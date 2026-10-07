@@ -125,7 +125,7 @@ renderer 변경이나 신규 실험·릴리스는 없다.
 
 2026-10-07 사용자는 제품이 테마를 선택할 수 있도록 여러 테마를 HJM에 참고용으로 보관하고, 테마를 한 번 주입하면 컴포넌트 → 구성 → 화면에 적용되기를 요청했다. 팔레트만 바꾼 비교 스토리로 전체 요구를 완료 처리하지 않는다.
 
-현재 소스 확인: Web/RN Provider는 `brandPalette`와 환경 축을 자식에게 상속한다. Web `createHjmThemeStyle`은 radius/font/typography/shadow를 공통 foundations에서 직접 가져오고, Native Provider도 고정 foundations를 tokens로 제공한다. Native actions/inputs에는 직접 radius/typography를 읽는 부분도 있다. EffectSurface의 질감은 별도 descriptor다. 따라서 현재 색상 상속은 제공하지만 제품별 재질·형태·서체를 합친 단일 테마 프로필의 전 단계 적용은 미완료다.
+당시 구현 전 소스 확인(역사 snapshot): Web/RN Provider는 `brandPalette`와 환경 축을 자식에게 상속한다. Web `createHjmThemeStyle`은 radius/font/typography/shadow를 공통 foundations에서 직접 가져오고, Native Provider도 고정 foundations를 tokens로 제공한다. Native actions/inputs에는 직접 radius/typography를 읽는 부분도 있다. EffectSurface의 질감은 별도 descriptor다. 따라서 현재 색상 상속은 제공하지만 제품별 재질·형태·서체를 합친 단일 테마 프로필의 전 단계 적용은 미완료다.
 
 목표 연결은 **제품 테마 설정 → Provider → 역할 기반 토큰·recipe → 컴포넌트 → 구성 → 화면**이다. 여러 테마는 선택형 참고 자료로 제공하고 중립 기본값이나 제품 소유권을 대체하지 않는다.
 
@@ -140,7 +140,7 @@ renderer 변경이나 신규 실험·릴리스는 없다.
 
 ## 표현·상호작용·구성·화면을 함께 선택하는 프리셋 — 범위 정정
 
-2026-10-07 사용자가 “테마 별로 구성도 변경되고 컴포넌트에 같은 기능이지만 여러 인터렉션”, “화면 구성도 변경”을 명시했다. 앞 절의 색·서체·재질 상속만으로는 이 요구를 충족하지 못한다. 따라서 참고 테마 등록은 **디자인 프리셋**으로 확장한다. 아래는 목표 계약이며 아직 구현된 API가 아니다.
+2026-10-07 사용자가 “테마 별로 구성도 변경되고 컴포넌트에 같은 기능이지만 여러 인터렉션”, “화면 구성도 변경”을 명시했다. 앞 절의 색·서체·재질 상속만으로는 이 요구를 충족하지 못한다. 따라서 참고 테마 등록은 **디자인 프리셋**으로 확장한다. 아래는 당시 목표 계약이다. 현재 구현은 디자인 프로필 계약·공개 renderer·조사 마감의 항목별 근거에서 확인한다.
 
 | 프리셋의 축 | 선택하는 것 | 함께 유지할 계약 |
 | --- | --- | --- |
@@ -158,7 +158,9 @@ renderer 변경이나 신규 실험·릴리스는 없다.
 - 설정 화면의 묶인 행/카드형 구분, 편집 도구의 inline/접이식 구분 등은 설명을 위한 예시다. 아직 제공하거나 채택 확정한 변형으로 계산하지 않는다. 전수조사에서 원본 기능과 HJM 중복을 검토해 실제 권장 목록을 확정한다.
 - 실험의 비교 단위는 같은 제품 데이터와 행동으로 동작하는 프리셋별 **컴포넌트·구성·화면 전체**다. 네 축에서 실제 변화가 드러나는 복수 프리셋, 개별 축 override, 환경 조합, 전환 중 상태 보존을 확인한 뒤 승격·게시·Utilverse 적용한다. 시각 스크린샷만으로 인터랙션 검증을 대신하지 않는다.
 
-## 완료 증거
+## 당시 완료 증거 — 1.14.0 checkpoint
+
+아래 표는 당시 17개 실험 승급/게시 snapshot이다. 2026-10-07 최신 적용 상태는 머리말과 [조사 마감](reference-research-closeout-2026-10-07.md), [후속 검토팩](reference-experiment-promotion-review-2026-10-07.md)을 따른다. 전수 조사 행의 미완료를 현재 추가 조사 의무로 사용하지 않는다.
 
 | 요구 | 필요한 증거 | 현재 상태 |
 | --- | --- | --- |
@@ -539,3 +541,20 @@ B의 [별도 복구 인덱스](../qa/2026-10-07-reference-parallel-b-21st-recove
 일부 좁은 다크/RTL/모션 감소 및 실패/재시도·Dialog 초안/초점 복귀를 확인했다.
 [검증·한계](../qa/2026-10-07-product-theme-propagation.md). 원격CI·버전 상승·게시·실제 제품
 반영과 Native 기기 검증은 수행하지 않았다. 새로운 범용 테마 엔진이나 실험 경로를 중복 등록하지 않았다.
+
+
+## 2026-10-07 최신 게시·소비 확인
+
+기존 계획의 1.14.0 완료 표와 달리 현재 npm latest는 세 패키지 모두 1.15.0이다.
+공식 registry의 tarball integrity를 직접 비교했고 기본 10종 프로필 및 design-profile 공개 진입점은 게시본에 있다.
+CollectionRail 진입점과 renderer Text.fontRole, EffectSurface ruledSpacing은 1.15.0에 없다.
+따라서 기본 테마 제공과 이번 후속 구현의 게시를 합산하지 않는다. GitHub Release 목록은 비어 있지만 npm 게시 부재의 근거가 아니며, remote v1.15.0 tag는 commit 9aa33e2063dc65d0427697fb5a20b48ab7cba387을 가리킨다.
+
+현재 공유 checkout에서 확인한 중앙 release record와 9개 소비 제품의 manifest/contract는 1.14.0이다.
+이는 다른 branch/worktree/remote에 1.15.0 갱신이 없다는 증거가 아니다. 소비 버전 변경 전 각 저장소의 branch/worktree와 진행 중 작업을 먼저 대조한다.
+이미 게시된 1.15.0의 소비 갱신은 사용자의 “릴리즈 되면 다른 곳들도 버전업” 범위에 있으며, 후속 8개 실험 승급·npm 게시 승인은 별도 질문으로 확인 중이다.
+이 확인에서 버전 상승·원격 CI·앱 build/배포·소비 저장소 수정은 수행하지 않았다.
+
+원격 main 재확인: 중앙 release record blob b3bde1e6c80521361902ec8da33e3c3c287ffed0과 BurnTok contract blob d8932e5c092712e4151eaac610edb35373237d78은 1.15.0이다.
+Portfolio Site·Unairplane·Spint·Diairy·Mofun·Utilverse·Choose Window·Yajalal의 원격 main 계약은 1.14.0이다.
+공유 checkout의 dirty와 stale local refs 때문에 설치/merge를 직접 수행하지 않는다. 이미 완료된 BurnTok 갱신은 중복하지 않으며 나머지 8개를 최신 원격 main에서 분리해 갱신한다.

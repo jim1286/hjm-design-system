@@ -1,6 +1,6 @@
 # 디자인 프리셋 계약
 
-검토일: 2026-10-07 · 상태: 10종 실험 구현·대상 로컬 검사 완료 · 미게시(1.14.0 이후)
+검토일: 2026-10-07 · 상태: 기본 10종 프로필 1.15.0 게시 · 후속 글자/질감/토큰 소비 개선 미게시
 
 사용자가 레트로·종이·숲 등의 테마에 따라 같은 기능의 상호작용·구성·화면 배치도 자동으로 달라지고, 앱이 자기 테마를 한 번 주입하기를 요청했다. 색상 프리셋만으로는 그 요구를 충족하지 못하므로 네 축을 하나의 데이터 계약으로 둔다. 기존 상태 엔진을 테마마다 복제하는 방식은 채택하지 않는다.
 
@@ -57,7 +57,9 @@ export const productDesign = defineHjmDesignProfile({
 
 ## 현재 증거와 남은 조건
 
-공통 데이터·Provider·기본 토큰 소비·상호작용 기본값·OverviewScreen 구성과 화면·양쪽 Storybook 비교를 구현했다. 전체 기존 컴포넌트의 정적 토큰 소비 감사는 진행 중이다. 브라우저의 입력 유지·복구와 light/dark·좁은 폭·큰 글자·RTL·모션 축소는 [QA 기록](../../../docs/qa/2026-10-07-design-profile-research.md)에서 확인했다. Native 실기기 검증은 아직 미완료다. 실험 등록·승격·게시·Utilverse 적용을 분리한다. 완료 기준은 [작업 계획](../../../docs/plans/reference-release-utilverse-2026-10-07.md)의 프리셋 절을 따른다.
+공통 데이터·Provider·기본 토큰 소비·상호작용 기본값·OverviewScreen 구성과 화면·양쪽 Storybook 비교를 구현했다. 2026-10-07 npm 1.15.0의 세 tarball integrity와 design-profile 진입점, 기본 10종 계약을 확인했다. 후속 CollectionRail·Text.fontRole·ruledSpacing과 토큰 소비 개선은 해당 게시본에 포함되지 않는다. 필요한 후보 조사는 마감했고, 확인한 모서리·제목 메트릭·UI 라벨·Toast 행간 누락을 [후속 QA](../../../docs/qa/2026-10-07-design-profile-research.md)에 따라 수정했다. 이는 모든 공개 컴포넌트/플랫폼 자동 검수 완료가 아니다.
+
+브라우저의 입력 유지·복구와 선택 환경은 위 QA에, 기존 iPhone 17 Pro/iOS26.5 개발 호스트에서 수행한 테마·카드/글자/종이·전환/날짜/명령·독립 OverviewScreen 선택 흐름은 [Native QA](../../../docs/qa/2026-10-07-native-reference-validation.md)에 있다. Android·실물/Release 성능·실제 VoiceOver 순회와 소비 앱 반영은 미확인이다. OS 최대 글자 및 최대값 모사는 검사·후속·완료 조건에서 제외한다. 기본 npm 게시와 실험 승급, 후속 npm 게시, 소비 제품 적용을 각각 구분한다.
 
 ## 10종 확장과 현재 연결
 
