@@ -1,4 +1,7 @@
+"use client";
 import { jsx as _jsx } from "react/jsx-runtime";
+// The provider creates React context and observes browser preferences; server pages can pass a serializable product profile without wrapping the whole page.
+// Root-barrel marking would also move unrelated exports; see docs/qa/2026-10-07-rsc-profile-boundary.md.
 import { DesignProfileContext } from "./internal.js";
 import { designSystemEnvironmentDefaults, isLargeTextScale, resolveDensityDefault, resolveDesignSystemProviderValue, validateDesignSystemProviderValue, } from "@hjmds/design-contracts/components/design-system-provider";
 import { tooltipBehaviorDefaults } from "@hjmds/design-contracts/components/tooltip";

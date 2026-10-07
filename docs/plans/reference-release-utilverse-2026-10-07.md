@@ -565,3 +565,6 @@ CollectionRail 진입점과 renderer Text.fontRole, EffectSurface ruledSpacing�
 
 
 23:37 KST 후속: Diairy PR26의 Web/Native 게시1.15.0을 main31c53b7aa3da1ca883d6120c450c625d6119d3c2에 통합했다. 기존 guide의 RSC 경계/브라우저 fixture 보완과 실제 두 표면 타입·2444unit/생성기5건·Node e2e36건·웹 두 build·iOS/Android JS export·선택 browser7조건의 범위와 한계는 [완료 감사 §12](../qa/2026-10-07-reference-completion-audit.md#12-diairy-webnative-소비-반영과9개-main-재확인--2337-kst)에 기록했다. 중앙 기존 library 채택 누락은 메타 PR14로 정리했다.9개 원격 main SHA를 각각 조회한 뒤 고정 SHA의 계약을 다시 읽어 모두1.15.0임을 확인했다. React7개/Flutter native-adapter2개이며 후자는 Dart 테마 UI 구현 완료가 아니다. 필요한 조사와 실험 등록은 마감했다. 후속8개 실험의 승급·게시 명시 승인만 별도로 대기한다.
+
+
+2026-10-08 00:10 KST 후속: Diairy에서 확인한 Web layout/provider RSC 경계를 HJM source에 보완하고 직접-import Next production fixture를 남겼다. 관련 기존 CollectionRail/글자 역할/토큰 표 검사 연결 누락까지 보완한 local gate 구간별 완료는 [완료 감사 §13](../qa/2026-10-07-reference-completion-audit.md#13-공개-web-profile의-rsc-경계와-로컬-gate-정리--2026-10-08-0010-kst)을 따른다. 새 npm train·소비 wrapper 제거·원격 CI는 수행하지 않았다. 필요한 조사 마감 및8개 실험 승급·게시 승인 대기는 유지한다.

@@ -168,6 +168,8 @@ describe("package boundaries", () => {
       // Profiles are optional: core imports must not pull the preset registry.
       "./design-profile",
       "./design-profile-layout",
+      // CollectionRail is an opt-in companion; retain exact export/Metro checks instead of loosening this allowlist.
+      "./collection-rail",
     ] as const;
 
     expect(Object.keys(packageJson.exports)).toEqual(expectedExports);

@@ -165,3 +165,12 @@ Node24.20/pnpm11.24의 frozen 설치, 웹·앱/공용 타입, 중복 제외2444u
 | Yajalal | b2f93e32fc2c57273663222824ca47dcffed1f5b | native-adapter |
 
 필요한 조사 마감과 등록7개(신규6/기존 개선1), 기존 목록 화면을 포함한 관련8개 검토팩은 유지한다. 후속8개 Storybook 승급·npm 게시 명시 승인은 아직 도착하지 않았고 실험 상태를 유지한다.
+
+
+## 13. 공개 Web profile의 RSC 경계와 로컬 gate 정리 — 2026-10-08 00:10 KST
+
+필요한 외부 조사는 닫힌 상태를 유지한다. Diairy 소비 반영에서 발견한 layout/provider의 client 경계를 공용 패키지에서 보완하고, 서버 작성 profile/JSX를 직접 주입하는 재사용 Next fixture를 남겼다. 캐시 없는 directive 대조군의 createContext 실패와 후보 production build/hydration·모션 감소 변경 뒤 같은 입력 노드/값 유지를 확인했다. [RSC QA](2026-10-07-rsc-profile-boundary.md)에 첫 실패·임시 dependency/cache 제약·구간별 결과와 digest를 기록했다.
+
+기여 지침의 로컬 전체 gate가 기존 CollectionRail 경계 목록/Metro import fixture, Text.fontRole 속성 순서 검사, font resolver를 token 값으로 센 Native Showcase 검사에서 멈춘 것을 보완했다. contracts1030/Web SSR278/browser1156/Native1263(+기존12skip), Native Metro700modules, governance45/Showcase Native21/Web48 및 production/static·사용 지침/Storybook/generated drift를 구간별로 통과했다. 단일 ci:check 성공으로 보고하지 않는다. 다른 세션19 dirty paths와 공유 runtime을 보존하며 원격 CI dispatch·train 버전 상승·npm 게시를 하지 않았다.
+
+이 source 보완은 게시1.15.0에 없고 Diairy client wrapper는 유지한다.9개 소비 main의1.15 채택 proof와 후속8개 승급·게시 승인 대기는 그대로다. 새 실험·외부 전수 조사를 추가하지 않았다.

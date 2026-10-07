@@ -1,0 +1,5 @@
+# Profile injection from a React Server Component
+
+The fixture imports the two granular client entries directly, defines a product-owned paper profile in the server page, and retains server-authored guide text as children. It reproduces the Next page-data failure seen in Diairy before the entry directives were present. It is a reusable integration fixture, not a published product or a substitute for device QA.
+
+Use an isolated temporary Next project with its own output/cache and a copied candidate renderer build. Supply Next/React/React DOM from an existing supported consumer installation; do not install or mutate a shared checkout. A local next.config.mjs should transpile @hjmds/react and @hjmds/design-contracts. The validation procedure, exact runtime versions, baseline failure and candidate result are in the [QA report](../../../../../docs/qa/2026-10-07-rsc-profile-boundary.md). No Next dependency is added to the renderer library because the framework remains the consumer's dependency.

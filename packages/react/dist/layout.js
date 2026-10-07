@@ -1,4 +1,7 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+// Layout renderers read profile context; declaring this granular entry keeps server-owned guide text outside the client graph.
+// Root-barrel marking would also move unrelated exports; see docs/qa/2026-10-07-rsc-profile-boundary.md.
 import { useDesignProfileDefaults } from "./internal.js";
 import { resolveGridLayout, } from "@hjmds/design-contracts/grid";
 import { resolveAspectRatioDescriptor, } from "@hjmds/design-contracts/components/aspect-ratio";

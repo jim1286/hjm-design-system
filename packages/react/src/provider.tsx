@@ -1,3 +1,7 @@
+"use client";
+
+// The provider creates React context and observes browser preferences; server pages can pass a serializable product profile without wrapping the whole page.
+// Root-barrel marking would also move unrelated exports; see docs/qa/2026-10-07-rsc-profile-boundary.md.
 import { DesignProfileContext } from "./internal.js";
 import type { HjmDesignProfile } from "@hjmds/design-contracts/design-profile";
 import {

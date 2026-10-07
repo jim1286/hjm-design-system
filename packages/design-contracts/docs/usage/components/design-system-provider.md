@@ -31,6 +31,15 @@ Provider 없이 렌더하면 예외가 난다. 화면 일부의 밀도·테마�
 
 테마 값은 Web `useHjmTheme()`, Native `useHjmNativeTheme()`로 읽는다(둘 다 Provider 밖에서는 예외).
 
+### React Server Components에서 설정 주입
+
+2026-10-07 공개 guide의 profile context 오류를 같은 원인인 Provider entry에서도 보완했다.
+현재 main의 Web `/provider`는 client entry이다. 서버는 contracts의 `defineHjmDesignProfile`로 만든
+직렬화 가능한 제품 설정과 서버 JSX children을 넘기며, hook·브라우저 관찰은 Provider 경계 안에서
+실행된다.1.15.0 게시본에는 이 client directive 보완이 없으므로 제품의 client wrapper를 유지한다.
+다른 Web entry와 루트 barrel의 RSC 지원은 이 변경으로 보장하지 않는다.
+[실제 Next 재현·검증](../../../../../docs/qa/2026-10-07-rsc-profile-boundary.md)을 참고한다.
+
 ## 최소 사용 예
 
 ```tsx
@@ -77,7 +86,7 @@ expect(checkBrandPaletteContrast(PRODUCT_BRAND_PALETTE)).toEqual({ light: [], da
 | `reducedMotion` | `true` · `false` | `false` | — |
 | `minimumVisualTarget` | `true` · `false` | `false` | — |
 | `brandPalette` | `{ light?, dark? }` | — | 각각 `ThemeColors` 17개 key 중 필요한 것만 넘긴다(부분 병합). 상태 강조색은 덮을 수 없다. 중첩 Provider는 가장 가까운 상위의 값을 물려받는다 |
-| `designProfile` | `HjmDesignProfile` | 가장 가까운 상위 프로필 또는 없음 | 미게시 실험. `hjmDesignPresets` 또는 `defineHjmDesignProfile` 결과만 넣는다. [프로필 계약](../../design-profile.md)의 토큰·질감·전환·구성·화면 기본값을 상속한다 |
+| `designProfile` | `HjmDesignProfile` | 가장 가까운 상위 프로필 또는 없음 | 기본 프로필은1.15.0 게시. `hjmDesignPresets` 또는 `defineHjmDesignProfile` 결과만 넣는다. 후속 글자 역할·질감/구성 개선은 아직 미게시다. [프로필 계약](../../design-profile.md)의 토큰·질감·전환·구성·화면 기본값을 상속한다 |
 | `value` | `DesignSystemProviderValue`(`resolveDesignSystemProviderValue` 결과) | — | 테스트·스토리·임베딩용. 환경 prop·`brandPalette`·`designProfile`과 함께 쓸 수 없고(타입이 막는다), 주면 OS theme·모션 관찰과 상위 `brandPalette` 상속이 멈춘다 |
 | `surfaceEffects`(Native) | `{ renderBackdrop?, insetShadows? }` | 상위 host 또는 없음 | 미게시 실험. 실제 blur host·inset capability를 한 번 등록하며 `{}`로 하위 영역을 해제. [Surface 질감 계약](../../design-profile.md#surfacecard의-유리클레이-질감) |
 | `safeAreaInsets`(Native) | `{ top?, right?, bottom?, left? }`(pt) | `{}` | 보통 `useSafeAreaInsets()` 결과. 중첩 Provider는 가장 가까운 상위 값을 물려받는다 |

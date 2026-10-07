@@ -179,3 +179,8 @@ Stable `sortable`, `swipe-actions`, `content-transition`, `carousel-motion` and 
 a brand/navigation/actions composition with a progressive glass surface.
 Existing [BottomNavigation](../design-contracts/docs/bottom-navigation.md) accepts
 `configuration={{ presentation: "capsule" }}` with an adjacent `primaryAction`.
+
+
+## React Server Component profile boundary
+
+A server-authored guide exposed a missing client boundary in the layout entry when profile context was added. The current source declares `"use client"` in `/layout` and `/provider` so a Server Component can pass serializable product profiles and server-authored JSX children without a page-wide wrapper. This fix is not present in published1.15.0; keep the consumer's wrapper until a version containing the fix is installed. Hooks and callback props still belong in consumer Client Components, and this change does not promise direct server imports of the root barrel or other entries. The [integration fixture](test/fixtures/rsc-profile/README.md) preserves the reproduction; [QA](../../docs/qa/2026-10-07-rsc-profile-boundary.md) records the actual Next build and hydration scope.

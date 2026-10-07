@@ -29,7 +29,12 @@ describe("Web core normalization", () => {
         <Stack><span>항목</span></Stack>
       </HjmProvider>,
     );
-    expect(markup).toContain('data-variant="body" data-tone="primary" data-emphasis="regular"');
+    // Named attributes define normalization; a new font role must not make source attribute order a contract.
+    const textRoot = markup.match(/<span\b([^>]*)>본문<\/span>/u)?.[1] ?? "";
+    expect(textRoot).toContain('data-variant="body"');
+    expect(textRoot).toContain('data-font-role="reading"');
+    expect(textRoot).toContain('data-tone="primary"');
+    expect(textRoot).toContain('data-emphasis="regular"');
     expect(markup).toContain('data-tone="default" data-bordered="true"');
     expect(markup).toContain('data-padding="none" data-radius="lg"');
     expect(markup).toContain('data-axis="block" data-gap="md"');

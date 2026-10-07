@@ -46,6 +46,9 @@ import { AppRegistry, View } from "react-native";
 
 import { Button, Link } from "@hjmds/react-native/actions";
 import { Carousel } from "@hjmds/react-native/carousel";
+// CollectionRail is already public; include its granular entry so the Metro
+// boundary check covers the actual graph instead of only its export declaration.
+import { CollectionRail } from "@hjmds/react-native/collection-rail";
 import { Rating } from "@hjmds/react-native/rating";
 import { ImageComparison } from "@hjmds/react-native/image-comparison";
 import { TextTransition } from "@hjmds/react-native/content-transition";
@@ -100,6 +103,12 @@ function MetroSmokeApp() {
         renderIcon: () => React.createElement(Text, null, "＋"), onContentClearanceChange: noop,
       }),
       React.createElement(TopBar, { title: "새 소식" }),
+      React.createElement(CollectionRail, {
+        label: "최근 기록",
+        items: [{ id: "one", label: "첫 기록" }],
+        labels: { previous: "이전", next: "다음", navigation: "기록 이동" },
+        renderItem: ({ label }) => React.createElement(Text, null, label),
+      }),
       React.createElement(Carousel, {
         label: "새 소식",
         slides: [{ id: "one", label: "첫 소식" }, { id: "two", label: "다음 소식" }],

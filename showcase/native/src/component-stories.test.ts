@@ -71,7 +71,10 @@ it("documents every foundation token group", async () => {
   // scripts/check-storybook.mjs S6; this keeps the shared reference complete against the public foundations.
   const tokens = await import("@hjmds/design-contracts/foundations");
   const { foundationGroups } = await import("../../shared/token-reference");
-  expect(Object.values(foundationGroups).flatMap(group => [...group.keys]).sort()).toEqual(Object.keys(tokens).sort());
+  // Font resolvers are documented behavior, not token values to flatten into a
+  // reference table. Keep exact coverage of every exported value, including future groups.
+  const tokenKeys = Object.entries(tokens).filter(([, value]) => typeof value !== "function").map(([key]) => key);
+  expect(Object.values(foundationGroups).flatMap(group => [...group.keys]).sort()).toEqual(tokenKeys.sort());
 });
 
 it("rejects Native includeStories because the pinned runtime drops default metadata", async () => {

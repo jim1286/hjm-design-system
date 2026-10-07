@@ -30,6 +30,15 @@
 | --- | --- | --- | --- |
 | `Surface` | 기본 | `@hjmds/react`, `/layout` | `@hjmds/react-native`, `/primitives` |
 
+### React Server Components의 import 경계
+
+공개 guide가 HJM profile context를 서버 module에서 평가해 실패한 사례(2026-10-07)를 보완했다.
+현재 main의 Web `/layout`은 client entry이므로 서버가 작성한 JSX children과 직렬화 가능한 props를
+Surface로 넘길 수 있다. 서버 page 전체를 client로 바꿀 필요는 없다. 이 보완은1.15.0 이후 미게시이므로
+설치1.15.0에서는 제품의 작은 `"use client"` 재수출 경계를 유지한다. callback/ref 등 client 실행이
+필요한 props는 소비 Client Component에서 만든다. 루트 barrel/다른 entry를 서버에 직접 import해도
+된다는 보장은 아니다. [재현·검증](../../../../../docs/qa/2026-10-07-rsc-profile-boundary.md)을 따른다.
+
 ## 최소 사용 예
 
 ```tsx
