@@ -3610,6 +3610,14 @@
         "status": "html",
         "checkedAt": "2026-10-06T15:58:25.594412+00:00",
         "evidence": "reference-page-source-index.json"
+      },
+      "implementationReview": {
+        "checkedAt": "2026-10-07T03:48:56.624604+00:00",
+        "sourceCommit": "cdb348cb4c72a9b54b554d8617801e479fbc8714",
+        "sourceUrl": "https://raw.githubusercontent.com/magicuidesign/magicui/cdb348cb4c72a9b54b554d8617801e479fbc8714/apps/www/registry/magicui/noise-texture.tsx",
+        "bodySha256": "90cad110cf368c95bd40edcdfe64d52c6aacb0656996e20867562787f4ca4c1c",
+        "scope": "Complete 73-line official NoiseTexture implementation read; existing visual/interaction/adoption record preserved",
+        "finding": "SVG fractalNoise -> desaturation -> channel slopes, unique filter id, rect opacity plus root light/dark opacity. HJM uses its independent periodic value-noise mask across Web/Native; no filter control or pixel-parity claim."
       }
     },
     {
@@ -4657,6 +4665,21 @@
         "status": "html",
         "checkedAt": "2026-10-06T16:00:22.553718+00:00",
         "evidence": "reference-page-source-index.json"
+      },
+      "documentationReview": {
+        "checkedAt": "2026-10-07T03:48:56.624604+00:00",
+        "scope": "Definition, both demo descriptions and full props table read; original implementation and visible runtime pending",
+        "finding": "Gradient palette, noise intensity, speed, animating and backdropBlur controls. Compare existing EffectSurface mesh/glow/noise and active/period with semantic colours and lifecycle controls. HJM does not implement true backdrop blur."
+      },
+      "existingApiComparison": {
+        "checkedAt": "2026-10-07T03:48:56.624604+00:00",
+        "hjmSourceBase": "d465249",
+        "sourceFiles": [
+          "packages/design-contracts/src/effect-surface.ts",
+          "packages/react/src/effect-surface.tsx",
+          "packages/react-native/src/effect-surface.tsx"
+        ],
+        "finding": "Existing resolver and both renderers already own layer/intensity/period, decoration-only input/accessibility, reduced motion and visibility/AppState suspension. Preserve this engine and independent mask; original source/blur/performance comparison still pending."
       }
     },
     {

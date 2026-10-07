@@ -241,3 +241,29 @@ Web 실제 브라우저와 Native Node host 검증을 구분한다. Native 실�
 | `context-menu-isolated-recheck.log` | `c4c8bfb9e05c44070e52b0a1528eb18fda2bd5536e2a2113faee317288e5dbf3` |
 | `profile-heading-showcase-build.log` | `b4d99ed82bcefab7ec3e1c4e35693f1d66f92ed1989a9e7e0857fa3b6a2f61f0` |
 | `opens-from-the-keyboard--tracks-the-active-item--and-restores-focus-after-dismissal-or-action-1.png` | `fb78eadcbba577d2f03d355cd5769d72a8a83c9f96f6c3100f532b8ae429dd58` |
+
+### 후속 리서치: 질감 원본 구현과 재사용 경계
+
+Magic UI의 [Noise Texture 문서](https://magicui.design/docs/components/noise-texture)는
+기본 예제와 newsletter/button/input source, usage와 props를 읽었다.
+[원본 구현](https://raw.githubusercontent.com/magicuidesign/magicui/cdb348cb4c72a9b54b554d8617801e479fbc8714/apps/www/registry/magicui/noise-texture.tsx) 전체 73행도 commit `cdb348cb4c72a9b54b554d8617801e479fbc8714`에
+고정해 확인했다(body SHA-256 `90cad110cf368c95bd40edcdfe64d52c6aacb0656996e20867562787f4ca4c1c`).
+fractalNoise·desaturation·channel slope와 root/rect opacity를 쓰며 HJM의 독립적인
+periodic value-noise mask와 픽셀이 같은 구현은 아니다. 기존 noise 실험의 시각/입력 기록은
+[질감 QA](2026-10-07-noise-experiment.md)에 있고, 이 source 독해를 새 기기 QA로 세지 않는다.
+
+Aceternity [Noise Background](https://ui.aceternity.com/components/noise-background)의
+props/두 demo 설명과 HJM resolver·Web/Native renderer를 대조했다. 기존
+EffectSurface에 mesh/glow/noise·intensity·period·active와 semantic color·장식 접근성 분리,
+reduced motion·화면 가시성/AppState 중지가 있다. 실제 backdrop blur는 없는 범위로 유지한다.
+원본 Manual implementation·실제 데모 시각/모션·성능 검증은 아직 pending이다.
+
+[공식 AI reference](https://ui.aceternity.com/llms-full.txt)의 서문과
+[Licence](https://ui.aceternity.com/licence)의 제품 사용/재배포 범위를 읽었다. 제공된 licence와
+개별 파일의 조건을 함께 확인하기 전 HJM package에 해당 원본을 복제해 배포하는 결정을
+내리지 않는다. 이번 대조에서 Aceternity 코드를 HJM source에 복사하지 않았다. 독립적인
+기존 HJM 표현을 개선하는 후보로 관리하며, 특정 파일 재사용 허용 여부는 별도 확인 대상이다.
+
+Magic UI 257·Aceternity 501개 공개 URL의 본문 수집을 각 host 순차/2초 간격으로
+시작했다. robots의 비공개 경로와 rate limit 중지 규칙을 유지한다. 수집·본문 독해·시각·
+동작 검토는 각각 따로 기록하고 원격 CI·설치·npm 게시를 시작한 작업이 아니다.

@@ -6166,7 +6166,7 @@
     {
       "site": "component.gallery",
       "checkedOn": "2026-10-07",
-      "evidence": "131 public URL variants, 66 identical-content path groups; 60 definitions/12 detailed guidance sections read. All 66 intros and default full-height layouts of 40 paths reviewed. 1629 visible basic example cards reviewed; placeholders, linked behaviour, other environments and remaining examples are separate.",
+      "evidence": "2026-10-07: 131 public URL variants, 66 identical-content path groups. All 66 complete default desktop/light full-height layouts and 2671 visible basic gallery cards inspected in 756 actual viewports/189 contact sheets. Placeholders, internal thumbnail text, linked behaviour and other environments remain separate.",
       "sitemaps": [
         "https://component.gallery/sitemap-0.xml"
       ],
@@ -6262,7 +6262,7 @@
         "allReviewComplete": false,
         "report": "../qa/2026-10-07-component-gallery-page-review.md",
         "fullPageCaptures": 66,
-        "fullPageCaptureVisualReview": "pending beyond intro; capture is not review",
+        "fullPageCaptureVisualReview": "Oversized fullPage captures are superseded; all 756 actual viewport tiles inspected. Linked source/interaction/environment review remains incomplete.",
         "generalPageTextReview": "All 6 general/index pages read and default desktop/light full-height layouts inspected",
         "fullScrollImageCount": 2853,
         "fullScrollImageLoadFailures": 0,
@@ -19949,7 +19949,16 @@
         "https://ui.aceternity.com/testimonial-section",
         "https://ui.aceternity.com/tools/box-shadows"
       ],
-      "discoveryComplete": false
+      "discoveryComplete": false,
+      "sourceCaptureProgress": {
+        "checkedAt": "2026-10-07T03:48:56.624604+00:00",
+        "capturedRecords": 55,
+        "http200": 55,
+        "knownQueueUrls": 501,
+        "scope": "Fetched/extracted public source; not source reading, visual or interaction review",
+        "lastCapturedAt": "2026-10-07T03:48:54Z",
+        "allReviewComplete": false
+      }
     },
     {
       "site": "magicui.design",
@@ -20218,7 +20227,16 @@
         "https://magicui.design/docs/templates/saas",
         "https://magicui.design/docs/templates/startup"
       ],
-      "discoveryComplete": false
+      "discoveryComplete": false,
+      "sourceCaptureProgress": {
+        "checkedAt": "2026-10-07T03:48:56.624604+00:00",
+        "capturedRecords": 56,
+        "http200": 56,
+        "knownQueueUrls": 257,
+        "scope": "Fetched/extracted public source; not source reading, visual or interaction review",
+        "lastCapturedAt": "2026-10-07T03:48:55Z",
+        "allReviewComplete": false
+      }
     },
     {
       "site": "motion-primitives.com",
