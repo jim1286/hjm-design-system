@@ -24,8 +24,10 @@ const budgets = [
   { exportPath: "./screen-patterns", maxModules: 2, maxRawBytes: 11_600, maxGzipBytes: 4_050, forbiddenModules: metadataModules },
   // Optional action state store: measured 2504 raw / 889 gzip bytes; no dependency graph.
   { exportPath: "./action-session", maxModules: 1, maxRawBytes: 2900, maxGzipBytes: 1050, forbiddenModules: metadataModules },
-  // Pure elastic-indicator geometry: 720 raw / 439 gzip bytes.
-  { exportPath: "./gooey-navigation", maxModules: 1, maxRawBytes: 850, maxGzipBytes: 520, forbiddenModules: metadataModules },
+  // 2026-10-07 graph review: profile Tabs' plain indicator reuses motion.normal,
+  // adding only foundations.js. Keep that shared timing instead of duplicating 200ms;
+  // metadata stays forbidden and a third module still fails. Bytes retain the old baseline.
+  { exportPath: "./gooey-navigation", maxModules: 2, maxRawBytes: 850, maxGzipBytes: 520, forbiddenModules: metadataModules },
   // Bounded grapheme geometry: 775 raw / 509 gzip bytes, one pure module.
   { exportPath: "./gravity-letters", maxModules: 1, maxRawBytes: 900, maxGzipBytes: 600, forbiddenModules: metadataModules },
   // Task validation reuses existing sortable identity validation; measured 2606/1145 bytes.

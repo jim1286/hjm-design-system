@@ -872,3 +872,44 @@ fixture 저장이며 네트워크·저장소·운영 데이터 변경은 없다.
 이 수정은 1.14.0 이후 미게시이며 Changeset만 추가했다. 버전 변경·원격 CI·npm 게시·소비 앱
 변경은 없다. Native 검사도 기기 외형/프레임 성능 증거가 아니다. 전수 조사·모든 상태/환경,
 실험 승급·게시·소비 제품 채택은 계속 남는다.
+
+## 선택형 Native 리퀴드 토스트 프로필 연결 — 2026-10-07 15:15 KST
+
+기준 main `0c602a1`. optional `/toast-liquid`의 Skia shadow는 foundation `raised`, settled
+corner와 RN body clip은 recipe 12로 고정돼 있었다. 일반 Toast는 이미 nearest profile의
+`radius.lg`/`shadow.floating`을 읽으므로 optional 경로를 별도로 대조했다. 새 Toast 엔진을
+추가하지 않고 기존 optional surface의 `radius.lg`/`shadow.raised` 소비를 연결했다.
+raised는 기존 2026-10-02 얕은 카드 결정이며 no-profile 12/raised, 원형 origin, 큐·행동은 유지한다.
+그림자가 위로 향하는 제품 프로필도 Canvas 네 가장자리의 3sigma+offset 여유를 확보한다.
+
+공개 geometry helper의 네 번째 선택 인자는 유한한 0 이상 모서리(기본 12)다. 폭·높이의
+절반을 초과하지 않으며 기존 3인자 호출의 결과를 유지한다. 양 renderer API/optional 경계를
+비교했고 Web은 기존 일반 Toast fallback이다. Native liquid를 Web 신규 기능으로 세지 않는다.
+기존 `실험/구성/비교와 검증/테마 조합`에 접힌 물방울 비교를 추가했다. 같은 visible entry의
+timeout을 이 비교에서만 해제하고 다음 테마로 순회한다. 신규 실험 제목·컴포넌트 수는 늘지 않았다.
+
+검증과 재현:
+
+- 변경 전 geometry 신규 검사: 모서리 전달/잘못된 값 거부 4건 실패, 기존 3건 통과. 수정 후
+  contracts `toast-liquid/toast/design-profile` 3파일 43건 통과.
+- Native `toast-liquid/profile-token-consumers/profile-chrome-shadows/design-profile` 4파일
+  25건 통과. no-profile·11 preset(중립 포함)·사용자 프로필을 light/dark로 바꾸며 같은 알림,
+  action/dismiss 미호출, 애니메이션 재시작 없음, Skia/RN corner 및 upward shadow bounds를 확인했다.
+  테스트 host wrapper의 parent/height 접근과 children의 string union 타입을 수정한 초기 실패는
+  테스트 harness 오류로 구분한다. import 경로 오류도 recipes로 정정했다. 최종 Native typecheck
+  통과 후 수정한 토스트 테스트 11건을 다시 실행해 통과했다.
+- contracts/Native build와 두 package typecheck, Web renderer 및 양 Showcase typecheck 통과.
+  Native Showcase registry/component stories 2파일 7건 통과. 이들은 실제 기기 시각 확인이 아니다.
+- docs 576파일, usage 12토큰/139컴포넌트/54구성/22화면, Storybook 421파일/929Web id,
+  public API map 308이름, contracts 103, workspace/evidence 동기화와 renderer graph 경계 통과.
+- contracts bundle에서 이전 Tabs 변경의 `gooey-navigation → foundations` 2모듈이 옛 1모듈
+  기록에 걸렸다. HEAD와 현재 import가 동일하고 추가 경로가 `motion.normal` 공유용 foundations
+  하나뿐임을 확인했다. 허용 2모듈로 기록하고 metadata 금지/3번째 모듈 차단·옛 byte baseline은
+  유지했다. bundle 재검사와 geometry/bundle-budget 회귀 2파일 9건 통과했다.
+
+미확인: Native GPU rasterization·터치/제스처·VoiceOver/TalkBack·프레임 성능, 모든 소비자의
+recipe/literal 감사 및 11사이트 전수 검토. 원격 CI·버전 상승·npm 게시·소비 앱 적용은 실행하지
+않았다. 기존 ContextMenu 전체 browser 검사 이력도 이번 focused 검사로 해결됐다고 보고하지 않는다.
+
+사용자 추가 요청에 따라 조사팀은 모든 채택/개선 후보의 근거와 최종 실험 경로를 매핑한다.
+조사 완료 뒤 규격에 맞춘 실제 등록과 대조하며, 현재 후보 목록을 등록 완료로 세지 않는다.

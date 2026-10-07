@@ -44,4 +44,24 @@ describe("Liquid presentation contract", () => {
     expect(final).toMatchObject({ width: 288, height: 170, y: 58, radius: 12, neckWidth: 0, offsetY: 0 });
     expect(buildLiquidToastGeometry(0.4, 0, layout).neckWidth).toBeGreaterThan(0);
   });
+
+  it("uses a supplied settled corner without changing the origin or exceeding measured bounds", () => {
+    const layout = resolveLiquidToastLayout({ width: 288, height: 112, availableHeight: 650, anchor: { kind: "capsule" } });
+    for (const radius of [0, 24, 48, 300]) {
+      const initial = buildLiquidToastGeometry(0.5, 0, layout, radius);
+      expect(initial).toEqual(buildLiquidToastGeometry(0.5, 0, layout));
+      const settled = buildLiquidToastGeometry(1, 1, layout, radius);
+      expect(settled).toMatchObject({ x: 0, y: 58, width: 288, height: 112, radius: Math.min(radius, 56) });
+      for (const expand of [-0.1, 0.25, 0.5, 0.75, 1.1]) {
+        const frame = buildLiquidToastGeometry(0.8, expand, layout, radius);
+        expect(frame.radius).toBeGreaterThanOrEqual(0);
+        expect(frame.radius).toBeLessThanOrEqual(Math.min(frame.width, frame.height) / 2);
+      }
+    }
+  });
+
+  it.each([-1, Number.NaN, Number.POSITIVE_INFINITY])("rejects invalid settled corner %s", radius => {
+    const layout = resolveLiquidToastLayout({ width: 288, height: 112, availableHeight: 650, anchor: { kind: "capsule" } });
+    expect(() => buildLiquidToastGeometry(1, 1, layout, radius)).toThrow(RangeError);
+  });
 });

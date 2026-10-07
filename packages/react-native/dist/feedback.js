@@ -292,6 +292,9 @@ function ToastSurface({ snapshot, managedMotion = false, announces = true, suspe
     // Managed liquid presentation owns its shadow; ordinary toast chrome follows
     // the profile floating role, preserving the recipe for consumers without one.
     const surfaceShadow = theme.designProfile?.tokens.shadow.floating ?? toastRecipe.surface.shadow;
+    // RN content clipping and the optional Skia card must resolve the same corner;
+    // preserve the liquid recipe for existing consumers without a profile.
+    const surfaceRadius = managedMotion ? theme.designProfile?.tokens.radius[toastRecipe.surface.radius] ?? liquidToastRecipe.radius : theme.tokens.radius[toastRecipe.surface.radius];
     const [motionProgress] = useState(() => new Animated.Value(theme.environment.reducedMotion ? 1 : 0));
     const exitCompleteRef = useRef(onExitComplete);
     exitCompleteRef.current = onExitComplete;
@@ -356,7 +359,7 @@ function ToastSurface({ snapshot, managedMotion = false, announces = true, suspe
                 // Liquid owns the surface; a second RN fill/border/shadow produced a double rim on iPhone (2026-10-01).
                 backgroundColor: managedMotion ? "transparent" : background,
                 borderColor: border,
-                borderRadius: managedMotion ? liquidToastRecipe.radius : theme.tokens.radius[toastRecipe.surface.radius],
+                borderRadius: surfaceRadius,
                 borderWidth: managedMotion ? 0 : toastRecipe.surface.borderWidth,
                 gap: toastRecipe.surface.gap,
                 maxWidth: toastRecipe.surface.maxWidth,

@@ -88,8 +88,11 @@ export function resolveLiquidToastLayout(input: Readonly<{
   };
 }
 
-export function buildLiquidToastGeometry(drop: number, expand: number, layout: LiquidToastLayout) {
+/** A themed corner changes only the settled card, never the circular origin.
+ * Keep the default recipe for existing callers and clamp to measured paint bounds. */
+export function buildLiquidToastGeometry(drop: number, expand: number, layout: LiquidToastLayout, cardRadius: number = liquidToastRecipe.radius) {
   "worklet";
+  if (!Number.isFinite(cardRadius) || cardRadius < 0) throw new RangeError("Liquid Toast card radius must be finite and non-negative");
   const clamp = (n: number) => Math.max(0, Math.min(1, n));
   const mix = (a: number, b: number, t: number) => a + (b - a) * t;
   const grow = 1 - (1 - clamp(drop / 0.7)) ** 1.25;
@@ -108,7 +111,7 @@ export function buildLiquidToastGeometry(drop: number, expand: number, layout: L
   const neckY = layout.anchorY + layout.anchorHeight / 2;
   return {
     x: centerX - width / 2, y: centerY - height / 2, width, height,
-    radius: Math.max(0, Math.min(mix(droplet / 2, liquidToastRecipe.radius, expand), width / 2, height / 2)),
+    radius: Math.max(0, Math.min(mix(droplet / 2, cardRadius, expand), width / 2, height / 2)),
     neckX: layout.anchorX + layout.anchorWidth / 2 - neckWidth / 2,
     neckY, neckWidth, neckHeight: Math.max(0, centerY - neckY),
     offsetY: centerY - (layout.cardTop + layout.height / 2),

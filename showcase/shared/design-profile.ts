@@ -21,6 +21,7 @@ export const profileCopy = {
   chrome: "입력·알림·오버레이 비교", dialog: "대화상자 열기", sheet: "패널 열기", close: "닫기",
   overlayTitle: "기록 편집", overlayDraft: "오버레이 초안", nextTheme: "다음 테마",
   chromeNotice: "테마를 바꿔도 초안은 유지돼요.", toastCopy: "미리보기 기록을 저장했어요.",
+  liquidToast: "물방울 알림의 테마 비교",
 };
 export const profileHeadingSamples = [
   { level: "level1", label: "큰 제목" }, { level: "level2", label: "주 제목" },

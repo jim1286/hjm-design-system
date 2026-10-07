@@ -5,6 +5,9 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { ToastRegion, useToastRegion, type ToastRegionController } from "../src/feedback.js";
 import { HjmNativeProvider } from "../src/provider.js";
 import { createLiquidToastPresentation } from "../src/toast-liquid.js";
+import { defineHjmDesignProfile, hjmDesignPresets } from "@hjmds/design-contracts/design-profile";
+import { shadow } from "@hjmds/design-contracts/foundations";
+import { withAlpha } from "@hjmds/design-contracts/colors";
 
 // Explicit completion controls exercise canceled/stale UI-thread callbacks without claiming device motion proof.
 const animations = vi.hoisted(() => ({ callbacks: [] as ((finished: boolean) => void)[] }));
@@ -127,4 +130,42 @@ it.each(["light", "dark"] as const)("retains the settled card fill alongside its
     expect(shadow.props.shadowOnly).not.toBe(true);
     expect(shadow.parent?.props.color).toBeTruthy();
   }
+});
+
+it.each(["light", "dark"] as const)("updates liquid shape/depth through profiles without replaying or replacing the %s toast", async theme => {
+  const custom = defineHjmDesignProfile({ extends: "paper", tokens: { radius: { lg: 48 }, shadow: { raised: { color: "#123456", opacity: 0.24, radius: 24, offsetY: -80 } } } });
+  const onAction = vi.fn(), onDismiss = vi.fn();
+  const profiles = [undefined, ...Object.values(hjmDesignPresets), custom];
+  const render = (designProfile = profiles[0]) => <HjmNativeProvider theme={theme} reducedMotion={false} {...(designProfile ? { designProfile } : {})}>
+    <ToastRegion placement="top" presentationAdapter={adapter}><Capture /></ToastRegion>
+  </HjmNativeProvider>;
+  await act(async () => { renderer = create(render()); });
+  await act(async () => { controller.publish({ ...message("same-entry"), durationMs: null, action: { label: "열기", onAction }, onDismiss }); });
+  measure(); completeMotion();
+  for (const profile of profiles) {
+    act(() => { renderer!.update(render(profile)); });
+    const shadowNode = renderer!.root.findAll(node => node.props.dx === 0 && typeof node.props.blur === "number").at(-1)!;
+    const token = profile?.tokens.shadow.raised ?? shadow.raised;
+    expect(shadowNode.props).toMatchObject({ dy: token.offsetY, blur: token.radius / 2, color: withAlpha(token.color, token.opacity) });
+    let card = shadowNode.parent!;
+    while (card && !card.props.r) card = card.parent!;
+    expect(card.props.r.value).toBe(profile?.tokens.radius.lg ?? 12);
+    const content = renderer!.root.findAll(node => Array.isArray(node.props.style) && node.props.style.some((style: { minHeight?: number } | undefined) => style?.minHeight === 74))[0]!;
+    expect(content.props.style[0]).toMatchObject({ borderRadius: profile?.tokens.radius.lg ?? 12, backgroundColor: "transparent", shadowOpacity: 0 });
+    const canvas = renderer!.root.findAll(node => node.props.pointerEvents === "none" && node.props.accessibilityElementsHidden && node.props.style?.position === "absolute").at(-1)!;
+    // Verify paint bounds in canvas coordinates, including an upward custom shadow.
+    const paintGroup = canvas.children.find(child => typeof child !== "string" && Array.isArray(child.props.transform));
+    expect(paintGroup).toBeDefined();
+    if (!paintGroup || typeof paintGroup === "string") throw new Error("Missing liquid paint group");
+    const translateY = paintGroup.props.transform.find((value: { translateY?: number }) => value.translateY !== undefined)?.translateY ?? 0;
+    const top = translateY + card.props.y.value + token.offsetY - token.radius / 2 * 3;
+    const bottom = translateY + card.props.y.value + card.props.height.value + token.offsetY + token.radius / 2 * 3;
+    expect(top).toBeGreaterThanOrEqual(0); expect(bottom).toBeLessThanOrEqual(canvas.props.style.height);
+    expect(onAction).not.toHaveBeenCalled(); expect(onDismiss).not.toHaveBeenCalled();
+    expect(animations.callbacks).toHaveLength(0);
+    expect(renderer!.root.findAll(node => node.props.snapshot?.descriptor.id === "same-entry").length).toBeGreaterThan(0);
+  }
+  const action = renderer!.root.findAll(node => node.props.accessibilityLabel === "열기" && typeof node.props.onPress === "function").at(-1)!;
+  act(() => action.props.onPress()); completeMotion();
+  expect(onAction).toHaveBeenCalledOnce(); expect(onDismiss).toHaveBeenCalledExactlyOnceWith("action");
 });

@@ -145,3 +145,24 @@ See [Skia shadow semantics](https://shopify.github.io/react-native-skia/docs/ima
 The default light card uses `bg` (white), while the dark card uses `surfaceAccent` (blue-tinted).
 This replaces the neutral gray fill after it was reported as dull. A single Skia outline remains
 to distinguish the light card from a white page; the accessible RN body stays transparent.
+
+## Nearest profile consumption · 2026-10-07
+
+The optional surface previously kept the foundation raised shadow and 12-unit corner even when
+the nearest Provider selected a different design profile. It now reads that profile's `radius.lg`
+and `shadow.raised`; the shallow raised role follows the depth decision above rather than adopting
+the ordinary Toast's floating role. Without a profile, the existing 12-unit corner and raised shadow
+remain. RN body clipping follows the same corner as Skia. The canvas reserves three blur sigmas
+plus the absolute vertical offset on every edge, including a product's upward shadow.
+
+The geometry helper's optional fourth argument is a finite non-negative settled radius (default 12).
+It keeps the circular origin and clamps the changing corner to half the measured width/height.
+The existing store, action, dismissal, FIFO and accessibility/reduced-motion fallback remain the
+same contracts. Web continues the ordinary Toast fallback; no Web liquid renderer was added.
+
+The existing Native `실험/구성/비교와 검증/테마 조합` includes a collapsed liquid comparison.
+Open a notification and use the next-theme control to keep that same visible entry while changing
+the nearest profile. Ordinary Toast previews retain their timeout. Light/dark mock regression
+covers no profile, all 11 presets (including neutral), and a custom upward shadow; these checks do
+not establish Native rasterization, touch, spoken accessibility or frame performance. See the
+[current QA record](../../../docs/qa/2026-10-07-design-profile-research.md).

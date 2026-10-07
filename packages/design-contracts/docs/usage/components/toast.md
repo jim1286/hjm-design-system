@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [Toast](../../toast.md), [Liquid Toast](../../../../react-native/docs/liquid-toast.md), `src/component-recipes.ts`(`toastRecipe`)
 - 스토리북: `배포/컴포넌트/상태와 알림/토스트`, `배포/컴포넌트/상태와 알림/리퀴드 토스트`
 
@@ -100,6 +100,14 @@ function useProfileSavedToast() {
 읽는다. Dialog/AlertDialog/Sheet/일반 Toast의 그림자는 `tokens.shadow.floating`을 읽으며
 프로필 없는 소비자의 기본값은 유지한다. 상태·초안·선택·Modal teardown은 이 축의 소유가 아니다.
 플랫폼 근사와 미검증 범위는 [프로필 계약](../../design-profile.md#오버레이선택-입력의-프로필-연결-보완)을 따른다.
+
+Native의 선택형 `/toast-liquid`도 가장 가까운 프로필의 `radius.lg`와 `shadow.raised`를
+읽는다. 일반 Toast의 `floating` 대신 `raised`를 유지하는 이유는 리퀴드 카드의 얕은 깊이를
+정한 기존 검토다. RN 내용 clip과 Skia 카드 모서리를 함께 바꾸고 그림자의 위·아래·좌·우
+여유를 확보한다. 프로필이 없으면 기존 모서리 12와 foundation `raised`를 유지한다.
+원형 시작점·큐·행동은 유지하며 Web은 일반 Toast fallback이다. 기존
+`실험/구성/비교와 검증/테마 조합`의 Native ‘물방울 알림의 테마 비교’에서 같은 알림을
+유지한 채 다음 테마로 바꿀 수 있다. 기기 시각·음성·제스처 검증은 별도로 남는다.
 
 
 ## 배치

@@ -7,16 +7,8 @@ import { scheduleOnRN } from "react-native-worklets";
 import { shadow, stroke } from "@hjmds/design-contracts/foundations";
 import { withAlpha } from "@hjmds/design-contracts/colors";
 import { buildLiquidToastGeometry, liquidToastRecipe as recipe, resolveLiquidToastLayout, validateLiquidToastAnchor } from "@hjmds/design-contracts/components/toast";
+import { toastRecipe } from "@hjmds/design-contracts/recipes";
 import { useHjmNativeTheme } from "./provider.js";
-// 2026-10-02: a floating shadow plus the goo-filtered settled card looked inflated.
-// Use the shallow shared elevation; reserve the liquid filter for the transition only.
-const cardShadow = shadow.raised;
-// Skia blur uses sigma; halve the shared radius and include the token opacity.
-const shadowColor = withAlpha(cardShadow.color, cardShadow.opacity);
-const shadowBlur = cardShadow.radius / 2;
-// The halo reaches about three sigmas past the card. The canvas grows by that much on each side; a canvas exactly as wide
-// as the region clipped it into straight left/right/bottom edges on phones where the card fills the width.
-const canvasBleed = Math.ceil(shadowBlur * 3 + Math.abs(cardShadow.offsetY));
 /** Optional entry: requires Skia 2.6, Reanimated 4.5 and Worklets 0.10 in the host. */
 export function createLiquidToastPresentation(options = {}) {
     const anchor = options.anchor?.kind === "island"
@@ -27,6 +19,15 @@ export function createLiquidToastPresentation(options = {}) {
 }
 function LiquidSurface({ anchor, ...props }) {
     const theme = useHjmNativeTheme();
+    // The settled surface keeps the shallow raised role (2026-10-02 depth review),
+    // resolved from the nearest profile instead of restoring a fixed floating shadow.
+    const cardShadow = theme.designProfile?.tokens.shadow.raised ?? shadow.raised;
+    const cardRadius = theme.designProfile?.tokens.radius[toastRecipe.surface.radius] ?? recipe.radius;
+    // Skia blur uses sigma. Reserve three sigmas plus either signed offset on all
+    // canvas edges; an upward product shadow otherwise clips against the fixed origin.
+    const shadowColor = withAlpha(cardShadow.color, cardShadow.opacity);
+    const shadowBlur = cardShadow.radius / 2;
+    const canvasBleed = cardShadow.opacity === 0 ? 0 : Math.ceil(shadowBlur * 3 + Math.abs(cardShadow.offsetY));
     const [height, setHeight] = useState(0);
     const [reader, setReader] = useState(false);
     const [osReduced, setOsReduced] = useState(false);
@@ -41,7 +42,7 @@ function LiquidSurface({ anchor, ...props }) {
     // Accessibility and constrained layouts keep the same store entry with standard chrome.
     const fallback = reader || osReduced || theme.environment.reducedMotion || (height > 0 && !layout.fits);
     const drop = useSharedValue(0), expand = useSharedValue(0), reveal = useSharedValue(0), tint = useSharedValue(0), drag = useSharedValue(0);
-    const geometry = useDerivedValue(() => buildLiquidToastGeometry(drop.value, expand.value, layout), [layout]);
+    const geometry = useDerivedValue(() => buildLiquidToastGeometry(drop.value, expand.value, layout, cardRadius), [layout, cardRadius]);
     // 2026-10-02: the neutral fill looked muddy. Use clean white in the default light
     // theme and a blue-tinted dark surface; keep the outline so white-on-white stays legible.
     const cardColor = theme.environment.theme === "dark" ? theme.colors.surfaceAccent : theme.colors.bg;
@@ -159,6 +160,6 @@ function LiquidSurface({ anchor, ...props }) {
     if (fallback)
         return props.fallback;
     // Only decoration is rasterized. RN text and its independent action/close stay accessible.
-    return _jsxs(View, { pointerEvents: "box-none", style: { width: "100%", paddingTop: layout.cardTop, alignItems: "center" }, children: [height > 0 ? _jsx(Canvas, { pointerEvents: "none", accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { position: "absolute", top: layout.canvasTop, left: -canvasBleed, width: props.width + canvasBleed * 2, height: layout.canvasHeight + canvasBleed }, children: _jsxs(Group, { transform: [{ translateX: canvasBleed }], children: [_jsxs(Group, { opacity: opacity, children: [_jsx(RoundedRect, { x: x, y: y, width: w, height: h, r: r, color: cardColor, children: _jsx(Shadow, { dx: 0, dy: cardShadow.offsetY, blur: shadowBlur, color: shadowColor }) }), _jsx(RoundedRect, { x: x, y: y, width: w, height: h, r: r, color: cardBorder, style: "stroke", strokeWidth: stroke.subtle })] }), _jsxs(Group, { opacity: liquidOpacity, layer: _jsxs(Paint, { children: [_jsx(Blur, { blur: recipe.blur }), _jsx(ColorMatrix, { matrix: [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, recipe.gain, -recipe.gain * recipe.threshold] })] }), children: [_jsx(Group, { opacity: anchorOpacity, children: _jsx(RoundedRect, { x: layout.anchorX + 4, y: layout.anchorY - layout.canvasTop + 4, width: Math.max(0, layout.anchorWidth - 8), height: Math.max(0, layout.anchorHeight - 8), r: layout.anchorHeight / 2, color: anchorColor }) }), _jsx(RoundedRect, { x: nx, y: ny, width: nw, height: nh, r: nr, color: anchorColor }), _jsx(RoundedRect, { x: x, y: y, width: w, height: h, r: r, color: dropletColor })] }), _jsx(Group, { opacity: anchorOpacity, children: _jsx(RoundedRect, { x: layout.anchorX, y: layout.anchorY - layout.canvasTop, width: layout.anchorWidth, height: layout.anchorHeight, r: layout.anchorHeight / 2, color: anchorColor }) })] }) }) : null, _jsx(Animated.View, { ...gesture.panHandlers, onLayout: event => setHeight(event.nativeEvent.layout.height), style: [{ width: "100%", maxWidth: recipe.maxWidth }, contentStyle], children: props.body })] });
+    return _jsxs(View, { pointerEvents: "box-none", style: { width: "100%", paddingTop: layout.cardTop, alignItems: "center" }, children: [height > 0 ? _jsx(Canvas, { pointerEvents: "none", accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { position: "absolute", top: layout.canvasTop - canvasBleed, left: -canvasBleed, width: props.width + canvasBleed * 2, height: layout.canvasHeight + canvasBleed * 2 }, children: _jsxs(Group, { transform: [{ translateX: canvasBleed }, { translateY: canvasBleed }], children: [_jsxs(Group, { opacity: opacity, children: [_jsx(RoundedRect, { x: x, y: y, width: w, height: h, r: r, color: cardColor, children: _jsx(Shadow, { dx: 0, dy: cardShadow.offsetY, blur: shadowBlur, color: shadowColor }) }), _jsx(RoundedRect, { x: x, y: y, width: w, height: h, r: r, color: cardBorder, style: "stroke", strokeWidth: stroke.subtle })] }), _jsxs(Group, { opacity: liquidOpacity, layer: _jsxs(Paint, { children: [_jsx(Blur, { blur: recipe.blur }), _jsx(ColorMatrix, { matrix: [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, recipe.gain, -recipe.gain * recipe.threshold] })] }), children: [_jsx(Group, { opacity: anchorOpacity, children: _jsx(RoundedRect, { x: layout.anchorX + 4, y: layout.anchorY - layout.canvasTop + 4, width: Math.max(0, layout.anchorWidth - 8), height: Math.max(0, layout.anchorHeight - 8), r: layout.anchorHeight / 2, color: anchorColor }) }), _jsx(RoundedRect, { x: nx, y: ny, width: nw, height: nh, r: nr, color: anchorColor }), _jsx(RoundedRect, { x: x, y: y, width: w, height: h, r: r, color: dropletColor })] }), _jsx(Group, { opacity: anchorOpacity, children: _jsx(RoundedRect, { x: layout.anchorX, y: layout.anchorY - layout.canvasTop, width: layout.anchorWidth, height: layout.anchorHeight, r: layout.anchorHeight / 2, color: anchorColor }) })] }) }) : null, _jsx(Animated.View, { ...gesture.panHandlers, onLayout: event => setHeight(event.nativeEvent.layout.height), style: [{ width: "100%", maxWidth: recipe.maxWidth }, contentStyle], children: props.body })] });
 }
 //# sourceMappingURL=toast-liquid.js.map

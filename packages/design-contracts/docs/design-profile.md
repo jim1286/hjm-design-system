@@ -233,3 +233,19 @@ floating/capsule BottomNavigation의 recipe 그림자가 프로필을 우회하�
 양 Showcase의 같은 저장/실패 행동은 공개 BottomCTA로 비교하고 Web chrome 비교에는
 기존 공개 Popover를 연결했다. 열린 초안/포커스·safe area·선택 route·행동 소유권 검증과
 Native 기기 미확인 범위는 [QA](../../../docs/qa/2026-10-07-design-profile-research.md)에 남긴다.
+
+## 선택형 리퀴드 알림의 프로필 소비
+
+2026-10-07 optional Native `/toast-liquid`를 별도로 대조한 결과 settled 카드와 RN 내용 clip은
+고정 모서리 12, Skia 그림자는 foundation `raised`를 읽고 있었다. 가장 가까운 프로필의
+`radius.lg`와 `shadow.raised`로 연결한다. 일반 Toast의 `floating`과 합치지 않은 이유는
+[기존 깊이 검토](../../react-native/docs/liquid-toast.md#current-shape--2026-10-02)에서 정한 얕은 카드 역할이다.
+프로필 없는 소비자는 이전 12와 raised를 유지한다. 그림자의 양방향 offset을 포함해 Canvas
+네 가장자리의 paint 여유를 함께 계산한다. 프로필이 얕은/무그림자를 고르면 그 값도 그대로 소비한다.
+
+`buildLiquidToastGeometry`는 네 번째 선택 인자로 유한한 0 이상 settled radius를 받는다(기본 12).
+모서리는 측정 폭·높이의 절반으로 제한한다. 원형 origin, 큐, 행동·닫힘, 모션 감소·화면 읽기
+fallback은 유지한다. Web은 일반 Toast fallback이므로 Native 효과를 양 플랫폼 제공으로 세지 않는다.
+기존 테마 비교 구성의 Native 예제로 같은 visible 알림을 보존한 채 10종을 순회한다.
+선택 peer는 optional subpath에 유지하며 새 공개 컴포넌트나 상태 엔진을 추가하지 않는다.
+실제 기기 외형·제스처·음성·성능은 [QA](../../../docs/qa/2026-10-07-design-profile-research.md)의 미확인 범위다.

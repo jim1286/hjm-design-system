@@ -101,7 +101,9 @@ export declare function resolveLiquidToastLayout(input: Readonly<{
         y: number;
     }>;
 }>): LiquidToastLayout;
-export declare function buildLiquidToastGeometry(drop: number, expand: number, layout: LiquidToastLayout): {
+/** A themed corner changes only the settled card, never the circular origin.
+ * Keep the default recipe for existing callers and clamp to measured paint bounds. */
+export declare function buildLiquidToastGeometry(drop: number, expand: number, layout: LiquidToastLayout, cardRadius?: number): {
     x: number;
     y: number;
     width: number;

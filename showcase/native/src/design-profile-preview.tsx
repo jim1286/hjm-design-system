@@ -18,6 +18,7 @@ import { Card } from "@hjmds/react-native/data-display";
 import { Heading } from "@hjmds/react-native/heading";
 import { hjmDesignPresets, type HjmDesignPreset } from "@hjmds/design-contracts/design-profile";
 import { profileCopy as copy, profileOptions, profileHeadingSamples } from "../../shared/design-profile";
+import { ToastPreview } from "./toast-preview";
 
 export function RecordSample() {
   const [name, setName] = useState<string>(copy.initial);
@@ -114,6 +115,7 @@ export function DesignProfileComparison() {
     <HjmNativeProvider designProfile={hjmDesignPresets[preset]}><ProfileTabsSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmNativeProvider>
     <HjmNativeProvider designProfile={hjmDesignPresets[preset]}><CodeBlock label={copy.codeTitle} code={copy.codeSource} wrap /></HjmNativeProvider>
     <HjmNativeProvider designProfile={hjmDesignPresets[preset]}><ProfileChromeSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmNativeProvider>
+    <HjmNativeProvider designProfile={hjmDesignPresets[preset]}><Collapsible trigger={copy.liquidToast}><View style={{ height: 520 }}>{/* A bounded region keeps the optional canvas out of other comparison sections. */}<ToastPreview enhanced onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></View></Collapsible></HjmNativeProvider>
     <Text tone="muted">{copy.limitation}</Text>
     <Collapsible trigger={copy.compare} defaultOpen>{profileOptions.map(option => <HjmNativeProvider key={option.id} designProfile={hjmDesignPresets[option.id]}><Stack gap="md"><Text variant="title">{option.label}</Text><View style={{ height: 640 }}><RecordSample /></View></Stack></HjmNativeProvider>)}</Collapsible>
   </Stack></ScrollView>;
