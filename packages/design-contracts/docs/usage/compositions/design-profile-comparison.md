@@ -19,6 +19,7 @@
 | Provider | 한 번 선택한 프로필 상속 | [프로필 계약](../../design-profile.md) |
 | SegmentedControl | 테마/기간 선택 | [선택 입력](../components/segmented-control.md) |
 | OverviewScreen | 도구·목록·주 행동 | [목록 화면](../components/overview-screen.md) |
+| Heading | 선택 테마의 5단계 제목 크기 | [제목](../components/heading.md) |
 | ContentTransition | 실제 저장 상태 전환 | [내용 전환](../components/content-transition.md) |
 | Collapsible | 전체 비교 접기 | [접기](../components/collapsible.md) |
 
@@ -27,6 +28,7 @@
 ```text
 설명 → 표현 선택
 선택한 프로필: 헤더 → 저장 상태 → 이름/기간 → 같은 기록 3개 → 저장/실패 재현
+선택한 프로필: 제목 크기 비교(5단계, 문서 단계 h3 유지)
 10종 비교: 각 이름 → 같은 화면
 ```
 

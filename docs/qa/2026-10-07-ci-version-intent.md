@@ -65,3 +65,14 @@ CLI는 축약 SHA를 받아들이지 않으며 실제 전체 commit SHA를 요�
 임시 Git fixture와 `GITHUB_OUTPUT` 파일은 검사 종료 후 제거했다. 별도 원시 로그·캡처를
 저장하지 않았다. 판정 도구·회귀 검사 소스는 재사용 가능한 CI 도구이므로 보존한다.
 기존 사이트 조사 자료와 공유 개발 서버는 보존했다.
+
+
+## 후속: package 회귀 테스트의 이전 PR 정책 제거
+
+2026-10-07 제목 테마 후속 작업의 로컬 `pnpm check`에서 contracts 1,011개 테스트 중
+1개가 실패했다. `test/workflows.test.ts`가 이전 `pull_request` 트리거와 PR에서만 취소하는
+concurrency 문자열을 요구했다. 워크플로 변경 자체는 되돌리지 않고 이 회귀를 현재 사용자
+정책에 맞춘다. ordinary PR 부재·수동 실행·실제 push base·version intent 종속·중단하지 않는
+Showcase 배포를 확인한다. 공유 governance의 negative cases는 그대로 유지한다.
+새 원격 job을 실행하거나 버전을 바꾼 수정이 아니다. 후속 전체 로컬 검사 결과는
+[같은 작업 QA](2026-10-07-design-profile-research.md#후속-테마의-다섯-제목-단계)에 기록한다.

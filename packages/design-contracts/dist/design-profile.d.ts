@@ -1,5 +1,5 @@
 import { type ResolvedTheme, type ThemeColors } from "./colors.js";
-import { radius, typography, shadow, type FontWeightValue } from "./foundations.js";
+import { radius, typography, heading, shadow, type FontWeightValue } from "./foundations.js";
 import { type EffectSurfaceDescriptor } from "./effect-surface.js";
 import type { ContentTransitionPreset } from "./content-transition.js";
 /** A product chooses one portable profile; the renderer owns each host translation.
@@ -13,6 +13,7 @@ type TypeToken = Readonly<{
     fontWeight: FontWeightValue;
 }>;
 type TypographyTokens = Readonly<Record<keyof typeof typography, TypeToken>>;
+type HeadingTokens = Readonly<Record<keyof typeof heading, TypeToken>>;
 type ShadowToken = Readonly<{
     color: string;
     opacity: number;
@@ -31,6 +32,7 @@ export type HjmDesignProfile = Readonly<{
             code: readonly string[];
         }>;
         typography: TypographyTokens;
+        heading: HeadingTokens;
         shadow: ShadowTokens;
     }>;
     material: Readonly<Record<"canvas" | "card", EffectSurfaceDescriptor | null>>;
@@ -56,6 +58,7 @@ export type HjmDesignProfileInput = Readonly<{
         radius?: Readonly<Partial<RadiusTokens>>;
         fontFamily?: Readonly<Partial<HjmDesignProfile["tokens"]["fontFamily"]>>;
         typography?: Readonly<Partial<Record<keyof typeof typography, Partial<TypeToken>>>>;
+        heading?: Readonly<Partial<Record<keyof typeof heading, Partial<TypeToken>>>>;
         shadow?: Readonly<Partial<Record<keyof typeof shadow, Partial<ShadowToken>>>>;
     }>;
     material?: Readonly<Partial<HjmDesignProfile["material"]>>;

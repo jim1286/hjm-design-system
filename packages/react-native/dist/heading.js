@@ -12,8 +12,7 @@ export function Heading({ level, semanticLevel, children, layoutStyle, style }) 
     };
     validateHeadingDescriptor(descriptor);
     const theme = useHjmNativeTheme();
-    const profileRole = level === "level3" ? "heading" : level === "level4" ? "titleLarge" : level === "level5" ? "title" : undefined;
-    const metrics = (profileRole ? theme.designProfile?.tokens.typography[profileRole] : undefined) ?? headingRecipe.levels[level];
+    const metrics = theme.designProfile?.tokens.heading[level] ?? headingRecipe.levels[level];
     return (_jsx(Text, { accessibilityRole: "header", "aria-level": resolveHeadingSemanticLevel(descriptor), style: [
             {
                 color: resolveColorReference(headingRecipe.color, theme.palette),

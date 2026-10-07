@@ -27,7 +27,7 @@ export const productDesign = defineHjmDesignProfile({
 | 축 | 중립 기본값 | 참고 프리셋의 차이 |
 | --- | --- | --- |
 | palette | 현재 HJM light/dark 17 semantic roles | 레트로의 잉크/황갈색, 종이의 따뜻한 중립색, 숲의 녹색 |
-| tokens | 기존 radius/fontFamily/typography/shadow | 모서리·글자 크기/행간/강조·그림자와 일반 monospace fallback; 폰트 자산은 번들하지 않음 |
+| tokens | 기존 radius/fontFamily/typography/heading/shadow | 모서리·글자 크기/행간/강조·그림자와 일반 monospace fallback; 폰트 자산은 번들하지 않음 |
 | material | canvas/card 모두 null | 레트로 noise, 종이 grain, 숲 mesh+glow; 오로라만 active=true, 나머지는 정적 |
 | interactions | contentTransition=fade, selectionMotion=none | 레트로 slide, 종이 fade, 숲 rise와 slide 선택 배경 |
 | compositions | collection=rows, toolbar=inline | 레트로 grid/inline, 종이 rows/collapsible, 숲 cards/collapsible |
@@ -45,7 +45,7 @@ export const productDesign = defineHjmDesignProfile({
 
 ## 현재 증거와 남은 조건
 
-공통 데이터·Provider·기본 토큰 소비·상호작용 기본값·OverviewScreen 구성과 화면·양쪽 Storybook 비교를 구현했다. 전체 기존 컴포넌트의 정적 토큰 소비 감사, 브라우저의 입력 유지·복구와 light/dark·좁은 폭·큰 글자·RTL·모션 축소는 [QA 기록](../../../docs/qa/2026-10-07-design-profile-research.md)에서 확인했다. Native 실기기 검증은 아직 미완료다. 실험 등록·승격·게시·Utilverse 적용을 분리한다. 완료 기준은 [작업 계획](../../../docs/plans/reference-release-utilverse-2026-10-07.md)의 프리셋 절을 따른다.
+공통 데이터·Provider·기본 토큰 소비·상호작용 기본값·OverviewScreen 구성과 화면·양쪽 Storybook 비교를 구현했다. 전체 기존 컴포넌트의 정적 토큰 소비 감사는 진행 중이다. 브라우저의 입력 유지·복구와 light/dark·좁은 폭·큰 글자·RTL·모션 축소는 [QA 기록](../../../docs/qa/2026-10-07-design-profile-research.md)에서 확인했다. Native 실기기 검증은 아직 미완료다. 실험 등록·승격·게시·Utilverse 적용을 분리한다. 완료 기준은 [작업 계획](../../../docs/plans/reference-release-utilverse-2026-10-07.md)의 프리셋 절을 따른다.
 
 ## 10종 확장과 현재 연결
 
@@ -59,3 +59,25 @@ Provider의 `designProfile`에 `hjmDesignPresets.forest` 또는 `defineHjmDesign
 SegmentedControl, ScreenLayout 및 optional OverviewScreen에 연결한다. 모든 기존 공개 컴포넌트의
 정적 recipe 경로까지 자동 반영 완료를 뜻하지 않는다. ScreenLayout의 기존 기본 배치는 프로필이 없으면 유지한다.
 유리의 실제 backdrop blur와 클레이 inset shadow는 미구현이며, 참조 표현의 완전 지원으로 안내하지 않는다.
+
+
+## 큰 제목까지 한 번에 지정하기
+
+`tokens.heading`은 `level1`~`level5`의 fontSize/lineHeight/fontWeight를 부분 지정한다.
+현재 Heading은 두 renderer 모두 이 값으로 그리고 문서 `semanticLevel`과 textScale을
+따로 유지한다. 중립은 foundation의 40/32/24/20/18px를 그대로 쓰며, 에디토리얼의
+level1/2는 44/34px·행간 54/44px·굵기 500, 브루탈리즘은 48/38px·행간 56/46px·굵기
+800이다. 이 두 큰 제목 선택은 원본 치수 복제가 아니라 편집형/강한 강조 프리셋의
+시각 계층을 구분한 HJM 실험값이며 좁은 폭·큰 글자 QA와 함께 판단한다.
+
+```ts
+const productDesign = defineHjmDesignProfile({
+  extends: "paper",
+  tokens: { heading: { level1: { fontSize: 52, lineHeight: 64, fontWeight: "500" } } },
+});
+```
+
+미지정 값은 preset을 상속한다. `tokens.typography.heading/titleLarge/title`은 이전과
+같이 Heading level3/4/5의 변경 기본값이며, 같은 필드에 명시한 `tokens.heading`이
+우선한다. 나머지 프로필 축·본문 Text typography와 문서 순서는 바꾸지 않는다.
+지원하지 않는 persisted heading 단계는 조용히 무시하지 않고 거부한다.

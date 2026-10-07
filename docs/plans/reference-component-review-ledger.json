@@ -268,7 +268,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "exampleCards": 18,
+        "scope": "Default desktop/light complete gallery page layout and visible basic thumbnail/card appearances; placeholder images are not original component appearance; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "finding": "Hex field/swatches, palette, hue/saturation plane, slider and wheel. Constrained semantic choice and free colour selection need distinct validation; thumbnails do not prove keyboard behaviour.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/combobox/",
@@ -281,7 +292,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "exampleCards": 37,
+        "scope": "Default desktop/light complete gallery page layout and visible basic thumbnail/card appearances; placeholder images are not original component appearance; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "finding": "Autocomplete, lookup, filtered input, grouped results and tag/clear affordances. Query, selected value and async results must remain separate; compare Combobox/Select/Menu meanings before adoption.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/date-input/",
@@ -294,7 +316,18 @@
       "adoptionDecision": "Additional experiment candidate: remembered-date entry with separate day/month/year drafts. HJM DatePicker is a calendar trigger/dialog or Sheet, not direct segmented entry; generic Field composition alone does not supply partial-date validation, ordering or group semantics. Investigate shared resolver plus existing TextField composition before adding a public primitive. See docs/plans/reference-release-utilverse-2026-10-07.md. Not implemented or visually verified. Internal draft resolver and 6 tests now implemented; no public export/renderer or new story. docs/qa/2026-10-07-date-entry-reference.md Follow-up: DateEntry now has contracts/Web/Native public subpaths, usage and the 15th experimental composition. Web correction/reordering and iOS basic input confirmed; full environmental/assistive QA remains. See the same date-entry QA report.",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "exampleCards": 18,
+        "scope": "Default desktop/light complete gallery page layout and visible basic thumbnail/card appearances; placeholder images are not original component appearance; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "finding": "Segmented day/month/year, locale field, calendar trigger, clear and expiry month/year. Memorable dates, range, time and timezone are separate requirements.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/datepicker/",
@@ -307,7 +340,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "exampleCards": 44,
+        "scope": "Default desktop/light complete gallery page layout and visible basic thumbnail/card appearances; placeholder images are not original component appearance; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "finding": "Single/range calendars, month scrolling, time/month pickers and relative presets. Selection rules and locale conversion cannot be inferred from the gallery appearance.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/drawer/",
@@ -320,7 +364,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "exampleCards": 38,
+        "scope": "Default desktop/light complete gallery page layout and visible basic thumbnail/card appearances; placeholder images are not original component appearance; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "finding": "Side and bottom panels, fixed actions, navigation and task panels. Modal/non-modal, dismissal, focus return and routing are separate original behaviour checks.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/dropdown-menu/",
@@ -333,7 +388,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "exampleCards": 49,
+        "scope": "Default desktop/light complete gallery page layout and visible basic thumbnail/card appearances; placeholder images are not original component appearance; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "finding": "Action/context menus, leading icons, destructive items, checks/radios, separators and submenus. Listbox/select aliases do not establish action-menu equivalence.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/empty-state/",
@@ -346,7 +412,18 @@
       "adoptionDecision": "Reuse existing public APIs; repair nonfunctional EmptyState sample actions on both platforms. Keep first-use, zero-result, access and error meanings distinct instead of adding duplicate component. Experiment count remains 16. docs/qa/2026-10-07-empty-state-reference.md",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "exampleCards": 16,
+        "scope": "Default desktop/light complete gallery page layout and visible basic thumbnail/card appearances; placeholder images are not original component appearance; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "finding": "No data, no results, permission/error, completion and onboarding thumbnails are mixed. Keep real state and appropriate recovery/action semantics.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/fieldset/",
@@ -359,7 +436,18 @@
       "adoptionDecision": "FieldGroup added as the 16th experiment through contracts/Web/Native field-group subpaths. Existing domain groups and Form remain separate. Web browser 3 and Native renderer 2 tests pass; Web dark/RTL/2x and iOS basic error/edit/lock/reorder observed. Full original-source review, real screen readers, Android and product palette coverage remain. docs/qa/2026-10-07-field-group-reference.md",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "exampleCards": 32,
+        "scope": "Default desktop/light complete gallery page layout and visible basic thumbnail/card appearances; placeholder images are not original component appearance; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "finding": "Legends, hints/errors, grouped radio/checkbox controls, nested bordered/unbordered field groups. Do not substitute a generic visual card for field grouping semantics.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/file-upload/",
@@ -372,7 +460,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "exampleCards": 32,
+        "scope": "Default desktop/light complete gallery page layout and visible basic thumbnail/card appearances; placeholder images are not original component appearance; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "finding": "Button/native file field/dropzone, accepted type and size hints, single/multiple files and progress. File choice, drag/drop, upload transport and retry require distinct owners.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/file/",
@@ -385,7 +484,18 @@
       "adoptionDecision": "Reuse Web Link download for simple links; document metadata, preview and independent export lifecycle use experimental DocumentResource via dedicated Web/Native subpaths. This is the 17th experiment; not promoted or published. Web fixture download verified as 76-byte exact UTF-8 content. Native fixture now writes and reads back TXT and opens expo-sharing; iOS 26.5 Files save produced a matching 76-byte copy. Sharing Promise does not report saved/cancelled. Full six-source review, Android, accessibility and cross-environment QA remain open. Native large text long name, dark preview recovery and an RTL story render have partial evidence. docs/qa/2026-10-07-file-reference.md and docs/plans/document-resource-experiment.md",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "exampleCards": 6,
+        "scope": "Default desktop/light complete gallery page layout and visible basic thumbnail/card appearances; placeholder images are not original component appearance; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "finding": "Download links, file type/size metadata, document previews and file lists. Reuse document resource choices before adding a duplicate visual component.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/footer/",
@@ -398,7 +508,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "exampleCards": 19,
+        "scope": "Default desktop/light complete gallery page layout and visible basic thumbnail/card appearances; placeholder images are not original component appearance; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "finding": "Compact legal/copyright, multi-column links, social/newsletter and language controls. Site footer and fixed screen CTA/info are different placements.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/form/",
@@ -411,7 +532,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "exampleCards": 21,
+        "scope": "Default desktop/light complete gallery page layout and visible basic thumbnail/card appearances; placeholder images are not original component appearance; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "finding": "Stacked/inline/grid fields, submit/reset, hint and validation appearances. Layout themes must preserve values, validation and grouping semantics.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/header/",
@@ -424,7 +556,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "exampleCards": 38,
+        "scope": "Default desktop/light complete gallery page layout and visible basic thumbnail/card appearances; placeholder images are not original component appearance; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "finding": "Site mastheads/navigation, app top bars, page/back titles, search and account controls. Global navigation and local page heading remain distinct scopes.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/heading/",
@@ -437,7 +580,24 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "exampleCards": 29,
+        "scope": "Default desktop/light complete gallery page layout and visible basic thumbnail/card appearances; placeholder images are not original component appearance; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "finding": "Display/subheading/eyebrow hierarchy. Visual scale is independent of semantic document level; audit full theme-token consumption in current Heading.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      },
+      "existingApiComparison": {
+        "checkedAt": "2026-10-07T03:32:46.169037+00:00",
+        "sources": "public API map; HeadingDescriptor/headingRecipe; both src/heading.tsx; design-profile.ts",
+        "finding": "Existing visual/semantic heading axes retained. Both renderers previously read profile typography only for level3–5; added complete optional profile heading tokens and consumed every level. Original linked implementations remain pending.",
+        "decision": "extend-existing-profile-and-heading; no duplicate Heading component; experimental profile not published"
+      }
     },
     {
       "url": "https://component.gallery/components/hero/",
@@ -450,7 +610,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "exampleCards": 9,
+        "scope": "Default desktop/light complete gallery page layout and visible basic thumbnail/card appearances; placeholder images are not original component appearance; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "finding": "Image overlay, split image/copy and title-only banners with multiple CTA choices. Screen structure reusable; imagery, text and brand belong to product.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/icon/",
@@ -463,7 +634,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "exampleCards": 45,
+        "scope": "Default desktop/light complete gallery page layout and visible basic thumbnail/card appearances; placeholder images are not original component appearance; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "finding": "Stroke, filled, multicolour, sizing and service glyphs. Decorative/meaningful and RTL semantics matter; no logo/font asset licensing inferred.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/image/",
@@ -476,7 +658,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "exampleCards": 29,
+        "scope": "Default desktop/light complete gallery page layout and visible basic thumbnail/card appearances; placeholder images are not original component appearance; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "finding": "Photo/placeholder/thumbnail, borders, crop and figure caption appearances. Alt text, loading/error and aspect ratio need original implementation checks.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/label/",
@@ -489,7 +682,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "exampleCards": 15,
+        "scope": "Default desktop/light complete gallery page layout and visible basic thumbnail/card appearances; placeholder images are not original component appearance; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "finding": "Field labels with required/optional indicators and question/checkbox labels. Typography alone does not establish association with a field.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/link/",
@@ -502,7 +706,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "exampleCards": 64,
+        "scope": "Default desktop/light complete gallery page layout and visible basic thumbnail/card appearances; placeholder images are not original component appearance; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "finding": "Inline, standalone arrow, external, back and button/tile-style links. Navigation destination and real action semantics remain separate regardless of visual shape.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/list/",
@@ -515,7 +730,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "exampleCards": 67,
+        "scope": "Default desktop/light complete gallery page layout and visible basic thumbnail/card appearances; placeholder images are not original component appearance; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "finding": "Ordered/unordered/description, nested, comparison, grouped and action lists. Marker style, key/value relation, navigation and selection are different contracts.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/modal/",
@@ -528,7 +754,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:32:46.169037+00:00",
+        "exampleCards": 82,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviours and other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:32:46.169037+00:00",
+        "finding": "Centered/full-width/task/confirmation/input/timeout dialog cards are mixed. Compare Modal/AlertDialog and existing focus/dismissal semantics; gallery thumbnails do not prove focus trapping or cancellation.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/navigation/",
@@ -541,7 +778,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:32:46.169037+00:00",
+        "exampleCards": 62,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviours and other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:32:46.169037+00:00",
+        "finding": "Horizontal/side/bottom/rail, site/app/in-page/mega/dropdown navigation appearances. Keep route navigation, action menus and local selection separate; responsive layout must preserve current route and focus.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/pagination/",
@@ -555,7 +803,18 @@
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
       "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
-      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification."
+      "guidanceReview": "2026-10-07: complete lower-page description/markup/accessibility/usage/resource sections visually read; external technical claims require primary-spec comparison.",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:38:40.118343+00:00",
+        "exampleCards": 48,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:38:40.118343+00:00",
+        "finding": "Numbered, first/last/previous/next, compact current/total, item count and page selection thumbnails. Current route and in-page data paging remain distinct; original keyboard/result focus and large-text behaviour need comparison.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/popover/",
@@ -569,7 +828,18 @@
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
       "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
-      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification."
+      "guidanceReview": "2026-10-07: complete lower-page description/markup/accessibility/usage/resource sections visually read; external technical claims require primary-spec comparison.",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:38:40.118343+00:00",
+        "exampleCards": 50,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:38:40.118343+00:00",
+        "finding": "Anchored information, confirmation, menu and form thumbnails. Preserve original popup role, trigger/focus return and dismissal meanings. Modal dialog, menu and hover tooltip are not interchangeable based on appearance.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/progress-bar/",
@@ -582,7 +852,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "exampleCards": 40,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "finding": "Lines/rings, labels, percentage and varied track geometry. Known progress, unknown duration and target ranges differ; a still preview cannot prove truthful progress or animation.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/progress-indicator/",
@@ -595,7 +876,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "exampleCards": 38,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "finding": "Discrete horizontal/vertical steps, timeline-like status and bar/ring forms. Compare Steps, Timeline and Progress by task meaning.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/quote/",
@@ -609,7 +901,18 @@
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
       "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
-      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification."
+      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification.",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "exampleCards": 11,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "finding": "Bordered quotes, pull quotes and testimonial attribution. Compare semantic quote/source/caption roles; the embedded example visibly failed to display.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/radio-button/",
@@ -622,7 +925,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "exampleCards": 85,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "finding": "Dots, descriptive cards, disabled options and yes/no groups. Some previews show checkboxes or select-all wording; category membership does not prove single-choice semantics.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/rating/",
@@ -636,7 +950,18 @@
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
       "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
-      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification."
+      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification.",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "exampleCards": 19,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "finding": "Whole/fractional stars, scores, review totals and risk glyphs. Separate aggregate display from selectable user input.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/rich-text-editor/",
@@ -650,7 +975,18 @@
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
       "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
-      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification."
+      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification.",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "exampleCards": 5,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "finding": "Five toolbar/document previews plus complete lower guidance. Compare document model, paste, sanitization and native host boundaries before adopting an editor adapter.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/search-input/",
@@ -663,7 +999,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "exampleCards": 30,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "finding": "Icon fields, submit buttons, pills, helpers and voice/filter affordances. Query submission, live filtering and suggestions differ; preserve input/result state on profile changes.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/segmented-control/",
@@ -676,7 +1023,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "exampleCards": 28,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "finding": "Pills, underlines, boxes, icons and descriptive options. Single choice, multiple toggles and tab panels need different semantics.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/select/",
@@ -689,7 +1047,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "exampleCards": 82,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "finding": "Native/custom, searchable, hierarchical and multiselect previews. Selected value, query, hierarchy and action menus remain distinct.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/separator/",
@@ -702,7 +1071,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "exampleCards": 34,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "finding": "Thin/thick, vertical/horizontal, OR labels and decorative rules. Compare decorative versus semantic separation with existing Divider.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/skeleton/",
@@ -715,7 +1095,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "exampleCards": 30,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "finding": "Lines, circles and composite card placeholders. Still appearances do not prove shimmer motion; compare geometry, busy announcements and reduced motion.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/skip-link/",
@@ -728,7 +1119,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "exampleCards": 14,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "finding": "High-contrast focus links, main/footer destinations and multiple skip links. Some placeholders; compare destination focus and page landmarks with SkipNav.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/slider/",
@@ -741,7 +1143,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "exampleCards": 38,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "finding": "Single/range thumbs, values, marks, volume and brightness. Original min/max/step, keyboard, touch and multi-thumb order remain unverified.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/spinner/",
@@ -754,7 +1167,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "exampleCards": 66,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "finding": "Arcs/rings, dots/squares, logos, inline text and overlays. Unknown-duration feedback differs from determinate progress; motion/announcement/blocking need runtime evidence.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/stack/",
@@ -767,7 +1191,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "exampleCards": 10,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "finding": "Horizontal/vertical item wrappers, badges and consistent gaps. Compare Stack/Inline and wrapping before adding a duplicate spacing API.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/stepper/",
@@ -780,7 +1215,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "exampleCards": 20,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "finding": "Numeric quantity controls, spinbuttons and travellers. Gallery Stepper changes a number; compare NumberField separately from task Steps.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/table/",
@@ -793,7 +1239,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "exampleCards": 73,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "finding": "Tables, summaries/comparisons, tree tables and grids with statuses/actions. Compare sorting/selection/editing and responsive reading with the existing engines.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/tabs/",
@@ -807,7 +1264,18 @@
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
       "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
-      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification."
+      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification.",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "exampleCards": 80,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "finding": "Horizontal/vertical, pill, underline and icon forms. Full guidance re-read; reversed arrow axes are the already recorded error. Activation and panel persistence remain unverified.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/text-input/",
@@ -820,7 +1288,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "exampleCards": 72,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "finding": "Border/underline/fill, floating labels, helpers and prefilled values. Label association, composition input and failure recovery need runtime review.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/textarea/",
@@ -833,7 +1312,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "exampleCards": 52,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "finding": "Multiline, counters/helpers, resize handles, filled and floating-label forms. Compare auto-growth, resize, max length and composed-input recovery.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/toast/",
@@ -846,7 +1336,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "exampleCards": 41,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "finding": "Compact/multiline, close, undo/action, timestamps and progress previews. Compare duration, announcement, pause and recovery with Toast/NoticeBanner.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/toggle/",
@@ -859,7 +1360,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "exampleCards": 60,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "finding": "Track/thumb, check/cross, on/off text, switch cards and yes/no segments. Immediate boolean settings, form checkbox and radio choice differ.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/tooltip/",
@@ -872,7 +1384,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "exampleCards": 74,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "finding": "Hover/focus labels mixed with callouts, hover cards, links and close buttons. Keep noninteractive Tooltip distinct from interactive Popover/menu.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/tree-view/",
@@ -886,7 +1409,18 @@
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
       "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
-      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification."
+      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification.",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "exampleCards": 14,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "finding": "Nested folders/text, checkboxes, icons and selected rows. Expansion and selection are independent; keyboard, async loading and focus remain unverified.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/video/",
@@ -899,7 +1433,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "exampleCards": 15,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "finding": "Native controls, service embed posters and animated-image previews. Playback/captions/fullscreen, provider resources and native host remain unverified.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://component.gallery/components/visually-hidden/",
@@ -912,7 +1457,18 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "exampleCards": 11,
+        "scope": "Default desktop/light full-height gallery layout and visible card appearances; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "finding": "All eleven cards use placeholders; only names, metadata and layout are visible. DOM and assistive-technology behaviour cannot be certified visually.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/accordion",
@@ -5177,6 +5733,17 @@
         "checkedAt": "2026-10-06T16:00:18.487242+00:00",
         "evidence": "reference-page-source-index.json",
         "error": "HTTP Error 404: Not Found"
+      },
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "exampleCards": 15,
+        "scope": "Default desktop/light complete gallery page layout and visible basic thumbnail/card appearances; placeholder images are not original component appearance; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "finding": "Field labels with required/optional indicators and question/checkbox labels. Typography alone does not establish association with a field.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
       }
     },
     {
@@ -5192,6 +5759,17 @@
         "status": "html",
         "checkedAt": "2026-10-06T16:00:12.078139+00:00",
         "evidence": "reference-page-source-index.json"
+      },
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "exampleCards": 32,
+        "scope": "Default desktop/light complete gallery page layout and visible basic thumbnail/card appearances; placeholder images are not original component appearance; linked behaviour/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "galleryObservation": {
+        "checkedAt": "2026-10-07T03:25:32.989858+00:00",
+        "finding": "Button/native file field/dropzone, accepted type and size hints, single/multiple files and progress. File choice, drag/drop, upload transport and retry require distinct owners.",
+        "existingApiComparison": "pending source-level comparison for this review batch"
       }
     },
     {

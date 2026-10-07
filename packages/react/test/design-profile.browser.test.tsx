@@ -1,11 +1,14 @@
 import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { expect, it } from "vitest";
+import { page } from "vitest/browser";
 import { HjmProvider } from "../src/provider.js";
 import { OverviewScreen } from "../src/design-profile.js";
 import { SegmentedControl } from "../src/selection.js";
 import { ScreenLayout } from "../src/screens.js";
-import { hjmDesignPresets, type HjmDesignPreset } from "@hjmds/design-contracts/design-profile";
+import { defineHjmDesignProfile, hjmDesignPresets, type HjmDesignPreset } from "@hjmds/design-contracts/design-profile";
+import { heading } from "@hjmds/design-contracts/foundations";
+import { Heading } from "../src/heading.js";
 import "../src/styles.css";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -70,4 +73,34 @@ it("uses profile selection motion but respects an explicit component override", 
     expect(controls[0]!.querySelector(".hjm-segmented__highlight")).not.toBeNull();
     expect(controls[1]!.querySelector(".hjm-segmented__highlight")).toBeNull();
   } finally { await act(() => root.unmount()); host.remove(); }
+});
+
+it("applies every heading level at the browser boundary while preserving semantic levels and text scaling", async () => {
+  await page.viewport(390, 844);
+  const host = document.createElement("div"); document.body.append(host); const root = createRoot(host);
+  const custom = defineHjmDesignProfile({ extends: "paper", tokens: { heading: {
+    level1: { fontSize: 56, lineHeight: 68 }, level2: { fontSize: 36, lineHeight: 46 },
+    level3: { fontSize: 27, lineHeight: 36 }, level4: { fontSize: 22, lineHeight: 30 },
+    level5: { fontSize: 19, lineHeight: 28, fontWeight: "500" },
+  } } });
+  const levels = Object.keys(heading) as (keyof typeof heading)[];
+  try {
+    for (const profile of [undefined, ...Object.values(hjmDesignPresets), custom]) {
+      for (const theme of ["light", "dark"] as const) {
+        await act(() => root.render(<HjmProvider theme={theme} textScale={2} direction="rtl" reducedMotion {...(profile ? { designProfile: profile } : {})}>
+          <HjmProvider>{levels.map(level => <Heading key={level} level={level} semanticLevel={4}>긴 제목 {level}</Heading>)}</HjmProvider>
+        </HjmProvider>));
+        const nodes = host.querySelectorAll<HTMLElement>(".hjm-heading");
+        levels.forEach((level, index) => {
+          const expected = (profile?.tokens.heading ?? heading)[level];
+          const node = nodes[index]!; const style = getComputedStyle(node);
+          expect(node.tagName).toBe("H4"); expect(node.dataset.level).toBe(level);
+          expect(Number.parseFloat(style.fontSize)).toBe(expected.fontSize * 2);
+          expect(Number.parseFloat(style.lineHeight)).toBe(expected.lineHeight * 2);
+          expect(style.fontWeight).toBe(expected.fontWeight);
+          expect(node.scrollWidth).toBeLessThanOrEqual(node.clientWidth + 1);
+        });
+      }
+    }
+  } finally { await act(() => root.unmount()); host.remove(); await page.viewport(1280, 720); }
 });

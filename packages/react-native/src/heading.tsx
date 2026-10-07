@@ -32,8 +32,7 @@ export function Heading({ level, semanticLevel, children, layoutStyle, style }: 
   };
   validateHeadingDescriptor(descriptor);
   const theme = useHjmNativeTheme();
-  const profileRole = level === "level3" ? "heading" : level === "level4" ? "titleLarge" : level === "level5" ? "title" : undefined;
-  const metrics = (profileRole ? theme.designProfile?.tokens.typography[profileRole] : undefined) ?? headingRecipe.levels[level];
+  const metrics = theme.designProfile?.tokens.heading[level] ?? headingRecipe.levels[level];
   return (
     <Text
       accessibilityRole="header"

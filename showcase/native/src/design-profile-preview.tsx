@@ -8,8 +8,9 @@ import { SegmentedControl } from "@hjmds/react-native/inputs";
 import { OverviewScreen } from "@hjmds/react-native/design-profile";
 import { ContentTransition } from "@hjmds/react-native/content-transition";
 import { Collapsible } from "@hjmds/react-native/collapsible";
+import { Heading } from "@hjmds/react-native/heading";
 import { hjmDesignPresets, type HjmDesignPreset } from "@hjmds/design-contracts/design-profile";
-import { profileCopy as copy, profileOptions } from "../../shared/design-profile";
+import { profileCopy as copy, profileOptions, profileHeadingSamples } from "../../shared/design-profile";
 
 export function RecordSample() {
   const [name, setName] = useState<string>(copy.initial);
@@ -37,6 +38,7 @@ export function DesignProfileComparison() {
   return <ScrollView keyboardShouldPersistTaps="handled"><Stack gap="xl"><Text variant="heading">{copy.title}</Text><Text>{copy.intro}</Text>
     <SegmentedControl label={copy.choose} presentation="pills" items={profileOptions.map(option => ({ value: option.id, label: option.label }))} value={preset} onValueChange={value => { const option = profileOptions.find(option => option.id === value); if (option) setPreset(option.id); }} />
     <View style={{ height: 640 }}>{/* A comparison tile supplies a bounded route viewport; ScreenLayout owns its inner scrolling. */}<HjmNativeProvider designProfile={hjmDesignPresets[preset]}><RecordSample /></HjmNativeProvider></View>
+    <HjmNativeProvider designProfile={hjmDesignPresets[preset]}><Collapsible trigger={copy.headingScale} defaultOpen><Stack gap="sm">{profileHeadingSamples.map(sample => <Heading key={sample.level} level={sample.level} semanticLevel={3}>{sample.label}</Heading>)}</Stack></Collapsible></HjmNativeProvider>
     <Text tone="muted">{copy.limitation}</Text>
     <Collapsible trigger={copy.compare} defaultOpen>{profileOptions.map(option => <HjmNativeProvider key={option.id} designProfile={hjmDesignPresets[option.id]}><Stack gap="md"><Text variant="title">{option.label}</Text><View style={{ height: 640 }}><RecordSample /></View></Stack></HjmNativeProvider>)}</Collapsible>
   </Stack></ScrollView>;

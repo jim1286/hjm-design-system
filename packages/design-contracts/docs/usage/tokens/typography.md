@@ -94,3 +94,10 @@ import { Heading } from "@hjmds/react-native/heading";
 컴포넌트는 Web CSS 변수 또는 Native `theme.tokens`/semantic palette를 읽는다.
 직접 foundations를 import한 값은 기본 상수이므로 프로필 변경을 따라가지 않는다. 현재 연결 API의 범위는
 프로필 계약에서 확인하고 앱 CSS로 내부 값을 덮지 않는다.
+
+
+Heading의 다섯 시각 단계는 `defineHjmDesignProfile({ tokens: { heading: ... } })`로
+일괄 지정한다. Web `--hjm-heading-size/line-height/weight`, Native Heading의 Text
+metrics로 연결된다. 해당 heading을 담은 Provider에서 가장 가까운 profile을 읽는다.
+level3/4/5는 기존 typography heading/titleLarge/title override를 기본으로 병합하며
+명시적인 heading 값이 우선한다. 문서의 h1~h6 순서는 `semanticLevel`이 소유한다.

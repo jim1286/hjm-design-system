@@ -23,7 +23,12 @@ export declare const DesignProfileContext: import("react").Context<Readonly<{
             ui: readonly string[];
             code: readonly string[];
         }>;
-        typography: Readonly<Record<"caption" | "label" | "body" | "bodyLarge" | "title" | "titleLarge" | "heading", Readonly<{
+        typography: Readonly<Record<"heading" | "caption" | "label" | "body" | "bodyLarge" | "title" | "titleLarge", Readonly<{
+            fontSize: number;
+            lineHeight: number;
+            fontWeight: import("@hjmds/design-contracts/foundations").FontWeightValue;
+        }>>>;
+        heading: Readonly<Record<"level1" | "level2" | "level3" | "level4" | "level5", Readonly<{
             fontSize: number;
             lineHeight: number;
             fontWeight: import("@hjmds/design-contracts/foundations").FontWeightValue;

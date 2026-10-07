@@ -37,14 +37,22 @@ describe("GitHub Actions runtime contracts", () => {
     expect(workspacePackage.scripts["release:check"]).toContain("pnpm ci:check");
   });
 
-  it("gates pull requests and deploys the verified Storybook from main", async () => {
+  it("gates version-intended main pushes and deploys the verified Storybook", async () => {
     const workflow = await readFile(
       new URL("../../../.github/workflows/showcase.yml", import.meta.url),
       "utf8",
     );
 
     expect(workflow).toMatch(/on:\n\s+push:\n\s+branches:\n\s+- main\n/);
-    expect(workflow).toMatch(/\n\s+pull_request:\n\s+branches:\n\s+- main\n/);
+    // 2026-10-07: ordinary PR checks were removed by user policy. Keep this
+    // package-level test aligned with RELEASE_GOVERNANCE.md; the shared checker
+    // separately exercises negative cases for bypassed version intent.
+    expect(workflow).not.toMatch(/\n\s+pull_request:/);
+    expect(workflow).toMatch(/\n\s+workflow_dispatch:/);
+    expect(workflow).toContain("run: node scripts/ci-version-intent.mjs");
+    expect(workflow).toContain("VERSION_BASE_SHA: ${{ github.event.before }}");
+    expect(workflow).toContain("needs: intent");
+    expect(workflow).toContain("if: needs.intent.outputs.run == 'true'");
     expect(workflow).toMatch(pinned("actions/checkout", 7));
     expect(workflow).toMatch(pinned("pnpm/action-setup", 6));
     expect(workflow).toMatch(pinned("actions/setup-node", 7));
@@ -55,9 +63,9 @@ describe("GitHub Actions runtime contracts", () => {
     );
     expect(workflow).toMatch(pinned("actions/upload-pages-artifact", 5));
     expect(workflow).toMatch(pinned("actions/deploy-pages", 5));
-    // A PR push used to cancel main's verify and Pages deploy (one group, cancel-in-progress).
+    // Once a version's verification starts, the next push must not cancel its deploy.
     expect(workflow).toContain("group: design-system-showcase-${{ github.ref }}");
-    expect(workflow).toContain("cancel-in-progress: ${{ github.event_name == 'pull_request' }}");
+    expect(workflow).toContain("cancel-in-progress: false");
     expect(workflow).not.toContain("changeset:check");
   });
 

@@ -3463,6 +3463,15 @@
         "errors": 0,
         "state": "running-confirmed-session",
         "scope": "Fetched text pending individual source/visual/interaction review; no HTML link closure claim"
+      },
+      "sourceCaptureProgress": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "capturedRecords": 2473,
+        "http200": 2473,
+        "knownQueueUrls": 3433,
+        "scope": "Fetched/extracted public source; not source reading, visual or interaction review",
+        "lastCapturedAt": "2026-10-07T03:44:41Z",
+        "allReviewComplete": false
       }
     },
     {
@@ -6143,12 +6152,21 @@
         "errors": 0,
         "state": "running-confirmed-session",
         "scope": "Fetched text pending individual source/visual/interaction review; no HTML link closure claim"
+      },
+      "sourceCaptureProgress": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "capturedRecords": 860,
+        "http200": 860,
+        "knownQueueUrls": 2657,
+        "scope": "Fetched/extracted public source; not source reading, visual or interaction review",
+        "lastCapturedAt": "2026-10-07T03:44:42Z",
+        "allReviewComplete": false
       }
     },
     {
       "site": "component.gallery",
       "checkedOn": "2026-10-07",
-      "evidence": "131 public URL variants, 66 identical-content path groups; 60 definitions/12 detailed guidance sections read. All 66 intros and default gallery full-height layouts of 16 paths reviewed. 761 basic example cards reviewed; linked behavior and remaining examples pending.",
+      "evidence": "131 public URL variants, 66 identical-content path groups; 60 definitions/12 detailed guidance sections read. All 66 intros and default full-height layouts of 40 paths reviewed. 1629 visible basic example cards reviewed; placeholders, linked behaviour, other environments and remaining examples are separate.",
       "sitemaps": [
         "https://component.gallery/sitemap-0.xml"
       ],
@@ -6256,14 +6274,64 @@
           "avatar": 38,
           "badge": 123,
           "breadcrumbs": 55,
-          "total": 761,
-          "remaining": 1910,
+          "total": 2671,
+          "remaining": 0,
           "scope": "Default gallery card/thumbnail appearances only; linked behavior, internal small thumbnail text and other environments pending",
           "button-group": 35,
           "button": 118,
           "card": 77,
           "carousel": 22,
-          "checkbox": 84
+          "checkbox": 84,
+          "color-picker": 18,
+          "combobox": 37,
+          "date-input": 18,
+          "datepicker": 44,
+          "drawer": 38,
+          "dropdown-menu": 49,
+          "empty-state": 16,
+          "fieldset": 32,
+          "file-upload": 32,
+          "file": 6,
+          "footer": 19,
+          "form": 21,
+          "header": 38,
+          "heading": 29,
+          "hero": 9,
+          "icon": 45,
+          "image": 29,
+          "label": 15,
+          "link": 64,
+          "list": 67,
+          "modal": 82,
+          "navigation": 62,
+          "pagination": 48,
+          "popover": 50,
+          "progress-bar": 40,
+          "progress-indicator": 38,
+          "quote": 11,
+          "radio-button": 85,
+          "rating": 19,
+          "rich-text-editor": 5,
+          "search-input": 30,
+          "segmented-control": 28,
+          "select": 82,
+          "separator": 34,
+          "skeleton": 30,
+          "skip-link": 14,
+          "slider": 38,
+          "spinner": 66,
+          "stack": 10,
+          "stepper": 20,
+          "table": 73,
+          "tabs": 80,
+          "text-input": 72,
+          "textarea": 52,
+          "toast": 41,
+          "toggle": 60,
+          "tooltip": 74,
+          "tree-view": 14,
+          "video": 15,
+          "visually-hidden": 11
         },
         "scrollViewportRecapture": {
           "pagesCaptured": 66,
@@ -6271,7 +6339,7 @@
           "captureErrors": 0,
           "unloadedMainImages": 0,
           "state": "finished",
-          "review": "260 unique actual viewport tiles inspected; 16 complete default gallery page layouts; other tiles/interaction states pending",
+          "review": "756 unique actual viewport tiles inspected; all 66 complete default desktop/light layouts; linked implementations, interactions and other environments pending",
           "checkedAt": "2026-10-07T02:05:05.921028+00:00"
         },
         "accordionLowerViewportReview": {
@@ -6292,12 +6360,12 @@
           "scope": "actual lower-page visible layout and body; linked implementation and interactions pending"
         },
         "defaultViewportVisualReview": {
-          "checkedAt": "2026-10-07T03:10:19.652933+00:00",
-          "uniqueTiles": 260,
-          "contactSheets": 65,
-          "completeDefaultPageLayouts": 16,
+          "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+          "uniqueTiles": 756,
+          "contactSheets": 189,
+          "completeDefaultPageLayouts": 66,
           "partialPageLayouts": 0,
-          "galleryExamples": 761,
+          "galleryExamples": 2671,
           "allReviewComplete": false
         }
       }
@@ -19359,6 +19427,15 @@
         "reason": "Local urllib formatting errors repaired by percent-encoding spaces; original URL identities preserved. Separate recovery file avoids overwriting the live crawler.",
         "sourceReview": "extracted-pending-review",
         "checkedAt": "2026-10-07T01:58:52.171516+00:00"
+      },
+      "sourceCaptureProgress": {
+        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
+        "capturedRecords": 4152,
+        "http200": 4142,
+        "knownQueueUrls": 12460,
+        "scope": "Fetched/extracted public source; not source reading, visual or interaction review",
+        "lastCapturedAt": "2026-10-07T03:44:43Z",
+        "allReviewComplete": false
       }
     },
     {

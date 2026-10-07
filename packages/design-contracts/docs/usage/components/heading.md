@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [Heading](../../heading.md), recipe `headingRecipe`(`src/heading.ts`)
 - 스토리북: `배포/컴포넌트/글자와 아이콘/제목`
 
@@ -53,6 +53,12 @@ import { Heading } from "@hjmds/react-native/heading";
 | `layoutStyle` | 배치 key(margin·폭·정렬 등) | — | 바깥 배치만. 크기·줄 높이·굵기·색은 받지 않는다 |
 
 - 범위 밖 값은 `TypeError`로 거부된다.
+- 위 크기는 프로필 없는 기본값이다. [디자인 프로필](../../design-profile.md)의
+  `tokens.heading.level1`~`level5`로 다섯 시각 단계를 지정하면 양 renderer가 따르며,
+  `semanticLevel`은 그대로다. 크기를 맞추려고 문서 단계를 바꾸지 않는다.
+- `defineHjmDesignProfile`에서 `tokens.typography.heading/titleLarge/title`을 바꾸면 기존
+  level3/4/5 연결을 유지한다. 같은 단계에 `tokens.heading`도 지정하면 명시한 heading
+  값이 우선한다. 큰 제목 level1/2는 본문 크기에서 자동 추정하지 않는다.
 
 ## 배치
 

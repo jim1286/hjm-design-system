@@ -9,8 +9,7 @@ export const Heading = forwardRef(function Heading({ level, semanticLevel, child
     };
     validateHeadingDescriptor(descriptor);
     const profile = useDesignProfileDefaults();
-    const profileRole = level === "level3" ? "heading" : level === "level4" ? "titleLarge" : level === "level5" ? "title" : undefined;
-    const metrics = (profileRole ? profile?.tokens.typography[profileRole] : undefined) ?? headingRecipe.levels[level];
+    const metrics = profile?.tokens.heading[level] ?? headingRecipe.levels[level];
     // Visual size and document level are separate axes: the element comes from
     // the semantic level, the type comes from the visual one.
     return createElement(`h${resolveHeadingSemanticLevel(descriptor)}`, {

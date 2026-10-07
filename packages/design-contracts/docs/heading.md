@@ -23,3 +23,18 @@ level5 18px까지 다섯 단계가 있었지만 어떤 renderer도 노출하지 
 구조를 왜곡하는 대신 둘을 따로 적는다. 생략하면 `level`의 숫자를 따른다.
 
 **Native.** 접근성 role은 `header` 하나뿐이라 문서 단계는 `aria-level`로 함께 싣는다.
+
+
+## 디자인 프로필의 전체 제목 크기(실험·미게시)
+
+2026-10-07 [Heading 갤러리](https://component.gallery/components/heading/)를 비교하며
+현재 renderer가 level3~5만 프로필 typography에 연결하고 level1/2는 고정값으로 남긴
+누락을 확인했다. 앱이 테마를 한 번 넣어 큰 제목까지 재사용하려는 요구 때문에
+[디자인 프로필](design-profile.md)의 `tokens.heading`을 다섯 시각 단계로 둔다.
+본문 크기에서 큰 제목을 임의로 배율 계산하는 대안은 계층과 행간이 달라질 수 있어
+채택하지 않는다. 원본 갤러리의 수치·코드·폰트 자산을 복사한 것이 아니다.
+
+프로필이 없으면 원래 40/32/24/20/18 크기를 유지한다. 기존 level3~5 typography
+alias는 helper에서 병합하고 명시적인 heading override가 마지막에 우선한다.
+Web은 CSS 변수, Native는 Text host의 metrics로 반영하고 `semanticLevel`·문구·초점을
+바꾸지 않는다. 테마 전환은 시각 크기만 바꾸며 실제 문서 단계는 기존 계약이 소유한다.

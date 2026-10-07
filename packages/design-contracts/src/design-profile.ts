@@ -1,5 +1,5 @@
 import { THEMES, type ResolvedTheme, type ThemeColors } from "./colors.js";
-import { radius, fontFamily, typography, shadow, fontWeight, type FontWeightValue } from "./foundations.js";
+import { radius, fontFamily, typography, heading, shadow, fontWeight, type FontWeightValue } from "./foundations.js";
 import { checkPaletteContrast } from "./palette-contrast.js";
 import { resolveEffectSurface, type EffectSurfaceDescriptor } from "./effect-surface.js";
 import type { ContentTransitionPreset } from "./content-transition.js";
@@ -11,6 +11,7 @@ export type HjmDesignPreset = "neutral" | "retro" | "paper" | "forest" | "minima
 type RadiusTokens = Readonly<Record<keyof typeof radius, number>>;
 type TypeToken = Readonly<{ fontSize: number; lineHeight: number; fontWeight: FontWeightValue }>;
 type TypographyTokens = Readonly<Record<keyof typeof typography, TypeToken>>;
+type HeadingTokens = Readonly<Record<keyof typeof heading, TypeToken>>;
 type ShadowToken = Readonly<{ color: string; opacity: number; radius: number; offsetY: number }>;
 type ShadowTokens = Readonly<Record<keyof typeof shadow, ShadowToken>>;
 type Palette = Readonly<Record<ResolvedTheme, Readonly<ThemeColors>>>;
@@ -21,6 +22,7 @@ export type HjmDesignProfile = Readonly<{
     radius: RadiusTokens;
     fontFamily: Readonly<{ ui: readonly string[]; code: readonly string[] }>;
     typography: TypographyTokens;
+    heading: HeadingTokens;
     shadow: ShadowTokens;
   }>;
   material: Readonly<Record<"canvas" | "card", EffectSurfaceDescriptor | null>>;
@@ -45,6 +47,7 @@ export type HjmDesignProfileInput = Readonly<{
     radius?: Readonly<Partial<RadiusTokens>>;
     fontFamily?: Readonly<Partial<HjmDesignProfile["tokens"]["fontFamily"]>>;
     typography?: Readonly<Partial<Record<keyof typeof typography, Partial<TypeToken>>>>;
+    heading?: Readonly<Partial<Record<keyof typeof heading, Partial<TypeToken>>>>;
     shadow?: Readonly<Partial<Record<keyof typeof shadow, Partial<ShadowToken>>>>;
   }>;
   material?: Readonly<Partial<HjmDesignProfile["material"]>>;
@@ -55,7 +58,7 @@ export type HjmDesignProfileInput = Readonly<{
 
 const neutral: HjmDesignProfile = {
   id: "neutral", palette: THEMES,
-  tokens: { radius, fontFamily, typography, shadow },
+  tokens: { radius, fontFamily, typography, heading, shadow },
   material: { canvas: null, card: null },
   interactions: { contentTransition: "fade", selectionMotion: "none" },
   compositions: { collection: "rows", toolbar: "inline" },
@@ -112,7 +115,7 @@ const presetInputs: Readonly<Record<Exclude<HjmDesignPreset, "neutral">, HjmDesi
   editorial: {
     id: "editorial",
     palette: { light: { primary: "#59435f", contentBrand: "#513a57", surfaceAccent: "#eee4f0" }, dark: { primary: "#846b8e", contentBrand: "#ead0f2", surfaceAccent: "#392a3e" } },
-    tokens: { radius: { sm: 0, md: 2, lg: 4, xl: 8 }, typography: { heading: { fontSize: 28, lineHeight: 38, fontWeight: fontWeight.medium }, body: { lineHeight: 24 } } },
+    tokens: { radius: { sm: 0, md: 2, lg: 4, xl: 8 }, typography: { heading: { fontSize: 28, lineHeight: 38, fontWeight: fontWeight.medium }, body: { lineHeight: 24 } }, heading: { level1: { fontSize: 44, lineHeight: 54, fontWeight: fontWeight.medium }, level2: { fontSize: 34, lineHeight: 44, fontWeight: fontWeight.medium } } },
 
     interactions: { contentTransition: "rise", selectionMotion: "none" },
     compositions: { collection: "rows", toolbar: "collapsible" }, screens: { overview: "editorial" },
@@ -120,7 +123,7 @@ const presetInputs: Readonly<Record<Exclude<HjmDesignPreset, "neutral">, HjmDesi
   brutalist: {
     id: "brutalist",
     palette: { light: { primary: "#171717", contentBrand: "#171717", surfaceAccent: "#e8ed91", border: "#171717" }, dark: { primary: "#727272", contentBrand: "#f0f3a3", surfaceAccent: "#393a1c", border: "#cccccc" } },
-    tokens: { radius: { sm: 0, md: 0, lg: 0, xl: 0 }, shadow: { raised: { radius: 0, offsetY: 4, opacity: 0.25 }, floating: { radius: 0, offsetY: 6, opacity: 0.3 } }, typography: { heading: { fontSize: 30, lineHeight: 38, fontWeight: fontWeight.heavy } } },
+    tokens: { radius: { sm: 0, md: 0, lg: 0, xl: 0 }, shadow: { raised: { radius: 0, offsetY: 4, opacity: 0.25 }, floating: { radius: 0, offsetY: 6, opacity: 0.3 } }, typography: { heading: { fontSize: 30, lineHeight: 38, fontWeight: fontWeight.heavy } }, heading: { level1: { fontSize: 48, lineHeight: 56 }, level2: { fontSize: 38, lineHeight: 46 } } },
 
     interactions: { contentTransition: "slide", selectionMotion: "none" },
     compositions: { collection: "cards", toolbar: "inline" }, screens: { overview: "editorial" },
@@ -178,6 +181,18 @@ function merge(base: HjmDesignProfile, input: HjmDesignProfileInput): HjmDesignP
   };
   // fromEntries loses fixed keys; iteration over the complete base preserves every role.
   const type = Object.fromEntries(Object.entries(base.tokens.typography).map(([key, value]) => [key, { ...value, ...input.tokens?.typography?.[key as keyof TypographyTokens] }])) as unknown as TypographyTokens;
+  // Display levels need their own roles: deriving them from body text would erase
+  // the hierarchy. Keep the original level3–5 typography aliases, with explicit
+  // heading overrides last, and preserve inherited heading values on empty input.
+  const aliases = { level3: "heading", level4: "titleLarge", level5: "title" } as const;
+  for (const key of Object.keys(input.tokens?.heading ?? {})) {
+    if (!Object.prototype.hasOwnProperty.call(heading, key)) throw new TypeError("Unsupported design profile heading level");
+  }
+  const headings = Object.fromEntries(Object.entries(base.tokens.heading).map(([key, value]) => {
+    const level = key as keyof HeadingTokens;
+    const alias = level in aliases ? aliases[level as keyof typeof aliases] : undefined;
+    return [level, { ...value, ...(alias ? input.tokens?.typography?.[alias] : undefined), ...input.tokens?.heading?.[level] }];
+  })) as unknown as HeadingTokens;
   // The complete base shadow record has the same key-preservation guarantee.
   const elevation = Object.fromEntries(Object.entries(base.tokens.shadow).map(([key, value]) => [key, { ...value, ...input.tokens?.shadow?.[key as keyof ShadowTokens] }])) as unknown as ShadowTokens;
   const profile: HjmDesignProfile = {
@@ -186,7 +201,7 @@ function merge(base: HjmDesignProfile, input: HjmDesignProfileInput): HjmDesignP
       radius: { ...base.tokens.radius, ...input.tokens?.radius },
       // Copy caller-owned arrays: freezing the resolved profile must never freeze app input.
       fontFamily: { ui: [...(input.tokens?.fontFamily?.ui ?? base.tokens.fontFamily.ui)], code: [...(input.tokens?.fontFamily?.code ?? base.tokens.fontFamily.code)] },
-      typography: type, shadow: elevation,
+      typography: type, heading: headings, shadow: elevation,
     },
     material: { ...base.material, ...input.material },
     interactions: { ...base.interactions, ...input.interactions },
@@ -205,7 +220,7 @@ function merge(base: HjmDesignProfile, input: HjmDesignProfileInput): HjmDesignP
   }
   // Circles/pills retain their semantic geometry; product corners apply to other roles.
   if (profile.tokens.radius.full !== radius.full) throw new RangeError("Design profile must preserve full radius");
-  for (const value of Object.values(type)) {
+  for (const value of [...Object.values(type), ...Object.values(headings)]) {
     if (!Number.isFinite(value.fontSize) || value.fontSize < 11 || value.fontSize > 96 || !Number.isFinite(value.lineHeight) || value.lineHeight < value.fontSize || value.lineHeight > 144) throw new RangeError("Invalid design profile typography");
     choose(value.fontWeight, ["400", "500", "600", "700", "800"], "fontWeight");
   }

@@ -5,8 +5,8 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 이 요청은 검증 후 Storybook 승격과 HJM npm 게시 권한을 포함한다. Utilverse 스토어 출시는 포함하지 않는다.
 상태: 진행 중. 기존 17개 검토·승급·npm 게시 이력과 11개 사이트 전수조사 완료를 구분한다. 2026-10-07 사용자가 최초 요청의 누락을 지적한 뒤 전수조사를 최우선으로 이어간다. 이전 7개 실험과 PR #55 머지는 전체 목표 완료가 아니다.
 
-2026-10-07 후속: Component Gallery 실제 viewport 검토를 65모음/260개, 완전한 기본
-갤러리 경로 16개, 기본 예제 카드 761/2,671개로 갱신했다. Button group·Button·Card·
+2026-10-07 후속: Component Gallery 실제 viewport 검토를 189모음/756개, 완전한 기본
+갤러리 경로 66개, 보이는 기본 예제 카드 2,671/2,671개로 갱신했다. Button group·Button·Card·
 Carousel·Checkbox를 기존 API와 대조했고 Native Card의 내부 media clip이 profile radius를
 따르지 않던 누락을 수정했다. Node 회귀·typecheck·Metro 검증과 실제 기기 시각 검증을
 구분한다. 원격 Showcase·시각 CI는 사용자 재확인에 따라 실제 버전 상승 때만 자동 실행한다.

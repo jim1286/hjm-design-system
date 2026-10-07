@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
-import { TextInput, View } from "react-native";
+import { TextInput, Text as NativeText, View } from "react-native";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { expect, it, vi } from "vitest";
-import { hjmDesignPresets, type HjmDesignPreset } from "@hjmds/design-contracts/design-profile";
-import { radius as foundationRadius } from "@hjmds/design-contracts/foundations";
+import { defineHjmDesignProfile, hjmDesignPresets, type HjmDesignPreset } from "@hjmds/design-contracts/design-profile";
+import { heading, radius as foundationRadius } from "@hjmds/design-contracts/foundations";
 import { HjmNativeProvider } from "../src/provider.js";
 import { OverviewScreen } from "../src/design-profile.js";
 import { Surface, Text } from "../src/primitives.js";
 import { Collapsible } from "../src/collapsible.js";
 import { Card } from "../src/data-display.js";
+import { Heading } from "../src/heading.js";
 
 // Substitute only the native drawing host. Real profile/grid/screen/state code
 // runs here; device rendering and optional SVG availability need separate QA.
@@ -88,6 +89,37 @@ it("keeps card media clipping aligned with the themed surface across profiles, m
           expect(mediaClip.props.style.borderRadius).toBe(expected);
           expect(frame.props.style[0].overflow).toBe("visible");
         }
+      }
+    }
+  } finally { if (tree) act(() => tree.unmount()); }
+});
+
+it("sends all five themed heading metrics to the native text host without changing document level or double scaling", () => {
+  const custom = defineHjmDesignProfile({ extends: "paper", tokens: { heading: {
+    level1: { fontSize: 56, lineHeight: 68 }, level2: { fontSize: 36, lineHeight: 46 },
+    level3: { fontSize: 27, lineHeight: 36 }, level4: { fontSize: 22, lineHeight: 30 },
+    level5: { fontSize: 19, lineHeight: 28, fontWeight: "500" },
+  } } });
+  const levels = Object.keys(heading) as (keyof typeof heading)[];
+  const flatten = (style: unknown): Record<string, unknown> => Array.isArray(style)
+    ? Object.assign({}, ...style.map(flatten)) : style && typeof style === "object" ? style as Record<string, unknown> : {};
+  let tree!: ReactTestRenderer;
+  try {
+    for (const profile of [undefined, ...Object.values(hjmDesignPresets), custom]) {
+      for (const theme of ["light", "dark"] as const) {
+        const render = <HjmNativeProvider theme={theme} textScale={2} direction="rtl" reducedMotion {...(profile ? { designProfile: profile } : {})}>
+          <HjmNativeProvider>{levels.map(level => <Heading key={level} level={level} semanticLevel={4}>긴 제목 {level}</Heading>)}</HjmNativeProvider>
+        </HjmNativeProvider>;
+        act(() => { if (tree) tree.update(render); else tree = create(render); });
+        const hosts = tree.root.findAllByType(NativeText);
+        levels.forEach((level, index) => {
+          const expected = (profile?.tokens.heading ?? heading)[level]; const host = hosts[index]!;
+          const style = flatten(host.props.style);
+          expect(host.props.accessibilityRole).toBe("header"); expect(host.props["aria-level"]).toBe(4);
+          expect(host.props.allowFontScaling).toBe(false);
+          expect(style.fontSize).toBe(expected.fontSize * 2); expect(style.lineHeight).toBe(expected.lineHeight * 2);
+          expect(style.fontWeight).toBe(expected.fontWeight);
+        });
       }
     }
   } finally { if (tree) act(() => tree.unmount()); }

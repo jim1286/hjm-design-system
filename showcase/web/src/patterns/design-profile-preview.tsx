@@ -7,8 +7,9 @@ import { SegmentedControl } from "@hjmds/react/selection";
 import { OverviewScreen } from "@hjmds/react/design-profile";
 import { ContentTransition } from "@hjmds/react/content-transition";
 import { Collapsible } from "@hjmds/react/collapsible";
+import { Heading } from "@hjmds/react/heading";
 import { hjmDesignPresets, type HjmDesignPreset } from "@hjmds/design-contracts/design-profile";
-import { profileCopy as copy, profileOptions } from "../../../shared/design-profile";
+import { profileCopy as copy, profileOptions, profileHeadingSamples } from "../../../shared/design-profile";
 
 export function RecordSample() {
   const [name, setName] = useState<string>(copy.initial);
@@ -35,7 +36,9 @@ export function DesignProfileComparison() {
   const [preset, setPreset] = useState<HjmDesignPreset>("retro");
   return <Stack gap="xl"><Text variant="heading">{copy.title}</Text><Text>{copy.intro}</Text>
     <SegmentedControl label={copy.choose} presentation="pills" items={profileOptions.map(option => ({ value: option.id, label: option.label }))} value={preset} onValueChange={value => { const option = profileOptions.find(option => option.id === value); if (option) setPreset(option.id); }} />
-    <HjmProvider designProfile={hjmDesignPresets[preset]}><RecordSample /></HjmProvider>
+    <HjmProvider designProfile={hjmDesignPresets[preset]}><Stack gap="xl"><RecordSample />
+      <Collapsible trigger={copy.headingScale} defaultOpen><Stack gap="sm">{profileHeadingSamples.map(sample => <Heading key={sample.level} level={sample.level} semanticLevel={3}>{sample.label}</Heading>)}</Stack></Collapsible>
+    </Stack></HjmProvider>
     <Text tone="muted">{copy.limitation}</Text>
     <Collapsible trigger={copy.compare} defaultOpen>{profileOptions.map(option => <HjmProvider key={option.id} designProfile={hjmDesignPresets[option.id]}><Stack gap="md"><Text variant="title">{option.label}</Text><RecordSample /></Stack></HjmProvider>)}</Collapsible>
   </Stack>;
