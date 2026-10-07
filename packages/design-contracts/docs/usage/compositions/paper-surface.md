@@ -39,7 +39,7 @@
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
-| 바깥 틀 | Stack | 화면 앞쪽 비교 도구부터 세로 | gap lg20 |
+| 바깥 틀 | Stack | 화면 앞쪽 비교 도구부터 세로 | gap lg20; Native는 바깥 ScrollView와 기존 테마 비교와 같은 640host-unit 화면 viewport |
 | 기록 항목 | OverviewScreen·Stack | items 본문 | gap sm12; rows/grid/cards와 화면은 profile 기본값 |
 | 줄무늬 | EffectSurface | 화면 canvas 뒤 SVG | 한 선 1host unit, spacing 기본24, 명시 비교40; userSpaceOnUse |
 | footer | Stack·Button | 기존 OverviewScreen footer | gap sm12, primary 확인 다음 secondary 상세 |
@@ -87,10 +87,15 @@ const productDesign = defineHjmDesignProfile({ extends: "paper", material: {
 
 | 항목 | Web | Native |
 | --- | --- | --- |
-| 선 단위 | CSS pixel | logical host unit, 실제 기기 래스터는 미검수 |
+| 선 단위 | CSS pixel | logical host unit; iPhone17Pro/iOS26.5 개발 호스트에서 24/40 간격 확인 |
 | 그리기 | SVG Pattern/Rect | 기존 optional react-native-svg15.15.5, 새 peer 없음 |
 | 모션 | atmospheric SVG 밖 정적 | Animated scale 밖 정적 |
 | 내용 | 일반 DOM 레이아웃 | 기존 Native 화면·입력 host |
 
 강도를 올려 원제품의 종이·사진 재질과 같다고 주장하지 않는다. 중요한 문구는 불투명 Surface에 놓고 실제 대비를 확인한다.
 제공하지 않는 경계를 대체한 것으로 세지 않는다. 최대 글자 조건은 사용자 지시로 실행·후속·완료 조건에서 제외한다.
+
+Native 비교 도구를 높이 없는 Stack에 넣으면 flex 화면이 접혔고, 작은 남은 화면 높이만 주면 도구가 본문을
+밀어냈다. 그래서 기존 테마 비교의 640unit viewport를 사용하고 바깥도 스크롤한다. 제품은 이 예제 높이를
+복사하지 않고 실제 route 영역을 제공한다. iOS 줄무늬는 1unit 폭/백분율 Rect 조합에서 보이지 않아
+spacing×spacing 타일과 명시적 물리 폭을 사용한다. [수정 전후 기기 결과](../../../../../docs/qa/2026-10-07-native-reference-validation.md)를 참고한다.

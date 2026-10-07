@@ -9,6 +9,7 @@
 원장은 보존하며, 수집 또는 본문 독해를 전체 원제품 검토로 바꾸지 않는다. 미독해 소개문,
 추가 URL, 모든 사이트/환경 조사 자체는 현재 후속 작업·완료 조건·릴리스 차단 대상이 아니다.
 새 실험에서 실제로 제공하는 행동과 플랫폼 계약의 검증은 여전히 필요하다.
+이번 후속에서 [실제 iOS 개발 검수](../qa/2026-10-07-native-reference-validation.md)를 더하고 종이 preview/래스터 문제 2건을 수정했다. 필요한 외부 조사 범위를 다시 넓히지 않았다.
 
 OS 최대 글자와 최대값을 모사한 확대는 설계·구현·검증·후속·완료/릴리스 차단에서 제외한다.
 과거 수행 기록은 보존한다. 일반 코드 push에서 원격 CI/dispatch/버전 상승을 실행하지 않는다.
@@ -45,13 +46,13 @@ OS 최대 글자와 최대값을 모사한 확대는 설계·구현·검증·후
 
 | 적용 단위 | 기존 기능과 결정 | 현재 상태 | 필요한 후속 |
 | --- | --- | --- | --- |
-| 10종 테마와 앱 소유 설정 | `defineHjmDesignProfile`·Provider·semantic palette·Heading/Surface·OverviewScreen·Tabs 기본값 재사용 | 10종 구현과 기존 실험에 앱 소유 설정 2종을 추가. Web 30조합·상태 유지 및 일부 좁은 다크/RTL/모션 감소 확인, Native 등록/타입 확인. [결과](../qa/2026-10-07-product-theme-propagation.md). 미게시 | Native 실제 흐름과 남은 공개 컴포넌트 토큰 소비 검수. 브랜드·폰트·로고/그림·설정 저장은 제품 소유 |
+| 10종 테마와 앱 소유 설정 | `defineHjmDesignProfile`·Provider·semantic palette·Heading/Surface·OverviewScreen·Tabs 기본값 재사용 | 10종 구현과 기존 실험에 앱 소유 설정 2종을 추가. Web 30조합·상태 유지 및 일부 좁은 다크/RTL/모션 감소 확인, Native 두 앱 설정 전환·숲 preset에서 편집 초안 유지 확인(전체 Native tile 검수 아님). [결과](../qa/2026-10-07-product-theme-propagation.md). 게시·소비 상태는 이번 기기 검수에서 재확인하지 않음 | 남은 공개 컴포넌트 토큰 소비 검수와 미확인 플랫폼/실물 범위를 분리한다. 브랜드·폰트·로고/그림·설정 저장은 제품 소유 |
 | 내용 전환 | 기존 `ContentTransition`와 Tabs/OnboardingScreen 합성 | `실험/구성/비교와 검증/내용 전환 비교` 등록 | 실제 제공 행동 검수 후 승급·게시 |
 | 날짜·시각 선택 | 기존 DatePicker/Select, 날짜와 시각 draft/요청 수명 분리 | `실험/구성/선택과 필터/날짜와 시각 선택` 등록 | 지원 플랫폼의 실제 흐름 검수 후 승급·게시 |
 | 명령 기록 | CodeBlock/Tabs/ClipboardButton, OS 복사 수명 개선 | `실험/구성/정보 표시/명령 기록 표시` 등록, 복사 및 메뉴 입력 회귀 수정 main 반영 | Native 실제 OS/입력 경계 검수, 승급·게시. 셸 실행/실시간 서버 기록은 제품 소유 |
-| 여러 카드 탐색과 상세 | List의 기존 세로 의미·Carousel의 단일 active panel과 다른 유한 다중 항목 배치. Card.actions→Dialog는 기존 API 재사용 | `CollectionRail` 계약·양 renderer와 카드 상세 실험 등록. Web 10종 light/dark·폭/끝·초안/모달 복귀 검수, Native host 회귀/타입 확인. [결과](../qa/2026-10-07-collection-detail.md). 1.15.0 이후 미게시 | Native 실제 touch/읽기 순서/OS 초점 검수와 승급·게시. 후기/미디어 목적별 변형은 별도 미반영 |
-| 제목·본문·UI·기술 글자 | 기존 profile와 Heading/Text 위계 재사용; optional display/reading family와 Text.fontRole 추가 | `실험/토큰/색과 글자/표시·읽기·기술 글자` 양 플랫폼 등록. Web 10종×두 모드 light/dark 및 상세·초안·복귀 확인. [결과](../qa/2026-10-07-font-roles.md). 1.15.0 이후 미게시 | Native 실제 font/glyph/fallback 검수. 제품 font 자산·권리·로딩, tracking/small-caps는 미반영 |
-| 종이 줄무늬 | 기존 EffectSurface에 정적 ruled/ruledSpacing 추가, paper canvas와 공개 OverviewScreen 연결 | 양 플랫폼 `실험/구성/비교와 검증/종이 줄무늬 비교` 등록. Web 10종×3모드 light/dark·RTL·간격·초안·상세 복귀 확인. [결과](../qa/2026-10-07-ruled-paper.md). 1.15.0 이후 미게시 | Native 실제 래스터/입력/OS 검수. 테이프·회전·찢어진/타공/물결 경계는 미반영 |
+| 여러 카드 탐색과 상세 | List의 기존 세로 의미·Carousel의 단일 active panel과 다른 유한 다중 항목 배치. Card.actions→Dialog는 기존 API 재사용 | `CollectionRail` 계약·양 renderer와 카드 상세 실험 등록. Web 10종 light/dark·폭/끝·초안/모달 복귀 검수, Native host 회귀/타입 및 실제 iOS touch·끝/처음·상세 초안·선택 환경 확인. [결과](../qa/2026-10-07-collection-detail.md). 1.15.0 이후 미게시 | 실제 VoiceOver/미확인 플랫폼 범위를 유지하며 승급·게시 상태를 별도로 확인한다. 후기/미디어 목적별 변형은 별도 미반영 |
+| 제목·본문·UI·기술 글자 | 기존 profile와 Heading/Text 위계 재사용; optional display/reading family와 Text.fontRole 추가 | `실험/토큰/색과 글자/표시·읽기·기술 글자` 양 플랫폼 등록. Web 10종×두 모드 light/dark 및 상세·초안·복귀 확인. [결과](../qa/2026-10-07-font-roles.md). 1.15.0 이후 미게시. 실제 iOS 표시/10종 상세 초안/terminal 상속 확인 | 실제 glyph별 font 식별과 제품 자산/미확인 플랫폼 범위를 분리한다. 제품 font 자산·권리·로딩, tracking/small-caps는 미반영 |
+| 종이 줄무늬 | 기존 EffectSurface에 정적 ruled/ruledSpacing 추가, paper canvas와 공개 OverviewScreen 연결 | 양 플랫폼 `실험/구성/비교와 검증/종이 줄무늬 비교` 등록. Web 10종×3모드 light/dark·RTL·간격·초안·상세 복귀 확인. [결과](../qa/2026-10-07-ruled-paper.md). 1.15.0 이후 미게시. 실제 iOS에서 접힌 화면·보이지 않는 선 수정 후 입력/상세 및 24/40 래스터 확인 | 미확인 플랫폼/실물 검수를 분리한다. 테이프·회전·찢어진/타공/물결 경계는 미반영 |
 | 나머지 목적별 구성·표현 | 각 조사 작업의 후보 판단을 전역 중복 병합 | 후보 처분 완료. 개별 변형의 적용·등록은 별도 | 기존 경로에 변형을 흡수하거나 필요한 고유 구성을 등록. 불채택·보류도 이유/조건 보존 |
 
 [실제 등록부](reference-experiment-registrations-2026-10-07.json)는 root가 양 Storybook 파일,

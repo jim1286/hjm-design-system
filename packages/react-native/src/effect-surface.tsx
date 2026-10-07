@@ -62,7 +62,9 @@ function EffectDecoration({ effect, visible }: { effect: ReturnType<typeof resol
     </Animated.View>
     {/* Physical-unit ruling stays outside Animated's scale, like the Web layer. */}
     {effect.ruled && <Svg testID="hjm-effect-ruled" pointerEvents="none" accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" width="100%" height="100%" style={[StyleSheet.absoluteFill, { opacity: effect.intensity }]}>
-      <Defs><Pattern id={`${id}-ruled`} width={1} height={effect.ruled.spacing} patternUnits="userSpaceOnUse"><Rect y={effect.ruled.spacing - effect.ruled.thickness} width="100%" height={effect.ruled.thickness} fill={palette.theme.text} /></Pattern></Defs>
+      {/* Match the physical tile width explicitly: a percent Rect inside a
+          one-unit native tile can disappear during iOS pattern rasterization. */}
+      <Defs><Pattern id={`${id}-ruled`} width={effect.ruled.spacing} height={effect.ruled.spacing} patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse"><Rect y={effect.ruled.spacing - effect.ruled.thickness} width={effect.ruled.spacing} height={effect.ruled.thickness} fill={palette.theme.text} /></Pattern></Defs>
       <Rect width="100%" height="100%" fill={`url(#${id}-ruled)`} />
     </Svg>}</>;
 }

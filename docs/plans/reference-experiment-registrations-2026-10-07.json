@@ -74,7 +74,7 @@
         "https://www.8bitcn.com/docs/components/theme-selector",
         "https://styles.refero.design/"
       ],
-      "sourceScope": "Existing 10-profile comparison reused; app-owned configuration added through the public defineHjmDesignProfile helper. Whole-site review remains false. Web 30-combination state preservation plus selected narrow dark RTL/reduced-motion flows verified; Native typecheck/registration only.",
+      "sourceScope": "Existing 10-profile comparison reused; app-owned configuration added through the public defineHjmDesignProfile helper. Whole-site review remains false. Web 30-combination state preservation plus selected narrow dark RTL/reduced-motion flows verified; Native typecheck/registration at initial registration; later selected device scope is recorded in nativeValidation.",
       "webStory": "showcase/web/src/patterns/DesignProfile.stories.tsx",
       "nativeStory": "showcase/native/src/DesignProfile.stories.tsx",
       "usage": "packages/design-contracts/docs/usage/compositions/design-profile-comparison.md",
@@ -91,7 +91,18 @@
         "ProductReading"
       ],
       "maximumFontExcluded": true,
-      "publication": "not-published"
+      "publication": "not-reverified-in-this-device-run",
+      "nativeValidation": {
+        "evidence": "docs/qa/2026-10-07-native-reference-validation.md",
+        "status": "selected-ios-development-flows-verified",
+        "scope": "Actual iPhone17Pro/iOS26.5 development UI: ProductNotes/ProductReading renders; edited Product66 survives product configuration and forest preset switches. This is selected flow evidence, not all native variants.",
+        "unverified": [
+          "Android",
+          "physical-device and Release performance",
+          "VoiceOver traversal",
+          "published-consumer adoption"
+        ]
+      }
     },
     {
       "path": "실험/구성/직접 조작과 모션/카드 상세 연결",
@@ -102,7 +113,7 @@
         "https://ui.aceternity.com/components/expandable-card",
         "https://ui.aceternity.com/components/animated-testimonials"
       ],
-      "sourceScope": "Previously recorded selected Manual/example flows and API comparison reused. One finite CollectionRail contract and two renderers compose existing Card/TextField/Dialog. Record-card Web flows verified; testimonials/media assets and Native device behavior are not claimed. Whole-site research remains incomplete and closed for adoption.",
+      "sourceScope": "Previously recorded selected Manual/example flows and API comparison reused. One finite CollectionRail contract and two renderers compose existing Card/TextField/Dialog. Record-card Web flows verified; testimonials/media assets and complete Native device behavior are not claimed; selected iOS results are recorded in nativeValidation. Whole-site research remains incomplete and closed for adoption.",
       "webStory": "showcase/web/src/patterns/CollectionDetail.stories.tsx",
       "nativeStory": "showcase/native/src/CollectionDetail.stories.tsx",
       "usage": "packages/design-contracts/docs/usage/compositions/collection-detail.md",
@@ -117,7 +128,18 @@
       ],
       "maximumFontExcluded": true,
       "publication": "not-published-after-1.15.0",
-      "publicEntry": "/collection-rail"
+      "publicEntry": "/collection-rail",
+      "nativeValidation": {
+        "evidence": "docs/qa/2026-10-07-native-reference-validation.md",
+        "status": "selected-ios-development-flows-verified",
+        "scope": "Actual iPhone17Pro/iOS26.5 development UI: LTR and RTL observed end/disabled state, touch horizontal scroll, card draft return, separate detail draft through theme switch and close; selected dark/empty views.",
+        "unverified": [
+          "Android",
+          "physical-device and Release performance",
+          "VoiceOver traversal",
+          "published-consumer adoption"
+        ]
+      }
     },
     {
       "path": "실험/토큰/색과 글자/표시·읽기·기술 글자",
@@ -146,7 +168,18 @@
       "publication": "not-published-after-1.15.0",
       "publicApi": "HjmDesignProfile.tokens.fontFamily display/reading; Text.fontRole",
       "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
-      "sourcePointer": "experimentCandidates.catalog/T01"
+      "sourcePointer": "experimentCandidates.catalog/T01",
+      "nativeValidation": {
+        "evidence": "docs/qa/2026-10-07-native-reference-validation.md",
+        "status": "selected-ios-development-flows-verified",
+        "scope": "Actual iPhone17Pro/iOS26.5 development UI: displayed role differences; edited draft through 10 light modal palettes, close, selected dark/RTL and terminal UI inheritance. Does not identify every glyph font or certify product font assets.",
+        "unverified": [
+          "Android",
+          "physical-device and Release performance",
+          "VoiceOver traversal",
+          "published-consumer adoption"
+        ]
+      }
     },
     {
       "path": "실험/구성/비교와 검증/종이 줄무늬 비교",
@@ -172,7 +205,18 @@
       ],
       "maximumFontExcluded": true,
       "publication": "not-published-after-1.15.0",
-      "publicApi": "EffectSurfaceDescriptor.layers ruled and ruledSpacing; paper canvas; existing OverviewScreen"
+      "publicApi": "EffectSurfaceDescriptor.layers ruled and ruledSpacing; paper canvas; existing OverviewScreen",
+      "nativeValidation": {
+        "evidence": "docs/qa/2026-10-07-native-reference-validation.md",
+        "status": "selected-ios-development-flows-verified",
+        "scope": "Actual iPhone17Pro/iOS26.5 development UI: fixed collapsed preview and invisible ruling; final light inheritance/dark ruled40 across 10 palettes, edited input/save/detail/close, selected RTL/reduced; final light24/40/plain raster compared.",
+        "unverified": [
+          "Android",
+          "physical-device and Release performance",
+          "VoiceOver traversal",
+          "published-consumer adoption"
+        ]
+      }
     }
   ]
 }
