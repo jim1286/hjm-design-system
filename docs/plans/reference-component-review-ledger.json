@@ -10,7 +10,11 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification."
     },
     {
       "url": "https://component.gallery/components/alert/",
@@ -20,7 +24,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/avatar/",
@@ -30,7 +37,10 @@
       "sourceAudit": "2026-10-07: current gallery lists 38 examples. Primer AvatarStack documentation reviewed; linked Gestalt AvatarGroup returned 404. HJM Web AvatarGroup has product-owned overflow copy; Native has no group renderer.",
       "visualReview": "Partial: gallery first row inspected. HJM 1280 dark/RTL/2x exposed clipping in ListRow leading; corrected example verified at 390x844 dark/RTL/2x. Remaining gallery examples not visually reviewed.",
       "interactionReview": "Static group example only; accessible group count and child names inspected. Overflow is decorative; no member-picker interaction or screen-reader run.",
-      "adoptionDecision": "Keep existing group API; fix misused 40x40 leading slot by composing Card body + Stack. Isolate +3 direction in example. No evidence to replace engine or add hover-only expansion. Native group and interactive member disclosure remain review candidates. docs/qa/2026-10-07-avatar-breadcrumb-reference.md"
+      "adoptionDecision": "Keep existing group API; fix misused 40x40 leading slot by composing Card body + Stack. Isolate +3 direction in example. No evidence to replace engine or add hover-only expansion. Native group and interactive member disclosure remain review candidates. docs/qa/2026-10-07-avatar-breadcrumb-reference.md",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/badge/",
@@ -40,7 +50,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/breadcrumbs/",
@@ -50,7 +63,11 @@
       "sourceAudit": "2026-10-07: gallery has 55 examples; definition, layout and nav/ol/current-page guidance read and compared with current Breadcrumb contract/source.",
       "visualReview": "Partial: first gallery row and HJM default at 390px dark/RTL/2x inspected. Full 55 example screenshots not reviewed.",
       "interactionReview": "HJM ancestor activated with Return; hash changes to records, current page becomes non-link and focus moves to new content. Long-copy LTR/RTL coverage checked separately in browser regression.",
-      "adoptionDecision": "Keep Web-only Breadcrumb and existing wrapping behavior for now; do not add a duplicate engine. Collapsed trails or Native adaptation are not verified requirements. docs/qa/2026-10-07-avatar-breadcrumb-reference.md"
+      "adoptionDecision": "Keep Web-only Breadcrumb and existing wrapping behavior for now; do not add a duplicate engine. Collapsed trails or Native adaptation are not verified requirements. docs/qa/2026-10-07-avatar-breadcrumb-reference.md",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification."
     },
     {
       "url": "https://component.gallery/components/button-group/",
@@ -60,7 +77,11 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification."
     },
     {
       "url": "https://component.gallery/components/button/",
@@ -70,7 +91,11 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification."
     },
     {
       "url": "https://component.gallery/components/card/",
@@ -80,7 +105,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/carousel/",
@@ -90,7 +118,11 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification."
     },
     {
       "url": "https://component.gallery/components/checkbox/",
@@ -100,7 +132,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/color-picker/",
@@ -110,7 +145,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/combobox/",
@@ -120,7 +158,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/date-input/",
@@ -130,7 +171,10 @@
       "sourceAudit": "2026-10-07: gallery currently lists 18 examples. Read GOV.UK official date-input guidance and example markup; Wise compact-date-input returned only a sparse text shell. Compared both HJM DatePicker Props and renderer sources at 5582ec7.",
       "visualReview": "Partial: GOV.UK standalone default and single-field error examples inspected at 1280x720. Three labeled inputs, focused partial year, retained day/month with only year error. Other gallery examples unreviewed. Wise compact route redirects to /404.",
       "interactionReview": "GOV.UK fixture: entered day=29, Tab focused month, entered Feb and partial year=20; values retained. Static demo has no submit/validation proof. No screen-reader or mobile check.",
-      "adoptionDecision": "Additional experiment candidate: remembered-date entry with separate day/month/year drafts. HJM DatePicker is a calendar trigger/dialog or Sheet, not direct segmented entry; generic Field composition alone does not supply partial-date validation, ordering or group semantics. Investigate shared resolver plus existing TextField composition before adding a public primitive. See docs/plans/reference-release-utilverse-2026-10-07.md. Not implemented or visually verified. Internal draft resolver and 6 tests now implemented; no public export/renderer or new story. docs/qa/2026-10-07-date-entry-reference.md Follow-up: DateEntry now has contracts/Web/Native public subpaths, usage and the 15th experimental composition. Web correction/reordering and iOS basic input confirmed; full environmental/assistive QA remains. See the same date-entry QA report."
+      "adoptionDecision": "Additional experiment candidate: remembered-date entry with separate day/month/year drafts. HJM DatePicker is a calendar trigger/dialog or Sheet, not direct segmented entry; generic Field composition alone does not supply partial-date validation, ordering or group semantics. Investigate shared resolver plus existing TextField composition before adding a public primitive. See docs/plans/reference-release-utilverse-2026-10-07.md. Not implemented or visually verified. Internal draft resolver and 6 tests now implemented; no public export/renderer or new story. docs/qa/2026-10-07-date-entry-reference.md Follow-up: DateEntry now has contracts/Web/Native public subpaths, usage and the 15th experimental composition. Web correction/reordering and iOS basic input confirmed; full environmental/assistive QA remains. See the same date-entry QA report.",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/datepicker/",
@@ -140,7 +184,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/drawer/",
@@ -150,7 +197,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/dropdown-menu/",
@@ -160,7 +210,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/empty-state/",
@@ -170,7 +223,10 @@
       "sourceAudit": "2026-10-07: gallery lists 16 examples. Primer Blankslate guidelines and PatternFly empty-state design guidelines read; broad upstream naming compared with EmptyState/Result/Notice/SearchScreen/PermissionScreen and ContentState.",
       "visualReview": "Original-site UI still pending. HJM Web 1280x720 and iOS 26.5 basic creation/no-results/recovery inspected. Found duplicate browser/HJM search cancel icons; scoped CSS fix visually verified.",
       "interactionReview": "Web creation, zero results, clear-to-results and retained search focus verified. Existing iOS Expo Go: create, type 999, clear while keyboard open, item restored. Browser input regressions 8 pass; actual screen readers and complete environments pending.",
-      "adoptionDecision": "Reuse existing public APIs; repair nonfunctional EmptyState sample actions on both platforms. Keep first-use, zero-result, access and error meanings distinct instead of adding duplicate component. Experiment count remains 16. docs/qa/2026-10-07-empty-state-reference.md"
+      "adoptionDecision": "Reuse existing public APIs; repair nonfunctional EmptyState sample actions on both platforms. Keep first-use, zero-result, access and error meanings distinct instead of adding duplicate component. Experiment count remains 16. docs/qa/2026-10-07-empty-state-reference.md",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/fieldset/",
@@ -180,7 +236,10 @@
       "sourceAudit": "2026-10-07: 32 gallery entries enumerated. GOV.UK and Headless UI documentation compared with HJM Form, selection groups and date/duration groups. The category mixes generic groups, single-field frames and selection groups.",
       "visualReview": "Partial: GOV.UK address-group standalone example inspected at 1280x720; four individually labeled inputs under one question. Remaining originals and gallery thumbnails not visually reviewed.",
       "interactionReview": "GOV.UK synthetic first address value retained after Tab moved to optional second line; fieldset first legend and four autocomplete values read from DOM. Screen reader, disabled and errors not exercised.",
-      "adoptionDecision": "FieldGroup added as the 16th experiment through contracts/Web/Native field-group subpaths. Existing domain groups and Form remain separate. Web browser 3 and Native renderer 2 tests pass; Web dark/RTL/2x and iOS basic error/edit/lock/reorder observed. Full original-source review, real screen readers, Android and product palette coverage remain. docs/qa/2026-10-07-field-group-reference.md"
+      "adoptionDecision": "FieldGroup added as the 16th experiment through contracts/Web/Native field-group subpaths. Existing domain groups and Form remain separate. Web browser 3 and Native renderer 2 tests pass; Web dark/RTL/2x and iOS basic error/edit/lock/reorder observed. Full original-source review, real screen readers, Android and product palette coverage remain. docs/qa/2026-10-07-field-group-reference.md",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/file-upload/",
@@ -190,7 +249,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/file/",
@@ -200,7 +262,10 @@
       "sourceAudit": "2026-10-07: six listed examples enumerated; TFWM markup and Nucleus current specification reviewed. Nucleus legacy docs URL redirects to /components/ns-download/. HJM Link accepts native anchor download; ListRow does not expose download. Asset is media framing and UploadItem owns upload lifecycle, not download. Follow-up: Brighton both original routes redirect to current council Page not found; cached search text is historical. Lightning redirects to https://v1.lightningdesignsystem.com/components/files/ and labels itself a Winter 27 desktop sandbox blueprint.",
       "visualReview": "All six gallery thumbnails inspected at 1280px; this is not six original-site UI reviews. Nucleus Standard and List live examples inspected at documentation default Desktop/75% preview; long title wraps and type/size appear below list titles. Other original-site variants remain pending. Lightning at 1280x720: base/actions, no-image fallback, titleless, loading with/without title and +22 attachment overflow inspected; ratio variants only enumerated in DOM.",
       "interactionReview": "Nucleus Standard to List tab transition verified; no file download transport, keyboard, screen reader or Native download host verification. Lightning first More Actions click showed no menu (role=menu count 0); preview anchors use #. Section navigation worked. Not download or preview engine verification.",
-      "adoptionDecision": "Reuse Web Link download for simple links; document metadata, preview and independent export lifecycle use experimental DocumentResource via dedicated Web/Native subpaths. This is the 17th experiment; not promoted or published. Web fixture download verified as 76-byte exact UTF-8 content. Native fixture now writes and reads back TXT and opens expo-sharing; iOS 26.5 Files save produced a matching 76-byte copy. Sharing Promise does not report saved/cancelled. Full six-source review, Android, accessibility and cross-environment QA remain open. Native large text long name, dark preview recovery and an RTL story render have partial evidence. docs/qa/2026-10-07-file-reference.md and docs/plans/document-resource-experiment.md"
+      "adoptionDecision": "Reuse Web Link download for simple links; document metadata, preview and independent export lifecycle use experimental DocumentResource via dedicated Web/Native subpaths. This is the 17th experiment; not promoted or published. Web fixture download verified as 76-byte exact UTF-8 content. Native fixture now writes and reads back TXT and opens expo-sharing; iOS 26.5 Files save produced a matching 76-byte copy. Sharing Promise does not report saved/cancelled. Full six-source review, Android, accessibility and cross-environment QA remain open. Native large text long name, dark preview recovery and an RTL story render have partial evidence. docs/qa/2026-10-07-file-reference.md and docs/plans/document-resource-experiment.md",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/footer/",
@@ -210,7 +275,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/form/",
@@ -220,7 +288,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/header/",
@@ -230,7 +301,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/heading/",
@@ -240,7 +314,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/hero/",
@@ -250,7 +327,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/icon/",
@@ -260,7 +340,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/image/",
@@ -270,7 +353,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/label/",
@@ -280,7 +366,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/link/",
@@ -290,7 +379,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/list/",
@@ -300,7 +392,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/modal/",
@@ -310,7 +405,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/navigation/",
@@ -320,7 +418,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/pagination/",
@@ -330,7 +431,11 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification."
     },
     {
       "url": "https://component.gallery/components/popover/",
@@ -340,7 +445,11 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification."
     },
     {
       "url": "https://component.gallery/components/progress-bar/",
@@ -350,7 +459,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/progress-indicator/",
@@ -360,7 +472,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/quote/",
@@ -370,7 +485,11 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification."
     },
     {
       "url": "https://component.gallery/components/radio-button/",
@@ -380,7 +499,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/rating/",
@@ -390,7 +512,11 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification."
     },
     {
       "url": "https://component.gallery/components/rich-text-editor/",
@@ -400,7 +526,11 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification."
     },
     {
       "url": "https://component.gallery/components/search-input/",
@@ -410,7 +540,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/segmented-control/",
@@ -420,7 +553,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/select/",
@@ -430,7 +566,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/separator/",
@@ -440,7 +579,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/skeleton/",
@@ -450,7 +592,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/skip-link/",
@@ -460,7 +605,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/slider/",
@@ -470,7 +618,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/spinner/",
@@ -480,7 +631,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/stack/",
@@ -490,7 +644,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/stepper/",
@@ -500,7 +657,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/table/",
@@ -510,7 +670,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/tabs/",
@@ -520,7 +683,11 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification."
     },
     {
       "url": "https://component.gallery/components/text-input/",
@@ -530,7 +697,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/textarea/",
@@ -540,7 +710,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/toast/",
@@ -550,7 +723,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/toggle/",
@@ -560,7 +736,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/tooltip/",
@@ -570,7 +749,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/tree-view/",
@@ -580,7 +762,11 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification."
     },
     {
       "url": "https://component.gallery/components/video/",
@@ -590,7 +776,10 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://component.gallery/components/visually-hidden/",
@@ -600,14 +789,17 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
+      "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
     },
     {
       "url": "https://motion-primitives.com/docs/accordion",
       "name": "accordion",
       "existingMapping": "Accordion / Collapsible",
       "priorRationale": "기존 열림 계약에 표현 흡수 검토",
-      "sourceAudit": "2026-10-07: full Manual implementation reviewed; see per-page rationale in evidence report.",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "2026-10-07: one desktop/light demo flow observed; exact states and failures in evidence report. Not all examples/keyboard/focus/pointer combinations.",
       "adoptionDecision": "기존 API 유지. 높이/opacity 전환과 아이콘 회전만 표현 후보. 원본 trigger에는 aria-expanded만 있고 내용 연결 ID가 없으므로 원본 상태 엔진을 교체 도입하지 않는다.",
@@ -616,22 +808,95 @@
         "date": "2026-10-07",
         "exampleCount": 3,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 3,
+        "characters": 11709,
+        "examples": [
+          [
+            "AccordionBasic"
+          ],
+          [
+            "AccordionIcons"
+          ],
+          [
+            "AccordionVariant"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "dbe9214ed3f58b43746da3d466df60c00440e9256e0ade34fae6bbdcd88401dd",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 3,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "a2e2400a47a8044794b4feac10be1b951f1c091d6cf2c53fd843c47ac6c8e778"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "04eb1dc08d3fd494120a10f52f07882fe2352cb118ece5d7d84ee91cea23bd6c"
+          },
+          {
+            "index": 3,
+            "screenshotDigest": "c48a09c37385af0de64618818740a3c60d06c8148ec1a42733fd6676191889c7"
+          }
+        ]
       }
     },
     {
       "url": "https://motion-primitives.com/docs/disclosure",
       "name": "disclosure",
-      "existingMapping": "Accordion / Collapsible",
+      "existingMapping": "Collapsible",
       "priorRationale": "기존 열림 계약에 표현 흡수 검토",
-      "sourceAudit": "2026-10-06",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "2026-10-07: one desktop/light demo flow observed; exact states and failures in evidence report. Not all examples/keyboard/focus/pointer combinations.",
-      "adoptionDecision": "pending",
+      "adoptionDecision": "기존 API + 표현 비교 — height auto와 opacity 전환을 흡수한다. trigger와 content ID 연결, child handler 조합, controlled open 소유는 HJM을 유지한다. 원본은 내부 open을 토글한 뒤 외부 callback에 통지한다. 실험 구현/승격/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
         "exampleCount": 2,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 2,
+        "characters": 3953,
+        "examples": [
+          [
+            "DisclosureBasic"
+          ],
+          [
+            "DisclosureCard"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "51367268bdbdce55f1c3233227702a220d33fce82afc2ef932acf851cb31753a",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 2,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "afb225c0ba277f1b6841cd9024ce307308d0a83cdc12a77d3c6d22efd1d54977"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "7e101b465cfb74fc2746135f2de9214e0cca825fa99991fee3385d8db1eafc0f"
+          }
+        ]
       }
     },
     {
@@ -639,16 +904,63 @@
       "name": "animated-background",
       "existingMapping": "Tabs / SegmentedControl",
       "priorRationale": "기존 선택 표시와 비교",
-      "sourceAudit": "2026-10-06",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "Week activated; data-checked=true moved; no aria-pressed/aria-selected on source buttons. Other demo variants and environment matrix pending.",
-      "adoptionDecision": "recommended: keep HJM radio engine and add opt-in selection artwork motion",
+      "adoptionDecision": "권장 표현 흡수 실험 — layoutId로 선택 배경이 이어지는 표현. 원본 cloneElement가 child onClick을 교체하고 data-checked만 사용하므로 선택 엔진은 HJM을 유지한다. hover는 선택 확정과 분리한다. 실험 구현/승격/게시 완료 아님.",
       "implementation": "SegmentedControl selectionMotion=slide in Web/Native. 2026-10-07: fixed Web RTL fixed-width pill track resize (90px regression); Native scrolling keyboard host added. iOS 26.5 light/2x input 42 retained through week selection, dark/RTL/2x selection artwork and checked state match. Full matrix/performance/screen readers remain pending. docs/qa/2026-10-07-selection-motion.md",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
         "exampleCount": 4,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 4,
+        "characters": 4752,
+        "examples": [
+          [
+            "AnimatedTabs"
+          ],
+          [
+            "AnimatedTabsHover"
+          ],
+          [
+            "AnimatedCardBackgroundHover"
+          ],
+          [
+            "SegmentedControl"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "7cfa48abd0dd3953ca4c46c6578f6b8aee0efa158cb597ab0b0ea24d9b75ca54",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 4,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "8ceef61b48a74363f71554cc549440fcbdb27dd040a6c9817eb5e3e2bb06a42e"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "056b83c28ea524f4e20edb35f74ce82ce8a170c1cb76a23126cc1be8c4cf43af"
+          },
+          {
+            "index": 3,
+            "screenshotDigest": "bd1bc4adae38639f55cb4f2868c2ddb0835b68fc5a913e94c9721bc2dc50e0f7"
+          },
+          {
+            "index": 4,
+            "screenshotDigest": "8e85fb6494012266eaa8464cceeea03175bf3d0137407c17fb0f669d34b3a0bd"
+          }
+        ]
       }
     },
     {
@@ -656,47 +968,160 @@
       "name": "animated-group",
       "existingMapping": "ContentTransition / Grid / List",
       "priorRationale": "등장 구성 후보, 읽기 지연 금지",
-      "sourceAudit": "2026-10-06",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending",
+      "adoptionDecision": "권장 표현 흡수 실험 — fade/slide/scale/blur 및 stagger 진입을 비교한다. index key와 추가 wrapper 때문에 재정렬·의미 구조가 달라질 수 있어 기존 stable key와 레이아웃을 유지한다. 실험 구현/승격/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
         "exampleCount": 3,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 3,
+        "characters": 4286,
+        "examples": [
+          [
+            "AnimatedGroupPreset"
+          ],
+          [
+            "AnimatedGroupCustomVariants"
+          ],
+          [
+            "AnimatedGroupCustomVariants2"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "289fc3c7f1bd2c9f9394681655e897e5c226ae1dd3b8f43bde2626ade88b89c3",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 3,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "7f07c37b1206f50174a76df5c3b709f448bb9a64ad27db93ffa8616d2741be4f"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "e01bcdde5124a4800e96a5b446e02a363db1268d0357374c79fce4d5480bd0e6"
+          },
+          {
+            "index": 3,
+            "screenshotDigest": "2e41eb088abadff5b717dfa343f73d4821a9bd1390324c16aa25d8ced98c1ce3"
+          }
+        ]
       }
     },
     {
       "url": "https://motion-primitives.com/docs/in-view",
       "name": "in-view",
-      "existingMapping": "ContentTransition / Grid / List",
+      "existingMapping": "ContentTransition / 제품 진입 구성",
       "priorRationale": "등장 구성 후보, 읽기 지연 금지",
-      "sourceAudit": "2026-10-06",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending",
+      "adoptionDecision": "권장 표현 흡수 실험 — useInView·once·margin으로 진입 시점을 정하는 표현. 필수 콘텐츠를 opacity 0으로 계속 숨기지 않도록 실패/모션 감소/지원 누락의 정적 노출을 확인한다. 실험 구현/승격/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
         "exampleCount": 3,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 3,
+        "characters": 6453,
+        "examples": [
+          [
+            "InViewBasic"
+          ],
+          [
+            "InViewBasicMultiple"
+          ],
+          [
+            "InViewImagesGrid"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "07134fe1fd6343842fc14bc45e316e21a5b656c9f3f19bc3ee1890bca0729edd",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 3,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "4ad2510818c6e56d45e16a2492e2778baf43777e947074b4de1080cc40643269"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "d158f5a7db17b82cf6b8b4a523c857debb192b7b6190a081ba888975ca521c91"
+          },
+          {
+            "index": 3,
+            "screenshotDigest": "fdf65f4ccf7bc2cbbdcc84a837e53bd91df88ad2550c98b13f8dba0acd527816"
+          }
+        ]
       }
     },
     {
       "url": "https://motion-primitives.com/docs/transition-panel",
       "name": "transition-panel",
-      "existingMapping": "ContentTransition / Grid / List",
+      "existingMapping": "ContentTransition / Tabs / 온보딩 구성",
       "priorRationale": "등장 구성 후보, 읽기 지연 금지",
-      "sourceAudit": "2026-10-06",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending",
+      "adoptionDecision": "기존 API + 표현 비교 — activeIndex에 따른 keyed enter/exit. 원본은 index 범위 검증·입력 보존·출력 확정·초점 이동을 별도 제공하지 않는다. 기존 단일 active subtree·제품 상태·focusTarget·height motion을 유지한다. 실험 구현/승격/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
         "exampleCount": 2,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 2,
+        "characters": 6803,
+        "examples": [
+          [
+            "TabsTransitionPanel"
+          ],
+          [
+            "TransitionPanelCard"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "0ad6002755f9b0f4586a356d90d392d5fb93ec144ae2761c983267b4bfad4528",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 2,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "48392abc275653eb79966f1fe8674b60ecebb26b93c5fdd84a8dc172166cc25e"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "8e5d8330975862cef2179d62e710579b44845c7f058956f76894d7f3efc55af8"
+          }
+        ]
       }
     },
     {
@@ -704,7 +1129,7 @@
       "name": "animated-number",
       "existingMapping": "AnimatedStatistic (optional statistic-motion)",
       "priorRationale": "현재 숫자 엔진 유지 권고",
-      "sourceAudit": "2026-10-07: full Manual implementation reviewed; see per-page rationale in evidence report.",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
       "adoptionDecision": "기존 API 유지. 원본은 매 프레임 Math.round(...).toLocaleString()으로 암묵 locale을 사용한다. HJM의 명시 locale·Intl format·모션 감소·RTL fallback을 유지한다.",
@@ -713,6 +1138,46 @@
         "date": "2026-10-07",
         "exampleCount": 3,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 3,
+        "characters": 2743,
+        "examples": [
+          [
+            "AnimatedNumberBasic"
+          ],
+          [
+            "AnimatedNumberCounter"
+          ],
+          [
+            "AnimatedNumberInView"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "36d05b6480d0a3086dba6a3de004b96fe0b7fcdca9e2170f92996b0576b217fb",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 3,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "e0223c1f95516fef62ba07a83de84c2b2418266578d48725518f691de43afb37"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "1c64c6a91de5fc3f551a6b2b5a22ef82b3306ee20f1c1a750acc8c6a8b21f3da"
+          },
+          {
+            "index": 3,
+            "screenshotDigest": "3facb584e0ab7e5476b6eaaabaf7b7f0650886d340ca49df5bae53ce09e714dd"
+          }
+        ]
       }
     },
     {
@@ -720,63 +1185,223 @@
       "name": "sliding-number",
       "existingMapping": "AnimatedStatistic",
       "priorRationale": "현재 숫자 엔진 유지 권고",
-      "sourceAudit": "2026-10-06",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending",
+      "adoptionDecision": "기존 API 유지·표현 비교 — 세로 숫자 rolling 표현. 원본은 자리마다 10개의 숫자를 렌더하고 spoken value를 별도로 숨기지 않으며 toString/parseInt에 의존한다. 기존 locale·finite value·Intl·단일 spoken value를 유지한다. 실험 구현/승격/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
         "exampleCount": 3,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 3,
+        "characters": 2364,
+        "examples": [
+          [
+            "Clock"
+          ],
+          [
+            "SlidingNumberWithSlider"
+          ],
+          [
+            "SlidingNumberBasic"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "d59a9fdff30ff407be58280dd91952e283f84e8b5e7611f4087c68e4edc22da2",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 3,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "211f160bd21188025b66df9ea36a77a203b702b38b1d8b0cc6ba4bc8cef57dce"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "9d2b70c3a2ea875a33a80d3c98a7d5aea5cca19be63981a0f904ff09d1f00a0e"
+          },
+          {
+            "index": 3,
+            "screenshotDigest": "318dc039463728f75aa289872834738eb24a7d0b810306ae38dc49beb67dd94d"
+          }
+        ]
       }
     },
     {
       "url": "https://motion-primitives.com/docs/border-trail",
       "name": "border-trail",
-      "existingMapping": "EffectSurface / Card",
+      "existingMapping": "EffectSurface / 장식 레이어",
       "priorRationale": "선택적 장식 레이어 후보",
-      "sourceAudit": "2026-10-06",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending",
+      "adoptionDecision": "권장 신규 표현 실험 — offsetPath를 따라 도는 테두리 표현. 원본 기본 repeat Infinity, 5초이며 구현 내부 모션 감소/가시성 분기가 없다. 의미 있는 진행은 기존 busy 상태가 소유하고 테두리는 장식이다. 실험 구현/승격/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
         "exampleCount": 3,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 3,
+        "characters": 3290,
+        "examples": [
+          [
+            "BorderTrailCard1"
+          ],
+          [
+            "BorderTrailCard2"
+          ],
+          [
+            "BorderTrailTextarea"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "138a2b18ab6eda02f2abfdc43d32022f9f8018f4ebe77336b7635c43a5cba6b2",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 3,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "b5b326a08c242d6c1608cb839fe39d5500e6a6c0f5894fcd1bce27bcfc3e0b63"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "c713af2234d1f8d1a9976f38948de9b59347ec4aeff7011143a1a8ab0d16afda"
+          },
+          {
+            "index": 3,
+            "screenshotDigest": "857a2136ecbdf350366825da572327204cefc69128e1bd07cd37b1a75553ef7b"
+          }
+        ]
       }
     },
     {
       "url": "https://motion-primitives.com/docs/glow-effect",
       "name": "glow-effect",
-      "existingMapping": "EffectSurface / Card",
+      "existingMapping": "EffectSurface",
       "priorRationale": "선택적 장식 레이어 후보",
-      "sourceAudit": "2026-10-06",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending",
+      "adoptionDecision": "권장 표현 흡수 실험 — rotate/pulse/breathe/colorShift/flowHorizontal/static을 기존 glow와 비교한다. 임의 hex 기본색과 numeric blur의 동적 Tailwind class를 복사하지 않고 semantic palette·장식 강도·가시성·모션 감소에 연결한다. 실험 구현/승격/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
         "exampleCount": 3,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 3,
+        "characters": 3224,
+        "examples": [
+          [
+            "GlowEffectCardBackground"
+          ],
+          [
+            "GlowEffectButton"
+          ],
+          [
+            "GlowEffectCardMode"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "b7c4650abc2764da58cdc22bb880cc6adc067765dac89ca147267166c8b6c7a4",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 3,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "1b68dfaec9d9534a76a553bb7bc888a9ec34598375be47ebd4600bf1531ec8bf"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "bcc674a2bf295cc090382d927d389ae25852eea136416317a3e333b4cfa40556"
+          },
+          {
+            "index": 3,
+            "screenshotDigest": "41ba2ff5b32d20aa789914d8c799c66c9abd831af9e66d0e3fb5d83580793dd6"
+          }
+        ]
       }
     },
     {
       "url": "https://motion-primitives.com/docs/spotlight",
       "name": "spotlight",
-      "existingMapping": "EffectSurface / Card",
+      "existingMapping": "EffectSurface / pointer 장식 후보",
       "priorRationale": "선택적 장식 레이어 후보",
-      "sourceAudit": "2026-10-06",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending",
+      "adoptionDecision": "권장 표현 흡수 실험 — 마우스를 따라 움직이는 radial highlight. 원본이 parent position/overflow를 직접 바꾸고 복원하지 않으므로 원래 레이아웃·overflow를 보존하는 scoped layer로 비교한다. 실험 구현/승격/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
         "exampleCount": 3,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 3,
+        "characters": 3018,
+        "examples": [
+          [
+            "SpotlightBasic"
+          ],
+          [
+            "SpotlightCustomColor"
+          ],
+          [
+            "SpotlightBorder"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "3b776881ec1d04ec92e50018f5b86329e83644f46ce0e732e7063f27e2a36242",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 3,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "f10b1c8327a54f2477d55f77f08bf9ef976e3b327941a3357f7089e725aa24d1"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "3fb56de1e86d2d458b95366b575b6e3e0bf37c2632a0c8210f6aa96ed7d210b3"
+          },
+          {
+            "index": 3,
+            "screenshotDigest": "940e2869004998f45eb8b8b84a0b5c8582aa10ea6d7f2ce42865ac7be93d1a20"
+          }
+        ]
       }
     },
     {
@@ -784,63 +1409,216 @@
       "name": "carousel",
       "existingMapping": "Carousel / CarouselMotion",
       "priorRationale": "현재 carousel 계약·engine 유지",
-      "sourceAudit": "2026-10-06",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending",
+      "adoptionDecision": "기존 API + 표현 비교 — 부분 노출·custom indicator·spring 전환을 비교한다. 8px dot, hover opacity, 비활성 슬라이드 focus/AX 처리와 IntersectionObserver visible count를 실제 상태에서 확인하기 전 engine 교체를 확정하지 않는다. 실험 구현/승격/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
         "exampleCount": 4,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 4,
+        "characters": 6914,
+        "examples": [
+          [
+            "CarouselBasic"
+          ],
+          [
+            "CarouselCustomSizes"
+          ],
+          [
+            "CarouselSpacing"
+          ],
+          [
+            "CarouselCustomIndicator"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "6ff491c72d9de2166751759771f99ad526597d24b324e7284916096f0c0e097a",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 4,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "536cb2c9efc242a7fb974dffd92a9d565f8ab6943394e7f88a054166abf0aef4"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "93647588e9157956131f37ad7d9d08a0924a90be9c28e1670b812c37dd4323a6"
+          },
+          {
+            "index": 3,
+            "screenshotDigest": "81cccb0026a6044b5f303fa2fa348d3775a28d661fb12549553531c4c6a663d0"
+          },
+          {
+            "index": 4,
+            "screenshotDigest": "7ad8245b402d33fb72cf8e7c7a43317e3428a00438ab5978dda9a351ee72454a"
+          }
+        ]
       }
     },
     {
       "url": "https://motion-primitives.com/docs/cursor",
       "name": "cursor",
-      "existingMapping": "제품 장식 또는 optional 표현",
+      "existingMapping": "제품 장식 / pointer 표현 adapter 후보",
       "priorRationale": "Web 소개용 표현, 기본 조작 UI 교체 제외",
-      "sourceAudit": "2026-10-06",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending",
+      "adoptionDecision": "조건부 실험 후보 — global body cursor 숨김이 cleanup에서 복원되지 않고 parent enter/leave는 익명 함수가 달라 제거되지 않는다. pointer-capability·복원·정적 대체를 갖춘 독립 장식 표현으로만 검토한다. 실험 구현/승격/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
         "exampleCount": 3,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 3,
+        "characters": 4958,
+        "examples": [
+          [
+            "Cursor1"
+          ],
+          [
+            "Cursor2"
+          ],
+          [
+            "Cursor3"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "762dc7b13fb37dcfc6bada22eb8f33dbbb2103b89ff07c5af7cbde212449a2f1",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 3,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "10cef40b278eaf4cedea81a53ddd69f433ab9722fe654c92a79dc479bd5a3cf5"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "d774e982bb0b51f427bb443172cd8019e98d8b88e8b316864349674049fbc3ec"
+          },
+          {
+            "index": 3,
+            "screenshotDigest": "89cac596f261135e77410b3aac5e6a1b5b3ad8d520a7f44bae38f2419b5764a7"
+          }
+        ]
       }
     },
     {
       "url": "https://motion-primitives.com/docs/magnetic",
       "name": "magnetic",
-      "existingMapping": "제품 장식 또는 optional 표현",
+      "existingMapping": "제품 장식 / pointer 표현 adapter 후보",
       "priorRationale": "Web 소개용 표현, 기본 조작 UI 교체 제외",
-      "sourceAudit": "2026-10-06",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending",
+      "adoptionDecision": "조건부 실험 후보 — self/parent/global 범위의 spring 이동을 비교한다. 안정된 hit frame·기본 누르기·pointer 지원·모션 감소와 복귀를 유지하며 버튼 행동 계약을 교체하지 않는다. 실험 구현/승격/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
         "exampleCount": 2,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 2,
+        "characters": 1274,
+        "examples": [
+          [
+            "MagneticBasic"
+          ],
+          [
+            "MagneticNested"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "5f7113bd04ca35834a1f1dfbaf55c009b6e464ea51fdf6ba4fd0fc007fd9a028",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 2,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "9d0596d17ae343996fc3c6cfe641199ae61b145cc151af61518561f4bb6467bf"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "771ab11f93cc30c0a2c07ade695c8fdb8f54a3f862b962d74cc00de78ed0f19e"
+          }
+        ]
       }
     },
     {
       "url": "https://motion-primitives.com/docs/tilt",
       "name": "tilt",
-      "existingMapping": "제품 장식 또는 optional 표현",
+      "existingMapping": "제품 장식 / pointer 표현 adapter 후보",
       "priorRationale": "Web 소개용 표현, 기본 조작 UI 교체 제외",
-      "sourceAudit": "2026-10-06",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending",
+      "adoptionDecision": "조건부 실험 후보 — mouse 위치에 따른 perspective 회전과 leave 복귀. 원본 transform이 외부 style.transform을 덮으므로 안정된 frame과 합성·정적/touch 대체를 비교한다. 실험 구현/승격/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
         "exampleCount": 2,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 2,
+        "characters": 2266,
+        "examples": [
+          [
+            "TiltCard1"
+          ],
+          [
+            "TiltSpotlight"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "48404f31c578b65ae2fa4ef1d7efda6b7ad2c8ce0601c42efa6b356b1bae489e",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 2,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "861922d32f02f84cdbd783da9f91ff949c9153a80323f8370d022299e7245da2"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "0b8c4f16b3e944a1b43c15c61c066696e53a5fbb26085800caa32273b9b93919"
+          }
+        ]
       }
     },
     {
@@ -848,7 +1626,7 @@
       "name": "dialog",
       "existingMapping": "Dialog",
       "priorRationale": "overlay 동작 유지, geometry만 비교",
-      "sourceAudit": "2026-10-07: full Manual implementation reviewed; see per-page rationale in evidence report.",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "2026-10-07: one desktop/light demo flow observed; exact states and failures in evidence report. Not all examples/keyboard/focus/pointer combinations.",
       "adoptionDecision": "기존 API 유지. 키보드 열기/Escape 닫기 확인; 닫은 뒤 BODY로 초점 이동. 전환 표현만 비교하며 기존 닫기·초점 복귀 계약은 보존한다.",
@@ -857,6 +1635,60 @@
         "date": "2026-10-07",
         "exampleCount": 5,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 5,
+        "characters": 9554,
+        "examples": [
+          [
+            "DialogBasic"
+          ],
+          [
+            "DialogControlled"
+          ],
+          [
+            "DialogCustomVariantsTransition"
+          ],
+          [
+            "DialogCustomExit"
+          ],
+          [
+            "DialogCustomBackdrop"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "9b62a9ed1b088810b6152428bd2a15a89ea1cec8e865ec7325506d9110994ee6",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 5,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "26115111b3e1ce783ba4dd5de3665364461b8a19db009aea63031018f3921cd2"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "cab69a5cae36a00b94572cc86c918298cff24f80d15f349ebb2085c78064568d"
+          },
+          {
+            "index": 3,
+            "screenshotDigest": "a3db9d5b13900ae5370c17289641c4b08f2994900601f2e0ef13fc1dd32098ee"
+          },
+          {
+            "index": 4,
+            "screenshotDigest": "a3db9d5b13900ae5370c17289641c4b08f2994900601f2e0ef13fc1dd32098ee"
+          },
+          {
+            "index": 5,
+            "screenshotDigest": "26115111b3e1ce783ba4dd5de3665364461b8a19db009aea63031018f3921cd2"
+          }
+        ]
       }
     },
     {
@@ -864,7 +1696,7 @@
       "name": "morphing-dialog",
       "existingMapping": "Dialog.motionOrigin / 버튼에서 이어지는 편집 구성",
       "priorRationale": "overlay 동작 유지, geometry만 비교",
-      "sourceAudit": "2026-10-07: full Manual implementation reviewed; see per-page rationale in evidence report.",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "2026-10-07: one desktop/light demo flow observed; exact states and failures in evidence report. Not all examples/keyboard/focus/pointer combinations.",
       "adoptionDecision": "별도 MorphingDialog API를 만들지 않는다. 원본 제목·설명 aria ID 대상 없음, Escape 뒤 트리거 초점 복귀 없음. 기존 Dialog.motionOrigin과 제품 소유 초안 구성에 흡수한다.",
@@ -874,39 +1706,145 @@
         "date": "2026-10-07",
         "exampleCount": 3,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 3,
+        "characters": 10895,
+        "examples": [
+          [
+            "MorphingDialogBasicOne"
+          ],
+          [
+            "MorphingDialogBasicTwo"
+          ],
+          [
+            "MorphingDialogBasicImage"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "46417253df209c76547d910e9e270a35deb6f891c36a2bb6b0ace740547176f2",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 3,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "c18ed63293d10c46b9720c2bfc66cc783ce31571531c230e0544bbb54f1bcfab"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "ea5ee0ea56776dc882bf2e2b537363e39f15fdd711e557f793c1c6ea38c3b119"
+          },
+          {
+            "index": 3,
+            "screenshotDigest": "e3277a2f5858c24880048abbbf54ab60726fd26ad0506f22361359cf8672a161"
+          }
+        ]
       }
     },
     {
       "url": "https://motion-primitives.com/docs/morphing-popover",
       "name": "morphing-popover",
-      "existingMapping": "Dialog / Popover / MorphingMenu",
+      "existingMapping": "Popover.motionOrigin / 버튼에서 이어지는 편집",
       "priorRationale": "overlay 동작 유지, geometry만 비교",
-      "sourceAudit": "2026-10-06",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "Add Note focuses textarea. After test draft and Escape, popover disappears and activeElement is BODY; reopening shows empty textarea. Submit was not invoked.",
-      "adoptionDecision": "Absorb geometry into the existing Web Popover without copying source session ownership. motionOrigin uses shared Dialog presentation lifecycle and existing Popover placement, focus and dismissal. Product owns retained draft; Native uses Dialog/Sheet.",
+      "adoptionDecision": "기존 API 유지·표현 흡수 — 원본은 aria-modal=true이지만 focus trap/inert/초점 복귀를 자체 제공하지 않는다. asChild의 onClick도 덮는다. HJM의 non-modal 편집·바깥 클릭·초점 복귀와 제품 draft를 유지한다. 실험 구현/승격/게시 완료 아님.",
       "implementationBoundary": "2026-10-07: implemented Web Popover motionOrigin and three contextual editing variants within the existing origin-dialog experiment. Chromium regression covers final placement, resize while scaled, rapid reopen, outside-pointer focus and reduced-motion Escape. IAB verified failed save, retained draft after close/reopen, successful retry, light/dark and 390px large-text error layout. Full palette/RTL/frame-performance matrix and promotion remain pending; see docs/qa/2026-10-07-overlay-origin-transition.md.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
         "exampleCount": 3,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 3,
+        "characters": 8625,
+        "examples": [
+          [
+            "MorphingPopoverBasic"
+          ],
+          [
+            "MorphingPopoverCustomTransitionVariants"
+          ],
+          [
+            "MorphingPopoverTextarea"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "ab41a743dd5d2fdef88b519378f9761f347e668a1530f10f4fca8e5a61168d06",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 3,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "d1405ab9c02e6dd29003d4bd2379416aceb71af40bd7d31592e178540d02b62e"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "313628c7d7259bdf4b6320907875b4c1088a8aa5de65b2e33cc5d249733ecb67"
+          },
+          {
+            "index": 3,
+            "screenshotDigest": "cc0fccbcf829f7b95fb5b301de70f89a465a16f5f62450a415464c2a2f9196fb"
+          }
+        ]
       }
     },
     {
       "url": "https://motion-primitives.com/docs/dock",
       "name": "dock",
-      "existingMapping": "NavigationBar / BottomNavigation",
+      "existingMapping": "NavigationBar / BottomNavigation / Toolbar",
       "priorRationale": "내비게이션 표현 비교, 확대 효과는 선택적",
-      "sourceAudit": "2026-10-06",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending",
+      "adoptionDecision": "조건부 표현 실험 후보 — 가까운 아이콘 확대와 label 전환을 비교한다. 원본 DockItem은 div role=button이고 Enter/Space handler가 없으며 demo navigation도 구현하지 않는다. 실제 navigation 의미·label·고정 touch target을 보존해야 한다. 실험 구현/승격/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
         "exampleCount": 1,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 1,
+        "characters": 1747,
+        "examples": [
+          [
+            "AppleStyleDock"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "b94246cb8ab856a632bc72d8363f69e9835a3a603c400da35e6285fee2ec09a4",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 1,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "b8ccb099be438efd512802866cead7b44a783fe4fb2b9806537a31464001223f"
+          }
+        ]
       }
     },
     {
@@ -914,7 +1852,7 @@
       "name": "image-comparison",
       "existingMapping": "ImageComparison",
       "priorRationale": "신규 기능 후보",
-      "sourceAudit": "2026-10-07: full Manual implementation reviewed; see per-page rationale in evidence report.",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "2026-10-07: one desktop/light demo flow observed; exact states and failures in evidence report. Not all examples/keyboard/focus/pointer combinations.",
       "adoptionDecision": "기존 1.14 API 유지. 원본 mouse drag는 50%→약80% 작동하지만 role=slider와 키보드 조절이 없다. HJM은 기존 Slider로 range/키보드/Native adjustable를 유지한다. 이미지 위 drag 표현 필요성은 별도 실험 판단으로 남긴다.",
@@ -923,103 +1861,425 @@
         "date": "2026-10-07",
         "exampleCount": 4,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 4,
+        "characters": 2833,
+        "examples": [
+          [
+            "ImageComparisonBasic"
+          ],
+          [
+            "ImageComparisonHover"
+          ],
+          [
+            "ImageComparisonSpring"
+          ],
+          [
+            "ImageComparisonCustomSlider"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "5871bc48ad2dd7657a9546bb48a0839623560312ca1c98660ba18f7d44a1df50",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 4,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "b7bc6c384a3eeb6a22a3023952dc6c932b417544ac7e78d8ca09f6856b28dcd6"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "c4deede3c796936a8d2ea02f3e125597e27ab08e16a92beb52b4d1bc676f4050"
+          },
+          {
+            "index": 3,
+            "screenshotDigest": "909351365293608345fbad02d3707b558d6bf0f0e3ba43bb9ffc9e1f5feaff1c"
+          },
+          {
+            "index": 4,
+            "screenshotDigest": "cd33f99dd41da111b429bd4e1fa6faa2e6256ebe40ba2f81cfd37aa473763f67"
+          }
+        ]
       }
     },
     {
       "url": "https://motion-primitives.com/docs/infinite-slider",
       "name": "infinite-slider",
-      "existingMapping": "제품 마케팅 구성",
+      "existingMapping": "Carousel / 로고·추천 목록 구성 후보",
       "priorRationale": "소개용 반복 띠 구성, 정지·중복 의미 필요",
-      "sourceAudit": "2026-10-06",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending",
+      "adoptionDecision": "권장 별도 구성 실험 — 자동 루프와 hover 속도 변경을 비교한다. 원본은 children을 접근성 구분 없이 두 번 렌더하며 speedOnHover=0은 falsy라 정지되지 않는다. 정지·focus/hover·중복 AX 제거·정적 목록을 구성 계약으로 검토한다. 실험 구현/승격/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
         "exampleCount": 3,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 3,
+        "characters": 5172,
+        "examples": [
+          [
+            "InfiniteSliderBasic"
+          ],
+          [
+            "InfiniteSliderHoverSpeed"
+          ],
+          [
+            "InfiniteSliderVertical"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "8a3020e63cedac24cd1fe07a759b156771f38cda9b40d5bf3bba9b063f063190",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 3,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "b6dbcfc168cf189b4f670a24f8d27205b5eb7504de334fc4e440bae905512fc2"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "b2ee50777a319d8bf2832454d9871179b50615b7dbf9361e948a7406210597ea"
+          },
+          {
+            "index": 3,
+            "screenshotDigest": "d5d126839d10c802ab484163033b4f84c917a12e5cee4a2afb68fd2b484254dc"
+          }
+        ]
       }
     },
     {
       "url": "https://motion-primitives.com/docs/progressive-blur",
       "name": "progressive-blur",
-      "existingMapping": "목록·이미지 장식",
+      "existingMapping": "ProgressiveBlur",
       "priorRationale": "가장자리 표현 후보, 실제 콘텐츠 가림 금지",
-      "sourceAudit": "2026-10-06",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "partial: pointer over artwork reveals blur and author/title at opacity 1; no keyboard-focusable artwork control inside the preview. The direction demo is an automatic duplicated number strip, not input range. After CDP prefers-reduced-motion=reduce and reload, translateX changed from -1.8px to -1097px on consecutive observations; no pause control seen in the demo. Emulation restored. Dark/responsive/performance pending.",
-      "adoptionDecision": "Use static artwork edge only behind always-visible copy, or a scroll-metric-driven hint. Do not inherit hover-only visual copy or automatic strip movement that ignores reduced motion. Implemented as an experiment; promotion remains pending.",
+      "adoptionDecision": "기존 1.14 API 유지 — 원본 방향별 mask/backdropFilter 레이어 표현을 비교한다. 원본 layer clamp와 segment 계산이 다른 입력을 사용하고 상한이 없다. HJM의 경계·초점 시 제거·2~8층·Native host 계약을 유지한다. 실험 구현/승격/게시 완료 아님.",
       "implementationBoundary": "2026-10-07: contracts and both granular renderers implemented; scroll edges and focused content remove decoration. Native product blur/mask host keeps Expo dependencies out of published renderer. iOS 26.5 Expo Go actual composition, end-item selection, shrink-to-fit, dark tint correction and large-text initial screen checked. Android actual composition, accessibility, product palettes and performance remain pending. See docs/qa/2026-10-07-progressive-blur.md.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
         "exampleCount": 3,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 3,
+        "characters": 4201,
+        "examples": [
+          [
+            "ProgressiveBlurBasic"
+          ],
+          [
+            "ProgressiveBlurHover"
+          ],
+          [
+            "ProgressiveBlurSlider"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "47528ec5abee97728c3c7e94275dd704eca16230060bb02e9868b9e09e3bfd4a",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 3,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "1824fb2c1d5f9cfb96e87df281ab0c754dede5c7e108d9f02ce0dee0eec26b7a"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "cbf707568404bbc5f7093e78a114b0509bb175785b6c3e4ea5a7ff97b864c8fa"
+          },
+          {
+            "index": 3,
+            "screenshotDigest": "1dc1350dd2ecd9c97c65b6fd8f5a24635b75ecc47a683c618c585c0fddf63045"
+          }
+        ]
       }
     },
     {
       "url": "https://motion-primitives.com/docs/scroll-progress",
       "name": "scroll-progress",
-      "existingMapping": "ScrollProgress / Timeline",
+      "existingMapping": "ScrollProgress",
       "priorRationale": "현재 host·범위 계약 유지",
-      "sourceAudit": "2026-10-06",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending",
+      "adoptionDecision": "기존 API 유지·표현 비교 — 문서나 내부 scroll container의 읽기 위치 표현이다. 원본 origin-left와 scaleX는 물리 방향이므로 RTL과 실제 container를 확인한다. 서버 작업 완료율로 사용하지 않는다. 실험 구현/승격/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
         "exampleCount": 3,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 3,
+        "characters": 5039,
+        "examples": [
+          [
+            "ScrollProgressBasic1"
+          ],
+          [
+            "ScrollProgressBasic2"
+          ],
+          [
+            "ScrollProgressBasic3"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "d786cd416146cc3a287c6e0139016b57838603eeb00b9ee4a7cf1fb16cd9c7fa",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 3,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "87ddd3d56731dbd33271904da3774153e30f3edf3a82d30766bac8a936e9546b"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "e2d050063f3dea2edb6798ba4a208e7959855ca57febfd7517d6c023b7f29ac1"
+          },
+          {
+            "index": 3,
+            "screenshotDigest": "d8ab6d0b485bff3b78a51af47cb80a0e6d4c54fb56552884cfbbb2ae8d9b0a47"
+          }
+        ]
       }
     },
     {
       "url": "https://motion-primitives.com/docs/spinning-text",
       "name": "spinning-text",
-      "existingMapping": "Text / TextTransition / 제품 소개 표현",
+      "existingMapping": "Text / 장식 텍스트 전환 후보",
       "priorRationale": "읽기·상태 텍스트의 기본 표현 교체 제외",
-      "sourceAudit": "2026-10-06",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending",
+      "adoptionDecision": "조건부 표현 실험 후보 — 원형 배치와 회전. 원본은 문자 aria-hidden + 전체 sr-only로 읽기 중복을 피한다. code-unit 분할·반경·모션 감소·자동 재생 정지를 검토하고 중요 본문을 원형으로 대체하지 않는다. 실험 구현/승격/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
         "exampleCount": 3,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 3,
+        "characters": 1599,
+        "examples": [
+          [
+            "SpinningTextBasic"
+          ],
+          [
+            "SpinningTextCustomTransition"
+          ],
+          [
+            "SpinningTextCustomVariants"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "002178bdbd49fbb822aacb48163b8801ec9b36f77e2eba5b0df6dc119662af91",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 3,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "e21967f7ea8df6d3bd35557f2593158fc4d889128783cdcbe3c68e69aef6132d"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "2a9d49bcb837da7a021e45532a20d0c9cd097fd607cba717bbb8c0f8c91c4167"
+          },
+          {
+            "index": 3,
+            "screenshotDigest": "aaa45b13bcb9d8623630069a161da48ceaa18b7286b61ddcc1f280dbe1e9aa81"
+          }
+        ]
       }
     },
     {
       "url": "https://motion-primitives.com/docs/text-effect",
       "name": "text-effect",
-      "existingMapping": "Text / TextTransition / 제품 소개 표현",
+      "existingMapping": "TextTransition",
       "priorRationale": "읽기·상태 텍스트의 기본 표현 교체 제외",
-      "sourceAudit": "2026-10-06",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending",
+      "adoptionDecision": "권장 표현 흡수 실험 — word/char/line reveal·preset·delay·speed 축을 기존 전체 문장 fade와 비교한다. 원본 char는 split(''), speed는 나눗셈에 사용된다. grapheme·검증된 시간·선택/줄바꿈·단일 spoken value·모션 감소를 제공해야 한다. 실험 구현/승격/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
         "exampleCount": 8,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 8,
+        "characters": 5329,
+        "examples": [
+          [
+            "TextEffectPerChar"
+          ],
+          [
+            "TextEffectPerWord"
+          ],
+          [
+            "TextEffectWithPreset"
+          ],
+          [
+            "TextEffectWithCustomVariants"
+          ],
+          [
+            "TextEffectWithCustomDelay"
+          ],
+          [
+            "TextEffectPerLine"
+          ],
+          [
+            "TextEffectWithExit"
+          ],
+          [
+            "TextEffectSpeed"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "d9e1bd2cd28862ba148c5a77432b38c5ce844aeef2640e23a9d6cccef0cee7e9",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 8,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "944965fc04169666696fb296803d4fc8c58e8b34a210bc8729809c1d0f7a1adf"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "4c7500d28ebef057edc8618c9cc0cdc88d0aba899ae6eef167d5c8b0bcc8f077"
+          },
+          {
+            "index": 3,
+            "screenshotDigest": "3e9dc841c3e3700c64e17dca931a44db7d1b38242754678a8cc74fe1c4e8ee38"
+          },
+          {
+            "index": 4,
+            "screenshotDigest": "31046856ae9842f254dd77eb39163a24eb00fadc1c449a429e739c3f2f64d0bf"
+          },
+          {
+            "index": 5,
+            "screenshotDigest": "e82f6cdb1795c3212e7e8f3f7337a83b3b5cb025d9b00e98b57f40fe6af764ac"
+          },
+          {
+            "index": 6,
+            "screenshotDigest": "8dbdf59d928a627e1be58654953e74aec2ffae6bdfe5ddd4b619560962834493"
+          },
+          {
+            "index": 7,
+            "screenshotDigest": "3aef82872827ede30f6fa5271449948e7f44a06794e23b396267e2068b8742d5"
+          },
+          {
+            "index": 8,
+            "screenshotDigest": "fb86bb919e4d90d1b84922c4bdf460ddc08ea62beef500271bd73ab99628c209"
+          }
+        ]
       }
     },
     {
       "url": "https://motion-primitives.com/docs/text-loop",
       "name": "text-loop",
-      "existingMapping": "Text / TextTransition / 제품 소개 표현",
+      "existingMapping": "TextTransition / 제품 순환 문구 구성 후보",
       "priorRationale": "읽기·상태 텍스트의 기본 표현 교체 제외",
-      "sourceAudit": "2026-10-06",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending",
+      "adoptionDecision": "권장 별도 구성 실험 — interval/trigger/onIndexChange 순환. 원본은 빈 children·interval 경계 검증이 없고 nowrap이다. 정지·줄바꿈·읽기 시간·내용의 단일 AX 값과 실제 작업 상태 분리를 검토한다. 실험 구현/승격/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
         "exampleCount": 3,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 3,
+        "characters": 2473,
+        "examples": [
+          [
+            "TextLoopBasic"
+          ],
+          [
+            "TextLoopCustomVariantsTransition"
+          ],
+          [
+            "TextLoopOnIndexChange"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "9c9db928817df5d521b2a9b2bb5b90df6de58f2266d9d03bd24b9d410b14a375",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 3,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "cff5314fc2983b9e15cfadc4ce39c101ca1489595076cf3e98a9923da5b820ff"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "c5e7931d00f431ec203cfc0980584d8bbbb62baef1980df05118679059bec711"
+          },
+          {
+            "index": 3,
+            "screenshotDigest": "9254bdf65786ad03920df67eb8aec89b3841ce14307c90a1b0cb2b78dd438676"
+          }
+        ]
       }
     },
     {
@@ -1027,7 +2287,7 @@
       "name": "text-morph",
       "existingMapping": "Text / TextTransition",
       "priorRationale": "읽기·상태 텍스트의 기본 표현 교체 제외",
-      "sourceAudit": "2026-10-07: full Manual implementation reviewed; see per-page rationale in evidence report.",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "2026-10-07: one desktop/light demo flow observed; exact states and failures in evidence report. Not all examples/keyboard/focus/pointer combinations.",
       "adoptionDecision": "공통 텍스트 전환 표현 후보. Continue→Confirm과 한글 입력의 aria-label 갱신 확인. 원본은 split('')으로 코드 유닛을 나누므로 emoji·결합 문자·모션 감소를 확인하기 전 채택 확정하지 않는다.",
@@ -1036,102 +2296,329 @@
         "date": "2026-10-07",
         "exampleCount": 2,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 2,
+        "characters": 1363,
+        "examples": [
+          [
+            "TextMorphButton"
+          ],
+          [
+            "TextMorphInput"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "96557bbc8885fbe9c6822239b03c184d8074886e777b5d565ba51cee6b2c2125",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 2,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "c30944538d79a7b714bef78aeb0fe1c49b003368b910b41dbef49753310bb302"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "503f53f6df6e9ce7277a20bfd569d83d0ec7cbe3717adbbad3cc6b76f256d674"
+          }
+        ]
       }
     },
     {
       "url": "https://motion-primitives.com/docs/text-roll",
       "name": "text-roll",
-      "existingMapping": "Text / TextTransition / 제품 소개 표현",
+      "existingMapping": "TextTransition",
       "priorRationale": "읽기·상태 텍스트의 기본 표현 교체 제외",
-      "sourceAudit": "2026-10-06",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending",
+      "adoptionDecision": "권장 표현 흡수 실험 — char rotateX 전환. 원본은 이중 시각 문자를 aria-hidden으로 숨기고 sr-only 전체 문장을 제공한다. grapheme·실제 line height·텍스트 선택·모션 감소를 확인한다. 실험 구현/승격/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
         "exampleCount": 3,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 3,
+        "characters": 1393,
+        "examples": [
+          [
+            "TextRollBasic"
+          ],
+          [
+            "TextRollCustomVariants"
+          ],
+          [
+            "TextRollCustomTransitionDelay"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "421b10012766da95a7967cd80094874b7a492a7e811866ea52ab1a85daa949fb",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 3,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "73630f500159b3c5d934e11baffc78ef38f7caf3d2b9a543951b2fc6213b6886"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "c2e0675c29abd1d6a29ee5d0a7027ca7996a70ee6bcf385fec096f4236d03d5b"
+          },
+          {
+            "index": 3,
+            "screenshotDigest": "5615a6b4ceb2b3bdcb783c5b79a0eaab2882a0209ffaf689e519e1588e1b883e"
+          }
+        ]
       }
     },
     {
       "url": "https://motion-primitives.com/docs/text-scramble",
       "name": "text-scramble",
-      "existingMapping": "Text / TextTransition / 제품 소개 표현",
+      "existingMapping": "TextTransition",
       "priorRationale": "읽기·상태 텍스트의 기본 표현 교체 제외",
-      "sourceAudit": "2026-10-06",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending",
+      "adoptionDecision": "권장 표현 흡수 실험 — 짧은 문구의 scramble 후 복원. 원본 interval은 unmount cleanup이 없고 children 변경은 effect dependency에 없다. 새 값/중단/언마운트·grapheme·안정된 AX 문장을 다룬 표현으로 검토한다. 실험 구현/승격/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
         "exampleCount": 3,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 3,
+        "characters": 1182,
+        "examples": [
+          [
+            "TextScrambleBasic"
+          ],
+          [
+            "TextScrambleCustomTrigger"
+          ],
+          [
+            "TextScrambleCustomCharacterDuration"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "ce56cf39b3a80875a93db2ccde55210373a6cca5f030c5fc814ab4b5fb1ce5f6",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 3,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "f8c3f20c8fa8e978f220704a670f2419159c189494ff8239c5e8a3dfc466fcba"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "dbc7cd3868c04080cc6e5252524c844f3dba8f813907beba7f28b137823334c3"
+          },
+          {
+            "index": 3,
+            "screenshotDigest": "811daf30ddf777ca7fb597cdc499e3ffa196129c52611fb5f8bab34817c7e9aa"
+          }
+        ]
       }
     },
     {
       "url": "https://motion-primitives.com/docs/text-shimmer",
       "name": "text-shimmer",
-      "existingMapping": "Text / TextTransition / 제품 소개 표현",
+      "existingMapping": "TextTransition / 상태 문구 표현 후보",
       "priorRationale": "읽기·상태 텍스트의 기본 표현 교체 제외",
-      "sourceAudit": "2026-10-06",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending",
+      "adoptionDecision": "권장 표현 흡수 실험 — 문장 전체에 이동 gradient. 기존 plain text와 나란히 비교하고 semantic text color·실제 대비·모션 감소·정지/가시성을 검증한다. 표현이 임의로 busy 상태를 만들지 않는다. 실험 구현/승격/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
         "exampleCount": 2,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 2,
+        "characters": 641,
+        "examples": [
+          [
+            "TextShimmerBasic"
+          ],
+          [
+            "TextShimmerColor"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "d865c2dea9819ce58edb0309ebc56a2f44bf6dddab70cb89ad3b6dc1c6448d9f",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 2,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "e70b66655a854f59313c500e9d47bf9055f92f7907ab25b1201f4ff5a6d4fe28"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "1487d44336ec29d538b6e93af8cf9d0ff5f326f27e7ef88bc011601acd258434"
+          }
+        ]
       }
     },
     {
       "url": "https://motion-primitives.com/docs/text-shimmer-wave",
       "name": "text-shimmer-wave",
-      "existingMapping": "Text / TextTransition / 제품 소개 표현",
+      "existingMapping": "TextTransition / 상태 문구 표현 후보",
       "priorRationale": "읽기·상태 텍스트의 기본 표현 교체 제외",
-      "sourceAudit": "2026-10-06",
+      "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending",
+      "adoptionDecision": "권장 표현 흡수 실험 — 각 문자의 3D 이동/색/scale wave. 원본은 code-unit 분할, 무한 반복, 기본 muted hex를 사용한다. grapheme·단일 AX 문장·줄바꿈·브랜드 대비·모션 감소를 함께 검토한다. 실험 구현/승격/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
         "exampleCount": 2,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 2,
+        "characters": 642,
+        "examples": [
+          [
+            "TextShimmerWaveBasic"
+          ],
+          [
+            "TextShimmerWaveColor"
+          ]
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "2b2e561e440ac6f35e6f481969dfd9a5db1f991318620875f1e37a4b1b55dc66",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 2,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "cc5d65c907ec0bc1dece71feb97b31190c97c74c339cadded83c286ecd85259f"
+          },
+          {
+            "index": 2,
+            "screenshotDigest": "979fb184ccef228f90fd0aa54723dbaac1598ec6db38eb4d7898f0d06df45930"
+          }
+        ]
       }
     },
     {
       "url": "https://motion-primitives.com/docs/toolbar-dynamic",
       "name": "toolbar-dynamic",
-      "existingMapping": "EditorScreen / MessageComposer",
+      "existingMapping": "SearchField / Collapsible / 입력을 유지하는 도구 구성",
       "priorRationale": "입력 문맥을 유지하는 구성 후보",
-      "sourceAudit": "2026-10-06",
+      "sourceAudit": "2026-10-07: full Code example read; no Manual implementation tab; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending",
+      "adoptionDecision": "기존 구성 + 표현 비교 — 98→300px 폭 전환. uncontrolled input이 닫힘 때 unmount되므로 재열기 시 검색어 보존이 없다. 제품 소유 query·responsive 폭·Escape/초점 복귀·44px hit target을 유지한다. 실험 구현/승격/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
         "exampleCount": 1,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 1,
+        "characters": 2894,
+        "examples": [
+          []
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "f0f78dca43c6e0da8367b7292247ab1a88fddff1a06af5195d583df90df3e68e",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 1,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "d9e02ff7dd5051bef3b36a84e6b36d3ecdd8d65c203daea4c5bf96549e0a5507"
+          }
+        ]
       }
     },
     {
       "url": "https://motion-primitives.com/docs/toolbar-expandable",
       "name": "toolbar-expandable",
-      "existingMapping": "EditorScreen / MessageComposer",
+      "existingMapping": "Collapsible / SegmentedControl / 입력을 유지하는 도구 구성",
       "priorRationale": "입력 문맥을 유지하는 구성 후보",
-      "sourceAudit": "2026-10-06",
+      "sourceAudit": "2026-10-07: full Code example read; no Manual implementation tab; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending",
+      "adoptionDecision": "기존 구성 + 표현 비교 — 선택한 도구의 측정 높이 전환. 초기 maxWidth를 한 번만 고정하고 selected/expanded ARIA를 주지 않는다. 입력/선택 유지와 실제 변화하는 폭·큰 글자·선택 의미를 기존 구성에서 제공한다. 실험 구현/승격/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
         "exampleCount": 1,
         "status": "extracted; review separate"
+      },
+      "exampleCodeReview": {
+        "status": "all-examples-read",
+        "count": 1,
+        "characters": 6497,
+        "examples": [
+          []
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "scope": "Full extracted Code text read. Rendered variant interactions remain partial."
+      },
+      "sourceCaptureDigest": "c32d98e49b920cf8b00e96731ac992989252ef967d4a0dfbd79ac27d6909a0bf",
+      "variantDefaultVisualReview": {
+        "status": "all-default-preview-panels-inspected",
+        "count": 1,
+        "environment": "Chrome 154.0.8037.98, 1440x1000, light desktop",
+        "scope": "Visible initial/automatic frame only. Open overlay, hover/pointer and inner scroll states remain partial.",
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "variants": [
+          {
+            "index": 1,
+            "screenshotDigest": "3201270c97f54e6d857fadade8464ca8a3c908051ba6c0420cf3c5f3bffbf82a"
+          }
+        ]
       }
     },
     {

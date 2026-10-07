@@ -3455,7 +3455,15 @@
         "https://minimal.gallery/zont/",
         "https://minimal.gallery/zz2c/"
       ],
-      "discoveryComplete": false
+      "discoveryComplete": false,
+      "sourceExtraction": {
+        "checkedAt": "2026-10-07T01:51:33.415008+00:00",
+        "totalRecords": 219,
+        "http200": 219,
+        "errors": 0,
+        "state": "running",
+        "scope": "Fetched text pending individual source/visual/interaction review"
+      }
     },
     {
       "site": "designbookmark.com",
@@ -6127,12 +6135,20 @@
         "https://designbookmark.com/web/website-builders",
         "https://designbookmark.com/windows-apps"
       ],
-      "sitemapExpansionComplete": true
+      "sitemapExpansionComplete": true,
+      "sourceExtraction": {
+        "checkedAt": "2026-10-07T01:51:33.415008+00:00",
+        "totalRecords": 181,
+        "http200": 181,
+        "errors": 0,
+        "state": "running",
+        "scope": "Fetched text pending individual source/visual/interaction review"
+      }
     },
     {
       "site": "component.gallery",
       "checkedOn": "2026-10-07",
-      "evidence": "Public sitemap and homepage/navigation links only; page, visual and interaction review still tracked separately.",
+      "evidence": "Public sitemap + observed first-party anchor closure: 131 URL variants, 66 identical-content path groups. All 60 definitions and 12 detailed guidance sections read; first section of all 66 pages inspected. Every example thumbnail, lower content and interaction still incomplete.",
       "sitemaps": [
         "https://component.gallery/sitemap-0.xml"
       ],
@@ -6140,13 +6156,9 @@
       "discoveryComplete": false,
       "urls": [
         "https://component.gallery/",
-        "https://component.gallery/about",
         "https://component.gallery/about/",
-        "https://component.gallery/changelog",
         "https://component.gallery/changelog/",
-        "https://component.gallery/components",
         "https://component.gallery/components/",
-        "https://component.gallery/components/accordion",
         "https://component.gallery/components/accordion/",
         "https://component.gallery/components/alert/",
         "https://component.gallery/components/avatar/",
@@ -6155,7 +6167,6 @@
         "https://component.gallery/components/button-group/",
         "https://component.gallery/components/button/",
         "https://component.gallery/components/card/",
-        "https://component.gallery/components/carousel",
         "https://component.gallery/components/carousel/",
         "https://component.gallery/components/checkbox/",
         "https://component.gallery/components/color-picker/",
@@ -6180,16 +6191,12 @@
         "https://component.gallery/components/list/",
         "https://component.gallery/components/modal/",
         "https://component.gallery/components/navigation/",
-        "https://component.gallery/components/pagination",
         "https://component.gallery/components/pagination/",
-        "https://component.gallery/components/popover",
         "https://component.gallery/components/popover/",
         "https://component.gallery/components/progress-bar/",
         "https://component.gallery/components/progress-indicator/",
-        "https://component.gallery/components/quote",
         "https://component.gallery/components/quote/",
         "https://component.gallery/components/radio-button/",
-        "https://component.gallery/components/rating",
         "https://component.gallery/components/rating/",
         "https://component.gallery/components/rich-text-editor/",
         "https://component.gallery/components/search-input/",
@@ -6203,23 +6210,46 @@
         "https://component.gallery/components/stack/",
         "https://component.gallery/components/stepper/",
         "https://component.gallery/components/table/",
-        "https://component.gallery/components/tabs",
         "https://component.gallery/components/tabs/",
         "https://component.gallery/components/text-input/",
         "https://component.gallery/components/textarea/",
         "https://component.gallery/components/toast/",
         "https://component.gallery/components/toggle/",
         "https://component.gallery/components/tooltip/",
-        "https://component.gallery/components/tree-view",
         "https://component.gallery/components/tree-view/",
         "https://component.gallery/components/video/",
         "https://component.gallery/components/visually-hidden/",
-        "https://component.gallery/contribute",
         "https://component.gallery/contribute/",
-        "https://component.gallery/design-systems",
         "https://component.gallery/design-systems/"
       ],
-      "sitemapExpansionComplete": true
+      "sitemapExpansionComplete": true,
+      "rawUrlCount": 131,
+      "aliasEquivalence": {
+        "urlVariants": 131,
+        "uniqueHtmlPaths": 66,
+        "pairs": 65,
+        "mismatchedBodyDigests": 0,
+        "method": "slash variants have identical rendered body SHA-256; not claimed to be redirects"
+      },
+      "navigationClosure": {
+        "visitedUrls": 131,
+        "discoveredUrls": 131,
+        "remainingUrls": 0,
+        "canonicalPages": 66
+      },
+      "reviewProgress": {
+        "definitionPagesRead": 60,
+        "detailedGuidancePagesRead": 12,
+        "introDesktopLightPagesInspected": 66,
+        "allReviewComplete": false,
+        "report": "../qa/2026-10-07-component-gallery-page-review.md",
+        "fullPageCaptures": 66,
+        "fullPageCaptureVisualReview": "pending beyond intro; capture is not review",
+        "generalPageTextReview": "home, about, contribute, design-systems and full changelog read; general-page lower visual review pending",
+        "fullScrollImageCount": 2853,
+        "fullScrollImageLoadFailures": 0,
+        "fullScrollPageErrors": 0
+      }
     },
     {
       "site": "www.cta.gallery",
@@ -6782,7 +6812,15 @@
         "https://www.cta.gallery/subscribe",
         "https://www.cta.gallery/templates"
       ],
-      "discoveryComplete": false
+      "discoveryComplete": false,
+      "sourceExtraction": {
+        "checkedAt": "2026-10-07T01:51:33.415008+00:00",
+        "totalRecords": 220,
+        "http200": 220,
+        "errors": 0,
+        "state": "running",
+        "scope": "Fetched text pending individual source/visual/interaction review"
+      }
     },
     {
       "site": "21st.dev",
@@ -19255,7 +19293,15 @@
         "https://21st.dev/sign-in",
         "https://21st.dev/terms"
       ],
-      "sitemapExpansionComplete": true
+      "sitemapExpansionComplete": true,
+      "sourceExtraction": {
+        "checkedAt": "2026-10-07T01:51:33.415008+00:00",
+        "totalRecords": 818,
+        "http200": 809,
+        "errors": 9,
+        "state": "running",
+        "scope": "Fetched text pending individual source/visual/interaction review"
+      }
     },
     {
       "site": "ui.aceternity.com",
@@ -20042,7 +20088,7 @@
     {
       "site": "motion-primitives.com",
       "checkedOn": "2026-10-07",
-      "evidence": "2026-10-07: 36 first-party navigation-linked HTML pages fetched and rendered; 36 default desktop/light captures inspected. 33 component pages expose 96 example sources; 6 implementations and 6 demo flows reviewed. Full state/platform/source review remains incomplete.",
+      "evidence": "2026-10-07: 36 first-party navigation-linked HTML pages fetched and rendered; 36 default desktop/light captures inspected. 33 component pages expose 96 example sources; 33 implementations (31 Manual + 2 toolbar Code) and 6 demo flows reviewed. Full state/platform/source review remains incomplete.",
       "sitemaps": [],
       "errors": [],
       "discoveryComplete": false,
@@ -20095,10 +20141,23 @@
         "defaultDesktopLightPagesVisuallyInspected": 36,
         "componentPages": 33,
         "exampleSourcesExtracted": 96,
-        "componentImplementationsReviewed": 6,
+        "componentImplementationsReviewed": 33,
         "componentDemoFlowsObserved": 6,
         "allReviewComplete": false,
-        "report": "../qa/2026-10-07-motion-reference-page-review.md"
+        "report": "../qa/2026-10-07-motion-reference-page-review.md",
+        "manualImplementationsReviewed": 31,
+        "toolbarCodeExamplesReviewed": 2,
+        "exampleCodeSourcesReviewed": 96,
+        "exampleCodeCharactersRead": 140086,
+        "defaultPreviewPanelsVisuallyInspected": 96,
+        "defaultPreviewCaptureCount": 96,
+        "additionalFlowObservations": {
+          "toolbarDraftReopen": 1,
+          "transitionPanelClose": 1,
+          "slidingNumberRangeInitialValue": 1,
+          "inViewInternalScrollExamples": 3,
+          "scope": "Specific observed interactions; no all-state pass"
+        }
       }
     },
     {
@@ -20207,7 +20266,7 @@
     {
       "site": "3dicons.co",
       "checkedOn": "2026-10-07",
-      "evidence": "Public sitemap and homepage/navigation links only; page, visual and interaction review still tracked separately.",
+      "evidence": "223 HTTP 200 URL variants; 222 public paths rendered, including 211 icon/detail default views and 11 general-page visible layouts inspected. Alternate styles/angles, interactions and full-state review remain incomplete; privacy-policy was robots disallowed.",
       "sitemaps": [
         "https://3dicons.co/sitemap.xml"
       ],
@@ -20439,7 +20498,28 @@
         "https://3dicons.co/privacy-policy",
         "https://3dicons.co/showcase"
       ],
-      "sitemapExpansionComplete": true
+      "sitemapExpansionComplete": true,
+      "sourceExtraction": {
+        "http200": 223,
+        "robotsDisallowed": 1,
+        "totalURLVariants": 224,
+        "reviewedPages": "211 icon detail unique body text read after common header/footer removal; home/about and other public body text read. HTML implementation source and dynamic body remain distinct.",
+        "sameHostAnchorAdditionalPaths": 0,
+        "scope": "same-host HTTP(S) path anchors without query; not dynamic search/angle/color closure",
+        "state": "finished"
+      },
+      "reviewProgress": {
+        "renderedPublicPaths": 222,
+        "defaultIconDetailAreasVisuallyInspected": 211,
+        "generalPageVisibleLayoutsInspected": 11,
+        "sourceUniqueIconBodiesRead": 211,
+        "capturePageErrors": 0,
+        "initialUnloadedMainImages": 2,
+        "mainImagesRecoveredOnRecheck": 2,
+        "allReviewComplete": false,
+        "report": "../qa/2026-10-07-3dicons-page-review.md",
+        "pageLedger": "3dicons-page-review-ledger.json"
+      }
     },
     {
       "site": "styles.refero.design",
@@ -21847,7 +21927,15 @@
         "https://styles.refero.design/style/ffd5932b-c78c-491b-b03e-78ebeb6b0a1b",
         "https://styles.refero.design/style/fff821ec-a3bf-41a5-aea2-626185bcd227"
       ],
-      "discoveryComplete": false
+      "discoveryComplete": false,
+      "sourceExtraction": {
+        "checkedAt": "2026-10-07T01:51:33.415008+00:00",
+        "totalRecords": 219,
+        "http200": 219,
+        "errors": 0,
+        "state": "running",
+        "scope": "Fetched text pending individual source/visual/interaction review"
+      }
     }
   ],
   "snapshotDate": "2026-10-07"

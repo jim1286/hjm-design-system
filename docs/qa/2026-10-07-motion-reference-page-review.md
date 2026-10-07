@@ -17,7 +17,7 @@
 - 별도 headless Google Chrome 154.0.8037.98, 기본 데스크톱/light 화면 1440×1000; 후속 키보드 재현 1280×720. 실제 외부 사이트, 로그인 없음.
 - Native·모바일·dark·큰 글자·RTL·모션 감소·스크린리더는 이번 실행에 포함하지 않았다.
 - 공개 HTML anchor 순회: seed 36, 방문 36, 추가 발견 0, HTTP 200 36. sitemap/robots 주소는 앞서 404였으므로 내비게이션을 사용했다.
-- 컴포넌트 33페이지에서 Code 96예제와 Manual 구현 31개를 추출했다. 두 toolbar는 Manual 탭이 없으며 Code 예제는 확보했다. 추출은 읽기 완료가 아니다.
+- 컴포넌트 33페이지에서 Code 96예제와 Manual 구현 31개를 추출했다. 후속 10-07 검토에서 Manual 31개와 두 toolbar의 Code 예제 전체를 읽었다. 후속 검토에서 Code 96예제 전체(140,086자)도 읽었다. 화면에서 변형을 모두 조작한 결과와는 구분한다.
 - 기본 화면은 16장 구획별 모음과 홈·설치 본문 추가 2장으로 모든 페이지를 읽었다. In View처럼 아직 나타나지 않은 상태, pointer spotlight/cursor/tilt의 hover 상태, 자동 재생의 시간 축은 미확인이다.
 
 ## 4. 확인 결과·발견한 문제·재현과 수정
@@ -44,39 +44,39 @@
 | /docs | 문서 본문 읽음 | 미완료/비상호작용 문서 | 설치/소개 문서: 제품 dependency 직접 도입 아님; 최종 채택 판단 미완료 |
 | / | 문서 본문 읽음 | 미완료/비상호작용 문서 | 설치/소개 문서: 제품 dependency 직접 도입 아님; 최종 채택 판단 미완료 |
 | /docs/accordion | Manual 전체 읽음 | 기본 흐름 부분 확인 | Accordion / Collapsible — 기존 API 유지. 높이/opacity 전환과 아이콘 회전만 표현 후보. 원본 trigger에는 aria-expanded만 있고 내용 연결 ID가 없으므로 원본 상태 엔진을 교체 도입하지 않는다. |
-| /docs/animated-background | 미완료 | 미완료/비상호작용 문서 | Tabs / SegmentedControl; 최종 채택 판단 미완료 |
-| /docs/animated-group | 미완료 | 미완료/비상호작용 문서 | ContentTransition / Grid / List; 최종 채택 판단 미완료 |
+| /docs/animated-background | Manual 전체 읽음 | 미완료/비상호작용 문서 | Tabs / SegmentedControl; 최종 채택 판단 미완료 |
+| /docs/animated-group | Manual 전체 읽음 | 미완료/비상호작용 문서 | ContentTransition / Grid / List; 최종 채택 판단 미완료 |
 | /docs/animated-number | Manual 전체 읽음 | 미완료/비상호작용 문서 | AnimatedStatistic (optional statistic-motion) — 기존 API 유지. 원본은 매 프레임 Math.round(...).toLocaleString()으로 암묵 locale을 사용한다. HJM의 명시 locale·Intl format·모션 감소·RTL fallback을 유지한다. |
-| /docs/border-trail | 미완료 | 미완료/비상호작용 문서 | EffectSurface / Card; 최종 채택 판단 미완료 |
-| /docs/carousel | 미완료 | 미완료/비상호작용 문서 | Carousel / CarouselMotion; 최종 채택 판단 미완료 |
-| /docs/cursor | 미완료 | 미완료/비상호작용 문서 | 제품 장식 또는 optional 표현; 최종 채택 판단 미완료 |
+| /docs/border-trail | Manual 전체 읽음 | 미완료/비상호작용 문서 | EffectSurface / Card; 최종 채택 판단 미완료 |
+| /docs/carousel | Manual 전체 읽음 | 미완료/비상호작용 문서 | Carousel / CarouselMotion; 최종 채택 판단 미완료 |
+| /docs/cursor | Manual 전체 읽음 | 미완료/비상호작용 문서 | 제품 장식 또는 optional 표현; 최종 채택 판단 미완료 |
 | /docs/dialog | Manual 전체 읽음 | 기본 흐름 부분 확인 | Dialog — 기존 API 유지. 키보드 열기/Escape 닫기 확인; 닫은 뒤 BODY로 초점 이동. 전환 표현만 비교하며 기존 닫기·초점 복귀 계약은 보존한다. |
-| /docs/disclosure | 미완료 | 기본 흐름 부분 확인 | Accordion / Collapsible; 최종 채택 판단 미완료 |
-| /docs/dock | 미완료 | 미완료/비상호작용 문서 | NavigationBar / BottomNavigation; 최종 채택 판단 미완료 |
-| /docs/glow-effect | 미완료 | 미완료/비상호작용 문서 | EffectSurface / Card; 최종 채택 판단 미완료 |
+| /docs/disclosure | Manual 전체 읽음 | 기본 흐름 부분 확인 | Accordion / Collapsible; 최종 채택 판단 미완료 |
+| /docs/dock | Manual 전체 읽음 | 미완료/비상호작용 문서 | NavigationBar / BottomNavigation; 최종 채택 판단 미완료 |
+| /docs/glow-effect | Manual 전체 읽음 | 미완료/비상호작용 문서 | EffectSurface / Card; 최종 채택 판단 미완료 |
 | /docs/image-comparison | Manual 전체 읽음 | 기본 흐름 부분 확인 | ImageComparison — 기존 1.14 API 유지. 원본 mouse drag는 50%→약80% 작동하지만 role=slider와 키보드 조절이 없다. HJM은 기존 Slider로 range/키보드/Native adjustable를 유지한다. 이미지 위 drag 표현 필요성은 별도 실험 판단으로 남긴다. |
-| /docs/in-view | 미완료 | 미완료/비상호작용 문서 | ContentTransition / Grid / List; 최종 채택 판단 미완료 |
-| /docs/infinite-slider | 미완료 | 미완료/비상호작용 문서 | 제품 마케팅 구성; 최종 채택 판단 미완료 |
+| /docs/in-view | Manual 전체 읽음 | 미완료/비상호작용 문서 | ContentTransition / Grid / List; 최종 채택 판단 미완료 |
+| /docs/infinite-slider | Manual 전체 읽음 | 미완료/비상호작용 문서 | 제품 마케팅 구성; 최종 채택 판단 미완료 |
 | /docs/installation | 문서 본문 읽음 | 미완료/비상호작용 문서 | 설치/소개 문서: 제품 dependency 직접 도입 아님; 최종 채택 판단 미완료 |
-| /docs/magnetic | 미완료 | 미완료/비상호작용 문서 | 제품 장식 또는 optional 표현; 최종 채택 판단 미완료 |
+| /docs/magnetic | Manual 전체 읽음 | 미완료/비상호작용 문서 | 제품 장식 또는 optional 표현; 최종 채택 판단 미완료 |
 | /docs/morphing-dialog | Manual 전체 읽음 | 기본 흐름 부분 확인 | Dialog.motionOrigin / 버튼에서 이어지는 편집 구성 — 별도 MorphingDialog API를 만들지 않는다. 원본 제목·설명 aria ID 대상 없음, Escape 뒤 트리거 초점 복귀 없음. 기존 Dialog.motionOrigin과 제품 소유 초안 구성에 흡수한다. |
-| /docs/morphing-popover | 미완료 | 미완료/비상호작용 문서 | Dialog / Popover / MorphingMenu; 최종 채택 판단 미완료 |
-| /docs/progressive-blur | 미완료 | 미완료/비상호작용 문서 | 목록·이미지 장식; 최종 채택 판단 미완료 |
-| /docs/scroll-progress | 미완료 | 미완료/비상호작용 문서 | ScrollProgress / Timeline; 최종 채택 판단 미완료 |
-| /docs/sliding-number | 미완료 | 미완료/비상호작용 문서 | AnimatedStatistic; 최종 채택 판단 미완료 |
-| /docs/spinning-text | 미완료 | 미완료/비상호작용 문서 | Text / TextTransition / 제품 소개 표현; 최종 채택 판단 미완료 |
-| /docs/spotlight | 미완료 | 미완료/비상호작용 문서 | EffectSurface / Card; 최종 채택 판단 미완료 |
-| /docs/text-effect | 미완료 | 미완료/비상호작용 문서 | Text / TextTransition / 제품 소개 표현; 최종 채택 판단 미완료 |
-| /docs/text-loop | 미완료 | 미완료/비상호작용 문서 | Text / TextTransition / 제품 소개 표현; 최종 채택 판단 미완료 |
+| /docs/morphing-popover | Manual 전체 읽음 | 미완료/비상호작용 문서 | Dialog / Popover / MorphingMenu; 최종 채택 판단 미완료 |
+| /docs/progressive-blur | Manual 전체 읽음 | 미완료/비상호작용 문서 | 목록·이미지 장식; 최종 채택 판단 미완료 |
+| /docs/scroll-progress | Manual 전체 읽음 | 미완료/비상호작용 문서 | ScrollProgress / Timeline; 최종 채택 판단 미완료 |
+| /docs/sliding-number | Manual 전체 읽음 | 미완료/비상호작용 문서 | AnimatedStatistic; 최종 채택 판단 미완료 |
+| /docs/spinning-text | Manual 전체 읽음 | 미완료/비상호작용 문서 | Text / TextTransition / 제품 소개 표현; 최종 채택 판단 미완료 |
+| /docs/spotlight | Manual 전체 읽음 | 미완료/비상호작용 문서 | EffectSurface / Card; 최종 채택 판단 미완료 |
+| /docs/text-effect | Manual 전체 읽음 | 미완료/비상호작용 문서 | Text / TextTransition / 제품 소개 표현; 최종 채택 판단 미완료 |
+| /docs/text-loop | Manual 전체 읽음 | 미완료/비상호작용 문서 | Text / TextTransition / 제품 소개 표현; 최종 채택 판단 미완료 |
 | /docs/text-morph | Manual 전체 읽음 | 기본 흐름 부분 확인 | Text / TextTransition — 공통 텍스트 전환 표현 후보. Continue→Confirm과 한글 입력의 aria-label 갱신 확인. 원본은 split('')으로 코드 유닛을 나누므로 emoji·결합 문자·모션 감소를 확인하기 전 채택 확정하지 않는다. |
-| /docs/text-roll | 미완료 | 미완료/비상호작용 문서 | Text / TextTransition / 제품 소개 표현; 최종 채택 판단 미완료 |
-| /docs/text-scramble | 미완료 | 미완료/비상호작용 문서 | Text / TextTransition / 제품 소개 표현; 최종 채택 판단 미완료 |
-| /docs/text-shimmer | 미완료 | 미완료/비상호작용 문서 | Text / TextTransition / 제품 소개 표현; 최종 채택 판단 미완료 |
-| /docs/text-shimmer-wave | 미완료 | 미완료/비상호작용 문서 | Text / TextTransition / 제품 소개 표현; 최종 채택 판단 미완료 |
-| /docs/tilt | 미완료 | 미완료/비상호작용 문서 | 제품 장식 또는 optional 표현; 최종 채택 판단 미완료 |
-| /docs/toolbar-dynamic | 미완료 | 미완료/비상호작용 문서 | EditorScreen / MessageComposer; 최종 채택 판단 미완료 |
-| /docs/toolbar-expandable | 미완료 | 미완료/비상호작용 문서 | EditorScreen / MessageComposer; 최종 채택 판단 미완료 |
-| /docs/transition-panel | 미완료 | 미완료/비상호작용 문서 | ContentTransition / Grid / List; 최종 채택 판단 미완료 |
+| /docs/text-roll | Manual 전체 읽음 | 미완료/비상호작용 문서 | Text / TextTransition / 제품 소개 표현; 최종 채택 판단 미완료 |
+| /docs/text-scramble | Manual 전체 읽음 | 미완료/비상호작용 문서 | Text / TextTransition / 제품 소개 표현; 최종 채택 판단 미완료 |
+| /docs/text-shimmer | Manual 전체 읽음 | 미완료/비상호작용 문서 | Text / TextTransition / 제품 소개 표현; 최종 채택 판단 미완료 |
+| /docs/text-shimmer-wave | Manual 전체 읽음 | 미완료/비상호작용 문서 | Text / TextTransition / 제품 소개 표현; 최종 채택 판단 미완료 |
+| /docs/tilt | Manual 전체 읽음 | 미완료/비상호작용 문서 | 제품 장식 또는 optional 표현; 최종 채택 판단 미완료 |
+| /docs/toolbar-dynamic | Code 전체 읽음 | 미완료/비상호작용 문서 | EditorScreen / MessageComposer; 최종 채택 판단 미완료 |
+| /docs/toolbar-expandable | Code 전체 읽음 | 미완료/비상호작용 문서 | EditorScreen / MessageComposer; 최종 채택 판단 미완료 |
+| /docs/transition-panel | Manual 전체 읽음 | 미완료/비상호작용 문서 | ContentTransition / Grid / List; 최종 채택 판단 미완료 |
 
 ## 5. 검사·관찰 결과
 
@@ -85,10 +85,86 @@
 - 최초 조사 스크립트가 Code를 button role로 찾아 timeout했다. 실제 role=tab으로 수정한 source 추출은 33/33페이지, 96예제, 추출 오류 0이다. 해당 도구 수정은 외부 컴포넌트 수정이 아니다.
 - 비교에 읽은 HJM 원본: ImageComparison 사용 지침/Web 구현, AnimatedStatistic Web 구현, 버튼에서 이어지는 편집 구성, 입력을 유지하는 도구 구성. OriginDialog·ContextToolbar를 독립 공개 API라고 안내하지 않는다.
 
+
+### 후속 구현 읽기와 표현 후보
+
+2026-10-07 후속 검토: 남은 27항목을 읽어 구현 읽기를 33/33으로 갱신했다(Manual 31 + toolbar Code 2). 이는 사이트의 모든 예제·상태·플랫폼 검토 완료가 아니다. 아래 권장 후보는 전체 11개 사이트 비교 후 실험에 넣을 목록이며, 기존 엔진을 무조건 복제하거나 현재 fade 표현으로 새 표현을 대체 완료 처리하지 않는다.
+
+| 원본 | 대응·분류 | 권장 표현과 남은 계약 |
+| --- | --- | --- |
+| animated-background | Tabs / SegmentedControl; 권장 표현 흡수 실험 | layoutId로 선택 배경이 이어지는 표현. 원본 cloneElement가 child onClick을 교체하고 data-checked만 사용하므로 선택 엔진은 HJM을 유지한다. hover는 선택 확정과 분리한다. |
+| animated-group | ContentTransition / Grid / List; 권장 표현 흡수 실험 | fade/slide/scale/blur 및 stagger 진입을 비교한다. index key와 추가 wrapper 때문에 재정렬·의미 구조가 달라질 수 있어 기존 stable key와 레이아웃을 유지한다. |
+| border-trail | EffectSurface / 장식 레이어; 권장 신규 표현 실험 | offsetPath를 따라 도는 테두리 표현. 원본 기본 repeat Infinity, 5초이며 구현 내부 모션 감소/가시성 분기가 없다. 의미 있는 진행은 기존 busy 상태가 소유하고 테두리는 장식이다. |
+| carousel | Carousel / CarouselMotion; 기존 API + 표현 비교 | 부분 노출·custom indicator·spring 전환을 비교한다. 8px dot, hover opacity, 비활성 슬라이드 focus/AX 처리와 IntersectionObserver visible count를 실제 상태에서 확인하기 전 engine 교체를 확정하지 않는다. |
+| cursor | 제품 장식 / pointer 표현 adapter 후보; 조건부 실험 후보 | global body cursor 숨김이 cleanup에서 복원되지 않고 parent enter/leave는 익명 함수가 달라 제거되지 않는다. pointer-capability·복원·정적 대체를 갖춘 독립 장식 표현으로만 검토한다. |
+| disclosure | Collapsible; 기존 API + 표현 비교 | height auto와 opacity 전환을 흡수한다. trigger와 content ID 연결, child handler 조합, controlled open 소유는 HJM을 유지한다. 원본은 내부 open을 토글한 뒤 외부 callback에 통지한다. |
+| dock | NavigationBar / BottomNavigation / Toolbar; 조건부 표현 실험 후보 | 가까운 아이콘 확대와 label 전환을 비교한다. 원본 DockItem은 div role=button이고 Enter/Space handler가 없으며 demo navigation도 구현하지 않는다. 실제 navigation 의미·label·고정 touch target을 보존해야 한다. |
+| glow-effect | EffectSurface; 권장 표현 흡수 실험 | rotate/pulse/breathe/colorShift/flowHorizontal/static을 기존 glow와 비교한다. 임의 hex 기본색과 numeric blur의 동적 Tailwind class를 복사하지 않고 semantic palette·장식 강도·가시성·모션 감소에 연결한다. |
+| in-view | ContentTransition / 제품 진입 구성; 권장 표현 흡수 실험 | useInView·once·margin으로 진입 시점을 정하는 표현. 필수 콘텐츠를 opacity 0으로 계속 숨기지 않도록 실패/모션 감소/지원 누락의 정적 노출을 확인한다. |
+| infinite-slider | Carousel / 로고·추천 목록 구성 후보; 권장 별도 구성 실험 | 자동 루프와 hover 속도 변경을 비교한다. 원본은 children을 접근성 구분 없이 두 번 렌더하며 speedOnHover=0은 falsy라 정지되지 않는다. 정지·focus/hover·중복 AX 제거·정적 목록을 구성 계약으로 검토한다. |
+| magnetic | 제품 장식 / pointer 표현 adapter 후보; 조건부 실험 후보 | self/parent/global 범위의 spring 이동을 비교한다. 안정된 hit frame·기본 누르기·pointer 지원·모션 감소와 복귀를 유지하며 버튼 행동 계약을 교체하지 않는다. |
+| morphing-popover | Popover.motionOrigin / 버튼에서 이어지는 편집; 기존 API 유지·표현 흡수 | 원본은 aria-modal=true이지만 focus trap/inert/초점 복귀를 자체 제공하지 않는다. asChild의 onClick도 덮는다. HJM의 non-modal 편집·바깥 클릭·초점 복귀와 제품 draft를 유지한다. |
+| progressive-blur | ProgressiveBlur; 기존 1.14 API 유지 | 원본 방향별 mask/backdropFilter 레이어 표현을 비교한다. 원본 layer clamp와 segment 계산이 다른 입력을 사용하고 상한이 없다. HJM의 경계·초점 시 제거·2~8층·Native host 계약을 유지한다. |
+| scroll-progress | ScrollProgress; 기존 API 유지·표현 비교 | 문서나 내부 scroll container의 읽기 위치 표현이다. 원본 origin-left와 scaleX는 물리 방향이므로 RTL과 실제 container를 확인한다. 서버 작업 완료율로 사용하지 않는다. |
+| sliding-number | AnimatedStatistic; 기존 API 유지·표현 비교 | 세로 숫자 rolling 표현. 원본은 자리마다 10개의 숫자를 렌더하고 spoken value를 별도로 숨기지 않으며 toString/parseInt에 의존한다. 기존 locale·finite value·Intl·단일 spoken value를 유지한다. |
+| spinning-text | Text / 장식 텍스트 전환 후보; 조건부 표현 실험 후보 | 원형 배치와 회전. 원본은 문자 aria-hidden + 전체 sr-only로 읽기 중복을 피한다. code-unit 분할·반경·모션 감소·자동 재생 정지를 검토하고 중요 본문을 원형으로 대체하지 않는다. |
+| spotlight | EffectSurface / pointer 장식 후보; 권장 표현 흡수 실험 | 마우스를 따라 움직이는 radial highlight. 원본이 parent position/overflow를 직접 바꾸고 복원하지 않으므로 원래 레이아웃·overflow를 보존하는 scoped layer로 비교한다. |
+| text-loop | TextTransition / 제품 순환 문구 구성 후보; 권장 별도 구성 실험 | interval/trigger/onIndexChange 순환. 원본은 빈 children·interval 경계 검증이 없고 nowrap이다. 정지·줄바꿈·읽기 시간·내용의 단일 AX 값과 실제 작업 상태 분리를 검토한다. |
+| text-effect | TextTransition; 권장 표현 흡수 실험 | word/char/line reveal·preset·delay·speed 축을 기존 전체 문장 fade와 비교한다. 원본 char는 split(''), speed는 나눗셈에 사용된다. grapheme·검증된 시간·선택/줄바꿈·단일 spoken value·모션 감소를 제공해야 한다. |
+| text-roll | TextTransition; 권장 표현 흡수 실험 | char rotateX 전환. 원본은 이중 시각 문자를 aria-hidden으로 숨기고 sr-only 전체 문장을 제공한다. grapheme·실제 line height·텍스트 선택·모션 감소를 확인한다. |
+| text-scramble | TextTransition; 권장 표현 흡수 실험 | 짧은 문구의 scramble 후 복원. 원본 interval은 unmount cleanup이 없고 children 변경은 effect dependency에 없다. 새 값/중단/언마운트·grapheme·안정된 AX 문장을 다룬 표현으로 검토한다. |
+| text-shimmer | TextTransition / 상태 문구 표현 후보; 권장 표현 흡수 실험 | 문장 전체에 이동 gradient. 기존 plain text와 나란히 비교하고 semantic text color·실제 대비·모션 감소·정지/가시성을 검증한다. 표현이 임의로 busy 상태를 만들지 않는다. |
+| text-shimmer-wave | TextTransition / 상태 문구 표현 후보; 권장 표현 흡수 실험 | 각 문자의 3D 이동/색/scale wave. 원본은 code-unit 분할, 무한 반복, 기본 muted hex를 사용한다. grapheme·단일 AX 문장·줄바꿈·브랜드 대비·모션 감소를 함께 검토한다. |
+| tilt | 제품 장식 / pointer 표현 adapter 후보; 조건부 실험 후보 | mouse 위치에 따른 perspective 회전과 leave 복귀. 원본 transform이 외부 style.transform을 덮으므로 안정된 frame과 합성·정적/touch 대체를 비교한다. |
+| toolbar-dynamic | SearchField / Collapsible / 입력을 유지하는 도구 구성; 기존 구성 + 표현 비교 | 98→300px 폭 전환. uncontrolled input이 닫힘 때 unmount되므로 재열기 시 검색어 보존이 없다. 제품 소유 query·responsive 폭·Escape/초점 복귀·44px hit target을 유지한다. |
+| toolbar-expandable | Collapsible / SegmentedControl / 입력을 유지하는 도구 구성; 기존 구성 + 표현 비교 | 선택한 도구의 측정 높이 전환. 초기 maxWidth를 한 번만 고정하고 selected/expanded ARIA를 주지 않는다. 입력/선택 유지와 실제 변화하는 폭·큰 글자·선택 의미를 기존 구성에서 제공한다. |
+| transition-panel | ContentTransition / Tabs / 온보딩 구성; 기존 API + 표현 비교 | activeIndex에 따른 keyed enter/exit. 원본은 index 범위 검증·입력 보존·출력 확정·초점 이동을 별도 제공하지 않는다. 기존 단일 active subtree·제품 상태·focusTarget·height motion을 유지한다. |
+
+원본 구현에 자체 모션 감소 분기가 없다는 소스 관찰과 실제 사이트 전체의 모션 감소 동작은 다르다. 상위 MotionConfig·CSS·브라우저 media 환경 실측 전 사이트 차원의 미지원으로 확정하지 않는다.
+
+### 예제 Code 96개 전체 읽기
+
+후속 검토에서 모든 Code 예제를 읽었다(33페이지, 96예제, 140,086자). 반복 문구·스타일을 포함한 전체 추출 텍스트를 확인했다. Manual 구현 31개 및 두 toolbar Code 읽기와 별도로, 각 예제의 상태 연결·의미·자산·사용 조건을 대조했다. 실제 브라우저의 각 변형 동작은 계속 미완료다.
+
+- AnimatedBackground의 icon 탭은 36px 버튼에 이름이 없고 선택 의미도 data-checked만 쓴다. hover 카드와 확정 선택을 구분해 기존 Tabs/SegmentedControl 엔진에 표현을 흡수한다.
+- AnimatedGroup의 National Geographic/Sony 이미지 alt가 각각 Apple Music/Chrome으로 남아 있다. Tilt+Spotlight 예제의 표시 제목 2001: A Space Odyssey와 alt Ghost in the Shell도 다르다. 외부 예제의 자산·alt를 제품에 그대로 복사하지 않는다.
+- BorderTrail 예제의 Submit은 장식 animationComplete로 loading을 종료한다. GlowEffect의 Submit도 glow 표시를 토글할 뿐 실제 요청 결과가 없다. 전환 시간과 실제 작업 확정을 연결하지 않는다. BorderTrail textarea에 label 연결이 없는 것도 별도 기록한다.
+- Carousel의 부분 노출·별도 배치 탐색·48px custom indicator를 비교 후보로 둔다. 각 인디케이터의 선택 의미·비활성 slide 초점은 원본 행동을 추가 확인한다.
+- Disclosure 이미지 클릭은 div onClick이며 Learn More 행동이 비어 있다. Dock 데이터의 href는 렌더된 항목에 연결되지 않는다. 보여 주는 효과와 제공되는 실제 기능을 구분한다.
+- MorphingDialog의 확대 카드·90vh 책 설명·90vw 이미지 lightbox는 서로 다른 구성 예시다. 책 팝업의 500px 고정 폭, trigger 내부 작은 plus 버튼과 의미 연결을 실제 mobile/keyboard에서 확인해야 한다.
+- MorphingPopover 치수 입력은 defaultValue로만 유지된다. Note 예제의 닫기/Submit은 note를 지우고 닫으며 form 제출은 preventDefault다. 저장 성공/실패/재시도 기능이 아니다. 제품 draft·실제 확정 결과를 기존 구성에 연결한다.
+- ProgressiveBlur hover 예제는 설명을 mouse enter에서만 보인다. 키보드/touch에서 필수 내용을 볼 수 있어야 하고 300px 카드·양쪽 200px 흐림 영역을 작은 화면에서 별도 확인한다.
+- InView는 내부 스크롤·반복 진입·once 이미지 grid를 제공한다. 기본 screenshot만으로 숨겨진 영역의 reveal이 정상이라고 보고하지 않는다.
+- SlidingNumber의 slider 예제는 초기값 100인데 min=500이다. 실제 range 값/숫자 표시 정합성을 확인한다. 시계·자동 0→100은 제품의 실제 진행률을 의미하지 않는다.
+- TextEffect는 char/word/line·blur/slide·지연·custom random 색·exit 반복·speed 조절을 구분한다. TextLoop의 방향/interval, TextRoll의 delay/variant, TextScramble의 hover/custom 문자, Shimmer/Wave의 semantic 대비 축을 각각 비교한다. 자동 재생·읽기 시간·grapheme·정지는 공통 요구다.
+- TransitionPanel의 마지막 Close 버튼은 onClick에서 null을 반환해 실제 닫기 동작이 없다. Next/Previous의 표현과 완료/닫기의 제품 행동을 분리한다. Tabs 예제의 선택 역할도 HJM Tabs 계약으로 보존한다.
+
+전체 예제 읽기는 source review 완료 범위이며 UI·기능 검증·실험 구현·승격의 완료 근거가 아니다.
+
+### 96개 Preview 기본 화면 직접 확인
+
+Code와 대응하는 Preview 96패널을 각각 캡처하고 6개씩 모은 16장을 모두 읽었다. 데스크톱 1440×1000/light 기본 화면이다. 자동 실행 중의 한 프레임은 애니메이션 완료/정지 검증이 아니며, Dialog/Popover는 닫힌 트리거 상태, InView는 내부 scroll 전 상태, Cursor/Spotlight는 hover 전 상태다. 이 조건을 원장에 명시했다.
+
+- Accordion 3종, 배경 선택 4종, 그룹 진입 3종, 숫자 3종, 테두리 3종, Carousel 4종, Cursor 3종의 기본 표시를 확인했다.
+- Dialog 5종·Disclosure 2종·Dock 1종·Glow 3종·ImageComparison 4종·InView 3종·InfiniteSlider 3종·Magnetic 2종도 각 Preview를 확인했다. 이미지 slider 4종은 모두 초기 양쪽 분할이며 내부 scroll/hover는 별도 확인한다.
+- MorphingDialog 3종·MorphingPopover 3종·ProgressiveBlur 3종·ScrollProgress 3종·SlidingNumber 3종·SpinningText 3종·Spotlight 3종을 확인했다. 그림 hover 설명과 pointer highlight가 아직 보이지 않는 상태를 누락이나 기능 통과로 처리하지 않는다.
+- TextLoop 3종·TextEffect 8종·TextMorph 2종·TextRoll 3종·TextScramble 3종·TextShimmer 2종·Wave 2종·Tilt 2종·두 toolbar 각 1종·TransitionPanel 2종을 확인했다. 정적 화면에서는 TextRoll의 중간 전환 글자 위치, shimmer gradient·wave의 일부 프레임만 볼 수 있다. 시간이 흐르는 전체 품질은 추가 검증한다.
+
+패널 캡처 총 96개/Code 총 96개로 수는 일치한다. 해당 대응은 예제 개수 확인이며 browser 동작 전수 통과가 아니다. 모음 caption에서 긴 함수 이름이 옆 칸과 겹치는 것은 리포트 산출물 문제이고 원본 컴포넌트 UI 결함으로 분류하지 않는다.
+
+### 추가 실제 동작 확인
+
+- ToolbarDynamic에서 `검토용 메모`를 입력하고 Back으로 닫은 뒤 다시 열었다. 입력은 빈 값으로 돌아갔으며 닫힌 뒤 activeElement는 BODY였다. 재열린 화면도 직접 확인했다. 제품 query/draft 보존과 초점 복귀를 원본 표현에 맡기지 않는다.
+- TransitionPanel의 Next를 세 번 누른 뒤 Close를 눌렀다. 최종 Design System 카드와 Close 버튼이 계속 보이는 화면을 확인했다. 전후 텍스트 차이는 이전 패널 exit가 정리되면서 생겼으므로 닫기 성공으로 계산하지 않는다. 소스의 Close handler는 null을 반환한다.
+- SlidingNumber 예제의 실제 range DOM 값은 500(min=500/max=100000/step=50)이었다. 읽은 소스 초기 상태와 기본 화면의 표시 100과 다르다. DOM 텍스트에 각 자리의 0~9가 모두 있었지만 실제 screen-reader 발화는 아직 확인하지 않았다.
+- InView 세 예제의 내부 scroll을 0/25/50/75/100%로 이동해 computed style을 관찰했다. 첫 예제는 후반에 opacity=1, 세 번째 grid는 중간 이후 opacity=1이었다. 두 번째의 Athletics는 중간에서 보였지만 다른 두 항목은 이 거친 간격에서 보이지 않았다. 더 촘촘한 위치·정착 시간 검토 전 실패로 확정하지 않는다. 이 scroll 관찰의 모든 캡처를 시각 검토했다고 계산하지 않는다.
+
+위 기록은 특정 시나리오의 관찰이며 모션 감소·모든 변형·접근성 통과 판정이 아니다.
+
 ## 6. 미확인 범위와 후속 조건
 
 - 11개 사이트 전체 검토 미완료. [사이트 목록](../plans/reference-site-inventory.json)의 URL 수는 검토 완료 수가 아니다. canonical 중복·추가 링크 발견·차단 페이지는 별도 추적한다.
-- Motion: 남은 구현 27페이지의 전체 소스 읽기, 96예제의 모든 동작, dark/mobile/large text/RTL/reduced motion, 포커스 순회와 screen reader, 자동 재생 정지/hover/scroll 상태.
+- Motion: 96예제의 모든 동작, dark/mobile/large text/RTL/reduced motion, 포커스 순회와 screen reader, 자동 재생 정지/hover/scroll 상태.
 - 공개 소스의 hook/registry 연결과 라이선스·의존성은 후속에서 확인. 외부 링크 전체 인터넷을 방문했다는 주장은 하지 않는다.
 - HJM 신규 표현 실험·기능/UI 검사·승격·새 npm release는 위 검토·선택 이후 진행한다. 이미 게시한 1.14.0을 전수 검토 완료로 재분류하지 않는다.
 
