@@ -10,9 +10,11 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
+    # 일반 개발 push/PR 대신 실제 fixed-train 버전 상승 때만 자동 시각 검사를 실행한다.
+    paths:
+      - packages/design-contracts/package.json
+      - packages/react/package.json
+      - packages/react-native/package.json
   workflow_dispatch:
     inputs:
       update:
@@ -28,7 +30,30 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  intent:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      run: ${{ steps.version.outputs.run }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # 여러 commit push의 직전 상태를 읽기 위해 event.before까지 확보한다.
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+      - name: Determine version intent
+        id: version
+        env:
+          VERSION_BASE_SHA: ${{ github.event.before }}
+        run: node scripts/ci-version-intent.mjs
+
   visual:
+    needs: intent
+    if: needs.intent.outputs.run == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:

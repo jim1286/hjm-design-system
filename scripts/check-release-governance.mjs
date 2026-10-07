@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { releaseManifestPaths } from "./ci-version-intent.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const requireEqual = (actual, expected, label) => {
@@ -23,7 +24,31 @@ function requiredStep(source, name, command) {
   return start;
 }
 
-export function validateReleaseGovernance({ packages, releaseWorkflow, showcaseWorkflow, registries, proofs }) {
+function versionIntentWorkflow(source, jobName) {
+  const code = source.split("\n").filter((line) => !/^\s*#/.test(line)).join("\n");
+  const trigger = code.slice(code.indexOf("\non:\n"), code.indexOf("\npermissions:\n"));
+  const events = [...trigger.matchAll(/^ {2}([a-z_]+):/gm)].map((match) => match[1]);
+  requireEqual(JSON.stringify(events), JSON.stringify(["push", "workflow_dispatch"]), `${jobName} CI events`);
+  if (!/^ {2}push:\n {4}branches:\n {6}- main\n {4}paths:\n/m.test(trigger)) throw new Error(`${jobName} CI push must target only main and version paths`);
+  const paths = [...trigger.matchAll(/^ {6}- (packages\/[^\n]+\/package\.json)$/gm)].map((match) => match[1]);
+  requireEqual(JSON.stringify(paths), JSON.stringify(releaseManifestPaths), `${jobName} CI version paths`);
+  if (!/^ {4}paths:\n/m.test(trigger) || /^ {4}(?:paths-ignore|tags|tags-ignore):/m.test(trigger)) throw new Error(`${jobName} CI must be filtered to version manifests`);
+  const job = (name) => {
+    const marker = `\n  ${name}:\n`;
+    const start = code.indexOf(marker);
+    if (start < 0) throw new Error(`${name} job is required`);
+    const tail = code.slice(start + marker.length);
+    const end = tail.search(/^ {2}[a-z][a-z-]*:\n/m);
+    return end < 0 ? tail : tail.slice(0, end);
+  };
+  const intent = job("intent");
+  requiredStep(intent, "Determine version intent", "node scripts/ci-version-intent.mjs");
+  if (!intent.includes("          VERSION_BASE_SHA: ${{ github.event.before }}") || !intent.includes("          fetch-depth: 0") || !intent.includes("      run: ${{ steps.version.outputs.run }}")) throw new Error(`${jobName} version intent must compare the actual push base and expose its result`);
+  const execution = job(jobName);
+  if (!/^ {4}needs: intent$/m.test(execution) || !/^ {4}if: needs\.intent\.outputs\.run == 'true'$/m.test(execution)) throw new Error(`${jobName} job must require version intent`);
+}
+
+export function validateReleaseGovernance({ packages, releaseWorkflow, showcaseWorkflow, visualWorkflow, registries, proofs }) {
   const releaseCode = releaseWorkflow.split("\n").filter((line) => !/^\s*#/.test(line)).join("\n");
   if (/repository_dispatch/.test(releaseCode)) throw new Error("Consumer dispatch needs an explicit validated release contract before it can be claimed");
   const scripts = packages.root.scripts;
@@ -34,7 +59,7 @@ export function validateReleaseGovernance({ packages, releaseWorkflow, showcaseW
   requireEqual(scripts["ci:check"], "pnpm check && pnpm showcase:native:check && pnpm showcase:web:check && pnpm showcase:web:build", "ci:check");
   requireEqual(scripts["check"], "pnpm -r --filter './packages/**' run check && pnpm bundle:renderer:check && pnpm workspace:check && pnpm evidence:check && pnpm docs:check && pnpm governance:check && pnpm api-map:check && pnpm usage:check && pnpm storybook:check", "check");
   requireEqual(scripts["release:check"], "pnpm ci:check && node scripts/check-release-artifacts.mjs", "release:check");
-  requireEqual(scripts["governance:check"], "node --test scripts/check-release-governance.test.mjs && node scripts/check-release-governance.mjs", "governance:check");
+  requireEqual(scripts["governance:check"], "node --test scripts/check-release-governance.test.mjs scripts/ci-version-intent.test.mjs && node scripts/check-release-governance.mjs", "governance:check");
   requireEqual(scripts["workspace:check"], "node scripts/check-workspace-sync.mjs", "workspace:check");
   requireEqual(scripts["evidence:check"], "node scripts/sync-renderer-evidence.mjs", "evidence:check");
   // The overlap audit found public companions/extensions absent from the catalog.
@@ -61,6 +86,10 @@ export function validateReleaseGovernance({ packages, releaseWorkflow, showcaseW
   if (!(commitStep < releaseStep && releaseStep < publishStep && publishStep < tagStep)) throw new Error("Release gates must precede publishing and tagging");
   if (/continue-on-error:\s*true/.test(releaseWorkflow)) throw new Error("Release job must not ignore failures");
   requiredStep(showcaseWorkflow, "Verify packages, evidence, and both showcases", "pnpm ci:check");
+  // 2026-10-07 사용자 재확인: 버전이 그대로인 개발 push/PR에서 원격 전량 검사를
+  // 반복하지 않는다. 실행 범위는 job에서 판정하되, 실행된 검사의 실패 전파는 그대로 둔다.
+  versionIntentWorkflow(showcaseWorkflow, "verify");
+  versionIntentWorkflow(visualWorkflow, "visual");
 
   for (const surface of ["react", "native"]) {
     const registry = registries[surface];
@@ -87,7 +116,7 @@ export async function loadReleaseGovernance(repositoryRoot = root) {
       proofs[`${surface}/${execution.proofFile}`] = await text(`packages/${directory}/${execution.proofFile}`);
     }
   }
-  return { packages, registries, proofs, releaseWorkflow: await text(".github/workflows/version-packages.yml"), showcaseWorkflow: await text(".github/workflows/showcase.yml") };
+  return { packages, registries, proofs, releaseWorkflow: await text(".github/workflows/version-packages.yml"), showcaseWorkflow: await text(".github/workflows/showcase.yml"), visualWorkflow: await text(".github/workflows/visual.yml") };
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

@@ -35,7 +35,7 @@
     "release:version": "changeset version && pnpm install --lockfile-only && node scripts/sync-release-version.mjs && pnpm contracts:sync && pnpm build && pnpm evidence:sync",
     "release:status": "changeset status",
     "release:check": "pnpm ci:check && node scripts/check-release-artifacts.mjs",
-    "governance:check": "node --test scripts/check-release-governance.test.mjs && node scripts/check-release-governance.mjs",
+    "governance:check": "node --test scripts/check-release-governance.test.mjs scripts/ci-version-intent.test.mjs && node scripts/check-release-governance.mjs",
     "api-map:sync": "node scripts/sync-public-component-map.mjs --write",
     "api-map:check": "node scripts/sync-public-component-map.mjs",
     "usage:sync": "node scripts/check-usage-docs.mjs --write",

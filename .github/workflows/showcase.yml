@@ -4,24 +4,48 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
+    # 2026-10-07 사용자 재확인: 일반 push/PR은 원격 전량 검사를 실행하지 않는다.
+    # paths는 후보만 좁히고, 아래 intent job이 의존성 변경과 실제 버전 상승을 구분한다.
+    paths:
+      - packages/design-contracts/package.json
+      - packages/react/package.json
+      - packages/react-native/package.json
   workflow_dispatch:
 
-# pages·id-token 쓰기는 deploy job에만 준다. 워크플로 전체에 두면 PR 검증도 Pages 배포
-# 권한을 가진 토큰으로 돌았다(2026-09-26 CI 검토).
+# Pages 쓰기는 배포 job에만 준다. 수동 브랜치 검사는 읽기 권한만 사용한다.
 permissions:
   contents: read
 
-# ref마다 그룹을 나눈다. 그룹 하나에 cancel-in-progress였을 때는 PR push가 main의 검증·
-# Pages 배포를 취소했다(2026-09-26 CI 검토). main은 배포 도중 끊기지 않게 취소하지 않는다.
+# ref별로 격리하고, main 배포가 다음 요청 때문에 중간에 끊기지 않게 한다.
 concurrency:
   group: design-system-showcase-${{ github.ref }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  cancel-in-progress: false
 
 jobs:
+  intent:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      run: ${{ steps.version.outputs.run }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # push에는 여러 commit이 함께 포함될 수 있어 HEAD^가 아닌 event.before와 비교한다.
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+      - name: Determine version intent
+        id: version
+        env:
+          VERSION_BASE_SHA: ${{ github.event.before }}
+        run: node scripts/ci-version-intent.mjs
+
   verify:
+    needs: intent
+    if: needs.intent.outputs.run == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -49,13 +73,13 @@ jobs:
         run: pnpm ci:check
 
       - name: Upload Storybook
-        if: github.event_name != 'pull_request'
+        if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: showcase/web/storybook-static
 
   deploy:
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     needs: verify
     runs-on: ubuntu-latest
     timeout-minutes: 10

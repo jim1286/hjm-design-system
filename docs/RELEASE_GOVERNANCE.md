@@ -18,7 +18,8 @@ contracts를 같은 npm 버전으로 설치하고, 제품의 실제 화면·환�
 
 | 단계 | 실행 원본 | 검사 범위 |
 | --- | --- | --- |
-| PR/main 내부 검사 | `showcase.yml` → `pnpm ci:check` | package 계약·테스트·생성 drift·bundle·두 Showcase |
+| 버전 상승/main 또는 수동 내부 검사 | `showcase.yml` → 버전 판정 → `pnpm ci:check` | package 계약·테스트·생성 drift·bundle·두 Showcase |
+| 버전 상승/main 또는 수동 시각 검사 | `visual.yml` → 같은 버전 판정 → Linux baseline 비교 | Chromium/Linux의 대표 시각 회귀 |
 | package 검사 | `pnpm check` | 세 package check, renderer bundle, workspace/evidence/docs/governance/public API map 검사 |
 | release 후보 | `version-packages.yml` → `pnpm release:commit:check`와 `pnpm release:check` | release commit 형태, 내부 ci:check, release artifacts |
 | publish/tag | 같은 workflow에서 검사 이후 실행 | 세 package publish 후 같은 commit에 canonical tag |
@@ -34,6 +35,24 @@ publish/tag 이전 순서, renderer 테스트와 scenario registry 연결을 검
 검사 제거·조건부 건너뛰기·`continue-on-error`를 negative tests로 고정한다. 이 검사는
 현재 저장소의 제한된 workflow 형태에 대한 source 검사이며 원격 required-check 설치 여부는
 별도 운영 설정이다. workflow 형태를 바꿀 때 검사와 회귀 사례를 함께 바꾼다.
+
+### 자동 검사의 실행 시점
+
+2026-10-07 사용자가 버전 상승 때만 원격 검사를 실행하는 기존 결정을 재확인했다.
+HJM에는 일반 main push/PR 트리거가 남아 테마 개발 commit마다 전량 검사가 실행됐으므로,
+Showcase와 시각 검사도 버전 의도로 한정한다. 자동 실행 후보는 main push에서 세 public
+package의 `package.json` 중 하나가 바뀔 때이며, 의존성·설정 변경만으로는 전량 검사를 실행하지 않는다.
+[`ci-version-intent.mjs`](../scripts/ci-version-intent.mjs)가 `github.event.before`와 현재 SHA의
+세 fixed-train 버전을 비교해 모두 같은 안정 버전으로 실제 상승한 경우에만 실행한다.
+여러 commit을 함께 push할 수 있으므로 `HEAD^`로 대체하지 않는다. 이전 SHA 누락·버전 하락·
+혼합 train·잘못된 버전은 판정 실패로 남기고 임의로 검사 실행을 승인하지 않는다.
+
+일반 코드·문서 push/PR은 이 두 원격 검사 workflow를 시작하지 않는다. `workflow_dispatch`는
+명시적인 진단·Linux baseline 재생성 경로로 유지한다. main에서 실행된 Showcase 검사가
+통과한 뒤에만 Pages가 갱신되므로, 일반 테마 개발의 확인은 로컬 Storybook으로 수행한다.
+원격 트리거 축소는 필요한 로컬 검증을 제거하는 변경이 아니다. npm 게시와 tag 생성은
+기존 수동 `version-packages.yml`의 release 검사를 유지하며 자동 게시로 바꾸지 않는다.
+GitHub 자체의 보안 분석·Dependabot 실행은 이 두 품질 workflow의 제어 범위와 별개다.
 
 ## 시나리오 증거의 의미
 
