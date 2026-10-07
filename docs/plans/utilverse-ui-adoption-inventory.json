@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "sourceHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
-  "scope": "All TSX under apps/mobile/src, source inventory only; no behavioral replacement or transitive-compliance claim.",
+  "sourceHead": "ca25701d648b331554fe5c3cdb51495e77db1e91",
+  "scope": "All 136 TSX under apps/mobile/src were source-reviewed at their recorded hashes. Source review is not runtime QA, adoption completion or conformance.",
   "items": [
     {
       "file": "apps/mobile/src/app/_layout.tsx",
@@ -145,20 +145,6 @@
           ]
         },
         {
-          "jsx": "AppToasts",
-          "count": 1,
-          "lines": [
-            75
-          ]
-        },
-        {
-          "jsx": "AppFrame",
-          "count": 1,
-          "lines": [
-            76
-          ]
-        },
-        {
           "from": "@tanstack/react-query",
           "name": "QueryClientProvider",
           "jsx": "QueryClientProvider",
@@ -183,13 +169,6 @@
           "count": 1,
           "lines": [
             87
-          ]
-        },
-        {
-          "jsx": "ThemedFrame",
-          "count": 1,
-          "lines": [
-            88
           ]
         }
       ],
@@ -381,26 +360,15 @@
     },
     {
       "file": "apps/mobile/src/app/notification-tools.tsx",
-      "sha256": "81935e8653e1e87cdf4c9c6597bfd12941b9bae15b2f5fcac12b4b9656163ebb",
+      "sha256": "d94a6880e0a9f566bf4c497d8051197a79fb5e486ff5354c53722783d0a850e3",
       "renderedTags": [
         {
-          "from": "react-native",
-          "name": "ScrollView",
-          "jsx": "ScrollView",
+          "from": "@hjmds/react-native/screen-flows",
+          "name": "SearchScreen",
+          "jsx": "SearchScreen",
           "count": 1,
           "lines": [
-            21
-          ]
-        },
-        {
-          "from": "@hjmds/react-native",
-          "name": "Stack",
-          "jsx": "Stack",
-          "count": 3,
-          "lines": [
-            27,
-            58,
-            60
+            75
           ]
         },
         {
@@ -409,36 +377,73 @@
           "jsx": "ScreenHeader",
           "count": 1,
           "lines": [
-            28
+            78
+          ]
+        },
+        {
+          "from": "@hjmds/react-native",
+          "name": "Stack",
+          "jsx": "Stack",
+          "count": 6,
+          "lines": [
+            157,
+            158,
+            165,
+            200,
+            229,
+            231
           ]
         },
         {
           "from": "@hjmds/react-native",
           "name": "Text",
           "jsx": "Text",
-          "count": 3,
+          "count": 5,
           "lines": [
-            33,
-            61,
-            62
+            159,
+            166,
+            202,
+            232,
+            233
+          ]
+        },
+        {
+          "from": "../components/ToolThemeFilter",
+          "name": "ToolThemeFilter",
+          "jsx": "ToolThemeFilter",
+          "count": 2,
+          "lines": [
+            160,
+            194
           ]
         },
         {
           "from": "@hjmds/react-native",
-          "name": "SearchField",
-          "jsx": "SearchField",
+          "name": "Switch",
+          "jsx": "Switch",
+          "count": 2,
+          "lines": [
+            167,
+            172
+          ]
+        },
+        {
+          "from": "@hjmds/react-native",
+          "name": "EmptyState",
+          "jsx": "EmptyState",
           "count": 1,
           "lines": [
-            36
+            208
           ]
         },
         {
           "from": "@hjmds/react-native",
           "name": "Button",
           "jsx": "Button",
-          "count": 1,
+          "count": 2,
           "lines": [
-            51
+            213,
+            222
           ]
         },
         {
@@ -447,7 +452,7 @@
           "jsx": "ToolArtwork",
           "count": 1,
           "lines": [
-            59
+            230
           ]
         },
         {
@@ -456,18 +461,18 @@
           "jsx": "UiGlyph",
           "count": 1,
           "lines": [
-            70
+            241
           ]
         }
       ],
       "review": "source-reviewed",
-      "decision": "replace-with-existing-hjm",
+      "decision": "Keep already-adopted SearchScreen with two-step local search, member execution gate, counts/recent queries, staged filter sheet and inline empty directory recovery.",
       "reviewEvidence": {
         "date": "2026-10-07",
-        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
-        "hjmHead": "ad7b77a",
-        "report": "docs/plans/utilverse-shell-routing-adoption.md",
-        "reason": "Replace composed navigation Button row with ListRow title/description/leading/trailing; preserve disabled availability and search/session gates.",
+        "consumerHead": "ca25701d648b331554fe5c3cdb51495e77db1e91",
+        "hjmHead": "0c9574bc88a6d348af4ab9154660a7d0b8064b22",
+        "report": "docs/plans/utilverse-final-source-review.md",
+        "reason": "Keep already-adopted SearchScreen with two-step local search, member execution gate, counts/recent queries, staged filter sheet and inline empty directory recovery.",
         "runtimeVerification": "pending",
         "adoption": "not-started"
       }
@@ -621,298 +626,12 @@
       "sha256": "222f10d9d755072419ed42c5c74f6030ce021902da6650d35046d430590266b5",
       "renderedTags": [
         {
-          "from": "../../components/ToolAccessGate",
-          "name": "default",
-          "jsx": "ToolAccessGate",
-          "count": 1,
-          "lines": [
-            54
-          ]
-        },
-        {
-          "from": "../../features/TranslationScreen",
-          "name": "default",
-          "jsx": "TranslationScreen",
-          "count": 1,
-          "lines": [
-            55
-          ]
-        },
-        {
-          "from": "../../features/OcrScreen",
-          "name": "default",
-          "jsx": "OcrScreen",
-          "count": 1,
-          "lines": [
-            56
-          ]
-        },
-        {
-          "from": "../../features/ExchangeScreen",
-          "name": "default",
-          "jsx": "ExchangeScreen",
-          "count": 1,
-          "lines": [
-            57
-          ]
-        },
-        {
-          "from": "../../features/PollToolScreen",
-          "name": "default",
-          "jsx": "PollToolScreen",
-          "count": 1,
-          "lines": [
-            58
-          ]
-        },
-        {
-          "from": "../../features/QrScreen",
-          "name": "default",
-          "jsx": "QrScreen",
-          "count": 1,
-          "lines": [
-            59
-          ]
-        },
-        {
-          "from": "../../features/PhotoStripScreen",
-          "name": "default",
-          "jsx": "PhotoStripScreen",
-          "count": 1,
-          "lines": [
-            60
-          ]
-        },
-        {
-          "from": "../../features/PhotoMaskScreen",
-          "name": "default",
-          "jsx": "PhotoMaskScreen",
-          "count": 1,
-          "lines": [
-            61
-          ]
-        },
-        {
-          "from": "../../features/PhotoConvertScreen",
-          "name": "default",
-          "jsx": "PhotoConvertScreen",
-          "count": 1,
-          "lines": [
-            62
-          ]
-        },
-        {
-          "from": "../../features/PhotoPdfScreen",
-          "name": "default",
-          "jsx": "PhotoPdfScreen",
-          "count": 1,
-          "lines": [
-            63
-          ]
-        },
-        {
-          "from": "../../features/DiscountScreen",
-          "name": "default",
-          "jsx": "DiscountScreen",
-          "count": 1,
-          "lines": [
-            64
-          ]
-        },
-        {
-          "from": "../../features/UnitPriceScreen",
-          "name": "default",
-          "jsx": "UnitPriceScreen",
-          "count": 1,
-          "lines": [
-            65
-          ]
-        },
-        {
-          "from": "../../features/ExpenseSplitScreen",
-          "name": "default",
-          "jsx": "ExpenseSplitScreen",
-          "count": 1,
-          "lines": [
-            66
-          ]
-        },
-        {
-          "from": "../../features/UnitConverterScreen",
-          "name": "default",
-          "jsx": "UnitConverterScreen",
-          "count": 1,
-          "lines": [
-            67
-          ]
-        },
-        {
-          "from": "../../features/WorldClockScreen",
-          "name": "default",
-          "jsx": "WorldClockScreen",
-          "count": 1,
-          "lines": [
-            68
-          ]
-        },
-        {
-          "from": "../../features/DisplayBoardScreen",
-          "name": "default",
-          "jsx": "DisplayBoardScreen",
-          "count": 1,
-          "lines": [
-            69
-          ]
-        },
-        {
-          "from": "../../features/LottoScreen",
-          "name": "default",
-          "jsx": "LottoScreen",
-          "count": 1,
-          "lines": [
-            70
-          ]
-        },
-        {
-          "from": "../../features/RouletteScreen",
-          "name": "default",
-          "jsx": "RouletteScreen",
-          "count": 1,
-          "lines": [
-            71
-          ]
-        },
-        {
-          "from": "../../features/LadderScreen",
-          "name": "default",
-          "jsx": "LadderScreen",
-          "count": 1,
-          "lines": [
-            72
-          ]
-        },
-        {
-          "from": "../../features/PasswordScreen",
-          "name": "default",
-          "jsx": "PasswordScreen",
-          "count": 1,
-          "lines": [
-            73
-          ]
-        },
-        {
-          "from": "../../features/TeamsScreen",
-          "name": "default",
-          "jsx": "TeamsScreen",
-          "count": 1,
-          "lines": [
-            74
-          ]
-        },
-        {
-          "from": "../../features/ChecklistScreen",
-          "name": "default",
-          "jsx": "ChecklistScreen",
-          "count": 1,
-          "lines": [
-            75
-          ]
-        },
-        {
-          "from": "../../features/NotesScreen",
-          "name": "default",
-          "jsx": "NotesScreen",
-          "count": 1,
-          "lines": [
-            76
-          ]
-        },
-        {
-          "from": "../../features/TimersScreen",
-          "name": "default",
-          "jsx": "TimersScreen",
-          "count": 1,
-          "lines": [
-            77
-          ]
-        },
-        {
-          "from": "../../features/ScoreboardScreen",
-          "name": "default",
-          "jsx": "ScoreboardScreen",
-          "count": 1,
-          "lines": [
-            78
-          ]
-        },
-        {
-          "from": "../../features/CounterScreen",
-          "name": "default",
-          "jsx": "CounterScreen",
-          "count": 1,
-          "lines": [
-            79
-          ]
-        },
-        {
-          "from": "../../features/CalendarScreen",
-          "name": "default",
-          "jsx": "CalendarScreen",
-          "count": 1,
-          "lines": [
-            80
-          ]
-        },
-        {
-          "from": "../../features/TextToolsScreen",
-          "name": "default",
-          "jsx": "TextToolsScreen",
-          "count": 1,
-          "lines": [
-            81
-          ]
-        },
-        {
-          "from": "../../features/PhotoScreen",
-          "name": "default",
-          "jsx": "PhotoScreen",
-          "count": 1,
-          "lines": [
-            83
-          ]
-        },
-        {
-          "from": "../../features/CalculatorScreen",
-          "name": "default",
-          "jsx": "CalculatorScreen",
-          "count": 1,
-          "lines": [
-            85
-          ]
-        },
-        {
-          "from": "../../features/ToolScreen",
-          "name": "default",
-          "jsx": "ToolScreen",
-          "count": 1,
-          "lines": [
-            87
-          ]
-        },
-        {
           "from": "../../components/ToolResultAds",
           "name": "ToolResultAds",
           "jsx": "ToolResultAds",
           "count": 1,
           "lines": [
             94
-          ]
-        },
-        {
-          "jsx": "ToolContent",
-          "count": 1,
-          "lines": [
-            95
           ]
         }
       ],
@@ -1225,13 +944,6 @@
           ]
         },
         {
-          "jsx": "AvatarPreview",
-          "count": 1,
-          "lines": [
-            48
-          ]
-        },
-        {
           "from": "@hjmds/react-native",
           "name": "Stack",
           "jsx": "Stack",
@@ -1427,20 +1139,6 @@
           "lines": [
             43
           ]
-        },
-        {
-          "jsx": "Dot",
-          "count": 1,
-          "lines": [
-            50
-          ]
-        },
-        {
-          "jsx": "Animated.View",
-          "count": 1,
-          "lines": [
-            84
-          ]
         }
       ],
       "review": "source-reviewed",
@@ -1524,20 +1222,6 @@
           "lines": [
             176,
             194
-          ]
-        },
-        {
-          "jsx": "ChatEditForm",
-          "count": 1,
-          "lines": [
-            183
-          ]
-        },
-        {
-          "jsx": "ChatReportForm",
-          "count": 1,
-          "lines": [
-            201
           ]
         },
         {
@@ -1679,7 +1363,7 @@
     },
     {
       "file": "apps/mobile/src/components/ChatToolPicker.tsx",
-      "sha256": "f1171848c42af0f6df0e14769e2e123fd12ff8ad27e44232e1ad9283c244217d",
+      "sha256": "2e6e3a6da6edcd0d46104218c8cb9568d0ab6f90a8975b7b6c6aa1f6a06278cd",
       "renderedTags": [
         {
           "from": "@hjmds/react-native",
@@ -1687,7 +1371,7 @@
           "jsx": "Sheet",
           "count": 1,
           "lines": [
-            42
+            32
           ]
         },
         {
@@ -1696,45 +1380,25 @@
           "jsx": "SearchScreen",
           "count": 1,
           "lines": [
-            53
+            43
           ]
         },
         {
-          "from": "@hjmds/react-native",
-          "name": "SearchField",
-          "jsx": "SearchField",
+          "from": "./ToolThemeFilter",
+          "name": "ToolThemeFilter",
+          "jsx": "ToolThemeFilter",
           "count": 1,
           "lines": [
             64
           ]
         },
         {
-          "from": "react-native",
-          "name": "ScrollView",
-          "jsx": "ScrollView",
-          "count": 1,
-          "lines": [
-            75
-          ]
-        },
-        {
           "from": "@hjmds/react-native",
           "name": "Stack",
           "jsx": "Stack",
-          "count": 2,
+          "count": 1,
           "lines": [
-            81,
-            99
-          ]
-        },
-        {
-          "from": "@hjmds/react-native",
-          "name": "Button",
-          "jsx": "Button",
-          "count": 2,
-          "lines": [
-            83,
-            102
+            66
           ]
         },
         {
@@ -1743,7 +1407,16 @@
           "jsx": "Text",
           "count": 1,
           "lines": [
-            100
+            67
+          ]
+        },
+        {
+          "from": "@hjmds/react-native",
+          "name": "Button",
+          "jsx": "Button",
+          "count": 1,
+          "lines": [
+            69
           ]
         },
         {
@@ -1752,18 +1425,18 @@
           "jsx": "ToolArtwork",
           "count": 1,
           "lines": [
-            106
+            73
           ]
         }
       ],
       "review": "source-reviewed",
-      "decision": "absorb-filter-results-preserve-search",
+      "decision": "Keep already-adopted SearchScreen within Sheet with native keyboard avoidance, named host gutter, debounced results, theme pills and product-specific tool selection.",
       "reviewEvidence": {
         "date": "2026-10-07",
-        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
-        "hjmHead": "7269392",
-        "report": "docs/plans/utilverse-social-host-adoption.md",
-        "reason": "Already Sheet/SearchScreen/SearchField. Replace pill Button theme selectors with single-selection API and result Buttons with ListRow. Preserve settled query/abort handling, localized keyword search, privacy copy and choose-only callback.",
+        "consumerHead": "ca25701d648b331554fe5c3cdb51495e77db1e91",
+        "hjmHead": "0c9574bc88a6d348af4ab9154660a7d0b8064b22",
+        "report": "docs/plans/utilverse-final-source-review.md",
+        "reason": "Keep already-adopted SearchScreen within Sheet with native keyboard avoidance, named host gutter, debounced results, theme pills and product-specific tool selection.",
         "runtimeVerification": "pending",
         "adoption": "not-started"
       }
@@ -2009,13 +1682,6 @@
           ]
         },
         {
-          "jsx": "CommentComposer",
-          "count": 1,
-          "lines": [
-            49
-          ]
-        },
-        {
           "from": "react-native",
           "name": "View",
           "jsx": "View",
@@ -2123,13 +1789,6 @@
           ]
         },
         {
-          "jsx": "ReportForm",
-          "count": 1,
-          "lines": [
-            38
-          ]
-        },
-        {
           "from": "@hjmds/react-native",
           "name": "Surface",
           "jsx": "Surface",
@@ -2212,13 +1871,6 @@
           "count": 1,
           "lines": [
             58
-          ]
-        },
-        {
-          "jsx": "CommentEditForm",
-          "count": 1,
-          "lines": [
-            64
           ]
         },
         {
@@ -2410,13 +2062,6 @@
       "sha256": "1397bbe2407ca5f3e69667d236502b3305cd7eafc23bf0b3a432555b09a26986",
       "renderedTags": [
         {
-          "jsx": "Page",
-          "count": 1,
-          "lines": [
-            24
-          ]
-        },
-        {
           "from": "react-native",
           "name": "KeyboardAvoidingView",
           "jsx": "KeyboardAvoidingView",
@@ -2463,8 +2108,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "Keep the session-scoped operator gate, focus ownership, zero-lived private queries and HJM ScreenLayout; generic screen replacement must not weaken authorization.",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "ca25701d648b331554fe5c3cdb51495e77db1e91",
+        "hjmHead": "0c9574bc88a6d348af4ab9154660a7d0b8064b22",
+        "report": "docs/plans/utilverse-final-source-review.md",
+        "reason": "Keep the session-scoped operator gate, focus ownership, zero-lived private queries and HJM ScreenLayout; generic screen replacement must not weaken authorization.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/DisplayPresentation.tsx",
@@ -2506,13 +2160,6 @@
             142,
             148,
             191
-          ]
-        },
-        {
-          "jsx": "Animated.View",
-          "count": 1,
-          "lines": [
-            153
           ]
         },
         {
@@ -2579,25 +2226,14 @@
     },
     {
       "file": "apps/mobile/src/components/FileJobNotice.tsx",
-      "sha256": "a2fd35676d376a135b2cf644fa3b04d993eaf21cba7e15e0cd33cea6848692bc",
+      "sha256": "e6ebe417f7e43180313fe97a22ecdc63603cb99576cc1b49ca516f547b3e74bc",
       "renderedTags": [
         {
           "from": "@hjmds/react-native",
-          "name": "Stack",
-          "jsx": "Stack",
+          "name": "Notice",
+          "jsx": "Notice",
           "count": 1,
           "lines": [
-            42
-          ]
-        },
-        {
-          "from": "@hjmds/react-native",
-          "name": "Text",
-          "jsx": "Text",
-          "count": 3,
-          "lines": [
-            44,
-            51,
             61
           ]
         },
@@ -2607,7 +2243,7 @@
           "jsx": "Button",
           "count": 1,
           "lines": [
-            56
+            74
           ]
         }
       ],
@@ -2615,12 +2251,13 @@
       "decision": "split-and-verify-target",
       "reviewEvidence": {
         "date": "2026-10-07",
-        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
-        "hjmHead": "73f938f",
-        "report": "docs/plans/utilverse-photo-export-adoption.md",
-        "reason": "Absorb status/error presentation with Notice; keep cleanup retry distinct from export retry and created/saved/shareReturned outcomes.",
-        "runtimeVerification": "pending",
-        "adoption": "not-started"
+        "consumerHead": "ca25701d648b331554fe5c3cdb51495e77db1e91",
+        "hjmHead": "0c9574bc88a6d348af4ab9154660a7d0b8064b22",
+        "report": "docs/plans/utilverse-final-source-review.md",
+        "reason": "split-and-verify-target",
+        "runtimeVerification": "automated checks passed; composition browser fixture partial; native device pending",
+        "adoption": "implemented",
+        "consumerQa": "https://github.com/jim1286/utilverse/blob/ca25701d648b331554fe5c3cdb51495e77db1e91/docs/qa/2026-10-07-hjm-notice-field-group-adoption.md"
       }
     },
     {
@@ -2691,13 +2328,6 @@
       "file": "apps/mobile/src/components/HomeWallpaper.tsx",
       "sha256": "f927b9bd5481fd0ed7512c795a914b0801ec1ccac85e7904daecfe58ddc84829",
       "renderedTags": [
-        {
-          "jsx": "Animated.View",
-          "count": 1,
-          "lines": [
-            40
-          ]
-        },
         {
           "from": "expo-image",
           "name": "Image",
@@ -2773,26 +2403,15 @@
     },
     {
       "file": "apps/mobile/src/components/LanguageNotice.tsx",
-      "sha256": "3b64771d42c7a1022cb7dafed3e1a264a3ff535e646b4a238690b644fd1c5774",
+      "sha256": "15747593c56b026618cc530428222eeb14928cfa60c23bba9a3afbc1802eadc6",
       "renderedTags": [
         {
           "from": "@hjmds/react-native",
-          "name": "Stack",
-          "jsx": "Stack",
+          "name": "Notice",
+          "jsx": "Notice",
           "count": 1,
           "lines": [
-            37
-          ]
-        },
-        {
-          "from": "@hjmds/react-native",
-          "name": "Text",
-          "jsx": "Text",
-          "count": 3,
-          "lines": [
-            38,
-            39,
-            41
+            46
           ]
         }
       ],
@@ -2800,12 +2419,13 @@
       "decision": "replace-with-notice",
       "reviewEvidence": {
         "date": "2026-10-07",
-        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
-        "hjmHead": "1dea6da",
-        "report": "docs/plans/utilverse-account-auth-adoption.md",
-        "reason": "Use Notice for progress, fault and outcome announcements; preserve engine-vs-input errors and empty OCR outcome distinction.",
-        "runtimeVerification": "pending",
-        "adoption": "not-started"
+        "consumerHead": "ca25701d648b331554fe5c3cdb51495e77db1e91",
+        "hjmHead": "0c9574bc88a6d348af4ab9154660a7d0b8064b22",
+        "report": "docs/plans/utilverse-final-source-review.md",
+        "reason": "replace-with-notice",
+        "runtimeVerification": "automated checks passed; composition browser fixture partial; native device pending",
+        "adoption": "implemented",
+        "consumerQa": "https://github.com/jim1286/utilverse/blob/ca25701d648b331554fe5c3cdb51495e77db1e91/docs/qa/2026-10-07-hjm-notice-field-group-adoption.md"
       }
     },
     {
@@ -3008,13 +2628,6 @@
           ]
         },
         {
-          "jsx": "PageCanvas",
-          "count": 1,
-          "lines": [
-            13
-          ]
-        },
-        {
           "from": "react-native",
           "name": "View",
           "jsx": "View",
@@ -3033,12 +2646,21 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "Keep white-paper HJM provider, y-flipped PDF placement, measured scale and native full-image host; generic image/compare components do not own document coordinates.",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "ca25701d648b331554fe5c3cdb51495e77db1e91",
+        "hjmHead": "0c9574bc88a6d348af4ab9154660a7d0b8064b22",
+        "report": "docs/plans/utilverse-final-source-review.md",
+        "reason": "Keep white-paper HJM provider, y-flipped PDF placement, measured scale and native full-image host; generic image/compare components do not own document coordinates.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/PersonalDocumentStatus.tsx",
-      "sha256": "018a71e8644b572d09fe6081cdd5dcbe44d42d95f8c9b1c7f35bdaa2badc364d",
+      "sha256": "028603040f4e79bb0573f6aa31a60de9698b040f1d7735a217dbd62643a3b422",
       "renderedTags": [
         {
           "from": "@hjmds/react-native",
@@ -3053,11 +2675,19 @@
           "from": "@hjmds/react-native",
           "name": "Text",
           "jsx": "Text",
-          "count": 3,
+          "count": 1,
           "lines": [
-            18,
+            18
+          ]
+        },
+        {
+          "from": "@hjmds/react-native",
+          "name": "Notice",
+          "jsx": "Notice",
+          "count": 2,
+          "lines": [
             22,
-            32
+            35
           ]
         },
         {
@@ -3074,12 +2704,13 @@
       "decision": "replace-with-notice",
       "reviewEvidence": {
         "date": "2026-10-07",
-        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
-        "hjmHead": "3b8de6e",
-        "report": "docs/plans/utilverse-public-recovery-adoption.md",
-        "reason": "Use persistent Notice for storage/invalid errors with explicit announcement; preserve member-vs-guest ownership text and read retry only when not ready. Ready write failure is not a read-retry action.",
-        "runtimeVerification": "pending",
-        "adoption": "not-started"
+        "consumerHead": "ca25701d648b331554fe5c3cdb51495e77db1e91",
+        "hjmHead": "0c9574bc88a6d348af4ab9154660a7d0b8064b22",
+        "report": "docs/plans/utilverse-final-source-review.md",
+        "reason": "replace-with-notice",
+        "runtimeVerification": "automated checks passed; composition browser fixture partial; native device pending",
+        "adoption": "implemented",
+        "consumerQa": "https://github.com/jim1286/utilverse/blob/ca25701d648b331554fe5c3cdb51495e77db1e91/docs/qa/2026-10-07-hjm-notice-field-group-adoption.md"
       }
     },
     {
@@ -3207,8 +2838,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "Keep normalized drag responder, minimum rectangle, termination cancellation, native letterbox coordinates and opaque document ink; common controls can move to HJM without replacing the gesture engine.",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "ca25701d648b331554fe5c3cdb51495e77db1e91",
+        "hjmHead": "0c9574bc88a6d348af4ab9154660a7d0b8064b22",
+        "report": "docs/plans/utilverse-final-source-review.md",
+        "reason": "Keep normalized drag responder, minimum rectangle, termination cancellation, native letterbox coordinates and opaque document ink; common controls can move to HJM without replacing the gesture engine.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/PhotoOutputCard.tsx",
@@ -3490,13 +3130,6 @@
           "lines": [
             58
           ]
-        },
-        {
-          "jsx": "Banner",
-          "count": 1,
-          "lines": [
-            66
-          ]
         }
       ],
       "review": "source-reviewed",
@@ -3531,13 +3164,6 @@
       "file": "apps/mobile/src/components/ResultCopy.tsx",
       "sha256": "c894124d6eba6a9422f326d45da8051d0fd8ed70a66465d08ffed8322c28bad5",
       "renderedTags": [
-        {
-          "jsx": "CopyAction",
-          "count": 1,
-          "lines": [
-            9
-          ]
-        },
         {
           "from": "@hjmds/react-native",
           "name": "Stack",
@@ -3582,13 +3208,6 @@
       "file": "apps/mobile/src/components/ResultShare.tsx",
       "sha256": "acd2518cc5fa6c930d3ecb6dd119458fe564e0e6b01375107e8ecc783d1d88f4",
       "renderedTags": [
-        {
-          "jsx": "ShareAction",
-          "count": 1,
-          "lines": [
-            9
-          ]
-        },
         {
           "from": "@hjmds/react-native",
           "name": "Stack",
@@ -3714,13 +3333,6 @@
           "lines": [
             43,
             61
-          ]
-        },
-        {
-          "jsx": "Animated.View",
-          "count": 1,
-          "lines": [
-            49
           ]
         }
       ],
@@ -3938,13 +3550,6 @@
       "file": "apps/mobile/src/components/SocialPhotoGallery.tsx",
       "sha256": "2e9cb0095ff119defdde7095d12a977fd0a23d37746ac06de640438ce52d8ad7",
       "renderedTags": [
-        {
-          "jsx": "Album",
-          "count": 1,
-          "lines": [
-            20
-          ]
-        },
         {
           "from": "react-native",
           "name": "View",
@@ -4451,13 +4056,6 @@
       "sha256": "c3c6bc69abdc19d2df02fdf9e1ac269ef03de378eb2d63264c572cf915973b22",
       "renderedTags": [
         {
-          "jsx": "ResultContext.Provider",
-          "count": 1,
-          "lines": [
-            25
-          ]
-        },
-        {
           "from": "react-native",
           "name": "View",
           "jsx": "View",
@@ -4740,38 +4338,12 @@
           ]
         },
         {
-          "from": "../components/AuthIssue",
-          "name": "default",
-          "jsx": "AuthIssue",
-          "count": 1,
-          "lines": [
-            75
-          ]
-        },
-        {
           "from": "@hjmds/react-native",
           "name": "Button",
           "jsx": "Button",
           "count": 1,
           "lines": [
             82
-          ]
-        },
-        {
-          "jsx": "Group",
-          "count": 2,
-          "lines": [
-            86,
-            98
-          ]
-        },
-        {
-          "jsx": "Row",
-          "count": 3,
-          "lines": [
-            88,
-            100,
-            109
           ]
         },
         {
@@ -4812,13 +4384,6 @@
       "file": "apps/mobile/src/features/BlockedUsersScreen.tsx",
       "sha256": "ad9c966e858a5edc7ca5366fb189d1c1459641a004a4d631b0adc4379de5839f",
       "renderedTags": [
-        {
-          "jsx": "BlockedUsers",
-          "count": 1,
-          "lines": [
-            15
-          ]
-        },
         {
           "from": "@hjmds/react-native/screens",
           "name": "ScreenLayout",
@@ -4925,13 +4490,6 @@
             236,
             242,
             277
-          ]
-        },
-        {
-          "jsx": "Calculator",
-          "count": 1,
-          "lines": [
-            55
           ]
         },
         {
@@ -5168,13 +4726,6 @@
           ]
         },
         {
-          "jsx": "Lists",
-          "count": 1,
-          "lines": [
-            35
-          ]
-        },
-        {
           "from": "../components/ToolScreenLayout",
           "name": "ToolScreenLayout",
           "jsx": "ToolScreenLayout",
@@ -5190,13 +4741,6 @@
           "count": 1,
           "lines": [
             62
-          ]
-        },
-        {
-          "jsx": "ListDetail",
-          "count": 1,
-          "lines": [
-            69
           ]
         },
         {
@@ -5530,17 +5074,19 @@
           "lines": [
             532
           ]
-        },
-        {
-          "jsx": "CommunityDetail",
-          "count": 1,
-          "lines": [
-            567
-          ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "Already uses CommentThreadScreen; absorb eligible Notice/confirmation UI while keeping scoped captured writers, durable delete intent, reaction revisions, member gates, orphan replies, keyboard inset and separate favorites.",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "ca25701d648b331554fe5c3cdb51495e77db1e91",
+        "hjmHead": "0c9574bc88a6d348af4ab9154660a7d0b8064b22",
+        "report": "docs/plans/utilverse-final-source-review.md",
+        "reason": "Already uses CommentThreadScreen; absorb eligible Notice/confirmation UI while keeping scoped captured writers, durable delete intent, reaction revisions, member gates, orphan replies, keyboard inset and separate favorites.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/ConversationScreen.tsx",
@@ -5719,13 +5265,6 @@
           ]
         },
         {
-          "jsx": "ArrivingMessage",
-          "count": 1,
-          "lines": [
-            557
-          ]
-        },
-        {
           "from": "@hjmds/react-native/screens",
           "name": "ChatMessage",
           "jsx": "ChatMessage",
@@ -5804,15 +5343,6 @@
           "count": 1,
           "lines": [
             786
-          ]
-        },
-        {
-          "jsx": "Conversation",
-          "count": 3,
-          "lines": [
-            790,
-            792,
-            795
           ]
         }
       ],
@@ -6346,13 +5876,6 @@
           "lines": [
             292
           ]
-        },
-        {
-          "jsx": "ExchangeContent",
-          "count": 1,
-          "lines": [
-            305
-          ]
         }
       ],
       "review": "source-reviewed",
@@ -6523,13 +6046,6 @@
             419,
             426,
             505
-          ]
-        },
-        {
-          "jsx": "ExpenseEditor",
-          "count": 1,
-          "lines": [
-            254
           ]
         },
         {
@@ -6736,16 +6252,6 @@
           ]
         },
         {
-          "from": "../components/AuthIssue",
-          "name": "default",
-          "jsx": "AuthIssue",
-          "count": 2,
-          "lines": [
-            88,
-            274
-          ]
-        },
-        {
           "from": "@hjmds/react-native",
           "name": "Button",
           "jsx": "Button",
@@ -6805,40 +6311,6 @@
           "count": 1,
           "lines": [
             245
-          ]
-        },
-        {
-          "jsx": "Registration",
-          "count": 1,
-          "lines": [
-            271
-          ]
-        },
-        {
-          "from": "../components/AppleProviderButton",
-          "name": "default",
-          "jsx": "AppleProviderButton",
-          "count": 1,
-          "lines": [
-            291
-          ]
-        },
-        {
-          "from": "../components/ReviewLogin",
-          "name": "default",
-          "jsx": "ReviewLogin",
-          "count": 1,
-          "lines": [
-            309
-          ]
-        },
-        {
-          "from": "../components/PolicyLinks",
-          "name": "default",
-          "jsx": "PolicyLinks",
-          "count": 1,
-          "lines": [
-            335
           ]
         }
       ],
@@ -6941,13 +6413,6 @@
           ]
         },
         {
-          "jsx": "LottoBall",
-          "count": 1,
-          "lines": [
-            136
-          ]
-        },
-        {
           "from": "@hjmds/react-native",
           "name": "Surface",
           "jsx": "Surface",
@@ -6973,13 +6438,6 @@
       "file": "apps/mobile/src/features/ModeratedContentScreen.tsx",
       "sha256": "9a19125ecb23cf994062a9c6e43a0736847852fd5176157f97557d9ac54c5c7d",
       "renderedTags": [
-        {
-          "jsx": "Content",
-          "count": 1,
-          "lines": [
-            39
-          ]
-        },
         {
           "from": "react-native",
           "name": "KeyboardAvoidingView",
@@ -7053,26 +6511,12 @@
           ]
         },
         {
-          "jsx": "Item",
-          "count": 1,
-          "lines": [
-            117
-          ]
-        },
-        {
           "from": "@hjmds/react-native",
           "name": "Surface",
           "jsx": "Surface",
           "count": 1,
           "lines": [
             142
-          ]
-        },
-        {
-          "jsx": "AppealForm",
-          "count": 1,
-          "lines": [
-            172
           ]
         },
         {
@@ -7118,13 +6562,6 @@
           "lines": [
             48,
             124
-          ]
-        },
-        {
-          "jsx": "Queue",
-          "count": 1,
-          "lines": [
-            49
           ]
         },
         {
@@ -7209,20 +6646,6 @@
           ]
         },
         {
-          "jsx": "Detail",
-          "count": 1,
-          "lines": [
-            125
-          ]
-        },
-        {
-          "jsx": "Review",
-          "count": 1,
-          "lines": [
-            141
-          ]
-        },
-        {
           "from": "@hjmds/react-native/screens",
           "name": "ScreenLayout",
           "jsx": "ScreenLayout",
@@ -7250,8 +6673,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "Keep operator scope, captured reviewed revision/restorable decision, explicit confirmation, coherent private detail and receipt checks; Notice, FieldGroup and AlertDialog presentation are eligible after product flows are exercised.",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "ca25701d648b331554fe5c3cdb51495e77db1e91",
+        "hjmHead": "0c9574bc88a6d348af4ab9154660a7d0b8064b22",
+        "report": "docs/plans/utilverse-final-source-review.md",
+        "reason": "Keep operator scope, captured reviewed revision/restorable decision, explicit confirmation, coherent private detail and receipt checks; Notice, FieldGroup and AlertDialog presentation are eligible after product flows are exercised.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/ModerationScreen.tsx",
@@ -7265,13 +6697,6 @@
           "lines": [
             44,
             129
-          ]
-        },
-        {
-          "jsx": "Queue",
-          "count": 1,
-          "lines": [
-            45
           ]
         },
         {
@@ -7354,20 +6779,6 @@
           ]
         },
         {
-          "jsx": "Detail",
-          "count": 1,
-          "lines": [
-            130
-          ]
-        },
-        {
-          "jsx": "Review",
-          "count": 1,
-          "lines": [
-            149
-          ]
-        },
-        {
           "from": "@hjmds/react-native/screens",
           "name": "ScreenLayout",
           "jsx": "ScreenLayout",
@@ -7404,8 +6815,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "Keep operator scope, coherent detail/revision guard, captured immutable action and receipt validation; replace eligible queue Notice and destructive confirmation presentation only.",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "ca25701d648b331554fe5c3cdb51495e77db1e91",
+        "hjmHead": "0c9574bc88a6d348af4ab9154660a7d0b8064b22",
+        "report": "docs/plans/utilverse-final-source-review.md",
+        "reason": "Keep operator scope, coherent detail/revision guard, captured immutable action and receipt validation; replace eligible queue Notice and destructive confirmation presentation only.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/NotesScreen.tsx",
@@ -7432,13 +6852,6 @@
           ]
         },
         {
-          "jsx": "Notes",
-          "count": 1,
-          "lines": [
-            40
-          ]
-        },
-        {
           "from": "../components/ToolScreenLayout",
           "name": "ToolScreenLayout",
           "jsx": "ToolScreenLayout",
@@ -7454,13 +6867,6 @@
           "count": 1,
           "lines": [
             67
-          ]
-        },
-        {
-          "jsx": "NoteEditor",
-          "count": 1,
-          "lines": [
-            74
           ]
         },
         {
@@ -7585,13 +6991,6 @@
       "sha256": "e54d4db4458da54689774478529f95f0e6ac5066d2505e1ef5c91fa6bc2d1e1d",
       "renderedTags": [
         {
-          "jsx": "Inbox",
-          "count": 1,
-          "lines": [
-            34
-          ]
-        },
-        {
           "from": "@hjmds/react-native/screens",
           "name": "NotificationInboxScreen",
           "jsx": "SharedNotificationInboxScreen",
@@ -7671,13 +7070,6 @@
           "count": 1,
           "lines": [
             107
-          ]
-        },
-        {
-          "jsx": "Entries",
-          "count": 1,
-          "lines": [
-            117
           ]
         },
         {
@@ -7861,8 +7253,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "Notice can replace engine-status presentation; retain pick lease, rotation/raster limits, editable result live=false, private edited translation handoff and background cleanup.",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "ca25701d648b331554fe5c3cdb51495e77db1e91",
+        "hjmHead": "0c9574bc88a6d348af4ab9154660a7d0b8064b22",
+        "report": "docs/plans/utilverse-final-source-review.md",
+        "reason": "Notice can replace engine-status presentation; retain pick lease, rotation/raster limits, editable result live=false, private edited translation handoff and background cleanup.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/PasswordScreen.tsx",
@@ -8103,7 +7504,7 @@
     },
     {
       "file": "apps/mobile/src/features/PhotoMaskScreen.tsx",
-      "sha256": "d422febdfad55d948c931f70d019b52541e06646e20408052411a7462d051ff3",
+      "sha256": "9eba065fe15a673a9dc378ac745092583d431b08db87bb9f49964c14f823f8ad",
       "renderedTags": [
         {
           "from": "react-native",
@@ -8111,7 +7512,7 @@
           "jsx": "View",
           "count": 1,
           "lines": [
-            125
+            136
           ]
         },
         {
@@ -8120,23 +7521,20 @@
           "jsx": "ToolScreenLayout",
           "count": 1,
           "lines": [
-            126
+            137
           ]
         },
         {
           "from": "@hjmds/react-native",
           "name": "Text",
           "jsx": "Text",
-          "count": 8,
+          "count": 5,
           "lines": [
-            154,
-            188,
-            191,
-            210,
-            211,
-            255,
-            285,
-            286
+            165,
+            199,
+            202,
+            282,
+            312
           ]
         },
         {
@@ -8145,7 +7543,7 @@
           "jsx": "PhotoOutputCard",
           "count": 1,
           "lines": [
-            156
+            167
           ]
         },
         {
@@ -8154,11 +7552,11 @@
           "jsx": "Button",
           "count": 5,
           "lines": [
-            171,
-            235,
-            256,
-            270,
-            288
+            182,
+            262,
+            283,
+            297,
+            314
           ]
         },
         {
@@ -8167,7 +7565,7 @@
           "jsx": "PhotoMaskEditor",
           "count": 1,
           "lines": [
-            179
+            190
           ]
         },
         {
@@ -8176,7 +7574,7 @@
           "jsx": "ChoiceField",
           "count": 1,
           "lines": [
-            192
+            203
           ]
         },
         {
@@ -8185,8 +7583,8 @@
           "jsx": "Surface",
           "count": 2,
           "lines": [
-            208,
-            253
+            219,
+            280
           ]
         },
         {
@@ -8195,8 +7593,17 @@
           "jsx": "Stack",
           "count": 2,
           "lines": [
-            209,
-            254
+            220,
+            281
+          ]
+        },
+        {
+          "from": "@hjmds/react-native/field-group",
+          "name": "FieldGroup",
+          "jsx": "FieldGroup",
+          "count": 1,
+          "lines": [
+            221
           ]
         },
         {
@@ -8205,7 +7612,7 @@
           "jsx": "TextField",
           "count": 1,
           "lines": [
-            215
+            247
           ]
         },
         {
@@ -8214,8 +7621,8 @@
           "jsx": "FileJobNotice",
           "count": 2,
           "lines": [
-            300,
-            305
+            326,
+            331
           ]
         },
         {
@@ -8224,12 +7631,22 @@
           "jsx": "Celebration",
           "count": 1,
           "lines": [
-            309
+            335
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "Adopt FieldGroup for four percentage inputs; preserve mask renderer, busy drag lock, rectangle limits, actual saved-pixel verification, review gate, separate source/output ownership and exports.",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "ca25701d648b331554fe5c3cdb51495e77db1e91",
+        "hjmHead": "0c9574bc88a6d348af4ab9154660a7d0b8064b22",
+        "report": "docs/plans/utilverse-final-source-review.md",
+        "reason": "Adopt FieldGroup for four percentage inputs; preserve mask renderer, busy drag lock, rectangle limits, actual saved-pixel verification, review gate, separate source/output ownership and exports.",
+        "runtimeVerification": "automated checks passed; composition browser fixture partial; native device pending",
+        "adoption": "implemented",
+        "consumerQa": "https://github.com/jim1286/utilverse/blob/ca25701d648b331554fe5c3cdb51495e77db1e91/docs/qa/2026-10-07-hjm-notice-field-group-adoption.md"
+      }
     },
     {
       "file": "apps/mobile/src/features/PhotoPdfScreen.tsx",
@@ -8361,8 +7778,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "Absorb file Notice and eligible configuration presentation; retain serialized encoding, reopen-and-verify PDF, white-paper coordinates, 20-image virtualization, rotation and accessible reorder controls.",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "ca25701d648b331554fe5c3cdb51495e77db1e91",
+        "hjmHead": "0c9574bc88a6d348af4ab9154660a7d0b8064b22",
+        "report": "docs/plans/utilverse-final-source-review.md",
+        "reason": "Absorb file Notice and eligible configuration presentation; retain serialized encoding, reopen-and-verify PDF, white-paper coordinates, 20-image virtualization, rotation and accessible reorder controls.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/PhotoScreen.native.tsx",
@@ -8695,8 +8121,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "Absorb file Notice and eligible option grouping; retain serial decode/budget, actual output verification, stable photo ids/order, native thumbnails, virtualization and separate save/share receipts.",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "ca25701d648b331554fe5c3cdb51495e77db1e91",
+        "hjmHead": "0c9574bc88a6d348af4ab9154660a7d0b8064b22",
+        "report": "docs/plans/utilverse-final-source-review.md",
+        "reason": "Absorb file Notice and eligible option grouping; retain serial decode/budget, actual output verification, stable photo ids/order, native thumbnails, virtualization and separate save/share receipts.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/PollDetailScreen.tsx",
@@ -8823,17 +8258,19 @@
           "lines": [
             279
           ]
-        },
-        {
-          "jsx": "PollActions",
-          "count": 1,
-          "lines": [
-            298
-          ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "ScreenLayout already adopted; Notice and revoke confirmation are eligible, but keep duplicate/idempotent commands, revision-checked receipts, latest query merge, account scope and stale-read lock.",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "ca25701d648b331554fe5c3cdb51495e77db1e91",
+        "hjmHead": "0c9574bc88a6d348af4ab9154660a7d0b8064b22",
+        "report": "docs/plans/utilverse-final-source-review.md",
+        "reason": "ScreenLayout already adopted; Notice and revoke confirmation are eligible, but keep duplicate/idempotent commands, revision-checked receipts, latest query merge, account scope and stale-read lock.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/PollToolScreen.tsx",
@@ -8945,17 +8382,19 @@
           "lines": [
             238
           ]
-        },
-        {
-          "jsx": "PollForm",
-          "count": 1,
-          "lines": [
-            243
-          ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "Consider FieldGroup for draft options and date parts, Notice for errors; preserve edit/preview/publish distinction, expected revision, duplicate option/deadline validation and scoped command lifetime.",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "ca25701d648b331554fe5c3cdb51495e77db1e91",
+        "hjmHead": "0c9574bc88a6d348af4ab9154660a7d0b8064b22",
+        "report": "docs/plans/utilverse-final-source-review.md",
+        "reason": "Consider FieldGroup for draft options and date parts, Notice for errors; preserve edit/preview/publish distinction, expected revision, duplicate option/deadline validation and scoped command lifetime.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/ProfileEditScreen.tsx",
@@ -9052,7 +8491,7 @@
     },
     {
       "file": "apps/mobile/src/features/QrCreatePanel.tsx",
-      "sha256": "2abcbeac969f750748f99e6a26bf2b408d57666569865baeefdaa45f99d4f87b",
+      "sha256": "de43156023fda6d66c9bdfc46fb6544fe1f5ed5e64315e48061308a38f582067",
       "renderedTags": [
         {
           "from": "@hjmds/react-native",
@@ -9060,7 +8499,7 @@
           "jsx": "Stack",
           "count": 1,
           "lines": [
-            73
+            77
           ]
         },
         {
@@ -9069,7 +8508,7 @@
           "jsx": "ToolResult",
           "count": 1,
           "lines": [
-            75
+            79
           ]
         },
         {
@@ -9078,21 +8517,20 @@
           "jsx": "PhotoFilePreview",
           "count": 1,
           "lines": [
-            77
+            81
           ]
         },
         {
           "from": "@hjmds/react-native",
           "name": "Text",
           "jsx": "Text",
-          "count": 6,
+          "count": 5,
           "lines": [
-            78,
-            83,
-            86,
-            89,
-            177,
-            203
+            82,
+            87,
+            90,
+            93,
+            223
           ]
         },
         {
@@ -9101,11 +8539,11 @@
           "jsx": "Button",
           "count": 5,
           "lines": [
-            90,
-            97,
-            105,
-            204,
-            210
+            94,
+            101,
+            109,
+            224,
+            230
           ]
         },
         {
@@ -9114,7 +8552,7 @@
           "jsx": "Celebration",
           "count": 1,
           "lines": [
-            109
+            113
           ]
         },
         {
@@ -9123,19 +8561,17 @@
           "jsx": "ChoiceField",
           "count": 2,
           "lines": [
-            114,
-            142
+            118,
+            158
           ]
         },
         {
-          "from": "@hjmds/react-native",
-          "name": "TextField",
-          "jsx": "TextField",
-          "count": 3,
+          "from": "@hjmds/react-native/field-group",
+          "name": "FieldGroup",
+          "jsx": "FieldGroup",
+          "count": 1,
           "lines": [
-            133,
-            159,
-            192
+            136
           ]
         },
         {
@@ -9144,7 +8580,17 @@
           "jsx": "Checkbox",
           "count": 1,
           "lines": [
-            170
+            178
+          ]
+        },
+        {
+          "from": "@hjmds/react-native",
+          "name": "TextField",
+          "jsx": "TextField",
+          "count": 2,
+          "lines": [
+            187,
+            212
           ]
         },
         {
@@ -9153,7 +8599,7 @@
           "jsx": "TextArea",
           "count": 1,
           "lines": [
-            180
+            200
           ]
         },
         {
@@ -9162,12 +8608,22 @@
           "jsx": "FileJobNotice",
           "count": 1,
           "lines": [
-            219
+            239
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "Adopt FieldGroup for Wi-Fi payload; preserve conditional secure password clearing, local-only credentials, payload validation, QR PNG reopen verification, file lease and separate save/share/edit.",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "ca25701d648b331554fe5c3cdb51495e77db1e91",
+        "hjmHead": "0c9574bc88a6d348af4ab9154660a7d0b8064b22",
+        "report": "docs/plans/utilverse-final-source-review.md",
+        "reason": "Adopt FieldGroup for Wi-Fi payload; preserve conditional secure password clearing, local-only credentials, payload validation, QR PNG reopen verification, file lease and separate save/share/edit.",
+        "runtimeVerification": "automated checks passed; composition browser fixture partial; native device pending",
+        "adoption": "implemented",
+        "consumerQa": "https://github.com/jim1286/utilverse/blob/ca25701d648b331554fe5c3cdb51495e77db1e91/docs/qa/2026-10-07-hjm-notice-field-group-adoption.md"
+      }
     },
     {
       "file": "apps/mobile/src/features/QrScreen.tsx",
@@ -9225,13 +8681,6 @@
           ]
         },
         {
-          "jsx": "CameraView",
-          "count": 1,
-          "lines": [
-            113
-          ]
-        },
-        {
           "from": "@hjmds/react-native",
           "name": "Button",
           "jsx": "Button",
@@ -9270,8 +8719,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "Absorb permission/fault Notice and eligible link confirmation; preserve camera capability/permission host, privacy reveal, multi-QR selection, explicit external-link approval and AppState suspension epochs.",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "ca25701d648b331554fe5c3cdb51495e77db1e91",
+        "hjmHead": "0c9574bc88a6d348af4ab9154660a7d0b8064b22",
+        "report": "docs/plans/utilverse-final-source-review.md",
+        "reason": "Absorb permission/fault Notice and eligible link confirmation; preserve camera capability/permission host, privacy reveal, multi-QR selection, explicit external-link approval and AppState suspension epochs.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/RouletteScreen.tsx",
@@ -10127,15 +9585,6 @@
           ]
         },
         {
-          "from": "../components/ToolAccessGate",
-          "name": "default",
-          "jsx": "ToolAccessGate",
-          "count": 1,
-          "lines": [
-            215
-          ]
-        },
-        {
           "from": "@hjmds/react-native/screens",
           "name": "ScreenLayout",
           "jsx": "ScreenLayout",
@@ -10187,13 +9636,6 @@
           "count": 1,
           "lines": [
             242
-          ]
-        },
-        {
-          "jsx": "ReminderForm",
-          "count": 1,
-          "lines": [
-            271
           ]
         },
         {
@@ -10264,7 +9706,7 @@
     },
     {
       "file": "apps/mobile/src/features/ToolboxScreen.tsx",
-      "sha256": "f0310b3dd5859a60f4081eada463dbc11e954eb3fdf497dc79e066c3e2784db2",
+      "sha256": "228facdea887be3d14429137d318d8222ec4890ff5d62ef7138f1a8dad88e0e0",
       "renderedTags": [
         {
           "from": "react-native",
@@ -10272,14 +9714,7 @@
           "jsx": "Pressable",
           "count": 1,
           "lines": [
-            71
-          ]
-        },
-        {
-          "jsx": "Animated.View",
-          "count": 1,
-          "lines": [
-            90
+            63
           ]
         },
         {
@@ -10288,22 +9723,22 @@
           "jsx": "Stack",
           "count": 16,
           "lines": [
-            112,
-            143,
-            348,
-            360,
-            372,
-            461,
-            463,
-            486,
-            519,
-            533,
-            546,
-            560,
-            562,
-            619,
-            642,
-            672
+            104,
+            135,
+            340,
+            352,
+            364,
+            442,
+            444,
+            467,
+            500,
+            514,
+            527,
+            541,
+            543,
+            600,
+            623,
+            653
           ]
         },
         {
@@ -10312,21 +9747,14 @@
           "jsx": "View",
           "count": 8,
           "lines": [
-            113,
-            128,
-            331,
-            347,
-            409,
-            439,
-            513,
-            658
-          ]
-        },
-        {
-          "jsx": "PressableTile",
-          "count": 1,
-          "lines": [
-            114
+            105,
+            120,
+            323,
+            339,
+            401,
+            420,
+            494,
+            639
           ]
         },
         {
@@ -10335,8 +9763,8 @@
           "jsx": "ToolArtwork",
           "count": 2,
           "lines": [
-            125,
-            561
+            117,
+            542
           ]
         },
         {
@@ -10345,9 +9773,9 @@
           "jsx": "Surface",
           "count": 3,
           "lines": [
-            129,
-            460,
-            673
+            121,
+            441,
+            654
           ]
         },
         {
@@ -10356,33 +9784,32 @@
           "jsx": "UiGlyph",
           "count": 6,
           "lines": [
-            130,
-            384,
-            393,
-            405,
-            568,
-            679
+            122,
+            376,
+            385,
+            397,
+            549,
+            660
           ]
         },
         {
           "from": "@hjmds/react-native",
           "name": "Button",
           "jsx": "Button",
-          "count": 13,
+          "count": 12,
           "lines": [
-            136,
-            373,
-            386,
-            395,
-            422,
-            464,
-            478,
-            503,
-            528,
-            548,
-            650,
-            674,
-            688
+            128,
+            365,
+            378,
+            387,
+            445,
+            459,
+            484,
+            509,
+            529,
+            631,
+            655,
+            669
           ]
         },
         {
@@ -10391,20 +9818,20 @@
           "jsx": "Text",
           "count": 14,
           "lines": [
-            144,
-            147,
-            153,
-            361,
-            365,
-            455,
-            462,
-            495,
-            525,
-            534,
-            563,
-            564,
-            620,
-            629
+            136,
+            139,
+            145,
+            353,
+            357,
+            436,
+            443,
+            476,
+            506,
+            515,
+            544,
+            545,
+            601,
+            610
           ]
         },
         {
@@ -10413,14 +9840,7 @@
           "jsx": "Grid",
           "count": 1,
           "lines": [
-            323
-          ]
-        },
-        {
-          "jsx": "AppTile",
-          "count": 1,
-          "lines": [
-            340
+            315
           ]
         },
         {
@@ -10429,9 +9849,18 @@
           "jsx": "ScrollView",
           "count": 3,
           "lines": [
-            410,
-            538,
-            602
+            405,
+            519,
+            583
+          ]
+        },
+        {
+          "from": "../components/ToolThemeFilter",
+          "name": "ToolThemeFilter",
+          "jsx": "ToolThemeFilter",
+          "count": 1,
+          "lines": [
+            411
           ]
         },
         {
@@ -10440,7 +9869,7 @@
           "jsx": "SearchField",
           "count": 1,
           "lines": [
-            440
+            421
           ]
         },
         {
@@ -10449,7 +9878,7 @@
           "jsx": "FlatList",
           "count": 1,
           "lines": [
-            575
+            556
           ]
         },
         {
@@ -10458,18 +9887,18 @@
           "jsx": "HomeToolPreview",
           "count": 1,
           "lines": [
-            699
+            680
           ]
         }
       ],
       "review": "source-reviewed",
-      "decision": "partial-replacement-retain-measured-pager",
+      "decision": "Keep launcher-specific measured native pager, virtualized pages, reduced-motion press/peek host and five shells; eligible notices/confirmation may be absorbed without replacing it with SearchScreen/Carousel.",
       "reviewEvidence": {
         "date": "2026-10-07",
-        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
-        "hjmHead": "fbf43bf",
-        "report": "docs/plans/utilverse-conversation-toolbox-adoption.md",
-        "reason": "Replace search rows with ListRow and empty/failure UI with EmptyState/Notice. Keep measured virtualized launcher paging; Card is not an interactive tile and Carousel eagerly renders every slide. Tile press/peek contract requires further common API comparison.",
+        "consumerHead": "ca25701d648b331554fe5c3cdb51495e77db1e91",
+        "hjmHead": "0c9574bc88a6d348af4ab9154660a7d0b8064b22",
+        "report": "docs/plans/utilverse-final-source-review.md",
+        "reason": "Keep launcher-specific measured native pager, virtualized pages, reduced-motion press/peek host and five shells; eligible notices/confirmation may be absorbed without replacing it with SearchScreen/Carousel.",
         "runtimeVerification": "pending",
         "adoption": "not-started"
       }
@@ -10624,8 +10053,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "Notice can replace engine-status presentation; keep platform-owned models/attribution, private input clearing, model deletion confirmation, download policy, cancelable job and result invalidation.",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "ca25701d648b331554fe5c3cdb51495e77db1e91",
+        "hjmHead": "0c9574bc88a6d348af4ab9154660a7d0b8064b22",
+        "report": "docs/plans/utilverse-final-source-review.md",
+        "reason": "Notice can replace engine-status presentation; keep platform-owned models/attribution, private input clearing, model deletion confirmation, download policy, cancelable job and result invalidation.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/UnitConverterScreen.tsx",
@@ -10971,15 +10409,7 @@
     {
       "file": "apps/mobile/src/lib/preferences.tsx",
       "sha256": "49da3562d5bb597f0bfcb144a196188d8c63e83efdc6d339aa9be673b4fe95fa",
-      "renderedTags": [
-        {
-          "jsx": "PreferencesContext.Provider",
-          "count": 1,
-          "lines": [
-            67
-          ]
-        }
-      ],
+      "renderedTags": [],
       "review": "source-reviewed",
       "decision": "retain-product-host",
       "reviewEvidence": {
@@ -10995,22 +10425,7 @@
     {
       "file": "apps/mobile/src/lib/session.tsx",
       "sha256": "0b1bf845303fd37178517d2aca11b1ed746714f1cf66113a60d55f9ef54b6948",
-      "renderedTags": [
-        {
-          "jsx": "AuthContext.Provider",
-          "count": 1,
-          "lines": [
-            76
-          ]
-        },
-        {
-          "jsx": "DeletionContext.Provider",
-          "count": 1,
-          "lines": [
-            77
-          ]
-        }
-      ],
+      "renderedTags": [],
       "review": "source-reviewed",
       "decision": "retain-product-host",
       "reviewEvidence": {
