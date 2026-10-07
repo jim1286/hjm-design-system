@@ -12,6 +12,7 @@ export function EffectSurface({ descriptor = {}, children, className, layoutStyl
   const host = useRef<HTMLDivElement>(null);
   const layer = useRef<SVGSVGElement>(null);
   const [visible, setVisible] = useState(false);
+  const hasAtmosphere = effect.layers.some(value => value !== "ruled");
   useEffect(() => {
     if (!host.current) return;
     if (typeof IntersectionObserver === "undefined") { setVisible(true); return; }
@@ -20,7 +21,7 @@ export function EffectSurface({ descriptor = {}, children, className, layoutStyl
   }, []);
   useEffect(() => {
     const node = layer.current;
-    if (!node || !effect.active || environment.reducedMotion || !visible || typeof node.animate !== "function") return;
+    if (!node || !hasAtmosphere || !effect.active || environment.reducedMotion || !visible || typeof node.animate !== "function") return;
     // WAAPI stays outside React renders; visibility changes cancel the loop and
     // expose its static composition rather than scheduling invisible frames.
     let animation: Animation | undefined;
@@ -35,7 +36,7 @@ export function EffectSurface({ descriptor = {}, children, className, layoutStyl
     ], { duration: effect.period * 1000, iterations: Infinity, easing: "ease-in-out" }); } catch { failed = true; } };
     sync(); document.addEventListener("visibilitychange", sync);
     return () => { animation?.cancel(); document.removeEventListener("visibilitychange", sync); };
-  }, [effect.active, effect.period, environment.reducedMotion, visible]);
+  }, [hasAtmosphere, effect.active, effect.period, environment.reducedMotion, visible]);
   const colors = effect.colors.map(color => resolveColorReference(color, palette));
   return <div ref={host} className={className} data-hjm-effect-surface="" style={{ ...layoutStyle, position: "relative", isolation: "isolate", overflow: "hidden", background: palette.theme.bg }}>
     <svg ref={layer} aria-hidden="true" focusable="false" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", opacity: effect.intensity }}>
@@ -51,6 +52,11 @@ export function EffectSurface({ descriptor = {}, children, className, layoutStyl
       {effect.layers.includes("grain") && <rect width={100} height={100} fill={`url(#${id}-grain)`} />}
       </svg>
     </svg>
+    {/* Notebook ruling must not stretch or drift with the atmospheric layers. */}
+    {effect.ruled && <svg data-hjm-effect-layer="ruled" aria-hidden="true" focusable="false" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", opacity: effect.intensity }}>
+      <defs><pattern id={`${id}-ruled`} width={1} height={effect.ruled.spacing} patternUnits="userSpaceOnUse"><rect y={effect.ruled.spacing - effect.ruled.thickness} width="100%" height={effect.ruled.thickness} fill={palette.theme.text} /></pattern></defs>
+      <rect width="100%" height="100%" fill={`url(#${id}-ruled)`} />
+    </svg>}
     <div style={{ position: "relative" }}>{children}</div>
   </div>;
 }

@@ -40,7 +40,7 @@ export const productDesign = defineHjmDesignProfile({
 | --- | --- | --- |
 | palette | 현재 HJM light/dark 17 semantic roles | 레트로의 잉크/황갈색, 종이의 따뜻한 중립색, 숲의 녹색 |
 | tokens | 기존 radius/fontFamily/typography/heading/shadow | 모서리·글자 크기/행간/강조·그림자와 일반 monospace fallback; 폰트 자산은 번들하지 않음 |
-| material | canvas/card/surface 모두 null | 레트로 noise, 종이 grain, 숲 mesh+glow; 오로라만 active=true, 나머지는 정적 |
+| material | canvas/card/surface 모두 null | 레트로 noise, 종이 grain+ruled, 숲 mesh+glow; 오로라만 active=true, 나머지는 정적 |
 | interactions | contentTransition=fade, selectionMotion=none | 레트로 slide, 종이 fade, 숲 rise와 slide 선택 배경 |
 | compositions | collection=rows, toolbar=inline | 레트로 grid/inline, 종이 rows/collapsible, 숲 cards/collapsible |
 | screens | overview=dashboard | 종이 editorial, 숲 landscape |
@@ -269,3 +269,10 @@ fallback은 유지한다. Web은 일반 Toast fallback이므로 Native 효과를
 독립적으로 지정한다. 생략하면 현재 ui stack을 따르므로 기존 ui-only 제품 설정은 유지된다.
 Heading/Text의 의미·크기·굵기와 입력/버튼의 ui는 바꾸지 않는다. `Text.fontRole`로 명시 역할을 선택한다.
 [역할 계약](font-roles.md)과 [사용 지침](usage/tokens/font-roles.md)을 따른다. 이 추가 API는 1.15.0 이후 미게시다.
+
+## 종이 줄무늬와 앱 소유 표현
+
+2026-10-07 A-02의 줄무늬는 기존 점/노이즈와 구분되는 표현이라 EffectSurface의 정적 ruled 레이어로 보완했다.
+paper canvas는 grain+ruled/intensity0.06/ruledSpacing24다. 실제 내용은 회전하거나 선의 기준에 맞추지 않는다.
+앱은 `material.canvas`를 grain만으로 교체하거나 ruledSpacing을 지정한다. 새로운 종이 상태/입력 엔진은 없다.
+이 변경은 1.15.0 이후 미게시이며 [실험 사용 지침](usage/compositions/paper-surface.md)과 [질감 계약](effect-surface.md)을 따른다.

@@ -2,8 +2,13 @@ import { effectNoiseTile } from "./internal/effect-noise.js";
 import { themeColor } from "./color-references.js";
 export function resolveEffectSurface(descriptor = {}) {
     const layers = descriptor.layers ?? ["mesh"];
-    if (!layers.length || layers.length > 4 || new Set(layers).size !== layers.length || layers.some(layer => !["mesh", "glow", "grain", "noise"].includes(layer)))
+    if (!layers.length || layers.length > 4 || new Set(layers).size !== layers.length || layers.some(layer => !["mesh", "glow", "grain", "noise", "ruled"].includes(layer)))
         throw new TypeError("Choose one to four unique effect layers");
+    // Keep the existing four-layer cost bound. Ruling is a static physical-unit tile,
+    // not a text grid: shrinking it below 8 would turn distinct lines into a dense fill.
+    const ruledSpacing = descriptor.ruledSpacing ?? 24;
+    if (!Number.isFinite(ruledSpacing) || ruledSpacing < 8 || ruledSpacing > 128)
+        throw new RangeError("Ruled spacing must be between 8 and 128 host units");
     const intensity = descriptor.intensity ?? 0.22;
     if (!Number.isFinite(intensity) || intensity < 0 || intensity > 1)
         throw new RangeError("Effect intensity must be between 0 and 1");
@@ -24,6 +29,7 @@ export function resolveEffectSurface(descriptor = {}) {
         colors: descriptor.colors ?? [themeColor("primary"), themeColor("contentBrand"), themeColor("surfaceAccent")],
         // Fixed periodic raster is shared across hosts; seed shifts its phase, not its pixels.
         noise: layers.includes("noise") ? { uri: effectNoiseTile, size: 64, offset: points[0].x / 4 } : undefined,
+        ruled: layers.includes("ruled") ? { spacing: ruledSpacing, thickness: 1 } : undefined,
         points, anchors: points.slice(0, 3) };
 }
 //# sourceMappingURL=effect-surface.js.map

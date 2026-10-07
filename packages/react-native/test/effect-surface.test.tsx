@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Animated, Pressable } from "react-native";
+import { Animated, Pressable, TextInput } from "react-native";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { AppState, Text, startedAnimatedTimings } from "./react-native.mock.js";
 import { expect, it, vi } from "vitest";
@@ -7,7 +7,40 @@ const host = vi.hoisted(() => ({ fail: false }));
 vi.mock("react-native-svg", async () => { const { View } = await import("react-native"); return { default: (props: object) => { if (host.fail) throw new Error("SVG host unavailable"); return <View {...props} />; }, Circle: View, Defs: View, Ellipse: View, RadialGradient: View, Stop: View, Pattern: View, Rect: View, Mask: View, Image: View }; });
 import { EffectSurface } from "../src/effect-surface.js";
 import { HjmNativeProvider } from "../src/provider.js";
+import { TextField } from "../src/inputs.js";
+import { OverviewScreen } from "../src/design-profile.js";
+import { defineHjmDesignProfile } from "@hjmds/design-contracts/design-profile";
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+it("propagates the paper canvas through the public screen across all reference profiles without replacing its draft", () => {
+  let tree!: ReactTestRenderer;
+  const presets = ["paper", "forest", "minimal", "editorial", "brutalist", "glass", "aurora", "terminal", "clay", "retro", "neutral"] as const;
+  const themed = (preset: typeof presets[number]) => <HjmNativeProvider designProfile={defineHjmDesignProfile({ extends: preset })} reducedMotion><OverviewScreen title="Notes" toolbarLabel="Note tools" toolbar={<TextField label="Draft" defaultValue="initial" />} items={[{ id: "one", children: <Text>One</Text> }]} /></HjmNativeProvider>;
+  try {
+    act(() => { tree = create(themed("paper")); }); const input = tree.root.findByType(TextInput);
+    act(() => input.props.onChangeText("kept"));
+    for (const preset of presets) {
+      act(() => tree.update(themed(preset)));
+      expect(tree.root.findByType(TextInput)).toBe(input); expect(input.props.value).toBe("kept");
+      expect(tree.root.findAllByProps({ testID: "hjm-effect-ruled" }).length > 0).toBe(preset === "paper");
+    }
+  } finally { act(() => tree.unmount()); }
+});
+it("keeps notebook ruling outside the motion host and retains edited input when spacing changes", () => {
+  let tree!: ReactTestRenderer;
+  const render = (enabled: boolean, ruledSpacing: number) => <HjmNativeProvider reducedMotion={false}><EffectSurface descriptor={{ layers: enabled ? ["ruled"] : ["grain"], active: enabled, ruledSpacing }}><TextField label="Draft" defaultValue="initial" /></EffectSurface></HjmNativeProvider>;
+  try {
+    startedAnimatedTimings.splice(0); act(() => { tree = create(render(true, 24)); });
+    const ruler = tree.root.findByProps({ testID: "hjm-effect-ruled" }), input = tree.root.findByType(TextInput);
+    expect(ruler.props.pointerEvents).toBe("none"); expect(ruler.props.accessibilityElementsHidden).toBe(true);
+    expect(ruler.props.style.some((value: { transform?: unknown }) => value?.transform)).toBe(false);
+    expect(tree.root.findAll(node => node.props.patternUnits === "userSpaceOnUse" && node.props.height === 24).length).toBeGreaterThan(0);
+    act(() => input.props.onChangeText("kept")); act(() => tree.update(render(true, 40)));
+    expect(tree.root.findByType(TextInput)).toBe(input); expect(input.props.value).toBe("kept");
+    expect(tree.root.findAll(node => node.props.patternUnits === "userSpaceOnUse" && node.props.height === 40).length).toBeGreaterThan(0);
+    act(() => tree.update(render(false, 40))); expect(tree.root.findAllByProps({ testID: "hjm-effect-ruled" })).toHaveLength(0); expect(input.props.value).toBe("kept");
+    expect(startedAnimatedTimings).toHaveLength(0);
+  } finally { act(() => tree.unmount()); }
+});
 it("freezes the actual seeded layers for reduced motion and hidden native hosts", () => {
   let tree!: ReactTestRenderer;
   const render=(reducedMotion: boolean, visible: boolean) => <HjmNativeProvider reducedMotion={reducedMotion}><EffectSurface descriptor={{active:true,layers:['mesh','grain','noise']}} visible={visible}><Text>Content</Text></EffectSurface></HjmNativeProvider>;

@@ -62,7 +62,8 @@ import { EffectSurface } from "@hjmds/react-native/effect-surface";
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `descriptor.layers` | `mesh` · `glow` · `grain` · `noise` | `["mesh"]` | 서로 다른 1~4개. noise는 미게시 실험 |
+| `descriptor.layers` | `mesh` · `glow` · `grain` · `noise` · `ruled` | `["mesh"]` | 서로 다른 1~4개. ruled는 1.15.0 이후 미게시 실험 |
+| `descriptor.ruledSpacing` | 유한한 8~128 host units | `24` | ruled의 1unit 선 간격. 텍스트 baseline과 독립적이며 모션 밖 정적 레이어 |
 | `descriptor.intensity` | 0~1 | `0.22` | — |
 | `descriptor.period` | 2~120초 | `12` | — |
 | `descriptor.seed` | 문자열 | `"hjm"` | 빈 문자열 금지 |
@@ -120,3 +121,6 @@ import { EffectSurface } from "@hjmds/react-native/effect-surface";
 - descriptor 검증 오류는 대비 밖에 있어 그대로 던져진다. 값 범위를 지킨다.
 
 `noise`의 구현 차이·실험 조건은 [질감 비교](../compositions/texture-comparison.md)를 따른다. 기존 grain을 교체하지 않는다.
+
+`ruled`의 profile 상속/override와 입력 보존은 [종이 줄무늬 비교](../compositions/paper-surface.md)를 따른다.
+ruled-only descriptor는 active=true여도 애니메이션을 시작하지 않는다. 테이프·찢어진 경계·본문 회전은 제공하지 않는다.

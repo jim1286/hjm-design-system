@@ -147,6 +147,32 @@
       "publicApi": "HjmDesignProfile.tokens.fontFamily display/reading; Text.fontRole",
       "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
       "sourcePointer": "experimentCandidates.catalog/T01"
+    },
+    {
+      "path": "실험/구성/비교와 검증/종이 줄무늬 비교",
+      "status": "registered-experimental",
+      "registrationKind": "new-experiment",
+      "sourceUrls": [
+        "https://www.cta.gallery/cta/bouquetinfusions",
+        "https://www.cta.gallery/cta/studioloop"
+      ],
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-02",
+      "sourceScope": "Previously captured selected static paper-treatment findings reused. Only static ruled decoration is newly supported; source assets/live product flows/tape/rotation/torn/perforated boundaries are not reproduced. Whole-site research remains incomplete and closed for adoption.",
+      "webStory": "showcase/web/src/patterns/PaperSurface.stories.tsx",
+      "nativeStory": "showcase/native/src/PaperSurface.stories.tsx",
+      "usage": "packages/design-contracts/docs/usage/compositions/paper-surface.md",
+      "evidence": "docs/qa/2026-10-07-ruled-paper.md",
+      "variants": [
+        "Default",
+        "Dark",
+        "LargeText",
+        "ReducedMotion",
+        "Rtl"
+      ],
+      "maximumFontExcluded": true,
+      "publication": "not-published-after-1.15.0",
+      "publicApi": "EffectSurfaceDescriptor.layers ruled and ruledSpacing; paper canvas; existing OverviewScreen"
     }
   ]
 }

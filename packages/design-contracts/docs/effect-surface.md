@@ -4,7 +4,7 @@
 by layered shader composition. No Shaders.com engine, presets or source is shipped.
 
 Import `EffectSurface` from the renderer `/effect-surface` entry. The shared
-`/effect-surface` contract accepts unique `layers` (`mesh`, `glow`, `grain`, `noise`), a
+`/effect-surface` contract accepts one to four unique `layers` (`mesh`, `glow`, `grain`, `noise`, `ruled`), a
 stable `seed`, `intensity` from 0 to 1, a cycle `period` from 2 to 120 seconds,
 `active` (false by default), and three semantic color references. Web uses local
 SVG/WAAPI; Native requires the existing optional SVG peer and core Animated.
@@ -64,3 +64,29 @@ peer or per-frame noise generation. Magic UI's reference motivated the compariso
 but no source or asset from that component is included. Check actual readability
 and rasterization cost before using it over product text. The comparison is at
 `실험/구성/정보 표시/질감 비교`; it is not a promotion of the new layer.
+
+## Static notebook ruling (unpublished after 1.15.0)
+
+2026-10-07 A-02 paper findings distinguish ruling from grain/noise, tape and torn
+edges. `ruled` adds a static one-host-unit line every `ruledSpacing` units (default
+24, finite 8–128). This independent decoration recipe is not a text baseline grid:
+content sizes, wrapping and spacing remain owned by existing HJM components.
+The lower bound prevents the pattern from collapsing into dense fill; the upper
+bound keeps the selected notebook treatment bounded. Existing four-layer composition
+limits remain in place; adding the fifth available kind does not allow five layers.
+
+Both renderers use their existing SVG Pattern/Rect host in userSpaceOnUse, outside
+the atmospheric transform. Ruling never stretches or drifts with active mesh/grain
+motion; a ruled-only descriptor starts no animation even if active is requested.
+Seed changes grain/noise geometry, not line positions. Semantic theme.text tint and
+intensity are shared, while Web pixels and Native logical units/rasterization differ.
+The existing decoration failure boundary preserves product children. The optional
+Native react-native-svg peer remains required; no new peer, asset or registry is added.
+
+Paper's canvas now composes grain/ruled at intensity0.06 and spacing24. An app can
+override canvas with plain grain or its chosen interval through its design profile.
+`실험/구성/비교와 검증/종이 줄무늬 비교` uses the public OverviewScreen to compare
+actual preset inheritance with explicit plain/ruled overrides and the same draft.
+Neither tape, rotated content, perforation nor torn/hand-drawn boundaries are
+provided by this layer. Put important content on an opaque Surface when needed;
+arbitrary intensities and glyphs do not come with a readability guarantee.

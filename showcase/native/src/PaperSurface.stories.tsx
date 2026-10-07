@@ -1,0 +1,10 @@
+import type { Meta, StoryObj } from "@storybook/react-native";
+import { PaperSurfacePreview } from "./paper-surface-preview";
+const meta = { title: "실험/구성/비교와 검증/종이 줄무늬 비교", component: PaperSurfacePreview, parameters: { hjm: { optionalEntry: "design-profile" } } } satisfies Meta<typeof PaperSurfacePreview>;
+export default meta;
+type Story = StoryObj<typeof meta>;
+export const Default: Story = { name: "기본" };
+export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
+export const ReducedMotion: Story = { name: "동작 줄이기", globals: { motion: "reduced" } };
+export const Rtl: Story = { name: "오른쪽에서 왼쪽", globals: { direction: "rtl" } };

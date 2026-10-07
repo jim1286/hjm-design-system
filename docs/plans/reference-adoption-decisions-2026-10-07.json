@@ -21,9 +21,9 @@
       "new-experiment": 10,
       "reuse-existing": 96
     },
-    "verifiedRegistrationRecords": 6,
-    "candidateRecordsLinkedToVerifiedRegistration": 7,
-    "newExperimentRegistrationRecords": 5,
+    "verifiedRegistrationRecords": 7,
+    "candidateRecordsLinkedToVerifiedRegistration": 8,
+    "newExperimentRegistrationRecords": 6,
     "existingExperimentImprovementRecords": 1
   },
   "countMeaning": "Candidate records and paths are not implemented APIs or registered experiments. Cross-source semantic overlap is preserved through merges. A matching Storybook title alone does not prove that a proposed variant was absorbed.",
@@ -114,8 +114,10 @@
         "A-07",
         "C-T06"
       ],
-      "decision": "Use existing material fill/blur/inset and role-based shadows for paper/glass/depth examples. Torn, taped or hand-drawn boundaries are unsupported shapes and stay explicit improvement/new-treatment candidates.",
-      "status": "adoption-target-consolidated-not-all-variants-implemented"
+      "decision": "Use existing material fill/blur/inset and role-based shadows. Static ruled paper is now a supported EffectSurface layer and paper canvas. Torn, taped, perforated or hand-drawn boundaries remain unsupported shapes; further role-depth variants need separate adoption evidence.",
+      "status": "ruled-paper-and-existing-depth-partially-implemented",
+      "implementationEvidence": "docs/qa/2026-10-07-ruled-paper.md",
+      "remainingScope": "Tape/rotation/torn/perforated boundaries and further role-depth variants are not implemented; Native actual device review pending."
     },
     {
       "id": "code-and-record-display",
@@ -160,9 +162,13 @@
       "sourcePointer": "experimentCandidateCheckpoint.candidates/A-02",
       "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
       "maximumFontExcluded": true,
-      "matchingStoryTitles": [],
-      "implementationStatus": "adoption-decision-only",
-      "registrationEvidence": null
+      "matchingStoryTitles": [
+        "실험/구성/비교와 검증/종이 줄무늬 비교"
+      ],
+      "implementationStatus": "ruled-layer-and-paper-profile-implemented-not-all-boundary-variants",
+      "registrationEvidence": "docs/qa/2026-10-07-ruled-paper.md",
+      "realizedPath": "실험/구성/비교와 검증/종이 줄무늬 비교",
+      "remainingScope": "Native device rasterization/readability/input/OS focus. Tape/rotation/torn/perforated/scalloped boundaries remain unsupported; source assets and original live flows are not verified."
     },
     {
       "id": "A-03",
@@ -4007,7 +4013,8 @@
       "order": 2,
       "id": "surface-material-and-depth",
       "decision": "Reuse paper/glass/clay material options; isolate invalid exported values; add unsupported treatments only through explicit supported contracts.",
-      "status": "partially-implemented-followup"
+      "status": "ruled-paper-added-existing-depth-and-boundary-followup",
+      "evidence": "docs/qa/2026-10-07-ruled-paper.md"
     },
     {
       "order": 3,
@@ -4025,7 +4032,7 @@
     {
       "order": 5,
       "id": "registered-experiment-review",
-      "decision": "Review five new experiments and the improved theme experiment; promote/publish only verified behavior before consumer adoption. CollectionRail and font roles are not included in published 1.15.0.",
+      "decision": "Review six new experiments and the improved theme experiment; promote/publish only verified behavior before consumer adoption. CollectionRail, font roles and ruled paper are not included in published 1.15.0.",
       "status": "registered-not-promoted-or-published"
     }
   ]

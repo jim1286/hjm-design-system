@@ -25,8 +25,9 @@ function EffectDecoration({ effect, visible }: { effect: ReturnType<typeof resol
   const { palette, environment } = useHjmNativeTheme();
   const id = useId().replace(/:/g, "");
   const progress = useRef(new Animated.Value(0)).current;
+  const hasAtmosphere = effect.layers.some(value => value !== "ruled");
   useEffect(() => {
-    if (!effect.active || environment.reducedMotion || !visible) { progress.setValue(0); return; }
+    if (!hasAtmosphere || !effect.active || environment.reducedMotion || !visible) { progress.setValue(0); return; }
     // Core Animated avoids a GPU/Worklets dependency for a decorative transform.
     // Native list/screen owners pass visibility; AppState additionally suspends it.
     let animation: Animated.CompositeAnimation | undefined;
@@ -42,9 +43,9 @@ function EffectDecoration({ effect, visible }: { effect: ReturnType<typeof resol
     } };
     sync(AppState.currentState); const sub = AppState.addEventListener("change", sync);
     return () => { animation?.stop(); progress.setValue(0); sub.remove(); };
-  }, [effect.active, effect.period, environment.reducedMotion, visible, progress]);
+  }, [hasAtmosphere, effect.active, effect.period, environment.reducedMotion, visible, progress]);
   const colors = effect.colors.map(color => resolveColorReference(color, palette));
-  return <Animated.View pointerEvents="none" accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={[StyleSheet.absoluteFill, { opacity: effect.intensity, transform: [{ scale: progress.interpolate({ inputRange: [0, 1], outputRange: [1.08, 1.12] }) }] }]}>
+  return <><Animated.View pointerEvents="none" accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={[StyleSheet.absoluteFill, { opacity: effect.intensity, transform: [{ scale: progress.interpolate({ inputRange: [0, 1], outputRange: [1.08, 1.12] }) }] }]}>
       <Svg width="100%" height="100%">
         {/* Noise uses physical units so a wide surface cannot stretch its grains. */}
         <Defs>{effect.noise && <><Pattern id={`${id}-noise-tile`} width={effect.noise.size} height={effect.noise.size} x={effect.noise.offset} patternUnits="userSpaceOnUse"><SvgImage href={effect.noise.uri} width={effect.noise.size} height={effect.noise.size} /></Pattern><Mask id={`${id}-noise-mask`} x={0} y={0} width="100%" height="100%" maskUnits="userSpaceOnUse"><Rect width="100%" height="100%" fill={`url(#${id}-noise-tile)`} /></Mask></>}</Defs>
@@ -58,5 +59,10 @@ function EffectDecoration({ effect, visible }: { effect: ReturnType<typeof resol
         {effect.layers.includes("grain") && <Rect width={100} height={100} fill={`url(#${id}-grain)`} />}
         </Svg>
       </Svg>
-    </Animated.View>;
+    </Animated.View>
+    {/* Physical-unit ruling stays outside Animated's scale, like the Web layer. */}
+    {effect.ruled && <Svg testID="hjm-effect-ruled" pointerEvents="none" accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" width="100%" height="100%" style={[StyleSheet.absoluteFill, { opacity: effect.intensity }]}>
+      <Defs><Pattern id={`${id}-ruled`} width={1} height={effect.ruled.spacing} patternUnits="userSpaceOnUse"><Rect y={effect.ruled.spacing - effect.ruled.thickness} width="100%" height={effect.ruled.thickness} fill={palette.theme.text} /></Pattern></Defs>
+      <Rect width="100%" height="100%" fill={`url(#${id}-ruled)`} />
+    </Svg>}</>;
 }

@@ -32,7 +32,9 @@ const presetInputs = {
             dark: { bg: "#1b1916", surface: "#27231e", surfaceAlt: "#332d25", surfaceAccent: "#4f4132", border: "#847561", borderControl: "#b8a68c", primary: "#83684c", contentBrand: "#e3bf91", text: "#f8f0e1", textBody: "#e5d9c4", textMuted: "#d0c0a6", textSub: "#b8a78d", textWeak: "#a18e72" },
         },
         tokens: { radius: { sm: 4, md: 6, lg: 8, xl: 12 } },
-        material: { canvas: { layers: ["grain"], intensity: 0.06, active: false, seed: "paper" } },
+        // A-02's ruled-paper finding is distinct from grain. A static low-opacity
+        // tile adds that voice without rotating controls or aligning content baselines.
+        material: { canvas: { layers: ["grain", "ruled"], ruledSpacing: 24, intensity: 0.06, active: false, seed: "paper" } },
         interactions: { contentTransition: "fade", selectionMotion: "none" },
         compositions: { collection: "rows", toolbar: "collapsible" },
         screens: { overview: "editorial" },

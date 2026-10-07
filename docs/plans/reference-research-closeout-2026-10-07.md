@@ -51,6 +51,7 @@ OS 최대 글자와 최대값을 모사한 확대는 설계·구현·검증·후
 | 명령 기록 | CodeBlock/Tabs/ClipboardButton, OS 복사 수명 개선 | `실험/구성/정보 표시/명령 기록 표시` 등록, 복사 및 메뉴 입력 회귀 수정 main 반영 | Native 실제 OS/입력 경계 검수, 승급·게시. 셸 실행/실시간 서버 기록은 제품 소유 |
 | 여러 카드 탐색과 상세 | List의 기존 세로 의미·Carousel의 단일 active panel과 다른 유한 다중 항목 배치. Card.actions→Dialog는 기존 API 재사용 | `CollectionRail` 계약·양 renderer와 카드 상세 실험 등록. Web 10종 light/dark·폭/끝·초안/모달 복귀 검수, Native host 회귀/타입 확인. [결과](../qa/2026-10-07-collection-detail.md). 1.15.0 이후 미게시 | Native 실제 touch/읽기 순서/OS 초점 검수와 승급·게시. 후기/미디어 목적별 변형은 별도 미반영 |
 | 제목·본문·UI·기술 글자 | 기존 profile와 Heading/Text 위계 재사용; optional display/reading family와 Text.fontRole 추가 | `실험/토큰/색과 글자/표시·읽기·기술 글자` 양 플랫폼 등록. Web 10종×두 모드 light/dark 및 상세·초안·복귀 확인. [결과](../qa/2026-10-07-font-roles.md). 1.15.0 이후 미게시 | Native 실제 font/glyph/fallback 검수. 제품 font 자산·권리·로딩, tracking/small-caps는 미반영 |
+| 종이 줄무늬 | 기존 EffectSurface에 정적 ruled/ruledSpacing 추가, paper canvas와 공개 OverviewScreen 연결 | 양 플랫폼 `실험/구성/비교와 검증/종이 줄무늬 비교` 등록. Web 10종×3모드 light/dark·RTL·간격·초안·상세 복귀 확인. [결과](../qa/2026-10-07-ruled-paper.md). 1.15.0 이후 미게시 | Native 실제 래스터/입력/OS 검수. 테이프·회전·찢어진/타공/물결 경계는 미반영 |
 | 나머지 목적별 구성·표현 | 각 조사 작업의 후보 판단을 전역 중복 병합 | 후보 처분 완료. 개별 변형의 적용·등록은 별도 | 기존 경로에 변형을 흡수하거나 필요한 고유 구성을 등록. 불채택·보류도 이유/조건 보존 |
 
 [실제 등록부](reference-experiment-registrations-2026-10-07.json)는 root가 양 Storybook 파일,
