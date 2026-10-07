@@ -38,7 +38,7 @@ GitHub Release 목록은 비어 있었지만 npm 부재의 증거로 쓰지 않�
 
 ## 4. 현재 소비 상태
 
-2026-10-07 22:45 KST 원격 GitHub main의 app.contract.json을 다시 직접 읽었다. 아래 blob은 계약 파일의 Git blob이며 runtime/lock/install/QA 영수증이 아니다. Portfolio Site·Unairplane의 실제 설치와 검사는 §8의 제품 QA를 따른다.
+2026-10-07 23:00 KST 원격 GitHub main의 app.contract.json을 다시 직접 읽었다. 아래 blob은 계약 파일의 Git blob이며 runtime/lock/install/QA 영수증이 아니다. Portfolio Site·Unairplane의 실제 설치와 검사는 §8의 제품 QA를 따른다.
 
 | 제품 | train | contract blob |
 | --- | --- | --- |
@@ -48,7 +48,7 @@ GitHub Release 목록은 비어 있었지만 npm 부재의 증거로 쓰지 않�
 | Spint | 1.15.0 | cdc5e29e0bf58bbcbd285e99856afa35fa701774 |
 | Diairy | 1.14.0 | 2c3b318e5689fb5f7bece2bd9594c13f87fbb9ce |
 | Mofun | 1.15.0 | bdced754956c5766ab7daeacbedc8c90dd64ec8d |
-| Utilverse | 1.14.0 | b72da3316bf006322403a541c0b1845512a493be |
+| Utilverse | 1.15.0 | f62089d88087d6a3c85215eedf41edd457f4a3dd |
 | Choose Window | 1.14.0 | 4dbfd83cee6ab84f7a52c4006d73ad3948a57859 |
 | Yajalal | 1.14.0 | cd0056c7bd358acf6a31fca5b7c00768b9076a1b |
 
@@ -60,7 +60,7 @@ GitHub Release 목록은 비어 있었지만 npm 부재의 증거로 쓰지 않�
 
 후속8개 승급·npm 게시 승인 확인 뒤 승인 대상만 첫 마디/usage/승인 기록을 함께 변경한다.
 후속 release는 actual version intent 단계에서 기존 원격 CI/게시 정책을 따른다.
-남은4개 소비 제품은 최신 remote main 기반 분리 checkout에서 manifest/lock/contract/catalog/표준을 정합하게 갱신하고 실제 필요한 회귀를 확인한다.
+남은3개 소비 제품(Diairy·Choose Window·Yajalal)은 최신 remote main 기반 분리 checkout에서 manifest/lock/contract/catalog/표준을 정합하게 갱신하고 실제 필요한 회귀를 확인한다.
 제품 브랜드/폰트 자산·설정 저장·라우팅·서버 확정은 제품 소유다.
 Native Android·실물/Release 성능·VoiceOver 순회와 모든 테마/상태/플랫폼 조합은 미확인이며 현재 조사 마감 조건으로 다시 추가하지 않는다.
 
@@ -111,3 +111,15 @@ Mofun의 초기 중앙 검사 STALE_LIBRARY_ADOPTION은 product7manifest에 없�
 일반 커밋/merge 제목의 `[skip ci]`와 version-file-only 기존 정책을 유지했다. 별도 원격 CI dispatch·npm 게시·Native build·서비스/스토어 배포를 하지 않았으며 두 merge SHA에 해당하는 신규 main workflow run도 관찰되지 않았다. TS/Metro 산출물은 각 제품 QA의 manifest digest를 남긴 뒤 제거하고 본인 설치만 정리했다. 공유 작업은 보존했다.
 
 9개 소비 main 중5개(BurnTok·Portfolio Site·Unairplane·Spint·Mofun)가1.15.0이다. 나머지 Diairy·Utilverse·Choose Window·Yajalal4개는 원격 계약을 다시 읽어1.14.0임을 확인했다. 후속8개 실험 승급/게시 승인 대기는 별도다.
+
+## 10. Utilverse 소비 반영 — 23:00 KST
+
+[Utilverse PR2](https://github.com/jim1286/utilverse/pull/2)가 MERGED됐고 head19aeb88eb5fe43c84e115fcd197eebfe2d3b19dd → main a08bf0625747649c8c6410dc788a5db50bd41288을 확인했다. 원격 계약은1.15.0/blob f62089d88087d6a3c85215eedf41edd457f4a3dd다. [제품 QA](https://github.com/jim1286/utilverse/blob/a08bf0625747649c8c6410dc788a5db50bd41288/docs/qa/2026-10-07-hjm-1-15-upgrade.md)에 검사·한계·산출물 digest를 보존했다.
+
+Node24.21/pnpm11.24 frozen 설치, 모바일과 공용3개 타입 검사, 모바일66파일321건·domain20파일179건·i18n6파일18건의 중복 제외518건, 추가 locale 생성1건, API/계약/디자인/문서137개·중앙 scaffold/library, iOS2636/Android2731modules Hermes export가 통과했다. peer 문제는 없고 HJM 외 YAML lock record와 이전/새 Native 외부 peer 요구도 동일하다. 실제 설치·공식 registry·중앙 integrity가 일치했다. 게시 profile의 앱 override29/rows/editorial도 보존됐지만 제품 UI의10종 전환 검증을 뜻하지 않는다.
+
+기존 appealKeys factory의 중앙 등록 누락9건은 baseline 소스와 같은 AST 검사에서도 재현됐다. source를 바꾸지 않고 기존 export를 등록한 [메타 PR13](https://github.com/jim1286/app-portfolio/pull/13)을 main86819113e7677017265b2b81171c9cb428c4acc0에 통합했다. 중앙6manifest/72libraries/1Query·문서129개/현재 정책12문서 검사 통과. 검사기 완화·SDK 변경은 없다.
+
+제품의 팔레트·다섯 shell theme·Expo/native 설정·앱/서버 버전은 유지했다. 기존 uuid deprecated와 AdMob 설정 key 무시/환경 color 경고는 제품 QA에 남겼다. 최초 one-off probe의 상대 require 오류는 공식 package subpath로 재확인했으며 최초 iOS 출력이 Android export로 교체된 뒤 플랫폼별 별도 경로를 재확인해 digest를 보존하고 본인 출력만 제거했다. 전체 root/server canonical·Native build·기기/운영/API·배포/스토어는 미실행이다.
+
+일반 커밋/merge에는 [skip ci]를 사용했고 CI dispatch나 package 게시를 하지 않았다. 이번 merge SHA에 해당하는 신규 main workflow run은 관찰되지 않았다. 공유 runtime·dirty source를 보존한다. 현재9개 소비 main 중6개가1.15이며 Diairy·Choose Window·Yajalal3개는 원격 계약 재확인에서도1.14다. 후속8개 실험 승급·게시 승인 대기는 별도다.
