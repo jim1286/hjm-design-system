@@ -2614,8 +2614,8 @@
       "priorRationale": "소개용 반복 띠 구성, 정지·중복 의미 필요",
       "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
-      "interactionReview": "pending",
-      "adoptionDecision": "권장 별도 구성 실험 — 자동 루프와 hover 속도 변경을 비교한다. 원본은 children을 접근성 구분 없이 두 번 렌더하며 speedOnHover=0은 falsy라 정지되지 않는다. 정지·focus/hover·중복 AX 제거·정적 목록을 구성 계약으로 검토한다. 실험 구현/승격/게시 완료 아님.",
+      "interactionReview": "2026-10-07: Partial live review of all three examples:1280 light/dark and390 dark LTR, reduced-motion, hover enter/leave and duplicate image AX/DOM. Continued movement and no pause UI observed; other inputs/environments/lifecycle unverified.",
+      "adoptionDecision": "소개 목록 구성 후보. 기존 finite Carousel과 기능 동등성으로 세지 않는다. 실제 모션 감소 중 이동/hover 이동 지속,12/12/24 이미지 중복 AX와 정지 UI 부재를 확인했다. 정지·focus·모션 감소·정적 대체·중복 AX 제외 계약을 갖춘 뒤 흡수 검토. 원본 엔진 복제/새 실험/승격/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
@@ -2661,6 +2661,18 @@
             "screenshotDigest": "d5d126839d10c802ab484163033b4f84c917a12e5cee4a2afb68fd2b484254dc"
           }
         ]
+      },
+      "liveVariantReview": {
+        "date": "2026-10-07",
+        "variants": 3,
+        "status": "partial",
+        "environments": [
+          "1280px light/dark LTR (dark desktop for Infinite Slider)",
+          "390x844 dark LTR",
+          "prefers-reduced-motion reduce"
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "originalImplementationChanged": false
       }
     },
     {
@@ -2930,8 +2942,8 @@
       "priorRationale": "읽기·상태 텍스트의 기본 표현 교체 제외",
       "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
-      "interactionReview": "pending",
-      "adoptionDecision": "권장 별도 구성 실험 — interval/trigger/onIndexChange 순환. 원본은 빈 children·interval 경계 검증이 없고 nowrap이다. 정지·줄바꿈·읽기 시간·내용의 단일 AX 값과 실제 작업 상태 분리를 검토한다. 실험 구현/승격/게시 완료 아님.",
+      "interactionReview": "2026-10-07: Partial live review of all three examples:390 dark and1280 light LTR, reduced-motion. Value cycling, exit/enter readable DOM and intermediate spatial transforms persist; no pause UI. trigger=false/empty arrays/other environments unverified.",
+      "adoptionDecision": "기존 TextTransition의 단일 값/프로필 선택/모션 감소 계약 유지. 원본은 실제 모션 감소 중 순환·공간 이동과 두 exit/enter 문구를 남겼다. 자동 순환은 timer를 제공하지 않는 현재 API와 다른 소개 구성 후보이며 정지·읽기 시간·정적 대체·locale 줄바꿈 계약 필요. 새 실험/승격/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
@@ -2977,6 +2989,18 @@
             "screenshotDigest": "9254bdf65786ad03920df67eb8aec89b3841ce14307c90a1b0cb2b78dd438676"
           }
         ]
+      },
+      "liveVariantReview": {
+        "date": "2026-10-07",
+        "variants": 3,
+        "status": "partial",
+        "environments": [
+          "1280px light/dark LTR (dark desktop for Infinite Slider)",
+          "390x844 dark LTR",
+          "prefers-reduced-motion reduce"
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "originalImplementationChanged": false
       }
     },
     {

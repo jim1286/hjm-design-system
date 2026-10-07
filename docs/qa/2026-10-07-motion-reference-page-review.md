@@ -213,6 +213,52 @@ nonmodal 편집/초점 복귀/controlled draft를 유지한다. 다중 visible/�
 collection presentation 후보이며 현재 단일 active Carousel이 제공한 것으로 세지 않는다.
 두 URL도 모든 환경/상태/원본 hook·license 검토 완료는 아니다.
 
+### 자동 반복 후속: Infinite Slider 세 예제와 Text Loop 세 예제
+
+2026-10-07 IAB 원본에서1280px light/dark,390×844 dark, LTR와
+`prefers-reduced-motion: reduce`를 확인했다. Manual/예제 전체는 기존 독해와 중복이며
+본문 완료 수를 늘리지 않는다. 원본 구현 digest는 Infinite Slider
+`8a3020e63cedac24cd1fe07a759b156771f38cda9b40d5bf3bba9b063f063190`, Text Loop
+`9c9db928817df5d521b2a9b2bb5b90df6de58f2266d9d03bd24b9d410b14a375`다.
+
+Infinite Slider는 basic/hover/vertical 모두 모션 감소 중 이동했다. hover track을 실제 포인터로
+진입/이탈했을 때 이동이 계속됐고 원본20px/s는 느려지는 표현이지 정지가 아니다. source의
+`speedOnHover=0` falsy 분기는 코드 판단이며 예제 prop을 임의 변경해 재현한 것은 아니다.
+기본/hover는 같은 여섯 이미지가 각각 두 번, vertical은 두 묶음의 여섯 이미지가 각각 두 번
+AX/DOM에 남았다(12/12/24개, aria-hidden/inert 없음). 제어는 Open in v0뿐이고 정지 버튼이
+없었다. 첫 기본 track은 viewport 위에 있어도 transform이 달라졌지만 hidden 탭/CPU 비용
+계측은 아니다.390px scrollWidth390과 세 번째 두 방향 목록의 실제 시각을 확인했다.
+HJM finite Carousel이나 single-active 선택 의미로 이 자동 반복을 기능 동등하다고 세지 않는다.
+소개 목록 후보는 정지/focus/hover/모션 감소/정적 대체와 중복 AX 제외를 갖춰야 한다.
+
+Text Loop의 basic/custom/index-callback 세 예제는 모션 감소 중에도 값이 순환했다.
+basic은 Draw a diagram→Generate a logo, index 예제는 음악명/지명 변경을 관찰했다.
+custom과 index의 전환 중에는 exit/enter 두 문자열 모두 aria-hidden/live 없이 남았고,
+index 예제의 y=-20.1919px/rotateX=-90.8634deg 중간 공간 이동도 관찰했다. 모든 예제의
+정지 버튼은 없고 trigger=false의 제공 UI는 없어 그 경로를 실행하지 않았다.390px의
+scrollWidth는390이며 light/1280에서도 순환을 확인했다. 빈 배열/음수 interval/locale와
+큰 글자/RTL/스크린리더 전체 검증은 미확인이다.
+
+HJM 양 renderer의 ContentTransition/TextTransition은 단일 값/하위 트리를 유지하고
+모션 감소 시 즉시 표시한다. 프로필을 따르려면 preset을 생략하며 명시값이 우선한다.
+사용 지침의 예전 고정 fade 기본값을 실제 provider fallback에 맞춰 정정했다. 기존 공개
+API에는 자동 순환 timer가 없으므로 새 구성 후보와 현재 API의 제공 범위를 구분한다.
+제품의 확정 상태는 실제 데이터로 표시하고 소개용 loop를 요청 상태 엔진으로 복사하지 않는다.
+
+- [Infinite Slider 실제 좁은 화면](assets/2026-10-07-motion-infinite-slider-reduced.png),
+  SHA256 `dd8e2bac06fa2aebdd4959e481b5b5f53d4ea990864583f8123b12347a5ed11d`.
+- [Text Loop 실제 좁은 화면](assets/2026-10-07-motion-text-loop-reduced.png),
+  SHA256 `48623e078d3187e14fd4dc795767ec5916612d763579ffef50db1bcae51bfdaf`.
+
+read-only evaluate의 performance 미제공 오류는 CDP의 읽기 전용 시각 측정으로 보완했다.
+390px에서 숨겨진 desktop anchor locator는 fresh DOM의 실제 heading으로 바꿨다.
+처음 viewport PNG가 축소돼 document CSS 좌표 clip으로 교정했으며 그 잘못된 PNG는 보존하지
+않았다. 도구 오류는 원본 결함으로 세지 않는다. 원본 내용/props를 바꾸지 않았고 임시 media/
+viewport를 해제, System theme 복원과 reduced=false/1280 확인 뒤 본 탭을 닫았다.
+이 후속은 renderer 수정·새 실험 등록·승격·게시가 아니다.
+로컬 문서 링크575파일, 사용 지침12토큰/139컴포넌트/54구성/22화면 검사를 통과했다.
+동작 코드는 바꾸지 않아 runtime 테스트·빌드를 반복하지 않았으며 원격 CI는 실행하지 않았다.
+
 ## 6. 미확인 범위와 후속 조건
 
 - 11개 사이트 전체 검토 미완료. [사이트 목록](../plans/reference-site-inventory.json)의 URL 수는 검토 완료 수가 아니다. canonical 중복·추가 링크 발견·차단 페이지는 별도 추적한다.

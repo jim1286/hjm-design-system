@@ -66,7 +66,7 @@ import { ContentTransition } from "@hjmds/react-native/content-transition";
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `preset` | `fade` · `rise` · `slide` · `scale` | `fade` | `rise`는 아래 12에서, `slide`는 가로 16(RTL이면 반대), `scale`은 0.96에서 시작 |
+| `preset` | `fade` · `rise` · `slide` · `scale` | provider `designProfile.interactions.contentTransition`, 프로필 없으면 `fade` | 명시한 prop이 프로필보다 우선. `rise`는 아래 12에서, `slide`는 가로 16(RTL이면 반대), `scale`은 0.96에서 시작 |
 | `motion` | `system` · `none` | `system` | `system`은 reduced motion을 따르고 `none`은 항상 즉시 교체 |
 | `stateKey` | `string` | — (필수) | 바뀔 때만 새 내용이 나타난다 |
 | `enterOnMount` | boolean | false | 미게시: 새 데이터 항목이 처음 추가될 때도 등장 전환. 이미 표시한 항목은 stable key를 유지한다 |

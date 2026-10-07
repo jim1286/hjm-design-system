@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: `src/content-transition.ts`(`resolveContentTransition`). 독립 계약 문서 없음(supplemental)
 - 스토리북: `배포/컴포넌트/시각 효과/내용 전환`, `배포/구성/직접 조작과 모션/끌기·밀기·화면 전환`
 
@@ -70,7 +70,7 @@ const uploadStatusKey = {
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `text`(필수) | 문자열 | — | 바뀔 때마다 전환한다. 같은 문자열이면 아무것도 하지 않는다 |
-| `preset` | `fade` · `rise`(아래 12에서) · `slide`(가로 16, RTL이면 반대) · `scale`(0.96에서) | `fade` | — |
+| `preset` | `fade` · `rise`(아래 12에서) · `slide`(가로 16, RTL이면 반대) · `scale`(0.96에서) | provider `designProfile.interactions.contentTransition`, 프로필 없으면 `fade` | 명시한 prop이 프로필보다 우선 |
 | `motion` | `system` · `none` | `system` | `system`이어도 provider의 reduced motion이면 즉시 바뀐다 |
 | `layoutStyle`(Web) | `HjmCompositionStyleProp` | — | 바깥 `<div>` 배치. Native에는 없다 |
 | `ContentTransition` `stateKey`·`children` | `string`·`ReactNode` | — (필수) | `stateKey`가 바뀔 때 하위 트리를 전환한다 |
@@ -93,6 +93,12 @@ const uploadStatusKey = {
 - 문자열은 i18n 키로 만든 최종 문구를 넘긴다. 글자 수 변화를 노린 연출용으로 쓰지 않는다.
 - 글자 모양 prop은 없다. 글자 모양은 감싸는 쪽이 정한다(아래 플랫폼 차이). Web은 `layoutStyle`로 배치만 하고, Native는 배치 prop이 없어 감싸는 쪽이 배치한다.
 - Web에서 이 subpath를 쓰려면 앱에 `framer-motion`을 설치한다. 없으면 import 시점에 실패한다.
+- 테마별 전환을 따르려면 `preset`을 생략한다. `motion="none"`과 환경의 모션 감소는 프로필보다 우선한다.
+- [Motion Text Loop 실제 검토](../../../../../docs/qa/2026-10-07-motion-reference-page-review.md)에서
+  모션 감소 중에도 순환·공간 이동, exit/enter 두 문구가 동시에 읽히는 경로를 확인했다.
+  현재 TextTransition은 단일 값의 전환만 맡으며 timer/배열/자동 순환 API를 제공하지 않는다.
+  소개용 문구를 순환하는 구성에는 정지·읽기 시간·정적 대체·locale별 줄바꿈의 별도 계약이 필요하다.
+  실제 처리 상태는 제품 상태에서 받은 `text`로 표시하고 타이머로 성공/진행을 만들지 않는다.
 
 ## 플랫폼 차이
 

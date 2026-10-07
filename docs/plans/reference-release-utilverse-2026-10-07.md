@@ -74,6 +74,15 @@ CTA의 기존551 snapshot 내부 anchor 비교에는 새 URL이 없었지만 liv
 명시적 기능 후보로 남긴다. Popover는 현재 nonmodal/초점 복귀와 controlled draft를 유지한다.
 이번 checkpoint는 문서·채택 기준 갱신이며 renderer 추가·새 실험 등록·승격·게시가 아니다.
 
+Motion 자동 반복 후속: Infinite Slider3/Text Loop3 예제의 실제 모션 감소·좁은 화면과
+선택 hover/순환을 확인했다. 중복 읽기·정지 UI 부재·순환 중 공간 이동을
+[QA와 중앙 ledger](../qa/2026-10-07-motion-reference-page-review.md)에 보존했다.
+TextTransition/ContentTransition의 지침에서 고정 fade로 남은 기본값을 실제
+`designProfile.interactions.contentTransition` 상속에 맞춰 고쳤다. 이 API는 단일 값의
+전환만 제공하므로 timer/자동 반복 구성 후보를 이미 제공한 기능으로 세지 않는다.
+문서 링크575파일과 사용 지침12토큰/139컴포넌트/54구성/22화면 검사는 통과했고
+renderer 변경이나 신규 실험·릴리스는 없다.
+
 사용자가 여러 테마·질감을 토큰에 넣을지, 공통 기본값은 HJM에 두고 제품별로 관리할지 물었고 후자를 선택했다. 공통 규격으로 제품의 분위기가 같아지는 것을 피하면서 검증·재사용을 유지하기 위한 경계다. 기존 [브랜드 경계](../../packages/design-contracts/docs/brand-boundary.md)를 시작점으로 사용한다.
 
 | HJM이 제공할 것 | 제품이 관리할 것 |
