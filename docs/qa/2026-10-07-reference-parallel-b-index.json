@@ -4065,7 +4065,24 @@
           "Recovery"
         ],
         "readiness": "public-tutorial-only-runtime-pending",
-        "actualVerification": "Entire public tutorial and stated existing usage only; actual visual/state behavior unverified."
+        "actualVerification": "Entire public tutorial and stated existing usage only; actual visual/state behavior unverified.",
+        "rootRegistrationEvidence": {
+          "status": "registered-by-root-web-native-stories-physical-native-unverified",
+          "commit": "203bcda2",
+          "usage": "packages/design-contracts/docs/usage/compositions/date-time-selection.md",
+          "qa": "docs/qa/2026-10-07-date-time-selection.md",
+          "states": [
+            "Default",
+            "Pending",
+            "Failed",
+            "Disabled",
+            "Dark",
+            "LargeText",
+            "Rtl"
+          ],
+          "promotion": "pending",
+          "publication": "pending"
+        }
       }
     },
     {
@@ -4553,70 +4570,185 @@
       "sourceSha256": "040fe77cbd4aa292c3ee15efeae57fbfc1e917de2bb4dde1a3b9be7a299faaee",
       "capturedAt": "2026-10-07T03:52:22Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 20933
+      "extractedCharacters": 20933,
+      "readScope": "Entire captured semantic main, all visible prose/code/table/FAQ/closing sections. External live examples, hidden source and actual behavior excluded.",
+      "reviewNotes": "Entire header8types/elements/25brandexamples/5practices/4mistakes read. No25externalheaderflows orimplementation. Hero/navigation/fullscreen roles blurred, Festela staticbar vsallscroll contradiction. ExistingTopBar/Sidebar/Menu/Link/Layout sizing/behavior comparisons;brand/cart/auth/locale productowned, nofakepromotion. Actual keyboard/transparentcontrast/stickylargeText/touch states pending.",
+      "experimentProposal": {
+        "path": "실험/구성/비교와 검증/탐색 크기 비교",
+        "existingApis": [
+          "TopBar",
+          "Sidebar",
+          "Menu",
+          "Link",
+          "Layout"
+        ],
+        "decision": "optional-expression",
+        "registration": "pending-root-after-research",
+        "scope": "Existing navigation purpose/layout comparison including responsive nested-menu ideas. Accessible button actions and actual destinations, current-page state, focus/dismiss/RTL and viewport collision; no global ul CSS or hover-only input engine.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "actualVerification": "Entire public tutorial only; external brand examples/code and actual visual/flow states not inspected.",
+        "readiness": "public-tutorial-only-runtime-pending"
+      }
     },
     {
       "url": "https://magicui.design/blog/website-logo-examples",
       "sourceSha256": "933978ccd1563e7465359c1386186d473f6ed9ea79fa80b99a2e58dc4909e3c1",
       "capturedAt": "2026-10-07T03:52:24Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 37196
+      "extractedCharacters": 37196,
+      "readScope": "Entire captured semantic main, all visible prose/code/table/FAQ/closing sections. External live examples, hidden source and actual behavior excluded.",
+      "reviewNotes": "Entire logo50styles/allqualitycriteria/selection/additional/ending read, both halves overlap. No50actualbrandassets/code/live logo examined; brand/museum/company descriptions such as OpenAIgradient/Googlechangesonsearch and title symmetrical vsasymmetrical source-only. Product owns logo/rights/source/assets. ReuseImage/Asset comparison fortransparent/dark/monochrome/smallsize/media failure, no50logos added orbrandartengine.",
+      "experimentProposal": {
+        "path": "실험/구성/비교와 검증/이미지 표현 비교",
+        "existingApis": [
+          "Image",
+          "Asset"
+        ],
+        "decision": "reuse-existing-engine-expression-or-composition",
+        "registration": "pending-root-after-research",
+        "readiness": "public-tutorial-only-runtime-pending",
+        "scope": "Existing image/resource role comparison: reserved dimensions, product responsive sources and decorative/informative names, loading/error/fallback, large text and target output density. No global resource budget/provider pipeline adopted from article.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl"
+        ],
+        "preconditions": "Original Code/implementation, all variants and keyboard/touch/focus/disabled/pending/error/recovery where relevant need review. Root verifies existing title collision and public API/usage contracts before actual registration.",
+        "actualVerification": "Entire public tutorial only; external brand examples/code and actual visual/flow states not inspected."
+      }
     },
     {
       "url": "https://magicui.design/blog/websites-with-great-ui",
       "sourceSha256": "83c5c8b3ad08c20f52a65456955c9d19e65f44f6fc84fb5354cd1e8f4fa845cf",
       "capturedAt": "2026-10-07T03:52:26Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 26583
+      "extractedCharacters": 26583,
+      "readScope": "Entire captured semantic main, all visible prose/code/table/FAQ/closing sections. External live examples, hidden source and actual behavior excluded.",
+      "reviewNotes": "Entire seveninspirationplatform descriptions/filter/pricing/licenses/table/finalworkflow read. Noindividualexternalgallery/page/flow inspected; marketvalidated/awardjudged doesnotprovea11y orconversion.7resourceproviders notnewUIroles;prices/plans/currentcounts/supportnotverified. Resourceguideonly,nopurchases/submissions/automation.",
+      "experimentProposal": {
+        "path": null,
+        "decision": "informational-guide-only",
+        "registration": "not-applicable",
+        "reason": "Resource/framework/setup information provides no distinct UI role beyond already mapped components; source recipes/claims not executed or independently validated."
+      }
     },
     {
       "url": "https://magicui.design/blog/what-are-ui-components",
       "sourceSha256": "72b7467b3537cea6ac16716c870b56b98453621f5948b1eeb7183db4c85e6cda",
       "capturedAt": "2026-10-07T03:52:28Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 14040
+      "extractedCharacters": 14040,
+      "readScope": "Entire captured semantic main, all visible prose/code/table/FAQ/closing sections. External live examples, hidden source and actual behavior excluded.",
+      "reviewNotes": "Entire UIcomponentdefinition/categories/benefits/drawbacks/ending read. No actualUIcode/newrole. Article Accessibility benefit means repository availability ratherthan assistivetech; librarytestedalwaysaccessiblecompatible assertions notproof. Existing HJM fourstage/semantic/input contracts remain.",
+      "experimentProposal": {
+        "path": null,
+        "decision": "informational-guide-only",
+        "registration": "not-applicable",
+        "reason": "Resource/framework/setup information provides no distinct UI role beyond already mapped components; source recipes/claims not executed or independently validated."
+      }
     },
     {
       "url": "https://magicui.design/blog/what-is-a-component-library",
       "sourceSha256": "4eab2c14dd4858318230bb1c5b552611a538f069e67614053931511f3b35ac36",
       "capturedAt": "2026-10-07T03:52:30Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 16486
+      "extractedCharacters": 16486,
+      "readScope": "Entire captured semantic main, all visible prose/code/table/FAQ/closing sections. External live examples, hidden source and actual behavior excluded.",
+      "reviewNotes": "Entirelibrarydefinition/designsystem/QA/atomic5stages/selection/fiveexamples/ending read. Storybooktool vscomponentlibrary mixed; confidentlibraryusage doesnotreplaceintegrationa11y/data/stateQA. No actualcomponentimplementation ornewUIrole/libraryadoption. Existingtoken-component-composition-screen hierarchy preserved.",
+      "experimentProposal": {
+        "path": null,
+        "decision": "informational-guide-only",
+        "registration": "not-applicable",
+        "reason": "Resource/framework/setup information provides no distinct UI role beyond already mapped components; source recipes/claims not executed or independently validated."
+      }
     },
     {
       "url": "https://magicui.design/blog/what-is-mobile-first-design",
       "sourceSha256": "3fd7417fea65dcae098b711ea3dbd5ffb058f249196b94bca71fd632011b6afc",
       "capturedAt": "2026-10-07T03:52:32Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 21035
+      "extractedCharacters": 21035,
+      "readScope": "Entire captured semantic main, all visible prose/code/table/FAQ/closing sections. External live examples, hidden source and actual behavior excluded.",
+      "reviewNotes": "Entire mobilefirsthistory/strategy/table/CSS/Bento/example/FAQ read; truncated38char tail explicitlyreread. Sidebar displaynone atmobile contradicts text saying movesbottom; contentmustremainavailable. Physicalmargin-left20/10px/768/1024notHJMresponsive tokens. BentoGridItem import/propsdiffersreviewedBentoCard, notexecuted. ExistingGrid/Card hierarchy/defaultcontent and logicalRTL/reflow;mobilefirstdoesnotguaranteeSEO/performance/nativeconformance.",
+      "experimentProposal": {
+        "path": "실험/구성/정보 표시/기능 카드 묶음",
+        "existingApis": [
+          "Grid",
+          "Card",
+          "Button",
+          "Link"
+        ],
+        "decision": "reuse-improve",
+        "registration": "pending-root-after-research",
+        "scope": "Expression or composition using current API; no new duplicate engine. Preconditions and source risks remain in manualReviewNotes and reviewNotes.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "actualVerification": "Entire public tutorial only; external brand examples/code and actual visual/flow states not inspected.",
+        "readiness": "public-tutorial-only-runtime-pending"
+      }
     },
     {
       "url": "https://magicui.design/blog/what-is-nextjs",
       "sourceSha256": "c4f9da934e7216dc4f97b2fbe864f2ed22ab05baaf9a5091e4e1f1ae40c54b7b",
       "capturedAt": "2026-10-07T03:52:34Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 18885
+      "extractedCharacters": 18885,
+      "readScope": "Entire captured semantic main, all visible prose/code/table/FAQ/closing sections. External live examples, hidden source and actual behavior excluded.",
+      "reviewNotes": "Entire NextJSdefinition/functionality/uses/UX/SEO/proscons/fouralternatives/ending read. next export/pages/getServerSideProps versionboundaries unstated;analyticsdashboardoutofbox/auto translate/scale/security blanketclaims unverified. MagicUI asNextalternative mixesUIkit/runtime. Frameworkinformation no distinctUIrole;noNextinstall/CI/deploy/analytics.",
+      "experimentProposal": {
+        "path": null,
+        "decision": "informational-guide-only",
+        "registration": "not-applicable",
+        "reason": "Resource/framework/setup information provides no distinct UI role beyond already mapped components; source recipes/claims not executed or independently validated."
+      }
     },
     {
       "url": "https://magicui.design/docs",
@@ -4689,14 +4821,14 @@
       "sourceSha256": "3a11b81d6a7a541e03a5f7f7ce74114527fd60705e0f24ad90e6b9564bf90bfd",
       "capturedAt": "2026-10-07T03:52:42Z",
       "extraction": "data-slot=docs; static HTML only; inactive Manual content may not be present",
-      "readReview": "partial",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
-      "reviewNotes": "Partial: default refs/curvature/reverse, uni/bi directional and multiple input snippets read. Long SVG geometry and a truncated middle remain unread; Manual and rendered flows pending.",
+      "readScope": "Entire captured data-slot=docs body, active CLI installation, all visible example TSX including raw SVG geometry, Usage/Props/Credits; inactive installation tabs excluded and Manual counted separately.",
+      "reviewNotes": "Entire captured 79,105-character docs body reread in overlapping chunks, including all raw SVG geometry, uni/bidirectional, multiple input/output examples, Usage/Props/Credits. Multiple Outputs positions user left, OpenAI center, outputs right but uses output refs as from and center as to without reverse; source direction and intended meaning require actual verification. WhatsApp references absent own linearGradient1780, followed by valid b overlay; GoogleDocs fixed path/mask/filter IDs repeat. These are source observations, not reproduced rendering defects. Named node/relationship semantics, responsive clipping, endpoint layout and reduced/hidden remain actual verification work.",
       "manualReview": "visible-tsx-css-read",
       "extractedCharacters": 79105,
-      "manualReviewNotes": "Full Manual implementation read separately from long examples: container-only ResizeObserver computes centers/quad path and useId gradient with finite or infinite repeat; endpoint layout changes and reduced/hidden guards not present locally. Example asset geometry/body middle still partial.",
+      "manualReviewNotes": "Full Manual implementation read separately from long examples: container-only ResizeObserver computes centers/quad path and useId gradient with finite or infinite repeat; endpoint layout changes and reduced/hidden guards not present locally. Captured example asset geometry/body middle subsequently read completely; actual variants remain pending.",
       "manualReviewedOn": "2026-10-07",
       "experimentProposal": {
         "path": "실험/구성/정보 표시/항목 연결선",
@@ -5390,14 +5522,14 @@
       "sourceSha256": "528692861fd4bbdec459222e9e1c918e017b8db46f6920500aad768d9cd4fb8b",
       "capturedAt": "2026-10-07T03:53:18Z",
       "extraction": "data-slot=docs; static HTML only; inactive Manual content may not be present",
-      "readReview": "partial",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
-      "reviewNotes": "Partial: all Dock control structure, custom direction/magnification, labels/links and props read; raw SVG asset geometry remains unread. Manual/focus/touch pending.",
+      "readScope": "Entire captured data-slot=docs body, active CLI installation, all visible example TSX including raw SVG geometry, Usage/Props/Credits; inactive installation tabs excluded and Manual counted separately.",
+      "reviewNotes": "Entire captured 24,530-character docs body reread, including all raw SVG assets, default labelled Link/Tooltip entries, custom direction/magnification, Usage/Props/Credits. Default hrefs are placeholders; bare custom/Usage icons have no action semantics by themselves. WhatsApp references absent own linearGradient1780 plus valid b overlay; constant a/b SVG IDs can collide across repeated instances. These are source observations, not reproduced defects. Preserve existing BottomNavigation/Sidebar action, selection and focus contracts; focus/touch/reduced/scroll-coordinate behavior remains pending.",
       "manualReview": "visible-tsx-css-read",
       "extractedCharacters": 24530,
-      "manualReviewNotes": "Full Manual read: Dock clones exact DockIcon children, mouse pageX vs bounds viewport x, spring width/height magnification, disable option and children links own actions. No local focus/touch/reduced contract; canonical BottomNavigation/NavigationBar present in map, raw example asset geometry body still partial.",
+      "manualReviewNotes": "Full Manual read: Dock clones exact DockIcon children, mouse pageX vs bounds viewport x, spring width/height magnification, disable option and children links own actions. No local focus/touch/reduced contract; canonical BottomNavigation/NavigationBar present in map, captured example asset geometry subsequently read completely; actual variants remain pending.",
       "manualReviewedOn": "2026-10-07",
       "experimentProposal": {
         "path": "실험/구성/비교와 검증/탐색 크기 비교",
@@ -7595,7 +7727,14 @@
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "shadcn init/add/import setup; commands read but not run/installed.",
       "manualReview": "pending",
-      "extractedCharacters": 1142
+      "extractedCharacters": 1142,
+      "installationReview": {
+        "status": "visible-all-installation-tabs-read",
+        "scope": "init and add command blocks x pnpm/npm/yarn/bun (8 commands) opened and read, import Globe sample reread. Package selection synchronizes both blocks. No install/project/config mutation.",
+        "commands": "pnpm dlx / npx / yarn / bunx --bun shadcn@latest {init|add @magicui/globe}",
+        "actualExecution": "not-run",
+        "reviewedOn": "2026-10-07"
+      }
     },
     {
       "url": "https://magicui.design/docs/legacy",
@@ -7619,9 +7758,16 @@
       "visualReview": "pending",
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
-      "reviewNotes": "MCP CLI/manual installations tabs; active CLI/usage read only, Manual/IDE variants not inspected and no install performed.",
+      "reviewNotes": "Captured full public body and subsequent live Manual config plus20IDE/package tab combinations read; latest unpinned package commands do not establish installation/tool quality. No HJM API replacement or duplicated engine proposed.",
       "manualReview": "pending",
-      "extractedCharacters": 1180
+      "extractedCharacters": 1180,
+      "installationReview": {
+        "status": "visible-all-installation-tabs-read",
+        "scope": "Manual MCP config and CLI Cursor/Windsurf/Claude/Cline/Roo-Cline x pnpm/npm/yarn/bun (20 combinations) actually opened and read. Config npx -y @magicuidesign/mcp@latest. No install, code execution, config mutation or generated component verification.",
+        "commands": "pnpm dlx / npx / yarn / bunx --bun @magicuidesign/cli@latest install {cursor|windsurf|claude|cline|roo-cline}",
+        "actualExecution": "not-run",
+        "reviewedOn": "2026-10-07"
+      }
     },
     {
       "url": "https://magicui.design/docs/story",
@@ -7756,9 +7902,9 @@
   ],
   "reviewCounts": {
     "capturedPages": 257,
-    "staticMainRead": 248,
-    "staticMainPartial": 2,
-    "staticMainPending": 7,
+    "staticMainRead": 257,
+    "staticMainPartial": 0,
+    "staticMainPending": 0,
     "manualImplementationRead": 77,
     "renderedSelectedPages": 4,
     "selectedFlowPages": 4
@@ -7771,9 +7917,9 @@
         "staticBodyRead": 500,
         "staticBodyPartial": 1,
         "staticBodyPending": 0,
-        "manualImplementationRead": 18,
-        "renderedSelectedPages": 9,
-        "selectedFlowPages": 3
+        "manualImplementationRead": 53,
+        "renderedSelectedPages": 10,
+        "selectedFlowPages": 4
       },
       "pages": [
         {
@@ -17292,7 +17438,7 @@
           "sourceSha256": "06829dd7b7316d66400a6b7d028c14030020d6156af3a3b8b6056eadac22b6a5",
           "capturedAt": "2026-10-07T03:58:40Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body (description, CLI, all visible props/snippets/headings); hidden Manual/Code/alternate tabs pending",
@@ -17307,7 +17453,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -17323,14 +17469,16 @@
             ],
             "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
             "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend."
-          }
+          },
+          "manualReviewedOn": "2026-10-07",
+          "manualReviewNotes": "Full visible Manual TSX read: CSS grid1->3columns, fixed md18rem rows, generic div card/title/description and hover translate-x-2. No card action semantics or reduced-motion guard locally. Reuse HJM responsive Grid with minColumnWidth, Card fixed media/title/body/actions slots/headingLevel and actions Button; do not claim irregular spans supported by existing Grid."
         },
         {
           "url": "https://ui.aceternity.com/components/canvas-reveal-effect",
           "sourceSha256": "1bfa5f5eec21618c89462dda37c222583301f4f340624b262de40d33067e3384",
           "capturedAt": "2026-10-07T03:58:42Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body (description, CLI, all visible props/snippets/headings); hidden Manual/Code/alternate tabs pending",
@@ -17342,7 +17490,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -17358,14 +17506,16 @@
             ],
             "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
             "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend."
-          }
+          },
+          "manualReviewedOn": "2026-10-07",
+          "manualReviewNotes": "Full visible Manual incl GLSL3 shader/uniform prep/useFrame read. animationSpeed.toFixed(1) quantizes speed; u_colors expects6 and u_opacities10, invalid arrays not guarded. ShaderMaterial memo excludes uniforms, resolution=size*2, maxFps60 only update throttle, no local reduced/offscreen/hidden guards or explicit material dispose in shown code. Source paths only, no runtime exceptional inputs executed; preserve EffectSurface lifecycle and fallback rather than copy Three engine."
         },
         {
           "url": "https://ui.aceternity.com/components/canvas-text",
           "sourceSha256": "af502ade3cc9b48e660b7b7c5987e59f4c37d119b96cf98562881a3de60c80eb",
           "capturedAt": "2026-10-07T03:58:44Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body (description, CLI, all visible props/snippets/headings); hidden Manual/Code/alternate tabs pending",
@@ -17378,7 +17528,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -17394,14 +17544,16 @@
             ],
             "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
             "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend."
-          }
+          },
+          "manualReviewedOn": "2026-10-07",
+          "manualReviewNotes": "Full visible Manual read: text dimensions/font ResizeObserver, root class MutationObserver, DPR canvas, perpetual RAF with unmount cancel, background/color CSS vars and single fillText path. No local reduced/offscreen/hidden; lineGap0 yields unbounded loop bound and duration0 nonfinite phase by source, not executed. Root class only does not cover local theme/style variables; canvas img aria-label is not semantic Text/Heading. Keep real static text/locale wrapping; decorated bounded option remains candidate."
         },
         {
           "url": "https://ui.aceternity.com/components/card-hover-effect",
           "sourceSha256": "fafd530e96926cd30d525fd7fbcba1e88f112ed58a6151d7509eca17b83daa23",
           "capturedAt": "2026-10-07T03:58:46Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body (description, CLI, all visible props/snippets/headings); hidden Manual/Code/alternate tabs pending",
@@ -17414,7 +17566,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -17430,14 +17582,16 @@
             ],
             "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
             "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend."
-          }
+          },
+          "manualReviewedOn": "2026-10-07",
+          "manualReviewNotes": "Full visible Manual read: anchor title/description cards, hoveredIndex from mouse only, global layoutId hoverBackground and delayed exit; black card both modes/h4 level hardcoded, no local focus/reduced handlers or client directive in shown file. Reuse HJM Card structure and Link/Button action semantics rather than give Card nonexistent onClick/onPress; actual keyboard/multiinstance flow pending."
         },
         {
           "url": "https://ui.aceternity.com/components/card-spotlight",
           "sourceSha256": "d3ddb720f7a46684ac6a9bfe51b4168f9b995fc3edc1169ec0c914aa3f07b42a",
           "capturedAt": "2026-10-07T03:58:48Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body (description, CLI, all visible props/snippets/headings); hidden Manual/Code/alternate tabs pending",
@@ -17450,7 +17604,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -17466,14 +17620,16 @@
             ],
             "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
             "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend."
-          }
+          },
+          "manualReviewedOn": "2026-10-07",
+          "manualReviewNotes": "Full visible Manual CardSpotlight and duplicated CanvasReveal/Shader source read. Mouse-relative mask radius350, mount canvas while hovered, pointer-none decorative overlay, isHovering mouse enter/leave only; props spread after internal handlers can override. Same uniform memo and lifecycle caveats as347. Do not make hover reveal required content or add interactive Card engine; compare bounded Card/EffectSurface optional geometry."
         },
         {
           "url": "https://ui.aceternity.com/components/card-stack",
           "sourceSha256": "c9763a36a13e35ad0c5c5fb7fd84331699d2952cbc50d2ab3554a6886911d1c8",
           "capturedAt": "2026-10-07T03:58:50Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body (description, CLI, all visible props/snippets/headings); hidden Manual/Code/alternate tabs pending",
@@ -17487,7 +17643,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -17503,14 +17659,16 @@
             ],
             "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
             "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend."
-          }
+          },
+          "manualReviewedOn": "2026-10-07",
+          "manualReviewNotes": "Full visible Manual read: module-global interval shared across instances, 5sec rotation with empty items pop nonnull assertion, initial items state not synced, offset/scaleFactor || prevents0, fixed h60w60/96 and all layered card content accessible. Source-only multiinstance cleanup/empty input risks, not reproduced. Reuse Carousel controlled ids/labels/manual previous-next and optional autoplay pause/reduced/visibility, content-sized Card; do not copy stack timer."
         },
         {
           "url": "https://ui.aceternity.com/components/cards-free",
           "sourceSha256": "b132c424757764d97b762c74c056ebe80430a7e79437c3a187fcd15be7bcf35a",
           "capturedAt": "2026-10-07T03:58:52Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body (description, CLI, all visible props/snippets/headings); hidden Manual/Code/alternate tabs pending",
@@ -17525,7 +17683,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -17541,6 +17699,12 @@
             ],
             "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
             "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend."
+          },
+          "manualReviewNotes": "Full visible Manual dependencies/util/TWv4 CSS and TWv3 config read; opened all3Code examples and read complete source incl raw SVG. Feature card global .circle-N animate(sequence) infinite without stop cleanup, Math.random particles/constant SVG IDs and 5sec move; hover GIF background card and author card cursor-pointer divs have no actual action. Header h1 levels hardcoded. Existing Card slots/headingLevel, Image/Asset product brand ownership, Link/Button action and EffectSurface lifecycle retained; actual variants pending.",
+          "manualReviewedOn": "2026-10-07",
+          "exampleSourceReview": {
+            "status": "all3-visible-Code-source-read",
+            "scope": "Feature Block Animated Card incl raw SVG, Background Overlays, Author Card; actual preview/input/environment states pending"
           }
         },
         {
@@ -17548,7 +17712,7 @@
           "sourceSha256": "74b1a6c723f123a5423c37de1fbd2a9f38dc741efe270ab2d0f6cee8be614282",
           "capturedAt": "2026-10-07T03:58:54Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body (description, CLI, all visible props/snippets/headings); hidden Manual/Code/alternate tabs pending",
@@ -17562,7 +17726,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -17578,14 +17742,16 @@
             ],
             "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
             "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend."
-          }
+          },
+          "manualReviewNotes": "Full visible Manual read. Internal index loop-wrap current, clickable li(no keyboard selection) under div children of ul, 70vmin fixed square, perSlide alwaysRAF/eager sync imgs, load sets even inactive opacity1, hardcoded English previous-next title, aria-labelledby points missing heading ID, innerButton no action/type. Imports Tabler but install command omits Tabler; force/legacy-peer-deps prose not adoption evidence. Keep HJM Carousel controlled stable ids/labels/bounded manual flow; multiple visible neighboring strip requires explicit composition contract, not CSS override. No actual bug/keyboard flow counted.",
+          "manualReviewedOn": "2026-10-07"
         },
         {
           "url": "https://ui.aceternity.com/components/chromatic-image",
           "sourceSha256": "f824b0235f610af14780ef61561f2fa16f76d164cbb4074b94a5ddafae32ae62",
           "capturedAt": "2026-10-07T03:58:56Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body (description, CLI, all visible props/snippets/headings); hidden Manual/Code/alternate tabs pending",
@@ -17599,7 +17765,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -17615,7 +17781,9 @@
             ],
             "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
             "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend."
-          }
+          },
+          "manualReviewNotes": "Full visible10844-character Manual incl WebGL shader read. DemandRAF settles/capsDPR2/disposes texture buffer program shaders on normal cleanup; static img keeps alt and remains fallback behind aria-hidden canvas. reduced-motion sampled once(no change listener), missing offscreen/hidden/contextlost handling; early shader/program failure returns before cleanup, image.onerror has no disposed guard; background parse hex-only defaults111111 for CSS var. These are source constraints, not reproduced defects. Reuse Image/Asset accessible media/loading/failure + optional decoration, preserve content fallback, no Native WebGL parity claim.",
+          "manualReviewedOn": "2026-10-07"
         },
         {
           "url": "https://ui.aceternity.com/components/cli",
@@ -17640,7 +17808,7 @@
           "sourceSha256": "1abc245d429f292ef523f2f158df155b94f7ad4a23d9ac97c43e259b788e7bdf",
           "capturedAt": "2026-10-07T03:59:00Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body (description, CLI, all visible props/snippets/headings); hidden Manual/Code/alternate tabs pending",
@@ -17652,7 +17820,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -17668,14 +17836,16 @@
             ],
             "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
             "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend."
-          }
+          },
+          "manualReviewNotes": "Full visible11034-character Manual GLSL and lifecycle read. Count clamps1..6/DPR2, paramsRef updates colors/speed, normal shader cleanup present. reducedMotion sampled once and time0 but continues draw+RAF every frame, no local hidden/offscreen/contextloss guard; early compile/link failure exits before general cleanup. RGB/hex parser not themeColor references. Keep scoped EffectSurface fallback/lifecycle, no arbitrary WebGL engine in common theme.",
+          "manualReviewedOn": "2026-10-07"
         },
         {
           "url": "https://ui.aceternity.com/components/code-block",
           "sourceSha256": "caeabcf71c42f37db5d24cef2afedc8a523b1fe4e3d209a1b8fd6e5875c2cc5d",
           "capturedAt": "2026-10-07T03:59:02Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body (description, CLI, all visible props/snippets/headings); hidden Manual/Code/alternate tabs pending",
@@ -17688,7 +17858,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -17704,14 +17874,16 @@
             ],
             "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
             "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend."
-          }
+          },
+          "manualReviewNotes": "Full visible Manual read including syntax-highlighter dependency/15.0.0 override/force guidance. Icon-only copy has no accessible label, clipboard rejection uncaught, copied2sec timeout not cleaned, copy absent when tabs exist, index tab state not reconciled on tabs shrink, String(undefined) possible. Tab buttons no tab roles/current semantics in source. Current HJM CodeBlock keeps verbatim validated token content/no parser dependency and copyAction; use ClipboardButton error response and existing Tabs controlled ids, not duplicate editor/copy engine.",
+          "manualReviewedOn": "2026-10-07"
         },
         {
           "url": "https://ui.aceternity.com/components/colourful-text",
           "sourceSha256": "5eb9b1a78adc83d784139134c2cee117cb6dd24c1ee6eb6ccdb81082bb392bc3",
           "capturedAt": "2026-10-07T03:59:04Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body (description, CLI, all visible props/snippets/headings); hidden Manual/Code/alternate tabs pending",
@@ -17724,7 +17896,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -17740,14 +17912,16 @@
             ],
             "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
             "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend."
-          }
+          },
+          "manualReviewNotes": "Full visible Manual read: text.split UTF16, each char-key includes5sec count => remount; sort(Math.random) palette shuffle; duration0.5 and index0.05 delay, blur5px. interval cleaned but no local reduced/offscreen/hidden; long/grapheme strings/theme contrast pending actual. Keep semantic Text/Heading and optional decorative label treatment; force install instruction not verified compatibility.",
+          "manualReviewedOn": "2026-10-07"
         },
         {
           "url": "https://ui.aceternity.com/components/comet-card",
           "sourceSha256": "1b32555006f4d48afe1026255dba28474e7c0985d5e1b232e2d58e8a0859ac3a",
           "capturedAt": "2026-10-07T03:59:06Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body (description, CLI, all visible props/snippets/headings); hidden Manual/Code/alternate tabs pending",
@@ -17760,7 +17934,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -17776,14 +17950,16 @@
             ],
             "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
             "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend."
-          }
+          },
+          "manualReviewNotes": "Full visible Manual read: mouseX/Y relative rendered rect, spring rotate17.5deg/translate20px, whileHover scale1.05/z50, pointer-none glare overlay. Width/height division nozero guard, no local fine-pointer/focus/touch/reduced/offscreen checks, literal shadow/radius/colors. Card structure/actions remains unchanged and depth expression must follow profile rather than mutate input engine; actual motion/contrast states pending.",
+          "manualReviewedOn": "2026-10-07"
         },
         {
           "url": "https://ui.aceternity.com/components/compare",
           "sourceSha256": "5a21e6e6f933d8cb08d8998998a2d2ed38b9eef6f23626bdd6a1290454d3744c",
           "capturedAt": "2026-10-07T03:59:08Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body (description, CLI, all visible props/snippets/headings); hidden Manual/Code/alternate tabs pending",
@@ -17793,9 +17969,9 @@
             "existingApis": [
               "ImageComparison"
             ],
-            "decision": "reuse-expression-or-composition",
+            "decision": "reuse-published-ImageComparison-optional-expression-only",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -17811,14 +17987,16 @@
             ],
             "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
             "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend."
-          }
+          },
+          "manualReviewNotes": "Full visible19392-character Manual incl Compare and complete SparklesCore particle config read. hover/drag internal percent, initial-only state, no slider role/keyboard/named handle, generic first/second alt; autoplay16ms timer loops and disables touch handlers when enabled, leaves restart, duration0 guard absent. RAFevent callbacks untracked; full sparkles fpsLimit120/density1200/push4 shown with no explicit local lifecycle/reduced guard(unknown library defaults not presumed). Existing published ImageComparison1.14 controlled0..100 and Slider range/adjustable/named images reused, optional decoration only; no source-copy/control engine replacement.",
+          "manualReviewedOn": "2026-10-07"
         },
         {
           "url": "https://ui.aceternity.com/components/container-cover",
           "sourceSha256": "53eaf53934bea14eda052d109fa9107dc1aa7c59bea7075166856bf061c2bfb5",
           "capturedAt": "2026-10-07T03:59:10Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body (description, CLI, all visible props/snippets/headings); hidden Manual/Code/alternate tabs pending",
@@ -17831,7 +18009,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -17847,14 +18025,16 @@
             ],
             "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
             "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend."
-          }
+          },
+          "manualReviewNotes": "Full visible18279-character Manual incl Cover/Beam/CircleIcon and complete SparklesCore read. ref.current-dependent size effect no resize/font observer, beams number floor(height/10), random duration each render, useId gradients. hover-keyed children remount and repeat0.2sec +/-30pxshake/scale0.8; hover mounts two500density sparkles, circle delay unused. No local reduced/hidden or keyboard hover counterpart; source ReactNode draft/focus loss potential not reproduced. Keep semantic Text stable and bounded EffectSurface behind, not generic interactive wrapping.",
+          "manualReviewedOn": "2026-10-07"
         },
         {
           "url": "https://ui.aceternity.com/components/container-scroll-animation",
           "sourceSha256": "d537b623e39efe526219d1cc80f4cf2ebc3c2c89066a17ba736ae6c9ec7283ce",
           "capturedAt": "2026-10-07T03:59:12Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body (description, CLI, all visible props/snippets/headings); hidden Manual/Code/alternate tabs pending",
@@ -17869,7 +18049,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -17885,14 +18065,16 @@
             ],
             "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
             "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend."
-          }
+          },
+          "manualReviewNotes": "Full visible Manual read: target scroll progress transforms rotation20->0/scale/mobile0.7->0.9 vs desktop1.05->1, titleY-100, window width768resize listener. Fixed60/80rem frame/30/40rem card/overflowhidden; translate prop passed but Card does not use it. No local reduced/visibility. Existing ScrollProgress/ContentTransition/Affix expression is not this 3Dscene engine; keep fixed text/content accessible and product media ownership, inspect responsive/large text before adopting.",
+          "manualReviewedOn": "2026-10-07"
         },
         {
           "url": "https://ui.aceternity.com/components/container-text-flip",
           "sourceSha256": "ba17de594907a133a1d4834c554bdd67dfead69e120abef6a6f417ff6cb33c77",
           "capturedAt": "2026-10-07T03:59:15Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body (description, CLI, all visible props/snippets/headings); hidden Manual/Code/alternate tabs pending",
@@ -17901,11 +18083,12 @@
             "path": "실험/구성/비교와 검증/글자 표현 비교",
             "existingApis": [
               "Text",
+              "TextTransition",
               "ContentTransition"
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -17921,14 +18104,16 @@
             ],
             "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
             "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend."
-          }
+          },
+          "manualReviewNotes": "Full visible Manual read: 3sec interval, measured scrollWidth+30 on index change only, outerp keyedword with nesteddiv, splitUTF16 and blur10px, widthdurationanimationDuration/2000 vs word duration/1000. Installed util path lib/utils differs import utils/cn. Empty words immediately undefined.split by source; prop/font/width updates not fully measured. Existing TextTransition/ContentTransition stable semantic content and reduced contract retained; runtime exceptions not executed.",
+          "manualReviewedOn": "2026-10-07"
         },
         {
           "url": "https://ui.aceternity.com/components/direction-aware-hover",
           "sourceSha256": "1ab8c01d9f019314943642ac70a9ac24b0f7aed3e1296ae717e9d343bc157812",
           "capturedAt": "2026-10-07T03:59:17Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body (description, CLI, all visible props/snippets/headings); hidden Manual/Code/alternate tabs pending",
@@ -17941,7 +18126,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -17957,14 +18142,16 @@
             ],
             "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
             "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend."
-          }
+          },
+          "manualReviewNotes": "Full visible Manual read: enter angle rect math/non-square normalization, console.logdirection, whileHover physicaldirection image20px slide and essential children opacity0 untilhover, genericalt=image/fixed240->384size. No local focus/touch/reduced equivalents. Interactive children may focus while invisible; actual keyboard not yet tested. Keep Card/Text/Image content alwaysreadable and Link/Button actions, optional direction expression only; do not hide required content.",
+          "manualReviewedOn": "2026-10-07"
         },
         {
           "url": "https://ui.aceternity.com/components/dither-shader",
           "sourceSha256": "f4aa09eb099d85cc7bc4d3e0d4751a9391c57f77443420b8fc80849df723fda7",
           "capturedAt": "2026-10-07T03:59:19Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body (description, CLI, all visible props/snippets/headings); hidden Manual/Code/alternate tabs pending",
@@ -17978,7 +18165,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -17994,14 +18181,16 @@
             ],
             "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
             "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend."
-          }
+          },
+          "manualReviewNotes": "Full visible15220-character Manual read. Despite name DitherShader is Canvas2D CPU pixel loops (no WebGL). Bayer/halftone/noise/crosshatch, original/grayscale/duotone/custom, offscreen imageData and fit formulas read. DPR uncapped; grid0 matrix indexing/empty custom palette unguarded; cached complete imageRef reused without comparingnewsrc; CORS/load failures log only, fixed Dithered image label/roleimg no alt prop/static original fallback. Bare export DitherShader ending as shown not executed/compiled. Existing Image/Asset preserves actualasset/name/failure; image expression candidate not arbitrary shader/theme engine.",
+          "manualReviewedOn": "2026-10-07"
         },
         {
           "url": "https://ui.aceternity.com/components/dotted-glow-background",
           "sourceSha256": "eff438b0bd66a79ddbbd1eecf8a1911d83b923e783180371d6a0efb54a043e08",
           "capturedAt": "2026-10-07T03:59:21Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body description/visible props/snippets/all example headings; hidden code/Manual/alternate tabs pending unless separately recorded",
@@ -18013,7 +18202,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -18029,14 +18218,16 @@
             ],
             "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
             "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend."
-          }
+          },
+          "manualReviewNotes": "Full visible Manual read. Canvas dot grid gap12/radius2, colors local/rootCSSvar+rootclass/style/systemdarklisteners, DPR2/IO skip drawing present. Skipped IO branch stillRAF; no local reduced/documenthidden. ResizeObserver resizes canvas only, dotregen onlywindow resize, gap0 unbounded loop bound bysource notexecuted. Wrappercanvas no pointer-none/aria-hidden. Keep scoped EffectSurface bounded density/seed and decorative semantics, no existing pattern equivalence claim.",
+          "manualReviewedOn": "2026-10-07"
         },
         {
           "url": "https://ui.aceternity.com/components/draggable-card",
           "sourceSha256": "5b596fdfca93a85e76a567a6f0f3397f320b75d5010514cf47ec5c4852f9f684",
           "capturedAt": "2026-10-07T03:59:23Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body description/visible props/snippets/all example headings; hidden code/Manual/alternate tabs pending unless separately recorded",
@@ -18049,7 +18240,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -18065,14 +18256,16 @@
             ],
             "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
             "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend."
-          }
+          },
+          "manualReviewNotes": "Full visible Manual read. Motion drag whole card, bounds=halfviewport notparent/cardextent, mouse tilt25deg, bodycursor globalgrabbing/default no restore-on-unmount. End animate(info.point number) lacks onUpdate binding to cardposition; source cannot establish inertia. No semantic reorder/drop/keyboard or localreduced. Existing Card content/actions preserved; dragging here is decoration not ReorderList contract, no enginecopy.",
+          "manualReviewedOn": "2026-10-07"
         },
         {
           "url": "https://ui.aceternity.com/components/encrypted-text",
           "sourceSha256": "1922b81714c3143516674376edf3095f5e6420e410365486a3693f5bddad1b32",
           "capturedAt": "2026-10-07T03:59:25Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body description/visible props/snippets/all example headings; hidden code/Manual/alternate tabs pending unless separately recorded",
@@ -18085,7 +18278,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -18101,14 +18294,16 @@
             ],
             "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
             "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend."
-          }
+          },
+          "manualReviewNotes": "Full visible Manual read. useInView once/RAF completes/cleanup, charsetrandominitial UTF16split, preserving spaces; label original text but role=text and scramble children not ariahidden need ATverification. Reveal delayclamp1/flip0; scrambleRef mutates without statecount change may notrerender eachflip, sourceonly. No localreduced/hidden/offscreenpause afterfirstinview. Keep real semanticText/stable accessibility and optionaldecorative glyphs, no encryption/security function claim.",
+          "manualReviewedOn": "2026-10-07"
         },
         {
           "url": "https://ui.aceternity.com/components/evervault-card",
           "sourceSha256": "1f6a40ffb5f72c8582fb4bc1abc8414e76221ff152dd5d83fa01410fcbfd7263",
           "capturedAt": "2026-10-07T03:59:27Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body description/visible props/snippets/all example headings; hidden code/Manual/alternate tabs pending unless separately recorded",
@@ -18121,7 +18316,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -18137,7 +18332,9 @@
             ],
             "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
             "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend."
-          }
+          },
+          "manualReviewNotes": "Full visible Manual read. 1500random chars generated on mount and everymousemove, mask250px/hoveropacity/pointer-none but decoration p notariahidden, literalgreen/blue/blurfixed. Actualstatic label remains but randomstring ATnoise possible/unverified. Not encryption function; existing Card/Text/EffectSurface optional bounded seeded decoration, content remains static, no source-copy/stateengine.",
+          "manualReviewedOn": "2026-10-07"
         },
         {
           "url": "https://ui.aceternity.com/components/expandable-card",
@@ -18257,7 +18454,7 @@
           "sourceSha256": "180bb9c5b2eb8889c9af8d4194fccba8c50269df29b670c4f1ff4660d9135bb8",
           "capturedAt": "2026-10-07T03:59:35Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body description/visible props/snippets/all example headings; hidden code/Manual/alternate tabs pending unless separately recorded",
@@ -18266,11 +18463,12 @@
             "path": "실험/구성/비교와 검증/글자 표현 비교",
             "existingApis": [
               "Text",
+              "TextTransition",
               "ContentTransition"
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -18286,18 +18484,20 @@
             ],
             "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
             "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend."
-          }
+          },
+          "manualReviewNotes": "Full visible Manual read: timeout while notanimating notcleaned, next via words.indexOf(currentWord)+1, key=currentWord/exitanimation copies, UTF16 letters/whitespacewordgroups. Empty/single/duplicatewords may throw or stall by source, notexecuted. Local reduced/hidden/locale absent. Current TextTransition onlystate string no timer/array/autocycle; preserve real state and optional promotional cycle would need separate pause/readtime/static contract.",
+          "manualReviewedOn": "2026-10-07"
         },
         {
           "url": "https://ui.aceternity.com/components/floating-dock",
           "sourceSha256": "2fb4d5338a21a98aa7e6f04571d7da1b898593def6e425ff22f3d9bc34b53d67",
           "capturedAt": "2026-10-07T03:59:37Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
-          "visualReview": "pending",
-          "interactionReview": "pending",
+          "manualReview": "visible-tsx-css-read",
+          "visualReview": "selected-desktop-states",
+          "interactionReview": "selected-flow-reviewed",
           "readScope": "Entire captured core body description/visible props/snippets/all example headings; hidden code/Manual/alternate tabs pending unless separately recorded",
-          "reviewNotes": "Full core FloatingDock desktop/mobile/iconcontainerprops read. Separate responsivepresentation documented; HJM Navigation/BottomNav contractscomparison; allManual/Usage/actual keyboardpending.",
+          "reviewNotes": "Full captured core props and subsequent entire visible Manual read; selected desktop dark keyboard-focus verified separately. Remaining mobile/allvariants/actualpointer/motion/coords states pending.",
           "experimentProposal": {
             "path": "실험/구성/비교와 검증/탐색 크기 비교",
             "existingApis": [
@@ -18308,7 +18508,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -18324,14 +18524,19 @@
             ],
             "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
             "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend."
-          }
+          },
+          "manualReviewNotes": "Full visible Manual read: desktop pageX-vsviewportbounds spring40->80, hover-only title, links no explicitnames/currentroute, mobile40pxlinks/toggle no name/expanded/escape/focus handling, global layoutIdnav. Reuse BottomNavigation controlledrouterselectedKey/labels/disabled/safearea/keyboard/aria-current, Sidebarwide; expression magnification notnavigationengine. Existing HJM BottomNavigation min52+ floating/capsule supports profile tokens; no newDockengine or physicalmobile parity claim.",
+          "manualReviewedOn": "2026-10-07",
+          "proof": "assets/parallel-b-aceternity-dock-keyboard.png",
+          "actualReviewNotes": "IAB1280x720 dark selected desktop preview. Seven dock links measured40x40, six unnamed in actual AX; AceternityLogo one has imgalt name. Firstlink locatorTab moved focus to secondTerminal link, focusedA href# with emptytext/noaria-label/alt/title. No tooltip or magnification onkeyboard focus, alllinks40x40; default focusoutline visible. Only selected keyboard-focus flow, not pointeractivation/mobile/RTL/large/reduced/scrollcoords tested.",
+          "proofSha256": "52a1c4431ebf226a3bc4b22dc5a0225042dc7e57751af9b5db95ba4a76e4e2e2"
         },
         {
           "url": "https://ui.aceternity.com/components/floating-navbar",
           "sourceSha256": "9f1b3a59fc06ff6138e4d69c6e9bf5f6028ff7b76aad797eadb060ab5a0f7c7b",
           "capturedAt": "2026-10-07T03:59:39Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body description/visible props/snippets/all example headings; hidden code/Manual/alternate tabs pending unless separately recorded",
@@ -18346,7 +18551,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -18362,14 +18567,16 @@
             ],
             "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
             "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend."
-          }
+          },
+          "manualReviewNotes": "Full visible Manual read: globalscrollratio<0.05 hidden and directionupshow; motion opacity0/y-100 leaveslinks mounted/focusable, mobile hidesname and iconoptional => accessibleName may absent; hardcoded Loginbutton nohandler/type/currentroute, z5000/top40. Keep existing navigation route+focus semantics; hiding must accountactivefocus, currentLink/name/responsive/allstates pending actual.",
+          "manualReviewedOn": "2026-10-07"
         },
         {
           "url": "https://ui.aceternity.com/components/focus-cards",
           "sourceSha256": "e75a6ade767fadde44d2466dd8255799c7db221128d33c7640f10f0b804d4fcd",
           "capturedAt": "2026-10-07T03:59:41Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body description/visible props/snippets/all example headings; hidden code/Manual/alternate tabs pending unless separately recorded",
@@ -18382,7 +18589,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -18398,14 +18605,16 @@
             ],
             "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
             "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend."
-          }
+          },
+          "manualReviewNotes": "Full visible Manual read: hoverindex blurs/scalesothers, imagealt title, hover-only visual titleopacity0, fixed240/384height, title-keynot stableid. No action/selected semantics orlocalkeyboard/touch/reduced behavior. Existing Grid/Card/Image content and static metadata preserved; emphasis expression does notprovide selection/navigationengine.",
+          "manualReviewedOn": "2026-10-07"
         },
         {
           "url": "https://ui.aceternity.com/components/following-pointer",
           "sourceSha256": "f8af1c6901cad0500d147d8462b9a9727da54e967b9f5e092ff3ebe1b3f7b360",
           "capturedAt": "2026-10-07T03:59:43Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body description/visible props/snippets/all example headings; hidden code/Manual/alternate tabs pending unless separately recorded",
@@ -18415,8 +18624,11 @@
             "decision": "do-not-adopt-source",
             "registration": "not-applicable",
             "reason": "Mouse-following cursor is not shared input behavior; product-only preference with touch/focus/reduced unverified.",
-            "existingApis": []
-          }
+            "existingApis": [],
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending"
+          },
+          "manualReviewNotes": "Full visible Manual read: mountonlyrect + currentwindow scroll offsets, mouse enter/leave, cursor:none onwholecontainer evennotfinepointer, pointer-none followbubble randomcolor7/defaultWilliamShakespeare, ReactNode title notAXhidden. Geometry afterresize/scroll and label readability must be actuallychecked. Keep actualinputcursor/Tooltipsemanticcontrols and requiredText static; optionalfine-pointer decoration only, no genericmouseengine.",
+          "manualReviewedOn": "2026-10-07"
         },
         {
           "url": "https://ui.aceternity.com/components/github-globe",
@@ -18459,11 +18671,11 @@
           "sourceSha256": "17c1d5b51ec927f7cd9ad9f3e3be06f7293584d9938d793d0e2437143516ee60",
           "capturedAt": "2026-10-07T03:59:47Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body description/visible props/snippets/all example headings; hidden code/Manual/alternate tabs pending unless separately recorded",
-          "reviewNotes": "Full core Glarecard both preview headings/contents andchildren/className read. Manual/Usage/focus/reduced pending.",
+          "reviewNotes": "Full core Glarecard both preview headings/contents andchildren/className read. Manual/Usage/focus/reduced pending. Full visible Manual TSX/CSS read. Fixed 320px/17:21/radius48, mouse ref CSS variables, 300ms timeout without cleanup; overlays share grid-area and lack pointer-events:none, possible child pointer occlusion SOURCE ONLY. No local fine-pointer/reduced/IO guards shown. Reuse Card content/actions/profile geometry with bounded EffectSurface, not copied glare engine. Actual pointer/keyboard/touch states pending.",
           "experimentProposal": {
             "path": "실험/구성/비교와 검증/카드 깊이 비교",
             "existingApis": [
@@ -18472,7 +18684,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -18495,11 +18707,11 @@
           "sourceSha256": "2d3aa3188cbe770595eea22b67d8b0ce916a79298c37a60c0898185287ba2612",
           "capturedAt": "2026-10-07T03:59:49Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body description/visible props/snippets/all example headings; hidden code/Manual/alternate tabs pending unless separately recorded",
-          "reviewNotes": "Full core GlowingEffect allprops+bothdemocontents read;disabledtrue/glowfalse default,proximity/inactiveZone/movementDuration2. Manual/Usage actualfocus/local guards pending.",
+          "reviewNotes": "Full core GlowingEffect allprops+bothdemocontents read;disabledtrue/glowfalse default,proximity/inactiveZone/movementDuration2. Manual/Usage actualfocus/local guards pending. Full visible Manual TSX/CSS read. disabled=true opt-in; enabled global body pointermove/window scroll, RAF coalescing cleaned. animate angle handle is not retained/stopped; overlap/unmount behavior SOURCE ONLY pending actual. pointer-events-none overlay/inherited radius, white variant --black dependency, literal palette; no explicit local reduced/hidden/offscreen guard shown. Reuse scoped EffectSurface lifecycle.",
           "experimentProposal": {
             "path": "실험/토큰/표면과 움직임/입자와 빛",
             "existingApis": [
@@ -18507,7 +18719,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -18530,11 +18742,11 @@
           "sourceSha256": "a6be3a6d6dc2c545dfc5dcc2a04f7ff5f1e79940940222d77e6604c3be4126d3",
           "capturedAt": "2026-10-07T03:59:51Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body description/visible props/snippets/all example headings; hidden code/Manual/alternate tabs pending unless separately recorded",
-          "reviewNotes": "Full core GlowingStars description/className propsread; hoverandinfinite motiondocumented. Manual/Usage/reduced pending.",
+          "reviewNotes": "Full core GlowingStars description/className propsread; hoverandinfinite motiondocumented. Manual/Usage/reduced pending. Full visible Manual TSX/CSS read. 108 stars/18cols; cleaned 3sec interval picks 5 indices with duplicates possible. Hover all stars and hovered+selected Glow may coexist; SOURCE ONLY, no actual duplicate rendering repro. Fixed maxheight/card palette and no local reduced/hidden/IO shown. Preserve Card growing semantic content + bounded seeded optional EffectSurface.",
           "experimentProposal": {
             "path": "실험/토큰/표면과 움직임/입자와 빛",
             "existingApis": [
@@ -18542,7 +18754,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -18602,11 +18814,11 @@
           "sourceSha256": "1b7af19fac073adf8935ba70b35e1463402de3aeb6a773caf3a5dcad85ddbe5f",
           "capturedAt": "2026-10-07T03:59:55Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body description/visible props/snippets/all example headings; hidden code/Manual/alternate tabs pending unless separately recorded",
-          "reviewNotes": "Full core Gemini svgMotionValue/title/descriptionprops read. Scrollpath visualeffect notfooterstructure; Manual/Usage pending.",
+          "reviewNotes": "Full core Gemini svgMotionValue/title/descriptionprops read. Scrollpath visualeffect notfooterstructure; Manual/Usage pending. Full 11574-character visible Manual including complete raw SVG paths read. Five MotionValues indexed without length tuple validation; duration0 linear pathLength, duplicate blurred paths and fixed blurMe id. sticky top80/fixed890px absolute art/literal colors, default marketing paragraphs and inert button no action/type. SVG has no explicit aria-hidden/pointer-events-none; no local reduced/hidden/IO shown. Reuse Section/Text/Button/ScrollProgress/EffectSurface contracts; no separate scroll path engine or functional Gemini model implied. Actual scroll/keyboard/layout states pending.",
           "experimentProposal": {
             "path": "실험/토큰/표면과 움직임/입자와 빛",
             "existingApis": [
@@ -18614,7 +18826,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -18637,11 +18849,11 @@
           "sourceSha256": "a03e4b0ac6d080c32d20c939ea3c389d30bd2ee5ad846f583c1567290e952292",
           "capturedAt": "2026-10-07T03:59:57Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body description/visible props/snippets/all example headings; hidden code/Manual/alternate tabs pending unless separately recorded",
-          "reviewNotes": "Full core staticGrid/SmallGrid/Dot headings anddependencyutilcode read. No hiddenManualtab; allfour Codepanels pending, statictexturedescriptor candidate.",
+          "reviewNotes": "Full core staticGrid/SmallGrid/Dot headings anddependencyutilcode read. No hiddenManualtab; allfour Codepanels pending, statictexturedescriptor candidate. All four actual Code toggles opened/read completely, including duplicate top/Grid demo. Static CSS linear grid40/20px, radial dot20px and radial20% fade; no runtime animation/dependency motion actually used by demos. Background layer lacks explicit pointer-events-none, fade does have it. Fixed50rem/literal light-dark palette not theme contract. Reuse optional bounded EffectSurface pattern descriptor, not new engine. Actual responsive/contrast/child action tests pending.",
           "experimentProposal": {
             "path": "실험/토큰/표면과 움직임/반복 무늬",
             "existingApis": [
@@ -18649,7 +18861,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -18672,11 +18884,11 @@
           "sourceSha256": "60fddedf54aecef7d8f748e0340c3768764078dc95602f9706d9720a2bfc3de9",
           "capturedAt": "2026-10-07T03:59:59Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body description/visible props/snippets/all example headings; hidden code/Manual/alternate tabs pending unless separately recorded",
-          "reviewNotes": "Full core HeroHighlight/Highlight children/className/container propsread. Manual/Usage andactualreadablehighlightcontrast pending.",
+          "reviewNotes": "Full core HeroHighlight/Highlight children/className/container propsread. Manual/Usage andactualreadablehighlightcontrast pending. Full visible Manual incl four raw data SVG circle patterns read. Pointer relative rect, 200px masked hover layer pointer-events-none and static dots; fixed40rem. Highlight inline motion.span background0->100% duration2 delay.5, physical leftcenter and literalindigo/purple light-dark. Essential children remain visible; no local reduced/finepointer/focus guards. Reuse Text stable content + optional scoped EffectSurface pattern; highlight contrast/RTL/focus/touch actual pending.",
           "experimentProposal": {
             "path": "실험/구성/비교와 검증/글자 표현 비교",
             "existingApis": [
@@ -18685,7 +18897,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -18708,11 +18920,11 @@
           "sourceSha256": "a79a0b59ced0aed0e07ec91784d92676f7f12143a2518878f820bc4622717ab0",
           "capturedAt": "2026-10-07T04:00:01Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body description/visible props/snippets/all example headings; hidden code/Manual/alternate tabs pending unless separately recorded",
-          "reviewNotes": "Full core HeroParallax 15products andHero/ProductCard dataMotionValueprops read. Manual/Usage/reduced/IO/keyboard pending.",
+          "reviewNotes": "Full core HeroParallax 15products andHero/ProductCard dataMotionValueprops read. Manual/Usage/reduced/IO/keyboard pending. Full visible Manual read. products slices0..15 (rest dropped), fixed300vh/30rem cards, scroll target offset start/end-start, spring stiffness300 damping30 bounce100, x±1000/y-700->500/rotateX15 rotateZ20. Hardcoded Header h1/copy; title keys, native anchors and image alt title, hover-only title/overlay no focus variant. No local reduced/hidden/IO; no image fallback shown. Reuse product data/Section/Grid/Image/Link plus ScrollProgress/Affix/ContentTransition expression; arbitrary3D/spring engine not copied. Actual keyboard clipping/mobile/reduced states pending.",
           "experimentProposal": {
             "path": "실험/구성/직접 조작과 모션/스크롤 장면 비교",
             "existingApis": [
@@ -18723,7 +18935,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -22364,14 +22576,14 @@
     "manualReviewedMagicUrlsMapped": 77,
     "proposedGroups": 27,
     "sourceRejections": 3,
-    "remaining": "Aceternity hidden Code/Manual/Usage and actual states; Magic blogs/source tab gaps/actual states; 21st public/locked scope. Proposal mapping is not Storybook registration.",
+    "remaining": "Magic hidden MCP/provider tabs, premium template implementations/previews and all actual variants/states; Aceternity AI-catalog partial, additional404 URLs, hidden Manual/Usage/Block source and actual flows; huge21st public scope/locked implementation remain. All257 captured Magic homepage/blog/docs bodies are fully read; this is not allReviewComplete.",
     "rules": "docs/STORYBOOK_NAVIGATION.md section1; exactly4 segments, fixed stage/category vocabulary, Korean item<=16chars, variants stay stories; root checks title collision/current existing story reuse.",
     "aceternityComponentUrlsMapped": 116,
     "aceternityComponentProposedGroups": 32,
     "aceternityBlockUrlsMapped": 180,
     "aceternityBlockCatalogueUrlsExcluded": 22,
     "aceternityLabIdeaUrlsMapped": 6,
-    "magicBlogUrlsMapped": 85,
+    "magicBlogUrlsMapped": 88,
     "uniquePathsAcrossAssignedSites": 68
   }
 }

@@ -27,13 +27,13 @@ HJM HjmProvider의 controlled theme/designProfile 및 environment.reducedMotion�
 
 | 범위 | 전체 분모 | 이번 독해 | 미확인 |
 | --- | ---: | ---: | --- |
-| Magic UI 수집 페이지 | 257 | 본문 전체 248, 부분 2 | 본문 7개 미검토 |
-| 그중 docs | 92 | 전체 90, 부분 2 | Animated Beam/Dock의 긴 SVG 원시 geometry 및 일부 잘린 중간 구간 |
-| 그중 홈페이지와 blog | 165 | 홈페이지 및 blog 첫 157개, 총 158 | blog 7개 |
+| Magic UI 수집 페이지 | 257 | 수집 본문 전체 257, 부분 0 | 수집 본문 미독해 0; 숨은 설치 탭·실제 상태는 별도 |
+| 그중 docs | 92 | 수집 본문 전체 92 | 비활성 설치 탭과 실제 예제 상태는 별도 |
+| 그중 홈페이지와 blog | 165 | 홈페이지 및 blog 164개, 총 165 | 공개 main 미독해 0 |
 | 컴포넌트 Manual 구현 | 77 | 77페이지, URL별 범위와 판단은 인덱스 manualReview/Notes | MCP Manual·설치 provider 탭과 실제 예제 상태 |
 | 실제 화면·선택 흐름 | 별도 | Ripple Button·Animated Theme Toggler·BentoGrid·HeroVideoDialog 4페이지의 데스크톱 선택 상태 | 나머지 페이지·모든 예제·환경 조합 |
 
-본 사이트의 257페이지에는 blog 164개가 포함된다. 92 docs를 읽었다고 사이트 전체 검토로 올리지 않는다. Animated Beam/Dock은 control structure와 Usage·Props를 읽었지만 raw SVG geometry와 잘린 구간이 있어 전체 읽기 수에 넣지 않았다. 템플릿 9개는 판매 소개 본문을 읽은 범위이며, 연결 live preview나 유료 구현 소스는 아직 검토하지 않았다. Blog의 라이브러리 권고·성능·전환율 수치는 원문 주장이며 검증된 채택 근거가 아니다. `animation-libraries` 글의 `pnpm add magicui`·`import { Button, Card, Modal } from "magicui"` 안내는 현재 설치 docs의 shadcn registry 방식과 다르므로 이 글을 설치 근거로 채택하지 않는다.
+본 사이트의 257페이지에는 blog 164개가 포함된다. 92 docs를 읽었다고 사이트 전체 검토로 올리지 않는다. Animated Beam/Dock은 아래 후속 checkpoint에서 긴 raw SVG geometry와 중간 구간까지 다시 읽어 수집 본문 전체 수에 포함했다. 숨은 설치 탭·실제 모든 예제 상태 완료를 뜻하지 않는다. 템플릿 9개는 판매 소개 본문을 읽은 범위이며, 연결 live preview나 유료 구현 소스는 아직 검토하지 않았다. Blog의 라이브러리 권고·성능·전환율 수치는 원문 주장이며 검증된 채택 근거가 아니다. `animation-libraries` 글의 `pnpm add magicui`·`import { Button, Card, Modal } from "magicui"` 안내는 현재 설치 docs의 shadcn registry 방식과 다르므로 이 글을 설치 근거로 채택하지 않는다.
 
 현재 HJM EffectSurface의 실제 공개 layer는 mesh/glow/grain/noise 네 개다. Web 렌더러는 pointerEvents:none·aria-hidden·IntersectionObserver·document.hidden·reducedMotion·WAAPI 실패 fallback을 갖고 있다. Magic NoiseTexture의 SVG fractal noise를 별도 API로 복사할 이유는 아직 없다. Dot/Grid/Striped/Hexagon/Retro pattern은 기존 네 layer와 정확한 시각 동등성이 없으므로, 필요하면 기존 descriptor의 선택적 pattern 확장으로 조사할 후보이다. 원본들의 SSR·Native 동등성을 아직 주장하지 않는다.
 
@@ -79,7 +79,7 @@ default dark preview에서 Play video에 Enter를 보내 overlay/iframe이 1개�
 
 ## Aceternity 본문·Manual 증분 범위
 
-수집 501 URL의 별도 상태를 같은 인덱스 additionalSites에 보존한다. 이번 B의 전체 공개 core 본문 독해 500, 부분 1(ai-recommendations), core 미독해 0이다. Manual 전체 18, 실제 선택 화면 9·flow 3(FileUpload·AnimatedModal)이며 parent가 이전에 검토한 네 페이지는 중복 완료로 더하지 않는다. ai-recommendations의 427,980자 catalog는 첫 구간 이후 출력이 잘려 전체 완료로 세지 않는다.
+수집 501 URL의 별도 상태를 같은 인덱스 additionalSites에 보존한다. 이번 B의 전체 공개 core 본문 독해 500, 부분 1(ai-recommendations), core 미독해 0이다. Manual 전체 53, 실제 선택 화면 10·flow 4(선택 URL별 범위는 인덱스)이며 parent가 이전에 검토한 네 페이지는 중복 완료로 더하지 않는다. ai-recommendations의 427,980자 catalog는 첫 구간 이후 출력이 잘려 전체 완료로 세지 않는다.
 
 URL: https://ui.aceternity.com/components/3d-card-effect
 
@@ -504,3 +504,124 @@ TypeScript글의 `100 * "2"`를1002/NaN이라 설명하는 오류, typecheck와 
 Footer는기존 `실험/구성/탐색과 이동/하단 링크 묶음`에합쳤다. footer7유형/22요소/6지침/13브랜드를읽은것이며13실제외부화면을검토했다는뜻이아니다. NoFooter가능문장과모든사이트footer필수문장이함께있으며copyright/약관/쿠키문구가법적준수증거는아니다. 실제linkgroup·법률문구·contact/newsletter전송·권한은제품이갖는다. waitlist3브랜드도소개본문뿐이며타이머/stock/가짜후기·CRM·메시지를자동도입하지않는다.
 
 성능/SEO/시장/행동숫자와Magic의접근성·반응형보장은source주장이다. Animation-tools제목10개에실제본문은Magic중심이고, webapp에는편집지시문이남아있으며trend마지막번호5·security설명만있는구간을기록했다. 원문브랜드mascot사실/성능을독립검증하지않았다. HJM은기존semantic/input/focus/lifecycle계약을유지하고analytics/auth/server/cache/deploy는제품규격소유다.
+
+
+## Magic blog 공개 main 본문 1단계 완료 — 158–164 checkpoint
+
+수집257개 중 본문전체255·부분2·미독해0. homepage1+blog164개는모든캡처semanticmain본문을실제읽었다. docs90전체+2부분은기존범위그대로다. **사이트전수검토완료가아니다.** 숨은MCP/provider tabs·Manual외부원본·모든예제·실제시각과상호작용은남았다. Manual77·실제시각4·선택flow4·68고유후보경로는그대로다. 홈페이지/blog의수집과실제독해를구분해미독해분모를없앴다.
+
+마지막header25·logo50·resource7·UIcomponents·componentlibrary·mobilefirst·Next설명의전체본문과보이는코드를읽었다. Header는탐색크기비교,logo는이미지표현비교, mobilefirst는기능카드묶음으로합치고 나머지generic정보는별도UI역할없음으로기록했다. logo50/헤더25/resource7외부URL을방문하거나실제자산을검토했다고세지않는다. 제품logo/권리/문구/media는제품소유이며공유Asset/Image의이름·배치·dark/large 상태계약으로보여준다.
+
+Mobilefirst본문은sidebar가모바일에서하단으로이동한다고하지만CSS는display:none이고, JSX BentoGridItem은기존검토BentoCard API와다르다. 작은폭에서필요한내용을없애거나물리margin-left·고정10px/768/1024를HJMtoken에넣지않는다. Next의next export/pages API버전·analytics outofbox/자동번역/자동확장·UIkit를framework대안으로드는설명은현재지원/실제동작근거가아니다. Storybook도componentlibrary자체와혼합돼있다. 모든글의sourceclaim와채택판단/미확인은URL별인덱스에보존했다.
+
+## 후속 checkpoint: Magic 수집 본문 257/257
+
+https://magicui.design/docs/components/animated-beam 의 79,105자와 https://magicui.design/docs/components/dock 의 24,530자를 겹치는 구간으로 끝까지 다시 읽었다. 설치 활성 CLI, raw SVG geometry, 모든 보이는 예제 TSX, Usage·Props·Credits를 포함한다. 이전 255전체+2부분은 이 checkpoint로 257전체+0부분이 됐다. 비활성 MCP/provider 설치 탭, premium 구현·preview와 실제 모든 상태는 미완료여서 allReviewComplete=false를 유지한다. Manual77·실제 화면4·선택 흐름4는 늘리지 않았다.
+
+AnimatedBeam Multiple Outputs는 user를 왼쪽·OpenAI를 중앙·출력 서비스들을 오른쪽에 놓지만 fromRef는 오른쪽 출력→중앙, 중앙→왼쪽 user이며 reverse가 없다. 소스의 방향 설정과 제목의 의미를 실제로 확인할 조건이며, 시각 오류를 재현했다고 주장하지 않는다. Default·uni/bidirectional·multiple inputs/outputs의 고정 높이·overflow-hidden, 이름 없는 노드와 의미 전달·텍스트 확대·RTL·정지 표현은 실험/구성/정보 표시/항목 연결선에서 기존 Grid/Card/EffectSurface와 대조한다.
+
+Dock 기본은 이름 있는 Link/Tooltip이지만 href=#이다. custom direction/magnification·Usage의 bare 아이콘 자체에는 실제 탐색 동작이 없으므로 기존 BottomNavigation/Sidebar의 행동·선택·포커스를 재사용한다(실험/구성/비교와 검증/탐색 크기 비교). 두 문서의 WhatsApp SVG는 자신의 defs에 없는 linearGradient1780을 참조하는 path 뒤에 올바른 b-gradient path도 덧그린다. 따라서 원시 참조 부재만으로 실제 아이콘 누락을 주장하지 않는다. b/a 및 GoogleDocs의 고정 path/mask/filter ID도 여러 예제 인스턴스에서 충돌할 가능성을 가진 소스 관찰이며 실제 재현은 남았다. 제품 소유 브랜드 자산을 사용하고 HJM Asset/Image 계약을 유지한다.
+
+## Magic 설치 숨은 탭: 실행 없이 독해
+
+https://magicui.design/docs/mcp 의 Manual 탭을 실제 열어 mcpServers.magicuidesign-mcp의 command=npx, args=[-y,@magicuidesign/mcp@latest]와 IDE 재시작 안내를 읽었다. CLI Cursor/Windsurf/Claude/Cline/Roo-Cline × pnpm/npm/yarn/bun의 20조합을 실제 선택하고 각 선택 상태·보이는 명령을 읽었다. pnpm dlx, npx, yarn, bunx --bun @magicuidesign/cli@latest install {IDE}이며 설치는 실행하지 않았다. 명령 독해를 MCP 구현 소스나 생성 결과 검증으로 계산하지 않는다. 컴포넌트 Manual77·화면4·흐름4는 그대로다.
+
+https://magicui.design/docs/installation 의 init/add 두 블록 × 네 패키지 명령 8개도 실제 선택해 읽었다. 선택이 두 블록에 같이 적용된다. shadcn@latest init 및 add @magicui/globe, 로컬 @/components/ui/globe import 구조다. Blog가 제안했던 magicui 패키지 일괄 import를 채택하지 않는 기존 판단을 뒷받침하지만 버전 고정·설치 성공·호환성의 증거는 아니다. 프로젝트·IDE·패키지 설정을 바꾸지 않았다. 나머지 컴포넌트 provider 설치 탭, 실제 모든 예제 및 premium preview/source는 별도 미완료다.
+
+## Aceternity Manual 후속: 24페이지
+
+다음 여섯 URL의 Manual TSX/CSS/셰이더 원문 전체를 실제 탭에서 열어 읽었다. 공개 core500전체+1부분, 실제 시각9·선택flow3은 그대로다. 원문 독해로 예외 입력 실행·실제 동작 검증 수를 늘리지 않는다. HJM Card/Carousel/Text/Grid/ContentTransition/EffectSurface 사용 지침 전체와 대조했다.
+
+| URL | 실제 읽은 구현과 기존 API 기준 | 실험 경로 |
+| --- | --- | --- |
+| https://ui.aceternity.com/components/bento-grid | grid1→3열·md18rem 고정행, div제목·본문·hover translate-x. HJM Grid의 minColumnWidth·row-major와 Card media/title/body/actions·headingLevel을 유지한다. 기존 Grid가 임의 bento span을 지원한다고 주장하지 않는다 | 실험/구성/정보 표시/기능 카드 묶음 |
+| https://ui.aceternity.com/components/canvas-reveal-effect | GLSL3·uniform 준비·useFrame 전체. speed.toFixed(1),6color/10opacity배열, memo uniforms누락, resolution=size*2·maxFps60. 소스 자체 reduced/offscreen/hidden guard 없음; EffectSurface lifecycle/fallback을 유지하고 Three엔진복제 안 함 | 실험/토큰/표면과 움직임/입자와 빛 |
+| https://ui.aceternity.com/components/canvas-text | font/dimension ResizeObserver·rootclass MutationObserver·DPR·fillText·매RAF·unmount취소. lineGap0의 무한 loop bound·duration0 비유한 phase는 실행하지 않은 소스 경로다. 정적 semantic Text/Heading·locale줄바꿈을 유지하고 장식은 숨김/모션감소/가시성 조건을 갖춰야 한다 | 실험/구성/비교와 검증/글자 표현 비교 |
+| https://ui.aceternity.com/components/card-hover-effect | anchor+mouse hoveredIndex, 고정 layoutId·지연exit·hardcodedh4. 포커스동등성/다중instance 실제 미검증. HJM Card에 없는 onClick/onPress를 추가한 것으로 안내하지 않고 Link/Button 행동을 유지 | 실험/구성/비교와 검증/카드 깊이 비교 |
+| https://ui.aceternity.com/components/card-spotlight | pointer-none mousemask·hover때Canvasmount·props가내부handler덮음; CanvasReveal 셰이더 중복 원문도 읽음. 내용은 항상 읽히고 EffectSurface 장식은 정지·fallback을 유지 | 실험/구성/비교와 검증/카드 깊이 비교 |
+| https://ui.aceternity.com/components/card-stack | module-global interval·5초회전·빈배열non-nullpop·초기items복사·0값을무시하는||·고정카드높이. HJM Carousel은 currentKey·명시라벨·이전/다음과 선택autoplay 정지/재개를 소유하므로 timer복제 대신 content-sizedCard와 재사용 | 실험/구성/정보 표시/고객 후기 탐색 |
+
+CardStack 다중 instance 정리·빈 입력, Canvas 계열 잘못된 배열/0입력·uniform갱신·줄바꿈·local theme 변경은 소스의 확인 필요 조건이며 재현 완료가 아니다. 기존 Carousel의 단일 active panel과 접근 가능한 컨트롤을 겹친 카드 자동회전으로 대체하지 않는다. CanvasText의 canvas role=img/aria-label을 semantic Text·Heading과 동등하다고 보지 않는다. EffectSurface는 현재 mesh/glow/grain/noise 네 layer만 공개하며 shader/pattern 동등성이나 Native canvas 동등성은 아직 없다. 새로운 고유 경로를 추가하지 않았고 기존68후보에 URL별 구체적 판단을 보강했다.
+
+## Aceternity Manual 후속: 27페이지
+
+https://ui.aceternity.com/components/cards-free 는 Manual의 util·Tailwindv4CSS·v3config를 모두 읽고 Code 세 개를 실제 열어 Feature Block Animated Card(rawSVG포함)·Background Overlays·Author Card 원문 전체를 읽었다. 전역 .circle-N animation은 infinite이며 effect가 stop을 반환하지 않고, GIF/author카드의 cursor-pointer div에는 실제 행동이 없다. Card/이미지·제품브랜드자산·Link/Button 행동 계약을 유지한다. CSS move5초 및 render-random장식은 모션감소·숨김·정지 기준을 갖추기 전에는 복사하지 않는다(기존 실험/구성/정보 표시/기능 카드 묶음).
+
+https://ui.aceternity.com/components/carousel Manual6,798자를 전체 읽었다. 내부index순환, 클릭만 있는li, ul직접자식div,70vmin고정크기,모든슬라이드항상RAF/eager이미지,이미지onLoad의opacity1,없는headingID를aria-labelledby참조,inner버튼행동없음을 확인했다. 예외 입력을 실행하거나 실제 화면 결함을 재현한 결과는 아니다. Tablerimport를설치명령이누락하고 force/legacy-peer-deps를권하는문구도 현재HJM설치근거가 아니다. HJM Carousel의 stableid/라벨/수동선택/단일activepanel을 재사용하며 여러 항목을 동시에 보는 strip은 별도 명시구성 검토조건이다(기존 실험/구성/정보 표시/고객 후기 탐색).
+
+https://ui.aceternity.com/components/chromatic-image Manual10,844자 WebGL/GLSL과 fallback전체를 읽었다. on-demandRAF·DPR상한2·정상cleanupGPU자원삭제·실제imgalt/aria-hiddenCanvas는 참고 가능하다. 초기reducedMotion만읽고설정변경·offscreen/hidden/contextlost는없다. 초기셰이더실패시정리이전return,disposed미검사onerror,hex만받는backgroundparse는 소스의 확인 조건이다. 기존 Image/Asset의의미·읽기·실패fallback을 보존하고 이미지표현비교의 선택적장식으로만 연결했다. NativeWebGL동등성을주장하지않는다. 공개core500+1부분·실제시각9·flow3과68경로는 그대로다.
+
+## Aceternity Manual 후속: 32페이지
+
+다음5개 숨은 Manual의 TSX/GLSL/설정원문 전체를 실제 열어 읽었다. 공개core500전체+1부분/실제시각9/flow3/후보68경로는 유지한다.
+
+| URL | 실제 source 독해와 기존 API 대조 | 경로 |
+| --- | --- | --- |
+| https://ui.aceternity.com/components/cloud-shader | GLSL·cleanup전체11,034자. Count1~6/DPR2/paramsRef갱신은있지만 reducedMotion초기값·time0상태에서도 매프레임RAF/draw, hidden/offscreen/contextloss처리없음. 기존 EffectSurface scoped lifecycle/fallback대조 | 실험/토큰/표면과 움직임/입자와 빛 |
+| https://ui.aceternity.com/components/code-block | CodeBlock·dependencies·override15.0.0 전체. 이름없는아이콘복사·clipboard거부미처리·timeout정리없음·tabs있으면복사버튼없음·index축소정합성미처리. HJM CodeBlock의원문검증/선택·ClipboardButton오류응답·기존Tabs를재사용 | 실험/구성/정보 표시/명령 기록 표시 |
+| https://ui.aceternity.com/components/colourful-text | splitUTF16·5초count키remount·randomsortpalette·글자별지연/blur전체. 타이머cleanup은있고 local모션감소/숨김은없음. semanticText/Heading·localegrapheme/테마대비 조건 유지 | 실험/구성/비교와 검증/글자 표현 비교 |
+| https://ui.aceternity.com/components/comet-card | mouse좌표spring·17.5도/20px·hover1.05scale/z50·pointer-noneglare전체. 0크기나fine-pointer/focus/touch/reduced가드없음은소스조건이며실제오류재현아님. 기존Card내용/행동·profile연결 유지 | 실험/구성/비교와 검증/카드 깊이 비교 |
+| https://ui.aceternity.com/components/compare | Compare+SparklesCore전체19,392자. 내부percent·마우스/터치·16msautoplay·전체particle설정까지독해. keyboard/sliderrole/handle이름없음·autoplay켜면touchhandler차단·0duration미검증. 현재배포ImageComparison1.14의controlledvalue·Slider키보드/adjustable·제품이미지라벨을그대로재사용 | 실험/구성/정보 표시/이미지 전후 비교 |
+
+Cloud의정상GPUcleanup을초기compile/link실패의cleanup보장으로해석하지않는다. Compare의fpsLimit120/density1200/push4는설정독해이고실제입자수/성능계측이아니며 외부엔진의기본가시성정지를부재로단정하지않는다. HJM CodeBlock 사용지침도전체읽었으며 highlighter·clipboard엔진을추가하는대신제품tokens가원문과일치하고copyAction이실패를알리도록기존계약을유지한다. 기존배포ImageComparison을새실험컴포넌트로중복등록할근거는없고출처/표현비교만후보로연결한다.
+
+## Aceternity Manual 후속: 36페이지
+
+https://ui.aceternity.com/components/container-cover 의 Cover/Beam/CircleIcon 및SparklesCore전체18,279자까지읽었다. ref.current효과의크기측정은resize/font갱신을감시하지않고, hovered키로children을remount하며±30px를0.2초주기로반복한다. ReactNode입력의초안/포커스소실가능성은실제재현이아니다. 정적semanticText와배경장식을분리하고HJMlifecycle을유지한다(실험/구성/정보 표시/문구 뒤 강조).
+
+https://ui.aceternity.com/components/container-scroll-animation 전체Manual은scroll20도→0/scale·768px창분기·titleY-100,60/80rem영역과30/40rem고정card의overflowhidden이다. Card에넘긴translate는읽지않는다. 모션감소·큰글자·실제스크롤/가시성조건은남았으며 HJM ScrollProgress/ContentTransition/Affix합성만으로동일3Dscene을지원한다고말하지않는다(실험/구성/직접 조작과 모션/스크롤 장면 비교).
+
+https://ui.aceternity.com/components/container-text-flip 전체Manual은3초interval,word변경때scrollWidth+30,UTF16split/blur·p아래div다. utils/cn import와실제설치안내lib/utils가다르다. 빈배열의undefined.split경로·글자확대/prop바뀔때너비측정은실행하지않은확인조건이다. 기존TextTransition/ContentTransition semantic단일내용을유지한다(실험/구성/비교와 검증/글자 표현 비교).
+
+https://ui.aceternity.com/components/direction-aware-hover 전체Manual은rect방향계산·물리방향20px이동·genericimagealt·hover전childrenopacity0이다. localfocus/touch/reduced동등성없음·대화형children의보이지않는focus가능성은실제검증미완이다. 핵심본문은항상보이게하고Card/Link/Button/Image계약을유지한다(실험/구성/비교와 검증/카드 깊이 비교). 공개core500+1부분/실제9/flow3·기존68경로는동일하다.
+
+## Aceternity Manual 후속: 41페이지
+
+| URL | 원문 전체 독해와 기존 API 기준 |
+| --- | --- |
+| https://ui.aceternity.com/components/dither-shader | Manual15,220자전체. 이름과달리Canvas2D CPU픽셀처리이며WebGL아님. 4패턴/4색모드/fit·오프스크린처리·CORS/cleanup읽음. newSrc와비교하지않고complete이미지cache를다시쓰는경로·grid0/빈palette·고정접근성라벨·정적원본실패fallback없음은소스조건. Image/Asset읽기/실패계약과기존이미지표현비교 연결 |
+| https://ui.aceternity.com/components/dotted-glow-background | Canvasdot·CSSvar/rootclass/style/systemdark·DPR2·IO를읽었다. IO밖에서는그리기만생략하며RAF유지, ResizeObserver는dot재생성을하지않음·gap0반복bound미검증. EffectSurface장식의pointer/AX/lifecycle/밀도상한 유지 |
+| https://ui.aceternity.com/components/draggable-card | viewport절반drag경계·tilt·bodycursor변경·endnumberanimate전체. animate결과가카드위치에연결되는onUpdate없음; 실제관성효과증거아님. 정렬/drop/keyboard엔진이아닌장식카드이며기존Card행동계약·입력/본문보존 |
+| https://ui.aceternity.com/components/encrypted-text | InViewonce·완료RAF/cleanup·문자charset·원문aria-label·scramble자식전체. UTF16분리·반복시ref만갱신되는flip·모션감소/숨김 조건은실제미검증. 암호화기능아닌표현이고semanticText/글자표현비교 유지 |
+| https://ui.aceternity.com/components/evervault-card | 1500random문자매mousemove·250pxmask·pointer-none·hover표현전체. 장식문단aria-hidden이없어보조기기noise가능성미검증. 정적Text/Card·bounded/seededEffectSurface와대조, 보안/암호화기능으로해석하지않음 |
+
+위소스입력예외는실행하지않았다. Dither의끝부분에나오는bare export DitherShader 문법도컴파일성공으로간주하지않는다. 공개core500전체+1부분·실제9/flow3·후보68경로는변하지않았고다섯경로의구체적근거를같은URL인덱스기존proposal에보강했다.
+
+## Aceternity Manual 후속: 46페이지
+
+FlipWords(https://ui.aceternity.com/components/flip-words) 전체Manual에서 cleanup없는timeout·indexOf기반다음문구·exit/enter복사·UTF16분리를읽었다. HJM TextTransition 사용지침전체와대조했으며 기존API는state문자열전환만제공하고timer/배열/자동순환은제공하지않는다. 단일/빈/중복words가멈추거나실패할가능성은소스조건이고실제로실행하지않았다. 홍보문구순환은정지·읽기시간·정적대체·locale줄바꿈이별도필요하다.
+
+FloatingDock(https://ui.aceternity.com/components/floating-dock) 전체Manual과HJM BottomNavigation지침전체를대조했다. desktop40→80pxspring·pageX/viewport좌표·hover때만title, mobile40pxlinks/toggle의이름·expanded/Escape/focus처리부족은소스관찰이다. HJM의router확정selectedKey·이름·disabled·safearea·keyboard·aria-current·52px이상항목·profilefloating/capsule을재사용하며 새Dock엔진을만들지않는다.
+
+FloatingNavbar(https://ui.aceternity.com/components/floating-navbar) 전체Manual은스크롤위5%에서숨김/위로움직일때표시이고opacity0/y-100에도links는mounted다. mobile은이름을숨기며icon이선택사항, Login은hardcoded행동없는button이다. FocusCards(https://ui.aceternity.com/components/focus-cards) 전체Manual은hover에따른blur·시각titleopacity0이며이미지alt는항상title이다. 이를실제keyboard결함재현이나선택엔진으로계산하지않는다. 기존탐색/카드/이미지의의미·필수내용과본문높이를유지한다.
+
+FollowingPointer(https://ui.aceternity.com/components/following-pointer) 전체Manual은mount때rect·현재scroll좌표·cursor:none·pointer-nonebubble·randomcolor와default고유명사다. 제목ReactNode와cursorgeometry의읽기/가시성·fine-pointer·resize/scroll은실제미검증이다. 제품기본cursor나필수설명을숨기지않고단순장식만옵션으로검토한다. 공개core500+1부분·실제9/flow3·기존68경로는유지하며이번5개후보도인덱스기존경로에합쳤다.
+
+## Floating Dock 실제 데스크톱 키보드 선택 흐름
+
+URL: https://ui.aceternity.com/components/floating-dock
+
+IAB1280×720 dark preview에서7링크의DOM경계가모두40×40px였다. 첫링크에서Tab을실행해두번째Terminal링크에초점이옮겨짐을확인했다. 초점A는href=#,텍스트/aria-label/title없음이며SVG에도이름이없다. 실제AX는7개중6개를이름없는link로보이고AceternityLogo하나만imgalt이름을갖는다. 모든링크는keyboardfocus에도40×40이고hover툴팁/크기확대가나타나지않았으며기본포커스외곽선은보였다.
+
+![Floating Dock dark keyboard focus](assets/parallel-b-aceternity-dock-keyboard.png)
+
+이것은선택키보드초점한흐름이며pointeractivation·mobile·터치·RTL·큰글자·모션감소·가로스크롤좌표검증이아니다. sourceonly였던link이름/keyboard표현중이범위만실제확인으로옮겼다. Aceternity선택시각10/flow4로갱신했고Manual46/공개core500+1부분은동일하다. 기존BottomNavigation의명시라벨/selectedKey/aria-current와상호작용최소크기를재사용하며 탐색크기비교의별도실험등록완료는아니다.
+
+## Aceternity 후속 Manual checkpoint — 50
+
+공개 본문 500전체+1부분과 실제 선택 화면10·flow4는 유지한다. 아래 4 URL은 숨겨진 Manual TSX/CSS 전체를 직접 열어 읽은 추가 범위다. 실제 위험 입력을 실행하거나 문제를 재현한 것으로 세지 않는다.
+
+- https://ui.aceternity.com/components/glare-card : width320/aspect17:21/radius48 고정과 ref 기반 포인터 회전을 확인했다. 300ms timeout 정리와 overlay pointer-events:none이 없으므로 중첩 입력 가림·unmount는 소스상 점검 후보다. 기존 Card 내용/버튼/프로필 geometry + EffectSurface에 표현만 흡수한다.
+- https://ui.aceternity.com/components/glowing-effect : disabled=true 기본이며 활성화 시 body pointermove/window scroll과 RAF는 정리한다. 각 angle animate 반환 handle을 보존/중지하지 않는 점은 실제 연속 입력·unmount 재현이 남았다. 기존 EffectSurface의 영역·환경 lifecycle을 유지한다.
+- https://ui.aceternity.com/components/glowing-stars-effect : 108개 star/18열, 3초마다 5 index 선택과 interval cleanup을 읽었다. 중복 index와 hover+selected glow 중복 가능성은 소스 판단이다. 고정 max-height·색·정지되지 않는 로컬 애니메이션을 기본 Card 계약으로 복사하지 않는다.
+- https://ui.aceternity.com/components/google-gemini-effect : 11,574자 Manual의 10개 SVG path geometry와 filter까지 모두 읽었다. pathLengths[0..4]를 길이 검증 없이 참조하고 blurMe id가 고정이다. sticky/890px absolute 장면·동작 없는 button·local reduced guard 미표시를 확인했지만 scroll·200%·키보드 실제 상태는 미확인이다. Section/Text/Button/ScrollProgress/EffectSurface 합성부터 검토하며 별도 Gemini 기능이나 scroll 엔진을 추가하지 않는다.
+
+이 4 URL의 기존 후보 경로는 각각 카드 깊이 비교/입자와 빛이며 새 경로 수68을 늘리지 않았다. 날짜와 시각 선택은 root가 기존 DatePicker/Select 합성으로 Web·Native 7스토리를 등록했다는 근거만 해당 Magic URL proposal에 연결했다. [사용 지침](../../packages/design-contracts/docs/usage/compositions/date-time-selection.md)·[검증 범위](2026-10-07-date-time-selection.md); Native 기기·승급·게시 및 나머지 후보 등록 완료를 뜻하지 않는다.
+
+## Aceternity 배경·히어로 후속 checkpoint — Manual53
+
+- https://ui.aceternity.com/components/grid-and-dot-backgrounds : 실제 Code 토글4개(상단 중복 Grid 포함)를 각각 열고 전체 읽었다. CSS grid40/20px·dot20px·radial fade이며 motion 런타임을 사용하지 않는다. 고정50rem·literal 색은 기본 토큰으로 복사하지 않는다. 후보 `실험/토큰/표면과 움직임/반복 무늬`의 EffectSurface 선택 표현부터 검토한다.
+- https://ui.aceternity.com/components/hero-highlight : 모든 SVG data URL까지 Manual 전체 읽었다. essential text는 유지하고 pointer-events-none의 200px mask·dots와 Highlight span background2초/.5초delay를 쓴다. 실제 contrast/RTL·focus·touch와 모션 감소는 미검증이다. `글자 표현 비교`의 Text 콘텐츠 계약과 배경 표현을 분리한다.
+- https://ui.aceternity.com/components/hero-parallax : Manual 전체 읽었다. 데이터15개 초과를 자르고300vh·카드30rem·이동±1000px·hardcoded Header를 사용한다. 이미지 alt/anchor는 있으나 제목은 hover만 보인다. `스크롤 장면 비교`에서 제품 데이터·기존 Section/Grid/Image/Link/ScrollProgress 등부터 합성하며 원본 spring/3D 엔진을 복제하지 않는다.
+
+Dock 키보드 증거 [이미지](assets/parallel-b-aceternity-dock-keyboard.png)의 SHA-256: `52a1c4431ebf226a3bc4b22dc5a0225042dc7e57751af9b5db95ba4a76e4e2e2`. 같은 hash를 URL별 인덱스 proofSha256에 저장했다. 현재 공개본문500전체+1부분/Manual53/실제10/선택flow4이며 전체 완료·모든 Usage·실험68개 등록 완료는 여전히 false다.
