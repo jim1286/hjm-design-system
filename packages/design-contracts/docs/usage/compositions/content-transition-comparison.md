@@ -40,7 +40,7 @@ Motion Primitives Transition Panel의 두 제공 예제를 실제 검토한 후�
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
-| 바깥 틀 | Stack | 세로 | `spacing.lg` 20 |
+| 바깥 틀 | Stack·Native ScrollView | 세로, 비교 도구와 단계 viewport를 함께 스크롤 | `spacing.lg` 20 |
 | 표현 선택 | SegmentedControl | 안내 아래 | 공개 `presentation="pills"`, 큰 글자·좁은 화면 줄바꿈 |
 | 탭 본문 | TabPanel·ContentTransition·Stack | 탭 목록 아래 | `spacing.md` 16, 높이는 현재 내용 측정 |
 | 단계 틀 | OnboardingScreen | 표현 선택 아래 | Web preview 70dvh/minHeight 360, Native preview 720. 이는 fixture viewport이며 제품은 실제 가용 높이 사용 |
@@ -106,3 +106,9 @@ import { OnboardingScreen } from "@hjmds/react-native/screen-flows";
 이는 짧은 viewport에서도 body scroll과 footer를 함께 검증하려는 fixture 한계값이며
 제품의 spacing/width 토큰을 높이로 전용하지 않는다. token-boundary-exceptions.json에
 해당 selector·minHeight·360만 한정해 등록했다. 제품 host는 실제 가용 높이를 공급한다.
+
+2026-10-07 실제 iOS 개발 검수에서 비교 도구 아래 720unit 단계 viewport의 footer가
+Canvas 바깥에 있어 다음 버튼에 도달할 수 없었다. Native 비교 host에 바깥 ScrollView를
+추가해 도구와 viewport를 함께 내리며, OnboardingScreen의 내부 본문 scroll과 footer 소유권은
+유지한다. viewport 축소로 실제 화면의 본문/행동 배치를 바꾸는 대안은 사용하지 않았다.
+제품 host는 이 fixture 높이를 복사하지 않고 실제 가용 높이를 공급한다.

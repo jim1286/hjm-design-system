@@ -79,3 +79,11 @@ short viewport에서 OnboardingScreen의 독립 body scroll/footer를 검증하�
 제품의 디자인 토큰과 의미가 달라 기존 geometry exception 형식에 file/selector/property/value를
 정확히 한정하고 source·사용 지침에 이유를 기록했다. 화면 크기/동작 변경은 없으며 이전
 실제 화면 증거는 유지한다. 토큰 검사 재실행 결과는 날짜·시각 QA에도 기록한다.
+
+
+## 선택 Native 흐름 후속
+
+6표현·10테마 초안 유지와 단계 실패/재시도/완료를 실제 iOS에서 확인했다. 도달 불가 footer를 Native preview 바깥 ScrollView로 수정했다.
+선택 dark/RTL 화면도 확인했다. 상세 재현·제약·source SHA·원시 보관 처리는
+[동일 작업 Native 검수 기록](2026-10-07-native-reference-validation.md#8-내용-전환날짜시각명령-기록-후속-검수)에 보존했다.
+Android·VoiceOver·실물/Release 성능·모든 상태/환경 검수·승급·npm 게시 완료는 아니다.

@@ -12,7 +12,7 @@ import { Notice } from "@hjmds/react-native/feedback";
 import { hjmDesignPresets } from "@hjmds/design-contracts/design-profile";
 import { profileOptions } from "../../shared/design-profile";
 import { transitionOptions, transitionSections, transitionCopy as copy, type TransitionChoice, type ContentTransitionComparisonProps } from "../../shared/content-transition-comparison";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 
 export function ContentTransitionComparison({ mode = "tabs" }: ContentTransitionComparisonProps) {
   const id = useId();
@@ -51,7 +51,9 @@ export function ContentTransitionComparison({ mode = "tabs" }: ContentTransition
     index={index} onIndexChange={setIndex} nextLabel={copy.next} backLabel={copy.back}
     complete={{ label: copy.complete, onAction: complete }}
     progressLabel={(current, total) => `${current} / ${total}`} />;
-  return <HjmNativeProvider designProfile={hjmDesignPresets[profile.id]}><Stack gap="lg">
+  // A bounded route plus comparison controls exceeds the canvas. Match the
+  // profile study's outer scroll so the route's existing footer stays reachable.
+  return <HjmNativeProvider designProfile={hjmDesignPresets[profile.id]}><ScrollView keyboardShouldPersistTaps="handled"><Stack gap="lg">
     <Heading level="level4">{copy.title}</Heading><Text>{copy.intro}</Text>
     <Stack gap="sm"><Text>{copy.theme}: {profile.label}</Text>
       <Button tone="secondary" onPress={() => setThemeIndex(current => (current + 1) % profileOptions.length)}>{copy.nextTheme}</Button>
@@ -65,5 +67,5 @@ export function ContentTransitionComparison({ mode = "tabs" }: ContentTransition
     </Stack> : done ? <Stack gap="md"><Notice tone="success" title={copy.done} /><Text>{draft}</Text>
       <Button onPress={() => { setDone(false); setIndex(0); }}>{copy.restart}</Button>
     </Stack> : <View style={{ height: 720 }}>{flow}</View>}
-  </Stack></HjmNativeProvider>;
+  </Stack></ScrollView></HjmNativeProvider>;
 }

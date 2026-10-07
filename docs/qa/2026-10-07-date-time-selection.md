@@ -95,3 +95,11 @@ actions/ref/onStatusChange를 직접 확인했다. tarball SHA-256
 최종 증거 SHA-256:
 - 2026-10-07-date-time-themes.png: `9c6d84e0f4554b97821400dd00926ede288726074efb3e23a998b0da5d501b66`
 - 2026-10-07-date-time-recovery.png: `64d83ae03430071bc1dac020a4bd99ac755b67462e10562458b69b82c5a0db99`
+
+
+## 선택 Native 흐름 후속
+
+달력·시·분 선택, 처리 중 잠금, 실패 후 입력 유지·재시도·초기화를 실제 iOS에서 확인했다.
+선택 dark/RTL 화면도 확인했다. 상세 재현·제약·source SHA·원시 보관 처리는
+[동일 작업 Native 검수 기록](2026-10-07-native-reference-validation.md#8-내용-전환날짜시각명령-기록-후속-검수)에 보존했다.
+Android·VoiceOver·실물/Release 성능·모든 상태/환경 검수·승급·npm 게시 완료는 아니다.

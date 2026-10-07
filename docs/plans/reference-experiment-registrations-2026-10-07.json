@@ -20,7 +20,19 @@
         "LargeText",
         "ReducedMotion",
         "Rtl"
-      ]
+      ],
+      "maximumFontExcluded": true,
+      "nativeValidation": {
+        "evidence": "docs/qa/2026-10-07-native-reference-validation.md",
+        "status": "selected-ios-development-flows-verified",
+        "scope": "Actual iPhone17Pro/iOS26.5 development UI: edited draft across six motion choices and ten named presets; fixed unreachable step footer and verified back/next, failure with draft retention, retry, done and restart. Selected dark/RTL/reduced views; no performance or AT claim.",
+        "unverified": [
+          "Android",
+          "physical-device and Release performance",
+          "VoiceOver traversal",
+          "published-consumer adoption"
+        ]
+      }
     },
     {
       "path": "실험/구성/선택과 필터/날짜와 시각 선택",
@@ -41,7 +53,19 @@
         "Dark",
         "LargeText",
         "Rtl"
-      ]
+      ],
+      "maximumFontExcluded": true,
+      "nativeValidation": {
+        "evidence": "docs/qa/2026-10-07-native-reference-validation.md",
+        "status": "selected-ios-development-flows-verified",
+        "scope": "Actual iPhone17Pro/iOS26.5 development UI: calendar month/cancel/select, hour and minute, pending lock, failed request retains 2026-09-16 09:05, retry success and reset. Selected disabled/dark/RTL views; not all preset/state combinations.",
+        "unverified": [
+          "Android",
+          "physical-device and Release performance",
+          "VoiceOver traversal",
+          "published-consumer adoption"
+        ]
+      }
     },
     {
       "path": "실험/구성/정보 표시/명령 기록 표시",
@@ -64,7 +88,19 @@
         "LargeText",
         "ReducedMotion",
         "Rtl"
-      ]
+      ],
+      "maximumFontExcluded": true,
+      "nativeValidation": {
+        "evidence": "docs/qa/2026-10-07-native-reference-validation.md",
+        "status": "selected-ios-development-flows-verified",
+        "scope": "Actual iPhone17Pro/iOS26.5 development UI: wrap/horizontal touch, command/output, ten named presets retaining source, failed refresh/retry and copy-error guide. Actual iOS Copy menu copied synthetic command bytes including newline exactly; previous simulator clipboard restored privately. Selected dark/RTL/reduced views.",
+        "unverified": [
+          "Android",
+          "physical-device and Release performance",
+          "VoiceOver traversal",
+          "published-consumer adoption"
+        ]
+      }
     },
     {
       "path": "실험/구성/비교와 검증/테마 조합",

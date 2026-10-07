@@ -274,3 +274,11 @@ bitmap이나 코드를 복제하지 않았다. QA·최종 그림을 보존한 �
   }
 ]
 ```
+
+
+## 선택 Native 흐름 후속
+
+긴 줄 touch·10테마 원문 유지·실패/재시도를 실제 iOS에서 확인했다. 시스템 Copy가 합성 원문 bytes 및 마지막 줄바꿈과 일치했고 이전 simulator clipboard를 복원했다.
+선택 dark/RTL 화면도 확인했다. 상세 재현·제약·source SHA·원시 보관 처리는
+[동일 작업 Native 검수 기록](2026-10-07-native-reference-validation.md#8-내용-전환날짜시각명령-기록-후속-검수)에 보존했다.
+Android·VoiceOver·실물/Release 성능·모든 상태/환경 검수·승급·npm 게시 완료는 아니다.
