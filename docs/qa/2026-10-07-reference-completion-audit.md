@@ -4,7 +4,7 @@
 
 2026-10-07. 시작 HJM main 372ba71efe61f466c259fde949812809ee6e430f.
 최신 사용자 “이제 조사 마무리해”, “필요한것만 조사해”에 따라 외부 전수 수집을 재개하지 않는다.
-초기 감사는 실제 요구의 코드/등록/게시/소비 상태를 대조했으며 소비 설치/변경·기기 조작을 실행하지 않았다. 이후 22:28 KST 소비 반영은 §8에 따로 기록한다. 후속에서도 버전 상승·npm 게시·CI dispatch·기기 조작은 수행하지 않았다.
+초기 감사는 실제 요구의 코드/등록/게시/소비 상태를 대조했으며 소비 설치/변경·기기 조작을 실행하지 않았다. 이후 22:28/22:45 KST 소비 반영은 §8/§9에 따로 기록한다. 후속에서도 버전 상승·npm 게시·CI dispatch·기기 조작은 수행하지 않았다.
 OS 최대 글자/최대값 모사는 모든 판단·검사·후속·차단에서 제외한다. 일반 배율 API/과거 기록은 보존한다.
 
 ## 2. 요구와 authoritative 근거
@@ -18,7 +18,7 @@ OS 최대 글자/최대값 모사는 모든 판단·검사·후속·차단에서
 | 조사 후 필요한 실험 등록 | 등록7개 각 Web/Native Story title·usage·QA 파일 직접대조 | 신규6개+기존 테마 개선1개. 기존 OverviewScreen까지 관련 메뉴8개. 규격 경로 일치 |
 | 필요한 누락 개선/검증 | profile QA의 모서리/제목/UI 서체/Toast 후속과 Native QA§9 | 현재 main 수정. 직전 집중 회귀27건/build/typecheck/규격·graph 검사를 기록. 이번 감사로 모든 플랫폼/AT/성능 통과를 추가하지 않음 |
 | 검토 후 후속8개 승급·npm 게시 | AGENTS 명시 승인 규칙, navigation§2 기존17개 승인, 후속8개 검토팩 | 기존 승인 대상17개와 후속8개를 구분. 사용자 확인 질문 대기; 현재 실험 유지. 승인/게시 완료 아님 |
-| 게시 후 소비 제품 버전 갱신 | npm latest·remote tag·원격 main 계약/중앙 record | 중앙/BurnTok/Portfolio Site/Unairplane1.15.0 확인. 나머지6개1.14.0 갱신 필요. 공유 local1.14.0만 보고 원격 누락이라 판단하지 않음 |
+| 게시 후 소비 제품 버전 갱신 | npm latest·remote tag·원격 main 계약/중앙 record | 중앙/BurnTok/Portfolio Site/Unairplane/Spint/Mofun1.15.0 확인. 나머지4개1.14.0 갱신 필요. 공유 local1.14.0만 보고 원격 누락이라 판단하지 않음 |
 
 ## 3. 공식 게시본 확인
 
@@ -38,16 +38,16 @@ GitHub Release 목록은 비어 있었지만 npm 부재의 증거로 쓰지 않�
 
 ## 4. 현재 소비 상태
 
-2026-10-07 22:28 KST 원격 GitHub main의 app.contract.json을 다시 직접 읽었다. 아래 blob은 계약 파일의 Git blob이며 runtime/lock/install/QA 영수증이 아니다. Portfolio Site·Unairplane의 실제 설치와 검사는 §8의 제품 QA를 따른다.
+2026-10-07 22:45 KST 원격 GitHub main의 app.contract.json을 다시 직접 읽었다. 아래 blob은 계약 파일의 Git blob이며 runtime/lock/install/QA 영수증이 아니다. Portfolio Site·Unairplane의 실제 설치와 검사는 §8의 제품 QA를 따른다.
 
 | 제품 | train | contract blob |
 | --- | --- | --- |
 | BurnTok | 1.15.0 | d8932e5c092712e4151eaac610edb35373237d78 |
 | Portfolio Site | 1.15.0 | 66d69de715b455f08b9640062b65e309f9a0eef0 |
 | Unairplane | 1.15.0 | 6bbcf214325891e11904ddd8906c296f7f337368 |
-| Spint | 1.14.0 | 1ee96af847cb7c3df4f33475f91bb0706cf3be5e |
+| Spint | 1.15.0 | cdc5e29e0bf58bbcbd285e99856afa35fa701774 |
 | Diairy | 1.14.0 | 2c3b318e5689fb5f7bece2bd9594c13f87fbb9ce |
-| Mofun | 1.14.0 | a6fcacd9e01ec0381861d7ed91c4839fef28b710 |
+| Mofun | 1.15.0 | bdced754956c5766ab7daeacbedc8c90dd64ec8d |
 | Utilverse | 1.14.0 | b72da3316bf006322403a541c0b1845512a493be |
 | Choose Window | 1.14.0 | 4dbfd83cee6ab84f7a52c4006d73ad3948a57859 |
 | Yajalal | 1.14.0 | cd0056c7bd358acf6a31fca5b7c00768b9076a1b |
@@ -60,7 +60,7 @@ GitHub Release 목록은 비어 있었지만 npm 부재의 증거로 쓰지 않�
 
 후속8개 승급·npm 게시 승인 확인 뒤 승인 대상만 첫 마디/usage/승인 기록을 함께 변경한다.
 후속 release는 actual version intent 단계에서 기존 원격 CI/게시 정책을 따른다.
-남은6개 소비 제품은 최신 remote main 기반 분리 checkout에서 manifest/lock/contract/catalog/표준을 정합하게 갱신하고 실제 필요한 회귀를 확인한다.
+남은4개 소비 제품은 최신 remote main 기반 분리 checkout에서 manifest/lock/contract/catalog/표준을 정합하게 갱신하고 실제 필요한 회귀를 확인한다.
 제품 브랜드/폰트 자산·설정 저장·라우팅·서버 확정은 제품 소유다.
 Native Android·실물/Release 성능·VoiceOver 순회와 모든 테마/상태/플랫폼 조합은 미확인이며 현재 조사 마감 조건으로 다시 추가하지 않는다.
 
@@ -94,3 +94,20 @@ contracts tarball을 본인 temp에만 추출해 Node24에서 design-profile.js�
 일반 변경의 커밋·squash 제목에 `[skip ci]`를 넣고 CI dispatch를 실행하지 않았다. Portfolio Site의 GitHub default CodeQL은 이를 무시하고 PR/main에서 자동 시작해 이번 변경에 해당하는 runs37628062009/37628158259를 취소했으며 둘 다 completed/cancelled를 확인했다. required gate를 우회하는 admin merge는 사용하지 않았다. Unairplane의 이 merge에 새 workflow run은 관찰되지 않았다.
 
 Vite/Expo 임시 bundles는 제품 QA에 file count/bytes/manifest SHA를 기록한 뒤 제거했다. 브라우저·기기·실물/Release 성능·운영 API·서비스 배포/스토어 제출은 미수행이다. 후속8개 승급·게시 승인 대기는 별도이며 남은6개는 Spint·Diairy·Mofun·Utilverse·Choose Window·Yajalal이다.
+
+## 9. Spint·Mofun 소비 반영 — 22:45 KST
+
+두 제품은 모바일만 HJM을 소비하며 서버·SDK·브랜드 source·앱 version은 바꾸지 않았다. exact1.15.0 frozen 설치, 모바일 workspace4개 TS build, 모바일 type/unit/e2e, i18n/계약/문서, 중앙 scaffold/library, iOS/Android Hermes exports를 확인했다. source alias/stub의 계약 시험은 실제 기기 UI 검증으로 확대하지 않는다. 전체 root/server canonical은 이번 범위에서 미실행이다.
+
+| 제품 | 실제 통합과 QA | 확인한 결과 |
+| --- | --- | --- |
+| Spint | [PR19](https://github.com/jim1286/spint/pull/19) MERGED, head7c39eafe5d45d0c4a78ad341b390998709bf0288 → main33378c30246cdc473e99030ec1ecdfe8eed6b30d; [QA](https://github.com/jim1286/spint/blob/33378c30246cdc473e99030ec1ecdfe8eed6b30d/docs/qa/2026-10-07-hjm-1-15-upgrade.md) | unit43파일272건, flow9건, i18n 생성4건; JS iOS4,053/Android4,069modules. 기존 peer3그룹과 sourcemap 원문 누락·Vite 설정 예고 경고는 보존 |
+| Mofun | [PR6](https://github.com/jim1286/mofun/pull/6) MERGED, headd555a148bd5a1dc89fa942c23c6b60b1ae9503d9 → main360018e9c918365bc74413ca5c2b587fcfd22a64; [QA](https://github.com/jim1286/mofun/blob/360018e9c918365bc74413ca5c2b587fcfd22a64/docs/qa/2026-10-07-hjm-1-15-upgrade.md) | unit4파일39건, contract e2e7건; JS iOS3,671/Android3,766modules. 기존 peer6그룹은 해결됐다고 보고하지 않음 |
+
+공식 registry integrity와 설치 버전을 확인했고 YAML 구조로 HJM 외 packages/snapshots/importer record가 바뀌지 않았음을 확인했다. 이전1.14와 새1.15의 외부 Native peer 요구도 동일하다. old exact 냉각 예외는 lock 선행 검증 중만 유지한 뒤 제거했다.
+
+Mofun의 초기 중앙 검사 STALE_LIBRARY_ADOPTION은 product7manifest에 없는 expo-dev-client 채택 기록1개가 원인이었다. 없는 의존성을 다시 넣는 대신 중앙 record만 제거한 [메타 PR12](https://github.com/jim1286/app-portfolio/pull/12)를 main8b70e6cda8e32fef1a3aa144198426a4cd1ad9c0에 통합했다. 중앙 문서129개·현재 지침12개와 Mofun7manifest/58라이브러리/1Query 정적 검사가 통과했다.
+
+일반 커밋/merge 제목의 `[skip ci]`와 version-file-only 기존 정책을 유지했다. 별도 원격 CI dispatch·npm 게시·Native build·서비스/스토어 배포를 하지 않았으며 두 merge SHA에 해당하는 신규 main workflow run도 관찰되지 않았다. TS/Metro 산출물은 각 제품 QA의 manifest digest를 남긴 뒤 제거하고 본인 설치만 정리했다. 공유 작업은 보존했다.
+
+9개 소비 main 중5개(BurnTok·Portfolio Site·Unairplane·Spint·Mofun)가1.15.0이다. 나머지 Diairy·Utilverse·Choose Window·Yajalal4개는 원격 계약을 다시 읽어1.14.0임을 확인했다. 후속8개 실험 승급/게시 승인 대기는 별도다.

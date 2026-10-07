@@ -550,11 +550,11 @@ B의 [별도 복구 인덱스](../qa/2026-10-07-reference-parallel-b-21st-recove
 CollectionRail 진입점과 renderer Text.fontRole, EffectSurface ruledSpacing은 1.15.0에 없다.
 따라서 기본 테마 제공과 이번 후속 구현의 게시를 합산하지 않는다. GitHub Release 목록은 비어 있지만 npm 게시 부재의 근거가 아니며, remote v1.15.0 tag는 commit 9aa33e2063dc65d0427697fb5a20b48ab7cba387을 가리킨다.
 
-현재 공유 checkout에서 확인한 중앙 release record와 9개 소비 제품의 manifest/contract는 1.14.0이다.
+초기 공유 checkout에서 확인한 중앙 release record와9개 소비 제품의 manifest/contract는1.14.0이었다. 이 working-copy 기록은 아래 최신 원격 상태의 대체 근거가 아니다.
 이는 다른 branch/worktree/remote에 1.15.0 갱신이 없다는 증거가 아니다. 소비 버전 변경 전 각 저장소의 branch/worktree와 진행 중 작업을 먼저 대조한다.
 이미 게시된 1.15.0의 소비 갱신은 사용자의 “릴리즈 되면 다른 곳들도 버전업” 범위에 있으며, 후속 8개 실험 승급·npm 게시 승인은 별도 질문으로 확인 중이다.
-이 확인에서 버전 상승·원격 CI·앱 build/배포·소비 저장소 수정은 수행하지 않았다.
+초기 게시 확인에서는 version 상승·CI dispatch·앱 build/배포·소비 수정이 없었다. 아래 소비 후속의 실제 검사/merge는 별도로 기록한다.
 
 원격 main 재확인: 중앙 release record blob b3bde1e6c80521361902ec8da33e3c3c287ffed0과 BurnTok contract blob d8932e5c092712e4151eaac610edb35373237d78은 1.15.0이다.
 22:28 KST 후속: Portfolio Site PR25와 Unairplane PR18을 게시 1.15.0으로 갱신하고 main merge 및 원격 계약을 확인했다. 제품별 frozen 설치·로컬 검사와 한계는 [완료 감사 §8](../qa/2026-10-07-reference-completion-audit.md#8-게시-1150-소비-반영--2228-kst)에 기록했다. Spint·Diairy·Mofun·Utilverse·Choose Window·Yajalal의 원격 main 계약은 아직1.14.0이다.
-공유 checkout의 dirty와 stale local refs 때문에 설치/merge를 직접 수행하지 않는다. 이미 완료된 BurnTok·Portfolio Site·Unairplane 갱신은 중복하지 않으며 나머지6개를 최신 원격 main에서 분리해 갱신한다.
+공유 checkout의 dirty와 stale local refs 때문에 설치/merge를 직접 수행하지 않는다. 22:45 KST 후속: Spint PR19와 Mofun PR6도 게시1.15.0으로 갱신해 main merge와 원격 계약을 확인했다. 검사·경고·메타 PR12 정리는 [완료 감사 §9](../qa/2026-10-07-reference-completion-audit.md#9-spintmofun-소비-반영--2245-kst)를 따른다. 이미 완료된5개 갱신은 중복하지 않으며 Diairy·Utilverse·Choose Window·Yajalal4개를 최신 원격 main에서 분리해 갱신한다.
