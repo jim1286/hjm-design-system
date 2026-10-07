@@ -174,3 +174,5 @@ Node24.20/pnpm11.24의 frozen 설치, 웹·앱/공용 타입, 중복 제외2444u
 기여 지침의 로컬 전체 gate가 기존 CollectionRail 경계 목록/Metro import fixture, Text.fontRole 속성 순서 검사, font resolver를 token 값으로 센 Native Showcase 검사에서 멈춘 것을 보완했다. contracts1030/Web SSR278/browser1156/Native1263(+기존12skip), Native Metro700modules, governance45/Showcase Native21/Web48 및 production/static·사용 지침/Storybook/generated drift를 구간별로 통과했다. 단일 ci:check 성공으로 보고하지 않는다. 다른 세션19 dirty paths와 공유 runtime을 보존하며 원격 CI dispatch·train 버전 상승·npm 게시를 하지 않았다.
 
 이 source 보완은 게시1.15.0에 없고 Diairy client wrapper는 유지한다.9개 소비 main의1.15 채택 proof와 후속8개 승급·게시 승인 대기는 그대로다. 새 실험·외부 전수 조사를 추가하지 않았다.
+
+마지막 source 보완은 로컬 main e0d5b39f804e41a70d8b874cb8e9c51f78a4b7f6에 commit했으나 GitHub HTTPS push3회가 Internal Server Error로 거절됐고 SSH 인증도 실패했다. 원격 main f2d77534bd4ca136f554a6833355c0bc70f0e055을 다시 확인해 미반영으로 남겼다. 앞서 통합 완료된9개 소비 제품 main과 필요한 조사/실험 등록 완료 상태를 되돌리는 실패는 아니다. 마지막 source fix의 원격 반영과8개 승급·게시 승인이 각각 남아 있다.
