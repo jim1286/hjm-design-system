@@ -860,6 +860,8 @@ export type AccordionProps<Value extends string = string> = Readonly<{
   layoutStyle?: HjmCompositionStyleProp;
 }>;
 
+
+// UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export function Accordion<Value extends string = string>({
   label,
   items,
@@ -967,6 +969,7 @@ export function Accordion<Value extends string = string>({
             >
               <View style={{ flex: 1, gap: spacing.xxs }}>
                 <Text
+              fontRole="ui"
                   style={[
                     {
                       color: resolveColorReference(

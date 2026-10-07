@@ -286,6 +286,7 @@ export function Skeleton({ shape = skeletonRecipe.defaults.shape, animated = ske
             layoutStyle,
         ] }));
 }
+// UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 function ToastSurface({ snapshot, managedMotion = false, announces = true, suspended = false, onDismiss, onAction, onExitComplete, onPause, onResume, placement, renderToneIcon, style, }) {
     const resolved = snapshot.descriptor;
     const theme = useHjmNativeTheme();
@@ -416,7 +417,7 @@ function ToastSurface({ snapshot, managedMotion = false, announces = true, suspe
                     minHeight: toastRecipe.action.minHeight,
                     opacity: pressed ? toastRecipe.states.pressedOpacity : 1,
                     paddingHorizontal: managedMotion ? 0 : toastRecipe.action.paddingHorizontal,
-                }), children: _jsx(Text, { style: {
+                }), children: _jsx(Text, { fontRole: "ui", style: {
                         color: resolveColorReference(toastRecipe.action.color, theme.palette),
                         fontWeight: toastRecipe.action.fontWeight,
                     }, variant: toastRecipe.action.textVariant, children: resolved.action.label }) })) : null] }));

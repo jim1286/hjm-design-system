@@ -11,6 +11,10 @@ export function Top({ descriptor, trailing, layoutStyle, style }) {
     const theme = useHjmNativeTheme();
     const size = descriptor.size ?? topDefaults.size;
     const metrics = topRecipe.sizes[size];
+    // Match the Web visual role without coupling it to the document heading level.
+    const title = theme.designProfile
+        ? size === "large" ? theme.designProfile.tokens.heading.level2 : theme.tokens.typography.titleLarge
+        : metrics.title;
     // Large text stacks the trailing action instead of squeezing the title, the
     // same rule Section already applies to its own header row.
     const stack = theme.environment.textScale >= 1.6;
@@ -25,9 +29,9 @@ export function Top({ descriptor, trailing, layoutStyle, style }) {
                 }, children: [_jsx(Text, { accessibilityRole: "header", style: {
                             color: resolveColorReference(topRecipe.title.color, theme.palette),
                             flex: stack ? undefined : 1,
-                            fontSize: metrics.title.fontSize,
-                            fontWeight: metrics.title.fontWeight,
-                            lineHeight: metrics.title.lineHeight,
+                            fontSize: title.fontSize,
+                            fontWeight: title.fontWeight,
+                            lineHeight: title.lineHeight,
                         }, children: descriptor.title }), trailing ? _jsx(View, { children: trailing }) : null] }), descriptor.description ? (_jsx(Text, { style: { color: resolveColorReference(topRecipe.description.color, theme.palette) }, variant: topRecipe.description.textVariant, children: descriptor.description })) : null] }));
 }
 //# sourceMappingURL=top.js.map

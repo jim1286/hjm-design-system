@@ -25,7 +25,8 @@ export const SkipNav = forwardRef<HTMLAnchorElement, SkipNavProps>(function Skip
       style={{
         "--hjm-skip-nav-min-height": `${skipNavRecipe.minHeight}px`,
         "--hjm-skip-nav-padding": `${skipNavRecipe.paddingHorizontal}px`,
-        "--hjm-skip-nav-radius": `${skipNavRecipe.radius}px`,
+        // The corner follows the nearest profile; pinned focus placement stays recipe-owned.
+        "--hjm-skip-nav-radius": `var(--hjm-radius-md, ${skipNavRecipe.radius}px)`,
         "--hjm-skip-nav-offset": `${skipNavRecipe.offset}px`,
       } as CSSProperties}
       onClick={(event) => {

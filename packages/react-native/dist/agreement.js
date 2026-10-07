@@ -8,6 +8,7 @@ import { mixedCheckboxState } from "./internal/state.js";
 import { Text } from "./primitives.js";
 import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
+// UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export function Agreement({ descriptor, checkedIds: controlledChecked, defaultCheckedIds, onCheckedIdsChange, onStateChange, onDetail, requiredLabel, optionalLabel, layoutStyle, style, }) {
     warnDeprecatedStyleProps("Agreement", { style }, "layoutStyle for placement; agreementRecipe owns appearance");
     validateAgreementDescriptor(descriptor);
@@ -68,7 +69,7 @@ export function Agreement({ descriptor, checkedIds: controlledChecked, defaultCh
                     minHeight: agreementRecipe.all.minHeight,
                     paddingHorizontal: agreementRecipe.all.paddingHorizontal,
                     paddingVertical: agreementRecipe.all.paddingVertical,
-                }, children: [mark(state.all), _jsx(Text, { variant: agreementRecipe.all.textVariant, children: descriptor.allLabel })] }), descriptor.items.map((item) => (_jsxs(View, { style: { gap: spacing.xxs }, children: [_jsxs(View, { style: { alignItems: "center", flexDirection: "row", flexWrap: "wrap", gap: spacing.xs }, children: [_jsxs(Pressable
+                }, children: [mark(state.all), _jsx(Text, { fontRole: "ui", variant: agreementRecipe.all.textVariant, children: descriptor.allLabel })] }), descriptor.items.map((item) => (_jsxs(View, { style: { gap: spacing.xxs }, children: [_jsxs(View, { style: { alignItems: "center", flexDirection: "row", flexWrap: "wrap", gap: spacing.xs }, children: [_jsxs(Pressable
                             // Named explicitly so the check glyph never leaks into the name ("✓, Terms").
                             , { 
                                 // Named explicitly so the check glyph never leaks into the name ("✓, Terms").
@@ -85,6 +86,6 @@ export function Agreement({ descriptor, checkedIds: controlledChecked, defaultCh
                                     flexDirection: "row",
                                     gap: agreementRecipe.item.gap,
                                     minHeight: agreementRecipe.item.minHeight,
-                                }, children: [mark(checked.has(item.id)), _jsx(Text, { style: { flex: 1 }, variant: agreementRecipe.item.label.textVariant, children: `${item.label} ${item.required === true ? requiredLabel : optionalLabel}` })] }), item.detail ? (_jsx(Pressable, { accessibilityRole: "button", onPress: () => onDetail?.(item.id), style: { justifyContent: "center", maxWidth: "100%", minHeight: agreementRecipe.detail.minHeight, paddingHorizontal: spacing.xs }, children: _jsx(Text, { style: { color: resolveColorReference(agreementRecipe.detail.color, theme.palette), textDecorationLine: "underline" }, variant: agreementRecipe.detail.textVariant, children: item.detail.label }) })) : null] }), item.description ? (_jsx(Text, { style: { color: resolveColorReference(agreementRecipe.item.description.color, theme.palette), paddingStart: spacing.xl }, variant: agreementRecipe.item.description.textVariant, children: item.description })) : null] }, item.id)))] }));
+                                }, children: [mark(checked.has(item.id)), _jsx(Text, { fontRole: "ui", style: { flex: 1 }, variant: agreementRecipe.item.label.textVariant, children: `${item.label} ${item.required === true ? requiredLabel : optionalLabel}` })] }), item.detail ? (_jsx(Pressable, { accessibilityRole: "button", onPress: () => onDetail?.(item.id), style: { justifyContent: "center", maxWidth: "100%", minHeight: agreementRecipe.detail.minHeight, paddingHorizontal: spacing.xs }, children: _jsx(Text, { style: { color: resolveColorReference(agreementRecipe.detail.color, theme.palette), textDecorationLine: "underline" }, variant: agreementRecipe.detail.textVariant, children: item.detail.label }) })) : null] }), item.description ? (_jsx(Text, { style: { color: resolveColorReference(agreementRecipe.item.description.color, theme.palette), paddingStart: spacing.xl }, variant: agreementRecipe.item.description.textVariant, children: item.description })) : null] }, item.id)))] }));
 }
 //# sourceMappingURL=agreement.js.map

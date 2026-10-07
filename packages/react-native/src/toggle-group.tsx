@@ -29,6 +29,8 @@ export type ToggleGroupProps<Id extends string = string> = Readonly<{
   style?: StyleProp<ViewStyle>;
 }>;
 
+
+// UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export function ToggleGroup<Id extends string = string>({
   descriptor,
   pressedIds: controlledPressed,
@@ -81,6 +83,7 @@ export function ToggleGroup<Id extends string = string>({
             }}
           >
             <Text
+              fontRole="ui"
               style={{ color: resolveColorReference(tone.color, theme.palette) }}
               variant={metrics.textVariant}
             >

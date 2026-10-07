@@ -99,3 +99,9 @@ import { UploadItem } from "@hjmds/react-native/upload-item";
 | 루트 | `role="group"`, `aria-label`=파일명, `HTMLAttributes`·`ref`·`layoutStyle` 전달 | 일반 `View`, `layoutStyle`(`style`은 deprecated) |
 | 상태 낭독 | 상태 문장 live region | 파일 정보 묶음이 한 요소(`busy` state, value=상태 문장), 액션은 별도 버튼 |
 | `leading` | `aria-hidden` | 접근성 트리에서 숨김 |
+
+### 프로필 모서리·제목 소비
+
+2026-10-07 소비 감사에서 Native 행의 모서리 12가 프로필을 우회했다. Web의 기존 `radius.md`와 같은 역할을 Native도 가까운 프로필에서 읽으며, 프로필이 없으면 기존 12를 유지한다. 업로드 상태·취소/재시도·진행 알림은 바꾸지 않는다.
+
+프로필 연결은 1.15.0 이후 미게시 변경이며, 기본 배포 계약과 실제 Native 기기 검증은 구분한다.

@@ -6,6 +6,7 @@ import { Pressable, View } from "react-native";
 import { Text } from "./primitives.js";
 import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
+// UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export function ToggleGroup({ descriptor, pressedIds: controlledPressed, defaultPressedIds, onPressedIdsChange, size = toggleGroupRecipe.defaults.size, layoutStyle, style, }) {
     warnDeprecatedStyleProps("ToggleGroup", { style }, "layoutStyle for placement; toggleGroupRecipe (size) owns appearance");
     validateToggleGroupDescriptor(descriptor);
@@ -37,7 +38,7 @@ export function ToggleGroup({ descriptor, pressedIds: controlledPressed, default
                     minHeight: metrics.minHeight,
                     opacity: item.disabled === true ? 0.5 : 1,
                     paddingHorizontal: metrics.paddingHorizontal,
-                }, children: _jsx(Text, { style: { color: resolveColorReference(tone.color, theme.palette) }, variant: metrics.textVariant, children: item.label }) }, item.id));
+                }, children: _jsx(Text, { fontRole: "ui", style: { color: resolveColorReference(tone.color, theme.palette) }, variant: metrics.textVariant, children: item.label }) }, item.id));
         }) }));
 }
 //# sourceMappingURL=toggle-group.js.map

@@ -255,6 +255,8 @@ export type LinkProps = Omit<
     style?: StyleProp<ViewStyle>;
   }>;
 
+
+// UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export function Link({
   descriptor,
   onNavigate,
@@ -323,6 +325,7 @@ export function Link({
     >
       {leadingNode ? <View accessible={false}>{leadingNode}</View> : null}
       <Text
+              fontRole="ui"
         style={{ color: colors.contentBrand, textDecorationLine: "underline" }}
         variant="bodyLarge"
       >

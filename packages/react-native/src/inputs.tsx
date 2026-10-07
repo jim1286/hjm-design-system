@@ -1096,6 +1096,8 @@ type ChoiceRowProps = ChoiceVisualProps & Readonly<{
   webTabIndex?: number | undefined;
 }>;
 
+
+// UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 function ChoiceRow({
   kind,
   label,
@@ -1266,6 +1268,7 @@ function ChoiceRow({
       ) : null}
       <View style={[{ flex: 1, gap: spacing.xxs, minWidth: 0 }, contentStyle]}>
         <Text
+              fontRole="ui"
           style={[
             {
               color: resolveColorReference(selectionControlRecipe.label.color, theme.palette),
@@ -1888,28 +1891,28 @@ export function Switch({
           opacity: disabled ? switchRecipe.states.disabledOpacity : 1,
         }}
       >
-        <Text tone="body" variant="bodyLarge">{label}</Text>
+        <Text fontRole="ui" tone="body" variant="bodyLarge">{label}</Text>
         {description ? (
           <Text tone="muted" variant="caption">{description}</Text>
         ) : null}
       </View> : null}
+      {/* iOS UISwitch has a fixed intrinsic size (about 66pt wide on iOS 26) that
+          ignores a smaller box: forcing the recipe box drew the control from the box's
+          top-start corner, so it overflowed up and to the end and sat above the row's
+          centre in two-line rows (reported 2026-09-27, iPhone 17 Pro). On iOS we let the
+          native size drive layout so `alignItems: center` centres the real track.
+          Rejected: an oversized centring wrapper — it has to guess the per-OS UISwitch
+          size, which is exactly the number that changed. Android honours the box.
+          RN's iOS Switch composes `alignSelf: "flex-start"` under the caller's style,
+          which overrode this row's `alignItems: center` and pinned the track to the
+          row top, 8-10pt above the label centre (2026-09-30 audit, iOS 27). Restate
+          the row's cross-axis alignment explicitly. */}
       <NativeSwitch
         {...props}
         accessible={false}
         disabled={disabled}
         ios_backgroundColor={trackOff}
         pointerEvents="none"
-        // iOS UISwitch has a fixed intrinsic size (about 66pt wide on iOS 26) that
-        // ignores a smaller box: forcing the recipe box drew the control from the box's
-        // top-start corner, so it overflowed up and to the end and sat above the row's
-        // centre in two-line rows (reported 2026-09-27, iPhone 17 Pro). On iOS we let the
-        // native size drive layout so `alignItems: center` centres the real track.
-        // Rejected: an oversized centring wrapper — it has to guess the per-OS UISwitch
-        // size, which is exactly the number that changed. Android honours the box.
-        // RN's iOS Switch composes `alignSelf: "flex-start"` under the caller's style,
-        // which overrode this row's `alignItems: center` and pinned the track to the
-        // row top, 8-10pt above the label centre (2026-09-30 audit, iOS 27). Restate
-        // the row's cross-axis alignment explicitly.
         style={Platform.OS === "ios"
           ? { alignSelf: stacked ? "flex-start" : "center" }
           : { height: dimensions.height, width: dimensions.width }}
@@ -2142,6 +2145,7 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
               </View>
             ) : null}
             <Text
+              fontRole="ui"
               align="center"
               style={{
                 color: contentColor,
@@ -2307,6 +2311,7 @@ export function Chip({
         </View>
       ) : null}
       <Text
+              fontRole="ui"
         align="center"
         style={[
           {

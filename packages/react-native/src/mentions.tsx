@@ -43,6 +43,8 @@ export type MentionsProps<TriggerId extends string = string> =
     listStyle?: StyleProp<ViewStyle>;
   }>;
 
+
+// UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export function Mentions<TriggerId extends string = string>({
   value,
   onValueChange,
@@ -123,7 +125,8 @@ export function Mentions<TriggerId extends string = string>({
                 onPress={() => insert(candidate)}
                 style={{ minHeight: 44, justifyContent: "center", paddingHorizontal: spacing.xs }}
               >
-                {renderCandidate?.(candidate) ?? <Text>{candidate.label}</Text>}
+                {renderCandidate?.(candidate) ?? <Text
+              fontRole="ui">{candidate.label}</Text>}
               </Pressable>
             ))
           )}

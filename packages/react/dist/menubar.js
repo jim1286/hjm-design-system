@@ -58,7 +58,8 @@ export function Menubar({ descriptor, openMenuId: controlledOpen, defaultOpenMen
             "--hjm-menubar-gap": `${menubarRecipe.gap}px`,
             "--hjm-menubar-padding": `${menubarRecipe.paddingHorizontal}px`,
             "--hjm-menubar-label-padding": `${menubarRecipe.label.paddingHorizontal}px`,
-            "--hjm-menubar-label-radius": `${menubarRecipe.label.radius}px`,
+            // Consume the label sm role through CSS inheritance, retaining standalone recipe geometry.
+            "--hjm-menubar-label-radius": `var(--hjm-radius-sm, ${menubarRecipe.label.radius}px)`,
         }, onKeyDown: (event) => {
             if (event.key === "ArrowRight") {
                 event.preventDefault();

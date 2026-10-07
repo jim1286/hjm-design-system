@@ -10,6 +10,7 @@ import { Text } from "./primitives.js";
 import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 import { resolveNativeFontStyle, resolveNativeTextScaleProps } from "./internal/styles.js";
+// UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export function TagsInput({ label, tags: controlledTags, defaultTags, onTagsChange, onReject, onDraftChange, policy, suggestions, suggestionsLabel, composeRemoveLabel, placeholder, description, disabled = false, layoutStyle, style, }) {
     warnDeprecatedStyleProps("TagsInput", { style }, "layoutStyle for placement; tagsInputRecipe owns appearance");
     const { palette, tokens, textScaling } = useHjmNativeTheme();
@@ -61,15 +62,6 @@ export function TagsInput({ label, tags: controlledTags, defaultTags, onTagsChan
                             paddingHorizontal: spacing.xs,
                             borderRadius: 999,
                             backgroundColor: surface,
-                        }, children: [_jsx(Text, { style: { color: content }, children: tag }), _jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: composeRemoveLabel(tag), disabled: disabled, 
-                                // The visible chip is small; the touch target is not.
-                                hitSlop: tagsInputRecipe.remove.minTouchTarget / 2, onPress: () => setTags(removeTagAt(tags, index)), children: _jsx(FixedGlyph, { color: content, children: "\u00D7" }) })] }, `${tag}-${index}`))), _jsx(TextInput, { accessibilityLabel: label, editable: !disabled, placeholder: placeholder, value: draft, onChangeText: changeDraft, 
-                        // There is no keyboard commit vocabulary here: the return key is the
-                        // only reliable one on a phone, so Comma/Space/Blur stay Web-only.
-                        onSubmitEditing: () => commit(draft), 
-                        // Return adds a tag and the next one follows, so keep the keyboard up.
-                        // The single-line default ("blurAndSubmit") closed it after every tag
-                        // (2026-09-30 audit). blurOnSubmit is deprecated in RN 0.81.
-                        submitBehavior: "submit", ...inputText })] }), suggestions !== undefined && suggestions.length > 0 && draft.trim().length > 0 ? (_jsx(View, { accessibilityLabel: suggestionsLabel, style: { gap: spacing.xxs }, children: suggestions.map((item) => (_jsx(Pressable, { accessibilityRole: "button", accessibilityState: { disabled: item.disabled === true }, disabled: item.disabled === true || disabled, onPress: () => commit(item.value ?? item.label), style: { minHeight: control.minTouchTarget, justifyContent: "center", paddingHorizontal: spacing.xs }, children: _jsx(Text, { style: { color: content }, children: item.label }) }, item.id))) })) : null, description ? _jsx(Text, { tone: "muted", variant: "caption", children: description }) : null] }));
+                        }, children: [_jsx(Text, { fontRole: "ui", style: { color: content }, children: tag }), _jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: composeRemoveLabel(tag), disabled: disabled, hitSlop: tagsInputRecipe.remove.minTouchTarget / 2, onPress: () => setTags(removeTagAt(tags, index)), children: _jsx(FixedGlyph, { color: content, children: "\u00D7" }) })] }, `${tag}-${index}`))), _jsx(TextInput, { accessibilityLabel: label, editable: !disabled, placeholder: placeholder, value: draft, onChangeText: changeDraft, onSubmitEditing: () => commit(draft), submitBehavior: "submit", ...inputText })] }), suggestions !== undefined && suggestions.length > 0 && draft.trim().length > 0 ? (_jsx(View, { accessibilityLabel: suggestionsLabel, style: { gap: spacing.xxs }, children: suggestions.map((item) => (_jsx(Pressable, { accessibilityRole: "button", accessibilityState: { disabled: item.disabled === true }, disabled: item.disabled === true || disabled, onPress: () => commit(item.value ?? item.label), style: { minHeight: control.minTouchTarget, justifyContent: "center", paddingHorizontal: spacing.xs }, children: _jsx(Text, { fontRole: "ui", style: { color: content }, children: item.label }) }, item.id))) })) : null, description ? _jsx(Text, { tone: "muted", variant: "caption", children: description }) : null] }));
 }
 //# sourceMappingURL=tags-input.js.map

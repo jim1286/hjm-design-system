@@ -392,6 +392,8 @@ function CollectionSheetHeader({ title, dismissLabel, onDismiss }: { title: stri
 }
 
 /** Native adaptive Select with shared sections, async states, and teardown-safe commits. */
+
+// UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export function Select<
   Value extends string = string,
   SectionKey extends string = string,
@@ -586,6 +588,7 @@ export function Select<
         ) : null}
         <View style={{ flex: 1, gap: spacing.xxs, minWidth: 0 }}>
           <Text
+              fontRole="ui"
             style={{
               color: resolveColorReference(densityContract.label.color, theme.palette),
               fontWeight: checked
@@ -670,7 +673,8 @@ export function Select<
             {triggerLeading}
           </View>
         ) : null}
-        <Text style={{ flex: 1, opacity: busy ? 0 : 1 }} tone={resolvedSelectedItem ? "body" : "muted"} variant={sizeContract.textVariant}>
+        <Text
+              fontRole="ui" style={{ flex: 1, opacity: busy ? 0 : 1 }} tone={resolvedSelectedItem ? "body" : "muted"} variant={sizeContract.textVariant}>
           {resolvedSelectedItem?.label ?? placeholder}
         </Text>
         <Text accessible={false} style={{ opacity: busy ? 0 : 1 }} tone="muted">⌄</Text>
@@ -1143,7 +1147,8 @@ export function Combobox<
           </View>
         ) : null}
         <View style={{ flex: 1, gap: spacing.xxs, minWidth: 0 }}>
-          <Text tone={checked ? "brand" : "body"} variant={densityContract.label.textVariant}>{item.label}</Text>
+          <Text
+              fontRole="ui" tone={checked ? "brand" : "body"} variant={densityContract.label.textVariant}>{item.label}</Text>
           {item.description ? <Text tone="muted" variant={densityContract.description.textVariant}>{item.description}</Text> : null}
         </View>
         {checked ? <Text accessible={false} tone="brand">✓</Text> : null}

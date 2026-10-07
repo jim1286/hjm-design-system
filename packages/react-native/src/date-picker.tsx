@@ -52,6 +52,8 @@ export type DatePickerProps<Content = unknown> = Readonly<{
 }>;
 
 /** Native single-date trigger backed by the canonical Sheet overlay. */
+
+// UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export function DatePicker<Content>({
   descriptor,
   monthLabel,
@@ -114,7 +116,8 @@ export function DatePicker<Content>({
           style={({ pressed }) => ({ alignItems: "center", backgroundColor: colors.bg, borderColor: descriptor.invalid || error ? colors.danger : colors.borderControl, borderRadius: tokens.radius[datePickerRecipe.frame.radius], borderWidth: datePickerRecipe.frame.borderWidth, flex: 1, flexDirection: "row", gap: 8, minHeight: datePickerRecipe.sizes[size].minHeight, opacity: pressed ? 0.72 : 1, paddingHorizontal: datePickerRecipe.sizes[size].paddingHorizontal })}
         >
           <Text accessible={false}>▣</Text>
-          <Text style={{ color: descriptor.displayValue === null ? colors.textMuted : colors.textBody }}>{triggerText}</Text>
+          <Text
+              fontRole="ui" style={{ color: descriptor.displayValue === null ? colors.textMuted : colors.textBody }}>{triggerText}</Text>
         </Pressable>
         {selectedDate === null ? null : (
           <Pressable accessibilityLabel={clearLabel} accessibilityRole="button" disabled={descriptor.disabled || descriptor.readOnly} onPress={() => commit(null, "clear")} style={({ pressed }) => [minimumTargetStyle, { alignItems: "center", justifyContent: "center", opacity: pressed ? 0.72 : 1 }]}>

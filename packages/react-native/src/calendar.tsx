@@ -27,6 +27,8 @@ export type CalendarProps<Content = unknown> = Readonly<{
 }>;
 
 /** Inline dates stay individually accessible; Native month paging uses explicit buttons. */
+
+// UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export function Calendar<Content>({ descriptor, composeAccessibleName, previousMonth, nextMonth,
   renderCellContent, size = "medium", ref, layoutStyle }: CalendarProps<Content>) {
   validateCalendarDescriptor(descriptor);
@@ -92,7 +94,8 @@ export function Calendar<Content>({ descriptor, composeAccessibleName, previousM
                 borderRadius: diameter / 2,
                 opacity: !cell.selectable ? recipe.day.disabledOpacity : cell.outsideFocusedMonth ? recipe.day.outsideFocusedMonthOpacity : 1 }}>
               <View accessible={false} style={{ width: diameter, minHeight: diameter, alignItems: "center", justifyContent: "center", borderRadius: diameter / 2, borderWidth: recipe.day.today.borderWidth, borderColor: cell.isToday ? resolveColorReference(recipe.day.today.border, palette) : "transparent", backgroundColor: cell.isSelected ? colors.primary : "transparent" }}>
-              <Text accessible={false} variant={recipe.sizes[size].textVariant} align="center"
+              <Text
+              fontRole="ui" accessible={false} variant={recipe.sizes[size].textVariant} align="center"
                 style={{ color: cell.isSelected ? colors.onPrimary : colors.textBody, fontVariant: ["tabular-nums"] }}>{Number(cell.date.slice(-2))}</Text></View>
               {renderCellContent ? <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ minHeight: tokens.typography.label.lineHeight * environment.textScale }}>{renderCellContent(cell)}</View> : null}
             </Pressable>)}

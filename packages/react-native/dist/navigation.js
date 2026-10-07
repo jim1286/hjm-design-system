@@ -54,6 +54,7 @@ export function TabPanel(props) {
         return null;
     return (_jsx(View, { nativeID: getTabPanelId(tabsId, value, dynamic ? "dynamic" : "keyed"), accessibilityLabel: label, accessibilityLabelledBy: getTabId(tabsId, dynamic ? activeValue : value), accessibilityElementsHidden: !selected, importantForAccessibility: selected ? "auto" : "no-hide-descendants", pointerEvents: selected ? "auto" : "none", role: "tabpanel", style: [style, layoutStyle, selected ? null : { display: "none" }], children: children }));
 }
+// UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export function Tabs(props) {
     const { id, label, items, value: valueProp, defaultValue, onValueChange, activationMode = tabsBehaviorDefaults.activationMode, mountPolicy = tabsBehaviorDefaults.mountPolicy, panelMode = tabsBehaviorDefaults.panelMode, appearance: suppliedAppearance, orientation = tabsBehaviorDefaults.orientation, direction: directionProp, loop = tabsBehaviorDefaults.loop, size = tabsRecipe.defaults.size, layout = tabsRecipe.defaults.layout, overflow = tabsRecipe.defaults.overflow, renderPanels = true, children, layoutStyle, style, tabListStyle, } = props;
     warnDeprecatedStyleProps("Tabs", { style, tabListStyle }, "layoutStyle for placement and size/layout/overflow/appearance for the tab list");
@@ -308,7 +309,7 @@ export function Tabs(props) {
                                         disabled: item.disabled === true,
                                         color: resolveColorReference(active ? tabsRecipe.colors.selected : tabsRecipe.colors.idle, theme.palette),
                                         size: glyph[tabsRecipe.icon.glyph],
-                                    }) })) : null, _jsx(Text, { align: "center", style: {
+                                    }) })) : null, _jsx(Text, { fontRole: "ui", align: "center", style: {
                                         color: resolveColorReference(active ? tabsRecipe.colors.selected : tabsRecipe.colors.idle, theme.palette),
                                         fontWeight: active
                                             ? tabsRecipe.label.selectedFontWeight
@@ -687,7 +688,8 @@ export function TopBar({ title, titleLeading, onTitlePress, titleAccessibilityLa
         titleStyle,
     ];
     const renderTitle = (containerStyle, numberOfLines) => {
-        const titleContent = (_jsxs(_Fragment, { children: [titleLeading !== undefined && titleLeading !== null && titleLeading !== false ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", pointerEvents: "none", children: titleLeading })) : null, _jsx(Text, { ...(onTitlePress
+        // Match Web: a clickable title is a UI button; a static heading keeps display.
+        const titleContent = (_jsxs(_Fragment, { children: [titleLeading !== undefined && titleLeading !== null && titleLeading !== false ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", pointerEvents: "none", children: titleLeading })) : null, _jsx(Text, { fontRole: onTitlePress ? "ui" : "display", ...(onTitlePress
                         ? { accessible: false }
                         : {
                             accessibilityLabel: titleAccessibilityLabel,
@@ -966,7 +968,7 @@ export function Menu({ triggerLabel, title = triggerLabel, items, sections, sour
                     opacity: itemDisabled ? menuRecipe.states.disabledOpacity : 1,
                     paddingHorizontal: densityContract.paddingHorizontal,
                 },
-            ], children: [leading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", children: leading })) : null, _jsxs(View, { style: { flex: 1, gap: spacing.xxs, minWidth: 0 }, children: [_jsx(Text, { style: { color: contentColor }, variant: densityContract.label.textVariant, children: item.label }), item.description ? _jsx(Text, { tone: "muted", variant: densityContract.description.textVariant, children: item.description }) : null] }), item.shortcut ? _jsx(Text, { accessible: false, tone: "muted", variant: menuRecipe.shortcut.textVariant, children: item.shortcut }) : null, trailing ? _jsx(View, { accessibilityElementsHidden: true, accessible: false, children: trailing }) : null, selection.mode !== "none" && selected ? _jsx(Text, { accessible: false, tone: "brand", children: "\u2713" }) : null] }, item.id));
+            ], children: [leading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", children: leading })) : null, _jsxs(View, { style: { flex: 1, gap: spacing.xxs, minWidth: 0 }, children: [_jsx(Text, { fontRole: "ui", style: { color: contentColor }, variant: densityContract.label.textVariant, children: item.label }), item.description ? _jsx(Text, { tone: "muted", variant: densityContract.description.textVariant, children: item.description }) : null] }), item.shortcut ? _jsx(Text, { accessible: false, tone: "muted", variant: menuRecipe.shortcut.textVariant, children: item.shortcut }) : null, trailing ? _jsx(View, { accessibilityElementsHidden: true, accessible: false, children: trailing }) : null, selection.mode !== "none" && selected ? _jsx(Text, { accessible: false, tone: "brand", children: "\u2713" }) : null] }, item.id));
     };
     const collection = source.sections ? source.sections.map((section) => (_jsxs(View, { accessibilityLabel: section.accessibilityLabel ?? section.label, children: [section.label ? (_jsx(Text, { style: {
                     color: resolveColorReference(menuRecipe.sectionLabel.color, theme.palette),

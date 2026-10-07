@@ -74,6 +74,7 @@ export const IconButton = forwardRef(function IconButton({ label, children, tone
                 width: glyphSize,
             }, children: resolvedIcon })) }));
 });
+// UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export function Link({ descriptor, onNavigate, leading, trailing, renderIcon, accessibilityHint, layoutStyle, style, ...props }) {
     const { colors, environment } = useHjmNativeTheme();
     const resolved = resolveLinkDescriptor(descriptor);
@@ -107,7 +108,7 @@ export function Link({ descriptor, onNavigate, leading, trailing, renderIcon, ac
             },
             style,
             layoutStyle,
-        ], children: [leadingNode ? _jsx(View, { accessible: false, children: leadingNode }) : null, _jsx(Text, { style: { color: colors.contentBrand, textDecorationLine: "underline" }, variant: "bodyLarge", children: resolved.label }), trailingNode ? _jsx(View, { accessible: false, children: trailingNode }) : null] }));
+        ], children: [leadingNode ? _jsx(View, { accessible: false, children: leadingNode }) : null, _jsx(Text, { fontRole: "ui", style: { color: colors.contentBrand, textDecorationLine: "underline" }, variant: "bodyLarge", children: resolved.label }), trailingNode ? _jsx(View, { accessible: false, children: trailingNode }) : null] }));
 }
 function BottomCTAButton({ action, fallbackTone, }) {
     return (_jsx(Button, { ...(action.accessibilityLabel === undefined ? {} : { accessibilityLabel: action.accessibilityLabel }), ...(action.accessibilityHint === undefined ? {} : { accessibilityHint: action.accessibilityHint }), ...(action.disabled === undefined ? {} : { disabled: action.disabled }), ...(action.loading === undefined ? {} : { loading: action.loading }), ...(action.loadingLabel === undefined ? {} : { loadingLabel: action.loadingLabel }), fullWidth: true, onPress: action.onPress, ...(action.size === undefined ? {} : { size: action.size }), tone: action.tone ?? fallbackTone, children: action.label }));

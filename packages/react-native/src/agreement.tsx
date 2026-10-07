@@ -39,6 +39,8 @@ export type AgreementProps<Id extends string = string> = Readonly<{
   style?: StyleProp<ViewStyle>;
 }>;
 
+
+// UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export function Agreement<Id extends string = string>({
   descriptor,
   checkedIds: controlledChecked,
@@ -137,7 +139,8 @@ export function Agreement<Id extends string = string>({
         }}
       >
         {mark(state.all)}
-        <Text variant={agreementRecipe.all.textVariant}>{descriptor.allLabel}</Text>
+        <Text
+              fontRole="ui" variant={agreementRecipe.all.textVariant}>{descriptor.allLabel}</Text>
       </Pressable>
       {descriptor.items.map((item) => (
         <View key={item.id} style={{ gap: spacing.xxs }}>
@@ -164,7 +167,8 @@ export function Agreement<Id extends string = string>({
               }}
             >
               {mark(checked.has(item.id))}
-              <Text style={{ flex: 1 }} variant={agreementRecipe.item.label.textVariant}>
+              <Text
+              fontRole="ui" style={{ flex: 1 }} variant={agreementRecipe.item.label.textVariant}>
                 {`${item.label} ${item.required === true ? requiredLabel : optionalLabel}`}
               </Text>
             </Pressable>

@@ -31,6 +31,8 @@ export type AuthProviderButtonProps = Readonly<{
   style?: StyleProp<ViewStyle>;
 }>;
 
+
+// UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export function AuthProviderButton({ descriptor, logo, onPress, layoutStyle, style }: AuthProviderButtonProps) {
   warnDeprecatedStyleProps("AuthProviderButton", { style }, "layoutStyle for placement; authProviderButtonRecipe owns appearance");
   validateAuthProviderButtonDescriptor(descriptor);
@@ -80,7 +82,8 @@ export function AuthProviderButton({ descriptor, logo, onPress, layoutStyle, sty
         {logo}
       </View>
       {/* Keep the measured label in place so the busy frame never shrinks. */}
-      <Text style={{ color: surface.content, flexShrink: 1, opacity: busy ? 0 : 1 }} variant="body">
+      <Text
+              fontRole="ui" style={{ color: surface.content, flexShrink: 1, opacity: busy ? 0 : 1 }} variant="body">
         {descriptor.label}
       </Text>
       {busy ? <View pointerEvents="none" style={{ alignItems: "center", bottom: 0, justifyContent: "center", left: 0, position: "absolute", right: 0, top: 0 }}><ActivityIndicator color={surface.content} /></View> : null}

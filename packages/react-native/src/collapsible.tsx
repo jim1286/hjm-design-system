@@ -29,6 +29,8 @@ export type CollapsibleProps = CollapsibleOpenState &
     style?: StyleProp<ViewStyle>;
   }>;
 
+
+// UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export function Collapsible({ trigger, children, disabled = false, presentation = "disclosure", keepMounted = false, layoutStyle, style, ...openState }: CollapsibleProps) {
   warnDeprecatedStyleProps("Collapsible", { style }, "layoutStyle for placement; collapsibleRecipe owns appearance");
   validateCollapsibleOpenState(openState as CollapsibleOpenState);
@@ -50,7 +52,8 @@ export function Collapsible({ trigger, children, disabled = false, presentation 
         // `.hjm-collapsible__trigger`; a one-line text trigger was ~20 tall (2026-10-06 follow-up).
         style={{ display: presentation === "inline" ? "none" : "flex", minHeight: control.minTouchTarget, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: collapsibleRecipe.gap }}
       >
-        {typeof trigger === "string" ? <Text>{trigger}</Text> : trigger}
+        {typeof trigger === "string" ? <Text
+              fontRole="ui">{trigger}</Text> : trigger}
         {/* Decoration only: the expanded state travels through accessibilityState. */}
         <Text accessibilityElementsHidden importantForAccessibility="no">{open ? "▾" : "▸"}</Text>
       </Pressable>

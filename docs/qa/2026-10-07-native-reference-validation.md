@@ -115,3 +115,23 @@ Storybook 433파일/969 Web ID 정적 검사 통과. 문서 링크591개 통과.
 `733a2885afb79b697952c4166649ac391fa58aedf8e19fe8aec2ad210304bb23`.
 전체 VQ PNG SHA-256: `1241781a048b16a0608bf37480e461264f28d5452d15e7e968575d7dd2c42ef7`.
 검토 후 본인 `/tmp/hjm-native-compositions-20261007` 170파일을 제거했고 경로가 남지 않은 것을 확인했다. 공유 runtime·소스·fixture와 기존 타인 helper는 보존한다.
+
+
+## 9. 목록 화면 골격 독립 Story 검수
+
+실행: 2026-10-07 21:40–21:49 Asia/Seoul. 시작 HEAD `88bbe6ad9e61c4686f3ccb8d066730d76c18c9e0`.
+기존 iPhone 17 Pro/iOS 26.5·개발 호스트·Metro8187·Device Hub 창 10967을 재사용했다.
+독립 `실험/컴포넌트/레이아웃/목록 화면 골격`의 Default/Dark에 제목 기반 deep link로 진입했다.
+모든 실행은 textScale1이며 기기 생성·Native build·원격 CI·버전 상승·게시 없음.
+
+- 기본 숲 테마의 도구 입력을 `저녁 산책 Overview73`으로 편집하고 Return 후 이번 주를 선택했다.
+- 기록 도구를 접고 다시 열어 같은 초안과 선택이 유지됨을 AX 값과 실제 창에서 대조했다.
+- 실패 재현 후 실패 문구·같은 초안/기간·다시 저장 행동을 확인했다. 재시도 후 저장 성공 문구와 같은 값을 확인했다. fixture의 성공이며 서버·영구 저장 영수증이 아니다.
+- 본문을 끝까지 내려 휴식 카드의 제목 y576–608/본문 y620–640을 footer 버튼 y711 위에서 확인했다. 시작 위치에서 footer 뒤에 있는 마지막 카드는 본문 스크롤로 도달 가능했다.
+- Dark 첫 화면과 저장 성공 화면에서 어두운 숲 표면·카드·본문·고정 CTA를 실제 창으로 확인했다. Story 전환은 새 fixture 상태이며 Story 간 초안 보존 주장 아님.
+
+9개 실제 창 캡처 전체 VQ 시트와 끝/다크 원본을 검토했다. 모든 테마·Android·VoiceOver·실물/Release 성능으로 확대하지 않는다.
+실행한 Native design-profile-preview.tsx SHA-256: `4b634bb73922cb255bc7f77495270916e593b2fec368c6a3e0fb513832245be1`.
+원시 19파일/4449522bytes 정렬 manifest SHA-256: `bee7011d98774e2c9fe7fe90b8851d1989c0b5af835a374cc676b0ad186ad370`. VQ PNG SHA-256: `9406c75ed7aaf2da43136cdc7ccc0c2700f93db22bc64101181058beca6a71a4`.
+문서에 결과와 digest를 남긴 뒤 본인 임시 폴더만 제거했다. 공유 Metro·기기·설치 호스트·소스·fixture는 보존한다.
+첫 입력 직전 Metro 새로고침 때문에 Loading from Metro가 잠시 표시됐으며, 최신 화면에서 다시 입력한 결과를 사용했다. 첫 touch helper의 정수 좌표 오류는 제품 오류로 세지 않는다.

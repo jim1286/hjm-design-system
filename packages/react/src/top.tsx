@@ -5,7 +5,7 @@ import {
   type TopDescriptor,
 } from "@hjmds/design-contracts/components/top";
 import { forwardRef, createElement, type CSSProperties, type ReactNode } from "react";
-import { classNames } from "./internal.js";
+import { classNames, useDesignProfileDefaults } from "./internal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type TopProps = Readonly<{
@@ -25,15 +25,20 @@ export const Top = forwardRef<HTMLElement, TopProps>(function Top(
   const size = descriptor.size ?? topDefaults.size;
   const level = descriptor.headingLevel ?? topDefaults.headingLevel;
   const metrics = topRecipe.sizes[size];
+  const profile = useDesignProfileDefaults();
+  // Keep the visual role independent of the semantic heading level and preserve recipe defaults.
+  const title = profile
+    ? size === "large" ? profile.tokens.heading.level2 : profile.tokens.typography.titleLarge
+    : metrics.title;
   return (
     <header
       ref={forwardedRef}
       className={classNames("hjm-top", className)}
       data-size={size}
       style={{ ...layoutStyle,
-        "--hjm-top-title-size": `${metrics.title.fontSize}px`,
-        "--hjm-top-title-line-height": `${metrics.title.lineHeight}px`,
-        "--hjm-top-title-weight": metrics.title.fontWeight,
+        "--hjm-top-title-size": `${title.fontSize}px`,
+        "--hjm-top-title-line-height": `${title.lineHeight}px`,
+        "--hjm-top-title-weight": title.fontWeight,
         "--hjm-top-padding-top": `${metrics.paddingTop}px`,
         "--hjm-top-padding-bottom": `${metrics.paddingBottom}px`,
       } as CSSProperties}

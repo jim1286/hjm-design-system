@@ -274,7 +274,12 @@
       "webStory": "showcase/web/src/patterns/OverviewScreen.stories.tsx",
       "nativeStory": "showcase/native/src/OverviewScreen.stories.tsx",
       "usage": "packages/design-contracts/docs/usage/components/overview-screen.md",
-      "classification": "pre-existing-related-experiment-not-an-additional-research-registration"
+      "classification": "pre-existing-related-experiment-not-an-additional-research-registration",
+      "nativeValidation": {
+        "evidence": "docs/qa/2026-10-07-native-reference-validation.md",
+        "status": "selected-ios-development-flows-verified",
+        "scope": "Standalone Default/Dark on existing iPhone17Pro/iOS26.5 development host: edited draft and period retained across toolbar collapse/restore and failed save/retry; last card reachable above fixed footer by body scroll. No Android, AT, physical-device/Release performance or consumer adoption claim."
+      }
     },
     "researchStatus": "closed-for-selected-adoption",
     "exhaustiveReviewComplete": false,

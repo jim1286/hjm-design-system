@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [TransferList](../../transfer-list.md), `src/transfer-list.ts`(`transferListRecipe`)
 - 스토리북: `배포/컴포넌트/입력/목록 간 항목 이동`
 
@@ -113,3 +113,9 @@ Web ≥ 480                                  Web < 480 · Native
 | 이동 후 포커스 | 빈 자리로 올라온 행, 비면 빈 상태 문구 | 옮기지 않음 |
 | 패널 비었을 때 전체 선택 | 활성 | `disabled` |
 | 외부 꾸밈 | `className`, `ref`, `layoutStyle` | `layoutStyle`(`style`은 deprecated) |
+
+### 프로필 모서리·제목 소비
+
+2026-10-07 소비 감사에서 Native 패널의 모서리 12가 프로필을 우회했다. Web 패널의 기존 `radius.md`와 같은 역할을 Native도 가까운 프로필에서 읽으며, 프로필이 없으면 기존 12를 유지한다. 선택 집합·이동·비활성 항목·초점 계약은 바꾸지 않는다.
+
+프로필 연결은 1.15.0 이후 미게시 변경이며, 기본 배포 계약과 실제 Native 기기 검증은 구분한다.

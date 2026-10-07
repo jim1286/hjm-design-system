@@ -44,6 +44,8 @@ export type TagsInputProps = Readonly<{
   style?: StyleProp<ViewStyle>;
 }>;
 
+
+// UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export function TagsInput({
   label,
   tags: controlledTags,
@@ -122,12 +124,12 @@ export function TagsInput({
               backgroundColor: surface,
             }}
           >
-            <Text style={{ color: content }}>{tag}</Text>
+            <Text fontRole="ui" style={{ color: content }}>{tag}</Text>
+            {/* The visible chip is small; the touch target is not. */}
             <Pressable
               accessibilityRole="button"
               accessibilityLabel={composeRemoveLabel(tag)}
               disabled={disabled}
-              // The visible chip is small; the touch target is not.
               hitSlop={tagsInputRecipe.remove.minTouchTarget / 2}
               onPress={() => setTags(removeTagAt(tags, index))}
             >
@@ -135,18 +137,18 @@ export function TagsInput({
             </Pressable>
           </View>
         ))}
+        {/* There is no keyboard commit vocabulary here: the return key is the
+            only reliable one on a phone, so Comma/Space/Blur stay Web-only.
+            Return adds a tag and the next one follows, so keep the keyboard up.
+            The single-line default ("blurAndSubmit") closed it after every tag
+            (2026-09-30 audit). blurOnSubmit is deprecated in RN 0.81. */}
         <TextInput
           accessibilityLabel={label}
           editable={!disabled}
           placeholder={placeholder}
           value={draft}
           onChangeText={changeDraft}
-          // There is no keyboard commit vocabulary here: the return key is the
-          // only reliable one on a phone, so Comma/Space/Blur stay Web-only.
           onSubmitEditing={() => commit(draft)}
-          // Return adds a tag and the next one follows, so keep the keyboard up.
-          // The single-line default ("blurAndSubmit") closed it after every tag
-          // (2026-09-30 audit). blurOnSubmit is deprecated in RN 0.81.
           submitBehavior="submit"
           {...inputText}
         />
@@ -162,7 +164,8 @@ export function TagsInput({
               onPress={() => commit(item.value ?? item.label)}
               style={{ minHeight: control.minTouchTarget, justifyContent: "center", paddingHorizontal: spacing.xs }}
             >
-              <Text style={{ color: content }}>{item.label}</Text>
+              <Text
+              fontRole="ui" style={{ color: content }}>{item.label}</Text>
             </Pressable>
           ))}
         </View>

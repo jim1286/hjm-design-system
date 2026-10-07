@@ -266,6 +266,7 @@ export function Divider({ orientation = "horizontal", inset = 0, style, layoutSt
             layoutStyle,
         ] }));
 }
+// UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export function Accordion({ label, items, expandedValues, defaultExpandedValues = [], onExpandedValuesChange, multiple = accordionRecipe.defaults.allowsMultipleExpanded, density = accordionRecipe.defaults.density, renderIndicator, style, itemStyle, triggerStyle, titleStyle, indicatorStyle, panelStyle, layoutStyle, }) {
     warnDeprecatedStyleProps("Accordion", { style, itemStyle, triggerStyle, titleStyle, indicatorStyle, panelStyle }, "layoutStyle for placement and density/renderIndicator for appearance");
     if (items.length === 0)
@@ -327,7 +328,7 @@ export function Accordion({ label, items, expandedValues, defaultExpandedValues 
                                 paddingVertical: metrics.paddingVertical,
                             },
                             triggerStyle,
-                        ], children: [_jsxs(View, { style: { flex: 1, gap: spacing.xxs }, children: [_jsx(Text, { style: [
+                        ], children: [_jsxs(View, { style: { flex: 1, gap: spacing.xxs }, children: [_jsx(Text, { fontRole: "ui", style: [
                                             {
                                                 color: resolveColorReference(accordionRecipe.title.color, theme.palette),
                                                 fontWeight: accordionRecipe.title.fontWeight,

@@ -168,3 +168,12 @@ overflow와 update를 검증합니다.
 
 - [Radix Toast](https://www.radix-ui.com/primitives/docs/components/toast)
 - [React Spectrum Toast](https://react-spectrum.adobe.com/Toast)
+
+## 프로필 행간 소비 — 미게시
+
+2026-10-07 소비 감사에서 Web 제목/설명의 1.35/1.45 고정 행간이 `typography.body.lineHeight`를
+우회하는 것을 확인했다. 두 slot은 기존 body 역할이므로 선택된 프로필의 `--hjm-type-body-line-height`를
+기존 Provider/portal 토큰 경로로 읽는다. 프로필 없는 Provider와 독립 사용은 기존 1.35/1.45를 유지한다.
+일괄 기본 행간 변경은 기존 알림 레이아웃까지 바꾸므로 채택하지 않았다. Native 본문 행간은 이미 body
+토큰을 소비하며, 이번 Native 변경은 action 라벨의 ui 서체 역할만 명시한다. 알림 문구·큐·시간·닫기·
+행동·초점 계약은 바꾸지 않는다.

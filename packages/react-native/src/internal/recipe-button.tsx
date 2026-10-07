@@ -40,6 +40,7 @@ function joinTextChildren(children: ReactNode): ReactNode {
     : children;
 }
 
+// UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export const RecipeButton = forwardRef<NativeView, RecipeButtonProps>(
   function RecipeButton(
     {
@@ -155,6 +156,7 @@ export const RecipeButton = forwardRef<NativeView, RecipeButtonProps>(
         {loading && leading != null ? <View style={{ opacity: 0 }}>{leading}</View> : leading}
         {textContent ? (
           <Text
+              fontRole="ui"
             align={align === "leading" ? "auto" : "center"}
             emphasis="medium"
             // Wrap up to the recipe's cap instead of the single line RN gives by

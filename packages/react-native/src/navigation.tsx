@@ -267,6 +267,8 @@ export function TabPanel(props: TabPanelProps) {
   );
 }
 
+
+// UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
   const {
     id,
@@ -574,6 +576,7 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
                 </View>
               ) : null}
               <Text
+              fontRole="ui"
                 align="center"
                 style={{
                   color: resolveColorReference(
@@ -1381,6 +1384,7 @@ export function TopBar({
     containerStyle: StyleProp<ViewStyle>,
     numberOfLines?: number,
   ) => {
+    // Match Web: a clickable title is a UI button; a static heading keeps display.
     const titleContent = (
       <>
         {titleLeading !== undefined && titleLeading !== null && titleLeading !== false ? (
@@ -1394,6 +1398,7 @@ export function TopBar({
           </View>
         ) : null}
         <Text
+          fontRole={onTitlePress ? "ui" : "display"}
           {...(onTitlePress
             ? { accessible: false }
             : {
@@ -1889,7 +1894,8 @@ export function Menu<
           </View>
         ) : null}
         <View style={{ flex: 1, gap: spacing.xxs, minWidth: 0 }}>
-          <Text style={{ color: contentColor }} variant={densityContract.label.textVariant}>{item.label}</Text>
+          <Text
+              fontRole="ui" style={{ color: contentColor }} variant={densityContract.label.textVariant}>{item.label}</Text>
           {item.description ? <Text tone="muted" variant={densityContract.description.textVariant}>{item.description}</Text> : null}
         </View>
         {item.shortcut ? <Text accessible={false} tone="muted" variant={menuRecipe.shortcut.textVariant}>{item.shortcut}</Text> : null}

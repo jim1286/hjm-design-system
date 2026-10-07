@@ -84,7 +84,8 @@ export const Sidebar = forwardRef(function Sidebar<Id extends string = string, G
       style={{ ...layoutStyle,
         "--hjm-sidebar-width": `${collapsed ? sidebarRecipe.widths.collapsed : sidebarRecipe.widths.expanded}px`,
         "--hjm-sidebar-item-height": `${sidebarRecipe.itemMinHeight}px`,
-        "--hjm-sidebar-item-radius": `${sidebarRecipe.itemRadius}px`,
+        // CSS inheritance preserves nested profiles without adding a Provider dependency.
+        "--hjm-sidebar-item-radius": `var(--hjm-radius-md, ${sidebarRecipe.itemRadius}px)`,
         "--hjm-sidebar-gap": `${sidebarRecipe.gap}px`,
         "--hjm-sidebar-group-gap": `${sidebarRecipe.groupGap}px`,
       } as CSSProperties}

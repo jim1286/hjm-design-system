@@ -20,6 +20,7 @@ function joinTextChildren(children) {
         ? parts.join("")
         : children;
 }
+// UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export const RecipeButton = forwardRef(function RecipeButton({ children, tone = buttonRecipe.defaults.tone, size = buttonRecipe.defaults.size, shape = buttonRecipe.defaults.shape, align = buttonRecipe.defaults.align, selected, disabled = false, loading = false, disableWhileLoading = false, growWithContent = false, loadingLabel, leading, trailing, fullWidth = false, hitSlop, layoutStyle, style, labelStyle, renderLoadingIndicator, accessibilityLabel, accessibilityState, onPress, onLongPress, ...props }, ref) {
     const { colors, environment, tokens } = useHjmNativeTheme();
     const labelLines = resolveButtonLabelLines(isLargeTextScale(environment.textScale));
@@ -71,6 +72,6 @@ export const RecipeButton = forwardRef(function RecipeButton({ children, tone = 
             },
             style,
             layoutStyle,
-        ], children: [loading && leading != null ? _jsx(View, { style: { opacity: 0 }, children: leading }) : leading, textContent ? (_jsx(Text, { align: align === "leading" ? "auto" : "center", emphasis: "medium", ...(labelLines === null ? {} : { numberOfLines: labelLines }), style: [{ color: contentColor, flexShrink: 1, minWidth: 0 }, labelStyle, loading ? { opacity: 0 } : null], variant: sizeContract.textVariant, children: content })) : (loading ? _jsx(View, { importantForAccessibility: "no-hide-descendants", style: { opacity: 0 }, children: content }) : content), loading && trailing != null ? _jsx(View, { style: { opacity: 0 }, children: trailing }) : trailing, loading ? _jsx(View, { pointerEvents: "none", style: { alignItems: "center", bottom: 0, justifyContent: "center", left: 0, position: "absolute", right: 0, top: 0 }, children: renderLoadingIndicator?.({ color: contentColor, size: "small" }) ?? _jsx(ActivityIndicator, { color: contentColor, size: "small" }) }) : null] }));
+        ], children: [loading && leading != null ? _jsx(View, { style: { opacity: 0 }, children: leading }) : leading, textContent ? (_jsx(Text, { fontRole: "ui", align: align === "leading" ? "auto" : "center", emphasis: "medium", ...(labelLines === null ? {} : { numberOfLines: labelLines }), style: [{ color: contentColor, flexShrink: 1, minWidth: 0 }, labelStyle, loading ? { opacity: 0 } : null], variant: sizeContract.textVariant, children: content })) : (loading ? _jsx(View, { importantForAccessibility: "no-hide-descendants", style: { opacity: 0 }, children: content }) : content), loading && trailing != null ? _jsx(View, { style: { opacity: 0 }, children: trailing }) : trailing, loading ? _jsx(View, { pointerEvents: "none", style: { alignItems: "center", bottom: 0, justifyContent: "center", left: 0, position: "absolute", right: 0, top: 0 }, children: renderLoadingIndicator?.({ color: contentColor, size: "small" }) ?? _jsx(ActivityIndicator, { color: contentColor, size: "small" }) }) : null] }));
 });
 //# sourceMappingURL=recipe-button.js.map

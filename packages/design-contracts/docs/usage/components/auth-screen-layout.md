@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [로그인 화면 골격](../../auth-screen.md), [1.4 제품 채택 가이드](../../product-adoption-1.4.md), recipe `authScreenRecipe`(`src/auth-screen.ts`), 포트폴리오 상위 기준 루트 `docs/LOGIN_SCREEN_STANDARD.md`(LS)
 - 스토리북: `배포/컴포넌트/레이아웃/로그인 화면`
 
@@ -74,7 +74,7 @@ import { AuthScreenLayout } from "@hjmds/react-native/auth-screen";
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 화면 전체(Web `min-block-size: 100dvh`, Native `ScrollView flex: 1`). 위 블록과 footer는 최대 폭 416, 마크 72(`markSize`, `radius.lg`), 정책 링크 최소 44(`footerMinTouchTarget`), mainCard 모서리 `radius.lg` 16 | `authScreenRecipe`, `.hjm-auth-screen*` |
+| 크기 | 화면 전체(Web `min-block-size: 100dvh`, Native `ScrollView flex: 1`). 위 블록과 footer는 최대 폭 416, 마크 72(`markSize`, `radius.lg`), 정책 링크 최소 44(`footerMinTouchTarget`), mainCard 모서리 profile의 `radius.lg`(neutral/미지정 16) | `authScreenRecipe`, `.hjm-auth-screen*` |
 | 간격 | `regular` / `compact`: 바깥 좌우 `layout.pagePadding.regular` 20 / `.compact` 16, 바깥 위아래 `spacing.xxxl` 40 / `spacing.lg` 20, hero 안 `spacing.md` 16 / `spacing.xs` 8, hero↔main `spacing.xl` 24 / `spacing.md` 16, 위 블록↔footer 최소 `spacing.xl` 24 / `spacing.md` 16. mainCard 안쪽 `spacing.md` 16 | `authScreenRecipe.densities`·`mainCard` |
 | 순서·정렬 | 위→아래 hero(가운데 정렬 문구) → main(폭 꽉 채움) → footer(동의 고지·정책 링크). 위 블록은 남는 세로 공간에서 가운데, footer는 바닥에 붙는다. 진행 중 로딩은 main 카드 가운데에 겹친다 | `.hjm-auth-screen__block`(`justify-content: center`), `.hjm-auth-screen__pending` |
 | 고정·스크롤 | 고정 영역이 없다. 넘치면 화면 전체가 스크롤한다. 안전 영역은 Native `contentInsetAdjustmentBehavior="automatic"`과 키보드 inset 자동 조정이 처리하고, Web은 safe-area inset을 더하지 않는다 | `react-native/src/auth-screen.tsx`, `.hjm-auth-screen` |
@@ -127,3 +127,7 @@ import { AuthScreenLayout } from "@hjmds/react-native/auth-screen";
 - 앱 셸이 이미 `<main>`을 가진 Web 화면에서 기본값을 쓰면 main landmark가 중첩된다. `as="section"`을 쓴다.
 - 기존 제품 카드 wrapper 안에서 `mainCard`를 켜면 카드가 이중이 된다. wrapper를 걷어내고 `mainCard`로 옮긴다.
 - 현재 Web `style`은 recipe 크기 변수(`--hjm-auth-screen-*`) 뒤에 펼쳐져 최대 폭·간격 변수를 덮을 수 있다. 배치는 `layoutStyle`로만 준다.
+
+### 테마 카드 모서리
+
+`mainCard`는 가장 가까운 Provider의 `designProfile.tokens.radius.lg`를 양 플랫폼에서 소비한다. 테마가 없으면 기존 recipe의 16을 유지한다. 제공자 버튼은 제공자 브랜드 규격을 유지하며, 처리 중에도 카드와 입력을 제거하지 않는다. 카드 표면과 제공자 브랜드를 같은 radius로 강제하면 제품 테마가 제공자 규격을 덮기 때문에 역할을 나눈다.

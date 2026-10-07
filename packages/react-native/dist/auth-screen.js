@@ -5,7 +5,10 @@ import { useHjmNativeTheme } from "./provider.js";
 function AuthActionCard({ children, style }) {
     const theme = useHjmNativeTheme();
     return _jsx(View, { style: [{ width: "100%", backgroundColor: theme.colors.bg,
-                borderRadius: authScreenRecipe.mainCard.radius, padding: authScreenRecipe.mainCard.padding }, style], children: children });
+                // The login card uses the same lg surface role as Web; provider buttons keep
+                // their separate branding recipe and pending keeps the mounted action block.
+                borderRadius: theme.designProfile?.tokens.radius.lg ?? authScreenRecipe.mainCard.radius,
+                padding: authScreenRecipe.mainCard.padding }, style], children: children });
 }
 /**
  * Two regions: hero + main stay one vertically centred block, the footer sits at

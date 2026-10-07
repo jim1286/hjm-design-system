@@ -846,6 +846,8 @@ type ToastSurfaceProps = Readonly<{
   style?: StyleProp<ViewStyle>;
 }>;
 
+
+// UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 function ToastSurface({
   snapshot,
   managedMotion = false,
@@ -1074,6 +1076,7 @@ function ToastSurface({
           })}
         >
           <Text
+              fontRole="ui"
             style={{
               color: resolveColorReference(toastRecipe.action.color, theme.palette),
               fontWeight: toastRecipe.action.fontWeight,

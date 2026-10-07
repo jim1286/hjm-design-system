@@ -115,3 +115,9 @@ they do not claim installed-device, VoiceOver, or TalkBack validation.
 - **Shared behavior:** moved rows are not preselected at the destination, disabled rows cannot be
   selected or moved, and select-all excludes disabled rows from its denominator. `onMove` gives
   the product moved ids in source-panel order so it can compose an announcement.
+
+## 프로필 모서리·제목 소비
+
+2026-10-07 소비 감사에서 Native 패널의 모서리 12가 프로필을 우회했다. Web 패널의 기존 `radius.md`와 같은 역할을 Native도 가까운 프로필에서 읽으며, 프로필이 없으면 기존 12를 유지한다. 선택 집합·이동·비활성 항목·초점 계약은 바꾸지 않는다.
+
+프로필 연결은 1.15.0 이후 미게시 변경이며, 기본 배포 계약과 실제 Native 기기 검증은 구분한다.

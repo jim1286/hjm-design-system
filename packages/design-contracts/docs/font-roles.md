@@ -35,3 +35,16 @@ iOS는 Apple이 열거한 동일 시스템 이름, 다른 Native host는 serif�
 [Apple system fonts](https://developer.apple.com/fonts/system-fonts/).
 
 [사용 지침](usage/tokens/font-roles.md)·[프로필](design-profile.md)·[타이포그래피](usage/tokens/typography.md)를 함께 따른다.
+
+## 조작 라벨과 읽기 본문의 구분 — 미게시
+
+2026-10-07 소비 감사에서 Native 조작 라벨 24곳이 body/bodyLarge 크기를 사용하면서 읽기 서체로 해석됐다.
+Button의 내부 라벨·제공자 버튼·ToggleGroup·선택 컨트롤·Switch·SegmentedControl·Chip·Tabs·Menu·Select·
+Combobox·동의·Toast 행동·Link·날짜 선택/Calendar 날짜·disclosure·멘션/태그 후보·TransferList는 기존
+Text의 `fontRole="ui"`를 명시한다. 크기 variant는 그대로 유지하고 가까운 Provider의 ui stack을 읽는다.
+본문/description의 reading, 의미 제목의 display, label/caption의 기존 ui와 고정 glyph는 바꾸지 않는다.
+일반 Text의 기본값을 ui로 바꾸는 대안은 실제 읽기 본문의 제품 서체를 잃으므로 채택하지 않았다.
+
+추가 1곳인 TopBar 제목은 Web과 같은 경계를 유지한다. 클릭형 제목은 일반 버튼 라벨이므로 ui,
+비클릭형 제목은 의미 heading이므로 display다. 제목 행동·접근성 이름·정적 heading 역할은 유지한다.
+서체 선택 검사는 Native host 모사에서 수행했으며 폰트 자산 설치·실제 기기 표시 검증을 뜻하지 않는다.

@@ -171,6 +171,10 @@ export function createHjmThemeStyle(
   style["--hjm-bottom-cta-shadow"] = profileTokens
     ? shadowCss({ ...profileTokens.shadow.floating, offsetY: -Math.abs(profileTokens.shadow.floating.offsetY) })
     : "none";
+  // Toast body metrics follow a selected profile; emit legacy values when no profile is selected
+  // instead of inheriting a parent profile or changing standalone presentation.
+  style["--hjm-toast-title-line-height"] = profileTokens ? "var(--hjm-type-body-line-height)" : "1.35";
+  style["--hjm-toast-description-line-height"] = profileTokens ? "var(--hjm-type-body-line-height)" : "1.45";
   // Overlay chrome and sizes come from the recipes Native reads (1.5.0).
   for (const [name, chrome] of [["dialog", dialogRecipe.content], ["sheet", sheetRecipe.content], ["toast", toastRecipe.surface]] as const) {
     style[`--hjm-${name}-background`] = resolveColorReference(chrome.background, palette);

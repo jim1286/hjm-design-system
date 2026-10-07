@@ -55,7 +55,9 @@ export function FilePicker({
   warnDeprecatedStyleProps("FilePicker", { style }, "layoutStyle for placement; filePickerRecipe owns appearance");
   validateFilePickerTriggers("native", ["button"]);
   const resolved = resolveFilePickerDescriptor(descriptor);
-  const { colors } = useHjmNativeTheme();
+  const { colors, designProfile } = useHjmNativeTheme();
+  // The trigger md role follows the nearest profile without changing standalone geometry.
+  const corner = designProfile?.tokens.radius[filePickerRecipe.trigger.radius] ?? 12;
   const [busy, setBusy] = useState(false);
   const mountedRef = useRef(true);
   useEffect(() => () => {
@@ -83,7 +85,7 @@ export function FilePicker({
         accessibilityState={{ busy, disabled: unavailable }}
         disabled={unavailable}
         onPress={() => void pick()}
-        style={({ pressed }) => ({ alignItems: "center", alignSelf: "flex-start", borderColor: error ? colors.danger : colors.border, borderRadius: 12, borderWidth: 1, justifyContent: "center", minHeight: filePickerRecipe.trigger.minHeight, opacity: unavailable ? filePickerRecipe.states.disabledOpacity : pressed ? 0.72 : 1, paddingHorizontal: filePickerRecipe.trigger.paddingHorizontal })}
+        style={({ pressed }) => ({ alignItems: "center", alignSelf: "flex-start", borderColor: error ? colors.danger : colors.border, borderRadius: corner, borderWidth: 1, justifyContent: "center", minHeight: filePickerRecipe.trigger.minHeight, opacity: unavailable ? filePickerRecipe.states.disabledOpacity : pressed ? 0.72 : 1, paddingHorizontal: filePickerRecipe.trigger.paddingHorizontal })}
       >
         <Text emphasis="strong" style={{ color: colors.contentBrand }} variant="label">{buttonLabel}</Text>
       </Pressable>

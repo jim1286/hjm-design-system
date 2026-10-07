@@ -4,6 +4,7 @@ import { ActivityIndicator, Pressable, View, } from "react-native";
 import { Text } from "./primitives.js";
 import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
+// UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export function AuthProviderButton({ descriptor, logo, onPress, layoutStyle, style }) {
     warnDeprecatedStyleProps("AuthProviderButton", { style }, "layoutStyle for placement; authProviderButtonRecipe owns appearance");
     validateAuthProviderButtonDescriptor(descriptor);
@@ -35,6 +36,6 @@ export function AuthProviderButton({ descriptor, logo, onPress, layoutStyle, sty
                     justifyContent: "center",
                     width: authProviderButtonRecipe.logoSize,
                     opacity: busy ? 0 : 1,
-                }, children: logo }), _jsx(Text, { style: { color: surface.content, flexShrink: 1, opacity: busy ? 0 : 1 }, variant: "body", children: descriptor.label }), busy ? _jsx(View, { pointerEvents: "none", style: { alignItems: "center", bottom: 0, justifyContent: "center", left: 0, position: "absolute", right: 0, top: 0 }, children: _jsx(ActivityIndicator, { color: surface.content }) }) : null] }));
+                }, children: logo }), _jsx(Text, { fontRole: "ui", style: { color: surface.content, flexShrink: 1, opacity: busy ? 0 : 1 }, variant: "body", children: descriptor.label }), busy ? _jsx(View, { pointerEvents: "none", style: { alignItems: "center", bottom: 0, justifyContent: "center", left: 0, position: "absolute", right: 0, top: 0 }, children: _jsx(ActivityIndicator, { color: surface.content }) }) : null] }));
 }
 //# sourceMappingURL=provider-button.js.map

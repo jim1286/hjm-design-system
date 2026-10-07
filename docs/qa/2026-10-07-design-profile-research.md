@@ -1026,3 +1026,69 @@ fixture·계약·사용 지침·양 renderer patch Changeset은 보존한다.
 
 새 실험 이름·버전 상승·원격 CI/dispatch·승급·npm 게시·소비 앱 반영은 없다.
 실제 Native 기기·미검수 플랫폼/AT/성능과 전체 컴포넌트 토큰 소비 검수는 이 4건으로 완료 처리하지 않는다.
+
+
+## 필요한 조사 마감 후 토큰 소비 누락 보완
+
+2026-10-07 사용자 “필요한것만 조사해”에 따라 추가 외부 수집과 새로운 조사 배치를 닫았다.
+기존 공개 API의 실제 토큰 소비 누락을 수정하며 새 wrapper·상태 엔진·실험 이름을 추가하지 않았다.
+
+- Native AuthScreenLayout의 mainCard가 radius16으로 고정돼 Web의 profile lg 표면 역할과 달랐다. 가까운 Provider의 lg를 쓰고 미지정은 recipe16을 유지했다. 제공자 버튼은 제공자의 light/dark 색과 모서리를 유지한다.
+- Native FilePicker·UploadItem·TransferList, Web Sidebar·SkipNav·Menubar의 모서리 고정을 기존 md/sm 역할로 연결했다. Web은 CSS 변수와 기존 fallback으로 optional import 경계를 유지한다.
+- Top의 크기별 기존 시각 역할을 profile 메트릭에 연결하되 명시적 heading level과 legacy recipe를 유지했다.
+- Native UI 제어 라벨은 Text의 기본 reading 역할과 구분해 기존 fontRole=ui를 소비하도록 연결했다. 콘텐츠 본문은 reading을 유지한다. Web Toast 제목·설명 줄 높이는 profile body 역할을 소비하고 미지정은 기존 1.35/1.45를 유지한다.
+
+Auth2 + Native navigation/file corners2, Web auth1 + navigation corners2 집중 회귀가 통과했다.
+Auth는 10종+neutral·앱 lg39·미지정 × light/dark × idle/pending에서 같은 입력/버튼 인스턴스·초안·중앙 로딩·접근성 숨김을 대조한 모의 host 검사다.
+Web 탐색은 실제 Chromium focus/menu/disabled/skip target·Top 의미 역할과 메트릭을 대조한다.
+초기 Web 명령은 browser config를 빠뜨려 document 부재로 실패했으며, 올바른 browser config의 최종 3건 통과를 사용한다.
+최대 글자와 최대 목적 모사는 실행하지 않았고 일반 배율 API/fixture를 일괄 제거하지 않았다.
+
+별도 [선택 iOS QA §9](2026-10-07-native-reference-validation.md#9-목록-화면-골격-독립-story-검수)는 목록 화면 골격 독립 Story의 선택 흐름 검수다. 이 토큰 수정의 모든 Native 기기 외형·Android·AT·Release 성능 검수로 합산하지 않는다.
+실험 승급·원격 CI·버전 상승·npm 게시·소비 앱 반영은 별도 상태이며 이 변경에서 실행하지 않았다.
+
+최종 회귀: Native3파일/23건(Auth2·navigation/file2·UI font19), Chromium3파일/4건(Auth1·navigation2·Toast1) 통과.
+UI font은 조작 라벨24곳과 클릭형 TopBar1곳이며 정적 제목 display/본문 reading과 구분했다.
+TopBar 클릭 callback·button role/정적 header, 가까운 앱 profile·neutral·legacy 및 초안/선택·같은 host를 확인했다.
+Native 라벨 초기 fixture의 필수 closeLabel/Calendar7셀/Tag draft·접근성 host 선택과 Web Toast의 onDismissRequest를 정정한 뒤 통과했다.
+Auth fixture의 필수 onPress 누락은 최종 typecheck에서 찾아 fixture에 추가했다. 이 harness 오류들을 제품 결함으로 세지 않는다.
+양 renderer build/typecheck와 양 Showcase typecheck, renderer graph/platform 경계, Storybook433파일/970ID, 공개 API310, workspace/evidence 동기화, 문서598파일 링크, Showcase70개 token-sensitive 선언 검사 통과.
+usage 새 하위 주제를 규격 ## 밖에 추가해 9건 실패했으며 모두 ###로 옮겨 토큰13/컴포넌트139/구성59/화면22 검사를 재통과했다.
+본인 자동 실패 PNG와 경계 로그 2파일/20865bytes의 manifest SHA-256 `0c081543ed13c1b73773ea34d0a001819000644847bacd15bd77466b7f6a17cb`를 보존 후 원시를 제거했다.
+이번 회귀는 필요한 계약/행동 확인이며 전체 CI 또는 실제 모든 테마·플랫폼 검수가 아니다.
+
+최종 소스·회귀 fixture SHA-256(생성물은 해당 renderer build로 재생성):
+
+| 경로 | SHA-256 |
+| --- | --- |
+| packages/react-native/src/actions.tsx | `51403a96b1976a80632e48c406bfad43e3b3beb256133fd53656e10aca17a842` |
+| packages/react-native/src/agreement.tsx | `380b9bede1ef8ee7e1e324f50d4fc44311b9ea816d8b3eaa6af7592f29b89a8d` |
+| packages/react-native/src/auth-screen.tsx | `98a1e5fe653b13f4d7337a27d9bd672c539bc587bf81ce7a223c92c4b74fda09` |
+| packages/react-native/src/calendar.tsx | `cfdc46a23dd3a2d7408fa1b3b755f49b6b3475807a10cfc78ef69428c840cb41` |
+| packages/react-native/src/collapsible.tsx | `1474054f568afcb45396626a140c154cdcbfecc8352d4a1f5be0dfb920d5da5a` |
+| packages/react-native/src/data-display.tsx | `99270cd33951bdc3948a1f350f09698f2b42424407a788baeec4365ddbf96038` |
+| packages/react-native/src/date-picker.tsx | `5462b8219845b4e61ebf82d2ff2fb07fdf88e08b102f3e1a955b050fdfeb48ca` |
+| packages/react-native/src/feedback.tsx | `caf7d55feb40302b171fb82bd1b3cb450bfb9807dafd1113c2e48b18998d8a9f` |
+| packages/react-native/src/file-picker.tsx | `ffa92b611133c70549892d9cd645e65aff97a7623e64b1aab2782c2ecedeaea2` |
+| packages/react-native/src/forms.tsx | `62e411db2200fd80a40cae3abd180020f9e059f023a2c4ec75499dbaadbd7945` |
+| packages/react-native/src/inputs.tsx | `7692ca586549cffa5af606bf2eceb279b44e83cd9bb73741cb541473e71617ac` |
+| packages/react-native/src/internal/recipe-button.tsx | `72948c8f76aa1e2121482422cddb13e67a63196d74cbd10434732896363ef64a` |
+| packages/react-native/src/mentions.tsx | `1162eca8d92ddf6f7cf1a89f161bc70eaa59d8792f7a2d67b1af6e049dc9fd14` |
+| packages/react-native/src/navigation.tsx | `694d21bb5c693c0aa75eb169b4fac87df2895dbdfb06f41776248a2114839c7c` |
+| packages/react-native/src/provider-button.tsx | `606179700cc4fcc037f424fcbbf83e8a2650580be45a076a4da4ebb02c75e06f` |
+| packages/react-native/src/tags-input.tsx | `27bc1ab8f6490a3d0b19f8a1dd36c3fe9b7a20f0e3d7c5b2de33ad91875c1071` |
+| packages/react-native/src/toggle-group.tsx | `50348069d4b2bea6a58c450bc04e64c4c50fe9adb2d06fef474d4b4bae510a3a` |
+| packages/react-native/src/top.tsx | `e8514c52d69d1e28fd6de5914254a60ee9b7a28030334ccde1fe9a577cd2e660` |
+| packages/react-native/src/transfer-list.tsx | `2a339740e267de9d327d440aaa51253733265b2bc3afb631f88d31de91c248ce` |
+| packages/react-native/src/upload-item.tsx | `f276f9ee04d09352cca7fdfa136fa42a15f5bd7821db3262779a07140d500a1c` |
+| packages/react/src/menubar.tsx | `0ce1fdbd005d0651fe6ff20c2ef898d3318a384f6e5c28a3f13750c551a023b7` |
+| packages/react/src/sidebar.tsx | `e27d8dee79b5f682937298d91d93843471a55158b2b29cce97dee49166ffac49` |
+| packages/react/src/skip-nav.tsx | `7c13a404ad2bf82c4aefc01980deae61448c49b284592b1b409af9d6e305b255` |
+| packages/react/src/top.tsx | `22366e4365116076922538912a432e74e5b9b0dbc7c31587e4731e39817215b6` |
+| packages/react/src/theme.ts | `f49e9726dd9dad12ac7b087937791e926a432e2414feb72580bb17d148eb8324` |
+| packages/react/src/styles.css | `49cf134da26349b2b790375951b053fb8ce0416ac7fbafdf57056cabe9ec092c` |
+| packages/react-native/test/auth-screen-pending.test.tsx | `db74cba6913848a81ac19e2909528c2da6b0dab6cf28abf0565fe699958c0f4a` |
+| packages/react-native/test/profile-file-navigation-corners.test.tsx | `61db80d88f9debc65f9d9f7399f4d673748f2513713b08e564ed4691eddacbc7` |
+| packages/react-native/test/profile-ui-label-fonts.test.tsx | `4ba9f7fd127943d8718eacfb2d894e8b7a6cc022bafd488ee15b61ef2e29295c` |
+| packages/react/test/profile-navigation-corners.browser.test.tsx | `644b718f54201c654e7cb0997bc6096d657e4cccdd7ff3cf90fb94e10191520c` |
+| packages/react/test/profile-toast-line-height.browser.test.tsx | `704eafc06c4e73bb6c04b9a9a3647588eac6a3545f646728374f462fb44f0144` |

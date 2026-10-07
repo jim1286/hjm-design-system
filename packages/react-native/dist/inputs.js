@@ -407,6 +407,7 @@ function warnChoiceVisualStyles(component, visual) {
         descriptionStyle: visual.descriptionStyle,
     }, choiceVisualReplacement);
 }
+// UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 function ChoiceRow({ kind, label, description, checked, disabled, readOnly, required, invalid, readOnlyLabel, requiredLabel, invalidLabel, accessibilityHint, presentation = selectionControlRecipe.defaults.presentation, size = selectionControlRecipe.defaults.size, indicator = "default", leading, renderLeading, renderIndicator, onActivate, webTabIndex, layoutStyle, style, controlStyle, indicatorStyle, leadingStyle, contentStyle, labelStyle, descriptionStyle, }) {
     const theme = useHjmNativeTheme();
     const metrics = selectionControlRecipe.sizes[size];
@@ -499,7 +500,7 @@ function ChoiceRow({ kind, label, description, checked, disabled, readOnly, requ
                         width: metrics.control,
                     },
                     controlStyle,
-                ], children: _jsx(View, { style: indicatorStyle, children: renderIndicator?.(appearance) ?? defaultIndicator }) })) : null, resolvedLeading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", style: leadingStyle, children: resolvedLeading })) : null, _jsxs(View, { style: [{ flex: 1, gap: spacing.xxs, minWidth: 0 }, contentStyle], children: [_jsx(Text, { style: [
+                ], children: _jsx(View, { style: indicatorStyle, children: renderIndicator?.(appearance) ?? defaultIndicator }) })) : null, resolvedLeading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", style: leadingStyle, children: resolvedLeading })) : null, _jsxs(View, { style: [{ flex: 1, gap: spacing.xxs, minWidth: 0 }, contentStyle], children: [_jsx(Text, { fontRole: "ui", style: [
                             {
                                 color: resolveColorReference(selectionControlRecipe.label.color, theme.palette),
                                 fontWeight: selected
@@ -666,19 +667,7 @@ export function Switch({ label, labelVisibility = "visible", presentation = swit
                     flex: stacked || presentation === "inline" ? undefined : 1,
                     gap: spacing.xxs,
                     opacity: disabled ? switchRecipe.states.disabledOpacity : 1,
-                }, children: [_jsx(Text, { tone: "body", variant: "bodyLarge", children: label }), description ? (_jsx(Text, { tone: "muted", variant: "caption", children: description })) : null] }) : null, _jsx(NativeSwitch, { ...props, accessible: false, disabled: disabled, ios_backgroundColor: trackOff, pointerEvents: "none", 
-                // iOS UISwitch has a fixed intrinsic size (about 66pt wide on iOS 26) that
-                // ignores a smaller box: forcing the recipe box drew the control from the box's
-                // top-start corner, so it overflowed up and to the end and sat above the row's
-                // centre in two-line rows (reported 2026-09-27, iPhone 17 Pro). On iOS we let the
-                // native size drive layout so `alignItems: center` centres the real track.
-                // Rejected: an oversized centring wrapper — it has to guess the per-OS UISwitch
-                // size, which is exactly the number that changed. Android honours the box.
-                // RN's iOS Switch composes `alignSelf: "flex-start"` under the caller's style,
-                // which overrode this row's `alignItems: center` and pinned the track to the
-                // row top, 8-10pt above the label centre (2026-09-30 audit, iOS 27). Restate
-                // the row's cross-axis alignment explicitly.
-                style: Platform.OS === "ios"
+                }, children: [_jsx(Text, { fontRole: "ui", tone: "body", variant: "bodyLarge", children: label }), description ? (_jsx(Text, { tone: "muted", variant: "caption", children: description })) : null] }) : null, _jsx(NativeSwitch, { ...props, accessible: false, disabled: disabled, ios_backgroundColor: trackOff, pointerEvents: "none", style: Platform.OS === "ios"
                     ? { alignSelf: stacked ? "flex-start" : "center" }
                     : { height: dimensions.height, width: dimensions.width }, thumbColor: thumb, trackColor: { false: trackOff, true: trackOn }, value: enabled })] }));
 }
@@ -819,7 +808,7 @@ export function SegmentedControl(props) {
                             paddingVertical: pills ? segmentedControlRecipe.pills.inset : undefined,
                             width: stacked ? "100%" : undefined,
                         },
-                    ], children: [pills ? _jsx(View, { pointerEvents: "none", accessible: false, style: { position: "absolute", left: 0, right: 0, top: segmentedControlRecipe.pills.inset, bottom: segmentedControlRecipe.pills.inset, borderRadius: segmentedControlRecipe.pills.radius, backgroundColor: isSelected ? (movingHighlight ? "transparent" : resolveColorReference(segmentedControlRecipe.pills.selectedBackground, theme.palette)) : theme.colors.surfaceAlt } }) : null, leading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", children: leading })) : null, _jsx(Text, { align: "center", style: {
+                    ], children: [pills ? _jsx(View, { pointerEvents: "none", accessible: false, style: { position: "absolute", left: 0, right: 0, top: segmentedControlRecipe.pills.inset, bottom: segmentedControlRecipe.pills.inset, borderRadius: segmentedControlRecipe.pills.radius, backgroundColor: isSelected ? (movingHighlight ? "transparent" : resolveColorReference(segmentedControlRecipe.pills.selectedBackground, theme.palette)) : theme.colors.surfaceAlt } }) : null, leading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", children: leading })) : null, _jsx(Text, { fontRole: "ui", align: "center", style: {
                                 color: contentColor,
                                 fontWeight: isSelected
                                     ? segmentedControlRecipe.item.selectedFontWeight
@@ -886,7 +875,7 @@ export function Chip({ label, size = chipRecipe.defaults.size, disabled = false,
                     size: glyph[chipRecipe.selectionIndicator.glyph],
                 })) : (
                 // Like Checkbox, the selection mark fits a fixed glyph slot; the chip label still scales.
-                _jsx(NativeText, { accessible: false, allowFontScaling: false, style: { ...typography.caption, color: indicatorColor }, children: "\u2713" })) })) : null, _jsx(Text, { align: "center", style: [
+                _jsx(NativeText, { accessible: false, allowFontScaling: false, style: { ...typography.caption, color: indicatorColor }, children: "\u2713" })) })) : null, _jsx(Text, { fontRole: "ui", align: "center", style: [
                     {
                         color: contentColor,
                         fontWeight: active

@@ -32,7 +32,9 @@ export type UploadItemProps = Readonly<{
 
 export function UploadItem({ descriptor, labels, onCancel, onRetry, leading, layoutStyle, style }: UploadItemProps) {
   warnDeprecatedStyleProps("UploadItem", { style }, "layoutStyle for placement; uploadItemRecipe owns appearance");
-  const { colors, environment } = useHjmNativeTheme();
+  const { colors, environment, designProfile } = useHjmNativeTheme();
+  // The row md role follows the nearest profile; retain the pre-profile 12px frame.
+  const corner = designProfile?.tokens.radius[uploadItemRecipe.row.radius] ?? 12;
   const announcement = resolveUploadItemAnnouncement(descriptor, labels);
   const action = getUploadItemAvailableAction(descriptor.state);
   if (action === "cancel" && onCancel === undefined) {
@@ -51,7 +53,7 @@ export function UploadItem({ descriptor, labels, onCancel, onRetry, leading, lay
     // element, VoiceOver and TalkBack swallowed Cancel/Retry into it and the
     // action was unreachable (2026-09-30 audit). The file text is one grouped
     // element and the action is a separate button, as the contract's slots list.
-    <View style={[{ alignItems: "center", borderColor: colors.border, borderRadius: 12, borderWidth: 1, direction: environment.direction, flexDirection: "row", gap: uploadItemRecipe.row.gap, minHeight: uploadItemRecipe.row.minHeight, paddingHorizontal: uploadItemRecipe.row.paddingHorizontal, paddingVertical: uploadItemRecipe.row.paddingVertical }, style, layoutStyle]}>
+    <View style={[{ alignItems: "center", borderColor: colors.border, borderRadius: corner, borderWidth: 1, direction: environment.direction, flexDirection: "row", gap: uploadItemRecipe.row.gap, minHeight: uploadItemRecipe.row.minHeight, paddingHorizontal: uploadItemRecipe.row.paddingHorizontal, paddingVertical: uploadItemRecipe.row.paddingVertical }, style, layoutStyle]}>
       {leading === undefined ? null : <View accessible={false} importantForAccessibility="no-hide-descendants">{leading}</View>}
       {/* Native exposes only a busy state for this lifecycle; success and error remain
           distinguishable through the live status sentence, as documented by the contract. */}

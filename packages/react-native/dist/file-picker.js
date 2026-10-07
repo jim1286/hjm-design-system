@@ -10,7 +10,9 @@ export function FilePicker({ descriptor, label, buttonLabel, onPick, onPickError
     warnDeprecatedStyleProps("FilePicker", { style }, "layoutStyle for placement; filePickerRecipe owns appearance");
     validateFilePickerTriggers("native", ["button"]);
     const resolved = resolveFilePickerDescriptor(descriptor);
-    const { colors } = useHjmNativeTheme();
+    const { colors, designProfile } = useHjmNativeTheme();
+    // The trigger md role follows the nearest profile without changing standalone geometry.
+    const corner = designProfile?.tokens.radius[filePickerRecipe.trigger.radius] ?? 12;
     const [busy, setBusy] = useState(false);
     const mountedRef = useRef(true);
     useEffect(() => () => {
@@ -34,6 +36,6 @@ export function FilePicker({ descriptor, label, buttonLabel, onPick, onPickError
                 setBusy(false);
         }
     };
-    return (_jsxs(View, { style: [{ gap: 6 }, style, layoutStyle], children: [_jsx(Text, { emphasis: "strong", variant: "label", children: label }), _jsx(Pressable, { accessibilityLabel: buttonLabel, accessibilityRole: "button", accessibilityState: { busy, disabled: unavailable }, disabled: unavailable, onPress: () => void pick(), style: ({ pressed }) => ({ alignItems: "center", alignSelf: "flex-start", borderColor: error ? colors.danger : colors.border, borderRadius: 12, borderWidth: 1, justifyContent: "center", minHeight: filePickerRecipe.trigger.minHeight, opacity: unavailable ? filePickerRecipe.states.disabledOpacity : pressed ? 0.72 : 1, paddingHorizontal: filePickerRecipe.trigger.paddingHorizontal }), children: _jsx(Text, { emphasis: "strong", style: { color: colors.contentBrand }, variant: "label", children: buttonLabel }) }), hint === undefined ? null : _jsx(Text, { tone: "muted", variant: "label", children: hint }), error === undefined ? null : _jsx(Text, { accessibilityLiveRegion: "assertive", style: { color: colors.danger }, variant: "label", children: error })] }));
+    return (_jsxs(View, { style: [{ gap: 6 }, style, layoutStyle], children: [_jsx(Text, { emphasis: "strong", variant: "label", children: label }), _jsx(Pressable, { accessibilityLabel: buttonLabel, accessibilityRole: "button", accessibilityState: { busy, disabled: unavailable }, disabled: unavailable, onPress: () => void pick(), style: ({ pressed }) => ({ alignItems: "center", alignSelf: "flex-start", borderColor: error ? colors.danger : colors.border, borderRadius: corner, borderWidth: 1, justifyContent: "center", minHeight: filePickerRecipe.trigger.minHeight, opacity: unavailable ? filePickerRecipe.states.disabledOpacity : pressed ? 0.72 : 1, paddingHorizontal: filePickerRecipe.trigger.paddingHorizontal }), children: _jsx(Text, { emphasis: "strong", style: { color: colors.contentBrand }, variant: "label", children: buttonLabel }) }), hint === undefined ? null : _jsx(Text, { tone: "muted", variant: "label", children: hint }), error === undefined ? null : _jsx(Text, { accessibilityLiveRegion: "assertive", style: { color: colors.danger }, variant: "label", children: error })] }));
 }
 //# sourceMappingURL=file-picker.js.map

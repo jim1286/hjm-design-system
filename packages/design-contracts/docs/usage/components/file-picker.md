@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [FilePicker](../../file-picker.md), 판정 `resolveFilePickerSelection`(`@hjmds/design-contracts/components/file-picker`)
 - 스토리북: `배포/컴포넌트/입력/파일 선택`
 
@@ -112,3 +112,9 @@ import { FilePicker } from "@hjmds/react-native/file-picker";
 
 - Native `onPick`이 reject하면 `onSelect`는 불리지 않고 `onPickError`로만 전달된다. 빈 함수로 두면 피커 실패가 화면에 남지 않는다.
 - 브라우저 `accept`와 OS 피커 필터는 힌트일 뿐이다. 거부 판정은 반드시 `onSelect` 결과로 처리한다.
+
+### 프로필 모서리·제목 소비
+
+2026-10-07 소비 감사에서 Native 선택 버튼의 모서리 12가 프로필을 우회했다. Web 버튼의 기존 `radius.md`와 같은 역할을 Native도 가까운 프로필에서 읽으며, 프로필이 없으면 기존 12를 유지한다. 선택 어댑터·비활성/진행 상태·파일 검증은 바꾸지 않는다.
+
+프로필 연결은 1.15.0 이후 미게시 변경이며, 기본 배포 계약과 실제 Native 기기 검증은 구분한다.

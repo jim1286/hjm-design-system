@@ -29,7 +29,8 @@ export const Sidebar = forwardRef(function Sidebar({ descriptor, appearance = "s
         }, style: { ...layoutStyle,
             "--hjm-sidebar-width": `${collapsed ? sidebarRecipe.widths.collapsed : sidebarRecipe.widths.expanded}px`,
             "--hjm-sidebar-item-height": `${sidebarRecipe.itemMinHeight}px`,
-            "--hjm-sidebar-item-radius": `${sidebarRecipe.itemRadius}px`,
+            // CSS inheritance preserves nested profiles without adding a Provider dependency.
+            "--hjm-sidebar-item-radius": `var(--hjm-radius-md, ${sidebarRecipe.itemRadius}px)`,
             "--hjm-sidebar-gap": `${sidebarRecipe.gap}px`,
             "--hjm-sidebar-group-gap": `${sidebarRecipe.groupGap}px`,
         }, children: [collapseLabels ? (_jsx("button", { type: "button", className: "hjm-sidebar__toggle", "aria-expanded": !collapsed, "aria-label": collapsed ? collapseLabels.expand : collapseLabels.collapse, onClick: () => setCollapsed(!collapsed), children: _jsx("span", { "aria-hidden": "true", children: collapsed ? "»" : "«" }) })) : null, descriptor.groups.map((group) => (_jsxs("div", { className: "hjm-sidebar__group", role: "group", "aria-label": group.label, children: [group.label ? _jsx("p", { className: "hjm-sidebar__group-label", "aria-hidden": "true", children: group.label }) : null, _jsx("ul", { className: "hjm-sidebar__list", children: group.items.map((item) => {

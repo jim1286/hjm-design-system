@@ -34,7 +34,10 @@ export type AuthScreenLayoutProps = AuthScreenDescriptor &
 function AuthActionCard({ children, style }: { children?: ReactNode; style?: StyleProp<ViewStyle> }) {
   const theme = useHjmNativeTheme();
   return <View style={[{ width: "100%", backgroundColor: theme.colors.bg,
-    borderRadius: authScreenRecipe.mainCard.radius, padding: authScreenRecipe.mainCard.padding }, style]}>{children}</View>;
+    // The login card uses the same lg surface role as Web; provider buttons keep
+    // their separate branding recipe and pending keeps the mounted action block.
+    borderRadius: theme.designProfile?.tokens.radius.lg ?? authScreenRecipe.mainCard.radius,
+    padding: authScreenRecipe.mainCard.padding }, style]}>{children}</View>;
 }
 
 /**

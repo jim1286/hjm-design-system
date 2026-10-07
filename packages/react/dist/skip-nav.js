@@ -7,7 +7,8 @@ export const SkipNav = forwardRef(function SkipNav({ targetId, label, className,
     return (_jsx("a", { ...props, ref: forwardedRef, href: `#${targetId}`, className: classNames("hjm-skip-nav", className), style: {
             "--hjm-skip-nav-min-height": `${skipNavRecipe.minHeight}px`,
             "--hjm-skip-nav-padding": `${skipNavRecipe.paddingHorizontal}px`,
-            "--hjm-skip-nav-radius": `${skipNavRecipe.radius}px`,
+            // The corner follows the nearest profile; pinned focus placement stays recipe-owned.
+            "--hjm-skip-nav-radius": `var(--hjm-radius-md, ${skipNavRecipe.radius}px)`,
             "--hjm-skip-nav-offset": `${skipNavRecipe.offset}px`,
         }, onClick: (event) => {
             onClick?.(event);

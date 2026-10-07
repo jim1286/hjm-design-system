@@ -90,7 +90,8 @@ export function Menubar<Key extends string = string, MenuKey extends string = st
         "--hjm-menubar-gap": `${menubarRecipe.gap}px`,
         "--hjm-menubar-padding": `${menubarRecipe.paddingHorizontal}px`,
         "--hjm-menubar-label-padding": `${menubarRecipe.label.paddingHorizontal}px`,
-        "--hjm-menubar-label-radius": `${menubarRecipe.label.radius}px`,
+        // Consume the label sm role through CSS inheritance, retaining standalone recipe geometry.
+        "--hjm-menubar-label-radius": `var(--hjm-radius-sm, ${menubarRecipe.label.radius}px)`,
       } as CSSProperties}
       onKeyDown={(event) => {
         if (event.key === "ArrowRight") { event.preventDefault(); move("next"); return; }

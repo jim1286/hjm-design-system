@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [Sidebar](../../sidebar.md), `src/sidebar.ts`(`sidebarRecipe`, `validateSidebarDescriptor`)
 - 스토리북: `배포/컴포넌트/탐색/사이드바`, `배포/컴포넌트/탐색/사이드바 전환`
 
@@ -105,3 +105,9 @@ Native: 없음. 폰은 BottomNavigation, 태블릿 split view는 navigator가 �
 - 항목은 `href`가 있는 일반 `<a>`이고 클릭 시 기본 이동을 막지 않는다. `onNavigate`는 알림 콜백이지
   이동을 대신하지 않는다. client router 전환(Next.js 등)이 필요하면 제품 셸에서 동작을 확인한다.
 - `destination`을 빼면 `href` 없는 `<a>`가 되어 키보드 초점을 받지 못한다. 이동 항목에는 `destination`을 둔다.
+
+### 프로필 모서리·제목 소비
+
+2026-10-07 소비 감사에서 Web 항목의 숫자 recipe 모서리가 프로필을 우회했다. 기존 `radius.md` 역할을 가까운 Provider의 CSS 변수로 읽고 변수 없는 독립 사용은 recipe 12를 유지한다. 레일 폭·링크·현재 위치·접기·초점과 Web 전용 범위는 바꾸지 않는다.
+
+프로필 연결은 1.15.0 이후 미게시 변경이며, 기본 배포 계약과 실제 Native 기기 검증은 구분한다.

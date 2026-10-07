@@ -1,4 +1,5 @@
 import {
+  transferListRecipe,
   moveTransferListSelection,
   reconcileTransferListSelection,
   resolveTransferListPanels,
@@ -51,6 +52,8 @@ const emptySelection = <Id extends string>(): TransferListSelection<Id> => ({
   target: new Set<Id>(),
 });
 
+
+// UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export function TransferList<Id extends string = string>({
   items,
   labels,
@@ -62,7 +65,9 @@ export function TransferList<Id extends string = string>({
   style,
 }: TransferListProps<Id>) {
   warnDeprecatedStyleProps("TransferList", { style }, "layoutStyle for placement; the transfer list renderer owns appearance");
-  const { colors } = useHjmNativeTheme();
+  const { colors, designProfile } = useHjmNativeTheme();
+  // Panels share the Web md role; preserve the pre-profile frame when no profile is selected.
+  const corner = designProfile?.tokens.radius[transferListRecipe.panel.radius] ?? 12;
   const [targetKeys, setTargetKeys] = useControllableState<ReadonlySet<Id>>({
     ...(controlledTargetKeys === undefined ? {} : { value: controlledTargetKeys }),
     defaultValue: defaultTargetKeys ?? new Set<Id>(),
@@ -105,7 +110,7 @@ export function TransferList<Id extends string = string>({
         <ScrollView
           accessibilityRole="list"
           accessibilityLabel={panel === "source" ? labels.source : labels.target}
-          style={{ borderWidth: 1, borderColor: colors.border, borderRadius: 12 }}
+          style={{ borderWidth: 1, borderColor: colors.border, borderRadius: corner }}
         >
           {rows.length === 0 ? (
             <Text tone="muted" variant="caption" style={{ padding: spacing.sm }}>{labels.empty}</Text>
@@ -122,7 +127,8 @@ export function TransferList<Id extends string = string>({
                   onPress={() => setSelection(toggleTransferListSelection(descriptor, selection, panel, item.id as Id))}
                   style={{ minHeight: 44, justifyContent: "center", paddingHorizontal: spacing.sm }}
                 >
-                  <Text>{checked ? "✓ " : ""}{item.label}</Text>
+                  <Text
+              fontRole="ui">{checked ? "✓ " : ""}{item.label}</Text>
                 </Pressable>
               );
             })
