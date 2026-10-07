@@ -7400,7 +7400,7 @@
           "ContentTransition"
         ],
         "decision": "reuse-composition",
-        "registration": "pending-root-after-research",
+        "registration": "registered-root-experiment-only",
         "scope": "Expression or composition using current API; no new duplicate engine. Preconditions and source risks remain in manualReviewNotes and reviewNotes.",
         "requiredStates": [
           "Default",
@@ -7415,7 +7415,14 @@
           "Failed",
           "Recovery"
         ],
-        "actualVerification": "Only URL-specific visualReview/interactionReview counts; no implied completion."
+        "actualVerification": "Only URL-specific visualReview/interactionReview counts; no implied completion.",
+        "registeredEvidence": {
+          "commit": "548f4bd1494515d0c48ef882c4baf4cf00bcd1de",
+          "qa": "docs/qa/2026-10-07-command-records.md",
+          "platforms": "Web and Native Showcase8variants each; Web actualselectedQA; Native physicaldevice pending",
+          "publication": "unpublished; version remains1.14.0",
+          "scope": "Only command-record composition experiment registered; all other candidates/promotion/publication pending."
+        }
       }
     },
     {
@@ -7914,12 +7921,13 @@
       "sourcePages": 501,
       "allReviewComplete": false,
       "reviewCounts": {
-        "staticBodyRead": 500,
-        "staticBodyPartial": 1,
+        "staticBodyRead": 501,
+        "staticBodyPartial": 0,
         "staticBodyPending": 0,
-        "manualImplementationRead": 53,
-        "renderedSelectedPages": 10,
-        "selectedFlowPages": 4
+        "manualImplementationRead": 112,
+        "renderedSelectedPages": 11,
+        "selectedFlowPages": 5,
+        "installationGuideRead": 4
       },
       "pages": [
         {
@@ -7962,12 +7970,19 @@
           "url": "https://ui.aceternity.com/ai-recommendations",
           "sourceSha256": "916d7a9e0f545883b115c79f8209eaa0538556e952cd8c7e4bf73e8eee85ac46",
           "capturedAt": "2026-10-07T03:47:10Z",
-          "readReview": "partial",
+          "readReview": "static-body-read",
           "manualReview": "pending",
           "visualReview": "pending",
           "interactionReview": "pending",
-          "readScope": "AI catalog main prefix before truncated tool output only; remainder unreviewed",
-          "reviewNotes": "112free/23pro/17templates/180blocks/1hook asserted by catalog. Fullmain427980 characters, not countedcomplete; contentcollection not implementation proof."
+          "readScope": "Captured human-facing catalogue and all Free112/Pro23/Template17/ProBlocks180 raw JSON plus all Quick Reference entries read in full, offsets [0,426340) under HTMLParser-main-nonblank-newline-v1. Contiguous overlapping chunks continued through END MAIN426340; hidden implementation/assets/runtime excluded.",
+          "reviewNotes": "Catalogue112free/23pro/17templates/180blocks/1hook claims and all captured main text fully read. Catalogue metadata is not source/runtime proof: dependencies differ from current visible Manual (Tabs Radix versus custom Motion; Keyboard Motion dependency categorized as npm), some taxonomy labels and marketing claims are generic. Twelve linked free aliases remain separately tracked 404. Locked premium code, location projection/labels, performance, full visual/input states remain pending. Existing68proposal mappings reused; no new experiment registration claimed.",
+          "bodyReadCheckpoint": {
+            "extractor": "HTMLParser-main-nonblank-newline-v1",
+            "fullCharacters": 426340,
+            "bodyTextSha256": "dc1f74e1de0ab4aceb25d458d368667f0a6a0696ea1172a7f3af925a0fb0970d",
+            "readThroughExclusive": 426340,
+            "status": "full-captured-main-read"
+          }
         },
         {
           "url": "https://ui.aceternity.com/amazing-tailwindcss-and-framer-motion-components",
@@ -16388,7 +16403,7 @@
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire category core heading/filter/all names/descriptions/access labels/Coming Soon; components catalogue full body for index327",
-          "reviewNotes": "Full sidebar catalogue text read separately; no listed linked component source/visual/flow inferred.",
+          "reviewNotes": "Full sidebar catalogue text read separately; no listed linked component source/visual/flow inferred. Public usage reread: HJM Sidebar is Web-only, native mobile routing uses BottomNavigation/navigator. Sheet is modal; Web nonmodal edge uses SidePanel. Do not claim same Sidebar/Popover across Native.",
           "experimentProposal": {
             "path": null,
             "existingApis": [],
@@ -16918,14 +16933,15 @@
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body (description, CLI, visible props/CSS, headings); hidden Manual/Usage/provider tabs only when separately noted",
-          "reviewNotes": "Full utilities code and both Next15/React19 alpha override samples read. Historic motion12alpha/React19rc workaround is source page advice, not verified-current dependency policy; do not overwrite HJM pins.",
+          "reviewNotes": "Full utilities code and both Next15/React19 alpha override samples read. Historic motion12alpha/React19rc workaround is source page advice, not verified-current dependency policy; do not overwrite HJM pins. Full current visible installation main read. cn util; stale React19 unsupported claim pins Next15.0.3/React19RC/motion12alpha+overrides. These compatibility values/override bypass not adopted; HJM actual supported package policy and contracts own dependency choice. No install or runtime checks performed.",
           "experimentProposal": {
             "path": null,
             "decision": "installation-only",
             "registration": "not-applicable",
             "reason": "Setup/utilities page is not a UI experiment; HJM package/library policy retained.",
             "existingApis": []
-          }
+          },
+          "installationReview": "full-visible-guide-and-available-tabs-read"
         },
         {
           "url": "https://ui.aceternity.com/components/animated-modal",
@@ -17051,21 +17067,23 @@
           "sourceSha256": "cc32d70c774039ab3812fb6b4b1e27c0dbc320652d12c78a723f85979946f03f",
           "capturedAt": "2026-10-07T03:58:20Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
-          "visualReview": "pending",
-          "interactionReview": "pending",
+          "manualReview": "visible-tsx-css-read",
+          "visualReview": "selected-desktop-dark-preview-read",
+          "interactionReview": "selected-keyboard-open-tab-escape-read",
           "readScope": "Entire captured core body (description, CLI, visible props/CSS, headings); hidden Manual/Usage/provider tabs only when separately noted",
-          "reviewNotes": "Full core body including useOutsideClick mousedown/touchstart hook cleanup, all carousel/card/BlurImage props, Standard and Layout Changes headings read. Manual and all Usage panels pending; Next Image and content overlay state must be compared with HJM.",
+          "reviewNotes": "Full core body including useOutsideClick mousedown/touchstart hook cleanup, all carousel/card/BlurImage props, Standard and Layout Changes headings read. Manual and all Usage panels pending; Next Image and content overlay state must be compared with HJM. Full Manual9913 incl hook all read: arbitrary JSX indexed strip, physical scrollLeft/300px arrows; onclose computes230/384+4/8 assumed widths+gap, no resize RO. Card uses true button+imagealt but unnamed arrows/close, global per-card Escape+bodyoverflow auto overwrites other locks; no focus trap/restore/dialog role visible. Stable title-based IDs not supplied dataID. HJM Carousel/CarouselMotion source+usage read: only oneactive finite slide/inert others, not equivalent simultaneousstrip. Reuse current Card/Button/Dialog motionOrigin for detail and List for multi-card browse; strip is explicit shared composition gap, not CSS overwrite. SOURCE ONLY actual arrow/end/width/focus pending. Follow-up actual1280x720 dark preview: first3cards fully horizontally visible plus4thpartial; cardwidth384/gap16/height640, startleftarrowdisabled. Firstcard Enter opens detail, bodyoverflowhidden, focus stays firstcard, dialogroles0; Tab moves focus to hidden background Productivitycard while overlay is visible. Escape removes detail and sets overflowauto; focus stays secondcard rather than triggeringfirst. Proof captures overlay with background focus. Endedge/arrow/resize/touch/RTL/reduced/allvariants still pending. Parent confirmed both List APIs nohorizontal/orientation, so not equivalent strip composition via List styling.",
           "experimentProposal": {
             "path": "실험/구성/정보 표시/고객 후기 탐색",
             "existingApis": [
               "Carousel",
               "Card",
-              "Avatar"
+              "Avatar",
+              "Button",
+              "Dialog"
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -17079,20 +17097,23 @@
               "Failed",
               "Recovery"
             ],
-            "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
+            "scope": "Existing Carousel remains single-active panel; simultaneous strip is a distinct gap, integrate current customer-feedback/card-detail proposal and filmstrip research before adding shared API. Reuse Card/Button/Dialog motionOrigin for accessible detail; List has nohorizontal API and CSS overwrite is not a completed implementation.",
             "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend."
-          }
+          },
+          "renderedPreviewUrl": "https://ui.aceternity.com/live-preview/apple-cards-carousel-demo",
+          "proof": "assets/parallel-b-apple-carousel-background-focus.png",
+          "proofSha256": "6457a4cb1868434cf61ef323ed33817bf58ff230e9aa691ee4d03728ca00db3c"
         },
         {
           "url": "https://ui.aceternity.com/components/ascii-art",
           "sourceSha256": "d3238404b7fcd8796f32cf998baa918c75b03953c5f7fbd940e35cbfbcca7b07",
           "capturedAt": "2026-10-07T03:58:22Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body (description, CLI, visible props/CSS, headings); hidden Manual/Usage/provider tabs only when separately noted",
-          "reviewNotes": "Full core body all11 preview headings,15 charsets and all ASCII props read. animatedtrue/animateOnViewtrue, resolution80,objectFit cover defaults. Source capture previews Loading; Manual/Usage and Canvas lifecycle pending.",
+          "reviewNotes": "Full core body all11 preview headings,15 charsets and all ASCII props read. animatedtrue/animateOnViewtrue, resolution80,objectFit cover defaults. Source capture previews Loading; Manual/Usage and Canvas lifecycle pending. Full Manual14362 incl charsets/CSS resolver/static variant read: image CORS/cancel guards, CPU luminance chars/resolution80 fixedsquare crop, uncapped DPR canvas each draw; font custom and loading/error present. Canvas generic role img/aria-label lacks product descriptive alt prop; error is not reset on src change and hasAnimated is retained; once IO/RO cleanup exists but no local reduced guard. Text decoding UTF16 customcharset not grapheme. Reuse Asset/Image with product alt and pre-generated optional ascii texture; do not treat reading bitmap as semantic text or copy conversion engine. SOURCE ONLY src recovery/performance pending.",
           "experimentProposal": {
             "path": "실험/구성/비교와 검증/이미지 표현 비교",
             "existingApis": [
@@ -17102,7 +17123,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -17794,14 +17815,15 @@
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body (description, CLI, all visible props/snippets/headings); hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "Full core body CLI init/add flags,mono cwd,registry3namespaces/search/view/list/MCP examples read. Alternate package-manager/provider tabs not opened. No install/config mutation performed.",
+          "reviewNotes": "Full core body CLI init/add flags,mono cwd,registry3namespaces/search/view/list/MCP examples read. Alternate package-manager/provider tabs not opened. No install/config mutation performed. Full visible guide/options/namespace/registry/MCP read; all12 command groups x4 package manager tabs=48 selected/read, plus Cursor/ClaudeDesktop/VSCode3 IDE commands selected/read. Includes force/overwrite/latest remote registry commands; none executed or external MCP installed. HJM imports/public props and library policy remain adoption path, not copy registry engine. Hidden JSX/JS language translations elsewhere still pending.",
           "experimentProposal": {
             "path": null,
             "decision": "installation-only",
             "registration": "not-applicable",
             "reason": "Setup/utilities page is not a UI experiment; HJM package/library policy retained.",
             "existingApis": []
-          }
+          },
+          "installationReview": "full-visible-guide-and-available-tabs-read"
         },
         {
           "url": "https://ui.aceternity.com/components/cloud-shader",
@@ -17857,7 +17879,7 @@
               "ContentTransition"
             ],
             "decision": "reuse-expression-or-composition",
-            "registration": "pending-root-after-research",
+            "registration": "registered-root-experiment-only",
             "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
@@ -17873,7 +17895,14 @@
               "Recovery"
             ],
             "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
-            "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend."
+            "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend.",
+            "registeredEvidence": {
+              "commit": "548f4bd1494515d0c48ef882c4baf4cf00bcd1de",
+              "qa": "docs/qa/2026-10-07-command-records.md",
+              "platforms": "Web and Native Showcase8variants each; Web actualselectedQA; Native physicaldevice pending",
+              "publication": "unpublished; version remains1.14.0",
+              "scope": "Only command-record composition experiment registered; all other candidates/promotion/publication pending."
+            }
           },
           "manualReviewNotes": "Full visible Manual read including syntax-highlighter dependency/15.0.0 override/force guidance. Icon-only copy has no accessible label, clipboard rejection uncaught, copied2sec timeout not cleaned, copy absent when tabs exist, index tab state not reconciled on tabs shrink, String(undefined) possible. Tab buttons no tab roles/current semantics in source. Current HJM CodeBlock keeps verbatim validated token content/no parser dependency and copyAction; use ClipboardButton error response and existing Tabs controlled ids, not duplicate editor/copy engine.",
           "manualReviewedOn": "2026-10-07"
@@ -18341,11 +18370,11 @@
           "sourceSha256": "a3a93d3343739696408148e70395f812e910f05a529ec0653112fcb34092d583",
           "capturedAt": "2026-10-07T03:59:29Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body description/visible props/snippets/all example headings; hidden code/Manual/alternate tabs pending unless separately recorded",
-          "reviewNotes": "Full core Expandablecard standard/grid contents and outsideclickhook read. Parent earlier selectedflows not counted again. Hidden Manual/Usage panels pending in ownindex.",
+          "reviewNotes": "Full core Expandablecard standard/grid contents and outsideclickhook read. Parent earlier selectedflows not counted again. Hidden Manual/Usage panels pending in ownindex. Manual951 hook and all3 Code11866/11866/10836 chars actually opened/read incl complete data+SVG; first2 identical source still individually read. Active object snapshot+title/useId, clickablediv/grid vs one button in list; closebutton lg:hidden+24px+unnamed; bodyoverflow hidden/auto global not restored unmount, Escape+outside listeners cleanup but focus trap/return/dialog role absent. Preserve root prior actual selectedflow separately. Reuse Card/Grid/List/Button/Dialog controlled stableid+motionOrigin; no new expansion engine. SOURCE ONLY new allvariant keyboard/large/RTL flow pending.",
           "experimentProposal": {
             "path": "실험/구성/직접 조작과 모션/카드 상세 연결",
             "existingApis": [
@@ -18355,7 +18384,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -18378,11 +18407,11 @@
           "sourceSha256": "2740c7d7996aaf3a58f55d4c1908d4e926a52c448bc2ff35c0b312ecc91444a5",
           "capturedAt": "2026-10-07T03:59:31Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body description/visible props/snippets/all example headings; hidden code/Manual/alternate tabs pending unless separately recorded",
-          "reviewNotes": "Full core freeFeature three section contents read. HIPAA/SOC2/uptime demo copy is decorativeunverified and must notcopy productclaims. Hidden fullManual/Usage pending.",
+          "reviewNotes": "Full core freeFeature three section contents read. HIPAA/SOC2/uptime demo copy is decorativeunverified and must notcopy productclaims. Hidden fullManual/Usage pending. Manual all util/deps and all3Code9777/4599/3581 chars opened/read including globe/images/SVG/list copy. 1st cobe Globe destroy cleanup but perpetual .01autoRotate/600pxDPR2/unsplash randomrotate mount render/generic alt;2nd SVG aria-hidden+useId good but random pattern;3rd static8featurehoveronlydecoration good essentialtext visible. Compliance/uptime/password-sharing source demo copy not product truth/adopted text. Reuse Section/Grid/Card/Text/Icon/Image/EffectSurface functional productdata, productpurpose determines ordering. No new feature API engine. SOURCE ONLY all actual breakpoints/flow pending.",
           "experimentProposal": {
             "path": "실험/구성/정보 표시/기능 카드 묶음",
             "existingApis": [
@@ -18393,7 +18422,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -18635,11 +18664,11 @@
           "sourceSha256": "f4d8830432cc89ee7fa45862a27017576ba2240f84f590ac42ee58f23cab94c0",
           "capturedAt": "2026-10-07T03:59:45Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body description/visible props/snippets/all example headings; hidden code/Manual/alternate tabs pending unless separately recorded",
-          "reviewNotes": "Full core GitHubGlobe all config/World/Position props inclarc/lighting/autoRotate read. GlobeJSONdownload instructionreadnotdownloaded; three vsstatic fallback andManual/Usage pending.",
+          "reviewNotes": "Full core GitHubGlobe all config/World/Position props inclarc/lighting/autoRotate read. GlobeJSONdownload instructionreadnotdownloaded; three vsstatic fallback andManual/Usage pending. Full Manual9068 read all types/material/data/rings/Canvas/utility. three/three-globe/R3Falpha/drei+external globe.json required, JSON actualdata not yetread. Ring interval2s clear cleanup present; OrbitControls hardcodesautoRotate true/speed1 ignoring declared config initialPosition/autoRotate/speed; pointRadius2 ignorespointSize later; zero emissive/shininess replaced. Canvas globalDPR uncapped, imperative ThreeGlobe added togroup no explicit dispose visible in this file but do not claim engine internal absence. No semantic location summary/reduced/visibility contract in source. Reuse Card/Text/Image/List+product optional map engine; no sharedgeneric globe core addition. SOURCE ONLY WebGL disposal/coords/focus/performance pending.",
           "experimentProposal": {
             "path": "실험/구성/정보 표시/지역과 위치 표시",
             "existingApis": [
@@ -18648,7 +18677,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -18958,11 +18987,11 @@
           "sourceSha256": "9e2dc303969c2098e7f07d6eb5bda9a487c73dec3cc49fa406c693ad04486070",
           "capturedAt": "2026-10-07T04:00:03Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body description/visible props/snippets/all example headings; hidden code/Manual/alternate tabs pending unless separately recorded",
-          "reviewNotes": "Full core freeHero description/CLI/single entryanimationcontentsread. HiddenManual/Usage pending;HJM Hero composition/actionslotsbaseline.",
+          "reviewNotes": "Full core freeHero description/CLI/single entryanimationcontentsread. HiddenManual/Usage pending;HJM Hero composition/actionslotsbaseline. Actual Manual dependency/utils plus sole Simple entry-animation Code example completely read. Header+Navbar each h1, hardcoded marketing/brand/media; word split space blur stagger and four entry fades; buttons no action/type. No explicit local reduced guard. Reuse existing Section/TopBar/Text/Button/Image/ContentTransition screen structure; product owns brand/data. Manual-only dependency cobe/Tabler not used in this sole code. Actual focus/dark2x/mobile pending.",
           "experimentProposal": {
             "path": "실험/구성/정보 표시/기능 카드 묶음",
             "existingApis": [
@@ -18973,7 +19002,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -18996,11 +19025,11 @@
           "sourceSha256": "be9454675a58334003acabc9faac76625fe7696209a08ab6b3e659b7debafb97",
           "capturedAt": "2026-10-07T04:00:05Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body description/visible props/snippets/all example headings; hidden code/Manual/alternate tabs pending unless separately recorded",
-          "reviewNotes": "Full core HoverBorderGradient allprops read; asbutton/default1s clockwise,HTMLAttributesHTMLElement notbutton specific. Manual/Usage/disabled/loading/keyboard/reduced pending.",
+          "reviewNotes": "Full core HoverBorderGradient allprops read; asbutton/default1s clockwise,HTMLAttributesHTMLElement notbutton specific. Manual/Usage/disabled/loading/keyboard/reduced pending. Full visible Manual read. polymorphic button default with HTMLAttributes rather than button disabled contract/type; hovered direction interval cleaned but effect only [hovered] omits duration/clockwise so updates stale until hover change SOURCE ONLY. props spread after internal handlers can override. Motion gradient blur literalblackwhiteblue, overlay no pointer-none, hover only/no local reduced/hidden/IO. Reuse Button functional states+bounded EffectSurface, not separate button engine. Actual keyboard/disabled/prop-update pending.",
           "experimentProposal": {
             "path": "실험/토큰/표면과 움직임/입자와 빛",
             "existingApis": [
@@ -19008,7 +19037,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -19031,11 +19060,11 @@
           "sourceSha256": "747cf63a35649d377db64a49f9a762addfc59fcb2ab888d31586ec0227aa176b",
           "capturedAt": "2026-10-07T04:00:07Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body description/visible props/snippets/all example headings; hidden code/Manual/alternate tabs pending unless separately recorded",
-          "reviewNotes": "Full core ImageGenerationLoader allprops+3headingsread;duration4s scan/700exit/completedoverlay sourceprogressrelationshipunknown. Manual/Usage pending;HJM measuredProgress cannot replace withtimer.",
+          "reviewNotes": "Full core ImageGenerationLoader allprops+3headingsread;duration4s scan/700exit/completedoverlay sourceprogressrelationshipunknown. Manual/Usage pending;HJM measuredProgress cannot replace withtimer. Full19377chars Manual read including all PIXEL_FONT/Bezier/cell drawing. Seededrandom sin, minpitch2/duration1,DPR2; ResizeObserver/IntersectionObserver, reduced static frame/change listener and all cleanup present; no doc-hidden/theme-var change watcher shown. Pixel alphabet A-Z/digits with ? fallback; decorative aria-hidden/pointer-none canvas and overlay. Status/progress/request/result/retry not provided. Reuse Dialog/Progress/Notice/Spinner live meaning + optional EffectSurface bounded expression. Actual theme-update/offscreen/reduced/provider-state pending.",
           "experimentProposal": {
             "path": "실험/구성/정보 표시/생성 이미지 진행",
             "existingApis": [
@@ -19045,7 +19074,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -19068,11 +19097,11 @@
           "sourceSha256": "d498d99aa2805428f5c3c5f98f1646cabc8f384f5039e7debdf78b1ac23b75cc",
           "capturedAt": "2026-10-07T04:00:09Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body description/visible props/snippets/all example headings; hidden code/Manual/alternate tabs pending unless separately recorded",
-          "reviewNotes": "Full core ImagesBadge allprops+5previewheadingsread;max3/folders32×24/hover48×32spread20rotate15/href. Focusdisclosure/content readability andManual/Usage pending.",
+          "reviewNotes": "Full core ImagesBadge allprops+5previewheadingsread;max3/folders32×24/hover48×32spread20rotate15/href. Focusdisclosure/content readability andManual/Usage pending. Full visible Manual read. display images capped3/indexkeys; default folder32x24 and hover48x32, spring400/25, amberliteral; href chooses nativeanchor with noopener noreferrer forblank, otherwise cursorpointerdiv. generic PreviewN alts, mouse-only expansion/no local reduced/focus/touch. Persistent text exists; preserve Link/AssetGroup/Image semantic names and optional fan expression. Actual hover/focus/AT/emptyimage/RTL pending.",
           "experimentProposal": {
             "path": "실험/구성/정보 표시/미리보기 묶음",
             "existingApis": [
@@ -19081,7 +19110,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -19104,11 +19133,11 @@
           "sourceSha256": "33ac6c14da45c384c9abbc09525787dfd8e764460da67433d41839be5556519c",
           "capturedAt": "2026-10-07T04:00:11Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body description/visible props/snippets/all example headings; hidden code/Manual/alternate tabs pending unless separately recorded",
-          "reviewNotes": "Full core ImagesSlider allprops read; keyboardnavigable claim,autoplaytrue5s andoverlaytypedReactNode-defaultboolean table. Manual/Usage/pauseglobalkeyboundary pending.",
+          "reviewNotes": "Full core ImagesSlider allprops read; keyboardnavigable claim,autoplaytrue5s andoverlaytypedReactNode-defaultboolean table. Manual/Usage/pauseglobalkeyboundary pending. Full visible Manual read. mount-only preload Promise.all one error logs without loadingfalse/fallback; loadedimages are immutable after props changes, Image handlers no cancellation. GlobalwindowArrowkeys and autoplay5sec mount-only so multipleinstances/inputkeys/propstale source risks not actualrepro. motion.img no alt; no manual pause/buttons/aria/no local reduced/IO/hidden. Nativeoverlay truthiness yields plainblack div ignoring ReactNodecontent. Reuse published Carousel controlledstableids/manual/stop/reduced+Image/error requeststates; separateengine not copied. Actual keyboard/autoplay/failure/dynamicprops pending.",
           "experimentProposal": {
             "path": "실험/구성/정보 표시/고객 후기 탐색",
             "existingApis": [
@@ -19118,7 +19147,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -19141,11 +19170,11 @@
           "sourceSha256": "d1e785299877902c5619032dca0503158514f69bfc64841372dd178e46eb6ad9",
           "capturedAt": "2026-10-07T04:00:13Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body description/visible props/snippets/all example headings; hidden code/Manual/alternate tabs pending unless separately recorded",
-          "reviewNotes": "Full core infiniteMovingCards allquotecontents+v4scrollCSS+props read;pauseHovertrue/speedfast. v3tab/Manual/Usage/duplicateARIA/focuspause pending.",
+          "reviewNotes": "Full core infiniteMovingCards allquotecontents+v4scrollCSS+props read;pauseHovertrue/speedfast. v3tab/Manual/Usage/duplicateARIA/focuspause pending. Full Manual TSX + Tailwindv4 CSS and actual selected v3 config read. cloneNode(true) appends accessible duplicates on mount, no clone cleanup or prop update, StrictMode repeated effect risk SOURCE ONLY. CSS20/40/80sec infinite, hover-only pause, globalanimationname scroll; no local reduced/focus/touch/hidden/IO. Original blockquote semantics present. Reuse semantic List/Card with usercontrolled/static ContentTransition; do not copy duplicate semantic DOM/marquee engine.",
           "experimentProposal": {
             "path": "실험/구성/정보 표시/흐르는 소개 목록",
             "existingApis": [
@@ -19155,7 +19184,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -19182,14 +19211,15 @@
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body description/visible props/snippets/all example headings; hidden code/Manual/alternate tabs pending unless separately recorded",
-          "reviewNotes": "Full core Nextinstall CreateNextApp prompts/startcommands read. No install executed,currentCLIsupportnotverified.",
+          "reviewNotes": "Full core Nextinstall CreateNextApp prompts/startcommands read. No install executed,currentCLIsupportnotverified. Full current main create-next-app prompts/start read; no tabs. Guide describes scaffold prompts, not verified current generator behavior. No dependency/project creation performed. Product framework owned by product/library policy, not theme requirement.",
           "experimentProposal": {
             "path": null,
             "decision": "installation-only",
             "registration": "not-applicable",
             "reason": "Setup/utilities page is not a UI experiment; HJM package/library policy retained.",
             "existingApis": []
-          }
+          },
+          "installationReview": "full-visible-guide-and-available-tabs-read"
         },
         {
           "url": "https://ui.aceternity.com/components/install-tailwindcss",
@@ -19200,25 +19230,26 @@
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body description/visible props/snippets/all example headings; hidden code/Manual/alternate tabs pending unless separately recorded",
-          "reviewNotes": "Full core v4/v3 Tailwind PostCSS/setup/difference snippets read. No config/package overwritten;HJM tokens/pinned deps remainauthority.",
+          "reviewNotes": "Full core v4/v3 Tailwind PostCSS/setup/difference snippets read. No config/package overwritten;HJM tokens/pinned deps remainauthority. Full current main v4+legacyv3 inclCSS/PostCSS/utility/variant/plugin snippets read; no tabs. Example arbitrary font/color/spacing not HJM semantic tokens/default theme adoption. No build/package install or config overwrite performed.",
           "experimentProposal": {
             "path": null,
             "decision": "installation-only",
             "registration": "not-applicable",
             "reason": "Setup/utilities page is not a UI experiment; HJM package/library policy retained.",
             "existingApis": []
-          }
+          },
+          "installationReview": "full-visible-guide-and-available-tabs-read"
         },
         {
           "url": "https://ui.aceternity.com/components/keyboard",
           "sourceSha256": "0be7e3667d431722c57cee00ebdaded56dc0f3c039af81218f47c9889a4c35ec",
           "capturedAt": "2026-10-07T04:00:19Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core body description/visible props/snippets/all example headings; hidden code/Manual/alternate tabs pending unless separately recorded",
-          "reviewNotes": "Full core keyboardfour previews,keynames,soundinstructions/allprops/notes read. IOlisteners andscale.8..2 claim requiresManual/actualproof; soundsnotplayed/downloaded.",
+          "reviewNotes": "Full core keyboardfour previews,keynames,soundinstructions/allprops/notes read. IOlisteners andscale.8..2 claim requiresManual/actualproof; soundsnotplayed/downloaded. Full27725chars Manual read incl entire down/up audio sprite tables and allKeypad rows. Sound false default; usergesture AudioContext/download/abort/close cleanup; IOthreshold.1 limits documentkeydown/keyup to visible but not focused/editing scope. showPreview displays physical event.code from any input while visible; SOURCEONLY password-input privacy exposure candidate, no payload executed. No actual textinput function. Pointer-only key handlers on typebutton, icon/Space unnamed possible; no blur clear pressed/reduced. Reuse Asset/Button explicit static/demokey-local events only; no globalkey capture/audio enabled default/new keyboard engine.",
           "experimentProposal": {
             "path": "실험/구성/정보 표시/입력 기기 모형",
             "existingApis": [
@@ -19227,7 +19258,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -19250,11 +19281,11 @@
           "sourceSha256": "bc7e6b52deee4f9347f33f7b8fd099bdef5cb35f2f41b969dd445451dd107c7a",
           "capturedAt": "2026-10-07T04:00:21Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "Lamp section children/className; header expression, hiddenManual/Usage pending.",
+          "reviewNotes": "Lamp section children/className; header expression, hiddenManual/Usage pending. Full Manual read incl all conic masks/blur classes. whileInView entry0.8sec/delay.3 widths15->30rem, minhscreen/childtranslate-80/literalcyan-slate; staticmaxgeometry overlays no explicit pointer-none/ariahidden/localreduced. Reuse scoped EffectSurface light expression+Text/Section essential content, no screen layout defaults copied. Actual darklight/200%/pointer/reduced pending.",
           "experimentProposal": {
             "path": "실험/토큰/표면과 움직임/입자와 빛",
             "existingApis": [
@@ -19262,7 +19293,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -19285,11 +19316,11 @@
           "sourceSha256": "96be55f7caf6171ea4656028e0c11f9f2bfd235e238def0a27774e5cc6e47484",
           "capturedAt": "2026-10-07T04:00:23Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "LayoutGrid allCard fields/id/content/className/thumbnail; parentselectedflow notduplicatecounted,ownManual/Usage pending.",
+          "reviewNotes": "LayoutGrid allCard fields/id/content/className/thumbnail; parentselectedflow notduplicatecounted,ownManual/Usage pending. Full Manual read. internal selected/lastSelected object snapshot, item indexkeys/layoutIds derived id, clickable motiondiv no button/name/keyboard. Backdrop selection tests truthy id so id0 treatment differs SOURCE ONLY. Thumbnailgenericalt, selectedabsolute halfheight/width and no dialog role/focus/Escape/scroll. Parent fourpage actual prior scope not duplicated. Reuse Grid/Card/Button/Dialog controlled stable IDs+ContentTransition, not new selection/dialog engine. Actual id0/dynamicprops/focus/large states pending.",
           "experimentProposal": {
             "path": "실험/구성/직접 조작과 모션/카드 상세 연결",
             "existingApis": [
@@ -19299,7 +19330,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -19322,11 +19353,11 @@
           "sourceSha256": "de696d8f5a781c20120c27412d46a70d697dcbd47bafafee236d8f6662f5aca5",
           "capturedAt": "2026-10-07T04:00:25Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "LayoutTextFlip text defaultBuildAmazing/words4/duration3s and hero contents; hiddenManual/Usage/reduced/grapheme pending.",
+          "reviewNotes": "LayoutTextFlip text defaultBuildAmazing/words4/duration3s and hero contents; hiddenManual/Usage/reduced/grapheme pending. Full Manual read. cleaned3sec interval but emptydeps capture words.length/duration; emptywords modulo0 NaN SOURCE ONLY; shrink index out-of-range; global layoutId subtext; whitespace-nowrap/filter blur exit copies. No local reduced/pause/IOhidden/grapheme contract. Reuse TextTransition stringvalue+product controlled timing/static label, no copied autotimer. Actual locale/RTL2x/multipleinstances/reduced pending.",
           "experimentProposal": {
             "path": "실험/구성/비교와 검증/글자 표현 비교",
             "existingApis": [
@@ -19335,7 +19366,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -19358,11 +19389,11 @@
           "sourceSha256": "5cda7af06f4507d8f28f5e42bdcd0835352c56060c142ef65248c74c0eb98ac2",
           "capturedAt": "2026-10-07T04:00:27Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "Lens4previewheadings/allprops zoom1.5,size170,isStaticfalse; docs explicitly isFocusing unused,hovercontrolled; Manual/Usage/duplicatecontent semantics pending.",
+          "reviewNotes": "Lens4previewheadings/allprops zoom1.5,size170,isStaticfalse; docs explicitly isFocusing unused,hovercontrolled; Manual/Usage/duplicatecontent semantics pending. Full Manual read. zoom1.5/lens170/position200,150 localorcontrolledhover. Mounts arbitrarychildren twice without ariahidden/inert/pointer-none on duplicate; duplicateID/focus/state/occlusion SOURCE ONLY, not runtime repro. Mouseonly/no local finepointer/reduced/touch/keyboard. Reuse staticdecorative Asset/Image + semanticoriginal or functional Image + Dialog/Sheet (functional zoom gap; not existing zoom API), no genericchildrenlensengine.",
           "experimentProposal": {
             "path": "실험/구성/정보 표시/이미지 확대 비교",
             "existingApis": [
@@ -19371,7 +19402,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -19394,11 +19425,11 @@
           "sourceSha256": "60cb55cb6e40ce720e0572a9fd0a81effd5e2689fff8c2418ec9bc4c5877487f",
           "capturedAt": "2026-10-07T04:00:29Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "LinkPreview default/static examples andallprops; microlink Nextimage domain config snippet read; width200height125quality50,externalmetadata privacy/cache fallback unknown. No config mutation; Manual/Usage pending.",
+          "reviewNotes": "LinkPreview default/static examples andallprops; microlink Nextimage domain config snippet read; width200height125quality50,externalmetadata privacy/cache fallback unknown. No config mutation; Manual/Usage pending. Full Manual TSX/nextconfig/dependencies read. Dynamicdefault hiddenimg eagerly sends fullencoded URL to api.microlink.io screenshot service onmount; staticimage bypass option exists. Hardcodeddark/mobile3xviewport;quality/layoutunused; RadixHoverCard ownsopen; event.targetrect reference, genericpreviewalt/no fallback; no localreduced. Reject productprivateURL/query transmission; reuse Link/Tooltip/Card/Image productowned staticasset. Actual keyboard/AT/failure pending.",
           "experimentProposal": {
             "path": "실험/구성/정보 표시/대상 설명과 미리보기",
             "existingApis": [
@@ -19408,7 +19439,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -19431,11 +19462,11 @@
           "sourceSha256": "97602341cace10ba74e0049dd2a6237cfcb801cb686e072c1083e0252aefdb34",
           "capturedAt": "2026-10-07T04:00:31Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "Loaders top+simple/shimmer/compact/SVG/glitch previewtext/headings; hiddenimplementation/Usage andstablearia/reduced pending.",
+          "reviewNotes": "Loaders top+simple/shimmer/compact/SVG/glitch previewtext/headings; hiddenimplementation/Usage andstablearia/reduced pending. Full6204chars Manual all5Loaders read. Infinite1/2sec bounce/path; LoaderFour same text3times without hidden duplicates and keyframe/times length mismatch SOURCE ONLY; LoaderFive UTF16split. No status/progress/aria-busy/localreduced/IOhidden shown. Reuse Spinner/Notice/Progress/Dialog requestmeaning with optionaldecoration. Actual AT/reduced/failure/200% pending.",
           "experimentProposal": {
             "path": "실험/구성/피드백과 복구/대기 단계와 진행",
             "existingApis": [
@@ -19445,7 +19476,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -19468,11 +19499,11 @@
           "sourceSha256": "62eab541cc4e43afff5ab965f14561c5896eb510d6fd421aa338b9f87f0bb3a8",
           "capturedAt": "2026-10-07T04:00:33Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "MacbookScroll whole keyboarddemo,src/title/gradient/badge props; decorativedeviceframe/scroll expression,Manual/Usage pending.",
+          "reviewNotes": "MacbookScroll whole keyboarddemo,src/title/gradient/badge props; decorativedeviceframe/scroll expression,Manual/Usage pending. Full19517chars Manual allkeyrows/SVGgeometryread. useScroll/mobilewidth sample once(<768)notresize, min200vh/scales.35..1 and translate1500/rotate-28. Optionalsrcassertedstring/genericaceternitylogoalt; Keypaddiv decorative notfunctional; staticbranding/duplicateSVGids. No explicitlocalreduced/ariahidden onkeyrows. Reuse Asset/Image productowned deviceframe+ScrollProgress/ContentTransition expression, not hardwareengine. Actual resize/RTL/reduced2x pending.",
           "experimentProposal": {
             "path": "실험/구성/직접 조작과 모션/스크롤 장면 비교",
             "existingApis": [
@@ -19483,7 +19514,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -19506,11 +19537,11 @@
           "sourceSha256": "ee9ba3f05cbd79cda2750afe5910273bd1c6eacfeb4cd923d72613e1c1b5d4c6",
           "capturedAt": "2026-10-07T04:00:35Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "MagneticButton wraps anyinteractivechild,strength.8,maxDistance100; actual pointer/focus/reduced andManual/Usage pending,Buttonenginekeep.",
+          "reviewNotes": "MagneticButton wraps anyinteractivechild,strength.8,maxDistance100; actual pointer/focus/reduced andManual/Usage pending,Buttonenginekeep. Full Manual read. Actual outerdiv and innerMotiondiv arbitrarychildren not Button. Movinginnerrect sampled,strength.8/maxdistance100, stateeachmove/spring150/25/mass.1, leave reset; no disabled/pending/keyboard/finepointer/reduced. Preserve Button stablehitregion/semantics/focus and optionalboundedvisual only. Actual movingclick/focus/touch/reduced pending.",
           "experimentProposal": {
             "path": "실험/구성/비교와 검증/누름 표현 비교",
             "existingApis": [
@@ -19518,7 +19549,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -19541,11 +19572,11 @@
           "sourceSha256": "2c543511fa1b97ce3636810269bd9f1d079fde1debd80bd63e59ead6a0502857",
           "capturedAt": "2026-10-07T04:00:37Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "Meteors entirev4 keyframe5s/215degree/-500px+className/number props;v3/Manual/Usage lifecycle pending.",
+          "reviewNotes": "Meteors entirev4 keyframe5s/215degree/-500px+className/number props;v3/Manual/Usage lifecycle pending. Full Manual TSX/v4CSS+selectedv3configread. newArray(number||20) zeroignored/negative invalid SOURCE ONLY, rendered randomdelay/duration, fixed800range/500translate; CSSinfinite5sec overridden5..9sec. No localreduced/IOhidden/ariahidden/pointer-none wrapper. Reuse EffectSurface seeded boundedcounts/lifecycle profile. Actual SSR/invalid/reduced pending.",
           "experimentProposal": {
             "path": "실험/토큰/표면과 움직임/입자와 빛",
             "existingApis": [
@@ -19553,7 +19584,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -19576,11 +19607,11 @@
           "sourceSha256": "b1edf271b7b7dd8b263fc9f479e9c3c95f7a8569bb3ae6e1f6312e4999b420e6",
           "capturedAt": "2026-10-07T04:00:39Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "MovingBorder radius1.75rem,duration2s,asany/forwardany fieldsallread; typedButton semantics/localguards Manual/Usage pending.",
+          "reviewNotes": "MovingBorder radius1.75rem,duration2s,asany/forwardany fieldsallread; typedButton semantics/localguards Manual/Usage pending. Full Manual TSXread. ExportButton polymorphicasany, fixed64x160 default/radius1.75rem*0.96, forwardedprops can replaceinline style; no explicittype/disabledpending semantics. MovingBorder reads SVGlength everyAnimationFrame duration3000, duration0 division nonfinite SOURCEONLY, no localreduced/IOhidden. Reuse Button contracts+EffectSurface inheritedgeometry/scopeddecoration. Actual focus/reduced/props0 pending.",
           "experimentProposal": {
             "path": "실험/토큰/표면과 움직임/입자와 빛",
             "existingApis": [
@@ -19588,7 +19619,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -19611,11 +19642,11 @@
           "sourceSha256": "9453a4934b13b40e0513bce1a2b4db610aa02899e70d23b745d0b20d81413753",
           "capturedAt": "2026-10-07T04:00:41Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "MultiStepLoader allpropsstates/loading/duration2s/looptrue/corevalue0; timerisnot actualprogress,HJM Step/Progresskeep,Manual/Usage pending.",
+          "reviewNotes": "MultiStepLoader allpropsstates/loading/duration2s/looptrue/corevalue0; timerisnot actualprogress,HJM Step/Progresskeep,Manual/Usage pending. Full Manual allSVG/TSXread. duration2sec looptrue timer advances checkfilled bytime notactualtasks; loadingfalse resets0/timeoutcleanupdepscorrect. Emptyarray/nonloop negative limit SOURCEONLY. Fixedfullscreen z100/backdropblur but no modalrole/focus/Escape/scrolllock/statuslive. Reuse Dialog/Notice/Progress/Steps/Spinner actualproductprogress/error/retry; do not infercompletion fromtimer. Actual blocking/recovery/reduced pending.",
           "experimentProposal": {
             "path": "실험/구성/피드백과 복구/대기 단계와 진행",
             "existingApis": [
@@ -19625,7 +19656,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -19648,11 +19679,11 @@
           "sourceSha256": "8e08b9fc43bbd721d717eb77fcb803482659876f7f189af74da3321b330fd773",
           "capturedAt": "2026-10-07T04:00:43Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "NavbarMenu hoverServices/Products/Pricing andclassName prop; keyboarddisclosure/navigationcontracts pendingManual/Usage.",
+          "reviewNotes": "NavbarMenu hoverServices/Products/Pricing andclassName prop; keyboarddisclosure/navigationcontracts pendingManual/Usage. Full Manual read. controlledactive string but MenuItem trigger motion.p onlymouseenter/navmouseleave, no semanticButton/focus/touch/ariaexpanded/Escape. Global layoutIdactive; maxcontent absoluteleftcenter panel/fixed140x70images. Nativeanchors/titlealt/h4preserve some meaning. Reuse TopBar/Popover/Menu/Link/Card/Image contracts ifpublicAPI supports. Actual keyboard/RTL/200%/placement pending. Menu publicusage reread: action/selection itemlist, not arbitrary links+richbody; rich link content uses Web Popover/Link, Native Sheet/route shell. No equivalent native hover nav claim.",
           "experimentProposal": {
             "path": "실험/구성/비교와 검증/탐색 크기 비교",
             "existingApis": [
@@ -19663,7 +19694,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -19686,11 +19717,11 @@
           "sourceSha256": "59d2f5709ab856abe966230b912260a6111c4ba6fe5ed2b594b1d92d1d9927c9",
           "capturedAt": "2026-10-07T04:00:45Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "NoiseBackground allgradientcolors/intensity.2/speed.1/backdropfalse/animatingtrue; existingEffectSurface noisebaseline; Manual/Usage pending.",
+          "reviewNotes": "NoiseBackground allgradientcolors/intensity.2/speed.1/backdropfalse/animatingtrue; existingEffectSurface noisebaseline; Manual/Usage pending. Full7161char Manual TSXread. Staticexternal noise.webp alt empty/pointer-none; gradientlayers/spring/perFrame rect read, assumed delta16ms refreshrate speed dependency SOURCEONLY. animatingfalse earlyreturn but hook registered,speedupdates handled; no localreduced/IOhidden. 3colors indexedfirsttwo unchecked, backdropBlur pseudooverlay no pointer-none. Reuse EffectSurface mesh/glow/noise lifecycle/profile+productpalette. Actual refreshrate/hit/fallback/reduced pending.",
           "experimentProposal": {
             "path": "실험/토큰/표면과 움직임/입자와 빛",
             "existingApis": [
@@ -19698,7 +19729,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -19721,11 +19752,11 @@
           "sourceSha256": "d264c44ba0f9f98d40babb11092d180f1d98525c66ad45467f7f982401a29204",
           "capturedAt": "2026-10-07T04:00:47Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "Notch allNotch/Item/Option props read;topbottom/startcenterend,controlled/uncontrolled,closeSelecttrue/revealtrue/offset16; labels ReactNodes and groupedselection. Manual/Usage/actualmenu keyboard pending.",
+          "reviewNotes": "Notch allNotch/Item/Option props read;topbottom/startcenterend,controlled/uncontrolled,closeSelecttrue/revealtrue/offset16; labels ReactNodes and groupedselection. Manual/Usage/actualmenu keyboard pending. Full10486char Manual read. useId shell stableitems controlled/uncontrolledvalues; typebuttons/listbox/options/aria-selected, outsidepointer and Escape cleanup/safearea present. Triggerunmounted onopen, aria-expandedfalse hardcoded, no explicit focusmove/restore/Arrow/Home/End or disabled supplied; SOURCEONLY keyboardflow pending. textnowrap/darkonly/fixed100/revealblur/localreduced absent. Reuse Select/SegmentedControl/Popover/Button selection contracts with optional BottomNavigation shell only ifactualnavigation, no copiednotchengine.",
           "experimentProposal": {
             "path": "실험/구성/비교와 검증/탐색 크기 비교",
             "existingApis": [
@@ -19736,7 +19767,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -19759,11 +19790,11 @@
           "sourceSha256": "4e792f8783705935aa926c0689c6fec204e50d6e50ab970399da6908a0c49023",
           "capturedAt": "2026-10-07T04:00:49Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "ParallaxHeroImages bothvariants/max8images/className/imageClassName; mouseonlydocs,Manual/Usage/reducedpending.",
+          "reviewNotes": "ParallaxHeroImages bothvariants/max8images/className/imageClassName; mouseonlydocs,Manual/Usage/reducedpending. Full Manual read. Max8 decorativeimages alt empty/lazy/async and pointer-events-none, memo posdepth8variant; windowmousemove globalnormalizedviewport/spring25/120/40pxdepth, cleanup present. No localfinepointer/reduced/IOhidden. Physical left/rightcoordinates/literalentryblur. Reuse AssetGroup/Image decorativeproductassets+scoped EffectSurface movement treatment, no globalpointerengine. Actual touch/RTL/reduced/390 pending.",
           "experimentProposal": {
             "path": "실험/구성/직접 조작과 모션/스크롤 장면 비교",
             "existingApis": [
@@ -19774,7 +19805,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -19797,11 +19828,11 @@
           "sourceSha256": "63f3b9bc3e3560aea425cd9b88bbc2046cc3b10d405f8b4293529616fa77af21",
           "capturedAt": "2026-10-07T04:00:51Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "ParallaxScroll twooppositecolumns/allprops/images;twoCLIregistrykeys,Manual/Usage/staticfallbackpending.",
+          "reviewNotes": "ParallaxScroll twooppositecolumns/allprops/images;twoCLIregistrykeys,Manual/Usage/staticfallbackpending. Full Manual BOTH ParallaxScroll/Second source read. Three ceil/slice columns, fixed40rem scroll/py40 and 1/2/3cols. Same gridRef assigned outer scroll and innergrid; expected source container could beinner non-scroll, SOURCEONLY actualpending. Translates±200 and secondX±200/rotateZ±20; genericthumbnailalt/indexkeys/no localreduced. Reuse Grid/Image/Affix/ScrollProgress without changing semanticorder or duplicateref; no duplicateparallaxengine.",
           "experimentProposal": {
             "path": "실험/구성/직접 조작과 모션/스크롤 장면 비교",
             "existingApis": [
@@ -19812,7 +19843,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -19835,11 +19866,11 @@
           "sourceSha256": "d8006c57d47071b18b1cde8daee2d8f8edd57aa484a663d3ed345edc606a84b9",
           "capturedAt": "2026-10-07T04:00:53Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "PixelatedCanvas all24props read;src,400×500,cell3,shape square,interactive true,maxFps60,responsivefalse,objectfit andjitter/fade controls; Manual/Usage/reduced/altfallback pending.",
+          "reviewNotes": "PixelatedCanvas all24props read;src,400×500,cell3,shape square,interactive true,maxFps60,responsivefalse,objectfit andjitter/fade controls; Manual/Usage/reduced/altfallback pending. Full18568chars Manual incl compute/sample9neighbors/fit/tint/dropout/allanimate/cleanup read. Canvas2DCPU, seededhash, DPRuncapped, cellSize0 unboundedloop SOURCEONLY; interactivefalse staticdraw and CORSgetImageData fallback original exists. Ininteractive CORSfallback stale samples may redraw not actualrepro. Defaultinteractive true perpetualRAFthrottle60/no localreduced/IOhidden; pointers cleaned/cancel flag. Responsive recompute uses suppliedfixedwidth notcontainer. Namedroleimg fixedEnglishlabel; actualcontentname/failurecallback absent. Reuse Image semantics+optionaldecorative Asset/EffectSurface boundedDPR/count/no newimage engine. Actual invalid/CORS/reduced/resize pending.",
           "experimentProposal": {
             "path": "실험/구성/비교와 검증/이미지 표현 비교",
             "existingApis": [
@@ -19849,7 +19880,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -19872,11 +19903,11 @@
           "sourceSha256": "a257cd916ef8063c5e5092797ac1469044815f92becfa47d4416108fbcfde928",
           "capturedAt": "2026-10-07T04:00:55Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "VanishInput allplaceholders/change/submitcallbackfields; animatedsubmitpresentation mustnotloserecoverytext; Manual/Usage pending.",
+          "reviewNotes": "VanishInput allplaceholders/change/submitcallbackfields; animatedsubmitpresentation mustnotloserecoverytext; Manual/Usage pending. Full8766chars Manual read. Placeholder3sectimer/documentvisibility stop+cleanup exists. Input draws800x800 allpixels eachvalue, recursivevanishRAF no storedcancel; enter onkeydown+formsubmit bothvanish paths/noIME isComposing/preventDefault onkeydown SOURCEONLY. Clearsdraft onanimationfinish regardless onSubmit asyncsuccess/failure; empty setsanimatingtruewithoutanimate, busybutton disabledonly !value notanimating. Input nolabel/name/errorcontract, iconbuttonunnamed/no localreduced. Reuse TextField/Form/Button controlleddraft-on-success,pending/error/retry/IME contract, never copyvanish submission engine. Actual IME/double-submit/failure pending.",
           "experimentProposal": {
             "path": "실험/구성/입력과 작성/입력 전환과 유지",
             "existingApis": [
@@ -19885,7 +19916,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -19908,11 +19939,11 @@
           "sourceSha256": "1c5b4acd70ca3ecd397f35f44fdd7a472b5848c3dbd116ec209380261c9b66a6",
           "capturedAt": "2026-10-07T04:00:57Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "PointerHighlight allchildren/rectangle/pointer/container classprops andinline/color headings; textreadability/accessiblecopy pendingManual/Usage.",
+          "reviewNotes": "PointerHighlight allchildren/rectangle/pointer/container classprops andinline/color headings; textreadability/accessiblecopy pendingManual/Usage. Full Manual read incl rawpointerSVG. ResizeObserver initialrect+contentrect, cleanupunobserve via currentref no disconnect, sourcepossibleunmountrefnull not actualleakproof. Essentialchildrenpersistent and pointer-events-none decoration; width/height growth1sec whileInView, localreducednotshown; SVGnoexplicitariahidden, fixedphysicalbottomright. Reuse Text/Section content+bounded EffectSurface highlight, notfunctionalcursor. Actual RTL/2x/reduced/focus pending.",
           "experimentProposal": {
             "path": "실험/구성/비교와 검증/글자 표현 비교",
             "existingApis": [
@@ -19921,7 +19952,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -19944,11 +19975,11 @@
           "sourceSha256": "055e70d8975cd9a24ca57898c878fff38667ad599bc6c13a886b3c257f74086b",
           "capturedAt": "2026-10-07T04:00:59Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "ResizableNavbar allNavbar/NavBody/NavItems/MobileNav/Header/Menu/Toggle/NavbarButton props; fixedversussticky demo caveat read; actualfocusmenuclose/Manual/Usage pending.",
+          "reviewNotes": "ResizableNavbar allNavbar/NavBody/NavItems/MobileNav/Header/Menu/Toggle/NavbarButton props; fixedversussticky demo caveat read; actualfocusmenuclose/Manual/Usage pending. Full8533chars Manual allDesktop/Mobile/Logo/Button read. scrollY>100 width40% min800 Desktop/90% Mobile geometry spring, cloneallvalidchildren visible. Nativeanchors but MobileToggle clickableSVG no semanticButton/name/expanded; MobileMenu onClose propunused/no focus/Escape/scrolllock. NavItems globalhovered layoutId/mouse-only accent. Reuse TopBar/Affix/Popover/Sheet/Button/Link contracts with optionalcompact expression; logo/routeproductowned, no newnavbarengine. Actual mobile keyboard/200%/darkRTL pending.",
           "experimentProposal": {
             "path": "실험/구성/비교와 검증/탐색 크기 비교",
             "existingApis": [
@@ -19959,7 +19990,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -20019,11 +20050,11 @@
           "sourceSha256": "463fe31cc7a6847d230c0eb9107e8f5b16f864c48f0cd87b06475cf2310ab12a",
           "capturedAt": "2026-10-07T04:01:03Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "ShootingStars all7shooting and6starbg props;speed10..30/delay4200..8700/starDensity.00015/alltwinkletrue/.5..1s. Manual/Usage/reduced/IO pending.",
+          "reviewNotes": "ShootingStars all7shooting and6starbg props;speed10..30/delay4200..8700/starDensity.00015/alltwinkletrue/.5..1s. Manual/Usage/reduced/IO pending. Full7618chars Manual BOTH ShootingStars/StarsBackground TSX read. RecursivecreateStar setTimeout nevercancelled (cleanupempty), globalwindowcoords/genericgradientid/source timer accumulation afterprops changes SOURCEONLY. Star movement RAFcancel exists; StarsBackground ResizeObserver andRAF cleanup exists but perpetualdraw evenstaticTwinklingfalse/no localreduced/IOhidden. Densityarea no explicitmax; no pointer-none/ariahidden. Reuse EffectSurface scopedseededbounded lifecycle and staticfallback, not newstarengine. Actual timer/reduced/resize pending.",
           "experimentProposal": {
             "path": "실험/토큰/표면과 움직임/입자와 빛",
             "existingApis": [
@@ -20031,7 +20062,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -20054,11 +20085,11 @@
           "sourceSha256": "d954e0fcb3877aee0b65650b7534106e63dba23aa91a421fe84a5a2baf4b126e",
           "capturedAt": "2026-10-07T04:01:05Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "Sidebar allprovider/sidebar/body/desktop/mobile/link/interfaces read; animatefalse explaineddefaultopen demo. OwnManual/Usage/actualkeyboard pending,HJM Navigation keep.",
+          "reviewNotes": "Sidebar allprovider/sidebar/body/desktop/mobile/link/interfaces read; animatefalse explaineddefaultopen demo. OwnManual/Usage/actualkeyboard pending,HJM Navigation keep. Full Manual read. Controlled/uncontrolledContext optionalprop independently, samechildren Desktop+Mobile bothmounted CSS breakpoint. Desktophover-onlywidth60/300; collapsed label displaynone risksunnamediconlinks SOURCEONLY. MobileMenu/close clickableSVG/div with fullscreenmotion no semanticButton/name/Escape/focus/scrolllock; no localreduced. Reuse Sidebar/Sheet/Popover/Button/Link actualpublic contracts/stable accessiblelabels; duplicateformstate mounting pending ifinteractivechildren. Actual mobilefocus/AT/RTL2x pending. Public usage reread: HJM Sidebar is Web-only, native mobile routing uses BottomNavigation/navigator. Sheet is modal; Web nonmodal edge uses SidePanel. Do not claim same Sidebar/Popover across Native.",
           "experimentProposal": {
             "path": "실험/구성/비교와 검증/탐색 크기 비교",
             "existingApis": [
@@ -20069,7 +20100,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -20092,11 +20123,11 @@
           "sourceSha256": "1521458550f03b1bfa7ede1a161605cec765ac1529b628a2829d191b88426987",
           "capturedAt": "2026-10-07T04:01:07Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "SignupForm allinput/ref/Radixlabel contracts andv4inputshadowCSS read; mocksignupexplicit noflow,Twitterpassworddemo mustnotcopy authcontract. v3/Manual/Usage pending.",
+          "reviewNotes": "SignupForm allinput/ref/Radixlabel contracts andv4inputshadowCSS read; mocksignupexplicit noflow,Twitterpassworddemo mustnotcopy authcontract. v3/Manual/Usage pending. Full3548char Manual Input/Label/v4CSS+selectedv3config AND soleactualSignupFormCode read. Input forwardref/nativeprops/focusring/LabelhtmlFor present,100px mousegradient andfixedh40. Form only preventDefault+console log, providerbuttons all type submit; twitterpasswordtype unknown/unmasked SOURCEONLY and explicit externalpasswordrequest not adopted. No realauth/account/pending/error/consent/validation. Reuse Form/TextField/PasswordField/AuthScreenLayout/AuthProviderButton provider-ownedlogo productauthcontracts; do not copy demoauth or force/legacyinstall recommendation. Actual auth/IME/failure not attempted.",
           "experimentProposal": {
             "path": "실험/화면/계정/가입 정보 입력",
             "existingApis": [
@@ -20105,7 +20136,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -20128,11 +20159,11 @@
           "sourceSha256": "790333e2933a5b0f5be00fefa28e6ad41bf911876d668417980295291a314e14",
           "capturedAt": "2026-10-07T04:01:09Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "Sparkles allid/background/particle/minmax/speed/color/density props read; bothdemoheadings; Manual/Usage lifecyclepending.",
+          "reviewNotes": "Sparkles allid/background/particle/minmax/speed/color/density props read; bothdemoheadings; Manual/Usage lifecyclepending. Full uniqueManual including ALL tsparticles optionbody independentlyread (prior Compare/Cover duplicates not reused as completion). useId, fullScreenfalse, fpsLimit120/density400x400/value120 default andonClickpush4; || ignores0. particleSize typed butnotused; loadSlim promise no explicitunmount/errorcatch/localreducedIOhidden. Engine defaults not inspected so not claiming library lacksguards. Reuse EffectSurface scopedcount/pointer-none/lifecycle; enginecopynot justified. Actual density/count/runtimeguards pending.",
           "experimentProposal": {
             "path": "실험/토큰/표면과 움직임/입자와 빛",
             "existingApis": [
@@ -20140,7 +20171,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -20163,11 +20194,11 @@
           "sourceSha256": "444b51082c66f0e4ef9765c0ea490b9186ff87b6b70c8d2098f420848450947a",
           "capturedAt": "2026-10-07T04:01:11Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "Spotlight allfill/className props+v4once2s delay.75 CSS read;v3/Manual/Usage/reducedpending.",
+          "reviewNotes": "Spotlight allfill/className props+v4once2s delay.75 CSS read;v3/Manual/Usage/reducedpending. Full Manual all SVGgeometry/v4CSS + selectedv3config read. Fixedfilterid filter, blur151/ellipsefillopacity.21, pointer-events-none, entryCSS2sdelay.75oneforward; outeropacity0 and no localreducedshown. Reuse EffectSurface glow/mesh profile with staticfallback, no separateSVGspotlightengine. Actual reduced/lightcontrast/multiinstances pending.",
           "experimentProposal": {
             "path": "실험/토큰/표면과 움직임/입자와 빛",
             "existingApis": [
@@ -20175,7 +20206,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -20198,11 +20229,11 @@
           "sourceSha256": "f2a4853a490d5adb279087185abd1854e7d7febd0b67bc1067b9eef0025827b1",
           "capturedAt": "2026-10-07T04:01:13Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "SpotlightNew all3gradientstrings/dimensions560×1380/240,x100,y-350,duration7 read;Manual/Usage lifecyclepending.",
+          "reviewNotes": "SpotlightNew all3gradientstrings/dimensions560×1380/240,x100,y-350,duration7 read;Manual/Usage lifecyclepending. Full Manual read. Six gradientdivs, pointer-none wrapper/layers, symmetricphysicalleft/right, fixed560x1380/small240/xOffset100,1.5secfade then7sec infinityreverse. No localreducedIOhidden. Reuse EffectSurface glow/mesh with controlled palette/environment boundedlayer, no fullviewport per-componentengine. Actual 390/RTL/reduced pending.",
           "experimentProposal": {
             "path": "실험/토큰/표면과 움직임/입자와 빛",
             "existingApis": [
@@ -20210,7 +20241,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -20233,11 +20264,11 @@
           "sourceSha256": "a9d55b3fddd74dc8ab44462301f322742f468cd30ae96edc2f695bae842f7dcd",
           "capturedAt": "2026-10-07T04:01:15Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "SquigglyText allpropssteps5/duration80ms/scale6..8/base.02/octaves3/as span/stylefilter reserved read;Manual/Usage staticreadability/reducedpending.",
+          "reviewNotes": "SquigglyText allpropssteps5/duration80ms/scale6..8/base.02/octaves3/as span/stylefilter reserved read;Manual/Usage staticreadability/reducedpending. Full3637char Manual read. useId sanitized/filterstable, aria-hidden pointer-none SVGdefs; sourcechildren remain single.5 turbulencefilters/steps every80ms viauseTime, scale6/8/3octaves; steps0 andduration0 undefinedfilter SOURCEONLY; no localreducedIOhidden; style overridefilterpossible. Reuse Text content with optionalvalidated distortion descriptor/static fallback, no unbounded filters/defaultglobalwobble. Do not adopt force/legacy package guidance. Actual readablecontrast/RTLgrapheme/reduced pending.",
           "experimentProposal": {
             "path": "실험/구성/비교와 검증/글자 표현 비교",
             "existingApis": [
@@ -20246,7 +20277,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -20269,11 +20300,11 @@
           "sourceSha256": "7ce74a788ecb0ac566cafd72776cd367e58bbec5abcf3ddd6e3d8a6dfb82e2ba",
           "capturedAt": "2026-10-07T04:01:17Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "StatefulButton allnativebuttonfields includingtypebutton/disabledfalse/async click read;parentexistingflow notduplicated;ownManual/Usagepending,Buttonrequeststate enginekeep.",
+          "reviewNotes": "StatefulButton allnativebuttonfields includingtypebutton/disabledfalse/async click read;parentexistingflow notduplicated;ownManual/Usagepending,Buttonrequeststate enginekeep. Full Manual TSX allLoading/Success/SVG read. ScopeduseAnimate loadingawait THEN productonClickawait THEN success2s, no errortryfinally/singleflight/busy/aria-busy/pendingdisable; failureleavesloader SOURCEONLY. Fixedglobal layoutIdbutton/children/span/typeundefined. Parentprioractualflow not duplicated. Reuse Button loading/disabled/input/functionsuccess/failureNotice productstate; sourcecallbacks no realrequest proof. Actual repeatedclick/reject/unmount/reduced pending.",
           "experimentProposal": {
             "path": "실험/구성/비교와 검증/누름 표현 비교",
             "existingApis": [
@@ -20281,7 +20312,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -20304,11 +20335,11 @@
           "sourceSha256": "51d352fd184c59204e62b05d59595fd6892db15704e978a6b486027f19d1f697",
           "capturedAt": "2026-10-07T04:01:19Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "StickyBanner allprops/hideOnScrollfalse/40px threshold +2previewheadings;Manual/Usage/focusedcontrolvisibility pending.",
+          "reviewNotes": "StickyBanner allprops/hideOnScrollfalse/40px threshold +2previewheadings;Manual/Usage/focusedcontrolvisibility pending. Full Manual TSX/SVGread. open true internal, scrollcallback logs and hidesif>40elseopens, so manualdismiss overwrittenbynextscroll SOURCEONLY. Opacity0/y-100 staysmounted pointer/focus notdisabled; closeiconbutton no name/type/min44, content no reservedcloseclearance. Reuse Notice/IconButton+Affix and controlledpersistentdismiss separatefromscroll; no newbannerengine. Actual keyboard/scrollreopen/2x/reduced pending.",
           "experimentProposal": {
             "path": "실험/구성/정보 표시/상단 고정 안내",
             "existingApis": [
@@ -20317,7 +20348,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -20340,11 +20371,11 @@
           "sourceSha256": "7372e0eed8facb572448b6531b40b6a13d3fb5f3698316fb0f3c6c7d23b6b233",
           "capturedAt": "2026-10-07T04:01:21Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "StickyScrollReveal allcontent/title/desc/reactnode/rightcontentclass props +4textentries read; sticky scroll expression,Manual/Usage/keyboard/reducedpending.",
+          "reviewNotes": "StickyScrollReveal allcontent/title/desc/reactnode/rightcontentclass props +4textentries read; sticky scroll expression,Manual/Usage/keyboard/reducedpending. Full Manual read. 30rem overflowcontainer/nearestfraction index/title+descriptionallmountedopacity1/.3, visualcontent fixed240x320 lgonly; content[activeCard].content emptyarray orprop-shrinkSOURCEONLY exception. Literal3palettes/gradient, no staticfallback foruniquecontent hiddenbelowlg/no localreduced. Reuse Section/Text/Image/Grid/Affix/ScrollProgress/ContentTransition with essentialmediaallwidths and productstableids. Actual 390/empty/propchange/2x pending.",
           "experimentProposal": {
             "path": "실험/구성/직접 조작과 모션/스크롤 장면 비교",
             "existingApis": [
@@ -20355,7 +20386,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -20378,11 +20409,11 @@
           "sourceSha256": "e3fb7b9217cf03b6ad52797d44d919b212053ff4db1810830cd2b2c893f24616",
           "capturedAt": "2026-10-07T04:01:23Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "SVGMask whole1298circle masksnippet/allsize/revealsize/staticchildren/revealtext fields read;className descriptioncopiedBackgroundBeams mismatch;Manual/Usage/focus/content duplication pending.",
+          "reviewNotes": "SVGMask whole1298circle masksnippet/allsize/revealsize/staticchildren/revealtext fields read;className descriptioncopiedBackgroundBeams mismatch;Manual/Usage/focus/content duplication pending. Full Manual TSX+publicmaskSVGread. Parent hscreen/backgroundvarslate/white, mousemove nativecleanupcurrentref risk, stateeverymove; tiny10px->600px mask exposes arbitrarychildren vsseparaterevealText. No pointer-none/aria-hidden/inert/keyboard/finepointer/reduced; maskedinteractivechildren semanticsrisk SOURCEONLY. Reuse Textessentialvisible + EffectSurfacedecorativemask with scopedenv, no copygenericchildrenmask engine. Actual touch/focus/AT/unmount pending.",
           "experimentProposal": {
             "path": "실험/구성/비교와 검증/이미지 표현 비교",
             "existingApis": [
@@ -20392,7 +20423,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -20415,11 +20446,11 @@
           "sourceSha256": "e22e059adb58224d9185323bcb8e1fb7a81379f55b97cc6777d61f2cdf2b3adc",
           "capturedAt": "2026-10-07T04:01:25Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "Tabs alltabandfadeprops+optionalscrollbarCSS read;parentpriorflow andnewTabsimplementation notclaimedasB;ownManual/Usage pending.",
+          "reviewNotes": "Tabs alltabandfadeprops+optionalscrollbarCSS read;parentpriorflow andnewTabsimplementation notclaimedasB;ownManual/Usage pending. Full Manual TSX/allFadeInDiv + optionalglobalsCSSread. InternalpropTabs snapshot/activefirst (empty undefined), selected reorderedpanels but triggers originalorder; FadeInDiv keyedactive.value remountsallchildren onselection, allpanels mounted opacity/z only/noinert/hide semantics. Buttons no type/tabrole/selected/panelIDs/arrow, globallayoutIdclickedbutton and values. Parentactualprior4pages notduplicated. Reuse existing Tabs IDs/keyboard/onepanel/preservation+ContentTransition scopedexpression, no stackTabsengine. Actual draft/focus/empty/pending/reduced not rereplayed.",
           "experimentProposal": {
             "path": "실험/구성/비교와 검증/선택 표시 비교",
             "existingApis": [
@@ -20427,7 +20458,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -20450,11 +20481,11 @@
           "sourceSha256": "0b54bb92296dd679f47a610bda629b1427c0d5d8eaced0ddc8123ca07f8d6425",
           "capturedAt": "2026-10-07T04:01:27Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "TailwindButtons all20names+v3CSS2sinfinite+ButtonsCardsource whole read; clipboard container onClickdiv lackskeyboard semantics/localtype but demosCodehidden stillpending. SourceoptionalButtonsCard alone notfullManualcount.",
+          "reviewNotes": "TailwindButtons all20names+v3CSS2sinfinite+ButtonsCardsource whole read; clipboard container onClickdiv lackskeyboard semantics/localtype but demosCodehidden stillpending. SourceoptionalButtonsCard alone notfullManualcount. AllactualCode11237chars including21buttonentries/rawSVG/Shimmerliteral code and optionalButtonsCard/config fullread. Mostlynativebutton/no type/callback; gradients/hardshadow/blur/outline/hoverlift, twoinfiniteborder/shimmer. CopyButtonsCard clickablediv nestsbutton, Clipboard promise success/error Sonner but moduleinstall omits sonner/Tabler. No localreduced/focuscopy/touch/statecontract. Reuse Button profile surface/feedback+ClipboardButton/Toast controllederrors; do not clonebuttonnames/brandstyles or defaultinfiniteCSS. Actualcopy/disabled/pending/2x pending.",
           "experimentProposal": {
             "path": "실험/구성/비교와 검증/누름 표현 비교",
             "existingApis": [
@@ -20462,7 +20493,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -20485,11 +20516,11 @@
           "sourceSha256": "5a4223a9c0a6f67d99fcde59ded62f569a984389b224aac0f8b2f03d5fd1a16d",
           "capturedAt": "2026-10-07T04:01:29Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "Terminal allcommands/outputs/user/speeds/delay/soundtrue props andIO/autoscrollnotes read;nosoundplayed;Manual/Usage/lifecycle/grapheme pending.",
+          "reviewNotes": "Terminal allcommands/outputs/user/speeds/delay/soundtrue props andIO/autoscrollnotes read;nosoundplayed;Manual/Usage/lifecycle/grapheme pending. Full14505char Manual allsoundtables/tokenizer/state/timer read. Commands/outputs onlydisplay strings notexecute! IOonce starts; typing50±30ms and530mscursor continuesoffscreen/done; cleanedtimers but no localreduced/hidden/pause. enableSound true default but gestureinit/abort/close cleanup; emptycommands neverlast SOURCEONLY. Imperfectbash highlighter productgrammar notlibraryfunction. Reuse CodeBlock verbatimtokens+ClipboardButton/Text/ContentTransition optionaltimeline; no terminalexecution/audio engine. Actuallocale/statechange/focus/reduced pending.",
           "experimentProposal": {
             "path": "실험/구성/정보 표시/명령 기록 표시",
             "existingApis": [
@@ -20498,7 +20529,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -20521,11 +20552,11 @@
           "sourceSha256": "ab66d5d128c5c046540784b7a253378787e3652e1c751a29ecae01fecc7cc1ee",
           "capturedAt": "2026-10-07T04:01:31Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "FlippingBoard text/rows/colorcode/duration1.2/soundfalse/allfields read; wrap/newlineclaimdocs only;Manual/Usage/grapheme/stabletextpending.",
+          "reviewNotes": "FlippingBoard text/rows/colorcode/duration1.2/soundfalse/allfields read; wrap/newlineclaimdocs only;Manual/Usage/grapheme/stabletextpending. Full14673char Manual all132cellrender/flap/colors/wrapping read. Fixed6x22, FLAP_CHARSLatinASCII, unsupportedchars normalizedspace, UTF16rows andword>22slice losesrest; crops6rows/multipleliteraltextcopies notariahidden/name. PerCell timerscleaned,25..39randomscramble/defaultapprox1.2 duration scaling notstrictcompletion. No localreduced/IOhidden. Reuse Text fullsemanticoriginal with boundeddecorativeoptional board/seed/staticfallback; locale/longtext cannotreplaceactualcontent. Actual AT/RTL/grapheme/2x pending.",
           "experimentProposal": {
             "path": "실험/구성/비교와 검증/글자 표현 비교",
             "existingApis": [
@@ -20534,7 +20565,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -20557,11 +20588,11 @@
           "sourceSha256": "1d67ab8ffba7ee2b98cd56deb994cc07ebe401ee136a729e238178a860f15e18",
           "capturedAt": "2026-10-07T04:01:33Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "TextGenerate allwords/duration/filter/className andcompletevisiblewordcopy read;hiddenManual/Usage/lifecyclepending.",
+          "reviewNotes": "TextGenerate allwords/duration/filter/className andcompletevisiblewordcopy read;hiddenManual/Usage/lifecyclepending. Full Manual read. words.splitspace/inserts spaces scopedanimate allspan, dependency scope.current omitswords/filter/duration, initialopacity0 blur; duration0 fallback1, stagger.2, no localreducedhidden. Actualpropchange maystayhidden SOURCEONLY notruntime. Reuse Text stablefullstring/ContentTransition graphemeword-safe optionalentry; notstreaming dataengine. Actual locale/propchange/reduced pending.",
           "experimentProposal": {
             "path": "실험/구성/비교와 검증/글자 표현 비교",
             "existingApis": [
@@ -20570,7 +20601,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -20593,11 +20624,11 @@
           "sourceSha256": "5362d1365ed117452e4971a31a6e6c37e39806442abf395adcb9c8d527cebb4f",
           "capturedAt": "2026-10-07T04:01:35Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "TextHover alltext/duration0propsread;SVGoutline/reveal expression;Manual/Usage/semantictextpending.",
+          "reviewNotes": "TextHover alltext/duration0propsread;SVGoutline/reveal expression;Manual/Usage/semantictextpending. Full Manual allSVGpath/gradients/masks read. Viewbox300x100, fixedhelvetica/text7xl threecopies, global textGradient/revealMask/textMaskIDs; percentdividebyrect nozero guard, typedautomaticunused, mouseonly. 4secdraw/maskduration option/no localreduced/aria label hidingduplicatetext. Reuse Text actualsemantic+decorative scopeduniqueID EffectSurface highlight, no svgtext replacement. Actualcontrast/AT/RTL/finepointer/reduced pending.",
           "experimentProposal": {
             "path": "실험/구성/비교와 검증/글자 표현 비교",
             "existingApis": [
@@ -20606,7 +20637,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -20629,11 +20660,11 @@
           "sourceSha256": "3e6b5e0416baccc29f391159156799455a3e91b21da9b822809725b7c7694939",
           "capturedAt": "2026-10-07T04:01:37Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "TextRevealCard alltext/reveal/children/className andbothcontentstrings read;mousemovehiddencontent semantics/focus pendingManual/Usage.",
+          "reviewNotes": "TextRevealCard alltext/reveal/children/className andbothcontentstrings read;mousemovehiddencontent semantics/focus pendingManual/Usage. Full Manual read. Mouse+touch supports but rect measuredonce/noclapratio; preventDefaulttouchscroll andno keyboard slider. Two semantictext nodes differentmeanings, reveal clippedwidthnotariahidden; fixed40rem/card h160;80randominfinite20..30secstars no localreduced/IOhidden/pointernone. Reuse Card/Text alwaysreadable + optionalEffectSurface or controlledSlider onlyifactualcomparison; no genericinputengine. Actualtouch/resize/AT/RTL2x pending.",
           "experimentProposal": {
             "path": "실험/구성/비교와 검증/글자 표현 비교",
             "existingApis": [
@@ -20642,7 +20673,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -20665,11 +20696,11 @@
           "sourceSha256": "49195d7cffd0fb6a97fb964c88db1a2f0c0feb7147b4a6f05358c4a450f8fb60",
           "capturedAt": "2026-10-07T04:01:39Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "Timeline wholethreeentrydemo/allTimelineEntry title/contentprops/read;HJM Timeline composition comparison;Manual/Usage/scrollbeampending.",
+          "reviewNotes": "Timeline wholethreeentrydemo/allTimelineEntry title/contentprops/read;HJM Timeline composition comparison;Manual/Usage/scrollbeampending. Full Manual read. h2hardcodedmarketing/fullnesteddataindexkeys/twoh3 CSSbreakpoint; height measuredref once notRO/data/font/mediaresize; decorativeline scrolltarget0..1/opacity. No explicitlocalreduced; title/contentexistingsemantic preserved. Reuse Timeline data/status contract+Section/Text productcontent+Affix/ScrollProgress optional, not chronologicalengine copy. Actualdynamicheight/2x/RTL pending.",
           "experimentProposal": {
             "path": "실험/구성/정보 표시/날짜별 변화 기록",
             "existingApis": [
@@ -20678,7 +20709,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -20701,11 +20732,11 @@
           "sourceSha256": "323e1bf939037ebe4c55ddfd65829c0b90a59a08670409033ad1d96e36a7adcc",
           "capturedAt": "2026-10-07T04:01:41Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "TooltipCard wholeinformativecontent andcontent/children/container fields read; docs hovertouchdoesnotprove keyboard. ExistingTooltip/Popover engineskeep;Manual/Usage pending.",
+          "reviewNotes": "TooltipCard wholeinformativecontent andcontent/children/container fields read; docs hovertouchdoesnotprove keyboard. ExistingTooltip/Popover engineskeep;Manual/Usage pending. Full6238char Manual read. mouse/touch clicktoggle hashovernone preventDefault, pointer-none cardcontainsarbitraryReactNode (interactivecontentunusable source risk), 2sechide timeoutuncleaned. No focus/Escape/tooltiprole/describedby/name; placementassumes240px minwidth evencontentwider, absolute mathdoublemouseoffset; no localreduced. Reuse Tooltip fornoninteractivehelp, Popover/Sheet forinteractivecontent productlabels/collision/focus. Actualplacement/touchfocus/AT pending.",
           "experimentProposal": {
             "path": "실험/구성/정보 표시/대상 설명과 미리보기",
             "existingApis": [
@@ -20715,7 +20746,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -20738,11 +20769,11 @@
           "sourceSha256": "7edd656675a80eee82778ad4c3bc3b6f00a0025cd3c683ce8e575c08de8abc60",
           "capturedAt": "2026-10-07T04:01:43Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "TracingBeam whole3entryLoremcontents/allchildren/classNameprops read;scrollspeedbeamvisual;Manual/Usage/localguards pending.",
+          "reviewNotes": "TracingBeam whole3entryLoremcontents/allchildren/classNameprops read;scrollspeedbeamvisual;Manual/Usage/localguards pending. Full Manual SVGread. initialheightonce/contentoffsetHeight, noRO/font/image/dataremeasure. aria-hidden SVG and animatedpath motion-reduce:hidden exists (different fromunguardedeffects); springsstillbound, indicator reads scroll.get duringReactrendernotreactive SOURCEONLY. GlobalgradientIDphysicalleft-4/-20/literalcolors. Reuse ScrollProgress/Affix/EffectSurfacedecorative lifecycle, staticpath remains; no newprogressengine. Actualreduced/runtimeindicator/RTL/resize pending.",
           "experimentProposal": {
             "path": "실험/구성/직접 조작과 모션/스크롤 장면 비교",
             "existingApis": [
@@ -20753,7 +20784,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -20776,11 +20807,11 @@
           "sourceSha256": "82cfb75ca8f71aff8869bcc5d68f23a15688c602a9feff7fdba64c5b3bc6e4d2",
           "capturedAt": "2026-10-07T04:01:45Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "Typewriter bothpreviewstrings/actions/allwords/cursor/className read;stableaccessibletext/grapheme/Manual/Usage pending.",
+          "reviewNotes": "Typewriter bothpreviewstrings/actions/allwords/cursor/className read;stableaccessibletext/grapheme/Manual/Usage pending. Full Manual BOTH standard andSmooth read. UTF16split+NBSP afterwords, standardhiddenuntilInView scopedanimate depsonlyisinView, cursor.8sec infinity; Smoothwidth0->fit2sec/delay1/nowrap/lgtextclass typo. No localreduced/staticsemanticlabel/pausehidden. Reuse Text fullsemanticoriginal+TextTransition/ContentTransition expression grapheme-safe; no copyingtimedvisibility as actualstreaming. Actuallocale/RTL2x/propchange/reduced pending.",
           "experimentProposal": {
             "path": "실험/구성/비교와 검증/글자 표현 비교",
             "existingApis": [
@@ -20789,7 +20820,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -20812,11 +20843,11 @@
           "sourceSha256": "5ce04871aa7f6f933fc9b7568170358f31a1f0e9bed319a70d9e5a9b66ac7b64",
           "capturedAt": "2026-10-07T04:01:47Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "Vortex top/fullpagedemotext+allprops read;particle700default/range100/Hue220 and0..1.5speed etc; fullManual/Usage/performancefallbackpending.",
+          "reviewNotes": "Vortex top/fullpagedemotext+allprops read;particle700default/range100/Hue220 and0..1.5speed etc; fullManual/Usage/performancefallbackpending. Full visible Manual 7533 chars read: Float32Array700 particles/defaults via || reject zero values; canvas uses global window dimensions, 3 self draw glow passes, perpetual RAF with cancellation+resize cleanup but no local visibility/reduced guards. Effect parameters captured once on mount; no equivalent Native canvas evidence. Reuse EffectSurface optional bounded decoration; do not copy engine or make essential content depend on it. SOURCE ONLY actual lifecycle/performance pending.",
           "experimentProposal": {
             "path": "실험/토큰/표면과 움직임/입자와 빛",
             "existingApis": [
@@ -20824,7 +20855,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -20847,11 +20878,11 @@
           "sourceSha256": "c03d0c08f60cca0f9eeed2b813b5aaf4242150d961280a389b92cf237fededb8",
           "capturedAt": "2026-10-07T04:01:49Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "WavyBackground allprops/color5/wavewidth50/blur10/fast/.5opacity/backgroundblack;canvasexpressionManual/Usage fallbackpending.",
+          "reviewNotes": "WavyBackground allprops/color5/wavewidth50/blur10/fast/.5opacity/backgroundblack;canvasexpressionManual/Usage fallbackpending. Full visible Manual3450 chars read: 5 simplex paths every RAF, global window dimensions, window.onresize overwritten and not restored by cleanup; RAF is cancelled; zero opacity/width replaced by || defaults; initial effect captures palette/speed. Safari user-agent branch applies CSS filter. No local reduced/visibility guard shown. Reuse EffectSurface static/optional bounded waves; source only no actual Safari/resize/multi-instance verification.",
           "experimentProposal": {
             "path": "실험/토큰/표면과 움직임/입자와 빛",
             "existingApis": [
@@ -20859,7 +20890,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -20882,11 +20913,11 @@
           "sourceSha256": "1a0db901f030c7d2be99d1bb610415f76ee20031fc434ccf1c6b5cfe19aa1d73",
           "capturedAt": "2026-10-07T04:01:51Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "WebcamPixelGrid all18propsincl64×48,mirrortrue,motion.4/readyerrorcallbacks read; nocamera requestorpreviewnavigationperformed,Manual/Usage/privacy/lifecyclepending.",
+          "reviewNotes": "WebcamPixelGrid all18propsincl64×48,mirrortrue,motion.4/readyerrorcallbacks read; nocamera requestorpreviewnavigationperformed,Manual/Usage/privacy/lifecyclepending. Full visible Manual17516 chars read; mount getUserMedia user camera640x480,64x48 CPU pixel motion+elevation/uncapped DPR/frame canvas resize, callback identity changes re-request camera; tracks stopped on effect cleanup but late async resolution after unmount and multiple retry stream replacement not guarded in visible source. Error Retry/dismiss present; close icon lacks label, hidden video/canvases not semantic-hidden. No camera permission granted or camera data transmitted during review. Keep product camera/permission/lifecycle owner, PermissionScreen/Notice/Button/Asset fixture composition; reject automatic branded background permission; no camera engine copy. SOURCE ONLY actual camera grant/deny/performance/retry pending.",
           "experimentProposal": {
             "path": "실험/구성/비교와 검증/카메라 화면 표현",
             "existingApis": [
@@ -20895,7 +20926,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -20918,11 +20949,11 @@
           "sourceSha256": "27e291e8614a3985c85e11c3c79e6e72b7205f8638cb18e9ac7cf8bb78a8ce18",
           "capturedAt": "2026-10-07T04:01:53Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "WobbleCard whole3cardcopy/allchildren/container/classNameprops+noiseassetdownload instructionreadnotdownloaded;Manual/Usage/IO/focuspending.",
+          "reviewNotes": "WobbleCard whole3cardcopy/allchildren/container/classNameprops+noiseassetdownload instructionreadnotdownloaded;Manual/Usage/IO/focuspending. Full visible Manual3019 chars incl Noise read; section mouse movement rect each event, outer translation/inner opposite with1.03scale, .1s CSStransition; hardcoded indigo/radius/shadow/padding and /noise.webp overlay not pointer-none. No focus/fine-pointer/reduced branch visible. Reuse Card/EffectSurface surface and bounded fine-pointer optional depth; essential focus/content stays static. SOURCE ONLY actual hit testing/performance pending.",
           "experimentProposal": {
             "path": "실험/구성/비교와 검증/카드 깊이 비교",
             "existingApis": [
@@ -20931,7 +20962,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -20954,11 +20985,11 @@
           "sourceSha256": "ad278156b7b670532243ff77fee370a93cfdc72392f56077531f64419b930366",
           "capturedAt": "2026-10-07T04:01:55Z",
           "readReview": "static-body-read",
-          "manualReview": "pending",
+          "manualReview": "visible-tsx-css-read",
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured core description/CLI/all visible props/snippets/example headings; hidden Manual/Code/alternate tabs pending",
-          "reviewNotes": "WorldMap alldots/linecolor,Pointlatlngbounds/optionallabel props read;animatedconnectionsillustration,Manual/Usage/staticaccessiblemappending.",
+          "reviewNotes": "WorldMap alldots/linecolor,Pointlatlngbounds/optionallabel props read;animatedconnectionsillustration,Manual/Usage/staticaccessiblemappending. Full visible Manual5740 chars read incl all circles/SMIL: DottedMap rebuilt render, next-themes raw theme (system resolved state not checked), labels declared unused, unvalidated linear lat/lng projection, global path-gradient id, motion path+1.5s SMIL infinite pulse. React19 note pins motion alpha and legacy-peer-deps; not adopted. Reuse Card/Image/Text/Tooltip geographic summary; map projection/data+engine remain product/optional library; location must have accessible text/list and reduced static. SOURCE ONLY actual map/coords/theme/instances pending.",
           "experimentProposal": {
             "path": "실험/구성/정보 표시/지역과 위치 표시",
             "existingApis": [
@@ -20967,7 +20998,7 @@
             ],
             "decision": "reuse-expression-or-composition",
             "registration": "pending-root-after-research",
-            "readiness": "public-body-only-hidden-source-pending",
+            "readiness": "captured-public-body-and-full-visible-manual-read-actual-states-pending",
             "requiredStates": [
               "Default",
               "Dark",
@@ -21731,7 +21762,7 @@
           "visualReview": "pending",
           "interactionReview": "pending",
           "readScope": "Entire captured public core, all listed summaries/visible labels/guidance/FAQ/related sections. Repeated site testimonials/YouTube promotion/footer excluded; linked preview/hidden TSX/actual states pending.",
-          "reviewNotes": "All three sidebar summaries/FAQ read. collapsed names/aria-current/expanded/mobile overlay/localStorage hydration are guidance only. Product owns persistence. Suggested animated width is not proof of transform-only motion.",
+          "reviewNotes": "All three sidebar summaries/FAQ read. collapsed names/aria-current/expanded/mobile overlay/localStorage hydration are guidance only. Product owns persistence. Suggested animated width is not proof of transform-only motion. Public usage reread: HJM Sidebar is Web-only, native mobile routing uses BottomNavigation/navigator. Sheet is modal; Web nonmodal edge uses SidePanel. Do not claim same Sidebar/Popover across Native.",
           "experimentProposal": {
             "path": null,
             "existingApis": [],

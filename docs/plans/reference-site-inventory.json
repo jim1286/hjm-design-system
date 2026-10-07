@@ -3511,6 +3511,12 @@
         "https://designbookmark.com/business/payments",
         "https://designbookmark.com/business/startups",
         "https://designbookmark.com/chrome-extensions",
+        "https://designbookmark.com/chrome-extensions/design",
+        "https://designbookmark.com/chrome-extensions/developer",
+        "https://designbookmark.com/chrome-extensions/marketing",
+        "https://designbookmark.com/chrome-extensions/media",
+        "https://designbookmark.com/chrome-extensions/productivity",
+        "https://designbookmark.com/chrome-extensions/utilities",
         "https://designbookmark.com/design",
         "https://designbookmark.com/design/3d-motion",
         "https://designbookmark.com/design/3d-motion/page/2",
@@ -3556,14 +3562,27 @@
         "https://designbookmark.com/learning/learn/page/2",
         "https://designbookmark.com/learning/marketplaces",
         "https://designbookmark.com/learning/podcasts",
+        "https://designbookmark.com/libraries",
         "https://designbookmark.com/linux-apps",
+        "https://designbookmark.com/linux-apps/design",
+        "https://designbookmark.com/linux-apps/developer",
+        "https://designbookmark.com/linux-apps/media",
+        "https://designbookmark.com/linux-apps/productivity",
+        "https://designbookmark.com/linux-apps/utilities",
         "https://designbookmark.com/listing-guidelines",
         "https://designbookmark.com/mac-apps",
+        "https://designbookmark.com/mac-apps/browsers",
+        "https://designbookmark.com/mac-apps/design",
+        "https://designbookmark.com/mac-apps/developer",
+        "https://designbookmark.com/mac-apps/marketing",
+        "https://designbookmark.com/mac-apps/media",
         "https://designbookmark.com/mac-apps/page/2",
         "https://designbookmark.com/mac-apps/page/3",
         "https://designbookmark.com/mac-apps/page/4",
         "https://designbookmark.com/mac-apps/page/5",
         "https://designbookmark.com/mac-apps/page/6",
+        "https://designbookmark.com/mac-apps/productivity",
+        "https://designbookmark.com/mac-apps/utilities",
         "https://designbookmark.com/marketing",
         "https://designbookmark.com/marketing/analytics",
         "https://designbookmark.com/marketing/analytics/page/2",
@@ -6144,7 +6163,12 @@
         "https://designbookmark.com/web/no-code",
         "https://designbookmark.com/web/no-code/page/2",
         "https://designbookmark.com/web/website-builders",
-        "https://designbookmark.com/windows-apps"
+        "https://designbookmark.com/windows-apps",
+        "https://designbookmark.com/windows-apps/design",
+        "https://designbookmark.com/windows-apps/developer",
+        "https://designbookmark.com/windows-apps/media",
+        "https://designbookmark.com/windows-apps/productivity",
+        "https://designbookmark.com/windows-apps/utilities"
       ],
       "sitemapExpansionComplete": true,
       "sourceExtraction": {
@@ -6152,8 +6176,10 @@
         "totalRecords": 316,
         "http200": 316,
         "errors": 0,
-        "state": "running-confirmed-session",
-        "scope": "Fetched text pending individual source/visual/interaction review; no HTML link closure claim"
+        "state": "historical-source-snapshot",
+        "scope": "Fetched text pending individual source/visual/interaction review; no HTML link closure claim",
+        "previousProcessStatus": "running-confirmed-session",
+        "currentProcessObservation": "sourceProcessObservation"
       },
       "sourceCaptureProgress": {
         "checkedAt": "2026-10-07T05:02:04.110165+00:00",
@@ -6163,7 +6189,300 @@
         "scope": "Fetched/extracted public source; not source reading, visual or interaction review",
         "lastCapturedAt": "2026-10-07T05:01:54Z",
         "allReviewComplete": false,
-        "status": "running-process-confirmed"
+        "status": "historical-snapshot-original-process-absent",
+        "previousProcessStatus": "running-process-confirmed",
+        "currentProcessObservation": "sourceProcessObservation"
+      },
+      "anchorDiscoveryCheckpoint": {
+        "observedAt": "2026-10-07T08:32:15.355924+00:00",
+        "evidence": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+        "newCanonicalPages": 24,
+        "newPages": [
+          {
+            "url": "https://designbookmark.com/libraries",
+            "observedFrom": "https://designbookmark.com/web-templates",
+            "anchorText": "All",
+            "discoveryOnly": true,
+            "sourceRead": true,
+            "visualReview": "pending",
+            "originalFlow": "pending",
+            "sourceReadScope": "Rendered404 recovery only, not success content",
+            "visible404": true
+          },
+          {
+            "url": "https://designbookmark.com/windows-apps/utilities",
+            "observedFrom": "https://designbookmark.com/windows-apps",
+            "anchorText": "Utilities",
+            "discoveryOnly": true,
+            "sourceRead": true,
+            "visualReview": "pending",
+            "originalFlow": "pending",
+            "sourceReadScope": "Title/breadcrumb/count/category introductory text only",
+            "visible404": false
+          },
+          {
+            "url": "https://designbookmark.com/windows-apps/productivity",
+            "observedFrom": "https://designbookmark.com/windows-apps",
+            "anchorText": "Productivity",
+            "discoveryOnly": true,
+            "sourceRead": true,
+            "visualReview": "pending",
+            "originalFlow": "pending",
+            "sourceReadScope": "Title/breadcrumb/count/category introductory text only",
+            "visible404": false
+          },
+          {
+            "url": "https://designbookmark.com/windows-apps/developer",
+            "observedFrom": "https://designbookmark.com/windows-apps",
+            "anchorText": "Developer",
+            "discoveryOnly": true,
+            "sourceRead": true,
+            "visualReview": "pending",
+            "originalFlow": "pending",
+            "sourceReadScope": "Title/breadcrumb/count/category introductory text only",
+            "visible404": false
+          },
+          {
+            "url": "https://designbookmark.com/windows-apps/design",
+            "observedFrom": "https://designbookmark.com/windows-apps",
+            "anchorText": "Design",
+            "discoveryOnly": true,
+            "sourceRead": true,
+            "visualReview": "pending",
+            "originalFlow": "pending",
+            "sourceReadScope": "Title/breadcrumb/count/category introductory text only",
+            "visible404": false
+          },
+          {
+            "url": "https://designbookmark.com/windows-apps/media",
+            "observedFrom": "https://designbookmark.com/windows-apps",
+            "anchorText": "Media",
+            "discoveryOnly": true,
+            "sourceRead": true,
+            "visualReview": "pending",
+            "originalFlow": "pending",
+            "sourceReadScope": "Title/breadcrumb/count/category introductory text only",
+            "visible404": false
+          },
+          {
+            "url": "https://designbookmark.com/chrome-extensions/utilities",
+            "observedFrom": "https://designbookmark.com/chrome-extensions",
+            "discoveryOnly": true,
+            "sourceRead": true,
+            "visualReview": "pending",
+            "originalFlow": "pending",
+            "evidenceScope": "Original captured source anchors mechanically compared; anchor title not extracted",
+            "sourceReadScope": "Actual title/breadcrumb/count/platform category introductory text only",
+            "canonicalNew": true
+          },
+          {
+            "url": "https://designbookmark.com/chrome-extensions/productivity",
+            "observedFrom": "https://designbookmark.com/chrome-extensions",
+            "discoveryOnly": true,
+            "sourceRead": true,
+            "visualReview": "pending",
+            "originalFlow": "pending",
+            "evidenceScope": "Original captured source anchors mechanically compared; anchor title not extracted",
+            "sourceReadScope": "Actual title/breadcrumb/count/platform category introductory text only",
+            "canonicalNew": true
+          },
+          {
+            "url": "https://designbookmark.com/chrome-extensions/developer",
+            "observedFrom": "https://designbookmark.com/chrome-extensions",
+            "discoveryOnly": true,
+            "sourceRead": true,
+            "visualReview": "pending",
+            "originalFlow": "pending",
+            "evidenceScope": "Original captured source anchors mechanically compared; anchor title not extracted",
+            "sourceReadScope": "Actual title/breadcrumb/count/platform category introductory text only",
+            "canonicalNew": true
+          },
+          {
+            "url": "https://designbookmark.com/chrome-extensions/design",
+            "observedFrom": "https://designbookmark.com/chrome-extensions",
+            "discoveryOnly": true,
+            "sourceRead": true,
+            "visualReview": "pending",
+            "originalFlow": "pending",
+            "evidenceScope": "Original captured source anchors mechanically compared; anchor title not extracted",
+            "sourceReadScope": "Actual title/breadcrumb/count/platform category introductory text only",
+            "canonicalNew": true
+          },
+          {
+            "url": "https://designbookmark.com/chrome-extensions/media",
+            "observedFrom": "https://designbookmark.com/chrome-extensions",
+            "discoveryOnly": true,
+            "sourceRead": true,
+            "visualReview": "pending",
+            "originalFlow": "pending",
+            "evidenceScope": "Original captured source anchors mechanically compared; anchor title not extracted",
+            "sourceReadScope": "Actual title/breadcrumb/count/platform category introductory text only",
+            "canonicalNew": true
+          },
+          {
+            "url": "https://designbookmark.com/chrome-extensions/marketing",
+            "observedFrom": "https://designbookmark.com/chrome-extensions",
+            "discoveryOnly": true,
+            "sourceRead": true,
+            "visualReview": "pending",
+            "originalFlow": "pending",
+            "evidenceScope": "Original captured source anchors mechanically compared; anchor title not extracted",
+            "sourceReadScope": "Actual title/breadcrumb/count/platform category introductory text only",
+            "canonicalNew": true
+          },
+          {
+            "url": "https://designbookmark.com/linux-apps/utilities",
+            "observedFrom": "https://designbookmark.com/linux-apps",
+            "discoveryOnly": true,
+            "sourceRead": true,
+            "visualReview": "pending",
+            "originalFlow": "pending",
+            "evidenceScope": "Original captured source anchors mechanically compared; anchor title not extracted",
+            "sourceReadScope": "Actual title/breadcrumb/count/platform category introductory text only",
+            "canonicalNew": true
+          },
+          {
+            "url": "https://designbookmark.com/linux-apps/productivity",
+            "observedFrom": "https://designbookmark.com/linux-apps",
+            "discoveryOnly": true,
+            "sourceRead": true,
+            "visualReview": "pending",
+            "originalFlow": "pending",
+            "evidenceScope": "Original captured source anchors mechanically compared; anchor title not extracted",
+            "sourceReadScope": "Actual title/breadcrumb/count/platform category introductory text only",
+            "canonicalNew": true
+          },
+          {
+            "url": "https://designbookmark.com/linux-apps/developer",
+            "observedFrom": "https://designbookmark.com/linux-apps",
+            "discoveryOnly": true,
+            "sourceRead": true,
+            "visualReview": "pending",
+            "originalFlow": "pending",
+            "evidenceScope": "Original captured source anchors mechanically compared; anchor title not extracted",
+            "sourceReadScope": "Actual title/breadcrumb/count/platform category introductory text only",
+            "canonicalNew": true
+          },
+          {
+            "url": "https://designbookmark.com/linux-apps/design",
+            "observedFrom": "https://designbookmark.com/linux-apps",
+            "discoveryOnly": true,
+            "sourceRead": true,
+            "visualReview": "pending",
+            "originalFlow": "pending",
+            "evidenceScope": "Original captured source anchors mechanically compared; anchor title not extracted",
+            "sourceReadScope": "Actual title/breadcrumb/count/platform category introductory text only",
+            "canonicalNew": true
+          },
+          {
+            "url": "https://designbookmark.com/linux-apps/media",
+            "observedFrom": "https://designbookmark.com/linux-apps",
+            "discoveryOnly": true,
+            "sourceRead": true,
+            "visualReview": "pending",
+            "originalFlow": "pending",
+            "evidenceScope": "Original captured source anchors mechanically compared; anchor title not extracted",
+            "sourceReadScope": "Actual title/breadcrumb/count/platform category introductory text only",
+            "canonicalNew": true
+          },
+          {
+            "url": "https://designbookmark.com/mac-apps/utilities",
+            "observedFrom": "https://designbookmark.com/mac-apps",
+            "discoveryOnly": true,
+            "sourceRead": true,
+            "visualReview": "pending",
+            "originalFlow": "pending",
+            "evidenceScope": "Original captured source anchors mechanically compared; anchor title not extracted",
+            "sourceReadScope": "Actual title/breadcrumb/count/platform category introductory text only",
+            "canonicalNew": true
+          },
+          {
+            "url": "https://designbookmark.com/mac-apps/productivity",
+            "observedFrom": "https://designbookmark.com/mac-apps",
+            "discoveryOnly": true,
+            "sourceRead": true,
+            "visualReview": "pending",
+            "originalFlow": "pending",
+            "evidenceScope": "Original captured source anchors mechanically compared; anchor title not extracted",
+            "sourceReadScope": "Actual title/breadcrumb/count/platform category introductory text only",
+            "canonicalNew": true
+          },
+          {
+            "url": "https://designbookmark.com/mac-apps/developer",
+            "observedFrom": "https://designbookmark.com/mac-apps",
+            "discoveryOnly": true,
+            "sourceRead": true,
+            "visualReview": "pending",
+            "originalFlow": "pending",
+            "evidenceScope": "Original captured source anchors mechanically compared; anchor title not extracted",
+            "sourceReadScope": "Actual title/breadcrumb/count/platform category introductory text only",
+            "canonicalNew": true
+          },
+          {
+            "url": "https://designbookmark.com/mac-apps/design",
+            "observedFrom": "https://designbookmark.com/mac-apps",
+            "discoveryOnly": true,
+            "sourceRead": true,
+            "visualReview": "pending",
+            "originalFlow": "pending",
+            "evidenceScope": "Original captured source anchors mechanically compared; anchor title not extracted",
+            "sourceReadScope": "Actual title/breadcrumb/count/platform category introductory text only",
+            "canonicalNew": true
+          },
+          {
+            "url": "https://designbookmark.com/mac-apps/media",
+            "observedFrom": "https://designbookmark.com/mac-apps",
+            "discoveryOnly": true,
+            "sourceRead": true,
+            "visualReview": "pending",
+            "originalFlow": "pending",
+            "evidenceScope": "Original captured source anchors mechanically compared; anchor title not extracted",
+            "sourceReadScope": "Actual title/breadcrumb/count/platform category introductory text only",
+            "canonicalNew": true
+          },
+          {
+            "url": "https://designbookmark.com/mac-apps/browsers",
+            "observedFrom": "https://designbookmark.com/mac-apps",
+            "discoveryOnly": true,
+            "sourceRead": true,
+            "visualReview": "pending",
+            "originalFlow": "pending",
+            "evidenceScope": "Original captured source anchors mechanically compared; anchor title not extracted",
+            "sourceReadScope": "Actual title/breadcrumb/count/platform category introductory text only",
+            "canonicalNew": true
+          },
+          {
+            "url": "https://designbookmark.com/mac-apps/marketing",
+            "observedFrom": "https://designbookmark.com/mac-apps",
+            "discoveryOnly": true,
+            "sourceRead": true,
+            "visualReview": "pending",
+            "originalFlow": "pending",
+            "evidenceScope": "Original captured source anchors mechanically compared; anchor title not extracted",
+            "sourceReadScope": "Actual title/breadcrumb/count/platform category introductory text only",
+            "canonicalNew": true
+          }
+        ],
+        "fragmentTargets": [
+          {
+            "url": "https://designbookmark.com/sponsor#apply",
+            "observedFrom": "https://designbookmark.com/sponsor",
+            "pageUrl": "https://designbookmark.com/sponsor",
+            "scope": "Same-page target, not another canonical page. Target activation/flow remains pending."
+          }
+        ],
+        "knownRequestedUrls": 2681,
+        "knownCanonicalPages": 2680,
+        "scope": "Actual source/DOM anchors expand inventory; category introduction reading is separate from whole-body/code/visual/interaction review. The libraries path rendered recovery/404 and is retained as an error observation.",
+        "discoveryComplete": false
+      },
+      "sourceProcessObservation": {
+        "observedAt": "2026-10-07T08:32:15.355924+00:00",
+        "pid": 80505,
+        "processPresent": false,
+        "command": "ps -p 80505 -o pid=,command=",
+        "scope": "The previous PID is absent; no restart or source overwrite. Prior capture/running fields are timestamped historical observations, not a current live process claim.",
+        "sourceSnapshotRecordsFromAgentIndex": 2352
       }
     },
     {
@@ -19455,6 +19774,54 @@
         "lastCapturedAt": "2026-10-07T05:02:02Z",
         "allReviewComplete": false,
         "status": "running-process-confirmed"
+      },
+      "sourceIndexMetadataObservation": {
+        "observedAt": "2026-10-07T08:32:15.355924+00:00",
+        "originalIndexPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/pages.json",
+        "originalIndexBytesObservedByAgent": 0,
+        "currentIndexBytesObservedByRoot": 0,
+        "cause": "unconfirmed",
+        "independentRecoveryIndex": "docs/qa/2026-10-07-reference-parallel-b-21st-recovery-index.json",
+        "recoveryIndexSha256": "8b447c2741601254f8008f3afb4625b4112cab27c4c0d32e18f774cd00d85acf",
+        "inventoryUrls": 12460,
+        "recoveredRawMetadataCounts": {
+          "missing-raw-file": 1062,
+          "raw-metadata-verified": 11398
+        },
+        "readingCountsSeparate": {
+          "newBatchCapturedPublicBodyRead": 20,
+          "implementationRead": 0,
+          "renderedSelectedPages": 0,
+          "selectedFlowPages": 0
+        },
+        "scope": "Independent raw file existence/bytes/hash recovery, not restored HTTP status/capture timestamps, content reading, UI or whole-site completion. Original file is preserved. Earlier source counts are historical snapshots.",
+        "allReviewComplete": false,
+        "rootVerification": {
+          "recoveryEntries": 12460,
+          "uniqueUrls": 12460,
+          "statusCountsConsistent": true,
+          "sampleRawVerification": [
+            {
+              "url": "https://21st.dev",
+              "rawBytes": 197784,
+              "bodySha256": "efbb046018550cf1a31403222ddf3838ff1854465a47770731ee71d878a67e80",
+              "matchesRecordedMetadata": true
+            },
+            {
+              "url": "https://21st.dev/@olewandowski1/components/onboarding-1",
+              "rawBytes": 278201,
+              "bodySha256": "8b7d05a217ab7cddd5f4c7906aecf3a656f48643df6701fde5b9720da8364b04",
+              "matchesRecordedMetadata": true
+            },
+            {
+              "url": "https://21st.dev/community/components/s/shader-background",
+              "rawBytes": 1822186,
+              "bodySha256": "d8595536afaed3d995055aeb1c9debe32ea4fa503314fd30b79e0e716a094b1d",
+              "matchesRecordedMetadata": true
+            }
+          ],
+          "scope": "All recovery metadata is structurally consistent; only three raw gzip samples independently reread by root. This is not content/UI reading."
+        }
       }
     },
     {

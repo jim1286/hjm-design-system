@@ -2,6 +2,9 @@
 
 2026-10-07 · 실험 등록/미게시 ClipboardButton 보완. 전체 사이트 조사·승급·npm 게시·소비 앱 적용 아님.
 
+최신 사용자 지침으로 최대 OS 접근성 글자/최대값 모사 확대는 이후 설계·검증·후속/완료 조건에서
+제외한다. 아래 textScale2 등 이미 수행한 확대 검증은 과거 증거로만 보존하고 반복하지 않는다.
+
 ## 출처와 기존 API 판단
 
 [Magic Terminal](https://magicui.design/docs/components/terminal)의 공개 본문/예제와 B의 전체 Manual

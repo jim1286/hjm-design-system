@@ -12,11 +12,12 @@
 | --- | --- | --- | --- |
 | CTA snapshot551 | 상세505 소개·분류 + 비상세46 고유 본문 | 상세505(두 preview500·desktop-only5), 비상세46 desktop 첫 viewport | 원제품 흐름은 Unikorns contact anchor 이동만; 나머지 상태/전송/전체 모바일 미완료 |
 | CTA live 신규1 | Numa DOM 소개·분류1 | Numa desktop/mobile1 | 제품 구매·의료 기능 미확인; snapshot 밖 별도 |
-| Minimal snapshot3433 | 상세3199 중 website metadata3006 + template소개193 + 나머지234 고유본문/목록, description460 | 상세desktop228(유효mobile103·미제공124·제공되나실패1) | Mobile switch partial103, keyboard/focus/original 흐름 미완료 |
+| Minimal snapshot3433 | 상세3199 중 website metadata3006 + template소개193 + 나머지234 고유본문/목록, description510 | 상세desktop252(유효mobile116·미제공135·제공되나실패1) | Mobile switch partial116, keyboard/focus/original 흐름 미완료 |
 | Minimal 추가 live 목록 | 추가294 요청(75+78+39+29+25+24+24)·신규canonical252, snapshot포함 소개/metadata층3685 | 이번 추가 목록 시각0 | 목록/소개/탐색label 독해만, discovery closurefalse |
-| DesignBookmark queue2657 | tool About/Features2163 | 최초 홈·8bitcn panel + 순차대표desktop12, tool mobile0 | retro 검색·drawer·Escape·query 보존 부분 확인 |
+| Minimal 목록 썸네일 | 기존 소개독해와 중복 URL, source수에 추가안함 | Websites목록10개230 작은desktop썸네일 | detail252/mobile116에 합산안함·세부글자/상태/flow미확인 |
+| DesignBookmark queue2657 | snapshot tool2249 + 비tool103 소개/고유본문 + 신규live tool298/비tool7 = known2657 소개층(2656canonical) | 최초 홈·8bitcn panel + 순차대표desktop24, tool mobile0 | retro 검색·drawer·Escape·query 보존 부분 확인 |
 
-등록 제안 후보38개는 기존 API 재사용·부족 가능성·보류를 분리한 목록이다. 실제 실험 등록0, API 교체0이며 조사 전수 완료와 discovery closure를 주장하지 않는다.
+등록 제안 후보39개는 기존 API 재사용·부족 가능성·보류를 분리한 목록이다. 실제 실험 등록0, API 교체0이며 조사 전수 완료와 discovery closure를 주장하지 않는다.
 
 ## 최초 checkpoint의 범위
 
@@ -611,3 +612,111 @@ BureauForVisualAffairs부터CecilieBahnsen까지 실제수집SEO description50�
 첫12tool URL의 대표이미지를 실제 읽었다. 첫fullpage캡처0·2·4·6·7·9는 DOMnaturalWidth가있어도대표영역이회색placeholder/부분상태여서 성공에서 제외했다. fresh DOM뒤 재캡처하고 contact sheet를 다시 실제읽은 정정12만 반영한다. 404s11도 처음unloaded를제외하고 fresh loaded후 다시 읽었다. SHA/정정초기실패는 URL별index. 이12는 실제desktop대표이미지독해이고 페이지아래모든image·원제품·mobile/flow는 아니다.
 
 1042흰store/유리처럼보이는preview=A07, 10Weblavenderprompt/1of10collageprompt/21stlibrary/23rd문서layout=A26, 123RFdark검색/assettiles=A27, 15Fivepeachserif/metrics·1Passwordcookieoverlay/toggle=A23, 26KeysDownload=A21, 3DAIplant/shoes·3diconsgradientcard=A08/A27, 404갤러리=A22. 정지캡처의cookiepanel/약한skeleton을 실제HJM버그나동작검증으로 세지 않았다. 특히21st/23rd/3dicons코드와라이선스는이대표이미지로 완료표시하지 않는다. 후보38/등록0 유지.
+
+## DesignBookmark 대표 desktop12–23 실제 시각 독해
+
+첫로드미완료11개는 제외후freshDOM에서재캡처했고13·21은두번째이미지도회색placeholder여서 다시제외/정정/실제독해했다. 60FPSwhitecategory/preview, 7Zip고전sidebar/표, 8bitcnpixelRPG/stepped경계/상태바, 99Invisible노란podcast/play처럼보이는control, 99designs검색hero, 99Soundscategory/email, a0검은prompt/계단장식, A1darkgallery/filter, A11ygatorURL입력/표준/시간필드, Absurdblackturquoise손그림, ABTestmobile비교gallery, AccessibilityInsightsblue소개/WebWindows영역을 실제읽었다.
+
+총대표desktop24/mobile0/originalflow0. 8bitcn과a0의경계=A03, prompt=A26, Absurd=A29/A27, podcast=A37, gallery=A16, a11y=A28, A/B=A23로 기존후보에 병합했다. 다운로드/결과/캐러셀/오디오/검증을 실제 실행한 근거가 아니며 코드·license·native는 미완료. source소개2163와 시각24를 다른층으로 유지. 후보38/등록0.
+
+## A228/DB24 저장값 검증
+
+Minimal실제기본시각228·유효mobile103, DB대표desktop24·소개2163의 URL별기록과 집계가 일치하며 중복URL을 확인했다. 전수/실험등록완료false·후보38을 유지했다. 이번 `pnpm docs:check` 성공: documentation links ready(583Markdown). 원격CI·게시·build·실제등록은 실행하지 않았다.
+
+## Minimal 실제 시각228–239 checkpoint
+
+12desktop/mobile7(228·229·230·231·233·234·237)을 실제 읽었다. Artifacts제품사진/여백, Artone제품디자인소개/사례, ArtTechblue기하배경, Arturistic검은겹침사진곡선/mobilestack, Arvinredpurplegradient, AskPhill전면사진/redmenu, Aspenborderedgrid/halftone/mint, Assembly큰사진제목, AtTheStudio제품tiles, Axelfloatingcollage/mobileblurEnter, Bettystilllife/contact, Athletics천장사진/흰소개다.239첫flat-darkpreview는DOMloadedtrue라도 실제작품이없어제외, freshDOM재캡처 후실제사진을읽은정정값만합산했다.
+
+AskPhill233은desktop/mobile다른정지장면, Axel237은introblur상태로 실제동일breakpoint/Enter/focusflow증거가 아니다. A25/A23/A24/A04에 출처를 병합했다. 총240desktop·유효mobile110·미제공129·제공실패1, SHA/index·후보38/등록0 유지.
+
+## Minimal 별도 목록 썸네일 시각층 시작23
+
+root지시에 따라 목록fullpage에 실제렌더링된썸네일만 별도층으로읽었다. `https://minimal.gallery/websites/`에서 실제스크롤후23작품이미지의loaded/크기/제목/detailURL/sourceimageURL을확인하고 fullpage를촬영했다. 광고카드는aria-label Viewdetailsfor제품링크가없어제외했다. 각crop와2contactsheet를 실제 읽고 basic배치/색/이미지표현만기록했다. `listingThumbnailVisualCheckpoint`에 제목/URL/source목록/이미지rect/fullpage·crop·sheet SHA가추적된다. 작은글자/정확한행동/상태/모션/원제품은미확인.
+
+기존detail240/mobile110에이23을합산하지않는다. 일부URL은앞선detail또는원수집metadata와겹치므로 전체source3685에도추가하지않는다. Onera녹청색diffusegrain과Driftimepinkgradient는A25/A04, TakeControlOS버튼=A21, 큰제목=A05, 작품collage=A24, Sonderdays검색처럼보이는intro=A16에 출처만합쳤다. 후보38/등록0·전수false유지.
+
+## A 소유 원시 캡처 정리 — ENOSPC 대응
+
+Websites목록page002 fullpage저장이 ENOSPC로 실패해 새캡처를중단했다. 이시도는썸네일/시각완료에합산하지않았다. 최초Data여유115MiB를확인했고root의QR정리범위지시에따라 이미URL별결과/근거hash/미확인범위가ownQA/index에보존되고 finalcontactsheet가남은 A소유3디렉터리의 rawfullpage/crop/실패PNG1917개(229596325bytes,219MiB)를정리했다. 디렉터리: parallel-a-cta-captures, parallel-a-minimal-captures, parallel-a-designbookmark-captures. 모든finalsheet·NumaPNG2·repo최종proof4·sourceHTML/JSON·script·fixture·타세션파일은보존했다. exact삭제상대경로/byte/hash는 `ownedRawCleanupCheckpoint.files`에보존했다.
+
+재확인Data여유는13GiB였다. 동시에host다른변경이있으므로13GiB전체를이번삭제의효과로주장하지않고 A삭제량219MiB만보고한다. 원래DesignBookmarkcrawler는종료/재시작하지않았다. 공간을재확인했으므로 다음캡처를재개한다.
+
+## Minimal 별도 목록2–4 썸네일69 실제 독해
+
+실제관찰후소개를이미읽은 Websites/page2·3·4를열어fullpage의작품69개crop/6sheet를실제로읽었다. 목록3 ArtemShcherbakov이미지가초기sheet에서flat-dark여서그slot만제외후freshDOM재캡처·독립correctedcrop을실제로읽어교정했다. 해당URLindex는 originalblank sheetSHA와 correctedcrop/fullSHA를별도지정한다. 광고제외, 본문상의모든작은글자/상태/원제품흐름미확인 유지.
+
+총4목록92작품thumbnailoccurrences/unique92(URL집계검증), detail252/mobile116에 합산안함. BuenaDev문자격자·ContentArchitecture원형text·Aspenhalftone=A25, Karol손글씨outline=A29, SevenGrid/ScreenTune다운로드=A21, Allagi앨범/strip=A37, Félixgradient=A04, Claudiuplanet자산=A08에출처병합했다. 기존A01/A05/A24범위에서많은사진/serif/작품grid를흡수하며 새후보/엔진을추가하지않는다. 전체source3685·후보38/등록0·discoveryclosurefalse.
+
+## 후속 checkpoint — 목록 썸네일 5–7 · 도구 소개 2163–2212
+
+Minimal Websites의 이미 관찰한 목록 URL `/websites/page/5/`, `/6/`, `/7/`에서 각각 23개, 총69 작은 정적 desktop 썸네일을 6개 contact sheet로 실제 읽었다. 누적7목록161개 occurrence/unique161이며 소개층3685·상세desktop240/mobile110과 합산하지 않는다. 광고는 `View details for` 상품 썸네일 selector 밖에서 제외했다. 7쪽 NoGood의 최초 unloaded capture는 제외하고 fresh DOM+교정 이미지 독해만 세었다. 각 title/URL/imageSrc/rect/fullpage·crop·sheet SHA와 읽은 색·배치가 index에 있다.
+
+큰 글자·사진·콜라주·ASCII·grid·손그림 경계는 기존 A-05/A-24/A-25/A-29에 흡수 연결했다. Ponder AI/Diffusion Studio/Dropshot의 정적 영상 제품 화면은 기존 배포 영상 미리보기 A-20로 연결하지만 생성/편집 엔진은 포함하지 않는다. 원본 버튼/재생/상품선택·작은 정확한 문구·responsive·runtime·license는 여전히 미확인이다.
+
+DesignBookmark tool2163–2212의50개 category/pricing/About 및 존재하는 Features를 실제 읽어 누적2213개로 저장했다. 당시 capture2352/tool2249는 독해수가 아니다. Tailwind/TanStack/Tauri 및 library 소개는 기존 API 비교 A-26이며 package 도입·교체 근거가 아니다. 아이콘/손그림/폼/QA/미디어/글자 표현은 기능별 기존 후보로 합친다. Sysinternals/코딩AI/HR/SEO/OCR/OS keyboard/DB/editor/녹화·스크린샷 도구 등의 실행 엔진은 HJM UI 조사와 구분한다. `free`/MIT/라이선스 조건은 디렉터리 주장이고 원문 검증 전 채택하지 않는다.
+
+Tegaki 소개가 주장한 선택 가능한 폰트의 획 쓰기는 별도 보류 후보 A-39 `실험/컴포넌트/시각 효과/손글씨 획과 읽기`로 기록했다. 공개 API 대응표·TextFormat 사용 지침·TextTransition 구현과 작업 중 text-annotation 계약/geometry를 읽었다. 전체문구 전환·줄 주석·손그림 경계는 glyph 획 애니메이션과 다르다. 소개만으로 지원·동등성·구현 가능성을 보장하지 않으며 원제품 코드·라이선스·실제 동작·한글/RTL/선택/모션 감소/Native는 미확인이다. 실제 실험 등록0·교체0이며 원사이트 전수 완료false를 유지한다.
+
+## DesignBookmark capture2352 소개층 checkpoint
+
+남은 tool2213–2248의36 About/category/pricing를 실제 읽었다. Theatre.js는 모션 editor 소개(A-31), Thinking Orbs는 AI thinking 상태 소개(A-30), Thiings/Three.js/device mockup은 원제품 엔진 도입이 아닌 제품 자산 슬롯 후보(A-08/A-27), 색 scale은 semantic palette/대비 검증(A-04/A-28)으로 합쳤다. planner/녹화/압축/OS앱/AI·CMS 실행 엔진은 HJM UI 재사용과 구분한다. 원제품 시각·동작·코드·라이선스는 미완료다.
+
+비tool103 URL을 두 번 나눠 실제 읽었다. 96개의 홈·분류·pagination은 title/breadcrumb/총수/구간/고유 소개까지만 읽었다. 반복 도구목록과 이미지는 포함하지 않는다. 나머지7개의 bookmarks/featured/newest/listing-guidelines/privacy/sponsor/terms는 nav 뒤 고유 추출 본문을 실제 모두 읽었다. 먼저 전체 목록이 출력돼 잘린36k-token 시도는 완료수에서 제외했고, 실제 읽을 소개 범위를 정확히 추출한 두 번째 batch만 기록했다. 따라서 tool2249 + 비tool103 = capture2352 요청URL의 **소개 또는 고유본문층**이며 canonical2351(홈 slash alias1)이다. known queue2657의 전수완료·모든 목록 카드/HTML/code/동작 검토를 뜻하지 않는다.
+
+Sponsor source는 월99달러/5자리 중3 open 표기와 info→FAQ→문의 폼 순서다. 약정·결제·문의전송을 하지 않았다. FAQ/소개/입력 구성은 기존 A-14/A-15/A-10에 연결한다. Bookmarks의 동기화 설명은 공개 SavedItemsScreen A-35에 연결하지만 Google account/bookmark 저장/persistence를 확인한 것이 아니다. Terms는 screenshot·브랜드·로고의 권리를 각 소유자에게 남기고 directory listing이 제품 test/endorsement가 아니며 가격/기능이 정확·최신이라는 보장을 하지 않는다고 명시한다. Directory의 MIT/free/성능 주장으로 원제품 라이선스를 확정하지 않는다. 그림을 실험 asset으로 번들하지 않고 HJM 자체 fixture·제품 소유 자산과 정확한 출처URL로 구성한다.
+
+## Minimal 목록 썸네일8–10 checkpoint
+
+이미 관찰한 Websites8–10의69개 작은 정적 썸네일을 추가로 실제 읽었다. 누적10목록230 occurrence/unique230이다. 9쪽 GIOLABS는 naturalWidth=true여도 최초 contact sheet가 어두운 placeholder였다. 해당 slot을 제외하고 페이지 재방문·fresh DOM·실제 viewport paint 후 standalone 교정 crop에서 구름 collage·큰 흰 제목·CTA/info를 읽어 그 근거만 포함했다. 초기 sheet SHA와 교정 full/crop SHA·정정 범위는 index에 분리되어 있다.
+
+Chus Retro OS/Hackie Techie/Daylman의 desktop icon/window 표현은 기존 retro·상태 비교 A-03/A-23으로 합쳤다. screenshot만으로 OS window engine을 만들지 않는다. 금속/콜라주/ASCII/질감/손그림/큰 제목은 A-08/A-24/A-25/A-29/A-05에 연결했다. 조그만 글자와 클릭·드래그·window state·flow·responsive·원래 자산 권리는 미확인이다. 상세desktop240/mobile110·소개3685·후보39·실제등록0은 그대로다.
+
+## Minimal 상세240–251 기본 시각 checkpoint
+
+12개의 desktop과 제공되는6 mobile 기본 정적 preview를 contact sheet로 실제 읽었다. 누적desktop252/mobile116, 미제공135, 제공되나 invalid1(이전173 Another Code Project 제외 유지)이다. 캡처 수/loaded 표기는 actual visual을 대신하지 않는다. Atilla의 mobile 긴 소개+Email me 순서, Atlason의3열→세로구성, Augen의 제목→portrait 위치, AusHydro의forest surface, Augusto/Atlas의글자 위계, Atrois/Automne의물질적 사진 질감을 확인했다.
+
+Austen Ezzell의30 seconds/5 minutes 선택처럼 보이는 intro는 기존 행동 순서 A-09에 연결하지만 실제 선택 결과는 미확인이다. AustenGoodman/Austen 두 URL의 정적 desktop 카드와 mobile 시작 타일이 서로 다르므로 동일 상태 responsive 비교라고 주장하지 않는다. 기존 카드/Grid/이미지·Typography·상태 구성에 우선 흡수하며 새로운 상태 엔진·갤러리 renderer 교체를 제안하지 않는다. 원제품 flow·a11y·motion·fulltext·이미지 권리는 남아 있다.
+
+`pnpm docs:check` 로컬 문서 검사 PASS(586 Markdown, 상세252 저장 전 실행), URL 중복/후보39의4마디·16자·고유이름 및 전수false 수치 assertion PASS. 이 검사는 원제품 UI/동작 또는 게시 검증이 아니다.
+
+## Minimal SEO description460–509 checkpoint
+
+추가50개의 SEO description과 기존 소개metadata를 실제 읽었다. 누적description510이며 기존 source 소개층3685에 포함된 URL의 더 깊은 글 읽기층으로, 신규50페이지라고 합산하지 않는다. 이름·분류·credit·게시일·제공 preview 여부를 확인했고 빈 category인 Chapter.Zero/Chapter20/Charlie Isslander/Check One Two Perfect/Christian Gruber의 일반 SEO문구를 실제 제품 기능으로 해석하지 않았다. 카테고리/설명만으로 후보를 늘리지 않았다. screenshot·원제품 본문/flow는 별도 미확인이다.
+
+## DesignBookmark 누락 queue live 소개0–39 checkpoint
+
+읽기 전용 ps에서 원래 crawler PID80505가 더 이상 조회되지 않았다. 종료·재시작·원시파일 overwrite를 하지 않았다. known2657 inventory URL에서 원본2352 capture를 빼서 미수집305 URL을 정확히 만들고 own CUA 탭에서40개의 live category/pricing/About를 실제 읽었다. 먼저25개 batch가60초 timeout·kernel reset으로 저장/출력되지 않아 그 시도는 성공수에서 제외했다. 다시 연결한 탭의 실제 Transhumans 소개와0–19/21–39 각 URL을 개별 persist한 결과만 읽어40으로 세었다.
+
+추가40은 원본 snapshot2249tool/103other와 분리한 `additionalLiveToolSourceRecords`로 보존했다. 읽은 renderedText SHA·요청/final URL·excerpt·기계적으로 관찰된 anchors가 있다. HTML/code/원제품/related links나 actual visual은 포함하지 않는다. 원본 snapshot 소개2351canonical + 신규40 =2391canonical 소개층이며 knownqueue 전체/발견closure는 미완료다.
+
+Tokens Studio는 토큰/code sync 소개를 기존 semantic tokens 대조 A-04, Toolcraft/Tremor는 A-26, Transhumans는 A-27/A-29, transitions-dev/Tumult Hype는 A-31에 흡수했다. token usage 앱 Tokens 4 Breakfast는 디자인토큰 exporter와 다르며 도입하지 않는다. CanvasSDK/백엔드/AI/OS관리/마케팅/녹화·컨텐츠생성 엔진은 별도 제품 기능이다. 정적 소개만으로 native/라이선스/동등성을 확정하지 않는다.
+
+## DesignBookmark 누락 live40–99 소개 checkpoint
+
+후속60개 category/pricing/About/Features를 실제 읽어 live100/305, 전체canonical소개2451로 저장했다. 원본snapshot2249tool/103other는 그대로다. Typeform의 한 질문씩·conditional branching/template/전송/brand 표기는 기존 단계입력 A-12 대조이며 원제품 conditional state engine을 실행하지 않았다. 글자scale/폰트/아이콘/gradient/glass/resources는 기존 A-05/A-27/A-04/A-07/A-26에 합쳤다. Untitled/UIAble/UIverse의 library·MIT/free 및 unDraw/Unsplash의 commercial/no-attribution는 directory 주장으로 원문 license 검토를 대신하지 않는다. original code/visual/flow/native는pending, 후보39·실제등록0 그대로다.
+
+## DesignBookmark 누락 live100–199 소개 checkpoint
+
+100개의 live About/category/pricing/Features를 두50 batch로 실제 읽어 추가live200/305, 전체canonical소개2551로 저장했다. 원본 source2352는변경하지않았다. useAnimations의 Lottie microinteraction 소개는 기존 Icon·motion/reduced-motion 대조 A-27/A-31로 묶었지만 라이브 원본 UI나 Lottie 도입/Native 지원은 확인하지않았다. Useberry/VisBug/web.dev는 A-28 검토 기준, UXPin/Geist/Viewport/템플릿은 A-26, variablefont/preview는 A-05, mockup/3Dasset은 A-08에 합쳤다.
+
+Vira/VS Code Themes/Vibe in Color는 에디터테마·코딩환경 소개이며 사용자 제품 테마를200개등록한다는 의미가 아니다. VLC/음성/녹화/편집/OS wallpaper/배포/계약·결제·AI/vectorDB는 UI system renderer 또는 공유토큰으로 채택하지 않는다. 디렉터리 무료·성능·우월성 문구와 vendorlicense/runtime를 구분한다. 시각24·actualflowpartial·후보39·실험등록0은그대로다.
+
+## DesignBookmark known2657 소개층 checkpoint
+
+누락305의 마지막105를 실제 읽었다. 별도live 총298tool About/category/pricing/Features와7비tool(1부모분류 소개,6목록의 고유본문/도구이름·설명)을 original snapshot2352와 분리해 보존했다. 원본2352 요청+live305 요청=known2657 소개 또는 고유본문층, canonical2656(홈 slash alias1)이다. **알려진queue의 해당 소개층만 완료**이며 전수전체페이지/모든listingcard/이미지/모바일/HTML/code/originalvendor/flow 또는discoveryclosure 완료가 아니다.
+
+305개 live에서 기계적으로 관찰된 내부 anchor를 known2657과 비교한 pending목록은 index `additionalLiveInternalAnchorDiscovery`에 별도 보존했다. 새URL발견을 독해수로 세지 않는다. 위7비tool의 실제 출력이 inline guidelines로 전체목록을 포함해 잘리지 않았으므로6목록 본문/카드text를 읽은 그대로 표시했다. 이전captured96 소개only의 목록text독해를 소급 완료하지 않는다.
+
+WhoCanUse 대비/vision 소개는 A-28, WebGradients는 A-04, 단일/NPS/단계form은 A-10/A-12/A-13, Typefacepreview는 A-05, Zdog/Womp/아이콘은 A-08/A-27, library/docs/templates는 A-26에 합쳤다. Workflowy/yEd/Wiretext의 graph/diagram engine은 Tree의 hierarchical list 계약과 다르고 소개만으로 renderer 신설을 요구하지 않는다. actual license/code/visual/reduced-motion/native/flows를 검증하기 전 기능동등성·도입·승급을 주장하지 않는다. 후보39·실제등록0·API교체0·DBstatic24는 유지한다.
+
+## DesignBookmark 신규6 소개·오류범위 checkpoint
+
+known2657밖에서 발견한6 URL을 actual CUA rendered본문으로 읽었다. Windows Apps의5 하위URL은 각각 다른 document title(Utilities/Productivity/Developer/Design/Media)이지만 header가모두33 Windows Apps를 표기했다. 해당 title/breadcrumb/소개만 읽었고, categoryfilter의 실제 결과/전환은미확인이다. 따라서 새valid소개5를별도집계한다. `/libraries`는 404·This page wandered off·Back to all tools라는 실제 rendered recovery 문구였다. HTTPstatus 자체는조회하지않았고 validcontent/성공source수에서제외했다. 전체canonical유효소개2661 + visibleerror1이며known2657/alias분모와분리한다.
+
+원본2352 capture 전체anchors도기계적으로대조해 결과를 `capturedAllAnchorDiscoveryComparison`에 저장했다. 기계적 queue차이가0이어도 state/숨겨진경로/전체원사이트의discovery closure를뜻하지 않는다. 신규UI·flow·공개API·실험등록은추가하지않았다.
+
+## DesignBookmark 새 플랫폼18 + sponsor alias1 checkpoint
+
+기계적으로 발견한19 요청URL을 실제 읽었다. Chrome6/Linux5/Mac7=18 platform 분류의 title/breadcrumb/소개를 읽었고 각platform 총수38/28/278 header를 확인했다. 서로다른분류URL이어도 header전체수가같은지밖에확인하지않았으며 실제category결과filter·시각·동작은미확인이다. 19번째는 `/sponsor#apply`라 이미읽은 sponsor fragment alias로 정정해신규canonical수에서제외했다.
+
+따라서 known2657소개층2656canonical + 새valid분류23(Windows5+이번18)=현재유효소개2679canonical, 별도 `/libraries` visible404 1이다. 원본snapshot2352/knownqueue2657/새request6+19 및alias는서로다른분모다. 원본2352와live330(305+6+19)의anchors를hash/ref/utm 정규화해전체대조한 currentObservedAnchorDiscoveryComparison을저장했다. queue차이가0이어도원제품/모든본문·이미지/로그인상태/숨은경로/discoveryclosure완료로주장하지않는다. 후보39·실험등록0·교체0·시각24는그대로다.

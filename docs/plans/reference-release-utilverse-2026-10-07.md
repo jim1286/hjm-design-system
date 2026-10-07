@@ -13,6 +13,12 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 조사 중 후보를 등록 완료로 표시하지 않는다. 단, 해당 후보의 제공 코드와 실제 동작 검토가 끝난 단위는 전체 사이트 조사와 병행해 실제 구현·사용 지침·규격 검사를 갖춰 등록할 수 있다. 이때 전체 조사 완료로 합산하지 않고 후보별 등록과 미확인 QA를 별도 기록한다. 이는 조사 완료 전 제안 문자열만으로 등록했다고 보고하는 혼동을 피하면서 검토한 후보 구현을 진행하기 위한 구분이다. 등록 후 UI·행동 검토와 승급·게시 단계는 별도로 기록한다.
 규격은 [Storybook 탐색](../STORYBOOK_NAVIGATION.md)과 [사용 지침](../../packages/design-contracts/docs/usage/README.md)을 따른다.
 
+2026-10-07 사용자 범위 변경: **OS 최대 접근성 글자와 최대값을 모사하는 확대 조건은
+설계·구현 판단, 테스트·검증, 후속 작업, 완료·릴리스 차단에서 제외한다.** 과거 최대 글자
+검증 기록과 이미 수정한 source는 당시 증거로 보존한다. 이 계획의 `전체 환경` 후속에도 최대
+조건을 포함하지 않으며, `LargeText`라는 스토리 이름을 최대값 검사 의무의 근거로 쓰지 않는다.
+이는 최대 글자를 반복 검증하지 말고 고려 자체에서 제외하라는 최신 사용자 지시를 적용한 것이다.
+
 2026-10-07 후속: Component Gallery 실제 viewport 검토를 189모음/756개, 완전한 기본
 갤러리 경로 66개, 보이는 기본 예제 카드 2,671/2,671개로 갱신했다. Button group·Button·Card·
 Carousel·Checkbox를 기존 API와 대조했고 Native Card의 내부 media clip이 profile radius를
@@ -499,3 +505,19 @@ Magic UI의 알려진 공개 URL 257개의 source fetch가 exit=0/HTTP200 257로
 사용 지침을 `실험/구성/정보 표시/명령 기록 표시`에 등록했다. 복사 요청의 중복/이전 응답을
 Chromium에서 재현해 공통 ClipboardButton을 보완했다. [근거·한계](../qa/2026-10-07-command-records.md).
 Native 실제 OS·승급·게시·전수 조사 완료는 아니다.
+
+2026-10-07 조사 인벤토리 재조정: A가 기존 DB2657 요청 목록 밖의 내부 링크를 확인했다.
+새 경로6+플랫폼 분류18을 중앙 [페이지 목록](reference-site-inventory.json)에 더해 요청2681/
+canonical2680이 됐다. `sponsor#apply`는 기존 페이지의 상호작용 타깃으로 따로 남겼으며 새
+페이지로 세지 않았다. `libraries`의 실제 rendered404는 오류 관찰로 보존하고 성공 본문 수에서
+뺐다. A의 소개층 독해·화면24개·원제품 흐름 미확인을 구분하며 discovery closure는 false다.
+기존 수집 PID80505가 root `ps`에서도 없는 것을 확인해 중앙 running 표기를 역사 snapshot으로
+정정했다. 다른 source/crawler를 덮어쓰거나 재시작하지 않았다.
+
+21st.dev 원본 pages.json은 B와 root가 0byte를 관찰했다. 원인은 미확인이며 원본은 보존한다.
+B의 [별도 복구 인덱스](../qa/2026-10-07-reference-parallel-b-21st-recovery-index.json)는
+기존12460URL 중 raw 파일 byte/SHA가 맞는11398개와 누락1062개를 구분한다. HTTP 상태·수집
+시각 복구나 본문 독해·실제 UI 검증 완료를 뜻하지 않는다. 중앙 목록에 복구 파일 SHA와
+독해 수를 별도 기록한 이유는 오래된 수집 수와 현재 오류를 합쳐 전수 완료로 오인하지 않도록
+하기 위해서다. 구현·실험 등록 상태는 [B 조사](../qa/2026-10-07-reference-parallel-b.md)와
+[후보 등록부](reference-experiment-registrations-2026-10-07.json)에 계속 따로 연결한다.
