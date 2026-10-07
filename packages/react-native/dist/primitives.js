@@ -1,4 +1,4 @@
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { resolveGridLayout, } from "@hjmds/design-contracts/grid";
 import { resolveAspectRatioDescriptor, } from "@hjmds/design-contracts/components/aspect-ratio";
 import { resolveContainerDescriptor, } from "@hjmds/design-contracts/components/container";
@@ -9,7 +9,7 @@ import { withAlpha } from "@hjmds/design-contracts/colors";
 import { glyph, fontFamily, } from "@hjmds/design-contracts/foundations";
 import { surfaceDefaults, surfaceGeometry, surfaceRecipe, } from "@hjmds/design-contracts/recipes/base";
 import { sectionRecipe, stackRecipe, textRecipe, } from "@hjmds/design-contracts/recipes";
-import { Children, forwardRef, isValidElement, useEffect, useMemo, useState, } from "react";
+import { Children, Component, Fragment, forwardRef, isValidElement, useEffect, useMemo, useState, } from "react";
 import { PixelRatio, Platform, Text as NativeText, View, useWindowDimensions, } from "react-native";
 import { useHjmNativeTheme } from "./provider.js";
 import { logicalTextAlign, resolveNativeShadowElevation, resolveNativeTextScaleProps, } from "./internal/styles.js";
@@ -71,8 +71,14 @@ export const Text = forwardRef(function Text({ children, variant = textRecipe.de
 function resolveThemeColor(colors, key) {
     return colors[key];
 }
-export function Surface({ tone = surfaceDefaults.tone, padding = surfaceDefaults.padding, radius: radiusValue = surfaceDefaults.radius, bordered, layoutStyle, ...props }) {
-    const { colors, tokens, designProfile } = useHjmNativeTheme();
+export function Surface({ tone = surfaceDefaults.tone, padding = surfaceDefaults.padding, radius: radiusValue = surfaceDefaults.radius, bordered, layoutStyle, children, ...props }) {
+    const { colors, tokens, designProfile, environment, surfaceEffects, reducedTransparency, surfaceMaterial: material } = useHjmNativeTheme();
+    const renderBackdrop = !reducedTransparency && material?.blurStrength ? surfaceEffects?.renderBackdrop : undefined;
+    // The core supports RN 0.81's old architecture too: inset boxShadow must be
+    // explicitly confirmed by the product host, never inferred from a theme name.
+    const insetStyle = surfaceEffects?.insetShadows && material?.insetShadows.length
+        ? { boxShadow: material.insetShadows.map(token => ({ inset: true, offsetX: token.offsetX, offsetY: token.offsetY, blurRadius: token.radius, color: withAlpha(token.color, token.opacity) })) }
+        : undefined;
     const normalizedTone = tone;
     const contract = surfaceRecipe[normalizedTone];
     const shouldDrawBorder = bordered ?? (surfaceDefaults.bordered || contract.borderAlways);
@@ -87,9 +93,9 @@ export function Surface({ tone = surfaceDefaults.tone, padding = surfaceDefaults
             shadowRadius: tokens.shadow.floating.radius,
         }
         : undefined;
-    return (_jsx(View, { ...props, style: [
+    return (_jsxs(View, { ...props, style: [
             {
-                backgroundColor: resolveThemeColor(colors, contract.background),
+                backgroundColor: renderBackdrop ? "transparent" : resolveThemeColor(colors, contract.background),
                 borderColor: shouldDrawBorder
                     ? contract.borderAlpha === 1
                         ? borderColor
@@ -103,8 +109,28 @@ export function Surface({ tone = surfaceDefaults.tone, padding = surfaceDefaults
                 padding: surfaceGeometry.paddings[padding],
             },
             elevatedStyle,
+            insetStyle,
             layoutStyle,
-        ] }));
+        ], children: [renderBackdrop && material ? _jsx(View, { pointerEvents: "none", accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { position: "absolute", top: 0, right: 0, bottom: 0, left: 0, borderRadius: tokens.radius[radiusValue], overflow: "hidden" }, children: _jsx(SurfaceBackdropBoundary, { renderBackdrop: renderBackdrop, background: colors.bg, children: _jsx(SurfaceBackdrop, { renderBackdrop: renderBackdrop, strength: material.blurStrength, theme: environment.theme, opacity: material.fillOpacity, background: colors.bg }) }, `${designProfile?.id}:${material.blurStrength}:${material.fillOpacity}`) }, "material") : null, _jsx(Fragment, { children: children }, "content")] }));
+}
+const surfaceBackdropFill = { position: "absolute", top: 0, right: 0, bottom: 0, left: 0 };
+// A whole-surface backdrop differs from EffectSurface/ProgressiveBlur's null
+// failure fallback: opaque fill is required before displaying readable content.
+class SurfaceBackdropBoundary extends Component {
+    state = { failed: false };
+    static getDerivedStateFromError() { return { failed: true }; }
+    componentDidUpdate(previous) {
+        // Retry only after a host replacement; content renders cannot loop a failure.
+        if (this.state.failed && previous.renderBackdrop !== this.props.renderBackdrop)
+            this.setState({ failed: false });
+    }
+    render() { return this.state.failed ? _jsx(View, { style: { ...surfaceBackdropFill, backgroundColor: this.props.background } }) : this.props.children; }
+}
+function SurfaceBackdrop({ renderBackdrop, strength, theme, opacity, background }) {
+    const layer = renderBackdrop({ strength, theme });
+    if (!isValidElement(layer))
+        return _jsx(View, { style: { ...surfaceBackdropFill, backgroundColor: background } });
+    return _jsxs(_Fragment, { children: [layer, _jsx(View, { style: { ...surfaceBackdropFill, backgroundColor: withAlpha(background, opacity) } })] });
 }
 const alignValues = {
     start: "flex-start",

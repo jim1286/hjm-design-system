@@ -75,7 +75,7 @@ export type SurfaceProps = Omit<ViewProps, "style"> & Readonly<{
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function Surface({ tone, padding, radius: radiusValue, bordered, layoutStyle, ...props }: SurfaceProps): import("react").JSX.Element;
+export declare function Surface({ tone, padding, radius: radiusValue, bordered, layoutStyle, children, ...props }: SurfaceProps): import("react").JSX.Element;
 export type StackProps = ViewProps & Readonly<{
     axis?: StackAxis;
     gap?: StackGap | number;

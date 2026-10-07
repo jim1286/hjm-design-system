@@ -10,6 +10,7 @@ import { Collapsible } from "@hjmds/react/collapsible";
 import { Dialog, Sheet } from "@hjmds/react/overlays";
 import { Notice, Skeleton } from "@hjmds/react/feedback";
 import { Toast } from "@hjmds/react/toast";
+import { Card } from "@hjmds/react/display";
 import { Heading } from "@hjmds/react/heading";
 import { hjmDesignPresets, type HjmDesignPreset } from "@hjmds/design-contracts/design-profile";
 import { profileCopy as copy, profileOptions, profileHeadingSamples } from "../../../shared/design-profile";
@@ -50,6 +51,16 @@ function ProfileChromeSample({ onNextTheme }: { onNextTheme: () => void }) {
   </Stack></Collapsible>;
 }
 
+function ProfileMaterialSample({ onNextTheme }: { onNextTheme: () => void }) {
+  const [draft, setDraft] = useState<string>(copy.initial);
+  return <Collapsible trigger={copy.material} defaultOpen><div className="hjm-profile-material-sample">
+    <div className="hjm-profile-material-sample__backdrop" aria-hidden="true" />
+    <div className="hjm-profile-material-sample__content"><Card title={copy.materialTitle} description={copy.materialBody} tone="raised"><Stack gap="md">
+      <TextField label={copy.materialDraft} value={draft} onValueChange={setDraft} /><Button onClick={onNextTheme}>{copy.nextTheme}</Button>
+    </Stack></Card></div>
+  </div></Collapsible>;
+}
+
 export function DesignProfileComparison() {
   const [preset, setPreset] = useState<HjmDesignPreset>("retro");
   return <Stack gap="xl"><Text variant="heading">{copy.title}</Text><Text>{copy.intro}</Text>
@@ -57,6 +68,7 @@ export function DesignProfileComparison() {
     <HjmProvider designProfile={hjmDesignPresets[preset]}><Stack gap="xl"><RecordSample />
       <Collapsible trigger={copy.headingScale} defaultOpen><Stack gap="sm">{profileHeadingSamples.map(sample => <Heading key={sample.level} level={sample.level} semanticLevel={3}>{sample.label}</Heading>)}</Stack></Collapsible>
     </Stack></HjmProvider>
+    <HjmProvider designProfile={hjmDesignPresets[preset]}><ProfileMaterialSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmProvider>
     <HjmProvider designProfile={hjmDesignPresets[preset]}><ProfileChromeSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmProvider>
     <Text tone="muted">{copy.limitation}</Text>
     <Collapsible trigger={copy.compare} defaultOpen>{profileOptions.map(option => <HjmProvider key={option.id} designProfile={hjmDesignPresets[option.id]}><Stack gap="md"><Text variant="title">{option.label}</Text><RecordSample /></Stack></HjmProvider>)}</Collapsible>

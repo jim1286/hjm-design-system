@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Animated, Pressable, TextInput, Text as NativeText, View } from "react-native";
+import { AccessibilityInfo, Platform, Animated, Pressable, TextInput, Text as NativeText, View } from "react-native";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { expect, it, vi } from "vitest";
 import { defineHjmDesignProfile, hjmDesignPresets, type HjmDesignPreset } from "@hjmds/design-contracts/design-profile";
@@ -195,4 +195,85 @@ it("themes native adaptive choices, loading and feedback while retaining selecti
       expect(flatten(toast.props.style)).toMatchObject({ borderRadius: profile.tokens.radius.lg, shadowRadius: profile.tokens.shadow.floating.radius, shadowOpacity: profile.tokens.shadow.floating.opacity });
     }
   } finally { if (tree) act(() => tree.unmount()); }
+});
+
+
+it("keeps a surface draft mounted through glass, clay, unsupported and failed decoration hosts", () => {
+  let mounts = 0;
+  function Draft() { const [value, setValue] = useState("initial"); useEffect(() => { mounts++; }, []); return <TextInput accessibilityLabel="질감 초안" value={value} onChangeText={setValue} />; }
+  const working = vi.fn(() => <View testID="real-backdrop-host" />);
+  const empty = () => null;
+  const broken = () => { throw new Error("host unavailable"); };
+  const error = vi.spyOn(console, "error").mockImplementation(() => {});
+  let tree!: ReactTestRenderer;
+  const render = (profile: typeof hjmDesignPresets.glass, renderBackdrop?: typeof working | typeof empty | typeof broken, insetShadows = false) => <HjmNativeProvider theme="dark" reducedMotion designProfile={profile} surfaceEffects={{ ...(renderBackdrop ? { renderBackdrop } : {}), insetShadows }}>
+    <HjmNativeProvider><Surface tone="raised"><Draft /></Surface></HjmNativeProvider>
+  </HjmNativeProvider>;
+  try {
+    act(() => { tree = create(render(hjmDesignPresets.glass)); });
+    act(() => tree.root.findByProps({ accessibilityLabel: "질감 초안" }).props.onChangeText("retained"));
+    expect(tree.root.findByType(Surface).findAllByType(View)[0]!.props.style[0].backgroundColor).toBe(hjmDesignPresets.glass.palette.dark.bg);
+    act(() => tree.update(render(hjmDesignPresets.glass, working)));
+    expect(working).toHaveBeenCalledWith({ strength: hjmDesignPresets.glass.material.surface!.blurStrength, theme: "dark" });
+    const decoration = tree.root.findByProps({ testID: "real-backdrop-host" }).parent!.parent!;
+    expect(tree.root.findAllByType(View).some(node => node.props.pointerEvents === "none" && node.props.accessibilityElementsHidden && node.props.importantForAccessibility === "no-hide-descendants")).toBe(true);
+    expect(decoration).toBeTruthy();
+    for (const host of [empty, broken]) {
+      act(() => tree.update(render(hjmDesignPresets.glass, host)));
+      expect(tree.root.findAllByType(View).some(node => !Array.isArray(node.props.style) && node.props.style?.backgroundColor === hjmDesignPresets.glass.palette.dark.bg)).toBe(true);
+      expect(tree.root.findByProps({ accessibilityLabel: "질감 초안" }).props.value).toBe("retained");
+    }
+    act(() => tree.update(render(hjmDesignPresets.glass, working)));
+    expect(tree.root.findAllByType(View).some(node => node.props.testID === "real-backdrop-host")).toBe(true);
+    act(() => tree.update(render(hjmDesignPresets.clay, working)));
+    const frame = () => Object.assign({}, ...tree.root.findByType(Surface).findAllByType(View)[0]!.props.style);
+    expect(frame().boxShadow).toBeUndefined();
+    act(() => tree.update(render(hjmDesignPresets.clay, working, true)));
+    expect(frame().boxShadow).toHaveLength(2);
+    expect(frame().boxShadow.every((item: { inset: boolean }) => item.inset)).toBe(true);
+    act(() => tree.update(render(hjmDesignPresets.neutral, working, true)));
+    expect(frame().boxShadow).toBeUndefined();
+    expect(mounts).toBe(1);
+    expect(tree.root.findByProps({ accessibilityLabel: "질감 초안" }).props.value).toBe("retained");
+  } finally { act(() => tree.unmount()); error.mockRestore(); }
+});
+
+it("keeps iOS unknown and reduced transparency opaque and shares live OS changes with nested providers", async () => {
+  const os = Platform.OS; Platform.OS = "ios";
+  let finishQuery!: (value: boolean) => void;
+  const query = vi.spyOn(AccessibilityInfo, "isReduceTransparencyEnabled").mockImplementation(() => new Promise(resolve => { finishQuery = resolve; }));
+  let changed!: (value: boolean) => void;
+  const remove = vi.fn();
+  // The mocked native emitter implements only remove(); the runtime callback
+  // below covers the boolean preference event, not SDK announcement metadata.
+  const events = vi.spyOn(AccessibilityInfo, "addEventListener").mockImplementation(((name: string, listener: (value: boolean) => void) => { if (name === "reduceTransparencyChanged") changed = listener; return { remove }; }) as unknown as typeof AccessibilityInfo.addEventListener);
+  const host = vi.fn(() => <View testID="blur" />);
+  let tree!: ReactTestRenderer;
+  try {
+    await act(async () => { tree = create(<HjmNativeProvider reducedMotion designProfile={hjmDesignPresets.glass} surfaceEffects={{ renderBackdrop: host }}><HjmNativeProvider><Surface><TextInput accessibilityLabel="초안" /></Surface></HjmNativeProvider></HjmNativeProvider>); });
+    expect(query).toHaveBeenCalledTimes(1); expect(host).not.toHaveBeenCalled();
+    await act(async () => changed(true));
+    await act(async () => finishQuery(false));
+    expect(host).not.toHaveBeenCalled();
+    await act(async () => changed(false));
+    expect(tree.root.findAllByType(View).filter(node => node.props.testID === "blur")).toHaveLength(1);
+    await act(async () => changed(true));
+    expect(tree.root.findAllByType(View).filter(node => node.props.testID === "blur")).toHaveLength(0);
+    expect(tree.root.findAllByType(TextInput)).toHaveLength(1);
+    await act(async () => tree.unmount()); expect(remove).toHaveBeenCalled();
+  } finally { query.mockRestore(); events.mockRestore(); Platform.OS = os; }
+});
+
+
+it("keeps a rejected iOS transparency query opaque instead of enabling a backdrop", async () => {
+  const os = Platform.OS; Platform.OS = "ios";
+  const query = vi.spyOn(AccessibilityInfo, "isReduceTransparencyEnabled").mockRejectedValue(new Error("preference unavailable"));
+  const host = vi.fn(() => <View testID="unavailable-preference-blur" />);
+  let tree!: ReactTestRenderer;
+  try {
+    await act(async () => { tree = create(<HjmNativeProvider reducedMotion designProfile={hjmDesignPresets.glass} surfaceEffects={{ renderBackdrop: host }}><Surface><TextInput accessibilityLabel="실패 후 초안" /></Surface></HjmNativeProvider>); });
+    expect(host).not.toHaveBeenCalled();
+    expect(tree.root.findByType(Surface).findAllByType(View)[0]!.props.style[0].backgroundColor).toBe(hjmDesignPresets.glass.palette.light.bg);
+    expect(tree.root.findAllByType(TextInput)).toHaveLength(1);
+  } finally { if (tree) await act(async () => tree.unmount()); query.mockRestore(); Platform.OS = os; }
 });

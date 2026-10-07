@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: `src/base-recipes.ts`(`surfaceRecipe`·`surfaceDefaults`·`surfaceGeometry`)
 - 스토리북: `배포/컴포넌트/레이아웃/배경 영역`
 
@@ -61,6 +61,13 @@ import { Surface } from "@hjmds/react-native/primitives";
 | 자식 자르기 | — | `raised` 외 자름 | `raised`를 뺀 tone은 둥근 모서리 밖으로 넘친 자식을 자른다. `raised`는 그림자가 잘리지 않게 자르지 않는다 |
 | `as`(Web) | `div` · `section` · `article` | `div` | — |
 | `layoutStyle` | `HjmCompositionStyleProp` | — | Surface 자신의 바깥 여백·폭·flex·`alignSelf`. Web·Native 모두 |
+
+### 프로필 표면 질감(미게시)
+
+선택한 `designProfile.material.surface`를 자동으로 읽는다. glass는 지원하는 Web에서 실제 배경 흐림,
+clay는 안쪽 그림자를 사용한다. Native는 루트 Provider의 선택형 `surfaceEffects` host와 inset capability를
+한 번 등록한다. 사용할 수 없거나 투명도 줄이기 설정이면 불투명 표면을 유지한다. 효과와 입력은 서로 다른
+subtree라 질감을 바꾸거나 host가 실패해도 본문/초안은 유지한다. [범위·등록·대비 계약](../../design-profile.md#surfacecard의-유리클레이-질감)을 따른다.
 
 ## 배치
 

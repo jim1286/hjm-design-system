@@ -88,10 +88,10 @@ dispatch gate는 현재 미구현입니다.
 `ci:check`는 package 계약·테스트·bundle/evidence, Native showcase 계약과 배포 가능한 Web
 Storybook을 한 번에 검증하는 CI의 canonical command입니다.
 
-- `main` 단일 branch로 운영합니다. `main` push는 Storybook을 GitHub Pages에 배포합니다.
+- `main` 단일 branch로 운영합니다. 2026-10-07 사용자 재확인으로 public package 버전 상승을 포함한 `main` push에서 원격 검사 후 Storybook을 GitHub Pages에 배포합니다. 일반 개발 push는 이 workflow를 실행하지 않습니다.
 - 세 public package는 하나의 fixed version train으로 함께 versioning합니다.
 - 일반 commit: public package source를 바꿨다면 `pnpm changeset`으로 Changeset을 함께 commit해야
-  합니다. 자동 배포는 Storybook만 갱신하고 package를 릴리스하지 않습니다.
+  합니다. 버전 상승 시의 자동 배포는 Storybook만 갱신하고 package를 릴리스하지 않습니다.
 - 릴리스 commit: 로컬에서 `pnpm release:version`을 실행하고 생성 결과를 하나의 commit으로
   `main`에 push합니다. package publish가 필요할 때 GitHub Actions에서 `Release Packages`를 직접
   실행합니다. workflow는 release commit shape를 확인하고 세 package를 npm에 publish한 뒤

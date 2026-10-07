@@ -1,4 +1,5 @@
 import { jsx as _jsx } from "react/jsx-runtime";
+import { resolveSurfaceFillOpacity } from "@hjmds/design-contracts/palette-contrast";
 import { resolveDesignSystemProviderValue, validateDesignSystemProviderValue, } from "@hjmds/design-contracts/components/design-system-provider";
 import { spacing, radius, typography, shadow, fontFamily } from "@hjmds/design-contracts/foundations";
 import { createContext, useContext, useEffect, useMemo, useState, useSyncExternalStore, } from "react";
@@ -35,6 +36,29 @@ function useSystemReducedMotion(observe) {
     }, [observe]);
     return reducedMotion;
 }
+function useSystemReducedTransparency(observe) {
+    // iOS resolves asynchronously; keep unknown/failing hosts opaque. Android has
+    // no equivalent AccessibilityInfo preference. Nested providers share one query.
+    const [reduced, setReduced] = useState(Platform.OS === "ios");
+    useEffect(() => {
+        if (!observe || Platform.OS !== "ios")
+            return undefined;
+        let active = true;
+        let changed = false;
+        void AccessibilityInfo.isReduceTransparencyEnabled().then(enabled => {
+            if (active && !changed)
+                setReduced(enabled);
+        }).catch(() => { if (active && !changed)
+            setReduced(true); });
+        const subscription = AccessibilityInfo.addEventListener("reduceTransparencyChanged", enabled => {
+            changed = true;
+            if (active)
+                setReduced(enabled);
+        });
+        return () => { active = false; subscription.remove(); };
+    }, [observe]);
+    return reduced;
+}
 function toEnvironmentInput(props) {
     return {
         ...(props.theme === undefined ? {} : { theme: props.theme }),
@@ -46,9 +70,13 @@ function toEnvironmentInput(props) {
             : { minimumVisualTarget: props.minimumVisualTarget }),
     };
 }
-export function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, brandPalette: suppliedBrandPalette, designProfile: suppliedDesignProfile, value: suppliedValue, safeAreaInsets: suppliedInsets, }) {
+export function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, brandPalette: suppliedBrandPalette, designProfile: suppliedDesignProfile, value: suppliedValue, safeAreaInsets: suppliedInsets, surfaceEffects: suppliedSurfaceEffects, }) {
     const parent = useContext(HjmNativeThemeContext);
     const designProfile = suppliedDesignProfile ?? parent?.designProfile;
+    const surfaceEffects = suppliedSurfaceEffects ?? parent?.surfaceEffects;
+    const observeTransparency = Boolean(surfaceEffects?.renderBackdrop) && (parent === null || surfaceEffects !== parent.surfaceEffects);
+    const systemReducedTransparency = useSystemReducedTransparency(observeTransparency);
+    const reducedTransparency = observeTransparency ? systemReducedTransparency : parent?.reducedTransparency ?? (Platform.OS === "ios");
     const inheritedInsets = useContext(HjmNativeSafeAreaContext);
     const safeAreaInsets = suppliedInsets ?? inheritedInsets;
     const inheritedBrandPalette = useContext(HjmNativeBrandPaletteContext);
@@ -86,13 +114,22 @@ export function HjmNativeProvider({ children, theme, direction, textScale, reduc
         return {
             ...resolved,
             colors: resolved.palette.theme,
+            ...(surfaceEffects === undefined ? {} : { surfaceEffects }),
+            reducedTransparency,
+            // Resolve palette contrast once per Provider, not again for every card or
+            // every input render. The final palette already includes product overrides.
+            surfaceMaterial: resolved.designProfile?.material.surface ? {
+                ...resolved.designProfile.material.surface,
+                fillOpacity: resolved.designProfile.material.surface.blurStrength
+                    ? resolveSurfaceFillOpacity(resolved.designProfile.material.surface.fillOpacity, resolved.palette.theme) : 1,
+            } : null,
             textScaling: {
                 mode: textScalingMode,
                 scale: resolved.environment.textScale,
             },
             tokens: { spacing, radius, typography, shadow, fontFamily, ...resolved.designProfile?.tokens },
         };
-    }, [brandPalette, designProfile, environment, parent, suppliedValue, systemReducedMotion, systemTextScale, systemTheme]);
+    }, [brandPalette, designProfile, environment, parent, suppliedValue, systemReducedMotion, systemTextScale, systemTheme, surfaceEffects, reducedTransparency]);
     return (_jsx(HjmNativeThemeContext.Provider, { value: contextValue, children: _jsx(HjmNativeBrandPaletteContext.Provider, { value: brandPalette, children: _jsx(HjmNativeSafeAreaContext.Provider, { value: safeAreaInsets, children: children }) }) }));
 }
 export function useHjmNativeTheme() {

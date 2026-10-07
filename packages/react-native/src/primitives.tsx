@@ -50,6 +50,8 @@ import {
 } from "@hjmds/design-contracts/recipes";
 import {
   Children,
+  Component,
+  Fragment,
   forwardRef,
   isValidElement,
   useEffect,
@@ -72,7 +74,7 @@ import {
   type ViewStyle,
 } from "react-native";
 
-import { useHjmNativeTheme } from "./provider.js";
+import { useHjmNativeTheme, type HjmNativeTheme } from "./provider.js";
 import {
   logicalTextAlign,
   resolveNativeShadowElevation,
@@ -261,10 +263,17 @@ export function Surface({
   radius: radiusValue = surfaceDefaults.radius,
   bordered,
   layoutStyle,
+  children,
 
   ...props
 }: SurfaceProps) {
-  const { colors, tokens, designProfile } = useHjmNativeTheme();
+  const { colors, tokens, designProfile, environment, surfaceEffects, reducedTransparency, surfaceMaterial: material } = useHjmNativeTheme();
+  const renderBackdrop = !reducedTransparency && material?.blurStrength ? surfaceEffects?.renderBackdrop : undefined;
+  // The core supports RN 0.81's old architecture too: inset boxShadow must be
+  // explicitly confirmed by the product host, never inferred from a theme name.
+  const insetStyle: ViewStyle | undefined = surfaceEffects?.insetShadows && material?.insetShadows.length
+    ? { boxShadow: material.insetShadows.map(token => ({ inset: true, offsetX: token.offsetX, offsetY: token.offsetY, blurRadius: token.radius, color: withAlpha(token.color, token.opacity) })) }
+    : undefined;
   const normalizedTone = tone;
   const contract = surfaceRecipe[normalizedTone];
   const shouldDrawBorder = bordered ?? (surfaceDefaults.bordered || contract.borderAlways);
@@ -284,7 +293,7 @@ export function Surface({
       {...props}
       style={[
         {
-          backgroundColor: resolveThemeColor(colors, contract.background),
+          backgroundColor: renderBackdrop ? "transparent" : resolveThemeColor(colors, contract.background),
           borderColor: shouldDrawBorder
             ? contract.borderAlpha === 1
               ? borderColor
@@ -298,10 +307,39 @@ export function Surface({
           padding: surfaceGeometry.paddings[padding],
         },
         elevatedStyle,
+        insetStyle,
         layoutStyle,
       ]}
-    />
+    >
+      {renderBackdrop && material ? <View key="material" pointerEvents="none" accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants"
+        style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0, borderRadius: tokens.radius[radiusValue], overflow: "hidden" }}>
+        <SurfaceBackdropBoundary key={`${designProfile?.id}:${material.blurStrength}:${material.fillOpacity}`} renderBackdrop={renderBackdrop} background={colors.bg}>
+          <SurfaceBackdrop renderBackdrop={renderBackdrop} strength={material.blurStrength} theme={environment.theme} opacity={material.fillOpacity} background={colors.bg} />
+        </SurfaceBackdropBoundary>
+      </View> : null}
+      {/* Stable keyed content remains a sibling of optional decoration. */}
+      <Fragment key="content">{children}</Fragment>
+    </View>
   );
+}
+
+type SurfaceBackdropRenderer = NonNullable<NonNullable<HjmNativeTheme["surfaceEffects"]>["renderBackdrop"]>;
+const surfaceBackdropFill = { position: "absolute", top: 0, right: 0, bottom: 0, left: 0 } as const;
+// A whole-surface backdrop differs from EffectSurface/ProgressiveBlur's null
+// failure fallback: opaque fill is required before displaying readable content.
+class SurfaceBackdropBoundary extends Component<{ children: ReactNode; background: string; renderBackdrop: SurfaceBackdropRenderer }, { failed: boolean }> {
+  override state = { failed: false };
+  static getDerivedStateFromError() { return { failed: true }; }
+  override componentDidUpdate(previous: Readonly<{ renderBackdrop: SurfaceBackdropRenderer }>) {
+    // Retry only after a host replacement; content renders cannot loop a failure.
+    if (this.state.failed && previous.renderBackdrop !== this.props.renderBackdrop) this.setState({ failed: false });
+  }
+  override render() { return this.state.failed ? <View style={{ ...surfaceBackdropFill, backgroundColor: this.props.background }} /> : this.props.children; }
+}
+function SurfaceBackdrop({ renderBackdrop, strength, theme, opacity, background }: { renderBackdrop: SurfaceBackdropRenderer; strength: number; theme: "light" | "dark"; opacity: number; background: string }) {
+  const layer = renderBackdrop({ strength, theme });
+  if (!isValidElement(layer)) return <View style={{ ...surfaceBackdropFill, backgroundColor: background }} />;
+  return <>{layer}<View style={{ ...surfaceBackdropFill, backgroundColor: withAlpha(background, opacity) }} /></>;
 }
 
 export type StackProps = ViewProps &

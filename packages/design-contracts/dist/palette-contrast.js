@@ -43,4 +43,21 @@ export function checkBrandPaletteContrast(brandPalette) {
         dark: checkPaletteContrast({ ...THEMES.dark, ...brandPalette.dark }),
     };
 }
+/** Shared whole-surface fill adaptation. This palette-only entry keeps ordinary
+ * renderer imports independent of the optional preset registry/effect descriptors.
+ * The supported 0.85..1 interval keeps readable foregrounds outside the backdrop
+ * luminance interval; testing its black/white endpoints bounds any opaque backdrop.
+ * See docs/design-profile.md for why a reference card's low alpha is not copied. */
+export function resolveSurfaceFillOpacity(requested, palette) {
+    if (!Number.isFinite(requested) || requested < 0.85 || requested > 1)
+        throw new RangeError("Surface fill opacity must be between 0.85 and 1");
+    const channels = [1, 3, 5].map(offset => Number.parseInt(palette.bg.slice(offset, offset + 2), 16));
+    const rules = paletteContrastRules.filter(rule => rule.background === "bg");
+    for (let opacity = requested; opacity < 1; opacity = Math.min(1, opacity + 0.01)) {
+        const endpoints = [0, 255].map(backdrop => "#" + channels.map(channel => Math.round(channel * opacity + backdrop * (1 - opacity)).toString(16).padStart(2, "0")).join(""));
+        if (endpoints.every(color => rules.every(rule => contrastRatio(palette[rule.foreground], color) >= rule.minimum)))
+            return opacity;
+    }
+    return 1;
+}
 //# sourceMappingURL=palette-contrast.js.map

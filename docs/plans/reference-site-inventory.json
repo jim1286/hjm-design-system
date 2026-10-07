@@ -3465,12 +3465,12 @@
         "scope": "Fetched text pending individual source/visual/interaction review; no HTML link closure claim"
       },
       "sourceCaptureProgress": {
-        "checkedAt": "2026-10-07T03:59:26.676857+00:00",
-        "capturedRecords": 2765,
-        "http200": 2765,
+        "checkedAt": "2026-10-07T04:22:13.498796+00:00",
+        "capturedRecords": 3203,
+        "http200": 3203,
         "knownQueueUrls": 3433,
         "scope": "Fetched/extracted public source; not source reading, visual or interaction review",
-        "lastCapturedAt": "2026-10-07T03:59:22Z",
+        "lastCapturedAt": "2026-10-07T04:22:10Z",
         "allReviewComplete": false
       }
     },
@@ -6154,12 +6154,12 @@
         "scope": "Fetched text pending individual source/visual/interaction review; no HTML link closure claim"
       },
       "sourceCaptureProgress": {
-        "checkedAt": "2026-10-07T03:59:26.676857+00:00",
-        "capturedRecords": 948,
-        "http200": 948,
+        "checkedAt": "2026-10-07T04:22:13.498796+00:00",
+        "capturedRecords": 1084,
+        "http200": 1084,
         "knownQueueUrls": 2657,
         "scope": "Fetched/extracted public source; not source reading, visual or interaction review",
-        "lastCapturedAt": "2026-10-07T03:59:22Z",
+        "lastCapturedAt": "2026-10-07T04:22:03Z",
         "allReviewComplete": false
       }
     },
@@ -19429,19 +19429,19 @@
         "checkedAt": "2026-10-07T01:58:52.171516+00:00"
       },
       "sourceCaptureProgress": {
-        "checkedAt": "2026-10-07T03:59:26.676857+00:00",
-        "capturedRecords": 4587,
-        "http200": 4577,
+        "checkedAt": "2026-10-07T04:22:13.498796+00:00",
+        "capturedRecords": 5248,
+        "http200": 5238,
         "knownQueueUrls": 12460,
         "scope": "Fetched/extracted public source; not source reading, visual or interaction review",
-        "lastCapturedAt": "2026-10-07T03:59:26Z",
+        "lastCapturedAt": "2026-10-07T04:22:08Z",
         "allReviewComplete": false
       }
     },
     {
       "site": "ui.aceternity.com",
       "checkedOn": "2026-10-07",
-      "evidence": "sitemap URLs only, not page or visual review",
+      "evidence": "Known public queue fetched/extracted: 501 URLs, HTTP200 501, crawler exit 0 verified through original session. Selected noise documentation compared separately; full source/visual/interaction review remains incomplete.",
       "sitemaps": [
         "https://ui.aceternity.com/sitemap.xml"
       ],
@@ -19951,13 +19951,15 @@
       ],
       "discoveryComplete": false,
       "sourceCaptureProgress": {
-        "checkedAt": "2026-10-07T03:59:26.676857+00:00",
-        "capturedRecords": 371,
-        "http200": 371,
+        "checkedAt": "2026-10-07T04:22:13.498796+00:00",
+        "capturedRecords": 501,
+        "http200": 501,
         "knownQueueUrls": 501,
         "scope": "Fetched/extracted public source; not source reading, visual or interaction review",
-        "lastCapturedAt": "2026-10-07T03:59:29Z",
-        "allReviewComplete": false
+        "lastCapturedAt": "2026-10-07T04:03:50Z",
+        "allReviewComplete": false,
+        "status": "completed-known-queue",
+        "terminalExitCode": 0
       }
     },
     {
@@ -20229,7 +20231,7 @@
       ],
       "discoveryComplete": false,
       "sourceCaptureProgress": {
-        "checkedAt": "2026-10-07T03:59:26.676857+00:00",
+        "checkedAt": "2026-10-07T04:22:13.498796+00:00",
         "capturedRecords": 257,
         "http200": 257,
         "knownQueueUrls": 257,
@@ -20334,12 +20336,15 @@
         "https://uiverse.io/Cksunandh/purple-moose-3",
         "https://uiverse.io/Codecite/angry-bullfrog-58",
         "https://uiverse.io/Darlley/jolly-yak-41",
+        "https://uiverse.io/Felip-r3y/cowardly-dolphin-76",
         "https://uiverse.io/Galahhad/breezy-wolverine-23",
         "https://uiverse.io/Nawsome/heavy-cheetah-95",
         "https://uiverse.io/Shoh2008/bad-emu-73",
         "https://uiverse.io/Spacious74/helpless-tiger-55",
+        "https://uiverse.io/SteveBloX/dangerous-warthog-85",
         "https://uiverse.io/TaniaDou/witty-rabbit-59",
         "https://uiverse.io/Yaya12085/bright-dolphin-91",
+        "https://uiverse.io/adamgiebl/curvy-moose-86",
         "https://uiverse.io/adamgiebl/soft-gecko-85",
         "https://uiverse.io/adamgiebl/wise-moth-35",
         "https://uiverse.io/alexruix/tame-fly-42",
@@ -20415,8 +20420,20 @@
         "https://uiverse.io/ui/tooltip-ui",
         "https://uiverse.io/vinodjangid07/chilly-newt-81",
         "https://uiverse.io/vinodjangid07/good-donkey-28",
+        "https://uiverse.io/vinodjangid07/horrible-husky-70",
         "https://uiverse.io/vinodjangid07/moody-rabbit-65"
-      ]
+      ],
+      "selectedMaterialReview": {
+        "checkedAt": "2026-10-07T04:22:13.498796+00:00",
+        "sourceAndDefaultVisualPages": [
+          "https://uiverse.io/SteveBloX/dangerous-warthog-85",
+          "https://uiverse.io/vinodjangid07/horrible-husky-70"
+        ],
+        "blogSectionScope": "Glass card and jelly inset concepts; not all blog demos/state review",
+        "licensedCodeCopied": false,
+        "report": "../qa/2026-10-07-design-profile-research.md",
+        "allReviewComplete": false
+      }
     },
     {
       "site": "3dicons.co",

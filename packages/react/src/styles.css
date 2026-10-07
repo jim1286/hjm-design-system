@@ -72,16 +72,30 @@
   border: 1px solid transparent;
   border-radius: var(--hjm-radius-lg);
   background: var(--hjm-color-bg);
+  box-shadow: var(--hjm-surface-inset-shadow, none);
 }
 /* A child image would otherwise spill past the rounded corner. An elevated tone
    opts out because clipping cuts off its own shadow. */
 .hjm-surface[data-clips="true"] { overflow: hidden; }
-.hjm-surface[data-tone="raised"] { background: var(--hjm-color-bg); box-shadow: var(--hjm-shadow-floating); }
+.hjm-surface[data-tone="raised"] { background: var(--hjm-color-bg); box-shadow: var(--hjm-surface-raised-shadow, var(--hjm-shadow-floating)); }
 .hjm-surface[data-tone="accent"] { background: var(--hjm-color-bg); }
 .hjm-surface[data-tone="sunken"] { background: var(--hjm-color-bg); }
 .hjm-surface[data-tone="subtle"] { background: var(--hjm-color-bg); }
 .hjm-surface[data-bordered="true"] { border-color: var(--hjm-color-border); }
 .hjm-surface[data-tone="accent"][data-bordered="true"] { border-color: color-mix(in srgb, var(--hjm-color-primary) 30%, transparent); }
+
+/* Whole-surface material belongs to Surface/Card; ProgressiveBlur remains an
+   edge/scroll mask. Feature detection and the OS preference retain opaque fill. */
+@supports (background: color-mix(in srgb, white 90%, transparent)) and ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .hjm-surface[data-tone] {
+    background: color-mix(in srgb, var(--hjm-color-bg) calc(var(--hjm-surface-fill-opacity, 1) * 100%), transparent);
+    backdrop-filter: var(--hjm-surface-blur, none);
+    -webkit-backdrop-filter: var(--hjm-surface-blur, none);
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .hjm-surface[data-tone] { background: var(--hjm-color-bg); backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
 
 .hjm-stack,
 .hjm-grid { min-inline-size: 0; }

@@ -21,6 +21,15 @@ type ShadowToken = Readonly<{
     offsetY: number;
 }>;
 type ShadowTokens = Readonly<Record<keyof typeof shadow, ShadowToken>>;
+type SurfaceMaterial = Readonly<{
+    /** Host-relative strength; Web maps 1 to 32px, Native host calibrates its own blur. */
+    blurStrength: number;
+    /** Requested semantic fill; the renderer raises opacity when background contrast requires it. */
+    fillOpacity: number;
+    insetShadows: readonly Readonly<ShadowToken & {
+        offsetX: number;
+    }>[];
+}>;
 type Palette = Readonly<Record<ResolvedTheme, Readonly<ThemeColors>>>;
 export type HjmDesignProfile = Readonly<{
     id: string;
@@ -35,7 +44,9 @@ export type HjmDesignProfile = Readonly<{
         heading: HeadingTokens;
         shadow: ShadowTokens;
     }>;
-    material: Readonly<Record<"canvas" | "card", EffectSurfaceDescriptor | null>>;
+    material: Readonly<Record<"canvas" | "card", EffectSurfaceDescriptor | null> & {
+        surface?: SurfaceMaterial | null;
+    }>;
     interactions: Readonly<{
         contentTransition: ContentTransitionPreset;
         selectionMotion: "none" | "slide";
@@ -61,12 +72,18 @@ export type HjmDesignProfileInput = Readonly<{
         heading?: Readonly<Partial<Record<keyof typeof heading, Partial<TypeToken>>>>;
         shadow?: Readonly<Partial<Record<keyof typeof shadow, Partial<ShadowToken>>>>;
     }>;
-    material?: Readonly<Partial<HjmDesignProfile["material"]>>;
+    material?: Readonly<Partial<Pick<HjmDesignProfile["material"], "canvas" | "card">> & {
+        surface?: Partial<SurfaceMaterial> | null;
+    }>;
     interactions?: Readonly<Partial<HjmDesignProfile["interactions"]>>;
     compositions?: Readonly<Partial<HjmDesignProfile["compositions"]>>;
     screens?: Readonly<Partial<HjmDesignProfile["screens"]>>;
 }>;
 export declare const hjmDesignPresets: Readonly<Record<HjmDesignPreset, HjmDesignProfile>>;
 export declare function defineHjmDesignProfile(input?: HjmDesignProfileInput): HjmDesignProfile;
+/** Resolve the readable fill against black/white backdrop extremes using the
+ * final product palette, including brandPalette overrides. Blur is decorative:
+ * it cannot be used as evidence of text contrast over arbitrary app content. */
+export declare function resolveDesignProfileSurfaceMaterial(profile: HjmDesignProfile | undefined, palette: Readonly<ThemeColors>): SurfaceMaterial | null;
 export {};
 //# sourceMappingURL=design-profile.d.ts.map

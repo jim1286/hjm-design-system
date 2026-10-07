@@ -1,6 +1,6 @@
 import { THEMES, type ResolvedTheme, type ThemeColors } from "./colors.js";
 import { radius, fontFamily, typography, heading, shadow, fontWeight, type FontWeightValue } from "./foundations.js";
-import { checkPaletteContrast } from "./palette-contrast.js";
+import { checkPaletteContrast, resolveSurfaceFillOpacity } from "./palette-contrast.js";
 import { resolveEffectSurface, type EffectSurfaceDescriptor } from "./effect-surface.js";
 import type { ContentTransitionPreset } from "./content-transition.js";
 
@@ -14,6 +14,13 @@ type TypographyTokens = Readonly<Record<keyof typeof typography, TypeToken>>;
 type HeadingTokens = Readonly<Record<keyof typeof heading, TypeToken>>;
 type ShadowToken = Readonly<{ color: string; opacity: number; radius: number; offsetY: number }>;
 type ShadowTokens = Readonly<Record<keyof typeof shadow, ShadowToken>>;
+type SurfaceMaterial = Readonly<{
+  /** Host-relative strength; Web maps 1 to 32px, Native host calibrates its own blur. */
+  blurStrength: number;
+  /** Requested semantic fill; the renderer raises opacity when background contrast requires it. */
+  fillOpacity: number;
+  insetShadows: readonly Readonly<ShadowToken & { offsetX: number }>[];
+}>;
 type Palette = Readonly<Record<ResolvedTheme, Readonly<ThemeColors>>>;
 export type HjmDesignProfile = Readonly<{
   id: string;
@@ -25,7 +32,7 @@ export type HjmDesignProfile = Readonly<{
     heading: HeadingTokens;
     shadow: ShadowTokens;
   }>;
-  material: Readonly<Record<"canvas" | "card", EffectSurfaceDescriptor | null>>;
+  material: Readonly<Record<"canvas" | "card", EffectSurfaceDescriptor | null> & { surface?: SurfaceMaterial | null }>;
   interactions: Readonly<{
     contentTransition: ContentTransitionPreset;
     selectionMotion: "none" | "slide";
@@ -50,7 +57,7 @@ export type HjmDesignProfileInput = Readonly<{
     heading?: Readonly<Partial<Record<keyof typeof heading, Partial<TypeToken>>>>;
     shadow?: Readonly<Partial<Record<keyof typeof shadow, Partial<ShadowToken>>>>;
   }>;
-  material?: Readonly<Partial<HjmDesignProfile["material"]>>;
+  material?: Readonly<Partial<Pick<HjmDesignProfile["material"], "canvas" | "card">> & { surface?: Partial<SurfaceMaterial> | null }>;
   interactions?: Readonly<Partial<HjmDesignProfile["interactions"]>>;
   compositions?: Readonly<Partial<HjmDesignProfile["compositions"]>>;
   screens?: Readonly<Partial<HjmDesignProfile["screens"]>>;
@@ -59,7 +66,7 @@ export type HjmDesignProfileInput = Readonly<{
 const neutral: HjmDesignProfile = {
   id: "neutral", palette: THEMES,
   tokens: { radius, fontFamily, typography, heading, shadow },
-  material: { canvas: null, card: null },
+  material: { canvas: null, card: null, surface: null },
   interactions: { contentTransition: "fade", selectionMotion: "none" },
   compositions: { collection: "rows", toolbar: "inline" },
   screens: { overview: "dashboard" },
@@ -130,9 +137,11 @@ const presetInputs: Readonly<Record<Exclude<HjmDesignPreset, "neutral">, HjmDesi
   },
   glass: {
     id: "glass",
-    palette: { light: { primary: "#435e91", contentBrand: "#354c78", surfaceAccent: "#e4ecf7" }, dark: { primary: "#5673a3", contentBrand: "#c1d8ff", surfaceAccent: "#233654" } },
+    palette: { // Stronger ink tiers keep glass visibly translucent under the existing
+    // contrast rules; the neutral weak/subtle tiers required an opaque fill.
+    light: { primary: "#435e91", contentBrand: "#354c78", surfaceAccent: "#e4ecf7", textSub: "#5b6879", textWeak: "#748292" }, dark: { primary: "#5673a3", contentBrand: "#c1d8ff", surfaceAccent: "#233654" } },
     tokens: { radius: { sm: 12, md: 18, lg: 26, xl: 36 }, shadow: { floating: { radius: 24, opacity: 0.12, offsetY: 8 } } },
-    material: { canvas: { layers: ["mesh"], intensity: 0.16, active: false, seed: "glass" }, card: { layers: ["glow"], intensity: 0.06, active: false, seed: "glass-card" } },
+    material: { canvas: { layers: ["mesh"], intensity: 0.16, active: false, seed: "glass" }, card: { layers: ["glow"], intensity: 0.06, active: false, seed: "glass-card" }, surface: { blurStrength: 0.75, fillOpacity: 0.88, insetShadows: [] } },
     interactions: { contentTransition: "fade", selectionMotion: "slide" },
     compositions: { collection: "cards", toolbar: "inline" }, screens: { overview: "landscape" },
   },
@@ -156,7 +165,10 @@ const presetInputs: Readonly<Record<Exclude<HjmDesignPreset, "neutral">, HjmDesi
     id: "clay",
     palette: { light: { primary: "#904663", contentBrand: "#803b57", surfaceAccent: "#f7e1eb" }, dark: { primary: "#a25e7d", contentBrand: "#f1bed4", surfaceAccent: "#482b3a" } },
     tokens: { radius: { sm: 14, md: 22, lg: 32, xl: 44 }, shadow: { raised: { radius: 16, offsetY: 6, opacity: 0.12 }, floating: { radius: 28, offsetY: 12, opacity: 0.18 } } },
-    material: { card: { layers: ["grain"], intensity: 0.04, active: false, seed: "clay" } },
+    material: { card: { layers: ["grain"], intensity: 0.04, active: false, seed: "clay" }, surface: { blurStrength: 0, fillOpacity: 1, insetShadows: [
+      { color: "#ffffff", opacity: 0.22, radius: 10, offsetX: 3, offsetY: 4 },
+      { color: "#000000", opacity: 0.12, radius: 12, offsetX: -3, offsetY: -4 },
+    ] } },
     interactions: { contentTransition: "scale", selectionMotion: "slide" },
     compositions: { collection: "cards", toolbar: "collapsible" }, screens: { overview: "dashboard" },
   },
@@ -175,6 +187,14 @@ function choose<T extends string>(value: T, allowed: readonly T[], field: string
 }
 
 function merge(base: HjmDesignProfile, input: HjmDesignProfileInput): HjmDesignProfile {
+  for (const role of Object.keys(input.material ?? {})) {
+    if (!["canvas", "card", "surface"].includes(role)) throw new TypeError("Unsupported design profile material role");
+  }
+  const requestedSurface = input.material?.surface;
+  if (requestedSurface !== undefined && requestedSurface !== null && (typeof requestedSurface !== "object" || Array.isArray(requestedSurface))) throw new TypeError("Invalid design profile surface material");
+  for (const key of Object.keys(requestedSurface ?? {})) {
+    if (!["blurStrength", "fillOpacity", "insetShadows"].includes(key)) throw new TypeError("Unsupported design profile surface material field");
+  }
   const palette = {
     light: { ...base.palette.light, ...input.palette?.light },
     dark: { ...base.palette.dark, ...input.palette?.dark },
@@ -203,7 +223,9 @@ function merge(base: HjmDesignProfile, input: HjmDesignProfileInput): HjmDesignP
       fontFamily: { ui: [...(input.tokens?.fontFamily?.ui ?? base.tokens.fontFamily.ui)], code: [...(input.tokens?.fontFamily?.code ?? base.tokens.fontFamily.code)] },
       typography: type, heading: headings, shadow: elevation,
     },
-    material: { ...base.material, ...input.material },
+    material: { ...base.material, ...input.material, surface: input.material?.surface === null ? null
+      : input.material?.surface === undefined ? base.material.surface ?? null
+      : { blurStrength: 0, fillOpacity: 1, insetShadows: [], ...base.material.surface, ...input.material.surface } },
     interactions: { ...base.interactions, ...input.interactions },
     compositions: { ...base.compositions, ...input.compositions },
     screens: { ...base.screens, ...input.screens },
@@ -230,12 +252,24 @@ function merge(base: HjmDesignProfile, input: HjmDesignProfileInput): HjmDesignP
   for (const token of Object.values(elevation)) {
     if (!/^#[0-9a-f]{6}$/i.test(token.color) || !Number.isFinite(token.opacity) || token.opacity < 0 || token.opacity > 1 || !Number.isFinite(token.radius) || token.radius < 0 || token.radius > 96 || !Number.isFinite(token.offsetY) || Math.abs(token.offsetY) > 96) throw new RangeError("Invalid design profile shadow");
   }
-  const material = Object.fromEntries(Object.entries(profile.material).map(([role, descriptor]) => {
+  const surface = profile.material.surface;
+  if (surface) {
+    // Keep a readable semantic fill rather than copying a low-alpha reference card.
+    // Native can fail to supply blur and must always retain its opaque fallback.
+    if (!Number.isFinite(surface.blurStrength) || surface.blurStrength < 0 || surface.blurStrength > 1 || !Number.isFinite(surface.fillOpacity) || surface.fillOpacity < 0.85 || surface.fillOpacity > 1) throw new RangeError("Invalid design profile surface material");
+    if (!Array.isArray(surface.insetShadows) || surface.insetShadows.length > 2) throw new RangeError("Invalid design profile inset shadows");
+    for (const token of surface.insetShadows) {
+      if (!/^#[0-9a-f]{6}$/i.test(token.color) || !Number.isFinite(token.opacity) || token.opacity < 0 || token.opacity > 1 || !Number.isFinite(token.radius) || token.radius < 0 || token.radius > 96 || !Number.isFinite(token.offsetY) || Math.abs(token.offsetY) > 96 || !Number.isFinite(token.offsetX) || Math.abs(token.offsetX) > 96) throw new RangeError("Invalid design profile inset shadow");
+    }
+  }
+  const effects = Object.fromEntries((["canvas", "card"] as const).map(role => {
+    const descriptor = profile.material[role];
     if (descriptor === null) return [role, null];
     resolveEffectSurface(descriptor);
     // Deep-copy material data as well: a preset resolver must not own caller state.
     return [role, { ...descriptor, ...(descriptor.layers ? { layers: [...descriptor.layers] } : {}), ...(descriptor.colors ? { colors: descriptor.colors.map(color => ({ ...color })) } : {}) }];
-  })) as HjmDesignProfile["material"];
+  })) as Pick<HjmDesignProfile["material"], "canvas" | "card">;
+  const material = { ...effects, surface: surface ? { ...surface, insetShadows: surface.insetShadows.map(token => ({ ...token })) } : null };
   choose(profile.interactions.contentTransition, ["fade", "rise", "slide", "scale"], "contentTransition");
   choose(profile.interactions.selectionMotion, ["none", "slide"], "selectionMotion");
   choose(profile.compositions.collection, ["rows", "cards", "grid"], "collection");
@@ -262,4 +296,16 @@ export function defineHjmDesignProfile(input: HjmDesignProfileInput = {}): HjmDe
   const base = hjmDesignPresets[input.extends ?? "neutral"];
   if (!base) throw new TypeError("Unknown HJM design preset");
   return merge(base, input);
+}
+
+/** Resolve the readable fill against black/white backdrop extremes using the
+ * final product palette, including brandPalette overrides. Blur is decorative:
+ * it cannot be used as evidence of text contrast over arbitrary app content. */
+export function resolveDesignProfileSurfaceMaterial(profile: HjmDesignProfile | undefined, palette: Readonly<ThemeColors>): SurfaceMaterial | null {
+  const material = profile?.material.surface;
+  if (!material) return null;
+  // Transparency requires a real backdrop effect. Plain/clay surfaces stay solid
+  // on both hosts instead of becoming tint-only imitations of a glass material.
+  if (!material.blurStrength) return { ...material, fillOpacity: 1 };
+  return { ...material, fillOpacity: resolveSurfaceFillOpacity(material.fillOpacity, palette) };
 }

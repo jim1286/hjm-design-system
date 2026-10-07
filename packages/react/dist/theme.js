@@ -1,3 +1,4 @@
+import { resolveSurfaceFillOpacity } from "@hjmds/design-contracts/palette-contrast";
 import { backdrop, control, easing, fontFamily, fontWeight, motion, layer, radius, shadow, spacing, stroke, typography, } from "@hjmds/design-contracts/foundations";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { focusIndicatorContract } from "@hjmds/design-contracts/contracts";
@@ -8,10 +9,10 @@ function kebab(value) {
     return value.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
 }
 // RN shadow token -> CSS; blur = radius, as react-native-web maps it.
-function shadowCss(token) {
+function shadowCss(token, offsetX = 0) {
     const hex = token.color.replace("#", "");
     const [r, g, b] = [0, 2, 4].map((start) => Number.parseInt(hex.slice(start, start + 2), 16));
-    return `0 ${token.offsetY}px ${token.radius}px rgb(${r} ${g} ${b} / ${Math.round(token.opacity * 100)}%)`;
+    return `${offsetX}px ${token.offsetY}px ${token.radius}px rgb(${r} ${g} ${b} / ${Math.round(token.opacity * 100)}%)`;
 }
 function rem(value) {
     return `${Number((value / 16).toFixed(5))}rem`;
@@ -100,6 +101,16 @@ export function createHjmThemeStyle(value) {
     for (const [name, token] of Object.entries(profileTokens?.shadow ?? shadow)) {
         style[`--hjm-shadow-${kebab(name)}`] = shadowCss(token);
     }
+    const surfaceMaterial = value.designProfile?.material.surface;
+    // Defaults are emitted on every Provider, so a nested neutral profile clears
+    // inherited glass/clay. Unsupported transparency remains an opaque CSS fill.
+    style["--hjm-surface-blur"] = surfaceMaterial?.blurStrength ? `blur(${surfaceMaterial.blurStrength * 32}px)` : "none";
+    style["--hjm-surface-fill-opacity"] = surfaceMaterial?.blurStrength ? resolveSurfaceFillOpacity(surfaceMaterial.fillOpacity, palette.theme) : 1;
+    const insetShadow = surfaceMaterial?.insetShadows.length
+        ? surfaceMaterial.insetShadows.map(token => `inset ${shadowCss(token, token.offsetX)}`).join(", ")
+        : "";
+    style["--hjm-surface-inset-shadow"] = insetShadow || "none";
+    style["--hjm-surface-raised-shadow"] = shadowCss(profileTokens?.shadow.floating ?? shadow.floating) + (insetShadow ? `, ${insetShadow}` : "");
     // Overlay chrome and sizes come from the recipes Native reads (1.5.0).
     for (const [name, chrome] of [["dialog", dialogRecipe.content], ["sheet", sheetRecipe.content], ["toast", toastRecipe.surface]]) {
         style[`--hjm-${name}-background`] = resolveColorReference(chrome.background, palette);

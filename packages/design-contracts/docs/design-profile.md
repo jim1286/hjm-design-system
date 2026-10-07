@@ -6,7 +6,7 @@
 
 ## 소유권과 공개 경로
 
-`@hjmds/design-contracts/design-profile`은 `hjmDesignPresets`, `defineHjmDesignProfile`, `HjmDesignProfile`, `HjmDesignProfileInput`, `HjmDesignPreset`을 제공한다. 이 subpath는 기존 ThemeStudio의 색상 편집과 역할이 다르다. 색상 편집 subpath에 질감/구성 그래프를 추가하지 않고 선택형 프로필 진입점으로 분리했다. package export 추가의 근거는 이 절이다.
+`@hjmds/design-contracts/design-profile`은 `hjmDesignPresets`, `defineHjmDesignProfile`, `resolveDesignProfileSurfaceMaterial`, `HjmDesignProfile`, `HjmDesignProfileInput`, `HjmDesignPreset`을 제공한다. 이 subpath는 기존 ThemeStudio의 색상 편집과 역할이 다르다. 색상 편집 subpath에 질감/구성 그래프를 추가하지 않고 선택형 프로필 진입점으로 분리했다. package export 추가의 근거는 이 절이다.
 
 제품은 설정 파일에서 preset을 상속하고 필요한 축만 수정한다. 설정은 Web/Native renderer를 import하지 않으며 글꼴 자산의 설치·라이선스·로딩, 브랜드 자산, 데이터·권한·라우팅·서버 확정은 제품이 소유한다. HJM은 지원 가능한 표현/행동/배치와 환경 대체 경로를 소유한다.
 
@@ -28,7 +28,7 @@ export const productDesign = defineHjmDesignProfile({
 | --- | --- | --- |
 | palette | 현재 HJM light/dark 17 semantic roles | 레트로의 잉크/황갈색, 종이의 따뜻한 중립색, 숲의 녹색 |
 | tokens | 기존 radius/fontFamily/typography/heading/shadow | 모서리·글자 크기/행간/강조·그림자와 일반 monospace fallback; 폰트 자산은 번들하지 않음 |
-| material | canvas/card 모두 null | 레트로 noise, 종이 grain, 숲 mesh+glow; 오로라만 active=true, 나머지는 정적 |
+| material | canvas/card/surface 모두 null | 레트로 noise, 종이 grain, 숲 mesh+glow; 오로라만 active=true, 나머지는 정적 |
 | interactions | contentTransition=fade, selectionMotion=none | 레트로 slide, 종이 fade, 숲 rise와 slide 선택 배경 |
 | compositions | collection=rows, toolbar=inline | 레트로 grid/inline, 종이 rows/collapsible, 숲 cards/collapsible |
 | screens | overview=dashboard | 종이 editorial, 숲 landscape |
@@ -58,7 +58,7 @@ Provider의 `designProfile`에 `hjmDesignPresets.forest` 또는 `defineHjmDesign
 프로필은 현재 양 플랫폼 Provider, 기본 Text/Surface/Button·필드 모서리, ContentTransition,
 SegmentedControl, ScreenLayout 및 optional OverviewScreen에 연결한다. 모든 기존 공개 컴포넌트의
 정적 recipe 경로까지 자동 반영 완료를 뜻하지 않는다. ScreenLayout의 기존 기본 배치는 프로필이 없으면 유지한다.
-유리의 실제 backdrop blur와 클레이 inset shadow는 미구현이며, 참조 표현의 완전 지원으로 안내하지 않는다.
+유리의 실제 backdrop blur와 클레이 inset shadow는 아래 Surface 질감 계약으로 연결한다. Native의 선택형 host·OS·architecture 조건과 실제 기기 검증은 별도다.
 
 
 ## 큰 제목까지 한 번에 지정하기
@@ -102,5 +102,78 @@ Dialog/AlertDialog/Sheet, Select/Combobox, Notice/Progress/Skeleton/Toast가 프
 기존 테마 조합 실험에서 Notice/Skeleton/Toast와 Dialog/Sheet를 직접 열고, 오버레이 안의
 다음 테마 버튼으로 10종을 순회한다. 같은 제어 초안을 닫기/재열기에서도 유지한다.
 Web의 10개 밝은 Dialog와 10개 dark/RTL/2배 Sheet 및 390px 검토는 위 QA 기록에 있다.
-Native 테스트는 실제 기기의 표시·VoiceOver 증거가 아니다. 이 보완은 glass blur/clay inset을
-구현한 것이 아니며, 남은 다른 컴포넌트의 직접 토큰/recipe 소비 경로도 계속 대조한다.
+Native 테스트는 실제 기기의 표시·VoiceOver 증거가 아니다. 오버레이 토큰 연결만으로 모든 질감이 적용되는 것은 아니다. 아래 Surface 질감 연결과 별도로 남은 다른 컴포넌트의 직접 토큰/recipe 소비 경로도 계속 대조한다.
+
+
+## Surface/Card의 유리·클레이 질감
+
+2026-10-07 원본 대조에서 유리는 glow만, 클레이는 grain만 있어 물리적인 표면 표현이 빠져 있었다.
+`material.surface`를 기존 Surface와 그 소비자인 Card에 연결한다. 새 wrapper나 상태 엔진을 만들지 않는다.
+EffectSurface는 mesh/glow/noise/grain 장식이며, ProgressiveBlur는 스크롤·입력 가림을 판단하는 가장자리
+마스크다. 배경 영역 전체의 blur/inset은 이들과 역할이 달라 Surface가 소유한다.
+
+| 필드 | 중립/미지정 | 범위와 실제 사용 |
+| --- | --- | --- |
+| `material.surface` | null | 부분 객체는 선택 preset의 surface를 상속, null은 해당 처리를 해제 |
+| `blurStrength` | 0 | 0~1. glass 0.75 → Web 24px. Native host의 강도는 기기별로 보정하며 픽셀 동등성 아님 |
+| `fillOpacity` | 1 | 0.85~1. glass 요청 0.88. blur가 0이거나 지원되지 않으면 불투명 |
+| `insetShadows` | 빈 배열 | 최대 2개. color 6자리 HEX·opacity 0~1·radius 0~96·offsetX/Y -96~96 |
+
+clay의 안쪽 빛은 white/0.22/radius10/offset3,4, 그림자는 black/0.12/radius12/offset-3,-4다.
+밝은 glass의 textSub=#5b6879·textWeak=#748292는 중립 팔레트의 약한 색이 대비 보정에서 opacity=1을
+요구했던 실제 비교 결과 때문에 더 짙게 정했다. 대비 기준을 낮추지 않고 질감과 읽기 경계를 함께 유지한다.
+이 값은 외부 원본 치수·브랜드색의 복사가 아니라 HJM의 정적인 표면 실험값이다. 바깥 그림자는 기존
+`tokens.shadow.floating`, 모서리는 같은 `tokens.radius` 역할을 계속 읽는다.
+
+```ts
+const productDesign = defineHjmDesignProfile({
+  extends: "glass",
+  material: { surface: { blurStrength: 0.5 } },
+});
+```
+
+`resolveDesignProfileSurfaceMaterial(profile, finalThemePalette)`는 Provider의 최종 제품 팔레트에서
+bg 위의 기존 대비 쌍이 검정/흰색 배경 합성 후에도 유지되도록 요청 opacity를 0.01씩 높인다.
+질감 뒤의 실제 이미지가 글자 대비의 근거가 될 수 없기 때문이다. 두 renderer는 같은 엔진인
+`@hjmds/design-contracts/palette-contrast`의 `resolveSurfaceFillOpacity(requested, palette)`를 읽는다.
+이 palette-only 진입점을 재사용해 일반 Provider가 선택형 전체 preset registry를 runtime import하지 않는다. 이 함수는 장식·선택된 입력·이미지·
+실제 화면 전체 접근성을 인증하지 않는다. inset의 가장자리와 미디어/결과 상태는 실제 화면에서도 확인한다.
+
+### Web
+
+Provider가 네 surface CSS 변수를 매번 해석한다. 중첩 neutral은 상위 glass/clay를 지운다.
+실제 `backdrop-filter` 또는 Safari의 prefixed 속성을 지원할 때만 투명 fill을 쓰고, OS
+`prefers-reduced-transparency: reduce`이면 opaque/none으로 대체한다. blur=0이면 `none`으로
+내보내므로 평범한 Surface에 불필요한 backdrop stacking context를 만들지 않는다.
+
+### Native의 한 번 등록하는 host
+
+`HjmNativeProvider.surfaceEffects`는 `renderBackdrop({ strength, theme })`와 `insetShadows`를
+제품 루트에서 공급한다. 중첩 Provider는 그대로 상속하며 `{}`는 그 subtree를 해제한다.
+core renderer는 Expo/Skia/blur 라이브러리를 import하지 않는다. `renderBackdrop`은 실제 backdrop
+React element를 반환하고 사용할 수 없으면 null을 반환한다. callback은 앱 setup에서 안정적으로 둔다.
+
+- iOS는 [AccessibilityInfo](https://reactnative.dev/docs/0.81/accessibilityinfo)의 투명도 줄이기 설정을
+  한 번 관찰한다. unknown/reject/설정 활성화는 불투명이다. 실시간 이벤트가 초기 비동기 응답보다 우선한다.
+- 장식만 pointer/접근성에서 제외하고 모서리 clip을 한다. 본문은 stable keyed sibling이므로 optional host
+  실패·테마 전환이 초안을 remount하지 않는다. 실패는 opaque로 대체하고 host 함수 교체/질감 변경 때만 재시도한다.
+- `insetShadows=true`는 제품이 [RN New Architecture와 Android API 29 이상](https://reactnative.dev/docs/0.81/view-style-props#boxshadow)을 확인한 경우만 쓴다. 기본 false이며 core는 기존 architecture도 지원한다.
+- [Expo BlurView](https://docs.expo.dev/versions/latest/sdk/blur-view/)를 쓰는 Android 제품은 먼저 렌더한
+  BlurTargetView의 ref를 host에 공급한다. Target은 효과가 그려지는 범위를 덮어야 한다. Showcase는 API31 미만을
+  불투명으로 유지하며, 지원 기기에서 strength×100과 `dimezisBlurViewSdk31Plus`를 쓴다.
+
+```tsx
+// 선택형 blur 모듈이 설치된 제품 host. capability 확인과 Target 배경은 제품 setup 소유.
+const effects = useMemo(() => ({
+  insetShadows: hostSupportsInsetShadows,
+  renderBackdrop: ({ strength, theme }: { strength: number; theme: "light" | "dark" }) =>
+    hostSupportsBlur ? <BlurView style={StyleSheet.absoluteFill} blurTarget={targetRef}
+      intensity={strength * 100} tint={theme} blurMethod="dimezisBlurViewSdk31Plus" /> : null,
+}), [hostSupportsBlur, hostSupportsInsetShadows, targetRef]);
+
+<HjmNativeProvider designProfile={productDesign} surfaceEffects={effects}>{children}</HjmNativeProvider>
+```
+
+실험 ‘테마 조합’의 무늬 배경 위 공개 Card에서 입력한 초안과 다음 테마 버튼으로 비교한다.
+Web 실제 표시·Native mock-host 회귀·기기 미확인 범위는 [QA 기록](../../../docs/qa/2026-10-07-design-profile-research.md)에 보존한다.
+오버레이/상단 바 등 Surface를 쓰지 않는 모든 공개 소비자에 이 material까지 반영 완료한 것은 아니다.

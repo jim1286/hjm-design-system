@@ -8,6 +8,8 @@ import { SegmentedControl } from "../src/selection.js";
 import { ScreenLayout } from "../src/screens.js";
 import { defineHjmDesignProfile, hjmDesignPresets, type HjmDesignPreset } from "@hjmds/design-contracts/design-profile";
 import { heading } from "@hjmds/design-contracts/foundations";
+import { Surface } from "../src/layout.js";
+import { Card } from "../src/display.js";
 import { Heading } from "../src/heading.js";
 import { Dialog, Sheet } from "../src/overlays.js";
 import { Toast } from "../src/toast.js";
@@ -133,5 +135,35 @@ it("updates portal and toast shadows from the nearest profile without replacing 
         expect(overlay.getAttribute("aria-modal")).toBe("true");
       }
     }
+  } finally { await act(() => root.unmount()); host.remove(); }
+});
+
+
+it("uses real glass filtering and clay inset shadows without replacing focused card content", async () => {
+  const host = document.createElement("div"); document.body.append(host); const root = createRoot(host);
+  let draft!: HTMLInputElement;
+  const render = (profile: typeof hjmDesignPresets.glass) => act(() => root.render(<HjmProvider theme="dark" designProfile={profile} reducedMotion>
+    <Card title="질감 카드" tone="raised"><input aria-label="질감 초안" defaultValue="initial" /></Card>
+    <HjmProvider designProfile={hjmDesignPresets.neutral}><Surface padding="md">중립 영역</Surface></HjmProvider>
+  </HjmProvider>));
+  try {
+    await render(hjmDesignPresets.glass);
+    draft = host.querySelector<HTMLInputElement>('[aria-label="질감 초안"]')!; draft.value = "retained"; draft.focus();
+    let surface = host.querySelector<HTMLElement>(".hjm-card")!;
+    expect(getComputedStyle(surface).backdropFilter).toMatch(/blur\([1-9]/);
+    const alpha = Number(getComputedStyle(surface).backgroundColor.match(/\/\s*(0\.\d+)\)/)?.[1]);
+    expect(alpha).toBeGreaterThanOrEqual(0.85); expect(alpha).toBeLessThan(1);
+    expect(getComputedStyle(host.querySelector<HTMLElement>(".hjm-surface:not(.hjm-card)")!).backdropFilter).toBe("none");
+    await render(hjmDesignPresets.clay);
+    surface = host.querySelector<HTMLElement>(".hjm-card")!;
+    const style = getComputedStyle(surface);
+    expect(style.backdropFilter).toBe("none");
+    expect(style.boxShadow.match(/inset/g)).toHaveLength(2);
+    expect(style.boxShadow).toContain(`${hjmDesignPresets.clay.tokens.shadow.floating.radius}px`);
+    expect(host.querySelector('[aria-label="질감 초안"]')).toBe(draft);
+    expect(draft.value).toBe("retained"); expect(document.activeElement).toBe(draft);
+    await render(hjmDesignPresets.neutral);
+    expect(getComputedStyle(surface).boxShadow).not.toContain("inset");
+    expect(getComputedStyle(surface).backdropFilter).toBe("none");
   } finally { await act(() => root.unmount()); host.remove(); }
 });

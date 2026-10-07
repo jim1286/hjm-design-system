@@ -376,3 +376,111 @@ Checkbox/Chip의 고정 selection mark는 글자 확대와 분리한 아이콘 �
 
 - `pnpm showcase:web:build` → exit=0, Storybook static build 및 103 canonical Web story/13 navigation page 검증 통과.
 - `hjm-profile-overlay-showcase-build.log` SHA-256 `3602048b536db8f02d6624c14454e92d1048392696848a8a8ddb4e137f550150`
+
+
+## 후속 검토: 실제 유리·클레이 Surface 질감
+
+기준: main `6bd405ec49b83df9949ddb072b51a20b34af529f` 이후 미게시 변경. 기존 Surface/Card와
+EffectSurface/ProgressiveBlur의 export·공개 API 대응표·두 renderer를 대조했다. 새 wrapper 대신
+`material.surface`와 선택형 Native Provider host에 연결했다. 원격 workflow dispatch·버전 변경·npm 게시 없음.
+
+### 원본과 채택
+
+- Uiverse 공식 블로그의 [유리 카드](https://uiverse.io/SteveBloX/dangerous-warthog-85) 상세에서
+  실제 기본 화면·CSS 전체·HTML을 읽었다. 반투명 채움과 backdrop blur를 사용하지만 HTML은 클릭을 안내하는
+  div여서 버튼 의미/키보드 계약이 없다. 표현 개념만 참고하고 HJM의 Card와 입력/행동 계약을 유지한다.
+- 같은 블로그의 [젤리 버튼](https://uiverse.io/vinodjangid07/horrible-husky-70)은 실제 기본 화면·CSS 전체·
+  HTML button을 읽었다. 안쪽 빛과 음영, 바깥 그림자로 깊이를 표현한다. 고정 치수·브랜드 색·hover keyframes를
+  복제하지 않고 HJM의 정적인 inset token을 독립적으로 정했다. 이 버튼을 clay 카드의 직접 구현으로 세지 않는다.
+- 두 상세의 MIT 고지 확인. 원본 코드·자산은 HJM source에 복사하지 않았다. 참조의 모든 hover/active·keyboard·
+  모션 축소·환경 검토가 끝난 것은 아니다. 발견된 variation 2개는 inventory에 추가했고 아직 검토하지 않았다.
+- [RN 0.81 boxShadow](https://reactnative.dev/docs/0.81/view-style-props#boxshadow),
+  [AccessibilityInfo](https://reactnative.dev/docs/0.81/accessibilityinfo),
+  [Expo BlurView](https://docs.expo.dev/versions/latest/sdk/blur-view/)를 직접 읽고 peer 최소 버전/설치 버전과 대조했다.
+  Native inset은 New Architecture/Android API29 조건을 확인한 host만 opt-in, blur는 제품의 실제 backdrop host다.
+  Showcase의 Android API31 미만은 opaque로 유지한다. core에 Expo/Skia/blur peer를 추가하지 않았다.
+
+### 변경과 실제 화면
+
+- glass 요청 strength=0.75/fill=0.88 → Web blur 24px, 최종 light/dark 팔레트에서 fill=0.9.
+  중립 weak/subtle 색을 그대로 쓴 첫 비교는 light fill=1을 요구했다. 대비 기준을 낮추지 않고 glass light의
+  textSub/textWeak를 짙게 바꿔 보완했다. Native는 대비 해석을 Provider에서 한 번 하고 각 Surface가 읽는다.
+- clay는 실제 inset 2개와 기존 floating shadow를 합성한다. CSS helper 확장 중 nonzero x offset의 px 누락이
+  실제 비교에서 shadow=none으로 드러나 수정했다. 최종 실제 계산값은 3/4/10px 및 -3/-4/12px inset이다.
+- 기존 ‘테마 조합’의 공개 Card에 무늬 배경·같은 초안·다음 테마를 추가했다. 장식만 pointer/접근성에서 제외한다.
+  Native host가 null/throw해도 opaque 대체와 같은 본문을 유지하고 host 교체 때만 장식을 재시도한다.
+- 실제 IAB: 10종 light, 10종 dark/RTL/textScale=2/reduced-motion에서 같은 입력 id와 초안 유지.
+  전부 Card scrollWidth=clientWidth=1166. Glass 실제 blur(24px)/fill alpha0.9, clay inset2개, 다른 테마 blur=none.
+- 390×844 실제 viewport의 glass/clay dark/RTL/2배에서 pageWidth=390, Card scrollWidth=clientWidth=308,
+  초안/id 유지. 입력은 편집 가능한 한 줄 영역이라 긴 값은 내부에서 가로 스크롤하며 문서 폭은 넘치지 않는다.
+- `prefers-reduced-transparency: reduce`를 임시 에뮬레이션해 glass blur=none/fill=opaque와 초안 유지 확인.
+  종료 전에 media와 viewport override를 복원했다. 지원하지 않는 브라우저의 CSS feature fallback은 코드 경로이며
+  실제 오래된 브라우저 검증으로 세지 않는다.
+
+![10종 light와 dark 카드](assets/2026-10-07-profile-material-comparison.webp)
+
+![유리와 클레이 실제 카드](assets/2026-10-07-profile-material-focus.webp)
+
+![390px 다크 큰 글자의 유리와 클레이](assets/2026-10-07-profile-material-narrow.webp)
+
+이미지는 실제 viewport 캡처에서 표면 영역을 모은 비교다. 새 이미지를 생성하거나 원본 레퍼런스를 합성하지 않았다.
+좁은 화면 첫 캡처는 DOM viewport와 backing metrics가 달라 기본 캡처 API가 390×219 thumbnail 또는 확대된
+부분 영역을 반환했다. 이를 기기 검증으로 채택하지 않고 CSS page 좌표를 지정한 CDP clip으로 390×844를
+재캡처해 실제 이미지와 좌표/폰트 크기를 대조했다. 좁은 화면 표에는 교정한 최종 캡처만 사용한다.
+
+### 로컬 검증과 미확인 범위
+
+- contracts profile/contrast 2파일 14검사 통과. 불변 복사, partial 상속/null 해제, 잘못된 JSON,
+  최종 팔레트의 검정/흰색/유채색 합성 대비, stock glass 양 테마의 실제 투명 fill을 확인한다.
+- Web profile/Sheet/Toast browser 3파일 19검사 통과. 실제 CSS blur/inset·중첩 neutral 해제·입력/포커스 보존과
+  기존 오버레이 행동을 확인한다. 전체 browser 검사 ContextMenu의 과거 실패는 이번 작업에서 해결한 것으로 바꾸지 않는다.
+- Native profile/Provider/EffectSurface mock-host 4파일 19검사 통과: host 없음/null/throw/교체, 장식 AX 제외,
+  inset capability opt-in, iOS unknown/live event가 초기 응답보다 우선함, rejected query, 같은 본문 유지.
+  실제 Native 기기 표시·VoiceOver/TalkBack·스크롤/GPU 성능·제품별 host 보정은 아직 미확인이다.
+- Web CSS variable SSR 1파일 2검사 통과. 두 renderer build/typecheck와 두 Showcase typecheck, Native storybook:generate와 6파일 21검사,
+  Web Showcase 14파일 중 13파일 42검사 + 새 wrapper 수정 후 style-boundary 1검사 통과.
+  Showcase의 public Card selector를 덮던 새 CSS를 자체 장식 wrapper로 옮겼고, 배경 stripe 길이는 existing token을 쓴다.
+- Web token boundary 301소스/69선언, renderer import graph/optional peer 경계, usage 12토큰/139컴포넌트/
+  54구성/22화면, API 308이름, Storybook 421파일/929Web id, docs 대상 검사 통과. 전체 원격 CI 결과가 아니다.
+
+- `pnpm showcase:web:build` → exit=0, Storybook static build 및 103 canonical Web story/13 navigation page 검증 통과.
+- 로컬 원시 로그: `hjm-material-showcase-build.log` SHA-256 `40159013cab031693818790864b734bc9a7845be4d501ce63121a9a428031533`,
+  `hjm-material-bundle.log` SHA-256 `02cb7784467e418a8f4c5f8bc76d108077db87b2ac877fed28648331a4569ee4`.
+
+11개 사이트의 전수 source·시각·상태/인터랙션 검토, 남은 foundation/recipe 소비자, Surface를 쓰지 않는 별도
+표면의 material 적용 판단, 실기기 성능/접근성, 실험 승급·npm 게시·소비 앱 반영은 계속 남아 있다.
+Aceternity known queue 501개는 기존 crawler session exit0과 501 HTTP200을 확인했다. 이는 본문 독해 완료가 아니다.
+
+### 원시 증거 보존과 정리
+
+최종 비교 WebP 3개와 재사용하는 캡처 정리 script를 보존했다. 원시 PNG 24개/JSON 1개와 위 로컬 로그 2개는 digest를 검증한 후 제거했다.
+미완료 reference source crawl의 자료와 재사용 fixture·제품 소스는 제거하지 않는다.
+
+| 파일 | SHA-256 |
+| --- | --- |
+| `dark-aurora.png` | `fb2cac85cfc3dbead93b67f37dc00aa26a5de66bd7dcacd3cb778d46a387dd7f` |
+| `dark-brutalist.png` | `b3a71ccac01e31523749ed4641dba476a564eb19b1b853975897caa49e54e6ed` |
+| `dark-clay.png` | `ab9b85bdfb5a80372179b7f7f66c7f3cd50a538fbd533da2b32c4d5bbfdb8105` |
+| `dark-editorial.png` | `a42f613ca638015fad36ba0f0ee24c7adb2bcf61f6fc0c704e8e2feeeb72c583` |
+| `dark-forest.png` | `86d08a6d80f85612ea76ca2eeb29da2893c8afe01206161e166d81292b093db7` |
+| `dark-glass.png` | `fcab1959b711ca285a5684d05c59bef3bcad61bb6110ff836b6a5bfe54574e42` |
+| `dark-minimal.png` | `9c9c60591c958e13c0373e8bf640ed931f331d5731f3214bd5fa1ccd61153b60` |
+| `dark-paper.png` | `3a5b60f8996a8b04d0b5c75333771bf6b8e0878a622d685b97e370bea0bb43fd` |
+| `dark-retro.png` | `56dc6765f039c5c7ff6f7164ce0095c41ad91e8ddbc738e5fb64e3b76e3c1d3e` |
+| `dark-terminal.png` | `df76a75099ff699f188bdd95bfc58477d61258321cc56134424e774e791963e6` |
+| `light-aurora.png` | `fd8742425e783170437198c7399e37eb5b6872a6a1c9f768ee28c60e803e9b8f` |
+| `light-brutalist.png` | `3dcb3cf309b9ebf511a06bb806b7953f435e8e1a5d2383a8019fb2d6ac58f3ab` |
+| `light-clay.png` | `acc8260fa29497e81486433a891f4687d88605a2b2e56cf709748fa20e0265c8` |
+| `light-editorial.png` | `aa658617730e07360842bc148536141db15d03c4a24e61804adb9ec7cc191aeb` |
+| `light-forest.png` | `a28fe817d57138e5f132c39e4df787e23fdc256633826a880e5b269f85677ddb` |
+| `light-glass.png` | `7be6801bc72c6d07f61fb4491844f057ad50d8be9482a43aabad49448e024aa1` |
+| `light-minimal.png` | `d123d65cec75003ad15906a2781ad239cc3ece5f0da6c006427fdac1e37c4dc7` |
+| `light-paper.png` | `482ce7780e6beaf30226332a151de30689b4feec1c2dda2c9743e25caf507501` |
+| `light-retro.png` | `63b3aee9d1fd499b1074b9fd0f06517a70549289e8b193df3431ce8905523b76` |
+| `light-terminal.png` | `f3e0d1d62bfbdfb2ccfa871cfc206bed00de1b474d175a4bd33d5a768750eebe` |
+| `narrow-clay.png` | `3e6cb8c7e1d2ec0206d13b6150c716d218742af8bf4aff91c78782ba6857bb99` |
+| `narrow-glass-cdp.png` | `794bb232118463c4419db1789bf14767dbd771f676995f25720d3768e2fb4d0a` |
+| `narrow-glass-clip.png` | `567a9cd160d8867b6c08a9521d572614d6036e081c92dfe9df982b0890399037` |
+| `narrow-glass.png` | `567a9cd160d8867b6c08a9521d572614d6036e081c92dfe9df982b0890399037` |
+| `checks.json` | `e5c9f84c001039248d79b5a284cb0027bf0951ec47e5e7554c54a3156676b794` |
+| `make-review-sheet.py` | `cc479d23035d0fb0dd87a535b9a2c34bd587b92bb908c8a2f90596a82e772bec` |

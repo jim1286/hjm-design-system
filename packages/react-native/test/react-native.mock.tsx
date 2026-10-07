@@ -138,6 +138,7 @@ export const I18nManager = { isRTL: false };
 export const PixelRatio = { get: () => 1, getFontScale: () => windowDimensions.fontScale };
 export const AccessibilityInfo = {
   isReduceMotionEnabled: async () => false,
+  isReduceTransparencyEnabled: async () => false,
   isScreenReaderEnabled: async () => false,
   announceForAccessibility: (_announcement: string) => undefined,
   addEventListener: () => ({ remove: () => undefined }),

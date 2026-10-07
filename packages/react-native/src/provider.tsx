@@ -1,4 +1,5 @@
 import type { HjmDesignProfile } from "@hjmds/design-contracts/design-profile";
+import { resolveSurfaceFillOpacity } from "@hjmds/design-contracts/palette-contrast";
 import {
   resolveDesignSystemProviderValue,
   validateDesignSystemProviderValue,
@@ -29,9 +30,19 @@ import {
 
 import type { NativeTextScaling } from "./internal/styles.js";
 
+type NativeSurfaceEffects = Readonly<{
+  /** Decorative whole-surface backdrop. Return null when the installed host is unavailable. */
+  renderBackdrop?: (input: Readonly<{ strength: number; theme: "light" | "dark" }>) => ReactNode;
+  /** Host confirms New Architecture and, on Android, API >= 29. Off by default. */
+  insetShadows?: boolean;
+}>;
+
 export type HjmNativeTheme = DesignSystemProviderValue &
   Readonly<{
     colors: DesignSystemProviderValue["palette"]["theme"];
+    surfaceEffects?: NativeSurfaceEffects;
+    reducedTransparency: boolean;
+    surfaceMaterial: NonNullable<HjmDesignProfile["material"]["surface"]> | null;
     /**
      * Native lets the OS scale text automatically. A product-supplied scale,
      * however, must be applied by HJM exactly once instead of being multiplied
@@ -98,6 +109,9 @@ export type HjmNativeProviderProps = Readonly<{
    * here; nested providers inherit the nearest supplied value.
    */
   safeAreaInsets?: HjmNativeSafeAreaInsets;
+  /** Register optional native effects once; nested providers inherit them.
+   * No Expo/Skia peer enters the core graph. `{}` opts this subtree out. */
+  surfaceEffects?: NativeSurfaceEffects;
 }> & (HjmNativeProviderEnvironmentProps | HjmNativeProviderValueProps);
 
 const HjmNativeThemeContext = createContext<HjmNativeTheme | null>(null);
@@ -140,6 +154,26 @@ function useSystemReducedMotion(observe: boolean): boolean {
   return reducedMotion;
 }
 
+function useSystemReducedTransparency(observe: boolean): boolean {
+  // iOS resolves asynchronously; keep unknown/failing hosts opaque. Android has
+  // no equivalent AccessibilityInfo preference. Nested providers share one query.
+  const [reduced, setReduced] = useState(Platform.OS === "ios");
+  useEffect(() => {
+    if (!observe || Platform.OS !== "ios") return undefined;
+    let active = true;
+    let changed = false;
+    void AccessibilityInfo.isReduceTransparencyEnabled().then(enabled => {
+      if (active && !changed) setReduced(enabled);
+    }).catch(() => { if (active && !changed) setReduced(true); });
+    const subscription = AccessibilityInfo.addEventListener("reduceTransparencyChanged", enabled => {
+      changed = true;
+      if (active) setReduced(enabled);
+    });
+    return () => { active = false; subscription.remove(); };
+  }, [observe]);
+  return reduced;
+}
+
 function toEnvironmentInput(
   props: HjmNativeProviderEnvironmentProps,
 ): DesignSystemEnvironmentInput {
@@ -165,9 +199,14 @@ export function HjmNativeProvider({
   designProfile: suppliedDesignProfile,
   value: suppliedValue,
   safeAreaInsets: suppliedInsets,
+  surfaceEffects: suppliedSurfaceEffects,
 }: HjmNativeProviderProps) {
   const parent = useContext(HjmNativeThemeContext);
   const designProfile = suppliedDesignProfile ?? parent?.designProfile;
+  const surfaceEffects = suppliedSurfaceEffects ?? parent?.surfaceEffects;
+  const observeTransparency = Boolean(surfaceEffects?.renderBackdrop) && (parent === null || surfaceEffects !== parent.surfaceEffects);
+  const systemReducedTransparency = useSystemReducedTransparency(observeTransparency);
+  const reducedTransparency = observeTransparency ? systemReducedTransparency : parent?.reducedTransparency ?? (Platform.OS === "ios");
   const inheritedInsets = useContext(HjmNativeSafeAreaContext);
   const safeAreaInsets = suppliedInsets ?? inheritedInsets;
   const inheritedBrandPalette = useContext(HjmNativeBrandPaletteContext);
@@ -215,13 +254,22 @@ export function HjmNativeProvider({
     return {
       ...resolved,
       colors: resolved.palette.theme,
+      ...(surfaceEffects === undefined ? {} : { surfaceEffects }),
+      reducedTransparency,
+      // Resolve palette contrast once per Provider, not again for every card or
+      // every input render. The final palette already includes product overrides.
+      surfaceMaterial: resolved.designProfile?.material.surface ? {
+        ...resolved.designProfile.material.surface,
+        fillOpacity: resolved.designProfile.material.surface.blurStrength
+          ? resolveSurfaceFillOpacity(resolved.designProfile.material.surface.fillOpacity, resolved.palette.theme) : 1,
+      } : null,
       textScaling: {
         mode: textScalingMode,
         scale: resolved.environment.textScale,
       },
       tokens: { spacing, radius, typography, shadow, fontFamily, ...resolved.designProfile?.tokens },
     };
-  }, [brandPalette, designProfile, environment, parent, suppliedValue, systemReducedMotion, systemTextScale, systemTheme]);
+  }, [brandPalette, designProfile, environment, parent, suppliedValue, systemReducedMotion, systemTextScale, systemTheme, surfaceEffects, reducedTransparency]);
 
   return (
     <HjmNativeThemeContext.Provider value={contextValue}>

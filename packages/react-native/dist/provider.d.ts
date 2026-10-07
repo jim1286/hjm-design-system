@@ -4,8 +4,20 @@ import type { ThemePreference } from "@hjmds/design-contracts/colors";
 import { spacing } from "@hjmds/design-contracts/foundations";
 import { type ReactNode } from "react";
 import type { NativeTextScaling } from "./internal/styles.js";
+type NativeSurfaceEffects = Readonly<{
+    /** Decorative whole-surface backdrop. Return null when the installed host is unavailable. */
+    renderBackdrop?: (input: Readonly<{
+        strength: number;
+        theme: "light" | "dark";
+    }>) => ReactNode;
+    /** Host confirms New Architecture and, on Android, API >= 29. Off by default. */
+    insetShadows?: boolean;
+}>;
 export type HjmNativeTheme = DesignSystemProviderValue & Readonly<{
     colors: DesignSystemProviderValue["palette"]["theme"];
+    surfaceEffects?: NativeSurfaceEffects;
+    reducedTransparency: boolean;
+    surfaceMaterial: NonNullable<HjmDesignProfile["material"]["surface"]> | null;
     /**
      * Native lets the OS scale text automatically. A product-supplied scale,
      * however, must be applied by HJM exactly once instead of being multiplied
@@ -67,8 +79,11 @@ export type HjmNativeProviderProps = Readonly<{
      * here; nested providers inherit the nearest supplied value.
      */
     safeAreaInsets?: HjmNativeSafeAreaInsets;
+    /** Register optional native effects once; nested providers inherit them.
+     * No Expo/Skia peer enters the core graph. `{}` opts this subtree out. */
+    surfaceEffects?: NativeSurfaceEffects;
 }> & (HjmNativeProviderEnvironmentProps | HjmNativeProviderValueProps);
-export declare function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, brandPalette: suppliedBrandPalette, designProfile: suppliedDesignProfile, value: suppliedValue, safeAreaInsets: suppliedInsets, }: HjmNativeProviderProps): import("react").JSX.Element;
+export declare function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, brandPalette: suppliedBrandPalette, designProfile: suppliedDesignProfile, value: suppliedValue, safeAreaInsets: suppliedInsets, surfaceEffects: suppliedSurfaceEffects, }: HjmNativeProviderProps): import("react").JSX.Element;
 export declare function useHjmNativeTheme(): HjmNativeTheme;
 /** Insets supplied to the nearest HjmNativeProvider; `{}` when the host supplied none. */
 export declare function useHjmNativeSafeAreaInsets(): HjmNativeSafeAreaInsets;

@@ -867,3 +867,9 @@ textarea {
 /* 우클릭 대상이라는 것을 눈으로 알려 주는 예제 전용 상자 — 렌더러는 영역의 모양에
    관여하지 않는다(제품이 감싸는 것이 무엇이든 그대로 쓴다). */
 .hjm-showcase-context-target { padding: var(--hjm-space-md); border: var(--hjm-stroke-default) dashed var(--hjm-color-border); border-radius: var(--hjm-radius-md); background: var(--hjm-color-bg); }
+
+/* Decorative stripes expose backdrop filtering without copying a reference
+   palette or changing the public Card's state/interaction contract. */
+.hjm-profile-material-sample { position: relative; padding: var(--hjm-space-xl); }
+.hjm-profile-material-sample__backdrop { position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(125deg, var(--hjm-color-primary) 0 var(--hjm-space-lg), var(--hjm-color-surface-accent) var(--hjm-space-lg) calc(var(--hjm-space-lg) * 2)); }
+.hjm-profile-material-sample__content { position: relative; }

@@ -40,7 +40,20 @@ export declare const DesignProfileContext: import("react").Context<Readonly<{
             offsetY: number;
         }>>>;
     }>;
-    material: Readonly<Record<"canvas" | "card", import("@hjmds/design-contracts/effect-surface").EffectSurfaceDescriptor | null>>;
+    material: Readonly<Record<"canvas" | "card", import("@hjmds/design-contracts/effect-surface").EffectSurfaceDescriptor | null> & {
+        surface?: Readonly<{
+            blurStrength: number;
+            fillOpacity: number;
+            insetShadows: readonly Readonly<Readonly<{
+                color: string;
+                opacity: number;
+                radius: number;
+                offsetY: number;
+            }> & {
+                offsetX: number;
+            }>[];
+        }> | null;
+    }>;
     interactions: Readonly<{
         contentTransition: import("@hjmds/design-contracts/content-transition").ContentTransitionPreset;
         selectionMotion: "none" | "slide";

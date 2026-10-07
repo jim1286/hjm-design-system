@@ -82,6 +82,13 @@ import { Button } from "@hjmds/react-native/actions";
 
 Card 자체에는 콜백이 없다. 누름 행동은 `actions`의 Button(Web `onClick: (event: MouseEvent<HTMLButtonElement>) => void`, Native `onPress`)이 갖는다.
 
+### 프로필 표면 질감(미게시)
+
+선택한 `designProfile.material.surface`를 자동으로 읽는다. glass는 지원하는 Web에서 실제 배경 흐림,
+clay는 안쪽 그림자를 사용한다. Native는 루트 Provider의 선택형 `surfaceEffects` host와 inset capability를
+한 번 등록한다. 사용할 수 없거나 투명도 줄이기 설정이면 불투명 표면을 유지한다. 효과와 입력은 서로 다른
+subtree라 질감을 바꾸거나 host가 실패해도 본문/초안은 유지한다. [범위·등록·대비 계약](../../design-profile.md#surfacecard의-유리클레이-질감)을 따른다.
+
 ## 배치
 
 | 항목 | 값 | 근거 |
