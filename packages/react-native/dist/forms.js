@@ -5,7 +5,7 @@ import { formRecipe, } from "@hjmds/design-contracts/components/form";
 import { comboboxBehaviorDefaults, resolveControlAccessibleName, } from "@hjmds/design-contracts/behaviors";
 import { flattenCollectionItems, isComboboxResultCurrent, reconcileSelectSelection, resolveComboboxSelectedItem, resolveSelectSelectedItem, validateCollection, } from "@hjmds/design-contracts/components/collection";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { backdrop, glyph, radius, spacing, } from "@hjmds/design-contracts/foundations";
+import { backdrop, glyph, spacing, } from "@hjmds/design-contracts/foundations";
 import { comboboxRecipe, selectRecipe, } from "@hjmds/design-contracts/recipes";
 import { useImperativeHandle, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, } from "react";
 import { AccessibilityInfo, ActivityIndicator, Modal, Pressable, ScrollView, TextInput, View, findNodeHandle, } from "react-native";
@@ -127,8 +127,8 @@ export function Form({ label, values, onSubmit, children, submitLabel, actions, 
 }
 /** Shared collection sheets keep dismissal in the header so it does not compete with choices. */
 function CollectionSheetHeader({ title, dismissLabel, onDismiss }) {
-    const { colors, environment } = useHjmNativeTheme();
-    return _jsxs(View, { style: { flexDirection: "row", direction: environment.direction, alignItems: "center", gap: spacing.sm }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", emphasis: "strong", style: { flex: 1 }, children: title }), _jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: dismissLabel, onPress: onDismiss, style: ({ pressed }) => [minimumTargetStyle, { alignItems: "center", justifyContent: "center", borderRadius: radius.full, backgroundColor: pressed ? colors.bg : "transparent" }], children: _jsx(Text, { accessible: false, tone: "muted", variant: "title", children: "\u00D7" }) })] });
+    const { colors, environment, tokens } = useHjmNativeTheme();
+    return _jsxs(View, { style: { flexDirection: "row", direction: environment.direction, alignItems: "center", gap: spacing.sm }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", emphasis: "strong", style: { flex: 1 }, children: title }), _jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: dismissLabel, onPress: onDismiss, style: ({ pressed }) => [minimumTargetStyle, { alignItems: "center", justifyContent: "center", borderRadius: tokens.radius.full, backgroundColor: pressed ? colors.bg : "transparent" }], children: _jsx(Text, { accessible: false, tone: "muted", variant: "title", children: "\u00D7" }) })] });
 }
 /** Native adaptive Select with shared sections, async states, and teardown-safe commits. */
 export function Select({ label, accessibilityLabel, source: sourceProp, items, sections, selectedKey, defaultSelectedKey, onSelectionChange, selectedItem, disallowEmptySelection = false, open, defaultOpen = false, onOpenChange, placeholder, description, error, required = false, disabled = false, readOnly = false, busy = false, size = selectRecipe.defaults.size, density = selectRecipe.defaults.density, asyncState = { status: "idle" }, onRetry, retryLabel, readOnlyLabel, openHint, renderLeading, renderOptionLeading, onSelectionAfterDismiss, onDismiss, dismissLabel, optionsAccessibilityLabel, layoutStyle, style, ...modalProps }) {
@@ -153,7 +153,7 @@ export function Select({ label, accessibilityLabel, source: sourceProp, items, s
     }
     const accessibleName = resolveControlAccessibleName(label, accessibilityLabel, "Select");
     const theme = useHjmNativeTheme();
-    const { colors, environment } = theme;
+    const { colors, environment, tokens } = theme;
     const safeArea = useHjmNativeSafeAreaInsets();
     const requestedControlled = selectedKey;
     const requestedDefault = defaultSelectedKey ?? null;
@@ -259,7 +259,7 @@ export function Select({ label, accessibilityLabel, source: sourceProp, items, s
                         : pressed
                             ? resolveColorReference(densityContract.highlightedBackground, theme.palette)
                             : "transparent",
-                    borderRadius: radius[densityContract.radius],
+                    borderRadius: tokens.radius[densityContract.radius],
                     direction: environment.direction,
                     flexDirection: "row",
                     gap: densityContract.gap,
@@ -293,7 +293,7 @@ export function Select({ label, accessibilityLabel, source: sourceProp, items, s
                         alignItems: "center",
                         backgroundColor: colors.bg,
                         borderColor: error ? colors.danger : colors.border,
-                        borderRadius: radius.md,
+                        borderRadius: tokens.radius.md,
                         borderWidth: error ? 2 : 1,
                         direction: environment.direction,
                         flexDirection: "row",
@@ -315,8 +315,8 @@ export function Select({ label, accessibilityLabel, source: sourceProp, items, s
                                 top: 0,
                             } }), _jsxs(View, { accessibilityLabel: optionsAccessibilityLabel ?? accessibleName, accessibilityRole: "radiogroup", accessibilityViewIsModal: true, style: {
                                 backgroundColor: colors.bg,
-                                borderTopLeftRadius: radius.lg,
-                                borderTopRightRadius: radius.lg,
+                                borderTopLeftRadius: tokens.radius.lg,
+                                borderTopRightRadius: tokens.radius.lg,
                                 gap: spacing.sm,
                                 maxHeight: "75%",
                                 padding: spacing.md,
@@ -364,7 +364,7 @@ export function Combobox({ label, accessibilityLabel, items, sections, source: s
     }
     const accessibleName = resolveControlAccessibleName(label, accessibilityLabel, "Combobox");
     const theme = useHjmNativeTheme();
-    const { colors, environment } = theme;
+    const { colors, environment, tokens } = theme;
     const safeArea = useHjmNativeSafeAreaInsets();
     const [committedKey, setCommittedKey] = useControllableState({
         ...(selectedKey === undefined ? {} : { value: selectedKey }),
@@ -551,7 +551,7 @@ export function Combobox({ label, accessibilityLabel, items, sections, source: s
                         : pressed
                             ? colors.bg
                             : "transparent",
-                    borderRadius: radius[densityContract.radius],
+                    borderRadius: tokens.radius[densityContract.radius],
                     direction: environment.direction,
                     flexDirection: "row",
                     gap: densityContract.gap,
@@ -579,7 +579,7 @@ export function Combobox({ label, accessibilityLabel, items, sections, source: s
                     alignItems: "center",
                     backgroundColor: colors.bg,
                     borderColor: error ? colors.danger : colors.border,
-                    borderRadius: radius.md,
+                    borderRadius: tokens.radius.md,
                     borderWidth: error ? 2 : 1,
                     direction: environment.direction,
                     flexDirection: "row",
@@ -635,8 +635,8 @@ export function Combobox({ label, accessibilityLabel, items, sections, source: s
                     focusInitialOption();
                 }, transparent: true, visible: visible, children: _jsxs(View, { style: { flex: 1, justifyContent: "flex-end" }, children: [_jsx(Pressable, { accessibilityLabel: dismissLabel, accessibilityRole: "button", onPress: () => dismiss("outside"), style: { backgroundColor: backdrop.modal.color, opacity: backdrop.modal.opacity, bottom: 0, left: 0, position: "absolute", right: 0, top: 0 } }), _jsxs(View, { accessibilityLabel: resultsAccessibilityLabel ?? accessibleName, accessibilityRole: "radiogroup", accessibilityViewIsModal: true, style: {
                                 backgroundColor: colors.bg,
-                                borderTopLeftRadius: radius.lg,
-                                borderTopRightRadius: radius.lg,
+                                borderTopLeftRadius: tokens.radius.lg,
+                                borderTopRightRadius: tokens.radius.lg,
                                 gap: spacing.sm,
                                 maxHeight: "75%",
                                 padding: spacing.md,

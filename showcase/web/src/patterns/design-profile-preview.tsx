@@ -7,6 +7,9 @@ import { SegmentedControl } from "@hjmds/react/selection";
 import { OverviewScreen } from "@hjmds/react/design-profile";
 import { ContentTransition } from "@hjmds/react/content-transition";
 import { Collapsible } from "@hjmds/react/collapsible";
+import { Dialog, Sheet } from "@hjmds/react/overlays";
+import { Notice, Skeleton } from "@hjmds/react/feedback";
+import { Toast } from "@hjmds/react/toast";
 import { Heading } from "@hjmds/react/heading";
 import { hjmDesignPresets, type HjmDesignPreset } from "@hjmds/design-contracts/design-profile";
 import { profileCopy as copy, profileOptions, profileHeadingSamples } from "../../../shared/design-profile";
@@ -32,6 +35,21 @@ export function RecordSample() {
     footer={<Stack gap="sm"><Button onClick={() => void save()} loading={status === "pending"} aria-label={status === "pending" ? copy.pending : status === "failed" ? copy.retry : copy.save}>{status === "failed" ? copy.retry : copy.save}</Button><Button tone="ghost" disabled={status === "pending"} onClick={() => { failNext.current = true; void save(); }}>{copy.fail}</Button></Stack>}
     items={items.map(item => ({ id: item.id, children: <Stack gap="sm"><Text variant="heading">{item.title}</Text><Text>{item.body}</Text></Stack> }))} />;
 }
+// Same public overlay instances stay mounted while the parent profile changes;
+// the shared controlled draft is fixture data, with no storage/network mutation.
+function ProfileChromeSample({ onNextTheme }: { onNextTheme: () => void }) {
+  const [open, setOpen] = useState<"dialog" | "sheet" | null>(null);
+  const [draft, setDraft] = useState<string>(copy.initial);
+  const fields = <Stack gap="md"><TextField label={copy.overlayDraft} value={draft} onValueChange={setDraft} /><Button onClick={onNextTheme}>{copy.nextTheme}</Button></Stack>;
+  return <Collapsible trigger={copy.chrome} defaultOpen><Stack gap="md">
+    <Notice title={copy.chromeNotice} /><Skeleton animated={false} />
+    <Toast descriptor={{ id: "profile-saved", description: copy.toastCopy, closeLabel: copy.close }} onDismissRequest={() => {}} />
+    <Stack axis="inline" gap="sm" wrap><Button onClick={() => setOpen("dialog")}>{copy.dialog}</Button><Button onClick={() => setOpen("sheet")}>{copy.sheet}</Button></Stack>
+    <Dialog open={open === "dialog"} onOpenChange={next => { if (!next) setOpen(null); }} title={copy.overlayTitle} closeLabel={copy.close}>{fields}</Dialog>
+    <Sheet open={open === "sheet"} onOpenChange={next => { if (!next) setOpen(null); }} title={copy.overlayTitle} closeLabel={copy.close}>{fields}</Sheet>
+  </Stack></Collapsible>;
+}
+
 export function DesignProfileComparison() {
   const [preset, setPreset] = useState<HjmDesignPreset>("retro");
   return <Stack gap="xl"><Text variant="heading">{copy.title}</Text><Text>{copy.intro}</Text>
@@ -39,6 +57,7 @@ export function DesignProfileComparison() {
     <HjmProvider designProfile={hjmDesignPresets[preset]}><Stack gap="xl"><RecordSample />
       <Collapsible trigger={copy.headingScale} defaultOpen><Stack gap="sm">{profileHeadingSamples.map(sample => <Heading key={sample.level} level={sample.level} semanticLevel={3}>{sample.label}</Heading>)}</Stack></Collapsible>
     </Stack></HjmProvider>
+    <HjmProvider designProfile={hjmDesignPresets[preset]}><ProfileChromeSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmProvider>
     <Text tone="muted">{copy.limitation}</Text>
     <Collapsible trigger={copy.compare} defaultOpen>{profileOptions.map(option => <HjmProvider key={option.id} designProfile={hjmDesignPresets[option.id]}><Stack gap="md"><Text variant="title">{option.label}</Text><RecordSample /></Stack></HjmProvider>)}</Collapsible>
   </Stack>;

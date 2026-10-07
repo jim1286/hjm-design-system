@@ -73,6 +73,15 @@ import { Notice } from "@hjmds/react-native/feedback";
 | `announcement`(Native) | `none` · `polite` · `assertive` | `none` | 새로 나타나는 상태만 발표한다(아래 플랫폼 차이) |
 | `layoutStyle` | 배치 전용 style 객체 | — | 바깥 여백·폭만 |
 
+### 디자인 프로필 상속
+
+2026-10-07 테마 소비 경로 점검에서 고정 foundation/recipe 값이 남은 곳을 보완했다.
+모서리의 recipe 역할은 유지하고 값은 가장 가까운 Provider의 `designProfile.tokens.radius`를
+읽는다. Dialog/AlertDialog/Sheet/일반 Toast의 그림자는 `tokens.shadow.floating`을 읽으며
+프로필 없는 소비자의 기본값은 유지한다. 상태·초안·선택·Modal teardown은 이 축의 소유가 아니다.
+플랫폼 근사와 미검증 범위는 [프로필 계약](../../design-profile.md#오버레이선택-입력의-프로필-연결-보완)을 따른다.
+
+
 ## 배치
 
 | 항목 | 값 | 근거 |

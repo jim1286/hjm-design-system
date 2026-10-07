@@ -1,5 +1,5 @@
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { easing, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
+import { easing, glyph, spacing } from "@hjmds/design-contracts/foundations";
 import {
   resolveControlAccessibleName,
 } from "@hjmds/design-contracts/behaviors";
@@ -142,7 +142,7 @@ export function Notice({
         {
           backgroundColor: resolveColorReference(toneContract.background, theme.palette),
           borderColor: resolveColorReference(toneContract.border, theme.palette),
-          borderRadius: radius[noticeRecipe.radius],
+          borderRadius: theme.tokens.radius[noticeRecipe.radius],
           borderWidth: noticeRecipe.borderWidth,
           gap: noticeRecipe.gap,
           padding: noticeRecipe.padding,
@@ -441,7 +441,7 @@ export function Result({
         style={{
           alignItems: "center",
           backgroundColor: iconBackgroundColor,
-          borderRadius: radius.full,
+          borderRadius: theme.tokens.radius.full,
           height: 56,
           justifyContent: "center",
           width: 56,
@@ -677,7 +677,7 @@ export function Progress({
         style={[
           {
             backgroundColor: resolveColorReference(progressRecipe.track, theme.palette),
-            borderRadius: radius[progressRecipe.radius],
+            borderRadius: theme.tokens.radius[progressRecipe.radius],
             height: progressRecipe.sizes[size],
             overflow: "hidden",
           },
@@ -739,7 +739,7 @@ export function Skeleton({
   layoutStyle,
 }: SkeletonProps) {
   warnDeprecatedStyleProps("Skeleton", { style }, "layoutStyle for placement and shape/width/height for appearance");
-  const { environment, palette } = useHjmNativeTheme();
+  const { environment, palette, tokens } = useHjmNativeTheme();
   const shapeSpec = skeletonRecipe.shapes[shape];
   const { duration, easing: easingName, fromOpacity, toOpacity } =
     skeletonRecipe.animation;
@@ -792,7 +792,7 @@ export function Skeleton({
           // A white loading placeholder needs an outline after removing grey fills.
           borderColor: palette.theme.border,
           borderWidth: 1,
-          borderRadius: radiusValue ?? radius[shapeSpec.radius],
+          borderRadius: radiusValue ?? tokens.radius[shapeSpec.radius],
           height: height ?? shapeSpec.defaultHeight,
           opacity: shouldAnimate
             ? pulse.interpolate({
@@ -862,6 +862,9 @@ function ToastSurface({
 }: ToastSurfaceProps) {
   const resolved = snapshot.descriptor;
   const theme = useHjmNativeTheme();
+  // Managed liquid presentation owns its shadow; ordinary toast chrome follows
+  // the profile floating role, preserving the recipe for consumers without one.
+  const surfaceShadow = theme.designProfile?.tokens.shadow.floating ?? toastRecipe.surface.shadow;
   const [motionProgress] = useState(
     () => new Animated.Value(theme.environment.reducedMotion ? 1 : 0),
   );
@@ -941,7 +944,7 @@ function ToastSurface({
           // Liquid owns the surface; a second RN fill/border/shadow produced a double rim on iPhone (2026-10-01).
           backgroundColor: managedMotion ? "transparent" : background,
           borderColor: border,
-          borderRadius: managedMotion ? liquidToastRecipe.radius : radius[toastRecipe.surface.radius],
+          borderRadius: managedMotion ? liquidToastRecipe.radius : theme.tokens.radius[toastRecipe.surface.radius],
           borderWidth: managedMotion ? 0 : toastRecipe.surface.borderWidth,
           gap: toastRecipe.surface.gap,
           maxWidth: toastRecipe.surface.maxWidth,
@@ -949,10 +952,10 @@ function ToastSurface({
           opacity: managedMotion ? 1 : motionProgress,
           overflow: "hidden",
           padding: toastRecipe.surface.padding,
-          shadowColor: toastRecipe.surface.shadow.color,
-          shadowOffset: { width: 0, height: toastRecipe.surface.shadow.offsetY },
-          shadowOpacity: managedMotion ? 0 : toastRecipe.surface.shadow.opacity,
-          shadowRadius: toastRecipe.surface.shadow.radius,
+          shadowColor: surfaceShadow.color,
+          shadowOffset: { width: 0, height: surfaceShadow.offsetY },
+          shadowOpacity: managedMotion ? 0 : surfaceShadow.opacity,
+          shadowRadius: surfaceShadow.radius,
           transform: [{ translateY }],
           width: "100%",
         },
@@ -966,7 +969,7 @@ function ToastSurface({
           importantForAccessibility="no-hide-descendants"
           style={{
             backgroundColor: accent,
-            borderRadius: radius[toastRecipe.toneMark.radius],
+            borderRadius: theme.tokens.radius[toastRecipe.toneMark.radius],
             bottom: 0,
             start: 0,
             position: "absolute",
@@ -1014,7 +1017,7 @@ function ToastSurface({
             style={{
               alignItems: "center",
               backgroundColor: badge,
-              borderRadius: radius[toastRecipe.icon.badgeRadius],
+              borderRadius: theme.tokens.radius[toastRecipe.icon.badgeRadius],
               flexShrink: 0,
               height: toastRecipe.icon.badgeDiameter,
               justifyContent: "center",
@@ -1060,7 +1063,7 @@ function ToastSurface({
             backgroundColor: managedMotion ? "transparent" : resolveColorReference(toastRecipe.action.background, theme.palette),
             borderTopWidth: managedMotion ? 1 : 0,
             borderTopColor: theme.colors.border,
-            borderRadius: managedMotion ? 0 : radius[toastRecipe.action.radius],
+            borderRadius: managedMotion ? 0 : theme.tokens.radius[toastRecipe.action.radius],
             justifyContent: "center",
             minHeight: toastRecipe.action.minHeight,
             opacity: pressed ? toastRecipe.states.pressedOpacity : 1,

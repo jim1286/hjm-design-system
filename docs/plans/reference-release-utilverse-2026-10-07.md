@@ -392,6 +392,21 @@ snapshot이며 Android·접근성·전체 환경은 아직 미검증이다. 실�
 
 neutral 제외 레트로·종이·숲·미니멀·에디토리얼·브루탈리즘·유리·오로라·터미널·클레이를
 4개 참고 도메인의 개별 출처에 근거해 실험으로 구현했다. 공개 계약·양 renderer·Provider 상속·
-상호작용 기본값·OverviewScreen·개별/전체 비교 Storybook·사용 지침·Changeset과 로컬 ci:check를
-마쳤다. [QA 기록](../qa/2026-10-07-design-profile-research.md)에 화면·명령·미지원 표현·기기 검증
+상호작용 기본값·OverviewScreen·개별/전체 비교 Storybook·사용 지침·Changeset을 구현하고 대상 로컬 검사를
+수행했다. 최신 전체 검사에는 ContextMenu 브라우저 1건 실패/단독 통과가 남아 전체 green으로 안내하지 않는다. [QA 기록](../qa/2026-10-07-design-profile-research.md)에 화면·명령·미지원 표현·기기 검증
 공백을 남긴다. 이 결과로 11개 사이트 전수 검토·승격·게시·소비 앱 반영 항목을 닫지 않는다.
+
+### 오버레이·선택 입력 연결 후속 보완
+
+2026-10-07 Provider 토큰만 바꾸고 고정 chrome을 유지한 경로를 대조해 Web Dialog/Sheet/Toast
+floating shadow, Native Dialog/AlertDialog/Sheet의 shape/shadow, Select/Combobox와 feedback의 shape를
+연결했다. 기존 테마 비교 실험에서 알림/로딩/Toast와 열린 Dialog/Sheet의 다음 테마 순회를 제공한다.
+초안·선택·Modal lifecycle은 같은 엔진을 유지한다. Native mock-host 대상 56검사, Web browser 대상 18검사와
+두 Showcase 검사를 통과했고, 실제 브라우저 light Dialog 10종 + dark/RTL/2배 Sheet 10종 + 390px Sheet
+10종의 입력/id 유지·가로 overflow·닫기 target을 확인했다. Native 기기/접근성은 아직 미확인이다.
+직접 foundation import 감사의 18파일·50 runtime 참조에는 정상 fallback/full/고정 glyph가 섞이며,
+미흡한 다른 shape/type/optional host 경로를 후속 대조한다. 이는 전체 토큰 소비 감사 완료가 아니다.
+
+Magic UI의 알려진 공개 URL 257개의 source fetch가 exit=0/HTTP200 257로 종료했다.
+원본 reading·UI/state 검토는 별도 진행이며 11개 사이트 전수 검토 완료 flag는 유지하지 않는다.
+미게시 source와 명령/화면/hash/잔여 경로는 [테마 QA](../qa/2026-10-07-design-profile-research.md)에 보존한다.

@@ -3465,12 +3465,12 @@
         "scope": "Fetched text pending individual source/visual/interaction review; no HTML link closure claim"
       },
       "sourceCaptureProgress": {
-        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
-        "capturedRecords": 2473,
-        "http200": 2473,
+        "checkedAt": "2026-10-07T03:59:26.676857+00:00",
+        "capturedRecords": 2765,
+        "http200": 2765,
         "knownQueueUrls": 3433,
         "scope": "Fetched/extracted public source; not source reading, visual or interaction review",
-        "lastCapturedAt": "2026-10-07T03:44:41Z",
+        "lastCapturedAt": "2026-10-07T03:59:22Z",
         "allReviewComplete": false
       }
     },
@@ -6154,12 +6154,12 @@
         "scope": "Fetched text pending individual source/visual/interaction review; no HTML link closure claim"
       },
       "sourceCaptureProgress": {
-        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
-        "capturedRecords": 860,
-        "http200": 860,
+        "checkedAt": "2026-10-07T03:59:26.676857+00:00",
+        "capturedRecords": 948,
+        "http200": 948,
         "knownQueueUrls": 2657,
         "scope": "Fetched/extracted public source; not source reading, visual or interaction review",
-        "lastCapturedAt": "2026-10-07T03:44:42Z",
+        "lastCapturedAt": "2026-10-07T03:59:22Z",
         "allReviewComplete": false
       }
     },
@@ -19429,12 +19429,12 @@
         "checkedAt": "2026-10-07T01:58:52.171516+00:00"
       },
       "sourceCaptureProgress": {
-        "checkedAt": "2026-10-07T03:44:44.260264+00:00",
-        "capturedRecords": 4152,
-        "http200": 4142,
+        "checkedAt": "2026-10-07T03:59:26.676857+00:00",
+        "capturedRecords": 4587,
+        "http200": 4577,
         "knownQueueUrls": 12460,
         "scope": "Fetched/extracted public source; not source reading, visual or interaction review",
-        "lastCapturedAt": "2026-10-07T03:44:43Z",
+        "lastCapturedAt": "2026-10-07T03:59:26Z",
         "allReviewComplete": false
       }
     },
@@ -19951,19 +19951,19 @@
       ],
       "discoveryComplete": false,
       "sourceCaptureProgress": {
-        "checkedAt": "2026-10-07T03:48:56.624604+00:00",
-        "capturedRecords": 55,
-        "http200": 55,
+        "checkedAt": "2026-10-07T03:59:26.676857+00:00",
+        "capturedRecords": 371,
+        "http200": 371,
         "knownQueueUrls": 501,
         "scope": "Fetched/extracted public source; not source reading, visual or interaction review",
-        "lastCapturedAt": "2026-10-07T03:48:54Z",
+        "lastCapturedAt": "2026-10-07T03:59:29Z",
         "allReviewComplete": false
       }
     },
     {
       "site": "magicui.design",
       "checkedOn": "2026-10-07",
-      "evidence": "sitemap URLs only, not page or visual review",
+      "evidence": "Known public queue fetched/extracted: 257 URLs, HTTP200 257, crawler exit 0. Selected noise documentation and pinned source compared separately; this is not whole-page/visual/interaction review.",
       "sitemaps": [
         "https://magicui.design/sitemap.xml"
       ],
@@ -20229,13 +20229,15 @@
       ],
       "discoveryComplete": false,
       "sourceCaptureProgress": {
-        "checkedAt": "2026-10-07T03:48:56.624604+00:00",
-        "capturedRecords": 56,
-        "http200": 56,
+        "checkedAt": "2026-10-07T03:59:26.676857+00:00",
+        "capturedRecords": 257,
+        "http200": 257,
         "knownQueueUrls": 257,
         "scope": "Fetched/extracted public source; not source reading, visual or interaction review",
-        "lastCapturedAt": "2026-10-07T03:48:55Z",
-        "allReviewComplete": false
+        "lastCapturedAt": "2026-10-07T03:55:38Z",
+        "allReviewComplete": false,
+        "status": "completed-known-queue",
+        "terminalExitCode": 0
       }
     },
     {

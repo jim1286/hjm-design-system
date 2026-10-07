@@ -9,6 +9,8 @@ import { ScreenLayout } from "../src/screens.js";
 import { defineHjmDesignProfile, hjmDesignPresets, type HjmDesignPreset } from "@hjmds/design-contracts/design-profile";
 import { heading } from "@hjmds/design-contracts/foundations";
 import { Heading } from "../src/heading.js";
+import { Dialog, Sheet } from "../src/overlays.js";
+import { Toast } from "../src/toast.js";
 import "../src/styles.css";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -103,4 +105,33 @@ it("applies every heading level at the browser boundary while preserving semanti
       }
     }
   } finally { await act(() => root.unmount()); host.remove(); await page.viewport(1280, 720); }
+});
+
+it("updates portal and toast shadows from the nearest profile without replacing the open draft", async () => {
+  const host = document.createElement("div"); document.body.append(host); const root = createRoot(host);
+  const custom = defineHjmDesignProfile({ extends: "clay", tokens: { shadow: { floating: { color: "#123456", radius: 19, offsetY: 7, opacity: 0.21 } } } });
+  try {
+    for (const kind of ["dialog", "sheet"] as const) {
+      let original: HTMLInputElement | undefined;
+      for (const profile of [hjmDesignPresets.clay, hjmDesignPresets.terminal, custom]) {
+        const draft = <input aria-label="열린 초안" defaultValue="initial" />;
+        await act(() => root.render(<HjmProvider theme="dark" reducedMotion textScale={2} direction="rtl" designProfile={profile}>
+          {kind === "dialog" ? <Dialog open onOpenChange={() => {}} title="기록" closeLabel="닫기">{draft}</Dialog> : <Sheet open onOpenChange={() => {}} title="기록" closeLabel="닫기">{draft}</Sheet>}
+          <Toast descriptor={{ id: "saved", description: "저장했어요", closeLabel: "닫기" }} onDismissRequest={() => {}} />
+        </HjmProvider>));
+        const input = document.querySelector<HTMLInputElement>('[aria-label="열린 초안"]')!;
+        if (!original) { original = input; input.value = "kept draft"; input.focus(); }
+        expect(input).toBe(original); expect(input.value).toBe("kept draft"); expect(document.activeElement).toBe(input);
+        const overlay = document.querySelector<HTMLElement>(`.hjm-${kind}`)!;
+        const toast = host.querySelector<HTMLElement>(".hjm-toast")!;
+        const rgba = profile === custom ? "rgba(18, 52, 86, 0.21)" : "rgba(0, 0, 0, " + profile.tokens.shadow.floating.opacity + ")";
+        for (const surface of [overlay, toast]) {
+          const shadow = getComputedStyle(surface).boxShadow;
+          expect(shadow).toContain(rgba);
+          expect(shadow).toContain(`0px ${profile.tokens.shadow.floating.offsetY}px ${profile.tokens.shadow.floating.radius}px`);
+        }
+        expect(overlay.getAttribute("aria-modal")).toBe("true");
+      }
+    }
+  } finally { await act(() => root.unmount()); host.remove(); }
 });

@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { easing, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
+import { easing, glyph, spacing } from "@hjmds/design-contracts/foundations";
 import { resolveControlAccessibleName, } from "@hjmds/design-contracts/behaviors";
 import { emptyStateRecipe, noticeRecipe, progressRecipe, skeletonRecipe, toastRecipe, } from "@hjmds/design-contracts/recipes";
 import { resolveResultDescriptor, resultRecipe, } from "@hjmds/design-contracts/components/result";
@@ -33,7 +33,7 @@ export function Notice({ title, description, tone = noticeRecipe.defaults.tone, 
             {
                 backgroundColor: resolveColorReference(toneContract.background, theme.palette),
                 borderColor: resolveColorReference(toneContract.border, theme.palette),
-                borderRadius: radius[noticeRecipe.radius],
+                borderRadius: theme.tokens.radius[noticeRecipe.radius],
                 borderWidth: noticeRecipe.borderWidth,
                 gap: noticeRecipe.gap,
                 padding: noticeRecipe.padding,
@@ -139,7 +139,7 @@ export function Result({ status, title, description, actions, renderIcon, style,
         ], children: [_jsx(View, { accessible: false, style: {
                     alignItems: "center",
                     backgroundColor: iconBackgroundColor,
-                    borderRadius: radius.full,
+                    borderRadius: theme.tokens.radius.full,
                     height: 56,
                     justifyContent: "center",
                     width: 56,
@@ -209,7 +209,7 @@ export function Progress({ value, max = progressRecipe.defaults.max, label, acce
                         ] }), children] })) : (_jsx(View, { accessible: false, style: [
                     {
                         backgroundColor: resolveColorReference(progressRecipe.track, theme.palette),
-                        borderRadius: radius[progressRecipe.radius],
+                        borderRadius: theme.tokens.radius[progressRecipe.radius],
                         height: progressRecipe.sizes[size],
                         overflow: "hidden",
                     },
@@ -234,7 +234,7 @@ export { Spinner } from "./internal/spinner.js";
  */
 export function Skeleton({ shape = skeletonRecipe.defaults.shape, animated = skeletonRecipe.defaults.animated, width, height, radius: radiusValue, accessibilityLabel, style, layoutStyle, }) {
     warnDeprecatedStyleProps("Skeleton", { style }, "layoutStyle for placement and shape/width/height for appearance");
-    const { environment, palette } = useHjmNativeTheme();
+    const { environment, palette, tokens } = useHjmNativeTheme();
     const shapeSpec = skeletonRecipe.shapes[shape];
     const { duration, easing: easingName, fromOpacity, toOpacity } = skeletonRecipe.animation;
     // The recipe declares reducedMotion: "static". Rather than running the pulse
@@ -272,7 +272,7 @@ export function Skeleton({ shape = skeletonRecipe.defaults.shape, animated = ske
                 // A white loading placeholder needs an outline after removing grey fills.
                 borderColor: palette.theme.border,
                 borderWidth: 1,
-                borderRadius: radiusValue ?? radius[shapeSpec.radius],
+                borderRadius: radiusValue ?? tokens.radius[shapeSpec.radius],
                 height: height ?? shapeSpec.defaultHeight,
                 opacity: shouldAnimate
                     ? pulse.interpolate({
@@ -289,6 +289,9 @@ export function Skeleton({ shape = skeletonRecipe.defaults.shape, animated = ske
 function ToastSurface({ snapshot, managedMotion = false, announces = true, suspended = false, onDismiss, onAction, onExitComplete, onPause, onResume, placement, renderToneIcon, style, }) {
     const resolved = snapshot.descriptor;
     const theme = useHjmNativeTheme();
+    // Managed liquid presentation owns its shadow; ordinary toast chrome follows
+    // the profile floating role, preserving the recipe for consumers without one.
+    const surfaceShadow = theme.designProfile?.tokens.shadow.floating ?? toastRecipe.surface.shadow;
     const [motionProgress] = useState(() => new Animated.Value(theme.environment.reducedMotion ? 1 : 0));
     const exitCompleteRef = useRef(onExitComplete);
     exitCompleteRef.current = onExitComplete;
@@ -353,7 +356,7 @@ function ToastSurface({ snapshot, managedMotion = false, announces = true, suspe
                 // Liquid owns the surface; a second RN fill/border/shadow produced a double rim on iPhone (2026-10-01).
                 backgroundColor: managedMotion ? "transparent" : background,
                 borderColor: border,
-                borderRadius: managedMotion ? liquidToastRecipe.radius : radius[toastRecipe.surface.radius],
+                borderRadius: managedMotion ? liquidToastRecipe.radius : theme.tokens.radius[toastRecipe.surface.radius],
                 borderWidth: managedMotion ? 0 : toastRecipe.surface.borderWidth,
                 gap: toastRecipe.surface.gap,
                 maxWidth: toastRecipe.surface.maxWidth,
@@ -361,17 +364,17 @@ function ToastSurface({ snapshot, managedMotion = false, announces = true, suspe
                 opacity: managedMotion ? 1 : motionProgress,
                 overflow: "hidden",
                 padding: toastRecipe.surface.padding,
-                shadowColor: toastRecipe.surface.shadow.color,
-                shadowOffset: { width: 0, height: toastRecipe.surface.shadow.offsetY },
-                shadowOpacity: managedMotion ? 0 : toastRecipe.surface.shadow.opacity,
-                shadowRadius: toastRecipe.surface.shadow.radius,
+                shadowColor: surfaceShadow.color,
+                shadowOffset: { width: 0, height: surfaceShadow.offsetY },
+                shadowOpacity: managedMotion ? 0 : surfaceShadow.opacity,
+                shadowRadius: surfaceShadow.radius,
                 transform: [{ translateY }],
                 width: "100%",
             },
             style,
         ], children: [toastRecipe.toneMark.width > 0 ? (_jsx(View, { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
                     backgroundColor: accent,
-                    borderRadius: radius[toastRecipe.toneMark.radius],
+                    borderRadius: theme.tokens.radius[toastRecipe.toneMark.radius],
                     bottom: 0,
                     start: 0,
                     position: "absolute",
@@ -389,7 +392,7 @@ function ToastSurface({ snapshot, managedMotion = false, announces = true, suspe
                 }, children: [renderedToneIcon === undefined ? null : (_jsx(View, { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
                             alignItems: "center",
                             backgroundColor: badge,
-                            borderRadius: radius[toastRecipe.icon.badgeRadius],
+                            borderRadius: theme.tokens.radius[toastRecipe.icon.badgeRadius],
                             flexShrink: 0,
                             height: toastRecipe.icon.badgeDiameter,
                             justifyContent: "center",
@@ -405,7 +408,7 @@ function ToastSurface({ snapshot, managedMotion = false, announces = true, suspe
                     backgroundColor: managedMotion ? "transparent" : resolveColorReference(toastRecipe.action.background, theme.palette),
                     borderTopWidth: managedMotion ? 1 : 0,
                     borderTopColor: theme.colors.border,
-                    borderRadius: managedMotion ? 0 : radius[toastRecipe.action.radius],
+                    borderRadius: managedMotion ? 0 : theme.tokens.radius[toastRecipe.action.radius],
                     justifyContent: "center",
                     minHeight: toastRecipe.action.minHeight,
                     opacity: pressed ? toastRecipe.states.pressedOpacity : 1,

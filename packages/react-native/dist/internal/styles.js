@@ -48,4 +48,13 @@ export function resolveNativeTextScaleProps(textScaling, style, requestedAllowFo
 export function logicalTextAlign(direction) {
     return direction === "rtl" ? "right" : "left";
 }
+/** Android elevation draws its own shadow and also affects sibling stacking.
+ * Keep the legacy host elevation without a profile; a zero-opacity profile must
+ * explicitly remove the platform shadow as well as the iOS shadow properties.
+ * Modals retain their separate host/positioning order (docs/design-profile.md). */
+export function resolveNativeShadowElevation(token, profiled, fallbackElevation) {
+    return { elevation: profiled
+            ? token.opacity === 0 ? 0 : Math.max(token.radius, Math.abs(token.offsetY))
+            : fallbackElevation };
+}
 //# sourceMappingURL=styles.js.map

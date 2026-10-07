@@ -106,7 +106,9 @@ export function createHjmThemeStyle(value) {
         style[`--hjm-${name}-border`] = resolveColorReference(chrome.border, palette);
         style[`--hjm-${name}-border-width`] = `${chrome.borderWidth}px`;
         style[`--hjm-${name}-radius`] = `var(--hjm-radius-${chrome.radius})`;
-        style[`--hjm-${name}-shadow`] = shadowCss(chrome.shadow);
+        // Recipes select the floating role. Resolve its value from the profile so
+        // dialogs, sheets and toasts cannot retain neutral shadows after a theme switch.
+        style[`--hjm-${name}-shadow`] = shadowCss(profileTokens?.shadow.floating ?? chrome.shadow);
     }
     style["--hjm-sheet-max-height"] = `${sheetRecipe.content.maxHeightRatio * 100}dvh`;
     style["--hjm-sheet-max-width"] = `${sheetRecipe.web.maxWidth}px`;

@@ -1,5 +1,5 @@
 import { spacing } from "@hjmds/design-contracts/foundations";
-import { type StyleProp, type TextStyle } from "react-native";
+import { type StyleProp, type TextStyle, type ViewStyle } from "react-native";
 export type SpacingToken = keyof typeof spacing;
 export declare const minimumTargetStyle: {
     readonly minHeight: 44;
@@ -26,4 +26,13 @@ export type NativeTextScaleProps = Readonly<{
  */
 export declare function resolveNativeTextScaleProps(textScaling: NativeTextScaling, style: StyleProp<TextStyle>, requestedAllowFontScaling?: boolean): NativeTextScaleProps;
 export declare function logicalTextAlign(direction: "ltr" | "rtl"): TextStyle["textAlign"];
+/** Android elevation draws its own shadow and also affects sibling stacking.
+ * Keep the legacy host elevation without a profile; a zero-opacity profile must
+ * explicitly remove the platform shadow as well as the iOS shadow properties.
+ * Modals retain their separate host/positioning order (docs/design-profile.md). */
+export declare function resolveNativeShadowElevation(token: Readonly<{
+    opacity: number;
+    radius: number;
+    offsetY: number;
+}>, profiled: boolean, fallbackElevation: number): Pick<ViewStyle, "elevation">;
 //# sourceMappingURL=styles.d.ts.map

@@ -1,6 +1,6 @@
 # 디자인 프리셋 계약
 
-검토일: 2026-10-07 · 상태: 10종 실험 구현·로컬 검사 완료 · 미게시(1.14.0 이후)
+검토일: 2026-10-07 · 상태: 10종 실험 구현·대상 로컬 검사 완료 · 미게시(1.14.0 이후)
 
 사용자가 레트로·종이·숲 등의 테마에 따라 같은 기능의 상호작용·구성·화면 배치도 자동으로 달라지고, 앱이 자기 테마를 한 번 주입하기를 요청했다. 색상 프리셋만으로는 그 요구를 충족하지 못하므로 네 축을 하나의 데이터 계약으로 둔다. 기존 상태 엔진을 테마마다 복제하는 방식은 채택하지 않는다.
 
@@ -81,3 +81,26 @@ const productDesign = defineHjmDesignProfile({
 같이 Heading level3/4/5의 변경 기본값이며, 같은 필드에 명시한 `tokens.heading`이
 우선한다. 나머지 프로필 축·본문 Text typography와 문서 순서는 바꾸지 않는다.
 지원하지 않는 persisted heading 단계는 조용히 무시하지 않고 거부한다.
+
+## 오버레이·선택 입력의 프로필 연결 보완
+
+2026-10-07 실제 소비 경로 대조에서 Web의 Dialog/Sheet/Toast 전용 그림자 변수와 Native의
+Dialog/AlertDialog/Sheet, Select/Combobox, Notice/Progress/Skeleton/Toast가 프로필의 해당
+역할 대신 foundation/recipe 값을 직접 읽었다. Provider 값만 바꾸는 방식으로는 동일 화면의
+카드와 열린 오버레이가 다른 표현을 유지했으므로 기존 API의 소비 경로를 연결했다.
+
+- Web Dialog/Sheet/Toast와 Native Dialog/AlertDialog/Sheet/일반 Toast는 `tokens.shadow.floating`을
+  읽는다. 프로필 없는 소비자는 각 recipe의 기존 그림자와 Native elevation을 유지한다.
+- Native에서 모서리의 역할 이름은 각 recipe가 정하고 값은 Provider의 `tokens.radius`가 정한다.
+  원·pill의 full=999, Sheet 하단의 바닥 모서리 0, 명시한 Skeleton 반지름은 유지한다.
+- Android elevation은 별도 플랫폼 그림자를 그리므로 프로필 opacity=0이면 elevation도 0이다.
+  나머지는 radius/offsetY의 최대값으로 근사한다. CSS blur와 기기 그림자의 픽셀 동등성을 뜻하지
+  않는다. [플랫폼 근거](https://reactnative.dev/docs/view-style-props#elevation).
+- 액션·선택·초안·Modal lifecycle·safe area·키보드 처리는 바꾸지 않는다. Liquid Toast의
+  managed presentation은 기존 별도 표현 host가 계속 소유한다.
+
+기존 테마 조합 실험에서 Notice/Skeleton/Toast와 Dialog/Sheet를 직접 열고, 오버레이 안의
+다음 테마 버튼으로 10종을 순회한다. 같은 제어 초안을 닫기/재열기에서도 유지한다.
+Web의 10개 밝은 Dialog와 10개 dark/RTL/2배 Sheet 및 390px 검토는 위 QA 기록에 있다.
+Native 테스트는 실제 기기의 표시·VoiceOver 증거가 아니다. 이 보완은 glass blur/clay inset을
+구현한 것이 아니며, 남은 다른 컴포넌트의 직접 토큰/recipe 소비 경로도 계속 대조한다.

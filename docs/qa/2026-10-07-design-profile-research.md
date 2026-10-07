@@ -267,3 +267,112 @@ reduced motion·화면 가시성/AppState 중지가 있다. 실제 backdrop blur
 Magic UI 257·Aceternity 501개 공개 URL의 본문 수집을 각 host 순차/2초 간격으로
 시작했다. robots의 비공개 경로와 rate limit 중지 규칙을 유지한다. 수집·본문 독해·시각·
 동작 검토는 각각 따로 기록하고 원격 CI·설치·npm 게시를 시작한 작업이 아니다.
+
+## 후속 검토: 오버레이·선택 입력의 테마 소비 경로
+
+기준: main `bd41c5a2ab0abbc6458bf985851865ccb8747f9c`에서 시작한 미게시 변경.
+Provider에 새 토큰을 추가하는 대신 현재 공개 소비자의 직접 foundation/recipe 참조를 보완했다.
+Web 전용 Dialog/Sheet/Toast 그림자 변수와 Native Dialog/AlertDialog/Sheet의 chrome, Select/Combobox의
+option/trigger/sheet 모서리, Notice/Progress/Skeleton/일반 Toast가 대상이다. Surface의 기존 Android
+shadow 근사를 내부 helper로 공유한다. Modal 상태 엔진·액션/선택·safe area·키보드 동작은 유지한다.
+유리 실제 blur·클레이 inset 구현, 전체 11개 사이트 원본 검토, npm 게시·소비 앱 반영은 아직 미완료다.
+
+### 실제 화면과 보존
+
+- Web local Storybook 1280×720: 같은 열린 Dialog에서 10종 light 순회. 입력 값과 id 동일, aria-modal=true,
+  모서리/그림자 변화 확인. terminal은 투명 shadow, brutalist는 radius=0/blur=0, clay는 외부 shadow 28/12/0.18.
+- 같은 열린 Sheet에서 dark/RTL/textScale=2/reduced-motion 10종 순회. 입력 값/id 동일,
+  각 scrollWidth=clientWidth=638. 390×844에서도 10종 scrollWidth=clientWidth=356, 닫기 target 44×44.
+- Sheet 닫기→Dialog 열기로 같은 제어 초안 유지. 이때 새 입력 host id는 바뀌므로 이 흐름을 DOM node 보존으로 세지 않는다.
+- Native는 실제 renderer를 mock host에서 검사했다. Dialog/Sheet 초안 subtree의 mount=1 유지,
+  AlertDialog 역할/액션, 11개 preset+미지정+custom floating/color/radius 값, 무그림자 elevation=0,
+  Select/Combobox 선택, Skeleton 명시 radius=13, Toast/Liquid presentation 회귀를 확인한다.
+  Native의 기기 표시·VoiceOver·TalkBack·성능은 이번 검사 범위 밖이다.
+
+![20개 테마 오버레이](assets/2026-10-07-profile-overlay-comparison.webp)
+
+![좁은 화면의 오버레이](assets/2026-10-07-profile-overlay-narrow.webp)
+
+최종 그림은 실제 viewport 캡처에서 오버레이 주변을 모아 보존한 비교이며 새 렌더나 참조 이미지 합성물이 아니다.
+원시 PNG 23개와 DOM 결과 JSON 2개는 아래 digest로 검증 후 제거한다. 중간 실패는 이번 새 테스트 fixture의
+필수 localized props/recipe 역할과 host 선택을 잘못 지정한 것이었고, 실제 Props 타입과 recipe에 맞춰 고쳤다.
+기존 전체 브라우저 검사 ContextMenu 1건 실패/단독 통과 기록은 해소한 것으로 바꾸지 않는다.
+
+### 직접 foundation 참조의 잔여 감사
+
+TypeScript checker가 두 renderer src 전체에서 명시적 `@hjmds/design-contracts/foundations` import의
+실제 symbol 참조를 추적했다. 타입/import만의 참조는 제외한다. 결과 18파일·50 runtime 참조다.
+이 숫자는 결함 수가 아니다. Web 4개와 Native Text 1개는 프로필 미지정 fallback, FixedGlyph 3개와
+Checkbox/Chip의 고정 selection mark는 글자 확대와 분리한 아이콘 슬롯이다. full radius는 계약상 고정이다.
+나머지 일반 shape/type 역할·optional host 표현은 다음 변경의 실제 소비 경로 대조 대상이다.
+이 감사는 recipe 내 숫자/객체, CSS literal, 다른 import 경로를 검사하지 않으므로 전체 테마 반영 완료 증거로 쓰지 않는다.
+
+| 파일 | runtime 참조 수 | 토큰/당시 행 |
+| --- | --- | --- |
+| `packages/react/src/theme.ts` | 4 | radius:84, typography:87, fontFamily:103, shadow:148 |
+| `packages/react-native/src/primitives.tsx` | 1 | fontFamily:203 |
+| `packages/react-native/src/internal/fixed-glyph.tsx` | 3 | typography:12, typography:12, typography:12 |
+| `packages/react-native/src/inputs.tsx` | 4 | typography:734, typography:735, typography:1181, typography:2307 |
+| `packages/react-native/src/calendar.tsx` | 1 | typography:98 |
+| `packages/react-native/src/date-picker.tsx` | 1 | radius:115 |
+| `packages/react-native/src/navigation.tsx` | 12 | radius:452, radius:571, radius:829, radius:862, radius:908, radius:908, radius:943, radius:994, radius:1846, radius:1952, radius:2128, radius:2176 |
+| `packages/react-native/src/data-display.tsx` | 10 | radius:165, radius:263, radius:498, radius:740, radius:1377, radius:1399, radius:1459, radius:1523, radius:1680, radius:1985 |
+| `packages/react-native/src/agreement.tsx` | 2 | radius:95, radius:131 |
+| `packages/react-native/src/tags-input.tsx` | 1 | radius:100 |
+| `packages/react-native/src/mentions.tsx` | 1 | radius:113 |
+| `packages/react-native/src/activity-heatmap.tsx` | 1 | radius:5 |
+| `packages/react-native/src/code-block.tsx` | 2 | typography:10, radius:11 |
+| `packages/react-native/src/folder-preview.tsx` | 2 | radius:4, radius:4 |
+| `packages/react-native/src/navigation-bar.tsx` | 1 | radius:19 |
+| `packages/react-native/src/saved-items.tsx` | 1 | radius:34 |
+| `packages/react-native/src/sheet-gesture.tsx` | 2 | typography:20, radius:25 |
+| `packages/react-native/src/toast-liquid.tsx` | 1 | shadow:16 |
+
+### 원시 증거 digest
+
+| 파일 | SHA-256 |
+| --- | --- |
+| `dark-sheet-aurora.png` | `026b8026d685da36bdcb18398140f8b316bc816d7b0f174523fd732e4a091903` |
+| `dark-sheet-brutalist.png` | `bd5ef26f8e3b0046477bf07192395b296ca1da71f5a72a62d298769279aae2e2` |
+| `dark-sheet-clay.png` | `ab01375f5869ec2cd463b104738fefc87b655ecd54fc533dfe8f0cd28a8b61ad` |
+| `dark-sheet-editorial.png` | `920a986908d783d75cadb1c9f806e20b410379982db6cae4d7f90baa45095aec` |
+| `dark-sheet-forest.png` | `5aba09c8d14efcf9425fab3d8079f52a37c7b58ac88be78d9d087fe956732af5` |
+| `dark-sheet-glass.png` | `88e15df4cc376f560d4c11d9770aef27b91ed714deb0cc1b880f8e27fa881041` |
+| `dark-sheet-minimal.png` | `4f8265553bb9958e19cbe747d97fb533d44c7b47c2d85d731709e156bf6165fb` |
+| `dark-sheet-paper.png` | `1f9c525e27d7e6cdbcdd461cd19ea3971c5de34a9f189c687b15f625e5aaf1ad` |
+| `dark-sheet-retro.png` | `4ce49b7f2d2c77bc0a7dddd28265e2e13d7575c203305dcfeef4318976fadfa0` |
+| `dark-sheet-terminal.png` | `9e81987278803d330bd803d2b995dc8bc2dcef3f804d6ac44320b78786fae5f7` |
+| `light-dialog-aurora.png` | `4ffe539edb8c49eeb777aef1f3ca6359bfccf26ef460daf6f5b9b823763486ba` |
+| `light-dialog-brutalist.png` | `c69098163857c92d2a9dbda6768b5bbd1f3f09f63fa8845ac80b5051e4b48f8f` |
+| `light-dialog-clay.png` | `6aaaa5d998505cd378c16dbb83fab0e65b542d99661fc457b87808c28e7ac5d2` |
+| `light-dialog-editorial.png` | `1dd6e0bab711f7a3c5e31b4df232f4bf478f07e6a9d7402e91f40f3e8fd40a16` |
+| `light-dialog-forest.png` | `f638e39e06e12e7f152cfd50a09b41880f6785f778a258d8470dcbf7147de8be` |
+| `light-dialog-glass.png` | `9e860e28f3feba91a0898939d163665482121607b2023953ad21765bca7c7ad7` |
+| `light-dialog-minimal.png` | `4597f7fc4a0583523178b38609ec0d36cbf395d56bed3f5ddd05c2be035290a5` |
+| `light-dialog-paper.png` | `96f220ff7377e935b34fa92b881b394f28ae2bbf242ed3ff96cb7ca4ca4134cc` |
+| `light-dialog-retro.png` | `80a0f6b123afa8ab6d0171be8585c038360a440329f98636f90c0e2b124e8fc2` |
+| `light-dialog-terminal.png` | `dff13fec0af624dbe48e20a575eafe5530a92ff2886ec00662434e9a2a5e6d4d` |
+| `narrow-dark-dialog-clay.png` | `9bd15fc0a79631d809a1f4a161f03135cef5ba750fc5489d4e323ab49ad5a1ff` |
+| `narrow-dark-sheet-clay.png` | `266179cc7e770d0b986247dfcc93b742799f37b58c1b2b0d6e63af7fd87e9e04` |
+| `narrow-dark-sheet-terminal.png` | `725b98fa8f47e428acac1777fd78ffdb76043db35aa0bfccd2b9996a0454f1c9` |
+| `checks.json` | `91d43b5ab6e6e196b8cae3b1bfacc258f3d98c6987666e8d54be6ac8e443070a` |
+| `narrow-checks.json` | `2b54a4370b284e150ee18f766cb836920c7e445d4818e580f632f4cad45e2a18` |
+| `foundation-import-audit.json` | `bea210e1a81c87186357ecc25ac8b1db06017bc802ff05e2c3f7551ea3d664d6` |
+| `audit-foundation-imports.mjs` | `26003380c165f963bbe995bdb1b69cfa571b30011a5d985c058d4d58e8f33827` |
+
+### 대상 검사 실행
+
+- Native: `pnpm --filter @hjmds/react-native exec vitest run test/design-profile.test.tsx test/dialog-actions.test.tsx test/alert-dialog-actions.test.tsx test/sheet-viewport.test.tsx test/deprecated-style-feedback.test.tsx test/toast-liquid.test.tsx` → 6파일/56검사 통과.
+- Web: `pnpm --filter @hjmds/react exec vitest run --config vitest.browser.config.ts test/design-profile.browser.test.tsx test/sheet-layout.browser.test.tsx test/toast-layout.browser.test.tsx` → 3파일/18검사 통과.
+- 두 renderer typecheck/build, Web Showcase 14파일/43검사 + token boundary 301소스/69선언,
+  Native Showcase 6파일/21검사 + generate/typecheck 통과.
+- usage 12토큰/139컴포넌트/54구성/22화면, docs 565 Markdown, API 308이름,
+  Storybook 421파일/929Web id의 정적 검사 통과. 전체 runtime/원격 CI/기기/게시 결과를 뜻하지 않는다.
+- 원격 workflow 실행·버전 변경·npm 게시 없음. 버전 상승 시 원격 CI를 실행한다.
+
+원시 검사 로그 digest:
+- `hjm-profile-overlay-native.log` SHA-256 `2be965e53adbd0ba6fc23e8f79fe58547e3b469e5a1cd63c0eb43111f06a3b36`
+- `hjm-profile-overlay-web.log` SHA-256 `fc2f8305048e910cefd2ff5b84066b94c94bd23e5a35405613077613bcf9d7e3`
+
+- `pnpm showcase:web:build` → exit=0, Storybook static build 및 103 canonical Web story/13 navigation page 검증 통과.
+- `hjm-profile-overlay-showcase-build.log` SHA-256 `3602048b536db8f02d6624c14454e92d1048392696848a8a8ddb4e137f550150`

@@ -12,6 +12,9 @@ export const profileCopy = {
   walk: "산책", read: "독서", rest: "휴식", walkBody: "공원을 걸으며 생각을 정리했어요.", readBody: "좋아하는 문장을 한 줄 남겼어요.", restBody: "잠시 쉬어가는 시간을 기록했어요.",
   limitation: "유리는 현재 단색 표면과 빛 효과로 표시해요. 실제 배경 흐림과 클레이 안쪽 그림자는 추가 구현이 필요해요.",
   headingScale: "제목 크기 비교",
+  chrome: "입력·알림·오버레이 비교", dialog: "대화상자 열기", sheet: "패널 열기", close: "닫기",
+  overlayTitle: "기록 편집", overlayDraft: "오버레이 초안", nextTheme: "다음 테마",
+  chromeNotice: "테마를 바꿔도 초안은 유지돼요.", toastCopy: "미리보기 기록을 저장했어요.",
 };
 export const profileHeadingSamples = [
   { level: "level1", label: "큰 제목" }, { level: "level2", label: "주 제목" },

@@ -8,6 +8,8 @@ import { SegmentedControl } from "@hjmds/react-native/inputs";
 import { OverviewScreen } from "@hjmds/react-native/design-profile";
 import { ContentTransition } from "@hjmds/react-native/content-transition";
 import { Collapsible } from "@hjmds/react-native/collapsible";
+import { Dialog, Sheet } from "@hjmds/react-native/overlays";
+import { Notice, Skeleton, Toast } from "@hjmds/react-native/feedback";
 import { Heading } from "@hjmds/react-native/heading";
 import { hjmDesignPresets, type HjmDesignPreset } from "@hjmds/design-contracts/design-profile";
 import { profileCopy as copy, profileOptions, profileHeadingSamples } from "../../shared/design-profile";
@@ -33,12 +35,28 @@ export function RecordSample() {
     footer={<Stack gap="sm"><Button onPress={() => void save()} loading={status === "pending"} loadingLabel={copy.pending}>{status === "failed" ? copy.retry : copy.save}</Button><Button tone="ghost" disabled={status === "pending"} onPress={() => { failNext.current = true; void save(); }}>{copy.fail}</Button></Stack>}
     items={items.map(item => ({ id: item.id, children: <Stack gap="sm"><Text variant="heading">{item.title}</Text><Text>{item.body}</Text></Stack> }))} />;
 }
+// Same public overlay instances stay mounted while the parent profile changes;
+// the shared controlled draft is fixture data, with no storage/network mutation.
+function ProfileChromeSample({ onNextTheme }: { onNextTheme: () => void }) {
+  const [open, setOpen] = useState<"dialog" | "sheet" | null>(null);
+  const [draft, setDraft] = useState<string>(copy.initial);
+  const fields = <Stack gap="md"><TextField label={copy.overlayDraft} value={draft} onValueChange={setDraft} /><Button onPress={onNextTheme}>{copy.nextTheme}</Button></Stack>;
+  return <Collapsible trigger={copy.chrome} defaultOpen><Stack gap="md">
+    <Notice title={copy.chromeNotice} /><Skeleton animated={false} />
+    <Toast descriptor={{ id: "profile-saved", description: copy.toastCopy, closeLabel: copy.close, durationMs: null }} />
+    <Stack axis="inline" gap="sm" wrap><Button onPress={() => setOpen("dialog")}>{copy.dialog}</Button><Button onPress={() => setOpen("sheet")}>{copy.sheet}</Button></Stack>
+    <Dialog open={open === "dialog"} onOpenChange={next => { if (!next) setOpen(null); }} title={copy.overlayTitle} closeLabel={copy.close}>{fields}</Dialog>
+    <Sheet open={open === "sheet"} onOpenChange={next => { if (!next) setOpen(null); }} title={copy.overlayTitle} closeLabel={copy.close} scrollable>{fields}</Sheet>
+  </Stack></Collapsible>;
+}
+
 export function DesignProfileComparison() {
   const [preset, setPreset] = useState<HjmDesignPreset>("retro");
   return <ScrollView keyboardShouldPersistTaps="handled"><Stack gap="xl"><Text variant="heading">{copy.title}</Text><Text>{copy.intro}</Text>
     <SegmentedControl label={copy.choose} presentation="pills" items={profileOptions.map(option => ({ value: option.id, label: option.label }))} value={preset} onValueChange={value => { const option = profileOptions.find(option => option.id === value); if (option) setPreset(option.id); }} />
     <View style={{ height: 640 }}>{/* A comparison tile supplies a bounded route viewport; ScreenLayout owns its inner scrolling. */}<HjmNativeProvider designProfile={hjmDesignPresets[preset]}><RecordSample /></HjmNativeProvider></View>
     <HjmNativeProvider designProfile={hjmDesignPresets[preset]}><Collapsible trigger={copy.headingScale} defaultOpen><Stack gap="sm">{profileHeadingSamples.map(sample => <Heading key={sample.level} level={sample.level} semanticLevel={3}>{sample.label}</Heading>)}</Stack></Collapsible></HjmNativeProvider>
+    <HjmNativeProvider designProfile={hjmDesignPresets[preset]}><ProfileChromeSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmNativeProvider>
     <Text tone="muted">{copy.limitation}</Text>
     <Collapsible trigger={copy.compare} defaultOpen>{profileOptions.map(option => <HjmNativeProvider key={option.id} designProfile={hjmDesignPresets[option.id]}><Stack gap="md"><Text variant="title">{option.label}</Text><View style={{ height: 640 }}><RecordSample /></View></Stack></HjmNativeProvider>)}</Collapsible>
   </Stack></ScrollView>;

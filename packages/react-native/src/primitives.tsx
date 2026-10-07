@@ -75,6 +75,7 @@ import {
 import { useHjmNativeTheme } from "./provider.js";
 import {
   logicalTextAlign,
+  resolveNativeShadowElevation,
   resolveNativeTextScaleProps,
 } from "./internal/styles.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
@@ -270,9 +271,7 @@ export function Surface({
   const borderColor = resolveThemeColor(colors, contract.border);
   const elevatedStyle: ViewStyle | undefined = contract.elevated
     ? {
-        // Android elevation approximates the selected shadow; a zero-opacity
-        // profile must also suppress its platform shadow. Keep legacy elevation otherwise.
-        elevation: designProfile ? (tokens.shadow.floating.opacity === 0 ? 0 : Math.max(tokens.shadow.floating.radius, Math.abs(tokens.shadow.floating.offsetY))) : 4,
+        ...resolveNativeShadowElevation(tokens.shadow.floating, designProfile !== undefined, 4),
         // Use the same floating surface token as Web instead of a separate blur.
         shadowColor: tokens.shadow.floating.color,
         shadowOffset: { width: 0, height: tokens.shadow.floating.offsetY },

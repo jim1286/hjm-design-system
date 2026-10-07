@@ -12,7 +12,7 @@ import { sectionRecipe, stackRecipe, textRecipe, } from "@hjmds/design-contracts
 import { Children, forwardRef, isValidElement, useEffect, useMemo, useState, } from "react";
 import { PixelRatio, Platform, Text as NativeText, View, useWindowDimensions, } from "react-native";
 import { useHjmNativeTheme } from "./provider.js";
-import { logicalTextAlign, resolveNativeTextScaleProps, } from "./internal/styles.js";
+import { logicalTextAlign, resolveNativeShadowElevation, resolveNativeTextScaleProps, } from "./internal/styles.js";
 import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 /** Native shell translation: ordered regions without inventing Web landmark roles. */
 export const Layout = forwardRef(function Layout({ children, header, footer, sidebar, headerProps, mainProps, footerProps, mainRef, style, ...props }, ref) {
@@ -79,9 +79,7 @@ export function Surface({ tone = surfaceDefaults.tone, padding = surfaceDefaults
     const borderColor = resolveThemeColor(colors, contract.border);
     const elevatedStyle = contract.elevated
         ? {
-            // Android elevation approximates the selected shadow; a zero-opacity
-            // profile must also suppress its platform shadow. Keep legacy elevation otherwise.
-            elevation: designProfile ? (tokens.shadow.floating.opacity === 0 ? 0 : Math.max(tokens.shadow.floating.radius, Math.abs(tokens.shadow.floating.offsetY))) : 4,
+            ...resolveNativeShadowElevation(tokens.shadow.floating, designProfile !== undefined, 4),
             // Use the same floating surface token as Web instead of a separate blur.
             shadowColor: tokens.shadow.floating.color,
             shadowOffset: { width: 0, height: tokens.shadow.floating.offsetY },

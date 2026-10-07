@@ -18,7 +18,7 @@ import {
   type SheetOpenChangeDetails,
 } from "@hjmds/design-contracts/components/sheet";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { backdrop, easing, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
+import { backdrop, easing, glyph, spacing } from "@hjmds/design-contracts/foundations";
 import {
   alertDialogRecipe,
   dialogRecipe,
@@ -66,6 +66,7 @@ import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "./provider.js";
+import { resolveNativeShadowElevation } from "./internal/styles.js";
 
 // A close glyph is icon artwork, not body copy; FixedGlyph keeps it inside IconButton's fixed frame.
 function CloseGlyph() {
@@ -309,7 +310,10 @@ export function Dialog({
     if (open === false) { actionRun.current = null; setActionPending(null); }
     return () => { actionRun.current = null; };
   }, [open]);
-  const { environment, palette } = useHjmNativeTheme();
+  const { environment, palette, tokens, designProfile } = useHjmNativeTheme();
+  // The profile floating role is shared with Web. Modal lifecycle, inset and
+  // action state remain recipe-owned; changing decoration must not replace them.
+  const surfaceShadow = designProfile?.tokens.shadow.floating ?? dialogRecipe.content.shadow;
   const accessibleTitle = resolveOverlayAccessibleTitle(title, accessibilityTitle);
   const viewportPadding = useDialogViewportPadding();
   const { width: windowWidth } = useWindowDimensions();
@@ -547,18 +551,18 @@ export function Dialog({
               alignSelf: "center",
               backgroundColor: contentBackground,
               borderColor: contentBorder,
-              borderRadius: radius[dialogRecipe.content.radius],
+              borderRadius: tokens.radius[dialogRecipe.content.radius],
               borderWidth: dialogRecipe.content.borderWidth,
-              elevation: 8,
+              ...resolveNativeShadowElevation(surfaceShadow, designProfile !== undefined, 8),
               gap: dialogRecipe.content.gap,
               maxWidth: sizeRecipe.maxWidth,
               maxHeight: "100%",
               flexShrink: 1,
               padding: sizeRecipe.padding,
-              shadowColor: dialogRecipe.content.shadow.color,
-              shadowOffset: { width: 0, height: dialogRecipe.content.shadow.offsetY },
-              shadowOpacity: dialogRecipe.content.shadow.opacity,
-              shadowRadius: dialogRecipe.content.shadow.radius,
+              shadowColor: surfaceShadow.color,
+              shadowOffset: { width: 0, height: surfaceShadow.offsetY },
+              shadowOpacity: surfaceShadow.opacity,
+              shadowRadius: surfaceShadow.radius,
               width: "100%",
             },
             originTransform && !environment.reducedMotion ? { transform: [
@@ -663,7 +667,10 @@ export function AlertDialog({
   validateAlertDialogRequest(request);
   warnVisualContentStyle("AlertDialog", contentStyle);
   const viewportPadding = useDialogViewportPadding();
-  const { colors, environment, palette } = useHjmNativeTheme();
+  const { colors, environment, palette, tokens, designProfile } = useHjmNativeTheme();
+  // The profile floating role is shared with Web. Modal lifecycle, inset and
+  // action state remain recipe-owned; changing decoration must not replace them.
+  const surfaceShadow = designProfile?.tokens.shadow.floating ?? alertDialogRecipe.content.shadow;
   const { width: windowWidth } = useWindowDimensions();
   const [visible, changeOpen] = useReasonedOpenState({
     ...(open === undefined ? {} : { open }),
@@ -928,7 +935,7 @@ export function AlertDialog({
         {
           alignItems: "center",
           backgroundColor: confirmBackground,
-          borderRadius: radius.md,
+          borderRadius: tokens.radius.md,
           flex: stackActions ? undefined : 1,
           justifyContent: "center",
           minWidth: alertDialogRecipe.actions.minButtonWidth,
@@ -984,21 +991,21 @@ export function AlertDialog({
               alignSelf: "center",
               backgroundColor: contentBackground,
               borderColor: contentBorder,
-              borderRadius: radius[alertDialogRecipe.content.radius],
+              borderRadius: tokens.radius[alertDialogRecipe.content.radius],
               borderWidth: alertDialogRecipe.content.borderWidth,
-              elevation: 8,
+              ...resolveNativeShadowElevation(surfaceShadow, designProfile !== undefined, 8),
               gap: alertDialogRecipe.content.gap,
               maxWidth: sizeRecipe.maxWidth,
               maxHeight: "100%",
               flexShrink: 1,
               padding: sizeRecipe.padding,
-              shadowColor: alertDialogRecipe.content.shadow.color,
+              shadowColor: surfaceShadow.color,
               shadowOffset: {
                 width: 0,
-                height: alertDialogRecipe.content.shadow.offsetY,
+                height: surfaceShadow.offsetY,
               },
-              shadowOpacity: alertDialogRecipe.content.shadow.opacity,
-              shadowRadius: alertDialogRecipe.content.shadow.radius,
+              shadowOpacity: surfaceShadow.opacity,
+              shadowRadius: surfaceShadow.radius,
               width: "100%",
             },
             contentStyle,
@@ -1047,7 +1054,7 @@ export function AlertDialog({
                     // (BurnTok's pale blue, 2026-09-27), competing with the confirm fill.
                     backgroundColor: colors.bg,
                     borderColor: colors.border,
-                    borderRadius: radius.md,
+                    borderRadius: tokens.radius.md,
                     borderWidth: 1,
                     flex: stackActions ? undefined : 1,
                     justifyContent: "center",
@@ -1130,7 +1137,10 @@ export function Sheet({
   ...modalProps
 }: SheetProps) {
   warnVisualContentStyle("Sheet", contentStyle);
-  const { environment, palette } = useHjmNativeTheme();
+  const { environment, palette, tokens, designProfile } = useHjmNativeTheme();
+  // The profile floating role is shared with Web. Modal lifecycle, inset and
+  // action state remain recipe-owned; changing decoration must not replace them.
+  const surfaceShadow = designProfile?.tokens.shadow.floating ?? sheetRecipe.content.shadow;
   // Default to the provider's window insets so a bare <Sheet> clears the home
   // indicator and navigation bar (2026-09-30 audit). Edges the call site passes win.
   const providerInsets = useHjmNativeSafeAreaInsets();
@@ -1466,13 +1476,13 @@ export function Sheet({
             {
               backgroundColor: contentBackground,
               borderColor: contentBorder,
-              borderRadius: radius[sheetRecipe.content.radius],
+              borderRadius: tokens.radius[sheetRecipe.content.radius],
               borderBottomLeftRadius:
-                physicalPlacement === "bottom" ? 0 : radius[sheetRecipe.content.radius],
+                physicalPlacement === "bottom" ? 0 : tokens.radius[sheetRecipe.content.radius],
               borderBottomRightRadius:
-                physicalPlacement === "bottom" ? 0 : radius[sheetRecipe.content.radius],
+                physicalPlacement === "bottom" ? 0 : tokens.radius[sheetRecipe.content.radius],
               borderWidth: sheetRecipe.content.borderWidth,
-              elevation: 8,
+              ...resolveNativeShadowElevation(surfaceShadow, designProfile !== undefined, 8),
               gap: sheetRecipe.body.gap,
               // A fixed size ratio drives the height; `auto` lets the content decide
               // and the recipe's maxHeightRatio caps it.
@@ -1493,13 +1503,13 @@ export function Sheet({
               // The top safe area limits the viewport, rather than adding a second
               // notch-sized gap inside a sheet anchored to the bottom.
               paddingTop: sheetRecipe.content.paddingTop,
-              shadowColor: sheetRecipe.content.shadow.color,
+              shadowColor: surfaceShadow.color,
               shadowOffset: {
                 width: 0,
-                height: sheetRecipe.content.shadow.offsetY,
+                height: surfaceShadow.offsetY,
               },
-              shadowOpacity: sheetRecipe.content.shadow.opacity,
-              shadowRadius: sheetRecipe.content.shadow.radius,
+              shadowOpacity: surfaceShadow.opacity,
+              shadowRadius: surfaceShadow.radius,
               transform: environment.reducedMotion
                 ? undefined
                 : side
