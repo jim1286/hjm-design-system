@@ -36,6 +36,20 @@ Web 팝오버를 비교 구성에 연결했다. 로컬 Web23/Native mock18 검�
 현재 사이트 전체 완료는 false다. 이는 대표 페이지 검토를 전수로 보고했던 혼동을 피하기 위한
 진척 기록 방식이며 병렬 시작 자체를 조사 완료 증거로 삼지 않는다.
 
+병렬 분담과 증거 위치:
+
+- A: Minimal·Designbookmark·CTA — [조사 A](../qa/2026-10-07-reference-parallel-a.md).
+- B: 21st·Aceternity·Magic UI·Motion — [조사 B](../qa/2026-10-07-reference-parallel-b.md),
+  [Magic URL별 범위](../qa/2026-10-07-reference-parallel-b-index.json).
+- C: Component Gallery·Uiverse·3dicons·Refero — [조사 C](../qa/2026-10-07-reference-parallel-c.md),
+  [Refero URL별 범위](../qa/2026-10-07-reference-parallel-c-ledger.json).
+
+본문 checkpoint는 Magic96개 전체+2개 부분/257, Refero67개/1394(일반52+상세15)다.
+Manual·실제 화면·상태는 각 보고서의 별도 분모를 따른다. 21st의 잠긴 구현은 저장된 로그인도
+없어 미검토이며 공개 다른 자료를 계속 읽는다. Refero에서 발견한 잘못된 hex·역할 충돌·
+브랜드와 출처/이미지 불일치는 공식 원제품 구현 근거에서 제외한다. 이 checkpoint는 적용/
+승급 근거를 추적하기 위한 기록이며 사이트 전체 완료나 새 릴리스가 아니다.
+
 사용자가 여러 테마·질감을 토큰에 넣을지, 공통 기본값은 HJM에 두고 제품별로 관리할지 물었고 후자를 선택했다. 공통 규격으로 제품의 분위기가 같아지는 것을 피하면서 검증·재사용을 유지하기 위한 경계다. 기존 [브랜드 경계](../../packages/design-contracts/docs/brand-boundary.md)를 시작점으로 사용한다.
 
 | HJM이 제공할 것 | 제품이 관리할 것 |
