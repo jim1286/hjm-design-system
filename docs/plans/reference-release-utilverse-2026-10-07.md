@@ -556,5 +556,5 @@ CollectionRail 진입점과 renderer Text.fontRole, EffectSurface ruledSpacing�
 이 확인에서 버전 상승·원격 CI·앱 build/배포·소비 저장소 수정은 수행하지 않았다.
 
 원격 main 재확인: 중앙 release record blob b3bde1e6c80521361902ec8da33e3c3c287ffed0과 BurnTok contract blob d8932e5c092712e4151eaac610edb35373237d78은 1.15.0이다.
-Portfolio Site·Unairplane·Spint·Diairy·Mofun·Utilverse·Choose Window·Yajalal의 원격 main 계약은 1.14.0이다.
-공유 checkout의 dirty와 stale local refs 때문에 설치/merge를 직접 수행하지 않는다. 이미 완료된 BurnTok 갱신은 중복하지 않으며 나머지 8개를 최신 원격 main에서 분리해 갱신한다.
+22:28 KST 후속: Portfolio Site PR25와 Unairplane PR18을 게시 1.15.0으로 갱신하고 main merge 및 원격 계약을 확인했다. 제품별 frozen 설치·로컬 검사와 한계는 [완료 감사 §8](../qa/2026-10-07-reference-completion-audit.md#8-게시-1150-소비-반영--2228-kst)에 기록했다. Spint·Diairy·Mofun·Utilverse·Choose Window·Yajalal의 원격 main 계약은 아직1.14.0이다.
+공유 checkout의 dirty와 stale local refs 때문에 설치/merge를 직접 수행하지 않는다. 이미 완료된 BurnTok·Portfolio Site·Unairplane 갱신은 중복하지 않으며 나머지6개를 최신 원격 main에서 분리해 갱신한다.
