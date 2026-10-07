@@ -65,14 +65,31 @@ content-visibility를 임시로 visible로 설정한 재캡처는 Changelog 본�
 
 Accordion의 y=15,300~22,817 구간을 실제 스크롤 viewport 9장으로 연속 확인했다. 마지막 Details/Workday 예제 카드, 상세 설명·두 markup 방식·상호작용·스타일·사용 지침·각주·Resources·Name distribution·footer가 정상 표시됐다. 기존 과대 fullPage 캡처의 상단 반복을 실제 사이트 결함으로 분류하지 않는다. 기본 예제 카드 101개 확인 범위는 기존 모음에서 보인 상단 목록과 이 마지막 카드 확인을 합친 것이며 linked design system의 구현/동작 검토는 여전히 남아 있다.
 
-새 viewport 9장의 URL·위치·SHA-256·검토 시각을 작업 증거에 보존했다. 다른 페이지의 새 viewport 캡처는 아직 전수 시각 검토하지 않았다.
+새 viewport 9장의 URL·위치·SHA-256·검토 시각을 작업 증거에 보존했다.
+
+### 실제 viewport 추가 검토와 기존 API 대조
+
+후속으로 실제 viewport 모음 43장, 원본 viewport 172장을 확인했다. 초기 9장과 겹치는 것을 중복 계산하지 않는다. 홈·About·Changelog·Contribute·Design systems·컴포넌트 색인 6개 경로와 Accordion·Alert·Avatar·Badge·Breadcrumbs 5개 컴포넌트 경로는 기본 desktop/light에서 상단부터 footer까지 확인했다. Button group은 첫 viewport만 추가 확인해 전체 검토로 세지 않는다.
+
+Changelog의 실제 y=0~34,975 구간은 본문과 footer를 정상 표시한다. 기존 fullPage의 빈 구간/상단 반복은 이 실제 viewport에 나타나지 않았다. Design systems 목록 95개 카드와 컴포넌트 색인 60개 카드도 확인했으며 linked 원본 사이트의 현재 상태를 확인한 것은 아니다.
+
+갤러리의 기본 예제 카드/thumbnail은 Accordion 101, Alert 108, Avatar 38, Badge 123, Breadcrumbs 55, 합계 425개를 확인했다. 이것은 2,671개 중 기본 목록의 시각 범위이며 예제의 실제 행동·hover·dark·모바일·접근성 통과 수가 아니다. 작은 thumbnail의 내부 문구·상태는 원본 구현을 확인해야 한다.
+
+| 추가 관찰 | HJM 실제 구현 대조 | 후속 판단 |
+| --- | --- | --- |
+| Alert: inline 고지·banner·제목/본문·선택 action·닫기·상태 강조 | 양 Notice가 title/description/action/icon/tone을 제공한다. Web은 tone으로 live 역할을 정하고 Native는 announcement를 별도 선택한다 | 새 Alert wrapper를 만들지 않는다. 상시 안내/동적 고지와 확인 Dialog를 구분하고, dismissible/배치/강조 변형은 원본 행동과 기존 Toast/Notice를 비교 |
+| Avatar: 원/둥근 사각형·초기 글자·사진·상태 표시·겹친 묶음/overflow | Web Avatar는 shape와 AvatarGroup을 제공한다. Native Avatar는 이미지 host와 fallback을 제공하지만 shape prop/AvatarGroup은 현재 없다 | 같은 이름의 양 플랫폼 지원을 추정하지 않는다. Native 모양·그룹과 상태 표시가 필요한지 원본 접근성/overflow 동작을 읽고 기존 Avatar 엔진 확장으로 검토 |
+| Badge: 상태 label·카운터·dot·filled/outline·삭제/선택 chip·복합 label | 양 Badge의 variant/leading, Tag, CounterBadge, Chip/TagsInput은 서로 다른 의미를 제공한다 | 갤러리의 Tag/Chip 별칭을 API 통합 이유로 쓰지 않는다. static/selection/removal/count 의미별 기존 API에 흡수하고 compound/dot 표현만 추가 비교 |
+| Breadcrumbs: 여러 separator·현재 항목·home·중간 경로 축약/menu | Web Breadcrumb는 label/items/현재 위치/separator를 제공한다. catalog는 Native unsupported다 | separator 표현은 기존 슬롯을 쓴다. 중간 경로 overflow는 실제 탐색·포커스 확인 뒤 검토하고 Native에 Web 탐색을 자동 복제하지 않음 |
+
+위 판단은 공개 API 대응표, catalog, 양 renderer의 실제 구현과 대조한 후보 분류다. 새 변형 구현·실험 등록·기능 검증 완료를 뜻하지 않는다. 사용자 후속 요구에 따라 디자인 프리셋은 색·재질뿐 아니라 이런 상호작용·구성·화면 변형을 선택하는 경로까지 제공해야 한다. 단순 재색상으로 전 단계 요구를 완료 처리하지 않는다.
 
 ## 6. 미확인 범위와 후속 조건
 
 | 미확인 항목 | 후속 조건 |
 | --- | --- |
-| 2,671개 갤러리 예제와 하단 본문 | 이미지 로드 상태·중복·대체 텍스트를 확인하고 실제 보이는 사례를 전수 시각 검토 |
-| 모든 general-page 하단 | Changelog 본문 읽기는 완료했고 아직 보지 않은 화면 구간을 검토 |
+| 기본 thumbnail 미확인 2,246개와 나머지 하단 본문 | 확인한 425개와 분리해 실제 보이는 사례를 전수 시각 검토 |
+| general-page 추가 환경/탐색 | 기본 desktop/light 하단 확인은 완료. filter/sort/search·환경과 linked 원본은 별도 확인 |
 | filter/sort/search/테마·작은 화면·키보드 | 공개 탐색 흐름을 실제 UI로 확인. 외부 폼 제출 없음 |
 | 원본 linked implementation | 채택 권장 후보의 의미·상태·모션·접근성·의존성·라이선스를 원본과 대조 |
 | 11개 사이트 전체·HJM 실험·검증·승격·릴리스·소비 앱 | 이 사이트의 일부 확인을 전체 완료 근거로 사용하지 않고 전체 비교 후 진행 |

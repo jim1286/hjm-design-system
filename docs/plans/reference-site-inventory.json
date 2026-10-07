@@ -3457,12 +3457,12 @@
       ],
       "discoveryComplete": false,
       "sourceExtraction": {
-        "checkedAt": "2026-10-07T01:51:33.415008+00:00",
-        "totalRecords": 219,
-        "http200": 219,
+        "checkedAt": "2026-10-07T02:14:07.037825+00:00",
+        "totalRecords": 668,
+        "http200": 668,
         "errors": 0,
-        "state": "running",
-        "scope": "Fetched text pending individual source/visual/interaction review"
+        "state": "running-confirmed-session",
+        "scope": "Fetched text pending individual source/visual/interaction review; no HTML link closure claim"
       }
     },
     {
@@ -6137,18 +6137,18 @@
       ],
       "sitemapExpansionComplete": true,
       "sourceExtraction": {
-        "checkedAt": "2026-10-07T01:51:33.415008+00:00",
-        "totalRecords": 181,
-        "http200": 181,
+        "checkedAt": "2026-10-07T02:14:07.037825+00:00",
+        "totalRecords": 316,
+        "http200": 316,
         "errors": 0,
-        "state": "running",
-        "scope": "Fetched text pending individual source/visual/interaction review"
+        "state": "running-confirmed-session",
+        "scope": "Fetched text pending individual source/visual/interaction review; no HTML link closure claim"
       }
     },
     {
       "site": "component.gallery",
       "checkedOn": "2026-10-07",
-      "evidence": "Public sitemap + observed first-party anchor closure: 131 URL variants, 66 identical-content path groups. All 60 definitions and 12 detailed guidance sections read; first section of all 66 pages inspected. Every example thumbnail, lower content and interaction still incomplete.",
+      "evidence": "131 public URL variants, 66 identical-content path groups; 60 definitions/12 detailed guidance sections read. All 66 intros and default gallery full-height layouts of 11 paths reviewed. 425 basic example cards reviewed; linked behavior and remaining examples pending.",
       "sitemaps": [
         "https://component.gallery/sitemap-0.xml"
       ],
@@ -6245,14 +6245,20 @@
         "report": "../qa/2026-10-07-component-gallery-page-review.md",
         "fullPageCaptures": 66,
         "fullPageCaptureVisualReview": "pending beyond intro; capture is not review",
-        "generalPageTextReview": "home, about, contribute, design-systems and full changelog read; general-page lower visual review pending",
+        "generalPageTextReview": "All 6 general/index pages read and default desktop/light full-height layouts inspected",
         "fullScrollImageCount": 2853,
         "fullScrollImageLoadFailures": 0,
         "fullScrollPageErrors": 0,
-        "fullPageCaptureReliability": "Oversized fullPage images contain blank/repeated lower sections; not accepted as complete lower-page visual evidence. Unaltered scroll-viewport recapture in progress.",
+        "fullPageCaptureReliability": "Oversized fullPage images are superseded by 756 actual viewport captures; only specifically recorded inspected tiles count as review.",
         "additionalThumbnailReview": {
           "accordion": 101,
-          "scope": "default gallery thumbnail/card appearances, not linked implementation behavior"
+          "alert": 108,
+          "avatar": 38,
+          "badge": 123,
+          "breadcrumbs": 55,
+          "total": 425,
+          "remaining": 2246,
+          "scope": "Default gallery card/thumbnail appearances only; linked behavior, internal small thumbnail text and other environments pending"
         },
         "scrollViewportRecapture": {
           "pagesCaptured": 66,
@@ -6260,7 +6266,7 @@
           "captureErrors": 0,
           "unloadedMainImages": 0,
           "state": "finished",
-          "review": "Accordion lower-page viewport tiles 9 inspected; remaining new tiles pending",
+          "review": "172 unique actual viewport tiles inspected; 11 complete default gallery page layouts plus Button group first viewport; other tiles/interaction states pending",
           "checkedAt": "2026-10-07T02:05:05.921028+00:00"
         },
         "accordionLowerViewportReview": {
@@ -6279,6 +6285,15 @@
             "3f97b8494bcf0e362f9f1c69a6af1f09ba37d03c11c15d4c686d14d45e534f44"
           ],
           "scope": "actual lower-page visible layout and body; linked implementation and interactions pending"
+        },
+        "defaultViewportVisualReview": {
+          "checkedAt": "2026-10-07T02:14:07.037825+00:00",
+          "uniqueTiles": 172,
+          "contactSheets": 43,
+          "completeDefaultPageLayouts": 11,
+          "partialPageLayouts": 1,
+          "galleryExamples": 425,
+          "allReviewComplete": false
         }
       }
     },
@@ -6845,12 +6860,12 @@
       ],
       "discoveryComplete": false,
       "sourceExtraction": {
-        "checkedAt": "2026-10-07T01:51:33.415008+00:00",
-        "totalRecords": 220,
-        "http200": 220,
+        "checkedAt": "2026-10-07T02:14:07.037825+00:00",
+        "totalRecords": 551,
+        "http200": 551,
         "errors": 0,
-        "state": "running",
-        "scope": "Fetched text pending individual source/visual/interaction review"
+        "state": "finished-sitemap-queue",
+        "scope": "Fetched text pending individual source/visual/interaction review; no HTML link closure claim"
       }
     },
     {
@@ -19326,12 +19341,12 @@
       ],
       "sitemapExpansionComplete": true,
       "sourceExtraction": {
-        "checkedAt": "2026-10-07T01:51:33.415008+00:00",
-        "totalRecords": 818,
-        "http200": 809,
-        "errors": 9,
-        "state": "running",
-        "scope": "Fetched text pending individual source/visual/interaction review"
+        "checkedAt": "2026-10-07T02:14:07.037825+00:00",
+        "totalRecords": 1471,
+        "http200": 1461,
+        "errors": 10,
+        "state": "running-confirmed-session",
+        "scope": "Fetched text pending individual source/visual/interaction review; no HTML link closure claim"
       },
       "sourceUrlRepairs": {
         "rawSpaceUrls": 9,
@@ -21967,12 +21982,12 @@
       ],
       "discoveryComplete": false,
       "sourceExtraction": {
-        "checkedAt": "2026-10-07T01:51:33.415008+00:00",
-        "totalRecords": 219,
-        "http200": 219,
+        "checkedAt": "2026-10-07T02:14:07.037825+00:00",
+        "totalRecords": 670,
+        "http200": 670,
         "errors": 0,
-        "state": "running",
-        "scope": "Fetched text pending individual source/visual/interaction review"
+        "state": "running-confirmed-session",
+        "scope": "Fetched text pending individual source/visual/interaction review; no HTML link closure claim"
       }
     }
   ],

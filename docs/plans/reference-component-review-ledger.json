@@ -14,7 +14,19 @@
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
       "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
-      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification."
+      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification.",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T02:14:07.037825+00:00",
+        "exampleCards": 101,
+        "scope": "Default desktop/light complete gallery page layout and basic thumbnail appearances; linked implementation behavior/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "existingApiComparison": {
+        "checkedAt": "2026-10-07T02:14:07.037825+00:00",
+        "sources": "public API map, catalog and both renderer source implementations",
+        "finding": "Divider/bordered/card/inline disclosure and indicator appearances: existing Accordion/Collapsible first; linked behavior still pending.",
+        "decision": "pending-linked-source-and-interaction-review"
+      }
     },
     {
       "url": "https://component.gallery/components/alert/",
@@ -27,7 +39,19 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T02:14:07.037825+00:00",
+        "exampleCards": 108,
+        "scope": "Default desktop/light complete gallery page layout and basic thumbnail appearances; linked implementation behavior/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "existingApiComparison": {
+        "checkedAt": "2026-10-07T02:14:07.037825+00:00",
+        "sources": "public API map, catalog and both renderer source implementations",
+        "finding": "Existing Web/RN Notice supports title/description/action/icon/tone; announcement behavior differs. Dismissal/placement/emphasis need source comparison; AlertDialog is a different decision contract.",
+        "decision": "pending-linked-source-and-interaction-review"
+      }
     },
     {
       "url": "https://component.gallery/components/avatar/",
@@ -40,7 +64,19 @@
       "adoptionDecision": "Keep existing group API; fix misused 40x40 leading slot by composing Card body + Stack. Isolate +3 direction in example. No evidence to replace engine or add hover-only expansion. Native group and interactive member disclosure remain review candidates. docs/qa/2026-10-07-avatar-breadcrumb-reference.md",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T02:14:07.037825+00:00",
+        "exampleCards": 38,
+        "scope": "Default desktop/light complete gallery page layout and basic thumbnail appearances; linked implementation behavior/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "existingApiComparison": {
+        "checkedAt": "2026-10-07T02:14:07.037825+00:00",
+        "sources": "public API map, catalog and both renderer source implementations",
+        "finding": "Web shape/AvatarGroup exist; Native renderImage/fallback exists but shape/group are absent. Inspect source behavior/accessibility before recommending parity extensions.",
+        "decision": "pending-linked-source-and-interaction-review"
+      }
     },
     {
       "url": "https://component.gallery/components/badge/",
@@ -53,7 +89,19 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T02:14:07.037825+00:00",
+        "exampleCards": 123,
+        "scope": "Default desktop/light complete gallery page layout and basic thumbnail appearances; linked implementation behavior/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "existingApiComparison": {
+        "checkedAt": "2026-10-07T02:14:07.037825+00:00",
+        "sources": "public API map, catalog and both renderer source implementations",
+        "finding": "Use Badge/Tag/CounterBadge/Chip/TagsInput according to static/count/selection/removal semantics; filled/outline/leading exist. Compound/dot appearances need source review.",
+        "decision": "pending-linked-source-and-interaction-review"
+      }
     },
     {
       "url": "https://component.gallery/components/breadcrumbs/",
@@ -67,7 +115,19 @@
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
       "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
-      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification."
+      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification.",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T02:14:07.037825+00:00",
+        "exampleCards": 55,
+        "scope": "Default desktop/light complete gallery page layout and basic thumbnail appearances; linked implementation behavior/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "existingApiComparison": {
+        "checkedAt": "2026-10-07T02:14:07.037825+00:00",
+        "sources": "public API map, catalog and both renderer source implementations",
+        "finding": "Web current item/separator slots exist; Native is unsupported. Overflow menu behavior needs source verification; no automatic Native route duplication.",
+        "decision": "pending-linked-source-and-interaction-review"
+      }
     },
     {
       "url": "https://component.gallery/components/button-group/",
