@@ -74,7 +74,7 @@ import { Button } from "@hjmds/react-native/actions";
 | `tone` | `default` · `raised` · `accent` · `sunken` · `subtle`(Surface tone) | `default` | — |
 | `bordered` | `boolean` | `true` | Surface 기본 `false`와 다르다 |
 | `padding` | spacing 이름 | `md`(16) | — |
-| `radius` | radius 이름 | `lg`(16) | — |
+| `radius` | radius 이름 | `lg`(foundation 16) | 선택한 designProfile의 같은 radius 역할로 frame과 media clip을 함께 변경 |
 | `selected` | `boolean` | `false` | `true`면 tone이 `accent`로 바뀐다(`cardRecipe.selectedTone`) |
 | `headingLevel`(Web만) | `2` · `3` · `4` | `3` | 제목이 `h3`로 렌더되므로 문서 위계에 맞춰 고른다 |
 | `title` · `description` · `leading` · `media` · `actions` · `children` | `ReactNode` | — | 슬롯. 순서는 HJM이 고정한다 |
@@ -108,9 +108,13 @@ Card 자체에는 콜백이 없다. 누름 행동은 `actions`의 Button(Web `on
 | root | `<article>` | `View`(Surface) |
 | 제목 | `h{headingLevel}` | `Text` + `accessibilityRole="header"`, 수준 지정 없음 |
 | 배치 | `layoutStyle` | `layoutStyle` |
-| 내용 clip | tone의 `clipsContent`(`raised`는 그림자 때문에 clip 안 함) | 내부 `View`가 항상 clip, 그림자는 바깥에 남는다 |
+| 내용 clip | tone의 `clipsContent`(`raised`는 그림자 때문에 clip 안 함) | 내부 `View`가 항상 clip, 그림자는 바깥에 남는다. frame과 clip이 같은 Provider radius token을 사용 |
 
 ## 함정
+
+- `radius="lg"`는 모든 테마에서 16px이라는 뜻이 아니다. foundation에서는 16이고, designProfile이
+  등록되면 그 테마의 `tokens.radius.lg`를 쓴다. 2026-10-07 카드 갤러리 비교에서 Native의 바깥
+  Surface만 테마를 따르고 내부 media clip은 foundation 값을 쓰는 누락을 발견해 같은 token으로 연결했다.
 
 - `selected`는 tone만 바꾼다. Web은 `data-state="selected"` 속성뿐이고 Native는 접근성 state를
   알리지 않는다. 선택 가능한 카드 목록이라면 선택 상태를 문구나 다른 컨트롤로도 전달한다.

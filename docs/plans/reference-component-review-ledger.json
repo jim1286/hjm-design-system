@@ -141,7 +141,19 @@
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
       "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
-      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification."
+      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification.",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:10:19.652933+00:00",
+        "exampleCards": 35,
+        "scope": "Default desktop/light complete gallery page layout and basic thumbnail appearances; linked implementation behavior/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "existingApiComparison": {
+        "checkedAt": "2026-10-07T03:10:19.652933+00:00",
+        "sources": "public API map, catalog and both renderer source implementations",
+        "finding": "Existing Button/Stack compose related actions; ToggleGroup and SegmentedControl own selection. Connected/spacing/primary-secondary appearances are candidates; split action needs original Menu/focus behavior review, not a new duplicated selection engine.",
+        "decision": "pending-linked-source-and-interaction-review"
+      }
     },
     {
       "url": "https://component.gallery/components/button/",
@@ -155,7 +167,19 @@
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
       "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
-      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification."
+      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification.",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:10:19.652933+00:00",
+        "exampleCards": 118,
+        "scope": "Default desktop/light complete gallery page layout and basic thumbnail appearances; linked implementation behavior/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "existingApiComparison": {
+        "checkedAt": "2026-10-07T03:10:19.652933+00:00",
+        "sources": "public API map, catalog and both renderer source implementations",
+        "finding": "Both Button renderers expose tone/size/shape/align/selected/loading and leading/trailing; IconButton supplies named icon actions. Floating placement, timers and split actions need separate product/interaction contracts. Do not infer behavior from thumbnails.",
+        "decision": "pending-linked-source-and-interaction-review"
+      }
     },
     {
       "url": "https://component.gallery/components/card/",
@@ -168,7 +192,19 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:10:19.652933+00:00",
+        "exampleCards": 77,
+        "scope": "Default desktop/light complete gallery page layout and basic thumbnail appearances; linked implementation behavior/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "existingApiComparison": {
+        "checkedAt": "2026-10-07T03:10:19.652933+00:00",
+        "sources": "public API map, catalog and both renderer source implementations",
+        "finding": "Both Card renderers expose media/title/description/body/actions over Surface. Native inner media clip still used foundation radius while outer Surface used profile radius; corrected to Provider tokens in this follow-up and verified with 48 Node renderer combinations. Nested actions/whole-card navigation remain separate semantic contracts.",
+        "decision": "pending-linked-source-and-interaction-review"
+      }
     },
     {
       "url": "https://component.gallery/components/carousel/",
@@ -182,7 +218,19 @@
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
       "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
-      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification."
+      "guidanceReview": "2026-10-07: complete Description/markup/interactivity/usage/resource sections read; technical claims require primary-spec verification.",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:10:19.652933+00:00",
+        "exampleCards": 22,
+        "scope": "Default desktop/light complete gallery page layout and basic thumbnail appearances; linked implementation behavior/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "existingApiComparison": {
+        "checkedAt": "2026-10-07T03:10:19.652933+00:00",
+        "sources": "public API map, catalog and both renderer source implementations",
+        "finding": "Both Carousel renderers own finite keyed selection and preserved hidden slides, explicit navigation, autoplay pauses and reduced motion; optional CarouselMotion owns peer swipe/motion. Filmstrip/multiple-visible/peek appearances need original behavior review and a visible-items/focus contract; no parity inferred from a single-active implementation.",
+        "decision": "pending-linked-source-and-interaction-review"
+      }
     },
     {
       "url": "https://component.gallery/components/checkbox/",
@@ -195,7 +243,19 @@
       "adoptionDecision": "pending",
       "definitionReview": "2026-10-07: full definition and aliases read across 60 component pages; example metadata/content and interactions separate.",
       "pageIntroVisualReview": "2026-10-07: default desktop/light first section and first visible example rows inspected; every thumbnail and lower page content still pending.",
-      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      "pageReviewEvidence": "../qa/2026-10-07-component-gallery-page-review.md",
+      "defaultGalleryPageReview": {
+        "checkedAt": "2026-10-07T03:10:19.652933+00:00",
+        "exampleCards": 84,
+        "scope": "Default desktop/light complete gallery page layout and basic thumbnail appearances; linked implementation behavior/other environments pending",
+        "evidence": "../qa/2026-10-07-component-gallery-page-review.md"
+      },
+      "existingApiComparison": {
+        "checkedAt": "2026-10-07T03:10:19.652933+00:00",
+        "sources": "public API map, catalog and both renderer source implementations",
+        "finding": "Both Checkbox renderers expose description/presentation/leading render slots and share next-state semantics; CheckboxGroup owns multiple selection. Choice-card appearance should use this existing engine; checked/indeterminate/disabled/readOnly behavior and clickable label boundaries need original implementation review.",
+        "decision": "pending-linked-source-and-interaction-review"
+      }
     },
     {
       "url": "https://component.gallery/components/color-picker/",

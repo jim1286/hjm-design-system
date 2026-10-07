@@ -84,11 +84,35 @@ Changelog의 실제 y=0~34,975 구간은 본문과 footer를 정상 표시한다
 
 위 판단은 공개 API 대응표, catalog, 양 renderer의 실제 구현과 대조한 후보 분류다. 새 변형 구현·실험 등록·기능 검증 완료를 뜻하지 않는다. 사용자 후속 요구에 따라 디자인 프리셋은 색·재질뿐 아니라 이런 상호작용·구성·화면 변형을 선택하는 경로까지 제공해야 한다. 단순 재색상으로 전 단계 요구를 완료 처리하지 않는다.
 
+### 후속: 버튼·카드·캐러셀·체크박스 하단
+
+실제 viewport 모음 44~65번을 추가로 직접 확인했다. 새 88개 viewport를 기존 172개와
+합쳐 **65모음 / 260개 고유 viewport**다. Button group·Button·Card·Carousel·Checkbox는
+각각 상단부터 footer까지 확인했고, 완전히 확인한 기본 desktop/light 갤러리 경로는
+기존 11개에서 16개가 됐다. 원본 구현의 모든 상태를 검토한 수치가 아니다.
+
+| 추가 경로 | 기본 예제 카드 수 | 시각 관찰과 기존 HJM 대조 |
+| --- | --- | --- |
+| Button group | 35 | 연결된 버튼·분리된 primary/secondary·toggle·split action이 섞인다. 행동 묶음은 Button+Stack, 선택은 ToggleGroup/SegmentedControl을 먼저 사용한다. Menu 초점·기본 행동은 split action 원본에서 별도 확인 |
+| Button | 118 | solid/outline/link·pill·아이콘·floating·timed·split 표현. 양 Button의 tone/size/shape/align/selected/loading/leading/trailing과 IconButton을 먼저 사용한다. 타이머·floating 배치·서버 확정은 thumbnail로 추정하지 않음 |
+| Card | 77 | media 위/옆·본문/metadata·독립 action·선택·문서 카드가 보인다. 양 Card의 media/title/description/children/actions 슬롯과 DocumentResource를 비교. 카드 전체 링크와 내부 버튼은 다른 의미로 유지 |
+| Carousel | 22 | 단일 슬라이드·filmstrip·부분 노출·여러 항목·banner·indicator 표현. 양 Carousel/CarouselMotion은 유한 keyed 선택과 단일 active 의미를 제공한다. 여러 보이는 항목·peek는 새 가시성/초점 계약을 검토해야 하며 현재 API로 동등하다고 표현하지 않음 |
+| Checkbox | 84 | 기본 행·설명·그룹·카드형·선택/미선택·중간 상태 thumbnail. 양 Checkbox의 presentation/description/leading과 CheckboxGroup 엔진을 우선한다. Card.selected를 다중 선택 엔진으로 대체하지 않음 |
+
+추가 336개와 기존 425개를 합쳐 기본 thumbnail/card 표현 **761/2,671개**를 확인했다.
+갤러리 footer·Resources·이름 분포까지 읽었으며 linked 원본, hover·실제 선택·모션·추가
+환경·작은 thumbnail 내부 문구는 여전히 별도 검토 대상이다.
+
+Card를 대조하다 Native 내부 media clip은 foundation radius, 외부 Surface는 Provider
+profile radius를 쓰는 실제 누락을 발견했다. 내부도 같은 토큰에 연결했고,
+[테마 QA 후속](2026-10-07-design-profile-research.md#후속-native-card의-테마-모서리)에
+수정 전·후 및 Node 검사 범위를 기록했다. 이는 원본 Card 77개의 실제 동작을 검증했다는 뜻이 아니다.
+
 ## 6. 미확인 범위와 후속 조건
 
 | 미확인 항목 | 후속 조건 |
 | --- | --- |
-| 기본 thumbnail 미확인 2,246개와 나머지 하단 본문 | 확인한 425개와 분리해 실제 보이는 사례를 전수 시각 검토 |
+| 기본 thumbnail 미확인 1,910개와 나머지 하단 본문 | 확인한 761개와 분리해 실제 보이는 사례를 전수 시각 검토 |
 | general-page 추가 환경/탐색 | 기본 desktop/light 하단 확인은 완료. filter/sort/search·환경과 linked 원본은 별도 확인 |
 | filter/sort/search/테마·작은 화면·키보드 | 공개 탐색 흐름을 실제 UI로 확인. 외부 폼 제출 없음 |
 | 원본 linked implementation | 채택 권장 후보의 의미·상태·모션·접근성·의존성·라이선스를 원본과 대조 |

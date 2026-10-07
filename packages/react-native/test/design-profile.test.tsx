@@ -3,10 +3,12 @@ import { TextInput, View } from "react-native";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { expect, it, vi } from "vitest";
 import { hjmDesignPresets, type HjmDesignPreset } from "@hjmds/design-contracts/design-profile";
+import { radius as foundationRadius } from "@hjmds/design-contracts/foundations";
 import { HjmNativeProvider } from "../src/provider.js";
 import { OverviewScreen } from "../src/design-profile.js";
 import { Surface, Text } from "../src/primitives.js";
 import { Collapsible } from "../src/collapsible.js";
+import { Card } from "../src/data-display.js";
 
 // Substitute only the native drawing host. Real profile/grid/screen/state code
 // runs here; device rendering and optional SVG availability need separate QA.
@@ -67,4 +69,26 @@ it("centers landscape headings and removes platform elevation when a profile req
     </HjmNativeProvider>));
     expect(tree.root.findByType(Surface).findAllByType(View)[0]!.props.style[1].elevation).toBe(0);
   } finally { act(() => tree.unmount()); }
+});
+
+it("keeps card media clipping aligned with the themed surface across profiles, modes and explicit radius roles", () => {
+  let tree!: ReactTestRenderer;
+  try {
+    for (const preset of [undefined, ...Object.keys(hjmDesignPresets) as HjmDesignPreset[]]) {
+      for (const theme of ["light", "dark"] as const) {
+        for (const cornerRadius of ["sm", "lg"] as const) {
+          const render = <HjmNativeProvider theme={theme} reducedMotion {...(preset === undefined ? {} : { designProfile: hjmDesignPresets[preset] })}>
+            <Card title="사진이 있는 카드" tone="raised" radius={cornerRadius} media={<Text>대표 이미지 host</Text>} />
+          </HjmNativeProvider>;
+          act(() => { if (tree) tree.update(render); else tree = create(render); });
+          const expected = (preset === undefined ? foundationRadius : hjmDesignPresets[preset].tokens.radius)[cornerRadius];
+          const frame = tree.root.findByType(Surface).findAllByType(View)[0]!;
+          const mediaClip = tree.root.findByType(Card).findAllByType(View).find(node => node.props.style?.overflow === "hidden")!;
+          expect(frame.props.style[0].borderRadius).toBe(expected);
+          expect(mediaClip.props.style.borderRadius).toBe(expected);
+          expect(frame.props.style[0].overflow).toBe("visible");
+        }
+      }
+    }
+  } finally { if (tree) act(() => tree.unmount()); }
 });

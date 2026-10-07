@@ -89,12 +89,12 @@ export function Tag({ children, tone, accessibilityLabel, layoutStyle, style, la
         ], children: _jsx(Text, { align: "center", emphasis: "medium", style: [{ color: presentation.content }, labelStyle], variant: tagRecipe.size.textVariant, children: descriptor.label }) }));
 }
 export function Card({ children, title, description, leading, media, actions, selected = cardRecipe.defaults.selected, tone = cardRecipe.defaults.tone, bordered = cardRecipe.defaults.bordered, padding = cardRecipe.defaults.padding, layoutStyle, radius: cornerRadius = surfaceDefaults.radius, ...props }) {
-    const { environment } = useHjmNativeTheme();
+    const { environment, tokens } = useHjmNativeTheme();
     const bodyPadding = surfaceGeometry.paddings[padding];
     const hasHeader = leading !== undefined || title !== undefined || description !== undefined;
     return (_jsx(Surface, { ...props, bordered: bordered, padding: "none", radius: cornerRadius, ...(layoutStyle === undefined ? {} : { layoutStyle }), tone: selected ? cardRecipe.selectedTone : tone, children: _jsxs(View, { style: {
                 overflow: "hidden",
-                borderRadius: surfaceGeometry.radii[cornerRadius],
+                borderRadius: tokens.radius[cornerRadius],
             }, children: [media === undefined ? null : _jsx(View, { children: media }), _jsxs(View, { style: { gap: cardRecipe.body.gap, padding: bodyPadding }, children: [hasHeader ? (_jsxs(View, { style: {
                                 alignItems: "flex-start",
                                 direction: environment.direction,

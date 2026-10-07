@@ -6148,7 +6148,7 @@
     {
       "site": "component.gallery",
       "checkedOn": "2026-10-07",
-      "evidence": "131 public URL variants, 66 identical-content path groups; 60 definitions/12 detailed guidance sections read. All 66 intros and default gallery full-height layouts of 11 paths reviewed. 425 basic example cards reviewed; linked behavior and remaining examples pending.",
+      "evidence": "131 public URL variants, 66 identical-content path groups; 60 definitions/12 detailed guidance sections read. All 66 intros and default gallery full-height layouts of 16 paths reviewed. 761 basic example cards reviewed; linked behavior and remaining examples pending.",
       "sitemaps": [
         "https://component.gallery/sitemap-0.xml"
       ],
@@ -6256,9 +6256,14 @@
           "avatar": 38,
           "badge": 123,
           "breadcrumbs": 55,
-          "total": 425,
-          "remaining": 2246,
-          "scope": "Default gallery card/thumbnail appearances only; linked behavior, internal small thumbnail text and other environments pending"
+          "total": 761,
+          "remaining": 1910,
+          "scope": "Default gallery card/thumbnail appearances only; linked behavior, internal small thumbnail text and other environments pending",
+          "button-group": 35,
+          "button": 118,
+          "card": 77,
+          "carousel": 22,
+          "checkbox": 84
         },
         "scrollViewportRecapture": {
           "pagesCaptured": 66,
@@ -6266,7 +6271,7 @@
           "captureErrors": 0,
           "unloadedMainImages": 0,
           "state": "finished",
-          "review": "172 unique actual viewport tiles inspected; 11 complete default gallery page layouts plus Button group first viewport; other tiles/interaction states pending",
+          "review": "260 unique actual viewport tiles inspected; 16 complete default gallery page layouts; other tiles/interaction states pending",
           "checkedAt": "2026-10-07T02:05:05.921028+00:00"
         },
         "accordionLowerViewportReview": {
@@ -6287,12 +6292,12 @@
           "scope": "actual lower-page visible layout and body; linked implementation and interactions pending"
         },
         "defaultViewportVisualReview": {
-          "checkedAt": "2026-10-07T02:14:07.037825+00:00",
-          "uniqueTiles": 172,
-          "contactSheets": 43,
-          "completeDefaultPageLayouts": 11,
-          "partialPageLayouts": 1,
-          "galleryExamples": 425,
+          "checkedAt": "2026-10-07T03:10:19.652933+00:00",
+          "uniqueTiles": 260,
+          "contactSheets": 65,
+          "completeDefaultPageLayouts": 16,
+          "partialPageLayouts": 0,
+          "galleryExamples": 761,
           "allReviewComplete": false
         }
       }

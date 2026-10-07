@@ -313,7 +313,7 @@ export function Card({
   radius: cornerRadius = surfaceDefaults.radius,
   ...props
 }: CardProps) {
-  const { environment } = useHjmNativeTheme();
+  const { environment, tokens } = useHjmNativeTheme();
   const bodyPadding = surfaceGeometry.paddings[padding];
   const hasHeader =
     leading !== undefined || title !== undefined || description !== undefined;
@@ -326,11 +326,12 @@ export function Card({
       {...(layoutStyle === undefined ? {} : { layoutStyle })}
       tone={selected ? cardRecipe.selectedTone : tone}
     >
-      {/* Clip card content independently so raised Surface shadows can remain outside the frame. */}
+      {/* The inner clip must use the same theme radius as Surface; foundation-only
+          geometry left images mismatched after profile changes. Keep shadows outside. */}
       <View
         style={{
           overflow: "hidden",
-          borderRadius: surfaceGeometry.radii[cornerRadius],
+          borderRadius: tokens.radius[cornerRadius],
         }}
       >
         {media === undefined ? null : <View>{media}</View>}
