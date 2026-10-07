@@ -196,3 +196,27 @@ Provider typography를 읽는다. PasswordField는 같은 줄 높이로 프레�
 semantic foreground/background와 공유 radius scale을 소비 컴포넌트에 연결한다. HJM도 기존
 semantic role을 재사용하되 CSS 생성기·단일 비율 radius를 새 의존성으로 도입하지 않는다.
 기존 프로필의 sm/md/lg/xl 개별 값과 네이티브 번역·상태 계약을 유지하는 선택이다.
+
+
+## Native UI 서체의 실제 host 연결
+
+2026-10-07 raw Text/TextInput 대조에서 Text는 UI 서체를 읽었지만 FieldRenderer,
+Combobox, NumberField, Slider, TagsInput, optional GestureSheetInput과 CodeBlock 제목은
+시스템 서체를 유지했다. [React Native 텍스트 상속](https://reactnative.dev/docs/text)은 Text
+하위 트리에 한정되므로 상위 View 스타일만으로 해결하지 않는다. 내부 font resolver를 공유하고
+각 입력/라벨 host에서 Provider의 UI 역할을 읽는다. CodeBlock 원문만 code 역할을 유지한다.
+고정 체크·닫기 glyph와 투명 OTP editor는 기존 의미를 유지한다.
+
+기본 UI stack 전체는 Native OS 서체로 유지한다. 첫 항목만 비교하면 제품이 직접 등록한
+`ui: ["Inter"]`까지 기본 stack으로 오인하므로 전체 stack과 비교한다. 제품의 명시적인 named
+font는 첫 항목을 Native에 전달한다. Native는 CSS fallback 목록을 그대로 해석하지 않는다.
+`ui-monospace`/`monospace`는 기존 iOS Menlo·Android monospace로 번역한다. 나머지 제품 font는
+유효한 플랫폼 등록 이름과 글리프/굵기 지원을 제품이 검증해야 한다. 제품 자산은 HJM에 번들하지 않는다.
+
+TagsInput의 실제 입력칸은 body 글자·줄 높이와 같은 controlled scale을 한 번만 읽는다.
+부모/중첩 프로필 전환은 입력 요소·초안·NumberField의 미확정 숫자·검색어를 유지한다.
+[Refero token 지침](https://styles.refero.design/ai-agents/css-variables-design-tokens)의 역할 소비,
+[컴포넌트 비교](https://styles.refero.design/ai-agents/component-design-prompts)의 반복되는 서체 역할,
+[검수 지침](https://styles.refero.design/ai-agents/agentic-ui-quality-checklist)의 실제 상태 검토를
+기존 HJM 계약과 대조한 후속 보완이다. linked 제품 소스와 모든 상태를 검수한 결과는 아니다.
+실제 기기의 폰트 로딩·텍스트 줄바꿈·접근성 증거는 계속 별도 검증한다.

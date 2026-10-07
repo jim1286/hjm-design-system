@@ -26,6 +26,7 @@ import { useControllableState } from "./internal/state.js";
 import {
   logicalTextAlign,
   minimumTargetStyle,
+  resolveNativeFontStyle,
   resolveNativeTextScaleProps,
 } from "./internal/styles.js";
 import { useHjmNativeTheme } from "./provider.js";
@@ -211,7 +212,7 @@ export const NumberField = forwardRef<TextInput, NumberFieldProps>(
     const scaledText = (
       style: StyleProp<TextStyle>,
       allowFontScaling?: boolean,
-    ) => resolveNativeTextScaleProps(textScaling, style, allowFontScaling);
+    ) => resolveNativeTextScaleProps(textScaling, [resolveNativeFontStyle(tokens.fontFamily.ui), style], allowFontScaling);
 
     return (
       <View style={[{ gap: numberFieldRecipe.support.gap }, containerStyle, layoutStyle]}>

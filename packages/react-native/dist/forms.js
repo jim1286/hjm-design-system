@@ -12,7 +12,7 @@ import { AccessibilityInfo, ActivityIndicator, Modal, Pressable, ScrollView, Tex
 import { Button } from "./actions.js";
 import { useControllableState } from "./internal/state.js";
 import { scheduleAfterNativeModalTeardown, shouldAwaitNativeModalDismiss, } from "./internal/modal-lifecycle.js";
-import { logicalTextAlign, minimumTargetStyle, resolveNativeTextScaleProps, } from "./internal/styles.js";
+import { logicalTextAlign, minimumTargetStyle, resolveNativeFontStyle, resolveNativeTextScaleProps, } from "./internal/styles.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "./provider.js";
 import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
@@ -408,6 +408,7 @@ export function Combobox({ label, accessibilityLabel, items, sections, source: s
     const densityContract = comboboxRecipe.density[density];
     const inputTypography = theme.tokens.typography[sizeContract.textVariant];
     const inputTextScaleProps = resolveNativeTextScaleProps(theme.textScaling, {
+        ...resolveNativeFontStyle(theme.tokens.fontFamily.ui),
         color: colors.text,
         flex: 1,
         fontSize: inputTypography.fontSize,

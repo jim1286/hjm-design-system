@@ -1,6 +1,10 @@
 import { spacing } from "@hjmds/design-contracts/foundations";
 import { type StyleProp, type TextStyle, type ViewStyle } from "react-native";
 export type SpacingToken = keyof typeof spacing;
+/** Native font inheritance stops at Text subtrees (reactnative.dev/docs/text).
+ * Resolve the same profile at every editor/raw text host rather than styling a
+ * parent View. Keep the neutral UI on its OS default; apps register custom fonts. */
+export declare function resolveNativeFontStyle(stack: readonly string[], role?: "ui" | "code"): Pick<TextStyle, "fontFamily">;
 export declare const minimumTargetStyle: {
     readonly minHeight: 44;
     readonly minWidth: 44;

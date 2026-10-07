@@ -9,15 +9,21 @@ import { Pressable, TextInput, View } from "react-native";
 import { Text } from "./primitives.js";
 import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
+import { resolveNativeFontStyle, resolveNativeTextScaleProps } from "./internal/styles.js";
 export function TagsInput({ label, tags: controlledTags, defaultTags, onTagsChange, onReject, onDraftChange, policy, suggestions, suggestionsLabel, composeRemoveLabel, placeholder, description, disabled = false, layoutStyle, style, }) {
     warnDeprecatedStyleProps("TagsInput", { style }, "layoutStyle for placement; tagsInputRecipe owns appearance");
-    const { palette, tokens } = useHjmNativeTheme();
+    const { palette, tokens, textScaling } = useHjmNativeTheme();
     const [internal, setInternal] = useState(defaultTags ?? []);
     const tags = controlledTags ?? internal;
     const [draft, setDraft] = useState("");
     const border = resolveColorReference(tagsInputRecipe.frame.border, palette);
     const surface = resolveColorReference(tagsInputRecipe.tag.background, palette);
     const content = resolveColorReference(tagsInputRecipe.tag.color, palette);
+    const inputText = resolveNativeTextScaleProps(textScaling, [
+        tokens.typography[fieldRecipe.textVariant],
+        resolveNativeFontStyle(tokens.fontFamily.ui),
+        { flexGrow: 1, minWidth: 80, color: content },
+    ]);
     const setTags = (next) => {
         if (controlledTags === undefined)
             setInternal(next);
@@ -33,6 +39,8 @@ export function TagsInput({ label, tags: controlledTags, defaultTags, onTagsChan
         setTags([...tags, result.value]);
         changeDraft("");
     };
+    // A suggestion row is a touch target, not a tag chip: tag.minHeight (28) left
+    // these rows under 44 (2026-10-06 follow-up). Both renderers use the target role.
     return (_jsxs(View, { style: [{ gap: tagsInputRecipe.frame.gap }, style, layoutStyle], children: [_jsx(Text, { variant: "label", style: disabled ? { opacity: fieldRecipe.disabledOpacity } : undefined, children: label }), _jsxs(View, { style: {
                     backgroundColor: resolveColorReference(tagsInputRecipe.frame.background, palette),
                     minHeight: tagsInputRecipe.frame.minHeight,
@@ -62,9 +70,6 @@ export function TagsInput({ label, tags: controlledTags, defaultTags, onTagsChan
                         // Return adds a tag and the next one follows, so keep the keyboard up.
                         // The single-line default ("blurAndSubmit") closed it after every tag
                         // (2026-09-30 audit). blurOnSubmit is deprecated in RN 0.81.
-                        submitBehavior: "submit", style: { flexGrow: 1, minWidth: 80, color: content } })] }), suggestions !== undefined && suggestions.length > 0 && draft.trim().length > 0 ? (_jsx(View, { accessibilityLabel: suggestionsLabel, style: { gap: spacing.xxs }, children: suggestions.map((item) => (_jsx(Pressable, { accessibilityRole: "button", accessibilityState: { disabled: item.disabled === true }, disabled: item.disabled === true || disabled, onPress: () => commit(item.value ?? item.label), 
-                    // A suggestion row is a touch target, not a tag chip: `tag.minHeight` (28) is the chip's
-                    // visual height and left these rows under 44 (2026-10-06 follow-up). Web already uses 44.
-                    style: { minHeight: control.minTouchTarget, justifyContent: "center", paddingHorizontal: spacing.xs }, children: _jsx(Text, { style: { color: content }, children: item.label }) }, item.id))) })) : null, description ? _jsx(Text, { tone: "muted", variant: "caption", children: description }) : null] }));
+                        submitBehavior: "submit", ...inputText })] }), suggestions !== undefined && suggestions.length > 0 && draft.trim().length > 0 ? (_jsx(View, { accessibilityLabel: suggestionsLabel, style: { gap: spacing.xxs }, children: suggestions.map((item) => (_jsx(Pressable, { accessibilityRole: "button", accessibilityState: { disabled: item.disabled === true }, disabled: item.disabled === true || disabled, onPress: () => commit(item.value ?? item.label), style: { minHeight: control.minTouchTarget, justifyContent: "center", paddingHorizontal: spacing.xs }, children: _jsx(Text, { style: { color: content }, children: item.label }) }, item.id))) })) : null, description ? _jsx(Text, { tone: "muted", variant: "caption", children: description }) : null] }));
 }
 //# sourceMappingURL=tags-input.js.map

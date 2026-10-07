@@ -593,3 +593,101 @@ Designbookmark/21st 원래 process는 실제 live 확인했고 계속 수집한�
 - `hjm-token-consumers-showcase-build.log` SHA-256 `dfe4dd21e045ffa7a7430138db50455abfd8eb70a5999326d02889fe34787d8c`.
 
 후속 변경의 docs 567 Markdown, usage/evidence 및 Storybook 421파일/929Web id 정적 검사 통과. 이 검사들은 실제 기기·사이트 전수 검토·npm 게시 완료를 증명하지 않는다.
+
+
+## 후속 적용: Native UI 서체·입력 host
+
+기준: main `1bb40eb3febe5557cca38106aeb1e78ebf905c35` 이후 미게시 변경.
+직접 foundation import 감사에 잡히지 않는 **서체를 아예 읽지 않는 host**를 별도로 대조했다.
+버전/원격 CI/npm/소비 앱 변경 없음.
+
+### 원본 조사와 실제 페이지 검토
+
+[Refero token 지침](https://styles.refero.design/ai-agents/css-variables-design-tokens),
+[컴포넌트 비교](https://styles.refero.design/ai-agents/component-design-prompts),
+[UI 검수 지침](https://styles.refero.design/ai-agents/agentic-ui-quality-checklist)의 전체 보이는 본문을
+읽고 실제 1280px desktop/light 기본 페이지 레이아웃을 끝까지 캡처·대조했다. 각 캡처 후 unloaded
+image=0. 페이지 높이는 각각 5326/4255/5298px이다. 첫 페이지의 초기 lazy image27은 전체 캡처 후0이다.
+
+- token 역할을 반복 소비하고 하드코딩 예외를 찾아야 한다는 지침을 Native의 실제 host 경로와 비교했다.
+- 컴포넌트 문서의 mono/neutral·밀집 상태·반복 모티프 설명과 palette/typography 구역을 확인했다.
+  원제품 서체/이미지/팔레트 값을 가져오지 않고 기존 HJM UI/code 역할 구분을 재사용했다.
+- 검수 문서의 실제 상태·내용 길이·작은 화면 조건은 기존 HJM 검증 범위와 대조했다.
+  이번에는 Native source/mock-host 회귀까지이며 새로운 기기/작은 화면 검증 성공을 주장하지 않는다.
+
+기본 카드 썸네일의 외형만 봤으며 내부의 작은 글자, 연결된 모든 style/detail 페이지, hover/모션/다른
+viewport까지 읽었다고 세지 않는다. 3개 guidance 검토는 ledger/inventory에 별도 기록하고 전체 완료 flag는 false다.
+[RN Text 상속](https://reactnative.dev/docs/text)과 [TextInput](https://reactnative.dev/docs/textinput)의
+공식 계약도 대조했다. Native 서체는 상위 View에서 모든 자식에게 CSS처럼 상속되지 않는다.
+
+### 누락·기존 API 비교·수정
+
+- `Text`의 기존 font 선택을 내부 `resolveNativeFontStyle`로 합성했다. FieldRenderer가 제공하는
+  TextField/TextArea/SearchField/PasswordField, Combobox editor, NumberField의 입력/라벨/지원 문구,
+  Slider의 라벨/값, TagsInput editor, optional GestureSheetInput과 CodeBlock 제목에 같은 UI 역할을 연결했다.
+  공개 wrapper·새 상태 엔진·export·peer/dependency를 추가하지 않는다.
+- code 원문과 span은 기존 code 역할/LTR/selectable 계약을 유지한다. 제목은 UI 역할로 구분한다.
+- 기본 UI stack 전체는 OS 서체를 유지한다. 이전 Text는 첫 항목이 Inter인지로 기본값을 판정해
+  제품이 등록한 `ui: ["Inter"]`도 무시했다. 전체 stack을 비교하고 이 명시적 등록 이름은 전달하도록 수정했다.
+  ui-monospace/monospace의 iOS Menlo/Android monospace 번역을 공유한다. 실제 등록·굵기·글리프 성공은 제품 소유다.
+- TagsInput의 editor에는 기존 body 크기/행간까지 전달한다. controlled scale2에서 추가 Native 배율을 끄고
+  profile body19/30은38/60, neutral14/20은28/40으로 해석한다. 초안/태그/키보드 submit 계약은 유지한다.
+- TypeScript import symbol 기준 RN Text/TextInput JSX를 대조한 결과 **9파일20개 host site**다.
+  UI13, code 원문/상속 span2, 고정 체크/닫기 glyph4, 투명 OTP editor1로 분류했다. optional Gorhom input1은
+  별도 연결·검사했다. 이 목록은 해당 RN named import의 JSX만 찾으며 모든 외부 host/렌더링/토큰 감사 완료가 아니다.
+
+### 로컬 검증
+
+- 대상 Native 10파일52검사 통과. UI font profile 순회, 입력 수명/미확정 숫자/검색·선택·단계 동작,
+  controlled scale, 기존 모서리/초안·오버레이·OTP/공유 frame 회귀를 포함한다.
+- 새 profile-font-hosts 검사에서 custom → 10종 → neutral을 같은 중첩 Provider 아래 순회했다.
+  **7개 editor identity와 초안 유지**, NumberField의 `3.` 미확정 입력·값3, slider/number/code 제목 UI role,
+  code 별도 family, 2배 body 값, iOS/Android generic 번역, neutral subtree reset와 explicit Inter를 확인했다.
+  선택된 tests의 host는 RN mock이며 실제 설치 폰트/기기 화면 성공의 근거가 아니다.
+- Native renderer build/typecheck와 Native Showcase typecheck 통과.
+- optional GestureSheetInput 검사는 실제 source에 대해 library drawing host만 대체한다.
+  keyboard/gesture runtime 설치나 기기 성공으로 세지 않는다.
+
+### 수집 checkpoint와 검증 공백
+
+2026-10-07 13:50 KST: 원래 Designbookmark PID80505와21st PID83201은 `ps`로 live 확인.
+Designbookmark1252/2657,21st6062/12460 record(HTTP2006052,기존 error10)까지 수집했다.
+이 숫자는 source reading·시각·interaction 완료가 아니다. 기존 process/미완료 원본을 보존했다.
+
+11사이트 전수 source/시각/상태 검토, 나머지 recipe/literal/optional host 경로와 실제 iOS/Android
+font·줄바꿈·큰 글자·접근성·성능, 기존 전체 Browser ContextMenu 실패, 승급·npm 게시·소비 앱 적용은 남는다.
+
+### 원시 자료 보존·정리
+
+아래 실제 reference 캡처와 host inventory digest를 검증·보존한 뒤 이 작업 소유 PNG3/JSON1을 제거했다.
+재사용 AST script/fixture·제품 source와 미완료 reference crawl은 보존한다.
+
+| 파일 | SHA-256 |
+| --- | --- |
+| `refero-tokens.png` | `6784316fddef75c78fc0e8f1e87eef6ef751412961c628d2e2dfff53c629f7f3` |
+| `refero-components.png` | `2f3d032a742b354ea812f6f3f33011dd5588bc8fee7dd452aee4cd569dc21f49` |
+| `refero-checklist.png` | `a9dc8514bb3257b2448824990ef2dea3e3b2f3eaf0eee61a441eb8af795550b0` |
+| `native-text-hosts.json` | `8ee9a6a94204e4b8e6c32597fc855b6b7287f91299233e57939324ce810991fa` |
+| `audit-native-text-hosts.mjs` | `4cd2c3f44cc5d0bfe4c36bcde21e3f0229459ec95509f8373af80ee9c7e4155c` |
+
+후속 UI font 변경의 usage/evidence/docs568 Markdown/API308이름·Storybook421파일/929id·renderer import/optional-peer 경계 검사 통과. 최종 profile-font-hosts 1파일4검사도 통과했다. 원격 CI/전체 Browser/기기 검증으로 세지 않는다.
+host-audit-output.log SHA-256 `8ea45207a8e688f1f74a05dbcf4346f55dc99802068729d9f68ddca446287b56`를 보존하고 이 작업 소유 중복 출력도 제거했다.
+
+
+재현 명령(대상 모듈 루트, pinned Node24.20.0/pnpm11.18.0):
+
+```bash
+pnpm --filter @hjmds/react-native exec vitest run test/profile-font-hosts.test.tsx test/gesture-sheet-tokens.test.tsx test/profile-token-consumers.test.tsx test/number-field.test.tsx test/slider.test.tsx test/provider-text-scale-parity.test.tsx test/native-input-collection-product.test.tsx test/password-otp-field.test.tsx test/shared-field-frame.test.tsx test/design-profile.test.tsx --maxWorkers=2
+pnpm --filter @hjmds/react-native build
+pnpm --filter @hjmds/react-native typecheck
+pnpm --filter @hjm/showcase-native typecheck
+pnpm bundle:renderer:check
+pnpm usage:check
+pnpm evidence:check
+pnpm docs:check
+pnpm api-map:check
+pnpm storybook:check
+```
+
+재사용 symbol 감사는 `/Users/jimin/.codex/tmp/hjm-profile-font-hosts-20261007/audit-native-text-hosts.mjs`에 보존했다.
+새 inventory 출력은 다시 생성할 수 있지만 당시 digest/시각 관찰을 현재 실행 결과로 대체하지 않는다.

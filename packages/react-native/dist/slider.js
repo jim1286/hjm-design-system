@@ -4,7 +4,7 @@ import { forwardRef, useEffect, useMemo, useRef, useState, } from "react";
 import { PanResponder, Text as NativeText, View, } from "react-native";
 import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useControllableState } from "./internal/state.js";
-import { logicalTextAlign, resolveNativeTextScaleProps } from "./internal/styles.js";
+import { logicalTextAlign, resolveNativeFontStyle, resolveNativeTextScaleProps } from "./internal/styles.js";
 import { useHjmNativeTheme } from "./provider.js";
 /** Points of travel before a drag counts as horizontal or vertical intent. */
 const sliderIntentSlop = 6;
@@ -163,10 +163,12 @@ export const Slider = forwardRef(function Slider({ label, min, max, step, value,
             },
         };
     const labelTextScaleProps = resolveNativeTextScaleProps(textScaling, [
+        resolveNativeFontStyle(tokens.fontFamily.ui),
         tokens.typography[recipe.labelVariant],
         { color: colors.textBody, textAlign: logicalTextAlign(environment.direction) },
     ]);
     const valueTextScaleProps = resolveNativeTextScaleProps(textScaling, [
+        resolveNativeFontStyle(tokens.fontFamily.ui),
         tokens.typography[recipe.valueLabelVariant],
         {
             color: colors.textMuted,

@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [NumberField](../../number-field.md), [DurationField](../../compound-controls.md#durationfield), `src/number-field.ts`(`numberFieldRecipe`)
 - 스토리북: `배포/컴포넌트/입력/숫자 입력`, `배포/컴포넌트/입력/소요 시간 입력`
 
@@ -103,6 +103,8 @@ const decreaseKey = { hours: "timer.decrease.hours", minutes: "timer.decrease.mi
 타이핑은 blur에서 clamp·step snap으로 확정되고, 증감 버튼과 ↑/↓는 즉시 확정된다.
 
 ## 배치
+
+Native는 제품 프로필의 `tokens.fontFamily.ui`를 실제 텍스트/입력 host에 연결한다. 기본 UI stack은 OS 서체를 유지하고, 제품이 지정한 첫 named font의 등록·글리프 확인은 제품이 맡는다.
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |

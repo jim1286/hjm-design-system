@@ -1,5 +1,6 @@
-import { control, spacing } from "@hjmds/design-contracts/foundations";
+import { control, fontFamily, spacing } from "@hjmds/design-contracts/foundations";
 import {
+  Platform,
   StyleSheet,
   type Insets,
   type StyleProp,
@@ -8,6 +9,24 @@ import {
 } from "react-native";
 
 export type SpacingToken = keyof typeof spacing;
+
+/** Native font inheritance stops at Text subtrees (reactnative.dev/docs/text).
+ * Resolve the same profile at every editor/raw text host rather than styling a
+ * parent View. Keep the neutral UI on its OS default; apps register custom fonts. */
+export function resolveNativeFontStyle(
+  stack: readonly string[],
+  role: "ui" | "code" = "ui",
+): Pick<TextStyle, "fontFamily"> {
+  const first = stack[0];
+  if (first === "ui-monospace" || first === "monospace") {
+    return { fontFamily: Platform.OS === "ios" ? "Menlo" : "monospace" };
+  }
+  const neutralUI = role === "ui" && stack.length === fontFamily.ui.length &&
+    stack.every((family, index) => family === fontFamily.ui[index]);
+  return first === undefined || neutralUI
+    ? {}
+    : { fontFamily: first };
+}
 
 export const minimumTargetStyle = {
   minHeight: control.minTouchTarget,

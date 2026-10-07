@@ -26,7 +26,6 @@ import { resolveColorReference } from "@hjmds/design-contracts/color-references"
 import { withAlpha, type ThemeColors } from "@hjmds/design-contracts/colors";
 import {
   glyph,
-  fontFamily,
   type TextVariant,
 } from "@hjmds/design-contracts/foundations";
 import {
@@ -62,7 +61,6 @@ import {
 } from "react";
 import {
   PixelRatio,
-  Platform,
   Text as NativeText,
   View,
   useWindowDimensions,
@@ -77,6 +75,7 @@ import {
 import { useHjmNativeTheme, type HjmNativeTheme } from "./provider.js";
 import {
   logicalTextAlign,
+  resolveNativeFontStyle,
   resolveNativeShadowElevation,
   resolveNativeTextScaleProps,
 } from "./internal/styles.js";
@@ -197,12 +196,6 @@ export const Text = forwardRef<NativeText, TextProps>(function Text(
 ) {
   const { colors, environment, textScaling, tokens, designProfile } = useHjmNativeTheme();
   const emphasis = suppliedEmphasis ?? textRecipe.defaults.emphasis;
-  const firstFont = tokens.fontFamily.ui[0];
-  // CSS generic monospace names are not iOS font names; translate the intent.
-  // Custom font registration remains the app's responsibility, as before.
-  const uiFont = firstFont === "ui-monospace" || firstFont === "monospace"
-    ? (Platform.OS === "ios" ? "Menlo" : "monospace")
-    : firstFont !== fontFamily.ui[0] ? firstFont : undefined;
   const toneColors: Readonly<Record<TextTone, string>> = {
     primary: colors.text,
     body: colors.textBody,
@@ -220,7 +213,7 @@ export const Text = forwardRef<NativeText, TextProps>(function Text(
       {
         color: toneColors[tone],
         fontWeight: designProfile && suppliedEmphasis === undefined ? tokens.typography[variant].fontWeight : textRecipe.emphasis[emphasis],
-        ...(uiFont === undefined ? {} : { fontFamily: uiFont }),
+        ...resolveNativeFontStyle(tokens.fontFamily.ui),
         textAlign: align ?? logicalTextAlign(environment.direction),
       },
       style,

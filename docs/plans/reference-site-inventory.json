@@ -6156,13 +6156,14 @@
         "scope": "Fetched text pending individual source/visual/interaction review; no HTML link closure claim"
       },
       "sourceCaptureProgress": {
-        "checkedAt": "2026-10-07T04:38:56.682303+00:00",
-        "capturedRecords": 1185,
-        "http200": 1185,
+        "checkedAt": "2026-10-07T04:50:07.702264+00:00",
+        "capturedRecords": 1252,
+        "http200": 1252,
         "knownQueueUrls": 2657,
         "scope": "Fetched/extracted public source; not source reading, visual or interaction review",
-        "lastCapturedAt": "2026-10-07T04:38:53Z",
-        "allReviewComplete": false
+        "lastCapturedAt": "2026-10-07T04:50:04Z",
+        "allReviewComplete": false,
+        "status": "running-process-confirmed"
       }
     },
     {
@@ -19431,13 +19432,14 @@
         "checkedAt": "2026-10-07T01:58:52.171516+00:00"
       },
       "sourceCaptureProgress": {
-        "checkedAt": "2026-10-07T04:38:56.682303+00:00",
-        "capturedRecords": 5736,
-        "http200": 5726,
+        "checkedAt": "2026-10-07T04:50:07.702264+00:00",
+        "capturedRecords": 6062,
+        "http200": 6052,
         "knownQueueUrls": 12460,
         "scope": "Fetched/extracted public source; not source reading, visual or interaction review",
-        "lastCapturedAt": "2026-10-07T04:38:56Z",
-        "allReviewComplete": false
+        "lastCapturedAt": "2026-10-07T04:50:06Z",
+        "allReviewComplete": false,
+        "status": "running-process-confirmed"
       }
     },
     {
@@ -22109,6 +22111,17 @@
         "errors": 0,
         "state": "running-confirmed-session",
         "scope": "Fetched text pending individual source/visual/interaction review; no HTML link closure claim"
+      },
+      "selectedGuidanceReview": {
+        "checkedAt": "2026-10-07T04:50:07.702264+00:00",
+        "sourceAndDefaultLayoutPages": [
+          "https://styles.refero.design/ai-agents/css-variables-design-tokens",
+          "https://styles.refero.design/ai-agents/component-design-prompts",
+          "https://styles.refero.design/ai-agents/agentic-ui-quality-checklist"
+        ],
+        "scope": "Three full visible guidance bodies and default 1280px desktop/light page layouts, palette/typography sections and basic thumbnails reviewed; linked style content, thumbnail internal text, other viewports and state/interaction review remain pending",
+        "allReviewComplete": false,
+        "report": "../qa/2026-10-07-design-profile-research.md"
       }
     }
   ],

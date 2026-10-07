@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: recipe `fieldRecipe`(`src/base-recipes.ts`), GestureSheetInput: [Optional presentation adapters](../../optional-adapters.md)
 - 스토리북: `배포/컴포넌트/입력/입력 필드`
 
@@ -83,6 +83,8 @@ import { Field } from "@hjmds/react-native/forms";
   2026-10-06 전에는 틀 전체가 흐려져 잠긴 이유를 적은 도움말까지 대비가 떨어졌다.
 
 ## 배치
+
+Native는 제품 프로필의 `tokens.fontFamily.ui`를 실제 텍스트/입력 host에 연결한다. 기본 UI stack은 OS 서체를 유지하고, 제품이 지정한 첫 named font의 등록·글리프 확인은 제품이 맡는다.
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |

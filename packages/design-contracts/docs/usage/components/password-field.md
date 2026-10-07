@@ -101,6 +101,8 @@ const passwordRef = useRef<TextInput>(null);
 
 ## 배치
 
+Native는 제품 프로필의 `tokens.fontFamily.ui`를 실제 텍스트/입력 host에 연결한다. 기본 UI stack은 OS 서체를 유지하고, 제품이 지정한 첫 named font의 등록·글리프 확인은 제품이 맡는다.
+
 Native `large`는 프로필의 `typography.bodyLarge`를 읽고 그 줄 높이로 프레임도 늘린다. recipe의 최소 높이가 큰 글자 프레임을 덮지 않으며 controlled textScale은 한 번만 적용한다.
 
 | 항목 | 값 | 근거 |

@@ -14,7 +14,7 @@ import { forwardRef, useCallback, useEffect, useId, useImperativeHandle, useLayo
 import { ActivityIndicator, Animated, AppState, Easing, Platform, Pressable, Switch as NativeSwitch, Text as NativeText, TextInput, View, } from "react-native";
 import { mixedCheckboxState, useControllableState } from "./internal/state.js";
 import { webChoiceProps, webOnly } from "./internal/web-a11y.js";
-import { logicalTextAlign, minimumTargetStyle, resolveNativeTextScaleProps, } from "./internal/styles.js";
+import { logicalTextAlign, minimumTargetStyle, resolveNativeFontStyle, resolveNativeTextScaleProps, } from "./internal/styles.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
@@ -119,6 +119,7 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
                 ? resolveColorReference(searchFieldRecipe.colors.content, theme.palette)
                 : colors.text,
             flex: 1,
+            ...resolveNativeFontStyle(theme.tokens.fontFamily.ui),
             fontSize: textStyle.fontSize,
             fontWeight: textStyle.fontWeight,
             lineHeight: textStyle.lineHeight,

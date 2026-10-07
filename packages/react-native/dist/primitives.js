@@ -6,13 +6,13 @@ import { getIconTransform, resolveIconDescriptor, } from "@hjmds/design-contract
 import { validateLayoutRegions, } from "@hjmds/design-contracts/components/layout";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { withAlpha } from "@hjmds/design-contracts/colors";
-import { glyph, fontFamily, } from "@hjmds/design-contracts/foundations";
+import { glyph, } from "@hjmds/design-contracts/foundations";
 import { surfaceDefaults, surfaceGeometry, surfaceRecipe, } from "@hjmds/design-contracts/recipes/base";
 import { sectionRecipe, stackRecipe, textRecipe, } from "@hjmds/design-contracts/recipes";
 import { Children, Component, Fragment, forwardRef, isValidElement, useEffect, useMemo, useState, } from "react";
-import { PixelRatio, Platform, Text as NativeText, View, useWindowDimensions, } from "react-native";
+import { PixelRatio, Text as NativeText, View, useWindowDimensions, } from "react-native";
 import { useHjmNativeTheme } from "./provider.js";
-import { logicalTextAlign, resolveNativeShadowElevation, resolveNativeTextScaleProps, } from "./internal/styles.js";
+import { logicalTextAlign, resolveNativeFontStyle, resolveNativeShadowElevation, resolveNativeTextScaleProps, } from "./internal/styles.js";
 import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 /** Native shell translation: ordered regions without inventing Web landmark roles. */
 export const Layout = forwardRef(function Layout({ children, header, footer, sidebar, headerProps, mainProps, footerProps, mainRef, style, ...props }, ref) {
@@ -39,12 +39,6 @@ export const Layout = forwardRef(function Layout({ children, header, footer, sid
 export const Text = forwardRef(function Text({ children, variant = textRecipe.defaults.variant, tone = textRecipe.defaults.tone, emphasis: suppliedEmphasis, align, allowFontScaling, layoutStyle, style, ...props }, ref) {
     const { colors, environment, textScaling, tokens, designProfile } = useHjmNativeTheme();
     const emphasis = suppliedEmphasis ?? textRecipe.defaults.emphasis;
-    const firstFont = tokens.fontFamily.ui[0];
-    // CSS generic monospace names are not iOS font names; translate the intent.
-    // Custom font registration remains the app's responsibility, as before.
-    const uiFont = firstFont === "ui-monospace" || firstFont === "monospace"
-        ? (Platform.OS === "ios" ? "Menlo" : "monospace")
-        : firstFont !== fontFamily.ui[0] ? firstFont : undefined;
     const toneColors = {
         primary: colors.text,
         body: colors.textBody,
@@ -60,7 +54,7 @@ export const Text = forwardRef(function Text({ children, variant = textRecipe.de
         {
             color: toneColors[tone],
             fontWeight: designProfile && suppliedEmphasis === undefined ? tokens.typography[variant].fontWeight : textRecipe.emphasis[emphasis],
-            ...(uiFont === undefined ? {} : { fontFamily: uiFont }),
+            ...resolveNativeFontStyle(tokens.fontFamily.ui),
             textAlign: align ?? logicalTextAlign(environment.direction),
         },
         style,

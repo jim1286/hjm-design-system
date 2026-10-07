@@ -25,7 +25,7 @@ import {
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useControllableState } from "./internal/state.js";
-import { logicalTextAlign, resolveNativeTextScaleProps } from "./internal/styles.js";
+import { logicalTextAlign, resolveNativeFontStyle, resolveNativeTextScaleProps } from "./internal/styles.js";
 import { useHjmNativeTheme } from "./provider.js";
 
 type NativeSliderViewProps = Omit<
@@ -262,10 +262,12 @@ export const Slider = forwardRef<View, SliderProps>(function Slider(
         },
       };
   const labelTextScaleProps = resolveNativeTextScaleProps(textScaling, [
+    resolveNativeFontStyle(tokens.fontFamily.ui),
     tokens.typography[recipe.labelVariant],
     { color: colors.textBody, textAlign: logicalTextAlign(environment.direction) },
   ]);
   const valueTextScaleProps = resolveNativeTextScaleProps(textScaling, [
+    resolveNativeFontStyle(tokens.fontFamily.ui),
     tokens.typography[recipe.valueLabelVariant],
     {
       color: colors.textMuted,

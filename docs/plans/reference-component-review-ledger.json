@@ -6630,6 +6630,57 @@
       "visualReview": "IAB screenshot shows a green Get Started button beside Learn about receiving money. Narrative says lime accent marks CTAs; extracted color role says not primary CTA; later text says no distinct primary action color observed. These contradict each other.",
       "interactionReview": "read-only reference inspection; original Wise financial service not used",
       "adoptionDecision": "Do not import inferred role labels as authoritative tokens. Extend REFERENCE_BRIEF to separate observed capture, source behavior, normalized measurement, role inference and reconstructed HTML. Preserve HJM accessibility and product semantic choices."
+    },
+    {
+      "url": "https://styles.refero.design/ai-agents/css-variables-design-tokens",
+      "name": "css-variables-design-tokens",
+      "existingMapping": "DesignProfile / existing Native text and editor hosts",
+      "sourceAudit": "2026-10-07: complete visible first-party guidance read from source and live AX; linked source detail pending",
+      "visualReview": "partial",
+      "interactionReview": "pending",
+      "adoptionDecision": "Absorb into existing font-role consumers; no new public API or external code copy",
+      "priorRationale": "Repeated semantic token consumers; keep a common UI font resolver at actual hosts",
+      "pageReviewEvidence": "../qa/2026-10-07-design-profile-research.md",
+      "defaultPageLayoutReview": {
+        "checkedAt": "2026-10-07T04:50:07.702264+00:00",
+        "viewport": "1280px desktop/light",
+        "scope": "Complete visible page layout and basic thumbnails; no linked style/detail or internal thumbnail text review",
+        "unloadedImagesAfterCapture": 0
+      }
+    },
+    {
+      "url": "https://styles.refero.design/ai-agents/component-design-prompts",
+      "name": "component-design-prompts",
+      "existingMapping": "DesignProfile / existing Native text and editor hosts",
+      "sourceAudit": "2026-10-07: complete visible first-party guidance read from source and live AX; linked source detail pending",
+      "visualReview": "partial",
+      "interactionReview": "pending",
+      "adoptionDecision": "Absorb into existing font-role consumers; no new public API or external code copy",
+      "priorRationale": "Compare recurring typography roles at working-size controls; keep UI headers separate from code source",
+      "pageReviewEvidence": "../qa/2026-10-07-design-profile-research.md",
+      "defaultPageLayoutReview": {
+        "checkedAt": "2026-10-07T04:50:07.702264+00:00",
+        "viewport": "1280px desktop/light",
+        "scope": "Complete visible page layout and basic thumbnails; no linked style/detail or internal thumbnail text review",
+        "unloadedImagesAfterCapture": 0
+      }
+    },
+    {
+      "url": "https://styles.refero.design/ai-agents/agentic-ui-quality-checklist",
+      "name": "agentic-ui-quality-checklist",
+      "existingMapping": "DesignProfile / existing Native text and editor hosts",
+      "sourceAudit": "2026-10-07: complete visible first-party guidance read from source and live AX; linked source detail pending",
+      "visualReview": "partial",
+      "interactionReview": "pending",
+      "adoptionDecision": "Absorb into existing font-role consumers; no new public API or external code copy",
+      "priorRationale": "Review real drafts, neutral reset, RTL and controlled large text; static tests are not device proof",
+      "pageReviewEvidence": "../qa/2026-10-07-design-profile-research.md",
+      "defaultPageLayoutReview": {
+        "checkedAt": "2026-10-07T04:50:07.702264+00:00",
+        "viewport": "1280px desktop/light",
+        "scope": "Complete visible page layout and basic thumbnails; no linked style/detail or internal thumbnail text review",
+        "unloadedImagesAfterCapture": 0
+      }
     }
   ]
 }

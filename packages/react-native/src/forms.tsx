@@ -71,6 +71,7 @@ import {
 import {
   logicalTextAlign,
   minimumTargetStyle,
+  resolveNativeFontStyle,
   resolveNativeTextScaleProps,
 } from "./internal/styles.js";
 import { Text } from "./primitives.js";
@@ -979,6 +980,7 @@ export function Combobox<
   const densityContract = comboboxRecipe.density[density];
   const inputTypography = theme.tokens.typography[sizeContract.textVariant];
   const inputTextScaleProps = resolveNativeTextScaleProps(theme.textScaling, {
+    ...resolveNativeFontStyle(theme.tokens.fontFamily.ui),
     color: colors.text,
     flex: 1,
     fontSize: inputTypography.fontSize,

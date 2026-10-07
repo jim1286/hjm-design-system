@@ -4,7 +4,7 @@ import { forwardRef, useEffect, useState } from "react";
 import { Pressable, Text as NativeText, TextInput, View, } from "react-native";
 import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useControllableState } from "./internal/state.js";
-import { logicalTextAlign, minimumTargetStyle, resolveNativeTextScaleProps, } from "./internal/styles.js";
+import { logicalTextAlign, minimumTargetStyle, resolveNativeFontStyle, resolveNativeTextScaleProps, } from "./internal/styles.js";
 import { useHjmNativeTheme } from "./provider.js";
 function valueToInput(value) {
     return value === null ? "" : String(value);
@@ -91,7 +91,7 @@ export const NumberField = forwardRef(function NumberField({ label, min, max, st
                     stepValue("decrement");
             },
         };
-    const scaledText = (style, allowFontScaling) => resolveNativeTextScaleProps(textScaling, style, allowFontScaling);
+    const scaledText = (style, allowFontScaling) => resolveNativeTextScaleProps(textScaling, [resolveNativeFontStyle(tokens.fontFamily.ui), style], allowFontScaling);
     return (_jsxs(View, { style: [{ gap: numberFieldRecipe.support.gap }, containerStyle, layoutStyle], children: [_jsx(NativeText, { ...scaledText([
                     tokens.typography[numberFieldRecipe.support.label.textVariant],
                     {

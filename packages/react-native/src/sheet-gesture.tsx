@@ -1,5 +1,5 @@
 import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
-import { resolveNativeTextScaleProps } from "./internal/styles.js";
+import { resolveNativeFontStyle, resolveNativeTextScaleProps } from "./internal/styles.js";
 import { forwardRef, useCallback, useEffect, useRef, type ComponentProps, type ElementRef, type ReactNode } from "react";
 import { BackHandler, View } from "react-native";
 import { BottomSheetModal, BottomSheetModalProvider, BottomSheetScrollView, BottomSheetBackdrop, BottomSheetHandle, BottomSheetTextInput, type BottomSheetBackdropProps, type BottomSheetBackgroundProps, type BottomSheetHandleProps } from "@gorhom/bottom-sheet";
@@ -20,6 +20,7 @@ export const GestureSheetInput = forwardRef<ElementRef<typeof BottomSheetTextInp
     // Preserve the sheet's keyboard-tracking host, but derive its presentation
     // and font scaling from the same recipe as TextField instead of a third style.
     const scaled = resolveNativeTextScaleProps(textScaling, [{
+      ...resolveNativeFontStyle(tokens.fontFamily.ui),
       borderColor: colors[fieldRecipe.states.idle.border],
       borderRadius: tokens.radius[fieldRecipe.shapes[fieldRecipe.defaults.shape]],
       borderWidth: fieldRecipe.borderWidth,

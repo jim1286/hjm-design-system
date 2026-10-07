@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: `src/component-recipes.ts`(`searchFieldRecipe`). 별도 계약 문서는 없다
 - 스토리북: `배포/컴포넌트/입력/검색 입력`
 
@@ -77,6 +77,8 @@ import { SearchField } from "@hjmds/react-native/inputs";
 | `label` / `aria-label`(Web) / `accessibilityLabel`(Native) | 문자열 | — | 하나는 필수. 없으면 렌더 중 `TypeError` |
 
 ## 배치
+
+Native는 제품 프로필의 `tokens.fontFamily.ui`를 실제 텍스트/입력 host에 연결한다. 기본 UI stack은 OS 서체를 유지하고, 제품이 지정한 첫 named font의 등록·글리프 확인은 제품이 맡는다.
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |

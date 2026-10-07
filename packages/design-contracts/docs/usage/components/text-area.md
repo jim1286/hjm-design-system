@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: `src/base-recipes.ts`(`fieldRecipe`)
 - 스토리북: `배포/컴포넌트/입력/여러 줄 입력`
 
@@ -78,6 +78,8 @@ import { TextArea } from "@hjmds/react-native/inputs";
 `leading`(흐린 장식 affix)은 TextArea에 없다(TextField 전용). 행동은 `leadingAction`·`trailing`에 두고, 글자 수 같은 보조 표시는 `description`으로 둔다.
 
 ## 배치
+
+Native는 제품 프로필의 `tokens.fontFamily.ui`를 실제 텍스트/입력 host에 연결한다. 기본 UI stack은 OS 서체를 유지하고, 제품이 지정한 첫 named font의 등록·글리프 확인은 제품이 맡는다.
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |

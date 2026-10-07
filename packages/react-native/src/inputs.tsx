@@ -95,6 +95,7 @@ import { webChoiceProps, webOnly } from "./internal/web-a11y.js";
 import {
   logicalTextAlign,
   minimumTargetStyle,
+  resolveNativeFontStyle,
   resolveNativeTextScaleProps,
 } from "./internal/styles.js";
 import { Text } from "./primitives.js";
@@ -347,6 +348,7 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
               )
             : colors.text,
           flex: 1,
+          ...resolveNativeFontStyle(theme.tokens.fontFamily.ui),
           fontSize: textStyle.fontSize,
           fontWeight: textStyle.fontWeight,
           lineHeight: textStyle.lineHeight,

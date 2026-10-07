@@ -99,6 +99,8 @@ import { Sheet } from "@hjmds/react-native/overlays";
 
 ## 배치
 
+선택형 Native `GestureSheetInput`의 실제 keyboard-tracking host에도 제품 `tokens.fontFamily.ui`가 이어진다. optional library·폰트 설치와 실제 기기 검증은 제품이 맡는다.
+
 선택형 GestureSheetInput은 Provider typography와 field recipe radius 역할을 읽고 textScale을 한 번 적용한다. optional keyboard-tracking host는 그대로다.
 
 | 항목 | 값 | 근거 |

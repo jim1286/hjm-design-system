@@ -84,6 +84,9 @@ import { TagsInput } from "@hjmds/react-native/tags-input";
 
 ## 배치
 
+Native는 제품 프로필의 `tokens.fontFamily.ui`를 실제 텍스트/입력 host에 연결한다. 기본 UI stack은 OS 서체를 유지하고, 제품이 지정한 첫 named font의 등록·글리프 확인은 제품이 맡는다.
+Native 입력칸은 `tokens.typography.body`의 글자·줄 높이도 읽는다. Provider가 textScale을 제어하면 한 번만 확대하고 시스템의 추가 확대를 끈다. 태그/편집 초안은 테마 전환 때 유지한다.
+
 Native 입력 프레임의 `md` 모서리는 Provider의 `tokens.radius.md`를 읽는다. pill 태그와 고정 삭제 glyph는 그대로이며 프로필 교체는 입력 중인 초안·태그를 유지한다.
 
 | 항목 | 값 | 근거 |

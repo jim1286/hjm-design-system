@@ -39,3 +39,5 @@ monospace on Android; custom font installation stays with the product. The sourc
 LTR inside an RTL shell: an actual RTL comparison moved the trailing semicolon to the
 beginning of the displayed statement. Localized headings and surrounding controls retain
 the product direction. This is a reading-order decision, not a source-text rewrite.
+
+Native 제목은 제품 UI font, 원문과 span은 code font를 읽는다. 두 역할은 같은 내부 플랫폼 font 해석을 공유하며, 제목이 OS 서체로 남던 경로를 보완했다. 실제 font 등록은 제품이 맡는다.
