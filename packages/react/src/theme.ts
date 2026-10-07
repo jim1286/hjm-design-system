@@ -160,6 +160,12 @@ export function createHjmThemeStyle(
     : "";
   style["--hjm-surface-inset-shadow"] = insetShadow || "none";
   style["--hjm-surface-raised-shadow"] = shadowCss(profileTokens?.shadow.floating ?? shadow.floating) + (insetShadow ? `, ${insetShadow}` : "");
+  // BottomCTA overlaps content above it (bottomCtaRecipe rationale). Profile
+  // strength is shared, but its shadow must cast upward rather than behind the
+  // footer; preserve the stylesheet-only legacy path when no profile is supplied.
+  style["--hjm-bottom-cta-shadow"] = profileTokens
+    ? shadowCss({ ...profileTokens.shadow.floating, offsetY: -Math.abs(profileTokens.shadow.floating.offsetY) })
+    : "none";
   // Overlay chrome and sizes come from the recipes Native reads (1.5.0).
   for (const [name, chrome] of [["dialog", dialogRecipe.content], ["sheet", sheetRecipe.content], ["toast", toastRecipe.surface]] as const) {
     style[`--hjm-${name}-background`] = resolveColorReference(chrome.background, palette);

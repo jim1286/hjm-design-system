@@ -8,7 +8,7 @@ import { forwardRef } from "react";
 import { ActivityIndicator, Pressable, View, } from "react-native";
 import { RecipeButton } from "./internal/recipe-button.js";
 import { warnDeprecatedStyleProps, warnOnce } from "./internal/deprecated-style.js";
-import { minimumTargetStyle } from "./internal/styles.js";
+import { minimumTargetStyle, resolveNativeShadowElevation } from "./internal/styles.js";
 import { Icon, Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 // Public callers compose placement through layoutStyle; visual overrides stay inside HJM recipes.
@@ -126,7 +126,13 @@ export function BottomCTA({ primaryAction, secondaryAction, description, accessi
     if (!Number.isFinite(safeAreaBottom) || safeAreaBottom < 0) {
         throw new RangeError("BottomCTA safeAreaBottom must be non-negative");
     }
-    const { colors, environment } = useHjmNativeTheme();
+    const { colors, environment, designProfile } = useHjmNativeTheme();
+    // Footer elevation separates the content above it (bottomCtaRecipe rationale).
+    // Reuse profile strength but retain the upward direction; a flat profile must
+    // also disable Android elevation rather than only its iOS shadow properties.
+    const surfaceShadow = designProfile
+        ? { ...designProfile.tokens.shadow.floating, offsetY: -Math.abs(designProfile.tokens.shadow.floating.offsetY) }
+        : bottomCtaRecipe.shadow;
     const stackActions = environment.textScale >= 1.6;
     const renderedSecondary = secondaryAction === undefined || secondaryAction === null
         ? null
@@ -138,16 +144,16 @@ export function BottomCTA({ primaryAction, secondaryAction, description, accessi
                 backgroundColor: colors.bg,
                 borderColor: colors.border,
                 borderTopWidth: bottomCtaRecipe.borderWidth,
-                elevation: bottomCtaRecipe.shadow.elevation,
+                ...resolveNativeShadowElevation(surfaceShadow, designProfile !== undefined, bottomCtaRecipe.shadow.elevation),
                 gap: bottomCtaRecipe.gap,
                 minHeight: bottomCtaRecipe.minHeight + safeAreaBottom,
                 paddingBottom: Math.max(safeAreaBottom, bottomCtaRecipe.paddingBottom),
                 paddingHorizontal: bottomCtaRecipe.paddingHorizontal,
                 paddingTop: bottomCtaRecipe.paddingTop,
-                shadowColor: bottomCtaRecipe.shadow.color,
-                shadowOffset: { width: 0, height: bottomCtaRecipe.shadow.offsetY },
-                shadowOpacity: bottomCtaRecipe.shadow.opacity,
-                shadowRadius: bottomCtaRecipe.shadow.radius,
+                shadowColor: surfaceShadow.color,
+                shadowOffset: { width: 0, height: surfaceShadow.offsetY },
+                shadowOpacity: surfaceShadow.opacity,
+                shadowRadius: surfaceShadow.radius,
             },
             style,
             layoutStyle,

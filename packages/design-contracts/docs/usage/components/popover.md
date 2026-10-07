@@ -112,3 +112,5 @@ Native 예는 없다(renderer 없음).
   공간 전환을 생략하고 기존 표현을 쓴다. 닫혔을 때는 즉시 inert/aria-hidden으로 입력에서 제외한다.
 - 초안은 Popover 위의 제품 상태에 둔다. 종료 후 portal이 제거되므로 내부 비제어 입력에만 두면 사라진다.
 - 공간 전환 실험은 [버튼에서 이어지는 편집](../compositions/origin-dialog.md)의 Web 전용 변형이다.
+
+미게시(1.14.0 이후): 가장 가까운 프로필의 `shadow.floating`을 열린 portal에도 상속한다. 프로필이 없으면 기존 recipe 그림자를 유지한다. 초안과 비모달 초점/닫기 계약은 그대로이며 Native는 기존 Sheet 경로를 쓴다.

@@ -22,6 +22,8 @@
 | Tabs | 프로필 상속/명시 표시와 방문한 패널의 초안 유지 | [탭](../components/tabs.md) |
 | Card | 무늬 위의 표면 질감과 초안 | [카드](../components/card.md) |
 | Heading | 선택 테마의 5단계 제목 크기 | [제목](../components/heading.md) |
+| BottomCTA | 저장·실패 재현과 위쪽 그림자 | [하단 행동](../components/bottom-cta.md) |
+| Popover(Web) | 비모달 초안과 같은 프로필 순회 | [팝오버](../components/popover.md) |
 | Dialog·Sheet | 열린 초안과 같은 프로필 순회 | [대화상자](../components/dialog.md) · [패널](../components/sheet.md) |
 | Notice·Skeleton·Toast | 알림·로딩·확정 후 피드백의 모서리/그림자 | [알림](../components/notice.md) · [로딩](../components/skeleton.md) · [토스트](../components/toast.md) |
 | ContentTransition | 실제 저장 상태 전환 | [내용 전환](../components/content-transition.md) |
@@ -45,7 +47,7 @@
 | 바깥 틀 | Stack | 세로 | `spacing.xl` 24 |
 | 이름/기간 | TextField·SegmentedControl | 도구 | `spacing.md` 16 |
 | 목록 | OverviewScreen | 본문 | [목록 배치](../components/overview-screen.md#배치) |
-| 저장/실패 | Button | footer | `spacing.sm` 12; 주 행동 후 ghost 실패 재현 |
+| 저장/실패 | BottomCTA | footer | `spacing.sm` 12; 주 행동 후 ghost 실패 재현 |
 
 ## 흐름과 상태
 
@@ -86,3 +88,5 @@ import { OverviewScreen } from "@hjmds/react-native/design-profile";
 선택한 탭과 같은 입력 호스트를 유지한다. forest·glass·aurora·clay는 생략한 appearance가
 slide로 해석되고 나머지 6종은 standard다. 명시 값은 프로필보다 우선한다. 실제 제품은
 이 샘플의 패널 수명을 기본값으로 복사하지 않고 초안과 탭의 사용 목적에 맞춰 선택한다.
+
+Web의 팝오버는 비모달 편집 초안과 테마 순회를 추가 비교한다. Native의 같은 용도는 기존 Sheet 경로다. 저장/실패 샘플은 두 플랫폼 공개 BottomCTA이며 브랜드가 바뀌어도 같은 저장 상태·초안·재시도 callback을 유지한다.

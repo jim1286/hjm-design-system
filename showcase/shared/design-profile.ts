@@ -17,6 +17,7 @@ export const profileCopy = {
   tabsDraft: "탭 안 초안", tabsHistoryBody: "보관한 기록을 이곳에서 확인해요.", tabsAppearance: "탭 표시 방식",
   tabsInherit: "테마 따르기", tabsStandard: "밑줄", tabsSlide: "이동", tabsGooey: "늘어남",
   tabsNote: "테마와 표시 방식을 바꿔도 선택한 탭과 초안을 유지해요.",
+  saveActions: "기록 저장 행동", popover: "팝오버 열기",
   chrome: "입력·알림·오버레이 비교", dialog: "대화상자 열기", sheet: "패널 열기", close: "닫기",
   overlayTitle: "기록 편집", overlayDraft: "오버레이 초안", nextTheme: "다음 테마",
   chromeNotice: "테마를 바꿔도 초안은 유지돼요.", toastCopy: "미리보기 기록을 저장했어요.",

@@ -220,3 +220,16 @@ TagsInput의 실제 입력칸은 body 글자·줄 높이와 같은 controlled sc
 [검수 지침](https://styles.refero.design/ai-agents/agentic-ui-quality-checklist)의 실제 상태 검토를
 기존 HJM 계약과 대조한 후속 보완이다. linked 제품 소스와 모든 상태를 검수한 결과는 아니다.
 실제 기기의 폰트 로딩·텍스트 줄바꿈·접근성 증거는 계속 별도 검증한다.
+
+## 팝오버와 하단 chrome의 그림자 상속
+
+2026-10-07 추가 소비 감사에서 Web Popover의 inline recipe 값과 Native BottomCTA·
+floating/capsule BottomNavigation의 recipe 그림자가 프로필을 우회하는 것을 확인했다.
+기존 API에 `shadow.floating`을 연결했다. bar는 무그림자를 유지하고 BottomCTA는 footer가
+위 콘텐츠와 겹치는 역할이라 offsetY의 절댓값을 위쪽으로 뒤집는다(bottomCtaRecipe 근거).
+별도의 그림자 토큰/엔진을 추가하지 않는다. Native의 0-opacity는 iOS 값뿐 아니라 기존
+공통 helper로 Android elevation도 제거한다. 프로필 없는 경로는 이전 renderer 외형이다.
+
+양 Showcase의 같은 저장/실패 행동은 공개 BottomCTA로 비교하고 Web chrome 비교에는
+기존 공개 Popover를 연결했다. 열린 초안/포커스·safe area·선택 route·행동 소유권 검증과
+Native 기기 미확인 범위는 [QA](../../../docs/qa/2026-10-07-design-profile-research.md)에 남긴다.

@@ -136,3 +136,5 @@ floating·capsule: 바깥 좌우 16 · 위 8 띄운 둥근 표면, 최대 폭 38
 - `renderLink` 없이 쓰면 일반 `<a>`로 그려 SPA 전환이 일어나지 않는다.
 - Web `onActivate`는 링크 기본 이동을 막지 않는다. `renderLink`의 라우터 Link가 이동하고 `onActivate`는 계측·맨 위로 스크롤 같은 부수 동작에만 쓴다. 수정키·가운데 클릭에는 불리지 않는다.
 - 현재 Native 내비게이션 연구 스토리(`showcase/native/src/reference-navigation-bars.tsx`)는 deprecated `style`(`paddingHorizontal: 0`)·`listStyle`(`borderRadius`)로 recipe 여백·모서리를 덮고, 제목을 `Text variant="heading"`으로 그린다. 규칙은 `configuration`·`layoutStyle`과 [Heading](heading.md)이다(스토리 수정 후보).
+
+미게시(1.14.0 이후): Native의 floating/capsule은 프로필 `shadow.floating`을 읽으며 0-opacity는 Android elevation도 제거한다. bar는 원래 무그림자 계약을 유지한다. Web은 기존 CSS token 경로로 같은 프로필을 읽는다. 선택 route와 이동 intent는 제품이 소유한다.

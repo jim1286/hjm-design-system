@@ -4,7 +4,7 @@ import { useMemo, useRef, useState } from "react";
 import { Platform, ScrollView, StyleSheet, View } from "react-native";
 import { requireOptionalNativeModule } from "expo";
 import { HjmNativeProvider, useHjmNativeTheme } from "@hjmds/react-native/provider";
-import { Button } from "@hjmds/react-native/actions";
+import { BottomCTA, Button } from "@hjmds/react-native/actions";
 import { Stack, Text } from "@hjmds/react-native/primitives";
 import { TextField } from "@hjmds/react-native/inputs";
 import { SegmentedControl } from "@hjmds/react-native/inputs";
@@ -37,7 +37,7 @@ export function RecordSample() {
   return <OverviewScreen title={copy.screen} description={copy.description} toolbarLabel={copy.tools}
     toolbar={<Stack gap="md"><TextField label={copy.name} value={name} onValueChange={setName} /><SegmentedControl label={copy.filter} items={[{ value: "day", label: copy.day }, { value: "week", label: copy.week }]} value={period} onValueChange={setPeriod} /></Stack>}
     notice={<ContentTransition stateKey={status}><Text accessibilityLiveRegion="polite">{copy[status]}</Text></ContentTransition>}
-    footer={<Stack gap="sm"><Button onPress={() => void save()} loading={status === "pending"} loadingLabel={copy.pending}>{status === "failed" ? copy.retry : copy.save}</Button><Button tone="ghost" disabled={status === "pending"} onPress={() => { failNext.current = true; void save(); }}>{copy.fail}</Button></Stack>}
+    footer={<BottomCTA accessibilityLabel={copy.saveActions} primaryAction={{ label: status === "failed" ? copy.retry : copy.save, onPress: () => void save(), loading: status === "pending", loadingLabel: copy.pending }} secondaryAction={{ label: copy.fail, tone: "ghost", disabled: status === "pending", onPress: () => { failNext.current = true; void save(); } }} />}
     items={items.map(item => ({ id: item.id, children: <Stack gap="sm"><Text variant="heading">{item.title}</Text><Text>{item.body}</Text></Stack> }))} />;
 }
 // Same public overlay instances stay mounted while the parent profile changes;

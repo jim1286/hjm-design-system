@@ -203,7 +203,9 @@ export const Popover = forwardRef<HTMLDivElement, PopoverProps>(function Popover
     "--hjm-popover-duration": `${open ? popoverRecipe.transition.enter.duration : reduced ? 0 : popoverRecipe.transition.exit.duration}ms`,
     "--hjm-popover-easing": `cubic-bezier(${easing[open ? popoverRecipe.transition.enter.easing : popoverRecipe.transition.exit.easing].join(", ")})`,
     minWidth: Math.min(popoverRecipe.minWidth, Number(position.style.maxWidth ?? popoverRecipe.minWidth)),
-    boxShadow: `0 ${popoverRecipe.surface.shadow.offsetY}px ${popoverRecipe.surface.shadow.radius}px ${popoverRecipe.surface.shadow.color}${Math.round(popoverRecipe.surface.shadow.opacity * 255).toString(16).padStart(2, "0")}`,
+    // Keep the legacy recipe without a profile; portal context variables follow
+    // the nearest provider so an open editor cannot retain neutral elevation.
+    boxShadow: theme?.designProfile ? "var(--hjm-shadow-floating)" : `0 ${popoverRecipe.surface.shadow.offsetY}px ${popoverRecipe.surface.shadow.radius}px ${popoverRecipe.surface.shadow.color}${Math.round(popoverRecipe.surface.shadow.opacity * 255).toString(16).padStart(2, "0")}`,
 
   } as CSSProperties;
   return <>{renderedTrigger}{open || present || motion.visible ? <AnchoredPortal anchorRef={triggerRef} ssrFallback="inline" {...(portalContainer ? { container: portalContainer } : {})}>

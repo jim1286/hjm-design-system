@@ -3,6 +3,8 @@ import { CodeBlock } from "@hjmds/react/code-block";
 import { useRef, useState } from "react";
 import { HjmProvider } from "@hjmds/react/provider";
 import { Button } from "@hjmds/react/actions";
+import { BottomCTA } from "@hjmds/react/bottom-cta";
+import { Popover } from "@hjmds/react/popover";
 import { Stack, Text } from "@hjmds/react/layout";
 import { TextField } from "@hjmds/react/forms";
 import { SegmentedControl } from "@hjmds/react/selection";
@@ -35,19 +37,19 @@ export function RecordSample() {
   return <OverviewScreen title={copy.screen} description={copy.description} toolbarLabel={copy.tools}
     toolbar={<Stack gap="md"><TextField label={copy.name} value={name} onValueChange={setName} /><SegmentedControl label={copy.filter} items={[{ value: "day", label: copy.day }, { value: "week", label: copy.week }]} value={period} onValueChange={setPeriod} /></Stack>}
     notice={<ContentTransition stateKey={status}><Text as="p" role="status">{copy[status]}</Text></ContentTransition>}
-    footer={<Stack gap="sm"><Button onClick={() => void save()} loading={status === "pending"} aria-label={status === "pending" ? copy.pending : status === "failed" ? copy.retry : copy.save}>{status === "failed" ? copy.retry : copy.save}</Button><Button tone="ghost" disabled={status === "pending"} onClick={() => { failNext.current = true; void save(); }}>{copy.fail}</Button></Stack>}
+    footer={<BottomCTA accessibilityLabel={copy.saveActions} primaryAction={{ label: status === "failed" ? copy.retry : copy.save, onClick: () => void save(), loading: status === "pending", loadingLabel: copy.pending }} secondaryAction={{ label: copy.fail, tone: "ghost", disabled: status === "pending", onClick: () => { failNext.current = true; void save(); } }} />}
     items={items.map(item => ({ id: item.id, children: <Stack gap="sm"><Text variant="heading">{item.title}</Text><Text>{item.body}</Text></Stack> }))} />;
 }
 // Same public overlay instances stay mounted while the parent profile changes;
 // the shared controlled draft is fixture data, with no storage/network mutation.
 function ProfileChromeSample({ onNextTheme }: { onNextTheme: () => void }) {
-  const [open, setOpen] = useState<"dialog" | "sheet" | null>(null);
+  const [open, setOpen] = useState<"dialog" | "sheet" | "popover" | null>(null);
   const [draft, setDraft] = useState<string>(copy.initial);
   const fields = <Stack gap="md"><TextField label={copy.overlayDraft} value={draft} onValueChange={setDraft} /><Button onClick={onNextTheme}>{copy.nextTheme}</Button></Stack>;
   return <Collapsible trigger={copy.chrome} defaultOpen><Stack gap="md">
     <Notice title={copy.chromeNotice} /><Skeleton animated={false} />
     <Toast descriptor={{ id: "profile-saved", description: copy.toastCopy, closeLabel: copy.close }} onDismissRequest={() => {}} />
-    <Stack axis="inline" gap="sm" wrap><Button onClick={() => setOpen("dialog")}>{copy.dialog}</Button><Button onClick={() => setOpen("sheet")}>{copy.sheet}</Button></Stack>
+    <Stack axis="inline" gap="sm" wrap><Button onClick={() => setOpen("dialog")}>{copy.dialog}</Button><Button onClick={() => setOpen("sheet")}>{copy.sheet}</Button><Popover open={open === "popover"} onOpenChange={next => setOpen(next ? "popover" : null)} title={copy.overlayTitle} closeLabel={copy.close} trigger={<Button>{copy.popover}</Button>}>{fields}</Popover></Stack>
     <Dialog open={open === "dialog"} onOpenChange={next => { if (!next) setOpen(null); }} title={copy.overlayTitle} closeLabel={copy.close}>{fields}</Dialog>
     <Sheet open={open === "sheet"} onOpenChange={next => { if (!next) setOpen(null); }} title={copy.overlayTitle} closeLabel={copy.close}>{fields}</Sheet>
   </Stack></Collapsible>;

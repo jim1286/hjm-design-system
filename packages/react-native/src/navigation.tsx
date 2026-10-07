@@ -112,7 +112,7 @@ shouldAwaitNativeModalDismiss,
 type NativeModalTeardownTask,
 } from "./internal/modal-lifecycle.js";
 import { useControllableState } from "./internal/state.js";
-import { minimumTargetStyle } from "./internal/styles.js";
+import { minimumTargetStyle, resolveNativeShadowElevation } from "./internal/styles.js";
 import { Text } from "./primitives.js";
 import { HjmNativeProvider, useHjmNativeTheme } from "./provider.js";
 
@@ -790,6 +790,11 @@ export function BottomNavigation<
   const density = bottomNavigationRecipe.density[presentation.density];
   const presentationRecipe =
     bottomNavigationRecipe.presentations[presentation.presentation];
+  // Floating/capsule presentations own elevation; a flat bar must never gain
+  // one just because a profile has a floating token. Keep router state outside.
+  const surfaceShadow = presentationRecipe.shadow
+    ? theme.designProfile?.tokens.shadow.floating ?? presentationRecipe.shadow
+    : null;
   const centerGap =
     bottomNavigationRecipe.distributions[presentation.distribution].centerGap;
   const middleIndex = resolved.items.length / 2 - 1;
@@ -857,15 +862,15 @@ export function BottomNavigation<
               presentation.presentation === "bar" ? presentationRecipe.borderWidth : 0,
             borderWidth:
               presentation.presentation === "floating" ? presentationRecipe.borderWidth : 0,
-            elevation: presentationRecipe.shadow ? 8 : 0,
+            ...(surfaceShadow ? resolveNativeShadowElevation(surfaceShadow, theme.designProfile !== undefined, 8) : { elevation: 0 }),
             maxWidth: presentationRecipe.maxWidth ?? undefined,
             position: "relative",
-            shadowColor: presentationRecipe.shadow?.color,
-            shadowOffset: presentationRecipe.shadow
-              ? { width: 0, height: presentationRecipe.shadow.offsetY }
+            shadowColor: surfaceShadow?.color,
+            shadowOffset: surfaceShadow
+              ? { width: 0, height: surfaceShadow.offsetY }
               : undefined,
-            shadowOpacity: presentationRecipe.shadow?.opacity,
-            shadowRadius: presentationRecipe.shadow?.radius,
+            shadowOpacity: surfaceShadow?.opacity,
+            shadowRadius: surfaceShadow?.radius,
             width: "100%",
           },
           surfaceStyle,

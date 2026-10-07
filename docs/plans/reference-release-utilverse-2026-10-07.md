@@ -23,6 +23,19 @@ Button의 상태/복구와 Card.actions→Dialog.motionOrigin 경로를 사용 �
 profile selectionMotion→Tabs 연결과 unequal-span/shared-element 차이는 후속 구현 후보이며,
 이 네 URL의 검토도 모든 환경/상태/연결 페이지 완료는 아니다. ledger의 범위를 partial로 유지한다.
 
+후속 checkpoint: Tabs 연결은 main `7c56dbc`에 구현·검증·push됐다. 이후 기존 Web Popover,
+Native BottomCTA/BottomNavigation의 프로필 그림자 누락을 수정했고 양쪽 공개 저장 행동과
+Web 팝오버를 비교 구성에 연결했다. 로컬 Web23/Native mock18 검사·build/typecheck·실제 Web
+10종 순회/390px/실패→재시도 결과는 [테마 QA](../qa/2026-10-07-design-profile-research.md)에 있다.
+두 변경은 미게시이며 unequal-span/shared-element와 Native 기기 검증은 남는다.
+
+사용자의 병렬 조사 요청으로 사이트를 3개 작업에 분담했다. 원본 수집, 본문 독해,
+실제 시각 검토, 상태·행동 검증을 별도로 기록하며 수집량을 완료량으로 합산하지 않는다.
+각 작업의 날짜별 보고서에 URL별 범위·발견·미확인을 보존하고 기존 API와 대조한 뒤 흡수한다.
+중앙 ledger를 각 조사자가 동시에 수정하거나 조사 도중 공개 API를 임의로 늘리지 않는다.
+현재 사이트 전체 완료는 false다. 이는 대표 페이지 검토를 전수로 보고했던 혼동을 피하기 위한
+진척 기록 방식이며 병렬 시작 자체를 조사 완료 증거로 삼지 않는다.
+
 사용자가 여러 테마·질감을 토큰에 넣을지, 공통 기본값은 HJM에 두고 제품별로 관리할지 물었고 후자를 선택했다. 공통 규격으로 제품의 분위기가 같아지는 것을 피하면서 검증·재사용을 유지하기 위한 경계다. 기존 [브랜드 경계](../../packages/design-contracts/docs/brand-boundary.md)를 시작점으로 사용한다.
 
 | HJM이 제공할 것 | 제품이 관리할 것 |

@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [화면 제목과 마지막 행동](../../screen-chrome.md), recipe `bottomCtaRecipe`(`src/component-recipes.ts`)
 - 스토리북: `배포/컴포넌트/동작/하단 실행 버튼`
 
@@ -123,3 +123,5 @@ const insets = useSafeAreaInsets();
 
 - Web `BottomCTA`의 `style`은 recipe CSS 변수 뒤에 펼쳐지므로 `--hjm-bottom-cta-*` 변수를 덮을 수 있다. 외형은 recipe 소유이므로 `style`로 변수를 바꾸지 않는다.
 - Native는 하단 inset을 스스로 읽지 않는다. `safeAreaBottom`을 빠뜨려도 오류가 없고 홈 인디케이터에 붙어 보인다.
+
+미게시(1.14.0 이후): 프로필의 `shadow.floating` 색·강도·반경을 상속하되, 위 콘텐츠와 겹치는 footer 역할이라 offsetY는 `-abs(offsetY)`로 위쪽에 표시한다. Native의 0-opacity 프로필은 Android elevation도 0이다. 프로필 없는 Web은 기존 무그림자, Native는 기존 위쪽 recipe 그림자를 유지한다. safe area·큰 글자·로딩/실패와 제품 행동 소유권은 바뀌지 않는다.

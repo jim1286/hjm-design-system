@@ -819,3 +819,56 @@ usage 토큰12·컴포넌트139·구성54·화면22, API map308 platform names,
 Storybook421파일/Web929 id, renderer evidence 동기화와 양 플랫폼 import-graph/optional
 peer 경계. 첫 usage 검사는 토큰 지침에 규격 밖 새2단계 제목을 추가해 실패했으므로 기존
 플랫폼 절의 설명 문단으로 고친 뒤 통과했다. 계약 최종 build도 exit0. 원격검사는 실행하지 않았다.
+
+## 후속: 팝오버·하단 행동·하단 탐색의 프로필 그림자
+
+Tabs 후속은 main `7c56dbc`에 반영됐다. 같은 토큰 소비 경로를 검토하며 Web Popover가
+inline recipe 그림자를 고정하고, Native BottomCTA와 floating/capsule BottomNavigation이
+프로필 그림자를 읽지 않는 누락을 확인했다. 새 컴포넌트를 추가하는 대신 기존 renderer의
+그림자 선택만 고쳤다. 프로필이 없으면 기존 표현을 유지하며 bar 탐색은 그림자를 만들지 않는다.
+하단 행동은 콘텐츠 위쪽을 구분해야 하므로 프로필 강도를 쓰되 offsetY를 `-abs`로 바꾼다.
+Native는 기존 elevation helper로 opacity0 프로필의 Android elevation도 0으로 만든다.
+공개 비교 구성의 저장 행동을 양쪽 BottomCTA로 바꾸고 Web Popover를 추가했다.
+저장·라우팅 callback과 safe area는 제품 소유로 유지하며 Native Popover API를 만들어내지 않았다.
+
+### 재현·수정·로컬 검사
+
+- 수정 전 Web 검사에서 프로필 footer의 computed shadow가 `none`이고 Native 검사에서
+  recipe의 radius8/opacity.08/y-2가 프로필 radius12/opacity.12/y-4와 달라 실패했다.
+  수정 후 Web Chromium 4파일23개(profile-chrome-shadows/design-profile/popover/popover-origin),
+  Native mock-host 3파일18개(profile-chrome-shadows/design-profile/navigation-product)가 통과했다.
+- 모든10 프로필, 프로필 없음, 제품 custom 그림자, 열린 중첩 provider portal의 동일 DOM·
+  값·초점, safeAreaBottom24, nonmodal 계약, bar/floating/capsule을 검증했다. 테마 갱신은
+  저장/탐색 callback을 호출하지 않으며 실제 action 호출만 제품 callback으로 전달됐다.
+- Web/Native renderer build와 양 renderer·양 Showcase typecheck4개 exit0.
+  docs574 Markdown, usage 토큰12·컴포넌트139·구성54·화면22, Storybook421파일/Web929 id,
+  양 renderer import-graph budget/platform boundary 검사도 통과했다. docs 수는 조사자 문서가
+  추가되던 시점의 snapshot이며 전체 사이트 검토 완료나 실기기 확인을 뜻하지 않는다.
+- 실패 PNG SHA256 `0a157c250dcc942cb0f7ff7b76b82b83ead2517b136b5e9ec2ca4f08242cf3dd`를
+  보존하고 이 검사에서 만든 실패 파일만 제거했다. 다른 세션의 원시 출력은 보존한다.
+
+### 실제 브라우저 확인
+
+빌드한 dist의 `design-profile-comparison--default`를 IAB Chromium에서
+dark/RTL/textScale2/reduced globals로 열었다. Popover를 연 채 초안을 입력하고 모든10 프로필을
+순회했다. 열린 입력의 id `hjm-_r_37_`와 초안이 같았고 그림자는 각 floating token을 따랐다.
+terminal은 투명/0, brutalist는 radius0/y6, glass는 radius24/y8, clay는 radius28/y12였다.
+footer는 같은 강도를 위쪽 방향으로 표시했다. Escape 뒤 재열기는 새 DOM id를 가지지만
+controlled 초안이 유지됐다. 390×844에서 popup left14/right374/width360,
+문서 scrollWidth=innerWidth=390이고 Escape 후 팝오버 열기 trigger로 초점이 돌아왔다.
+
+공개 BottomCTA에서 이름을 `실패 후에도 보존할 기록`으로 바꾸고 실패→재시도를 수행했다.
+실패 상태·다시 저장, 재시도 pending의 양 행동 disabled, 최종 저장 성공에서 같은 이름을 확인했다.
+fixture 저장이며 네트워크·저장소·운영 데이터 변경은 없다.
+
+- [10종 순회 후 열린 팝오버와 주변 구성](assets/2026-10-07-profile-popover.png)
+  SHA256 `753f6665e00afd02c02d6cffb15c7d9570f3129f3512f1d6be1c8fd6f8e9a99a`.
+- [390px·다크·RTL·200% 팝오버](assets/2026-10-07-profile-popover-narrow.png)
+  SHA256 `ec08c64a49964475328c4e58a460396e4ae3c164044ff26aeba3ddf7e5536180`.
+  처음 viewport-only screenshot은 browser 기본 캡처 영역과 emulation이 맞지 않아 증거에서
+  제외하고 실제 DOM viewport/document 좌표 clip으로 다시 캡처했다. 임시 override를 해제하고
+  본 작업의 탭을 닫았다. 두 PNG는 실제 결과 증거로 보존한다.
+
+이 수정은 1.14.0 이후 미게시이며 Changeset만 추가했다. 버전 변경·원격 CI·npm 게시·소비 앱
+변경은 없다. Native 검사도 기기 외형/프레임 성능 증거가 아니다. 전수 조사·모든 상태/환경,
+실험 승급·게시·소비 제품 채택은 계속 남는다.
