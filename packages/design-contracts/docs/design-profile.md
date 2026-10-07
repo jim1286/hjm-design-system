@@ -261,3 +261,11 @@ fallback은 유지한다. Web은 일반 Toast fallback이므로 Native 효과를
 기존 테마 비교 구성의 Native 예제로 같은 visible 알림을 보존한 채 10종을 순회한다.
 선택 peer는 optional subpath에 유지하며 새 공개 컴포넌트나 상태 엔진을 추가하지 않는다.
 실제 기기 외형·제스처·음성·성능은 [QA](../../../docs/qa/2026-10-07-design-profile-research.md)의 미확인 범위다.
+
+
+## 제목·읽기용 본문을 다른 서체로 지정하기
+
+2026-10-07 A-05/C-T01 적용: optional `tokens.fontFamily.display/reading`은 제목과 본문 역할을
+독립적으로 지정한다. 생략하면 현재 ui stack을 따르므로 기존 ui-only 제품 설정은 유지된다.
+Heading/Text의 의미·크기·굵기와 입력/버튼의 ui는 바꾸지 않는다. `Text.fontRole`로 명시 역할을 선택한다.
+[역할 계약](font-roles.md)과 [사용 지침](usage/tokens/font-roles.md)을 따른다. 이 추가 API는 1.15.0 이후 미게시다.

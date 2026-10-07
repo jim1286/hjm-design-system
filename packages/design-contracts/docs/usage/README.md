@@ -13,6 +13,7 @@
 | --- | --- | --- | --- | --- |
 | [색상](tokens/color.md) | 색과 글자 | 색은 팔레트 이름(파랑·회색)이 아니라 배경·글자·브랜드·피드백·테두리 **역할**로 고른다. | 배포 | Web · Native |
 | [타이포그래피](tokens/typography.md) | 색과 글자 | 글자 크기·줄 높이·굵기를 정할 때 쓴다. | 배포 | Web · Native |
+| [표시·읽기·기술 글자](tokens/font-roles.md) | 색과 글자 | 앱의 제목·읽기용 본문·입력/조작 문구·기술값을 서로 다른 서체로 표시할 때 쓴다. | 실험 | Web · Native |
 | [간격](tokens/spacing.md) | 공간과 크기 | 요소 사이 간격(gap)과 영역 안쪽 여백(padding)을 정할 때 쓴다. | 배포 | Web · Native |
 | [크기](tokens/size.md) | 공간과 크기 | 아이콘·작은 그림(glyph)의 크기와 누를 수 있는 컨트롤의 높이·최소 터치 영역을 정할 때 쓴다. | 배포 | Web · Native |
 | [화면 여백과 너비](tokens/layout.md) | 공간과 크기 | 화면 좌우 여백·본문 최대 폭·구획 간격·행 높이·breakpoint를 정하는 화면 배치의 기준값이다. | 배포 | Web · Native |

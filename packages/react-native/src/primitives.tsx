@@ -26,6 +26,9 @@ import { resolveColorReference } from "@hjmds/design-contracts/color-references"
 import { withAlpha, type ThemeColors } from "@hjmds/design-contracts/colors";
 import {
   glyph,
+  resolveTextFontRole,
+  resolveFontFamilyStack,
+  type FontRole,
   type TextVariant,
 } from "@hjmds/design-contracts/foundations";
 import {
@@ -173,6 +176,8 @@ export type TextProps = Omit<NativeTextProps, "children"> &
   Readonly<{
     children: ReactNode;
     variant?: TextVariant;
+    /** Overrides family role while retaining the variant metrics and text semantics. */
+    fontRole?: FontRole;
     tone?: TextTone;
     emphasis?: TextEmphasis;
     align?: TextStyle["textAlign"];
@@ -184,6 +189,7 @@ export const Text = forwardRef<NativeText, TextProps>(function Text(
   {
     children,
     variant = textRecipe.defaults.variant,
+    fontRole,
     tone = textRecipe.defaults.tone,
     emphasis: suppliedEmphasis,
     align,
@@ -196,6 +202,7 @@ export const Text = forwardRef<NativeText, TextProps>(function Text(
 ) {
   const { colors, environment, textScaling, tokens, designProfile } = useHjmNativeTheme();
   const emphasis = suppliedEmphasis ?? textRecipe.defaults.emphasis;
+  const familyRole = resolveTextFontRole(variant, fontRole ?? (props.accessibilityRole === "header" || props.role === "heading" ? "display" : undefined));
   const toneColors: Readonly<Record<TextTone, string>> = {
     primary: colors.text,
     body: colors.textBody,
@@ -213,7 +220,7 @@ export const Text = forwardRef<NativeText, TextProps>(function Text(
       {
         color: toneColors[tone],
         fontWeight: designProfile && suppliedEmphasis === undefined ? tokens.typography[variant].fontWeight : textRecipe.emphasis[emphasis],
-        ...resolveNativeFontStyle(tokens.fontFamily.ui),
+        ...resolveNativeFontStyle(resolveFontFamilyStack(tokens.fontFamily, familyRole), familyRole === "code" ? "code" : "ui"),
         textAlign: align ?? logicalTextAlign(environment.direction),
       },
       style,

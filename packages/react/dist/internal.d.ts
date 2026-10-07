@@ -19,10 +19,7 @@ export declare const DesignProfileContext: import("react").Context<Readonly<{
     palette: Readonly<Record<import("@hjmds/design-contracts/colors").ResolvedTheme, Readonly<import("@hjmds/design-contracts/colors").ThemeColors>>>;
     tokens: Readonly<{
         radius: Readonly<Record<"sm" | "md" | "lg" | "xl" | "full", number>>;
-        fontFamily: Readonly<{
-            ui: readonly string[];
-            code: readonly string[];
-        }>;
+        fontFamily: import("@hjmds/design-contracts/foundations").FontFamilyRoles;
         typography: Readonly<Record<"heading" | "caption" | "label" | "body" | "bodyLarge" | "title" | "titleLarge", Readonly<{
             fontSize: number;
             lineHeight: number;

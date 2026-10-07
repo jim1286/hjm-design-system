@@ -4,6 +4,7 @@ import {
   control,
   easing,
   fontFamily,
+  resolveFontFamilyStack,
   fontWeight,
   motion,
   layer,
@@ -103,6 +104,10 @@ export function createHjmThemeStyle(
 
   style["--hjm-font-family-ui"] = (profileTokens?.fontFamily.ui ?? fontFamily.ui).join(", ");
   style["--hjm-font-family-code"] = (profileTokens?.fontFamily.code ?? fontFamily.code).join(", ");
+  // Roles resolve from the nearest Provider, including portal/nested reset contexts.
+  for (const role of ["display", "reading"] as const) {
+    style[`--hjm-font-family-${role}`] = resolveFontFamilyStack(profileTokens?.fontFamily ?? fontFamily, role).join(", ");
+  }
   for (const [name, value] of Object.entries(stroke)) {
     style[`--hjm-stroke-${kebab(name)}`] = `${value}px`;
   }

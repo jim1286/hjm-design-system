@@ -20,8 +20,8 @@ export const radius = {
 
 /**
  * Ordered fallbacks keep the contract platform-neutral: Web renderers join
- * the list as a CSS stack, while native renderers select the first family
- * available on the device instead of receiving a CSS-only string.
+ * the list as a CSS stack, while native renderers request the first named
+ * family (or their OS default mapping), rather than receiving a CSS stack.
  */
 export const fontFamily = {
   ui: [
@@ -42,6 +42,18 @@ export const fontFamily = {
 } as const;
 
 export type FontFamily = keyof typeof fontFamily;
+
+/** Display/reading roles are optional so existing ui/code product profiles retain their fonts. */
+export type FontRole = "ui" | "display" | "reading" | "code";
+export type FontFamilyRoles = Readonly<{ ui: readonly string[]; code: readonly string[]; display?: readonly string[]; reading?: readonly string[] }>;
+
+export function resolveFontFamilyStack(families: FontFamilyRoles, role: FontRole): readonly string[] {
+  if (!["ui", "display", "reading", "code"].includes(role)) throw new TypeError("Unsupported font role");
+  // Unspecified reading/display follow the current ui stack, rather than a
+  // frozen neutral stack that would silently undo an app's existing ui override.
+  return families[role] ?? families.ui;
+}
+
 
 /** String weights translate unchanged to CSS and React Native text styles. */
 export const fontWeight = {
@@ -83,6 +95,18 @@ export const typography = {
 } as const;
 
 export type TextVariant = keyof typeof typography;
+
+/** Visual variants choose a default family role; semantics and sizes remain independent. */
+export function resolveTextFontRole(variant: TextVariant, role?: FontRole): FontRole {
+  if (role !== undefined) {
+    if (!["ui", "display", "reading", "code"].includes(role)) throw new TypeError("Unsupported font role");
+    return role;
+  }
+  if (variant === "body" || variant === "bodyLarge") return "reading";
+  if (variant === "title" || variant === "titleLarge" || variant === "heading") return "display";
+  return "ui";
+}
+
 
 /**
  * Document heading hierarchy without widening the established `TextVariant`

@@ -37,7 +37,7 @@ import {
   type TextEmphasis,
   type TextTone,
 } from "@hjmds/design-contracts/recipes";
-import type { TextVariant } from "@hjmds/design-contracts/foundations";
+import { resolveTextFontRole, type FontRole, type TextVariant } from "@hjmds/design-contracts/foundations";
 import {
   createElement,
   forwardRef,
@@ -311,6 +311,8 @@ export type TextProps = Omit<HTMLAttributes<HTMLElement>, "children"> &
     children: ReactNode;
     as?: "span" | "p" | "div" | "strong" | "small";
     variant?: TextVariant;
+    /** Overrides the variant family role; never changes its semantic element or metrics. */
+    fontRole?: FontRole;
     tone?: TextTone;
     emphasis?: TextEmphasis;
       /** Canonical layout-only placement. Controlled visual keys are excluded. */
@@ -321,6 +323,7 @@ export const Text = forwardRef<HTMLElement, TextProps>(function Text(
   {
     as = "span",
     variant = textRecipe.defaults.variant,
+    fontRole,
     tone = textRecipe.defaults.tone,
     emphasis: suppliedEmphasis,
     className,
@@ -337,6 +340,7 @@ export const Text = forwardRef<HTMLElement, TextProps>(function Text(
     ref,
     className: classNames("hjm-text", className),
     "data-variant": variant,
+    "data-font-role": resolveTextFontRole(variant, fontRole ?? (props.role === "heading" ? "display" : undefined)),
     "data-tone": tone,
     "data-emphasis": emphasis,
     // Placement wins over the legacy `style`, matching Surface's ordering.

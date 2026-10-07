@@ -1,5 +1,5 @@
 import { type ResolvedTheme, type ThemeColors } from "./colors.js";
-import { radius, typography, heading, shadow, type FontWeightValue } from "./foundations.js";
+import { radius, typography, heading, shadow, type FontWeightValue, type FontFamilyRoles } from "./foundations.js";
 import { type EffectSurfaceDescriptor } from "./effect-surface.js";
 import type { ContentTransitionPreset } from "./content-transition.js";
 /** A product chooses one portable profile; the renderer owns each host translation.
@@ -36,10 +36,7 @@ export type HjmDesignProfile = Readonly<{
     palette: Palette;
     tokens: Readonly<{
         radius: RadiusTokens;
-        fontFamily: Readonly<{
-            ui: readonly string[];
-            code: readonly string[];
-        }>;
+        fontFamily: FontFamilyRoles;
         typography: TypographyTokens;
         heading: HeadingTokens;
         shadow: ShadowTokens;

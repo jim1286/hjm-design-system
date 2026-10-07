@@ -44,6 +44,13 @@
   overflow-wrap: anywhere;
 }
 
+/* Family role changes the type voice, never the document level or control state. */
+.hjm-root :where(h1, h2, h3, h4, h5, h6) { font-family: var(--hjm-font-family-display, var(--hjm-font-family-ui, inherit)); }
+.hjm-text[data-font-role="ui"] { font-family: var(--hjm-font-family-ui, inherit); }
+.hjm-text[data-font-role="display"] { font-family: var(--hjm-font-family-display, var(--hjm-font-family-ui, inherit)); }
+.hjm-text[data-font-role="reading"] { font-family: var(--hjm-font-family-reading, var(--hjm-font-family-ui, inherit)); }
+.hjm-text[data-font-role="code"] { font-family: var(--hjm-font-family-code, monospace); }
+
 .hjm-text[data-variant="caption"] { font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); }
 .hjm-text[data-variant="label"] { font-size: var(--hjm-type-label-size); line-height: var(--hjm-type-label-line-height); }
 .hjm-text[data-variant="body"] { font-size: var(--hjm-type-body-size); line-height: var(--hjm-type-body-line-height); }
@@ -208,6 +215,8 @@
 }
 .hjm-button,
 .hjm-icon-button {
+  /* Controls keep ui even when placed inside a reading-font text container. */
+  font-family: var(--hjm-font-family-ui, inherit);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -309,7 +318,8 @@
 
 /* Input interiors use the theme canvas (white in light mode), not tinted
    surfaces. Focus and selection still use blue borders and compact indicators. */
-.hjm-field { display: grid; gap: var(--hjm-space-xs); min-inline-size: 0; }
+.hjm-field {
+  font-family: var(--hjm-font-family-ui, inherit); display: grid; gap: var(--hjm-space-xs); min-inline-size: 0; }
 .hjm-field__label { color: var(--hjm-color-text-body); font-weight: var(--hjm-font-weight-semibold); }
 .hjm-field__control {
   display: flex;
@@ -1694,6 +1704,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 */
 .hjm-heading {
   margin: 0;
+  font-family: var(--hjm-font-family-display, var(--hjm-font-family-ui, inherit));
   color: var(--hjm-color-text);
   font-size: calc(var(--hjm-heading-size) * var(--hjm-text-scale, 1));
   line-height: calc(var(--hjm-heading-line-height) * var(--hjm-text-scale, 1));

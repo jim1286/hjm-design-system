@@ -4,7 +4,7 @@ import { type ContainerGutter, type ContainerSize } from "@hjmds/design-contract
 import { type LayoutSidebarRole } from "@hjmds/design-contracts/components/layout";
 import { type SurfacePadding, type SurfaceRadius, type SurfaceTone } from "@hjmds/design-contracts/recipes/base";
 import { type StackAlign, type StackAxis, type StackGap, type StackJustify, type TextEmphasis, type TextTone } from "@hjmds/design-contracts/recipes";
-import type { TextVariant } from "@hjmds/design-contracts/foundations";
+import { type FontRole, type TextVariant } from "@hjmds/design-contracts/foundations";
 import { type AnchorHTMLAttributes, type HTMLAttributes, type ReactElement, type ReactNode, type Ref } from "react";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type { SurfacePadding, SurfaceRadius, SurfaceTone, } from "@hjmds/design-contracts/recipes/base";
@@ -66,6 +66,8 @@ export type TextProps = Omit<HTMLAttributes<HTMLElement>, "children"> & Readonly
     children: ReactNode;
     as?: "span" | "p" | "div" | "strong" | "small";
     variant?: TextVariant;
+    /** Overrides the variant family role; never changes its semantic element or metrics. */
+    fontRole?: FontRole;
     tone?: TextTone;
     emphasis?: TextEmphasis;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
@@ -75,6 +77,8 @@ export declare const Text: import("react").ForwardRefExoticComponent<Omit<HTMLAt
     children: ReactNode;
     as?: "span" | "p" | "div" | "strong" | "small";
     variant?: TextVariant;
+    /** Overrides the variant family role; never changes its semantic element or metrics. */
+    fontRole?: FontRole;
     tone?: TextTone;
     emphasis?: TextEmphasis;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */

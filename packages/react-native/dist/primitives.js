@@ -6,7 +6,7 @@ import { getIconTransform, resolveIconDescriptor, } from "@hjmds/design-contract
 import { validateLayoutRegions, } from "@hjmds/design-contracts/components/layout";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { withAlpha } from "@hjmds/design-contracts/colors";
-import { glyph, } from "@hjmds/design-contracts/foundations";
+import { glyph, resolveTextFontRole, resolveFontFamilyStack, } from "@hjmds/design-contracts/foundations";
 import { surfaceDefaults, surfaceGeometry, surfaceRecipe, } from "@hjmds/design-contracts/recipes/base";
 import { sectionRecipe, stackRecipe, textRecipe, } from "@hjmds/design-contracts/recipes";
 import { Children, Component, Fragment, forwardRef, isValidElement, useEffect, useMemo, useState, } from "react";
@@ -36,9 +36,10 @@ export const Layout = forwardRef(function Layout({ children, header, footer, sid
         : (_jsx(View, { ...sidebar.containerProps, accessibilityLabel: sidebar.label, children: sidebar.children }));
     return (_jsxs(View, { ...props, ref: ref, style: [{ flex: 1 }, style], children: [hasHeader ? _jsx(View, { ...headerProps, children: header }) : null, sidebar?.mode === "overlay" ? sidebar.renderOverlay(sidebarNode) : sidebarNode, _jsx(View, { ...mainProps, ref: mainRef, style: [{ flex: 1 }, mainProps?.style], children: children }), hasFooter ? _jsx(View, { ...footerProps, children: footer }) : null] }));
 });
-export const Text = forwardRef(function Text({ children, variant = textRecipe.defaults.variant, tone = textRecipe.defaults.tone, emphasis: suppliedEmphasis, align, allowFontScaling, layoutStyle, style, ...props }, ref) {
+export const Text = forwardRef(function Text({ children, variant = textRecipe.defaults.variant, fontRole, tone = textRecipe.defaults.tone, emphasis: suppliedEmphasis, align, allowFontScaling, layoutStyle, style, ...props }, ref) {
     const { colors, environment, textScaling, tokens, designProfile } = useHjmNativeTheme();
     const emphasis = suppliedEmphasis ?? textRecipe.defaults.emphasis;
+    const familyRole = resolveTextFontRole(variant, fontRole ?? (props.accessibilityRole === "header" || props.role === "heading" ? "display" : undefined));
     const toneColors = {
         primary: colors.text,
         body: colors.textBody,
@@ -54,7 +55,7 @@ export const Text = forwardRef(function Text({ children, variant = textRecipe.de
         {
             color: toneColors[tone],
             fontWeight: designProfile && suppliedEmphasis === undefined ? tokens.typography[variant].fontWeight : textRecipe.emphasis[emphasis],
-            ...resolveNativeFontStyle(tokens.fontFamily.ui),
+            ...resolveNativeFontStyle(resolveFontFamilyStack(tokens.fontFamily, familyRole), familyRole === "code" ? "code" : "ui"),
             textAlign: align ?? logicalTextAlign(environment.direction),
         },
         style,

@@ -1,5 +1,5 @@
 import { resolveSurfaceFillOpacity } from "@hjmds/design-contracts/palette-contrast";
-import { backdrop, control, easing, fontFamily, fontWeight, motion, layer, radius, shadow, spacing, stroke, typography, } from "@hjmds/design-contracts/foundations";
+import { backdrop, control, easing, fontFamily, resolveFontFamilyStack, fontWeight, motion, layer, radius, shadow, spacing, stroke, typography, } from "@hjmds/design-contracts/foundations";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { focusIndicatorContract } from "@hjmds/design-contracts/contracts";
 import { visibleControlHeight, } from "@hjmds/design-contracts/components/design-system-provider";
@@ -60,6 +60,10 @@ export function createHjmThemeStyle(value) {
     }
     style["--hjm-font-family-ui"] = (profileTokens?.fontFamily.ui ?? fontFamily.ui).join(", ");
     style["--hjm-font-family-code"] = (profileTokens?.fontFamily.code ?? fontFamily.code).join(", ");
+    // Roles resolve from the nearest Provider, including portal/nested reset contexts.
+    for (const role of ["display", "reading"]) {
+        style[`--hjm-font-family-${role}`] = resolveFontFamilyStack(profileTokens?.fontFamily ?? fontFamily, role).join(", ");
+    }
     for (const [name, value] of Object.entries(stroke)) {
         style[`--hjm-stroke-${kebab(name)}`] = `${value}px`;
     }

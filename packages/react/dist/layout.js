@@ -6,6 +6,7 @@ import { resolveContainerDescriptor, } from "@hjmds/design-contracts/components/
 import { layoutRecipe, validateLayoutWebDescriptor, } from "@hjmds/design-contracts/components/layout";
 import { surfaceDefaults, surfaceGeometry, surfaceRecipe, } from "@hjmds/design-contracts/recipes/base";
 import { stackRecipe, textRecipe, } from "@hjmds/design-contracts/recipes";
+import { resolveTextFontRole } from "@hjmds/design-contracts/foundations";
 import { createElement, forwardRef, useId, useRef, } from "react";
 import { classNames, composeRefs, useElementWidth, useWindowWidth, } from "./internal.js";
 function hasRegionContent(content) {
@@ -90,7 +91,7 @@ export const Layout = forwardRef(function Layout({ children, header, footer, sid
                     ...mainStyle,
                 }, children: children }), hasFooter ? (_jsx("footer", { ...restFooterProps, className: classNames("hjm-layout__footer", footerClassName), children: footer })) : null] }));
 });
-export const Text = forwardRef(function Text({ as = "span", variant = textRecipe.defaults.variant, tone = textRecipe.defaults.tone, emphasis: suppliedEmphasis, className, layoutStyle, style, ...props }, ref) {
+export const Text = forwardRef(function Text({ as = "span", variant = textRecipe.defaults.variant, fontRole, tone = textRecipe.defaults.tone, emphasis: suppliedEmphasis, className, layoutStyle, style, ...props }, ref) {
     const profile = useDesignProfileDefaults();
     const emphasis = suppliedEmphasis ?? textRecipe.defaults.emphasis;
     return createElement(as, {
@@ -98,6 +99,7 @@ export const Text = forwardRef(function Text({ as = "span", variant = textRecipe
         ref,
         className: classNames("hjm-text", className),
         "data-variant": variant,
+        "data-font-role": resolveTextFontRole(variant, fontRole ?? (props.role === "heading" ? "display" : undefined)),
         "data-tone": tone,
         "data-emphasis": emphasis,
         // Placement wins over the legacy `style`, matching Surface's ordering.

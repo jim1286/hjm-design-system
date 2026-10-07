@@ -1,5 +1,5 @@
 import { THEMES, type ResolvedTheme, type ThemeColors } from "./colors.js";
-import { radius, fontFamily, typography, heading, shadow, fontWeight, type FontWeightValue } from "./foundations.js";
+import { radius, fontFamily, typography, heading, shadow, fontWeight, type FontWeightValue, type FontFamilyRoles } from "./foundations.js";
 import { checkPaletteContrast, resolveSurfaceFillOpacity } from "./palette-contrast.js";
 import { resolveEffectSurface, type EffectSurfaceDescriptor } from "./effect-surface.js";
 import type { ContentTransitionPreset } from "./content-transition.js";
@@ -27,7 +27,7 @@ export type HjmDesignProfile = Readonly<{
   palette: Palette;
   tokens: Readonly<{
     radius: RadiusTokens;
-    fontFamily: Readonly<{ ui: readonly string[]; code: readonly string[] }>;
+    fontFamily: FontFamilyRoles;
     typography: TypographyTokens;
     heading: HeadingTokens;
     shadow: ShadowTokens;
@@ -215,12 +215,21 @@ function merge(base: HjmDesignProfile, input: HjmDesignProfileInput): HjmDesignP
   })) as unknown as HeadingTokens;
   // The complete base shadow record has the same key-preservation guarantee.
   const elevation = Object.fromEntries(Object.entries(base.tokens.shadow).map(([key, value]) => [key, { ...value, ...input.tokens?.shadow?.[key as keyof ShadowTokens] }])) as unknown as ShadowTokens;
+  const requestedFonts = input.tokens?.fontFamily;
+  for (const role of Object.keys(requestedFonts ?? {})) {
+    if (!["ui", "code", "display", "reading"].includes(role)) throw new TypeError("Unsupported design profile font role");
+    const families = requestedFonts?.[role as keyof FontFamilyRoles];
+    if (families !== undefined && (!Array.isArray(families) || !families.length || families.some(family => typeof family !== "string" || !family.trim()))) throw new TypeError("Design profile font families must not be empty");
+  }
+  const display = requestedFonts?.display ?? base.tokens.fontFamily.display;
+  const reading = requestedFonts?.reading ?? base.tokens.fontFamily.reading;
   const profile: HjmDesignProfile = {
     id: input.id ?? base.id, palette,
     tokens: {
       radius: { ...base.tokens.radius, ...input.tokens?.radius },
       // Copy caller-owned arrays: freezing the resolved profile must never freeze app input.
-      fontFamily: { ui: [...(input.tokens?.fontFamily?.ui ?? base.tokens.fontFamily.ui)], code: [...(input.tokens?.fontFamily?.code ?? base.tokens.fontFamily.code)] },
+      fontFamily: { ui: [...(input.tokens?.fontFamily?.ui ?? base.tokens.fontFamily.ui)], code: [...(input.tokens?.fontFamily?.code ?? base.tokens.fontFamily.code)],
+        ...(display ? { display: [...display] } : {}), ...(reading ? { reading: [...reading] } : {}) },
       typography: type, heading: headings, shadow: elevation,
     },
     material: { ...base.material, ...input.material, surface: input.material?.surface === null ? null
@@ -247,7 +256,7 @@ function merge(base: HjmDesignProfile, input: HjmDesignProfileInput): HjmDesignP
     choose(value.fontWeight, ["400", "500", "600", "700", "800"], "fontWeight");
   }
   for (const families of Object.values(profile.tokens.fontFamily)) {
-    if (!families.length || families.some(family => !family.trim())) throw new TypeError("Design profile font families must not be empty");
+    if (!Array.isArray(families) || !families.length || families.some(family => typeof family !== "string" || !family.trim())) throw new TypeError("Design profile font families must not be empty");
   }
   for (const token of Object.values(elevation)) {
     if (!/^#[0-9a-f]{6}$/i.test(token.color) || !Number.isFinite(token.opacity) || token.opacity < 0 || token.opacity > 1 || !Number.isFinite(token.radius) || token.radius < 0 || token.radius > 96 || !Number.isFinite(token.offsetY) || Math.abs(token.offsetY) > 96) throw new RangeError("Invalid design profile shadow");

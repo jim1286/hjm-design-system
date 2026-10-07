@@ -18,8 +18,8 @@ export const radius = {
 };
 /**
  * Ordered fallbacks keep the contract platform-neutral: Web renderers join
- * the list as a CSS stack, while native renderers select the first family
- * available on the device instead of receiving a CSS-only string.
+ * the list as a CSS stack, while native renderers request the first named
+ * family (or their OS default mapping), rather than receiving a CSS stack.
  */
 export const fontFamily = {
     ui: [
@@ -38,6 +38,13 @@ export const fontFamily = {
         "monospace",
     ],
 };
+export function resolveFontFamilyStack(families, role) {
+    if (!["ui", "display", "reading", "code"].includes(role))
+        throw new TypeError("Unsupported font role");
+    // Unspecified reading/display follow the current ui stack, rather than a
+    // frozen neutral stack that would silently undo an app's existing ui override.
+    return families[role] ?? families.ui;
+}
 /** String weights translate unchanged to CSS and React Native text styles. */
 export const fontWeight = {
     regular: "400",
@@ -66,6 +73,19 @@ export const typography = {
     titleLarge: { fontSize: 20, lineHeight: 28, fontWeight: fontWeight.heavy },
     heading: { fontSize: 24, lineHeight: 32, fontWeight: fontWeight.heavy },
 };
+/** Visual variants choose a default family role; semantics and sizes remain independent. */
+export function resolveTextFontRole(variant, role) {
+    if (role !== undefined) {
+        if (!["ui", "display", "reading", "code"].includes(role))
+            throw new TypeError("Unsupported font role");
+        return role;
+    }
+    if (variant === "body" || variant === "bodyLarge")
+        return "reading";
+    if (variant === "title" || variant === "titleLarge" || variant === "heading")
+        return "display";
+    return "ui";
+}
 /**
  * Document heading hierarchy without widening the established `TextVariant`
  * union. Levels 3–5 reuse the existing semantic styles; larger levels are

@@ -35,6 +35,7 @@ export function Heading({ level, semanticLevel, children, layoutStyle, style }: 
   const metrics = theme.designProfile?.tokens.heading[level] ?? headingRecipe.levels[level];
   return (
     <Text
+      fontRole="display"
       accessibilityRole="header"
       // Native exposes one heading role, so the document level rides along as
       // an accessibility value instead of disappearing.

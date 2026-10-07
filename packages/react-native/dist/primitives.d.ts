@@ -3,7 +3,7 @@ import { type AspectRatioValue } from "@hjmds/design-contracts/components/aspect
 import { type ContainerGutter, type ContainerSize } from "@hjmds/design-contracts/components/container";
 import { type IconDescriptor } from "@hjmds/design-contracts/components/icon";
 import { type LayoutSidebarRole } from "@hjmds/design-contracts/components/layout";
-import { type TextVariant } from "@hjmds/design-contracts/foundations";
+import { type FontRole, type TextVariant } from "@hjmds/design-contracts/foundations";
 import { type SurfacePadding as ContractSurfacePadding, type SurfaceRadius as ContractSurfaceRadius, type SurfaceTone as ContractSurfaceTone } from "@hjmds/design-contracts/recipes/base";
 import { type StackAlign, type StackAxis, type StackGap, type StackJustify, type TextEmphasis, type TextTone as ContractTextTone } from "@hjmds/design-contracts/recipes";
 import { type Ref, type ReactNode } from "react";
@@ -49,6 +49,8 @@ export declare const Layout: import("react").ForwardRefExoticComponent<Omit<View
 export type TextProps = Omit<NativeTextProps, "children"> & Readonly<{
     children: ReactNode;
     variant?: TextVariant;
+    /** Overrides family role while retaining the variant metrics and text semantics. */
+    fontRole?: FontRole;
     tone?: TextTone;
     emphasis?: TextEmphasis;
     align?: TextStyle["textAlign"];
@@ -58,6 +60,8 @@ export type TextProps = Omit<NativeTextProps, "children"> & Readonly<{
 export declare const Text: import("react").ForwardRefExoticComponent<Omit<NativeTextProps, "children"> & Readonly<{
     children: ReactNode;
     variant?: TextVariant;
+    /** Overrides family role while retaining the variant metrics and text semantics. */
+    fontRole?: FontRole;
     tone?: TextTone;
     emphasis?: TextEmphasis;
     align?: TextStyle["textAlign"];

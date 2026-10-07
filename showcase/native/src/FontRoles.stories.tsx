@@ -1,0 +1,11 @@
+import type { Meta, StoryObj } from "@storybook/react-native";
+import { FontRolePreview } from "./font-role-preview";
+const meta = { title: "실험/토큰/색과 글자/표시·읽기·기술 글자", component: FontRolePreview } satisfies Meta<typeof FontRolePreview>;
+export default meta;
+type Story = StoryObj<typeof meta>;
+export const Default: Story = { name: "기본" };
+export const Inherited: Story = { name: "UI 서체 상속", args: { initialMode: "inherited" } };
+export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
+export const ReducedMotion: Story = { name: "동작 줄이기", globals: { motion: "reduced" } };
+export const Rtl: Story = { name: "오른쪽에서 왼쪽", globals: { direction: "rtl" } };

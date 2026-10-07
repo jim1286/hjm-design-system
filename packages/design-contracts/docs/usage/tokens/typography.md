@@ -101,3 +101,6 @@ Heading의 다섯 시각 단계는 `defineHjmDesignProfile({ tokens: { heading: 
 metrics로 연결된다. 해당 heading을 담은 Provider에서 가장 가까운 profile을 읽는다.
 level3/4/5는 기존 typography heading/titleLarge/title override를 기본으로 병합하며
 명시적인 heading 값이 우선한다. 문서의 h1~h6 순서는 `semanticLevel`이 소유한다.
+
+제목·본문에 서로 다른 글꼴이 필요하면 [표시·읽기·기술 글자](font-roles.md)를 사용한다.
+현재 ui/code-only 설정은 유지되며 신규 optional display/reading은 1.15.0 이후 미게시다.

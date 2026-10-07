@@ -21,9 +21,9 @@
       "new-experiment": 10,
       "reuse-existing": 96
     },
-    "verifiedRegistrationRecords": 4,
-    "candidateRecordsLinkedToVerifiedRegistration": 4,
-    "newExperimentRegistrationRecords": 3,
+    "verifiedRegistrationRecords": 6,
+    "candidateRecordsLinkedToVerifiedRegistration": 7,
+    "newExperimentRegistrationRecords": 5,
     "existingExperimentImprovementRecords": 1
   },
   "countMeaning": "Candidate records and paths are not implemented APIs or registered experiments. Cross-source semantic overlap is preserved through merges. A matching Storybook title alone does not prove that a proposed variant was absorbed.",
@@ -85,8 +85,9 @@
         "A-05",
         "C-T01"
       ],
-      "decision": "Existing heading metrics/hierarchy can be reused. Independent display/reading font-family roles remain an explicit improvement gap, not fulfilled by resizing ui text.",
-      "status": "adoption-target-consolidated-not-all-variants-implemented"
+      "decision": "Reuse heading metrics/hierarchy. Optional display/reading font families and Text.fontRole now propagate through both renderers; existing ui/code profiles retain current UI fallbacks. Tracking/small-caps and product font assets remain separate.",
+      "status": "family-roles-implemented-web-reviewed-native-device-pending",
+      "evidence": "docs/qa/2026-10-07-font-roles.md"
     },
     {
       "id": "state-and-intent-comparison",
@@ -207,9 +208,13 @@
       "sourcePointer": "experimentCandidateCheckpoint.candidates/A-05",
       "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
       "maximumFontExcluded": true,
-      "matchingStoryTitles": [],
-      "implementationStatus": "adoption-decision-only",
-      "registrationEvidence": null
+      "matchingStoryTitles": [
+        "실험/토큰/색과 글자/표시·읽기·기술 글자"
+      ],
+      "implementationStatus": "family-roles-and-hierarchy-implemented-not-all-variants",
+      "registrationEvidence": "docs/qa/2026-10-07-font-roles.md",
+      "realizedPath": "실험/토큰/색과 글자/표시·읽기·기술 글자",
+      "remainingScope": "Native device font/glyph/fallback verification; product font assets/licensing/loading; contextual tracking and small-caps are not implemented here."
     },
     {
       "id": "A-06",
@@ -2228,9 +2233,13 @@
       "sourcePointer": "experimentCandidates.catalog/T01",
       "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
       "maximumFontExcluded": true,
-      "matchingStoryTitles": [],
-      "implementationStatus": "adoption-decision-only",
-      "registrationEvidence": null
+      "matchingStoryTitles": [
+        "실험/토큰/색과 글자/표시·읽기·기술 글자"
+      ],
+      "implementationStatus": "family-roles-and-hierarchy-implemented-not-all-variants",
+      "registrationEvidence": "docs/qa/2026-10-07-font-roles.md",
+      "realizedPath": "실험/토큰/색과 글자/표시·읽기·기술 글자",
+      "remainingScope": "Native device font/glyph/fallback verification; product font assets/licensing/loading; contextual tracking and small-caps are not implemented here."
     },
     {
       "id": "C-T02",
@@ -4016,7 +4025,7 @@
     {
       "order": 5,
       "id": "registered-experiment-review",
-      "decision": "Review four new compositions and the improved theme experiment; promote/publish only verified behavior before consumer adoption. CollectionRail is not part of published 1.15.0.",
+      "decision": "Review five new experiments and the improved theme experiment; promote/publish only verified behavior before consumer adoption. CollectionRail and font roles are not included in published 1.15.0.",
       "status": "registered-not-promoted-or-published"
     }
   ]

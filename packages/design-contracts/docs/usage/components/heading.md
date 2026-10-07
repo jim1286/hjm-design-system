@@ -91,3 +91,6 @@ import { Heading } from "@hjmds/react-native/heading";
 - Web `style`은 이제 버려지지 않고 합쳐진다. 다만 크기·줄 높이·굵기 변수(`--hjm-heading-*`)는 recipe가 마지막에 덮으므로
   `style`로 크기를 바꿀 수 없다. 배치는 `layoutStyle`로 준다.
 - Native `style`(deprecated)은 아직 마지막에 합쳐져 색·크기까지 바뀐다. 쓰지 말고 `layoutStyle`·`level`로 옮긴다.
+
+2026-10-07 추가: 제목은 프로필의 optional `tokens.fontFamily.display`를 사용하고 생략 시 현재 ui를 따른다.
+문서 semanticLevel·크기·굵기는 유지한다. [서체 역할](../tokens/font-roles.md), 1.15.0 이후 미게시.

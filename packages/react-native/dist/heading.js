@@ -13,7 +13,7 @@ export function Heading({ level, semanticLevel, children, layoutStyle, style }) 
     validateHeadingDescriptor(descriptor);
     const theme = useHjmNativeTheme();
     const metrics = theme.designProfile?.tokens.heading[level] ?? headingRecipe.levels[level];
-    return (_jsx(Text, { accessibilityRole: "header", "aria-level": resolveHeadingSemanticLevel(descriptor), style: [
+    return (_jsx(Text, { fontRole: "display", accessibilityRole: "header", "aria-level": resolveHeadingSemanticLevel(descriptor), style: [
             {
                 color: resolveColorReference(headingRecipe.color, theme.palette),
                 fontSize: metrics.fontSize,

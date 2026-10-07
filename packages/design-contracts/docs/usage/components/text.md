@@ -58,6 +58,7 @@ import { Text } from "@hjmds/react-native/primitives";
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `variant` | `caption`(11) · `label`(12) · `body`(14) · `bodyLarge`(16) · `title`(18) · `titleLarge`(20) · `heading`(24) | `body` | 화면·섹션 제목은 모양이 아니라 [Heading](heading.md)으로 쓴다 |
+| `fontRole` | `ui` · `display` · `reading` · `code` | 제목 variant는 display, 본문은 reading, caption/label은 ui | 명시값이 기본을 덮는다. [역할 지침](../tokens/font-roles.md), 1.15.0 이후 미게시 |
 | `emphasis` | `regular` · `medium`(semibold) · `strong`(bold) | `regular` | — |
 | `tone` | `primary` · `body` · `muted` · `subtle` · `weak` · `brand` · `danger` · `inverse` | `primary` | — |
 | `as` | `span` · `p` · `div` · `strong` · `small` | `span` | Web만. 문단은 `as="p"` |
@@ -68,7 +69,7 @@ import { Text } from "@hjmds/react-native/primitives";
 
 ## 배치
 
-Native는 제품 프로필의 `tokens.fontFamily.ui`를 실제 텍스트/입력 host에 연결한다. 기본 UI stack은 OS 서체를 유지하고, 제품이 지정한 첫 named font의 등록·글리프 확인은 제품이 맡는다.
+Native는 Text의 역할을 해당 stack에, 입력/조작 host는 제품 프로필의 `tokens.fontFamily.ui`에 연결한다. 기본 UI stack은 OS 서체를 유지하고, 제품이 지정한 첫 named font의 등록·글리프 확인은 제품이 맡는다.
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
