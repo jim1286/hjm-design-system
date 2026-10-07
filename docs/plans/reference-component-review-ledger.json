@@ -1759,7 +1759,7 @@
       "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "2026-10-07: partial live keyboard flow in both previews. Three tabs selected with Enter, ArrowRight leaves current button. Four card steps and Previous verified. Final Close is a no-op on desktop and 390px dark/reduced; Code confirms null final branch. Prior/next headings coexist during sampled transitions; settled DOM has one. Timing, large text, RTL, spoken AT and Native pending.",
-      "adoptionDecision": "기존 API + 표현 비교 — activeIndex에 따른 keyed enter/exit. 원본은 index 범위 검증·입력 보존·출력 확정·초점 이동을 별도 제공하지 않는다. 기존 단일 active subtree·제품 상태·focusTarget·height motion을 유지한다. 실험 구현/승격/게시 완료 아님.",
+      "adoptionDecision": "기존 API 합성 + 표현 비교 실험 등록. Tabs/TabPanel 수동 활성화와 단일 active 본문, 제품 제어 초안, OnboardingScreen 실제 완료/실패 복구를 유지. 원본 null Close/무의미 탭/exit 복제는 불채택. 전체 조사·승격·게시 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
@@ -1808,12 +1808,30 @@
         "digest": "6f5f04f19bc34a7029344f429f3f7ebe1502b21184af9e8e61aa8b58e5613797"
       },
       "experimentProposal": {
-        "status": "proposed-not-registered",
+        "status": "registered-experimental",
         "path": "실험/구성/비교와 검증/내용 전환 비교",
         "approach": "Preserve existing Tabs selection/focus semantics and ContentTransition active subtree/focusTarget/height motion. Use published OnboardingScreen for a complete step flow; no duplicated state engine. Retain deployed stories.",
         "comparison": "Catalog/API map and both source renderers; npm 1.14.0 /screen-flows exports, declaration and implementation verified from published archives. Existing usage corrected for actual platform layout.",
         "variants": "Tabs appearance and step-card height; same product state and completion callback. Default/Dark/LargeText plus focus, draft retention and reduced motion checks.",
-        "evidence": "../qa/2026-10-07-motion-reference-page-review.md"
+        "evidence": "../qa/2026-10-07-content-transition-comparison.md",
+        "registration": {
+          "date": "2026-10-07",
+          "platforms": [
+            "Web",
+            "Native"
+          ],
+          "stories": [
+            "Default",
+            "StepFlow",
+            "Dark",
+            "LargeText",
+            "ReducedMotion",
+            "Rtl"
+          ],
+          "webId": "composition-comparison-content-transitions",
+          "usage": "packages/design-contracts/docs/usage/compositions/content-transition-comparison.md",
+          "scope": "Researched candidate unit registered; global research incomplete; Native device and promotion/publication pending."
+        }
       }
     },
     {

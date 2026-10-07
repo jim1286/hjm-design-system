@@ -1,0 +1,11 @@
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { ContentTransitionComparison } from "./content-transition-comparison-preview";
+const meta = { id: "composition-comparison-content-transitions", includeStories: ["Default", "StepFlow", "Dark", "LargeText", "ReducedMotion", "Rtl"], title: "실험/구성/비교와 검증/내용 전환 비교", component: ContentTransitionComparison, parameters: { hjm: { optionalEntry: "content-transition" } } } satisfies Meta<typeof ContentTransitionComparison>;
+export default meta;
+type Story = StoryObj<typeof meta>;
+export const Default: Story = { name: "기본" };
+export const StepFlow: Story = { name: "단계별 완료", args: { mode: "steps" } };
+export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
+export const ReducedMotion: Story = { name: "동작 줄이기", globals: { motion: "reduced" } };
+export const Rtl: Story = { name: "오른쪽에서 왼쪽", globals: { direction: "rtl" } };

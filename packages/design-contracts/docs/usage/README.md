@@ -219,6 +219,7 @@
 | [숫자 변화와 메뉴 변형](compositions/optional-motion.md) | 직접 조작과 모션 | 선택 설치 모션(숫자 자리 단위 변화, 메뉴 형태 변환)을 기존 컴포넌트 자리에 끼워 넣을 때 쓴다. | 배포 | Web |
 | [이미지·시트·키보드 조작](compositions/optional-adapters.md) | 직접 조작과 모션 | Native 앱 한 화면에서 이미지 확대 보기, 끌어서 높이를 바꾸는 시트, OS 길게 누르기 메뉴, 키보드를 따라 올라가는 하단 행동을 함께 쓸 때 provider 중첩 순서와 각 요소의 자리를 확인하는 구성이다. | 배포 | Native |
 | [내비게이션 바 비교](compositions/navigation-bar-collection.md) | 비교와 검증 | 하단 탭에 목적지 이동과 별개의 행동(작성·전원·기록 추가)을 함께 둘지, 선택한 목적지를 어떻게 보여 줄지 고를 때 이 비교를 본다. | 배포 | Web · Native |
+| [내용 전환 비교](compositions/content-transition-comparison.md) | 비교와 검증 | 동일 내용의 전환 표현을 테마와 비교하거나 단계별 입력·완료·복구를 검토할 때 쓴다. | 실험 | Web · Native |
 | [네이티브 컴포넌트 기기 확인](compositions/native-renderers.md) | 비교와 검증 | Native 공개 컴포넌트가 실제 기기·시뮬레이터에서 그려지고 눌리는지 범주별로 한 화면에서 확인할 때 쓴다. | 배포 | Native |
 | [복합 입력 모음](compositions/compound-controls.md) | 비교와 검증 | 기존 컨트롤을 묶은 네 가지 복합 입력(소요 시간, 버튼 자리 확인, 이모지 반응, 알림 종)을 화면 안 한 블록으로 둘 때 쓴다. | 배포 | Web · Native |
 | [시각 효과 모음](compositions/visual-foundations.md) | 비교와 검증 | 배경 질감, 의미 이름 아이콘, 사진 없는 프로필 얼굴, 문장 전환처럼 화면의 분위기를 더하는 선택 표현을 고를 때 이 모음을 본다. | 배포 | Web · Native |

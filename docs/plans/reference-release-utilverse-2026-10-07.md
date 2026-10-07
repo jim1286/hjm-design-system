@@ -10,7 +10,7 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 최종 실험 경로→등록 상태를 연결해 누락을 대조한다. 동일 후보의 여러 출처는 하나로 묶고,
 불채택한 자료는 이유를 남긴다. 제목은 `실험/<토큰|컴포넌트|구성|화면>/<고정 분류>/<항목>`
 4마디, 지원 플랫폼의 Default/Dark/LargeText와 사용 지침을 같은 변경에 제공한다.
-조사 중 후보를 등록 완료로 표시하지 않는다. 등록 후 UI·행동 검토와 승급·게시 단계는 별도로 기록한다.
+조사 중 후보를 등록 완료로 표시하지 않는다. 단, 해당 후보의 제공 코드와 실제 동작 검토가 끝난 단위는 전체 사이트 조사와 병행해 실제 구현·사용 지침·규격 검사를 갖춰 등록할 수 있다. 이때 전체 조사 완료로 합산하지 않고 후보별 등록과 미확인 QA를 별도 기록한다. 이는 조사 완료 전 제안 문자열만으로 등록했다고 보고하는 혼동을 피하면서 검토한 후보 구현을 진행하기 위한 구분이다. 등록 후 UI·행동 검토와 승급·게시 단계는 별도로 기록한다.
 규격은 [Storybook 탐색](../STORYBOOK_NAVIGATION.md)과 [사용 지침](../../packages/design-contracts/docs/usage/README.md)을 따른다.
 
 2026-10-07 후속: Component Gallery 실제 viewport 검토를 189모음/756개, 완전한 기본
@@ -485,3 +485,7 @@ floating shadow, Native Dialog/AlertDialog/Sheet의 shape/shadow, Select/Combobo
 Magic UI의 알려진 공개 URL 257개의 source fetch가 exit=0/HTTP200 257로 종료했다.
 원본 reading·UI/state 검토는 별도 진행이며 11개 사이트 전수 검토 완료 flag는 유지하지 않는다.
 미게시 source와 명령/화면/hash/잔여 경로는 [테마 QA](../qa/2026-10-07-design-profile-research.md)에 보존한다.
+
+2026-10-07 내용 전환 후보 단위: Motion 두 예제 전체 코드·실제 흐름 대조 후 양 플랫폼
+`실험/구성/비교와 검증/내용 전환 비교`에6스토리와 사용 지침을 등록했다.
+[후보별 등록·검증](../qa/2026-10-07-content-transition-comparison.md). 전수 조사·Native 기기·승급·게시 완료 아님.
