@@ -1,5 +1,19 @@
 # @hjmds/react-native
 
+## 1.16.1
+
+### Patch Changes
+
+- a3a01b6: Place CommentThreadScreen item actions beside the heart in one inline row on Web and Native.
+  Comment previews use a vertical-ellipsis Menu trigger. The existing actions and likeAction APIs,
+  product permissions, and independent action callbacks are preserved. Consumers that used actions
+  for wide body content should move that content to body; this slot now owns trailing comment actions.
+- a3a01b6: Restore the floating BottomNavigation top border to the existing all-edge recipe.
+  React Native's explicit borderTopWidth=0 overrode borderWidth=1, leaving the top edge
+  missing unless a consumer supplied deprecated surfaceStyle. Bar and capsule geometry,
+  router activation, center actions, safe-area padding and keyboard behavior are preserved.
+  Consumers may remove that compatibility override after installing the corrected published train.
+
 ## 1.16.0
 
 ### Minor Changes
