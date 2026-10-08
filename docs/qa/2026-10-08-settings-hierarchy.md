@@ -24,3 +24,16 @@ Pending: package release checks and
 publication, official Spint dependency upgrade, native top/middle/bottom review.
 The currently installed Spint package is still 1.17.0, so the source fix is not yet
 consumer visual proof. No release or store submission is claimed here.
+
+## Official release receipt
+
+Release Packages run 37780813537 completed successfully at 2026-10-08 13:04:56 UTC.
+It verified commit 3aae610af02abd4756148ea6a526ec00b535ac04, published all three
+@hjmds packages as 1.17.1, and created annotated tag v1.17.1 pointing to that SHA.
+The same commit's Showcase and Visual Baselines runs also passed. The additional
+local browser screen suite passed all 14 tests (existing React act warnings remain).
+
+At 13:05 UTC the local canonical release importer and npm view still returned 404
+for 1.17.1. Publication logs therefore prove the publish step, not yet successful
+consumer resolution. Spint adoption/native visual proof remain pending; no local
+renderer copy or bypassed package provenance is used to claim adoption.
