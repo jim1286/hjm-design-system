@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 미게시(1.12.1 이후)
-- 검토일: 2026-10-06
+- 검토일: 2026-10-08
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screens.tsx`·`src/screen-flows.tsx`; 기존 개별 지침을 새 규격으로 통합. 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
 - 스토리북: `배포/화면/설정/앱 설정`
 
@@ -124,3 +124,9 @@ import { ListRow } from "@hjmds/react-native/data-display";
 | 조각 import | `Switch` `/selection`, `ListRow` `/display` | `Switch` `/inputs`, `ListRow` `/data-display` |
 | Switch 기본 `presentation` | `inline` | `row` |
 | 행 이동 이벤트 | ListRow `href`/`onClick` | ListRow `onPress` |
+
+2026-10-08 Spint 실화면 검토에서 일반 Section의 큰 제목과 상단 구분선이 설정 행보다 강하게
+보였다. SettingsScreen은 화면 제목 아래의 그룹 이름을 `Text label / strong / muted`로 표시하고,
+그룹 간격은 `md`, 제목과 내용 간격은 `xs`로 둔다. 그룹마다 추가하던 진한 선은 제거하며,
+행 자체의 경계·터치 영역은 유지한다. 제품에서 내부 스타일을 덮거나 별도 설정 틀을 복제하지 않는다.
+Web의 의미 있는 section heading과 Native의 header 역할은 유지한다.

@@ -77,8 +77,9 @@ export function ScreenLayout({ title, header, contentInset = "default", presenta
 export type SettingsScreenSection = Readonly<{ id: string; title: string; description?: string; children: ReactNode }>;
 export type SettingsScreenProps = Omit<ScreenLayoutProps, "children" | "scroll"> & Readonly<{ profile?: ReactNode; sections: readonly SettingsScreenSection[] }>;
 export function SettingsScreen({ profile, sections, ...props }: SettingsScreenProps) {
-  return <ScreenLayout {...props}><Stack gap="xl">{profile}{sections.map(section =>
-    <Section className="hjm-settings-section" key={section.id} title={section.title} description={section.description}>{section.children}</Section>)}</Stack></ScreenLayout>;
+  // Keep semantic section headings while using the smaller settings label role.
+  return <ScreenLayout {...props}><Stack gap="md">{profile}{sections.map(section =>
+    <Section className="hjm-settings-section" key={section.id} title={<Text variant="label" emphasis="strong" tone="muted">{section.title}</Text>} description={section.description}>{section.children}</Section>)}</Stack></ScreenLayout>;
 }
 
 export type NotificationInboxScreenProps = Omit<ScreenLayoutProps, "children"> & Readonly<{

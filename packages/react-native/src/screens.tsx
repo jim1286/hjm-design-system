@@ -8,7 +8,7 @@ import { PanResponder, ScrollView, View, type AccessibilityActionEvent, type Tex
 import { Spinner } from "./internal/spinner.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { isReplySwipe, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
-import { Section, Stack, Text } from "./primitives.js";
+import { Stack, Text } from "./primitives.js";
 import { ListRow, type ListRowProps } from "./data-display.js";
 import type { ListRowPrivateProps } from "./internal/list-row-private.js";
 import type { FieldPrivateProps } from "./internal/field-private.js";
@@ -79,10 +79,14 @@ export function ScreenLayout({ title, header, contentInset = "default", presenta
 export type SettingsScreenSection = Readonly<{ id: string; title: string; description?: string; children: ReactNode }>;
 export type SettingsScreenProps = Omit<ScreenLayoutProps, "children" | "scroll"> & Readonly<{ profile?: ReactNode; sections: readonly SettingsScreenSection[] }>;
 export function SettingsScreen({ profile, sections, ...props }: SettingsScreenProps) {
-  const { colors } = useHjmNativeTheme();
-  // Match the unshaded settings groups on Web; separators preserve hierarchy without gray cards.
-  return <ScreenLayout {...props}><Stack gap="xl">{profile}{sections.map(section =>
-    <Section key={section.id} title={section.title} {...(section.description === undefined ? {} : { description: section.description })}><View style={{ borderTopWidth: 1, borderColor: colors.border }}>{section.children}</View></Section>)}</Stack></ScreenLayout>;
+  // Settings group labels are subordinate to the screen title. Generic Section uses
+  // editorial headings, which overwhelmed ordinary rows in Spint (2026-10-08 QA).
+  return <ScreenLayout {...props}><Stack gap="md">{profile}{sections.map(section =>
+    <Stack key={section.id} gap="xs">
+      <Text variant="label" emphasis="strong" tone="muted" accessibilityRole="header">{section.title}</Text>
+      {section.description ? <Text variant="caption" tone="muted">{section.description}</Text> : null}
+      {section.children}
+    </Stack>)}</Stack></ScreenLayout>;
 }
 
 export type NotificationInboxScreenProps = Omit<ScreenLayoutProps, "children"> & Readonly<{ filters?: ReactNode; children: ReactNode }>;

@@ -8,7 +8,7 @@ import { PanResponder, ScrollView, View } from "react-native";
 import { Spinner } from "./internal/spinner.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { isReplySwipe, canSubmitMessage, validateMessageAttachments, resolveScreenContentState, screenPatternRecipe } from "@hjmds/design-contracts/screen-patterns";
-import { Section, Stack, Text } from "./primitives.js";
+import { Stack, Text } from "./primitives.js";
 import { ListRow } from "./data-display.js";
 import { useHjmNativeTheme } from "./provider.js";
 export function ScreenLayout({ title, header, contentInset = "default", presentation: suppliedPresentation, description, leading, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps }) {
@@ -23,9 +23,9 @@ export function ScreenLayout({ title, header, contentInset = "default", presenta
                 : _jsx(View, { style: { flex: 1, minHeight: 0, padding }, children: body }), footer ? _jsx(View, { style: { padding, borderTopWidth: contentInset === "none" ? 0 : 1, borderColor: colors.border }, children: footer }) : null] });
 }
 export function SettingsScreen({ profile, sections, ...props }) {
-    const { colors } = useHjmNativeTheme();
-    // Match the unshaded settings groups on Web; separators preserve hierarchy without gray cards.
-    return _jsx(ScreenLayout, { ...props, children: _jsxs(Stack, { gap: "xl", children: [profile, sections.map(section => _jsx(Section, { title: section.title, ...(section.description === undefined ? {} : { description: section.description }), children: _jsx(View, { style: { borderTopWidth: 1, borderColor: colors.border }, children: section.children }) }, section.id))] }) });
+    // Settings group labels are subordinate to the screen title. Generic Section uses
+    // editorial headings, which overwhelmed ordinary rows in Spint (2026-10-08 QA).
+    return _jsx(ScreenLayout, { ...props, children: _jsxs(Stack, { gap: "md", children: [profile, sections.map(section => _jsxs(Stack, { gap: "xs", children: [_jsx(Text, { variant: "label", emphasis: "strong", tone: "muted", accessibilityRole: "header", children: section.title }), section.description ? _jsx(Text, { variant: "caption", tone: "muted", children: section.description }) : null, section.children] }, section.id))] }) });
 }
 export function NotificationInboxScreen({ filters, children, notice, ...props }) {
     return _jsx(ScreenLayout, { ...props, notice: _jsxs(Stack, { gap: "sm", children: [notice, filters] }), children: children });

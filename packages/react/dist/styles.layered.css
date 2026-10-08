@@ -2867,7 +2867,9 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-search-screen__filters > * { inline-size: max-content; }
 
 /* Settings use spacing and rules, not shaded cards, per the 2026-10-05 product direction. */
-.hjm-settings-section > .hjm-section__content { background: transparent; border-block-start: 1px solid var(--hjm-color-border); }
+/* Settings rows already establish their own boundaries; a second strong rule competes with controls. */
+.hjm-settings-section { gap: var(--hjm-space-xs); }
+.hjm-settings-section > .hjm-section__content { background: transparent; }
 .hjm-settings-section .hjm-list-row { background: transparent; }
 .hjm-notification-item { border-radius: 0; }
 .hjm-notification-item[data-unread="true"] { background: transparent; }
