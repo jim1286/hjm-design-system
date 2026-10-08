@@ -1,5 +1,11 @@
 # @hjmds/design-contracts
 
+## 1.17.2
+
+### Patch Changes
+
+- 692a733: Align settings-row Switch labels to the shared body typography role on Web and Native. Preserve inline typography, touch targets, descriptions and interaction contracts; no consumer API migration is required.
+
 ## 1.17.1
 
 ### Patch Changes
