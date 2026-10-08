@@ -22,3 +22,12 @@ the introduction, filters, comments and fixed actions are exercised together.
 
 The concurrent 1.16.2 release is the earlier navigation-frame correction. This optional API is a minor
 Changeset for the following release and is not included in 1.16.2.
+
+## Release validation repair
+
+Run 37774148185 stopped before publish/tag: workspace synchronization rejected the contracts peer
+range >=1.16.0 <1.18.0 because it spans two minor trains. Renderer tests had passed; the failure was
+release compatibility metadata. Reverted only the unpublished generated version commit, declared
+the next single train >=1.17.0 <1.18.0 before generation as contracts-peer-train.mjs requires, and
+regenerated the unchanged 1.17.0 target. No published version or remote history was rewritten and
+the validator was not relaxed.
