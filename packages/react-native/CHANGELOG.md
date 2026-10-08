@@ -1,5 +1,11 @@
 # @hjmds/react-native
 
+## 1.17.1
+
+### Patch Changes
+
+- ba7d815: Reduce SettingsScreen group headings to subordinate labels and remove redundant group rules. Retain heading semantics, row controls and screen scrolling on Web and Native. No consumer API migration is required.
+
 ## 1.17.0
 
 ### Minor Changes
