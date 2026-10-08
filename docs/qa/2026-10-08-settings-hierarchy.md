@@ -51,3 +51,26 @@ Web Switch named-target/description/toggle/disabled browser cases 2 pass. Large-
 cases were not selected for this targeted run. Usage sync and API map pass after
 placing the added rationale within the standard document structure. Full release
 gates, visual comparison and published Spint adoption remain pending.
+
+## 1.17.2 candidate validation — 23:10 KST
+
+Candidate cd1d0187 consumes the patch Changeset; release-commit verification passes.
+Local package suites: contracts 1,030, Web SSR 278, Web browser 1,161, Native 1,265
+tests pass. Native Showcase 21 and Web Showcase 48 tests pass; static Storybook
+build verifies 103 canonical component stories and 13 navigation pages. Release
+artifact inspection passes for all three 1.17.2 packages. Browser inspection of
+notification settings in default and dark themes shows readable body labels and
+caption descriptions; this does not replace native consumer verification.
+
+The aggregate local release command stopped at docs:check because the shared
+checkout already has historical QA image/index deletions from another task. Those
+deletions were preserved. Exported the exact committed candidate into a temporary
+archive and ran check-doc-links.mjs with --root: 581 Markdown files, zero findings.
+Removed that task-owned archive afterward. Remaining governance/API/usage/Storybook
+and Showcase/artifact gates were executed separately and passed. The canonical
+remote release run 37789741669 is still verifying; publication is not claimed.
+
+Reconciled SettingsScreen usage text with the 1.17.1 renderer: md=16 group gap,
+no group rule, and Native Stack/header rather than Section. The appended historical
+rationale previously contradicted the main table. Usage validation passes. This
+document-only follow-up is newer than the immutable 1.17.2 candidate artifact.
