@@ -15,7 +15,12 @@ SSR tests 2 pass; all package builds pass. Usage docs and generated distribution
 were updated. Product notification permission row separately passes 13 settings
 tests and mobile typecheck, with an actual iPhone 17 Pro/iOS 26.5 simulator review.
 
-Pending: browser visual review of this shared change, package release checks and
+Browser visual review: local Storybook common-screen-settings default and dark
+were inspected in the browser. Screen title remains dominant; group labels and
+row controls remain legible with no extra group rules. Semantic h2 headings remain
+in the accessibility tree. These are web checks, not native consumer proof.
+
+Pending: package release checks and
 publication, official Spint dependency upgrade, native top/middle/bottom review.
 The currently installed Spint package is still 1.17.0, so the source fix is not yet
 consumer visual proof. No release or store submission is claimed here.
