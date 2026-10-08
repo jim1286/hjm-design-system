@@ -74,3 +74,15 @@ Reconciled SettingsScreen usage text with the 1.17.1 renderer: md=16 group gap,
 no group rule, and Native Stack/header rather than Section. The appended historical
 rationale previously contradicted the main table. Usage validation passes. This
 document-only follow-up is newer than the immutable 1.17.2 candidate artifact.
+
+## 1.17.2 publication receipt — 23:14 KST
+
+Release run 37789741669 succeeded for cd1d0187b0bb58fb4a022d3a17cb65675b880b82.
+Its publish log confirms design-contracts at 14:11:43 UTC, react at 14:11:49 and
+react-native at 14:11:56; canonical v1.17.2 was pushed at 14:12:00. Showcase
+37789739855 and Visual Baselines 37789739745 both succeeded on the same candidate.
+
+At 14:13 UTC this Mac still received HTTP404 from the exact npm metadata and
+tarball URLs, including a no-cache HEAD request. Official importer consequently
+refuses the train. Publication is proven; consumer installation and native screen
+verification remain pending registry availability. No local-copy substitution.
