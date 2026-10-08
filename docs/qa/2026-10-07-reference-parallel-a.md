@@ -1,5 +1,7 @@
 # 병렬 레퍼런스 조사 A — Minimal · DesignBookmark · CTA
 
+> 2026-10-09 QR 정리: 원시 URL 원장·캡처는 현재 보관하지 않는다. 과거의 원장/이미지 보존 문구는 당시 작업 기록이며, 현재 확인 가능한 결과·실패·미확인 범위는 이 문서 본문이다. 새 조사나 재검증을 수행한 것은 아니다.
+
 검토일: 2026-10-07 · 상태: 사용자 범위 변경에 따른 조사 checkpoint 마무리, 전수 완료 아님
 
 사용자의 병렬 전수 조사 요청으로 세 사이트를 분담했다. 수집된 HTML·소개 문구, 실제 갤러리 이미지, 원제품 동작을 분리한다. URL 수집만으로 독해·시각·상호작용 확인을 주장하지 않는다. 공용 inventory/ledger와 구현 소스는 root 담당이며 이 보고서는 조사 담당자 소유다.
@@ -55,7 +57,7 @@
 - [Unikorns 상세](https://www.cta.gallery/cta/unikorns.work): intro, category Form, industry Landing, mode Light, 관련 CTA 본문을 읽었다. desktop/mobile static capture 모두 자연 풍경에 흰 독립 폼을 둔다. mobile capture는 필드와 행동의 순서를 유지한다. 모바일은 실제 390px browser 실행이 아니라 갤러리의 static screenshot이다.
 - [원제품](https://unikorns.work/): hero→대상팀→case study→시작 단계→고객 리뷰→가치→비교→FAQ→Contact→footer의 전체 DOM 텍스트를 읽었다. 현재 live Contact는 이름·회사·업무메일·프로젝트 설명의 **4개** required input/textarea다. 갤러리 screenshot은 예전 5필드처럼 보이므로 현재 원제품과 같다고 가정하면 안 된다. 상단 Contact 클릭 뒤 `#contact`로 이동하고 자연 배경의 흰 폼을 실제 봤다. 초기 screenshot은 smooth scroll 도중 hero였으며 다음 screenshot에서 도착을 확인했다. 입력·제출·서버 오류·성공 상태는 확인하지 않았다. 필드의 aria-label/aria-labelledby는 null이고 placeholder만 보였지만 전체 accessible-name 진단을 실행하지 않았으므로 접근성 실패로 단정하지 않는다.
 
-![원제품의 Contact 폼 도착 상태](assets/parallel-a-unikorns-contact.png)
+캡처 설명(원시 이미지 정리): 원제품의 Contact 폼 도착 상태. 관찰 결과와 검증 한계는 이 문서의 본문에 보존한다.
 
 ## 기존 HJM과 비교한 판단
 
@@ -88,7 +90,7 @@
 
 CTA의 알려진 551 URL은 상세 505개(`/cta/<slug>`)와 목록·분류·소개·폼·템플릿 46개로 나뉜다. 상세 **505/505의 고유 소개 및 Category/Industry/Mode**를 실제 순서대로 읽었다. 비상세 **46/46의 고유 추출 본문과 카드 제목**도 읽었다. 비상세는 반복 nav/footer와 responsive 복제 행만 제거했다. 상세 관련 CTA 목록 개별 독해·HTML 구현 코드·원제품 전체 본문과 상태는 이 완료층에 포함하지 않는다. 전체 페이지 검토 완료는 여전히 아니다.
 
-URL별 source SHA, 읽은 범위와 pending 층은 [A 전용 index](2026-10-07-reference-parallel-a-index.json)에 남겼다. known queue의 discovery closure는 확인하지 않았다. CTA 작성 팁의 명확한 행동/이익/위험 감소/사회적 증거 원칙, 광고 페이지의 세 plan 및 quote form, 제출/구독 폼, template 소개도 읽었다. 사이트의 전환율·보안·의료·금융 효능 주장은 소개 문구일 뿐 검증 근거로 채택하지 않는다.
+URL별 source SHA, 읽은 범위와 pending 층은 [A 전용 index — 본문 요약·미확인 범위](2026-10-07-reference-parallel-a.md)에 남겼다. known queue의 discovery closure는 확인하지 않았다. CTA 작성 팁의 명확한 행동/이익/위험 감소/사회적 증거 원칙, 광고 페이지의 세 plan 및 quote form, 제출/구독 폼, template 소개도 읽었다. 사이트의 전환율·보안·의료·금융 효능 주장은 소개 문구일 뿐 검증 근거로 채택하지 않는다.
 
 ### 캡처 정정과 시각 완료층
 
@@ -109,7 +111,7 @@ URL별 source SHA, 읽은 범위와 pending 층은 [A 전용 index](2026-10-07-r
 
 교정된 fullPage/DOM crop의 상세 **0–103 = 104/505**를 12개씩 contact sheet로 실제 읽었다. 이 층은 기본 배치·색·주/보조 행동 위치·정적 모바일 재배치 확인이며 작은 모든 문구의 판독이나 원제품 동작 검증은 아니다. URL별 corrected PNG SHA 및 읽은 contact-sheet SHA를 A index에 기록했다. 교정 PNG 저장 135개와 시각 독해 104개를 구분한다. metadata상 이미지가 아직 로드되지 않은 106–114는 시각 성공에서 제외하고 재캡처가 필요하다.
 
-![CTA 44–55 교정된 desktop/mobile 기본 배치 비교](assets/parallel-a-cta-044-055.jpg)
+캡처 설명(원시 이미지 정리): CTA 44–55 교정된 desktop/mobile 기본 배치 비교. 관찰 결과와 검증 한계는 이 문서의 본문에 보존한다.
 
 새로 확인한 차이: Bouquetinfusions(50)는 노란 sticky note 형태 newsletter와 회전한 종이 표현, Alpbio(14)는 점 기반 픽셀 글자와 rounded 입력, Bluechip(49)는 stepped 경계와 가운데 download 버튼이다. 이들은 종이 rotation이나 pixel outline이라는 시각 옵션 후보지만 accessibility·확대 글자·native clip 검증 없이 공개 treatment로 승급하지 않는다. Forest 이미지 위 newsletter(Blok46), paper/green line contact form(Cultivatefood103), rainbow primary/secondary(Aboardhr5), dark neon single action(Aptosbuild23), 물 표면 위 white newsletter(Augustcollections30)는 기존 semantic surface와 Card/Button/Form/Image 표현 조합을 먼저 비교한다.
 
@@ -199,9 +201,9 @@ CTA 남음: 비상세46의긴전체시각/모바일live·gallery모든controls�
 
 첫12 desktoppreview를 실제 읽었으며 제공된mobilepreview가있는6개(1/2/3/6/9/11)는 버튼전환 후 실제 모바일이미지도 읽었다. 나머지6은현재갤러리에 Mobile버튼이없어 desktop-only로 분리했다. 원제품실제mobilebreakpoint/전체상태/작은전체문구는 미확인이다. source메타400·이12시각·추가갤러리partialflow6은 별도층이다.
 
-![Minimal 첫12 desktoppreview 기본배치](assets/parallel-a-minimal-000-011.jpg)
+캡처 설명(원시 이미지 정리): Minimal 첫12 desktoppreview 기본배치. 관찰 결과와 검증 한계는 이 문서의 본문에 보존한다.
 
-![제공된6 mobilepreview 전환후 확인](assets/parallel-a-minimal-mobile-001-011.jpg)
+캡처 설명(원시 이미지 정리): 제공된6 mobilepreview 전환후 확인. 관찰 결과와 검증 한계는 이 문서의 본문에 보존한다.
 
 0 Landskab은 gray/white 프로젝트표,1 101은 sparkler photo와serif 문장·하단navigation,2 10Things는 dark imagegrid+newsletter,3 108Supply는 dark editorial motion-template grid/filter다. source E-commerce분류만으로 실제상품종류를 확정하지 않는다.4 10×16은white에 pastelgradient텍스트,5 124m2는white serif editorial+interior image,6 +13322566869는red/orange 큰타이포/portrait,7 14islands2017은geometricmulticolor로고,8 14islands2020은portrait/video+play,9 Tatem은blur/photo위 translucentwaitlistcard,10 1979Radio는black/white collage와INTRO글자,11 1991Books는blackphotogrid/editorial이다.
 

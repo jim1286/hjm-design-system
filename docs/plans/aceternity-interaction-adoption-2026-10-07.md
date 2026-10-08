@@ -1,5 +1,7 @@
 # Aceternity 탭·상태 버튼·상세 카드 대조
 
+> 2026-10-09 QR 정리: 원시 URL 원장·캡처는 현재 보관하지 않는다. 과거의 원장/이미지 보존 문구는 당시 작업 기록이며, 현재 확인 가능한 결과·실패·미확인 범위는 이 문서 본문이다. 새 조사나 재검증을 수행한 것은 아니다.
+
 검토일: 2026-10-07 · 기준: HJM main `3021ce0` · 상태: 아래 네 페이지의 선택된 동작 검토.
 11개 사이트/Aceternity 전체 페이지 검토 완료가 아니다.
 
@@ -93,8 +95,8 @@ B는 [Apple Cards Carousel](https://ui.aceternity.com/components/apple-cards-car
 Manual과 관련 확장 카드 구현을 읽고, 독립 예제의 desktop/dark 동작을 확인했다.
 1280×720에서 카드 세 개와 다음 카드 일부가 함께 보였다. 첫 카드 Enter로 상세를 연 뒤
 Tab은 두 번째 배경 카드로 이동했고 dialog role은 없었다. Escape 후 호출 카드로 돌아오지
-않은 관찰은 [B 조사](../qa/2026-10-07-reference-parallel-b.md)와
-[해당 시각 증거](../qa/assets/parallel-b-apple-carousel-background-focus.png)에 있다.
+않은 관찰은 [B 조사](../qa/2026-10-07-reference-parallel-b.md)의 본문에 보존한다.
+당시 원시 캡처는 QR에 따라 정리했다.
 이는 선택된 한 예제의 실제 흐름이며 모든 원본 항목/환경/성능 검증은 아니다.
 
 공개 API 대응표와 양 renderer를 다시 대조했다. `List`의 Web `advanced-display.tsx`, Native

@@ -1,5 +1,7 @@
 # 병렬 레퍼런스 검토 B — 요청 범위 마무리
 
+> 2026-10-09 QR 정리: 원시 URL 원장·캡처는 현재 보관하지 않는다. 과거의 원장/이미지 보존 문구는 당시 작업 기록이며, 현재 확인 가능한 결과·실패·미확인 범위는 이 문서 본문이다. 새 조사나 재검증을 수행한 것은 아니다.
+
 검토일: 2026-10-07 · 담당: 21st.dev, Aceternity, Magic UI, Motion Primitives.
 범위: 이번 추가 검토만. 수집 HTTP 200을 본문 독해·화면·동작 검토로 계산하지 않는다.
 기존 Aceternity 네 페이지와 Motion 36 기본 페이지 검토는 기존 리포트의 당시 범위로 유지한다.
@@ -23,7 +25,7 @@ HJM HjmProvider의 controlled theme/designProfile 및 environment.reducedMotion�
 
 ## Magic UI URL별 본문 독해 진척
 
-[개별 URL 인덱스](2026-10-07-reference-parallel-b-index.json)에 원본 URL·SHA-256·수집 시각·독해 범위·페이지별 판단을 보존한다. 프로그램 추출이나 유사 코드 분류를 독해로 계산하지 않는다. docs는 semantic main이 없는 원본이어서 `div[data-slot=docs]`의 본문을 읽었다. 활성 CLI 설치 탭·보이는 모든 예제 코드·Usage·Props·Credits가 범위이며, 비활성 Manual 탭의 구현은 별도로 센다.
+[개별 URL 인덱스 — 본문 요약·미확인 범위](2026-10-07-reference-parallel-b.md)에 원본 URL·SHA-256·수집 시각·독해 범위·페이지별 판단을 보존한다. 프로그램 추출이나 유사 코드 분류를 독해로 계산하지 않는다. docs는 semantic main이 없는 원본이어서 `div[data-slot=docs]`의 본문을 읽었다. 활성 CLI 설치 탭·보이는 모든 예제 코드·Usage·Props·Credits가 범위이며, 비활성 Manual 탭의 구현은 별도로 센다.
 
 | 범위 | 전체 분모 | 이번 독해 | 미확인 |
 | --- | ---: | ---: | --- |
@@ -63,7 +65,7 @@ Blog best-web-developer-portfolios부터 cool-react-components까지 10개 main 
 
 URL: https://magicui.design/docs/components/bento-grid
 
-Manual에서 desktop CTA는 opacity=0/translate-y-10이고 group-hover에서만 표시된다. 실제 1280×720 dark preview에서 첫 Learn more 링크에 focus한 뒤 Tab을 보내 다음 링크로 이동했다. activeElement는 `A`, text=Learn more, href=#, 부모 opacity=0, 위치 x=522.664/y=342이었다. 포커스된 CTA가 화면에서 보이지 않는 것을 스크린샷으로 확인했다. [키보드 상태 증거](assets/parallel-b-magic-bento-keyboard.png). 링크의 Enter 탐색은 실행하지 않았다. 기본/세로 bento 모든 card flow·touch/RTL/좁은 화면은 미검증이다. 기존 Grid/Card/action 슬롯에 같은 hover 표현을 채택한다면 focus-within에서도 CTA를 드러내는 조건이 필요하다.
+Manual에서 desktop CTA는 opacity=0/translate-y-10이고 group-hover에서만 표시된다. 실제 1280×720 dark preview에서 첫 Learn more 링크에 focus한 뒤 Tab을 보내 다음 링크로 이동했다. activeElement는 `A`, text=Learn more, href=#, 부모 opacity=0, 위치 x=522.664/y=342이었다. 포커스된 CTA가 화면에서 보이지 않는 것을 스크린샷으로 확인했다. 키보드 상태 증거(원시 캡처는 정리했으며 관찰 결과는 연결된 조사 리포트 본문에 보존함). 링크의 Enter 탐색은 실행하지 않았다. 기본/세로 bento 모든 card flow·touch/RTL/좁은 화면은 미검증이다. 기존 Grid/Card/action 슬롯에 같은 hover 표현을 채택한다면 focus-within에서도 CTA를 드러내는 조건이 필요하다.
 
 ### CodeComparison 미채택 근거
 
@@ -75,7 +77,7 @@ Manual 전체를 읽었다. Shiki 실패 catch는 원본 code를 `<pre>${beforeC
 
 URL: https://magicui.design/docs/components/hero-video-dialog
 
-default dark preview에서 Play video에 Enter를 보내 overlay/iframe이 1개씩 생기는 것을 확인했다. activeElement는 뒤의 Play video trigger 그대로였다. 그 focus에서 Escape를 보내도 overlay/iframe이 남아 있었다. [Escape 후 상태 증거](assets/parallel-b-magic-hero-dialog-escape.png). 원본 Manual은 overlay에 role=button/tabIndex=0과 keyDown을 두지만 dialog 의미·초기 focus·trap을 제공하지 않는다. overlay에 직접 focus한 뒤 Escape를 보내면 exit 후 둘 다 0으로 정리되는 것을 확인하고 agent가 연 preview를 닫았다. YouTube 재생은 시작하지 않았다. 8개 animation variant·close pointer·focus restore·반복 열기·좁은 화면은 아직 전수 검증하지 않았다. HJM Dialog와 motionOrigin/media 슬롯에 표현만 연결하는 방향을 유지한다.
+default dark preview에서 Play video에 Enter를 보내 overlay/iframe이 1개씩 생기는 것을 확인했다. activeElement는 뒤의 Play video trigger 그대로였다. 그 focus에서 Escape를 보내도 overlay/iframe이 남아 있었다. Escape 후 상태 증거(원시 캡처는 정리했으며 관찰 결과는 연결된 조사 리포트 본문에 보존함). 원본 Manual은 overlay에 role=button/tabIndex=0과 keyDown을 두지만 dialog 의미·초기 focus·trap을 제공하지 않는다. overlay에 직접 focus한 뒤 Escape를 보내면 exit 후 둘 다 0으로 정리되는 것을 확인하고 agent가 연 preview를 닫았다. YouTube 재생은 시작하지 않았다. 8개 animation variant·close pointer·focus restore·반복 열기·좁은 화면은 아직 전수 검증하지 않았다. HJM Dialog와 motionOrigin/media 슬롯에 표현만 연결하는 방향을 유지한다.
 
 ## Aceternity 본문·Manual 증분 범위
 
@@ -92,7 +94,7 @@ URL: https://ui.aceternity.com/components/file-upload
 
 본문·onChange props와 Manual 구현/util을 전부 읽었다. `useDropzone({multiple:false,noClick:true})`의 root props에 role=presentation/tabIndex=0이 붙고, 별도 display:none input은 내부 div의 mouse click으로 열린다. getInputProps는 사용하지 않는다. 전달 onChange는 새로 받은 File[]이고 내부 목록은 이전 파일에 추가한다. 업로드 통신·진행·취소·retry·accept/size 오류 상태를 제공하는 구현은 아니다.
 
-실제 독립 preview의 light/dark 업로드 영역을 보았고, root `[role=presentation][tabindex=0]`에 Enter를 보냈다. key 입력은 완료됐지만 2초 filechooser 대기는 timeout이고 화면이 변하지 않았다. 이 특정 root 경로의 관찰이며 가능한 모든 키보드 경로를 검증한 것은 아니다. 파일 선택·전송은 실행하지 않았다. [dark 선택 화면 증거](assets/parallel-b-aceternity-upload-dark.png).
+실제 독립 preview의 light/dark 업로드 영역을 보았고, root `[role=presentation][tabindex=0]`에 Enter를 보냈다. key 입력은 완료됐지만 2초 filechooser 대기는 timeout이고 화면이 변하지 않았다. 이 특정 root 경로의 관찰이며 가능한 모든 키보드 경로를 검증한 것은 아니다. 파일 선택·전송은 실행하지 않았다. dark 선택 화면 증거(원시 캡처는 정리했으며 관찰 결과는 연결된 조사 리포트 본문에 보존함).
 
 기존 HJM UploadItem은 pending/uploading/success/error 및 product 측정 progress, uploading에서 cancel·error에서 retry를 파생하는 공통 계약을 이미 가진다. Aceternity 데모로 UploadItem을 교체하면 상태 계약을 잃는다. 필요하면 제품의 접근 가능한 file 선택 control과 UploadItem을 연결하는 구성으로 흡수하고, drop presentation은 선택 기능과 구분한다. Native picker 및 실제 전송은 제품 소유로 남긴다.
 
@@ -102,7 +104,7 @@ URL: https://21st.dev/ 및 https://21st.dev/@kokonutd/components/button-colorful
 
 홈 공개 본문, Colorful Button 상세의 author/library/license/dependency/Usage를 읽었다. 페이지 WebMCP는 메타데이터·설치 안내를 반환하지만 구현 본문은 반환하지 않았다. Usage.tsx는 ButtonColorful을 import/render하는 짧은 사용 예다. Component.tsx 선택은 `Component source is locked`와 로그인/Unlock UI를 보였으므로 구현 미검토를 유지한다.
 
-초기 검은 thumbnail 이후 실제 `https://cdn.21st.dev/bundled/3.html?theme=light` iframe이 흰 배경 버튼을 렌더한 것을 구분해서 보았다. 실제 Explore Components 버튼에 Enter를 보내 focus outline을 확인했다. 화면/URL 변화는 없었다. 부모 iframe의 title은 없었다. 실제 구현 event·reduced-motion·disabled/loading 소스는 잠겨 있어 단정하지 않는다. [선택 상태 증거](assets/parallel-b-21st-keyboard.png).
+초기 검은 thumbnail 이후 실제 `https://cdn.21st.dev/bundled/3.html?theme=light` iframe이 흰 배경 버튼을 렌더한 것을 구분해서 보았다. 실제 Explore Components 버튼에 Enter를 보내 focus outline을 확인했다. 화면/URL 변화는 없었다. 부모 iframe의 title은 없었다. 실제 구현 event·reduced-motion·disabled/loading 소스는 잠겨 있어 단정하지 않는다. 선택 상태 증거(원시 캡처는 정리했으며 관찰 결과는 연결된 조사 리포트 본문에 보존함).
 
 루트 AGENTS의 저장된 로그인 우선 규칙에 따라 Aside Vault로 기존 21st 로그인만 찾게 했다. 일치하는 저장 계정과 기존 21st 탭이 없다는 결과를 확인했다. 새 계정·결제·약관 수락·API-key quota 사용은 하지 않았다. 로그인 막힘은 공개 다른 원본 조사 중단 이유가 아니며, 이 사이트의 구현 전수 완료 근거도 아니다.
 
@@ -126,7 +128,7 @@ URL: https://21st.dev/ 및 https://21st.dev/@kokonutd/components/button-colorful
 
 본문 core는 BentoGrid부터 DitherShader까지 20개를 추가 독해해 총 39/501, 부분 1, pending 461이다. URL마다 공개 description·CLI·모든 보이는 props/소스 snippet·예제 제목을 읽었으며 숨긴 Code/Manual/alternate tab은 따로 pending이다. CardSpotlight props 마지막 description은 원 수집본 자체가 `con`에서 끝나므로 그 이후 원문은 미확인이다. Manual은 Modal/Testimonial/Tooltip을 추가하여8개, 실제 선택 desktop/flow는2개이다.
 
-https://ui.aceternity.com/components/animated-modal 의 Manual+전체 Usage를 읽고 실제 dark 1280×720에서 trigger Enter→Escape→Cancel Enter→unnamed close Enter 순서로 확인했다. 열기 후 focus는 배경 trigger이고 role=dialog0, body overflow hidden이다. Escape와 Cancel 후에도 내용이 남는다. [Escape 상태 증거](assets/parallel-b-aceternity-modal-escape.png). close 버튼 Enter로 exit 후 heading0/overflow auto/activeBODY를 확인했다. Book Now·결제·예약 행동은 실행하지 않았다. HJM Dialog의 의미·초기 focus·trap·restore·Escape·scrolllock 계약을 유지하고 3D spring/blur 표현만 흡수한다.
+https://ui.aceternity.com/components/animated-modal 의 Manual+전체 Usage를 읽고 실제 dark 1280×720에서 trigger Enter→Escape→Cancel Enter→unnamed close Enter 순서로 확인했다. 열기 후 focus는 배경 trigger이고 role=dialog0, body overflow hidden이다. Escape와 Cancel 후에도 내용이 남는다. Escape 상태 증거(원시 캡처는 정리했으며 관찰 결과는 연결된 조사 리포트 본문에 보존함). close 버튼 Enter로 exit 후 heading0/overflow auto/activeBODY를 확인했다. Book Now·결제·예약 행동은 실행하지 않았다. HJM Dialog의 의미·초기 focus·trap·restore·Escape·scrolllock 계약을 유지하고 3D spring/blur 표현만 흡수한다.
 
 https://ui.aceternity.com/components/animated-testimonials 의 전체 Manual+Usage는 모든 이미지, 랜덤 회전, 5s autoplay,28px 무명 arrow button, active name/quote 배열 접근을 제공한다. 빈배열·배열변경·pause/focus/reduced에 대한 실제 재현은 남아 있다. https://ui.aceternity.com/components/animated-tooltip 의 Manual+Usage는 hover-only div, mousemove RAF·name키를 사용하며 focus/tooltipARIA·unmount RAF cleanup은 없다. 이것도 소스 판단이며 아직 실제키보드 flow 완료 수를 올리지 않는다.
 
@@ -357,7 +359,7 @@ Background Boxes·Background Gradient·Background Gradient Animation의 Manual/�
 
 Gradient는 animate=false가 있지만 기본 true의 두 무한 layer와 literal palette를 복사하지 않는다. Gradient Animation은 mount에서 body CSS 변수10개를 전역 변경하고 props 갱신/cleanup이 없어서 앱별·인스턴스별 테마 분리가 깨질 수 있다. 원본 source의 firstColor triplet가 rgba 없이 gradient에 들어가며 **실제 dark DOM의 첫 layer backgroundImage=none**도 확인했다. 나머지 네 색 layer와 pointer layer는 유효한 radial gradient이고 pointer-events는 여섯 layer 모두 auto였다. HJM scoped EffectSurface/static/고유ID/토큰/cleanup을 유지한 표현만 후보이다.
 
-[Gradient Animation dark 증거](assets/parallel-b-gradient-animation-dark.png). 이 화면은 전체 loop·실제 pointer·Safari fallback·reduced/offscreen/hidden·복수 인스턴스 검증 완료를 뜻하지 않는다.
+Gradient Animation dark 증거(원시 캡처는 정리했으며 관찰 결과는 연결된 조사 리포트 본문에 보존함). 이 화면은 전체 loop·실제 pointer·Safari fallback·reduced/offscreen/hidden·복수 인스턴스 검증 완료를 뜻하지 않는다.
 
 ### Aceternity Manual 18 · 실제 시각 9 · 선택 flow 3
 
@@ -603,7 +605,7 @@ URL: https://ui.aceternity.com/components/floating-dock
 
 IAB1280×720 dark preview에서7링크의DOM경계가모두40×40px였다. 첫링크에서Tab을실행해두번째Terminal링크에초점이옮겨짐을확인했다. 초점A는href=#,텍스트/aria-label/title없음이며SVG에도이름이없다. 실제AX는7개중6개를이름없는link로보이고AceternityLogo하나만imgalt이름을갖는다. 모든링크는keyboardfocus에도40×40이고hover툴팁/크기확대가나타나지않았으며기본포커스외곽선은보였다.
 
-![Floating Dock dark keyboard focus](assets/parallel-b-aceternity-dock-keyboard.png)
+캡처 설명(원시 이미지 정리): Floating Dock dark keyboard focus. 관찰 결과와 검증 한계는 이 문서의 본문에 보존한다.
 
 이것은선택키보드초점한흐름이며pointeractivation·mobile·터치·RTL·큰글자·모션감소·가로스크롤좌표검증이아니다. sourceonly였던link이름/keyboard표현중이범위만실제확인으로옮겼다. Aceternity선택시각10/flow4로갱신했고Manual46/공개core500+1부분은동일하다. 기존BottomNavigation의명시라벨/selectedKey/aria-current와상호작용최소크기를재사용하며 탐색크기비교의별도실험등록완료는아니다.
 
@@ -624,7 +626,7 @@ IAB1280×720 dark preview에서7링크의DOM경계가모두40×40px였다. 첫�
 - https://ui.aceternity.com/components/hero-highlight : 모든 SVG data URL까지 Manual 전체 읽었다. essential text는 유지하고 pointer-events-none의 200px mask·dots와 Highlight span background2초/.5초delay를 쓴다. 실제 contrast/RTL·focus·touch와 모션 감소는 미검증이다. `글자 표현 비교`의 Text 콘텐츠 계약과 배경 표현을 분리한다.
 - https://ui.aceternity.com/components/hero-parallax : Manual 전체 읽었다. 데이터15개 초과를 자르고300vh·카드30rem·이동±1000px·hardcoded Header를 사용한다. 이미지 alt/anchor는 있으나 제목은 hover만 보인다. `스크롤 장면 비교`에서 제품 데이터·기존 Section/Grid/Image/Link/ScrollProgress 등부터 합성하며 원본 spring/3D 엔진을 복제하지 않는다.
 
-Dock 키보드 증거 [이미지](assets/parallel-b-aceternity-dock-keyboard.png)의 SHA-256: `52a1c4431ebf226a3bc4b22dc5a0225042dc7e57751af9b5db95ba4a76e4e2e2`. 같은 hash를 URL별 인덱스 proofSha256에 저장했다. 현재 공개본문500전체+1부분/Manual53/실제10/선택flow4이며 전체 완료·모든 Usage·실험68개 등록 완료는 여전히 false다.
+Dock 키보드 증거 이미지(원시 캡처는 정리했으며 관찰 결과는 연결된 조사 리포트 본문에 보존함)의 SHA-256: `52a1c4431ebf226a3bc4b22dc5a0225042dc7e57751af9b5db95ba4a76e4e2e2`. 같은 hash를 URL별 인덱스 proofSha256에 저장했다. 현재 공개본문500전체+1부분/Manual53/실제10/선택flow4이며 전체 완료·모든 Usage·실험68개 등록 완료는 여전히 false다.
 
 ## Aceternity 후속 Manual checkpoint — 58
 
@@ -783,13 +785,13 @@ https://ui.aceternity.com/ai-recommendations 동일 추출426,340자/SHA256 `dc1
 
 ## Apple 가로 목록 실제 키보드 checkpoint
 
-https://ui.aceternity.com/live-preview/apple-cards-carousel-demo 을1280×720 dark에서 실제 보았다. 카드384×640/gap16, 가로로3개 전체+4번째 부분 노출이며 시작의 이전 화살표는 disabled였다. 첫AI카드 Enter로 상세를 열면 body overflow hidden이고 초점은 첫 배경카드에 남는다. Tab은 Productivity 배경카드로 이동했으며 상세 overlay가 여전히 보이는 상태에서 dialog role은0이었다. Escape 후 상세내용은 사라지고 bodyoverflow auto, 초점은 호출카드가 아닌 두 번째 배경카드에 그대로 남았다. 이것은 실제 선택 흐름 확인이며 source 추정만이 아니다. [상세 표시 중 배경 초점 증거](assets/parallel-b-apple-carousel-background-focus.png) SHA256 `6457a4cb1868434cf61ef323ed33817bf58ff230e9aa691ee4d03728ca00db3c`.
+https://ui.aceternity.com/live-preview/apple-cards-carousel-demo 을1280×720 dark에서 실제 보았다. 카드384×640/gap16, 가로로3개 전체+4번째 부분 노출이며 시작의 이전 화살표는 disabled였다. 첫AI카드 Enter로 상세를 열면 body overflow hidden이고 초점은 첫 배경카드에 남는다. Tab은 Productivity 배경카드로 이동했으며 상세 overlay가 여전히 보이는 상태에서 dialog role은0이었다. Escape 후 상세내용은 사라지고 bodyoverflow auto, 초점은 호출카드가 아닌 두 번째 배경카드에 그대로 남았다. 이것은 실제 선택 흐름 확인이며 source 추정만이 아니다. 상세 표시 중 배경 초점 증거(원시 캡처는 정리했으며 관찰 결과는 연결된 조사 리포트 본문에 보존함) SHA256 `6457a4cb1868434cf61ef323ed33817bf58ff230e9aa691ee4d03728ca00db3c`.
 
 이후 실제 선택 화면11/flow5, 수집 공개본문501전체/Manual112/설치4이다. 끝 경계·화살표 전체·resize·touch·RTL·큰글자·reduced·Layout Changes 예제는 미확인이다. 기존 고객 후기 탐색/카드 상세 연결 후보로 통합하고, 상세는 기존 HJM Dialog의 이름·초점 이동/복귀·배경 비활성 계약을 유지한다. List 양 플랫폼에 horizontal 계약이 없어 스타일 덮기로 가로 strip 등록을 완료했다고 주장하지 않는다. 새로운69번째 경로/엔진 및 전체 조사완료는 없다.
 
 ## 21st 수집 인덱스 관찰과 독립 복구 metadata
 
-기존 `/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/pages.json`은0byte로 관찰했다. 원인은 미확인이고 원본 파일/crawler를 수정·재시작·종료하지 않았다. [별도 B 복구 인덱스](2026-10-07-reference-parallel-b-21st-recovery-index.json)에 기존 inventory12,460 URL→URL SHA256 파일 경로·gzip byte·원문 byte/SHA256·읽는 동안 파일 변경 여부를 보존했다. 관찰 snapshot에서11,398원본 metadata 일치/1,062원본누락이다. HTTP상태·수집시각·정상 전체수집을 복구했다고 주장하지 않는다. collector가 이후 추가할 수 있어 이 분모는 snapshot이다. Metadata 해시를 읽은 행은 콘텐츠 독해로 세지 않는다.
+기존 `/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/pages.json`은0byte로 관찰했다. 원인은 미확인이고 원본 파일/crawler를 수정·재시작·종료하지 않았다. [별도 B 복구 인덱스 — 본문 요약·미확인 범위](2026-10-07-reference-parallel-b.md)에 기존 inventory12,460 URL→URL SHA256 파일 경로·gzip byte·원문 byte/SHA256·읽는 동안 파일 변경 여부를 보존했다. 관찰 snapshot에서11,398원본 metadata 일치/1,062원본누락이다. HTTP상태·수집시각·정상 전체수집을 복구했다고 주장하지 않는다. collector가 이후 추가할 수 있어 이 분모는 snapshot이다. Metadata 해시를 읽은 행은 콘텐츠 독해로 세지 않는다.
 
 첫20개(@0xUrvish author1+detail19)의 공개문구·보이는 Usage wrapper·dependency/license/source·similar counts를 URL 순서대로 전체 읽었다. 각URL 독해/원본hash와 기존 실험경로·API 매핑은 복구 인덱스에 따로 있다. author의 featured22 vs 전체24/Multi-StepForm·StatusButton 및 자동index/미가입 안내도 읽었다. uselayouts 독립원본 링크를 발견했으나 아직 구현을 읽지 않았고, Component.tsx/실제화면·flow 완료로 세지 않는다. 삭제버튼 gesture는 Button/Dialog의 확인/복구를 유지하고, InlineEdit/MorphingInput은 TextField controlled draft·IME·실제성공 이후 상태를 먼저 대조한다. 기존68경로에 출처를 연결하며 새 엔진·경로·등록완료 수를 늘리지 않았다.
 

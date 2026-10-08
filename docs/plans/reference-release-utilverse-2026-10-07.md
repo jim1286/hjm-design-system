@@ -1,5 +1,7 @@
 # 레퍼런스 적용 판단 → HJM 실험·릴리스 → Utilverse 채택
 
+> 2026-10-09 QR 정리: 원시 URL 원장·캡처는 현재 보관하지 않는다. 과거의 원장/이미지 보존 문구는 당시 작업 기록이며, 현재 확인 가능한 결과·실패·미확인 범위는 이 문서 본문이다. 새 조사나 재검증을 수행한 것은 아니다.
+
 2026-10-07 최신 사용자 요청: **“이제 조사 마무리해”, “필요한것만 조사해”.** 최초의
 11개 사이트 전수 조사 요구는 적용에 필요한 근거 확인으로 범위를 변경했다. 추가 URL 발견,
 소개문 순차 독해와 모든 원제품/환경 검토는 더 이상 완료 조건이나 릴리스 차단 조건이 아니다.
@@ -64,9 +66,9 @@ Web 팝오버를 비교 구성에 연결했다. 로컬 Web23/Native mock18 검�
 
 - A: Minimal·Designbookmark·CTA — [조사 A](../qa/2026-10-07-reference-parallel-a.md).
 - B: 21st·Aceternity·Magic UI·Motion — [조사 B](../qa/2026-10-07-reference-parallel-b.md),
-  [Magic URL별 범위](../qa/2026-10-07-reference-parallel-b-index.json).
+  [Magic URL별 범위 — 본문 요약·미확인 범위](../qa/2026-10-07-reference-parallel-b.md).
 - C: Component Gallery·Uiverse·3dicons·Refero — [조사 C](../qa/2026-10-07-reference-parallel-c.md),
-  [Refero URL별 범위](../qa/2026-10-07-reference-parallel-c-ledger.json).
+  [Refero URL별 범위 — 본문 요약·미확인 범위](../qa/2026-10-07-reference-parallel-c.md).
 
 본문 checkpoint는 Magic96개 전체+2개 부분/257, Refero67개/1394(일반52+상세15)다.
 Manual·실제 화면·상태는 각 보고서의 별도 분모를 따른다. 21st의 잠긴 구현은 저장된 로그인도
@@ -88,7 +90,7 @@ Manual·실제 화면·상태는 각 보고서의 별도 분모를 따른다. 21
 
 CTA의 기존551 snapshot 내부 anchor 비교에는 새 URL이 없었지만 live related 링크에는 Numa가
 나왔다. 따라서 sitemap/capture 종료를 discovery closure로 취급하지 않는다.
-[A URL별 범위](../qa/2026-10-07-reference-parallel-a-index.json)와
+[A URL별 범위 — 본문 요약·미확인 범위](../qa/2026-10-07-reference-parallel-a.md)와
 [Motion 실제 관찰](../qa/2026-10-07-motion-reference-page-review.md)을 중앙 목록/ledger와 연결했다.
 
 버튼 표현 후보도 기존 Button/IconButton의 HTML button·Pressable, loading/disabled/초점 계약과
@@ -527,7 +529,7 @@ canonical2680이 됐다. `sponsor#apply`는 기존 페이지의 상호작용 타
 정정했다. 다른 source/crawler를 덮어쓰거나 재시작하지 않았다.
 
 21st.dev 원본 pages.json은 B와 root가 0byte를 관찰했다. 원인은 미확인이며 원본은 보존한다.
-B의 [별도 복구 인덱스](../qa/2026-10-07-reference-parallel-b-21st-recovery-index.json)는
+B의 [별도 복구 인덱스 — 본문 요약·미확인 범위](../qa/2026-10-07-reference-parallel-b.md)는
 기존12460URL 중 raw 파일 byte/SHA가 맞는11398개와 누락1062개를 구분한다. HTTP 상태·수집
 시각 복구나 본문 독해·실제 UI 검증 완료를 뜻하지 않는다. 중앙 목록에 복구 파일 SHA와
 독해 수를 별도 기록한 이유는 오래된 수집 수와 현재 오류를 합쳐 전수 완료로 오인하지 않도록

@@ -1,5 +1,7 @@
 # QA 리포트 — Motion Primitives 공개 페이지 검토
 
+> 2026-10-09 QR 정리: 원시 URL 원장·캡처는 현재 보관하지 않는다. 과거의 원장/이미지 보존 문구는 당시 작업 기록이며, 현재 확인 가능한 결과·실패·미확인 범위는 이 문서 본문이다. 새 조사나 재검증을 수행한 것은 아니다.
+
 ## 1. 최종 판정
 
 **부분 확인. 11개 사이트 전수조사는 미완료다.** 이번 기록은 Motion Primitives에서 공개 내비게이션으로 발견한 HTML 36페이지의 기본 화면과 일부 구현·동작을 검토한 결과다. URL 수집, 소스 추출, 화면 캡처를 전수 검토 완료의 근거로 쓰지 않는다.
@@ -198,11 +200,11 @@ textarea의 aria-label/labelledby/placeholder는 모두 없었다. Close popover
 exit/enter DOM과 중복 field ID가 보였지만 정착 뒤 하나/중복0이라 지속적 중복 결함으로
 판정하지 않는다. defaultValue attribute와 실제 input.value를 구분해 정착 값을 재확인했다.
 
-- [숨은 Next 키보드 초점](assets/2026-10-07-motion-carousel-hidden-focus.png),
+- 숨은 Next 키보드 초점(원시 캡처는 정리했으며 관찰 결과는 연결된 조사 리포트 본문에 보존함),
   SHA256 `e0dd6f274753ff980252ab8a51c55a569fda41d17ee95f5c0d4ebf150ef0f9e6`.
-- [폭 변경 뒤 빈 마지막 카드 영역](assets/2026-10-07-motion-carousel-resize.png),
+- 폭 변경 뒤 빈 마지막 카드 영역(원시 캡처는 정리했으며 관찰 결과는 연결된 조사 리포트 본문에 보존함),
   SHA256 `b68050f1849ce6e286a79c2011f07c30d05bdb6c0c5dc4d3d700c872a89e11dd`.
-- [메모 재열기의 빈 값/숨은 caption](assets/2026-10-07-motion-popover-reopen.png),
+- 메모 재열기의 빈 값/숨은 caption(원시 캡처는 정리했으며 관찰 결과는 연결된 조사 리포트 본문에 보존함),
   SHA256 `01b8168362ada4c02aa42dcc2bc44a4aa1c7af78d317b91c6a6b9833b8083d6f`.
 
 이 PNG는 실제 결과 증거로 보존한다. 임시 viewport/media를 해제하고 System theme을 선택해
@@ -245,9 +247,9 @@ HJM 양 renderer의 ContentTransition/TextTransition은 단일 값/하위 트리
 API에는 자동 순환 timer가 없으므로 새 구성 후보와 현재 API의 제공 범위를 구분한다.
 제품의 확정 상태는 실제 데이터로 표시하고 소개용 loop를 요청 상태 엔진으로 복사하지 않는다.
 
-- [Infinite Slider 실제 좁은 화면](assets/2026-10-07-motion-infinite-slider-reduced.png),
+- Infinite Slider 실제 좁은 화면(원시 캡처는 정리했으며 관찰 결과는 연결된 조사 리포트 본문에 보존함),
   SHA256 `dd8e2bac06fa2aebdd4959e481b5b5f53d4ea990864583f8123b12347a5ed11d`.
-- [Text Loop 실제 좁은 화면](assets/2026-10-07-motion-text-loop-reduced.png),
+- Text Loop 실제 좁은 화면(원시 캡처는 정리했으며 관찰 결과는 연결된 조사 리포트 본문에 보존함),
   SHA256 `48623e078d3187e14fd4dc795767ec5916612d763579ffef50db1bcae51bfdaf`.
 
 read-only evaluate의 performance 미제공 오류는 CDP의 읽기 전용 시각 측정으로 보완했다.
@@ -285,9 +287,9 @@ wrapper API를 늘리지 않는다. 연구가 끝난 뒤 표현 비교를
 
 증거:
 
-- [검색에서 Escape 후 입력 유지](assets/2026-10-07-motion-toolbar-search-escape.png),
+- 검색에서 Escape 후 입력 유지(원시 캡처는 정리했으며 관찰 결과는 연결된 조사 리포트 본문에 보존함),
   SHA-256 `ca248c4063e9feca4ed2fba923063ac20104e6b4b97bb6bb57ef6970d100aa6e`.
-- [390px 다크의 확장 내용](assets/2026-10-07-motion-toolbar-expandable-narrow.png),
+- 390px 다크의 확장 내용(원시 캡처는 정리했으며 관찰 결과는 연결된 조사 리포트 본문에 보존함),
   SHA-256 `4822aaa4f996fa42ee206863b769982b0adb84d671c5a19eb6a174c1a29045b8`.
   최초 IAB/기본 CDP 캡처의 viewport 스케일이 DOM 측정과 달라 증거로 제외하고, CSS viewport
   x0/y99.5/390×844 clip을 명시한 최종 캡처로 덮어써 직접 읽었다.
@@ -326,7 +328,7 @@ Web은 제목/설명/건너뛰기를 헤더, 진행을 notice에 두고 Native�
 완료 callback, 초점, 모션 감소를 함께 검토한다. Default/Dark/LargeText와 사용 지침을
 갖춘 실제 스토리 등록 전까지 상태는 `proposed-not-registered`다.
 
-[마지막 단계의 실제 Close 상태](assets/2026-10-07-motion-panel-last-step.png),
+마지막 단계의 실제 Close 상태(원시 캡처는 정리했으며 관찰 결과는 연결된 조사 리포트 본문에 보존함),
 SHA-256 `6f5f04f19bc34a7029344f429f3f7ebe1502b21184af9e8e61aa8b58e5613797`.
 
 동적인 AX 번호가 바뀐 뒤 일괄 Next 요청의 일부가 실패해 완료 행동 수에 포함하지 않았다.

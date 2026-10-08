@@ -1,5 +1,7 @@
 # Reference parallel C — source reading and selected live states
 
+> 2026-10-09 QR 정리: 원시 URL 원장·캡처는 현재 보관하지 않는다. 과거의 원장/이미지 보존 문구는 당시 작업 기록이며, 현재 확인 가능한 결과·실패·미확인 범위는 이 문서 본문이다. 새 조사나 재검증을 수행한 것은 아니다.
+
 - Date: 2026-10-07. Scope: Component Gallery, Uiverse, 3dicons, Refero.
 2026-10-07 scope update: maximum OS accessibility text and expansion simulating that maximum are excluded from design/implementation judgment, new tests, verification, follow-ups, completion and release blockers under the user-updated root AGENTS.md. Earlier performed observations remain historical only. Earlier pending maximum-text mentions are superseded by this exclusion and do not create active work.
 
@@ -11,7 +13,7 @@
 
 | Site | Earlier baseline, not new work | New reading / live work | Still unverified |
 | --- | --- | --- | --- |
-| Refero | 1,394 captured URL bodies: 1,342 style details + 52 general pages; capture alone was pending reading | All 52 captured general bodies read: 23 ai-agents, 13 design-md, 11 design-styles, 4 examples, 1 home. Own per-URL hash and semantic finding in [reading index](2026-10-07-reference-parallel-c-ledger.json). Wise and Cursor live style detail sections partially read; export tabs not all complete | 1,025 unread style bodies retained after the first three hundred and seventeen sorted detail reads; sequential reading stopped at user request; original websites, all export formats, responsive, keyboard, hover, disabled/loading/error states not exhausted |
+| Refero | 1,394 captured URL bodies: 1,342 style details + 52 general pages; capture alone was pending reading | All 52 captured general bodies read: 23 ai-agents, 13 design-md, 11 design-styles, 4 examples, 1 home. Own per-URL hash and semantic finding in [reading index — 본문 요약·미확인 범위](2026-10-07-reference-parallel-c.md). Wise and Cursor live style detail sections partially read; export tabs not all complete | 1,025 unread style bodies retained after the first three hundred and seventeen sorted detail reads; sequential reading stopped at user request; original websites, all export formats, responsive, keyboard, hover, disabled/loading/error states not exhausted |
 | Component Gallery | 131 URL variants, 66 equivalent component paths; 2,671 card images / 189 contact sheets / 756 tiles were basic visual evidence | Search → Carousel via ArrowDown/Enter; React filter 22→10; name sort; clear→22. Dark theme menu selection then restored System. Linked Cedar Filmstrip full text read | 66 linked implementation families and their original behavior/variants remain pending. One linked implementation read is not all 22 Carousel examples |
 | 3dicons | 224 variants / 222 public views: 211 icons + 11 general basic views previously read/seen | Explore clay/front selected; Notebook search + detail; gradient/iso real asset loaded; download menu; Escape; no-result state | Every icon style/angle combination and similar/footer details remain pending. Two observed URLs do not cover 211 icons × variants |
 | Uiverse | Earlier two selected surfaces + blog were partial | Home, 3D-buttons category, thin-owl-11 post read. One post complete HTML (5 lines) and CSS (88 lines) read; Space/focus appearance observed | All posts, categories, paging/filter combinations, full behavior remain pending. Home’s 7,450 and category’s 1,995 are site claims, not independently verified exhaustive URL counts |
@@ -26,7 +28,7 @@ Both pages distinguish normalized measurement, interpreted roles, and reconstruc
 
 The 52 general pages consistently put product purpose and actual content first. Useful shared additions are usage guidance for display/reading/technical typography roles, section density/rhythm, screenshot crop/frame/mobile alternatives, and how a composition selects quiet versus operational presentation. Product requirements still own transaction rules, commercial prices, data, permissions, and state transitions. A proposed DESIGN.md specification and vendor-history assertions were read as page claims, not independently verified standards.
 
-![Refero Cursor live detail](assets/parallel-c-refero-cursor.png)
+캡처 설명(원시 이미지 정리): Refero Cursor live detail. 관찰 결과와 검증 한계는 이 문서의 본문에 보존한다.
 
 Proof PNG SHA-256: `b8e3af24af908f1061fdf79127f9fc991f1b3e5be6b81736039148c1561f1ab9`.
 
@@ -38,7 +40,7 @@ Download opened a menu for current icon, angle bundles, .fbx, .blend, and all ic
 
 Absorb through existing Asset/Image, Dialog/Menu, SearchField/EmptyState, and finite collection composition. A theme can select a material/angle bundle while products own asset meaning and license mapping. Decorative 3D illustrations should not replace functional Icon semantics or official provider assets. Preserve a loading fallback and image layout stability.
 
-![3dicons no-result state](assets/parallel-c-3dicons-no-results.png)
+캡처 설명(원시 이미지 정리): 3dicons no-result state. 관찰 결과와 검증 한계는 이 문서의 본문에 보존한다.
 
 Proof PNG SHA-256: `1d9338bbe3f0882df5cae6c62c345ddcf9df1e29714f39a7b947d13a2af6ffe1`.
 
@@ -92,7 +94,7 @@ The fourteenth sorted [Refero detail](https://styles.refero.design/style/0231caf
 
 Exclude the record from official-brand implementation evidence until its origin/capture/identity are reconciled. Its body also recommends no large violet fills while describing full-width violet promo/trust bands, and its red role differs from urgent-state recommendations. Those source recommendations were read, but should not enter a preset without validation.
 
-![Refero title and unrelated preview](assets/parallel-c-refero-provenance.png)
+캡처 설명(원시 이미지 정리): Refero title and unrelated preview. 관찰 결과와 검증 한계는 이 문서의 본문에 보존한다.
 
 Proof PNG SHA-256: `4ddad916a2a6e97d8cf7115ceff3b5145eaa9d123949104b7efe46886677d333`.
 

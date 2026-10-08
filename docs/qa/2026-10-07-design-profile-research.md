@@ -1,5 +1,7 @@
 # 디자인 프로필 10종 조사와 구현
 
+> 2026-10-09 QR 정리: 원시 URL 원장·캡처는 현재 보관하지 않는다. 과거의 원장/이미지 보존 문구는 당시 작업 기록이며, 현재 확인 가능한 결과·실패·미확인 범위는 이 문서 본문이다. 새 조사나 재검증을 수행한 것은 아니다.
+
 검토일: 2026-10-07 · 상태: 10종 실험 구현·로컬 검사 완료, 미게시 · 시작 SHA: `1482bea`
 
 ## 요구와 조사 범위
@@ -49,9 +51,9 @@
 - 구현 검토에서 수정한 문제: Web Surface의 정적 radius, Native Provider tokens spread 누락, 닫힌 Web 도구의 display:flex, 세로 헤더의 flex-basis 공백, Native 무그림자 프로필의 Android elevation, Web ScreenLayout의 Provider 필수화. 각각 토큰 소비/상태/호환 경로로 수정했다.
 - 경고: 기존 일부 browser fixture의 React act 경고와 Storybook third-party `use client`/chunk 크기 경고가 남지만 검사는 통과했다. 경고를 기기 동작 또는 제품 성능 증거로 해석하지 않는다.
 
-![10종 밝음/어두움 비교](assets/2026-10-07-design-profile-comparison.webp)
+캡처 설명(원시 이미지 정리): 10종 밝음/어두움 비교. 관찰 결과와 검증 한계는 이 문서의 본문에 보존한다.
 
-![실패 복구 후 입력·기간·성공 상태](assets/2026-10-07-design-profile-retention.webp)
+캡처 설명(원시 이미지 정리): 실패 복구 후 입력·기간·성공 상태. 관찰 결과와 검증 한계는 이 문서의 본문에 보존한다.
 
 ### 미확인과 판정 경계
 
@@ -172,9 +174,9 @@ raster clip·외곽 그림자의 시각 동등성은 기기에서 미확인이�
 앞선 화면 비교 모음과 구분한다. 390×844·dark·RTL·2배 글자·reduced motion에서 10종
 모두 가로 넘침이 없었으며, 브루탈리즘의 큰 제목 96px와 하단 작은 제목까지 스크롤해 읽었다.
 
-![10종 테마의 밝은/어두운 제목 크기](assets/2026-10-07-profile-heading-scales.webp)
+캡처 설명(원시 이미지 정리): 10종 테마의 밝은/어두운 제목 크기. 관찰 결과와 검증 한계는 이 문서의 본문에 보존한다.
 
-![브루탈리즘 큰 글자와 하단 스크롤](assets/2026-10-07-profile-heading-narrow.webp)
+캡처 설명(원시 이미지 정리): 브루탈리즘 큰 글자와 하단 스크롤. 관찰 결과와 검증 한계는 이 문서의 본문에 보존한다.
 
 Web 실제 브라우저와 Native Node host 검증을 구분한다. Native 실기기·전체 recipe 토큰
 감사·원본 linked 구현·11사이트 전수·유리 실제 blur/클레이 inset은 미완료다.
@@ -289,9 +291,9 @@ shadow 근사를 내부 helper로 공유한다. Modal 상태 엔진·액션/선�
   Select/Combobox 선택, Skeleton 명시 radius=13, Toast/Liquid presentation 회귀를 확인한다.
   Native의 기기 표시·VoiceOver·TalkBack·성능은 이번 검사 범위 밖이다.
 
-![20개 테마 오버레이](assets/2026-10-07-profile-overlay-comparison.webp)
+캡처 설명(원시 이미지 정리): 20개 테마 오버레이. 관찰 결과와 검증 한계는 이 문서의 본문에 보존한다.
 
-![좁은 화면의 오버레이](assets/2026-10-07-profile-overlay-narrow.webp)
+캡처 설명(원시 이미지 정리): 좁은 화면의 오버레이. 관찰 결과와 검증 한계는 이 문서의 본문에 보존한다.
 
 최종 그림은 실제 viewport 캡처에서 오버레이 주변을 모아 보존한 비교이며 새 렌더나 참조 이미지 합성물이 아니다.
 원시 PNG 23개와 DOM 결과 JSON 2개는 아래 digest로 검증 후 제거한다. 중간 실패는 이번 새 테스트 fixture의
@@ -417,11 +419,11 @@ EffectSurface/ProgressiveBlur의 export·공개 API 대응표·두 renderer를 �
   종료 전에 media와 viewport override를 복원했다. 지원하지 않는 브라우저의 CSS feature fallback은 코드 경로이며
   실제 오래된 브라우저 검증으로 세지 않는다.
 
-![10종 light와 dark 카드](assets/2026-10-07-profile-material-comparison.webp)
+캡처 설명(원시 이미지 정리): 10종 light와 dark 카드. 관찰 결과와 검증 한계는 이 문서의 본문에 보존한다.
 
-![유리와 클레이 실제 카드](assets/2026-10-07-profile-material-focus.webp)
+캡처 설명(원시 이미지 정리): 유리와 클레이 실제 카드. 관찰 결과와 검증 한계는 이 문서의 본문에 보존한다.
 
-![390px 다크 큰 글자의 유리와 클레이](assets/2026-10-07-profile-material-narrow.webp)
+캡처 설명(원시 이미지 정리): 390px 다크 큰 글자의 유리와 클레이. 관찰 결과와 검증 한계는 이 문서의 본문에 보존한다.
 
 이미지는 실제 viewport 캡처에서 표면 영역을 모은 비교다. 새 이미지를 생성하거나 원본 레퍼런스를 합성하지 않았다.
 좁은 화면 첫 캡처는 DOM viewport와 backing metrics가 달라 기본 캡처 API가 390×219 thumbnail 또는 확대된
@@ -538,9 +540,9 @@ Liquid Toast 별도 host shadow1이다. 이 감사는 recipe의 numeric 값·CSS
   줄바꿈과 세미콜론 순서 확인. editorial radio 조작의 observation timeout 후 실제 checked/profile 상태를 먼저
   확인하고 다시 누르지 않았다. 캡처 후 viewport override를 해제했다.
 
-![10종의 실제 코드 비교](assets/2026-10-07-profile-code-comparison.webp)
+캡처 설명(원시 이미지 정리): 10종의 실제 코드 비교. 관찰 결과와 검증 한계는 이 문서의 본문에 보존한다.
 
-![390px 코드 줄바꿈](assets/2026-10-07-profile-code-narrow.webp)
+캡처 설명(원시 이미지 정리): 390px 코드 줄바꿈. 관찰 결과와 검증 한계는 이 문서의 본문에 보존한다.
 
 실제 Native/optional gesture host·font 설치·VoiceOver/TalkBack·GPU 성능·제품 채택은 아직 미검증이다.
 기존 전체 Browser ContextMenu 실패를 이 검사로 해결했다고 세지 않는다. 실험 승급/npm 게시 전 전체 검수는 남아 있다.
@@ -788,8 +790,8 @@ Storybook globals를 `theme:dark;direction:rtl;textScale:2;motion:reduced`로 �
 read-only CUA DOM에는 getAnimations가 없어 한 관찰식이 실패했으므로 해당 항목은 그 도구로
 확인하지 않았다. 애니메이션 실행/중단은 아래 실제 Chromium 자동 테스트로 검증한다.
 
-- [공개 Tabs의 테마·표시 선택과 같은 초안](assets/2026-10-07-profile-tabs.png)
-- [390px·다크·RTL·200%·동작 줄이기](assets/2026-10-07-profile-tabs-narrow.png)
+- 공개 Tabs의 테마·표시 선택과 같은 초안(원시 캡처는 정리했으며 관찰 결과는 연결된 조사 리포트 본문에 보존함)
+- 390px·다크·RTL·200%·동작 줄이기(원시 캡처는 정리했으며 관찰 결과는 연결된 조사 리포트 본문에 보존함)
 
 두 PNG는 실제 로컬 UI의 재현 가능한 결과 증거로 보존한다. SHA256은 각각
 `8f403d992f503d9976735fa6226fb6fede950d2bdd5e855a16cc7ec3ae0e58fd`,
@@ -861,9 +863,9 @@ controlled 초안이 유지됐다. 390×844에서 popup left14/right374/width360
 실패 상태·다시 저장, 재시도 pending의 양 행동 disabled, 최종 저장 성공에서 같은 이름을 확인했다.
 fixture 저장이며 네트워크·저장소·운영 데이터 변경은 없다.
 
-- [10종 순회 후 열린 팝오버와 주변 구성](assets/2026-10-07-profile-popover.png)
+- 10종 순회 후 열린 팝오버와 주변 구성(원시 캡처는 정리했으며 관찰 결과는 연결된 조사 리포트 본문에 보존함)
   SHA256 `753f6665e00afd02c02d6cffb15c7d9570f3129f3512f1d6be1c8fd6f8e9a99a`.
-- [390px·다크·RTL·200% 팝오버](assets/2026-10-07-profile-popover-narrow.png)
+- 390px·다크·RTL·200% 팝오버(원시 캡처는 정리했으며 관찰 결과는 연결된 조사 리포트 본문에 보존함)
   SHA256 `ec08c64a49964475328c4e58a460396e4ae3c164044ff26aeba3ddf7e5536180`.
   처음 viewport-only screenshot은 browser 기본 캡처 영역과 emulation이 맞지 않아 증거에서
   제외하고 실제 DOM viewport/document 좌표 clip으로 다시 캡처했다. 임시 override를 해제하고
