@@ -129,7 +129,7 @@ function nativeActionAndLongCopyClaim(componentId, exportNames, subpath, proofFi
 export const reactNativeRendererEvidence = {
     schemaVersion: reactNativeRendererEvidenceSchemaVersion,
     packageName: "@hjmds/react-native",
-    packageVersion: "1.16.2",
+    packageVersion: "1.17.0",
     surface: "native",
     components: [
         defaultClaim("design-system-provider", ["HjmNativeProvider", "useHjmNativeTheme"], "./provider"),
