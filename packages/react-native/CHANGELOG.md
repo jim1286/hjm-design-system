@@ -1,5 +1,11 @@
 # @hjmds/react-native
 
+## 1.16.2
+
+### Patch Changes
+
+- bcdd973: Match floating bottom-navigation edge press backgrounds to the inner frame radius so holding the first or last tab does not obscure its border. No API migration.
+
 ## 1.16.1
 
 ### Patch Changes
