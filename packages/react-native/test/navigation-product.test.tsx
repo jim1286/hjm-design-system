@@ -205,6 +205,13 @@ describe("Native navigation product adapters", () => {
       borderWidth: bottomNavigationRecipe.presentations.floating.borderWidth,
       position: "relative",
     });
+    // RN per-edge widths override borderWidth, including an explicit zero.
+    // A floating surface must actually paint all recipe edges, not only report borderWidth=1.
+    const floatingSurface = flattenStyle(surface.props.style);
+    for (const edge of ["Top", "Right", "Bottom", "Left"]) {
+      expect(floatingSurface[`border${edge}Width`] ?? floatingSurface.borderWidth ?? 0)
+        .toBe(bottomNavigationRecipe.presentations.floating.borderWidth);
+    }
     const primaryAction = renderer.root.findByProps({ testID: "create-action" });
     expect(flattenStyle(primaryAction.parent?.props.style)).toMatchObject({
       alignItems: "center",

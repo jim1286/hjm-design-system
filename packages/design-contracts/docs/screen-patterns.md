@@ -376,3 +376,7 @@ Web·Native가 같은 규칙이라 홈 actions 병합이나 콜백 분리는 양
 - `./screens`, `./screen-flows`, `./saved-items`의 화면 루트는 ScreenLayout을 통해
   `layoutStyle`을 받는다(Native ScreenLayout과 같음). ListDetailScreen·SavedItemsScreen은
   목록·상세를 감싸는 바깥 host에 적용한다. PhotoSourceSheet는 portal Sheet라 제외한다.
+
+CommentThreadItem.actions sits beside likeAction in one inline row, with spacing.xxs between them,
+since the 2026-10-07 user requested a vertical-ellipsis overflow next to the heart. The slot remains
+product-owned and nullable custom likeAction remains supported; action handlers are independent.

@@ -418,7 +418,9 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
                     borderRadius: presentationRecipe.radius
                         ? theme.tokens.radius[presentationRecipe.radius]
                         : 0,
-                    borderTopWidth: presentation.presentation === "bar" ? presentationRecipe.borderWidth : 0,
+                    // RN's per-edge zero overrides borderWidth and erased floating's all-edge frame.
+                    // Capsule's own list paints its border; bar/floating keep the recipe top edge here.
+                    borderTopWidth: capsule ? 0 : presentationRecipe.borderWidth,
                     borderWidth: presentation.presentation === "floating" ? presentationRecipe.borderWidth : 0,
                     ...(surfaceShadow ? resolveNativeShadowElevation(surfaceShadow, theme.designProfile !== undefined, 8) : { elevation: 0 }),
                     maxWidth: presentationRecipe.maxWidth ?? undefined,

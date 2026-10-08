@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 미게시(1.12.1 이후)
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screens.tsx`·`src/screen-flows.tsx`; 기존 개별 지침을 새 규격으로 통합. 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
 - 스토리북: `배포/화면/소통/댓글`
 
@@ -88,15 +88,15 @@ import { MessageComposer } from "@hjmds/react-native/screens";
 
 `CommentThreadItem`: `id`, `parentId`(`null`이면 최상위), `author`, `body`(노드), `timeLabel`, `likeCountLabel`,
 `likeIcon`, `likeLabel`은 필수. 선택은 `bodyText`(작성자와 본문을 한 줄 흐름으로), `avatar`, `likeAction`(기본
-좋아요 버튼 교체, `null`이면 생략), `actions`(신고·수정 등), `canReply`(기본: 최상위만 true), `replyDisabled`.
+좋아요 버튼 교체, `null`이면 생략), `actions`(하트 바로 옆의 더보기 메뉴 등), `canReply`(기본: 최상위만 true), `replyDisabled`.
 
 ## 배치
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | ScreenLayout 폭(최대 720); 본문 열이 남은 폭을 채우고(`flex: 1`, 최소 폭 0) 오른쪽 끝에 좋아요 `IconButton` 하나; 답글·펼침 버튼은 `Button size="small"` ghost | Web·Native `CommentThreadScreen` |
-| 간격 | 화면 padding `spacing.md` 16; 최상위 댓글 묶음 사이 `spacing.lg` 20; 댓글 행–답글 묶음 `spacing.xs` 8; 답글 묶음 들여쓰기 `sectionGap`(`spacing.xl`) 24, 펼침 버튼·답글 사이 `spacing.md` 16; 행 안 아바타–본문–좋아요 `spacing.sm` 12, 본문 줄 사이 `spacing.xxs` 4, 시각·좋아요 수·답글 버튼 사이 `spacing.sm` 12 | `screen-flows.tsx` `Stack gap`, `screenPatternRecipe.sectionGap` |
-| 순서·정렬 | 최상위 댓글(아바타 → 작성자·본문 → 시각·좋아요 수·답글 → `actions` → 좋아요) → 답글 펼침 버튼 → 펼친 답글 → … → `threadFooter` → composer(footer) | 렌더 순서 |
+| 크기 | ScreenLayout 폭(최대 720); 본문 열이 남은 폭을 채우고(`flex: 1`, 최소 폭 0) 오른쪽 끝에 좋아요와 `actions`를 같은 가로 행으로; 답글·펼침 버튼은 `Button size="small"` ghost | Web·Native `CommentThreadScreen` |
+| 간격 | 화면 padding `spacing.md` 16; 최상위 댓글 묶음 사이 `spacing.lg` 20; 댓글 행–답글 묶음 `spacing.xs` 8; 답글 묶음 들여쓰기 `sectionGap`(`spacing.xl`) 24, 펼침 버튼·답글 사이 `spacing.md` 16; 행 안 아바타–본문–좋아요 `spacing.sm` 12, 본문 줄 사이 `spacing.xxs` 4, 좋아요–actions 사이 `spacing.xxs` 4, 시각·좋아요 수·답글 버튼 사이 `spacing.sm` 12 | `screen-flows.tsx` `Stack gap`, `screenPatternRecipe.sectionGap` |
+| 순서·정렬 | 최상위 댓글(아바타 → 작성자·본문 → 시각·좋아요 수·답글) + 행 오른쪽 좋아요 → `actions` → 답글 펼침 버튼 → 펼친 답글 → … → `threadFooter` → composer(footer) | 렌더 순서 |
 | 고정·스크롤 | 헤더·composer 고정, 댓글은 본문 화면 스크롤(`scroll` 기본 `"screen"`); composer는 `ready`·`empty`에서만 | `ScreenLayout`, `screen-flows.tsx` |
 | 좁은 폭·큰 글자 | 시각·좋아요 수·답글 버튼 줄과 작성자 줄은 줄바꿈(`flexWrap: "wrap"`); 답글은 한 단계만 들여써 좁은 폭에서도 본문 폭을 지킨다 | `screen-flows.tsx` |
 
@@ -123,3 +123,10 @@ import { MessageComposer } from "@hjmds/react-native/screens";
 
 - 작성창 노출 조건이 ChatScreen과 다르다. ChatScreen은 `ready`에서만, CommentThreadScreen은 `ready`·`empty`에서 보인다.
   `loading`·`error`·`restricted`에서는 둘 다 숨는다.
+
+2026-10-07 사용자 요청으로 댓글의 추가 행동을 본문 아래에서 하트 바로 옆으로 옮겼다.
+기존 위치는 답글 행동과 섞였고 세로로 쌓으면 하트와 더보기의 관계가 떨어져 보였다.
+두 버튼은 같은 가로 행이며 더보기 glyph는 세로 점3개(`MoreVertical`)를 제품이 Menu
+trigger로 공급한다. `actions`는 자유 노드 슬롯을 유지하고 메뉴 권한/항목/전송은 제품 소유다.
+순서는 좋아요 → 더보기이며 RTL에서는 논리 방향을 따른다. `likeAction=null`도 그대로 지원한다.
+이 배치 수정은 1.14.0 이후 미게시 변경이며 npm/제품 배포와 별개다.

@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 미게시(1.12.1 이후)
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [반복 화면 조합](../../screen-patterns.md); 공통 API와 실제 Web·Native 예제의 슬롯·상태를 대조해 중복 조립 방지. 2026-10-06 사용자 승인으로 스토리북 배포(이전 `실험/화면/공통 화면/댓글`, [승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정))
 - 스토리북: `배포/화면/소통/댓글`
 
@@ -29,7 +29,7 @@ host: 남은 높이·safe area·키보드
 
 | 행동 | 컴포넌트·tone | 위치 | 개수·순서 |
 | --- | --- | --- | --- |
-| 작업 | CommentThreadScreen 공개 행동 슬롯 | 좋아요·답글은 각 댓글; 보내기는 하단 composer | 같은 표면에 경쟁하는 primary 하나만 |
+| 작업 | CommentThreadScreen 공개 행동 슬롯 | 좋아요와 세로 점 더보기는 댓글 오른쪽의 같은 행; 답글은 본문 아래; 보내기는 하단 composer | 같은 표면에 경쟁하는 primary 하나만 |
 | 복구 | Button·secondary | 오류 근처 | 재시도할 대상과 범위를 표시 |
 
 ## 상태
@@ -106,3 +106,7 @@ import { MessageComposer } from "@hjmds/react-native/screens";
 
 - 빈 댓글에서도 작성창 유지; 실패한 전송은 초안 유지.
 - Storybook은 실제 서버·OS 권한·라우터 연동 증거가 아니다. 기본·다크·큰 글자와 실패/복구를 각각 확인한다.
+
+2026-10-07 하트 옆 더보기 요청에 따라 두 renderer의 `CommentThreadItem.actions`를
+좋아요 바로 뒤에 둔다. Storybook 예제는 공개 Menu와 MoreVertical을 쓰며 메뉴의 답글/좋아요는
+기존 controlled callback을 호출한다. 제품의 신고·삭제 권한이나 서버를 예제에서 추정하지 않는다.

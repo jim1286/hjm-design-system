@@ -8,6 +8,19 @@ import {EditorScreen,ModerationScreen,PermissionScreen,OnboardingScreen,SearchSc
 import {useState, type ReactNode} from "react";
 import {ScrollView,StyleSheet,TextInput} from "react-native";
 import {Text} from "../src/primitives.js";
+it("groups comment heart and overflow in one inline action row without merging their handlers",async()=>{
+ const {CommentThreadScreen}=await import("../src/screen-flows.js");
+ const {Stack}=await import("../src/primitives.js");
+ const {IconButton}=await import("../src/actions.js");
+ const like=vi.fn(),more=vi.fn();
+ const tree=render(<CommentThreadScreen title="댓글" items={[{id:"one",parentId:null,author:"작성자",body:"본문",timeLabel:"방금",likeCountLabel:"좋아요 3개",likeIcon:<Text>♡</Text>,likeLabel:"댓글 좋아요",actions:<IconButton label="댓글 더보기" onPress={more}>⋮</IconButton>}]} expandedIds={[]} onExpandedChange={()=>{}} onLike={like} onReply={()=>{}} replyLabel="답글" repliesLabel={()=>"답글 더 보기"}/>);
+ const row=tree.root.findAllByType(Stack).find(node=>node.props.axis==="inline"&&node.props.gap==="xxs")!;
+ expect(row.props.layoutStyle.flexShrink).toBe(0);
+ const actions=row.findAllByType(IconButton);expect(actions.map(action=>action.props.label)).toEqual(["댓글 좋아요","댓글 더보기"]);
+ act(()=>actions[0]!.props.onPress());expect(like).toHaveBeenCalledExactlyOnceWith("one");expect(more).not.toHaveBeenCalled();
+ act(()=>actions[1]!.props.onPress());expect(more).toHaveBeenCalledOnce();expect(like).toHaveBeenCalledOnce();
+ act(()=>tree.unmount());
+});
 function render(child:ReactNode){let tree:ReactTestRenderer;act(()=>{tree=create(<HjmNativeProvider theme="dark" textScale={2}>{child}</HjmNativeProvider>);});return tree!;}
 it("keeps dirty draft mounted while native discard confirmation is shown",()=>{const leave=vi.fn();const tree=render(<EditorScreen title="작성" dirty submit={{label:"저장",onAction:()=>{}}} cancel={{label:"닫기",onAction:leave}} discard={{mode:"confirm",title:"버릴까요",description:"초안",confirmLabel:"버리기",cancelLabel:"유지",fallbackErrorMessage:"실패"}}>내용</EditorScreen>);act(()=>tree.root.findAllByType(Button).find(button=>button.props.children==="닫기")!.props.onPress());expect(leave).not.toHaveBeenCalled();expect(tree.root.findByType(AlertDialog).props.open).toBe(true);act(()=>tree.unmount());});
 it("disables reporting without a selected reason and forwards valid selection",()=>{const select=vi.fn();const tree=render(<ModerationScreen title="신고" reasons={[{value:"spam",label:"스팸"}]} reason={null} onReasonChange={select} reasonLabel="사유" submit={{label:"신고하기",onAction:()=>{}}}/>);expect(tree.root.findAllByType(Button).find(button=>button.props.children==="신고하기")!.props.disabled).toBe(true);act(()=>tree.root.findByType(RadioGroup).props.onValueChange("spam"));expect(select).toHaveBeenCalledWith("spam");act(()=>tree.unmount());});

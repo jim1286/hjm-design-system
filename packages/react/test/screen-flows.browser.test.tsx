@@ -5,6 +5,23 @@ import {beforeEach,afterEach,it,expect,vi} from "vitest";
 import {HjmProvider} from "../src/provider.js";
 import {EditorScreen,ListDetailScreen,SearchScreen,PermissionScreen,CommentThreadScreen} from "../src/screen-flows.js";
 import "../src/styles.css";
+it("keeps comment overflow beside the heart with separate keyboard actions at narrow width",async()=>{
+ const {IconButton}=await import("../src/actions.js");
+ const like=vi.fn(),more=vi.fn();host.style.width="320px";host.style.height="720px";
+ for(const theme of ["light","dark"] as const)for(const direction of ["ltr","rtl"] as const){
+  await act(async()=>root.render(<HjmProvider theme={theme} direction={direction} textScale={2}><CommentThreadScreen title="댓글" items={[{id:"one",parentId:null,author:"작성자가 긴 댓글",body:"본문을 읽은 뒤 답글을 작성할 수 있습니다.",timeLabel:"방금",likeCountLabel:"좋아요 3개",likeIcon:"♡",likeLabel:"댓글 좋아요",actions:<IconButton label="댓글 더보기" tone="ghost" onClick={more}>⋮</IconButton>}]} expandedIds={[]} onExpandedChange={()=>{}} onLike={like} onReply={()=>{}} replyLabel="답글" repliesLabel={()=>"답글 더 보기"}/></HjmProvider>));
+  const heart=host.querySelector<HTMLButtonElement>('button[aria-label="댓글 좋아요"]')!,overflow=host.querySelector<HTMLButtonElement>('button[aria-label="댓글 더보기"]')!;
+  expect(heart.parentElement).toBe(overflow.parentElement);
+  expect([...heart.parentElement!.children]).toEqual([heart,overflow]);
+  const h=heart.getBoundingClientRect(),m=overflow.getBoundingClientRect(),bounds=host.getBoundingClientRect();
+  expect(Math.abs(h.y-m.y)).toBeLessThan(1);expect(h.width).toBeGreaterThanOrEqual(44);expect(m.width).toBeGreaterThanOrEqual(44);
+  expect(m.left).toBeGreaterThanOrEqual(bounds.left);expect(m.right).toBeLessThanOrEqual(bounds.right+1);
+  if(direction==="ltr")expect(m.x).toBeGreaterThan(h.x);else expect(m.x).toBeLessThan(h.x);
+  await act(async()=>heart.focus());await userEvent.keyboard("{Enter}");expect(like).toHaveBeenLastCalledWith("one");
+  await userEvent.keyboard("{Tab}");expect(document.activeElement).toBe(overflow);
+  await userEvent.keyboard("{Enter}");expect(more).toHaveBeenCalledTimes(like.mock.calls.length);
+ }
+});
 let host:HTMLDivElement,root:Root;
 beforeEach(()=>{(globalThis as typeof globalThis & {IS_REACT_ACT_ENVIRONMENT:boolean}).IS_REACT_ACT_ENVIRONMENT=true;host=document.createElement("div");document.body.append(host);root=createRoot(host);});
 afterEach(async()=>{await act(async()=>root.unmount());host.remove();});
