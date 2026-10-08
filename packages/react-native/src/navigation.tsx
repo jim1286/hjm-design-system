@@ -941,6 +941,19 @@ export function BottomNavigation<
                     alignItems: "center",
                     backgroundColor: pressed ? pressedBackground : capsule && selected ? theme.colors.surfaceAccent : "transparent",
                     borderRadius: capsule ? radius.full : theme.tokens.radius.lg,
+                    // Floating edge items touch the frame. Their pressed fill must follow its
+                    // inner curve; the smaller generic radius painted over the border in Spint.
+                    // Match corners instead of clipping the whole surface (which clips shadows/focus).
+                    ...(presentation.presentation === "floating" ? {
+                      ...(index === 0 ? {
+                        borderTopStartRadius: Math.max(0, theme.tokens.radius[presentationRecipe.radius!] - presentationRecipe.borderWidth),
+                        borderBottomStartRadius: Math.max(0, theme.tokens.radius[presentationRecipe.radius!] - presentationRecipe.borderWidth),
+                      } : {}),
+                      ...(index === resolved.items.length - 1 ? {
+                        borderTopEndRadius: Math.max(0, theme.tokens.radius[presentationRecipe.radius!] - presentationRecipe.borderWidth),
+                        borderBottomEndRadius: Math.max(0, theme.tokens.radius[presentationRecipe.radius!] - presentationRecipe.borderWidth),
+                      } : {}),
+                    } : {}),
                     flexDirection: capsule && !expandedLabels ? "row" : "column",
                     flex: capsule && selected && !expandedLabels ? 2 : 1,
                     flexShrink: 1,

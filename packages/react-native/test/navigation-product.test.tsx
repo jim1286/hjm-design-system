@@ -182,6 +182,16 @@ describe("Native navigation product adapters", () => {
       minWidth: bottomNavigationRecipe.density.compact.itemMinWidth,
       padding: bottomNavigationRecipe.density.compact.padding,
     });
+    // Regression: a held edge destination must not paint outside the frame's inner curve.
+    const innerRadius = radius[bottomNavigationRecipe.presentations.floating.radius!] - bottomNavigationRecipe.presentations.floating.borderWidth;
+    const first = renderer.root.findByProps({ testID: "destination-home" });
+    const last = renderer.root.findByProps({ testID: "destination-profile" });
+    expect(flattenStyle(first.props.style({ pressed: true }))).toMatchObject({
+      borderTopStartRadius: innerRadius, borderBottomStartRadius: innerRadius,
+    });
+    expect(flattenStyle(last.props.style({ pressed: true }))).toMatchObject({
+      borderTopEndRadius: innerRadius, borderBottomEndRadius: innerRadius,
+    });
     act(() => search.props.onPress());
     expect(onActivate).toHaveBeenCalledWith({ key: "search", reason: "navigate" });
     act(() => search.props.onLongPress());

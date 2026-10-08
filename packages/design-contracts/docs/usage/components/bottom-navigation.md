@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-07
+- 검토일: 2026-10-08
 - 근거: [BottomNavigation](../../bottom-navigation.md), recipe `bottomNavigationRecipe`
 - 스토리북: `배포/컴포넌트/탐색/하단 탐색`
 
@@ -86,6 +86,8 @@ import { BottomNavigation } from "@hjmds/react-native/navigation";
 | `layoutStyle` | margin·width·flex·`alignSelf` | — | 배치 전용. Native `style`·`surfaceStyle`·`listStyle`·`primaryActionStyle`은 deprecated — layoutStyle 또는 `configuration` |
 
 ## 배치
+
+2026-10-08 Spint 누름 상태 점검: Native floating의 양 끝 항목은 프레임 안쪽 곡률을 따라 누름 배경을 그린다. 작은 일반 항목 모서리가 프레임을 덮던 문제를 수정하며, 전체 표면 clipping으로 그림자·포커스를 자르지 않는다.
 
 Native floating 프레임·선택 표시·항목 모서리는 각 recipe radius 역할을 Provider token에서 읽는다. full/capsule 원형 역할과 목적지·키보드 동작은 유지한다.
 

@@ -147,3 +147,10 @@ icon/label을 제공합니다. `primaryAction`은 컬렉션 밖의 별도 원형
 선택 캡슐과 분리된 추가 행동을 참고했으며, 원본 소스는 복제하지 않았습니다.
 
 Storybook: **컴포넌트 → 탐색 → 캡슐 네비게이션**, Default/Dark/LargeText.
+
+### Native floating pressed-edge geometry (2026-10-08)
+
+Spint reproduced the first/last pressed background covering the rounded frame. Edge destinations now
+use the frame radius minus its border width on their logical outer corners; interior corners keep
+the item radius. This preserves the existing public API, router activation and focus behavior. Do not
+clip the entire elevated surface as a workaround: that also clips its shadow and focus outline.
