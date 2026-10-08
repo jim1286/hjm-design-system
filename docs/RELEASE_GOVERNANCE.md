@@ -154,3 +154,11 @@ root check의 `api-map:check`는 모든 공개 컴포넌트 export를 분류하�
 ### 2026-10-08 1.16.0 peer train 준비
 
 CollectionRail과 글자 역할 등 additive API를 1.16.0으로 게시하기 위해 renderer peer를 버전 생성 전에 `>=1.16.0 <1.17.0`으로 옮긴다. 이전 범위를 유지하면 Changesets가 peer 범위 이탈을 major로 올리므로 위의 authored-next-train 순서를 따른다. 승격 승인 범위는 Storybook 탐색 규격 §2에 기록했다.
+
+## 1.17 댓글 소개 슬롯 호환 범위
+
+2026-10-08 optional threadHeader 추가는 기존 contracts의 상태·토큰 API만 사용한다. 따라서
+두 renderer의 contracts peer 범위는 >=1.16.0 <1.18.0이다. 이전 <1.17.0 상한을 유지하면
+Changesets가 minor contracts 갱신을 peer breaking change로 해석해 fixed train 전체를 2.0.0으로
+올렸다. 생성 숫자를 수동으로 낮추는 대신 검증한 호환 범위를 먼저 선언한다. 소비 제품은
+기존 정책대로 세 패키지 중 사용하는 패키지를 동일한 exact train으로 설치한다.
