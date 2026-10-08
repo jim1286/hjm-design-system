@@ -34,7 +34,7 @@ export type ReactRendererEvidenceManifest = Readonly<{
 export declare const reactRendererEvidence: {
     readonly schemaVersion: 2;
     readonly packageName: "@hjmds/react";
-    readonly packageVersion: "1.17.0";
+    readonly packageVersion: "1.16.2";
     readonly surface: "web";
     readonly components: readonly [Readonly<{
         /** Canonical component id from the design-contracts catalog. */

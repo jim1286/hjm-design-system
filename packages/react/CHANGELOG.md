@@ -1,11 +1,5 @@
 # @hjmds/react
 
-## 1.17.0
-
-### Minor Changes
-
-- 36e7693: Add an optional CommentThreadScreen threadHeader slot to both renderers. Product introductions and filters scroll with comments instead of requiring a tall fixed header or nested scroll region. Existing callers remain unchanged.
-
 ## 1.16.2
 
 ## 1.16.1
