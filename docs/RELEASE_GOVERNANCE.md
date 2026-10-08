@@ -157,8 +157,8 @@ CollectionRail과 글자 역할 등 additive API를 1.16.0으로 게시하기 �
 
 ## 1.17 댓글 소개 슬롯 호환 범위
 
-2026-10-08 optional threadHeader 추가는 기존 contracts의 상태·토큰 API만 사용한다. 따라서
-두 renderer의 contracts peer 범위는 >=1.16.0 <1.18.0이다. 이전 <1.17.0 상한을 유지하면
-Changesets가 minor contracts 갱신을 peer breaking change로 해석해 fixed train 전체를 2.0.0으로
-올렸다. 생성 숫자를 수동으로 낮추는 대신 검증한 호환 범위를 먼저 선언한다. 소비 제품은
-기존 정책대로 세 패키지 중 사용하는 패키지를 동일한 exact train으로 설치한다.
+2026-10-08 optional threadHeader 릴리스에서 두 renderer의 contracts peer를 생성 전에
+>=1.17.0 <1.18.0으로 선언한다. 기존 <1.17.0을 두면 Changesets가 peer 갱신을 major로
+해석하고, >=1.16.0 <1.18.0으로 넓히면 workspace의 단일 minor train 검사가 실패했다.
+생성 결과를 수동으로 낮추거나 검사를 완화하지 않고, 다음 train을 미리 명시하는
+contracts-peer-train.mjs의 기존 계약을 따른다. 소비 제품은 같은 exact train을 사용한다.
