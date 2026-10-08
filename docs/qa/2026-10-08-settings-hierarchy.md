@@ -37,3 +37,17 @@ At 13:05 UTC the local canonical release importer and npm view still returned 40
 for 1.17.1. Publication logs therefore prove the publish step, not yet successful
 consumer resolution. Spint adoption/native visual proof remain pending; no local
 renderer copy or bypassed package provenance is used to claim adoption.
+
+## Follow-up: Switch row typography — 22:59 KST
+
+Spint settings was rejected after the prior 1.17.1 hierarchy adjustment. Native
+Switch still hardcoded bodyLarge, while Web inherited surrounding typography.
+Added switchRecipe.rowLabelTextVariant=body and consumed it on both platforms
+for presentation=row. Inline rendering, description, row height, track geometry,
+accessibility and callbacks are unchanged. This is a patch with no API migration.
+
+Validation: all three packages build/typecheck; Native stable-core 22 tests pass;
+Web Switch named-target/description/toggle/disabled browser cases 2 pass. Large-text
+cases were not selected for this targeted run. Usage sync and API map pass after
+placing the added rationale within the standard document structure. Full release
+gates, visual comparison and published Spint adoption remain pending.

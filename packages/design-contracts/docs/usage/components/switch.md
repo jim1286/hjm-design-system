@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-08
 - 근거: [제품 채택 1.4 §설정 한 행](../../product-adoption-1.4.md), `src/component-recipes.ts`(`switchRecipe`)
 - 스토리북: `배포/컴포넌트/입력/스위치`
 
@@ -118,3 +118,11 @@ presentation="row"                    큰 글자(≥1.6)
 - Native 꺼짐 상태에는 테두리가 없으므로, 어두운 카드 위에서 track이 배경과 섞이는지 실제 기기 다크 모드로 확인한다.
   (Web은 이 hairline이 빠져 보이지 않던 일이 있었고 현재 stylesheet가 그린다.)
 - Web은 `type="button"`이 기본이라 폼 안에서도 submit을 일으키지 않는다.
+
+**설정 행의 글자 역할**
+
+2026-10-08 Spint 설정 화면에서 Native의 고정 `bodyLarge` 항목 이름이 설명과
+섹션 제목보다 지나치게 강하게 보였다. `presentation="row"`의 이름은 두 renderer
+모두 `switchRecipe.rowLabelTextVariant`의 `body` 역할을 사용한다. 설명은 `caption`,
+최소 터치 영역과 두 줄 행 높이는 그대로 유지한다. inline의 기존 글자 처리는 유지한다.
+앱에서 Text로 이름을 다시 조립하거나 내부 글자 스타일을 덮지 않는다.

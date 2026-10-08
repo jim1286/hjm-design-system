@@ -7352,6 +7352,7 @@ export declare const recipeRegistry: {
         };
     };
     readonly switchRecipe: {
+        readonly rowLabelTextVariant: "body";
         readonly slots: readonly ["root", "track", "thumb", "label", "description"];
         readonly defaults: {
             readonly size: "medium";

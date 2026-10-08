@@ -1891,7 +1891,7 @@ export function Switch({
           opacity: disabled ? switchRecipe.states.disabledOpacity : 1,
         }}
       >
-        <Text fontRole="ui" tone="body" variant="bodyLarge">{label}</Text>
+        <Text fontRole="ui" tone="body" variant={presentation === "row" ? switchRecipe.rowLabelTextVariant : "bodyLarge"}>{label}</Text>
         {description ? (
           <Text tone="muted" variant="caption">{description}</Text>
         ) : null}

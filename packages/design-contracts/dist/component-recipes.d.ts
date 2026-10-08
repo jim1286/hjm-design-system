@@ -1901,6 +1901,7 @@ export declare const segmentedControlRecipe: {
     };
 };
 export declare const switchRecipe: {
+    readonly rowLabelTextVariant: "body";
     readonly slots: readonly ["root", "track", "thumb", "label", "description"];
     readonly defaults: {
         readonly size: "medium";

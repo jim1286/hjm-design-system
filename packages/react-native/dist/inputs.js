@@ -667,7 +667,7 @@ export function Switch({ label, labelVisibility = "visible", presentation = swit
                     flex: stacked || presentation === "inline" ? undefined : 1,
                     gap: spacing.xxs,
                     opacity: disabled ? switchRecipe.states.disabledOpacity : 1,
-                }, children: [_jsx(Text, { fontRole: "ui", tone: "body", variant: "bodyLarge", children: label }), description ? (_jsx(Text, { tone: "muted", variant: "caption", children: description })) : null] }) : null, _jsx(NativeSwitch, { ...props, accessible: false, disabled: disabled, ios_backgroundColor: trackOff, pointerEvents: "none", style: Platform.OS === "ios"
+                }, children: [_jsx(Text, { fontRole: "ui", tone: "body", variant: presentation === "row" ? switchRecipe.rowLabelTextVariant : "bodyLarge", children: label }), description ? (_jsx(Text, { tone: "muted", variant: "caption", children: description })) : null] }) : null, _jsx(NativeSwitch, { ...props, accessible: false, disabled: disabled, ios_backgroundColor: trackOff, pointerEvents: "none", style: Platform.OS === "ios"
                     ? { alignSelf: stacked ? "flex-start" : "center" }
                     : { height: dimensions.height, width: dimensions.width }, thumbColor: thumb, trackColor: { false: trackOff, true: trackOn }, value: enabled })] }));
 }

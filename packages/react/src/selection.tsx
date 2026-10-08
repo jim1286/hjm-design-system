@@ -777,7 +777,11 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch
         <span className="hjm-switch__thumb" />
       </span>
       <span className={classNames("hjm-switch__copy", labelVisibility === "hidden" && "hjm-visually-hidden")}>
-        <span id={labelId} className="hjm-switch__label">{label}</span>
+        <span id={labelId}
+          className={classNames("hjm-switch__label", presentation === "row" && "hjm-text")}
+          data-font-role={presentation === "row" ? "ui" : undefined}
+          data-variant={presentation === "row" ? switchRecipe.rowLabelTextVariant : undefined}
+        >{label}</span>
         {hasDescription ? <span id={descriptionId} className="hjm-switch__description">{description}</span> : null}
       </span>
     </button>

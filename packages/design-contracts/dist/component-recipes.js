@@ -675,6 +675,9 @@ export const segmentedControlRecipe = {
     },
 };
 export const switchRecipe = {
+    // Settings rows are controls, not prominent reading content. Spint's native row
+    // used bodyLarge while Web inherited its parent; one role prevents that drift.
+    rowLabelTextVariant: "body",
     slots: ["root", "track", "thumb", "label", "description"],
     defaults: { size: "medium" },
     // Preserve existing inline Web and full-row Native layouts. Settings can opt in
