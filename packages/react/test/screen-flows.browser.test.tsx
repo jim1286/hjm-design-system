@@ -311,3 +311,16 @@ it("replaces results with loading rows while the count is unknown and scrolls to
  expect(sortChange).toHaveBeenCalledExactlyOnceWith("newest");
  expect(body.scrollTop).toBe(0);
 });
+
+it("keeps the thread introduction in the comment scroll body and replaces it with state", async()=>{
+ const fixture=(restricted=false)=><HjmProvider><CommentThreadScreen title="Comments" header={<nav>Back</nav>} threadHeader={<div data-testid="thread-intro">Place filters</div>} items={[{id:"root",parentId:null,author:"Author",body:<div data-testid="thread-content">Comment</div>,timeLabel:"Now",likeCountLabel:"",likeIcon:null,likeLabel:"Like",likeAction:null}]} expandedIds={[]} onExpandedChange={()=>{}} onLike={()=>{}} onReply={()=>{}} replyLabel="Reply" repliesLabel={()=>"More"} composer={<input aria-label="Write"/>} {...(restricted?{state:{kind:"restricted" as const,title:"Sign in"}}:{})}/></HjmProvider>;
+ await act(async()=>root.render(fixture()));
+ const body=host.querySelector(".hjm-screen__body")!;
+ expect(body.querySelector('[data-testid="thread-intro"]')).not.toBeNull();
+ expect(body.querySelector('[data-testid="thread-content"]')).not.toBeNull();
+ expect(body.querySelector("input")).toBeNull();
+ expect(host.querySelector(".hjm-screen__footer input")).not.toBeNull();
+ await act(async()=>root.render(fixture(true)));
+ expect(host.querySelector('[data-testid="thread-intro"]')).toBeNull();
+ expect(host.querySelector("input")).toBeNull();
+});

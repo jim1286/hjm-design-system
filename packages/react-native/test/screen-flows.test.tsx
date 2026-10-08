@@ -291,3 +291,17 @@ describe("SearchScreen two-step search", () => {
   act(()=>ready.unmount());
  });
 });
+
+it("scrolls thread introduction with comments and replaces it on restricted state", async () => {
+ const {CommentThreadScreen}=await import("../src/screen-flows.js");
+ const fixture=(restricted=false)=><CommentThreadScreen title="Comments" header={<Text>Back</Text>} threadHeader={<Text testID="thread-intro">Place filters</Text>} items={[{id:"root",parentId:null,author:"Author",body:<Text testID="thread-content">Comment</Text>,timeLabel:"Now",likeCountLabel:"",likeIcon:null,likeLabel:"Like",likeAction:null}]} expandedIds={[]} onExpandedChange={()=>{}} onLike={()=>{}} onReply={()=>{}} replyLabel="Reply" repliesLabel={()=>"More"} composer={<Text testID="thread-composer">Write</Text>} {...(restricted?{state:{kind:"restricted" as const,title:"Sign in"}}:{})}/>;
+ const tree=render(fixture());
+ const scroll=tree.root.findByType(ScrollView);
+ expect(scroll.findAll(node=>node.props.testID==="thread-intro").length).toBeGreaterThan(0);
+ expect(scroll.findAll(node=>node.props.testID==="thread-content").length).toBeGreaterThan(0);
+ expect(scroll.findAll(node=>node.props.testID==="thread-composer")).toHaveLength(0);
+ act(()=>tree.update(<HjmNativeProvider>{fixture(true)}</HjmNativeProvider>));
+ expect(tree.root.findAll(node=>node.props.testID==="thread-intro")).toHaveLength(0);
+ expect(tree.root.findAll(node=>node.props.testID==="thread-composer")).toHaveLength(0);
+ act(()=>tree.unmount());
+});

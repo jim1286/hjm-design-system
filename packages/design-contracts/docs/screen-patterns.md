@@ -380,3 +380,10 @@ Web·Native가 같은 규칙이라 홈 actions 병합이나 콜백 분리는 양
 CommentThreadItem.actions sits beside likeAction in one inline row, with spacing.xxs between them,
 since the 2026-10-07 user requested a vertical-ellipsis overflow next to the heart. The slot remains
 product-owned and nullable custom likeAction remains supported; action handlers are independent.
+
+### 댓글 본문 앞 소개 슬롯
+
+CommentThreadScreen의 optional threadHeader는 첫 댓글 앞의 스크롤 콘텐츠다. Web과 Native
+모두 같은 본문에 배치하고 상태 교체 시 함께 숨긴다. fixed header는 짧은 탐색 영역, composer는
+고정 작성 영역이다. Spint의 2026-10-08 이중 스크롤 문제 때문에 추가했으며 상세 사용법은
+[댓글 화면](usage/components/comment-thread-screen.md#배치)을 따른다.

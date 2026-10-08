@@ -295,9 +295,10 @@ export type CommentThreadScreenProps = Base & {
     replyLabel: string;
     repliesLabel(count: number, expanded: boolean): string;
     composer?: ReactNode;
+    threadHeader?: ReactNode;
     threadFooter?: ReactNode;
 };
 /** Controlled thread: server ordering, permission checks and receipt-based draft clearing belong to the product. */
-export declare function CommentThreadScreen({ items, expandedIds, onExpandedChange, onLike, onReply, replyLabel, repliesLabel, composer, threadFooter, ...screen }: CommentThreadScreenProps): import("react").JSX.Element;
+export declare function CommentThreadScreen({ items, expandedIds, onExpandedChange, onLike, onReply, replyLabel, repliesLabel, composer, threadHeader, threadFooter, ...screen }: CommentThreadScreenProps): import("react").JSX.Element;
 export {};
 //# sourceMappingURL=screen-flows.d.ts.map

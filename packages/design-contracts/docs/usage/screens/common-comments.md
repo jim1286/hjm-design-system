@@ -14,6 +14,13 @@ CommentThreadScreen을 사용해 댓글 흐름을 구성한다. 제품이 데이
 
 ## 영역 구조
 
+
+짧은 뒤로/제목 행은 `header`, 장소 소개·원문·필터는 `threadHeader`, 추가 페이지 버튼은
+`threadFooter`, 작성기는 `composer`에 둔다. threadHeader와 댓글은 하나의 본문 스크롤을
+공유한다. 소개를 고정 header 안의 별도 스크롤로 제한하지 않는다. Spint의 소개가 잘려
+스팟 선택이 숨는 문제(2026-10-08)를 해결하기 위한 배치다.
+
+
 ```text
 host: 남은 높이·safe area·키보드
 └─ 원댓글 → 한 단계 답글 → 더 보기 → 작성창

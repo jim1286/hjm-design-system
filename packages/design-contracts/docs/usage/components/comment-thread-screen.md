@@ -92,6 +92,18 @@ import { MessageComposer } from "@hjmds/react-native/screens";
 
 ## 배치
 
+
+`threadHeader?: ReactNode`는 장소 소개·원문·필터처럼 댓글과 함께 스크롤할 콘텐츠다.
+공통 본문 안에서 첫 댓글 앞에 놓이고, `threadFooter`는 마지막 댓글 뒤에 놓인다.
+`header`는 뒤로 버튼·짧은 제목 같은 고정 탐색 영역에만 쓴다. 소개 영역 안에 별도 ScrollView를
+넣지 않는다. `composer`는 기존 고정 작성 영역을 유지한다. 화면 상태가 본문을 교체하면
+threadHeader도 댓글과 함께 숨겨지므로 항상 보여야 하는 안내는 `notice`를 사용한다.
+
+2026-10-08 Spint 실제 화면에서 긴 소개를 고정 header에 넣고 높이를 제한하자 스팟 선택이
+잘리고 스크롤이 둘로 나뉘었다. 임의의 댓글 항목에 소개를 끼워 넣으면 댓글 ID·펼침 계약이
+오염되므로 두 renderer에 동일한 optional 슬롯을 추가했다. 생략한 기존 호출은 바뀌지 않는다.
+
+
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | ScreenLayout 폭(최대 720); 본문 열이 남은 폭을 채우고(`flex: 1`, 최소 폭 0) 오른쪽 끝에 좋아요와 `actions`를 같은 가로 행으로; 답글·펼침 버튼은 `Button size="small"` ghost | Web·Native `CommentThreadScreen` |
