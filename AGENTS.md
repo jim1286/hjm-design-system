@@ -7,6 +7,14 @@
 [검증·릴리스 계약](docs/RELEASE_GOVERNANCE.md)을 읽고 `main`에서 작업한다.
 공유 checkout의 기존 미커밋 변경은 보존하고 stage할 경로를 명시한다.
 
+## Web Storybook 공개 주소
+
+2026-10-10 사용자 승인으로 대표 주소는 `https://storybook.jmstudioapps.com/`이다.
+검사한 고정 artifact의 source SHA·CI run·파일 hash를 보존해 [게시 실행서](deploy/storybook/README.md)로
+VPS에 전달한다. 특정 Codex/Sites 계정은 요건이 아니다. 기존 GitHub Pages는 story path/query/hash를
+유지하는 이동 안내이며 HTTP 서버 redirect로 보고하지 않는다. 메뉴 제목이나 story id를 이관 때문에
+바꾸지 않는다. 이번 직접 이관은 정책·포폴 이관의 후속 승인이고 반복 delivery는 mac-ci 기본이다.
+
 ## 컴포넌트 중복과 소유권
 
 2026-10-01 전수 조사에서 catalog 밖 공개 API와 메뉴·필드·표·캐러셀의 공통 행동이

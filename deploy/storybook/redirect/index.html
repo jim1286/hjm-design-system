@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>HJM Storybook 주소 안내</title>
+<script>
+// Keep story ids, iframe paths and globals in shared links; changing menu titles must not change ids.
+const target = new URL('https://storybook.jmstudioapps.com/');
+target.pathname = location.pathname.replace(/^\/hjm-design-system(?:\/|$)/, '/');
+target.search = location.search;
+target.hash = location.hash;
+location.replace(target.href);
+</script>
+<p>HJM Storybook은 <a href="https://storybook.jmstudioapps.com/">storybook.jmstudioapps.com</a>으로 이전했습니다.</p>
+</html>

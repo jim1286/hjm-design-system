@@ -2,6 +2,7 @@
 
 상태: 현재 내부 릴리스 계약 · 검토일: 2026-10-09
 적용: 이 저장소의 contracts, React, React Native, 두 Showcase.
+Web Storybook 공개 실행 정본: [자체 도메인 게시](../deploy/storybook/README.md).
 기계 검사: [`scripts/check-release-governance.mjs`](../scripts/check-release-governance.mjs).
 
 공통 기준은 [배포 정책](https://github.com/jim1286/app-portfolio/blob/main/docs/DEPLOYMENT_POLICY.md)과
@@ -49,7 +50,10 @@ package의 `package.json` 중 하나가 바뀔 때이며, 의존성·설정 변�
 
 일반 코드·문서 push/PR은 이 두 원격 검사 workflow를 시작하지 않는다. `workflow_dispatch`는
 명시적인 진단·Linux baseline 재생성 경로로 유지한다. main에서 실행된 Showcase 검사가
-통과한 뒤에만 Pages가 갱신되므로, 일반 테마 개발의 확인은 로컬 Storybook으로 수행한다.
+통과한 뒤에만 고정 Storybook delivery artifact와 Pages 이동 안내가 갱신되므로,
+일반 테마 개발의 확인은 로컬 Storybook으로 수행한다. 2026-10-10 도메인 이관 승인으로
+실제 Web Storybook은 자체 VPS에 검사한 artifact를 명시적으로 게시한다. artifact 생성/Pages 안내
+게시를 VPS 공개 완료로 보고하지 않고 [실행 정본](../deploy/storybook/README.md)의 공개 검증을 따른다.
 원격 트리거 축소는 필요한 로컬 검증을 제거하는 변경이 아니다. npm 게시와 tag 생성은
 기존 수동 `version-packages.yml`의 release 검사를 유지하며 자동 게시로 바꾸지 않는다.
 GitHub 자체의 보안 분석·Dependabot 실행은 이 두 품질 workflow의 제어 범위와 별개다.

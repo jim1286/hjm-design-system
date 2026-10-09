@@ -72,11 +72,39 @@ jobs:
       - name: Verify packages, evidence, and both showcases
         run: pnpm ci:check
 
+      # 2026-10-10: own-domain delivery consumes the exact checked files from any
+      # authorized host; Pages keeps only a compatibility redirect for old story URLs.
+      - name: Verify Storybook delivery tooling
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s deploy/storybook -p test_artifact.py
+          bash -n deploy/storybook/publish.sh
+
+      - name: Prepare Storybook delivery artifact
+        if: github.ref == 'refs/heads/main'
+        env:
+          STORYBOOK_ARTIFACT: ${{ runner.temp }}/hjm-storybook
+        run: |
+          python3 deploy/storybook/artifact.py prepare "$PWD/showcase/web/storybook-static" "$STORYBOOK_ARTIFACT" "$GITHUB_SHA" "$GITHUB_RUN_ID"
+          cp deploy/storybook/redirect/index.html deploy/storybook/redirect/iframe.html
+          cp deploy/storybook/redirect/index.html deploy/storybook/redirect/404.html
+
+      - name: Upload Storybook delivery artifact
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: hjm-storybook-${{ github.sha }}
+          path: ${{ runner.temp }}/hjm-storybook
+          if-no-files-found: error
+          retention-days: 30
+          # Only the already inventoried public closure is uploaded; .nojekyll
+          # must not disappear from the artifact and invalidate its manifest.
+          include-hidden-files: true
+
       - name: Upload Storybook
         if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
-          path: showcase/web/storybook-static
+          path: deploy/storybook/redirect
 
   deploy:
     if: github.ref == 'refs/heads/main'

@@ -3,6 +3,9 @@
 HJM 제품이 같은 언어와 상호작용을 공유하도록 계약, Web renderer, React Native
 renderer를 한 이력과 한 release train에서 관리하는 pnpm monorepo입니다.
 
+Web Storybook: [storybook.jmstudioapps.com](https://storybook.jmstudioapps.com/).
+2026-10-10 승인한 자체 도메인 게시·복구 방법은 [배포 실행서](deploy/storybook/README.md)를 따릅니다.
+
 | Package | Role |
 | --- | --- |
 | [`@hjmds/design-contracts`](packages/design-contracts) | renderer-neutral tokens, recipes, behavior, catalog, evidence |
