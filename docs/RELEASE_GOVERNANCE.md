@@ -1,6 +1,6 @@
 # 디자인 시스템 검증과 릴리스 계약
 
-상태: 현재 내부 릴리스 계약 · 검토일: 2026-10-07
+상태: 현재 내부 릴리스 계약 · 검토일: 2026-10-09
 적용: 이 저장소의 contracts, React, React Native, 두 Showcase.
 기계 검사: [`scripts/check-release-governance.mjs`](../scripts/check-release-governance.mjs).
 
@@ -20,7 +20,7 @@ contracts를 같은 npm 버전으로 설치하고, 제품의 실제 화면·환�
 | --- | --- | --- |
 | 버전 상승/main 또는 수동 내부 검사 | `showcase.yml` → 버전 판정 → `pnpm ci:check` | package 계약·테스트·생성 drift·bundle·두 Showcase |
 | 버전 상승/main 또는 수동 시각 검사 | `visual.yml` → 같은 버전 판정 → Linux baseline 비교 | Chromium/Linux의 대표 시각 회귀 |
-| package 검사 | `pnpm check` | 세 package check, renderer bundle, workspace/evidence/docs/governance/public API map 검사 |
+| package 검사 | `pnpm check` | 패키지 1회 build 후 typecheck/test·bundle, workspace/evidence/docs/governance/public API map 검사 |
 | release 후보 | `version-packages.yml` → `pnpm release:commit:check`와 `pnpm release:check` | release commit 형태, 내부 ci:check, release artifacts |
 | publish/tag | 같은 workflow에서 검사 이후 실행 | 세 package publish 후 같은 commit에 canonical tag |
 | 제품 검증 | 각 제품 저장소의 CI/기기 QA | 설치된 npm train을 소비한 제품 흐름·환경·migration |
@@ -133,8 +133,8 @@ minor bump가 범위를 벗어나고, changesets는 범위를 벗어나는 peer 
 ## 작업 순서
 
 1. 계약·renderer·환경 증거를 같은 변경에서 설계한다.
-2. public source/API 변경이면 Changeset과 소비 migration을 작성한다.
-3. 생성 명령으로 projection을 갱신하고 `pnpm ci:check`를 실행한다.
+2. 게시 소스 변경은 작업 단위(PR 또는 PR 없는 `main` push 묶음)를 마칠 때 Changeset으로 정리하고, `release:version` 전에 마지막 tag 이후 변경이 모두 담겼는지 확인한다. 소비 API·동작이 바뀌면 migration을 작성하며 내부 리팩터링에 형식적인 migration 문서를 요구하지 않는다.
+3. 공개 계약이 바뀌면 `pnpm sync`로 projection을 갱신한다. 개발 중에는 `pnpm dev:check --base origin/main`, 게시 전에는 `pnpm ci:check`를 실행한다(2026-10-09 반복 검증 비용 분리).
 4. 실제 소비 제품은 설치 train과 지원 범위를 기록하고 별도 제품 CI/기기 QA를 검증한다.
 5. package release가 승인된 작업일 때 release version/commit을 만들고 수동 workflow를 실행한다.
 

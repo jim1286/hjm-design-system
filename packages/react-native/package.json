@@ -533,7 +533,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
     "bundle:check": "pnpm build && node scripts/check-metro-bundle.mjs",
-    "check": "pnpm typecheck && pnpm test && pnpm bundle:check"
+    "check": "pnpm typecheck && pnpm test && pnpm bundle:check",
+    "bundle:check:built": "node scripts/check-metro-bundle.mjs"
   },
   "peerDependencies": {
     "@gorhom/bottom-sheet": "5.2.14",

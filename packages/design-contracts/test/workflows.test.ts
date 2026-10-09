@@ -32,7 +32,7 @@ describe("GitHub Actions runtime contracts", () => {
     // 그전에는 CI가 그 스위트를 한 번도 돌리지 않아 main에서 실패하는 테스트를 안은 채
     // 릴리스가 통과했다 (#21).
     expect(workspacePackage.scripts["ci:check"]).toBe(
-      "pnpm check && pnpm showcase:native:check && pnpm showcase:web:check && pnpm showcase:web:build",
+      "pnpm check && pnpm showcase:native:check:built && pnpm showcase:web:check:built && pnpm showcase:web:build:built",
     );
     expect(workspacePackage.scripts["release:check"]).toContain("pnpm ci:check");
   });

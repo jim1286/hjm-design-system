@@ -56,10 +56,12 @@ export function validateReleaseGovernance({ packages, releaseWorkflow, showcaseW
   // vitest를 한 번도 돌리지 않아(빌드는 typecheck·build·verify:static만 본다) CONTRIBUTING의
   // 커밋 전 게이트와 CI가 서로 다른 명령을 말했고, main에서 실패하는 테스트를 안은 채
   // 1.0.0~1.0.2가 통과했다 (#21). package.json은 주석을 담지 못하므로 근거는 여기 둔다.
-  requireEqual(scripts["ci:check"], "pnpm check && pnpm showcase:native:check && pnpm showcase:web:check && pnpm showcase:web:build", "ci:check");
-  requireEqual(scripts["check"], "pnpm -r --filter './packages/**' run check && pnpm bundle:renderer:check && pnpm workspace:check && pnpm evidence:check && pnpm docs:check && pnpm governance:check && pnpm api-map:check && pnpm usage:check && pnpm storybook:check", "check");
+  // Build the dependency graph once; prepared showcase/bundle checks reuse that output.
+  // Standalone showcase commands still build their prerequisites for local use.
+  requireEqual(scripts["ci:check"], "pnpm check && pnpm showcase:native:check:built && pnpm showcase:web:check:built && pnpm showcase:web:build:built", "ci:check");
+  requireEqual(scripts["check"], "pnpm build && pnpm typecheck && pnpm test && pnpm contracts:check && pnpm --filter @hjmds/design-contracts bundle:check && pnpm --filter @hjmds/react-native bundle:check:built && pnpm bundle:renderer:check && pnpm workspace:check && pnpm evidence:check && pnpm docs:check && pnpm governance:check && pnpm api-map:check && pnpm usage:check && pnpm storybook:check", "check");
   requireEqual(scripts["release:check"], "pnpm ci:check && node scripts/check-release-artifacts.mjs", "release:check");
-  requireEqual(scripts["governance:check"], "node --test scripts/check-release-governance.test.mjs scripts/ci-version-intent.test.mjs && node scripts/check-release-governance.mjs", "governance:check");
+  requireEqual(scripts["governance:check"], "node --test scripts/check-release-governance.test.mjs scripts/ci-version-intent.test.mjs scripts/dev-check.test.mjs && node scripts/check-release-governance.mjs", "governance:check");
   requireEqual(scripts["workspace:check"], "node scripts/check-workspace-sync.mjs", "workspace:check");
   requireEqual(scripts["evidence:check"], "node scripts/sync-renderer-evidence.mjs", "evidence:check");
   // The overlap audit found public companions/extensions absent from the catalog.

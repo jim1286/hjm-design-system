@@ -23,7 +23,7 @@ for (const [name, mutate, expected] of [
   ["release verification is conditional", (s) => { s.releaseWorkflow = s.releaseWorkflow.replace("        run: pnpm release:check", "        if: false\n        run: pnpm release:check"); }, /must not skip/],
   ["release verification ignores failure", (s) => { s.releaseWorkflow = s.releaseWorkflow.replace("        run: pnpm release:check", "        continue-on-error: true\n        run: pnpm release:check"); }, /must not skip/],
   ["release workflow calls a weaker command", (s) => { s.releaseWorkflow = s.releaseWorkflow.replace("run: pnpm release:check", "run: pnpm typecheck"); }, /release:check/],
-  ["ci:check drops the web showcase tests", (s) => { s.packages.root.scripts["ci:check"] = s.packages.root.scripts["ci:check"].replace(" && pnpm showcase:web:check", ""); }, /ci:check/],
+  ["ci:check drops the web showcase tests", (s) => { s.packages.root.scripts["ci:check"] = s.packages.root.scripts["ci:check"].replace(" && pnpm showcase:web:check:built", ""); }, /ci:check/],
   ["showcase workflow skips canonical check", (s) => { s.showcaseWorkflow = s.showcaseWorkflow.replace("run: pnpm ci:check", "run: pnpm showcase:web:build"); }, /ci:check/],
   ["showcase restores ordinary PR checks", (s) => { s.showcaseWorkflow = s.showcaseWorkflow.replace("  workflow_dispatch:", "  pull_request:\n    branches:\n      - main\n  workflow_dispatch:"); }, /CI events/],
   ["showcase removes version paths", (s) => { s.showcaseWorkflow = s.showcaseWorkflow.replace("      - packages/react/package.json\n", ""); }, /version paths/],
