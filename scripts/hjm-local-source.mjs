@@ -129,6 +129,9 @@ function withNext(config, projectRoot, phase, env = process.env) {
   const previous = config.webpack;
   return { ...config,
     transpilePackages: [...new Set([...(config.transpilePackages ?? []), '@hjmds/react', '@hjmds/design-contracts'])],
+    // Next gives tracingRoot precedence when roots differ; align both in source
+    // development so existing standalone configs cannot rebase the HJM aliases.
+    outputFileTracingRoot: commonRoot,
     turbopack: { ...config.turbopack, root: commonRoot, resolveAlias: { ...config.turbopack?.resolveAlias, ...turboAliases } },
     webpack(webpackConfig, options) {
       const result = previous ? previous(webpackConfig, options) : webpackConfig;

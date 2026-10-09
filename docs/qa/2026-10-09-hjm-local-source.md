@@ -43,3 +43,7 @@ HJM을 수정할 때 dist 재생성이 필요했던 경로에 명시적 로컬 �
 ## 7. 보관 처리
 
 테스트 fixture와 전용 서버는 종료·제거했다. 재사용 검증 스크립트만 보존한다. 루트/HJM/6개 앱은 기존 main checkout 하나씩이며 새 branch·worktree·clone을 만들지 않았다. 다른 세션의 source·dist·문서 변경과 기존 개발 서버는 보존한다. 삭제할 이 작업의 임시 branch/worktree는 없다. 사용법 정본: app-portfolio/docs/STANDARD_OPERATIONS.md의 로컬 소스 개발 절.
+
+### 후속 수정 — Next 개발 root 우선순위 (2026-10-10 KST)
+
+번뚝 실행에서 기존 outputFileTracingRoot가 개발용 turbopack.root보다 우선되어 소스 alias 기준이 달라질 수 있음을 확인했다. 로컬 소스 모드에서만 두 root를 HJM과 앱의 공통 상위 경로로 맞췄다. 플래그 없는 설정은 기존 객체를 그대로 반환한다. 실제 Next dev fixture에 앱 내부 tracing root를 설정하여 재현 조건을 추가했고, HTTP 200 및 root 충돌 경고 없음으로 재검증했다. 테스트 4개도 통과했다. 첫 재검증은 응답 본문까지 적용되는 5초 제한으로 실패하여 cold compile을 고려한 30초 제한으로 수정 후 통과했다. 기존 제품 서버는 종료·재시작하지 않았고 임시 검증 서버만 정리했다.
