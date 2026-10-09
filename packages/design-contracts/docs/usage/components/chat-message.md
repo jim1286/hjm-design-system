@@ -73,6 +73,7 @@ import { Text } from "@hjmds/react-native/primitives";
 | `direction` | `"incoming"` · `"outgoing"` | 필수 | 수신은 시작 쪽, 발신은 끝 쪽에 붙는다 |
 | `author` | `string` | 필수 | 빈 문자열이면 작성자 줄을 그리지 않는다(연속 메시지 그룹) |
 | `timestamp` | `string` | 필수 | 제품이 포맷한 시각. 빈 문자열이고 `deliveryLabel`·`actions`도 없으면 메타 줄을 그리지 않는다 |
+| `timestampPresentation` | `"always"` · `"swipe"` | `"always"` | `swipe`는 오른쪽으로 끄는 동안 시각을 보여 주고 놓으면 숨긴다. 이 모드에서는 같은 제스처로 답장을 실행하지 않는다. 시각은 보조기술에서도 읽을 수 있다. |
 | `deliveryLabel` | `string` | 없음 | 시각 뒤에 ` · `로 붙는 전송 상태 |
 | `avatar` | `ReactNode` | 없음 | 버블 옆 아바타 |
 | `reply` | `ReactNode` | 없음 | 인용 노드. `replyLink`가 없으면 버블 안 인용으로 그린다 |
@@ -130,3 +131,5 @@ import { Text } from "@hjmds/react-native/primitives";
 ### 고정 아이콘과 큰 글자
 
 2026-10-06 최근 검색 삭제 기호가 큰 글자에서 잘린 재현에 따라 Native 내장 삭제·메뉴 기호는 고정 아이콘 틀의 크기를 유지한다. 주변 제목·라벨은 계속 확대한다. Chip의 체크와 Toast 닫기는 기존 비확대 경로를 유지하며 회귀 검사에 포함한다. 제품이 전달한 아이콘 슬롯은 제품이 같은 조건을 검증한다.
+
+2026-10-09 번뚝 DM 사용자 요청으로 시각 공개 동작을 공용 ChatMessage에 추가했다. 앱별 PanResponder/PointerEvent 복제를 피하고 세로 스크롤·내부 컨트롤 우선권을 유지한다.

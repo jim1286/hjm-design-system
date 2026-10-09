@@ -150,4 +150,9 @@ export const searchScreenRecipe = {
     /** Between chips in applied filters and suggested queries. */
     chipGap: spacing.xs,
 };
+/** Horizontal intent preserves vertical scrolling and uses one reveal distance across renderers. */
+export function timestampRevealOffset(dx, dy) {
+    // A 12px dead zone and 2:1 direction bias avoid turning taps/list scrolling into a time gesture.
+    return dx > 12 && dx > Math.abs(dy) * 2 ? Math.min(dx, 88) : 0;
+}
 //# sourceMappingURL=screen-patterns.js.map

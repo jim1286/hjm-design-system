@@ -7,7 +7,7 @@ import { useMemo, useState } from "react";
 import { PanResponder, ScrollView, View } from "react-native";
 import { Spinner } from "./internal/spinner.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
-import { isReplySwipe, canSubmitMessage, validateMessageAttachments, resolveScreenContentState, screenPatternRecipe } from "@hjmds/design-contracts/screen-patterns";
+import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, resolveScreenContentState, screenPatternRecipe } from "@hjmds/design-contracts/screen-patterns";
 import { Stack, Text } from "./primitives.js";
 import { ListRow } from "./data-display.js";
 import { useHjmNativeTheme } from "./provider.js";
@@ -56,20 +56,21 @@ export function MessageComposer({ value, label, sendLabel, placeholder = label, 
                                         onRemoveAttachment?.(item.id); }, children: _jsx(View, { style: { backgroundColor: colors.bg, borderRadius: tokens.radius.full, width: screenPatternRecipe.attachmentRemoveSize, height: screenPatternRecipe.attachmentRemoveSize, alignItems: "center", justifyContent: "center" }, children: _jsx(FixedGlyph, { fontSize: 18, lineHeight: 24, children: "\u00D7" }) }) }) })] }, item.id)), attach] }) : null, _jsxs(View, { style: { flexDirection: "row", alignItems: "flex-end", gap: screenPatternRecipe.itemGap }, children: [_jsx(TextArea, { ...compactField, ref: inputRef, maxLength: maxLength, leadingAction: leadingAction, shape: "large", accessibilityLabel: label, placeholder: placeholder, ...(description === undefined ? {} : { description }), ...(error === undefined ? {} : { error }), invalid: invalid, onBlur: onBlur, value: value, disabled: locked, submitBehavior: submitMode === "send" ? "submit" : "newline", onSubmitEditing: () => { if (submitMode === "send" && canSend)
                             onSend(value); }, layoutStyle: { flex: 1 }, onValueChange: onValueChange, minVisibleLines: screenPatternRecipe.composerMinLines, maxVisibleLines: screenPatternRecipe.composerMaxLines, ...(sendIcon ? { trailing: _jsx(View, { style: { alignSelf: "center", marginStart: tokens.spacing.sm, marginEnd: sendPresentation === "circle" ? tokens.spacing.xs - tokens.spacing.md : 0 }, children: hasContent || pending ? send : attach }) } : {}) }), sendIcon ? null : send] })] });
 }
-export function ChatMessage({ direction, author, timestamp, deliveryLabel, avatar, reply, actions, replyAction, replyLink, reactions, children, interactiveContent = false }) {
+export function ChatMessage({ direction, author, timestamp, timestampPresentation = "always", deliveryLabel, avatar, reply, actions, replyAction, replyLink, reactions, children, interactiveContent = false }) {
     const { colors, tokens } = useHjmNativeTheme();
+    const revealTime = timestampPresentation === "swipe" && !!timestamp;
     const outgoing = direction === "outgoing";
     const [offset, setOffset] = useState(0);
     // SwipeActions reveals row controls and requires an optional gesture peer; reply commits
     // on release and stays in the core timeline without capturing vertical scrolling.
     const gesture = useMemo(() => PanResponder.create({
-        onMoveShouldSetPanResponder: (_, state) => !!replyAction && !replyAction.disabled && Math.abs(state.dx) > 12 && Math.abs(state.dx) > Math.abs(state.dy) * 2,
-        onPanResponderMove: (_, state) => setOffset(Math.max(-72, Math.min(72, state.dx))),
-        onPanResponderRelease: (_, state) => { setOffset(0); if (replyAction && !replyAction.disabled && isReplySwipe(state.dx, state.dy))
+        onMoveShouldSetPanResponder: (_, state) => revealTime ? timestampRevealOffset(state.dx, state.dy) > 0 : !!replyAction && !replyAction.disabled && Math.abs(state.dx) > 12 && Math.abs(state.dx) > Math.abs(state.dy) * 2,
+        onPanResponderMove: (_, state) => setOffset(revealTime ? timestampRevealOffset(state.dx, state.dy) : Math.max(-72, Math.min(72, state.dx))),
+        onPanResponderRelease: (_, state) => { setOffset(0); if (!revealTime && replyAction && !replyAction.disabled && isReplySwipe(state.dx, state.dy))
             replyAction.onPress(); },
         onPanResponderTerminate: () => setOffset(0),
         onPanResponderTerminationRequest: () => true,
-    }), [replyAction]);
+    }), [replyAction, revealTime]);
     const canReply = !!replyAction && !replyAction.disabled;
     const replyAccessibility = canReply ? {
         accessible: true,
@@ -78,9 +79,10 @@ export function ChatMessage({ direction, author, timestamp, deliveryLabel, avata
             replyAction.onPress(); },
     } : {};
     const captionCarriesReply = interactiveContent && !reactions;
-    const meta = timestamp || deliveryLabel ? `${timestamp}${deliveryLabel ? ` · ${deliveryLabel}` : ""}` : "";
+    const visibleTime = revealTime ? "" : timestamp;
+    const meta = [visibleTime, deliveryLabel].filter(Boolean).join(" · ");
     const bubbleStyle = { backgroundColor: outgoing ? colors.surfaceAccent : colors.bg, borderWidth: outgoing ? 0 : 1, borderColor: colors.border, borderRadius: tokens.radius.lg, padding: tokens.spacing.sm, gap: tokens.spacing.xs };
     const bubbleContent = _jsxs(_Fragment, { children: [reply && !replyLink ? _jsx(View, { style: { borderStartWidth: 2, borderColor: colors.contentBrand, paddingStart: tokens.spacing.xs }, children: reply }) : null, children] });
-    return _jsxs(View, { ...gesture.panHandlers, style: { transform: [{ translateX: offset }], flexDirection: "row", justifyContent: outgoing ? "flex-end" : "flex-start", gap: tokens.spacing.xs }, children: [!outgoing ? avatar : null, _jsxs(View, { style: { maxWidth: screenPatternRecipe.messageMaxWidth, flexShrink: 1, gap: tokens.spacing.xxs, alignItems: outgoing ? "flex-end" : "flex-start" }, children: [author ? _jsx(Text, { variant: "caption", tone: "muted", ...(captionCarriesReply && !meta ? replyAccessibility : {}), children: author }) : null, reply && replyLink ? _jsx(Button, { tone: "ghost", accessibilityLabel: replyLink.label, onPress: replyLink.onPress, children: reply }) : null, reactions ? _jsx(MessageReactions, { ...reactions, interactiveContent: interactiveContent, ...(replyAction ? { replyAction } : {}), children: _jsx(View, { style: bubbleStyle, children: bubbleContent }) }) : _jsx(View, { style: bubbleStyle, accessible: !interactiveContent, ...(interactiveContent ? {} : replyAccessibility), children: bubbleContent }), meta || actions ? _jsxs(Stack, { axis: "inline", gap: "xs", align: "center", children: [meta ? _jsx(Text, { variant: "caption", tone: "muted", ...(captionCarriesReply ? replyAccessibility : {}), children: meta }) : null, actions] }) : null] }), outgoing ? avatar : null] });
+    return _jsxs(View, { ...gesture.panHandlers, style: { position: "relative", overflow: "hidden" }, children: [revealTime ? _jsx(View, { pointerEvents: "none", style: { position: "absolute", left: 0, top: 0, bottom: 0, width: 80, justifyContent: "center", opacity: offset > 0 ? 1 : 0 }, children: _jsx(Text, { variant: "caption", tone: "muted", children: timestamp }) }) : null, _jsxs(View, { style: { transform: [{ translateX: offset }], flexDirection: "row", justifyContent: outgoing ? "flex-end" : "flex-start", gap: tokens.spacing.xs }, children: [!outgoing ? avatar : null, _jsxs(View, { style: { maxWidth: screenPatternRecipe.messageMaxWidth, flexShrink: 1, gap: tokens.spacing.xxs, alignItems: outgoing ? "flex-end" : "flex-start" }, children: [author ? _jsx(Text, { variant: "caption", tone: "muted", ...(captionCarriesReply && !meta ? replyAccessibility : {}), children: author }) : null, reply && replyLink ? _jsx(Button, { tone: "ghost", accessibilityLabel: replyLink.label, onPress: replyLink.onPress, children: reply }) : null, reactions ? _jsx(MessageReactions, { ...reactions, interactiveContent: interactiveContent, ...(replyAction ? { replyAction } : {}), children: _jsx(View, { style: bubbleStyle, children: bubbleContent }) }) : _jsx(View, { style: bubbleStyle, accessible: !interactiveContent, ...(interactiveContent ? {} : replyAccessibility), children: bubbleContent }), meta || actions ? _jsxs(Stack, { axis: "inline", gap: "xs", align: "center", children: [meta ? _jsx(Text, { variant: "caption", tone: "muted", ...(captionCarriesReply ? replyAccessibility : {}), children: meta }) : null, actions] }) : null] }), outgoing ? avatar : null] })] });
 }
 //# sourceMappingURL=screens.js.map

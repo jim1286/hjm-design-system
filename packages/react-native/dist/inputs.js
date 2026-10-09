@@ -142,6 +142,27 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
             textAlignVertical: multiline ? "top" : "center",
         },
     ], allowFontScaling);
+    // SearchField `busy` means "results are loading", not "this value is being committed":
+    // locking the editor dropped every keystroke typed while suggestions refreshed, while the
+    // Web SearchField keeps typing under `aria-busy` (2026-10-06 parity follow-up). Plain
+    // fields keep the lock because their busy means a pending save of the current value.
+    // iOS scrolls the one-line viewport before reporting intrinsic growth. Keep bounded
+    // composers unscrollable until their content exceeds the recipe cap; ordinary editors retain caller behavior.
+    const editor = (_jsx(TextInput, { ...props, ...inputTextScaleProps, ref: attachInput, accessibilityHint: hint, accessibilityLabel: accessibleName, accessibilityRole: search ? "search" : undefined, accessibilityState: { busy, disabled }, editable: !disabled && (search || !busy), multiline: multiline, scrollEnabled: multiline && minVisibleLines !== undefined
+            ? !!currentValue && contentHeight > textStyle.lineHeight * (resolvedMaxVisibleLines ?? 1000) + fieldRecipe.paddingVertical * 2
+            : props.scrollEnabled, onBlur: (event) => {
+            setFocused(false);
+            onBlur?.(event);
+        }, onContentSizeChange: event => {
+            // Bounded sizing is owned by the unconstrained text measurement below.
+            onContentSizeChange?.(event);
+        }, onSelectionChange: event => {
+            selectionRef.current = event.nativeEvent.selection;
+            onSelectionChange?.(event);
+        }, onChangeText: setCurrentValue, onFocus: (event) => {
+            setFocused(true);
+            onFocus?.(event);
+        }, placeholderTextColor: placeholderColor, value: currentValue }, editorKey));
     return (_jsx(NativeFieldFrame, { ...(visibleLabel === undefined ? {} : { label: visibleLabel }), required: required, ...(error === undefined ? {} : { error }), ...(supportText === undefined ? {} : { description: supportText }), ...(disabled ? { disabledOpacity: resolvedDisabledOpacity } : {}), style: layoutStyle, children: _jsxs(View, { style: {
                 opacity: disabled ? resolvedDisabledOpacity : 1,
                 alignItems: multiline ? "stretch" : "center",
@@ -156,25 +177,12 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
                 paddingHorizontal: search
                     ? searchSizing.paddingHorizontal
                     : fieldRecipe.paddingHorizontal,
-            }, children: [leading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", children: leading })) : null, leadingAction ? _jsx(View, { style: { alignSelf: "center" }, children: leadingAction }) : null, _jsx(TextInput, { ...props, ...inputTextScaleProps, ref: attachInput, accessibilityHint: hint, accessibilityLabel: accessibleName, accessibilityRole: search ? "search" : undefined, accessibilityState: { busy, disabled }, 
-                    // SearchField `busy` means "results are loading", not "this value is being committed":
-                    // locking the editor dropped every keystroke typed while suggestions refreshed, while the
-                    // Web SearchField keeps typing under `aria-busy` (2026-10-06 parity follow-up). Plain
-                    // fields keep the lock because their busy means a pending save of the current value.
-                    editable: !disabled && (search || !busy), multiline: multiline, onBlur: (event) => {
-                        setFocused(false);
-                        onBlur?.(event);
-                    }, onContentSizeChange: event => {
-                        if (multiline && minVisibleLines !== undefined)
-                            setContentHeight(event.nativeEvent.contentSize.height);
-                        onContentSizeChange?.(event);
-                    }, onSelectionChange: event => {
-                        selectionRef.current = event.nativeEvent.selection;
-                        onSelectionChange?.(event);
-                    }, onChangeText: setCurrentValue, onFocus: (event) => {
-                        setFocused(true);
-                        onFocus?.(event);
-                    }, placeholderTextColor: placeholderColor, value: currentValue }, editorKey), trailing] }) }));
+            }, children: [leading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", children: leading })) : null, leadingAction ? _jsx(View, { style: { alignSelf: "center" }, children: leadingAction }) : null, multiline && minVisibleLines !== undefined ? _jsxs(View, { style: { flex: 1, flexDirection: "row" }, children: [_jsx(NativeText, { ...resolveNativeTextScaleProps(textScaling, [{
+                                    ...resolveNativeFontStyle(theme.tokens.fontFamily.ui), fontSize: textStyle.fontSize,
+                                    fontWeight: textStyle.fontWeight, lineHeight: textStyle.lineHeight,
+                                    position: "absolute", left: 0, right: 0, opacity: 0,
+                                    paddingVertical: fieldRecipe.paddingVertical,
+                                }], allowFontScaling), accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", pointerEvents: "none", onTextLayout: event => setContentHeight(event.nativeEvent.lines.reduce((height, line) => height + Math.max(line.height, textStyle.lineHeight), 0) + fieldRecipe.paddingVertical * 2), children: currentValue + "\u200b" }), editor] }) : editor, trailing] }) }));
 });
 export const TextField = forwardRef(function TextField(props, ref) {
     return _jsx(FieldRenderer, { ...props, ref: ref, multiline: false, search: false });

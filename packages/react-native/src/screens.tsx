@@ -7,7 +7,7 @@ import { useMemo, useState, type Ref, type ReactNode } from "react";
 import { PanResponder, ScrollView, View, type AccessibilityActionEvent, type TextInput, type ScrollViewProps } from "react-native";
 import { Spinner } from "./internal/spinner.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
-import { isReplySwipe, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
+import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
 import { Stack, Text } from "./primitives.js";
 import { ListRow, type ListRowProps } from "./data-display.js";
 import type { ListRowPrivateProps } from "./internal/list-row-private.js";
@@ -157,19 +157,20 @@ export function MessageComposer({ value, label, sendLabel, placeholder = label, 
 }
 
 export type ChatMessageProps = ChatMessageDescriptor & Readonly<{ children: ReactNode; interactiveContent?: boolean; avatar?: ReactNode; reply?: ReactNode; actions?: ReactNode; replyAction?: Readonly<{label:string; onPress():void; disabled?:boolean}>; replyLink?: Readonly<{label:string; onPress():void}>; reactions?: ReactionPickerProps & Readonly<{ closeLabel: string; menuAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean }> }> }>;
-export function ChatMessage({ direction, author, timestamp, deliveryLabel, avatar, reply, actions, replyAction, replyLink, reactions, children, interactiveContent=false }: ChatMessageProps) {
+export function ChatMessage({ direction, author, timestamp, timestampPresentation = "always", deliveryLabel, avatar, reply, actions, replyAction, replyLink, reactions, children, interactiveContent=false }: ChatMessageProps) {
   const { colors, tokens } = useHjmNativeTheme();
+  const revealTime = timestampPresentation === "swipe" && !!timestamp;
   const outgoing = direction === "outgoing";
   const [offset, setOffset] = useState(0);
   // SwipeActions reveals row controls and requires an optional gesture peer; reply commits
   // on release and stays in the core timeline without capturing vertical scrolling.
   const gesture = useMemo(() => PanResponder.create({
-    onMoveShouldSetPanResponder: (_, state) => !!replyAction && !replyAction.disabled && Math.abs(state.dx)>12 && Math.abs(state.dx)>Math.abs(state.dy)*2,
-    onPanResponderMove: (_, state) => setOffset(Math.max(-72,Math.min(72,state.dx))),
-    onPanResponderRelease: (_, state) => { setOffset(0); if (replyAction && !replyAction.disabled && isReplySwipe(state.dx,state.dy)) replyAction.onPress(); },
+    onMoveShouldSetPanResponder: (_, state) => revealTime ? timestampRevealOffset(state.dx, state.dy) > 0 : !!replyAction && !replyAction.disabled && Math.abs(state.dx)>12 && Math.abs(state.dx)>Math.abs(state.dy)*2,
+    onPanResponderMove: (_, state) => setOffset(revealTime ? timestampRevealOffset(state.dx, state.dy) : Math.max(-72,Math.min(72,state.dx))),
+    onPanResponderRelease: (_, state) => { setOffset(0); if (!revealTime && replyAction && !replyAction.disabled && isReplySwipe(state.dx,state.dy)) replyAction.onPress(); },
     onPanResponderTerminate: () => setOffset(0),
     onPanResponderTerminationRequest: () => true,
-  }), [replyAction]);
+  }), [replyAction, revealTime]);
   const canReply = !!replyAction && !replyAction.disabled;
   const replyAccessibility = canReply ? {
     accessible: true,
@@ -177,10 +178,13 @@ export function ChatMessage({ direction, author, timestamp, deliveryLabel, avata
     onAccessibilityAction: (event: AccessibilityActionEvent) => { if (event.nativeEvent.actionName === "reply") replyAction!.onPress(); },
   } : {};
   const captionCarriesReply = interactiveContent && !reactions;
-  const meta = timestamp || deliveryLabel ? `${timestamp}${deliveryLabel ? ` · ${deliveryLabel}` : ""}` : "";
+  const visibleTime = revealTime ? "" : timestamp;
+  const meta = [visibleTime, deliveryLabel].filter(Boolean).join(" · ");
   const bubbleStyle = { backgroundColor: outgoing ? colors.surfaceAccent : colors.bg, borderWidth: outgoing ? 0 : 1, borderColor: colors.border, borderRadius: tokens.radius.lg, padding: tokens.spacing.sm, gap: tokens.spacing.xs };
   const bubbleContent = <>{reply && !replyLink ? <View style={{ borderStartWidth: 2, borderColor: colors.contentBrand, paddingStart: tokens.spacing.xs }}>{reply}</View> : null}{children}</>;
-  return <View {...gesture.panHandlers} style={{ transform:[{translateX:offset}], flexDirection: "row", justifyContent: outgoing ? "flex-end" : "flex-start", gap: tokens.spacing.xs }}>
+  return <View {...gesture.panHandlers} style={{ position: "relative", overflow: "hidden" }}>
+    {revealTime ? <View pointerEvents="none" style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 80, justifyContent: "center", opacity: offset > 0 ? 1 : 0 }}><Text variant="caption" tone="muted">{timestamp}</Text></View> : null}
+    <View style={{ transform:[{translateX:offset}], flexDirection: "row", justifyContent: outgoing ? "flex-end" : "flex-start", gap: tokens.spacing.xs }}>
     {!outgoing ? avatar : null}
     {/* Accessibility (2026-10-06 review): a row-level accessible View named by `author`, and a reaction
         target named by `picker.label`, both replaced the body so screen readers never heard the message.
@@ -198,5 +202,6 @@ export function ChatMessage({ direction, author, timestamp, deliveryLabel, avata
       {meta||actions?<Stack axis="inline" gap="xs" align="center">{meta?<Text variant="caption" tone="muted" {...(captionCarriesReply ? replyAccessibility : {})}>{meta}</Text>:null}{actions}</Stack>:null}
     </View>
     {outgoing ? avatar : null}
+    </View>
   </View>;
 }

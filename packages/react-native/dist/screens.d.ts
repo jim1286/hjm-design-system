@@ -115,5 +115,5 @@ export type ChatMessageProps = ChatMessageDescriptor & Readonly<{
         }>;
     }>;
 }>;
-export declare function ChatMessage({ direction, author, timestamp, deliveryLabel, avatar, reply, actions, replyAction, replyLink, reactions, children, interactiveContent }: ChatMessageProps): import("react").JSX.Element;
+export declare function ChatMessage({ direction, author, timestamp, timestampPresentation, deliveryLabel, avatar, reply, actions, replyAction, replyLink, reactions, children, interactiveContent }: ChatMessageProps): import("react").JSX.Element;
 //# sourceMappingURL=screens.d.ts.map

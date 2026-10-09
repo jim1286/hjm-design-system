@@ -250,3 +250,21 @@ it("keeps the published glyph size in the default layout and enlarges only the c
   expect(getComputedStyle(strip!).fontSize).toBe(getComputedStyle(host.querySelector<HTMLElement>("[data-probe]")!).fontSize);
   expect(getComputedStyle(strip!).fontSize).not.toBe(getComputedStyle(wrap!).fontSize);
 });
+
+it("reveals a timestamp while dragging and restores the row without sending a reply", async () => {
+  const {ChatMessage} = await import("../src/screens.js");
+  const reply = vi.fn();
+  await act(async () => root.render(<HjmProvider><ChatMessage direction="incoming" author="서연" timestamp="23:45" timestampPresentation="swipe" replyAction={{label:"답장",onPress:reply}}>메시지</ChatMessage></HjmProvider>));
+  const bubble=host.querySelector<HTMLElement>('.hjm-chat-message__bubble')!;
+  const time=host.querySelector<HTMLElement>('time')!;
+  expect(time.style.opacity).toBe("0");
+  await act(async () => {
+    bubble.dispatchEvent(new PointerEvent("pointerdown",{button:0,clientX:10,clientY:10,bubbles:true}));
+    bubble.dispatchEvent(new PointerEvent("pointermove",{clientX:80,clientY:14,bubbles:true}));
+  });
+  expect(time.style.opacity).toBe("1");
+  expect(host.querySelector<HTMLElement>('.hjm-chat-message')!.style.transform).toBe("translateX(70px)");
+  await act(async () => bubble.dispatchEvent(new PointerEvent("pointerup",{clientX:80,clientY:14,bubbles:true})));
+  expect(time.style.opacity).toBe("0");
+  expect(reply).not.toHaveBeenCalled();
+});

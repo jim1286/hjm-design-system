@@ -376,6 +376,48 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
       allowFontScaling,
     );
 
+    // SearchField `busy` means "results are loading", not "this value is being committed":
+    // locking the editor dropped every keystroke typed while suggestions refreshed, while the
+    // Web SearchField keeps typing under `aria-busy` (2026-10-06 parity follow-up). Plain
+    // fields keep the lock because their busy means a pending save of the current value.
+    // iOS scrolls the one-line viewport before reporting intrinsic growth. Keep bounded
+    // composers unscrollable until their content exceeds the recipe cap; ordinary editors retain caller behavior.
+    const editor = (<TextInput
+            key={editorKey}
+            {...props}
+            {...inputTextScaleProps}
+            ref={attachInput}
+            accessibilityHint={hint}
+            accessibilityLabel={accessibleName}
+            accessibilityRole={search ? "search" : undefined}
+            accessibilityState={{ busy, disabled }}
+            editable={!disabled && (search || !busy)}
+            multiline={multiline}
+            scrollEnabled={multiline && minVisibleLines !== undefined
+              ? !!currentValue && contentHeight > textStyle.lineHeight * (resolvedMaxVisibleLines ?? 1000) + fieldRecipe.paddingVertical * 2
+              : props.scrollEnabled}
+            onBlur={(event) => {
+              setFocused(false);
+              onBlur?.(event);
+            }}
+            onContentSizeChange={event => {
+              // Bounded sizing is owned by the unconstrained text measurement below.
+              onContentSizeChange?.(event);
+            }}
+            onSelectionChange={event => {
+              selectionRef.current = event.nativeEvent.selection;
+              onSelectionChange?.(event);
+            }}
+            onChangeText={setCurrentValue}
+            onFocus={(event) => {
+              setFocused(true);
+              onFocus?.(event);
+            }}
+            placeholderTextColor={placeholderColor}
+            value={currentValue}
+          />
+    );
+
     return (
       <NativeFieldFrame
         {...(visibleLabel === undefined ? {} : { label: visibleLabel })}
@@ -415,41 +457,20 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
             </View>
           ) : null}
           {leadingAction ? <View style={{ alignSelf: "center" }}>{leadingAction}</View> : null}
-          <TextInput
-            key={editorKey}
-            {...props}
-            {...inputTextScaleProps}
-            ref={attachInput}
-            accessibilityHint={hint}
-            accessibilityLabel={accessibleName}
-            accessibilityRole={search ? "search" : undefined}
-            accessibilityState={{ busy, disabled }}
-            // SearchField `busy` means "results are loading", not "this value is being committed":
-            // locking the editor dropped every keystroke typed while suggestions refreshed, while the
-            // Web SearchField keeps typing under `aria-busy` (2026-10-06 parity follow-up). Plain
-            // fields keep the lock because their busy means a pending save of the current value.
-            editable={!disabled && (search || !busy)}
-            multiline={multiline}
-            onBlur={(event) => {
-              setFocused(false);
-              onBlur?.(event);
-            }}
-            onContentSizeChange={event => {
-              if (multiline && minVisibleLines !== undefined) setContentHeight(event.nativeEvent.contentSize.height);
-              onContentSizeChange?.(event);
-            }}
-            onSelectionChange={event => {
-              selectionRef.current = event.nativeEvent.selection;
-              onSelectionChange?.(event);
-            }}
-            onChangeText={setCurrentValue}
-            onFocus={(event) => {
-              setFocused(true);
-              onFocus?.(event);
-            }}
-            placeholderTextColor={placeholderColor}
-            value={currentValue}
-          />
+          {multiline && minVisibleLines !== undefined ? <View style={{ flex: 1, flexDirection: "row" }}>
+            {/* iOS reports the constrained editor viewport as content height. Measure the same
+                text at its actual width without height constraints; this also preserves trailing newlines. */}
+            <NativeText {...resolveNativeTextScaleProps(textScaling, [{
+              ...resolveNativeFontStyle(theme.tokens.fontFamily.ui), fontSize: textStyle.fontSize,
+              fontWeight: textStyle.fontWeight, lineHeight: textStyle.lineHeight,
+              position: "absolute", left: 0, right: 0, opacity: 0,
+              paddingVertical: fieldRecipe.paddingVertical,
+            }], allowFontScaling)} accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants"
+              pointerEvents="none" onTextLayout={event => setContentHeight(
+                event.nativeEvent.lines.reduce((height, line) => height + Math.max(line.height, textStyle.lineHeight), 0) + fieldRecipe.paddingVertical * 2
+              )}>{currentValue + "\u200b"}</NativeText>
+            {editor}
+          </View> : editor}
           {trailing}
         </View>
       </NativeFieldFrame>

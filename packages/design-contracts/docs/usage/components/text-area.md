@@ -112,3 +112,6 @@ Native는 제품 프로필의 `tokens.fontFamily.ui`를 실제 텍스트/입력 
 
 - 현재 Web `TextField`의 `onValueChange` 주석은 "Web TextArea와 같은 콜백"이라고 적지만 Web `TextAreaProps`에는
   `onValueChange`가 없다(`react/src/forms.tsx`). 공유 폼 코드는 Web TextArea만 `onChange`로 분기한다.
+
+
+2026-10-09 번뚝 시뮬레이터 확인: Native bounded 입력은 같은 너비의 비노출 텍스트로 줄 높이를 측정한다. iOS TextInput의 contentSize가 현재 viewport 높이로 제한되는 경우를 피하고, 마지막 줄바꿈도 크기에 포함한다. 화면에서 수동 픽셀 높이를 덧씌우지 않는다. 최대 표시 줄에 도달하기 전에는 커지고 이후 내부 스크롤을 사용한다.

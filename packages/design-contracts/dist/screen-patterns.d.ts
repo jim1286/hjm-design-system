@@ -59,6 +59,8 @@ export type ChatMessageDescriptor = Readonly<{
     author: string;
     timestamp: string;
     deliveryLabel?: string;
+    /** Rightward drag reveals time while delivery state remains visible; default preserves existing captions. */
+    timestampPresentation?: "always" | "swipe";
 }>;
 /** A denied permission goes to settings; rendering never requests OS access automatically. */
 export type PermissionScreenStatus = "prompt" | "denied" | "granted" | "unavailable";
@@ -159,4 +161,6 @@ export declare const searchScreenRecipe: {
     /** Between chips in applied filters and suggested queries. */
     readonly chipGap: 8;
 };
+/** Horizontal intent preserves vertical scrolling and uses one reveal distance across renderers. */
+export declare function timestampRevealOffset(dx: number, dy: number): number;
 //# sourceMappingURL=screen-patterns.d.ts.map

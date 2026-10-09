@@ -76,3 +76,12 @@ it("keeps newline default and protects Shift, composing, and Safari 229 when opt
   expect(shouldSubmitMessageKey({key:"Enter"}, "send")).toBe(true);
   for (const event of [{key:"Enter",shiftKey:true},{key:"Enter",isComposing:true},{key:"Enter",keyCode:229},{key:"a"}]) expect(shouldSubmitMessageKey(event,"send")).toBe(false);
 });
+
+it("reveals timestamps only for rightward horizontal intent", async () => {
+  const { timestampRevealOffset } = await import("../src/screen-patterns.js");
+  expect(timestampRevealOffset(8, 0)).toBe(0);
+  expect(timestampRevealOffset(40, 30)).toBe(0);
+  expect(timestampRevealOffset(-80, 0)).toBe(0);
+  expect(timestampRevealOffset(60, 4)).toBe(60);
+  expect(timestampRevealOffset(200, 4)).toBe(88);
+});

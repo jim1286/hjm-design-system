@@ -4,7 +4,7 @@ import { MessageReactions } from "./internal/message-reactions.js";
 import { Button, IconButton } from "./actions.js";
 import { TextArea } from "./forms.js";
 import { useId, useRef, useState } from "react";
-import { isReplySwipe, shouldSubmitMessageKey, canSubmitMessage, validateMessageAttachments, resolveScreenContentState, screenPatternRecipe } from "@hjmds/design-contracts/screen-patterns";
+import { isReplySwipe, timestampRevealOffset, shouldSubmitMessageKey, canSubmitMessage, validateMessageAttachments, resolveScreenContentState, screenPatternRecipe } from "@hjmds/design-contracts/screen-patterns";
 import { Heading } from "./heading.js";
 import { Spinner } from "./internal/spinner.js";
 import { Section, Stack, Text } from "./layout.js";
@@ -61,20 +61,23 @@ export function MessageComposer({ value, label, sendLabel, placeholder = label, 
                         } }, onChange: event => { if (!locked)
                             onValueChange(event.currentTarget.value); }, minVisibleLines: screenPatternRecipe.composerMinLines, maxVisibleLines: screenPatternRecipe.composerMaxLines, ...(sendIcon ? { trailing: hasContent || pending ? send : attach } : {}) }), sendIcon ? null : send] })] });
 }
-export function ChatMessage({ direction, author, timestamp, deliveryLabel, avatar, reply, actions, replyAction, replyLink, reactions, children, interactiveContent = false, layoutStyle }) {
+export function ChatMessage({ direction, author, timestamp, timestampPresentation = "always", deliveryLabel, avatar, reply, actions, replyAction, replyLink, reactions, children, interactiveContent = false, layoutStyle }) {
+    const revealTime = timestampPresentation === "swipe" && !!timestamp;
     const start = useRef(null);
     const [offset, setOffset] = useState(0);
     const finish = () => { start.current = null; setOffset(0); };
     return _jsxs("article", { tabIndex: replyAction && !replyAction.disabled ? 0 : undefined, "aria-keyshortcuts": replyAction ? "Alt+ArrowLeft Alt+ArrowRight" : undefined, "aria-description": replyAction?.label, onKeyDown: event => { if (event.target === event.currentTarget && event.altKey && (event.key === "ArrowLeft" || event.key === "ArrowRight") && replyAction && !replyAction.disabled) {
             event.preventDefault();
             replyAction.onPress();
-        } }, onPointerDown: event => { if (!replyAction || replyAction.disabled || event.button !== 0 || event.target.closest("button,a,input,textarea"))
+        } }, onPointerDown: event => { if ((!revealTime && (!replyAction || replyAction.disabled)) || event.button !== 0 || event.target.closest("button,a,input,textarea"))
             return; start.current = { x: event.clientX, y: event.clientY }; }, onPointerMove: event => { if (!start.current)
             return; const dx = event.clientX - start.current.x, dy = event.clientY - start.current.y; if (Math.abs(dy) > 10 && Math.abs(dy) > Math.abs(dx)) {
             finish();
             return;
-        } if (Math.abs(dx) > Math.abs(dy) * 2)
-            setOffset(Math.max(-72, Math.min(72, dx))); }, onPointerUp: event => { if (start.current && replyAction && !replyAction.disabled && isReplySwipe(event.clientX - start.current.x, event.clientY - start.current.y))
-            replyAction.onPress(); finish(); }, onPointerCancel: finish, onPointerLeave: finish, className: "hjm-chat-message", style: { ...layoutStyle, transform: `translateX(${offset}px)`, touchAction: replyAction ? "pan-y" : undefined, "--hjm-message-max-width": screenPatternRecipe.messageMaxWidth }, "data-direction": direction, "aria-label": author, children: [avatar ? _jsx("div", { className: "hjm-chat-message__avatar", children: avatar }) : null, _jsxs("div", { className: "hjm-chat-message__content", children: [author ? _jsx(Text, { variant: "caption", tone: "muted", children: author }) : null, reply && replyLink ? _jsx(Button, { tone: "ghost", "aria-label": replyLink.label, onClick: replyLink.onPress, children: reply }) : null, reactions ? _jsxs(MessageReactions, { ...reactions, interactiveContent: interactiveContent, children: [reply && !replyLink ? _jsx("div", { className: "hjm-chat-message__reply", children: reply }) : null, children] }) : _jsxs("div", { className: "hjm-chat-message__bubble", children: [reply && !replyLink ? _jsx("div", { className: "hjm-chat-message__reply", children: reply }) : null, children] }), timestamp || deliveryLabel || actions ? _jsxs("div", { className: "hjm-chat-message__meta", children: [timestamp || deliveryLabel ? _jsxs(Text, { variant: "caption", tone: "muted", children: [timestamp, deliveryLabel ? ` · ${deliveryLabel}` : ""] }) : null, actions] }) : null] })] });
+        } if (revealTime)
+            setOffset(timestampRevealOffset(dx, dy));
+        else if (Math.abs(dx) > Math.abs(dy) * 2)
+            setOffset(Math.max(-72, Math.min(72, dx))); }, onPointerUp: event => { if (!revealTime && start.current && replyAction && !replyAction.disabled && isReplySwipe(event.clientX - start.current.x, event.clientY - start.current.y))
+            replyAction.onPress(); finish(); }, onPointerCancel: finish, onPointerLeave: finish, style: { ...layoutStyle, position: "relative", overflow: "hidden", touchAction: revealTime || replyAction ? "pan-y" : undefined }, "aria-label": author, children: [revealTime ? _jsx("time", { style: { position: "absolute", left: 0, top: 0, bottom: 0, width: 80, display: "flex", alignItems: "center", opacity: offset > 0 ? 1 : 0, pointerEvents: "none" }, children: _jsx(Text, { variant: "caption", tone: "muted", children: timestamp }) }) : null, _jsxs("div", { className: "hjm-chat-message", style: { transform: `translateX(${offset}px)`, "--hjm-message-max-width": screenPatternRecipe.messageMaxWidth }, "data-direction": direction, children: [avatar ? _jsx("div", { className: "hjm-chat-message__avatar", children: avatar }) : null, _jsxs("div", { className: "hjm-chat-message__content", children: [author ? _jsx(Text, { variant: "caption", tone: "muted", children: author }) : null, reply && replyLink ? _jsx(Button, { tone: "ghost", "aria-label": replyLink.label, onClick: replyLink.onPress, children: reply }) : null, reactions ? _jsxs(MessageReactions, { ...reactions, interactiveContent: interactiveContent, children: [reply && !replyLink ? _jsx("div", { className: "hjm-chat-message__reply", children: reply }) : null, children] }) : _jsxs("div", { className: "hjm-chat-message__bubble", children: [reply && !replyLink ? _jsx("div", { className: "hjm-chat-message__reply", children: reply }) : null, children] }), (!revealTime && timestamp) || deliveryLabel || actions ? _jsxs("div", { className: "hjm-chat-message__meta", children: [(!revealTime && timestamp) || deliveryLabel ? _jsx(Text, { variant: "caption", tone: "muted", children: [revealTime ? "" : timestamp, deliveryLabel].filter(Boolean).join(" · ") }) : null, actions] }) : null] })] })] });
 }
 //# sourceMappingURL=screens.js.map

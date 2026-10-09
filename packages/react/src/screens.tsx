@@ -4,7 +4,7 @@ import type { ReactionPickerProps } from "./reaction-picker.js";
 import { Button, IconButton } from "./actions.js";
 import { TextArea } from "./forms.js";
 import { useId, useRef, useState, type Ref, type ReactNode } from "react";
-import { isReplySwipe, shouldSubmitMessageKey, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
+import { isReplySwipe, timestampRevealOffset, shouldSubmitMessageKey, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
 import { Heading } from "./heading.js";
 import { Spinner } from "./internal/spinner.js";
 import { Section, Stack, Text } from "./layout.js";
@@ -154,22 +154,26 @@ export function MessageComposer({ value, label, sendLabel, placeholder = label, 
 export type ChatMessageProps = ChatMessageDescriptor & Readonly<{ children: ReactNode; interactiveContent?: boolean; avatar?: ReactNode; reply?: ReactNode; actions?: ReactNode; replyAction?: Readonly<{label:string; onPress():void; disabled?:boolean}>; replyLink?: Readonly<{label:string; onPress():void}>; reactions?: ReactionPickerProps & Readonly<{ closeLabel: string; menuAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean }> }>;
   /** Canonical layout-only placement on the message row. The swipe offset still owns `transform`. */
   layoutStyle?: HjmCompositionStyleProp }>;
-export function ChatMessage({ direction, author, timestamp, deliveryLabel, avatar, reply, actions, replyAction, replyLink, reactions, children, interactiveContent=false, layoutStyle }: ChatMessageProps) {
+export function ChatMessage({ direction, author, timestamp, timestampPresentation = "always", deliveryLabel, avatar, reply, actions, replyAction, replyLink, reactions, children, interactiveContent=false, layoutStyle }: ChatMessageProps) {
+  const revealTime = timestampPresentation === "swipe" && !!timestamp;
   const start = useRef<{x:number;y:number} | null>(null);
   const [offset, setOffset] = useState(0);
   const finish = () => { start.current = null; setOffset(0); };
   return <article tabIndex={replyAction && !replyAction.disabled ? 0 : undefined}
     aria-keyshortcuts={replyAction ? "Alt+ArrowLeft Alt+ArrowRight" : undefined} aria-description={replyAction?.label}
     onKeyDown={event => { if (event.target === event.currentTarget && event.altKey && (event.key === "ArrowLeft" || event.key === "ArrowRight") && replyAction && !replyAction.disabled) { event.preventDefault(); replyAction.onPress(); } }}
-    onPointerDown={event => { if (!replyAction || replyAction.disabled || event.button !== 0 || (event.target as HTMLElement).closest("button,a,input,textarea")) return; start.current = {x:event.clientX,y:event.clientY}; }}
-    onPointerMove={event => { if (!start.current) return; const dx=event.clientX-start.current.x,dy=event.clientY-start.current.y; if (Math.abs(dy)>10 && Math.abs(dy)>Math.abs(dx)) {finish();return;} if (Math.abs(dx)>Math.abs(dy)*2) setOffset(Math.max(-72,Math.min(72,dx))); }}
-    onPointerUp={event => { if (start.current && replyAction && !replyAction.disabled && isReplySwipe(event.clientX-start.current.x,event.clientY-start.current.y)) replyAction.onPress(); finish(); }} onPointerCancel={finish} onPointerLeave={finish}
-    className="hjm-chat-message" style={{ ...layoutStyle, transform: `translateX(${offset}px)`, touchAction: replyAction ? "pan-y" : undefined, "--hjm-message-max-width": screenPatternRecipe.messageMaxWidth } as React.CSSProperties} data-direction={direction} aria-label={author}>
+    onPointerDown={event => { if ((!revealTime && (!replyAction || replyAction.disabled)) || event.button !== 0 || (event.target as HTMLElement).closest("button,a,input,textarea")) return; start.current = {x:event.clientX,y:event.clientY}; }}
+    onPointerMove={event => { if (!start.current) return; const dx=event.clientX-start.current.x,dy=event.clientY-start.current.y; if (Math.abs(dy)>10 && Math.abs(dy)>Math.abs(dx)) {finish();return;} if (revealTime) setOffset(timestampRevealOffset(dx,dy)); else if (Math.abs(dx)>Math.abs(dy)*2) setOffset(Math.max(-72,Math.min(72,dx))); }}
+    onPointerUp={event => { if (!revealTime && start.current && replyAction && !replyAction.disabled && isReplySwipe(event.clientX-start.current.x,event.clientY-start.current.y)) replyAction.onPress(); finish(); }} onPointerCancel={finish} onPointerLeave={finish}
+    style={{ ...layoutStyle, position: "relative", overflow: "hidden", touchAction: revealTime || replyAction ? "pan-y" : undefined }} aria-label={author}>
+    {revealTime ? <time style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 80, display: "flex", alignItems: "center", opacity: offset > 0 ? 1 : 0, pointerEvents: "none" }}><Text variant="caption" tone="muted">{timestamp}</Text></time> : null}
+    <div className="hjm-chat-message" style={{ transform: `translateX(${offset}px)`, "--hjm-message-max-width": screenPatternRecipe.messageMaxWidth } as React.CSSProperties} data-direction={direction}>
     {avatar ? <div className="hjm-chat-message__avatar">{avatar}</div> : null}
     <div className="hjm-chat-message__content">{author?<Text variant="caption" tone="muted">{author}</Text>:null}
       {reply && replyLink ? <Button tone="ghost" aria-label={replyLink.label} onClick={replyLink.onPress}>{reply}</Button> : null}
       {reactions ? <MessageReactions {...reactions} interactiveContent={interactiveContent}>{reply && !replyLink ? <div className="hjm-chat-message__reply">{reply}</div> : null}{children}</MessageReactions> : <div className="hjm-chat-message__bubble">{reply && !replyLink ? <div className="hjm-chat-message__reply">{reply}</div> : null}{children}</div>}
-      {timestamp||deliveryLabel||actions?<div className="hjm-chat-message__meta">{timestamp||deliveryLabel?<Text variant="caption" tone="muted">{timestamp}{deliveryLabel ? ` · ${deliveryLabel}` : ""}</Text>:null}{actions}</div>:null}
+      {(!revealTime && timestamp)||deliveryLabel||actions?<div className="hjm-chat-message__meta">{(!revealTime && timestamp)||deliveryLabel?<Text variant="caption" tone="muted">{[revealTime ? "" : timestamp, deliveryLabel].filter(Boolean).join(" · ")}</Text>:null}{actions}</div>:null}
+    </div>
     </div>
   </article>;
 }

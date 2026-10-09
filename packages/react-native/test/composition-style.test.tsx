@@ -1,5 +1,5 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
-import { Pressable, TextInput, View, type ViewStyle } from "react-native";
+import { Pressable, Text as NativeText, TextInput, View, type ViewStyle } from "react-native";
 import { describe, expect, expectTypeOf, it } from "vitest";
 
 import {
@@ -318,8 +318,11 @@ it("grows, caps and shrinks a bounded composer with its measured content", () =>
   const input = () => tree.root.findByType(TextInput);
   const style = () => Object.assign({}, ...[input().props.style].flat(4).filter(Boolean));
   const initial = style().height;
-  act(() => input().props.onContentSizeChange({nativeEvent:{contentSize:{width:200,height:1000}}}));
+  expect(input().props.scrollEnabled).toBe(false);
+  act(() => tree.root.findAllByType(NativeText).find(node => node.props.onTextLayout).props.onTextLayout({nativeEvent:{lines:Array.from({length:50},()=>({height:20}))}}));
   expect(style().height).toBe(style().maxHeight);
-  act(() => input().props.onContentSizeChange({nativeEvent:{contentSize:{width:200,height:initial}}}));
+  expect(input().props.scrollEnabled).toBe(true);
+  act(() => tree.root.findAllByType(NativeText).find(node => node.props.onTextLayout).props.onTextLayout({nativeEvent:{lines:[{height:20}]}}));
   expect(style().height).toBe(initial);
+  expect(input().props.scrollEnabled).toBe(false);
 });

@@ -1,3 +1,4 @@
+import { View } from "react-native";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { describe, expect, it, vi } from "vitest";
 import { ScrollView } from "react-native";
@@ -266,4 +267,18 @@ it("starts the message composer at one control row through the private compact f
   expect(style.minHeight).toBeLessThan(fieldRecipe.multilineMinHeight - fieldRecipe.borderWidth * 2);
   expect(tree.root.findByType(TextInput).props).not.toHaveProperty("hjmCompactMultiline");
   act(() => tree.unmount());
+});
+
+it("reveals time only during a rightward drag and leaves vertical motion to the timeline", async () => {
+  const {ChatMessage} = await import("../src/screens.js");
+  const reply = vi.fn();
+  const tree = render(<ChatMessage direction="incoming" author="" timestamp="23:45" timestampPresentation="swipe" replyAction={{label:"답장",onPress:reply}}><Text>본문</Text></ChatMessage>);
+  const host = tree.root.findAllByType(View).find(view=>view.props.onMoveShouldSetResponder)!;
+  expect(host.props.onMoveShouldSetResponder({}, {dx:40,dy:60})).toBe(false);
+  expect(host.props.onMoveShouldSetResponder({}, {dx:60,dy:4})).toBe(true);
+  act(()=>host.props.onResponderMove({}, {dx:60,dy:4}));
+  expect(tree.root.findAllByType(View).some(view=>view.props.style?.transform?.[0]?.translateX===60)).toBe(true);
+  act(()=>host.props.onResponderRelease({}, {dx:60,dy:4}));
+  expect(reply).not.toHaveBeenCalled();
+  expect(tree.root.findAllByType(View).some(view=>view.props.style?.transform?.[0]?.translateX===0)).toBe(true);
 });

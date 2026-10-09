@@ -73,6 +73,8 @@ export type ChatMessageDescriptor = Readonly<{
   author: string;
   timestamp: string;
   deliveryLabel?: string;
+  /** Rightward drag reveals time while delivery state remains visible; default preserves existing captions. */
+  timestampPresentation?: "always" | "swipe";
 }>;
 
 /** A denied permission goes to settings; rendering never requests OS access automatically. */
@@ -192,3 +194,9 @@ export const searchScreenRecipe = {
   /** Between chips in applied filters and suggested queries. */
   chipGap: spacing.xs,
 } as const;
+
+/** Horizontal intent preserves vertical scrolling and uses one reveal distance across renderers. */
+export function timestampRevealOffset(dx: number, dy: number): number {
+  // A 12px dead zone and 2:1 direction bias avoid turning taps/list scrolling into a time gesture.
+  return dx > 12 && dx > Math.abs(dy) * 2 ? Math.min(dx, 88) : 0;
+}
