@@ -365,7 +365,9 @@ describe("web composition style", () => {
       [303, "hjm-screen", <NotificationInboxScreen title="Inbox" layoutStyle={{ marginTop: 303 }}>{null}</NotificationInboxScreen>],
       [304, "hjm-screen", <ChatScreen title="Chat" composer={null} layoutStyle={{ marginTop: 304 }} />],
       [305, "hjm-message-composer", <MessageComposer label="Message" sendLabel="Send" value="" onValueChange={() => {}} onSend={() => {}} layoutStyle={{ marginTop: 305 }} />],
-      [306, "hjm-chat-message", <ChatMessage direction="incoming" author="A" timestamp="now" layoutStyle={{ marginTop: 306 }}>hi</ChatMessage>],
+      // Swipe-time presentation introduced an outer article that owns placement;
+      // hjm-chat-message is the translated inner bubble. Keep the one-root style check.
+      [306, "<article", <ChatMessage direction="incoming" author="A" timestamp="now" layoutStyle={{ marginTop: 306 }}>hi</ChatMessage>],
       [307, "<div", <ListDetailScreen title="List" list={null} back={action} layoutStyle={{ marginTop: 307 }} />],
       [308, "hjm-screen", <EditorScreen title="Edit" dirty={false} submit={action} cancel={action} discard={{ ...confirm }} layoutStyle={{ marginTop: 308 }}>body</EditorScreen>],
       [309, "hjm-screen", <ProfileScreen title="Profile" summary={null} edit={action} layoutStyle={{ marginTop: 309 }} />],
