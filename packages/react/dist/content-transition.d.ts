@@ -3,6 +3,7 @@ import { type ReactNode, type RefObject } from "react";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type ContentTransitionProps = {
     preset?: ContentTransitionPreset;
+    travelDirection?: "forward" | "backward";
     stateKey: string;
     children: ReactNode;
     motion?: "system" | "none";
@@ -17,7 +18,7 @@ export type ContentTransitionProps = {
 };
 /** Motion Primitives' keyed transition pattern, adapted to HJM's single active subtree.
  * No exiting interactive copy: it would duplicate fields and focus targets. See THIRD_PARTY_NOTICES. */
-export declare function ContentTransition({ stateKey, children, motion: preference, preset: suppliedPreset, focusTarget, animateHeight, enterOnMount, layoutStyle }: ContentTransitionProps): import("react").JSX.Element;
+export declare function ContentTransition({ stateKey, children, motion: preference, preset: suppliedPreset, travelDirection, focusTarget, animateHeight, enterOnMount, layoutStyle }: ContentTransitionProps): import("react").JSX.Element;
 export type TextTransitionProps = {
     preset?: ContentTransitionPreset;
     text: string;

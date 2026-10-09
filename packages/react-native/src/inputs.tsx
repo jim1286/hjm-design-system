@@ -2141,6 +2141,8 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
                   : 0,
                 flex: stacked || pills ? undefined : 1,
                 maxWidth: pills ? "100%" : undefined,
+                // Leading artwork and its label share a row; column layout squeezed theme options.
+                flexDirection: "row",
                 gap: segmentedControlRecipe.item.gap,
                 justifyContent: "center",
                 minHeight: pills ? segmentedControlRecipe.pills.minHeight : sizeContract.minHeight,

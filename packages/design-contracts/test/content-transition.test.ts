@@ -4,6 +4,8 @@ it("mirrors only inline travel and preserves the final content geometry", () => 
   expect(resolveContentTransition("slide", "rtl").translateX).toBe(-resolveContentTransition("slide", "ltr").translateX);
   expect(resolveContentTransition("rise", "rtl")).toEqual(resolveContentTransition("rise", "ltr"));
   expect(resolveContentTransition().scale).toBe(1);
+  expect(resolveContentTransition("slide", "ltr", "backward").translateX).toBeLessThan(0);
+  expect(resolveContentTransition("slide", "rtl", "backward").translateX).toBeGreaterThan(0);
 });
 
 it("rejects unknown presets instead of silently changing presentation", () => {

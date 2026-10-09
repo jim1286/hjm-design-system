@@ -5,11 +5,11 @@ import { easing, motion as timing } from "@hjmds/design-contracts/foundations";
 import { useHjmNativeTheme } from "./provider.js";
 import { Text } from "./primitives.js";
 
-export type ContentTransitionProps = { preset?: ContentTransitionPreset; stateKey: string; children: ReactNode; motion?: "system" | "none"; animateHeight?: boolean; enterOnMount?: boolean };
-export function ContentTransition({ stateKey, children, motion: preference = "system", preset: suppliedPreset, animateHeight = false, enterOnMount = false }: ContentTransitionProps) {
+export type ContentTransitionProps = { preset?: ContentTransitionPreset; travelDirection?: "forward" | "backward"; stateKey: string; children: ReactNode; motion?: "system" | "none"; animateHeight?: boolean; enterOnMount?: boolean };
+export function ContentTransition({ stateKey, children, motion: preference = "system", preset: suppliedPreset, travelDirection = "forward", animateHeight = false, enterOnMount = false }: ContentTransitionProps) {
   const { environment, designProfile } = useHjmNativeTheme();
   const preset = suppliedPreset ?? designProfile?.interactions.contentTransition ?? "fade";
-  const from = resolveContentTransition(preset, environment.direction);
+  const from = resolveContentTransition(preset, environment.direction, travelDirection);
   const opacity = useRef(new Animated.Value(1)).current;
   const height = useRef(new Animated.Value(0)).current;
   const targetHeight = useRef<number | null>(null);
@@ -48,7 +48,7 @@ export function ContentTransition({ stateKey, children, motion: preference = "sy
     return () => { animation.stop(); sub.remove(); };
     // A new preset/direction mid-flight must settle the current content rather
     // than bend an already running transform onto a different path.
-  }, [stateKey, opacity, environment.reducedMotion, environment.direction, preference, preset, enterOnMount]);
+  }, [stateKey, opacity, environment.reducedMotion, environment.direction, preference, preset, enterOnMount, travelDirection]);
   // Keep only the current subtree; exit copies could remain touchable or spoken.
   return <Animated.View style={heightEnabled && measured ? { height, overflow: "hidden" } : undefined}><View onLayout={animateHeight ? measureHeight : undefined}><Animated.View style={{ opacity, transform: [{ translateX: opacity.interpolate({ inputRange: [0, 1], outputRange: [from.translateX, 0] }) }, { translateY: opacity.interpolate({ inputRange: [0, 1], outputRange: [from.translateY, 0] }) }, { scale: opacity.interpolate({ inputRange: [0, 1], outputRange: [from.scale, 1] }) }] }}>{children}</Animated.View></View></Animated.View>;
 }

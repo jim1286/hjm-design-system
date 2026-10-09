@@ -8,7 +8,7 @@ export declare const contentTransitionMotion: {
 };
 /** Bounded travel keeps decorative motion close to the destination.
  * Single-subtree recipes: preserve wrapping, focus and accessible content. */
-export declare function resolveContentTransition(preset?: ContentTransitionPreset, direction?: "ltr" | "rtl"): {
+export declare function resolveContentTransition(preset?: ContentTransitionPreset, direction?: "ltr" | "rtl", travelDirection?: "forward" | "backward"): {
     opacity: number;
     translateX: number;
     translateY: number;

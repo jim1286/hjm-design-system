@@ -35,3 +35,10 @@ contracts screen-patterns 11, Native composition-style/screens 28, Web screens.b
 main 73f09040 + 이 변경, Codex. 사용자 요청: 발신 꼬리 오른쪽·수신 꼬리 왼쪽, 같은 표면과 외곽 테두리로 연결. `bubbleTail=false` 기본값을 유지하고 번뚝만 선택 채택한다. inward 시간 제스처는 수신 오른쪽·발신 왼쪽이며 각각 왼쪽/오른쪽 여백에 시간을 표시한다. Native capture로 내부 Pressable 경합을 해소했다.
 
 세 패키지 TypeScript build 통과, Native screens 18 / Web browser screens 16 통과. 양 방향 제스처·세로 이동·release 복귀·reply 오발송 방지 회귀 포함. Web 기존 act 경고는 남아 있으나 실패 0. 사용 지침 검사 통과. 번뚝 iPhone 17 Pro iOS26.5 개발 화면에서 DM 양측 꼬리·수신 시간 공개, 번뜩 발신 왼쪽 드래그의 오른쪽 시간 공개를 확인했다. 제품의 native back 제스처 경합은 제품 화면 설정으로 해결한다. 새로운 전체 테마 QA·Release·게시·소비 후보 CI는 미수행. 임시 캡처와 로그를 요약 후 제거한다. 새 작업 branch/worktree 없음(main 하나), 다른 세션 게시 문서 변경 보존.
+
+
+## 2026-10-10 프로필 전환·설정 정렬 후속
+
+사용자 캡처의 테마 선택이 아이콘/라벨을 세로로 쌓아 찌그러져 보였으므로 Native SegmentedControl 내부를 가로 정렬했다. ContentTransition에 선택적인 travelDirection(forward/backward)을 추가하여 이전 페이지와 다음 페이지의 slide 방향을 구분한다. 기본 forward와 reduced-motion/lifecycle 계약은 유지한다. 제품 격자의 칸 너비는 제품이 소유하며 전환 wrapper가 기존 백분율 너비의 새 기준이 되지 않게 해야 한다.
+
+contracts content-transition 5/5, Native content-transition lifecycle 9/9 및 Native/Web TypeScript build 통과. 방향 대조는 LTR/RTL의 backward를 포함한다. 번뚝 실제 iPhone17Pro iOS26.5에서 수신 번뜩 메시지를 오른쪽으로 드래그해 왼쪽 시간 공개를 확인했다. 설정의 아이콘/라벨 가로 정렬은 같은 기기에서 확인했다. 공통 변경의 전체 제품 채택·공식 게시·Release 검증은 별도다. 새 branch/worktree는 없으며 다른 세션의 generated declaration 변경은 보존한다.

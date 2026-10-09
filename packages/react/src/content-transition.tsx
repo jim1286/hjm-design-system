@@ -6,7 +6,7 @@ import { useHjmTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type ContentTransitionProps = {
-  preset?: ContentTransitionPreset;
+  preset?: ContentTransitionPreset; travelDirection?: "forward" | "backward";
   stateKey: string; children: ReactNode; motion?: "system" | "none";
   /** Opt-in measured height transition; never renders a second interactive panel. */
   animateHeight?: boolean;
@@ -19,10 +19,10 @@ export type ContentTransitionProps = {
 };
 /** Motion Primitives' keyed transition pattern, adapted to HJM's single active subtree.
  * No exiting interactive copy: it would duplicate fields and focus targets. See THIRD_PARTY_NOTICES. */
-export function ContentTransition({ stateKey, children, motion: preference = "system", preset: suppliedPreset, focusTarget, animateHeight = false, enterOnMount = false, layoutStyle }: ContentTransitionProps) {
+export function ContentTransition({ stateKey, children, motion: preference = "system", preset: suppliedPreset, travelDirection = "forward", focusTarget, animateHeight = false, enterOnMount = false, layoutStyle }: ContentTransitionProps) {
   const { environment, designProfile } = useHjmTheme();
   const preset = suppliedPreset ?? designProfile?.interactions.contentTransition ?? "fade";
-  const from = resolveContentTransition(preset, environment.direction);
+  const from = resolveContentTransition(preset, environment.direction, travelDirection);
   const enabled = preference !== "none" && !environment.reducedMotion;
   const frame = useRef<HTMLDivElement>(null);
   const measure = useRef<HTMLDivElement>(null);
