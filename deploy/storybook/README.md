@@ -43,3 +43,5 @@ Python 3, curl, Bash, SSH/SCP 및 known_hosts가 필요하다. 빌드는 Node 24
 GitHub Pages는 `deploy/storybook/redirect`의 이동 안내를 게시한다. index/iframe/404 안내는 path/query/hash를 보존한다.
 HTTP 서버 301/308이 아니라 HTML/JS 이동이다. 알 수 없는 old path의 404 이동 안내는 브라우저에서만 실행된다.
 기존 Storybook id와 이력은 보존한다. 배포 source와 pipeline/config SHA·검사 run은 작업별 QA에 따로 기록한다.
+
+실제 이관 결과: [2026-10-10 Storybook QA](../../docs/qa/2026-10-10-storybook-domain-migration.md).

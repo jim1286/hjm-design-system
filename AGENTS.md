@@ -1,6 +1,6 @@
 # HJM Design System 에이전트 작업 지침
 
-적용: 이 저장소 전체 · 검토일: 2026-10-09
+적용: 이 저장소 전체 · 검토일: 2026-10-10
 
 이 checkout은 app-portfolio의 독립 Git 저장소다. 상위 작업 지침과 함께
 [README](README.md), [기여 지침](CONTRIBUTING.md),

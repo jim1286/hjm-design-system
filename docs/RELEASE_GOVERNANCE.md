@@ -1,6 +1,6 @@
 # 디자인 시스템 검증과 릴리스 계약
 
-상태: 현재 내부 릴리스 계약 · 검토일: 2026-10-09
+상태: 현재 내부 릴리스 계약 · 검토일: 2026-10-10
 적용: 이 저장소의 contracts, React, React Native, 두 Showcase.
 Web Storybook 공개 실행 정본: [자체 도메인 게시](../deploy/storybook/README.md).
 기계 검사: [`scripts/check-release-governance.mjs`](../scripts/check-release-governance.mjs).
