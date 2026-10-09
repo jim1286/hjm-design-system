@@ -121,5 +121,5 @@ export type ChatMessageProps = ChatMessageDescriptor & Readonly<{
     /** Canonical layout-only placement on the message row. The swipe offset still owns `transform`. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function ChatMessage({ direction, author, timestamp, timestampPresentation, deliveryLabel, avatar, reply, actions, replyAction, replyLink, reactions, children, interactiveContent, layoutStyle }: ChatMessageProps): import("react").JSX.Element;
+export declare function ChatMessage({ direction, author, timestamp, timestampPresentation, bubbleTail, deliveryLabel, avatar, reply, actions, replyAction, replyLink, reactions, children, interactiveContent, layoutStyle }: ChatMessageProps): import("react").JSX.Element;
 //# sourceMappingURL=screens.d.ts.map

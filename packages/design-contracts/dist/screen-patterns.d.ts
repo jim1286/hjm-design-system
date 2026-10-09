@@ -59,8 +59,10 @@ export type ChatMessageDescriptor = Readonly<{
     author: string;
     timestamp: string;
     deliveryLabel?: string;
-    /** Rightward drag reveals time while delivery state remains visible; default preserves existing captions. */
+    /** Inward drag reveals time (incoming right, outgoing left) while delivery state remains visible; default preserves existing captions. */
     timestampPresentation?: "always" | "swipe";
+    /** Connected authorship tip; opt-in keeps existing card-like conversations unchanged. */
+    bubbleTail?: boolean;
 }>;
 /** A denied permission goes to settings; rendering never requests OS access automatically. */
 export type PermissionScreenStatus = "prompt" | "denied" | "granted" | "unavailable";

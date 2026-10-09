@@ -73,7 +73,8 @@ import { Text } from "@hjmds/react-native/primitives";
 | `direction` | `"incoming"` · `"outgoing"` | 필수 | 수신은 시작 쪽, 발신은 끝 쪽에 붙는다 |
 | `author` | `string` | 필수 | 빈 문자열이면 작성자 줄을 그리지 않는다(연속 메시지 그룹) |
 | `timestamp` | `string` | 필수 | 제품이 포맷한 시각. 빈 문자열이고 `deliveryLabel`·`actions`도 없으면 메타 줄을 그리지 않는다 |
-| `timestampPresentation` | `"always"` · `"swipe"` | `"always"` | `swipe`는 오른쪽으로 끄는 동안 시각을 보여 주고 놓으면 숨긴다. 이 모드에서는 같은 제스처로 답장을 실행하지 않는다. 시각은 보조기술에서도 읽을 수 있다. |
+| `timestampPresentation` | `"always"` · `"swipe"` | `"always"` | `swipe`는 수신은 오른쪽·발신은 왼쪽으로 끄는 동안 반대편 여백에 시각을 보여 주고 놓으면 숨긴다. 이 모드에서는 같은 제스처로 답장을 실행하지 않는다. 시각은 보조기술에서도 읽을 수 있다. |
+| `bubbleTail` | `boolean` | `false` | 말풍선 본체와 이어진 꼬리를 수신 시작 쪽·발신 끝 쪽에 표시한다. 같은 표면·테두리를 쓰며 행 양쪽 `spacing.xs` 8 여백으로 잘림을 막는다. |
 | `deliveryLabel` | `string` | 없음 | 시각 뒤에 ` · `로 붙는 전송 상태 |
 | `avatar` | `ReactNode` | 없음 | 버블 옆 아바타 |
 | `reply` | `ReactNode` | 없음 | 인용 노드. `replyLink`가 없으면 버블 안 인용으로 그린다 |

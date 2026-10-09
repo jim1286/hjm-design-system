@@ -269,16 +269,17 @@ it("starts the message composer at one control row through the private compact f
   act(() => tree.unmount());
 });
 
-it("reveals time only during a rightward drag and leaves vertical motion to the timeline", async () => {
+it.each(["incoming", "outgoing"] as const)("reveals time only during an inward drag and leaves vertical motion to the timeline", async (direction) => {
   const {ChatMessage} = await import("../src/screens.js");
   const reply = vi.fn();
-  const tree = render(<ChatMessage direction="incoming" author="" timestamp="23:45" timestampPresentation="swipe" replyAction={{label:"답장",onPress:reply}}><Text>본문</Text></ChatMessage>);
+  const tree = render(<ChatMessage direction={direction} author="" timestamp="23:45" timestampPresentation="swipe" replyAction={{label:"답장",onPress:reply}}><Text>본문</Text></ChatMessage>);
+  const dx = direction === "outgoing" ? -60 : 60;
   const host = tree.root.findAllByType(View).find(view=>view.props.onMoveShouldSetResponder)!;
   expect(host.props.onMoveShouldSetResponder({}, {dx:40,dy:60})).toBe(false);
-  expect(host.props.onMoveShouldSetResponder({}, {dx:60,dy:4})).toBe(true);
-  act(()=>host.props.onResponderMove({}, {dx:60,dy:4}));
-  expect(tree.root.findAllByType(View).some(view=>view.props.style?.transform?.[0]?.translateX===60)).toBe(true);
-  act(()=>host.props.onResponderRelease({}, {dx:60,dy:4}));
+  expect(host.props.onMoveShouldSetResponder({}, {dx,dy:4})).toBe(true);
+  act(()=>host.props.onResponderMove({}, {dx,dy:4}));
+  expect(tree.root.findAllByType(View).some(view=>view.props.style?.transform?.[0]?.translateX===dx)).toBe(true);
+  act(()=>host.props.onResponderRelease({}, {dx,dy:4}));
   expect(reply).not.toHaveBeenCalled();
   expect(tree.root.findAllByType(View).some(view=>view.props.style?.transform?.[0]?.translateX===0)).toBe(true);
 });

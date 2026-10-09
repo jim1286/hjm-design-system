@@ -154,7 +154,7 @@ export function MessageComposer({ value, label, sendLabel, placeholder = label, 
 export type ChatMessageProps = ChatMessageDescriptor & Readonly<{ children: ReactNode; interactiveContent?: boolean; avatar?: ReactNode; reply?: ReactNode; actions?: ReactNode; replyAction?: Readonly<{label:string; onPress():void; disabled?:boolean}>; replyLink?: Readonly<{label:string; onPress():void}>; reactions?: ReactionPickerProps & Readonly<{ closeLabel: string; menuAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean }> }>;
   /** Canonical layout-only placement on the message row. The swipe offset still owns `transform`. */
   layoutStyle?: HjmCompositionStyleProp }>;
-export function ChatMessage({ direction, author, timestamp, timestampPresentation = "always", deliveryLabel, avatar, reply, actions, replyAction, replyLink, reactions, children, interactiveContent=false, layoutStyle }: ChatMessageProps) {
+export function ChatMessage({ direction, author, timestamp, timestampPresentation = "always", bubbleTail = false, deliveryLabel, avatar, reply, actions, replyAction, replyLink, reactions, children, interactiveContent=false, layoutStyle }: ChatMessageProps) {
   const revealTime = timestampPresentation === "swipe" && !!timestamp;
   const start = useRef<{x:number;y:number} | null>(null);
   const [offset, setOffset] = useState(0);
@@ -163,11 +163,11 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
     aria-keyshortcuts={replyAction ? "Alt+ArrowLeft Alt+ArrowRight" : undefined} aria-description={replyAction?.label}
     onKeyDown={event => { if (event.target === event.currentTarget && event.altKey && (event.key === "ArrowLeft" || event.key === "ArrowRight") && replyAction && !replyAction.disabled) { event.preventDefault(); replyAction.onPress(); } }}
     onPointerDown={event => { if ((!revealTime && (!replyAction || replyAction.disabled)) || event.button !== 0 || (event.target as HTMLElement).closest("button,a,input,textarea")) return; start.current = {x:event.clientX,y:event.clientY}; }}
-    onPointerMove={event => { if (!start.current) return; const dx=event.clientX-start.current.x,dy=event.clientY-start.current.y; if (Math.abs(dy)>10 && Math.abs(dy)>Math.abs(dx)) {finish();return;} if (revealTime) setOffset(timestampRevealOffset(dx,dy)); else if (Math.abs(dx)>Math.abs(dy)*2) setOffset(Math.max(-72,Math.min(72,dx))); }}
+    onPointerMove={event => { if (!start.current) return; const dx=event.clientX-start.current.x,dy=event.clientY-start.current.y; if (Math.abs(dy)>10 && Math.abs(dy)>Math.abs(dx)) {finish();return;} if (revealTime) setOffset((direction === "outgoing" ? -1 : 1) * timestampRevealOffset(direction === "outgoing" ? -dx : dx,dy)); else if (Math.abs(dx)>Math.abs(dy)*2) setOffset(Math.max(-72,Math.min(72,dx))); }}
     onPointerUp={event => { if (!revealTime && start.current && replyAction && !replyAction.disabled && isReplySwipe(event.clientX-start.current.x,event.clientY-start.current.y)) replyAction.onPress(); finish(); }} onPointerCancel={finish} onPointerLeave={finish}
-    style={{ ...layoutStyle, position: "relative", overflow: "hidden", touchAction: revealTime || replyAction ? "pan-y" : undefined }} aria-label={author}>
-    {revealTime ? <time style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 80, display: "flex", alignItems: "center", opacity: offset > 0 ? 1 : 0, pointerEvents: "none" }}><Text variant="caption" tone="muted">{timestamp}</Text></time> : null}
-    <div className="hjm-chat-message" style={{ transform: `translateX(${offset}px)`, "--hjm-message-max-width": screenPatternRecipe.messageMaxWidth } as React.CSSProperties} data-direction={direction}>
+    style={{ ...layoutStyle, position: "relative", overflow: "hidden", paddingInline: bubbleTail ? "var(--hjm-space-xs)" : undefined, touchAction: revealTime || replyAction ? "pan-y" : undefined }} aria-label={author}>
+    {revealTime ? <time style={{ position: "absolute", ...(direction === "outgoing" ? { right: 0, justifyContent: "flex-end" } : { left: 0 }), top: 0, bottom: 0, width: 80, display: "flex", alignItems: "center", opacity: offset !== 0 ? 1 : 0, pointerEvents: "none" }}><Text variant="caption" tone="muted">{timestamp}</Text></time> : null}
+    <div className="hjm-chat-message" style={{ transform: `translateX(${offset}px)`, "--hjm-message-max-width": screenPatternRecipe.messageMaxWidth } as React.CSSProperties} data-direction={direction} data-tail={bubbleTail || undefined}>
     {avatar ? <div className="hjm-chat-message__avatar">{avatar}</div> : null}
     <div className="hjm-chat-message__content">{author?<Text variant="caption" tone="muted">{author}</Text>:null}
       {reply && replyLink ? <Button tone="ghost" aria-label={replyLink.label} onClick={replyLink.onPress}>{reply}</Button> : null}

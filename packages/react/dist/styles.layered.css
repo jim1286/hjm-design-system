@@ -2886,6 +2886,11 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-chat-message[data-direction="outgoing"] .hjm-chat-message__content { align-items: flex-end; }
 .hjm-chat-message__bubble { border: var(--hjm-stroke-default) solid var(--hjm-color-border); border-radius: var(--hjm-radius-lg); background: var(--hjm-color-bg); padding: var(--hjm-space-sm); overflow-wrap: anywhere; white-space: pre-wrap; }
 .hjm-chat-message[data-direction="outgoing"] .hjm-chat-message__bubble { background: var(--hjm-color-surface-accent); }
+/* One surface and a partial border join the tip to the body without an interior seam. */
+.hjm-chat-message[data-tail] .hjm-chat-message__bubble { position: relative; }
+.hjm-chat-message[data-tail] .hjm-chat-message__bubble::before { content: ""; position: absolute; bottom: var(--hjm-space-sm); inset-inline-start: -5px; width: 8px; height: 8px; background: var(--hjm-color-bg); border-inline-start: var(--hjm-stroke-default) solid var(--hjm-color-border); border-bottom: var(--hjm-stroke-default) solid var(--hjm-color-border); transform: rotate(45deg); pointer-events: none; }
+.hjm-chat-message[data-tail][data-direction="outgoing"] .hjm-chat-message__bubble::before { inset-inline-start: auto; inset-inline-end: -5px; background: var(--hjm-color-surface-accent); border-inline-start: 0; border-inline-end: var(--hjm-stroke-default) solid var(--hjm-color-border); transform: rotate(-45deg); }
+
 .hjm-chat-message__meta { display: flex; align-items: center; gap: var(--hjm-space-xs); }
 .hjm-chat-message__reply { border-inline-start: 2px solid var(--hjm-color-content-brand); padding-inline-start: var(--hjm-space-xs); margin-block-end: var(--hjm-space-xs); }
 

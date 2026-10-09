@@ -157,7 +157,7 @@ export function MessageComposer({ value, label, sendLabel, placeholder = label, 
 }
 
 export type ChatMessageProps = ChatMessageDescriptor & Readonly<{ children: ReactNode; interactiveContent?: boolean; avatar?: ReactNode; reply?: ReactNode; actions?: ReactNode; replyAction?: Readonly<{label:string; onPress():void; disabled?:boolean}>; replyLink?: Readonly<{label:string; onPress():void}>; reactions?: ReactionPickerProps & Readonly<{ closeLabel: string; menuAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean }> }> }>;
-export function ChatMessage({ direction, author, timestamp, timestampPresentation = "always", deliveryLabel, avatar, reply, actions, replyAction, replyLink, reactions, children, interactiveContent=false }: ChatMessageProps) {
+export function ChatMessage({ direction, author, timestamp, timestampPresentation = "always", bubbleTail = false, deliveryLabel, avatar, reply, actions, replyAction, replyLink, reactions, children, interactiveContent=false }: ChatMessageProps) {
   const { colors, tokens } = useHjmNativeTheme();
   const revealTime = timestampPresentation === "swipe" && !!timestamp;
   const outgoing = direction === "outgoing";
@@ -165,12 +165,14 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
   // SwipeActions reveals row controls and requires an optional gesture peer; reply commits
   // on release and stays in the core timeline without capturing vertical scrolling.
   const gesture = useMemo(() => PanResponder.create({
-    onMoveShouldSetPanResponder: (_, state) => revealTime ? timestampRevealOffset(state.dx, state.dy) > 0 : !!replyAction && !replyAction.disabled && Math.abs(state.dx)>12 && Math.abs(state.dx)>Math.abs(state.dy)*2,
-    onPanResponderMove: (_, state) => setOffset(revealTime ? timestampRevealOffset(state.dx, state.dy) : Math.max(-72,Math.min(72,state.dx))),
+    // Capture horizontal intent before nested message Pressables can retain the touch.
+    onMoveShouldSetPanResponderCapture: (_, state) => revealTime && timestampRevealOffset(outgoing ? -state.dx : state.dx, state.dy) > 0,
+    onMoveShouldSetPanResponder: (_, state) => revealTime ? timestampRevealOffset(outgoing ? -state.dx : state.dx, state.dy) > 0 : !!replyAction && !replyAction.disabled && Math.abs(state.dx)>12 && Math.abs(state.dx)>Math.abs(state.dy)*2,
+    onPanResponderMove: (_, state) => setOffset(revealTime ? (outgoing ? -1 : 1) * timestampRevealOffset(outgoing ? -state.dx : state.dx, state.dy) : Math.max(-72,Math.min(72,state.dx))),
     onPanResponderRelease: (_, state) => { setOffset(0); if (!revealTime && replyAction && !replyAction.disabled && isReplySwipe(state.dx,state.dy)) replyAction.onPress(); },
     onPanResponderTerminate: () => setOffset(0),
     onPanResponderTerminationRequest: () => true,
-  }), [replyAction, revealTime]);
+  }), [replyAction, revealTime, outgoing]);
   const canReply = !!replyAction && !replyAction.disabled;
   const replyAccessibility = canReply ? {
     accessible: true,
@@ -181,9 +183,11 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
   const visibleTime = revealTime ? "" : timestamp;
   const meta = [visibleTime, deliveryLabel].filter(Boolean).join(" · ");
   const bubbleStyle = { backgroundColor: outgoing ? colors.surfaceAccent : colors.bg, borderWidth: outgoing ? 0 : 1, borderColor: colors.border, borderRadius: tokens.radius.lg, padding: tokens.spacing.sm, gap: tokens.spacing.xs };
-  const bubbleContent = <>{reply && !replyLink ? <View style={{ borderStartWidth: 2, borderColor: colors.contentBrand, paddingStart: tokens.spacing.xs }}>{reply}</View> : null}{children}</>;
-  return <View {...gesture.panHandlers} style={{ position: "relative", overflow: "hidden" }}>
-    {revealTime ? <View pointerEvents="none" style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 80, justifyContent: "center", opacity: offset > 0 ? 1 : 0 }}><Text variant="caption" tone="muted">{timestamp}</Text></View> : null}
+  // Paint the tip with the bubble's own surface/border; a detached triangle leaves a seam.
+  const tail = bubbleTail ? <View pointerEvents="none" accessible={false} style={{ position: "absolute", bottom: tokens.spacing.sm, ...(outgoing ? { right: -4 } : { left: -4 }), width: 8, height: 8, backgroundColor: outgoing ? colors.surfaceAccent : colors.bg, borderLeftWidth: outgoing ? 0 : 1, borderBottomWidth: outgoing ? 0 : 1, borderColor: colors.border, transform: [{ rotate: outgoing ? "225deg" : "45deg" }] }} /> : null;
+  const bubbleContent = <>{tail}{reply && !replyLink ? <View style={{ borderStartWidth: 2, borderColor: colors.contentBrand, paddingStart: tokens.spacing.xs }}>{reply}</View> : null}{children}</>;
+  return <View {...gesture.panHandlers} style={{ position: "relative", overflow: "hidden", paddingHorizontal: bubbleTail ? tokens.spacing.xs : 0 }}>
+    {revealTime ? <View pointerEvents="none" style={{ position: "absolute", ...(outgoing ? { right: 0, alignItems: "flex-end" as const } : { left: 0 }), top: 0, bottom: 0, width: 80, justifyContent: "center", opacity: offset !== 0 ? 1 : 0 }}><Text variant="caption" tone="muted">{timestamp}</Text></View> : null}
     <View style={{ transform:[{translateX:offset}], flexDirection: "row", justifyContent: outgoing ? "flex-end" : "flex-start", gap: tokens.spacing.xs }}>
     {!outgoing ? avatar : null}
     {/* Accessibility (2026-10-06 review): a row-level accessible View named by `author`, and a reaction
