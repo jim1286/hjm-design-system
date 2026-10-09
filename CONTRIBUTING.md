@@ -17,6 +17,20 @@ pnpm dev:check --base origin/main
 pnpm ci:check
 ```
 
+## 로컬 화면 개발
+
+2026-10-09 사용자 요청으로 일상 화면 확인은 source 연결을 사용한다.
+`pnpm showcase:web` / `pnpm showcase:native`는 build 없이 중앙 `src`를 읽고 저장을 감지한다.
+기존 dist를 갱신하거나 패키지 버전을 올릴 필요가 없다. `HJM_LOCAL_SOURCE=1`은 명령 프로세스에만
+설정하며 정식 build/check에는 넘기지 않는다. Web과 Native는 같은 공개 export를 src로 해석한다.
+Node peer와 React/native context는 소비 호스트의 설치본을 사용한다.
+`styles.layered.css`의 개발 entry는 원본 CSS를 layer로 import하고, 게시 entry는 기존 생성 절차로 평탄화한다.
+따라서 게시 CSS·exports와 개발 경로가 같은 규칙을 유지한다.
+
+package build·후보 tarball·게시 검사는 별도로 유지한다. 여기서 source 화면을 확인했다고
+소비 앱의 게시 패키지 호환성·native binary·배포 검증을 완료한 것은 아니다.
+개발 어댑터는 포트폴리오 `scripts/hjm-local-source.cjs`에서 투영한다.
+
 ## 변경 규칙
 
 1. canonical 컴포넌트의 공개 API·지원 행동이 바뀌면 관련 `componentCatalog`와 renderer evidence를 갱신합니다. 내부 리팩터링에 내용이 같은 문서 갱신을 요구하지 않습니다.

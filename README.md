@@ -146,3 +146,12 @@ Web/Native 예제는 `배포/구성/피드백과 복구`의 저장과 재시도�
 기본 흐름은 `@hjmds/react/screen-flows` / `@hjmds/react-native/screen-flows`에서 제공합니다.
 목록·작성·프로필·신고·사진·검색·권한·온보딩과 댓글의 사용법 및 제품 소유 범위는
 [화면 계약](packages/design-contracts/docs/screen-patterns.md#기본-흐름-공개-조합-2026-10-05)을 확인하세요.
+
+
+## 로컬 HJM 소스 연결
+
+일상 개발은 `pnpm showcase:web` 또는 `pnpm showcase:native`로 시작한다.
+2026-10-09부터 이 명령은 선행 package build 없이 `src`를 직접 읽고 자동 갱신한다.
+소비 앱은 `HJM_LOCAL_SOURCE=1`을 해당 앱의 개발 명령에서만 설정하면 중앙 소스를 읽는다.
+끄면 기존 게시 패키지를 사용하며, 켠 상태의 production/CI 빌드는 거부한다.
+자세한 범위는 [기여 지침](CONTRIBUTING.md#로컬-화면-개발)을 따른다.

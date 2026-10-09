@@ -1,4 +1,5 @@
 const path = require("node:path");
+const { withMetro } = require("../../scripts/hjm-local-source.cjs");
 const { getDefaultConfig } = require("expo/metro-config");
 const { withStorybook } = require("@storybook/react-native/withStorybook");
 
@@ -26,7 +27,7 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
   return context.resolveRequest(hostContext, moduleName, platform);
 };
 
-module.exports = withStorybook(config, {
+module.exports = withMetro(withStorybook(config, {
   configPath: path.resolve(projectRoot, ".rnstorybook"),
   enabled: true,
-});
+}), projectRoot);
