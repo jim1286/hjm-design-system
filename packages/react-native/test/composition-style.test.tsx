@@ -318,11 +318,18 @@ it("grows, caps and shrinks a bounded composer with its measured content", () =>
   const input = () => tree.root.findByType(TextInput);
   const style = () => Object.assign({}, ...[input().props.style].flat(4).filter(Boolean));
   const initial = style().height;
+  const measurement = () => {
+    const node = tree.root.findAllByType(NativeText).find(candidate => candidate.props.onTextLayout);
+    // The fixture must fail explicitly if its measurement host disappears; an
+    // unchecked find() broke strict typechecking in the Storybook delivery gate.
+    if (!node) throw new Error("Bounded composer measurement host is missing");
+    return node;
+  };
   expect(input().props.scrollEnabled).toBe(false);
-  act(() => tree.root.findAllByType(NativeText).find(node => node.props.onTextLayout).props.onTextLayout({nativeEvent:{lines:Array.from({length:50},()=>({height:20}))}}));
+  act(() => measurement().props.onTextLayout({nativeEvent:{lines:Array.from({length:50},()=>({height:20}))}}));
   expect(style().height).toBe(style().maxHeight);
   expect(input().props.scrollEnabled).toBe(true);
-  act(() => tree.root.findAllByType(NativeText).find(node => node.props.onTextLayout).props.onTextLayout({nativeEvent:{lines:[{height:20}]}}));
+  act(() => measurement().props.onTextLayout({nativeEvent:{lines:[{height:20}]}}));
   expect(style().height).toBe(initial);
   expect(input().props.scrollEnabled).toBe(false);
 });
