@@ -155,6 +155,7 @@ Web/Native 예제는 `배포/구성/피드백과 복구`의 저장과 재시도�
 
 일상 개발은 `pnpm showcase:web` 또는 `pnpm showcase:native`로 시작한다.
 2026-10-09부터 이 명령은 선행 package build 없이 `src`를 직접 읽고 자동 갱신한다.
-소비 앱은 `HJM_LOCAL_SOURCE=1`을 해당 앱의 개발 명령에서만 설정하면 중앙 소스를 읽는다.
-끄면 기존 게시 패키지를 사용하며, 켠 상태의 production/CI 빌드는 거부한다.
+2026-10-12 사용자 요청으로 소비 앱의 개발 서버도 중앙 소스를 기본으로 읽는다.
+게시 버전과 비교할 때만 `HJM_LOCAL_SOURCE=0`으로 실행한다. production/CI와 배포 빌드는
+플래그와 무관하게 설치된 패키지를 사용한다. Next 소비 앱의 dev 스크립트는 `--webpack`을 포함한다.
 자세한 범위는 [기여 지침](CONTRIBUTING.md#로컬-화면-개발)을 따른다.

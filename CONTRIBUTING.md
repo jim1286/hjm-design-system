@@ -22,8 +22,10 @@ pnpm release:check
 
 2026-10-09 사용자 요청으로 일상 화면 확인은 source 연결을 사용한다.
 `pnpm showcase:web` / `pnpm showcase:native`는 build 없이 중앙 `src`를 읽고 저장을 감지한다.
-기존 dist를 갱신하거나 패키지 버전을 올릴 필요가 없다. `HJM_LOCAL_SOURCE=1`은 명령 프로세스에만
-설정하며 정식 build/check에는 넘기지 않는다. Web과 Native는 같은 공개 export를 src로 해석한다.
+기존 dist를 갱신하거나 패키지 버전을 올릴 필요가 없다. 2026-10-12 사용자 요청으로 소비 앱도
+개발 서버에서 로컬 소스를 기본 사용한다. 게시 버전 비교는 `HJM_LOCAL_SOURCE=0`으로 실행한다.
+production/CI·배포 번들은 기존 플래그와 무관하게 설치된 패키지를 사용한다.
+Web과 Native는 같은 공개 export를 src로 해석한다.
 Node peer와 React/native context는 소비 호스트의 설치본을 사용한다.
 `styles.layered.css`의 개발 entry는 원본 CSS를 layer로 import하고, 게시 entry는 기존 생성 절차로 평탄화한다.
 따라서 게시 CSS·exports와 개발 경로가 같은 규칙을 유지한다.

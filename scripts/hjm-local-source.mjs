@@ -8,12 +8,15 @@ const packageNames = ['design-contracts', 'react', 'react-native'];
 const nextOwnedPeers = new Set(['react', 'react-dom']);
 const inside = (root, file) => file === root || file.startsWith(root + path.sep);
 
-function localSource(projectRoot, env = process.env) {
+function usesLocalSource(env) {
+  // Development uses the shared checkout by default (2026-10-12 user decision).
+  // Release/CI always resolve installed packages, even with an inherited opt-in.
+  if (env.NODE_ENV === 'production' || (env.CI && env.CI !== 'false') || env.EAS_BUILD === 'true') return false;
   if (env.HJM_DESIGN_SYSTEM_LOCAL === '1') throw new Error('Use HJM_LOCAL_SOURCE=1 instead of legacy package links');
-  if (env.HJM_LOCAL_SOURCE !== '1') return null;
-  if (env.NODE_ENV === 'production' || (env.CI && env.CI !== 'false') || env.EAS_BUILD === 'true')
-    throw new Error('HJM local source is development-only; unset HJM_LOCAL_SOURCE for published-package verification');
-  projectRoot = fs.realpathSync(projectRoot);
+  return env.HJM_LOCAL_SOURCE !== '0';
+}
+
+function findSourceRoot(projectRoot, env) {
   let root = env.HJM_SOURCE_ROOT && path.resolve(projectRoot, env.HJM_SOURCE_ROOT);
   for (let directory = projectRoot; !root;) {
     if (fs.existsSync(path.join(directory, 'packages/design-contracts/package.json'))) root = directory;
@@ -23,8 +26,15 @@ function localSource(projectRoot, env = process.env) {
     if (parent === directory) break;
     directory = parent;
   }
-  if (!root) throw new Error('Cannot find local HJM checkout; set HJM_SOURCE_ROOT');
-  root = fs.realpathSync(root);
+  return root;
+}
+
+function localSource(projectRoot, env = process.env) {
+  if (!usesLocalSource(env)) return null;
+  projectRoot = fs.realpathSync(projectRoot);
+  const found = findSourceRoot(projectRoot, env);
+  if (!found) throw new Error('Cannot find local HJM checkout; set HJM_SOURCE_ROOT or use HJM_LOCAL_SOURCE=0 for published-package verification');
+  const root = fs.realpathSync(found);
   const aliases = {};
   const peers = new Set();
   for (const name of packageNames) {
@@ -52,16 +62,27 @@ function relativeSource(state, importer, request) {
 }
 
 function withMetro(config, projectRoot, env = process.env) {
-  const state = localSource(projectRoot, env);
-  if (!state) return config;
+  if (!usesLocalSource(env)) return config;
+  projectRoot = fs.realpathSync(projectRoot);
+  const found = findSourceRoot(projectRoot, env);
+  const root = found && fs.existsSync(found) ? fs.realpathSync(found) : null;
+  // Metro loads config before it knows dev/export mode. Defer source validation
+  // until a development request so release bundles work without this checkout.
+  let state;
   const previous = config.resolver?.resolveRequest;
+  const delegate = (context, request, platform) => previous ? previous(context, request, platform) : context.resolveRequest(context, request, platform);
   return { ...config,
-    watchFolders: [...new Set([...(config.watchFolders ?? []), state.root])],
+    watchFolders: [...new Set([...(config.watchFolders ?? []), ...(root ? [root] : [])])],
     resolver: { ...config.resolver, resolveRequest(context, request, platform) {
-      // expo export can run with a development NODE_ENV. The bundle request's
-      // dev flag is authoritative, so an inherited shell flag cannot leak source.
-      if (context.dev !== true && (request.startsWith('@hjmds/') || inside(path.join(state.root, 'packages'), context.originModulePath)))
-        throw new Error('HJM local source requires a development Metro bundle');
+      const fromSource = root && packageNames.some(name => inside(path.join(root, 'packages', name, 'src'), context.originModulePath));
+      // The request, not NODE_ENV, selects release resolution. Never allow a
+      // direct source import to create a mixed source/published release bundle.
+      if (context.dev !== true) {
+        if (fromSource) throw new Error('HJM local source requires a development Metro bundle');
+        return delegate(context, request, platform);
+      }
+      if (!request.startsWith('@hjmds/') && !fromSource) return delegate(context, request, platform);
+      state ??= localSource(projectRoot, env);
       const source = state.aliases[request] ?? relativeSource(state, context.originModulePath, request);
       if (source) return { type: 'sourceFile', filePath: source };
       if (request.startsWith('@hjmds/')) throw new Error(`HJM source export is not public: ${request}`);
@@ -69,7 +90,7 @@ function withMetro(config, projectRoot, env = process.env) {
       // fixture installation (React duplication and navigation-context failures).
       const peer = state.peers.some(name => request === name || request.startsWith(name + '/'));
       const next = peer ? { ...context, originModulePath: path.join(state.projectRoot, 'package.json') } : context;
-      return previous ? previous(next, request, platform) : context.resolveRequest(next, request, platform);
+      return delegate(next, request, platform);
     } },
   };
 }
@@ -79,9 +100,10 @@ function vitePlugin(projectRoot, env = process.env) {
   return {
     name: 'hjm-local-source', enforce: 'pre',
     config(_config, { command }) {
+      state = undefined;
+      if (command !== 'serve') return;
       state = localSource(projectRoot ?? _config.root ?? process.cwd(), env);
       if (!state) return;
-      if (command !== 'serve') throw new Error('Unset HJM_LOCAL_SOURCE before a Vite build');
       let workspaceRoot = state.projectRoot;
       for (let directory = workspaceRoot; path.dirname(directory) !== directory; directory = path.dirname(directory)) {
         if (fs.existsSync(path.join(directory, 'pnpm-workspace.yaml'))) { workspaceRoot = directory; break; }
@@ -116,9 +138,9 @@ function peerDirectory(projectRoot, name) {
 }
 
 function withNext(config, projectRoot, phase, env = process.env) {
+  if (phase !== 'phase-development-server') return config;
   const state = localSource(projectRoot, env);
   if (!state) return config;
-  if (phase !== 'phase-development-server') throw new Error('Unset HJM_LOCAL_SOURCE before a Next production build/start');
   // Next picks the bundler before loading this config and exports it as TURBOPACK
   // (`auto` for the default). Turbopack has no extensionAlias for HJM's `./x.js`
   // -> `x.ts` imports and resolves relative aliases from the app, so the source
