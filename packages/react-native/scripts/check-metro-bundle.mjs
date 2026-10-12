@@ -24,7 +24,7 @@ const packageJson = JSON.parse(
 
 // This is minified production JavaScript before Hermes bytecode compilation.
 // Budgets include React Native itself so the fixture catches resolver/runtime drift.
-// These reviewed 0.7 ceilings retain about 20% byte headroom.
+// Historical measurements are informational; size alone must not block a valid bundle.
 const budget = Object.freeze({
   rawBytes: 1_660_000,
   gzipBytes: 410_000,
@@ -136,12 +136,7 @@ try {
 
   const rawBytes = bundleStats.size;
   const gzipBytes = gzipSync(bundle, { level: 9 }).byteLength;
-  if (rawBytes > budget.rawBytes) {
-    fail(`raw pre-Hermes bundle ${formatBytes(rawBytes)} exceeds ${formatBytes(budget.rawBytes)}`);
-  }
-  if (gzipBytes > budget.gzipBytes) {
-    fail(`gzip pre-Hermes bundle ${formatBytes(gzipBytes)} exceeds ${formatBytes(budget.gzipBytes)}`);
-  }
+  // Oct 12 owner request: retain measurements, remove raw/gzip hard caps.
 
   const elapsedSeconds = (performance.now() - startedAt) / 1000;
   console.log(

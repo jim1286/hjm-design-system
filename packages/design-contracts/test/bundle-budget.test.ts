@@ -7,7 +7,7 @@ import { describe, expect, it } from "vitest";
 // @ts-expect-error -- private build script with focused runtime tests.
 import * as budgetChecker from "../scripts/check-bundle-budget.mjs";
 
-const { budgetExemptions, getBudgetCoverageFailures, getCheckedBudgets } = budgetChecker;
+const { getCheckedBudgets } = budgetChecker;
 
 const executable = (target: string) => ({
   "react-native": target,
@@ -26,48 +26,15 @@ describe("contract bundle-budget coverage", () => {
     const budgetPaths = checkedBudgets.map(({ exportPath }) => exportPath);
 
     expect(budgetPaths).toEqual(expect.arrayContaining(["./evidence", "./showcase"]));
-    expect(
-      getBudgetCoverageFailures(packageJson.exports, budgetPaths, budgetExemptions),
-    ).toEqual([]);
   });
 
-  it("requires every executable export to have exactly one reviewed disposition", () => {
-    const exports = {
-      ".": executable("./dist/index.js"),
-      "./evidence": executable("./dist/evidence.js"),
+  it("checks new exports without requiring a handwritten baseline", () => {
+    const checked = getCheckedBudgets({ exports: {
+      "./new-component": executable("./dist/new-component.js"),
       "./manifest.json": { default: "./docs/generated/showcase-manifest.json" },
-    };
-
-    expect(getBudgetCoverageFailures(exports, ["."], {})).toEqual([
-      "./evidence: missing explicit budget or justified exemption",
-    ]);
-    expect(
-      getBudgetCoverageFailures(exports, ["."], {
-        "./evidence": "Measured by an external runtime-specific budget.",
-      }),
-    ).toEqual([]);
-    expect(
-      getBudgetCoverageFailures(exports, [".", "./evidence"], {
-        "./evidence": "No longer exclusive.",
-      }),
-    ).toEqual(["./evidence: cannot have both a budget and an exemption"]);
-  });
-
-  it("rejects stale, duplicate, and unjustified declarations", () => {
-    const exports = { ".": executable("./dist/index.js") };
-
-    expect(
-      getBudgetCoverageFailures(exports, [".", ".", "./removed"], {
-        "./removed-exemption": "Stale declaration.",
-        ".": "   ",
-      }),
-    ).toEqual([
-      ".: duplicate budget declarations",
-      ".: cannot have both a budget and an exemption",
-      "./removed: budget has no executable package export",
-      "./removed-exemption: exemption has no executable package export",
-      ".: exemption must include a justification",
-    ]);
+    }});
+    expect(checked.map((entry: {exportPath: string}) => entry.exportPath)).toEqual(["./new-component"]);
+    expect(budgetChecker.checkBudget(checked[0], {modules: ["catalog.js"], rawBytes: 100, gzipBytes: 50})).toEqual(["metadata leak: catalog.js"]);
   });
 });
 

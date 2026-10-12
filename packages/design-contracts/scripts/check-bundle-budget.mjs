@@ -478,85 +478,16 @@ function getExecutableTarget(definition) {
   return undefined;
 }
 
-function hasOwn(record, key) {
-  return Object.prototype.hasOwnProperty.call(record, key);
-}
-
-/**
- * Makes budget coverage fail closed in both directions: every executable
- * package export is accounted for, and every declaration still points at an
- * executable export. An exemption must be exclusive and explain why it exists.
- */
-export function getBudgetCoverageFailures(packageExports, budgetPaths, exemptions) {
-  const failures = [];
-  const executableExports = new Set(
-    Object.entries(packageExports)
-      .filter(([, definition]) => getExecutableTarget(definition) !== undefined)
-      .map(([exportPath]) => exportPath),
-  );
-  const budgetCounts = new Map();
-  for (const exportPath of budgetPaths) {
-    budgetCounts.set(exportPath, (budgetCounts.get(exportPath) ?? 0) + 1);
-  }
-
-  for (const [exportPath, count] of budgetCounts) {
-    if (count > 1) failures.push(`${exportPath}: duplicate budget declarations`);
-  }
-
-  for (const exportPath of executableExports) {
-    const hasBudget = budgetCounts.has(exportPath);
-    const hasExemption = hasOwn(exemptions, exportPath);
-    if (!hasBudget && !hasExemption) {
-      failures.push(`${exportPath}: missing explicit budget or justified exemption`);
-    } else if (hasBudget && hasExemption) {
-      failures.push(`${exportPath}: cannot have both a budget and an exemption`);
-    }
-  }
-
-  for (const exportPath of budgetCounts.keys()) {
-    if (!executableExports.has(exportPath)) {
-      failures.push(`${exportPath}: budget has no executable package export`);
-    }
-  }
-
-  for (const [exportPath, reason] of Object.entries(exemptions)) {
-    if (!executableExports.has(exportPath)) {
-      failures.push(`${exportPath}: exemption has no executable package export`);
-    }
-    if (typeof reason !== "string" || reason.trim().length === 0) {
-      failures.push(`${exportPath}: exemption must include a justification`);
-    }
-  }
-
-  return failures;
-}
-
-/** Builds the reviewed explicit and component-family budgets for one manifest. */
+// Discover every live export automatically. Historical numeric baselines are optional;
+// actual files and forbidden metadata dependencies remain checked.
 export function getCheckedBudgets(packageJson) {
-  const explicitBudgetPaths = new Set(budgets.map(({ exportPath }) => exportPath));
-  const componentBudgets = Object.keys(packageJson.exports)
-    .filter(
-      (exportPath) =>
-        exportPath.startsWith("./components/") && !explicitBudgetPaths.has(exportPath),
-    )
-    .map((exportPath) => ({
-      exportPath,
-      // A component may compose foundations, semantic colors, and one or two
-      // focused helpers. It must never reach the full behavior/recipe barrels.
-      maxModules: 9,
-      maxRawBytes: 50_000,
-      maxGzipBytes: 12_000,
-      forbiddenModules: componentBoundaryModules,
-    }));
-  const largeGraphBudgetIndex = budgets.findIndex(
-    ({ exportPath }) => exportPath === "./recipes/all",
-  );
-  if (largeGraphBudgetIndex < 0) throw new Error("Missing ./recipes/all graph budget anchor");
-  return [
-    ...budgets.slice(0, largeGraphBudgetIndex),
-    ...componentBudgets,
-    ...budgets.slice(largeGraphBudgetIndex),
-  ];
+  const historical = new Map(budgets.map(budget => [budget.exportPath, budget]));
+  return Object.entries(packageJson.exports)
+    .filter(([path, definition]) => getExecutableTarget(definition) && !budgetExemptions[path])
+    .map(([exportPath]) => historical.get(exportPath) ?? {
+      exportPath, maxModules: 0, maxRawBytes: 0, maxGzipBytes: 0,
+      forbiddenModules: exportPath.startsWith("./components/") ? componentBoundaryModules : metadataModules,
+    });
 }
 
 function getModuleDependencies(source) {
@@ -624,8 +555,8 @@ async function assertExportTargetsExist(packageJson) {
 
 // Bytes are measured and reported, not enforced (2026-10-06 user decision: "상한 없애").
 // The 2026-10-02 alarm (+10% tolerance) still made comment-only growth fail CI and cap
-// debates. `maxRawBytes`/`maxGzipBytes` remain as reviewed baselines only. Module counts
-// and forbidden imports, which catch accidental dependency edges, still fail immediately.
+// debates. `maxRawBytes`/`maxGzipBytes` remain as reviewed baselines only. Module counts are
+// informational too; forbidden imports still fail immediately.
 export function classifyBytes(_measured, _baseline) {
   return "pass";
 }
@@ -651,17 +582,6 @@ async function main() {
   const availableModules = new Set(distFiles.filter((fileName) => fileName.endsWith(".js")));
   const failures = [];
   const checkedBudgets = getCheckedBudgets(packageJson);
-  const coverageFailures = getBudgetCoverageFailures(
-    packageJson.exports,
-    checkedBudgets.map(({ exportPath }) => exportPath),
-    budgetExemptions,
-  );
-  if (coverageFailures.length > 0) {
-    throw new Error(
-      `Bundle budget configuration is incomplete:\n- ${coverageFailures.join("\n- ")}`,
-    );
-  }
-
   console.log("Metro/Web import-graph budgets");
   for (const budget of checkedBudgets) {
     const target = getExportTarget(packageJson, budget.exportPath);

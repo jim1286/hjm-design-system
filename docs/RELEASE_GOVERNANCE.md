@@ -179,3 +179,5 @@ contracts-peer-train.mjs의 기존 계약을 따른다. 소비 제품은 같은 
 2026-10-12 사용자 요청: 수정 후 반복 실패와 게시 지연을 줄이기 위해 npm 게시에서 문서 형식·Storybook 분류·생성 증거 감사·Showcase 전체 검사를 제거한다. `release:check`는 게시 패키지의 build/typecheck/행동 테스트/bundle과 실제 artifact만 검사한다. 기존 전수 검사는 명시적 `ci:check`에서 실행할 수 있다. 릴리스 커밋의 파일 whitelist와 Changeset 삭제/추가 형태 제한도 폐지한다. 버전 일치와 artifact 존재 검사는 유지한다.
 
 2026-10-12 규약 축소: 모듈 수 상한도 바이트와 같이 관측값으로 전환한다. 실제 HJM 게시에서 gzip이 감소했는데 helper 파일 한 개 증가로 8개 진입점이 실패했다. 파일 수는 실행 오류 증거가 아니므로 차단하지 않으며 금지 import·선택 peer 유입·실제 bundling 실패는 계속 차단한다.
+
+Native 실제 Metro fixture의 남은 1,660,000/410,000 byte 상한도 제거했다. 모든 공개 경로에 수동 budget/면제 사유를 등록하던 의무도 폐지하고 manifest의 실제 export를 자동으로 순회한다. 새 경로도 파일 존재·금지 의존성 검사를 받는다.
