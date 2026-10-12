@@ -68,8 +68,7 @@ Web 최소 검사 성공을 Native·행동 회귀·npm 게시 성공으로 사�
 ## 시나리오 증거의 의미
 
 각 renderer의 `test/executed-scenarios.json`은 실행할 환경 목록과 `all-cases` 범위를 선언한다.
-실제 proof test가 이 목록을 import해 case/environment를 실행하고, package test 실패는
-상위 `ci:check`와 release job에 전파된다. `workspace:check`는 claim의 component/case/proof와
+실제 proof test가 이 목록을 import해 case/environment를 실행한다. package 행동 테스트 실패는 `release:check`에 전파하며, 문서/규약 감사는 명시적 `ci:check`에서 실행한다. `workspace:check`는 claim의 component/case/proof와
 registry의 scenario를 결합하고, `evidence:check`는 생성 projection의 drift를 차단한다.
 
 registry는 독립적인 테스트 성공 영수증이 아니다. 해당 source commit의 테스트 실행 결과와
@@ -145,7 +144,7 @@ minor bump가 범위를 벗어나고, changesets는 범위를 벗어나는 peer 
 
 1. 계약·renderer·환경 증거를 같은 변경에서 설계한다.
 2. 게시 소스 변경은 작업 단위(PR 또는 PR 없는 `main` push 묶음)를 마칠 때 Changeset으로 정리하고, `release:version` 전에 마지막 tag 이후 변경이 모두 담겼는지 확인한다. 소비 API·동작이 바뀌면 migration을 작성하며 내부 리팩터링에 형식적인 migration 문서를 요구하지 않는다.
-3. 공개 계약이 바뀌면 `pnpm sync`로 projection을 갱신한다. 개발 중에는 `pnpm dev:check --base origin/main`, 게시 전에는 `pnpm ci:check`를 실행한다(2026-10-09 반복 검증 비용 분리).
+3. 공개 계약이 바뀌면 `pnpm sync`로 projection을 갱신한다. 개발 중에는 `pnpm dev:check --base origin/main`, 게시 전에는 `pnpm release:check`를 실행한다(2026-10-09 반복 검증 비용 분리).
 4. 실제 소비 제품은 설치 train과 지원 범위를 기록하고 별도 제품 CI/기기 QA를 검증한다.
 5. package release가 승인된 작업일 때 release version/commit을 만들고 수동 workflow를 실행한다.
 

@@ -1,6 +1,6 @@
 # Contributing to HJM Design System
 
-검토일: 2026-10-09
+검토일: 2026-10-12
 
 HJM은 계약, Web renderer, React Native renderer, Showcase evidence를 같은 변경에서
 함께 관리합니다. 새 API는 한 플랫폼의 편의보다 공통 사용자 문제와 검증 가능한 의미를
@@ -13,8 +13,9 @@ Node.js 20 이상과 저장소에 선언된 pnpm 버전을 사용합니다.
 ```bash
 pnpm install
 pnpm dev:check --base origin/main
-# 릴리스 전 전체 검증
-pnpm ci:check
+# npm 게시 전 실제 패키지 검사
+pnpm release:check
+# 전체 문서·Showcase 회귀는 명시적으로 선택할 때만 pnpm ci:check
 ```
 
 ## 로컬 화면 개발
@@ -50,13 +51,13 @@ package build·후보 tarball·게시 검사는 별도로 유지한다. 여기�
 `pnpm dev:check`는 staged/unstaged/untracked 변경, `--base REF`는 해당 ref 이후 변경까지 봅니다.
 Web/Native 변경은 해당 renderer와 contracts·Showcase만 검사하고, contracts·공용 설정 변경은
 양쪽을 검사합니다. `--plan`으로 실행 목록을 보고 `--all`로 양쪽을 명시할 수 있습니다.
-문서만 바뀌어도 contracts의 build·typecheck·test를 실행합니다. contracts 테스트가 루트·패키지 README와
+`dev:check`는 넓은 개발 진단 명령이며 문서만 바뀌어도 contracts의 build·typecheck·test를 실행합니다. 일상 수정의 필수 명령이 아니므로 작은 변경에서는 관련 검사만 직접 실행합니다. contracts 테스트가 루트·패키지 README와
 패키지 문서 내용을 검증하기 때문입니다. Native 범위는 Metro bundle(`bundle:check:built`)을, Web 범위는
 renderer budget을 함께 확인하고, 모든 범위에서 `contracts:check`·`docs:check`·`usage:check`·`api-map:check`·
 `workspace:check`를 실행합니다. 이름 변경은 이전·새 경로를 모두 범위 판정에 넣습니다. 2026-10-09 리뷰에서
 문서만 바꾼 변경이 실행 항목 0개로 통과하고 optional native peer 서브패스 오류(tsc·test 통과, Metro 실패)를
 놓칠 수 있음을 확인해 넓혔습니다.
-릴리스의 `pnpm ci:check`는 전체 검증을 유지하되 세 패키지를 한 번 빌드하고
+선택적 전수 감사 `pnpm ci:check`는 전체 검증을 유지하되 세 패키지를 한 번 빌드하고
 `:built` 명령이 같은 산출물을 사용합니다. 이 명령들은 선행 build가 필요한 내부 단계이며
 단독 개발에는 기존 Showcase 명령을 사용합니다.
 
@@ -80,10 +81,8 @@ renderer budget을 함께 확인하고, 모든 범위에서 `contracts:check`·`
 ## Storybook 실험과 배포
 
 2026-10-02 사용자 요청에 따라 `배포`와 `실험` 모두 `토큰 → 컴포넌트 → 구성 → 화면`으로
-정리합니다. 신규 UI·표현·도구는 `실험/<단계>/...`에서 먼저 검토하고, 명시적 사용자 승인 후
-같은 단계의 `배포/<단계>/...`로 이동합니다. 이 이동은 **스토리북 배포**이며 npm 게시나
-소비 앱·운영 서비스 배포와 별개입니다. 구현이나 검사 통과는 사용자 승인을 대신하지 않습니다.
-승인 날짜·대상·경로와 양쪽 Storybook·메뉴·검사·문서를 함께 갱신합니다.
+정리합니다. 신규 UI·표현·도구는 `실험/<단계>/...`에서 검토하고, 승인된 작업 범위에서 같은 단계의 `배포/<단계>/...`로 이동합니다. 분류 변경만을 위한 재승인을 요구하지 않습니다. 이 이동은 **스토리북 배포**이며 npm 게시나
+소비 앱·운영 서비스 배포와 별개입니다. 분류 변경은 npm 게시의 승인이나 선행 gate가 아닙니다. 변경된 경로와 관련 사용 지침을 갱신합니다.
 기존 항목 수정은 현재 위치에서 진행합니다. 상세 기준은 [탐색 기준](docs/STORYBOOK_NAVIGATION.md)을 따릅니다.
 
 ## 상호작용 품질
