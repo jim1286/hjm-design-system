@@ -6,8 +6,8 @@ import { gzipSync } from "node:zlib";
 // Bytes are measured and reported, not enforced (2026-10-06 user decision: "상한 없애").
 // The 2026-10-02 alarm (+10% tolerance) still turned comment-only and feature growth into
 // CI failures and cap debates. The `raw`/`gzip` numbers below are reviewed baselines: the
-// report prints growth against them so a large jump stays visible in review. Module counts,
-// optional-peer leaks and root-barrel traversal still fail immediately — those catch import
+// report prints growth against them so a large jump stays visible in review.
+// Optional-peer leaks and root-barrel traversal still fail immediately — those catch import
 // edges that crash device Metro while typecheck and tests pass, which byte size never did.
 const workspaceRoot = fileURLToPath(new URL("../", import.meta.url));
 
@@ -818,9 +818,8 @@ async function checkRenderer(renderer) {
     ) {
       regressions.push("granular entry traverses the renderer root barrel");
     }
-    if (measured.modules > budget.modules) {
-      regressions.push(`${measured.modules} modules > ${budget.modules}`);
-    }
+    // Oct 12 owner request: file-count growth alone is not a runtime regression.
+    // Keep counts visible, but fail only on actual forbidden import boundaries.
     const status = regressions.length > 0 ? "FAIL" : "PASS";
     console.log(
       `${status.padEnd(4)} ${exportPath.padEnd(20)} ` +

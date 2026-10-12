@@ -131,7 +131,7 @@ minor bump가 범위를 벗어나고, changesets는 범위를 벗어나는 peer 
 기능 추가·근거 주석만으로 경보 한계를 넘어 CI가 실패했고(같은 날 Native `./overlays` 등), 상한을 올릴지
 말지가 변경마다 다시 결정 사항이 됐다.
 
-- **차단 유지**: 모듈 수 초과, 금지 모듈(catalog 등 metadata) 유입, 기본 진입점의 선택 peer import,
+- **차단 유지**: 금지 모듈(catalog 등 metadata) 유입, 기본 진입점의 선택 peer import,
   세부 진입점의 루트 barrel 경유. 앱에 없는 native peer가 딸려 오면 타입 검사·테스트는 통과하고 기기
   Metro에서만 죽는 사고가 있었다. 바이트와 달리 이 사고를 막으므로 즉시 실패한다.
 - **바이트는 측정·보고만**: `check-bundle-budget.mjs`(contracts)와 `check-renderer-budgets.mjs`(루트)는
@@ -177,3 +177,5 @@ contracts-peer-train.mjs의 기존 계약을 따른다. 소비 제품은 같은 
 ## 릴리스 차단 조건 최소화
 
 2026-10-12 사용자 요청: 수정 후 반복 실패와 게시 지연을 줄이기 위해 npm 게시에서 문서 형식·Storybook 분류·생성 증거 감사·Showcase 전체 검사를 제거한다. `release:check`는 게시 패키지의 build/typecheck/행동 테스트/bundle과 실제 artifact만 검사한다. 기존 전수 검사는 명시적 `ci:check`에서 실행할 수 있다. 릴리스 커밋의 파일 whitelist와 Changeset 삭제/추가 형태 제한도 폐지한다. 버전 일치와 artifact 존재 검사는 유지한다.
+
+2026-10-12 규약 축소: 모듈 수 상한도 바이트와 같이 관측값으로 전환한다. 실제 HJM 게시에서 gzip이 감소했는데 helper 파일 한 개 증가로 8개 진입점이 실패했다. 파일 수는 실행 오류 증거가 아니므로 차단하지 않으며 금지 import·선택 peer 유입·실제 bundling 실패는 계속 차단한다.

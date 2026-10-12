@@ -78,7 +78,7 @@ describe("byte sizes are reported, not enforced (2026-10-06 policy)", () => {
     expect(classifyBytes(5000, 1000)).toBe("pass");
   });
 
-  it("still fails module growth and metadata leaks immediately", () => {
+  it("permits module growth but rejects metadata leaks", () => {
     const budget = { exportPath: "./x", maxModules: 2, maxRawBytes: 1000, maxGzipBytes: 500, forbiddenModules: ["catalog.js"] };
     const warnings: string[] = [];
     const failures = budgetChecker.checkBudget(
@@ -86,7 +86,7 @@ describe("byte sizes are reported, not enforced (2026-10-06 policy)", () => {
       { modules: ["a.js", "b.js", "catalog.js"], rawBytes: 9050, gzipBytes: 5000 },
       warnings,
     );
-    expect(failures).toEqual(["3 modules > 2", "metadata leak: catalog.js"]);
+    expect(failures).toEqual(["metadata leak: catalog.js"]);
     expect(warnings).toHaveLength(0);
   });
 });

@@ -32,7 +32,7 @@ VPS에 전달한다. 특정 Codex/Sites 계정은 요건이 아니다. 기존 Gi
   `pnpm api-map:check`를 실행한다. canonical catalog 확장과 companion/alternative/optional
   API 추가를 구분한다. 생성물을 직접 수정하지 않는다.
 - 공통 구현을 바꾸면 이를 소비하는 컴포넌트의 행동 회귀와 해당 renderer의 경계를 검증한다.
-  bundle budget의 모듈 수·금지 모듈 검사는 즉시 실패한다. 바이트 상한은 없앴고 크기는 기준값 대비 증감으로
+  bundle의 금지 모듈 유입은 실패한다. 모듈 수·바이트 상한은 없앴고 수와 크기는 기준값 대비 증감으로
   보고만 한다([번들 크기 상한](docs/RELEASE_GOVERNANCE.md#번들-크기-상한), 2026-10-06 사용자 결정).
 
 ## 문서와 완료 보고

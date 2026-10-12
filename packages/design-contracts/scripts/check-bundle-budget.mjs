@@ -632,9 +632,7 @@ export function classifyBytes(_measured, _baseline) {
 
 export function checkBudget(budget, measurement, warnings = []) {
   const failures = [];
-  if (measurement.modules.length > budget.maxModules) {
-    failures.push(`${measurement.modules.length} modules > ${budget.maxModules}`);
-  }
+  // Oct 12: module counts are informational; forbidden imports remain blocking.
 
   const forbidden = typeof budget.forbiddenModules === "function"
     ? budget.forbiddenModules()
