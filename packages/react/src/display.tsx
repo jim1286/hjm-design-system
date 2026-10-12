@@ -24,6 +24,7 @@ import {
 import {
   createElement,
   forwardRef,
+  type CSSProperties,
   type HTMLAttributes,
   type MouseEventHandler,
   type ReactNode,
@@ -119,6 +120,9 @@ export type CardProps = Omit<HTMLAttributes<HTMLElement>, "title"> &
     actions?: ReactNode;
     headingLevel?: CardHeadingLevel;
     selected?: boolean;
+    /** Whole-card activation. Do not combine with interactive children or actions. */
+    onActivate?: () => void;
+    disabled?: boolean;
     tone?: SurfaceTone;
     bordered?: boolean;
     padding?: SurfacePadding;
@@ -136,6 +140,8 @@ export const Card = forwardRef<HTMLElement, CardProps>(function Card(
     actions,
     headingLevel = cardRecipe.defaults.headingLevel,
     selected = cardRecipe.defaults.selected,
+    onActivate,
+    disabled = false,
     tone = cardRecipe.defaults.tone,
     bordered = cardRecipe.defaults.bordered,
     padding = cardRecipe.defaults.padding,
@@ -146,6 +152,9 @@ export const Card = forwardRef<HTMLElement, CardProps>(function Card(
   },
   ref,
 ) {
+  if (onActivate && (!props["aria-label"]?.trim() || actions !== undefined)) {
+    throw new TypeError("Interactive Card requires aria-label and no actions");
+  }
   const hasHeader =
     leading !== undefined || title !== undefined || description !== undefined;
 
@@ -153,12 +162,18 @@ export const Card = forwardRef<HTMLElement, CardProps>(function Card(
     <Surface
       {...props}
       ref={ref}
-      as="article"
+      as={onActivate ? "button" : "article"}
+      {...(onActivate ? {
+        type: "button" as const, disabled, "aria-pressed": selected,
+        "data-interactive": true, onClick: () => { if (!disabled) onActivate(); },
+      } : {})}
       tone={selected ? cardRecipe.selectedTone : tone}
       bordered={bordered}
       {...(radius === undefined ? {} : { radius })}
       className={classNames("hjm-card", className)}
-      data-state={selected ? "selected" : "idle"}
+      data-state={onActivate && disabled ? "disabled" : selected ? "selected" : "idle"}
+      style={{ "--hjm-card-disabled-opacity": cardRecipe.interaction.disabledOpacity,
+        "--hjm-card-pressed-opacity": cardRecipe.interaction.pressedOpacity, ...props.style } as CSSProperties}
     >
       {media ? <div className="hjm-card__media" data-slot="media">{media}</div> : null}
       <div

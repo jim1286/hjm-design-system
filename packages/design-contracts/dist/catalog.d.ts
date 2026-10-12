@@ -3005,6 +3005,10 @@ export declare const recipeRegistry: {
             readonly padding: "md";
         };
         readonly selectedTone: "accent";
+        readonly interaction: {
+            readonly disabledOpacity: 0.5;
+            readonly pressedOpacity: 0.86;
+        };
         readonly body: {
             readonly padding: 16;
             readonly gap: 8;
@@ -3072,7 +3076,7 @@ export declare const recipeRegistry: {
             readonly selected: {
                 readonly background: "bg";
                 readonly content: "contentBrand";
-                readonly border: "contentBrand";
+                readonly border: null;
             };
         };
         readonly sizes: {
@@ -4340,11 +4344,7 @@ export declare const recipeRegistry: {
                     key: "contentBrand";
                     alpha?: number;
                 }>;
-                readonly border: Readonly<{
-                    source: "theme";
-                    key: "contentBrand";
-                    alpha?: number;
-                }>;
+                readonly border: null;
             };
             readonly pressedOpacity: 0.86;
             readonly disabledOpacity: 0.5;
@@ -7773,7 +7773,7 @@ export declare const recipeRegistry: {
         };
     };
     readonly toastRecipe: {
-        readonly slots: readonly ["viewport", "root", "toneMark", "icon", "content", "title", "description", "action", "close"];
+        readonly slots: readonly ["viewport", "root", "toneMark", "icon", "media", "content", "title", "description", "progress", "action", "close"];
         readonly defaults: {
             readonly tone: "neutral";
             readonly placement: "bottom";
@@ -7926,7 +7926,7 @@ export declare const recipeRegistry: {
                 alpha?: number;
             }>;
             readonly borderWidth: 1;
-            readonly radius: "lg";
+            readonly radius: "xl";
             readonly shadow: {
                 readonly color: "#000000";
                 readonly opacity: 0.12;
@@ -7946,6 +7946,9 @@ export declare const recipeRegistry: {
             readonly glyph: "sm";
             readonly badgeDiameter: 32;
             readonly badgeRadius: "full";
+        };
+        readonly media: {
+            readonly size: 44;
         };
         readonly content: {
             readonly gap: 4;
@@ -7967,6 +7970,32 @@ export declare const recipeRegistry: {
             }>;
             readonly textVariant: "body";
         };
+        readonly progress: {
+            readonly gap: 12;
+            readonly dotSize: 6;
+            readonly currentScale: 1.4;
+            readonly doneColor: Readonly<{
+                source: "theme";
+                key: "contentBrand";
+                alpha?: number;
+            }>;
+            readonly upcomingColor: Readonly<{
+                source: "theme";
+                key: "border";
+                alpha?: number;
+            }>;
+            readonly labelColor: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+            readonly currentLabelColor: Readonly<{
+                source: "theme";
+                key: "text";
+                alpha?: number;
+            }>;
+            readonly textVariant: "caption";
+        };
         readonly action: {
             readonly color: Readonly<{
                 source: "theme";
@@ -7979,7 +8008,7 @@ export declare const recipeRegistry: {
                 alpha?: number;
             }>;
             readonly radius: "full";
-            readonly align: "end";
+            readonly align: "start";
             readonly textVariant: "body";
             readonly fontWeight: "700";
             readonly minHeight: 44;

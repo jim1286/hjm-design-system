@@ -13,6 +13,10 @@ export declare const cardRecipe: {
         readonly padding: "md";
     };
     readonly selectedTone: "accent";
+    readonly interaction: {
+        readonly disabledOpacity: 0.5;
+        readonly pressedOpacity: 0.86;
+    };
     readonly body: {
         readonly padding: 16;
         readonly gap: 8;

@@ -35,9 +35,22 @@ export type ToastActionDescriptor = Readonly<{
 }>;
 
 /**
+ * Ordered steps of a background task shown inside the toast panel (1.20 panel toast).
+ * `current` is the zero-based index of the running step; earlier steps read as done.
+ */
+export type ToastProgressDescriptor = Readonly<{
+  steps: readonly string[];
+  current: number;
+}>;
+
+/**
  * Renderer-neutral copy and behavior for one notification. Copy stays plain
  * text so Web and Native can announce the exact same message without accepting
- * renderer nodes in the core package.
+ * renderer nodes in the core package. `media` is the one exception: a decorative
+ * leading visual (product mascot, avatar, icon) that the core never inspects and
+ * only passes through to the renderer, which hides it from assistive technology.
+ * 2026-10-10 BurnTok asked for its review mascot inside the toast; a renderer-only
+ * field was rejected because the store resolves descriptors and would drop it.
  */
 export type ToastDescriptor = Readonly<{
   /** Stable product-owned identity used for in-place de-duplication. */
@@ -54,6 +67,10 @@ export type ToastDescriptor = Readonly<{
   /** `null` persists; short durations clamp to the configured floor. */
   durationMs?: number | null;
   action?: ToastActionDescriptor;
+  /** Decorative leading visual that replaces the tone badge (ReactNode on Web/Native). */
+  media?: unknown;
+  /** Step progress of a running task, announced with the current step label. */
+  progress?: ToastProgressDescriptor;
   /** Required localized name for the icon-only close affordance. */
   closeLabel: string;
   onDismiss?: (reason: ToastDismissReason) => void;
@@ -76,6 +93,8 @@ export type ResolvedToastDescriptor = Readonly<{
   announcement: string;
   durationMs: number | null;
   action: ResolvedToastActionDescriptor | null;
+  media: unknown;
+  progress: ToastProgressDescriptor | null;
   closeLabel: string;
   onDismiss: ((reason: ToastDismissReason) => void) | null;
 }>;
@@ -152,6 +171,17 @@ export function validateToastDescriptor(descriptor: ToastDescriptor): void {
       throw new RangeError("Toast durationMs must be a positive finite number or null");
     }
   }
+  if (descriptor.progress !== undefined) {
+    const { steps, current } = descriptor.progress;
+    // Two to five steps keep the dot row on one line at the 320pt compact width.
+    if (!Array.isArray(steps) || steps.length < 2 || steps.length > 5) {
+      throw new RangeError("Toast progress needs 2 to 5 steps");
+    }
+    steps.forEach((step, index) => assertCopy(step, `progress.steps[${index}]`));
+    if (!Number.isInteger(current) || current < 0 || current >= steps.length) {
+      throw new RangeError("Toast progress current must index an existing step");
+    }
+  }
   if (descriptor.action) {
     assertCopy(descriptor.action.label, "action.label");
     if (descriptor.action.accessibilityLabel !== undefined) {
@@ -175,9 +205,11 @@ export function resolveToastDescriptor(
 ): ResolvedToastDescriptor {
   validateToastDescriptor(descriptor);
   const title = descriptor.title ?? null;
+  const base = title === null ? descriptor.description : `${title}. ${descriptor.description}`;
+  // The visible step dots are decorative; the running step label is part of the spoken message.
   const announcement =
     descriptor.announcement ??
-    (title === null ? descriptor.description : `${title}. ${descriptor.description}`);
+    (descriptor.progress ? `${base}. ${descriptor.progress.steps[descriptor.progress.current]}` : base);
   const action = descriptor.action
     ? {
         label: descriptor.action.label,
@@ -199,6 +231,8 @@ export function resolveToastDescriptor(
     announcement,
     durationMs: resolveToastDuration(descriptor),
     action,
+    media: descriptor.media ?? null,
+    progress: descriptor.progress ?? null,
     closeLabel: descriptor.closeLabel,
     onDismiss: descriptor.onDismiss ?? null,
   };

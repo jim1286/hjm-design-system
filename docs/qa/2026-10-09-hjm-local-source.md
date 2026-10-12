@@ -47,3 +47,13 @@ HJM을 수정할 때 dist 재생성이 필요했던 경로에 명시적 로컬 �
 ### 후속 수정 — Next 개발 root 우선순위 (2026-10-10 KST)
 
 번뚝 실행에서 기존 outputFileTracingRoot가 개발용 turbopack.root보다 우선되어 소스 alias 기준이 달라질 수 있음을 확인했다. 로컬 소스 모드에서만 두 root를 HJM과 앱의 공통 상위 경로로 맞췄다. 플래그 없는 설정은 기존 객체를 그대로 반환한다. 실제 Next dev fixture에 앱 내부 tracing root를 설정하여 재현 조건을 추가했고, HTTP 200 및 root 충돌 경고 없음으로 재검증했다. 테스트 4개도 통과했다. 첫 재검증은 응답 본문까지 적용되는 5초 제한으로 실패하여 cold compile을 고려한 30초 제한으로 수정 후 통과했다. 기존 제품 서버는 종료·재시작하지 않았고 임시 검증 서버만 정리했다.
+
+### 후속 수정 — Next Turbopack 조용한 폴백·React 중복 (2026-10-10 KST)
+
+수행자: Claude. 위 두 Next 검증은 틀렸다. 번뚝 웹에서 HJM 소스에만 있는 `ActivityChip`이 "export doesn't exist"로 실패했다. 확인해 보니 Turbopack은 상대 alias를 앱 디렉터리 기준으로 풀어 alias가 조용히 빠졌고, 게시된 `@hjmds/react` 1.16.1 dist가 렌더됐다. 기준을 고쳐도 Turbopack에는 `extensionAlias`가 없어 HJM 소스의 `./actions.js` → `.ts` import를 풀지 못했다. smoke의 HTTP 200은 게시 dist로도 나오는 신호였다.
+
+- Turbopack: 로컬 소스 모드에서는 Next가 config보다 먼저 정하는 `TURBOPACK` 값(`auto`/`1`)을 보고 `next dev --webpack` 안내와 함께 거부한다. 쓰이지 않던 turbopack alias·root 정렬 코드는 지웠다.
+- webpack: peer alias의 접두 `react`가 Next 계층별 `react$` vendored alias보다 앞서 React가 둘이 됐다(`/login`·`/create` 500, useContext null). `react`·`react-dom`은 Next에 맡기고 alias에서 뺐다.
+- 결과: `node --test tests/hjm-local-source.test.mjs` 4/4 통과(TURBOPACK 거부·React alias 미설정 단언 추가). `node tests/hjm-local-next-smoke.mjs` 통과. Turbopack 거부를 확인하고, webpack에서는 HTTP 200에 더해 page chunk가 `hjm-design-system/packages/react/src/`에서 컴파일됐고 `@hjmds/react/dist`가 없음을 단언한다. 번뚝 웹 `HJM_LOCAL_SOURCE=1 pnpm dev --webpack`은 `/create` 200이고 chunk에 HJM src `activity-chip`이 있다.
+- 실행 명령: Next 앱(번뚝·다에리 웹)은 `--webpack`을 붙인다(STANDARD_OPERATIONS 표). 사본 갱신은 `node scripts/sync-hjm-local-source.mjs --write`(8개 저장소 동일 diff).
+- 미확인: 다에리 웹 실행. Metro·Vite 경로는 바꾸지 않았다.

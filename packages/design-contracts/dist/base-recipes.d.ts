@@ -63,7 +63,7 @@ export declare const buttonRecipe: {
         readonly selected: {
             readonly background: "bg";
             readonly content: "contentBrand";
-            readonly border: "contentBrand";
+            readonly border: null;
         };
     };
     readonly sizes: {

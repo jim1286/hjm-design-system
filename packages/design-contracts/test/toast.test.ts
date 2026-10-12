@@ -136,6 +136,51 @@ describe("Toast descriptor and announcement contract", () => {
   });
 });
 
+describe("Toast panel media and progress (1.20 panel toast)", () => {
+  it("passes decorative media through untouched and defaults it to null", () => {
+    const media = { kind: "renderer-node" };
+    expect(resolveToastDescriptor(makeToast("media", { media })).media).toBe(media);
+    expect(resolveToastDescriptor(makeToast("plain")).media).toBeNull();
+  });
+
+  it("validates 2 to 5 non-empty steps and an existing current index", () => {
+    const invalid = [
+      { steps: ["only"], current: 0 },
+      { steps: ["a", "b", "c", "d", "e", "f"], current: 0 },
+      { steps: ["a", " "], current: 0 },
+      { steps: ["a", "b"], current: 2 },
+      { steps: ["a", "b"], current: -1 },
+      { steps: ["a", "b"], current: 0.5 },
+      { steps: "ab" as never, current: 0 },
+    ];
+    for (const progress of invalid) {
+      expect(() => validateToastDescriptor(makeToast("progress", { progress }))).toThrow();
+    }
+    const progress = { steps: ["읽기", "다듬기", "확인"], current: 1 };
+    expect(resolveToastDescriptor(makeToast("valid", { progress })).progress).toEqual(progress);
+    expect(resolveToastDescriptor(makeToast("none")).progress).toBeNull();
+  });
+
+  it("appends the running step label to the generated announcement only", () => {
+    const progress = { steps: ["읽기", "다듬기", "확인"], current: 1 };
+    expect(
+      resolveToastDescriptor(makeToast("running", { title: "똑쟁이", description: "앱을 다듬는 중이에요", progress }))
+        .announcement,
+    ).toBe("똑쟁이. 앱을 다듬는 중이에요. 다듬기");
+    expect(
+      resolveToastDescriptor(makeToast("explicit", { announcement: "직접 쓴 안내", progress })).announcement,
+    ).toBe("직접 쓴 안내");
+  });
+
+  it("draws every toast as the xl panel with a start-aligned action under the copy", () => {
+    expect(toastRecipe.surface.radius).toBe("xl");
+    expect(toastRecipe.action.align).toBe("start");
+    expect(toastRecipe.slots).toEqual(expect.arrayContaining(["media", "progress"]));
+    expect(toastRecipe.media.size).toBeGreaterThan(toastRecipe.icon.badgeDiameter);
+    expect(toastRecipe.progress.currentScale).toBeGreaterThan(1);
+  });
+});
+
 describe("Toast session lifecycle", () => {
   it("keeps subscription snapshots referentially stable until state changes", () => {
     const session = createToastSession(makeToast("session-snapshot"));
@@ -560,6 +605,8 @@ describe("Toast visual and behavior identity", () => {
         toastRecipe.description.color,
         toastRecipe.action.color,
         toastRecipe.close.color,
+        toastRecipe.progress.labelColor,
+        toastRecipe.progress.currentLabelColor,
       ]) {
         expect(contrast(resolveColorReference(reference, palette), background)).toBeGreaterThanOrEqual(4.5);
       }

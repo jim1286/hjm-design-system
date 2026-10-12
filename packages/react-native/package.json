@@ -519,6 +519,12 @@
       "react-native": "./dist/collection-rail.js",
       "import": "./dist/collection-rail.js",
       "default": "./dist/collection-rail.js"
+    },
+    "./activity-chip": {
+      "types": "./dist/activity-chip.d.ts",
+      "react-native": "./dist/activity-chip.js",
+      "import": "./dist/activity-chip.js",
+      "default": "./dist/activity-chip.js"
     }
   },
   "files": [

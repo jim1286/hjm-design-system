@@ -51,7 +51,7 @@ export const IconButton = forwardRef(function IconButton({ label, children, tone
                 backgroundColor: presentation.background ?? "transparent",
                 borderColor: presentation.border ?? "transparent",
                 borderRadius: theme.tokens.radius[iconButtonRecipe.shapes[shape]],
-                borderWidth: 1,
+                borderWidth: selected === true ? 0 : 1,
                 height: visibleDiameter,
                 justifyContent: "center",
                 minHeight: visibleDiameter,

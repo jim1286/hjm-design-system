@@ -92,6 +92,42 @@ describe("Native navigation product adapters", () => {
     }
   });
 
+  it("drops visible BottomNavigation labels but keeps item names when labels are hidden", () => {
+    const descriptor = {
+      accessibilityLabel: "primary",
+      items: [
+        { id: "home", label: "Home", icon: { name: "home" } },
+        { id: "profile", label: "Profile", icon: { name: "user" } },
+      ],
+      selectedKey: "home",
+    } as const;
+    const textChildren = (node: unknown): string[] => {
+      if (typeof node === "string") return [node];
+      if (Array.isArray(node)) return node.flatMap(textChildren);
+      if (node && typeof node === "object" && "children" in node) {
+        return textChildren((node as { children: unknown }).children);
+      }
+      return [];
+    };
+    const visible = render(
+      <BottomNavigation descriptor={descriptor} onActivate={() => {}} renderIcon={() => <View />} />,
+    );
+    expect(textChildren(visible.toJSON())).toEqual(expect.arrayContaining(["Home", "Profile"]));
+
+    const hidden = render(
+      <BottomNavigation
+        configuration={{ labels: "hidden" }}
+        descriptor={descriptor}
+        getItemTestID={(item) => `hidden-${item.id}`}
+        onActivate={() => {}}
+        renderIcon={() => <View />}
+      />,
+    );
+    expect(textChildren(hidden.toJSON())).toEqual([]);
+    expect(hidden.root.findByProps({ testID: "hidden-home" }).props.accessibilityLabel).toBe("Home");
+    expect(hidden.root.findByProps({ testID: "hidden-profile" }).props.accessibilityLabel).toBe("Profile");
+  });
+
   it("binds BottomNavigation slots, appearance, intents, safe area, and keyboard behavior", () => {
     const onActivate = vi.fn();
     const onLongActivate = vi.fn();

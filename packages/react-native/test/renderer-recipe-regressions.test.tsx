@@ -567,7 +567,8 @@ describe("Recipe axes that replace product style overrides", () => {
     expect(flattenStyle((node.props.style as (s: { pressed: boolean }) => unknown)({ pressed: false })))
       .toMatchObject({
         backgroundColor: lightValue.palette.theme.bg,
-        borderColor: lightValue.palette.theme.contentBrand,
+        borderColor: "transparent",
+        borderWidth: 0,
       });
     expect(node.props.accessibilityState.selected).toBe(true);
 
@@ -596,7 +597,8 @@ describe("Recipe axes that replace product style overrides", () => {
     const node = byLabel(renderer, "Sound");
     expect(pressableStyleOf(node)).toMatchObject({
       backgroundColor: lightValue.palette.theme.bg,
-      borderColor: lightValue.palette.theme.contentBrand,
+      borderColor: "transparent",
+        borderWidth: 0,
     });
     expect(node.props.accessibilityState.selected).toBe(true);
   });

@@ -170,6 +170,8 @@ describe("package boundaries", () => {
       "./design-profile-layout",
       // CollectionRail is an opt-in companion; retain exact export/Metro checks instead of loosening this allowlist.
       "./collection-rail",
+      // ActivityChip opens the panel toast (activity-status); opt-in like CollectionRail, no catalog row.
+      "./activity-chip",
     ] as const;
 
     expect(Object.keys(packageJson.exports)).toEqual(expectedExports);

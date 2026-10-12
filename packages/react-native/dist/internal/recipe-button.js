@@ -50,7 +50,7 @@ export const RecipeButton = forwardRef(function RecipeButton({ children, tone = 
             {
                 alignItems: "center",
                 backgroundColor: resolveColor(selectedContract?.background ?? toneContract.background),
-                borderColor: resolveColor(selectedContract?.border ?? toneContract.border),
+                borderColor: resolveColor((selectedContract ?? toneContract).border),
                 borderRadius: tokens.radius[buttonRecipe.shapes[shape]],
                 borderWidth: (selectedContract ?? toneContract).border ? 1 : 0,
                 direction: environment.direction,

@@ -71,7 +71,7 @@ function BottomNavigationInner({ descriptor, configuration = {}, getHref, render
     const iconSize = iconRecipe.sizes[density.icon];
     if (hidden)
         return null;
-    return (_jsx("nav", { ...props, ref: ref, "aria-label": resolved.accessibilityLabel, className: classNames("hjm-bottom-navigation", className), "data-expanded-labels": (theme?.environment.textScale ?? 1) >= 1.5 || resolved.items.length > 4 ? "true" : "false", "data-density": presentation.density, "data-distribution": presentation.distribution, "data-keyboard-behavior": presentation.keyboardBehavior, "data-presentation": presentation.presentation, dir: presentation.direction, style: {
+    return (_jsx("nav", { ...props, ref: ref, "aria-label": resolved.accessibilityLabel, className: classNames("hjm-bottom-navigation", className), "data-expanded-labels": (theme?.environment.textScale ?? 1) >= 1.5 || resolved.items.length > 4 ? "true" : "false", "data-density": presentation.density, "data-distribution": presentation.distribution, "data-keyboard-behavior": presentation.keyboardBehavior, "data-labels": presentation.labels, "data-presentation": presentation.presentation, dir: presentation.direction, style: {
             "--hjm-bottom-navigation-center-gap": `${centerGap}px`,
             "--hjm-bottom-navigation-columns": resolved.items.length,
             "--hjm-bottom-navigation-half-columns": resolved.items.length / 2,
@@ -100,7 +100,7 @@ function BottomNavigationInner({ descriptor, configuration = {}, getHref, render
                                             scale: selected
                                                 ? bottomNavigationRecipe.icon.selectedEmphasis.scale.selected
                                                 : bottomNavigationRecipe.icon.selectedEmphasis.scale.idle,
-                                        }), item.badge ? (_jsx("span", { "aria-hidden": "true", className: "hjm-bottom-navigation__badge", children: item.badge.visibleLabel })) : null] }), _jsx("span", { className: "hjm-bottom-navigation__label", children: item.label })] }));
+                                        }), item.badge ? (_jsx("span", { "aria-hidden": "true", className: "hjm-bottom-navigation__badge", children: item.badge.visibleLabel })) : null] }), presentation.labels === "visible" ? (_jsx("span", { className: "hjm-bottom-navigation__label", children: item.label })) : null] }));
                         const itemStyle = {
                             gridColumn: getBottomNavigationGridColumn(index, resolved.items.length, presentation.distribution),
                         };

@@ -262,8 +262,9 @@
    of alignment with the text around it. */
 .hjm-button[data-tone="link"] { color: var(--hjm-color-content-brand); background: transparent; padding-inline: 0; }
 /* Toggle treatment: aria-pressed already carried the state, so without a paired
-   visual every consumer painted the selected background in product styles. */
-.hjm-button[data-selected="true"], .hjm-icon-button[data-selected="true"] { color: var(--hjm-color-content-brand); background: var(--hjm-color-bg); border-color: var(--hjm-color-content-brand); }
+   visual every consumer painted the selected background in product styles.
+   Selection uses content color without an added border (2026-10-10 user request); focus stays separate. */
+.hjm-button[data-selected="true"], .hjm-icon-button[data-selected="true"] { color: var(--hjm-color-content-brand); background: var(--hjm-color-bg); border-color: transparent; }
 .hjm-button:active:not(:disabled):not([aria-disabled="true"]), .hjm-icon-button:active:not(:disabled):not([aria-disabled="true"]) { opacity: var(--hjm-button-pressed-opacity); }
 .hjm-button:disabled, .hjm-icon-button:disabled { cursor: not-allowed; opacity: var(--hjm-button-disabled-opacity); }
 /* 라벨은 자르지 않고 두 줄까지 접는다(buttonRecipe.label). 잘린 행동 라벨은 무엇을 하는
@@ -310,6 +311,7 @@
 .hjm-segmented__item:has(input:focus-visible),
 .hjm-tabs__tab:focus-visible,
 .hjm-list-row:focus-visible,
+.hjm-card[data-interactive="true"]:focus-visible,
 .hjm-virtual-list:focus-visible,
 .hjm-virtual-list__row:focus-visible {
   outline: var(--hjm-focus-width) solid var(--hjm-color-focus);
@@ -570,6 +572,8 @@
 }
 .hjm-bottom-navigation__indicator > :first-child { transition: transform 160ms ease; }
 .hjm-bottom-navigation__indicator[data-state="selected"] > :first-child { transform: scale(1.06); }
+/* Icon-only items center the indicator in the density's minimum height instead of leaving an empty label row. */
+.hjm-bottom-navigation[data-labels="hidden"] .hjm-bottom-navigation__item { justify-content: center; }
 .hjm-bottom-navigation__label { font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); font-weight: var(--hjm-font-weight-semibold); }
 .hjm-bottom-navigation__item[data-state="selected"] .hjm-bottom-navigation__label { font-weight: var(--hjm-font-weight-bold); }
 .hjm-bottom-navigation__badge {
@@ -959,6 +963,18 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 
 /* chipRecipe.sizes (2026-10-06 follow-up): medium 44 · padding md 16 · gap xs 8, small 36 · padding sm 12 · gap xxs 4 with a
    4px vertical hit slop. Web had drawn padding 12/8 and gap 8 for both sizes. */
+/* ActivityChip (2026-10-10): one 44px status pill in a header slot. Colours are the theme roles that
+   activityChipRecipe.emphasis references (surface/text/border, primary/onPrimary); the component sets the
+   recipe-only sizes as custom properties so theme.ts does not pull this opt-in contract into every graph. */
+.hjm-activity-chip { display: inline-flex; align-items: center; gap: var(--hjm-space-xxs); min-block-size: var(--hjm-control-min-touch-target); max-inline-size: var(--hjm-activity-chip-max-width); min-inline-size: 0; padding-block: 0; padding-inline: var(--hjm-space-xxs) var(--hjm-space-sm); border: 1px solid var(--hjm-color-border); border-radius: 999px; color: var(--hjm-color-text); background: var(--hjm-color-surface); font: inherit; font-size: var(--hjm-type-label-size, 0.75rem); line-height: var(--hjm-type-label-line-height, 1.5); font-weight: var(--hjm-font-weight-bold); cursor: pointer; }
+/* Without media the pill keeps the symmetric label inset; the media hugs the start edge like an avatar chip. */
+.hjm-activity-chip:not([data-media]) { padding-inline-start: var(--hjm-space-sm); }
+.hjm-activity-chip[data-emphasis="emphasis"] { border-color: var(--hjm-color-primary); color: var(--hjm-color-on-primary); background: var(--hjm-color-primary); }
+.hjm-activity-chip:active { opacity: var(--hjm-activity-chip-pressed-opacity); }
+.hjm-activity-chip:focus-visible { outline: 2px solid var(--hjm-color-content-brand); outline-offset: 2px; }
+.hjm-activity-chip__media { flex: none; display: grid; place-items: center; inline-size: var(--hjm-activity-chip-media-size); block-size: var(--hjm-activity-chip-media-size); overflow: hidden; border-radius: 50%; }
+.hjm-activity-chip__media > :is(img, svg) { inline-size: 100%; block-size: 100%; object-fit: contain; }
+.hjm-activity-chip__label { min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .hjm-chip { position: relative; min-block-size: var(--hjm-control-min-touch-target); display: inline-flex; align-items: center; gap: var(--hjm-space-xs); padding-inline: var(--hjm-space-md); border: 1px solid var(--hjm-color-border); border-radius: 999px; background: var(--hjm-color-bg); color: var(--hjm-color-text-body); font: inherit; font-weight: var(--hjm-font-weight-medium); cursor: pointer; }
 .hjm-chip[data-size="small"] { min-block-size: 36px; padding-inline: var(--hjm-space-sm); gap: var(--hjm-space-xxs); }
 .hjm-chip[data-size="small"]::after { content: ""; position: absolute; inset: -4px 0; }
@@ -2531,7 +2547,17 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-toast__description { color: var(--hjm-toast-description-color); line-height: var(--hjm-toast-description-line-height, 1.45); }
 .hjm-toast__close { grid-column: 3; grid-row: 1; align-self: start; display: grid; place-items: center; inline-size: var(--hjm-control-min-touch-target); min-block-size: var(--hjm-control-min-touch-target); margin-block-start: calc(-1 * var(--hjm-space-xxs)); border: 0; border-radius: 50%; color: var(--hjm-color-text-muted); background: transparent; cursor: pointer; }
 .hjm-toast__close:hover { color: var(--hjm-color-text); }
-.hjm-toast__action { grid-column: 2 / -1; grid-row: 2; justify-self: end; margin-inline-end: var(--hjm-space-xs); min-block-size: var(--hjm-control-min-touch-target); max-inline-size: 100%; padding-inline: var(--hjm-space-md); border: 0; border-radius: 999px; color: var(--hjm-toast-action-color); background: var(--hjm-toast-action-background); font: inherit; font-weight: var(--hjm-font-weight-bold); overflow-wrap: anywhere; text-align: center; cursor: pointer; }
+/* 2026-10-10 panel toast: product media replaces the tone badge in the leading column (toastRecipe.media),
+   and a running task shows its steps under the description (toastRecipe.progress). */
+.hjm-toast__media { grid-column: 1; grid-row: 1; align-self: start; display: grid; place-items: center; inline-size: var(--hjm-toast-media-size); block-size: var(--hjm-toast-media-size); overflow: hidden; border-radius: 50%; }
+.hjm-toast__media > :is(img, svg) { inline-size: 100%; block-size: 100%; object-fit: contain; }
+.hjm-toast__progress { display: flex; flex-wrap: wrap; align-items: center; gap: var(--hjm-space-xxs) var(--hjm-toast-progress-gap); margin: var(--hjm-space-xxs) 0 0; padding: 0; list-style: none; font-size: var(--hjm-type-caption-size, 0.75rem); line-height: var(--hjm-type-caption-line-height, 1.4); }
+.hjm-toast__progress-step { display: inline-flex; align-items: center; gap: var(--hjm-space-xxs); color: var(--hjm-toast-progress-label); }
+.hjm-toast__progress-dot { flex: none; inline-size: var(--hjm-toast-progress-dot); block-size: var(--hjm-toast-progress-dot); border-radius: 50%; background: var(--hjm-toast-progress-upcoming); }
+.hjm-toast__progress-step[data-state="done"] .hjm-toast__progress-dot { background: var(--hjm-toast-progress-done); }
+.hjm-toast__progress-step[data-state="current"] { color: var(--hjm-toast-progress-current-label); font-weight: var(--hjm-font-weight-bold); }
+.hjm-toast__progress-step[data-state="current"] .hjm-toast__progress-dot { background: var(--hjm-toast-progress-done); transform: scale(var(--hjm-toast-progress-current-scale)); }
+.hjm-toast__action { grid-column: 2 / -1; grid-row: 2; justify-self: var(--hjm-toast-action-align, start); margin-inline-end: var(--hjm-space-xs); min-block-size: var(--hjm-control-min-touch-target); max-inline-size: 100%; padding-inline: var(--hjm-space-md); border: 0; border-radius: 999px; color: var(--hjm-toast-action-color); background: var(--hjm-toast-action-background); font: inherit; font-weight: var(--hjm-font-weight-bold); overflow-wrap: anywhere; text-align: center; cursor: pointer; }
 .hjm-toast__action:hover { filter: brightness(0.97); }
 .hjm-toast[data-state="closing"] { opacity: 0; transform: translateY(var(--hjm-space-xs)); transition: opacity var(--hjm-toast-exit-duration) var(--hjm-toast-exit-easing), transform var(--hjm-toast-exit-duration) var(--hjm-toast-exit-easing); }
 
@@ -2986,3 +3012,8 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 /* Profile header columns cannot keep the row's minimum flex-basis as a tall empty spacer. */
 .hjm-screen[data-presentation="editorial"] .hjm-screen__heading,
 .hjm-screen[data-presentation="landscape"] .hjm-screen__heading { flex: 0 1 auto; inline-size: 100%; }
+
+/* Whole-card activation shares native button keyboard semantics and control targets. */
+.hjm-card[data-interactive="true"] { font: inherit; color: inherit; text-align: inherit; cursor: pointer; min-inline-size: var(--hjm-control-min-touch-target); min-block-size: var(--hjm-control-min-touch-target); }
+.hjm-card[data-interactive="true"]:active:not(:disabled) { opacity: var(--hjm-card-pressed-opacity); }
+.hjm-card[data-interactive="true"]:disabled { opacity: var(--hjm-card-disabled-opacity); cursor: default; }

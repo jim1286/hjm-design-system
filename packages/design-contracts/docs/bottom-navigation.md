@@ -1,6 +1,6 @@
 # BottomNavigation contract
 
-검토일: 2026-10-05
+검토일: 2026-10-10
 
 `BottomNavigation`은 콘텐츠 panel을 바꾸는 `Tabs`가 아니라 앱의 안정된 최상위 route를
 이동합니다. 같은 destination 의미를 Web의 link와 React Native navigator tab으로 적응시키며,
@@ -42,6 +42,10 @@ const descriptor = {
 - `density`: `compact | regular`
 - `direction`: `ltr | rtl`
 - `keyboardBehavior`: `hide | remain`
+- `labels`: `visible | hidden` (기본 `visible`). 2026-10-10 번뚝의 아이콘 전용 독 요청으로 추가했다.
+  제품이 deprecated style이나 투명 팔레트로 라벨을 숨기는 대신 계약 옵션으로 둔다. `hidden`은 화면의
+  이름 줄만 그리지 않고 항목의 접근성 이름(`resolvedAccessibilityLabel`)은 유지하며, 아이콘을 항목
+  가운데에 둔다. 선택의 비색상 증거는 아이콘 선 굵기·확대로 남는다.
 
 두 renderer 모두 `resolveBottomNavigationConfiguration(configuration, itemCount)`를 사용합니다.
 `center-gap`은 짝수 destination에서만 유효합니다. 이 gap은 별도 primary action의 시각적 자리만

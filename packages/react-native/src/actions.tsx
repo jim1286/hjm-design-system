@@ -190,7 +190,7 @@ export const IconButton = forwardRef<NativeView, IconButtonProps>(function IconB
           backgroundColor: presentation.background ?? "transparent",
           borderColor: presentation.border ?? "transparent",
           borderRadius: theme.tokens.radius[iconButtonRecipe.shapes[shape]],
-          borderWidth: 1,
+          borderWidth: selected === true ? 0 : 1,
           height: visibleDiameter,
           justifyContent: "center",
           minHeight: visibleDiameter,

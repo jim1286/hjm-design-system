@@ -354,7 +354,10 @@ export const Text = forwardRef<HTMLElement, TextProps>(function Text(
 
 export type SurfaceProps = HTMLAttributes<HTMLElement> &
   Readonly<{
-    as?: "div" | "section" | "article";
+    as?: "div" | "section" | "article" | "button";
+    /** Native button host used by interactive Card; passive surfaces remain divs. */
+    type?: "button";
+    disabled?: boolean;
     tone?: SurfaceTone;
     bordered?: boolean;
     padding?: SurfacePadding;

@@ -38,7 +38,8 @@ export const buttonRecipe = {
    * consumer painted the selected background in product styles.
    */
   states: {
-    selected: { background: "bg", content: "contentBrand", border: "contentBrand" },
+    // Selected reactions use content color, without adding an outline (2026-10-10 user request).
+    selected: { background: "bg", content: "contentBrand", border: null },
   },
   sizes: {
     small: {
@@ -93,7 +94,7 @@ export const buttonRecipe = {
     selected: {
       background: keyof ThemeColors;
       content: keyof ThemeColors;
-      border: keyof ThemeColors;
+      border: keyof ThemeColors | null;
     };
   };
   sizes: Record<

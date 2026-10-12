@@ -149,9 +149,9 @@ it.each(["light", "dark"] as const)("updates liquid shape/depth through profiles
     expect(shadowNode.props).toMatchObject({ dy: token.offsetY, blur: token.radius / 2, color: withAlpha(token.color, token.opacity) });
     let card = shadowNode.parent!;
     while (card && !card.props.r) card = card.parent!;
-    expect(card.props.r.value).toBe(profile?.tokens.radius.lg ?? 12);
+    expect(card.props.r.value).toBe(profile?.tokens.radius.xl ?? 24);
     const content = renderer!.root.findAll(node => Array.isArray(node.props.style) && node.props.style.some((style: { minHeight?: number } | undefined) => style?.minHeight === 74))[0]!;
-    expect(content.props.style[0]).toMatchObject({ borderRadius: profile?.tokens.radius.lg ?? 12, backgroundColor: "transparent", shadowOpacity: 0 });
+    expect(content.props.style[0]).toMatchObject({ borderRadius: profile?.tokens.radius.xl ?? 24, backgroundColor: "transparent", shadowOpacity: 0 });
     const canvas = renderer!.root.findAll(node => node.props.pointerEvents === "none" && node.props.accessibilityElementsHidden && node.props.style?.position === "absolute").at(-1)!;
     // Verify paint bounds in canvas coordinates, including an upward custom shadow.
     const paintGroup = canvas.children.find(child => typeof child !== "string" && Array.isArray(child.props.transform));

@@ -169,6 +169,29 @@ overflow와 update를 검증합니다.
 - [Radix Toast](https://www.radix-ui.com/primitives/docs/components/toast)
 - [React Spectrum Toast](https://react-spectrum.adobe.com/Toast)
 
+## 패널 Toast — 미게시(1.17.2 이후)
+
+2026-10-10 사용자 요청("칩이랑 패널 디자인시스템에 넣고 … 패널은 디자인 시스템에 있는 토스트를 대체하고 리퀴드
+토스트의 토스트도 대체해 — 패널이 토스트가 되는거지")으로 BurnTok이 검수 상태용으로 만든 패널을 Toast 자체의
+모양으로 삼습니다. 별도 `Panel` API를 만들지 않은 이유: 같은 id 갱신·지속·닫기·낭독·큐를 Toast store가 이미
+소유하고, 두 번째 떠 있는 층을 만들면 큐와 낭독이 둘이 됩니다.
+
+- 모양: 모든 Toast의 모서리는 `xl`(24)입니다. Native 리퀴드 카드도 같은 패널 열(미디어/배지 · 문구 · 닫기)을
+  그리고, 프로필이 없을 때의 리퀴드 모서리도 12 → 24로 바뀝니다. 리퀴드의 투명 chrome·물방울 연출은 유지합니다.
+- `media?: unknown`: 제품 마스코트·아바타 같은 장식 시각물입니다. core는 검사하지 않고 그대로 넘기며
+  (`ResolvedToastDescriptor.media`, 없으면 `null`), renderer는 ReactNode로 그려 tone badge 자리(44, `toastRecipe.media.size`)를
+  대신하고 보조기술에서 숨깁니다. tone은 `data-tone`과 문구가 계속 전달합니다. renderer 전용 prop을 버린 이유는
+  store가 descriptor를 해석·보관하므로 그 밖의 값은 갱신 때 사라지기 때문입니다.
+- `progress?: { steps: readonly string[]; current: number }`: 실행 중인 작업 단계입니다. 단계는 2~5개의 비어 있지 않은
+  현지화 문자열이고(320 폭에서 한 줄 유지가 목표, 넘치면 줄바꿈) `current`는 0부터 시작하는 실행 단계 index입니다.
+  앞 단계는 완료로 그립니다. 기본 announcement는 `title. description. <현재 단계>`입니다.
+  점은 장식이고 단계 이름이 옆에 있어 색만으로 상태를 전달하지 않습니다(Web은 `ol`과 `aria-current="step"`).
+- action은 둘째 줄 끝이 아니라 **문구 아래 시작 쪽**(`toastRecipe.action.align = "start"`)입니다. 눈이 이미 있는 자리에
+  둔다는 BurnTok 패널 배치를 따랐습니다. pill 모양·44 target·대비는 1.10.0 그대로입니다.
+- 작업 상태 패널은 `id` 고정 + `durationMs: null`로 열고, 단계·결과가 바뀔 때 같은 id로 다시 publish해 제자리에서
+  갱신합니다. 여닫는 트리거는 [`ActivityChip`](activity-chip.md), 흐름은
+  [백그라운드 작업 상태 구성](usage/compositions/activity-status.md)입니다.
+
 ## 프로필 행간 소비 — 미게시
 
 2026-10-07 소비 감사에서 Web 제목/설명의 1.35/1.45 고정 행간이 `typography.body.lineHeight`를

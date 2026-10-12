@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 const packageNames = ['design-contracts', 'react', 'react-native'];
+const nextOwnedPeers = new Set(['react', 'react-dom']);
 const inside = (root, file) => file === root || file.startsWith(root + path.sep);
 
 function localSource(projectRoot, env = process.env) {
@@ -118,21 +119,23 @@ function withNext(config, projectRoot, phase, env = process.env) {
   const state = localSource(projectRoot, env);
   if (!state) return config;
   if (phase !== 'phase-development-server') throw new Error('Unset HJM_LOCAL_SOURCE before a Next production build/start');
-  let commonRoot = state.projectRoot;
-  while (!inside(commonRoot, state.root)) commonRoot = path.dirname(commonRoot);
+  // Next picks the bundler before loading this config and exports it as TURBOPACK
+  // (`auto` for the default). Turbopack has no extensionAlias for HJM's `./x.js`
+  // -> `x.ts` imports and resolves relative aliases from the app, so the source
+  // aliases were silently skipped and the published package rendered instead
+  // (2026-10-10 BurnTok: missing ActivityChip export). Fail before that happens.
+  if (env.TURBOPACK) throw new Error('HJM local source in Next needs webpack: run `next dev --webpack` (Turbopack would silently use the published @hjmds package)');
   // Missing optional peers must fail only when imported, never fall back to the
   // design-system fixture's installation and hide a host dependency requirement.
-  const peers = Object.fromEntries(state.peers.map(name => [name, peerDirectory(projectRoot, name) ?? path.join(state.projectRoot, 'node_modules', name)]));
-  // Turbopack aliases are project-root relative; webpack uses absolute paths.
-  const aliases = { ...peers, ...state.aliases };
-  const turboAliases = Object.fromEntries(Object.entries(aliases).map(([name, file]) => [name, './' + path.relative(commonRoot, file).split(path.sep).join('/')]));
+  // Next vendors React per layer (RSC/SSR/browser) with exact `react$` aliases. A
+  // prefix `react` alias here outranks them and loads a second React, failing every
+  // page with useContext null (2026-10-10 BurnTok /login 500). Next's aliases match by
+  // request name, so HJM source outside the project already gets Next's React.
+  const peers = Object.fromEntries(state.peers.filter(name => !nextOwnedPeers.has(name))
+    .map(name => [name, peerDirectory(projectRoot, name) ?? path.join(state.projectRoot, 'node_modules', name)]));
   const previous = config.webpack;
   return { ...config,
     transpilePackages: [...new Set([...(config.transpilePackages ?? []), '@hjmds/react', '@hjmds/design-contracts'])],
-    // Next gives tracingRoot precedence when roots differ; align both in source
-    // development so existing standalone configs cannot rebase the HJM aliases.
-    outputFileTracingRoot: commonRoot,
-    turbopack: { ...config.turbopack, root: commonRoot, resolveAlias: { ...config.turbopack?.resolveAlias, ...turboAliases } },
     webpack(webpackConfig, options) {
       const result = previous ? previous(webpackConfig, options) : webpackConfig;
       result.resolve ??= {};

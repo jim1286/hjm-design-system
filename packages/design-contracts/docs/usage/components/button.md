@@ -106,7 +106,7 @@ import { Button } from "@hjmds/react-native/actions";
   Native에서 `style`·`labelStyle`을 넘기면 실행 중 `TypeError`가 난다.
 - 색은 tone과 제품 테마 토큰으로 바꾼다. 버튼마다 브랜드 색을 하드코딩하지 않는다.
 - 진행 중 상태는 `loading`으로 표시하고 같은 자리에 별도 Spinner를 겹치지 않는다. children을 빈 문자열이나 다른 길이의 진행 문구로 바꾸지 않는다. 렌더러가 문구·아이콘을 숨긴 자리에 중앙 스피너만 표시하고 기존 크기·접근성 이름을 유지한다. 2026-10-06 독립 검증에서 이 사용자 요구가 사용 지침에는 빠져 있음을 확인해 명시했다.
-- "한 화면 `primary` 하나"의 예외는 다음과 같다. `selected`를 준 버튼은 tone과 관계없이 `buttonRecipe.states.selected`(배경 `bg`, 글자·테두리 `contentBrand`)로 칠해져 primary 채움이 아니므로 세지 않고(Web `.hjm-button[data-selected="true"]`, Native `internal/recipe-button.tsx`, 검색·작품 탐색 스토리의 필터 줄), Sheet·Dialog 안의 행동은 그 표면 안에서 primary 하나를 센다([Sheet](sheet.md) `footer`, 작품 탐색·랜딩 스토리의 시트).
+- "한 화면 `primary` 하나"의 예외는 다음과 같다. `selected`를 준 버튼은 tone과 관계없이 `buttonRecipe.states.selected`(배경 `bg`, 글자 `contentBrand`, 선택 테두리 없음)로 칠해져 primary 채움이 아니므로 세지 않고(Web `.hjm-button[data-selected="true"]`, Native `internal/recipe-button.tsx`, 검색·작품 탐색 스토리의 필터 줄), Sheet·Dialog 안의 행동은 그 표면 안에서 primary 하나를 센다([Sheet](sheet.md) `footer`, 작품 탐색·랜딩 스토리의 시트).
 
 - 긴 소개 화면에서 위·아래 CTA가 **동일한 행동**으로 이어지고 서로 다른 스크롤 구간에 있으면 둘 다 primary를 허용한다. 큰 글자에서 첫 CTA가 멀어지는 문제를 보완하기 위한 예외이며, 서로 다른 가입·구매 행동을 동시에 강조하는 근거로 쓰지 않는다.
 
@@ -122,3 +122,6 @@ import { Button } from "@hjmds/react-native/actions";
 
 
 - 2026-10-06 독립 지침 재구현에서 footer 순서를 모든 본문 행동에 강제하는 것으로 읽혔다. 시간 선택처럼 주 행동 다음에 초기화가 오는 구성과 AlertDialog의 좁은 폭 순서는 각각 명시된 구성 계약을 따른다.
+
+2026-10-10 사용자 요청으로 선택 시 추가되는 테두리를 제거했다. `selected` 접근성 상태와
+contentBrand 글자·아이콘 색은 유지하며 키보드 focus outline은 선택과 별도로 유지한다.

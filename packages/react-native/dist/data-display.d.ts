@@ -59,11 +59,14 @@ export type CardProps = Omit<SurfaceProps, "children" | "padding"> & Readonly<{
     media?: ReactNode;
     actions?: ReactNode;
     selected?: boolean;
+    /** Whole-card activation. Do not combine with interactive children or actions. */
+    onActivate?: () => void;
+    disabled?: boolean;
     padding?: SurfacePadding;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function Card({ children, title, description, leading, media, actions, selected, tone, bordered, padding, layoutStyle, radius: cornerRadius, ...props }: CardProps): import("react").JSX.Element;
+export declare function Card({ children, title, description, leading, media, actions, selected, onActivate, disabled, accessibilityLabel, accessibilityHint, tone, bordered, padding, layoutStyle, radius: cornerRadius, ...props }: CardProps): import("react").JSX.Element;
 export type ListRowProps = Omit<PressableProps, "accessibilityLabel" | "accessibilityRole" | "children" | "disabled" | "style"> & Readonly<{
     title: string;
     description?: string;

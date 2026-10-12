@@ -329,3 +329,8 @@ export const Skeleton = forwardRef<HTMLSpanElement, SkeletonProps>(
     );
   },
 );
+
+// ActivityChip is a feedback-category status trigger (its panel is the Toast in this module). Also exported here so
+// apps can import it from an existing subpath: Next dev with HJM_LOCAL_SOURCE rejected the new ./activity-chip
+// subpath before aliasing because the installed release lacks it (BurnTok 2026-10-10).
+export { ActivityChip, type ActivityChipProps } from "./activity-chip.js";

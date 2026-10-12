@@ -96,11 +96,7 @@ export declare const iconButtonRecipe: {
                 key: "contentBrand";
                 alpha?: number;
             }>;
-            readonly border: Readonly<{
-                source: "theme";
-                key: "contentBrand";
-                alpha?: number;
-            }>;
+            readonly border: null;
         };
         readonly pressedOpacity: 0.86;
         readonly disabledOpacity: 0.5;

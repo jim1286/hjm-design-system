@@ -88,11 +88,14 @@ export function Tag({ children, tone, accessibilityLabel, layoutStyle, style, la
             layoutStyle,
         ], children: _jsx(Text, { align: "center", emphasis: "medium", style: [{ color: presentation.content }, labelStyle], variant: tagRecipe.size.textVariant, children: descriptor.label }) }));
 }
-export function Card({ children, title, description, leading, media, actions, selected = cardRecipe.defaults.selected, tone = cardRecipe.defaults.tone, bordered = cardRecipe.defaults.bordered, padding = cardRecipe.defaults.padding, layoutStyle, radius: cornerRadius = surfaceDefaults.radius, ...props }) {
+export function Card({ children, title, description, leading, media, actions, selected = cardRecipe.defaults.selected, onActivate, disabled = false, accessibilityLabel, accessibilityHint, tone = cardRecipe.defaults.tone, bordered = cardRecipe.defaults.bordered, padding = cardRecipe.defaults.padding, layoutStyle, radius: cornerRadius = surfaceDefaults.radius, ...props }) {
     const { environment, tokens } = useHjmNativeTheme();
+    if (onActivate && (!accessibilityLabel?.trim() || actions !== undefined)) {
+        throw new TypeError("Interactive Card requires accessibilityLabel and no actions");
+    }
     const bodyPadding = surfaceGeometry.paddings[padding];
     const hasHeader = leading !== undefined || title !== undefined || description !== undefined;
-    return (_jsx(Surface, { ...props, bordered: bordered, padding: "none", radius: cornerRadius, ...(layoutStyle === undefined ? {} : { layoutStyle }), tone: selected ? cardRecipe.selectedTone : tone, children: _jsxs(View, { style: {
+    const frame = (_jsx(Surface, { ...props, bordered: bordered, padding: "none", radius: cornerRadius, ...(onActivate ? {} : { accessibilityLabel, accessibilityHint }), ...(layoutStyle === undefined || onActivate ? {} : { layoutStyle }), tone: selected ? cardRecipe.selectedTone : tone, children: _jsxs(View, { style: {
                 overflow: "hidden",
                 borderRadius: tokens.radius[cornerRadius],
             }, children: [media === undefined ? null : _jsx(View, { children: media }), _jsxs(View, { style: { gap: cardRecipe.body.gap, padding: bodyPadding }, children: [hasHeader ? (_jsxs(View, { style: {
@@ -108,6 +111,14 @@ export function Card({ children, title, description, leading, media, actions, se
                         paddingBottom: cardRecipe.actions.paddingBottom,
                         paddingHorizontal: cardRecipe.actions.paddingHorizontal,
                     }, children: actions }))] }) }));
+    if (!onActivate)
+        return frame;
+    // Keep Surface's material/clip inside one native action host. App-owned wrappers
+    // previously had to reinvent disabled/selected naming and press feedback.
+    return _jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: accessibilityLabel, accessibilityHint: accessibilityHint, accessibilityState: { selected, disabled }, disabled: disabled, onPress: () => { if (!disabled)
+            onActivate(); }, style: ({ pressed }) => [minimumTargetStyle, {
+                opacity: disabled ? cardRecipe.interaction.disabledOpacity : pressed ? cardRecipe.interaction.pressedOpacity : 1,
+            }, layoutStyle], children: frame });
 }
 export function ListRow({ title, description, leading, trailing, titleMetadata, trailingAction, trailingText, metadataLabel, trailingLabel, onPress, accessibilityLabel, accessibilityHint, disabled = false, density = listRowRecipe.defaults.density, selected: selectedProp, leadingShape = "square", layoutStyle, leadingStyle, contentStyle, titleStyle, titleRowStyle, descriptionStyle, trailingStyle, trailingActionStyle, containerProps, accessibilityState, ...forwarded }) {
     const { hjmTitleEmphasis, ...props } = forwarded;

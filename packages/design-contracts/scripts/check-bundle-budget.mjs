@@ -14,6 +14,9 @@ const packageJsonUrl = new URL("../package.json", import.meta.url);
  * Raising a budget requires an intentional review of the changed graph.
  */
 const budgets = [
+  // 2026-10-10 ActivityChip: descriptor + recipe over foundations/semantic colours only; no catalog or
+  // renderer edge. Reviewed 5 pure modules, 18.1 kB raw / 5.6 kB gzip (mostly the shared colour graph).
+  { exportPath: "./activity-chip", maxModules: 5, maxRawBytes: 18_200, maxGzipBytes: 5_700, forbiddenModules: metadataModules },
   // Finite geometry reuses stable-ID validation and foundations, not Carousel selection.
   // Reviewed 3 pure modules, 13795 raw / 4638 gzip; metadata and renderer edges stay forbidden.
   { exportPath: "./collection-rail", maxModules: 3, maxRawBytes: 13800, maxGzipBytes: 4650, forbiddenModules: metadataModules },
@@ -396,7 +399,8 @@ const budgets = [
     // 2026-10-01: Popover/Tooltip share internal/object-validation.js instead
     // of duplicating shape guards. One reviewed pure helper edge; byte and
     // forbidden-module limits remain unchanged.
-    maxModules: 99,
+    // 2026-10-10 ActivityChip (panel-toast trigger) adds one pure contract module: 99 -> 100.
+    maxModules: 100,
     // 0.9.13에서 470_000/110_000을 올렸다. 증가분은 recipe의 근거 주석이며 tsc는
     // 주석을 dist에 그대로 싣는다. maxModules가 70으로 그대로라는 점이 import
     // 그래프가 늘지 않았다는 근거다. 이 한도를 다시 올릴 때는 module 수가 함께

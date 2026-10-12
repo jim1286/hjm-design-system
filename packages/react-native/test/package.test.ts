@@ -130,6 +130,8 @@ describe("@hjmds/react-native package boundary", () => {
       "./design-profile",
       // CollectionRail remains opt-in; verify its entry instead of weakening the exact family boundary list.
       "./collection-rail",
+      // Panel-toast trigger; opt-in like CollectionRail so core graphs do not grow.
+      "./activity-chip",
     ];
     expect(Object.keys(packageJson.exports)).toEqual(expectedExportPaths);
     const familyTargets = expectedExportPaths.slice(1).filter((path) => path !== "./top-bar" && path !== "./bottom-cta").map((exportPath) => {

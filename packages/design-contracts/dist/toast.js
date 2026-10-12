@@ -52,6 +52,17 @@ export function validateToastDescriptor(descriptor) {
             throw new RangeError("Toast durationMs must be a positive finite number or null");
         }
     }
+    if (descriptor.progress !== undefined) {
+        const { steps, current } = descriptor.progress;
+        // Two to five steps keep the dot row on one line at the 320pt compact width.
+        if (!Array.isArray(steps) || steps.length < 2 || steps.length > 5) {
+            throw new RangeError("Toast progress needs 2 to 5 steps");
+        }
+        steps.forEach((step, index) => assertCopy(step, `progress.steps[${index}]`));
+        if (!Number.isInteger(current) || current < 0 || current >= steps.length) {
+            throw new RangeError("Toast progress current must index an existing step");
+        }
+    }
     if (descriptor.action) {
         assertCopy(descriptor.action.label, "action.label");
         if (descriptor.action.accessibilityLabel !== undefined) {
@@ -72,8 +83,10 @@ export function resolveToastDuration(descriptor) {
 export function resolveToastDescriptor(descriptor) {
     validateToastDescriptor(descriptor);
     const title = descriptor.title ?? null;
+    const base = title === null ? descriptor.description : `${title}. ${descriptor.description}`;
+    // The visible step dots are decorative; the running step label is part of the spoken message.
     const announcement = descriptor.announcement ??
-        (title === null ? descriptor.description : `${title}. ${descriptor.description}`);
+        (descriptor.progress ? `${base}. ${descriptor.progress.steps[descriptor.progress.current]}` : base);
     const action = descriptor.action
         ? {
             label: descriptor.action.label,
@@ -92,6 +105,8 @@ export function resolveToastDescriptor(descriptor) {
         announcement,
         durationMs: resolveToastDuration(descriptor),
         action,
+        media: descriptor.media ?? null,
+        progress: descriptor.progress ?? null,
         closeLabel: descriptor.closeLabel,
         onDismiss: descriptor.onDismiss ?? null,
     };

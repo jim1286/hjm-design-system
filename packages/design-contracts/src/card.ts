@@ -1,5 +1,6 @@
 import { spacing } from "./foundations.js";
 import {
+  buttonRecipe,
   surfaceDefaults,
   type SurfacePadding,
   type SurfaceTone,
@@ -31,6 +32,9 @@ export const cardRecipe = {
     padding: "md",
   },
   selectedTone: "accent",
+  // BurnTok's compact 3-column picker (2026-10-10) needs the whole card to activate.
+  // Reuse control state opacity instead of a product Pressable with a second visual contract.
+  interaction: { disabledOpacity: buttonRecipe.opacity.disabled, pressedOpacity: buttonRecipe.opacity.pressed },
   body: {
     padding: spacing.md,
     gap: spacing.xs,
@@ -73,6 +77,7 @@ export const cardRecipe = {
     padding: SurfacePadding;
   };
   selectedTone: SurfaceTone;
+  interaction: { disabledOpacity: number; pressedOpacity: number };
   body: { padding: number; gap: number };
   header: { gap: number };
   title: {

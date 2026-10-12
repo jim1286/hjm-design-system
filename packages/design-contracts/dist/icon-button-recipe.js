@@ -39,7 +39,8 @@ export const iconButtonRecipe = {
         selected: {
             background: semanticColors.canvas,
             content: semanticColors.content.brand,
-            border: semanticColors.border.focus,
+            // Match Button: selection changes color without introducing an outline.
+            border: null,
         },
         pressedOpacity: opacity.pressed,
         disabledOpacity: opacity.disabled,

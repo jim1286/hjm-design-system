@@ -192,7 +192,7 @@ it("themes native adaptive choices, loading and feedback while retaining selecti
       expect(flatten(placeholders[0]!.findByType(Animated.View).props.style).borderRadius).toBe(profile.tokens.radius.md);
       expect(flatten(placeholders[1]!.findByType(Animated.View).props.style).borderRadius).toBe(13);
       const toast = tree.root.findByType(Toast).findByType(Animated.View);
-      expect(flatten(toast.props.style)).toMatchObject({ borderRadius: profile.tokens.radius.lg, shadowRadius: profile.tokens.shadow.floating.radius, shadowOpacity: profile.tokens.shadow.floating.opacity });
+      expect(flatten(toast.props.style)).toMatchObject({ borderRadius: profile.tokens.radius.xl, shadowRadius: profile.tokens.shadow.floating.radius, shadowOpacity: profile.tokens.shadow.floating.opacity });
     }
   } finally { if (tree) act(() => tree.unmount()); }
 });

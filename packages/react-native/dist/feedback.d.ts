@@ -243,4 +243,5 @@ export type ToastRegionProps = Readonly<{
 /** Bounded FIFO region with one clock, app-state pause and teardown interruption. */
 export declare function ToastRegion({ presentationAdapter, occluded, children, accessibilityLabel, toasts, defaultToasts, onToastsChange, maxVisible, maxQueued, duplicatePolicy, timerUpdatePolicy, overflowPolicy, placement, safeAreaInsets, avoidKeyboard, keyboardOffset, renderToneIcon, style, toastStyle, layoutStyle, }: ToastRegionProps): import("react").JSX.Element;
 export declare function useToastRegion(): ToastRegionController;
+export { ActivityChip, type ActivityChipProps } from "./activity-chip.js";
 //# sourceMappingURL=feedback.d.ts.map

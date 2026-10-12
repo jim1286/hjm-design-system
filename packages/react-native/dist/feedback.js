@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { easing, glyph, spacing } from "@hjmds/design-contracts/foundations";
+import { easing, fontWeight, glyph, spacing } from "@hjmds/design-contracts/foundations";
 import { resolveControlAccessibleName, } from "@hjmds/design-contracts/behaviors";
 import { emptyStateRecipe, noticeRecipe, progressRecipe, skeletonRecipe, toastRecipe, } from "@hjmds/design-contracts/recipes";
 import { resolveResultDescriptor, resultRecipe, } from "@hjmds/design-contracts/components/result";
@@ -286,6 +286,26 @@ export function Skeleton({ shape = skeletonRecipe.defaults.shape, animated = ske
             layoutStyle,
         ] }));
 }
+const toastActionAlign = { start: "flex-start", end: "flex-end" };
+// Step dots beside their labels so state never depends on colour alone (WCAG 1.4.1). The spoken message
+// already names the running step (resolveToastDescriptor), so the dots are hidden from assistive technology.
+function ToastProgressRow({ progress }) {
+    const theme = useHjmNativeTheme();
+    const contract = toastRecipe.progress;
+    return (_jsx(View, { style: { alignItems: "center", columnGap: contract.gap, direction: theme.environment.direction, flexDirection: "row", flexWrap: "wrap", marginTop: spacing.xxs, rowGap: spacing.xxs }, children: progress.steps.map((step, index) => {
+            const state = index < progress.current ? "done" : index === progress.current ? "current" : "upcoming";
+            return (_jsxs(View, { style: { alignItems: "center", flexDirection: "row", gap: spacing.xxs }, children: [_jsx(View, { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
+                            backgroundColor: resolveColorReference(state === "upcoming" ? contract.upcomingColor : contract.doneColor, theme.palette),
+                            borderRadius: contract.dotSize / 2,
+                            height: contract.dotSize,
+                            transform: [{ scale: state === "current" ? contract.currentScale : 1 }],
+                            width: contract.dotSize,
+                        } }), _jsx(Text, { style: {
+                            color: resolveColorReference(state === "current" ? contract.currentLabelColor : contract.labelColor, theme.palette),
+                            ...(state === "current" ? { fontWeight: fontWeight.bold } : {}),
+                        }, variant: contract.textVariant, children: step })] }, `${index}-${step}`));
+        }) }));
+}
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 function ToastSurface({ snapshot, managedMotion = false, announces = true, suspended = false, onDismiss, onAction, onExitComplete, onPause, onResume, placement, renderToneIcon, style, }) {
     const resolved = snapshot.descriptor;
@@ -384,16 +404,23 @@ function ToastSurface({ snapshot, managedMotion = false, announces = true, suspe
                     position: "absolute",
                     top: 0,
                     width: toastRecipe.toneMark.width,
-                } })) : null, !announces || Platform.OS === "ios" ? null : (_jsx(Text, { accessibilityLabel: resolved.announcement, accessibilityLiveRegion: resolved.priority === "high" ? "assertive" : "polite", accessibilityRole: resolved.priority === "high" ? "alert" : undefined, accessible: true, style: { height: 1, opacity: 0, position: "absolute", width: 1 }, children: resolved.announcement })), managedMotion ? (
-            // A full-width editorial banner replaces the badge/body/close three-column card.
-            // Keep only a small status glyph in the heading so long copy owns the entire second row.
-            _jsxs(View, { style: { gap: spacing.xs, direction: theme.environment.direction }, children: [resolved.title ? _jsxs(View, { style: { flexDirection: "row", alignItems: "flex-start", gap: spacing.xs, paddingEnd: toastRecipe.close.diameter, minHeight: glyph.md }, children: [renderedToneIcon === undefined ? null : _jsx(View, { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { paddingTop: spacing.xxs, flexShrink: 0 }, children: renderedToneIcon }), _jsx(Text, { variant: "bodyLarge", emphasis: "strong", style: { flex: 1, minWidth: 0, color: theme.colors.text }, children: resolved.title })] }) : null, _jsx(Text, { variant: "body", style: { color: theme.colors.textBody, paddingEnd: resolved.title ? 0 : toastRecipe.close.diameter }, children: resolved.description }), _jsx(View, { style: { position: "absolute", top: -spacing.xs, end: -spacing.xs }, children: closeControl })] })) : (_jsxs(View, { style: {
+                } })) : null, !announces || Platform.OS === "ios" ? null : (_jsx(Text, { accessibilityLabel: resolved.announcement, accessibilityLiveRegion: resolved.priority === "high" ? "assertive" : "polite", accessibilityRole: resolved.priority === "high" ? "alert" : undefined, accessible: true, style: { height: 1, opacity: 0, position: "absolute", width: 1 }, children: resolved.announcement })), _jsxs(View, { style: {
                     // Start-aligned so a multi-line or large-text toast keeps its badge beside the title (Web does the same).
                     alignItems: "flex-start",
                     direction: theme.environment.direction,
                     flexDirection: "row",
                     gap: toastRecipe.surface.gap,
-                }, children: [renderedToneIcon === undefined ? null : (_jsx(View, { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
+                }, children: [resolved.media !== null ? (
+                    // Product media replaces the tone badge in the same column; it is decorative, the copy carries meaning.
+                    _jsx(View, { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
+                            alignItems: "center",
+                            borderRadius: theme.tokens.radius.full,
+                            flexShrink: 0,
+                            height: toastRecipe.media.size,
+                            justifyContent: "center",
+                            overflow: "hidden",
+                            width: toastRecipe.media.size,
+                        }, children: resolved.media })) : renderedToneIcon === undefined ? null : (_jsx(View, { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
                             alignItems: "center",
                             backgroundColor: badge,
                             borderRadius: theme.tokens.radius[toastRecipe.icon.badgeRadius],
@@ -404,23 +431,22 @@ function ToastSurface({ snapshot, managedMotion = false, announces = true, suspe
                         }, children: renderedToneIcon })), _jsxs(View, { style: { alignSelf: "center", flex: 1, gap: toastRecipe.content.gap, minWidth: 0 }, children: [resolved.title ? (_jsx(Text, { style: {
                                     color: resolveColorReference(toastRecipe.title.color, theme.palette),
                                     fontWeight: toastRecipe.title.fontWeight,
-                                }, variant: toastRecipe.title.textVariant, children: resolved.title })) : null, _jsx(Text, { style: { color: resolveColorReference(toastRecipe.description.color, theme.palette) }, variant: toastRecipe.description.textVariant, children: resolved.description })] }), closeControl] })), resolved.action ? (
-            // 1.10.0: tinted pill aligned to the end (toastRecipe.action) instead of a ghost text button.
-            _jsx(Pressable, { accessibilityLabel: resolved.action.accessibilityLabel, accessibilityRole: "button", onBlur: resumeFocus, onFocus: pauseFocus, onPress: onAction, style: ({ pressed }) => ({
-                    alignItems: managedMotion ? "flex-start" : "center",
-                    alignSelf: managedMotion ? "stretch" : toastRecipe.action.align === "end" ? "flex-end" : "flex-start",
-                    backgroundColor: managedMotion ? "transparent" : resolveColorReference(toastRecipe.action.background, theme.palette),
-                    borderTopWidth: managedMotion ? 1 : 0,
-                    borderTopColor: theme.colors.border,
-                    borderRadius: managedMotion ? 0 : theme.tokens.radius[toastRecipe.action.radius],
-                    justifyContent: "center",
-                    minHeight: toastRecipe.action.minHeight,
-                    opacity: pressed ? toastRecipe.states.pressedOpacity : 1,
-                    paddingHorizontal: managedMotion ? 0 : toastRecipe.action.paddingHorizontal,
-                }), children: _jsx(Text, { fontRole: "ui", style: {
-                        color: resolveColorReference(toastRecipe.action.color, theme.palette),
-                        fontWeight: toastRecipe.action.fontWeight,
-                    }, variant: toastRecipe.action.textVariant, children: resolved.action.label }) })) : null] }));
+                                }, variant: toastRecipe.title.textVariant, children: resolved.title })) : null, _jsx(Text, { style: { color: resolveColorReference(toastRecipe.description.color, theme.palette) }, variant: toastRecipe.description.textVariant, children: resolved.description }), resolved.progress ? _jsx(ToastProgressRow, { progress: resolved.progress }) : null, resolved.action ? (
+                            // 1.10.0 tinted pill; 1.20 panel: under the copy at the start edge (toastRecipe.action.align).
+                            _jsx(Pressable, { accessibilityLabel: resolved.action.accessibilityLabel, accessibilityRole: "button", onBlur: resumeFocus, onFocus: pauseFocus, onPress: onAction, style: ({ pressed }) => ({
+                                    alignItems: "center",
+                                    alignSelf: toastActionAlign[toastRecipe.action.align],
+                                    backgroundColor: resolveColorReference(toastRecipe.action.background, theme.palette),
+                                    borderRadius: theme.tokens.radius[toastRecipe.action.radius],
+                                    justifyContent: "center",
+                                    marginTop: spacing.xs,
+                                    minHeight: toastRecipe.action.minHeight,
+                                    opacity: pressed ? toastRecipe.states.pressedOpacity : 1,
+                                    paddingHorizontal: toastRecipe.action.paddingHorizontal,
+                                }), children: _jsx(Text, { fontRole: "ui", style: {
+                                        color: resolveColorReference(toastRecipe.action.color, theme.palette),
+                                        fontWeight: toastRecipe.action.fontWeight,
+                                    }, variant: toastRecipe.action.textVariant, children: resolved.action.label }) })) : null] }), closeControl] })] }));
 }
 /** One Native toast driven by the same exactly-once session as a queued region. */
 export function Toast({ descriptor, onDismiss, placement = toastRecipe.defaults.placement, renderToneIcon, style, layoutStyle, }) {
@@ -512,6 +538,9 @@ function snapshotDescriptor(snapshot) {
                     dismissOnAction: descriptor.action.dismissOnAction,
                 },
             }),
+        // Panel fields must survive the controlled-collection round trip, or `onToastsChange` would drop them.
+        ...(descriptor.media === null ? {} : { media: descriptor.media }),
+        ...(descriptor.progress === null ? {} : { progress: descriptor.progress }),
         closeLabel: descriptor.closeLabel,
         ...(descriptor.onDismiss === null ? {} : { onDismiss: descriptor.onDismiss }),
     };
@@ -762,4 +791,8 @@ export function useToastRegion() {
         throw new Error("useToastRegion must be used inside ToastRegion");
     return controller;
 }
+// ActivityChip is a feedback-category status trigger (its panel is the Toast in this module). Also exported here so
+// apps can import it from an existing subpath: Next dev with HJM_LOCAL_SOURCE rejected the new ./activity-chip
+// subpath before aliasing because the installed release lacks it (BurnTok 2026-10-10).
+export { ActivityChip } from "./activity-chip.js";
 //# sourceMappingURL=feedback.js.map

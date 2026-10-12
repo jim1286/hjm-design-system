@@ -43,6 +43,10 @@ const supplemental = new Set([
   "KeyboardAvoiding", "KeyboardMotionProvider", "KeyboardDock", "KeyboardFormScrollView",
   "SortableCollection", "SwipeActions", "ContentTransition", "TextTransition", "Celebration",
   "SharedTransitionScreen", "SharedTransitionElement", "EffectSurface", "ProgressiveBlur",
+  // 2026-10-10: disclosure trigger for the panel Toast (composition activity-status). Not a Chip variant
+  // (Chip carries selection roles; this carries expanded state) and not part of Toast's queue, so it keeps
+  // its own usage unit instead of growing the frozen catalog.
+  "ActivityChip",
 ]);
 const files = ["react", "react-native"].flatMap(pkg => {
   const sourceRoot = path.join(root, "packages", pkg, "src");

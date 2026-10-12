@@ -43,6 +43,9 @@ export type CardProps = Omit<HTMLAttributes<HTMLElement>, "title"> & Readonly<{
     actions?: ReactNode;
     headingLevel?: CardHeadingLevel;
     selected?: boolean;
+    /** Whole-card activation. Do not combine with interactive children or actions. */
+    onActivate?: () => void;
+    disabled?: boolean;
     tone?: SurfaceTone;
     bordered?: boolean;
     padding?: SurfacePadding;
@@ -58,6 +61,9 @@ export declare const Card: import("react").ForwardRefExoticComponent<Omit<HTMLAt
     actions?: ReactNode;
     headingLevel?: CardHeadingLevel;
     selected?: boolean;
+    /** Whole-card activation. Do not combine with interactive children or actions. */
+    onActivate?: () => void;
+    disabled?: boolean;
     tone?: SurfaceTone;
     bordered?: boolean;
     padding?: SurfacePadding;

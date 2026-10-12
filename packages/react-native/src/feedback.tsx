@@ -1,5 +1,5 @@
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { easing, glyph, spacing } from "@hjmds/design-contracts/foundations";
+import { easing, fontWeight, glyph, spacing } from "@hjmds/design-contracts/foundations";
 import {
   resolveControlAccessibleName,
 } from "@hjmds/design-contracts/behaviors";
@@ -34,6 +34,7 @@ import {
   type ToastDuplicatePolicy,
   type ToastOverflowPolicy,
   type ToastPauseReason,
+  type ToastProgressDescriptor,
   type ToastPublishResult,
   type ToastSessionSnapshot,
   type ToastStore,
@@ -847,6 +848,46 @@ type ToastSurfaceProps = Readonly<{
 }>;
 
 
+const toastActionAlign: Readonly<Record<"start" | "end", "flex-start" | "flex-end">> = { start: "flex-start", end: "flex-end" };
+
+// Step dots beside their labels so state never depends on colour alone (WCAG 1.4.1). The spoken message
+// already names the running step (resolveToastDescriptor), so the dots are hidden from assistive technology.
+function ToastProgressRow({ progress }: { progress: ToastProgressDescriptor }) {
+  const theme = useHjmNativeTheme();
+  const contract = toastRecipe.progress;
+  return (
+    <View style={{ alignItems: "center", columnGap: contract.gap, direction: theme.environment.direction, flexDirection: "row", flexWrap: "wrap", marginTop: spacing.xxs, rowGap: spacing.xxs }}>
+      {progress.steps.map((step, index) => {
+        const state = index < progress.current ? "done" : index === progress.current ? "current" : "upcoming";
+        return (
+          <View key={`${index}-${step}`} style={{ alignItems: "center", flexDirection: "row", gap: spacing.xxs }}>
+            <View
+              accessibilityElementsHidden
+              importantForAccessibility="no-hide-descendants"
+              style={{
+                backgroundColor: resolveColorReference(state === "upcoming" ? contract.upcomingColor : contract.doneColor, theme.palette),
+                borderRadius: contract.dotSize / 2,
+                height: contract.dotSize,
+                transform: [{ scale: state === "current" ? contract.currentScale : 1 }],
+                width: contract.dotSize,
+              }}
+            />
+            <Text
+              style={{
+                color: resolveColorReference(state === "current" ? contract.currentLabelColor : contract.labelColor, theme.palette),
+                ...(state === "current" ? { fontWeight: fontWeight.bold } : {}),
+              }}
+              variant={contract.textVariant}
+            >
+              {step}
+            </Text>
+          </View>
+        );
+      })}
+    </View>
+  );
+}
+
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 function ToastSurface({
   snapshot,
@@ -994,18 +1035,9 @@ function ToastSurface({
           {resolved.announcement}
         </Text>
       )}
-      {managedMotion ? (
-        // A full-width editorial banner replaces the badge/body/close three-column card.
-        // Keep only a small status glyph in the heading so long copy owns the entire second row.
-        <View style={{ gap: spacing.xs, direction: theme.environment.direction }}>
-          {resolved.title ? <View style={{ flexDirection: "row", alignItems: "flex-start", gap: spacing.xs, paddingEnd: toastRecipe.close.diameter, minHeight: glyph.md }}>
-            {renderedToneIcon === undefined ? null : <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ paddingTop: spacing.xxs, flexShrink: 0 }}>{renderedToneIcon}</View>}
-            <Text variant="bodyLarge" emphasis="strong" style={{ flex: 1, minWidth: 0, color: theme.colors.text }}>{resolved.title}</Text>
-          </View> : null}
-          <Text variant="body" style={{ color: theme.colors.textBody, paddingEnd: resolved.title ? 0 : toastRecipe.close.diameter }}>{resolved.description}</Text>
-          <View style={{ position: "absolute", top: -spacing.xs, end: -spacing.xs }}>{closeControl}</View>
-        </View>
-      ) : (
+      {/* 2026-10-10 panel toast: the liquid presentation used a full-width editorial banner (title row +
+          absolute close). The user asked for one panel everywhere ("the panel becomes the toast"), so the liquid
+          surface now carries the same media/badge · copy · close columns; only its chrome stays transparent. */}
       <View
         style={{
           // Start-aligned so a multi-line or large-text toast keeps its badge beside the title (Web does the same).
@@ -1015,7 +1047,24 @@ function ToastSurface({
           gap: toastRecipe.surface.gap,
         }}
       >
-        {renderedToneIcon === undefined ? null : (
+        {resolved.media !== null ? (
+          // Product media replaces the tone badge in the same column; it is decorative, the copy carries meaning.
+          <View
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
+            style={{
+              alignItems: "center",
+              borderRadius: theme.tokens.radius.full,
+              flexShrink: 0,
+              height: toastRecipe.media.size,
+              justifyContent: "center",
+              overflow: "hidden",
+              width: toastRecipe.media.size,
+            }}
+          >
+            {resolved.media as ReactNode}
+          </View>
+        ) : renderedToneIcon === undefined ? null : (
           <View
             accessibilityElementsHidden
             importantForAccessibility="no-hide-descendants"
@@ -1050,43 +1099,42 @@ function ToastSurface({
           >
             {resolved.description}
           </Text>
+          {resolved.progress ? <ToastProgressRow progress={resolved.progress} /> : null}
+          {resolved.action ? (
+            // 1.10.0 tinted pill; 1.20 panel: under the copy at the start edge (toastRecipe.action.align).
+            <Pressable
+              accessibilityLabel={resolved.action.accessibilityLabel}
+              accessibilityRole="button"
+              onBlur={resumeFocus}
+              onFocus={pauseFocus}
+              onPress={onAction}
+              style={({ pressed }) => ({
+                alignItems: "center",
+                alignSelf: toastActionAlign[toastRecipe.action.align],
+                backgroundColor: resolveColorReference(toastRecipe.action.background, theme.palette),
+                borderRadius: theme.tokens.radius[toastRecipe.action.radius],
+                justifyContent: "center",
+                marginTop: spacing.xs,
+                minHeight: toastRecipe.action.minHeight,
+                opacity: pressed ? toastRecipe.states.pressedOpacity : 1,
+                paddingHorizontal: toastRecipe.action.paddingHorizontal,
+              })}
+            >
+              <Text
+                fontRole="ui"
+                style={{
+                  color: resolveColorReference(toastRecipe.action.color, theme.palette),
+                  fontWeight: toastRecipe.action.fontWeight,
+                }}
+                variant={toastRecipe.action.textVariant}
+              >
+                {resolved.action.label}
+              </Text>
+            </Pressable>
+          ) : null}
         </View>
         {closeControl}
       </View>
-      )}
-      {resolved.action ? (
-        // 1.10.0: tinted pill aligned to the end (toastRecipe.action) instead of a ghost text button.
-        <Pressable
-          accessibilityLabel={resolved.action.accessibilityLabel}
-          accessibilityRole="button"
-          onBlur={resumeFocus}
-          onFocus={pauseFocus}
-          onPress={onAction}
-          style={({ pressed }) => ({
-            alignItems: managedMotion ? "flex-start" : "center",
-            alignSelf: managedMotion ? "stretch" : toastRecipe.action.align === "end" ? "flex-end" : "flex-start",
-            backgroundColor: managedMotion ? "transparent" : resolveColorReference(toastRecipe.action.background, theme.palette),
-            borderTopWidth: managedMotion ? 1 : 0,
-            borderTopColor: theme.colors.border,
-            borderRadius: managedMotion ? 0 : theme.tokens.radius[toastRecipe.action.radius],
-            justifyContent: "center",
-            minHeight: toastRecipe.action.minHeight,
-            opacity: pressed ? toastRecipe.states.pressedOpacity : 1,
-            paddingHorizontal: managedMotion ? 0 : toastRecipe.action.paddingHorizontal,
-          })}
-        >
-          <Text
-              fontRole="ui"
-            style={{
-              color: resolveColorReference(toastRecipe.action.color, theme.palette),
-              fontWeight: toastRecipe.action.fontWeight,
-            }}
-            variant={toastRecipe.action.textVariant}
-          >
-            {resolved.action.label}
-          </Text>
-        </Pressable>
-      ) : null}
     </Animated.View>
   );
 }
@@ -1269,6 +1317,9 @@ function snapshotDescriptor(snapshot: ToastSessionSnapshot): ToastDescriptor {
             dismissOnAction: descriptor.action.dismissOnAction,
           },
         }),
+    // Panel fields must survive the controlled-collection round trip, or `onToastsChange` would drop them.
+    ...(descriptor.media === null ? {} : { media: descriptor.media }),
+    ...(descriptor.progress === null ? {} : { progress: descriptor.progress }),
     closeLabel: descriptor.closeLabel,
     ...(descriptor.onDismiss === null ? {} : { onDismiss: descriptor.onDismiss }),
   };
@@ -1594,3 +1645,8 @@ export function useToastRegion(): ToastRegionController {
   if (controller === null) throw new Error("useToastRegion must be used inside ToastRegion");
   return controller;
 }
+
+// ActivityChip is a feedback-category status trigger (its panel is the Toast in this module). Also exported here so
+// apps can import it from an existing subpath: Next dev with HJM_LOCAL_SOURCE rejected the new ./activity-chip
+// subpath before aliasing because the installed release lacks it (BurnTok 2026-10-10).
+export { ActivityChip, type ActivityChipProps } from "./activity-chip.js";

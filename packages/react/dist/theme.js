@@ -154,6 +154,16 @@ export function createHjmThemeStyle(value) {
     style["--hjm-toast-action-background"] = resolveColorReference(toastRecipe.action.background, palette);
     style["--hjm-toast-action-color"] = resolveColorReference(toastRecipe.action.color, palette);
     style["--hjm-toast-description-color"] = resolveColorReference(toastRecipe.description.color, palette);
+    // Panel toast (2026-10-10): media column, step progress and action alignment come from the same recipe Native reads.
+    style["--hjm-toast-media-size"] = `${toastRecipe.media.size}px`;
+    style["--hjm-toast-action-align"] = toastRecipe.action.align;
+    style["--hjm-toast-progress-gap"] = `${toastRecipe.progress.gap}px`;
+    style["--hjm-toast-progress-dot"] = `${toastRecipe.progress.dotSize}px`;
+    style["--hjm-toast-progress-current-scale"] = String(toastRecipe.progress.currentScale);
+    style["--hjm-toast-progress-done"] = resolveColorReference(toastRecipe.progress.doneColor, palette);
+    style["--hjm-toast-progress-upcoming"] = resolveColorReference(toastRecipe.progress.upcomingColor, palette);
+    style["--hjm-toast-progress-label"] = resolveColorReference(toastRecipe.progress.labelColor, palette);
+    style["--hjm-toast-progress-current-label"] = resolveColorReference(toastRecipe.progress.currentLabelColor, palette);
     const toastExit = toastRecipe.transition.web.exit;
     style["--hjm-toast-exit-duration"] = environment.reducedMotion ? "0ms" : `${toastExit.duration}ms`;
     style["--hjm-toast-exit-easing"] = `cubic-bezier(${easing[toastExit.easing].join(", ")})`;

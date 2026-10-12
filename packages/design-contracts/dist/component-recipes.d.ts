@@ -3332,7 +3332,7 @@ export type ToastPlacement = "top" | "top-start" | "top-end" | "bottom" | "botto
 export type ToastTone = "neutral" | "info" | "success" | "warning" | "danger";
 export type ToastToneMark = "notifications" | "info" | "success" | "warning" | "alert";
 export declare const toastRecipe: {
-    readonly slots: readonly ["viewport", "root", "toneMark", "icon", "content", "title", "description", "action", "close"];
+    readonly slots: readonly ["viewport", "root", "toneMark", "icon", "media", "content", "title", "description", "progress", "action", "close"];
     readonly defaults: {
         readonly tone: "neutral";
         readonly placement: "bottom";
@@ -3485,7 +3485,7 @@ export declare const toastRecipe: {
             alpha?: number;
         }>;
         readonly borderWidth: 1;
-        readonly radius: "lg";
+        readonly radius: "xl";
         readonly shadow: {
             readonly color: "#000000";
             readonly opacity: 0.12;
@@ -3505,6 +3505,9 @@ export declare const toastRecipe: {
         readonly glyph: "sm";
         readonly badgeDiameter: 32;
         readonly badgeRadius: "full";
+    };
+    readonly media: {
+        readonly size: 44;
     };
     readonly content: {
         readonly gap: 4;
@@ -3526,6 +3529,32 @@ export declare const toastRecipe: {
         }>;
         readonly textVariant: "body";
     };
+    readonly progress: {
+        readonly gap: 12;
+        readonly dotSize: 6;
+        readonly currentScale: 1.4;
+        readonly doneColor: Readonly<{
+            source: "theme";
+            key: "contentBrand";
+            alpha?: number;
+        }>;
+        readonly upcomingColor: Readonly<{
+            source: "theme";
+            key: "border";
+            alpha?: number;
+        }>;
+        readonly labelColor: Readonly<{
+            source: "theme";
+            key: "textMuted";
+            alpha?: number;
+        }>;
+        readonly currentLabelColor: Readonly<{
+            source: "theme";
+            key: "text";
+            alpha?: number;
+        }>;
+        readonly textVariant: "caption";
+    };
     readonly action: {
         readonly color: Readonly<{
             source: "theme";
@@ -3538,7 +3567,7 @@ export declare const toastRecipe: {
             alpha?: number;
         }>;
         readonly radius: "full";
-        readonly align: "end";
+        readonly align: "start";
         readonly textVariant: "body";
         readonly fontWeight: "700";
         readonly minHeight: 44;

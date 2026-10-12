@@ -13,6 +13,16 @@
         "role": "canonical"
       },
       {
+        "name": "ActivityChip",
+        "source": "packages/react/src/activity-chip.tsx",
+        "entries": [
+          "./activity-chip",
+          "./feedback"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "ActivityHeatmap",
         "source": "packages/react/src/activity-heatmap.tsx",
         "entries": [
@@ -1587,6 +1597,16 @@
         ],
         "canonicalComponent": "Accordion",
         "role": "canonical"
+      },
+      {
+        "name": "ActivityChip",
+        "source": "packages/react-native/src/activity-chip.tsx",
+        "entries": [
+          "./activity-chip",
+          "./feedback"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "ActivityHeatmap",

@@ -124,3 +124,6 @@ TopBar
 - children의 색은 버튼이 칠하지 않는다. HJM Icon은 자기 `tone` 색을 쓰므로, `primary`·`danger` 버튼 안에서는
   `tone="inverse"`를 준다. 다른 아이콘 라이브러리의 컴포넌트를 직접 넣으면(Native) 색을 제품이 넘겨야 한다.
 - Native `IconButton` `style`은 deprecated지만 다음 major 전까지 recipe 뒤에 합쳐져 지름·배경까지 바뀐다. 새 코드에서 쓰지 않는다.
+
+2026-10-10 사용자 요청: Button과 같은 선택 표현을 쓴다. 선택은 bg 바탕·contentBrand 아이콘으로
+표시하고 추가 선택 테두리는 없다. aria-pressed/Native selected와 키보드 focus outline은 유지한다.

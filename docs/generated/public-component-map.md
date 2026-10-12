@@ -4,11 +4,12 @@
 
 ## @hjmds/react
 
-고유 공개 컴포넌트 및 provider 이름 162개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 163개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
 | Accordion | Accordion | canonical | root, ./display |
+| ActivityChip | 별도 보조 기능 | supplemental | ./activity-chip, ./feedback |
 | ActivityHeatmap | 별도 보조 기능 | supplemental | ./activity-heatmap |
 | Affix | Affix | canonical | ./affix |
 | Agreement | Agreement | canonical | root, ./agreement |
@@ -173,11 +174,12 @@
 
 ## @hjmds/react-native
 
-고유 공개 컴포넌트 및 provider 이름 148개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 149개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
 | Accordion | Accordion | canonical | root, ./data-display |
+| ActivityChip | 별도 보조 기능 | supplemental | ./activity-chip, ./feedback |
 | ActivityHeatmap | 별도 보조 기능 | supplemental | ./activity-heatmap |
 | Agreement | Agreement | canonical | root, ./agreement |
 | AlertDialog | AlertDialog | canonical | root, ./overlays |

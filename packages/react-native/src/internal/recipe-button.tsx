@@ -127,7 +127,7 @@ export const RecipeButton = forwardRef<NativeView, RecipeButtonProps>(
               selectedContract?.background ?? toneContract.background,
             ),
             borderColor: resolveColor(
-              selectedContract?.border ?? toneContract.border,
+              (selectedContract ?? toneContract).border,
             ),
             borderRadius: tokens.radius[buttonRecipe.shapes[shape]],
             borderWidth: (selectedContract ?? toneContract).border ? 1 : 0,

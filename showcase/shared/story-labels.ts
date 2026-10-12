@@ -221,6 +221,7 @@ export const storyLabels: Readonly<Record<string, string>> = {
   "VoiceNote": "음성 메모",
   "FolderPreview": "폴더 미리보기",
   "BlobatarAvatar": "블로바타 캐릭터",
+  "ActivityChip": "작업 상태 칩",
   "ActivityHeatmap": "활동 히트맵",
   "CodeBlock": "코드 블록",
   "AnimatedBlobatar": "움직이는 블로바타 캐릭터",

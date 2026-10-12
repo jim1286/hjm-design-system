@@ -52,7 +52,8 @@ export const iconButtonRecipe = {
     selected: {
       background: semanticColors.canvas,
       content: semanticColors.content.brand,
-      border: semanticColors.border.focus,
+      // Match Button: selection changes color without introducing an outline.
+      border: null,
     },
     pressedOpacity: opacity.pressed,
     disabledOpacity: opacity.disabled,
@@ -71,7 +72,7 @@ export const iconButtonRecipe = {
   sizes: Record<IconButtonSize, { diameter: number; hitSlop: number; glyph: GlyphSize }>;
   shapes: Record<IconButtonShape, keyof typeof radius>;
   states: {
-    selected: { background: ColorReference; content: ColorReference; border: ColorReference };
+    selected: { background: ColorReference; content: ColorReference; border: ColorReference | null };
     pressedOpacity: number;
     disabledOpacity: number;
   };

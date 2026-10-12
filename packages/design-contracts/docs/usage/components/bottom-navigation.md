@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-08
+- 검토일: 2026-10-10
 - 근거: [BottomNavigation](../../bottom-navigation.md), recipe `bottomNavigationRecipe`
 - 스토리북: `배포/컴포넌트/탐색/하단 탐색`
 
@@ -73,6 +73,7 @@ import { BottomNavigation } from "@hjmds/react-native/navigation";
 | `configuration.density` | `regular` · `compact` | `regular` | — |
 | `configuration.direction` | `ltr` · `rtl` | Provider 환경(없으면 `ltr`) | — |
 | `configuration.keyboardBehavior` | `hide` · `remain` | `hide` | 기본은 소프트 키보드가 열리면 막대를 숨긴다 |
+| `configuration.labels` | `visible` · `hidden` | `visible` | `hidden`은 아이콘만 남기고 목적지 이름을 화면에서 뺀다. 이름은 항목의 접근성 이름으로 그대로 읽힌다. 아이콘을 칸 가운데에 둔다. 선택 표시는 아이콘 굵기·확대(와 제품 선택 표시)만 남으므로 의도한 아이콘 전용 막대에만 쓴다 |
 | `primaryAction` | `ReactNode`(Button/IconButton) | — | `configuration` 밖의 별도 prop. 생성 같은 비목적지 행동이며 `center-gap` 또는 `capsule`과 짝짓는다 |
 | 항목 `badge` | `{ count, max?, accessibilityLabel }` | `max` 99 | 숫자만. 점 배지는 없다. `count`가 0이면 그리지 않는다 |
 | `onActivate` | `(activation: { key: Key; reason: "navigate" \| "reselect" }) => void` | Web 선택 · Native 필수 | 이동 의도만 알린다. 선택은 바꾸지 않는다. `reselect`는 이미 선택된 항목을 다시 누른 경우 |

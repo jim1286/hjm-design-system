@@ -3,12 +3,22 @@ import { type SemanticIconName } from "./icon.js";
 import type { DesignSystemDirection } from "./design-system-provider.js";
 export type BottomNavigationDirection = DesignSystemDirection;
 export type BottomNavigationKeyboardBehavior = "hide" | "remain";
+/**
+ * `hidden` drops the visible destination name and keeps it as the item's
+ * accessible name. Icon-only bars rely on the icon stroke/scale emphasis (and
+ * any product selection mark) for non-color selected evidence, so products
+ * choose it deliberately; the default keeps labels visible. Added 2026-10-10
+ * for BurnTok's icon-only dock instead of letting the app hide labels with
+ * deprecated styles or transparent palette overrides.
+ */
+export type BottomNavigationLabels = "visible" | "hidden";
 export type BottomNavigationConfiguration = Readonly<{
     presentation?: BottomNavigationPresentation;
     distribution?: BottomNavigationDistribution;
     density?: BottomNavigationDensity;
     direction?: BottomNavigationDirection;
     keyboardBehavior?: BottomNavigationKeyboardBehavior;
+    labels?: BottomNavigationLabels;
 }>;
 export type ResolvedBottomNavigationConfiguration = Readonly<{
     presentation: BottomNavigationPresentation;
@@ -16,6 +26,7 @@ export type ResolvedBottomNavigationConfiguration = Readonly<{
     density: BottomNavigationDensity;
     direction: BottomNavigationDirection;
     keyboardBehavior: BottomNavigationKeyboardBehavior;
+    labels: BottomNavigationLabels;
 }>;
 /**
  * Bottom navigation only accepts numeric counters. A silent status dot is too
@@ -98,6 +109,7 @@ export type BottomNavigationActivation<Key extends string = string> = Readonly<{
 export declare const bottomNavigationBehaviorDefaults: {
     readonly direction: "ltr";
     readonly keyboardBehavior: "hide";
+    readonly labels: "visible";
     readonly minItems: 2;
     readonly maxItems: 6;
 };

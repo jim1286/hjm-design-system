@@ -41,7 +41,7 @@ describe("Liquid presentation contract", () => {
       expect(g.width).toBeLessThanOrEqual(288);
     }
     const final = buildLiquidToastGeometry(1, 1, layout);
-    expect(final).toMatchObject({ width: 288, height: 170, y: 58, radius: 12, neckWidth: 0, offsetY: 0 });
+    expect(final).toMatchObject({ width: 288, height: 170, y: 58, radius: 24, neckWidth: 0, offsetY: 0 });
     expect(buildLiquidToastGeometry(0.4, 0, layout).neckWidth).toBeGreaterThan(0);
   });
 

@@ -11,8 +11,9 @@ export const liquidToastRecipe = {
     gap: 26,
     minHeight: 74,
     maxWidth: 396,
-    // 2026-10-02 card redesign: the medium 12-unit corner supports a banner silhouette.
-    radius: 12,
+    // 2026-10-02 card redesign used the medium 12-unit corner for a banner silhouette. 2026-10-10 the panel
+    // replaces that banner too ("패널이 토스트가 되는거지"), so the settled card uses the same xl (24) corner.
+    radius: 24,
     dropSize: 52,
     neckWidth: 60,
     blur: 14.3,

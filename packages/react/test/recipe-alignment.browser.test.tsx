@@ -6,7 +6,7 @@ import { layer, radius, shadow as shadowTokens } from "@hjmds/design-contracts/f
 import { buttonRecipe, fieldRecipe } from "@hjmds/design-contracts/recipes/base";
 import { dialogRecipe, sheetRecipe, toastRecipe } from "@hjmds/design-contracts/recipes";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { Button, Dialog, HjmProvider, Menu, Sheet, Surface, TextField, ToastProvider, useToast } from "../src/index.js";
+import { Button, IconButton, Dialog, HjmProvider, Menu, Sheet, Surface, TextField, ToastProvider, useToast } from "../src/index.js";
 import "../src/styles.css";
 
 /**
@@ -50,6 +50,26 @@ async function flush() {
 
 describe.each(["light", "dark"] as const)("Web renderer follows the recipes in %s mode", (theme) => {
   const palette = resolveDesignSystemProviderValue({ theme }, { systemTheme: theme }).palette;
+
+  it("keeps selected button and icon-button color without a visible border", async () => {
+    await act(async () => root.render(
+      <HjmProvider theme={theme} systemTheme={theme}>
+        <Button tone="ghost" selected>Petals</Button>
+        <IconButton tone="secondary" selected label="Sound"><span /></IconButton>
+      </HjmProvider>,
+    ));
+    await flush();
+    for (const button of container.querySelectorAll<HTMLButtonElement>("button")) {
+      const style = getComputedStyle(button);
+      expect(style.borderTopColor).toBe("rgba(0, 0, 0, 0)");
+      expect(style.color).toBe(rgb(palette.theme.contentBrand));
+      expect(button.getAttribute("aria-pressed")).toBe("true");
+    }
+    // Selection and keyboard focus are independent: removing selection chrome keeps the focus outline.
+    const button = container.querySelector<HTMLButtonElement>("button")!;
+    button.focus();
+    expect(getComputedStyle(button).outlineStyle).not.toBe("none");
+  });
 
   it("paints Sheet chrome from sheetRecipe", async () => {
     await act(async () => root.render(

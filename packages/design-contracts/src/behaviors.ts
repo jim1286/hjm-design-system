@@ -758,6 +758,7 @@ export const behaviorRegistry = {
     configuration: {
       direction: ["ltr", "rtl"],
       keyboardBehavior: ["hide", "remain"],
+      labels: ["visible", "hidden"],
     },
     defaults: bottomNavigationBehaviorDefaults,
     stateAxes: {

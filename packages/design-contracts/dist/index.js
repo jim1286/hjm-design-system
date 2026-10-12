@@ -56,6 +56,8 @@ export * from "./file-picker.js";
 export * from "./pagination.js";
 export * from "./popover.js";
 export * from "./upload-item.js";
+// 2026-10-10 panel-toast trigger (composition activity-status); contract-only, no catalog row (frozen).
+export * from "./activity-chip.js";
 export * from "./timeline.js";
 export * from "./tree.js";
 export * from "./steps.js";

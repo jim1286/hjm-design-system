@@ -16,9 +16,21 @@ export type ToastActionDescriptor = Readonly<{
     dismissOnAction?: boolean;
 }>;
 /**
+ * Ordered steps of a background task shown inside the toast panel (1.20 panel toast).
+ * `current` is the zero-based index of the running step; earlier steps read as done.
+ */
+export type ToastProgressDescriptor = Readonly<{
+    steps: readonly string[];
+    current: number;
+}>;
+/**
  * Renderer-neutral copy and behavior for one notification. Copy stays plain
  * text so Web and Native can announce the exact same message without accepting
- * renderer nodes in the core package.
+ * renderer nodes in the core package. `media` is the one exception: a decorative
+ * leading visual (product mascot, avatar, icon) that the core never inspects and
+ * only passes through to the renderer, which hides it from assistive technology.
+ * 2026-10-10 BurnTok asked for its review mascot inside the toast; a renderer-only
+ * field was rejected because the store resolves descriptors and would drop it.
  */
 export type ToastDescriptor = Readonly<{
     /** Stable product-owned identity used for in-place de-duplication. */
@@ -35,6 +47,10 @@ export type ToastDescriptor = Readonly<{
     /** `null` persists; short durations clamp to the configured floor. */
     durationMs?: number | null;
     action?: ToastActionDescriptor;
+    /** Decorative leading visual that replaces the tone badge (ReactNode on Web/Native). */
+    media?: unknown;
+    /** Step progress of a running task, announced with the current step label. */
+    progress?: ToastProgressDescriptor;
     /** Required localized name for the icon-only close affordance. */
     closeLabel: string;
     onDismiss?: (reason: ToastDismissReason) => void;
@@ -55,6 +71,8 @@ export type ResolvedToastDescriptor = Readonly<{
     announcement: string;
     durationMs: number | null;
     action: ResolvedToastActionDescriptor | null;
+    media: unknown;
+    progress: ToastProgressDescriptor | null;
     closeLabel: string;
     onDismiss: ((reason: ToastDismissReason) => void) | null;
 }>;

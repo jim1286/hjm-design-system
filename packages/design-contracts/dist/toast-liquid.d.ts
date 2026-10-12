@@ -11,7 +11,7 @@ export declare const liquidToastRecipe: {
     readonly gap: 26;
     readonly minHeight: 74;
     readonly maxWidth: 396;
-    readonly radius: 12;
+    readonly radius: 24;
     readonly dropSize: 52;
     readonly neckWidth: 60;
     readonly blur: 14.3;

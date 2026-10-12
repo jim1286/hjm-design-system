@@ -8,6 +8,7 @@ import {
   type ToastDuplicatePolicy,
   type ToastId,
   type ToastOverflowPolicy,
+  type ToastProgressDescriptor,
   type ToastPublishOptions,
   type ToastPublishResult,
   type ToastSessionSnapshot,
@@ -64,6 +65,29 @@ function ToneGlyph({ tone }: { tone: keyof typeof toastRecipe.tones }) {
     >
       <path d={toneGlyphPaths[toastRecipe.tones[tone].mark]} />
     </svg>
+  );
+}
+
+// Steps read as an ordered list with `aria-current="step"`; the dots are decoration beside each label,
+// so state never depends on colour alone (WCAG 1.4.1).
+function ToastProgress({ progress }: { progress: ToastProgressDescriptor }) {
+  return (
+    <ol className="hjm-toast__progress">
+      {progress.steps.map((step, index) => {
+        const state = index < progress.current ? "done" : index === progress.current ? "current" : "upcoming";
+        return (
+          <li
+            key={`${index}-${step}`}
+            className="hjm-toast__progress-step"
+            data-state={state}
+            aria-current={state === "current" ? "step" : undefined}
+          >
+            <span className="hjm-toast__progress-dot" aria-hidden="true" />
+            <span className="hjm-toast__progress-label">{step}</span>
+          </li>
+        );
+      })}
+    </ol>
   );
 }
 
@@ -139,9 +163,14 @@ const ToastCard = forwardRef<HTMLDivElement, ToastCardProps>(function ToastCard(
         {descriptor.announcement}
       </span>
       <span className="hjm-toast__tone-mark" aria-hidden="true" />
-      <span className="hjm-toast__icon" aria-hidden="true">
-        <ToneGlyph tone={descriptor.tone} />
-      </span>
+      {descriptor.media === null ? (
+        <span className="hjm-toast__icon" aria-hidden="true">
+          <ToneGlyph tone={descriptor.tone} />
+        </span>
+      ) : (
+        // Product media (mascot, avatar) takes the badge column; it is decorative, the copy carries meaning.
+        <span className="hjm-toast__media" aria-hidden="true">{descriptor.media as ReactNode}</span>
+      )}
       <span className="hjm-toast__content">
         {descriptor.title ? (
           <strong id={titleId} className="hjm-toast__title">{descriptor.title}</strong>
@@ -149,6 +178,7 @@ const ToastCard = forwardRef<HTMLDivElement, ToastCardProps>(function ToastCard(
         <span id={descriptionId} className="hjm-toast__description">
           {descriptor.description}
         </span>
+        {descriptor.progress ? <ToastProgress progress={descriptor.progress} /> : null}
       </span>
       {descriptor.action ? (
         <button

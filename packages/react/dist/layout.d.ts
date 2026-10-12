@@ -85,7 +85,10 @@ export declare const Text: import("react").ForwardRefExoticComponent<Omit<HTMLAt
     layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLElement>>;
 export type SurfaceProps = HTMLAttributes<HTMLElement> & Readonly<{
-    as?: "div" | "section" | "article";
+    as?: "div" | "section" | "article" | "button";
+    /** Native button host used by interactive Card; passive surfaces remain divs. */
+    type?: "button";
+    disabled?: boolean;
     tone?: SurfaceTone;
     bordered?: boolean;
     padding?: SurfacePadding;
@@ -94,7 +97,10 @@ export type SurfaceProps = HTMLAttributes<HTMLElement> & Readonly<{
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const Surface: import("react").ForwardRefExoticComponent<HTMLAttributes<HTMLElement> & Readonly<{
-    as?: "div" | "section" | "article";
+    as?: "div" | "section" | "article" | "button";
+    /** Native button host used by interactive Card; passive surfaces remain divs. */
+    type?: "button";
+    disabled?: boolean;
     tone?: SurfaceTone;
     bordered?: boolean;
     padding?: SurfacePadding;

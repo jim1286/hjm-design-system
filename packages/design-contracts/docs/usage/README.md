@@ -30,6 +30,7 @@
 | 지침 | 분류 | 언제 쓰나 | 상태 | 지원 |
 | --- | --- | --- | --- | --- |
 | [Accordion](components/accordion.md) | 데이터 표시 | 서로 관계가 있는 여러 접힘 항목을 한 그룹으로 보일 때 쓴다. | 배포 | Web · Native |
+| [ActivityChip](components/activity-chip.md) | 상태와 알림 | 백그라운드에서 돌고 있는 작업 하나(검수·업로드·동기화)의 상태를 헤더의 빈 자리에 짧게 보여 주고, 누르면 그 작업의 진행 패널(Toast 패널)을 여닫을 때 쓴다. | 실험 | Web · Native |
 | [ActivityHeatmap](components/activity-heatmap.md) | 데이터 표시 | 최대 1년(366일) 범위의 일별 활동량을 한눈에 보여 주는 읽기 전용 개요에 쓴다. | 배포 | Web · Native |
 | [Affix](components/affix.md) | 기반 기능 | Web에서 스크롤하는 동안 요약·필터·저장 버튼 같은 작은 영역을 가장 가까운 스크롤 조상의 상단에 붙여 두고, 부모가 끝나면 함께 풀리게 할 때 쓴다. | 배포 | Web |
 | [Agreement](components/agreement.md) | 입력 | 가입·결제·서비스 시작 앞의 약관 동의 묶음에 쓴다. | 배포 | Web · Native |
@@ -207,6 +208,7 @@
 | [추가해도 유지되는 목록](compositions/live-list.md) | 정보 표시 | 입력 중인 목록에 새 데이터가 추가되거나 순서가 바뀌어도 기존 초안과 항목의 정체성을 유지할 때 쓴다. | 배포 | Web · Native |
 | [카드 묶음과 긴 목록](compositions/data-layouts.md) | 정보 표시 | 많은 항목을 화면에 늘어놓을 방식을 고를 때 쓴다. | 배포 | Web · Native |
 | [그림과 시작 안내](compositions/illustrated-outcome.md) | 피드백과 복구 | 빈 목록에서 시작을 안내하고 짧은 온보딩을 거쳐 결과를 보여 줄 때 쓴다. | 배포 | Web · Native |
+| [백그라운드 작업 상태](compositions/activity-status.md) | 피드백과 복구 | 사용자가 다른 화면을 보는 동안 계속되는 작업 하나(검수·생성·업로드)의 진행을 헤더의 작은 칩으로 알리고, 칩을 누르면 같은 작업의 패널 Toast가 열려 단계와 결과를 보여 줄 때 쓴다. | 실험 | Web · Native |
 | [버튼 완료 피드백](compositions/action-feedback.md) | 피드백과 복구 | 입력을 유지하며 저장의 진행·성공·재시도 가능 실패를 보여 줄 때 쓴다. | 배포 | Web · Native |
 | [변경 저장과 이탈 확인](compositions/reference-settings.md) | 피드백과 복구 | 저장값과 편집 초안을 비교해 이탈 확인 흐름이 필요할 때 쓴다. | 배포 | Web · Native |
 | [보관과 실행 취소](compositions/action-recovery-undo.md) | 피드백과 복구 | 보관·숨기기·목록에서 빼기처럼 제품이 역연산을 제공하는 작업 뒤에, 같은 자리에서 실행 취소를 주고 그 복구 요청이 성공해야 화면을 되돌릴 때 쓴다. | 배포 | Web · Native |

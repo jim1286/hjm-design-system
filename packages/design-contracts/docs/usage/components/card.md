@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-07
+- 검토일: 2026-10-10
 - 근거: recipe `cardRecipe`(`src/card.ts`), 바탕 `surfaceRecipe`(`src/base-recipes.ts`). 별도 계약 문서는 없다
 - 스토리북: `배포/컴포넌트/데이터 표시/카드`
 
@@ -78,9 +78,31 @@ import { Button } from "@hjmds/react-native/actions";
 | `selected` | `boolean` | `false` | `true`면 tone이 `accent`로 바뀐다(`cardRecipe.selectedTone`) |
 | `headingLevel`(Web만) | `2` · `3` · `4` | `3` | 제목이 `h3`로 렌더되므로 문서 위계에 맞춰 고른다 |
 | `title` · `description` · `leading` · `media` · `actions` · `children` | `ReactNode` | — | 슬롯. 순서는 HJM이 고정한다 |
+| `onActivate` | `() => void` | — | 카드 전체가 하나의 행동일 때 사용(미게시). Web `aria-label`, Native `accessibilityLabel` 필수 |
+| `disabled` | `boolean` | `false` | 전체 카드 행동 차단·비활성 피드백(미게시) |
 | `layoutStyle` | margin·width·flex·`alignSelf` | — | 배치 전용. 두 플랫폼 모두 root Surface에 적용된다 |
 
-Card 자체에는 콜백이 없다. 누름 행동은 `actions`의 Button(Web `onClick: (event: MouseEvent<HTMLButtonElement>) => void`, Native `onPress`)이 갖는다.
+### 카드 전체 누름(미게시)
+
+2026-10-10 번뚝의 세 열 시작점 선택에서 별도 선택 버튼이 좁은 카드의 절반을 차지했다.
+`onActivate`는 기존 Card의 구조를 유지하면서 전체 표면을 하나의 행동으로 만든다.
+제품이 Card 바깥에 Pressable을 다시 조립하는 대신 HJM이 버튼 역할, 선택·비활성 상태,
+44pt 최소 대상, 눌림·초점 피드백을 소유한다. 같은 카드를 다시 눌러도 콜백을 호출하므로
+제품이 수정된 초안 교체 확인을 처리할 수 있다. RadioGroup은 단일 옵션 값 변경용이며,
+이처럼 같은 항목을 다시 실행하는 카드 동작을 대신하지 않는다.
+
+```tsx
+<Card aria-label={starter.title} onActivate={() => choose(starter)}
+  selected={selectedId === starter.id} disabled={pending} bordered={selectedId === starter.id} padding="sm">
+  <span>{starter.emoji} {starter.title}</span>
+</Card>
+// Native는 aria-label 대신 accessibilityLabel을 전달한다.
+```
+
+`onActivate`와 `actions`를 함께 쓰지 않는다. children·media·leading에도 입력/링크/버튼을
+넣지 않는다. 내부 행동이 여러 개인 카드에는 기존 `actions` 슬롯을 사용한다.
+기존 passive Card는 콜백 없이 동일하게 유지된다. 이 API는 로컬 source/candidate 단계이며
+npm 게시 및 소비 제품의 게시 버전 채택 완료를 뜻하지 않는다.
 
 2026-10-07 [확장 카드·그리드 대조](../../../../../docs/plans/aceternity-interaction-adoption-2026-10-07.md)에서
 카드와 상세 표시를 별도 새 카드 엔진으로 복제할 필요가 없는 경우를 확인했다. 상세는 `actions`의
@@ -112,13 +134,13 @@ subtree라 질감을 바꾸거나 host가 실패해도 본문/초안은 유지�
 - 색·radius·padding은 `tone`·`radius`·`padding` 축으로만 바꾼다. 카드마다 브랜드 색을 칠하지 않는다.
 - 배치는 두 플랫폼 모두 `layoutStyle`로 한다. Native `CardProps`에는 `style`이 없다. Web의 `className`·`style`로 recipe 값을 덮지 않는다.
   카드 목록 사이 간격은 바깥 [Stack](stack.md)·[Grid](grid.md)이 정한다.
-- Card 자체는 누름 행동이 없다(Native는 `onPress`가 없다). 카드 안 행동은 `actions`의 Button으로 둔다.
+- 카드 전체 행동은 `onActivate`만 사용한다. 카드 안 행동이 있으면 전체 행동을 빼고 `actions`의 Button으로 둔다.
 
 ## 플랫폼 차이
 
 | 항목 | Web | Native |
 | --- | --- | --- |
-| root | `<article>` | `View`(Surface) |
+| root | 기본 `<article>`, 전체 행동은 `<button type="button">` | 기본 `View`(Surface), 전체 행동은 `Pressable` |
 | 제목 | `h{headingLevel}` | `Text` + `accessibilityRole="header"`, 수준 지정 없음 |
 | 배치 | `layoutStyle` | `layoutStyle` |
 | 내용 clip | tone의 `clipsContent`(`raised`는 그림자 때문에 clip 안 함) | 내부 `View`가 항상 clip, 그림자는 바깥에 남는다. frame과 clip이 같은 Provider radius token을 사용 |
@@ -129,5 +151,4 @@ subtree라 질감을 바꾸거나 host가 실패해도 본문/초안은 유지�
   등록되면 그 테마의 `tokens.radius.lg`를 쓴다. 2026-10-07 카드 갤러리 비교에서 Native의 바깥
   Surface만 테마를 따르고 내부 media clip은 foundation 값을 쓰는 누락을 발견해 같은 token으로 연결했다.
 
-- `selected`는 tone만 바꾼다. Web은 `data-state="selected"` 속성뿐이고 Native는 접근성 state를
-  알리지 않는다. 선택 가능한 카드 목록이라면 선택 상태를 문구나 다른 컨트롤로도 전달한다.
+- passive Card의 `selected`는 tone 표시다. 전체 행동 Card는 Web `aria-pressed`, Native `accessibilityState.selected`로도 선택을 알린다.

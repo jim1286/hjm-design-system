@@ -393,10 +393,12 @@ export declare const behaviorRegistry: {
         readonly configuration: {
             readonly direction: readonly ["ltr", "rtl"];
             readonly keyboardBehavior: readonly ["hide", "remain"];
+            readonly labels: readonly ["visible", "hidden"];
         };
         readonly defaults: {
             readonly direction: "ltr";
             readonly keyboardBehavior: "hide";
+            readonly labels: "visible";
             readonly minItems: 2;
             readonly maxItems: 6;
         };

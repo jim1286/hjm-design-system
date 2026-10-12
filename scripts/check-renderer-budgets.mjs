@@ -49,6 +49,9 @@ const rendererBudgets = [
     // to those three pre-allowance limits; Node 24 additionally needs 100 gzip bytes
     // on display (18.4 kB measured). Other byte/optional-peer gates stay fixed.
     budgets: {
+      // 2026-10-10 ActivityChip: one button over the activity-chip contract; no provider/Toast edge.
+      // Reviewed 2 local modules, 4.6 kB raw / 1.6 kB gzip.
+      "./activity-chip": { modules: 2, raw: 4600, gzip: 1600 },
       // Finite multi-visible rail reuses Button/provider instead of Carousel selection.
       // Reviewed 5 local modules, 35037 raw / 9277 gzip; base excludes existing shared allowances.
       "./collection-rail": { modules: 5, raw: 31000, gzip: 8100 },
@@ -394,6 +397,9 @@ const rendererBudgets = [
     // label/support presentation. Only its consuming graphs gain one local edge;
     // provider, native-linking and optional-peer boundaries remain unchanged.
     budgets: {
+      // 2026-10-10 ActivityChip: Pressable + Text primitive + provider theme; no Toast or gesture peer.
+      // Reviewed 5 local modules, 33.6 kB raw / 8.9 kB gzip (Text primitive and provider are shared graphs).
+      "./activity-chip": { modules: 5, raw: 33600, gzip: 8900 },
       // Finite rail reuses Button/primitives and a horizontal ScrollView, without a gesture peer.
       // Reviewed 7 local modules, 53520 raw / 13476 gzip; base excludes shared helper allowances.
       "./collection-rail": { modules: 5, raw: 50600, gzip: 12100 },

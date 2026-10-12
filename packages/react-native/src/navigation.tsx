@@ -785,6 +785,8 @@ export function BottomNavigation<
     resolved.items.length,
   );
   const capsule = presentation.presentation === "capsule";
+  // Hidden labels keep the item's accessibilityLabel; only the visible Text row is dropped.
+  const labelsVisible = presentation.labels === "visible";
   const expandedLabels = theme.environment.textScale >= 1.5 || resolved.items.length > 4;
   // Controlled providers bake scale into Text's style, so the native multiplier
   // prop cannot enforce the recipe limit (BT-QA-021). Scope labels only; AX names stay.
@@ -958,7 +960,8 @@ export function BottomNavigation<
                     flex: capsule && selected && !expandedLabels ? 2 : 1,
                     flexShrink: 1,
                     gap: density.gap,
-                    justifyContent: capsule ? "center" : "flex-start",
+                    // Icon-only items center the indicator instead of leaving an empty label row.
+                    justifyContent: capsule || !labelsVisible ? "center" : "flex-start",
                     marginEnd: index === middleIndex ? centerGap : 0,
                     minHeight: density.itemMinHeight,
                     minWidth: capsule ? 44 : density.itemMinWidth,
@@ -1063,7 +1066,7 @@ export function BottomNavigation<
                     </View>
                   ) : null}
                 </View>
-                {(!capsule || expandedLabels || selected) && <HjmNativeProvider
+                {labelsVisible && (!capsule || expandedLabels || selected) && <HjmNativeProvider
                   textScale={labelTextScale}
                 ><Text
                   align="center"

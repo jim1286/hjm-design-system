@@ -10,6 +10,7 @@ import {} from "./icon.js";
 export const bottomNavigationBehaviorDefaults = {
     direction: "ltr",
     keyboardBehavior: "hide",
+    labels: "visible",
     minItems: 2,
     maxItems: 6,
 };
@@ -30,6 +31,7 @@ const configurationKeys = new Set([
     "density",
     "direction",
     "keyboardBehavior",
+    "labels",
 ]);
 const descriptorKeys = new Set(["accessibilityLabel", "items", "selectedKey"]);
 const itemKeys = new Set([
@@ -101,6 +103,7 @@ const keyboardBehaviors = new Set([
     "hide",
     "remain",
 ]);
+const labelModes = new Set(["visible", "hidden"]);
 export function validateBottomNavigationConfiguration(configuration, itemCount) {
     if (!isObject(configuration)) {
         throw new TypeError("BottomNavigation configuration must be an object");
@@ -130,6 +133,9 @@ export function validateBottomNavigationConfiguration(configuration, itemCount) 
         !keyboardBehaviors.has(configuration.keyboardBehavior)) {
         throw new TypeError(`Unsupported BottomNavigation keyboardBehavior: ${String(configuration.keyboardBehavior)}`);
     }
+    if (configuration.labels !== undefined && !labelModes.has(configuration.labels)) {
+        throw new TypeError(`Unsupported BottomNavigation labels: ${String(configuration.labels)}`);
+    }
     // Capsule actions sit beside the destination surface, so reserving a central gap would duplicate their space.
     if (configuration.presentation === "capsule" && configuration.distribution === "center-gap") {
         throw new TypeError("BottomNavigation capsule uses an adjacent action, not center-gap");
@@ -147,6 +153,7 @@ export function resolveBottomNavigationConfiguration(configuration, itemCount) {
         direction: configuration.direction ?? bottomNavigationBehaviorDefaults.direction,
         keyboardBehavior: configuration.keyboardBehavior ??
             bottomNavigationBehaviorDefaults.keyboardBehavior,
+        labels: configuration.labels ?? bottomNavigationBehaviorDefaults.labels,
     };
 }
 export function validateBottomNavigationDescriptor(descriptor) {

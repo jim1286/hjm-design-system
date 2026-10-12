@@ -191,6 +191,7 @@ function BottomNavigationInner<
       data-density={presentation.density}
       data-distribution={presentation.distribution}
       data-keyboard-behavior={presentation.keyboardBehavior}
+      data-labels={presentation.labels}
       data-presentation={presentation.presentation}
       dir={presentation.direction}
       style={{
@@ -240,7 +241,11 @@ function BottomNavigationInner<
                     </span>
                   ) : null}
                 </span>
-                <span className="hjm-bottom-navigation__label">{item.label}</span>
+                {/* Hidden labels are not rendered: the item link already carries
+                    resolvedAccessibilityLabel, so a visually-hidden copy would only duplicate it. */}
+                {presentation.labels === "visible" ? (
+                  <span className="hjm-bottom-navigation__label">{item.label}</span>
+                ) : null}
               </>
             );
             const itemStyle = {

@@ -4,9 +4,9 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-07
+- 검토일: 2026-10-10
 - 근거: [Toast](../../toast.md), [Liquid Toast](../../../../react-native/docs/liquid-toast.md), `src/component-recipes.ts`(`toastRecipe`)
-- 스토리북: `배포/컴포넌트/상태와 알림/토스트`, `배포/컴포넌트/상태와 알림/리퀴드 토스트`
+- 스토리북: `배포/컴포넌트/상태와 알림/토스트`, `배포/컴포넌트/상태와 알림/리퀴드 토스트`, `실험/구성/피드백과 복구/백그라운드 작업 상태`
 
 ## 언제 쓰나
 
@@ -20,6 +20,7 @@
 | 화면 안에 계속 남아야 하는 안내·경고(점검 예정, 권한 없음, 폼 오류 요약) | [Notice](notice.md) |
 | 사용자가 응답해야 진행되는 확인·삭제 확인·필수 선택 | [AlertDialog](alert-dialog.md) |
 | 작업 결과를 화면 전체로 보여 줌 | [Result](result.md) |
+| 헤더에 작업 상태를 상시 표시하고 눌러서 패널을 여닫음 | [ActivityChip](activity-chip.md) + 이 Toast 패널([구성](../compositions/activity-status.md)) |
 
 선택 기준: 사용자가 놓쳐도 되고 자리를 차지하면 안 되면 Toast, 그 화면을 보는 동안 계속 보여야 하거나
 읽지 않으면 다음 행동을 잘못할 수 있으면 Notice다. Toast에는 그 알림에서만 할 수 있는 행동을 두지 않는다.
@@ -78,7 +79,9 @@ function useProfileSavedToast() {
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| descriptor | `id`·`description`·`closeLabel` 필수, `title`·`tone`·`priority`·`durationMs`·`action`·`announcement`·`presentation` 선택 | — | 모두 `string`(ReactNode 아님) |
+| descriptor | `id`·`description`·`closeLabel` 필수, `title`·`tone`·`priority`·`durationMs`·`action`·`announcement`·`presentation`·`media`·`progress` 선택 | — | 문구는 모두 `string`(ReactNode 아님). `media`만 예외 |
+| `media` | `unknown`(Web·Native에서 `ReactNode`를 넘긴다) | — | 미게시(1.17.2 이후). 장식 시각물(마스코트·아바타). tone 배지 자리를 44(`toastRecipe.media.size`) 원으로 대신하고 보조기술에서 숨긴다 |
+| `progress` | `{ steps: readonly string[]; current: number }` | — | 미게시(1.17.2 이후). 단계 2~5개, `current`는 0부터. 설명 아래 점+이름 줄로 그리고, 기본 낭독 끝에 현재 단계 이름을 붙인다. 범위 밖이면 throw |
 | `action` | `{ label, accessibilityLabel?, onAction: () => void, dismissOnAction? }` | — | 누르면 `onAction`, 기본으로 알림이 닫힌다 |
 | `tone` | `neutral` · `info` · `success` · `warning` · `danger` | `neutral` | — |
 | `priority` | `normal` · `high` | — | 낭독 순서, 색과 무관 |
@@ -101,10 +104,10 @@ function useProfileSavedToast() {
 프로필 없는 소비자의 기본값은 유지한다. 상태·초안·선택·Modal teardown은 이 축의 소유가 아니다.
 플랫폼 근사와 미검증 범위는 [프로필 계약](../../design-profile.md#오버레이선택-입력의-프로필-연결-보완)을 따른다.
 
-Native의 선택형 `/toast-liquid`도 가장 가까운 프로필의 `radius.lg`와 `shadow.raised`를
+Native의 선택형 `/toast-liquid`도 가장 가까운 프로필의 `radius.xl`(패널 이전 `radius.lg`)과 `shadow.raised`를
 읽는다. 일반 Toast의 `floating` 대신 `raised`를 유지하는 이유는 리퀴드 카드의 얕은 깊이를
 정한 기존 검토다. RN 내용 clip과 Skia 카드 모서리를 함께 바꾸고 그림자의 위·아래·좌·우
-여유를 확보한다. 프로필이 없으면 기존 모서리 12와 foundation `raised`를 유지한다.
+여유를 확보한다. 프로필이 없으면 모서리 24(패널, 미게시 1.17.2 이후. 그전 12)와 foundation `raised`를 쓴다.
 원형 시작점·큐·행동은 유지하며 Web은 일반 Toast fallback이다. 기존
 `실험/구성/비교와 검증/테마 조합`의 Native ‘물방울 알림의 테마 비교’에서 같은 알림을
 유지한 채 다음 테마로 바꿀 수 있다. 기기 시각·음성·제스처 검증은 별도로 남는다.
@@ -114,9 +117,9 @@ Native의 선택형 `/toast-liquid`도 가장 가까운 프로필의 `radius.lg`
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 카드 최대 폭 420(Web `min(420px, 100vw − 2×spacing.md)`, Native 화면 폭 − 안전 영역 − 2×16에서 420으로 자름). 최소 높이 56(`layout.rowHeight.singleLine`). 열은 [아이콘 배지 32][문구][닫기 44]. `action`은 높이 44(`control.minTouchTarget`), 좌우 여백 `spacing.md` 16의 pill | `toastRecipe.viewport`·`surface`·`icon`·`action`, `.hjm-toast`, `react-native/src/feedback.tsx` |
+| 크기 | 카드 최대 폭 420(Web `min(420px, 100vw − 2×spacing.md)`, Native 화면 폭 − 안전 영역 − 2×16에서 420으로 자름). 최소 높이 56(`layout.rowHeight.singleLine`). 모서리 `radius.xl` 24(패널, 미게시 1.17.2 이후. 그전 `lg` 16). 열은 [아이콘 배지 32 또는 `media` 44][문구][닫기 44]. `action`은 높이 44(`control.minTouchTarget`), 좌우 여백 `spacing.md` 16의 pill. `progress` 점 6(현재 단계 1.4배) | `toastRecipe.viewport`·`surface`·`icon`·`action`, `.hjm-toast`, `react-native/src/feedback.tsx` |
 | 간격 | 화면 가장자리에서 `spacing.md` 16 + 안전 영역(`safeAreaMode: "additive"`). 여러 장 사이 `spacing.sm` 12. 카드 안 열 간격 `spacing.sm` 12 | `toastRecipe.viewport`, `.hjm-toast-viewport` |
-| 순서·정렬 | 기본은 아래 가운데(`placement="bottom"`). 위쪽 배치는 위에서 아래로, 아래쪽 배치는 가장자리부터 위로 쌓인다. `action`은 둘째 줄 끝 | `toastRecipe.placements`, `.hjm-toast__action` |
+| 순서·정렬 | 기본은 아래 가운데(`placement="bottom"`). 위쪽 배치는 위에서 아래로, 아래쪽 배치는 가장자리부터 위로 쌓인다. 문구 열 안 순서는 제목 → 설명 → `progress` → `action`. `action`은 문구 아래 시작 쪽(`toastRecipe.action.align` `start`, 미게시 1.17.2 이후. 그전 둘째 줄 끝) | `toastRecipe.placements`, `.hjm-toast__action` |
 | 고정·스크롤 | 화면 흐름 밖에 떠 있는 층이라 본문 레이아웃에 자리를 만들지 않는다. 하단 고정 바(BottomNavigation·BottomCTA)가 있으면 Web `bottomOffset`(px 또는 CSS 길이), Native `keyboardOffset`으로 그 위에 띄운다. Native 아래쪽 배치는 `avoidKeyboard`(기본 true)로 키보드 위에 선다 | `react/src/toast.tsx`, `react-native/src/feedback.tsx`(`ToastRegion`) |
 | 좁은 폭·큰 글자 | 폭이 줄고 문구가 줄바꿈되어 카드가 세로로 자란다. 잘라 내지 않는다 | `.hjm-toast__content`(`overflow-wrap: anywhere`) |
 
@@ -126,11 +129,26 @@ Native의 선택형 `/toast-liquid`도 가장 가까운 프로필의 `radius.lg`
 │ 본문(스크롤)                 │      │ 본문(스크롤)                 │
 │                              │      │ ┌──────────────────────────┐ │
 │ ┌──────────────────────────┐ │      │ │(●) 저장했어요        [×] │ │
-│ │(●) 저장했어요        [×] │ │      │ │              [되돌리기]  │ │ ← action(선택)
+│ │(●) 저장했어요        [×] │ │      │ │    [되돌리기]            │ │ ← action(선택), 문구 아래 시작 쪽
 │ └──────────────────────────┘ │      │ └──────────────────────────┘ │
 │   ↑ 16 + 안전 영역           │      │   ↑ bottomOffset/keyboardOffset
 └──────────────────────────────┘      │ [홈] [검색] [내 정보]        │ ← 고정 바
   좌우 16, 최대 폭 420, 가운데         └──────────────────────────────┘
+```
+
+### 패널 — media·progress (미게시, 1.17.2 이후)
+
+2026-10-10 사용자 요청으로 패널이 Toast의 모양이 됐다(기본·리퀴드 모두). 진행 중인 작업은 같은 `id`, `durationMs: null`로
+열어 두고 단계가 바뀔 때마다 같은 `id`로 다시 `publish`해 제자리에서 갱신한다. 끝나면 `progress`를 빼고 결과 문구와
+`action`으로 바꾼다. 여닫는 트리거는 [ActivityChip](activity-chip.md)이다.
+
+```text
+┌──────────────────────────────────────┐
+│ (🐥)  도우미                      [×] │  ← media 44가 tone 배지 자리를 대신
+│       앱을 다듬고 있어요.              │
+│       ● 읽기  ◉ 다듬기  ○ 확인         │  ← progress: 완료·현재(굵게)·예정, 점 6
+│       [결과 보기]                      │  ← action: 문구 아래 시작 쪽
+└──────────────────────────────────────┘    모서리 radius.xl 24
 ```
 
 ## 꼭 지킬 것

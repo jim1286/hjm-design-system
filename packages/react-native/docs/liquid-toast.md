@@ -166,3 +166,14 @@ the nearest profile. Ordinary Toast previews retain their timeout. Light/dark mo
 covers no profile, all 11 presets (including neutral), and a custom upward shadow; these checks do
 not establish Native rasterization, touch, spoken accessibility or frame performance. See the
 [current QA record](../../../docs/qa/2026-10-07-design-profile-research.md).
+
+## Panel card · 2026-10-10 (unpublished, after 1.17.2)
+
+The user asked for one panel everywhere ("the panel becomes the toast"), including the liquid card. The settled
+card now draws the same columns as the ordinary Toast: media (44) or tone badge (32) · title/description/progress/
+action · close (44). The two-row banner, the title-row glyph and the full-width action footer of the 2026-10-02
+redesign are retired; the action is the start-aligned tinted pill under the copy. The liquid chrome (transparent RN
+body, Skia fill/outline, raised shadow) and the circular origin, neck, timing and fallbacks are unchanged. Without a
+profile the settled corner is now 24 (`radius.xl`, `liquidToastRecipe.radius`); with one, the profile's `radius.xl`.
+`buildLiquidToastGeometry`'s default fourth argument follows (24). Device visual acceptance is still pending.
+Contract: [Toast panel](../../design-contracts/docs/toast.md#패널-toast--미게시1172-이후).

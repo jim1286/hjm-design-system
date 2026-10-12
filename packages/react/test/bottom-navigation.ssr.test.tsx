@@ -46,6 +46,25 @@ describe("Web BottomNavigation", () => {
     expect(markup).not.toContain('href="/profile"');
   });
 
+  it("drops visible labels but keeps each destination's accessible name when labels are hidden", () => {
+    const markup = renderToStaticMarkup(
+      <HjmProvider systemTheme="light">
+        <BottomNavigation
+          descriptor={descriptor}
+          configuration={{ labels: "hidden" }}
+          getHref={(item) => `/${item.id}`}
+          renderIcon={({ name }) => <span data-icon={name} />}
+        />
+      </HjmProvider>,
+    );
+
+    expect(markup).toContain('data-labels="hidden"');
+    expect(markup).not.toContain("hjm-bottom-navigation__label");
+    expect(markup).toContain('aria-label="홈"');
+    expect(markup).toContain('aria-label="검색, 읽지 않은 검색 알림 3개"');
+    expect(markup).toContain('aria-current="page"');
+  });
+
   it("keeps center-gap placement and keyboard occlusion deterministic", () => {
     expect(getBottomNavigationGridColumn(0, 4, "center-gap")).toBe(1);
     expect(getBottomNavigationGridColumn(2, 4, "center-gap")).toBe(4);

@@ -1393,9 +1393,11 @@ export const toastRecipe = {
         "root",
         "toneMark",
         "icon",
+        "media",
         "content",
         "title",
         "description",
+        "progress",
         "action",
         "close",
     ],
@@ -1453,10 +1455,11 @@ export const toastRecipe = {
     surface: {
         background: semanticColors.canvas,
         // Strong border stays: the card boundary must keep 3:1 against the page (toast.test.ts, WCAG 1.4.11).
-        // 1.10.0 only softens the shape (lg radius).
+        // 1.10.0 softened the shape to lg; 1.20 makes every toast the "panel" (xl) that BurnTok designed for its
+        // review status, by user request on 2026-10-10 ("패널이 토스트가 되는거지").
         border: semanticColors.border.strong,
         borderWidth: stroke.default,
-        radius: "lg",
+        radius: "xl",
         shadow: floatingSurfaceContract.shadow,
         minHeight: layout.rowHeight.singleLine,
         padding: spacing.md,
@@ -1466,6 +1469,9 @@ export const toastRecipe = {
     // Retired in 1.10.0 (width 0): the icon badge carries tone. Kept so the slot contract stays additive.
     toneMark: { width: 0, radius: "full" },
     icon: { glyph: "sm", badgeDiameter: 32, badgeRadius: "full" },
+    // A product media (mascot, avatar) replaces the tone badge in the same leading column. 44 keeps a
+    // character legible; it is decorative, so the tone still lives in `data-tone` and the copy.
+    media: { size: 44 },
     content: { gap: spacing.xxs },
     title: {
         color: semanticColors.content.primary,
@@ -1477,13 +1483,26 @@ export const toastRecipe = {
         color: semanticColors.content.secondary,
         textVariant: "body",
     },
-    // 1.10.0: a tinted pill button aligned to the end instead of a bare text link, so the one thing a toast
-    // asks for is recognisable as a control. Hit area stays the 44pt touch target.
+    // Step dots of a running task: done and current are brand, upcoming is the divider colour; the current
+    // label is bold. Labels sit beside each dot so the row reads without colour alone (WCAG 1.4.1).
+    progress: {
+        gap: spacing.sm,
+        dotSize: 6,
+        currentScale: 1.4,
+        doneColor: semanticColors.content.brand,
+        upcomingColor: semanticColors.border.default,
+        labelColor: semanticColors.content.secondary,
+        currentLabelColor: semanticColors.content.primary,
+        textVariant: "caption",
+    },
+    // 1.10.0: a tinted pill button instead of a bare text link, so the one thing a toast asks for is
+    // recognisable as a control. Hit area stays the 44pt touch target. 1.20 panel: it sits under the copy
+    // at the start edge, where the eye already is, instead of the far end.
     action: {
         color: semanticColors.content.brand,
         background: semanticColors.surface.brand,
         radius: "full",
-        align: "end",
+        align: "start",
         textVariant: "body",
         fontWeight: fontWeight.bold,
         minHeight: control.minTouchTarget,

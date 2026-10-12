@@ -1,5 +1,5 @@
 import { spacing } from "./foundations.js";
-import { surfaceDefaults, } from "./base-recipes.js";
+import { buttonRecipe, surfaceDefaults, } from "./base-recipes.js";
 /**
  * Shared Card anatomy. Renderers own their host nodes (`article` on Web,
  * `View` on Native), while these slots and defaults stay identical.
@@ -24,6 +24,9 @@ export const cardRecipe = {
         padding: "md",
     },
     selectedTone: "accent",
+    // BurnTok's compact 3-column picker (2026-10-10) needs the whole card to activate.
+    // Reuse control state opacity instead of a product Pressable with a second visual contract.
+    interaction: { disabledOpacity: buttonRecipe.opacity.disabled, pressedOpacity: buttonRecipe.opacity.pressed },
     body: {
         padding: spacing.md,
         gap: spacing.xs,

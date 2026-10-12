@@ -12,6 +12,15 @@ import type { DesignSystemDirection } from "./design-system-provider.js";
 
 export type BottomNavigationDirection = DesignSystemDirection;
 export type BottomNavigationKeyboardBehavior = "hide" | "remain";
+/**
+ * `hidden` drops the visible destination name and keeps it as the item's
+ * accessible name. Icon-only bars rely on the icon stroke/scale emphasis (and
+ * any product selection mark) for non-color selected evidence, so products
+ * choose it deliberately; the default keeps labels visible. Added 2026-10-10
+ * for BurnTok's icon-only dock instead of letting the app hide labels with
+ * deprecated styles or transparent palette overrides.
+ */
+export type BottomNavigationLabels = "visible" | "hidden";
 
 export type BottomNavigationConfiguration = Readonly<{
   presentation?: BottomNavigationPresentation;
@@ -19,6 +28,7 @@ export type BottomNavigationConfiguration = Readonly<{
   density?: BottomNavigationDensity;
   direction?: BottomNavigationDirection;
   keyboardBehavior?: BottomNavigationKeyboardBehavior;
+  labels?: BottomNavigationLabels;
 }>;
 
 export type ResolvedBottomNavigationConfiguration = Readonly<{
@@ -27,6 +37,7 @@ export type ResolvedBottomNavigationConfiguration = Readonly<{
   density: BottomNavigationDensity;
   direction: BottomNavigationDirection;
   keyboardBehavior: BottomNavigationKeyboardBehavior;
+  labels: BottomNavigationLabels;
 }>;
 
 /**
@@ -135,11 +146,13 @@ export type BottomNavigationActivation<Key extends string = string> = Readonly<{
 export const bottomNavigationBehaviorDefaults = {
   direction: "ltr",
   keyboardBehavior: "hide",
+  labels: "visible",
   minItems: 2,
   maxItems: 6,
 } as const satisfies Readonly<{
   direction: BottomNavigationDirection;
   keyboardBehavior: BottomNavigationKeyboardBehavior;
+  labels: BottomNavigationLabels;
   minItems: number;
   maxItems: number;
 }>;
@@ -163,6 +176,7 @@ const configurationKeys = new Set([
   "density",
   "direction",
   "keyboardBehavior",
+  "labels",
 ]);
 const descriptorKeys = new Set(["accessibilityLabel", "items", "selectedKey"]);
 const itemKeys = new Set([
@@ -258,6 +272,7 @@ const keyboardBehaviors = new Set<BottomNavigationKeyboardBehavior>([
   "hide",
   "remain",
 ]);
+const labelModes = new Set<BottomNavigationLabels>(["visible", "hidden"]);
 
 export function validateBottomNavigationConfiguration(
   configuration: BottomNavigationConfiguration,
@@ -313,6 +328,11 @@ export function validateBottomNavigationConfiguration(
       `Unsupported BottomNavigation keyboardBehavior: ${String(configuration.keyboardBehavior)}`,
     );
   }
+  if (configuration.labels !== undefined && !labelModes.has(configuration.labels)) {
+    throw new TypeError(
+      `Unsupported BottomNavigation labels: ${String(configuration.labels)}`,
+    );
+  }
   // Capsule actions sit beside the destination surface, so reserving a central gap would duplicate their space.
   if (configuration.presentation === "capsule" && configuration.distribution === "center-gap") {
     throw new TypeError("BottomNavigation capsule uses an adjacent action, not center-gap");
@@ -339,6 +359,7 @@ export function resolveBottomNavigationConfiguration(
     keyboardBehavior:
       configuration.keyboardBehavior ??
       bottomNavigationBehaviorDefaults.keyboardBehavior,
+    labels: configuration.labels ?? bottomNavigationBehaviorDefaults.labels,
   };
 }
 

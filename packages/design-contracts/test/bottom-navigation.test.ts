@@ -458,6 +458,7 @@ describe("BottomNavigation visual and behavior contracts", () => {
       density: "regular",
       direction: "ltr",
       keyboardBehavior: "hide",
+      labels: "visible",
     });
     expect(
       resolveBottomNavigationConfiguration(
@@ -467,6 +468,7 @@ describe("BottomNavigation visual and behavior contracts", () => {
           density: "compact",
           direction: "rtl",
           keyboardBehavior: "remain",
+          labels: "hidden",
         },
         4,
       ),
@@ -476,6 +478,7 @@ describe("BottomNavigation visual and behavior contracts", () => {
       density: "compact",
       direction: "rtl",
       keyboardBehavior: "remain",
+      labels: "hidden",
     });
     expect(() =>
       validateBottomNavigationConfiguration({ distribution: "center-gap" }, 3),
@@ -491,6 +494,7 @@ describe("BottomNavigation visual and behavior contracts", () => {
       [{ density: "dense" }, "density"],
       [{ direction: "auto" }, "direction"],
       [{ keyboardBehavior: "lift" }, "keyboardBehavior"],
+      [{ labels: "selected" }, "labels"],
     ] as const) {
       expect(() =>
         validateBottomNavigationConfiguration(configuration as never, 4),
@@ -536,6 +540,7 @@ describe("BottomNavigation visual and behavior contracts", () => {
     expect(bottomNavigationBehaviorDefaults).toEqual({
       direction: "ltr",
       keyboardBehavior: "hide",
+      labels: "visible",
       minItems: 2,
       maxItems: 6,
     });

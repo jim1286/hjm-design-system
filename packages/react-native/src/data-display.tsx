@@ -293,6 +293,9 @@ export type CardProps = Omit<SurfaceProps, "children" | "padding"> &
     media?: ReactNode;
     actions?: ReactNode;
     selected?: boolean;
+    /** Whole-card activation. Do not combine with interactive children or actions. */
+    onActivate?: () => void;
+    disabled?: boolean;
     padding?: SurfacePadding;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
@@ -306,6 +309,10 @@ export function Card({
   media,
   actions,
   selected = cardRecipe.defaults.selected,
+  onActivate,
+  disabled = false,
+  accessibilityLabel,
+  accessibilityHint,
   tone = cardRecipe.defaults.tone,
   bordered = cardRecipe.defaults.bordered,
   padding = cardRecipe.defaults.padding,
@@ -314,16 +321,20 @@ export function Card({
   ...props
 }: CardProps) {
   const { environment, tokens } = useHjmNativeTheme();
+  if (onActivate && (!accessibilityLabel?.trim() || actions !== undefined)) {
+    throw new TypeError("Interactive Card requires accessibilityLabel and no actions");
+  }
   const bodyPadding = surfaceGeometry.paddings[padding];
   const hasHeader =
     leading !== undefined || title !== undefined || description !== undefined;
-  return (
+  const frame = (
     <Surface
       {...props}
       bordered={bordered}
       padding="none"
       radius={cornerRadius}
-      {...(layoutStyle === undefined ? {} : { layoutStyle })}
+      {...(onActivate ? {} : { accessibilityLabel, accessibilityHint })}
+      {...(layoutStyle === undefined || onActivate ? {} : { layoutStyle })}
       tone={selected ? cardRecipe.selectedTone : tone}
     >
       {/* The inner clip must use the same theme radius as Surface; foundation-only
@@ -386,6 +397,15 @@ export function Card({
       </View>
     </Surface>
   );
+  if (!onActivate) return frame;
+  // Keep Surface's material/clip inside one native action host. App-owned wrappers
+  // previously had to reinvent disabled/selected naming and press feedback.
+  return <Pressable accessibilityRole="button" accessibilityLabel={accessibilityLabel}
+    accessibilityHint={accessibilityHint} accessibilityState={{ selected, disabled }}
+    disabled={disabled} onPress={() => { if (!disabled) onActivate(); }}
+    style={({ pressed }) => [minimumTargetStyle, {
+      opacity: disabled ? cardRecipe.interaction.disabledOpacity : pressed ? cardRecipe.interaction.pressedOpacity : 1,
+    }, layoutStyle]}>{frame}</Pressable>;
 }
 
 export type ListRowProps = Omit<

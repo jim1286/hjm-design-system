@@ -111,6 +111,8 @@ describe("@hjmds/react package boundary", () => {
       // Profiles are optional: core imports must not pull the preset registry.
       "./design-profile",
       "./collection-rail",
+      // Panel-toast trigger; opt-in like CollectionRail so core graphs do not grow.
+      "./activity-chip",
     ];
 
     expect(Object.keys(packageJson.exports)).toEqual([
