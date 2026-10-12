@@ -181,3 +181,5 @@ contracts-peer-train.mjs의 기존 계약을 따른다. 소비 제품은 같은 
 2026-10-12 규약 축소: 모듈 수 상한도 바이트와 같이 관측값으로 전환한다. 실제 HJM 게시에서 gzip이 감소했는데 helper 파일 한 개 증가로 8개 진입점이 실패했다. 파일 수는 실행 오류 증거가 아니므로 차단하지 않으며 금지 import·선택 peer 유입·실제 bundling 실패는 계속 차단한다.
 
 Native 실제 Metro fixture의 남은 1,660,000/410,000 byte 상한도 제거했다. 모든 공개 경로에 수동 budget/면제 사유를 등록하던 의무도 폐지하고 manifest의 실제 export를 자동으로 순회한다. 새 경로도 파일 존재·금지 의존성 검사를 받는다.
+
+`test:release`는 package 동작 검사를 실행하되 `workflows.test.ts`(workflow 문자열 형식), `consumer-policy.test.ts`(규약 문구), `doc-links.test.ts`(문서 검사기)는 제외한다. 이 세 검사는 명시적인 `test`/`ci:check` 감사에 남긴다. 문서·workflow 형식 검사가 package 테스트 안에서 다시 릴리스를 막는 중복 경로를 없애기 위함이다.

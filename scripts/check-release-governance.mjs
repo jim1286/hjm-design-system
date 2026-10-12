@@ -62,7 +62,7 @@ export function validateReleaseGovernance({ packages, releaseWorkflow, showcaseW
   // Standalone showcase commands still build their prerequisites for local use.
   requireEqual(scripts["ci:check"], "pnpm check && pnpm showcase:native:check:built && pnpm showcase:web:check:built && pnpm showcase:web:build:built", "ci:check");
   requireEqual(scripts["check"], "pnpm build && pnpm typecheck && pnpm test && pnpm contracts:check && pnpm --filter @hjmds/design-contracts bundle:check && pnpm --filter @hjmds/react-native bundle:check:built && pnpm bundle:renderer:check && pnpm workspace:check && pnpm evidence:check && pnpm docs:check && pnpm governance:check && pnpm api-map:check && pnpm usage:check && pnpm storybook:check", "check");
-  requireEqual(scripts["release:check"], "pnpm build && pnpm typecheck && pnpm test && pnpm --filter @hjmds/design-contracts bundle:check && pnpm --filter @hjmds/react-native bundle:check:built && pnpm bundle:renderer:check && node scripts/check-release-artifacts.mjs", "release:check");
+  requireEqual(scripts["release:check"], "pnpm build && pnpm typecheck && pnpm test:release && pnpm --filter @hjmds/design-contracts bundle:check && pnpm --filter @hjmds/react-native bundle:check:built && pnpm bundle:renderer:check && node scripts/check-release-artifacts.mjs", "release:check");
   requireEqual(scripts["governance:check"], "node --test scripts/check-release-governance.test.mjs scripts/ci-version-intent.test.mjs scripts/dev-check.test.mjs && node scripts/check-release-governance.mjs", "governance:check");
   requireEqual(scripts["workspace:check"], "node scripts/check-workspace-sync.mjs", "workspace:check");
   requireEqual(scripts["evidence:check"], "node scripts/sync-renderer-evidence.mjs", "evidence:check");
