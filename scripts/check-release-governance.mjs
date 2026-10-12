@@ -10,29 +10,31 @@ const requireEqual = (actual, expected, label) => {
 
 // This is a constrained audit of this repository's workflow layout, not a YAML
 // parser or a claim that GitHub required checks are installed remotely.
-function requiredStep(source, name, command) {
+function requiredStep(source, name, command, condition) {
   const marker = `      - name: ${name}\n`;
   if (source.split(marker).length !== 2) throw new Error(`Workflow must contain exactly one ${name} step`);
   const start = source.indexOf(marker);
   const tail = source.slice(start + marker.length);
   const nextStep = tail.search(/^ {6}- /m);
   const step = nextStep < 0 ? tail : tail.slice(0, nextStep);
-  if (/^ {8}(?:if|continue-on-error):/m.test(step)) throw new Error(`${name} must not skip or ignore failures`);
+  if (/^ {8}continue-on-error:/m.test(step)) throw new Error(`${name} must not skip or ignore failures`);
+  const actualCondition = step.match(/^ {8}if: (.+)$/m)?.[1];
+  if (actualCondition !== condition) throw new Error(`${name} must not skip or ignore failures outside its explicit mode`);
   const runs = [...step.matchAll(/^ {8}run: (.+)$/gm)];
   if (runs.length !== 1) throw new Error(`${name} must have one canonical run command`);
   requireEqual(runs[0][1], command, name);
   return start;
 }
 
-function versionIntentWorkflow(source, jobName) {
+function versionIntentWorkflow(source, jobName, manualOnly = false) {
   const code = source.split("\n").filter((line) => !/^\s*#/.test(line)).join("\n");
   const trigger = code.slice(code.indexOf("\non:\n"), code.indexOf("\npermissions:\n"));
   const events = [...trigger.matchAll(/^ {2}([a-z_]+):/gm)].map((match) => match[1]);
-  requireEqual(JSON.stringify(events), JSON.stringify(["push", "workflow_dispatch"]), `${jobName} CI events`);
-  if (!/^ {2}push:\n {4}branches:\n {6}- main\n {4}paths:\n/m.test(trigger)) throw new Error(`${jobName} CI push must target only main and version paths`);
+  requireEqual(JSON.stringify(events), JSON.stringify(manualOnly ? ["workflow_dispatch"] : ["push", "workflow_dispatch"]), `${jobName} CI events`);
+  if (!manualOnly && !/^ {2}push:\n {4}branches:\n {6}- main\n {4}paths:\n/m.test(trigger)) throw new Error(`${jobName} CI push must target only main and version paths`);
   const paths = [...trigger.matchAll(/^ {6}- (packages\/[^\n]+\/package\.json)$/gm)].map((match) => match[1]);
-  requireEqual(JSON.stringify(paths), JSON.stringify(releaseManifestPaths), `${jobName} CI version paths`);
-  if (!/^ {4}paths:\n/m.test(trigger) || /^ {4}(?:paths-ignore|tags|tags-ignore):/m.test(trigger)) throw new Error(`${jobName} CI must be filtered to version manifests`);
+  if (!manualOnly) requireEqual(JSON.stringify(paths), JSON.stringify(releaseManifestPaths), `${jobName} CI version paths`);
+  if (!manualOnly && (!/^ {4}paths:\n/m.test(trigger) || /^ {4}(?:paths-ignore|tags|tags-ignore):/m.test(trigger))) throw new Error(`${jobName} CI must be filtered to version manifests`);
   const job = (name) => {
     const marker = `\n  ${name}:\n`;
     const start = code.indexOf(marker);
@@ -87,11 +89,12 @@ export function validateReleaseGovernance({ packages, releaseWorkflow, showcaseW
   const tagStep = releaseWorkflow.indexOf("      - name: Tag release\n");
   if (!(commitStep < releaseStep && releaseStep < publishStep && publishStep < tagStep)) throw new Error("Release gates must precede publishing and tagging");
   if (/continue-on-error:\s*true/.test(releaseWorkflow)) throw new Error("Release job must not ignore failures");
-  requiredStep(showcaseWorkflow, "Verify packages, evidence, and both showcases", "pnpm ci:check");
+  requiredStep(showcaseWorkflow, "Verify packages, evidence, and both showcases", "pnpm ci:check", "github.event_name == 'workflow_dispatch' && inputs.full_regression");
+  requiredStep(showcaseWorkflow, "Build and typecheck the web delivery surface", "pnpm showcase:web:build && pnpm --filter @hjm/showcase-web... typecheck", "github.event_name != 'workflow_dispatch' || !inputs.full_regression");
   // 2026-10-07 사용자 재확인: 버전이 그대로인 개발 push/PR에서 원격 전량 검사를
   // 반복하지 않는다. 실행 범위는 job에서 판정하되, 실행된 검사의 실패 전파는 그대로 둔다.
   versionIntentWorkflow(showcaseWorkflow, "verify");
-  versionIntentWorkflow(visualWorkflow, "visual");
+  versionIntentWorkflow(visualWorkflow, "visual", true);
 
   for (const surface of ["react", "native"]) {
     const registry = registries[surface];

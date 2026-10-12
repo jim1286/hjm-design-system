@@ -28,7 +28,7 @@ for (const [name, mutate, expected] of [
   ["showcase restores ordinary PR checks", (s) => { s.showcaseWorkflow = s.showcaseWorkflow.replace("  workflow_dispatch:", "  pull_request:\n    branches:\n      - main\n  workflow_dispatch:"); }, /CI events/],
   ["showcase removes version paths", (s) => { s.showcaseWorkflow = s.showcaseWorkflow.replace("      - packages/react/package.json\n", ""); }, /version paths/],
   ["showcase removes push path filtering", (s) => { s.showcaseWorkflow = s.showcaseWorkflow.replace("    paths:\n", "    paths-ignore:\n"); }, /only main and version paths/],
-  ["visual broadens automatic branch checks", (s) => { s.visualWorkflow = s.visualWorkflow.replace("      - main\n", "      - main\n      - feature\n"); }, /only main and version paths/],
+  ["visual restores automatic checks", (s) => { s.visualWorkflow = s.visualWorkflow.replace("  workflow_dispatch:", "  push:\n  workflow_dispatch:"); }, /CI events/],
   ["visual restores ordinary PR checks", (s) => { s.visualWorkflow = s.visualWorkflow.replace("  workflow_dispatch:", "  pull_request:\n  workflow_dispatch:"); }, /CI events/],
   ["showcase bypasses version intent", (s) => { s.showcaseWorkflow = s.showcaseWorkflow.replace("    if: needs.intent.outputs.run == 'true'", "    if: true"); }, /require version intent/],
   ["visual detaches version intent", (s) => { s.visualWorkflow = s.visualWorkflow.replace("    needs: intent\n", ""); }, /require version intent/],

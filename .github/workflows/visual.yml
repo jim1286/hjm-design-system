@@ -6,15 +6,8 @@ name: Visual Baselines
 # of `pnpm ci:check`. Regenerate with workflow_dispatch update=true, review the
 # uploaded images, and commit them under packages/react/test/visual-baselines/.
 
+# Oct 12: full screenshot regression is explicit, outside web delivery.
 on:
-  push:
-    branches:
-      - main
-    # 일반 개발 push/PR 대신 실제 fixed-train 버전 상승 때만 자동 시각 검사를 실행한다.
-    paths:
-      - packages/design-contracts/package.json
-      - packages/react/package.json
-      - packages/react-native/package.json
   workflow_dispatch:
     inputs:
       update:
