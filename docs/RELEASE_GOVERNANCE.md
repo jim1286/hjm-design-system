@@ -23,7 +23,7 @@ contracts를 같은 npm 버전으로 설치하고, 제품의 실제 화면·환�
 | 명시적 전체 회귀 | `showcase.yml`, `full_regression=true` → `pnpm ci:check` | package 계약·테스트·생성 drift·bundle·두 Showcase |
 | 수동 시각 검사 | `visual.yml` → 같은 버전 판정 → Linux baseline 비교 | Chromium/Linux의 대표 시각 회귀 |
 | package 검사 | `pnpm check` | 패키지 1회 build 후 typecheck/test·bundle, workspace/evidence/docs/governance/public API map 검사 |
-| release 후보 | `version-packages.yml` → `pnpm release:commit:check`와 `pnpm release:check` | release commit 형태, 내부 ci:check, release artifacts |
+| release 후보 | `version-packages.yml` → `pnpm release:commit:check`와 `pnpm release:check` | 동일 패키지 버전, build/typecheck/행동 테스트/bundle, release artifacts |
 | publish/tag | 같은 workflow에서 검사 이후 실행 | 세 package publish 후 같은 commit에 canonical tag |
 | 제품 검증 | 각 제품 저장소의 CI/기기 QA | 설치된 npm train을 소비한 제품 흐름·환경·migration |
 
@@ -173,3 +173,7 @@ CollectionRail과 글자 역할 등 additive API를 1.16.0으로 게시하기 �
 해석하고, >=1.16.0 <1.18.0으로 넓히면 workspace의 단일 minor train 검사가 실패했다.
 생성 결과를 수동으로 낮추거나 검사를 완화하지 않고, 다음 train을 미리 명시하는
 contracts-peer-train.mjs의 기존 계약을 따른다. 소비 제품은 같은 exact train을 사용한다.
+
+## 릴리스 차단 조건 최소화
+
+2026-10-12 사용자 요청: 수정 후 반복 실패와 게시 지연을 줄이기 위해 npm 게시에서 문서 형식·Storybook 분류·생성 증거 감사·Showcase 전체 검사를 제거한다. `release:check`는 게시 패키지의 build/typecheck/행동 테스트/bundle과 실제 artifact만 검사한다. 기존 전수 검사는 명시적 `ci:check`에서 실행할 수 있다. 릴리스 커밋의 파일 whitelist와 Changeset 삭제/추가 형태 제한도 폐지한다. 버전 일치와 artifact 존재 검사는 유지한다.

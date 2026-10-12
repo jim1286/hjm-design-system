@@ -48,4 +48,8 @@ export { Spinner } from "./internal/spinner.js";
 export const Skeleton = forwardRef(function Skeleton({ shape = skeletonRecipe.defaults.shape, animated = skeletonRecipe.defaults.animated, width, height, className, style, layoutStyle, ...props }, ref) {
     return (_jsx("span", { ...props, ref: ref, className: classNames("hjm-skeleton", className), "data-shape": shape, "data-animated": animated, "aria-hidden": "true", style: { width, height, ...style, ...layoutStyle } }));
 });
+// ActivityChip is a feedback-category status trigger (its panel is the Toast in this module). Also exported here so
+// apps can import it from an existing subpath: Next dev with HJM_LOCAL_SOURCE rejected the new ./activity-chip
+// subpath before aliasing because the installed release lacks it (BurnTok 2026-10-10).
+export { ActivityChip } from "./activity-chip.js";
 //# sourceMappingURL=feedback.js.map

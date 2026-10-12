@@ -22,77 +22,8 @@ function parseVersion(value, label) {
   return match.slice(1).map(Number);
 }
 
-function parseChangesetReleases(source) {
-  const frontmatter = source.match(/^---\s*\n([\s\S]*?)\n---(?:\s*\n|$)/)?.[1] ?? "";
-  return frontmatter
-    .split("\n")
-    .map((line) => {
-      const release = line.match(
-        /^\s*["']?(@hjmds\/(?:design-contracts|react|react-native))["']?\s*:\s*(patch|minor|major)\s*$/,
-      );
-      return release ? { packageName: release[1], type: release[2] } : undefined;
-    })
-    .filter(Boolean);
-}
-
-const rawDiff = git("diff", "--name-status", `${baseRevision}...HEAD`);
-const changes = rawDiff.length === 0
-  ? []
-  : rawDiff.split("\n").map((line) => {
-      const [status = "", ...paths] = line.split("\t");
-      return { status, path: paths.at(-1) ?? "" };
-    });
-
-const deletedChangesets = changes.filter(
-  ({ status, path }) =>
-    status.startsWith("D") && /^\.changeset\/(?!README\.md$)[^/]+\.md$/.test(path),
-);
-const addedChangesets = changes.filter(
-  ({ status, path }) =>
-    status.startsWith("A") && /^\.changeset\/(?!README\.md$)[^/]+\.md$/.test(path),
-);
-if (deletedChangesets.length === 0) {
-  throw new Error("Release commit must consume at least one non-empty Changeset");
-}
-if (addedChangesets.length > 0) {
-  throw new Error("Release commit must not add authored Changesets");
-}
-
-const scheduledPackages = new Set();
-for (const { path } of deletedChangesets) {
-  const source = git("show", `${baseRevision}:${path}`);
-  for (const { packageName } of parseChangesetReleases(source)) {
-    scheduledPackages.add(packageName);
-  }
-}
-if (scheduledPackages.size === 0) {
-  throw new Error("Deleted Changesets do not schedule an HJM public package");
-}
-
-const allowedPath = (path) =>
-  path === "pnpm-lock.yaml" ||
-  /^\.changeset\/(?!README\.md$)[^/]+\.md$/.test(path) ||
-  publicPackagePaths.includes(path) ||
-  /^packages\/(?:design-contracts|react|react-native)\/CHANGELOG\.md$/.test(path) ||
-  path === "packages/design-contracts/src/version.ts" ||
-  path === "packages/react/src/evidence.ts" ||
-  path === "packages/react-native/src/evidence.ts" ||
-  /^packages\/(?:design-contracts|react|react-native)\/dist\//.test(path) ||
-  /^packages\/design-contracts\/docs\/generated\//.test(path);
-
-const unexpectedPaths = changes.map(({ path }) => path).filter((path) => !allowedPath(path));
-if (unexpectedPaths.length > 0) {
-  throw new Error(
-    `Release commit contains non-release source changes: ${unexpectedPaths.join(", ")}`,
-  );
-}
-
-for (const packagePath of publicPackagePaths) {
-  if (!changes.some(({ path }) => path === packagePath)) {
-    throw new Error(`Release commit did not update fixed package manifest ${packagePath}`);
-  }
-}
-
+// Owner request, 2026-10-12: validate the publishable versions, not commit shape.
+// Documentation or fixes after version preparation must not block a valid release.
 const currentPackages = await Promise.all(
   publicPackagePaths.map(async (path) => JSON.parse(await readFile(path, "utf8"))),
 );
@@ -124,5 +55,5 @@ for (const [label, source] of [["React", reactEvidence], ["React Native", native
 }
 
 console.log(
-  `Verified generated fixed-package release commit ${previousVersion} -> ${currentVersion} from ${deletedChangesets.length} consumed Changeset(s).`,
+  `Verified generated fixed-package release commit ${previousVersion} -> ${currentVersion} (commit layout is unrestricted).`,
 );

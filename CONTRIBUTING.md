@@ -134,3 +134,5 @@ Foundation/Foundations와 단일 컴포넌트의 Patterns 등록이 혼재했다
 [Storybook 탐색 기준](docs/STORYBOOK_NAVIGATION.md)을 따르고, 기존 제목을 옮길 때는
 Web은 CSF `id`를 유지해 저장된 링크를 보존한다. Native 10.4.4는 명시적 meta ID를
 무시하는 runtime index 때문에 새 제목 기반 ID를 사용하며 변경 경로를 문서화한다.
+
+2026-10-12 릴리스 간소화: npm 게시에는 package build/typecheck/행동 테스트/bundle/artifact 검사를 적용한다. 문서·Storybook 규약과 Showcase 전수 검사는 게시 차단 조건에서 제외한다. 릴리스 커밋에 문서나 수정 파일을 함께 포함할 수 있으며 Changeset 소비 형태는 차단 조건이 아니다.

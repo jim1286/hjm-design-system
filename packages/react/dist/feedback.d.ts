@@ -113,4 +113,5 @@ export declare const Skeleton: import("react").ForwardRefExoticComponent<Omit<HT
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLSpanElement>>;
+export { ActivityChip, type ActivityChipProps } from "./activity-chip.js";
 //# sourceMappingURL=feedback.d.ts.map
