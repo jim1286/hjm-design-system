@@ -1,6 +1,6 @@
 # 디자인 시스템 검증과 릴리스 계약
 
-상태: 현재 내부 릴리스 계약 · 검토일: 2026-10-10
+상태: 현재 내부 릴리스 계약 · 검토일: 2026-10-12
 적용: 이 저장소의 contracts, React, React Native, 두 Showcase.
 Web Storybook 공개 실행 정본: [자체 도메인 게시](../deploy/storybook/README.md).
 기계 검사: [`scripts/check-release-governance.mjs`](../scripts/check-release-governance.mjs).
@@ -19,8 +19,9 @@ contracts를 같은 npm 버전으로 설치하고, 제품의 실제 화면·환�
 
 | 단계 | 실행 원본 | 검사 범위 |
 | --- | --- | --- |
-| 버전 상승/main 또는 수동 내부 검사 | `showcase.yml` → 버전 판정 → `pnpm ci:check` | package 계약·테스트·생성 drift·bundle·두 Showcase |
-| 버전 상승/main 또는 수동 시각 검사 | `visual.yml` → 같은 버전 판정 → Linux baseline 비교 | Chromium/Linux의 대표 시각 회귀 |
+| 버전 상승/main 또는 기본 수동 검사 | `showcase.yml` → 버전 판정 → Web dependency build/typecheck | Web Storybook 정적 artifact·타입 |
+| 명시적 전체 회귀 | `showcase.yml`, `full_regression=true` → `pnpm ci:check` | package 계약·테스트·생성 drift·bundle·두 Showcase |
+| 수동 시각 검사 | `visual.yml` → 같은 버전 판정 → Linux baseline 비교 | Chromium/Linux의 대표 시각 회귀 |
 | package 검사 | `pnpm check` | 패키지 1회 build 후 typecheck/test·bundle, workspace/evidence/docs/governance/public API map 검사 |
 | release 후보 | `version-packages.yml` → `pnpm release:commit:check`와 `pnpm release:check` | release commit 형태, 내부 ci:check, release artifacts |
 | publish/tag | 같은 workflow에서 검사 이후 실행 | 세 package publish 후 같은 commit에 canonical tag |
@@ -57,6 +58,12 @@ package의 `package.json` 중 하나가 바뀔 때이며, 의존성·설정 변�
 원격 트리거 축소는 필요한 로컬 검증을 제거하는 변경이 아니다. npm 게시와 tag 생성은
 기존 수동 `version-packages.yml`의 release 검사를 유지하며 자동 게시로 바꾸지 않는다.
 GitHub 자체의 보안 분석·Dependabot 실행은 이 두 품질 workflow의 제어 범위와 별개다.
+
+2026-10-12 전수 CI 축소 요청으로 Web Storybook 배포는 Web 의존 패키지의 build/typecheck와
+정적 artifact 검증만 자동 실행한다. Web 게시에서 Native·브라우저 전체 회귀를 반복하던 비용을
+없애기 위한 변경이다. `full_regression=true`일 때만 Chromium 설치와 `ci:check`를 실행하고
+시각 baseline workflow도 수동으로 분리했다. npm package 게시의 `release:check`는 별도 계약이다.
+Web 최소 검사 성공을 Native·행동 회귀·npm 게시 성공으로 사용하지 않는다.
 
 ## 시나리오 증거의 의미
 

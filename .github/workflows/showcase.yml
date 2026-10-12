@@ -11,6 +11,11 @@ on:
       - packages/react/package.json
       - packages/react-native/package.json
   workflow_dispatch:
+    inputs:
+      full_regression:
+        description: Run all package, native, browser and evidence regression checks
+        type: boolean
+        default: false
 
 # Pages 쓰기는 배포 job에만 준다. 수동 브랜치 검사는 읽기 권한만 사용한다.
 permissions:
@@ -67,9 +72,16 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Install Playwright Chromium
+        if: github.event_name == 'workflow_dispatch' && inputs.full_regression
         run: pnpm --filter @hjmds/react exec playwright install --with-deps chromium
 
+      # Oct 12: publishing Web Storybook does not require the native/browser
+      # regression graph. Build its dependency closure once, then check web types.
+      - name: Build and typecheck the web delivery surface
+        if: github.event_name != 'workflow_dispatch' || !inputs.full_regression
+        run: pnpm showcase:web:build && pnpm --filter @hjm/showcase-web... typecheck
       - name: Verify packages, evidence, and both showcases
+        if: github.event_name == 'workflow_dispatch' && inputs.full_regression
         run: pnpm ci:check
 
       # 2026-10-10: own-domain delivery consumes the exact checked files from any
