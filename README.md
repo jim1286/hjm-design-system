@@ -13,13 +13,12 @@ Web Storybook: [storybook.jmstudioapps.com](https://storybook.jmstudioapps.com/)
 | [`@hjmds/react-native`](packages/react-native) | Expo-independent React Native components |
 | [`@hjm/showcase-web`](showcase/web) | Storybook documentation and Web evidence |
 
-현재 checkout의 stable은 계약/Web 69개, Native 62개입니다.
-1.5.0의 17개에 `Divider`, `Section`, `ListRow`, `Statistic`, `DescriptionList`, `EmptyState`,
-`Result`, `Heading`, `Top`, `BottomCTA`, `AspectRatio`, `Grid`, `Steps`, `TopBar`, `AuthScreenLayout`, `Radio`, `Avatar`, `Asset`, `CounterBadge`, `Image`, `VisuallyHidden`을 승격했고, Web-only TextFormat도 stable입니다. 잘못 적용되던 long-copy gate는 실제 visible text 슬롯이 없는 다섯 컴포넌트에서 제외하고 접근성·fallback 증거를 유지합니다. 다음 minor 배포에 포함됩니다. 소비 앱은 설치한 버전의 catalog를 따릅니다.
-추가로 긴 row title·timeline label·안내 문구를 검증해 List, Timeline, BottomInfo를, Link·AuthProviderButton·PasswordField·CheckboxGroup·RadioGroup·Chip·SegmentedControl·SearchField·NumberField·Toast·FloatingActionButton·Checkbox·Switch·ToggleGroup·Slider·OtpField·TagsInput·Select·Combobox은 각 renderer의 키보드 또는 host action을 확인해 stable로 승격했습니다. Layout은 양 renderer의 긴 콘텐츠·환경·접근성 검사와 Web skip-link Tab/Enter 동작을, Web-only Splitter는 긴 콘텐츠 matrix와 실제 포커스된 separator의 키보드 조절을 확인했습니다. Native에는 Layout skip-link action 계약이 없어 keyboard proof는 요구하지 않습니다.
-승격은 공개 API와 renderer 검증을 기준으로 하며 제품 수·배포 이력은 필수 조건이 아닙니다.
-[승격 기준](packages/design-contracts/docs/stable-promotion.md)과
-[승격 기록](packages/design-contracts/docs/stable-core.md)을 참고하세요.
+현재 API 안정성과 플랫폼 지원은 [생성된 성숙도 표](packages/design-contracts/docs/generated/component-maturity.md)를 따른다.
+화면 선택은 [사용 지침](packages/design-contracts/docs/usage/README.md)과
+[선택 기준](packages/design-contracts/docs/usage/SELECTION.md)에서 시작한다.
+소비 앱은 설치한 버전의 catalog와 지침을 사용한다. Storybook 분류와 npm 제공 버전은 서로 다른 정보다.
+승격 판단은 [승격 기준](packages/design-contracts/docs/stable-promotion.md), 과거 결과는
+[승격 기록](packages/design-contracts/docs/stable-core.md)에 보존한다.
 
 Beta는 필요한 경우 선택해서 쓸 수 있으며, 기존 contract/TASKS의 채택 기록과 관련 회귀
 검사로 추적합니다. 별도 ADR을 항목마다 요구하지 않습니다. 신규 제품의 공통 계약과 제품 소유

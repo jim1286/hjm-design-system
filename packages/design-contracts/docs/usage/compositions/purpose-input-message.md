@@ -3,7 +3,7 @@
 - 단계: 구성
 - 상태: 배포
 - 지원: Web · Native
-- 적용: 미게시(1.12.1 이후)
+- 적용: 구성 API 지침 참조
 - 검토일: 2026-10-06
 - 근거: [MessageComposer](../components/message-composer.md), [공통 실행과 실패 복구](../../action-session.md), `showcase/web/src/patterns/conversation-previews.tsx`, `showcase/native/src/conversation-previews.tsx`. 2026-10-06 사용자 승인으로 스토리북 배포(이전 `실험/구성/입력과 작성/메시지 작성`, [승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정))
 - 스토리북: `배포/구성/입력과 작성/메시지 작성`

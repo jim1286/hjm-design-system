@@ -1,6 +1,6 @@
 # 1.11 호환 API 제거와 소비 이관
 
-검토일: 2026-10-06 · 1.11 minor 소스 변경 · npm 게시와 소비 설치는 별도 확인
+검토일: 2026-10-13 · 1.11 minor 소스 변경 · npm 게시와 소비 설치는 별도 확인
 
 사용자가 전체 소비 앱을 함께 버전업하므로 구형 호환 API도 제거하라고 요청했다.
 별칭과 deprecated 스타일 통로를 유지하는 대신 기존 canonical API로 이관한다.
@@ -52,8 +52,9 @@ LoadMore의 내부 Button 조합은 비공개 RecipeButton을 써서 recipe의 �
 받는 것을 확인했다. 1.11처럼 minor에서 지우거나 Button처럼 throw하면 1.x 소비 앱이 깨지므로
 이번 minor는 동작을 유지한 채 `@deprecated` JSDoc과 개발 모드 1회 `console.warn`
 (`internal/deprecated-style.ts`, 컴포넌트·prop마다 한 번, production 무음)만 단다. 없던 곳에는
-`layoutStyle`을 추가했다. 실제 삭제는 [consumer-policy §3.1](consumer-policy.md#31-react-native-legacy-style-compatibility-boundary)의
-네 조건을 채운 다음 major에서 한다.
+`layoutStyle`을 추가했다. 이 표의 잔존 API는 1.11에서 제거된 API와 구분한다. 현재 배치 규칙은
+[consumer-policy §3.1](consumer-policy.md#31-배치와-시각-값)을 따른다. 잔존 공개 API 삭제는
+소비 코드 이관·호환성 영향·대체 경로를 확인하는 별도 breaking 변경이다. 문서 정리는 API 삭제가 아니다.
 
 | 컴포넌트 | deprecated prop | 대체 |
 | --- | --- | --- |

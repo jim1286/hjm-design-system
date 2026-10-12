@@ -1,6 +1,6 @@
 # 브랜드 경계 — 제품이 바꿀 수 있는 것과 그 경로
 
-상태: 규범 · 검토일: 2026-10-07 · 이 문서가 브랜드·테마 주입 규칙의 단일 원본이다.
+상태: 규범 · 검토일: 2026-10-13 · 이 문서가 브랜드·테마 주입 규칙의 단일 원본이다.
 [theming.md](./theming.md)는 사용법 예시, [consumer-policy.md](./consumer-policy.md)는 채택 정책,
 [design-system-provider.md](./design-system-provider.md)는 환경 축 설계를 다루며 브랜드 규칙은 여기로 링크한다.
 
@@ -25,7 +25,7 @@ CSS 변수 재정의, 제품 자체 토큰 생성기)였고, 문서 세 개가 �
   17개 key를 모두 채운 `brandPalette`는 허용되지만 아래 대비 검사를 반드시 통과해야 한다.
 
 2026-10-07 사용자 요청으로 색뿐 아니라 질감·컴포넌트 기본 전환·구성·화면 배치를 한 번 선택하는
-[디자인 프로필](./design-profile.md)을 추가했다(현재 실험·미게시). `defineHjmDesignProfile`로 정규화한
+[디자인 프로필](./design-profile.md)을 제공한다. 제공 버전과 지원 축은 해당 계약을 따른다. `defineHjmDesignProfile`로 정규화한
 앱 소유 데이터를 Provider의 `designProfile`로 주입한다. CSS/전체 value 우회나 테마별 상태 엔진 복제는
 허용하지 않는다. `brandPalette`는 프로필의 해당 light/dark 팔레트 위에 병합된다. 글꼴 자산·로고·문구·데이터는
 제품 소유이며 현재 연결 범위와 미지원 표현은 프로필 계약에 명시한다.
@@ -68,7 +68,7 @@ HJM 기본 light·dark 팔레트도 같은 검사를 통과한다(`test/palette-
 
 ### 기존 재정의는 추적되는 부채다
 
-2026-09-26 기준 제품 web stylesheet의 `.hjm-*` 재정의: 다에리 61줄, 번뚝 26줄. 제품은 이 목록을 한 곳에 모으고,
+기존 제품 stylesheet의 재정의는 제품의 기존 작업 기록 한 곳에서 추적하고,
 각 줄을 (1) `brandPalette` key, (2) HJM recipe 축 요청(이슈), (3) 삭제 중 하나로 옮긴다. 새 재정의는 추가하지 않는다.
 
 ### 이관 경로: 레이어된 stylesheet (opt-in)

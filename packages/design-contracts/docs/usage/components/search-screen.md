@@ -3,7 +3,7 @@
 - 단계: 컴포넌트
 - 상태: 배포
 - 지원: Web · Native
-- 적용: 미게시(1.12.1 이후)
+- 적용: 1.17.1
 - 검토일: 2026-10-06
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screens.tsx`·`src/screen-flows.tsx`; 기존 개별 지침을 새 규격으로 통합. `onSubmit`·`filtersOverflow`는 2026-10-06 사용자 요청("검색과 필터 있는 앱 서비스 따라해")의 검색 화면 개편에서 추가. 같은 날 사용자 위임 결정(권장안)으로 미리보기에만 있던 두 단계 검색 로직(`committedQuery`·`recentQueries`·`suggestedQueries`·`suggestions`·`resultSummary`·`appliedFilters`·`filterSheet`)과 `queryLabelVisibility`를, utilverse 적용 조사로 `searching`·`searchingLabel`을 추가([계약 결정 표](../../screen-patterns.md#searchscreen-두-단계-검색)). 1.13.0 utilverse 적용에서 드러난 결함으로 `hostGutter`와 확정 시 키보드 닫기(Web 결과 영역 포커스)를 추가(1.13.1 patch). 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
 - 스토리북: `배포/화면/검색/검색 결과와 필터`

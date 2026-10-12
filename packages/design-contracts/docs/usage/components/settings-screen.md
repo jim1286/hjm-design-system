@@ -34,55 +34,17 @@
 
 ## 최소 사용 예
 
-```tsx
-// Web — Switch는 /selection, ListRow는 /display, 행 이동은 onClick(또는 href)
-import { SettingsScreen } from "@hjmds/react/screens";
-import { Switch } from "@hjmds/react/selection";
-import { ListRow } from "@hjmds/react/display";
+문서와 Storybook은 같은 실행 예제를 참조한다. 제품 데이터·문구·저장·라우팅은 제품에서 연결하고,
+아래 preview의 메모리 상태를 서버 저장으로 취급하지 않는다. 예제는 읽기용이며 제품에서 showcase를 import하지 않는다.
 
-<SettingsScreen
-  title={t("settings.title")}
-  sections={[
-    { id: "notifications", title: t("settings.notifications"), children: (
-      <Switch
-        presentation="row"
-        label={t("settings.push.label")}
-        description={t("settings.push.description")}
-        checked={pushEnabled}
-        onCheckedChange={setPushEnabled}
-      />
-    ) },
-    { id: "account", title: t("settings.account"), children: (
-      <ListRow title={t("settings.language")} description={currentLanguageName} onClick={openLanguageSheet} />
-    ) },
-  ]}
-/>
-```
+<!-- usage-example: Web ../../../../../showcase/web/src/patterns/settings-page-preview.tsx -->
+- [Web 실행 예제](../../../../../showcase/web/src/patterns/settings-page-preview.tsx): 공개 SettingsScreen·행·Sheet 조합과 로컬 설정 상태.
+<!-- usage-example: Native ../../../../../showcase/native/src/settings-page-preview.tsx -->
+- [Native 실행 예제](../../../../../showcase/native/src/settings-page-preview.tsx): 같은 흐름의 Native 공개 API와 이벤트 연결.
 
-```tsx
-// Native — Switch는 /inputs, ListRow는 /data-display, 행 이동은 onPress
-import { SettingsScreen } from "@hjmds/react-native/screens";
-import { Switch } from "@hjmds/react-native/inputs";
-import { ListRow } from "@hjmds/react-native/data-display";
-
-<SettingsScreen
-  title={t("settings.title")}
-  sections={[
-    { id: "notifications", title: t("settings.notifications"), children: (
-      <Switch
-        presentation="row"
-        label={t("settings.push.label")}
-        description={t("settings.push.description")}
-        checked={pushEnabled}
-        onCheckedChange={setPushEnabled}
-      />
-    ) },
-    { id: "account", title: t("settings.account"), children: (
-      <ListRow title={t("settings.language")} description={currentLanguageName} onPress={openLanguageSheet} />
-    ) },
-  ]}
-/>
-```
+설치 패키지에서 소스 링크를 열 수 없다면 [Web 원본](https://github.com/jim1286/hjm-design-system/blob/v1.17.1/showcase/web/src/patterns/settings-page-preview.tsx)과
+[Native 원본](https://github.com/jim1286/hjm-design-system/blob/v1.17.1/showcase/native/src/settings-page-preview.tsx)을 참고한다.
+고정 버전 예제와 현재 checkout의 후속 변경은 구분하며 설치된 타입을 기준으로 사용한다.
 
 ## 축과 기본값
 

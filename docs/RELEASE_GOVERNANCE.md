@@ -1,6 +1,6 @@
 # 디자인 시스템 검증과 릴리스 계약
 
-상태: 현재 내부 릴리스 계약 · 검토일: 2026-10-12
+상태: 현재 내부 릴리스 계약 · 검토일: 2026-10-13
 적용: 이 저장소의 contracts, React, React Native, 두 Showcase.
 Web Storybook 공개 실행 정본: [자체 도메인 게시](../deploy/storybook/README.md).
 기계 검사: [`scripts/check-release-governance.mjs`](../scripts/check-release-governance.mjs).
@@ -144,7 +144,7 @@ minor bump가 범위를 벗어나고, changesets는 범위를 벗어나는 peer 
 
 1. 계약·renderer·환경 증거를 같은 변경에서 설계한다.
 2. 게시 소스 변경은 작업 단위(PR 또는 PR 없는 `main` push 묶음)를 마칠 때 Changeset으로 정리하고, `release:version` 전에 마지막 tag 이후 변경이 모두 담겼는지 확인한다. 소비 API·동작이 바뀌면 migration을 작성하며 내부 리팩터링에 형식적인 migration 문서를 요구하지 않는다.
-3. 공개 계약이 바뀌면 `pnpm sync`로 projection을 갱신한다. 개발 중에는 `pnpm dev:check --base origin/main`, 게시 전에는 `pnpm release:check`를 실행한다(2026-10-09 반복 검증 비용 분리).
+3. 공개 계약이 바뀌면 해당 생성 명령으로 projection을 갱신한다. 개발 중에는 변경 범위 검사만 선택하고, 넓은 `dev:check`는 선택적 진단으로 사용한다. 게시 전에는 `pnpm release:check`를 실행한다.
 4. 실제 소비 제품은 설치 train과 지원 범위를 기록하고 별도 제품 CI/기기 QA를 검증한다.
 5. package release가 승인된 작업일 때 release version/commit을 만들고 수동 workflow를 실행한다.
 

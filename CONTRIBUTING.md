@@ -1,6 +1,6 @@
 # Contributing to HJM Design System
 
-검토일: 2026-10-12
+검토일: 2026-10-13
 
 HJM은 계약, Web renderer, React Native renderer, Showcase evidence를 같은 변경에서
 함께 관리합니다. 새 API는 한 플랫폼의 편의보다 공통 사용자 문제와 검증 가능한 의미를
@@ -12,7 +12,8 @@ Node.js 20 이상과 저장소에 선언된 pnpm 버전을 사용합니다.
 
 ```bash
 pnpm install
-pnpm dev:check --base origin/main
+# 변경 파일의 타입·관련 동작 검사를 직접 선택한다.
+# 넓은 개발 진단이 필요할 때만 pnpm dev:check --base origin/main
 # npm 게시 전 실제 패키지 검사
 pnpm release:check
 # 전체 문서·Showcase 회귀는 명시적으로 선택할 때만 pnpm ci:check
@@ -46,7 +47,7 @@ package build·후보 tarball·게시 검사는 별도로 유지한다. 여기�
    `pnpm changeset` 하나로 SemVer 영향을 기록합니다. 반복 개발마다 추가하지 않습니다. `main` 단일 branch
    운영에서는 PR이 없을 수 있으므로 `pnpm release:version` 전에 마지막 `v<version>` tag 이후의 게시 소스
    변경이 모두 changeset에 담겼는지 확인합니다. migration은 소비 API·동작이 바뀔 때만 작성합니다.
-5. 생성 파일은 `pnpm sync`로 함께 갱신합니다. 공개 API·지원 상태·사용법에 변화가 없으면
+5. 변경한 원본에 해당하는 생성 명령만 실행합니다(`contracts:sync`, `api-map:sync`, `usage:sync` 등). 전체 동기화가 필요할 때 `pnpm sync`를 씁니다. 공개 API·지원 상태·사용법에 변화가 없으면
    관련 문서의 무의미한 수정이나 검토일 갱신을 요구하지 않습니다.
 
 2026-10-09 생산성 개선: 매 반복마다 전량 빌드·문서 갱신을 강제하던 흐름을 나눴습니다.
@@ -107,14 +108,14 @@ renderer budget을 함께 확인하고, 모든 범위에서 `contracts:check`·`
 계획된 컴포넌트의 자세한 저작 규칙은
 `packages/design-contracts/docs/authoring-brief.md`를 따릅니다.
 
-## 커밋 전 게이트
+## 변경 검증
 
-```bash
-# 개발/PR: 변경 영향 검사. 공개 계약 변경 시 pnpm sync 후 diff를 검토한다.
-pnpm dev:check --base origin/main
-# 게시 전: 전체 회귀와 생성 drift 검사
-pnpm release:check
-```
+개발 중에는 변경 파일·직접 소비 모듈의 타입과 관련 동작만 검사한다. `dev:check`와
+`ci:check`는 선택적 진단이며 커밋의 고정 선행 명령이 아니다. npm 게시 전에는
+`release:check`로 실제 패키지를 검사한다. 공개 계약 변경은 관련 생성물의 diff도 확인한다.
+
+사용 예제는 [사용 지침 규격](packages/design-contracts/docs/usage/STANDARD.md)의 원본 참조 방식을 따른다.
+문서 형식 검사와 TSX 예제 타입 검사는 별개의 결과다.
 
 ## 행동 강령
 

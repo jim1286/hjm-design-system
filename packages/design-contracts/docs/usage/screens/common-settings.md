@@ -3,7 +3,7 @@
 - 단계: 화면
 - 상태: 배포
 - 지원: Web · Native
-- 적용: 미게시(1.12.1 이후)
+- 적용: 구성 API 지침 참조
 - 검토일: 2026-10-08
 - 근거: [반복 화면 조합](../../screen-patterns.md); 공통 API와 실제 Web·Native 예제의 슬롯·상태를 대조해 중복 조립 방지. 2026-10-06 사용자 승인으로 스토리북 배포(이전 `실험/화면/공통 화면/설정`, [승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정))
 - 스토리북: `배포/화면/설정/앱 설정`
@@ -51,57 +51,17 @@ host: 남은 높이·safe area·키보드
 
 ## 코드 골격
 
-```tsx
-// Web
-import { SettingsScreen } from "@hjmds/react/screens";
-import { Switch } from "@hjmds/react/selection";
-import { ListRow } from "@hjmds/react/display";
+문서와 Storybook은 같은 실행 예제를 참조한다. 제품 데이터·문구·저장·라우팅은 제품에서 연결하고,
+아래 preview의 메모리 상태를 서버 저장으로 취급하지 않는다. 예제는 읽기용이며 제품에서 showcase를 import하지 않는다.
 
-<SettingsScreen
-  title={t("settings.title")}
-  sections={[
-    { id: "notifications", title: t("settings.notifications"), children: (
-      <Switch
-        presentation="row"
-        label={t("settings.push.label")}
-        description={t("settings.push.description")}
-        checked={pushEnabled}
-        onCheckedChange={setPushEnabled}
-      />
-    ) },
-    { id: "account", title: t("settings.account"), children: (
-      <ListRow title={t("settings.language")} description={currentLanguageName} onClick={openLanguageSheet} />
-    ) },
-  ]}
-/>
-```
+<!-- usage-example: Web ../../../../../showcase/web/src/patterns/settings-page-preview.tsx -->
+- [Web 실행 예제](../../../../../showcase/web/src/patterns/settings-page-preview.tsx): 공개 SettingsScreen·행·Sheet 조합과 로컬 설정 상태.
+<!-- usage-example: Native ../../../../../showcase/native/src/settings-page-preview.tsx -->
+- [Native 실행 예제](../../../../../showcase/native/src/settings-page-preview.tsx): 같은 흐름의 Native 공개 API와 이벤트 연결.
 
-```tsx
-// Native
-import { SettingsScreen } from "@hjmds/react-native/screens";
-import { Switch } from "@hjmds/react-native/inputs";
-import { ListRow } from "@hjmds/react-native/data-display";
-
-<SettingsScreen
-  title={t("settings.title")}
-  sections={[
-    { id: "notifications", title: t("settings.notifications"), children: (
-      <Switch
-        presentation="row"
-        label={t("settings.push.label")}
-        description={t("settings.push.description")}
-        checked={pushEnabled}
-        onCheckedChange={setPushEnabled}
-      />
-    ) },
-    { id: "account", title: t("settings.account"), children: (
-      <ListRow title={t("settings.language")} description={currentLanguageName} onPress={openLanguageSheet} />
-    ) },
-  ]}
-/>
-```
-
-콜백·데이터·지역화 함수는 제품에서 공급한다. 필수 props와 플랫폼별 차이는 위 API 지침에서 확인한다.
+설치 패키지에서 소스 링크를 열 수 없다면 [Web 원본](https://github.com/jim1286/hjm-design-system/blob/v1.17.1/showcase/web/src/patterns/settings-page-preview.tsx)과
+[Native 원본](https://github.com/jim1286/hjm-design-system/blob/v1.17.1/showcase/native/src/settings-page-preview.tsx)을 참고한다.
+고정 버전 예제와 현재 checkout의 후속 변경은 구분하며 설치된 타입을 기준으로 사용한다.
 
 ## 큰 글자·다크·좁은 폭
 

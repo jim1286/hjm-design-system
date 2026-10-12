@@ -2,12 +2,15 @@
 
 상태: **Normative**
 정책 버전: **2.0.0**
-검토일: 2026-10-06 · Web `layoutStyle` 전수 제공(이전: 2026-10-02 deprecated API 제거)
+검토일: 2026-10-13 · 현재 소비 계약과 변경 범위 검증
 적용 대상: 신규 HJM Web·React Native 앱과 기존 앱의 새 화면
 
 이 원문은 `@hjmds/design-contracts/consumer-policy.md`에서 제공한다. 소비 앱은 설치한
 패키지 버전의 정책과 HJM-APP-STANDARD release snapshot을 함께 확인한다. 이 checkout의
-1.11 소스 갱신을 아직 설치하지 않은 앱에 자동 적용된 것으로 판단하지 않는다.
+미게시 변경을 설치된 패키지의 기능으로 판단하지 않는다.
+
+2026-10-13 지침 점검에서 종료된 foundation bridge와 스타일 제거 예정 조건이 현재 규칙에
+남아 있었다. 해당 레거시 절차는 제거하고 과거 버전의 이관표와 검증 기록은 보존한다.
 
 이 문서는 "HJM답게 보인다"를 특정 화면 복제로 정의하지 않습니다. 모든 제품이 공유해야
 하는 것은 정보 위계, semantic role, 상태 피드백, 접근성 품질과 플랫폼별 행동입니다.
@@ -34,7 +37,8 @@
 | `deprecated` | 신규 사용 금지 | 공지된 migration 기한 안에 제거 |
 
 `surfaceStatus`가 사용 플랫폼의 채택 기준입니다. contract `status`가 stable이어도
-다른 renderer까지 안정화됐다는 뜻은 아닙니다. 예를 들어 TopBar는 Web stable / Native beta입니다.
+다른 renderer까지 안정화됐다는 뜻은 아닙니다. 현재 값은 설치 버전의
+[성숙도 표](generated/component-maturity.md)를 확인합니다. Storybook의 배포/실험은 API 안정성이나 npm 게시 상태가 아닙니다.
 
 신규 앱 scaffold의 기본 선택은 Stable Core입니다(SHOULD). Beta 사용은 정책 예외가 아닙니다.
 앱의 기존 contract 또는 TASKS 한 곳에 컴포넌트·표면, 사용하는 이유, 담당자와 관련 회귀
@@ -42,40 +46,12 @@
 재검토 날짜는 요구하지 않습니다. 실제 기기·브라우저 QA는 바뀐 사용자 흐름과 플랫폼 위험에
 맞춰 앱 릴리스에서 수행합니다. Beta라는 이유만으로 제품 전체 QA를 반복하지 않습니다.
 
-2026-09-29 점검에서 HJM 자체 검증을 통과한 표시 컴포넌트도 제품 수·배포 이력 때문에
-승격이 막혔습니다. 1.4.0은 컴포넌트 호환성 약속과 제품 릴리스 검증을 분리합니다.
-[승격 기준](stable-promotion.md)을 따르며 기존 versioned app profile의 검사 요건은 그
-profile을 명시적으로 갱신하기 전까지 유지합니다.
+컴포넌트 승격은 [승격 기준](stable-promotion.md)을 따르고 과거 판정은
+[Stable Core 기록](stable-core.md)에 보존한다. 현재 규칙에 이전 버전의 개수나 임시 foundation
+bridge를 복제하지 않는다. 구버전 소비자는 설치된 정책·profile과 해당 이관표를 확인한다.
 
-### 2.1 Stable Core와 필수 foundation bridge
-
-1.5.0에서 Stable Core는 17개 컴포넌트였습니다. 1.4까지의 `Surface`, `Button`, `Field`, `TextArea`에
-더해, 첫 제품 화면에 필요한 foundation인 `Text`, `Icon`, `Stack`, `Container`,
-`DesignSystemProvider`와 세 제품 이상이 쓰는 `IconButton`, `Badge`, `Card`, `Tag`, `Notice`,
-`Progress`, `Spinner`, `Skeleton`이 stable로 승격됐습니다. 승격 근거는 이름뿐이던 시나리오 증거를
-실제 계산 스타일 검사로 바꾼 뒤 두 renderer에서 요구 시나리오가 모두 통과한 것입니다
-([Stable Core](stable-core.md)). 이번 개정에서는 `Divider`, `Section`, `ListRow`, `Statistic`,
-`DescriptionList`, `EmptyState`, `Result`, `Heading`, `Top`, `BottomCTA`를 양쪽에서 승격하고,
-`TopBar`는 계약·Web만 승격했습니다. 계약/Web stable은 28개, Native stable은 27개입니다.
-배포된 패키지의 catalog가 소비 앱의 기준입니다. 남은 beta를 `stable`로
-간주하거나 `betaAdoptions: []`로 기록하는 것은 허용하지 않습니다(MUST NOT).
-
-HJM-APP-STANDARD가 versioned `requiredFoundations` 목록을 선언한 경우 다음 bridge를
-적용합니다.
-
-- 필수 foundation의 채택 이유와 최소 목록은 중앙 profile이 소유합니다. 앱마다 같은
-  선택 이유를 새로 발명하지 않습니다(MUST).
-- 각 앱은 실제 adapter와 사용 환경에 대한 evidence를 소유합니다(MUST). `draft` /
-  `incubating` contract에서는 evidence가 `planned`일 수 있지만, `active` 또는 release gate는
-  timestamp가 있는 `verified` evidence 없이는 통과하면 안 됩니다(MUST NOT).
-- 중앙 필수 목록 밖의 `beta`는 제품별 optional adoption이며 §2의 간단한 채택 기록을
-  사용합니다. 예전 profile이 ADR·verified evidence를 요구하면 해당 profile 갱신 때 이관합니다.
-- foundation이 catalog에서 `stable`로 승격되면 기존 표준의 의미를 조용히 바꾸지 않고
-  다음 versioned app profile에서 bridge 목록을 줄입니다(MUST).
-
-이 bridge는 성숙도 예외가 아니라 공개된 임시 채택 계약입니다. 1.5.0에서 bridge의 다섯
-foundation이 모두 stable이 됐으므로, 중앙 app profile의 다음 개정에서 `requiredFoundations`
-목록을 비웁니다. 개정 전까지 기존 profile을 쓰는 앱의 evidence 요구는 조용히 바뀌지 않습니다.
+화면은 [선택 기준](usage/SELECTION.md)에 따라 그대로 사용, 공개 슬롯 확장, 제품 전용 구성 중 고른다.
+이름이 같다는 이유로 저장·스크롤·권한 흐름이 다른 화면에 공통 API를 강제하지 않는다.
 
 ## 3. 코드 경계
 
@@ -85,83 +61,22 @@ foundation이 모두 stable이 됐으므로, 중앙 app profile의 다음 개정
   또는 제품 어댑터를 사용해야 합니다(MUST).
 - 도메인 상태는 화면마다 색을 정하지 않고 제품 어댑터에서 HJM `AccentTone`과 component
   variant에 매핑해야 합니다(MUST).
-- HJM component의 `style` escape hatch는 배치용 margin, width, flex와 화면 composition에만
+- HJM component의 `layoutStyle`은 배치용 margin, width, flex와 화면 composition에만
   사용해야 합니다(SHOULD). color, typography, radius, control height와 interaction state를
   덮어쓰는 용도로 사용하면 안 됩니다(MUST NOT).
 - 플랫폼 primitive가 필요한 경우 접근성 또는 플랫폼 관습 때문에 필요한 adapter에
   한정하고, 그 이유를 해당 adapter test로 고정해야 합니다(MUST).
 
-### 3.1 React Native legacy style compatibility boundary
+### 3.1 배치와 시각 값
 
-2026-10-02 전체 소비 버전업 결정에 따라 deprecated 공개 스타일 통로는 1.11에서 제거합니다.
-정확한 제거 속성과 대체 API는 [1.11 이관표](migration-native-legacy-removal.md)를 따릅니다.
-1.x 설치본의 caller-last 호환 동작은 역사적 동작이며 현재 소스에 유지되지 않습니다.
-
-- 배치에는 `layoutStyle`을 쓰고, 제공하지 않는 컴포넌트는 외부 composition wrapper를 씁니다.
-  Web은 2026-10-06부터 화면 흐름 안에 루트가 있는 모든 공개 컴포넌트가 `layoutStyle`을 받습니다.
-  사용 지침을 쓰다가 일부 컴포넌트에만 이 prop이 있어 wrapper나 내부 input에 걸리는 `style`로
-  배치하던 것을 확인해 넓혔습니다. 제외 대상은 provider·portal/viewport layer·recipe가 위치를 고정하는
-  요소이며 그 목록과 이유는 `@hjmds/react`의 `composition-style.ts`와 각 props 타입 주석에 있습니다.
-- `HjmCompositionStyle` / `layoutStyle`은 margin, width, flex 계열과 `alignSelf`만 제공합니다. color,
-  typography, padding, gap, border, radius, height, opacity, transform은 recipe/semantic API 소유입니다.
-- 내부 조합의 스타일은 비공개 renderer에 두며 앱에서 해당 내부 파일을 import하지 않습니다.
-- 정식 플랫폼 host·제품 소유 슬롯·이미지 renderer 스타일을 deprecated 별칭과 혼동하지 않습니다.
-
-소비 앱의 legacy prop이 실제로 무엇을 덮어쓰고 있었는지 확인한 뒤, 배치가 아닌 값은
-semantic axis로 옮겼습니다. 아래는 그 축과 대체 대상입니다.
-
-| 제품이 덮어썼던 것 | semantic axis |
-| --- | --- |
-| 컨트롤에 `minHeight: 44`를 다시 얹어 compact recipe의 36pt를 가리기 | provider 환경의 `minimumVisualTarget` |
-| Button `borderRadius: 999`로 pill 만들기 | `shape="pill"` |
-| Button `justifyContent: "flex-start"`로 라벨 좌측 정렬 | `align="leading"` |
-| ListRow leading slot에 40pt 원형 avatar 프레임을 제품이 다시 계산 | `leadingShape` (`listRowRecipe.leadingSize`를 renderer가 바인딩) |
-| 중첩 web Provider의 `display: contents` 인라인 중화 | `host="contents"` |
-| secondary 컨트롤 테두리를 제품 boundary 색으로 덮기 | `borderControl` semantic key + `semanticColors.border.control` |
-
-### Web renderer의 캐스케이드
-
-`@hjmds/react/styles.css`는 **CSS 레이어 밖**에 있다(레이어된 opt-in 파일과 전환 조건은
-[brand-boundary.md §3](./brand-boundary.md#3-css-재정의는-지원하는-테마-경로가-아니다)). Tailwind 4를 쓰는 소비 앱의
-유틸리티는 `@layer utilities` 안에 들어가고, 레이어 밖 규칙은 레이어 안 규칙을
-이긴다. 따라서 HJM 컴포넌트에 `px-0`·`rounded-none`·`justify-start` 같은
-유틸리티를 붙여 recipe 값을 덮으려는 시도는 **조용히 아무 일도 하지 않는다.**
-
-이건 결함이 아니라 이 정책이 의도한 결과다 — recipe 소유 값은 지나가는
-유틸리티로 흔들리면 안 된다. 다만 **조용하다**는 점이 문제라, 소비 앱은 다음을
-알고 있어야 한다.
-
-- 유틸리티로 recipe 값을 덮는 코드는 리뷰에서 걸러야 한다. 필요한 값은 semantic
-  axis로 요청한다.
-- HJM이 표현할 수 없는 값은 `.hjm-*` 재정의로 우회하지 않는다. 계약 공백으로 올린다. 기존 재정의는
-  추적되는 부채이며 이관 경로(opt-in `styles.layered.css`)와 규칙은 [brand-boundary.md](./brand-boundary.md)가 정한다.
-- 인라인 `style`은 모든 규칙을 이기므로 이관 전에는 보이던 값이 이관 후 조용히
-  사라질 수 있다. 이관은 브라우저에서 실제 렌더를 확인하며 진행한다.
-
-> `ThemeColors`에 semantic key를 더하는 것은 `brandPalette` 부분 주입 소비자에게는
-> 무해하지만, **완전한 팔레트를 직접 선언하는 소비자에게는 타입 파괴적**이다.
-> 0.x train에서는 patch로 내보내되 릴리스 노트에 그 사실을 적고, 소비자는 새 key를
-> 채워야 한다. 1.0 이후에는 이 형태의 추가를 minor 이상으로 올린다.
-| 토글 Button·IconButton의 selected 배경·테두리를 제품 style로 칠하기 | `selected` (`buttonRecipe.states.selected`, `iconButtonRecipe.states.selected`) |
-| `link` tone Button에서 `paddingHorizontal: 0`으로 인라인 정렬 복원 | tone별 `paddingHorizontal` (link=0) |
-| Web ListRow의 1행/2행 최소 높이·padding·gap을 제품이 다시 계산 | `--hjm-list-row-*` 변수로 density recipe를 stylesheet에 바인딩 |
-| Web Switch에 size 축이 없어 track/thumb 크기를 제품 변수로 구현 | `size` prop + `--hjm-switch-*` (`switchRecipe.sizes` 바인딩) |
-| Surface에 `overflow: hidden`을 얹어 자식 이미지의 라운드 코너 침범 막기 | `surfaceRecipe[tone].clipsContent` (elevated tone은 그림자가 잘리므로 예외) |
-| Chip·ListRow·Image·LoadMore·DescriptionList의 배치용 `style` | 각 컴포넌트의 `layoutStyle` |
-
-legacy raw style surface는 다음 조건이 모두 충족된 뒤 공지된 breaking train에서 제거합니다.
-
-1. Stable Core가 canonical `layoutStyle` 또는 동등한 좁은 composition API를 제공한다.
-2. HJM showcase와 관리 중인 앱이 새 API로 이동하고 light/dark, large text, RTL과 touch-target
-   evidence를 다시 검증한다.
-3. 최소 한 fixed release train 동안 deprecation과 migration 문서를 제공한다.
-4. 제거 Changeset이 영향을 받는 prop과 semantic 대안을 열거한다.
-
-2026-09-23 소비 감사에서 1.3.5에도 deprecated prop이 남아 있음을 확인했습니다. 이전의
-“1.0.0 이전 제거” 기한은 실제 release/API와 어긋나므로 폐기합니다. 이미 게시한 1.x의 타입과
-런타임을 minor에서 삭제하는 대신, 위 네 조건과 소비 앱별 이관 목록을 충족한 다음 major에서
-제거합니다. 1.4는 semantic API와 이관 경로를 추가하는 train이며, 기존 prop을 새 화면에 쓰는
-것은 계속 금지합니다. 2026-10-02 사용자의 전체 이관 결정으로 제거 train을 1.11로 확정했습니다.
+- 배치에는 `layoutStyle`을 쓰고, 제공하지 않는 컴포넌트는 외부 composition wrapper를 쓴다.
+  지원 속성은 각 renderer의 `HjmCompositionStyle` 타입과 컴포넌트 Props를 따른다.
+- 색·글꼴·모서리·높이·상태 표현은 semantic API, `brandPalette`, `designProfile`로 지정한다.
+  앱에서 내부 selector나 제거된 `style`·`labelStyle` 별칭으로 덮지 않는다.
+- 플랫폼 host·제품 소유 슬롯·이미지 renderer의 정식 style은 제거된 별칭과 구분한다.
+- CSS 레이어와 기존 재정의의 이관은 [브랜드 경계](brand-boundary.md#3-css-재정의는-지원하는-테마-경로가-아니다)가 소유한다.
+- 제거된 API와 대체 prop은 [1.11 이관표](migration-native-legacy-removal.md)에 보존한다.
+  종료된 제거 예정 조건이나 0.x 버전 규칙을 현재 소비 경로로 안내하지 않는다.
 
 권장 구조는 다음과 같습니다. 실제 폴더명은 stack 관습에 맞춰도 역할은 유지합니다.
 
@@ -195,27 +110,28 @@ on-color 대비, 색에 의존하지 않는 상태 표지, reduce-motion을 제�
 
 ## 5. 필수 검증과 evidence
 
-앱 CI는 최소한 다음을 실패 조건으로 두어야 합니다(MUST).
+다음 제품 계약을 유지하고, 변경한 코드와 직접 소비하는 표면의 타입·빌드·관련 동작을 검사한다.
+같은 SHA·같은 범위의 성공은 재사용하며 전체 회귀는 명시적으로 선택한다.
+문서 형식·Storybook 분류·검사 명령 문자열은 제품 배포의 차단 조건이 아니다.
 
 1. contracts/renderer exact version 일치와 금지 dependency 형식 검사
-2. versioned `requiredFoundations` 전체의 선언과 lifecycle에 맞는 app evidence 검사
+2. 설치된 catalog·앱 profile과 실제 사용 표면의 일치
 3. HJM Provider 존재와 제품 theme adapter 존재 검사
 4. 원시 색·간격·radius의 화면 레이어 유입 방지 검사
 5. typecheck, unit/component test, production build
-6. light/dark, 100–200% 글자 크기, LTR/RTL, reduce motion 중 앱이 지원한다고 선언한 환경
+6. 영향 화면의 light/dark, 지원 방향과 reduced motion 등 변경에 관련된 환경
 7. optional Beta component를 쓴다면 §2의 채택 기록과 변경한 사용자 흐름의 회귀 검사
 
 앱이 지원하지 않는 플랫폼이나 환경은 가짜 통과 script로 만들지 않고 app contract에서
 `not-applicable`과 이유를 선언해야 합니다(MUST).
 
+OS 최대 글자 및 그 최대값 모사는 설계·검증·후속 조건에서 제외한다.
+
 ## 6. 예외와 변경 절차
 
-필수 규칙의 예외는 암묵적으로 두지 않습니다. ADR에는 다음을 모두 기록해야 합니다.
-
-- 위반하는 정책 항목과 사용자 가치
-- 검토한 대안과 선택 이유
-- 위험, 보완 테스트와 담당자
-- 만료 또는 재검토 날짜
+계약 변경이나 예외의 이유·영향·검사 결과·미확인 범위는 기존 계약 문서, TASKS 또는 커밋에 남긴다.
+작은 수정에 별도 ADR, 고정 항목 수, 중복 승인을 요구하지 않는다. 임시 우회에는 제거 조건을 적는다.
+공개 API·데이터·호환성을 바꾸면 해당 계약과 migration을 갱신한다.
 
 공통 API를 바꾸는 것이 한 제품의 local override보다 적절하면 제품 코드를 복제하지 않고
 HJM에 Changeset과 Web/RN evidence를 먼저 제출합니다. 반대로 제품 의미가 들어가면 공통
@@ -226,8 +142,7 @@ package로 승격하지 않습니다.
 다음 질문에 모두 "예"라고 답할 수 있어야 HJM 채택이 완료된 것입니다.
 
 - exact fixed-train dependency와 Provider가 CI에서 검증되는가?
-- Stable은 기본 사용하고(1.5.0 이전 profile이면 필수 foundation은 중앙 목록+앱 evidence로),
-  optional Beta는 채택 기록과 관련 회귀 검사로 추적되는가?
+- 설치 버전의 surfaceStatus를 따르고 optional Beta는 채택 기록과 관련 회귀 검사로 추적되는가?
 - screen 코드가 semantic token·component를 우회하지 않는가?
 - 같은 상태가 Web/RN에서 같은 의미와 자연스러운 플랫폼 행동을 갖는가?
 - 로고를 제거해도 제품의 핵심 콘텐츠와 정보 구조가 다른 제품과 구분되는가?

@@ -85,9 +85,8 @@ The package exports include:
 
 ## Composition style boundary
 
-The normative [consumer policy](../design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary)
-defines the supported composition boundary. Version 1.11 removes deprecated public raw-style
-props and compatibility aliases listed in the [migration guide](../design-contracts/docs/migration-native-legacy-removal.md).
+The normative [consumer policy](../design-contracts/docs/consumer-policy.md#31-배치와-시각-값)
+defines the supported composition boundary. The [migration table](../design-contracts/docs/migration-native-legacy-removal.md) distinguishes removed aliases from deprecated raw-style props still present in public types.
 Source changes do not update already installed npm packages. Upgrade each consumer's dependency
 and lockfile together, and verify its supported surfaces.
 
@@ -113,7 +112,7 @@ const actionPlacement = {
 ```
 
 If a product needs a new color, type treatment, radius, density, or control size, add a semantic
-theme/recipe axis with renderer evidence. Deprecated 1.x compatibility props are removed in 1.11;
+theme/recipe axis with renderer evidence. New code must use the canonical props;
 private recipe composition and supported platform host styles are separate APIs.
 
 `Image` consumes the same intrinsic descriptor as Web. `width` and `height`

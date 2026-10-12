@@ -8,7 +8,7 @@
 // 단위: 컴포넌트는 public-component-map의 계약(계약 없는 supplemental은 이름 하나). 토큰·구성·화면은 showcase의
 // `<배포|실험>/<단계>/<분류>/<항목>` Storybook 제목이고, 컴포넌트 단계의 항목 제목(`컴포넌트/개요/*` 문서 제외)도
 // 어느 지침이 담당해야 한다. 제목 형식 자체는 scripts/check-storybook.mjs가 검사한다.
-// 규격을 바꾸면 STANDARD.md·templates/·이 파일·전체 지침을 같은 변경에서 바꾼다.
+// 규격 변경은 STANDARD.md·templates/·이 파일 중 영향을 받는 부분만 갱신한다. 형식 감사는 선택 사항이다.
 
 import { readFile, readdir, writeFile } from "node:fs/promises";
 import { dirname, relative, resolve } from "node:path";
@@ -19,6 +19,41 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const usageDir = resolve(root, "packages/design-contracts/docs/usage");
 const indexPath = resolve(usageDir, "README.md");
 const write = process.argv.includes("--write");
+// A shared checkout can have unrelated unfinished guides. Explicit file selection
+// validates only this task's docs while the index still includes every existing guide.
+const filesAt = process.argv.indexOf("--files");
+const selected = filesAt < 0 ? null : new Set(process.argv.slice(filesAt + 1).filter(arg => arg !== "--write").map(file => resolve(root, file)));
+if (selected?.size === 0) throw new Error("--files requires usage document paths");
+const shouldCheck = label => selected === null || selected.has(resolve(usageDir, label));
+const checked = new Set();
+const manifest = JSON.parse(await readFile(resolve(root, "packages/design-contracts/docs/generated/showcase-manifest.json"), "utf8"));
+const maturity = new Map(manifest.components.map(component => [component.name, component.surfaces]));
+
+// Read maturity from the existing generated contract; Storybook promotion is a separate axis.
+function apiStatus(unit) {
+  const surfaces = maturity.get(unit);
+  return surfaces ? `Web ${surfaces.web} / Native ${surfaces.native}` : "개별 API 계약 참조";
+}
+
+async function inspect(stage, label, markdown, problems) {
+  if (!shouldCheck(label)) {
+    const values = Object.fromEntries(parseHeader(markdown));
+    const declared = [...(values["스토리북"] ?? "").matchAll(/`([^`]+)`/g)].map(match => match[1]);
+    return { values, declared };
+  }
+  checked.add(resolve(usageDir, label));
+  const result = validate(stage, label, markdown, problems);
+  // Source references eliminate copied examples; existence is not a claim that tsc ran.
+  for (const [, platform, source] of markdown.matchAll(/<!-- usage-example: (Web|Native) ([^\n]+?) -->/g)) {
+    const target = resolve(dirname(resolve(usageDir, label)), source);
+    if (relative(root, target).startsWith("..") || !target.endsWith(".tsx")) {
+      problems.push(`${label}: ${platform} 예제는 저장소 안 TSX 원본이어야 한다`);
+      continue;
+    }
+    try { await readFile(target, "utf8"); } catch { problems.push(`${label}: ${platform} 예제 원본 없음: ${source}`); }
+  }
+  return result;
+}
 
 const HEADER_KEYS = ["단계", "상태", "지원", "적용", "검토일", "근거", "스토리북"];
 const SUPPORT = new Set(["Web · Native", "Web", "Native"]);
@@ -179,8 +214,8 @@ function validate(stage, label, markdown, problems) {
   if (values["지원"] && !SUPPORT.has(values["지원"])) problems.push(`${label}: 지원은 Web · Native|Web|Native`);
   if (values["검토일"] && !/^\d{4}-\d{2}-\d{2}$/.test(values["검토일"])) problems.push(`${label}: 검토일 형식`);
 
-  if (values["적용"] && !/^(\d+\.\d+\.\d+|미게시\(\d+\.\d+\.\d+ 이후\))$/.test(values["적용"])) {
-    problems.push(`${label}: 적용은 \`x.y.z\` 또는 \`미게시(x.y.z 이후)\`(현재 ${values["적용"]})`);
+  if (values["적용"] && !/^(\d+\.\d+\.\d+|미게시\(\d+\.\d+\.\d+ 이후\)|구성 API 지침 참조)$/.test(values["적용"])) {
+    problems.push(`${label}: 적용은 \`x.y.z\`, \`미게시(x.y.z 이후)\` 또는 \`구성 API 지침 참조\`(현재 ${values["적용"]})`);
   }
   // 규격 절을 `###`로 내리면 표·행 검사를 피할 수 있었다(2026-10-06 리뷰에서 10개 발견).
   for (const spec of stage.sections) {
@@ -193,7 +228,8 @@ function validate(stage, label, markdown, problems) {
   for (const section of sections) {
     const index = stage.sections.findIndex((spec, i) => i >= cursor && spec.name === section.name);
     if (index < 0) {
-      problems.push(`${label}: 규격에 없거나 순서가 틀린 절 "${section.name}"`);
+      // Extra product guidance is useful content, not a schema violation.
+      if (stage.sections.some(spec => spec.name === section.name)) problems.push(`${label}: 중복되거나 순서가 틀린 절 "${section.name}"`);
       continue;
     }
     for (const skipped of stage.sections.slice(cursor, index)) {
@@ -206,10 +242,11 @@ function validate(stage, label, markdown, problems) {
       if (!section.body.includes(`\n| ${row} |`)) problems.push(`${label}: "${spec.name}" 표에 ${row} 행 없음`);
     }
     if (spec.diagram && !section.body.includes("```text")) problems.push(`${label}: "${spec.name}"에 배치도(\`\`\`text) 없음`);
-    if (spec.code && !section.body.includes("```tsx")) problems.push(`${label}: "${spec.name}"에 코드(\`\`\`tsx) 없음`);
+    if (spec.code && !section.body.includes("```tsx") && !section.body.includes("<!-- usage-example:")) problems.push(`${label}: "${spec.name}"에 코드(\`\`\`tsx) 없음`);
     if (spec.code) {
       // 코드 블록 첫 줄로 플랫폼을 밝히고, 지원하는 플랫폼마다 예를 둔다(2026-10-06 리뷰: 한쪽만 있는 지침 38개).
       const platforms = [...section.body.matchAll(/```tsx\n([^\n]*)/g)].map((m) => m[1].trim());
+      platforms.push(...[...section.body.matchAll(/<!-- usage-example: (Web|Native) [^\n]+? -->/g)].map(match => `// ${match[1]}`));
       for (const first of platforms) {
         if (!/^\/\/ (Web|Native)\b/.test(first)) problems.push(`${label}: "${spec.name}" 코드 첫 줄이 // Web 또는 // Native가 아니다`);
       }
@@ -272,8 +309,11 @@ function renderIndex(sections) {
     "이 파일은 `pnpm usage:sync`가 각 지침에서 생성한다. 직접 수정하지 않는다. 지침 형식은 [규격](STANDARD.md)을 따른다.",
     "",
     "단계는 Storybook과 같은 `토큰 → 컴포넌트 → 구성 → 화면`이다. 화면을 만들 때는 화면 지침의 영역 구조와",
-    "버튼 위치에서 시작해 구성·컴포넌트 지침으로 내려가고, 값은 토큰 지침에서 고른다. 표에 맞는 것이 없을 때만",
-    "제품에서 조합한다. 설치한 버전의 지침을 본다: `node_modules/@hjmds/design-contracts/docs/usage/`.",
+    "버튼 위치에서 시작해 구성·컴포넌트 지침으로 내려가고, 값은 토큰 지침에서 고른다.",
+    "[선택 기준](SELECTION.md)으로 그대로 사용·공개 슬롯 확장·제품 전용 구성을 고른다. 설치 버전의 지침을 본다: `node_modules/@hjmds/design-contracts/docs/usage/`.",
+    "제공 기준은 확인한 기본 API 버전이며 최초 출시 버전이 아니다. 구성·화면은 각 API 지침의 제공 버전을 확인한다.",
+    `API 안정성은 ${manifest.designSystemVersion}의 생성 manifest에서 읽은 정규(canonical) API 기준이다. 동반·선택형 확장은 개별 계약을 확인한다.`,
+    "Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품 반영을 의미하지 않는다.",
     "`분류`는 Storybook 제목 `<배포|실험>/<단계>/<분류>/<항목>`의 셋째 마디이고, 토큰·구성·화면은 Storybook 메뉴와 같은 순서다.",
   ];
   for (const { stage, rows } of sections) {
@@ -281,11 +321,11 @@ function renderIndex(sections) {
       "",
       `## ${stage.label}`,
       "",
-      `| 지침 | 분류 | ${stage.key === "screens" ? "목적" : "언제 쓰나"} | 상태 | 지원 |`,
-      "| --- | --- | --- | --- | --- |",
+      `| 지침 | 분류 | ${stage.key === "screens" ? "목적" : "언제 쓰나"} | 제공 기준 | 지원 | API 안정성 | Storybook |`,
+      "| --- | --- | --- | --- | --- | --- | --- |",
     );
     for (const row of orderRows(stage, rows)) {
-      lines.push(`| [${row.name}](${row.path}) | ${row.category} | ${row.summary} | ${row.status} | ${row.support} |`);
+      lines.push(`| [${row.name}](${row.path}) | ${row.category} | ${row.summary} | ${row.version} | ${row.support} | ${row.maturity} | ${row.status} |`);
     }
   }
   return `${lines.join("\n")}\n`;
@@ -323,43 +363,46 @@ async function main() {
         const file = usageFileName(unit);
         const label = `components/${file}`;
         if (!files.delete(file)) {
-          problems.push(`${label}: ${unit} 지침 없음`);
+          if (shouldCheck(label)) problems.push(`${label}: ${unit} 지침 없음`);
           continue;
         }
         const markdown = await readFile(resolve(directory, file), "utf8");
-        if (!markdown.startsWith(`# ${unit}\n`)) problems.push(`${label}: 제목은 "# ${unit}"`);
-        const { values, declared } = validate(stage, label, markdown, problems);
+        if (shouldCheck(label) && !markdown.startsWith(`# ${unit}\n`)) problems.push(`${label}: 제목은 "# ${unit}"`);
+        const { values, declared } = await inspect(stage, label, markdown, problems);
         // 컴포넌트는 Storybook 항목이 없을 수 있다(보조 API). 그때 스토리북 값은 `없음`.
-        if (values["스토리북"] !== "없음") claim(label, stage, declared);
+        if (shouldCheck(label) && values["스토리북"] !== "없음") claim(label, stage, declared);
         // 묶인 companion·optional 이름이 빠지면 그 이름을 찾는 사람이 지침에 닿지 못한다.
         for (const name of new Set([...names.web, ...names.native])) {
-          if (!markdown.includes(`\`${name}\``)) problems.push(`${label}: 공개 이름 \`${name}\` 언급 없음`);
+          if (shouldCheck(label) && !markdown.includes(`\`${name}\``)) problems.push(`${label}: 공개 이름 \`${name}\` 언급 없음`);
         }
-        rows.push({ name: unit, path: label, category: categoryOf(stage, declared), summary: summary(markdown, stage.summary), status: values["상태"] ?? "", support: values["지원"] ?? "" });
+        rows.push({ name: unit, path: label, category: categoryOf(stage, declared), summary: summary(markdown, stage.summary), status: values["상태"] ?? "", support: values["지원"] ?? "", version: values["적용"] ?? "", maturity: apiStatus(unit) });
       }
-      for (const orphan of files) problems.push(`components/${orphan}: 공개 API 대응표에 없는 단위`);
+      for (const orphan of files) if (shouldCheck(`components/${orphan}`)) problems.push(`components/${orphan}: 공개 API 대응표에 없는 단위`);
     } else {
       for (const file of [...files].sort()) {
         const label = `${stage.key}/${file}`;
         const markdown = await readFile(resolve(directory, file), "utf8");
-        const { values, declared } = validate(stage, label, markdown, problems);
-        if (declared.length === 0) problems.push(`${label}: 스토리북 제목 없음`);
-        claim(label, stage, declared);
+        const { values, declared } = await inspect(stage, label, markdown, problems);
+        if (shouldCheck(label) && declared.length === 0) problems.push(`${label}: 스토리북 제목 없음`);
+        if (shouldCheck(label)) claim(label, stage, declared);
         const name = markdown.match(/^# (.+)$/m)?.[1] ?? file;
-        rows.push({ name, path: label, category: categoryOf(stage, declared), summary: summary(markdown, stage.summary), status: values["상태"] ?? "", support: values["지원"] ?? "" });
+        rows.push({ name, path: label, category: categoryOf(stage, declared), summary: summary(markdown, stage.summary), status: values["상태"] ?? "", support: values["지원"] ?? "", version: values["적용"] ?? "", maturity: stage.key === "tokens" ? "해당 계약 참조" : "구성 API별" });
       }
     }
     sections.push({ stage, rows });
   }
 
   for (const [storyTitle, story] of stories) {
-    if (story.required && !claimed.has(storyTitle)) problems.push(`Storybook ${storyTitle}(${story.stage}) 담당 지침 없음`);
+    if (selected === null && story.required && !claimed.has(storyTitle)) problems.push(`Storybook ${storyTitle}(${story.stage}) 담당 지침 없음`);
   }
 
+  for (const file of selected ?? []) {
+    if (!checked.has(file)) problems.push(`${relative(root, file)}: 검사 대상 지침 없음`);
+  }
   const index = renderIndex(sections);
   if (write) {
     await writeFile(indexPath, index);
-  } else {
+  } else if (selected === null) {
     const current = await readFile(indexPath, "utf8").catch(() => "");
     if (current !== index) problems.push(`${relative(root, indexPath)} 색인이 생성 결과와 다르다(pnpm usage:sync)`);
   }
@@ -369,7 +412,7 @@ async function main() {
     process.exitCode = 1;
     return;
   }
-  const counts = sections.map(({ stage, rows }) => `${stage.label} ${rows.length}`).join(", ");
+  const counts = selected ? `선택 지침 ${checked.size}개` : sections.map(({ stage, rows }) => `${stage.label} ${rows.length}`).join(", ");
   console.log(`usage docs: ${counts}${write ? ", 색인 갱신" : ""}`);
 }
 

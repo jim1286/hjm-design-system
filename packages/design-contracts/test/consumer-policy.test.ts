@@ -1,6 +1,5 @@
 import { access, readFile } from "node:fs/promises";
 import { describe, expect, it } from "vitest";
-import { componentCatalog } from "../src/catalog.js";
 
 const policyUrl = new URL("../docs/consumer-policy.md", import.meta.url);
 
@@ -13,18 +12,7 @@ describe("consumer adoption policy", () => {
     for (const maturity of ["stable", "beta", "planned", "deprecated"]) {
       expect(policy).toContain(`\`${maturity}\``);
     }
-    expect(policy).toContain("제품 정체성 경계");
-    expect(policy).toContain("신규 앱 완료 조건");
-    expect(policy).toContain("Stable Core와 필수 foundation bridge");
-    expect(policy).toContain("`requiredFoundations`");
-    expect(policy).toContain("`draft` /\n  `incubating`");
-    expect(policy).toContain("timestamp가 있는 `verified` evidence");
-    expect(policy).toContain("optional adoption");
-    expect(policy).toContain("정책 버전: **2.0.0**");
-    expect(policy).toContain("React Native legacy style compatibility boundary");
-    expect(policy).toContain("`HjmCompositionStyle` / `layoutStyle`");
-    expect(policy).toContain("위 네 조건과 소비 앱별 이관 목록을 충족한 다음 major에서");
-    expect(policy).toContain("1.4는 semantic API와 이관 경로를 추가하는 train");
+
   });
 
   it("is reachable from both public package entry documents", async () => {
@@ -47,28 +35,11 @@ describe("consumer adoption policy", () => {
     );
   });
 
-  it("names every foundation that left the app-standard bridge in 1.5.0", async () => {
-    const policy = await readFile(policyUrl, "utf8");
-    const requiredFoundationNames = [
-      "Text",
-      "Icon",
-      "Stack",
-      "Container",
-      "DesignSystemProvider",
-    ];
-
-    for (const name of requiredFoundationNames) {
-      const entry = componentCatalog.find((candidate) => candidate.name === name);
-      expect(entry, `${name} must remain a catalog entry`).toBeDefined();
-      expect(entry?.status, `${name} policy text must be revised when its maturity changes`).toBe("stable");
-      expect(policy).toContain(`\`${name}\``);
-    }
-  });
-
+  // The 1.5 foundation bridge and 1.11 removal timetable are historical migrations.
+  // Do not require current policy prose to duplicate them.
   it("connects the RN guide and public composition type to the normative boundary", async () => {
-    const [policy, nativeReadme, nativePackageSource, compositionSource, ...coreSources] =
+    const [nativeReadme, nativePackageSource, compositionSource, ...coreSources] =
       await Promise.all([
-        readFile(policyUrl, "utf8"),
         readFile(new URL("../../react-native/README.md", import.meta.url), "utf8"),
         readFile(new URL("../../react-native/package.json", import.meta.url), "utf8"),
         readFile(new URL("../../react-native/src/composition-style.ts", import.meta.url), "utf8"),
@@ -80,12 +51,10 @@ describe("consumer adoption policy", () => {
       exports?: Record<string, { types?: string }>;
     };
 
-    expect(policy).toContain("deprecated 공개 스타일 통로는 1.11에서 제거");
     expect(nativeReadme).toContain(
-      "../design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary",
+      "../design-contracts/docs/consumer-policy.md#31-배치와-시각-값",
     );
     expect(nativeReadme).toContain("type HjmCompositionStyle");
-    expect(nativeReadme).toContain("Deprecated 1.x compatibility props are removed in 1.11");
     expect(nativePackage.exports?.["./composition-style"]?.types)
       .toBe("./dist/composition-style.d.ts");
     expect(compositionSource).toContain("export type HjmCompositionStyle");

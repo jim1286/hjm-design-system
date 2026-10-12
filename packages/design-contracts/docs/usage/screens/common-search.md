@@ -3,7 +3,7 @@
 - 단계: 화면
 - 상태: 배포
 - 지원: Web · Native
-- 적용: 미게시(1.12.1 이후)
+- 적용: 구성 API 지침 참조
 - 검토일: 2026-10-06
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screen-flows.tsx`(`SearchScreen` 두 단계 검색 prop, 2026-10-06 사용자 위임 결정으로 미리보기 로직을 공개 API로 올림), 예제 `showcase/*/search-discovery-preview.tsx`·`showcase/shared/search-discovery.ts`. 2026-10-06 사용자 요청("실험에 있는 검색화면 UI도 개편해. 검색과 필터 있는 앱 서비스 따라해.")에 따라 Material 3 Search·Apple HIG search fields·Baymard·NN/g·eBay Playbook 필터 패턴과 국내 커머스·생활 서비스 모바일 웹의 **구조·상호작용만** 조사해 다시 설계했다(브랜드 색·로고·문구·자산은 가져오지 않았다). 2026-10-06 사용자 승인으로 실험 `공통 화면/검색`을 배포하면서 같은 일을 직접 조립하던 배포 `화면/검색`(내 기록 검색)을 대체했다(Web id `patterns-search` 보존, [승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정))
 - 스토리북: `배포/화면/검색/검색 결과와 필터`
