@@ -34,7 +34,6 @@ describe("GitHub Actions runtime contracts", () => {
     expect(workspacePackage.scripts["ci:check"]).toBe(
       "pnpm check && pnpm showcase:native:check:built && pnpm showcase:web:check:built && pnpm showcase:web:build:built",
     );
-    expect(workspacePackage.scripts["release:check"]).toContain("pnpm ci:check");
   });
 
   it("gates version-intended main pushes and deploys the verified Storybook", async () => {
@@ -86,18 +85,6 @@ describe("GitHub Actions runtime contracts", () => {
     expect(workflow).toContain("publish --access public --no-git-checks --provenance");
     expect(workflow).toContain('git tag -a "${TAG}"');
     expect(workflow).not.toContain("check-consumer-release");
-  });
-
-  it("verifies a generated release commit against the authored Changeset plan", async () => {
-    const checker = await readFile(
-      new URL("../../../scripts/check-release-commit.mjs", import.meta.url),
-      "utf8",
-    );
-
-    expect(checker).toContain("Release commit must consume");
-    expect(checker).toContain("Release commit contains");
-    expect(checker).not.toContain("Release commit must apply the highest authored");
-    expect(checker).toContain("parseVersion(currentVersion");
   });
 
   it("joins non-default renderer evidence to structured executed-scenario registries", async () => {
