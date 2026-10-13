@@ -3462,11 +3462,11 @@
       "storyId": "data-display/data-table",
       "name": "DataTable",
       "category": "data-display",
-      "platform": "web",
+      "platform": "shared",
       "contractStatus": "stable",
       "surfaces": {
         "web": "stable",
-        "native": "unsupported"
+        "native": "beta"
       },
       "requirements": [
         {
@@ -3487,11 +3487,71 @@
             "accessibility",
             "keyboard"
           ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
         }
       ],
       "documentation": {
         "generated": "docs/generated/component-maturity.md",
         "authored": "docs/data-table.md"
+      }
+    },
+    {
+      "id": "chart",
+      "storyId": "data-display/chart",
+      "name": "Chart",
+      "category": "data-display",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/chart.md"
       }
     },
     {

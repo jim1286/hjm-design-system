@@ -76,8 +76,10 @@ control의 `accessibilityLabel`/`accessibilityHint`가 canonical 번역이다.
   아니라 배치다. 목록 전용 변형을 따로 두면 같은 제목이 화면 위치에 따라 다른 컴포넌트가
   된다. `Section` + `List` 조합으로 충분하고, 그 조합이 부족하다는 실측이 나오면 그때
   `Section`의 축으로 검토한다.
-- `Chart`: **토큰만 채택한다.** 렌더러는 만들지 않고 계열 팔레트·축·격자·범례 토큰만
-  고정한다. 근거는 [catalog-cleanup.md](./catalog-cleanup.md).
+- `Chart`: ~~**토큰만 채택한다.** 렌더러는 만들지 않고 계열 팔레트·축·격자·범례 토큰만
+  고정한다. 근거는 [catalog-cleanup.md](./catalog-cleanup.md).~~ **2026-10-14 번복.** 제품이 같은
+  차트·정렬 표를 직접 다시 만든 것을 확인했고 사용자가 흡수를 요청해 Web·Native 렌더러를 둔다.
+  [chart.md](./chart.md).
 
 ## 후속 검토
 

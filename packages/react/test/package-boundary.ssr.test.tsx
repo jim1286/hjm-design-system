@@ -114,6 +114,8 @@ describe("@hjmds/react package boundary", () => {
       "./collection-rail",
       // Panel-toast trigger; opt-in like CollectionRail so core graphs do not grow.
       "./activity-chip",
+      // 2026-10-14 SVG chart family; opt-in so core graphs do not carry chart geometry.
+      "./chart",
     ];
 
     expect(Object.keys(packageJson.exports)).toEqual([

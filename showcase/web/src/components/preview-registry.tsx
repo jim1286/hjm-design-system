@@ -10,6 +10,7 @@ import { TourPreview } from "../patterns/Tour.previews.js";
 import { TreePreview } from "../patterns/Tree.previews.js";
 import { TransferListPreview, MentionsPreview } from "../patterns/TransferList.previews.js";
 import { CommandPalettePreview, DataTablePreview } from "../patterns/CommandPalette.previews.js";
+import { ChartGalleryPreview } from "../patterns/Chart.previews.js";
 import { AgreementPreview, TopPreview, AuthProviderButtonPreview, AuthScreenLayoutPreview } from "../patterns/Agreement.previews.js";
 import { HeadingPreview } from "../patterns/Heading.previews.js";
 import { ToggleGroupPreview, TagsInputPreview } from "../patterns/ToggleGroup.previews.js";
@@ -200,6 +201,7 @@ export const webRendererComponentNames = [
   "Mentions",
   "CommandPalette",
   "DataTable",
+  "Chart",
   "Collapsible",
   "Asset",
   "ContextMenu",
@@ -430,6 +432,7 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "Mentions": return <MentionsPreview />;
     case "CommandPalette": return <CommandPalettePreview />;
     case "DataTable": return <DataTablePreview />;
+    case "Chart": return <ChartGalleryPreview />;
     case "Collapsible": return <CollapsiblePreview />;
     case "Asset": return <AssetPreview />;
     case "ContextMenu": return <ContextMenuPreview />;
@@ -842,6 +845,7 @@ export const webRendererRegistry = {
   Mentions: createWebRendererDefinition("Mentions", "comboboxRecipe", "combobox"),
   CommandPalette: createWebRendererDefinition("CommandPalette", "commandPaletteRecipe", "commandPalette"),
   DataTable: createWebRendererDefinition("DataTable", "dataTableRecipe", "dataTable"),
+  Chart: createWebRendererDefinition("Chart", "chartRecipe", "chart"),
   Agreement: createWebRendererDefinition("Agreement", "agreementRecipe", "agreement"),
   AuthProviderButton: createWebRendererDefinition("AuthProviderButton", "authProviderButtonRecipe", "authProviderButton"),
   AuthScreenLayout: createWebRendererDefinition("AuthScreenLayout", "authScreenRecipe", "authScreen"),

@@ -8,6 +8,11 @@
       "name": "ThinkingOrb",
       "date": "2026-09-29",
       "rationale": "사용자가 Thinking Orbs의 HJM 흡수를 명시적으로 요청함. 기존 Spinner를 교체하지 않는 AI 상태 표시이며 선택형 경로로 격리. docs/thinking-orb.md"
+    },
+    {
+      "name": "Chart",
+      "date": "2026-10-14",
+      "rationale": "사용자가 차트·표 라이브러리 흡수를 명시적으로 요청함. 2026-09-29 토큰만 남기고 지운 Chart를 되살려 Line·Bar·Pie·Radar·Scatter·Sparkline·ChartLegend를 한 계약의 동반 API로 둔다. Yajalal이 같은 스크럽 선 차트·막대를 직접 다시 만든 것이 근거. docs/chart.md"
     }
   ],
   "names": [

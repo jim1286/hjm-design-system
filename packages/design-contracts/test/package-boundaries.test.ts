@@ -43,6 +43,7 @@ const publicComponentContractNames = [
   "content-state",
   "context-menu",
   "data-table",
+  "chart",
   "date-picker",
   "date-range",
   "description-list",

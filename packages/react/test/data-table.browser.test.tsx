@@ -193,3 +193,74 @@ it("gives selection checkboxes and sort buttons a 44px hit area", async () => {
   await act(async () => tap(sort));
   expect(onSort).toHaveBeenCalledOnce();
 });
+
+// 2026-10-14 stat-table additions: sortDescFirst, pinned start columns, summary row.
+const statColumns = [
+  { id: "name", header: "선수", pinned: "start" as const, width: 120 },
+  { id: "team", header: "팀", width: 240 },
+  { id: "avg", header: "타율", align: "end" as const, sortable: true, sortDescFirst: true, width: 240 },
+  { id: "so", header: "삼진", align: "end" as const, sortable: true, width: 240 },
+];
+const statCells: Record<string, Record<string, string>> = {
+  koo: { name: "구자욱", team: "삼성", avg: ".361", so: "71" },
+  aus: { name: "오스틴", team: "LG", avg: ".340", so: "88" },
+};
+function StatFixture({ onSort }: { onSort: (state: DataTableSortState<string>) => void }) {
+  const [sortState, setSortState] = useState<DataTableSortState<string>>(null);
+  return (
+    <HjmProvider reducedMotion>
+      <div style={{ inlineSize: 320 }}>
+        <DataTable
+          columns={statColumns}
+          rows={[{ id: "koo" }, { id: "aus" }]}
+          labels={{ ...labels, selectRow: (id) => `${statCells[id]!.name} 선택` }}
+          renderCell={(rowId, columnId) => statCells[rowId]![columnId]}
+          sortState={sortState}
+          onSortChange={(next) => { setSortState(next); onSort(next); }}
+          selection={{ mode: "single", defaultSelectedKey: null }}
+          summaryRow={(columnId) => columnId === "name" ? "평균" : columnId === "avg" ? ".351" : null}
+        />
+      </div>
+    </HjmProvider>
+  );
+}
+
+it("starts sortDescFirst columns descending and keeps the default for others", async () => {
+  const onSort = vi.fn();
+  await act(async () => root.render(<StatFixture onSort={onSort} />));
+  await act(async () => header("타율").querySelector("button")!.click());
+  await act(async () => header("타율").querySelector("button")!.click());
+  await act(async () => header("타율").querySelector("button")!.click());
+  await act(async () => header("삼진").querySelector("button")!.click());
+  expect(onSort.mock.calls.map(([state]) => state?.direction ?? null)).toEqual(["descending", "ascending", null, "ascending"]);
+});
+
+it("keeps pinned start columns and the selector visible while the table scrolls", async () => {
+  await act(async () => root.render(<StatFixture onSort={() => undefined} />));
+  const scroller = document.querySelector<HTMLElement>(".hjm-data-table__scroll")!;
+  expect(scroller).not.toBeNull();
+  const nameHeader = header("선수");
+  expect(getComputedStyle(nameHeader).position).toBe("sticky");
+  expect(nameHeader.classList.contains("hjm-data-table__pinned-edge")).toBe(true);
+  // The pinned column starts after the (also sticky) selection column.
+  const selector = document.querySelector<HTMLElement>("thead .hjm-data-table__selector")!;
+  expect(parseFloat(nameHeader.style.insetInlineStart)).toBeCloseTo(selector.getBoundingClientRect().width, 0);
+  expect(header("팀").classList.contains("hjm-data-table__pinned")).toBe(false);
+  const before = nameHeader.getBoundingClientRect().left;
+  await act(async () => { scroller.scrollLeft = 200; scroller.dispatchEvent(new Event("scroll")); });
+  expect(scroller.scrollLeft).toBeGreaterThan(0);
+  expect(nameHeader.getBoundingClientRect().left).toBeCloseTo(before, 0);
+});
+
+it("renders the product's summary row in tfoot", async () => {
+  await act(async () => root.render(<StatFixture onSort={() => undefined} />));
+  const cells = [...document.querySelectorAll("tfoot td")].map((cell) => cell.textContent);
+  // Selector placeholder, then one cell per column.
+  expect(cells).toEqual(["", "평균", "", ".351", ""]);
+});
+
+it("keeps the original DOM for tables without pinned columns", async () => {
+  await act(async () => root.render(<Fixture />));
+  expect(document.querySelector(".hjm-data-table__scroll")).toBeNull();
+  expect(document.querySelector("tfoot")).toBeNull();
+});

@@ -4,7 +4,7 @@
 
 ## @hjmds/react
 
-고유 공개 컴포넌트 및 provider 이름 164개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 171개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -24,6 +24,7 @@
 | Avatar | Avatar | canonical | root, ./display |
 | AvatarGroup | Avatar | companion-or-alternative | root, ./display |
 | Badge | Badge | canonical | root, ./display |
+| BarChart | Chart | companion-or-alternative | ./chart |
 | BottomCTA | BottomCTA | canonical | root, ./bottom-cta |
 | BottomInfo | BottomInfo | canonical | root, ./bottom-info |
 | BottomNavigation | BottomNavigation | canonical | root, ./navigation |
@@ -34,6 +35,7 @@
 | Carousel | Carousel | canonical | root, ./carousel |
 | CarouselMotion | Carousel | optional-extension | ./carousel-motion |
 | Celebration | 별도 보조 기능 | supplemental | ./celebration |
+| ChartLegend | Chart | companion-or-alternative | ./chart |
 | ChatMessage | 별도 보조 기능 | supplemental | ./screens |
 | ChatScreen | 별도 보조 기능 | supplemental | ./screens |
 | Checkbox | Checkbox | canonical | root, ./selection |
@@ -80,6 +82,7 @@
 | ImageComparison | 별도 보조 기능 | supplemental | ./image-comparison |
 | InlineConfirm | Button | optional-extension | ./inline-confirm |
 | Layout | Layout | canonical | root, ./layout |
+| LineChart | Chart | companion-or-alternative | ./chart |
 | Link | Link | canonical | root, ./actions |
 | List | List | canonical | root, ./display |
 | ListDetailScreen | 별도 보조 기능 | supplemental | ./screen-flows |
@@ -108,17 +111,20 @@
 | PasswordField | PasswordField | canonical | root, ./forms, ./password-field |
 | PermissionScreen | 별도 보조 기능 | supplemental | ./screen-flows |
 | PhotoSourceSheet | 별도 보조 기능 | supplemental | ./screen-flows |
+| PieChart | Chart | companion-or-alternative | ./chart |
 | Popover | Popover | canonical | root, ./popover |
 | ProfileScreen | 별도 보조 기능 | supplemental | ./screen-flows |
 | Progress | Progress | canonical | root, ./feedback |
 | ProgressiveBlur | 별도 보조 기능 | supplemental | ./progressive-blur |
 | QRCode | QRCode | canonical | ./qr-code |
+| RadarChart | Chart | companion-or-alternative | ./chart |
 | Radio | Radio | canonical | root, ./selection |
 | RadioGroup | RadioGroup | canonical | root, ./selection |
 | Rating | 별도 보조 기능 | supplemental | ./rating |
 | ReactionPicker | Button | optional-extension | ./reaction-picker |
 | Result | Result | canonical | root, ./feedback |
 | SavedItemsScreen | 별도 보조 기능 | supplemental | ./saved-items |
+| ScatterChart | Chart | companion-or-alternative | ./chart |
 | ScreenLayout | 별도 보조 기능 | supplemental | ./screens |
 | ScrollProgress | Progress | optional-extension | ./scroll-progress |
 | SearchField | SearchField | canonical | root, ./forms |
@@ -134,6 +140,7 @@
 | SkipNav | SkipNav | canonical | root, ./skip-nav |
 | Slider | Slider | canonical | root, ./forms, ./slider |
 | SortableCollection | 별도 보조 기능 | supplemental | ./sortable |
+| Sparkline | Chart | companion-or-alternative | ./chart |
 | Spinner | Spinner | canonical | root, ./feedback |
 | Splitter | Splitter | canonical | root, ./splitter |
 | Stack | Stack | canonical | root, ./layout |
@@ -175,7 +182,7 @@
 
 ## @hjmds/react-native
 
-고유 공개 컴포넌트 및 provider 이름 150개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 158개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -192,6 +199,7 @@
 | AuthScreenLayout | AuthScreenLayout | canonical | root, ./auth-screen |
 | Avatar | Avatar | canonical | root, ./data-display |
 | Badge | Badge | canonical | root, ./data-display |
+| BarChart | Chart | companion-or-alternative | ./chart |
 | BottomCTA | BottomCTA | canonical | root, ./actions, ./bottom-cta |
 | BottomInfo | BottomInfo | canonical | root, ./bottom-info |
 | BottomNavigation | BottomNavigation | canonical | root, ./navigation, ./top-bar |
@@ -201,6 +209,7 @@
 | Carousel | Carousel | canonical | root, ./carousel |
 | CarouselMotion | Carousel | optional-extension | ./carousel-motion |
 | Celebration | 별도 보조 기능 | supplemental | ./celebration |
+| ChartLegend | Chart | companion-or-alternative | ./chart |
 | ChatMessage | 별도 보조 기능 | supplemental | ./screens |
 | ChatScreen | 별도 보조 기능 | supplemental | ./screens |
 | Checkbox | Checkbox | canonical | root, ./inputs |
@@ -214,6 +223,7 @@
 | Container | Container | canonical | root, ./primitives |
 | ContentTransition | 별도 보조 기능 | supplemental | ./content-transition |
 | CounterBadge | CounterBadge | canonical | root, ./data-display |
+| DataTable | DataTable | canonical | ./data-table |
 | DateEntry | Field | optional-extension | ./date-entry |
 | DatePicker | DatePicker | canonical | root, ./date-picker, ./inputs |
 | DateRangePicker | DateRangePicker | canonical | root, ./date-range |
@@ -250,6 +260,7 @@
 | KeyboardFormScrollView | 별도 보조 기능 | supplemental | ./keyboard-controller |
 | KeyboardMotionProvider | 별도 보조 기능 | supplemental | ./keyboard-controller |
 | Layout | Layout | canonical | root, ./primitives |
+| LineChart | Chart | companion-or-alternative | ./chart |
 | Link | Link | canonical | root, ./actions, ./bottom-cta |
 | List | List | canonical | root, ./data-display |
 | ListDetailScreen | 별도 보조 기능 | supplemental | ./screen-flows |
@@ -274,16 +285,19 @@
 | PasswordField | PasswordField | canonical | root, ./inputs, ./password-field |
 | PermissionScreen | 별도 보조 기능 | supplemental | ./screen-flows |
 | PhotoSourceSheet | 별도 보조 기능 | supplemental | ./screen-flows |
+| PieChart | Chart | companion-or-alternative | ./chart |
 | ProfileScreen | 별도 보조 기능 | supplemental | ./screen-flows |
 | Progress | Progress | canonical | root, ./feedback |
 | ProgressiveBlur | 별도 보조 기능 | supplemental | ./progressive-blur |
 | QRCode | QRCode | canonical | ./qr-code |
+| RadarChart | Chart | companion-or-alternative | ./chart |
 | Radio | Radio | canonical | root, ./inputs |
 | RadioGroup | RadioGroup | canonical | root, ./inputs |
 | Rating | 별도 보조 기능 | supplemental | ./rating |
 | ReactionPicker | Button | optional-extension | ./reaction-picker |
 | Result | Result | canonical | root, ./feedback |
 | SavedItemsScreen | 별도 보조 기능 | supplemental | ./saved-items |
+| ScatterChart | Chart | companion-or-alternative | ./chart |
 | ScreenLayout | 별도 보조 기능 | supplemental | ./screens |
 | ScrollProgress | Progress | optional-extension | ./scroll-progress |
 | SearchField | SearchField | canonical | root, ./inputs |
@@ -298,6 +312,7 @@
 | Skeleton | Skeleton | canonical | root, ./feedback |
 | Slider | Slider | canonical | root, ./inputs, ./slider |
 | SortableCollection | 별도 보조 기능 | supplemental | ./sortable |
+| Sparkline | Chart | companion-or-alternative | ./chart |
 | Spinner | Spinner | canonical | root, ./feedback |
 | Stack | Stack | canonical | root, ./primitives |
 | Statistic | Statistic | canonical | root, ./data-display |

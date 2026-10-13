@@ -112,6 +112,9 @@ describe("@hjmds/react-native package boundary", () => {
       "./scroll-progress",
       "./code-block",
       "./activity-heatmap",
+      // 2026-10-14: chart family (react-native-svg optional peer) and Native DataTable renderer.
+      "./chart",
+      "./data-table",
       "./statistic-motion",
       "./task-list",
       "./folder-preview",

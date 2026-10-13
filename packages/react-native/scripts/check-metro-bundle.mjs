@@ -43,9 +43,9 @@ const executableFamilyExports = Object.entries(packageJson.exports)
   .map(([exportPath, definition]) => [exportPath, getNativeRuntimeTarget(definition)])
   .filter(
     ([exportPath, target]) =>
-      // SVG/Blobatar effects and QR use the complete Expo showcase export; this baseline must resolve without their peers.
+      // SVG/Blobatar effects, QR and charts (2026-10-14) use the complete Expo showcase export; this baseline must resolve without their peers.
       // OverviewScreen composes EffectSurface, so its optional subpath belongs to the same SVG boundary.
-      exportPath !== "." && exportPath !== "./toast-liquid" && !(["./design-profile", "./avatar-blobatar", "./avatar-blobatar-motion", "./effect-surface", "./sortable", "./swipe-actions", "./carousel-motion", "./celebration", "./screen-transition", "./qr-code", "./thinking-orb", "./image-viewer", "./keyboard-controller", "./sheet-gesture", "./context-menu-native"].includes(exportPath)) && typeof target === "string" && target.endsWith(".js"),
+      exportPath !== "." && exportPath !== "./toast-liquid" && !(["./design-profile", "./avatar-blobatar", "./avatar-blobatar-motion", "./effect-surface", "./sortable", "./swipe-actions", "./carousel-motion", "./celebration", "./screen-transition", "./qr-code", "./chart", "./thinking-orb", "./image-viewer", "./keyboard-controller", "./sheet-gesture", "./context-menu-native"].includes(exportPath)) && typeof target === "string" && target.endsWith(".js"),
   );
 
 const requiredRendererSources = executableFamilyExports.map(([, target]) =>

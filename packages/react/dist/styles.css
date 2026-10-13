@@ -1218,6 +1218,89 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-data-table__table tr[data-disabled] { color: var(--hjm-color-text-weak); }
 .hjm-data-table__state { margin: 0; color: var(--hjm-color-text-muted); }
 .hjm-data-table__footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--hjm-space-sm); }
+/* Pinned start columns (2026-10-14): the table scrolls inside its own box so sticky cells have a
+   scroll container; pinned cells paint the canvas so scrolled text never shows through. */
+.hjm-data-table__scroll { overflow-x: auto; min-inline-size: 0; }
+.hjm-data-table__scroll > .hjm-data-table__table { inline-size: max-content; min-inline-size: 100%; }
+.hjm-data-table__table .hjm-data-table__pinned { position: sticky; z-index: 1; background: var(--hjm-color-bg); }
+.hjm-data-table__table .hjm-data-table__pinned-edge { box-shadow: inset -1px 0 0 var(--hjm-color-border); }
+.hjm-data-table__table .hjm-data-table__pinned-edge:dir(rtl) { box-shadow: inset 1px 0 0 var(--hjm-color-border); }
+.hjm-data-table__table tfoot td { border-block-start: 1px solid var(--hjm-color-border); border-block-end: 0; font-weight: var(--hjm-font-weight-semibold); }
+
+/* Chart ------------------------------------------------------------------- */
+/* Colors come from chartRecipe.chrome via --hjm-chart-* set inline by the renderer (2026-10-14). */
+.hjm-chart { position: relative; display: flex; flex-direction: column; gap: var(--hjm-space-xs); inline-size: 100%; min-inline-size: 0; }
+.hjm-chart__plot {
+  position: relative;
+  /* Horizontal drags scrub; vertical drags keep scrolling the page. */
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  border-radius: var(--hjm-radius-sm);
+  outline: none;
+}
+.hjm-chart__plot:focus-visible { outline: var(--hjm-focus-width) solid var(--hjm-color-focus); outline-offset: var(--hjm-focus-offset); }
+.hjm-chart svg, .hjm-sparkline { display: block; overflow: visible; }
+.hjm-chart__grid { stroke: var(--hjm-chart-grid-line); stroke-width: var(--hjm-chart-grid-width); }
+.hjm-chart__reference { stroke: var(--hjm-chart-axis-label); stroke-width: 1; }
+.hjm-chart__cursor { stroke: var(--hjm-chart-axis-label); }
+.hjm-chart__dot { stroke: var(--hjm-color-bg); }
+.hjm-chart__label { fill: var(--hjm-chart-axis-label); font-family: inherit; font-size: var(--hjm-type-caption-size); }
+.hjm-chart__label[data-focused], .hjm-chart__axis-name, .hjm-chart__value { fill: var(--hjm-chart-legend-label); font-weight: var(--hjm-font-weight-semibold); }
+.hjm-chart__extreme { font-weight: var(--hjm-font-weight-semibold); }
+.hjm-chart__bubble {
+  position: absolute;
+  inset-block-start: 0;
+  transform: translateX(-50%);
+  padding: 2px var(--hjm-space-xs);
+  border: 1px solid var(--hjm-chart-tooltip-border);
+  border-radius: var(--hjm-radius-sm);
+  background: var(--hjm-chart-tooltip-surface);
+  color: var(--hjm-chart-tooltip-content);
+  font-size: var(--hjm-type-caption-size);
+  line-height: var(--hjm-type-caption-line-height);
+  font-weight: var(--hjm-font-weight-bold);
+  white-space: nowrap;
+  pointer-events: none;
+}
+.hjm-chart__pie, .hjm-chart__radar { position: relative; align-self: center; }
+.hjm-chart__pie-center { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; pointer-events: none; }
+.hjm-chart__slice[role="button"], .hjm-chart--pie .hjm-chart__slice[data-id] { cursor: pointer; }
+.hjm-chart__slice:focus-visible { outline: none; stroke: var(--hjm-color-focus); stroke-width: var(--hjm-focus-width); }
+.hjm-chart__slice-label { fill: #ffffff; font-family: inherit; font-size: var(--hjm-type-caption-size); font-weight: var(--hjm-font-weight-bold); }
+.hjm-chart__axis-titles { display: flex; justify-content: space-between; color: var(--hjm-chart-axis-label); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); }
+.hjm-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hjm-space-xxs) var(--hjm-space-md);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--hjm-chart-legend-label);
+  font-size: var(--hjm-type-label-size);
+  line-height: var(--hjm-type-label-line-height);
+}
+.hjm-chart-legend[data-interactive] { flex-direction: column; flex-wrap: nowrap; }
+.hjm-chart-legend__item, .hjm-chart-legend__button { display: flex; align-items: center; gap: var(--hjm-space-xs); }
+.hjm-chart-legend__item[data-dimmed] { opacity: 0.5; }
+.hjm-chart-legend__button {
+  position: relative;
+  flex: 1;
+  min-block-size: var(--hjm-control-min-touch-target);
+  padding: 0 var(--hjm-space-xs);
+  border: 0;
+  border-radius: var(--hjm-radius-sm);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+.hjm-chart-legend__button[aria-pressed="true"] { background: var(--hjm-color-surface); }
+.hjm-chart-legend__button:focus-visible { outline: var(--hjm-focus-width) solid var(--hjm-color-focus); outline-offset: var(--hjm-focus-offset); }
+.hjm-chart-legend__swatch { flex: none; inline-size: 10px; block-size: 10px; border-radius: 3px; }
+.hjm-chart-legend[data-interactive] .hjm-chart-legend__label { flex: 1; }
+.hjm-chart-legend__value { font-weight: var(--hjm-font-weight-bold); font-variant-numeric: tabular-nums; }
 
 /* Mentions ---------------------------------------------------------------- */
 /*

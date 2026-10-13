@@ -80,6 +80,7 @@ export declare const componentIds: {
     readonly Statistic: "statistic";
     readonly Timeline: "timeline";
     readonly DataTable: "data-table";
+    readonly Chart: "chart";
     readonly Tree: "tree";
     readonly Calendar: "calendar";
     readonly Carousel: "carousel";

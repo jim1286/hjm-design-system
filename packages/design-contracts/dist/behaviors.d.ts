@@ -1182,11 +1182,41 @@ export declare const behaviorRegistry: {
             readonly focus: "native";
         };
         readonly native: {
-            readonly roles: readonly [];
-            readonly states: readonly [];
-            readonly actions: readonly [];
+            readonly roles: readonly ["button", "header"];
+            readonly states: readonly ["selected"];
+            readonly actions: readonly ["activate"];
         };
-        readonly scenarios: readonly ["row-selection-reuses-the-shared-collection-selection-model-unchanged", "select-all-reuses-the-shared-tri-state-checkbox-value", "async-state-reuses-the-shared-collection-async-state-unchanged", "sortable-header-is-a-button-inside-the-columnheader-not-the-header-itself", "sort-direction-values-pass-through-to-aria-sort-without-translation", "disabled-rows-are-excluded-from-select-all-accounting", "pagination-or-load-more-is-composed-beneath-the-table-not-owned-by-it", "row-expansion-is-not-owned-here-compose-the-disclosure-group-contract-per-row", "a-data-cell-exposes-at-most-one-focusable-control", "no-roving-tabindex-grid-navigation-is-implied"];
+        readonly scenarios: readonly ["sort-desc-first-columns-start-descending-and-cycle-back", "missing-values-sink-to-the-bottom-in-both-directions", "pinned-start-columns-stay-visible-while-the-rest-scrolls", "row-selection-reuses-the-shared-collection-selection-model-unchanged", "select-all-reuses-the-shared-tri-state-checkbox-value", "async-state-reuses-the-shared-collection-async-state-unchanged", "sortable-header-is-a-button-inside-the-columnheader-not-the-header-itself", "sort-direction-values-pass-through-to-aria-sort-without-translation", "disabled-rows-are-excluded-from-select-all-accounting", "pagination-or-load-more-is-composed-beneath-the-table-not-owned-by-it", "row-expansion-is-not-owned-here-compose-the-disclosure-group-contract-per-row", "a-data-cell-exposes-at-most-one-focusable-control", "no-roving-tabindex-grid-navigation-is-implied"];
+    };
+    readonly chart: {
+        readonly controlled: readonly ["focusIndex"];
+        readonly inputs: readonly ["categories", "series", "kind", "orientation", "layout", "domain", "invert", "curve"];
+        readonly events: readonly ["onFocusChange"];
+        readonly configuration: {
+            readonly curve: readonly ["linear", "monotone", "step"];
+            readonly orientation: readonly ["vertical", "horizontal"];
+            readonly layout: readonly ["grouped", "stacked"];
+        };
+        readonly defaults: {
+            readonly curve: "linear";
+            readonly orientation: "vertical";
+            readonly layout: "grouped";
+        };
+        readonly stateAxes: {
+            readonly value: readonly ["focused", "scrubbing"];
+            readonly content: readonly ["idle", "empty"];
+        };
+        readonly web: {
+            readonly roles: readonly ["img", "slider"];
+            readonly keyboard: readonly ["ArrowLeft", "ArrowRight", "Home", "End"];
+            readonly focus: "native";
+        };
+        readonly native: {
+            readonly roles: readonly ["adjustable", "image"];
+            readonly states: readonly [];
+            readonly actions: readonly ["increment", "decrement"];
+        };
+        readonly scenarios: readonly ["missing-values-split-the-line-instead-of-drawing-zero", "bars-and-stacks-always-include-a-zero-baseline", "inverted-scale-puts-the-best-rank-on-top", "scrubbing-reports-the-focused-index-and-releasing-restores-the-latest", "the-focused-point-is-reachable-without-a-drag-via-adjustable-or-arrow-keys", "series-colors-come-from-the-product-or-the-dataviz-palette-never-status-colors", "every-chart-exposes-a-product-formatted-text-alternative", "radar-axes-share-one-domain", "pie-slices-ignore-negative-and-missing-values"];
     };
     readonly tour: {
         readonly controlled: readonly ["open", "defaultOpen", "onOpenChange", "currentStepId", "defaultCurrentStepId", "onStepChange"];

@@ -140,7 +140,7 @@ describe("DataTable visual and behavior contract", () => {
     ]);
   });
 
-  it("declares no native surface for this web-only component", () => {
-    expect(dataTableBehavior.native).toEqual({ roles: [], states: [], actions: [] });
+  it("declares the native surface added with the Native renderer (2026-10-14)", () => {
+    expect(dataTableBehavior.native).toEqual({ roles: ["button", "header"], states: ["selected"], actions: ["activate"] });
   });
 });

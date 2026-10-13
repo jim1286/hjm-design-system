@@ -8,6 +8,16 @@ export type DataTableColumnDescriptor<Key extends CollectionKey = CollectionKey>
     sortable?: boolean;
     /** Layout hint only (px or flex-basis); renderers may ignore or clamp it. */
     width?: number;
+    /**
+     * First press sorts descending (TanStack Table `sortDescFirst`). Stat tables read "highest first";
+     * lower-is-better columns (ERA, rank) leave it false. Added 2026-10-14 with the Native renderer.
+     */
+    sortDescFirst?: boolean;
+    /**
+     * Keeps the column visible while the others scroll horizontally (AG Grid / TanStack column
+     * pinning, start edge only). Only a leading run of pinned columns is honored.
+     */
+    pinned?: "start";
 }>;
 export declare const dataTableColumnDefaults: {
     readonly align: "start";
@@ -56,7 +66,34 @@ export declare function validateDataTableSortState<Key extends CollectionKey>(st
  * actually re-sorting rows (Combobox's local/external filtering split is the
  * same boundary — HJM judges intent, never executes the data operation).
  */
-export declare function getNextDataTableSortState<Key extends CollectionKey>(current: DataTableSortState<Key>, columnId: Key, cycle?: DataTableSortCycle): DataTableSortState<Key>;
+export declare function getNextDataTableSortState<Key extends CollectionKey>(current: DataTableSortState<Key>, columnId: Key, cycle?: DataTableSortCycle, firstDirection?: DataTableSortDirection): DataTableSortState<Key>;
+/** The first direction a column's header applies, from `sortDescFirst`. */
+export declare function dataTableFirstSortDirection(column: Pick<DataTableColumnDescriptor, "sortDescFirst">): DataTableSortDirection;
+export type DataTableSortValue = number | string | null | undefined;
+/**
+ * Sort key for a displayed cell string: "0.340", ".340", "36 ⅓", "13.5억", "61.0%" → numbers;
+ * text such as "7승0무3패" or names stay strings; "—", "-" and "" are missing.
+ */
+export declare function toDataTableSortValue(value: unknown): DataTableSortValue;
+/**
+ * Pure comparison: numbers numerically, strings with `localeCompare`, numbers before strings.
+ * Missing values are not compared here; `sortDataTableRows` always sinks them.
+ */
+export declare function compareDataTableValues(a: Exclude<DataTableSortValue, null | undefined>, b: Exclude<DataTableSortValue, null | undefined>, locale?: string): number;
+/**
+ * Optional row-model helper (TanStack `getSortedRowModel` with `sortUndefined: "last"`): stable,
+ * missing values always last in both directions. 1.20 left all sorting to products; Yajalal and
+ * other stat tables reimplemented the same rules, so the shared helper exists now. Products with
+ * server-side sorting keep calling `getNextDataTableSortState` only.
+ */
+export declare function sortDataTableRows<Row, Key extends CollectionKey>(rows: readonly Row[], sort: DataTableSortState<Key>, getValue: (row: Row, columnId: Key) => DataTableSortValue, options?: Readonly<{
+    locale?: string;
+}>): Row[];
+/** Leading pinned columns (only an unbroken run from the start is pinned). */
+export declare function splitPinnedDataTableColumns<Column extends Pick<DataTableColumnDescriptor, "pinned">>(columns: readonly Column[]): Readonly<{
+    pinned: readonly Column[];
+    scrolling: readonly Column[];
+}>;
 /** The whole table's row-loading status — the unmodified Collection base async contract. */
 export type DataTableAsyncState = AsyncCollectionState;
 export type DataTableDensity = "compact" | "regular";
@@ -194,10 +231,10 @@ export declare const dataTableBehavior: {
         readonly focus: "native";
     };
     readonly native: {
-        readonly roles: readonly [];
-        readonly states: readonly [];
-        readonly actions: readonly [];
+        readonly roles: readonly ["button", "header"];
+        readonly states: readonly ["selected"];
+        readonly actions: readonly ["activate"];
     };
-    readonly scenarios: readonly ["row-selection-reuses-the-shared-collection-selection-model-unchanged", "select-all-reuses-the-shared-tri-state-checkbox-value", "async-state-reuses-the-shared-collection-async-state-unchanged", "sortable-header-is-a-button-inside-the-columnheader-not-the-header-itself", "sort-direction-values-pass-through-to-aria-sort-without-translation", "disabled-rows-are-excluded-from-select-all-accounting", "pagination-or-load-more-is-composed-beneath-the-table-not-owned-by-it", "row-expansion-is-not-owned-here-compose-the-disclosure-group-contract-per-row", "a-data-cell-exposes-at-most-one-focusable-control", "no-roving-tabindex-grid-navigation-is-implied"];
+    readonly scenarios: readonly ["sort-desc-first-columns-start-descending-and-cycle-back", "missing-values-sink-to-the-bottom-in-both-directions", "pinned-start-columns-stay-visible-while-the-rest-scrolls", "row-selection-reuses-the-shared-collection-selection-model-unchanged", "select-all-reuses-the-shared-tri-state-checkbox-value", "async-state-reuses-the-shared-collection-async-state-unchanged", "sortable-header-is-a-button-inside-the-columnheader-not-the-header-itself", "sort-direction-values-pass-through-to-aria-sort-without-translation", "disabled-rows-are-excluded-from-select-all-accounting", "pagination-or-load-more-is-composed-beneath-the-table-not-owned-by-it", "row-expansion-is-not-owned-here-compose-the-disclosure-group-contract-per-row", "a-data-cell-exposes-at-most-one-focusable-control", "no-roving-tabindex-grid-navigation-is-implied"];
 };
 //# sourceMappingURL=data-table.d.ts.map

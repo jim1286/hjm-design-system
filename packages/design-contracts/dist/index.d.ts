@@ -34,6 +34,7 @@ export * from "./design-system-provider.js";
 export * from "./floating-action-button.js";
 export * from "./content-state.js";
 export * from "./data-table.js";
+export * from "./chart.js";
 export * from "./mentions.js";
 export * from "./transfer-list.js";
 export * from "./tour.js";

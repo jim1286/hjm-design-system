@@ -418,6 +418,18 @@
       "import": "./dist/activity-heatmap.js",
       "default": "./dist/activity-heatmap.js"
     },
+    "./chart": {
+      "types": "./dist/chart.d.ts",
+      "react-native": "./dist/chart.js",
+      "import": "./dist/chart.js",
+      "default": "./dist/chart.js"
+    },
+    "./data-table": {
+      "types": "./dist/data-table.d.ts",
+      "react-native": "./dist/data-table.js",
+      "import": "./dist/data-table.js",
+      "default": "./dist/data-table.js"
+    },
     "./statistic-motion": {
       "types": "./dist/statistic-motion.d.ts",
       "react-native": "./dist/statistic-motion.js",

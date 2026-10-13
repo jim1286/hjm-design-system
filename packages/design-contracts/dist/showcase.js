@@ -160,7 +160,7 @@ const semanticOnlyBehaviors = new Set([
 // importing that registry; showcase.test.ts cross-checks these names against it to prevent drift.
 const webKeyboardBehaviors = new Set([
     "agreement", "alertDialog", "anchor", "authProviderButton", "bottomNavigation", "breadcrumb",
-    "calendar", "carousel", "checkbox", "checkboxGroup", "chip", "collapsible", "combobox",
+    "calendar", "carousel", "chart", "checkbox", "checkboxGroup", "chip", "collapsible", "combobox",
     "commandPalette", "contextMenu", "dataTable", "datePicker", "dateRange", "dialog",
     "disclosureGroup", "field", "filePicker", "floatingActionButton", "form", "layout", "link",
     "loadMore", "menu", "menubar", "numberField", "otpField", "pagination", "passwordField",
@@ -175,6 +175,8 @@ const nativeActionBehaviors = new Set([
     "loadMore", "menu", "numberField", "otpField", "passwordField", "radioGroup", "searchField",
     "segmentedControl", "select", "sheet", "slider", "switch", "tabs", "tagsInput", "toast",
     "toggleGroup", "transferList", "uploadItem",
+    // 2026-10-14: Native DataTable sort/row actions and chart adjustable stepping.
+    "dataTable", "chart",
 ]);
 function getRendererShowcaseScenarios(entry, surface) {
     const requirements = rendererRequirements.filter((scenario) => scenario !== "long-copy" || !textlessComponentNames.has(entry.name));

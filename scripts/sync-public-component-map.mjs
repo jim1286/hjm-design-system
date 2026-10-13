@@ -18,6 +18,10 @@ const companions = {
   TextField: "Field", NativeSelect: "Select", Table: "DataTable", TabPanel: "Tabs",
   AvatarGroup: "Avatar", StatisticGroup: "Statistic", ToastProvider: "Toast", ToastRegion: "Toast",
   ClipboardButton: "Button", OverlayStackProvider: "Dialog", AssetGroup: "Asset", TopBarAction: "TopBar",
+  // 2026-10-14: chart kinds share one Chart contract (ChartSeries model, dataviz colors, focus, text
+  // alternative), so they are companions of one catalog row rather than seven new rows (docs/chart.md).
+  LineChart: "Chart", BarChart: "Chart", PieChart: "Chart", RadarChart: "Chart", ScatterChart: "Chart",
+  Sparkline: "Chart", ChartLegend: "Chart",
 };
 const extensions = {
   GravityLetters: "Text",

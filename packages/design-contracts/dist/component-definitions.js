@@ -75,6 +75,7 @@ export const componentIds = {
     Statistic: "statistic",
     Timeline: "timeline",
     DataTable: "data-table",
+    Chart: "chart",
     Tree: "tree",
     Calendar: "calendar",
     Carousel: "carousel",

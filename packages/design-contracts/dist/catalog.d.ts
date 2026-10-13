@@ -947,12 +947,23 @@ export declare const componentCatalog: readonly [{
     readonly behavior: "dataTable";
     readonly surfaceStatus: {
         readonly web: "stable";
-        readonly native: "unsupported";
+        readonly native: "beta";
     };
     readonly name: "DataTable";
     readonly category: "data-display";
-    readonly platform: "web";
+    readonly platform: "shared";
     readonly status: "stable";
+}, {
+    readonly recipe: "chartRecipe";
+    readonly behavior: "chart";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "Chart";
+    readonly category: "data-display";
+    readonly platform: "shared";
+    readonly status: "beta";
 }, {
     readonly recipe: "treeRecipe";
     readonly behavior: "tree";
@@ -3908,6 +3919,114 @@ export declare const recipeRegistry: {
                 readonly width: 2;
                 readonly offset: 2;
             };
+        };
+    };
+    readonly chartRecipe: {
+        readonly heights: {
+            readonly sparkline: 28;
+            readonly compact: 128;
+            readonly regular: 180;
+            readonly tall: 240;
+        };
+        readonly insets: {
+            readonly plot: {
+                readonly top: 20;
+                readonly right: 8;
+                readonly bottom: 8;
+                readonly left: 8;
+            };
+            readonly axis: {
+                readonly top: 16;
+                readonly right: 8;
+                readonly bottom: 20;
+                readonly left: 36;
+            };
+        };
+        readonly line: {
+            readonly strokeWidth: 2.4;
+            readonly pointRadius: 4.5;
+            readonly focusHaloRadius: 9;
+            readonly focusHaloOpacity: 0.25;
+        };
+        readonly area: {
+            readonly topOpacity: 0.32;
+            readonly bottomOpacity: 0;
+        };
+        readonly bar: {
+            readonly radius: number;
+            readonly maxWidth: 28;
+            readonly bandPadding: 0.36;
+            readonly groupGap: 2;
+            readonly restOpacity: 0.4;
+        };
+        readonly pie: {
+            readonly donutRatio: 0.62;
+            readonly padAngle: 0.012;
+            readonly minLabelPercent: 4;
+        };
+        readonly radar: {
+            readonly levels: 4;
+            readonly strokeWidth: 2;
+            readonly fillOpacity: 0.22;
+            readonly labelOffset: 12;
+        };
+        readonly scatter: {
+            readonly radius: 5;
+            readonly focusRadius: 8;
+        };
+        readonly sparkline: {
+            readonly width: 72;
+            readonly height: 28;
+            readonly strokeWidth: 1.8;
+            readonly padding: 2;
+        };
+        readonly cursor: {
+            readonly strokeWidth: 1;
+            readonly dash: readonly [2, 3];
+        };
+        readonly reference: {
+            readonly dash: readonly [2, 4];
+        };
+        readonly chrome: {
+            readonly axisLine: Readonly<{
+                source: "theme";
+                key: "border";
+                alpha?: number;
+            }>;
+            readonly axisLabel: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+            readonly gridLine: Readonly<{
+                source: "theme";
+                key: "border";
+                alpha?: number;
+            }>;
+            readonly legendLabel: Readonly<{
+                source: "theme";
+                key: "textBody";
+                alpha?: number;
+            }>;
+            readonly tooltipSurface: Readonly<{
+                source: "theme";
+                key: "surface";
+                alpha?: number;
+            }>;
+            readonly tooltipBorder: Readonly<{
+                source: "theme";
+                key: "border";
+                alpha?: number;
+            }>;
+            readonly tooltipContent: Readonly<{
+                source: "theme";
+                key: "textBody";
+                alpha?: number;
+            }>;
+            readonly lineWidth: 1;
+            readonly gridWidth: 1;
+            readonly labelVariant: "caption";
+            readonly legendVariant: "label";
         };
     };
     readonly datePickerRecipe: {

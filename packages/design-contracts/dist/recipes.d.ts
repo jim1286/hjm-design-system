@@ -8,6 +8,7 @@ export { calendarRecipe } from "./calendar.js";
 export { carouselRecipe } from "./carousel.js";
 export { commandPaletteRecipe } from "./command-palette.js";
 export { dataTableRecipe } from "./data-table.js";
+export { chartRecipe } from "./chart.js";
 export { transferListRecipe } from "./transfer-list.js";
 export { tourRecipe } from "./tour.js";
 export { layoutRecipe } from "./layout.js";

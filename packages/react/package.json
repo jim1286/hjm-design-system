@@ -522,6 +522,11 @@
       "types": "./dist/activity-chip.d.ts",
       "import": "./dist/activity-chip.js",
       "default": "./dist/activity-chip.js"
+    },
+    "./chart": {
+      "types": "./dist/chart.d.ts",
+      "import": "./dist/chart.js",
+      "default": "./dist/chart.js"
     }
   },
   "files": [

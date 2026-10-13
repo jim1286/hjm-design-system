@@ -128,8 +128,9 @@ describe("component reference coverage", () => {
     }
 
     // 2026-09-29 promotion: every beta renderer now has complete required evidence; Form's focus path was implemented, and ThinkingOrb Native passed installed iOS/Android Skia smoke.
-    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.web === "beta")).toHaveLength(0);
-    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.native === "beta")).toHaveLength(0);
+    // 2026-10-14: Chart (both renderers) and the new Native DataTable start as beta until device evidence.
+    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.web === "beta").map(entry => entry.name)).toEqual(["Chart"]);
+    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.native === "beta").map(entry => entry.name)).toEqual(["DataTable", "Chart"]);
     expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.web === "stable")).toHaveLength(103);
     expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.native === "stable")).toHaveLength(83);
   });
@@ -147,7 +148,8 @@ describe("component reference coverage", () => {
 
   it("does not list deliberately excluded candidates as future work", () => {
     const names = componentCatalog.map(entry => entry.name) as readonly string[];
-    for (const name of ["AppProvider", "Utility", "BorderBeam", "Chart", "TimePicker", "Cascader", "Rating", "TreeSelect", "ConfirmPopover"]) expect(names).not.toContain(name);
+    // Chart left this list on 2026-10-14 (user request to absorb chart libraries; docs/chart.md).
+    for (const name of ["AppProvider", "Utility", "BorderBeam", "TimePicker", "Cascader", "Rating", "TreeSelect", "ConfirmPopover"]) expect(names).not.toContain(name);
   });
 
   it("explains every roadmap transition and every planned row", () => {

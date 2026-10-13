@@ -4,9 +4,9 @@
 
 This document is the human-readable projection of the same catalog and Showcase manifest consumed by product CI.
 
-- Contract: stable 103
-- Web renderer: stable 103
-- Native renderer: stable 83 · unsupported 20
+- Contract: stable 103 · beta 1
+- Web renderer: stable 103 · beta 1
+- Native renderer: stable 83 · beta 2 · unsupported 19
 
 | Component | Canonical story ID | Contract | Web | Native | Documentation | Required evidence |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -83,7 +83,8 @@ This document is the human-readable projection of the same catalog and Showcase 
 | Accordion | `data-display/accordion` | stable | stable | stable | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |
 | Statistic | `data-display/statistic` | stable | stable | stable | [authored](../statistic.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | Timeline | `data-display/timeline` | stable | stable | stable | [authored](../timeline.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
-| DataTable | `data-display/data-table` | stable | stable | unsupported | [authored](../data-table.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
+| DataTable | `data-display/data-table` | stable | stable | beta | [authored](../data-table.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| Chart | `data-display/chart` | beta | beta | beta | [authored](../chart.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | Tree | `data-display/tree` | stable | stable | unsupported | [authored](../tree.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
 | Calendar | `data-display/calendar` | stable | stable | stable | [authored](../calendar.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |
 | Carousel | `data-display/carousel` | stable | stable | stable | [authored](../carousel.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |

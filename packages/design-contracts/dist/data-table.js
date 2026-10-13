@@ -76,14 +76,76 @@ export function validateDataTableSortState(state, columns) {
  * actually re-sorting rows (Combobox's local/external filtering split is the
  * same boundary — HJM judges intent, never executes the data operation).
  */
-export function getNextDataTableSortState(current, columnId, cycle = dataTableDefaults.sortCycle) {
+export function getNextDataTableSortState(current, columnId, cycle = dataTableDefaults.sortCycle, firstDirection = "ascending") {
+    const second = firstDirection === "ascending" ? "descending" : "ascending";
     if (current === null || current.columnId !== columnId) {
-        return { columnId, direction: "ascending" };
+        return { columnId, direction: firstDirection };
     }
-    if (current.direction === "ascending") {
-        return { columnId, direction: "descending" };
+    if (current.direction === firstDirection) {
+        return { columnId, direction: second };
     }
-    return cycle === "three-state" ? null : { columnId, direction: "ascending" };
+    return cycle === "three-state" ? null : { columnId, direction: firstDirection };
+}
+/** The first direction a column's header applies, from `sortDescFirst`. */
+export function dataTableFirstSortDirection(column) {
+    return column.sortDescFirst ? "descending" : "ascending";
+}
+/**
+ * Sort key for a displayed cell string: "0.340", ".340", "36 ⅓", "13.5억", "61.0%" → numbers;
+ * text such as "7승0무3패" or names stay strings; "—", "-" and "" are missing.
+ */
+export function toDataTableSortValue(value) {
+    if (value === null || value === undefined)
+        return null;
+    if (typeof value === "number")
+        return Number.isFinite(value) ? value : null;
+    const text = String(value).trim();
+    if (!text || text === "—" || text === "-" || text === "–")
+        return null;
+    // Two or more letters (any script) mean a label, not a number with a unit.
+    if (/\p{L}.*\p{L}/u.test(text.replace(/[⅓⅔]/g, "")))
+        return text;
+    const number = Number.parseFloat(text.replace(/[^0-9.+-]/g, ""));
+    return Number.isFinite(number) ? number : text;
+}
+/**
+ * Pure comparison: numbers numerically, strings with `localeCompare`, numbers before strings.
+ * Missing values are not compared here; `sortDataTableRows` always sinks them.
+ */
+export function compareDataTableValues(a, b, locale) {
+    if (typeof a === "number" && typeof b === "number")
+        return a - b;
+    if (typeof a === "number")
+        return -1;
+    if (typeof b === "number")
+        return 1;
+    return a.localeCompare(b, locale);
+}
+/**
+ * Optional row-model helper (TanStack `getSortedRowModel` with `sortUndefined: "last"`): stable,
+ * missing values always last in both directions. 1.20 left all sorting to products; Yajalal and
+ * other stat tables reimplemented the same rules, so the shared helper exists now. Products with
+ * server-side sorting keep calling `getNextDataTableSortState` only.
+ */
+export function sortDataTableRows(rows, sort, getValue, options = {}) {
+    const indexed = rows.map((row, index) => ({ row, index }));
+    if (!sort)
+        return indexed.map(item => item.row);
+    const sign = sort.direction === "ascending" ? 1 : -1;
+    return indexed.sort((x, y) => {
+        const a = getValue(x.row, sort.columnId), b = getValue(y.row, sort.columnId);
+        const missingA = a === null || a === undefined, missingB = b === null || b === undefined;
+        if (missingA || missingB)
+            return missingA === missingB ? x.index - y.index : missingA ? 1 : -1;
+        return sign * compareDataTableValues(a, b, options.locale) || x.index - y.index;
+    }).map(item => item.row);
+}
+/** Leading pinned columns (only an unbroken run from the start is pinned). */
+export function splitPinnedDataTableColumns(columns) {
+    let count = 0;
+    while (count < columns.length && columns[count].pinned === "start")
+        count++;
+    return { pinned: columns.slice(0, count), scrolling: columns.slice(count) };
 }
 /**
  * Reuses `collectionItemContract`'s hover/selected/focus tokens instead of a
@@ -165,8 +227,11 @@ export const dataTableBehavior = {
         keyboard: ["Tab", "Enter", "Space"],
         focus: "native",
     },
-    native: { roles: [], states: [], actions: [] },
+    native: { roles: ["button", "header"], states: ["selected"], actions: ["activate"] },
     scenarios: [
+        "sort-desc-first-columns-start-descending-and-cycle-back",
+        "missing-values-sink-to-the-bottom-in-both-directions",
+        "pinned-start-columns-stay-visible-while-the-rest-scrolls",
         "row-selection-reuses-the-shared-collection-selection-model-unchanged",
         "select-all-reuses-the-shared-tri-state-checkbox-value",
         "async-state-reuses-the-shared-collection-async-state-unchanged",

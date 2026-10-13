@@ -23,6 +23,11 @@ export type DataTableProps<ColumnKey extends string = string, RowKey extends str
     density?: DataTableDensity;
     /** Composed beneath the table by the product — pagination, load more, totals. */
     footer?: ReactNode;
+    /**
+     * Optional summary row rendered as the table's `tfoot` (totals, averages). Returns the cell for
+     * each column; HJM never computes the aggregate (2026-10-14, stat tables).
+     */
+    summaryRow?: (columnId: ColumnKey) => ReactNode;
     className?: string;
     /** Canonical layout-only placement on the root wrapper. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;

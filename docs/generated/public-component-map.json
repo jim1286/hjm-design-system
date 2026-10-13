@@ -160,6 +160,15 @@
         "role": "canonical"
       },
       {
+        "name": "BarChart",
+        "source": "packages/react/src/chart.tsx",
+        "entries": [
+          "./chart"
+        ],
+        "canonicalComponent": "Chart",
+        "role": "companion-or-alternative"
+      },
+      {
         "name": "BottomCTA",
         "source": "packages/react/src/bottom-cta.tsx",
         "entries": [
@@ -257,6 +266,15 @@
         ],
         "canonicalComponent": null,
         "role": "supplemental"
+      },
+      {
+        "name": "ChartLegend",
+        "source": "packages/react/src/chart.tsx",
+        "entries": [
+          "./chart"
+        ],
+        "canonicalComponent": "Chart",
+        "role": "companion-or-alternative"
       },
       {
         "name": "ChatMessage",
@@ -703,6 +721,15 @@
         "role": "canonical"
       },
       {
+        "name": "LineChart",
+        "source": "packages/react/src/chart.tsx",
+        "entries": [
+          "./chart"
+        ],
+        "canonicalComponent": "Chart",
+        "role": "companion-or-alternative"
+      },
+      {
         "name": "Link",
         "source": "packages/react/src/actions.tsx",
         "entries": [
@@ -973,6 +1000,15 @@
         "role": "supplemental"
       },
       {
+        "name": "PieChart",
+        "source": "packages/react/src/chart.tsx",
+        "entries": [
+          "./chart"
+        ],
+        "canonicalComponent": "Chart",
+        "role": "companion-or-alternative"
+      },
+      {
         "name": "Popover",
         "source": "packages/react/src/popover.tsx",
         "entries": [
@@ -1018,6 +1054,15 @@
         ],
         "canonicalComponent": "QRCode",
         "role": "canonical"
+      },
+      {
+        "name": "RadarChart",
+        "source": "packages/react/src/chart.tsx",
+        "entries": [
+          "./chart"
+        ],
+        "canonicalComponent": "Chart",
+        "role": "companion-or-alternative"
       },
       {
         "name": "Radio",
@@ -1075,6 +1120,15 @@
         ],
         "canonicalComponent": null,
         "role": "supplemental"
+      },
+      {
+        "name": "ScatterChart",
+        "source": "packages/react/src/chart.tsx",
+        "entries": [
+          "./chart"
+        ],
+        "canonicalComponent": "Chart",
+        "role": "companion-or-alternative"
       },
       {
         "name": "ScreenLayout",
@@ -1221,6 +1275,15 @@
         ],
         "canonicalComponent": null,
         "role": "supplemental"
+      },
+      {
+        "name": "Sparkline",
+        "source": "packages/react/src/chart.tsx",
+        "entries": [
+          "./chart"
+        ],
+        "canonicalComponent": "Chart",
+        "role": "companion-or-alternative"
       },
       {
         "name": "Spinner",
@@ -1727,6 +1790,15 @@
         "role": "canonical"
       },
       {
+        "name": "BarChart",
+        "source": "packages/react-native/src/chart.tsx",
+        "entries": [
+          "./chart"
+        ],
+        "canonicalComponent": "Chart",
+        "role": "companion-or-alternative"
+      },
+      {
         "name": "BottomCTA",
         "source": "packages/react-native/src/actions.tsx",
         "entries": [
@@ -1816,6 +1888,15 @@
         ],
         "canonicalComponent": null,
         "role": "supplemental"
+      },
+      {
+        "name": "ChartLegend",
+        "source": "packages/react-native/src/chart.tsx",
+        "entries": [
+          "./chart"
+        ],
+        "canonicalComponent": "Chart",
+        "role": "companion-or-alternative"
       },
       {
         "name": "ChatMessage",
@@ -1939,6 +2020,15 @@
           "./data-display"
         ],
         "canonicalComponent": "CounterBadge",
+        "role": "canonical"
+      },
+      {
+        "name": "DataTable",
+        "source": "packages/react-native/src/data-table.tsx",
+        "entries": [
+          "./data-table"
+        ],
+        "canonicalComponent": "DataTable",
         "role": "canonical"
       },
       {
@@ -2287,6 +2377,15 @@
         "role": "canonical"
       },
       {
+        "name": "LineChart",
+        "source": "packages/react-native/src/chart.tsx",
+        "entries": [
+          "./chart"
+        ],
+        "canonicalComponent": "Chart",
+        "role": "companion-or-alternative"
+      },
+      {
         "name": "Link",
         "source": "packages/react-native/src/actions.tsx",
         "entries": [
@@ -2519,6 +2618,15 @@
         "role": "supplemental"
       },
       {
+        "name": "PieChart",
+        "source": "packages/react-native/src/chart.tsx",
+        "entries": [
+          "./chart"
+        ],
+        "canonicalComponent": "Chart",
+        "role": "companion-or-alternative"
+      },
+      {
         "name": "ProfileScreen",
         "source": "packages/react-native/src/screen-flows.tsx",
         "entries": [
@@ -2554,6 +2662,15 @@
         ],
         "canonicalComponent": "QRCode",
         "role": "canonical"
+      },
+      {
+        "name": "RadarChart",
+        "source": "packages/react-native/src/chart.tsx",
+        "entries": [
+          "./chart"
+        ],
+        "canonicalComponent": "Chart",
+        "role": "companion-or-alternative"
       },
       {
         "name": "Radio",
@@ -2611,6 +2728,15 @@
         ],
         "canonicalComponent": null,
         "role": "supplemental"
+      },
+      {
+        "name": "ScatterChart",
+        "source": "packages/react-native/src/chart.tsx",
+        "entries": [
+          "./chart"
+        ],
+        "canonicalComponent": "Chart",
+        "role": "companion-or-alternative"
       },
       {
         "name": "ScreenLayout",
@@ -2745,6 +2871,15 @@
         ],
         "canonicalComponent": null,
         "role": "supplemental"
+      },
+      {
+        "name": "Sparkline",
+        "source": "packages/react-native/src/chart.tsx",
+        "entries": [
+          "./chart"
+        ],
+        "canonicalComponent": "Chart",
+        "role": "companion-or-alternative"
       },
       {
         "name": "Spinner",

@@ -4,8 +4,8 @@
 
 This projection joins the canonical surface maturity manifest with first-party renderer claims. Missing scenarios are explicit beta promotion debt; stable surfaces are blocked by CI until none remain.
 
-- web: 103/103 active implementations; 103/103 required scenario sets
-- native: 83/83 active implementations; 83/83 required scenario sets
+- web: 103/104 active implementations; 103/104 required scenario sets
+- native: 83/85 active implementations; 83/85 required scenario sets
 
 | Component | Surface | Maturity | Renderer package | Export | Claimed scenarios | Missing required scenarios | Executable proofs |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -83,6 +83,7 @@ This projection joins the canonical surface maturity manifest with first-party r
 | Statistic | web | stable | @hjmds/react | ./display | default, accessibility, dark, large-text, rtl, reduced-motion, long-copy | none | test/default-render.ssr.test.tsx#statistic, test/scenario-matrix.browser.test.tsx#statistic |
 | Timeline | web | stable | @hjmds/react | ./display | default, accessibility, dark, large-text, rtl, reduced-motion, long-copy | none | test/default-render.ssr.test.tsx#timeline, test/scenario-matrix.browser.test.tsx#timeline |
 | DataTable | web | stable | @hjmds/react | ./data-table | default, accessibility, dark, large-text, rtl, reduced-motion, long-copy, keyboard | none | test/default-render.ssr.test.tsx#data-table, test/scenario-matrix.browser.test.tsx#data-table, test/data-table.keyboard.browser.test.tsx#data-table |
+| Chart | web | beta | @hjmds/react | unclaimed | none | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none |
 | Tree | web | stable | @hjmds/react | ./tree | default, accessibility, dark, large-text, rtl, reduced-motion, long-copy, keyboard | none | test/default-render.ssr.test.tsx#tree, test/scenario-matrix.browser.test.tsx#tree, test/tree.browser.test.tsx#tree |
 | Calendar | web | stable | @hjmds/react | ./calendar | default, accessibility, dark, large-text, rtl, reduced-motion, long-copy, keyboard | none | test/default-render.ssr.test.tsx#calendar, test/scenario-matrix.browser.test.tsx#calendar, test/calendar.browser.test.tsx#calendar |
 | Carousel | web | stable | @hjmds/react | ./carousel | default, accessibility, dark, large-text, rtl, reduced-motion, long-copy, keyboard | none | test/default-render.ssr.test.tsx#carousel, test/scenario-matrix.browser.test.tsx#carousel, test/carousel.browser.test.tsx#carousel |
@@ -176,6 +177,8 @@ This projection joins the canonical surface maturity manifest with first-party r
 | Accordion | native | stable | @hjmds/react-native | ./data-display | default, accessibility, dark, large-text, rtl, reduced-motion, long-copy, native-actions | none | test/default-render.test.tsx#accordion, test/scenario-matrix.test.tsx#accordion, test/accordion-actions.test.tsx#accordion |
 | Statistic | native | stable | @hjmds/react-native | ./data-display | default, accessibility, dark, large-text, rtl, reduced-motion, long-copy | none | test/default-render.test.tsx#statistic, test/scenario-matrix.test.tsx#statistic |
 | Timeline | native | stable | @hjmds/react-native | ./data-display | default, accessibility, dark, large-text, rtl, reduced-motion, long-copy | none | test/default-render.test.tsx#timeline, test/scenario-matrix.test.tsx#timeline |
+| DataTable | native | beta | @hjmds/react-native | unclaimed | none | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none |
+| Chart | native | beta | @hjmds/react-native | unclaimed | none | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none |
 | Calendar | native | stable | @hjmds/react-native | ./calendar | default, accessibility, dark, large-text, rtl, reduced-motion, long-copy, native-actions | none | test/default-render.test.tsx#calendar, test/scenario-matrix.test.tsx#calendar, test/calendar.test.tsx#calendar |
 | Carousel | native | stable | @hjmds/react-native | ./carousel | default, accessibility, dark, large-text, rtl, reduced-motion, long-copy, native-actions | none | test/default-render.test.tsx#carousel, test/scenario-matrix.test.tsx#carousel, test/carousel.test.tsx#carousel |
 | DescriptionList | native | stable | @hjmds/react-native | ./data-display | default, accessibility, dark, large-text, rtl, reduced-motion, long-copy | none | test/default-render.test.tsx#description-list, test/scenario-matrix.test.tsx#description-list |

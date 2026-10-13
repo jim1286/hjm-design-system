@@ -108,7 +108,6 @@ export const PLATFORM_ONLY = {
     ...Object.fromEntries(GROUP_ROLES.map((role) => [`컴포넌트/개요/${role} 모아 보기`, `${WEB_DOCS}. 2026-10-06 이전 역할 묶음 URL(id) 보존용`])),
     "컴포넌트/글자와 아이콘/글자 서식": WEB_API,
     "컴포넌트/레이아웃/분할 영역 조절": WEB_API,
-    "컴포넌트/데이터 표시/데이터 표": WEB_API,
     "컴포넌트/데이터 표시/트리 목록": WEB_API,
     "컴포넌트/상태와 알림/워터마크": WEB_API,
     "컴포넌트/기반 기능/고정 배치": WEB_API,

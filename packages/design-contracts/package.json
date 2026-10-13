@@ -253,6 +253,12 @@
       "import": "./dist/data-table.js",
       "default": "./dist/data-table.js"
     },
+    "./components/chart": {
+      "types": "./dist/chart.d.ts",
+      "react-native": "./dist/chart.js",
+      "import": "./dist/chart.js",
+      "default": "./dist/chart.js"
+    },
     "./components/date-picker": {
       "types": "./dist/date-picker.d.ts",
       "react-native": "./dist/date-picker.js",

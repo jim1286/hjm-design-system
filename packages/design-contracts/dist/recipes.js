@@ -19,6 +19,7 @@ export { calendarRecipe } from "./calendar.js";
 export { carouselRecipe } from "./carousel.js";
 export { commandPaletteRecipe } from "./command-palette.js";
 export { dataTableRecipe } from "./data-table.js";
+export { chartRecipe } from "./chart.js";
 export { transferListRecipe } from "./transfer-list.js";
 // floatingActionButtonRecipe는 여기서 재수출하지 않는다. 이 모듈이 buttonRecipe를
 // 정의하는데 floating-action-button.ts가 그것을 import하므로, 여기에 `export ... from`을

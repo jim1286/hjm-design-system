@@ -33,6 +33,7 @@ import { commandPaletteBehaviorScenarios } from "./command-palette.js";
 import { floatingActionButtonBehaviorScenarios } from "./floating-action-button.js";
 import { tourBehaviorScenarios } from "./tour.js";
 import { dataTableBehavior } from "./data-table.js";
+import { chartBehavior } from "./chart.js";
 import { layoutBehavior } from "./layout.js";
 import { otpFieldBehavior } from "./otp-field.js";
 import { passwordFieldBehavior } from "./password-field.js";
@@ -1215,6 +1216,7 @@ export const behaviorRegistry = {
   ],
   },
   dataTable: dataTableBehavior,
+  chart: chartBehavior,
   tour: {
     controlled: ["open", "defaultOpen", "onOpenChange", "currentStepId", "defaultCurrentStepId", "onStepChange"],
     inputs: ["steps", "labels", "anchorId"],

@@ -161,7 +161,10 @@ export const componentCatalog = [
     { name: "Statistic", category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "statisticRecipe" },
     // Timeline labels are visible prose and now have long-copy matrix coverage on both renderers.
     { name: "Timeline", category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "timelineRecipe", ...evidenceNeeded("두 제품의 이력 UI가 공통 descriptor와 Web/RN dot·connector renderer를 소비합니다. 남은 renderer 증거는 generated 보고서에서 추적합니다.") },
-    { name: "DataTable", category: "data-display", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), recipe: "dataTableRecipe", behavior: "dataTable" },
+    // 2026-10-14: Native DataTable renderer added (pinned columns, sortDescFirst, summary row); beta until device evidence.
+    { name: "DataTable", category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "beta"), recipe: "dataTableRecipe", behavior: "dataTable" },
+    // 2026-10-14 user request: chart drawing absorbed from product libraries (docs/chart.md); one family for all chart types.
+    { name: "Chart", category: "data-display", platform: "shared", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "chartRecipe", behavior: "chart" },
     { name: "Tree", category: "data-display", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), recipe: "treeRecipe", behavior: "tree" },
     { name: "Calendar", category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "calendarRecipe", behavior: "calendar" },
     { name: "Carousel", category: "data-display", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "carouselRecipe", behavior: "carousel" },
@@ -211,7 +214,7 @@ export function summarizeComponentRoadmap(entries = componentCatalog) {
         declined: 0,
     });
 }
-import { accordionRecipe, alertDialogRecipe, avatarRecipe, badgeRecipe, bottomNavigationRecipe, bottomCtaRecipe, anchorRecipe, agreementRecipe, topRecipe, authProviderButtonRecipe, authScreenRecipe, headingRecipe, toggleGroupRecipe, tagsInputRecipe, skipNavRecipe, bottomInfoRecipe, sidebarRecipe, textFormatRecipe, collapsibleRecipe, menubarRecipe, assetRecipe, breadcrumbRecipe, aspectRatioRecipe, containerRecipe, calendarRecipe, cardRecipe, buttonRecipe, carouselRecipe, chipRecipe, comboboxRecipe, descriptionListRecipe, counterBadgeRecipe, dialogRecipe, dataTableRecipe, datePickerRecipe, dividerRecipe, formRecipe, emptyStateRecipe, fieldRecipe, filePickerRecipe, iconButtonRecipe, iconRecipe, imageRecipe, linkRecipe, listRecipe, listRowRecipe, loadMoreRecipe, menuRecipe, noticeRecipe, paginationRecipe, popoverRecipe, numberFieldRecipe, progressRecipe, resultRecipe, searchFieldRecipe, selectRecipe, selectionGroupRecipe, sectionRecipe, segmentedControlRecipe, selectionControlRecipe, sheetRecipe, sidePanelRecipe, commandPaletteRecipe, layoutRecipe, otpFieldRecipe, passwordFieldRecipe, splitterRecipe, tourRecipe, transferListRecipe, skeletonRecipe, sliderRecipe, spinnerRecipe, stackRecipe, statisticRecipe, stepsRecipe, surfaceRecipe, switchRecipe, tabsRecipe, tagRecipe, textRecipe, timelineRecipe, toastRecipe, tooltipRecipe, topBarRecipe, treeRecipe, uploadItemRecipe, visuallyHiddenRecipe, } from "./recipes.js";
+import { accordionRecipe, alertDialogRecipe, avatarRecipe, badgeRecipe, bottomNavigationRecipe, bottomCtaRecipe, anchorRecipe, agreementRecipe, topRecipe, authProviderButtonRecipe, authScreenRecipe, headingRecipe, toggleGroupRecipe, tagsInputRecipe, skipNavRecipe, bottomInfoRecipe, sidebarRecipe, textFormatRecipe, collapsibleRecipe, menubarRecipe, assetRecipe, breadcrumbRecipe, aspectRatioRecipe, containerRecipe, calendarRecipe, cardRecipe, buttonRecipe, carouselRecipe, chipRecipe, comboboxRecipe, descriptionListRecipe, counterBadgeRecipe, dialogRecipe, dataTableRecipe, chartRecipe, datePickerRecipe, dividerRecipe, formRecipe, emptyStateRecipe, fieldRecipe, filePickerRecipe, iconButtonRecipe, iconRecipe, imageRecipe, linkRecipe, listRecipe, listRowRecipe, loadMoreRecipe, menuRecipe, noticeRecipe, paginationRecipe, popoverRecipe, numberFieldRecipe, progressRecipe, resultRecipe, searchFieldRecipe, selectRecipe, selectionGroupRecipe, sectionRecipe, segmentedControlRecipe, selectionControlRecipe, sheetRecipe, sidePanelRecipe, commandPaletteRecipe, layoutRecipe, otpFieldRecipe, passwordFieldRecipe, splitterRecipe, tourRecipe, transferListRecipe, skeletonRecipe, sliderRecipe, spinnerRecipe, stackRecipe, statisticRecipe, stepsRecipe, surfaceRecipe, switchRecipe, tabsRecipe, tagRecipe, textRecipe, timelineRecipe, toastRecipe, tooltipRecipe, topBarRecipe, treeRecipe, uploadItemRecipe, visuallyHiddenRecipe, } from "./recipes.js";
 import { floatingActionButtonRecipe } from "./floating-action-button.js";
 import { gridRecipe } from "./grid.js";
 /** One typed registry prevents catalog recipe names from drifting into strings. */
@@ -257,6 +260,7 @@ export const recipeRegistry = {
     counterBadgeRecipe,
     dialogRecipe,
     dataTableRecipe,
+    chartRecipe,
     datePickerRecipe,
     dividerRecipe,
     formRecipe,

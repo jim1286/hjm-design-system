@@ -6,7 +6,7 @@
     "web": {
       "packageName": "@hjmds/react",
       "packageVersion": "1.20.0",
-      "activeComponents": 103,
+      "activeComponents": 104,
       "claimedComponents": 103,
       "completeScenarioComponents": 103,
       "components": [
@@ -4074,6 +4074,34 @@
           "missingScenarios": []
         },
         {
+          "componentId": "chart",
+          "name": "Chart",
+          "status": "beta",
+          "claimed": false,
+          "subpath": null,
+          "exportNames": [],
+          "proofs": [],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [],
+          "missingScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
           "componentId": "tree",
           "name": "Tree",
           "status": "stable",
@@ -5643,7 +5671,7 @@
     "native": {
       "packageName": "@hjmds/react-native",
       "packageVersion": "1.20.0",
-      "activeComponents": 83,
+      "activeComponents": 85,
       "claimedComponents": 83,
       "completeScenarioComponents": 83,
       "components": [
@@ -9122,6 +9150,62 @@
             "long-copy"
           ],
           "missingScenarios": []
+        },
+        {
+          "componentId": "data-table",
+          "name": "DataTable",
+          "status": "beta",
+          "claimed": false,
+          "subpath": null,
+          "exportNames": [],
+          "proofs": [],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [],
+          "missingScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "componentId": "chart",
+          "name": "Chart",
+          "status": "beta",
+          "claimed": false,
+          "subpath": null,
+          "exportNames": [],
+          "proofs": [],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [],
+          "missingScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
         },
         {
           "componentId": "calendar",
