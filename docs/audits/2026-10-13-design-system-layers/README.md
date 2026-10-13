@@ -292,3 +292,15 @@ Node24.20.0과 각 앱의 설치 TypeScript를 사용했다. Spint의 첫 임시
 버전 push의 Showcase CI `38358053750`은 Web 정적 빌드·artifact 검사 후 contracts 테스트 소스의 TS2339로 실패했다. save-feedback fixture가 빈 객체를 포함한 union으로 추론되어 optional phase를 읽지 못한 것이며, tuple 배열의 명시 타입으로 수정했다. contracts typecheck와 해당 13개 테스트가 통과했다. 공개 resolver API는 바꾸지 않았다.
 
 릴리스 게이트가 실행하는 package 테스트에 2026-10-07 제외한 최대 글자 모사 조건이 남아 있음을 확인해, 전용 사례는 본문을 보존하고 skip하며 다른 행동의 불필요한 2배 fixture는 일반 크기로 바꿨다. 역사 registry/scenario와 제품 source는 보존했다. 수정 표적 검사는 contracts46건(최대 전용2건 제외), Web Chromium37·SSR3·Showcase theme1건, Native148건 통과했다. Native matrix의 이름 필터에 의한 skip을 최대 글자 제외 수로 합산하지 않는다. 이 결과는 게시 전 표적 검사이며 전체 릴리스 CI·기기 검증 성공을 뜻하지 않는다.
+
+게시 전 CI에서 추가로 발견한 검증 예제 누락을 수정했다. `38359051263`은 새 StatusText의 package exports 기대 목록(Web/Native)에 빠진 항목을 추가하고 관련 3건을 통과했다. `38359431358`은 TransferList의 명시적인 `disabled: false` 상태를 기존 회귀 기대에 반영하고 해당 1건을 통과했다. `38359999558`은 Native 179파일·1452건 통과 뒤 Metro 예제의 StatusText 직접 import 누락으로 멈췄다. 실제 렌더 호출을 추가한 `50bdce68`에서 Metro production JavaScript 69개 진입점·704모듈, 양 renderer import 경계, 1.19.0 release artifacts 검사가 통과했다. 세 실패 run은 모두 Publish/Tag 이전에 종료돼 npm 전송이 없었다. Metro JavaScript 검사는 네이티브 빌드·기기 실행 증거가 아니다.
+
+## 1.19.0 게시 결과
+
+[Release Packages 38360621517](https://github.com/jim1286/hjm-design-system/actions/runs/38360621517)이 source `50bdce6860cb387904f6c0533e4d617754007bfa`에서 성공했다. 기존 릴리스 게이트의 build·typecheck, contracts 1058건, Web SSR 280건·브라우저 1303건, Native host 1452건, import 경계·Metro JavaScript·release artifacts 검사가 통과했다. 각각 제외된 사례는 2/2/132/100건으로 성공 수에 포함하지 않는다. 제외에는 이전 조건부 사례도 있어 모두 최대 글자 전용으로 해석하지 않는다.
+
+`@hjmds/design-contracts`, `@hjmds/react`, `@hjmds/react-native`의 npm 1.19.0 게시와 정본 `v1.19.0` 태그가 위 source SHA를 가리키는 것을 확인했다. 게시 직후 일부 npm 조회가 404/이전 latest를 반환했으므로 재전송하지 않고 전파를 기다렸다. 이후 소비 importer에서 세 실제 tarball의 SHA512, manifest·version export, 정본 태그의 Git manifest를 검증했다. 무결성 원문은 소비 저장소의 `docs/profiles/hjm-release.json`에 남긴다. 이는 npm 공개 증거이며 제품 스토어·서버 배포나 기기 검증을 뜻하지 않는다.
+
+준비해 둔 두 소비 patch를 실제 적용했다. BurnTok은 Web·Native와 공용 design-system의 exact 1.19.0, 계약·catalog·lock을 갱신하고 Native AppDialog를 공개 size prop으로 이관했다. Web ActivityChip의 게시 대기 임시 alias·stub 2개도 제거했다. frozen 설치, Web/Mobile typecheck, Web AppDialog·renderer adoption·ThemeProvider 19건과 Native 소스 계약 5건이 통과했다(Node24.20.0/pnpm11.24.0). Utilverse는 contracts·Native exact 1.19.0과 계약·catalog·lock을 갱신하고 AccountScreen 탈퇴 행을 tone="danger"로 이관했다. frozen 설치, Mobile typecheck, 브랜드/optional peer 3건이 통과했다(Node24.21.0/pnpm11.24.0). 두 앱의 검사는 HJM_LOCAL_SOURCE=0 및 설치 node_modules 기준이다.
+
+소비 앱의 기존 TASKS/REMAINING_WORK와 라이브러리 기록에 결과를 반영했다. 앱의 공유 미커밋 변경은 보존했고 앱 커밋·바이너리 버전 상승·스토어 배포·기기 검증·production build는 하지 않았다. 다른 소비 표면은 앞 절의 후보 타입 검사 근거만 있으며 이번 두 앱의 실제 설치 결과로 확대하지 않는다. 본 작업의 importer/검사 임시 자료는 정리했고, 기존 실패 캡처 48개와 게시 이후 별도 세션이 수정한 HJM bottom-navigation 소스·생성물은 삭제하거나 이번 기록 커밋에 넣지 않았다.
