@@ -75,6 +75,7 @@ import {
 } from "@hjmds/react-native/navigation";
 import { Dialog } from "@hjmds/react-native/overlays";
 import { Icon, Text } from "@hjmds/react-native/primitives";
+import { StatusText } from "@hjmds/react-native/status-text";
 import { HjmNativeProvider } from "@hjmds/react-native/provider";
 
 // Keep peer-free optional exports reachable so Metro checks their actual dependency graph.
@@ -99,6 +100,7 @@ function MetroSmokeApp() {
       View,
       null,
       React.createElement(Text, { variant: "title" }, `HJM Metro smoke: ${optionalFamilyNames.join(", ")}`),
+      React.createElement(StatusText, null, "저장 완료"),
       React.createElement(FloatingActionButton, {
         descriptor: { label: "새 기록", icon: { name: "add" } },
         renderIcon: () => React.createElement(Text, null, "＋"), onContentClearanceChange: noop,
