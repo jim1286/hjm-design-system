@@ -2,25 +2,34 @@ import { TableSortButton } from "./table-sort-button.js";
 import {
   dataTableColumnDefaults,
   dataTableDefaults,
+  dataTableFamilyRecipe,
   dataTableFirstSortDirection,
   getNextDataTableSortState,
+  resolveDataTableBody,
+  resolveDataTableHeaderBands,
   splitPinnedDataTableColumns,
   resolveDataTableSelectAllState,
   validateDataTableColumns,
   validateDataTableRows,
   validateDataTableSortState,
   type DataTableAsyncState,
+  type DataTableBodyItem,
+  type DataTableCellHeat,
+  type DataTableCellTone,
   type DataTableColumnDescriptor,
+  type DataTableColumnGroup,
   type DataTableDensity,
   type DataTableRowDescriptor,
+  type DataTableRowGroup,
   type DataTableSelection,
   type DataTableSortCycle,
   type DataTableSortState,
 } from "@hjmds/design-contracts/components/data-table";
-import { forwardRef, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { forwardRef, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { useHjmDensityDefault } from "./provider.js";
 import { classNames } from "./internal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { tableCellEmphasis, type TableHeatColors } from "./table-family.js";
 
 export type DataTableLabels = Readonly<{
   /** Accessible name for the table itself. */
@@ -50,6 +59,16 @@ export type DataTableProps<ColumnKey extends string = string, RowKey extends str
    * each column; HJM never computes the aggregate (2026-10-14, stat tables).
    */
   summaryRow?: (columnId: ColumnKey) => ReactNode;
+  /** Header bands above leaf columns (타격 | 주루). */
+  columnGroups?: readonly DataTableColumnGroup<ColumnKey>[];
+  /** Labeled row sections (선발 / 교체); each renders as its own `tbody`. */
+  rowGroups?: readonly DataTableRowGroup<RowKey>[];
+  /** Per-cell emphasis decided by the product (AG Grid cellClassRules / Savant percentile heat). */
+  cellStyle?: (rowId: RowKey, columnId: ColumnKey) => Readonly<{ tone?: DataTableCellTone | null; heat?: DataTableCellHeat | null }> | null;
+  /** Heat base colors (any CSS color); default high = danger red, low = info blue (Savant). */
+  heatColors?: TableHeatColors;
+  /** Bounds the scroll box height in px; the header stays fixed while rows scroll. */
+  maxBodyHeight?: number;
   className?: string;
   /** Canonical layout-only placement on the root wrapper. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
@@ -66,9 +85,31 @@ function selectedRowKeysFrom<RowKey extends string>(
   return selection.selectedKeys ?? selection.defaultSelectedKeys ?? new Set<RowKey>();
 }
 
-/** Pinned columns need their own horizontal scroll box; unpinned tables keep the original DOM. */
-function TableScroll({ scroll, children }: Readonly<{ scroll: boolean; children: ReactNode }>) {
-  return scroll ? <div className="hjm-data-table__scroll">{children}</div> : <>{children}</>;
+/**
+ * Pinned columns and bounded heights need their own scroll box (sticky cells stick to it);
+ * other tables keep the original DOM.
+ */
+function TableScroll({ scroll, maxBodyHeight, children }: Readonly<{ scroll: boolean; maxBodyHeight?: number | undefined; children: ReactNode }>) {
+  if (!scroll && maxBodyHeight === undefined) return <>{children}</>;
+  return (
+    <div className="hjm-data-table__scroll" data-bounded={maxBodyHeight !== undefined || undefined} style={maxBodyHeight !== undefined ? { maxBlockSize: maxBodyHeight } : undefined}>
+      {children}
+    </div>
+  );
+}
+
+type BodySection<RowKey> = { group: Readonly<{ id: string; label: string }> | null; rows: RowKey[] };
+
+/** Splits the resolved body into `tbody` sections: loose rows first, then one per row group. */
+function bodySections<RowKey>(items: readonly DataTableBodyItem<RowKey & string>[]): BodySection<RowKey>[] {
+  const sections: BodySection<RowKey>[] = [];
+  for (const item of items) {
+    if (item.kind === "group") { sections.push({ group: { id: item.id, label: item.label }, rows: [] }); continue; }
+    if (sections.length === 0) sections.push({ group: null, rows: [] });
+    sections.at(-1)!.rows.push(item.id as RowKey);
+  }
+  // An empty table still renders one (empty) tbody, as before row groups existed.
+  return sections.length > 0 ? sections : [{ group: null, rows: [] }];
 }
 
 export const DataTable = forwardRef(function DataTable<
@@ -88,6 +129,11 @@ export const DataTable = forwardRef(function DataTable<
     density: densityProp,
     footer,
     summaryRow,
+    columnGroups,
+    rowGroups,
+    cellStyle,
+    heatColors,
+    maxBodyHeight,
     className,
     layoutStyle,
   }: DataTableProps<ColumnKey, RowKey>,
@@ -149,6 +195,10 @@ export const DataTable = forwardRef(function DataTable<
   const selectorSticky = hasSelector && pinnedCount > 0 ? stickyAt(0, false) : {};
   const columnSticky = (index: number) => index < pinnedCount ? stickyAt(index + (hasSelector ? 1 : 0), index === pinnedCount - 1) : {};
   const selectAllState = multiple ? resolveDataTableSelectAllState(rows, selectedKeys) : false;
+  const bands = useMemo(() => columnGroups && columnGroups.length > 0 ? resolveDataTableHeaderBands(columns, columnGroups) : null, [columns, columnGroups]);
+  const sections = useMemo(() => bodySections<RowKey>(resolveDataTableBody(rows, rowGroups ?? [])), [rows, rowGroups]);
+  const rowById = useMemo(() => new Map(rows.map((row) => [row.id, row])), [rows]);
+  const columnSpan = columns.length + (hasSelector ? 1 : 0);
 
   const toggleRow = (row: DataTableRowDescriptor<RowKey>) => {
     if (row.disabled || !selection || selection.mode === "none") return;
@@ -181,9 +231,23 @@ export const DataTable = forwardRef(function DataTable<
       {asyncState.status === "idle" ? null : (
         <p className="hjm-data-table__state" role={asyncState.status === "error" ? "alert" : "status"}>{asyncState.message}</p>
       )}
-      <TableScroll scroll={pinnedCount > 0}>
+      <TableScroll scroll={pinnedCount > 0} maxBodyHeight={maxBodyHeight}>
       <table ref={forwardedRef} className="hjm-data-table__table" aria-label={labels.table} aria-busy={asyncState.status === "loading" || undefined}>
         <thead>
+          {bands ? (
+            <tr className="hjm-data-table__bands">
+              {hasSelector ? <td aria-hidden="true" className={classNames("hjm-data-table__selector", selectorSticky.className)} style={selectorSticky.style} /> : null}
+              {bands.map((band) => {
+                const first = columns.findIndex((column) => column.id === band.columnIds[0]);
+                // A band sticks only when every column under it is pinned; otherwise it scrolls with them.
+                const sticky = first + band.span <= pinnedCount ? columnSticky(first + band.span - 1) : {};
+                const stickyStyle = sticky.style ? { insetInlineStart: pinnedOffsets[first + (hasSelector ? 1 : 0)] ?? 0 } : undefined;
+                return band.header === null
+                  ? <td key={band.id} aria-hidden="true" colSpan={band.span} className={sticky.className} style={stickyStyle} />
+                  : <th key={band.id} scope="colgroup" colSpan={band.span} className={classNames("hjm-data-table__band", sticky.className)} style={stickyStyle}><span>{band.header}</span></th>;
+              })}
+            </tr>
+          ) : null}
           <tr ref={headerRowRef}>
             {selection && selection.mode !== "none" ? (
               <th scope="col" className={classNames("hjm-data-table__selector", selectorSticky.className)} style={selectorSticky.style}>
@@ -231,8 +295,14 @@ export const DataTable = forwardRef(function DataTable<
             })}
           </tr>
         </thead>
-        <tbody>
-          {rows.map((row) => (
+        {sections.map((section) => (
+        <tbody key={section.group?.id ?? "rows"}>
+          {section.group ? (
+            <tr className="hjm-data-table__group">
+              <th scope="rowgroup" colSpan={columnSpan}><span>{section.group.label}</span></th>
+            </tr>
+          ) : null}
+          {section.rows.map((rowId) => rowById.get(rowId)!).map((row) => (
             <tr key={row.id} aria-selected={selection && selection.mode !== "none" ? selectedKeys.has(row.id) : undefined} data-disabled={row.disabled || undefined}>
               {selection && selection.mode !== "none" ? (
                 <td className={classNames("hjm-data-table__selector", selectorSticky.className)} style={selectorSticky.style}>
@@ -251,8 +321,23 @@ export const DataTable = forwardRef(function DataTable<
               ) : null}
               {columns.map((column, columnIndex) => {
                 const sticky = columnSticky(columnIndex);
+                const emphasis = tableCellEmphasis(cellStyle?.(row.id, column.id), heatColors);
+                // Sub-rows (TanStack `depth`) indent only the first column, which is the pinned one when pinning.
+                const depth = columnIndex === 0 ? row.depth ?? 0 : 0;
                 return (
-                  <td key={column.id} className={sticky.className} style={{ textAlign: column.align ?? dataTableColumnDefaults.align, ...sticky.style } as CSSProperties}>
+                  <td
+                    key={column.id}
+                    className={classNames(sticky.className, emphasis.heat && "hjm-table-family__heat")}
+                    data-tone={emphasis.tone}
+                    data-heat={emphasis.heat}
+                    data-depth={depth > 0 ? depth : undefined}
+                    style={{
+                      textAlign: column.align ?? dataTableColumnDefaults.align,
+                      ...emphasis.style,
+                      ...(depth > 0 ? { "--hjm-data-table-indent": `${depth * dataTableFamilyRecipe.depthIndent}px` } : {}),
+                      ...sticky.style,
+                    } as CSSProperties}
+                  >
                     {renderCell(row.id, column.id)}
                   </td>
                 );
@@ -260,6 +345,7 @@ export const DataTable = forwardRef(function DataTable<
             </tr>
           ))}
         </tbody>
+        ))}
         {summaryRow ? (
           <tfoot>
             <tr className="hjm-data-table__summary">
@@ -284,3 +370,13 @@ export const DataTable = forwardRef(function DataTable<
 }) as <ColumnKey extends string = string, RowKey extends string = string>(
   props: DataTableProps<ColumnKey, RowKey> & { ref?: React.Ref<HTMLTableElement> },
 ) => React.ReactElement | null;
+
+export {
+  LineScore,
+  MatrixTable,
+  ComparisonTable,
+  type LineScoreProps,
+  type MatrixTableProps,
+  type ComparisonTableProps,
+  type TableHeatColors,
+} from "./table-family.js";

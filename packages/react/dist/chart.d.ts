@@ -9,6 +9,8 @@ type FocusProps = Readonly<{
     focusIndex?: number | null;
     defaultFocusIndex?: number | null;
     onFocusChange?: (index: number | null, detail: FocusDetail) => void;
+    /** Keep the scrubbed point after release instead of returning to the default (Native parity, 2026-10-14). */
+    holdOnRelease?: boolean;
 }>;
 type ChartRootProps = Readonly<{
     className?: string;
@@ -46,8 +48,12 @@ export type LineChartProps = CartesianCommon & FocusProps & Readonly<{
     }>;
     /** Bubble text above the cursor while scrubbing; defaults to the category. */
     cursorLabel?: (index: number) => string;
+    /** Value labels only (rank charts: "1위" at the top). */
+    valueAxis?: boolean;
+    /** Overrides grid/label ticks. */
+    ticks?: readonly number[];
 }>;
-export declare function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, width: fallbackWidth, curve, area, stacked, invert, domain, includeZero, referenceValue, extremes, showAxis, cursorLabel, className, layoutStyle, ...focusProps }: LineChartProps): import("react").JSX.Element;
+export declare function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, width: fallbackWidth, curve, area, stacked, invert, domain, includeZero, referenceValue, extremes, showAxis, valueAxis, ticks: tickOverride, cursorLabel, className, layoutStyle, ...focusProps }: LineChartProps): import("react").JSX.Element;
 export type BarChartProps = CartesianCommon & FocusProps & Readonly<{
     orientation?: ChartOrientation;
     layout?: ChartBarLayout;

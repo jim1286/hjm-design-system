@@ -5,8 +5,8 @@
 - 지원: Web · Native
 - 적용: 1.12.1
 - 검토일: 2026-10-14
-- 근거: [DataTable](../../data-table.md), `src/data-table.ts`(`dataTableRecipe`, `getNextDataTableSortState`, `sortDataTableRows`, `splitPinnedDataTableColumns`)
-- 스토리북: `배포/컴포넌트/데이터 표시/데이터 표`
+- 근거: [DataTable](../../data-table.md), `src/data-table.ts`(`dataTableRecipe`, `getNextDataTableSortState`, `sortDataTableRows`, `splitPinnedDataTableColumns`, `resolveDataTableHeaderBands`, `resolveDataTableBody`, `percentileRank`, `percentileHeat`, `dataTableFamilyRecipe`, `resolveLineScore`, `resolveMatrix`, `resolveComparisonRow`)
+- 스토리북: `배포/컴포넌트/데이터 표시/데이터 표`, `배포/컴포넌트/데이터 표시/라인스코어`, `배포/컴포넌트/데이터 표시/대전표`, `배포/컴포넌트/데이터 표시/비교 표`
 
 ## 언제 쓰나
 
@@ -32,6 +32,9 @@ Native renderer(기록 표: 고정 열 + 가로 스크롤)는 2026-10-14 추가�
 | --- | --- | --- | --- |
 | `DataTable` | 기본 — 정렬·행 선택·비동기 상태를 갖는 표 | `@hjmds/react`, `/data-table` | `@hjmds/react-native/data-table` |
 | `Table` | 동반 — 행 객체와 `cell` 렌더러를 받는 단순 표 | `@hjmds/react`, `/display` | 없음 |
+| `LineScore` | 동반 — 회별 점수 + 합계 열(9회 채움·연장 확장·진행 중 회 강조) | `@hjmds/react/data-table` | `@hjmds/react-native/data-table` |
+| `MatrixTable` | 동반 — 같은 id 목록의 행×열 교차표(상대 전적), 대각선은 빈 칸 | `@hjmds/react/data-table` | `@hjmds/react-native/data-table` |
+| `ComparisonTable` | 동반 — 두 대상의 지표를 행마다 값 + 막대로 비교 | `@hjmds/react/data-table` | `@hjmds/react-native/data-table` |
 
 정렬 helper(`getNextDataTableSortState`·`dataTableFirstSortDirection`·`toDataTableSortValue`·`compareDataTableValues`·
 `sortDataTableRows`·`splitPinnedDataTableColumns`)는 `@hjmds/design-contracts/components/data-table`에서 가져온다.
@@ -119,6 +122,12 @@ const sorted = sortDataTableRows(players, sort, (player, columnId) => toDataTabl
 | `selectedRowId`(Native) | `RowKey \| null` | — | 강조할 행 하나. 미게시(1.20.0 이후) |
 | `emptyLabel`(Native) | `string` | — | 본문 상태 문구(제품 문구) |
 | `footer` | `ReactNode` | — | 표 아래 합성 영역 |
+| `columnGroups` | `{ id, header: string, columns: ColumnKey[] }[]` | — | 잎 머리글 위 묶음 머리글(타격 \| 주루). 묶음 열은 이어져야 하고, 묶이지 않은 열은 빈 칸. Web은 `scope="colgroup"`. 미게시(1.20.0 이후) |
+| `rowGroups` | `{ id, label: string, rows: RowKey[] }[]` | — | 행 묶음(선발 / 교체). 묶음마다 이름 행이 먼저 나오고, 묶이지 않은 행은 맨 앞. Web은 묶음마다 `tbody` + `scope="rowgroup"`. 미게시(1.20.0 이후) |
+| 행 `depth` | `0`–`3` | `0` | 하위 행 들여쓰기. 첫 열에 `dataTableFamilyRecipe.depthIndent`(16) × depth |
+| `cellStyle` | `(rowId, columnId) => { tone?, heat? } \| null` | — | 셀 강조. `tone`: `leader` · `positive` · `negative` · `muted`, `heat`: `{ side: "high" \| "low", strength: 1 \| 2 \| 3 }`(백분위 색). 판정은 제품(`percentileRank`·`percentileHeat`). 미게시(1.20.0 이후) |
+| `heatColors` | `{ high: string; low: string }` | 높음 `danger` 빨강 · 낮음 `info` 파랑 | heat 기준색. 칠할 때 `heatAlpha`(0.14·0.26·0.42)를 곱한다 |
+| `maxBodyHeight` | 양수 px | — | 높이 제한. 머리글은 고정되고 본문만 세로 스크롤 |
 | `layoutStyle` | 배치 전용 style(여백·폭·grid 위치) | — | 루트 wrapper에 붙는다. 시각 키는 받지 않는다 |
 
 ## 배치
@@ -128,7 +137,7 @@ const sorted = sortDataTableRows(players, sort, (player, columnId) => toDataTabl
 | 크기 | 본문 폭을 채운다(표 `inline-size: 100%`). 선택 열 폭 `control.minTouchTarget` 44, 정렬 버튼·체크 상자 터치 영역 44 | `packages/react/src/styles.css` `.hjm-data-table*`, `src/data-table.ts` |
 | 간격 | 루트 세로 간격 `spacing.sm` 12. 셀 여백(`dataTableRecipe.density`): `regular` 세로 `spacing.sm` 12 · 가로 `spacing.md` 16, `compact` 세로 `spacing.xs` 8 · 가로 `spacing.sm` 12. `footer` 간격 `spacing.sm` 12 | `packages/react/src/styles.css` |
 | 순서·정렬 | 위에서 [상태 메시지] → 표 → [footer]. 선택 열은 맨 앞. 숫자·금액 열은 `align: "end"`로 끝 정렬하고 머리 행 정렬도 열 `align`을 따른다. 셀은 위 정렬. `footer`는 한 줄 flex(`space-between`, 넘치면 줄바꿈)이며 요약을 앞에, [Pagination](pagination.md)을 끝에 둔다 | `packages/react/src/data-table.tsx` |
-| 고정·스크롤 | Web은 가로 스크롤 컨테이너를 그리지 않고 긴 글자를 줄바꿈한다. `pinned: "start"` 열은 `position: sticky`로 시작 쪽에 붙는다. Native는 고정 열을 제자리에 두고 나머지 열을 가로 `ScrollView`에 넣으며 스크롤 가장자리에 흐림을 둔다 | `packages/react/src/styles.css`, `react-native/src/data-table.tsx`, `splitPinnedDataTableColumns` |
+| 고정·스크롤 | `maxBodyHeight`를 주면 Web은 스크롤 상자(`max-block-size`, `overflow: auto`) 안에서 `thead`를 `sticky`로, Native는 머리글을 본문 밖에 두고 본문만 세로 `ScrollView`에 넣는다. 그 밖의 Web 표는 가로 스크롤 컨테이너를 그리지 않고 긴 글자를 줄바꿈한다. `pinned: "start"` 열은 `position: sticky`로 시작 쪽에 붙는다. Native는 고정 열을 제자리에 두고 나머지 열을 가로 `ScrollView`에 넣으며 스크롤 가장자리에 흐림을 둔다 | `packages/react/src/styles.css`, `react-native/src/data-table.tsx`, `splitPinnedDataTableColumns` |
 | 좁은 폭·큰 글자 | 열 비교가 목적인 기록 표는 열을 빼지 말고 이름 열을 `pinned: "start"`로 고정해 가로 스크롤로 보존한다. 행 하나가 하나의 항목이면 [List](list.md)로 바꾼다 | [계약](../../data-table.md#정렬-helper와-native-renderer--2026-10-14) |
 
 ```text
@@ -151,6 +160,9 @@ const sorted = sortDataTableRows(players, sort, (player, columnId) => toDataTabl
 - `sortDescFirst` 열은 제품이 `onSortChange` 밖에서 첫 상태를 만들 때도 `dataTableFirstSortDirection(column)`을 쓴다.
 - 페이지네이션·더 보기는 `footer`에 [Pagination](pagination.md)·[LoadMore](load-more.md)로 합성한다.
 - 배치는 `layoutStyle`, 시각 override는 `className`으로만 한다. 행 hover·선택 색을 덮지 않는다.
+- 백분위 색은 같은 열 안의 비교다. `percentileRank(value, 열 전체 값, { lowerIsBetter })`로 열마다 따로 구하고, 낮을수록 좋은
+  지표(평균자책·도루자)는 `lowerIsBetter`를 켠다. 색만으로 뜻을 전하지 않는다 — 셀 글자는 그대로 값이다.
+- `LineScore`·`MatrixTable`·`ComparisonTable`은 `accessibilityLabel`(Web은 `aria-label`)이 필수다. 문구는 i18n 키로 만든다.
 
 ## 플랫폼 차이
 
@@ -161,6 +173,10 @@ const sorted = sortDataTableRows(players, sort, (player, columnId) => toDataTabl
 | 요약 행 | `summaryRow` → `tfoot` | `summaryRow` → 본문 아래 행 |
 | 접근성 | `role="table"`, 머리 칸 안 정렬 버튼 + `aria-sort` | 정렬 머리 칸 `button`, 머리 행 `header`, 선택 행 `selected` |
 | companion | `Table` | 없음 |
+| 묶음 머리글·행 묶음 | 머리 행 하나 더(`colgroup`) · 묶음마다 `tbody` + `rowgroup` 머리 칸 | 머리 띠 · 묶음 이름 행(`header`) |
+| 높이 제한 | 스크롤 상자 + `thead` sticky | 머리글 분리 + 본문 세로 `ScrollView` |
+| `LineScore`·`MatrixTable` | `<table>`, 진행 중 회 머리 칸 `aria-current="true"`, 대각선 칸 `aria-hidden` | 팀 행마다 합계를 읽는 접근성 이름, 셀 단위 이름 |
+| `ComparisonTable` | `section` + `role="list"`, 행마다 화면 읽기 문장 하나 | 행마다 접근성 이름 하나 |
 
 ## 함정
 
@@ -176,3 +192,5 @@ const sorted = sortDataTableRows(players, sort, (player, columnId) => toDataTabl
 - `toDataTableSortValue`는 글자가 둘 이상이면 문자열로 본다. "7승0무3패"는 문자열 정렬이 되므로 승수로 정렬하려면
   `getValue`에서 숫자를 직접 돌려준다.
 - 2026-10-14 작성 시점에 Native renderer와 Native Storybook 등록은 구현 중이다. Native 행은 renderer가 들어온 뒤 실제 Props와 다시 대조한다.
+- `cellStyle`은 셀마다 호출된다. 백분위 표본(열 전체 값)은 함수 밖에서 한 번 만들어 두고 셀에서는 조회만 한다.
+- `columnGroups`의 묶음은 고정 열 경계를 넘지 않게 나눈다. Web은 묶음 안 열이 모두 고정일 때만 묶음 머리 칸도 고정된다.

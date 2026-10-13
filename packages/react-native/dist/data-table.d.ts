@@ -1,5 +1,5 @@
 import { type ReactNode } from "react";
-import { type DataTableAsyncState, type DataTableColumnDescriptor, type DataTableDensity, type DataTableRowDescriptor, type DataTableSortCycle, type DataTableSortState } from "@hjmds/design-contracts/components/data-table";
+import { type DataTableAsyncState, type DataTableCellHeat, type DataTableCellTone, type DataTableColumnDescriptor, type DataTableColumnGroup, type DataTableDensity, type DataTableRowDescriptor, type DataTableRowGroup, type DataTableSortCycle, type DataTableSortState } from "@hjmds/design-contracts/components/data-table";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type NativeDataTableLabels = Readonly<{
     /** Accessible name for the table. */
@@ -25,7 +25,24 @@ export type DataTableProps<ColumnKey extends string = string, RowKey extends str
     emptyLabel?: string;
     density?: DataTableDensity;
     footer?: ReactNode;
+    /** Header bands above leaf columns (타격 | 주루). */
+    columnGroups?: readonly DataTableColumnGroup<ColumnKey>[];
+    /** Labeled row sections (선발 / 교체). */
+    rowGroups?: readonly DataTableRowGroup<RowKey>[];
+    /** Per-cell emphasis decided by the product (AG Grid cellClassRules / Savant percentile heat). */
+    cellStyle?: (rowId: RowKey, columnId: ColumnKey) => Readonly<{
+        tone?: DataTableCellTone | null;
+        heat?: DataTableCellHeat | null;
+    }> | null;
+    /** Heat base colors; default high = danger red, low = info blue (Savant). */
+    heatColors?: Readonly<{
+        high: string;
+        low: string;
+    }>;
+    /** Bounds the body height; the header stays fixed while rows scroll (react-native-sticky-table). */
+    maxBodyHeight?: number;
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function DataTable<ColumnKey extends string = string, RowKey extends string = string>({ columns, rows, labels, renderCell, sortState, sortCycle, onSortChange, onRowPress, selectedRowId, summaryRow, asyncState, emptyLabel, density, footer, layoutStyle, }: DataTableProps<ColumnKey, RowKey>): import("react").JSX.Element;
+export declare function DataTable<ColumnKey extends string = string, RowKey extends string = string>({ columns, rows, labels, renderCell, sortState, sortCycle, onSortChange, onRowPress, selectedRowId, summaryRow, asyncState, emptyLabel, density, footer, layoutStyle, columnGroups, rowGroups, cellStyle, heatColors, maxBodyHeight, }: DataTableProps<ColumnKey, RowKey>): import("react").JSX.Element;
+export { LineScore, MatrixTable, ComparisonTable, type LineScoreProps, type MatrixTableProps, type ComparisonTableProps } from "./table-family.js";
 //# sourceMappingURL=data-table.d.ts.map

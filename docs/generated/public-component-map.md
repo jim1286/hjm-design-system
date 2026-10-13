@@ -4,7 +4,7 @@
 
 ## @hjmds/react
 
-고유 공개 컴포넌트 및 provider 이름 171개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 174개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -49,6 +49,7 @@
 | Combobox | Combobox | canonical | root, ./forms |
 | CommandPalette | CommandPalette | canonical | root, ./command-palette |
 | CommentThreadScreen | 별도 보조 기능 | supplemental | ./screen-flows |
+| ComparisonTable | DataTable | companion-or-alternative | ./data-table |
 | Container | Container | canonical | root, ./layout |
 | ContentTransition | 별도 보조 기능 | supplemental | ./content-transition |
 | ContextMenu | ContextMenu | canonical | root, ./context-menu |
@@ -83,12 +84,14 @@
 | InlineConfirm | Button | optional-extension | ./inline-confirm |
 | Layout | Layout | canonical | root, ./layout |
 | LineChart | Chart | companion-or-alternative | ./chart |
+| LineScore | DataTable | companion-or-alternative | ./data-table |
 | Link | Link | canonical | root, ./actions |
 | List | List | canonical | root, ./display |
 | ListDetailScreen | 별도 보조 기능 | supplemental | ./screen-flows |
 | ListRow | ListRow | canonical | root, ./display |
 | LoadMore | LoadMore | canonical | root, ./navigation |
 | Masonry | Masonry | canonical | ./masonry |
+| MatrixTable | DataTable | companion-or-alternative | ./data-table |
 | MediaSelectionScreen | 별도 보조 기능 | supplemental | ./screen-flows |
 | Mentions | Mentions | canonical | root, ./mentions |
 | Menu | Menu | canonical | root, ./overlays |
@@ -182,7 +185,7 @@
 
 ## @hjmds/react-native
 
-고유 공개 컴포넌트 및 provider 이름 158개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 161개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -220,6 +223,7 @@
 | CollectionRail | List | companion-or-alternative | ./collection-rail |
 | Combobox | Combobox | canonical | root, ./forms |
 | CommentThreadScreen | 별도 보조 기능 | supplemental | ./screen-flows |
+| ComparisonTable | DataTable | companion-or-alternative | ./data-table |
 | Container | Container | canonical | root, ./primitives |
 | ContentTransition | 별도 보조 기능 | supplemental | ./content-transition |
 | CounterBadge | CounterBadge | canonical | root, ./data-display |
@@ -261,12 +265,14 @@
 | KeyboardMotionProvider | 별도 보조 기능 | supplemental | ./keyboard-controller |
 | Layout | Layout | canonical | root, ./primitives |
 | LineChart | Chart | companion-or-alternative | ./chart |
+| LineScore | DataTable | companion-or-alternative | ./data-table |
 | Link | Link | canonical | root, ./actions, ./bottom-cta |
 | List | List | canonical | root, ./data-display |
 | ListDetailScreen | 별도 보조 기능 | supplemental | ./screen-flows |
 | ListRow | ListRow | canonical | root, ./data-display |
 | LoadMore | LoadMore | canonical | root, ./navigation, ./top-bar |
 | Masonry | Masonry | canonical | ./masonry |
+| MatrixTable | DataTable | companion-or-alternative | ./data-table |
 | MediaSelectionScreen | 별도 보조 기능 | supplemental | ./screen-flows |
 | Mentions | Mentions | canonical | root, ./mentions |
 | Menu | Menu | canonical | root, ./navigation, ./top-bar |

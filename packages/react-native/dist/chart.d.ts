@@ -6,6 +6,11 @@ type FocusProps = Readonly<{
     onFocusChange?: (index: number | null, detail: Readonly<{
         scrubbing: boolean;
     }>) => void;
+    /**
+     * Keep the scrubbed point selected after the finger lifts (2026-10-14, Yajalal QA: snapping back to
+     * the latest point on release read as the chart "moving by itself"). Default false = wagmi-style reset.
+     */
+    holdOnRelease?: boolean;
 }>;
 export type LineChartProps = Readonly<{
     categories: readonly string[];
@@ -26,9 +31,13 @@ export type LineChartProps = Readonly<{
         low: string;
     }>;
     showAxis?: boolean;
+    /** Value labels only (no category labels), e.g. rank charts that must show "1위" at the top. */
+    valueAxis?: boolean;
+    /** Overrides grid/label ticks (rank charts: [1, 5, 10]). */
+    ticks?: readonly number[];
     cursorLabel?: (index: number) => string;
 } & FocusProps>;
-export declare function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, curve, area, stacked, invert, domain, includeZero, referenceValue, extremes, showAxis, cursorLabel, ...focusProps }: LineChartProps): import("react").JSX.Element;
+export declare function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, curve, area, stacked, invert, domain, includeZero, referenceValue, extremes, showAxis, valueAxis, ticks: tickOverride, cursorLabel, ...focusProps }: LineChartProps): import("react").JSX.Element;
 export type BarChartProps = Readonly<{
     categories: readonly string[];
     series: readonly ChartSeries[];

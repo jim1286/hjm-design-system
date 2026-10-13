@@ -69,14 +69,17 @@ function useMeasuredWidth(fallback) {
     return [setNode, width];
 }
 /** Controlled/uncontrolled focus plus a transient scrub index (same model as the Native renderer). */
-function useFocus({ focusIndex, defaultFocusIndex = null, onFocusChange }, fallback) {
+function useFocus({ focusIndex, defaultFocusIndex = null, onFocusChange, holdOnRelease = false }, fallback) {
     const [own, setOwn] = useState(defaultFocusIndex);
     const [scrub, setScrub] = useState(null);
+    const last = useRef(null);
     const settled = focusIndex !== undefined ? focusIndex : own;
     const focus = scrub ?? settled ?? fallback;
     const set = useCallback((index, scrubbing) => {
-        if (scrubbing)
+        if (scrubbing) {
             setScrub(index);
+            last.current = index;
+        }
         else {
             setScrub(null);
             if (focusIndex === undefined)
@@ -84,7 +87,8 @@ function useFocus({ focusIndex, defaultFocusIndex = null, onFocusChange }, fallb
         }
         onFocusChange?.(index, { scrubbing });
     }, [focusIndex, onFocusChange]);
-    return { focus, scrubbing: scrub !== null, set };
+    const release = useCallback(() => set(holdOnRelease ? last.current : null, false), [set, holdOnRelease]);
+    return { focus, scrubbing: scrub !== null, set, release };
 }
 /** Press-and-drag; the pointer is captured so a drag that leaves the plot keeps scrubbing. */
 function useScrub(pick, onScrub, onEnd) {
@@ -141,19 +145,19 @@ function CursorBubble({ x, width, text }) {
     const half = 44, center = Math.min(width - half, Math.max(half, x));
     return _jsx("span", { className: "hjm-chart__bubble", "aria-hidden": "true", style: { left: center }, children: text });
 }
-export function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height = chartRecipe.heights.regular, width: fallbackWidth = 320, curve = "linear", area, stacked = false, invert = false, domain, includeZero, referenceValue, extremes, showAxis = false, cursorLabel, className, layoutStyle, ...focusProps }) {
+export function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height = chartRecipe.heights.regular, width: fallbackWidth = 320, curve = "linear", area, stacked = false, invert = false, domain, includeZero, referenceValue, extremes, showAxis = false, valueAxis = false, ticks: tickOverride, cursorLabel, className, layoutStyle, ...focusProps }) {
     validateChartSeries(categories, series);
     const colorOf = useSeriesColor(), id = useSvgId(), descriptionId = `${id}-description`;
     const [measure, width] = useMeasuredWidth(fallbackWidth);
     const available = useMemo(() => observedIndices(series), [series]);
-    const { focus, scrubbing, set } = useFocus(focusProps, available.at(-1) ?? null);
-    const insets = showAxis ? chartRecipe.insets.axis : chartRecipe.insets.plot;
+    const { focus, scrubbing, set, release } = useFocus(focusProps, available.at(-1) ?? null);
+    const insets = showAxis || valueAxis ? chartRecipe.insets.axis : chartRecipe.insets.plot;
     const g = useMemo(() => resolveLineGeometry({
         categories, series, width, height, insets, invert, stacked,
         ...(domain ? { domain } : {}), ...(includeZero === undefined ? {} : { includeZero }),
     }), [categories, series, width, height, insets, invert, stacked, domain, includeZero]);
-    // Release returns to the default (latest) focus, like brokerage quote charts.
-    const handlers = useScrub((x) => nearestChartIndex(g.xs, x, available), (index) => set(index, true), () => set(null, false));
+    // Release returns to the default (latest) focus unless holdOnRelease keeps the scrubbed point.
+    const handlers = useScrub((x) => nearestChartIndex(g.xs, x, available), (index) => set(index, true), release);
     const showArea = area ?? series.length === 1;
     const reference = referenceValue === "first" ? series[0]?.values.find(isChartNumber) : referenceValue;
     const marks = extremes && !scrubbing ? seriesExtremes(series[0]?.values ?? []) : null;
@@ -164,7 +168,7 @@ export function LineChart({ categories, series, accessibilityLabel, formatValue,
         event.preventDefault();
         set(next, false);
     };
-    return (_jsxs("div", { ref: measure, className: classNames("hjm-chart", "hjm-chart--line", className), style: { ...chromeStyle, ...layoutStyle }, "data-scrubbing": scrubbing || undefined, children: [_jsxs("div", { className: "hjm-chart__plot", role: "slider", tabIndex: 0, "aria-label": accessibilityLabel, "aria-describedby": descriptionId, "aria-valuemin": 0, "aria-valuemax": Math.max(0, categories.length - 1), "aria-valuenow": focus ?? 0, "aria-valuetext": focus === null ? missingLabel : valueText(categories, series, focus, formatValue, missingLabel), style: { blockSize: height }, onKeyDown: onKeyDown, ...handlers, children: [_jsxs("svg", { width: width, height: height, viewBox: `0 0 ${width} ${height}`, "aria-hidden": "true", focusable: "false", children: [_jsx("defs", { children: series.map((item, s) => (_jsxs("linearGradient", { id: `${id}-area-${s}`, x1: "0", y1: "0", x2: "0", y2: "1", children: [_jsx("stop", { offset: "0", stopColor: colorOf(item, s), stopOpacity: chartRecipe.area.topOpacity }), _jsx("stop", { offset: "1", stopColor: colorOf(item, s), stopOpacity: chartRecipe.area.bottomOpacity })] }, item.id))) }), g.ticks.map((tick) => _jsx("line", { className: "hjm-chart__grid", x1: g.plot.left, x2: g.plot.right, y1: g.y(tick), y2: g.y(tick) }, tick)), showAxis ? g.ticks.map((tick) => _jsx("text", { className: "hjm-chart__label", x: g.plot.left - 6, y: g.y(tick), dominantBaseline: "middle", textAnchor: "end", children: formatValue(tick) }, `t${tick}`)) : null, isChartNumber(reference) ? (_jsx("line", { className: "hjm-chart__reference", x1: g.plot.left, x2: g.plot.right, y1: g.y(reference), y2: g.y(reference), strokeDasharray: chartRecipe.reference.dash.join(" ") })) : null, series.map((item, s) => {
+    return (_jsxs("div", { ref: measure, className: classNames("hjm-chart", "hjm-chart--line", className), style: { ...chromeStyle, ...layoutStyle }, "data-scrubbing": scrubbing || undefined, children: [_jsxs("div", { className: "hjm-chart__plot", role: "slider", tabIndex: 0, "aria-label": accessibilityLabel, "aria-describedby": descriptionId, "aria-valuemin": 0, "aria-valuemax": Math.max(0, categories.length - 1), "aria-valuenow": focus ?? 0, "aria-valuetext": focus === null ? missingLabel : valueText(categories, series, focus, formatValue, missingLabel), style: { blockSize: height }, onKeyDown: onKeyDown, ...handlers, children: [_jsxs("svg", { width: width, height: height, viewBox: `0 0 ${width} ${height}`, "aria-hidden": "true", focusable: "false", children: [_jsx("defs", { children: series.map((item, s) => (_jsxs("linearGradient", { id: `${id}-area-${s}`, x1: "0", y1: "0", x2: "0", y2: "1", children: [_jsx("stop", { offset: "0", stopColor: colorOf(item, s), stopOpacity: chartRecipe.area.topOpacity }), _jsx("stop", { offset: "1", stopColor: colorOf(item, s), stopOpacity: chartRecipe.area.bottomOpacity })] }, item.id))) }), (tickOverride ?? g.ticks).map((tick) => _jsx("line", { className: "hjm-chart__grid", x1: g.plot.left, x2: g.plot.right, y1: g.y(tick), y2: g.y(tick) }, tick)), showAxis || valueAxis ? (tickOverride ?? g.ticks).map((tick) => _jsx("text", { className: "hjm-chart__label", x: g.plot.left - 6, y: g.y(tick), dominantBaseline: "middle", textAnchor: "end", children: formatValue(tick) }, `t${tick}`)) : null, isChartNumber(reference) ? (_jsx("line", { className: "hjm-chart__reference", x1: g.plot.left, x2: g.plot.right, y1: g.y(reference), y2: g.y(reference), strokeDasharray: chartRecipe.reference.dash.join(" ") })) : null, series.map((item, s) => {
                                 const color = colorOf(item, s), segments = splitSegments(g.plots[s]);
                                 const lower = g.lower?.[s];
                                 return (_jsxs("g", { "data-series": item.id, children: [showArea || stacked ? segments.map((segment, i) => (_jsx("path", { className: "hjm-chart__area", d: areaPath(segment, g.plot.bottom, curve, lower ? segment.map((p) => lower[p.index]) : undefined), fill: `url(#${id}-area-${s})` }, `a${i}`))) : null, segments.map((segment, i) => (_jsx("path", { className: "hjm-chart__line", d: linePath(segment, curve), stroke: color, strokeWidth: chartRecipe.line.strokeWidth, fill: "none", strokeLinejoin: "round", strokeLinecap: "round" }, `l${i}`))), segments.filter((segment) => segment.length === 1).map((segment) => (_jsx("circle", { cx: segment[0].x, cy: segment[0].y, r: 3, fill: color }, `d${segment[0].index}`)))] }, item.id));

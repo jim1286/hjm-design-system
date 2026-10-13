@@ -27,14 +27,17 @@ function useWidth(initial = 0) {
     return [width, useCallback((event) => setWidth(Math.round(event.nativeEvent.layout.width)), [])];
 }
 /** Controlled/uncontrolled focus with a separate transient scrub index. */
-function useFocus({ focusIndex, defaultFocusIndex = null, onFocusChange }, fallback) {
+function useFocus({ focusIndex, defaultFocusIndex = null, onFocusChange, holdOnRelease = false }, fallback) {
     const [own, setOwn] = useState(defaultFocusIndex);
     const [scrub, setScrub] = useState(null);
+    const last = useRef(null);
     const settled = focusIndex !== undefined ? focusIndex : own;
     const focus = scrub ?? settled ?? fallback;
     const set = useCallback((index, scrubbing) => {
-        if (scrubbing)
+        if (scrubbing) {
             setScrub(index);
+            last.current = index;
+        }
         else {
             setScrub(null);
             if (focusIndex === undefined)
@@ -42,7 +45,8 @@ function useFocus({ focusIndex, defaultFocusIndex = null, onFocusChange }, fallb
         }
         onFocusChange?.(index, { scrubbing });
     }, [focusIndex, onFocusChange]);
-    return { focus, scrubbing: scrub !== null, set };
+    const release = useCallback(() => set(holdOnRelease ? last.current : null, false), [set, holdOnRelease]);
+    return { focus, scrubbing: scrub !== null, set, release };
 }
 /**
  * Horizontal press-and-drag scrubbing. Vertical drags are released to the parent ScrollView so a
@@ -75,24 +79,27 @@ function CursorBubble({ x, width, text, surface, color }) {
 function AxisLabels({ ticks, y, x, color, format }) {
     return _jsx(_Fragment, { children: ticks.map(tick => _jsx(SvgText, { x: x, y: y(tick) + 4, fontSize: 10, fill: color, textAnchor: "end", children: format(tick) }, tick)) });
 }
-export function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height = chartRecipe.heights.regular, curve = "linear", area, stacked = false, invert = false, domain, includeZero, referenceValue, extremes, showAxis = false, cursorLabel, ...focusProps }) {
+export function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height = chartRecipe.heights.regular, curve = "linear", area, stacked = false, invert = false, domain, includeZero, referenceValue, extremes, showAxis = false, valueAxis = false, ticks: tickOverride, cursorLabel, ...focusProps }) {
     const palette = useChartPalette(), id = useId().replace(/[^a-zA-Z0-9]/g, "");
     const [width, onLayout] = useWidth();
     const available = useMemo(() => observedIndices(series), [series]);
-    const { focus, scrubbing, set } = useFocus(focusProps, available.at(-1) ?? null);
-    const insets = showAxis ? chartRecipe.insets.axis : chartRecipe.insets.plot;
+    const { focus, scrubbing, set, release } = useFocus(focusProps, available.at(-1) ?? null);
+    const insets = showAxis || valueAxis ? chartRecipe.insets.axis : chartRecipe.insets.plot;
     const g = useMemo(() => width > 0 ? resolveLineGeometry({ categories, series, width, height, insets, invert, stacked, domain, includeZero }) : null, [categories, series, width, height, insets, invert, stacked, domain, includeZero]);
-    const handlers = useScrub(x => g ? nearestChartIndex(g.xs, x, available) : null, index => set(index, true), () => set(null, false));
+    const handlers = useScrub(x => g ? nearestChartIndex(g.xs, x, available) : null, index => set(index, true), release);
     const showArea = area ?? series.length === 1;
     const reference = referenceValue === "first" ? series[0]?.values.find(isChartNumber) : referenceValue;
     const marks = extremes && !scrubbing ? seriesExtremes(series[0]?.values ?? []) : null;
-    return _jsxs(View, { accessible: true, accessibilityRole: "adjustable", accessibilityLabel: accessibilityLabel, accessibilityHint: describeChart(categories, series, formatValue, missingLabel), accessibilityValue: { text: focus === null ? missingLabel : `${categories[focus]} ${series.map(item => { const v = item.values[focus]; return isChartNumber(v) ? formatValue(v) : missingLabel; }).join(", ")}` }, accessibilityActions: [{ name: "increment" }, { name: "decrement" }], onAccessibilityAction: event => set(stepChartIndex(available, focus, event.nativeEvent.actionName === "increment" ? 1 : -1), false), onLayout: onLayout, style: { height }, ...handlers, children: [g && _jsxs(Svg, { width: width, height: height, accessible: false, children: [_jsx(Defs, { children: series.map((item, s) => _jsxs(LinearGradient, { id: `hjmArea${id}${s}`, x1: "0", y1: "0", x2: "0", y2: "1", children: [_jsx(Stop, { offset: "0", stopColor: palette.seriesColor(item, s), stopOpacity: chartRecipe.area.topOpacity }), _jsx(Stop, { offset: "1", stopColor: palette.seriesColor(item, s), stopOpacity: chartRecipe.area.bottomOpacity })] }, item.id)) }), g.ticks.map(tick => _jsx(Line, { x1: g.plot.left, x2: g.plot.right, y1: g.y(tick), y2: g.y(tick), stroke: palette.grid, strokeWidth: chartRecipe.chrome.gridWidth }, tick)), showAxis && _jsx(AxisLabels, { ticks: g.ticks, y: g.y, x: g.plot.left - 6, color: palette.label, format: formatValue }), isChartNumber(reference) && _jsx(Line, { x1: g.plot.left, x2: g.plot.right, y1: g.y(reference), y2: g.y(reference), stroke: palette.label, strokeDasharray: [...chartRecipe.reference.dash], strokeWidth: 1 }), series.map((item, s) => {
+    return _jsxs(View, { accessible: true, accessibilityRole: "adjustable", accessibilityLabel: accessibilityLabel, accessibilityHint: describeChart(categories, series, formatValue, missingLabel), accessibilityValue: { text: focus === null ? missingLabel : `${categories[focus]} ${series.map(item => { const v = item.values[focus]; return isChartNumber(v) ? formatValue(v) : missingLabel; }).join(", ")}` }, accessibilityActions: [{ name: "increment" }, { name: "decrement" }], onAccessibilityAction: event => set(stepChartIndex(available, focus, event.nativeEvent.actionName === "increment" ? 1 : -1), false), onLayout: onLayout, style: { height }, ...handlers, children: [g && _jsxs(Svg, { width: width, height: height, accessible: false, children: [_jsx(Defs, { children: series.map((item, s) => _jsxs(LinearGradient, { id: `hjmArea${id}${s}`, x1: "0", y1: "0", x2: "0", y2: "1", children: [_jsx(Stop, { offset: "0", stopColor: palette.seriesColor(item, s), stopOpacity: chartRecipe.area.topOpacity }), _jsx(Stop, { offset: "1", stopColor: palette.seriesColor(item, s), stopOpacity: chartRecipe.area.bottomOpacity })] }, item.id)) }), (tickOverride ?? g.ticks).map(tick => _jsx(Line, { x1: g.plot.left, x2: g.plot.right, y1: g.y(tick), y2: g.y(tick), stroke: palette.grid, strokeWidth: chartRecipe.chrome.gridWidth }, tick)), (showAxis || valueAxis) && _jsx(AxisLabels, { ticks: tickOverride ?? g.ticks, y: g.y, x: g.plot.left - 6, color: palette.label, format: formatValue }), isChartNumber(reference) && _jsx(Line, { x1: g.plot.left, x2: g.plot.right, y1: g.y(reference), y2: g.y(reference), stroke: palette.label, strokeDasharray: [...chartRecipe.reference.dash], strokeWidth: 1 }), series.map((item, s) => {
                         const color = palette.seriesColor(item, s), segments = splitSegments(g.plots[s]);
                         const lowerSegments = g.lower ? splitSegments(g.lower[s]) : null;
                         return _jsxs(G, { children: [(showArea || stacked) && segments.map((segment, i) => _jsx(Path, { d: areaPath(segment, g.plot.bottom, curve, lowerSegments?.[i]), fill: `url(#hjmArea${id}${s})` }, `a${i}`)), segments.map((segment, i) => _jsx(Path, { d: linePath(segment, curve), stroke: color, strokeWidth: chartRecipe.line.strokeWidth, fill: "none", strokeLinejoin: "round", strokeLinecap: "round" }, `l${i}`)), segments.filter(segment => segment.length === 1).map(segment => _jsx(Circle, { cx: segment[0].x, cy: segment[0].y, r: 3, fill: color }, `d${segment[0].index}`))] }, item.id);
-                    }), focus !== null && _jsxs(_Fragment, { children: [_jsx(Line, { x1: g.xs[focus], x2: g.xs[focus], y1: g.plot.top - 4, y2: g.plot.bottom, stroke: palette.label, strokeWidth: chartRecipe.cursor.strokeWidth, ...(scrubbing ? {} : { strokeDasharray: [...chartRecipe.cursor.dash] }) }), series.map((item, s) => { const p = g.plots[s][focus]; const color = palette.seriesColor(item, s); return p ? _jsxs(G, { children: [_jsx(Circle, { cx: p.x, cy: p.y, r: chartRecipe.line.focusHaloRadius, fill: color, opacity: chartRecipe.line.focusHaloOpacity }), _jsx(Circle, { cx: p.x, cy: p.y, r: chartRecipe.line.pointRadius, fill: color, stroke: palette.background, strokeWidth: 2 })] }, item.id) : null; })] }), marks && extremes && [[marks.max, extremes.high, -10], [marks.min, extremes.low, 16]].filter(([index], i) => i === 0 || index !== marks.max).map(([index, label, dy]) => {
+                    }), focus !== null && _jsxs(_Fragment, { children: [_jsx(Line, { x1: g.xs[focus], x2: g.xs[focus], y1: g.plot.top - 4, y2: g.plot.bottom, stroke: palette.label, strokeWidth: chartRecipe.cursor.strokeWidth, ...(scrubbing ? {} : { strokeDasharray: [...chartRecipe.cursor.dash] }) }), series.map((item, s) => { const p = g.plots[s][focus]; const color = palette.seriesColor(item, s); return p ? _jsxs(G, { children: [_jsx(Circle, { cx: p.x, cy: p.y, r: chartRecipe.line.focusHaloRadius, fill: color, opacity: chartRecipe.line.focusHaloOpacity }), _jsx(Circle, { cx: p.x, cy: p.y, r: chartRecipe.line.pointRadius, fill: color, stroke: palette.background, strokeWidth: 2 })] }, item.id) : null; })] }), marks && extremes && [[marks.max, extremes.high], [marks.min, extremes.low]].filter(([index], i) => i === 0 || index !== marks.max).map(([index, label]) => {
                         const p = g.plots[0][index];
-                        return p ? _jsx(SvgText, { x: Math.min(g.plot.right - 4, Math.max(g.plot.left + 4, p.x)), y: Math.max(10, Math.min(height - 2, p.y + dy)), fontSize: 11, fontWeight: "600", fill: palette.label, textAnchor: p.x < width * 0.2 ? "start" : p.x > width * 0.8 ? "end" : "middle", children: `${label} ${formatValue(p.value)}` }, label) : null;
+                        // Place the label on the open side of the point: above when it sits in the upper half of the
+                        // plot, below otherwise, so inverted (rank) series never draw text across their own line.
+                        const above = p ? p.y < (g.plot.top + g.plot.bottom) / 2 : true;
+                        return p ? _jsx(SvgText, { x: Math.min(g.plot.right - 4, Math.max(g.plot.left + 4, p.x)), y: Math.max(10, Math.min(height - 2, p.y + (above ? -10 : 16))), fontSize: 11, fontWeight: "600", fill: palette.label, textAnchor: p.x < width * 0.2 ? "start" : p.x > width * 0.8 ? "end" : "middle", children: `${label} ${formatValue(p.value)}` }, label) : null;
                     }), showAxis && categories.length > 0 && _jsxs(_Fragment, { children: [_jsx(SvgText, { x: g.xs[0], y: height - 4, fontSize: 10, fill: palette.label, textAnchor: "start", children: categories[0] }), _jsx(SvgText, { x: g.xs.at(-1), y: height - 4, fontSize: 10, fill: palette.label, textAnchor: "end", children: categories.at(-1) })] })] }), g && scrubbing && focus !== null && _jsx(CursorBubble, { x: g.xs[focus], width: width, text: cursorLabel?.(focus) ?? categories[focus], surface: palette.surface, color: palette.legend })] });
 }
 export function BarChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, orientation = "vertical", layout = "grouped", domain, showAxis = false, showValues = false, ...focusProps }) {

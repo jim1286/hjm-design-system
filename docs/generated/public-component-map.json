@@ -401,6 +401,15 @@
         "role": "supplemental"
       },
       {
+        "name": "ComparisonTable",
+        "source": "packages/react/src/table-family.tsx",
+        "entries": [
+          "./data-table"
+        ],
+        "canonicalComponent": "DataTable",
+        "role": "companion-or-alternative"
+      },
+      {
         "name": "Container",
         "source": "packages/react/src/layout.tsx",
         "entries": [
@@ -730,6 +739,15 @@
         "role": "companion-or-alternative"
       },
       {
+        "name": "LineScore",
+        "source": "packages/react/src/table-family.tsx",
+        "entries": [
+          "./data-table"
+        ],
+        "canonicalComponent": "DataTable",
+        "role": "companion-or-alternative"
+      },
+      {
         "name": "Link",
         "source": "packages/react/src/actions.tsx",
         "entries": [
@@ -786,6 +804,15 @@
         ],
         "canonicalComponent": "Masonry",
         "role": "canonical"
+      },
+      {
+        "name": "MatrixTable",
+        "source": "packages/react/src/table-family.tsx",
+        "entries": [
+          "./data-table"
+        ],
+        "canonicalComponent": "DataTable",
+        "role": "companion-or-alternative"
       },
       {
         "name": "MediaSelectionScreen",
@@ -1994,6 +2021,15 @@
         "role": "supplemental"
       },
       {
+        "name": "ComparisonTable",
+        "source": "packages/react-native/src/table-family.tsx",
+        "entries": [
+          "./data-table"
+        ],
+        "canonicalComponent": "DataTable",
+        "role": "companion-or-alternative"
+      },
+      {
         "name": "Container",
         "source": "packages/react-native/src/primitives.tsx",
         "entries": [
@@ -2386,6 +2422,15 @@
         "role": "companion-or-alternative"
       },
       {
+        "name": "LineScore",
+        "source": "packages/react-native/src/table-family.tsx",
+        "entries": [
+          "./data-table"
+        ],
+        "canonicalComponent": "DataTable",
+        "role": "companion-or-alternative"
+      },
+      {
         "name": "Link",
         "source": "packages/react-native/src/actions.tsx",
         "entries": [
@@ -2444,6 +2489,15 @@
         ],
         "canonicalComponent": "Masonry",
         "role": "canonical"
+      },
+      {
+        "name": "MatrixTable",
+        "source": "packages/react-native/src/table-family.tsx",
+        "entries": [
+          "./data-table"
+        ],
+        "canonicalComponent": "DataTable",
+        "role": "companion-or-alternative"
       },
       {
         "name": "MediaSelectionScreen",

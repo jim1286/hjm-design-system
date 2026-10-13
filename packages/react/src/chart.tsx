@@ -119,20 +119,24 @@ type FocusProps = Readonly<{
   focusIndex?: number | null;
   defaultFocusIndex?: number | null;
   onFocusChange?: (index: number | null, detail: FocusDetail) => void;
+  /** Keep the scrubbed point after release instead of returning to the default (Native parity, 2026-10-14). */
+  holdOnRelease?: boolean;
 }>;
 
 /** Controlled/uncontrolled focus plus a transient scrub index (same model as the Native renderer). */
-function useFocus({ focusIndex, defaultFocusIndex = null, onFocusChange }: FocusProps, fallback: number | null) {
+function useFocus({ focusIndex, defaultFocusIndex = null, onFocusChange, holdOnRelease = false }: FocusProps, fallback: number | null) {
   const [own, setOwn] = useState<number | null>(defaultFocusIndex);
   const [scrub, setScrub] = useState<number | null>(null);
+  const last = useRef<number | null>(null);
   const settled = focusIndex !== undefined ? focusIndex : own;
   const focus = scrub ?? settled ?? fallback;
   const set = useCallback((index: number | null, scrubbing: boolean) => {
-    if (scrubbing) setScrub(index);
+    if (scrubbing) { setScrub(index); last.current = index; }
     else { setScrub(null); if (focusIndex === undefined) setOwn(index); }
     onFocusChange?.(index, { scrubbing });
   }, [focusIndex, onFocusChange]);
-  return { focus, scrubbing: scrub !== null, set };
+  const release = useCallback(() => set(holdOnRelease ? last.current : null, false), [set, holdOnRelease]);
+  return { focus, scrubbing: scrub !== null, set, release };
 }
 
 /** Press-and-drag; the pointer is captured so a drag that leaves the plot keeps scrubbing. */
@@ -225,25 +229,29 @@ export type LineChartProps = CartesianCommon & FocusProps & Readonly<{
   extremes?: Readonly<{ high: string; low: string }>;
   /** Bubble text above the cursor while scrubbing; defaults to the category. */
   cursorLabel?: (index: number) => string;
+  /** Value labels only (rank charts: "1위" at the top). */
+  valueAxis?: boolean;
+  /** Overrides grid/label ticks. */
+  ticks?: readonly number[];
 }>;
 
 export function LineChart({
   categories, series, accessibilityLabel, formatValue, missingLabel, height = chartRecipe.heights.regular, width: fallbackWidth = 320,
   curve = "linear", area, stacked = false, invert = false, domain, includeZero, referenceValue, extremes, showAxis = false,
-  cursorLabel, className, layoutStyle, ...focusProps
+  valueAxis = false, ticks: tickOverride, cursorLabel, className, layoutStyle, ...focusProps
 }: LineChartProps) {
   validateChartSeries(categories, series);
   const colorOf = useSeriesColor(), id = useSvgId(), descriptionId = `${id}-description`;
   const [measure, width] = useMeasuredWidth(fallbackWidth);
   const available = useMemo(() => observedIndices(series), [series]);
-  const { focus, scrubbing, set } = useFocus(focusProps, available.at(-1) ?? null);
-  const insets = showAxis ? chartRecipe.insets.axis : chartRecipe.insets.plot;
+  const { focus, scrubbing, set, release } = useFocus(focusProps, available.at(-1) ?? null);
+  const insets = showAxis || valueAxis ? chartRecipe.insets.axis : chartRecipe.insets.plot;
   const g = useMemo(() => resolveLineGeometry({
     categories, series, width, height, insets, invert, stacked,
     ...(domain ? { domain } : {}), ...(includeZero === undefined ? {} : { includeZero }),
   }), [categories, series, width, height, insets, invert, stacked, domain, includeZero]);
-  // Release returns to the default (latest) focus, like brokerage quote charts.
-  const handlers = useScrub((x) => nearestChartIndex(g.xs, x, available), (index) => set(index, true), () => set(null, false));
+  // Release returns to the default (latest) focus unless holdOnRelease keeps the scrubbed point.
+  const handlers = useScrub((x) => nearestChartIndex(g.xs, x, available), (index) => set(index, true), release);
   const showArea = area ?? series.length === 1;
   const reference = referenceValue === "first" ? series[0]?.values.find(isChartNumber) : referenceValue;
   const marks = extremes && !scrubbing ? seriesExtremes(series[0]?.values ?? []) : null;
@@ -278,8 +286,8 @@ export function LineChart({
               </linearGradient>
             ))}
           </defs>
-          {g.ticks.map((tick) => <line key={tick} className="hjm-chart__grid" x1={g.plot.left} x2={g.plot.right} y1={g.y(tick)} y2={g.y(tick)} />)}
-          {showAxis ? g.ticks.map((tick) => <text key={`t${tick}`} className="hjm-chart__label" x={g.plot.left - 6} y={g.y(tick)} dominantBaseline="middle" textAnchor="end">{formatValue(tick)}</text>) : null}
+          {(tickOverride ?? g.ticks).map((tick) => <line key={tick} className="hjm-chart__grid" x1={g.plot.left} x2={g.plot.right} y1={g.y(tick)} y2={g.y(tick)} />)}
+          {showAxis || valueAxis ? (tickOverride ?? g.ticks).map((tick) => <text key={`t${tick}`} className="hjm-chart__label" x={g.plot.left - 6} y={g.y(tick)} dominantBaseline="middle" textAnchor="end">{formatValue(tick)}</text>) : null}
           {isChartNumber(reference) ? (
             <line className="hjm-chart__reference" x1={g.plot.left} x2={g.plot.right} y1={g.y(reference)} y2={g.y(reference)} strokeDasharray={chartRecipe.reference.dash.join(" ")} />
           ) : null}

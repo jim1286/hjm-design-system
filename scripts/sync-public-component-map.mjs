@@ -22,6 +22,9 @@ const companions = {
   // alternative), so they are companions of one catalog row rather than seven new rows (docs/chart.md).
   LineChart: "Chart", BarChart: "Chart", PieChart: "Chart", RadarChart: "Chart", ScatterChart: "Chart",
   Sparkline: "Chart", ChartLegend: "Chart",
+  // 2026-10-14: table family layouts reuse the DataTable contract (recipe, heat, tone) and ship from the
+  // data-table entry, so they are DataTable companions rather than new catalog rows.
+  LineScore: "DataTable", MatrixTable: "DataTable", ComparisonTable: "DataTable",
 };
 const extensions = {
   GravityLetters: "Text",
