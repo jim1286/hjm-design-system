@@ -16,7 +16,8 @@ type Base = Omit<ScreenLayoutProps, "children" | "footer">;
 export type ListDetailScreenProps = Base & {
     list: ReactNode;
     detail?: Pick<ScreenLayoutProps, "title" | "state" | "stateAction" | "notice"> & {
-        content: ReactNode;
+        content: ReactNode; /** Product back control (icon button) replacing the text action; `back` still names it. */
+        leading?: ReactNode;
     };
     back: ScreenFlowAction;
     refresh?: ScreenFlowAction;
