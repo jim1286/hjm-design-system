@@ -14,4 +14,3 @@ export const Radar: Story = { name: "레이더", args: { only: "radar" } };
 export const Scatter: Story = { name: "산점도", args: { only: "scatter" } };
 export const SparklineStory: Story = { name: "스파크라인", args: { only: "sparkline" } };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
-export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

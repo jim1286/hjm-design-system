@@ -88,7 +88,7 @@ export const STAGES = [
       {
         name: "## 배치",
         table: "| 항목 | 값 | 근거 |",
-        rows: ["크기", "간격", "순서·정렬", "고정·스크롤", "좁은 폭·큰 글자"],
+        rows: ["크기", "간격", "순서·정렬", "고정·스크롤", ["좁은 폭·큰 글자", "좁은 폭"]],
       },
       { name: "## 꼭 지킬 것" },
       { ...PLATFORM, optional: true },
@@ -120,7 +120,9 @@ export const STAGES = [
       { name: "## 상태", table: "| 상태 | 화면 모습 | 행동 |", rows: ["기본", "로딩", "빈", "오류"] },
       { name: "## 사용하는 지침", table: "| 지침 | 쓰는 곳 |" },
       { name: "## 코드 골격", ...CODE },
-      { name: "## 큰 글자·다크·좁은 폭", table: "| 조건 | 바뀌는 것 |" },
+      // 2026-10-07 user rule excludes maximum/emulated text size from design and verification
+      // (portfolio AGENTS.md "최대 글자 조건 제외"), so guides may drop "큰 글자" from this section.
+      { name: "## 큰 글자·다크·좁은 폭", aliases: ["## 다크·좁은 폭"], table: "| 조건 | 바뀌는 것 |" },
       { ...PLATFORM, optional: true },
       PITFALLS,
     ],
@@ -226,10 +228,11 @@ function validate(stage, label, markdown, problems) {
   const sections = splitSections(markdown);
   let cursor = 0;
   for (const section of sections) {
-    const index = stage.sections.findIndex((spec, i) => i >= cursor && spec.name === section.name);
+    const matches = spec => spec.name === section.name || (spec.aliases ?? []).includes(section.name);
+    const index = stage.sections.findIndex((spec, i) => i >= cursor && matches(spec));
     if (index < 0) {
       // Extra product guidance is useful content, not a schema violation.
-      if (stage.sections.some(spec => spec.name === section.name)) problems.push(`${label}: 중복되거나 순서가 틀린 절 "${section.name}"`);
+      if (stage.sections.some(matches)) problems.push(`${label}: 중복되거나 순서가 틀린 절 "${section.name}"`);
       continue;
     }
     for (const skipped of stage.sections.slice(cursor, index)) {
@@ -239,7 +242,8 @@ function validate(stage, label, markdown, problems) {
     const spec = stage.sections[index];
     if (spec.table && !section.body.includes(`\n${spec.table}\n`)) problems.push(`${label}: "${spec.name}"에 표 ${spec.table} 없음`);
     for (const row of spec.rows ?? []) {
-      if (!section.body.includes(`\n| ${row} |`)) problems.push(`${label}: "${spec.name}" 표에 ${row} 행 없음`);
+      const names = Array.isArray(row) ? row : [row];
+      if (!names.some(name => section.body.includes(`\n| ${name} |`))) problems.push(`${label}: "${spec.name}" 표에 ${names[0]} 행 없음`);
     }
     if (spec.diagram && !section.body.includes("```text")) problems.push(`${label}: "${spec.name}"에 배치도(\`\`\`text) 없음`);
     if (spec.code && !section.body.includes("```tsx") && !section.body.includes("<!-- usage-example:")) problems.push(`${label}: "${spec.name}"에 코드(\`\`\`tsx) 없음`);

@@ -79,8 +79,8 @@ Native 화면에서 같은 일이 필요하면 이 구성을 옮기지 않는다
 | 상태 | 모습 | 포커스·알림 |
 | --- | --- | --- |
 | 기본 | ColorPicker는 `value` 색, 워터마크 타일, Affix는 일반 위치(`data-affixed="false"`) | — |
-| 진행 중(제품 연결) | 저장 버튼 `loading`(Watermark·Affix 안). ColorPicker는 요청이 없다 | 포커스는 버튼에 남는다 |
-| 실패(제품 연결) | 저장 실패 Notice danger, 버튼 다시 활성. Affix 고정 중이면 버튼은 그대로 위에 붙어 있다 | Notice `danger`는 `role="alert"` |
+| 진행 중 | (제품 비동기 저장 연결 시) 저장 버튼 `loading`(Watermark·Affix 안). ColorPicker는 요청이 없다 | 포커스는 버튼에 남는다 |
+| 실패 | (제품 비동기 저장 연결 시) 저장 실패 Notice danger, 버튼 다시 활성. Affix 고정 중이면 버튼은 그대로 위에 붙어 있다 | Notice `danger`는 `role="alert"` |
 | HEX 잘못 입력 | `labels.invalid` 문구가 오류로 보이고 외부 값은 그대로 | 오류 문구는 alert |
 | 프리셋 선택됨 | 선택한 견본 테두리가 primary 색, `aria-pressed="true"` | — |
 | `disabled` | fieldset 전체 흐림(opacity 0.5), 입력·프리셋 막힘 | 포커스 불가 |

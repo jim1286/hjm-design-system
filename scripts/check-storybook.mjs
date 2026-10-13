@@ -358,7 +358,9 @@ function storyGroup(exportName, exportNames) {
 function checkStories(file, label, problems) {
   const names = new Map(file.stories.map((story) => [story.exportName, story.name]));
   const exportsList = file.stories.map((story) => story.exportName);
-  for (const required of ["Default", "Dark", "LargeText"]) {
+  // LargeText is optional since the 2026-10-07 user rule excluding maximum/emulated text size from
+  // UI design and verification (portfolio AGENTS.md "최대 글자 조건 제외"); existing ones may stay.
+  for (const required of ["Default", "Dark"]) {
     if (!names.has(required)) problems.push(`S4 ${label}: 필수 스토리 ${required}(${RESERVED_STORIES[required]}) 없음`);
   }
   if (exportsList[0] !== undefined && exportsList[0] !== "Default") problems.push(`S4 ${label}: 첫 스토리가 Default(기본)가 아니다(${exportsList[0]})`);

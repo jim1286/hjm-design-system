@@ -86,7 +86,7 @@ export와 표시 이름은 1:1이다. 아래 export는 이 이름으로만 쓰�
 | 2 | 항목 고유 상태 | 자유 한글 | 예: 입력 중, 필터 시트, 여러 사진 전송, 탐색 옆에서 작업 실행(변형) |
 | 2 | `Loading` · `Pending` · `Empty` · `NoResults` · `Error` · `Failed` · `Restricted` · `Disabled` · `Playground` | 불러오는 중 · 처리 중 · 비어 있음 · 결과 없음 · 오류 · 실패 후 입력 유지 · 로그인 필요 · 비활성 · 직접 조작 | 데이터 가져오는 중 · 사용자 행동 진행 중(버튼 로딩 포함) · 아직 내용 없음 · 검색·필터 0건 · 불러오기 실패와 다시 시도 · 행동 실패 후 입력·초안 유지 · 권한·로그인 없음 · 공개 `disabled` · args 놀이터. 이 순서를 지킨다 |
 | 3 | `Dark` | 어두운 테마 | `globals: { theme: "dark" }`. **필수** |
-| 4 | `LargeText` | 큰 글자 | `globals: { textScale: "2" }`. **필수** |
+| 4 | `LargeText` | 큰 글자 | `globals: { textScale: "2" }`. 선택 — 2026-10-07 사용자 지시(최대 글자 조건 제외)로 필수에서 해제. 새 항목에는 추가하지 않는다 |
 | 5 | `ReducedMotion` · `Rtl` | 동작 줄이기 · 오른쪽에서 왼쪽 | `globals.motion: "reduced"` · `globals.direction: "rtl"` |
 | 6 | `<상태>Dark` · `<상태>LargeText` 등 · `Brand<색>` | `<상태 이름> · 어두운 테마` · `제품 색 · <색>` | 고유 상태와 환경의 조합, 제품 팔레트 |
 | 7 | `Recovery` | 실패와 복구 | 실패 주입 도구로 실패 → 다시 시도를 직접 해 본다 |
