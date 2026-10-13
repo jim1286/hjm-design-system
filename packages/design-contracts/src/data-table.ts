@@ -1,4 +1,4 @@
-import type { ColorReference } from "./color-references.js";
+import { accentColor, themeColor, type ColorReference } from "./color-references.js";
 import type {
   AsyncCollectionState,
   BehaviorContract,
@@ -73,6 +73,8 @@ export function validateDataTableColumns<Key extends CollectionKey>(
 export type DataTableRowDescriptor<Key extends CollectionKey = CollectionKey> = Readonly<{
   id: Key;
   disabled?: boolean;
+  /** Sub-row nesting (TanStack `depth`): 1 indents a substitute under a starter. 0–3. */
+  depth?: number;
 }>;
 
 export function validateDataTableRows<Key extends CollectionKey>(
@@ -85,6 +87,9 @@ export function validateDataTableRows<Key extends CollectionKey>(
       throw new TypeError(`Duplicate DataTable row id: ${row.id}`);
     }
     ids.add(row.id);
+    if (row.depth !== undefined && (!Number.isInteger(row.depth) || row.depth < 0 || row.depth > 3)) {
+      throw new RangeError(`DataTable row "${String(row.id)}" depth must be an integer from 0 to 3`);
+    }
   }
 }
 
@@ -328,6 +333,17 @@ export const dataTableRecipe = {
   states: { focus: typeof focusIndicatorContract };
 };
 
+export const dataTableFamilyScenarios = [
+  "header-groups-span-contiguous-leaf-columns-and-pad-ungrouped-columns",
+  "row-groups-insert-a-section-label-before-their-rows",
+  "cell-tone-and-heat-are-product-decided-semantic-emphasis",
+  "percentile-rank-flips-for-lower-is-better-stats-and-ties-take-the-midpoint",
+  "bounded-height-tables-keep-the-header-fixed-while-the-body-scrolls",
+  "line-score-pads-to-nine-periods-and-extends-for-extra-periods",
+  "matrix-diagonal-is-a-blank-self-cell",
+  "comparison-bars-favor-the-better-side-even-when-lower-is-better",
+] as const;
+
 /**
  * No roving-tabindex grid keyboard navigation (arrow keys between cells):
  * no product using this contract has measured demand for full ARIA-grid
@@ -364,5 +380,223 @@ export const dataTableBehavior = {
     "row-expansion-is-not-owned-here-compose-the-disclosure-group-contract-per-row",
     "a-data-cell-exposes-at-most-one-focusable-control",
     "no-roving-tabindex-grid-navigation-is-implied",
+    ...dataTableFamilyScenarios,
   ],
 } as const satisfies BehaviorContract;
+
+/* ------------------------------------------------------------------------------------------------
+ * Table family, 2026-10-14 (user request: research table libraries and absorb several table types).
+ * Concepts re-derived, nothing vendored:
+ * - column header groups (TanStack Table `getHeaderGroups`, AG Grid column groups),
+ * - row groups with a section label and indented sub-rows (AG Grid row grouping, TanStack expanding),
+ * - conditional cell tone and percentile heat (AG Grid `cellClassRules`/cellStyle heatmaps,
+ *   Baseball Savant percentile color: deeper red toward the best, deeper blue toward the worst),
+ * - a vertically bounded body with a fixed header (react-native-sticky-table, CSS sticky headers),
+ * - sports layouts that products kept hand-building: line score (period columns + totals, MLB/ESPN),
+ *   cross-table matrix (head-to-head records), and two-sided comparison rows (ESPN matchup).
+ * ---------------------------------------------------------------------------------------------- */
+
+/** One header band above leaf columns. Columns not listed in any group get an empty placeholder cell. */
+export type DataTableColumnGroup<Key extends CollectionKey = CollectionKey> = Readonly<{
+  id: string;
+  header: string;
+  columns: readonly Key[];
+}>;
+
+export type DataTableHeaderBand = Readonly<{ id: string; header: string | null; span: number; columnIds: readonly string[] }>;
+
+/**
+ * Resolves group bands over the given (already pinned-split) column order. A group must cover a
+ * contiguous run; columns outside every group become placeholder bands so leaf widths still line up.
+ */
+export function resolveDataTableHeaderBands<Key extends CollectionKey>(
+  columns: readonly Pick<DataTableColumnDescriptor<Key>, "id">[],
+  groups: readonly DataTableColumnGroup<Key>[],
+): DataTableHeaderBand[] {
+  const owner = new Map<Key, DataTableColumnGroup<Key>>();
+  for (const group of groups) {
+    assertNonEmpty(group.id, "column group id");
+    assertNonEmpty(group.header, `column group "${group.id}" header`);
+    for (const id of group.columns) {
+      if (owner.has(id)) throw new TypeError(`DataTable column "${String(id)}" belongs to two groups`);
+      owner.set(id, group);
+    }
+  }
+  const bands: { id: string; header: string | null; columnIds: string[] }[] = [];
+  for (const column of columns) {
+    const group = owner.get(column.id) ?? null;
+    const last = bands.at(-1);
+    if (group && last && last.id === group.id) { last.columnIds.push(column.id); continue; }
+    if (group && bands.some((band) => band.id === group.id)) throw new TypeError(`DataTable column group "${group.id}" must be contiguous`);
+    bands.push({ id: group ? group.id : `placeholder-${column.id}`, header: group ? group.header : null, columnIds: [column.id] });
+  }
+  return bands.map((band) => ({ ...band, span: band.columnIds.length }));
+}
+
+/** Labeled row section (e.g. 선발 / 교체, 동부 / 서부). Rows not in any group render first, ungrouped. */
+export type DataTableRowGroup<Key extends CollectionKey = CollectionKey> = Readonly<{
+  id: string;
+  label: string;
+  rows: readonly Key[];
+}>;
+
+export type DataTableBodyItem<Key extends CollectionKey = CollectionKey> =
+  | Readonly<{ kind: "group"; id: string; label: string }>
+  | Readonly<{ kind: "row"; id: Key }>;
+
+/** Flattens rows + groups into the body order renderers draw. Unknown or duplicated ids throw. */
+export function resolveDataTableBody<Key extends CollectionKey>(
+  rows: readonly DataTableRowDescriptor<Key>[],
+  groups: readonly DataTableRowGroup<Key>[] = [],
+): DataTableBodyItem<Key>[] {
+  if (groups.length === 0) return rows.map((row) => ({ kind: "row", id: row.id }));
+  const known = new Set(rows.map((row) => row.id)), placed = new Set<Key>();
+  const grouped: DataTableBodyItem<Key>[] = [];
+  for (const group of groups) {
+    assertNonEmpty(group.id, "row group id");
+    assertNonEmpty(group.label, `row group "${group.id}" label`);
+    grouped.push({ kind: "group", id: group.id, label: group.label });
+    for (const id of group.rows) {
+      if (!known.has(id)) throw new TypeError(`DataTable row group "${group.id}" references unknown row id: ${String(id)}`);
+      if (placed.has(id)) throw new TypeError(`DataTable row "${String(id)}" belongs to two row groups`);
+      placed.add(id);
+      grouped.push({ kind: "row", id });
+    }
+  }
+  const loose: DataTableBodyItem<Key>[] = rows.filter((row) => !placed.has(row.id)).map((row) => ({ kind: "row", id: row.id }));
+  return [...loose, ...grouped];
+}
+
+/**
+ * Semantic cell emphasis, decided by the product per cell (AG Grid cellClassRules):
+ * `leader` marks a league/table best, `positive`/`negative` a direction, `muted` a non-qualifying value.
+ */
+export type DataTableCellTone = "leader" | "positive" | "negative" | "muted";
+
+/** Percentile heat (Savant): `high` side toward the best values, `low` toward the worst; strength 1–3. */
+export type DataTableCellHeat = Readonly<{ side: "high" | "low"; strength: 1 | 2 | 3 }>;
+
+/**
+ * Percentile rank (0–100, best = 100) of `value` among `sample`. `lowerIsBetter` flips ERA-style stats.
+ * Ties take the midpoint rank, missing values return null. A one-value sample is the 50th percentile.
+ */
+export function percentileRank(value: number | null | undefined, sample: readonly (number | null | undefined)[], options: Readonly<{ lowerIsBetter?: boolean }> = {}): number | null {
+  if (value === null || value === undefined || !Number.isFinite(value)) return null;
+  const values = sample.filter((item): item is number => item !== null && item !== undefined && Number.isFinite(item));
+  if (values.length <= 1) return 50;
+  let below = 0, equal = 0;
+  for (const item of values) {
+    const better = options.lowerIsBetter ? item > value : item < value;
+    if (item === value) equal++;
+    else if (better) below++;
+  }
+  return Math.round(((below + (equal - 1) / 2) / (values.length - 1)) * 100);
+}
+
+/** Maps a percentile to heat: ≥90/≥75/≥60 high, ≤10/≤25/≤40 low, the middle stays neutral (null). */
+export function percentileHeat(percentile: number | null): DataTableCellHeat | null {
+  if (percentile === null) return null;
+  if (percentile >= 90) return { side: "high", strength: 3 };
+  if (percentile >= 75) return { side: "high", strength: 2 };
+  if (percentile >= 60) return { side: "high", strength: 1 };
+  if (percentile <= 10) return { side: "low", strength: 3 };
+  if (percentile <= 25) return { side: "low", strength: 2 };
+  if (percentile <= 40) return { side: "low", strength: 1 };
+  return null;
+}
+
+export const dataTableFamilyRecipe = {
+  /** Heat background alpha per strength, over the high/low base colors. */
+  heatAlpha: { 1: 0.14, 2: 0.26, 3: 0.42 },
+  heat: { high: themeColor("danger"), low: accentColor("info") },
+  tone: {
+    leader: { color: semanticColors.content.primary, fontWeight: fontWeight.bold },
+    positive: { color: themeColor("danger"), fontWeight: fontWeight.bold },
+    negative: { color: accentColor("info"), fontWeight: fontWeight.bold },
+    muted: { color: semanticColors.content.tertiary, fontWeight: fontWeight.regular },
+  },
+  groupRow: { background: semanticColors.surface.sunken, color: semanticColors.content.secondary, textVariant: "label" as TextVariant },
+  /** Indent per sub-row depth level (substitutes under a starter, players under a team). */
+  depthIndent: spacing.md,
+  headerBand: { color: semanticColors.content.secondary, borderBottom: semanticColors.border.subtle },
+} as const;
+
+/* ---------------------------------------------- Line score ------------------------------------- */
+
+export type LineScoreTeam = Readonly<{
+  id: string;
+  name: string;
+  /** Runs per period; null = not played yet, "X" = home team did not bat in the last inning. */
+  periods: readonly (number | "X" | null)[];
+  /** Totals in display order, e.g. { R: 5, H: 9, E: 0, B: 4 }. */
+  totals: Readonly<Record<string, number | null>>;
+}>;
+
+export type LineScoreColumn = Readonly<{ id: string; header: string; kind: "period" | "total" }>;
+
+/**
+ * Period columns are padded to `minPeriods` (9 innings) and extend for extra innings; totals follow.
+ * The current period (live game) is reported so renderers can highlight it.
+ */
+export function resolveLineScore(teams: readonly LineScoreTeam[], options: Readonly<{ minPeriods?: number; totals: readonly string[]; currentPeriod?: number | null }>): Readonly<{ columns: LineScoreColumn[]; currentPeriod: number | null; leaderId: string | null }> {
+  if (teams.length < 2) throw new TypeError("LineScore needs at least two teams");
+  const ids = new Set<string>();
+  for (const team of teams) {
+    assertNonEmpty(team.id, "line score team id");
+    if (ids.has(team.id)) throw new TypeError(`Duplicate LineScore team id: ${team.id}`);
+    ids.add(team.id);
+  }
+  const played = Math.max(...teams.map((team) => team.periods.length));
+  const count = Math.max(options.minPeriods ?? 9, played);
+  const columns: LineScoreColumn[] = Array.from({ length: count }, (_, i) => ({ id: `p${i + 1}`, header: String(i + 1), kind: "period" }));
+  for (const total of options.totals) columns.push({ id: `t-${total}`, header: total, kind: "total" });
+  const runs = options.totals[0];
+  let leaderId: string | null = null;
+  if (runs) {
+    const scores = teams.map((team) => ({ id: team.id, value: team.totals[runs] ?? null }));
+    const best = Math.max(...scores.map((score) => score.value ?? -Infinity));
+    const leaders = scores.filter((score) => score.value === best && Number.isFinite(best));
+    leaderId = leaders.length === 1 ? leaders[0]!.id : null;
+  }
+  const current = options.currentPeriod ?? null;
+  return { columns, currentPeriod: current !== null && current >= 1 && current <= count ? current : null, leaderId };
+}
+
+export function formatLineScoreCell(value: number | "X" | null | undefined): string {
+  return value === null || value === undefined ? "" : String(value);
+}
+
+/* ---------------------------------------------- Matrix table ----------------------------------- */
+
+export type MatrixCell = Readonly<{ label: string; tone?: DataTableCellTone | null; heat?: DataTableCellHeat | null }>;
+
+/**
+ * Square cross table (team × team head-to-head). Rows and columns share one id list; the diagonal is
+ * a self cell and renders blank. `getCell(row, column)` returns null for no record.
+ */
+export function resolveMatrix<Key extends string>(ids: readonly Key[], getCell: (row: Key, column: Key) => MatrixCell | null): readonly (readonly (MatrixCell | "self" | null)[])[] {
+  if (new Set(ids).size !== ids.length) throw new TypeError("Matrix ids must be unique");
+  return ids.map((row) => ids.map((column) => (row === column ? "self" : getCell(row, column))));
+}
+
+/* ---------------------------------------------- Comparison table ------------------------------- */
+
+export type ComparisonRow = Readonly<{
+  id: string;
+  label: string;
+  values: readonly [number | null, number | null];
+  /** Display strings; defaults to String(value). */
+  display?: readonly [string, string];
+  lowerIsBetter?: boolean;
+}>;
+
+/** Which side wins a row (null on ties/missing), and each side's bar share of the pair (0–1). */
+export function resolveComparisonRow(row: ComparisonRow): Readonly<{ winner: 0 | 1 | null; shares: readonly [number, number] }> {
+  const [a, b] = row.values;
+  if (a === null || b === null || !Number.isFinite(a) || !Number.isFinite(b)) return { winner: null, shares: [a === null ? 0 : 0.5, b === null ? 0 : 0.5] };
+  const winner = a === b ? null : (row.lowerIsBetter ? a < b : a > b) ? 0 : 1;
+  // Lower-is-better rows invert the magnitudes so the better side still draws the longer bar.
+  const left = Math.abs(row.lowerIsBetter ? b : a), right = Math.abs(row.lowerIsBetter ? a : b), sum = left + right;
+  return { winner, shares: sum === 0 ? [0.5, 0.5] : [left / sum, right / sum] };
+}
+

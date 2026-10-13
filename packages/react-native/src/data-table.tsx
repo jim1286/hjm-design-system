@@ -1,11 +1,11 @@
-import { useMemo, useState, type ReactNode } from "react";
+import { useMemo, useRef, useState, type ReactNode } from "react";
 import { Pressable, ScrollView, Text as NativeText, View, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import {
-  dataTableColumnDefaults, dataTableDefaults, dataTableFirstSortDirection, dataTableRecipe, getNextDataTableSortState,
-  splitPinnedDataTableColumns, validateDataTableColumns, validateDataTableRows, validateDataTableSortState,
-  type DataTableAsyncState, type DataTableColumnDescriptor, type DataTableDensity, type DataTableRowDescriptor,
-  type DataTableSortCycle, type DataTableSortState,
+  dataTableColumnDefaults, dataTableDefaults, dataTableFamilyRecipe, dataTableFirstSortDirection, dataTableRecipe, getNextDataTableSortState,
+  resolveDataTableBody, resolveDataTableHeaderBands, splitPinnedDataTableColumns, validateDataTableColumns, validateDataTableRows, validateDataTableSortState,
+  type DataTableAsyncState, type DataTableCellHeat, type DataTableCellTone, type DataTableColumnDescriptor, type DataTableColumnGroup, type DataTableDensity,
+  type DataTableRowDescriptor, type DataTableRowGroup, type DataTableSortCycle, type DataTableSortState,
 } from "@hjmds/design-contracts/components/data-table";
 import { spacing } from "@hjmds/design-contracts/foundations";
 import { Text } from "./primitives.js";
@@ -45,6 +45,16 @@ export type DataTableProps<ColumnKey extends string = string, RowKey extends str
   emptyLabel?: string;
   density?: DataTableDensity;
   footer?: ReactNode;
+  /** Header bands above leaf columns (타격 | 주루). */
+  columnGroups?: readonly DataTableColumnGroup<ColumnKey>[];
+  /** Labeled row sections (선발 / 교체). */
+  rowGroups?: readonly DataTableRowGroup<RowKey>[];
+  /** Per-cell emphasis decided by the product (AG Grid cellClassRules / Savant percentile heat). */
+  cellStyle?: (rowId: RowKey, columnId: ColumnKey) => Readonly<{ tone?: DataTableCellTone | null; heat?: DataTableCellHeat | null }> | null;
+  /** Heat base colors; default high = danger red, low = info blue (Savant). */
+  heatColors?: Readonly<{ high: string; low: string }>;
+  /** Bounds the body height; the header stays fixed while rows scroll (react-native-sticky-table). */
+  maxBodyHeight?: number;
   layoutStyle?: HjmCompositionStyleProp;
 }>;
 
@@ -54,6 +64,7 @@ const alignOf = (align: DataTableColumnDescriptor["align"]) => align === "end" ?
 export function DataTable<ColumnKey extends string = string, RowKey extends string = string>({
   columns, rows, labels, renderCell, sortState = null, sortCycle = dataTableDefaults.sortCycle, onSortChange, onRowPress, selectedRowId = null,
   summaryRow, asyncState = { status: "idle" }, emptyLabel, density = dataTableRecipe.defaults.density, footer, layoutStyle,
+  columnGroups = [], rowGroups = [], cellStyle, heatColors, maxBodyHeight,
 }: DataTableProps<ColumnKey, RowKey>) {
   validateDataTableColumns(columns);
   validateDataTableRows(rows);
@@ -84,18 +95,21 @@ export function DataTable<ColumnKey extends string = string, RowKey extends stri
           hitSlop={4} onPress={() => onSortChange(getNextDataTableSortState(sortState, column.id, sortCycle, dataTableFirstSortDirection(column)))} style={style}>{content}</Pressable>
       : <View key={column.id} accessibilityRole="header" style={style}>{content}</View>;
   }
-  function cell(node: ReactNode, column: DataTableColumnDescriptor<ColumnKey>, pinnedColumn: boolean, emphasis: boolean, key: string) {
+  const heatBase = { high: heatColors?.high ?? color(dataTableFamilyRecipe.heat.high), low: heatColors?.low ?? color(dataTableFamilyRecipe.heat.low) };
+  function cell(node: ReactNode, column: DataTableColumnDescriptor<ColumnKey>, pinnedColumn: boolean, emphasis: boolean, key: string, decoration: Readonly<{ tone?: DataTableCellTone | null; heat?: DataTableCellHeat | null }> | null = null, indent = 0) {
     const align = alignOf(column.align ?? dataTableColumnDefaults.align);
-    return <View key={key} style={{ width: widthOf(column, pinnedColumn), height: rowHeight - 1, paddingHorizontal: pad.paddingHorizontal / 2, justifyContent: "center", alignItems: align === "right" ? "flex-end" : align === "center" ? "center" : "flex-start" }}>
+    const tone = decoration?.tone ? dataTableFamilyRecipe.tone[decoration.tone] : null, heat = decoration?.heat ?? null;
+    return <View key={key} style={{ width: widthOf(column, pinnedColumn), height: rowHeight - 1, paddingHorizontal: pad.paddingHorizontal / 2, paddingLeft: pad.paddingHorizontal / 2 + indent, justifyContent: "center", alignItems: align === "right" ? "flex-end" : align === "center" ? "center" : "flex-start" }}>
+      {heat && <View pointerEvents="none" style={{ position: "absolute", left: 2, right: 2, top: 4, bottom: 4, borderRadius: 6, backgroundColor: heatBase[heat.side], opacity: dataTableFamilyRecipe.heatAlpha[heat.strength] }} />}
       {typeof node === "string" || typeof node === "number"
-        ? <NativeText numberOfLines={1} style={{ color: emphasis ? colors.text : color(dataTableRecipe.cell.color), fontSize: 14, fontWeight: emphasis ? "700" : "500", textAlign: align, fontVariant: ["tabular-nums"] }}>{String(node)}</NativeText>
+        ? <NativeText numberOfLines={1} style={{ color: tone ? color(tone.color) : emphasis ? colors.text : color(dataTableRecipe.cell.color), fontSize: 14, fontWeight: tone ? tone.fontWeight : emphasis ? "700" : "500", textAlign: align, fontVariant: ["tabular-nums"] }}>{String(node)}</NativeText>
         : node}
     </View>;
   }
   const rowBackground = (id: RowKey) => pressed === id ? color(dataTableRecipe.row.hoverBackground) : selectedRowId === id ? color(dataTableRecipe.row.selectedBackground) : "transparent";
   function row(rowDescriptor: DataTableRowDescriptor<RowKey>, part: "pinned" | "scrolling") {
     const list = part === "pinned" ? pinned : scrolling;
-    const cells = <View style={{ flexDirection: "row" }}>{list.map(column => cell(renderCell(rowDescriptor.id, column.id), column, part === "pinned", part === "pinned" || sortState?.columnId === column.id, `${rowDescriptor.id}-${column.id}`))}</View>;
+    const cells = <View style={{ flexDirection: "row" }}>{list.map((column, index) => cell(renderCell(rowDescriptor.id, column.id), column, part === "pinned", part === "pinned" || sortState?.columnId === column.id, `${rowDescriptor.id}-${column.id}`, cellStyle?.(rowDescriptor.id, column.id) ?? null, index === 0 && (part === "pinned" || pinned.length === 0) ? (rowDescriptor.depth ?? 0) * dataTableFamilyRecipe.depthIndent : 0))}</View>;
     const style = { height: rowHeight, borderTopWidth: 1, borderColor: color(dataTableRecipe.row.borderBottom), backgroundColor: rowBackground(rowDescriptor.id), opacity: rowDescriptor.disabled ? 0.5 : 1 };
     // Only the pinned half carries the accessible row button so a row is announced once.
     const name = part === "pinned" ? columns.map(column => { const value = renderCell(rowDescriptor.id, column.id); return typeof value === "string" || typeof value === "number" ? `${column.header} ${value}` : column.header; }).join(", ") : undefined;
@@ -107,36 +121,65 @@ export function DataTable<ColumnKey extends string = string, RowKey extends stri
   const summary = (list: readonly DataTableColumnDescriptor<ColumnKey>[], part: "pinned" | "scrolling") => summaryRow ? <View style={{ flexDirection: "row", height: rowHeight, borderTopWidth: 1, borderColor: color(dataTableRecipe.header.borderBottom), backgroundColor: color(dataTableRecipe.header.background) }}>
     {list.map(column => cell(summaryRow(column.id), column, part === "pinned", true, `summary-${column.id}`))}
   </View> : null;
+  const headerScroll = useRef<ScrollView>(null);
   function onScroll(event: NativeSyntheticEvent<NativeScrollEvent>) {
     const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
+    // The header lives outside the body so it can stay fixed vertically; it follows the body horizontally.
+    headerScroll.current?.scrollTo({ x: contentOffset.x, animated: false });
     setAtEnd(contentOffset.x + layoutMeasurement.width >= contentSize.width - 4);
   }
+  const body = useMemo(() => resolveDataTableBody(rows, rowGroups), [rows, rowGroups]);
+  const rowById = useMemo(() => new Map(rows.map(item => [item.id, item])), [rows]);
+  const bandHeight = 26;
+  function bands(list: readonly DataTableColumnDescriptor<ColumnKey>[], part: "pinned" | "scrolling") {
+    if (columnGroups.length === 0) return null;
+    const resolved = resolveDataTableHeaderBands(list, columnGroups);
+    return <View style={{ flexDirection: "row", height: bandHeight }}>{resolved.map(band => {
+      const width = band.columnIds.reduce((sum, id) => sum + widthOf(list.find(column => column.id === id)!, part === "pinned"), 0);
+      return <View key={band.id} accessibilityRole={band.header ? "header" : undefined} style={{ width, justifyContent: "flex-end", paddingHorizontal: pad.paddingHorizontal / 2, paddingBottom: 2 }}>
+        {band.header && <View style={{ borderBottomWidth: 1, borderColor: color(dataTableFamilyRecipe.headerBand.borderBottom), paddingBottom: 2 }}>
+          <NativeText numberOfLines={1} style={{ color: color(dataTableFamilyRecipe.headerBand.color), fontSize: 11, fontWeight: "700", textAlign: "center" }}>{band.header}</NativeText>
+        </View>}
+      </View>;
+    })}</View>;
+  }
+  function groupRow(id: string, label: string, part: "pinned" | "scrolling") {
+    const showLabel = part === "pinned" || pinned.length === 0;
+    return <View key={`group-${id}`} accessibilityRole={showLabel ? "header" : undefined} style={{ height: 30, justifyContent: "center", paddingHorizontal: pad.paddingHorizontal / 2, borderTopWidth: 1, borderColor: color(dataTableRecipe.row.borderBottom), backgroundColor: color(dataTableFamilyRecipe.groupRow.background) }}>
+      {showLabel && <NativeText numberOfLines={1} style={{ color: color(dataTableFamilyRecipe.groupRow.color), fontSize: 12, fontWeight: "700" }}>{label}</NativeText>}
+    </View>;
+  }
+  const bodyRows = (part: "pinned" | "scrolling") => body.map(item => item.kind === "group" ? groupRow(item.id, item.label, part) : row(rowById.get(item.id)!, part));
+  const headerBackground = color(dataTableRecipe.header.background);
   const status = asyncState.status;
   const bodyMessage = status === "loading" || status === "error" || rows.length === 0 ? emptyLabel : null;
+  const columnsBody = <View style={{ flexDirection: "row" }}>
+    {pinned.length > 0 && <View style={{ borderRightWidth: overflow ? 1 : 0, borderColor: color(dataTableRecipe.row.borderBottom) }}>{bodyRows("pinned")}{summary(pinned, "pinned")}</View>}
+    <View style={{ flex: 1 }}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} onScroll={onScroll} scrollEventThrottle={16}>
+        <View>{bodyRows("scrolling")}{summary(scrolling, "scrolling")}</View>
+      </ScrollView>
+      {overflow && !atEnd && <View pointerEvents="none" accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 24, flexDirection: "row" }}>
+        {[0.15, 0.35, 0.55, 0.8].map(alpha => <View key={alpha} style={{ flex: 1, backgroundColor: colors.surface, opacity: alpha }} />)}
+      </View>}
+    </View>
+  </View>;
   return <View style={[{ gap: spacing.sm }, layoutStyle]}>
     <View accessibilityLabel={labels.table} onLayout={event => setWidth(event.nativeEvent.layout.width)} style={{ borderRadius: 12, overflow: "hidden", backgroundColor: colors.surface }}>
       {bodyMessage
         ? <View style={{ minHeight: 120, alignItems: "center", justifyContent: "center", padding: spacing.md }}><Text tone={status === "error" ? "danger" : "muted"} align="center">{bodyMessage}</Text></View>
-        : <View style={{ flexDirection: "row" }}>
-          {pinned.length > 0 && <View style={{ borderRightWidth: overflow ? 1 : 0, borderColor: color(dataTableRecipe.row.borderBottom) }}>
-            <View style={{ flexDirection: "row", backgroundColor: color(dataTableRecipe.header.background) }}>{pinned.map(column => header(column, true))}</View>
-            {rows.map(item => row(item, "pinned"))}
-            {summary(pinned, "pinned")}
-          </View>}
-          <View style={{ flex: 1 }}>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} onScroll={onScroll} scrollEventThrottle={32}>
-              <View>
-                <View style={{ flexDirection: "row", backgroundColor: color(dataTableRecipe.header.background) }}>{scrolling.map(column => header(column, false))}</View>
-                {rows.map(item => row(item, "scrolling"))}
-                {summary(scrolling, "scrolling")}
-              </View>
+        : <>
+          <View style={{ flexDirection: "row", backgroundColor: headerBackground }}>
+            {pinned.length > 0 && <View style={{ borderRightWidth: overflow ? 1 : 0, borderColor: color(dataTableRecipe.row.borderBottom) }}>{bands(pinned, "pinned")}<View style={{ flexDirection: "row" }}>{pinned.map(column => header(column, true))}</View></View>}
+            <ScrollView ref={headerScroll} horizontal scrollEnabled={false} showsHorizontalScrollIndicator={false} style={{ flex: 1 }}>
+              <View>{bands(scrolling, "scrolling")}<View style={{ flexDirection: "row" }}>{scrolling.map(column => header(column, false))}</View></View>
             </ScrollView>
-            {overflow && !atEnd && <View pointerEvents="none" accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 24, flexDirection: "row" }}>
-              {[0.15, 0.35, 0.55, 0.8].map(alpha => <View key={alpha} style={{ flex: 1, backgroundColor: colors.surface, opacity: alpha }} />)}
-            </View>}
           </View>
-        </View>}
+          {maxBodyHeight ? <ScrollView nestedScrollEnabled style={{ maxHeight: maxBodyHeight }}>{columnsBody}</ScrollView> : columnsBody}
+        </>}
     </View>
     {footer}
   </View>;
 }
+
+export { LineScore, MatrixTable, ComparisonTable, type LineScoreProps, type MatrixTableProps, type ComparisonTableProps } from "./table-family.js";

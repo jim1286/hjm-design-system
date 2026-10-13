@@ -25,6 +25,11 @@ type FocusProps = Readonly<{
   focusIndex?: number | null;
   defaultFocusIndex?: number | null;
   onFocusChange?: (index: number | null, detail: Readonly<{ scrubbing: boolean }>) => void;
+  /**
+   * Keep the scrubbed point selected after the finger lifts (2026-10-14, Yajalal QA: snapping back to
+   * the latest point on release read as the chart "moving by itself"). Default false = wagmi-style reset.
+   */
+  holdOnRelease?: boolean;
 }>;
 
 function useChartPalette() {
@@ -48,16 +53,18 @@ function useWidth(initial = 0): [number, (event: LayoutChangeEvent) => void] {
 }
 
 /** Controlled/uncontrolled focus with a separate transient scrub index. */
-function useFocus({ focusIndex, defaultFocusIndex = null, onFocusChange }: FocusProps, fallback: number | null) {
+function useFocus({ focusIndex, defaultFocusIndex = null, onFocusChange, holdOnRelease = false }: FocusProps, fallback: number | null) {
   const [own, setOwn] = useState<number | null>(defaultFocusIndex);
   const [scrub, setScrub] = useState<number | null>(null);
+  const last = useRef<number | null>(null);
   const settled = focusIndex !== undefined ? focusIndex : own;
   const focus = scrub ?? settled ?? fallback;
   const set = useCallback((index: number | null, scrubbing: boolean) => {
-    if (scrubbing) setScrub(index); else { setScrub(null); if (focusIndex === undefined) setOwn(index); }
+    if (scrubbing) { setScrub(index); last.current = index; } else { setScrub(null); if (focusIndex === undefined) setOwn(index); }
     onFocusChange?.(index, { scrubbing });
   }, [focusIndex, onFocusChange]);
-  return { focus, scrubbing: scrub !== null, set };
+  const release = useCallback(() => set(holdOnRelease ? last.current : null, false), [set, holdOnRelease]);
+  return { focus, scrubbing: scrub !== null, set, release };
 }
 
 /**
@@ -115,17 +122,21 @@ export type LineChartProps = Readonly<{
   referenceValue?: number | "first";
   extremes?: Readonly<{ high: string; low: string }>;
   showAxis?: boolean;
+  /** Value labels only (no category labels), e.g. rank charts that must show "1위" at the top. */
+  valueAxis?: boolean;
+  /** Overrides grid/label ticks (rank charts: [1, 5, 10]). */
+  ticks?: readonly number[];
   cursorLabel?: (index: number) => string;
 } & FocusProps>;
 
-export function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height = chartRecipe.heights.regular, curve = "linear", area, stacked = false, invert = false, domain, includeZero, referenceValue, extremes, showAxis = false, cursorLabel, ...focusProps }: LineChartProps) {
+export function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height = chartRecipe.heights.regular, curve = "linear", area, stacked = false, invert = false, domain, includeZero, referenceValue, extremes, showAxis = false, valueAxis = false, ticks: tickOverride, cursorLabel, ...focusProps }: LineChartProps) {
   const palette = useChartPalette(), id = useId().replace(/[^a-zA-Z0-9]/g, "");
   const [width, onLayout] = useWidth();
   const available = useMemo(() => observedIndices(series), [series]);
-  const { focus, scrubbing, set } = useFocus(focusProps, available.at(-1) ?? null);
-  const insets = showAxis ? chartRecipe.insets.axis : chartRecipe.insets.plot;
+  const { focus, scrubbing, set, release } = useFocus(focusProps, available.at(-1) ?? null);
+  const insets = showAxis || valueAxis ? chartRecipe.insets.axis : chartRecipe.insets.plot;
   const g = useMemo(() => width > 0 ? resolveLineGeometry({ categories, series, width, height, insets, invert, stacked, domain, includeZero }) : null, [categories, series, width, height, insets, invert, stacked, domain, includeZero]);
-  const handlers = useScrub(x => g ? nearestChartIndex(g.xs, x, available) : null, index => set(index, true), () => set(null, false));
+  const handlers = useScrub(x => g ? nearestChartIndex(g.xs, x, available) : null, index => set(index, true), release);
   const showArea = area ?? series.length === 1;
   const reference = referenceValue === "first" ? series[0]?.values.find(isChartNumber) : referenceValue;
   const marks = extremes && !scrubbing ? seriesExtremes(series[0]?.values ?? []) : null;
@@ -135,8 +146,8 @@ export function LineChart({ categories, series, accessibilityLabel, formatValue,
     onLayout={onLayout} style={{ height }} {...handlers}>
     {g && <Svg width={width} height={height} accessible={false}>
       <Defs>{series.map((item, s) => <LinearGradient key={item.id} id={`hjmArea${id}${s}`} x1="0" y1="0" x2="0" y2="1"><Stop offset="0" stopColor={palette.seriesColor(item, s)} stopOpacity={chartRecipe.area.topOpacity} /><Stop offset="1" stopColor={palette.seriesColor(item, s)} stopOpacity={chartRecipe.area.bottomOpacity} /></LinearGradient>)}</Defs>
-      {g.ticks.map(tick => <Line key={tick} x1={g.plot.left} x2={g.plot.right} y1={g.y(tick)} y2={g.y(tick)} stroke={palette.grid} strokeWidth={chartRecipe.chrome.gridWidth} />)}
-      {showAxis && <AxisLabels ticks={g.ticks} y={g.y} x={g.plot.left - 6} color={palette.label} format={formatValue} />}
+      {(tickOverride ?? g.ticks).map(tick => <Line key={tick} x1={g.plot.left} x2={g.plot.right} y1={g.y(tick)} y2={g.y(tick)} stroke={palette.grid} strokeWidth={chartRecipe.chrome.gridWidth} />)}
+      {(showAxis || valueAxis) && <AxisLabels ticks={tickOverride ?? g.ticks} y={g.y} x={g.plot.left - 6} color={palette.label} format={formatValue} />}
       {isChartNumber(reference) && <Line x1={g.plot.left} x2={g.plot.right} y1={g.y(reference)} y2={g.y(reference)} stroke={palette.label} strokeDasharray={[...chartRecipe.reference.dash]} strokeWidth={1} />}
       {series.map((item, s) => {
         const color = palette.seriesColor(item, s), segments = splitSegments(g.plots[s]!);

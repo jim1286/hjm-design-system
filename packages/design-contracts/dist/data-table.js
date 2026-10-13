@@ -1,3 +1,4 @@
+import { accentColor, themeColor } from "./color-references.js";
 import { collectionItemContract, focusIndicatorContract } from "./component-contracts.js";
 import { control, fontWeight, spacing } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
@@ -35,6 +36,9 @@ export function validateDataTableRows(rows) {
             throw new TypeError(`Duplicate DataTable row id: ${row.id}`);
         }
         ids.add(row.id);
+        if (row.depth !== undefined && (!Number.isInteger(row.depth) || row.depth < 0 || row.depth > 3)) {
+            throw new RangeError(`DataTable row "${String(row.id)}" depth must be an integer from 0 to 3`);
+        }
     }
 }
 /**
@@ -206,6 +210,16 @@ export const dataTableRecipe = {
         focus: focusIndicatorContract,
     },
 };
+export const dataTableFamilyScenarios = [
+    "header-groups-span-contiguous-leaf-columns-and-pad-ungrouped-columns",
+    "row-groups-insert-a-section-label-before-their-rows",
+    "cell-tone-and-heat-are-product-decided-semantic-emphasis",
+    "percentile-rank-flips-for-lower-is-better-stats-and-ties-take-the-midpoint",
+    "bounded-height-tables-keep-the-header-fixed-while-the-body-scrolls",
+    "line-score-pads-to-nine-periods-and-extends-for-extra-periods",
+    "matrix-diagonal-is-a-blank-self-cell",
+    "comparison-bars-favor-the-better-side-even-when-lower-is-better",
+];
 /**
  * No roving-tabindex grid keyboard navigation (arrow keys between cells):
  * no product using this contract has measured demand for full ARIA-grid
@@ -242,6 +256,163 @@ export const dataTableBehavior = {
         "row-expansion-is-not-owned-here-compose-the-disclosure-group-contract-per-row",
         "a-data-cell-exposes-at-most-one-focusable-control",
         "no-roving-tabindex-grid-navigation-is-implied",
+        ...dataTableFamilyScenarios,
     ],
 };
+/**
+ * Resolves group bands over the given (already pinned-split) column order. A group must cover a
+ * contiguous run; columns outside every group become placeholder bands so leaf widths still line up.
+ */
+export function resolveDataTableHeaderBands(columns, groups) {
+    const owner = new Map();
+    for (const group of groups) {
+        assertNonEmpty(group.id, "column group id");
+        assertNonEmpty(group.header, `column group "${group.id}" header`);
+        for (const id of group.columns) {
+            if (owner.has(id))
+                throw new TypeError(`DataTable column "${String(id)}" belongs to two groups`);
+            owner.set(id, group);
+        }
+    }
+    const bands = [];
+    for (const column of columns) {
+        const group = owner.get(column.id) ?? null;
+        const last = bands.at(-1);
+        if (group && last && last.id === group.id) {
+            last.columnIds.push(column.id);
+            continue;
+        }
+        if (group && bands.some((band) => band.id === group.id))
+            throw new TypeError(`DataTable column group "${group.id}" must be contiguous`);
+        bands.push({ id: group ? group.id : `placeholder-${column.id}`, header: group ? group.header : null, columnIds: [column.id] });
+    }
+    return bands.map((band) => ({ ...band, span: band.columnIds.length }));
+}
+/** Flattens rows + groups into the body order renderers draw. Unknown or duplicated ids throw. */
+export function resolveDataTableBody(rows, groups = []) {
+    if (groups.length === 0)
+        return rows.map((row) => ({ kind: "row", id: row.id }));
+    const known = new Set(rows.map((row) => row.id)), placed = new Set();
+    const grouped = [];
+    for (const group of groups) {
+        assertNonEmpty(group.id, "row group id");
+        assertNonEmpty(group.label, `row group "${group.id}" label`);
+        grouped.push({ kind: "group", id: group.id, label: group.label });
+        for (const id of group.rows) {
+            if (!known.has(id))
+                throw new TypeError(`DataTable row group "${group.id}" references unknown row id: ${String(id)}`);
+            if (placed.has(id))
+                throw new TypeError(`DataTable row "${String(id)}" belongs to two row groups`);
+            placed.add(id);
+            grouped.push({ kind: "row", id });
+        }
+    }
+    const loose = rows.filter((row) => !placed.has(row.id)).map((row) => ({ kind: "row", id: row.id }));
+    return [...loose, ...grouped];
+}
+/**
+ * Percentile rank (0–100, best = 100) of `value` among `sample`. `lowerIsBetter` flips ERA-style stats.
+ * Ties take the midpoint rank, missing values return null. A one-value sample is the 50th percentile.
+ */
+export function percentileRank(value, sample, options = {}) {
+    if (value === null || value === undefined || !Number.isFinite(value))
+        return null;
+    const values = sample.filter((item) => item !== null && item !== undefined && Number.isFinite(item));
+    if (values.length <= 1)
+        return 50;
+    let below = 0, equal = 0;
+    for (const item of values) {
+        const better = options.lowerIsBetter ? item > value : item < value;
+        if (item === value)
+            equal++;
+        else if (better)
+            below++;
+    }
+    return Math.round(((below + (equal - 1) / 2) / (values.length - 1)) * 100);
+}
+/** Maps a percentile to heat: ≥90/≥75/≥60 high, ≤10/≤25/≤40 low, the middle stays neutral (null). */
+export function percentileHeat(percentile) {
+    if (percentile === null)
+        return null;
+    if (percentile >= 90)
+        return { side: "high", strength: 3 };
+    if (percentile >= 75)
+        return { side: "high", strength: 2 };
+    if (percentile >= 60)
+        return { side: "high", strength: 1 };
+    if (percentile <= 10)
+        return { side: "low", strength: 3 };
+    if (percentile <= 25)
+        return { side: "low", strength: 2 };
+    if (percentile <= 40)
+        return { side: "low", strength: 1 };
+    return null;
+}
+export const dataTableFamilyRecipe = {
+    /** Heat background alpha per strength, over the high/low base colors. */
+    heatAlpha: { 1: 0.14, 2: 0.26, 3: 0.42 },
+    heat: { high: themeColor("danger"), low: accentColor("info") },
+    tone: {
+        leader: { color: semanticColors.content.primary, fontWeight: fontWeight.bold },
+        positive: { color: themeColor("danger"), fontWeight: fontWeight.bold },
+        negative: { color: accentColor("info"), fontWeight: fontWeight.bold },
+        muted: { color: semanticColors.content.tertiary, fontWeight: fontWeight.regular },
+    },
+    groupRow: { background: semanticColors.surface.sunken, color: semanticColors.content.secondary, textVariant: "label" },
+    /** Indent per sub-row depth level (substitutes under a starter, players under a team). */
+    depthIndent: spacing.md,
+    headerBand: { color: semanticColors.content.secondary, borderBottom: semanticColors.border.subtle },
+};
+/**
+ * Period columns are padded to `minPeriods` (9 innings) and extend for extra innings; totals follow.
+ * The current period (live game) is reported so renderers can highlight it.
+ */
+export function resolveLineScore(teams, options) {
+    if (teams.length < 2)
+        throw new TypeError("LineScore needs at least two teams");
+    const ids = new Set();
+    for (const team of teams) {
+        assertNonEmpty(team.id, "line score team id");
+        if (ids.has(team.id))
+            throw new TypeError(`Duplicate LineScore team id: ${team.id}`);
+        ids.add(team.id);
+    }
+    const played = Math.max(...teams.map((team) => team.periods.length));
+    const count = Math.max(options.minPeriods ?? 9, played);
+    const columns = Array.from({ length: count }, (_, i) => ({ id: `p${i + 1}`, header: String(i + 1), kind: "period" }));
+    for (const total of options.totals)
+        columns.push({ id: `t-${total}`, header: total, kind: "total" });
+    const runs = options.totals[0];
+    let leaderId = null;
+    if (runs) {
+        const scores = teams.map((team) => ({ id: team.id, value: team.totals[runs] ?? null }));
+        const best = Math.max(...scores.map((score) => score.value ?? -Infinity));
+        const leaders = scores.filter((score) => score.value === best && Number.isFinite(best));
+        leaderId = leaders.length === 1 ? leaders[0].id : null;
+    }
+    const current = options.currentPeriod ?? null;
+    return { columns, currentPeriod: current !== null && current >= 1 && current <= count ? current : null, leaderId };
+}
+export function formatLineScoreCell(value) {
+    return value === null || value === undefined ? "" : String(value);
+}
+/**
+ * Square cross table (team × team head-to-head). Rows and columns share one id list; the diagonal is
+ * a self cell and renders blank. `getCell(row, column)` returns null for no record.
+ */
+export function resolveMatrix(ids, getCell) {
+    if (new Set(ids).size !== ids.length)
+        throw new TypeError("Matrix ids must be unique");
+    return ids.map((row) => ids.map((column) => (row === column ? "self" : getCell(row, column))));
+}
+/** Which side wins a row (null on ties/missing), and each side's bar share of the pair (0–1). */
+export function resolveComparisonRow(row) {
+    const [a, b] = row.values;
+    if (a === null || b === null || !Number.isFinite(a) || !Number.isFinite(b))
+        return { winner: null, shares: [a === null ? 0 : 0.5, b === null ? 0 : 0.5] };
+    const winner = a === b ? null : (row.lowerIsBetter ? a < b : a > b) ? 0 : 1;
+    // Lower-is-better rows invert the magnitudes so the better side still draws the longer bar.
+    const left = Math.abs(row.lowerIsBetter ? b : a), right = Math.abs(row.lowerIsBetter ? a : b), sum = left + right;
+    return { winner, shares: sum === 0 ? [0.5, 0.5] : [left / sum, right / sum] };
+}
 //# sourceMappingURL=data-table.js.map

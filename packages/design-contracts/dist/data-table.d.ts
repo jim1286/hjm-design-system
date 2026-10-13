@@ -1,4 +1,5 @@
 import type { AsyncCollectionState, CheckboxState, CollectionKey, CollectionSelectionModel } from "./behaviors.js";
+import { type TextVariant } from "./foundations.js";
 export type DataTableAlign = "start" | "center" | "end";
 export type DataTableColumnDescriptor<Key extends CollectionKey = CollectionKey> = Readonly<{
     id: Key;
@@ -34,6 +35,8 @@ export declare function validateDataTableColumns<Key extends CollectionKey>(colu
 export type DataTableRowDescriptor<Key extends CollectionKey = CollectionKey> = Readonly<{
     id: Key;
     disabled?: boolean;
+    /** Sub-row nesting (TanStack `depth`): 1 indents a substitute under a starter. 0–3. */
+    depth?: number;
 }>;
 export declare function validateDataTableRows<Key extends CollectionKey>(rows: readonly DataTableRowDescriptor<Key>[]): void;
 /** Row selection is the unmodified Collection base contract — no DataTable-only selection shape. */
@@ -205,6 +208,7 @@ export declare const dataTableRecipe: {
         };
     };
 };
+export declare const dataTableFamilyScenarios: readonly ["header-groups-span-contiguous-leaf-columns-and-pad-ungrouped-columns", "row-groups-insert-a-section-label-before-their-rows", "cell-tone-and-heat-are-product-decided-semantic-emphasis", "percentile-rank-flips-for-lower-is-better-stats-and-ties-take-the-midpoint", "bounded-height-tables-keep-the-header-fixed-while-the-body-scrolls", "line-score-pads-to-nine-periods-and-extends-for-extra-periods", "matrix-diagonal-is-a-blank-self-cell", "comparison-bars-favor-the-better-side-even-when-lower-is-better"];
 /**
  * No roving-tabindex grid keyboard navigation (arrow keys between cells):
  * no product using this contract has measured demand for full ARIA-grid
@@ -235,6 +239,189 @@ export declare const dataTableBehavior: {
         readonly states: readonly ["selected"];
         readonly actions: readonly ["activate"];
     };
-    readonly scenarios: readonly ["sort-desc-first-columns-start-descending-and-cycle-back", "missing-values-sink-to-the-bottom-in-both-directions", "pinned-start-columns-stay-visible-while-the-rest-scrolls", "row-selection-reuses-the-shared-collection-selection-model-unchanged", "select-all-reuses-the-shared-tri-state-checkbox-value", "async-state-reuses-the-shared-collection-async-state-unchanged", "sortable-header-is-a-button-inside-the-columnheader-not-the-header-itself", "sort-direction-values-pass-through-to-aria-sort-without-translation", "disabled-rows-are-excluded-from-select-all-accounting", "pagination-or-load-more-is-composed-beneath-the-table-not-owned-by-it", "row-expansion-is-not-owned-here-compose-the-disclosure-group-contract-per-row", "a-data-cell-exposes-at-most-one-focusable-control", "no-roving-tabindex-grid-navigation-is-implied"];
+    readonly scenarios: readonly ["sort-desc-first-columns-start-descending-and-cycle-back", "missing-values-sink-to-the-bottom-in-both-directions", "pinned-start-columns-stay-visible-while-the-rest-scrolls", "row-selection-reuses-the-shared-collection-selection-model-unchanged", "select-all-reuses-the-shared-tri-state-checkbox-value", "async-state-reuses-the-shared-collection-async-state-unchanged", "sortable-header-is-a-button-inside-the-columnheader-not-the-header-itself", "sort-direction-values-pass-through-to-aria-sort-without-translation", "disabled-rows-are-excluded-from-select-all-accounting", "pagination-or-load-more-is-composed-beneath-the-table-not-owned-by-it", "row-expansion-is-not-owned-here-compose-the-disclosure-group-contract-per-row", "a-data-cell-exposes-at-most-one-focusable-control", "no-roving-tabindex-grid-navigation-is-implied", "header-groups-span-contiguous-leaf-columns-and-pad-ungrouped-columns", "row-groups-insert-a-section-label-before-their-rows", "cell-tone-and-heat-are-product-decided-semantic-emphasis", "percentile-rank-flips-for-lower-is-better-stats-and-ties-take-the-midpoint", "bounded-height-tables-keep-the-header-fixed-while-the-body-scrolls", "line-score-pads-to-nine-periods-and-extends-for-extra-periods", "matrix-diagonal-is-a-blank-self-cell", "comparison-bars-favor-the-better-side-even-when-lower-is-better"];
 };
+/** One header band above leaf columns. Columns not listed in any group get an empty placeholder cell. */
+export type DataTableColumnGroup<Key extends CollectionKey = CollectionKey> = Readonly<{
+    id: string;
+    header: string;
+    columns: readonly Key[];
+}>;
+export type DataTableHeaderBand = Readonly<{
+    id: string;
+    header: string | null;
+    span: number;
+    columnIds: readonly string[];
+}>;
+/**
+ * Resolves group bands over the given (already pinned-split) column order. A group must cover a
+ * contiguous run; columns outside every group become placeholder bands so leaf widths still line up.
+ */
+export declare function resolveDataTableHeaderBands<Key extends CollectionKey>(columns: readonly Pick<DataTableColumnDescriptor<Key>, "id">[], groups: readonly DataTableColumnGroup<Key>[]): DataTableHeaderBand[];
+/** Labeled row section (e.g. 선발 / 교체, 동부 / 서부). Rows not in any group render first, ungrouped. */
+export type DataTableRowGroup<Key extends CollectionKey = CollectionKey> = Readonly<{
+    id: string;
+    label: string;
+    rows: readonly Key[];
+}>;
+export type DataTableBodyItem<Key extends CollectionKey = CollectionKey> = Readonly<{
+    kind: "group";
+    id: string;
+    label: string;
+}> | Readonly<{
+    kind: "row";
+    id: Key;
+}>;
+/** Flattens rows + groups into the body order renderers draw. Unknown or duplicated ids throw. */
+export declare function resolveDataTableBody<Key extends CollectionKey>(rows: readonly DataTableRowDescriptor<Key>[], groups?: readonly DataTableRowGroup<Key>[]): DataTableBodyItem<Key>[];
+/**
+ * Semantic cell emphasis, decided by the product per cell (AG Grid cellClassRules):
+ * `leader` marks a league/table best, `positive`/`negative` a direction, `muted` a non-qualifying value.
+ */
+export type DataTableCellTone = "leader" | "positive" | "negative" | "muted";
+/** Percentile heat (Savant): `high` side toward the best values, `low` toward the worst; strength 1–3. */
+export type DataTableCellHeat = Readonly<{
+    side: "high" | "low";
+    strength: 1 | 2 | 3;
+}>;
+/**
+ * Percentile rank (0–100, best = 100) of `value` among `sample`. `lowerIsBetter` flips ERA-style stats.
+ * Ties take the midpoint rank, missing values return null. A one-value sample is the 50th percentile.
+ */
+export declare function percentileRank(value: number | null | undefined, sample: readonly (number | null | undefined)[], options?: Readonly<{
+    lowerIsBetter?: boolean;
+}>): number | null;
+/** Maps a percentile to heat: ≥90/≥75/≥60 high, ≤10/≤25/≤40 low, the middle stays neutral (null). */
+export declare function percentileHeat(percentile: number | null): DataTableCellHeat | null;
+export declare const dataTableFamilyRecipe: {
+    /** Heat background alpha per strength, over the high/low base colors. */
+    readonly heatAlpha: {
+        readonly 1: 0.14;
+        readonly 2: 0.26;
+        readonly 3: 0.42;
+    };
+    readonly heat: {
+        readonly high: Readonly<{
+            source: "theme";
+            key: "danger";
+            alpha?: number;
+        }>;
+        readonly low: Readonly<{
+            source: "accent";
+            key: "info";
+            alpha?: number;
+        }>;
+    };
+    readonly tone: {
+        readonly leader: {
+            readonly color: Readonly<{
+                source: "theme";
+                key: "text";
+                alpha?: number;
+            }>;
+            readonly fontWeight: "700";
+        };
+        readonly positive: {
+            readonly color: Readonly<{
+                source: "theme";
+                key: "danger";
+                alpha?: number;
+            }>;
+            readonly fontWeight: "700";
+        };
+        readonly negative: {
+            readonly color: Readonly<{
+                source: "accent";
+                key: "info";
+                alpha?: number;
+            }>;
+            readonly fontWeight: "700";
+        };
+        readonly muted: {
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textSub";
+                alpha?: number;
+            }>;
+            readonly fontWeight: "400";
+        };
+    };
+    readonly groupRow: {
+        readonly background: Readonly<{
+            source: "theme";
+            key: "surfaceAlt";
+            alpha?: number;
+        }>;
+        readonly color: Readonly<{
+            source: "theme";
+            key: "textMuted";
+            alpha?: number;
+        }>;
+        readonly textVariant: TextVariant;
+    };
+    /** Indent per sub-row depth level (substitutes under a starter, players under a team). */
+    readonly depthIndent: 16;
+    readonly headerBand: {
+        readonly color: Readonly<{
+            source: "theme";
+            key: "textMuted";
+            alpha?: number;
+        }>;
+        readonly borderBottom: Readonly<{
+            source: "theme";
+            key: "border";
+            alpha?: number;
+        }>;
+    };
+};
+export type LineScoreTeam = Readonly<{
+    id: string;
+    name: string;
+    /** Runs per period; null = not played yet, "X" = home team did not bat in the last inning. */
+    periods: readonly (number | "X" | null)[];
+    /** Totals in display order, e.g. { R: 5, H: 9, E: 0, B: 4 }. */
+    totals: Readonly<Record<string, number | null>>;
+}>;
+export type LineScoreColumn = Readonly<{
+    id: string;
+    header: string;
+    kind: "period" | "total";
+}>;
+/**
+ * Period columns are padded to `minPeriods` (9 innings) and extend for extra innings; totals follow.
+ * The current period (live game) is reported so renderers can highlight it.
+ */
+export declare function resolveLineScore(teams: readonly LineScoreTeam[], options: Readonly<{
+    minPeriods?: number;
+    totals: readonly string[];
+    currentPeriod?: number | null;
+}>): Readonly<{
+    columns: LineScoreColumn[];
+    currentPeriod: number | null;
+    leaderId: string | null;
+}>;
+export declare function formatLineScoreCell(value: number | "X" | null | undefined): string;
+export type MatrixCell = Readonly<{
+    label: string;
+    tone?: DataTableCellTone | null;
+    heat?: DataTableCellHeat | null;
+}>;
+/**
+ * Square cross table (team × team head-to-head). Rows and columns share one id list; the diagonal is
+ * a self cell and renders blank. `getCell(row, column)` returns null for no record.
+ */
+export declare function resolveMatrix<Key extends string>(ids: readonly Key[], getCell: (row: Key, column: Key) => MatrixCell | null): readonly (readonly (MatrixCell | "self" | null)[])[];
+export type ComparisonRow = Readonly<{
+    id: string;
+    label: string;
+    values: readonly [number | null, number | null];
+    /** Display strings; defaults to String(value). */
+    display?: readonly [string, string];
+    lowerIsBetter?: boolean;
+}>;
+/** Which side wins a row (null on ties/missing), and each side's bar share of the pair (0–1). */
+export declare function resolveComparisonRow(row: ComparisonRow): Readonly<{
+    winner: 0 | 1 | null;
+    shares: readonly [number, number];
+}>;
 //# sourceMappingURL=data-table.d.ts.map
