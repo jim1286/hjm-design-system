@@ -2224,6 +2224,31 @@ export declare const bottomNavigationRecipe: {
         readonly gap: 4;
         readonly radius: "lg";
     };
+    /**
+     * Opt-in thick plank for tile selection (Spint wooden sign, 2026-10-13). The
+     * lower edges replace the floating shadow so the bar reads as one flat object.
+     * The selected edge darkens the brand fill with translucent body text because
+     * no palette role names a "pressed brand" shade.
+     */
+    readonly raisedSurface: {
+        readonly background: Readonly<{
+            source: "theme";
+            key: "surfaceAlt";
+            alpha?: number;
+        }>;
+        readonly border: Readonly<{
+            source: "theme";
+            key: "borderControl";
+            alpha?: number;
+        }>;
+        readonly depth: 4;
+        readonly selectedDepth: 3;
+        readonly selectedDepthColor: Readonly<{
+            source: "theme";
+            key: "text";
+            alpha?: number;
+        }>;
+    };
     readonly adaptive: {
         readonly web: "fixed-compact-viewport";
         readonly native: "navigator-tab-bar";

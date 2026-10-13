@@ -26,6 +26,7 @@ import {
   type TextVariant,
 } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
+import { themeColor } from "./color-references.js";
 import { tooltipDescriptorDefaults } from "./tooltip.js";
 import { bottomNavigationRecipeDefaults } from "./bottom-navigation-defaults.js";
 
@@ -1212,6 +1213,19 @@ export const bottomNavigationRecipe = {
     padding: spacing.xxs,
     gap: spacing.xxs,
     radius: "lg" as const,
+  },
+  /**
+   * Opt-in thick plank for tile selection (Spint wooden sign, 2026-10-13). The
+   * lower edges replace the floating shadow so the bar reads as one flat object.
+   * The selected edge darkens the brand fill with translucent body text because
+   * no palette role names a "pressed brand" shade.
+   */
+  raisedSurface: {
+    background: semanticColors.surface.sunken,
+    border: semanticColors.border.control,
+    depth: 4,
+    selectedDepth: 3,
+    selectedDepthColor: themeColor("text", 0.45),
   },
   adaptive: {
     web: "fixed-compact-viewport",

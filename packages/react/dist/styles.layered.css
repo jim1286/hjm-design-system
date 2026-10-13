@@ -3028,5 +3028,10 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-bottom-navigation[data-selection="tile"] .hjm-bottom-navigation__list { padding: var(--hjm-space-xxs); gap: var(--hjm-space-xxs); }
 .hjm-bottom-navigation[data-selection="tile"] .hjm-bottom-navigation__item[data-state="selected"] { background: var(--hjm-color-primary); color: var(--hjm-color-on-primary); }
 .hjm-bottom-navigation[data-selection="tile"] .hjm-bottom-navigation__item:not([data-state="selected"]):active { background: var(--hjm-bottom-navigation-pressed-background); }
+/* Raised plank (bottomNavigationRecipe.raisedSurface): lower edges replace the floating shadow.
+   Every tile reserves its edge so selection does not shift rows; the selected edge darkens the brand fill. */
+.hjm-bottom-navigation[data-surface="raised"] .hjm-bottom-navigation__surface { background: var(--hjm-color-surface-alt); border-color: var(--hjm-color-border-control); border-block-end-width: 4px; box-shadow: none; }
+.hjm-bottom-navigation[data-surface="raised"] .hjm-bottom-navigation__item { border-block-end: 3px solid transparent; }
+.hjm-bottom-navigation[data-surface="raised"] .hjm-bottom-navigation__item[data-state="selected"] { border-block-end-color: color-mix(in srgb, var(--hjm-color-text) 45%, transparent); }
 
 }

@@ -193,6 +193,7 @@ function BottomNavigationInner<
       data-keyboard-behavior={presentation.keyboardBehavior}
       data-labels={presentation.labels}
       data-selection={presentation.selection}
+      data-surface={presentation.surface}
       data-presentation={presentation.presentation}
       dir={presentation.direction}
       style={{

@@ -169,3 +169,14 @@ Web·Native 모두 막대에는 surfaceAccent, 선택한 항목에는 primary/on
 연한 선택 카드가 도크와 구분되지 않는 사용자 피드백에 따라 선택한 카드 전체를 브랜드 색으로 채운다.
 안쪽 여백과 카드 사이 간격은 spacing.xxs, 카드 모서리는 radius.lg다.
 라우팅·누름 방지·키보드·접근성·배지는 기존 BottomNavigation 계약을 그대로 따른다.
+
+### 두께 있는 팻말 (2026-10-13)
+
+Spint가 하단 탐색을 들판 게임의 나무 팻말처럼 보이게 요청해 `selection: "tile"`에 `surface: "raised"`를 추가했다.
+기본 `surface: "flat"`은 기존 선택 카드 외형을 유지한다. `raised`는 `selection: "tile"`에서만 허용된다.
+막대 바탕은 surfaceAlt(`surface.sunken`), 테두리는 borderControl이며 아래 테두리가 4로 두꺼워져 옆면이 된다.
+floating 그림자는 그리지 않는다. 옆면이 높이를 표현하므로 그림자를 함께 두면 두 물체로 보인다.
+선택한 카드는 primary 위에 아래 테두리 3을 text 45% 반투명으로 겹쳐 더 진한 옆면을 만든다.
+팔레트에 "눌린 브랜드" 역할이 없어서 새 역할을 추가하지 않고 기존 역할을 겹쳐 쓴다.
+선택하지 않은 카드도 같은 두께의 투명 테두리를 둔다. 그래서 선택이 바뀌어도 아이콘·라벨 줄이 움직이지 않는다.
+제품은 나무 같은 색을 surfaceAlt·borderControl 팔레트 역할로 공급한다. deprecated 시각 style로 덮지 않는다.

@@ -71,6 +71,7 @@ export {
   type BottomNavigationItemDescriptor,
   type BottomNavigationKeyboardBehavior,
   type BottomNavigationLabels,
+  type BottomNavigationSurface,
   type ResolvedBottomNavigationCounterBadge,
   type ResolvedBottomNavigationConfiguration,
   type ResolvedBottomNavigationDescriptor,

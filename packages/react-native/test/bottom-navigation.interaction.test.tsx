@@ -145,3 +145,18 @@ it("tile selection keeps every label and equal width while the router owns selec
   expect(search().props.style({ pressed: false })[1].backgroundColor).not.toBe("transparent");
   act(() => tree.unmount());
 });
+
+it("raised tile plank reserves every lower edge and darkens only the selected one", () => {
+  let tree!: ReturnType<typeof create>;
+  const items = [{ id: "home", label: "들판", icon: { name: "home" } }, { id: "search", label: "탐험", icon: { name: "search" } }];
+  act(() => { tree = create(<HjmNativeProvider theme="light">
+    <BottomNavigation descriptor={{ accessibilityLabel: "탐색", selectedKey: "home", items }} configuration={{ presentation: "floating", selection: "tile", surface: "raised" }} renderIcon={() => null} onActivate={() => {}} getItemTestID={item => `tile-${item.id}`} />
+  </HjmNativeProvider>); });
+  const home = tree.root.findByProps({ testID: "tile-home" }).props.style({ pressed: false })[1];
+  const search = tree.root.findByProps({ testID: "tile-search" }).props.style({ pressed: false })[1];
+  expect(home.borderBottomWidth).toBe(3);
+  expect(search.borderBottomWidth).toBe(3);
+  expect(home.borderBottomColor).not.toBe("transparent");
+  expect(search.borderBottomColor).toBe("transparent");
+  act(() => tree.unmount());
+});

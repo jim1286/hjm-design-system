@@ -45,7 +45,7 @@ export function ReferenceBar({ reference }: { reference: NavigationBarReference 
   <Heading level="level3">{reference.title}</Heading>
   <Text>{reference.source}에서 착안</Text>
   <BottomNavigation descriptor={{ accessibilityLabel: reference.title, selectedKey: selected, items }}
-   configuration={{ presentation: reference.presentation, selection: reference.id === "project" ? "tile" : "emphasis", density: "compact", distribution: action && reference.presentation !== "capsule" ? "center-gap" : "equal" }}
+   configuration={{ presentation: reference.presentation, selection: reference.id === "project" || reference.id === "plank" ? "tile" : "emphasis", ...(reference.id === "plank" ? { surface: "raised" as const } : {}), density: "compact", distribution: action && reference.presentation !== "capsule" ? "center-gap" : "equal" }}
    renderIcon={glyph} onActivate={event => setSelected(event.key)}
    getHref={item => `#${encodeURIComponent(`${fragmentPrefix}${item.id}`)}`} style={{ position: "relative" }}
    primaryAction={action ? <IconButton label={action} tone="primary" size="large" shape="circle" onClick={() => setActionCount(count => count + 1)}><ActionIcon aria-hidden="true"/></IconButton> : undefined} />

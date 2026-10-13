@@ -744,6 +744,8 @@ export function BottomNavigation<
   const capsule = presentation.presentation === "capsule";
   const tile = presentation.selection === "tile";
   const tileRecipe = bottomNavigationRecipe.selectionTile;
+  const raised = tile && presentation.surface === "raised";
+  const raisedRecipe = bottomNavigationRecipe.raisedSurface;
   // Hidden labels keep the item's accessibilityLabel; only the visible Text row is dropped.
   const labelsVisible = presentation.labels === "visible";
   const expandedLabels = theme.environment.textScale >= 1.5 || resolved.items.length > 4;
@@ -756,7 +758,8 @@ export function BottomNavigation<
     bottomNavigationRecipe.presentations[presentation.presentation];
   // Floating/capsule presentations own elevation; a flat bar must never gain
   // one just because a profile has a floating token. Keep router state outside.
-  const surfaceShadow = presentationRecipe.shadow
+  // The raised plank's lower edge is its elevation; a floating shadow under it reads as two objects.
+  const surfaceShadow = presentationRecipe.shadow && !raised
     ? theme.designProfile?.tokens.shadow.floating ?? presentationRecipe.shadow
     : null;
   const centerGap =
@@ -779,13 +782,16 @@ export function BottomNavigation<
     theme.palette,
   );
   const surfaceBackground = resolveColorReference(
-    tile ? tileRecipe.background : presentationRecipe.background,
+    raised ? raisedRecipe.background : tile ? tileRecipe.background : presentationRecipe.background,
     theme.palette,
   );
   const surfaceBorder = resolveColorReference(
-    presentationRecipe.border,
+    raised ? raisedRecipe.border : presentationRecipe.border,
     theme.palette,
   );
+  const selectedDepthColor = raised
+    ? resolveColorReference(raisedRecipe.selectedDepthColor, theme.palette)
+    : undefined;
   const badgeMetrics = counterBadgeRecipe.sizes[bottomNavigationRecipe.badge.size];
   const badgeTone = counterBadgeRecipe.tones.danger;
   const badgeVariant = counterBadgeRecipe.variants[bottomNavigationRecipe.badge.variant];
@@ -827,6 +833,8 @@ export function BottomNavigation<
               capsule ? 0 : presentationRecipe.borderWidth,
             borderWidth:
               presentation.presentation === "floating" ? presentationRecipe.borderWidth : 0,
+            // Per-edge width after borderWidth: only the lower edge thickens into the plank side.
+            ...(raised ? { borderBottomWidth: raisedRecipe.depth } : {}),
             ...(surfaceShadow ? resolveNativeShadowElevation(surfaceShadow, theme.designProfile !== undefined, 8) : { elevation: 0 }),
             maxWidth: presentationRecipe.maxWidth ?? undefined,
             position: "relative",
@@ -902,6 +910,12 @@ export function BottomNavigation<
                       ? resolveColorReference(tileRecipe.selectedBackground, theme.palette)
                       : pressed ? pressedBackground : capsule && selected ? theme.colors.surfaceAccent : "transparent",
                     borderRadius: tile ? theme.tokens.radius[tileRecipe.radius] : capsule ? radius.full : theme.tokens.radius.lg,
+                    // Every raised tile reserves the edge so selection never shifts icon/label rows.
+                    // The translucent edge composites over the brand fill, darkening it.
+                    ...(raised ? {
+                      borderBottomWidth: raisedRecipe.selectedDepth,
+                      borderBottomColor: selected ? selectedDepthColor : "transparent",
+                    } : {}),
                     // Floating edge items touch the frame. Their pressed fill must follow its
                     // inner curve; the smaller generic radius painted over the border in Spint.
                     // Match corners instead of clipping the whole surface (which clips shadows/focus).

@@ -21,7 +21,15 @@ export type BottomNavigationConfiguration = Readonly<{
     labels?: BottomNavigationLabels;
     /** Inset selected destination card, with equal widths and persistent labels. Floating only. */
     selection?: "emphasis" | "tile";
+    /**
+     * `raised` paints the tile bar as a thick plank: a sunken surface role with a
+     * control-colored lower edge, and a darker lower edge under the selected tile.
+     * Tile selection only. Added 2026-10-13 for Spint's wooden-sign tab bar so the
+     * product supplies colors through palette roles instead of deprecated styles.
+     */
+    surface?: BottomNavigationSurface;
 }>;
+export type BottomNavigationSurface = "flat" | "raised";
 export type ResolvedBottomNavigationConfiguration = Readonly<{
     presentation: BottomNavigationPresentation;
     distribution: BottomNavigationDistribution;
@@ -30,6 +38,7 @@ export type ResolvedBottomNavigationConfiguration = Readonly<{
     keyboardBehavior: BottomNavigationKeyboardBehavior;
     labels: BottomNavigationLabels;
     selection: "emphasis" | "tile";
+    surface: BottomNavigationSurface;
 }>;
 /**
  * Bottom navigation only accepts numeric counters. A silent status dot is too
@@ -114,6 +123,7 @@ export declare const bottomNavigationBehaviorDefaults: {
     readonly keyboardBehavior: "hide";
     readonly labels: "visible";
     readonly selection: "emphasis";
+    readonly surface: "flat";
     readonly minItems: 2;
     readonly maxItems: 6;
 };

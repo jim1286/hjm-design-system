@@ -460,6 +460,7 @@ describe("BottomNavigation visual and behavior contracts", () => {
       keyboardBehavior: "hide",
       labels: "visible",
       selection: "emphasis",
+      surface: "flat",
     });
     expect(
       resolveBottomNavigationConfiguration(
@@ -481,6 +482,7 @@ describe("BottomNavigation visual and behavior contracts", () => {
       keyboardBehavior: "remain",
       labels: "hidden",
       selection: "emphasis",
+      surface: "flat",
     });
     expect(() =>
       validateBottomNavigationConfiguration({ distribution: "center-gap" }, 3),
@@ -544,6 +546,7 @@ describe("BottomNavigation visual and behavior contracts", () => {
       keyboardBehavior: "hide",
       labels: "visible",
       selection: "emphasis",
+      surface: "flat",
       minItems: 2,
       maxItems: 6,
     });
@@ -583,5 +586,12 @@ describe("tile selection", () => {
     expect(() => resolveBottomNavigationConfiguration({ presentation: "capsule", selection: "tile" }, 3)).toThrow("requires floating");
     expect(() => resolveBottomNavigationConfiguration({ presentation: "floating", selection: "tile", labels: "hidden" }, 3)).toThrow("visible labels");
     expect(() => resolveBottomNavigationConfiguration({ presentation: "floating", selection: "tile", distribution: "center-gap" }, 4)).toThrow("equal distribution");
+  });
+
+  it("adds the raised plank only on tile selection", () => {
+    expect(resolveBottomNavigationConfiguration({ presentation: "floating", selection: "tile" }, 3).surface).toBe("flat");
+    expect(resolveBottomNavigationConfiguration({ presentation: "floating", selection: "tile", surface: "raised" }, 3).surface).toBe("raised");
+    expect(() => resolveBottomNavigationConfiguration({ presentation: "floating", surface: "raised" }, 3)).toThrow("requires tile selection");
+    expect(() => resolveBottomNavigationConfiguration({ presentation: "floating", selection: "tile", surface: "wood" as never }, 3)).toThrow("Unsupported BottomNavigation surface");
   });
 });

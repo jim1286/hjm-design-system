@@ -400,6 +400,7 @@ export declare const behaviorRegistry: {
             readonly keyboardBehavior: "hide";
             readonly labels: "visible";
             readonly selection: "emphasis";
+            readonly surface: "flat";
             readonly minItems: 2;
             readonly maxItems: 6;
         };

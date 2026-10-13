@@ -12,6 +12,7 @@ export const bottomNavigationBehaviorDefaults = {
     keyboardBehavior: "hide",
     labels: "visible",
     selection: "emphasis",
+    surface: "flat",
     minItems: 2,
     maxItems: 6,
 };
@@ -34,6 +35,7 @@ const configurationKeys = new Set([
     "keyboardBehavior",
     "labels",
     "selection",
+    "surface",
 ]);
 const descriptorKeys = new Set(["accessibilityLabel", "items", "selectedKey"]);
 const itemKeys = new Set([
@@ -146,6 +148,13 @@ export function validateBottomNavigationConfiguration(configuration, itemCount) 
         (configuration.presentation !== "floating" || configuration.distribution === "center-gap" || configuration.labels === "hidden")) {
         throw new TypeError("BottomNavigation tile selection requires floating, equal distribution and visible labels");
     }
+    if (configuration.surface !== undefined && !["flat", "raised"].includes(configuration.surface)) {
+        throw new TypeError("Unsupported BottomNavigation surface");
+    }
+    // The lower edges belong to the tile row; an emphasis bar has no selected card to lift.
+    if (configuration.surface === "raised" && configuration.selection !== "tile") {
+        throw new TypeError("BottomNavigation raised surface requires tile selection");
+    }
     // Capsule actions sit beside the destination surface, so reserving a central gap would duplicate their space.
     if (configuration.presentation === "capsule" && configuration.distribution === "center-gap") {
         throw new TypeError("BottomNavigation capsule uses an adjacent action, not center-gap");
@@ -165,6 +174,7 @@ export function resolveBottomNavigationConfiguration(configuration, itemCount) {
             bottomNavigationBehaviorDefaults.keyboardBehavior,
         labels: configuration.labels ?? bottomNavigationBehaviorDefaults.labels,
         selection: configuration.selection ?? bottomNavigationBehaviorDefaults.selection,
+        surface: configuration.surface ?? bottomNavigationBehaviorDefaults.surface,
     };
 }
 export function validateBottomNavigationDescriptor(descriptor) {

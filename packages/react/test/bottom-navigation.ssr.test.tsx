@@ -113,3 +113,10 @@ it("renders tile destinations as equal persistent named links", () => {
   expect(markup).toContain('aria-current="page"');
   expect(markup).toContain('href="/search"');
 });
+
+it("marks the raised tile plank for its surface styles", () => {
+  const markup = renderToStaticMarkup(<HjmProvider systemTheme="light">
+    <BottomNavigation descriptor={descriptor} configuration={{ presentation: "floating", selection: "tile", surface: "raised" }} getHref={item => `/${item.id}`} renderIcon={() => null} />
+  </HjmProvider>);
+  expect(markup).toContain('data-surface="raised"');
+});

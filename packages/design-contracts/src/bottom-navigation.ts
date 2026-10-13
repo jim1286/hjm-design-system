@@ -31,7 +31,16 @@ export type BottomNavigationConfiguration = Readonly<{
   labels?: BottomNavigationLabels;
   /** Inset selected destination card, with equal widths and persistent labels. Floating only. */
   selection?: "emphasis" | "tile";
+  /**
+   * `raised` paints the tile bar as a thick plank: a sunken surface role with a
+   * control-colored lower edge, and a darker lower edge under the selected tile.
+   * Tile selection only. Added 2026-10-13 for Spint's wooden-sign tab bar so the
+   * product supplies colors through palette roles instead of deprecated styles.
+   */
+  surface?: BottomNavigationSurface;
 }>;
+
+export type BottomNavigationSurface = "flat" | "raised";
 
 export type ResolvedBottomNavigationConfiguration = Readonly<{
   presentation: BottomNavigationPresentation;
@@ -41,6 +50,7 @@ export type ResolvedBottomNavigationConfiguration = Readonly<{
   keyboardBehavior: BottomNavigationKeyboardBehavior;
   labels: BottomNavigationLabels;
   selection: "emphasis" | "tile";
+  surface: BottomNavigationSurface;
 }>;
 
 /**
@@ -151,6 +161,7 @@ export const bottomNavigationBehaviorDefaults = {
   keyboardBehavior: "hide",
   labels: "visible",
   selection: "emphasis",
+  surface: "flat",
   minItems: 2,
   maxItems: 6,
 } as const satisfies Readonly<{
@@ -158,6 +169,7 @@ export const bottomNavigationBehaviorDefaults = {
   keyboardBehavior: BottomNavigationKeyboardBehavior;
   labels: BottomNavigationLabels;
   selection: "emphasis" | "tile";
+  surface: BottomNavigationSurface;
   minItems: number;
   maxItems: number;
 }>;
@@ -183,6 +195,7 @@ const configurationKeys = new Set([
   "keyboardBehavior",
   "labels",
   "selection",
+  "surface",
 ]);
 const descriptorKeys = new Set(["accessibilityLabel", "items", "selectedKey"]);
 const itemKeys = new Set([
@@ -347,6 +360,13 @@ export function validateBottomNavigationConfiguration(
       (configuration.presentation !== "floating" || configuration.distribution === "center-gap" || configuration.labels === "hidden")) {
     throw new TypeError("BottomNavigation tile selection requires floating, equal distribution and visible labels");
   }
+  if (configuration.surface !== undefined && !["flat", "raised"].includes(configuration.surface)) {
+    throw new TypeError("Unsupported BottomNavigation surface");
+  }
+  // The lower edges belong to the tile row; an emphasis bar has no selected card to lift.
+  if (configuration.surface === "raised" && configuration.selection !== "tile") {
+    throw new TypeError("BottomNavigation raised surface requires tile selection");
+  }
   // Capsule actions sit beside the destination surface, so reserving a central gap would duplicate their space.
   if (configuration.presentation === "capsule" && configuration.distribution === "center-gap") {
     throw new TypeError("BottomNavigation capsule uses an adjacent action, not center-gap");
@@ -375,6 +395,7 @@ export function resolveBottomNavigationConfiguration(
       bottomNavigationBehaviorDefaults.keyboardBehavior,
     labels: configuration.labels ?? bottomNavigationBehaviorDefaults.labels,
     selection: configuration.selection ?? bottomNavigationBehaviorDefaults.selection,
+    surface: configuration.surface ?? bottomNavigationBehaviorDefaults.surface,
   };
 }
 

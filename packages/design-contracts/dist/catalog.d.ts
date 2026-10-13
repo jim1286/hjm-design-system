@@ -1852,6 +1852,25 @@ export declare const recipeRegistry: {
             readonly gap: 4;
             readonly radius: "lg";
         };
+        readonly raisedSurface: {
+            readonly background: Readonly<{
+                source: "theme";
+                key: "surfaceAlt";
+                alpha?: number;
+            }>;
+            readonly border: Readonly<{
+                source: "theme";
+                key: "borderControl";
+                alpha?: number;
+            }>;
+            readonly depth: 4;
+            readonly selectedDepth: 3;
+            readonly selectedDepthColor: Readonly<{
+                source: "theme";
+                key: "text";
+                alpha?: number;
+            }>;
+        };
         readonly adaptive: {
             readonly web: "fixed-compact-viewport";
             readonly native: "navigator-tab-bar";

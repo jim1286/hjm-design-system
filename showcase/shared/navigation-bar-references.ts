@@ -11,6 +11,7 @@ export const navigationBarReferences = [
  { id: "energy", title: "끝쪽 에너지 버튼", source: "가정 에너지", presentation: "capsule", accent: "#8c6200", soft: "#fff0b5", items: ["홈", "전원", "연결"], icons: ["home", "power", "link"], action: "에너지 절약 전환", actionIcon: "power" },
  { id: "video", title: "어두운 영상 탐색 바", source: "짧은 영상", presentation: "floating", accent: "#543078", soft: "#eee1ff", items: ["홈", "탐색", "메시지", "내 정보"], icons: ["home", "search", "message", "user"], action: "영상 만들기", actionIcon: "plus" },
  { id: "project", title: "둥근 사각형 선택 바", source: "프로젝트 관리", presentation: "floating", accent: "#ffffff", soft: "#252b33", items: ["홈", "프로젝트", "검색", "내 정보"], icons: ["home", "file", "search", "user"] },
+ { id: "plank", title: "두께 있는 팻말 바", source: "들판 꾸미기 게임", presentation: "floating", accent: "#2f732c", soft: "#eadfc2", items: ["들판", "탐험", "설정"], icons: ["home", "search", "settings"] },
 ] as const;
 export type NavigationBarReference = (typeof navigationBarReferences)[number];
 
@@ -24,6 +25,13 @@ export function referenceNavigationPalette(reference: NavigationBarReference) {
   const ink = { bg: finance ? "#124c43" : "#352246", surface: finance ? "#276c60" : "#443057", surfaceAlt: finance ? "#276c60" : "#443057", surfaceAccent: finance ? "#408577" : "#16101e", border: finance ? "#71aa9e" : "#947ca5", text: "#ffffff", textBody: "#f5f5f5", textMuted: "#e6e6e6", textSub: "#e6e6e6", contentBrand: "#ffffff", primary: "#ffffff", onPrimary: finance ? "#124c43" : "#352246" };
   return { light: ink, dark: { ...ink, bg: finance ? "#0d352f" : "#23172d" } };
  }
+ // The raised plank reads its surface from surfaceAlt and its edge from borderControl (Spint, 2026-10-13).
+ if (reference.id === "plank") {
+  return {
+   light: { ...light, surfaceAccent: "#ddefc8", surfaceAlt: reference.soft, borderControl: "#7a6749", contentBrand: "#2d6a2a", onPrimary: "#ffffff" },
+   dark: { primary: "#8fd27f", onPrimary: "#16301a", contentBrand: "#a9dc9c", surfaceAccent: "#24331f", surfaceAlt: "#3a3226", borderControl: "#a08c68" },
+  };
+ }
  return { light, dark };
 }
 
@@ -33,6 +41,6 @@ export const navigationBehaviorGroups = [
  { id: "center", title: "중앙에서 작업 실행", references: ["robot", "social", "commerce", "video"] },
  { id: "separate", title: "탐색 옆에서 작업 실행", references: ["cycle", "energy"] },
  { id: "label", title: "선택한 목적지 이름 표시", references: ["finance", "shop", "car"] },
- { id: "rectangle", title: "사각 영역으로 현재 위치 표시", references: ["project"] },
+ { id: "rectangle", title: "사각 영역으로 현재 위치 표시", references: ["project", "plank"] },
 ] as const;
 export type NavigationBehavior = (typeof navigationBehaviorGroups)[number]["id"];
