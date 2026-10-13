@@ -12,6 +12,7 @@ describe("@hjmds/react package boundary", () => {
     };
     const executableExportPaths = [
       ".",
+      "./status-text",
       "./provider",
       "./carousel",
       "./floating-action-button",

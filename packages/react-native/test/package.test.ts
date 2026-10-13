@@ -48,6 +48,7 @@ describe("@hjmds/react-native package boundary", () => {
     expect(packageJson.sideEffects).toBe(false);
     const expectedExportPaths = [
       ".",
+      "./status-text",
       "./provider",
       "./carousel",
       "./floating-action-button",
