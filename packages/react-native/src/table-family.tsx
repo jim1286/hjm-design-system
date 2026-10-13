@@ -38,15 +38,16 @@ export function LineScore({ teams, totals, currentPeriod = null, minPeriods, ren
   const { colors, color } = usePalette();
   const score = resolveLineScore(teams, { totals, currentPeriod, ...(minPeriods !== undefined ? { minPeriods } : {}) });
   const periods = score.columns.filter(column => column.kind === "period"), totalColumns = score.columns.filter(column => column.kind === "total");
-  const CELL = 26, TOTAL = 30, ROW = 36, NAME = 72;
+  // Nine innings plus R/H/E/B fit a 360pt phone without scrolling; a team mark (renderTeam) replaces the
+  // visible name, which stays in the row's accessibility label (2026-10-14 Yajalal device check: "L…").
+  const CELL = 23, TOTAL = 27, ROW = 36, NAME = renderTeam ? 40 : 64;
   const header = color(dataTableRecipe.header.color), live = color(dataTableRecipe.sortButton.activeColor);
   const rowLabel = (team: LineScoreTeam) => `${team.name} ${totalColumns.map(column => `${column.header} ${team.totals[column.header] ?? "—"}`).join(", ")}`;
   return <View accessibilityLabel={accessibilityLabel} style={[{ flexDirection: "row", borderRadius: 12, overflow: "hidden", backgroundColor: colors.surface, paddingVertical: spacing.xs }, layoutStyle]}>
     <View>
       <View style={{ height: 26 }} />
-      {teams.map(team => <View key={team.id} accessible accessibilityLabel={rowLabel(team)} style={{ height: ROW, width: NAME, flexDirection: "row", alignItems: "center", gap: 6, paddingHorizontal: spacing.sm }}>
-        {renderTeam?.(team)}
-        <NativeText numberOfLines={1} style={{ flex: 1, color: score.leaderId === team.id ? colors.text : colors.textBody, fontSize: 14, fontWeight: score.leaderId === team.id ? "800" : "600" }}>{team.name}</NativeText>
+      {teams.map(team => <View key={team.id} accessible accessibilityLabel={rowLabel(team)} style={{ height: ROW, width: NAME, flexDirection: "row", alignItems: "center", gap: 6, paddingLeft: spacing.sm }}>
+        {renderTeam ? renderTeam(team) : <NativeText numberOfLines={1} style={{ flex: 1, color: score.leaderId === team.id ? colors.text : colors.textBody, fontSize: 14, fontWeight: score.leaderId === team.id ? "800" : "600" }}>{team.name}</NativeText>}
       </View>)}
     </View>
     <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1, justifyContent: "flex-end" }}>
