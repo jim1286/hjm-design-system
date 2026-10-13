@@ -20,6 +20,7 @@ on:
 # Pages 쓰기는 배포 job에만 준다. 수동 브랜치 검사는 읽기 권한만 사용한다.
 permissions:
   contents: read
+  actions: read
 
 # ref별로 격리하고, main 배포가 다음 요청 때문에 중간에 끊기지 않게 한다.
 concurrency:
@@ -117,6 +118,14 @@ jobs:
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: deploy/storybook/redirect
+      # Observe existing checks without turning API availability into a gate.
+      - name: Summarize observed CI timings
+        if: ${{ always() && github.ref == 'refs/heads/main' }}
+        continue-on-error: true
+        run: node scripts/ci-metrics.mjs "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID" "$RUNNER_TEMP/module-check-timing.json"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          CI_METRICS_SUMMARY: '1'
 
   deploy:
     if: github.ref == 'refs/heads/main'
