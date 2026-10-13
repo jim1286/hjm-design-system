@@ -261,7 +261,7 @@ Web 17건(5·4·6·2)이 세 브라우저 각각, Native host 13건(5·3·2·3)�
 
 공유 변경 경계를 확인하며 RN Web focus host 2건, Native toast-press/interaction-adapters/image-viewer-host 25건, Chromium toast-press 8건을 추가 실행해 통과했다. BottomNavigation tile만 선택한 contracts/Native/Web SSR 각 1건도 통과했다(다른 사례는 선택 범위 밖으로 건너뜀). package exports의 실제 대상 경로를 dry-run 게시 목록과 대조해 contracts237/Web202/Native168개 경로 누락이 없음을 확인했다. 기존 공유 변경의 게시 포함 여부와 검증된 source SHA가 확정되기 전에는 버전 변경·commit·push·npm 게시를 실행하지 않았다. 소비 앱 두 patch도 아직 새 게시 버전과 함께 적용할 대상으로 유지한다.
 
-사용자가 2026-10-13 공유 변경 4그룹도 이번 릴리스에 포함하도록 승인했다. 위 4그룹은 현재 근거로 식별된 독립 기능이며, 감사 기록만으로 나머지 모든 diff의 원저자까지 확정할 수 있다는 뜻은 아니다. 공개 소스의 실제 diff와 필요한 파일 의존을 확인하고 경로를 지정해 커밋한다. 새 브랜치·워크트리 없이 기존 main에서 소스를 확정하고, 배포 Mac에서 major 버전을 준비한 뒤 기존 CI의 release 검사를 거쳐 게시한다.
+사용자가 2026-10-13 공유 변경 4그룹도 이번 릴리스에 포함하도록 승인했다. 위 4그룹은 현재 근거로 식별된 독립 기능이며, 감사 기록만으로 나머지 모든 diff의 원저자까지 확정할 수 있다는 뜻은 아니다. 공개 소스의 실제 diff와 필요한 파일 의존을 확인하고 경로를 지정해 커밋했다. 새 브랜치·워크트리 없이 기존 main에서 소스를 확정하고, 배포 Mac의 버전 준비 뒤 기존 CI의 release 검사를 거쳐 게시한다.
 
 ## 게시 대기 중 소비 표면 대조
 
@@ -280,3 +280,11 @@ Web 17건(5·4·6·2)이 세 브라우저 각각, Native host 13건(5·3·2·3)�
 Node24.20.0과 각 앱의 설치 TypeScript를 사용했다. Spint의 첫 임시 설정에서 나온 TS2688은 후보와 설치 baseline 모두에서 /tmp 기준 explicit types 탐색 실패였고, 앱 typeRoots를 지정한 최종 후보는 통과했다. 제품 소스 결함으로 합산하지 않는다. 새로 필요한 소비 patch는 발견하지 않았고, 기존 BurnTok/Utilverse patch의 `git apply --check`도 재통과했다. 후보 실제 설치·Next typegen/build·브라우저/기기 동작은 미실행이다.
 
 실제 package.json 의존성 검색에서 module.contract.json의 호환성 검토 목록에 Utilverse와 App Release Hub가 빠져 있어 추가하고 consumer policy에 근거를 적었다. HJM 한 모듈만 선택한 계약 검사는 `contract-valid, execution=not-run`이며 실행 회귀 통과로 해석하지 않는다. Mofun은 portfolio catalog상 archived/checkout absent이므로 현재 활성 checkout의 후보 타입 검사 대상에 포함하지 않았다.
+
+## 1.19.0 게시 준비
+
+공유 4그룹 포함 승인 뒤 소스를 `fde269f2`로 커밋·push하고 원격 main SHA를 확인했다. 실패 캡처 48개는 게시 소스에서 제외하고 보존했다. 배포 Mac의 깨끗한 기존 main을 Git fast-forward로 동기화했다.
+
+배포 Mac에서 처음 2.0.0을 준비했으나, 게시 전에 사용자가 "마이너 버전 올려"로 지정했다. 세 패키지를 1.19.0, renderer peer를 `>=1.19.0 <1.20.0`으로 수정하고 source/evidence/manifest/dist를 다시 생성했다. 버전·release artifacts 검사는 통과했고 버전 커밋 `f6884e2d`를 push해 원격 SHA를 확인했다. 제거 API의 breaking 성격은 이관표에 유지하며 사용자 지정 minor 번호를 일반적인 하위 호환 보장으로 표현하지 않는다. 이 시점에는 npm 게시·소비 설치가 아직 미실행이다.
+
+게시 경계 재검토에서 장식 복구 안내만 담긴 두 usage stub를 발견해 GravityLetters·GridReveal 정본문서에 합쳤다. 기존 Text/Image 사용 지침의 정본 링크를 유지했고 선택 지침 2개 검사·색인 갱신을 통과했다.

@@ -24,3 +24,5 @@ Both Storybooks: `컴포넌트 / Display / Gravity Letters`, with Default, Dark
 and LargeText. Web glyph typography can be inherited from a surrounding heading
 Text. Renderer behavior tests cover explicit replay and motion bypass; Native
 mock tests do not prove actual device rendering.
+
+장식 animation 생성이 중간에 실패하면 이미 만든 animation을 정리하고 정적인 글자를 유지한다. 장식 실패로 본문을 제거하지 않는다.

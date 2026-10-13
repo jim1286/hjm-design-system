@@ -9,3 +9,5 @@
 Web은 WAAPI, Native는 Core Animated를 사용한다. Native 화면이 mounted인 채 가려지면 제품이 active=false를 전달해야 한다. 부모를 이미지 크기에 맞게 배치하며, 둥근 이미지 모서리가 필요하면 동일한 클리핑 프레임으로 둘을 감싼다.
 
 양쪽 Storybook 컴포넌트/시각 효과/Grid Reveal에서 Default/Dark/LargeText, 다시 보기와 이미지 실패/재시도를 제공한다. 예제 풍경은 코드로 만든 자체 이미지다. [Native 후속 검증](../../../docs/evidence/component-flows-2026-10-01/README.md)에서 기존 iPhone 17 / iOS 27 시뮬레이터의 큰 글씨 오류·재시도 화면을 실제 조작하고 확인했다. Image 계약에 따라 오류 전후 같은 이미지 설명을 유지하며, 시각적 오류 문구는 중복 접근성 이름으로 읽지 않는다. 물리 기기의 GPU 비용과 프레임별 효과 타이밍 검증은 별도다.
+
+장식 animation 생성이 중간에 실패하면 이미 만든 animation과 마스크를 정리하여 본문을 즉시 드러낸다.
