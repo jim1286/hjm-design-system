@@ -170,5 +170,5 @@
 
 - Web `@hjmds/react/chart`(SVG DOM), Native `@hjmds/react-native/chart`(react-native-svg)는 같은 이름·prop을 쓴다.
 - 계약 검사는 `test/chart.test.ts`(기하·빈 값·쌓기·척도·포커스·텍스트 대안)다.
-- 2026-10-14 작성 시점에 두 renderer는 구현 중이다. renderer 테스트·Storybook(`실험/컴포넌트/데이터 표시/차트`)·기기 확인 결과는
+- 2026-10-14 작성 시점에 두 renderer는 구현 중이다. renderer 테스트·Storybook(`배포/컴포넌트/데이터 표시/차트`)·기기 확인 결과는
   들어온 뒤 이 절에 따로 기록한다. 계약 검사 통과를 renderer 검증이나 제품 반영으로 보고하지 않는다.

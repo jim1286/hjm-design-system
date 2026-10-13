@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-native";
 import { ActivityStatusPreview } from "./activity-status-preview";
-const meta = { title: "실험/구성/피드백과 복구/백그라운드 작업 상태", component: ActivityStatusPreview } satisfies Meta<typeof ActivityStatusPreview>;
+const meta = { title: "배포/구성/피드백과 복구/백그라운드 작업 상태", component: ActivityStatusPreview } satisfies Meta<typeof ActivityStatusPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

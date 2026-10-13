@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ChartGalleryPreview } from "./Chart.previews";
 
-const meta = { id: "components-data-display-chart", title: "실험/컴포넌트/데이터 표시/차트", component: ChartGalleryPreview } satisfies Meta<typeof ChartGalleryPreview>;
+const meta = { id: "components-data-display-chart", title: "배포/컴포넌트/데이터 표시/차트", component: ChartGalleryPreview } satisfies Meta<typeof ChartGalleryPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

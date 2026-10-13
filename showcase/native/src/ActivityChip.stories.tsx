@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-native";
 import { ActivityChipPreview } from "./activity-status-preview";
-const meta = { title: "실험/컴포넌트/상태와 알림/작업 상태 칩", component: ActivityChipPreview } satisfies Meta<typeof ActivityChipPreview>;
+const meta = { title: "배포/컴포넌트/상태와 알림/작업 상태 칩", component: ActivityChipPreview } satisfies Meta<typeof ActivityChipPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

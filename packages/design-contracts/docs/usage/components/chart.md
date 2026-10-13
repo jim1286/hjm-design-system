@@ -1,12 +1,12 @@
 # Chart
 
 - 단계: 컴포넌트
-- 상태: 실험
+- 상태: 배포
 - 지원: Web · Native
 - 적용: 미게시(1.20.0 이후)
 - 검토일: 2026-10-14
 - 근거: [Chart](../../chart.md), `src/chart.ts`(`chartRecipe`, `describeChart`, `resolveLineGeometry`), `src/dataviz.ts`(`resolveDatavizSeriesColor`, `datavizChromeTokens`)
-- 스토리북: `실험/컴포넌트/데이터 표시/차트`
+- 스토리북: `배포/컴포넌트/데이터 표시/차트`
 
 ## 언제 쓰나
 

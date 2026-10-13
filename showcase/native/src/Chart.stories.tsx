@@ -38,7 +38,7 @@ function Gallery({ only }: { only?: "line" | "bar" | "horizontal" | "stacked" | 
   </Stack></ScrollView>;
 }
 
-const meta = { title: "실험/컴포넌트/데이터 표시/차트", component: Gallery } satisfies Meta<typeof Gallery>;
+const meta = { title: "배포/컴포넌트/데이터 표시/차트", component: Gallery } satisfies Meta<typeof Gallery>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

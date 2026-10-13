@@ -33,7 +33,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | 지침 | 분류 | 언제 쓰나 | 제공 기준 | 지원 | API 안정성 | Storybook |
 | --- | --- | --- | --- | --- | --- | --- |
 | [Accordion](components/accordion.md) | 데이터 표시 | 서로 관계가 있는 여러 접힘 항목을 한 그룹으로 보일 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
-| [ActivityChip](components/activity-chip.md) | 상태와 알림 | 백그라운드에서 돌고 있는 작업 하나(검수·업로드·동기화)의 상태를 헤더의 빈 자리에 짧게 보여 주고, 누르면 그 작업의 진행 패널(Toast 패널)을 여닫을 때 쓴다. | 미게시(1.17.2 이후) | Web · Native | 개별 API 계약 참조 | 실험 |
+| [ActivityChip](components/activity-chip.md) | 상태와 알림 | 백그라운드에서 돌고 있는 작업 하나(검수·업로드·동기화)의 상태를 헤더의 빈 자리에 짧게 보여 주고, 누르면 그 작업의 진행 패널(Toast 패널)을 여닫을 때 쓴다. | 미게시(1.17.2 이후) | Web · Native | 개별 API 계약 참조 | 배포 |
 | [ActivityHeatmap](components/activity-heatmap.md) | 데이터 표시 | 최대 1년(366일) 범위의 일별 활동량을 한눈에 보여 주는 읽기 전용 개요에 쓴다. | 1.12.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Affix](components/affix.md) | 기반 기능 | Web에서 스크롤하는 동안 요약·필터·저장 버튼 같은 작은 영역을 가장 가까운 스크롤 조상의 상단에 붙여 두고, 부모가 끝나면 함께 풀리게 할 때 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |
 | [Agreement](components/agreement.md) | 입력 | 가입·결제·서비스 시작 앞의 약관 동의 묶음에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
@@ -54,7 +54,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [Card](components/card.md) | 데이터 표시 | 문서 metadata·미리보기·내보내기 상태는 실험 구성 DocumentResource를 먼저 대조한다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Carousel](components/carousel.md) | 데이터 표시 | 한 번에 카드 하나만 보이고 사용자가 순서대로 넘겨 보는 유한한 묶음에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Celebration](components/celebration.md) | 구성/직접 조작과 모션 | 목표 달성, 첫 완료처럼 드물게 일어나는 성공 순간에 한 번 터지는 색종이 효과에 쓴다. | 1.12.1 | Web · Native | 개별 API 계약 참조 | 배포 |
-| [Chart](components/chart.md) | 데이터 표시 | 수치의 흐름·비교·몫·모양·관계를 그림으로 읽게 할 때 쓴다. | 미게시(1.20.0 이후) | Web · Native | Web beta / Native beta | 실험 |
+| [Chart](components/chart.md) | 데이터 표시 | 수치의 흐름·비교·몫·모양·관계를 그림으로 읽게 할 때 쓴다. | 미게시(1.20.0 이후) | Web · Native | Web beta / Native beta | 배포 |
 | [ChatMessage](components/chat-message.md) | 구성/정보 표시 | DM·대화 타임라인의 메시지 한 개에 쓴다. | 1.17.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [ChatScreen](components/chat-screen.md) | 화면/소통 | DM·대화방처럼 헤더, 메시지 타임라인, 하단 작성창으로 이루어진 화면 한 장에 쓴다. | 1.17.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Checkbox](components/checkbox.md) | 입력 | 독립된 예/아니오 하나를 고르는 항목에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
@@ -212,7 +212,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [추가해도 유지되는 목록](compositions/live-list.md) | 정보 표시 | 입력 중인 목록에 새 데이터가 추가되거나 순서가 바뀌어도 기존 초안과 항목의 정체성을 유지할 때 쓴다. | 1.14.0 | Web · Native | 구성 API별 | 배포 |
 | [카드 묶음과 긴 목록](compositions/data-layouts.md) | 정보 표시 | 많은 항목을 화면에 늘어놓을 방식을 고를 때 쓴다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
 | [그림과 시작 안내](compositions/illustrated-outcome.md) | 피드백과 복구 | 빈 목록에서 시작을 안내하고 짧은 온보딩을 거쳐 결과를 보여 줄 때 쓴다. | 1.14.0 | Web · Native | 구성 API별 | 배포 |
-| [백그라운드 작업 상태](compositions/activity-status.md) | 피드백과 복구 | 사용자가 다른 화면을 보는 동안 계속되는 작업 하나(검수·생성·업로드)의 진행을 헤더의 작은 칩으로 알리고, 칩을 누르면 같은 작업의 패널 Toast가 열려 단계와 결과를 보여 줄 때 쓴다. | 미게시(1.17.2 이후) | Web · Native | 구성 API별 | 실험 |
+| [백그라운드 작업 상태](compositions/activity-status.md) | 피드백과 복구 | 사용자가 다른 화면을 보는 동안 계속되는 작업 하나(검수·생성·업로드)의 진행을 헤더의 작은 칩으로 알리고, 칩을 누르면 같은 작업의 패널 Toast가 열려 단계와 결과를 보여 줄 때 쓴다. | 미게시(1.17.2 이후) | Web · Native | 구성 API별 | 배포 |
 | [버튼 완료 피드백](compositions/action-feedback.md) | 피드백과 복구 | 입력을 유지하며 저장의 진행·성공·재시도 가능 실패를 보여 줄 때 쓴다. | 1.14.0 | Web · Native | 구성 API별 | 배포 |
 | [변경 저장과 이탈 확인](compositions/reference-settings.md) | 피드백과 복구 | 저장값과 편집 초안을 비교해 이탈 확인 흐름이 필요할 때 쓴다. | 구성 API 지침 참조 | Web · Native | 구성 API별 | 배포 |
 | [보관과 실행 취소](compositions/action-recovery-undo.md) | 피드백과 복구 | 보관·숨기기·목록에서 빼기처럼 제품이 역연산을 제공하는 작업 뒤에, 같은 자리에서 실행 취소를 주고 그 복구 요청이 성공해야 화면을 되돌릴 때 쓴다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |

@@ -1,12 +1,12 @@
 # 백그라운드 작업 상태
 
 - 단계: 구성
-- 상태: 실험
+- 상태: 배포
 - 지원: Web · Native
 - 적용: 미게시(1.17.2 이후)
 - 검토일: 2026-10-13
 - 근거: [ActivityChip 계약](../../activity-chip.md), [Toast 패널](../../toast.md#패널-toast--미게시1172-이후), 양 Showcase `activity-status-preview.tsx`, `showcase/shared/activity-status.ts`
-- 스토리북: `실험/구성/피드백과 복구/백그라운드 작업 상태`
+- 스토리북: `배포/구성/피드백과 복구/백그라운드 작업 상태`
 
 ## 언제 쓰나
 
