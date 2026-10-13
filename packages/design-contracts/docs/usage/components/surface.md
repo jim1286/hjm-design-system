@@ -34,8 +34,7 @@
 
 공개 guide가 HJM profile context를 서버 module에서 평가해 실패한 사례(2026-10-07)를 보완했다.
 현재 main의 Web `/layout`은 client entry이므로 서버가 작성한 JSX children과 직렬화 가능한 props를
-Surface로 넘길 수 있다. 서버 page 전체를 client로 바꿀 필요는 없다. 이 보완은1.15.0 이후 미게시이므로
-설치1.15.0에서는 제품의 작은 `"use client"` 재수출 경계를 유지한다. callback/ref 등 client 실행이
+Surface로 넘길 수 있다. 서버 page 전체를 client로 바꿀 필요는 없다. 이 client entry는 1.16.0 변경이다. callback/ref 등 client 실행이
 필요한 props는 소비 Client Component에서 만든다. 루트 barrel/다른 entry를 서버에 직접 import해도
 된다는 보장은 아니다. [재현·검증](../../../../../docs/qa/2026-10-07-rsc-profile-boundary.md)을 따른다.
 
@@ -71,7 +70,7 @@ import { Surface } from "@hjmds/react-native/primitives";
 | `as`(Web) | `div` · `section` · `article` | `div` | — |
 | `layoutStyle` | `HjmCompositionStyleProp` | — | Surface 자신의 바깥 여백·폭·flex·`alignSelf`. Web·Native 모두 |
 
-### 프로필 표면 질감(미게시)
+### 프로필 표면 질감(1.15.0 추가)
 
 선택한 `designProfile.material.surface`를 자동으로 읽는다. glass는 지원하는 Web에서 실제 배경 흐림,
 clay는 안쪽 그림자를 사용한다. Native는 루트 Provider의 선택형 `surfaceEffects` host와 inset capability를

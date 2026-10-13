@@ -1,6 +1,5 @@
 import { type MentionMatch, type MentionTriggerConfig } from "@hjmds/design-contracts/components/mentions";
 import { type ReactNode } from "react";
-import { type StyleProp, type ViewStyle } from "react-native";
 import { type TextAreaProps } from "./inputs.js";
 export type MentionCandidate = Readonly<{
     id: string;
@@ -22,11 +21,6 @@ export type MentionsProps<TriggerId extends string = string> = Omit<TextAreaProp
     /** Localized accessible name for the candidate list. */
     listLabel: string;
     renderCandidate?: (candidate: MentionCandidate) => ReactNode;
-    /**
-     * @deprecated Raw list style bypasses the candidate list renderer; it has no replacement slot.
-     * Use the inherited `layoutStyle` for placement. Removed in the next major (consumer-policy.md §3.1).
-     */
-    listStyle?: StyleProp<ViewStyle>;
 }>;
-export declare function Mentions<TriggerId extends string = string>({ value, onValueChange, triggers, candidates, onMentionQueryChange, emptyMessage, listLabel, renderCandidate, listStyle, ...textAreaProps }: MentionsProps<TriggerId>): import("react").JSX.Element;
+export declare function Mentions<TriggerId extends string = string>({ value, onValueChange, triggers, candidates, onMentionQueryChange, emptyMessage, listLabel, renderCandidate, ...textAreaProps }: MentionsProps<TriggerId>): import("react").JSX.Element;
 //# sourceMappingURL=mentions.d.ts.map

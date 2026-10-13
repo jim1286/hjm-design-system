@@ -31,4 +31,5 @@ export { TransferList, type TransferListProps, type TransferListLabels } from ".
 export { KeyboardAvoiding, resolveKeyboardAvoidanceBehavior, type KeyboardAvoidingProps } from "./keyboard.js";
 export { AuthProviderButton, type AuthProviderButtonProps } from "./provider-button.js";
 export { AuthScreenLayout, type AuthScreenLayoutProps } from "./auth-screen.js";
+export { StatusText, type StatusTextProps } from "./status-text.js";
 //# sourceMappingURL=index.d.ts.map

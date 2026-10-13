@@ -30,6 +30,8 @@
 | `Field` | 기본 — 커스텀 컨트롤용 틀 | `@hjmds/react`, `/forms` | `@hjmds/react-native`, `/forms` |
 | `TextField` | 동반 — 한 줄 텍스트 입력 | `@hjmds/react`, `/forms` | `@hjmds/react-native`, `/inputs` |
 | `GestureSheetInput` | 확장 — GestureSheet 안의 키보드 추적 입력 | 없음 | `/sheet-gesture` |
+| `DateEntry` | 확장 — 날짜 조각 직접 입력([구성 지침](../compositions/date-entry.md)) | `/date-entry` | `/date-entry` |
+| `FieldGroup` | 확장 — 관련 입력의 그룹 안내·오류([구성 지침](../compositions/field-group.md)) | `/field-group` | `/field-group` |
 
 ## 최소 사용 예
 
@@ -130,7 +132,7 @@ TextField와 같은 테두리·글꼴·placeholder 색을 입힌다. 라벨·도
   않는다(TS2375). 위 예처럼 조건부 spread로 넘긴다. Web은 `ReactNode`라 `undefined`를 그대로 넘겨도 된다.
 - Web `Field`는 `controlId`가 필수이고, Native `Field`에는 `controlId`가 없다. 공용 코드에서 같은 props 객체를 넘기지 않는다.
 
-### 날짜 조각 직접 입력 (실험·미게시)
+### 날짜 조각 직접 입력 (1.14.0 추가·실험)
 
 알고 있는 날짜를 년·월·일로 직접 편집하려면 `DateEntry`를 사용한다.
 Web `@hjmds/react/date-entry`, Native `@hjmds/react-native/date-entry`의 Field 확장이다.
@@ -143,11 +145,11 @@ Web `@hjmds/react/date-entry`, Native `@hjmds/react-native/date-entry`의 Field 
 
 Web TextField의 `aria-invalid={true}`는 외부 오류 ID를 `aria-describedby`로 연결하는 경우에도
 오류 테두리를 표시한다. Native TextField/TextArea의 `invalid`는 인라인 error 문구 없이 오류
-테두리를 표시하는 미게시 옵션이다. 같은 오류를 `accessibilityHint`로 연결하고 그룹 안내를
+테두리를 표시하는 옵션이다(1.14.0 추가). 같은 오류를 `accessibilityHint`로 연결하고 그룹 안내를
 별도로 보여 준다. error가 있으면 해당 문구가 hint보다 우선하고, hint가 없으면 description을 쓴다.
 2026-10-07 날짜 직접 입력의 큰 글자 오류가 세 번 반복된 관찰에 따라 이 경로를 추가했다.
 
-### 관련 입력 그룹 (실험·미게시)
+### 관련 입력 그룹 (1.14.0 추가·실험)
 
 여러 입력이 한 질문에 답하면 `FieldGroup`을 사용한다. Form의 제출 경계와 구분하며
 `@hjmds/react/field-group`, `@hjmds/react-native/field-group`에서 제공한다.

@@ -3,7 +3,7 @@ import type { SemanticIconName } from "@hjmds/design-contracts/components/icon";
 import { type IconButtonTone as ContractIconButtonTone, type IconButtonShape, type IconButtonSize } from "@hjmds/design-contracts/recipes";
 import { type ButtonAlign as ContractButtonAlign, type ButtonShape as ContractButtonShape, type ButtonSize as ContractButtonSize, type ButtonTone as ContractButtonTone } from "@hjmds/design-contracts/recipes/base";
 import { type ReactNode } from "react";
-import { View, type PressableProps, type StyleProp, type ViewStyle } from "react-native";
+import { View, type PressableProps } from "react-native";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { type NativeIconRenderProps } from "./primitives.js";
 export type ButtonTone = ContractButtonTone;
@@ -88,11 +88,6 @@ export type IconButtonProps = Omit<PressableProps, "accessibilityLabel" | "acces
     disableWhileLoading?: boolean;
     hitSlop?: PressableProps["hitSlop"];
     accessibilityState?: PressableProps["accessibilityState"];
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and
-     * `tone`/`size`/`shape`/`selected` for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
     renderLoadingIndicator?: (props: Readonly<{
         color: string;
         size: "small";
@@ -116,11 +111,6 @@ export declare const IconButton: import("react").ForwardRefExoticComponent<Omit<
     disableWhileLoading?: boolean;
     hitSlop?: PressableProps["hitSlop"];
     accessibilityState?: PressableProps["accessibilityState"];
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and
-     * `tone`/`size`/`shape`/`selected` for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
     renderLoadingIndicator?: (props: Readonly<{
         color: string;
         size: "small";
@@ -143,13 +133,8 @@ export type LinkProps = Omit<PressableProps, "accessibilityLabel" | "accessibili
     accessibilityHint?: string;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement; link
-     * color, underline and target size belong to `linkRecipe`. Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
 }>;
-export declare function Link({ descriptor, onNavigate, leading, trailing, renderIcon, accessibilityHint, layoutStyle, style, ...props }: LinkProps): import("react").JSX.Element;
+export declare function Link({ descriptor, onNavigate, leading, trailing, renderIcon, accessibilityHint, layoutStyle, ...props }: LinkProps): import("react").JSX.Element;
 export type BottomCTAAction = Readonly<{
     label: string;
     onPress: NonNullable<PressableProps["onPress"]>;
@@ -170,13 +155,8 @@ export type BottomCTAProps = Readonly<{
     safeAreaBottom?: number;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
-     * surface, border and shadow belong to `bottomCtaRecipe`. Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
     testID?: string;
 }>;
 /** Native sticky-action content; products own its screen-edge positioning. */
-export declare function BottomCTA({ primaryAction, secondaryAction, description, accessibilityLabel, safeAreaBottom, layoutStyle, style, testID, }: BottomCTAProps): import("react").JSX.Element;
+export declare function BottomCTA({ primaryAction, secondaryAction, description, accessibilityLabel, safeAreaBottom, layoutStyle, testID, ...removedProps }: BottomCTAProps): import("react").JSX.Element;
 //# sourceMappingURL=actions.d.ts.map

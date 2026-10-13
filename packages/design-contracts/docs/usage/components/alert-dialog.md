@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-07
+- 검토일: 2026-10-13
 - 근거: `AlertDialogRequest`·`createAlertDialogSession`(`src/alert-dialog.ts`), recipe `alertDialogRecipe`, Popover와의 경계 [ConfirmPopover 결정](../../confirm-popover.md), Native 긴 문구 처리 [Dialog](../../dialog.md)
 - 스토리북: `배포/컴포넌트/오버레이/확인 대화상자`
 
@@ -39,6 +39,7 @@ import { AlertDialog } from "@hjmds/react/overlays";
 <AlertDialog
   open={open}
   onOpenChange={(next) => setOpen(next)}
+  returnFocusRef={openButtonRef}
   request={{
     mode: "confirm",
     tone: "danger",
@@ -52,6 +53,10 @@ import { AlertDialog } from "@hjmds/react/overlays";
 />
 ```
 
+Web의 외부 열기 버튼과 `returnFocusRef`에 같은 `useRef<HTMLButtonElement>(null)`을 연결한다.
+macOS WebKit에서는 버튼 클릭만으로 호출 위치에 초점이 남지 않을 수 있다. 삭제 성공으로 버튼도
+제거될 때는 목록 제목 등 작업을 이어갈 유효한 위치를 복귀 대상으로 정한다([Dialog 초점 복귀](dialog.md#최소-사용-예)).
+
 ```tsx
 // Native
 import { AlertDialog } from "@hjmds/react-native/overlays";
@@ -60,6 +65,7 @@ import { AlertDialog } from "@hjmds/react-native/overlays";
   open={open}
   onOpenChange={(next) => setOpen(next)}
   onResult={(result) => { if (result.outcome === "confirmed") router.back(); }}
+  size="small"
   request={request}
 />
 ```
@@ -79,9 +85,9 @@ import { AlertDialog } from "@hjmds/react-native/overlays";
 | 닫기 | — | — | 바깥 누름으로 닫히지 않는다. Escape(Web)·뒤로(Native)는 취소로 끝난다. 처리 중(`busy`)에는 닫을 수 없다 |
 | `request.onConfirm` 실패 | — | — | 열린 채로 `resolveErrorMessage` 또는 `fallbackErrorMessage`를 보여 준다 |
 | Web `trigger` | `ReactNode` | — | 비제어면 필수 |
-| Web `size` | `small` · `medium` · `large` | `medium`(Dialog recipe) | — |
+| `size` | `small` · `medium` · `large` | Web `medium` · Native `small` | 각 플랫폼 recipe의 최대 폭·안쪽 여백을 선택한다 |
 | Web `modalPriority` | `number` | `0` | 높은 우선순위 모달이 뒤에 열린 낮은 모달 위에서 동작한다 |
-| Native `contentStyle` | 배치 key(margin·width·flex·`alignSelf`)만 | — | 색·radius·padding 등 시각 key는 deprecated(개발 모드 1회 경고, 다음 major에서 배치 key로 좁힘) |
+| Native `contentStyle` | 배치 key(margin·width·flex·`alignSelf`)만 | — | `HjmCompositionStyleProp` 배치 전용 타입. 색·radius·padding은 받지 않으며 크기는 `size`로 지정한다 |
 
 ### 디자인 프로필 상속
 
@@ -96,8 +102,8 @@ import { AlertDialog } from "@hjmds/react-native/overlays";
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | Web `size` `medium` `min(36rem, 100%)` · `small` 28rem · `large` 48rem, 최대 높이 `100dvh − 32`. Native는 recipe 기본 `small`로 최대 폭 320, 폭 100%. 아이콘 원 44(`control.minTouchTarget`). Native 행동 버튼 최소 폭 96 | `.hjm-alert-dialog`, `alertDialogRecipe`·`dialogRecipe.sizes`, `react-native/src/overlays.tsx` |
-| 간격 | 화면 가장자리와 최소 `spacing.md` 16. 안쪽 여백 `spacing.lg` 20(Web·Native small). 요소 사이 Web `spacing.sm` 12 · Native `dialogRecipe.content.gap` `spacing.md` 16. 행동 사이 `spacing.sm` 12, 세로로 쌓이면 `spacing.xs` 8. Native 버튼 좌우 `spacing.md` 16 | `.hjm-overlay`, `.hjm-alert-dialog__actions`, `alertDialogRecipe.actions` |
+| 크기 | Web `size` `medium` `min(36rem, 100%)` · `small` 28rem · `large` 48rem, 최대 높이 `100dvh − 32`. Native는 폭 100%, 최대 폭은 `small` 320 · `medium` 420 · `large` 640이며 기본은 `small`이다. 아이콘 원 44(`control.minTouchTarget`). Native 행동 버튼 최소 폭 96 | `.hjm-alert-dialog`, `alertDialogRecipe`·`dialogRecipe.sizes`, `react-native/src/overlays.tsx` |
+| 간격 | 화면 가장자리와 최소 `spacing.md` 16. 안쪽 여백은 Native `small` `spacing.lg` 20, `medium`·`large` `spacing.xl` 24이다. 요소 사이 Web `spacing.sm` 12 · Native `dialogRecipe.content.gap` `spacing.md` 16. 행동 사이 `spacing.sm` 12, 세로로 쌓이면 `spacing.xs` 8. Native 버튼 좌우 `spacing.md` 16 | `.hjm-overlay`, `.hjm-alert-dialog__actions`, `alertDialogRecipe.actions` |
 | 순서·정렬 | 화면 가운데. 위→아래 [아이콘] → 제목 → 설명 → 오류 문구 → 행동. 행동은 끝 정렬 한 줄 [취소][확인]. 버튼 수는 `mode`가 정한다(alert 1 · confirm 2) | `.hjm-overlay`, `alertDialogRecipe.slots` |
 | 고정·스크롤 | 배경막(`backdrop.modal`)이 화면 전체를 덮고 하단 고정 바보다 위에 쌓인다(Web z-index `layer.modal` 900). 내용이 길면 대화상자 안에서 스크롤한다 | `.hjm-overlay`, `.hjm-alert-dialog` |
 | 좁은 폭·큰 글자 | 폭 < 600(`breakpoint.medium`)이면 행동을 세로로 쌓고 **확인이 위**에 온다(Web DOM은 [취소][확인] 유지). Native는 글자 배율 1.6 이상(`largeTextThreshold`)에서도 쌓는다 | `alertDialogRecipe.actions.stackBelow`·`stackedOrder`, `react-native/src/overlays.tsx` |
@@ -129,7 +135,7 @@ import { AlertDialog } from "@hjmds/react-native/overlays";
 | 여는 요소 | `trigger`(선택, 비제어면 필수) | 없음. `open`/`defaultOpen`으로만 연다 |
 | 결과 콜백 | 없음(`onOpenChange` 사유 `confirm`/`cancel-action`/`escape`) | `onResult({ outcome })` |
 | 아이콘 | `icon` | 없음 |
-| 크기·우선순위·portal | `size`, `modalPriority`, `portalContainer` | 없음(RN `Modal` props 일부를 그대로 받는다) |
+| 크기·우선순위·portal | `size`, `modalPriority`, `portalContainer` | `size`와 RN `Modal` props 일부. `modalPriority`·`portalContainer`는 없다 |
 | 초점 복귀 | `returnFocusRef`(없으면 trigger) | `returnFocusRef` |
 | 배치 prop | 없음(`layoutStyle` 제외 대상) | `contentStyle` 배치 key만 |
 

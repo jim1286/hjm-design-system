@@ -3,12 +3,11 @@ import { SavedItemsScreen } from "@hjmds/react-native/saved-items";
 import { Stack, Text, Surface, Grid } from "@hjmds/react-native/primitives";
 import { Heading } from "@hjmds/react-native/heading";
 import { Button, IconButton } from "@hjmds/react-native/actions";
-import { SearchField, TextField, TextArea } from "@hjmds/react-native/inputs";
-import { ListRow } from "@hjmds/react-native/data-display";
+import { TextField, TextArea } from "@hjmds/react-native/inputs";
 import { Sheet } from "@hjmds/react-native/overlays";
-import { Bookmark, ArrowLeft, LockKeyhole } from "lucide-react-native";
+import { Bookmark } from "lucide-react-native";
 import { PreviewPhoto, ProfilePhoto } from "./reference-screen-parts";
-import { screenPatternRecipe, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
+import { type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
 import { View } from "react-native";
 
 import { savedPreviewItems, savedPreviewCollections } from "../../shared/saved-items-preview";

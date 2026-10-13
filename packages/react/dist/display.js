@@ -31,7 +31,7 @@ export const Card = forwardRef(function Card({ title, description, leading, medi
                                         ? null
                                         : createElement(`h${headingLevel}`, { className: "hjm-card__title", "data-slot": "title" }, title), description === undefined ? null : (_jsx(Text, { as: "p", tone: "muted", className: "hjm-card__description", "data-slot": "description", children: description }))] })] })) : null, children === undefined ? null : (_jsx("div", { className: "hjm-card__content", "data-slot": "content", children: children }))] }), actions ? _jsx("div", { className: "hjm-card__actions", "data-slot": "actions", children: actions }) : null] }));
 });
-export const ListRow = forwardRef(function ListRow({ title, description, leading, trailing, density: densityProp, leadingShape = "square", selected = listRowRecipe.defaults.selected, disabled = false, loading = false, loadingLabel, href, onClick, className, layoutStyle, style, ...props }, ref) {
+export const ListRow = forwardRef(function ListRow({ title, description, leading, trailing, density: densityProp, tone = listRowRecipe.defaults.tone, leadingShape = "square", selected = listRowRecipe.defaults.selected, disabled = false, loading = false, loadingLabel, href, onClick, className, layoutStyle, style, ...props }, ref) {
     // The hook runs unconditionally — `??` would short-circuit it and break the
     // rules of hooks on the very first row that passes `density`.
     const densityDefault = useHjmDensityDefault({
@@ -41,7 +41,7 @@ export const ListRow = forwardRef(function ListRow({ title, description, leading
     const density = densityProp ?? densityDefault;
     if (loading) {
         // A loading row is never interactive: there is nothing to activate yet.
-        return (_jsxs("div", { ...props, ref: ref, role: "status", "aria-busy": "true", "aria-label": loadingLabel, className: classNames("hjm-list-row", "hjm-list-row--loading", className), "data-density": density, "data-lines": description ? "two" : "one", "data-state": "loading", style: { ...style, ...layoutStyle }, children: [leading ? _jsx("span", { className: "hjm-list-row__leading", "data-shape": leadingShape, "data-placeholder": "" }) : null, _jsxs("span", { className: "hjm-list-row__content", children: [_jsx("span", { className: "hjm-list-row__title", "data-placeholder": "" }), description ? _jsx("span", { className: "hjm-list-row__description", "data-placeholder": "" }) : null] }), trailing ? _jsx("span", { className: "hjm-list-row__trailing", "data-placeholder": "" }) : null] }));
+        return (_jsxs("div", { ...props, ref: ref, role: loadingLabel ? "status" : undefined, "aria-busy": loadingLabel ? true : undefined, "aria-hidden": loadingLabel ? undefined : true, "aria-label": loadingLabel, className: classNames("hjm-list-row", "hjm-list-row--loading", className), "data-density": density, "data-lines": description ? "two" : "one", "data-state": "loading", style: { ...style, ...layoutStyle }, children: [leading ? _jsx("span", { className: "hjm-list-row__leading", "data-shape": leadingShape, "data-placeholder": "" }) : null, _jsxs("span", { className: "hjm-list-row__content", children: [_jsx("span", { className: "hjm-list-row__title", "data-placeholder": "", style: { width: `${listRowRecipe.loading.titleWidthPercent}%` } }), description ? _jsx("span", { className: "hjm-list-row__description", "data-placeholder": "", style: { width: `${listRowRecipe.loading.descriptionWidthPercent}%` } }) : null] }), trailing ? _jsx("span", { className: "hjm-list-row__trailing", "data-placeholder": "", style: { width: listRowRecipe.loading.trailingWidth } }) : null] }));
     }
     const element = href ? "a" : onClick ? "button" : "div";
     const interactiveProps = href
@@ -65,6 +65,7 @@ export const ListRow = forwardRef(function ListRow({ title, description, leading
         ref,
         className: classNames("hjm-list-row", className),
         "data-density": density,
+        "data-tone": tone,
         // One- and two-line rows have different minimum heights in the recipe;
         // the web renderer used a single hardcoded value until now.
         "data-lines": description ? "two" : "one",

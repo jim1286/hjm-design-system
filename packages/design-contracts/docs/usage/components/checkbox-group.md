@@ -89,7 +89,7 @@ import { CheckboxGroup } from "@hjmds/react-native/inputs";
 - 항목 id는 비지 않고 중복되지 않아야 한다. 제어 `value`에 목록에 없는 id가 있으면 `RangeError`다.
   항목이 바뀌면 제어하는 쪽이 `value`를 먼저 정리한다.
 - 문구는 모두 i18n 키로 넣는다. 각 항목의 아이콘은 `renderLeading(item, appearance)`로 그린다.
-- 배치는 `layoutStyle`로 한다. Native의 `style`과 행 슬롯 스타일(`controlStyle`·`labelStyle` 등)은 deprecated —
+- 배치는 `layoutStyle`로 한다. Native의 `style`과 행 슬롯 스타일(`controlStyle`·`labelStyle` 등)은 제거된 속성 —
   `layoutStyle` 또는 `presentation`·`size`·`renderIndicator`를 쓴다([이관 문서](../../migration-native-legacy-removal.md)).
 
 ## 플랫폼 차이

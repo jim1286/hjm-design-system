@@ -1,3 +1,17 @@
+export type FieldGroupLayout = "stack" | "inline";
+/** Date and duration parts share grouping, spacing and wrapping rather than rebuilding a fieldset. */
+export declare const fieldGroupRecipe: {
+    readonly defaults: {
+        readonly layout: "stack";
+    };
+    readonly gap: "md";
+    readonly headingGap: "sm";
+    readonly supportGap: "xs";
+    readonly inline: {
+        readonly minCharacters: 10;
+        readonly minWidth: number;
+    };
+};
 /** Related-input grouping contract. Values and submit/validation timing remain product-owned. */
 export type FieldGroupMember = Readonly<{
     id: string;

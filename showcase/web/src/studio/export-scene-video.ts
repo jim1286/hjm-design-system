@@ -1,6 +1,6 @@
-import type { MockupScene } from "../../../shared/mockup-scene";
-import { sampleSceneTimeline } from "../../../shared/scene-timeline";
-import { drawMockup } from "./draw-mockup";
+import type { MockupScene } from "../../../shared/mockup-scene.js";
+import { sampleSceneTimeline } from "../../../shared/scene-timeline.js";
+import { drawMockup } from "./draw-mockup.js";
 export function supportedSceneVideoType(): string | null {
   if (typeof MediaRecorder === "undefined" || typeof HTMLCanvasElement === "undefined" || !HTMLCanvasElement.prototype.captureStream || typeof CanvasCaptureMediaStreamTrack === "undefined" || !CanvasCaptureMediaStreamTrack.prototype.requestFrame) return null;
   return ["video/webm;codecs=vp8", "video/webm", "video/mp4"].find(type => MediaRecorder.isTypeSupported(type)) ?? null;

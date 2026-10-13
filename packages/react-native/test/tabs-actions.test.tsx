@@ -1,6 +1,6 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
-import { Pressable } from "react-native";
-import { afterEach, expect, it } from "vitest";
+import { AccessibilityInfo, Pressable } from "react-native";
+import { afterEach, expect, it, vi } from "vitest";
 
 import { Tabs } from "../src/navigation.js";
 import { HjmNativeProvider, Text } from "../src/index.js";
@@ -14,6 +14,7 @@ let renderer: ReactTestRenderer;
 
 afterEach(() => {
   act(() => renderer?.unmount());
+  vi.restoreAllMocks();
 });
 
 it("selects a long-label tab through its contract activate action and renders its panel", () => {
@@ -50,4 +51,45 @@ it("selects a long-label tab through its contract activate action and renders it
     role: "tabpanel",
   });
   expect(panel.findByType(Text).props.children).toBe("상세 정보 패널");
+});
+
+
+it("ignores disabled accessibility activation and recovers dynamic selection", () => {
+  const change = vi.fn();
+  const render = (disabled = false, remove = false) => <HjmNativeProvider><Tabs label="Dynamic" defaultValue="b" onValueChange={change} items={[{ id: "a", label: "A" }, ...(remove ? [] : [{ id: "b", label: "B", disabled }])]} /></HjmNativeProvider>;
+  act(() => { renderer = create(render()); });
+  act(() => renderer.update(render(true)));
+  const tabs = () => renderer.root.findAllByType(Pressable).filter(node => node.props.accessibilityRole === "tab");
+  expect(tabs()[0]!.props.accessibilityState.selected).toBe(true);
+  change.mockClear();
+  act(() => tabs()[1]!.props.onAccessibilityAction({ nativeEvent: { actionName: "activate" } }));
+  expect(change).not.toHaveBeenCalled();
+  act(() => renderer.update(render(false, true)));
+  expect(tabs()[0]!.props.accessibilityState.selected).toBe(true);
+});
+
+it("preserves controlled selection until owner accepts an accessibility action", () => {
+  const change = vi.fn();
+  const render = (value: "a" | "b") => <HjmNativeProvider direction="rtl"><Tabs label="Controlled" value={value} onValueChange={change} items={[{ id: "a", label: "A" }, { id: "b", label: "B" }]} /></HjmNativeProvider>;
+  act(() => { renderer = create(render("a")); });
+  const tabs = () => renderer.root.findAllByType(Pressable).filter(node => node.props.accessibilityRole === "tab");
+  act(() => tabs()[1]!.props.onAccessibilityAction({ nativeEvent: { actionName: "activate" } }));
+  expect(change).toHaveBeenCalledWith("b");
+  expect(tabs()[0]!.props.accessibilityState.selected).toBe(true);
+  act(() => renderer.update(render("b")));
+  expect(tabs()[1]!.props.accessibilityState.selected).toBe(true);
+});
+
+
+it("routes accessibility increment around disabled tabs without changing manual selection", async () => {
+  const focus = vi.spyOn(AccessibilityInfo, "setAccessibilityFocus");
+  const change = vi.fn();
+  await act(async () => { renderer = create(<HjmNativeProvider direction="rtl"><Tabs label="Navigation" onValueChange={change} items={[{ id: "a", label: "A" }, { id: "b", label: "B", disabled: true }, { id: "c", label: "C" }]} /></HjmNativeProvider>, { createNodeMock: () => ({}) }); });
+  const tabs = () => renderer.root.findAllByType(Pressable).filter(node => node.props.accessibilityRole === "tab");
+  await act(async () => tabs()[0]!.props.onAccessibilityAction({ nativeEvent: { actionName: "increment" } }));
+  expect(focus).toHaveBeenCalledOnce();
+  expect(change).not.toHaveBeenCalled();
+  expect(tabs()[0]!.props.accessibilityState.selected).toBe(true);
+  act(() => tabs()[2]!.props.onAccessibilityAction({ nativeEvent: { actionName: "activate" } }));
+  expect(change).toHaveBeenCalledWith("c");
 });

@@ -68,7 +68,7 @@ const insets = useSafeAreaInsets();
 | `accessibilityLabel` | `string` | — | 바 전체(Web `role="group"`, Native `toolbar`)의 이름 |
 | `safeAreaBottom` | 0 이상의 유한수 | `0` | 음수·무한대는 `RangeError` |
 | Web `position` | `flow` · `sticky` | `flow` | fixed는 제공하지 않는다 |
-| `layoutStyle` | margin·width·flex·`alignSelf` | — | 배치 전용. Native `style`은 deprecated — layoutStyle 또는 tone/토큰 |
+| `layoutStyle` | margin·width·flex·`alignSelf` | — | 배치 전용. Native `style`은 제거된 속성 — layoutStyle 또는 tone/토큰 |
 | 큰 글자 | — | — | 두 행동을 세로로 쌓고 **주 행동을 위**에 둔다(`column-reverse`, Native `textScale >= 1.6`, Web `isLargeTextScale`) |
 
 ## 배치
@@ -101,7 +101,7 @@ const insets = useSafeAreaInsets();
 - 폼 제출을 BottomCTA로 옮기면 [Form](form.md)의 제출 버튼과 중복하지 않는다. Web은 Form `actions`에 submit Button을 넣지 않고,
   Native Form은 내장 제출 버튼(`submitLabel` 필수)을 항상 그리므로 Form 대신 필드 + contracts `createFormSubmitSession`
   (`@hjmds/design-contracts/components/form`)으로 제출 세션을 잡고 그 상태를 `primaryAction.loading`에 연결한다.
-- 배치는 `layoutStyle`로만 한다. Native `style`은 deprecated(개발 모드 1회 경고, 다음 major 제거)다.
+- 배치는 `layoutStyle`로만 한다. Native `style`은 제거된 속성이다.
 - 하단 inset을 넘긴다. Native는 자동으로 읽지 않으므로 `safeAreaBottom`이 없으면 홈 인디케이터에 붙는다.
 - 키보드가 열리는 폼 화면(Native)은 `KeyboardAvoiding`(`/keyboard`) 또는 `KeyboardDock`(`/keyboard-controller`,
   optional peer `react-native-keyboard-controller` 설치 필요)로 감싼다.
@@ -116,7 +116,7 @@ const insets = useSafeAreaInsets();
 | `loadingLabel` 타입 | `string`(접근성 이름) | `ReactNode` |
 | `accessibilityHint` | 없음 | 있음 |
 | root 역할 | `role="group"` | `accessibilityRole="toolbar"` |
-| 그 밖 | HTML 속성·`className`·`style` 전달 | `testID`(`style`은 deprecated) |
+| 그 밖 | HTML 속성·`className`·`style` 전달 | `testID`(`style`은 제거된 속성) |
 | 빈 `label` | `TypeError` | 검사 없음(Button이 빈 이름으로 그려진다) |
 
 ## 함정
@@ -124,4 +124,4 @@ const insets = useSafeAreaInsets();
 - Web `BottomCTA`의 `style`은 recipe CSS 변수 뒤에 펼쳐지므로 `--hjm-bottom-cta-*` 변수를 덮을 수 있다. 외형은 recipe 소유이므로 `style`로 변수를 바꾸지 않는다.
 - Native는 하단 inset을 스스로 읽지 않는다. `safeAreaBottom`을 빠뜨려도 오류가 없고 홈 인디케이터에 붙어 보인다.
 
-미게시(1.14.0 이후): 프로필의 `shadow.floating` 색·강도·반경을 상속하되, 위 콘텐츠와 겹치는 footer 역할이라 offsetY는 `-abs(offsetY)`로 위쪽에 표시한다. Native의 0-opacity 프로필은 Android elevation도 0이다. 프로필 없는 Web은 기존 무그림자, Native는 기존 위쪽 recipe 그림자를 유지한다. safe area·큰 글자·로딩/실패와 제품 행동 소유권은 바뀌지 않는다.
+1.15.0 변경: 프로필의 `shadow.floating` 색·강도·반경을 상속하되, 위 콘텐츠와 겹치는 footer 역할이라 offsetY는 `-abs(offsetY)`로 위쪽에 표시한다. Native의 0-opacity 프로필은 Android elevation도 0이다. 프로필 없는 Web은 기존 무그림자, Native는 기존 위쪽 recipe 그림자를 유지한다. safe area·큰 글자·로딩/실패와 제품 행동 소유권은 바뀌지 않는다.

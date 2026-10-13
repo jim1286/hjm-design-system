@@ -9,8 +9,11 @@ export function GridReveal({ready,active=true,children}:GridRevealProps){
  useEffect(()=>{
   const clear=()=>values.forEach(value=>{value.stopAnimation();value.setValue(0);});clear();
   if(!ready||!active||environment.reducedMotion||AppState.currentState!=="active")return;
-  const animations=values.map((value,index)=>{value.setValue(1);return Animated.timing(value,{toValue:0,duration:gridRevealDuration,delay:gridRevealTiles[index]!.delay,useNativeDriver:true});});
-  animations.forEach(animation=>animation.start());const stop=()=>{animations.forEach(animation=>animation.stop());clear();};
+  const animations:ReturnType<typeof Animated.timing>[]=[];
+  const stop=()=>{animations.forEach(animation=>animation.stop());clear();};
+  // Clear every mask even when only part of the host animation was created.
+  try{values.forEach((value,index)=>{value.setValue(1);animations.push(Animated.timing(value,{toValue:0,duration:gridRevealDuration,delay:gridRevealTiles[index]!.delay,useNativeDriver:true}));});animations.forEach(animation=>animation.start());}
+  catch{stop();return;}
   const subscription=AppState.addEventListener("change",state=>{if(state!=="active")stop();});return()=>{stop();subscription.remove();};
  },[ready,active,environment.reducedMotion,values]);
  return <View style={{position:"relative"}}>{children}<View pointerEvents="none" accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{position:"absolute",top:0,right:0,bottom:0,left:0}}>{gridRevealTiles.map(tile=><Animated.View key={tile.id} style={{position:"absolute",top:`${tile.row*25}%`,left:`${tile.column*25}%`,width:"25%",height:"25%",opacity:values[tile.id],backgroundColor:colors.bg}}/>)}</View></View>;

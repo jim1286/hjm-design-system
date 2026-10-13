@@ -55,7 +55,7 @@ function ComposerContents({ purpose = "comment", initialState = "idle", initialP
       <Heading level="level5">{copy.title}</Heading>
       <MessageComposer label={copy.label} sendLabel={copy.send} value={value} onValueChange={setValue} pending={pending} onSend={send}
         sendIcon={<ArrowUp size={20} color={colors.onPrimary} />} sendPresentation="circle"
-        context={error ? <Text tone="danger">전송하지 못했어요. 초안은 그대로예요. 다시 전송해 주세요.</Text> : null}
+        context={error ? <PatternStatus announceOnMount tone="danger">전송하지 못했어요. 초안은 그대로예요. 다시 전송해 주세요.</PatternStatus> : null}
         {...(reply ? { replyTo: { author: "서연", excerpt: "오늘 어떤 하루였나요?", cancelLabel: copy.replyCancel, onCancel: () => setReply(false) } } : {})}
         {...(purpose === "message" ? {
           attachmentAction: { label: "사진 추가", icon: <Plus size={20} color={colors.text} />, onPress: () => setPhotos(current => [...current, (current.at(-1) ?? -1) + 1]) },
@@ -63,6 +63,7 @@ function ComposerContents({ purpose = "comment", initialState = "idle", initialP
           onRemoveAttachment: (id: string) => setPhotos(current => current.filter(photo => String(photo) !== id)),
         } : {})} />
       {sent.map((text, index) => <Text key={index}>{text}</Text>)}
+      <PatternStatus>{sent.length ? `전송한 항목 ${sent.length}개` : ""}</PatternStatus>
     </Stack></Surface>
     <Stack axis="inline" wrap gap="sm">
       <Button tone="secondary" disabled={pending} onPress={() => setReply(true)}>{copy.reply}</Button>
@@ -89,6 +90,14 @@ export function ChatMessagePreview() {
   const [status, setStatus] = useState("말풍선을 길게 눌러 반응을 남겨 보세요.");
   // The failed message starts in error; resending reuses the demo action session (action-session.md).
   const { session, state, request, failureArmed, toggleFailure, busy } = useDemoAction(false);
+  useEffect(() => () => session.reset(false), [session]);
+  const resend = () => { void session.run(async () => {
+    const result = await request(true);
+    if (session.getSnapshot().status === "pending") {
+      setStatus("메시지를 전송했어요.");
+    }
+    return result;
+  }, { retryable: true }); };
   useEffect(() => { if (!highlight) return; const timer = setTimeout(() => setHighlight(false), 1500); return () => clearTimeout(timer); }, [highlight]);
   const delivered = state.status === "success";
   return <Frame>
@@ -108,7 +117,7 @@ export function ChatMessagePreview() {
         <Text>네! 생각보다 조용해서 좋았어요.</Text>
       </ChatMessage>
       <ChatMessage direction="outgoing" author="" timestamp="오후 2:33" deliveryLabel={deliveryCopy[delivered ? "sent" : busy ? "pending" : "failed"]}
-        actions={delivered ? null : <Button size="small" tone="secondary" loading={busy} onPress={() => { void session.run(() => request(true), { retryable: true }); }}>다시 보내기</Button>}>
+        actions={delivered ? null : <Button size="small" tone="secondary" loading={busy} onPress={resend}>다시 보내기</Button>}>
         <Text>주말 오후는 어때요?</Text>
       </ChatMessage>
     </Stack>
@@ -129,9 +138,12 @@ const readStatusCopy = { idle: "알림을 누르면 읽음으로 바뀌어요.",
 export function NotificationItemPreview() {
   // Marking read is optimistic and rolls back on failure (action-session.md `optimisticValue`).
   const { session, state, request, failureArmed, toggleFailure, busy } = useDemoAction<readonly number[]>([]);
+  useEffect(() => () => session.reset([]), [session]);
   const open = (id: number) => {
-    if (state.value.includes(id)) return;
-    const next = [...state.value, id];
+    // Read the session at activation time; two callbacks can precede React's next render.
+    const current = session.getSnapshot();
+    if (current.status === "pending" || current.value.includes(id)) return;
+    const next = [...current.value, id];
     void session.run(() => request(next), { optimisticValue: next, retryable: true });
   };
   return <Frame>

@@ -7,12 +7,11 @@ import {
   type FilePickerDescriptor,
   type FilePickerSelectionResult,
 } from "@hjmds/design-contracts/components/file-picker";
-import { useEffect, useRef, useState } from "react";
-import { Pressable, View, type StyleProp, type ViewStyle } from "react-native";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Pressable, View } from "react-native";
 
 import { Text } from "./primitives.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 
 export type FilePickerProps = Readonly<{
@@ -30,11 +29,6 @@ export type FilePickerProps = Readonly<{
   error?: string;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
-   * `filePickerRecipe` owns appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
 }>;
 
 /** Expo-independent Native trigger; products inject the platform picker adapter. */
@@ -50,9 +44,8 @@ export function FilePicker({
   hint,
   error,
   layoutStyle,
-  style,
 }: FilePickerProps) {
-  warnDeprecatedStyleProps("FilePicker", { style }, "layoutStyle for placement; filePickerRecipe owns appearance");
+
   validateFilePickerTriggers("native", ["button"]);
   const resolved = resolveFilePickerDescriptor(descriptor);
   const { colors, designProfile } = useHjmNativeTheme();
@@ -60,24 +53,36 @@ export function FilePicker({
   const corner = designProfile?.tokens.radius[filePickerRecipe.trigger.radius] ?? 12;
   const [busy, setBusy] = useState(false);
   const mountedRef = useRef(true);
-  useEffect(() => () => {
-    mountedRef.current = false;
+  const pickingRef = useRef(false);
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => { mountedRef.current = false; };
   }, []);
+  const current = useRef({ disabled, resolved, existingCount, onSelect, onPickError });
+  useLayoutEffect(() => { current.current = { disabled, resolved, existingCount, onSelect, onPickError }; });
   const unavailable = disabled || busy;
   const pick = async () => {
-    if (unavailable) return;
+    if (unavailable || pickingRef.current) return;
+    // Lock synchronously: two presses may arrive before React renders busy.
+    pickingRef.current = true;
     setBusy(true);
     try {
       const candidates = await onPick();
-      if (candidates !== null) onSelect(resolveFilePickerSelection(candidates, resolved, existingCount));
+      // A platform dialog can outlive changes to the form's lock or remaining
+      // capacity. Judge its result against the latest committed owner inputs.
+      const latest = current.current;
+      if (mountedRef.current && !latest.disabled && candidates !== null) {
+        latest.onSelect(resolveFilePickerSelection(candidates, latest.resolved, latest.existingCount));
+      }
     } catch (error) {
-      onPickError(error);
+      if (mountedRef.current) current.current.onPickError(error);
     } finally {
+      pickingRef.current = false;
       if (mountedRef.current) setBusy(false);
     }
   };
   return (
-    <View style={[{ gap: 6 }, style, layoutStyle]}>
+    <View style={[{ gap: 6 }, layoutStyle]}>
       <Text emphasis="strong" variant="label">{label}</Text>
       <Pressable
         accessibilityLabel={buttonLabel}

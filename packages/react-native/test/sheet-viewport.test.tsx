@@ -17,8 +17,8 @@ const keyboard = Keyboard as typeof Keyboard & {
 let renderer: ReactTestRenderer | undefined;
 // `title`/`accessibilityTitle` form a union pair; a Partial over the union would let the
 // string-title fixture below merge into the element branch and fail to type-check.
-function tree(props: Partial<Omit<SheetProps, "title">> & { title?: string } = {}) {
-  return <HjmNativeProvider reducedMotion textScale={2}>
+function tree(props: Partial<Omit<SheetProps, "title">> & { title?: string } = {}, textScale: 1 | 2 = 1) {
+  return <HjmNativeProvider reducedMotion textScale={textScale}>
     <Sheet open title="설정" closeLabel="닫기" safeAreaInsets={{ top: 40, bottom: 24 }}
       footer={<Text>저장</Text>} {...props}>
       <Text>입력 본문</Text>
@@ -145,7 +145,7 @@ describe("Sheet input viewport", () => {
 
   it("preserves long title and description without truncation at large text", () => {
     const longCopy = "계정 설정을 확인하고 저장하기 전에 모든 변경 사항을 검토해 주세요. 이 문장은 큰 글자에서도 잘리면 안 됩니다.";
-    render(tree({ title: longCopy, description: longCopy }));
+    render(tree({ title: longCopy, description: longCopy }, 2));
     const visibleText = dialog().findAllByType(Text).map((node) => node.props.children);
     expect(visibleText).toContain(longCopy);
     expect(visibleText.filter((value) => value === longCopy)).toHaveLength(2);

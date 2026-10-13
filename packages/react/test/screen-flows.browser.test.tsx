@@ -324,3 +324,9 @@ it("keeps the thread introduction in the comment scroll body and replaces it wit
  expect(host.querySelector('[data-testid="thread-intro"]')).toBeNull();
  expect(host.querySelector("input")).toBeNull();
 });
+
+it("aligns anonymous comment body with avatar without an empty metadata row", async()=>{
+ await act(async()=>root.render(<HjmProvider><CommentThreadScreen title="Comments" items={[{id:"one",parentId:null,author:"",timeLabel:"",body:<div data-testid="aligned-body">Comment</div>,avatar:<div data-testid="aligned-avatar" style={{width:40,height:40}}>Avatar</div>,likeCountLabel:"",likeIcon:null,likeLabel:"Like",likeAction:null,canReply:false}]} expandedIds={[]} onExpandedChange={()=>{}} onLike={()=>{}} onReply={()=>{}} replyLabel="Reply" repliesLabel={()=>"Replies"}/></HjmProvider>));
+ const body=host.querySelector('[data-testid="aligned-body"]')!,avatar=host.querySelector('[data-testid="aligned-avatar"]')!;
+ expect(Math.abs(body.getBoundingClientRect().top-avatar.getBoundingClientRect().top)).toBeLessThan(1);
+});

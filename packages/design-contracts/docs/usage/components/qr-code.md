@@ -76,7 +76,7 @@ import { spacing } from "@hjmds/design-contracts/foundations";
 | `fallback` | `ReactNode` | 필수 | QR 아래에 그려지는 대체 행동(`null`·`false`면 `TypeError`) |
 | `size` | 숫자(px) | `192` | 실제 크기는 모듈 수의 정수배로 내림된다. 모듈당 2px 미만이면 `TypeError` |
 | `level` | `L` · `M` · `Q` · `H` | `M` | 오류 정정 수준 |
-| `layoutStyle` | 배치 전용 style 객체 | — | 루트 배치만(Native는 미게시(1.12.1 이후)) |
+| `layoutStyle` | 배치 전용 style 객체 | — | 루트 배치만(Native는 1.13.0 변경) |
 
 콜백은 없다. `style`·`className`은 두 renderer 모두 없다. 1.12.1 Native는 `layoutStyle`이 없어 감싸는 레이아웃에서 배치한다.
 
@@ -117,6 +117,6 @@ import { spacing } from "@hjmds/design-contracts/foundations";
 | --- | --- | --- |
 | 그리기 | 인라인 `<svg role="img">` | `react-native-svg`, 감싼 `View`가 `accessibilityRole="image"` |
 | 필요한 peer | `qrcode-generator` | `qrcode-generator`, `react-native-svg` |
-| 배치 | `layoutStyle` | `layoutStyle`(미게시(1.12.1 이후), 1.12.1은 감싸는 View) |
+| 배치 | `layoutStyle` | `layoutStyle`(1.13.0 변경, 1.12.1은 감싸는 View) |
 
 - 2026-10-06 독립 재구현에서 QRCode 바깥 Stack의 gap으로 내부 QR–fallback 간격을 바꿀 수 없음을 확인해 슬롯 안 여백 예제로 수정했다.

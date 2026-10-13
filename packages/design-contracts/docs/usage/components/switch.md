@@ -69,7 +69,7 @@ import { Switch } from "@hjmds/react-native/inputs";
 | `description` | 문구 | — | 이름과 따로 연결한다(Web `aria-describedby`, Native `accessibilityHint` 기본값) |
 | `disabled` | `boolean` | `false` | — |
 | `layoutStyle` | `HjmCompositionStyleProp` | — | 루트(행) 배치. Web·Native 모두 |
-| `style`(Native) | `StyleProp<ViewStyle>` | — | deprecated — `layoutStyle` 또는 `size`. 개발 모드에서 한 번 경고하고 다음 major에서 제거된다 |
+| `style`(Native) | 지원하지 않음 | — | 제거된 속성 — `layoutStyle` 또는 `size`. 현재 공개 props에서 제거되었다 |
 
 큰 글자(공통 large-text 기준)에서 `row`는 설명 아래로 track을 내린다.
 

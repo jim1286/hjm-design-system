@@ -66,7 +66,7 @@ import { DescriptionList } from "@hjmds/react-native/data-display";
 | 항목 | `{ id, label: string, value: string }` | — (필수) | 셋 다 빈 문자열이면 안 된다. 항목이 없거나 `id`가 겹치면 예외가 난다 |
 | Native `label` | `string` | — (필수) | 목록 전체의 접근성 이름 |
 | Native `availableWidth` | 양수 | 측정값 | 주면 측정보다 우선 |
-| `layoutStyle` | 배치 전용 style | — | 루트 배치. Native `style`·`itemStyle`은 deprecated |
+| `layoutStyle` | 배치 전용 style | — | 루트 배치. Native `style`·`itemStyle`은 제거된 속성 |
 
 콜백 prop은 없다.
 
@@ -86,7 +86,7 @@ import { DescriptionList } from "@hjmds/react-native/data-display";
 - 큰 글자 대응으로 화면에서 `fontScale`을 보고 `columns={1}`을 넘기지 않는다. 접힘은 resolver가 한다
   ([계약](../../description-list.md#큰-글자에서의-전환--resolver가-소유)).
 - 라벨은 i18n 키로 넣는다. Native는 목록 전체의 접근성 이름 `label`이 필수다.
-- 배치는 `layoutStyle`로만 한다(Web·Native). 색·글자 스타일을 덮지 않는다. Native `style`·`itemStyle`은 deprecated — 배치는 `layoutStyle`, 열 배치는 `descriptor.columns`로 옮긴다.
+- 배치는 `layoutStyle`로만 한다(Web·Native). 색·글자 스타일을 덮지 않는다. Native `style`·`itemStyle`은 제거된 속성 — 배치는 `layoutStyle`, 열 배치는 `descriptor.columns`로 옮긴다.
 
 ## 플랫폼 차이
 
@@ -95,7 +95,7 @@ import { DescriptionList } from "@hjmds/react-native/data-display";
 | 데이터 전달 | `items`, `columns` 평면 prop | `descriptor={{ items, columns }}` |
 | 목록 이름 | 없음(`dl`/`dt`/`dd` 의미 구조) | `label` 필수, `accessibilityRole="list"` |
 | 폭 측정 | 요소 폭 측정 | `availableWidth`가 우선, 없으면 `onLayout` 측정, 첫 프레임은 창 폭 |
-| 배치 prop | `layoutStyle`(`style`과 합친다) | `layoutStyle`(`style`·`itemStyle`은 deprecated) |
+| 배치 prop | `layoutStyle`(`style`과 합친다) | `layoutStyle`(`style`·`itemStyle`은 제거된 속성) |
 
 ## 함정
 

@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-13
 - 근거: [복합 입력 계약](../../compound-controls.md), `showcase/shared/compound-controls.ts`, `showcase/{web/src/patterns,native/src}/compound-previews.tsx`
 - 스토리북: `배포/구성/비교와 검증/복합 입력 모음`
 
@@ -78,10 +78,10 @@
 | --- | --- | --- |
 | 기본 | 각 블록의 초기 값. InlineConfirm은 트리거 버튼 하나(`danger`) | — |
 | 확인 대기 | 질문 + [유지하기][삭제하기] | Web은 취소에 처음 포커스, Escape는 취소하고 트리거로 포커스 복귀. Native는 질문이 live region, iOS 한 번 알림 |
-| 진행 중 | InlineConfirm busy. 두 행동 비활성, 확인 버튼 `loading` + `pendingLabel`. DurationField·ReactionPicker·NotificationBell은 진행 상태가 없다 | Native iOS는 상태마다 한 번 알림, Web Escape 무시 |
+| 진행 중 | InlineConfirm busy. 두 행동 비활성, 확인 버튼 `loading` + `pendingLabel`. DurationField·ReactionPicker·NotificationBell은 진행 상태가 없다 | Native iOS는 상태마다 한 번 알림, Web Escape 무시, 확인 버튼은 loading으로 재실행을 막고 키보드 초점 유지 |
 | 실패 | InlineConfirm error. 질문 아래 `errorLabel`(Native `tone="danger"`), 확인 버튼으로 다시 시도 | Web `role="alert"`, Native `accessibilityRole="alert"` + iOS는 대기 중 음성을 끊고 알린다 |
 | 재시도 실패 | 같은 `errorLabel`이 다시 나온다(busy → error로 바뀌므로 다시 알림) | 실패와 같다 |
-| 확인 성공 | `successLabel`이 남는다 | Web `role="status"`, Native live region. 초기화는 새 `key`로 remount |
+| 확인 성공 | `successLabel`이 남는다 | Web `role="status"`에 해당 확인 묶음의 초점만 복귀(외부 초점 유지), Native live region. 초기화는 새 `key`로 remount |
 | 알림 수 증가 | 종이 400ms 한 번 흔들린다 | 종 그림·배지는 숨기고 `label` 한 번만 읽는다 |
 | reduced motion·배경·`active={false}` | 종이 흔들리지 않는다 | — |
 
@@ -178,9 +178,17 @@ function CompoundBlocks() {
 - NotificationBell 누름이 읽음 처리를 하지 않는다. 제품이 count를 갱신해야 배지가 줄어든다.
 - DurationField 범위 밖 `value`는 조용히 고치지 않고 오류를 던진다.
 - InlineConfirm의 성공 상태는 다시 트리거로 돌아가지 않는다. 같은 자리에서 다시 쓰려면 새 `key`로 remount한다.
-- 현재 Native 스토리는 블록 제목을 `Text variant="heading"`으로 그리고, Web 스토리는 `Heading level="level2"`(32)를 쓴다.
-  플랫폼별 크기 차이에 근거가 없으므로 제품은 두 플랫폼 모두 `Heading level="level3"`(24)과 화면 구조에 맞는 `semanticLevel`을 쓴다.
+- 양 플랫폼 예제의 블록 제목은 `Heading level="level3"`(24)이다. 제품 문서 단계는 화면 구조에 맞는 `semanticLevel`로 지정한다. 기존 Web 32/Native 24의 근거 없는 차이는 2026-10-13 실제 구성 검수에서 통일했다.
 - 현재 Native 스토리는 `ScrollView contentContainerStyle={{ padding: spacing.xl, gap: spacing.xl }}`로 좌우 여백과 간격을 직접 준다.
   좌우 여백은 `Container gutter`, 위아래는 `paddingVertical: spacing.lg`, 자식 간격은 `Stack gap="xl"`로 둔다([화면 여백](../tokens/layout.md)).
 - 현재 스토리의 Switch "실패 응답 보기"·"예제 다시 시작"·"새 알림 추가" 버튼은 데모 조작이다. 알림 상태 스토리의 "새 알림 추가"는 primary라
   제품 화면에 옮기면 그 화면의 주 행동과 겹친다.
+
+
+2026-10-13 실제 구성 검수에서 실패 설정을 요청 완료 시 읽어 진행 중 결과가 바뀌고, 같은 렌더의 연속 알림 추가가 하나로 합쳐지는 문제를 확인했다. 예제의 600ms 지연은 유지하되 실패 여부는 확인 시작 시 캡처하고, 새 알림은 함수형 갱신으로 모두 반영한다. 처리 중 설정 변경은 다음 확인에 적용된다. 다시 시작은 새 로컬 예제를 열며 이전 삭제 요청의 실제 취소를 뜻하지 않는다. Web 확인의 pending/success 초점 문제는 예제의 DOM 우회가 아니라 공개 InlineConfirm에서 고쳤다.
+
+### 소요 시간의 하위 입력 그룹
+
+`DurationField`는 `FieldGroup layout="inline"`으로 그룹 이름과 단위별 잠금을 연결하고, 각 값은 기존 NumberField로 편집한다. 좁은 영역에서는 시간·분·초 순서를 유지하며 줄바꿈한다. Native의 보이는 라벨은 각 단위만, 접근성 이름은 그룹 이름과 단위를 함께 전달한다. 그룹이 잠기거나 사라진 뒤 도착한 이전 단위 callback은 값을 바꾸지 않는다. 총 초 단위 값·상한 보정은 기존 duration-field 계약이 소유한다.
+
+2026-10-13 날짜 직접 입력과 반복되던 그룹 제목·입력 행을 FieldGroup과 공통 `fieldGroupRecipe`로 옮겼다. 자세한 배치 축은 [관련 입력 묶음](field-group.md)을 따른다.

@@ -63,7 +63,7 @@ Native 예는 없다(renderer 없음).
 | `dismissPolicy`(부분 지정) | `{ dismissible?, outsideDismiss?, escapeDismiss?, focusOutDismiss? }`(`boolean`) | 모두 `true` | |
 | `open` · `defaultOpen` | `boolean` | 비제어 `false` | 제어하면 `onOpenChange` 필수 |
 | `onOpenChange` | `(open: boolean, details: { reason }) => void` | — | `reason`: `trigger` · `close-action` · `outside-pointer` · `outside-focus` · `escape` · `programmatic` |
-| `motionOrigin` | `TransitionRect` | — | 미게시: 열기 직전 viewport 좌표. 위치 확정 뒤 공간 전환하며 기존 비모달 초점·닫기 정책 유지 |
+| `motionOrigin` | `TransitionRect` | — | 1.14.0 추가: 열기 직전 viewport 좌표. 위치 확정 뒤 공간 전환하며 기존 비모달 초점·닫기 정책 유지 |
 | `initialFocusRef` | `RefObject<HTMLElement \| null>` | 첫 포커스 가능 요소 | 열릴 때 처음 포커스 |
 | `portalContainer` | `HTMLElement` | `document.body` | 표면을 붙일 곳 |
 | `className` | 문자열 | — | `layoutStyle`은 받지 않는다(아래 함정) |
@@ -113,7 +113,7 @@ Native 예는 없다(renderer 없음).
 - 초안은 Popover 위의 제품 상태에 둔다. 종료 후 portal이 제거되므로 내부 비제어 입력에만 두면 사라진다.
 - 공간 전환 실험은 [버튼에서 이어지는 편집](../compositions/origin-dialog.md)의 Web 전용 변형이다.
 
-미게시(1.14.0 이후): 가장 가까운 프로필의 `shadow.floating`을 열린 portal에도 상속한다. 프로필이 없으면 기존 recipe 그림자를 유지한다. 초안과 비모달 초점/닫기 계약은 그대로이며 Native는 기존 Sheet 경로를 쓴다.
+1.15.0 변경: 가장 가까운 프로필의 `shadow.floating`을 열린 portal에도 상속한다. 프로필이 없으면 기존 recipe 그림자를 유지한다. 초안과 비모달 초점/닫기 계약은 그대로이며 Native는 기존 Sheet 경로를 쓴다.
 
 [Motion 세 편집 예제 검토](../../../../../docs/qa/2026-10-07-motion-reference-page-review.md)에서
 aria-modal 표시와 실제 초점 경계가 다르고, 닫기 후 defaultValue 편집이 초기화되는 것을 확인했다.

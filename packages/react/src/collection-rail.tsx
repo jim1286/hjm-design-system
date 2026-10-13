@@ -27,6 +27,16 @@ export function CollectionRail({ label, items, renderItem, labels, density = col
   const theme = useOptionalHjmTheme(), direction = theme?.environment.direction ?? "ltr";
   const gap = collectionRailRecipe.gap;
   const viewportRef = useRef<HTMLDivElement>(null);
+  const detachedFocus = useRef<HTMLElement | null>(null);
+  useLayoutEffect(() => {
+    const old = detachedFocus.current;
+    detachedFocus.current = null;
+    // A removed card must leave a keyboard origin in this collection, without
+    // moving focus away from a surviving input or an external control.
+    if (old && !old.isConnected && old.ownerDocument.activeElement === old.ownerDocument.body) {
+      viewportRef.current?.focus({ preventScroll: true });
+    }
+  });
   const anchor = useRef<string | null>(defaultStartKey ?? items[0]?.id ?? null);
   const initialized = useRef(false);
   if (!initialized.current) { validateCollectionRail(items, defaultStartKey); initialized.current = true; }
@@ -112,6 +122,13 @@ export function CollectionRail({ label, items, renderItem, labels, density = col
       }}>
       <div style={{ display: "flex", gap, width: "max-content", minWidth: "100%", paddingBlock: "var(--hjm-space-xs)" }}>
         {items.map((item, index) => <div key={item.id} role="listitem" data-collection-rail-item={item.id}
+          ref={node => {
+            if (!node) return;
+            return () => {
+              const active = node.ownerDocument.activeElement;
+              if (active instanceof HTMLElement && node.contains(active)) detachedFocus.current = active;
+            };
+          }}
           style={{ flex: "0 0 auto", width: position.layout.itemWidth || "auto", minWidth: 0 }}
           onFocusCapture={() => scrollToOffset(getCollectionRailRevealOffset(current.current.layout, current.current.offset, index), false)}>
           {renderItem(item)}

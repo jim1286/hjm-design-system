@@ -53,3 +53,11 @@ it("toggles the lone disclosure with Tab, Enter, and Space while matching its re
   expect(trigger.getAttribute("aria-expanded")).toBe("false");
   expect(host.querySelector(".hjm-collapsible__content")).toBeNull();
 });
+it.each([false,true])('restores focus after external collapse with keepMounted=%s without losing retained drafts',async keepMounted=>{
+ const render=(open:boolean)=>act(async()=>root.render(<HjmProvider><Collapsible trigger="Details" open={open} onOpenChange={()=>{}} keepMounted={keepMounted}><input defaultValue="Draft"/></Collapsible></HjmProvider>));
+ await render(true);const input=host.querySelector('input')!;await act(async()=>input.focus());await render(false);expect(document.activeElement).toBe(host.querySelector('button'));await render(true);if(keepMounted)expect(host.querySelector('input')).toBe(input);
+});
+it('does not steal an external focus on collapse and refuses disabled activation',async()=>{
+ let calls=0;const render=(open:boolean,disabled=false)=>act(async()=>root.render(<HjmProvider><button id="external">Outside</button><Collapsible trigger="Details" open={open} onOpenChange={()=>calls++} disabled={disabled}><input/></Collapsible></HjmProvider>));
+ await render(true);await act(async()=>host.querySelector<HTMLButtonElement>('#external')!.focus());await render(false,true);expect(document.activeElement?.id).toBe('external');await act(async()=>host.querySelector<HTMLButtonElement>('.hjm-collapsible__trigger')!.click());expect(calls).toBe(0);
+});

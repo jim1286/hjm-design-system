@@ -1,0 +1,35 @@
+import { act } from "react";
+import { createRoot, type Root } from "react-dom/client";
+import { afterEach, beforeEach, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { HjmProvider } from "@hjmds/react/provider";
+import { DialogPreview, AlertDialogPreview } from "../../../showcase/web/src/components/dialog-examples.js";
+import "../src/styles.css";
+let host: HTMLDivElement, root: Root;
+beforeEach(() => { (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true; host = document.createElement('div'); document.body.append(host); root = createRoot(host); });
+afterEach(async () => { await act(async () => root.unmount()); host.remove(); });
+const button = (label: string) => [...document.querySelectorAll('button')].find(node => node.textContent === label)!;
+const click = (label: string) => act(async () => button(label).click());
+const closed = async () => { await act(async () => { await new Promise(resolve => setTimeout(resolve, 80)); }); };
+it("previews a real rename with cancel, retained draft, empty guard and saved result", async () => {
+ await act(async () => root.render(<HjmProvider reducedMotion><DialogPreview/></HjmProvider>));
+ await click('이름 바꾸기'); const input = document.querySelector<HTMLInputElement>('input')!;
+ expect(document.activeElement).toBe(input); expect(button('저장').disabled).toBe(true);
+ await act(async () => { Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value')!.set!.call(input,'새 앨범'); input.dispatchEvent(new Event('input',{bubbles:true})); });
+ await click('취소'); await closed(); expect(host.textContent).toContain('앨범 이름: 주말 산책'); expect(host.textContent).toContain('저장하지 않았어요.');
+ await click('이름 바꾸기'); expect(document.querySelector<HTMLInputElement>('input')!.value).toBe('새 앨범');
+ await act(async () => { const field = document.querySelector<HTMLInputElement>('input')!; Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value')!.set!.call(field,'   '); field.dispatchEvent(new Event('input',{bubbles:true})); });
+ expect(button('저장').disabled).toBe(true); expect(document.body.textContent).toContain('이름을 입력해 주세요.');
+ await act(async () => { const field = document.querySelector<HTMLInputElement>('input')!; Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value')!.set!.call(field,'  새 앨범  '); field.dispatchEvent(new Event('input',{bubbles:true})); });
+ await act(async () => userEvent.keyboard('{Enter}')); await closed();
+ expect(host.textContent).toContain('앨범 이름: 새 앨범'); expect(host.textContent).toContain('이름을 저장했어요.'); expect(document.querySelector('[role=dialog]')).toBeNull();
+});
+it("previews cancelling and confirming one named deletion and preserves the info variant", async () => {
+ await act(async () => root.render(<HjmProvider reducedMotion><AlertDialogPreview/></HjmProvider>));
+ await click('기록 삭제하기'); expect(document.body.textContent).toContain('주말 산책 기록을 삭제할까요?'); await click('취소'); await closed();
+ expect(host.textContent).toContain('보관된 기록: 주말 산책'); expect(host.textContent).toContain('삭제를 취소했어요.');
+ await click('기록 삭제하기'); await click('기록 삭제'); await closed();
+ expect(host.textContent).toContain('보관된 기록이 없어요.'); expect(host.textContent).toContain('주말 산책 기록을 삭제했어요.');
+ await click('예제 기록 다시 만들기'); expect(host.textContent).toContain('보관된 기록: 주말 산책');
+ await click('설명 AlertDialog 열기'); expect(document.body.textContent).toContain('내 버전으로 만들까요?'); await click('취소');
+});

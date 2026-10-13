@@ -12,8 +12,16 @@ function Artwork({ size, options }) {
     const host = useRef(null);
     const [visible, setVisible] = useState(false);
     const [foreground, setForeground] = useState(false);
-    useEffect(() => { const update = () => setForeground(!document.hidden); update(); document.addEventListener('visibilitychange', update); const observer = new IntersectionObserver(entries => setVisible(entries.some(e => e.isIntersecting))); if (host.current)
-        observer.observe(host.current); return () => { observer.disconnect(); document.removeEventListener('visibilitychange', update); }; }, []);
+    useEffect(() => {
+        const update = () => setForeground(!document.hidden);
+        update();
+        document.addEventListener('visibilitychange', update);
+        // Without viewport observation, keep decorative artwork static instead of failing the avatar.
+        const observer = typeof IntersectionObserver === 'undefined' ? undefined : new IntersectionObserver(entries => setVisible(entries.some(entry => entry.isIntersecting)));
+        if (host.current)
+            observer?.observe(host.current);
+        return () => { observer?.disconnect(); document.removeEventListener('visibilitychange', update); };
+    }, []);
     const active = spec.active && spec.visible && visible && foreground && !environment.reducedMotion;
     return _jsx("span", { ref: host, "aria-hidden": "true", style: { display: 'block' }, children: _jsx(Blobatar, { name: spec.seed, size: size, normalize: false, expression: expressions[spec.expression], animate: active ? 'always' : false, alt: "", "aria-hidden": "true" }) });
 }

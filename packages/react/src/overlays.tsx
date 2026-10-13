@@ -549,6 +549,13 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
     if (lifecycleRef.current.requestClose(reason, busy, policy)) {
       dismissReasonRef.current = reason;
       changeOpen(false, { reason });
+      if (openProp !== undefined) queueMicrotask(() => {
+        // Controlled owners may reject a request. Deduplicate this interaction,
+        // then allow a later attempt instead of permanently latching the sheet.
+        if (currentOpenRef.current) {
+          lifecycleRef.current = createSheetLifecycle(true);
+        }
+      });
     }
   };
   useEffect(() => {

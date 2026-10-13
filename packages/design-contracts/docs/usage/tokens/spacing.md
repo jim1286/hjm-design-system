@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-13
 - 근거: `src/foundations.ts`(`spacing`·`layout`), `src/grid.ts`(`gridGaps`), `src/base-recipes.ts`(`buttonRecipe`·`fieldRecipe`), `src/auth-screen.ts`, `packages/react/src/theme.ts`, `packages/react/src/styles.css`
 - 스토리북: `배포/토큰/공간과 크기/간격`
 
@@ -17,8 +17,8 @@
 
 | 토큰 | 값 | Web CSS 변수 | Native 경로 | 용도 |
 | --- | --- | --- | --- | --- |
-| `spacing.xxs` | 4 | `--hjm-space-xxs` | `spacing.xxs` · `theme.tokens.spacing.xxs` | 목록 팝업 안쪽 여백(Select·Menubar) |
-| `spacing.xs` | 8 | `--hjm-space-xs` | `spacing.xs` · `theme.tokens.spacing.xs` | 필드 라벨과 입력 사이, DatePicker 팝업과 입력 사이, EmptyState 안 요소 사이 |
+| `spacing.xxs` | 4 | `--hjm-space-xxs` | `spacing.xxs` · `theme.tokens.spacing.xxs` | SegmentedControl 트랙 안쪽 여백·항목 간격 |
+| `spacing.xs` | 8 | `--hjm-space-xs` | `spacing.xs` · `theme.tokens.spacing.xs` | 필드 라벨과 입력 사이, 목록 팝업 안쪽 여백(Select·Menu), DatePicker 팝업과 입력 사이, EmptyState 안 요소 사이 |
 | `spacing.sm` | 12 | `--hjm-space-sm` | `spacing.sm` · `theme.tokens.spacing.sm` | 나란한 버튼 사이, Toast 사이, small 버튼 좌우·필드 위아래 안쪽 여백 |
 | `spacing.md` | 16 | `--hjm-space-md` | `spacing.md` · `theme.tokens.spacing.md` | Stack·Grid 기본 gap, medium 버튼·필드 좌우 안쪽 여백, `layout.contentGap`, `layout.pagePadding.compact` |
 | `spacing.lg` | 20 | `--hjm-space-lg` | `spacing.lg` · `theme.tokens.spacing.lg` | large 버튼 좌우 안쪽 여백, `layout.pagePadding.regular`, Dialog 하단 여백 |

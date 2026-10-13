@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-07
+- 검토일: 2026-10-13
 - 근거: [Dialog](../../dialog.md), [명령형 오버레이](../../overlay-stack.md), recipe `dialogRecipe`(`src/component-recipes.ts`)
 - 스토리북: `배포/컴포넌트/오버레이/대화상자`
 
@@ -49,6 +49,7 @@ import { Dialog } from "@hjmds/react/overlays";
 <Dialog
   open={open}
   onOpenChange={(next) => setOpen(next)}
+  returnFocusRef={openButtonRef}
   title={t("album.rename.title")}
   description={t("album.rename.description")}
   closeLabel={t("common.close")}
@@ -63,6 +64,11 @@ import { Dialog } from "@hjmds/react/overlays";
   {body /* 제품 본문: TextField 등 */}
 </Dialog>
 ```
+
+Web에서 바깥 버튼으로 `open`을 제어할 때는 그 버튼의 ref를 `returnFocusRef`로 연결한다.
+위 `openButtonRef`는 `useRef<HTMLButtonElement>(null)`로 만들고 여는 버튼의 `ref`에도 준다.
+macOS WebKit은 버튼 클릭이 초점을 옮기지 않을 수 있어, 열기 직전 `activeElement`만으로는
+닫힌 뒤 호출 위치를 복구할 수 없다(2026-10-13 브라우저 대조). `trigger` 슬롯을 사용하면 이 연결은 내부에서 처리한다.
 
 ```tsx
 // Native
@@ -89,6 +95,11 @@ Native `save`는 저장 Promise를 반환한다. Dialog가 완료를 기다리�
 이벤트 밖에서 시작한 요청은 외부 `busy`로 연결한다. 이전 즉시 닫힘 대응 예제가 현재 Promise 계약과 충돌해
 2026-10-06 독립 재구현 검증에서 교정했다.
 
+Native Dialog는 화면 하단에 붙은 키보드가 나타나면 그 위의 사용 가능한 영역에 가운데 정렬한다.
+입력 본문은 내부에서 스크롤하고 제목·닫기·저장 행동은 그 밖에 유지한다. 별도 KeyboardAvoidingView를
+중첩하지 않는다. iOS 입력 예제에서 저장 버튼이 키보드에 가려진 재현을 바탕으로 Sheet와 같은 좌표 계산을
+공유한다(2026-10-13). Android가 이미 줄인 모달 높이는 다시 빼지 않으며 떠 있는 키보드는 이 여백 계산에서 제외한다.
+
 ```tsx
 // Web 명령형: 앱 루트에 <OverlayStackProvider>를 두고
 import { useDialog } from "@hjmds/react/overlay-stack";
@@ -111,8 +122,8 @@ await handle.closed; // portal 제거·초점 복구 뒤. 다음 오버레이는
 | `onOpenChange` | `(open: boolean, detail: { reason }) => void` | — | Web `reason`: `"trigger"`·`"close-action"`·`"escape"`·`"outside"`. Native: `"close-action"`·`"back"`·`"outside"`. `busy`이거나 `dismissible={false}`면 닫기 요청을 보내지 않는다 |
 | `onDismissComplete`(Web) | `(detail: { reason: "close-action" \| "escape" \| "outside" \| "programmatic" }) => void` | — | 한 번 열릴 때마다 한 번, portal 제거·초점 복구 뒤. 다음 오버레이는 여기서 연다 |
 | `trigger`(Web) | `ReactElement`(버튼 요소) | — | 누르면 `reason: "trigger"`로 열린다 |
-| `primaryAction`·`secondaryAction`(Native) | `{ label, onPress: () => void \| Promise<void>, tone?, disabled?, accessibilityHint? }` | — | 동기 함수는 같은 누름에서 닫힌다. Promise를 반환하면 기다리는 동안 누른 버튼이 loading이 되고 행동·닫기·back·바깥 닫기가 모두 막히며, 성공하면 `close-action`으로 닫힌다. 던지거나 거절되면 열린 채 행동이 다시 켜지고 `onActionError`를 호출한다. 외부 `busy`도 반복 행동·닫기를 막는다. 미게시(1.12.1 이후) — 1.12.1은 Promise를 무시하고 바로 닫았다 |
-| `onActionError`(Native) | `(error: unknown) => void` | — | action 실패를 본문 오류·재시도로 연결한다. 오류를 처리하는 동안 초안을 보존한다. 없으면 개발 빌드에서 실패마다 `console.error`를 남긴다(중복 제거 없음). 미게시(1.12.1 이후) |
+| `primaryAction`·`secondaryAction`(Native) | `{ label, onPress: () => void \| Promise<void>, tone?, disabled?, accessibilityHint? }` | — | 동기 함수는 같은 누름에서 닫힌다. Promise를 반환하면 기다리는 동안 누른 버튼이 loading이 되고 행동·닫기·back·바깥 닫기가 모두 막히며, 성공하면 `close-action`으로 닫힌다. 던지거나 거절되면 열린 채 행동이 다시 켜지고 `onActionError`를 호출한다. 외부 `busy`도 반복 행동·닫기를 막는다. 1.13.0 변경 — 1.12.1은 Promise를 무시하고 바로 닫았다 |
+| `onActionError`(Native) | `(error: unknown) => void` | — | action 실패를 본문 오류·재시도로 연결한다. 오류를 처리하는 동안 초안을 보존한다. 없으면 개발 빌드에서 실패마다 `console.error`를 남긴다(중복 제거 없음). 1.13.0 변경 |
 | `children`(Native) | `ReactNode` | — | 고정된 제목 줄 아래 스크롤 본문(`ScrollView`) 안에 들어간다. `FlatList`·`SectionList`를 넣지 않는다 |
 | `contentStyle`(Native) | 배치 key만(`HjmCompositionStyleProp`) | — | 대화상자 상자의 배치. 높이는 `size`로 |
 | `useDialog()`(Web) | `(request) => { closed: Promise<void>, close(): void }` | — | request는 `open`·`defaultOpen`·`onOpenChange`·`trigger`를 뺀 DialogProps. `OverlayStackProvider` 안에서만 |

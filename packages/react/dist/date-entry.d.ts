@@ -4,6 +4,6 @@ export type DateEntryProps = DateEntryControlProps & Readonly<{
     className?: string;
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-/** Direct date drafts reuse TextField; Calendar/DatePicker continue to own calendar selection. */
+/** Date policy stays here; FieldGroup owns related-input semantics, feedback and edit lifetime. */
 export declare function DateEntry(props: DateEntryProps): import("react").JSX.Element;
 //# sourceMappingURL=date-entry.d.ts.map

@@ -36,8 +36,9 @@ import {
   createElement,
   forwardRef,
   isValidElement,
-  useEffect,
   useId,
+  useLayoutEffect,
+  useMemo,
   useRef,
   useState,
   type CSSProperties,
@@ -51,7 +52,7 @@ import {
   type TableHTMLAttributes,
 } from "react";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
-import { classNames, useControllableState, useElementWidth } from "./internal.js";
+import { assignRef, classNames, useControllableState, useElementWidth } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
 
 export type AccordionItem = Readonly<{
@@ -122,12 +123,19 @@ export const Accordion = forwardRef<HTMLDivElement, AccordionProps>(
     ref,
   ) {
     validateAccordionItems(items);
-    const [value, setValue] = useControllableState<readonly string[]>({
+    const [storedValue, setValue] = useControllableState<readonly string[]>({
       ...(valueProp === undefined ? {} : { value: valueProp }),
       defaultValue,
       ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
     });
     const validIds = new Set(items.map((item) => item.id));
+    const committed = useRef(false);
+    const value = valueProp === undefined && committed.current ? storedValue.filter(id => validIds.has(id)) : storedValue;
+    useLayoutEffect(() => {
+      committed.current = true;
+      // Removed uncontrolled disclosures retire their expansion; reinsertion starts closed.
+      if (value.length !== storedValue.length) setValue(value);
+    }, [value, storedValue, setValue]);
     const valueIds = new Set<string>();
     for (const id of value) {
       if (!validIds.has(id)) throw new RangeError(`Unknown Accordion value: ${id}`);
@@ -139,6 +147,21 @@ export const Accordion = forwardRef<HTMLDivElement, AccordionProps>(
     }
     const baseId = useId().replaceAll(":", "");
     const triggerRefs = useRef(new Map<string, HTMLButtonElement>());
+    const host = useRef<HTMLDivElement | null>(null);
+    const focused = useRef<{ id: string; index: number; node: HTMLElement } | null>(null);
+    useLayoutEffect(() => {
+      const previous = focused.current;
+      if (!previous) return;
+      const index = items.findIndex(item => item.id === previous.id);
+      const removed = index < 0;
+      const disabledTrigger = index >= 0 && items[index]!.disabled && triggerRefs.current.get(previous.id) === previous.node;
+      if (!(removed || disabledTrigger) || (document.activeElement !== previous.node && document.activeElement !== document.body)) return;
+      // Restore only the removed/disabled target, never steal a user's external focus.
+      const origin = removed ? Math.min(previous.index, items.length - 1) : index + 1;
+      const target = Array.from({ length: items.length }, (_, offset) => items[(origin + offset) % items.length]!).find(item => !item.disabled);
+      focused.current = null;
+      (target ? triggerRefs.current.get(target.id) : host.current)?.focus();
+    }, [items]);
     const toggle = (id: string) => {
       const expanded = value.includes(id);
       setValue(
@@ -154,7 +177,8 @@ export const Accordion = forwardRef<HTMLDivElement, AccordionProps>(
       <div
         {...props}
         style={{ ...props.style, ...layoutStyle }}
-        ref={ref}
+        ref={node => { host.current = node; assignRef(ref, node); }}
+        tabIndex={-1}
         className={classNames("hjm-accordion", className)}
         data-density={density}
         data-multiple={allowsMultipleExpanded || undefined}
@@ -192,6 +216,7 @@ export const Accordion = forwardRef<HTMLDivElement, AccordionProps>(
           return (
             <div
               key={item.id}
+              onFocusCapture={event => { if (event.target instanceof HTMLElement) focused.current = { id: item.id, index, node: event.target }; }}
               className="hjm-accordion__item"
               data-state={item.disabled ? "disabled" : expanded ? "expanded" : "collapsed"}
             >
@@ -245,8 +270,11 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
   ref,
 ) {
   if (name.trim().length === 0) throw new TypeError("Avatar name must not be empty");
-  const [imageAvailable, setImageAvailable] = useState(Boolean(src));
-  useEffect(() => setImageAvailable(Boolean(src)), [src]);
+  const generation = useMemo(() => ({}), [src]);
+  const active = useRef<object | null>(generation);
+  useLayoutEffect(() => { active.current = generation; return () => { active.current = null; }; }, [generation]);
+  const [failed, setFailed] = useState<object | null>(null);
+  const imageAvailable = Boolean(src) && failed !== generation;
   const { onError, className: imageClassName, ...restImageProps } = imageProps ?? {};
   return (
     <span
@@ -261,11 +289,13 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
       {src && imageAvailable ? (
         <img
           {...restImageProps}
+          key={src}
           src={src}
           alt={alt}
           className={classNames("hjm-avatar__image", imageClassName)}
           onError={(event) => {
-            setImageAvailable(false);
+            if (active.current !== generation) return;
+            setFailed(generation);
             onError?.(event);
           }}
         />

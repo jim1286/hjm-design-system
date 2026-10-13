@@ -126,14 +126,14 @@ threadHeader도 댓글과 함께 숨겨지므로 항상 보여야 하는 안내�
 | --- | --- | --- |
 | 배치 | `layoutStyle`, `className` | `layoutStyle` |
 | 새로고침·키보드 스크롤 | 없음 | `scrollProps`(`refreshControl`, `keyboardDismissMode` 등), `scrollRef` |
-| 답글 펼침 상태 | 펼침 버튼이 `aria-expanded`를 노출한다(미게시(1.12.1 이후)) | 펼침 버튼이 `accessibilityState.expanded`를 노출한다(미게시(1.12.1 이후)) |
+| 답글 펼침 상태 | 펼침 버튼이 `aria-expanded`를 노출한다(1.13.0 변경) | 펼침 버튼이 `accessibilityState.expanded`를 노출한다(1.13.0 변경) |
 
 ## 함정
 
 - 펼침 상태는 두 플랫폼 모두 버튼의 expanded 상태로 전한다(2026-10-06 Web `aria-expanded` 추가). 그래도 `repliesLabel(count, expanded)`가
   버튼 이름이므로 문구에서도 펼침 여부가 드러나게 만든다.
 
-- 작성창 노출 조건이 ChatScreen과 다르다. ChatScreen은 `ready`에서만, CommentThreadScreen은 `ready`·`empty`에서 보인다.
+- ChatScreen과 CommentThreadScreen 모두 `ready`·`empty`에서 작성창을 보인다.
   `loading`·`error`·`restricted`에서는 둘 다 숨는다.
 
 2026-10-07 사용자 요청으로 댓글의 추가 행동을 본문 아래에서 하트 바로 옆으로 옮겼다.
@@ -141,4 +141,7 @@ threadHeader도 댓글과 함께 숨겨지므로 항상 보여야 하는 안내�
 두 버튼은 같은 가로 행이며 더보기 glyph는 세로 점3개(`MoreVertical`)를 제품이 Menu
 trigger로 공급한다. `actions`는 자유 노드 슬롯을 유지하고 메뉴 권한/항목/전송은 제품 소유다.
 순서는 좋아요 → 더보기이며 RTL에서는 논리 방향을 따른다. `likeAction=null`도 그대로 지원한다.
-이 배치 수정은 1.14.0 이후 미게시 변경이며 npm/제품 배포와 별개다.
+이 배치 수정은 1.16.1 변경이다. 실제 설치 버전과 제품 화면 검증은 별도로 확인한다.
+
+2026-10-12 Spint의 작성자 없는 개발 댓글에서 빈 머리글이 본문을 아래로 밀었다.
+`author`와 `timeLabel`이 모두 비면 머리글 행을 생략해 avatar와 본문 시작 높이를 맞춘다. Web·Native 동일하다.

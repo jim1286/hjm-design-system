@@ -1,4 +1,5 @@
 import { resolveOriginTransition, type TransitionRect } from "@hjmds/design-contracts/content-transition";
+import { focusAccessibleHost } from "./internal/accessible-focus.js";
 import {
   createAlertDialogSession,
   getAlertDialogInitialFocus,
@@ -8,7 +9,7 @@ import {
   type AlertDialogResult,
   type AlertDialogSession,
 } from "@hjmds/design-contracts/components/alert-dialog";
-import { hjmCompositionStyleKeys, type HjmCompositionStyleProp } from "./composition-style.js";
+import { type HjmCompositionStyleProp } from "./composition-style.js";
 import {
   canDismissSheet,
   createSheetLifecycle,
@@ -36,7 +37,6 @@ import {
   type RefObject,
 } from "react";
 import {
-  AccessibilityInfo,
   Animated,
   Easing,
   Keyboard,
@@ -44,15 +44,11 @@ import {
   Platform,
   ScrollView,
   Pressable,
-  StyleSheet,
   View,
-  findNodeHandle,
   useWindowDimensions,
   type Insets,
   type KeyboardMetrics,
   type ModalProps,
-  type StyleProp,
-  type ViewStyle,
 } from "react-native";
 
 import { Button, IconButton, type ButtonTone } from "./actions.js";
@@ -61,7 +57,7 @@ import {
   shouldAwaitNativeModalDismiss,
   type NativeModalTeardownTask,
 } from "./internal/modal-lifecycle.js";
-import { isDevelopment, warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
+import { isDevelopment } from "./internal/diagnostics.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 import { Text } from "./primitives.js";
@@ -71,6 +67,18 @@ import { resolveNativeShadowElevation } from "./internal/styles.js";
 // A close glyph is icon artwork, not body copy; FixedGlyph keeps it inside IconButton's fixed frame.
 function CloseGlyph() {
   return <FixedGlyph fontSize={glyph.sm}>×</FixedGlyph>;
+}
+
+// Keep interaction visibility off native-driven animation hosts. In iOS 26.5,
+// Dialog/AlertDialog/Sheet lost their AX descendants on a second presentation
+// while still painting; a non-animated boundary preserves reopen accessibility.
+function ModalInteractionBoundary({ visible, children }: { visible: boolean; children: ReactNode }) {
+  return <View
+    accessibilityElementsHidden={!visible}
+    importantForAccessibility={visible ? "auto" : "no-hide-descendants"}
+    pointerEvents={visible ? "auto" : "none"}
+    style={{ flex: 1 }}
+  >{children}</View>;
 }
 
 // BT-QA-027: maximum text made a centered BurnTok confirmation taller than the
@@ -85,6 +93,49 @@ function DialogScrollBody({ children, gap }: { children: ReactNode; gap: number 
     automaticallyAdjustContentInsets={false}
     automaticallyAdjustKeyboardInsets={false}
   >{children}</ScrollView>;
+}
+
+// Dialog input QA on iOS 26.5 exposed a Save action behind the keyboard.
+// Share Sheet's measured viewport math so centered modals also avoid double
+// clearance on Android adjustResize and ignore undocked/floating keyboards.
+function useModalKeyboardViewport(active: boolean, enabled = true) {
+  const { width: windowWidth, height: windowHeight } = useWindowDimensions();
+  const [modalHeight, setModalHeight] = useState<number | null>(null);
+  const [keyboardFrame, setKeyboardFrame] = useState<KeyboardMetrics | null>(null);
+  useEffect(() => {
+    if (!active || !enabled) {
+      setKeyboardFrame(null);
+      return;
+    }
+    // A modal may open while an input elsewhere already owns the keyboard. Event-only
+    // tracking misses that case; metrics also restores the correct state on reopen.
+    // RN Web has no metrics() API; its keyboard events can still update the frame.
+    setKeyboardFrame(Keyboard.metrics?.() ?? null);
+    const change = (event: { endCoordinates: KeyboardMetrics }) => setKeyboardFrame(event.endCoordinates);
+    const hide = () => setKeyboardFrame(null);
+    const subscriptions = [
+      Keyboard.addListener("keyboardDidShow", change),
+      Keyboard.addListener("keyboardDidHide", hide),
+      ...(Platform.OS === "ios" ? [
+        Keyboard.addListener("keyboardWillChangeFrame", change),
+        Keyboard.addListener("keyboardWillHide", hide),
+      ] : []),
+    ];
+    return () => subscriptions.forEach((subscription) => subscription.remove());
+  }, [enabled, active]);
+
+  // Modal owns a full-screen coordinate space (statusBarTranslucent). Measure its
+  // actual height so Android adjustResize does not subtract the keyboard twice.
+  const viewportHeight = modalHeight ?? windowHeight;
+  const dockedKeyboard = enabled && keyboardFrame !== null
+    // Android converts IME pixels to float dp independently from window dimensions;
+    // exact width comparison rejected a full-width keyboard by 0.000013 dp on API 36.
+    && keyboardFrame.height > 0 && Math.abs(keyboardFrame.screenX) <= 1
+    && keyboardFrame.width >= windowWidth - 1;
+  const keyboardInset = dockedKeyboard
+    ? Math.max(0, viewportHeight - keyboardFrame.screenY)
+    : 0;
+  return { viewportHeight, keyboardInset, dockedKeyboard, setModalHeight };
 }
 
 function useDialogViewportPadding() {
@@ -151,9 +202,7 @@ function useReasonedOpenState<Reason>({
 }
 
 function focusNativeTarget(target: RefObject<View | null> | undefined): void {
-  if (!target?.current) return;
-  const handle = findNodeHandle(target.current);
-  if (handle !== null) AccessibilityInfo.setAccessibilityFocus(handle);
+  focusAccessibleHost(target?.current);
 }
 
 function Scrim(): ReactNode {
@@ -326,6 +375,7 @@ export function Dialog({
   const visibleRef = useRef(visible);
   visibleRef.current = visible;
   const [nativeVisible, setNativeVisible] = useState(visible);
+  const keyboardViewport = useModalKeyboardViewport(nativeVisible);
   const nativeVisibleRef = useRef(visible);
   nativeVisibleRef.current = nativeVisible;
   const nativeShownRef = useRef(false);
@@ -512,111 +562,114 @@ export function Dialog({
       transparent
       visible={nativeVisible}
     >
-      <Animated.View
-        accessibilityElementsHidden={!visible}
-        importantForAccessibility={visible ? "auto" : "no-hide-descendants"}
-        pointerEvents={visible ? "auto" : "none"}
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          opacity: motionProgress,
-          ...viewportPadding,
-        }}
-      >
-        <Scrim />
-        {dismissible ? (
-          <Pressable
-            accessible={false}
-            importantForAccessibility="no-hide-descendants"
-            onPress={() => requestClose("outside")}
-            style={{ bottom: 0, left: 0, position: "absolute", right: 0, top: 0 }}
-          />
-        ) : null}
-        <Animated.View ref={originContentRef}
-          onLayout={(event) => {
-            const { width, height } = event.nativeEvent.layout;
-            const previous = originLayout.current;
-            originLayout.current = { width, height };
-            // Error copy, keyboard or rotation may change the destination after entry.
-            // Fade instead of returning through stale dimensions; a later open remeasures.
-            if (previous && (previous.width !== width || previous.height !== height)) setOriginTransform(null);
+      <ModalInteractionBoundary visible={visible}>
+        <Animated.View
+          onLayout={(event) => keyboardViewport.setModalHeight(event.nativeEvent.layout.height)}
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            opacity: motionProgress,
+            ...viewportPadding,
+            paddingBottom: keyboardViewport.dockedKeyboard
+              ? spacing.md + keyboardViewport.keyboardInset
+              : viewportPadding.paddingBottom,
           }}
-          accessibilityLabel={[accessibleTitle, description].filter(Boolean).join(", ")}
-          accessibilityState={{ busy }}
-          accessibilityViewIsModal
-          importantForAccessibility="yes"
-          role="dialog"
-          style={[
-            {
-              alignSelf: "center",
-              backgroundColor: contentBackground,
-              borderColor: contentBorder,
-              borderRadius: tokens.radius[dialogRecipe.content.radius],
-              borderWidth: dialogRecipe.content.borderWidth,
-              ...resolveNativeShadowElevation(surfaceShadow, designProfile !== undefined, 8),
-              gap: dialogRecipe.content.gap,
-              maxWidth: sizeRecipe.maxWidth,
-              maxHeight: "100%",
-              flexShrink: 1,
-              padding: sizeRecipe.padding,
-              shadowColor: surfaceShadow.color,
-              shadowOffset: { width: 0, height: surfaceShadow.offsetY },
-              shadowOpacity: surfaceShadow.opacity,
-              shadowRadius: surfaceShadow.radius,
-              width: "100%",
-            },
-            originTransform && !environment.reducedMotion ? { transform: [
-              { translateX: motionProgress.interpolate({ inputRange: [0, 1], outputRange: [originTransform.translateX, 0] }) },
-              { translateY: motionProgress.interpolate({ inputRange: [0, 1], outputRange: [originTransform.translateY, 0] }) },
-              { scaleX: motionProgress.interpolate({ inputRange: [0, 1], outputRange: [originTransform.scaleX, 1] }) },
-              { scaleY: motionProgress.interpolate({ inputRange: [0, 1], outputRange: [originTransform.scaleY, 1] }) },
-            ] } : undefined,
-            contentStyle,
-          ]}
         >
-          {/* The title row stays outside the scroll so Close remains reachable while a long body
-              scrolls (2026-10-06 review). The description moves into the scroll: BT-QA-027 showed
-              maximum text can exceed the window, and only the title row is kept fixed. The wrapper
-              gap keeps title->description at spacing.xs and title->body at the recipe gap. */}
-          <View style={{ flexShrink: 1, gap: description ? spacing.xs : dialogRecipe.content.gap }}>
-            <View
-              style={{
-                alignItems: "flex-start",
-                direction: environment.direction,
-                flexDirection: "row",
-                gap: spacing.sm,
-              }}
-            >
-              <View style={{ flex: 1 }}>
-                <Text accessibilityRole="header" tone="primary" variant="title">{title}</Text>
+          <Scrim />
+          {dismissible ? (
+            <Pressable
+              accessible={false}
+              importantForAccessibility="no-hide-descendants"
+              onPress={() => requestClose("outside")}
+              style={{ bottom: 0, left: 0, position: "absolute", right: 0, top: 0 }}
+            />
+          ) : null}
+          <Animated.View ref={originContentRef}
+            onLayout={(event) => {
+              const { width, height } = event.nativeEvent.layout;
+              const previous = originLayout.current;
+              originLayout.current = { width, height };
+              // Error copy, keyboard or rotation may change the destination after entry.
+              // Fade instead of returning through stale dimensions; a later open remeasures.
+              if (previous && (previous.width !== width || previous.height !== height)) setOriginTransform(null);
+            }}
+            accessibilityLabel={[accessibleTitle, description].filter(Boolean).join(", ")}
+            accessibilityState={{ busy }}
+            accessibilityViewIsModal
+            importantForAccessibility="yes"
+            role="dialog"
+            style={[
+              {
+                alignSelf: "center",
+                backgroundColor: contentBackground,
+                borderColor: contentBorder,
+                borderRadius: tokens.radius[dialogRecipe.content.radius],
+                borderWidth: dialogRecipe.content.borderWidth,
+                ...resolveNativeShadowElevation(surfaceShadow, designProfile !== undefined, 8),
+                gap: dialogRecipe.content.gap,
+                maxWidth: sizeRecipe.maxWidth,
+                maxHeight: "100%",
+                flexShrink: 1,
+                padding: sizeRecipe.padding,
+                shadowColor: surfaceShadow.color,
+                shadowOffset: { width: 0, height: surfaceShadow.offsetY },
+                shadowOpacity: surfaceShadow.opacity,
+                shadowRadius: surfaceShadow.radius,
+                width: "100%",
+              },
+              originTransform && !environment.reducedMotion ? { transform: [
+                { translateX: motionProgress.interpolate({ inputRange: [0, 1], outputRange: [originTransform.translateX, 0] }) },
+                { translateY: motionProgress.interpolate({ inputRange: [0, 1], outputRange: [originTransform.translateY, 0] }) },
+                { scaleX: motionProgress.interpolate({ inputRange: [0, 1], outputRange: [originTransform.scaleX, 1] }) },
+                { scaleY: motionProgress.interpolate({ inputRange: [0, 1], outputRange: [originTransform.scaleY, 1] }) },
+              ] } : undefined,
+              contentStyle,
+            ]}
+          >
+            {/* The title row stays outside the scroll so Close remains reachable while a long body
+                scrolls (2026-10-06 review). The description moves into the scroll: BT-QA-027 showed
+                maximum text can exceed the window, and only the title row is kept fixed. The wrapper
+                gap keeps title->description at spacing.xs and title->body at the recipe gap. */}
+            <View style={{ flexShrink: 1, gap: description ? spacing.xs : dialogRecipe.content.gap }}>
+              <View
+                style={{
+                  alignItems: "flex-start",
+                  direction: environment.direction,
+                  flexDirection: "row",
+                  gap: spacing.sm,
+                }}
+              >
+                <View style={{ flex: 1 }}>
+                  <Text accessibilityRole="header" tone="primary" variant="title">{title}</Text>
+                </View>
+                {dismissible ? (
+                  <IconButton
+                    disabled={busy}
+                    label={closeLabel}
+                    onPress={() => requestClose("close-action")}
+                  >
+                    <CloseGlyph />
+                  </IconButton>
+                ) : null}
               </View>
-              {dismissible ? (
-                <IconButton
-                  disabled={busy}
-                  label={closeLabel}
-                  onPress={() => requestClose("close-action")}
-                >
-                  <CloseGlyph />
-                </IconButton>
+              {description || children ? (
+                <DialogScrollBody gap={dialogRecipe.content.gap}>
+                  {description ? <Text tone="muted">{description}</Text> : null}
+                  {children}
+                </DialogScrollBody>
               ) : null}
             </View>
-            {description || children ? (
-              <DialogScrollBody gap={dialogRecipe.content.gap}>
-                {description ? <Text tone="muted">{description}</Text> : null}
-                {children}
-              </DialogScrollBody>
-            ) : null}
-          </View>
-          <OverlayActions
-            busy={busy}
-            onAction={runAction}
-            pendingAction={actionPending}
-            stacked={stackActions}
-            {...(primaryAction === undefined ? {} : { primaryAction })}
-            {...(secondaryAction === undefined ? {} : { secondaryAction })}
-          />
+            <OverlayActions
+              busy={busy}
+              onAction={runAction}
+              pendingAction={actionPending}
+              stacked={stackActions}
+              {...(primaryAction === undefined ? {} : { primaryAction })}
+              {...(secondaryAction === undefined ? {} : { secondaryAction })}
+            />
+          </Animated.View>
         </Animated.View>
-      </Animated.View>
+      </ModalInteractionBoundary>
     </Modal>
   );
 }
@@ -625,32 +678,12 @@ export type AlertDialogProps = NativeModalProps &
   ReasonedOpenProps<AlertDialogOpenChangeReason> &
   Readonly<{
     request: AlertDialogRequest;
+    size?: DialogSize;
     returnFocusRef?: RefObject<View | null>;
     onResult?: (result: AlertDialogResult) => void;
-    /**
-     * Layout keys only (`hjmCompositionStyleKeys`). Visual keys still apply but are deprecated:
-     * use `size`/`placement` and the recipe for appearance.
-     * @deprecated for visual keys. The next major narrows this to `HjmCompositionStyleProp`, like Dialog
-     * (consumer-policy.md §3.1).
-     */
-    contentStyle?: StyleProp<ViewStyle>;
+    /** Layout-only placement; semantic size and the recipe own appearance. */
+    contentStyle?: HjmCompositionStyleProp;
   }>;
-
-const compositionKeys = new Set<string>(hjmCompositionStyleKeys);
-
-/**
- * 1.x keeps AlertDialog/Sheet `contentStyle` wide; warn only on visual keys (layout use is supported).
- */
-function warnVisualContentStyle(component: string, contentStyle: StyleProp<ViewStyle>): void {
-  if (contentStyle === undefined || contentStyle === null) return;
-  const flattened = StyleSheet.flatten(contentStyle) ?? {};
-  const hasVisualKey = Object.keys(flattened).some(key => !compositionKeys.has(key));
-  warnDeprecatedStyleProps(
-    component,
-    { contentStyle: hasVisualKey ? contentStyle : undefined },
-    "layout-only keys in contentStyle and size/placement for appearance",
-  );
-}
 
 /** Contract session owns duplicate confirms, busy dismissal, error and settlement. */
 export function AlertDialog({
@@ -658,6 +691,7 @@ export function AlertDialog({
   defaultOpen,
   onOpenChange,
   request,
+  size = alertDialogRecipe.defaults.size,
   returnFocusRef,
   onResult,
   contentStyle,
@@ -665,7 +699,6 @@ export function AlertDialog({
   ...modalProps
 }: AlertDialogProps) {
   validateAlertDialogRequest(request);
-  warnVisualContentStyle("AlertDialog", contentStyle);
   const viewportPadding = useDialogViewportPadding();
   const { colors, environment, palette, tokens, designProfile } = useHjmNativeTheme();
   // The profile floating role is shared with Web. Modal lifecycle, inset and
@@ -691,6 +724,7 @@ export function AlertDialog({
   const visibleRef = useRef(visible);
   visibleRef.current = visible;
   const [nativeVisible, setNativeVisible] = useState(visible);
+  const keyboardViewport = useModalKeyboardViewport(nativeVisible);
   const nativeVisibleRef = useRef(visible);
   nativeVisibleRef.current = nativeVisible;
   const nativeShownRef = useRef(false);
@@ -906,7 +940,7 @@ export function AlertDialog({
   };
   const resolvedTone = request.tone ?? alertDialogRecipe.defaults.tone;
   const toneRecipe = alertDialogRecipe.tones[resolvedTone];
-  const sizeRecipe = alertDialogRecipe.sizes[alertDialogRecipe.defaults.size];
+  const sizeRecipe = alertDialogRecipe.sizes[size];
   const stackActions =
     windowWidth < alertDialogRecipe.actions.stackBelow ||
     environment.textScale >= 1.6;
@@ -968,109 +1002,112 @@ export function AlertDialog({
       transparent
       visible={nativeVisible}
     >
-      <Animated.View
-        accessibilityElementsHidden={!visible}
-        importantForAccessibility={visible ? "auto" : "no-hide-descendants"}
-        pointerEvents={visible ? "auto" : "none"}
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          opacity: motionProgress,
-          ...viewportPadding,
-        }}
-      >
-        <Scrim />
-        <View
-          accessibilityLabel={`${request.title}, ${request.description}`}
-          accessibilityState={{ busy }}
-          accessibilityViewIsModal
-          importantForAccessibility="yes"
-          role="alertdialog"
-          style={[
-            {
-              alignSelf: "center",
-              backgroundColor: contentBackground,
-              borderColor: contentBorder,
-              borderRadius: tokens.radius[alertDialogRecipe.content.radius],
-              borderWidth: alertDialogRecipe.content.borderWidth,
-              ...resolveNativeShadowElevation(surfaceShadow, designProfile !== undefined, 8),
-              gap: alertDialogRecipe.content.gap,
-              maxWidth: sizeRecipe.maxWidth,
-              maxHeight: "100%",
-              flexShrink: 1,
-              padding: sizeRecipe.padding,
-              shadowColor: surfaceShadow.color,
-              shadowOffset: {
-                width: 0,
-                height: surfaceShadow.offsetY,
-              },
-              shadowOpacity: surfaceShadow.opacity,
-              shadowRadius: surfaceShadow.radius,
-              width: "100%",
-            },
-            contentStyle,
-          ]}
+      <ModalInteractionBoundary visible={visible}>
+        <Animated.View
+          onLayout={(event) => keyboardViewport.setModalHeight(event.nativeEvent.layout.height)}
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            opacity: motionProgress,
+            ...viewportPadding,
+            paddingBottom: keyboardViewport.dockedKeyboard
+              ? spacing.md + keyboardViewport.keyboardInset
+              : viewportPadding.paddingBottom,
+          }}
         >
-          <DialogScrollBody gap={spacing.xs}>
-            <Text accessibilityRole="header" tone="primary" variant="title">{request.title}</Text>
-            <Text tone="muted">{request.description}</Text>
-            {error ? (
-              <Text
-                accessibilityLiveRegion="assertive"
-                accessibilityRole="alert"
-                style={{ color: errorColor }}
-              >
-                {error}
-              </Text>
-            ) : null}
-          </DialogScrollBody>
+          <Scrim />
           <View
-            style={{
-              direction: environment.direction,
-              flexDirection: stackActions ? "column" : "row",
-              gap: stackActions
-                ? alertDialogRecipe.actions.stackedGap
-                : alertDialogRecipe.actions.gap,
-            }}
+            accessibilityLabel={`${request.title}, ${request.description}`}
+            accessibilityState={{ busy }}
+            accessibilityViewIsModal
+            importantForAccessibility="yes"
+            role="alertdialog"
+            style={[
+              {
+                alignSelf: "center",
+                backgroundColor: contentBackground,
+                borderColor: contentBorder,
+                borderRadius: tokens.radius[alertDialogRecipe.content.radius],
+                borderWidth: alertDialogRecipe.content.borderWidth,
+                ...resolveNativeShadowElevation(surfaceShadow, designProfile !== undefined, 8),
+                gap: alertDialogRecipe.content.gap,
+                maxWidth: sizeRecipe.maxWidth,
+                maxHeight: "100%",
+                flexShrink: 1,
+                padding: sizeRecipe.padding,
+                shadowColor: surfaceShadow.color,
+                shadowOffset: {
+                  width: 0,
+                  height: surfaceShadow.offsetY,
+                },
+                shadowOpacity: surfaceShadow.opacity,
+                shadowRadius: surfaceShadow.radius,
+                width: "100%",
+              },
+              contentStyle,
+            ]}
           >
-            {/* Stacked, the confirm action renders first so visual, VoiceOver/TalkBack and
-                focus-traversal order agree (recipe actions.stackedOrder). Reversing with
-                column-reverse was rejected: it would leave the reading order upside down. */}
-            {stackActions ? confirmAction : null}
-            {request.mode === "confirm" ? (
-              <Pressable
-                ref={cancelRef}
-                accessibilityLabel={request.cancelLabel}
-                accessibilityRole="button"
-                accessibilityState={{ disabled: busy }}
-                disabled={busy}
-                onPress={() => cancel("cancel-action")}
-                style={({ pressed }) => [
-                  minimumTargetStyle,
-                  {
-                    alignItems: "center",
-                    // The cancel action is a quiet outline on the dialog surface. surfaceAlt
-                    // turned it into a tinted slab wherever a product brands that token
-                    // (BurnTok's pale blue, 2026-09-27), competing with the confirm fill.
-                    backgroundColor: colors.bg,
-                    borderColor: colors.border,
-                    borderRadius: tokens.radius.md,
-                    borderWidth: 1,
-                    flex: stackActions ? undefined : 1,
-                    justifyContent: "center",
-                    minWidth: alertDialogRecipe.actions.minButtonWidth,
-                    opacity: busy ? 0.5 : pressed ? 0.86 : 1,
-                    paddingHorizontal: spacing.md,
-                  },
-                ]}
-              >
-                <Text variant="label">{request.cancelLabel}</Text>
-              </Pressable>
-            ) : null}
-            {stackActions ? null : confirmAction}
+            <DialogScrollBody gap={spacing.xs}>
+              <Text accessibilityRole="header" tone="primary" variant="title">{request.title}</Text>
+              <Text tone="muted">{request.description}</Text>
+              {error ? (
+                <Text
+                  accessibilityLiveRegion="assertive"
+                  accessibilityRole="alert"
+                  style={{ color: errorColor }}
+                >
+                  {error}
+                </Text>
+              ) : null}
+            </DialogScrollBody>
+            <View
+              style={{
+                direction: environment.direction,
+                flexDirection: stackActions ? "column" : "row",
+                gap: stackActions
+                  ? alertDialogRecipe.actions.stackedGap
+                  : alertDialogRecipe.actions.gap,
+              }}
+            >
+              {/* Stacked, the confirm action renders first so visual, VoiceOver/TalkBack and
+                  focus-traversal order agree (recipe actions.stackedOrder). Reversing with
+                  column-reverse was rejected: it would leave the reading order upside down. */}
+              {stackActions ? confirmAction : null}
+              {request.mode === "confirm" ? (
+                <Pressable
+                  ref={cancelRef}
+                  accessibilityLabel={request.cancelLabel}
+                  accessibilityRole="button"
+                  accessibilityState={{ disabled: busy }}
+                  disabled={busy}
+                  onPress={() => cancel("cancel-action")}
+                  style={({ pressed }) => [
+                    minimumTargetStyle,
+                    {
+                      alignItems: "center",
+                      // The cancel action is a quiet outline on the dialog surface. surfaceAlt
+                      // turned it into a tinted slab wherever a product brands that token
+                      // (BurnTok's pale blue, 2026-09-27), competing with the confirm fill.
+                      backgroundColor: colors.bg,
+                      borderColor: colors.border,
+                      borderRadius: tokens.radius.md,
+                      borderWidth: 1,
+                      flex: stackActions ? undefined : 1,
+                      justifyContent: "center",
+                      minWidth: alertDialogRecipe.actions.minButtonWidth,
+                      opacity: busy ? 0.5 : pressed ? 0.86 : 1,
+                      paddingHorizontal: spacing.md,
+                    },
+                  ]}
+                >
+                  <Text variant="label">{request.cancelLabel}</Text>
+                </Pressable>
+              ) : null}
+              {stackActions ? null : confirmAction}
+            </View>
           </View>
-        </View>
-      </Animated.View>
+        </Animated.View>
+      </ModalInteractionBoundary>
     </Modal>
   );
 }
@@ -1099,13 +1136,8 @@ export type SheetProps = NativeModalProps &
     returnFocusRef?: RefObject<View | null>;
     safeAreaInsets?: Partial<Insets>;
     onDismissComplete?: (detail: Readonly<{ reason: SheetDismissReason }>) => void;
-    /**
-     * Layout keys only (`hjmCompositionStyleKeys`). Visual keys still apply but are deprecated:
-     * use `size`/`placement` and the recipe for appearance.
-     * @deprecated for visual keys. The next major narrows this to `HjmCompositionStyleProp`, like Dialog
-     * (consumer-policy.md §3.1).
-     */
-    contentStyle?: StyleProp<ViewStyle>;
+    /** Layout-only placement; semantic size and the recipe own appearance. */
+    contentStyle?: HjmCompositionStyleProp;
     /** Opt in when the body contains inputs; the modal owns keyboard clearance. */
     keyboardAvoidance?: boolean;
     /** Keep the header/footer fixed while long content scrolls. Do not nest a virtualized list. */
@@ -1136,7 +1168,6 @@ export function Sheet({
   onShow,
   ...modalProps
 }: SheetProps) {
-  warnVisualContentStyle("Sheet", contentStyle);
   const { environment, palette, tokens, designProfile } = useHjmNativeTheme();
   // The profile floating role is shared with Web. Modal lifecycle, inset and
   // action state remain recipe-owned; changing decoration must not replace them.
@@ -1152,8 +1183,6 @@ export function Sheet({
   };
   const accessibleTitle = resolveOverlayAccessibleTitle(title, accessibilityTitle);
   const { width: windowWidth, height: windowHeight } = useWindowDimensions();
-  const [modalHeight, setModalHeight] = useState<number | null>(null);
-  const [keyboardFrame, setKeyboardFrame] = useState<KeyboardMetrics | null>(null);
   const sizeRatio = sheetRecipe.sizes[size];
   const policy: SheetDismissPolicy = { ...sheetBehaviorDefaults, ...dismissPolicy };
   const [visible, changeOpen] = useReasonedOpenState({
@@ -1166,6 +1195,7 @@ export function Sheet({
   const visibleRef = useRef(visible);
   visibleRef.current = visible;
   const [nativeVisible, setNativeVisible] = useState(visible);
+  const { viewportHeight, keyboardInset, dockedKeyboard, setModalHeight } = useModalKeyboardViewport(nativeVisible, keyboardAvoidance);
   const nativeVisibleRef = useRef(visible);
   nativeVisibleRef.current = nativeVisible;
   const nativeShownRef = useRef(false);
@@ -1197,38 +1227,6 @@ export function Sheet({
     }
   }
 
-  useEffect(() => {
-    if (!nativeVisible || !keyboardAvoidance) {
-      setKeyboardFrame(null);
-      return;
-    }
-    // A sheet may open while an input elsewhere already owns the keyboard. Event-only
-    // tracking misses that case; metrics also restores the correct state on reopen.
-    setKeyboardFrame(Keyboard.metrics() ?? null);
-    const change = (event: { endCoordinates: KeyboardMetrics }) => setKeyboardFrame(event.endCoordinates);
-    const hide = () => setKeyboardFrame(null);
-    const subscriptions = [
-      Keyboard.addListener("keyboardDidShow", change),
-      Keyboard.addListener("keyboardDidHide", hide),
-      ...(Platform.OS === "ios" ? [
-        Keyboard.addListener("keyboardWillChangeFrame", change),
-        Keyboard.addListener("keyboardWillHide", hide),
-      ] : []),
-    ];
-    return () => subscriptions.forEach((subscription) => subscription.remove());
-  }, [keyboardAvoidance, nativeVisible]);
-
-  // Modal owns a full-screen coordinate space (statusBarTranslucent). Measure its
-  // actual height so Android adjustResize does not subtract the keyboard twice.
-  const viewportHeight = modalHeight ?? windowHeight;
-  const dockedKeyboard = keyboardAvoidance && keyboardFrame !== null
-    // Android converts IME pixels to float dp independently from window dimensions;
-    // exact width comparison rejected a full-width keyboard by 0.000013 dp on API 36.
-    && keyboardFrame.height > 0 && Math.abs(keyboardFrame.screenX) <= 1
-    && keyboardFrame.width >= windowWidth - 1;
-  const keyboardInset = dockedKeyboard
-    ? Math.max(0, viewportHeight - keyboardFrame.screenY)
-    : 0;
   const availableHeight = Math.max(0, viewportHeight - keyboardInset - insets.top);
   const bottomInset = dockedKeyboard ? 0 : insets.bottom;
 
@@ -1443,132 +1441,131 @@ export function Sheet({
       transparent
       visible={nativeVisible}
     >
-      <Animated.View
-        accessibilityElementsHidden={!visible}
-        importantForAccessibility={visible ? "auto" : "no-hide-descendants"}
-        pointerEvents={visible ? "auto" : "none"}
-        onLayout={(event) => setModalHeight(event.nativeEvent.layout.height)}
-        style={{
-          alignItems: physicalPlacement === "right" ? "flex-end" : "flex-start",
-          flex: 1,
-          justifyContent: physicalPlacement === "bottom" ? "flex-end" : "flex-start",
-          opacity: motionProgress,
-          paddingTop: insets.top,
-          paddingBottom: keyboardInset,
-        }}
-      >
-        <Scrim />
-        {policy.dismissible && policy.outsideDismiss ? (
-          <Pressable
-            accessible={false}
-            importantForAccessibility="no-hide-descendants"
-            onPress={() => requestClose("outside")}
-            style={{ bottom: 0, left: 0, position: "absolute", right: 0, top: 0 }}
-          />
-        ) : null}
+      <ModalInteractionBoundary visible={visible}>
         <Animated.View
-          accessibilityLabel={[accessibleTitle, description].filter(Boolean).join(", ")}
-          accessibilityState={{ busy }}
-          accessibilityViewIsModal
-          importantForAccessibility="yes"
-          role="dialog"
-          style={[
-            {
-              backgroundColor: contentBackground,
-              borderColor: contentBorder,
-              borderRadius: tokens.radius[sheetRecipe.content.radius],
-              borderBottomLeftRadius:
-                physicalPlacement === "bottom" ? 0 : tokens.radius[sheetRecipe.content.radius],
-              borderBottomRightRadius:
-                physicalPlacement === "bottom" ? 0 : tokens.radius[sheetRecipe.content.radius],
-              borderWidth: sheetRecipe.content.borderWidth,
-              ...resolveNativeShadowElevation(surfaceShadow, designProfile !== undefined, 8),
-              gap: sheetRecipe.body.gap,
-              // A fixed size ratio drives the height; `auto` lets the content decide
-              // and the recipe's maxHeightRatio caps it.
-              height: side
-                ? availableHeight
-                : sizeRatio === null
-                  ? undefined
-                  : Math.min(viewportHeight * sizeRatio, availableHeight),
-              maxWidth: side ? 420 : undefined,
-              // maxHeightRatio caps only `auto`. A fixed size is already bounded by availableHeight
-              // (viewport − top inset − keyboard); capping it too stopped `full` at 90% (2026-10-06 follow-up).
-              maxHeight: side || sizeRatio !== null
-                ? availableHeight
-                : Math.min(availableHeight, viewportHeight * sheetRecipe.content.maxHeightRatio),
-              paddingBottom: sheetRecipe.content.paddingBottom + bottomInset,
-              paddingLeft: sheetRecipe.content.paddingHorizontal + insets.left,
-              paddingRight: sheetRecipe.content.paddingHorizontal + insets.right,
-              // The top safe area limits the viewport, rather than adding a second
-              // notch-sized gap inside a sheet anchored to the bottom.
-              paddingTop: sheetRecipe.content.paddingTop,
-              shadowColor: surfaceShadow.color,
-              shadowOffset: {
-                width: 0,
-                height: surfaceShadow.offsetY,
-              },
-              shadowOpacity: surfaceShadow.opacity,
-              shadowRadius: surfaceShadow.radius,
-              transform: environment.reducedMotion
-                ? undefined
-                : side
-                  ? [{ translateX: translate }]
-                  : [{ translateY: translate }],
-              width: side ? "88%" : "100%",
-            },
-            contentStyle,
-          ]}
+          onLayout={(event) => setModalHeight(event.nativeEvent.layout.height)}
+          style={{
+            alignItems: physicalPlacement === "right" ? "flex-end" : "flex-start",
+            flex: 1,
+            justifyContent: physicalPlacement === "bottom" ? "flex-end" : "flex-start",
+            opacity: motionProgress,
+            paddingTop: insets.top,
+            paddingBottom: keyboardInset,
+          }}
         >
-          <View
-            style={{
-              alignItems: "center",
-              minHeight: sheetRecipe.header.minHeight,
-              flexShrink: 0,
-              direction: environment.direction,
-              flexDirection: "row",
-              gap: spacing.sm,
-            }}
+          <Scrim />
+          {policy.dismissible && policy.outsideDismiss ? (
+            <Pressable
+              accessible={false}
+              importantForAccessibility="no-hide-descendants"
+              onPress={() => requestClose("outside")}
+              style={{ bottom: 0, left: 0, position: "absolute", right: 0, top: 0 }}
+            />
+          ) : null}
+          <Animated.View
+            accessibilityLabel={[accessibleTitle, description].filter(Boolean).join(", ")}
+            accessibilityState={{ busy }}
+            accessibilityViewIsModal
+            importantForAccessibility="yes"
+            role="dialog"
+            style={[
+              {
+                backgroundColor: contentBackground,
+                borderColor: contentBorder,
+                borderRadius: tokens.radius[sheetRecipe.content.radius],
+                borderBottomLeftRadius:
+                  physicalPlacement === "bottom" ? 0 : tokens.radius[sheetRecipe.content.radius],
+                borderBottomRightRadius:
+                  physicalPlacement === "bottom" ? 0 : tokens.radius[sheetRecipe.content.radius],
+                borderWidth: sheetRecipe.content.borderWidth,
+                ...resolveNativeShadowElevation(surfaceShadow, designProfile !== undefined, 8),
+                gap: sheetRecipe.body.gap,
+                // A fixed size ratio drives the height; `auto` lets the content decide
+                // and the recipe's maxHeightRatio caps it.
+                height: side
+                  ? availableHeight
+                  : sizeRatio === null
+                    ? undefined
+                    : Math.min(viewportHeight * sizeRatio, availableHeight),
+                maxWidth: side ? 420 : undefined,
+                // maxHeightRatio caps only `auto`. A fixed size is already bounded by availableHeight
+                // (viewport − top inset − keyboard); capping it too stopped `full` at 90% (2026-10-06 follow-up).
+                maxHeight: side || sizeRatio !== null
+                  ? availableHeight
+                  : Math.min(availableHeight, viewportHeight * sheetRecipe.content.maxHeightRatio),
+                paddingBottom: sheetRecipe.content.paddingBottom + bottomInset,
+                paddingLeft: sheetRecipe.content.paddingHorizontal + insets.left,
+                paddingRight: sheetRecipe.content.paddingHorizontal + insets.right,
+                // The top safe area limits the viewport, rather than adding a second
+                // notch-sized gap inside a sheet anchored to the bottom.
+                paddingTop: sheetRecipe.content.paddingTop,
+                shadowColor: surfaceShadow.color,
+                shadowOffset: {
+                  width: 0,
+                  height: surfaceShadow.offsetY,
+                },
+                shadowOpacity: surfaceShadow.opacity,
+                shadowRadius: surfaceShadow.radius,
+                transform: environment.reducedMotion
+                  ? undefined
+                  : side
+                    ? [{ translateX: translate }]
+                    : [{ translateY: translate }],
+                width: side ? "88%" : "100%",
+              },
+              contentStyle,
+            ]}
           >
-            <View style={{ flex: 1, gap: spacing.xs }}>
-              <Text accessibilityRole="header" tone="primary" variant="title">{title}</Text>
-              {description ? <Text tone="muted">{description}</Text> : null}
-            </View>
-            {policy.dismissible ? (
-              <IconButton
-                disabled={busy && !policy.dismissWhileBusy}
-                label={closeLabel}
-                onPress={() => requestClose("close-action")}
-              >
-                <CloseGlyph />
-              </IconButton>
-            ) : null}
-          </View>
-          {/* Keyboard clearance belongs to the enclosing modal; UIKit must not add it again. */}
-          {scrollable ? (
-            <ScrollView
-              style={{ flexShrink: 1, minHeight: 0, ...bodyFill }}
-              contentContainerStyle={{ gap: sheetRecipe.body.gap }}
-              keyboardShouldPersistTaps="handled"
-              keyboardDismissMode={Platform.OS === "ios" ? "interactive" : "on-drag"}
-              automaticallyAdjustKeyboardInsets={false}
-            >
-              {children}
-            </ScrollView>
-          ) : <View style={{ gap: sheetRecipe.body.gap, flexShrink: 1, ...bodyFill }}>{children}</View>}
-          {footer ? (
             <View
               style={{
-                gap: sheetRecipe.footer.gap,
+                alignItems: "center",
+                minHeight: sheetRecipe.header.minHeight,
                 flexShrink: 0,
-                paddingTop: sheetRecipe.footer.paddingTop,
+                direction: environment.direction,
+                flexDirection: "row",
+                gap: spacing.sm,
               }}
             >
-              {footer}
+              <View style={{ flex: 1, gap: spacing.xs }}>
+                <Text accessibilityRole="header" tone="primary" variant="title">{title}</Text>
+                {description ? <Text tone="muted">{description}</Text> : null}
+              </View>
+              {policy.dismissible ? (
+                <IconButton
+                  disabled={busy && !policy.dismissWhileBusy}
+                  label={closeLabel}
+                  onPress={() => requestClose("close-action")}
+                >
+                  <CloseGlyph />
+                </IconButton>
+              ) : null}
             </View>
-          ) : null}
+            {/* Keyboard clearance belongs to the enclosing modal; UIKit must not add it again. */}
+            {scrollable ? (
+              <ScrollView
+                style={{ flexShrink: 1, minHeight: 0, ...bodyFill }}
+                contentContainerStyle={{ gap: sheetRecipe.body.gap }}
+                keyboardShouldPersistTaps="handled"
+                keyboardDismissMode={Platform.OS === "ios" ? "interactive" : "on-drag"}
+                automaticallyAdjustKeyboardInsets={false}
+              >
+                {children}
+              </ScrollView>
+            ) : <View style={{ gap: sheetRecipe.body.gap, flexShrink: 1, ...bodyFill }}>{children}</View>}
+            {footer ? (
+              <View
+                style={{
+                  gap: sheetRecipe.footer.gap,
+                  flexShrink: 0,
+                  paddingTop: sheetRecipe.footer.paddingTop,
+                }}
+              >
+                {footer}
+              </View>
+            ) : null}
+          </Animated.View>
         </Animated.View>
-      </Animated.View>
+      </ModalInteractionBoundary>
     </Modal>
   );
 }

@@ -72,7 +72,7 @@ Native: 없음. 계약상 Native는 `unsupported`이고 hover UI를 흉내 내�
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 말풍선 안쪽 여백 사방 `spacing.xs` 8(`tooltipRecipe.surface.padding`; 2026-10-06까지 Web은 좌우 12였다, 1.12.1 이후 미게시), 모서리 `radius.sm` 8, 최대 폭 280(`tooltipRecipe.content.maxWidth`, 화면 폭 − 24를 넘지 않음). trigger는 그 자체로 최소 터치 영역 44를 지켜야 한다(Tooltip은 영역을 넓히지 않는다). 보통 [IconButton](icon-button.md) | `tooltipRecipe.surface`, `.hjm-tooltip__content` |
+| 크기 | 말풍선 안쪽 여백 사방 `spacing.xs` 8(`tooltipRecipe.surface.padding`; 2026-10-06까지 Web은 좌우 12였다, 1.13.0 변경), 모서리 `radius.sm` 8, 최대 폭 280(`tooltipRecipe.content.maxWidth`, 화면 폭 − 24를 넘지 않음). trigger는 그 자체로 최소 터치 영역 44를 지켜야 한다(Tooltip은 영역을 넓히지 않는다). 보통 [IconButton](icon-button.md) | `tooltipRecipe.surface`, `.hjm-tooltip__content` |
 | 간격 | trigger와 4(`positioning.sideOffset` = `spacing.xxs`), 뷰포트 가장자리와 최소 12(`positioning.collisionPadding` = `spacing.sm`) | `tooltipRecipe.positioning`, `react/src/overlays.tsx`(`Tooltip`) |
 | 순서·정렬 | trigger 바로 옆에 붙는다. 한 줄에 Tooltip 달린 아이콘 버튼이 여럿이면 하나만 보이고, 300ms 안에 옆으로 옮기면 바로 열린다 | `react/src/overlays.tsx`(`Tooltip`) |
 | 고정·스크롤 | 떠 있는 층(`position: fixed`)이라 문서 흐름에 자리를 만들지 않고 trigger 크기도 바꾸지 않는다. 공간이 모자라면 반대쪽으로 뒤집힌다 | `.hjm-tooltip__content`, `react/src/portal.tsx` |

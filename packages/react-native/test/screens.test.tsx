@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { Animated, View } from "react-native";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { describe, expect, it, vi } from "vitest";
 import { ScrollView } from "react-native";
@@ -241,9 +241,9 @@ it("keeps interactive content controls and moves reply to the time caption", asy
   act(() => tree.unmount());
 });
 
-it("marks unread notifications without the deprecated ListRow titleStyle warning", async () => {
-  const {resetDeprecatedStyleWarningsForTest} = await import("../src/internal/deprecated-style.js");
-  resetDeprecatedStyleWarningsForTest();
+it("marks unread notifications through semantic selection without visual overrides", async () => {
+  const {resetDiagnosticsForTest} = await import("../src/internal/diagnostics.js");
+  resetDiagnosticsForTest();
   const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
   const weight = (read: boolean) => {
     const tree = render(<NotificationItem title="답글" read={read} statusLabel="상태" timestamp="방금" />);
@@ -278,8 +278,23 @@ it.each(["incoming", "outgoing"] as const)("reveals time only during an inward d
   expect(host.props.onMoveShouldSetResponder({}, {dx:40,dy:60})).toBe(false);
   expect(host.props.onMoveShouldSetResponder({}, {dx,dy:4})).toBe(true);
   act(()=>host.props.onResponderMove({}, {dx,dy:4}));
-  expect(tree.root.findAllByType(View).some(view=>view.props.style?.transform?.[0]?.translateX===dx)).toBe(true);
+  expect(tree.root.findAllByType(Animated.View).some(view=>view.props.style?.transform?.[0]?.translateX?.current===dx)).toBe(true);
   act(()=>host.props.onResponderRelease({}, {dx,dy:4}));
   expect(reply).not.toHaveBeenCalled();
-  expect(tree.root.findAllByType(View).some(view=>view.props.style?.transform?.[0]?.translateX===0)).toBe(true);
+  expect(tree.root.findAllByType(Animated.View).some(view=>view.props.style?.transform?.[0]?.translateX?.current===0)).toBe(true);
+});
+
+it("moves the swipe layer without rendering message content for every drag frame", async () => {
+  const { ChatMessage } = await import("../src/screens.js");
+  const renders = vi.fn();
+  function Content() { renders(); return <Text>사진 없는 본문</Text>; }
+  let tree!: ReactTestRenderer;
+  await act(async () => { tree = create(<HjmNativeProvider><ChatMessage direction="incoming" author="" timestamp="23:45" timestampPresentation="swipe"><Content /></ChatMessage></HjmNativeProvider>); });
+  const initial = renders.mock.calls.length;
+  const host = tree.root.findAllByType(View).find(view => view.props.onMoveShouldSetResponder)!;
+  act(() => { for (let dx = 20; dx <= 70; dx += 5) host.props.onResponderMove({}, {dx,dy:2}); });
+  expect(renders).toHaveBeenCalledTimes(initial);
+  act(() => host.props.onResponderRelease({}, {dx:70,dy:2}));
+  expect(renders).toHaveBeenCalledTimes(initial);
+  act(() => tree.unmount());
 });

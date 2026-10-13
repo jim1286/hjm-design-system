@@ -106,17 +106,25 @@ export const NativeSelect = forwardRef<HTMLSelectElement, NativeSelectProps>(fun
 ) {
   validateOptions(options, "Select");
   const controlId = useControlId(id, "select");
-  const [value, setValue] = useControllableState({
+  const [storedValue, setValue] = useControllableState({
     ...(valueProp === undefined ? {} : { value: valueProp }),
     defaultValue,
     ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
   });
-  if (
-    value !== "" &&
-    !options.some((option) => option.value === value && !option.disabled)
-  ) {
-    throw new RangeError(`Select value must identify an enabled option: ${value}`);
+  const initialized = useRef(false);
+  const available = storedValue === "" || options.some(option => option.value === storedValue && !option.disabled);
+  if ((!initialized.current || valueProp !== undefined) && !available) {
+    throw new RangeError(`Select value must identify an enabled option: ${storedValue}`);
   }
+  initialized.current = true;
+  // Defaults are validated once. Later list changes must reconcile an internal
+  // selection instead of crashing a form while its options are being refreshed.
+  const value = valueProp === undefined && !available
+    ? placeholder !== undefined ? "" : options.find(option => !option.disabled)?.value ?? ""
+    : storedValue;
+  useEffect(() => {
+    if (valueProp === undefined && value !== storedValue) setValue(value);
+  }, [storedValue, value, valueProp, setValue]);
 
   return (
     <Field
@@ -257,6 +265,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
       className,
       layoutStyle,
       disabled = false,
+      readOnly = false,
       required = false,
       autoComplete = "off",
       onFocus,
@@ -342,7 +351,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
       return -1;
     };
     const selectItem = (item: ComboboxItem) => {
-      if (item.disabled) return;
+      if (item.disabled || disabled || readOnly || loading) return;
       setSelectedValue(item.value);
       setQuery(item.label);
       setOpen(false, "selection");
@@ -358,7 +367,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
     };
     const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
       onKeyDown?.(event);
-      if (event.defaultPrevented) return;
+      if (event.defaultPrevented || disabled || readOnly || event.nativeEvent.isComposing || event.keyCode === 229) return;
       if (
         loading &&
         ["ArrowDown", "ArrowUp", "Home", "End", "Enter"].includes(event.key)
@@ -429,6 +438,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
                 ref={composeRefs(forwardedRef, inputRef)}
                 className={classNames("hjm-field__input hjm-combobox__input", className)}
                 value={query}
+                readOnly={readOnly}
                 role="combobox"
                 autoComplete={autoComplete}
                 aria-autocomplete="list"
@@ -441,12 +451,13 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
                   onFocus?.(event);
                   if (
                     !event.defaultPrevented &&
-                    openOnFocus &&
+                    !disabled && !readOnly && openOnFocus &&
                     !suppressFocusOpenRef.current
                   ) setOpen(true, "focus");
                 }}
                 onBlur={onBlur}
                 onChange={(event) => {
+                  if (disabled || readOnly) return;
                   setQuery(event.target.value);
                   setSelectedValue("");
                   setOpen(true, "input");

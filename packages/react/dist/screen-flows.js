@@ -9,19 +9,20 @@ import { AlertDialog, Menu, Sheet } from "./overlays.js";
 import { UploadItem } from "./upload-item.js";
 import {} from "@hjmds/design-contracts/components/upload-item";
 import {} from "@hjmds/design-contracts/components/alert-dialog";
-import { validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchEmptyCause, resolveSearchScreenPhase, resolveFocusAfterRemoval, screenPatternRecipe, searchScreenRecipe } from "@hjmds/design-contracts/screen-patterns";
+import { validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchScreenPhase, resolveFocusAfterRemoval, screenPatternRecipe, searchScreenRecipe } from "@hjmds/design-contracts/screen-patterns";
 import { resolveWindowClass } from "@hjmds/design-contracts/responsive";
 import { containerRecipe } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./display.js";
 import { Heading } from "./heading.js";
 import { EmptyState, Skeleton } from "./feedback.js";
-function Action({ action, secondary = false }) { return _jsx(Button, { tone: secondary ? "ghost" : "primary", disabled: !!(action.disabled || action.pending), loading: action.pending ?? false, onClick: action.onAction, children: action.label }); }
+function Action({ action, secondary = false, buttonRef }) { return _jsx(Button, { ref: buttonRef, tone: secondary ? "ghost" : "primary", disabled: !!(action.disabled || action.pending), loading: action.pending ?? false, onClick: action.onAction, children: action.label }); }
 /** Keep the list mounted so input and scroll survive a detail visit. Routers may instead restore host scroll state. */
 export function ListDetailScreen({ list, detail, back, refresh, loadMore, layoutStyle, ...screen }) {
     const open = !!detail;
     // Seed with the first render: a deep link that mounts with detail open is not a user transition,
     // so it must not pull focus from wherever the host left it (address bar, router focus target).
     const listHost = useRef(null), detailHost = useRef(null), returnFocus = useRef(null), wasOpen = useRef(open);
+    // The retained host is a fallback when a virtualized list removes its focused item.
     // Hidden lists preserve scroll but drop browser focus; retain the trigger and move into the
     // detail once, then restore it (or the list body if the item was removed). See usage/ListDetailScreen.
     useLayoutEffect(() => {
@@ -31,24 +32,43 @@ export function ListDetailScreen({ list, detail, back, refresh, loadMore, layout
             const target = returnFocus.current;
             if (target?.isConnected && !target.closest("[hidden]"))
                 target.focus({ preventScroll: true });
-            else
-                listHost.current?.querySelector('[tabindex="0"]')?.focus({ preventScroll: true });
+            // A retained trigger can also become disabled while detail is open.
+            if (document.activeElement !== target)
+                (listHost.current?.querySelector('[tabindex="0"]') ?? listHost.current)?.focus({ preventScroll: true });
         }
         wasOpen.current = open;
     }, [open]);
     // layoutStyle places the outer host that owns both panes, not the inner list ScreenLayout.
-    return _jsxs("div", { style: { height: "100%", ...layoutStyle }, children: [_jsx("div", { ref: listHost, hidden: open, style: { height: "100%" }, onFocusCapture: event => { returnFocus.current = event.target; }, children: _jsx(ScreenLayout, { ...screen, actions: refresh ? _jsx(Action, { action: refresh, secondary: true }) : screen.actions, footer: loadMore ? _jsx(Action, { action: loadMore, secondary: true }) : null, children: list }) }), detail ? _jsx("div", { ref: detailHost, style: { height: "100%" }, children: _jsx(ScreenLayout, { title: detail.title, leading: _jsx(Action, { action: back, secondary: true }), children: detail.content }) }) : null] });
+    return _jsxs("div", { style: { height: "100%", ...layoutStyle }, children: [_jsx("div", { ref: listHost, tabIndex: -1, hidden: open, style: { height: "100%" }, onFocusCapture: event => { returnFocus.current = event.target; }, children: _jsx(ScreenLayout, { ...screen, actions: refresh ? _jsx(Action, { action: refresh, secondary: true }) : screen.actions, footer: loadMore ? _jsx(Action, { action: loadMore, secondary: true }) : null, children: list }) }), detail ? _jsx("div", { ref: detailHost, style: { height: "100%" }, children: _jsx(ScreenLayout, { title: detail.title, ...(detail.state === undefined ? {} : { state: detail.state }), stateAction: detail.stateAction, notice: detail.notice, leading: _jsx(Action, { action: back, secondary: true }), children: detail.content }) }) : null] });
 }
 export function EditorScreen({ children, dirty, submitPlacement = "footer", submit, cancel, discard, draftStatus, ...screen }) {
     const [confirm, setConfirm] = useState(false);
-    return _jsxs(_Fragment, { children: [_jsx(ScreenLayout, { ...screen, leading: _jsx(Action, { action: { ...cancel, disabled: !!(cancel.disabled || submit.pending), onAction: () => { if (dirty)
+    const cancelLocked = !!(cancel.disabled || cancel.pending || submit.pending);
+    const submitAction = { ...submit, disabled: !!(submit.disabled || screen.state && screen.state.kind !== "ready") };
+    // A prompt opened before an external save must not bypass the current leave lock
+    // or reappear once the save finishes. Keep the draft mounted throughout.
+    useEffect(() => { if (cancelLocked)
+        setConfirm(false); }, [cancelLocked]);
+    // Preserve an async host result so AlertDialog can retain failure and retry.
+    const leave = () => { if (!cancelLocked)
+        return cancel.onAction(); };
+    return _jsxs(_Fragment, { children: [_jsx(ScreenLayout, { ...screen, leading: _jsx(Action, { action: { ...cancel, disabled: cancelLocked, onAction: () => { if (cancelLocked)
+                            return; if (dirty)
                             setConfirm(true);
                         else
-                            cancel.onAction(); } }, secondary: true }), actions: submitPlacement === "header" ? _jsx(Action, { action: submit }) : screen.actions, footer: submitPlacement === "header" ? draftStatus : _jsxs(Stack, { gap: "sm", children: [draftStatus, _jsx(Action, { action: submit })] }), children: children }), _jsx(AlertDialog, { open: confirm, onOpenChange: setConfirm, request: { ...discard, mode: "confirm", onConfirm: () => cancel.onAction() } })] });
+                            leave(); } }, secondary: true }), actions: submitPlacement === "header" ? _jsx(Action, { action: submitAction }) : screen.actions, footer: submitPlacement === "header" ? draftStatus : _jsxs(Stack, { gap: "sm", children: [draftStatus, _jsx(Action, { action: submitAction })] }), children: children }), _jsx(AlertDialog, { open: confirm && !cancelLocked, onOpenChange: setConfirm, request: { ...discard, mode: "confirm", onConfirm: leave } })] });
 }
 export function ProfileScreen({ summary, edit, children, accountActions, ...screen }) { return _jsx(ScreenLayout, { ...screen, children: _jsxs(Stack, { gap: "xl", children: [_jsxs(Stack, { gap: "md", children: [summary, _jsx(Action, { action: edit, secondary: true })] }), children, accountActions] }) }); }
-export function ModerationScreen({ reasonPicker, reasons, reason, onReasonChange, reasonLabel, children, submit, block, ...screen }) { const [confirm, setConfirm] = useState(false); return _jsxs(_Fragment, { children: [_jsx(ScreenLayout, { ...screen, footer: _jsxs(Stack, { gap: "sm", children: [_jsx(Action, { action: { ...submit, disabled: submit.disabled || !!screen.state && screen.state.kind !== "ready" || !reasons.some(item => item.value === reason) } }), block ? _jsx(Action, { action: { ...block.action, onAction: () => setConfirm(true) }, secondary: true }) : null] }), children: _jsxs(Stack, { gap: "lg", children: [reasonPicker ?? (reasons.length ? _jsx(RadioGroup, { accessibilityLabel: reasonLabel, orientation: "vertical", items: reasons, value: reason, onValueChange: value => { if (value)
-                            onReasonChange(value); } }) : null), children] }) }), block ? _jsx(AlertDialog, { open: confirm, onOpenChange: setConfirm, request: block.confirmation }) : null] }); }
+export function ModerationScreen({ reasonPicker, reasons, reason, onReasonChange, reasonLabel, children, submit, block, ...screen }) {
+    const [confirm, setConfirm] = useState(false);
+    const hasBlock = !!block;
+    // Withdrawing the action ends that confirmation session; a later action needs
+    // a new explicit press even if the screen itself stays mounted.
+    useEffect(() => { if (!hasBlock)
+        setConfirm(false); }, [hasBlock]);
+    return _jsxs(_Fragment, { children: [_jsx(ScreenLayout, { ...screen, footer: _jsxs(Stack, { gap: "sm", children: [_jsx(Action, { action: { ...submit, disabled: submit.disabled || !!screen.state && screen.state.kind !== "ready" || !reasons.some(item => item.value === reason) } }), block ? _jsx(Action, { action: { ...block.action, onAction: () => setConfirm(true) }, secondary: true }) : null] }), children: _jsxs(Stack, { gap: "lg", children: [reasonPicker ?? (reasons.length ? _jsx(RadioGroup, { accessibilityLabel: reasonLabel, orientation: "vertical", items: reasons, value: reason, onValueChange: value => { if (value)
+                                onReasonChange(value); } }) : null), children] }) }), block ? _jsx(AlertDialog, { open: confirm, onOpenChange: setConfirm, request: block.confirmation }) : null] });
+}
 export function PhotoSourceSheet({ open, onOpenChange, onSelect, labels, disabled = false, cameraAvailable = true }) {
     // File-input click must stay in the user's activation stack. Deferring until the
     // sheet animation ends can cause browsers to reject camera/album selection.
@@ -57,7 +77,69 @@ export function PhotoSourceSheet({ open, onOpenChange, onSelect, labels, disable
     return _jsx(Sheet, { open: open, onOpenChange: onOpenChange, title: labels.title, closeLabel: labels.cancel, children: _jsxs(Stack, { gap: "sm", children: [_jsx(Button, { tone: "secondary", disabled: disabled, onClick: () => select("library"), children: labels.library }), cameraAvailable ? _jsx(Button, { tone: "secondary", disabled: disabled, onClick: () => select("camera"), children: labels.camera }) : null] }) });
 }
 /** A photo is the primary content; upload status stays below it instead of replacing the thumbnail. */
-export function MediaSelectionScreen({ library, selectionSummary, items, add, done, labels, actionLabels, removeLabel, moveUpLabel, moveDownLabel, onRemove, onMove, onRetry, onCancel, ...screen }) { return _jsx(ScreenLayout, { ...screen, actions: _jsx(Action, { action: add, secondary: true }), footer: _jsxs(Stack, { gap: "sm", children: [selectionSummary, _jsx(Action, { action: done })] }), children: library ?? _jsx(Grid, { columns: { compact: 2, expanded: 3 }, gap: { compact: "md" }, children: items.map((item, index) => _jsxs(Stack, { gap: "xs", children: [item.preview, _jsx(UploadItem, { descriptor: item.descriptor, labels: labels, onRetry: onRetry, onCancel: onCancel }), _jsxs(Stack, { axis: "inline", gap: "xxs", layoutStyle: { flexWrap: "wrap" }, children: [_jsx(Button, { "aria-label": moveUpLabel(item), size: "small", tone: "ghost", disabled: index === 0, onClick: () => onMove(item.descriptor.id, -1), children: actionLabels.moveUp }), _jsx(Button, { "aria-label": moveDownLabel(item), size: "small", tone: "ghost", disabled: index === items.length - 1, onClick: () => onMove(item.descriptor.id, 1), children: actionLabels.moveDown }), _jsx(Button, { "aria-label": removeLabel(item), size: "small", tone: "ghost", onClick: () => onRemove(item.descriptor.id), children: actionLabels.remove })] })] }, item.descriptor.id)) }) }); }
+export function MediaSelectionScreen({ library, selectionSummary, items, add, done, labels, actionLabels, removeLabel, moveUpLabel, moveDownLabel, onRemove, onMove, onRetry, onCancel, ...screen }) {
+    const grid = useRef(null), addButton = useRef(null);
+    const focusedItem = useRef(null);
+    useLayoutEffect(() => {
+        const previous = focusedItem.current, host = grid.current;
+        if (!previous)
+            return;
+        const active = document.activeElement;
+        if (!host) {
+            focusedItem.current = null;
+            // Empty-state replacement unmounts the grid; the ordinary last-removal
+            // destination still applies. Other state/library replacements own their focus.
+            if (!previous.node.isConnected && !items.length && screen.state?.kind === "empty" && library == null
+                && (active === document.body || active === previous.body) && !addButton.current?.disabled)
+                addButton.current?.focus({ preventScroll: true });
+            return;
+        }
+        const index = items.findIndex(item => item.descriptor.id === previous.id), moved = index >= 0 && index !== previous.index;
+        if (index >= 0)
+            previous.index = index;
+        const reveal = (node) => {
+            const body = previous.body;
+            if (!body?.contains(node) || body.dataset.scroll !== "screen")
+                return;
+            const bounds = node.getBoundingClientRect(), clip = body.getBoundingClientRect();
+            // Scroll only the owned body, by the minimum needed to keep the action visible.
+            if (bounds.top < clip.top)
+                body.scrollTop += Math.floor(bounds.top - clip.top);
+            else if (bounds.bottom > clip.bottom)
+                body.scrollTop += Math.ceil(bounds.bottom - clip.bottom);
+        };
+        const disabled = previous.node.matches(":disabled");
+        if (active !== document.body && active !== previous.body && !(active === previous.node && disabled)) {
+            if (active === previous.node && moved)
+                reveal(previous.node);
+            return;
+        }
+        // A keyed reorder may detach a focused node; a boundary move may disable it.
+        // Recover only focus owned by this grid, after the product accepts the change.
+        const id = index < 0 ? items[Math.min(previous.index, items.length - 1)]?.descriptor.id : previous.id;
+        const row = Array.from(host.querySelectorAll("[data-hjm-media-item]")).find(node => node.dataset.hjmMediaItem === id);
+        const target = index >= 0 && previous.node.isConnected && !disabled ? previous.node
+            : row?.querySelector(index < 0 ? '[data-media-action="remove"]' : 'button[data-media-action]:not(:disabled)')
+                ?? (!addButton.current?.disabled ? addButton.current : null);
+        focusedItem.current = null;
+        if (target) {
+            target.focus({ preventScroll: true });
+            reveal(target);
+        }
+    });
+    return _jsx(ScreenLayout, { ...screen, actions: _jsx(Action, { action: add, secondary: true, buttonRef: addButton }), footer: _jsxs(Stack, { gap: "sm", children: [selectionSummary, _jsx(Action, { action: done })] }), children: library ?? _jsx(Grid, { ref: grid, columns: { compact: 2, expanded: 3 }, gap: { compact: "md" }, onFocusCapture: event => {
+                const node = event.target, row = node.closest("[data-hjm-media-item]");
+                const id = row?.dataset.hjmMediaItem;
+                if (id !== undefined)
+                    focusedItem.current = { node, id, index: items.findIndex(item => item.descriptor.id === id), body: node.closest(".hjm-screen__body") };
+            }, onBlurCapture: event => {
+                const node = event.target;
+                // Explicit blur/outside focus relinquishes ownership; DOM removal and a newly
+                // disabled move button retain it until the layout effect chooses a successor.
+                if (event.relatedTarget ? !event.currentTarget.contains(event.relatedTarget) : node.isConnected && !node.matches(":disabled"))
+                    focusedItem.current = null;
+            }, children: items.map((item, index) => _jsxs(Stack, { "data-hjm-media-item": item.descriptor.id, gap: "xs", children: [item.preview, _jsx(UploadItem, { descriptor: item.descriptor, labels: labels, onRetry: onRetry, onCancel: onCancel }), _jsxs(Stack, { axis: "inline", gap: "xxs", layoutStyle: { flexWrap: "wrap" }, children: [_jsx(Button, { "data-media-action": "up", "aria-label": moveUpLabel(item), size: "small", tone: "ghost", disabled: index === 0, onClick: () => onMove(item.descriptor.id, -1), children: actionLabels.moveUp }), _jsx(Button, { "data-media-action": "down", "aria-label": moveDownLabel(item), size: "small", tone: "ghost", disabled: index === items.length - 1, onClick: () => onMove(item.descriptor.id, 1), children: actionLabels.moveDown }), _jsx(Button, { "data-media-action": "remove", "aria-label": removeLabel(item), size: "small", tone: "ghost", onClick: () => onRemove(item.descriptor.id), children: actionLabels.remove })] })] }, item.descriptor.id)) }) });
+}
 function Highlighted({ text, match }) {
     if (!match || match.start < 0 || match.end <= match.start || match.end > text.length)
         return text;
@@ -118,7 +200,7 @@ function SearchResultsHeader({ summary, applied, cause, appliedHost, onRemove, o
 function SearchResultsBody({ summary, applied, suggested, cause, onCommit, onClearAll, children }) {
     // Loading keeps each row's own height (ListRow `loading`), so the list does not jump when results land.
     if (summary?.count === null)
-        return _jsx(Stack, { gap: "xxs", children: Array.from({ length: searchScreenRecipe.loadingRows }, (_, index) => _jsx(ListRow, { loading: true, title: "", description: "", ...(index === 0 ? { loadingLabel: summary.loadingLabel } : {}) }, index)) });
+        return _jsx(Stack, { gap: "xxs", children: Array.from({ length: searchScreenRecipe.loadingRows }, (_, index) => _jsx(ListRow, { loading: true, title: "", description: summary.loadingLabel, ...(index === 0 ? { loadingLabel: summary.loadingLabel } : {}) }, index)) });
     if (cause === "none" || !summary?.empty)
         return _jsx(_Fragment, { children: children });
     return _jsxs(Stack, { gap: "lg", children: [_jsx(EmptyState, { density: "compact", title: summary.empty.title, ...(summary.empty.description === undefined ? {} : { description: summary.empty.description }), ...(cause === "filters" && applied ? { action: _jsx(Button, { tone: "secondary", onClick: onClearAll, children: applied.clearAllLabel }) } : {}) }), cause === "query" && suggested?.items.length ? _jsx(SearchSuggestedChips, { suggested: suggested, onCommit: onCommit }) : null, children] });
@@ -148,13 +230,14 @@ function SearchFilterSheetView({ sheet }) {
     return _jsx(Sheet, { open: sheet.open, onOpenChange: open => sheet.onOpenChange(open), title: sheet.title, closeLabel: sheet.labels.close, placement: session?.side ? "end" : "bottom", size: sheet.size ?? "large", footer: footer, children: sheet.renderContent(draft, setDraft) });
 }
 /** Abort is supplied to the host request; the host must ignore aborted responses before committing results. */
-export function SearchScreen({ query, queryLabel, queryField, queryClearLabel, onQueryChange, onSearch, debounceMs = 300, filters, recentSearches, children, onSubmit, committedQuery, filtersOverflow = "wrap", hostGutter = "none", queryLabelVisibility = "visible", searching, searchingLabel, recentQueries, suggestedQueries, suggestions, resultSummary, appliedFilters, filterSheet, ...screen }) {
+export function SearchScreen({ query, queryLabel, queryField, queryClearLabel, onQueryChange, onSearch, debounceMs, filters, recentSearches, children, onSubmit, committedQuery, filtersOverflow = "wrap", hostGutter = "none", queryLabelVisibility = "visible", searching, searchingLabel, recentQueries, suggestedQueries, suggestions, resultSummary, appliedFilters, filterSheet, ...screen }) {
     // The host owns localized copy. A custom queryField owns its own clear affordance.
     if (queryField == null && !queryClearLabel?.trim())
         throw new TypeError("SearchScreen requires a localized queryClearLabel for its default search field");
+    const searchDelay = resolveSearchDebounceMs(debounceMs);
     const callback = useRef(onSearch);
     callback.current = onSearch;
-    useEffect(() => { const controller = new AbortController(); const timer = setTimeout(() => callback.current(query, { signal: controller.signal }), Math.max(0, debounceMs)); return () => { clearTimeout(timer); controller.abort(); }; }, [query, debounceMs]);
+    useEffect(() => { const controller = new AbortController(); const timer = setTimeout(() => callback.current(query, { signal: controller.signal }), searchDelay); return () => { clearTimeout(timer); controller.abort(); }; }, [query, searchDelay]);
     const fieldHost = useRef(null), bodyHost = useRef(null);
     const input = useCallback(() => fieldHost.current?.querySelector("input"), []);
     const focus = useSearchRemovalFocus(recentQueries?.items.length ?? 0, appliedFilters?.items.length ?? 0, input);
@@ -210,16 +293,37 @@ export function SearchScreen({ query, queryLabel, queryField, queryClearLabel, o
     return _jsxs(_Fragment, { children: [_jsx(ScreenLayout, { ...screen, notice: _jsxs(Stack, { gap: "sm", ref: fieldHost, children: [queryField ?? _jsx(SearchField, { ...labelProps, clearLabel: queryClearLabel, value: query, onValueChange: onQueryChange, loading: searching ?? false, ...submitProps }), filterSlot, screen.notice] }), children: _jsxs(Stack, { gap: "lg", ref: bodyHost, className: "hjm-search-screen__results", tabIndex: -1, children: [suggestions || resultSummary || searchingLabel ? _jsx(SearchAnnouncement, { text: announcement }) : null, body] }) }), filterSheet ? _jsx(SearchFilterSheetView, { sheet: filterSheet }) : null] });
 }
 export function PermissionScreen({ status, illustration, explanation, request, settings, continueAction, skip, ...screen }) { const kind = resolvePermissionAction(status); const primary = kind === "request" ? request : kind === "settings" ? settings : kind === "continue" ? continueAction : null; return _jsx(ScreenLayout, { ...screen, footer: _jsxs(Stack, { gap: "sm", children: [primary ? _jsx(Action, { action: primary }) : null, skip ? _jsx(Action, { action: skip, secondary: true }) : null] }), children: _jsxs(Stack, { gap: "xl", align: "center", children: [illustration, explanation] }) }); }
-export function OnboardingScreen({ steps, index, onIndexChange, nextLabel, backLabel, complete, skip, progressLabel, layoutStyle }) { const position = resolveOnboardingStep(steps.length, index); const step = steps[index]; return _jsx(ScreenLayout, { ...(layoutStyle === undefined ? {} : { layoutStyle }), title: step.title, description: step.description, actions: skip ? _jsx(Action, { action: skip, secondary: true }) : null, notice: _jsx(Text, { variant: "caption", tone: "muted", children: progressLabel(index + 1, steps.length) }), footer: _jsxs(Stack, { gap: "sm", children: [_jsx(Action, { action: position.last ? complete : { label: nextLabel, onAction: () => onIndexChange(index + 1) } }), !position.first ? _jsx(Action, { action: { label: backLabel, onAction: () => onIndexChange(index - 1) }, secondary: true }) : null] }), children: step.content }); }
+export function OnboardingScreen({ steps, index, onIndexChange, nextLabel, backLabel, complete, skip, progressLabel, layoutStyle }) {
+    const position = resolveOnboardingStep(steps.length, index);
+    const step = steps[index];
+    // Completion and skip persist the same flow: keep navigation stable until the receipt.
+    const pending = !!(complete.pending || skip?.pending);
+    return _jsx(ScreenLayout, { ...(layoutStyle === undefined ? {} : { layoutStyle }), title: step.title, description: step.description, actions: skip ? _jsx(Action, { action: { ...skip, disabled: !!(skip.disabled || pending) }, secondary: true }) : null, notice: _jsx(Text, { variant: "caption", tone: "muted", children: progressLabel(index + 1, steps.length) }), footer: _jsxs(Stack, { gap: "sm", children: [_jsx(Action, { action: position.last ? { ...complete, disabled: !!(complete.disabled || pending) } : { label: nextLabel, disabled: pending, onAction: () => onIndexChange(index + 1) } }), !position.first ? _jsx(Action, { action: { label: backLabel, disabled: pending, onAction: () => onIndexChange(index - 1) }, secondary: true }) : null] }), children: step.content });
+}
 /** Controlled thread: server ordering, permission checks and receipt-based draft clearing belong to the product. */
 export function CommentThreadScreen({ items, expandedIds, onExpandedChange, onLike, onReply, replyLabel, repliesLabel, composer, threadHeader, threadFooter, ...screen }) {
     validateCommentThread(items);
+    // Index replies once; rescanning every item for each root makes long threads quadratic.
+    const roots = [], repliesByParent = new Map();
+    const expanded = new Set(expandedIds);
+    for (const item of items) {
+        if (item.parentId === null)
+            roots.push(item);
+        else {
+            const siblings = repliesByParent.get(item.parentId);
+            if (siblings)
+                siblings.push(item);
+            else
+                repliesByParent.set(item.parentId, [item]);
+        }
+    }
     // The supplied reference joins the author to the first body line and reserves the right edge
     // for reaction and its adjacent overflow action (Oct 7 user request). Keep
     // legacy rich bodies intact; bodyText opts into that compact flow.
-    const row = (item) => _jsxs(Stack, { axis: "inline", align: "start", gap: "sm", children: [item.avatar, _jsxs(Stack, { gap: "xxs", layoutStyle: { flex: 1, minWidth: 0 }, children: [item.bodyText !== undefined ? _jsxs(Text, { children: [_jsx(Text, { emphasis: "strong", children: item.author }), " ", item.bodyText] }) : _jsxs(Stack, { axis: "inline", gap: "sm", align: "center", layoutStyle: { flexWrap: "wrap" }, children: [_jsx(Text, { emphasis: "strong", children: item.author }), _jsx(Text, { variant: "caption", tone: "muted", children: item.timeLabel })] }), item.body, _jsxs(Stack, { axis: "inline", gap: "sm", align: "center", layoutStyle: { flexWrap: "wrap" }, children: [item.bodyText !== undefined && item.timeLabel ? _jsx(Text, { variant: "caption", tone: "muted", children: item.timeLabel }) : null, item.likeCountLabel ? _jsx(Text, { variant: "caption", tone: "muted", children: item.likeCountLabel }) : null, (item.canReply ?? item.parentId === null) ? _jsx(Button, { size: "small", tone: "ghost", disabled: item.replyDisabled ?? false, onClick: () => onReply(item.id), children: replyLabel }) : null] })] }), _jsxs(Stack, { axis: "inline", gap: "xxs", align: "center", layoutStyle: { flexShrink: 0 }, children: [item.likeAction !== undefined ? item.likeAction : _jsx(IconButton, { label: item.likeLabel, tone: "ghost", onClick: () => onLike(item.id), children: item.likeIcon }), item.actions] })] }, item.id);
+    // Empty metadata must not reserve a line above the body: anonymous comments align with their avatar.
+    const row = (item) => _jsxs(Stack, { axis: "inline", align: "start", gap: "sm", children: [item.avatar, _jsxs(Stack, { gap: "xxs", layoutStyle: { flex: 1, minWidth: 0 }, children: [item.bodyText !== undefined ? _jsxs(Text, { children: [_jsx(Text, { emphasis: "strong", children: item.author }), " ", item.bodyText] }) : (item.author || item.timeLabel) ? _jsxs(Stack, { axis: "inline", gap: "sm", align: "center", layoutStyle: { flexWrap: "wrap" }, children: [item.author ? _jsx(Text, { emphasis: "strong", children: item.author }) : null, item.timeLabel ? _jsx(Text, { variant: "caption", tone: "muted", children: item.timeLabel }) : null] }) : null, item.body, _jsxs(Stack, { axis: "inline", gap: "sm", align: "center", layoutStyle: { flexWrap: "wrap" }, children: [item.bodyText !== undefined && item.timeLabel ? _jsx(Text, { variant: "caption", tone: "muted", children: item.timeLabel }) : null, item.likeCountLabel ? _jsx(Text, { variant: "caption", tone: "muted", children: item.likeCountLabel }) : null, (item.canReply ?? item.parentId === null) ? _jsx(Button, { size: "small", tone: "ghost", disabled: item.replyDisabled ?? false, onClick: () => onReply(item.id), children: replyLabel }) : null] })] }), _jsxs(Stack, { axis: "inline", gap: "xxs", align: "center", layoutStyle: { flexShrink: 0 }, children: [item.likeAction !== undefined ? item.likeAction : _jsx(IconButton, { label: item.likeLabel, tone: "ghost", onClick: () => onLike(item.id), children: item.likeIcon }), item.actions] })] }, item.id);
     // Product context belongs in the same scroll body as comments. Putting a tall
     // overview in the fixed header forced a second scroll region in Spint (2026-10-08).
-    return _jsx(ScreenLayout, { ...screen, footer: !screen.state || screen.state.kind === "ready" || screen.state.kind === "empty" ? composer : null, children: _jsxs(Stack, { gap: "lg", children: [threadHeader, items.filter(item => item.parentId === null).map(item => { const replies = items.filter(reply => reply.parentId === item.id); return _jsxs(Stack, { gap: "xs", children: [row(item), replies.length ? _jsxs(Stack, { gap: "md", layoutStyle: { marginInlineStart: screenPatternRecipe.sectionGap }, children: [_jsx(Button, { layoutStyle: { alignSelf: "flex-start" }, tone: "ghost", size: "small", "aria-expanded": expandedIds.includes(item.id), onClick: () => onExpandedChange(item.id), children: repliesLabel(replies.length, expandedIds.includes(item.id)) }), expandedIds.includes(item.id) ? replies.map(row) : null] }) : null] }, item.id); }), threadFooter] }) });
+    return _jsx(ScreenLayout, { ...screen, footer: !screen.state || screen.state.kind === "ready" || screen.state.kind === "empty" ? composer : null, children: _jsxs(Stack, { gap: "lg", children: [threadHeader, roots.map(item => { const replies = repliesByParent.get(item.id) ?? []; return _jsxs(Stack, { gap: "xs", children: [row(item), replies.length ? _jsxs(Stack, { gap: "md", layoutStyle: { marginInlineStart: screenPatternRecipe.sectionGap }, children: [_jsx(Button, { layoutStyle: { alignSelf: "flex-start" }, tone: "ghost", size: "small", "aria-expanded": expanded.has(item.id), onClick: () => onExpandedChange(item.id), children: repliesLabel(replies.length, expanded.has(item.id)) }), expanded.has(item.id) ? replies.map(row) : null] }) : null] }, item.id); }), threadFooter] }) });
 }
 //# sourceMappingURL=screen-flows.js.map

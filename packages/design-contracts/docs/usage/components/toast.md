@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-10
+- 검토일: 2026-10-13
 - 근거: [Toast](../../toast.md), [Liquid Toast](../../../../react-native/docs/liquid-toast.md), `src/component-recipes.ts`(`toastRecipe`)
 - 스토리북: `배포/컴포넌트/상태와 알림/토스트`, `배포/컴포넌트/상태와 알림/리퀴드 토스트`, `실험/구성/피드백과 복구/백그라운드 작업 상태`
 
@@ -79,22 +79,23 @@ function useProfileSavedToast() {
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| descriptor | `id`·`description`·`closeLabel` 필수, `title`·`tone`·`priority`·`durationMs`·`action`·`announcement`·`presentation`·`media`·`progress` 선택 | — | 문구는 모두 `string`(ReactNode 아님). `media`만 예외 |
+| descriptor | `id`·`description`·`closeLabel` 필수, `title`·`tone`·`priority`·`durationMs`·`action`·`press`·`announcement`·`presentation`·`media`·`progress` 선택 | — | 문구는 모두 `string`(ReactNode 아님). `media`만 예외 |
 | `media` | `unknown`(Web·Native에서 `ReactNode`를 넘긴다) | — | 미게시(1.17.2 이후). 장식 시각물(마스코트·아바타). tone 배지 자리를 44(`toastRecipe.media.size`) 원으로 대신하고 보조기술에서 숨긴다 |
 | `progress` | `{ steps: readonly string[]; current: number }` | — | 미게시(1.17.2 이후). 단계 2~5개, `current`는 0부터. 설명 아래 점+이름 줄로 그리고, 기본 낭독 끝에 현재 단계 이름을 붙인다. 범위 밖이면 throw |
 | `action` | `{ label, accessibilityLabel?, onAction: () => void, dismissOnAction? }` | — | 누르면 `onAction`, 기본으로 알림이 닫힌다 |
+| `press` | `{ accessibilityLabel: string; onPress: () => void }` | 없음 | 미게시. 카드 본문·미디어·여백을 누르면 콜백 후 `press` 사유로 닫힌다. 실행·닫기 버튼과 스와이프는 열기 동작을 실행하지 않는다. Web은 Tab/Enter/Space, Native는 독립 접근성 버튼 |
 | `tone` | `neutral` · `info` · `success` · `warning` · `danger` | `neutral` | — |
 | `priority` | `normal` · `high` | — | 낭독 순서, 색과 무관 |
-| `durationMs` | ms · `null` | 3000 | 더 짧게 줘도 3000으로 올라간다. `null`은 수동으로 닫을 때까지 유지, `action`이 있으면 기본 유지 |
+| `durationMs` | ms · `null` | 3000 | 더 짧게 줘도 3000으로 올라간다. `null`은 수동으로 닫을 때까지 유지, `action` 또는 `press`가 있으면 기본 유지 |
 | `placement` | `bottom` · `top` · `top-start` · `top-end` · `bottom-start` · `bottom-end` | `bottom` | — |
 | 큐 | `maxVisible` · `maxQueued` · `duplicatePolicy` · `timerUpdatePolicy` · `overflowPolicy` | 1 · 20 · `update` · `preserve` · `discard-oldest` | — |
 | `publish` | Web `(descriptor, options?) => ToastPublishResult`, Native `(descriptor) => ToastPublishResult` | — | 결과는 `{ outcome: "added" \| "updated", id, position: "visible" \| "queued" }`, `{ outcome: "ignored", id, reason: "duplicate" \| "closing" }`, `{ outcome: "discarded", id, reason: "queue-overflow" }` 중 하나 |
 | `dismiss` | Web `(id, reason) => boolean`, Native `(id, reason?) => boolean` | — | 닫았으면 `true`. Web은 `close(id)`도 있다. Native는 `pause`·`resume(id, reason?)`도 있다 |
-| 닫힘 사유 `ToastDismissReason` | `timeout` · `action` · `close-action` · `escape` · `swipe` · `programmatic` · `queue-overflow` · `interrupted` | — | Web `Toast` `onDismissRequest`·Native `onDismiss`가 받는다 |
+| 닫힘 사유 `ToastDismissReason` | `timeout` · `action` · `press` · `close-action` · `escape` · `swipe` · `programmatic` · `queue-overflow` · `interrupted` | — | Web `Toast` `onDismissRequest`·Native `onDismiss`가 받는다 |
 | `toasts`/`defaultToasts` + `onToastsChange`(Native `ToastRegion`) | `readonly ToastDescriptor[]`, `(toasts) => void` | — | 큐를 제품 상태로 제어할 때 |
 | `safeAreaInsets`(Native) | `{ top?, bottom?, left?, right?, start?, end? }` | `{}` | — |
 | `layoutStyle`(Native `Toast`·`ToastRegion`) | `HjmCompositionStyleProp` | — | Web Toast·ToastProvider에는 없다(떠 있는 층이라 배치 대상이 아님) |
-| `style`·`toastStyle`(Native) | `StyleProp<ViewStyle>` | — | deprecated — `layoutStyle` 또는 `placement`·`safeAreaInsets`. 개발 모드에서 한 번 경고하고 다음 major에서 제거된다 |
+| `style`·`toastStyle`(Native) | 지원하지 않음 | — | 제거된 속성 — `layoutStyle` 또는 `placement`·`safeAreaInsets`. 현재 공개 props에서 제거되었다 |
 
 ### 디자인 프로필 상속
 
@@ -177,14 +178,14 @@ Native의 선택형 `/toast-liquid`도 가장 가까운 프로필의 `radius.xl`
 - 리퀴드는 `placement="top"`과 `maxVisible={1}`일 때만 동작하고, 아니면 `ToastRegion`이 `TypeError`를 던진다.
   어댑터는 render 밖에서 만들거나 memo한다.
 - ToastRegion 배치는 `layoutStyle={{ flex: 1 }}`로 쓴다. Native 예제도 이 경로를 사용한다.
-- Web `Toast` 단독 렌더는 나머지 HTML 속성(id·data-*·이벤트)을 루트에 전달한다(미게시(1.12.1 이후). 1.12.1은 `className`만 전달). `role`·`aria-labelledby`·`aria-describedby`·`data-tone`·`data-state`는 Toast가 정하므로 덮이지 않는다. 배치는 Provider를 쓴다.
+- Web `Toast` 단독 렌더는 나머지 HTML 속성(id·data-*·이벤트)을 루트에 전달한다(1.13.0 변경. 1.12.1은 `className`만 전달). `role`·`aria-labelledby`·`aria-describedby`·`data-tone`·`data-state`는 Toast가 정하므로 덮이지 않는다. 배치는 Provider를 쓴다.
 
 
 ### 고정 아이콘과 큰 글자
 
 2026-10-06 최근 검색 삭제 기호가 큰 글자에서 잘린 재현에 따라 Native 내장 삭제·메뉴 기호는 고정 아이콘 틀의 크기를 유지한다. 주변 제목·라벨은 계속 확대한다. Chip의 체크와 Toast 닫기는 기존 비확대 경로를 유지하며 회귀 검사에 포함한다. 제품이 전달한 아이콘 슬롯은 제품이 같은 조건을 검증한다.
 
-### 프로필 행간 소비 — 미게시
+### 프로필 행간 소비 — 1.16.0 변경
 
 2026-10-07 소비 감사에서 Web 제목/설명의 1.35/1.45 고정 행간이 `typography.body.lineHeight`를
 우회하는 것을 확인했다. 두 slot은 기존 body 역할이므로 선택된 프로필의 `--hjm-type-body-line-height`를
@@ -192,3 +193,12 @@ Native의 선택형 `/toast-liquid`도 가장 가까운 프로필의 `radius.xl`
 일괄 기본 행간 변경은 기존 알림 레이아웃까지 바꾸므로 채택하지 않았다. Native 본문 행간은 이미 body
 토큰을 소비하며, 이번 Native 변경은 action 라벨의 ui 서체 역할만 명시한다. 알림 문구·큐·시간·닫기·
 행동·초점 계약은 바꾸지 않는다.
+
+### 카드에서 관련 화면 열기
+
+댓글·답장·작업 완료 알림에서 `press: { accessibilityLabel: t("reply.open"), onPress: openReply }`를
+같은 descriptor에 넣는다. `action`은 카드와 별개의 실행 버튼이 필요할 때만 함께 쓴다.
+본문·이미지·카드 여백 전체가 열기 영역이며 실행·닫기 버튼은 각각 자기 동작만 수행한다.
+Web은 전체 영역의 투명한 button과 두 제어 버튼을 형제로, Native는 뒤쪽 Pressable과 위쪽 제어 버튼을
+독립적으로 배치한다. label은 동작 이름, 설명은 기존 알림 문구이며 기본 카드 배치와 크기는 바뀌지 않는다.
+라우터는 HJM이 가져오지 않고 제품 콜백이 실행한다. 화면 이동 뒤 provider가 없어져도 중복 실행하지 않는다.

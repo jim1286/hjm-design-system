@@ -135,13 +135,13 @@ export type BehaviorContract = Readonly<{
         roles: readonly string[];
         keyboard: readonly WebKeyboardKey[];
         focus: "native" | "roving" | "activeDescendant" | "trap" | "restore" | "none";
-        dismiss?: readonly ("escape" | "outside" | "selection" | "blur" | "timeout" | "action" | "close-action" | "swipe" | "programmatic")[];
+        dismiss?: readonly ("escape" | "outside" | "selection" | "blur" | "timeout" | "action" | "press" | "close-action" | "swipe" | "programmatic")[];
     }>;
     native: Readonly<{
         roles: readonly string[];
         states: readonly NativeAccessibilityState[];
         actions: readonly string[];
-        dismiss?: readonly ("back" | "swipe" | "outside" | "selection" | "timeout" | "action" | "close-action" | "programmatic")[];
+        dismiss?: readonly ("back" | "swipe" | "outside" | "selection" | "timeout" | "action" | "press" | "close-action" | "programmatic")[];
     }>;
     scenarios: readonly string[];
 }>;
@@ -399,6 +399,7 @@ export declare const behaviorRegistry: {
             readonly direction: "ltr";
             readonly keyboardBehavior: "hide";
             readonly labels: "visible";
+            readonly selection: "emphasis";
             readonly minItems: 2;
             readonly maxItems: 6;
         };
@@ -592,7 +593,7 @@ export declare const behaviorRegistry: {
     readonly toast: {
         readonly controlled: readonly [];
         readonly inputs: readonly ["descriptor", "queueSnapshot", "visibleSnapshot"];
-        readonly events: readonly ["onAction", "onDismiss"];
+        readonly events: readonly ["onAction", "onPress", "onDismiss"];
         readonly configuration: {
             readonly priority: readonly ["normal", "high"];
             readonly duplicatePolicy: readonly ["update", "ignore"];
@@ -618,15 +619,15 @@ export declare const behaviorRegistry: {
             readonly roles: readonly ["region", "status", "alert", "button"];
             readonly keyboard: readonly ["Tab", "Enter", "Space", "Escape", "F8"];
             readonly focus: "native";
-            readonly dismiss: readonly ["timeout", "action", "close-action", "escape", "swipe", "programmatic"];
+            readonly dismiss: readonly ["timeout", "action", "press", "close-action", "escape", "swipe", "programmatic"];
         };
         readonly native: {
             readonly roles: readonly ["alert", "button"];
             readonly states: readonly [];
             readonly actions: readonly ["announce", "activate", "dismiss"];
-            readonly dismiss: readonly ["timeout", "action", "close-action", "swipe", "programmatic"];
+            readonly dismiss: readonly ["timeout", "action", "press", "close-action", "swipe", "programmatic"];
         };
-        readonly scenarios: readonly ["stable-id-duplicate-updates-in-place-without-reordering", "bounded-queue-promotes-items-in-fifo-order", "queued-time-never-consumes-auto-dismiss-duration", "visible-timer-pauses-for-pointer-focus-window-and-gesture", "actionable-toast-is-persistent-unless-duration-is-explicit", "auto-dismiss-duration-is-never-shorter-than-five-seconds", "action-and-dismiss-callbacks-run-exactly-once", "programmatic-close-reports-its-own-dismiss-reason", "normal-and-high-announcements-use-the-visible-copy-or-explicit-override", "tone-is-always-paired-with-a-non-color-mark", "web-hotkey-focuses-the-labelled-viewport-and-last-close-restores-focus", "exit-completes-once-with-and-without-reduced-motion", "provider-teardown-interrupts-every-session-without-leaking-a-timer"];
+        readonly scenarios: readonly ["stable-id-duplicate-updates-in-place-without-reordering", "bounded-queue-promotes-items-in-fifo-order", "queued-time-never-consumes-auto-dismiss-duration", "visible-timer-pauses-for-pointer-focus-window-and-gesture", "actionable-toast-is-persistent-unless-duration-is-explicit", "auto-dismiss-duration-is-never-shorter-than-five-seconds", "action-and-dismiss-callbacks-run-exactly-once", "card-press-runs-once-before-dismiss-and-excludes-action-close-and-swipe", "programmatic-close-reports-its-own-dismiss-reason", "normal-and-high-announcements-use-the-visible-copy-or-explicit-override", "tone-is-always-paired-with-a-non-color-mark", "web-hotkey-focuses-the-labelled-viewport-and-last-close-restores-focus", "exit-completes-once-with-and-without-reduced-motion", "provider-teardown-interrupts-every-session-without-leaking-a-timer"];
     };
     readonly loadMore: {
         readonly controlled: readonly [];

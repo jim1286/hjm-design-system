@@ -72,3 +72,23 @@ it("keeps one group error and stable editable nodes at 200% in narrow LTR/RTL th
     expect(document.activeElement).toBe(year);
   }
 });
+
+it("retains date focus across order changes and connects one shared group error to affected fields", async () => {
+  const render = (reverse: boolean) => <HjmProvider><DateEntry
+    value={{ year: "20", month: "Feb", day: "29" }} onValueChange={() => undefined}
+    order={reverse ? ["day", "month", "year"] : ["year", "month", "day"]} labels={labels}
+    description="Use the Gregorian calendar" showErrors
+    parse={() => ({ status: "incomplete", code: "year", fields: ["year"] })}
+    formatIssue={() => "Enter four digits"} /></HjmProvider>;
+  await act(async () => root.render(render(false)));
+  const year = host.querySelector("input")!;
+  const messages = (input: HTMLInputElement) => input.getAttribute("aria-describedby")!.split(" ").map(id => document.getElementById(id)!.textContent);
+  expect(messages(year)).toEqual(["Use the Gregorian calendar", "Enter four digits"]);
+  expect(messages(host.querySelectorAll("input")[1]!)).toEqual(["Use the Gregorian calendar"]);
+  expect(host.querySelectorAll("fieldset")).toHaveLength(1);
+  expect(host.querySelectorAll('[role="alert"]')).toHaveLength(1);
+  await act(async () => year.focus());
+  await act(async () => root.render(render(true)));
+  expect(document.activeElement).toBe(year);
+  expect(host.querySelectorAll("input")[2]).toBe(year);
+});

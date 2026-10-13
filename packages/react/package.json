@@ -23,6 +23,11 @@
       "import": "./dist/index.js",
       "default": "./dist/index.js"
     },
+    "./status-text": {
+      "types": "./dist/status-text.d.ts",
+      "import": "./dist/status-text.js",
+      "default": "./dist/status-text.js"
+    },
     "./provider": {
       "types": "./dist/provider.d.ts",
       "import": "./dist/provider.js",

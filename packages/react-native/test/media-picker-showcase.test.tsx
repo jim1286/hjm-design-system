@@ -1,0 +1,52 @@
+import { createRequire } from "node:module";
+import { act, create, type ReactTestRenderer } from "react-test-renderer";
+import { afterEach, expect, it } from "vitest";
+import { HjmNativeProvider } from "@hjmds/react-native/provider";
+import { MediaSelectionScreen } from "@hjmds/react-native/screen-flows";
+import { createMediaPickerExample } from "../../../showcase/shared/media-picker-example.js";
+// Metro resolves these local fixture assets in the app. The host harness only needs opaque image sources.
+const nodeRequire = createRequire(import.meta.url);
+const previousJpg = nodeRequire.extensions[".jpg"];
+nodeRequire.extensions[".jpg"] = (module) => { module.exports = 1; };
+const { MediaPickerPreview } = await import("../../../showcase/native/src/media-picker-preview.js");
+if (previousJpg) nodeRequire.extensions[".jpg"] = previousJpg; else delete nodeRequire.extensions[".jpg"];
+let tree: ReactTestRenderer | undefined;
+(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+afterEach(() => { act(() => tree?.unmount()); tree = undefined; });
+const render = (tools = false) => act(() => { tree = create(<HjmNativeProvider reducedMotion><MediaPickerPreview tools={tools}/></HjmNativeProvider>); });
+const screen = () => tree!.root.findByType(MediaSelectionScreen).props;
+const pressPhoto = (label: string) => act(() => tree!.root.findAll(node => String(node.type) === "Pressable" && node.props.accessibilityLabel === label)[0]!.props.onPress());
+const settle = () => act(async () => { await new Promise(resolve => setTimeout(resolve, 400)); });
+it("limits selection, retries only failure, preserves reordered completion and freezes the result", async () => {
+ render(true); for (const name of ["강과 산 1","푸른 계곡 2","붉은 협곡 3","강아지 4","숲속 동물 5","성 6"]) pressPhoto(name);
+ expect(screen().done.label).toBe("5장 선택 완료");
+ act(() => { const done = screen().done.onAction; done(); done(); }); expect(screen().done.disabled).toBe(true); await settle();
+ expect(screen().items.filter((item: {descriptor:{state:{status:string}}}) => item.descriptor.state.status === "error")).toHaveLength(1);
+ expect(screen().done.disabled).toBe(true);
+ act(() => screen().onMove("1", -1));
+ act(() => { screen().onRetry("0"); screen().onRetry("0"); });
+ expect(screen().items.find((item: {descriptor:{id:string}}) => item.descriptor.id === "1").descriptor.state.status).toBe("success");
+ await settle(); act(() => screen().done.onAction());
+ expect(screen().title).toBe("사진을 선택했어요");
+ expect(tree!.root.findAll(node => String(node.type) === "Pressable" && node.props.accessibilityLabel?.endsWith("선택 해제"))).toHaveLength(0);
+ expect(tree!.root.findAll(node => String(node.type) === "Image" && node.props.accessibilityLabel?.endsWith("선택 완료")).map(node => node.props.accessibilityLabel)).toEqual(["푸른 계곡 2 선택 완료","강과 산 1 선택 완료","붉은 협곡 3 선택 완료","강아지 4 선택 완료","숲속 동물 5 선택 완료"]);
+ act(() => screen().done.onAction()); expect(screen().done.disabled).toBe(true); expect(screen().done.label).toBe("0장 선택 완료");
+});
+it("removes pending uploads and can return from an empty review without resurrection", async () => {
+ render(); pressPhoto("강과 산 1"); act(() => screen().done.onAction()); act(() => screen().onCancel("0")); await settle();
+ expect(screen().items).toHaveLength(0); expect(screen().done.disabled).toBe(true);
+ act(() => screen().add.onAction()); expect(screen().title).toBe("사진 선택"); expect(screen().done.disabled).toBe(true);
+});
+it("ignores an old request after the same photo is removed and selected again, and after unmount disposal", async () => {
+ const completions: Array<() => void> = [];
+ const upload = () => new Promise<void>(resolve => completions.push(resolve));
+ const example = createMediaPickerExample(false, upload);
+ example.toggle("0"); example.done(); await Promise.resolve();
+ example.remove("0"); example.back(); example.toggle("0"); example.done(); await Promise.resolve();
+ completions[0]!(); await Promise.resolve(); await Promise.resolve();
+ expect(example.getSnapshot().entries[0]!.upload.status).toBe("uploading");
+ completions[1]!(); await Promise.resolve(); await Promise.resolve();
+ expect(example.getSnapshot().entries[0]!.upload.status).toBe("success");
+ example.reset(); example.toggle("1"); example.done(); await Promise.resolve(); example.dispose();
+ const snapshot = example.getSnapshot(); completions[2]!(); await Promise.resolve(); await Promise.resolve(); expect(example.getSnapshot()).toBe(snapshot);
+});

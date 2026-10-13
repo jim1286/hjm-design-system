@@ -62,7 +62,7 @@ import { AuthProviderButton } from "@hjmds/react-native/provider-button";
 | `logo` | `ReactNode` | 필수 | 제품이 공급하는 제공자 로고 |
 | Web `onClick` · Native `onPress` | `(event: MouseEvent<HTMLButtonElement>) => void` · `() => void` | Native 필수 | 로그인 시작 |
 | `layoutStyle` | margin·width·flex·`alignSelf` | — | 바깥 배치 전용 |
-| Native `style` | — | — | deprecated — `layoutStyle`(외형은 `authProviderButtonRecipe` 소유, 개발 모드 1회 경고, 다음 major 제거) |
+| Native `style` | — | — | 제거된 속성 — `layoutStyle`(외형은 `authProviderButtonRecipe` 소유) |
 | — | — | HJM 소유 | 크기: 높이 `buttonRecipe` medium(Native는 최소 터치 타깃과 큰 쪽), radius `md`, 로고 상자 20, 테두리 1(테두리를 규정한 변형만), 포커스 링은 fill 바깥(offset 2) |
 | Web `type` | HTML button type | `"button"` | — |
 
@@ -105,7 +105,7 @@ main 카드(mainCard)
 | --- | --- | --- |
 | 이벤트 | `onClick` 등 `<button>` 속성(선택) | `onPress`(필수) |
 | 비활성 | `descriptor.disabled`(`disabled` 속성은 받지 않음) | `descriptor.disabled` |
-| 배치 입력 | `layoutStyle`(+`className`, `style` 없음) | `layoutStyle`(`style`은 deprecated) |
+| 배치 입력 | `layoutStyle`(+`className`, `style` 없음) | `layoutStyle`(`style`은 제거된 속성) |
 | 접근성 이름 | `aria-label={label}` | `accessibilityLabel={label}` |
 | `testID`·ref | ref 전달 | 둘 다 없음 |
 

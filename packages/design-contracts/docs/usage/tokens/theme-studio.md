@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-13
 - 근거: [테마 작업실](../../theme-studio.md), [브랜드 경계](../../brand-boundary.md), `src/theme-studio.ts`, `src/palette-contrast.ts`, `showcase/web/src/foundations/ThemeStudio.stories.tsx`, `showcase/native/src/ThemeStudio.stories.tsx`
 - 스토리북: `배포/토큰/편집 도구/테마 편집`
 
@@ -51,7 +51,7 @@ import { brandPalette } from "./brand-palette";
 <HjmNativeProvider brandPalette={brandPalette} safeAreaInsets={insets}>{app}</HjmNativeProvider>
 
 // 제품 테스트
-expect(checkBrandPaletteContrast(brandPalette)).toEqual([]);
+expect(checkBrandPaletteContrast(brandPalette)).toEqual({ light: [], dark: [] });
 ```
 
 ## 하지 말 것

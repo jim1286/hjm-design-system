@@ -47,7 +47,7 @@ Native 화면(ScrollView, 위아래 spacing.lg 20) > Container gutter 16(폭 < 6
 | --- | --- | --- | --- |
 | 바깥 틀 | Web: 제품 화면 레이아웃(문서 스크롤). Native: `ScrollView` > `Container` | 이 구성은 바깥 폭·여백을 정하지 않는다(Web 스토리는 Stack만 그린다). Native는 `ScrollView` 안 [Container](../components/container.md)에 둔다. 입력이 없어 키보드 처리는 없다. 안전 영역은 화면 골격(내비게이션 헤더·탭 바)이 맡는다 | Native ScrollView 위아래 `spacing.lg` 20, Container gutter 폭 600 미만 `compact` 16 · 이상 `regular` 20(`layout.pagePadding`) |
 | 빈 상태 | EmptyState `density="regular"` | 본문 가운데 | 위아래 Web `spacing.xxl` 32 / Native `spacing.xxxl` 40, 좌우 `spacing.xl` 24, 슬롯 사이 `spacing.xs` 8 |
-| 캐릭터 | Web `icon` / Native `illustration` | EmptyState 맨 위 | 96×96(12칸 × `spacing.xs` 8). Native는 `illustrationStyle`로 칸을 96에 맞춘다 |
+| 캐릭터 | Web `icon` / Native `illustration` | EmptyState 맨 위 | 96×96(12칸 × `spacing.xs` 8). Native도 그림 노드 자체의 96×96 크기를 사용한다 |
 | 시작 행동 | Button `primary` | EmptyState `action` | 높이 44, 하나만 |
 | 멈춤 제어 | Button `ghost` | EmptyState 아래, 꽉 찬 폭(`Stack` 기본 `align="stretch"`) | 묶음 사이 `spacing.md` 16 |
 | 상태 문구 | Text muted | 맨 아래. Web은 빈 `role="status"`를 늘 마운트, Native는 문구가 있을 때만 | `spacing.md` 16 |
@@ -109,7 +109,7 @@ const gutter = resolveWindowClass(width) === "compact" ? "compact" : "regular";
 <ScrollView contentContainerStyle={{ paddingVertical: spacing.lg }}>
   <Container gutter={gutter}>
     <Stack gap="md">
-      <EmptyState illustration={<ProductMascot paused={paused} />} illustrationStyle={{ width: 96, height: 96 }}
+      <EmptyState illustration={<ProductMascot paused={paused} />}
         title={t("records.empty.title")} description={t("records.empty.description")}
         action={<Button loading={starting} onPress={startRecord}>{t("records.empty.start")}</Button>} />
       <Button tone="ghost" onPress={() => setPaused((v) => !v)}>
@@ -127,7 +127,7 @@ const gutter = resolveWindowClass(width) === "compact" ? "compact" : "regular";
 
 | 항목 | Web | Native |
 | --- | --- | --- |
-| 그림 슬롯 | `icon` | `illustration` + `illustrationStyle`(기본 칸이 아이콘 크기 `glyph.lg`라 캐릭터가 넘친다) |
+| 그림 슬롯 | `icon` | `illustration`(최소 `glyph.lg` 크기만 보장하고 캐릭터 자체 크기를 존중한다) |
 | 세로 여백 | `.hjm-empty-state` `spacing.xxl` 32 | recipe `spacing.xxxl` 40 |
 | 일시정지 감지 | `document.hidden` | `AppState` |
 | 상태 문구 자리 | 빈 `role="status"`를 늘 마운트 | 문구가 있을 때만 마운트 |

@@ -70,7 +70,7 @@ import { FilePicker } from "@hjmds/react-native/file-picker";
 | Native `onPick` | `() => Promise<readonly FilePickerCandidate[] \| null>` | 필수 | 제품 adapter. 취소면 `null` |
 | Native `onPickError` | `(error: unknown) => void` | 필수 | `onPick`이 reject하면 이쪽으로만 온다 |
 | Web `getCandidateId` | `(file: File, index: number) => string` | `name:size:lastModified:index` | 후보 id 규칙 |
-| `disabled` | `true` · `false` | `false` | — |
+| `disabled` | `true` · `false` | `false` | 선택 완료 시에도 잠금 상태면 결과를 반영하지 않는다 |
 | `hint`, `error` | 문구 | — | 선택 사항이다 |
 
 - `FilePickerCandidate`: `{ id, name, mimeType, sizeBytes }`(`mimeType`은 플랫폼이 못 정하면 `""`).
@@ -93,6 +93,9 @@ import { FilePicker } from "@hjmds/react-native/file-picker";
   만들고 색으로만 알리지 않는다.
 - `rejected`가 있어도 `accepted`는 그대로 쓴다. 한 장이 막혔다고 전체 선택을 버리지 않는다.
 - FilePicker는 선택 목록을 쌓지 않는다. 고른 파일 목록·업로드 상태는 제품 상태와 UploadItem이 소유한다.
+- 취소(Web의 빈 선택, Native adapter의 `null`)는 기존 목록을 바꾸거나 `onSelect`를 호출하지 않는다. 같은 파일은 다시 선택할 수 있다.
+- Native 결과는 완료 시점의 `descriptor`·`existingCount`로 판정하고 현재 콜백으로 전달한다. 대기 중 다른 파일이 추가·제거되면 `existingCount`를 계속 갱신한다.
+- 파일 행 제거와 제거 후 초점 복귀는 목록을 소유한 제품이 처리한다. 제거 버튼을 FilePicker 내부에 가정하거나 선택 콜백을 목록 초기화 신호로 쓰지 않는다.
 - Native 실제 OS document/image picker 연결(`onPick`)은 제품 책임이다. 패키지는 이를 구현하거나
   기기에서 검증하지 않는다. 제품 릴리스 QA에서 확인한다.
 
@@ -106,7 +109,7 @@ import { FilePicker } from "@hjmds/react-native/file-picker";
 | 진행 중 잠금 | 없음 | `onPick` 대기 중 버튼 `busy`·비활성 |
 | `label`·`hint`·`error` 타입 | `ReactNode` | `string` |
 | 후보 id | `getCandidateId`(기본 `name:size:lastModified:index`) | adapter가 `id`를 채움 |
-| 배치 | `layoutStyle`(루트), `className`과 div 속성 | `layoutStyle`. `style`은 deprecated(개발 모드 1회 경고, 다음 major 제거) — `layoutStyle` 또는 recipe |
+| 배치 | `layoutStyle`(루트), `className`과 div 속성 | `layoutStyle`. `style`은 제거된 속성 — `layoutStyle` 또는 recipe |
 
 ## 함정
 
@@ -117,4 +120,4 @@ import { FilePicker } from "@hjmds/react-native/file-picker";
 
 2026-10-07 소비 감사에서 Native 선택 버튼의 모서리 12가 프로필을 우회했다. Web 버튼의 기존 `radius.md`와 같은 역할을 Native도 가까운 프로필에서 읽으며, 프로필이 없으면 기존 12를 유지한다. 선택 어댑터·비활성/진행 상태·파일 검증은 바꾸지 않는다.
 
-프로필 연결은 1.15.0 이후 미게시 변경이며, 기본 배포 계약과 실제 Native 기기 검증은 구분한다.
+프로필 연결은 1.16.0 변경이며, 기본 배포 계약과 실제 Native 기기 검증은 구분한다.

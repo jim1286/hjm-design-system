@@ -10,7 +10,8 @@ export function Masonry<T>({ items, keyExtractor, renderItem, getItemHeight, wid
   const itemWidth = resolveMasonryLayout([], width, columns, gap).itemWidth;
   const layout = resolveMasonryLayout(items.map(item => getItemHeight(item, itemWidth)), width, columns, gap);
   const { environment } = useHjmNativeTheme();
-  if (!items.length) return <View accessibilityLabel={label} style={layoutStyle}>{empty}</View>;
+  // The empty collection keeps its measured width and centers within host-allocated space.
+  if (!items.length) return <View accessibilityLabel={label} style={[layoutStyle, { width, alignItems: "center", justifyContent: "center" }]}>{empty}</View>;
   return <View accessibilityLabel={label} style={[layoutStyle, { width, height: layout.height }]}>
     {items.map((item, index) => { const frame = layout.items[index]!; return <View key={keys[index]} style={{ position: "absolute", top: frame.top, width: frame.width, height: frame.height, ...(environment.direction === "rtl" ? { right: frame.left } : { left: frame.left }) }}>{renderItem(item, index)}</View>; })}
   </View>;

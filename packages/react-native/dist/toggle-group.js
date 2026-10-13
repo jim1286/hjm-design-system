@@ -1,26 +1,31 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import { reconcileToggleGroupSelection, toggleGroupRecipe, toggleGroupSelection, validateToggleGroupDescriptor, } from "@hjmds/design-contracts/components/toggle-group";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Pressable, View } from "react-native";
 import { Text } from "./primitives.js";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
-export function ToggleGroup({ descriptor, pressedIds: controlledPressed, defaultPressedIds, onPressedIdsChange, size = toggleGroupRecipe.defaults.size, layoutStyle, style, }) {
-    warnDeprecatedStyleProps("ToggleGroup", { style }, "layoutStyle for placement; toggleGroupRecipe (size) owns appearance");
+export function ToggleGroup({ descriptor, pressedIds: controlledPressed, defaultPressedIds, onPressedIdsChange, size = toggleGroupRecipe.defaults.size, layoutStyle, }) {
     validateToggleGroupDescriptor(descriptor);
     const theme = useHjmNativeTheme();
     const [internal, setInternal] = useState(defaultPressedIds ?? new Set());
     const raw = controlledPressed ?? internal;
     const pressed = useMemo(() => reconcileToggleGroupSelection(descriptor, raw), [descriptor, raw]);
+    useEffect(() => {
+        // Persist pruning so a removed toggle does not revive when the item returns.
+        if (controlledPressed === undefined && pressed !== internal) {
+            setInternal(pressed);
+            onPressedIdsChange?.(pressed);
+        }
+    }, [controlledPressed, internal, onPressedIdsChange, pressed]);
     const metrics = toggleGroupRecipe.sizes[size];
     const commit = (next) => {
         if (controlledPressed === undefined)
             setInternal(next);
         onPressedIdsChange?.(next);
     };
-    return (_jsx(View, { accessibilityLabel: descriptor.accessibilityLabel, style: [{ flexDirection: "row", flexWrap: "wrap", gap: toggleGroupRecipe.gap }, style, layoutStyle], children: descriptor.items.map((item) => {
+    return (_jsx(View, { accessibilityLabel: descriptor.accessibilityLabel, style: [{ flexDirection: "row", flexWrap: "wrap", gap: toggleGroupRecipe.gap }, layoutStyle], children: descriptor.items.map((item) => {
             const on = pressed.has(item.id);
             const tone = on ? toggleGroupRecipe.pressed : toggleGroupRecipe.idle;
             return (_jsx(Pressable, { accessibilityRole: "button", 

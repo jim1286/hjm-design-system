@@ -89,6 +89,7 @@ export const SidePanel = forwardRef<HTMLDivElement, SidePanelProps>(function Sid
   });
   const triggerRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const nonModalFocusWithin = useRef(false);
   const id = useId().replaceAll(":", "");
   const contentId = `${id}-side-panel`;
   const titleId = `${id}-title`;
@@ -119,6 +120,11 @@ export const SidePanel = forwardRef<HTMLDivElement, SidePanelProps>(function Sid
       gesture is reported as `programmatic`.
     */
     wasOpenRef.current = false;
+    // A non-modal panel does not trap focus, but closing its focused subtree still needs a keyboard return point.
+    if (!modal && nonModalFocusWithin.current && document.activeElement === document.body) {
+      (returnFocusRef?.current ?? triggerRef.current)?.focus();
+    }
+    nonModalFocusWithin.current = false;
     const reason = dismissReasonRef.current ?? "programmatic";
     dismissReasonRef.current = undefined;
     dismissCompleteRef.current?.({ reason });
@@ -143,7 +149,7 @@ export const SidePanel = forwardRef<HTMLDivElement, SidePanelProps>(function Sid
     // Escape dismisses non-modal panels too, but only while focus is inside them
     // — the live page behind keeps its own Escape handling.
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== "Escape" || event.defaultPrevented) return;
+      if (event.key !== "Escape" || event.defaultPrevented || event.isComposing || event.keyCode === 229) return;
       // Read the ref per event: the portal mounts one commit after this effect,
       // so a value captured here would still be null for the panel's first keys.
       if (!(event.target instanceof Node) || contentRef.current?.contains(event.target) !== true) return;
@@ -170,6 +176,10 @@ export const SidePanel = forwardRef<HTMLDivElement, SidePanelProps>(function Sid
       aria-describedby={description ? descriptionId : undefined}
       aria-busy={busy || undefined}
       tabIndex={-1}
+      onFocusCapture={() => { nonModalFocusWithin.current = true; }}
+      onBlurCapture={(event) => {
+        if (event.relatedTarget instanceof Node && !event.currentTarget.contains(event.relatedTarget)) nonModalFocusWithin.current = false;
+      }}
       className={classNames("hjm-side-panel", className)}
       data-hjm-modal-content={modal ? "" : undefined}
       data-edge={edge}

@@ -71,9 +71,9 @@ import { Button } from "@hjmds/react-native/actions";
 | Native `fullWidth` | `boolean` | `false` | 부모 폭을 채운다 |
 | Native `loadingLabel` · `renderLoadingIndicator` | `ReactNode` · `(props: { color: string; size: "small" }) => ReactNode` | — | 로딩 중 읽기 문구·스피너 교체 |
 | Native `growWithContent` | `boolean` | `false` | 이미지 등 사용자 콘텐츠가 recipe 높이를 넘어 늘어나게 한다. 문자열·숫자 라벨은 이 옵션 없이도 줄 수에 맞춰 늘어난다 |
-| `ClipboardButton` | `value: string`, `labels: { idle; copied }`, `onCopy?: (value: string) => void`, `onCopyError?: (error: unknown) => void`, `feedbackDuration?`(ms, 2000) | — | Button props를 물려받는다(`tone` 기본 `secondary`, 미게시(1.12.1 이후). 1.12.1은 `primary`). 쓰는 법은 [CodeBlock](code-block.md) |
+| `ClipboardButton` | `value: string`, `labels: { idle; copied }`, `onCopy?: (value: string) => void`, `onCopyError?: (error: unknown) => void`, `feedbackDuration?`(ms, 2000) | — | Button props를 물려받는다(`tone` 기본 `secondary`, 1.13.0 변경). 쓰는 법은 [CodeBlock](code-block.md) |
 | `InlineConfirm` | `label`·`prompt`·`confirmLabel`·`cancelLabel`·`pendingLabel`·`successLabel`·`errorLabel`(모두 `string`), `onConfirm: () => void \| Promise<void>` | — | danger 버튼 → 같은 자리 확인 묶음. Promise가 거부되면 `errorLabel`을 alert로 보인다. Web만 `layoutStyle` |
-| `ReactionPicker` | `label: string`, `options: readonly { id; emoji; label; count?; disabled? }[]`, `value: string \| null`, `onValueChange: (value: string \| null) => void`, `layout?: "wrap" \| "strip"`, `more?: { label; options }` | `layout` `wrap` | 제어 전용. 같은 반응을 다시 누르면 `null`. 이모지는 `strip`(대화 반응 줄)에서만 `typography.title` 18/26으로 커지고 `wrap`은 버튼 글자 크기 그대로다. `more`를 주면 끝에 `+` 토글이 생겨 카탈로그를 펼치고, 카탈로그에만 있는 이모지를 고르면 접히면서 Web 키보드 포커스가 `+` 버튼으로 간다. Web만 `layoutStyle`(루트 기본 `minWidth`보다 우선). `layout`·`more`·`layoutStyle`은 미게시(1.12.1 이후) |
+| `ReactionPicker` | `label: string`, `options: readonly { id; emoji; label; count?; disabled? }[]`, `value: string \| null`, `onValueChange: (value: string \| null) => void`, `layout?: "wrap" \| "strip"`, `more?: { label; options }` | `layout` `wrap` | 제어 전용. 같은 반응을 다시 누르면 `null`. 이모지는 `strip`(대화 반응 줄)에서만 `typography.title` 18/26으로 커지고 `wrap`은 버튼 글자 크기 그대로다. `more`를 주면 끝에 `+` 토글이 생겨 카탈로그를 펼치고, 카탈로그에만 있는 이모지를 고르면 접히면서 Web 키보드 포커스가 `+` 버튼으로 간다. Web만 `layoutStyle`(루트 기본 `minWidth`보다 우선). `layout`·`more`·`layoutStyle`은 1.13.0 변경 |
 
 ## 배치
 

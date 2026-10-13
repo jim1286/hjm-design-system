@@ -1,6 +1,6 @@
 import { Heading } from "@hjmds/react-native/heading";
-import { radius } from "@hjmds/design-contracts/tokens";
 import { useState } from "react";
+import { PatternStatus } from "./pattern-status";
 import { BottomNavigation } from "@hjmds/react-native/navigation";
 import { Button, IconButton } from "@hjmds/react-native/actions";
 import { Stack, Text } from "@hjmds/react-native/primitives";
@@ -21,19 +21,18 @@ export function ReferenceBar({ reference }: { reference: NavigationBarReference 
  const action = "action" in reference ? reference.action : undefined;
 
  const items = reference.items.map((label, index) => ({ id: String(index), label, icon: { name: reference.icons[index]! } }));
- // Preserve destination semantics, large-text expansion and focus in the existing
+ // Preserve destination semantics and focus in the existing
  // renderer; these studies compose it instead of cloning ten navigation engines.
  const palette = referenceNavigationPalette(reference);
  return <HjmNativeProvider brandPalette={palette}><Stack gap="md">
   <Heading level="level3">{reference.title}</Heading>
   <Text>{reference.source}에서 착안</Text>
   <BottomNavigation descriptor={{ accessibilityLabel: reference.title, selectedKey: selected, items }}
-   configuration={{ presentation: reference.presentation, density: "compact", distribution: action && reference.presentation !== "capsule" ? "center-gap" : "equal" }}
-   style={{ paddingHorizontal: 0 }} listStyle={reference.id === "project" ? { borderRadius: radius.lg } : undefined}
+   configuration={{ presentation: reference.presentation, selection: reference.id === "project" ? "tile" : "emphasis", density: "compact", distribution: action && reference.presentation !== "capsule" ? "center-gap" : "equal" }}
    renderIcon={glyph} onActivate={event => setSelected(event.key)}
 
    primaryAction={action ? <IconButton label={action} tone="primary" size="large" shape="circle" onPress={() => setActionCount(count => count + 1)}><ActionGlyph name={"actionIcon" in reference ? reference.actionIcon : "plus"}/></IconButton> : undefined} />
-  <Text accessibilityLiveRegion="polite">{reference.items[Number(selected)]} 선택{action ? ` · ${action} ${actionCount}회` : ""}</Text>
+  <PatternStatus>{`${reference.items[Number(selected)]} 선택${action ? ` · ${action} ${actionCount}회` : ""}`}</PatternStatus>
  </Stack></HjmNativeProvider>;
 }
 export function NavigationBehaviorPreview({ behavior }: { behavior: NavigationBehavior }) {

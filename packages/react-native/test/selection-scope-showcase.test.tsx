@@ -1,0 +1,35 @@
+import { Pressable } from "react-native";
+import { act, create, type ReactTestRenderer } from "react-test-renderer";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
+import { HjmNativeProvider } from "@hjmds/react-native/provider";
+import { Button } from "@hjmds/react-native/actions";
+import { SegmentedControl } from "@hjmds/react-native/inputs";
+import meta from "../../../showcase/native/src/SelectionScope.stories";
+const Preview = meta.component;
+let tree: ReactTestRenderer;
+(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+beforeEach(async () => { vi.useFakeTimers(); await act(async () => { tree = create(<HjmNativeProvider reducedMotion><Preview /></HjmNativeProvider>); }); });
+afterEach(() => { act(() => tree?.unmount()); vi.useRealTimers(); });
+const group = () => tree.root.findByType(SegmentedControl);
+const radio = (label: string) => group().findAllByType(Pressable).find(node => node.props.accessibilityLabel === label)!;
+const button = (label: string) => tree.root.findAllByType(Button).find(node => node.props.children === label)!;
+const press = (label: string) => act(() => button(label).props.onPress());
+const content = () => JSON.stringify(tree.toJSON());
+const settle = () => act(async () => { await vi.advanceTimersByTimeAsync(420); });
+it("keeps selected scope during failure, retries it and clears results on the next choice", async () => {
+  act(() => radio("묶음 전체 · 3개").props.onPress()); expect(group().props.value).toBe("group");
+  press("다음 적용 실패시키기"); press("3개 공유 대상으로 정하기");
+  expect(group().props.disabled).toBe(true); expect(button("3개 공유 대상으로 정하기").props.loading).toBe(true);
+  act(() => radio("대표 사진만 · 1개").props.onPress()); expect(group().props.value).toBe("group");
+  await settle(); expect(content()).toContain("정하지 못했어요"); expect(group().props.value).toBe("group");
+  press("3개 공유 대상으로 정하기"); await settle(); expect(content()).toContain("3개를 공유 대상으로 정했어요");
+  act(() => radio("대표 사진만 · 1개").props.onPress()); expect(group().props.value).toBe("cover");
+  expect(content()).toContain("범위를 고른 뒤 적용하세요."); expect(content()).not.toContain("3개를 공유 대상으로 정했어요");
+});
+it("rejects a queued radio press after apply starts before the disabled render commits", async () => {
+  const chooseGroup = radio("묶음 전체 · 3개").props.onPress, apply = button("1개 공유 대상으로 정하기").props.onPress, armFailure = button("다음 적용 실패시키기").props.onPress;
+  act(() => { apply(); apply(); chooseGroup(); armFailure(); });
+  expect(group().props.value).toBe("cover"); expect(group().props.disabled).toBe(true);
+  expect(content()).toContain("1개 공유 대상을 확인하고 있어요."); expect(button("다음 적용 실패시키기").props.selected).toBe(false);
+  await settle(); expect(content()).toContain("1개를 공유 대상으로 정했어요");
+});

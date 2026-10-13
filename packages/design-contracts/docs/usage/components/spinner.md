@@ -53,7 +53,7 @@ import { Spinner } from "@hjmds/react-native/feedback";
 | `tone`(Web) | `brand` · `neutral` · `inverse` | `brand` | — |
 | `size`(Native) | `small` · `large` | `small` | 플랫폼 `ActivityIndicator`를 테마 `contentBrand` 색으로 그린다. `tone`은 없다 |
 | `layoutStyle` | `HjmCompositionStyleProp`(margin·width·flex 계열·`alignSelf`) | — | 루트 배치. Web·Native 모두 |
-| `style`(Native) | `StyleProp<ViewStyle>` | — | deprecated — `layoutStyle` 또는 `size`. 개발 모드에서 한 번 경고하고 다음 major에서 제거된다 |
+| `style`(Native) | 지원하지 않음 | — | 제거된 속성 — `layoutStyle` 또는 `size`. 현재 공개 props에서 제거되었다 |
 
 ## 배치
 
@@ -83,4 +83,4 @@ import { Spinner } from "@hjmds/react-native/feedback";
 | 크기 | 3단계 | `small`·`large` 2단계 |
 | tone | 있음 | 없음(항상 brand 색) |
 | reduced motion | 회전 멈춤(CSS) | 별도 처리 없음(`ActivityIndicator` 그대로) |
-| `style` | HTML 속성(`layoutStyle`과 합쳐지고 `layoutStyle`이 이김) | deprecated |
+| `style` | HTML 속성(`layoutStyle`과 합쳐지고 `layoutStyle`이 이김) | 제거된 속성 |

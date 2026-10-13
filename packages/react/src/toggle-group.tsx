@@ -6,7 +6,7 @@ import {
   type ToggleGroupDescriptor,
   type ToggleGroupSize,
 } from "@hjmds/design-contracts/components/toggle-group";
-import { forwardRef, useMemo, type CSSProperties } from "react";
+import { forwardRef, useEffect, useMemo, type CSSProperties } from "react";
 import { classNames, useControllableState } from "./internal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
@@ -43,6 +43,10 @@ export const ToggleGroup = forwardRef(function ToggleGroup<Id extends string = s
     () => reconcileToggleGroupSelection(descriptor, rawPressed),
     [descriptor, rawPressed],
   );
+  useEffect(() => {
+    // Persist pruning so a removed toggle does not revive when the item returns.
+    if (controlledPressed === undefined && pressed !== rawPressed) setPressed(pressed);
+  }, [controlledPressed, pressed, rawPressed, setPressed]);
   const metrics = toggleGroupRecipe.sizes[size];
   return (
     <div

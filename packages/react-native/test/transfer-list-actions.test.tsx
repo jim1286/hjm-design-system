@@ -46,6 +46,8 @@ it("exposes the two named Native lists and moves a row with the standard host pr
     .find((node) => node.props.accessibilityLabel === "Selected account permissions")!;
   expect(sourceList.props.accessibilityRole).toBe("list");
   expect(targetList.props.accessibilityRole).toBe("list");
+  expect(targetList.props.contentContainerStyle).toMatchObject({ flexGrow: 1, justifyContent: "center", alignItems: "center" });
+  expect(sourceList.props.contentContainerStyle).toBeUndefined();
 
   const sourceRow = renderer!.root.findAllByType(Pressable)
     .find((node) => node.props.accessibilityLabel === longLabel)!;

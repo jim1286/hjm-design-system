@@ -126,7 +126,7 @@ export const SearchField = forwardRef(function SearchField({ value: valueProp, d
         color: "currentColor",
         size: iconRecipe.sizes[searchFieldRecipe.sizes[size].glyph],
     };
-    const canClear = value.length > 0 && !disabled;
+    const canClear = value.length > 0 && !disabled && !props.readOnly;
     return (_jsx(FieldDisabledOpacityContext.Provider, { value: searchFieldRecipe.states.disabledOpacity, children: _jsx(TextField, { ...props, ref: composeRefs(inputRef, forwardedRef), type: "search", value: value, "data-size": size, "data-loading": loading || undefined, disabled: disabled, "aria-busy": loading || ariaBusy || undefined, fieldClassName: classNames("hjm-search-field", fieldClassName), leading: leading ?? (renderSearchIcon ? renderSearchIcon(iconAppearance) : undefined), onChange: (event) => {
                 setValue(event.currentTarget.value);
                 onChange?.(event);

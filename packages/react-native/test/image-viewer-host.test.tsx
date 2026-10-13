@@ -3,6 +3,7 @@ import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { Image, Modal, StyleSheet, View } from "react-native";
 import { afterEach, expect, it, vi } from "vitest";
 import { HjmNativeProvider } from "../src/provider.js";
+import { Text } from "../src/primitives.js";
 import { Button } from "../src/actions.js";
 import { ImageViewer, type ImageViewerImageRenderProps, type ImageViewerProps } from "../src/image-viewer.js";
 
@@ -131,4 +132,10 @@ it("re-measures the image viewport after a rotation layout without using screen 
   expect({ width: host.width, height: host.height }).toEqual({ width: 874, height: 218 });
   act(() => layout.props.onLayout({ nativeEvent: { layout: { width: 402, height: 590 } } }));
   expect({ width: host.width, height: host.height }).toEqual({ width: 402, height: 590 });
+});
+
+it("shows a centered loading icon without a visible loading sentence", () => {
+  render({ renderImage: () => <View /> });
+  expect(tree!.root.findAllByType(View).some(node => node.props.accessibilityRole === "progressbar" && node.props.accessibilityLabel === base.loadingLabel)).toBe(true);
+  expect(tree!.root.findAllByType(Text).some(node => node.props.children === base.loadingLabel)).toBe(false);
 });

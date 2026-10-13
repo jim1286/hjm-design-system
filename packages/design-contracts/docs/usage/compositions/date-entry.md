@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.14.0
-- 검토일: 2026-10-07
+- 검토일: 2026-10-13
 - 근거: [날짜 입력 조사](../../../../../docs/qa/2026-10-07-date-entry-reference.md), `src/date-entry.ts`
 - 스토리북: `배포/구성/입력과 작성/날짜 직접 입력`
 
@@ -14,13 +14,14 @@
 
 사용자가 알고 있는 날짜를 직접 입력할 때 쓴다. DatePicker는 달력에서 날짜를 선택하는 API이므로
 부분 연도·월 이름을 편집하는 초안을 담지 않는다. 새 DateEntry는 Field의 optional extension이며
-기존 TextField를 합성한다. 달력·언어·시간대 계산은 제품이 맡는 기존 Calendar 경계를 유지한다.
+기존 FieldGroup의 `layout="inline"` 안에서 TextField를 합성한다. 달력·언어·시간대 계산은 제품이 맡는 기존 Calendar 경계를 유지한다.
 
 ## 구성 요소
 
 | 컴포넌트 | 역할 | 지침 |
 | --- | --- | --- |
 | DateEntry | 날짜 초안·필드 순서·오류 연결 | 이 문서 |
+| FieldGroup | 그룹 이름·설명·대상별 오류 연결·입력 수명 | [관련 입력 묶음](field-group.md) |
 | TextField | 각 날짜 조각 입력·포커스·오류 | [Field](../components/field.md) |
 | Button | 제품의 확인/저장 | [Button](../components/button.md) |
 
@@ -29,8 +30,8 @@
 ```text
 그룹 이름
 설명(선택)
+오류 안내 한 번         ← 해당 칸 테두리로 연결
 [연도]   [월]   [일]   ← 제품 order
-오류 안내 한 번         ← 입력 위, 해당 칸 테두리로 연결
 [확인]                ← 제품 행동
 결과/서버 상태         ← 제품 소유
 ```
@@ -59,8 +60,8 @@
 | 기본 | 세 입력과 설명 | 자동 초점 이동 없음 |
 | 진행 중 | 미완성 원문 유지 | 일반 Tab/터치로 이동, validation 노출은 제품 제어 |
 | 실패 | 그룹 오류 한 번과 해당 필드의 오류 테두리 | Web 연결된 오류 설명, Native 그룹+조각 이름·오류 hint, iOS 그룹 안내 한 번 |
-| 확인 | 제품에 전달한 valid 값 | 확인 UI/서버 저장은 제품 소유 |
-| 비활성·읽기 전용 | 편집 차단 | 호스트가 늦게 edit 이벤트를 보내도 callback 차단 |
+| 확인 | 제품에 전달한 valid 값 | 확인 UI/서버 저장은 제품 소유. 결과 변경은 Web status, Native Android live region과 iOS announcement로 알림 |
+| 비활성·읽기 전용 | 편집 차단 | 기존 callback도 새 잠금·읽기 전용을 따르며 언마운트 뒤 편집 차단 |
 
 ## 코드 골격
 
@@ -106,3 +107,7 @@ Android의 `birthdate-year/month/day`와 iOS의 명시적 `birthdateYear/Month/D
 - Calendar로 부분 입력을 강제로 변환하거나 NumberField로 교체하면 원문 보존 계약이 깨진다.
 - Web 390px 다크/RTL/2배 글자와 iOS 2배 글자에서 오류 복구를 확인했다. 제품 팔레트·스크린리더·자동완성 실제 검증은 남아 있다. 실험 등록은 승격·게시가 아니다.
 - Native 화면 호스트는 키보드 inset을 처리하는 ScrollView 등으로 하단 행동에 접근할 수 있어야 한다. DateEntry 내부에 중첩 스크롤을 만들지 않는다.
+
+2026-10-13 실제 독립 Story 검수에서 iOS 확인 결과 안내가 빠진 것을 확인해 기존 PatternStatus를 연결했다. 확인 후 필드 순서만 바꾸면 같은 날짜 결과를 유지하고, 원문을 편집하면 이전 결과를 지운다. 예제의 로컬 확인은 서버 저장을 뜻하지 않는다.
+
+DateEntry는 그룹 설명을 모든 입력에, 그룹 오류를 영향받는 입력에만 연결한다. 재정렬은 입력 identity를 유지한다. 늦은 편집 callback도 최신 초안의 해당 조각만 바꾸며 그룹 잠금·언마운트는 FieldGroup의 edit session이 차단한다.

@@ -72,7 +72,7 @@ import { Text } from "@hjmds/react-native/primitives";
 | Native `label` | `string` | 필수 | 그룹 접근성 이름 |
 | Native `renderIndicator` | `(props: { value, expanded, disabled, color, size }) => ReactNode` | `+`/`−` | 펼침 표시만 교체한다 |
 | `layoutStyle` | margin·width·flex·`alignSelf` | — | 바깥 배치 전용 |
-| Native `style`·`itemStyle`·`triggerStyle`·`titleStyle`·`indicatorStyle`·`panelStyle` | — | — | deprecated — `layoutStyle` 또는 `density`/`renderIndicator`(개발 모드 1회 경고, 다음 major 제거) |
+| Native `style`·`itemStyle`·`triggerStyle`·`titleStyle`·`indicatorStyle`·`panelStyle` | — | — | 제거된 속성 — `layoutStyle` 또는 `density`/`renderIndicator` |
 
 ## 배치
 
@@ -86,12 +86,14 @@ import { Text } from "@hjmds/react-native/primitives";
 
 ## 꼭 지킬 것
 
-- 항목은 하나 이상, 식별자(Web `id`, Native `value`)는 고유해야 한다. 빈 목록·중복 id·없는 값·
+- 항목은 하나 이상, 식별자(Web `id`, Native `value`)는 고유해야 한다. 빈 목록·중복 id·최초 기본값 또는 제어 값에 없는 식별자·
   단일 모드에서 둘 이상 펼침은 렌더 중 `TypeError`/`RangeError`로 실패한다.
+- 비제어 상태에서 펼쳐진 항목을 삭제하면 그 식별자를 펼침 값에서 제거하고 변경 콜백을 한 번 알린다. 재삽입해도 저절로 다시 열리지 않는다. 삭제로 오류 화면이 되거나 이전 선택이 되살아나는 문제를 막기 위한 규칙이다.
+- 펼쳐진 항목의 `disabled` 전환은 추가 토글만 막고 읽던 본문은 유지한다. 웹에서 삭제된 항목 또는 새로 비활성화된 트리거에 포커스가 있었다면 다음 활성 트리거로 옮긴다(없으면 그룹). 사용자가 이미 외부로 옮긴 포커스는 유지한다.
 - 제목·본문은 i18n 키로 넣는다. Native는 그룹 `label`이 필수이며 접근성 이름이 된다.
 - 펼침 표시(`+`/`−`)와 trigger·panel 접근성 관계는 HJM이 소유한다. 직접 버튼과 패널을 다시 조립하지 않는다.
 - 배치는 `layoutStyle`로만 한다. Native의 `style`·`itemStyle`·`triggerStyle`·`titleStyle`·`indicatorStyle`·`panelStyle`은
-  deprecated다. 새 코드에 쓰지 않는다([소비 정책 §3](../../consumer-policy.md), [Native 이관](../../migration-native-legacy-removal.md)).
+  제거된 속성이다. 새 코드에 쓰지 않는다([소비 정책 §3](../../consumer-policy.md), [Native 이관](../../migration-native-legacy-removal.md)).
 
 ## 플랫폼 차이
 

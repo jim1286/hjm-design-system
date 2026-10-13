@@ -90,7 +90,13 @@ export function Calendar<Content>({ descriptor, composeAccessibleName, previousM
               data-disabled={!cell.selectable || undefined} data-outside={cell.outsideFocusedMonth || undefined}
               aria-label={cell.accessibleName} aria-selected={cell.isSelected} aria-disabled={!cell.selectable || undefined}
               aria-current={cell.isToday ? "date" : undefined} tabIndex={cell.date === active ? 0 : -1}
-              onFocus={() => setFocused(cell.date)} onClick={() => { if (cell.selectable) setSelected(cell.date); }}
+              onFocus={() => setFocused(cell.date)} onClick={() => {
+                if (!cell.selectable) return;
+                // Range completion and DatePicker confirmation still need activation
+                // when the date already equals Calendar's single selected value.
+                if (cell.date === selected) descriptor.onSelectionChange?.(cell.date);
+                else setSelected(cell.date);
+              }}
               onKeyDown={(event) => {
                 if (event.altKey || event.ctrlKey || event.metaKey) return;
                 const intent = getCalendarNavigationIntent(event.key as Parameters<typeof getCalendarNavigationIntent>[0], theme?.environment.direction ?? "ltr");

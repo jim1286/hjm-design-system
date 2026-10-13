@@ -95,7 +95,7 @@ import { Image } from "react-native";
 | `attachmentAction` | `{ label, icon, onPress(), disabled? }` | 없음 | 첨부 버튼(ghost `IconButton`) |
 | `attachments` | `readonly { id, removeLabel, preview, disabled? }[]` | `[]` | 첨부 미리보기. 있으면 `onRemoveAttachment` 필수 |
 | `onRemoveAttachment` | `(id: string) => void` | 없음 | 첨부 제거 |
-| Web `layoutStyle` | `HjmCompositionStyleProp` | 없음 | 작성창 루트 배치(margin·width·flex 등). 미게시(1.12.1 이후) |
+| Web `layoutStyle` | `HjmCompositionStyleProp` | 없음 | 작성창 루트 배치(margin·width·flex 등). 1.13.0 변경 |
 
 전송 가능 조건: `disabled`·`pending`·`sendDisabled`가 아니고, 글(공백 제외)·첨부·`additionalContent` 중 하나가 있을 때(`canSubmitMessage`).
 
@@ -104,7 +104,7 @@ import { Image } from "react-native";
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 입력 `composerMinLines` 1 ~ `composerMaxLines` 5줄(넘으면 입력 안에서 스크롤), `shape="large"`; 첨부 썸네일 `attachmentSize` 80(radius `radius.md`); 제거 버튼은 `IconButton size="small"` 36 + 사방 hit 4(실제 타깃 44), 그 안 보이는 원 `attachmentRemoveSize` 24; circle 전송은 `IconButton size="small"` 36 | `screen-patterns.ts`, `icon-button-recipe.ts` `sizes.small`, Web `styles.css`, Native `MessageComposer` |
-| 간격 | 세로 묶음(context·답장 대상·첨부·입력 줄) 사이와 입력–텍스트 전송 버튼 사이 `screenPatternRecipe.itemGap`(`spacing.sm` 12, 두 플랫폼. 2026-10-06까지 Web은 8, 1.12.1 이후 미게시); 답장 대상 줄·첨부 사이 `spacing.sm` 12; circle 전송은 입력 글자와 `spacing.sm` 12, 오른쪽 끝 8 | `screenPatternRecipe.itemGap`, Web `.hjm-message-composer`·`__row`(`--hjm-message-composer-gap`), Native `Stack gap="sm"`·`itemGap` |
+| 간격 | 세로 묶음(context·답장 대상·첨부·입력 줄) 사이와 입력–텍스트 전송 버튼 사이 `screenPatternRecipe.itemGap`(`spacing.sm` 12, 두 플랫폼. 2026-10-06까지 Web은 8, 1.13.0 변경); 답장 대상 줄·첨부 사이 `spacing.sm` 12; circle 전송은 입력 글자와 `spacing.sm` 12, 오른쪽 끝 8 | `screenPatternRecipe.itemGap`, Web `.hjm-message-composer`·`__row`(`--hjm-message-composer-gap`), Native `Stack gap="sm"`·`itemGap` |
 | 순서·정렬 | `context` → 답장 대상(작성자·발췌 → 취소) → 첨부 썸네일(→ 첨부 버튼) → 입력·전송 한 줄, 전송은 입력 아래쪽(`flex-end`)에 맞춘다. 입력 줄 안은 `leadingAction` → 글자 → (아이콘 모드) 전송/첨부 | 렌더 순서, Web `forms.tsx` `hjm-field__leading` |
 | 고정·스크롤 | 자체 고정 없음: 화면 composer 슬롯(footer)에 넣는다; 첨부는 가로 스크롤; 키보드 adapter는 host 하나만 | ChatScreen·CommentThreadScreen `composer` |
 | 좁은 폭·큰 글자 | 입력이 남은 폭을 채우고(`flex: 1`, 최소 폭 0) 전송 버튼은 줄지 않는다; 큰 글자에서도 5줄 상한 뒤 입력 안 스크롤로 기록을 가리지 않는다 | Web `.hjm-message-composer__row`, Native `layoutStyle={{ flex: 1 }}` |

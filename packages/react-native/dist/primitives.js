@@ -13,7 +13,7 @@ import { Children, Component, Fragment, forwardRef, isValidElement, useEffect, u
 import { PixelRatio, Text as NativeText, View, useWindowDimensions, } from "react-native";
 import { useHjmNativeTheme } from "./provider.js";
 import { logicalTextAlign, resolveNativeFontStyle, resolveNativeShadowElevation, resolveNativeTextScaleProps, } from "./internal/styles.js";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
+import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 /** Native shell translation: ordered regions without inventing Web landmark roles. */
 export const Layout = forwardRef(function Layout({ children, header, footer, sidebar, headerProps, mainProps, footerProps, mainRef, style, ...props }, ref) {
     const hasHeader = header !== undefined && header !== null && header !== false;
@@ -157,8 +157,8 @@ export function Stack({ axis, gap = stackRecipe.defaults.gap, align = stackRecip
         ] }));
 }
 /** Shared centered content boundary for phones, tablets, and desktop-sized Native windows. */
-export function Container({ size, gutter, layoutStyle, style, ...props }) {
-    warnDeprecatedStyleProps("Container", { style }, "layoutStyle for placement and size/gutter for width and padding");
+export function Container({ size, gutter, layoutStyle, ...props }) {
+    assertNoRemovedStyleProps("Container", props, ["style"]);
     const resolved = resolveContainerDescriptor({
         ...(size === undefined ? {} : { size }),
         ...(gutter === undefined ? {} : { gutter }),
@@ -170,7 +170,6 @@ export function Container({ size, gutter, layoutStyle, style, ...props }) {
                 paddingHorizontal: resolved.paddingInline,
                 width: "100%",
             },
-            style,
             layoutStyle,
         ] }));
 }
@@ -223,8 +222,8 @@ export function Grid({ children, columns, gap, minColumnWidth, availableWidth, o
         ], children: Children.toArray(children).map((child, index) => (_jsx(View, { style: [{ width: cellWidth }, itemStyle], children: child }, isValidElement(child) && child.key !== null ? child.key : `hjm-grid-${index}`))) }));
 }
 /** Semantic Native icon frame without an Expo or third-party icon dependency. */
-export function Icon({ descriptor, renderGlyph, layoutStyle, style, }) {
-    warnDeprecatedStyleProps("Icon", { style }, "layoutStyle for placement and the icon descriptor for appearance");
+export function Icon({ descriptor, renderGlyph, layoutStyle, ...removedProps }) {
+    assertNoRemovedStyleProps("Icon", removedProps, ["style"]);
     const resolved = resolveIconDescriptor(descriptor);
     const theme = useHjmNativeTheme();
     const colors = {
@@ -254,7 +253,6 @@ export function Icon({ descriptor, renderGlyph, layoutStyle, style, }) {
                 transform: mirror ? [{ scaleX: -1 }] : undefined,
                 width: size,
             },
-            style,
             layoutStyle,
         ], children: _jsx(View, { accessible: false, children: renderGlyph({
                 name: resolved.name,
@@ -264,12 +262,12 @@ export function Icon({ descriptor, renderGlyph, layoutStyle, style, }) {
             }) }) }));
 }
 /** A large-text-safe content section with a logical header action slot. */
-export function Section({ title, description, action, children, headerStyle, copyStyle, actionStyle, contentStyle, layoutStyle, style, ...props }) {
+export function Section({ title, description, action, children, headerStyle, copyStyle, actionStyle, contentStyle, layoutStyle, ...props }) {
     const theme = useHjmNativeTheme();
-    warnDeprecatedStyleProps("Section", { style }, "layoutStyle for placement; sectionRecipe owns appearance");
+    assertNoRemovedStyleProps("Section", props, ["style"]);
     const stackHeader = theme.environment.textScale >= 1.6;
     const hasHeader = title !== undefined || description !== undefined || action !== undefined;
-    return (_jsxs(View, { ...props, style: [{ gap: sectionRecipe.gap }, style, layoutStyle], children: [hasHeader ? _jsxs(View, { style: [
+    return (_jsxs(View, { ...props, style: [{ gap: sectionRecipe.gap }, layoutStyle], children: [hasHeader ? _jsxs(View, { style: [
                     {
                         alignItems: stackHeader ? "stretch" : "center",
                         direction: theme.environment.direction,

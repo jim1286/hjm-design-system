@@ -7,12 +7,10 @@ import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
 import { useState } from "react";
 import { Pressable, TextInput, View } from "react-native";
 import { Text } from "./primitives.js";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 import { resolveNativeFontStyle, resolveNativeTextScaleProps } from "./internal/styles.js";
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
-export function TagsInput({ label, tags: controlledTags, defaultTags, onTagsChange, onReject, onDraftChange, policy, suggestions, suggestionsLabel, composeRemoveLabel, placeholder, description, disabled = false, layoutStyle, style, }) {
-    warnDeprecatedStyleProps("TagsInput", { style }, "layoutStyle for placement; tagsInputRecipe owns appearance");
+export function TagsInput({ label, tags: controlledTags, defaultTags, onTagsChange, onReject, onDraftChange, policy, suggestions, suggestionsLabel, composeRemoveLabel, placeholder, description, disabled = false, layoutStyle, }) {
     const { palette, tokens, textScaling } = useHjmNativeTheme();
     const [internal, setInternal] = useState(defaultTags ?? []);
     const tags = controlledTags ?? internal;
@@ -42,7 +40,7 @@ export function TagsInput({ label, tags: controlledTags, defaultTags, onTagsChan
     };
     // A suggestion row is a touch target, not a tag chip: tag.minHeight (28) left
     // these rows under 44 (2026-10-06 follow-up). Both renderers use the target role.
-    return (_jsxs(View, { style: [{ gap: tagsInputRecipe.frame.gap }, style, layoutStyle], children: [_jsx(Text, { variant: "label", style: disabled ? { opacity: fieldRecipe.disabledOpacity } : undefined, children: label }), _jsxs(View, { style: {
+    return (_jsxs(View, { style: [{ gap: tagsInputRecipe.frame.gap }, layoutStyle], children: [_jsx(Text, { variant: "label", style: disabled ? { opacity: fieldRecipe.disabledOpacity } : undefined, children: label }), _jsxs(View, { style: {
                     backgroundColor: resolveColorReference(tagsInputRecipe.frame.background, palette),
                     minHeight: tagsInputRecipe.frame.minHeight,
                     flexDirection: "row",

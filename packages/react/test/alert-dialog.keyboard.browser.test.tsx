@@ -7,6 +7,7 @@ import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { AlertDialog } from "../src/overlays.js";
 import { HjmProvider } from "../src/provider.js";
 import "../src/styles.css";
+import { tabThroughControls } from "./tab-through-controls.js";
 
 export const alertDialogKeyboardCases = [{ componentId: "alert-dialog" }] as const;
 export const alertDialogLongCopyCases = [{ componentId: "alert-dialog" }] as const;
@@ -52,10 +53,12 @@ it("focuses the least destructive action, traps Tab, and cancels on Escape", asy
   expect(alert.getAttribute("aria-modal")).toBe("true");
   expect(document.activeElement).toBe(cancel);
 
-  await act(async () => userEvent.tab());
+  await act(async () => tabThroughControls());
   expect(document.activeElement).toBe(confirm);
-  await act(async () => userEvent.tab());
+  await act(async () => tabThroughControls());
   expect(document.activeElement).toBe(cancel);
+  await act(async () => tabThroughControls(true));
+  expect(document.activeElement).toBe(confirm);
   await act(async () => userEvent.keyboard("{Escape}"));
 
   expect(document.body.querySelector('[role="alertdialog"]')).toBeNull();

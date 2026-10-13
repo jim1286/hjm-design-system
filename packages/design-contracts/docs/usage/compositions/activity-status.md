@@ -4,7 +4,7 @@
 - 상태: 실험
 - 지원: Web · Native
 - 적용: 미게시(1.17.2 이후)
-- 검토일: 2026-10-10
+- 검토일: 2026-10-13
 - 근거: [ActivityChip 계약](../../activity-chip.md), [Toast 패널](../../toast.md#패널-toast--미게시1172-이후), 양 Showcase `activity-status-preview.tsx`, `showcase/shared/activity-status.ts`
 - 스토리북: `실험/구성/피드백과 복구/백그라운드 작업 상태`
 
@@ -116,12 +116,12 @@ import { TopBar } from "@hjmds/react-native/top-bar";
 
 // 앱 루트: <ToastRegion placement="top" maxVisible={1} layoutStyle={{ flex: 1 }}>…</ToastRegion>
 function ReviewHeader({ task }: { task: ReviewTask | null }) {
-  const toast = useToastRegion();
+  const { publish, dismiss } = useToastRegion();
   const [open, setOpen] = useState(false);
   useEffect(() => {
     if (!open || !task) return;
-    toast.publish(reviewPanel(task, <Image source={mascot} style={{ width: 44, height: 44 }} />, () => setOpen(false)));
-  }, [open, task, toast]);
+    publish(reviewPanel(task, <Image source={mascot} style={{ width: 44, height: 44 }} />, () => setOpen(false)));
+  }, [open, task, publish]);
   return (
     <TopBar
       title={t("screen.title")}
@@ -132,7 +132,7 @@ function ReviewHeader({ task }: { task: ReviewTask | null }) {
             emphasis={task.done ? "emphasis" : "default"}
             expanded={open}
             media={<Image source={mascot} style={{ width: 28, height: 28 }} />}
-            onPress={() => (open ? toast.dismiss("review-status", "programmatic") : setOpen(true))}
+            onPress={() => (open ? dismiss("review-status", "programmatic") : setOpen(true))}
           />
         ),
       } : {})}
@@ -159,4 +159,10 @@ function ReviewHeader({ task }: { task: ReviewTask | null }) {
 - 패널을 닫는 경로가 여럿(칩·닫기·Escape·스와이프)이라 `open` 상태는 `onDismiss`에서만 내린다. 칩 핸들러에서 먼저
   `setOpen(false)`하고 `close`를 부르면 닫히는 동안(closing) 다시 누른 `publish`가 `ignored`(`closing`)로 돌아올 수 있다.
 - `media`는 장식이다. 마스코트에 의미가 있으면 그 뜻을 `title`·`description`에 쓴다.
+- Native effect는 `useToastRegion()`의 안정적인 `publish` 함수에 의존한다. controller 객체 전체를 의존성에 넣으면
+  publish로 controller가 갱신될 때마다 effect가 다시 발행하는 반복 렌더가 생긴다(실제 예제 host에서 재현).
+- 결과 보기의 예제 안내는 Web `role="status"`, 공개 `StatusText`로 전달한다.
+  Web은 패널이 실제 소유하던 초점 요소가 닫힘으로 제거됐을 때만 칩으로 돌아가고, 완료 칩 자체에 초점이 있을 때 자동 숨김이 일어나면 작업 시작 버튼으로 옮긴다.
+  Enter로 결과를 선택해 초점 요소가 제거되면 복구하지만, 포인터 클릭이 버튼에 초점을 두지 않은 경우에는 새 초점을 강제하지 않는다.
+  사용자가 외부 컨트롤로 이동하거나 명시적으로 해제한 초점은 유지한다. body 자체를 패널 초점 소유의 근거로 삼지 않는다. 이는 예제의 결과 안내이며 실제 결과 화면 이동은 제품 소유다.
 - 현재 스토리는 작업 진행을 타이머로 흉내 낸다. 제품은 자기 작업 이벤트로 단계를 바꾼다.

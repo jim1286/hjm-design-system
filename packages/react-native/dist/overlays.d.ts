@@ -4,7 +4,7 @@ import { type HjmCompositionStyleProp } from "./composition-style.js";
 import { type SheetDismissPolicy, type SheetDismissReason, type SheetOpenChangeDetails } from "@hjmds/design-contracts/components/sheet";
 import { sheetRecipe, type DialogSize } from "@hjmds/design-contracts/recipes";
 import { type ReactElement, type ReactNode, type RefObject } from "react";
-import { View, type Insets, type ModalProps, type StyleProp, type ViewStyle } from "react-native";
+import { View, type Insets, type ModalProps } from "react-native";
 import { type ButtonTone } from "./actions.js";
 export type OverlayAction = Readonly<{
     label: string;
@@ -73,18 +73,14 @@ export type DialogProps = NativeModalProps & ReasonedOpenProps<DialogOpenChangeR
 export declare function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, primaryAction, secondaryAction, dismissible, busy: externalBusy, onActionError, size, motionOrigin, closeLabel, returnFocusRef, contentStyle, onShow, ...modalProps }: DialogProps): import("react").JSX.Element;
 export type AlertDialogProps = NativeModalProps & ReasonedOpenProps<AlertDialogOpenChangeReason> & Readonly<{
     request: AlertDialogRequest;
+    size?: DialogSize;
     returnFocusRef?: RefObject<View | null>;
     onResult?: (result: AlertDialogResult) => void;
-    /**
-     * Layout keys only (`hjmCompositionStyleKeys`). Visual keys still apply but are deprecated:
-     * use `size`/`placement` and the recipe for appearance.
-     * @deprecated for visual keys. The next major narrows this to `HjmCompositionStyleProp`, like Dialog
-     * (consumer-policy.md §3.1).
-     */
-    contentStyle?: StyleProp<ViewStyle>;
+    /** Layout-only placement; semantic size and the recipe own appearance. */
+    contentStyle?: HjmCompositionStyleProp;
 }>;
 /** Contract session owns duplicate confirms, busy dismissal, error and settlement. */
-export declare function AlertDialog({ open, defaultOpen, onOpenChange, request, returnFocusRef, onResult, contentStyle, onShow, ...modalProps }: AlertDialogProps): import("react").JSX.Element;
+export declare function AlertDialog({ open, defaultOpen, onOpenChange, request, size, returnFocusRef, onResult, contentStyle, onShow, ...modalProps }: AlertDialogProps): import("react").JSX.Element;
 export type SheetPlacement = "bottom" | "start" | "end";
 export type SheetSize = keyof typeof sheetRecipe.sizes;
 export type SheetProps = NativeModalProps & ReasonedOpenProps<SheetOpenChangeDetails["reason"]> & OverlayTitleProps & Readonly<{
@@ -107,13 +103,8 @@ export type SheetProps = NativeModalProps & ReasonedOpenProps<SheetOpenChangeDet
     onDismissComplete?: (detail: Readonly<{
         reason: SheetDismissReason;
     }>) => void;
-    /**
-     * Layout keys only (`hjmCompositionStyleKeys`). Visual keys still apply but are deprecated:
-     * use `size`/`placement` and the recipe for appearance.
-     * @deprecated for visual keys. The next major narrows this to `HjmCompositionStyleProp`, like Dialog
-     * (consumer-policy.md §3.1).
-     */
-    contentStyle?: StyleProp<ViewStyle>;
+    /** Layout-only placement; semantic size and the recipe own appearance. */
+    contentStyle?: HjmCompositionStyleProp;
     /** Opt in when the body contains inputs; the modal owns keyboard clearance. */
     keyboardAvoidance?: boolean;
     /** Keep the header/footer fixed while long content scrolls. Do not nest a virtualized list. */

@@ -35,7 +35,7 @@ export function OrderProgressRetry() {
           : <Button loading={state.phase === "requesting"} onClick={() => dispatch({ type: "request" })}>
               {state.phase === "failed" ? orderCopy.retry : orderCopy.request}
             </Button>}
-        {done ? null : <Switch label={orderCopy.failNext} checked={state.failNext} onCheckedChange={() => dispatch({ type: "toggleFailNext" })} />}
+        {done ? null : <Switch label={orderCopy.failNext} disabled={state.phase === "requesting"} checked={state.failNext} onCheckedChange={() => dispatch({ type: "toggleFailNext" })} />}
       </Stack>
       <Text variant="label" tone="muted">{orderCopy.logLabel}</Text>
       <Timeline items={state.log} composeAccessibleName={steaTimelineName} />
@@ -60,11 +60,14 @@ export function OtpVerifyRecover() {
   const error = otpErrorMessage(state);
   const input = useRef<HTMLInputElement>(null);
   const result = useRef<HTMLDivElement>(null);
+  const previousVerified = useRef(verified);
+  const formOwnsFocus = useRef(false);
   // busy 동안 OtpField는 포커스를 유지한다(2026-10-02 수정). 재전송 버튼을 누른 뒤에는 새 번호를 바로
   // 입력하도록, 성공하면 입력이 사라지므로 결과로 포커스를 옮긴다.
   useEffect(() => {
-    if (state.phase === "editing" && state.resent) input.current?.focus();
-    if (state.phase === "verified") result.current?.focus();
+    if (state.phase === "editing" && (state.resent || previousVerified.current)) input.current?.focus();
+    if (state.phase === "verified" && formOwnsFocus.current) result.current?.focus();
+    previousVerified.current = verified;
   }, [state.phase, state.resendCount]);
   // 성공 화면 전환은 서버 확인(respond) 뒤에만 일어난다. 입력 중에는 같은 subtree를 유지해 슬롯이 움직이지 않는다.
   return <Card title={otpCopy.title} description={otpCopy.description}>
@@ -72,7 +75,9 @@ export function OtpVerifyRecover() {
       {state.phase === "verified"
         ? <Result ref={result} tabIndex={-1} status="success" title={otpCopy.successTitle} description={otpCopy.successBody}
             actions={[{ label: otpCopy.again, onAction: () => dispatch({ type: "reset" }) }]} />
-        : <form onSubmit={event => { event.preventDefault(); dispatch({ type: "submit" }); }}>
+        : <form onFocusCapture={() => { formOwnsFocus.current = true; }}
+            onBlurCapture={event => { formOwnsFocus.current = event.currentTarget.contains(event.relatedTarget); }}
+            onSubmit={event => { event.preventDefault(); dispatch({ type: "submit" }); }}>
             <Stack gap="md">
               <OtpField ref={input} label={otpCopy.field} length={otpLength} value={state.value}
                 onValueChange={value => dispatch({ type: "change", value })}

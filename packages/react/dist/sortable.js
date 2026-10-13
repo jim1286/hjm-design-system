@@ -1,4 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { control } from "@hjmds/design-contracts/foundations";
 import { useCallback, useLayoutEffect, useRef, useState, useMemo } from "react";
 import { Accessibility } from "@dnd-kit/dom";
 import { DragDropProvider } from "@dnd-kit/react";
@@ -9,7 +10,7 @@ import { useHjmTheme } from "./provider.js";
 function Row({ item, index, children, disabled, reduced, labels, move, count }) {
     const { ref, handleRef } = useSortable({ id: item.id, index, disabled: disabled || item.disabled === true,
         ...(reduced ? { transition: null } : {}) });
-    return _jsxs("li", { ref: ref, "data-item-id": item.id, style: { display: "grid", gridTemplateColumns: "auto minmax(0, 1fr)", alignItems: "center", gap: "var(--hjm-space-sm)", paddingBlock: "var(--hjm-space-xs)" }, children: [_jsx(Button, { ref: handleRef, tone: "ghost", type: "button", disabled: disabled || item.disabled, "aria-label": labels.handle(item), style: { minWidth: 44, minHeight: 44, touchAction: "none", cursor: "grab" }, children: "\u283F" }), _jsx("div", { style: { minWidth: 0, overflowWrap: "anywhere" }, children: children }), _jsxs("div", { style: { gridColumn: "1 / -1", display: "flex", flexWrap: "wrap", gap: "var(--hjm-space-xs)" }, children: [_jsx(Button, { tone: "ghost", disabled: disabled || item.disabled || index === 0, onClick: () => move(index - 1), children: labels.previous(item) }), _jsx(Button, { tone: "ghost", disabled: disabled || item.disabled || index === count - 1, onClick: () => move(index + 1), children: labels.next(item) })] })] });
+    return _jsxs("li", { ref: ref, "data-item-id": item.id, style: { display: "grid", gridTemplateColumns: "auto minmax(0, 1fr)", alignItems: "center", gap: "var(--hjm-space-sm)", paddingBlock: "var(--hjm-space-xs)" }, children: [_jsx(Button, { ref: handleRef, tone: "ghost", type: "button", disabled: disabled || item.disabled, "aria-label": labels.handle(item), style: { minWidth: control.minTouchTarget, minHeight: control.minTouchTarget, touchAction: "none", cursor: "grab" }, children: "\u283F" }), _jsx("div", { style: { minWidth: 0, overflowWrap: "anywhere" }, children: children }), _jsxs("div", { style: { gridColumn: "1 / -1", display: "flex", flexWrap: "wrap", gap: "var(--hjm-space-xs)" }, children: [_jsx(Button, { tone: "ghost", disabled: disabled || item.disabled || index === 0, onClick: () => move(index - 1), children: labels.previous(item) }), _jsx(Button, { tone: "ghost", disabled: disabled || item.disabled || index === count - 1, onClick: () => move(index + 1), children: labels.next(item) })] })] });
 }
 /** Small controlled collections only; persistence and rollback belong to the host. */
 export function SortableCollection(props) {

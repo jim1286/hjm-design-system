@@ -20,8 +20,18 @@ export function WebNavigationPreview() {
   }, [collection]);
   useEffect(() => {
     // Scoped fragments let multiple catalog previews coexist without sharing a route.
-    const route = () => { let hash: string; try { hash = decodeURIComponent(location.hash.slice(1)); } catch { return; }
-      if (hash === rootId || hash === collectionId) { setCollection(hash === collectionId); setPage(1); }
+    const initialFragment = location.hash;
+    let visitedScopedRoute = false;
+    const route = () => {
+      let hash: string;
+      try { hash = decodeURIComponent(location.hash.slice(1)); } catch { hash = ""; }
+      if (hash === rootId || hash === collectionId) {
+        visitedScopedRoute = true; setCollection(hash === collectionId); setPage(1);
+      } else if (visitedScopedRoute && location.hash === initialFragment) {
+        // Back can return to the initial URL, which has no preview fragment. Only a
+        // preview that handled its own route restores here; other mounted previews stay put.
+        setCollection(true); setPage(1);
+      }
     };
     route(); window.addEventListener("hashchange", route);
     return () => window.removeEventListener("hashchange", route);

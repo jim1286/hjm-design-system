@@ -62,7 +62,7 @@ import { CounterBadge } from "@hjmds/react-native/data-display";
 | `dot` | `true` · `false` | `false` | Web만. 숫자 대신 8px 점을 그린다 |
 | `count` | `number` | — (필수) | 0 이하면 아무것도 그리지 않는다 |
 | `accessibilityLabel` | `string` | — | 없으면 보조기술에서 숨는다. 빈 문자열은 `TypeError` |
-| `layoutStyle` | 배치 전용 style | — | 위치·여백만. Native `style`은 deprecated |
+| `layoutStyle` | 배치 전용 style | — | 위치·여백만. Native `style`은 제거된 속성 |
 
 콜백 prop은 없다.
 
@@ -91,14 +91,14 @@ inline (행 끝)                      floating (아이콘 모서리)
 - 개수 표기·`+` 처리는 컴포넌트에 맡기고 `"99+"` 같은 문자열을 앱에서 만들지 않는다. 배지가 아닌
   자리에서 같은 표기가 필요하면 `formatCounterBadgeCount`(`@hjmds/design-contracts`, `/recipes`)를 쓴다.
 - 색은 `tone`과 제품 테마 토큰으로 바꾼다. 배지 색을 직접 칠하지 않는다.
-- 배치는 `layoutStyle`로 한다(Web·Native). Native `style`은 deprecated — 배치는 `layoutStyle`, 외형은 `tone`·`size`·`variant`로 옮긴다(개발 모드 1회 경고, 다음 major 제거).
+- 배치는 `layoutStyle`로 한다(Web·Native). Native `style`은 제거된 속성 — 배치는 `layoutStyle`, 외형은 `tone`·`size`·`variant`로 옮긴다.
 
 ## 플랫폼 차이
 
 | 항목 | Web | Native |
 | --- | --- | --- |
 | `dot` | 있음 | 없음 |
-| 배치 | `layoutStyle`(그 밖에 `span` 속성 전달, `style`과 합친다) | `layoutStyle`(`style`은 deprecated) |
+| 배치 | `layoutStyle`(그 밖에 `span` 속성 전달, `style`과 합친다) | `layoutStyle`(`style`은 제거된 속성) |
 | ref | `HTMLSpanElement` | 없음 |
 
 ## 함정

@@ -39,6 +39,7 @@ export const LoadMore = forwardRef(function LoadMore({ descriptor, mode = loadMo
     onLoadMoreRef.current = onLoadMore;
     const [controllerFacade] = useState(createLoadMoreControllerFacade);
     const controller = controllerFacade.facade;
+    const requestGeneration = useRef(0);
     const sentinelRef = useRef(null);
     const currentRequestIdentityRef = useRef(null);
     const completedRequestIdentityRef = useRef(null);
@@ -47,6 +48,7 @@ export const LoadMore = forwardRef(function LoadMore({ descriptor, mode = loadMo
         : null;
     useLayoutEffect(() => {
         currentRequestIdentityRef.current = currentRequestIdentity;
+        return () => { currentRequestIdentityRef.current = null; };
     }, [currentRequestIdentity]);
     const request = useCallback(async (state, reason) => {
         if (state.status === "loading" || state.status === "complete")
@@ -61,15 +63,19 @@ export const LoadMore = forwardRef(function LoadMore({ descriptor, mode = loadMo
         // until the product commits a new cursor or a retryable error state.
         if (completedRequestIdentityRef.current === requestIdentity)
             return;
+        const generation = requestGeneration.current;
         try {
             const outcome = await controller.request(state, reason);
+            if (generation !== requestGeneration.current)
+                return;
             if (outcome === "started") {
                 completedRequestIdentityRef.current = requestIdentity;
             }
             onRequestOutcome?.(outcome, reason);
         }
         catch (error) {
-            onRequestError?.(error, reason);
+            if (generation === requestGeneration.current)
+                onRequestError?.(error, reason);
         }
     }, [controller, onRequestError, onRequestOutcome]);
     useEffect(() => {
@@ -78,7 +84,10 @@ export const LoadMore = forwardRef(function LoadMore({ descriptor, mode = loadMo
             onLoadMore: (nextRequest) => onLoadMoreRef.current(nextRequest),
         });
         const detach = controllerFacade.attach(attached);
+        requestGeneration.current += 1;
         return () => {
+            // The query remains product-owned; only this retired footer's callbacks stop.
+            requestGeneration.current += 1;
             detach();
             attached.dispose();
         };

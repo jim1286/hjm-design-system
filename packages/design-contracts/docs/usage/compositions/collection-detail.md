@@ -89,3 +89,5 @@ Native는 controlled Dialog open/onOpenChange를 쓴다.
 | 상세 호출 | Dialog의 canonical trigger in Card.actions | Card.actions Button과 controlled Dialog, 실제 OS 복귀 검수 별도 |
 | 보기 변경 | ResizeObserver와 input focus 노출 | ScrollView layout/content-size와 focus 노출, OS touch/VoiceOver 별도 |
 | 테마 | 같은 Provider 경로의 10 profiles | 같은 profiles/데이터, 플랫폼 표현 |
+
+2026-10-13 예제 검수: 같은 페이지의 두 컬렉션이 `collection-walk` 같은 입력 ID를 중복 사용해 두 번째 라벨이 첫 번째 입력을 가리키는 문제를 재현했다. Web 입력 ID는 TextField의 고유 ID에 맡기고, 데이터 `item.id`는 카드 상태를 보존하는 key로만 사용한다. 양 플랫폼의 카드/상세 초안 분리, 테마 변경, 닫기·재열기와 빈 목록 전환은 실제 예제로 확인한다. 이 구성에는 서버 요청·저장·실패 콜백이 없으므로 해당 검증을 했다고 보지 않는다. Native OS 초점 복귀는 호스트 모형 검사와 별도다.

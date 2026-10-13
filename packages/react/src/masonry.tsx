@@ -11,7 +11,8 @@ export function Masonry<T>({ items, keyExtractor, renderItem, getItemHeight, wid
   const layout = resolveMasonryLayout(items.map(item => getItemHeight(item, itemWidth)), width, columns, gap);
   // A named div without a role is not exposed with its name (ARIA prohibits aria-label on generic).
   // `group` keeps the collection name with the empty copy; `list` was rejected because the empty slot is not a listitem.
-  if (!items.length) return <div role="group" aria-label={label} style={layoutStyle}>{empty}</div>;
+  // The empty collection keeps its measured width and centers within host-allocated space.
+  if (!items.length) return <div role="group" aria-label={label} style={{ ...layoutStyle, width, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }}>{empty}</div>;
   return <div data-hjm-masonry role="list" aria-label={label} style={{ ...layoutStyle, position: "relative", width, height: layout.height }}>
     {items.map((item, index) => { const frame = layout.items[index]!; return <div role="listitem" key={keys[index]} style={{ position: "absolute", insetInlineStart: frame.left, top: frame.top, width: frame.width, height: frame.height }}>{renderItem(item, index)}</div>; })}
   </div>;

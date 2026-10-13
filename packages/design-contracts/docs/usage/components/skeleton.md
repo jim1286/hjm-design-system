@@ -90,7 +90,7 @@ import { Skeleton } from "@hjmds/react-native/feedback";
 
 - 실제 콘텐츠와 같은 자리·비슷한 크기로 둔다. 로딩이 끝나면 Skeleton을 내용으로 **바꾼다**(겹쳐 두지 않는다).
 - 색·테두리는 recipe와 테마가 정한다. 배치는 `layoutStyle`로 하고 `style`/`className`으로 회색 배경을 덮지 않는다.
-  Native `style`은 deprecated(개발 모드 경고, 다음 major 제거)다.
+  Native `style`은 제거된 속성이다.
 - Web Skeleton은 `aria-hidden`이다. 로딩 사실을 알려야 하면 영역 단위로 한 번 알린다
   (예: 감싼 영역의 `aria-busy`, 또는 Spinner 하나). Skeleton마다 라벨을 붙이지 않는다.
 - Web은 `HjmProvider` 안에서 렌더한다. 원 지름·펄스 값을 provider가 내보내는 `--hjm-skeleton-*` 변수로 읽는다.

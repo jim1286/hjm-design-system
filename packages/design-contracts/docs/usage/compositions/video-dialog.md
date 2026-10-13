@@ -5,7 +5,7 @@
 - 지원: Web · Native
 - 적용: 1.14.0
 - 검토일: 2026-10-07
-- 근거: `showcase/web/src/patterns/video-dialog-preview.tsx`, `showcase/native/src/video-dialog-preview.tsx`
+- 근거: `showcase/web/src/patterns/video-dialog-preview.tsx`, `showcase/native/src/video-dialog-preview.tsx`·`video-dialog-host.ts`(Expo 로딩 경계)
 - 스토리북: `배포/구성/정보 표시/영상 미리보기`
 
 승급: 2026-10-07 사용자 승인, [검토 결과](../../../../../docs/qa/2026-10-07-experiment-promotion-release.md). Storybook 분류이며 제품 적용 증거는 별도다.
@@ -49,17 +49,18 @@ Dialog: [제목                   닫기]
 1. 제품이 open과 입력 초안을 소유한다. 닫기 후 초안을 지우지 않는다.
 2. open일 때만 플레이어를 mount한다. 자동 재생하지 않고 사용자 행동으로 시작한다.
 3. 브라우저/Native 미디어 이벤트에서 재생·정지·실패를 읽는다. 요청 성공으로 재생을 추정하지 않는다.
-4. 실패 시 설명과 재시도를 유지한다. 재시도는 정상 source로 호스트를 새로 만들며 Web은 재생 버튼으로 초점을 옮긴다.
+4. 실패 시 설명과 재시도를 유지한다. Web에서 사라질 재생 컨트롤이 초점을 갖고 있으면 재시도로 옮기고, 닫기 버튼 등 다른 초점은 유지한다. 재시도는 정상 source로 호스트를 새로 만들며 Web은 새 재생 버튼으로 초점을 옮긴다.
 5. open=false 즉시 호스트를 unmount한다. 모달 퇴장 애니메이션이 끝날 때까지 기다리지 않는다.
 6. Web은 pause 후 src를 제거하고 load하여 자원을 해제한다. Native useVideoPlayer는 unmount 시 player를 release한다.
 7. 앱/문서가 비활성화되면 일시 정지한다. 복귀 시 자동 재생하지 않는다.
+8. Web `play()`가 준비 중이면 Button `loading`으로 같은 요청을 막으면서 키보드 초점을 유지한다. DOM `disabled`로 Enter 조작의 초점을 지우지 않는다. 재생 여부는 미디어 이벤트로 표시하고, 정지·오류·닫기 뒤 늦은 promise 결과는 반영하지 않는다.
 
 | 상태 | 모습 | 포커스·알림 |
 | --- | --- | --- |
 | 기본 | 열기 전 플레이어 없음, 메모 유지 | 열기 버튼 |
 | 진행 중 | 실제 이벤트에 따른 일시 정지와 상태 | 재생 상태 알림 |
 | 실패 | 설명·다시 시도, 원래 메모 유지 | 오류 알림, Web 재시도 후 재생 버튼 |
-| 호스트 없음 | Native 지원 모듈 누락 안내, 닫기 가능 | 제목과 안내 |
+| 호스트 없음 | Native 지원 모듈 누락 안내와 동등한 텍스트 설명, 닫기 가능 | 제목과 안내 |
 | 닫힘 | 영상 호스트 제거 | 열기 버튼으로 초점 복귀 |
 
 ## 코드 골격
@@ -98,3 +99,9 @@ Web은 HTML video controls와 playsInline을 사용한다. Native 예제는 Expo
 | 정리 | pause·src 제거·load | hook 소유 player 해제 |
 | 지원 누락 | 미디어 오류와 재시도 | 모듈 누락 안내 |
 | 설명 | 화면의 동등한 텍스트 | 화면의 동등한 텍스트 |
+
+2026-10-13 예제 검수에서 Web의 연속 재생 요청과 오류 시 초점 유실, Native 모듈 누락 시 텍스트 설명 누락을
+재현해 수정했다. Web은 Chromium·WebKit·Firefox에서 제어한 HTML 미디어 이벤트·promise·키보드 초점
+8개 행동과, 미디어 모형을 제거한 번들 MP4의 메타데이터·실제 재생 시간 증가·일시 정지·닫기 시 자원 해제를
+확인했다. Native 4개 행동은 Expo 호스트 모형의 이벤트·해제 연결을 확인한다. Native 기기의 코덱 재생,
+OS 미디어 동작, 네트워크 복구는 미실행이다.

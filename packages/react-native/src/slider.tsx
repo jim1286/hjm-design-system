@@ -1,3 +1,4 @@
+import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import {
   getSliderStepTarget,
   resolveSliderDescriptor,
@@ -17,13 +18,10 @@ import {
   Text as NativeText,
   View,
   type LayoutChangeEvent,
-  type StyleProp,
   type ViewProps,
-  type ViewStyle,
 } from "react-native";
 
 import type { HjmCompositionStyleProp } from "./composition-style.js";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useControllableState } from "./internal/state.js";
 import { logicalTextAlign, resolveNativeFontStyle, resolveNativeTextScaleProps } from "./internal/styles.js";
 import { useHjmNativeTheme } from "./provider.js";
@@ -65,16 +63,6 @@ export type SliderProps = NativeSliderViewProps &
     onLayout?: (event: LayoutChangeEvent) => void;
     /** Canonical layout-only placement for the complete slider. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Raw container style bypasses `sliderRecipe`. Use `layoutStyle` for placement.
-     * Removed in the next major (consumer-policy.md §3.1).
-     */
-    containerStyle?: StyleProp<ViewStyle>;
-    /**
-     * @deprecated Raw control style bypasses `sliderRecipe` (track, thumb and hit target).
-     * Removed in the next major (consumer-policy.md §3.1).
-     */
-    controlStyle?: StyleProp<ViewStyle>;
   }>;
 
 /** Dependency-free horizontal Slider using the Native responder system. */
@@ -95,19 +83,14 @@ export const Slider = forwardRef<View, SliderProps>(function Slider(
     onFocus,
     onBlur,
     onLayout,
-    containerStyle,
-    controlStyle,
     layoutStyle,
     ...viewProps
   },
   forwardedRef,
 ) {
+  assertNoRemovedStyleProps("Slider", viewProps, ["containerStyle", "controlStyle"]);
   const { colors, environment, textScaling, tokens } = useHjmNativeTheme();
-  warnDeprecatedStyleProps(
-    "Slider",
-    { containerStyle, controlStyle },
-    "layoutStyle for placement; sliderRecipe owns the track and thumb",
-  );
+
   const [currentValue, setCurrentValue] = useControllableState<number>({
     ...(value === undefined ? {} : { value }),
     defaultValue: defaultValue ?? min,
@@ -283,7 +266,6 @@ export const Slider = forwardRef<View, SliderProps>(function Slider(
           gap: sliderRecipe.header.trackGap,
           opacity: disabled ? sliderRecipe.states.disabledOpacity : 1,
         },
-        containerStyle,
         layoutStyle,
       ]}
     >
@@ -339,7 +321,6 @@ export const Slider = forwardRef<View, SliderProps>(function Slider(
             minHeight: recipe.hitTarget,
             minWidth: recipe.hitTarget,
           },
-          controlStyle,
         ]}
       >
         <View

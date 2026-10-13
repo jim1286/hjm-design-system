@@ -2,8 +2,9 @@ import { resolveDesignProfileScreen, type DesignProfileScreenPresentation } from
 import { MessageReactions } from "./internal/message-reactions.js";
 import type { ReactionPickerProps } from "./reaction-picker.js";
 import { Button, IconButton } from "./actions.js";
+import { useOptionalHjmTheme } from "./provider.js";
 import { TextArea } from "./forms.js";
-import { useId, useRef, useState, type Ref, type ReactNode } from "react";
+import { useId, useLayoutEffect, useRef, useState, type Ref, type ReactNode } from "react";
 import { isReplySwipe, timestampRevealOffset, shouldSubmitMessageKey, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
 import { Heading } from "./heading.js";
 import { Spinner } from "./internal/spinner.js";
@@ -50,6 +51,17 @@ export function ScreenLayout({ title, header, contentInset = "default", presenta
   // Replacement text owns scrolling even when the ready state delegates it to
   // a virtual list. Use the rendered mode for keyboard access as well as CSS.
   const bodyScroll = resolved.replacesContent ? "screen" : scroll;
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const lastBodyFocus = useRef<HTMLElement | null>(null);
+  useLayoutEffect(() => {
+    // Replacing a focused retry/input removes its DOM node. Keep keyboard users
+    // in the same content region without stealing focus moved to another control.
+    const previous = lastBodyFocus.current;
+    if (previous && !previous.isConnected && document.activeElement === document.body) {
+      bodyRef.current?.focus({ preventScroll: true });
+    }
+    if (previous && !previous.isConnected) lastBodyFocus.current = null;
+  });
   const recipe = screenPatternRecipe;
   return <Element aria-labelledby={header ? undefined : id} aria-label={header ? title : undefined} data-content-inset={contentInset} data-presentation={presentation} className={classNames("hjm-screen", className)}
     style={{ backgroundColor: designProfile?.material.canvas ? "transparent" : undefined, "--hjm-screen-width": `${profileLayout?.maxWidth ?? recipe.maxWidth}px`, "--hjm-screen-padding": `${contentInset === "none" ? 0 : recipe.padding}px`, "--hjm-screen-gap": `${profileLayout?.gap ?? recipe.sectionGap}px`, "--hjm-screen-item-gap": `${recipe.itemGap}px`, "--hjm-screen-state-gap": `${recipe.stateGap}px`, "--hjm-screen-header-min": `${recipe.headerMinWidth}px`, ...layoutStyle } as React.CSSProperties}>
@@ -59,7 +71,16 @@ export function ScreenLayout({ title, header, contentInset = "default", presenta
     </header>}
     {notice ? <div className="hjm-screen__notice">{notice}</div> : null}
     {/* Scrollable read-only screens still need a keyboard entry point. */}
-    <div tabIndex={bodyScroll === "content" ? undefined : 0} className="hjm-screen__body" data-scroll={bodyScroll} data-replacement={resolved.replacesContent || undefined} aria-busy={resolved.busy || undefined}>
+    <div ref={bodyRef} tabIndex={bodyScroll === "content" ? -1 : 0}
+      onFocusCapture={event => { lastBodyFocus.current = event.target as HTMLElement; }}
+      onBlurCapture={event => {
+        // A connected input blurred to the document intentionally relinquishes
+        // focus too; only removal of the currently focused node needs recovery.
+        if (event.relatedTarget ? !event.currentTarget.contains(event.relatedTarget as Node) : (event.target as HTMLElement).isConnected) {
+          lastBodyFocus.current = null;
+        }
+      }}
+      className="hjm-screen__body" data-scroll={bodyScroll} data-replacement={resolved.replacesContent || undefined} aria-busy={resolved.busy || undefined}>
       {state.kind === "ready" ? children : <div className="hjm-screen__state">
         {/* Loading copy is an accessible name; visible copy beside the spinner
             contradicts the shared spinner-only loading contract. */}
@@ -105,7 +126,8 @@ export function NotificationItem({ read, statusLabel, timestamp, description, ti
 export type ChatScreenProps = Omit<ScreenLayoutProps, "footer"> & Readonly<{ composer: ReactNode }>;
 /** Caller supplies a virtualized timeline and keyboard-aware composer; no implicit auto-scroll or send. */
 export function ChatScreen({ composer, scroll = "content", ...props }: ChatScreenProps) {
-  return <ScreenLayout {...props} scroll={scroll} footer={!props.state || props.state.kind === "ready" ? composer : null} />;
+  // An empty conversation must still allow its first message; unavailable states hide input.
+  return <ScreenLayout {...props} scroll={scroll} footer={!props.state || props.state.kind === "ready" || props.state.kind === "empty" ? composer : null} />;
 }
 
 export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCount"> & Readonly<{
@@ -155,19 +177,21 @@ export type ChatMessageProps = ChatMessageDescriptor & Readonly<{ children: Reac
   /** Canonical layout-only placement on the message row. The swipe offset still owns `transform`. */
   layoutStyle?: HjmCompositionStyleProp }>;
 export function ChatMessage({ direction, author, timestamp, timestampPresentation = "always", bubbleTail = false, deliveryLabel, avatar, reply, actions, replyAction, replyLink, reactions, children, interactiveContent=false, layoutStyle }: ChatMessageProps) {
+  const theme = useOptionalHjmTheme();
   const revealTime = timestampPresentation === "swipe" && !!timestamp;
-  const start = useRef<{x:number;y:number} | null>(null);
+  // Only the pointer that began a drag can finish it; another touch must not reply or cancel it.
+  const start = useRef<{x:number;y:number;pointerId:number} | null>(null);
   const [offset, setOffset] = useState(0);
   const finish = () => { start.current = null; setOffset(0); };
   return <article tabIndex={replyAction && !replyAction.disabled ? 0 : undefined}
     aria-keyshortcuts={replyAction ? "Alt+ArrowLeft Alt+ArrowRight" : undefined} aria-description={replyAction?.label}
     onKeyDown={event => { if (event.target === event.currentTarget && event.altKey && (event.key === "ArrowLeft" || event.key === "ArrowRight") && replyAction && !replyAction.disabled) { event.preventDefault(); replyAction.onPress(); } }}
-    onPointerDown={event => { if ((!revealTime && (!replyAction || replyAction.disabled)) || event.button !== 0 || (event.target as HTMLElement).closest("button,a,input,textarea")) return; start.current = {x:event.clientX,y:event.clientY}; }}
-    onPointerMove={event => { if (!start.current) return; const dx=event.clientX-start.current.x,dy=event.clientY-start.current.y; if (Math.abs(dy)>10 && Math.abs(dy)>Math.abs(dx)) {finish();return;} if (revealTime) setOffset((direction === "outgoing" ? -1 : 1) * timestampRevealOffset(direction === "outgoing" ? -dx : dx,dy)); else if (Math.abs(dx)>Math.abs(dy)*2) setOffset(Math.max(-72,Math.min(72,dx))); }}
-    onPointerUp={event => { if (!revealTime && start.current && replyAction && !replyAction.disabled && isReplySwipe(event.clientX-start.current.x,event.clientY-start.current.y)) replyAction.onPress(); finish(); }} onPointerCancel={finish} onPointerLeave={finish}
+    onPointerDown={event => { if (start.current || (!revealTime && (!replyAction || replyAction.disabled)) || event.button !== 0 || (event.target as HTMLElement).closest("button,a,input,textarea")) return; start.current = {x:event.clientX,y:event.clientY,pointerId:event.pointerId}; }}
+    onPointerMove={event => { if (!start.current || start.current.pointerId !== event.pointerId) return; const dx=event.clientX-start.current.x,dy=event.clientY-start.current.y; if (Math.abs(dy)>10 && Math.abs(dy)>Math.abs(dx)) {finish();return;} if (revealTime) setOffset((direction === "outgoing" ? -1 : 1) * timestampRevealOffset(direction === "outgoing" ? -dx : dx,dy)); else if (Math.abs(dx)>Math.abs(dy)*2) setOffset(Math.max(-72,Math.min(72,dx))); }}
+    onPointerUp={event => { if (start.current?.pointerId !== event.pointerId) return; if (!revealTime && start.current && replyAction && !replyAction.disabled && isReplySwipe(event.clientX-start.current.x,event.clientY-start.current.y)) replyAction.onPress(); finish(); }} onPointerCancel={event => { if (start.current?.pointerId === event.pointerId) finish(); }} onPointerLeave={event => { if (start.current?.pointerId === event.pointerId) finish(); }}
     style={{ ...layoutStyle, position: "relative", overflow: "hidden", paddingInline: bubbleTail ? "var(--hjm-space-xs)" : undefined, touchAction: revealTime || replyAction ? "pan-y" : undefined }} aria-label={author}>
     {revealTime ? <time style={{ position: "absolute", ...(direction === "outgoing" ? { right: 0, justifyContent: "flex-end" } : { left: 0 }), top: 0, bottom: 0, width: 80, display: "flex", alignItems: "center", opacity: offset !== 0 ? 1 : 0, pointerEvents: "none" }}><Text variant="caption" tone="muted">{timestamp}</Text></time> : null}
-    <div className="hjm-chat-message" style={{ transform: `translateX(${offset}px)`, "--hjm-message-max-width": screenPatternRecipe.messageMaxWidth } as React.CSSProperties} data-direction={direction} data-tail={bubbleTail || undefined}>
+    <div className="hjm-chat-message" style={{ transform: `translateX(${offset}px)`, transition: start.current || theme?.environment.reducedMotion ? "none" : "transform var(--hjm-motion-normal, 200ms) ease-out", "--hjm-message-max-width": screenPatternRecipe.messageMaxWidth } as React.CSSProperties} data-direction={direction} data-tail={bubbleTail || undefined}>
     {avatar ? <div className="hjm-chat-message__avatar">{avatar}</div> : null}
     <div className="hjm-chat-message__content">{author?<Text variant="caption" tone="muted">{author}</Text>:null}
       {reply && replyLink ? <Button tone="ghost" aria-label={replyLink.label} onClick={replyLink.onPress}>{reply}</Button> : null}

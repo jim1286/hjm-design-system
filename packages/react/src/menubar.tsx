@@ -5,7 +5,7 @@ import {
   validateMenubarDescriptor,
   type MenubarDescriptor,
 } from "@hjmds/design-contracts/components/menubar";
-import { useCallback, useEffect, useId, useMemo, useRef, useState, type CSSProperties, type RefObject } from "react";
+import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type RefObject } from "react";
 import { classNames, useControllableState } from "./internal.js";
 import { AnchoredPortal, useAnchoredPopup } from "./portal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
@@ -43,8 +43,26 @@ export function Menubar<Key extends string = string, MenuKey extends string = st
   const [activeItemIndex, setActiveItemIndex] = useState(0);
   const rootRef = useRef<HTMLDivElement>(null);
   const labelRefs = useRef(new Map<MenuKey, HTMLButtonElement>());
-  const openMenu = descriptor.menus.find((menu) => menu.id === openId) ?? null;
+  const focusedNode = useRef<HTMLButtonElement | null>(null);
+  const previousMenuIds = useRef(descriptor.menus.map(menu => menu.id));
+  const fallbackIndex = Math.min(Math.max(0, previousMenuIds.current.indexOf(focusedId)), Math.max(0, enabledMenus.length - 1));
+  const resolvedFocusedId = enabledMenus.some(menu => menu.id === focusedId) ? focusedId : enabledMenus[fallbackIndex]?.id;
+  const openMenu = descriptor.menus.find((menu) => menu.id === openId && !menu.disabled) ?? null;
+  const effectiveOpenId = openMenu?.id ?? null;
   const openItems = openMenu?.items.filter((item) => item.disabled !== true) ?? [];
+  const resolvedItemIndex = Math.min(activeItemIndex, Math.max(0, openItems.length - 1));
+  useLayoutEffect(() => {
+    previousMenuIds.current = descriptor.menus.map(menu => menu.id);
+    if (resolvedFocusedId !== focusedId) {
+      if (resolvedFocusedId !== undefined) setFocusedId(resolvedFocusedId);
+      // Removing/disabling the focused label must leave a usable keyboard origin.
+      if (focusedNode.current && (document.activeElement === document.body || document.activeElement === focusedNode.current)) {
+        (resolvedFocusedId === undefined ? rootRef.current : labelRefs.current.get(resolvedFocusedId))?.focus();
+      }
+    }
+    if (openId !== null && effectiveOpenId === null) setOpenId(null);
+    if (resolvedItemIndex !== activeItemIndex) setActiveItemIndex(resolvedItemIndex);
+  }, [descriptor.menus, resolvedFocusedId, focusedId, openId, effectiveOpenId, setOpenId, resolvedItemIndex, activeItemIndex]);
   // The panel was absolute inside the bar, so any overflow ancestor clipped it
   // (2026-09-30 audit WR-0930-4: at 1100px an item could not be hit). It now uses
   // the same portal + fixed positioning as Menu; focus stays on the bar label.
@@ -72,17 +90,18 @@ export function Menubar<Key extends string = string, MenuKey extends string = st
     labelRefs.current.get(id)?.focus();
   };
   const move = (direction: "next" | "previous") => {
-    const next = resolveMenubarNavigation(descriptor, focusedId, direction);
+    const next = resolveMenubarNavigation(descriptor, resolvedFocusedId ?? focusedId, direction);
     focusLabel(next);
     // Left/right while a menu is open moves to the neighbour already open, which
     // is the whole reason this is a bar and not three independent Menus.
-    if (openId !== null) { setOpenId(next); setActiveItemIndex(0); }
+    if (effectiveOpenId !== null) { setOpenId(next); setActiveItemIndex(0); }
   };
 
   return (
     <div
       ref={rootRef}
       role="menubar"
+      tabIndex={enabledMenus.length === 0 ? 0 : undefined}
       aria-label={descriptor.accessibilityLabel}
       className={classNames("hjm-menubar", className)}
       style={{ ...layoutStyle,
@@ -94,24 +113,26 @@ export function Menubar<Key extends string = string, MenuKey extends string = st
         "--hjm-menubar-label-radius": `var(--hjm-radius-sm, ${menubarRecipe.label.radius}px)`,
       } as CSSProperties}
       onKeyDown={(event) => {
-        if (event.key === "ArrowRight") { event.preventDefault(); move("next"); return; }
-        if (event.key === "ArrowLeft") { event.preventDefault(); move("previous"); return; }
+        if (resolvedFocusedId === undefined) return;
+        const rtl = getComputedStyle(event.currentTarget).direction === "rtl";
+        if (event.key === "ArrowRight") { event.preventDefault(); move(rtl ? "previous" : "next"); return; }
+        if (event.key === "ArrowLeft") { event.preventDefault(); move(rtl ? "next" : "previous"); return; }
         if (event.key === "Home" || event.key === "End") {
           event.preventDefault();
           const target = (event.key === "Home" ? enabledMenus[0] : enabledMenus.at(-1))?.id;
-          if (target !== undefined) { focusLabel(target); if (openId !== null) { setOpenId(target); setActiveItemIndex(0); } }
+          if (target !== undefined) { focusLabel(target); if (effectiveOpenId !== null) { setOpenId(target); setActiveItemIndex(0); } }
           return;
         }
-        if (event.key === "Escape" && openId !== null) {
+        if (event.key === "Escape" && effectiveOpenId !== null) {
           event.preventDefault();
           setOpenId(null);
-          focusLabel(focusedId);
+          focusLabel(resolvedFocusedId);
           return;
         }
-        if (openId === null) {
+        if (effectiveOpenId === null) {
           if (event.key === "ArrowDown" || event.key === "Enter" || event.key === " ") {
             event.preventDefault();
-            setOpenId(focusedId);
+            setOpenId(resolvedFocusedId);
             setActiveItemIndex(0);
           }
           return;
@@ -126,18 +147,18 @@ export function Menubar<Key extends string = string, MenuKey extends string = st
         }
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
-          const item = openItems[activeItemIndex];
+          const item = openItems[resolvedItemIndex];
           if (item) {
-            onAction(item.id as Key, openId);
+            onAction(item.id as Key, effectiveOpenId);
             // Activation runs an action and leaves nothing selected — unlike Tabs.
             setOpenId(null);
-            focusLabel(openId);
+            focusLabel(effectiveOpenId);
           }
         }
       }}
     >
       {descriptor.menus.map((menu) => {
-        const open = menu.id === openId;
+        const open = menu.id === effectiveOpenId;
         return (
           <div key={menu.id} className="hjm-menubar__menu">
             <button
@@ -148,7 +169,8 @@ export function Menubar<Key extends string = string, MenuKey extends string = st
               aria-expanded={open}
               aria-controls={open ? panelId : undefined}
               disabled={menu.disabled}
-              tabIndex={menu.id === focusedId ? 0 : -1}
+              tabIndex={menu.id === resolvedFocusedId ? 0 : -1}
+              onFocus={(event) => { focusedNode.current = event.currentTarget; setFocusedId(menu.id); }}
               data-open={open || undefined}
               className="hjm-menubar__label"
               onClick={() => {
@@ -159,7 +181,7 @@ export function Menubar<Key extends string = string, MenuKey extends string = st
               onMouseEnter={() => {
                 // Once one menu is open, hovering the bar switches menus — the
                 // desktop convention; with nothing open, hover opens nothing.
-                if (openId !== null && menu.disabled !== true) { setOpenId(menu.id); setFocusedId(menu.id); setActiveItemIndex(0); }
+                if (effectiveOpenId !== null && menu.disabled !== true) { setOpenId(menu.id); setFocusedId(menu.id); setActiveItemIndex(0); }
               }}
             >
               {menu.label}
@@ -176,7 +198,7 @@ export function Menubar<Key extends string = string, MenuKey extends string = st
                       key={item.id}
                       role="menuitem"
                       aria-disabled={item.disabled || undefined}
-                      data-active={index === activeItemIndex && item.disabled !== true ? "" : undefined}
+                      data-active={index === resolvedItemIndex && item.disabled !== true ? "" : undefined}
                       data-tone={item.tone}
                       className="hjm-menubar__item"
                       onMouseMove={() => { if (index >= 0) setActiveItemIndex(index); }}

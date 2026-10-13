@@ -84,7 +84,7 @@ import { Chip } from "@hjmds/react-native/inputs";
 
 - `label`은 i18n 키로 넣는다. Native는 `string`만 받고, 다른 읽기 이름이 필요하면 `accessibilityLabel`을 준다.
 - `single` 줄은 제품이 하나만 `selected`가 되도록 관리한다. Chip이 형제를 해제하지 않는다.
-- 색·테두리를 덮지 않는다. 배치는 두 renderer 모두 `layoutStyle`로 한다. Native `labelStyle`은 deprecated —
+- 색·테두리를 덮지 않는다. 배치는 두 renderer 모두 `layoutStyle`로 한다. Native `labelStyle`은 제거된 속성 —
   `size`·`selected`로 글자 모양을 정한다([이관 문서](../../migration-native-legacy-removal.md)).
 
 ## 플랫폼 차이
@@ -97,7 +97,7 @@ import { Chip } from "@hjmds/react-native/inputs";
 | `label` 타입 | `ReactNode` | `string` |
 | 배치 | `layoutStyle` | `layoutStyle`, 슬롯별 `leadingStyle`·`indicatorStyle`·`trailingStyle`(배치 key만) |
 | 선택 표시 위치 | 표시 → leading → 라벨 | leading → 표시 → 라벨 |
-| 높이 | `min-block-size` | `minHeight`(미게시(1.13.1 이후). 1.13.0 이하는 고정 `height`) |
+| 높이 | `min-block-size` | `minHeight`(1.13.1 변경. 1.13.0 이하는 고정 `height`) |
 
 ## 함정
 

@@ -72,3 +72,22 @@ it("consumes reduced-motion events once even under Strict Mode and rerenders", a
   await render(<Celebration eventId="two" onComplete={complete} />);
   expect(complete).toHaveBeenCalledTimes(2);
 });
+
+it("pages a counter carousel without giving inactive pictures focus", async () => {
+  function Album() {
+    const [key, setKey] = useState("a");
+    return <CarouselMotion slides={items} currentKey={key} onCurrentKeyChange={setKey} navigation="counter"
+      label="Photos" previousLabel="Previous photo" nextLabel="Next photo" renderSlide={item => <button>{item.label}</button>} />;
+  }
+  await render(<Album />);
+  const previous = host.querySelector<HTMLButtonElement>('button[aria-label="Previous photo"]')!;
+  const next = host.querySelector<HTMLButtonElement>('button[aria-label="Next photo"]')!;
+  expect(previous.disabled).toBe(true);
+  expect(host.textContent).toContain("1/2");
+  await act(() => next.click());
+  expect(host.textContent).toContain("2/2");
+  expect(next.disabled).toBe(true);
+  expect(host.querySelector('[aria-label="Alpha"]')?.hasAttribute("inert")).toBe(true);
+  await act(() => previous.click());
+  expect(previous.disabled).toBe(true);
+});

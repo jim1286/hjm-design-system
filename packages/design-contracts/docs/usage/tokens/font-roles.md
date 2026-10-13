@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.16.0
-- 검토일: 2026-10-08
+- 검토일: 2026-10-13
 - 근거: [서체 역할 계약](../../font-roles.md), `src/foundations.ts`, `src/design-profile.ts`, 양 renderer Text/Heading/Provider
 - 스토리북: `배포/토큰/색과 글자/표시·읽기·기술 글자`
 
@@ -73,7 +73,7 @@ const design = defineHjmDesignProfile({ extends: "paper", tokens: { fontFamily: 
 - 같은 역할을 앱마다 또 다른 Provider/전역 CSS 엔진으로 구현하지 않는다. 설정·자산·로딩은 앱이 관리한다.
 - 글꼴 전환 시 입력 또는 열린 상세를 key로 다시 마운트하지 않는다. 상태는 기존 구성/제품이 소유한다.
 
-### 조작 라벨과 읽기 본문의 구분 — 미게시
+### 조작 라벨과 읽기 본문의 구분
 
 2026-10-07 소비 감사에서 Native 조작 라벨 24곳이 body/bodyLarge 크기를 사용하면서 읽기 서체로 해석됐다.
 Button의 내부 라벨·제공자 버튼·ToggleGroup·선택 컨트롤·Switch·SegmentedControl·Chip·Tabs·Menu·Select·

@@ -1,25 +1,25 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
+import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { resolveAvatarInitials } from "@hjmds/design-contracts/avatar-fallback";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { fontWeight, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
 import { resolveDescriptionListColumnCount, resolveDescriptionListDescriptor, } from "@hjmds/design-contracts/components/description-list";
 import { resolveStatisticDescriptor, validateStatisticGroup, } from "@hjmds/design-contracts/components/statistic";
 import { resolveTagDescriptor, resolveTagPresentation, tagRecipe, } from "@hjmds/design-contracts/components/tag";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { cardRecipe } from "@hjmds/design-contracts/components/card";
 import { imageRecipe, nativeResizeModes, resolveImageAspectRatio, resolveImageDescriptor, resolveImageFallbackAccessibilityLabel, } from "@hjmds/design-contracts/components/image";
 import { resolveTimelineDescriptor, timelineRecipe, } from "@hjmds/design-contracts/components/timeline";
 import { surfaceDefaults, surfaceGeometry } from "@hjmds/design-contracts/recipes/base";
 import { accordionRecipe, counterBadgeRecipe, badgeRecipe, listRecipe, formatCounterBadgeCount, listRowRecipe, statisticRecipe, } from "@hjmds/design-contracts/recipes";
-import { Children, isValidElement, useEffect, useMemo, useRef, useState, } from "react";
+import { Children, isValidElement, useEffect, useLayoutEffect, useMemo, useRef, useState, } from "react";
 import { Image as NativeImage, LayoutAnimation, Pressable, StyleSheet, View, useWindowDimensions, } from "react-native";
 import { useControllableState } from "./internal/state.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 import { webDisclosureProps, webOnly } from "./internal/web-a11y.js";
 import { Surface, Text, } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
-export function Badge({ label, tone = badgeRecipe.defaults.tone, size = badgeRecipe.defaults.size, variant = badgeRecipe.defaults.variant, leading, accessibilityLabel, style, labelStyle, layoutStyle, ...props }) {
-    warnDeprecatedStyleProps("Badge", { style, labelStyle }, "layoutStyle for placement and tone/size/variant for appearance");
+export function Badge({ label, tone = badgeRecipe.defaults.tone, size = badgeRecipe.defaults.size, variant = badgeRecipe.defaults.variant, leading, accessibilityLabel, layoutStyle, ...props }) {
+    assertNoRemovedStyleProps("Badge", props, ["style", "labelStyle"]);
     const theme = useHjmNativeTheme();
     const presentation = badgeRecipe.tones[tone];
     const metrics = badgeRecipe.sizes[size];
@@ -49,17 +49,15 @@ export function Badge({ label, tone = badgeRecipe.defaults.tone, size = badgeRec
                 minHeight: metrics.minHeight,
                 paddingHorizontal: metrics.paddingHorizontal,
             },
-            style,
             layoutStyle,
         ], children: [leading === undefined ? null : (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", children: leading })), _jsx(Text, { accessible: false, align: "center", emphasis: "strong", style: [
                     {
                         color: resolveColorReference(outlined ? presentation.outlineContent : presentation.content, theme.palette),
                     },
-                    labelStyle,
                 ], variant: metrics.textVariant, children: label })] }));
 }
-export function Tag({ children, tone, accessibilityLabel, layoutStyle, style, labelStyle, ...props }) {
-    warnDeprecatedStyleProps("Tag", { style, labelStyle }, "layoutStyle for placement and tone for appearance");
+export function Tag({ children, tone, accessibilityLabel, layoutStyle, ...props }) {
+    assertNoRemovedStyleProps("Tag", props, ["style", "labelStyle"]);
     const theme = useHjmNativeTheme();
     const resolvedLabel = children;
     if (resolvedLabel === undefined) {
@@ -84,9 +82,8 @@ export function Tag({ children, tone, accessibilityLabel, layoutStyle, style, la
                 minHeight: tagRecipe.size.minHeight,
                 paddingHorizontal: tagRecipe.size.paddingHorizontal,
             },
-            style,
             layoutStyle,
-        ], children: _jsx(Text, { align: "center", emphasis: "medium", style: [{ color: presentation.content }, labelStyle], variant: tagRecipe.size.textVariant, children: descriptor.label }) }));
+        ], children: _jsx(Text, { align: "center", emphasis: "medium", style: [{ color: presentation.content }], variant: tagRecipe.size.textVariant, children: descriptor.label }) }));
 }
 export function Card({ children, title, description, leading, media, actions, selected = cardRecipe.defaults.selected, onActivate, disabled = false, accessibilityLabel, accessibilityHint, tone = cardRecipe.defaults.tone, bordered = cardRecipe.defaults.bordered, padding = cardRecipe.defaults.padding, layoutStyle, radius: cornerRadius = surfaceDefaults.radius, ...props }) {
     const { environment, tokens } = useHjmNativeTheme();
@@ -120,9 +117,9 @@ export function Card({ children, title, description, leading, media, actions, se
                 opacity: disabled ? cardRecipe.interaction.disabledOpacity : pressed ? cardRecipe.interaction.pressedOpacity : 1,
             }, layoutStyle], children: frame });
 }
-export function ListRow({ title, description, leading, trailing, titleMetadata, trailingAction, trailingText, metadataLabel, trailingLabel, onPress, accessibilityLabel, accessibilityHint, disabled = false, density = listRowRecipe.defaults.density, selected: selectedProp, leadingShape = "square", layoutStyle, leadingStyle, contentStyle, titleStyle, titleRowStyle, descriptionStyle, trailingStyle, trailingActionStyle, containerProps, accessibilityState, ...forwarded }) {
+export function ListRow({ title, tone = listRowRecipe.defaults.tone, description, leading, trailing, titleMetadata, trailingAction, trailingText, metadataLabel, trailingLabel, onPress, accessibilityLabel, accessibilityHint, disabled = false, density = listRowRecipe.defaults.density, loading = false, loadingLabel, selected: selectedProp, leadingShape = "square", layoutStyle, leadingStyle, contentStyle, titleRowStyle, trailingStyle, trailingActionStyle, containerProps, accessibilityState, ...forwarded }) {
+    assertNoRemovedStyleProps("ListRow", forwarded, ["titleStyle", "descriptionStyle"]);
     const { hjmTitleEmphasis, ...props } = forwarded;
-    warnDeprecatedStyleProps("ListRow", { titleStyle, descriptionStyle }, "density/selected and the listRowRecipe typography for appearance");
     const theme = useHjmNativeTheme();
     const metrics = listRowRecipe.density[density];
     const interactive = onPress !== undefined;
@@ -155,6 +152,15 @@ export function ListRow({ title, description, leading, trailing, titleMetadata, 
         width: listRowRecipe.leadingSize,
         ...(leadingRadius === null ? {} : { borderRadius: theme.tokens.radius[leadingRadius] }),
     };
+    if (loading) {
+        // Search and other collections share ListRow geometry instead of approximating it with
+        // loose Skeletons. Never mount placeholder actions or forward touch handlers while loading.
+        const placeholder = { backgroundColor: theme.colors.surfaceAlt, borderRadius: theme.tokens.radius.sm };
+        return _jsxs(View, { testID: props.testID, onLayout: props.onLayout, accessible: Boolean(loadingLabel), accessibilityRole: "progressbar", accessibilityLabel: loadingLabel, accessibilityState: { busy: true }, importantForAccessibility: loadingLabel ? "yes" : "no-hide-descendants", style: [{ alignItems: "center", flexDirection: "row", direction: theme.environment.direction,
+                    gap: listRowRecipe.gap, minHeight: visualState.minHeight,
+                    paddingHorizontal: metrics.paddingHorizontal, paddingVertical: metrics.paddingVertical,
+                    borderWidth: 1, borderColor: "transparent" }, layoutStyle], children: [leading ? _jsx(View, { style: [placeholder, leadingFrameStyle] }) : null, _jsxs(View, { style: { flex: 1, minWidth: 0, gap: spacing.xxs }, children: [_jsx(View, { style: [placeholder, { width: `${listRowRecipe.loading.titleWidthPercent}%`, height: theme.tokens.typography[listRowRecipe.title.textVariant].lineHeight }] }), description ? _jsx(View, { style: [placeholder, { width: `${listRowRecipe.loading.descriptionWidthPercent}%`, height: theme.tokens.typography[listRowRecipe.description.textVariant].lineHeight }] }) : null] }), trailing || trailingText ? _jsx(View, { style: [placeholder, { width: listRowRecipe.loading.trailingWidth, height: theme.tokens.typography[listRowRecipe.trailing.textVariant].lineHeight }] }) : null] });
+    }
     const rowContent = (_jsxs(_Fragment, { children: [leading ? (_jsx(View, { accessible: interactive ? false : undefined, importantForAccessibility: interactive ? "no-hide-descendants" : "auto", style: [leadingFrameStyle, leadingStyle], children: leading })) : null, _jsxs(View, { style: [{ flex: 1, gap: spacing.xxs, minWidth: 0 }, contentStyle], children: [_jsxs(View, { style: [
                             {
                                 alignItems: "center",
@@ -166,14 +172,12 @@ export function ListRow({ title, description, leading, trailing, titleMetadata, 
                             titleRowStyle,
                         ], children: [_jsx(Text, { style: [
                                     {
-                                        color: resolveColorReference(listRowRecipe.title.color, theme.palette),
+                                        color: resolveColorReference(listRowRecipe.tones[tone].titleColor, theme.palette),
                                         flexShrink: 1,
                                         fontWeight: hjmTitleEmphasis === "regular" ? fontWeight.regular : listRowRecipe.title.fontWeight,
                                     },
-                                    titleStyle,
                                 ], variant: listRowRecipe.title.textVariant, children: title }), resolvedMetadata === undefined ? null : (_jsx(View, { accessible: interactive ? false : undefined, importantForAccessibility: interactive ? "no-hide-descendants" : "auto", children: resolvedMetadata }))] }), description ? (_jsx(Text, { style: [
                             { color: resolveColorReference(listRowRecipe.description.color, theme.palette) },
-                            descriptionStyle,
                         ], variant: listRowRecipe.description.textVariant, children: description })) : null] }), trailingText || trailing ? (_jsx(View, { accessible: interactive ? false : undefined, importantForAccessibility: interactive ? "no-hide-descendants" : "auto", style: [{ flexShrink: 0 }, trailingStyle], children: trailingText ? (_jsx(Text, { style: { color: resolveColorReference(listRowRecipe.trailing.textColor, theme.palette) }, variant: listRowRecipe.trailing.textVariant, children: trailingText })) : trailing })) : null] }));
     const contentStyleFor = (pressed) => [
         minimumTargetStyle,
@@ -223,10 +227,9 @@ export function ListRow({ title, description, leading, trailing, titleMetadata, 
                     trailingActionStyle,
                 ], children: trailingAction })] }));
 }
-export function Avatar({ source, renderImage, name, initials, renderFallback, size = 44, decorative = false, accessibilityLabel, style, imageStyle, layoutStyle, }) {
+export function Avatar({ source, renderImage, name, initials, renderFallback, size = 44, decorative = false, accessibilityLabel, layoutStyle, }) {
     if (!Number.isFinite(size) || size < 24)
         throw new RangeError("Avatar size must be at least 24");
-    warnDeprecatedStyleProps("Avatar", { style, imageStyle }, "layoutStyle for placement and size/renderFallback for appearance");
     const { colors } = useHjmNativeTheme();
     const sourceKey = source === undefined ? "none" : resolveImageSourceKey(source);
     const [failedSource, setFailedSource] = useState(null);
@@ -259,55 +262,55 @@ export function Avatar({ source, renderImage, name, initials, renderFallback, si
                 overflow: "hidden",
                 width: size,
             },
-            style,
             layoutStyle,
         ], children: source !== undefined && !failed ? (renderImage ? (_jsx(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { height: size, width: size }, children: renderImage({ source, size, onError: failImage,
-                fallback: renderFallback?.({ size, decorative: true }) ?? _jsx(Text, { align: "center", style: { color: colors.contentBrand }, variant: "label", children: fallback }) }) })) : (_jsx(NativeImage, { accessible: false, onError: failImage, source: source, style: [{ height: size, width: size }, imageStyle] }))) : (_jsx(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", children: renderFallback?.({ size, decorative: true }) ?? _jsx(Text, { align: "center", style: { color: colors.contentBrand }, variant: "label", children: fallback }) })) }));
+                fallback: renderFallback?.({ size, decorative: true }) ?? _jsx(Text, { align: "center", style: { color: colors.contentBrand }, variant: "label", children: fallback }) }) })) : (_jsx(NativeImage, { accessible: false, onError: failImage, source: source, style: [{ height: size, width: size }] }))) : (_jsx(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", children: renderFallback?.({ size, decorative: true }) ?? _jsx(Text, { align: "center", style: { color: colors.contentBrand }, variant: "label", children: fallback }) })) }));
 }
-export function Divider({ orientation = "horizontal", inset = 0, style, layoutStyle }) {
+export function Divider({ orientation = "horizontal", inset = 0, layoutStyle }) {
     if (!Number.isFinite(inset) || inset < 0)
         throw new RangeError("Divider inset must be non-negative");
-    warnDeprecatedStyleProps("Divider", { style }, "layoutStyle for placement and orientation/inset for appearance");
     const { colors } = useHjmNativeTheme();
     return (_jsx(View, { accessible: false, style: [
             orientation === "horizontal"
                 ? { backgroundColor: colors.border, height: 1, marginHorizontal: inset, width: "auto" }
                 : { alignSelf: "stretch", backgroundColor: colors.border, marginVertical: inset, width: 1 },
-            style,
             layoutStyle,
         ] }));
 }
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
-export function Accordion({ label, items, expandedValues, defaultExpandedValues = [], onExpandedValuesChange, multiple = accordionRecipe.defaults.allowsMultipleExpanded, density = accordionRecipe.defaults.density, renderIndicator, style, itemStyle, triggerStyle, titleStyle, indicatorStyle, panelStyle, layoutStyle, }) {
-    warnDeprecatedStyleProps("Accordion", { style, itemStyle, triggerStyle, titleStyle, indicatorStyle, panelStyle }, "layoutStyle for placement and density/renderIndicator for appearance");
+export function Accordion({ label, items, expandedValues, defaultExpandedValues = [], onExpandedValuesChange, multiple = accordionRecipe.defaults.allowsMultipleExpanded, density = accordionRecipe.defaults.density, renderIndicator, layoutStyle, }) {
     if (items.length === 0)
         throw new Error("Accordion requires at least one item");
     const itemValues = new Set(items.map((item) => item.value));
     if (itemValues.size !== items.length)
         throw new TypeError("Accordion values must be unique");
-    const initial = expandedValues ?? defaultExpandedValues;
-    if (initial.some((value) => !itemValues.has(value))) {
-        throw new RangeError("Accordion expanded values must match items");
-    }
-    if (!multiple && initial.length > 1) {
-        throw new RangeError("Accordion only accepts one expanded value unless multiple is true");
-    }
     const theme = useHjmNativeTheme();
     const metrics = accordionRecipe.density[density];
     const indicatorColor = resolveColorReference(accordionRecipe.indicator.color, theme.palette);
-    const [expanded, setExpanded] = useControllableState({
+    const [storedExpanded, setExpanded] = useControllableState({
         ...(expandedValues === undefined ? {} : { value: expandedValues }),
         defaultValue: defaultExpandedValues,
         ...(onExpandedValuesChange === undefined ? {} : { onChange: onExpandedValuesChange }),
     });
-    return (_jsx(View, { accessibilityLabel: label, accessibilityRole: "list", style: [style, layoutStyle], children: items.map((item) => {
+    const committed = useRef(false);
+    const expanded = expandedValues === undefined && committed.current ? storedExpanded.filter(value => itemValues.has(value)) : storedExpanded;
+    if (expanded.some(value => !itemValues.has(value)))
+        throw new RangeError("Accordion expanded values must match items");
+    if (!multiple && expanded.length > 1)
+        throw new RangeError("Accordion only accepts one expanded value unless multiple is true");
+    useLayoutEffect(() => {
+        committed.current = true;
+        // Retire expansion with the deleted item instead of reopening it when its key returns.
+        if (expanded.length !== storedExpanded.length)
+            setExpanded(expanded);
+    }, [expanded, storedExpanded, setExpanded]);
+    return (_jsx(View, { accessibilityLabel: label, accessibilityRole: "list", style: [layoutStyle], children: items.map((item) => {
             const isExpanded = expanded.includes(item.value);
             return (_jsxs(View, { style: [
                     {
                         borderBottomColor: resolveColorReference(accordionRecipe.divider, theme.palette),
                         borderBottomWidth: 1,
                     },
-                    itemStyle,
                 ], children: [_jsxs(Pressable, { accessibilityHint: item.accessibilityHint, accessibilityLabel: item.accessibilityLabel ?? item.title, accessibilityRole: "button", accessibilityState: { disabled: item.disabled === true, expanded: isExpanded }, ...webOnly(webDisclosureProps(isExpanded, item.disabled === true)), disabled: item.disabled, onPress: () => {
                             if (!theme.environment.reducedMotion) {
                                 LayoutAnimation.configureNext({
@@ -338,14 +341,12 @@ export function Accordion({ label, items, expandedValues, defaultExpandedValues 
                                 paddingHorizontal: accordionRecipe.paddingHorizontal,
                                 paddingVertical: metrics.paddingVertical,
                             },
-                            triggerStyle,
                         ], children: [_jsxs(View, { style: { flex: 1, gap: spacing.xxs }, children: [_jsx(Text, { fontRole: "ui", style: [
                                             {
                                                 color: resolveColorReference(accordionRecipe.title.color, theme.palette),
                                                 fontWeight: accordionRecipe.title.fontWeight,
                                             },
-                                            titleStyle,
-                                        ], variant: accordionRecipe.title.textVariant, children: item.title }), item.description ? _jsx(Text, { tone: "muted", variant: "caption", children: item.description }) : null] }), _jsx(View, { accessible: false, style: indicatorStyle, children: renderIndicator ? (renderIndicator({
+                                        ], variant: accordionRecipe.title.textVariant, children: item.title }), item.description ? _jsx(Text, { tone: "muted", variant: "caption", children: item.description }) : null] }), _jsx(View, { accessible: false, children: renderIndicator ? (renderIndicator({
                                     value: item.value,
                                     expanded: isExpanded,
                                     disabled: item.disabled === true,
@@ -356,12 +357,11 @@ export function Accordion({ label, items, expandedValues, defaultExpandedValues 
                                 paddingBottom: accordionRecipe.panel.paddingBottom,
                                 paddingStart: accordionRecipe.panel.paddingInlineStart,
                             },
-                            panelStyle,
                         ], children: item.content })) : null] }, item.value));
         }) }));
 }
-export function DescriptionList({ label, descriptor, availableWidth, style, itemStyle, layoutStyle, onLayout, ...props }) {
-    warnDeprecatedStyleProps("DescriptionList", { style, itemStyle }, "layoutStyle for placement and descriptor.columns for arrangement");
+export function DescriptionList({ label, descriptor, availableWidth, layoutStyle, onLayout, ...props }) {
+    assertNoRemovedStyleProps("DescriptionList", props, ["style", "itemStyle"]);
     const resolved = resolveDescriptionListDescriptor(descriptor);
     const { width: windowWidth } = useWindowDimensions();
     const { environment } = useHjmNativeTheme();
@@ -388,9 +388,8 @@ export function DescriptionList({ label, descriptor, availableWidth, style, item
                 flexWrap: "wrap",
                 gap: spacing.sm,
             },
-            style,
             layoutStyle,
-        ], children: resolved.items.map((item) => (_jsxs(View, { accessibilityLabel: `${item.label}, ${item.value}`, accessible: true, style: [{ gap: spacing.xxs, width: itemWidth }, itemStyle], children: [_jsx(Text, { accessible: false, tone: "muted", variant: "label", children: item.label }), _jsx(Text, { accessible: false, tone: "primary", children: item.value })] }, item.id))) }));
+        ], children: resolved.items.map((item) => (_jsxs(View, { accessibilityLabel: `${item.label}, ${item.value}`, accessible: true, style: [{ gap: spacing.xxs, width: itemWidth }], children: [_jsx(Text, { accessible: false, tone: "muted", variant: "label", children: item.label }), _jsx(Text, { accessible: false, tone: "primary", children: item.value })] }, item.id))) }));
 }
 function resolveImageSourceKey(source) {
     if (typeof source === "number")
@@ -415,27 +414,32 @@ export function Image(imageProps) {
     const resolvedDecorative = descriptor.decorative;
     const resolvedAccessibilityLabel = descriptor.decorative ? undefined : descriptor.accessibilityLabel;
     const resolvedResizeMode = nativeResizeModes[descriptor.fit];
-    const sourceKey = `src:${descriptor.src}`;
     const source = useMemo(() => sourceAdapter?.(descriptor) ?? { uri: descriptor.src }, [descriptor.accessibilityLabel, descriptor.decorative, descriptor.fit,
         descriptor.height, descriptor.src, descriptor.width, sourceAdapter]);
-    const [state, setState] = useState({ sourceKey, status: "loading" });
-    const status = state.sourceKey === sourceKey ? state.status : "loading";
-    useEffect(() => {
-        setState((current) => current.sourceKey === sourceKey
-            ? current
-            : { sourceKey, status: "loading" });
-    }, [sourceKey]);
+    // Auth/cache changes can create a new request at the same URL. Compare the
+    // resolved source contents, not the inline adapter function's identity.
+    const sourceKey = JSON.stringify([descriptor.src, resolveImageSourceKey(source)]);
+    // Match the Web image lifecycle: a replaced/unmounted host cannot publish
+    // results, including an old A request after the product changes A→B→A.
+    const generation = useMemo(() => ({}), [sourceKey]);
+    const activeGeneration = useRef(generation);
+    useLayoutEffect(() => {
+        activeGeneration.current = generation;
+        return () => { activeGeneration.current = null; };
+    }, [generation]);
+    const [state, setState] = useState({ generation, status: "loading" });
+    const status = state.generation === generation ? state.status : "loading";
     const reportLoad = (event) => {
-        setState((current) => current.sourceKey === sourceKey
-            ? { sourceKey, status: "loaded" }
-            : current);
+        if (activeGeneration.current !== generation)
+            return;
+        setState({ generation, status: "loaded" });
         onLoadStatusChange?.("loaded");
         onLoad?.(event);
     };
     const reportError = (event) => {
-        setState((current) => current.sourceKey === sourceKey
-            ? { sourceKey, status: "error" }
-            : current);
+        if (activeGeneration.current !== generation)
+            return;
+        setState({ generation, status: "error" });
         onLoadStatusChange?.("error");
         onError?.(event);
     };
@@ -529,15 +533,15 @@ const styles = StyleSheet.create({
         width: glyph.lg,
     },
 });
-export function CounterBadge({ count, accessibilityLabel, max = counterBadgeRecipe.defaults.max, tone = counterBadgeRecipe.defaults.tone, size = counterBadgeRecipe.defaults.size, variant = counterBadgeRecipe.defaults.variant, style, layoutStyle, }) {
-    warnDeprecatedStyleProps("CounterBadge", { style }, "layoutStyle for placement and tone/size/variant for appearance");
+export function CounterBadge({ count, accessibilityLabel, max = counterBadgeRecipe.defaults.max, tone = counterBadgeRecipe.defaults.tone, size = counterBadgeRecipe.defaults.size, variant = counterBadgeRecipe.defaults.variant, layoutStyle, }) {
     if (accessibilityLabel !== undefined && !accessibilityLabel.trim()) {
         throw new TypeError("CounterBadge accessibilityLabel must not be empty");
     }
+    // A zero count hides the badge, but must not change its Hook call order.
+    const { colors } = useHjmNativeTheme();
     const visibleLabel = formatCounterBadgeCount(count, max);
     if (visibleLabel === null)
         return null;
-    const { colors } = useHjmNativeTheme();
     const presentation = {
         danger: { background: colors.dangerFill, content: colors.onDanger },
         brand: { background: colors.primary, content: colors.onPrimary },
@@ -557,13 +561,12 @@ export function CounterBadge({ count, accessibilityLabel, max = counterBadgeReci
                 minWidth: metrics.minWidth,
                 paddingHorizontal: metrics.paddingHorizontal,
             },
-            style,
             layoutStyle,
         ], children: _jsx(Text, { accessible: false, align: "center", style: { color: presentation[tone].content, fontWeight: "700" }, variant: "caption", children: visibleLabel }) }));
 }
 /** Semantic list container that owns separator rhythm around composed rows. */
-export function List({ label, children, separator = listRecipe.defaults.separator, appearance = "plain", style, layoutStyle, ...props }) {
-    warnDeprecatedStyleProps("List", { style }, "layoutStyle for placement and appearance/separator for appearance");
+export function List({ label, children, separator = listRecipe.defaults.separator, appearance = "plain", layoutStyle, ...props }) {
+    assertNoRemovedStyleProps("List", props, ["style"]);
     const { colors, environment, tokens } = useHjmNativeTheme();
     const items = Children.toArray(children);
     const separatorContract = listRecipe.separators[separator];
@@ -580,7 +583,6 @@ export function List({ label, children, separator = listRecipe.defaults.separato
                     }
                     : {}),
             },
-            style,
             layoutStyle,
         ], children: items.map((item, index) => (_jsxs(View, { children: [item, separatorContract && index < items.length - 1 ? (_jsx(View, { accessible: false, style: {
                         backgroundColor: colors.border,
@@ -590,21 +592,10 @@ export function List({ label, children, separator = listRecipe.defaults.separato
                     } })) : null] }, isValidElement(item) && item.key !== null ? item.key : `hjm-list-${index}`))) }));
 }
 export function Statistic(props) {
-    warnDeprecatedStyleProps("Statistic", {
-        style: props.style,
-        labelStyle: props.labelStyle,
-        valueStyle: props.valueStyle,
-        affixStyle: props.affixStyle,
-        trendStyle: props.trendStyle,
-        hintStyle: props.hintStyle,
-    }, "layoutStyle for placement and density/presentation for appearance");
     return renderStatistic(props);
 }
-// StatisticGroup composes Statistic with its own item width and the group's deprecated `itemStyle`.
-// Routing through this plain function (called in the same component, so hook order is unchanged)
-// keeps those internal values from being reported as caller misuse of Statistic.style. A private
-// prop on the public component was rejected because it would leak into the exported type.
-function renderStatistic({ descriptor, density = "comfortable", presentation = "plain", contextLabel, accessibilityLabel, composeAccessibilityLabel, renderTrendMark, style, labelStyle, valueStyle, affixStyle, trendStyle, hintStyle, layoutStyle, }) {
+// StatisticGroup reuses this renderer with its calculated layout width.
+function renderStatistic({ descriptor, density = "comfortable", presentation = "plain", contextLabel, accessibilityLabel, composeAccessibilityLabel, renderTrendMark, layoutStyle, }) {
     const resolved = resolveStatisticDescriptor(descriptor);
     const theme = useHjmNativeTheme();
     const densityContract = statisticRecipe.density[density];
@@ -643,14 +634,12 @@ function renderStatistic({ descriptor, density = "comfortable", presentation = "
                 minWidth: 0,
                 padding: densityContract.padding,
             },
-            style,
             layoutStyle,
         ], children: [_jsx(Text, { accessible: false, style: [
                     {
                         color: resolveColorReference(statisticRecipe.label.color, theme.palette),
                         fontWeight: statisticRecipe.label.fontWeight,
                     },
-                    labelStyle,
                 ], variant: densityContract.labelVariant, children: resolved.label }), _jsxs(View, { accessible: false, style: {
                     alignItems: "baseline",
                     direction: theme.environment.direction,
@@ -663,7 +652,6 @@ function renderStatistic({ descriptor, density = "comfortable", presentation = "
                                 color: resolveColorReference(statisticRecipe.affix.color, theme.palette),
                                 fontWeight: statisticRecipe.affix.fontWeight,
                             },
-                            affixStyle,
                         ], variant: statisticRecipe.affix.textVariant, children: resolved.prefix })) : null, _jsx(Text, { accessible: false, style: [
                             {
                                 color: resolveColorReference(statisticRecipe.value.color, theme.palette),
@@ -671,13 +659,11 @@ function renderStatistic({ descriptor, density = "comfortable", presentation = "
                                 fontVariant: ["tabular-nums"],
                                 fontWeight: statisticRecipe.value.fontWeight,
                             },
-                            valueStyle,
                         ], variant: densityContract.valueVariant, children: resolved.value }), resolved.suffix ? (_jsx(Text, { accessible: false, style: [
                             {
                                 color: resolveColorReference(statisticRecipe.affix.color, theme.palette),
                                 fontWeight: statisticRecipe.affix.fontWeight,
                             },
-                            affixStyle,
                         ], variant: statisticRecipe.affix.textVariant, children: resolved.suffix })) : null] }), resolved.trend ? (_jsxs(View, { accessible: false, style: {
                     alignItems: "center",
                     flexDirection: "row",
@@ -690,14 +676,12 @@ function renderStatistic({ descriptor, density = "comfortable", presentation = "
                                 flexShrink: 1,
                                 fontWeight: statisticRecipe.trend.fontWeight,
                             },
-                            trendStyle,
                         ], variant: statisticRecipe.trend.textVariant, children: resolved.trend.label })] })) : null, resolved.hint ? (_jsx(Text, { accessible: false, style: [
                     { color: resolveColorReference(statisticRecipe.hint.color, theme.palette) },
-                    hintStyle,
                 ], variant: statisticRecipe.hint.textVariant, children: resolved.hint })) : null] }));
 }
-export function StatisticGroup({ label, descriptor, availableWidth, density, presentation, composeAccessibilityLabel, renderTrendMark, style, itemStyle, layoutStyle, onLayout, ...props }) {
-    warnDeprecatedStyleProps("StatisticGroup", { style, itemStyle }, "layoutStyle for placement and density/presentation for appearance");
+export function StatisticGroup({ label, descriptor, availableWidth, density, presentation, composeAccessibilityLabel, renderTrendMark, layoutStyle, onLayout, ...props }) {
+    assertNoRemovedStyleProps("StatisticGroup", props, ["style", "itemStyle"]);
     validateStatisticGroup(descriptor);
     const { width: windowWidth } = useWindowDimensions();
     const { environment } = useHjmNativeTheme();
@@ -736,20 +720,19 @@ export function StatisticGroup({ label, descriptor, availableWidth, density, pre
                 flexWrap: "wrap",
                 gap: statisticRecipe.group.gap,
             },
-            style,
             layoutStyle,
-        ], children: descriptor.items.map((item, index) => (_jsx(StatisticGroupItem, { contextLabel: label, descriptor: item, ...(composeAccessibilityLabel === undefined ? {} : { composeAccessibilityLabel }), ...(density === undefined ? {} : { density }), ...(presentation === undefined ? {} : { presentation }), ...(renderTrendMark === undefined ? {} : { renderTrendMark }), layoutStyle: { width: index >= finalRowStart ? finalRowItemWidth : itemWidth }, ...(itemStyle === undefined ? {} : { style: itemStyle }) }, item.id))) }));
+        ], children: descriptor.items.map((item, index) => (_jsx(StatisticGroupItem, { contextLabel: label, descriptor: item, ...(composeAccessibilityLabel === undefined ? {} : { composeAccessibilityLabel }), ...(density === undefined ? {} : { density }), ...(presentation === undefined ? {} : { presentation }), ...(renderTrendMark === undefined ? {} : { renderTrendMark }), layoutStyle: { width: index >= finalRowStart ? finalRowItemWidth : itemWidth } }, item.id))) }));
 }
 /** Group cell: same render as Statistic without attributing the group's styles to the caller. */
 function StatisticGroupItem(props) {
     return renderStatistic(props);
 }
 /** Ordered record of completed events; unlike Steps it has no current cursor. */
-export function Timeline({ items, composeAccessibleName, style, layoutStyle, ...props }) {
-    warnDeprecatedStyleProps("Timeline", { style }, "layoutStyle for placement and item tone for appearance");
+export function Timeline({ items, composeAccessibleName, layoutStyle, ...props }) {
+    assertNoRemovedStyleProps("Timeline", props, ["style"]);
     const theme = useHjmNativeTheme();
     const resolved = resolveTimelineDescriptor({ items }, { composeAccessibleName });
-    return (_jsx(View, { ...props, style: [{ gap: timelineRecipe.gap }, style, layoutStyle], children: resolved.map((item, index) => {
+    return (_jsx(View, { ...props, style: [{ gap: timelineRecipe.gap }, layoutStyle], children: resolved.map((item, index) => {
             const tone = timelineRecipe.dot.tones[item.tone];
             const accessibilityLabel = [
                 item.accessibleName,

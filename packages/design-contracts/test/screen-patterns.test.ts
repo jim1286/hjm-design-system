@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { shouldSubmitMessageKey, canSubmitMessage, validateMessageAttachments, resolveScreenContentState, resolveSearchScreenPhase, resolveSearchCommit, resolveSearchEmptyCause, resolveFocusAfterRemoval, searchScreenRecipe, type ScreenContentState } from "../src/screen-patterns.js";
+import { shouldSubmitMessageKey, canSubmitMessage, validateMessageAttachments, resolveScreenContentState, resolveSearchScreenPhase, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveFocusAfterRemoval, searchScreenRecipe, type ScreenContentState } from "../src/screen-patterns.js";
 
 describe("screen content and composer ownership", () => {
   it("only replaces content for explicit initial states", () => {
@@ -66,6 +66,16 @@ describe("search screen phases", () => {
     expect(resolveFocusAfterRemoval(0, 0)).toBe(-1);
     expect(() => resolveFocusAfterRemoval(-1, 1)).toThrow(RangeError);
   });
+  it("rejects malformed search counts even when the result is loading or nonempty", () => {
+    for (const count of [1.5, Infinity, Number.MAX_SAFE_INTEGER + 1]) {
+      expect(() => resolveSearchEmptyCause(count, 0)).toThrow(RangeError);
+    }
+    for (const count of [null, 3]) {
+      for (const filters of [-1, 1.5, NaN, Infinity]) {
+        expect(() => resolveSearchEmptyCause(count, filters)).toThrow(RangeError);
+      }
+    }
+  });
   it("keeps section geometry on spacing tokens", () => {
     expect(searchScreenRecipe).toMatchObject({ recentVisible: 5, suggestionVisible: 6, loadingRows: 4, sectionGap: 24, headerGap: 12, chipGap: 8 });
   });
@@ -84,4 +94,18 @@ it("reveals timestamps only for rightward horizontal intent", async () => {
   expect(timestampRevealOffset(-80, 0)).toBe(0);
   expect(timestampRevealOffset(60, 4)).toBe(60);
   expect(timestampRevealOffset(200, 4)).toBe(88);
+});
+
+// Timer handles stay renderer-owned; defaulting and validation are platform-independent.
+describe("search debounce delay", () => {
+  it("uses the recipe default while preserving zero, finite custom values and negative clamping", () => {
+    expect(resolveSearchDebounceMs()).toBe(searchScreenRecipe.debounceMs);
+    expect(resolveSearchDebounceMs(0)).toBe(0);
+    expect(resolveSearchDebounceMs(12.5)).toBe(12.5);
+    expect(resolveSearchDebounceMs(1500)).toBe(1500);
+    expect(resolveSearchDebounceMs(-5)).toBe(0);
+  });
+  it.each([NaN, Infinity, -Infinity])("rejects nonfinite delay %s before scheduling", value => {
+    expect(() => resolveSearchDebounceMs(value)).toThrow(RangeError);
+  });
 });

@@ -119,4 +119,4 @@ Native: 없음. Native renderer가 없다.
 - `asyncState`의 `message`는 표 위에 `status`/`alert`로 나오지만 표는 그대로 그려진다. 빈 상태 화면이
   따로 필요하면 [EmptyState](empty-state.md)로 표를 대신 그린다.
 - `Table`의 `onSortChange`는 `null`을 받지 못해 항상 two-state로 돈다. `emptyState`는 필수 prop이다.
-- 미게시(1.12.1 이후) 변경: 1.12.1까지 Web `regular` 셀은 사방 `spacing.sm` 12였다. 열 폭을 그 값으로 맞춘 화면은 가로 16에서 다시 확인한다.
+- 1.13.0 변경: 1.12.1까지 Web `regular` 셀은 사방 `spacing.sm` 12였다. 열 폭을 그 값으로 맞춘 화면은 가로 16에서 다시 확인한다.

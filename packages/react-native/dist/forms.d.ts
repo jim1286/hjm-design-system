@@ -3,7 +3,7 @@ import { type ComboboxCommitReason, type ComboboxFiltering, type AsyncCollection
 import { type SelectCollectionSectionDescriptor, type SelectCollectionSource, type SelectOpenChangeReason } from "@hjmds/design-contracts/components/collection";
 import { type SelectDensity, type SelectSize } from "@hjmds/design-contracts/recipes";
 import { type Ref, type RefObject, type ReactNode } from "react";
-import { TextInput, type ModalProps, type StyleProp, type ViewStyle } from "react-native";
+import { TextInput, type ModalProps } from "react-native";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 type NativeCollectionLeadingRenderProps = Readonly<{
     placement: "trigger" | "option";
@@ -58,20 +58,15 @@ export type FormProps<Values> = Readonly<{
     firstInvalidFieldRef?: RefObject<TextInput | null>;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Raw visual style bypasses `formRecipe`. Use `layoutStyle` for placement and `density` for field rhythm.
-     * Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
 }>;
 /**
  * A Native submit boundary. Products retain ownership of values and validation;
  * this renderer only owns submit re-entrancy, feedback, and field rhythm.
  */
-export declare function Form<Values>({ label, values, onSubmit, children, submitLabel, actions, ref, status, defaultStatus, onStatusChange, error, fallbackErrorMessage, disabled, density, firstInvalidFieldRef, layoutStyle, style, }: FormProps<Values>): import("react").JSX.Element;
+export declare function Form<Values>({ label, values, onSubmit, children, submitLabel, actions, ref, status, defaultStatus, onStatusChange, error, fallbackErrorMessage, disabled, density, firstInvalidFieldRef, layoutStyle, }: FormProps<Values>): import("react").JSX.Element;
 export type SelectSection<Value extends string = string, SectionKey extends string = string> = SelectCollectionSectionDescriptor<Value, SectionKey>;
 export type SelectLeadingRenderProps = NativeCollectionLeadingRenderProps;
-export type SelectProps<Value extends string = string, SectionKey extends string = string> = Omit<ModalProps, "animationType" | "children" | "onDismiss" | "onRequestClose" | "onShow" | "transparent" | "visible"> & Readonly<{
+export type SelectProps<Value extends string = string, SectionKey extends string = string> = Omit<ModalProps, "style" | "animationType" | "children" | "onDismiss" | "onRequestClose" | "onShow" | "transparent" | "visible"> & Readonly<{
     label?: string;
     accessibilityLabel?: string;
     source?: SelectCollectionSource<Value, SectionKey>;
@@ -110,16 +105,11 @@ export type SelectProps<Value extends string = string, SectionKey extends string
     optionsAccessibilityLabel?: string;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Raw visual style bypasses `selectRecipe`. Use `layoutStyle` for placement and `size`/`density` for appearance.
-     * Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
 }>;
 /** Native adaptive Select with shared sections, async states, and teardown-safe commits. */
-export declare function Select<Value extends string = string, SectionKey extends string = string>({ label, accessibilityLabel, source: sourceProp, items, sections, selectedKey, defaultSelectedKey, onSelectionChange, selectedItem, disallowEmptySelection, open, defaultOpen, onOpenChange, placeholder, description, error, required, disabled, readOnly, busy, size, density, asyncState, onRetry, retryLabel, readOnlyLabel, openHint, renderLeading, renderOptionLeading, onSelectionAfterDismiss, onDismiss, dismissLabel, optionsAccessibilityLabel, layoutStyle, style, ...modalProps }: SelectProps<Value, SectionKey>): import("react").JSX.Element;
+export declare function Select<Value extends string = string, SectionKey extends string = string>({ label, accessibilityLabel, source: sourceProp, items, sections, selectedKey, defaultSelectedKey, onSelectionChange, selectedItem, disallowEmptySelection, open, defaultOpen, onOpenChange, placeholder, description, error, required, disabled, readOnly, busy, size, density, asyncState, onRetry, retryLabel, readOnlyLabel, openHint, renderLeading, renderOptionLeading, onSelectionAfterDismiss, onDismiss, dismissLabel, optionsAccessibilityLabel, layoutStyle, ...modalProps }: SelectProps<Value, SectionKey>): import("react").JSX.Element;
 export type ComboboxLeadingRenderProps = NativeCollectionLeadingRenderProps;
-export type ComboboxProps<Key extends string = string, SectionKey extends string = string> = Omit<ModalProps, "animationType" | "children" | "onDismiss" | "onRequestClose" | "onShow" | "transparent" | "visible"> & Readonly<{
+export type ComboboxProps<Key extends string = string, SectionKey extends string = string> = Omit<ModalProps, "style" | "animationType" | "children" | "onDismiss" | "onRequestClose" | "onShow" | "transparent" | "visible"> & Readonly<{
     label?: string;
     accessibilityLabel?: string;
     items?: readonly SelectItemDescriptor<Key>[];
@@ -177,13 +167,8 @@ export type ComboboxProps<Key extends string = string, SectionKey extends string
     resultsAccessibilityLabel?: string;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Raw visual style bypasses `comboboxRecipe`. Use `layoutStyle` for placement and `density` for appearance.
-     * Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
 }>;
 /** Editable Native combobox with sectioned async results and teardown-safe commits. */
-export declare function Combobox<Key extends string = string, SectionKey extends string = string>({ label, accessibilityLabel, items, sections, source: sourceProp, selectedKey, defaultSelectedKey, selectedItem, onSelectionChange, inputValue, defaultInputValue, onInputValueChange, open, defaultOpen, onOpenChange, onCommit, onCommitAfterDismiss, onDismiss, filtering, queryValue, resultQuery, asyncState, loading, emptyMessage, loadingMessage, loadingMoreMessage, errorMessage, promptMessage, minimumQueryLength, onRetry, retryLabel, description, error, placeholder, openHint, sheetTitle, required, disabled, readOnly, busy, openOnFocus, size, density, readOnlyLabel, renderLeading, clearLabel, dismissLabel, resultsAccessibilityLabel, layoutStyle, style, ...modalProps }: ComboboxProps<Key, SectionKey>): import("react").JSX.Element;
+export declare function Combobox<Key extends string = string, SectionKey extends string = string>({ label, accessibilityLabel, items, sections, source: sourceProp, selectedKey, defaultSelectedKey, selectedItem, onSelectionChange, inputValue, defaultInputValue, onInputValueChange, open, defaultOpen, onOpenChange, onCommit, onCommitAfterDismiss, onDismiss, filtering, queryValue, resultQuery, asyncState, loading, emptyMessage, loadingMessage, loadingMoreMessage, errorMessage, promptMessage, minimumQueryLength, onRetry, retryLabel, description, error, placeholder, openHint, sheetTitle, required, disabled, readOnly, busy, openOnFocus, size, density, readOnlyLabel, renderLeading, clearLabel, dismissLabel, resultsAccessibilityLabel, layoutStyle, ...modalProps }: ComboboxProps<Key, SectionKey>): import("react").JSX.Element;
 export {};
 //# sourceMappingURL=forms.d.ts.map

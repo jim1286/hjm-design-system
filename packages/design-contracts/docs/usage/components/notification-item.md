@@ -95,4 +95,4 @@ import { NotificationItem } from "@hjmds/react-native/screens";
 | 상태·시각 줄 | 설명 아래 caption `Text` | `description`과 줄바꿈(`\n`)으로 합친 한 문자열 |
 | 이동 | `href`, `onClick` | `onPress` |
 | 추가 슬롯 | `className`, `layoutStyle` | `titleMetadata`, `trailingAction`, `trailingText`, `layoutStyle` |
-| 제목 굵기 조정 | `Text emphasis` | 렌더러 비공개 입력(`hjmTitleEmphasis`)으로 안 읽음 700(`fontWeight.bold`)·읽음 400(`fontWeight.regular`). deprecated `ListRow.titleStyle`을 쓰지 않으므로 HJM이 `titleStyle` 경고를 내지 않는다. `NotificationItemProps`에는 `titleStyle`이 없다(미게시(1.12.1 이후)) |
+| 제목 굵기 조정 | `Text emphasis` | 렌더러 비공개 입력(`hjmTitleEmphasis`)으로 안 읽음 700(`fontWeight.bold`)·읽음 400(`fontWeight.regular`). 제거된 `ListRow.titleStyle`을 사용하지 않는다. `NotificationItemProps`에는 `titleStyle`이 없다(1.13.0 변경) |

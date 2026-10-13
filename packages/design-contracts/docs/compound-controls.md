@@ -1,6 +1,6 @@
 # Compound controls
 
-Reviewed: 2026-10-01. Web and React Native expose identical optional entry names:
+Reviewed: 2026-10-13. Web and React Native expose identical optional entry names:
 `/duration-field`, `/inline-confirm`, `/reaction-picker`, `/notification-bell`.
 These are compositions of existing canonical controls, not replacements for them.
 The 2026-10-01 visual integration request calls for reusable interactions as well as
@@ -25,9 +25,14 @@ Use for a local explicit confirmation when an overlay would interrupt the contex
 Pass `label`, `prompt`, `confirmLabel`, `cancelLabel`, `pendingLabel`,
 `successLabel`, `errorLabel`, and `onConfirm(): void | Promise<void>`.
 The existing AlertDialog session owns async deduplication, pending and retry.
-No action runs on the initial trigger. Pending disables both actions; rejection
+No action runs on the initial trigger. If props change while the prompt is open,
+confirmation uses the current `onConfirm`, matching the currently displayed prompt
+(2026-10-13 stale-action regression). Pending blocks both actions; Web loading retains the confirmation button focus. Rejection
 shows the supplied safe error text and permits retry. Web initially focuses cancel,
-Escape cancels, and cancellation restores trigger focus. Native exposes the
+Escape cancels, and cancellation restores trigger focus. On success, Web moves focus from
+the retiring confirmation group to the result, while preserving intentional focus elsewhere.
+The 2026-10-13 example audit found that native-disabled DOM buttons lost keyboard focus
+during pending; the existing loading contract now blocks repeats without losing focus. Native exposes the
 controls and live error text through its host accessibility APIs.
 Native keeps the localized status text available to assistive technology. iOS
 receives one explicit announcement per prompt/pending/error/success transition;

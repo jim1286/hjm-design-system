@@ -83,14 +83,14 @@ import { Heading } from "@hjmds/react-native/heading";
 | --- | --- | --- |
 | 출력 | `h1`~`h6` 요소 | `Text` + `accessibilityRole="header"` + `aria-level` |
 | 추가 prop | `HTMLAttributes`(`id`, `className`, `style` 등), ref | 없음 |
-| 배치 | `layoutStyle`. `style`도 합쳐진다(크기 변수는 덮이지 않음) | `layoutStyle`. `style`(TextStyle)은 deprecated(개발 모드 1회 경고, 다음 major 제거) — `layoutStyle` 또는 `level` |
+| 배치 | `layoutStyle`. `style`도 합쳐진다(크기 변수는 덮이지 않음) | `layoutStyle`. `style`(TextStyle)은 제거된 속성 — `layoutStyle` 또는 `level` |
 | 글자 배율 | `--hjm-text-scale`로 확대 | Native `Text`의 글자 배율 |
 
 ## 함정
 
 - Web `style`은 이제 버려지지 않고 합쳐진다. 다만 크기·줄 높이·굵기 변수(`--hjm-heading-*`)는 recipe가 마지막에 덮으므로
   `style`로 크기를 바꿀 수 없다. 배치는 `layoutStyle`로 준다.
-- Native `style`(deprecated)은 아직 마지막에 합쳐져 색·크기까지 바뀐다. 쓰지 말고 `layoutStyle`·`level`로 옮긴다.
+- Native `style`은 제거되었다. 배치는 `layoutStyle`, 제목 위계는 `level`로 지정한다.
 
 2026-10-07 추가: 제목은 프로필의 optional `tokens.fontFamily.display`를 사용하고 생략 시 현재 ui를 따른다.
-문서 semanticLevel·크기·굵기는 유지한다. [서체 역할](../tokens/font-roles.md), 1.15.0 이후 미게시.
+문서 semanticLevel·크기·굵기는 유지한다. [서체 역할](../tokens/font-roles.md), 1.16.0 변경.

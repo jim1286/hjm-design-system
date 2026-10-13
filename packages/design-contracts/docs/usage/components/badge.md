@@ -53,7 +53,7 @@ import { Badge } from "@hjmds/react-native/data-display";
 | `leading` | `ReactNode` | — | 라벨 앞 아이콘 자리이며 보조기기에서 숨겨진다 |
 | Web `children` · Native `label` | `ReactNode` · `string \| number`(필수) | — | 표시 라벨 |
 | Native `accessibilityLabel` | `string` | `String(label)` | 숫자 라벨에 단위를 붙여 읽힐 때 쓴다 |
-| `layoutStyle` | margin·width·flex·`alignSelf` | — | 배치 전용. Native `style`·`labelStyle`은 deprecated — layoutStyle 또는 tone/토큰 |
+| `layoutStyle` | margin·width·flex·`alignSelf` | — | 배치 전용. Native `style`·`labelStyle`은 제거된 속성 — layoutStyle 또는 tone/토큰 |
 
 콜백이 없다. 누를 수 없는 표시다.
 
@@ -73,7 +73,7 @@ Native 모서리는 Provider token에서 recipe 역할을 읽는다. Badge의 `f
 
 - 라벨은 i18n 키로 넣고 짧게 둔다. 상태 뜻을 색에만 싣지 않는다(글자가 뜻을 말해야 한다).
 - 색은 `tone`으로만 고른다. 브랜드 색을 `style`·`className`·`labelStyle`로 덮지 않는다.
-- 배치는 Web·Native 모두 `layoutStyle`로만 한다. Native `style`·`labelStyle`은 deprecated(개발 모드 1회 경고, 다음 major 제거)다.
+- 배치는 Web·Native 모두 `layoutStyle`로만 한다. Native `style`·`labelStyle`은 제거된 속성이다.
 
 ## 플랫폼 차이
 
@@ -81,6 +81,6 @@ Native 모서리는 Provider token에서 recipe 역할을 읽는다. Badge의 `f
 | --- | --- | --- |
 | 라벨 | `children` | `label`(문자열·숫자, 필수) |
 | 접근성 이름 | 라벨 텍스트 | `accessibilityLabel`(기본 `String(label)`) |
-| 배치 | `layoutStyle` | `layoutStyle`(`style`은 deprecated) |
-| 라벨 스타일 훅 | 없음 | `labelStyle` deprecated — tone/토큰 |
+| 배치 | `layoutStyle` | `layoutStyle`(`style`은 제거된 속성) |
+| 라벨 스타일 훅 | 없음 | `labelStyle` 제거된 속성 — tone/토큰 |
 | 기본 폭 | inline | `alignSelf: "flex-start"` |

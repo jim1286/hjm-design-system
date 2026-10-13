@@ -84,7 +84,7 @@ Native는 `ScrollView`가 세로 스크롤을, 그 안의 Container가 좌우 �
 - 최대 폭과 여백은 `size`·`gutter`로만 고른다. 임의 px `maxWidth`나 좌우 padding을 제품마다
   새로 정하지 않는다(배제 이유는 [계약](../../container.md#배제한-축)).
 - 바깥 배치(margin·flex)는 `layoutStyle`로 한다. `style`로 `maxWidth`·`padding`을 덮으면
-  계약 폭이 사라진다(두 renderer 모두 `style`이 recipe 값 뒤에 합쳐진다). Native `style`은 deprecated —
+  계약 폭이 사라진다(Web은 `style`을 받지만 시각 override에 쓰지 않는다). Native `style`은 제거되었으므로
   `layoutStyle` 또는 `size`·`gutter`를 쓴다.
 - Container는 배경·테두리·스크롤을 갖지 않는다. 필요하면 바깥 컴포넌트가 맡는다.
 

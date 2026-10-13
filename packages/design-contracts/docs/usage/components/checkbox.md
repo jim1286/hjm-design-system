@@ -83,8 +83,8 @@ import { Checkbox } from "@hjmds/react-native/inputs";
 - `label`(필수)과 `description`은 i18n 키로 넣는다. Native는 둘 다 `string`만 받는다.
 - 선택 아이콘을 바꾸려면 `renderLeading`(Native는 `renderIndicator`도)을 쓴다. 색·테두리를 직접 칠하지 않는다.
 - 배치는 `layoutStyle`로 한다. Native의 `style`·`controlStyle`·`indicatorStyle`·`leadingStyle`·`contentStyle`·
-  `labelStyle`·`descriptionStyle`은 deprecated — `layoutStyle` 또는 `presentation`·`size`·`renderIndicator`를 쓴다
-  (개발 모드 1회 경고, 다음 major 제거. [이관 문서](../../migration-native-legacy-removal.md)).
+  `labelStyle`·`descriptionStyle`은 제거된 속성 — `layoutStyle` 또는 `presentation`·`size`·`renderIndicator`를 쓴다
+  ([이관 문서](../../migration-native-legacy-removal.md)).
 
 ## 플랫폼 차이
 

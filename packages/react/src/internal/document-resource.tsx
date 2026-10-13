@@ -39,21 +39,26 @@ export function DocumentResource({ preview, moreAction, ...props }: DocumentReso
       <Text emphasis="strong" style={{ overflowWrap: "anywhere" }}>{resource.name}</Text>
       {resource.metadata.map((label, index) => <Text key={index} variant="caption" tone="muted">{label}</Text>)}
       {resource.description ? <Text>{resource.description}</Text> : null}
-      {resource.preview.status === "ready" ? preview : null}
-      {resource.preview.status === "none" ? <Text tone="muted">{labels.previewUnavailable}</Text> : null}
-      {resource.preview.status === "loading" ? <Text role="status">{labels.previewLoading}</Text> : null}
-      {previewFailed ? <Text tone="danger" role="alert">{resource.preview.status === "error" ? resource.preview.message : ""}</Text> : null}
-      {/* Independent buttons prevent preview navigation from swallowing save/menu interaction. */}
-      {props.onPreview ? <Button ref={previewButton} tone="secondary" disabled={!resource.canPreview} onClick={props.onPreview}>{labels.preview}</Button> : null}
-      {previewFailed && resource.preview.retryable ? <Button ref={attachRetry} tone="secondary" disabled={!resource.canRetryPreview} onClick={props.onRetryPreview}>{labels.retryPreview}</Button> : null}
-      <Button ref={saveButton} disabled={saveFailed ? !resource.canRetrySave : !resource.canSave}
-        loading={resource.save.status === "pending"}
-        onClick={saveFailed ? props.onRetrySave : props.onSave}>
-        {saveFailed ? labels.retrySave : resource.save.status === "pending" ? labels.saving : labels.save}
-      </Button>
-      {saveFailed ? <Text tone="danger" role="alert">{resource.save.status === "error" ? resource.save.message : ""}</Text> : null}
-      {resource.save.status === "started" || resource.save.status === "saved" || resource.save.status === "cancelled"
-        ? <Text role="status">{labels[resource.save.status]}</Text> : null}
+      {/* Center each state with its own actions without moving the document metadata. */}
+      {resource.preview.status !== "ready" || preview != null || props.onPreview ? <Stack gap="sm" justify="center">
+        {resource.preview.status === "ready" ? preview : null}
+        {resource.preview.status === "none" ? <Text tone="muted" style={{ textAlign: "center" }}>{labels.previewUnavailable}</Text> : null}
+        {resource.preview.status === "loading" ? <Text role="status" style={{ textAlign: "center" }}>{labels.previewLoading}</Text> : null}
+        {previewFailed ? <Text tone="danger" role="alert" style={{ textAlign: "center" }}>{resource.preview.status === "error" ? resource.preview.message : ""}</Text> : null}
+        {/* Independent buttons prevent preview navigation from swallowing save/menu interaction. */}
+        {props.onPreview ? <Button ref={previewButton} tone="secondary" disabled={!resource.canPreview} onClick={props.onPreview}>{labels.preview}</Button> : null}
+        {previewFailed && resource.preview.retryable ? <Button ref={attachRetry} tone="secondary" disabled={!resource.canRetryPreview} onClick={props.onRetryPreview}>{labels.retryPreview}</Button> : null}
+      </Stack> : null}
+      <Stack gap="sm" justify="center">
+        <Button ref={saveButton} disabled={saveFailed ? !resource.canRetrySave : !resource.canSave}
+          loading={resource.save.status === "pending"}
+          onClick={saveFailed ? props.onRetrySave : props.onSave}>
+          {saveFailed ? labels.retrySave : resource.save.status === "pending" ? labels.saving : labels.save}
+        </Button>
+        {saveFailed ? <Text tone="danger" role="alert" style={{ textAlign: "center" }}>{resource.save.status === "error" ? resource.save.message : ""}</Text> : null}
+        {resource.save.status === "started" || resource.save.status === "saved" || resource.save.status === "cancelled"
+          ? <Text role="status" style={{ textAlign: "center" }}>{labels[resource.save.status]}</Text> : null}
+      </Stack>
       {moreAction}
     </Stack>
   </Surface>;

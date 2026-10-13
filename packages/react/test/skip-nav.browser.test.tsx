@@ -85,3 +85,29 @@ it("keeps a long localized label readable without overflowing a narrow viewport"
   expect(rect.right).toBeLessThanOrEqual(window.innerWidth);
   expect(link.scrollWidth).toBeLessThanOrEqual(link.clientWidth);
 });
+
+it("restores temporary target tabindex on blur and when the skip link unmounts", async () => {
+  const view = (show = true) => <><button>Outside</button>{show && <SkipNav targetId="cleanup-target" label="Skip" />}<main id="cleanup-target">Main</main></>;
+  await render(view());
+  const target = host.querySelector<HTMLElement>("main")!;
+  await act(async () => host.querySelector<HTMLAnchorElement>(".hjm-skip-nav")!.click());
+  expect(target.getAttribute("tabindex")).toBe("-1");
+  host.querySelector("button")!.focus();
+  expect(target.hasAttribute("tabindex")).toBe(false);
+  await act(async () => host.querySelector<HTMLAnchorElement>(".hjm-skip-nav")!.click());
+  await render(view(false));
+  expect(target.hasAttribute("tabindex")).toBe(false);
+});
+
+it("preserves product tabindex and leaves modified clicks to the browser", async () => {
+  await render(<><button>Outside</button><SkipNav targetId="native-target" label="Skip" /><main id="native-target" tabIndex={0}>Main</main></>);
+  const outside = host.querySelector("button")!;
+  outside.focus();
+  const link = host.querySelector<HTMLAnchorElement>(".hjm-skip-nav")!;
+  document.addEventListener("click", event => event.preventDefault(), { once: true });
+  await act(async () => link.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, ctrlKey: true })));
+  expect(document.activeElement).toBe(outside);
+  await act(async () => link.click());
+  outside.focus();
+  expect(host.querySelector("main")!.getAttribute("tabindex")).toBe("0");
+});

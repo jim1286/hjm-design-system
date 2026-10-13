@@ -50,6 +50,18 @@ export const Tour = forwardRef(function Tour({ descriptor, resolveAnchor, compos
     const anchor = open ? resolveAnchor(step.anchorId) : null;
     anchorRef.current = anchor;
     const anchorRect = useAnchorRect(anchor, open);
+    const [, refreshAnchor] = useState(0);
+    useEffect(() => {
+        if (!open)
+            return;
+        // Product children may mount independently of the tour owner; re-resolve identity after DOM replacement.
+        const observer = new MutationObserver(() => {
+            if (resolveAnchor(step.anchorId) !== anchorRef.current)
+                refreshAnchor(value => value + 1);
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+        return () => observer.disconnect();
+    }, [open, resolveAnchor, step.anchorId]);
     const change = useCallback((next, reason) => {
         if (openProp === undefined)
             setInternalOpen(next);
@@ -114,8 +126,9 @@ export const Tour = forwardRef(function Tour({ descriptor, resolveAnchor, compos
     if (!open)
         return renderedTrigger;
     return (_jsxs(_Fragment, { children: [renderedTrigger, _jsx(HjmPortal, { ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("div", { className: "hjm-tour-backdrop", "data-state": "open", style: { zIndex: getModalLayer(0) }, children: anchorRect ? (_jsx("div", { className: "hjm-tour-highlight", "aria-hidden": "true", style: {
-                            insetBlockStart: anchorRect.top,
-                            insetInlineStart: anchorRect.left,
+                            // DOMRect uses physical coordinates even when the provider direction is RTL.
+                            top: anchorRect.top,
+                            left: anchorRect.left,
                             inlineSize: anchorRect.width,
                             blockSize: anchorRect.height,
                         } })) : null }) }), _jsx(AnchoredPortal, { anchorRef: anchorRef, ...(portalContainer ? { container: portalContainer } : {}), children: _jsxs("div", { ref: cardRefs, id: id, role: "dialog", "aria-modal": "true", "aria-label": resolved.accessibilityLabel, "aria-describedby": `${id}-announcement`, tabIndex: -1, "data-hjm-modal-content": "", "data-placement": position.placement, "data-align": position.align, className: classNames("hjm-tour", className), style: { ...position.style, maxInlineSize: tourRecipe.maxWidth }, children: [_jsx("span", { id: `${id}-announcement`, className: "hjm-visually-hidden", children: step.announcement }), _jsxs("div", { "aria-hidden": "true", children: [_jsxs("p", { className: "hjm-tour__counter", children: [step.position, " / ", step.total] }), _jsx("h2", { className: "hjm-tour__title", children: step.title }), _jsx("p", { className: "hjm-tour__description", children: step.description })] }), _jsxs("div", { className: "hjm-tour__actions", children: [_jsx(Button, { tone: "ghost", onClick: () => close("skip"), children: descriptor.labels.skip }), _jsx(Button, { tone: "secondary", "aria-disabled": resolved.isFirstStep || undefined, onClick: () => advance("previous"), children: descriptor.labels.previous }), _jsx(Button, { onClick: () => advance("next"), children: resolved.isLastStep ? descriptor.labels.done : descriptor.labels.next })] })] }) })] }));

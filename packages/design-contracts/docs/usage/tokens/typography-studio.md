@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-13
 - 근거: [테마 작업실](../../theme-studio.md), `src/foundations.ts`(`fontFamily`), `showcase/web/src/foundations/TypographyStudio.stories.tsx`, `showcase/native/src/TypographyStudio.stories.tsx`, `showcase/shared/typography-studio.ts`
 - 스토리북: `배포/토큰/편집 도구/글꼴 편집`
 
@@ -32,27 +32,33 @@
 
 ## 쓰는 법
 
-후보가 정해지면 제품이 폰트 파일과 라이선스를 소유하고 제품 앱에서 등록한다. HJM 컴포넌트는 Web에서 Provider 루트의 서체를,
-`host="contents"`일 때는 제품 루트의 서체를 상속한다.
+후보가 정해지면 제품이 폰트 파일과 라이선스를 소유하고 먼저 폰트를 등록한다. 이후
+Provider의 `designProfile.tokens.fontFamily`에 역할별 stack을 넣어 HJM Text·Heading·입력·조작 라벨에 전달한다.
+`host="contents"`도 HJM Text의 명시적 역할 변수를 바꾸지 않으므로 제품 루트의 CSS 상속만으로 적용하지 않는다.
 
 ```tsx
 // Web
+import { defineHjmDesignProfile } from "@hjmds/design-contracts/design-profile";
 import { HjmProvider } from "@hjmds/react/provider";
 
 // 제품 CSS: @font-face { font-family: "ProductSans"; src: url("/fonts/product-sans.woff2") format("woff2"); }
-// 제품 CSS: .product-root { font-family: "ProductSans", system-ui, sans-serif; }
-<div className="product-root">
-  <HjmProvider host="contents">{app}</HjmProvider>
-</div>
+const design = defineHjmDesignProfile({ tokens: { fontFamily: { ui: ["ProductSans", "sans-serif"] } } });
+<HjmProvider designProfile={design}>{app}</HjmProvider>
 ```
 
 ```tsx
 // Native
 import { useFonts } from "expo-font";
+import { defineHjmDesignProfile } from "@hjmds/design-contracts/design-profile";
+import { HjmNativeProvider } from "@hjmds/react-native/provider";
 
+const design = defineHjmDesignProfile({ tokens: { fontFamily: { ui: ["ProductSans"] } } });
 const [loaded] = useFonts({ ProductSans: require("./assets/fonts/ProductSans.otf") });
-// HJM Native 컴포넌트는 fontFamily를 지정하지 않는다. 제품 서체 적용 범위는 제품 Text 래퍼가 정한다.
+// 제품의 폰트 로딩/실패 처리가 끝난 뒤 등록된 이름을 Provider에 전달한다.
+<HjmNativeProvider {...(loaded ? { designProfile: design } : {})}>{app}</HjmNativeProvider>
 ```
+
+제목·읽기용 본문을 분리할 때는 [표시·읽기·기술 글자](font-roles.md)의 display/reading 역할을 쓴다.
 
 ## 하지 말 것
 

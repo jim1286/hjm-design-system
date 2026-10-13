@@ -15,9 +15,6 @@ export function CollapsiblePreview() {
       <Collapsible trigger="배송 정보 더 보기" defaultOpen>
         <Text>주문 다음 날 도착합니다. 도착 전날 알림을 보내드려요.</Text>
       </Collapsible>
-      <Collapsible trigger="환불 규정 더 보기">
-        <Text>받은 날부터 7일 안에는 그대로 돌려드립니다.</Text>
-      </Collapsible>
     </Stack>
   );
 }

@@ -46,6 +46,8 @@ export const NumberField = forwardRef(function NumberField({ id, label, min, max
         setDraft(valueToInput(controlled ? currentValue : next));
     };
     const commitDraft = () => {
+        if (disabled || readOnly)
+            return;
         const next = commitNumberFieldInput(draft, descriptor);
         if (next === undefined) {
             setDraft(valueToInput(currentValue));
@@ -75,7 +77,7 @@ export const NumberField = forwardRef(function NumberField({ id, label, min, max
     };
     const handleKeyDown = (event) => {
         onKeyDown?.(event);
-        if (event.defaultPrevented || disabled || readOnly)
+        if (event.defaultPrevented || disabled || readOnly || event.nativeEvent.isComposing || event.keyCode === 229)
             return;
         if (event.key === "ArrowUp" || event.key === "ArrowDown") {
             event.preventDefault();

@@ -5,7 +5,9 @@ import { scheduleOnRN } from "react-native-worklets";
 import type { SortableItem } from "@hjmds/design-contracts/components/interaction-adapters";
 import { resolveCarouselDescriptor, getCarouselNavigationTarget, type ComposeCarouselAccessibleName } from "@hjmds/design-contracts/components/carousel";
 import { motion as timing } from "@hjmds/design-contracts/foundations";
-import { Button } from "./actions.js";
+import { Button, IconButton } from "./actions.js";
+import { Text } from "./primitives.js";
+import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { useHjmNativeTheme } from "./provider.js";
 
 /** Fraction of a slide past which a slow release still pages (platform paging uses half). */
@@ -14,6 +16,7 @@ const carouselReleasePageFraction = 0.5;
 const carouselReleaseFlingBack = 300;
 
 export type CarouselMotionProps = {
+  navigation?: "buttons" | "counter";
   slides: readonly SortableItem[]; currentKey: string; onCurrentKeyChange(key: string): void;
   /** Optional localized position/name composer shared with the base Carousel. */
   composeAccessibleName?: ComposeCarouselAccessibleName;
@@ -70,7 +73,13 @@ export function CarouselMotion(props: CarouselMotionProps) {
       onSnapToItem={next => { const slide = props.slides[next]; if (slide && slide.id !== props.currentKey) props.onCurrentKeyChange(slide.id); }}
       renderItem={({ item, index: i }) => <View accessibilityLabel={resolved[i]!.accessibleName} accessibilityElementsHidden={resolved[i]!.inert} importantForAccessibility={i === index ? "auto" : "no-hide-descendants"}
         pointerEvents={i === index ? "auto" : "none"}>{props.renderSlide(item)}</View>} />
-    <Button tone="ghost" disabled={index === 0} onPress={() => props.onCurrentKeyChange(getCarouselNavigationTarget(descriptor, "previous"))}>{props.previousLabel}</Button>
-    <Button tone="ghost" disabled={index === props.slides.length - 1} onPress={() => props.onCurrentKeyChange(getCarouselNavigationTarget(descriptor, "next"))}>{props.nextLabel}</Button>
+    {props.navigation === "counter" ? <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+      <IconButton label={props.previousLabel} tone="ghost" disabled={index === 0} onPress={() => pageBy(-1)}><FixedGlyph>{rtl ? "›" : "‹"}</FixedGlyph></IconButton>
+      <Text align="center" variant="caption" accessibilityLiveRegion="polite">{index + 1}/{props.slides.length}</Text>
+      <IconButton label={props.nextLabel} tone="ghost" disabled={index === props.slides.length - 1} onPress={() => pageBy(1)}><FixedGlyph>{rtl ? "‹" : "›"}</FixedGlyph></IconButton>
+    </View> : <>
+      <Button tone="ghost" disabled={index === 0} onPress={() => pageBy(-1)}>{props.previousLabel}</Button>
+      <Button tone="ghost" disabled={index === props.slides.length - 1} onPress={() => pageBy(1)}>{props.nextLabel}</Button>
+    </>}
   </View>;
 }

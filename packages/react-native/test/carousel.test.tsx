@@ -94,3 +94,27 @@ describe("Native Carousel", () => {
     await act(async () => { await vi.advanceTimersByTimeAsync(5000); }); expect(position().props.accessibilityValue.now).toBe(1);
   });
 });
+
+it("recovers an uncontrolled removed slide at its previous position and keeps controls consistent", async () => {
+  const three = [...slides, { id: "c", label: "마지막 소식" }]; const change = vi.fn();
+  const view = (items: typeof three) => <HjmNativeProvider><Carousel {...base} slides={items} defaultCurrentKey="b" onCurrentKeyChange={change} /></HjmNativeProvider>;
+  await act(async () => { renderer = create(view(three)); });
+  await act(async () => renderer.update(view([three[0]!, three[2]!])));
+  expect(position().props.accessibilityValue.text).toBe("2/2 마지막 소식");
+  expect(next().props.disabled).toBe(true);
+  expect(renderer.root.findAllByType(Button).find(node => node.props.accessibilityState?.selected)?.props.accessibilityLabel).toBe("2/2 마지막 소식");
+  expect(change).toHaveBeenCalledExactlyOnceWith("c");
+  await act(async () => renderer.update(view(three)));
+  expect(position().props.accessibilityValue.text).toBe("3/3 마지막 소식");
+  await act(async () => renderer.update(view(slides)));
+  expect(position().props.accessibilityValue.text).toBe("2/2 다음 소식");
+  await act(async () => renderer.update(view([{ id: "x", label: "새 항목" }])));
+  expect(position().props.accessibilityValue.text).toBe("1/1 새 항목");
+  expect(next().props.disabled).toBe(true);
+  expect(renderer.root.findAllByType(Button).find(node => node.props.children === "이전")?.props.disabled).toBe(true);
+  expect(change.mock.calls).toEqual([["c"], ["b"], ["x"]]);
+});
+
+it.each(["default", "controlled"])("still rejects an initially invalid %s key", async kind => {
+  await expect(render(kind === "default" ? { defaultCurrentKey: "missing" } : { currentKey: "missing", onCurrentKeyChange() {} })).rejects.toThrow(/currentKey/);
+});

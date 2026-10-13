@@ -25,13 +25,21 @@ export function ContentTransitionComparison({ mode = "tabs" }: ContentTransition
   const [failNext, setFailNext] = useState(false);
   const [failed, setFailed] = useState(false);
   const [done, setDone] = useState(false);
+  // Confirmation is a snapshot; switching to tabs may still edit the current draft.
+  const [confirmed, setConfirmed] = useState("");
   const restartRef = useRef<HTMLButtonElement>(null);
-  // Completion removes its footer action, so move Web focus to the next available action.
-  useEffect(() => { if (done) restartRef.current?.focus(); }, [done]);
+  const draftRef = useRef<HTMLInputElement>(null);
+  const resumeDraft = useRef(false);
+  // Completion and restart both remove the active button. Focus the newly available action/input.
+  useEffect(() => {
+    if (mode !== "steps") return;
+    if (done) restartRef.current?.focus();
+    else if (resumeDraft.current) { resumeDraft.current = false; draftRef.current?.focus(); }
+  }, [done, mode]);
   const profile = profileOptions[themeIndex]!;
   const transitionProps = choice === "none" ? { motion: "none" as const }
     : choice === "profile" ? {} : { preset: choice };
-  const field = <TextField label={copy.draft} value={draft} onValueChange={setDraft} />;
+  const field = <TextField ref={draftRef} label={copy.draft} value={draft} onValueChange={setDraft} />;
   const section = transitionSections.find(item => item.id === selected)!;
   const body = (item: typeof transitionSections[number]) => <ContentTransition stateKey={item.id} animateHeight {...transitionProps}>
     <Stack gap="md"><Text emphasis="strong">{item.title}</Text><Text>{item.body}</Text>{field}</Stack>
@@ -39,7 +47,7 @@ export function ContentTransitionComparison({ mode = "tabs" }: ContentTransition
   function complete() {
     // Deterministic local failure, without fake network latency or persistence claims.
     if (failNext) { setFailNext(false); setFailed(true); return; }
-    setFailed(false); setDone(true);
+    setFailed(false); setConfirmed(draft); setDone(true);
   }
   // This bounded preview floor keeps body scrolling and the footer observable at short
   // viewport heights. Product layout tokens describe rhythm, not this fixture viewport;
@@ -65,8 +73,8 @@ export function ContentTransitionComparison({ mode = "tabs" }: ContentTransition
       <Tabs id={id} label={copy.tabs} items={transitionSections} value={selected} onValueChange={setSelected}
         panelMode="dynamic" renderPanels={false} activationMode="manual" />
       <TabPanel tabsId={id} activeValue={selected} mode="dynamic">{body(section)}</TabPanel>
-    </Stack> : done ? <Stack gap="md"><Notice tone="success" title={copy.done} /><Text>{draft}</Text>
-      <Button ref={restartRef} onClick={() => { setDone(false); setIndex(0); }}>{copy.restart}</Button>
+    </Stack> : done ? <Stack gap="md"><Notice tone="success" title={copy.done} /><Text>{confirmed}</Text>
+      <Button ref={restartRef} onClick={() => { resumeDraft.current = true; setDone(false); setIndex(0); }}>{copy.restart}</Button>
     </Stack> : <div style={{ height: "70dvh", minHeight: 360 }}>{flow}</div>}
   </Stack></HjmProvider>;
 }

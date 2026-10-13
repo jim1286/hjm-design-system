@@ -332,7 +332,9 @@ export const listRecipe = {
 };
 export const listRowRecipe = {
     slots: ["root", "leading", "content", "title", "description", "trailing"],
-    defaults: { density: "comfortable", selected: false },
+    defaults: { density: "comfortable", selected: false, tone: "default" },
+    // Destructive destinations keep semantic emphasis without renderer-specific title styles.
+    tones: { default: { titleColor: semanticColors.content.body }, danger: { titleColor: semanticColors.content.danger } },
     density: {
         compact: {
             oneLineMinHeight: control.minTouchTarget,
@@ -365,6 +367,8 @@ export const listRowRecipe = {
             paddingVertical: spacing.md,
         },
     },
+    // Loading uses the same row/line boxes as content; only the copy width is illustrative.
+    loading: { titleWidthPercent: 60, descriptionWidthPercent: 40, trailingWidth: spacing.xxl },
     gap: spacing.sm,
     leadingSize: 40,
     /**
@@ -848,6 +852,15 @@ export const bottomNavigationRecipe = {
         "badge",
     ],
     defaults: bottomNavigationRecipeDefaults,
+    // Selected full-item cards retain the existing navigation state engine (Spint, 2026-10-12).
+    selectionTile: {
+        background: semanticColors.surface.brand,
+        selectedBackground: semanticColors.action.brand.background,
+        selectedContent: semanticColors.action.brand.content,
+        padding: spacing.xxs,
+        gap: spacing.xxs,
+        radius: "lg",
+    },
     adaptive: {
         web: "fixed-compact-viewport",
         native: "navigator-tab-bar",

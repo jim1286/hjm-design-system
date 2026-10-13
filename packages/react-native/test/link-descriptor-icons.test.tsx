@@ -6,7 +6,7 @@ import { View } from "react-native";
 import { afterEach, beforeEach, describe, expect, it, vi, type MockInstance } from "vitest";
 
 import { HjmNativeProvider, Link, Text, type LinkProps } from "../src/index.js";
-import { resetDeprecatedStyleWarningsForTest } from "../src/internal/deprecated-style.js";
+import { resetDiagnosticsForTest } from "../src/internal/diagnostics.js";
 
 // Regression: until 1.12 Native Link validated descriptor.leadingIcon/trailingIcon but never drew
 // them (docs/link.md "Icon과 접근성"), so a descriptor shared with Web lost its chevron.
@@ -34,7 +34,7 @@ const base = {
 
 let warn: MockInstance<typeof console.warn>;
 beforeEach(() => {
-  resetDeprecatedStyleWarningsForTest();
+  resetDiagnosticsForTest();
   warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
 });
 afterEach(() => vi.restoreAllMocks());

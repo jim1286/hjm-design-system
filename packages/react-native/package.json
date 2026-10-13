@@ -22,6 +22,12 @@
       "import": "./dist/index.js",
       "default": "./dist/index.js"
     },
+    "./status-text": {
+      "types": "./dist/status-text.d.ts",
+      "react-native": "./dist/status-text.js",
+      "import": "./dist/status-text.js",
+      "default": "./dist/status-text.js"
+    },
     "./provider": {
       "types": "./dist/provider.d.ts",
       "react-native": "./dist/provider.js",

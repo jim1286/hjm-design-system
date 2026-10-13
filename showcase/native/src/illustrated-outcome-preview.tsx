@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Image as NativeImage } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { AccessibilityInfo, AppState, Image as NativeImage, Platform } from "react-native";
 import { KeyboardAvoiding } from "@hjmds/react-native/keyboard";
 import { Button } from "@hjmds/react-native/actions";
 import { EmptyState, Result } from "@hjmds/react-native/feedback";
@@ -20,6 +20,17 @@ export function IllustratedOutcomePreview() {
  const [index,setIndex] = useState(0);
  const [draft,setDraft] = useState("");
  const [showArtwork,setShowArtwork] = useState(true);
+ const resultTitle = "시작할 준비가 됐어요";
+ const resultDescription = `입력한 제목: ${draft}. 이 체험에서는 서버에 저장하지 않아요.`;
+ const previousStage = useRef(stage);
+ useEffect(() => {
+  const completed = stage === "done" && previousStage.current !== "done";
+  previousStage.current = stage;
+  // Announce the outcome without grouping Result's separate actions into one accessibility target.
+  if (completed && Platform.OS === "ios" && AppState.currentState === "active") {
+   AccessibilityInfo.announceForAccessibilityWithOptions(`${resultTitle}. ${resultDescription}`, { queue: true });
+  }
+ }, [stage, resultDescription]);
  const notebook = showArtwork ? <Artwork kind="notebook"/> : null;
  const artworkToggle = <Button tone="ghost" selected={!showArtwork} onPress={()=>setShowArtwork(v=>!v)}>{showArtwork ? "그림 없이 보기" : "그림 다시 보기"}</Button>;
  const artworkNote = <Text variant="caption" tone="muted">그림이 없어도 안내와 모든 행동을 사용할 수 있어요.</Text>;
@@ -33,7 +44,7 @@ export function IllustratedOutcomePreview() {
     {id:"welcome",title:"작은 장면부터 기록해요",description:"그림은 분위기를 더하고, 제목과 버튼은 할 일을 안내해요.",content:<Stack gap="lg">{notebook}{artworkToggle}{artworkNote}</Stack>},
     {id:"draft",title:"기록에 이름을 붙여요",description:"앞 단계로 돌아가도 입력한 제목은 유지돼요.",content:<Stack gap="lg"><TextField label="기록 제목" value={draft} onValueChange={setDraft}/>{artworkToggle}{artworkNote}</Stack>}
    ]} index={index} onIndexChange={setIndex} nextLabel="다음" backLabel="이전" complete={{label:"체험 완료",disabled:!draft.trim(),onAction:()=>setStage("done")}} progressLabel={(step,total)=>`${step} / ${total} 단계`}/> :
-   <Result status="success" title="시작할 준비가 됐어요" description={`입력한 제목: ${draft}. 이 체험에서는 서버에 저장하지 않아요.`} renderIcon={() => showArtwork ? <Artwork kind="tick" size={32}/> : null} actions={[{label:"다시 체험하기",onAction:()=>{setStage("empty");setIndex(0);}}]}/>}
+   <Result accessibilityLiveRegion="polite" status="success" title={resultTitle} description={resultDescription} renderIcon={() => showArtwork ? <Artwork kind="tick" size={32}/> : null} actions={[{label:"다시 체험하기",onAction:()=>{setStage("empty");setIndex(0);}}]}/>}
   {stage !== "intro" ? artworkNote : null}
  </Stack></KeyboardAvoiding>;
 }

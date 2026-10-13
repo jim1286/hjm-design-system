@@ -110,4 +110,4 @@ Native: 없음. 폰은 BottomNavigation, 태블릿 split view는 navigator가 �
 
 2026-10-07 소비 감사에서 Web 항목의 숫자 recipe 모서리가 프로필을 우회했다. 기존 `radius.md` 역할을 가까운 Provider의 CSS 변수로 읽고 변수 없는 독립 사용은 recipe 12를 유지한다. 레일 폭·링크·현재 위치·접기·초점과 Web 전용 범위는 바꾸지 않는다.
 
-프로필 연결은 1.15.0 이후 미게시 변경이며, 기본 배포 계약과 실제 Native 기기 검증은 구분한다.
+프로필 연결은 1.16.0 변경이며, 기본 배포 계약과 실제 Native 기기 검증은 구분한다.

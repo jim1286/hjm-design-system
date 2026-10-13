@@ -8,6 +8,10 @@ export type InlineConfirmProps = Readonly<{ label: string; prompt: string; confi
 const emptySubscribe = () => () => {};
 const emptySnapshot = () => null;
 export function InlineConfirm(props: InlineConfirmProps) {
+  // The displayed prompt can change while confirmation is open. Execute the
+  // current action rather than the callback captured when the prompt opened.
+  const confirmRef = useRef(props.onConfirm);
+  confirmRef.current = props.onConfirm;
   const [session, setSession] = useState<AlertDialogSession | null>(null);
   const [done, setDone] = useState(false);
   const phase = useSyncExternalStore(session?.subscribe ?? emptySubscribe, session?.getSnapshot ?? emptySnapshot, emptySnapshot);
@@ -28,7 +32,7 @@ export function InlineConfirm(props: InlineConfirmProps) {
     }
   }, [status, phase?.status]);
   if (done) return <Text accessibilityLiveRegion="polite">{props.successLabel}</Text>;
-  if (!session) return <Button tone="danger" disabled={props.disabled ?? false} onPress={() => setSession(createAlertDialogSession({ mode: "confirm", tone: "danger", title: props.label, description: props.prompt, confirmLabel: props.confirmLabel, cancelLabel: props.cancelLabel, onConfirm: props.onConfirm, fallbackErrorMessage: props.errorLabel }))}>{props.label}</Button>;
+  if (!session) return <Button tone="danger" disabled={props.disabled ?? false} onPress={() => setSession(createAlertDialogSession({ mode: "confirm", tone: "danger", title: props.label, description: props.prompt, confirmLabel: props.confirmLabel, cancelLabel: props.cancelLabel, onConfirm: () => confirmRef.current(), fallbackErrorMessage: props.errorLabel }))}>{props.label}</Button>;
   const busy = phase?.status === "busy";
   return <View style={{ gap: spacing.sm }}><Text accessibilityLiveRegion="polite">{props.prompt}</Text>{phase?.status === "error" && <Text accessibilityRole="alert" tone="danger">{phase.message}</Text>}
     <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing.sm }}>

@@ -59,4 +59,15 @@ describe("shared action session", () => {
   session.subscribe(() => { if (session.getSnapshot().status === "pending") session.reset(2); });
   expect(await session.run(task)).toEqual({ status: "ignored" }); expect(task).not.toHaveBeenCalled();
  });
+ it.each(["success", "error"] as const)("ignores the %s outcome when a subscriber switches entities during publication", async status => {
+  const session = createActionSession("first entity");
+  session.subscribe(() => { if (session.getSnapshot().status === status) session.reset("second entity"); });
+  const outcome = await session.run(() => {
+   if (status === "error") throw new Error("failed first entity");
+   return "saved first entity";
+  }, { retryable: true });
+  expect(outcome).toEqual({ status: "ignored" });
+  expect(session.getSnapshot()).toEqual({ status: "idle", value: "second entity" });
+  expect(await session.retry()).toEqual({ status: "blocked" });
+ });
 });

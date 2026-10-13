@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 구성 API 지침 참조
-- 검토일: 2026-10-06
+- 검토일: 2026-10-13
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screen-flows.tsx`(`SearchScreen` 두 단계 검색 prop, 2026-10-06 사용자 위임 결정으로 미리보기 로직을 공개 API로 올림), 예제 `showcase/*/search-discovery-preview.tsx`·`showcase/shared/search-discovery.ts`. 2026-10-06 사용자 요청("실험에 있는 검색화면 UI도 개편해. 검색과 필터 있는 앱 서비스 따라해.")에 따라 Material 3 Search·Apple HIG search fields·Baymard·NN/g·eBay Playbook 필터 패턴과 국내 커머스·생활 서비스 모바일 웹의 **구조·상호작용만** 조사해 다시 설계했다(브랜드 색·로고·문구·자산은 가져오지 않았다). 2026-10-06 사용자 승인으로 실험 `공통 화면/검색`을 배포하면서 같은 일을 직접 조립하던 배포 `화면/검색`(내 기록 검색)을 대체했다(Web id `patterns-search` 보존, [승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정))
 - 스토리북: `배포/화면/검색/검색 결과와 필터`
 
@@ -110,6 +110,18 @@ Native · Web < 960: 아래 시트(size large)        Web ≥ 960(expanded): 옆
 | 오류 | 이전 결과를 남기고 위에 Notice `danger` | `다시 시도` |
 | 실패와 복구 | `실패와 복구` 스토리: 다음 검색 실패를 예약한 뒤 검색하면 오류 행이 되고 `다시 시도`로 같은 검색어·조건을 다시 조회 | 검색어·조건·정렬은 그대로 |
 | 로그인 필요 | `state={{ kind: "restricted" }}`로 본문 교체 | `stateAction` 로그인 |
+
+
+### 제안·확정 결과·필터 개수의 요청 경계
+
+2026-10-13 전수 점검에서 최초 조회와 변경 요청의 상태를 같은 골격으로 설명하던 부분을 구체화했다.
+
+| 상황 | 연결 | 유지·복구 |
+| --- | --- | --- |
+| 제안 조회 | onSearch(value, signal) | 중단된 응답은 무시하고 최근 검색에는 쓰지 않는다 |
+| 검색 확정 | onSubmit + committedQuery | 검색어·필터·정렬을 요청 키로 묶고 최신 결과만 반영한다 |
+| 재조회 실패 | 기존 결과 + resultSummary.notice | count를 0으로 바꿔 실제 0건처럼 보이지 않게 한다 |
+| 필터 초안 개수 조회 | count(draft)=null | 아직 모르는 개수를 0으로 표시하지 않는다. 닫기는 적용값을 바꾸지 않는다 |
 
 ## 사용하는 지침
 
@@ -247,8 +259,8 @@ import { SearchScreen } from "@hjmds/react-native/screen-flows";
 | 다크 | semantic token만 쓰므로 따로 처리하지 않는다. 일치 강조는 색이 아니라 굵기라 다크·색각 차이에서도 남는다. 예제 색을 제품 기본값으로 복사하지 않는다 |
 | 좁은 폭 | 320에서 칩 줄은 화면 끝까지 스크롤, 적용 조건 칩은 줄바꿈, 시트는 아래 전폭 |
 | 넓은 폭(Web ≥ 960) | 한 열(최대 720) 유지, 필터 시트는 `placement="end"` 옆 시트로 결과를 가리지 않는다. 상시 왼쪽 필터 패널은 ScreenLayout 폭 계약 밖이라 두지 않는다 |
-| 키보드 | Native 본문 ScrollView가 `keyboardShouldPersistTaps="handled"`라 키보드가 떠 있어도 제안 행이 한 번에 눌린다. 검색 키뿐 아니라 제안·최근·추천을 골라 확정해도 키보드가 닫힌다(Native `Keyboard.dismiss()`, Web은 결과 영역으로 포커스, 미게시(1.13.1 이후)) |
-| 큰 글자 · 칩 줄 안 pills | 칩 줄에 SegmentedControl `presentation="pills"`를 넣어도 세로로 쌓이지 않고 한 줄 가로 스크롤로 남는다(미게시(1.13.1 이후). 1.13.0 이하는 약 440pt 기둥이 됐다). 칩 높이는 라벨에 맞춰 늘어난다(Native Chip `minHeight`) |
+| 키보드 | Native 본문 ScrollView가 `keyboardShouldPersistTaps="handled"`라 키보드가 떠 있어도 제안 행이 한 번에 눌린다. 검색 키뿐 아니라 제안·최근·추천을 골라 확정해도 키보드가 닫힌다(Native `Keyboard.dismiss()`, Web은 결과 영역으로 포커스, 1.13.1 반영) |
+| 큰 글자 · 칩 줄 안 pills | 칩 줄에 SegmentedControl `presentation="pills"`를 넣어도 세로로 쌓이지 않고 한 줄 가로 스크롤로 남는다(1.13.1 반영. 1.13.0 이하는 약 440pt 기둥이 됐다). 칩 높이는 라벨에 맞춰 늘어난다(Native Chip `minHeight`) |
 
 ## 플랫폼 차이
 
@@ -277,3 +289,11 @@ import { SearchScreen } from "@hjmds/react-native/screen-flows";
 - Storybook은 실제 검색 서버·라우터 연동 증거가 아니다. Native 화면은 2026-10-06 개편에서 시뮬레이터로 확인하지 않았다(구조는 렌더 테스트로만 확인).
 - 시트 안 검색(채팅 도구 고르기 등)은 Sheet `size`를 `medium`·`large`로 주고 `scrollable` 없이 SearchScreen을 넣는다. SearchScreen은 `contentInset="none"`·`hostGutter="regular"`.
   1.13.0 이하 Native는 이 조합에서 화면이 0pt가 되고 칩 줄이 시트 여백에서 잘렸다(2026-10-06 utilverse, [Sheet 함정](../components/sheet.md#함정)).
+
+
+### 하위 목록 로딩 계약
+
+결과 개수가 아직 없는 `resultSummary.count === null`은 양 renderer에서 `ListRow loading`을
+사용한다. 위쪽 개수 Skeleton과 실제 결과 행은 화면이 배치하지만, 행의 density·두 줄 높이·슬롯은
+ListRow가 소유한다. 상태 이름은 첫 로딩 행 한 곳에만 제공한다. 검색 화면 안에서 임의 폭/간격의
+Skeleton 두 개로 결과 행을 다시 만들지 않는다.

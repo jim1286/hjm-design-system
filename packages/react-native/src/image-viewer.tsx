@@ -3,6 +3,7 @@ import { AccessibilityInfo, Image, Modal, Platform, View, useWindowDimensions, t
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Gallery } from "react-native-zoom-toolkit";
 import { containerDefaults, containerRecipe } from "@hjmds/design-contracts/components/container";
+import { Spinner } from "./internal/spinner.js";
 import { Button } from "./actions.js";
 import { SegmentedControl } from "./inputs.js";
 import { ImageInspection, type ImageViewerInspection } from "./internal/image-inspection.js";
@@ -157,7 +158,7 @@ function ImageViewerSession(props: ImageViewerProps) {
           {currentStatus !== "ready" ? <View pointerEvents="box-none" style={{ position: "absolute", top: 0, bottom: 0, left: 0, right: 0, justifyContent: "center", alignItems: "center", ...controlInsets }}>
             <Surface padding="md">
               {currentStatus === "error" ? <View><Text accessibilityLiveRegion="assertive">{props.errorLabel}</Text><Button growWithContent onPress={resetImages}>{props.retryLabel}</Button></View>
-                : <Text accessibilityLiveRegion="polite">{props.loadingLabel}</Text>}
+                : <Spinner label={props.loadingLabel} />}
             </Surface>
           </View> : null}
         </View>}

@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.17.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-13
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screens.tsx`·`src/screen-flows.tsx`; 기존 개별 지침을 새 규격으로 통합. 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
 - 스토리북: `배포/화면/콘텐츠/사진 선택과 업로드`
 
@@ -44,7 +44,7 @@ import { MediaSelectionScreen } from "@hjmds/react/screen-flows";
   items={picked.map((p) => ({ descriptor: { id: p.id, name: p.fileName, state: p.upload },
     preview: <img src={p.uri} alt="" width={p.width} height={p.height} /> }))}
   add={{ label: t("media.add"), onAction: openPicker }}
-  done={{ label: t("media.done"), onAction: submit, disabled: uploading }}
+  done={{ label: t("media.done"), onAction: submit, disabled: uploading || !canComplete }}
   labels={{ pending: t("upload.pending"), uploading: t("upload.uploading"),
     success: t("upload.success"), cancel: t("upload.cancel"), retry: t("upload.retry") }}
   actionLabels={{ remove: t("media.remove"), moveUp: t("media.moveUp"), moveDown: t("media.moveDown") }}
@@ -66,7 +66,7 @@ import { Image } from "react-native";
   items={picked.map((p) => ({ descriptor: { id: p.id, name: p.fileName, state: p.upload },
     preview: <Image src={p.uri} width={p.width} height={p.height} /> }))}
   add={{ label: t("media.add"), onAction: openPicker }}
-  done={{ label: t("media.done"), onAction: submit, disabled: uploading }}
+  done={{ label: t("media.done"), onAction: submit, disabled: uploading || !canComplete }}
   labels={{ pending: t("upload.pending"), uploading: t("upload.uploading"),
     success: t("upload.success"), cancel: t("upload.cancel"), retry: t("upload.retry") }}
   actionLabels={{ remove: t("media.remove"), moveUp: t("media.moveUp"), moveDown: t("media.moveDown") }}
@@ -104,7 +104,7 @@ Web의 `<img alt="">`는 장식용 미리보기다. 사진 이름은 `removeLabe
 | 간격 | 화면 padding `spacing.md` 16; 격자 간격 `spacing.md` 16; 항목 안 미리보기–UploadItem–버튼 줄 `spacing.xs` 8; 버튼 사이 `spacing.xxs` 4; footer 요약–완료 `spacing.sm` 12 | Web·Native `MediaSelectionScreen` |
 | 순서·정렬 | 헤더(제목 → 추가) → 격자(항목마다 미리보기 → UploadItem → 위로·아래로·삭제) → footer(`selectionSummary` → 완료) | 렌더 순서 |
 | 고정·스크롤 | 헤더·footer 고정, 격자는 본문 스크롤(`scroll` 기본 `"screen"`) | `ScreenLayout` |
-| 좁은 폭·큰 글자 | 좁은 폭에서도 2열 유지; 항목 버튼 줄은 줄바꿈(`flexWrap: "wrap"`)해 버튼을 자르지 않는다 | `screen-flows.tsx` |
+| 좁은 폭 | 좁은 폭에서도 2열 유지; 항목 버튼 줄은 줄바꿈(`flexWrap: "wrap"`)해 버튼을 자르지 않는다 | `screen-flows.tsx` |
 
 ## 꼭 지킬 것
 
@@ -117,3 +117,9 @@ Web의 `<img alt="">`는 장식용 미리보기다. 사진 이름은 `removeLabe
 
 - `actions`를 넘겨도 `add` 버튼이 그 자리를 덮는다. 다른 상단 행동은 `leading`이나 `notice`로 둔다.
 - `library`를 주면 `items` 격자와 업로드 상태 표시는 그려지지 않는다. 선택 결과는 `selectionSummary`로 보여 준다.
+
+## 삭제·순서 변경 후 Web 키보드 초점
+
+기본 격자는 제품이 `items` 변경을 반영한 뒤 초점을 복구한다. 현재 사진을 제거하면 같은 위치의 다음 사진 제거 버튼, 마지막이면 이전 사진 제거 버튼으로 이어진다. 모두 제거하면 활성 `add`로 이동하고, 추가도 잠겼으면 본문에 남는다. 마지막 제거와 동시에 `state.kind="empty"`로 바꿔도 같은 규칙이다. 이동 후 첫·마지막 위치의 버튼이 비활성화되면 같은 사진의 사용 가능한 행동으로 이어진다. 살아 있는 미리보기 입력과 값은 key인 `descriptor.id`를 따라 유지한다. 이동된 초점이 본문 밖으로 가려지면 `scroll="screen"`의 본문만 필요한 만큼 스크롤한다.
+
+2026-10-13 실행 검수에서 삭제·경계 이동 후 키보드 문맥이 끊겨 추가한 동작이다. 외부 컨트롤로 이동하거나 명시적으로 blur한 초점은 가져오지 않는다. `library`의 초점·선택과 Native OS 접근성 초점은 이 Web DOM 복구 범위에 포함되지 않는다. `done` 허용 조건과 요청 취소·늦은 응답 처리는 계속 제품이 소유한다.

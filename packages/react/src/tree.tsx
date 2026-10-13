@@ -15,6 +15,8 @@ import {
 import type { CheckboxState, WebKeyboardKey } from "@hjmds/design-contracts/behaviors";
 import {
   forwardRef,
+  useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -100,13 +102,42 @@ export const Tree = forwardRef(function Tree<Id extends string = string>(
     ? selection.selectedKey !== undefined
     : selection?.mode === "multiple" ? selection.selectedKeys !== undefined : true;
   const [uncontrolledSelected, setUncontrolledSelected] = useState<ReadonlySet<Id>>(() => selectedIds(selection));
-  const selected = selectionControlled ? selectedIds(selection) : uncontrolledSelected;
+  const rawSelected = selectionControlled ? selectedIds(selection) : uncontrolledSelected;
+  const selected = useMemo(() => {
+    const liveIds = new Set(resolved.map(node => node.id));
+    const keys = [...rawSelected].filter(id => liveIds.has(id));
+    return keys.length === rawSelected.size ? rawSelected : new Set(keys);
+  }, [rawSelected, resolved]);
+  useEffect(() => {
+    if (selectionControlled || selected === uncontrolledSelected || !selection || selection.mode === "none") return;
+    // A removed node must not leak into the next callback or revive when reinserted.
+    setUncontrolledSelected(selected);
+    if (selection.mode === "single") selection.onSelectionChange?.([...selected][0] ?? null);
+    else selection.onSelectionChange?.(selected);
+  }, [selected, selection, selectionControlled, uncontrolledSelected]);
   const [focusedId, setFocusedId] = useState<Id | null>(null);
   // Roving tab stop: one node is tabbable, and it must stay a real visible node
-  // after a collapse removed the previously focused descendant.
-  const activeId = visible.some((node) => node.id === focusedId) ? focusedId : visible[0]?.id ?? null;
+  // after a collapse removed the previously focused descendant. The decorative
+  // glyph is not a nested control, so each row has only one focus target.
+  const previousResolved = useRef(resolved);
+  let fallbackId = focusedId;
+  while (fallbackId !== null && !visible.some(node => node.id === fallbackId)) {
+    fallbackId = previousResolved.current.find(node => node.id === fallbackId)?.parentId ?? null;
+  }
+  const activeId = fallbackId ?? visible[0]?.id ?? null;
+  const focusWithin = useRef(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const typeahead = useRef<Readonly<{ query: string; at: number }>>({ query: "", at: 0 });
+  useLayoutEffect(() => {
+    previousResolved.current = resolved;
+    if (focusedId === null || activeId === null || focusedId === activeId) return;
+    setFocusedId(activeId);
+    // External collapse/removal can unmount the focused row without firing blur.
+    // Restore its surviving ancestor only while focus still belongs to this tree.
+    if (focusWithin.current) {
+      rootRef.current?.querySelector<HTMLElement>(`[data-hjm-tree-node="${CSS.escape(activeId)}"]`)?.focus();
+    }
+  }, [activeId, focusedId, resolved]);
 
   const focusNode = (id: Id) => {
     setFocusedId(id);
@@ -169,6 +200,10 @@ export const Tree = forwardRef(function Tree<Id extends string = string>(
     <div
       ref={composeRefs(rootRef, forwardedRef)}
       role="tree"
+      onFocusCapture={() => { focusWithin.current = true; }}
+      onBlurCapture={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) focusWithin.current = false;
+      }}
       aria-label={label}
       aria-busy={asyncState.status === "loading" || asyncState.status === "loadingMore" || undefined}
       aria-multiselectable={selection?.mode === "multiple" || undefined}
@@ -191,8 +226,6 @@ export const Tree = forwardRef(function Tree<Id extends string = string>(
           aria-checked={checkedStates ? (checkedStates.get(node.id) === "mixed" ? "mixed" : String(checkedStates.get(node.id) === true)) as "true" | "false" | "mixed" : undefined}
           aria-disabled={node.disabled || undefined}
           aria-label={node.accessibleName}
-          // One tab stop for the whole tree; the glyph is decorative, not a
-          // nested control, so a node is the only focusable thing in a row.
           tabIndex={node.id === activeId ? 0 : -1}
           className="hjm-tree__node"
           style={{ "--hjm-tree-depth": node.depth - 1 } as CSSProperties}

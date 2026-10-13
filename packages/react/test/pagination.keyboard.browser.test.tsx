@@ -93,3 +93,32 @@ it("moves pages with Tab and Space/Enter, announces the current page, and retain
   expect(onPageChange).toHaveBeenCalledTimes(2);
   expect(currentPageButton().getAttribute("aria-label")).toBe("3페이지 중 3페이지");
 });
+
+it("restores focus to the current page when a result update removes the focused page", async () => {
+  const change = vi.fn();
+  const view = (currentPage: number, totalPages: number) => <HjmProvider><button>Outside</button><Pagination label="Pages" descriptor={{ currentPage, totalPages }} labels={labels} composeAccessibleName={composeAccessibleName} onPageChange={change} /></HjmProvider>;
+  await act(async () => root.render(view(10, 10)));
+  currentPageButton().focus();
+  await act(async () => root.render(view(1, 2)));
+  expect(document.activeElement).toBe(currentPageButton());
+  expect(change).not.toHaveBeenCalled();
+  const outside = host.querySelector("button")!;
+  outside.focus();
+  await act(async () => root.render(view(1, 1)));
+  expect(document.activeElement).toBe(outside);
+});
+
+it("leaves controlled pagination unchanged until the owner accepts and reports the previous reason", async () => {
+  const change = vi.fn();
+  const view = (currentPage: number) => <Pagination label="Pages" descriptor={{ currentPage, totalPages: 2 }} labels={labels} composeAccessibleName={composeAccessibleName} onPageChange={change} />;
+  await act(async () => root.render(view(2)));
+  const previous = buttonNamed("이전 페이지");
+  previous.focus();
+  await act(async () => previous.click());
+  expect(change).toHaveBeenCalledExactlyOnceWith(1, "previous");
+  expect(currentPageButton().textContent).toBe("2");
+  await act(async () => root.render(view(1)));
+  expect(document.activeElement).toBe(previous);
+  await act(async () => previous.click());
+  expect(change).toHaveBeenCalledOnce();
+});

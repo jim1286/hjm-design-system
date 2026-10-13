@@ -4,8 +4,8 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
-- 근거: `showcase/web/src/patterns/Landing.stories.tsx`·`Landing.previews.tsx`, `showcase/native/src/Landing.stories.tsx`·`introduction-preview.tsx`, 변형 `showcase/*/reference-flow-previews.tsx`(`ServiceIntroduction`), `showcase/shared/landing-pattern.ts`, `showcase/native/src/pattern-status.tsx`, `packages/react/src/effect-surface.tsx`, `packages/react-native/src/effect-surface.tsx`. 2026-10-06 사용자 승인으로 실험 `서비스 소개/제품 체험 중심`(설명과 사례 중심 포함)을 배포하면서 같은 소개 목적의 배포 `화면/랜딩 화면`과 한 항목으로 합쳤다(Web id `patterns-landing` 보존, [승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정))
+- 검토일: 2026-10-13
+- 근거: `showcase/web/src/patterns/Landing.stories.tsx`·`Landing.previews.tsx`(진입점)·`showcase/web/src/patterns/landing-preview.tsx`(기본 본체), `showcase/native/src/Landing.stories.tsx`·`introduction-preview.tsx`(진입점)·`showcase/native/src/landing-preview.tsx`(기본 본체), 변형 `showcase/*/reference-flow-previews.tsx`(`ServiceIntroduction`), `showcase/shared/landing-pattern.ts`, `showcase/native/src/pattern-status.tsx`, `packages/react/src/effect-surface.tsx`, `packages/react-native/src/effect-surface.tsx`. 2026-10-06 사용자 승인으로 실험 `서비스 소개/제품 체험 중심`(설명과 사례 중심 포함)을 배포하면서 같은 소개 목적의 배포 `화면/랜딩 화면`과 한 항목으로 합쳤다(Web id `patterns-landing` 보존, [승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정))
 - 스토리북: `배포/화면/소개/서비스 소개`
 
 ## 목적
@@ -63,7 +63,7 @@
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
 | 바깥 틀 | Web `main` > `Container size="content" gutter={gutter}` > `Stack gap="xl"`(문서 스크롤) · Native `ScrollView`(`contentContainerStyle={{ paddingVertical: spacing.lg }}`) > `Container size="content" gutter={gutter}` > `Stack gap="xl"` | 화면 전체, 스크롤. 위 안전 영역은 내비게이션 헤더(또는 [TopBar](../components/top-bar.md) `safeAreaTop`)가 맡고 헤더 없이 띄울 때만 제품이 감싼다. 아래 고정 영역은 없다. 바깥에는 입력이 없어 키보드 처리는 ⑥ 시트가 맡는다 | 좌우 gutter: 폭 600 미만 `compact` 16(`layout.pagePadding.compact`), 이상 `regular` 20([화면 여백](../tokens/layout.md)). Native 위아래 `spacing.lg` 20. 직계 요소 사이 `spacing.xl` 24(`layout.sectionGap`) |
-| ① 히어로 | EffectSurface `descriptor={{ layers: ["mesh","grain"], active: false }}` > Stack `gap="lg"` > Text·Heading·Text·Button | 맨 위 | 요소 사이 `spacing.lg` 20. EffectSurface는 안쪽 여백이 없어 제품이 컨테이너에 `spacing.xl` 24를 준다(Web `className`, Native `style`) |
+| ① 히어로 | EffectSurface `descriptor={{ layers: ["mesh","grain"], active: false }}` > Surface `padding="xl"` > Stack `gap="lg"` > Text·Heading·Text·Button | 맨 위 | 요소 사이 `spacing.lg` 20. EffectSurface 안에 Surface `padding="xl"`을 두어 spacing.xl 24를 준다. 실제 양 플랫폼 예제와 같은 공개 구성이다 |
 | ② 미리보기 | Surface `padding="lg"` > Stack `gap="md"` > Heading·상태 Text·List | 히어로 아래 | 안쪽 20, 요소 사이 `spacing.md` 16, 한 줄 행 최소 56(`layout.rowHeight.singleLine`). 새 기록이 맨 위 |
 | ③ 기능 | Heading level2 + Surface `padding="lg"` ×3 > Stack `gap="sm"` | 미리보기 아래 | 카드 안 `spacing.sm` 12, 카드 사이 24 |
 | ④ FAQ | Heading level2 + Collapsible × n | 기능 아래 | 트리거 최소 44(`control.minTouchTarget`), 트리거 위아래 `spacing.xs` 8(Web) |
@@ -76,7 +76,7 @@
 ScreenLayout(제목 = 소개 문장, 최대 720, 바깥 padding spacing.md 16) — 본문 스크롤
 ├─ 제품 체험 중심:   [히어로·행동 | 제품 미리보기] → 특징 3열 → FAQ → 끝 행동 카드
 └─ 설명과 사례 중심: 히어로·행동 → [설명 | 제품 미리보기] → 특징 3열 → FAQ → 끝 행동 카드
-   [a | b] = Grid 두 열(열 최소 240), 좁은 폭·큰 글자에서 한 열로 접힌다
+   [a | b] = Grid 두 열(열 최소 240), 좁은 폭에서 한 열로 접힌다
 입력: Sheet(아래 고정 footer에 저장)
 ```
 
@@ -92,10 +92,10 @@ ScreenLayout(제목 = 소개 문장, 최대 720, 바깥 padding spacing.md 16) �
 | 행동 | 컴포넌트·tone | 위치 | 개수·순서 |
 | --- | --- | --- | --- |
 | 주 행동(체험 시작) | Button 기본 primary, `medium` | ① 히어로 소개문 바로 아래 | 1 |
-| 같은 행동 반복 | Button `secondary`, 같은 라벨·같은 동작 | ⑤ FAQ 다음 | 1. 큰 글자에서 히어로 행동이 첫 화면 밖으로 밀리므로 끝에 한 번 더 둔다 |
+| 같은 행동 반복 | Button `secondary`, 같은 라벨·같은 동작 | ⑤ FAQ 다음 | 1. 기능·FAQ를 읽은 뒤 위로 돌아가지 않고 체험할 수 있도록 끝에 한 번 더 둔다 |
 | FAQ 펼치기 | Collapsible 트리거 | ④ 각 질문 행 전체 | 질문마다 1 |
 | 입력 제출 | Button 기본 primary | ⑥ Sheet `footer`(Web 끝 정렬, Native 꽉 찬 폭) | 1. 시트 안에서 따로 센다([Button](../components/button.md#꼭-지킬-것)) |
-| 시트 닫기 | Sheet `closeLabel` | 시트 머리 끝 | 1. 저장 중에는 Sheet `busy`로 막는다 |
+| 시트 닫기 | Sheet `closeLabel` | 시트 머리 끝 | 1. 기본 예제는 닫아도 초안을 유지한다. 제품이 비동기 저장을 연결하면 저장 중에는 Sheet `busy`로 막는다 |
 | 파괴 행동 | — | — | 없음 |
 
 화면의 primary는 히어로 행동 하나다. 시트 `footer`의 제출은 시트 안에서 따로 센다.
@@ -103,6 +103,14 @@ ScreenLayout(제목 = 소개 문장, 최대 720, 바깥 padding spacing.md 16) �
 
 키보드: Native 시트는 `keyboardAvoidance`로 키보드 위에 붙고 `footer`가 키보드 위에 고정돼 제출 버튼이 가려지지 않는다.
 바깥 ScrollView에는 입력이 없다.
+
+기본 예제는 시트를 열면 입력칸에 초점을 둔다(Web `initialFocusRef`, Native `autoFocus`). Web Enter와 Native Done 키는
+footer의 저장과 같은 동작을 실행한다. Web에서 IME 조합 확정 중인 Enter는 저장으로 처리하지 않는다.
+빈 입력을 제출하면 시트를 유지하고 오류가 있는 입력칸에 초점을 돌린다. 닫기·Escape 또는 저장으로 시트가 끝나면
+`returnFocusRef`로 실제 누른 위·아래 CTA에 복귀한다(Native는 접근성 초점).
+
+2026-10-13 실제 예제 검수에서 닫은 뒤 초안 소실과 연속 제출 시 중복 행을 재현해 수정했다.
+기본 예제는 닫을 때 초안을 보존하고, 성공한 제출만 한 번 추가한 뒤 초안을 비운다. 다시 열면 새로운 기록을 시작한다.
 
 ## 상태
 
@@ -112,7 +120,8 @@ ScreenLayout(제목 = 소개 문장, 최대 720, 바깥 padding spacing.md 16) �
 | 로딩 | 스토리에 없음. 저장이 비동기면 `footer` 제출 Button `loading`, Sheet `busy`로 닫기를 막는다. 입력 값은 그대로 둔다 | 기다림 |
 | 빈 | ②에 기록이 0개인 경우는 스토리에 없다. 예시 한 줄을 처음부터 넣어 미리보기가 비지 않게 한다 | — |
 | 오류 | 입력 오류: ⑥ TextField `error`(`landing.error.empty`). 입력을 바꾸면 지워지고 시트는 닫히지 않는다. 저장 실패는 스토리에 없음. 시트 본문 맨 위에 [Notice](../components/notice.md) `tone="danger"`(Native `announcement="assertive"` — 기본 `none`), 문구는 원인별 키: 네트워크 `landing.error.offline`, 서버 `landing.error.server`. 입력 값과 ②의 이전 기록은 유지하고 시트를 닫지 않는다. 다시 시도는 같은 `footer` 제출 버튼이며, 또 실패하면 Notice를 같은 자리에 두고 `loading`·`busy`만 푼다 | 다시 입력 · 다시 제출 |
-| 성공 | 시트가 닫히고 ② 맨 위에 새 행, "추가했어요" 상태 문구가 읽힌다 | — |
+| 성공 | 기본 예제는 시트가 닫히고 ② 맨 위에 새 행을 한 번 추가하며, "추가했어요" 상태 문구가 읽힌다. 입력 초안을 비워 다음 기록을 준비한다 | CTA로 초점 복귀 · 다시 기록 |
+| 저장 없이 닫음 | 시트만 닫히고 이전 미리보기는 유지한다. 초안은 위·아래 어느 CTA로 다시 열어도 남는다 | 같은 초안 계속 입력 |
 | FAQ 펼침 | 질문 아래에 답이 열린다(같은 자리 enter/exit 모션) | 다시 눌러 접기 |
 | 제품 체험 중심 | `제품 체험 중심` 스토리: 히어로·행동과 제품 미리보기 두 열 → 특징 3열 → FAQ → 끝 행동 카드. 저장하면 미리보기가 방금 쓴 장면으로 바뀐다 | 히어로·끝 행동 = 같은 Sheet |
 | 설명과 사례 중심 | `설명과 사례 중심` 스토리: 히어로·행동 한 열 → 설명과 미리보기 두 열 → 이하 같음 | 같은 Sheet |
@@ -137,6 +146,13 @@ ScreenLayout(제목 = 소개 문장, 최대 720, 바깥 padding spacing.md 16) �
 | [Stack](../components/stack.md) | 모든 세로 리듬 |
 | [간격](../tokens/spacing.md) | `spacing.sm`·`md`·`lg`·`xl` |
 
+### 제품의 비동기 저장 연결
+
+기본과 두 변형 스토리는 메모리 저장이다. 공개 `LandingScreen`을 제공하는 것으로 해석하지 않는다.
+실제 서버에 연결할 때는 제출 시 draft snapshot을 잡고 같은 요청의 중복 실행을 막는다.
+성공 응답 뒤에만 미리보기와 저장 문구를 갱신하고 Sheet를 닫는다. 실패하면 초안·이전 미리보기·현재 Sheet를 유지하며
+오류는 입력 영역 Notice, 재시도는 기존 footer 제출 하나로 둔다. 소개 자료를 재조회해도 열린 입력 Sheet를 remount하지 않는다.
+
 ## 코드 골격
 
 카피·기능 목록·FAQ·장식 seed는 제품 소유다. 오류 문구는 상태→키 상수 표로 고른다.
@@ -158,15 +174,15 @@ const failureKey = { offline: "landing.error.offline", server: "landing.error.se
 const gutter = resolveWindowClass(window.innerWidth) === "compact" ? "compact" : "regular";
 
 <main><Container size="content" gutter={gutter}><Stack gap="xl">
-  {/* landing-hero: padding: var(--hjm-space-xl) — EffectSurface는 안쪽 여백이 없다 */}
-  <EffectSurface className="landing-hero" descriptor={{ layers: ["mesh", "grain"], seed: "landing", active: false }}>
+  {/* 장식과 콘텐츠 여백은 기존 EffectSurface + Surface로 분리한다. */}
+  <EffectSurface descriptor={{ layers: ["mesh", "grain"], seed: "landing", active: false }}><Surface padding="xl">
     <Stack gap="lg">
       <Text tone="muted">{t("landing.eyebrow")}</Text>
       <Heading level="level1">{t("landing.title")}</Heading>
       <Text as="p">{t("landing.intro")}</Text>
       <Button onClick={start}>{t("landing.cta")}</Button>
     </Stack>
-  </EffectSurface>
+  </Surface></EffectSurface>
   <Surface padding="lg"><Stack gap="md">
     <Heading level="level2">{t("landing.preview")}</Heading>
     {saved ? <Text role="status">{t("landing.saved")}</Text> : null}
@@ -196,7 +212,7 @@ const gutter = resolveWindowClass(window.innerWidth) === "compact" ? "compact" :
 import { ScrollView, useWindowDimensions } from "react-native";
 import { spacing } from "@hjmds/design-contracts/foundations";
 import { resolveWindowClass } from "@hjmds/design-contracts/responsive";
-import { Container, Stack, Text } from "@hjmds/react-native/primitives";
+import { Container, Stack, Surface, Text } from "@hjmds/react-native/primitives";
 import { Heading } from "@hjmds/react-native/heading";
 import { Button } from "@hjmds/react-native/actions";
 import { TextField } from "@hjmds/react-native/inputs";
@@ -210,13 +226,13 @@ const gutter = resolveWindowClass(width) === "compact" ? "compact" : "regular";
 
 <ScrollView contentContainerStyle={{ paddingVertical: spacing.lg }}>
   <Container size="content" gutter={gutter}><Stack gap="xl">
-    <EffectSurface style={{ padding: spacing.xl }} descriptor={{ layers: ["mesh", "grain"], seed: "landing", active: false }}>
+    <EffectSurface descriptor={{ layers: ["mesh", "grain"], seed: "landing", active: false }}><Surface padding="xl">
       <Stack gap="lg">
         <Heading level="level1">{t("landing.title")}</Heading>
         <Text>{t("landing.intro")}</Text>
         <Button onPress={start}>{t("landing.cta")}</Button>
       </Stack>
-    </EffectSurface>
+    </Surface></EffectSurface>
     {/* 미리보기·기능·FAQ·반복 행동(secondary)·범위 안내: Web과 같은 순서, onPress */}
   </Stack></Container>
   <Sheet keyboardAvoidance scrollable busy={saving} title={t("landing.sheetTitle")} closeLabel={t("common.close")}
@@ -315,16 +331,15 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 </>
 ```
 
-## 큰 글자·다크·좁은 폭
+## 다크·좁은 폭
 
 | 조건 | 바뀌는 것 |
 | --- | --- |
-| 큰 글자(`textScale` 2) | 제목·카드가 세로로 길어질 뿐 순서는 같다. 히어로 주 행동이 첫 화면 밖으로 밀릴 수 있어 ⑤의 반복 행동이 필요하다. 시트 본문이 길어져도 `footer` 제출은 고정이다 |
 | 다크 | EffectSurface 배경은 테마 팔레트의 `bg`를 쓰고 장식 층이 그 위에 그려진다. 나머지는 테마 토큰 |
 | 좁은 폭 | 한 열 그대로, 폭 600 미만은 gutter `compact` 16. 시트는 아래에 붙고 Native는 키보드 위로 올라간다 |
 | 넓은 폭 Web | 한 열 유지, Container `content` 1200으로 폭을 묶고 gutter `regular` 20 |
 | 모션 줄이기 | 스토리는 `active: false`로 장식 움직임을 끈다. Native는 `visible={false}`로 화면 밖 장식을 멈춘다 |
-| 변형의 두 열 | 열 최소 240을 못 채우면(좁은 폭·큰 글자) Grid가 한 열로 접어 히어로 → 미리보기 순서로 읽힌다. Sheet `footer` 저장은 고정이다 |
+| 변형의 두 열 | 열 최소 240을 못 채우면(좁은 폭) Grid가 한 열로 접어 히어로 → 미리보기 순서로 읽힌다. Sheet `footer` 저장은 고정이다 |
 
 ## 플랫폼 차이
 
@@ -334,14 +349,16 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 | 시트 키보드 처리 | 브라우저가 처리 | `keyboardAvoidance` 명시 |
 | 시트 본문 스크롤 | 자동 | `scrollable` 명시 |
 | 시트 `footer` 버튼 | 끝 정렬 가로 줄 | 꽉 찬 폭 세로 열(`fullWidth`) |
-| 저장 알림 | `role="status"` | 라이브 영역(Android) + iOS는 제품이 직접 알림. 문구가 새로 나타날 때 한 번 읽히게 한다(스토리 `PatternStatus announceOnMount`) |
+| 저장 알림 | `role="status"` | 공개 StatusText. 조건부 저장 결과는 `announceOnMount`로 iOS 첫 결과도 알림 |
 | 실패 알림 | Notice가 자기 역할로 읽힌다 | Notice `announcement="assertive"` 명시(기본 `none`) |
-| 히어로 안쪽 여백 | `className`으로 `var(--hjm-space-xl)` | `style`의 `padding: spacing.xl` |
+| 히어로 안쪽 여백 | EffectSurface 내부 Surface `padding="xl"` | 같은 Surface 공개 prop |
 
 ## 함정
 
 - 히어로는 Surface padding="xl"로 내부 여백을 갖고, 바깥 폭·gutter는 Container가 소유한다. 시트 저장은 footer에 둔다(2026-10-06 지침과 예제 정합성 수정).
-- 위·아래 CTA는 동일 행동이다. 긴 스크롤 구간의 접근성을 위한 반복 primary 예외이며 서로 다른 주 행동을 허용하지 않는다.
+- 기본 예제의 위·아래 CTA는 같은 시트를 연다. 히어로는 primary, FAQ 뒤의 반복 행동은 secondary다.
 - 미리보기 행은 번역 문구나 배열 위치 대신 생성 시 부여한 id로 유지한다.
-- 변형 예제의 저장은 메모리에만 남고 Sheet를 닫아도 입력 초안이 남는다. 운영 저장·실패 처리는 위 오류 행 규칙을 따른다.
+- 기본·변형 예제의 저장은 메모리에만 남는다. 기본 예제는 저장 없이 닫으면 초안을 보존하고 성공하면 비운다. 변형은 Sheet를 닫아도 입력 초안이 남는다. 운영 저장·실패 처리는 위 오류 행 규칙을 따른다.
 - 현재 변형 스토리는 FAQ를 Collapsible이 아니라 `selected` 토글 Button 하나로 그린다. 질문이 여럿이면 기본처럼 Collapsible을 쓴다.
+
+제품 체험·편집형 ServiceIntroduction 변형도 Web에서 CTA 클릭의 `event.currentTarget`을 복귀 대상으로 기록한다. Safari의 포인터 클릭은 버튼에 초점을 주지 않을 수 있어, 열기 직전 `document.activeElement`만으로 복귀 대상을 추정하지 않는다. 이 변형은 저장한 한 장면을 다시 편집하는 예제이므로 닫기뿐 아니라 저장 뒤 재열기에도 입력값을 유지한다. 새 기록을 계속 추가하는 기본 랜딩의 성공 후 입력 초기화와 구분한다.

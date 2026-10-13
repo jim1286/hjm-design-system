@@ -68,7 +68,8 @@ export const Mentions = forwardRef(function Mentions<TriggerId extends string = 
   const [activeIndex, setActiveIndex] = useState(0);
   const [list, setList] = useState<HTMLDivElement | null>(null);
   const id = `${useId().replaceAll(":", "")}-mentions`;
-  const open = match !== null;
+  const unavailable = textAreaProps.disabled || textAreaProps.readOnly;
+  const open = match !== null && !unavailable;
   const activeCandidate = candidates[Math.min(activeIndex, Math.max(candidates.length - 1, 0))];
 
   const notifyRef = useRef(onMentionQueryChange);
@@ -78,13 +79,13 @@ export const Mentions = forwardRef(function Mentions<TriggerId extends string = 
   const syncMatch = (text: string, cursor: number) => {
     // The contract owns trigger detection, including "a space closes it" and
     // "the nearer trigger wins"; this component only reports the cursor.
-    const next = findActiveMentionTrigger(text, cursor, triggers);
+    const next = unavailable ? null : findActiveMentionTrigger(text, cursor, triggers);
     setMatch((previous) => (previous?.triggerStart === next?.triggerStart && previous?.query === next?.query ? previous : next));
     if (next === null || next.query !== match?.query) setActiveIndex(0);
   };
   const commit = (candidate: MentionCandidate) => {
     const input = inputRef.current;
-    if (!match || !input) return;
+    if (unavailable || !match || !input) return;
     const result = resolveMentionInsertion(value, match, input.selectionStart ?? value.length, candidate.insertText ?? candidate.label);
     onValueChange(result.text);
     setMatch(null);
@@ -95,7 +96,7 @@ export const Mentions = forwardRef(function Mentions<TriggerId extends string = 
   };
 
   const onKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (!open) return;
+    if (!open || event.defaultPrevented || event.nativeEvent.isComposing || event.keyCode === 229) return;
     if (event.key === "ArrowDown" || event.key === "ArrowUp") {
       if (candidates.length === 0) return;
       event.preventDefault();
@@ -144,11 +145,16 @@ export const Mentions = forwardRef(function Mentions<TriggerId extends string = 
         onKeyUp={(event) => {
           // Caret moves without an edit (arrows, clicks) change which trigger is
           // active, so the match is re-read from the caret, not only from input.
+          textAreaProps.onKeyUp?.(event);
+          // Escape keyup must not reopen the token dismissed on keydown.
+          if (event.defaultPrevented || event.key === "Escape" || event.nativeEvent.isComposing || event.keyCode === 229) return;
           if (open && (event.key === "ArrowDown" || event.key === "ArrowUp")) return;
           const input = event.currentTarget;
           syncMatch(input.value, input.selectionStart ?? input.value.length);
         }}
         onClick={(event) => {
+          textAreaProps.onClick?.(event);
+          if (event.defaultPrevented) return;
           const input = event.currentTarget;
           syncMatch(input.value, input.selectionStart ?? input.value.length);
         }}

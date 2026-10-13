@@ -1,5 +1,4 @@
 import { type AgreementDescriptor, type AgreementState } from "@hjmds/design-contracts/components/agreement";
-import { type StyleProp, type ViewStyle } from "react-native";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type AgreementProps<Id extends string = string> = Readonly<{
     descriptor: AgreementDescriptor<Id>;
@@ -15,11 +14,6 @@ export type AgreementProps<Id extends string = string> = Readonly<{
     optionalLabel: string;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
-     * `agreementRecipe` owns appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
 }>;
-export declare function Agreement<Id extends string = string>({ descriptor, checkedIds: controlledChecked, defaultCheckedIds, onCheckedIdsChange, onStateChange, onDetail, requiredLabel, optionalLabel, layoutStyle, style, }: AgreementProps<Id>): import("react").JSX.Element;
+export declare function Agreement<Id extends string = string>({ descriptor, checkedIds: controlledChecked, defaultCheckedIds, onCheckedIdsChange, onStateChange, onDetail, requiredLabel, optionalLabel, layoutStyle, }: AgreementProps<Id>): import("react").JSX.Element;
 //# sourceMappingURL=agreement.d.ts.map

@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 구성 API 지침 참조
-- 검토일: 2026-10-06
+- 검토일: 2026-10-13
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screen-flows.tsx`(`OnboardingScreen`), 예제 `showcase/*/screen-flow-previews.tsx`(`OnboardingFlowPreview`)·`showcase/shared/onboarding-pattern.ts`(주제·요약). 2026-10-06 사용자 승인으로 실험 `기본 흐름/온보딩`(OnboardingScreen)을 배포하면서 같은 일을 직접 조립하던 배포 `화면/온보딩`을 대체했다(Web id `patterns-onboarding` 보존, [승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정))
 - 스토리북: `배포/화면/소개/온보딩`
 
@@ -188,7 +188,7 @@ const topicPicker = <Stack axis="inline" wrap gap="xs">
 ## 함정
 
 - `notice` 자리는 진행 문구가 차지한다. 저장 실패를 띄우려고 OnboardingScreen에 notice를 넘길 수 없으니 마지막 단계 `content`에 둔다.
-- 완료 `pending` 동안에도 이전 버튼은 막히지 않는다. 저장 중 단계 이동이 문제가 되면 `onIndexChange`에서 무시한다.
+- 완료 또는 건너뛰기 `pending` 동안 HJM은 이동 버튼을 함께 잠근다(미게시(1.18.0 이후)). 제품은 같은 완료 요청에 pending을 연결하고, 실패하면 현재 단계·선택값을 유지한 채 잠금을 푼다. 라우터 이탈은 별도로 연결한다.
 - 현재 스토리의 진행 문구는 `` `${index} / ${total}` `` 고정 문자열이다. 제품은 보간 키 하나(`onboarding.progress`)를 쓴다.
 - Storybook은 실제 서버·라우터 연동 증거가 아니다. 기본·어두운 테마·큰 글자와 실패와 복구를 각각 확인한다.
 

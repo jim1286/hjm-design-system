@@ -1,3 +1,9 @@
+import {Pressable} from 'react-native';
 import{act,create,type ReactTestRenderer}from'react-test-renderer';import{expect,it,vi}from'vitest';import{FolderPreview}from'../src/folder-preview.js';import{Collapsible}from'../src/collapsible.js';import{HjmNativeProvider}from'../src/provider.js';
 (globalThis as {IS_REACT_ACT_ENVIRONMENT?:boolean}).IS_REACT_ACT_ENVIRONMENT=true;
 it('delegates controlled expansion and keeps decorative previews hidden from accessibility',()=>{let tree!:ReactTestRenderer;const change=vi.fn();try{act(()=>{tree=create(<HjmNativeProvider><FolderPreview label="Ideas" open={false} onOpenChange={change} previews={[]}><></></FolderPreview></HjmNativeProvider>);});const collapsible=tree.root.findByType(Collapsible);expect(collapsible.props.open).toBe(false);act(()=>collapsible.props.onOpenChange(true));expect(change).toHaveBeenCalledWith(true);expect(tree.root.findAll(n=>n.props.importantForAccessibility==='no-hide-descendants').length).toBeGreaterThan(0);}finally{act(()=>tree.unmount());}});
+
+it('routes repeated controlled requests through the real disclosure host and blocks disabled presses',()=>{
+ let tree!:ReactTestRenderer;const change=vi.fn();const render=(open:boolean,disabled=false)=><HjmNativeProvider reducedMotion><FolderPreview label="Ideas" open={open} disabled={disabled} onOpenChange={change} previews={[]}>Content</FolderPreview></HjmNativeProvider>;
+ try{act(()=>{tree=create(render(false));});act(()=>tree.root.findByType(Pressable).props.onPress());act(()=>tree.root.findByType(Pressable).props.onPress());expect(change.mock.calls).toEqual([[true],[true]]);act(()=>tree.update(render(true)));expect(tree.root.findByType(Pressable).props.accessibilityState.expanded).toBe(true);act(()=>tree.update(render(true,true)));act(()=>tree.root.findByType(Pressable).props.onPress());expect(change).toHaveBeenCalledTimes(2);}finally{act(()=>tree.unmount());}
+});

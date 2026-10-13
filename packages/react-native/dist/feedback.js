@@ -1,4 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
+import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { easing, fontWeight, glyph, spacing } from "@hjmds/design-contracts/foundations";
 import { resolveControlAccessibleName, } from "@hjmds/design-contracts/behaviors";
@@ -8,11 +9,10 @@ import { liquidToastRecipe, createToastSession, createToastStore, resolveToastDe
 import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, } from "react";
 import { Text as NativeText, AccessibilityInfo, Animated, AppState, Easing, Keyboard, Platform, Pressable, View, useWindowDimensions, } from "react-native";
 import { Button, IconButton } from "./actions.js";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
-export function Notice({ title, description, tone = noticeRecipe.defaults.tone, announcement = "none", icon, renderIcon, action, style, layoutStyle, ...props }) {
-    warnDeprecatedStyleProps("Notice", { style }, "layoutStyle for placement and tone for appearance");
+export function Notice({ title, description, tone = noticeRecipe.defaults.tone, announcement = "none", icon, renderIcon, action, layoutStyle, ...props }) {
+    assertNoRemovedStyleProps("Notice", props, ["style"]);
     const theme = useHjmNativeTheme();
     const toneContract = noticeRecipe.tones[tone];
     const foreground = resolveColorReference(toneContract.foreground, theme.palette);
@@ -38,7 +38,6 @@ export function Notice({ title, description, tone = noticeRecipe.defaults.tone, 
                 gap: noticeRecipe.gap,
                 padding: noticeRecipe.padding,
             },
-            style,
             layoutStyle,
         ], children: [_jsxs(View, { style: {
                     alignItems: "flex-start",
@@ -52,8 +51,8 @@ export function Notice({ title, description, tone = noticeRecipe.defaults.tone, 
                             width: glyph[noticeRecipe.iconSize],
                         }, children: resolvedIcon })), _jsxs(View, { style: { flex: 1, gap: noticeRecipe.contentGap, minWidth: 0 }, children: [_jsx(Text, { style: { color: foreground, fontWeight: noticeRecipe.title.fontWeight }, variant: noticeRecipe.title.textVariant, children: title }), description ? (_jsx(Text, { style: { color: resolveColorReference(noticeRecipe.description.color, theme.palette) }, variant: noticeRecipe.description.textVariant, children: description })) : null] })] }), action] }));
 }
-export function EmptyState({ title, description, illustration, action, density = emptyStateRecipe.defaults.density, align = "center", announcement = "none", accessibilityLabel, titleRole = "header", style, illustrationStyle, titleStyle, descriptionStyle, actionStyle, layoutStyle, ...props }) {
-    warnDeprecatedStyleProps("EmptyState", { style, illustrationStyle, titleStyle, descriptionStyle, actionStyle }, "layoutStyle for placement and density/align for appearance");
+export function EmptyState({ title, description, illustration, action, density = emptyStateRecipe.defaults.density, align = "center", announcement = "none", accessibilityLabel, titleRole = "header", layoutStyle, ...props }) {
+    assertNoRemovedStyleProps("EmptyState", props, ["style", "illustrationStyle", "titleStyle", "descriptionStyle", "actionStyle"]);
     const theme = useHjmNativeTheme();
     const contentLabel = [title, description].filter(Boolean).join(", ");
     const announcementText = accessibilityLabel ?? [title, description].filter(Boolean).join(". ");
@@ -77,32 +76,29 @@ export function EmptyState({ title, description, illustration, action, density =
                 paddingHorizontal: emptyStateRecipe.paddingHorizontal,
                 paddingVertical: emptyStateRecipe.density[density].paddingVertical,
             },
-            style,
             layoutStyle,
         ], children: [announcement === "none" || Platform.OS === "ios" ? null : (_jsx(Text, { accessibilityLabel: announcementText, accessibilityLiveRegion: announcement, accessibilityRole: announcement === "assertive" ? "alert" : undefined, accessible: true, style: { height: 1, opacity: 0, position: "absolute", width: 1 }, children: announcementText })), usesUpperSpacers ? _jsx(View, { accessible: false, style: { flexGrow: 1 } }) : null, illustration ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", style: [
                     {
                         alignItems: "center",
-                        height: glyph[emptyStateRecipe.icon.size],
+                        // Larger illustrations own their intrinsic size; icons retain a minimum frame.
+                        minHeight: glyph[emptyStateRecipe.icon.size],
                         justifyContent: "center",
-                        width: glyph[emptyStateRecipe.icon.size],
+                        minWidth: glyph[emptyStateRecipe.icon.size],
                     },
-                    illustrationStyle,
                 ], children: illustration })) : null, title === undefined ? null : _jsx(Text, { align: "center", accessibilityRole: titleRole, style: [
                     {
                         color: resolveColorReference(emptyStateRecipe.title.color, theme.palette),
                         fontWeight: emptyStateRecipe.title.fontWeight,
                     },
-                    titleStyle,
                 ], variant: emptyStateRecipe.title.textVariant, children: title }), description ? (_jsx(Text, { align: "center", style: [
                     {
                         color: resolveColorReference(emptyStateRecipe.description.color, theme.palette),
                     },
-                    descriptionStyle,
-                ], variant: emptyStateRecipe.description.textVariant, children: description })) : null, action ? _jsx(View, { style: actionStyle, children: action }) : null, usesUpperSpacers ? _jsx(View, { accessible: false, style: { flexGrow: 3 } }) : null] }));
+                ], variant: emptyStateRecipe.description.textVariant, children: description })) : null, action ? _jsx(View, { children: action }) : null, usesUpperSpacers ? _jsx(View, { accessible: false, style: { flexGrow: 3 } }) : null] }));
 }
 /** Terminal flow outcome with platform announcement and canonical actions. */
-export function Result({ status, title, description, actions, renderIcon, style, layoutStyle, ...props }) {
-    warnDeprecatedStyleProps("Result", { style }, "layoutStyle for placement and status for appearance");
+export function Result({ status, title, description, actions, renderIcon, layoutStyle, ...props }) {
+    assertNoRemovedStyleProps("Result", props, ["style"]);
     const theme = useHjmNativeTheme();
     const result = resolveResultDescriptor({
         status,
@@ -134,7 +130,6 @@ export function Result({ status, title, description, actions, renderIcon, style,
                 paddingHorizontal: resultRecipe.paddingHorizontal,
                 paddingVertical: resultRecipe.paddingVertical,
             },
-            style,
             layoutStyle,
         ], children: [_jsx(View, { accessible: false, style: {
                     alignItems: "center",
@@ -161,8 +156,7 @@ export function Result({ status, title, description, actions, renderIcon, style,
                     marginTop: spacing.xs,
                 }, children: [result.secondaryAction ? (_jsx(Button, { accessibilityLabel: result.secondaryAction.accessibilityLabel, onPress: result.secondaryAction.onAction, tone: "secondary", children: result.secondaryAction.label })) : null, result.primaryAction ? (_jsx(Button, { accessibilityLabel: result.primaryAction.accessibilityLabel, onPress: result.primaryAction.onAction, children: result.primaryAction.label })) : null] })) : null] }));
 }
-export function Progress({ value, max = progressRecipe.defaults.max, label, accessibilityLabel, valueText, accessibilityHint, size = progressRecipe.defaults.size, tone = progressRecipe.defaults.tone, shape = progressRecipe.defaults.shape, children, style, labelStyle, valueStyle, trackStyle, indicatorStyle, layoutStyle, testID, }) {
-    warnDeprecatedStyleProps("Progress", { style, labelStyle, valueStyle, trackStyle, indicatorStyle }, "layoutStyle for placement and tone/size/shape for appearance");
+export function Progress({ value, max = progressRecipe.defaults.max, label, accessibilityLabel, valueText, accessibilityHint, size = progressRecipe.defaults.size, tone = progressRecipe.defaults.tone, shape = progressRecipe.defaults.shape, children, layoutStyle, testID, }) {
     if (!Number.isFinite(max) || max <= 0) {
         throw new RangeError("Progress max must be a positive finite number");
     }
@@ -178,12 +172,12 @@ export function Progress({ value, max = progressRecipe.defaults.max, label, acce
             max: 100,
             ...(percentage === undefined ? {} : { now: percentage }),
             ...(resolvedValueText === undefined ? {} : { text: resolvedValueText }),
-        }, testID: testID, style: [{ gap: spacing.xs }, style, layoutStyle], children: [label === undefined ? null : (_jsxs(View, { accessible: false, style: {
+        }, testID: testID, style: [{ gap: spacing.xs }, layoutStyle], children: [label === undefined ? null : (_jsxs(View, { accessible: false, style: {
                     alignItems: "center",
                     direction: theme.environment.direction,
                     flexDirection: "row",
                     justifyContent: "space-between",
-                }, children: [_jsx(Text, { style: labelStyle, variant: "label", children: label }), resolvedValueText ? (_jsx(Text, { style: valueStyle, tone: "muted", variant: "caption", children: resolvedValueText })) : null] })), shape === "circular" ? (_jsxs(View, { accessible: false, style: [
+                }, children: [_jsx(Text, { variant: "label", children: label }), resolvedValueText ? (_jsx(Text, { tone: "muted", variant: "caption", children: resolvedValueText })) : null] })), shape === "circular" ? (_jsxs(View, { accessible: false, style: [
                     {
                         alignItems: "center",
                         borderColor: resolveColorReference(progressRecipe.track, theme.palette),
@@ -193,34 +187,27 @@ export function Progress({ value, max = progressRecipe.defaults.max, label, acce
                         justifyContent: "center",
                         width: progressRecipe.circular.sizes[size],
                     },
-                    trackStyle,
-                ], children: [_jsx(View, { pointerEvents: "none", style: [
-                            {
-                                borderColor: resolveColorReference(progressRecipe.tones[tone], theme.palette),
-                                borderRadius: progressRecipe.circular.sizes[size] / 2,
-                                borderTopColor: "transparent",
-                                borderWidth: progressRecipe.circular.strokeWidth[size],
-                                height: progressRecipe.circular.sizes[size],
-                                position: "absolute",
-                                transform: [{ rotate: `${((percentage ?? 25) / 100) * 360}deg` }],
-                                width: progressRecipe.circular.sizes[size],
-                            },
-                            indicatorStyle,
-                        ] }), children] })) : (_jsx(View, { accessible: false, style: [
+                ], children: [[0, 1].map(half => {
+                        const diameter = progressRecipe.circular.sizes[size];
+                        const fraction = (percentage ?? 25) / 100;
+                        const sweep = Math.max(0, Math.min(1, fraction * 2 - half));
+                        if (sweep === 0)
+                            return null;
+                        const left = half === 0 ? diameter / 2 : 0;
+                        return _jsx(View, { pointerEvents: "none", style: { position: "absolute", top: -progressRecipe.circular.strokeWidth[size], left: left - progressRecipe.circular.strokeWidth[size], width: diameter / 2, height: diameter, overflow: "hidden" }, children: _jsx(View, { style: { position: "absolute", left: -left, width: diameter, height: diameter, transform: [{ rotate: `${(sweep - 1) * 180}deg` }] }, children: _jsx(View, { style: { position: "absolute", left, width: diameter / 2, height: diameter, overflow: "hidden" }, children: _jsx(View, { style: [{ position: "absolute", left: -left, width: diameter, height: diameter, borderRadius: diameter / 2, borderWidth: progressRecipe.circular.strokeWidth[size], borderColor: resolveColorReference(progressRecipe.tones[tone], theme.palette) }] }) }) }) }, half);
+                    }), children] })) : (_jsx(View, { accessible: false, style: [
                     {
                         backgroundColor: resolveColorReference(progressRecipe.track, theme.palette),
                         borderRadius: theme.tokens.radius[progressRecipe.radius],
                         height: progressRecipe.sizes[size],
                         overflow: "hidden",
                     },
-                    trackStyle,
                 ], children: _jsx(View, { style: [
                         {
                             backgroundColor: resolveColorReference(progressRecipe.tones[tone], theme.palette),
                             height: "100%",
                             width: `${percentage ?? 30}%`,
                         },
-                        indicatorStyle,
                     ] }) }))] }));
 }
 export { Spinner } from "./internal/spinner.js";
@@ -232,8 +219,7 @@ export { Spinner } from "./internal/spinner.js";
  * width/height/radius stay for callers already on the 0.9 train and win over
  * `shape`. Migration: .changeset/skeleton-pulse-by-default.md
  */
-export function Skeleton({ shape = skeletonRecipe.defaults.shape, animated = skeletonRecipe.defaults.animated, width, height, radius: radiusValue, accessibilityLabel, style, layoutStyle, }) {
-    warnDeprecatedStyleProps("Skeleton", { style }, "layoutStyle for placement and shape/width/height for appearance");
+export function Skeleton({ shape = skeletonRecipe.defaults.shape, animated = skeletonRecipe.defaults.animated, width, height, radius: radiusValue, accessibilityLabel, layoutStyle, }) {
     const { environment, palette, tokens } = useHjmNativeTheme();
     const shapeSpec = skeletonRecipe.shapes[shape];
     const { duration, easing: easingName, fromOpacity, toOpacity } = skeletonRecipe.animation;
@@ -282,7 +268,6 @@ export function Skeleton({ shape = skeletonRecipe.defaults.shape, animated = ske
                     : toOpacity,
                 width: resolvedWidth,
             },
-            style,
             layoutStyle,
         ] }));
 }
@@ -307,8 +292,9 @@ function ToastProgressRow({ progress }) {
         }) }));
 }
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
-function ToastSurface({ snapshot, managedMotion = false, announces = true, suspended = false, onDismiss, onAction, onExitComplete, onPause, onResume, placement, renderToneIcon, style, }) {
+function ToastSurface({ snapshot, managedMotion = false, announces = true, suspended = false, onDismiss, onAction, onPress, onExitComplete, onPause, onResume, placement, renderToneIcon, style, }) {
     const resolved = snapshot.descriptor;
+    const [pressFocused, setPressFocused] = useState(false);
     const theme = useHjmNativeTheme();
     // Managed liquid presentation owns its shadow; ordinary toast chrome follows
     // the profile floating role, preserving the recipe for consumers without one.
@@ -396,7 +382,16 @@ function ToastSurface({ snapshot, managedMotion = false, announces = true, suspe
                 width: "100%",
             },
             style,
-        ], children: [toastRecipe.toneMark.width > 0 ? (_jsx(View, { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
+        ], children: [resolved.press ? (
+            // A sibling hit surface lets text/media/padding activate the card while the
+            // explicit controls stay separate accessibility targets. Liquid's parent
+            // PanResponder can cancel this Pressable when it claims an upward swipe.
+            _jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: resolved.press.accessibilityLabel, accessibilityHint: resolved.announcement, disabled: snapshot.phase !== "visible" || suspended, onPress: onPress, onFocus: () => { setPressFocused(true); pauseFocus(); }, onBlur: () => { setPressFocused(false); resumeFocus(); }, style: ({ pressed }) => ({
+                    position: "absolute", top: 0, bottom: 0, start: 0, end: 0,
+                    borderRadius: surfaceRadius,
+                    borderWidth: pressFocused || pressed ? toastRecipe.states.focus.width : 0,
+                    borderColor: resolveColorReference(toastRecipe.states.focus.color, theme.palette),
+                }) })) : null, toastRecipe.toneMark.width > 0 ? (_jsx(View, { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
                     backgroundColor: accent,
                     borderRadius: theme.tokens.radius[toastRecipe.toneMark.radius],
                     bottom: 0,
@@ -404,7 +399,7 @@ function ToastSurface({ snapshot, managedMotion = false, announces = true, suspe
                     position: "absolute",
                     top: 0,
                     width: toastRecipe.toneMark.width,
-                } })) : null, !announces || Platform.OS === "ios" ? null : (_jsx(Text, { accessibilityLabel: resolved.announcement, accessibilityLiveRegion: resolved.priority === "high" ? "assertive" : "polite", accessibilityRole: resolved.priority === "high" ? "alert" : undefined, accessible: true, style: { height: 1, opacity: 0, position: "absolute", width: 1 }, children: resolved.announcement })), _jsxs(View, { style: {
+                } })) : null, !announces || Platform.OS === "ios" ? null : (_jsx(Text, { accessibilityLabel: resolved.announcement, accessibilityLiveRegion: resolved.priority === "high" ? "assertive" : "polite", accessibilityRole: resolved.priority === "high" ? "alert" : undefined, accessible: true, style: { height: 1, opacity: 0, position: "absolute", width: 1 }, children: resolved.announcement })), _jsxs(View, { pointerEvents: resolved.press ? "box-none" : "auto", style: {
                     // Start-aligned so a multi-line or large-text toast keeps its badge beside the title (Web does the same).
                     alignItems: "flex-start",
                     direction: theme.environment.direction,
@@ -412,7 +407,7 @@ function ToastSurface({ snapshot, managedMotion = false, announces = true, suspe
                     gap: toastRecipe.surface.gap,
                 }, children: [resolved.media !== null ? (
                     // Product media replaces the tone badge in the same column; it is decorative, the copy carries meaning.
-                    _jsx(View, { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
+                    _jsx(View, { pointerEvents: resolved.press ? "none" : "auto", accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
                             alignItems: "center",
                             borderRadius: theme.tokens.radius.full,
                             flexShrink: 0,
@@ -420,7 +415,7 @@ function ToastSurface({ snapshot, managedMotion = false, announces = true, suspe
                             justifyContent: "center",
                             overflow: "hidden",
                             width: toastRecipe.media.size,
-                        }, children: resolved.media })) : renderedToneIcon === undefined ? null : (_jsx(View, { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
+                        }, children: resolved.media })) : renderedToneIcon === undefined ? null : (_jsx(View, { pointerEvents: resolved.press ? "none" : "auto", accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
                             alignItems: "center",
                             backgroundColor: badge,
                             borderRadius: theme.tokens.radius[toastRecipe.icon.badgeRadius],
@@ -428,10 +423,10 @@ function ToastSurface({ snapshot, managedMotion = false, announces = true, suspe
                             height: toastRecipe.icon.badgeDiameter,
                             justifyContent: "center",
                             width: toastRecipe.icon.badgeDiameter,
-                        }, children: renderedToneIcon })), _jsxs(View, { style: { alignSelf: "center", flex: 1, gap: toastRecipe.content.gap, minWidth: 0 }, children: [resolved.title ? (_jsx(Text, { style: {
-                                    color: resolveColorReference(toastRecipe.title.color, theme.palette),
-                                    fontWeight: toastRecipe.title.fontWeight,
-                                }, variant: toastRecipe.title.textVariant, children: resolved.title })) : null, _jsx(Text, { style: { color: resolveColorReference(toastRecipe.description.color, theme.palette) }, variant: toastRecipe.description.textVariant, children: resolved.description }), resolved.progress ? _jsx(ToastProgressRow, { progress: resolved.progress }) : null, resolved.action ? (
+                        }, children: renderedToneIcon })), _jsxs(View, { pointerEvents: resolved.press ? "box-none" : "auto", style: { alignSelf: "center", flex: 1, gap: toastRecipe.content.gap, minWidth: 0 }, children: [_jsxs(View, { pointerEvents: resolved.press ? "none" : "auto", style: { gap: toastRecipe.content.gap }, children: [resolved.title ? (_jsx(Text, { style: {
+                                            color: resolveColorReference(toastRecipe.title.color, theme.palette),
+                                            fontWeight: toastRecipe.title.fontWeight,
+                                        }, variant: toastRecipe.title.textVariant, children: resolved.title })) : null, _jsx(Text, { style: { color: resolveColorReference(toastRecipe.description.color, theme.palette) }, variant: toastRecipe.description.textVariant, children: resolved.description }), resolved.progress ? _jsx(ToastProgressRow, { progress: resolved.progress }) : null] }), resolved.action ? (
                             // 1.10.0 tinted pill; 1.20 panel: under the copy at the start edge (toastRecipe.action.align).
                             _jsx(Pressable, { accessibilityLabel: resolved.action.accessibilityLabel, accessibilityRole: "button", onBlur: resumeFocus, onFocus: pauseFocus, onPress: onAction, style: ({ pressed }) => ({
                                     alignItems: "center",
@@ -449,8 +444,7 @@ function ToastSurface({ snapshot, managedMotion = false, announces = true, suspe
                                     }, variant: toastRecipe.action.textVariant, children: resolved.action.label }) })) : null] }), closeControl] })] }));
 }
 /** One Native toast driven by the same exactly-once session as a queued region. */
-export function Toast({ descriptor, onDismiss, placement = toastRecipe.defaults.placement, renderToneIcon, style, layoutStyle, }) {
-    warnDeprecatedStyleProps("Toast", { style }, "layoutStyle for placement and the descriptor tone for appearance");
+export function Toast({ descriptor, onDismiss, placement = toastRecipe.defaults.placement, renderToneIcon, layoutStyle, }) {
     const descriptorRef = useRef(descriptor);
     const additionalDismissRef = useRef(onDismiss);
     descriptorRef.current = descriptor;
@@ -469,29 +463,41 @@ export function Toast({ descriptor, onDismiss, placement = toastRecipe.defaults.
     });
     const snapshot = useSyncExternalStore(session.subscribe, session.getSnapshot, session.getSnapshot);
     const previousDescriptor = useRef(descriptor);
+    const lastTime = useRef(performance.now());
+    const flushTime = useCallback(() => {
+        const now = performance.now();
+        const elapsed = Math.max(0, now - lastTime.current);
+        lastTime.current = now;
+        session.advanceTime(elapsed);
+    }, [session]);
     useEffect(() => {
         if (previousDescriptor.current !== descriptor) {
+            flushTime();
             session.update(decorate(descriptor));
             previousDescriptor.current = descriptor;
         }
-    }, [decorate, descriptor, session]);
-    useEffect(() => () => {
-        session.interrupt();
+    }, [decorate, descriptor, session, flushTime]);
+    const mountGeneration = useRef(0);
+    useEffect(() => {
+        const generation = ++mountGeneration.current;
+        // StrictMode replays cleanup before reattaching the same session. Interrupt
+        // only a real unmount, like ToastRegion's store disposal lifecycle.
+        return () => { queueMicrotask(() => { if (mountGeneration.current === generation)
+            session.interrupt(); }); };
     }, [session]);
     useEffect(() => {
         if (snapshot.timer.status !== "running" || snapshot.timer.remainingMs === null)
             return;
-        const timeout = setTimeout(() => {
-            session.advanceTime(snapshot.timer.remainingMs ?? 0);
-        }, snapshot.timer.remainingMs);
+        lastTime.current = performance.now();
+        const timeout = setTimeout(flushTime, snapshot.timer.remainingMs);
         return () => clearTimeout(timeout);
-    }, [session, snapshot.timer.remainingMs, snapshot.timer.status]);
+    }, [flushTime, snapshot.timer.remainingMs, snapshot.timer.status]);
     const completeDismiss = (reason) => {
         session.dismiss(reason);
     };
     return (_jsx(ToastSurface, { onAction: () => {
             session.invokeAction();
-        }, onDismiss: completeDismiss, onExitComplete: () => session.completeExit(), onPause: (reason) => session.pause(reason), onResume: (reason) => session.resume(reason), placement: placement, ...(renderToneIcon === undefined ? {} : { renderToneIcon }), snapshot: snapshot, style: [style, layoutStyle] }));
+        }, onPress: () => { session.invokePress(); }, onDismiss: completeDismiss, onExitComplete: () => session.completeExit(), onPause: (reason) => { flushTime(); session.pause(reason); }, onResume: (reason) => { flushTime(); session.resume(reason); }, placement: placement, ...(renderToneIcon === undefined ? {} : { renderToneIcon }), snapshot: snapshot, style: [layoutStyle] }));
 }
 const ToastRegionContext = createContext(null);
 function useToastKeyboardHeight(enabled) {
@@ -538,6 +544,7 @@ function snapshotDescriptor(snapshot) {
                     dismissOnAction: descriptor.action.dismissOnAction,
                 },
             }),
+        ...(descriptor.press === null ? {} : { press: descriptor.press }),
         // Panel fields must survive the controlled-collection round trip, or `onToastsChange` would drop them.
         ...(descriptor.media === null ? {} : { media: descriptor.media }),
         ...(descriptor.progress === null ? {} : { progress: descriptor.progress }),
@@ -580,8 +587,7 @@ function PresentedToast({ adapter, width, availableHeight, windowOrigin, ...prop
     return _jsxs(_Fragment, { children: [announcer, _jsx(Surface, { anchor: selected.anchor, snapshot: props.snapshot, width: width, availableHeight: availableHeight, ...(windowOrigin === undefined ? {} : { windowOrigin }), suspended: props.suspended ?? false, body: _jsx(ToastSurface, { ...props, announces: false, managedMotion: true }), fallback: fallback, onPause: props.onPause, onResume: props.onResume, onDismiss: props.onDismiss, onExitComplete: props.onExitComplete })] });
 }
 /** Bounded FIFO region with one clock, app-state pause and teardown interruption. */
-export function ToastRegion({ presentationAdapter, occluded = false, children, accessibilityLabel, toasts, defaultToasts = [], onToastsChange, maxVisible = toastBehaviorDefaults.maxVisible, maxQueued = toastBehaviorDefaults.maxQueued, duplicatePolicy = toastBehaviorDefaults.duplicatePolicy, timerUpdatePolicy = toastBehaviorDefaults.timerUpdatePolicy, overflowPolicy = toastBehaviorDefaults.overflowPolicy, placement = toastRecipe.defaults.placement, safeAreaInsets = {}, avoidKeyboard = true, keyboardOffset = 0, renderToneIcon, style, toastStyle, layoutStyle, }) {
-    warnDeprecatedStyleProps("ToastRegion", { style, toastStyle }, "layoutStyle for placement and placement/safeAreaInsets/descriptor tone for appearance");
+export function ToastRegion({ presentationAdapter, occluded = false, children, accessibilityLabel, toasts, defaultToasts = [], onToastsChange, maxVisible = toastBehaviorDefaults.maxVisible, maxQueued = toastBehaviorDefaults.maxQueued, duplicatePolicy = toastBehaviorDefaults.duplicatePolicy, timerUpdatePolicy = toastBehaviorDefaults.timerUpdatePolicy, overflowPolicy = toastBehaviorDefaults.overflowPolicy, placement = toastRecipe.defaults.placement, safeAreaInsets = {}, avoidKeyboard = true, keyboardOffset = 0, renderToneIcon, layoutStyle, }) {
     if (presentationAdapter && (presentationAdapter.kind !== "liquid" || placement !== "top" || maxVisible !== 1)) {
         throw new TypeError("Liquid Toast requires top placement and maxVisible=1");
     }
@@ -747,6 +753,10 @@ export function ToastRegion({ presentationAdapter, occluded = false, children, a
         }
         return changed;
     }, [emitChange, pruneRaw, store]);
+    const invokePress = useCallback((id) => {
+        flushTime();
+        return store.invokePress(id);
+    }, [store]);
     const invokeAction = useCallback((id) => {
         flushTime();
         return store.invokeAction(id);
@@ -768,7 +778,7 @@ export function ToastRegion({ presentationAdapter, occluded = false, children, a
             : "center";
     const blockOffset = toastRecipe.viewport.inset
         + (bottomPlacement ? safeBottom + keyboardHeight + keyboardOffset : safeTop);
-    return (_jsx(ToastRegionContext.Provider, { value: controller, children: _jsxs(View, { style: [{ flex: hasChildren ? 1 : undefined }, style, layoutStyle], children: [children, _jsx(View, { ref: viewportRef, onLayout: event => {
+    return (_jsx(ToastRegionContext.Provider, { value: controller, children: _jsxs(View, { style: [{ flex: hasChildren ? 1 : undefined }, layoutStyle], children: [children, _jsx(View, { ref: viewportRef, onLayout: event => {
                         setViewportWidth(event.nativeEvent.layout.width);
                         viewportRef.current?.measureInWindow?.((x, y) => setWindowOrigin(previous => previous?.x === x && previous?.y === y ? previous : { x, y }));
                     }, accessibilityLabel: accessibilityLabel, accessibilityElementsHidden: suspended, importantForAccessibility: suspended ? "no-hide-descendants" : "auto", pointerEvents: suspended ? "none" : "box-none", style: {
@@ -783,7 +793,7 @@ export function ToastRegion({ presentationAdapter, occluded = false, children, a
                         start: toastRecipe.viewport.inset + safeStart,
                         zIndex: toastRecipe.viewport.layer,
                         ...(bottomPlacement ? { bottom: blockOffset } : { top: blockOffset }),
-                    }, children: snapshot.visible.map((entry) => (_jsx(PresentedToast, { adapter: presentationAdapter, width: width, availableHeight: availableHeight, windowOrigin: windowOrigin, suspended: suspended, onAction: () => invokeAction(entry.descriptor.id), onDismiss: (reason) => dismiss(entry.descriptor.id, reason), onExitComplete: () => completeExit(entry.descriptor.id), onPause: (reason) => { controller.pause(entry.descriptor.id, reason); }, onResume: (reason) => { controller.resume(entry.descriptor.id, reason); }, placement: placement, ...(renderToneIcon === undefined ? {} : { renderToneIcon }), snapshot: entry, style: toastStyle }, entry.descriptor.id))) })] }) }));
+                    }, children: snapshot.visible.map((entry) => (_jsx(PresentedToast, { adapter: presentationAdapter, width: width, availableHeight: availableHeight, windowOrigin: windowOrigin, suspended: suspended, onAction: () => invokeAction(entry.descriptor.id), onPress: () => invokePress(entry.descriptor.id), onDismiss: (reason) => dismiss(entry.descriptor.id, reason), onExitComplete: () => completeExit(entry.descriptor.id), onPause: (reason) => { controller.pause(entry.descriptor.id, reason); }, onResume: (reason) => { controller.resume(entry.descriptor.id, reason); }, placement: placement, ...(renderToneIcon === undefined ? {} : { renderToneIcon }), snapshot: entry }, entry.descriptor.id))) })] }) }));
 }
 export function useToastRegion() {
     const controller = useContext(ToastRegionContext);

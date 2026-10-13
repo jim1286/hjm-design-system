@@ -20,11 +20,13 @@ export function DateTimeSelectionPreview(props: DateTimeSelectionProps) {
   const busy = model.status === "pending", locked = !!props.disabled || busy;
   const value = dateTimeSelectionValue(model);
   const confirmRef = useRef<HTMLButtonElement>(null);
+  const restoreResponseFocus = useRef(false);
   const previousBusy = useRef(busy);
   useEffect(() => {
-    // The fixture response button becomes disabled after settling; return focus
-    // to the original confirmation instead of leaving it on the document body.
-    if (previousBusy.current && !busy) confirmRef.current?.focus();
+    // Restore only the response action being disabled; a user who moved to
+    // another control keeps that position when a response settles.
+    if (previousBusy.current && !busy && restoreResponseFocus.current) confirmRef.current?.focus();
+    restoreResponseFocus.current = false;
     previousBusy.current = busy;
   }, [busy]);
   const contents = <Container gutter="compact"><Section title={copy.title} description={copy.description}><Stack gap="md">
@@ -42,12 +44,16 @@ export function DateTimeSelectionPreview(props: DateTimeSelectionProps) {
     <Select label={copy.minute} placeholder={copy.minutePlaceholder} emptySelectionLabel={copy.minuteClear} items={minuteOptions} selectedKey={model.minute} onSelectionChange={next => send({ type: "minute", value: next })} disabled={locked} />
     <Text role="status">{value ? dateTimeSelectionDisplay(value) : copy.missing}</Text>
     <Text tone="muted">{copy.timezone}</Text>
-    <Button ref={confirmRef} disabled={locked || !value} loading={busy} onClick={() => send({ type: "confirm" })}>{busy ? copy.pending : model.status === "failed" ? copy.retry : copy.confirm}</Button>
+    <Button ref={confirmRef} disabled={!!props.disabled || !value} loading={busy} onClick={() => send({ type: "confirm" })}>{busy ? copy.pending : model.status === "failed" ? copy.retry : copy.confirm}</Button>
     <Button tone="ghost" disabled={locked} onClick={() => send({ type: "reset" })}>{copy.reset}</Button>
     {model.status === "failed" ? <Notice tone="danger" title={copy.failed} /> : null}
     {model.status === "saved" ? <Notice tone="success" title={copy.saved} description={dateTimeSelectionDisplay(model.saved!)} /> : null}
     <Collapsible trigger={copy.tools} defaultOpen>
-      <Stack gap="sm"><Button tone="secondary" disabled={!busy} onClick={() => send({ type: "respond" })}>{copy.respond}</Button>
+      <Stack gap="sm"><Button tone="secondary" disabled={!busy} onClick={event => {
+        // Safari pointer activation need not focus the clicked button.
+        restoreResponseFocus.current = document.activeElement === event.currentTarget || event.detail > 0;
+        send({ type: "respond" });
+      }}>{copy.respond}</Button>
         <Button tone="ghost" disabled={locked} onClick={() => send({ type: "armFailure" })}>{model.failNext ? copy.armed : copy.fail}</Button>
       </Stack>
     </Collapsible>

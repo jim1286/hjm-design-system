@@ -2,11 +2,13 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import type { SortableItem } from "@hjmds/design-contracts/components/interaction-adapters";
 import { resolveCarouselDescriptor, getCarouselNavigationTarget, type ComposeCarouselAccessibleName } from "@hjmds/design-contracts/components/carousel";
-import { Button } from "./actions.js";
+import { Button, IconButton } from "./actions.js";
+import { Text } from "./layout.js";
 import { useHjmTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type CarouselMotionProps = {
+  navigation?: "buttons" | "counter";
   slides: readonly SortableItem[]; currentKey: string; onCurrentKeyChange(key: string): void;
   /** Optional localized position/name composer shared with the base Carousel. */
   composeAccessibleName?: ComposeCarouselAccessibleName;
@@ -51,7 +53,13 @@ export function CarouselMotion(props: CarouselMotionProps) {
       {props.slides.map((slide, i) => <div key={slide.id} role="group" aria-roledescription="slide" aria-label={resolved[i]!.accessibleName} aria-hidden={resolved[i]!.inert} inert={resolved[i]!.inert}
         style={{ flex: "0 0 100%", minWidth: 0 }}>{props.renderSlide(slide)}</div>)}
     </div></div>
-    <Button tone="ghost" disabled={index === 0} onClick={() => props.onCurrentKeyChange(getCarouselNavigationTarget(descriptor, "previous"))}>{props.previousLabel}</Button>
-    <Button tone="ghost" disabled={index === props.slides.length - 1} onClick={() => props.onCurrentKeyChange(getCarouselNavigationTarget(descriptor, "next"))}>{props.nextLabel}</Button>
+    {props.navigation === "counter" ? <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+      <IconButton label={props.previousLabel} tone="ghost" disabled={index === 0} onClick={() => props.onCurrentKeyChange(getCarouselNavigationTarget(descriptor, "previous"))}><span aria-hidden="true">{environment.direction === "rtl" ? "›" : "‹"}</span></IconButton>
+      <Text variant="caption" aria-live="polite">{index + 1}/{props.slides.length}</Text>
+      <IconButton label={props.nextLabel} tone="ghost" disabled={index === props.slides.length - 1} onClick={() => props.onCurrentKeyChange(getCarouselNavigationTarget(descriptor, "next"))}><span aria-hidden="true">{environment.direction === "rtl" ? "‹" : "›"}</span></IconButton>
+    </div> : <>
+      <Button tone="ghost" disabled={index === 0} onClick={() => props.onCurrentKeyChange(getCarouselNavigationTarget(descriptor, "previous"))}>{props.previousLabel}</Button>
+      <Button tone="ghost" disabled={index === props.slides.length - 1} onClick={() => props.onCurrentKeyChange(getCarouselNavigationTarget(descriptor, "next"))}>{props.nextLabel}</Button>
+    </>}
   </section>;
 }

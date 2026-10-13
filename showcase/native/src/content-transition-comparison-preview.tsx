@@ -26,6 +26,8 @@ export function ContentTransitionComparison({ mode = "tabs" }: ContentTransition
   const [failNext, setFailNext] = useState(false);
   const [failed, setFailed] = useState(false);
   const [done, setDone] = useState(false);
+  // Confirmation is a snapshot; switching to tabs may still edit the current draft.
+  const [confirmed, setConfirmed] = useState("");
   const profile = profileOptions[themeIndex]!;
   const transitionProps = choice === "none" ? { motion: "none" as const }
     : choice === "profile" ? {} : { preset: choice };
@@ -37,7 +39,7 @@ export function ContentTransitionComparison({ mode = "tabs" }: ContentTransition
   function complete() {
     // Deterministic local failure, without fake network latency or persistence claims.
     if (failNext) { setFailNext(false); setFailed(true); return; }
-    setFailed(false); setDone(true);
+    setFailed(false); setConfirmed(draft); setDone(true);
   }
   // A bounded preview viewport lets ScreenLayout own body scrolling and its footer;
   // product hosts provide available screen height instead of copying this fixture size.
@@ -64,7 +66,7 @@ export function ContentTransitionComparison({ mode = "tabs" }: ContentTransition
       <Tabs id={id} label={copy.tabs} items={transitionSections} value={selected} onValueChange={setSelected}
         panelMode="dynamic" renderPanels={false} activationMode="manual" />
       <TabPanel tabsId={id} activeValue={selected} mode="dynamic" label={section.label}>{body(section)}</TabPanel>
-    </Stack> : done ? <Stack gap="md"><Notice tone="success" title={copy.done} /><Text>{draft}</Text>
+    </Stack> : done ? <Stack gap="md"><Notice tone="success" title={copy.done} /><Text>{confirmed}</Text>
       <Button onPress={() => { setDone(false); setIndex(0); }}>{copy.restart}</Button>
     </Stack> : <View style={{ height: 720 }}>{flow}</View>}
   </Stack></ScrollView></HjmNativeProvider>;

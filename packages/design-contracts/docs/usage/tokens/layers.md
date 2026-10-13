@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-13
 - 근거: [오버레이 스택](../../overlay-stack.md), `src/foundations.ts`(`layer`), `src/component-recipes.ts`(`toastRecipe.viewport.layer`·`tooltipRecipe.layer`), `packages/react/src/styles.css`, `packages/react-native/src/feedback.tsx`
 - 스토리북: `배포/토큰/표면과 움직임/겹침 순서`
 
@@ -69,8 +69,8 @@ import { layer } from "@hjmds/design-contracts/foundations";
 
 ### Web 표면별 실제 값
 
-1.12.1까지 Web은 토큰과 다른 500–1400 숫자를 직접 썼다. 아래 값은 미게시(1.12.1 이후) 변경이며
-`.changeset/shared-layer-elevation-consumption.md`가 이전 값을 함께 적는다. HJM 층끼리의 상대 순서는 Popover를 빼면 그대로다.
+아래 표는 현재 소스의 Web 소비 값과 1.12.1의 이전 값을 비교한다. 과거 값은 기존 제품의 층 충돌을
+이관할 때만 참고하고 새 코드에는 토큰을 사용한다. HJM 층끼리의 상대 순서는 Popover를 빼면 그대로다.
 
 | Web 표면 | 토큰 | 값 | 1.12.1 값 |
 | --- | --- | --- | --- |

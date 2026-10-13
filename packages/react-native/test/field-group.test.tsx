@@ -33,3 +33,17 @@ it("blocks old callbacks after group lock, member removal and unmount", () => {
   expect(change).toHaveBeenCalledTimes(2);
   act(() => tree!.unmount()); tree = undefined; callback("unmounted"); current("unmounted current"); expect(change).toHaveBeenCalledTimes(2);
 });
+
+it("keeps inline group inputs independent and preserves their hosts when switching layout", () => {
+  const render = (layout: "stack" | "inline") => <HjmNativeProvider><FieldGroup layout={layout}
+    descriptor={{ label: "배송지", fields }} renderField={({ controlProps }) => <TextField {...controlProps} defaultValue="초안" />} /></HjmNativeProvider>;
+  act(() => { tree = create(render("stack")); });
+  const before = tree!.root.findAllByType(TextInput);
+  act(() => tree!.update(render("inline")));
+  const after = tree!.root.findAllByType(TextInput);
+  expect(after[0]).toBe(before[0]);
+  expect(after[0]!.props.value).toBe("초안");
+  expect(after.map(input => input.props.accessibilityLabel)).toEqual(["배송지, 주소", "배송지, 국가"]);
+  expect(after[1]!.props.editable).toBe(false);
+  expect(tree!.root.findByType(FieldGroup).findAllByType(View).filter(node => node.props.accessible === true)).toHaveLength(0);
+});

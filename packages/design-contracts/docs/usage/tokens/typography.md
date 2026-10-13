@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-07
+- 검토일: 2026-10-13
 - 근거: `src/foundations.ts`(`typography`·`heading`·`fontFamily`·`fontWeight`·`letterSpacing`·`numeric`·`largeTextThreshold`), `src/component-recipes.ts`(`textRecipe`), `packages/react/src/theme.ts`, `packages/react/src/provider.tsx`, `packages/react-native/src/provider.tsx`
 - 스토리북: `배포/토큰/색과 글자/타이포그래피`
 
@@ -27,6 +27,10 @@
 | `typography.titleLarge` | 20 / 줄 28 / 800 | `--hjm-type-title-large-*` | `theme.tokens.typography.titleLarge` | 큰 구획 제목(`heading.level4`) |
 | `typography.heading` | 24 / 줄 32 / 800 | `--hjm-type-heading-*` | `theme.tokens.typography.heading` | 화면의 가장 큰 제목 |
 
+굵기 열은 토큰 원본값이다. 프로필 없는 Text는 기본 `emphasis="regular"`(400)를 사용하므로
+variant만 지정해도 위 굵기가 자동 적용되는 것은 아니다. 프로필이 있으면 생략한 emphasis는
+프로필의 variant 굵기를 읽고, 명시한 emphasis는 언제나 우선한다. Heading은 제목 단계의 굵기를 쓴다.
+
 ### 문서 제목 단계(`heading`, Heading `level`)
 
 | 토큰 | 값 | Web CSS 변수 | Native 경로 | 용도 |
@@ -41,7 +45,7 @@
 
 | 토큰 | 값 | Web CSS 변수 | Native 경로 | 용도 |
 | --- | --- | --- | --- | --- |
-| `fontFamily.ui` | Inter, Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif | `--hjm-font-family-ui` | `fontFamily.ui` | 화면 글자. Native는 HJM이 서체를 지정하지 않아 OS 기본 서체로 그린다 |
+| `fontFamily.ui` | Inter, Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif | `--hjm-font-family-ui` | `fontFamily.ui` | 화면 글자. Native의 중립 기본 stack은 OS 서체, 제품 프로필은 등록된 첫 named font를 사용한다 |
 | `fontFamily.code` | ui-monospace, SFMono-Regular, Consolas, Liberation Mono, monospace | — (`--hjm-font-family-code` fallback) | `fontFamily.code` | 코드 |
 | `fontWeight.regular` · `medium` · `semibold` · `bold` · `heavy` | 400 · 500 · 600 · 700 · 800 | `--hjm-font-weight-<이름>` | `fontWeight.<이름>` | Text `emphasis`: `regular` 400 · `medium` 600 · `strong` 700 |
 | `letterSpacing.tight` · `normal` · `wide` | -0.2 · 0 · 0.2 | — | `letterSpacing.<이름>` | 자간 조정이 필요한 제품 고유 글자. HJM 컴포넌트는 자간을 지정하지 않는다 |
@@ -58,8 +62,10 @@ Web 크기 변수는 `rem × --hjm-text-scale`이라 Provider의 `textScale`을 
 import { Text } from "@hjmds/react/layout";
 import { Heading } from "@hjmds/react/heading";
 
+<>
 <Heading level="level3">{t("orders.title")}</Heading>
 <Text as="p" variant="body" tone="muted">{t("orders.hint")}</Text>
+</>
 // 제품 고유 그림: .product-axis-label { font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); }
 ```
 
@@ -68,8 +74,10 @@ import { Heading } from "@hjmds/react/heading";
 import { Text } from "@hjmds/react-native/primitives";
 import { Heading } from "@hjmds/react-native/heading";
 
+<>
 <Heading level="level3">{t("orders.title")}</Heading>
 <Text variant="body" tone="muted">{t("orders.hint")}</Text>
+</>
 ```
 
 ## 하지 말 것
@@ -85,10 +93,12 @@ import { Heading } from "@hjmds/react-native/heading";
 | 항목 | Web | Native |
 | --- | --- | --- |
 | 단위 | rem(16px 기준) × `--hjm-text-scale` | dp. OS 글자 크기를 따르고, Provider `textScale`을 주면 HJM이 한 번만 곱한다 |
-| 서체 | `--hjm-font-family-ui` 목록 | OS 기본 서체(HJM이 `fontFamily`를 지정하지 않음) |
+| 서체 | `--hjm-font-family-ui` 목록 | 중립 기본 stack은 OS 서체, 프로필의 역할별 stack은 첫 named font |
 | 큰 글자 판정 | 루트 `data-large-text` | `isLargeTextScale(environment.textScale)` |
 
-### 디자인 프로필(실험·미게시)
+### 디자인 프로필
+
+기본 프로필은 1.15.0, 후속 글자·토큰 소비 개선은 1.16.0부터 제공한다.
 
 위 표는 프로필 없는 기본값이다. 앱이 [디자인 프로필](../../design-profile.md)을 선택하면 연결된
 컴포넌트는 Web CSS 변수 또는 Native `theme.tokens`/semantic palette를 읽는다.
@@ -103,4 +113,4 @@ level3/4/5는 기존 typography heading/titleLarge/title override를 기본으�
 명시적인 heading 값이 우선한다. 문서의 h1~h6 순서는 `semanticLevel`이 소유한다.
 
 제목·본문에 서로 다른 글꼴이 필요하면 [표시·읽기·기술 글자](font-roles.md)를 사용한다.
-현재 ui/code-only 설정은 유지되며 신규 optional display/reading은 1.15.0 이후 미게시다.
+기존 ui/code-only 설정은 유지되며 optional display/reading은 1.16.0부터 제공한다.

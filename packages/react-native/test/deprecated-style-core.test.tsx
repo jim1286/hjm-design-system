@@ -1,7 +1,7 @@
 import type { ReactElement } from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { View } from "react-native";
-import { afterEach, beforeEach, describe, expect, it, vi, type MockInstance } from "vitest";
+import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi, type MockInstance } from "vitest";
 
 import {
   Agreement,
@@ -23,11 +23,10 @@ import {
   Text,
   Top,
   UploadItem,
+  type IconButtonProps, type LinkProps, type BottomCTAProps, type ContainerProps, type IconProps, type SectionProps,
 } from "../src/index.js";
-import { resetDeprecatedStyleWarningsForTest } from "../src/internal/deprecated-style.js";
 
-// 2026-10-06: these Native components kept raw visual `style` after 1.11. They stay working for
-// SemVer, but warn once in development and accept the canonical `layoutStyle` instead.
+// Placement remains public; removed visual props must not reach a host through untyped spreads.
 
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -98,18 +97,17 @@ function flatten(style: unknown): Record<string, unknown> {
 }
 
 function hasStyle(renderer: ReactTestRenderer, key: string, value: unknown): boolean {
-  return renderer.root.findAll((node) => node.props.style !== undefined)
+  return renderer.root.findAll((node) => typeof node.type === "string" && node.props.style !== undefined)
     .some((node) => flatten(node.props.style)[key] === value);
 }
 
 let warn: MockInstance<typeof console.warn>;
 beforeEach(() => {
-  resetDeprecatedStyleWarningsForTest();
   warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
 });
 afterEach(() => vi.restoreAllMocks());
 
-describe("Native deprecated visual style props", () => {
+describe("Native canonical style boundary", () => {
   it.each(cases)("%s applies layoutStyle without a deprecation warning", (_name, make) => {
     const renderer = render(make({ layoutStyle: { marginTop: 7 } }));
     expect(hasStyle(renderer, "marginTop", 7)).toBe(true);
@@ -117,25 +115,25 @@ describe("Native deprecated visual style props", () => {
     act(() => renderer.unmount());
   });
 
-  it.each(cases)("%s keeps legacy style working and warns once", (name, make) => {
-    const first = render(make({ style: { marginTop: 9 } }));
-    expect(hasStyle(first, "marginTop", 9)).toBe(true);
-    act(() => first.unmount());
-    const second = render(make({ style: { marginTop: 9 } }));
-    act(() => second.unmount());
-    const messages = warn.mock.calls.map((call) => String(call[0]));
-    expect(messages.filter((message) => message.includes(`${name}.style is deprecated`))).toHaveLength(1);
+  const guarded = ["IconButton", "Link", "BottomCTA", "Container", "Icon", "Section"];
+  it.each(cases.filter(([name]) => guarded.includes(name)))(
+    "%s rejects removed style from untyped callers", (_name, make) => {
+      expect(() => render(make({ style: { marginTop: 9 } }))).toThrow(TypeError);
+    },
+  );
+  it.each(cases.filter(([name]) => !guarded.includes(name)))("%s ignores removed style from untyped callers", (_name, make) => {
+    const renderer = render(make({ style: { marginTop: 9 } }));
+    expect(hasStyle(renderer, "marginTop", 9)).toBe(false);
+    act(() => renderer.unmount());
   });
 
-  it("stays silent in production builds", () => {
-    const globals = globalThis as { __DEV__?: boolean };
-    globals.__DEV__ = false;
-    try {
-      const renderer = render(<Top descriptor={{ title: "제목" }} style={{ marginTop: 1 }} />);
-      act(() => renderer.unmount());
-      expect(warn).not.toHaveBeenCalled();
-    } finally {
-      delete globals.__DEV__;
-    }
-  });
+});
+
+it("excludes removed core visual overrides from public types", () => {
+  expectTypeOf<IconButtonProps>().not.toHaveProperty("style");
+  expectTypeOf<LinkProps>().not.toHaveProperty("style");
+  expectTypeOf<BottomCTAProps>().not.toHaveProperty("style");
+  expectTypeOf<ContainerProps>().not.toHaveProperty("style");
+  expectTypeOf<IconProps>().not.toHaveProperty("style");
+  expectTypeOf<SectionProps>().not.toHaveProperty("style");
 });

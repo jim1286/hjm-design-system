@@ -86,7 +86,8 @@ The package exports include:
 ## Composition style boundary
 
 The normative [consumer policy](../design-contracts/docs/consumer-policy.md#31-배치와-시각-값)
-defines the supported composition boundary. The [migration table](../design-contracts/docs/migration-native-legacy-removal.md) distinguishes removed aliases from deprecated raw-style props still present in public types.
+defines the supported composition boundary. The [migration table](../design-contracts/docs/migration-native-legacy-removal.md) lists the removed aliases and raw visual style props. This source removal is a breaking change;
+canonical placement and host/renderer style slots remain supported.
 Source changes do not update already installed npm packages. Upgrade each consumer's dependency
 and lockfile together, and verify its supported surfaces.
 
@@ -145,7 +146,7 @@ import { Image as ExpoImage } from "expo-image";
 ```
 
 Use `sourceAdapter` when the built-in React Native host needs headers, cache
-metadata, or another `ImageSourcePropType`. The old `source` prop is removed in the next major;
+metadata, or another `ImageSourcePropType`. The old `source` prop was removed in 1.11;
 provide canonical dimensions and use `sourceAdapter` for transport. See
 [the migration guide](../design-contracts/docs/migration-native-legacy-removal.md).
 
@@ -256,10 +257,10 @@ For cross-renderer code, use the canonical collection/state vocabulary:
 - `Tabs`, `RadioGroup`, and `SegmentedControl` take `items`; Native's former `options` prop is removed in 1.11.
 - Native `TabItem` uses `id`, matching Web. The former `TabOption.value` and `options` path are removed.
 - `Switch` takes `checked`, `defaultChecked`, and `onCheckedChange`, matching Web. Native's former
-  `value`, `defaultValue`, and `onValueChange` aliases are removed in the next major.
+  `value`, `defaultValue`, and `onValueChange` aliases were removed in 1.11.
 
-Canonical and deprecated channels cannot be mixed in one component instance. The public types reject
-ambiguous combinations, and runtime validation protects untyped JavaScript consumers.
+Use only canonical channels. Removed aliases are absent from public types; runtime guards prevent
+removed visual overrides from leaking into forwarded host props.
 
 `TextArea` follows the same accessible-name rule as `TextField`: provide either a visible `label`
 or `accessibilityLabel`. `SearchField` can render product icons through `renderLeading`,

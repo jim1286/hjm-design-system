@@ -2,6 +2,13 @@ import { fileURLToPath } from "node:url";
 import { playwright } from "@vitest/browser-playwright";
 import { defineConfig } from "vitest/config";
 
+// Keep routine runs on Chromium; targeted compatibility checks select an engine
+// explicitly without editing the shared config or widening every CI run.
+function auditBrowser(name = process.env.HJM_TEST_BROWSER ?? "chromium") {
+  if (name === "chromium" || name === "firefox" || name === "webkit") return name;
+  throw new Error(`Unsupported HJM_TEST_BROWSER: ${name}`);
+}
+
 export default defineConfig({
   // The native provider's Expo-web hydration regression reuses this DOM runtime;
   // alias the platform boundary so Vite never parses React Native's Flow entry.
@@ -23,7 +30,7 @@ export default defineConfig({
       enabled: true,
       headless: true,
       provider: playwright(),
-      instances: [{ browser: "chromium" }],
+      instances: [{ browser: auditBrowser() }],
     },
   },
 });

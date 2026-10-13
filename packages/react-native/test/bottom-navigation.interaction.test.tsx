@@ -119,3 +119,29 @@ it.skip("applies the same label limit to OS text without capping sibling body te
     __setWindowDimensions({ width: 402, height: 874, scale: 3, fontScale: 1 });
   }
 });
+
+
+it("tile selection keeps every label and equal width while the router owns selection", () => {
+  let tree!: ReturnType<typeof create>;
+  const activate = vi.fn();
+  const items = [{ id: "home", label: "들판", icon: { name: "home" } }, { id: "search", label: "탐험", icon: { name: "search" } }, { id: "settings", label: "설정", icon: { name: "settings" } }];
+  const render = (selectedKey: string) => <HjmNativeProvider theme="light">
+    <BottomNavigation descriptor={{ accessibilityLabel: "탐색", selectedKey, items }} configuration={{ presentation: "floating", selection: "tile", density: "compact" }} renderIcon={() => null} onActivate={activate} getItemTestID={item => `tile-${item.id}`} />
+  </HjmNativeProvider>;
+  act(() => { tree = create(render("home")); });
+  for (const item of items) {
+    expect(tree.root.findAllByType(Text).some(node => node.props.children === item.label)).toBe(true);
+    const target = tree.root.findByProps({ testID: `tile-${item.id}` });
+    expect(target.props.style({ pressed: false })[1].flex).toBe(1);
+  }
+  const home = () => tree.root.findByProps({ testID: "tile-home" });
+  const search = () => tree.root.findByProps({ testID: "tile-search" });
+  expect(home().props.style({ pressed: false })[1].backgroundColor).not.toBe("transparent");
+  act(() => search().props.onPress());
+  expect(activate).toHaveBeenCalledWith({ key: "search", reason: "navigate" });
+  expect(home().props.accessibilityState.selected).toBe(true);
+  act(() => tree.update(render("search")));
+  expect(home().props.style({ pressed: false })[1].backgroundColor).toBe("transparent");
+  expect(search().props.style({ pressed: false })[1].backgroundColor).not.toBe("transparent");
+  act(() => tree.unmount());
+});

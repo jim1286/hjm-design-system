@@ -73,7 +73,7 @@ import { TransferList } from "@hjmds/react-native/transfer-list";
 | `items` | `{ id, label, textValue, description?, disabled? }[]` | — | `disabled` 항목은 선택도 이동도 되지 않는다 |
 | 패널별 체크 선택 | 내부 상태 | — | 이동 전 임시 상태라 prop으로 받지 않는다. 이동 버튼은 해당 패널에 선택이 있을 때만 활성화된다 |
 | `layoutStyle` | `HjmCompositionStyleProp` | — | 최상위 컨테이너 배치. Web·Native 모두 |
-| `style`(Native) | `StyleProp<ViewStyle>` | — | deprecated — `layoutStyle`. 개발 모드에서 한 번 경고하고 다음 major에서 제거된다 |
+| `style`(Native) | 지원하지 않음 | — | 제거된 속성 — `layoutStyle`. 현재 공개 props에서 제거되었다 |
 
 ## 배치
 
@@ -101,7 +101,8 @@ Web ≥ 480                                  Web < 480 · Native
 
 - `labels`의 여섯 문구는 모두 제품 i18n으로 넣는다. HJM은 문장을 만들지 않는다.
 - 이동 결과 낭독은 제품 몫이다. `onMove(movedIds, direction)`로 "2명 이동" 같은 문장을 만들어 알린다.
-- 배치는 `layoutStyle`(최상위 컨테이너)로 한다. Web `className`·Native의 deprecated `style`로 패널·행 모양을 덮지 않는다.
+- 빈 패널의 안내는 해당 목록 내부에서 중앙 정렬한다. Native에서 패널에 남는 높이가 있으면 안내가 그 영역의 세로 중앙을 채운다.
+- 배치는 `layoutStyle`(최상위 컨테이너)로 한다. Web `className`·Native에서 제거된 `style`로 패널·행 모양을 덮지 않는다.
 
 ## 플랫폼 차이
 
@@ -112,10 +113,10 @@ Web ≥ 480                                  Web < 480 · Native
 | 키보드 | 화살표·Home/End 이동, Space 선택, Enter로 그 행만 이동 | 없음 |
 | 이동 후 포커스 | 빈 자리로 올라온 행, 비면 빈 상태 문구 | 옮기지 않음 |
 | 패널 비었을 때 전체 선택 | 활성 | `disabled` |
-| 외부 꾸밈 | `className`, `ref`, `layoutStyle` | `layoutStyle`(`style`은 deprecated) |
+| 외부 꾸밈 | `className`, `ref`, `layoutStyle` | `layoutStyle`(`style`은 제거된 속성) |
 
 ### 프로필 모서리·제목 소비
 
 2026-10-07 소비 감사에서 Native 패널의 모서리 12가 프로필을 우회했다. Web 패널의 기존 `radius.md`와 같은 역할을 Native도 가까운 프로필에서 읽으며, 프로필이 없으면 기존 12를 유지한다. 선택 집합·이동·비활성 항목·초점 계약은 바꾸지 않는다.
 
-프로필 연결은 1.15.0 이후 미게시 변경이며, 기본 배포 계약과 실제 Native 기기 검증은 구분한다.
+프로필 연결은 1.16.0 변경이며, 기본 배포 계약과 실제 Native 기기 검증은 구분한다.

@@ -88,6 +88,7 @@
 
 ```tsx
 // Native
+import { StatusText } from "@hjmds/react-native/status-text";
 import { useState } from "react";
 import { ScrollView, useWindowDimensions } from "react-native";
 import { spacing } from "@hjmds/design-contracts/foundations";
@@ -118,7 +119,7 @@ function FlowStatus() {
           </Stack>
           {visible ? (
             <ContentTransition stateKey={String(index)} preset="rise" motion={reduced ? "none" : "system"}>
-              <StatusText>{t(flowStateKey[index] ?? flowStateKey[0])}</StatusText>{/* 저장과 재시도의 공통 절 helper */}
+              <StatusText>{t(flowStateKey[index] ?? flowStateKey[0])}</StatusText>{/* 공개 Text companion */}
             </ContentTransition>
           ) : null}
         </Stack>
@@ -129,7 +130,7 @@ function FlowStatus() {
 ```
 
 상태 목록·문구·동작 줄이기 설정의 저장 위치는 제품 소유다. 제품에 별도 설정이 없으면 토글을 두지 말고 `motion="system"`만 쓴다.
-`StatusText`는 [저장과 재시도](action-recovery-save.md#공통-세션과-상태-알림)의 helper(Android live region + iOS active일 때 바뀐 문구 알림)다.
+`StatusText`는 [저장과 재시도](action-recovery-save.md#공통-세션과-상태-알림)에서 사용하는 공개 Text companion이다.
 
 ## 플랫폼 차이
 

@@ -538,7 +538,9 @@ export type ListRowLeadingShape = "square" | "circle";
 
 export const listRowRecipe = {
   slots: ["root", "leading", "content", "title", "description", "trailing"] as const,
-  defaults: { density: "comfortable", selected: false },
+  defaults: { density: "comfortable", selected: false, tone: "default" },
+  // Destructive destinations keep semantic emphasis without renderer-specific title styles.
+  tones: { default: { titleColor: semanticColors.content.body }, danger: { titleColor: semanticColors.content.danger } },
   density: {
     compact: {
       oneLineMinHeight: control.minTouchTarget,
@@ -571,6 +573,8 @@ export const listRowRecipe = {
       paddingVertical: spacing.md,
     },
   },
+  // Loading uses the same row/line boxes as content; only the copy width is illustrative.
+  loading: { titleWidthPercent: 60, descriptionWidthPercent: 40, trailingWidth: spacing.xxl },
   gap: spacing.sm,
   leadingSize: 40,
   /**
@@ -594,13 +598,15 @@ export const listRowRecipe = {
   },
 } as const satisfies {
   slots: readonly string[];
-  defaults: { density: ListRowDensity; selected: boolean };
+  defaults: { density: ListRowDensity; selected: boolean; tone: "default" | "danger" };
+  tones: Record<"default" | "danger", { titleColor: ColorReference }>;
   density: Record<ListRowDensity, {
     oneLineMinHeight: number;
     twoLineMinHeight: number;
     paddingHorizontal: number;
     paddingVertical: number;
   }>;
+  loading: { titleWidthPercent: number; descriptionWidthPercent: number; trailingWidth: number };
   gap: number;
   leadingSize: number;
   leadingShapes: Record<ListRowLeadingShape, keyof typeof radius | null>;
@@ -1198,6 +1204,15 @@ export const bottomNavigationRecipe = {
     "badge",
   ] as const,
   defaults: bottomNavigationRecipeDefaults,
+  // Selected full-item cards retain the existing navigation state engine (Spint, 2026-10-12).
+  selectionTile: {
+    background: semanticColors.surface.brand,
+    selectedBackground: semanticColors.action.brand.background,
+    selectedContent: semanticColors.action.brand.content,
+    padding: spacing.xxs,
+    gap: spacing.xxs,
+    radius: "lg" as const,
+  },
   adaptive: {
     web: "fixed-compact-viewport",
     native: "navigator-tab-bar",

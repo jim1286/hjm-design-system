@@ -86,7 +86,7 @@ it("preserves settings field identity on notices and isolates virtual scrolling 
   expect(host.querySelector("input")).toBe(input);
   await act(async () => root.render(<HjmProvider><ChatScreen title="채팅" composer={<button>전송</button>}><div>가상 목록</div></ChatScreen></HjmProvider>));
   expect(host.querySelector(".hjm-screen__body")?.getAttribute("data-scroll")).toBe("content");
-  expect(host.querySelector(".hjm-screen__body")?.hasAttribute("tabindex")).toBe(false);
+  expect(host.querySelector<HTMLElement>(".hjm-screen__body")?.tabIndex).toBe(-1);
   await act(async () => root.render(<HjmProvider><ChatScreen title="채팅" state={{ kind: "restricted", title: "권한 필요" }} composer={<button>전송</button>}><div>비공개 메시지</div></ChatScreen></HjmProvider>));
   expect(host.textContent).not.toContain("비공개 메시지"); expect(host.textContent).not.toContain("전송");
   const restrictedBody = host.querySelector<HTMLElement>(".hjm-screen__body")!;

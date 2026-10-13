@@ -44,4 +44,20 @@ export type ActionSession<T> = Readonly<{
  * See docs/action-session.md for retry, persistence and ownership boundaries.
  */
 export declare function createActionSession<T>(initialValue: T): ActionSession<T>;
+/** Product-owned comparisons against the last confirmed value, never an optimistic value. */
+export type SaveFeedbackInput = Readonly<{
+    phase: ActionSnapshot<unknown>["status"];
+    dirty: boolean;
+    valid: boolean;
+    hasSaved: boolean;
+    disabled?: boolean;
+}>;
+export type SaveFeedback = Readonly<{
+    feedback: "pending" | "error" | "saved" | "saved-with-changes" | "unsaved" | "unchanged";
+    pending: boolean;
+    currentSaved: boolean;
+    canSubmit: boolean;
+}>;
+/** Classifies current-draft feedback without owning requests, equality, validation or copy. */
+export declare function resolveSaveFeedback({ phase, dirty, valid, hasSaved, disabled }: SaveFeedbackInput): SaveFeedback;
 //# sourceMappingURL=action-session.d.ts.map

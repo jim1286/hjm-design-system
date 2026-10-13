@@ -63,7 +63,7 @@
 | 현재 값 | `Text` | 제목 아래, 트리거 위 | `spacing.md` 16 |
 | 트리거 | `Button`(primary) | 현재 값 아래 | `medium` 44(`control.buttonHeight`) |
 | 시트 머리 | `Sheet` header | 시트 위 고정 | Native 최소 높이 `control.minTouchTarget` 44, 제목–닫기 `spacing.sm` 12; Web 여백 `spacing.lg` 20, 제목–닫기 `spacing.md` 16 |
-| 선택지 | `Button selected` × N | 시트 body, 스크롤 | 높이 44, 간격 `spacing.md` 16. 두 플랫폼 본문이 `sheetRecipe.body.gap`으로 준다(Web은 미게시(1.12.1 이후). 1.12.1 Web 본문은 gap이 없어 `Stack gap="md"`로 감싼다) |
+| 선택지 | `Button selected` × N | 시트 body, 스크롤 | 높이 44, 간격 `spacing.md` 16. 본문 안 선택지 묶음은 `Stack gap="md"`로 명시한다. 설치한 버전의 Sheet body gap과 중첩 여부를 확인하며 checkout 상태를 npm 게시 증거로 삼지 않는다 |
 | 행동 | `Button` 적용·취소 | 시트 footer, 스크롤 밖 고정 | 간격 `spacing.sm` 12(`sheetRecipe.footer.gap`), Native 위 여백 `spacing.sm` 12 |
 | 시트 틀 | `Sheet` | 하단, 모달 | Web 최대 폭 640(`sheetRecipe.web.maxWidth`)·최대 높이 90%, Native 가로 여백 `spacing.lg` 20·최대 높이 90%(`maxHeightRatio` 0.9), 하단 안전 영역 추가 |
 
@@ -126,7 +126,7 @@ const trigger = useRef<HTMLButtonElement>(null);
       <Button tone="secondary" onClick={() => setOpen(false)}>{t("display.cancel")}</Button>
       <Button onClick={() => { setApplied(draft); setOpen(false); }}>{t("display.apply")}</Button>
     </>}>
-    <Stack gap="md">{/* Web 시트 body에는 gap이 없다 */}
+    <Stack gap="md">{/* 선택지 묶음 내부 간격 */}
       {options.map((id) => (
         <Button key={id} tone="secondary" selected={draft === id} onClick={() => setDraft(id)}>{t(displayKey[id])}</Button>
       ))}
@@ -138,6 +138,7 @@ const trigger = useRef<HTMLButtonElement>(null);
 
 ```tsx
 // Native
+import { StatusText } from "@hjmds/react-native/status-text";
 import { useRef, useState } from "react";
 import { ScrollView, View, useWindowDimensions } from "react-native";
 import { Button } from "@hjmds/react-native/actions";
@@ -175,7 +176,7 @@ const trigger = useRef<View>(null);
 </Sheet>
 ```
 
-`options`·`displayKey`·문구는 제품 소유다. `StatusText`는 [저장과 재시도의 공통 절](action-recovery-save.md#공통-세션과-상태-알림)의 Native 상태 알림 helper다.
+`options`·`displayKey`·문구는 제품 소유다. `StatusText`는 [저장과 재시도의 공통 절](action-recovery-save.md#공통-세션과-상태-알림)에서 사용하는 공개 Text companion이다.
 Web `gutter`는 [화면 여백과 너비](../tokens/layout.md)처럼 폭 구간으로 고른다.
 
 ### 공통: 시트 흐름
@@ -203,3 +204,5 @@ Web `gutter`는 [화면 여백과 너비](../tokens/layout.md)처럼 폭 구간�
 ## 함정
 
 - 구획 제목은 Heading으로 표시한다. 이전 Text heading 예제는 2026-10-06 제목 의미 구조를 맞추면서 수정했다.
+
+2026-10-13 실제 예제는 시트 열기마다 세대를 구분한다. 취소·닫기·적용·저장·폐기로 한 번 닫힌 세대의 입력/확정 콜백은 무시하며, 다시 연 뒤 도착한 이전 세대 콜백도 현재 초안이나 확정값을 바꾸지 않는다. 재열기에서는 마지막 적용값으로 임시 선택을 초기화한다.

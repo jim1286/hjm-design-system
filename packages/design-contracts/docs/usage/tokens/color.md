@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-07
+- 검토일: 2026-10-13
 - 근거: [브랜드 경계](../../brand-boundary.md), [테마 팔레트](../../theme-palette.md), [테마 사용법](../../theming.md), `src/colors.ts`, `src/semantic-colors.ts`, `src/component-recipes.ts`(`textRecipe`·`iconRecipe`), `src/base-recipes.ts`(`buttonRecipe`·`surfaceRecipe`), `packages/react/src/theme.ts`, `packages/react-native/src/provider.tsx`
 - 스토리북: `배포/토큰/색과 글자/색상`
 
@@ -69,7 +69,8 @@
 | `accentTint` | `weak` 0.1 · `base` 0.15 · `strong` 0.2 · `border` 0.3 | — | `accentTint` | 피드백 색을 옅게 깔 때 쓰는 alpha |
 
 도메인 상태(예: "배송 지연")는 제품 어댑터에서 `info`·`success`·`warning`·`attention`·`danger` 중 하나로 매핑한다.
-피드백 색은 `brandPalette`로 바꿀 수 없다(브랜드와 오류·성공이 같은 색이 되는 것을 막는다).
+`info`·`success`·`warning`·`attention`의 accent 색은 `brandPalette` 변경 대상이 아니다.
+`danger`·`dangerFill`·`onDanger`는 팔레트 역할이므로 변경할 수 있지만 오류 의미와 지정 대비 쌍을 유지해야 한다.
 
 ### 테두리·상호작용
 
@@ -141,7 +142,9 @@ import { HjmProvider } from "@hjmds/react/provider";
 | 피드백 색 | `--hjm-accent-<tone>`, `--hjm-accent-fill-<tone>` | `theme.palette.statusAccents` · `statusAccentFills` |
 | alpha 섞기 | CSS `color-mix` | `resolveColorReference` 또는 `withAlpha` |
 
-### 디자인 프로필(실험·미게시)
+### 디자인 프로필
+
+기본 프로필은 1.15.0, 후속 글자·토큰 소비 개선은 1.16.0부터 제공한다.
 
 위 표는 프로필 없는 기본값이다. 앱이 [디자인 프로필](../../design-profile.md)을 선택하면 연결된
 컴포넌트는 Web CSS 변수 또는 Native `theme.tokens`/semantic palette를 읽는다.

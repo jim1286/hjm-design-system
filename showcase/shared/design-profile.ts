@@ -10,6 +10,7 @@ export const profileCopy = {
   screen: "오늘의 기록", description: "산책과 독서, 작은 기록을 모아 보세요.", tools: "기록 도구", name: "기록 이름", initial: "저녁 산책",
   filter: "기록 기간", day: "오늘", week: "이번 주", save: "미리보기 기록 저장", retry: "다시 저장", fail: "저장 실패 재현",
   idle: "저장 전", pending: "기록 저장 중", saved: "미리보기 기록을 저장했어요", failed: "저장에 실패했어요. 입력을 유지했어요.",
+  unsaved: "제출한 기록은 저장했어요. 현재 입력은 아직 저장하지 않았어요.", showToast: "알림 다시 보기",
   walk: "산책", read: "독서", rest: "휴식", walkBody: "공원을 걸으며 생각을 정리했어요.", readBody: "좋아하는 문장을 한 줄 남겼어요.", restBody: "잠시 쉬어가는 시간을 기록했어요.",
   limitation: "질감은 기기와 접근성 설정에 맞춰 표시해요. 효과를 사용할 수 없어도 내용과 입력은 유지돼요.",
   material: "표면 질감 비교", materialTitle: "배경 위의 기록 카드", materialBody: "뒤의 무늬를 통해 유리의 흐림과 클레이의 깊이를 비교해 보세요.", materialDraft: "질감 카드 초안",

@@ -6,13 +6,16 @@ import {
   resolveTransferListSelectAllState,
   toggleTransferListSelectAll,
   toggleTransferListSelection,
+  validateTransferListDescriptor,
   type TransferListMoveDirection,
   type TransferListPanel,
   type TransferListSelection,
 } from "@hjmds/design-contracts/components/transfer-list";
-import type { SelectItemDescriptor } from "@hjmds/design-contracts/behaviors";
+import { reconcileCheckboxSelection, type SelectItemDescriptor } from "@hjmds/design-contracts/behaviors";
 import {
   forwardRef,
+  useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -62,11 +65,22 @@ export const TransferList = forwardRef(function TransferList<Id extends string =
   }: TransferListProps<Id>,
   forwardedRef: React.Ref<HTMLDivElement>,
 ) {
-  const [targetKeys, setTargetKeys] = useControllableState<ReadonlySet<Id>>({
+  const [storedTargetKeys, setTargetKeys] = useControllableState<ReadonlySet<Id>>({
     ...(controlledTargetKeys === undefined ? {} : { value: controlledTargetKeys }),
     defaultValue: defaultTargetKeys ?? new Set<Id>(),
     ...(onTargetKeysChange === undefined ? {} : { onChange: onTargetKeysChange }),
   });
+  const validatedInitialTargets = useRef(false);
+  if (!validatedInitialTargets.current) {
+    validateTransferListDescriptor({ items, targetKeys: storedTargetKeys });
+    validatedInitialTargets.current = true;
+  }
+  const targetKeys = useMemo(() => controlledTargetKeys === undefined
+    ? reconcileCheckboxSelection(items, storedTargetKeys) : storedTargetKeys,
+    [controlledTargetKeys, items, storedTargetKeys]);
+  useEffect(() => {
+    if (controlledTargetKeys === undefined && targetKeys !== storedTargetKeys) setTargetKeys(targetKeys);
+  }, [controlledTargetKeys, setTargetKeys, storedTargetKeys, targetKeys]);
   const [rawSelection, setSelection] = useState<TransferListSelection<Id>>(emptySelection<Id>);
   const descriptor = useMemo(() => ({ items, targetKeys }), [items, targetKeys]);
   // A row that left the list entirely must not keep a pending check mark.
@@ -74,9 +88,28 @@ export const TransferList = forwardRef(function TransferList<Id extends string =
     () => reconcileTransferListSelection(descriptor, rawSelection),
     [descriptor, rawSelection],
   );
+  useEffect(() => {
+    if (selection !== rawSelection) setSelection(selection);
+  }, [rawSelection, selection]);
   const panels = resolveTransferListPanels(descriptor);
+  const canMove = (panel: TransferListPanel) => panels[panel].some(item => !item.disabled && selection[panel].has(item.id));
   const rootRef = useRef<HTMLDivElement>(null);
   const [focused, setFocused] = useState<Readonly<Record<TransferListPanel, Id | null>>>({ source: null, target: null });
+  const focusWithin = useRef(false);
+  const focusedPanel = useRef<TransferListPanel | null>(null);
+  const previousPanels = useRef(panels);
+  useLayoutEffect(() => {
+    const before = previousPanels.current;
+    previousPanels.current = panels;
+    const panel = focusedPanel.current;
+    if (!focusWithin.current || panel === null || document.activeElement !== document.body) return;
+    const id = focused[panel];
+    if (id === null || panels[panel].some(item => item.id === id)) return;
+    // External removals bypass the move handler, but must not drop row focus onto body.
+    const next = resolveTransferListFocusAfterMove(panels[panel], before[panel].findIndex(item => item.id === id));
+    if (next !== null) focusRow(panel, next);
+    else rootRef.current?.querySelector<HTMLElement>(`[data-hjm-transfer-empty="${panel}"]`)?.focus();
+  }, [focused, panels]);
 
   const focusRow = (panel: TransferListPanel, id: Id | null) => {
     setFocused((previous) => ({ ...previous, [panel]: id }));
@@ -91,12 +124,14 @@ export const TransferList = forwardRef(function TransferList<Id extends string =
     const removedIndex = before.findIndex((item) => item.id === result.movedIds[0]);
     const remaining = before.filter((item) => !result.movedIds.includes(item.id));
     setTargetKeys(result.targetKeys);
-    setSelection(result.selection);
+    // Controlled owners may refuse or defer the move; keep checks until the rows actually leave.
+    if (controlledTargetKeys === undefined) setSelection(result.selection);
     onMove?.(result.movedIds, direction);
     // Focus lands on the row that slid into the first removed position, or on
     // the panel's empty state — never on the document body.
     const next = resolveTransferListFocusAfterMove(remaining, removedIndex);
     queueMicrotask(() => {
+      if (result.movedIds.some(id => rootRef.current?.querySelector(`[data-hjm-transfer-row="${from}:${CSS.escape(id)}"]`))) return;
       if (next !== null) focusRow(from, next);
       else rootRef.current?.querySelector<HTMLElement>(`[data-hjm-transfer-empty="${from}"]`)?.focus();
     });
@@ -112,10 +147,13 @@ export const TransferList = forwardRef(function TransferList<Id extends string =
     const removedIndex = before.findIndex((item) => item.id === id);
     const remaining = before.filter((item) => item.id !== id);
     setTargetKeys(result.targetKeys);
-    setSelection((current) => ({ ...current, [panel]: new Set([...current[panel]].filter((key) => key !== id)) }));
+    if (controlledTargetKeys === undefined) {
+      setSelection((current) => ({ ...current, [panel]: new Set([...current[panel]].filter((key) => key !== id)) }));
+    }
     onMove?.(result.movedIds, direction);
     const next = resolveTransferListFocusAfterMove(remaining, removedIndex);
     queueMicrotask(() => {
+      if (rootRef.current?.querySelector(`[data-hjm-transfer-row="${panel}:${CSS.escape(id)}"]`)) return;
       if (next !== null) focusRow(panel, next);
       else rootRef.current?.querySelector<HTMLElement>(`[data-hjm-transfer-empty="${panel}"]`)?.focus();
     });
@@ -156,6 +194,7 @@ export const TransferList = forwardRef(function TransferList<Id extends string =
             aria-checked={selectAllState === "mixed" ? "mixed" : String(selectAllState === true) as "true" | "false"}
             aria-label={`${labels[panel]} ${labels.selectAll}`}
             className="hjm-transfer-list__select-all"
+            disabled={!panelItems.some(item => !item.disabled)}
             onClick={() => setSelection(toggleTransferListSelectAll(descriptor, selection, panel))}
           >
             {selectAllState === true ? "✓" : selectAllState === "mixed" ? "–" : ""}
@@ -174,7 +213,7 @@ export const TransferList = forwardRef(function TransferList<Id extends string =
                 aria-disabled={item.disabled || undefined}
                 tabIndex={item.id === activeId ? 0 : -1}
                 className="hjm-transfer-list__option"
-                onFocus={() => setFocused((previous) => ({ ...previous, [panel]: item.id }))}
+                onFocus={() => { focusedPanel.current = panel; setFocused((previous) => ({ ...previous, [panel]: item.id })); }}
                 onClick={() => setSelection(toggleTransferListSelection(descriptor, selection, panel, item.id))}
                 onKeyDown={(event) => onKeyDown(event, item)}
               >
@@ -191,13 +230,15 @@ export const TransferList = forwardRef(function TransferList<Id extends string =
   };
 
   return (
-    <div ref={composeRefs(rootRef, forwardedRef)} style={layoutStyle} className={classNames("hjm-transfer-list", className)}>
+    <div ref={composeRefs(rootRef, forwardedRef)} style={layoutStyle} className={classNames("hjm-transfer-list", className)}
+      onFocusCapture={() => { focusWithin.current = true; }}
+      onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) focusWithin.current = false; }}>
       {renderPanel("source")}
       <div className="hjm-transfer-list__actions">
-        <Button tone="secondary" disabled={selection.source.size === 0} onClick={() => move("toTarget")}>
+        <Button tone="secondary" disabled={!canMove("source")} onClick={() => move("toTarget")}>
           {labels.toTarget}
         </Button>
-        <Button tone="secondary" disabled={selection.target.size === 0} onClick={() => move("toSource")}>
+        <Button tone="secondary" disabled={!canMove("target")} onClick={() => move("toSource")}>
           {labels.toSource}
         </Button>
       </div>

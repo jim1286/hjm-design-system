@@ -12,9 +12,17 @@ export function GridReveal({ ready, active = true, children }) {
         clear();
         if (!ready || !active || environment.reducedMotion || AppState.currentState !== "active")
             return;
-        const animations = values.map((value, index) => { value.setValue(1); return Animated.timing(value, { toValue: 0, duration: gridRevealDuration, delay: gridRevealTiles[index].delay, useNativeDriver: true }); });
-        animations.forEach(animation => animation.start());
+        const animations = [];
         const stop = () => { animations.forEach(animation => animation.stop()); clear(); };
+        // Clear every mask even when only part of the host animation was created.
+        try {
+            values.forEach((value, index) => { value.setValue(1); animations.push(Animated.timing(value, { toValue: 0, duration: gridRevealDuration, delay: gridRevealTiles[index].delay, useNativeDriver: true })); });
+            animations.forEach(animation => animation.start());
+        }
+        catch {
+            stop();
+            return;
+        }
         const subscription = AppState.addEventListener("change", state => { if (state !== "active")
             stop(); });
         return () => { stop(); subscription.remove(); };

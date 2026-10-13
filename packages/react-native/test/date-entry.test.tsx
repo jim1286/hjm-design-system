@@ -67,3 +67,19 @@ it("announces a group error once on iOS and remains quiet on unchanged rerenders
     expect(announce).toHaveBeenCalledTimes(1);
   } finally { announce.mockRestore(); Object.assign(Platform, { OS: originalOS }); }
 });
+
+it("uses the current draft and policy for retained date callbacks and stops them after unmount", () => {
+  const change = vi.fn();
+  const render = (readOnly = false, disabled = false, month = "Feb") => <HjmNativeProvider><DateEntry {...base}
+    value={{ ...base.value, month }} readOnly={readOnly} disabled={disabled} onValueChange={change} /></HjmNativeProvider>;
+  act(() => { tree = create(render()); });
+  const edit = tree!.root.findAllByType(TextField)[0]!.props.onValueChange;
+  act(() => tree!.update(render(true)));
+  act(() => edit("ignored")); expect(change).not.toHaveBeenCalled();
+  act(() => tree!.update(render(false, true)));
+  act(() => edit("ignored")); expect(change).not.toHaveBeenCalled();
+  act(() => tree!.update(render(false, false, "Mar")));
+  act(() => edit("2024")); expect(change).toHaveBeenLastCalledWith({ year: "2024", month: "Mar", day: "29" });
+  act(() => tree!.unmount()); tree = undefined;
+  act(() => edit("unmounted")); expect(change).toHaveBeenCalledTimes(1);
+});

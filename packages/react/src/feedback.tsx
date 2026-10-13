@@ -14,6 +14,7 @@ import {
 } from "@hjmds/design-contracts/components/result";
 import {
   forwardRef,
+  useId,
   type HTMLAttributes,
   type ProgressHTMLAttributes,
   type ReactNode,
@@ -246,6 +247,7 @@ export const Progress = forwardRef<HTMLProgressElement, ProgressProps>(
     ) {
       throw new RangeError("Progress value must be between zero and max");
     }
+    const labelId = useId();
     const diameter = progressRecipe.circular.sizes[size];
     const strokeWidth = progressRecipe.circular.strokeWidth[size];
     return (
@@ -267,7 +269,7 @@ export const Progress = forwardRef<HTMLProgressElement, ProgressProps>(
         } as CSSProperties) : layoutStyle}
       >
         <span className="hjm-progress__copy">
-          <span>{label}</span>
+          <span id={labelId}>{label}</span>
           {valueText ? <span>{valueText}</span> : null}
         </span>
         {shape === "circular" ? (
@@ -281,6 +283,7 @@ export const Progress = forwardRef<HTMLProgressElement, ProgressProps>(
           className="hjm-progress__native"
           max={max}
           {...(value === undefined ? {} : { value })}
+          aria-labelledby={props["aria-labelledby"] ?? (props["aria-label"] === undefined ? labelId : undefined)}
           aria-valuetext={typeof valueText === "string" ? valueText : undefined}
         />
       </div>

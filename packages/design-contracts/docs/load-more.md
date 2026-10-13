@@ -28,6 +28,11 @@ ready(requestKey) ─ request ─→ loading(requestKey)
 - loading copy는 status로, 오류는 alert로 한 번만 발표합니다. retry/manual target은 44-unit
   이상이고 focus indicator를 유지합니다.
 
+2026-10-13 수명 검수: 성공으로 완료된 Native viewport 요청만 같은 cursor의 자동 재요청을
+막는다. 진행 중 다른 요청에 막힌 cursor와 실패한 요청은 재시도할 수 있다. Web/Native 모두
+unmount 또는 mode 변경으로 교체된 footer의 늦은 outcome/error 콜백을 전달하지 않는다.
+제품 query 자체의 취소·데이터 저장은 여전히 제품 adapter가 소유한다.
+
 Web `IntersectionObserver`와 RN `onEndReached`는 감지 방식만 다르며 같은 controller와 state를
 사용합니다. 페이지 번호가 필요한 탐색은 `Pagination`, 사용자 의도 없이 계속 이어지는 긴
 목록은 `LoadMore`로 분리합니다.

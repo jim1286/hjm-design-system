@@ -169,3 +169,26 @@ it.each(["light", "dark"] as const)("updates liquid shape/depth through profiles
   act(() => action.props.onPress()); completeMotion();
   expect(onAction).toHaveBeenCalledOnce(); expect(onDismiss).toHaveBeenCalledExactlyOnceWith("action");
 });
+
+it("opens liquid cards once and suppresses card activation after a claimed swipe", async () => {
+  await mount(); const onPress = vi.fn(), onDismiss = vi.fn();
+  act(() => { controller.publish({ ...message("tap"), press: { accessibilityLabel: "결과 열기", onPress }, onDismiss }); });
+  measure(); completeMotion();
+  const press = renderer!.root.findAll(node => node.props.accessibilityLabel === "결과 열기" && typeof node.props.onPress === "function").at(-1)!;
+  act(() => { press.props.onPress(); press.props.onPress(); }); completeMotion();
+  expect(onPress).toHaveBeenCalledOnce(); expect(onDismiss).toHaveBeenCalledExactlyOnceWith("press");
+  onPress.mockClear(); onDismiss.mockClear();
+  act(() => { controller.publish({ ...message("swipe"), press: { accessibilityLabel: "결과 열기", onPress }, onDismiss }); });
+  measure(); completeMotion();
+  const stalePress = renderer!.root.findAll(node => node.props.accessibilityLabel === "결과 열기" && typeof node.props.onPress === "function").at(-1)!;
+  const pan = renderer!.root.findAll(node => typeof node.props.onMoveShouldSetResponder === "function").at(-1)!;
+  expect(pan.props.onMoveShouldSetResponder({}, { dx: 1, dy: -20 })).toBe(true);
+  act(() => {
+    pan.props.onResponderGrant();
+    pan.props.onResponderMove({}, { dy: -80 });
+    pan.props.onResponderRelease({}, { dy: -80, vy: -1 });
+    stalePress.props.onPress();
+  });
+  completeMotion();
+  expect(onPress).not.toHaveBeenCalled(); expect(onDismiss).toHaveBeenCalledExactlyOnceWith("swipe");
+});

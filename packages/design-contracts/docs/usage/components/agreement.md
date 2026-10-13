@@ -74,11 +74,11 @@ import { Agreement } from "@hjmds/react-native/agreement";
 | 전체 동의 | tri-state(파생) | — | 저장되는 값이 아니라 개별 항목에서 파생한다. 비활성 항목은 분모에서 빠진다 |
 | `checkedIds` · `defaultCheckedIds` | `ReadonlySet<Id>` | 비제어 빈 Set | 제어·비제어. 목록에서 빠진 항목의 체크는 자동으로 버려진다(`reconcileAgreementSelection`) |
 | `onCheckedIdsChange` | `(ids: ReadonlySet<Id>) => void` | — | 체크 목록이 바뀔 때 |
-| `onStateChange` | `(state: AgreementState) => void`, `state` = `{ all: boolean \| "mixed", satisfied: boolean, missingRequiredIds: readonly Id[] }` | — | 마운트 때 초기 상태로 한 번, 그 뒤 체크를 바꿀 때마다 호출된다(마운트 호출은 미게시(1.12.1 이후)) |
+| `onStateChange` | `(state: AgreementState) => void`, `state` = `{ all: boolean \| "mixed", satisfied: boolean, missingRequiredIds: readonly Id[] }` | — | 마운트와 실제 체크/필수 항목 판정 변경 때 호출된다. 제어 요청 거부는 가상의 동의 완료를 알리지 않는다 |
 | `onDetail` | `(id: Id) => void` | — | 전문 보기. Web은 `detail.href`가 없을 때만 호출 |
 | `requiredLabel` · `optionalLabel` | `string` | 필수 | 행 끝 "(필수)"·"(선택)" 문구 |
 | `layoutStyle` | margin·width·flex·`alignSelf` | — | 바깥 배치 전용 |
-| Native `style` | — | — | deprecated — `layoutStyle` 또는 recipe(개발 모드 1회 경고, 다음 major 제거) |
+| Native `style` | — | — | 제거된 속성 — `layoutStyle` 또는 recipe |
 
 ## 배치
 
@@ -110,27 +110,24 @@ Native의 전체 동의 프레임 `md`와 선택 표시 `sm`은 Provider의 `tok
 ## 꼭 지킬 것
 
 - 필수 동의 판정은 `resolveAgreementState`의 `satisfied`를 사용하고 제출 가능 여부는 제품의 입력 검증·진행 중 상태와 함께 결정한다. 묶음 잠금은 동의 사실을 바꾸지 않으므로 `satisfied`가 true인 채 잠길 수 있다. 남은 필수 항목 안내는 `missingRequiredIds`로 제품이 문장을 만든다.
-- `onStateChange`는 마운트와 사용자 토글 때 알린다. 제품이 약관 버전이나 제어 `checkedIds`를 직접 바꾸면 같은 렌더에서 `resolveAgreementState(descriptor, checkedIds)`로 판정한다. 문서 버전 변경 시 이전 동의를 초기화하는 책임은 제품에 있다.
+- `onStateChange`는 마운트와 실제 동의/필수 항목 판정 변경 때 알린다. 외부 `checkedIds`·필수 항목 변경도 반영하며, 부모가 제어 요청을 거부하면 미수락 상태를 완료로 알리지 않는다. 같은 렌더에서 판정이 필요하면 `resolveAgreementState(descriptor, checkedIds)`를 사용한다. 문서 버전 변경 시 이전 동의를 초기화하는 책임은 제품에 있다.
 - `accessibilityLabel`·`allLabel`·항목 `label`·`requiredLabel`·`optionalLabel`은 모두 제품의 i18n 문구다.
   빈 문자열, 빈 목록, 중복 id, 필수이면서 `disabled`인 항목은 throw다.
 - 약관 문구·링크 주소·법적 유효성·동의 기록 저장은 제품 소유다. HJM은 판정과 배치만 가진다.
 - 전문 보기 컨트롤은 체크박스와 별개이며 눌러도 체크되지 않는다. 같은 행에 다른 누름 영역을 덧붙이지 않는다.
-- 색·간격은 recipe가 정한다. 배치는 `layoutStyle`로만 한다. Native `style`은 deprecated다([소비 정책 §3](../../consumer-policy.md)).
+- 색·간격은 recipe가 정한다. 배치는 `layoutStyle`로만 한다. Native `style`은 제거된 속성이다([소비 정책 §3](../../consumer-policy.md)).
 
 ## 플랫폼 차이
 
 | 항목 | Web | Native |
 | --- | --- | --- |
 | 전문 열기 | `detail.href`가 있으면 `<a>`, 없으면 버튼이 `onDetail(id)` 호출 | `href`를 쓰지 않고 항상 `onDetail(id)` |
-| 배치 prop | `layoutStyle`(+`className`) | `layoutStyle`(`style`은 deprecated) |
+| 배치 prop | `layoutStyle`(+`className`) | `layoutStyle`(`style`은 제거된 속성) |
 | `ref` | root `div`로 전달 | 없음 |
 
 ## 함정
 
-- 1.12.1까지 `onStateChange`는 사용자가 체크를 바꿀 때만 호출돼, `defaultCheckedIds`로 필수 항목을 미리 채운 경우 첫
-  `satisfied`를 받지 못했다. 미게시(1.12.1 이후) 버전은 마운트 때 초기 상태를 한 번 알린다. 1.12.1에서는 제출 버튼의 첫 상태를
-  `resolveAgreementState(descriptor, checkedIds)`(`@hjmds/design-contracts/components/agreement`)로 직접 계산한다.
-  호출 횟수를 세는 코드는 마운트 1회가 늘어난다.
+- `onStateChange`는 마운트 때 초기 상태와 이후 실제 체크/필수 항목 판정 변경을 알린다. 제출 버튼의 활성 상태는 이 결과의 `satisfied`에 연결한다. 사용자 조작 횟수로 해석하지 않는다.
 
 2026-10-07 Utilverse 가입은 요청 중 필수 Checkbox 둘을 잠그는데, 개별 필수 item에 disabled를
 주면 Agreement 검증이 거절했다. 묶음 `descriptor.disabled`를 추가해 필수 항목을 분모에서

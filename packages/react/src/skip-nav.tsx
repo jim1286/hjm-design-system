@@ -3,7 +3,7 @@ import {
   validateSkipNavDescriptor,
   type SkipNavDescriptor,
 } from "@hjmds/design-contracts/components/skip-nav";
-import { forwardRef, type AnchorHTMLAttributes, type CSSProperties } from "react";
+import { forwardRef, useEffect, useRef, type AnchorHTMLAttributes, type CSSProperties } from "react";
 import { classNames } from "./internal.js";
 
 // No `layoutStyle`: off-screen until focused, then pinned by the recipe offset; moving it would hide the focus target.
@@ -16,6 +16,8 @@ export const SkipNav = forwardRef<HTMLAnchorElement, SkipNavProps>(function Skip
   forwardedRef,
 ) {
   validateSkipNavDescriptor({ targetId, label });
+  const restorations = useRef(new Map<HTMLElement, () => void>());
+  useEffect(() => () => { for (const restore of [...restorations.current.values()]) restore(); }, []);
   return (
     <a
       {...props}
@@ -31,7 +33,7 @@ export const SkipNav = forwardRef<HTMLAnchorElement, SkipNavProps>(function Skip
       } as CSSProperties}
       onClick={(event) => {
         onClick?.(event);
-        if (event.defaultPrevented) return;
+        if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return;
         const target = document.getElementById(targetId);
         if (!target) return;
         /*
@@ -39,7 +41,17 @@ export const SkipNav = forwardRef<HTMLAnchorElement, SkipNavProps>(function Skip
           the next Tab returns to the links the user just skipped. Making the
           target programmatically focusable moves the caret with the view.
         */
-        if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+        if (!target.hasAttribute("tabindex")) {
+          target.setAttribute("tabindex", "-1");
+          // The target belongs to the page; temporary focusability must not outlive this navigation.
+          const restore = () => {
+            if (target.getAttribute("tabindex") === "-1") target.removeAttribute("tabindex");
+            target.removeEventListener("blur", restore);
+            restorations.current.delete(target);
+          };
+          restorations.current.set(target, restore);
+          target.addEventListener("blur", restore, { once: true });
+        }
         target.focus({ preventScroll: false });
       }}
     >

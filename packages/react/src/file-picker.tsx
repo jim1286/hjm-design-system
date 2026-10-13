@@ -9,6 +9,7 @@ import {
 } from "@hjmds/design-contracts/components/file-picker";
 import {
   forwardRef,
+  useEffect,
   useId,
   useRef,
   useState,
@@ -68,8 +69,12 @@ export const FilePicker = forwardRef<HTMLDivElement, FilePickerProps>(function F
   const id = inputId ?? `hjm-file-${generatedId.replaceAll(":", "")}`;
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
+  useEffect(() => { if (disabled) setDragging(false); }, [disabled]);
 
   const commit = (files: FileList | readonly File[]) => {
+    // The OS dialog may finish after the owner locks this field. Empty input
+    // changes represent no selection and must not erase a product's file list.
+    if (disabled || files.length === 0) return;
     const candidates: FilePickerCandidate[] = Array.from(files).map((file, index) => ({
       id: getCandidateId(file, index),
       name: file.name,
@@ -79,8 +84,8 @@ export const FilePicker = forwardRef<HTMLDivElement, FilePickerProps>(function F
     onSelect(resolveFilePickerSelection(candidates, resolved, existingCount));
   };
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.currentTarget.files) commit(event.currentTarget.files);
-    event.currentTarget.value = "";
+    try { if (event.currentTarget.files) commit(event.currentTarget.files); }
+    finally { event.currentTarget.value = ""; }
   };
   const handleDrop = (event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -89,7 +94,7 @@ export const FilePicker = forwardRef<HTMLDivElement, FilePickerProps>(function F
   };
 
   return (
-    <div {...props} style={{ ...props.style, ...layoutStyle }} ref={composeRefs(ref)} className={classNames("hjm-file-picker", className)} data-dragging={dragging || undefined} data-invalid={error !== undefined || undefined}>
+    <div {...props} style={{ ...props.style, ...layoutStyle }} ref={composeRefs(ref)} className={classNames("hjm-file-picker", className)} data-dragging={(!disabled && dragging) || undefined} data-invalid={error !== undefined || undefined}>
       <span className="hjm-file-picker__label" id={`${id}-label`}>{label}</span>
       {/*
         The visible button below is the keyboard entry point. Before 1.5.0 this

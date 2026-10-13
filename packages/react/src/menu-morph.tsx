@@ -80,9 +80,9 @@ export function MorphingMenu({ label, items, onAction, disabled = false, open: c
         style={{ background: theme.palette.theme.bg, color: theme.palette.theme.text }}>
         <Bloom.Trigger disabled={disabled}>{label}</Bloom.Trigger>
         <Bloom.Content>
-          {items.map(item => <button type="button" role="menuitem" tabIndex={-1} className="hjm-menu-morph__item" key={item.id} disabled={!open || (item.disabled ?? false)}
+          {items.map(item => <button type="button" role="menuitem" tabIndex={-1} className="hjm-menu-morph__item" key={item.id} disabled={!open || disabled || (item.disabled ?? false)}
             data-tone={item.tone} aria-label={item.textValue}
-            onClick={() => { if (!item.disabled) { change(false); onAction?.(item.id); } }}>
+            onClick={() => { if (!disabled && !item.disabled) { change(false); onAction?.(item.id); } }}>
             {item.leading}{item.label}{item.trailing}
           </button>)}
         </Bloom.Content>

@@ -34,11 +34,17 @@ export function createActionSession(initialValue) {
             // Retrying a mutation must be authorized by the product adapter (idempotency).
             failedAttempt = proposal.retryable ? { task, options: proposal } : undefined;
             publish({ status: "error", value: previous, operationId, error });
+            if (generation !== operationId)
+                return { status: "ignored" };
             return { status: "error", error, operationId };
         }
         if (generation !== operationId)
             return { status: "ignored" };
         publish({ status: "success", value, operationId });
+        // Subscribers may synchronously switch entities; their new session must not
+        // receive a stale continuation such as closing the editor after this save.
+        if (generation !== operationId)
+            return { status: "ignored" };
         return { status: "success", value, operationId };
     };
     return {
@@ -56,5 +62,17 @@ export function createActionSession(initialValue) {
             publish({ status: "idle", value });
         },
     };
+}
+/** Classifies current-draft feedback without owning requests, equality, validation or copy. */
+export function resolveSaveFeedback({ phase, dirty, valid, hasSaved, disabled = false }) {
+    const pending = phase === "pending";
+    const currentSaved = hasSaved && !dirty;
+    // A response confirms its submitted snapshot, not edits made after submission.
+    // Reverting to the confirmed value also clears an obsolete failure notice.
+    const feedback = pending ? "pending"
+        : !dirty ? phase === "success" && hasSaved ? "saved" : "unchanged"
+            : phase === "error" ? "error"
+                : phase === "success" && hasSaved ? "saved-with-changes" : "unsaved";
+    return { feedback, pending, currentSaved, canSubmit: !pending && !disabled && valid && dirty };
 }
 //# sourceMappingURL=action-session.js.map

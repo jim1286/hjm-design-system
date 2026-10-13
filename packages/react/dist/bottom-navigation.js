@@ -71,7 +71,7 @@ function BottomNavigationInner({ descriptor, configuration = {}, getHref, render
     const iconSize = iconRecipe.sizes[density.icon];
     if (hidden)
         return null;
-    return (_jsx("nav", { ...props, ref: ref, "aria-label": resolved.accessibilityLabel, className: classNames("hjm-bottom-navigation", className), "data-expanded-labels": (theme?.environment.textScale ?? 1) >= 1.5 || resolved.items.length > 4 ? "true" : "false", "data-density": presentation.density, "data-distribution": presentation.distribution, "data-keyboard-behavior": presentation.keyboardBehavior, "data-labels": presentation.labels, "data-presentation": presentation.presentation, dir: presentation.direction, style: {
+    return (_jsx("nav", { ...props, ref: ref, "aria-label": resolved.accessibilityLabel, className: classNames("hjm-bottom-navigation", className), "data-expanded-labels": (theme?.environment.textScale ?? 1) >= 1.5 || resolved.items.length > 4 ? "true" : "false", "data-density": presentation.density, "data-distribution": presentation.distribution, "data-keyboard-behavior": presentation.keyboardBehavior, "data-labels": presentation.labels, "data-selection": presentation.selection, "data-presentation": presentation.presentation, dir: presentation.direction, style: {
             "--hjm-bottom-navigation-center-gap": `${centerGap}px`,
             "--hjm-bottom-navigation-columns": resolved.items.length,
             "--hjm-bottom-navigation-half-columns": resolved.items.length / 2,

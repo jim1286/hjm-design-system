@@ -54,7 +54,7 @@ import { Divider } from "@hjmds/react-native/data-display";
 | `orientation` | `horizontal` · `vertical` | `horizontal` | 가로선·세로선 |
 | `inset` | Web `none` · `start` · `both` / Native 숫자(pt, 토큰 값으로 넘긴다) | Web `none`(0) / Native 0 | Web `start`·`both`는 `spacing.md`. Native는 가로선이면 좌우, 세로선이면 위아래 여백이 된다 |
 | Web `decorative` | `boolean` | `false` | `true`면 `role="presentation"`·`aria-hidden` |
-| `layoutStyle` | 배치 전용 style | — | 루트 배치. Native `style`은 deprecated |
+| `layoutStyle` | 배치 전용 style | — | 루트 배치. Native `style`은 제거된 속성 |
 
 콜백 prop은 없다.
 
@@ -71,7 +71,7 @@ import { Divider } from "@hjmds/react-native/data-display";
 ## 꼭 지킬 것
 
 - 색·두께를 `style`/`className`으로 바꾸지 않는다. 구분선 색은 제품 테마의 `border` key로 바뀐다.
-  배치는 `layoutStyle`로 한다. Native `style`은 deprecated — `layoutStyle` 또는 `orientation`·`inset`으로 옮긴다.
+  배치는 `layoutStyle`로 한다. Native `style`은 제거된 속성 — `layoutStyle` 또는 `orientation`·`inset`으로 옮긴다.
 - Web에서 의미가 없는 장식선은 `decorative`로 표시한다(`role="presentation"`, `aria-hidden`).
   기본은 `role="separator"`다.
 

@@ -97,6 +97,7 @@ export const LoadMore = forwardRef<HTMLDivElement, LoadMoreProps>(
     onLoadMoreRef.current = onLoadMore;
     const [controllerFacade] = useState(createLoadMoreControllerFacade);
     const controller = controllerFacade.facade;
+    const requestGeneration = useRef(0);
     const sentinelRef = useRef<HTMLSpanElement>(null);
     const currentRequestIdentityRef = useRef<string | null>(null);
     const completedRequestIdentityRef = useRef<string | null>(null);
@@ -107,6 +108,7 @@ export const LoadMore = forwardRef<HTMLDivElement, LoadMoreProps>(
 
     useLayoutEffect(() => {
       currentRequestIdentityRef.current = currentRequestIdentity;
+      return () => { currentRequestIdentityRef.current = null; };
     }, [currentRequestIdentity]);
 
     const request = useCallback(
@@ -123,14 +125,16 @@ export const LoadMore = forwardRef<HTMLDivElement, LoadMoreProps>(
         // Once a request settles successfully, retire that exact state/key
         // until the product commits a new cursor or a retryable error state.
         if (completedRequestIdentityRef.current === requestIdentity) return;
+        const generation = requestGeneration.current;
         try {
           const outcome = await controller.request(state, reason);
+          if (generation !== requestGeneration.current) return;
           if (outcome === "started") {
             completedRequestIdentityRef.current = requestIdentity;
           }
           onRequestOutcome?.(outcome, reason);
         } catch (error) {
-          onRequestError?.(error, reason);
+          if (generation === requestGeneration.current) onRequestError?.(error, reason);
         }
       },
       [controller, onRequestError, onRequestOutcome],
@@ -142,7 +146,10 @@ export const LoadMore = forwardRef<HTMLDivElement, LoadMoreProps>(
         onLoadMore: (nextRequest) => onLoadMoreRef.current(nextRequest),
       });
       const detach = controllerFacade.attach(attached);
+      requestGeneration.current += 1;
       return () => {
+        // The query remains product-owned; only this retired footer's callbacks stop.
+        requestGeneration.current += 1;
         detach();
         attached.dispose();
       };

@@ -46,3 +46,7 @@ Native host 번역 회귀는 실제 OS touch/VoiceOver/키보드 성능과 구�
 공식 host 근거: [React Native ScrollView](https://reactnative.dev/docs/scrollview),
 [Web scrollLeft](https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollLeft),
 [ResizeObserver](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver).
+
+2026-10-13 키보드 복구 검수: Web에서 초점이 있던 카드가 삭제되면 레일의 이름 있는
+list viewport에 초점을 돌려 다음 키보드 탐색을 이어 간다. 생존하는 입력과 레일 밖의
+초점은 옮기지 않는다. Native의 실제 접근성 초점 복구는 이 Web 동작의 검증에 포함되지 않는다.

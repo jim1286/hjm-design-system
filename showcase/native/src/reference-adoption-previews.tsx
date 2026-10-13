@@ -1,9 +1,11 @@
+import { resolveSaveFeedback } from "@hjmds/design-contracts/action-session";
+import { Heading } from "@hjmds/react-native/heading";
 import { spacing } from "@hjmds/design-contracts/foundations";
 import { KeyboardAvoiding } from "@hjmds/react-native/keyboard";
 import { ScreenLayout } from "@hjmds/react-native/screens";
 import { BottomCTA } from "@hjmds/react-native/bottom-cta";
 import { BottomInfo } from "@hjmds/react-native/bottom-info";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { View } from "react-native";
 import { Button } from "@hjmds/react-native/actions";
 import { Stack, Surface, Text } from "@hjmds/react-native/primitives";
@@ -15,9 +17,10 @@ import { ImageComparison } from "@hjmds/react-native/image-comparison";
 import { FilePicker } from "@hjmds/react-native/file-picker";
 import { UploadItem } from "@hjmds/react-native/upload-item";
 import { Collapsible } from "@hjmds/react-native/collapsible";
+import type { FilePickerSelectionResult } from "@hjmds/design-contracts/components/file-picker";
 import type { UploadItemDescriptor } from "@hjmds/design-contracts/components/upload-item";
 import { useDemoAction } from "./action-recovery-previews";
-import { beforeImage, afterImage, scoreLabel, sampleFile, uploadLabels, mergeSelectedFiles, changeUploadState } from "../../shared/reference-adoption";
+import { beforeImage, afterImage, scoreLabel, sampleFile, uploadLabels, mergeUploadSelection, changeUploadState } from "../../shared/reference-adoption";
 
 export function RatingPreview() {
   const [score, setScore] = useState<number | null>(null);
@@ -40,47 +43,66 @@ export function ActionFeedbackPreview() {
   const { state, session, request, busy, failureArmed, toggleFailure } = useDemoAction("");
   const [draft,setDraft]=useState("");
   const status=state.status;
+  // The completed snapshot does not confirm edits made while its request was pending.
+  const currentSaved=state.value!==""&&draft.trim()===state.value;
+  const save=()=>{const submitted=draft.trim();if(submitted)void session.run(()=>request(submitted),{retryable:true});};
   return <Stack gap="md"><Text variant="heading">입력은 남기고, 결과는 분명하게</Text><TextField label="기록 제목" value={draft} onValueChange={setDraft} />
-    <Button loading={busy} disabled={!draft.trim()} onPress={()=>{void session.run(()=>request(draft),{retryable:true});}}>{busy?"기록 저장 중":status==="success"?"✓ 다시 저장":status==="error"?"다시 저장":"기록 저장"}</Button>
-    <ContentTransition stateKey={status} animateHeight><Text accessibilityLiveRegion="polite">{busy?"저장을 확인하고 있어요":status==="error"?"저장하지 못했어요. 제목은 남아 있으니 다시 시도해 주세요.":status==="success"?`저장한 제목: ${state.value}`:"제목을 입력한 뒤 저장해 주세요."}</Text></ContentTransition>
+    <Button loading={busy} disabled={!draft.trim()} onPress={save}>{busy?"기록 저장 중":status==="error"?"다시 저장":currentSaved?"✓ 다시 저장":"기록 저장"}</Button>
+    <ContentTransition stateKey={status} animateHeight><Text accessibilityLiveRegion="polite">{busy?"저장을 확인하고 있어요":status==="error"?"저장하지 못했어요. 제목은 남아 있으니 다시 시도해 주세요.":state.value&&!currentSaved?"현재 제목은 아직 저장하지 않았어요.":currentSaved?"현재 제목을 저장했어요.":"제목을 입력한 뒤 저장해 주세요."}</Text></ContentTransition>
+    {state.value?<Text>저장한 제목: {state.value}</Text>:null}
     <Button tone="ghost" selected={failureArmed} disabled={busy} onPress={toggleFailure}>예제: 다음 저장 실패</Button>
     <Text>실제 서버 요청 없는 예제예요. 다시 저장하면 현재 입력한 제목을 사용해요.</Text></Stack>;
 }
 export function UploadRecoveryPreview() {
   const [items,setItems]=useState<UploadItemDescriptor[]>([]); const [notice,setNotice]=useState("");
-  const change=(id:string,state:UploadItemDescriptor["state"])=>setItems(current=>changeUploadState(current,id,state));
+  // These refs serialize same-render picks and distinguish a removed/retried item's callbacks.
+  const itemsRef=useRef(items);
+  const update=(next:UploadItemDescriptor[])=>{itemsRef.current=next;setItems(next);};
+  const select=(selection:FilePickerSelectionResult)=>{const next=mergeUploadSelection(itemsRef.current,selection);update(next.items);setNotice(next.rejected.length?"추가하지 못한 파일이 있어요. 이미지 3개, 파일당 5MB까지 선택할 수 있어요.":"같은 파일은 한 번만 추가해요.");};
+
+  const change=(item:UploadItemDescriptor,state:UploadItemDescriptor["state"])=>{if(itemsRef.current.find(current=>current.id===item.id)===item)update(changeUploadState(itemsRef.current,item.id,state));};
   return <Stack gap="md"><Text variant="heading">파일 선택부터 다시 전송까지</Text>
-    <FilePicker descriptor={{mode:"multiple",accept:["image/*"],maxCount:3,maxSizeBytes:5*1024*1024}} label="기록 사진" buttonLabel="예제 사진 선택" existingCount={items.length} onPick={async()=>[sampleFile]} onPickError={()=>setNotice("사진을 선택하지 못했어요.")} onSelect={result=>{setItems(current=>mergeSelectedFiles(current,result.accepted));setNotice(result.rejected.length?"이미지 3개, 파일당 5MB까지 선택할 수 있어요.":"같은 파일은 한 번만 추가해요.");}} />
-    <Button tone="secondary" onPress={()=>setItems(current=>mergeSelectedFiles(current,[sampleFile]).slice(0,3))}>예제 사진 추가</Button>
+    <FilePicker descriptor={{mode:"multiple",accept:["image/*"],maxCount:3,maxSizeBytes:5*1024*1024}} label="기록 사진" buttonLabel="예제 사진 선택" existingCount={items.length} onPick={async()=>[sampleFile]} onPickError={()=>setNotice("사진을 선택하지 못했어요.")} onSelect={select} />
+    <Button tone="secondary" onPress={()=>select({accepted:[sampleFile],rejected:[]})}>예제 사진 추가</Button>
     {/* Keep the demo boundary visible when a rejection replaces the status notice. */}
     <Text>파일은 서버로 전송하지 않습니다. 아래 예제 응답으로 상태를 확인하세요.</Text>
     {notice ? <Text accessibilityLiveRegion="polite">{notice}</Text> : null}
-    {items.map(item=><Surface key={item.id} padding="md"><Stack gap="sm"><UploadItem descriptor={item} labels={uploadLabels} onCancel={id=>change(id,{status:"pending"})} onRetry={id=>change(id,{status:"uploading",progress:null})} />
-      <Stack axis="inline" wrap>{item.state.status==="pending"?<Button onPress={()=>change(item.id,{status:"uploading",progress:null})}>전송 시작</Button>:null}{item.state.status==="uploading"?<><Button tone="secondary" onPress={()=>change(item.id,{status:"success"})}>예제: 성공 응답</Button><Button tone="secondary" onPress={()=>change(item.id,{status:"error",message:"연결이 끊겼어요. 다시 전송해 주세요."})}>예제: 실패 응답</Button></>:null}<Button tone="ghost" disabled={item.state.status==="uploading"} onPress={()=>setItems(current=>current.filter(file=>file.id!==item.id))}>선택에서 제거</Button></Stack></Stack></Surface>)}
+    {items.map(item=><Surface key={item.id} padding="md"><Stack gap="sm"><UploadItem descriptor={item} labels={uploadLabels} onCancel={()=>change(item,{status:"pending"})} onRetry={()=>change(item,{status:"uploading",progress:null})} />
+      <Stack axis="inline" wrap>{item.state.status==="pending"?<Button onPress={()=>change(item,{status:"uploading",progress:null})}>전송 시작</Button>:null}{item.state.status==="uploading"?<><Button tone="secondary" onPress={()=>change(item,{status:"success"})}>예제: 성공 응답</Button><Button tone="secondary" onPress={()=>change(item,{status:"error",message:"연결이 끊겼어요. 다시 전송해 주세요."})}>예제: 실패 응답</Button></>:null}<Button tone="ghost" disabled={item.state.status==="uploading"} onPress={()=>{if(itemsRef.current.find(current=>current.id===item.id)===item&&item.state.status!=="uploading")update(itemsRef.current.filter(file=>file.id!==item.id));}}>선택에서 제거</Button></Stack></Stack></Surface>)}
   </Stack>;
 }
 export function ProductBentoPreview() {
   const [started,setStarted]=useState(false);
   const [draft, setDraft] = useState("");
   const [details, setDetails] = useState(false);
-  const { session, state, request, failureArmed, toggleFailure, busy } = useDemoAction("");
+  const { session, state, request, failureArmed, toggleFailure } = useDemoAction("");
   // Keep conditions and the draft outside the conditional editor. Returning to
   // the introduction must not hide the product boundary or discard unfinished work.
-  const save = () => { const submitted = draft.trim(); if (submitted) void session.run(() => request(submitted), { retryable: true }); };
+  const feedback = resolveSaveFeedback({ phase: state.status, dirty: draft.trim() !== state.value, valid: !!draft.trim(), hasSaved: state.value !== "" });
+  const { currentSaved, pending: busy } = feedback;
+  const save = () => {
+    const submitted = draft.trim();
+    if (feedback.canSubmit && submitted !== session.getSnapshot().value) void session.run(() => request(submitted), { retryable: true });
+  };
+  const back = () => { if (session.getSnapshot().status !== "pending") setStarted(false); };
+  // A completed request confirms its snapshot, not edits made while it was pending.
+  const status = busy ? "저장 중이에요." : currentSaved ? "미리보기에 저장했어요."
+    : feedback.feedback === "error" ? "저장하지 못했어요. 제목은 유지되어 있어요. 다시 저장해 주세요."
+    : state.value ? "현재 제목은 아직 저장하지 않았어요." : "아직 저장하지 않았어요.";
   // The Native Storybook canvas is not scrollable. Use the canonical screen host
   // so the long feature preview cannot strand its CTA below the viewport.
   return <KeyboardAvoiding style={{ flex: 1 }}><ScreenLayout title="기록을 더 선명하게" contentInset="none"
-    header={<Stack gap="md"><Text tone="brand" variant="label">장면 기록</Text><Text variant="heading">기록을 더 선명하게</Text><Text>사진의 변화와 그날의 생각을 한곳에 모아 보세요.</Text></Stack>}>
+    header={<Stack gap="md"><Text tone="brand" variant="label">장면 기록</Text><Heading level="level3" semanticLevel={1}>기록을 더 선명하게</Heading><Text>사진의 변화와 그날의 생각을 한곳에 모아 보세요.</Text></Stack>}>
     <Stack gap="lg">
-    <View style={{ gap: 16 }}><Surface padding="lg"><ImageComparisonPreview /></Surface><Stack gap="md"><Surface padding="lg"><Stack gap="sm"><Text variant="title">한 줄로 시작</Text><Text>짧은 제목을 적고, 필요한 만큼 이야기를 더하세요.</Text></Stack></Surface><Surface padding="lg"><Stack gap="sm"><Text variant="title">내가 고른 장면</Text><Text>다시 보고 싶은 순간을 직접 선택해요.</Text></Stack></Surface></Stack></View>
+    <View style={{ gap: 16 }}><Surface padding="lg"><ImageComparisonPreview /></Surface><Stack gap="md"><Surface padding="lg"><Stack gap="sm"><Heading level="level5" semanticLevel={2}>한 줄로 시작</Heading><Text>짧은 제목을 적고, 필요한 만큼 이야기를 더하세요.</Text></Stack></Surface><Surface padding="lg"><Stack gap="sm"><Heading level="level5" semanticLevel={2}>내가 고른 장면</Heading><Text>다시 보고 싶은 순간을 직접 선택해요.</Text></Stack></Surface></Stack></View>
     {started ? <TextField label="첫 기록 제목" value={draft} onValueChange={setDraft} autoFocus /> : null}
     {details ? <Surface padding="md"><Text>사진을 비교하고 제목을 적으면 이 화면의 미리보기에 추가돼요. 다른 사람에게 전송되지는 않아요.</Text></Surface> : null}
     <BottomCTA description={started ? "입력한 제목으로 미리보기를 만들어요." : "먼저 사진을 비교하거나 첫 기록을 작성해 보세요."}
-      primaryAction={{ label: started ? "미리보기에 저장" : "첫 기록 시작하기", onPress: started ? save : () => setStarted(true), loading: busy, loadingLabel: "미리보기 저장 중", disabled: started && !draft.trim() }}
-      secondaryAction={{ label: started ? "소개로 돌아가기" : details ? "사용 방법 접기" : "사용 방법 보기", onPress: started ? () => setStarted(false) : () => setDetails(value => !value), disabled: busy }}/>
+      primaryAction={{ label: started ? currentSaved ? "저장했어요" : "미리보기에 저장" : "첫 기록 시작하기", onPress: started ? save : () => setStarted(true), loading: busy, loadingLabel: "미리보기 저장 중", disabled: started && !feedback.canSubmit }}
+      secondaryAction={{ label: started ? "소개로 돌아가기" : details ? "사용 방법 접기" : "사용 방법 보기", onPress: started ? back : () => setDetails(value => !value), disabled: busy }}/>
     <BottomInfo items={["실제 서버 요청 없이 체험하는 예제예요.", "제목은 이 화면이 열려 있는 동안만 유지돼요. 계정 생성이나 결제는 없어요."]}/>
     {started ? <Button tone="ghost" selected={failureArmed} disabled={busy} onPress={toggleFailure}>다음 저장 실패 체험</Button> : null}
-    <Text accessibilityLiveRegion="polite">{state.status === "error" ? "저장하지 못했어요. 제목은 유지되어 있어요. 다시 저장해 주세요." : state.status === "success" ? "미리보기에 저장했어요." : state.status === "pending" ? "저장 중이에요." : "아직 저장하지 않았어요."}</Text>
+    <Text accessibilityLiveRegion="polite">{status}</Text>
     {state.value ? <Text>저장된 제목: {state.value}</Text> : null}</Stack></ScreenLayout></KeyboardAvoiding>;
 }
 export function ContextToolbarPreview() {

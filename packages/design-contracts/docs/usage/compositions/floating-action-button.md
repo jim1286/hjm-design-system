@@ -70,20 +70,19 @@ Dialog (열림)
 ## 흐름과 상태
 
 1. 목록을 아래로 스크롤하면 FAB가 원(`collapsed`)으로, 위로 스크롤하면 알약(`expanded`)으로 바뀐다. 같은 버튼 인스턴스라 포커스가 유지된다.
-2. FAB를 누르면 Dialog가 열린다.
+2. FAB를 누르면 Dialog가 열린다. 양 플랫폼 모두 FAB ref를 Dialog `returnFocusRef`에 연결해 포인터로 열었을 때도 닫기·저장 후 실제 FAB로 돌아오게 한다.
 3. 내용을 쓰면 "기록 추가"가 활성화된다. 누르면 저장한다(비동기면 `busy`).
 4. 성공하면 새 항목을 목록 맨 위에 넣고, 대화상자를 닫고, 입력을 비우고, 목록을 맨 위로 스크롤한다. 맨 위로 돌아오면 FAB 라벨이 다시 펼쳐진다.
 5. 실패(네트워크·서버 오류)하면 입력을 비우지 않는다. Web은 대화상자를 연 채 본문 맨 위에 Notice를 보이고 "기록 추가"를 다시 누를 수 있다.
-   Native Dialog는 `primaryAction`을 누르면 콜백을 부른 뒤 바로 `close-action`을 요청하므로, 열어 두려면 제어형 소유자가
-   저장 중 닫기 요청을 무시한다(아래 코드 골격). 재시도도 실패하면 같은 Notice가 한 개만 남는다.
+   Native Dialog는 반환 Promise가 거절되면 열린 상태를 유지하고 `onActionError`를 호출한다. 저장 중 닫기는 Dialog가 차단한다. 재시도도 실패하면 같은 Notice가 한 개만 남는다.
 
 | 상태 | 모습 | 포커스·알림 |
 | --- | --- | --- |
 | 기본 | 목록 + 펼친 FAB(아이콘 + "새 기록" 알약). 스크롤하면 접힌 원 52 | 접근성 이름은 접힘·펼침 모두 전체 `label` |
-| 진행 중 | 저장 중. Dialog `busy`(닫기 막음), Web "기록 추가" `loading`, Native 행동 버튼 `disabled` | 포커스는 대화상자 안에 유지 |
+| 진행 중 | 저장 중. Dialog `busy`(닫기 막음), Web "기록 추가" `loading`, Native 내장 행동 버튼 `loading` | 포커스는 대화상자 안에 유지 |
 | 실패 | 대화상자 열림 유지, 입력 유지, 본문 맨 위 `Notice tone="danger"` `t("notes.compose.failed")` | Web `danger` Notice는 `role="alert"`. Native는 `announcement="assertive"`를 줘야 알린다. 포커스 이동 없음 |
 | 입력 비어 있음 | "기록 추가" `disabled` | — |
-| 저장 후 | 새 항목이 맨 위, 대화상자 닫힘 | Web Dialog는 닫히며 포커스를 트리거(FAB)로 돌린다. Native는 `returnFocusRef`로 지정한다 |
+| 저장 후 | 새 항목이 맨 위, 대화상자 닫힘 | 양 플랫폼 모두 FAB ref를 `returnFocusRef`로 지정한다. WebKit은 pointer 클릭이 FAB를 자동으로 focus하지 않으므로 명시 연결이 필요하다 |
 | 큰 글자 | 라벨이 여러 줄이 되어 clearance가 커진다 | 측정값을 하단 padding에 그대로 반영 |
 | 빈 목록 | 목록 자리에 [EmptyState](../components/empty-state.md), FAB는 그대로 | — |
 | 목록 불러오기 실패 | 목록 자리에 [EmptyState](../components/empty-state.md)(실패 문구 + `action`에 다시 불러오기 버튼). FAB는 그대로 | EmptyState `announcement`(Native)로 알림 |
@@ -92,7 +91,7 @@ Dialog (열림)
 
 ```tsx
 // Web
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { resolveWindowClass } from "@hjmds/design-contracts/responsive";
 import { Button } from "@hjmds/react/actions";
 import { List, ListRow } from "@hjmds/react/display";
@@ -104,6 +103,7 @@ import { Dialog } from "@hjmds/react/overlays";
 import { TopBar } from "@hjmds/react/top-bar";
 
 function Notes() {
+  const composerTrigger = useRef<HTMLButtonElement>(null);
   const [target, setTarget] = useState<HTMLDivElement | null>(null);
   const layoutMode = useFloatingActionButtonScroll(target);
   const [clearance, setClearance] = useState(resolveFloatingActionButtonContentClearance(0));
@@ -118,9 +118,9 @@ function Notes() {
           </Container>
         </div>
       </div>
-      <FloatingActionButton descriptor={{ label: t("notes.new"), icon: { name: "add" }, layoutMode }}
+      <FloatingActionButton ref={composerTrigger} descriptor={{ label: t("notes.new"), icon: { name: "add" }, layoutMode }}
         renderIcon={renderIcon} onContentClearanceChange={setClearance} onClick={() => setOpen(true)} />
-      <Dialog title={t("notes.compose.title")} open={open} onOpenChange={setOpen} closeLabel={t("common.close")} busy={saving}
+      <Dialog returnFocusRef={composerTrigger} title={t("notes.compose.title")} open={open} onOpenChange={setOpen} closeLabel={t("common.close")} busy={saving}
         footer={<Button loading={saving} disabled={!draft.trim()} onClick={save}>{t("notes.compose.save")}</Button>}>
         {failed && <Notice tone="danger" title={t("notes.compose.failed")} />}
         <TextArea label={t("notes.compose.label")} value={draft} onChange={(event) => setDraft(event.currentTarget.value)} />
@@ -145,10 +145,10 @@ import { Container } from "@hjmds/react-native/primitives";
 import { TopBar } from "@hjmds/react-native/top-bar";
 
 function Notes() {
+  const composerTrigger = useRef<View>(null);
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const scroll = useRef<ScrollView>(null);
-  const submitting = useRef(false); // save()가 동기로 true로 둔다 — Dialog가 곧바로 보내는 close-action을 무시하기 위해
   const { layoutMode, onScroll } = useFloatingActionButtonScroll();
   const [clearance, setClearance] = useState(resolveFloatingActionButtonContentClearance(insets.bottom));
   return (
@@ -159,11 +159,11 @@ function Notes() {
           <List label={t("notes.recent")}>{notes.map((n) => <ListRow key={n.id} title={n.text} />)}</List>
         </Container>
       </ScrollView>
-      <FloatingActionButton descriptor={{ label: t("notes.new"), icon: { name: "add" }, layoutMode }}
+      <FloatingActionButton ref={composerTrigger} descriptor={{ label: t("notes.new"), icon: { name: "add" }, layoutMode }}
         renderIcon={renderIcon} safeAreaBottomInset={insets.bottom}
         onContentClearanceChange={setClearance} onPress={() => setOpen(true)} />
-      <Dialog title={t("notes.compose.title")} open={open} closeLabel={t("common.close")} busy={saving}
-        onOpenChange={(next) => { if (!next && submitting.current) return; setOpen(next); }}
+      <Dialog returnFocusRef={composerTrigger} title={t("notes.compose.title")} open={open} closeLabel={t("common.close")} busy={saving}
+        onOpenChange={setOpen} onActionError={() => setFailed(true)}
         primaryAction={{ label: t("notes.compose.save"), onPress: save, disabled: !draft.trim() }}>
         {failed ? <Notice tone="danger" announcement="assertive" title={t("notes.compose.failed")} /> : null}
         <TextArea label={t("notes.compose.label")} value={draft} onValueChange={setDraft} />
@@ -173,8 +173,8 @@ function Notes() {
 }
 ```
 
-`save`는 `saving`(Native는 `submitting.current`도)을 켜고 저장한 뒤 성공이면 항목 추가·닫기·입력 비우기·맨 위로 스크롤,
-실패면 `failed`를 켜고 대화상자를 연 채 둔다. 스토리의 18개 예시 기록과 문구, `＋` 글자 아이콘은 제품 데이터·아이콘으로 바꾼다.
+Web `save`는 `saving`을 켜고 성공 때 항목 추가·닫기·입력 비우기·맨 위 스크롤을 한다.
+Native `primaryAction.onPress`는 저장 Promise를 반환한다. Dialog가 중복 실행·pending 표시·저장 중 닫기 차단을 소유하고, Promise가 이행될 때만 닫는다. 거절은 `onActionError`에서 제품 문구로 표시한다. 저장 오류를 삼켜 성공으로 반환하지 않는다. 스토리의 18개 예시 기록과 문구, `＋` 글자 아이콘은 제품 데이터·아이콘으로 바꾼다.
 
 ## 플랫폼 차이
 
@@ -182,7 +182,7 @@ function Notes() {
 | --- | --- | --- |
 | FAB 위치 | CSS `position: fixed`, 안전 영역 `env()` 자동 | positioned 부모 안 `absolute`, `safeAreaBottomInset` 직접 전달 |
 | 스크롤 hook | `useFloatingActionButtonScroll(target)` → `layoutMode` | `useFloatingActionButtonScroll()` → `{ layoutMode, onScroll }`, `scrollEventThrottle={16}` |
-| 대화상자 주 행동 | `footer`에 Button(`loading` 가능) | `primaryAction` 객체. 누르면 콜백 뒤 바로 `close-action` 요청, `loading` 없음(`busy`면 `disabled`) |
+| 대화상자 주 행동 | `footer`에 Button(`loading` 가능) | `primaryAction` 객체. 반환 Promise가 이행되면 `close-action`, 거절되면 열린 상태 유지. pending은 내장 버튼 loading으로 표시 |
 | TextArea 값 | DOM `onChange`(Web TextArea에는 `onValueChange`가 없다, 1.12.1) | `onValueChange(value)` |
 | 맨 위로 | `target.scrollTo({ top: 0 })` | `scroll.current?.scrollTo({ y: 0 })` |
 
@@ -190,8 +190,8 @@ function Notes() {
 
 - clearance를 스크롤 콘텐츠 하단 padding에 넣지 않으면 마지막 항목이 FAB 아래에 가려진다. 지름만 예약하지 않는다.
 - 한 화면에 FAB는 하나다. 하단 고정 결론 행동이 따로 있으면 [BottomCTA](../components/bottom-cta.md)를 쓴다.
-- Native Dialog에서 비동기 저장을 `primaryAction`에 넣고 닫기 요청을 그대로 받으면 실패해도 대화상자가 이미 닫혀 있다. 저장 중 닫기 요청은 소유자가 무시한다.
+- Native Dialog의 `onPress`에서 `void save()`로 Promise를 버리면 동기 성공으로 처리된다. `return save()` 또는 `async` 반환을 유지한다.
 - 현재 Native 스토리는 `safeAreaBottomInset`·TopBar `safeAreaTop`을 넘기지 않는다. 실제 화면은 inset을 넘긴다.
-- 현재 스토리는 List를 Container 없이 화면 가장자리에 둔다(ListRow 좌우 8만 남는다). 제품은 Container gutter 안에 둔다.
+- Native 스토리는 List를 Container 없이 화면 가장자리에 둔다(ListRow 좌우 8만 남는다). 제품은 Container gutter 안에 둔다. Web 스토리는 이미 Container를 사용한다.
 - Web TextArea는 TextField와 달리 `onValueChange`가 없다(1.12.1). Web은 `onChange`로 값을 읽는다([TextArea](../components/text-area.md)).
-- 현재 스토리는 저장이 동기라 진행 중·실패 상태가 없고 문구가 i18n 키 없는 리터럴이다.
+- 현재 스토리는 저장이 동기라 진행 중·실패 상태가 없고 문구가 i18n 키 없는 리터럴이다. 작성 세션별 ref로 닫힘 렌더 전에 도착한 중복 저장을 막고, FAB로 새 작성창을 열 때 초기화한다. 비동기 저장은 제품의 실제 Promise와 실패 상태를 연결한다.

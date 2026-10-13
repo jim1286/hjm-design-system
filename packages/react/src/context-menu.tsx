@@ -17,7 +17,8 @@ import {
   type ReactNode,
 } from "react";
 import { classNames } from "./internal.js";
-import { HjmPortal, getModalLayer } from "./modal.js";
+import { AnchoredPortal } from "./portal.js";
+import { getModalLayer } from "./modal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type ContextMenuProps<Key extends string = string> = Readonly<{
@@ -49,10 +50,22 @@ export function ContextMenu<Key extends string = string>({
   const [anchor, setAnchor] = useState<ContextMenuAnchor | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const longPress = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const pressOrigin = useRef<ContextMenuAnchor | null>(null);
+  const cancelLongPress = useCallback(() => {
+    if (longPress.current !== undefined) clearTimeout(longPress.current);
+    longPress.current = undefined;
+    pressOrigin.current = null;
+  }, []);
+  useEffect(() => cancelLongPress, [cancelLongPress]);
   const typeahead = useRef({ value: "", time: 0 });
   const enabled = items.filter((item) => !item.disabled);
+  const resolvedActiveIndex = Math.min(activeIndex, Math.max(0, enabled.length - 1));
+  useLayoutEffect(() => {
+    if (activeIndex !== resolvedActiveIndex) setActiveIndex(resolvedActiveIndex);
+  }, [activeIndex, resolvedActiveIndex]);
 
   const open = useCallback((reason: ContextMenuOpenReason, pointer: ContextMenuAnchor | null) => {
+    cancelLongPress();
     const activeElement = document.activeElement;
     returnFocusRef.current = activeElement instanceof HTMLElement && hostRef.current?.contains(activeElement)
       ? activeElement
@@ -65,7 +78,7 @@ export function ContextMenu<Key extends string = string>({
     ));
     setActiveIndex(0);
     typeahead.current = { value: "", time: 0 };
-  }, []);
+  }, [cancelLongPress]);
 
   const setMenuRef = useCallback((node: HTMLDivElement | null) => {
     menuRef.current = node;
@@ -106,7 +119,7 @@ export function ContextMenu<Key extends string = string>({
         return;
       }
       if (event.key.length === 1 && event.key !== " " && !event.ctrlKey && !event.metaKey && !event.altKey) {
-        const result = resolveMenuTypeahead(enabled, activeIndex, event.key, typeahead.current, Date.now());
+        const result = resolveMenuTypeahead(enabled, resolvedActiveIndex, event.key, typeahead.current, Date.now());
         typeahead.current = result.state;
         if (result.index !== undefined) {
           event.preventDefault();
@@ -116,7 +129,7 @@ export function ContextMenu<Key extends string = string>({
       }
       if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
-        const item = enabled[activeIndex];
+        const item = enabled[resolvedActiveIndex];
         if (item) { onAction(item.id as Key); setAnchor(null); returnFocusRef.current?.focus(); }
         return;
       }
@@ -135,7 +148,7 @@ export function ContextMenu<Key extends string = string>({
       document.removeEventListener("keydown", onKeyDown);
       document.removeEventListener("pointerdown", onPointerDown);
     };
-  }, [anchor, activeIndex, enabled, onAction]);
+  }, [anchor, resolvedActiveIndex, enabled, onAction]);
 
   return (
     <div
@@ -157,20 +170,28 @@ export function ContextMenu<Key extends string = string>({
       }}
       onPointerDown={(event) => {
         if (event.pointerType !== "touch") return;
-        longPress.current = setTimeout(() => open("longPress", { x: event.clientX, y: event.clientY }), longPressDelay);
+        cancelLongPress();
+        const origin = { x: event.clientX, y: event.clientY };
+        pressOrigin.current = origin;
+        longPress.current = setTimeout(() => open("longPress", origin), longPressDelay);
       }}
-      onPointerUp={() => { if (longPress.current !== undefined) clearTimeout(longPress.current); }}
-      onPointerCancel={() => { if (longPress.current !== undefined) clearTimeout(longPress.current); }}
+      onPointerMove={(event) => {
+        const origin = pressOrigin.current;
+        // Treat a 10px move as scrolling, while tolerating small touch jitter.
+        if (origin && Math.hypot(event.clientX - origin.x, event.clientY - origin.y) >= 10) cancelLongPress();
+      }}
+      onPointerUp={cancelLongPress}
+      onPointerCancel={cancelLongPress}
     >
       {children}
       {anchor !== null ? (
-        <HjmPortal>
+        <AnchoredPortal anchorRef={hostRef}>
           <div
             role="menu"
             id={menuId}
             ref={setMenuRef}
             tabIndex={-1}
-            aria-activedescendant={enabled[activeIndex] ? `${menuId}-item-${activeIndex}` : undefined}
+            aria-activedescendant={enabled[resolvedActiveIndex] ? `${menuId}-item-${resolvedActiveIndex}` : undefined}
             aria-label={accessibilityLabel}
             className="hjm-context-menu"
             style={{
@@ -190,7 +211,7 @@ export function ContextMenu<Key extends string = string>({
                   id={index >= 0 ? `${menuId}-item-${index}` : undefined}
                   role="menuitem"
                   aria-disabled={item.disabled || undefined}
-                  data-active={index === activeIndex && !item.disabled ? "" : undefined}
+                  data-active={index === resolvedActiveIndex && !item.disabled ? "" : undefined}
                   data-tone={item.tone}
                   className="hjm-context-menu__item"
                   onMouseMove={() => { if (index >= 0) setActiveIndex(index); }}
@@ -207,7 +228,7 @@ export function ContextMenu<Key extends string = string>({
               );
             })}
           </div>
-        </HjmPortal>
+        </AnchoredPortal>
       ) : null}
     </div>
   );

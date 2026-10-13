@@ -3,7 +3,7 @@ import { act, type ReactNode } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
-import { HjmProvider, Tooltip } from "../src/index.js";
+import { Dialog, HjmProvider, Tooltip } from "../src/index.js";
 import "../src/styles.css";
 import { tap } from "./touch-tap.js";
 // The evidence registry points to this focused keyboard proof; the shared scenario fixture omits tooltip trigger interactions.
@@ -138,4 +138,14 @@ describe("Tooltip renderer readiness", () => {
     await act(async () => userEvent.keyboard("{Escape}"));
     expect(tooltip()).toBeNull();
   });
+});
+
+
+it("dismisses the focused tooltip before its containing dialog on Escape", async () => {
+  await render(<HjmProvider reducedMotion><Dialog defaultOpen trigger={<button>열기</button>} title="부모" closeLabel="닫기"><Tooltip trigger={<button>힌트</button>} content="도움말" focusOpenDelayMs={0} /></Dialog></HjmProvider>);
+  await act(async () => [...document.querySelectorAll("button")].find(node => node.textContent === "힌트")!.focus());
+  expect(document.querySelector('[role="tooltip"]')).not.toBeNull();
+  await act(async () => userEvent.keyboard("{Escape}"));
+  expect(document.querySelector('[role="tooltip"]')).toBeNull();
+  expect(document.querySelector('.hjm-dialog')).not.toBeNull();
 });

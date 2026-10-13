@@ -1,5 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { NativeFieldFrame } from "./internal/field-frame.js";
+import { focusAccessibleHost } from "./internal/accessible-focus.js";
 import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
 import { formRecipe, } from "@hjmds/design-contracts/components/form";
 import { comboboxBehaviorDefaults, resolveControlAccessibleName, } from "@hjmds/design-contracts/behaviors";
@@ -8,14 +10,13 @@ import { resolveColorReference } from "@hjmds/design-contracts/color-references"
 import { backdrop, glyph, spacing, } from "@hjmds/design-contracts/foundations";
 import { comboboxRecipe, selectRecipe, } from "@hjmds/design-contracts/recipes";
 import { useImperativeHandle, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, } from "react";
-import { AccessibilityInfo, ActivityIndicator, Modal, Pressable, ScrollView, TextInput, View, findNodeHandle, } from "react-native";
+import { ActivityIndicator, Modal, Pressable, ScrollView, TextInput, View, } from "react-native";
 import { Button } from "./actions.js";
 import { useControllableState } from "./internal/state.js";
 import { scheduleAfterNativeModalTeardown, shouldAwaitNativeModalDismiss, } from "./internal/modal-lifecycle.js";
 import { logicalTextAlign, minimumTargetStyle, resolveNativeFontStyle, resolveNativeTextScaleProps, } from "./internal/styles.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "./provider.js";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 function useAfterModalDismiss(visible) {
     const shownRef = useRef(false);
     const previousVisibleRef = useRef(visible);
@@ -69,8 +70,7 @@ export function Field({ label, children, description, error, required = false, d
  * A Native submit boundary. Products retain ownership of values and validation;
  * this renderer only owns submit re-entrancy, feedback, and field rhythm.
  */
-export function Form({ label, values, onSubmit, children, submitLabel, actions, ref, status, defaultStatus = "idle", onStatusChange, error, fallbackErrorMessage, disabled = false, density = "comfortable", firstInvalidFieldRef, layoutStyle, style, }) {
-    warnDeprecatedStyleProps("Form", { style }, "layoutStyle for placement and density for field rhythm");
+export function Form({ label, values, onSubmit, children, submitLabel, actions, ref, status, defaultStatus = "idle", onStatusChange, error, fallbackErrorMessage, disabled = false, density = "comfortable", firstInvalidFieldRef, layoutStyle, }) {
     const [submitStatus, setSubmitStatus] = useControllableState({
         ...(status === undefined ? {} : { value: status }),
         defaultValue: defaultStatus,
@@ -95,10 +95,7 @@ export function Form({ label, values, onSubmit, children, submitLabel, actions, 
             // selected target. Focusing the TextInput also opens the native keyboard, while
             // setAccessibilityFocus moves VoiceOver/TalkBack to that same field.
             invalidField.focus();
-            const nativeHandle = findNodeHandle(invalidField);
-            if (nativeHandle !== null) {
-                void AccessibilityInfo.setAccessibilityFocus(nativeHandle);
-            }
+            focusAccessibleHost(invalidField);
             return;
         }
         submittingRef.current = true;
@@ -123,7 +120,7 @@ export function Form({ label, values, onSubmit, children, submitLabel, actions, 
     };
     // Keyboard return and a sheet footer share validation/reentrancy instead of reimplementing submission.
     useImperativeHandle(ref, () => ({ submit }));
-    return (_jsxs(View, { accessibilityLabel: label, accessibilityState: { busy, disabled }, style: [{ gap: formRecipe.density[density].fieldGap }, style, layoutStyle], children: [children, error ?? internalError ? (_jsx(View, { accessibilityLiveRegion: "assertive", accessibilityRole: "alert", children: _jsx(Text, { tone: "danger", children: error ?? internalError }) })) : null, actions !== undefined ? actions : _jsx(Button, { disabled: disabled, loading: busy, onPress: () => void submit(), children: submitLabel })] }));
+    return (_jsxs(View, { accessibilityLabel: label, accessibilityState: { busy, disabled }, style: [{ gap: formRecipe.density[density].fieldGap }, layoutStyle], children: [children, error ?? internalError ? (_jsx(View, { accessibilityLiveRegion: "assertive", accessibilityRole: "alert", children: _jsx(Text, { tone: "danger", children: error ?? internalError }) })) : null, actions !== undefined ? actions : _jsx(Button, { disabled: disabled, loading: busy, onPress: () => void submit(), children: submitLabel })] }));
 }
 /** Shared collection sheets keep dismissal in the header so it does not compete with choices. */
 function CollectionSheetHeader({ title, dismissLabel, onDismiss }) {
@@ -132,8 +129,8 @@ function CollectionSheetHeader({ title, dismissLabel, onDismiss }) {
 }
 /** Native adaptive Select with shared sections, async states, and teardown-safe commits. */
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
-export function Select({ label, accessibilityLabel, source: sourceProp, items, sections, selectedKey, defaultSelectedKey, onSelectionChange, selectedItem, disallowEmptySelection = false, open, defaultOpen = false, onOpenChange, placeholder, description, error, required = false, disabled = false, readOnly = false, busy = false, size = selectRecipe.defaults.size, density = selectRecipe.defaults.density, asyncState = { status: "idle" }, onRetry, retryLabel, readOnlyLabel, openHint, renderLeading, renderOptionLeading, onSelectionAfterDismiss, onDismiss, dismissLabel, optionsAccessibilityLabel, layoutStyle, style, ...modalProps }) {
-    warnDeprecatedStyleProps("Select", { style }, "layoutStyle for placement and size/density for appearance");
+export function Select({ label, accessibilityLabel, source: sourceProp, items, sections, selectedKey, defaultSelectedKey, onSelectionChange, selectedItem, disallowEmptySelection = false, open, defaultOpen = false, onOpenChange, placeholder, description, error, required = false, disabled = false, readOnly = false, busy = false, size = selectRecipe.defaults.size, density = selectRecipe.defaults.density, asyncState = { status: "idle" }, onRetry, retryLabel, readOnlyLabel, openHint, renderLeading, renderOptionLeading, onSelectionAfterDismiss, onDismiss, dismissLabel, optionsAccessibilityLabel, layoutStyle, ...modalProps }) {
+    assertNoRemovedStyleProps("Select", modalProps, ["style"]);
     const providedSources = [sourceProp, items, sections].filter((candidate) => candidate !== undefined).length;
     if (providedSources !== 1) {
         throw new TypeError("Select requires exactly one of source, items, or sections");
@@ -158,14 +155,18 @@ export function Select({ label, accessibilityLabel, source: sourceProp, items, s
     const safeArea = useHjmNativeSafeAreaInsets();
     const requestedControlled = selectedKey;
     const requestedDefault = defaultSelectedKey ?? null;
-    const requestedValue = requestedControlled ?? requestedDefault;
-    if (requestedValue !== null &&
+    const requestedValue = requestedControlled === undefined ? requestedDefault : requestedControlled;
+    const validatedInitialSelection = useRef(false);
+    if ((requestedControlled !== undefined || !validatedInitialSelection.current) &&
+        requestedValue !== null &&
         requestedValue !== undefined &&
         !collectionItems.some((option) => option.id === requestedValue) &&
         selectedItem?.id !== requestedValue &&
         asyncState.status === "idle") {
         throw new RangeError("Select selection must match an option");
     }
+    // Defaults only seed the initial selection; later item removals reconcile live state.
+    validatedInitialSelection.current = true;
     const [selected, setSelected] = useControllableState({
         ...(requestedControlled === undefined ? {} : { value: requestedControlled }),
         defaultValue: requestedDefault,
@@ -200,9 +201,7 @@ export function Select({ label, accessibilityLabel, source: sourceProp, items, s
     const densityContract = selectRecipe.density[density];
     const close = useCallback((reason, after) => {
         modalDismiss.queue(async () => {
-            const handle = findNodeHandle(triggerRef.current);
-            if (handle !== null)
-                AccessibilityInfo.setAccessibilityFocus(handle);
+            focusAccessibleHost(triggerRef.current);
             onDismiss?.(reason);
             await after?.();
         });
@@ -217,11 +216,7 @@ export function Select({ label, accessibilityLabel, source: sourceProp, items, s
         if (initialValue === undefined)
             return;
         const target = optionRefs.current.get(initialValue);
-        if (target) {
-            const handle = findNodeHandle(target);
-            if (handle !== null)
-                AccessibilityInfo.setAccessibilityFocus(handle);
-        }
+        focusAccessibleHost(target);
     };
     const leadingColor = resolveColorReference(selectRecipe.leading.color, theme.palette);
     const triggerLeading = renderLeading?.(resolvedSelectedItem, {
@@ -281,7 +276,7 @@ export function Select({ label, accessibilityLabel, source: sourceProp, items, s
                     paddingVertical: selectRecipe.sectionLabel.paddingVertical,
                 }, variant: selectRecipe.sectionLabel.textVariant, children: section.label })) : null, section.items.map(renderOption)] }, section.id))) : collectionItems.map(renderOption);
     const blockingState = asyncState.status === "loading" || asyncState.status === "error" || asyncState.status === "empty";
-    return (_jsxs(View, { style: [{ gap: spacing.xs }, style, layoutStyle], children: [label ? _jsxs(Text, { tone: "primary", variant: "label", style: disabled ? { opacity: selectRecipe.states.disabledOpacity } : undefined, children: [label, required ? " *" : ""] }) : null, _jsxs(Pressable, { ref: triggerRef, accessibilityLabel: accessibleName, accessibilityHint: readOnly ? readOnlyLabel : error ?? description ?? openHint, accessibilityRole: "combobox", accessibilityState: {
+    return (_jsxs(View, { style: [{ gap: spacing.xs }, layoutStyle], children: [label ? _jsxs(Text, { tone: "primary", variant: "label", style: disabled ? { opacity: selectRecipe.states.disabledOpacity } : undefined, children: [label, required ? " *" : ""] }) : null, _jsxs(Pressable, { ref: triggerRef, accessibilityLabel: accessibleName, accessibilityHint: readOnly ? readOnlyLabel : error ?? description ?? openHint, accessibilityRole: "combobox", accessibilityState: {
                     busy: busy || asyncState.status === "loading",
                     disabled: disabled || readOnly || busy,
                     expanded: visible,
@@ -331,8 +326,8 @@ export function Select({ label, accessibilityLabel, source: sourceProp, items, s
  */
 const comboboxRefocusGuardMs = 600;
 /** Editable Native combobox with sectioned async results and teardown-safe commits. */
-export function Combobox({ label, accessibilityLabel, items, sections, source: sourceProp, selectedKey, defaultSelectedKey = null, selectedItem, onSelectionChange, inputValue, defaultInputValue, onInputValueChange, open, defaultOpen = false, onOpenChange, onCommit, onCommitAfterDismiss, onDismiss, filtering = comboboxBehaviorDefaults.filtering, queryValue, resultQuery, asyncState, loading = false, emptyMessage, loadingMessage, loadingMoreMessage, errorMessage, promptMessage, minimumQueryLength = 0, onRetry, retryLabel, description, error, placeholder, openHint, sheetTitle, required = false, disabled = false, readOnly = false, busy = false, openOnFocus = true, size = comboboxRecipe.defaults.size, density = comboboxRecipe.defaults.density, readOnlyLabel, renderLeading, clearLabel, dismissLabel, resultsAccessibilityLabel, layoutStyle, style, ...modalProps }) {
-    warnDeprecatedStyleProps("Combobox", { style }, "layoutStyle for placement and density for appearance");
+export function Combobox({ label, accessibilityLabel, items, sections, source: sourceProp, selectedKey, defaultSelectedKey = null, selectedItem, onSelectionChange, inputValue, defaultInputValue, onInputValueChange, open, defaultOpen = false, onOpenChange, onCommit, onCommitAfterDismiss, onDismiss, filtering = comboboxBehaviorDefaults.filtering, queryValue, resultQuery, asyncState, loading = false, emptyMessage, loadingMessage, loadingMoreMessage, errorMessage, promptMessage, minimumQueryLength = 0, onRetry, retryLabel, description, error, placeholder, openHint, sheetTitle, required = false, disabled = false, readOnly = false, busy = false, openOnFocus = true, size = comboboxRecipe.defaults.size, density = comboboxRecipe.defaults.density, readOnlyLabel, renderLeading, clearLabel, dismissLabel, resultsAccessibilityLabel, layoutStyle, ...modalProps }) {
+    assertNoRemovedStyleProps("Combobox", modalProps, ["style"]);
     const providedSources = [sourceProp, items, sections].filter((candidate) => candidate !== undefined).length;
     if (providedSources !== 1) {
         throw new TypeError("Combobox requires exactly one of source, items, or sections");
@@ -420,9 +415,7 @@ export function Combobox({ label, accessibilityLabel, items, sections, source: s
     });
     const close = useCallback((reason, after) => {
         modalDismiss.queue(async () => {
-            const handle = findNodeHandle(inputRef.current);
-            if (handle !== null)
-                AccessibilityInfo.setAccessibilityFocus(handle);
+            focusAccessibleHost(inputRef.current);
             onDismiss?.(reason);
             await after?.();
         });
@@ -459,7 +452,10 @@ export function Combobox({ label, accessibilityLabel, items, sections, source: s
         close(reason);
     };
     const commit = (item) => {
-        if (item.disabled || disabled || readOnly || busy || !resultsAreCurrent)
+        // Hidden async/prompt results cannot be selected by a hardware keyboard.
+        if (item.disabled || disabled || readOnly || busy || !resultsAreCurrent
+            || query.trim().length < minimumQueryLength
+            || !["idle", "loadingMore"].includes(resolvedAsyncState.status))
             return;
         setCommittedKey(item.id);
         setQuery(item.label);
@@ -491,11 +487,7 @@ export function Combobox({ label, accessibilityLabel, items, sections, source: s
     const focusInitialOption = () => {
         const initial = (committedKey === null ? undefined : optionRefs.current.get(committedKey)) ??
             optionRefs.current.get(filteredItems.find((item) => !item.disabled)?.id);
-        if (initial) {
-            const handle = findNodeHandle(initial);
-            if (handle !== null)
-                AccessibilityInfo.setAccessibilityFocus(handle);
-        }
+        focusAccessibleHost(initial);
     };
     const leading = committedItem && renderLeading ? renderLeading(committedItem, {
         placement: "trigger",
@@ -577,7 +569,7 @@ export function Combobox({ label, accessibilityLabel, items, sections, source: s
                     return renderOption(item, optionIndex);
                 })] }, section.id));
     }) : filteredItems.map(renderOption);
-    return (_jsxs(View, { style: [{ gap: spacing.xs }, style, layoutStyle], children: [label ? _jsxs(Text, { tone: "primary", variant: "label", style: disabled ? { opacity: fieldRecipe.disabledOpacity } : undefined, children: [label, required ? " *" : ""] }) : null, _jsxs(View, { style: {
+    return (_jsxs(View, { style: [{ gap: spacing.xs }, layoutStyle], children: [label ? _jsxs(Text, { tone: "primary", variant: "label", style: disabled ? { opacity: fieldRecipe.disabledOpacity } : undefined, children: [label, required ? " *" : ""] }) : null, _jsxs(View, { style: {
                     alignItems: "center",
                     backgroundColor: colors.bg,
                     borderColor: error ? colors.danger : colors.border,
@@ -607,6 +599,8 @@ export function Combobox({ label, accessibilityLabel, items, sections, source: s
                             if (openOnFocus && !disabled && !readOnly && !busy)
                                 requestOpen(true, "trigger");
                         }, onKeyPress: (event) => {
+                            if (disabled || readOnly || busy)
+                                return;
                             const key = event.nativeEvent.key;
                             if (key === "Escape") {
                                 dismiss("escape");
@@ -627,7 +621,7 @@ export function Combobox({ label, accessibilityLabel, items, sections, source: s
                             else if (key === "End") {
                                 setActiveIndex(lastEnabledIndex());
                             }
-                            else if (key === "Enter" && activeIndex >= 0) {
+                            else if (key === "Enter" && visible && activeIndex >= 0) {
                                 const active = filteredItems[activeIndex];
                                 if (active)
                                     commit(active);

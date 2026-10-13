@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.14.0
-- 검토일: 2026-10-07
+- 검토일: 2026-10-13
 - 근거: `reference-adoption-previews.tsx`, `reference-adoption.css`
 - 스토리북: `배포/화면/소개/기능 카드와 주 행동`
 
@@ -51,11 +51,11 @@
 | 상태 | 화면 모습 | 행동 |
 | --- | --- | --- |
 | 기본 | 설명과 비교·주/보조 행동·조건 안내 | 첫 입력 또는 사용 방법으로 이동 |
-| 로딩 | 실제 이미지 로드 상태 | 주 행동은 제품 가용성에 맞춤 |
+| 로딩 | 현재 예제는 로컬 이미지 비교. 제품 네트워크 이미지가 있으면 미리보기 내부에 상태 배치 | 주 행동은 제품 가용성에 맞춤 |
 | 빈 | 제품 자료가 없으면 비교 영역 생략 | 문구와 첫 행동 유지 |
 | 오류 | 이미지 실패 대체 또는 저장 실패 문구·제목 유지 | 현재 제목으로 다시 저장 |
-| 진행 중 | 주 행동 spinner, 보조 행동 비활성 | 중복 실행 방지, 입력 내용은 제품 상태에 유지 |
-| 완료 | 확정한 제목과 성공 문구 | 다음 입력 가능 |
+| 진행 중 | 주 행동 spinner, 보조 행동 비활성 | 중복 실행과 늦게 도착한 소개 복귀 콜백을 막는다. 제목은 계속 수정할 수 있으며 제출 snapshot과 구분한다 |
+| 완료 | 확정한 제목을 별도로 표시. 현재 초안이 같으면 성공 문구와 비활성 `저장했어요` 버튼, 다르면 현재 제목의 미저장 안내 | 제목을 바꾸면 다시 저장 가능 |
 
 ## 사용하는 지침
 
@@ -65,12 +65,23 @@
 | [Stack](../components/stack.md) | 읽기 순서와 간격 |
 | [BottomCTA](../components/bottom-cta.md) · [BottomInfo](../components/bottom-info.md) | 주·보조 행동과 항상 보이는 조건 |
 
+### 공개 API와 저장 범위
+
+`ProductBentoPreview`는 양 Showcase의 구성 예제이며 제품에서 import하는 공개 화면 API가 아니다.
+제품은 기존 ScreenLayout·Grid·Surface·Heading·BottomCTA·BottomInfo를 사용한다.
+현재 예제의 그림은 로컬 예시이므로 이미지의 네트워크 로딩·실패를 검증한 상태가 아니다.
+제품은 미리보기 영역 안에만 이미지 상태를 두고 제목 입력·CTA를 화면 전체 로딩으로 교체하지 않는다.
+저장 pending은 BottomCTA 주 행동에만 연결하고 서버 확정 전 저장된 제목을 바꾸지 않는다.
+실패 시 현재 초안과 마지막 확정 제목을 따로 유지한다. 재시도는 현재 초안을 새 snapshot으로 제출한다.
+저장 중 수정한 제목은 이전 요청의 성공으로 확정하지 않는다. 현재 초안과 확정 제목이 다르면 미저장 안내를 유지하며, 같으면 중복 저장을 막는다. 소개로 돌아가는 행동은 현재 저장 세션이 pending이면 지연된 콜백도 무시한다.
+
 ## 코드 골격
 
 ```tsx
 // Web
+import { Heading } from "@hjmds/react/heading";
 <Stack gap="lg">
-  <Text variant="heading">{title}</Text>
+  <Heading level="level3" semanticLevel={1}>{title}</Heading>
   <Surface padding="lg"><ImageComparison {...comparison} /></Surface>
   <BottomCTA primaryAction={{ label: startLabel, onClick: start }} secondaryAction={{ label: helpLabel, onClick: showHelp }} />
   <BottomInfo items={conditions} />
@@ -93,11 +104,10 @@
 Native는 같은 public component entry를 `@hjmds/react-native`로 바꾸고 Button에 `onPress`를 쓴다.
 Native ImageComparison에는 증감 행동 label을 추가한다. 제품의 계정/저장 안내와 데이터는 제품이 공급한다.
 
-## 큰 글자·다크·좁은 폭
+## 다크·좁은 폭
 
 | 조건 | 바뀌는 것 |
 | --- | --- |
-| 큰 글자 | 제목·본문·버튼이 자연스럽게 줄바꿈 |
 | 다크 | provider semantic palette 사용 |
 | 좁은 폭 | 예제 Web 48rem 이하에서 1열. Native는 항상 단일 순서 |
 
@@ -113,5 +123,4 @@ Ente 캡처에서 플랫폼 조건에 맞춘 행동 묶음을 확인했다. HJM�
 중복 요청·pending·실패 후 재시도를 검증하며 350ms 지연은 데모 전용이다. 실패 시 현재 제목은
 유지하고 다시 저장은 현재 입력 snapshot을 제출한다. 저장된 제목은 마지막으로 확정한 값이다.
 
-Web 큰 글자에서는 BottomCTA 계약대로 주 행동이 위, 보조 행동이 아래로 쌓인다. 모바일 Native도
-같은 계약을 따르며 화면 host가 스크롤·키보드·safe area를 제공한다. Native 예제에는 기존 ScreenLayout과 KeyboardAvoiding을 연결한다. 스크롤 없는 Canvas에서 CTA가 화면 밖으로 잘렸던 2026-10-07 실제 확인에 따른 수정이다. 제품은 host safe area/keyboard offset을 실제 내비게이션에 맞춘다.
+화면 host가 스크롤·키보드·safe area를 제공한다. Native 예제에는 기존 ScreenLayout과 KeyboardAvoiding을 연결한다. 스크롤 없는 Canvas에서 CTA가 화면 밖으로 잘렸던 2026-10-07 실제 확인에 따른 수정이다. 제품은 host safe area/keyboard offset을 실제 내비게이션에 맞춘다.

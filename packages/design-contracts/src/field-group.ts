@@ -1,3 +1,15 @@
+import { spacing } from "./foundations.js";
+
+export type FieldGroupLayout = "stack" | "inline";
+/** Date and duration parts share grouping, spacing and wrapping rather than rebuilding a fieldset. */
+export const fieldGroupRecipe = {
+  defaults: { layout: "stack" },
+  gap: "md",
+  headingGap: "sm",
+  supportGap: "xs",
+  inline: { minCharacters: 10, minWidth: spacing.xxxl * 3 },
+} as const;
+
 /** Related-input grouping contract. Values and submit/validation timing remain product-owned. */
 export type FieldGroupMember = Readonly<{
   id: string;

@@ -1,4 +1,6 @@
+import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { NativeFieldFrame } from "./internal/field-frame.js";
+import { focusAccessibleHost } from "./internal/accessible-focus.js";
 import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
 import {
   formRecipe,
@@ -48,17 +50,13 @@ import {
   type ReactNode,
 } from "react";
 import {
-  AccessibilityInfo,
   ActivityIndicator,
   Modal,
   Pressable,
   ScrollView,
   TextInput,
   View,
-  findNodeHandle,
   type ModalProps,
-  type StyleProp,
-  type ViewStyle,
 } from "react-native";
 
 import { Button } from "./actions.js";
@@ -77,7 +75,6 @@ import {
 import { Text } from "./primitives.js";
 import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 
 type NativeCollectionLeadingRenderProps = Readonly<{
   placement: "trigger" | "option";
@@ -199,11 +196,6 @@ export type FormProps<Values> = Readonly<{
   firstInvalidFieldRef?: RefObject<TextInput | null>;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
-  /**
-   * @deprecated Raw visual style bypasses `formRecipe`. Use `layoutStyle` for placement and `density` for field rhythm.
-   * Removed in the next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
 }>;
 
 /**
@@ -227,9 +219,8 @@ export function Form<Values>({
   density = "comfortable",
   firstInvalidFieldRef,
   layoutStyle,
-  style,
 }: FormProps<Values>) {
-  warnDeprecatedStyleProps("Form", { style }, "layoutStyle for placement and density for field rhythm");
+
   const [submitStatus, setSubmitStatus] = useControllableState({
     ...(status === undefined ? {} : { value: status }),
     defaultValue: defaultStatus,
@@ -255,10 +246,7 @@ export function Form<Values>({
       // selected target. Focusing the TextInput also opens the native keyboard, while
       // setAccessibilityFocus moves VoiceOver/TalkBack to that same field.
       invalidField.focus();
-      const nativeHandle = findNodeHandle(invalidField);
-      if (nativeHandle !== null) {
-        void AccessibilityInfo.setAccessibilityFocus(nativeHandle);
-      }
+      focusAccessibleHost(invalidField);
       return;
     }
     submittingRef.current = true;
@@ -288,7 +276,7 @@ export function Form<Values>({
     <View
       accessibilityLabel={label}
       accessibilityState={{ busy, disabled }}
-      style={[{ gap: formRecipe.density[density].fieldGap }, style, layoutStyle]}
+      style={[{ gap: formRecipe.density[density].fieldGap }, layoutStyle]}
     >
       {children}
       {error ?? internalError ? (
@@ -319,6 +307,7 @@ export type SelectProps<
   SectionKey extends string = string,
 > = Omit<
   ModalProps,
+  | "style"
   | "animationType"
   | "children"
   | "onDismiss"
@@ -372,11 +361,6 @@ export type SelectProps<
     optionsAccessibilityLabel?: string;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Raw visual style bypasses `selectRecipe`. Use `layoutStyle` for placement and `size`/`density` for appearance.
-     * Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
   }>;
 
 /** Shared collection sheets keep dismissal in the header so it does not compete with choices. */
@@ -432,10 +416,10 @@ export function Select<
   dismissLabel,
   optionsAccessibilityLabel,
   layoutStyle,
-  style,
   ...modalProps
 }: SelectProps<Value, SectionKey>) {
-  warnDeprecatedStyleProps("Select", { style }, "layoutStyle for placement and size/density for appearance");
+  assertNoRemovedStyleProps("Select", modalProps, ["style"]);
+
   const providedSources = [sourceProp, items, sections].filter(
     (candidate) => candidate !== undefined,
   ).length;
@@ -459,8 +443,10 @@ export function Select<
   const safeArea = useHjmNativeSafeAreaInsets();
   const requestedControlled = selectedKey;
   const requestedDefault = defaultSelectedKey ?? null;
-  const requestedValue = requestedControlled ?? requestedDefault;
+  const requestedValue = requestedControlled === undefined ? requestedDefault : requestedControlled;
+  const validatedInitialSelection = useRef(false);
   if (
+    (requestedControlled !== undefined || !validatedInitialSelection.current) &&
     requestedValue !== null &&
     requestedValue !== undefined &&
     !collectionItems.some((option) => option.id === requestedValue) &&
@@ -469,6 +455,8 @@ export function Select<
   ) {
     throw new RangeError("Select selection must match an option");
   }
+  // Defaults only seed the initial selection; later item removals reconcile live state.
+  validatedInitialSelection.current = true;
   const [selected, setSelected] = useControllableState<Value | null>({
     ...(requestedControlled === undefined ? {} : { value: requestedControlled }),
     defaultValue: requestedDefault,
@@ -505,8 +493,7 @@ export function Select<
   const densityContract = selectRecipe.density[density];
   const close = useCallback((reason: SelectOpenChangeReason, after?: PendingDismissAction) => {
     modalDismiss.queue(async () => {
-      const handle = findNodeHandle(triggerRef.current);
-      if (handle !== null) AccessibilityInfo.setAccessibilityFocus(handle);
+      focusAccessibleHost(triggerRef.current);
       onDismiss?.(reason);
       await after?.();
     });
@@ -521,10 +508,7 @@ export function Select<
       reconciledSelected ?? collectionItems.find((option) => !option.disabled)?.id;
     if (initialValue === undefined) return;
     const target = optionRefs.current.get(initialValue);
-    if (target) {
-      const handle = findNodeHandle(target);
-      if (handle !== null) AccessibilityInfo.setAccessibilityFocus(handle);
-    }
+    focusAccessibleHost(target);
   };
   const leadingColor = resolveColorReference(selectRecipe.leading.color, theme.palette);
   const triggerLeading = renderLeading?.(resolvedSelectedItem, {
@@ -632,7 +616,7 @@ export function Select<
   const blockingState = asyncState.status === "loading" || asyncState.status === "error" || asyncState.status === "empty";
 
   return (
-    <View style={[{ gap: spacing.xs }, style, layoutStyle]}>
+    <View style={[{ gap: spacing.xs }, layoutStyle]}>
       {/* fieldRecipe.disabledScope: the label fades with the trigger, the support text does not. */}
       {label ? <Text tone="primary" variant="label" style={disabled ? { opacity: selectRecipe.states.disabledOpacity } : undefined}>{label}{required ? " *" : ""}</Text> : null}
       <Pressable
@@ -764,6 +748,7 @@ export type ComboboxProps<
   SectionKey extends string = string,
 > = Omit<
   ModalProps,
+  | "style"
   | "animationType"
   | "children"
   | "onDismiss"
@@ -833,11 +818,6 @@ export type ComboboxProps<
     resultsAccessibilityLabel?: string;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Raw visual style bypasses `comboboxRecipe`. Use `layoutStyle` for placement and `density` for appearance.
-     * Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
   }>;
 
 /**
@@ -900,10 +880,10 @@ export function Combobox<
   dismissLabel,
   resultsAccessibilityLabel,
   layoutStyle,
-  style,
   ...modalProps
 }: ComboboxProps<Key, SectionKey>) {
-  warnDeprecatedStyleProps("Combobox", { style }, "layoutStyle for placement and density for appearance");
+  assertNoRemovedStyleProps("Combobox", modalProps, ["style"]);
+
   const providedSources = [sourceProp, items, sections].filter(
     (candidate) => candidate !== undefined,
   ).length;
@@ -995,8 +975,7 @@ export function Combobox<
   });
   const close = useCallback((reason: SelectOpenChangeReason, after?: PendingDismissAction) => {
     modalDismiss.queue(async () => {
-      const handle = findNodeHandle(inputRef.current);
-      if (handle !== null) AccessibilityInfo.setAccessibilityFocus(handle);
+      focusAccessibleHost(inputRef.current);
       onDismiss?.(reason);
       await after?.();
     });
@@ -1031,7 +1010,10 @@ export function Combobox<
     close(reason);
   };
   const commit = (item: SelectItemDescriptor<Key>) => {
-    if (item.disabled || disabled || readOnly || busy || !resultsAreCurrent) return;
+    // Hidden async/prompt results cannot be selected by a hardware keyboard.
+    if (item.disabled || disabled || readOnly || busy || !resultsAreCurrent
+      || query.trim().length < minimumQueryLength
+      || !["idle", "loadingMore"].includes(resolvedAsyncState.status)) return;
     setCommittedKey(item.id);
     setQuery(item.label);
     onCommit?.(item.id, "selection");
@@ -1062,10 +1044,7 @@ export function Combobox<
     const initial =
       (committedKey === null ? undefined : optionRefs.current.get(committedKey)) ??
       optionRefs.current.get(filteredItems.find((item) => !item.disabled)?.id as Key);
-    if (initial) {
-      const handle = findNodeHandle(initial);
-      if (handle !== null) AccessibilityInfo.setAccessibilityFocus(handle);
-    }
+    focusAccessibleHost(initial);
   };
   const leading = committedItem && renderLeading ? renderLeading(committedItem, {
     placement: "trigger",
@@ -1182,7 +1161,7 @@ export function Combobox<
   }) : filteredItems.map(renderOption);
 
   return (
-    <View style={[{ gap: spacing.xs }, style, layoutStyle]}>
+    <View style={[{ gap: spacing.xs }, layoutStyle]}>
       {/* fieldRecipe.disabledScope: label and input frame fade, the support text does not. comboboxRecipe has no
           amount, so the field default applies; before 2026-10-06 a disabled Native Combobox did not dim at all. */}
       {label ? <Text tone="primary" variant="label" style={disabled ? { opacity: fieldRecipe.disabledOpacity } : undefined}>{label}{required ? " *" : ""}</Text> : null}
@@ -1232,6 +1211,7 @@ export function Combobox<
             if (openOnFocus && !disabled && !readOnly && !busy) requestOpen(true, "trigger");
           }}
           onKeyPress={(event) => {
+            if (disabled || readOnly || busy) return;
             const key = event.nativeEvent.key;
             if (key === "Escape") {
               dismiss("escape");
@@ -1245,7 +1225,7 @@ export function Combobox<
               setActiveIndex(firstEnabledIndex());
             } else if (key === "End") {
               setActiveIndex(lastEnabledIndex());
-            } else if (key === "Enter" && activeIndex >= 0) {
+            } else if (key === "Enter" && visible && activeIndex >= 0) {
               const active = filteredItems[activeIndex];
               if (active) commit(active);
             }

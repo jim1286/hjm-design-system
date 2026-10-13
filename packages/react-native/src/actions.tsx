@@ -28,13 +28,11 @@ import {
   View,
   type View as NativeView,
   type PressableProps,
-  type StyleProp,
-  type ViewStyle,
 } from "react-native";
 import { RecipeButton } from "./internal/recipe-button.js";
 
 import type { HjmCompositionStyleProp } from "./composition-style.js";
-import { warnDeprecatedStyleProps, warnOnce } from "./internal/deprecated-style.js";
+import { assertNoRemovedStyleProps, warnOnce } from "./internal/diagnostics.js";
 import { minimumTargetStyle, resolveNativeShadowElevation } from "./internal/styles.js";
 import { Icon, Text, type NativeIconRenderProps } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
@@ -116,11 +114,6 @@ export type IconButtonProps = Omit<
     disableWhileLoading?: boolean;
     hitSlop?: PressableProps["hitSlop"];
     accessibilityState?: PressableProps["accessibilityState"];
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and
-     * `tone`/`size`/`shape`/`selected` for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
     renderLoadingIndicator?: (props: Readonly<{ color: string; size: "small" }>) => ReactNode;
       /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
@@ -138,7 +131,6 @@ export const IconButton = forwardRef<NativeView, IconButtonProps>(function IconB
   disableWhileLoading = false,
   hitSlop,
   layoutStyle,
-  style,
   renderLoadingIndicator,
   onPress,
   onLongPress,
@@ -146,7 +138,7 @@ export const IconButton = forwardRef<NativeView, IconButtonProps>(function IconB
   ...props
 }: IconButtonProps, ref) {
   const theme = useHjmNativeTheme();
-  warnDeprecatedStyleProps("IconButton", { style }, "layoutStyle for placement and tone/size/shape/selected for appearance");
+  assertNoRemovedStyleProps("IconButton", props, ["style"]);
   const resolvedLabel = label;
   const resolvedIcon = children;
   if (resolvedLabel === undefined || resolvedLabel.trim().length === 0) {
@@ -204,7 +196,6 @@ export const IconButton = forwardRef<NativeView, IconButtonProps>(function IconB
               : 1,
           width: visibleDiameter,
         },
-        style,
         layoutStyle,
       ]}
     >
@@ -248,11 +239,6 @@ export type LinkProps = Omit<
     accessibilityHint?: string;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement; link
-     * color, underline and target size belong to `linkRecipe`. Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
   }>;
 
 
@@ -265,12 +251,11 @@ export function Link({
   renderIcon,
   accessibilityHint,
   layoutStyle,
-  style,
   ...props
 }: LinkProps) {
   const { colors, environment } = useHjmNativeTheme();
   const resolved = resolveLinkDescriptor(descriptor);
-  warnDeprecatedStyleProps("Link", { style }, "layoutStyle for placement; linkRecipe owns link appearance");
+  assertNoRemovedStyleProps("Link", props, ["style"]);
   // Until 1.12 the resolver validated leadingIcon/trailingIcon but Native never drew them, so a
   // descriptor shared with Web silently lost its chevron. A missing renderIcon now warns instead of
   // throwing: throwing would crash apps that already passed icons which were simply invisible.
@@ -319,7 +304,6 @@ export function Link({
           gap: spacing.xs,
           opacity: pressed ? 0.72 : 1,
         },
-        style,
         layoutStyle,
       ]}
     >
@@ -357,11 +341,6 @@ export type BottomCTAProps = Readonly<{
   safeAreaBottom?: number;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
-   * surface, border and shadow belong to `bottomCtaRecipe`. Removed in the next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
   testID?: string;
 }>;
 
@@ -403,10 +382,10 @@ export function BottomCTA({
   accessibilityLabel,
   safeAreaBottom = 0,
   layoutStyle,
-  style,
   testID,
+  ...removedProps
 }: BottomCTAProps) {
-  warnDeprecatedStyleProps("BottomCTA", { style }, "layoutStyle for placement; bottomCtaRecipe owns appearance");
+  assertNoRemovedStyleProps("BottomCTA", removedProps, ["style"]);
   if (!Number.isFinite(safeAreaBottom) || safeAreaBottom < 0) {
     throw new RangeError("BottomCTA safeAreaBottom must be non-negative");
   }
@@ -444,7 +423,6 @@ export function BottomCTA({
           shadowOpacity: surfaceShadow.opacity,
           shadowRadius: surfaceShadow.radius,
         },
-        style,
         layoutStyle,
       ]}
     >

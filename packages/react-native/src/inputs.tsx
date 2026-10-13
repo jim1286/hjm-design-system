@@ -1,3 +1,4 @@
+import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { FieldMessage, NativeFieldFrame } from "./internal/field-frame.js";
 import type { FieldPrivateProps } from "./internal/field-private.js";
@@ -48,6 +49,7 @@ import {
   reconcileCheckboxSelection,
   resolveControlAccessibleName,
   resolveInitialRadioValue,
+  resolveRadioTabStop,
   resolveInitialTabValue,
   reconcileRadioSelection,
   selectionGroupBehaviorDefaults,
@@ -82,12 +84,9 @@ import {
   Text as NativeText,
   TextInput,
   View,
-  type StyleProp,
   type GestureResponderEvent,
   type SwitchProps as NativeSwitchProps,
   type TextInputProps,
-  type TextStyle,
-  type ViewStyle,
 } from "react-native";
 
 import { mixedCheckboxState, useControllableState } from "./internal/state.js";
@@ -101,7 +100,6 @@ import {
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 
 type FieldAccessibleName =
   | Readonly<{
@@ -391,7 +389,7 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
             accessibilityLabel={accessibleName}
             accessibilityRole={search ? "search" : undefined}
             accessibilityState={{ busy, disabled }}
-            editable={!disabled && (search || !busy)}
+            editable={!disabled && !props.readOnly && props.editable !== false && (search || !busy)}
             multiline={multiline}
             scrollEnabled={multiline && minVisibleLines !== undefined
               ? !!currentValue && contentHeight > textStyle.lineHeight * (resolvedMaxVisibleLines ?? 1000) + fieldRecipe.paddingVertical * 2
@@ -408,7 +406,9 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
               selectionRef.current = event.nativeEvent.selection;
               onSelectionChange?.(event);
             }}
-            onChangeText={setCurrentValue}
+            onChangeText={(next) => {
+              if (!disabled && !props.readOnly && props.editable !== false && (search || !busy)) setCurrentValue(next);
+            }}
             onFocus={(event) => {
               setFocused(true);
               onFocus?.(event);
@@ -565,7 +565,7 @@ export const SearchField = forwardRef<TextInput, SearchFieldProps>(function Sear
         <ActivityIndicator color={iconProps.color} size={iconProps.size} />
       )}
     </View>
-  ) : searchValue.length > 0 ? (
+  ) : searchValue.length > 0 && !props.readOnly && props.editable !== false ? (
     <Pressable
       accessibilityLabel={clearLabel}
       accessibilityRole="button"
@@ -809,16 +809,7 @@ export type OtpFieldProps = Omit<
     onComplete?: (value: string) => void;
     size?: OtpFieldSize;
     presentation?: OtpFieldPresentation;
-    /**
-     * @deprecated Raw slot style bypasses `otpFieldRecipe`. Use `size` and `presentation` for slot
-     * appearance and `layoutStyle` for placement. Removed in the next major (consumer-policy.md §3.1).
-     */
-    slotStyle?: StyleProp<ViewStyle>;
-    /**
-     * @deprecated Raw slot text style bypasses `otpFieldRecipe`; `size` selects the digit typography.
-     * Removed in the next major (consumer-policy.md §3.1).
-     */
-    slotTextStyle?: StyleProp<TextStyle>;
+
   }>;
 
 /** One accessible numeric TextInput rendered through decorative OTP slots. */
@@ -839,8 +830,6 @@ export const OtpField = forwardRef<TextInput, OtpFieldProps>(function OtpField(
     onComplete,
     size = otpFieldRecipe.defaults.size,
     presentation = "boxes",
-    slotStyle,
-    slotTextStyle,
     // Inherited from BaseFieldProps; before 1.13 it fell into `...props` and was spread onto the
     // hidden TextInput, so OtpField silently ignored its own canonical placement prop.
     layoutStyle,
@@ -852,13 +841,10 @@ export const OtpField = forwardRef<TextInput, OtpFieldProps>(function OtpField(
   },
   ref,
 ) {
+  assertNoRemovedStyleProps("OtpField", props, ["slotStyle", "slotTextStyle"]);
   const supportText = description;
   const theme = useHjmNativeTheme();
-  warnDeprecatedStyleProps(
-    "OtpField",
-    { slotStyle, slotTextStyle },
-    "size/presentation for slot appearance and layoutStyle for placement",
-  );
+
   const { accessibleName, visibleLabel } = resolveFieldAccessibleName(label, accessibilityLabel);
   const [focused, setFocused] = useState(false);
   const [value, setValue] = useControllableState({
@@ -927,7 +913,7 @@ export const OtpField = forwardRef<TextInput, OtpFieldProps>(function OtpField(
             allowFontScaling={allowFontScaling}
             autoComplete="one-time-code"
             caretHidden
-            editable={!disabled && !busy && !readOnly}
+            editable={!disabled && !busy && !readOnly && props.editable !== false}
             keyboardType="number-pad"
             maxLength={length}
             onBlur={(event) => {
@@ -991,14 +977,13 @@ export const OtpField = forwardRef<TextInput, OtpFieldProps>(function OtpField(
                     minWidth: 0,
                     zIndex: 1,
                   },
-                  slotStyle,
                 ]}
               >
                 <Text
                   accessible={false}
                   align="center"
                   allowFontScaling={allowFontScaling}
-                  style={[{ color: contentColor }, slotTextStyle]}
+                  style={[{ color: contentColor }]}
                   variant={metrics.textVariant}
                 >
                   {digit}
@@ -1032,69 +1017,11 @@ type ChoiceVisualProps = Readonly<{
   indicator?: "default" | "none";
   /** Canonical layout-only placement for the row (or the group frame). Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
-  /**
-   * @deprecated Raw visual style bypasses `selectionControlRecipe`. Use `layoutStyle` for placement and
-   * `presentation`/`size`/`indicator`/`renderIndicator`/`renderLeading` for appearance. Removed in the
-   * next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
-  /**
-   * @deprecated Raw visual style bypasses `selectionControlRecipe`. Use `layoutStyle` for placement and
-   * `presentation`/`size`/`indicator`/`renderIndicator`/`renderLeading` for appearance. Removed in the
-   * next major (consumer-policy.md §3.1).
-   */
-  controlStyle?: StyleProp<ViewStyle>;
-  /**
-   * @deprecated Raw visual style bypasses `selectionControlRecipe`. Use `layoutStyle` for placement and
-   * `presentation`/`size`/`indicator`/`renderIndicator`/`renderLeading` for appearance. Removed in the
-   * next major (consumer-policy.md §3.1).
-   */
-  indicatorStyle?: StyleProp<ViewStyle>;
-  /**
-   * @deprecated Raw visual style bypasses `selectionControlRecipe`. Use `layoutStyle` for placement and
-   * `presentation`/`size`/`indicator`/`renderIndicator`/`renderLeading` for appearance. Removed in the
-   * next major (consumer-policy.md §3.1).
-   */
-  leadingStyle?: StyleProp<ViewStyle>;
-  /**
-   * @deprecated Raw visual style bypasses `selectionControlRecipe`. Use `layoutStyle` for placement and
-   * `presentation`/`size`/`indicator`/`renderIndicator`/`renderLeading` for appearance. Removed in the
-   * next major (consumer-policy.md §3.1).
-   */
-  contentStyle?: StyleProp<ViewStyle>;
-  /**
-   * @deprecated Raw visual style bypasses `selectionControlRecipe`. Use `layoutStyle` for placement and
-   * `presentation`/`size`/`indicator`/`renderIndicator`/`renderLeading` for appearance. Removed in the
-   * next major (consumer-policy.md §3.1).
-   */
-  labelStyle?: StyleProp<TextStyle>;
-  /**
-   * @deprecated Raw visual style bypasses `selectionControlRecipe`. Use `layoutStyle` for placement and
-   * `presentation`/`size`/`indicator`/`renderIndicator`/`renderLeading` for appearance. Removed in the
-   * next major (consumer-policy.md §3.1).
-   */
-  descriptionStyle?: StyleProp<TextStyle>;
+
+
+
+
 }>;
-
-const choiceVisualReplacement =
-  "layoutStyle for placement and presentation/size/indicator/renderIndicator/renderLeading for appearance";
-
-/** Public choice components share one deprecated slot list; ChoiceRow itself stays silent. */
-function warnChoiceVisualStyles(component: string, visual: ChoiceVisualProps): void {
-  warnDeprecatedStyleProps(
-    component,
-    {
-      style: visual.style,
-      controlStyle: visual.controlStyle,
-      indicatorStyle: visual.indicatorStyle,
-      leadingStyle: visual.leadingStyle,
-      contentStyle: visual.contentStyle,
-      labelStyle: visual.labelStyle,
-      descriptionStyle: visual.descriptionStyle,
-    },
-    choiceVisualReplacement,
-  );
-}
 
 type ChoiceRowProps = ChoiceVisualProps & Readonly<{
   kind: "checkbox" | "radio";
@@ -1116,7 +1043,6 @@ type ChoiceRowProps = ChoiceVisualProps & Readonly<{
   /** Roving tabindex position inside a radio group. Web renderer only. */
   webTabIndex?: number | undefined;
 }>;
-
 
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 function ChoiceRow({
@@ -1141,13 +1067,6 @@ function ChoiceRow({
   onActivate,
   webTabIndex,
   layoutStyle,
-  style,
-  controlStyle,
-  indicatorStyle,
-  leadingStyle,
-  contentStyle,
-  labelStyle,
-  descriptionStyle,
 }: ChoiceRowProps) {
   const theme = useHjmNativeTheme();
   const metrics = selectionControlRecipe.sizes[size];
@@ -1244,7 +1163,6 @@ function ChoiceRow({
           paddingHorizontal: plate.useSizePadding ? metrics.paddingHorizontal : 0,
           paddingVertical: plate.useSizePadding ? metrics.paddingVertical : 0,
         },
-        style,
         layoutStyle,
       ]}
     >
@@ -1269,10 +1187,9 @@ function ChoiceRow({
               justifyContent: "center",
               width: metrics.control,
             },
-            controlStyle,
           ]}
         >
-          <View style={indicatorStyle}>
+          <View>
             {renderIndicator?.(appearance) ?? defaultIndicator}
           </View>
         </View>
@@ -1282,12 +1199,11 @@ function ChoiceRow({
           accessibilityElementsHidden
           accessible={false}
           importantForAccessibility="no-hide-descendants"
-          style={leadingStyle}
         >
           {resolvedLeading}
         </View>
       ) : null}
-      <View style={[{ flex: 1, gap: spacing.xxs, minWidth: 0 }, contentStyle]}>
+      <View style={[{ flex: 1, gap: spacing.xxs, minWidth: 0 }]}>
         <Text
               fontRole="ui"
           style={[
@@ -1297,7 +1213,6 @@ function ChoiceRow({
                 ? selectionControlRecipe.label.checkedFontWeight
                 : selectionControlRecipe.label.fontWeight,
             },
-            labelStyle,
           ]}
           variant={metrics.labelVariant}
         >
@@ -1312,7 +1227,6 @@ function ChoiceRow({
                   theme.palette,
                 ),
               },
-              descriptionStyle,
             ]}
             variant={metrics.descriptionVariant}
           >
@@ -1362,7 +1276,6 @@ export function Checkbox({
   accessibilityHint,
   ...visual
 }: CheckboxProps) {
-  warnChoiceVisualStyles("Checkbox", visual);
   const [selected, setSelected] = useControllableState<CheckboxState>({
     ...(checked === undefined ? {} : { value: checked }),
     defaultValue: defaultChecked,
@@ -1433,7 +1346,6 @@ export function Radio({
   accessibilityHint,
   ...visual
 }: RadioProps) {
-  warnChoiceVisualStyles("Radio", visual);
   const [selected, setSelected] = useControllableState<boolean>({
     ...(checked === undefined ? {} : { value: checked }),
     defaultValue: defaultChecked,
@@ -1513,7 +1425,6 @@ function ChoiceGroupFrame({
   role,
   orientation,
   presentation,
-  style,
   layoutStyle,
   children,
 }: Readonly<{
@@ -1529,7 +1440,6 @@ function ChoiceGroupFrame({
   role?: "radiogroup" | undefined;
   orientation: SelectionOrientation;
   presentation: SelectionControlPresentation;
-  style?: StyleProp<ViewStyle>;
   layoutStyle?: HjmCompositionStyleProp | undefined;
   children: ReactNode;
 }>) {
@@ -1552,7 +1462,7 @@ function ChoiceGroupFrame({
       accessibilityRole={role}
       accessibilityState={{ disabled: disabled || readOnly }}
       accessibilityValue={error ? { text: error } : undefined}
-      style={[{ direction: theme.environment.direction, gap: selectionGroupRecipe.supportGap }, style, layoutStyle]}
+      style={[{ direction: theme.environment.direction, gap: selectionGroupRecipe.supportGap }, layoutStyle]}
     >
       {label ? (
         <Text nativeID={labelId} tone="primary" variant={selectionGroupRecipe.label.textVariant}>
@@ -1608,11 +1518,8 @@ export function RadioGroup<Value extends string = string>(props: RadioGroupProps
   renderLeading,
   renderIndicator,
   layoutStyle,
-  style,
   ...slotStyles
 } = props;
-  // Group `style` paints the frame; the remaining slot styles reach every row.
-  warnChoiceVisualStyles("RadioGroup", { style, ...slotStyles });
   // Removed aliases must not silently change the selected collection in JavaScript callers.
   if ("options" in props || !Array.isArray(items)) throw new TypeError("RadioGroup requires items; options was removed");
   const resolvedItems = items;
@@ -1636,7 +1543,7 @@ export function RadioGroup<Value extends string = string>(props: RadioGroupProps
   const selected = reconcileRadioSelection(selectionItems, storedValue, required);
   // A radio group is one tab stop: the selected option holds it, or the first
   // enabled option when nothing is selected yet.
-  const webTabStop = selected ?? selectionItems.find((item) => !item.disabled)?.id;
+  const webTabStop = resolveRadioTabStop(selectionItems, selected);
   useEffect(() => {
     if (value === undefined && selected !== storedValue) setSelected(selected);
   }, [selected, setSelected, storedValue, value]);
@@ -1655,7 +1562,6 @@ export function RadioGroup<Value extends string = string>(props: RadioGroupProps
       required={required}
       requiredLabel={requiredLabel}
       role="radiogroup"
-      style={style}
       layoutStyle={layoutStyle}
     >
       {resolvedItems.map((item) => {
@@ -1725,10 +1631,8 @@ export function CheckboxGroup<Value extends string = string>({
   renderLeading,
   renderIndicator,
   layoutStyle,
-  style,
   ...slotStyles
 }: CheckboxGroupProps<Value>) {
-  warnChoiceVisualStyles("CheckboxGroup", { style, ...slotStyles });
   validateSelectionItems(items);
   if (value !== undefined) validateCheckboxSelection(items, value);
   const [storedValue, setSelected] = useControllableState<ReadonlySet<Value>>({
@@ -1754,7 +1658,6 @@ export function CheckboxGroup<Value extends string = string>({
       readOnlyLabel={readOnlyLabel}
       required={required}
       requiredLabel={requiredLabel}
-      style={style}
       layoutStyle={layoutStyle}
     >
       {items.map((item) => {
@@ -1808,11 +1711,6 @@ type SwitchBaseProps = Omit<
     accessibilityHint?: string;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Raw visual style bypasses `switchRecipe`. Use `layoutStyle` for placement and
-     * `presentation`/`size` for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
   }>;
 
 type SwitchCanonicalStateProps = Readonly<{
@@ -1840,14 +1738,14 @@ export function Switch({
   accessibilityLabel,
   accessibilityHint,
   layoutStyle,
-  style,
   ...props
 }: SwitchProps) {
+  assertNoRemovedStyleProps("Switch", props, ["style"]);
   // Reject old JavaScript callers rather than silently dropping their controlled state.
   if (["value", "defaultValue", "onValueChange"].some(key => key in props)) {
     throw new TypeError("Switch no longer accepts value/defaultValue/onValueChange; use checked/defaultChecked/onCheckedChange");
   }
-  warnDeprecatedStyleProps("Switch", { style }, "layoutStyle for placement and presentation/size for appearance");
+
   const { colors, environment, ...nativeTheme } = useHjmNativeTheme();
   const dimensions = switchRecipe.sizes[size];
   const stacked = presentation === "row" && labelVisibility === "visible"
@@ -1899,7 +1797,6 @@ export function Switch({
             : switchRecipe.rowMinHeight,
           opacity: pressed ? switchRecipe.states.pressedOpacity : 1,
         },
-        style,
         layoutStyle,
       ]}
     >
@@ -1996,11 +1893,6 @@ export type SegmentedControlProps<Value extends string = string> =
     disabled?: boolean;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Raw visual style bypasses `segmentedControlRecipe`. Use `layoutStyle` for placement
-     * and `size` for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
   }>;
 
 export function SegmentedControl<Value extends string = string>(props: SegmentedControlProps<Value>) {
@@ -2015,11 +1907,10 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
   selectionMotion: suppliedSelectionMotion,
   disabled = false,
   layoutStyle,
-  style,
 } = props;
   // Removed aliases must not silently change the selected collection in JavaScript callers.
   if ("options" in props || !Array.isArray(items)) throw new TypeError("SegmentedControl requires items; options was removed");
-  warnDeprecatedStyleProps("SegmentedControl", { style }, "layoutStyle for placement and size for appearance");
+
   const pills = presentation === "pills";
   const resolvedItems = items;
   const theme = useHjmNativeTheme();
@@ -2083,7 +1974,6 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
           gap: pills ? segmentedControlRecipe.pills.gap : segmentedControlRecipe.container.gap,
           padding: pills ? 0 : segmentedControlRecipe.container.padding,
         },
-        style,
         layoutStyle,
       ]}
     >
@@ -2200,11 +2090,6 @@ type ChipBaseProps = Readonly<{
   layoutStyle?: HjmCompositionStyleProp;
   leadingStyle?: HjmCompositionStyleProp;
   indicatorStyle?: HjmCompositionStyleProp;
-  /**
-   * @deprecated Raw text style bypasses `chipRecipe.label`. Use `size` and `selected` for label
-   * typography. Removed in the next major (consumer-policy.md §3.1).
-   */
-  labelStyle?: StyleProp<TextStyle>;
   trailingStyle?: HjmCompositionStyleProp;
   renderSelectionIndicator?: (props: Readonly<{
     selected: boolean;
@@ -2241,7 +2126,6 @@ export function Chip({
 
   leadingStyle,
   indicatorStyle,
-  labelStyle,
   trailingStyle,
   renderSelectionIndicator,
   selectionMode = "action",
@@ -2249,7 +2133,7 @@ export function Chip({
   onPress,
 }: ChipProps) {
   const theme = useHjmNativeTheme();
-  warnDeprecatedStyleProps("Chip", { labelStyle }, "size/selected for label typography");
+
   const selectable = selectionMode !== "action";
   const active = selectable && selected === true;
   const metrics = chipRecipe.sizes[size];
@@ -2343,7 +2227,6 @@ export function Chip({
               ? chipRecipe.label.selectedFontWeight
               : chipRecipe.label.fontWeight,
           },
-          labelStyle,
         ]}
         variant={metrics.textVariant}
       >

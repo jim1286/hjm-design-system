@@ -314,6 +314,7 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
     : value;
   const [visited, setVisited] = useState<ReadonlySet<string>>(() => new Set([value]));
   const tabRefs = useRef(new Map<string, HTMLButtonElement>());
+  const focusedTabRef = useRef<HTMLButtonElement | null>(null);
   const generatedId = useId().replaceAll(":", "");
   const baseId = id ?? `hjm-${generatedId}`;
   const theme = useOptionalHjmTheme();
@@ -373,9 +374,14 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
   useEffect(() => {
     if (!controlled && !storedSelectionIsValid) setValue(collectionFallback);
   }, [collectionFallback, controlled, setValue, storedSelectionIsValid]);
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!items.some((item) => item.id === focusValue && !item.disabled)) {
       setFocusValue(value);
+      // Collection updates can remove the actual focused host; roving tabindex alone cannot restore keyboard position.
+      const previous = focusedTabRef.current;
+      if (previous && (document.activeElement === previous || document.activeElement === document.body)) {
+        tabRefs.current.get(value)?.focus();
+      }
     }
   }, [focusValue, items, value]);
   useEffect(() => {
@@ -479,6 +485,7 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
                 setFocusValue(item.id);
                 setValue(item.id);
               }}
+              onFocus={(event) => { focusedTabRef.current = event.currentTarget; setFocusValue(item.id); }}
               onKeyDown={(event) => handleKeyDown(event, item.id)}
             >
               {item.renderLeading ? (

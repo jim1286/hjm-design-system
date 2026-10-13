@@ -72,16 +72,21 @@ export function OverlayStackProvider({ children }: OverlayStackProviderProps): R
   const [entry, setEntry] = useState<Entry | null>(null);
   const [open, setOpen] = useState(false);
   const nextId = useRef(0);
+  const activeEntry = useRef<Entry | null>(null);
 
   const openEntry = useCallback((kind: Entry["kind"], request: DialogRequest | SheetRequest): OverlayHandle => {
+    // Reject before React commits so two requests in one event cannot orphan a promise.
+    if (activeEntry.current) throw new Error("Wait for the current overlay.closed before opening another overlay");
     const id = (nextId.current += 1);
     let settle: () => void = () => undefined;
     const closed = new Promise<void>((resolve) => { settle = resolve; });
-    setEntry({ kind, id, request, settle } as Entry);
+    const next = { kind, id, request, settle } as Entry;
+    activeEntry.current = next;
+    setEntry(next);
     setOpen(true);
     return {
       closed,
-      close: () => setOpen(false),
+      close: () => { if (activeEntry.current?.id === id) setOpen(false); },
     };
   }, []);
 
@@ -92,9 +97,13 @@ export function OverlayStackProvider({ children }: OverlayStackProviderProps): R
 
   // The promise resolves from the renderer's own completion signal, not from a
   // timer: that is the whole reason this layer exists.
-  const complete = () => {
-    entry?.settle();
-    setEntry(null);
+  const complete = (completed: Entry, notify: () => void) => {
+    if (activeEntry.current?.id !== completed.id) return;
+    activeEntry.current = null;
+    setEntry((current) => current?.id === completed.id ? null : current);
+    // A consumer callback may open the next overlay or throw; either way this
+    // session's completion promise must settle and must not clear its successor.
+    try { notify(); } finally { completed.settle(); }
   };
 
   return (
@@ -106,7 +115,7 @@ export function OverlayStackProvider({ children }: OverlayStackProviderProps): R
           key={entry.id}
           open={open}
           onOpenChange={(next) => setOpen(next)}
-          onDismissComplete={() => complete()}
+          onDismissComplete={(details) => complete(entry, () => entry.request.onDismissComplete?.(details))}
         />
       ) : null}
       {entry?.kind === "sheet" ? (
@@ -115,7 +124,7 @@ export function OverlayStackProvider({ children }: OverlayStackProviderProps): R
           key={entry.id}
           open={open}
           onOpenChange={(next) => setOpen(next)}
-          onDismissComplete={() => complete()}
+          onDismissComplete={(details) => complete(entry, () => entry.request.onDismissComplete?.(details))}
         />
       ) : null}
     </OverlayStackContext.Provider>

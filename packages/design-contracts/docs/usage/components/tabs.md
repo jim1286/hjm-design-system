@@ -77,12 +77,12 @@ import { Tabs } from "@hjmds/react-native/navigation";
 | `overflow` | `scroll` · `clip` | `scroll` | — |
 | `orientation` | `horizontal` · `vertical` | `horizontal` | — |
 | `loop` | `boolean` | `true` | — |
-| `appearance` | `standard` · `slide` · `gooey` | 미지정 시 프로필의 selectionMotion; 없으면 `standard` | 미게시(1.14.0 이후): `slide`는 2점 표시선 이동, `gooey`는 6점 표시선 늘어남. 명시 값 우선, 세로는 standard 유지 |
+| `appearance` | `standard` · `slide` · `gooey` | 미지정 시 프로필의 selectionMotion; 없으면 `standard` | 1.15.0 변경: `slide`는 2점 표시선 이동, `gooey`는 6점 표시선 늘어남. 명시 값 우선, 세로는 standard 유지 |
 | `renderPanels` | `boolean` | `true` | `false`면 패널을 그리지 않는다. 패널을 라우터·스크롤 상태와 함께 따로 둘 때 `TabPanel`에 `tabsId`(Tabs의 `id`와 같게)·`activeValue`·`value`를 넘긴다 |
 | `children`(Native) | `(selectedValue: Value) => ReactNode` | — | 항목 `panel` 대신 선택 값으로 패널을 그린다 |
 | `TabPanel` | `{ tabsId, activeValue, children, mode?: "keyed", value, mountPolicy? }` 또는 `{ mode: "dynamic" }`, Native는 `label` 필수 | — | — |
 | `layoutStyle` | `HjmCompositionStyleProp` | — | Tabs·TabPanel 루트 배치. Web·Native 모두 |
-| Native `style`·`tabListStyle`, TabPanel `style` | `StyleProp<ViewStyle>` | — | deprecated — `layoutStyle` 또는 `size`·`layout`·`overflow`·`appearance`. 개발 모드에서 한 번 경고하고 다음 major에서 제거된다 |
+| Native `style`·`tabListStyle`, TabPanel `style` | 지원하지 않음 | — | 제거된 속성 — `layoutStyle` 또는 `size`·`layout`·`overflow`·`appearance`. 현재 공개 props에서 제거되었다 |
 
 ## 배치
 
@@ -112,7 +112,7 @@ import { Tabs } from "@hjmds/react-native/navigation";
   Web controlled `value`가 비활성·없는 항목이면 `RangeError`다.
 - 아이콘은 `renderLeading`으로 넣고 받은 `color`·`size`를 쓴다. 색을 직접 정하지 않는다.
 - 탭을 바꿔도 화면 이동(뒤로 가기 대상)이 아니다. 주소에 남겨야 하면 제품이 controlled 값으로 동기화한다.
-- 배치는 `layoutStyle`로 한다. Web 루트 `div` 속성(`className`·`style`)과 Native의 deprecated `style`·`tabListStyle`로
+- 배치는 `layoutStyle`로 한다. Web 루트 `div` 속성(`className`·`style`)과 Native에서 제거된 `style`·`tabListStyle`로
   색·높이·인디케이터를 덮지 않는다.
 
 ## 플랫폼 차이
@@ -131,7 +131,7 @@ import { Tabs } from "@hjmds/react-native/navigation";
 
 - 2026-10-07 [Animated Tabs 대조](../../../../../docs/plans/aceternity-interaction-adoption-2026-10-07.md)에서
   선택 표시의 이동과 겹친 패널의 이동을 구분했다. 현재 `appearance="gooey"`는 표시선만 늘어나며,
-  패널을 겹쳐 복제하거나 순서를 바꾸지 않는다. 미게시(1.14.0 이후) 후속 구현에서
+  패널을 겹쳐 복제하거나 순서를 바꾸지 않는다. 1.15.0 변경 후속 구현에서
   `appearance`를 생략하면 `designProfile.interactions.selectionMotion="slide"`가 일반 이동선으로
   연결된다. 명시 `standard`는 이동을 끄고 명시 `gooey`만 늘어남을 고른다. `slide`와 `gooey`를
   같은 의미로 간주하지 않는다. 전환 표현이 필요하면 [ContentTransition](content-transition.md)의

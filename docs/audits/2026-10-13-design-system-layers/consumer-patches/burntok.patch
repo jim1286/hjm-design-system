@@ -1,0 +1,53 @@
+--- a/apps/mobile/src/components/ui/AppDialog.tsx
++++ b/apps/mobile/src/components/ui/AppDialog.tsx
+@@ -12,7 +12,6 @@
+ import { usePathname } from "expo-router";
+ import {
+   alertDialogRecipe,
+-  PRODUCT_BOUNDARIES,
+   type AlertDialogConfirmAction,
+   type AlertDialogRequest,
+   type AlertDialogResult,
+@@ -21,7 +20,6 @@
+   type DialogSize,
+ } from "@burntok/design-system";
+ import { useLang } from "../LangProvider";
+-import { useTheme } from "../ThemeProvider";
+ 
+ type AppDialogCopyOptions = {
+   title: string;
+@@ -101,7 +99,6 @@
+   scopeKey?: string;
+ }) {
+   const lang = useLang();
+-  const { resolved } = useTheme();
+   const pathname = usePathname();
+   const [activeEntry, setActiveEntry] = useState<DialogEntry | null>(null);
+   const activeRef = useRef<DialogEntry | null>(null);
+@@ -255,9 +252,6 @@
+     activeEntry?.originPath === pathname && activeEntry.originScopeKey === scopeKey
+       ? activeEntry
+       : null;
+-  const sizeRecipe = visibleEntry
+-    ? alertDialogRecipe.sizes[visibleEntry.size]
+-    : null;
+ 
+   return (
+     <DialogContext.Provider value={controller}>
+@@ -268,15 +262,7 @@
+           open={visibleEntry.open}
+           request={visibleEntry.request}
+           hardwareAccelerated
+-          contentStyle={
+-            sizeRecipe
+-              ? {
+-                  maxWidth: sizeRecipe.maxWidth,
+-                  padding: sizeRecipe.padding,
+-                  borderColor: PRODUCT_BOUNDARIES[resolved].subtle,
+-                }
+-              : undefined
+-          }
++          size={visibleEntry.size}
+           onOpenChange={(open) => {
+             if (open) return;
+             const current = activeRef.current;

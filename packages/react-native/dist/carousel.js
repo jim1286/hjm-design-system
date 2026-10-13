@@ -1,20 +1,28 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AccessibilityInfo, AppState, PanResponder, View } from "react-native";
 import { carouselRecipe, resolveCarouselDescriptor, getCarouselNavigationTarget, isCarouselAutoplayActive, } from "@hjmds/design-contracts/components/carousel";
 import { Button } from "./actions.js";
 import { Text } from "./primitives.js";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 import { useControllableState } from "./internal/state.js";
-export function Carousel({ label, slides, renderSlide, composeAccessibleName, labels, autoplay, currentKey, defaultCurrentKey, onCurrentKeyChange, layoutStyle, style }) {
-    warnDeprecatedStyleProps("Carousel", { style }, "layoutStyle for placement; carouselRecipe owns appearance");
+export function Carousel({ label, slides, renderSlide, composeAccessibleName, labels, autoplay, currentKey, defaultCurrentKey, onCurrentKeyChange, layoutStyle }) {
     const { environment, tokens } = useHjmNativeTheme();
-    const [current, setCurrent] = useControllableState({
+    const [storedCurrent, setCurrent] = useControllableState({
         ...(currentKey === undefined ? {} : { value: currentKey }),
         defaultValue: defaultCurrentKey ?? slides[0]?.id ?? "",
         ...(onCurrentKeyChange === undefined ? {} : { onChange: onCurrentKeyChange }),
     });
+    const previousIndex = useRef(null);
+    // A host can delete the current uncontrolled slide after mount. Keep its place
+    // in the collection (or the new last slide); explicit invalid keys still fail validation.
+    const recovering = currentKey === undefined && previousIndex.current !== null && !slides.some(slide => slide.id === storedCurrent);
+    const current = recovering ? slides[Math.min(previousIndex.current, slides.length - 1)]?.id ?? storedCurrent : storedCurrent;
+    useLayoutEffect(() => {
+        previousIndex.current = slides.findIndex(slide => slide.id === current);
+        if (recovering)
+            setCurrent(current);
+    }, [current, recovering, slides, setCurrent]);
     const descriptor = { slides, currentKey: current, ...(autoplay ? { autoplay } : {}) };
     const resolved = resolveCarouselDescriptor(descriptor, { composeAccessibleName });
     if (!label.trim() || Object.values(labels).some((value) => !value.trim()))
@@ -61,7 +69,7 @@ export function Carousel({ label, slides, renderSlide, composeAccessibleName, la
         },
     });
     const selected = resolved.find((slide) => slide.current);
-    return _jsxs(View, { style: [{ gap: carouselRecipe.sizes.medium.gap, direction: environment.direction }, style, layoutStyle], children: [autoplay ? _jsx(Button, { tone: "ghost", disabled: environment.reducedMotion || screenReader, onPress: () => { if (last)
+    return _jsxs(View, { style: [{ gap: carouselRecipe.sizes.medium.gap, direction: environment.direction }, layoutStyle], children: [autoplay ? _jsx(Button, { tone: "ghost", disabled: environment.reducedMotion || screenReader, onPress: () => { if (last)
                     setCurrent(slides[0].id); setRotating(!rotating || last); }, children: rotating && !last && !environment.reducedMotion && !screenReader ? labels.pause : labels.resume }) : null, _jsx(View, { ...swipe.panHandlers, onTouchStart: () => setRotating(false), onFocus: () => setRotating(false), children: resolved.map((slide) => _jsx(View, { style: slide.inert ? { display: "none" } : undefined, accessibilityElementsHidden: slide.inert, importantForAccessibility: slide.inert ? "no-hide-descendants" : "auto", pointerEvents: slide.inert ? "none" : "auto", children: renderSlide(slide) }, slide.id)) }), _jsx(View, { accessible: true, accessibilityRole: "adjustable", accessibilityLabel: `${label}: ${selected.accessibleName}`, accessibilityValue: { min: 1, max: slides.length, now: selected.position, text: selected.accessibleName }, accessibilityActions: [{ name: "increment", label: labels.next }, { name: "decrement", label: labels.previous }], onAccessibilityAction: ({ nativeEvent }) => { if (nativeEvent.actionName === "increment")
                     move("next"); if (nativeEvent.actionName === "decrement")
                     move("previous"); }, children: _jsx(Text, { align: "center", variant: "caption", children: selected.accessibleName }) }), _jsxs(View, { accessibilityLabel: labels.navigation, onFocus: () => setRotating(false), style: { flexDirection: "row", flexWrap: "wrap", gap: tokens.spacing.xs, justifyContent: "center" }, children: [_jsx(Button, { tone: "ghost", disabled: current === slides[0].id, onPress: () => move("previous"), children: labels.previous }), resolved.map((slide) => _jsx(Button, { tone: slide.current ? "secondary" : "ghost", accessibilityLabel: slide.accessibleName, accessibilityState: { selected: slide.current }, onPress: () => select(slide.id), children: String(slide.position) }, slide.id)), _jsx(Button, { tone: "ghost", disabled: last, onPress: () => move("next"), children: labels.next })] })] });

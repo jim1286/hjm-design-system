@@ -96,14 +96,9 @@ export type ContainerProps = Omit<ViewProps, "children" | "style"> & Readonly<{
     gutter?: ContainerGutter;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
-     * `size`/`gutter` (container descriptor) owns appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
 }>;
 /** Shared centered content boundary for phones, tablets, and desktop-sized Native windows. */
-export declare function Container({ size, gutter, layoutStyle, style, ...props }: ContainerProps): import("react").JSX.Element;
+export declare function Container({ size, gutter, layoutStyle, ...props }: ContainerProps): import("react").JSX.Element;
 export type AspectRatioProps = Omit<ViewProps, "children"> & Readonly<{
     children?: ReactNode;
     ratio?: AspectRatioValue;
@@ -131,14 +126,9 @@ export type IconProps<Name extends string = string> = Readonly<{
     renderGlyph: (props: NativeIconRenderProps<Name>) => ReactNode;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
-     * the descriptor (`size`, `tone`, `weight`, `directionality`) owns appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
 }>;
 /** Semantic Native icon frame without an Expo or third-party icon dependency. */
-export declare function Icon<Name extends string = string>({ descriptor, renderGlyph, layoutStyle, style, }: IconProps<Name>): import("react").JSX.Element;
+export declare function Icon<Name extends string = string>({ descriptor, renderGlyph, layoutStyle, ...removedProps }: IconProps<Name>): import("react").JSX.Element;
 export type SectionProps = Omit<ViewProps, "children" | "style"> & Readonly<{
     title?: string;
     description?: string;
@@ -157,13 +147,8 @@ export type SectionProps = Omit<ViewProps, "children" | "style"> & Readonly<{
     contentStyle?: HjmCompositionStyleProp;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
-     * `sectionRecipe` owns appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
 }>;
 /** A large-text-safe content section with a logical header action slot. */
-export declare function Section({ title, description, action, children, headerStyle, copyStyle, actionStyle, contentStyle, layoutStyle, style, ...props }: SectionProps): import("react").JSX.Element;
+export declare function Section({ title, description, action, children, headerStyle, copyStyle, actionStyle, contentStyle, layoutStyle, ...props }: SectionProps): import("react").JSX.Element;
 export type { AspectRatioValue, ContainerGutter, ContainerSize };
 //# sourceMappingURL=primitives.d.ts.map

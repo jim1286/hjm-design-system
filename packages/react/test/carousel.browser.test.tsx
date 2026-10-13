@@ -130,3 +130,30 @@ describe("Carousel interaction", () => {
     for (const node of overflow) expect(node.scrollWidth).toBeLessThanOrEqual(node.clientWidth + 2);
   });
 });
+
+it("recovers an uncontrolled removed slide at its previous position and keeps controls consistent", async () => {
+  const change = vi.fn();
+  await render({ defaultCurrentKey: "b", onCurrentKeyChange: change });
+  const nextButton = button("다음"); await act(async () => nextButton.focus());
+  await render({ slides: [slides[0]!, slides[2]!], defaultCurrentKey: "b", onCurrentKeyChange: change });
+  expect(current()).toBe("2/2 마지막 소식");
+  expect(document.activeElement).toBe(nextButton);
+  expect(button("다음").getAttribute("aria-disabled")).toBe("true");
+  expect(host.querySelector('button[data-current="true"]')?.getAttribute("aria-label")).toBe("2/2 마지막 소식");
+  expect(change).toHaveBeenCalledExactlyOnceWith("c");
+  await render({ onCurrentKeyChange: change });
+  expect(current()).toBe("3/3 마지막 소식"); // Reappearing b must not reclaim the selection.
+  await act(async () => host.querySelector<HTMLButtonElement>('button[data-current="true"]')!.focus());
+  await render({ slides: [slides[0]!, slides[1]!], onCurrentKeyChange: change });
+  expect(document.activeElement).toBe(host.querySelector('button[data-current="true"]'));
+  expect(current()).toBe("2/2 둘째 소식");
+  await render({ slides: [{ id: "x", label: "새 항목" }], onCurrentKeyChange: change });
+  expect(current()).toBe("1/1 새 항목");
+  expect(button("이전").getAttribute("aria-disabled")).toBe("true");
+  expect(button("다음").getAttribute("aria-disabled")).toBe("true");
+  expect(change.mock.calls).toEqual([["c"], ["b"], ["x"]]);
+});
+
+it.each(["default", "controlled"])("still rejects an initially invalid %s key", async kind => {
+  await expect(render(kind === "default" ? { defaultCurrentKey: "missing" } : { currentKey: "missing", onCurrentKeyChange() {} })).rejects.toThrow(/currentKey/);
+});

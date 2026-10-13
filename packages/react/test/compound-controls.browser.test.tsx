@@ -1,6 +1,7 @@
 import { act, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { expect, it, vi } from "vitest";
+import { userEvent } from "vitest/browser";
 import { InlineConfirm } from "../src/inline-confirm.js";
 import { DurationField } from "../src/duration-field.js";
 import { HjmProvider } from "../src/provider.js";
@@ -47,4 +48,46 @@ it('keeps reactions controlled and notification pulses bounded by motion prefere
   await act(()=>root.render(render(2,true)));expect(animate).toHaveBeenCalledTimes(1);
   await act(()=>host.querySelector<HTMLButtonElement>('[aria-label="2 unread"]')!.click());expect(press).toHaveBeenCalledTimes(1);
  }finally{await act(()=>root.unmount());host.remove();animate.mockRestore();}
+});
+
+it("confirms with the current action after the inline prompt rerenders",async()=>{
+ const host=document.createElement('div');document.body.append(host);const root=createRoot(host);const old=vi.fn(),latest=vi.fn();
+ const view=(onConfirm:()=>void,prompt:string)=><HjmProvider><InlineConfirm {...copy} prompt={prompt} onConfirm={onConfirm}/></HjmProvider>;
+ try {
+  await act(async()=>root.render(view(old,'Delete old draft?')));
+  await act(async()=>host.querySelector('button')!.click());
+  await act(async()=>root.render(view(latest,'Delete current draft?')));
+  await act(async()=>[...host.querySelectorAll('button')].find(button=>button.textContent==='Confirm')!.click());
+  expect(old).not.toHaveBeenCalled();expect(latest).toHaveBeenCalledOnce();
+ } finally {await act(async()=>root.unmount());host.remove();}
+});
+
+it("preserves real keyboard focus while confirming and focuses the replacement result",async()=>{
+ const host=document.createElement('div');document.body.append(host);const root=createRoot(host);
+ let finish!:()=>void; const action=vi.fn(()=>new Promise<void>(resolve=>{finish=resolve;}));
+ const button=(label:string)=>[...host.querySelectorAll('button')].find(node=>node.textContent===label)!;
+ try {
+  await act(async()=>root.render(<HjmProvider><InlineConfirm {...copy} onConfirm={action}/></HjmProvider>));
+  await act(async()=>userEvent.click(button('Delete')));
+  await act(async()=>button('Confirm').focus());
+  await act(async()=>userEvent.keyboard('{Enter}'));
+  expect(document.activeElement===button('Deleting')).toBe(true);
+  await act(async()=>userEvent.keyboard('{Enter}'));expect(action).toHaveBeenCalledTimes(1);
+  await act(async()=>finish());expect(document.activeElement===host.querySelector('[role="status"]')).toBe(true);
+ } finally {await act(async()=>root.unmount());host.remove();}
+});
+
+it("moves pointer confirmation off cancel before it locks and preserves later external focus",async()=>{
+ const host=document.createElement('div');document.body.append(host);const root=createRoot(host);
+ let finish!:()=>void;const action=()=>new Promise<void>(resolve=>{finish=resolve;});
+ const button=(label:string)=>[...host.querySelectorAll('button')].find(node=>node.textContent===label)!;
+ try {
+  await act(async()=>root.render(<HjmProvider><InlineConfirm {...copy} onConfirm={action}/><button>Outside</button></HjmProvider>));
+  await act(async()=>userEvent.click(button('Delete')));
+  expect(document.activeElement===button('Cancel')).toBe(true);
+  await act(async()=>userEvent.click(button('Confirm')));
+  expect(document.activeElement===button('Deleting')).toBe(true);
+  await act(async()=>button('Outside').focus());await act(async()=>finish());
+  expect(document.activeElement===button('Outside')).toBe(true);
+ } finally {await act(async()=>root.unmount());host.remove();}
 });

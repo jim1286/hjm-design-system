@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { AppState, View } from "react-native";
 import ReanimatedSwipeable, {} from "react-native-gesture-handler/ReanimatedSwipeable";
 import { validateActions } from "@hjmds/design-contracts/components/interaction-adapters";
@@ -10,6 +10,13 @@ export function SwipeActions(props) {
     const theme = useHjmNativeTheme();
     const ref = useRef(null);
     const pending = useRef(false);
+    const generation = useMemo(() => ({}), [props.rowId]);
+    const activeGeneration = useRef(generation);
+    useLayoutEffect(() => {
+        activeGeneration.current = generation;
+        pending.current = false;
+        return () => { activeGeneration.current = null; };
+    }, [generation]);
     const [accessibleActions, setAccessibleActions] = useState(false);
     const latest = useRef(props);
     latest.current = props;
@@ -38,9 +45,13 @@ export function SwipeActions(props) {
             await props.onAction(action.id);
         }
         catch (error) {
-            props.onError(error);
+            if (activeGeneration.current === generation)
+                props.onError(error);
         }
         finally {
+            // Recycled rows must not let an earlier request close or unlock their new action.
+            if (activeGeneration.current !== generation)
+                return;
             pending.current = false;
             ref.current?.reset();
             // Only close this row. Another row may have been opened while the action was pending (2026-09-30 review).

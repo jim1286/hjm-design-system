@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-07
+- 검토일: 2026-10-13
 - 근거: `src/foundations.ts`(`motion`·`easing`·`motionPreset`·`spring`), `packages/react/src/theme.ts`, `packages/react/src/provider.tsx`, `packages/react-native/src/provider.tsx`
 - 스토리북: `배포/토큰/표면과 움직임/모션`
 
@@ -87,7 +87,7 @@ Web에서 JS로 직접 움직일 때는 `useHjmTheme().environment.reducedMotion
 | 곡선 | `cubic-bezier(...)` | `Easing.bezier(...)` |
 | 스프링 | 쓰지 않음 | `spring.*` |
 
-프로필 선택 이동 (미게시, 1.14.0 이후):
+프로필 선택 이동(기본 프로필 1.15.0부터 제공):
 
 `designProfile.interactions.selectionMotion`은 SegmentedControl과 appearance를 생략한
 [Tabs](../components/tabs.md)에 연결된다. Tabs의 `slide`는 `motion.normal` 200ms·

@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.17.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-13
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screens.tsx`·`src/screen-flows.tsx`; 기존 개별 지침을 새 규격으로 통합. 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
 - 스토리북: `배포/화면/콘텐츠/목록과 상세`
 
@@ -64,11 +64,11 @@ import { ListDetailScreen } from "@hjmds/react-native/screen-flows";
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `list` | `ReactNode` | 필수 | 목록 pane 본문. 상세가 열려도 mount를 유지한다 |
-| `detail` | `{ title: string; content: ReactNode }` | 없음 | 있으면 상세 pane을 보이고 목록 pane을 숨긴다. 닫힌 상태는 prop을 빼서 표현한다(`undefined`를 넘기지 않는다) |
+| `detail` | `{ title; content; state?; stateAction?; notice? }` | 없음 | 있으면 상세 pane을 보이고 목록 pane을 숨긴다. 닫힌 상태는 prop을 빼서 표현한다(`undefined`를 넘기지 않는다) |
 | `back` | `ScreenFlowAction`(`{ label, onAction(), disabled?, pending? }`) | 필수 | 상세 pane `leading` 자리의 ghost 버튼 |
 | `refresh` | `ScreenFlowAction` | 없음 | 목록 pane `actions` 자리의 ghost 버튼. 주면 `actions`를 덮는다 |
 | `loadMore` | `ScreenFlowAction` | 없음 | 목록 pane footer의 ghost 버튼 |
-| `layoutStyle` | `HjmCompositionStyleProp` | 없음 | Web·Native 모두 목록·상세 pane을 함께 담는 **바깥 틀**에 적용한다(안쪽 목록 ScreenLayout이 아니다). 목록/상세 전환과 상관없이 같은 루트에 남는다. 미게시(1.12.1 이후) |
+| `layoutStyle` | `HjmCompositionStyleProp` | 없음 | Web·Native 모두 목록·상세 pane을 함께 담는 **바깥 틀**에 적용한다(안쪽 목록 ScreenLayout이 아니다). 목록/상세 전환과 상관없이 같은 루트에 남는다(1.13.0) |
 | 나머지 | `ScreenLayout`과 같음(`children`·`footer` 제외) | — | 목록 pane에만 적용된다(`title` 필수, `state`, `scroll` 등) |
 
 ## 배치
@@ -84,7 +84,7 @@ import { ListDetailScreen } from "@hjmds/react-native/screen-flows";
 ## 꼭 지킬 것
 
 - 라벨은 모두 i18n 키로 넣는다.
-- `state`(로딩·빈·오류·제한)는 목록 pane에만 적용된다. 상세의 로딩·오류는 `detail.content` 안에서 표시한다.
+- `state`(로딩·빈·오류·제한)는 목록 pane에만 적용된다. 상세 최초 조회·오류는 `detail.state`, 재시도는 `detail.stateAction`, 기존 상세를 유지하는 갱신 실패는 `detail.notice`로 전달한다. 미게시(1.18.0 이후)에 추가된 선택 prop이며 이전 설치 버전에서는 상세 content 안에 상태를 구성한다.
 - Web은 상세 진입 시 뒤로 버튼에 포커스를 옮기고 복귀 시 목록의 원래 요소로 돌린다. 요소가 삭제되었으면 목록 본문으로 이동한다.
   처음부터 `detail`이 있는 채로 mount되면(딥링크) 사용자 전환이 아니므로 포커스를 옮기지 않는다. 그때 포커스는 제품 router가 정한다.
 - 상세 열림 상태는 제품이 가진다. OS 뒤로가기·브라우저 뒤로가기와 `back`을 제품 router에서 함께 연결한다.
@@ -99,5 +99,5 @@ import { ListDetailScreen } from "@hjmds/react-native/screen-flows";
 ## 함정
 
 - `refresh`를 주면 ScreenLayout `actions`는 무시된다. 둘 다 필요하면 `refresh` 대신 `actions`에 직접 조합한다.
-- 상세 pane은 `title`과 `back`(leading)만 받는다. 상세 쪽 `description`·`actions`·footer 자리는 없다.
+- 상세 pane은 `title`·`state`·`stateAction`·`notice`와 `back`(leading)을 받는다. 상세 쪽 `description`·`actions`·footer 자리는 없다.
 - `loadMore`는 상태 없는 버튼이다. 끝·오류·중복 요청 방지가 필요하면 LoadMore를 쓴다.

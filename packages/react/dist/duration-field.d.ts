@@ -5,9 +5,9 @@ export type DurationFieldProps = DurationRange & Readonly<{
     onValueChange: (seconds: number) => void;
     labels: DurationFieldLabels;
     disabled?: boolean;
-    className?: string; /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    className?: string;
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-/** A NumberField composition; value and limits always use whole seconds. */
+/** Units and limits remain in seconds; FieldGroup owns grouping and edit lifetime. */
 export declare function DurationField({ value, onValueChange, labels, min, max, disabled, className, layoutStyle }: DurationFieldProps): import("react").JSX.Element;
 //# sourceMappingURL=duration-field.d.ts.map

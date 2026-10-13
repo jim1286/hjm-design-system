@@ -5,9 +5,9 @@ import { type TagTone as ContractTagTone } from "@hjmds/design-contracts/compone
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { type ImageDescriptor, type ImageFit, type ImageLoadStatus, type ResolvedImageDescriptor } from "@hjmds/design-contracts/components/image";
 import { type ComposeTimelineAccessibleName, type TimelineItemDescriptor } from "@hjmds/design-contracts/components/timeline";
-import { statisticRecipe, type AccordionDensity, type BadgeSize, type BadgeTone, type BadgeVariant as ContractBadgeVariant, type CounterBadgeSize, type CounterBadgeTone, type CounterBadgeVariant, type ListRowDensity, type ListRowLeadingShape, type StatisticDensity, type StatisticPresentation } from "@hjmds/design-contracts/recipes";
+import { listRowRecipe, statisticRecipe, type AccordionDensity, type BadgeSize, type BadgeTone, type BadgeVariant as ContractBadgeVariant, type CounterBadgeSize, type CounterBadgeTone, type CounterBadgeVariant, type ListRowDensity, type ListRowLeadingShape, type StatisticDensity, type StatisticPresentation } from "@hjmds/design-contracts/recipes";
 import { type ReactNode } from "react";
-import { type ImageProps as NativeImageProps, type ImageSourcePropType, type ImageStyle, type PressableProps, type StyleProp, type TextStyle, type ViewProps, type ViewStyle } from "react-native";
+import { type ImageProps as NativeImageProps, type ImageSourcePropType, type ImageStyle, type PressableProps, type StyleProp, type ViewProps } from "react-native";
 import { type SurfacePadding, type SurfaceProps } from "./primitives.js";
 export type StatusTone = BadgeTone;
 export type BadgeVariant = ContractBadgeVariant;
@@ -18,39 +18,19 @@ export type BadgeProps = Omit<ViewProps, "accessibilityLabel" | "accessible" | "
     variant?: BadgeVariant;
     leading?: ReactNode;
     accessibilityLabel?: string;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and
-     * `tone`/`size`/`variant` for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `tone`/`size`/`variant` / typography recipe
-     * for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    labelStyle?: StyleProp<TextStyle>;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function Badge({ label, tone, size, variant, leading, accessibilityLabel, style, labelStyle, layoutStyle, ...props }: BadgeProps): import("react").JSX.Element;
+export declare function Badge({ label, tone, size, variant, leading, accessibilityLabel, layoutStyle, ...props }: BadgeProps): import("react").JSX.Element;
 export type TagTone = ContractTagTone;
 export type TagProps = Omit<ViewProps, "accessibilityLabel" | "accessible" | "children" | "style"> & Readonly<{
     children: string;
     tone?: TagTone;
     accessibilityLabel?: string;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and
-     * `tone` for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `tone` / typography recipe
-     * for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    labelStyle?: StyleProp<TextStyle>;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function Tag({ children, tone, accessibilityLabel, layoutStyle, style, labelStyle, ...props }: TagProps): import("react").JSX.Element;
+export declare function Tag({ children, tone, accessibilityLabel, layoutStyle, ...props }: TagProps): import("react").JSX.Element;
 export type CardProps = Omit<SurfaceProps, "children" | "padding"> & Readonly<{
     children?: ReactNode;
     title?: ReactNode;
@@ -85,6 +65,12 @@ export type ListRowProps = Omit<PressableProps, "accessibilityLabel" | "accessib
     accessibilityHint?: string;
     disabled?: boolean;
     density?: ListRowDensity;
+    /** Semantic emphasis for destructive destinations; selection stays independent. */
+    tone?: keyof typeof listRowRecipe.tones;
+    /** Reserve the real row geometry without exposing its commands or content. */
+    loading?: boolean;
+    /** Localized status name; omit on duplicate placeholder rows. */
+    loadingLabel?: string;
     selected?: boolean;
     /** Frame the ListRow paints around `leading`; the recipe owns its size. */
     leadingShape?: ListRowLeadingShape;
@@ -92,22 +78,12 @@ export type ListRowProps = Omit<PressableProps, "accessibilityLabel" | "accessib
     layoutStyle?: HjmCompositionStyleProp;
     leadingStyle?: HjmCompositionStyleProp;
     contentStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `density`/`selected` / typography recipe
-     * for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    titleStyle?: StyleProp<TextStyle>;
     titleRowStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `density`/`selected` / typography recipe
-     * for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    descriptionStyle?: StyleProp<TextStyle>;
     trailingStyle?: HjmCompositionStyleProp;
     trailingActionStyle?: HjmCompositionStyleProp;
     containerProps?: Omit<ViewProps, "children" | "style">;
 }>;
-export declare function ListRow({ title, description, leading, trailing, titleMetadata, trailingAction, trailingText, metadataLabel, trailingLabel, onPress, accessibilityLabel, accessibilityHint, disabled, density, selected: selectedProp, leadingShape, layoutStyle, leadingStyle, contentStyle, titleStyle, titleRowStyle, descriptionStyle, trailingStyle, trailingActionStyle, containerProps, accessibilityState, ...forwarded }: ListRowProps): import("react").JSX.Element;
+export declare function ListRow({ title, tone, description, leading, trailing, titleMetadata, trailingAction, trailingText, metadataLabel, trailingLabel, onPress, accessibilityLabel, accessibilityHint, disabled, density, loading, loadingLabel, selected: selectedProp, leadingShape, layoutStyle, leadingStyle, contentStyle, titleRowStyle, trailingStyle, trailingActionStyle, containerProps, accessibilityState, ...forwarded }: ListRowProps): import("react").JSX.Element;
 type AccessibleMedia = Readonly<{
     decorative: true;
     accessibilityLabel?: never;
@@ -131,33 +107,18 @@ type AvatarBaseProps = Readonly<{
     initials?: string;
     renderFallback?: (context: AvatarFallbackContext) => ReactNode;
     size?: number;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and
-     * `size`/`renderFallback` for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `size` / typography recipe
-     * for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    imageStyle?: StyleProp<ImageStyle>;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 export type AvatarProps = AvatarBaseProps & AccessibleMedia;
-export declare function Avatar({ source, renderImage, name, initials, renderFallback, size, decorative, accessibilityLabel, style, imageStyle, layoutStyle, }: AvatarProps): import("react").JSX.Element;
+export declare function Avatar({ source, renderImage, name, initials, renderFallback, size, decorative, accessibilityLabel, layoutStyle, }: AvatarProps): import("react").JSX.Element;
 export type DividerProps = Readonly<{
     orientation?: "horizontal" | "vertical";
     inset?: number;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and
-     * `orientation`/`inset` for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function Divider({ orientation, inset, style, layoutStyle }: DividerProps): import("react").JSX.Element;
+export declare function Divider({ orientation, inset, layoutStyle }: DividerProps): import("react").JSX.Element;
 export type AccordionItem<Value extends string = string> = Readonly<{
     value: Value;
     title: string;
@@ -186,59 +147,19 @@ export type AccordionProps<Value extends string = string> = Readonly<{
     multiple?: boolean;
     density?: AccordionDensity;
     renderIndicator?: (props: AccordionIndicatorRenderProps<Value>) => ReactNode;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and
-     * `density`/`renderIndicator` for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `density`/`renderIndicator` / typography recipe
-     * for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    itemStyle?: StyleProp<ViewStyle>;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `density`/`renderIndicator` / typography recipe
-     * for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    triggerStyle?: StyleProp<ViewStyle>;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `density`/`renderIndicator` / typography recipe
-     * for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    titleStyle?: StyleProp<TextStyle>;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `density`/`renderIndicator` / typography recipe
-     * for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    indicatorStyle?: StyleProp<ViewStyle>;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `density`/`renderIndicator` / typography recipe
-     * for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    panelStyle?: StyleProp<ViewStyle>;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function Accordion<Value extends string = string>({ label, items, expandedValues, defaultExpandedValues, onExpandedValuesChange, multiple, density, renderIndicator, style, itemStyle, triggerStyle, titleStyle, indicatorStyle, panelStyle, layoutStyle, }: AccordionProps<Value>): import("react").JSX.Element;
+export declare function Accordion<Value extends string = string>({ label, items, expandedValues, defaultExpandedValues, onExpandedValuesChange, multiple, density, renderIndicator, layoutStyle, }: AccordionProps<Value>): import("react").JSX.Element;
 export type DescriptionListProps<Id extends string = string> = Omit<ViewProps, "accessibilityLabel" | "accessibilityRole" | "children" | "style"> & Readonly<{
     label: string;
     descriptor: DescriptionListDescriptor<Id>;
     /** Explicit inner width wins; otherwise the rendered container is measured. */
     availableWidth?: number;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and
-     * `descriptor.columns` for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `descriptor.columns` / typography recipe
-     * for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    itemStyle?: StyleProp<ViewStyle>;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function DescriptionList<Id extends string = string>({ label, descriptor, availableWidth, style, itemStyle, layoutStyle, onLayout, ...props }: DescriptionListProps<Id>): import("react").JSX.Element;
+export declare function DescriptionList<Id extends string = string>({ label, descriptor, availableWidth, layoutStyle, onLayout, ...props }: DescriptionListProps<Id>): import("react").JSX.Element;
 type ImageNativeProps = Omit<NativeImageProps, "accessibilityElementsHidden" | "accessibilityLabel" | "accessibilityRole" | "accessible" | "alt" | "aria-hidden" | "aria-label" | "height" | "importantForAccessibility" | "onError" | "onLoad" | "resizeMode" | "role" | "source" | "src" | "srcSet" | "style" | "width">;
 type ImageAdapterBaseProps = Readonly<{
     source: ImageSourcePropType;
@@ -298,15 +219,10 @@ export type CounterBadgeProps = Readonly<{
     tone?: CounterBadgeTone;
     size?: CounterBadgeSize;
     variant?: CounterBadgeVariant;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and
-     * `tone`/`size`/`variant` for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function CounterBadge({ count, accessibilityLabel, max, tone, size, variant, style, layoutStyle, }: CounterBadgeProps): import("react").JSX.Element | null;
+export declare function CounterBadge({ count, accessibilityLabel, max, tone, size, variant, layoutStyle, }: CounterBadgeProps): import("react").JSX.Element | null;
 export type ListAppearance = "grouped" | "plain";
 export type ListProps = Omit<ViewProps, "accessibilityLabel" | "accessibilityRole" | "children" | "style"> & Readonly<{
     /** Localized accessible name for this list. */
@@ -314,16 +230,11 @@ export type ListProps = Omit<ViewProps, "accessibilityLabel" | "accessibilityRol
     children: ReactNode;
     separator?: "none" | "full" | "indented";
     appearance?: ListAppearance;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and
-     * `appearance`/`separator` for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Semantic list container that owns separator rhythm around composed rows. */
-export declare function List({ label, children, separator, appearance, style, layoutStyle, ...props }: ListProps): import("react").JSX.Element;
+export declare function List({ label, children, separator, appearance, layoutStyle, ...props }: ListProps): import("react").JSX.Element;
 export type StatisticTrendMarkRenderProps = Readonly<{
     name: (typeof statisticRecipe.trend.marks)[keyof typeof statisticRecipe.trend.marks];
     color: string;
@@ -342,36 +253,6 @@ export type StatisticProps<Id extends string = string> = Readonly<{
     accessibilityLabel?: string;
     composeAccessibilityLabel?: ComposeStatisticAccessibilityLabel<Id>;
     renderTrendMark?: (props: StatisticTrendMarkRenderProps) => ReactNode;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and
-     * `density`/`presentation` for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `density`/`presentation` / typography recipe
-     * for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    labelStyle?: StyleProp<TextStyle>;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `density`/`presentation` / typography recipe
-     * for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    valueStyle?: StyleProp<TextStyle>;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `density`/`presentation` / typography recipe
-     * for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    affixStyle?: StyleProp<TextStyle>;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `density`/`presentation` / typography recipe
-     * for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    trendStyle?: StyleProp<TextStyle>;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `density`/`presentation` / typography recipe
-     * for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    hintStyle?: StyleProp<TextStyle>;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -384,32 +265,17 @@ export type StatisticGroupProps<Id extends string = string> = Omit<ViewProps, "a
     presentation?: StatisticPresentation;
     composeAccessibilityLabel?: ComposeStatisticAccessibilityLabel<Id>;
     renderTrendMark?: (props: StatisticTrendMarkRenderProps) => ReactNode;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and
-     * `density`/`presentation`/`descriptor.columns` for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `density`/`presentation` / typography recipe
-     * for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    itemStyle?: StyleProp<ViewStyle>;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function StatisticGroup<Id extends string = string>({ label, descriptor, availableWidth, density, presentation, composeAccessibilityLabel, renderTrendMark, style, itemStyle, layoutStyle, onLayout, ...props }: StatisticGroupProps<Id>): import("react").JSX.Element;
+export declare function StatisticGroup<Id extends string = string>({ label, descriptor, availableWidth, density, presentation, composeAccessibilityLabel, renderTrendMark, layoutStyle, onLayout, ...props }: StatisticGroupProps<Id>): import("react").JSX.Element;
 export type TimelineProps<Id extends string = string> = Omit<ViewProps, "children" | "style"> & Readonly<{
     items: readonly TimelineItemDescriptor<Id>[];
     composeAccessibleName: ComposeTimelineAccessibleName;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and
-     * item `tone` for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Ordered record of completed events; unlike Steps it has no current cursor. */
-export declare function Timeline<Id extends string = string>({ items, composeAccessibleName, style, layoutStyle, ...props }: TimelineProps<Id>): import("react").JSX.Element;
+export declare function Timeline<Id extends string = string>({ items, composeAccessibleName, layoutStyle, ...props }: TimelineProps<Id>): import("react").JSX.Element;
 export {};
 //# sourceMappingURL=data-display.d.ts.map

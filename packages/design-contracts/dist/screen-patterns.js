@@ -117,11 +117,12 @@ export function resolveSearchCommit(value) {
     return next ? next : null;
 }
 export function resolveSearchEmptyCause(count, appliedFilterCount) {
-    if (count === null || count > 0)
-        return "none";
-    if (count < 0 || !Number.isSafeInteger(count) || !Number.isSafeInteger(appliedFilterCount) || appliedFilterCount < 0) {
+    // Loading/nonempty results must not bypass the same count contract used by empty results.
+    if ((count !== null && (count < 0 || !Number.isSafeInteger(count))) || !Number.isSafeInteger(appliedFilterCount) || appliedFilterCount < 0) {
         throw new RangeError("Search counts must be nonnegative integers");
     }
+    if (count === null || count > 0)
+        return "none";
     return appliedFilterCount > 0 ? "filters" : "query";
 }
 /**
@@ -137,6 +138,8 @@ export function resolveFocusAfterRemoval(removedIndex, remaining) {
 }
 /** Recipe for the SearchScreen phase sections; geometry stays on shared spacing tokens. */
 export const searchScreenRecipe = {
+    /** Debounced typing delay; explicit submit remains a separate host action. */
+    debounceMs: 300,
     /** Recent searches shown before the user types; reference services show 5–10 and let the rest scroll away. */
     recentVisible: 5,
     /** Suggestions under the "search for ‘q’" row. */
@@ -150,6 +153,12 @@ export const searchScreenRecipe = {
     /** Between chips in applied filters and suggested queries. */
     chipGap: spacing.xs,
 };
+/** Keep finite negative delays at zero; reject values whose timer behavior varies by host. */
+export function resolveSearchDebounceMs(value = searchScreenRecipe.debounceMs) {
+    if (!Number.isFinite(value))
+        throw new RangeError("Search debounceMs must be finite");
+    return Math.max(0, value);
+}
 /** Horizontal intent preserves vertical scrolling and uses one reveal distance across renderers. */
 export function timestampRevealOffset(dx, dy) {
     // A 12px dead zone and 2:1 direction bias avoid turning taps/list scrolling into a time gesture.

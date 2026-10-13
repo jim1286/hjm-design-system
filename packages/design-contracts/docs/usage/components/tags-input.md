@@ -80,7 +80,7 @@ import { TagsInput } from "@hjmds/react-native/tags-input";
 | `suggestions` · `suggestionsLabel` | 제품이 거른 후보(`id`·`label`·`value?`·`disabled?`)와 목록 이름 | — | 거르려면 `onDraftChange`로 입력 중 문자를 받는다 |
 | `placeholder`·`description`·`disabled` | `string`·`string`·`boolean` | — | `disabled`는 라벨과 입력 틀을 `fieldRecipe.disabledOpacity`(0.6)로 흐리고 `description`은 그대로 둔다([Field](field.md)) |
 | `layoutStyle` | `HjmCompositionStyleProp` | — | 필드 전체 배치. Web·Native 모두 |
-| `style`(Native) | `StyleProp<ViewStyle>` | — | deprecated — `layoutStyle`. 개발 모드에서 한 번 경고하고 다음 major에서 제거된다 |
+| `style`(Native) | 지원하지 않음 | — | 제거된 속성 — `layoutStyle`. 현재 공개 props에서 제거되었다 |
 
 ## 배치
 
@@ -91,7 +91,7 @@ Native 입력 프레임의 `md` 모서리는 Provider의 `tokens.radius.md`를 �
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 입력 틀 최소 높이 44(필드 틀과 같음), 모서리 `radius.md` 12. 입력 칸 최소 Web `8ch`, Native 80. 태그 칩 높이 28, 삭제 버튼 터치 영역 44(`control.minTouchTarget`). 후보 행 최소 높이 44(두 플랫폼, Native는 미게시(1.12.1 이후). 1.12.1 Native는 28) | `tagsInputRecipe`, `.hjm-tags-input__frame`·`__remove::after`·`__suggestion` |
+| 크기 | 입력 틀 최소 높이 44(필드 틀과 같음), 모서리 `radius.md` 12. 입력 칸 최소 Web `8ch`, Native 80. 태그 칩 높이 28, 삭제 버튼 터치 영역 44(`control.minTouchTarget`). 후보 행 최소 높이 44(두 플랫폼, Native는 1.13.0 변경. 1.12.1 Native는 28) | `tagsInputRecipe`, `.hjm-tags-input__frame`·`__remove::after`·`__suggestion` |
 | 간격 | 라벨과 틀 사이 Web `spacing.xxs` 4, Native `spacing.xs` 8. 틀 안 태그·입력 칸 사이 `spacing.xs` 8. 이웃 필드와의 간격은 폼이 정한다 | `.hjm-tags-input`, `react-native/src/tags-input.tsx` |
 | 순서·정렬 | 라벨 → 입력 틀 → 후보 목록 → 설명. 폼 안에서 다른 [Field](field.md)와 같은 세로 줄에 두고 폭을 꽉 채운다 | `react/src/tags-input.tsx`, `react-native/src/tags-input.tsx` |
 | 고정·스크롤 | 후보 목록은 틀 바로 아래 문서 흐름에 펼쳐진다(떠 있는 층이 아니다). Web은 최대 높이 12rem에서 스크롤 | `.hjm-tags-input__suggestions` |
@@ -103,7 +103,7 @@ Native 입력 프레임의 `md` 모서리는 Provider의 `tokens.radius.md`를 �
 - 거절 사유 문장("이미 있어요")은 제품이 `reason`으로 만든다. HJM은 판정만 한다.
 - 한국어처럼 공백이 값의 일부인 도메인에서는 `Space`를 확정 키로 켜지 않는다.
 - 후보 필터링·정렬은 제품이 한다. HJM은 받은 후보를 보여 주고 고른 값을 확정한다.
-- 배치는 `layoutStyle`로 한다(Web `className`도 받는다). Native `style`은 deprecated다.
+- 배치는 `layoutStyle`로 한다(Web `className`도 받는다). Native `style`은 제거된 속성이다.
 
 ## 플랫폼 차이
 
@@ -113,7 +113,7 @@ Native 입력 프레임의 `md` 모서리는 Provider의 `tokens.radius.md`를 �
 | 빈 입력 Backspace | 첫 번째는 마지막 태그 선택, 두 번째에 삭제 | 해당 키 계약 없음, 태그 옆 삭제 버튼 |
 | 후보 이동 | ArrowUp/Down(끝에서 순환) | 후보를 버튼으로 누름 |
 | ref | `forwardRef`(`input`) | 없음 |
-| 스타일 prop | `className`, `layoutStyle` | `layoutStyle`(`style`은 deprecated) |
+| 스타일 prop | `className`, `layoutStyle` | `layoutStyle`(`style`은 제거된 속성) |
 
 
 ### 고정 아이콘과 큰 글자

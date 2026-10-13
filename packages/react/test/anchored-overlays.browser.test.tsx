@@ -596,3 +596,27 @@ describe("modal arbitration and teardown", () => {
       .toBe("large");
   });
 });
+
+
+it("dismisses a menu inside a dialog before the containing dialog on Escape", async () => {
+  await render(<HjmProvider reducedMotion><Dialog defaultOpen trigger={<button>부모 열기</button>} title="부모" closeLabel="닫기">
+    <Menu label="메뉴" trigger={<button>메뉴 열기</button>} items={[{ id: "edit", label: "편집" }]} />
+  </Dialog></HjmProvider>);
+  await act(async () => [...document.querySelectorAll("button")].find(node => node.textContent === "메뉴 열기")!.click());
+  await flush();
+  const menu = document.querySelector<HTMLElement>('[role="menu"]')!;
+  expect(menu).not.toBeNull();
+  await act(async () => (document.activeElement ?? menu).dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true, cancelable: true })));
+  expect(document.querySelector('[role="menu"]')).toBeNull();
+  expect(document.querySelector('.hjm-dialog')).not.toBeNull();
+});
+
+it("allows a controlled Sheet owner to reject dismissal and receive a later retry", async () => {
+  const changed = vi.fn();
+  await render(<HjmProvider reducedMotion><Sheet open title="선택" closeLabel="닫기" onOpenChange={changed} /></HjmProvider>);
+  const close = document.querySelector<HTMLButtonElement>(".hjm-sheet .hjm-dialog__close")!;
+  await act(async () => close.click());
+  expect(changed).toHaveBeenCalledTimes(1);
+  await act(async () => close.click());
+  expect(changed).toHaveBeenCalledTimes(2);
+});

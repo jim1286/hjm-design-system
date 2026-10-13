@@ -187,4 +187,4 @@ const gutter = resolveWindowClass(useWindowDimensions().width) === "compact" ? "
 - Native 화면 전환은 현재 포트폴리오 Expo 앱(expo-router, React Navigation 미사용)에서 바로 쓸 수 없다. exports patch를 제품 패키지 관리자에 등록해야 한다.
 - 어댑터 peer 없이 subpath를 import하면 자동 대체 없이 기기 Metro 번들이 실패한다.
 - 예제는 Heading·Container·Stack·ListRow를 사용한다. 플랫폼별 드래그/스와이프 host는 유지하고 동일한 배치 역할을 재사용한다.
-- Native 결과 문구는 iOS 알림을 포함한 `PatternStatus` 예제 helper로 표시한다. 제품은 showcase 파일을 import하지 말고 제품 알림 계층에 연결한다.
+- Native 결과 문구는 iOS 알림을 포함한 공개 `StatusText`로 표시한다. 제품은 `@hjmds/react-native/status-text`를 import한다.

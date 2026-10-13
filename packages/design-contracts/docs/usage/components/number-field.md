@@ -120,7 +120,7 @@ Native는 제품 프로필의 `tokens.fontFamily.ui`를 실제 텍스트/입력 
 - 단위·통화·소수 자릿수 표시는 만들지 않는다. 보조기기용 문구가 필요하면 `getValueText`로 제품이 포맷한다.
 - 제어형과 비제어형을 렌더 사이에 바꾸지 않는다(`value`를 넣었다 뺐다 하면 던진다).
 - `min ≥ max`, `step ≤ 0`, 범위 밖 `value`는 던진다. DurationField도 범위 밖·정수 아닌 초를 던진다.
-- 색·높이를 덮지 않는다. 배치는 `layoutStyle`로 한다. Native `inputStyle`·`containerStyle`은 deprecated(개발 모드 경고, 다음 major 제거) — 높이·글꼴은 `size`, 배치는 `layoutStyle`.
+- 색·높이를 덮지 않는다. 배치는 `layoutStyle`로 한다. Native `inputStyle`·`containerStyle`은 제거된 속성 — 높이·글꼴은 `size`, 배치는 `layoutStyle`.
 
 ## 플랫폼 차이
 
@@ -129,5 +129,5 @@ Native는 제품 프로필의 `tokens.fontFamily.ui`를 실제 텍스트/입력 
 | 역할 | `spinbutton`, `type="text"` | 입력 + 증감 button, accessibility action |
 | label·description·error 타입 | `ReactNode` | `string` |
 | 추가 이름 | 없음 | `accessibilityLabel`, `accessibilityHint` |
-| 클래스·스타일 | `className`, `inputClassName`, `layoutStyle`(필드 전체). `style`은 안쪽 input | `layoutStyle`(필드 전체). `inputStyle`·`containerStyle`은 deprecated |
-| DurationField 배치 | `className`, `layoutStyle`(fieldset) | `layoutStyle`(미게시(1.12.1 이후), 1.12.1은 감싸는 View) |
+| 클래스·스타일 | `className`, `inputClassName`, `layoutStyle`(필드 전체). `style`은 안쪽 input | `layoutStyle`(필드 전체). `inputStyle`·`containerStyle`은 제거된 속성 |
+| DurationField 배치 | `className`, `layoutStyle`(fieldset) | `layoutStyle`(1.13.0 변경, 1.12.1은 감싸는 View) |

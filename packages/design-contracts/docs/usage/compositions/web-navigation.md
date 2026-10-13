@@ -126,7 +126,7 @@ import { Section, Stack, Text } from "@hjmds/react/layout";
 // 없음. Breadcrumb·Pagination은 Web 전용이다.
 ```
 
-라우팅(스토리는 데모용 hash fragment), 레코드 125개, pageSize 5는 예시다. 경로·페이지 크기·URL 동기화는 제품 소유다.
+라우팅(스토리는 데모용 hash fragment), 레코드 125개, pageSize 5는 예시다. 데모는 처음에 모음 1페이지를 보여 주며, 상위 경로를 거친 뒤 브라우저 뒤로 가기로 최초 URL에 돌아와도 같은 초기 모음을 복구한다. 각 인스턴스의 fragment만 처리하므로 다른 미리보기의 이동은 현재 목록을 바꾸지 않는다. 페이지 번호는 메모리 상태이며 URL 이력에 추가하지 않는다. 경로·페이지 크기·URL 동기화는 제품 소유다.
 
 ## 플랫폼 차이
 

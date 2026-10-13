@@ -11,11 +11,10 @@ import {
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { spacing } from "@hjmds/design-contracts/foundations";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Pressable, View, type StyleProp, type ViewStyle } from "react-native";
+import { Pressable, View } from "react-native";
 import { mixedCheckboxState } from "./internal/state.js";
 import { Text } from "./primitives.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 
 export type AgreementProps<Id extends string = string> = Readonly<{
@@ -32,11 +31,6 @@ export type AgreementProps<Id extends string = string> = Readonly<{
   optionalLabel: string;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
-   * `agreementRecipe` owns appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
 }>;
 
 
@@ -51,9 +45,7 @@ export function Agreement<Id extends string = string>({
   requiredLabel,
   optionalLabel,
   layoutStyle,
-  style,
 }: AgreementProps<Id>) {
-  warnDeprecatedStyleProps("Agreement", { style }, "layoutStyle for placement; agreementRecipe owns appearance");
   validateAgreementDescriptor(descriptor);
   const theme = useHjmNativeTheme();
   const [internal, setInternal] = useState<ReadonlySet<Id>>(defaultCheckedIds ?? new Set<Id>());
@@ -63,22 +55,29 @@ export function Agreement<Id extends string = string>({
     [descriptor, raw],
   );
   const state = resolveAgreementState(descriptor, checked);
-  // Report the initial state once on mount. Until 2026-10-06 only user toggles reported, so
-  // `defaultCheckedIds`/`checkedIds` that already satisfied every required item never produced a
-  // first `satisfied: true` and a submit button wired to this callback stayed disabled. Mount-only
-  // (not on every derived change) keeps the callback count to "initial + one per toggle"; StrictMode
-  // may repeat the same snapshot, which is idempotent for a consumer that stores it.
-  const initialStateRef = useRef(state);
-  const onStateChangeRef = useRef(onStateChange);
-  onStateChangeRef.current = onStateChange;
+  // Persist removed consent IDs so reinserting a row cannot silently consent again.
   useEffect(() => {
-    onStateChangeRef.current?.(initialStateRef.current);
-  }, []);
+    if (controlledChecked === undefined && checked !== raw) {
+      setInternal(checked);
+      onCheckedIdsChange?.(checked);
+    }
+  }, [checked, controlledChecked, raw, onCheckedIdsChange]);
+  // Report accepted state, including external value/required-item changes. A rejected
+  // controlled request must not enable the product's submit button optimistically.
+  const reported = useRef<{ checked: ReadonlySet<Id>; state: AgreementState<Id> } | undefined>(undefined);
+  useEffect(() => {
+    const previous = reported.current;
+    if (previous && previous.state.all === state.all && previous.state.satisfied === state.satisfied
+      && previous.state.missingRequiredIds.length === state.missingRequiredIds.length
+      && previous.state.missingRequiredIds.every((id, index) => id === state.missingRequiredIds[index])
+      && previous.checked.size === checked.size && [...checked].every(id => previous.checked.has(id))) return;
+    reported.current = { checked, state };
+    onStateChange?.(state);
+  });
   const commit = (next: ReadonlySet<Id>) => {
     if (descriptor.disabled) return;
     if (controlledChecked === undefined) setInternal(next);
     onCheckedIdsChange?.(next);
-    onStateChange?.(resolveAgreementState(descriptor, next));
   };
 
   const markColor = resolveColorReference(agreementRecipe.item.selectedIndicator, theme.palette);
@@ -113,7 +112,7 @@ export function Agreement<Id extends string = string>({
   );
 
   return (
-    <View accessibilityLabel={descriptor.accessibilityLabel} accessibilityRole="none" style={[{ gap: agreementRecipe.gap }, style, layoutStyle]}>
+    <View accessibilityLabel={descriptor.accessibilityLabel} accessibilityRole="none" style={[{ gap: agreementRecipe.gap }, layoutStyle]}>
       {/*
         An explicit label keeps the name stable: without it Android derived the
         content description from the mixed state and read "mixed" as the name

@@ -157,7 +157,7 @@ useEffect(() => { firstInvalidRef.current = nicknameError ? nicknameInputRef.cur
 | 실패 처리 | Promise reject를 삼킨다. 제품이 `formError`를 설정 | reject하면 `failed`로 바꾸고 Error 메시지 또는 `fallbackErrorMessage`를 alert로 표시 |
 | 첫 오류 필드로 이동 | 없음. 제품이 `onSubmit` 안에서 첫 무효 입력에 `.focus()`한다 | `firstInvalidFieldRef`: 버튼을 누른 순간 `current`를 읽는다. non-null이면 그 입력에 focus와 스크린 리더 focus를 옮기고 `onSubmit`·`onStatusChange` 없이 멈춘다(상태 그대로). ref는 `useEffect`에서 갱신하고, 순서 계산은 `resolveFirstInvalidFieldFocusTarget(fieldOrder, invalidIds)`를 쓴다 |
 | 접근성 이름 | `<form>` 속성(`aria-label` 등) | `label` 필수 |
-| 배치 | `className`, `layoutStyle`(form 속성 `style`도 받음) | `layoutStyle`. `style`은 deprecated(개발 모드 1회 경고, 다음 major 제거) — `layoutStyle` 또는 `density` |
+| 배치 | `className`, `layoutStyle`(form 속성 `style`도 받음) | `layoutStyle`. `style`은 제거된 속성 — `layoutStyle` 또는 `density` |
 | 밖에서 제출 | `<form>`이므로 `type="submit"` 버튼·Enter로 된다 | `ref: Ref<FormHandle>`의 `submit()`으로 같은 validation·중복 제출 방지를 실행 |
 
 ## 함정

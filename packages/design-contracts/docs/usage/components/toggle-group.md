@@ -64,7 +64,7 @@ import { ToggleGroup } from "@hjmds/react-native/toggle-group";
 | `size` | `small` · `medium` | `medium` | medium은 최소 높이 44 |
 | `items[].disabled` | `boolean` | `false` | `disabled` 항목은 켜지지 않고 눌림 집합에도 들어가지 않는다. 사라진 id의 눌림 상태는 렌더 때 버려진다(`reconcileToggleGroupSelection`) |
 | `layoutStyle` | `HjmCompositionStyleProp` | — | 묶음 컨테이너 배치. Web·Native 모두 |
-| `style`(Native) | `StyleProp<ViewStyle>` | — | deprecated — `layoutStyle` 또는 `size`. 개발 모드에서 한 번 경고하고 다음 major에서 제거된다 |
+| `style`(Native) | 지원하지 않음 | — | 제거된 속성 — `layoutStyle` 또는 `size`. 현재 공개 props에서 제거되었다 |
 
 ## 배치
 
@@ -83,7 +83,7 @@ import { ToggleGroup } from "@hjmds/react-native/toggle-group";
 - 라벨은 i18n 키로 넣고 짧게 둔다. 단일 선택 모드는 없다. 하나만 고르게 하려고 변환하지 않는다.
 - 눌림 표시 색은 recipe(`idle`/`pressed`)가 소유한다. 상태는 Web `aria-pressed`, Native `selected`로
   알리므로 색만으로 상태를 바꿔 그리지 않는다.
-- 배치는 `layoutStyle`(묶음 컨테이너)로 한다. Web `className`·Native의 deprecated `style`로 항목 모양을 덮지 않는다.
+- 배치는 `layoutStyle`(묶음 컨테이너)로 한다. Web `className`·Native에서 제거된 `style`로 항목 모양을 덮지 않는다.
 
 ## 플랫폼 차이
 
@@ -91,7 +91,7 @@ import { ToggleGroup } from "@hjmds/react-native/toggle-group";
 | --- | --- | --- |
 | 컨테이너 | `role="group"` + `aria-label` | `View` + `accessibilityLabel`(role 없음) |
 | 배치 | CSS(`hjm-toggle-group`) | 가로 `flexWrap: "wrap"` |
-| 외부 꾸밈 | `className`, `ref`, `layoutStyle` | `layoutStyle`(`style`은 deprecated) |
+| 외부 꾸밈 | `className`, `ref`, `layoutStyle` | `layoutStyle`(`style`은 제거된 속성) |
 | 키보드 | 항목마다 tab stop(roving 없음) | 해당 없음 |
 
 ### 제품 테마의 모서리

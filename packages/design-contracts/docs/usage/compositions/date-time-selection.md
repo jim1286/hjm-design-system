@@ -58,8 +58,8 @@ Section 제목/설명 → 선택 테마/다음 테마
 | 상태 | 모습 | 포커스·알림 |
 | --- | --- | --- |
 | 기본 | 세 선택값 없음·확인 비활성 | 날짜·시·분 모두 필수 이름. 셀 disabled는 API 계약으로 제어 |
-| 진행 중 | 확인 버튼 loading·입력/재설정 잠김 | placeholder를 서버 성공으로 바꾸지 않음; 이미 고른 값 유지 |
-| 실패 | danger Notice·다시 확인 | 같은 날짜·시·분 보존; Web alert·Native assertive; Web 응답 뒤 확인 버튼으로 포커스 복귀 |
+| 진행 중 | 확인 버튼 loading·입력/재설정 잠김 | placeholder를 서버 성공으로 바꾸지 않음; 이미 고른 값 유지. Web 확인 버튼은 loading의 실행 차단을 사용해 키보드 초점을 보존 |
+| 실패 | danger Notice·다시 확인 | 같은 날짜·시·분 보존; Web alert·Native assertive; Web에서 직접 누른 응답 버튼이 비활성화되면 확인 버튼으로 복귀. 사용자가 다른 곳으로 옮긴 초점은 유지 |
 | 성공 | success Notice·확정한 날짜와 시각 | 값 변경 시 이전 결과 제거. 실제 예약·서버 저장을 뜻하지 않음 |
 | 비활성 | 선택 트리거/행동 비활성 | CSS pointer-events로만 차단하지 않음 |
 
@@ -95,7 +95,7 @@ import { Select } from "@hjmds/react-native/forms";
 | --- | --- | --- |
 | 날짜 표면 | 필드에 붙은 popover | Sheet |
 | 시각 표면 | listbox popover | modal sheet |
-| 상태 | Text role=status | Showcase PatternStatus의 Android live region/iOS announce 보완. 제품은 공개Text/Notice와 같은 정책을 연결 |
+| 상태 | Text role=status | 공개 StatusText의 Android live region/iOS 변경 알림. 제목·행동이 있는 안내는 Notice |
 | 날짜 키보드 | Calendar roving focus, 달 경계 callback은 제품 설정 | touch/AT, 실기기 확인 별도 |
 
 ## 함정

@@ -79,7 +79,7 @@ const renderGlyph = createLucideGlyph({ chevronEnd: ChevronRight }); // 제품�
 | `renderIcon`(Native) | `(props: { name, size, color, strokeWidth }) => ReactNode` | — | semantic name → glyph 경계. 보통 `createLucideGlyph`. 크기·색은 HJM이 넘긴 값을 그대로 쓴다 |
 | `renderAnchor`(Web) | `(props: LinkRenderProps) => ReactElement` | — | 받은 props(`href`·`ref`·`className`·`data-*`·`aria-disabled`·`onClick`·`children`·병합된 `style`)를 framework Link에 그대로 넘긴다 |
 | `layoutStyle` | 배치 key만 | — | 양쪽 있음. Web은 `renderAnchor`에도 병합된 `style`로 전달된다 |
-| `style`(Native) | — | — | **deprecated**(1.13, 개발 모드 1회 경고, 다음 major 제거) — `layoutStyle`을 쓴다 |
+| `style`(Native) | — | — | 제거된 속성 — `layoutStyle`을 쓴다 |
 
 - Native는 tone·variant가 없다. 항상 brand 색 · 밑줄 · `bodyLarge` 글자 · 최소 터치 target이다.
 
@@ -118,6 +118,6 @@ const renderGlyph = createLucideGlyph({ chevronEnd: ChevronRight }); // 제품�
 - Native에서 descriptor 아이콘을 주고 `renderIcon`을 빼면 개발 모드에서 한 번 경고하고 아이콘을 그리지 않는다(throw하지 않음).
   descriptor 아이콘과 `leading`/`trailing` node를 함께 주면 descriptor가 그 자리를 갖고 경고가 난다. 1.12까지는 Native가
   descriptor 아이콘을 그리지 않았다.
-- Native `style`은 deprecated다. 아직 recipe 뒤에 합쳐져 시각 값이 통과하므로 배치는 `layoutStyle`로만 준다.
+- Native `style`은 제거되었다. 배치는 `layoutStyle`로 지정하고 brand 색·밑줄·글자 크기는 `linkRecipe`를 따른다. Native에는 `tone`·`size` prop이 없다.
 - 현재 Native 스토리(`showcase/native/src/component-examples.tsx` LinkExample)는 descriptor 아이콘·`renderIcon` 예가 없고
   문구가 i18n 키가 아니다. 아이콘 경로는 위 최소 사용 예로 확인한다.

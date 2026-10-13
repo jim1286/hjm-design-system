@@ -180,6 +180,10 @@ import { SearchScreen } from "@hjmds/react/screen-flows";
 Native는 import만 해당 renderer의 `screen-flows`로 바꾸고 플랫폼별 자식/host를 제공한다.
 React Query 등을 쓰는 제품은 이 화면의 callback을 기존 제품 query 상태와 연결하며 별도 캐시를 만들지 않는다.
 필터 변경은 debounce query 변경과 독립적이므로 제품 query key에 필터도 포함한다.
+
+`debounceMs` 기본값은 `searchScreenRecipe.debounceMs`(300ms)이며 양 renderer가
+`resolveSearchDebounceMs`로 해석한다. 0과 유한한 사용자 지연은 유지하고 음수는 기존처럼 0으로
+맞춘다. `NaN`·±`Infinity`는 호스트 타이머마다 다르게 해석될 수 있어 예약 전에 `RangeError`로 거부한다.
 예제 미디어는 로컬 샘플 사진과 모의 업로드이며 기기 갤러리·네트워크 업로드를 실행하지 않는다.
 예제 권한은 상태 분기만 보여 주며 실제 OS 권한을 바꾸지 않는다.
 
@@ -303,7 +307,7 @@ SearchScreen accepts a queryField slot for an existing accessible SearchField wi
 | 레일 첫 칩(`filterSheet.trigger`)은 HJM이 그리고 이름에 적용 개수를 넣는다(Web `aria-haspopup="dialog"`) | 적용 칩·모두 해제 뒤 포커스가 돌아갈 고정 대상이 필요하다 | 제품이 trigger를 그림(포커스 복귀 대상을 HJM이 모름) |
 | Web: 적용 칩·최근 검색 행을 지우면 같은 자리 다음 항목, 없으면 trigger(최근 검색은 입력)로 포커스. 목록이 실제로 줄어든 뒤에 옮긴다(`resolveFocusAfterRemoval`). Native는 옮기지 않는다 | 지운 버튼이 사라져 포커스가 `<body>`로 떨어지는 것을 막는다. Native는 프로그램 포커스 이동이 화면을 다시 읽게 해 낭독 커서를 그대로 둔다 | 항상 입력으로 이동(칩 줄 탐색이 끊김) |
 | 개수 낭독은 HJM: 입력 중 "제안 N개", 결과 개수, `searching`이면 `searchingLabel`. Web은 숨긴 `role="status"`, Native는 `announceForAccessibilityWithOptions(queue)`. 문구가 바뀔 때만 | 제품마다 live region을 다시 만들면 중복·누락 낭독이 생긴다 | 제품 소유 |
-| `resultSummary.count === null`이면 결과 머리 개수 자리에 Skeleton, `children` 대신 로딩 행 4개(`searchScreenRecipe.loadingRows`). Web은 ListRow `loading`(행 높이 유지) | 결과가 도착할 때 목록이 뛰지 않는다 | spinner로 본문 교체(`state="loading"`, 입력·필터·이전 결과가 사라짐) |
+| `resultSummary.count === null`이면 결과 머리 개수 자리에 Skeleton, `children` 대신 로딩 행 4개(`searchScreenRecipe.loadingRows`). 양 renderer는 ListRow `loading`으로 같은 두 줄 행 geometry를 사용하며 첫 행에만 loadingLabel을 제공 | 결과가 도착할 때 목록이 뛰지 않는다 | spinner로 본문 교체(`state="loading"`, 입력·필터·이전 결과가 사라짐) |
 | 정렬은 결과 머리 끝 Menu(single). 바꾸면 본문을 맨 위로 | Menu 지침이 정렬을 용도로 명시. 시트 안 정렬은 정렬 하나에 시트 왕복이 필요 | 필터 시트 안 정렬 |
 | `queryLabelVisibility="hidden"`: 보이는 label을 빼고 `queryLabel`을 접근성 이름(Web `aria-label`, Native `accessibilityLabel`)과 placeholder로 쓴다 | 참고 서비스 공통 모양. 1배 약 22, 2배 약 40만큼 고정 영역을 아낀다(2026-10-06 실측). placeholder가 검색 대상을 알린다(Apple HIG) | placeholder 없이 숨김(보이는 이름이 없는 입력) |
 | `searching`+`searchingLabel`: Web `loading`, Native `busy`+`busyLabel`을 한 이름으로. 둘 다 주거나 둘 다 생략(타입) | 2026-10-06 utilverse 적용 조사: 진행 표시 하나 때문에 제품이 입력을 `queryField`로 통째로 바꿨다 | 플랫폼별 이름 그대로 노출 |
@@ -387,3 +391,21 @@ CommentThreadScreen의 optional threadHeader는 첫 댓글 앞의 스크롤 콘�
 모두 같은 본문에 배치하고 상태 교체 시 함께 숨긴다. fixed header는 짧은 탐색 영역, composer는
 고정 작성 영역이다. Spint의 2026-10-08 이중 스크롤 문제 때문에 추가했으며 상세 사용법은
 [댓글 화면](usage/components/comment-thread-screen.md#배치)을 따른다.
+
+
+### 화면별 독립 복구와 첫 행동 (미게시, 1.18.0 이후)
+
+2026-10-13 계층 점검에서 빈 채팅의 첫 입력이 사라지고 상세 조회 실패를 제품이 다시 조립해야 하는
+누락을 확인했다. 기존 화면 API를 다음과 같이 보강한다.
+
+- `ChatScreen`은 ready뿐 아니라 empty에서도 composer를 유지한다. loading/error/restricted에서는
+  입력을 숨긴다. 전송 실패는 ready/empty를 유지하고 notice로 알린다.
+- `ListDetailScreen.detail`에 선택 `state`, `stateAction`, `notice`를 받는다. 상세만 본문 교체 또는
+  비차단 실패를 표현하고 숨겨진 목록의 입력·스크롤은 유지한다. 기존 title/content는 호환된다.
+- `OnboardingScreen`은 complete.pending 또는 skip.pending 동안 다음·이전·완료·건너뛰기를
+  함께 잠근다. 제품의 입력값과 라우터 이탈 처리는 제품 소유다.
+- `CommentThreadScreen`은 루트마다 전체 items를 재탐색하지 않고 한 번 만든 부모별 인덱스로
+  답글을 읽는다. 루트·답글의 서버 순서와 펼침·동작 계약은 유지한다. 가상화 구현은 아니다.
+
+검증: 각 renderer의 `screen-recovery` 테스트. Web은 Chromium 동작 검사, Native는 host 렌더 검사이며
+실기기 성능·운영 서버·npm 게시·소비 앱 반영을 뜻하지 않는다.

@@ -70,14 +70,14 @@ it("names the tour, announces the step, and moves focus to the card on every ste
   const announcement = () => document.getElementById(card()!.getAttribute("aria-describedby")!)!.textContent;
   const highlight = () => document.querySelector<HTMLElement>(".hjm-tour-highlight");
   expect(announcement()).toBe("2단계 중 1단계, 여기에 기록이 쌓여요. 최근에 쓴 기록이 위에 옵니다.");
-  await expect.poll(() => highlight()?.style.insetInlineStart).toBe(`${document.getElementById("list")!.getBoundingClientRect().left}px`);
+  await expect.poll(() => highlight()?.getBoundingClientRect().left).toBe(document.getElementById("list")!.getBoundingClientRect().left);
   // The visible copy repeats the announcement, so it stays out of the a11y tree.
   expect(card()!.querySelector(".hjm-tour__title")!.closest("[aria-hidden='true']")).not.toBeNull();
 
   button("다음").focus();
   await act(async () => userEvent.keyboard("{Enter}"));
   await expect.poll(() => announcement()).toBe("2단계 중 2단계, 여기서 새 기록을 써요. 짧게 남겨도 괜찮아요.");
-  await expect.poll(() => highlight()?.style.insetInlineStart).toBe(`${document.getElementById("write")!.getBoundingClientRect().left}px`);
+  await expect.poll(() => highlight()?.getBoundingClientRect().left).toBe(document.getElementById("write")!.getBoundingClientRect().left);
   // Focus follows the card, never the anchor the step points at.
   expect(document.activeElement).toBe(card());
   expect(document.getElementById("write")).not.toBe(document.activeElement);
@@ -189,4 +189,26 @@ it("keeps long localized copy scrollable and keyboard actions reachable, then re
   await act(async () => userEvent.keyboard("{Enter}"));
   await expect.poll(() => card()).toBeNull();
   await expect.poll(() => document.activeElement).toBe(trigger);
+});
+
+it("keeps the highlight on physical anchor bounds in RTL", async () => {
+  await act(async () => root.render(<HjmProvider direction="rtl"><Fixture /></HjmProvider>));
+  await expect.poll(() => document.querySelector(".hjm-tour-highlight")).not.toBeNull();
+  const target = document.getElementById("list")!.getBoundingClientRect();
+  const highlight = document.querySelector(".hjm-tour-highlight")!.getBoundingClientRect();
+  expect(Math.abs(highlight.left - target.left)).toBeLessThanOrEqual(1);
+});
+
+it("refreshes a removed and replaced anchor without requiring the tour owner to rerender", async () => {
+  await act(async () => root.render(<Fixture />));
+  await expect.poll(() => document.querySelector(".hjm-tour-highlight")).not.toBeNull();
+  const target = document.getElementById("list")!;
+  const parent = target.parentElement!;
+  try {
+    await act(async () => target.remove());
+    await expect.poll(() => document.querySelector(".hjm-tour-highlight")).toBeNull();
+  } finally { await act(async () => parent.append(target)); }
+  await expect.poll(() => document.querySelector(".hjm-tour-highlight")).not.toBeNull();
+  await key("Escape");
+  expect(card()).toBeNull();
 });

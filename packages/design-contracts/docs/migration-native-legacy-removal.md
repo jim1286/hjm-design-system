@@ -1,6 +1,8 @@
-# 1.11 호환 API 제거와 소비 이관
+# Native 호환 API 제거와 소비 이관
 
-검토일: 2026-10-13 · 1.11 minor 소스 변경 · npm 게시와 소비 설치는 별도 확인
+검토일: 2026-10-13 · 잔여 시각 style 제거는 breaking 소스 변경 · npm 게시와 소비 설치는 별도 확인
+
+## 1.11 제거 이력
 
 사용자가 전체 소비 앱을 함께 버전업하므로 구형 호환 API도 제거하라고 요청했다.
 별칭과 deprecated 스타일 통로를 유지하는 대신 기존 canonical API로 이관한다.
@@ -46,35 +48,38 @@ renderer에 주입하는 이미지 스타일, 제품 소유 슬롯과 private re
 LoadMore의 내부 Button 조합은 비공개 RecipeButton을 써서 recipe의 크기·색·그림자를 보존한다.
 해당 구현을 패키지 entry에서 export하지 않는다.
 
-## 1.13 deprecated 시각 style (제거는 다음 major)
+## 2026-10-13 잔여 시각 style 제거
 
-2026-10-06 사용 지침 작성 중 위 표 밖의 Native 컴포넌트가 아직 raw `StyleProp` 시각 통로를
-받는 것을 확인했다. 1.11처럼 minor에서 지우거나 Button처럼 throw하면 1.x 소비 앱이 깨지므로
-이번 minor는 동작을 유지한 채 `@deprecated` JSDoc과 개발 모드 1회 `console.warn`
-(`internal/deprecated-style.ts`, 컴포넌트·prop마다 한 번, production 무음)만 단다. 없던 곳에는
-`layoutStyle`을 추가했다. 이 표의 잔존 API는 1.11에서 제거된 API와 구분한다. 현재 배치 규칙은
-[consumer-policy §3.1](consumer-policy.md#31-배치와-시각-값)을 따른다. 잔존 공개 API 삭제는
-소비 코드 이관·호환성 영향·대체 경로를 확인하는 별도 breaking 변경이다. 문서 정리는 API 삭제가 아니다.
+1.13에서는 2026-10-06에 발견한 잔여 raw `StyleProp` 통로의 동작을 유지하고 개발 모드에서
+한 번 경고했다. 이는 당시 minor 호환성 조치였다. 2026-10-13 레거시 제거 요구에 따라 아래
+공개 속성과 시각 style 병합을 소스에서 제거했다. 이전 1.11의 minor 예외를 재사용하지 않으며,
+이번 Native changeset은 **major**다. 패키지 버전 상승·npm 게시·소비 설치는 아직 수행하지 않았다.
 
-| 컴포넌트 | deprecated prop | 대체 |
+정식 배치는 [consumer-policy §3.1](consumer-policy.md#31-배치와-시각-값)을 따른다.
+제거 속성은 타입 오류다. JavaScript 호출도 더 이상 외형을 바꾸지 못하며, host로 나머지 props를
+전달하는 컴포넌트는 제거 속성을 명시적으로 거부한다. 그 외 컴포넌트의 미지정 속성 무시는
+호환 지원을 뜻하지 않는다. 일반 Link 아이콘·Dialog 오류 진단은 `internal/diagnostics.ts`로
+분리해 보존했다.
+
+| 컴포넌트 | 제거한 prop | 대체 |
 | --- | --- | --- |
 | IconButton, Link, BottomCTA, Agreement, Asset, AssetGroup, AuthProviderButton, BottomInfo, Carousel, Collapsible, Container, Section, Icon, Steps, Top, UploadItem | `style` | 배치는 `layoutStyle`, 외형은 각 recipe·semantic prop |
 | Heading | `style`(TextStyle) | `layoutStyle`, 크기·굵기는 `level` |
 | Badge, Tag | `style`, `labelStyle` | `layoutStyle`, `tone`/`size`/`variant` |
-| ListRow | `titleStyle`, `descriptionStyle` | `density`·`selected`, listRowRecipe typography |
+| ListRow | `titleStyle`, `descriptionStyle` | `density`·`selected`·`tone="danger"`, listRowRecipe typography |
 | Avatar | `style`, `imageStyle` | `layoutStyle`, `size`/`renderFallback` |
 | Divider, CounterBadge, List, Timeline | `style` | `layoutStyle`, 각 컴포넌트 축 |
 | Accordion | `style`, `itemStyle`, `triggerStyle`, `titleStyle`, `indicatorStyle`, `panelStyle` | `layoutStyle`, `density`/`renderIndicator` |
 | DescriptionList, StatisticGroup | `style`, `itemStyle` | `layoutStyle`, descriptor·`density` |
 | Statistic | `style`, `labelStyle`, `valueStyle`, `affixStyle`, `trendStyle`, `hintStyle` | `layoutStyle`, `density`/`presentation` |
 | Notice, Result, Spinner, Skeleton, Toast | `style` | `layoutStyle`, `tone`/`status`/`size`/`shape`·`width`·`height` |
-| EmptyState | `style`, `illustrationStyle`, `titleStyle`, `descriptionStyle`, `actionStyle` | `layoutStyle`, `density`/`align` |
+| EmptyState | `style`, `illustrationStyle`, `titleStyle`, `descriptionStyle`, `actionStyle` | `layoutStyle`, `density`/`align`. illustration은 최소 크기와 실제 콘텐츠 크기를 함께 존중 |
 | Progress | `style`, `labelStyle`, `valueStyle`, `trackStyle`, `indicatorStyle` | `layoutStyle`, `tone`/`size`/`shape` |
 | ToastRegion | `style`, `toastStyle` | `layoutStyle`, `placement`/`safeAreaInsets` |
-| AlertDialog, Sheet | `contentStyle`의 배치 밖 key | 배치 key만 사용. 다음 major에서 Dialog처럼 `HjmCompositionStyleProp`으로 좁힘(배치 key만 넘기면 경고 없음) |
+| AlertDialog, Sheet | `contentStyle`의 배치 밖 key | `HjmCompositionStyleProp` 배치 key만 사용. AlertDialog 크기는 `size="small" | "medium" | "large"` |
 | Tabs | `style`, `tabListStyle` / TabPanel `style` | `layoutStyle`, `size`/`layout`/`overflow`/`appearance` |
 | BottomNavigation | `style`, `surfaceStyle`, `listStyle`, `primaryActionStyle` | `layoutStyle`, `configuration` |
-| TopBar | `style`, `leadingStyle`, `titleStyle`, `trailingStyle` / TopBar action `style`, `labelStyle` | `layoutStyle`, `centered`/`labelVisibility` |
+| TopBar | `style`, `leadingStyle`, `titleStyle`, `trailingStyle` | `layoutStyle`, `centered`/`labelVisibility` |
 | Menu | `style` | `layoutStyle`, `density` |
 | Checkbox, Radio, CheckboxGroup, RadioGroup | `style`, `controlStyle`, `indicatorStyle`, `leadingStyle`, `contentStyle`, `labelStyle`, `descriptionStyle` | `layoutStyle`(행 또는 그룹), selection control recipe |
 | Switch, SegmentedControl, Form, Select, Combobox, TagsInput, ToggleGroup, DatePicker, FilePicker, TransferList | `style` | `layoutStyle`, 각 컴포넌트 `size`·descriptor |
@@ -86,9 +91,10 @@ LoadMore의 내부 Button 조합은 비공개 RecipeButton을 써서 recipe의 �
 
 제외(정식 host·renderer 스타일): KeyboardAvoiding·KeyboardDock(플랫폼 host), Image·ImageAdapter `style`(renderer 주입),
 EffectSurface·ThinkingOrb·SharedTransition(optional motion host frame), Text·Stack·AspectRatio·Grid·Layout(내부 조합 전반이
-쓰는 layout primitive라 경고하면 HJM 자신이 경고를 낸다. 내부 renderer 분리 후 별도 train에서 다룬다).
+쓰는 layout primitive). TopBar `renderAction`에 주입하는 action appearance의 `style`·`labelStyle`,
+Section 슬롯과 Chip leading/indicator/trailing의 정식 배치 속성도 보존한다.
 
-이관: 경고 문구의 prop을 찾아 margin·width·flex·alignSelf만 남긴 값은 `layoutStyle`로 옮기고, 색·글꼴·padding·
+이관: 위 표의 호출과 래퍼 전파를 찾아 margin·width·flex·alignSelf만 남긴 값은 `layoutStyle`로 옮기고, 색·글꼴·padding·
 높이·radius는 semantic prop으로 옮긴다. 표현할 축이 없으면 `.hjm-*`·style 우회 대신 계약 공백으로 올린다.
 
 ## 관리 소비 저장소
@@ -96,7 +102,12 @@ EffectSurface·ThinkingOrb·SharedTransition(optional motion host frame), Text·
 번뚝·다에리·비행중·모펀의 직접 호출과 제품 래퍼를 함께 이관한다. 스핀트·유틸버스·포트폴리오
 사이트·App Release Hub도 새 공개 타입으로 검사한다. 웹과 앱이 있는 제품은 양쪽을 확인한다.
 소스 검사, 새 패키지 설치/lock 갱신, 기기 검증, npm 게시·운영 배포는 별개의 단계다.
-로컬 후보 선언을 연결한 검사만으로 게시된 1.11 소비 설치를 주장하지 않는다.
+로컬 후보 선언을 연결한 검사만으로 게시된 패키지의 소비 설치를 주장하지 않는다.
+
+설치된 1.18.0에도 있는 `layoutStyle` 이관은 먼저 적용할 수 있다. 새 `ListRow.tone`과
+`AlertDialog.size`는 후보 패키지에만 있으므로 기존 1.18.0 선언을 캐스트로 우회하지 않는다.
+Utilverse 계정 탈퇴 행과 BurnTok 대화상자 크기 어댑터는 새 패키지 설치·타입검사와 함께
+이관해야 한다. 이 두 호출이 남아 있는 동안 해당 흐름의 로컬 소스 모드를 완료로 보고하지 않는다.
 
 ## Storybook
 

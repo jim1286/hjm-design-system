@@ -67,7 +67,7 @@ import { EmptyState } from "@hjmds/react-native/feedback";
 | `description` | Web `ReactNode` · Native `string` | — | — |
 | `action` | `ReactNode`(Button 하나) | — | 콜백은 Button의 `onClick`·`onPress`가 갖는다 |
 | Web `icon` · Native `illustration` | `ReactNode` | — | 장식, 접근성에서 숨김 |
-| `layoutStyle` | 배치 전용 style | — | 루트 배치. Native `style`·`illustrationStyle`·`titleStyle`·`descriptionStyle`·`actionStyle`은 deprecated |
+| `layoutStyle` | 배치 전용 style | — | 루트 배치. Native `style`·`illustrationStyle`·`titleStyle`·`descriptionStyle`·`actionStyle`은 제거된 속성 |
 
 EmptyState 자체에는 콜백 prop이 없다. 2026-10-07 기존 예제의 생성 버튼에 동작이 없음을 확인해
 양 기본 스토리를 예시 생성 → 검색 0건 → 검색어 지우기 → 목록 복구로 연결했다. 이 데이터는
@@ -77,7 +77,7 @@ EmptyState 자체에는 콜백 prop이 없다. 2026-10-07 기존 예제의 생�
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 그림 슬롯은 `glyph.lg`(28) 정사각형이다(Native `illustration` 상자 고정 크기). 세로 여백: `compact` `spacing.xl`(24). `regular` `spacing.xxxl`(40, 두 플랫폼) | `component-recipes.ts` `emptyStateRecipe`, `styles.css` `.hjm-empty-state` |
+| 크기 | Native 그림 슬롯은 최소 `glyph.lg`(28) 폭·높이를 확보하고 큰 일러스트의 자체 크기를 존중한다. Web 그림 슬롯에는 고정 크기가 없다. 세로 여백: `compact` `spacing.xl`(24). `regular` `spacing.xxxl`(40, 두 플랫폼) | `component-recipes.ts` `emptyStateRecipe`, `styles.css` `.hjm-empty-state` |
 | 간격 | 항목 사이 간격 `spacing.xs`(8), 좌우 여백 `spacing.xl`(24) | `component-recipes.ts` `emptyStateRecipe` |
 | 순서·정렬 | 위→아래 순서는 그림 → 제목 → 설명 → 행동이고 가운데 정렬이다. 행동은 Button 하나(`tone="secondary"` 또는 `primary`)를 내용 폭만큼 둔다 | `react-native/src/feedback.tsx` `EmptyState` |
 | 고정·스크롤 | 비어 있는 목록·검색 결과 영역 **안**에 둔다. 위 TopBar·검색칸·필터는 그대로 남기고 그 아래 내용 영역만 EmptyState로 바꾼다. Native `regular`는 남은 높이를 채우고(`flexGrow: 1`) 세로 가운데에 놓는다. `align="upper"`는 위:아래 빈 공간을 1:3으로 나눠 내용이 위쪽에 온다. 화면 하단 고정 행동이 필요하면 [BottomCTA](bottom-cta.md)로 따로 둔다 | `react-native/src/feedback.tsx` `EmptyState` |
@@ -107,16 +107,16 @@ EmptyState 자체에는 콜백 prop이 없다. 2026-10-07 기존 예제의 생�
 - 제목·설명·행동 문구는 i18n 키로 넣는다. "검색 0건"과 "아직 만든 것 없음"은 다른 문구로 구분한다.
 - 다음 행동이 있으면 `action`에 Button 하나를 둔다. 아이콘·일러스트는 장식이라 접근성에서 숨겨진다.
 - Native는 `title`·`description`·`accessibilityLabel` 중 하나는 있어야 한다. 모두 없으면 `TypeError`를 던진다.
-- 일러스트·아이콘 자산은 제품 소유다. 색은 recipe가 정하므로 슬롯 색을 덮지 않는다.
+- 일러스트·아이콘 자산과 자체 크기는 제품 소유다. 큰 그림은 `illustration` 노드 안에서 크기를 지정한다. EmptyState의 제목·설명 색은 recipe가 정하며 제거된 `illustrationStyle`로 프레임을 덮지 않는다.
 - 배치는 `layoutStyle`로 한다. Native 슬롯 style(`style`·`illustrationStyle`·`titleStyle`·`descriptionStyle`·`actionStyle`)은
-  deprecated(개발 모드 1회 경고, 다음 major 제거)다 — 배치는 `layoutStyle`, 외형은 `density`·`align`으로 옮긴다.
+  제거된 속성이다 — 배치는 `layoutStyle`, 외형은 `density`·`align`으로 옮긴다.
 
 ## 플랫폼 차이
 
 | 항목 | Web | Native |
 | --- | --- | --- |
-| 그림 슬롯 | `icon`(ReactNode) | `illustration`(ReactNode, 아이콘 크기 상자) |
+| 그림 슬롯 | `icon`(ReactNode) | `illustration`(ReactNode, 최소 아이콘 크기 + 콘텐츠 자체 크기) |
 | `title` | 필수, ReactNode | 선택, string |
 | `description` | ReactNode | string |
 | 정렬·알림 | 없음 | `align`, `announcement`, `accessibilityLabel`, `titleRole` |
-| 배치 | `layoutStyle`(그 밖에 `className`과 div 속성) | `layoutStyle`(슬롯 style 다섯 개는 deprecated) |
+| 배치 | `layoutStyle`(그 밖에 `className`과 div 속성) | `layoutStyle`(슬롯 style 다섯 개는 제거된 속성) |

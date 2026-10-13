@@ -97,6 +97,16 @@ export const Tour = forwardRef(function Tour<Id extends string = string>(
   const anchor = open ? resolveAnchor(step.anchorId) : null;
   anchorRef.current = anchor;
   const anchorRect = useAnchorRect(anchor, open);
+  const [, refreshAnchor] = useState(0);
+  useEffect(() => {
+    if (!open) return;
+    // Product children may mount independently of the tour owner; re-resolve identity after DOM replacement.
+    const observer = new MutationObserver(() => {
+      if (resolveAnchor(step.anchorId) !== anchorRef.current) refreshAnchor(value => value + 1);
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, [open, resolveAnchor, step.anchorId]);
 
   const change = useCallback((next: boolean, reason: TourOpenReason) => {
     if (openProp === undefined) setInternalOpen(next);
@@ -173,8 +183,9 @@ export const Tour = forwardRef(function Tour<Id extends string = string>(
               className="hjm-tour-highlight"
               aria-hidden="true"
               style={{
-                insetBlockStart: anchorRect.top,
-                insetInlineStart: anchorRect.left,
+                // DOMRect uses physical coordinates even when the provider direction is RTL.
+                top: anchorRect.top,
+                left: anchorRect.left,
                 inlineSize: anchorRect.width,
                 blockSize: anchorRect.height,
               } as CSSProperties}

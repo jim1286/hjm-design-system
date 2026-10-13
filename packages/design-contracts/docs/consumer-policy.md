@@ -27,6 +27,10 @@
 - 앱 runtime은 granular subpath를 우선하고 catalog·showcase·evidence entry는 CI나
   tooling에서만 사용해야 합니다(SHOULD).
 
+저장소의 `module.contract.json` 소비 목록은 호환성 검토 대상을 기록하며 설치·배포 완료를
+뜻하지 않는다. 2026-10-13 실제 package 의존성을 대조해 누락된 Utilverse와 App Release Hub를
+추가했다. Hub는 정책 사이트 생성에 colors/foundations만 사용하므로 renderer 이관과 구분한다.
+
 ## 2. 성숙도별 채택
 
 | 사용할 surface 상태 | 신규 앱 기본 정책 | 추가 조건 |
@@ -75,7 +79,7 @@ bridge를 복제하지 않는다. 구버전 소비자는 설치된 정책·profi
   앱에서 내부 selector나 제거된 `style`·`labelStyle` 별칭으로 덮지 않는다.
 - 플랫폼 host·제품 소유 슬롯·이미지 renderer의 정식 style은 제거된 별칭과 구분한다.
 - CSS 레이어와 기존 재정의의 이관은 [브랜드 경계](brand-boundary.md#3-css-재정의는-지원하는-테마-경로가-아니다)가 소유한다.
-- 제거된 API와 대체 prop은 [1.11 이관표](migration-native-legacy-removal.md)에 보존한다.
+- 제거된 API와 대체 prop은 [Native 호환 API 이관표](migration-native-legacy-removal.md)에 보존한다.
   종료된 제거 예정 조건이나 0.x 버전 규칙을 현재 소비 경로로 안내하지 않는다.
 
 권장 구조는 다음과 같습니다. 실제 폴더명은 stack 관습에 맞춰도 역할은 유지합니다.

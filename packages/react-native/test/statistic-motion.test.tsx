@@ -1,3 +1,14 @@
-import{act,create,type ReactTestRenderer}from'react-test-renderer';import{expect,it}from'vitest';import{AnimatedStatistic}from'../src/statistic-motion.js';import{Statistic}from'../src/data-display.js';import{HjmNativeProvider}from'../src/provider.js';import{startedAnimatedTimings}from'./react-native.mock.js';
+import{act,create,type ReactTestRenderer}from'react-test-renderer';import{expect,it,vi}from'vitest';import{Animated,AppState,type AppStateStatus}from'react-native';import{AnimatedStatistic}from'../src/statistic-motion.js';import{Statistic}from'../src/data-display.js';import{HjmNativeProvider}from'../src/provider.js';import{startedAnimatedTimings}from'./react-native.mock.js';
 (globalThis as {IS_REACT_ACT_ENVIRONMENT?:boolean}).IS_REACT_ACT_ENVIRONMENT=true;
 it('preserves Intl final values while reduced motion skips animation',()=>{let tree!:ReactTestRenderer;const render=(value:number,reducedMotion:boolean)=><HjmNativeProvider reducedMotion={reducedMotion}><AnimatedStatistic descriptor={{id:'weekly-records',label:'Total'}} value={value} locale="de-DE" format={{minimumFractionDigits:2}}/></HjmNativeProvider>;try{startedAnimatedTimings.splice(0);act(()=>{tree=create(render(1234.5,true));});expect(tree.root.findByType(Statistic).props.descriptor.value).toBe('1.234,50');act(()=>tree.update(render(42,true)));expect(startedAnimatedTimings).toHaveLength(0);act(()=>tree.update(render(43,false)));expect(startedAnimatedTimings.length).toBeGreaterThan(0);expect(tree.root.findByType(Statistic).props.descriptor.value).toBe('43,00');}finally{act(()=>tree.unmount());}});
+
+it('settles running native transitions in background and cleans rapid replacements and unmount',()=>{
+ let tree!:ReactTestRenderer;const listeners=new Set<(state:AppStateStatus)=>void>();const stops:ReturnType<typeof vi.fn>[]=[];
+ const sub=vi.spyOn(AppState,'addEventListener').mockImplementation((_event,listener)=>{listeners.add(listener);return{remove(){listeners.delete(listener);}};});
+ const timing=vi.spyOn(Animated,'timing').mockImplementation(()=>{const stop=vi.fn();stops.push(stop);return{start:vi.fn(),stop,reset:vi.fn()};});
+ const render=(value:number)=><HjmNativeProvider reducedMotion={false}><AnimatedStatistic descriptor={{id:'total',label:'Total'}} value={value} locale="en-US"/></HjmNativeProvider>;
+ try{AppState.currentState='active';act(()=>{tree=create(render(1));});act(()=>tree.update(render(2)));expect(stops).toHaveLength(1);act(()=>tree.update(render(3)));expect(stops[0]).toHaveBeenCalledOnce();expect(stops).toHaveLength(2);
+ AppState.currentState='background';act(()=>listeners.forEach(listener=>listener('background')));expect(stops[1]).toHaveBeenCalledOnce();act(()=>tree.update(render(4)));expect(stops).toHaveLength(2);expect(tree.root.findByType(Statistic).props.descriptor.value).toBe('4');
+ AppState.currentState='active';act(()=>listeners.forEach(listener=>listener('active')));act(()=>tree.update(render(5)));expect(stops).toHaveLength(3);act(()=>tree.unmount());expect(stops[2]).toHaveBeenCalledOnce();expect(listeners.size).toBe(0);
+ }finally{AppState.currentState='active';sub.mockRestore();timing.mockRestore();}
+});

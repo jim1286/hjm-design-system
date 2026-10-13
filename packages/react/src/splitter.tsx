@@ -10,6 +10,7 @@ import {
 } from "@hjmds/design-contracts/components/splitter";
 import {
   forwardRef,
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -122,6 +123,18 @@ export const Splitter = forwardRef<HTMLDivElement, SplitterProps>(function Split
   validateSplitterDescriptor(descriptor);
   const rootRef = useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = useState(false);
+  const drag = useRef<{ pointerId: number; target: HTMLDivElement } | null>(null);
+  const currentValue = useRef(value); currentValue.current = value;
+  const finishDrag = useCallback(() => {
+    const session = drag.current;
+    if (!session) return;
+    // Release can synchronously produce lostpointercapture; retire ownership first.
+    drag.current = null;
+    setDragging(false);
+    if (session.target.hasPointerCapture(session.pointerId)) session.target.releasePointerCapture(session.pointerId);
+    onValueChangeEnd?.(currentValue.current);
+  }, [onValueChangeEnd]);
+  useEffect(() => { if (disabled) finishDrag(); }, [disabled, finishDrag]);
 
   const commit = (next: number) => {
     if (next !== value) setValue(next);
@@ -152,24 +165,20 @@ export const Splitter = forwardRef<HTMLDivElement, SplitterProps>(function Split
     onValueChangeEnd?.(next);
   };
   const onPointerDown = (event: PointerEvent<HTMLDivElement>) => {
-    if (disabled || event.button !== 0) return;
+    if (disabled || event.button !== 0 || drag.current) return;
     event.preventDefault();
+    drag.current = { pointerId: event.pointerId, target: event.currentTarget };
     event.currentTarget.setPointerCapture(event.pointerId);
     setDragging(true);
   };
   const resize = (event: PointerEvent<HTMLDivElement>) => {
     const root = rootRef.current;
-    if (!dragging || !root) return;
+    if (disabled || drag.current?.pointerId !== event.pointerId || !root) return;
     const fraction = fractionFromPointer(root, axis, event.clientX, event.clientY);
     commit(resolveSplitterDragValue(descriptor, min + fraction * (max - min)));
   };
   const endDrag = (event: PointerEvent<HTMLDivElement>) => {
-    if (!dragging) return;
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
-    }
-    setDragging(false);
-    onValueChangeEnd?.(value);
+    if (drag.current?.pointerId === event.pointerId) finishDrag();
   };
 
   const [primaryScrollable, primaryPaneRef] = useScrollableTabStop();
@@ -202,6 +211,7 @@ export const Splitter = forwardRef<HTMLDivElement, SplitterProps>(function Split
         onPointerMove={resize}
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
+        onLostPointerCapture={endDrag}
       >
         <span className="hjm-splitter__handle" aria-hidden="true" />
       </div>

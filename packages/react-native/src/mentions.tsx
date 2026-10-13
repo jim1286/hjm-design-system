@@ -1,16 +1,16 @@
+import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import {
   findActiveMentionTrigger,
   resolveMentionInsertion,
   type MentionMatch,
   type MentionTriggerConfig,
 } from "@hjmds/design-contracts/components/mentions";
-import { spacing } from "@hjmds/design-contracts/foundations";
+import { control, spacing } from "@hjmds/design-contracts/foundations";
 import { comboboxRecipe } from "@hjmds/design-contracts/recipes";
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Pressable, View, type NativeSyntheticEvent, type StyleProp, type TextInputSelectionChangeEventData, type ViewStyle } from "react-native";
+import { Pressable, View, type NativeSyntheticEvent, type TextInputSelectionChangeEventData } from "react-native";
 import { TextArea, type TextAreaProps } from "./inputs.js";
 import { Text } from "./primitives.js";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 
 export type MentionCandidate = Readonly<{
@@ -36,13 +36,7 @@ export type MentionsProps<TriggerId extends string = string> =
     /** Localized accessible name for the candidate list. */
     listLabel: string;
     renderCandidate?: (candidate: MentionCandidate) => ReactNode;
-    /**
-     * @deprecated Raw list style bypasses the candidate list renderer; it has no replacement slot.
-     * Use the inherited `layoutStyle` for placement. Removed in the next major (consumer-policy.md §3.1).
-     */
-    listStyle?: StyleProp<ViewStyle>;
   }>;
-
 
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export function Mentions<TriggerId extends string = string>({
@@ -54,11 +48,11 @@ export function Mentions<TriggerId extends string = string>({
   emptyMessage,
   listLabel,
   renderCandidate,
-  listStyle,
   ...textAreaProps
 }: MentionsProps<TriggerId>) {
+  assertNoRemovedStyleProps("Mentions", textAreaProps, ["listStyle"]);
   const { colors, tokens } = useHjmNativeTheme();
-  warnDeprecatedStyleProps("Mentions", { listStyle }, "layoutStyle for placement; the candidate list owns its appearance");
+
   /*
     Native has no caret position on change — only `onSelectionChange` reports
     it. So the cursor is tracked separately and the contract's trigger search
@@ -66,7 +60,8 @@ export function Mentions<TriggerId extends string = string>({
     at the end of the text.
   */
   const [caret, setCaret] = useState(value.length);
-  const match = findActiveMentionTrigger(value, Math.min(caret, value.length), triggers);
+  const unavailable = textAreaProps.disabled || textAreaProps.readOnly || textAreaProps.editable === false || textAreaProps.busy;
+  const match = unavailable ? null : findActiveMentionTrigger(value, Math.min(caret, value.length), triggers);
   const matchKey = match === null ? null : `${String(match.triggerId)}:${match.query}:${match.triggerStart}`;
   const matchRef = useRef(match);
   matchRef.current = match;
@@ -102,8 +97,10 @@ export function Mentions<TriggerId extends string = string>({
           ...textAreaProps,
           value,
           onValueChange,
-          onSelectionChange: (event: NativeSyntheticEvent<TextInputSelectionChangeEventData>) =>
-            setCaret(event.nativeEvent.selection.end),
+          onSelectionChange: (event: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => {
+            setCaret(event.nativeEvent.selection.end);
+            textAreaProps.onSelectionChange?.(event);
+          },
         } as TextAreaProps)}
       />
       {match !== null ? (
@@ -112,7 +109,7 @@ export function Mentions<TriggerId extends string = string>({
           accessibilityRole="list"
           // Same popover surface as Combobox (mentions.ts): padding and radius from comboboxRecipe.popover, 8 and md.
           // Until 2026-10-06 the padding was 4 while the Web list and the recipe moved to 8.
-          style={[{ gap: spacing.xxs, borderWidth: comboboxRecipe.popover.borderWidth, borderColor: colors.border, borderRadius: tokens.radius[comboboxRecipe.popover.radius], padding: comboboxRecipe.popover.padding }, listStyle]}
+          style={[{ gap: spacing.xxs, borderWidth: comboboxRecipe.popover.borderWidth, borderColor: colors.border, borderRadius: tokens.radius[comboboxRecipe.popover.radius], padding: comboboxRecipe.popover.padding }]}
         >
           {candidates.length === 0 ? (
             <Text tone="muted" variant="caption">{emptyMessage}</Text>
@@ -123,7 +120,7 @@ export function Mentions<TriggerId extends string = string>({
                 accessibilityRole="button"
                 accessibilityLabel={candidate.label}
                 onPress={() => insert(candidate)}
-                style={{ minHeight: 44, justifyContent: "center", paddingHorizontal: spacing.xs }}
+                style={{ minHeight: control.minTouchTarget, justifyContent: "center", paddingHorizontal: spacing.xs }}
               >
                 {renderCandidate?.(candidate) ?? <Text
               fontRole="ui">{candidate.label}</Text>}

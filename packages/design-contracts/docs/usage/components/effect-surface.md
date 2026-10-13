@@ -62,7 +62,7 @@ import { EffectSurface } from "@hjmds/react-native/effect-surface";
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `descriptor.layers` | `mesh` · `glow` · `grain` · `noise` · `ruled` | `["mesh"]` | 서로 다른 1~4개. ruled는 1.15.0 이후 미게시 실험 |
+| `descriptor.layers` | `mesh` · `glow` · `grain` · `noise` · `ruled` | `["mesh"]` | 서로 다른 1~4개. ruled는 1.16.0 추가 실험 |
 | `descriptor.ruledSpacing` | 유한한 8~128 host units | `24` | ruled의 1unit 선 간격. 텍스트 baseline과 독립적이며 모션 밖 정적 레이어 |
 | `descriptor.intensity` | 0~1 | `0.22` | — |
 | `descriptor.period` | 2~120초 | `12` | — |

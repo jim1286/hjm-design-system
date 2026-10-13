@@ -1,17 +1,17 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { getSliderStepTarget, resolveSliderDescriptor, resolveSliderFillFraction, resolveSliderValueFromOffset, sliderRecipe, } from "@hjmds/design-contracts/components/slider";
 import { forwardRef, useEffect, useMemo, useRef, useState, } from "react";
 import { PanResponder, Text as NativeText, View, } from "react-native";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useControllableState } from "./internal/state.js";
 import { logicalTextAlign, resolveNativeFontStyle, resolveNativeTextScaleProps } from "./internal/styles.js";
 import { useHjmNativeTheme } from "./provider.js";
 /** Points of travel before a drag counts as horizontal or vertical intent. */
 const sliderIntentSlop = 6;
 /** Dependency-free horizontal Slider using the Native responder system. */
-export const Slider = forwardRef(function Slider({ label, min, max, step, value, defaultValue, onValueChange, onValueChangeEnd, decrementLabel, incrementLabel, getValueText, disabled = false, onFocus, onBlur, onLayout, containerStyle, controlStyle, layoutStyle, ...viewProps }, forwardedRef) {
+export const Slider = forwardRef(function Slider({ label, min, max, step, value, defaultValue, onValueChange, onValueChangeEnd, decrementLabel, incrementLabel, getValueText, disabled = false, onFocus, onBlur, onLayout, layoutStyle, ...viewProps }, forwardedRef) {
+    assertNoRemovedStyleProps("Slider", viewProps, ["containerStyle", "controlStyle"]);
     const { colors, environment, textScaling, tokens } = useHjmNativeTheme();
-    warnDeprecatedStyleProps("Slider", { containerStyle, controlStyle }, "layoutStyle for placement; sliderRecipe owns the track and thumb");
     const [currentValue, setCurrentValue] = useControllableState({
         ...(value === undefined ? {} : { value }),
         defaultValue: defaultValue ?? min,
@@ -181,7 +181,6 @@ export const Slider = forwardRef(function Slider({ label, min, max, step, value,
                 gap: sliderRecipe.header.trackGap,
                 opacity: disabled ? sliderRecipe.states.disabledOpacity : 1,
             },
-            containerStyle,
             layoutStyle,
         ], children: [_jsxs(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
                     alignItems: "baseline",
@@ -209,7 +208,6 @@ export const Slider = forwardRef(function Slider({ label, min, max, step, value,
                         minHeight: recipe.hitTarget,
                         minWidth: recipe.hitTarget,
                     },
-                    controlStyle,
                 ], children: [_jsx(View, { pointerEvents: "none", style: {
                             backgroundColor: colors.surfaceAlt,
                             borderColor: colors.textMuted,

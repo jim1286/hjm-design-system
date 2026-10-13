@@ -247,3 +247,29 @@ it("renders the close button only with closeLabel and closes with the close-acti
   expect(palette()).toBeNull();
   expect(onOpenChange.mock.calls).toEqual([[false, "close-action"]]);
 });
+
+
+it("does not activate commands while confirming an IME composition", async () => {
+  const onActivate = vi.fn();
+  await act(async () => root.render(<Fixture onActivate={onActivate} />));
+  for (const init of [{ isComposing: true }, { keyCode: 229 }]) {
+    await act(async () => search().dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true, cancelable: true, ...init })));
+    expect(onActivate).not.toHaveBeenCalled();
+    expect(palette()).not.toBeNull();
+  }
+});
+
+it("waits for controlled dismissal before opening a follow-up surface", async () => {
+  const onAfter = vi.fn();
+  const renderPalette = (open: boolean) => <HjmProvider reducedMotion><CommandPalette
+    open={open} onOpenChange={() => {}} descriptor={{ accessibilityLabel: "명령", searchPlaceholder: "검색" }}
+    source={{ items: commands }} query="" onQueryChange={() => {}} onActivate={() => {}}
+    onActivateAfterDismiss={onAfter} /></HjmProvider>;
+  await act(async () => root.render(renderPalette(true)));
+  await key("Enter");
+  expect(palette()).not.toBeNull();
+  expect(onAfter).not.toHaveBeenCalled();
+  await act(async () => root.render(renderPalette(false)));
+  expect(palette()).toBeNull();
+  expect(onAfter).toHaveBeenCalledExactlyOnceWith("write", "keyboard");
+});

@@ -77,9 +77,7 @@ export function PixelEmptyState() {
   const [paused, setPaused] = useState(false);
   const [started, setStarted] = useState(false);
   return <Frame><Stack gap="md">
-    {/* Native EmptyState는 일러스트 칸을 아이콘 크기(glyph.lg)로 고정한다. 캐릭터가 제목 위로 넘쳐
-        (2026-10-02 시뮬레이터 확인) 공개 illustrationStyle로 칸을 캐릭터 크기에 맞춘다. */}
-    <EmptyState illustration={<PixelSprite paused={paused} />} illustrationStyle={{ height: pixelSize, width: pixelSize }} title={pixelCopy.title} description={pixelCopy.description}
+    <EmptyState illustration={<PixelSprite paused={paused} />} title={pixelCopy.title} description={pixelCopy.description}
       action={<Button onPress={() => setStarted(true)}>{pixelCopy.start}</Button>} />
     {/* 5초 넘게 반복되는 움직임은 멈출 수 있어야 한다(WCAG 2.2.2). */}
     <Button tone="ghost" onPress={() => setPaused(value => !value)}>{paused ? pixelCopy.resume : pixelCopy.pause}</Button>

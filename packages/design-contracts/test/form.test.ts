@@ -229,3 +229,24 @@ describe("Form behavior wiring reference", () => {
     );
   });
 });
+
+it("allows a subscriber to dispose before the submission handler starts", async () => {
+  const onSubmit = vi.fn();
+  const session = createFormSubmitSession({ onSubmit, fallbackErrorMessage: "Failed" });
+  session.subscribe(() => { if (session.getSnapshot().status === "submitting") session.dispose(); });
+  await expect(session.submit({})).resolves.toEqual({ outcome: "interrupted" });
+  expect(onSubmit).not.toHaveBeenCalled();
+});
+
+it("preserves cancellation of a retry started by a completion subscriber", async () => {
+  const gate = deferred<void>();
+  const onSubmit = vi.fn().mockResolvedValueOnce(undefined).mockReturnValueOnce(gate.promise);
+  const session = createFormSubmitSession({ onSubmit, fallbackErrorMessage: "Failed" });
+  let retry: Promise<FormSubmitOutcome> | undefined;
+  session.subscribe(() => { if (session.getSnapshot().status === "succeeded") retry = session.submit({}); });
+  await expect(session.submit({})).resolves.toEqual({ outcome: "succeeded" });
+  expect(onSubmit).toHaveBeenCalledTimes(2);
+  session.dispose();
+  await expect(retry).resolves.toEqual({ outcome: "interrupted" });
+  gate.resolve();
+});

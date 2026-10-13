@@ -30,7 +30,7 @@
 | `Text` | 진행·결과·실패 문구 | [Text](../components/text.md) |
 
 스토리의 "느린 응답으로 검색"(900ms)·"빠른 응답으로 검색"(150ms) 두 버튼은 역순 응답을 재현하는 데모다. 제품은 검색 버튼 하나(또는 입력 중 검색)로 둔다.
-`다음 검색 실패시키기`는 실패 경로를 여는 데모 도구다. 스토리는 기본·어두운 테마·큰 글자, `검색 중`, `실패와 다시 검색`, 제품 팔레트 두 가지(`보라 테마`, `초록 테마 · 어둡게`)다.
+`다음 검색 실패시키기`는 실패 경로를 여는 데모 도구다. 스토리는 기본·어두운 테마, `검색 중`, `실패와 다시 검색`, 제품 팔레트 두 가지(`보라 테마`, `초록 테마 · 어둡게`)다.
 2026-10-06 같은 SearchField 진행 상태와 팔레트를 보이던 `입력과 작성/검색 입력`을 이 항목으로 합쳤다([옛 링크](../../../../../docs/STORYBOOK_NAVIGATION.md#실험-정리와-합친-항목-2026-10-06)).
 검색 입력 칸·결과 목록이 필요한 화면이면 [SearchField](../components/search-field.md)·[List](../components/list.md)에 같은 세대 규칙을 연결한다.
 
@@ -123,6 +123,7 @@ const message = state.status === "pending" || state.status === "error" ? t(searc
 
 ```tsx
 // Native
+import { StatusText } from "@hjmds/react-native/status-text";
 import { ScrollView, useWindowDimensions } from "react-native";
 import { Button } from "@hjmds/react-native/actions";
 import { Heading } from "@hjmds/react-native/heading";
@@ -150,7 +151,7 @@ const gutter = resolveWindowClass(useWindowDimensions().width) === "compact" ? "
 </ScrollView>
 ```
 
-`api.search`·`renderResult`·`Result`·문구 키는 제품 소유다. `StatusText`는 [저장과 재시도의 공통 절](action-recovery-save.md#공통-세션과-상태-알림)의 Native 상태 알림 helper다.
+`api.search`·`renderResult`·`Result`·문구 키는 제품 소유다. `StatusText`는 [저장과 재시도의 공통 절](action-recovery-save.md#공통-세션과-상태-알림)에서 사용하는 공개 Text companion이다.
 세션·`search`·`message`는 Web과 같다. 네트워크 요청을 실제로 끊어야 하면 제품이 `AbortController` 등을 따로 쓴다.
 
 ## 플랫폼 차이
@@ -169,3 +170,5 @@ const gutter = resolveWindowClass(useWindowDimensions().width) === "compact" ? "
 - 구획 제목은 Heading으로 표시한다. 이전 Text heading 예제는 2026-10-06 제목 의미 구조를 맞추면서 수정했다.
 - 진행 표시를 결과 영역에 따로 두지 않는다. SearchField의 진행 표시와 상태 문구 하나면 된다(흡수한 `검색 입력` 예제의 규칙).
 - 실패와 결과 없음은 다른 상태다. 실패는 `다시 검색`(`session.retry()`), 결과 없음은 검색어를 바꾸는 경로를 준다.
+
+2026-10-13 실패 예약은 다음 요청이 **시작할 때** 그 요청에 귀속한다. 이미 진행 중인 응답이 이후에 켠 예약을 소비하지 않으며, 오래된 실패도 최신 성공을 덮지 않는다. 재시도는 기존 계약대로 실패한 제출 검색어를 다시 요청하고 작성 중인 검색어는 보존한다. 재시도 버튼이 사라질 때 입력 ref로 초점을 돌린다. unmount에서는 로컬 데모 지연 타이머를 정리하고 분리된 작업을 종료하지만 실제 네트워크 취소를 구현한 것은 아니다.

@@ -945,6 +945,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-list-row__leading[data-shape="circle"] { border-radius: var(--hjm-radius-full); }
 .hjm-list-row__content { flex: 1 1 auto; min-inline-size: 0; display: grid; gap: var(--hjm-space-xxs); }
 .hjm-list-row__title { color: var(--hjm-color-text-body); font-weight: var(--hjm-font-weight-bold); overflow-wrap: anywhere; }
+.hjm-list-row[data-tone="danger"] .hjm-list-row__title { color: var(--hjm-color-danger); }
 .hjm-list-row__description, .hjm-list-row__trailing { color: var(--hjm-color-text-muted); overflow-wrap: anywhere; }
 
 .hjm-section { display: grid; gap: var(--hjm-space-xs); min-inline-size: 0; overflow-wrap: anywhere; }
@@ -1102,15 +1103,13 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   background: var(--hjm-color-surface-alt);
 }
 .hjm-list-row--loading .hjm-list-row__title[data-placeholder] {
-  inline-size: 60%;
   block-size: var(--hjm-type-body-large-line-height);
 }
 .hjm-list-row--loading .hjm-list-row__description[data-placeholder] {
-  inline-size: 40%;
   block-size: var(--hjm-type-body-line-height);
 }
 .hjm-list-row--loading .hjm-list-row__leading[data-placeholder] { background: var(--hjm-color-surface-alt); }
-.hjm-list-row--loading .hjm-list-row__trailing[data-placeholder] { inline-size: var(--hjm-space-xxl); }
+.hjm-list-row--loading .hjm-list-row__trailing[data-placeholder] { block-size: var(--hjm-type-caption-line-height); }
 .hjm-spinner { display: inline-flex; align-items: center; justify-content: center; color: var(--hjm-color-content-brand); }
 .hjm-spinner[data-tone="neutral"] { color: var(--hjm-color-text-muted); }
 .hjm-spinner[data-tone="inverse"] { color: var(--hjm-color-on-primary); }
@@ -1317,7 +1316,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-transfer-list__option:focus-visible,
 .hjm-transfer-list__empty:focus-visible,
 .hjm-transfer-list__select-all:focus-visible { outline: 2px solid var(--hjm-color-focus); outline-offset: -2px; }
-.hjm-transfer-list__empty { margin: 0; padding: var(--hjm-space-md) var(--hjm-space-sm); color: var(--hjm-color-text-muted); }
+.hjm-transfer-list__empty { margin: 0; padding: var(--hjm-space-md) var(--hjm-space-sm); color: var(--hjm-color-text-muted); text-align: center; }
 .hjm-transfer-list__actions { display: flex; flex-direction: column; gap: var(--hjm-space-sm); /* transferListRecipe.moveControls.gap sm 12, as Native */ padding-block-start: var(--hjm-space-xl); }
 
 /* AuthProviderButton ------------------------------------------------------ */
@@ -2536,6 +2535,11 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
    1.10.0 layout: [tone badge][title + description][close] / action pill on its own row, end-aligned.
    The 2px tone strip is retired — the tinted badge carries tone (toastRecipe.toneMark width 0). */
 .hjm-toast { position: relative; min-inline-size: 0; min-block-size: 3.5rem; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; column-gap: var(--hjm-space-sm); row-gap: var(--hjm-space-xs); padding: var(--hjm-space-sm) var(--hjm-space-xs) var(--hjm-space-sm) var(--hjm-space-md); overflow: hidden; border: var(--hjm-toast-border-width) solid var(--hjm-toast-border); border-radius: var(--hjm-toast-radius); color: var(--hjm-color-text); background: var(--hjm-toast-background); box-shadow: var(--hjm-toast-shadow); pointer-events: auto; }
+/* Whole-card activation is a sibling surface; explicit controls stay above it. */
+.hjm-toast__press { position: absolute; inset: 0; z-index: 1; border: 0; border-radius: inherit; padding: 0; background: transparent; cursor: pointer; }
+.hjm-toast__press:focus-visible { outline: 2px solid var(--hjm-color-content-brand); outline-offset: -2px; }
+.hjm-toast:has(> .hjm-toast__press:active) { opacity: var(--hjm-toast-pressed-opacity); }
+.hjm-toast:has(> .hjm-toast__press) > :is(.hjm-toast__action, .hjm-toast__close) { position: relative; z-index: 2; }
 .hjm-toast__tone-mark { display: none; }
 .hjm-toast__icon { grid-column: 1; grid-row: 1; align-self: start; display: grid; place-items: center; inline-size: var(--hjm-toast-badge-size); block-size: var(--hjm-toast-badge-size); border-radius: 50%; color: var(--hjm-toast-accent-neutral); background: var(--hjm-toast-badge-neutral); }
 .hjm-toast[data-tone="info"] .hjm-toast__icon { color: var(--hjm-toast-accent-info); background: var(--hjm-toast-badge-info); }
@@ -3017,3 +3021,9 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-card[data-interactive="true"] { font: inherit; color: inherit; text-align: inherit; cursor: pointer; min-inline-size: var(--hjm-control-min-touch-target); min-block-size: var(--hjm-control-min-touch-target); }
 .hjm-card[data-interactive="true"]:active:not(:disabled) { opacity: var(--hjm-card-pressed-opacity); }
 .hjm-card[data-interactive="true"]:disabled { opacity: var(--hjm-card-disabled-opacity); cursor: default; }
+
+/* Full destination cards keep all names and widths stable; colors remain product semantic roles. */
+.hjm-bottom-navigation[data-selection="tile"] .hjm-bottom-navigation__surface { background: var(--hjm-color-surface-accent); }
+.hjm-bottom-navigation[data-selection="tile"] .hjm-bottom-navigation__list { padding: var(--hjm-space-xxs); gap: var(--hjm-space-xxs); }
+.hjm-bottom-navigation[data-selection="tile"] .hjm-bottom-navigation__item[data-state="selected"] { background: var(--hjm-color-primary); color: var(--hjm-color-on-primary); }
+.hjm-bottom-navigation[data-selection="tile"] .hjm-bottom-navigation__item:not([data-state="selected"]):active { background: var(--hjm-bottom-navigation-pressed-background); }

@@ -78,7 +78,7 @@ import { Section } from "@hjmds/react-native/primitives";
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 자체 배경·테두리·여백이 없다. 폭은 부모를 따른다 | `.hjm-section` |
-| 글자 | 제목 `title` 18/26 bold, 설명 `caption` 11/16(두 플랫폼). 2026-10-06까지 Web은 둘 다 본문 14를 물려받았다(1.12.1 이후 미게시) | `sectionRecipe.title`·`description`, `.hjm-section__title`·`__description` |
+| 글자 | 제목 `title` 18/26 bold, 설명 `caption` 11/16(두 플랫폼). 2026-10-06까지 Web은 둘 다 본문 14를 물려받았다(1.13.0 변경) | `sectionRecipe.title`·`description`, `.hjm-section__title`·`__description` |
 | 간격 | 머리와 본문 사이 `spacing.xs` 8, 글자 묶음과 행동 사이 `spacing.sm` 12, 제목과 설명 사이 `spacing.xxs` 4. Section끼리의 간격은 Section이 주지 않는다. 감싸는 [Stack](stack.md)이나 `layoutStyle`로 `layout.sectionGap`(`spacing.xl` 24)을 둔다 | `sectionRecipe.gap`·`headerGap`·`copyGap`, `layout.sectionGap` |
 | 순서·정렬 | 머리 행동은 끝(LTR 오른쪽)에 하나, 글자 묶음과 세로 가운데 정렬. 보통 [Link](link.md) 또는 `tone="link"` [Button](button.md) | `.hjm-section__header`, Native `Section` |
 | 고정·스크롤 | 고정되지 않는다. 화면 본문 스크롤 안에 둔다 | — |
@@ -98,7 +98,7 @@ import { Section } from "@hjmds/react-native/primitives";
 
 - 제목·설명은 i18n 문구로 넣는다. Native는 `string`만 받는다.
 - 배치는 `layoutStyle`로 한다. Native slot 배치는 `headerStyle`·`copyStyle`·`actionStyle`·`contentStyle`(모두 배치 전용 타입)이다.
-  Native `style`은 deprecated(개발 모드 경고, 다음 major 제거)다.
+  Native `style`은 제거된 속성이다.
 - 머리 행동은 하나로 둔다. 여러 행동은 본문 안이나 [Menu](menu.md)로 옮긴다.
 
 ## 플랫폼 차이
@@ -108,4 +108,4 @@ import { Section } from "@hjmds/react-native/primitives";
 | `title`·`description` 타입 | `ReactNode` | `string` |
 | heading 수준 | `headingLevel` | 없음(header role 고정) |
 | 루트 | `<section>` | `View` |
-| 배치 | `className`, `layoutStyle`(HTML `style`도 받음) | `layoutStyle`, slot `*Style`(`style`은 deprecated) |
+| 배치 | `className`, `layoutStyle`(HTML `style`도 받음) | `layoutStyle`, slot `*Style`(`style`은 제거된 속성) |

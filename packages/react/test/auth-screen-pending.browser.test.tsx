@@ -50,3 +50,21 @@ it("hides all actions, preserves the card bounds and centres one loader until au
     expect(card.getBoundingClientRect().toJSON()).toEqual(before.toJSON());
   } finally { await act(() => root.unmount()); host.remove(); }
 });
+it.each([false, true])("restores authentication focus without stealing an outside focus (%s)", async outside => {
+  const host = document.createElement("div"); document.body.append(host);
+  const root = createRoot(host);
+  const render = (pending: boolean) => act(async () => root.render(<AuthScreenLayout
+    {...(pending ? {pendingLabel: "Signing in"} : {})} hero={<h1>Sign in</h1>}
+    main={<button>Continue with provider</button>} footer={<a href="#privacy">Privacy</a>}/>));
+  try {
+    await render(false);
+    const provider = host.querySelector<HTMLButtonElement>("button")!;
+    const privacy = host.querySelector<HTMLAnchorElement>("a")!;
+    provider.focus();
+    await render(true);
+    await expect.poll(() => document.activeElement).toBe(document.body);
+    if (outside) privacy.focus();
+    await render(false);
+    expect(document.activeElement).toBe(outside ? privacy : provider);
+  } finally { await act(async () => root.unmount()); host.remove(); }
+});

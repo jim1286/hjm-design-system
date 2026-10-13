@@ -95,7 +95,7 @@ import { Notice } from "@hjmds/react-native/feedback";
 ## 꼭 지킬 것
 
 - 제목·설명·행동 문구는 i18n 키로 넣는다. 아이콘은 제품 소유 자산이고 색은 tone이 정한다.
-- 배치는 `layoutStyle`로만 한다. 색·padding·radius를 `style`/`className`으로 덮지 않는다. Native `style`은 deprecated(개발 모드 경고, 다음 major 제거)다.
+- 배치는 `layoutStyle`로만 한다. 색·padding·radius를 `style`/`className`으로 덮지 않는다. Native `style`은 제거된 속성이다.
 - 같은 화면에 같은 내용의 Notice와 Toast를 동시에 띄우지 않는다.
 
 ## 플랫폼 차이
@@ -105,7 +105,7 @@ import { Notice } from "@hjmds/react-native/feedback";
 | 발표 | 항상 live region. `danger`는 `role="alert"`+assertive, 나머지는 `role="status"`+polite | `announcement`: `none`(기본) · `polite` · `assertive`. 지정해야 발표한다 |
 | title/description 타입 | `ReactNode` | `string` |
 | 아이콘 렌더 함수 | 없음 | `renderIcon` |
-| 배치 | `className`, `layoutStyle`(HTML `style`도 받음) | `layoutStyle`(`style`은 deprecated) |
+| 배치 | `className`, `layoutStyle`(HTML `style`도 받음) | `layoutStyle`(`style`은 제거된 속성) |
 
 ## 함정
 

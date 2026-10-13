@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, forwardRef, type HTMLAttributes, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import {
   resolveCarouselDescriptor, getCarouselNavigationTarget, isCarouselAutoplayActive,
   type CarouselSlideDescriptor, type CarouselSelection, type CarouselAutoplayConfig,
@@ -6,7 +6,7 @@ import {
 } from "@hjmds/design-contracts/components/carousel";
 import { Button } from "./actions.js";
 import { isLargeTextScale } from "@hjmds/design-contracts/components/design-system-provider";
-import { classNames, useControllableState } from "./internal.js";
+import { assignRef, classNames, useControllableState } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
@@ -29,11 +29,28 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
   onFocusCapture, onMouseEnter, onMouseLeave, onKeyDown, layoutStyle, ...props
 }, ref) {
   const theme = useOptionalHjmTheme();
-  const [current, setCurrent] = useControllableState({
+  const [storedCurrent, setCurrent] = useControllableState({
     ...(currentKey === undefined ? {} : { value: currentKey }),
     defaultValue: defaultCurrentKey ?? slides[0]?.id ?? "",
     ...(onCurrentKeyChange === undefined ? {} : { onChange: onCurrentKeyChange }),
   });
+  const previousIndex = useRef<number | null>(null);
+  const host = useRef<HTMLDivElement | null>(null);
+  const lastFocused = useRef<HTMLElement | null>(null);
+  // A host can delete the current uncontrolled slide after mount. Keep its place
+  // in the collection (or the new last slide); explicit invalid keys still fail validation.
+  const recovering = currentKey === undefined && previousIndex.current !== null && !slides.some(slide => slide.id === storedCurrent);
+  const current = recovering ? slides[Math.min(previousIndex.current!, slides.length - 1)]?.id ?? storedCurrent : storedCurrent;
+  useLayoutEffect(() => {
+    previousIndex.current = slides.findIndex(slide => slide.id === current);
+    if (recovering) {
+      setCurrent(current);
+      // A removed dot/card can strand focus on body; retained controls keep their focus.
+      if (lastFocused.current && !lastFocused.current.isConnected && document.activeElement === document.body) {
+        host.current?.querySelector<HTMLButtonElement>('.hjm-carousel__dot[data-current="true"]')?.focus();
+      }
+    }
+  }, [current, recovering, slides, setCurrent]);
   const descriptor = { slides, currentKey: current, ...(autoplay ? { autoplay } : {}) };
   const resolved = resolveCarouselDescriptor(descriptor, { composeAccessibleName });
   if (!label.trim() || Object.values(labels).some((value) => !value.trim())) throw new TypeError("Carousel labels must not be empty");
@@ -59,9 +76,10 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
   function select(key: string) { setRotating(false); if (key !== current) setCurrent(key); }
   function move(intent: "next" | "previous") { select(getCarouselNavigationTarget(descriptor, intent)); }
   const rotationRequested = rotating && !last && !theme?.environment.reducedMotion;
-  return <div {...props} style={{ ...props.style, ...layoutStyle }} ref={ref} role="region" aria-label={label} aria-roledescription="carousel"
+  return <div {...props} style={{ ...props.style, ...layoutStyle }} ref={node => { host.current = node; assignRef(ref, node); }} role="region" aria-label={label} aria-roledescription="carousel"
     className={classNames("hjm-carousel", className)} data-large-text={isLargeTextScale(theme?.environment.textScale ?? 1)}
     onFocusCapture={(event) => {
+      lastFocused.current = event.target instanceof HTMLElement ? event.target : null;
       // APG: leaving focus must not silently restart rotation. Explicit resume is required.
       if (!event.currentTarget.contains(event.relatedTarget)) setRotating(false);
       onFocusCapture?.(event);

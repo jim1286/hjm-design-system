@@ -98,7 +98,7 @@ import {
   type ViewStyle,
 } from "react-native";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
+import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { RecipeButton } from "./internal/recipe-button.js";
 import { isWebRenderer, webOnly, webTabProps } from "./internal/web-a11y.js";
 
@@ -167,17 +167,7 @@ type TabsBaseProps<Value extends string> = Readonly<{
   children?: (selectedValue: Value) => ReactNode;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement; `tabsRecipe` (`size`/`layout`/`appearance`) owns appearance. Removed in the next major
-   * (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` on Tabs for placement; `layout`/`overflow` own the tab list. Removed in the next major
-   * (consumer-policy.md §3.1).
-   */
-  tabListStyle?: StyleProp<ViewStyle>;
-}>;
+    }>;
 
 type TabsCollectionProps<Value extends string> = Readonly<{ items: readonly TabItem<Value>[] }>;
 
@@ -213,12 +203,7 @@ type ExternalTabPanelBaseProps = Readonly<{
   children: ReactNode;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement; panel content owns its own surface. Removed in the next major
-   * (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
-}>;
+  }>;
 
 export type TabPanelProps = ExternalTabPanelBaseProps &
   (
@@ -236,8 +221,8 @@ export type TabPanelProps = ExternalTabPanelBaseProps &
 
 /** External panel host for products that keep routing, query, or list state outside Tabs. */
 export function TabPanel(props: TabPanelProps) {
-  const { tabsId, activeValue, label, children, layoutStyle, style } = props;
-  warnDeprecatedStyleProps("TabPanel", { style }, "layoutStyle for placement");
+  const { tabsId, activeValue, label, children, layoutStyle } = props;
+  assertNoRemovedStyleProps("TabPanel", props, ["style"]);
   const dynamic = props.mode === "dynamic";
   const value = dynamic ? activeValue : props.value;
   const selected = value === activeValue;
@@ -260,7 +245,7 @@ export function TabPanel(props: TabPanelProps) {
       importantForAccessibility={selected ? "auto" : "no-hide-descendants"}
       pointerEvents={selected ? "auto" : "none"}
       role="tabpanel"
-      style={[style, layoutStyle, selected ? null : { display: "none" }]}
+      style={[layoutStyle, selected ? null : { display: "none" }]}
     >
       {children}
     </View>
@@ -290,10 +275,8 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
     renderPanels = true,
     children,
     layoutStyle,
-    style,
-    tabListStyle,
   } = props;
-  warnDeprecatedStyleProps("Tabs", { style, tabListStyle }, "layoutStyle for placement and size/layout/overflow/appearance for the tab list");
+  assertNoRemovedStyleProps("Tabs", props, ["style", "tabListStyle"]);
   if (!label.trim()) throw new TypeError("Tabs label must not be empty");
   if (panelMode === "dynamic" && mountPolicy !== "active") {
     throw new TypeError("Tabs dynamic panelMode requires active mountPolicy");
@@ -439,7 +422,6 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
           flexDirection: orientation === "vertical" ? "row" : "column",
           gap: spacing.md,
         },
-        style,
         layoutStyle,
       ]}
     >
@@ -454,7 +436,6 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
         scrollEnabled={scrollable && !fitted}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        style={tabListStyle}
         contentContainerStyle={[
           {
             borderBottomColor: orientation === "horizontal"
@@ -526,16 +507,19 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
               }))}
               disabled={item.disabled}
               onAccessibilityAction={(event) => {
+                if (item.disabled) return;
                 const action = event.nativeEvent.actionName;
                 if (action === "activate") setSelected(item.id);
                 else if (action === "increment") moveFocus(item.id, "next");
                 else if (action === "decrement") moveFocus(item.id, "previous");
               }}
               onFocus={() => {
+                if (item.disabled) return;
                 setFocusValue(item.id);
                 if (activationMode === "automatic") setSelected(item.id);
               }}
               onPress={() => {
+                if (item.disabled) return;
                 setFocusValue(item.id);
                 setSelected(item.id);
               }}
@@ -712,27 +696,7 @@ export type BottomNavigationProps<
   safeAreaBottom?: number;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement; `configuration` (presentation/density/distribution) owns appearance. Removed in the next major
-   * (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `configuration.presentation`/`density`. Removed in the next major
-   * (consumer-policy.md §3.1).
-   */
-  surfaceStyle?: StyleProp<ViewStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `configuration.distribution`. Removed in the next major
-   * (consumer-policy.md §3.1).
-   */
-  listStyle?: StyleProp<ViewStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `configuration.distribution: "center-gap"`. Removed in the next major
-   * (consumer-policy.md §3.1).
-   */
-  primaryActionStyle?: StyleProp<ViewStyle>;
-}>;
+        }>;
 
 function useBottomNavigationKeyboardVisible(): boolean {
   const [visible, setVisible] = useState(() => Keyboard.isVisible());
@@ -762,16 +726,9 @@ export function BottomNavigation<
   configuration = {},
   safeAreaBottom = 0,
   layoutStyle,
-  style,
-  surfaceStyle,
-  listStyle,
-  primaryActionStyle,
+  ...removedProps
 }: BottomNavigationProps<Key, IconName>) {
-  warnDeprecatedStyleProps(
-    "BottomNavigation",
-    { style, surfaceStyle, listStyle, primaryActionStyle },
-    "layoutStyle for placement and configuration (presentation/density/distribution) for appearance",
-  );
+  assertNoRemovedStyleProps("BottomNavigation", removedProps, ["style", "surfaceStyle", "listStyle", "primaryActionStyle"]);
   const resolved = resolveBottomNavigationDescriptor(descriptor);
   if (!Number.isFinite(safeAreaBottom) || safeAreaBottom < 0) {
     throw new RangeError("BottomNavigation safeAreaBottom must be non-negative");
@@ -785,6 +742,8 @@ export function BottomNavigation<
     resolved.items.length,
   );
   const capsule = presentation.presentation === "capsule";
+  const tile = presentation.selection === "tile";
+  const tileRecipe = bottomNavigationRecipe.selectionTile;
   // Hidden labels keep the item's accessibilityLabel; only the visible Text row is dropped.
   const labelsVisible = presentation.labels === "visible";
   const expandedLabels = theme.environment.textScale >= 1.5 || resolved.items.length > 4;
@@ -808,11 +767,11 @@ export function BottomNavigation<
     theme.palette,
   );
   const selectedIconColor = resolveColorReference(
-    bottomNavigationRecipe.colors.selectedIcon,
+    tile ? tileRecipe.selectedContent : bottomNavigationRecipe.colors.selectedIcon,
     theme.palette,
   );
   const selectedLabelColor = resolveColorReference(
-    bottomNavigationRecipe.colors.selectedLabel,
+    tile ? tileRecipe.selectedContent : bottomNavigationRecipe.colors.selectedLabel,
     theme.palette,
   );
   const pressedBackground = resolveColorReference(
@@ -820,7 +779,7 @@ export function BottomNavigation<
     theme.palette,
   );
   const surfaceBackground = resolveColorReference(
-    presentationRecipe.background,
+    tile ? tileRecipe.background : presentationRecipe.background,
     theme.palette,
   );
   const surfaceBorder = resolveColorReference(
@@ -847,7 +806,6 @@ export function BottomNavigation<
           paddingTop: presentationRecipe.outerPaddingTop,
           width: "100%",
         },
-        style,
         layoutStyle,
       ]}
     >
@@ -880,7 +838,6 @@ export function BottomNavigation<
             shadowRadius: surfaceShadow?.radius,
             width: "100%",
           },
-          surfaceStyle,
         ]}
       >
         <View
@@ -894,13 +851,13 @@ export function BottomNavigation<
               width: capsule ? undefined : "100%",
               flex: capsule ? 1 : undefined,
               minWidth: 0,
-              padding: capsule ? spacing.xxs : 0,
+              padding: tile ? tileRecipe.padding : capsule ? spacing.xxs : 0,
+              gap: tile ? tileRecipe.gap : 0,
               backgroundColor: capsule ? surfaceBackground : undefined,
               borderRadius: capsule ? radius.full : undefined,
               borderWidth: capsule ? presentationRecipe.borderWidth : 0,
               borderColor: surfaceBorder,
             },
-            listStyle,
           ]}
         >
           {resolved.items.map((item, index) => {
@@ -941,12 +898,14 @@ export function BottomNavigation<
                   minimumTargetStyle,
                   {
                     alignItems: "center",
-                    backgroundColor: pressed ? pressedBackground : capsule && selected ? theme.colors.surfaceAccent : "transparent",
-                    borderRadius: capsule ? radius.full : theme.tokens.radius.lg,
+                    backgroundColor: tile && selected
+                      ? resolveColorReference(tileRecipe.selectedBackground, theme.palette)
+                      : pressed ? pressedBackground : capsule && selected ? theme.colors.surfaceAccent : "transparent",
+                    borderRadius: tile ? theme.tokens.radius[tileRecipe.radius] : capsule ? radius.full : theme.tokens.radius.lg,
                     // Floating edge items touch the frame. Their pressed fill must follow its
                     // inner curve; the smaller generic radius painted over the border in Spint.
                     // Match corners instead of clipping the whole surface (which clips shadows/focus).
-                    ...(presentation.presentation === "floating" ? {
+                    ...(presentation.presentation === "floating" && !tile ? {
                       ...(index === 0 ? {
                         borderTopStartRadius: Math.max(0, theme.tokens.radius[presentationRecipe.radius!] - presentationRecipe.borderWidth),
                         borderBottomStartRadius: Math.max(0, theme.tokens.radius[presentationRecipe.radius!] - presentationRecipe.borderWidth),
@@ -1105,7 +1064,6 @@ export function BottomNavigation<
               },
               // Keep creation outside route destinations; absolute center placement overlaps capsule labels.
               capsule ? { position: "relative", left: undefined, right: undefined, top: undefined, bottom: undefined, flexShrink: 0 } : undefined,
-              primaryActionStyle,
             ]}
           >
             {primaryAction}
@@ -1154,19 +1112,9 @@ type TopBarActionBaseProps = TopBarActionHostProps & Readonly<{
   disabled?: boolean;
   /** Back/close affordances may keep the product label accessibility-only. */
   labelVisibility?: "visible" | "accessibility-only";
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `labelVisibility`; `topBarRecipe.actionLabel` owns typography. Removed in the next major
-   * (consumer-policy.md §3.1).
-   */
-  labelStyle?: StyleProp<TextStyle>;
-  /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement; `topBarRecipe.action` owns size and states. Removed in the next major
-   * (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
-}>;
+  }>;
 
 type TopBarButtonActionProps = TopBarActionBaseProps & Readonly<{
   intent?: "button";
@@ -1198,12 +1146,10 @@ export function TopBarAction(props: TopBarActionProps) {
     children,
     disabled = false,
     labelVisibility = "visible",
-    labelStyle,
     layoutStyle,
-    style,
     ...intentAndHostProps
   } = props;
-  warnDeprecatedStyleProps("TopBarAction", { style, labelStyle }, "layoutStyle for placement and labelVisibility/topBarRecipe for appearance");
+  assertNoRemovedStyleProps("TopBarAction", props, ["style", "labelStyle"]);
   if (!label.trim()) throw new TypeError("TopBarAction label must not be empty");
   const resolvedAccessibilityLabel = accessibilityLabel ?? label;
   if (!resolvedAccessibilityLabel.trim()) {
@@ -1255,7 +1201,6 @@ export function TopBarAction(props: TopBarActionProps) {
                 color: resolveColorReference(topBarRecipe.actionLabel.color, theme.palette),
                 fontWeight: topBarRecipe.actionLabel.fontWeight,
               },
-              labelStyle,
             ]}
             variant={topBarRecipe.actionLabel.textVariant}
           >
@@ -1282,7 +1227,6 @@ export function TopBarAction(props: TopBarActionProps) {
             : 1,
         paddingHorizontal: topBarRecipe.action.paddingHorizontal,
       },
-      style,
       layoutStyle,
     ],
   };
@@ -1312,27 +1256,7 @@ export type TopBarProps = Readonly<{
   safeAreaTop?: number;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement; `centered`/`topBarRecipe` own appearance. Removed in the next major
-   * (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `centered` and slot content; `topBarRecipe` owns slot sizing. Removed in the next major
-   * (consumer-policy.md §3.1).
-   */
-  leadingStyle?: StyleProp<ViewStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `topBarRecipe.title` typography. Removed in the next major
-   * (consumer-policy.md §3.1).
-   */
-  titleStyle?: StyleProp<TextStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `centered` and slot content; `topBarRecipe` owns slot sizing. Removed in the next major
-   * (consumer-policy.md §3.1).
-   */
-  trailingStyle?: StyleProp<ViewStyle>;
-}>;
+        }>;
 
 /** Native screen top bar with logical action slots and large-text reflow. */
 export function TopBar({
@@ -1347,16 +1271,9 @@ export function TopBar({
   centered = topBarRecipe.defaults.centered,
   safeAreaTop = 0,
   layoutStyle,
-  style,
-  leadingStyle,
-  titleStyle,
-  trailingStyle,
+  ...removedProps
 }: TopBarProps) {
-  warnDeprecatedStyleProps(
-    "TopBar",
-    { style, leadingStyle, titleStyle, trailingStyle },
-    "layoutStyle for placement and centered/topBarRecipe for appearance",
-  );
+  assertNoRemovedStyleProps("TopBar", removedProps, ["style", "leadingStyle", "titleStyle", "trailingStyle"]);
   if (!Number.isFinite(safeAreaTop) || safeAreaTop < 0) {
     throw new RangeError("TopBar safeAreaTop must be non-negative");
   }
@@ -1396,7 +1313,6 @@ export function TopBar({
       color: resolveColorReference(topBarRecipe.title.color, theme.palette),
       fontWeight: topBarRecipe.title.fontWeight,
     },
-    titleStyle,
   ];
   const renderTitle = (
     containerStyle: StyleProp<ViewStyle>,
@@ -1483,7 +1399,6 @@ export function TopBar({
           paddingHorizontal: topBarRecipe.paddingHorizontal,
           paddingTop: safeAreaTop,
         },
-        style,
         layoutStyle,
       ]}
     >
@@ -1511,7 +1426,6 @@ export function TopBar({
                       flexDirection: "row",
                       minWidth: topBarRecipe.sideMinWidth,
                     },
-                    leadingStyle,
                   ]}
                 >
                   {leading}
@@ -1543,7 +1457,6 @@ export function TopBar({
                   minWidth: topBarRecipe.sideMinWidth,
                   width: "100%",
                 },
-                trailingStyle,
               ]}
             >
               {trailingContent}
@@ -1563,7 +1476,6 @@ export function TopBar({
                   justifyContent: "flex-start",
                   minWidth: topBarRecipe.sideMinWidth,
                 },
-                leadingStyle,
               ]}
             >
               {hasLeading ? leading : null}
@@ -1587,7 +1499,6 @@ export function TopBar({
                   marginStart: hasTitle ? undefined : "auto",
                   minWidth: topBarRecipe.sideMinWidth,
                 },
-                trailingStyle,
               ]}
             >
               {hasTrailingContent ? trailingContent : null}
@@ -1629,11 +1540,16 @@ export type MenuTriggerRenderProps = Readonly<{
 }>;
 
 function useMenuAfterDismiss(visible: boolean) {
+  const visibleRef = useRef(visible);
+  visibleRef.current = visible;
+  const mountedRef = useRef(true);
+  const generationRef = useRef(0);
   const shownRef = useRef(false);
   const previousVisibleRef = useRef(visible);
   const pendingRef = useRef<null | (() => void | Promise<void>)>(null);
   const taskRef = useRef<NativeModalTeardownTask | null>(null);
   const complete = useCallback(() => {
+    if (!mountedRef.current || visibleRef.current) return;
     taskRef.current?.cancel();
     taskRef.current = null;
     shownRef.current = false;
@@ -1644,11 +1560,30 @@ function useMenuAfterDismiss(visible: boolean) {
   useLayoutEffect(() => {
     const wasVisible = previousVisibleRef.current;
     previousVisibleRef.current = visible;
+    if (!wasVisible && visible) {
+      // Reopening invalidates the previous selection; its late teardown must not run under the new menu.
+      generationRef.current += 1;
+      taskRef.current?.cancel();
+      taskRef.current = null;
+      pendingRef.current = null;
+      shownRef.current = false;
+    }
     if (!wasVisible || visible || shouldAwaitNativeModalDismiss(shownRef.current)) return;
     taskRef.current?.cancel();
-    taskRef.current = scheduleAfterNativeModalTeardown(complete);
+    const generation = generationRef.current;
+    taskRef.current = scheduleAfterNativeModalTeardown(() => {
+      if (generation === generationRef.current) complete();
+    });
   }, [complete, visible]);
-  useEffect(() => () => taskRef.current?.cancel(), []);
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      generationRef.current += 1;
+      pendingRef.current = null;
+      taskRef.current?.cancel();
+    };
+  }, []);
   return {
     queue(callback: null | (() => void | Promise<void>)) {
       pendingRef.current = callback;
@@ -1707,12 +1642,7 @@ export type MenuProps<
     renderTrigger?: (props: MenuTriggerRenderProps) => ReactElement;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement of the trigger host; `density`/`menuRecipe` own appearance. Removed in the next major
-     * (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
-  }>;
+      }>;
 
 /** Sectioned Native action/selection menu with teardown-safe action callbacks. */
 export function Menu<
@@ -1746,10 +1676,9 @@ export function Menu<
   trigger,
   renderTrigger,
   layoutStyle,
-  style,
   ...modalProps
 }: MenuProps<Value, SectionKey>) {
-  warnDeprecatedStyleProps("Menu", { style }, "layoutStyle for placement and density for appearance");
+  assertNoRemovedStyleProps("Menu", modalProps, ["style"]);
   const providedSources = [sourceProp, items, sections].filter(
     (candidate) => candidate !== undefined,
   ).length;
@@ -1947,7 +1876,7 @@ export function Menu<
   };
 
   return (
-    <View style={[style, layoutStyle]}>
+    <View style={[layoutStyle]}>
       <View ref={triggerRef}>
         {renderTrigger ? renderTrigger(triggerProps) : (
           <Pressable
@@ -2099,6 +2028,8 @@ export const LoadMore = forwardRef<LoadMoreHandle, LoadMoreProps>(function LoadM
   stateRef.current = descriptor.state;
   handlerRef.current = onLoadMore;
   const [controllerFacade] = useState(createNativeLoadMoreControllerFacade);
+  const requestGeneration = useRef(0);
+  const requestActive = useRef(false);
   const lastViewportRequest = useRef<Readonly<{
     mode: LoadMoreMode;
     requestKey: string;
@@ -2110,8 +2041,12 @@ export const LoadMore = forwardRef<LoadMoreHandle, LoadMoreProps>(function LoadM
       onLoadMore: (request) => handlerRef.current(request),
     });
     const detach = controllerFacade.attach(controller);
+    requestGeneration.current += 1;
+    requestActive.current = true;
     lastViewportRequest.current = null;
     return () => {
+      requestGeneration.current += 1;
+      requestActive.current = false;
       detach();
       controller.dispose();
     };
@@ -2119,6 +2054,9 @@ export const LoadMore = forwardRef<LoadMoreHandle, LoadMoreProps>(function LoadM
 
   const request = useCallback(
     async (reason: LoadMoreRequestReason) => {
+      // FlatList may have queued onEndReached before the footer was removed.
+      if (!requestActive.current) return "blocked-by-state";
+      const generation = requestGeneration.current;
       const state = stateRef.current;
       if (reason === "viewport" && mode === "automatic" && state.status === "ready") {
         const previous = lastViewportRequest.current;
@@ -2130,17 +2068,19 @@ export const LoadMore = forwardRef<LoadMoreHandle, LoadMoreProps>(function LoadM
           onRequestOutcome?.(outcome, reason);
           return outcome;
         }
-        lastViewportRequest.current = {
-          mode,
-          requestKey: state.requestKey,
-        };
       }
       try {
         const outcome = await controllerFacade.request(state, reason);
+        if (generation !== requestGeneration.current) return outcome;
+        // Only a successfully completed viewport request retires its cursor.
+        // A blocked next page or a rejection must remain eligible for retry.
+        if (outcome === "started" && reason === "viewport" && state.status === "ready") {
+          lastViewportRequest.current = { mode, requestKey: state.requestKey };
+        }
         onRequestOutcome?.(outcome, reason);
         return outcome;
       } catch (error) {
-        onRequestError?.(error, reason);
+        if (generation === requestGeneration.current) onRequestError?.(error, reason);
         // The request was accepted and started; product error state arrives
         // through the controlled descriptor and optional callback. Keep the
         // FlatList imperative bridge rejection-free like the Web observer.

@@ -9,8 +9,9 @@ export function Masonry({ items, keyExtractor, renderItem, getItemHeight, width,
     const itemWidth = resolveMasonryLayout([], width, columns, gap).itemWidth;
     const layout = resolveMasonryLayout(items.map(item => getItemHeight(item, itemWidth)), width, columns, gap);
     const { environment } = useHjmNativeTheme();
+    // The empty collection keeps its measured width and centers within host-allocated space.
     if (!items.length)
-        return _jsx(View, { accessibilityLabel: label, style: layoutStyle, children: empty });
+        return _jsx(View, { accessibilityLabel: label, style: [layoutStyle, { width, alignItems: "center", justifyContent: "center" }], children: empty });
     return _jsx(View, { accessibilityLabel: label, style: [layoutStyle, { width, height: layout.height }], children: items.map((item, index) => { const frame = layout.items[index]; return _jsx(View, { style: { position: "absolute", top: frame.top, width: frame.width, height: frame.height, ...(environment.direction === "rtl" ? { right: frame.left } : { left: frame.left }) }, children: renderItem(item, index) }, keys[index]); }) });
 }
 //# sourceMappingURL=masonry.js.map

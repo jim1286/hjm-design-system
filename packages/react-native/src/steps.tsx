@@ -7,11 +7,10 @@ import {
   type StepsStatusLabels,
 } from "@hjmds/design-contracts/components/steps";
 import type { ReactNode } from "react";
-import { View, type StyleProp, type ViewStyle } from "react-native";
+import { View } from "react-native";
 
 import { Text } from "./primitives.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 
 export type StepsProps<Id extends string = string> = Readonly<{
@@ -21,11 +20,6 @@ export type StepsProps<Id extends string = string> = Readonly<{
   renderMark?: (status: StepStatus, position: number) => ReactNode;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
-   * `stepsRecipe` owns appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
 }>;
 
 /** Non-interactive linear steps preserving one cursor and reading order. */
@@ -35,15 +29,13 @@ export function Steps<Id extends string>({
   composeAccessibleName,
   renderMark,
   layoutStyle,
-  style,
 }: StepsProps<Id>) {
-  warnDeprecatedStyleProps("Steps", { style }, "layoutStyle for placement; stepsRecipe owns appearance");
   const { colors, environment } = useHjmNativeTheme();
   const steps = resolveStepsDescriptor(descriptor, { statusLabels, composeAccessibleName });
   const statusColor = (status: StepStatus) =>
     status === "error" ? colors.danger : status === "pending" ? colors.textMuted : colors.contentBrand;
   return (
-    <View accessibilityRole="summary" style={[{ direction: environment.direction, flexDirection: "row", gap: stepsRecipe.gap }, style, layoutStyle]}>
+    <View accessibilityRole="summary" style={[{ direction: environment.direction, flexDirection: "row", gap: stepsRecipe.gap }, layoutStyle]}>
       {steps.map((step, index) => (
         <View accessibilityHint={step.statusLabel} accessibilityLabel={step.accessibleName} accessible key={step.id} style={{ flex: 1, gap: stepsRecipe.gap, minWidth: 0 }}>
           <View accessible={false} style={{ alignItems: "center", flexDirection: "row" }}>

@@ -66,7 +66,7 @@ import { SegmentedControl } from "@hjmds/react-native/inputs";
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `items` | Web `readonly { value: string; label: ReactNode; disabled? }[]` · Native `readonly { value: Value; label: string; disabled?; leading?; renderLeading? }[]` | 필수 | 값이 비거나 중복이면 던진다 |
-| `presentation` | `connected` · `pills` | `connected` | 연결된 보기 전환 / 독립된 카테고리 필터. `pills`는 미게시(1.12.1 이후) |
+| `presentation` | `connected` · `pills` | `connected` | 연결된 보기 전환 / 독립된 카테고리 필터. `pills`는 1.13.0 변경 |
 | `size` | `small` · `medium` | `medium` | 항목 최소 높이 36(+hitSlop 4) · 44 |
 | `value` · `defaultValue` | 항목 값 | 첫 번째 활성 항목 | 선택 해제 상태는 없다 |
 | `onValueChange` | Web `(value: string) => void` · Native `(value: Value) => void` | — | 다른 항목을 고를 때. `null`은 오지 않는다 |
@@ -74,7 +74,7 @@ import { SegmentedControl } from "@hjmds/react-native/inputs";
 | `disabled` | `boolean` | `false` | 전체 비활성(Web은 fieldset 속성) |
 | `layoutStyle` | 배치 전용 style 객체 | — | 바깥 배치 |
 
-`connected`는 글자 크기 160% 이상(`stackAtFontScale`)에서 항목을 세로로 쌓는다. `pills`는 쌓지 않는다(`pills.largeTextLayout` `wrap`, 미게시(1.13.1 이후)).
+`connected`는 글자 크기 160% 이상(`stackAtFontScale`)에서 항목을 세로로 쌓는다. `pills`는 쌓지 않는다(`pills.largeTextLayout` `wrap`, 1.13.1 변경).
 
 ## 배치
 
@@ -103,7 +103,7 @@ import { SegmentedControl } from "@hjmds/react-native/inputs";
   `value`가 비활성 항목이어도 `RangeError`다.
 - 옛 Native `options` prop은 제거됐다. 넘기면 `TypeError`다([이관표](../../migration-native-legacy-removal.md)).
 - 연결형의 선택 표시는 focus 색 테두리(ring), `pills`는 본문색 채움과 반전 글자다. 제품에서 선택 배경을 직접 덮지 않는다. 배치는 `layoutStyle`로 하고, Native `style`은
-  deprecated(개발 모드 경고, 다음 major 제거)다.
+  제거된 속성이다.
 
 ## 플랫폼 차이
 
@@ -134,7 +134,7 @@ import { SegmentedControl } from "@hjmds/react/selection";
   items={categories} value={category} onValueChange={setCategory} />
 ```
 
-Native는 `@hjmds/react-native/inputs`에서 같은 prop을 사용한다. `presentation`은 게시 버전 1.12.1에 없다(미게시, 1.12.1 이후). 게시·소비 앱 반영 전에는 연결형을 쓴다.
+Native는 `@hjmds/react-native/inputs`에서 같은 prop을 사용한다. `presentation`은 1.13.0 추가 API다. 연결형과 pills는 같은 단일 선택 계약을 따른다.
 스토리는 `버튼형 선택`의 `알약 모양`·`비활성`·`알약 모양 · 큰 글자`다. 2026-10-06 사용자 승인으로 실험 `입력/카테고리 필터` 항목을 배포하면서 별도 공개 API가 아니라 이 표현이라 그 스토리로 합쳤다([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). Storybook 배포는 npm 게시가 아니다.
 
 ## 함정

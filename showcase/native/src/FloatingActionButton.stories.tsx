@@ -11,21 +11,26 @@ import { nativeRendererStoryGroups } from "./story-registry";
 
 // Not exported: CSF registers every named export as a story, which showed an unnamed menu entry (2026-10-06).
 function FloatingNotesPreview() {
+  // A controlled dialog needs its opening host to restore accessibility focus after dismissal.
+  const composerTrigger = useRef<View>(null);
   const scroll = useRef<ScrollView>(null);
   const { layoutMode, onScroll } = useFloatingActionButtonScroll();
   const [clearance, setClearance] = useState(resolveFloatingActionButtonContentClearance(0));
   const [notes, setNotes] = useState(Array.from({ length: 18 }, (_, index) => `기억하고 싶은 순간 ${index + 1}`));
   const [open, setOpen] = useState(false); const [draft, setDraft] = useState("");
-  function save() { if (!draft.trim()) return; setNotes((items) => [draft.trim(), ...items]); setOpen(false); setDraft(""); scroll.current?.scrollTo({ y: 0, animated: false }); }
+  // A second queued press can arrive before the closing render commits.
+  const savedInSession = useRef(false);
+  function start() { savedInSession.current = false; setOpen(true); }
+  function save() { if (savedInSession.current || !draft.trim()) return; savedInSession.current = true; setNotes((items) => [draft.trim(), ...items]); setOpen(false); setDraft(""); scroll.current?.scrollTo({ y: 0, animated: false }); }
   return <View style={{ flex: 1, position: "relative" }}>
     {/* Frame-paced events let the direction hook accumulate small gestures instead of missing reversals between sparse events. */}
     <ScrollView ref={scroll} onScroll={onScroll} scrollEventThrottle={16} contentContainerStyle={{ paddingBottom: clearance }}>
       <TopBar title="나의 기록" />
       <List label="최근 기록">{notes.map((note, index) => <ListRow key={`${index}-${note}`} title={note} description="작은 순간도 모아두면 오래 남아요." />)}</List>
     </ScrollView>
-    <FloatingActionButton descriptor={{ label: "새 기록", icon: { name: "add" }, layoutMode }} renderIcon={() => <Text tone="inverse">＋</Text>}
-      onContentClearanceChange={setClearance} onPress={() => setOpen(true)} />
-    <Dialog title="어떤 순간을 남길까요?" open={open} onOpenChange={setOpen} closeLabel="닫기"
+    <FloatingActionButton ref={composerTrigger} descriptor={{ label: "새 기록", icon: { name: "add" }, layoutMode }} renderIcon={() => <Text tone="inverse">＋</Text>}
+      onContentClearanceChange={setClearance} onPress={start} />
+    <Dialog title="어떤 순간을 남길까요?" open={open} onOpenChange={setOpen} closeLabel="닫기" returnFocusRef={composerTrigger}
       primaryAction={{ label: "기록 추가", onPress: save, disabled: !draft.trim() }}>
       <TextArea label="나의 기록" value={draft} onValueChange={setDraft} />
     </Dialog>

@@ -1,8 +1,8 @@
 import { Container } from "@hjmds/react-native/primitives";
 // STEA Code P1 후보를 기존 HJM API만으로 조합한 실험 구성이다. 새 공개 API는 만들지 않는다.
 // 상태 규칙은 shared/stea-compositions.ts가 소유하고 이 파일은 Native 표현만 맡는다.
-import { useEffect, useReducer, useState, type ReactNode } from "react";
-import { ScrollView } from "react-native";
+import { useEffect, useReducer, useRef, useState, type ReactNode } from "react";
+import { AccessibilityInfo, AppState, Platform, ScrollView, type TextInput } from "react-native";
 import { Check } from "lucide-react-native";
 import { spacing } from "@hjmds/design-contracts/foundations";
 import { Button } from "@hjmds/react-native/actions";
@@ -44,7 +44,7 @@ export function OrderProgressRetry() {
           : <Button loading={state.phase === "requesting"} onPress={() => dispatch({ type: "request" })}>
               {state.phase === "failed" ? orderCopy.retry : orderCopy.request}
             </Button>}
-        {done ? null : <Switch label={orderCopy.failNext} checked={state.failNext} onCheckedChange={() => dispatch({ type: "toggleFailNext" })} />}
+        {done ? null : <Switch label={orderCopy.failNext} disabled={state.phase === "requesting"} checked={state.failNext} onCheckedChange={() => dispatch({ type: "toggleFailNext" })} />}
       </Stack>
       <Text variant="label" tone="muted">{orderCopy.logLabel}</Text>
       <Timeline items={state.log} composeAccessibleName={steaTimelineName} />
@@ -61,6 +61,21 @@ export function OtpVerifyRecover() {
   }, [state.phase]);
   // phase를 의존성에 넣으면 확인 요청마다 1초 타이머가 다시 시작돼 대기 시간이 줄지 않는다(2026-10-02 실측).
   const verified = state.phase === "verified";
+  const input = useRef<TextInput>(null);
+  const previousVerified = useRef(verified);
+  const previousResend = useRef(state.resendCount);
+  useEffect(() => {
+    const entering = previousVerified.current && !verified;
+    const resending = previousResend.current !== state.resendCount && state.resent;
+    // Result keeps its actions individually accessible. Announce success instead
+    // of focusing an artificial group around the entire result and its buttons.
+    if (verified && !previousVerified.current && Platform.OS === "ios" && AppState.currentState === "active") {
+      AccessibilityInfo.announceForAccessibilityWithOptions(`${otpCopy.successTitle}. ${otpCopy.successBody}`, { queue: true });
+    }
+    previousVerified.current = verified;
+    previousResend.current = state.resendCount;
+    if (entering || resending) input.current?.focus();
+  }, [verified, state.resendCount, state.resent]);
   useEffect(() => {
     if (state.resendIn === 0 || verified) return;
     const timer = setTimeout(() => dispatch({ type: "tick" }), 1000);
@@ -70,10 +85,10 @@ export function OtpVerifyRecover() {
   return <Frame><Card title={otpCopy.title} description={otpCopy.description}>
     <ContentTransition stateKey={state.phase === "verified" ? "verified" : "form"}>
       {state.phase === "verified"
-        ? <Result status="success" renderIcon={({ color }) => <Check color={color} accessible={false} />} title={otpCopy.successTitle} description={otpCopy.successBody}
+        ? <Result accessibilityLiveRegion="polite" status="success" renderIcon={({ color }) => <Check color={color} accessible={false} />} title={otpCopy.successTitle} description={otpCopy.successBody}
             actions={[{ label: otpCopy.again, onAction: () => dispatch({ type: "reset" }) }]} />
         : <Stack gap="md">
-            <OtpField label={otpCopy.field} length={otpLength} value={state.value}
+            <OtpField ref={input} label={otpCopy.field} length={otpLength} value={state.value}
               onValueChange={value => dispatch({ type: "change", value })}
               onComplete={() => dispatch({ type: "submit" })}
               busy={state.phase === "verifying"} disabled={state.phase === "locked"}

@@ -111,6 +111,8 @@ export const Sidebar = forwardRef(function Sidebar<Id extends string = string, G
           <ul className="hjm-sidebar__list">
             {group.items.map((item) => {
               const current = descriptor.currentId === item.id;
+              // Router-owned destinations may omit href; role/tabIndex/Enter keep
+              // their link keyboard path without inventing a URL.
               return (
                 <li key={item.id}>
                   <a
@@ -122,7 +124,13 @@ export const Sidebar = forwardRef(function Sidebar<Id extends string = string, G
                     // Collapsed labels are hidden visually, so the name comes
                     // from the attribute instead of disappearing with the text.
                     aria-label={collapsed ? item.label : undefined}
-                    tabIndex={item.disabled ? -1 : undefined}
+                    role={item.destination === undefined ? "link" : undefined}
+                    tabIndex={item.disabled ? -1 : item.destination === undefined ? 0 : undefined}
+                    onKeyDown={(event) => {
+                      if (item.destination === undefined && !item.disabled && event.key === "Enter") {
+                        event.preventDefault(); event.currentTarget.click();
+                      }
+                    }}
                     onClick={(event) => {
                       if (item.disabled) { event.preventDefault(); return; }
                       if (appearance === "bounce" && animate) setActivatedId(item.id);

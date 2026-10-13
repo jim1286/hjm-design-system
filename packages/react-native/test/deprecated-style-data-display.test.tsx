@@ -1,7 +1,7 @@
-import type { ReactElement } from "react";
+import type { ComponentProps, ReactElement } from "react";
 import { act, create, type ReactTestInstance, type ReactTestRenderer } from "react-test-renderer";
 import { Text as NativeText, View } from "react-native";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from "vitest";
 
 import {
   Accordion,
@@ -17,8 +17,8 @@ import {
   StatisticGroup,
   Tag,
   Timeline,
+  useHjmNativeTheme,
 } from "../src/index.js";
-import { resetDeprecatedStyleWarningsForTest } from "../src/internal/deprecated-style.js";
 
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean })
   .IS_REACT_ACT_ENVIRONMENT = true;
@@ -51,7 +51,7 @@ function hasMarker(renderer: ReactTestRenderer): boolean {
 
 type Case = Readonly<{
   component: string;
-  /** Deprecated props passed together; every name must warn exactly once. */
+  /** Untyped callers exercise removal while canonical placement stays supported. */
   deprecated: Readonly<Record<string, unknown>>;
   build: (extra: Readonly<Record<string, unknown>>) => ReactElement;
 }>;
@@ -77,7 +77,7 @@ const cases: readonly Case[] = [
   },
   {
     component: "Avatar",
-    deprecated: { style: paint },
+    deprecated: { style: paint, imageStyle: paint },
     build: (extra) => <Avatar decorative name="Ji Min" {...extra} />,
   },
   {
@@ -175,33 +175,46 @@ const cases: readonly Case[] = [
   },
 ];
 
-describe("data-display deprecated visual style props", () => {
+describe("data-display removed visual style props", () => {
   let warn: ReturnType<typeof vi.spyOn>;
   beforeEach(() => {
-    resetDeprecatedStyleWarningsForTest();
     warn = vi.spyOn(console, "warn").mockImplementation(() => {});
   });
   afterEach(() => {
     warn.mockRestore();
   });
 
-  it.each(cases)("$component warns once per deprecated prop and keeps rendering it", ({ component, deprecated, build }) => {
-    const first = render(build(deprecated));
-    act(() => first.update(
-      <HjmNativeProvider reducedMotion theme="light">{build(deprecated)}</HjmNativeProvider>,
-    ));
-    const second = render(build(deprecated));
-    const messages = warn.mock.calls.map((call: unknown[]) => String(call[0]));
-    for (const prop of Object.keys(deprecated)) {
-      expect(messages.filter((message: string) => message.includes(`${component}.${prop} is deprecated`)))
-        .toHaveLength(1);
+  it.each(cases)("$component no longer applies removed visual styles", ({ component, deprecated, build }) => {
+    if (!["Avatar", "Divider", "Accordion", "CounterBadge", "Statistic"].includes(component)) {
+      expect(() => render(build(deprecated))).toThrow(/were removed/);
+      return;
     }
-    // Only the component's own props are reported, not internal composition.
-    expect(messages).toHaveLength(Object.keys(deprecated).length);
-    act(() => {
-      first.unmount();
-      second.unmount();
-    });
+    const renderer = render(build(deprecated));
+    expect(renderer.root.findAll(node => typeof node.type === "string").some(node => {
+      const style = flattenStyle(node.props.style);
+      return style.backgroundColor === "red" || style.color === "red";
+    })).toBe(false);
+    act(() => renderer.unmount());
+  });
+
+  it("removes visual keys from exported props", () => {
+    expectTypeOf<Extract<keyof ComponentProps<typeof Badge>, "style" | "labelStyle">>().toEqualTypeOf<never>();
+    expectTypeOf<Extract<keyof ComponentProps<typeof ListRow>, "titleStyle" | "descriptionStyle">>().toEqualTypeOf<never>();
+    expectTypeOf<Extract<keyof ComponentProps<typeof Avatar>, "style" | "imageStyle">>().toEqualTypeOf<never>();
+  });
+
+  it("uses semantic danger emphasis without changing selection or activation", () => {
+    const press = vi.fn();
+    let dangerColor: string | undefined;
+    function ThemeColor() { dangerColor = useHjmNativeTheme().colors.danger; return null; }
+    const renderer = render(<><ThemeColor /><ListRow title="Delete account" tone="danger" selected onPress={press} /></>);
+    const title = renderer.root.findAllByType(NativeText).find(node => node.props.children === "Delete account")!;
+    expect(flattenStyle(title.props.style).color).toBe(dangerColor);
+    const row = renderer.root.findAll(node => typeof node.type === "string" && node.props.accessibilityRole === "button")[0]!;
+    expect(row.props.accessibilityState.selected).toBe(true);
+    act(() => row.props.onPress());
+    expect(press).toHaveBeenCalledOnce();
+    act(() => renderer.unmount());
   });
 
   it.each(cases)("$component accepts layoutStyle on the root without warning", ({ build }) => {
@@ -211,7 +224,7 @@ describe("data-display deprecated visual style props", () => {
     act(() => renderer.unmount());
   });
 
-  it("keeps StatisticGroup item widths without attributing them to Statistic.style", () => {
+  it("keeps StatisticGroup item widths through canonical placement", () => {
     const renderer = render(
       <StatisticGroup
         availableWidth={320}

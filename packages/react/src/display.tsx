@@ -225,6 +225,8 @@ export type ListRowProps = Omit<HTMLAttributes<HTMLElement>, "title" | "onClick"
     leading?: ReactNode;
     trailing?: ReactNode;
     density?: ListRowDensity;
+    /** Semantic emphasis for destructive destinations; selection stays independent. */
+    tone?: keyof typeof listRowRecipe.tones;
     /** Frame the ListRow paints around `leading`; the recipe owns its size. */
     leadingShape?: ListRowLeadingShape;
     selected?: boolean;
@@ -250,6 +252,7 @@ export const ListRow = forwardRef<HTMLElement, ListRowProps>(function ListRow(
     leading,
     trailing,
     density: densityProp,
+    tone = listRowRecipe.defaults.tone,
     leadingShape = "square",
     selected = listRowRecipe.defaults.selected,
     disabled = false,
@@ -277,8 +280,9 @@ export const ListRow = forwardRef<HTMLElement, ListRowProps>(function ListRow(
       <div
         {...props}
         ref={ref as React.Ref<HTMLDivElement>}
-        role="status"
-        aria-busy="true"
+        role={loadingLabel ? "status" : undefined}
+        aria-busy={loadingLabel ? true : undefined}
+        aria-hidden={loadingLabel ? undefined : true}
         aria-label={loadingLabel}
         className={classNames("hjm-list-row", "hjm-list-row--loading", className)}
         data-density={density}
@@ -288,10 +292,10 @@ export const ListRow = forwardRef<HTMLElement, ListRowProps>(function ListRow(
       >
         {leading ? <span className="hjm-list-row__leading" data-shape={leadingShape} data-placeholder="" /> : null}
         <span className="hjm-list-row__content">
-          <span className="hjm-list-row__title" data-placeholder="" />
-          {description ? <span className="hjm-list-row__description" data-placeholder="" /> : null}
+          <span className="hjm-list-row__title" data-placeholder="" style={{ width: `${listRowRecipe.loading.titleWidthPercent}%` }} />
+          {description ? <span className="hjm-list-row__description" data-placeholder="" style={{ width: `${listRowRecipe.loading.descriptionWidthPercent}%` }} /> : null}
         </span>
-        {trailing ? <span className="hjm-list-row__trailing" data-placeholder="" /> : null}
+        {trailing ? <span className="hjm-list-row__trailing" data-placeholder="" style={{ width: listRowRecipe.loading.trailingWidth }} /> : null}
       </div>
     );
   }
@@ -320,6 +324,7 @@ export const ListRow = forwardRef<HTMLElement, ListRowProps>(function ListRow(
       ref,
       className: classNames("hjm-list-row", className),
       "data-density": density,
+      "data-tone": tone,
       // One- and two-line rows have different minimum heights in the recipe;
       // the web renderer used a single hardcoded value until now.
       "data-lines": description ? "two" : "one",

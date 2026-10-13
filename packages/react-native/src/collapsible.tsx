@@ -5,10 +5,9 @@ import {
 } from "@hjmds/design-contracts/components/collapsible";
 import { useState, type ReactNode } from "react";
 import { control } from "@hjmds/design-contracts/foundations";
-import { Pressable, View, type StyleProp, type ViewStyle } from "react-native";
+import { Pressable, View } from "react-native";
 import { Text } from "./primitives.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 
 export type CollapsibleProps = CollapsibleOpenState &
   Readonly<{
@@ -22,28 +21,23 @@ export type CollapsibleProps = CollapsibleOpenState &
     keepMounted?: boolean;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
-     * `collapsibleRecipe` owns appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
   }>;
 
 
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
-export function Collapsible({ trigger, children, disabled = false, presentation = "disclosure", keepMounted = false, layoutStyle, style, ...openState }: CollapsibleProps) {
-  warnDeprecatedStyleProps("Collapsible", { style }, "layoutStyle for placement; collapsibleRecipe owns appearance");
+export function Collapsible({ trigger, children, disabled = false, presentation = "disclosure", keepMounted = false, layoutStyle, ...openState }: CollapsibleProps) {
   validateCollapsibleOpenState(openState as CollapsibleOpenState);
   const controlled = openState.open !== undefined;
   const [internalOpen, setInternalOpen] = useState(openState.defaultOpen ?? false);
   const open = presentation === "inline" || (openState.open ?? internalOpen);
   return (
-    <View style={[{ gap: collapsibleRecipe.gap }, style, layoutStyle]}>
+    <View style={[{ gap: collapsibleRecipe.gap }, layoutStyle]}>
       <Pressable
         accessibilityRole="button"
         accessibilityState={{ expanded: open, disabled }}
         disabled={disabled}
         onPress={() => {
+          if (disabled || presentation === "inline") return;
           const next = !open;
           if (!controlled) setInternalOpen(next);
           openState.onOpenChange?.(next);

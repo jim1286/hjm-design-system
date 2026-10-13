@@ -1,7 +1,7 @@
 import { FloatingActionButton } from "@hjmds/react/floating-action-button";
 import { Tabs, type TabsAppearance } from "@hjmds/react/navigation";
 import { CodeBlock } from "@hjmds/react/code-block";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { HjmProvider } from "@hjmds/react/provider";
 import { Button } from "@hjmds/react/actions";
 import { BottomCTA } from "@hjmds/react/bottom-cta";
@@ -22,6 +22,8 @@ import { defineHjmDesignProfile, hjmDesignPresets } from "@hjmds/design-contract
 import { profileCopy as copy, profileOptions, profileHeadingSamples } from "../../../shared/design-profile";
 import { productDesignOptions, createPreviewProductResolver, type PreviewProductDesign, type ReferenceDesignPreset } from "../../../shared/product-design";
 
+import { useDemoAction } from "./action-recovery-previews";
+
 // Resolve immutable app configurations once; profile changes never key or replace
 // the record, input, tab, overlay or pending-action owners.
 const resolvePreviewProductDesign = createPreviewProductResolver(preset => hjmDesignPresets[preset], defineHjmDesignProfile);
@@ -29,22 +31,26 @@ const resolvePreviewProductDesign = createPreviewProductResolver(preset => hjmDe
 export function RecordSample() {
   const [name, setName] = useState<string>(copy.initial);
   const [period, setPeriod] = useState("day");
-  const [status, setStatus] = useState<"idle" | "pending" | "saved" | "failed">("idle");
-  const failNext = useRef(false);
-  async function save() {
-    if (status === "pending") return;
-    setStatus("pending");
-    // Fixture-only latency makes real pending/failed/retry transitions inspectable;
-    // no network mutation or product record is implied by the preview.
-    await new Promise(resolve => setTimeout(resolve, 350));
-    setStatus(failNext.current ? "failed" : "saved");
-    failNext.current = false;
+  const { session, state, request, toggleFailure } = useDemoAction<{ name: string; period: string } | null>(null);
+  useEffect(() => () => session.reset(null), [session]);
+  const status = state.status === "success" ? "saved" : state.status === "error" ? "failed" : state.status;
+  // A theme changes presentation only. Saving confirms the submitted name/period,
+  // while edits made during that request remain available and explicitly unsaved.
+  const statusText = status === "saved" && (state.value?.name !== name || state.value?.period !== period)
+    ? copy.unsaved : copy[status];
+  function save(fails = false) {
+    // The session snapshot also protects callbacks queued before the next render.
+    if (session.getSnapshot().status === "pending") return;
+    if (fails) toggleFailure();
+    const submitted = { name, period };
+    void session.run(() => request(submitted));
   }
   const items = [{ id: "walk", title: copy.walk, body: copy.walkBody }, { id: "read", title: copy.read, body: copy.readBody }, { id: "rest", title: copy.rest, body: copy.restBody }];
+  // The secondary action slot allows aria-disabled to retain keyboard focus during the request.
   return <OverviewScreen title={copy.screen} description={copy.description} toolbarLabel={copy.tools}
     toolbar={<Stack gap="md"><TextField label={copy.name} value={name} onValueChange={setName} /><SegmentedControl label={copy.filter} items={[{ value: "day", label: copy.day }, { value: "week", label: copy.week }]} value={period} onValueChange={setPeriod} /></Stack>}
-    notice={<ContentTransition stateKey={status}><Text as="p" role="status">{copy[status]}</Text></ContentTransition>}
-    footer={<BottomCTA accessibilityLabel={copy.saveActions} primaryAction={{ label: status === "failed" ? copy.retry : copy.save, onClick: () => void save(), loading: status === "pending", loadingLabel: copy.pending }} secondaryAction={{ label: copy.fail, tone: "ghost", disabled: status === "pending", onClick: () => { failNext.current = true; void save(); } }} />}
+    notice={<ContentTransition stateKey={status}><Text as="p" role="status">{statusText}</Text></ContentTransition>}
+    footer={<BottomCTA accessibilityLabel={copy.saveActions} primaryAction={{ label: status === "failed" ? copy.retry : copy.save, onClick: () => void save(), loading: status === "pending", loadingLabel: copy.pending }} secondaryAction={<Button tone="ghost" aria-disabled={status === "pending"} onClick={() => save(true)}>{copy.fail}</Button>} />}
     items={items.map(item => ({ id: item.id, children: <Stack gap="sm"><Text variant="heading">{item.title}</Text><Text>{item.body}</Text></Stack> }))} />;
 }
 // Same public overlay instances stay mounted while the parent profile changes;
@@ -52,13 +58,18 @@ export function RecordSample() {
 function ProfileChromeSample({ onNextTheme }: { onNextTheme: () => void }) {
   const [open, setOpen] = useState<"dialog" | "sheet" | "popover" | null>(null);
   const [draft, setDraft] = useState<string>(copy.initial);
+  const dialogTrigger = useRef<HTMLButtonElement>(null);
+  const sheetTrigger = useRef<HTMLButtonElement>(null);
+  const toastTrigger = useRef<HTMLButtonElement>(null);
+  const [toastOpen, setToastOpen] = useState(true);
   const fields = <Stack gap="md"><TextField label={copy.overlayDraft} value={draft} onValueChange={setDraft} /><Button onClick={onNextTheme}>{copy.nextTheme}</Button></Stack>;
   return <Collapsible trigger={copy.chrome} defaultOpen><Stack gap="md">
     <Notice title={copy.chromeNotice} /><Skeleton animated={false} />
-    <Toast descriptor={{ id: "profile-saved", description: copy.toastCopy, closeLabel: copy.close }} onDismissRequest={() => {}} />
-    <Stack axis="inline" gap="sm" wrap><Button onClick={() => setOpen("dialog")}>{copy.dialog}</Button><Button onClick={() => setOpen("sheet")}>{copy.sheet}</Button><Popover open={open === "popover"} onOpenChange={next => setOpen(next ? "popover" : null)} title={copy.overlayTitle} closeLabel={copy.close} trigger={<Button>{copy.popover}</Button>}>{fields}</Popover></Stack>
-    <Dialog open={open === "dialog"} onOpenChange={next => { if (!next) setOpen(null); }} title={copy.overlayTitle} closeLabel={copy.close}>{fields}</Dialog>
-    <Sheet open={open === "sheet"} onOpenChange={next => { if (!next) setOpen(null); }} title={copy.overlayTitle} closeLabel={copy.close}>{fields}</Sheet>
+    {toastOpen && <Toast descriptor={{ id: "profile-saved", description: copy.toastCopy, closeLabel: copy.close }} onDismissRequest={() => { setToastOpen(false); toastTrigger.current?.focus(); }} />}
+    <Button ref={toastTrigger} tone="secondary" onClick={() => setToastOpen(true)}>{copy.showToast}</Button>
+    <Stack axis="inline" gap="sm" wrap><Button ref={dialogTrigger} onClick={() => setOpen("dialog")}>{copy.dialog}</Button><Button ref={sheetTrigger} onClick={() => setOpen("sheet")}>{copy.sheet}</Button><Popover open={open === "popover"} onOpenChange={next => setOpen(next ? "popover" : null)} title={copy.overlayTitle} closeLabel={copy.close} trigger={<Button>{copy.popover}</Button>}>{fields}</Popover></Stack>
+    <Dialog returnFocusRef={dialogTrigger} open={open === "dialog"} onOpenChange={next => { if (!next) setOpen(null); }} title={copy.overlayTitle} closeLabel={copy.close}>{fields}</Dialog>
+    <Sheet returnFocusRef={sheetTrigger} open={open === "sheet"} onOpenChange={next => { if (!next) setOpen(null); }} title={copy.overlayTitle} closeLabel={copy.close}>{fields}</Sheet>
   </Stack></Collapsible>;
 }
 

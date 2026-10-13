@@ -4,7 +4,7 @@ import { type PasswordFieldAutofillHint, type PasswordFieldSize } from "@hjmds/d
 import { type OtpFieldSize, type OtpFieldPresentation } from "@hjmds/design-contracts/components/otp-field";
 import { type CheckboxGroupSelection, type CheckboxState, type SelectionItemDescriptor, type SelectionOrientation } from "@hjmds/design-contracts/behaviors";
 import { type ReactNode } from "react";
-import { TextInput, type StyleProp, type GestureResponderEvent, type SwitchProps as NativeSwitchProps, type TextInputProps, type TextStyle, type ViewStyle } from "react-native";
+import { TextInput, type GestureResponderEvent, type SwitchProps as NativeSwitchProps, type TextInputProps } from "react-native";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 type FieldAccessibleName = Readonly<{
     label: string;
@@ -105,16 +105,6 @@ export type OtpFieldProps = Omit<BaseFieldProps, "autoComplete" | "defaultValue"
     onComplete?: (value: string) => void;
     size?: OtpFieldSize;
     presentation?: OtpFieldPresentation;
-    /**
-     * @deprecated Raw slot style bypasses `otpFieldRecipe`. Use `size` and `presentation` for slot
-     * appearance and `layoutStyle` for placement. Removed in the next major (consumer-policy.md §3.1).
-     */
-    slotStyle?: StyleProp<ViewStyle>;
-    /**
-     * @deprecated Raw slot text style bypasses `otpFieldRecipe`; `size` selects the digit typography.
-     * Removed in the next major (consumer-policy.md §3.1).
-     */
-    slotTextStyle?: StyleProp<TextStyle>;
 }>;
 /** One accessible numeric TextInput rendered through decorative OTP slots. */
 export declare const OtpField: import("react").ForwardRefExoticComponent<OtpFieldProps & import("react").RefAttributes<TextInput>>;
@@ -132,48 +122,6 @@ type ChoiceVisualProps = Readonly<{
     indicator?: "default" | "none";
     /** Canonical layout-only placement for the row (or the group frame). Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Raw visual style bypasses `selectionControlRecipe`. Use `layoutStyle` for placement and
-     * `presentation`/`size`/`indicator`/`renderIndicator`/`renderLeading` for appearance. Removed in the
-     * next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
-    /**
-     * @deprecated Raw visual style bypasses `selectionControlRecipe`. Use `layoutStyle` for placement and
-     * `presentation`/`size`/`indicator`/`renderIndicator`/`renderLeading` for appearance. Removed in the
-     * next major (consumer-policy.md §3.1).
-     */
-    controlStyle?: StyleProp<ViewStyle>;
-    /**
-     * @deprecated Raw visual style bypasses `selectionControlRecipe`. Use `layoutStyle` for placement and
-     * `presentation`/`size`/`indicator`/`renderIndicator`/`renderLeading` for appearance. Removed in the
-     * next major (consumer-policy.md §3.1).
-     */
-    indicatorStyle?: StyleProp<ViewStyle>;
-    /**
-     * @deprecated Raw visual style bypasses `selectionControlRecipe`. Use `layoutStyle` for placement and
-     * `presentation`/`size`/`indicator`/`renderIndicator`/`renderLeading` for appearance. Removed in the
-     * next major (consumer-policy.md §3.1).
-     */
-    leadingStyle?: StyleProp<ViewStyle>;
-    /**
-     * @deprecated Raw visual style bypasses `selectionControlRecipe`. Use `layoutStyle` for placement and
-     * `presentation`/`size`/`indicator`/`renderIndicator`/`renderLeading` for appearance. Removed in the
-     * next major (consumer-policy.md §3.1).
-     */
-    contentStyle?: StyleProp<ViewStyle>;
-    /**
-     * @deprecated Raw visual style bypasses `selectionControlRecipe`. Use `layoutStyle` for placement and
-     * `presentation`/`size`/`indicator`/`renderIndicator`/`renderLeading` for appearance. Removed in the
-     * next major (consumer-policy.md §3.1).
-     */
-    labelStyle?: StyleProp<TextStyle>;
-    /**
-     * @deprecated Raw visual style bypasses `selectionControlRecipe`. Use `layoutStyle` for placement and
-     * `presentation`/`size`/`indicator`/`renderIndicator`/`renderLeading` for appearance. Removed in the
-     * next major (consumer-policy.md §3.1).
-     */
-    descriptionStyle?: StyleProp<TextStyle>;
 }>;
 export type CheckboxProps = ChoiceVisualProps & Readonly<{
     label: string;
@@ -255,7 +203,7 @@ export type CheckboxGroupProps<Value extends string = string> = ChoiceGroupVisua
     renderIndicator?: (item: SelectionItemDescriptor<Value>, props: ChoiceVisualRenderProps) => ReactNode;
 }>;
 /** Validated controlled/uncontrolled checkbox collection using immutable Sets. */
-export declare function CheckboxGroup<Value extends string = string>({ label, accessibilityLabel, items, value, defaultValue, onValueChange, required, disabled, readOnly, invalid, description, error, requiredLabel, readOnlyLabel, invalidLabel, orientation, presentation, size, indicator, renderLeading, renderIndicator, layoutStyle, style, ...slotStyles }: CheckboxGroupProps<Value>): import("react").JSX.Element;
+export declare function CheckboxGroup<Value extends string = string>({ label, accessibilityLabel, items, value, defaultValue, onValueChange, required, disabled, readOnly, invalid, description, error, requiredLabel, readOnlyLabel, invalidLabel, orientation, presentation, size, indicator, renderLeading, renderIndicator, layoutStyle, ...slotStyles }: CheckboxGroupProps<Value>): import("react").JSX.Element;
 type SwitchBaseProps = Omit<NativeSwitchProps, "accessibilityHint" | "accessibilityLabel" | "defaultValue" | "onValueChange" | "style" | "value"> & Readonly<{
     label: string;
     /** Use inside a labelled ListRow; the accessible name and hint remain present. */
@@ -267,11 +215,6 @@ type SwitchBaseProps = Omit<NativeSwitchProps, "accessibilityHint" | "accessibil
     accessibilityHint?: string;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Raw visual style bypasses `switchRecipe`. Use `layoutStyle` for placement and
-     * `presentation`/`size` for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
 }>;
 type SwitchCanonicalStateProps = Readonly<{
     checked?: boolean;
@@ -282,7 +225,7 @@ type SwitchCanonicalStateProps = Readonly<{
     onValueChange?: never;
 }>;
 export type SwitchProps = SwitchBaseProps & SwitchCanonicalStateProps;
-export declare function Switch({ label, labelVisibility, presentation, testID, description, size, checked, defaultChecked, onCheckedChange, disabled, accessibilityLabel, accessibilityHint, layoutStyle, style, ...props }: SwitchProps): import("react").JSX.Element;
+export declare function Switch({ label, labelVisibility, presentation, testID, description, size, checked, defaultChecked, onCheckedChange, disabled, accessibilityLabel, accessibilityHint, layoutStyle, ...props }: SwitchProps): import("react").JSX.Element;
 export type SegmentedControlItem<Value extends string = string> = Readonly<{
     value: Value;
     label: string;
@@ -311,11 +254,6 @@ export type SegmentedControlProps<Value extends string = string> = SegmentedCont
     disabled?: boolean;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Raw visual style bypasses `segmentedControlRecipe`. Use `layoutStyle` for placement
-     * and `size` for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
 }>;
 export declare function SegmentedControl<Value extends string = string>(props: SegmentedControlProps<Value>): import("react").JSX.Element;
 type ChipBaseProps = Readonly<{
@@ -330,11 +268,6 @@ type ChipBaseProps = Readonly<{
     layoutStyle?: HjmCompositionStyleProp;
     leadingStyle?: HjmCompositionStyleProp;
     indicatorStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Raw text style bypasses `chipRecipe.label`. Use `size` and `selected` for label
-     * typography. Removed in the next major (consumer-policy.md §3.1).
-     */
-    labelStyle?: StyleProp<TextStyle>;
     trailingStyle?: HjmCompositionStyleProp;
     renderSelectionIndicator?: (props: Readonly<{
         selected: boolean;
@@ -355,6 +288,6 @@ type SelectionChipProps = Readonly<{
 }>;
 export type ChipProps = ChipBaseProps & (ActionChipProps | SelectionChipProps);
 /** Action/filter chip with role-specific, controlled selection semantics. */
-export declare function Chip({ label, size, disabled, leading, trailing, accessibilityLabel, accessibilityHint, layoutStyle, leadingStyle, indicatorStyle, labelStyle, trailingStyle, renderSelectionIndicator, selectionMode, selected, onPress, }: ChipProps): import("react").JSX.Element;
+export declare function Chip({ label, size, disabled, leading, trailing, accessibilityLabel, accessibilityHint, layoutStyle, leadingStyle, indicatorStyle, trailingStyle, renderSelectionIndicator, selectionMode, selected, onPress, }: ChipProps): import("react").JSX.Element;
 export {};
 //# sourceMappingURL=inputs.d.ts.map

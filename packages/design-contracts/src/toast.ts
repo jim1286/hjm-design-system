@@ -17,6 +17,7 @@ export type ToastPauseReason =
 export type ToastDismissReason =
   | "timeout"
   | "action"
+  | "press"
   | "close-action"
   | "escape"
   | "swipe"
@@ -67,6 +68,8 @@ export type ToastDescriptor = Readonly<{
   /** `null` persists; short durations clamp to the configured floor. */
   durationMs?: number | null;
   action?: ToastActionDescriptor;
+  /** Whole-card activation; sibling action/close controls remain independent. */
+  press?: Readonly<{ accessibilityLabel: string; onPress(): void }>;
   /** Decorative leading visual that replaces the tone badge (ReactNode on Web/Native). */
   media?: unknown;
   /** Step progress of a running task, announced with the current step label. */
@@ -93,6 +96,7 @@ export type ResolvedToastDescriptor = Readonly<{
   announcement: string;
   durationMs: number | null;
   action: ResolvedToastActionDescriptor | null;
+  press: NonNullable<ToastDescriptor["press"]> | null;
   media: unknown;
   progress: ToastProgressDescriptor | null;
   closeLabel: string;
@@ -182,6 +186,12 @@ export function validateToastDescriptor(descriptor: ToastDescriptor): void {
       throw new RangeError("Toast progress current must index an existing step");
     }
   }
+  if (descriptor.press) {
+    assertCopy(descriptor.press.accessibilityLabel, "press.accessibilityLabel");
+    if (typeof descriptor.press.onPress !== "function") {
+      throw new TypeError("Toast press.onPress must be a function");
+    }
+  }
   if (descriptor.action) {
     assertCopy(descriptor.action.label, "action.label");
     if (descriptor.action.accessibilityLabel !== undefined) {
@@ -195,7 +205,7 @@ export function resolveToastDuration(descriptor: ToastDescriptor): number | null
   validateToastDescriptor(descriptor);
   if (descriptor.durationMs === null) return null;
   if (descriptor.durationMs === undefined) {
-    return descriptor.action ? null : toastBehaviorDefaults.durationMs;
+    return descriptor.action || descriptor.press ? null : toastBehaviorDefaults.durationMs;
   }
   return Math.max(descriptor.durationMs, toastBehaviorDefaults.minimumDurationMs);
 }
@@ -231,6 +241,7 @@ export function resolveToastDescriptor(
     announcement,
     durationMs: resolveToastDuration(descriptor),
     action,
+    press: descriptor.press ?? null,
     media: descriptor.media ?? null,
     progress: descriptor.progress ?? null,
     closeLabel: descriptor.closeLabel,
@@ -266,6 +277,7 @@ export type ToastSessionSnapshot = Readonly<{
   descriptor: ResolvedToastDescriptor;
   timer: ToastTimerSnapshot;
   actionInvoked: boolean;
+  pressInvoked: boolean;
   dismissReason: ToastDismissReason | null;
 }>;
 
@@ -280,6 +292,7 @@ export type ToastSession = Readonly<{
   /** Advances a renderer-owned clock; no global timer or Date dependency exists. */
   advanceTime(elapsedMs: number): boolean;
   invokeAction(): boolean;
+  invokePress(): boolean;
   dismiss(reason: ToastDismissReason): boolean;
   /** Renderers call this once exit motion or immediate reduced-motion exit finishes. */
   completeExit(): boolean;
@@ -299,6 +312,8 @@ export function createToastSession(descriptor: ToastDescriptor): ToastSession {
   let revision = 0;
   let elapsedMs = 0;
   let actionInvoked = false;
+  let pressInvoked = false;
+  let invokingControl = false;
   let dismissReason: ToastDismissReason | null = null;
   let dismissNotified = false;
   let cachedSnapshot: ToastSessionSnapshot | null = null;
@@ -341,6 +356,7 @@ export function createToastSession(descriptor: ToastDescriptor): ToastSession {
       descriptor: resolved,
       timer: timerSnapshot(),
       actionInvoked,
+      pressInvoked,
       dismissReason,
     };
     return cachedSnapshot;
@@ -384,6 +400,7 @@ export function createToastSession(descriptor: ToastDescriptor): ToastSession {
       resolved = next;
       revision += 1;
       actionInvoked = false;
+      pressInvoked = false;
       dismissReason = null;
       dismissNotified = false;
       if (phase === "queued" || timerPolicy === "restart") elapsedMs = 0;
@@ -431,13 +448,15 @@ export function createToastSession(descriptor: ToastDescriptor): ToastSession {
     },
     invokeAction() {
       const action = resolved.action;
-      if (phase !== "visible" || action === null || actionInvoked) return false;
+      if (phase !== "visible" || action === null || actionInvoked || invokingControl) return false;
       const invokedRevision = revision;
       actionInvoked = true;
+      invokingControl = true;
       notify();
       try {
         action.onAction();
       } finally {
+        invokingControl = false;
         if (
           action.dismissOnAction &&
           phase === "visible" &&
@@ -445,6 +464,28 @@ export function createToastSession(descriptor: ToastDescriptor): ToastSession {
         ) {
           phase = "closing";
           dismissReason = "action";
+          pausedBy.clear();
+          notify();
+        }
+      }
+      return true;
+    },
+    invokePress() {
+      const press = resolved.press;
+      if (phase !== "visible" || press === null || pressInvoked || invokingControl) return false;
+      const invokedRevision = revision;
+      pressInvoked = true;
+      invokingControl = true;
+      notify();
+      try {
+        press.onPress();
+      } finally {
+        invokingControl = false;
+        // Match the reference's callback-then-dismiss ordering without closing a new
+        // revision published by navigation, or re-entering another control mid-callback.
+        if (phase === "visible" && revision === invokedRevision) {
+          phase = "closing";
+          dismissReason = "press";
           pausedBy.clear();
           notify();
         }
@@ -510,6 +551,7 @@ export type ToastStore = Readonly<{
   subscribe(listener: () => void): () => void;
   publish(descriptor: ToastDescriptor, options?: ToastPublishOptions): ToastPublishResult;
   invokeAction(id: ToastId): boolean;
+  invokePress(id: ToastId): boolean;
   dismiss(id: ToastId, reason: ToastDismissReason): boolean;
   /** Stable-id programmatic close shortcut. */
   close(id: ToastId): boolean;
@@ -716,6 +758,10 @@ export function createToastStore(options: ToastStoreOptions = {}): ToastStore {
       queuedIds.push(descriptor.id);
       notify();
       return { outcome: "added", id: descriptor.id, position: "queued" };
+    },
+    invokePress(id) {
+      assertActive();
+      return sessions.get(id)?.invokePress() ?? false;
     },
     invokeAction(id) {
       assertActive();

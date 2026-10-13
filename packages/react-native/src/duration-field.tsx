@@ -1,24 +1,21 @@
-import { View } from "react-native";
-import { spacing } from "@hjmds/design-contracts/foundations";
 import { changeDurationUnit, resolveDuration, type DurationFieldLabels, type DurationRange } from "@hjmds/design-contracts/duration-field";
 import { NumberField } from "./number-field.js";
-import { Text } from "./primitives.js";
-import { useHjmNativeTheme } from "./provider.js";
+import { FieldGroup } from "./field-group.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
-export type DurationFieldProps = DurationRange & Readonly<{ value: number; onValueChange: (seconds: number) => void; labels: DurationFieldLabels; disabled?: boolean;
-  /** Canonical layout-only placement on the root, matching Web DurationField (added 2026-10-06; Native had no placement prop). */
-  layoutStyle?: HjmCompositionStyleProp }>;
+export type DurationFieldProps = DurationRange & Readonly<{ value: number; onValueChange: (seconds: number) => void; labels: DurationFieldLabels; disabled?: boolean; layoutStyle?: HjmCompositionStyleProp }>;
+const units = ["hours", "minutes", "seconds"] as const;
+/** Units and limits remain in seconds; FieldGroup owns grouping and edit lifetime. */
 export function DurationField({ value, onValueChange, labels, min = 0, max, disabled = false, layoutStyle }: DurationFieldProps) {
   const parts = resolveDuration(value, { min, max });
-  const { environment } = useHjmNativeTheme();
-  // Scale the field's wrapping basis with its text: two narrow columns clipped minute values at 200%.
-  const fieldBasis = spacing.xxxl * 3 * environment.textScale;
-  return <View style={[layoutStyle, { gap: spacing.sm }]}><Text variant="label">{labels.label}</Text>
-    <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing.md }}>
-      {(["hours", "minutes", "seconds"] as const).map(unit => <View key={unit} style={{ flexGrow: 1, flexBasis: fieldBasis }}><NumberField label={`${labels.label}, ${labels[unit]}`} min={0} max={unit === "hours" ? Math.max(1, Math.floor(max / 3600)) : 59}
-        value={parts[unit]} disabled={disabled || (unit === "hours" && max < 3600)} step={1}
+  return <FieldGroup layout="inline" layoutStyle={layoutStyle}
+    descriptor={{ label: labels.label, disabled,
+      fields: units.map(unit => ({ id: unit, label: labels[unit], disabled: unit === "hours" && max < 3600 })) }}
+    renderField={({ id, controlProps, guardChange }) => {
+      const unit = units.find(unit => unit === id);
+      if (!unit) return null;
+      return <NumberField label={controlProps.label} accessibilityLabel={controlProps.accessibilityLabel} disabled={controlProps.disabled}
+        min={0} max={unit === "hours" ? Math.max(1, Math.floor(max / 3600)) : 59} value={parts[unit]} step={1}
         incrementLabel={labels.increment(unit)} decrementLabel={labels.decrement(unit)}
-        onValueChange={next => onValueChange(changeDurationUnit(value, unit, next, { min, max }))} /></View>)}
-    </View>
-  </View>;
+        onValueChange={guardChange((next: number | null) => onValueChange(changeDurationUnit(value, unit, next, { min, max })))} />;
+    }} />;
 }

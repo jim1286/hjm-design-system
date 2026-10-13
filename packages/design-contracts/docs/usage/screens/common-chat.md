@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 구성 API 지침 참조
-- 검토일: 2026-10-06
+- 검토일: 2026-10-13
 - 근거: [반복 화면 조합](../../screen-patterns.md); 공통 API와 실제 Web·Native 예제의 슬롯·상태를 대조해 중복 조립 방지. 2026-10-06 사용자 승인으로 스토리북 배포(이전 `실험/화면/공통 화면/채팅`, [승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정))
 - 스토리북: `배포/화면/소통/채팅`
 
@@ -38,8 +38,20 @@ host: 남은 높이·safe area·키보드
 | --- | --- | --- |
 | 기본 | 헤더 → 메시지 타임라인 → 작성창 | 각 공개 콜백을 제품 상태에 연결 |
 | 로딩 | 최초 조회는 본문 상태, 저장은 해당 행동 pending | 중복 제출 차단; 성공을 먼저 표시하지 않음 |
-| 빈 | 실제 조회 0건 또는 아직 작성하지 않은 상태 안내 | 시작·조건 해제 등 맥락에 맞는 대안 |
+| 빈 | 타임라인 중앙에 첫 대화 안내, composer 유지 | 바로 첫 메시지 작성 |
 | 오류 | 전송 실패는 초안과 타임라인을 유지하고 notice로 안내 | 실패 원인과 재시도 경로 제공 |
+
+
+### 첫 메시지부터 실패 복구까지
+
+2026-10-13 전수 점검에서 최초 조회와 변경 요청의 상태를 같은 골격으로 설명하던 부분을 구체화했다.
+
+| 상황 | 연결 | 유지·복구 |
+| --- | --- | --- |
+| 첫 메시지 | empty + composer | 미게시(1.18.0 이후): 첫 입력을 허용한다. 로딩·오류·권한 제한은 composer를 숨긴다 |
+| 전송 중 | ready 또는 empty 유지, composer.pending | 입력 snapshot과 요청 식별자를 제품이 보관한다 |
+| 전송 실패 | 같은 초안·첨부·답장 대상, notice | 동일 메시지 재시도와 새 메시지 전송을 구분한다 |
+| 전송 확정 | receipt의 메시지 id로 목록 반영 | 확정된 초안만 비우며 사용자가 그 뒤 쓴 내용은 지우지 않는다 |
 
 ## 사용하는 지침
 
@@ -58,7 +70,7 @@ import { ChatMessage, ChatScreen, MessageComposer } from "@hjmds/react/screens";
 <ChatScreen
   title={t("chat.title")}
   scroll="screen" // 짧은 기록. 긴 기록은 제품 가상 목록 + 기본 scroll="content"
-  state={isPending ? { kind: "loading", title: t("chat.loading") } : { kind: "ready" }}
+  state={isPending ? { kind: "loading", title: t("chat.loading") } : messages.length ? { kind: "ready" } : { kind: "empty", title: t("chat.empty") }}
   composer={<MessageComposer value={draft} label={t("chat.input")} sendLabel={t("chat.send")}
     pending={sending} onValueChange={setDraft} onSend={send} />}
 >
@@ -79,7 +91,7 @@ import { Text } from "@hjmds/react-native/primitives";
 
 <ChatScreen
   title={t("chat.title")}
-  state={isPending ? { kind: "loading", title: t("chat.loading") } : { kind: "ready" }}
+  state={isPending ? { kind: "loading", title: t("chat.loading") } : messages.length ? { kind: "ready" } : { kind: "empty", title: t("chat.empty") }}
   composer={<MessageComposer value={draft} label={t("chat.input")} sendLabel={t("chat.send")}
     pending={sending} onValueChange={setDraft} onSend={send} />}
 >
@@ -103,11 +115,10 @@ HJM `Timeline`(이벤트 연표)과 `VirtualList`(고정 `rowHeight`)는 높이�
 `deliveryLabel`은 선택 prop이라 값이 없을 때 `undefined`를 넘기지 않고 조건부 spread로 뺀다(`exactOptionalPropertyTypes`).
 콜백·데이터·지역화 함수는 제품에서 공급한다.
 
-## 큰 글자·다크·좁은 폭
+## 다크·좁은 폭
 
 | 조건 | 바뀌는 것 |
 | --- | --- |
-| 큰 글자 | 2배 글자에서 제목·행은 내용 높이로 증가. footer·닫기·입력 필드가 겹치지 않는지 확인 |
 | 다크 | semantic 색으로 내용과 표면을 함께 전환; 예제 브랜드 색을 제품 기본값으로 복사하지 않음 |
 | 좁은 폭 | 320px부터 한 열로 읽기 순서 유지. 가상화 본문은 scroll=content, 중첩 스크롤 금지 |
 | 키보드 | Native host가 safe area와 키보드를 한 번 처리; Web은 포커스된 입력과 footer 가림 확인 |
@@ -121,7 +132,9 @@ HJM `Timeline`(이벤트 연표)과 `VirtualList`(고정 `rowHeight`)는 높이�
 
 ## 함정
 
+- 대화 정보에 들어갔다 돌아와도 입력과 답장 대상을 유지한다. 원문 이동은 현재 메시지 목록에서 대상에 스크롤하고, Web은 원문 host로 초점도 옮긴다. 같은 원문을 다시 누르면 강조 시간을 다시 시작하며 언마운트 시 타이머를 정리한다.
+- 전송 실패 예약은 읽음 저장 실패 예약과 구분해 다른 화면의 행동을 실패시키지 않는다.
 - 전송 실패는 초안과 타임라인을 유지하고 notice로 안내.
-- Storybook은 실제 서버·OS 권한·라우터 연동 증거가 아니다. 기본·다크·큰 글자와 실패/복구를 각각 확인한다.
+- Storybook은 실제 서버·OS 권한·라우터 연동 증거가 아니다. 기본·다크와 실패/복구를 각각 확인한다.
 - 긴 대화를 `scroll="screen"` + map으로 그리지 않는다. Native는 `FlatList`(기본 `scroll="content"`, 답장 원문 이동은 `scrollToIndex`), Web은 가변 높이 가상 목록이다. Web 예제의 `scroll="screen"`은 짧은 고정 기록이라서다.
 - 실패 복구 스토리(`실패와 초안 복구`)는 다음 전송 실패를 예약하는 데모 도구로 연다.

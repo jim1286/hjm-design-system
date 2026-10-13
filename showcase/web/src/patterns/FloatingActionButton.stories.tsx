@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { FloatingActionButton, useFloatingActionButtonScroll, resolveFloatingActionButtonContentClearance } from "@hjmds/react/floating-action-button";
 import { TopBar } from "@hjmds/react/top-bar";
@@ -9,12 +9,17 @@ import { Container } from "@hjmds/react/layout";
 import { Button } from "@hjmds/react/actions";
 
 export function FloatingNotesPreview() {
+  // Pointer activation does not focus buttons in Safari; identify the actual opener explicitly.
+  const composerTrigger = useRef<HTMLButtonElement>(null);
   const [target, setTarget] = useState<HTMLDivElement | null>(null);
   const layoutMode = useFloatingActionButtonScroll(target);
   const [clearance, setClearance] = useState(resolveFloatingActionButtonContentClearance(0));
   const [notes, setNotes] = useState(Array.from({ length: 18 }, (_, index) => `기억하고 싶은 순간 ${index + 1}`));
   const [open, setOpen] = useState(false); const [draft, setDraft] = useState("");
-  function save() { if (!draft.trim()) return; setNotes((items) => [draft.trim(), ...items]); setOpen(false); setDraft(""); target?.scrollTo({ top: 0 }); }
+  // A second queued press can arrive before the closing render commits.
+  const savedInSession = useRef(false);
+  function start() { savedInSession.current = false; setOpen(true); }
+  function save() { if (savedInSession.current || !draft.trim()) return; savedInSession.current = true; setNotes((items) => [draft.trim(), ...items]); setOpen(false); setDraft(""); target?.scrollTo({ top: 0 }); }
   return <>
     <div ref={setTarget} tabIndex={0} role="region" aria-label="최근 기록" style={{ blockSize: "100dvh", overflowY: "auto" }}>
       <div style={{ paddingBottom: clearance }}>
@@ -22,9 +27,9 @@ export function FloatingNotesPreview() {
         <Container gutter="compact"><List label="최근 기록">{notes.map((note, index) => <ListRow key={`${index}-${note}`} title={note} description="작은 순간도 모아두면 오래 남아요." />)}</List></Container>
       </div>
     </div>
-    <FloatingActionButton descriptor={{ label: "새 기록", icon: { name: "add" }, layoutMode }} renderIcon={() => <span>＋</span>}
-      onContentClearanceChange={setClearance} onClick={() => setOpen(true)} />
-    <Dialog title="어떤 순간을 남길까요?" open={open} onOpenChange={setOpen} closeLabel="닫기"
+    <FloatingActionButton ref={composerTrigger} descriptor={{ label: "새 기록", icon: { name: "add" }, layoutMode }} renderIcon={() => <span>＋</span>}
+      onContentClearanceChange={setClearance} onClick={start} />
+    <Dialog title="어떤 순간을 남길까요?" open={open} onOpenChange={setOpen} closeLabel="닫기" returnFocusRef={composerTrigger}
       footer={<Button disabled={!draft.trim()} onClick={save}>기록 추가</Button>}>
       <TextArea label="나의 기록" value={draft} onChange={(event) => setDraft(event.target.value)} />
     </Dialog>

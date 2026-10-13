@@ -305,3 +305,14 @@ it("scrolls thread introduction with comments and replaces it on restricted stat
  expect(tree.root.findAll(node=>node.props.testID==="thread-composer")).toHaveLength(0);
  act(()=>tree.unmount());
 });
+
+it("omits empty metadata above anonymous comment body",async()=>{
+ const {CommentThreadScreen}=await import("../src/screen-flows.js");
+ const {Stack}=await import("../src/primitives.js");
+ let tree:ReactTestRenderer;
+ act(()=>{tree=create(<HjmNativeProvider><CommentThreadScreen title="Comments" items={[{id:"one",parentId:null,author:"",timeLabel:"",body:<Text>Comment body</Text>,avatar:<Text>Avatar</Text>,likeCountLabel:"",likeIcon:null,likeLabel:"Like",likeAction:null,canReply:false}]} expandedIds={[]} onExpandedChange={()=>{}} onLike={()=>{}} onReply={()=>{}} replyLabel="Reply" repliesLabel={()=>"Replies"}/></HjmNativeProvider>);});
+ const column=tree!.root.findAllByType(Stack).find(node=>node.props.layoutStyle?.flex===1&&node.props.layoutStyle?.minWidth===0)!;
+ expect(column.props.children[0]).toBeNull();
+ expect(column.props.children[1].props.children).toBe("Comment body");
+ act(()=>tree!.unmount());
+});

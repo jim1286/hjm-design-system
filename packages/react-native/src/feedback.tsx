@@ -1,3 +1,4 @@
+import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { easing, fontWeight, glyph, spacing } from "@hjmds/design-contracts/foundations";
 import {
@@ -65,7 +66,6 @@ import {
   useWindowDimensions,
   type ViewProps,
   type StyleProp,
-  type TextStyle,
   type ViewStyle,
 } from "react-native";
 
@@ -74,7 +74,6 @@ export type { ToastPresentationAdapter } from "./internal/toast-presentation.js"
 
 import { Button, IconButton } from "./actions.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 
@@ -95,11 +94,6 @@ export type NoticeProps = Omit<ViewProps, "children" | "style"> & Readonly<{
   icon?: ReactNode;
   renderIcon?: (props: NoticeIconRenderProps) => ReactNode;
   action?: ReactNode;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and `tone` for appearance.
-   * Removed in the next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -112,11 +106,10 @@ export function Notice({
   icon,
   renderIcon,
   action,
-  style,
   layoutStyle,
   ...props
 }: NoticeProps) {
-  warnDeprecatedStyleProps("Notice", { style }, "layoutStyle for placement and tone for appearance");
+  assertNoRemovedStyleProps("Notice", props, ["style"]);
   const theme = useHjmNativeTheme();
   const toneContract = noticeRecipe.tones[tone];
   const foreground = resolveColorReference(toneContract.foreground, theme.palette);
@@ -148,7 +141,6 @@ export function Notice({
           gap: noticeRecipe.gap,
           padding: noticeRecipe.padding,
         },
-        style,
         layoutStyle,
       ]}
     >
@@ -208,31 +200,6 @@ export type EmptyStateProps = Omit<ViewProps, "children" | "style"> & Readonly<{
   announcement?: AnnouncementMode;
   accessibilityLabel?: string;
   titleRole?: "header";
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and `density`/`align` for appearance.
-   * Removed in the next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `illustration` content and `density` for appearance.
-   * Removed in the next major (consumer-policy.md §3.1).
-   */
-  illustrationStyle?: StyleProp<ViewStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use the empty-state typography recipe for appearance.
-   * Removed in the next major (consumer-policy.md §3.1).
-   */
-  titleStyle?: StyleProp<TextStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use the empty-state typography recipe for appearance.
-   * Removed in the next major (consumer-policy.md §3.1).
-   */
-  descriptionStyle?: StyleProp<TextStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use the `action` node's own semantic props for appearance.
-   * Removed in the next major (consumer-policy.md §3.1).
-   */
-  actionStyle?: StyleProp<ViewStyle>;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -247,19 +214,10 @@ export function EmptyState({
   announcement = "none",
   accessibilityLabel,
   titleRole = "header",
-  style,
-  illustrationStyle,
-  titleStyle,
-  descriptionStyle,
-  actionStyle,
   layoutStyle,
   ...props
 }: EmptyStateProps) {
-  warnDeprecatedStyleProps(
-    "EmptyState",
-    { style, illustrationStyle, titleStyle, descriptionStyle, actionStyle },
-    "layoutStyle for placement and density/align for appearance",
-  );
+  assertNoRemovedStyleProps("EmptyState", props, ["style","illustrationStyle","titleStyle","descriptionStyle","actionStyle"]);
   const theme = useHjmNativeTheme();
   const contentLabel = [title, description].filter(Boolean).join(", ");
   const announcementText = accessibilityLabel ?? [title, description].filter(Boolean).join(". ");
@@ -287,7 +245,6 @@ export function EmptyState({
           paddingHorizontal: emptyStateRecipe.paddingHorizontal,
           paddingVertical: emptyStateRecipe.density[density].paddingVertical,
         },
-        style,
         layoutStyle,
       ]}
     >
@@ -311,11 +268,11 @@ export function EmptyState({
           style={[
             {
               alignItems: "center",
-              height: glyph[emptyStateRecipe.icon.size],
+              // Larger illustrations own their intrinsic size; icons retain a minimum frame.
+              minHeight: glyph[emptyStateRecipe.icon.size],
               justifyContent: "center",
-              width: glyph[emptyStateRecipe.icon.size],
+              minWidth: glyph[emptyStateRecipe.icon.size],
             },
-            illustrationStyle,
           ]}
         >
           {illustration}
@@ -329,7 +286,6 @@ export function EmptyState({
             color: resolveColorReference(emptyStateRecipe.title.color, theme.palette),
             fontWeight: emptyStateRecipe.title.fontWeight,
           },
-          titleStyle,
         ]}
         variant={emptyStateRecipe.title.textVariant}
       >
@@ -345,14 +301,13 @@ export function EmptyState({
                 theme.palette,
               ),
             },
-            descriptionStyle,
           ]}
           variant={emptyStateRecipe.description.textVariant}
         >
           {description}
         </Text>
       ) : null}
-      {action ? <View style={actionStyle}>{action}</View> : null}
+      {action ? <View>{action}</View> : null}
       {usesUpperSpacers ? <View accessible={false} style={{ flexGrow: 3 }} /> : null}
     </View>
   );
@@ -368,11 +323,6 @@ export type ResultProps = Omit<ViewProps, "children" | "style"> &
   ResultDescriptor &
   Readonly<{
     renderIcon?: (props: ResultIconRenderProps) => ReactNode;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and `status` for appearance.
-     * Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
   }>;
@@ -384,11 +334,10 @@ export function Result({
   description,
   actions,
   renderIcon,
-  style,
   layoutStyle,
   ...props
 }: ResultProps) {
-  warnDeprecatedStyleProps("Result", { style }, "layoutStyle for placement and status for appearance");
+  assertNoRemovedStyleProps("Result", props, ["style"]);
   const theme = useHjmNativeTheme();
   const result = resolveResultDescriptor({
     status,
@@ -433,7 +382,6 @@ export function Result({
           paddingHorizontal: resultRecipe.paddingHorizontal,
           paddingVertical: resultRecipe.paddingVertical,
         },
-        style,
         layoutStyle,
       ]}
     >
@@ -538,31 +486,6 @@ export type ProgressProps = ProgressName & Readonly<{
   /** Content inside the ring. Ignored when linear. */
   children?: ReactNode;
   tone?: ProgressTone;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and `tone`/`size`/`shape` for appearance.
-   * Removed in the next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use the progress label typography recipe for appearance.
-   * Removed in the next major (consumer-policy.md §3.1).
-   */
-  labelStyle?: StyleProp<TextStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `valueText` and the progress typography recipe for appearance.
-   * Removed in the next major (consumer-policy.md §3.1).
-   */
-  valueStyle?: StyleProp<TextStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `size`/`shape` for appearance.
-   * Removed in the next major (consumer-policy.md §3.1).
-   */
-  trackStyle?: StyleProp<ViewStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `tone` for appearance.
-   * Removed in the next major (consumer-policy.md §3.1).
-   */
-  indicatorStyle?: StyleProp<ViewStyle>;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
   testID?: string;
@@ -579,19 +502,9 @@ export function Progress({
   tone = progressRecipe.defaults.tone,
   shape = progressRecipe.defaults.shape,
   children,
-  style,
-  labelStyle,
-  valueStyle,
-  trackStyle,
-  indicatorStyle,
   layoutStyle,
   testID,
 }: ProgressProps) {
-  warnDeprecatedStyleProps(
-    "Progress",
-    { style, labelStyle, valueStyle, trackStyle, indicatorStyle },
-    "layoutStyle for placement and tone/size/shape for appearance",
-  );
   if (!Number.isFinite(max) || max <= 0) {
     throw new RangeError("Progress max must be a positive finite number");
   }
@@ -615,7 +528,7 @@ export function Progress({
         ...(resolvedValueText === undefined ? {} : { text: resolvedValueText }),
       }}
       testID={testID}
-      style={[{ gap: spacing.xs }, style, layoutStyle]}
+      style={[{ gap: spacing.xs }, layoutStyle]}
     >
       {label === undefined ? null : (
         <View
@@ -627,9 +540,9 @@ export function Progress({
             justifyContent: "space-between",
           }}
         >
-          <Text style={labelStyle} variant="label">{label}</Text>
+          <Text variant="label">{label}</Text>
           {resolvedValueText ? (
-            <Text style={valueStyle} tone="muted" variant="caption">{resolvedValueText}</Text>
+            <Text tone="muted" variant="caption">{resolvedValueText}</Text>
           ) : null}
         </View>
       )}
@@ -646,30 +559,24 @@ export function Progress({
               justifyContent: "center",
               width: progressRecipe.circular.sizes[size],
             },
-            trackStyle,
           ]}
         >
-          {/*
-            The filled arc is a rotated half-ring: RN has no conic gradient, and
-            pulling in a drawing dependency for one shape is not worth it. The
-            value itself is announced by the wrapper, so this is decoration.
-          */}
-          <View
-            pointerEvents="none"
-            style={[
-              {
-                borderColor: resolveColorReference(progressRecipe.tones[tone], theme.palette),
-                borderRadius: progressRecipe.circular.sizes[size] / 2,
-                borderTopColor: "transparent",
-                borderWidth: progressRecipe.circular.strokeWidth[size],
-                height: progressRecipe.circular.sizes[size],
-                position: "absolute",
-                transform: [{ rotate: `${((percentage ?? 25) / 100) * 360}deg` }],
-                width: progressRecipe.circular.sizes[size],
-              },
-              indicatorStyle,
-            ]}
-          />
+          {/* Each clipped half grows independently. Rotating a fixed three-quarter
+              border showed the same amount at 0% and 100%, despite its numeric value. */}
+          {([0, 1] as const).map(half => {
+            const diameter = progressRecipe.circular.sizes[size];
+            const fraction = (percentage ?? 25) / 100;
+            const sweep = Math.max(0, Math.min(1, fraction * 2 - half));
+            if (sweep === 0) return null;
+            const left = half === 0 ? diameter / 2 : 0;
+            return <View key={half} pointerEvents="none" style={{ position: "absolute", top: -progressRecipe.circular.strokeWidth[size], left: left - progressRecipe.circular.strokeWidth[size], width: diameter / 2, height: diameter, overflow: "hidden" }}>
+              <View style={{ position: "absolute", left: -left, width: diameter, height: diameter, transform: [{ rotate: `${(sweep - 1) * 180}deg` }] }}>
+                <View style={{ position: "absolute", left, width: diameter / 2, height: diameter, overflow: "hidden" }}>
+                  <View style={[{ position: "absolute", left: -left, width: diameter, height: diameter, borderRadius: diameter / 2, borderWidth: progressRecipe.circular.strokeWidth[size], borderColor: resolveColorReference(progressRecipe.tones[tone], theme.palette) }]} />
+                </View>
+              </View>
+            </View>;
+          })}
           {children}
         </View>
       ) : (
@@ -682,7 +589,6 @@ export function Progress({
             height: progressRecipe.sizes[size],
             overflow: "hidden",
           },
-          trackStyle,
         ]}
       >
         <View
@@ -692,7 +598,6 @@ export function Progress({
               height: "100%",
               width: `${percentage ?? 30}%`,
             },
-            indicatorStyle,
           ]}
         />
       </View>
@@ -712,11 +617,6 @@ export type SkeletonProps = Readonly<{
   height?: number;
   radius?: number;
   accessibilityLabel?: string;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and `shape`/`width`/`height` for appearance.
-   * Removed in the next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -736,10 +636,8 @@ export function Skeleton({
   height,
   radius: radiusValue,
   accessibilityLabel,
-  style,
   layoutStyle,
 }: SkeletonProps) {
-  warnDeprecatedStyleProps("Skeleton", { style }, "layoutStyle for placement and shape/width/height for appearance");
   const { environment, palette, tokens } = useHjmNativeTheme();
   const shapeSpec = skeletonRecipe.shapes[shape];
   const { duration, easing: easingName, fromOpacity, toOpacity } =
@@ -803,7 +701,6 @@ export function Skeleton({
             : toOpacity,
           width: resolvedWidth,
         },
-        style,
         layoutStyle,
       ]}
     />
@@ -815,11 +712,6 @@ export type ToastProps = Readonly<{
   onDismiss?: (reason: ToastDismissReason) => void;
   placement?: ToastPlacement;
   renderToneIcon?: (props: ToastToneIconRenderProps) => ReactNode;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and the descriptor `tone`/`placement` for appearance.
-   * Removed in the next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -839,6 +731,7 @@ type ToastSurfaceProps = Readonly<{
   suspended?: boolean;
   onDismiss: (reason: ToastDismissReason) => void;
   onAction: () => void;
+  onPress: () => void;
   onExitComplete: () => void;
   onPause: (reason: ToastPauseReason) => void;
   onResume: (reason: ToastPauseReason) => void;
@@ -896,6 +789,7 @@ function ToastSurface({
   suspended = false,
   onDismiss,
   onAction,
+  onPress,
   onExitComplete,
   onPause,
   onResume,
@@ -904,6 +798,7 @@ function ToastSurface({
   style,
 }: ToastSurfaceProps) {
   const resolved = snapshot.descriptor;
+  const [pressFocused, setPressFocused] = useState(false);
   const theme = useHjmNativeTheme();
   // Managed liquid presentation owns its shadow; ordinary toast chrome follows
   // the profile floating role, preserving the recipe for consumers without one.
@@ -1008,6 +903,26 @@ function ToastSurface({
         style,
       ]}
     >
+      {resolved.press ? (
+        // A sibling hit surface lets text/media/padding activate the card while the
+        // explicit controls stay separate accessibility targets. Liquid's parent
+        // PanResponder can cancel this Pressable when it claims an upward swipe.
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={resolved.press.accessibilityLabel}
+          accessibilityHint={resolved.announcement}
+          disabled={snapshot.phase !== "visible" || suspended}
+          onPress={onPress}
+          onFocus={() => { setPressFocused(true); pauseFocus(); }}
+          onBlur={() => { setPressFocused(false); resumeFocus(); }}
+          style={({ pressed }) => ({
+            position: "absolute", top: 0, bottom: 0, start: 0, end: 0,
+            borderRadius: surfaceRadius,
+            borderWidth: pressFocused || pressed ? toastRecipe.states.focus.width : 0,
+            borderColor: resolveColorReference(toastRecipe.states.focus.color, theme.palette),
+          })}
+        />
+      ) : null}
       {/* 1.10.0 retired the edge strip (toneMark width 0); the tinted icon badge carries tone. */}
       {toastRecipe.toneMark.width > 0 ? (
         <View
@@ -1039,6 +954,7 @@ function ToastSurface({
           absolute close). The user asked for one panel everywhere ("the panel becomes the toast"), so the liquid
           surface now carries the same media/badge · copy · close columns; only its chrome stays transparent. */}
       <View
+        pointerEvents={resolved.press ? "box-none" : "auto"}
         style={{
           // Start-aligned so a multi-line or large-text toast keeps its badge beside the title (Web does the same).
           alignItems: "flex-start",
@@ -1050,6 +966,7 @@ function ToastSurface({
         {resolved.media !== null ? (
           // Product media replaces the tone badge in the same column; it is decorative, the copy carries meaning.
           <View
+            pointerEvents={resolved.press ? "none" : "auto"}
             accessibilityElementsHidden
             importantForAccessibility="no-hide-descendants"
             style={{
@@ -1066,6 +983,7 @@ function ToastSurface({
           </View>
         ) : renderedToneIcon === undefined ? null : (
           <View
+            pointerEvents={resolved.press ? "none" : "auto"}
             accessibilityElementsHidden
             importantForAccessibility="no-hide-descendants"
             style={{
@@ -1081,25 +999,27 @@ function ToastSurface({
             {renderedToneIcon}
           </View>
         )}
-        <View style={{ alignSelf: "center", flex: 1, gap: toastRecipe.content.gap, minWidth: 0 }}>
-          {resolved.title ? (
+        <View pointerEvents={resolved.press ? "box-none" : "auto"} style={{ alignSelf: "center", flex: 1, gap: toastRecipe.content.gap, minWidth: 0 }}>
+          <View pointerEvents={resolved.press ? "none" : "auto"} style={{ gap: toastRecipe.content.gap }}>
+            {resolved.title ? (
+              <Text
+                style={{
+                  color: resolveColorReference(toastRecipe.title.color, theme.palette),
+                  fontWeight: toastRecipe.title.fontWeight,
+                }}
+                variant={toastRecipe.title.textVariant}
+              >
+                {resolved.title}
+              </Text>
+            ) : null}
             <Text
-              style={{
-                color: resolveColorReference(toastRecipe.title.color, theme.palette),
-                fontWeight: toastRecipe.title.fontWeight,
-              }}
-              variant={toastRecipe.title.textVariant}
+              style={{ color: resolveColorReference(toastRecipe.description.color, theme.palette) }}
+              variant={toastRecipe.description.textVariant}
             >
-              {resolved.title}
+              {resolved.description}
             </Text>
-          ) : null}
-          <Text
-            style={{ color: resolveColorReference(toastRecipe.description.color, theme.palette) }}
-            variant={toastRecipe.description.textVariant}
-          >
-            {resolved.description}
-          </Text>
-          {resolved.progress ? <ToastProgressRow progress={resolved.progress} /> : null}
+            {resolved.progress ? <ToastProgressRow progress={resolved.progress} /> : null}
+          </View>
           {resolved.action ? (
             // 1.10.0 tinted pill; 1.20 panel: under the copy at the start edge (toastRecipe.action.align).
             <Pressable
@@ -1145,10 +1065,8 @@ export function Toast({
   onDismiss,
   placement = toastRecipe.defaults.placement,
   renderToneIcon,
-  style,
   layoutStyle,
 }: ToastProps) {
-  warnDeprecatedStyleProps("Toast", { style }, "layoutStyle for placement and the descriptor tone for appearance");
   const descriptorRef = useRef(descriptor);
   const additionalDismissRef = useRef(onDismiss);
   descriptorRef.current = descriptor;
@@ -1174,23 +1092,34 @@ export function Toast({
     session.getSnapshot,
   );
   const previousDescriptor = useRef(descriptor);
+  const lastTime = useRef(performance.now());
+  const flushTime = useCallback(() => {
+    const now = performance.now();
+    const elapsed = Math.max(0, now - lastTime.current);
+    lastTime.current = now;
+    session.advanceTime(elapsed);
+  }, [session]);
 
   useEffect(() => {
     if (previousDescriptor.current !== descriptor) {
+      flushTime();
       session.update(decorate(descriptor));
       previousDescriptor.current = descriptor;
     }
-  }, [decorate, descriptor, session]);
-  useEffect(() => () => {
-    session.interrupt();
+  }, [decorate, descriptor, session, flushTime]);
+  const mountGeneration = useRef(0);
+  useEffect(() => {
+    const generation = ++mountGeneration.current;
+    // StrictMode replays cleanup before reattaching the same session. Interrupt
+    // only a real unmount, like ToastRegion's store disposal lifecycle.
+    return () => { queueMicrotask(() => { if (mountGeneration.current === generation) session.interrupt(); }); };
   }, [session]);
   useEffect(() => {
     if (snapshot.timer.status !== "running" || snapshot.timer.remainingMs === null) return;
-    const timeout = setTimeout(() => {
-      session.advanceTime(snapshot.timer.remainingMs ?? 0);
-    }, snapshot.timer.remainingMs);
+    lastTime.current = performance.now();
+    const timeout = setTimeout(flushTime, snapshot.timer.remainingMs);
     return () => clearTimeout(timeout);
-  }, [session, snapshot.timer.remainingMs, snapshot.timer.status]);
+  }, [flushTime, snapshot.timer.remainingMs, snapshot.timer.status]);
 
   const completeDismiss = (reason: ToastDismissReason) => {
     session.dismiss(reason);
@@ -1200,14 +1129,15 @@ export function Toast({
       onAction={() => {
         session.invokeAction();
       }}
+      onPress={() => { session.invokePress(); }}
       onDismiss={completeDismiss}
       onExitComplete={() => session.completeExit()}
-      onPause={(reason) => session.pause(reason)}
-      onResume={(reason) => session.resume(reason)}
+      onPause={(reason) => { flushTime(); session.pause(reason); }}
+      onResume={(reason) => { flushTime(); session.resume(reason); }}
       placement={placement}
       {...(renderToneIcon === undefined ? {} : { renderToneIcon })}
       snapshot={snapshot}
-      style={[style, layoutStyle]}
+      style={[layoutStyle]}
     />
   );
 }
@@ -1257,16 +1187,6 @@ export type ToastRegionProps = Readonly<{
   /** Additional product-owned offset, for example a persistent bottom bar. */
   keyboardOffset?: number;
   renderToneIcon?: (props: ToastToneIconRenderProps) => ReactNode;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and `placement`/`safeAreaInsets` for appearance.
-   * Removed in the next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use each descriptor's `tone` for appearance.
-   * Removed in the next major (consumer-policy.md §3.1).
-   */
-  toastStyle?: StyleProp<ViewStyle>;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -1317,6 +1237,7 @@ function snapshotDescriptor(snapshot: ToastSessionSnapshot): ToastDescriptor {
             dismissOnAction: descriptor.action.dismissOnAction,
           },
         }),
+    ...(descriptor.press === null ? {} : { press: descriptor.press }),
     // Panel fields must survive the controlled-collection round trip, or `onToastsChange` would drop them.
     ...(descriptor.media === null ? {} : { media: descriptor.media }),
     ...(descriptor.progress === null ? {} : { progress: descriptor.progress }),
@@ -1387,15 +1308,8 @@ export function ToastRegion({
   avoidKeyboard = true,
   keyboardOffset = 0,
   renderToneIcon,
-  style,
-  toastStyle,
   layoutStyle,
 }: ToastRegionProps) {
-  warnDeprecatedStyleProps(
-    "ToastRegion",
-    { style, toastStyle },
-    "layoutStyle for placement and placement/safeAreaInsets/descriptor tone for appearance",
-  );
   if (presentationAdapter && (presentationAdapter.kind !== "liquid" || placement !== "top" || maxVisible !== 1)) {
     throw new TypeError("Liquid Toast requires top placement and maxVisible=1");
   }
@@ -1565,6 +1479,10 @@ export function ToastRegion({
     }
     return changed;
   }, [emitChange, pruneRaw, store]);
+  const invokePress = useCallback((id: string) => {
+    flushTime();
+    return store.invokePress(id);
+  }, [store]);
   const invokeAction = useCallback((id: string) => {
     flushTime();
     return store.invokeAction(id);
@@ -1589,7 +1507,7 @@ export function ToastRegion({
     + (bottomPlacement ? safeBottom + keyboardHeight + keyboardOffset : safeTop);
   return (
     <ToastRegionContext.Provider value={controller}>
-      <View style={[{ flex: hasChildren ? 1 : undefined }, style, layoutStyle]}>
+      <View style={[{ flex: hasChildren ? 1 : undefined }, layoutStyle]}>
         {children}
         <View
           ref={viewportRef}
@@ -1624,6 +1542,7 @@ export function ToastRegion({
               windowOrigin={windowOrigin}
               suspended={suspended}
               onAction={() => invokeAction(entry.descriptor.id)}
+              onPress={() => invokePress(entry.descriptor.id)}
               onDismiss={(reason) => dismiss(entry.descriptor.id, reason)}
               onExitComplete={() => completeExit(entry.descriptor.id)}
               onPause={(reason) => { controller.pause(entry.descriptor.id, reason); }}
@@ -1631,7 +1550,6 @@ export function ToastRegion({
               placement={placement}
               {...(renderToneIcon === undefined ? {} : { renderToneIcon })}
               snapshot={entry}
-              style={toastStyle}
             />
           ))}
         </View>

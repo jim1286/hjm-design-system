@@ -1,18 +1,35 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { useEffect, useRef, useState, forwardRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, forwardRef } from "react";
 import { resolveCarouselDescriptor, getCarouselNavigationTarget, isCarouselAutoplayActive, } from "@hjmds/design-contracts/components/carousel";
 import { Button } from "./actions.js";
 import { isLargeTextScale } from "@hjmds/design-contracts/components/design-system-provider";
-import { classNames, useControllableState } from "./internal.js";
+import { assignRef, classNames, useControllableState } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
 /** Finite keyed cards. Hidden slides stay mounted but cannot receive focus. */
 export const Carousel = forwardRef(function Carousel({ label, slides, renderSlide, composeAccessibleName, labels, autoplay, currentKey, defaultCurrentKey, onCurrentKeyChange, className, onFocusCapture, onMouseEnter, onMouseLeave, onKeyDown, layoutStyle, ...props }, ref) {
     const theme = useOptionalHjmTheme();
-    const [current, setCurrent] = useControllableState({
+    const [storedCurrent, setCurrent] = useControllableState({
         ...(currentKey === undefined ? {} : { value: currentKey }),
         defaultValue: defaultCurrentKey ?? slides[0]?.id ?? "",
         ...(onCurrentKeyChange === undefined ? {} : { onChange: onCurrentKeyChange }),
     });
+    const previousIndex = useRef(null);
+    const host = useRef(null);
+    const lastFocused = useRef(null);
+    // A host can delete the current uncontrolled slide after mount. Keep its place
+    // in the collection (or the new last slide); explicit invalid keys still fail validation.
+    const recovering = currentKey === undefined && previousIndex.current !== null && !slides.some(slide => slide.id === storedCurrent);
+    const current = recovering ? slides[Math.min(previousIndex.current, slides.length - 1)]?.id ?? storedCurrent : storedCurrent;
+    useLayoutEffect(() => {
+        previousIndex.current = slides.findIndex(slide => slide.id === current);
+        if (recovering) {
+            setCurrent(current);
+            // A removed dot/card can strand focus on body; retained controls keep their focus.
+            if (lastFocused.current && !lastFocused.current.isConnected && document.activeElement === document.body) {
+                host.current?.querySelector('.hjm-carousel__dot[data-current="true"]')?.focus();
+            }
+        }
+    }, [current, recovering, slides, setCurrent]);
     const descriptor = { slides, currentKey: current, ...(autoplay ? { autoplay } : {}) };
     const resolved = resolveCarouselDescriptor(descriptor, { composeAccessibleName });
     if (!label.trim() || Object.values(labels).some((value) => !value.trim()))
@@ -42,7 +59,8 @@ export const Carousel = forwardRef(function Carousel({ label, slides, renderSlid
         setCurrent(key); }
     function move(intent) { select(getCarouselNavigationTarget(descriptor, intent)); }
     const rotationRequested = rotating && !last && !theme?.environment.reducedMotion;
-    return _jsxs("div", { ...props, style: { ...props.style, ...layoutStyle }, ref: ref, role: "region", "aria-label": label, "aria-roledescription": "carousel", className: classNames("hjm-carousel", className), "data-large-text": isLargeTextScale(theme?.environment.textScale ?? 1), onFocusCapture: (event) => {
+    return _jsxs("div", { ...props, style: { ...props.style, ...layoutStyle }, ref: node => { host.current = node; assignRef(ref, node); }, role: "region", "aria-label": label, "aria-roledescription": "carousel", className: classNames("hjm-carousel", className), "data-large-text": isLargeTextScale(theme?.environment.textScale ?? 1), onFocusCapture: (event) => {
+            lastFocused.current = event.target instanceof HTMLElement ? event.target : null;
             // APG: leaving focus must not silently restart rotation. Explicit resume is required.
             if (!event.currentTarget.contains(event.relatedTarget))
                 setRotating(false);

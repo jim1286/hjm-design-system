@@ -11,10 +11,9 @@ import { resolveColorReference } from "@hjmds/design-contracts/color-references"
 import { control, spacing } from "@hjmds/design-contracts/foundations";
 import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
 import { useState } from "react";
-import { Pressable, TextInput, View, type StyleProp, type ViewStyle } from "react-native";
+import { Pressable, TextInput, View } from "react-native";
 import { Text } from "./primitives.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 import { resolveNativeFontStyle, resolveNativeTextScaleProps } from "./internal/styles.js";
 
@@ -37,11 +36,6 @@ export type TagsInputProps = Readonly<{
   disabled?: boolean;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
-   * `tagsInputRecipe` owns appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
 }>;
 
 
@@ -61,9 +55,8 @@ export function TagsInput({
   description,
   disabled = false,
   layoutStyle,
-  style,
 }: TagsInputProps) {
-  warnDeprecatedStyleProps("TagsInput", { style }, "layoutStyle for placement; tagsInputRecipe owns appearance");
+
   const { palette, tokens, textScaling } = useHjmNativeTheme();
   const [internal, setInternal] = useState<readonly string[]>(defaultTags ?? []);
   const tags = controlledTags ?? internal;
@@ -92,7 +85,7 @@ export function TagsInput({
   // A suggestion row is a touch target, not a tag chip: tag.minHeight (28) left
   // these rows under 44 (2026-10-06 follow-up). Both renderers use the target role.
   return (
-    <View style={[{ gap: tagsInputRecipe.frame.gap }, style, layoutStyle]}>
+    <View style={[{ gap: tagsInputRecipe.frame.gap }, layoutStyle]}>
       {/* fieldRecipe.disabledScope: label and frame fade by the field default (Web drew 0.6, this drew a
           literal 0.5 on the frame only until 2026-10-06); the description keeps full contrast. */}
       <Text variant="label" style={disabled ? { opacity: fieldRecipe.disabledOpacity } : undefined}>{label}</Text>

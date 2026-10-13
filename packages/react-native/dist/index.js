@@ -31,4 +31,5 @@ export { TransferList } from "./transfer-list.js";
 export { KeyboardAvoiding, resolveKeyboardAvoidanceBehavior } from "./keyboard.js";
 export { AuthProviderButton } from "./provider-button.js";
 export { AuthScreenLayout } from "./auth-screen.js";
+export { StatusText } from "./status-text.js";
 //# sourceMappingURL=index.js.map

@@ -116,8 +116,6 @@ export function createFormSubmitSession<Values>(
         return Promise.resolve({ outcome: "blocked", reason: "already-submitting" });
       }
 
-      transition({ status: "submitting" });
-
       return new Promise<FormSubmitOutcome>((resolve) => {
         let settled = false;
         const settleOnce = (outcome: FormSubmitOutcome) => {
@@ -127,18 +125,25 @@ export function createFormSubmitSession<Values>(
           resolve(outcome);
         };
         interruptCurrentAttempt = settleOnce;
+        // Subscribers may dispose synchronously. Install cancellation before notifying.
+        transition({ status: "submitting" });
+        if (settled) return;
 
         (async () => {
           try {
             await options.onSubmit(values);
             if (settled) return;
-            transition({ status: "succeeded" });
+            phase = { status: "succeeded" };
             settleOnce({ outcome: "succeeded" });
+            // A terminal-state subscriber can start the next attempt; do not clear
+            // that new attempt's cancellation handle after notifying it.
+            notify();
           } catch (error) {
             if (settled) return;
             const message = resolveFailureMessage(options, error);
-            transition({ status: "failed", message });
+            phase = { status: "failed", message };
             settleOnce({ outcome: "failed", message });
+            notify();
           }
         })();
       });

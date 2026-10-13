@@ -1,0 +1,20 @@
+--- a/apps/mobile/src/features/AccountScreen.tsx
++++ b/apps/mobile/src/features/AccountScreen.tsx
+@@ -21,7 +21,7 @@
+   useAppLanguage();
+   const auth = useAuth();
+   const session = useSession();
+-  const { colors, tokens } = useHjmNativeTheme();
++  const { tokens } = useHjmNativeTheme();
+   const busy = !['idle', 'error'].includes(session.phase);
+   const member = session.status === 'member';
+   const entries: Entry[] = [
+@@ -109,7 +109,7 @@
+           <Row divider={member}>
+             <ListRow
+               title={t('deletionOpen')}
+-              titleStyle={{ color: colors.danger }}
++              tone="danger"
+               onPress={() => router.push('/delete-account')}
+             />
+           </Row>

@@ -10,6 +10,7 @@ import {
   type DatePickerSize,
 } from "@hjmds/design-contracts/components/date-picker";
 import {
+  useCallback,
   useEffect,
   useId,
   useLayoutEffect,
@@ -75,16 +76,23 @@ export function DatePicker<Content>({
   );
   const selectedDate = controlledSelection ? descriptor.selectedDate ?? null : internalSelection;
 
-  const requestOpen = (next: boolean, reason: DatePickerOpenChangeReason) => {
+  const closeReasonRef = useRef<DatePickerOpenChangeReason>("programmatic");
+  const requestOpen = useCallback((next: boolean, reason: DatePickerOpenChangeReason) => {
+    closeReasonRef.current = next ? "programmatic" : reason;
     if (!controlledOpen) setInternalOpen(next);
     descriptor.onOpenChange?.(next, reason);
-  };
+  }, [controlledOpen, descriptor.onOpenChange]);
+  useEffect(() => {
+    if (open && (descriptor.disabled || descriptor.readOnly)) requestOpen(false, "programmatic");
+  }, [descriptor.disabled, descriptor.readOnly, open, requestOpen]);
   const commit = (date: string | null, reason: "activate" | "clear") => {
     // A controlled open field can become read-only while its grid remains mounted.
     if (descriptor.disabled || descriptor.readOnly) return;
     if (!controlledSelection) setInternalSelection(date);
     descriptor.onSelectionChange?.(date, reason);
     requestOpen(false, reason === "activate" ? "selection" : "clear");
+    // Clearing a closed field removes the focused clear button without an open transition.
+    if (reason === "clear") triggerRef.current?.focus();
   };
 
   const wasOpenRef = useRef(open);
@@ -92,7 +100,8 @@ export function DatePicker<Content>({
     const wasOpen = wasOpenRef.current;
     wasOpenRef.current = open;
     if (!open) {
-      if (wasOpen) triggerRef.current?.focus();
+      // Outside/Tab dismissal keeps the user's new target; confirmation/Escape returns here.
+      if (wasOpen && closeReasonRef.current !== "outside" && closeReasonRef.current !== "blur") triggerRef.current?.focus();
       return;
     }
     const outside = (event: PointerEvent) => {
@@ -105,7 +114,7 @@ export function DatePicker<Content>({
     return () => {
       document.removeEventListener("pointerdown", outside);
     };
-  }, [open]);
+  }, [open, requestOpen]);
 
   // Keep the popover inside the viewport (2026-09-30 audit WR-0930-3): shift inline, flip up
   // when short. Not portaled: Calendar autoFocus runs before a portal popup is measured.
@@ -151,14 +160,19 @@ export function DatePicker<Content>({
   const label = descriptor.label ?? descriptor.accessibilityLabel;
   const triggerText = resolveDatePickerTriggerText(descriptor);
   return (
-    <div style={layoutStyle} className={classNames("hjm-date-picker", className)} data-disabled={descriptor.disabled || undefined} data-invalid={descriptor.invalid || error !== undefined || undefined} data-size={size}>
+    <div style={layoutStyle} className={classNames("hjm-date-picker", className)} onBlur={(event) => {
+      const field = event.currentTarget;
+      queueMicrotask(() => {
+        if (open && dialogRef.current && !field.contains(document.activeElement)) requestOpen(false, "blur");
+      });
+    }} data-disabled={descriptor.disabled || undefined} data-invalid={descriptor.invalid || error !== undefined || undefined} data-size={size}>
       {descriptor.label === undefined ? null : <span className="hjm-date-picker__label">{descriptor.label}</span>}
       <div className="hjm-date-picker__anchor">
         <button
           aria-controls={open ? dialogId : undefined}
           aria-expanded={open}
           aria-haspopup="dialog"
-          aria-label={descriptor.accessibilityLabel}
+          aria-label={descriptor.accessibilityLabel ?? `${label}, ${triggerText}`}
           className="hjm-date-picker__trigger"
           disabled={descriptor.disabled}
           onClick={() => !descriptor.readOnly && requestOpen(!open, "trigger")}

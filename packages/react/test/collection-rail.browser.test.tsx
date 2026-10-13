@@ -90,3 +90,14 @@ describe("CollectionRail real scroll host", () => {
     expect(button("다음").getAttribute("aria-disabled")).toBe("true");
   });
 });
+
+it("keeps a keyboard origin when the focused card is removed without stealing outside focus", async () => {
+ await render();const active=host.querySelectorAll<HTMLInputElement>('input')[2]!;
+ await act(async()=>active.focus());await render('ltr','paper',items.filter(item=>item.id!=='item-2'));
+ expect(document.activeElement).toBe(viewport());
+ await act(async()=>host.querySelector('input')!.focus());await render('ltr','paper',[]);
+ expect(document.activeElement).toBe(viewport());
+ const outside=document.createElement('button');document.body.append(outside);
+ try {await render();await act(async()=>outside.focus());await render('ltr','paper',[]);expect(document.activeElement).toBe(outside);}
+ finally {outside.remove();}
+});

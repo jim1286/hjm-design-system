@@ -2,7 +2,7 @@ import {
   resolveAuthScreenDescriptor,
   type AuthScreenDescriptor,
 } from "@hjmds/design-contracts/components/auth-screen";
-import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
+import { forwardRef, useLayoutEffect, useRef, type HTMLAttributes, type ReactNode } from "react";
 import { classNames } from "./internal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
@@ -42,6 +42,18 @@ export const AuthScreenLayout = forwardRef<HTMLElement, AuthScreenLayoutProps>(
     });
     const showFooter = resolved.hasFooter && footer !== undefined && footer !== null;
     const pending = pendingLabel !== undefined;
+    const actionsRef = useRef<HTMLDivElement>(null);
+    const focusedAction = useRef<HTMLElement | null>(null);
+    const wasPending = useRef(pending);
+    useLayoutEffect(() => {
+      // Inert loading content sends keyboard focus to body. Resume at the same
+      // action after failure/cancellation, unless the user moved somewhere else.
+      const target = focusedAction.current;
+      if (wasPending.current && !pending && document.activeElement === document.body && target?.isConnected && actionsRef.current?.contains(target)) {
+        target.focus({ preventScroll: true });
+      }
+      wasPending.current = pending;
+    }, [pending]);
     if (pending && !pendingLabel.trim()) throw new TypeError("AuthScreen pendingLabel must not be empty");
     return (
       <Element
@@ -64,7 +76,9 @@ export const AuthScreenLayout = forwardRef<HTMLElement, AuthScreenLayoutProps>(
           <div className="hjm-auth-screen__hero">{hero}</div>
           <div className="hjm-auth-screen__main" data-card={mainCard || undefined} aria-busy={pending || undefined}>
             {/* Keep the action block in flow so the card never collapses; inert also removes keyboard access. */}
-            <div className="hjm-auth-screen__actions" inert={pending} aria-hidden={pending || undefined}
+            <div ref={actionsRef} className="hjm-auth-screen__actions" inert={pending} aria-hidden={pending || undefined}
+              onFocusCapture={event => { focusedAction.current = event.target; }}
+              onBlurCapture={event => { if (!pending && !event.currentTarget.contains(event.relatedTarget)) focusedAction.current = null; }}
               style={pending ? { visibility: "hidden" } : undefined}>{main}</div>
             {pending ? <div className="hjm-auth-screen__pending" role="status" aria-label={pendingLabel}>
               <span className="hjm-auth-provider-button__spinner" aria-hidden="true" />

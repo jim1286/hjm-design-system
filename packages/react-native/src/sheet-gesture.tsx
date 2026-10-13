@@ -76,6 +76,7 @@ export function GestureSheet({ open, onOpenChange, title, closeLabel, children,
   const modal = useRef<BottomSheetModal>(null);
   const presented = useRef(false);
   const openRef = useRef(open); openRef.current = open;
+  const closeState = useRef({ busy, onOpenChange }); closeState.current = { busy, onOpenChange };
   if (!title.trim() || !closeLabel.trim() || !snapPoints.length || !Number.isInteger(initialIndex) || initialIndex < 0 || initialIndex >= snapPoints.length ||
     snapPoints.some(point => typeof point === "number" ? !Number.isFinite(point) || point <= 0 : !/^\d+(\.\d+)?%$/.test(point) || parseFloat(point) <= 0 || parseFloat(point) > 100)) {
     throw new TypeError("GestureSheet needs labels, positive snap points and a valid index");
@@ -94,7 +95,8 @@ export function GestureSheet({ open, onOpenChange, title, closeLabel, children,
   useEffect(() => {
     if (!open) return;
     // Busy keeps the sheet but still consumes back, as before.
-    const close = () => { if (!busy) onOpenChange(false); };
+    // Keep presentation order stable when an older sheet rerenders or becomes busy.
+    const close = () => { if (!closeState.current.busy) closeState.current.onOpenChange(false); };
     openSheets.push(close);
     const subscription = BackHandler.addEventListener("hardwareBackPress", () => { close(); return true; });
     return () => {
@@ -102,7 +104,7 @@ export function GestureSheet({ open, onOpenChange, title, closeLabel, children,
       const at = openSheets.lastIndexOf(close);
       if (at >= 0) openSheets.splice(at, 1);
     };
-  }, [open, busy, onOpenChange]);
+  }, [open]);
   // The library's backdrop and handle announce English defaults ("Bottom sheet
   // backdrop", "Bottom sheet handle"; 2026-09-30 audit). The backdrop becomes a
   // localized dismiss button like the canonical Sheet's, and only while it can

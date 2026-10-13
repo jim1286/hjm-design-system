@@ -84,10 +84,11 @@ import { ImageViewer } from "@hjmds/react-native/image-viewer";
 | ImageViewer `onClose` · `onIndexChange` | `() => void` · `(index: number) => void` | `onClose` 필수 | — |
 | ImageViewer `safeAreaInsets` | `{ top: number; bottom: number; left?: number; right?: number }` | 필수, 좌우 0 | 버튼·caption·상태 안내를 물리적 좌우 안전 영역 안에 배치. 사진은 전체 갤러리 폭 사용 |
 | ImageViewer `supportedOrientations` | RN Modal의 orientation 배열 | RN 기본값 | 제품 manifest·기기 회전 잠금 범위 안에서 허용. Modal은 fullScreen |
-| ImageViewer `renderImage` | `(props: ImageViewerImageRenderProps) => ReactNode` | RN Image | Native 전용, 미게시. `item`, 측정된 `width`·`height`, `onReady`·`onError`를 전달. 제품 이미지 host의 캐시·표시 이벤트를 연결 |
+| ImageViewer `renderImage` | `(props: ImageViewerImageRenderProps) => ReactNode` | RN Image | Native 전용, 1.14.0 추가. `item`, 측정된 `width`·`height`, `onReady`·`onError`를 전달. 제품 이미지 host의 캐시·표시 이벤트를 연결 |
 | ImageViewer `onImageStatusChange` | `({ item, status }) => void` | 없음 | `loading`·`ready`·`error`. 마운트된 각 이미지 기준이며 비선택 페이지도 포함할 수 있음 |
 
 - 실패하면 중립 배경 위에 오류 기호를 그리고, 정보 이미지의 이름은 그대로 유지한다. `fallback`은 시각만 바꾼다.
+- 같은 주소라도 Web `imageProps.srcSet`/요청 정책, Native `sourceAdapter`의 실제 source·헤더·cache 내용이 바뀌면 새 요청으로 보고 loading부터 시작한다. inline adapter 함수만 다시 만든 것은 재시도가 아니다. 같은 요청을 명시적으로 재시도하거나 adapter 구현만 교체하려면 `<Image key={attempt} ... />`처럼 요청 시도 키로 Image 전체를 다시 마운트한다. 실패한 요청의 늦은 콜백은 새 요청을 덮지 않는다.
 
 ## 배치
 
@@ -107,7 +108,7 @@ Native 이미지 프레임은 `imageRecipe.radius` 역할을 Provider의 `tokens
 - GridReveal의 `ready`는 `onLoadStatusChange`가 `loaded`일 때만 true, 오류·소스 변경·재시도 전에는 false로 돌린다.
   Native에서 화면이 가려진 채 mounted면 `active={false}`.
 - ImageViewer는 `open`으로 제어하고 닫히면 상태를 버린다. 라벨·`id`가 비거나 중복이면 `TypeError`.
-- ImageViewer는 불러오는 중(`loadingLabel`)과 실패(`errorLabel`)를 모두 알린다. 실패는 Android assertive live region, iOS는 `announceForAccessibility`다(미게시(1.12.1 이후). 1.12.1은 실패를 알리지 않았다).
+- ImageViewer는 불러오는 중(`loadingLabel`)과 실패(`errorLabel`)를 모두 알린다. 실패는 Android assertive live region, iOS는 `announceForAccessibility`다(1.13.0 변경. 1.12.1은 실패를 알리지 않았다).
 - 원격 이미지 권한·URL 수명·캐시는 제품 소유다. HJM은 메타데이터를 가져오지 않는다.
 
 ### Native ImageViewer의 제품 이미지 호스트
@@ -140,7 +141,7 @@ import { ImageViewer } from "@hjmds/react-native/image-viewer";
 회전을 허용하는 제품은 `supportedOrientations={["portrait", "landscape"]}`와 갱신되는
 safeAreaInsets 네 방향을 제공한다. 앱 manifest가 portrait 고정이면 이 prop만으로 회전이 보장되지 않는다.
 화면 크기가 바뀌면 버튼을 제외한 남은 갤러리 영역을 다시 측정해 host에 전달한다.
-아래 inspection 확장은 미게시이며, Expo 표시 확인·결과 승인 회귀와 Utilverse 채택은 별도 검증한다.
+아래 inspection 확장은 1.14.0 추가 API이며, Expo 표시 확인·결과 승인 회귀와 Utilverse 채택은 별도 검증한다.
 
 ### 결과 검사 크기 계산
 
@@ -157,7 +158,7 @@ const geometry = resolveImageInspectionGeometry(
 ); // width/height 804, panBounds x=201 y=175 (중앙에서 양방향)
 ```
 
-### Native 결과 검사 보기 (미게시)
+### Native 결과 검사 보기 (1.14.0 추가)
 
 `ImageViewer`의 선택적 `inspection`은 위 계산을 사용한다. 모든 `items`에 실제 출력의
 양수 `width`·`height`를 제공한다. 일반 Gallery의 pinch/paging과 별개로 고정 배율의 결과를

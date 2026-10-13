@@ -132,6 +132,7 @@ const trigger = useRef<HTMLButtonElement>(null);
 
 ```tsx
 // Native
+import { StatusText } from "@hjmds/react-native/status-text";
 import { ScrollView, View, useWindowDimensions } from "react-native";
 import { Button } from "@hjmds/react-native/actions";
 import { Heading } from "@hjmds/react-native/heading";
@@ -164,12 +165,12 @@ const gutter = resolveWindowClass(useWindowDimensions().width) === "compact" ? "
     <Button tone="secondary" disabled={saving} onPress={() => { setDraft(""); setOpen(false); }}>{t("memo.discard")}</Button>
   </>}>
   <TextField label={t("memo.body")} value={draft} onValueChange={setDraft} />
-  {saveFailed ? <StatusText>{t(draftStatusKey.failed)}</StatusText> : null}
+  {saveFailed ? <StatusText announceOnMount announcement="assertive">{t(draftStatusKey.failed)}</StatusText> : null}
 </Sheet>
 ```
 
 `save`(성공하면 초안을 비우고 닫고, 실패하면 `saveFailed`만 켠다)·`saving`·문구 키는 제품 소유다. `StatusText`는
-[저장과 재시도의 공통 절](action-recovery-save.md#공통-세션과-상태-알림)의 Native 상태 알림 helper다.
+[저장과 재시도의 공통 절](action-recovery-save.md#공통-세션과-상태-알림)에서 사용하는 공개 Text companion이다.
 
 ## 플랫폼 차이
 
@@ -186,3 +187,5 @@ const gutter = resolveWindowClass(useWindowDimensions().width) === "compact" ? "
 
 - 초안 state를 시트 children 안 컴포넌트에 두지 않는다. 닫힌 시트의 내용이 계속 마운트돼 있다고 가정하지 않고, 시트를 여는 화면이 초안을 소유한다.
 - 구획 제목은 Heading으로 표시한다. 이전 Text heading 예제는 2026-10-06 제목 의미 구조를 맞추면서 수정했다.
+
+2026-10-13 실제 예제는 시트 열기마다 세대를 구분한다. 취소·닫기·적용·저장·폐기로 한 번 닫힌 세대의 입력/확정 콜백은 무시하며, 다시 연 뒤 도착한 이전 세대 콜백도 현재 초안이나 확정값을 바꾸지 않는다. 닫기는 메모리 초안을 유지하고, 명시적 폐기만 초안을 비운다.

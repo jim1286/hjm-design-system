@@ -1,5 +1,5 @@
 import { type TransferListMoveDirection } from "@hjmds/design-contracts/components/transfer-list";
-import type { SelectItemDescriptor } from "@hjmds/design-contracts/behaviors";
+import { type SelectItemDescriptor } from "@hjmds/design-contracts/behaviors";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type TransferListLabels = Readonly<{
     source: string;

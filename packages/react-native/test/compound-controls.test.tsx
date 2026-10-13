@@ -65,3 +65,32 @@ it.each(['ios','android'])('announces inline confirmation transitions once on %s
   expect(announce).not.toHaveBeenCalled();
  }finally {act(()=>tree.unmount());Platform.OS=previousOS;AppState.currentState='active';announce.mockRestore();}
 });
+
+it("confirms with the current action after the inline prompt rerenders",async()=>{
+ const copy={label:'Delete',prompt:'Delete draft?',confirmLabel:'Confirm',cancelLabel:'Cancel',pendingLabel:'Deleting',successLabel:'Deleted',errorLabel:'Try again'};
+ const old=vi.fn(),latest=vi.fn();let tree:ReturnType<typeof create>;
+ const view=(onConfirm:()=>void,prompt:string)=><HjmNativeProvider><InlineConfirm {...copy} prompt={prompt} onConfirm={onConfirm}/></HjmNativeProvider>;
+ const press=async(label:string)=>act(async()=>tree.root.findAllByType(Button).find(node=>node.props.children===label)!.props.onPress());
+ await act(async()=>{tree=create(view(old,'Delete old draft?'));});
+ try {
+  await press('Delete'); await act(async()=>tree.update(view(latest,'Delete current draft?')));await press('Confirm');
+  expect(old).not.toHaveBeenCalled();expect(latest).toHaveBeenCalledOnce();
+ } finally {await act(async()=>tree!.unmount());}
+});
+
+it("preserves duration unit names and rejects retained unit edits during lock or after unmount", () => {
+ let tree!:ReactTestRenderer; const change=vi.fn();
+ const labels={label:'Duration',hours:'Hours',minutes:'Minutes',seconds:'Seconds',increment:(u:string)=>`${u}+`,decrement:(u:string)=>`${u}-`};
+ const render=(disabled=false)=><HjmNativeProvider><DurationField value={90} max={1500} disabled={disabled} labels={labels} onValueChange={change}/></HjmNativeProvider>;
+ act(()=>{tree=create(render());});
+ try {
+  const fields=tree.root.findAllByType(NumberField);
+  expect(fields.map(field=>field.props.label)).toEqual(['Hours','Minutes','Seconds']);
+  expect(fields.map(field=>field.props.accessibilityLabel)).toEqual(['Duration, Hours','Duration, Minutes','Duration, Seconds']);
+  const edit=fields[1]!.props.onValueChange;
+  act(()=>tree.update(render(true))); act(()=>edit(2)); expect(change).not.toHaveBeenCalled();
+  act(()=>tree.update(render(false))); act(()=>edit(2)); expect(change).toHaveBeenLastCalledWith(150);
+  expect(tree.root.findAllByType(NumberField)[0]!.props.disabled).toBe(true);
+  act(()=>tree.unmount()); act(()=>edit(3)); expect(change).toHaveBeenCalledTimes(1);
+ } finally {act(()=>tree.unmount());}
+});

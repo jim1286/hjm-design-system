@@ -87,7 +87,7 @@ import { SavedItemsScreen } from "@hjmds/react-native/saved-items";
 | actions · leading | ScreenLayout 상속 | 없음 | 홈에서는 제품 `actions` 대신 컬렉션 만들기 버튼이 그 자리를 쓰고 제품 `leading`은 유지된다. 컬렉션·상세에서는 `leading`이 뒤로 버튼이 되고 제품 `actions`가 보인다 |
 | renderThumbnail · renderDetail | `(item) => ReactNode`, 필수 | — | 사진·상세 슬롯, API·자산은 제품 소유 |
 | state · notice | ScreenLayout 상속 | ready · 없음 | 조회 상태, 저장 해제/복구 안내 |
-| layoutStyle | `HjmCompositionStyleProp` | 없음 | Web·Native 모두 목록·상세를 담는 ListDetailScreen 바깥 틀에 적용한다(컬렉션·격자·상세 전환과 상관없이 같은 루트). 미게시(1.12.1 이후) |
+| layoutStyle | `HjmCompositionStyleProp` | 없음 | Web·Native 모두 목록·상세를 담는 ListDetailScreen 바깥 틀에 적용한다(컬렉션·격자·상세 전환과 상관없이 같은 루트). 1.13.0 변경 |
 | className(Web) | `string` | 없음 | 안쪽 목록 ScreenLayout에 붙는다 |
 
 ## 배치
@@ -126,3 +126,5 @@ Native collection cover의 모서리는 Provider의 `tokens.radius.md`다. 저�
 
 - 비공개 안내는 권한 구현이 아니다. 서버에서 소유자 접근을 검사한다.
 - HTML/WebView나 Instagram 자산을 복사하는 구현이 아니다. 제품 사진·테마·문구를 슬롯으로 전달한다.
+
+미게시(1.18.0 이후): 선택한 컬렉션의 항목이 0개면 별도 Text 행 대신 ListDetailScreen의 empty 상태를 사용해 남은 본문 중앙에 안내한다. 명시한 loading/error/restricted가 우선하고 컬렉션 개요는 ready를 유지한다. 커버는 그룹별로 한 번 계산하며 기존 items 순서의 첫 네 항목을 사용한다.

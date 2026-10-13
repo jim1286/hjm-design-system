@@ -41,7 +41,7 @@ Motion Primitives Transition Panel의 두 제공 예제를 실제 검토한 후�
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
 | 바깥 틀 | Stack·Native ScrollView | 세로, 비교 도구와 단계 viewport를 함께 스크롤 | `spacing.lg` 20 |
-| 표현 선택 | SegmentedControl | 안내 아래 | 공개 `presentation="pills"`, 큰 글자·좁은 화면 줄바꿈 |
+| 표현 선택 | SegmentedControl | 안내 아래 | 공개 `presentation="pills"`, 좁은 화면 줄바꿈 |
 | 탭 본문 | TabPanel·ContentTransition·Stack | 탭 목록 아래 | `spacing.md` 16, 높이는 현재 내용 측정 |
 | 단계 틀 | OnboardingScreen | 표현 선택 아래 | Web preview 70dvh/minHeight 360, Native preview 720. 이는 fixture viewport이며 제품은 실제 가용 높이 사용 |
 | 주 행동 | OnboardingScreen footer | 본문 scroll 바깥 | [기존 안내 배치](../components/onboarding-screen.md#배치) |
@@ -52,7 +52,7 @@ Motion Primitives Transition Panel의 두 제공 예제를 실제 검토한 후�
 2. 테마를 순회하거나 나타남·떠오름·옆으로·확대·즉시를 선택한다. `preset` 생략은 테마 기본값, 명시 값은 우선한다.
 3. 단계별 완료 스토리에서 다음·이전으로 이동한다. 화면 전체를 key로 다시 마운트하지 않고 본문만 전환한다.
 4. 마지막 단계에서 완료 실패 재현을 예약하고 기록 확인을 누른다. 초안을 유지한 실패 알림 뒤 같은 완료를 다시 누른다.
-5. 확인 결과와 초안을 보고 다시 비교한다. 완료는 로컬 fixture이며 서버 저장·라우팅 완료로 안내하지 않는다.
+5. 완료 시점의 확인 결과를 별도로 보관한다. 같은 예제의 탭 모드에서 초안을 수정해도 이미 확인한 결과는 바뀌지 않는다. 다시 비교하면 현재 초안을 유지한 첫 단계로 돌아가며 Web은 초안 입력에 초점을 옮긴다. 완료는 로컬 fixture이며 서버 저장·라우팅 완료로 안내하지 않는다.
 
 | 상태 | 모습 | 포커스·알림 |
 | --- | --- | --- |

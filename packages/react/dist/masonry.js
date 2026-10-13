@@ -8,8 +8,9 @@ export function Masonry({ items, keyExtractor, renderItem, getItemHeight, width,
     const layout = resolveMasonryLayout(items.map(item => getItemHeight(item, itemWidth)), width, columns, gap);
     // A named div without a role is not exposed with its name (ARIA prohibits aria-label on generic).
     // `group` keeps the collection name with the empty copy; `list` was rejected because the empty slot is not a listitem.
+    // The empty collection keeps its measured width and centers within host-allocated space.
     if (!items.length)
-        return _jsx("div", { role: "group", "aria-label": label, style: layoutStyle, children: empty });
+        return _jsx("div", { role: "group", "aria-label": label, style: { ...layoutStyle, width, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }, children: empty });
     return _jsx("div", { "data-hjm-masonry": true, role: "list", "aria-label": label, style: { ...layoutStyle, position: "relative", width, height: layout.height }, children: items.map((item, index) => { const frame = layout.items[index]; return _jsx("div", { role: "listitem", style: { position: "absolute", insetInlineStart: frame.left, top: frame.top, width: frame.width, height: frame.height }, children: renderItem(item, index) }, keys[index]); }) });
 }
 //# sourceMappingURL=masonry.js.map

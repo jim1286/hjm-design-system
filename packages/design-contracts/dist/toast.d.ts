@@ -5,7 +5,7 @@ export type ToastId = string;
 export type ToastPresentation = "standard" | "liquid";
 export type ToastAnnouncementPriority = "normal" | "high";
 export type ToastPauseReason = "pointer" | "focus" | "window" | "gesture" | "programmatic" | "presentation" | "occlusion";
-export type ToastDismissReason = "timeout" | "action" | "close-action" | "escape" | "swipe" | "programmatic" | "queue-overflow" | "interrupted";
+export type ToastDismissReason = "timeout" | "action" | "press" | "close-action" | "escape" | "swipe" | "programmatic" | "queue-overflow" | "interrupted";
 export type ToastDuplicatePolicy = "update" | "ignore";
 export type ToastTimerUpdatePolicy = "preserve" | "restart";
 export type ToastOverflowPolicy = "discard-oldest" | "discard-newest";
@@ -47,6 +47,11 @@ export type ToastDescriptor = Readonly<{
     /** `null` persists; short durations clamp to the configured floor. */
     durationMs?: number | null;
     action?: ToastActionDescriptor;
+    /** Whole-card activation; sibling action/close controls remain independent. */
+    press?: Readonly<{
+        accessibilityLabel: string;
+        onPress(): void;
+    }>;
     /** Decorative leading visual that replaces the tone badge (ReactNode on Web/Native). */
     media?: unknown;
     /** Step progress of a running task, announced with the current step label. */
@@ -71,6 +76,7 @@ export type ResolvedToastDescriptor = Readonly<{
     announcement: string;
     durationMs: number | null;
     action: ResolvedToastActionDescriptor | null;
+    press: NonNullable<ToastDescriptor["press"]> | null;
     media: unknown;
     progress: ToastProgressDescriptor | null;
     closeLabel: string;
@@ -111,6 +117,7 @@ export type ToastSessionSnapshot = Readonly<{
     descriptor: ResolvedToastDescriptor;
     timer: ToastTimerSnapshot;
     actionInvoked: boolean;
+    pressInvoked: boolean;
     dismissReason: ToastDismissReason | null;
 }>;
 export type ToastSession = Readonly<{
@@ -124,6 +131,7 @@ export type ToastSession = Readonly<{
     /** Advances a renderer-owned clock; no global timer or Date dependency exists. */
     advanceTime(elapsedMs: number): boolean;
     invokeAction(): boolean;
+    invokePress(): boolean;
     dismiss(reason: ToastDismissReason): boolean;
     /** Renderers call this once exit motion or immediate reduced-motion exit finishes. */
     completeExit(): boolean;
@@ -168,6 +176,7 @@ export type ToastStore = Readonly<{
     subscribe(listener: () => void): () => void;
     publish(descriptor: ToastDescriptor, options?: ToastPublishOptions): ToastPublishResult;
     invokeAction(id: ToastId): boolean;
+    invokePress(id: ToastId): boolean;
     dismiss(id: ToastId, reason: ToastDismissReason): boolean;
     /** Stable-id programmatic close shortcut. */
     close(id: ToastId): boolean;

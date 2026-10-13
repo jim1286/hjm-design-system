@@ -40,6 +40,7 @@ export const CommandPalette = forwardRef(function CommandPalette({ descriptor, s
     // Stale external rows stay visible but inert, as in the Native Combobox.
     const enabled = results.current ? results.items.filter((item) => !item.disabled) : [];
     const [activeId, setActiveId] = useState(null);
+    const pendingActivation = useRef(null);
     const contentRef = useRef(null);
     const triggerRef = useRef(null);
     const inputRef = useRef(null);
@@ -68,9 +69,8 @@ export const CommandPalette = forwardRef(function CommandPalette({ descriptor, s
         onActivate(itemId, reason);
         // Running a command always closes the palette — `activation` is a dismiss
         // reason no policy can veto — and the follow-up surface opens after that.
+        pendingActivation.current = { itemId, reason };
         change(false, "activation");
-        if (onActivateAfterDismiss)
-            queueMicrotask(() => onActivateAfterDismiss(itemId, reason));
     };
     useModalFocus({
         active: open,
@@ -79,7 +79,19 @@ export const CommandPalette = forwardRef(function CommandPalette({ descriptor, s
         ...(trigger === undefined ? {} : { fallbackReturnRef: triggerRef }),
         onEscape: () => requestClose("escape"),
     });
+    useEffect(() => {
+        if (open || !pendingActivation.current)
+            return;
+        const { itemId, reason } = pendingActivation.current;
+        pendingActivation.current = null;
+        // A controlled owner may delay closing; wait for teardown and focus release.
+        if (onActivateAfterDismiss)
+            queueMicrotask(() => onActivateAfterDismiss(itemId, reason));
+    }, [open, onActivateAfterDismiss]);
     const onKeyDown = (event) => {
+        // IME confirmation and candidate navigation belong to the text input.
+        if (event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229)
+            return;
         const intent = getCollectionNavigationIntent(event.key);
         if (intent) {
             const target = getCollectionNavigationTarget({ items: enabled }, active?.id ?? null, intent, true);

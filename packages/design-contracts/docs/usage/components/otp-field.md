@@ -97,5 +97,5 @@ import { OtpField } from "@hjmds/react-native/otp-field";
 | 항목 | Web | Native |
 | --- | --- | --- |
 | 이름 | `label` | `label` 또는 `accessibilityLabel`만 |
-| 칸 스타일 통로 | 없음 | `slotStyle`, `slotTextStyle`은 deprecated(개발 모드 경고, 다음 major 제거). 외형은 `size`·`presentation` |
+| 칸 스타일 통로 | 없음 | `slotStyle`, `slotTextStyle`은 제거된 속성. 외형은 `size`·`presentation` |
 | busy 표현 | read-only + `aria-busy` | `editable={false}` + `accessibilityState.busy` |

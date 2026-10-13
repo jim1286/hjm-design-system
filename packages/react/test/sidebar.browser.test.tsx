@@ -94,3 +94,14 @@ it("wraps long group and item names inside the fixed-width rail without horizont
   expect(item.getAttribute("aria-label")).toBeNull();
   expect(item.textContent).toContain(itemLabel);
 });
+
+it("keeps callback-only destinations keyboard reachable without inventing an href", async () => {
+  const onNavigate = vi.fn();
+  await act(async () => root.render(<HjmProvider><Sidebar onNavigate={onNavigate} descriptor={{ accessibilityLabel: "메뉴", currentId: "home", groups: [{ id: "main", items: [{ id: "home", label: "홈" }, { id: "locked", label: "잠김", disabled: true }] }] }} /></HjmProvider>));
+  await act(async () => userEvent.tab());
+  const item = host.querySelector<HTMLElement>(".hjm-sidebar__item")!;
+  expect(document.activeElement).toBe(item);
+  expect(item.getAttribute("role")).toBe("link");
+  await act(async () => userEvent.keyboard("{Enter}"));
+  expect(onNavigate).toHaveBeenCalledExactlyOnceWith("home");
+});

@@ -157,6 +157,7 @@ export const NumberField = forwardRef<HTMLInputElement, NumberFieldProps>(
     };
 
     const commitDraft = () => {
+      if (disabled || readOnly) return;
       const next = commitNumberFieldInput(draft, descriptor);
       if (next === undefined) {
         setDraft(valueToInput(currentValue));
@@ -185,7 +186,7 @@ export const NumberField = forwardRef<HTMLInputElement, NumberFieldProps>(
     };
     const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
       onKeyDown?.(event);
-      if (event.defaultPrevented || disabled || readOnly) return;
+      if (event.defaultPrevented || disabled || readOnly || event.nativeEvent.isComposing || event.keyCode === 229) return;
       if (event.key === "ArrowUp" || event.key === "ArrowDown") {
         event.preventDefault();
         stepValue(event.key === "ArrowUp" ? "increment" : "decrement");

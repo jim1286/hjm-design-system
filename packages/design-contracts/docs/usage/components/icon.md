@@ -96,7 +96,7 @@ const renderGlyph = createLucideGlyph({ search: Search, back: ArrowLeft });
 | glyph | 내장 SVG 경로, `renderGlyph`는 선택 | `renderGlyph` 필수(내장 그림 없음) |
 | 사용자 정의 이름 | `SemanticIconName`만 | `Icon<Name>` 제네릭으로 제품 이름 허용 |
 | 출력 | `<svg>`(장식이면 `aria-hidden`) | `View` 프레임(장식이면 `accessible={false}`) |
-| 배치 | `layoutStyle` | `layoutStyle`. `style`은 deprecated(개발 모드 1회 경고, 다음 major 제거) — `layoutStyle` 또는 descriptor `size`·`tone` |
+| 배치 | `layoutStyle` | `layoutStyle`. `style`은 제거된 속성 — `layoutStyle` 또는 descriptor `size`·`tone` |
 
 ## 함정
 

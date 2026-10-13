@@ -54,6 +54,8 @@ import { Avatar, ListRow } from "@hjmds/react-native/data-display";
 <ListRow title={member.name} description={member.role}
   leading={<Avatar name={member.name} decorative />} leadingShape="circle"
   trailingText={t("member.joined", { date })} onPress={() => openMember(member.id)} />
+
+<ListRow title={t("account.delete")} tone="danger" onPress={openDeleteConfirmation} />
 ```
 
 ## 축과 기본값
@@ -62,15 +64,16 @@ import { Avatar, ListRow } from "@hjmds/react-native/data-display";
 | --- | --- | --- | --- |
 | `density` | `compact` · `comfortable` · `relaxed` · `spacious` | `comfortable` | 최소 높이는 설명 유무(한 줄·두 줄)와 함께 정해진다 |
 | `leadingShape` | `square` · `circle` | `square` | leading 프레임 크기는 recipe가 그린다 |
+| `tone` | `default` · `danger` | `default` | 탈퇴 같은 파괴적 목적지 제목은 `danger`로 강조한다. 선택·잠금·밀도와 독립적이다 |
 | `selected` | `true` · `false` | `false` | — |
 | `disabled` | `true` · `false` | `false` | — |
 | `href`(Web) | 문자열 | — | 있으면 `<a>` 행 |
 | `onClick`(Web) | `(event: MouseEvent<HTMLElement>) => void` | — | 있으면 `<button>` 행 |
 | `onPress`(Native) | `(event: GestureResponderEvent) => void` | — | 있으면 누를 수 있는 행 |
-| `loading`·`loadingLabel`(Web) | `boolean` · 현지화 문자열 | `false` · — | 같은 슬롯 모양의 자리표시 행. `loadingLabel`이 상태로 읽힌다 |
+| `loading`·`loadingLabel` | `boolean` · 현지화 문자열 | `false` · — | 같은 슬롯 모양의 자리표시 행. `loadingLabel`이 상태로 읽힌다 |
 | `trailingAction`(Native) | ReactNode | — | 행 명령 옆에 따로 그리는 별도 target(IconButton 등). 자기 `onPress`를 가진다 |
 | `layoutStyle` | 배치 key만 | — | 행 루트 배치. Native는 슬롯 배치용 `leadingStyle`·`contentStyle`·`titleRowStyle`·`trailingStyle`·`trailingActionStyle`(모두 배치 key만)도 받는다 |
-| `titleStyle`·`descriptionStyle`(Native) | — | — | **deprecated**(1.13, 개발 모드 1회 경고, 다음 major 제거) — `density`·`selected`, 글자는 listRowRecipe가 정한다 |
+| `titleStyle`·`descriptionStyle`(Native) | — | — | 제거된 속성 — 배치는 `layoutStyle`, 제목의 위험색은 `tone="danger"`, 글자는 listRowRecipe가 정한다 |
 
 - 상호작용: Web은 `href`면 `<a>`(selected는 `aria-current="page"`), `onClick`이면 `<button>`(selected는 `aria-pressed`),
   둘 다 없으면 `<div>`. Native는 `onPress`가 있으면 누를 수 있는 행이 된다.
@@ -116,7 +119,7 @@ Native 원형 leading의 `full`은 Provider token에서 읽지만 고정 원형 
 | 항목 | Web | Native |
 | --- | --- | --- |
 | 제목·설명 타입 | `ReactNode` | `string` |
-| 자리표시 행 | `loading` + `loadingLabel` | — |
+| 자리표시 행 | `loading` + `loadingLabel` | `loading` + `loadingLabel` |
 | 링크 행 | `href` | 없음(`onPress`에서 router 호출) |
 | 제목 옆 메타·별도 뒤 행동·뒤 문구 | — | `titleMetadata`, `trailingAction`, `trailingText` |
 | 접근성 이름 조합 | 요소 내용 | `accessibilityLabel` 없으면 제목·`metadataLabel`·설명·`trailingLabel`을 이어 붙임 |
@@ -125,4 +128,10 @@ Native 원형 leading의 `full`은 Provider token에서 읽지만 고정 원형 
 ## 함정
 
 - Web 로딩 행은 슬롯의 **존재**로 모양을 정하고 문구는 무시한다. 실제 행과 같은 슬롯을 넘겨야 높이가 맞는다.
-- Native `titleStyle`·`descriptionStyle`은 deprecated지만 아직 TextStyle 전체를 받아 색·굵기도 바뀐다. 새 코드에서 쓰지 않는다.
+- Native `titleStyle`·`descriptionStyle`은 제거되었다. 파괴적 목적지의 제목 강조에는 양 플랫폼 공통 `tone="danger"`를 사용한다. `tone`은 확인 절차나 삭제 실행을 대신하지 않는다.
+
+
+로딩 행은 실제 ListRow의 density·한 줄/두 줄 최소 높이와 padding을 그대로 사용한다. 두 줄 결과를
+예상하면 `description`을 제공한다(자리표시 중 문구 자체는 표시하지 않는다). loading 동안 행과
+trailingAction은 실행할 수 없으며 실제 슬롯 내용도 마운트하지 않는다. 여러 로딩 행 중 첫 행에만
+`loadingLabel`을 주고 나머지는 접근성 트리에서 숨긴다. 검색 화면도 임의 Skeleton 조립 대신 이 계약을 쓴다.

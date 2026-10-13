@@ -1,5 +1,5 @@
 import { type ReactNode } from "react";
-import { type FieldGroupDescriptor } from "@hjmds/design-contracts/field-group";
+import { type FieldGroupLayout, type FieldGroupDescriptor } from "@hjmds/design-contracts/field-group";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type FieldGroupBinding = Readonly<{
     id: string;
@@ -15,8 +15,10 @@ export type FieldGroupBinding = Readonly<{
 export type FieldGroupProps = Readonly<{
     descriptor: FieldGroupDescriptor;
     renderField: (field: FieldGroupBinding) => ReactNode;
+    layout?: FieldGroupLayout;
+    className?: string;
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Named related fields inside an existing form; never creates a submission boundary. */
-export declare function FieldGroup({ descriptor, renderField, layoutStyle }: FieldGroupProps): import("react").JSX.Element;
+export declare function FieldGroup({ descriptor, renderField, layout, className, layoutStyle }: FieldGroupProps): import("react").JSX.Element;
 //# sourceMappingURL=field-group.d.ts.map

@@ -69,8 +69,8 @@ Web의 `footer` slot은 `Layout`이 `<footer>` contentinfo를 정확히 한 번 
 `BottomNavigation`은 자체 루트를 이름 있는 `<nav>`로 렌더링하고 contentinfo를
 만들지 않으므로 `footer={<BottomNavigation ... />}` 합성 결과도 `<footer>` 하나와
 `<nav>` 하나다. Native `Layout`은 같은 source order만 유지하며 skip link를
-렌더링하거나 요구하지 않는다. `skipLinkLabel` Native prop은 이전 호출부 호환을
-위해 deprecated 상태로만 남아 있다.
+렌더링하거나 요구하지 않는다. Native `LayoutProps`에는 `skipLinkLabel`이 없다.
+Web의 skip-link 입력을 Native에 공통 props로 넘기지 않는다.
 
 **현재 검증.** 공통 descriptor를 직접 소비하는 first-party Web/RN renderer가 실제
 landmark, source order, overlay adapter를 검증한다. Web Chromium test는 skip-link가 첫

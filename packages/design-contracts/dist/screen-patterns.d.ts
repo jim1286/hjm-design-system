@@ -150,6 +150,8 @@ export declare function resolveSearchEmptyCause(count: number | null, appliedFil
 export declare function resolveFocusAfterRemoval(removedIndex: number, remaining: number): number;
 /** Recipe for the SearchScreen phase sections; geometry stays on shared spacing tokens. */
 export declare const searchScreenRecipe: {
+    /** Debounced typing delay; explicit submit remains a separate host action. */
+    readonly debounceMs: 300;
     /** Recent searches shown before the user types; reference services show 5–10 and let the rest scroll away. */
     readonly recentVisible: 5;
     /** Suggestions under the "search for ‘q’" row. */
@@ -163,6 +165,8 @@ export declare const searchScreenRecipe: {
     /** Between chips in applied filters and suggested queries. */
     readonly chipGap: 8;
 };
+/** Keep finite negative delays at zero; reject values whose timer behavior varies by host. */
+export declare function resolveSearchDebounceMs(value?: number): number;
 /** Horizontal intent preserves vertical scrolling and uses one reveal distance across renderers. */
 export declare function timestampRevealOffset(dx: number, dy: number): number;
 //# sourceMappingURL=screen-patterns.d.ts.map

@@ -4,6 +4,7 @@ import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, it } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { ContextMenu } from "../src/context-menu.js";
+import { Dialog } from "../src/overlays.js";
 import { HjmProvider } from "../src/provider.js";
 import "../src/styles.css";
 // The evidence registry points to this focused keyboard proof; the shared scenario fixture omits ContextMenu dismissal.
@@ -112,4 +113,17 @@ it("keeps the keyboard item after a late mouse enter until the user moves the mo
   expect(activeLabel()).toContain("삭제");
   await act(async () => userEvent.hover(first));
   expect(activeLabel()).toContain("이름 변경");
+});
+
+
+it("keeps focus and the first Escape inside a context menu owned by a dialog", async () => {
+  await act(async () => root.render(<HjmProvider reducedMotion><Dialog defaultOpen trigger={<button>부모 열기</button>} title="부모" closeLabel="닫기"><ContextMenu accessibilityLabel="작업" items={items} onAction={() => {}}><button>대상</button></ContextMenu></Dialog></HjmProvider>));
+  const origin = document.querySelector<HTMLButtonElement>(".hjm-context-menu-host button")!;
+  origin.focus();
+  await act(async () => userEvent.keyboard("{Shift>}{F10}{/Shift}"));
+  expect(document.activeElement).toBe(document.querySelector(".hjm-context-menu"));
+  await act(async () => userEvent.keyboard("{Escape}"));
+  expect(document.querySelector(".hjm-context-menu")).toBeNull();
+  expect(document.querySelector(".hjm-dialog")).not.toBeNull();
+  expect(document.activeElement).toBe(origin);
 });

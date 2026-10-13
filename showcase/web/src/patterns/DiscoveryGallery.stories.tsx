@@ -1,13 +1,13 @@
 import { SegmentedControl } from "@hjmds/react/selection";
 import { Heading } from "@hjmds/react/heading";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Container, Grid, Stack, Text } from "@hjmds/react/layout";
 import { Button } from "@hjmds/react/actions";
 import { SearchField } from "@hjmds/react/forms";
 import { Sheet } from "@hjmds/react/overlays";
 import { EmptyState } from "@hjmds/react/feedback";
-import { galleryCategories, selectGalleryEntries, type GalleryCategory, type GalleryEntry } from "../../../shared/discovery-gallery";
+import { galleryCategories, selectGalleryEntries, type GalleryCategory, type GalleryEntry } from "../../../shared/discovery-gallery.js";
 // Original UI artwork; gallery thumbnails and third-party product assets are not copied.
 function Artwork({ entry }: { entry: GalleryEntry }) {
  const editorial=entry.layout==="editorial"; const mobile=entry.layout==="mobile";
@@ -23,16 +23,24 @@ function Artwork({ entry }: { entry: GalleryEntry }) {
 function DiscoveryGallery() {
  const [query,setQuery] = useState(""); const [category,setCategory] = useState<GalleryCategory>("전체");
  const [sort,setSort] = useState<"popular" | "latest">("popular"); const [saved,setSaved] = useState<string[]>([]); const [savedOnly,setSavedOnly] = useState(false); const [selected,setSelected] = useState<GalleryEntry | null>(null);
+ const searchRef=useRef<HTMLInputElement>(null);
+ const savedFilterRef=useRef<HTMLButtonElement>(null), returnFocusRef=useRef<HTMLButtonElement>(null);
+ const detailRefs=useRef(new Map<string, HTMLButtonElement>());
+ const closeDetail=()=>{
+  // Saving in the detail can remove its original card from the saved-only results.
+  returnFocusRef.current=(selected?detailRefs.current.get(selected.id):null)??savedFilterRef.current;
+  setSelected(null);
+ };
  const results=selectGalleryEntries(query,category,sort,savedOnly,saved);
  const toggle=(id:string)=>setSaved(current=>current.includes(id)?current.filter(value=>value!==id):[...current,id]);
- const reset=()=>{setQuery("");setCategory("전체");setSavedOnly(false);};
- return <main><Container gutter="compact"><Stack gap="xl"><Stack gap="md"><Text tone="brand">작은 아이디어가 시작되는 곳</Text><Heading level="level3" semanticLevel={1}  >다음 화면의 영감을 찾아보세요</Heading><Text>마음에 드는 화면을 살펴보고 나만의 컬렉션에 담아보세요.</Text><SearchField label="작품 검색" placeholder="모바일, 작업 공간, 서연" clearLabel="검색어 지우기"  value={query} onValueChange={setQuery}/></Stack>
+ const reset=()=>{setQuery("");setCategory("전체");setSavedOnly(false);searchRef.current?.focus();};
+ return <main><Container gutter="compact"><Stack gap="xl"><Stack gap="md"><Text tone="brand">작은 아이디어가 시작되는 곳</Text><Heading level="level3" semanticLevel={1}  >다음 화면의 영감을 찾아보세요</Heading><Text>마음에 드는 화면을 살펴보고 나만의 컬렉션에 담아보세요.</Text><SearchField ref={searchRef} label="작품 검색" placeholder="모바일, 작업 공간, 서연" clearLabel="검색어 지우기"  value={query} onValueChange={setQuery}/></Stack>
  <SegmentedControl label="작품 카테고리" presentation="pills" items={galleryCategories.map(item => ({ value: item, label: item }))} value={category} onValueChange={value => { const item = galleryCategories.find(item => item === value); if (item) setCategory(item); }}/>
- <Stack axis="inline" wrap gap="sm"><Button tone="secondary" onClick={()=>setSort(sort==="popular"?"latest":"popular")}>정렬: {sort==="popular"?"인기순":"최신순"}</Button><Button tone="ghost" selected={savedOnly} onClick={()=>setSavedOnly(!savedOnly)}>저장한 작품 {saved.length}</Button></Stack>
+ <Stack axis="inline" wrap gap="sm"><Button tone="secondary" onClick={()=>setSort(current=>current==="popular"?"latest":"popular")}>정렬: {sort==="popular"?"인기순":"최신순"}</Button><Button ref={savedFilterRef} tone="ghost" selected={savedOnly} onClick={()=>setSavedOnly(current=>!current)}>저장한 작품 {saved.length}</Button></Stack>
  <Text role="status">{results.length}개의 작품</Text>
- {results.length ? <Grid columns={{ compact: 1, medium: 2, expanded: 3 }} gap={{ compact: "xl" }} minColumnWidth={{ compact: 320 }}>{results.map(item=><article key={item.id}><Stack gap="sm"><Artwork entry={item}/><Text variant="label">{item.title}</Text><Text tone="muted">{item.author} · {item.category} · 좋아요 {item.likes}</Text><Stack axis="inline" wrap gap="sm"><Button tone="ghost" onClick={()=>setSelected(item)} aria-label={`${item.title} 보기`}>자세히 보기</Button><Button aria-label={`${item.title} ${saved.includes(item.id)?"저장 취소":"저장"}`} tone="secondary" selected={saved.includes(item.id)} onClick={()=>toggle(item.id)}>{saved.includes(item.id)?"저장됨":"저장"}</Button></Stack></Stack></article>)}</Grid> : <EmptyState title="찾는 작품이 없어요" description="다른 검색어나 카테고리로 다시 찾아보세요." action={<Button onClick={reset}>필터 초기화</Button>}/>}
+ {results.length ? <Grid columns={{ compact: 1, medium: 2, expanded: 3 }} gap={{ compact: "xl" }} minColumnWidth={{ compact: 320 }}>{results.map(item=><article key={item.id}><Stack gap="sm"><Artwork entry={item}/><Text variant="label">{item.title}</Text><Text tone="muted">{item.author} · {item.category} · 좋아요 {item.likes}</Text><Stack axis="inline" wrap gap="sm"><Button ref={node=>{if(node)detailRefs.current.set(item.id,node);else detailRefs.current.delete(item.id);}} tone="ghost" onClick={()=>{returnFocusRef.current=detailRefs.current.get(item.id)??savedFilterRef.current;setSelected(item);}} aria-label={`${item.title} 보기`}>자세히 보기</Button><Button aria-label={`${item.title} ${saved.includes(item.id)?"저장 취소":"저장"}`} tone="secondary" selected={saved.includes(item.id)} onClick={()=>{if(savedOnly&&saved.includes(item.id))savedFilterRef.current?.focus();toggle(item.id);}}>{saved.includes(item.id)?"저장됨":"저장"}</Button></Stack></Stack></article>)}</Grid> : <EmptyState title="찾는 작품이 없어요" description="다른 검색어나 카테고리로 다시 찾아보세요." action={<Button onClick={reset}>필터 초기화</Button>}/>}
  <Text tone="muted">직접 만든 예제 작품입니다. 저장은 이 미리보기에서만 유지됩니다.</Text>
- <Sheet  open={selected!==null} onOpenChange={open=>{if(!open)setSelected(null);}} title={selected?.title??"작품 상세"} closeLabel="닫기" footer={selected ? <Button aria-label={`${selected.title} ${saved.includes(selected.id)?"저장 취소":"저장"}`} selected={saved.includes(selected.id)} onClick={()=>toggle(selected.id)}>{saved.includes(selected.id)?"저장 취소":"컬렉션에 저장"}</Button> : null}><Stack gap="lg">{selected && <><Artwork entry={selected}/><Text>{selected.author} · {selected.category}</Text><Text>큰 제목과 명확한 행동, 여유 있는 간격으로 구성한 화면입니다.</Text></>}</Stack></Sheet>
+ <Sheet  returnFocusRef={returnFocusRef} open={selected!==null} onOpenChange={open=>{if(!open)closeDetail();}} title={selected?.title??"작품 상세"} closeLabel="닫기" footer={selected ? <Button aria-label={`${selected.title} ${saved.includes(selected.id)?"저장 취소":"저장"}`} selected={saved.includes(selected.id)} onClick={()=>toggle(selected.id)}>{saved.includes(selected.id)?"저장 취소":"컬렉션에 저장"}</Button> : null}><Stack gap="lg">{selected && <><Artwork entry={selected}/><Text>{selected.author} · {selected.category}</Text><Text>큰 제목과 명확한 행동, 여유 있는 간격으로 구성한 화면입니다.</Text></>}</Stack></Sheet>
  </Stack></Container></main>;
 }
 const meta = { includeStories: ["Default","Dark","LargeText"], id: "patterns-discovery-gallery", title: "배포/화면/검색/작품 탐색", component: DiscoveryGallery } satisfies Meta<typeof DiscoveryGallery>;

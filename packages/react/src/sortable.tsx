@@ -1,3 +1,4 @@
+import { control } from "@hjmds/design-contracts/foundations";
 import { useCallback, useLayoutEffect, useRef, useState, useMemo, type ReactNode } from "react";
 import { Accessibility, type DragStartEvent, type DragEndEvent } from "@dnd-kit/dom";
 import { DragDropProvider } from "@dnd-kit/react";
@@ -22,7 +23,7 @@ function Row({ item, index, children, disabled, reduced, labels, move, count }: 
     ...(reduced ? { transition: null } : {}) });
   return <li ref={ref} data-item-id={item.id} style={{ display: "grid", gridTemplateColumns: "auto minmax(0, 1fr)", alignItems: "center", gap: "var(--hjm-space-sm)", paddingBlock: "var(--hjm-space-xs)" }}>
     <Button ref={handleRef} tone="ghost" type="button" disabled={disabled || item.disabled} aria-label={labels.handle(item)}
-      style={{ minWidth: 44, minHeight: 44, touchAction: "none", cursor: "grab" }}>⠿</Button>
+      style={{ minWidth: control.minTouchTarget, minHeight: control.minTouchTarget, touchAction: "none", cursor: "grab" }}>⠿</Button>
     <div style={{ minWidth: 0, overflowWrap: "anywhere" }}>{children}</div>
     {/* Separate action line preserves readable item labels at 200% text in narrow hosts. */}
     <div style={{ gridColumn: "1 / -1", display: "flex", flexWrap: "wrap", gap: "var(--hjm-space-xs)" }}>

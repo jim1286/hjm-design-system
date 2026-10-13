@@ -1,5 +1,5 @@
 import { resolvePaginationDescriptor, type ComposePaginationAccessibleName, type PaginationChangeHandler, type PaginationDescriptor, type PaginationLabels } from "@hjmds/design-contracts/components/pagination";
-import { forwardRef, type HTMLAttributes } from "react";
+import { forwardRef, useLayoutEffect, useRef, type HTMLAttributes } from "react";
 import { classNames } from "./internal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
@@ -24,6 +24,8 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
       onPageChange,
       className,
       layoutStyle,
+      onFocusCapture,
+      onBlurCapture,
       ...props
     },
     ref,
@@ -32,6 +34,14 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
     const resolved = resolvePaginationDescriptor(descriptor, {
       labels,
       composeAccessibleName,
+    });
+    const focusedButton = useRef<HTMLElement | null>(null);
+    const currentButton = useRef<HTMLButtonElement>(null);
+    useLayoutEffect(() => {
+      // A smaller result set or moved page window can remove the focused numbered button.
+      if (focusedButton.current && !focusedButton.current.isConnected && document.activeElement === document.body) {
+        currentButton.current?.focus();
+      }
     });
     // Preserve focus when a page change reaches a boundary; aria-disabled buttons
     // remain reachable but their activation is guarded below.
@@ -42,6 +52,11 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
         ref={ref}
         className={classNames("hjm-pagination", className)}
         aria-label={label}
+        onFocusCapture={(event) => { focusedButton.current = event.target; onFocusCapture?.(event); }}
+        onBlurCapture={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget)) focusedButton.current = null;
+          onBlurCapture?.(event);
+        }}
       >
         <ul className="hjm-pagination__list">
           <li>
@@ -65,6 +80,7 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
                 <button
                   type="button"
                   className="hjm-pagination__item"
+                  ref={item.current ? currentButton : undefined}
                   data-state={item.current ? "current" : "idle"}
                   aria-current={item.current ? "page" : undefined}
                   aria-label={item.accessibleName}

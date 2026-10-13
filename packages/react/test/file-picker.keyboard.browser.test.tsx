@@ -1,6 +1,7 @@
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { userEvent } from "vitest/browser";
+import { tabThroughControls } from "./tab-through-controls.js";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { FilePicker } from "../src/file-picker.js";
 import { HjmProvider } from "../src/provider.js";
@@ -45,7 +46,7 @@ it("opens the file input from the keyboard trigger and reports its chosen file",
   expect(input.accept).toBe("image/*");
   expect(input.multiple).toBe(false);
 
-  await act(async () => userEvent.tab());
+  await act(async () => tabThroughControls());
   expect(document.activeElement).toBe(button);
   await act(async () => userEvent.keyboard("{Enter}"));
   expect(openPicker).toHaveBeenCalledOnce();

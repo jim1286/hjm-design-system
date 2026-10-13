@@ -117,7 +117,7 @@ Native는 제품 프로필의 `tokens.fontFamily.ui`를 실제 텍스트/입력 
 | --- | --- | --- |
 | 진행 상태 prop | `loading`(+`renderLoadingIndicator`) | `busy`(+`renderBusyIndicator`, `busyLabel` 필수) |
 | 검색 아이콘 | `renderSearchIcon`, 또는 `leading` | `renderLeading`, 또는 `leading` |
-| 진행 중 입력 | 입력 가능(`aria-busy`) | 입력 가능(`accessibilityState.busy`). 2026-10-06까지 Native는 `busy`인 동안 입력을 무시했다(1.12.1 이후 미게시) |
+| 진행 중 입력 | 입력 가능(`aria-busy`) | 입력 가능(`accessibilityState.busy`). 2026-10-06까지 Native는 `busy`인 동안 입력을 무시했다(1.13.0 변경) |
 | 입력 요소 | `<input type="search">`, 원시 `onChange`도 전달 | `TextInput` |
 | 배치 | `layoutStyle`·`fieldClassName`(필드 틀), `style`은 안쪽 input | `layoutStyle` |
 

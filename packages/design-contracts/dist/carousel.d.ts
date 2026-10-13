@@ -24,6 +24,9 @@ export type ControlledCarouselSelection<Id extends string = string> = Readonly<{
     defaultCurrentKey?: never;
     onCurrentKeyChange(key: Id): void;
 }>;
+/** After mount, removing the current slide selects the slide at its previous
+ * position, clamped to the new last position, and emits onCurrentKeyChange once.
+ * An invalid initial default and an empty collection still fail validation. */
 export type UncontrolledCarouselSelection<Id extends string = string> = Readonly<{
     currentKey?: never;
     defaultCurrentKey?: Id;

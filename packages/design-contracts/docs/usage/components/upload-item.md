@@ -70,7 +70,7 @@ import { UploadItem } from "@hjmds/react-native/upload-item";
 | `onCancel` / `onRetry` | `(id: string) => void` | — | descriptor `id`를 받는다. `uploading`·`error` 상태에서는 각각 필수 |
 | `leading` | `ReactNode` | — | 아이콘·썸네일(장식) |
 | `layoutStyle` | `HjmCompositionStyleProp` | — | 행 바깥 배치. Web·Native 모두 |
-| `style`(Native) | `StyleProp<ViewStyle>` | — | deprecated — `layoutStyle`. 개발 모드에서 한 번 경고하고 다음 major에서 제거된다 |
+| `style`(Native) | 지원하지 않음 | — | 제거된 속성 — `layoutStyle`. 현재 공개 props에서 제거되었다 |
 
 ## 배치
 
@@ -96,7 +96,7 @@ import { UploadItem } from "@hjmds/react-native/upload-item";
 
 | 항목 | Web | Native |
 | --- | --- | --- |
-| 루트 | `role="group"`, `aria-label`=파일명, `HTMLAttributes`·`ref`·`layoutStyle` 전달 | 일반 `View`, `layoutStyle`(`style`은 deprecated) |
+| 루트 | `role="group"`, `aria-label`=파일명, `HTMLAttributes`·`ref`·`layoutStyle` 전달 | 일반 `View`, `layoutStyle`(`style`은 제거된 속성) |
 | 상태 낭독 | 상태 문장 live region | 파일 정보 묶음이 한 요소(`busy` state, value=상태 문장), 액션은 별도 버튼 |
 | `leading` | `aria-hidden` | 접근성 트리에서 숨김 |
 
@@ -104,4 +104,4 @@ import { UploadItem } from "@hjmds/react-native/upload-item";
 
 2026-10-07 소비 감사에서 Native 행의 모서리 12가 프로필을 우회했다. Web의 기존 `radius.md`와 같은 역할을 Native도 가까운 프로필에서 읽으며, 프로필이 없으면 기존 12를 유지한다. 업로드 상태·취소/재시도·진행 알림은 바꾸지 않는다.
 
-프로필 연결은 1.15.0 이후 미게시 변경이며, 기본 배포 계약과 실제 Native 기기 검증은 구분한다.
+프로필 연결은 1.16.0 변경이며, 기본 배포 계약과 실제 Native 기기 검증은 구분한다.

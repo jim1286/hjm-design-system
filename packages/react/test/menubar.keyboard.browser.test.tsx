@@ -5,6 +5,7 @@ import executedScenarioRegistry from "./executed-scenarios.json" with { type: "j
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 
 import { Menubar } from "../src/menubar.js";
+import { Dialog } from "../src/overlays.js";
 import { HjmProvider } from "../src/provider.js";
 import "../src/styles.css";
 
@@ -99,7 +100,7 @@ it("supports browser keyboard focus, menu navigation, disabled state, and action
 it("keeps the keyboard item when layout causes a late mouse enter, then follows actual mouse movement", async () => {
   await act(async () => root.render(<HjmProvider><Menubar descriptor={{ accessibilityLabel: "주 메뉴", menus }} onAction={() => undefined} /></HjmProvider>));
   const file = host.querySelector<HTMLButtonElement>('[aria-haspopup="menu"]')!;
-  file.focus();
+  await act(async () => file.focus());
   await act(async () => userEvent.keyboard("{ArrowDown}{ArrowDown}"));
   const panel = document.querySelector<HTMLElement>('[role="menu"]')!;
   const first = panel.querySelector<HTMLElement>('[role="menuitem"]')!;
@@ -110,4 +111,78 @@ it("keeps the keyboard item when layout causes a late mouse enter, then follows 
   expect(panel.querySelector('[data-active=""]')?.textContent).toContain("종료");
   await act(async () => userEvent.hover(first));
   expect(panel.querySelector('[data-active=""]')?.textContent).toContain("새 문서");
+});
+
+
+it("closes the expanded menu before its containing dialog on Escape", async () => {
+  await act(async () => root.render(<HjmProvider reducedMotion><Dialog defaultOpen trigger={<button>부모 열기</button>} title="부모" closeLabel="닫기"><Menubar descriptor={{ accessibilityLabel: "메뉴", menus }} onAction={() => {}} /></Dialog></HjmProvider>));
+  await act(async () => document.querySelector<HTMLButtonElement>(".hjm-menubar__label")!.focus());
+  await act(async () => userEvent.keyboard("{ArrowDown}{Escape}"));
+  expect(document.querySelector('[role="menu"]')).toBeNull();
+  expect(document.querySelector('.hjm-dialog')).not.toBeNull();
+});
+
+it("recovers focus and closes a removed menu while keeping the next menu usable", async () => {
+  const action = vi.fn();
+  const view = (removed: boolean) => <HjmProvider><Menubar descriptor={{ accessibilityLabel: "메뉴", menus: removed ? menus.filter(menu => menu.id !== "file") : menus }} onAction={action} /></HjmProvider>;
+  await act(async () => root.render(view(false)));
+  await act(async () => host.querySelector<HTMLButtonElement>(".hjm-menubar__label")!.focus());
+  await act(async () => userEvent.keyboard("{ArrowDown}"));
+  await act(async () => root.render(view(true)));
+  const remaining = host.querySelector<HTMLButtonElement>('.hjm-menubar__label:not(:disabled)')!;
+  expect(document.activeElement).toBe(remaining);
+  expect(remaining.tabIndex).toBe(0);
+  expect(document.querySelector('[role="menu"]')).toBeNull();
+  await act(async () => userEvent.keyboard("{ArrowDown}{Enter}"));
+  expect(action).toHaveBeenCalledExactlyOnceWith("zoom", "view");
+});
+
+it("keeps an enabled active item when the open menu items shrink", async () => {
+  const action = vi.fn();
+  const view = (shrunk: boolean) => <HjmProvider><Menubar descriptor={{ accessibilityLabel: "메뉴", menus: [{ ...menus[0], items: shrunk ? [menus[0].items[0]] : menus[0].items }] }} onAction={action} /></HjmProvider>;
+  await act(async () => root.render(view(false)));
+  await act(async () => host.querySelector<HTMLButtonElement>(".hjm-menubar__label")!.focus());
+  await act(async () => userEvent.keyboard("{ArrowDown}{ArrowDown}"));
+  await act(async () => root.render(view(true)));
+  expect(document.querySelector('[role="menu"] [data-active]')?.textContent).toContain("새 문서");
+  await act(async () => userEvent.keyboard("{Enter}"));
+  expect(action).toHaveBeenCalledExactlyOnceWith("new", "file");
+});
+
+
+it("keeps focus outside while replacing a previously focused menu", async () => {
+  const view = (removed: boolean) => <HjmProvider><button data-outside>외부</button><Menubar descriptor={{ accessibilityLabel: "메뉴", menus: removed ? menus.filter(menu => menu.id !== "file") : menus }} onAction={() => {}} /></HjmProvider>;
+  await act(async () => root.render(view(false)));
+  await act(async () => host.querySelector<HTMLButtonElement>(".hjm-menubar__label")!.focus());
+  const outside = host.querySelector<HTMLButtonElement>("[data-outside]")!;
+  await act(async () => outside.focus());
+  await act(async () => root.render(view(true)));
+  expect(document.activeElement).toBe(outside);
+  expect(host.querySelector('.hjm-menubar__label:not(:disabled)')?.getAttribute("tabindex")).toBe("0");
+});
+
+it("recovers to the next enabled label when the open menu becomes disabled", async () => {
+  const view = (disabled: boolean) => <HjmProvider><Menubar descriptor={{ accessibilityLabel: "메뉴", menus: menus.map(menu => menu.id === "file" ? { ...menu, disabled } : menu) }} onAction={() => {}} /></HjmProvider>;
+  await act(async () => root.render(view(false)));
+  await act(async () => host.querySelector<HTMLButtonElement>(".hjm-menubar__label")!.focus());
+  await act(async () => userEvent.keyboard("{ArrowDown}"));
+  await act(async () => root.render(view(true)));
+  expect(document.activeElement?.textContent).toBe("보기");
+  expect(document.querySelector('[role="menu"]')).toBeNull();
+});
+
+it("mirrors horizontal arrow navigation in RTL while Home and End keep logical endpoints", async () => {
+  const rtlMenus = menus.map(menu => ({ ...menu, disabled: false }));
+  await act(async () => root.render(<HjmProvider direction="rtl"><Menubar descriptor={{ accessibilityLabel: "RTL 메뉴", menus: rtlMenus }} onAction={() => {}} /></HjmProvider>));
+  const labels = [...host.querySelectorAll<HTMLButtonElement>(".hjm-menubar__label")];
+  await act(async () => labels[0]!.focus());
+  await act(async () => userEvent.keyboard("{ArrowDown}{ArrowLeft}"));
+  expect(document.activeElement).toBe(labels[1]);
+  expect(labels[1]!.getAttribute("aria-expanded")).toBe("true");
+  await act(async () => userEvent.keyboard("{ArrowRight}"));
+  expect(document.activeElement).toBe(labels[0]);
+  await act(async () => userEvent.keyboard("{End}"));
+  expect(document.activeElement).toBe(labels[2]);
+  await act(async () => userEvent.keyboard("{Home}"));
+  expect(document.activeElement).toBe(labels[0]);
 });

@@ -121,6 +121,7 @@ export const Tabs = forwardRef(function Tabs(props, ref) {
         : value;
     const [visited, setVisited] = useState(() => new Set([value]));
     const tabRefs = useRef(new Map());
+    const focusedTabRef = useRef(null);
     const generatedId = useId().replaceAll(":", "");
     const baseId = id ?? `hjm-${generatedId}`;
     const theme = useOptionalHjmTheme();
@@ -190,9 +191,14 @@ export const Tabs = forwardRef(function Tabs(props, ref) {
         if (!controlled && !storedSelectionIsValid)
             setValue(collectionFallback);
     }, [collectionFallback, controlled, setValue, storedSelectionIsValid]);
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (!items.some((item) => item.id === focusValue && !item.disabled)) {
             setFocusValue(value);
+            // Collection updates can remove the actual focused host; roving tabindex alone cannot restore keyboard position.
+            const previous = focusedTabRef.current;
+            if (previous && (document.activeElement === previous || document.activeElement === document.body)) {
+                tabRefs.current.get(value)?.focus();
+            }
         }
     }, [focusValue, items, value]);
     useEffect(() => {
@@ -253,7 +259,7 @@ export const Tabs = forwardRef(function Tabs(props, ref) {
                             }, id: tabId, type: "button", role: "tab", className: "hjm-tabs__tab", "data-state": selected ? "selected" : "idle", "aria-selected": selected, "aria-controls": panelId(item.id), tabIndex: item.id === resolvedFocusValue ? 0 : -1, disabled: item.disabled, onClick: () => {
                                 setFocusValue(item.id);
                                 setValue(item.id);
-                            }, onKeyDown: (event) => handleKeyDown(event, item.id), children: [item.renderLeading ? (_jsx("span", { "aria-hidden": "true", className: "hjm-tabs__leading", children: item.renderLeading({
+                            }, onFocus: (event) => { focusedTabRef.current = event.currentTarget; setFocusValue(item.id); }, onKeyDown: (event) => handleKeyDown(event, item.id), children: [item.renderLeading ? (_jsx("span", { "aria-hidden": "true", className: "hjm-tabs__leading", children: item.renderLeading({
                                         selected,
                                         disabled: item.disabled ?? false,
                                         color: "currentColor",

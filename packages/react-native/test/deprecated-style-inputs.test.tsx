@@ -1,6 +1,6 @@
-import type { ReactElement } from "react";
+import type { ComponentProps, ReactElement } from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
-import { afterEach, beforeEach, describe, expect, it, vi, type MockInstance } from "vitest";
+import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi, type MockInstance } from "vitest";
 
 import {
   Checkbox,
@@ -25,10 +25,8 @@ import {
   ToggleGroup,
   TransferList,
 } from "../src/index.js";
-import { resetDeprecatedStyleWarningsForTest } from "../src/internal/deprecated-style.js";
 
-// 2026-10-06: input/form components kept raw visual style props after 1.11. They stay working for
-// SemVer, warn once in development, and accept the canonical `layoutStyle` on the root instead.
+// Removed visual overrides cannot replace recipe appearance; canonical layout remains supported.
 
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -107,52 +105,49 @@ function flatten(style: unknown): Record<string, unknown> {
 }
 
 function hasStyle(renderer: ReactTestRenderer, key: string, value: unknown): boolean {
-  return renderer.root.findAll((node) => node.props.style !== undefined)
+  return renderer.root.findAll((node) => typeof node.type === "string" && node.props.style !== undefined)
     .some((node) => flatten(node.props.style)[key] === value);
 }
 
 let warn: MockInstance<typeof console.warn>;
 beforeEach(() => {
-  resetDeprecatedStyleWarningsForTest();
   warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
 });
 afterEach(() => vi.restoreAllMocks());
 
-function warnings(): string[] {
-  return warn.mock.calls.map((call) => String(call[0]));
-}
-
-describe("Native deprecated input style props", () => {
-  it.each(cases)("%s applies layoutStyle without a deprecation warning", (_name, _root, _slots, make) => {
+describe("Native input style removal", () => {
+  it("excludes removed visual props from the public input types", () => {
+    type PublicInputs = typeof Checkbox | typeof CheckboxGroup | typeof Radio | typeof RadioGroup
+      | typeof Switch | typeof SegmentedControl | typeof Form | typeof Select | typeof Combobox
+      | typeof DatePicker | typeof FilePicker | typeof TagsInput | typeof ToggleGroup | typeof TransferList;
+    type RemovedChoiceKeys = "style" | "controlStyle" | "indicatorStyle" | "leadingStyle" | "contentStyle" | "labelStyle" | "descriptionStyle";
+    type Keys<T extends PublicInputs> = T extends PublicInputs ? keyof ComponentProps<T> : never;
+    expectTypeOf<Extract<Keys<PublicInputs>, RemovedChoiceKeys>>().toEqualTypeOf<never>();
+    expectTypeOf<Extract<keyof ComponentProps<typeof OtpField>, "slotStyle" | "slotTextStyle">>().toEqualTypeOf<never>();
+    expectTypeOf<Extract<keyof ComponentProps<typeof NumberField>, "inputStyle" | "containerStyle">>().toEqualTypeOf<never>();
+    expectTypeOf<Extract<keyof ComponentProps<typeof Slider>, "containerStyle" | "controlStyle">>().toEqualTypeOf<never>();
+    expectTypeOf<Extract<keyof ComponentProps<typeof Mentions>, "listStyle">>().toEqualTypeOf<never>();
+    expectTypeOf<Extract<keyof ComponentProps<typeof Chip>, "labelStyle">>().toEqualTypeOf<never>();
+  });
+  it.each(cases)("%s preserves canonical root placement", (_name, _root, _slots, make) => {
     const renderer = render(make({ layoutStyle: { marginTop: 7 } }));
     expect(hasStyle(renderer, "marginTop", 7)).toBe(true);
     expect(warn).not.toHaveBeenCalled();
     act(() => renderer.unmount());
   });
 
-  it.each(cases.filter(([, root]) => root !== null))(
-    "%s keeps the legacy root style working and warns once",
-    (name, root, _slots, make) => {
-      const first = render(make({ [root!]: { marginTop: 9 } }));
-      expect(hasStyle(first, "marginTop", 9)).toBe(true);
-      act(() => first.unmount());
-      const second = render(make({ [root!]: { marginTop: 9 } }));
-      act(() => second.unmount());
-      expect(warnings().filter((message) => message.includes(`${name}.${root} is deprecated`))).toHaveLength(1);
-    },
-  );
-
-  it.each(cases.filter(([, , slots]) => slots.length > 0))(
-    "%s warns once for each deprecated slot style",
-    (name, _root, slots, make) => {
-      const props = Object.fromEntries(slots.map((slot) => [slot, { opacity: 0.99 }]));
-      const first = render(make(props));
-      act(() => first.unmount());
-      const second = render(make(props));
-      act(() => second.unmount());
-      for (const slot of slots) {
-        expect(warnings().filter((message) => message.includes(`${name}.${slot} is deprecated`))).toHaveLength(1);
-      }
-    },
-  );
+  it.each(cases)("%s cannot apply a removed visual override", (name, root, slots, make) => {
+    const removed = [...(root ? [root] : []), ...slots];
+    const props = Object.fromEntries(removed.map(prop => [prop, { opacity: 0.1234, marginTop: 9137 }]));
+    // Host rest-prop forwarding rejects legacy keys; explicit renderers ignore unknown JS props.
+    if (["OtpField", "Switch", "NumberField", "Slider", "Mentions", "Select", "Combobox"].includes(name)) {
+      expect(() => render(make(props))).toThrow(/were removed/);
+      return;
+    }
+    const renderer = render(make(props));
+    expect(hasStyle(renderer, "opacity", 0.1234)).toBe(false);
+    expect(hasStyle(renderer, "marginTop", 9137)).toBe(false);
+    expect(warn).not.toHaveBeenCalled();
+    act(() => renderer.unmount());
+  });
 });

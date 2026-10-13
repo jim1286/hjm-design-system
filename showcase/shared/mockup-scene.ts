@@ -1,4 +1,4 @@
-import { initialSceneTimeline, validateSceneTimeline, type SceneTimeline } from "./scene-timeline";
+import { initialSceneTimeline, validateSceneTimeline, type SceneTimeline } from "./scene-timeline.js";
 /** Internal authoring model, deliberately separate from shipped application UI APIs. */
 export type MockupScene = Readonly<{
   version: 1;

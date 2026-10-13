@@ -1273,6 +1273,16 @@
         "role": "companion-or-alternative"
       },
       {
+        "name": "StatusText",
+        "source": "packages/react/src/status-text.tsx",
+        "entries": [
+          ".",
+          "./status-text"
+        ],
+        "canonicalComponent": "Text",
+        "role": "companion-or-alternative"
+      },
+      {
         "name": "StepPlayer",
         "source": "packages/react/src/step-player.tsx",
         "entries": [
@@ -2774,6 +2784,16 @@
           "./data-display"
         ],
         "canonicalComponent": "Statistic",
+        "role": "companion-or-alternative"
+      },
+      {
+        "name": "StatusText",
+        "source": "packages/react-native/src/status-text.tsx",
+        "entries": [
+          ".",
+          "./status-text"
+        ],
+        "canonicalComponent": "Text",
         "role": "companion-or-alternative"
       },
       {

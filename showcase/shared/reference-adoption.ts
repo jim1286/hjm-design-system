@@ -1,11 +1,22 @@
-import type { FilePickerCandidate } from "../../packages/design-contracts/src/file-picker.js";
+import type { FilePickerCandidate, FilePickerSelectionResult } from "../../packages/design-contracts/src/file-picker.js";
 import type { UploadItemDescriptor, UploadItemState } from "../../packages/design-contracts/src/upload-item.js";
 export const uploadLabels = { pending: "전송 대기", uploading: "전송 확인 중", success: "전송 완료", cancel: "취소", retry: "다시 전송" };
 export const sampleFile: FilePickerCandidate = { id: "sample", name: "여행 기록.jpg", mimeType: "image/jpeg", sizeBytes: 2048 };
-export function mergeSelectedFiles(items: readonly UploadItemDescriptor[], files: readonly FilePickerCandidate[]): UploadItemDescriptor[] {
+/** Owner capacity is evaluated after dedupe, including batches delivered before React renders. */
+export function mergeUploadSelection(items: readonly UploadItemDescriptor[], selection: FilePickerSelectionResult, maxCount = 3) {
   const next = [...items];
-  for (const file of files) if (!next.some(item => item.id === file.id)) next.push({ id: file.id, name: file.name, state: { status: "pending" } });
-  return next;
+  const rejected: FilePickerSelectionResult["rejected"][number][] = selection.rejected.filter(item => item.reason !== "count-exceeded");
+  // resolveFilePickerSelection (design-contracts/file-picker.ts) checks type/size before count.
+  // Only that count-rejected subset may be reconsidered after owner dedupe; other rejections stay rejected.
+  const candidates = [...selection.accepted, ...selection.rejected.filter(item => item.reason === "count-exceeded").map(item => item.file)];
+  const seen = new Set(next.map(item => item.id));
+  for (const file of candidates) {
+    if (seen.has(file.id)) continue;
+    seen.add(file.id);
+    if (next.length >= maxCount) rejected.push({ file, reason: "count-exceeded", maxCount });
+    else next.push({ id: file.id, name: file.name, state: { status: "pending" } });
+  }
+  return { items: next, rejected };
 }
 export function changeUploadState(items: readonly UploadItemDescriptor[], id: string, state: UploadItemState): UploadItemDescriptor[] {
   return items.map(item => item.id === id ? { ...item, state } : item);

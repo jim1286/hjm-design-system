@@ -19,7 +19,7 @@
 | 화면 형태 | 쓸 것 |
 | --- | --- |
 | 수십 개 이하의 행을 한 번에 그림(설정, 계정 메뉴, 검색 결과 한 페이지) | `List` + `ListRow` |
-| 유한 카드 여러 장의 독립 입력/행동을 함께 보여주는 가로 탐색 | `CollectionRail` (미게시 실험, 아래 가로 배치 지침) |
+| 유한 카드 여러 장의 독립 입력/행동을 함께 보여주는 가로 탐색 | `CollectionRail` (1.16.0 추가·실험, 아래 가로 배치 지침) |
 | 행 한 줄의 제목·설명·앞뒤 슬롯 | [ListRow](list-row.md) |
 | 높이가 고정된 행 수백~수천 개를 창 안에서 스크롤 | [VirtualList](virtual-list.md) |
 | 이어지는 목록의 다음 페이지 요청 footer | [LoadMore](load-more.md) (List·VirtualList 아래에 둔다) |
@@ -42,6 +42,7 @@
 | --- | --- | --- | --- |
 | `List` | 기본 | `@hjmds/react`, `/display` | `@hjmds/react-native`, `/data-display` |
 | `TaskList` | 확장 — 완료 체크 목록(optional) | `/task-list` | `/task-list` |
+| `CollectionRail` | 동반·대안 — 독립 행동을 가진 유한 가로 목록([구성 지침](../compositions/collection-detail.md)) | `/collection-rail` | `/collection-rail` |
 
 `TaskList`는 granular subpath로만 import 된다. 추가 peer는 없다. 순서 바꾸기를 합성하면 SortableCollection의 peer가 필요하다.
 
@@ -74,7 +75,7 @@ import { Text } from "@hjmds/react-native/primitives";
 | `label` | 현지화 문자열(필수) | — | 목록의 접근성 이름. 비면 `TypeError` |
 | `separator` | `indented` · `full` · `none` | `indented` | `indented`는 leading 슬롯 폭만큼 들여씀 |
 | `appearance` | `plain` · `grouped` | `plain` | `grouped`는 배경과 둥근 모서리로 한 덩어리 |
-| `layoutStyle` | 배치 key만 | — | 목록 루트 배치. Native `style`은 **deprecated**(1.13, 개발 모드 1회 경고, 다음 major 제거) — `layoutStyle`, 모양은 `appearance`·`separator` |
+| `layoutStyle` | 배치 key만 | — | 목록 루트 배치. Native `style`은 제거된 속성 — `layoutStyle`, 모양은 `appearance`·`separator` |
 | TaskList `items` | `readonly TaskItem[]` — `{ id, label, completed, description?, disabled? }` | — | `id`·`label`이 비거나 `id`가 중복되거나 `completed`가 boolean이 아니면 `TypeError` |
 | TaskList `onCompletedChange` | `(id: string, completed: boolean) => void` | — | 필수. 체크 하나마다 한 번. 목록 순서·저장은 제품이 정한다 |
 | TaskList `disabled` | `true` · `false` | `false` | 전체 체크박스를 끈다 |
@@ -110,7 +111,7 @@ Native `grouped` 프레임은 Provider의 `tokens.radius.lg`를 읽는다. plain
 
 ### CollectionRail 가로 배치
 
-새 `CollectionRail`은 미게시(1.15.0 이후) 실험 companion이다. 기존 List의 배포/호환 계약은 유지한다.
+새 `CollectionRail`은 1.16.0 추가 실험 companion이다. 기존 List의 배포/호환 계약은 유지한다.
 
 #### 언제 쓰나
 
@@ -196,7 +197,7 @@ import { CollectionRail } from "@hjmds/react/collection-rail";
 | --- | --- | --- |
 | 구조 | `role="list"` + 자식마다 `role="listitem"` | `accessibilityRole="list"` |
 | 구분선 | CSS(`data-separator`) | 행 사이 1px `View` |
-| 배치 | `layoutStyle`(+ `className`) | `layoutStyle`(`style`은 deprecated) |
+| 배치 | `layoutStyle`(+ `className`) | `layoutStyle`(`style`은 제거된 속성) |
 
 2026-10-07 Utilverse 항목 삭제 채택을 위해 `renderItemAction`을 추가했다. 체크와 삭제의 초점·누름을 분리하고 큰 글자 라벨 폭을 보존하도록 행동을 다음 줄에 둔다. `renderCollection`의 `renderItem`에도 포함된다. 삭제 저장·실패·되돌리기는 제품이 처리한다.
 

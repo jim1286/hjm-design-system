@@ -30,9 +30,9 @@ export function CommandRecordsPreview(props: CommandRecordsProps) {
     <Tabs id={id} label={copy.panels} items={commandRecords} value={selected} onValueChange={value => { setSelected(value); setCopyError(false); }} renderPanels={false} panelMode="dynamic" activationMode="manual" />
     <Text tone="muted">{copy.select}</Text>
     <TabPanel tabsId={id} activeValue={selected} mode="dynamic" label={current.label}><CodeBlock label={current.label} language={current.language} code={current.code} wrap={display === "wrap"} /></TabPanel>
-    {copyError ? <Stack gap="sm"><Notice tone="danger" title={copy.copyError} /><Button tone="ghost" onPress={() => setCopyError(false)}>{copy.dismiss}</Button></Stack> : null}
-    {busy ? <PatternStatus>{copy.pending}</PatternStatus> : null}
-    {phase === "failed" ? <Notice tone="danger" title={copy.failed} /> : null}
+    {copyError ? <Stack gap="sm"><Notice tone="danger" announcement="assertive" title={copy.copyError} /><Button tone="ghost" onPress={() => setCopyError(false)}>{copy.dismiss}</Button></Stack> : null}
+    {busy ? <PatternStatus announceOnMount>{copy.pending}</PatternStatus> : null}
+    {phase === "failed" ? <Notice tone="danger" announcement="assertive" title={copy.failed} /> : null}
     <Button loading={busy} disabled={busy} onPress={() => setPhase("pending")}>{phase === "failed" ? copy.retry : copy.refresh}</Button>
     <Text tone="muted">{copy.fixture}</Text>
     <Collapsible trigger={copy.tools} defaultOpen><Stack gap="sm">

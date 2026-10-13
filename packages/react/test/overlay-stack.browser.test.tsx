@@ -1,8 +1,8 @@
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import { afterEach, beforeEach, expect, it } from "vitest";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
-import { OverlayStackProvider, useDialog, useSheet } from "../src/overlay-stack.js";
+import { OverlayStackProvider, useDialog, useSheet, type OverlayStackApi, type OverlayHandle } from "../src/overlay-stack.js";
 import { Button } from "../src/actions.js";
 import { HjmProvider } from "../src/provider.js";
 import "../src/styles.css";
@@ -85,4 +85,31 @@ it("refuses to be used outside its provider instead of silently doing nothing", 
   } catch (error) { errors.push(String(error)); }
   console.error = originalError;
   expect(errors.join(" ")).toContain("OverlayStackProvider");
+});
+
+
+it("retains handle ownership and forwards the renderer completion callback", async () => {
+  let api!: OverlayStackApi;
+  function Capture() { api = { openDialog: useDialog(), openSheet: useSheet() }; return null; }
+  await act(async () => root.render(<HjmProvider reducedMotion><OverlayStackProvider><Capture /></OverlayStackProvider></HjmProvider>));
+  const complete = vi.fn();
+  let first!: OverlayHandle;
+  await act(async () => { first = api.openDialog({ title: "첫째", closeLabel: "닫기", onDismissComplete: complete }); });
+  await act(async () => first.close());
+  await first.closed;
+  expect(complete).toHaveBeenCalledOnce();
+  await act(async () => { api.openDialog({ title: "둘째", closeLabel: "닫기" }); });
+  await act(async () => first.close());
+  expect(document.querySelector(".hjm-dialog")?.textContent).toContain("둘째");
+});
+
+it("rejects overlapping imperative requests without replacing the active session", async () => {
+  let api!: OverlayStackApi;
+  function Capture() { api = { openDialog: useDialog(), openSheet: useSheet() }; return null; }
+  await act(async () => root.render(<HjmProvider reducedMotion><OverlayStackProvider><Capture /></OverlayStackProvider></HjmProvider>));
+  await act(async () => {
+    api.openDialog({ title: "첫째", closeLabel: "닫기" });
+    expect(() => api.openSheet({ title: "겹침", closeLabel: "닫기" })).toThrow(/closed/);
+  });
+  expect(document.querySelector(".hjm-dialog")?.textContent).toContain("첫째");
 });

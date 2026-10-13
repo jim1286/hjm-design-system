@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { emptyStateRecipe, noticeRecipe, progressRecipe, skeletonRecipe, } from "@hjmds/design-contracts/recipes";
 import { resolveResultDescriptor, } from "@hjmds/design-contracts/components/result";
-import { forwardRef, } from "react";
+import { forwardRef, useId, } from "react";
 import { classNames } from "./internal.js";
 import { Button } from "./actions.js";
 export const Notice = forwardRef(function Notice({ title, description, action, icon, tone = noticeRecipe.defaults.tone, className, layoutStyle, ...props }, ref) {
@@ -30,6 +30,7 @@ export const Progress = forwardRef(function Progress({ label, value, valueText, 
         (!Number.isFinite(value) || value < 0 || value > max)) {
         throw new RangeError("Progress value must be between zero and max");
     }
+    const labelId = useId();
     const diameter = progressRecipe.circular.sizes[size];
     const strokeWidth = progressRecipe.circular.strokeWidth[size];
     return (_jsxs("div", { className: classNames("hjm-progress", className), "data-size": size, "data-tone": tone, "data-shape": shape, "data-state": value === undefined ? "indeterminate" : "determinate", 
@@ -42,7 +43,7 @@ export const Progress = forwardRef(function Progress({ label, value, valueText, 
             // Conic sweep instead of an SVG arc: the same token drives both
             // shapes and no second color pipeline appears.
             "--hjm-progress-sweep": value === undefined ? "25%" : `${(value / max) * 100}%`,
-        } : layoutStyle, children: [_jsxs("span", { className: "hjm-progress__copy", children: [_jsx("span", { children: label }), valueText ? _jsx("span", { children: valueText }) : null] }), shape === "circular" ? (_jsx("span", { className: "hjm-progress__ring", "aria-hidden": "true", children: children ? _jsx("span", { className: "hjm-progress__ring-content", children: children }) : null })) : null, _jsx("progress", { ...props, ref: ref, className: "hjm-progress__native", max: max, ...(value === undefined ? {} : { value }), "aria-valuetext": typeof valueText === "string" ? valueText : undefined })] }));
+        } : layoutStyle, children: [_jsxs("span", { className: "hjm-progress__copy", children: [_jsx("span", { id: labelId, children: label }), valueText ? _jsx("span", { children: valueText }) : null] }), shape === "circular" ? (_jsx("span", { className: "hjm-progress__ring", "aria-hidden": "true", children: children ? _jsx("span", { className: "hjm-progress__ring-content", children: children }) : null })) : null, _jsx("progress", { ...props, ref: ref, className: "hjm-progress__native", max: max, ...(value === undefined ? {} : { value }), "aria-labelledby": props["aria-labelledby"] ?? (props["aria-label"] === undefined ? labelId : undefined), "aria-valuetext": typeof valueText === "string" ? valueText : undefined })] }));
 });
 export { Spinner } from "./internal/spinner.js";
 export const Skeleton = forwardRef(function Skeleton({ shape = skeletonRecipe.defaults.shape, animated = skeletonRecipe.defaults.animated, width, height, className, style, layoutStyle, ...props }, ref) {

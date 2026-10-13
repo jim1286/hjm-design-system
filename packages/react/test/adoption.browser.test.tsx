@@ -43,3 +43,27 @@ it("uses the canonical Menu when motion is reduced", async () => {
   expect(host.querySelector(".hjm-menu-morph")).toBeNull();
   expect(host.querySelector("button")?.textContent).toBe("작업");
 });
+
+it("blocks an already open morph menu when its owner disables it", async () => {
+  const action = vi.fn();
+  const view = (disabled: boolean) => <MorphingMenu label="작업" open disabled={disabled} onOpenChange={() => {}} items={[{ id: "a", label: "Alpha" }]} onAction={action} />;
+  await render(view(false)); await render(view(true));
+  const item = host.querySelector<HTMLButtonElement>('[role="menuitem"]')!;
+  expect(item.disabled).toBe(true);
+  await act(async () => item.click());
+  expect(action).not.toHaveBeenCalled();
+});
+
+
+it.each(["reduced", "rtl"] as const)("keeps keyboard activation and focus return through the %s canonical fallback", async mode => {
+  const action = vi.fn();
+  await render(<HjmProvider reducedMotion={mode === "reduced"} direction={mode === "rtl" ? "rtl" : "ltr"}><MorphingMenu label="작업" items={[{ id: "a", label: "Alpha" }, { id: "b", label: "Beta", disabled: true }]} onAction={action} /></HjmProvider>);
+  expect(host.querySelector(".hjm-menu-morph")).toBeNull();
+  const trigger = host.querySelector<HTMLButtonElement>("button")!;
+  await act(async () => trigger.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true, cancelable: true })));
+  const item = document.querySelector<HTMLButtonElement>('[role="menuitem"]')!;
+  expect(document.activeElement).toBe(item);
+  await act(async () => item.click());
+  expect(action).toHaveBeenCalledExactlyOnceWith("a");
+  expect(document.activeElement).toBe(trigger);
+});

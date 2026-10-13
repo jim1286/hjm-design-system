@@ -1,3 +1,4 @@
+import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { resolveAvatarInitials, type AvatarFallbackContext } from "@hjmds/design-contracts/avatar-fallback";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { fontWeight, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
@@ -20,7 +21,6 @@ import {
   type TagTone as ContractTagTone,
 } from "@hjmds/design-contracts/components/tag";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import type { ListRowPrivateProps } from "./internal/list-row-private.js";
 import { cardRecipe } from "@hjmds/design-contracts/components/card";
 import {
@@ -65,6 +65,7 @@ import {
   Children,
   isValidElement,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -83,7 +84,6 @@ import {
   type LayoutChangeEvent,
   type PressableProps,
   type StyleProp,
-  type TextStyle,
   type ViewProps,
   type ViewStyle,
 } from "react-native";
@@ -112,16 +112,6 @@ export type BadgeProps = Omit<
   variant?: BadgeVariant;
   leading?: ReactNode;
   accessibilityLabel?: string;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and
-   * `tone`/`size`/`variant` for appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `tone`/`size`/`variant` / typography recipe
-   * for appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  labelStyle?: StyleProp<TextStyle>;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -133,12 +123,10 @@ export function Badge({
   variant = badgeRecipe.defaults.variant,
   leading,
   accessibilityLabel,
-  style,
-  labelStyle,
   layoutStyle,
   ...props
 }: BadgeProps) {
-  warnDeprecatedStyleProps("Badge", { style, labelStyle }, "layoutStyle for placement and tone/size/variant for appearance");
+  assertNoRemovedStyleProps("Badge", props, ["style","labelStyle"]);
   const theme = useHjmNativeTheme();
   const presentation = badgeRecipe.tones[tone];
   const metrics = badgeRecipe.sizes[size];
@@ -173,7 +161,6 @@ export function Badge({
           minHeight: metrics.minHeight,
           paddingHorizontal: metrics.paddingHorizontal,
         },
-        style,
         layoutStyle,
       ]}
     >
@@ -197,7 +184,6 @@ export function Badge({
               theme.palette,
             ),
           },
-          labelStyle,
         ]}
         variant={metrics.textVariant}
       >
@@ -215,16 +201,6 @@ export type TagProps = Omit<
   children: string;
   tone?: TagTone;
   accessibilityLabel?: string;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and
-   * `tone` for appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `tone` / typography recipe
-   * for appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  labelStyle?: StyleProp<TextStyle>;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -234,11 +210,9 @@ export function Tag({
   tone,
   accessibilityLabel,
   layoutStyle,
-  style,
-  labelStyle,
   ...props
 }: TagProps) {
-  warnDeprecatedStyleProps("Tag", { style, labelStyle }, "layoutStyle for placement and tone for appearance");
+  assertNoRemovedStyleProps("Tag", props, ["style","labelStyle"]);
   const theme = useHjmNativeTheme();
   const resolvedLabel = children;
   if (resolvedLabel === undefined) {
@@ -268,14 +242,13 @@ export function Tag({
           minHeight: tagRecipe.size.minHeight,
           paddingHorizontal: tagRecipe.size.paddingHorizontal,
         },
-        style,
         layoutStyle,
       ]}
     >
       <Text
         align="center"
         emphasis="medium"
-        style={[{ color: presentation.content }, labelStyle]}
+        style={[{ color: presentation.content }]}
         variant={tagRecipe.size.textVariant}
       >
         {descriptor.label}
@@ -430,6 +403,12 @@ export type ListRowProps = Omit<
     accessibilityHint?: string;
     disabled?: boolean;
     density?: ListRowDensity;
+    /** Semantic emphasis for destructive destinations; selection stays independent. */
+    tone?: keyof typeof listRowRecipe.tones;
+    /** Reserve the real row geometry without exposing its commands or content. */
+    loading?: boolean;
+    /** Localized status name; omit on duplicate placeholder rows. */
+    loadingLabel?: string;
     selected?: boolean;
     /** Frame the ListRow paints around `leading`; the recipe owns its size. */
     leadingShape?: ListRowLeadingShape;
@@ -437,17 +416,7 @@ export type ListRowProps = Omit<
     layoutStyle?: HjmCompositionStyleProp;
     leadingStyle?: HjmCompositionStyleProp;
     contentStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `density`/`selected` / typography recipe
-     * for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    titleStyle?: StyleProp<TextStyle>;
     titleRowStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `density`/`selected` / typography recipe
-     * for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    descriptionStyle?: StyleProp<TextStyle>;
     trailingStyle?: HjmCompositionStyleProp;
     trailingActionStyle?: HjmCompositionStyleProp;
     containerProps?: Omit<ViewProps, "children" | "style">;
@@ -455,6 +424,7 @@ export type ListRowProps = Omit<
 
 export function ListRow({
   title,
+  tone = listRowRecipe.defaults.tone,
   description,
   leading,
   trailing,
@@ -468,23 +438,23 @@ export function ListRow({
   accessibilityHint,
   disabled = false,
   density = listRowRecipe.defaults.density,
+  loading = false,
+  loadingLabel,
   selected: selectedProp,
   leadingShape = "square",
   layoutStyle,
 
   leadingStyle,
   contentStyle,
-  titleStyle,
   titleRowStyle,
-  descriptionStyle,
   trailingStyle,
   trailingActionStyle,
   containerProps,
   accessibilityState,
   ...forwarded
 }: ListRowProps) {
+  assertNoRemovedStyleProps("ListRow", forwarded, ["titleStyle","descriptionStyle"]);
   const { hjmTitleEmphasis, ...props } = forwarded as typeof forwarded & ListRowPrivateProps;
-  warnDeprecatedStyleProps("ListRow", { titleStyle, descriptionStyle }, "density/selected and the listRowRecipe typography for appearance");
   const theme = useHjmNativeTheme();
   const metrics = listRowRecipe.density[density];
   const interactive = onPress !== undefined;
@@ -517,6 +487,26 @@ export function ListRow({
     width: listRowRecipe.leadingSize,
     ...(leadingRadius === null ? {} : { borderRadius: theme.tokens.radius[leadingRadius] }),
   } as const satisfies ViewStyle;
+  if (loading) {
+    // Search and other collections share ListRow geometry instead of approximating it with
+    // loose Skeletons. Never mount placeholder actions or forward touch handlers while loading.
+    const placeholder = { backgroundColor: theme.colors.surfaceAlt, borderRadius: theme.tokens.radius.sm };
+    return <View testID={props.testID} onLayout={props.onLayout}
+      accessible={Boolean(loadingLabel)} accessibilityRole="progressbar"
+      accessibilityLabel={loadingLabel} accessibilityState={{ busy: true }}
+      importantForAccessibility={loadingLabel ? "yes" : "no-hide-descendants"}
+      style={[{ alignItems: "center", flexDirection: "row", direction: theme.environment.direction,
+        gap: listRowRecipe.gap, minHeight: visualState.minHeight,
+        paddingHorizontal: metrics.paddingHorizontal, paddingVertical: metrics.paddingVertical,
+        borderWidth: 1, borderColor: "transparent" }, layoutStyle]}>
+      {leading ? <View style={[placeholder, leadingFrameStyle]} /> : null}
+      <View style={{ flex: 1, minWidth: 0, gap: spacing.xxs }}>
+        <View style={[placeholder, { width: `${listRowRecipe.loading.titleWidthPercent}%`, height: theme.tokens.typography[listRowRecipe.title.textVariant].lineHeight }]} />
+        {description ? <View style={[placeholder, { width: `${listRowRecipe.loading.descriptionWidthPercent}%`, height: theme.tokens.typography[listRowRecipe.description.textVariant].lineHeight }]} /> : null}
+      </View>
+      {trailing || trailingText ? <View style={[placeholder, { width: listRowRecipe.loading.trailingWidth, height: theme.tokens.typography[listRowRecipe.trailing.textVariant].lineHeight }]} /> : null}
+    </View>;
+  }
   const rowContent = (
     <>
       {leading ? (
@@ -544,11 +534,10 @@ export function ListRow({
           <Text
             style={[
               {
-                color: resolveColorReference(listRowRecipe.title.color, theme.palette),
+                color: resolveColorReference(listRowRecipe.tones[tone].titleColor, theme.palette),
                 flexShrink: 1,
                 fontWeight: hjmTitleEmphasis === "regular" ? fontWeight.regular : listRowRecipe.title.fontWeight,
               },
-              titleStyle,
             ]}
             variant={listRowRecipe.title.textVariant}
           >
@@ -567,7 +556,6 @@ export function ListRow({
           <Text
             style={[
               { color: resolveColorReference(listRowRecipe.description.color, theme.palette) },
-              descriptionStyle,
             ]}
             variant={listRowRecipe.description.textVariant}
           >
@@ -698,16 +686,6 @@ type AvatarBaseProps = Readonly<{
   initials?: string;
   renderFallback?: (context: AvatarFallbackContext) => ReactNode;
   size?: number;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and
-   * `size`/`renderFallback` for appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `size` / typography recipe
-   * for appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  imageStyle?: StyleProp<ImageStyle>;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -723,12 +701,9 @@ export function Avatar({
   size = 44,
   decorative = false,
   accessibilityLabel,
-  style,
-  imageStyle,
   layoutStyle,
 }: AvatarProps) {
   if (!Number.isFinite(size) || size < 24) throw new RangeError("Avatar size must be at least 24");
-  warnDeprecatedStyleProps("Avatar", { style, imageStyle }, "layoutStyle for placement and size/renderFallback for appearance");
   const { colors } = useHjmNativeTheme();
   const sourceKey = source === undefined ? "none" : resolveImageSourceKey(source);
   const [failedSource, setFailedSource] = useState<string | null>(null);
@@ -763,7 +738,6 @@ export function Avatar({
           overflow: "hidden",
           width: size,
         },
-        style,
         layoutStyle,
       ]}
     >
@@ -775,7 +749,7 @@ export function Avatar({
           </View>
         ) : (
           <NativeImage accessible={false} onError={failImage} source={source}
-            style={[{ height: size, width: size }, imageStyle]} />
+            style={[{ height: size, width: size }]} />
         )
       ) : (
         <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
@@ -789,18 +763,12 @@ export function Avatar({
 export type DividerProps = Readonly<{
   orientation?: "horizontal" | "vertical";
   inset?: number;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and
-   * `orientation`/`inset` for appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
 }>;
 
-export function Divider({ orientation = "horizontal", inset = 0, style, layoutStyle }: DividerProps) {
+export function Divider({ orientation = "horizontal", inset = 0, layoutStyle }: DividerProps) {
   if (!Number.isFinite(inset) || inset < 0) throw new RangeError("Divider inset must be non-negative");
-  warnDeprecatedStyleProps("Divider", { style }, "layoutStyle for placement and orientation/inset for appearance");
   const { colors } = useHjmNativeTheme();
   return (
     <View
@@ -809,7 +777,6 @@ export function Divider({ orientation = "horizontal", inset = 0, style, layoutSt
         orientation === "horizontal"
           ? { backgroundColor: colors.border, height: 1, marginHorizontal: inset, width: "auto" }
           : { alignSelf: "stretch", backgroundColor: colors.border, marginVertical: inset, width: 1 },
-        style,
         layoutStyle,
       ]}
     />
@@ -846,36 +813,6 @@ export type AccordionProps<Value extends string = string> = Readonly<{
   multiple?: boolean;
   density?: AccordionDensity;
   renderIndicator?: (props: AccordionIndicatorRenderProps<Value>) => ReactNode;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and
-   * `density`/`renderIndicator` for appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `density`/`renderIndicator` / typography recipe
-   * for appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  itemStyle?: StyleProp<ViewStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `density`/`renderIndicator` / typography recipe
-   * for appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  triggerStyle?: StyleProp<ViewStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `density`/`renderIndicator` / typography recipe
-   * for appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  titleStyle?: StyleProp<TextStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `density`/`renderIndicator` / typography recipe
-   * for appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  indicatorStyle?: StyleProp<ViewStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `density`/`renderIndicator` / typography recipe
-   * for appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  panelStyle?: StyleProp<ViewStyle>;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -891,43 +828,34 @@ export function Accordion<Value extends string = string>({
   multiple = accordionRecipe.defaults.allowsMultipleExpanded,
   density = accordionRecipe.defaults.density,
   renderIndicator,
-  style,
-  itemStyle,
-  triggerStyle,
-  titleStyle,
-  indicatorStyle,
-  panelStyle,
   layoutStyle,
 }: AccordionProps<Value>) {
-  warnDeprecatedStyleProps(
-    "Accordion",
-    { style, itemStyle, triggerStyle, titleStyle, indicatorStyle, panelStyle },
-    "layoutStyle for placement and density/renderIndicator for appearance",
-  );
   if (items.length === 0) throw new Error("Accordion requires at least one item");
   const itemValues = new Set(items.map((item) => item.value));
   if (itemValues.size !== items.length) throw new TypeError("Accordion values must be unique");
-  const initial = expandedValues ?? defaultExpandedValues;
-  if (initial.some((value) => !itemValues.has(value))) {
-    throw new RangeError("Accordion expanded values must match items");
-  }
-  if (!multiple && initial.length > 1) {
-    throw new RangeError("Accordion only accepts one expanded value unless multiple is true");
-  }
   const theme = useHjmNativeTheme();
   const metrics = accordionRecipe.density[density];
   const indicatorColor = resolveColorReference(
     accordionRecipe.indicator.color,
     theme.palette,
   );
-  const [expanded, setExpanded] = useControllableState<readonly Value[]>({
+  const [storedExpanded, setExpanded] = useControllableState<readonly Value[]>({
     ...(expandedValues === undefined ? {} : { value: expandedValues }),
     defaultValue: defaultExpandedValues,
     ...(onExpandedValuesChange === undefined ? {} : { onChange: onExpandedValuesChange }),
   });
 
+  const committed = useRef(false);
+  const expanded = expandedValues === undefined && committed.current ? storedExpanded.filter(value => itemValues.has(value)) : storedExpanded;
+  if (expanded.some(value => !itemValues.has(value))) throw new RangeError("Accordion expanded values must match items");
+  if (!multiple && expanded.length > 1) throw new RangeError("Accordion only accepts one expanded value unless multiple is true");
+  useLayoutEffect(() => {
+    committed.current = true;
+    // Retire expansion with the deleted item instead of reopening it when its key returns.
+    if (expanded.length !== storedExpanded.length) setExpanded(expanded);
+  }, [expanded, storedExpanded, setExpanded]);
   return (
-    <View accessibilityLabel={label} accessibilityRole="list" style={[style, layoutStyle]}>
+    <View accessibilityLabel={label} accessibilityRole="list" style={[layoutStyle]}>
       {items.map((item) => {
         const isExpanded = expanded.includes(item.value);
         return (
@@ -941,7 +869,6 @@ export function Accordion<Value extends string = string>({
                 ),
                 borderBottomWidth: 1,
               },
-              itemStyle,
             ]}
           >
             <Pressable
@@ -984,7 +911,6 @@ export function Accordion<Value extends string = string>({
                   paddingHorizontal: accordionRecipe.paddingHorizontal,
                   paddingVertical: metrics.paddingVertical,
                 },
-                triggerStyle,
               ]}
             >
               <View style={{ flex: 1, gap: spacing.xxs }}>
@@ -998,7 +924,6 @@ export function Accordion<Value extends string = string>({
                       ),
                       fontWeight: accordionRecipe.title.fontWeight,
                     },
-                    titleStyle,
                   ]}
                   variant={accordionRecipe.title.textVariant}
                 >
@@ -1006,7 +931,7 @@ export function Accordion<Value extends string = string>({
                 </Text>
                 {item.description ? <Text tone="muted" variant="caption">{item.description}</Text> : null}
               </View>
-              <View accessible={false} style={indicatorStyle}>
+              <View accessible={false}>
                 {renderIndicator ? (
                   renderIndicator({
                     value: item.value,
@@ -1030,7 +955,6 @@ export function Accordion<Value extends string = string>({
                     paddingBottom: accordionRecipe.panel.paddingBottom,
                     paddingStart: accordionRecipe.panel.paddingInlineStart,
                   },
-                  panelStyle,
                 ]}
               >
                 {item.content}
@@ -1051,16 +975,6 @@ export type DescriptionListProps<Id extends string = string> = Omit<
   descriptor: DescriptionListDescriptor<Id>;
   /** Explicit inner width wins; otherwise the rendered container is measured. */
   availableWidth?: number;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and
-   * `descriptor.columns` for appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `descriptor.columns` / typography recipe
-   * for appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  itemStyle?: StyleProp<ViewStyle>;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -1069,13 +983,11 @@ export function DescriptionList<Id extends string = string>({
   label,
   descriptor,
   availableWidth,
-  style,
-  itemStyle,
   layoutStyle,
   onLayout,
   ...props
 }: DescriptionListProps<Id>) {
-  warnDeprecatedStyleProps("DescriptionList", { style, itemStyle }, "layoutStyle for placement and descriptor.columns for arrangement");
+  assertNoRemovedStyleProps("DescriptionList", props, ["style","itemStyle"]);
   const resolved = resolveDescriptionListDescriptor(descriptor);
   const { width: windowWidth } = useWindowDimensions();
   const { environment } = useHjmNativeTheme();
@@ -1111,7 +1023,6 @@ export function DescriptionList<Id extends string = string>({
           flexWrap: "wrap",
           gap: spacing.sm,
         },
-        style,
         layoutStyle,
       ]}
     >
@@ -1120,7 +1031,7 @@ export function DescriptionList<Id extends string = string>({
           key={item.id}
           accessibilityLabel={`${item.label}, ${item.value}`}
           accessible
-          style={[{ gap: spacing.xxs, width: itemWidth }, itemStyle]}
+          style={[{ gap: spacing.xxs, width: itemWidth }]}
         >
           <Text accessible={false} tone="muted" variant="label">{item.label}</Text>
           <Text accessible={false} tone="primary">{item.value}</Text>
@@ -1217,7 +1128,7 @@ type CanonicalImageProps = ImageSharedProps &
 export type ImageProps = CanonicalImageProps;
 
 type ImageState = Readonly<{
-  sourceKey: string;
+  generation: object;
   status: Extract<ImageLoadStatus, "loading" | "loaded" | "error">;
 }>;
 
@@ -1261,31 +1172,34 @@ export function Image(imageProps: ImageProps) {
   const resolvedDecorative = descriptor.decorative;
   const resolvedAccessibilityLabel = descriptor.decorative ? undefined : descriptor.accessibilityLabel;
   const resolvedResizeMode = nativeResizeModes[descriptor.fit];
-  const sourceKey = `src:${descriptor.src}`;
   const source = useMemo(
     () => sourceAdapter?.(descriptor) ?? { uri: descriptor.src },
     [descriptor.accessibilityLabel, descriptor.decorative, descriptor.fit,
       descriptor.height, descriptor.src, descriptor.width, sourceAdapter],
   );
-  const [state, setState] = useState<ImageState>({ sourceKey, status: "loading" });
-  const status = state.sourceKey === sourceKey ? state.status : "loading";
-  useEffect(() => {
-    setState((current) => current.sourceKey === sourceKey
-      ? current
-      : { sourceKey, status: "loading" });
-  }, [sourceKey]);
+  // Auth/cache changes can create a new request at the same URL. Compare the
+  // resolved source contents, not the inline adapter function's identity.
+  const sourceKey = JSON.stringify([descriptor.src, resolveImageSourceKey(source)]);
+  // Match the Web image lifecycle: a replaced/unmounted host cannot publish
+  // results, including an old A request after the product changes A→B→A.
+  const generation = useMemo(() => ({}), [sourceKey]);
+  const activeGeneration = useRef<object | null>(generation);
+  useLayoutEffect(() => {
+    activeGeneration.current = generation;
+    return () => { activeGeneration.current = null; };
+  }, [generation]);
+  const [state, setState] = useState<ImageState>({ generation, status: "loading" });
+  const status = state.generation === generation ? state.status : "loading";
 
   const reportLoad = (event?: unknown) => {
-    setState((current) => current.sourceKey === sourceKey
-      ? { sourceKey, status: "loaded" }
-      : current);
+    if (activeGeneration.current !== generation) return;
+    setState({ generation, status: "loaded" });
     onLoadStatusChange?.("loaded");
     onLoad?.(event as Parameters<NonNullable<NativeImageProps["onLoad"]>>[0]);
   };
   const reportError = (event?: unknown) => {
-    setState((current) => current.sourceKey === sourceKey
-      ? { sourceKey, status: "error" }
-      : current);
+    if (activeGeneration.current !== generation) return;
+    setState({ generation, status: "error" });
     onLoadStatusChange?.("error");
     onError?.(event as Parameters<NonNullable<NativeImageProps["onError"]>>[0]);
   };
@@ -1435,11 +1349,6 @@ export type CounterBadgeProps = Readonly<{
   tone?: CounterBadgeTone;
   size?: CounterBadgeSize;
   variant?: CounterBadgeVariant;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and
-   * `tone`/`size`/`variant` for appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -1451,16 +1360,15 @@ export function CounterBadge({
   tone = counterBadgeRecipe.defaults.tone,
   size = counterBadgeRecipe.defaults.size,
   variant = counterBadgeRecipe.defaults.variant,
-  style,
   layoutStyle,
 }: CounterBadgeProps) {
-  warnDeprecatedStyleProps("CounterBadge", { style }, "layoutStyle for placement and tone/size/variant for appearance");
   if (accessibilityLabel !== undefined && !accessibilityLabel.trim()) {
     throw new TypeError("CounterBadge accessibilityLabel must not be empty");
   }
+  // A zero count hides the badge, but must not change its Hook call order.
+  const { colors } = useHjmNativeTheme();
   const visibleLabel = formatCounterBadgeCount(count, max);
   if (visibleLabel === null) return null;
-  const { colors } = useHjmNativeTheme();
   const presentation = {
     danger: { background: colors.dangerFill, content: colors.onDanger },
     brand: { background: colors.primary, content: colors.onPrimary },
@@ -1486,7 +1394,6 @@ export function CounterBadge({
           minWidth: metrics.minWidth,
           paddingHorizontal: metrics.paddingHorizontal,
         },
-        style,
         layoutStyle,
       ]}
     >
@@ -1508,11 +1415,6 @@ export type ListProps = Omit<
   children: ReactNode;
   separator?: "none" | "full" | "indented";
   appearance?: ListAppearance;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and
-   * `appearance`/`separator` for appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -1523,11 +1425,10 @@ export function List({
   children,
   separator = listRecipe.defaults.separator,
   appearance = "plain",
-  style,
   layoutStyle,
   ...props
 }: ListProps) {
-  warnDeprecatedStyleProps("List", { style }, "layoutStyle for placement and appearance/separator for appearance");
+  assertNoRemovedStyleProps("List", props, ["style"]);
   const { colors, environment, tokens } = useHjmNativeTheme();
   const items = Children.toArray(children);
   const separatorContract = listRecipe.separators[separator];
@@ -1548,7 +1449,6 @@ export function List({
               }
             : {}),
         },
-        style,
         layoutStyle,
       ]}
     >
@@ -1594,60 +1494,15 @@ export type StatisticProps<Id extends string = string> = Readonly<{
   accessibilityLabel?: string;
   composeAccessibilityLabel?: ComposeStatisticAccessibilityLabel<Id>;
   renderTrendMark?: (props: StatisticTrendMarkRenderProps) => ReactNode;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and
-   * `density`/`presentation` for appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `density`/`presentation` / typography recipe
-   * for appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  labelStyle?: StyleProp<TextStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `density`/`presentation` / typography recipe
-   * for appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  valueStyle?: StyleProp<TextStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `density`/`presentation` / typography recipe
-   * for appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  affixStyle?: StyleProp<TextStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `density`/`presentation` / typography recipe
-   * for appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  trendStyle?: StyleProp<TextStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `density`/`presentation` / typography recipe
-   * for appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  hintStyle?: StyleProp<TextStyle>;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 export function Statistic<Id extends string = string>(props: StatisticProps<Id>) {
-  warnDeprecatedStyleProps(
-    "Statistic",
-    {
-      style: props.style,
-      labelStyle: props.labelStyle,
-      valueStyle: props.valueStyle,
-      affixStyle: props.affixStyle,
-      trendStyle: props.trendStyle,
-      hintStyle: props.hintStyle,
-    },
-    "layoutStyle for placement and density/presentation for appearance",
-  );
   return renderStatistic(props);
 }
 
-// StatisticGroup composes Statistic with its own item width and the group's deprecated `itemStyle`.
-// Routing through this plain function (called in the same component, so hook order is unchanged)
-// keeps those internal values from being reported as caller misuse of Statistic.style. A private
-// prop on the public component was rejected because it would leak into the exported type.
+// StatisticGroup reuses this renderer with its calculated layout width.
 function renderStatistic<Id extends string = string>({
   descriptor,
   density = "comfortable",
@@ -1656,12 +1511,6 @@ function renderStatistic<Id extends string = string>({
   accessibilityLabel,
   composeAccessibilityLabel,
   renderTrendMark,
-  style,
-  labelStyle,
-  valueStyle,
-  affixStyle,
-  trendStyle,
-  hintStyle,
   layoutStyle,
 }: StatisticProps<Id>) {
   const resolved = resolveStatisticDescriptor(descriptor);
@@ -1706,7 +1555,6 @@ function renderStatistic<Id extends string = string>({
           minWidth: 0,
           padding: densityContract.padding,
         },
-        style,
         layoutStyle,
       ]}
     >
@@ -1717,7 +1565,6 @@ function renderStatistic<Id extends string = string>({
             color: resolveColorReference(statisticRecipe.label.color, theme.palette),
             fontWeight: statisticRecipe.label.fontWeight,
           },
-          labelStyle,
         ]}
         variant={densityContract.labelVariant}
       >
@@ -1742,7 +1589,6 @@ function renderStatistic<Id extends string = string>({
                 color: resolveColorReference(statisticRecipe.affix.color, theme.palette),
                 fontWeight: statisticRecipe.affix.fontWeight,
               },
-              affixStyle,
             ]}
             variant={statisticRecipe.affix.textVariant}
           >
@@ -1758,7 +1604,6 @@ function renderStatistic<Id extends string = string>({
               fontVariant: ["tabular-nums"],
               fontWeight: statisticRecipe.value.fontWeight,
             },
-            valueStyle,
           ]}
           variant={densityContract.valueVariant}
         >
@@ -1772,7 +1617,6 @@ function renderStatistic<Id extends string = string>({
                 color: resolveColorReference(statisticRecipe.affix.color, theme.palette),
                 fontWeight: statisticRecipe.affix.fontWeight,
               },
-              affixStyle,
             ]}
             variant={statisticRecipe.affix.textVariant}
           >
@@ -1808,7 +1652,6 @@ function renderStatistic<Id extends string = string>({
                 flexShrink: 1,
                 fontWeight: statisticRecipe.trend.fontWeight,
               },
-              trendStyle,
             ]}
             variant={statisticRecipe.trend.textVariant}
           >
@@ -1821,7 +1664,6 @@ function renderStatistic<Id extends string = string>({
           accessible={false}
           style={[
             { color: resolveColorReference(statisticRecipe.hint.color, theme.palette) },
-            hintStyle,
           ]}
           variant={statisticRecipe.hint.textVariant}
         >
@@ -1843,16 +1685,6 @@ export type StatisticGroupProps<Id extends string = string> = Omit<
   presentation?: StatisticPresentation;
   composeAccessibilityLabel?: ComposeStatisticAccessibilityLabel<Id>;
   renderTrendMark?: (props: StatisticTrendMarkRenderProps) => ReactNode;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and
-   * `density`/`presentation`/`descriptor.columns` for appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `density`/`presentation` / typography recipe
-   * for appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  itemStyle?: StyleProp<ViewStyle>;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -1865,13 +1697,11 @@ export function StatisticGroup<Id extends string = string>({
   presentation,
   composeAccessibilityLabel,
   renderTrendMark,
-  style,
-  itemStyle,
   layoutStyle,
   onLayout,
   ...props
 }: StatisticGroupProps<Id>) {
-  warnDeprecatedStyleProps("StatisticGroup", { style, itemStyle }, "layoutStyle for placement and density/presentation for appearance");
+  assertNoRemovedStyleProps("StatisticGroup", props, ["style","itemStyle"]);
   validateStatisticGroup(descriptor);
   const { width: windowWidth } = useWindowDimensions();
   const { environment } = useHjmNativeTheme();
@@ -1918,7 +1748,6 @@ export function StatisticGroup<Id extends string = string>({
           flexWrap: "wrap",
           gap: statisticRecipe.group.gap,
         },
-        style,
         layoutStyle,
       ]}
     >
@@ -1932,7 +1761,6 @@ export function StatisticGroup<Id extends string = string>({
           {...(presentation === undefined ? {} : { presentation })}
           {...(renderTrendMark === undefined ? {} : { renderTrendMark })}
           layoutStyle={{ width: index >= finalRowStart ? finalRowItemWidth : itemWidth }}
-          {...(itemStyle === undefined ? {} : { style: itemStyle })}
         />
       ))}
     </View>
@@ -1951,11 +1779,6 @@ export type TimelineProps<Id extends string = string> = Omit<
   Readonly<{
     items: readonly TimelineItemDescriptor<Id>[];
     composeAccessibleName: ComposeTimelineAccessibleName;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and
-     * item `tone` for appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
   }>;
@@ -1964,18 +1787,17 @@ export type TimelineProps<Id extends string = string> = Omit<
 export function Timeline<Id extends string = string>({
   items,
   composeAccessibleName,
-  style,
   layoutStyle,
   ...props
 }: TimelineProps<Id>) {
-  warnDeprecatedStyleProps("Timeline", { style }, "layoutStyle for placement and item tone for appearance");
+  assertNoRemovedStyleProps("Timeline", props, ["style"]);
   const theme = useHjmNativeTheme();
   const resolved = resolveTimelineDescriptor(
     { items },
     { composeAccessibleName },
   );
   return (
-    <View {...props} style={[{ gap: timelineRecipe.gap }, style, layoutStyle]}>
+    <View {...props} style={[{ gap: timelineRecipe.gap }, layoutStyle]}>
       {resolved.map((item, index) => {
         const tone = timelineRecipe.dot.tones[item.tone];
         const accessibilityLabel = [

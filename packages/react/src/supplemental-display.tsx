@@ -23,6 +23,9 @@ import {
 import {
   forwardRef,
   useState,
+  useMemo,
+  useRef,
+  useLayoutEffect,
   type CSSProperties,
   type HTMLAttributes,
   type ImgHTMLAttributes,
@@ -219,7 +222,7 @@ export type ImageProps = ImageRootProps &
   }>;
 
 type ImageState = Readonly<{
-  src: string;
+  generation: object;
   status: Extract<ImageLoadStatus, "loading" | "loaded" | "error">;
 }>;
 
@@ -254,11 +257,18 @@ export const Image = forwardRef<HTMLSpanElement, ImageProps>(function Image(
     ...(decorative === undefined ? {} : { decorative }),
     ...(accessibilityLabel === undefined ? {} : { accessibilityLabel }),
   } as ImageDescriptor);
-  const [state, setState] = useState<ImageState>({
-    src: descriptor.src,
-    status: "loading",
-  });
-  const status = state.src === descriptor.src ? state.status : "loading";
+  // A→B→A is a new request even when the URL repeats. Retire adapter callbacks
+  // at commit/unmount so old network events cannot update state or product observers.
+  // Responsive source candidates and request policy are part of image identity;
+  // a new srcSet must recover even when its fallback src is unchanged.
+  const generation = useMemo(() => ({}), [descriptor.src, imageProps?.srcSet, imageProps?.sizes, imageProps?.crossOrigin, imageProps?.referrerPolicy]);
+  const activeGeneration = useRef<object | null>(generation);
+  useLayoutEffect(() => {
+    activeGeneration.current = generation;
+    return () => { activeGeneration.current = null; };
+  }, [generation]);
+  const [state, setState] = useState<ImageState>({ generation, status: "loading" });
+  const status = state.generation === generation ? state.status : "loading";
   const {
     className: imageClassName,
     style: imageStyle,
@@ -266,12 +276,14 @@ export const Image = forwardRef<HTMLSpanElement, ImageProps>(function Image(
   } = imageProps ?? {};
 
   const handleLoad: ReactEventHandler<HTMLImageElement> = (event) => {
-    setState({ src: descriptor.src, status: "loaded" });
+    if (activeGeneration.current !== generation) return;
+    setState({ generation, status: "loaded" });
     onLoadStatusChange?.("loaded");
     onLoad?.(event);
   };
   const handleError: ReactEventHandler<HTMLImageElement> = (event) => {
-    setState({ src: descriptor.src, status: "error" });
+    if (activeGeneration.current !== generation) return;
+    setState({ generation, status: "error" });
     onLoadStatusChange?.("error");
     onError?.(event);
   };

@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { removeTagAt, resolveTagsInputActiveSuggestion, resolveTagsInputCommit, tagsInputBehaviorDefaults, tagsInputRecipe, } from "@hjmds/design-contracts/components/tags-input";
-import { forwardRef, useRef, useState, } from "react";
+import { forwardRef, useId, useRef, useState, } from "react";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
 export const TagsInput = forwardRef(function TagsInput({ label, tags: controlledTags, defaultTags, onTagsChange, onReject, onDraftChange, policy, commitKeys = tagsInputRecipe.defaults.commitKeys, suggestions, suggestionsLabel, composeRemoveLabel, placeholder, description, disabled = false, className, layoutStyle, }, forwardedRef) {
     const [tags, setTags] = useControllableState({
@@ -13,15 +13,20 @@ export const TagsInput = forwardRef(function TagsInput({ label, tags: controlled
     // removes it. Removing on the first press loses work with no warning.
     const [armedIndex, setArmedIndex] = useState(null);
     const [activeSuggestionId, setActiveSuggestionId] = useState(null);
-    const openSuggestions = (suggestions?.length ?? 0) > 0 && draft.trim().length > 0;
-    const activeSuggestion = suggestions?.find((item) => item.id === activeSuggestionId) ?? null;
+    const [suggestionsDismissed, setSuggestionsDismissed] = useState(false);
+    const hasSuggestions = (suggestions?.length ?? 0) > 0 && draft.trim().length > 0;
+    const openSuggestions = hasSuggestions && !suggestionsDismissed;
+    const activeSuggestion = suggestions?.find((item) => item.id === activeSuggestionId && !item.disabled) ?? null;
     const inputRef = useRef(null);
-    const id = `hjm-tags-${label.replace(/\s+/gu, "-")}`;
+    const id = `hjm-tags-${useId().replaceAll(":", "")}`;
     const changeDraft = (next) => {
         setDraft(next);
+        setSuggestionsDismissed(false);
         onDraftChange?.(next);
     };
     const commit = (value) => {
+        if (disabled)
+            return;
         const result = resolveTagsInputCommit(tags, value, policy ?? {});
         if (!result.accepted) {
             onReject?.(result);
@@ -39,15 +44,20 @@ export const TagsInput = forwardRef(function TagsInput({ label, tags: controlled
         inputRef.current?.focus();
     };
     const onKeyDown = (event) => {
+        // IME confirmation keys belong to the composition, not tag submission.
+        if (disabled || event.nativeEvent.isComposing || event.keyCode === 229)
+            return;
         const key = event.key;
-        if (openSuggestions && (key === "ArrowDown" || key === "ArrowUp")) {
+        if (hasSuggestions && (key === "ArrowDown" || key === "ArrowUp")) {
             event.preventDefault();
+            setSuggestionsDismissed(false);
             setActiveSuggestionId(resolveTagsInputActiveSuggestion(suggestions ?? [], activeSuggestionId, key === "ArrowDown" ? "next" : "previous"));
             return;
         }
-        if (key === "Escape" && activeSuggestionId !== null) {
+        if (key === "Escape" && openSuggestions) {
             // Dismissing the candidate list must not clear what the user typed.
             event.preventDefault();
+            setSuggestionsDismissed(true);
             setActiveSuggestionId(null);
             return;
         }
@@ -78,11 +88,11 @@ export const TagsInput = forwardRef(function TagsInput({ label, tags: controlled
                     "--hjm-tags-gap": `${tagsInputRecipe.frame.gap}px`,
                     "--hjm-tags-tag-min-height": `${tagsInputRecipe.tag.minHeight}px`,
                     "--hjm-tags-remove-target": `${tagsInputRecipe.remove.minTouchTarget}px`,
-                }, onClick: () => inputRef.current?.focus(), children: [_jsx("ul", { className: "hjm-tags-input__list", children: tags.map((tag, index) => (_jsxs("li", { className: "hjm-tags-input__tag", "data-armed": armedIndex === index || undefined, children: [_jsx("span", { children: tag }), _jsx("button", { type: "button", "aria-label": composeRemoveLabel(tag), className: "hjm-tags-input__remove", disabled: disabled, onClick: () => remove(index), children: "\u00D7" })] }, `${tag}-${index}`))) }), _jsx("input", { ref: composeRefs(inputRef, forwardedRef), id: id, type: "text", className: "hjm-tags-input__input", value: draft, placeholder: placeholder, disabled: disabled, "aria-describedby": description ? `${id}-description` : undefined, role: suggestions ? "combobox" : undefined, "aria-expanded": suggestions ? openSuggestions : undefined, "aria-controls": suggestions && openSuggestions ? `${id}-suggestions` : undefined, "aria-activedescendant": activeSuggestion ? `${id}-suggestion-${activeSuggestion.id}` : undefined, "aria-autocomplete": suggestions ? "list" : undefined, onChange: (event) => { changeDraft(event.target.value); setArmedIndex(null); setActiveSuggestionId(null); }, onKeyDown: onKeyDown, onBlur: () => { if (commitKeys.includes("Blur"))
+                }, onClick: () => inputRef.current?.focus(), children: [_jsx("ul", { className: "hjm-tags-input__list", children: tags.map((tag, index) => (_jsxs("li", { className: "hjm-tags-input__tag", "data-armed": armedIndex === index || undefined, children: [_jsx("span", { children: tag }), _jsx("button", { type: "button", "aria-label": composeRemoveLabel(tag), className: "hjm-tags-input__remove", disabled: disabled, onClick: () => remove(index), children: "\u00D7" })] }, `${tag}-${index}`))) }), _jsx("input", { ref: composeRefs(inputRef, forwardedRef), id: id, type: "text", className: "hjm-tags-input__input", value: draft, placeholder: placeholder, disabled: disabled, "aria-describedby": description ? `${id}-description` : undefined, role: suggestions ? "combobox" : undefined, "aria-expanded": suggestions ? openSuggestions : undefined, "aria-controls": suggestions && openSuggestions ? `${id}-suggestions` : undefined, "aria-activedescendant": openSuggestions && activeSuggestion ? `${id}-suggestion-${activeSuggestion.id}` : undefined, "aria-autocomplete": suggestions ? "list" : undefined, onChange: (event) => { changeDraft(event.target.value); setArmedIndex(null); setActiveSuggestionId(null); }, onKeyDown: onKeyDown, onBlur: () => { if (commitKeys.includes("Blur"))
                             commit(draft); setArmedIndex(null); } })] }), openSuggestions ? (_jsx("ul", { id: `${id}-suggestions`, role: "listbox", "aria-label": suggestionsLabel, className: "hjm-tags-input__suggestions", children: (suggestions ?? []).map((item) => (_jsx("li", { id: `${id}-suggestion-${item.id}`, role: "option", "aria-selected": item.id === activeSuggestionId, "aria-disabled": item.disabled || undefined, className: "hjm-tags-input__suggestion", onMouseDown: (event) => {
                         // Commit before blur so the draft is still there to replace.
                         event.preventDefault();
-                        if (!item.disabled)
+                        if (!disabled && !item.disabled)
                             commit(item.value ?? item.label);
                     }, onMouseEnter: () => { if (!item.disabled)
                         setActiveSuggestionId(item.id); }, children: item.label }, item.id))) })) : null, description ? _jsx("p", { id: `${id}-description`, className: "hjm-tags-input__description", children: description }) : null] }));

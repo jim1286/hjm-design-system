@@ -63,6 +63,12 @@ export function validateToastDescriptor(descriptor) {
             throw new RangeError("Toast progress current must index an existing step");
         }
     }
+    if (descriptor.press) {
+        assertCopy(descriptor.press.accessibilityLabel, "press.accessibilityLabel");
+        if (typeof descriptor.press.onPress !== "function") {
+            throw new TypeError("Toast press.onPress must be a function");
+        }
+    }
     if (descriptor.action) {
         assertCopy(descriptor.action.label, "action.label");
         if (descriptor.action.accessibilityLabel !== undefined) {
@@ -76,7 +82,7 @@ export function resolveToastDuration(descriptor) {
     if (descriptor.durationMs === null)
         return null;
     if (descriptor.durationMs === undefined) {
-        return descriptor.action ? null : toastBehaviorDefaults.durationMs;
+        return descriptor.action || descriptor.press ? null : toastBehaviorDefaults.durationMs;
     }
     return Math.max(descriptor.durationMs, toastBehaviorDefaults.minimumDurationMs);
 }
@@ -105,6 +111,7 @@ export function resolveToastDescriptor(descriptor) {
         announcement,
         durationMs: resolveToastDuration(descriptor),
         action,
+        press: descriptor.press ?? null,
         media: descriptor.media ?? null,
         progress: descriptor.progress ?? null,
         closeLabel: descriptor.closeLabel,
@@ -127,6 +134,8 @@ export function createToastSession(descriptor) {
     let revision = 0;
     let elapsedMs = 0;
     let actionInvoked = false;
+    let pressInvoked = false;
+    let invokingControl = false;
     let dismissReason = null;
     let dismissNotified = false;
     let cachedSnapshot = null;
@@ -168,6 +177,7 @@ export function createToastSession(descriptor) {
             descriptor: resolved,
             timer: timerSnapshot(),
             actionInvoked,
+            pressInvoked,
             dismissReason,
         };
         return cachedSnapshot;
@@ -214,6 +224,7 @@ export function createToastSession(descriptor) {
             resolved = next;
             revision += 1;
             actionInvoked = false;
+            pressInvoked = false;
             dismissReason = null;
             dismissNotified = false;
             if (phase === "queued" || timerPolicy === "restart")
@@ -259,20 +270,46 @@ export function createToastSession(descriptor) {
         },
         invokeAction() {
             const action = resolved.action;
-            if (phase !== "visible" || action === null || actionInvoked)
+            if (phase !== "visible" || action === null || actionInvoked || invokingControl)
                 return false;
             const invokedRevision = revision;
             actionInvoked = true;
+            invokingControl = true;
             notify();
             try {
                 action.onAction();
             }
             finally {
+                invokingControl = false;
                 if (action.dismissOnAction &&
                     phase === "visible" &&
                     revision === invokedRevision) {
                     phase = "closing";
                     dismissReason = "action";
+                    pausedBy.clear();
+                    notify();
+                }
+            }
+            return true;
+        },
+        invokePress() {
+            const press = resolved.press;
+            if (phase !== "visible" || press === null || pressInvoked || invokingControl)
+                return false;
+            const invokedRevision = revision;
+            pressInvoked = true;
+            invokingControl = true;
+            notify();
+            try {
+                press.onPress();
+            }
+            finally {
+                invokingControl = false;
+                // Match the reference's callback-then-dismiss ordering without closing a new
+                // revision published by navigation, or re-entering another control mid-callback.
+                if (phase === "visible" && revision === invokedRevision) {
+                    phase = "closing";
+                    dismissReason = "press";
                     pausedBy.clear();
                     notify();
                 }
@@ -484,6 +521,10 @@ export function createToastStore(options = {}) {
             queuedIds.push(descriptor.id);
             notify();
             return { outcome: "added", id: descriptor.id, position: "queued" };
+        },
+        invokePress(id) {
+            assertActive();
+            return sessions.get(id)?.invokePress() ?? false;
         },
         invokeAction(id) {
             assertActive();

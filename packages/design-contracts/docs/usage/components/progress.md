@@ -104,7 +104,7 @@ linear                               circular (Web)          circular (Native)
   `max ≤ 0`, 범위 밖 `value`는 던진다.
 - 이름은 지역화한 `label`로 준다. Native는 보이는 label 없이 `accessibilityLabel`만 줄 수도 있다(`ScrollProgress`는 `label` 필수).
 - 색은 `tone`, 두께는 `size`로만 바꾸고 배치는 `layoutStyle`로 한다. Native의 `style`·`labelStyle`·`valueStyle`·`trackStyle`·`indicatorStyle`은
-  deprecated(개발 모드 경고, 다음 major 제거)다.
+  제거된 속성이다.
 - `ScrollProgress`는 window에 자동으로 붙지 않는다. Web은 스크롤 host를, Native는 측정값을 반드시 넘긴다.
 - 작업 완료율에는 `ScrollProgress`가 아니라 `Progress`를 쓴다.
 
@@ -125,7 +125,7 @@ linear                               circular (Web)          circular (Native)
 
 2026-10-07 레퍼런스 조사에서 끝까지 스크롤한 마지막 행도 블러에 가려지는 문제를 확인했다.
 새 `resolveScrollEdges`는 같은 `ScrollMetrics`에서 논리적 이전/다음 콘텐츠 존재 여부를 계산한다.
-아직 미게시이며 `/scroll-progress` subpath에서 제공한다. 블러 renderer 자체를 제공한다는 뜻은 아니다.
+1.14.0부터 `/scroll-progress` subpath에서 제공한다. 블러 renderer 자체를 제공한다는 뜻은 아니다.
 
 ```ts
 import { resolveScrollEdges } from "@hjmds/design-contracts/scroll-progress";

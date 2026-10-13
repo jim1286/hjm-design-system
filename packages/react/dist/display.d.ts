@@ -1,4 +1,4 @@
-import { type BadgeSize, type BadgeTone, type BadgeVariant as ContractBadgeVariant, type ListRowDensity, type ListRowLeadingShape } from "@hjmds/design-contracts/recipes";
+import { listRowRecipe, type BadgeSize, type BadgeTone, type BadgeVariant as ContractBadgeVariant, type ListRowDensity, type ListRowLeadingShape } from "@hjmds/design-contracts/recipes";
 import { type TagTone } from "@hjmds/design-contracts/components/tag";
 import { type CardHeadingLevel } from "@hjmds/design-contracts/components/card";
 import { type SurfacePadding, type SurfaceRadius, type SurfaceTone } from "@hjmds/design-contracts/recipes/base";
@@ -77,6 +77,8 @@ export type ListRowProps = Omit<HTMLAttributes<HTMLElement>, "title" | "onClick"
     leading?: ReactNode;
     trailing?: ReactNode;
     density?: ListRowDensity;
+    /** Semantic emphasis for destructive destinations; selection stays independent. */
+    tone?: keyof typeof listRowRecipe.tones;
     /** Frame the ListRow paints around `leading`; the recipe owns its size. */
     leadingShape?: ListRowLeadingShape;
     selected?: boolean;
@@ -100,6 +102,8 @@ export declare const ListRow: import("react").ForwardRefExoticComponent<Omit<HTM
     leading?: ReactNode;
     trailing?: ReactNode;
     density?: ListRowDensity;
+    /** Semantic emphasis for destructive destinations; selection stays independent. */
+    tone?: keyof typeof listRowRecipe.tones;
     /** Frame the ListRow paints around `leading`; the recipe owns its size. */
     leadingShape?: ListRowLeadingShape;
     selected?: boolean;

@@ -1,7 +1,7 @@
 import riverPhoto from "../../../shared/photos/river.jpg";
 import { ProviderLogo } from "./provider-logo";
 import { SettingsPagePreview } from "./settings-page-preview";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode, type Ref } from "react";
 import { NotificationInboxScreen, NotificationItem, ChatScreen, ChatMessage, MessageComposer, ScreenLayout } from "@hjmds/react/screens";
 import { AuthScreenLayout } from "@hjmds/react/auth-screen";
 import { AuthProviderButton } from "@hjmds/react/provider-button";
@@ -28,7 +28,7 @@ export type ScreenPreviewOptions = { stateKind?: keyof typeof states; tools?: bo
 const glyphs = { bell: Bell, back: ChevronLeft, next: ChevronRight, language: Globe2, help: HelpCircle, shield: ShieldCheck, sound: Volume2, spark: Sparkles, more: MoreHorizontal, check: CheckCheck, chat: MessageCircle, heart: Heart, palette: Palette, settings: Settings2 };
 function Glyph({ name }: { name: keyof typeof glyphs }) { const GlyphIcon = glyphs[name];  return <GlyphIcon size={20} color={"currentColor"} strokeWidth={1.8} />; }
 function Person({ name }: { name: string }) { return <Avatar name={name} size="small" />; }
-function Frame({ children, login = false }: { children: ReactNode; login?: boolean }) { return <div style={{ height: login ? "auto" : "90dvh", width: "100%" }}>{children}</div>; }
+function Frame({ children, login = false, containerRef }: { children: ReactNode; login?: boolean; containerRef: Ref<HTMLDivElement> }) { return <div ref={containerRef} style={{ height: login ? "auto" : "90dvh", width: "100%" }}>{children}</div>; }
 type ReplyTarget = {id:string; author:string; text:string};
 type DemoMessage = ReplyTarget & {direction:"incoming"|"outgoing"; timestamp:string; replyTo?:ReplyTarget};
 const initialMessages: DemoMessage[] = [
@@ -58,33 +58,63 @@ function ScreenPreview({ kind: initialKind, stateKind = "ready", tools = false }
   const [messages, setMessages] = useState<DemoMessage[]>([]);
   const [replyTarget, setReplyTarget] = useState<ReplyTarget | null>(null);
   const [highlight, setHighlight] = useState<string | null>(null);
-  useEffect(() => { if (!highlight) return; const timer=setTimeout(() => setHighlight(null),1500); return () => clearTimeout(timer); }, [highlight]);
+  const highlightJob = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useEffect(() => () => clearTimeout(highlightJob.current), []);
+  const highlightOriginal = (id: string) => {
+    // Repeated visits to the same original restart the full visible highlight duration.
+    clearTimeout(highlightJob.current); setHighlight(id);
+    highlightJob.current = setTimeout(() => setHighlight(null), 1500);
+  };
   const messageNodes = useRef(new Map<string,HTMLDivElement>());
-  const jump = (id:string) => { messageNodes.current.get(id)?.scrollIntoView({block:"center",behavior:"instant"}); setHighlight(id); };
-  const [failNext, setFailNext] = useState(false);
+  const jump = (id:string) => { const node = messageNodes.current.get(id); if (!node) return; node.focus({preventScroll:true}); node.scrollIntoView({block:"center",behavior:"instant"}); highlightOriginal(id); };
+  // Failure tools belong to their action type, even after local navigation.
+  const [failNext, setFailNext] = useState<"chat" | "notifications" | null>(null);
   const [detail, setDetail] = useState<string | null>(null);
+  const [notificationDetailId, setNotificationDetailId] = useState<number | null>(null);
+  const routeHost = useRef<HTMLDivElement>(null), notificationFilter = useRef<HTMLButtonElement>(null);
+  const initialRoute = useRef(true);
+  useEffect(() => {
+    if (initialRoute.current) { initialRoute.current = false; return; }
+    const host = routeHost.current;
+    if (!host || kind === "login" && !atHome) return;
+    // Local routes replace their trigger. Restore the selected row/filter on inbox return;
+    // otherwise announce the new heading, without taking focus from another preview.
+    if (document.activeElement !== document.body && !host.contains(document.activeElement)) return;
+    const target = !atHome && !detail && kind === "notifications" && notificationDetailId !== null
+      ? host.querySelector<HTMLElement>(`[data-notification-id="${notificationDetailId}"]`) ?? notificationFilter.current
+      : host.querySelector<HTMLElement>("h1");
+    if (target) { if (!target.matches("button")) target.tabIndex = -1; target.focus(); }
+  }, [atHome, kind, detail, notificationDetailId]);
   // "loading" on the login screen means a provider sign-in in progress (pendingLabel), not the initial
   // provider-list fetch: LS-09 keeps those two states apart.
   const [loginBusy, setLoginBusy] = useState(initialKind === "login" && stateKind === "loading");
   const [loginError, setLoginError] = useState(false);
   const failLogin = useRef(initialKind === "login" && stateKind === "error");
   const loginJob = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  useEffect(() => () => clearTimeout(loginJob.current), []);
+  // Synchronous ownership prevents two provider events before React commits from creating orphan timers.
+  const loginRequest = useRef<object | null>(loginBusy ? {} : null);
+  useEffect(() => () => { loginRequest.current = null; clearTimeout(loginJob.current); }, []);
   const startLogin = () => {
-    if (loginBusy) return;
+    if (loginRequest.current) return;
+    const request = {}; loginRequest.current = request;
     setLoginError(false); setLoginBusy(true);
     loginJob.current = setTimeout(() => {
+      if (loginRequest.current !== request) return;
+      loginRequest.current = null; loginJob.current = undefined;
       setLoginBusy(false);
-      if (failLogin.current) { failLogin.current = false; setLoginError(true); } else setAtHome(true);
+      if (failLogin.current) { failLogin.current = false; setLoginError(true); } else {
+        // A login failure/loading fixture must not become the next screen's content state.
+        setRecovered(true); setAtHome(true);
+      }
     }, loginDelay);
   };
-  const cancelLogin = () => { clearTimeout(loginJob.current); setLoginBusy(false); }; // LS-09: cancel restores buttons without a failure sentence
+  const cancelLogin = () => { loginRequest.current = null; clearTimeout(loginJob.current); loginJob.current = undefined; setLoginBusy(false); }; // LS-09: cancel restores buttons without a failure sentence
   const [readError, setReadError] = useState(false);
-  const notice = failed ? <Text tone="danger">보내지 못했어요. 작성한 메시지는 남아 있어요.</Text> : readError ? <Text tone="danger">읽음 표시를 저장하지 못했어요. 알림을 다시 눌러 주세요.</Text> : detail ? <Stack gap="sm"><Text>{detail}</Text><Button tone="ghost" onClick={() => setDetail(null)}>닫기</Button></Stack> : null;
+  const notice = kind === "chat" && failed ? <Text tone="danger">보내지 못했어요. 작성한 메시지는 남아 있어요.</Text> : kind === "notifications" && readError ? <Text tone="danger">읽음 표시를 저장하지 못했어요. 알림을 다시 눌러 주세요.</Text> : detail ? <Stack gap="sm"><Text>{detail}</Text><Button tone="ghost" onClick={() => setDetail(null)}>닫기</Button></Stack> : null;
   const composer = <MessageComposer value={draft} onValueChange={setDraft} label="메시지 보내기" sendLabel="전송" context={notice} {...(replyTarget ? {replyTo:{author:replyTarget.author,excerpt:replyTarget.text,cancelLabel:"답장 취소",onCancel:() => setReplyTarget(null)}} : {})} sendPresentation="circle" sendIcon={<ArrowUp size={20} strokeWidth={2} color="var(--hjm-color-on-primary)"/>} attachmentAction={{label:"사진 추가", icon:<ImageIcon size={20}/>, onPress:() => setPhotos(current => [...current, (current.at(-1) ?? -1) + 1])}}
     attachments={photos.map((id,index) => ({id:String(id),removeLabel:`사진 ${index + 1} 삭제`,preview:<img src={riverPhoto} alt={`선택한 사진 ${index + 1}`} />}))}
     onRemoveAttachment={id => setPhotos(current => current.filter(photo => String(photo) !== id))} onSend={value => {
-    if (failNext) { setFailed(true); setFailNext(false); return; }
+    if (failNext === "chat") { setFailed(true); setFailNext(null); return; }
     setMessages(current => [...current, {id:`sent-${current.length}`,author:"나",direction:"outgoing",timestamp:"지금",text:value || `사진 ${photos.length}장`,...(replyTarget ? {replyTo:replyTarget} : {})}]); setReplyTarget(null); setPhotos([]); setDraft(""); setFailed(false);
   }} />;
   const retry = state.kind === "error" || state.kind === "restricted" ? <Button onClick={() => setRecovered(true)}>{state.kind === "restricted" ? "로그인" : "다시 연결"}</Button> : null;
@@ -95,19 +125,22 @@ function ScreenPreview({ kind: initialKind, stateKind = "ready", tools = false }
     { id: 3, name: "지우", title: "함께 나누던 대화가 이어졌어요", description: "내일 3시, 같은 장소에서 만나요.", time: "1시간 전", icon: "chat" as const },
     { id: 4, name: "안내", title: "이번 주의 이야기가 모였어요", description: "소중했던 순간을 다시 만나 보세요.", time: "어제", icon: "spark" as const },
   ];
+  const visibleEntries = entries.filter(entry => notificationTab === "전체" || notificationTab === "답글" && entry.icon === "chat" || notificationTab === "읽지 않음" && !readIds.includes(entry.id) && entry.id !== 4);
+  const notificationState = state.kind === "ready" && visibleEntries.length === 0 ? states.empty : state;
+  const groups = [{ title: "오늘", items: visibleEntries.filter(entry => entry.id !== 4) }, { title: "이번 주", items: visibleEntries.filter(entry => entry.id === 4) }].filter(group => group.items.length > 0);
   let screen;
   if (kind === "settings") screen = <SettingsPagePreview leading={back} state={state} stateAction={retry} />;
-  else if (kind === "notifications") screen = <NotificationInboxScreen title="알림" leading={back} state={state} stateAction={retry} notice={readError ? notice : null}
-    filters={<Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap:"wrap"}}>{["전체","답글","읽지 않음"].map(value=><Button key={value} size="small" tone="ghost" selected={notificationTab===value} onClick={()=>setNotificationTab(value)}>{value}</Button>)}</Stack>}
+  else if (kind === "notifications") screen = <NotificationInboxScreen title="알림" leading={back} state={notificationState} stateAction={retry} notice={readError ? notice : null}
+    filters={<Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap:"wrap"}}>{["전체","답글","읽지 않음"].map(value=><Button ref={notificationTab === value ? notificationFilter : undefined} key={value} size="small" tone="ghost" selected={notificationTab===value} onClick={()=>setNotificationTab(value)}>{value}</Button>)}</Stack>}
     actions={<IconButton label="알림 설정" tone="ghost" onClick={() => setKind("settings")}><Glyph name="settings" /></IconButton>}>
-    <Stack gap="xl">{[{title:"오늘", items:entries.slice(0,3)}, {title:"이번 주", items:entries.slice(3)}].map(group => <Stack key={group.title} gap="sm"><Heading level="level5" semanticLevel={2}>{group.title}</Heading>{group.items.filter(entry=>notificationTab==="전체"||notificationTab==="답글"&&entry.icon==="chat"||notificationTab==="읽지 않음"&&!readIds.includes(entry.id)&&entry.id!==4).map(entry => <NotificationItem key={entry.id} title={entry.title} description={entry.description}
+    <Stack gap="xl">{groups.map(group => <Stack key={group.title} gap="sm"><Heading level="level5" semanticLevel={2}>{group.title}</Heading>{group.items.map(entry => <NotificationItem data-notification-id={entry.id} key={entry.id} title={entry.title} description={entry.description}
       leading={<Person name={entry.name} />} trailing={<Glyph name={entry.icon} />} read={readIds.includes(entry.id) || entry.id === 4} statusLabel={readIds.includes(entry.id) || entry.id === 4 ? "확인함" : "새 알림"} timestamp={entry.time}
-      onClick={() => { if (failNext) { setFailNext(false); setReadError(true); return; } setReadError(false); setReadIds(ids => [...ids, entry.id]); setDetail(entry.description); }} />)}</Stack>)}</Stack>
+      onClick={() => { if (failNext === "notifications") { setFailNext(null); setReadError(true); return; } setReadError(false); setReadIds(ids => ids.includes(entry.id) ? ids : [...ids, entry.id]); setNotificationDetailId(entry.id); setDetail(entry.description); }} />)}</Stack>)}</Stack>
   </NotificationInboxScreen>;
   else if (kind === "chat") screen = <ChatScreen title="서연" leading={<Stack axis="inline" gap="xs" align="center">{back}<Person name="서연"/></Stack>} state={state} stateAction={retry} scroll="screen" composer={composer}
     actions={<IconButton label="대화 정보" tone="ghost" onClick={() => setDetail("서연님과 나누는 대화예요.")}><Glyph name="more" /></IconButton>}>
     <Stack gap="lg"><Stack align="center"><Text variant="caption" tone="muted">10월 5일 월요일</Text></Stack>
-      {[...initialMessages,...messages].map(message => <div key={message.id} ref={node => {if(node) messageNodes.current.set(message.id,node); else messageNodes.current.delete(message.id);}} style={{outline:highlight===message.id ? "2px solid var(--hjm-color-content-brand)" : undefined,borderRadius:"var(--hjm-radius-md)"}}>
+      {[...initialMessages,...messages].map(message => <div tabIndex={-1} key={message.id} ref={node => {if(node) messageNodes.current.set(message.id,node); else messageNodes.current.delete(message.id);}} style={{outline:highlight===message.id ? "2px solid var(--hjm-color-content-brand)" : undefined,borderRadius:"var(--hjm-radius-md)"}}>
         <ChatMessage direction={message.direction} author={message.author} timestamp={message.timestamp}
           replyAction={{label:"답장",onPress:() => setReplyTarget(message)}}
           {...(message.replyTo ? {reply:<Text variant="caption">{message.replyTo.author} · {message.replyTo.text}</Text>,replyLink:{label:"원문 메시지로 이동",onPress:() => jump(message.replyTo!.id)}} : {})}
@@ -124,10 +157,11 @@ function ScreenPreview({ kind: initialKind, stateKind = "ready", tools = false }
     footer={<Stack gap="xs" align="center"><Text variant="caption" tone="muted">계속하면 이용약관과 개인정보처리방침에 동의해요.</Text><Stack axis="inline" gap="md"><Button size="small" tone="ghost" onClick={() => setDetail("이용약관 예제 · 실제 서비스의 약관을 연결하는 영역이에요.")}>이용약관</Button><Button size="small" tone="ghost" onClick={() => setDetail("개인정보처리방침 예제 · 수집 항목과 보관 기간을 안내하는 영역이에요.")}>개인정보처리방침</Button></Stack>{detail ? <Text variant="caption">{detail}</Text> : null}{loginBusy ? <Button tone="ghost" onClick={cancelLogin}>예제 로그인 취소</Button> : null}</Stack>} />;
   else screen = <ScreenLayout title="내 소식" leading={back} state={state} stateAction={retry}><Text>나에게 도착한 이야기를 여기에서 확인해요.</Text></ScreenLayout>;
   // Local navigation keeps the fixture reversible without changing the host router.
+  // Only notification 1 belongs to the supplied Soyeon timeline; other details must not open it.
   if (atHome) screen = <ScreenLayout title="나의 공간" description="오늘의 이야기와 소식을 만나 보세요."><Stack gap="sm">{([['settings', '설정'], ['notifications', '알림'], ['chat', '서연과의 대화']] as const).map(([target, label]) => <ListRow key={target} title={label} trailing={<Glyph name="next" />} onClick={() => { setKind(target); setAtHome(false); }} />)}</Stack></ScreenLayout>;
-  else if (detail && kind !== "login") screen = <ScreenLayout title={kind === "notifications" ? "도착한 이야기" : kind === "chat" ? "대화 정보" : "상세 정보"} leading={<IconButton label="뒤로" tone="ghost" onClick={() => setDetail(null)}><Glyph name="back" /></IconButton>}><Stack gap="lg"><Text>{detail}</Text>{kind === "notifications" ? <Button onClick={() => { setDetail(null); setKind("chat"); }}>대화 이어가기</Button> : null}</Stack></ScreenLayout>;
+  else if (detail && kind !== "login") screen = <ScreenLayout title={kind === "notifications" ? "도착한 이야기" : kind === "chat" ? "대화 정보" : "상세 정보"} leading={<IconButton label="뒤로" tone="ghost" onClick={() => setDetail(null)}><Glyph name="back" /></IconButton>}><Stack gap="lg"><Text>{detail}</Text>{kind === "notifications" && notificationDetailId === 1 ? <Button onClick={() => { setDetail(null); setKind("chat"); }}>대화 이어가기</Button> : null}</Stack></ScreenLayout>;
   const toggleCopy = kind === "chat" || kind === "notifications" ? failToggleCopy[kind] : null;
-  return <Stack gap="sm">{tools && toggleCopy ? <Button tone="secondary" selected={failNext} onClick={() => setFailNext(v => !v)}>{toggleCopy[failNext ? 1 : 0]}</Button> : null}<Frame login={kind === "login"}>{screen}</Frame></Stack>;
+  return <Stack gap="sm">{tools && toggleCopy ? <Button tone="secondary" selected={failNext === kind} onClick={() => setFailNext(v => v === kind ? null : kind === "chat" || kind === "notifications" ? kind : null)}>{toggleCopy[failNext === kind ? 1 : 0]}</Button> : null}<Frame containerRef={routeHost} login={kind === "login"}>{screen}</Frame></Stack>;
 }
 
 export function LoginScreenPreview(props: ScreenPreviewOptions) { return <ScreenPreview kind="login" {...props} />; }

@@ -145,6 +145,7 @@ function SaveNote({ save }: { save(value: string): Promise<string> }) {
 
 ```tsx
 // Native
+import { StatusText } from "@hjmds/react-native/status-text";
 import { useState, useSyncExternalStore } from "react";
 import { ScrollView, useWindowDimensions } from "react-native";
 import { createActionSession } from "@hjmds/design-contracts/action-session";
@@ -173,7 +174,7 @@ function SaveNote({ save }: { save(value: string): Promise<string> }) {
             {t("common.save")}
           </Button>
           {state.status === "error" && <Button tone="secondary" onPress={() => void session.retry()}>{t("save.retry")}</Button>}
-          <StatusText>{t(saveStatusKey[state.status])}</StatusText>{/* 아래 공통 절의 제품 helper */}
+          <StatusText>{t(saveStatusKey[state.status])}</StatusText>{/* 공개 Text companion */}
           {state.value ? <Text>{t("save.savedValue", { value: state.value })}</Text> : null}
         </Stack>
       </Container>
@@ -190,31 +191,20 @@ function SaveNote({ save }: { save(value: string): Promise<string> }) {
   화면보다 오래 살아야 하면 제품의 작업 소유자(store)에 둔다. unmount 시 자동 reset은 기본으로 넣지 않는다.
 - 구독은 Web·Native 모두 `useSyncExternalStore(session.subscribe, session.getSnapshot, session.getSnapshot)`다. SSR은 요청별 세션을 만든다.
 - `reset(value)`는 세대를 바꿔 이전 응답과 재시도를 버린다. 서버 작업을 취소하지는 않는다.
-- 상태 문구 알림: Web은 `<Text role="status">`다. Native는 `Text`에 `accessibilityLiveRegion="polite"`(Android)를 주고,
-  iOS에서는 문구가 바뀌었고 비어 있지 않을 때만, 앱이 active일 때 `AccessibilityInfo.announceForAccessibilityWithOptions(message, { queue: true })`를 부른다.
-  스토리의 `PatternStatus`(`showcase/native/src/pattern-status.tsx`)는 공개 API가 아니므로 제품에서 같은 동작의 helper를 만든다.
-  나머지 Text prop은 `Omit<ComponentProps<typeof Text>, ...>`로 받아 그대로 넘긴다(optional prop을 `tone?: …`로 따로 받아 넘기면
-  `exactOptionalPropertyTypes`에서 TS2375가 난다).
+- 짧은 상태 문구는 공개 [StatusText](../components/text.md#statustext)를 쓴다. 문구와 실제 저장 결과는 제품이 소유하고,
+  Web live region·Native iOS 알림과 Android live region은 컴포넌트가 연결한다.
+- 계속 표시되는 최초 안내는 iOS에서 알리지 않는다. 행동 결과를 조건부로 새로 마운트하면 Native의
+  `announceOnMount`를 명시한다. 빈 문구·같은 문구 재렌더·배경 변경은 iOS에서 발표하지 않으며 복귀 때 재생하지 않는다.
+- Web은 동일 live node의 문구를 갱신한다. 조건부 마운트의 실제 낭독은 브라우저·보조기술에 따라 달라진다.
+  제목·설명·재시도 행동을 묶으면 Notice, 화면 위 일시 알림은 Toast를 고른다.
 
 ```tsx
 // Native
-import { useEffect, useRef, type ComponentProps } from "react";
-import { AccessibilityInfo, AppState, Platform } from "react-native";
-import { Text } from "@hjmds/react-native/primitives";
+import { StatusText } from "@hjmds/react-native/status-text";
+// Web: import { StatusText } from "@hjmds/react/status-text";
 
-type StatusTextProps = Omit<ComponentProps<typeof Text>, "children" | "accessibilityLiveRegion"> & { children: string };
-
-function StatusText({ children, ...props }: StatusTextProps) {
-  const previous = useRef(children); // 첫 렌더는 알리지 않는다
-  useEffect(() => {
-    const changed = previous.current !== children;
-    previous.current = children;
-    if (changed && children.trim() && Platform.OS === "ios" && AppState.currentState === "active") {
-      AccessibilityInfo.announceForAccessibilityWithOptions(children, { queue: true });
-    }
-  }, [children]);
-  return <Text {...props} accessibilityLiveRegion="polite">{children}</Text>;
-}
+<StatusText>{t(saveStatusKey[state.status])}</StatusText>
+{saved ? <StatusText announceOnMount>{t("save.complete")}</StatusText> : null} // Native
 ```
 
 ## 플랫폼 차이
@@ -233,3 +223,9 @@ function StatusText({ children, ...props }: StatusTextProps) {
 - 렌더 중 `createActionSession`을 부르면 매 렌더 새 세션이 생겨 중복 차단이 사라진다.
 - 구획 제목은 Heading으로 표시한다. 이전 Text heading 예제는 2026-10-06 제목 의미 구조를 맞추면서 수정했다.
 - 재시도는 secondary로 두어 저장과 경쟁하는 primary를 만들지 않는다(2026-10-06 예제 반영).
+
+### 재시도 뒤 초점과 결과 구분
+
+Web 예제는 재시도 버튼이 pending에서 사라지기 전에 저장 행동으로 초점을 옮긴다. 현재 입력이 비어 저장이 비활성화됐으면 입력칸으로 이동한다. 완료 시에는 추가 초점 이동을 하지 않아 사용자가 그동안 선택한 입력이나 다른 행동을 보존한다.
+
+재시도는 실패한 제출 snapshot을 다시 실행하며, 새로 입력한 초안은 주 저장 행동으로 제출한다. 성공한 snapshot과 현재 초안이 다르면 현재 입력이 아직 저장되지 않았다고 별도로 안내한다. 확정 값으로 편집 중인 초안을 덮어쓰지 않는다.

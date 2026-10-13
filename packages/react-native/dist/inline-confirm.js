@@ -8,6 +8,10 @@ import { Text } from "./primitives.js";
 const emptySubscribe = () => () => { };
 const emptySnapshot = () => null;
 export function InlineConfirm(props) {
+    // The displayed prompt can change while confirmation is open. Execute the
+    // current action rather than the callback captured when the prompt opened.
+    const confirmRef = useRef(props.onConfirm);
+    confirmRef.current = props.onConfirm;
     const [session, setSession] = useState(null);
     const [done, setDone] = useState(false);
     const phase = useSyncExternalStore(session?.subscribe ?? emptySubscribe, session?.getSnapshot ?? emptySnapshot, emptySnapshot);
@@ -33,7 +37,7 @@ export function InlineConfirm(props) {
     if (done)
         return _jsx(Text, { accessibilityLiveRegion: "polite", children: props.successLabel });
     if (!session)
-        return _jsx(Button, { tone: "danger", disabled: props.disabled ?? false, onPress: () => setSession(createAlertDialogSession({ mode: "confirm", tone: "danger", title: props.label, description: props.prompt, confirmLabel: props.confirmLabel, cancelLabel: props.cancelLabel, onConfirm: props.onConfirm, fallbackErrorMessage: props.errorLabel })), children: props.label });
+        return _jsx(Button, { tone: "danger", disabled: props.disabled ?? false, onPress: () => setSession(createAlertDialogSession({ mode: "confirm", tone: "danger", title: props.label, description: props.prompt, confirmLabel: props.confirmLabel, cancelLabel: props.cancelLabel, onConfirm: () => confirmRef.current(), fallbackErrorMessage: props.errorLabel })), children: props.label });
     const busy = phase?.status === "busy";
     return _jsxs(View, { style: { gap: spacing.sm }, children: [_jsx(Text, { accessibilityLiveRegion: "polite", children: props.prompt }), phase?.status === "error" && _jsx(Text, { accessibilityRole: "alert", tone: "danger", children: phase.message }), _jsxs(View, { style: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm }, children: [_jsx(Button, { tone: "ghost", disabled: busy, onPress: () => session.cancel("cancel-action"), children: props.cancelLabel }), _jsx(Button, { tone: "danger", loading: busy, disabled: busy || (props.disabled ?? false), onPress: () => { void session.confirm(); }, children: busy ? props.pendingLabel : props.confirmLabel })] })] });
 }

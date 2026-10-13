@@ -110,7 +110,7 @@ Button으로 [Dialog](dialog.md)를 열고, 위치 연결이 필요하면 Dialog
 같은 흐름 안에서 내용을 늘릴 때는 [Collapsible](collapsible.md)를 고른다. 이미지·제목이 각각 이동하는
 shared-element 효과와 일반 상세 Dialog는 다르며, 전자를 제공한다고 안내하지 않는다.
 
-### 프로필 표면 질감(미게시)
+### 프로필 표면 질감(1.15.0 추가)
 
 선택한 `designProfile.material.surface`를 자동으로 읽는다. glass는 지원하는 Web에서 실제 배경 흐림,
 clay는 안쪽 그림자를 사용한다. Native는 루트 Provider의 선택형 `surfaceEffects` host와 inset capability를

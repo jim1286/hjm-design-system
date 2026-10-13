@@ -54,7 +54,7 @@ import { BottomInfo } from "@hjmds/react-native/bottom-info";
 | `items` | 비지 않은 문자열 배열 | 필수 | 빈 배열·빈 문자열은 거부한다. 2개 이상이면 목록 표식이 붙는다(`listMarkerFrom: 2`) |
 | `tone` | `muted` · `emphasis` | `muted` | 법적 고지처럼 놓치면 안 되는 문장만 `emphasis`. danger·success tone은 없다 |
 | `renderItem` | `(item: string, index: number) => ReactNode` | — | 한 줄을 rich copy로 바꾼다(문장 안 약관 링크 등). `null`·`undefined`를 돌려주면 원래 문장을 그린다 |
-| `layoutStyle` | margin·width·flex·`alignSelf` | — | 배치 전용. Native `style`은 deprecated — layoutStyle 또는 tone/토큰 |
+| `layoutStyle` | margin·width·flex·`alignSelf` | — | 배치 전용. Native `style`은 제거된 속성 — layoutStyle 또는 tone/토큰 |
 
 상태가 없는 표시 컴포넌트다. 이벤트 콜백이 없다.
 
@@ -90,7 +90,7 @@ import { BottomInfo } from "@hjmds/react-native/bottom-info";
 | 항목 | Web | Native |
 | --- | --- | --- |
 | root | `<aside>`, 여러 줄이면 `<ul>/<li>` | `View` + 줄마다 `·` 표식 텍스트 |
-| 전달 가능 속성 | HTML 속성·`className`·ref·`layoutStyle` | `layoutStyle`(`style`은 deprecated) |
+| 전달 가능 속성 | HTML 속성·`className`·ref·`layoutStyle` | `layoutStyle`(`style`은 제거된 속성) |
 | `renderItem` 결과 위치 | `<li>`/`<p>` 안 | `Text` 안. 인라인 텍스트(문자열·`Text`·인라인 링크)만 돌려준다 |
 
 ## 함정

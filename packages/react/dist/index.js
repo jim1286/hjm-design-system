@@ -56,4 +56,5 @@ export { Collapsible } from "./collapsible.js";
 export { ContextMenu } from "./context-menu.js";
 export { Menubar } from "./menubar.js";
 export { Asset, AssetGroup } from "./asset.js";
+export { StatusText } from "./status-text.js";
 //# sourceMappingURL=index.js.map

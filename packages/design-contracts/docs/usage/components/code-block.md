@@ -74,7 +74,7 @@ import { CodeBlock } from "@hjmds/react-native/code-block";
 | `ClipboardButton` `value` · `labels` | `string` · `{ idle: ReactNode; copied: ReactNode }` | 필수 | 복사할 원문과 두 상태 문구 |
 | `ClipboardButton` `onCopy` · `onCopyError` | `(value: string) => void` · `(error: unknown) => void` | — | 실패(권한 거부 등)는 `onCopyError`로만 알 수 있다 |
 | `ClipboardButton` `feedbackDuration` | ms | 2000 | "복사했어요" 상태 유지 시간 |
-| `ClipboardButton` `tone` · `size` | [Button](button.md)과 같다 | `secondary` · `medium`(1.12.1은 `primary`) | 코드 블록 안에서는 `small`로 낮춘다 |
+| `ClipboardButton` `tone` · `size` | [Button](button.md)과 같다 | `secondary` · `medium` | 코드 블록 안에서는 `small`로 낮춘다 |
 
 ## 배치
 
@@ -96,8 +96,7 @@ Native 코드 제목은 `tokens.fontFamily.ui`, 선택 가능한 원문과 그 t
 - 토큰은 제품이 고른 하이라이터로 만든다(제품 소유). 토큰 색은 HJM semantic 색이 정한다.
 - `label`은 i18n 키로 넣는다. Native 접근성 이름에는 `label`과 원문이 함께 들어간다.
 - 복사 버튼과 실패 응답은 제품이 `copyAction`으로 공급한다. `onCopyError`에서 "직접 선택해 복사" 같은 안내를 보인다.
-- 복사 버튼은 화면의 주 행동이 아니다. 기본 tone은 `secondary`다(미게시(1.12.1 이후). 1.12.1은 Button 기본 `primary`를
-  물려받으므로 `tone="secondary"`를 명시한다). 코드 블록 안에서는 `size="small"`을 준다([Button](button.md)의 한 화면 primary 하나 규칙).
+- 복사 버튼은 화면의 주 행동이 아니다. 기본 tone은 `secondary`다(1.13.0 변경). 코드 블록 안에서는 `size="small"`을 준다([Button](button.md)의 한 화면 primary 하나 규칙).
 - 배치는 Web `layoutStyle`로 한다. Native CodeBlock은 배치 prop이 없으므로 감싸는 레이아웃(`Stack` 등)이 배치한다.
 
 ## 플랫폼 차이
@@ -115,7 +114,7 @@ Native 코드 제목은 `tokens.fontFamily.ui`, 선택 가능한 원문과 그 t
   사용자는 실패를 알 수 없다.
 
 2026-10-07 명령 기록 후보를 구현하며 지연 OS 응답을 검증한 결과, 이전 원문의 복사 성공/오류가
-새 원문과 언마운트 뒤에도 callback을 호출하고 중복 쓰기를 허용했다. 미게시(1.14.0 이후) 후속
+새 원문과 언마운트 뒤에도 callback을 호출하고 중복 쓰기를 허용했다. 1.15.0 변경 후속
 수정은 OS 쓰기 동안 Button loading/aria-busy/aria-disabled로 잠그고 키보드 포커스를 유지한다.
 원문이 바뀌어도 진행 중 OS 쓰기는 취소할 수 없으므로 완료까지 새 쓰기를 막는다. 이전 결과의
 성공 표시·callback은 무시하고 완료 뒤 현재 원문을 다시 복사할 수 있다. value가 바뀔 때마다

@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { Button, Stack } from "@hjmds/react";
+import { StatusText } from "@hjmds/react/status-text";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ContractStory } from "./preview-registry";
 
@@ -9,3 +12,18 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
+
+function StatusPreview() {
+  const [count, setCount] = useState(0);
+  const [failed, setFailed] = useState(false);
+  return <Stack gap="sm">
+    <StatusText announcement={failed ? "assertive" : "polite"} tone={failed ? "danger" : "muted"}>
+      {failed ? "저장하지 못했어요. 다시 시도해 주세요." : count ? `${count}번째 저장을 완료했어요.` : "변경한 내용은 저장 버튼으로 반영해요."}
+    </StatusText>
+    <Stack axis="inline" gap="xs">
+      <Button onClick={() => { setCount(value => value + 1); setFailed(false); }}>저장</Button>
+      <Button tone="secondary" onClick={() => setFailed(true)}>실패 보기</Button>
+    </Stack>
+  </Stack>;
+}
+export const Status: Story = { name: "상태 알림", render: () => <StatusPreview /> };

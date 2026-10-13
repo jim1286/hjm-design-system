@@ -2,8 +2,9 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { resolveDesignProfileScreen } from "@hjmds/design-contracts/design-profile-layout";
 import { MessageReactions } from "./internal/message-reactions.js";
 import { Button, IconButton } from "./actions.js";
+import { useOptionalHjmTheme } from "./provider.js";
 import { TextArea } from "./forms.js";
-import { useId, useRef, useState } from "react";
+import { useId, useLayoutEffect, useRef, useState } from "react";
 import { isReplySwipe, timestampRevealOffset, shouldSubmitMessageKey, canSubmitMessage, validateMessageAttachments, resolveScreenContentState, screenPatternRecipe } from "@hjmds/design-contracts/screen-patterns";
 import { Heading } from "./heading.js";
 import { Spinner } from "./internal/spinner.js";
@@ -22,8 +23,26 @@ export function ScreenLayout({ title, header, contentInset = "default", presenta
     // Replacement text owns scrolling even when the ready state delegates it to
     // a virtual list. Use the rendered mode for keyboard access as well as CSS.
     const bodyScroll = resolved.replacesContent ? "screen" : scroll;
+    const bodyRef = useRef(null);
+    const lastBodyFocus = useRef(null);
+    useLayoutEffect(() => {
+        // Replacing a focused retry/input removes its DOM node. Keep keyboard users
+        // in the same content region without stealing focus moved to another control.
+        const previous = lastBodyFocus.current;
+        if (previous && !previous.isConnected && document.activeElement === document.body) {
+            bodyRef.current?.focus({ preventScroll: true });
+        }
+        if (previous && !previous.isConnected)
+            lastBodyFocus.current = null;
+    });
     const recipe = screenPatternRecipe;
-    return _jsxs(Element, { "aria-labelledby": header ? undefined : id, "aria-label": header ? title : undefined, "data-content-inset": contentInset, "data-presentation": presentation, className: classNames("hjm-screen", className), style: { backgroundColor: designProfile?.material.canvas ? "transparent" : undefined, "--hjm-screen-width": `${profileLayout?.maxWidth ?? recipe.maxWidth}px`, "--hjm-screen-padding": `${contentInset === "none" ? 0 : recipe.padding}px`, "--hjm-screen-gap": `${profileLayout?.gap ?? recipe.sectionGap}px`, "--hjm-screen-item-gap": `${recipe.itemGap}px`, "--hjm-screen-state-gap": `${recipe.stateGap}px`, "--hjm-screen-header-min": `${recipe.headerMinWidth}px`, ...layoutStyle }, children: [header ?? _jsxs("header", { className: "hjm-screen__header", style: profileLayout ? { flexDirection: profileLayout.headerAxis, alignItems: profileLayout.centered ? "center" : undefined, textAlign: profileLayout.centered ? "center" : undefined } : undefined, children: [leading, _jsxs("div", { className: "hjm-screen__heading", children: [_jsx(Heading, { level: "level3", semanticLevel: 1, id: id, children: title }), description ? _jsx(Text, { as: "p", tone: "muted", children: description }) : null] }), actions] }), notice ? _jsx("div", { className: "hjm-screen__notice", children: notice }) : null, _jsx("div", { tabIndex: bodyScroll === "content" ? undefined : 0, className: "hjm-screen__body", "data-scroll": bodyScroll, "data-replacement": resolved.replacesContent || undefined, "aria-busy": resolved.busy || undefined, children: state.kind === "ready" ? children : _jsxs("div", { className: "hjm-screen__state", children: [resolved.busy ? _jsx(Spinner, { label: [state.title, state.description].filter(Boolean).join(". ") }) : _jsx("div", { role: state.kind === "error" ? "alert" : "status", children: _jsxs(Stack, { gap: "sm", align: "center", children: [_jsx(Text, { variant: "title", children: state.title }), state.description ? _jsx(Text, { tone: "muted", children: state.description }) : null] }) }), stateAction] }) }), footer ? _jsx("footer", { className: "hjm-screen__footer", children: footer }) : null] });
+    return _jsxs(Element, { "aria-labelledby": header ? undefined : id, "aria-label": header ? title : undefined, "data-content-inset": contentInset, "data-presentation": presentation, className: classNames("hjm-screen", className), style: { backgroundColor: designProfile?.material.canvas ? "transparent" : undefined, "--hjm-screen-width": `${profileLayout?.maxWidth ?? recipe.maxWidth}px`, "--hjm-screen-padding": `${contentInset === "none" ? 0 : recipe.padding}px`, "--hjm-screen-gap": `${profileLayout?.gap ?? recipe.sectionGap}px`, "--hjm-screen-item-gap": `${recipe.itemGap}px`, "--hjm-screen-state-gap": `${recipe.stateGap}px`, "--hjm-screen-header-min": `${recipe.headerMinWidth}px`, ...layoutStyle }, children: [header ?? _jsxs("header", { className: "hjm-screen__header", style: profileLayout ? { flexDirection: profileLayout.headerAxis, alignItems: profileLayout.centered ? "center" : undefined, textAlign: profileLayout.centered ? "center" : undefined } : undefined, children: [leading, _jsxs("div", { className: "hjm-screen__heading", children: [_jsx(Heading, { level: "level3", semanticLevel: 1, id: id, children: title }), description ? _jsx(Text, { as: "p", tone: "muted", children: description }) : null] }), actions] }), notice ? _jsx("div", { className: "hjm-screen__notice", children: notice }) : null, _jsx("div", { ref: bodyRef, tabIndex: bodyScroll === "content" ? -1 : 0, onFocusCapture: event => { lastBodyFocus.current = event.target; }, onBlurCapture: event => {
+                    // A connected input blurred to the document intentionally relinquishes
+                    // focus too; only removal of the currently focused node needs recovery.
+                    if (event.relatedTarget ? !event.currentTarget.contains(event.relatedTarget) : event.target.isConnected) {
+                        lastBodyFocus.current = null;
+                    }
+                }, className: "hjm-screen__body", "data-scroll": bodyScroll, "data-replacement": resolved.replacesContent || undefined, "aria-busy": resolved.busy || undefined, children: state.kind === "ready" ? children : _jsxs("div", { className: "hjm-screen__state", children: [resolved.busy ? _jsx(Spinner, { label: [state.title, state.description].filter(Boolean).join(". ") }) : _jsx("div", { role: state.kind === "error" ? "alert" : "status", children: _jsxs(Stack, { gap: "sm", align: "center", children: [_jsx(Text, { variant: "title", children: state.title }), state.description ? _jsx(Text, { tone: "muted", children: state.description }) : null] }) }), stateAction] }) }), footer ? _jsx("footer", { className: "hjm-screen__footer", children: footer }) : null] });
 }
 export function SettingsScreen({ profile, sections, ...props }) {
     // Keep semantic section headings while using the smaller settings label role.
@@ -37,7 +56,8 @@ export function NotificationItem({ read, statusLabel, timestamp, description, ti
 }
 /** Caller supplies a virtualized timeline and keyboard-aware composer; no implicit auto-scroll or send. */
 export function ChatScreen({ composer, scroll = "content", ...props }) {
-    return _jsx(ScreenLayout, { ...props, scroll: scroll, footer: !props.state || props.state.kind === "ready" ? composer : null });
+    // An empty conversation must still allow its first message; unavailable states hide input.
+    return _jsx(ScreenLayout, { ...props, scroll: scroll, footer: !props.state || props.state.kind === "ready" || props.state.kind === "empty" ? composer : null });
 }
 export function MessageComposer({ value, label, sendLabel, placeholder = label, description, error, invalid = false, submitMode = "newline", onBlur, disabled = false, pending = false, onValueChange, onSend, maxLength, sendDisabled = false, additionalContent = false, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation = "inline", attachmentAction, attachments = [], onRemoveAttachment, layoutStyle }) {
     validateMessageAttachments(attachments);
@@ -62,22 +82,27 @@ export function MessageComposer({ value, label, sendLabel, placeholder = label, 
                             onValueChange(event.currentTarget.value); }, minVisibleLines: screenPatternRecipe.composerMinLines, maxVisibleLines: screenPatternRecipe.composerMaxLines, ...(sendIcon ? { trailing: hasContent || pending ? send : attach } : {}) }), sendIcon ? null : send] })] });
 }
 export function ChatMessage({ direction, author, timestamp, timestampPresentation = "always", bubbleTail = false, deliveryLabel, avatar, reply, actions, replyAction, replyLink, reactions, children, interactiveContent = false, layoutStyle }) {
+    const theme = useOptionalHjmTheme();
     const revealTime = timestampPresentation === "swipe" && !!timestamp;
+    // Only the pointer that began a drag can finish it; another touch must not reply or cancel it.
     const start = useRef(null);
     const [offset, setOffset] = useState(0);
     const finish = () => { start.current = null; setOffset(0); };
     return _jsxs("article", { tabIndex: replyAction && !replyAction.disabled ? 0 : undefined, "aria-keyshortcuts": replyAction ? "Alt+ArrowLeft Alt+ArrowRight" : undefined, "aria-description": replyAction?.label, onKeyDown: event => { if (event.target === event.currentTarget && event.altKey && (event.key === "ArrowLeft" || event.key === "ArrowRight") && replyAction && !replyAction.disabled) {
             event.preventDefault();
             replyAction.onPress();
-        } }, onPointerDown: event => { if ((!revealTime && (!replyAction || replyAction.disabled)) || event.button !== 0 || event.target.closest("button,a,input,textarea"))
-            return; start.current = { x: event.clientX, y: event.clientY }; }, onPointerMove: event => { if (!start.current)
+        } }, onPointerDown: event => { if (start.current || (!revealTime && (!replyAction || replyAction.disabled)) || event.button !== 0 || event.target.closest("button,a,input,textarea"))
+            return; start.current = { x: event.clientX, y: event.clientY, pointerId: event.pointerId }; }, onPointerMove: event => { if (!start.current || start.current.pointerId !== event.pointerId)
             return; const dx = event.clientX - start.current.x, dy = event.clientY - start.current.y; if (Math.abs(dy) > 10 && Math.abs(dy) > Math.abs(dx)) {
             finish();
             return;
         } if (revealTime)
             setOffset((direction === "outgoing" ? -1 : 1) * timestampRevealOffset(direction === "outgoing" ? -dx : dx, dy));
         else if (Math.abs(dx) > Math.abs(dy) * 2)
-            setOffset(Math.max(-72, Math.min(72, dx))); }, onPointerUp: event => { if (!revealTime && start.current && replyAction && !replyAction.disabled && isReplySwipe(event.clientX - start.current.x, event.clientY - start.current.y))
-            replyAction.onPress(); finish(); }, onPointerCancel: finish, onPointerLeave: finish, style: { ...layoutStyle, position: "relative", overflow: "hidden", paddingInline: bubbleTail ? "var(--hjm-space-xs)" : undefined, touchAction: revealTime || replyAction ? "pan-y" : undefined }, "aria-label": author, children: [revealTime ? _jsx("time", { style: { position: "absolute", ...(direction === "outgoing" ? { right: 0, justifyContent: "flex-end" } : { left: 0 }), top: 0, bottom: 0, width: 80, display: "flex", alignItems: "center", opacity: offset !== 0 ? 1 : 0, pointerEvents: "none" }, children: _jsx(Text, { variant: "caption", tone: "muted", children: timestamp }) }) : null, _jsxs("div", { className: "hjm-chat-message", style: { transform: `translateX(${offset}px)`, "--hjm-message-max-width": screenPatternRecipe.messageMaxWidth }, "data-direction": direction, "data-tail": bubbleTail || undefined, children: [avatar ? _jsx("div", { className: "hjm-chat-message__avatar", children: avatar }) : null, _jsxs("div", { className: "hjm-chat-message__content", children: [author ? _jsx(Text, { variant: "caption", tone: "muted", children: author }) : null, reply && replyLink ? _jsx(Button, { tone: "ghost", "aria-label": replyLink.label, onClick: replyLink.onPress, children: reply }) : null, reactions ? _jsxs(MessageReactions, { ...reactions, interactiveContent: interactiveContent, children: [reply && !replyLink ? _jsx("div", { className: "hjm-chat-message__reply", children: reply }) : null, children] }) : _jsxs("div", { className: "hjm-chat-message__bubble", children: [reply && !replyLink ? _jsx("div", { className: "hjm-chat-message__reply", children: reply }) : null, children] }), (!revealTime && timestamp) || deliveryLabel || actions ? _jsxs("div", { className: "hjm-chat-message__meta", children: [(!revealTime && timestamp) || deliveryLabel ? _jsx(Text, { variant: "caption", tone: "muted", children: [revealTime ? "" : timestamp, deliveryLabel].filter(Boolean).join(" · ") }) : null, actions] }) : null] })] })] });
+            setOffset(Math.max(-72, Math.min(72, dx))); }, onPointerUp: event => { if (start.current?.pointerId !== event.pointerId)
+            return; if (!revealTime && start.current && replyAction && !replyAction.disabled && isReplySwipe(event.clientX - start.current.x, event.clientY - start.current.y))
+            replyAction.onPress(); finish(); }, onPointerCancel: event => { if (start.current?.pointerId === event.pointerId)
+            finish(); }, onPointerLeave: event => { if (start.current?.pointerId === event.pointerId)
+            finish(); }, style: { ...layoutStyle, position: "relative", overflow: "hidden", paddingInline: bubbleTail ? "var(--hjm-space-xs)" : undefined, touchAction: revealTime || replyAction ? "pan-y" : undefined }, "aria-label": author, children: [revealTime ? _jsx("time", { style: { position: "absolute", ...(direction === "outgoing" ? { right: 0, justifyContent: "flex-end" } : { left: 0 }), top: 0, bottom: 0, width: 80, display: "flex", alignItems: "center", opacity: offset !== 0 ? 1 : 0, pointerEvents: "none" }, children: _jsx(Text, { variant: "caption", tone: "muted", children: timestamp }) }) : null, _jsxs("div", { className: "hjm-chat-message", style: { transform: `translateX(${offset}px)`, transition: start.current || theme?.environment.reducedMotion ? "none" : "transform var(--hjm-motion-normal, 200ms) ease-out", "--hjm-message-max-width": screenPatternRecipe.messageMaxWidth }, "data-direction": direction, "data-tail": bubbleTail || undefined, children: [avatar ? _jsx("div", { className: "hjm-chat-message__avatar", children: avatar }) : null, _jsxs("div", { className: "hjm-chat-message__content", children: [author ? _jsx(Text, { variant: "caption", tone: "muted", children: author }) : null, reply && replyLink ? _jsx(Button, { tone: "ghost", "aria-label": replyLink.label, onClick: replyLink.onPress, children: reply }) : null, reactions ? _jsxs(MessageReactions, { ...reactions, interactiveContent: interactiveContent, children: [reply && !replyLink ? _jsx("div", { className: "hjm-chat-message__reply", children: reply }) : null, children] }) : _jsxs("div", { className: "hjm-chat-message__bubble", children: [reply && !replyLink ? _jsx("div", { className: "hjm-chat-message__reply", children: reply }) : null, children] }), (!revealTime && timestamp) || deliveryLabel || actions ? _jsxs("div", { className: "hjm-chat-message__meta", children: [(!revealTime && timestamp) || deliveryLabel ? _jsx(Text, { variant: "caption", tone: "muted", children: [revealTime ? "" : timestamp, deliveryLabel].filter(Boolean).join(" · ") }) : null, actions] }) : null] })] })] });
 }
 //# sourceMappingURL=screens.js.map

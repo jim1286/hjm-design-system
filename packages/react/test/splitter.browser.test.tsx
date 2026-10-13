@@ -147,3 +147,40 @@ it("adds a pane Tab stop only while the pane overflows, so its content stays key
   await act(async () => userEvent.tab());
   expect(document.activeElement).toBe(separator());
 });
+
+it("settles a drag once and stops resizing when disabled during the drag", async () => {
+  const end = vi.fn();
+  await act(async () => root.render(<Fixture onValueChangeEnd={end} />));
+  const box = document.querySelector<HTMLElement>(".hjm-splitter")!.getBoundingClientRect();
+  await pointer("pointerdown", box.left + box.width / 2);
+  await pointer("pointermove", box.left + box.width * 0.7);
+  const value = separator().getAttribute("aria-valuenow");
+  await act(async () => root.render(<Fixture disabled onValueChangeEnd={end} />));
+  await pointer("pointermove", box.left + box.width * 0.9);
+  expect(separator().getAttribute("aria-valuenow")).toBe(value);
+  expect(document.querySelector(".hjm-splitter")!.hasAttribute("data-dragging")).toBe(false);
+  await pointer("pointerup", box.left + box.width * 0.9);
+  expect(end).toHaveBeenCalledExactlyOnceWith(Number(value));
+  await act(async () => root.render(<Fixture onValueChangeEnd={end} />));
+  await key("ArrowRight");
+  expect(separator().getAttribute("aria-valuenow")).toBe(String(Number(value) + 5));
+});
+
+it("settles capture loss once and ignores later movement until a new drag", async () => {
+  const end = vi.fn();
+  await act(async () => root.render(<Fixture onValueChangeEnd={end} />));
+  const box = document.querySelector<HTMLElement>(".hjm-splitter")!.getBoundingClientRect();
+  await pointer("pointerdown", box.left + box.width / 2);
+  await pointer("pointermove", box.left + box.width * 0.7);
+  const value = separator().getAttribute("aria-valuenow");
+  await pointer("lostpointercapture", box.left + box.width * 0.7);
+  await pointer("pointermove", box.left + box.width * 0.9);
+  await pointer("pointerup", box.left + box.width * 0.9);
+  expect(separator().getAttribute("aria-valuenow")).toBe(value);
+  expect(end).toHaveBeenCalledExactlyOnceWith(Number(value));
+  await pointer("pointerdown", box.left + box.width * 0.7);
+  await pointer("pointermove", box.left + box.width * 0.9);
+  await pointer("pointerup", box.left + box.width * 0.9);
+  expect(separator().getAttribute("aria-valuenow")).toBe("75");
+  expect(end.mock.calls).toEqual([[Number(value)], [75]]);
+});

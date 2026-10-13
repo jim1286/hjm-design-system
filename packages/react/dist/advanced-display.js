@@ -1,3 +1,4 @@
+import { createElement as _createElement } from "react";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { resolveAvatarInitials } from "@hjmds/design-contracts/avatar-fallback";
 import { TableSortButton } from "./table-sort-button.js";
@@ -6,8 +7,8 @@ import { resolveDescriptionListColumnCount, resolveDescriptionListDescriptor, } 
 import { resolveTimelineDescriptor, } from "@hjmds/design-contracts/components/timeline";
 import { resolveStatisticDescriptor, validateStatisticGroup, } from "@hjmds/design-contracts/components/statistic";
 import { accordionRecipe, avatarRecipe, dividerRecipe, listRecipe, statisticRecipe, } from "@hjmds/design-contracts/recipes";
-import { Children, createElement, forwardRef, isValidElement, useEffect, useId, useRef, useState, } from "react";
-import { classNames, useControllableState, useElementWidth } from "./internal.js";
+import { Children, createElement, forwardRef, isValidElement, useId, useLayoutEffect, useMemo, useRef, useState, } from "react";
+import { assignRef, classNames, useControllableState, useElementWidth } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
 function validateAccordionItems(items) {
     if (items.length === 0)
@@ -43,12 +44,20 @@ function accordionFocusTarget(items, currentIndex, key) {
 }
 export const Accordion = forwardRef(function Accordion({ items, value: valueProp, defaultValue = [], onValueChange, allowsMultipleExpanded = accordionRecipe.defaults.allowsMultipleExpanded, density = accordionRecipe.defaults.density, headingLevel = 3, className, layoutStyle, ...props }, ref) {
     validateAccordionItems(items);
-    const [value, setValue] = useControllableState({
+    const [storedValue, setValue] = useControllableState({
         ...(valueProp === undefined ? {} : { value: valueProp }),
         defaultValue,
         ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
     });
     const validIds = new Set(items.map((item) => item.id));
+    const committed = useRef(false);
+    const value = valueProp === undefined && committed.current ? storedValue.filter(id => validIds.has(id)) : storedValue;
+    useLayoutEffect(() => {
+        committed.current = true;
+        // Removed uncontrolled disclosures retire their expansion; reinsertion starts closed.
+        if (value.length !== storedValue.length)
+            setValue(value);
+    }, [value, storedValue, setValue]);
     const valueIds = new Set();
     for (const id of value) {
         if (!validIds.has(id))
@@ -62,6 +71,23 @@ export const Accordion = forwardRef(function Accordion({ items, value: valueProp
     }
     const baseId = useId().replaceAll(":", "");
     const triggerRefs = useRef(new Map());
+    const host = useRef(null);
+    const focused = useRef(null);
+    useLayoutEffect(() => {
+        const previous = focused.current;
+        if (!previous)
+            return;
+        const index = items.findIndex(item => item.id === previous.id);
+        const removed = index < 0;
+        const disabledTrigger = index >= 0 && items[index].disabled && triggerRefs.current.get(previous.id) === previous.node;
+        if (!(removed || disabledTrigger) || (document.activeElement !== previous.node && document.activeElement !== document.body))
+            return;
+        // Restore only the removed/disabled target, never steal a user's external focus.
+        const origin = removed ? Math.min(previous.index, items.length - 1) : index + 1;
+        const target = Array.from({ length: items.length }, (_, offset) => items[(origin + offset) % items.length]).find(item => !item.disabled);
+        focused.current = null;
+        (target ? triggerRefs.current.get(target.id) : host.current)?.focus();
+    }, [items]);
     const toggle = (id) => {
         const expanded = value.includes(id);
         setValue(expanded
@@ -70,7 +96,7 @@ export const Accordion = forwardRef(function Accordion({ items, value: valueProp
                 ? [...value, id]
                 : [id]);
     };
-    return (_jsx("div", { ...props, style: { ...props.style, ...layoutStyle }, ref: ref, className: classNames("hjm-accordion", className), "data-density": density, "data-multiple": allowsMultipleExpanded || undefined, children: items.map((item, index) => {
+    return (_jsx("div", { ...props, style: { ...props.style, ...layoutStyle }, ref: node => { host.current = node; assignRef(ref, node); }, tabIndex: -1, className: classNames("hjm-accordion", className), "data-density": density, "data-multiple": allowsMultipleExpanded || undefined, children: items.map((item, index) => {
             const expanded = value.includes(item.id);
             const triggerId = `${baseId}-accordion-trigger-${index}`;
             const panelId = `${baseId}-accordion-panel-${index}`;
@@ -86,17 +112,23 @@ export const Accordion = forwardRef(function Accordion({ items, value: valueProp
                     event.preventDefault();
                     triggerRefs.current.get(items[target].id)?.focus();
                 }, children: [_jsx("span", { className: "hjm-accordion__title", children: item.title }), _jsx("span", { className: "hjm-accordion__indicator", "aria-hidden": "true", children: expanded ? "−" : "+" })] }));
-            return (_jsxs("div", { className: "hjm-accordion__item", "data-state": item.disabled ? "disabled" : expanded ? "expanded" : "collapsed", children: [createElement(`h${headingLevel}`, { className: "hjm-accordion__header" }, trigger), _jsx("div", { id: panelId, role: "region", className: "hjm-accordion__panel", "aria-labelledby": triggerId, hidden: !expanded, children: item.panel })] }, item.id));
+            return (_jsxs("div", { onFocusCapture: event => { if (event.target instanceof HTMLElement)
+                    focused.current = { id: item.id, index, node: event.target }; }, className: "hjm-accordion__item", "data-state": item.disabled ? "disabled" : expanded ? "expanded" : "collapsed", children: [createElement(`h${headingLevel}`, { className: "hjm-accordion__header" }, trigger), _jsx("div", { id: panelId, role: "region", className: "hjm-accordion__panel", "aria-labelledby": triggerId, hidden: !expanded, children: item.panel })] }, item.id));
         }) }));
 });
 export const Avatar = forwardRef(function Avatar({ name, src, alt = name, fallback, renderFallback, size = avatarRecipe.defaults.size, shape = avatarRecipe.defaults.shape, imageProps, className, layoutStyle, ...props }, ref) {
     if (name.trim().length === 0)
         throw new TypeError("Avatar name must not be empty");
-    const [imageAvailable, setImageAvailable] = useState(Boolean(src));
-    useEffect(() => setImageAvailable(Boolean(src)), [src]);
+    const generation = useMemo(() => ({}), [src]);
+    const active = useRef(generation);
+    useLayoutEffect(() => { active.current = generation; return () => { active.current = null; }; }, [generation]);
+    const [failed, setFailed] = useState(null);
+    const imageAvailable = Boolean(src) && failed !== generation;
     const { onError, className: imageClassName, ...restImageProps } = imageProps ?? {};
-    return (_jsx("span", { ...props, style: { ...props.style, ...layoutStyle }, ref: ref, className: classNames("hjm-avatar", className), "data-size": size, "data-shape": shape, "data-state": imageAvailable ? "image" : "fallback", children: src && imageAvailable ? (_jsx("img", { ...restImageProps, src: src, alt: alt, className: classNames("hjm-avatar__image", imageClassName), onError: (event) => {
-                setImageAvailable(false);
+    return (_jsx("span", { ...props, style: { ...props.style, ...layoutStyle }, ref: ref, className: classNames("hjm-avatar", className), "data-size": size, "data-shape": shape, "data-state": imageAvailable ? "image" : "fallback", children: src && imageAvailable ? (_createElement("img", { ...restImageProps, key: src, src: src, alt: alt, className: classNames("hjm-avatar__image", imageClassName), onError: (event) => {
+                if (active.current !== generation)
+                    return;
+                setFailed(generation);
                 onError?.(event);
             } })) : (_jsx("span", { className: "hjm-avatar__fallback", role: alt.length > 0 ? "img" : undefined, "aria-label": alt.length > 0 ? alt : undefined, "aria-hidden": alt.length === 0 || undefined, children: renderFallback?.({ size: avatarRecipe.sizes[size], decorative: true }) ?? fallback ?? resolveAvatarInitials(name) })) }));
 });

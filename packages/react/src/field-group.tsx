@@ -1,5 +1,5 @@
 import { useId, useLayoutEffect, useRef, type ReactNode } from "react";
-import { createFieldGroupEditSession, resolveFieldGroup, type FieldGroupDescriptor } from "@hjmds/design-contracts/field-group";
+import { createFieldGroupEditSession, resolveFieldGroup, fieldGroupRecipe, type FieldGroupLayout, type FieldGroupDescriptor } from "@hjmds/design-contracts/field-group";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type FieldGroupBinding = Readonly<{
@@ -10,22 +10,25 @@ export type FieldGroupBinding = Readonly<{
 export type FieldGroupProps = Readonly<{
   descriptor: FieldGroupDescriptor;
   renderField: (field: FieldGroupBinding) => ReactNode;
+  layout?: FieldGroupLayout;
+  className?: string;
   layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 /** Named related fields inside an existing form; never creates a submission boundary. */
-export function FieldGroup({ descriptor, renderField, layoutStyle }: FieldGroupProps) {
+export function FieldGroup({ descriptor, renderField, layout = fieldGroupRecipe.defaults.layout, className, layoutStyle }: FieldGroupProps) {
   const groupId = useId();
   const resolved = resolveFieldGroup(descriptor);
+  const recipe = fieldGroupRecipe;
   const session = useRef(createFieldGroupEditSession(resolved.fields));
   useLayoutEffect(() => { session.current.update(resolved.fields); return () => session.current.suspend(); }, [resolved.fields]);
   const groupSupport = [resolved.description ? `${groupId}-description` : undefined, resolved.error ? `${groupId}-error` : undefined].filter(Boolean).join(" ") || undefined;
-  return <fieldset disabled={resolved.disabled} aria-describedby={groupSupport}
+  return <fieldset className={className} disabled={resolved.disabled} aria-describedby={groupSupport}
     style={{ border: 0, margin: 0, padding: 0, minInlineSize: 0, ...layoutStyle }}>
-    <legend style={{ maxInlineSize: "100%", overflowWrap: "anywhere", marginBlockEnd: "var(--hjm-space-sm)" }}>{resolved.label}</legend>
+    <legend style={{ maxInlineSize: "100%", overflowWrap: "anywhere", marginBlockEnd: `var(--hjm-space-${recipe.headingGap})` }}>{resolved.label}</legend>
     {resolved.description ? <p id={`${groupId}-description`}>{resolved.description}</p> : null}
     {resolved.error ? <p id={`${groupId}-error`} role="alert" style={{ color: "var(--hjm-color-danger)" }}>{resolved.error}</p> : null}
-    <div style={{ display: "grid", gap: "var(--hjm-space-md)", minInlineSize: 0 }}>
+    <div style={{ display: "grid", gridTemplateColumns: layout === "inline" ? `repeat(auto-fit, minmax(min(100%, ${recipe.inline.minCharacters}ch), 1fr))` : undefined, gap: `var(--hjm-space-${recipe.gap})`, minInlineSize: 0 }}>
       {resolved.fields.map(field => {
         // Encode product ids rather than indexes: reordering must preserve control identity and focus.
         const id = `${groupId}-field-${encodeURIComponent(field.id)}`;

@@ -1,7 +1,7 @@
-import type { ReactNode } from "react";
+import { cloneElement, type ReactElement, type ReactNode } from "react";
 import { act, create, type ReactTestInstance, type ReactTestRenderer } from "react-test-renderer";
 import { Text, View } from "react-native";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from "vitest";
 
 import {
   BottomNavigation,
@@ -11,8 +11,8 @@ import {
   Tabs,
   TopBar,
   TopBarAction,
+  type TabsProps, type TabPanelProps, type BottomNavigationProps, type TopBarProps, type TopBarActionProps, type MenuProps,
 } from "../src/index.js";
-import { resetDeprecatedStyleWarningsForTest } from "../src/internal/deprecated-style.js";
 
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean })
   .IS_REACT_ACT_ENVIRONMENT = true;
@@ -47,17 +47,12 @@ function hasPlacement(renderer: ReactTestRenderer): boolean {
 let warn: ReturnType<typeof vi.spyOn>;
 
 beforeEach(() => {
-  resetDeprecatedStyleWarningsForTest();
   warn = vi.spyOn(console, "warn").mockImplementation(() => {});
 });
 
 afterEach(() => {
   vi.restoreAllMocks();
 });
-
-function warnedFor(key: string): number {
-  return warn.mock.calls.filter((call: unknown[]) => String(call[0]).includes(`${key} is deprecated`)).length;
-}
 
 const bottomDescriptor = {
   accessibilityLabel: "주요 탐색",
@@ -76,7 +71,6 @@ const tabItems = [
 type Case = Readonly<{
   name: string;
   props: readonly string[];
-  deprecated: () => ReactNode;
   layoutOnly: () => ReactNode;
 }>;
 
@@ -84,19 +78,11 @@ const cases: readonly Case[] = [
   {
     name: "Tabs",
     props: ["style", "tabListStyle"],
-    deprecated: () => (
-      <Tabs id="t" items={tabItems} label="계정" style={{ opacity: 0.5 }} tabListStyle={{ opacity: 0.5 }} />
-    ),
     layoutOnly: () => <Tabs id="t" items={tabItems} label="계정" layoutStyle={placement} />,
   },
   {
     name: "TabPanel",
     props: ["style"],
-    deprecated: () => (
-      <TabPanel activeValue="a" label="패널" style={{ opacity: 0.5 }} tabsId="t" value="a">
-        <Text>내용</Text>
-      </TabPanel>
-    ),
     layoutOnly: () => (
       <TabPanel activeValue="a" label="패널" layoutStyle={placement} tabsId="t" value="a">
         <Text>내용</Text>
@@ -106,18 +92,6 @@ const cases: readonly Case[] = [
   {
     name: "BottomNavigation",
     props: ["style", "surfaceStyle", "listStyle", "primaryActionStyle"],
-    deprecated: () => (
-      <BottomNavigation
-        descriptor={bottomDescriptor}
-        listStyle={{ opacity: 0.5 }}
-        onActivate={() => undefined}
-        primaryAction={<View />}
-        primaryActionStyle={{ opacity: 0.5 }}
-        renderIcon={() => null}
-        style={{ opacity: 0.5 }}
-        surfaceStyle={{ opacity: 0.5 }}
-      />
-    ),
     layoutOnly: () => (
       <BottomNavigation
         descriptor={bottomDescriptor}
@@ -130,27 +104,11 @@ const cases: readonly Case[] = [
   {
     name: "TopBar",
     props: ["style", "leadingStyle", "titleStyle", "trailingStyle"],
-    deprecated: () => (
-      <TopBar
-        leading={<View />}
-        leadingStyle={{ opacity: 0.5 }}
-        style={{ opacity: 0.5 }}
-        title="제목"
-        titleStyle={{ opacity: 0.5 }}
-        trailing={<View />}
-        trailingStyle={{ opacity: 0.5 }}
-      />
-    ),
     layoutOnly: () => <TopBar layoutStyle={placement} title="제목" />,
   },
   {
     name: "TopBarAction",
     props: ["style", "labelStyle"],
-    deprecated: () => (
-      <TopBarAction label="필터" labelStyle={{ opacity: 0.5 }} onPress={() => undefined} style={{ opacity: 0.5 }}>
-        <View />
-      </TopBarAction>
-    ),
     layoutOnly: () => (
       <TopBarAction label="필터" layoutStyle={placement} onPress={() => undefined}>
         <View />
@@ -160,37 +118,34 @@ const cases: readonly Case[] = [
   {
     name: "Menu",
     props: ["style"],
-    deprecated: () => (
-      <Menu dismissLabel="닫기" items={[{ id: "edit", label: "편집" }]} style={{ opacity: 0.5 }} triggerLabel="메뉴" />
-    ),
     layoutOnly: () => (
       <Menu dismissLabel="닫기" items={[{ id: "edit", label: "편집" }]} layoutStyle={placement} triggerLabel="메뉴" />
     ),
   },
 ];
 
-describe("Native navigation deprecated visual style props", () => {
+describe("Native navigation canonical style boundary", () => {
   for (const testCase of cases) {
-    it(`${testCase.name} warns once per deprecated prop and keeps the legacy style working`, () => {
-      const first = render(testCase.deprecated());
-      act(() => first.update(
-        <HjmNativeProvider reducedMotion theme="light">{testCase.deprecated()}</HjmNativeProvider>,
-      ));
-      const second = render(testCase.deprecated());
-      for (const prop of testCase.props) {
-        expect(warnedFor(`${testCase.name}.${prop}`), `${testCase.name}.${prop}`).toBe(1);
-      }
-      act(() => {
-        first.unmount();
-        second.unmount();
+    for (const prop of testCase.props) {
+      it(`${testCase.name} rejects removed ${prop} from untyped callers`, () => {
+        const node = testCase.layoutOnly() as ReactElement<Record<string, unknown>>;
+        expect(() => render(cloneElement(node, { [prop]: { opacity: 0.5 } }))).toThrow(TypeError);
       });
-    });
-
-    it(`${testCase.name} accepts layoutStyle on the root without warning`, () => {
+    }
+    it(`${testCase.name} applies layoutStyle without overriding the recipe`, () => {
       const renderer = render(testCase.layoutOnly());
       expect(warn).not.toHaveBeenCalled();
       expect(hasPlacement(renderer)).toBe(true);
       act(() => renderer.unmount());
     });
   }
+});
+
+it("excludes removed navigation visual overrides from public types", () => {
+  expectTypeOf<Extract<keyof TabsProps, "style" | "tabListStyle">>().toEqualTypeOf<never>();
+  expectTypeOf<TabPanelProps>().not.toHaveProperty("style");
+  expectTypeOf<Extract<keyof BottomNavigationProps, "style" | "surfaceStyle" | "listStyle" | "primaryActionStyle">>().toEqualTypeOf<never>();
+  expectTypeOf<Extract<keyof TopBarProps, "style" | "leadingStyle" | "titleStyle" | "trailingStyle">>().toEqualTypeOf<never>();
+  expectTypeOf<Extract<keyof TopBarActionProps, "style" | "labelStyle">>().toEqualTypeOf<never>();
+  expectTypeOf<MenuProps>().not.toHaveProperty("style");
 });

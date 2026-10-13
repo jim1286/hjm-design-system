@@ -138,6 +138,7 @@ function ArchiveItem({ id, name, api }: { id: string; name: string; api: Archive
 
 ```tsx
 // Native
+import { StatusText } from "@hjmds/react-native/status-text";
 import { useState, useSyncExternalStore } from "react";
 import { ScrollView, useWindowDimensions } from "react-native";
 import { createActionSession, type ActionSnapshot } from "@hjmds/design-contracts/action-session";
@@ -177,7 +178,7 @@ function ArchiveItem({ id, name, api }: { id: string; name: string; api: Archive
 }
 ```
 
-`api.archive`·`api.unarchive`(서버가 확정한 boolean을 돌려줌)와 `StatusText`는 제품 소유다([공통 절](action-recovery-save.md#공통-세션과-상태-알림)의 helper).
+`api.archive`·`api.unarchive`(서버가 확정한 boolean을 돌려줌)는 제품 소유다. `StatusText`는 [공개 Text companion](../components/text.md#statustext)이다.
 
 ## 플랫폼 차이
 
@@ -191,3 +192,7 @@ function ArchiveItem({ id, name, api }: { id: string; name: string; api: Archive
 
 - 구획 제목은 Heading으로 표시한다. 이전 Text heading 예제는 2026-10-06 제목 의미 구조를 맞추면서 수정했다.
 - 재시도는 secondary로 두어 저장과 경쟁하는 primary를 만들지 않는다(2026-10-06 예제 반영).
+
+### 재시도 뒤 초점과 결과 구분
+
+Web 예제는 사라질 재시도 버튼에서 기존 보관/실행 취소 행동으로 초점을 옮긴다. 해당 버튼은 pending에도 같은 노드로 남아 완료 후 다음 행동으로 이어진다. 역연산이 실패하면 마지막으로 확정된 보관 상태를 유지하고, 성공한 때에만 목록으로 돌아간다.

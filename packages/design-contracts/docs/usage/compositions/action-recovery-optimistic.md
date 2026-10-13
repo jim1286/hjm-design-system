@@ -129,6 +129,7 @@ function BookmarkToggle({ initial, setBookmark }: { initial: boolean; setBookmar
 
 ```tsx
 // Native
+import { StatusText } from "@hjmds/react-native/status-text";
 import { useState, useSyncExternalStore } from "react";
 import { ScrollView, useWindowDimensions } from "react-native";
 import { createActionSession } from "@hjmds/design-contracts/action-session";
@@ -163,7 +164,7 @@ function BookmarkToggle({ initial, setBookmark }: { initial: boolean; setBookmar
 }
 ```
 
-`setBookmark`(서버가 확정한 boolean을 돌려줌)과 `StatusText`는 제품 소유다([공통 절](action-recovery-save.md#공통-세션과-상태-알림)의 helper).
+`setBookmark`(서버가 확정한 boolean을 돌려줌)는 제품 소유다. `StatusText`는 [공개 Text companion](../components/text.md#statustext)이다.
 
 ## 플랫폼 차이
 
@@ -178,3 +179,7 @@ function BookmarkToggle({ initial, setBookmark }: { initial: boolean; setBookmar
 
 - 구획 제목은 Heading으로 표시한다. 이전 Text heading 예제는 2026-10-06 제목 의미 구조를 맞추면서 수정했다.
 - 재시도는 secondary로 두어 저장과 경쟁하는 primary를 만들지 않는다(2026-10-06 예제 반영).
+
+### 재시도 뒤 초점과 결과 구분
+
+Web 예제는 사라질 재시도 버튼에서 기존 북마크 토글로 초점을 옮긴다. pending의 토글은 `aria-disabled`와 Button의 실행 차단을 사용해 키보드 위치를 유지한다. Native 예제의 `disabled`와 구분한다. 서버 새 상태로 reset한 뒤 이전 완료는 상태나 초점을 덮지 않는다. 예제는 메모리 요청이며 실제 서버 정합성을 검증하지 않는다.

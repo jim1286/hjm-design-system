@@ -1,4 +1,4 @@
-import { useEffect, useId, useState, type CSSProperties } from "react";
+import { useEffect, useId, useRef, useState, type CSSProperties } from "react";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { colorPickerRecipe, normalizePickerColor, pickerOpacity, withPickerOpacity } from "@hjmds/design-contracts/components/color-picker";
 export type ColorPickerLabels = Readonly<{ color: string; hex: string; opacity: string; invalid: string }>;
@@ -17,9 +17,12 @@ export function ColorPicker({ label, labels, value, onValueChange, alpha = false
   const id = useId();
   const [draft, setDraft] = useState(color);
   const [invalid, setInvalid] = useState(false);
-  useEffect(() => { setDraft(color); setInvalid(false); }, [color]);
-  function emit(next: string) { setDraft(next); setInvalid(false); if (next !== color) onValueChange(next); }
+  // Enter consumes this edit; its following blur must not resend a deferred controlled request.
+  const draftChanged = useRef(false);
+  useEffect(() => { setDraft(color); setInvalid(false); draftChanged.current = false; }, [color]);
+  function emit(next: string) { if (disabled) return; draftChanged.current = false; setDraft(next); setInvalid(false); if (next !== color) onValueChange(next); }
   function commit() {
+    if (disabled) return;
     let next: string;
     try {
       // A typed 3/6-digit HEX names only the hue. Keep the current opacity instead of resetting it to 100%,
@@ -34,8 +37,8 @@ export function ColorPicker({ label, labels, value, onValueChange, alpha = false
     <div className="hjm-color-picker__row">
       <label className="hjm-color-picker__native"><span>{labels.color}</span><input type="color" value={color.slice(0, 7)} onChange={event => emit(event.target.value + (alpha ? color.slice(7) : ""))} /></label>
       <label className="hjm-color-picker__hex"><span>{labels.hex}</span><input type="text" dir="ltr" value={draft} spellCheck={false} autoComplete="off" aria-invalid={invalid || undefined} aria-describedby={invalid ? `${id}-error` : undefined}
-        onChange={event => { setDraft(event.target.value); setInvalid(false); }} onBlur={commit}
-        onKeyDown={event => { if (event.key === "Enter") { event.preventDefault(); commit(); } if (event.key === "Escape") { event.preventDefault(); setDraft(color); setInvalid(false); } }} /></label>
+        onChange={event => { draftChanged.current = true; setDraft(event.target.value); setInvalid(false); }} onBlur={() => { if (draftChanged.current) commit(); }}
+        onKeyDown={event => { if (event.nativeEvent.isComposing || event.keyCode === 229) return; if (event.key === "Enter") { event.preventDefault(); commit(); } if (event.key === "Escape") { event.preventDefault(); draftChanged.current = false; setDraft(color); setInvalid(false); } }} /></label>
     </div>
     {invalid && <p id={`${id}-error`} role="alert" className="hjm-color-picker__error">{labels.invalid}</p>}
     {alpha && <label className="hjm-color-picker__opacity"><span>{labels.opacity} <output>{pickerOpacity(color)}%</output></span><input type="range" min={0} max={100} step={1} value={pickerOpacity(color)} aria-label={labels.opacity} aria-valuetext={`${pickerOpacity(color)}%`} onChange={event => emit(withPickerOpacity(color, Number(event.target.value)))} /></label>}

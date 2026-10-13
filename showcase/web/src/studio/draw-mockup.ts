@@ -1,4 +1,4 @@
-import { resolveMockupLayout, type MockupScene } from "../../../shared/mockup-scene";
+import { resolveMockupLayout, type MockupScene } from "../../../shared/mockup-scene.js";
 const palettes = {
   dawn: { start: "#f5e9de", end: "#ded8ef", ink: "#28232f", accent: "#b392df" },
   ink: { start: "#101c29", end: "#273749", ink: "#f6f4ee", accent: "#6699b9" },

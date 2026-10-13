@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 구성 API 지침 참조
-- 검토일: 2026-10-06
+- 검토일: 2026-10-13
 - 근거: [반복 화면 조합](../../screen-patterns.md); 공통 API와 실제 Web·Native 예제의 슬롯·상태를 대조해 중복 조립 방지. 2026-10-06 사용자 승인으로 스토리북 배포(이전 `실험/화면/기본 흐름/사진 선택과 업로드`, [승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정))
 - 스토리북: `배포/화면/콘텐츠/사진 선택과 업로드`
 
@@ -41,6 +41,21 @@ host: 남은 높이·safe area·키보드
 | 빈 | 실제 조회 0건 또는 아직 작성하지 않은 상태 안내 | 시작·조건 해제 등 맥락에 맞는 대안 |
 | 오류 | 업로드 실패 항목만 재시도, 완료 버튼은 제품 정책으로 제한 | 실패 원인과 재시도 경로 제공 |
 
+
+### 항목별 업로드와 완료 조건
+
+Web·Native `media-picker-preview.tsx`는 최대 5장을 순서대로 고른 뒤 공통 `items` 격자에서 메모리 업로드를 시연한다. `실패와 복구`는 첫 항목 한 번만 실패하며, 항목의 재시도로 해당 사진만 다시 처리한다. 업로드·실패·0장 상태에서는 완료를 막고, 사진 제거·선택 화면 복귀 뒤 도착한 이전 결과는 무시한다. 모두 성공한 뒤 완료하면 순서를 포함한 읽기 전용 결과가 남고 `새로 선택`으로 초기화한다. `showcase/shared/media-picker-example.ts`는 이 예제만의 메모리 어댑터이며 실제 OS 사진 접근·권한이나 서버 업로드를 수행하지 않는다.
+
+2026-10-13 전수 점검에서 최초 조회와 변경 요청의 상태를 같은 골격으로 설명하던 부분을 구체화했다.
+
+| 상황 | 연결 | 유지·복구 |
+| --- | --- | --- |
+| 선택 0개 | empty + add | 새 사진 선택은 계속 가능하고 done은 제품 정책에 따라 잠근다 |
+| 업로드 혼재 | 썸네일·순서와 각 UploadItem 상태 유지 | 실패한 항목만 재시도한다. 성공한 사진을 다시 업로드하지 않는다 |
+| 완료 가능 | 필수 항목 모두 서버 확정 | 업로드 중이 아니어도 실패·취소 항목이 남으면 done을 바로 활성화하지 않는다 |
+| 권한 제한 | restricted + 권한 안내 행동 | 로컬 썸네일이 존재한다는 이유로 OS 접근 권한을 얻었다고 판단하지 않는다 |
+| 제거·취소 | 제품이 요청 취소 및 id별 결과 무시 | 늦은 응답이 제거한 사진을 다시 추가하지 않게 한다 |
+
 ## 사용하는 지침
 
 | 지침 | 쓰는 곳 |
@@ -60,7 +75,7 @@ import { MediaSelectionScreen } from "@hjmds/react/screen-flows";
   items={picked.map((p) => ({ descriptor: { id: p.id, name: p.fileName, state: p.upload },
     preview: <img src={p.uri} alt="" width={p.width} height={p.height} /> }))}
   add={{ label: t("media.add"), onAction: openPicker }}
-  done={{ label: t("media.done"), onAction: submit, disabled: uploading }}
+  done={{ label: t("media.done"), onAction: submit, disabled: uploading || !canComplete }}
   labels={{ pending: t("upload.pending"), uploading: t("upload.uploading"),
     success: t("upload.success"), cancel: t("upload.cancel"), retry: t("upload.retry") }}
   actionLabels={{ remove: t("media.remove"), moveUp: t("media.moveUp"), moveDown: t("media.moveDown") }}
@@ -82,7 +97,7 @@ import { Image } from "react-native";
   items={picked.map((p) => ({ descriptor: { id: p.id, name: p.fileName, state: p.upload },
     preview: <Image src={p.uri} width={p.width} height={p.height} /> }))}
   add={{ label: t("media.add"), onAction: openPicker }}
-  done={{ label: t("media.done"), onAction: submit, disabled: uploading }}
+  done={{ label: t("media.done"), onAction: submit, disabled: uploading || !canComplete }}
   labels={{ pending: t("upload.pending"), uploading: t("upload.uploading"),
     success: t("upload.success"), cancel: t("upload.cancel"), retry: t("upload.retry") }}
   actionLabels={{ remove: t("media.remove"), moveUp: t("media.moveUp"), moveDown: t("media.moveDown") }}
@@ -94,13 +109,14 @@ import { Image } from "react-native";
 />
 ```
 
+`canComplete`는 필수 파일의 성공·선택 개수 등 제품 완료 조건이다. 단순히 uploading=false인 실패 상태를 완료로 취급하지 않는다.
+
 콜백·데이터·지역화 함수는 제품에서 공급한다. Web·Native import와 필수 props는 위 API 지침에서 확인한다. 미리보기 이미지는 제품이 공급한다(Web `img`, Native `Image`).
 
-## 큰 글자·다크·좁은 폭
+## 다크·좁은 폭
 
 | 조건 | 바뀌는 것 |
 | --- | --- |
-| 큰 글자 | 2배 글자에서 제목·행은 내용 높이로 증가. footer·닫기·입력 필드가 겹치지 않는지 확인 |
 | 다크 | semantic 색으로 내용과 표면을 함께 전환; 예제 브랜드 색을 제품 기본값으로 복사하지 않음 |
 | 좁은 폭 | 기본 격자는 `minColumnWidth` 없이 `columns={{ compact: 2, expanded: 3 }}`라 320px에서도 2열이다(한 열로 접지 않는다). 960 미만 2열, 이상 3열. 이동·제거 버튼 행은 줄바꿈된다. 한 열이 필요하면 `library` 슬롯으로 제품 격자를 넘긴다 |
 | 키보드 | Native host가 safe area와 키보드를 한 번 처리; Web은 포커스된 입력과 footer 가림 확인 |
@@ -108,4 +124,4 @@ import { Image } from "react-native";
 ## 함정
 
 - 업로드 실패 항목만 재시도, 완료 버튼은 제품 정책으로 제한.
-- Storybook은 실제 서버·OS 권한·라우터 연동 증거가 아니다. 기본·다크·큰 글자와 실패/복구를 각각 확인한다.
+- Storybook은 실제 서버·OS 권한·라우터 연동 증거가 아니다. 기본·다크와 실패/복구를 확인한다. 최대 글자와 이를 모사하는 확대 조건은 공통 사용자 지침에 따라 검증·설계 고려에서 제외한다.

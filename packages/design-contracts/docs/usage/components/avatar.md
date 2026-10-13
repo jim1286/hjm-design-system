@@ -76,9 +76,9 @@ import { Avatar } from "@hjmds/react-native/data-display";
 | Web `alt` | `string` | `name` | `""`이면 보조기기에서 숨긴다 |
 | Web `imageProps` | `img` 속성(`alt`·`src` 제외) | — | `onError`는 `(event: SyntheticEvent<HTMLImageElement>) => void`이며 대체 표시로 바꾼 뒤 불린다 |
 | Native `accessibilityLabel` · `decorative` | `{ accessibilityLabel: string }` 또는 `{ decorative: true }` | — | 둘 중 하나가 타입으로 강제된다 |
-| Native `renderImage` | `(context: AvatarImageRenderProps) => ReactNode` | 기본 Native Image | 제품의 이미지 캐시·표시 호스트를 연결한다(미게시, 1.13.1 이후). `source`, `size`, HJM `fallback`, 세대가 보호된 `onError` 제공 |
+| Native `renderImage` | `(context: AvatarImageRenderProps) => ReactNode` | 기본 Native Image | 제품의 이미지 캐시·표시 호스트를 연결한다(1.14.0 추가). `source`, `size`, HJM `fallback`, 세대가 보호된 `onError` 제공 |
 | Native `initials` | `string` | 이름에서 계산 | 앞뒤 공백을 지우고 최대 3자, 대문자 |
-| `layoutStyle` | margin·width·flex·`alignSelf` | — | 배치 전용. Native `style`·`imageStyle`은 deprecated — layoutStyle 또는 `size`/`renderFallback` |
+| `layoutStyle` | margin·width·flex·`alignSelf` | — | 배치 전용. Native `style`·`imageStyle`은 제거된 속성 — layoutStyle 또는 `size`/`renderFallback` |
 | `AvatarGroup`(Web) `label` · `size` · `overflow` | `string` · Avatar 크기 · `ReactNode` | `label` 필수 · `size` `medium` | 빈 `label`은 `TypeError`. `overflow`는 제품이 만든 "+3" 같은 문구이며 `aria-hidden`이다(남은 인원은 `label`에 담는다). 겹침은 크기의 30%다 |
 
 ## 배치
@@ -96,13 +96,13 @@ import { Avatar } from "@hjmds/react-native/data-display";
 - `name`은 빈 문자열이면 `TypeError`다. 접근성 이름은 Avatar가 소유하고, 대체 그림은 장식으로만 그린다(버튼 등 상호작용 금지).
 - Blobatar `seed`에는 공개 제품 식별자를 쓴다. 이름·이메일·자격증명은 seed로 쓰지 않는다.
 - 사진·표시 이름·남은 인원 문구는 제품 소유다. `overflow`는 i18n 키로 만든다. `overflow`는 보조기기에서 숨겨지므로 전체 인원은 `label` 문구에 넣는다.
-- 배치는 `layoutStyle`로만 한다. Native `style`·`imageStyle`은 deprecated(개발 모드 1회 경고, 다음 major 제거)다.
+- 배치는 `layoutStyle`로만 한다. Native `style`·`imageStyle`은 제거된 속성이다.
 
 ## 플랫폼 차이
 
 | 항목 | Web | Native |
 | --- | --- | --- |
-| 사진 | `src`(문자열), `imageProps`로 `img` 속성·`onError` 전달 | `source`(`ImageSourcePropType`). `imageStyle`은 deprecated — layoutStyle 또는 `size` |
+| 사진 | `src`(문자열), `imageProps`로 `img` 속성·`onError` 전달 | `source`(`ImageSourcePropType`). `imageStyle`은 제거된 속성 — layoutStyle 또는 `size` |
 | 접근성 이름 | `alt`(기본 `name`), `alt=""`이면 숨김 | `accessibilityLabel` 필수, 또는 `decorative` |
 | 대체 표시 | `fallback` 노드 또는 이니셜 | `initials`(최대 3자) 또는 이니셜 |
 | 크기·모양 축 | 4단 이름 · `circle`/`rounded` | 숫자 · 원만 |
@@ -116,7 +116,7 @@ Stack처럼 내용 폭을 수용하는 영역에 둔다. leading의 overflow/크
 
 - `src`/`source`에 `undefined`를 직접 넘기면 `exactOptionalPropertyTypes`에서 타입 오류다. 사진이 없으면 prop을 빼거나 spread로 조건부로 넣는다.
 - Web `AvatarGroup`은 이제 `style`을 버리지 않고 `layoutStyle`과 합친다. 겹침 변수(`--hjm-avatar-overlap`)는 마지막에 덮이므로 `style`로 겹침을 바꿀 수 없다.
-- 이니셜은 두 플랫폼 모두 `resolveAvatarInitials`(`@hjmds/design-contracts/avatar-fallback`)로 첫 단어와 마지막 단어의 첫 글자(code point)다. 1.12.1까지 Web은 앞 두 단어를 써서 "Kim Min Jun"이 Web "KM", Native "KJ"였다(미게시 변경). 1.12.1에서 일치가 필요하면 Native `initials`·Web `fallback`으로 같은 값을 준다.
+- 이니셜은 두 플랫폼 모두 `resolveAvatarInitials`(`@hjmds/design-contracts/avatar-fallback`)로 첫 단어와 마지막 단어의 첫 글자(code point)다. "Kim Min Jun"은 두 플랫폼 모두 "KJ"다. 제품이 다른 이니셜 규칙을 쓰면 Native `initials`·Web `fallback`으로 같은 값을 준다.
 
 ### Native 제품 이미지 호스트
 
@@ -143,4 +143,6 @@ import { Avatar } from "@hjmds/react-native/data-display";
 실패 시 전달된 `onError`를 호출해야 공통 대체 표시로 바뀐다. 이전 source의 callback은
 A→B→A로 되돌아와도 무시한다. source를 같은 값으로 재생성하는 것은 재시도가 아니다.
 슬롯의 자식은 장식 전용이며 공통 wrapper가 접근성 트리에서 숨긴다. 버튼·링크를 넣지 않는다.
-기본 Native Image 경로는 그대로다. Web은 기존 img/imageProps 경로를 사용한다.
+기본 Native Image 경로는 그대로다. Web은 img/imageProps 경로를 사용하며 src가 바뀌면 요청 img 노드를 교체해 이전 DOM 오류가 새 사진의 대체 표시를 켜지 않도록 한다.
+
+Web animated Blobatar는 IntersectionObserver를 사용할 수 없으면 같은 seed·표정의 정적 그림을 유지한다. 장식의 관찰 기능 미지원 때문에 Avatar 본문을 실패시키지 않는다.

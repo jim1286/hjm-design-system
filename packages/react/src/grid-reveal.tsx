@@ -8,8 +8,11 @@ export function GridReveal({ready,active=true,children,layoutStyle}:GridRevealPr
  const{environment}=useHjmTheme();const overlay=useRef<HTMLDivElement>(null);
  useLayoutEffect(()=>{
   if(!ready||!active||environment.reducedMotion||document.hidden)return;
-  const animations=[...overlay.current!.children].map((node,index)=>node.animate([{opacity:1},{opacity:0}],{duration:gridRevealDuration,delay:gridRevealTiles[index]!.delay,fill:"backwards",easing:"ease-out"}));
+  const animations:Animation[]=[];
   const stop=()=>animations.forEach(animation=>animation.cancel());
+  // Failed decoration must reveal content, including after partial startup.
+  try{[...overlay.current!.children].forEach((node,index)=>animations.push(node.animate([{opacity:1},{opacity:0}],{duration:gridRevealDuration,delay:gridRevealTiles[index]!.delay,fill:"backwards",easing:"ease-out"})));}
+  catch{stop();return;}
   const visibility=()=>{if(document.hidden)stop();};document.addEventListener("visibilitychange",visibility);
   return()=>{stop();document.removeEventListener("visibilitychange",visibility);};
  },[ready,active,environment.reducedMotion]);

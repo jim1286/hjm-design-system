@@ -88,6 +88,7 @@ import { Masonry } from "@hjmds/react-native/masonry";
 - `width`가 0 이하이거나 열 폭이 0 이하, `getItemHeight`가 양의 유한수가 아니면 `TypeError`가 난다. 항목이 비어
   `empty`만 그릴 때도 기하 검사를 먼저 하므로 같다. 측정 전(폭 0)에는 Masonry를 렌더하지 않는다.
 - 화면 폭이 바뀌면 `width`를 다시 넘긴다.
+- 빈 목록도 `width`를 유지하며, `layoutStyle`로 할당한 영역 안에서 안내를 가로·세로 중앙에 놓는다. 높이를 지정하지 않은 본문에서는 안내의 내용 높이를 사용한다.
 
 ## 플랫폼 차이
 
@@ -100,7 +101,7 @@ import { Masonry } from "@hjmds/react-native/masonry";
 ## 함정
 
 - 모든 항목을 한 번에 그린다. 항목이 많은 무한 피드에서는 렌더 비용이 쌓인다.
-- 항목이 없으면 `empty`만 그리고 목록 role이 붙지 않는다. Web 빈 분기는 `role="group"` + `label` 이름이다(미게시(1.12.1 이후).
+- 항목이 없으면 `empty`만 그리고 목록 role이 붙지 않는다. Web 빈 분기는 `role="group"` + `label` 이름이다(1.13.0 변경.
   1.12.1은 role 없는 `<div aria-label>`이라 이름이 노출되지 않았다). 빈 상태 문구는 `empty` 안에 보이는 글로 둔다.
 - 다음 페이지는 목록 다음 형제로 [LoadMore](load-more.md)를 둔다. Native에서 FlatList 밖(ScrollView 안 Masonry)이면
   `onEndReached`가 없으므로 `mode="manual"`로 둔다. Web `automatic`은 sentinel로 동작하지만 비가상화라 항목이

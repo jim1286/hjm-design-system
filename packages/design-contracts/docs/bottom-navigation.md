@@ -158,3 +158,14 @@ Spint reproduced the first/last pressed background covering the rounded frame. E
 use the frame radius minus its border width on their logical outer corners; interior corners keep
 the item radius. This preserves the existing public API, router activation and focus behavior. Do not
 clip the entire elevated surface as a workaround: that also clips its shadow and focus outline.
+
+
+### 선택 카드 (2026-10-12)
+
+Spint에서 모든 이름·동일 너비를 유지하면서 선택한 목적지를 분명히 구분하기 위해
+`configuration={{ presentation: "floating", distribution: "equal", density: "compact", selection: "tile" }}`를 추가했다.
+기본 `selection: "emphasis"`는 기존 외형을 유지한다. `tile`은 floating·equal·visible labels에만 허용된다.
+Web·Native 모두 막대에는 surfaceAccent, 선택한 항목에는 primary/onPrimary를 사용한다.
+연한 선택 카드가 도크와 구분되지 않는 사용자 피드백에 따라 선택한 카드 전체를 브랜드 색으로 채운다.
+안쪽 여백과 카드 사이 간격은 spacing.xxs, 카드 모서리는 radius.lg다.
+라우팅·누름 방지·키보드·접근성·배지는 기존 BottomNavigation 계약을 그대로 따른다.

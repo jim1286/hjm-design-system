@@ -104,6 +104,9 @@ export function orderReducer(state: OrderState, action: OrderAction): OrderState
       };
     }
     case "toggleFailNext":
+      // The pending request owns its result; a queued switch event must not
+      // change that result after request() has started.
+      if (state.phase === "requesting") return state;
       return { ...state, failNext: !state.failNext };
     case "restart":
       return initialOrderState;
@@ -128,7 +131,8 @@ export const otpCopy = {
   submit: "확인",
   resend: "인증번호 다시 받기",
   resendWait: (seconds: number) => `${seconds}초 후 다시 받을 수 있어요`,
-  resent: "새 인증번호를 보냈어요. 이전 번호는 더 이상 쓸 수 없어요.",
+  // This local fixture reuses one code; it does not send SMS or invalidate server codes.
+  resent: "예제 인증번호를 다시 받았어요. 246810을 입력해 주세요.",
   wrong: (left: number) => `인증번호가 맞지 않아요. ${left}번 더 시도할 수 있어요.`,
   locked: "시도 횟수를 모두 썼어요. 인증번호를 다시 받아 주세요.",
   successTitle: "인증을 마쳤어요",

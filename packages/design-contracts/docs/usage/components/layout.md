@@ -113,5 +113,5 @@ Web (persistent sidebar)                         Native
 
 ## 함정
 
-- [계약 문서](../../layout.md)는 Native `skipLinkLabel`이 deprecated로 남아 있다고 적지만 1.12.1 Native `LayoutProps`에는 없다.
+- `skipLinkLabel`은 Web 전용이다. Native `LayoutProps`에는 없으므로 플랫폼 공통 props에 넣지 않는다.
 - Native persistent 사이드바는 옆으로 놓이지 않고 세로로 쌓인다. 넓은 화면 2단 배치가 필요하면 제품이 main 안에서 구성한다.

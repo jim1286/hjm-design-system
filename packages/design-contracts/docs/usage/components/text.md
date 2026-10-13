@@ -17,6 +17,7 @@
 
 | 상황 | 대신 쓸 것 |
 | --- | --- |
+| 짧은 상태·결과 문구를 변경 알림으로 전달 | [StatusText](#statustext) |
 | 문서 제목 단계(`h1`~)가 필요하거나 24px보다 큰 제목 | [Heading](heading.md) |
 | 화면 첫 자리의 제목 블록(보조 문장·행동 포함) | [Top](top.md) |
 | 본문 묶음의 헤더 행 | [Section](section.md) |
@@ -33,6 +34,7 @@ Text와 Heading의 경계: Text의 `variant="heading"`(24px)은 **모양만** �
 | 이름 | 역할 | Web | Native |
 | --- | --- | --- | --- |
 | `Text` | 기본 | `@hjmds/react`, `/layout` | `@hjmds/react-native`, `/primitives` |
+| `StatusText` | 짧은 상태·결과 알림 companion | `@hjmds/react`, `/status-text` | `@hjmds/react-native`, `/status-text` |
 | `GravityLetters` | 확장(홍보용 글자 낙하 장식, optional-extension) | `/gravity-letters` | `/gravity-letters` |
 
 `GravityLetters`는 granular subpath로만 import 된다. 추가 peer 의존성은 없다(Web은 WAAPI, Native는 RN `Animated`).
@@ -58,8 +60,8 @@ import { Text } from "@hjmds/react-native/primitives";
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `variant` | `caption`(11) · `label`(12) · `body`(14) · `bodyLarge`(16) · `title`(18) · `titleLarge`(20) · `heading`(24) | `body` | 화면·섹션 제목은 모양이 아니라 [Heading](heading.md)으로 쓴다 |
-| `fontRole` | `ui` · `display` · `reading` · `code` | 제목 variant는 display, 본문은 reading, caption/label은 ui | 명시값이 기본을 덮는다. [역할 지침](../tokens/font-roles.md), 1.15.0 이후 미게시 |
-| `emphasis` | `regular` · `medium`(semibold) · `strong`(bold) | `regular` | — |
+| `fontRole` | `ui` · `display` · `reading` · `code` | 제목 variant는 display, 본문은 reading, caption/label은 ui | 명시값이 기본을 덮는다. [역할 지침](../tokens/font-roles.md), 1.16.0 변경 |
+| `emphasis` | `regular` · `medium`(semibold) · `strong`(bold) | 프로필이 있으면 variant 굵기, 없으면 `regular` | 명시값이 프로필과 variant보다 우선 |
 | `tone` | `primary` · `body` · `muted` · `subtle` · `weak` · `brand` · `danger` · `inverse` | `primary` | — |
 | `as` | `span` · `p` · `div` · `strong` · `small` | `span` | Web만. 문단은 `as="p"` |
 | `align` | `TextStyle["textAlign"]` | 쓰기 방향의 시작 쪽 | Native만 |
@@ -100,5 +102,84 @@ Native는 Text의 역할을 해당 stack에, 입력/조작 host는 제품 프로
 
 ## 함정
 
-- `emphasis`가 `variant`의 굵기를 덮는다. `variant="title"`도 기본 `emphasis="regular"`면 보통 굵기로
-  그려진다. 굵은 제목이 필요하면 `emphasis="strong"`을 명시한다(두 renderer 동일).
+- `emphasis`를 명시하면 `variant`의 굵기를 덮는다. `designProfile`이 있으면 생략한 `emphasis`는 해당 프로필의 `tokens.typography[variant].fontWeight`를 따른다. 프로필이 없으면 기존 기본값 `regular`를 유지하므로 `variant="title"`도 보통 굵기로 그려진다. 그 경우 굵은 제목은 `emphasis="strong"`으로 지정한다(두 renderer 동일).
+
+
+## StatusText
+
+Text와 같은 표현을 유지하면서 상태 변경 알림을 연결하는 공개 companion이다.
+기존 `본문 글자` Story의 `상태 알림`에서 지속 안내와 저장 결과를 확인한다.
+
+### StatusText 선택 기준
+
+저장 결과, 선택 개수, 요청 진행처럼 **짧은 문자열 하나**를 화면 안에 유지하며 변경을 알릴 때 쓴다.
+Text의 companion으로 같은 `variant`·`tone`·`emphasis`·`layoutStyle`을 받으며 글꼴·색·간격을 새로 만들지 않는다.
+문구와 성공·실패 판정은 제품이 소유한다.
+
+| 상황 | 선택 |
+| --- | --- |
+| 읽기만 하는 본문·계속 표시되는 설명 | Text |
+| 짧은 상태·결과 문자열의 변경 알림 | StatusText |
+| 제목·설명·아이콘·재시도 행동을 묶은 안내 | Notice |
+| 화면 위에 일시적으로 나타나며 닫히는 알림 | Toast |
+
+### 가져오기
+
+```tsx
+// Web
+import { StatusText } from "@hjmds/react/status-text";
+// Native: import { StatusText } from "@hjmds/react-native/status-text";
+// 두 renderer의 root에서도 내보낸다.
+```
+
+### StatusText가 놓이는 자리
+
+```text
+관련 입력 또는 행동
+↕ 부모 Stack의 gap
+StatusText: 결과 문자열
+```
+
+자체 여백·판·최소 높이는 없다. 관련 행동 가까이에 두고 부모 Stack이 간격을 소유한다.
+화면 전체를 대체하는 로딩·실패·빈 상태는 해당 영역의 ScreenLayout/StateView/Notice로 구성한다.
+
+### 공개 props
+
+| prop | 기본값 | 의미 |
+| --- | --- | --- |
+| `children: string` | 필수 | 제품의 지역화된 상태 문구. 빈 문자열도 허용 |
+| `announcement` | `polite` | `none`·`polite`·`assertive`. 시각적 tone과 알림 우선순위는 독립 |
+| `announceOnMount` | `false` | Native iOS 옵션. 조건부로 새로 나타난 행동 결과를 처음에도 알림 |
+| 나머지 Text props·ref | Text와 같음 | Web role/live/atomic, Native live region은 StatusText가 소유 |
+
+### 지속 안내와 새 결과
+
+```tsx
+// Native
+import { StatusText } from "@hjmds/react-native/status-text";
+
+// 계속 유지되는 노드: 최초 안내는 iOS에서 읽지 않고 이후 문자열 변경만 알린다.
+<StatusText>{message}</StatusText>
+
+// Native: 행동 뒤 조건부로 새로 마운트되는 결과는 opt-in한다.
+{saved ? <StatusText announceOnMount>{t("save.complete")}</StatusText> : null}
+
+<StatusText announcement="assertive" tone="danger">{errorMessage}</StatusText>
+```
+
+Web은 `polite`를 `role="status"`, `assertive`를 `role="alert"`로 연결하고 `aria-live`와
+`aria-atomic`을 설정한다. `none`은 `aria-live="off"`이고 상태 role을 붙이지 않는다.
+같은 live node의 텍스트를 갱신하는 것이 기본이다. Web에는 `announceOnMount` prop이 없으며,
+새로 마운트된 live region의 읽힘은 브라우저·보조기술에 따라 달라진다.
+
+Native Android는 `accessibilityLiveRegion`만 사용한다. iOS는 앱이 active이고 비어 있지 않은 문구가
+바뀔 때 `announceForAccessibilityWithOptions`를 호출한다. `polite`는 queue, `assertive`는 즉시 우선순위다.
+`none`, 같은 문구 재렌더, 빈 문구, 배경 변경은 발표하지 않는다. foreground 복귀나 announcement 모드 변경만으로
+과거 문구를 재생하지 않는다. 빈 문구로 지웠다가 같은 결과를 다시 표시하면 새 변경이다.
+`announceOnMount`는 마운트 시점에 결정하며 나중에 true로 바꿔 초기 안내를 재생하지 않는다.
+
+### 경계
+
+동일 결과를 매 렌더 다시 알리기 위해 key를 바꾸지 않는다. Toast·Notice에서 이미 알리는 결과를 중복 알리지 않는다.
+Showcase의 `PatternStatus`는 이 공개 컴포넌트를 가리키는 내부 별칭일 뿐이며 제품에서 Showcase 파일을 import하지 않는다.
+DOM 속성·Native host 호출 검사는 실제 VoiceOver·TalkBack의 낭독 확인과 구분한다.

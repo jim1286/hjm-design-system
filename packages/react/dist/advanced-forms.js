@@ -31,15 +31,26 @@ function validateOptions(options, component) {
 export const NativeSelect = forwardRef(function NativeSelect({ id, label, description, error, options, placeholder, value: valueProp, defaultValue = "", onValueChange, size = selectRecipe.defaults.size, density = selectRecipe.defaults.density, fieldClassName, className, layoutStyle, disabled = false, required = false, ...props }, ref) {
     validateOptions(options, "Select");
     const controlId = useControlId(id, "select");
-    const [value, setValue] = useControllableState({
+    const [storedValue, setValue] = useControllableState({
         ...(valueProp === undefined ? {} : { value: valueProp }),
         defaultValue,
         ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
     });
-    if (value !== "" &&
-        !options.some((option) => option.value === value && !option.disabled)) {
-        throw new RangeError(`Select value must identify an enabled option: ${value}`);
+    const initialized = useRef(false);
+    const available = storedValue === "" || options.some(option => option.value === storedValue && !option.disabled);
+    if ((!initialized.current || valueProp !== undefined) && !available) {
+        throw new RangeError(`Select value must identify an enabled option: ${storedValue}`);
     }
+    initialized.current = true;
+    // Defaults are validated once. Later list changes must reconcile an internal
+    // selection instead of crashing a form while its options are being refreshed.
+    const value = valueProp === undefined && !available
+        ? placeholder !== undefined ? "" : options.find(option => !option.disabled)?.value ?? ""
+        : storedValue;
+    useEffect(() => {
+        if (valueProp === undefined && value !== storedValue)
+            setValue(value);
+    }, [storedValue, value, valueProp, setValue]);
     return (_jsx(Field, { controlId: controlId, label: label, description: description, error: error, required: required, disabled: disabled, className: classNames("hjm-select", fieldClassName), ...(layoutStyle === undefined ? {} : { layoutStyle }), "data-size": size, "data-density": density, children: (controlProps) => (_jsxs("div", { className: "hjm-field__control hjm-select__control", children: [_jsxs("select", { ...props, ...controlProps, ref: ref, value: value, className: classNames("hjm-field__input hjm-select__native", className), onChange: (event) => setValue(event.target.value), children: [placeholder !== undefined ? (_jsx("option", { value: "", disabled: required, children: placeholder })) : null, options.map((option) => (_jsx("option", { value: option.value, disabled: option.disabled, children: option.label }, option.value)))] }), _jsx("span", { className: "hjm-select__indicator", "aria-hidden": "true", children: "\u2304" })] })) }));
 });
 function nextEnabled(items, current, direction) {
@@ -52,7 +63,7 @@ function nextEnabled(items, current, direction) {
     }
     return -1;
 }
-export const Combobox = forwardRef(function Combobox({ id, name, label, description, error, items, value: valueProp, defaultValue = "", onValueChange, inputValue: inputValueProp, defaultInputValue, onInputValueChange, open: openProp, defaultOpen = false, onOpenChange, emptyMessage, loading = false, loadingMessage, selectionRequiredMessage, openOnFocus = true, size = comboboxRecipe.defaults.size, density = comboboxRecipe.defaults.density, align = "start", fieldClassName, portalContainer, className, layoutStyle, disabled = false, required = false, autoComplete = "off", onFocus, onBlur, onKeyDown, ...props }, forwardedRef) {
+export const Combobox = forwardRef(function Combobox({ id, name, label, description, error, items, value: valueProp, defaultValue = "", onValueChange, inputValue: inputValueProp, defaultInputValue, onInputValueChange, open: openProp, defaultOpen = false, onOpenChange, emptyMessage, loading = false, loadingMessage, selectionRequiredMessage, openOnFocus = true, size = comboboxRecipe.defaults.size, density = comboboxRecipe.defaults.density, align = "start", fieldClassName, portalContainer, className, layoutStyle, disabled = false, readOnly = false, required = false, autoComplete = "off", onFocus, onBlur, onKeyDown, ...props }, forwardedRef) {
     validateOptions(items, "Combobox");
     const controlId = useControlId(id, "combobox");
     const listboxId = `${controlId}-listbox`;
@@ -124,7 +135,7 @@ export const Combobox = forwardRef(function Combobox({ id, name, label, descript
         return -1;
     };
     const selectItem = (item) => {
-        if (item.disabled)
+        if (item.disabled || disabled || readOnly || loading)
             return;
         setSelectedValue(item.value);
         setQuery(item.label);
@@ -142,7 +153,7 @@ export const Combobox = forwardRef(function Combobox({ id, name, label, descript
     };
     const handleKeyDown = (event) => {
         onKeyDown?.(event);
-        if (event.defaultPrevented)
+        if (event.defaultPrevented || disabled || readOnly || event.nativeEvent.isComposing || event.keyCode === 229)
             return;
         if (loading &&
             ["ArrowDown", "ArrowUp", "Home", "End", "Enter"].includes(event.key)) {
@@ -185,13 +196,15 @@ export const Combobox = forwardRef(function Combobox({ id, name, label, descript
                 if (!event.currentTarget.contains(event.relatedTarget) &&
                     !listboxRef.current?.contains(event.relatedTarget))
                     setOpen(false, "blur");
-            }, children: [_jsxs("div", { className: "hjm-field__control hjm-combobox__control", children: [_jsx("input", { ...props, ...controlProps, ref: composeRefs(forwardedRef, inputRef), className: classNames("hjm-field__input hjm-combobox__input", className), value: query, role: "combobox", autoComplete: autoComplete, "aria-autocomplete": "list", "aria-controls": listboxId, "aria-expanded": open, "aria-activedescendant": open && activeItem ? `${controlId}-option-${activeIndex}` : undefined, onFocus: (event) => {
+            }, children: [_jsxs("div", { className: "hjm-field__control hjm-combobox__control", children: [_jsx("input", { ...props, ...controlProps, ref: composeRefs(forwardedRef, inputRef), className: classNames("hjm-field__input hjm-combobox__input", className), value: query, readOnly: readOnly, role: "combobox", autoComplete: autoComplete, "aria-autocomplete": "list", "aria-controls": listboxId, "aria-expanded": open, "aria-activedescendant": open && activeItem ? `${controlId}-option-${activeIndex}` : undefined, onFocus: (event) => {
                                 onFocus?.(event);
                                 if (!event.defaultPrevented &&
-                                    openOnFocus &&
+                                    !disabled && !readOnly && openOnFocus &&
                                     !suppressFocusOpenRef.current)
                                     setOpen(true, "focus");
                             }, onBlur: onBlur, onChange: (event) => {
+                                if (disabled || readOnly)
+                                    return;
                                 setQuery(event.target.value);
                                 setSelectedValue("");
                                 setOpen(true, "input");

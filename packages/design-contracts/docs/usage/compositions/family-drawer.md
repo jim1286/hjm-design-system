@@ -67,7 +67,7 @@
 
 ## 흐름과 상태
 
-1. 트리거를 누르면 단계를 0으로, 완료·실패 표시를 지우고 시트를 연다.
+1. 트리거는 중단한 단계와 실패 상태를 유지해 시트를 다시 연다. 이전 저장이 성공한 뒤 새로 시작할 때만 단계를 0으로 초기화한다.
 2. "계속"은 다음 단계로 간다. 첫 단계에서 "이전"은 `disabled`다.
 3. 마지막 단계에서 주 행동 라벨이 "설정 마치기"로 바뀐다. 누르면 결과를 저장한다. 저장이 비동기면 저장 중 Sheet `busy`로 닫기를 막고 주 행동은 `loading`이다.
 4. 저장이 성공하면 시트를 닫고 시작 화면에 완료 문구가 나타난다.
@@ -137,6 +137,7 @@ const isLast = step === stepIds.length - 1;
 
 ```tsx
 // Native
+import { StatusText } from "@hjmds/react-native/status-text";
 import { ScrollView } from "react-native";
 import { spacing } from "@hjmds/design-contracts/foundations";
 import { Button } from "@hjmds/react-native/actions";
@@ -180,7 +181,7 @@ import { Steps } from "@hjmds/react-native/steps";
 ```
 
 단계 목록·문구·저장 동작은 제품 소유다. `gutter`는 폭 구간으로 고른다(`resolveWindowClass(width) === "compact" ? "compact" : "regular"`).
-`StatusText`는 [저장과 재시도](action-recovery-save.md#공통-세션과-상태-알림)의 helper이며, 완료 문구는 새로 나타나므로 첫 렌더에도 알리게 한다(스토리 `PatternStatus announceOnMount`).
+`StatusText`는 [저장과 재시도](action-recovery-save.md#공통-세션과-상태-알림)에서 사용하는 공개 Text companion이며, 완료 문구는 새로 나타나므로 첫 렌더에도 알리게 한다(Native `StatusText announceOnMount`).
 
 ## 플랫폼 차이
 
@@ -195,7 +196,11 @@ import { Steps } from "@hjmds/react-native/steps";
 ## 함정
 
 - 저장을 시트 닫힘 사유와 묶지 않는다. 닫기·바깥·back 닫힘은 취소다.
-- 단계를 열 때마다 0으로 되돌린다. 이전 진행 상태가 남으면 마지막 단계에서 바로 열린다.
+- 중단 후 다시 열면 진행 중이던 단계로 이어간다. 성공 뒤 새 작업을 시작할 때만 0으로 되돌린다. 영속 초안이 필요한 제품은 별도 저장소 정책을 연결한다.
 - 저장 중 `busy`를 빼면 사용자가 시트를 닫아 저장 결과를 볼 곳이 사라진다.
 - 현재 스토리는 시작 화면에 바깥 틀(Container·ScrollView)이 없고 Storybook 프레임이 감싼다. 제품은 위 바깥 틀 행을 따른다.
-- 현재 스토리는 저장이 동기라 진행 중·실패 상태가 없다.
+- 스토리는 데모 비동기 저장의 진행 중·실패·재시도를 포함한다. 실제 서버 저장은 제품이 연결한다.
+
+## 실행 예제의 복구 경계
+
+2026-10-13 Web·Native 스토리는 `createActionSession` 기반 데모 저장을 연결한다. 마지막 단계 저장 중에는 이동·닫기를 잠그고, 실패하면 `Steps.currentStepStatus="error"`와 Notice를 표시한 채 현재 단계를 유지한다. 같은 주 버튼이 다시 저장을 수행한다. 중간에 닫았다 열면 현재 단계로 이어지고, 성공 뒤 다시 시작할 때만 첫 단계로 초기화한다. footer는 기본 Sheet 배치를 따르는 직접 자식이다. Web은 이전 → 주 행동, Native는 주 행동 → 이전이며 Native에서 가로 Stack으로 재정의하지 않는다. 실제 서버 저장·영속 초안·제품별 단계 입력은 포함하지 않는다.

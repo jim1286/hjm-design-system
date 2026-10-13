@@ -627,7 +627,6 @@ describe("Native canonical recipe bindings", () => {
     const renderer = render(
       <Badge
         label="위험"
-        labelStyle={{ letterSpacing: 2 }}
         leading={<View testID="badge-leading" />}
         size="small"
         tone="danger"
@@ -659,7 +658,6 @@ describe("Native canonical recipe bindings", () => {
     });
     expect(flattenStyle(label.props.style)).toMatchObject({
       color: resolveColorReference(tone.content, lightValue.palette),
-      letterSpacing: 2,
     });
   });
 
@@ -672,7 +670,6 @@ describe("Native canonical recipe bindings", () => {
       <Chip
         indicatorStyle={{ marginStart: 1 }}
         label="인기"
-        labelStyle={{ letterSpacing: 1 }}
         leading={<View testID="chip-leading" />}
         leadingStyle={{ marginStart: 2 }}
         onPress={onPress}
@@ -736,7 +733,6 @@ describe("Native canonical recipe bindings", () => {
         onPress={vi.fn()}
         selected
         title="선택된 행"
-        titleStyle={{ textDecorationLine: "underline" }}
         trailing={<View testID="row-trailing" />}
       />,
     );
@@ -766,7 +762,6 @@ describe("Native canonical recipe bindings", () => {
     expect(flattenStyle(title.props.style)).toMatchObject({
       color: resolveColorReference(listRowRecipe.title.color, lightValue.palette),
       fontWeight: listRowRecipe.title.fontWeight,
-      textDecorationLine: "underline",
     });
     const description = copy(renderer, "상세 설명");
     expect(description.props.variant).toBe(listRowRecipe.description.textVariant);
@@ -791,10 +786,8 @@ describe("Native canonical recipe bindings", () => {
           trend: { direction: "up", label: "전주 대비 증가", tone: "success" },
           value: "12,000",
         }}
-        hintStyle={{ letterSpacing: 1 }}
         presentation="surface"
         renderTrendMark={renderTrendMark}
-        valueStyle={{ fontSize: 31 }}
       />,
     );
     const root = byLabel(renderer, "매출, ₩12,000원, 전주 대비 증가, 세전 금액");
@@ -827,7 +820,6 @@ describe("Native canonical recipe bindings", () => {
     expect(flattenStyle(value.props.style)).toMatchObject({
       color: resolveColorReference(statisticRecipe.value.color, lightValue.palette),
       flexShrink: 1,
-      fontSize: 31,
       fontVariant: ["tabular-nums"],
       fontWeight: statisticRecipe.value.fontWeight,
     });
@@ -856,7 +848,6 @@ describe("Native canonical recipe bindings", () => {
     const renderer = render(
       <Accordion
         density="compact"
-        itemStyle={{ borderBottomWidth: 3 }}
         items={[{
           accessibilityHint: "두 번 탭하여 펼치기",
           accessibilityLabel: "배송 도움말",
@@ -868,10 +859,7 @@ describe("Native canonical recipe bindings", () => {
         }]}
         label="도움말"
         onExpandedValuesChange={onExpandedValuesChange}
-        panelStyle={{ paddingEnd: 9 }}
         renderIndicator={renderIndicator}
-        titleStyle={{ letterSpacing: 1 }}
-        triggerStyle={{ marginHorizontal: 2 }}
       />,
     );
     const trigger = byLabel(renderer, "배송 도움말");
@@ -883,7 +871,6 @@ describe("Native canonical recipe bindings", () => {
     });
     expect(flattenStyle(trigger.props.style({ pressed: false }))).toMatchObject({
       gap: accordionRecipe.gap,
-      marginHorizontal: 2,
       minHeight: density.triggerMinHeight,
       paddingHorizontal: accordionRecipe.paddingHorizontal,
       paddingVertical: density.paddingVertical,
@@ -914,13 +901,12 @@ describe("Native canonical recipe bindings", () => {
     expect(renderIndicator).toHaveBeenLastCalledWith(expect.objectContaining({ expanded: true }));
     expect(flattenStyle(byLabel(renderer, "배송 상세").props.style)).toMatchObject({
       paddingBottom: accordionRecipe.panel.paddingBottom,
-      paddingEnd: 9,
       paddingStart: accordionRecipe.panel.paddingInlineStart,
     });
     const item = trigger.parent;
     expect(flattenStyle(item?.props.style)).toMatchObject({
       borderBottomColor: resolveColorReference(accordionRecipe.divider, lightValue.palette),
-      borderBottomWidth: 3,
+      borderBottomWidth: 1,
     });
   });
 
@@ -970,12 +956,9 @@ describe("Native canonical recipe bindings", () => {
     const renderer = render(
       <TopBar
         leading={<View testID="top-leading" />}
-        leadingStyle={{ width: 51 }}
         safeAreaTop={12}
         title="설정"
-        titleStyle={{ letterSpacing: 2 }}
         trailing={<View testID="top-trailing" />}
-        trailingStyle={{ width: 52 }}
       />,
     );
     const toolbar = renderer.root.find(
@@ -999,25 +982,21 @@ describe("Native canonical recipe bindings", () => {
     expect(flattenStyle(title.props.style)).toMatchObject({
       color: resolveColorReference(topBarRecipe.title.color, lightValue.palette),
       fontWeight: topBarRecipe.title.fontWeight,
-      letterSpacing: 2,
     });
     expect(flattenStyle(renderer.root.findByProps({ testID: "top-leading" }).parent?.props.style))
-      .toMatchObject({ minWidth: topBarRecipe.sideMinWidth, width: 51 });
+      .toMatchObject({ minWidth: topBarRecipe.sideMinWidth });
     expect(flattenStyle(renderer.root.findByProps({ testID: "top-trailing" }).parent?.props.style))
-      .toMatchObject({ minWidth: topBarRecipe.sideMinWidth, width: 52 });
+      .toMatchObject({ minWidth: topBarRecipe.sideMinWidth });
   });
 
   it("binds EmptyState density, copy, illustration, and action slots to emptyStateRecipe", () => {
     const renderer = render(
       <EmptyState
         action={<View testID="empty-action" />}
-        actionStyle={{ marginTop: 7 }}
         density="compact"
         description="필터를 바꿔보세요"
         illustration={<View testID="empty-illustration" />}
-        illustrationStyle={{ opacity: 0.8 }}
         title="결과 없음"
-        titleStyle={{ fontSize: 21 }}
       />,
     );
     const root = byLabel(renderer, "결과 없음, 필터를 바꿔보세요");
@@ -1029,15 +1008,13 @@ describe("Native canonical recipe bindings", () => {
     const illustration = renderer.root.findByProps({ testID: "empty-illustration" }).parent!;
     expect(illustration.props.accessible).toBe(false);
     expect(flattenStyle(illustration.props.style)).toMatchObject({
-      height: glyph[emptyStateRecipe.icon.size],
-      opacity: 0.8,
-      width: glyph[emptyStateRecipe.icon.size],
+      minHeight: glyph[emptyStateRecipe.icon.size],
+      minWidth: glyph[emptyStateRecipe.icon.size],
     });
     const title = copy(renderer, "결과 없음");
     expect(title.props).toMatchObject({ accessibilityRole: "header", variant: emptyStateRecipe.title.textVariant });
     expect(flattenStyle(title.props.style)).toMatchObject({
       color: resolveColorReference(emptyStateRecipe.title.color, lightValue.palette),
-      fontSize: 21,
       fontWeight: emptyStateRecipe.title.fontWeight,
     });
     const description = copy(renderer, "필터를 바꿔보세요");
@@ -1045,24 +1022,19 @@ describe("Native canonical recipe bindings", () => {
     expect(flattenStyle(description.props.style)).toMatchObject({
       color: resolveColorReference(emptyStateRecipe.description.color, lightValue.palette),
     });
-    expect(flattenStyle(renderer.root.findByProps({ testID: "empty-action" }).parent?.props.style))
-      .toMatchObject({ marginTop: 7 });
+    expect(renderer.root.findByProps({ testID: "empty-action" }).parent?.type).toBe("View");
   });
 
   it("binds Progress visible copy, semantic value, track/indicator recipe, and slots", () => {
     const renderer = render(
       <Progress
         accessibilityHint="업로드 완료까지 남은 비율"
-        indicatorStyle={{ opacity: 0.75 }}
         label="업로드"
-        labelStyle={{ letterSpacing: 1 }}
         max={200}
         size="large"
         tone="success"
         testID="upload-progress"
-        trackStyle={{ marginTop: 2 }}
         value={50}
-        valueStyle={{ fontWeight: "700" }}
         valueText="50 / 200"
       />,
     );
@@ -1075,10 +1047,8 @@ describe("Native canonical recipe bindings", () => {
     });
     const label = copy(renderer, "업로드");
     expect(label.props.variant).toBe("label");
-    expect(flattenStyle(label.props.style)).toMatchObject({ letterSpacing: 1 });
     const value = copy(renderer, "50 / 200");
     expect(value.props.variant).toBe("caption");
-    expect(flattenStyle(value.props.style)).toMatchObject({ fontWeight: "700" });
     const track = renderer.root.findAllByType(View).find((node) => {
       const style = flattenStyle(node.props.style);
       return style.height === progressRecipe.sizes.large && style.overflow === "hidden";
@@ -1088,7 +1058,6 @@ describe("Native canonical recipe bindings", () => {
       backgroundColor: resolveColorReference(progressRecipe.track, lightValue.palette),
       borderRadius: radius[progressRecipe.radius],
       height: progressRecipe.sizes.large,
-      marginTop: 2,
     });
     const indicator = track.findAllByType(View).find(
       (node) => flattenStyle(node.props.style).width === "25%",
@@ -1096,7 +1065,6 @@ describe("Native canonical recipe bindings", () => {
     expect(flattenStyle(indicator.props.style)).toMatchObject({
       backgroundColor: resolveColorReference(progressRecipe.tones.success, lightValue.palette),
       height: "100%",
-      opacity: 0.75,
       width: "25%",
     });
 

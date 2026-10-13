@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.17.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-13
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screens.tsx`·`src/screen-flows.tsx`; 기존 개별 지침을 새 규격으로 통합. 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
 - 스토리북: `배포/화면/콘텐츠/작성과 수정`, `배포/화면/계정/프로필`
 
@@ -92,7 +92,7 @@ import { TextField } from "@hjmds/react-native/inputs";
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `dirty` | `boolean` | 필수 | `true`에서 닫기를 누르면 `discard` 확인창을 띄우고, 확인하면 `cancel.onAction`을 부른다. `false`면 바로 부른다 |
-| `submit` | `ScreenFlowAction`(`{ label, onAction(), disabled?, pending? }`) | 필수 | `pending`이면 loading·비활성. 그동안 닫기 버튼도 비활성 |
+| `submit` | `ScreenFlowAction`(`{ label, onAction(), disabled?, pending? }`) | 필수 | `pending`이면 loading·비활성. 그동안 닫기 버튼도 비활성. 본문 `state`가 `ready`가 아니면 저장 비활성 |
 | `cancel` | `ScreenFlowAction` | 필수 | `leading` 자리의 ghost 닫기 버튼 |
 | `discard` | AlertDialog confirm 요청에서 `onConfirm`을 뺀 것 + `fallbackErrorMessage: string` | 필수 | `onConfirm`은 EditorScreen이 채운다 |
 | `submitPlacement` | `"footer"` · `"header"` | `"footer"` | `header`면 저장이 상단 `actions` 자리로 가고 footer에는 `draftStatus`만 남는다 |
@@ -115,6 +115,8 @@ import { TextField } from "@hjmds/react-native/inputs";
 - 모든 문구(`label`, `discard`의 제목·설명·버튼)는 i18n 키로 넣는다. 컴포넌트는 기본 문구를 갖지 않는다.
 - `discard`는 `fallbackErrorMessage`까지 필수 타입이다. `onConfirm`은 EditorScreen이 채우므로 넘기지 않는다.
 - 확인 후 초안을 되돌리는 일은 `cancel.onAction` 안에서 제품이 한다.
+- 저장 시작 또는 `cancel.disabled`/`cancel.pending` 전환은 이미 열린 초안 버리기 확인도 종료한다. 잠금이 풀렸다고 확인창이 다시 열리지는 않는다. 2026-10-13 이전 확인창으로 저장 중 이탈 잠금을 우회할 수 있던 경로를 수정했다.
+- 최초 조회·오류·권한 제한 등 본문 대체 상태에서는 저장을 잠근다. 새 문서의 빈 초안은 `state="empty"`가 아니라 `ready`와 빈 입력으로 표현하고 제품 validation은 `submit.disabled`에 연결한다.
 - 라우터 뒤로가기·Android back·브라우저 이탈은 이 컴포넌트가 막지 않는다. 제품이 `dirty`로 guard를 건다.
 - 저장 성공 판정·오류 표시는 제품 상태(`notice`, Toast 등)로 한다.
 

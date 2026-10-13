@@ -1,3 +1,4 @@
+import { DialogExample, AlertDialogExample } from "./dialog-examples";
 // Component fixtures are kept separate from CSF modules so importing a preview never registers a second story.
 import { Agreement } from "@hjmds/react-native/agreement";
 import { Heading } from "@hjmds/react-native/heading";
@@ -69,7 +70,7 @@ import {
   TopBar,
   TopBarAction,
 } from "@hjmds/react-native/navigation";
-import { AlertDialog, Dialog, Sheet } from "@hjmds/react-native/overlays";
+import { Sheet } from "@hjmds/react-native/overlays";
 import {
   AspectRatio,
   Container,
@@ -769,35 +770,6 @@ return (<StoryFrame><ToastRegion><ToastTrigger /></ToastRegion></StoryFrame>);
 function BottomInfoExample({ variant }: { variant: PreviewVariant }) {
 
 return (<StoryFrame><BottomInfo items={["Your draft stays private until published.", "You can change this later."]} /></StoryFrame>);
-}
-
-function DialogExample({ variant }: { variant: PreviewVariant }) {
-const [dialogOpen, setDialogOpen] = useState(false);
-return (<StoryFrame><><Button onPress={() => setDialogOpen(true)}>Open dialog</Button><Dialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        title="Edit item"
-        description="Canonical dialog renderer."
-        closeLabel="Close"
-        // No server in this renderer example; the action contract owns success dismissal.
-        primaryAction={{ label: "Save", onPress: () => undefined }}
-      ><Text>Dialog content</Text></Dialog></></StoryFrame>);
-}
-
-function AlertDialogExample({ variant }: { variant: PreviewVariant }) {
-const [alertOpen, setAlertOpen] = useState(false);
-return (<StoryFrame><><Button tone="secondary" onPress={() => setAlertOpen(true)}>Open alert dialog</Button><AlertDialog
-        open={alertOpen}
-        onOpenChange={setAlertOpen}
-        request={{
-          mode: "confirm",
-          tone: "danger",
-          title: "Delete item?",
-          description: "This action cannot be undone.",
-          confirmLabel: "Delete",
-          cancelLabel: "Cancel",
-        }}
-      /></></StoryFrame>);
 }
 
 function SheetExample({ variant }: { variant: PreviewVariant }) {

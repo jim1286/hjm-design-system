@@ -388,10 +388,6 @@ const rendererBudgets = [
       // Grid device-pixel floor (Utilverse 411dp wrap fix) adds exactly 189 raw / 89 gzip
       // to primitives.js, measured against the committed 1.12.0 dist.
       { file: "primitives.js", raw: 189, gzip: 89 },
-      // 2026-10-06 1.13: one shared dev-only warner for deprecated visual style props, measured
-      // 1657 raw / 818 gzip. A per-component inline warning was rejected: it repeats the
-      // dedupe/__DEV__ logic in ~40 files. Per-file call-site growth is reported against the baselines.
-      { file: "internal/deprecated-style.js", modules: 1, raw: 1_657, gzip: 818 },
     ],
     // 2026-10-01: internal/field-frame.js replaces repeated Field/TextField
     // label/support presentation. Only its consuming graphs gain one local edge;

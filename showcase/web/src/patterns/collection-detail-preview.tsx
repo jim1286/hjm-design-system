@@ -10,7 +10,7 @@ import { Container, Section, Stack, Text } from "@hjmds/react/layout";
 import { profileCopy, profileOptions } from "../../../shared/design-profile";
 import { collectionRecords, collectionCopy as copy, type CollectionDetailProps } from "../../../shared/collection-detail";
 
-function RecordCard({ id, label, description, onNextTheme }: { id: string; label: string; description: string; onNextTheme: () => void }) {
+function RecordCard({ label, description, onNextTheme }: { label: string; description: string; onNextTheme: () => void }) {
   const [draft, setDraft] = useState<string>(copy.initial);
   const [detailDraft, setDetailDraft] = useState<string>(copy.initial);
   // Keep the Dialog's canonical trigger inside Card.actions. Modal/background
@@ -20,7 +20,8 @@ function RecordCard({ id, label, description, onNextTheme }: { id: string; label
     <Stack gap="md"><TextField label={`${label} ${copy.detailNote}`} value={detailDraft} onChange={event => setDetailDraft(event.target.value)} />
       <Button tone="secondary" onClick={onNextTheme}>{profileCopy.nextTheme}</Button></Stack>
   </Dialog>}>
-    <TextField id={`collection-${id}`} label={`${label} ${copy.note}`} value={draft} onChange={event => setDraft(event.target.value)} />
+    {/* TextField owns unique label IDs when multiple collections appear on one page. */}
+    <TextField label={`${label} ${copy.note}`} value={draft} onChange={event => setDraft(event.target.value)} />
   </Card>;
 }
 

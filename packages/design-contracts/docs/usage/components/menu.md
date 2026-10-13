@@ -89,7 +89,7 @@ Native popover와 항목 모서리는 Provider token에서 recipe 역할을 해�
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 항목 높이 `comfortable` 56(`layout.rowHeight.singleLine`) · `compact` 44(`control.minTouchTarget`). Web 표면 폭 `13.75rem`~`min(24rem, 90vw)`, 높이 최대 `100dvh − 2 × spacing.md`. Native 표면 폭 100%·최대 520, 높이 최대 75% | `menuRecipe.density`, `.hjm-menu__content`, `react-native/src/navigation.tsx` |
-| 간격 | 항목 좌우 `spacing.sm` 12, leading·문구·단축키 사이 12. 섹션 제목 좌우 12 · 위아래 `spacing.xs` 8. Web: 트리거와 8(`menuRecipe.sideOffset`), 화면 가장자리 8(`collisionPadding`), 안쪽 `spacing.xs` 8(`menuRecipe.surface.padding`; 2026-10-06까지 4, 1.12.1 이후 미게시), 표면·항목 radius `radius.md` 12, 구분선 위아래 4 · 좌우 8. Native: 바깥 여백·안쪽 `spacing.md` 16, 제목·목록·닫기 사이 12, radius `radius.lg` 16 | `collectionItemContract`, `menuRecipe.sectionLabel`·`surface`, `.hjm-menu__*`, `useAnchoredPopup` |
+| 간격 | 항목 좌우 `spacing.sm` 12, leading·문구·단축키 사이 12. 섹션 제목 좌우 12 · 위아래 `spacing.xs` 8. Web: 트리거와 8(`menuRecipe.sideOffset`), 화면 가장자리 8(`collisionPadding`), 안쪽 `spacing.xs` 8(`menuRecipe.surface.padding`; 2026-10-06까지 4, 1.13.0 변경), 표면·항목 radius `radius.md` 12, 구분선 위아래 4 · 좌우 8. Native: 바깥 여백·안쪽 `spacing.md` 16, 제목·목록·닫기 사이 12, radius `radius.lg` 16 | `collectionItemContract`, `menuRecipe.sectionLabel`·`surface`, `.hjm-menu__*`, `useAnchoredPopup` |
 | 순서·정렬 | 일반 행동을 위에, `danger` 행동은 맨 아래. Web `align="start"`(기본)는 트리거 시작 끝, `end`는 끝 끝에 맞춘다(행 끝 ⋯은 `end`). Native는 위→아래 제목 → 항목 → 닫기 버튼(`secondary`) | `menuRecipe`, `src/overlays.tsx` |
 | 고정·스크롤 | Web: 트리거에 붙는 portal(z-index `layer.dropdown` 400), 아래가 모자라면 위로 뒤집고 가로는 화면 안으로 민다. 넘치면 표면 안 스크롤. Native: `Modal`로 화면 **가운데**, scrim을 누르면 닫히고 항목 목록만 스크롤 | `useAnchoredPopup`, `react-native/src/navigation.tsx`(`Menu`) |
 | 좁은 폭·큰 글자 | Web 폭 상한 `90vw`, 항목 문구는 줄바꿈된다. Native 높이 상한 75%를 넘으면 목록이 스크롤된다 | `.hjm-menu__content`, `maxHeight: "75%"` |
@@ -114,6 +114,7 @@ Web (트리거 아래, 앵커)                 Native (Modal, 화면 가운데)
 - 항목 id는 비어 있지 않고 유일해야 하며, 활성 항목이 하나 이상 있어야 한다. 어기면 렌더 중 던진다.
 - Web에서 `label`이 문자열이 아닌 항목은 typeahead용 `textValue`를 준다. 없으면 던진다.
 - 다른 모달·시트·화면 이동을 여는 action은 `onActionAfterDismiss`로 실행한다. 이 콜백은 메뉴가 실제로 닫힌 뒤(Native는 Modal teardown 뒤)에만 실행되므로 두 표면이 겹치지 않는다.
+- Native에서 teardown 완료 전에 재열거나 owner를 교체하면 이전에 대기하던 after-dismiss action은 폐기된다. 비동기 action의 요청 오류는 제품 콜백 안에서 처리하고 제품 오류 UI에 연결한다. 메뉴는 Promise 실패에 따른 오류 화면이나 자동 재시도를 만들지 않는다.
 - 항목 문구·아이콘(제품 소유)은 i18n 키와 제품 아이콘으로 넣고, 색은 `tone`으로만 바꾼다.
 - `MorphingMenu`는 action 전용이다. 선택·async가 필요하면 `Menu`를 쓴다. reduce-motion·RTL에서는 스스로 `Menu`로 돌아간다.
 
@@ -128,4 +129,4 @@ Web (트리거 아래, 앵커)                 Native (Modal, 화면 가운데)
 | 상태 | `disabled` | `disabled`, `readOnly`(+`readOnlyLabel`), `busy`, `onRetry`/`retryLabel` |
 | 표면 | 트리거에 붙는 portal(`portalContainer`) | `Modal` |
 | 항목 label | `ReactNode`(+`textValue`) | `string` |
-| 배치 | `className`, `layoutStyle` | `layoutStyle`(`style`은 deprecated — 개발 모드 경고, 다음 major 제거) |
+| 배치 | `className`, `layoutStyle` | `layoutStyle`(`style`은 제거된 속성) |

@@ -84,7 +84,7 @@ import { Statistic } from "@hjmds/react-native/data-display";
 | `renderValue`(Web) | `(value: string) => ReactNode` | — | 보이는 값만 바꾼다. 접근성 값은 descriptor 그대로 |
 | `availableWidth`(Native `StatisticGroup`) | `number` | 측정 폭 | 열 수 계산에 쓸 폭 |
 | `layoutStyle` | `HjmCompositionStyleProp` | — | 루트 배치. Web·Native 모두 |
-| Native `style`·`labelStyle`·`valueStyle`·`affixStyle`·`trendStyle`·`hintStyle`, 그룹 `style`·`itemStyle` | `StyleProp` | — | deprecated — `layoutStyle` 또는 `density`·`presentation`. 개발 모드에서 한 번 경고하고 다음 major에서 제거된다 |
+| Native `style`·`labelStyle`·`valueStyle`·`affixStyle`·`trendStyle`·`hintStyle`, 그룹 `style`·`itemStyle` | 지원하지 않음 | — | 제거된 속성 — `layoutStyle` 또는 `density`·`presentation`. 현재 공개 props에서 제거되었다 |
 
 ## 배치
 
@@ -93,7 +93,7 @@ Native 프레임의 모서리는 `statisticRecipe.presentations`의 역할을 Pr
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | `presentation="surface"`의 안쪽 여백: `comfortable` `spacing.md` 16 · `compact` `spacing.sm` 12(두 플랫폼). 테두리 `stroke.default` 1, radius `md` 12 | `statisticRecipe.density`·`presentations`, `styles.css` `.hjm-statistic[data-presentation="surface"]` |
-| 글자 | 라벨 `label` 12 semibold(`compact` `caption` 11), 값 `heading` 24 heavy(`compact` `title` 18), prefix·suffix `body` 14 semibold 본문색, hint `caption`, 추세 `caption` bold(두 플랫폼). 2026-10-06까지 Web은 라벨 본문 14 medium, 값은 밀도와 관계없이 18, prefix·suffix는 흐린색이었다(1.12.1 이후 미게시) | `statisticRecipe.density`·`label`·`value`·`affix`·`hint`·`trend`, `.hjm-statistic__*` |
+| 글자 | 라벨 `label` 12 semibold(`compact` `caption` 11), 값 `heading` 24 heavy(`compact` `title` 18), prefix·suffix `body` 14 semibold 본문색, hint `caption`, 추세 `caption` bold(두 플랫폼). 2026-10-06까지 Web은 라벨 본문 14 medium, 값은 밀도와 관계없이 18, prefix·suffix는 흐린색이었다(1.13.0 변경) | `statisticRecipe.density`·`label`·`value`·`affix`·`hint`·`trend`, `.hjm-statistic__*` |
 | 간격 | 그룹 간격 `statisticRecipe.group.gap` = `spacing.xs` 8. 지표 안 줄 간격(라벨·값·추세) `comfortable` `spacing.xs` 8 · `compact` `spacing.xxs` 4(두 플랫폼) | `styles.css` `.hjm-statistic`·`.hjm-statistic-group`, `statisticRecipe` |
 | 순서·정렬 | 화면 위쪽 요약 영역이나 카드 안에 둔다. 지표 여러 개는 [Grid](grid.md)를 직접 짜지 말고 `StatisticGroup`으로 묶는다 | — |
 | 고정·스크롤 | — | — |
@@ -106,7 +106,7 @@ Native 프레임의 모서리는 `statisticRecipe.presentations`의 역할을 Pr
 - `direction`과 `tone`은 따로 정한다. 증가가 나쁜 지표는 `up` + `danger`다([계약](../../statistic.md)).
 - 접근성 이름은 기본으로 `[contextLabel, label, 값, trend label, hint]`를 이어 만든다. 어순을 바꿔야 하면
   `composeAccessibilityLabel`을 쓴다. `StatisticGroup`은 group `label`을 각 항목의 `contextLabel`로 넘긴다.
-- 배치는 `layoutStyle`로만 한다. Native의 deprecated `style`·`*Style`·`itemStyle`로 recipe 색·굵기를 덮지 않는다.
+- 배치는 `layoutStyle`로만 한다. Native에서 제거된 `style`·`*Style`·`itemStyle`로 recipe 색·굵기를 덮지 않는다.
 
 ## 플랫폼 차이
 
@@ -114,7 +114,7 @@ Native 프레임의 모서리는 `statisticRecipe.presentations`의 역할을 Pr
 | --- | --- | --- |
 | 값 렌더 교체 | `renderValue`(접근성 값은 descriptor 유지) | 없음 |
 | 그룹 폭 | CSS grid, 좁은 화면에서 1열 | `availableWidth` 또는 측정 폭, 최소 항목 폭 120×글자 배율로 열 수 감소 |
-| 슬롯 스타일 prop | 없음(`className`, 배치는 `layoutStyle`) | `style`·`*Style`, 그룹 `itemStyle`(모두 deprecated, 배치는 `layoutStyle`) |
+| 슬롯 스타일 prop | 없음(`className`, 배치는 `layoutStyle`) | `style`·`*Style`, 그룹 `itemStyle`(모두 제거된 속성, 배치는 `layoutStyle`) |
 | `AnimatedStatistic` 모션 | 숫자 자리 단위 NumberFlow | 지표 전체 `rise` 전환 |
 | `renderTrendMark` color | `"currentColor"` | trend tone을 푼 색 문자열 |
 
@@ -122,6 +122,7 @@ Native 프레임의 모서리는 `statisticRecipe.presentations`의 역할을 Pr
 
 - Web `AnimatedStatistic`은 reduced motion, RTL, 라틴 숫자가 아닌 numbering system, `ar`·`fa`·`he`·`ur` locale,
   `scientific`·`engineering` 표기에서는 애니메이션 없이 `Intl` 결과 문자열만 그린다.
+- Web은 탭이 숨겨지거나 숫자 호스트가 제거되면 진행 중 전환을 최종 값으로 완료한다. 화면 밖에서는 모션을 정지하고 새 값·접근 이름을 즉시 반영하며, 화면 안으로 돌아오면 다음 값부터 다시 전환한다. IntersectionObserver 미지원 환경은 정적으로 표시한다.
 - `AnimatedStatistic`의 `descriptor`에는 `value`를 넣지 않는다. 값은 `value` prop의 숫자로 받는다.
 
 ### 외부 숫자 효과 대조

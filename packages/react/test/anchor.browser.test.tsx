@@ -103,3 +103,15 @@ it("uses native Tab and Enter activation, moves focus, and updates the document 
   expect(document.activeElement).toBe(target);
   expect(location.hash).toBe("#anchor-two");
 });
+
+it("cleans temporary focusability and queued observers when the navigation unmounts", async () => {
+  const view = (show = true) => <HjmProvider reducedMotion>{show && <Anchor label="Contents" items={[{ id: "persistent-target", label: "Target" }]} historyMode="none" />}<section id="persistent-target">Target</section></HjmProvider>;
+  await act(async () => root.render(view()));
+  const target = document.getElementById("persistent-target")!;
+  await act(async () => host.querySelector("a")!.click());
+  expect(target.getAttribute("tabindex")).toBe("-1");
+  await act(async () => { window.dispatchEvent(new Event("scroll")); root.render(view(false)); });
+  await settle();
+  expect(target.hasAttribute("tabindex")).toBe(false);
+  expect(host.querySelector("nav")).toBeNull();
+});

@@ -131,7 +131,7 @@ import { Container, Stack, Text } from "@hjmds/react/layout";
 
 | 항목 | Web | Native |
 | --- | --- | --- |
-| `Collapsible` | `/collapsible`, 배치는 `layoutStyle`(또는 `className`) | `/collapsible`, 배치는 `layoutStyle`(`style`은 deprecated) |
+| `Collapsible` | `/collapsible`, 배치는 `layoutStyle`(또는 `className`) | `/collapsible`, 배치는 `layoutStyle`(`style`은 제거된 속성) |
 | 대상 메뉴 | `ContextMenu`(stable) | `NativeContextMenu`(실험적 어댑터) |
 | `Menubar` | 있음 | 없음 |
 

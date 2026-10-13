@@ -15,12 +15,16 @@ export function GravityLetters({ glyphs, active = false, replayKey = 0 }: Gravit
     clear();
     if (!active || environment.reducedMotion || AppState.currentState !== "active") return;
     const recipe = resolveGravityLetters(JSON.parse(signature) as string[]);
-    const animations = values.map((value, index) => {
-      value.setValue(0);
-      return Animated.timing(value, { toValue: 1, duration: gravityLetterMotion.duration, delay: recipe[index]!.delay, useNativeDriver: true });
-    });
-    animations.forEach(animation => animation.start());
+    const animations: ReturnType<typeof Animated.timing>[] = [];
     const stop = () => { animations.forEach(animation => animation.stop()); clear(); };
+    // A partial native animation failure must leave the decorative text settled.
+    try {
+      values.forEach((value, index) => {
+        value.setValue(0);
+        animations.push(Animated.timing(value, { toValue: 1, duration: gravityLetterMotion.duration, delay: recipe[index]!.delay, useNativeDriver: true }));
+      });
+      animations.forEach(animation => animation.start());
+    } catch { stop(); return; }
     const subscription = AppState.addEventListener("change", state => { if (state !== "active") stop(); });
     return () => { stop(); subscription.remove(); };
   }, [signature, values, active, replayKey, environment.reducedMotion]);

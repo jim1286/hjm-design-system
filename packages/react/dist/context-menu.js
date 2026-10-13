@@ -4,7 +4,8 @@ import { resolveContextMenuAnchor, } from "@hjmds/design-contracts/components/co
 import { menuRecipe } from "@hjmds/design-contracts/recipes";
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, } from "react";
 import { classNames } from "./internal.js";
-import { HjmPortal, getModalLayer } from "./modal.js";
+import { AnchoredPortal } from "./portal.js";
+import { getModalLayer } from "./modal.js";
 const longPressDelay = 500;
 export function ContextMenu({ children, items, accessibilityLabel, onAction, className, layoutStyle, }) {
     const hostRef = useRef(null);
@@ -15,9 +16,23 @@ export function ContextMenu({ children, items, accessibilityLabel, onAction, cla
     const [anchor, setAnchor] = useState(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const longPress = useRef(undefined);
+    const pressOrigin = useRef(null);
+    const cancelLongPress = useCallback(() => {
+        if (longPress.current !== undefined)
+            clearTimeout(longPress.current);
+        longPress.current = undefined;
+        pressOrigin.current = null;
+    }, []);
+    useEffect(() => cancelLongPress, [cancelLongPress]);
     const typeahead = useRef({ value: "", time: 0 });
     const enabled = items.filter((item) => !item.disabled);
+    const resolvedActiveIndex = Math.min(activeIndex, Math.max(0, enabled.length - 1));
+    useLayoutEffect(() => {
+        if (activeIndex !== resolvedActiveIndex)
+            setActiveIndex(resolvedActiveIndex);
+    }, [activeIndex, resolvedActiveIndex]);
     const open = useCallback((reason, pointer) => {
+        cancelLongPress();
         const activeElement = document.activeElement;
         returnFocusRef.current = activeElement instanceof HTMLElement && hostRef.current?.contains(activeElement)
             ? activeElement
@@ -26,7 +41,7 @@ export function ContextMenu({ children, items, accessibilityLabel, onAction, cla
         setAnchor(resolveContextMenuAnchor(reason, pointer, rect === null ? null : { left: rect.left, bottom: rect.bottom }));
         setActiveIndex(0);
         typeahead.current = { value: "", time: 0 };
-    }, []);
+    }, [cancelLongPress]);
     const setMenuRef = useCallback((node) => {
         menuRef.current = node;
         setMenuMounted(node !== null);
@@ -67,7 +82,7 @@ export function ContextMenu({ children, items, accessibilityLabel, onAction, cla
                 return;
             }
             if (event.key.length === 1 && event.key !== " " && !event.ctrlKey && !event.metaKey && !event.altKey) {
-                const result = resolveMenuTypeahead(enabled, activeIndex, event.key, typeahead.current, Date.now());
+                const result = resolveMenuTypeahead(enabled, resolvedActiveIndex, event.key, typeahead.current, Date.now());
                 typeahead.current = result.state;
                 if (result.index !== undefined) {
                     event.preventDefault();
@@ -77,7 +92,7 @@ export function ContextMenu({ children, items, accessibilityLabel, onAction, cla
             }
             if (event.key === "Enter" || event.key === " ") {
                 event.preventDefault();
-                const item = enabled[activeIndex];
+                const item = enabled[resolvedActiveIndex];
                 if (item) {
                     onAction(item.id);
                     setAnchor(null);
@@ -100,7 +115,7 @@ export function ContextMenu({ children, items, accessibilityLabel, onAction, cla
             document.removeEventListener("keydown", onKeyDown);
             document.removeEventListener("pointerdown", onPointerDown);
         };
-    }, [anchor, activeIndex, enabled, onAction]);
+    }, [anchor, resolvedActiveIndex, enabled, onAction]);
     return (_jsxs("div", { ref: hostRef, tabIndex: 0, className: classNames("hjm-context-menu-host", className), style: layoutStyle, onContextMenu: (event) => {
             event.preventDefault();
             open("pointer", { x: event.clientX, y: event.clientY });
@@ -114,10 +129,16 @@ export function ContextMenu({ children, items, accessibilityLabel, onAction, cla
         }, onPointerDown: (event) => {
             if (event.pointerType !== "touch")
                 return;
-            longPress.current = setTimeout(() => open("longPress", { x: event.clientX, y: event.clientY }), longPressDelay);
-        }, onPointerUp: () => { if (longPress.current !== undefined)
-            clearTimeout(longPress.current); }, onPointerCancel: () => { if (longPress.current !== undefined)
-            clearTimeout(longPress.current); }, children: [children, anchor !== null ? (_jsx(HjmPortal, { children: _jsx("div", { role: "menu", id: menuId, ref: setMenuRef, tabIndex: -1, "aria-activedescendant": enabled[activeIndex] ? `${menuId}-item-${activeIndex}` : undefined, "aria-label": accessibilityLabel, className: "hjm-context-menu", style: {
+            cancelLongPress();
+            const origin = { x: event.clientX, y: event.clientY };
+            pressOrigin.current = origin;
+            longPress.current = setTimeout(() => open("longPress", origin), longPressDelay);
+        }, onPointerMove: (event) => {
+            const origin = pressOrigin.current;
+            // Treat a 10px move as scrolling, while tolerating small touch jitter.
+            if (origin && Math.hypot(event.clientX - origin.x, event.clientY - origin.y) >= 10)
+                cancelLongPress();
+        }, onPointerUp: cancelLongPress, onPointerCancel: cancelLongPress, children: [children, anchor !== null ? (_jsx(AnchoredPortal, { anchorRef: hostRef, children: _jsx("div", { role: "menu", id: menuId, ref: setMenuRef, tabIndex: -1, "aria-activedescendant": enabled[resolvedActiveIndex] ? `${menuId}-item-${resolvedActiveIndex}` : undefined, "aria-label": accessibilityLabel, className: "hjm-context-menu", style: {
                         top: anchor.y,
                         left: anchor.x,
                         zIndex: getModalLayer(0),
@@ -126,7 +147,7 @@ export function ContextMenu({ children, items, accessibilityLabel, onAction, cla
                         // A newly positioned menu can enter a stationary cursor; that
                         // boundary event must not undo the user's keyboard selection.
                         const index = enabled.findIndex((candidate) => candidate.id === item.id);
-                        return (_jsxs("div", { id: index >= 0 ? `${menuId}-item-${index}` : undefined, role: "menuitem", "aria-disabled": item.disabled || undefined, "data-active": index === activeIndex && !item.disabled ? "" : undefined, "data-tone": item.tone, className: "hjm-context-menu__item", onMouseMove: () => { if (index >= 0)
+                        return (_jsxs("div", { id: index >= 0 ? `${menuId}-item-${index}` : undefined, role: "menuitem", "aria-disabled": item.disabled || undefined, "data-active": index === resolvedActiveIndex && !item.disabled ? "" : undefined, "data-tone": item.tone, className: "hjm-context-menu__item", onMouseMove: () => { if (index >= 0)
                                 setActiveIndex(index); }, onClick: () => {
                                 if (item.disabled)
                                     return;

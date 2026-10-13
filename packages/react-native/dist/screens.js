@@ -3,11 +3,12 @@ import { resolveDesignProfileScreen } from "@hjmds/design-contracts/design-profi
 import { MessageReactions } from "./internal/message-reactions.js";
 import { Button, IconButton } from "./actions.js";
 import { TextArea } from "./inputs.js";
-import { useMemo, useState } from "react";
-import { PanResponder, ScrollView, View } from "react-native";
+import { useEffect, useMemo, useRef } from "react";
+import { Animated, PanResponder, ScrollView, View } from "react-native";
 import { Spinner } from "./internal/spinner.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, resolveScreenContentState, screenPatternRecipe } from "@hjmds/design-contracts/screen-patterns";
+import { motion } from "@hjmds/design-contracts/foundations";
 import { Stack, Text } from "./primitives.js";
 import { ListRow } from "./data-display.js";
 import { useHjmNativeTheme } from "./provider.js";
@@ -36,7 +37,8 @@ export function NotificationItem({ read, statusLabel, timestamp, description, ..
 }
 /** Wrap with existing KeyboardAvoiding (or the host's keyboard adapter), never both. */
 export function ChatScreen({ composer, scroll = "content", ...props }) {
-    return _jsx(ScreenLayout, { ...props, scroll: scroll, footer: !props.state || props.state.kind === "ready" ? composer : null });
+    // An empty conversation must still allow its first message; unavailable states hide input.
+    return _jsx(ScreenLayout, { ...props, scroll: scroll, footer: !props.state || props.state.kind === "ready" || props.state.kind === "empty" ? composer : null });
 }
 export function MessageComposer({ value, label, sendLabel, placeholder = label, description, error, invalid = false, submitMode = "newline", onBlur, disabled = false, pending = false, onValueChange, onSend, maxLength, sendDisabled = false, additionalContent = false, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation = "inline", attachmentAction, attachments = [], onRemoveAttachment }) {
     validateMessageAttachments(attachments);
@@ -57,22 +59,31 @@ export function MessageComposer({ value, label, sendLabel, placeholder = label, 
                             onSend(value); }, layoutStyle: { flex: 1 }, onValueChange: onValueChange, minVisibleLines: screenPatternRecipe.composerMinLines, maxVisibleLines: screenPatternRecipe.composerMaxLines, ...(sendIcon ? { trailing: _jsx(View, { style: { alignSelf: "center", marginStart: tokens.spacing.sm, marginEnd: sendPresentation === "circle" ? tokens.spacing.xs - tokens.spacing.md : 0 }, children: hasContent || pending ? send : attach }) } : {}) }), sendIcon ? null : send] })] });
 }
 export function ChatMessage({ direction, author, timestamp, timestampPresentation = "always", bubbleTail = false, deliveryLabel, avatar, reply, actions, replyAction, replyLink, reactions, children, interactiveContent = false }) {
-    const { colors, tokens } = useHjmNativeTheme();
+    const { colors, tokens, environment } = useHjmNativeTheme();
     const revealTime = timestampPresentation === "swipe" && !!timestamp;
     const outgoing = direction === "outgoing";
-    const [offset, setOffset] = useState(0);
+    const offset = useRef(new Animated.Value(0)).current;
+    const resetOffset = () => {
+        offset.stopAnimation();
+        if (environment.reducedMotion)
+            offset.setValue(0);
+        else
+            Animated.timing(offset, { toValue: 0, duration: motion.normal, useNativeDriver: true }).start();
+    };
+    useEffect(() => () => offset.stopAnimation(), [offset]);
     // SwipeActions reveals row controls and requires an optional gesture peer; reply commits
     // on release and stays in the core timeline without capturing vertical scrolling.
     const gesture = useMemo(() => PanResponder.create({
         // Capture horizontal intent before nested message Pressables can retain the touch.
         onMoveShouldSetPanResponderCapture: (_, state) => revealTime && timestampRevealOffset(outgoing ? -state.dx : state.dx, state.dy) > 0,
         onMoveShouldSetPanResponder: (_, state) => revealTime ? timestampRevealOffset(outgoing ? -state.dx : state.dx, state.dy) > 0 : !!replyAction && !replyAction.disabled && Math.abs(state.dx) > 12 && Math.abs(state.dx) > Math.abs(state.dy) * 2,
-        onPanResponderMove: (_, state) => setOffset(revealTime ? (outgoing ? -1 : 1) * timestampRevealOffset(outgoing ? -state.dx : state.dx, state.dy) : Math.max(-72, Math.min(72, state.dx))),
-        onPanResponderRelease: (_, state) => { setOffset(0); if (!revealTime && replyAction && !replyAction.disabled && isReplySwipe(state.dx, state.dy))
+        onPanResponderGrant: () => offset.stopAnimation(),
+        onPanResponderMove: (_, state) => offset.setValue(revealTime ? (outgoing ? -1 : 1) * timestampRevealOffset(outgoing ? -state.dx : state.dx, state.dy) : Math.max(-72, Math.min(72, state.dx))),
+        onPanResponderRelease: (_, state) => { resetOffset(); if (!revealTime && replyAction && !replyAction.disabled && isReplySwipe(state.dx, state.dy))
             replyAction.onPress(); },
-        onPanResponderTerminate: () => setOffset(0),
+        onPanResponderTerminate: resetOffset,
         onPanResponderTerminationRequest: () => true,
-    }), [replyAction, revealTime, outgoing]);
+    }), [replyAction, revealTime, outgoing, environment.reducedMotion, offset]);
     const canReply = !!replyAction && !replyAction.disabled;
     const replyAccessibility = canReply ? {
         accessible: true,
@@ -87,6 +98,6 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
     // Paint the tip with the bubble's own surface/border; a detached triangle leaves a seam.
     const tail = bubbleTail ? _jsx(View, { pointerEvents: "none", accessible: false, style: { position: "absolute", bottom: tokens.spacing.sm, ...(outgoing ? { right: -4 } : { left: -4 }), width: 8, height: 8, backgroundColor: outgoing ? colors.surfaceAccent : colors.bg, borderLeftWidth: outgoing ? 0 : 1, borderBottomWidth: outgoing ? 0 : 1, borderColor: colors.border, transform: [{ rotate: outgoing ? "225deg" : "45deg" }] } }) : null;
     const bubbleContent = _jsxs(_Fragment, { children: [tail, reply && !replyLink ? _jsx(View, { style: { borderStartWidth: 2, borderColor: colors.contentBrand, paddingStart: tokens.spacing.xs }, children: reply }) : null, children] });
-    return _jsxs(View, { ...gesture.panHandlers, style: { position: "relative", overflow: "hidden", paddingHorizontal: bubbleTail ? tokens.spacing.xs : 0 }, children: [revealTime ? _jsx(View, { pointerEvents: "none", style: { position: "absolute", ...(outgoing ? { right: 0, alignItems: "flex-end" } : { left: 0 }), top: 0, bottom: 0, width: 80, justifyContent: "center", opacity: offset !== 0 ? 1 : 0 }, children: _jsx(Text, { variant: "caption", tone: "muted", children: timestamp }) }) : null, _jsxs(View, { style: { transform: [{ translateX: offset }], flexDirection: "row", justifyContent: outgoing ? "flex-end" : "flex-start", gap: tokens.spacing.xs }, children: [!outgoing ? avatar : null, _jsxs(View, { style: { maxWidth: screenPatternRecipe.messageMaxWidth, flexShrink: 1, gap: tokens.spacing.xxs, alignItems: outgoing ? "flex-end" : "flex-start" }, children: [author ? _jsx(Text, { variant: "caption", tone: "muted", ...(captionCarriesReply && !meta ? replyAccessibility : {}), children: author }) : null, reply && replyLink ? _jsx(Button, { tone: "ghost", accessibilityLabel: replyLink.label, onPress: replyLink.onPress, children: reply }) : null, reactions ? _jsx(MessageReactions, { ...reactions, interactiveContent: interactiveContent, ...(replyAction ? { replyAction } : {}), children: _jsx(View, { style: bubbleStyle, children: bubbleContent }) }) : _jsx(View, { style: bubbleStyle, accessible: !interactiveContent, ...(interactiveContent ? {} : replyAccessibility), children: bubbleContent }), meta || actions ? _jsxs(Stack, { axis: "inline", gap: "xs", align: "center", children: [meta ? _jsx(Text, { variant: "caption", tone: "muted", ...(captionCarriesReply ? replyAccessibility : {}), children: meta }) : null, actions] }) : null] }), outgoing ? avatar : null] })] });
+    return _jsxs(View, { ...gesture.panHandlers, style: { position: "relative", overflow: "hidden", paddingHorizontal: bubbleTail ? tokens.spacing.xs : 0 }, children: [revealTime ? _jsx(Animated.View, { pointerEvents: "none", style: { position: "absolute", ...(outgoing ? { right: 0, alignItems: "flex-end" } : { left: 0 }), top: 0, bottom: 0, width: 80, justifyContent: "center", opacity: offset.interpolate({ inputRange: [-16, 0, 16], outputRange: [1, 0, 1], extrapolate: "clamp" }) }, children: _jsx(Text, { variant: "caption", tone: "muted", children: timestamp }) }) : null, _jsxs(Animated.View, { style: { transform: [{ translateX: offset }], flexDirection: "row", justifyContent: outgoing ? "flex-end" : "flex-start", gap: tokens.spacing.xs }, children: [!outgoing ? avatar : null, _jsxs(View, { style: { maxWidth: screenPatternRecipe.messageMaxWidth, flexShrink: 1, gap: tokens.spacing.xxs, alignItems: outgoing ? "flex-end" : "flex-start" }, children: [author ? _jsx(Text, { variant: "caption", tone: "muted", ...(captionCarriesReply && !meta ? replyAccessibility : {}), children: author }) : null, reply && replyLink ? _jsx(Button, { tone: "ghost", accessibilityLabel: replyLink.label, onPress: replyLink.onPress, children: reply }) : null, reactions ? _jsx(MessageReactions, { ...reactions, interactiveContent: interactiveContent, ...(replyAction ? { replyAction } : {}), children: _jsx(View, { style: bubbleStyle, children: bubbleContent }) }) : _jsx(View, { style: bubbleStyle, accessible: !interactiveContent, ...(interactiveContent ? {} : replyAccessibility), children: bubbleContent }), meta || actions ? _jsxs(Stack, { axis: "inline", gap: "xs", align: "center", children: [meta ? _jsx(Text, { variant: "caption", tone: "muted", ...(captionCarriesReply ? replyAccessibility : {}), children: meta }) : null, actions] }) : null] }), outgoing ? avatar : null] })] });
 }
 //# sourceMappingURL=screens.js.map

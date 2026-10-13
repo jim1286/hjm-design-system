@@ -83,7 +83,7 @@ import {
   resolveNativeTextScaleProps,
 } from "./internal/styles.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
+import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 
 export type {
   StackAlign,
@@ -405,17 +405,12 @@ export type ContainerProps = Omit<ViewProps, "children" | "style"> & Readonly<{
   gutter?: ContainerGutter;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
-   * `size`/`gutter` (container descriptor) owns appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
 }>;
 
 /** Shared centered content boundary for phones, tablets, and desktop-sized Native windows. */
 export function Container({ size, gutter, layoutStyle,
-  style, ...props }: ContainerProps) {
-  warnDeprecatedStyleProps("Container", { style }, "layoutStyle for placement and size/gutter for width and padding");
+  ...props }: ContainerProps) {
+  assertNoRemovedStyleProps("Container", props, ["style"]);
   const resolved = resolveContainerDescriptor({
     ...(size === undefined ? {} : { size }),
     ...(gutter === undefined ? {} : { gutter }),
@@ -430,7 +425,6 @@ export function Container({ size, gutter, layoutStyle,
           paddingHorizontal: resolved.paddingInline,
           width: "100%",
         },
-        style,
         layoutStyle,
       ]}
     />
@@ -566,11 +560,6 @@ export type IconProps<Name extends string = string> = Readonly<{
   renderGlyph: (props: NativeIconRenderProps<Name>) => ReactNode;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
-   * the descriptor (`size`, `tone`, `weight`, `directionality`) owns appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
 }>;
 
 /** Semantic Native icon frame without an Expo or third-party icon dependency. */
@@ -578,9 +567,9 @@ export function Icon<Name extends string = string>({
   descriptor,
   renderGlyph,
   layoutStyle,
-  style,
+  ...removedProps
 }: IconProps<Name>) {
-  warnDeprecatedStyleProps("Icon", { style }, "layoutStyle for placement and the icon descriptor for appearance");
+  assertNoRemovedStyleProps("Icon", removedProps, ["style"]);
   const resolved = resolveIconDescriptor(descriptor);
   const theme = useHjmNativeTheme();
   const colors = {
@@ -614,7 +603,6 @@ export function Icon<Name extends string = string>({
           transform: mirror ? [{ scaleX: -1 }] : undefined,
           width: size,
         },
-        style,
         layoutStyle,
       ]}
     >
@@ -649,12 +637,7 @@ export type SectionProps = Omit<ViewProps, "children" | "style"> &
     contentStyle?: HjmCompositionStyleProp;
       /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
-     * `sectionRecipe` owns appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
-}>;
+  }>;
 
 /** A large-text-safe content section with a logical header action slot. */
 export function Section({
@@ -668,15 +651,14 @@ export function Section({
   actionStyle,
   contentStyle,
   layoutStyle,
-  style,
   ...props
 }: SectionProps) {
   const theme = useHjmNativeTheme();
-  warnDeprecatedStyleProps("Section", { style }, "layoutStyle for placement; sectionRecipe owns appearance");
+  assertNoRemovedStyleProps("Section", props, ["style"]);
   const stackHeader = theme.environment.textScale >= 1.6;
   const hasHeader = title !== undefined || description !== undefined || action !== undefined;
   return (
-    <View {...props} style={[{ gap: sectionRecipe.gap }, style, layoutStyle]}>
+    <View {...props} style={[{ gap: sectionRecipe.gap }, layoutStyle]}>
       {hasHeader ? <View
         style={[
           {

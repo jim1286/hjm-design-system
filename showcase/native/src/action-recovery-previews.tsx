@@ -35,12 +35,15 @@ const archiveStatusCopy = { pending: "요청을 확인하고 있어요.", error:
 export function SaveRecoveryPreview() {
  const { session, state, request, failureArmed, toggleFailure, busy } = useDemoAction("");
  const [draft, setDraft] = useState("");
+ // A request confirms its submitted snapshot; edits made during that request remain unsaved.
+ const status = state.status === "success" && draft !== state.value
+  ? "제출한 내용은 저장했어요. 현재 입력은 아직 저장하지 않았어요." : saveStatusCopy[state.status];
  return <Frame reading><Heading level="level3">입력은 유지하고 다시 저장</Heading>
   <TextField label="기록 내용" value={draft} onValueChange={setDraft} />
   <Button loading={busy} disabled={!draft.trim()} onPress={() => { const submitted = draft; void session.run(() => request(submitted), { retryable: true }); }}>저장</Button>
   {state.status === "error" && <Button tone="secondary" onPress={() => { void session.retry(); }}>실패한 내용 다시 저장</Button>}
   <FailureToggle selected={failureArmed} onToggle={toggleFailure} />
-  <PatternStatus>{saveStatusCopy[state.status]}</PatternStatus>
+  <PatternStatus>{status}</PatternStatus>
   <Text>저장된 내용: {state.value || "아직 없어요"}</Text>
   <Text>실제 서버 요청 없이 실패와 복구를 확인하는 예제예요. 입력은 이 화면이 열린 동안 유지돼요.</Text>
  </Frame>;

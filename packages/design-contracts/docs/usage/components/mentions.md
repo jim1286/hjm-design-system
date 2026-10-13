@@ -79,7 +79,7 @@ Native 후보 목록의 모서리는 `comboboxRecipe.popover.radius` 역할을 P
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 후보 한 줄 최소 높이 44(`control.minTouchTarget`). Web 목록 최대 높이 `14rem`, 입력 폭에 맞춤 | `.hjm-mentions__option`·`__list`, Native `minHeight: 44` |
-| 간격 | 라벨·입력·설명·오류 사이 `spacing.xs` 8. Web 목록은 입력과 8, 화면 가장자리 8, 안쪽 8, radius `radius.md` 12 — 모두 Combobox 목록과 같은 `comboboxRecipe.popover`(sideOffset·collisionPadding·padding `spacing.xs`). Native 목록 안쪽 8(같은 recipe)·항목 사이 4, radius `radius.md` 12. 후보 좌우 여백 8. 2026-10-06까지 Web 가장자리 16·안쪽 4, Native 안쪽 4였다(1.12.1 이후 미게시) | `comboboxRecipe.popover`, `.hjm-mentions__*`, `react-native/src/mentions.tsx` |
+| 간격 | 라벨·입력·설명·오류 사이 `spacing.xs` 8. Web 목록은 입력과 8, 화면 가장자리 8, 안쪽 8, radius `radius.md` 12 — 모두 Combobox 목록과 같은 `comboboxRecipe.popover`(sideOffset·collisionPadding·padding `spacing.xs`). Native 목록 안쪽 8(같은 recipe)·항목 사이 4, radius `radius.md` 12. 후보 좌우 여백 8. 2026-10-06까지 Web 가장자리 16·안쪽 4, Native 안쪽 4였다(1.13.0 변경) | `comboboxRecipe.popover`, `.hjm-mentions__*`, `react-native/src/mentions.tsx` |
 | 순서·정렬 | 후보 목록은 입력 **바로 아래**. Web은 아래 공간이 모자라면 위로 뒤집는다. Web 후보는 `label` 옆에 `description`, 좁으면 줄바꿈 | `useAnchoredPopup`, `.hjm-mentions__option` |
 | 고정·스크롤 | Web 목록은 떠 있는 portal(z-index `layer.dropdown` 400)이고 넘치면 목록 안 스크롤. Native 목록은 문서 흐름 안에 끼어들어 아래 내용을 민다 | `src/mentions.tsx`(Web·Native) |
 | 좁은 폭·큰 글자 | 키보드 위 입력이면 Native 목록이 가려질 수 있으니 [KeyboardFormScrollView](keyboard-form-scroll-view.md) 안에 둔다 | — |
@@ -112,7 +112,7 @@ Web                                   Native
 | 후보 표시 | 입력 아래 떠 있는 listbox(portal) | 입력 아래 문서 흐름 안 목록 |
 | 키보드 | ↑↓ 이동, Enter 확정, Esc 닫기(입력은 유지) | 해당 없음(누름으로 확정) |
 | 기본 후보 렌더 | `label` + `description` | `label`만 |
-| 추가 prop | `className`, ref(`HTMLTextAreaElement`). `style`은 안쪽 textarea에 붙는다 | `listStyle`은 deprecated(다음 major 제거, 대체 없음 — 후보 목록 recipe가 외형을 가진다) |
+| 추가 prop | `className`, ref(`HTMLTextAreaElement`). `style`은 안쪽 textarea에 붙는다 | `listStyle`은 제거된 속성(후보 목록의 외형은 recipe가 소유한다) |
 
 ## 함정
 

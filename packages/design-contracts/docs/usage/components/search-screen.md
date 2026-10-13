@@ -144,9 +144,9 @@ import { SearchScreen } from "@hjmds/react-native/screen-flows";
 | `onSearch` | `(query: string, context: { signal: AbortSignal }) => void` | 필수 | `debounceMs` 뒤 호출. 값이 바뀌면 이전 타이머를 지우고 이전 신호를 abort한다 |
 | `queryClearLabel` | `string` | `queryField`가 없으면 필수 | 기본 입력의 지우기 버튼 이름. 비어 있으면 `TypeError` |
 | `queryField` | `ReactNode` | 없음 | 기본 `SearchField` 대신 그릴 입력. 지우기 동작을 직접 제공한다 |
-| `debounceMs` | `number` | `300` | 0 미만은 0 |
+| `debounceMs` | `number` | `searchScreenRecipe.debounceMs` (`300`) | 유한값을 받으며 0 미만은 0. `NaN`·±`Infinity`는 `RangeError`. 두 renderer가 `resolveSearchDebounceMs`를 공유한다 |
 | `filters` | `ReactNode` | 없음 | 검색 입력 아래, 상단에 고정. 두 단계 검색에서는 결과 단계에만, 검색어 때문인 0건에는 숨긴다 |
-| `onSubmit` | `(query: string) => void` | 없음 | 확정 신호. 모든 확정에서 키보드를 닫는다(Native `Keyboard.dismiss()`, Web은 고른 항목이면 결과 영역으로 포커스, 미게시(1.13.1 이후)) — 아래 플랫폼 차이. 기본 입력의 Web Enter(`enterKeyHint="search"`, IME 조합 중 Enter는 무시)·Native 키보드 검색 키(`returnKeyType="search"`, `onSubmitEditing`)와 SearchScreen이 그린 확정 행·제안·최근·추천 검색어가 모두 여기로 온다. 앞뒤 공백을 지운 값이고 공백만이면 부르지 않는다. 고른 값이 입력과 다르면 먼저 `onQueryChange`. 대기 중인 `onSearch` debounce는 그대로 둔다. `queryField`를 주면 그 입력의 키는 연결하지 않는다 |
+| `onSubmit` | `(query: string) => void` | 없음 | 확정 신호. 모든 확정에서 키보드를 닫는다(Native `Keyboard.dismiss()`, Web은 고른 항목이면 결과 영역으로 포커스, 1.13.1 변경) — 아래 플랫폼 차이. 기본 입력의 Web Enter(`enterKeyHint="search"`, IME 조합 중 Enter는 무시)·Native 키보드 검색 키(`returnKeyType="search"`, `onSubmitEditing`)와 SearchScreen이 그린 확정 행·제안·최근·추천 검색어가 모두 여기로 온다. 앞뒤 공백을 지운 값이고 공백만이면 부르지 않는다. 고른 값이 입력과 다르면 먼저 `onQueryChange`. 대기 중인 `onSearch` debounce는 그대로 둔다. `queryField`를 주면 그 입력의 키는 연결하지 않는다 |
 | `committedQuery` | `string` | 없음 | 결과를 보여 줄 확정 검색어. 주면 두 단계 검색(`onSubmit` 필수, 타입). 단계: 검색어 공백 = 검색 전, 확정값과 다름 = 입력 중, 같음 = 결과(앞뒤 공백 무시). `children`은 결과 단계에만 그린다 |
 | `queryLabelVisibility` | `visible` · `hidden` | `visible` | `hidden`이면 보이는 label 없이 `queryLabel`을 접근성 이름(Web `aria-label`, Native `accessibilityLabel`)과 placeholder로 쓴다 |
 | `searching` · `searchingLabel` | `boolean` · `string` | 없음 | 기본 입력의 진행 표시(Web `loading`, Native `busy`+`busyLabel`). 함께 주거나 함께 생략(타입). 켜져 있으면 `searchingLabel`을 낭독한다 |
@@ -158,7 +158,7 @@ import { SearchScreen } from "@hjmds/react-native/screen-flows";
 | `appliedFilters` | `{ items: { key, label }[], removeLabel(label), onRemove(key), clearAllLabel, onClearAll(), removeIcon? }` | 없음 | 결과 머리 아래 × 칩 + `모두 해제`. 개수는 trigger 이름과 0건 원인 판정에도 쓴다 |
 | `filterSheet` | `{ open, onOpenChange(open), title, value, onApply(next), count(draft): number \| null, reset(draft), isDefault(draft), renderContent(draft, setDraft), labels: { close, reset, apply(count) }, size?, trigger? }` | 없음 | 열 때 `value`를 초안으로 복사, 닫히면 초안을 버림, 주 행동에서만 `onApply`. `count = 0`이면 주 행동 비활성, `isDefault`면 초기화 비활성. `trigger`를 주면 칩 줄 맨 앞에 `label(적용 개수)` Chip |
 | `filtersOverflow` | `wrap` · `scroll` | `wrap` | `scroll`이면 `filters`를 한 줄 가로 스크롤 영역에 넣고 화면 좌우 여백(`spacing.md` 16, `contentInset="none"`이면 0)에 `hostGutter`를 더한 만큼 가장자리까지 넓힌다. 첫 칩은 검색 입력과 같은 시작선에 놓인다 |
-| `hostGutter` | `none` · `compact` · `regular` · `spacious` | `none` | 미게시(1.13.1 이후). 이 화면을 감싼 host가 이미 준 좌우 여백 이름(`containerRecipe.gutters`: 0 · `spacing.md` 16 · `spacing.lg` 20 · `spacing.xl` 24). Container 안이면 그 `gutter`, Sheet 본문 안이면 `regular`(`sheetRecipe.content.paddingHorizontal`과 같은 `spacing.lg`). `scroll` 줄만 이 값을 쓴다 |
+| `hostGutter` | `none` · `compact` · `regular` · `spacious` | `none` | 1.13.1 변경. 이 화면을 감싼 host가 이미 준 좌우 여백 이름(`containerRecipe.gutters`: 0 · `spacing.md` 16 · `spacing.lg` 20 · `spacing.xl` 24). Container 안이면 그 `gutter`, Sheet 본문 안이면 `regular`(`sheetRecipe.content.paddingHorizontal`과 같은 `spacing.lg`). `scroll` 줄만 이 값을 쓴다 |
 | `recentSearches` | `ReactNode` | 없음 | `query`가 공백일 때만 본문 맨 위에 보인다 |
 | `children` | `ReactNode` | 필수 | 결과 |
 | 나머지 | `ScreenLayout`과 같음(`children`·`footer` 제외) | — | `notice`는 필터 아래에 붙는다 |

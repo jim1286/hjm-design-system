@@ -36,7 +36,12 @@ export type SavedItemsScreenProps<T extends SavedItem> = Omit<ListDetailScreenPr
 export function SavedItemsScreen<T extends SavedItem>({items,collections,collectionId,selectedItemId,labels,onOpenCollection,onOpenItem,onBack,onCreateCollection,renderThumbnail,renderDetail,...screen}:SavedItemsScreenProps<T>) {
   const {home,collection,visible,selected}=resolveSavedItems(items,collections,collectionId,selectedItemId);
   const groups=[{id:null,title:labels.allItems,itemIds:items.map(item=>item.id)},...collections];
-  return <ListDetailScreen {...screen} title={home?screen.title:collection?.title??labels.allItems}
+  // Empty is a full body state, not a short text row at the top of the grid.
+  const state=(screen.state?.kind??"ready")==="ready"&&!home&&!visible.length
+    ? {kind:"empty" as const,title:labels.empty} : screen.state??{kind:"ready" as const};
+  // Resolve each cover once; four thumbnails must not each rescan membership.
+  const covers=new Map(groups.map(group=>{const ids=new Set(group.itemIds);return [group.id,items.filter(item=>ids.has(item.id)).slice(0,4)] as const;}));
+  return <ListDetailScreen {...screen} state={state} title={home?screen.title:collection?.title??labels.allItems}
     leading={home?screen.leading:<Button tone="ghost" onClick={onBack}>{labels.back}</Button>}
     actions={home?<Button tone="ghost" onClick={onCreateCollection}>{labels.createCollection}</Button>:screen.actions}
     back={{label:labels.back,onAction:onBack}}
@@ -44,9 +49,9 @@ export function SavedItemsScreen<T extends SavedItem>({items,collections,collect
     list={<Stack gap="md">
       {home?<><Text variant="caption" tone="muted">{labels.privateNotice}</Text><Grid columns={{compact:2}} gap={{compact:"md"}} minColumnWidth={{compact:80}}>
         {groups.map(group=><button key={group.id===null?"all":`collection:${group.id}`} type="button" className="hjm-saved-collection" onClick={()=>onOpenCollection(group.id)} aria-label={group.title}>
-          <span className="hjm-saved-collection__cover" aria-hidden="true">{Array.from({length:4},(_,index)=>{const item=items.filter(item=>group.itemIds.includes(item.id))[index];return <span key={index}>{item?renderThumbnail(item):null}</span>})}</span>
+          <span className="hjm-saved-collection__cover" aria-hidden="true">{Array.from({length:4},(_,index)=>{const item=covers.get(group.id)?.[index];return <span key={index}>{item?renderThumbnail(item):null}</span>})}</span>
           <Text emphasis="strong">{group.title}</Text>
         </button>)}
-      </Grid></>:visible.length?<Grid columns={{compact:3}} gap={{compact:"xxs"}} minColumnWidth={{compact:44}}>{visible.map(item=><button key={item.id} type="button" className="hjm-saved-post" aria-label={item.title} onClick={()=>onOpenItem(item.id)}>{renderThumbnail(item)}</button>)}</Grid>:<Text role="status">{labels.empty}</Text>}
+      </Grid></>:visible.length?<Grid columns={{compact:3}} gap={{compact:"xxs"}} minColumnWidth={{compact:44}}>{visible.map(item=><button key={item.id} type="button" className="hjm-saved-post" aria-label={item.title} onClick={()=>onOpenItem(item.id)}>{renderThumbnail(item)}</button>)}</Grid>:null}
     </Stack>}/>
 }

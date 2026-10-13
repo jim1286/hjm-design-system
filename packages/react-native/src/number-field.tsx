@@ -1,3 +1,4 @@
+import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import {
   commitNumberFieldInput,
   numberFieldRecipe,
@@ -17,11 +18,9 @@ import {
   type StyleProp,
   type TextInputProps,
   type TextStyle,
-  type ViewStyle,
 } from "react-native";
 
 import type { HjmCompositionStyleProp } from "./composition-style.js";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useControllableState } from "./internal/state.js";
 import {
   logicalTextAlign,
@@ -77,16 +76,6 @@ export type NumberFieldProps = NativeNumberInputProps &
     inputMode?: "decimal" | "numeric" | "text";
     /** Canonical layout-only placement for the complete field. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Raw input style bypasses `numberFieldRecipe`. Use `size` for control height and
-     * typography. Removed in the next major (consumer-policy.md §3.1; the 1.11 text-field removal).
-     */
-    inputStyle?: StyleProp<TextStyle>;
-    /**
-     * @deprecated Raw container style bypasses `numberFieldRecipe`. Use `layoutStyle` for placement.
-     * Removed in the next major (consumer-policy.md §3.1).
-     */
-    containerStyle?: StyleProp<ViewStyle>;
   }>;
 
 function valueToInput(value: NumberFieldValue): string {
@@ -121,8 +110,6 @@ export const NumberField = forwardRef<TextInput, NumberFieldProps>(
       accessibilityHint,
       getValueText,
       inputMode,
-      inputStyle,
-      containerStyle,
       layoutStyle,
       onBlur,
       onFocus,
@@ -131,12 +118,9 @@ export const NumberField = forwardRef<TextInput, NumberFieldProps>(
     },
     forwardedRef,
   ) {
+    assertNoRemovedStyleProps("NumberField", inputProps, ["inputStyle", "containerStyle"]);
     const { colors, environment, textScaling, tokens } = useHjmNativeTheme();
-    warnDeprecatedStyleProps(
-      "NumberField",
-      { inputStyle, containerStyle },
-      "layoutStyle for placement and size for the control",
-    );
+
     const controlled = value !== undefined;
     const [currentValue, setCurrentValue] = useControllableState<NumberFieldValue>({
       ...(value === undefined ? {} : { value }),
@@ -162,6 +146,7 @@ export const NumberField = forwardRef<TextInput, NumberFieldProps>(
       setDraft(valueToInput(controlled ? currentValue : next));
     };
     const commitDraft = () => {
+      if (disabled || readOnly) return;
       const next = commitNumberFieldInput(draft, descriptor);
       if (next === undefined) {
         setDraft(valueToInput(currentValue));
@@ -215,7 +200,7 @@ export const NumberField = forwardRef<TextInput, NumberFieldProps>(
     ) => resolveNativeTextScaleProps(textScaling, [resolveNativeFontStyle(tokens.fontFamily.ui), style], allowFontScaling);
 
     return (
-      <View style={[{ gap: numberFieldRecipe.support.gap }, containerStyle, layoutStyle]}>
+      <View style={[{ gap: numberFieldRecipe.support.gap }, layoutStyle]}>
         <NativeText
           {...scaledText([
             tokens.typography[numberFieldRecipe.support.label.textVariant],
@@ -296,7 +281,6 @@ export const NumberField = forwardRef<TextInput, NumberFieldProps>(
                   paddingVertical: 0,
                   textAlign: "center",
                 },
-                inputStyle,
               ],
               inputProps.allowFontScaling,
             )}

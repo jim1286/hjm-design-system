@@ -140,9 +140,9 @@ export function useOpenState<Detail>({
       pendingRequestRef.current = nextOpen;
       if (!controlled) setInternalOpen(nextOpen);
       onOpenChange?.(nextOpen, detail);
-      if (controlled && nextOpen) {
+      if (controlled) {
         queueMicrotask(() => {
-          if (pendingRequestRef.current === true) {
+          if (pendingRequestRef.current === nextOpen) {
             pendingRequestRef.current = undefined;
           }
         });
@@ -358,11 +358,20 @@ export function useModalFocus({
       if (getTopModal() === modal) initial.focus();
 
       const handleKeyDown = (event: KeyboardEvent) => {
-        if (getTopModal() !== modal) return;
+        if (getTopModal() !== modal || event.isComposing || event.keyCode === 229) return;
         if (event.key === "Escape") {
           // A focused non-modal child owns its first Escape. Let its content (or
           // nested menu) handle it before dismissing the containing modal.
-          if (event.target instanceof Node && getPopoverOwner(event.target)) return;
+          if (event.target instanceof Node && (getPopoverOwner(event.target) ||
+            getOwnedPopupHosts(modal).some((host) => host.contains(event.target as Node)))) return;
+          // Menubar keeps focus on its expanded trigger while its menu is portaled.
+          const trigger = event.target instanceof Element
+            ? event.target.closest<HTMLElement>('[aria-expanded="true"][aria-controls]') : null;
+          const popup = trigger ? document.getElementById(trigger.getAttribute("aria-controls")!) : null;
+          if (popup && getOwnedPopupHosts(modal).some((host) => host.contains(popup))) return;
+          const descriptions = event.target instanceof Element
+            ? event.target.getAttribute("aria-describedby")?.split(/\s+/) ?? [] : [];
+          if (descriptions.some((id) => document.getElementById(id)?.getAttribute("role") === "tooltip")) return;
           event.preventDefault();
           escapeRef.current();
           return;

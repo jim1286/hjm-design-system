@@ -13,8 +13,11 @@ export const compoundCopy = {
 
 /** Simulated latency makes the pending state reviewable; no server mutation. */
 export async function runConfirmationPreview(shouldFail: () => boolean) {
+  // Changing the demo setting while waiting applies to the next confirmation,
+  // never to an operation that has already been submitted.
+  const fails = shouldFail();
   await new Promise(resolve => setTimeout(resolve, 600));
-  if (shouldFail()) throw new Error("Demo failure");
+  if (fails) throw new Error("Demo failure");
 }
 
 export const socialCopy = {

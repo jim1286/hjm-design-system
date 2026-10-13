@@ -4,7 +4,7 @@
 
 ## @hjmds/react
 
-고유 공개 컴포넌트 및 provider 이름 163개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 164개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -139,6 +139,7 @@
 | Stack | Stack | canonical | root, ./layout |
 | Statistic | Statistic | canonical | root, ./display |
 | StatisticGroup | Statistic | companion-or-alternative | root, ./display |
+| StatusText | Text | companion-or-alternative | root, ./status-text |
 | StepPlayer | Steps | optional-extension | ./step-player |
 | Steps | Steps | canonical | root, ./navigation, ./steps |
 | Surface | Surface | canonical | root, ./layout |
@@ -174,7 +175,7 @@
 
 ## @hjmds/react-native
 
-고유 공개 컴포넌트 및 provider 이름 149개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 150개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -301,6 +302,7 @@
 | Stack | Stack | canonical | root, ./primitives |
 | Statistic | Statistic | canonical | root, ./data-display |
 | StatisticGroup | Statistic | companion-or-alternative | root, ./data-display |
+| StatusText | Text | companion-or-alternative | root, ./status-text |
 | StepPlayer | Steps | optional-extension | ./step-player |
 | Steps | Steps | canonical | root, ./steps |
 | Surface | Surface | canonical | root, ./primitives |

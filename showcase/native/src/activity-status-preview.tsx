@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { PatternStatus } from "./pattern-status";
 import { ScrollView, Text as NativeText, View } from "react-native";
 import { ActivityChip } from "@hjmds/react-native/activity-chip";
 import { Button, IconButton } from "@hjmds/react-native/actions";
@@ -22,7 +23,7 @@ export function Mascot() {
 }
 
 function ActivityStatusScreen({ initial = "idle" }: ActivityStatusProps) {
-  const toast = useToastRegion();
+  const { publish, dismiss } = useToastRegion();
   const [phase, setPhase] = useState<ActivityStatusPhase>(initial);
   const [step, setStep] = useState(0);
   const [open, setOpen] = useState(initial === "running");
@@ -45,17 +46,19 @@ function ActivityStatusScreen({ initial = "idle" }: ActivityStatusProps) {
     return () => clearTimeout(timer);
   }, [phase, open]);
 
-  // Same id + durationMs null: every state change updates the open panel in place instead of stacking.
+  // Depend on the stable publish method, not the region controller object: publishing
+  // updates that controller and would otherwise trigger an endless publication loop.
+  // Same id + durationMs null keeps each step in the same panel.
   useEffect(() => {
     if (!open || phase === "idle") return;
-    toast.publish(activityStatusDescriptor(phase, step, <Mascot />, {
+    publish(activityStatusDescriptor(phase, step, <Mascot />, {
       onDismiss: () => closeRef.current(),
       onOpenResult: () => setNotice(copy.resultOpened),
     }));
-  }, [open, phase, step, toast]);
+  }, [open, phase, step, publish]);
 
   const toggle = () => {
-    if (open) toast.dismiss(activityStatusToastId, "programmatic");
+    if (open) dismiss(activityStatusToastId, "programmatic");
     else setOpen(true);
   };
   const start = () => { setNotice(null); setStep(0); setPhase("running"); };
@@ -85,7 +88,7 @@ function ActivityStatusScreen({ initial = "idle" }: ActivityStatusProps) {
             <Button tone="secondary" onPress={start} disabled={phase === "running"}>
               {phase === "idle" ? copy.start : copy.restart}
             </Button>
-            {notice ? <Text>{notice}</Text> : null}
+            {notice ? <PatternStatus announceOnMount>{notice}</PatternStatus> : null}
             <Text tone="muted">{copy.fixture}</Text>
           </Stack>
         </Container>

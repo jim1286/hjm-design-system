@@ -1,10 +1,11 @@
-import { act, useState } from "react";
+import { act, useRef, useState } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { Dialog, Sheet } from "../src/overlays.js";
 import { HjmProvider } from "../src/provider.js";
 import "../src/styles.css";
+import { tabThroughControls } from "./tab-through-controls.js";
 
 let host: HTMLDivElement;
 let root: Root;
@@ -25,12 +26,13 @@ function Fixture({ kind, busy = false, changed }: {
   changed: (open: boolean) => void;
 }) {
   const [open, setOpen] = useState(false);
+  const returnFocusRef = useRef<HTMLButtonElement>(null);
   const Modal = kind === "dialog" ? Dialog : Sheet;
   return <HjmProvider reducedMotion>
     <button type="button">First control</button>
-    <button type="button" onClick={() => setOpen(true)}>Open modal</button>
+    <button ref={returnFocusRef} type="button" onClick={() => setOpen(true)}>Open modal</button>
     <Modal open={open} onOpenChange={(next) => { changed(next); setOpen(next); }}
-      title="Public fixture" closeLabel="Close" busy={busy}>
+      title="Public fixture" closeLabel="Close" busy={busy} returnFocusRef={returnFocusRef}>
       <button type="button">Inside modal</button>
     </Modal>
     <button type="button">Next control</button>
@@ -49,7 +51,7 @@ it.each(["dialog", "sheet"] as const)("returns focus after a real outside click 
   await act(async () => page.elementLocator(backdrop).click({ position: { x: 8, y: 8 } }));
   await expect.poll(() => document.querySelector('[role="dialog"]')).toBeNull();
   await expect.poll(() => document.activeElement?.textContent).toBe("Open modal");
-  await act(async () => userEvent.tab());
+  await act(async () => tabThroughControls());
   expect(document.activeElement?.textContent).toBe("Next control");
   expect(changed).toHaveBeenCalledExactlyOnceWith(false);
 });

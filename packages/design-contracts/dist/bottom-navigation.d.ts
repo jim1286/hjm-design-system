@@ -19,6 +19,8 @@ export type BottomNavigationConfiguration = Readonly<{
     direction?: BottomNavigationDirection;
     keyboardBehavior?: BottomNavigationKeyboardBehavior;
     labels?: BottomNavigationLabels;
+    /** Inset selected destination card, with equal widths and persistent labels. Floating only. */
+    selection?: "emphasis" | "tile";
 }>;
 export type ResolvedBottomNavigationConfiguration = Readonly<{
     presentation: BottomNavigationPresentation;
@@ -27,6 +29,7 @@ export type ResolvedBottomNavigationConfiguration = Readonly<{
     direction: BottomNavigationDirection;
     keyboardBehavior: BottomNavigationKeyboardBehavior;
     labels: BottomNavigationLabels;
+    selection: "emphasis" | "tile";
 }>;
 /**
  * Bottom navigation only accepts numeric counters. A silent status dot is too
@@ -110,6 +113,7 @@ export declare const bottomNavigationBehaviorDefaults: {
     readonly direction: "ltr";
     readonly keyboardBehavior: "hide";
     readonly labels: "visible";
+    readonly selection: "emphasis";
     readonly minItems: 2;
     readonly maxItems: 6;
 };

@@ -75,10 +75,11 @@ import { TopBar, TopBarAction } from "@hjmds/react-native/top-bar";
 | `titleLeading` | `ReactNode` | — | 제목 앞 작은 시각 요소 |
 | `leading` / `actions`(별칭 `trailing`) | `ReactNode` | — | 둘 중 한 이름만 쓴다 |
 | `layoutStyle` | `HjmCompositionStyleProp` | — | 루트 배치. Web·Native 모두 |
-| Native `style`·`leadingStyle`·`titleStyle`·`trailingStyle` | `StyleProp` | — | deprecated — `layoutStyle` 또는 `centered`. 개발 모드에서 한 번 경고하고 다음 major에서 제거된다 |
+| Native `style`·`leadingStyle`·`titleStyle`·`trailingStyle` | 지원하지 않음 | — | 제거된 속성 — `layoutStyle` 또는 `centered`. 현재 공개 props에서 제거되었다 |
 | `TopBarAction` `intent` | `button` · `link` | `button` | `button`은 `onPress: (event) => void`, `link`는 `destination` + `onNavigate?: (destination: LinkDestination) => void \| Promise<void>` 또는 `renderLink` |
 | `TopBarAction` `labelVisibility` | `visible` · `accessibility-only` | `visible` | — |
-| `TopBarAction` `layoutStyle` | `HjmCompositionStyleProp` | — | `style`·`labelStyle`은 deprecated |
+| `TopBarAction` `layoutStyle` | `HjmCompositionStyleProp` | — | `style`·`labelStyle`은 제거된 속성 |
+| Native `TopBarAction` `renderAction`·`renderLink` | 렌더 콜백 | — | 전달받은 control props의 `style`·접근성·동작은 정식 host 입력이다. 이를 host에 그대로 연결하며 제거된 소비자 override prop과 구분한다 |
 | `NavigationBar` | `label`·`brand`·`children` 필수, `actions` 선택 | — | Web만 `layoutStyle`도 받는다 |
 
 ## 배치
@@ -108,7 +109,7 @@ NavigationBar의 Native 프레임 모서리는 Provider의 `tokens.radius.xl`을
 - `title` 없이 `titleLeading`·`onTitleClick`/`onTitlePress`·`titleAccessibilityLabel`을 주면 `TypeError`다.
 - 이동은 슬롯 안의 Link(Native는 `intent="link"`)로, 제목 클릭은 실제 버튼으로 표현한다.
 - 화면 이름·행동 라벨은 i18n 키로, 아이콘은 제품 소유다. 높이·간격·제목 색은 recipe가 정한다.
-  배치는 `layoutStyle`로만 하고 Native의 deprecated 슬롯 스타일로 덮지 않는다.
+  배치는 `layoutStyle`로만 하고 Native에서 제거된 슬롯 스타일로 덮지 않는다.
 - 큰 글자에서 Native는 슬롯 구조를 다시 만들어 슬롯 안 로컬 상태·포커스가 초기화될 수 있다.
   유지할 상태는 TopBar 밖에 둔다.
 - `NavigationBar`는 `label`(빈 문자열이면 throw)·`brand`·`children` 필수, `actions` 선택이다.
@@ -120,7 +121,7 @@ NavigationBar의 Native 프레임 모서리는 Provider의 `tokens.radius.xl`을
 | --- | --- | --- |
 | 루트 | `div`(Dialog 안에서도 landmark를 추가하지 않음), ref·HTML 속성 전달 | `accessibilityRole="toolbar"` `View`, ref 없음 |
 | 제목 접근성 | `h1`~`h6` | `accessibilityRole="header"`, `titleAccessibilityHint`(`onTitlePress` 필수) |
-| 슬롯 스타일 | `className`·`style`, 배치는 `layoutStyle` | 배치는 `layoutStyle`(`style`·`leadingStyle`·`titleStyle`·`trailingStyle`은 deprecated) |
+| 슬롯 스타일 | `className`·`style`, 배치는 `layoutStyle` | 배치는 `layoutStyle`(`style`·`leadingStyle`·`titleStyle`·`trailingStyle`은 제거된 속성) |
 | 큰 글자 | CSS가 제목을 다음 행으로 | 글자 배율이 `largeTextThreshold` 이상이면 leading+제목 행 아래에 행동 행 |
 | 행동 컴포넌트 | 일반 `IconButton`·`Link` | `TopBarAction`(아이콘 + 마이크로 라벨, 44pt) |
 | `NavigationBar` 배경 | 지원 시 blur + 92% 불투명 | 불투명 surface(blur 없음) |

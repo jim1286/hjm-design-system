@@ -65,7 +65,7 @@ const keyboardOpen = useKeyboardState((state) => state.isVisible);
 | `enabled` | `true` · `false` | `true` | `false`면 따라 움직이지 않는다 |
 | `clearance` | 0 이상 숫자(layout point) | `0` | 키보드 위 추가 간격. 음수나 유한하지 않은 값은 `TypeError` |
 | `children` | ReactNode(필수) | — | 하단 행동. 안쪽 여백·안전 영역은 호스트가 준다 |
-| `style` | `StyleProp<ViewStyle>` | — | 감싸는 sticky view의 host 스타일. 플랫폼 host라 1.13 deprecated 대상이 아니다([이관 문서](../../migration-native-legacy-removal.md#113-deprecated-시각-style-제거는-다음-major)). 배치 값만 넣는다 |
+| `style` | `StyleProp<ViewStyle>` | — | 감싸는 sticky view의 host 스타일. 플랫폼 host라 1.13 deprecated 대상이 아니다([이관 문서](../../migration-native-legacy-removal.md#2026-10-13-잔여-시각-style-제거)). 배치 값만 넣는다 |
 
 - 이벤트·콜백 prop은 없다. 키보드 열림 여부가 필요하면 peer의 `useKeyboardState((state) => state.isVisible)`로 읽는다.
 - 내부에서 `KeyboardStickyView`에 `offset={{ closed: 0, opened: -clearance }}`를 넘긴다.

@@ -24,11 +24,11 @@
 | --- | --- | --- |
 | `Heading level="level3" semanticLevel={2}` | 질문형 제목 `t("share.scopeQuestion")` | [Heading](../components/heading.md) |
 | `Text` | 묶음 설명: 대표 1개 포함 전체 N개 | [Text](../components/text.md) |
-| `Button selected`(secondary) × 2 | 범위 선택: "대표만 · 1개" / "묶음 전체 · N개". 라벨에 개수를 넣는다 | [Button](../components/button.md) |
+| `SegmentedControl` | 범위 선택: "대표만 · 1개" / "묶음 전체 · N개". 라벨에 개수를 넣는다 | [SegmentedControl](../components/segmented-control.md) |
 | `Text` | 선택 범위 요약(범위 이름 + 개수) | [Text](../components/text.md) |
 | `Button`(primary) | 적용. 라벨에 개수를 넣는다 `t("share.apply", { count })`. 진행 중은 `loading` | [Button](../components/button.md) |
 | `Text` 상태 | 적용 결과·안내·실패 | [Text](../components/text.md) |
-| `Container`·`Stack` | 바깥 틀, 바깥 `gap="md"`, 범위 버튼 묶음 `gap="sm"` | [Container](../components/container.md), [Stack](../components/stack.md) |
+| `Container`·`Stack` | 바깥 틀, 바깥 `gap="md"`, 선택지 내부는 SegmentedControl recipe | [Container](../components/container.md), [Stack](../components/stack.md) |
 
 ## 배치
 
@@ -53,14 +53,14 @@
 | --- | --- | --- | --- |
 | 바깥 틀 | Web: `Container size="reading"` → `Stack gap="md"`. Native: `ScrollView` → `Container` → `Stack gap="md"` | 화면 본문 스크롤. 안전 영역은 화면 host(SafeArea·navigation header)가 준다. 입력이 없어 키보드 처리는 없다. 적용 버튼을 하단에 고정하면 [BottomCTA](../components/bottom-cta.md)가 하단 안전 영역을 맡는다 | Native `ScrollView` 위아래 `spacing.md` 16, 좌우는 `Container` `gutter`(폭 600 미만 `compact` 16, 이상 `regular` 20). 최대 폭 `layout.readingMaxWidth` 720 |
 | 질문·설명 | `Heading` + `Text` | 맨 위 | 사이 `spacing.md` 16 |
-| 범위 선택 | `Button selected` × 2 | 설명 아래, 세로 묶음 | 각 `medium` 44(`control.buttonHeight`), 서로 `spacing.sm` 12 |
+| 범위 선택 | `SegmentedControl` 단일 선택 | 설명 아래, 세로 묶음 | 각 `medium` 44(`control.buttonHeight`), 서로 `spacing.sm` 12 |
 | 범위 요약 | `Text` | 범위 선택 아래 | `spacing.md` 16 |
 | 주 행동 | `Button` 적용 | 요약 아래 | `medium` 44, `spacing.md` 16 |
 | 결과 | `Text` 상태 | 맨 아래 | `spacing.md` 16 |
 
-- 범위 버튼은 서로 가깝게(`spacing.sm` 12), 다른 덩어리와는 `spacing.md` 16으로 띄워 한 묶음으로 읽히게 한다.
+- 범위는 이름 있는 하나의 선택 그룹이다. 다른 덩어리와 `spacing.md` 16으로 띄우고 내부 간격은 SegmentedControl recipe를 따른다.
 - 순서는 좁은 범위(대표) → 넓은 범위(전체)다. 기본 선택은 스토리에서 대표 항목이지만 제품이 정한다.
-- 범위 버튼은 `selected` 처리로 칠해져 primary로 세지 않는다. 화면의 primary는 적용 하나다([Button](../components/button.md) "한 화면 primary 하나"의 예외).
+- 범위 선택은 SegmentedControl의 선택 의미와 외형을 사용한다. 화면의 primary 행동은 적용 하나다.
 - 적용 버튼이 화면 하단 고정이면 [BottomCTA](../components/bottom-cta.md)에 두고 라벨의 개수는 유지한다.
 
 근거: `src/component-recipes.ts`(`stackRecipe.gaps` = `spacing`, `buttonRecipe.states.selected`), `src/foundations.ts`(`control`·`layout`)
@@ -68,15 +68,15 @@
 ## 흐름과 상태
 
 1. 화면은 묶음 설명과 기본 범위(대표)를 보여 준다.
-2. 사용자가 범위 버튼을 누르면 `selected`가 옮겨 가고, 요약과 적용 버튼 라벨의 개수가 바뀐다. 이전 결과 문구는 지운다.
-3. 적용을 누르면 그 범위의 항목 ID로 제품 작업(공유 대상 확정 등)을 실행한다. 끝날 때까지 적용 버튼은 `loading`이다.
+2. 사용자가 범위를 고르면 `value`가 바뀌고, 요약과 적용 버튼 라벨의 개수가 바뀐다. 이전 결과 문구는 지운다.
+3. 적용을 누르면 그 범위의 항목 ID로 제품 작업(공유 대상 확정 등)을 실행한다. 끝날 때까지 적용 버튼은 `loading`이고 선택한 개수의 처리 중 상태를 표시한다. 비활성 렌더 전에 도착한 선택 callback도 현재 세션이 pending이면 거부한다.
 4. 결과 문구로 몇 개에 적용했는지 알린다. 실패하면 범위는 그대로 두고 실패 문구를 알린다. 적용을 다시 누르면 같은 범위로 재요청한다.
 
 | 상태 | 모습 | 포커스·알림 |
 | --- | --- | --- |
-| 기본 | 기본 범위 버튼 `selected`, 요약에 개수, 안내 문구 `share.chooseScope` | `selected`는 Web `aria-pressed`·Native 접근성 state로 알림 |
+| 기본 | 기본 범위를 `value`로 지정, 요약에 개수, 안내 문구 `share.chooseScope` | 그룹 이름과 선택 항목을 Web radio/Native radio 접근성 의미로 알림 |
 | 범위 변경 | 요약·적용 라벨의 개수 갱신, 결과 문구는 안내로 돌아감 | 같음 |
-| 진행 중 | 적용 버튼 `loading`(누름 막힘·스피너), 범위 버튼 `disabled` | 포커스는 적용 버튼 유지 |
+| 진행 중 | 적용 버튼 `loading`(누름 막힘·스피너), 선택 그룹 `disabled`, 제출 개수의 처리 중 문구 | 포커스는 적용 버튼 유지 |
 | 성공 | 결과 문구 `t("share.applied", { count })` | 결과 알림, 포커스는 적용 버튼 유지 |
 | 실패 | 네트워크·서버 실패: 범위 유지, 결과 문구 `share.applyFailed`, 적용 버튼 다시 활성. 재요청도 실패하면 같은 문구를 다시 알린다 | 결과 알림(Web `role="status"`, Native live region + iOS 알림) |
 
@@ -87,46 +87,49 @@
 
 ```tsx
 // Web
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
+import { createActionSession } from "@hjmds/design-contracts/action-session";
 import { Button } from "@hjmds/react/actions";
+import { SegmentedControl } from "@hjmds/react/selection";
 import { Heading } from "@hjmds/react/heading";
 import { Container, Stack, Text } from "@hjmds/react/layout";
 
 const scopeKey = { cover: "share.scope.cover", group: "share.scope.group" } as const;
-const resultKey = { idle: "share.chooseScope", applied: "share.applied", failed: "share.applyFailed" } as const;
+const resultKey = { idle: "share.chooseScope", applying: "share.applying", applied: "share.applied", failed: "share.applyFailed" } as const;
 
 const [scope, setScope] = useState<"cover" | "group">("cover");
-const [result, setResult] = useState<"idle" | "applying" | "applied" | "failed">("idle");
+const [session] = useState(() => createActionSession<"cover" | "group" | null>(null));
+const snapshot = useSyncExternalStore(session.subscribe, session.getSnapshot, session.getSnapshot);
+const result = snapshot.status === "pending" ? "applying" : snapshot.status === "error" ? "failed" : snapshot.status === "success" ? "applied" : "idle";
 const count = scope === "cover" ? 1 : group.items.length;
-const choose = (next: "cover" | "group") => { setScope(next); setResult("idle"); };
+// The owner also guards queued callbacks that arrive before disabled renders.
+const choose = (next: "cover" | "group") => { if (session.getSnapshot().status === "pending") return; setScope(next); session.reset(null); };
 const apply = async () => {
-  setResult("applying");
-  try { await onApply(scope); setResult("applied"); } catch { setResult("failed"); }
+  const submitted = scope;
+  await session.run(async () => { await onApply(submitted); return submitted; });
 };
 
 <Container size="reading">
   <Stack gap="md">
     <Heading level="level3" semanticLevel={2}>{t("share.scopeQuestion")}</Heading>
     <Text as="p">{t("share.groupSummary", { total: group.items.length })}</Text>
-    <Stack gap="sm">
-      <Button tone="secondary" selected={scope === "cover"} disabled={result === "applying"} onClick={() => choose("cover")}>
-        {t("share.coverOnly", { count: 1 })}
-      </Button>
-      <Button tone="secondary" selected={scope === "group"} disabled={result === "applying"} onClick={() => choose("group")}>
-        {t("share.wholeGroup", { count: group.items.length })}
-      </Button>
-    </Stack>
+    <SegmentedControl label={t("share.scopeQuestion")} value={scope} onValueChange={value => { if (value === "cover" || value === "group") choose(value); }}
+      presentation="pills" disabled={result === "applying"}
+      items={[{ value: "cover", label: t("share.coverOnly", { count: 1 }) },
+        { value: "group", label: t("share.wholeGroup", { count: group.items.length }) }]} />
     <Text as="p">{t("share.scopeSummary", { scope: t(scopeKey[scope]), count })}</Text>
     <Button loading={result === "applying"} onClick={() => void apply()}>{t("share.apply", { count })}</Button>
-    <Text as="p" role="status">{t(resultKey[result === "applying" ? "idle" : result], { count })}</Text>
+    <Text as="p" role="status">{t(resultKey[result], { count })}</Text>
   </Stack>
 </Container>
 ```
 
 ```tsx
 // Native
+import { StatusText } from "@hjmds/react-native/status-text";
 import { ScrollView, useWindowDimensions } from "react-native";
 import { Button } from "@hjmds/react-native/actions";
+import { SegmentedControl } from "@hjmds/react-native/inputs";
 import { Heading } from "@hjmds/react-native/heading";
 import { Container, Stack, Text } from "@hjmds/react-native/primitives";
 import { useHjmNativeTheme } from "@hjmds/react-native/provider";
@@ -141,23 +144,19 @@ const gutter = resolveWindowClass(useWindowDimensions().width) === "compact" ? "
     <Stack gap="md">
       <Heading level="level3" semanticLevel={2}>{t("share.scopeQuestion")}</Heading>
       <Text>{t("share.groupSummary", { total: group.items.length })}</Text>
-      <Stack gap="sm">
-        <Button tone="secondary" selected={scope === "cover"} disabled={result === "applying"} onPress={() => choose("cover")}>
-          {t("share.coverOnly", { count: 1 })}
-        </Button>
-        <Button tone="secondary" selected={scope === "group"} disabled={result === "applying"} onPress={() => choose("group")}>
-          {t("share.wholeGroup", { count: group.items.length })}
-        </Button>
-      </Stack>
+      <SegmentedControl label={t("share.scopeQuestion")} value={scope} onValueChange={value => { if (value === "cover" || value === "group") choose(value); }}
+      presentation="pills" disabled={result === "applying"}
+      items={[{ value: "cover", label: t("share.coverOnly", { count: 1 }) },
+        { value: "group", label: t("share.wholeGroup", { count: group.items.length }) }]} />
       <Text>{t("share.scopeSummary", { scope: t(scopeKey[scope]), count })}</Text>
       <Button loading={result === "applying"} onPress={() => void apply()}>{t("share.apply", { count })}</Button>
-      <StatusText>{t(resultKey[result === "applying" ? "idle" : result], { count })}</StatusText>
+      <StatusText>{t(resultKey[result], { count })}</StatusText>
     </Stack>
   </Container>
 </ScrollView>
 ```
 
-`group`·`onApply`는 제품 소유다. `StatusText`는 [저장과 재시도의 공통 절](action-recovery-save.md#공통-세션과-상태-알림)의 helper(Android live region + iOS 알림)다.
+`group`·`onApply`는 제품 소유다. `StatusText`는 [저장과 재시도의 공통 절](action-recovery-save.md#공통-세션과-상태-알림)에서 사용하는 공개 Text companion이다.
 
 ## 플랫폼 차이
 
@@ -165,10 +164,24 @@ const gutter = resolveWindowClass(useWindowDimensions().width) === "compact" ? "
 | --- | --- | --- |
 | 바깥 틀 | 문서 스크롤 + `Container` | `ScrollView`(위아래 `spacing.md`) + `Container` |
 | 이벤트 | `onClick` | `onPress` |
-| `selected` 알림 | `aria-pressed` | 접근성 state |
+| 단일 선택 의미 | 이름 있는 radiogroup, radio checked | 이름 있는 그룹과 radio checked |
 | 상태 알림 | `role="status"` | live region(Android) + iOS 알림 호출(`StatusText`) |
 
 ## 함정
 
 - 구획 제목은 Heading으로 표시한다. 이전 Text heading 예제는 2026-10-06 제목 의미 구조를 맞추면서 수정했다.
 - 스토리의 "다음 적용 실패시키기"(ghost)와 350ms 지연은 실패·진행 중을 확인하는 데모 전용이다. 제품에 넣지 않는다.
+
+## 단일 선택 계약
+
+2026-10-13 실행 예제는 대표/전체를 두 독립 토글 대신 `SegmentedControl presentation="pills"`로 묶었다. 둘 중 하나인 선택은 그룹 이름과 checked 의미를 전달한다. 위 골격과 같은 공개 선택 계약을 유지한다. 저장·실패·초안은 기존 세션을 유지한다.
+
+```tsx
+// Web: @hjmds/react/selection, Native: @hjmds/react-native/inputs
+<SegmentedControl label={t("share.scopeQuestion")} value={scope} onValueChange={value => { if (value === "cover" || value === "group") choose(value); }}
+  presentation="pills" disabled={result === "applying"}
+  items={[{ value: "cover", label: t("share.coverOnly", { count: 1 }) },
+    { value: "group", label: t("share.wholeGroup", { count: group.items.length }) }]} />
+```
+
+2026-10-13 실제 Story 검사에서 Native의 늦은 선택 callback이 pending 요청을 reset하는 경우를 재현했다. Web·Native 예제 모두 세션 snapshot으로 선택 변경과 실패 예약을 즉시 거부한다. 새 범위 선택은 이전 성공 문구를 지우고, 실패 후 재적용은 기존 선택 범위로 요청한다. 이 예제에는 별도 텍스트 초안이 없으며 선택값 자체가 적용 전 초안이다.

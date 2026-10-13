@@ -88,8 +88,7 @@ import { Radio } from "@hjmds/react-native/inputs";
 - 묶음의 접근성 이름(fieldset/radiogroup)은 Radio가 만들지 않는다. 단독 Radio 여러 개로 묶음을
   흉내 내지 말고 RadioGroup을 쓴다.
 - 선택 표시는 indicator(dot)가 맡는다. 색만으로 선택을 알리도록 바꾸지 않는다.
-- 배치는 `layoutStyle`로 한다. Native의 `style`·`controlStyle`·`labelStyle` 등 slot style은 deprecated(개발 모드 경고,
-  다음 major 제거)다. 색·글자·radius·높이를 덮지 않는다([소비 정책 §3.1](../../consumer-policy.md)).
+- 배치는 `layoutStyle`로 한다. Native의 `style`·`controlStyle`·`labelStyle` 등 slot style은 제거된 속성이다. 색·글자·radius·높이를 덮지 않는다([소비 정책 §3.1](../../consumer-policy.md)).
 
 ## 플랫폼 차이
 

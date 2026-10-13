@@ -36,6 +36,15 @@ describe("order progress", () => {
     expect(orderStepsDescriptor(done).currentStepStatus).toBe("complete");
     expect(orderReducer(done, { type: "request" })).toBe(done);
   });
+
+  it("keeps the requested result when a queued failure toggle arrives", () => {
+    const waiting = runOrder([{ type: "request" }]);
+    expect(orderReducer(waiting, { type: "toggleFailNext" })).toBe(waiting);
+    expect(orderReducer(waiting, { type: "respond" }).cursor).toBe(2);
+    const failing = runOrder([{ type: "toggleFailNext" }, { type: "request" }]);
+    expect(orderReducer(failing, { type: "toggleFailNext" })).toBe(failing);
+    expect(orderReducer(failing, { type: "respond" }).phase).toBe("failed");
+  });
 });
 
 describe("otp verification", () => {

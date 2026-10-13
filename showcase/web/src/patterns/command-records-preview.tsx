@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { HjmProvider } from "@hjmds/react/provider";
 import { hjmDesignPresets } from "@hjmds/design-contracts/design-profile";
 import { profileOptions, profileCopy } from "../../../shared/design-profile";
@@ -22,14 +22,8 @@ export function CommandRecordsPreview(props: CommandRecordsProps) {
   const [copyError, setCopyError] = useState(!!props.copyFailed);
   const profile = profileOptions[themeIndex]!, current = commandRecords.find(item => item.id === selected)!;
   const busy = phase === "pending";
-  const refreshRef = useRef<HTMLButtonElement>(null), previousBusy = useRef(busy);
+  const refreshRef = useRef<HTMLButtonElement>(null);
   const copyRef = useRef<HTMLButtonElement>(null);
-  useEffect(() => {
-    // The fixture response action disables itself; restore the refresh action
-    // after its response rather than leaving focus on the document body.
-    if (previousBusy.current && !busy) refreshRef.current?.focus();
-    previousBusy.current = busy;
-  }, [busy]);
   return <HjmProvider designProfile={hjmDesignPresets[profile.id]}><Container gutter="compact"><Section title={copy.title} description={copy.description}><Stack gap="md">
     <Text>{profileCopy.choose}: {profile.label}</Text><Button tone="secondary" onClick={() => setThemeIndex(value => (value + 1) % profileOptions.length)}>{profileCopy.nextTheme}</Button>
     <SegmentedControl label={copy.display} presentation="pills" value={display} onValueChange={setDisplay} items={[{ value: "wrap", label: copy.wrap }, { value: "scroll", label: copy.scroll }]} />
@@ -41,10 +35,15 @@ export function CommandRecordsPreview(props: CommandRecordsProps) {
     {copyError ? <Stack gap="sm"><Notice tone="danger" title={copy.copyError} /><Button tone="ghost" onClick={() => { setCopyError(false); copyRef.current?.focus(); }}>{copy.dismiss}</Button></Stack> : null}
     {busy ? <Text role="status">{copy.pending}</Text> : null}
     {phase === "failed" ? <Notice tone="danger" title={copy.failed} /> : null}
-    <Button ref={refreshRef} loading={busy} disabled={busy} onClick={() => setPhase("pending")}>{phase === "failed" ? copy.retry : copy.refresh}</Button>
+    <Button ref={refreshRef} loading={busy} onClick={() => setPhase("pending")}>{phase === "failed" ? copy.retry : copy.refresh}</Button>
     <Text tone="muted">{copy.fixture}</Text>
     <Collapsible trigger={copy.tools} defaultOpen><Stack gap="sm">
-      <Button tone="secondary" disabled={!busy} onClick={() => { setPhase(failNext ? "failed" : "idle"); setFailNext(false); }}>{copy.respond}</Button>
+      <Button tone="secondary" disabled={!busy} onClick={event => {
+        // Move only focus owned by the response button, before disabling it.
+        // loading already guards refresh activation while keeping that target focusable.
+        if (document.activeElement === event.currentTarget) refreshRef.current?.focus();
+        setPhase(failNext ? "failed" : "idle"); setFailNext(false);
+      }}>{copy.respond}</Button>
       <Button tone="ghost" disabled={busy} onClick={() => setFailNext(true)}>{failNext ? copy.armed : copy.fail}</Button>
     </Stack></Collapsible>
   </Stack></Section></Container></HjmProvider>;

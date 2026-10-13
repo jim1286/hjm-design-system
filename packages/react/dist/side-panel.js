@@ -13,6 +13,7 @@ export const SidePanel = forwardRef(function SidePanel({ trigger, title, descrip
     });
     const triggerRef = useRef(null);
     const contentRef = useRef(null);
+    const nonModalFocusWithin = useRef(false);
     const id = useId().replaceAll(":", "");
     const contentId = `${id}-side-panel`;
     const titleId = `${id}-title`;
@@ -44,6 +45,11 @@ export const SidePanel = forwardRef(function SidePanel({ trigger, title, descrip
           gesture is reported as `programmatic`.
         */
         wasOpenRef.current = false;
+        // A non-modal panel does not trap focus, but closing its focused subtree still needs a keyboard return point.
+        if (!modal && nonModalFocusWithin.current && document.activeElement === document.body) {
+            (returnFocusRef?.current ?? triggerRef.current)?.focus();
+        }
+        nonModalFocusWithin.current = false;
         const reason = dismissReasonRef.current ?? "programmatic";
         dismissReasonRef.current = undefined;
         dismissCompleteRef.current?.({ reason });
@@ -67,7 +73,7 @@ export const SidePanel = forwardRef(function SidePanel({ trigger, title, descrip
         // Escape dismisses non-modal panels too, but only while focus is inside them
         // — the live page behind keeps its own Escape handling.
         const onKeyDown = (event) => {
-            if (event.key !== "Escape" || event.defaultPrevented)
+            if (event.key !== "Escape" || event.defaultPrevented || event.isComposing || event.keyCode === 229)
                 return;
             // Read the ref per event: the portal mounts one commit after this effect,
             // so a value captured here would still be null for the panel's first keys.
@@ -86,7 +92,10 @@ export const SidePanel = forwardRef(function SidePanel({ trigger, title, descrip
     const panel = (_jsxs("div", { ref: composeRefs(contentRef, forwardedRef), id: contentId, 
         // A modal panel is a dialog; a non-modal one stays a complementary landmark
         // so assistive technology can move past it like any other page region.
-        role: modal ? "dialog" : "complementary", "aria-modal": modal || undefined, "aria-labelledby": titleId, "aria-describedby": description ? descriptionId : undefined, "aria-busy": busy || undefined, tabIndex: -1, className: classNames("hjm-side-panel", className), "data-hjm-modal-content": modal ? "" : undefined, "data-edge": edge, "data-size": size, "data-modal": modal, "data-state": busy ? "busy" : "idle", style: modal ? undefined : style, children: [_jsxs("header", { className: "hjm-side-panel__header", children: [_jsxs("div", { children: [_jsx("h2", { id: titleId, className: "hjm-side-panel__title", children: title }), description ? _jsx("p", { id: descriptionId, className: "hjm-side-panel__description", children: description }) : null] }), policy.dismissible ? (_jsx("button", { type: "button", className: "hjm-dialog__close", "aria-label": closeLabel, disabled: busy && !policy.dismissWhileBusy, onClick: () => requestClose("close-action"), children: "\u00D7" })) : null] }), children ? _jsx("div", { className: "hjm-side-panel__body", children: children }) : null, footer ? _jsx("footer", { className: "hjm-side-panel__footer", children: footer }) : null] }));
+        role: modal ? "dialog" : "complementary", "aria-modal": modal || undefined, "aria-labelledby": titleId, "aria-describedby": description ? descriptionId : undefined, "aria-busy": busy || undefined, tabIndex: -1, onFocusCapture: () => { nonModalFocusWithin.current = true; }, onBlurCapture: (event) => {
+            if (event.relatedTarget instanceof Node && !event.currentTarget.contains(event.relatedTarget))
+                nonModalFocusWithin.current = false;
+        }, className: classNames("hjm-side-panel", className), "data-hjm-modal-content": modal ? "" : undefined, "data-edge": edge, "data-size": size, "data-modal": modal, "data-state": busy ? "busy" : "idle", style: modal ? undefined : style, children: [_jsxs("header", { className: "hjm-side-panel__header", children: [_jsxs("div", { children: [_jsx("h2", { id: titleId, className: "hjm-side-panel__title", children: title }), description ? _jsx("p", { id: descriptionId, className: "hjm-side-panel__description", children: description }) : null] }), policy.dismissible ? (_jsx("button", { type: "button", className: "hjm-dialog__close", "aria-label": closeLabel, disabled: busy && !policy.dismissWhileBusy, onClick: () => requestClose("close-action"), children: "\u00D7" })) : null] }), children ? _jsx("div", { className: "hjm-side-panel__body", children: children }) : null, footer ? _jsx("footer", { className: "hjm-side-panel__footer", children: footer }) : null] }));
     return (_jsxs(_Fragment, { children: [trigger === undefined ? null : renderTrigger(trigger, triggerRef, open, contentId, "dialog", () => changeOpen(true, { reason: "trigger" })), open ? (_jsx(HjmPortal, { ...(portalContainer === undefined ? {} : { container: portalContainer }), children: modal ? (_jsx("div", { className: "hjm-overlay hjm-side-panel-positioner", "data-kind": "side-panel", "data-modal-priority": modalPriority, "data-edge": edge, "data-state": "open", style: style, onMouseDown: (event) => {
                         if (event.target === event.currentTarget)
                             requestClose("outside");

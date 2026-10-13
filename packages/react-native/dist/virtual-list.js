@@ -7,6 +7,7 @@ export function VirtualList({ items, keyExtractor, renderItem, rowHeight, height
     resolveVirtualWindow(items.length, rowHeight, height, 0, overscan);
     // ScrollView defaults to flexGrow: 1; disable it so the declared viewport
     // remains fixed inside a tall host instead of expanding beyond `height`.
-    return _jsx(FlatList, { data: items, accessibilityLabel: label, keyExtractor: keyExtractor, style: { height, flexGrow: 0, flexShrink: 0 }, getItemLayout: (_data, index) => ({ length: rowHeight, offset: index * rowHeight, index }), initialNumToRender: Math.ceil(height / rowHeight) + overscan, ListEmptyComponent: _jsx(View, { children: empty }), renderItem: ({ item, index }) => _jsx(View, { style: { height: rowHeight }, children: renderItem(item, index) }) });
+    // Empty guidance occupies the declared viewport, not a zero-height first row.
+    return _jsx(FlatList, { data: items, accessibilityLabel: label, keyExtractor: keyExtractor, style: { height, flexGrow: 0, flexShrink: 0 }, getItemLayout: (_data, index) => ({ length: rowHeight, offset: index * rowHeight, index }), contentContainerStyle: items.length === 0 ? { flexGrow: 1, justifyContent: "center", alignItems: "center" } : undefined, initialNumToRender: Math.ceil(height / rowHeight) + overscan, ListEmptyComponent: _jsx(View, { children: empty }), renderItem: ({ item, index }) => _jsx(View, { style: { height: rowHeight }, children: renderItem(item, index) }) });
 }
 //# sourceMappingURL=virtual-list.js.map

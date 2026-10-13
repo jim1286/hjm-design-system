@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.17.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-13
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screens.tsx`·`src/screen-flows.tsx`; 기존 개별 지침을 새 규격으로 통합. 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
 - 스토리북: `배포/화면/소통/채팅`
 
@@ -69,7 +69,7 @@ import { ChatScreen, MessageComposer } from "@hjmds/react-native/screens";
 | `title`(필수) | 지역화한 대화 제목 | `header`를 주면 Web은 `aria-label`로만 쓴다 |
 | `header` / `leading` / `actions` / `description` | 기존 navigation 헤더, 또는 뒤로 가기·도구 슬롯 | `header`를 주면 기본 헤더를 그리지 않는다 |
 | `children` | 타임라인(가상화 목록 + `ChatMessage`) | 자동 스크롤·새 메시지 배지·이전 메시지 위치는 제품 |
-| `composer`(필수) | `MessageComposer` 등 작성창 | `state.kind === "ready"`일 때만 보인다 |
+| `composer`(필수) | `MessageComposer` 등 작성창 | `ready`와 `empty`에서 보인다(빈 대화의 첫 메시지 입력) |
 | `state` / `stateAction` | `loading`·`empty`·`error`·`restricted` + 지역화 `title` | ready 외에는 본문을 교체한다 |
 | `notice` | 새로고침 실패 같은 비차단 안내 | 초안 유지가 필요하면 `state` 대신 이것 |
 
@@ -77,10 +77,10 @@ import { ChatScreen, MessageComposer } from "@hjmds/react-native/screens";
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `composer` | `ReactNode` | 필수 | footer에 고정되는 작성창. `state.kind === "ready"`일 때만 보인다 |
+| `composer` | `ReactNode` | 필수 | footer에 고정되는 작성창. `ready`와 `empty`에서 보인다(빈 대화의 첫 메시지 입력) |
 | `scroll` | `"content"` · `"screen"` | `"content"` | 가상화 목록이 스크롤을 소유하므로 작은 예제 외에는 바꾸지 않는다 |
 | `contentInset` | `"default"` · `"none"` | `"default"` | 이미 gutter를 주는 route 안에서는 `"none"`으로 이중 여백을 막는다 |
-| `state` | `ScreenContentState`(`{ kind: "ready" }` 또는 `{ kind, title, description? }`) | `{ kind: "ready" }` | ready 외에는 본문을 교체하고 composer를 숨긴다 |
+| `state` | `ScreenContentState`(`{ kind: "ready" }` 또는 `{ kind, title, description? }`) | `{ kind: "ready" }` | ready 외에는 본문을 교체한다. composer는 loading·error·restricted에서 숨긴다 |
 | `as` (Web) | `"main"` · `"section"` | `"main"` | 제품 shell이 이미 `main`이면 `"section"` |
 | 나머지 | `ScreenLayout`과 같음(`footer` 제외) | — | [ScreenLayout](screen-layout.md) |
 

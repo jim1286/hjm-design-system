@@ -1,3 +1,4 @@
+import { ListDetailRecoveryPreview } from "./list-detail-recovery-preview";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { CollectionFlowPreview } from "./screen-flow-previews";
 const meta = { id: "screen-flow-collection", title: "배포/화면/콘텐츠/목록과 상세", component: CollectionFlowPreview } satisfies Meta<typeof CollectionFlowPreview>;
@@ -6,6 +7,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };
 export const Loading: Story = { name: "불러오는 중", args: {stateKind:"loading"} };
 export const Error: Story = { name: "오류", args: {stateKind:"error"} };
+export const DetailRecovery: Story = { name: "상세 조회 실패와 복구", render: () => <ListDetailRecoveryPreview /> };
 export const Dark: Story = { name: "어두운 테마", globals: {theme:"dark"} };
 export const LargeText: Story = { name: "큰 글자", globals: {textScale:"2"} };
 export const Recovery: Story = { name: "실패와 복구", args: {tools:true} };

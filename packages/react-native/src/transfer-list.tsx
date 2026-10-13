@@ -6,19 +6,19 @@ import {
   resolveTransferListSelectAllState,
   toggleTransferListSelectAll,
   toggleTransferListSelection,
+  validateTransferListDescriptor,
   type TransferListMoveDirection,
   type TransferListPanel,
   type TransferListSelection,
 } from "@hjmds/design-contracts/components/transfer-list";
-import type { SelectItemDescriptor } from "@hjmds/design-contracts/behaviors";
-import { spacing } from "@hjmds/design-contracts/foundations";
-import { useMemo, useState } from "react";
-import { Pressable, ScrollView, View, type StyleProp, type ViewStyle } from "react-native";
+import { reconcileCheckboxSelection, type SelectItemDescriptor } from "@hjmds/design-contracts/behaviors";
+import { control, spacing } from "@hjmds/design-contracts/foundations";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Pressable, ScrollView, View } from "react-native";
 import { Button } from "./actions.js";
 import { Text } from "./primitives.js";
 import { mixedCheckboxState, useControllableState } from "./internal/state.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 
 export type TransferListLabels = Readonly<{
@@ -40,11 +40,6 @@ export type TransferListProps<Id extends string = string> = Readonly<{
   onMove?: (movedIds: readonly Id[], direction: TransferListMoveDirection) => void;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
-   * the transfer list renderer owns appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
 }>;
 
 const emptySelection = <Id extends string>(): TransferListSelection<Id> => ({
@@ -62,17 +57,27 @@ export function TransferList<Id extends string = string>({
   onTargetKeysChange,
   onMove,
   layoutStyle,
-  style,
 }: TransferListProps<Id>) {
-  warnDeprecatedStyleProps("TransferList", { style }, "layoutStyle for placement; the transfer list renderer owns appearance");
+
   const { colors, designProfile } = useHjmNativeTheme();
   // Panels share the Web md role; preserve the pre-profile frame when no profile is selected.
   const corner = designProfile?.tokens.radius[transferListRecipe.panel.radius] ?? 12;
-  const [targetKeys, setTargetKeys] = useControllableState<ReadonlySet<Id>>({
+  const [storedTargetKeys, setTargetKeys] = useControllableState<ReadonlySet<Id>>({
     ...(controlledTargetKeys === undefined ? {} : { value: controlledTargetKeys }),
     defaultValue: defaultTargetKeys ?? new Set<Id>(),
     ...(onTargetKeysChange === undefined ? {} : { onChange: onTargetKeysChange }),
   });
+  const validatedInitialTargets = useRef(false);
+  if (!validatedInitialTargets.current) {
+    validateTransferListDescriptor({ items, targetKeys: storedTargetKeys });
+    validatedInitialTargets.current = true;
+  }
+  const targetKeys = useMemo(() => controlledTargetKeys === undefined
+    ? reconcileCheckboxSelection(items, storedTargetKeys) : storedTargetKeys,
+    [controlledTargetKeys, items, storedTargetKeys]);
+  useEffect(() => {
+    if (controlledTargetKeys === undefined && targetKeys !== storedTargetKeys) setTargetKeys(targetKeys);
+  }, [controlledTargetKeys, setTargetKeys, storedTargetKeys, targetKeys]);
   const [rawSelection, setSelection] = useState<TransferListSelection<Id>>(emptySelection<Id>);
   const descriptor = useMemo(() => ({ items, targetKeys }), [items, targetKeys]);
   // A row that left the list entirely must not keep a pending check mark.
@@ -80,12 +85,18 @@ export function TransferList<Id extends string = string>({
     () => reconcileTransferListSelection(descriptor, rawSelection),
     [descriptor, rawSelection],
   );
+  useEffect(() => {
+    if (selection !== rawSelection) setSelection(selection);
+  }, [rawSelection, selection]);
   const panels = resolveTransferListPanels(descriptor);
+  const canMove = (panel: TransferListPanel) => panels[panel].some(item => !item.disabled && selection[panel].has(item.id));
 
   const move = (direction: TransferListMoveDirection) => {
     const result = moveTransferListSelection(descriptor, selection, direction);
+    if (result.movedIds.length === 0) return;
     setTargetKeys(result.targetKeys);
-    setSelection(result.selection);
+    // Controlled owners may refuse or defer the move; keep checks until the rows actually leave.
+    if (controlledTargetKeys === undefined) setSelection(result.selection);
     if (result.movedIds.length > 0) onMove?.(result.movedIds, direction);
   };
 
@@ -99,11 +110,11 @@ export function TransferList<Id extends string = string>({
           // `mixed` is the contract's answer, not a third visual state invented
           // here: some rows checked is neither on nor off.
           // mixedCheckboxState keeps Android from holding a stale ", mixed" suffix.
-          accessibilityState={mixedCheckboxState(selectAll)}
+          accessibilityState={mixedCheckboxState(selectAll, { disabled: !rows.some(item => !item.disabled) })}
           accessibilityLabel={`${panel === "source" ? labels.source : labels.target}, ${labels.selectAll}`}
-          disabled={rows.length === 0}
+          disabled={!rows.some(item => !item.disabled)}
           onPress={() => setSelection(toggleTransferListSelectAll(descriptor, selection, panel))}
-          style={{ minHeight: 44, justifyContent: "center" }}
+          style={{ minHeight: control.minTouchTarget, justifyContent: "center" }}
         >
           <Text variant="label">{labels.selectAll}</Text>
         </Pressable>
@@ -111,9 +122,10 @@ export function TransferList<Id extends string = string>({
           accessibilityRole="list"
           accessibilityLabel={panel === "source" ? labels.source : labels.target}
           style={{ borderWidth: 1, borderColor: colors.border, borderRadius: corner }}
+          contentContainerStyle={rows.length === 0 ? { flexGrow: 1, justifyContent: "center", alignItems: "center" } : undefined}
         >
           {rows.length === 0 ? (
-            <Text tone="muted" variant="caption" style={{ padding: spacing.sm }}>{labels.empty}</Text>
+            <Text tone="muted" variant="caption" align="center" style={{ padding: spacing.sm }}>{labels.empty}</Text>
           ) : (
             rows.map((item) => {
               const checked = selection[panel].has(item.id as Id);
@@ -125,7 +137,7 @@ export function TransferList<Id extends string = string>({
                   accessibilityState={{ checked, disabled: item.disabled === true }}
                   disabled={item.disabled === true}
                   onPress={() => setSelection(toggleTransferListSelection(descriptor, selection, panel, item.id as Id))}
-                  style={{ minHeight: 44, justifyContent: "center", paddingHorizontal: spacing.sm }}
+                  style={{ minHeight: control.minTouchTarget, justifyContent: "center", paddingHorizontal: spacing.sm }}
                 >
                   <Text
               fontRole="ui">{checked ? "✓ " : ""}{item.label}</Text>
@@ -139,7 +151,7 @@ export function TransferList<Id extends string = string>({
   };
 
   return (
-    <View style={[{ gap: spacing.sm }, style, layoutStyle]}>
+    <View style={[{ gap: spacing.sm }, layoutStyle]}>
       <Text variant="label">{labels.source}</Text>
       {renderPanel("source")}
       {/*
@@ -148,10 +160,10 @@ export function TransferList<Id extends string = string>({
         reading order "list, what to do with it, other list".
       */}
       <View style={{ flexDirection: "row", gap: spacing.sm, justifyContent: "center" }}>
-        <Button tone="secondary" disabled={selection.source.size === 0} onPress={() => move("toTarget")}>
+        <Button tone="secondary" disabled={!canMove("source")} onPress={() => move("toTarget")}>
           {labels.toTarget}
         </Button>
-        <Button tone="secondary" disabled={selection.target.size === 0} onPress={() => move("toSource")}>
+        <Button tone="secondary" disabled={!canMove("target")} onPress={() => move("toSource")}>
           {labels.toSource}
         </Button>
       </View>

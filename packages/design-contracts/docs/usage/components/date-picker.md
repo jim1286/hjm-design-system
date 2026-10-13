@@ -91,7 +91,7 @@ import { DatePicker } from "@hjmds/react-native/date-picker";
 | `renderCellContent` | `(cell: ResolvedCalendarDateCell) => ReactNode` | — | 날짜 아래 보조 표시 |
 | Web `onNavigateBeyondGrid` | `(detail: { date, intent, overflow: "before" \| "after" }, focusDate: (date: string) => void) => void` | — | 키보드가 격자 밖으로 나갈 때 |
 | Native `safeAreaInsets` | Sheet `safeAreaInsets` | Provider 값 | — |
-| `layoutStyle` | 배치 전용 style | — | 루트 배치. Native `style`은 deprecated |
+| `layoutStyle` | 배치 전용 style | — | 루트 배치. Native `style`은 제거된 속성 |
 
 ## 배치
 
@@ -99,7 +99,7 @@ Native trigger 모서리는 `datePickerRecipe.frame.radius` 역할을 Provider�
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 트리거 높이: `medium` 44 · `large` 52(`datePickerRecipe.sizes`, 두 플랫폼), 좌우 여백 16 · 20. 2026-10-06까지 렌더 값이 Web 44·56, Native 48·56이었다(1.12.1 이후 미게시). 지우기 버튼 44×44. Web 팝오버 폭 `min(22.5rem, 100vw − 2rem)`(최대 360). 날짜 셀 44, 7열 | `datePickerRecipe.sizes`, `packages/react/src/styles.css` `.hjm-date-picker*`, `packages/react-native/src/date-picker.tsx`, `src/calendar.ts` |
+| 크기 | 트리거 높이: `medium` 44 · `large` 52(`datePickerRecipe.sizes`, 두 플랫폼), 좌우 여백 16 · 20. 2026-10-06까지 렌더 값이 Web 44·56, Native 48·56이었다(1.13.0 변경). 지우기 버튼 44×44. Web 팝오버 폭 `min(22.5rem, 100vw − 2rem)`(최대 360). 날짜 셀 44, 7열 | `datePickerRecipe.sizes`, `packages/react/src/styles.css` `.hjm-date-picker*`, `packages/react-native/src/date-picker.tsx`, `src/calendar.ts` |
 | 간격 | 라벨·트리거·설명·오류 사이 Web `spacing.xs` 8, Native 6(렌더러 고정값). 트리거 가로 여백 `medium` `spacing.md` 16, `large` `spacing.lg` 20. 팝오버는 트리거 아래 `spacing.xs` 8, 안쪽 여백 `spacing.sm` 12 | 같은 파일 |
 | 순서·정렬 | 폼 안에서 다른 필드와 같은 폭으로 세로로 쌓는다. 위에서 라벨 → 트리거 → 설명 → 오류. 지우기 버튼(값이 있을 때)은 Web은 트리거 안 끝에 겹치고(트리거가 끝 여백 3rem을 비움), Native는 트리거 바깥 끝에 최소 터치 영역으로 붙는다. Web 팝오버는 시작 쪽 정렬 | `packages/react/src/styles.css`, `packages/react-native/src/date-picker.tsx` |
 | 고정·스크롤 | Web 팝오버는 필드에 붙어 층 800에 뜬다. Native 달력은 화면 아래에서 올라오는 [Sheet](sheet.md)이며 하단 안전 영역은 Provider `safeAreaInsets`를 쓴다 | 같은 파일 |
@@ -125,7 +125,7 @@ Web                                  Native
 - 모든 문구(라벨·placeholder·`clearLabel`·`closeLabel`·월 이동 라벨·셀 이름)는 i18n 키로 만든다.
   셀 이름(`composeAccessibleName`)의 어순·문법은 제품이 소유한다.
 - 달을 넘기면 제품이 새 달의 `cells`와 `monthLabel`을 다시 만들어 넘긴다. 달을 바꿔도 선택값은 바뀌지 않는다.
-- 배치는 `layoutStyle`로 한다(Web·Native). 트리거 색·높이를 덮지 않는다. Native `style`은 deprecated — `layoutStyle` 또는 `size`로 옮긴다.
+- 배치는 `layoutStyle`로 한다(Web·Native). 트리거 색·높이를 덮지 않는다. Native `style`은 제거된 속성 — `layoutStyle` 또는 `size`로 옮긴다.
 
 ## 플랫폼 차이
 
@@ -135,7 +135,7 @@ Web                                  Native
 | `description`·`error` | `ReactNode` | `string` |
 | 격자 밖 이동 알림 `onNavigateBeyondGrid` | 있음 | 없음 |
 | 하단 안전 영역 `safeAreaInsets` | 없음 | 있음(기본은 Provider 값) |
-| 배치 | `layoutStyle`(그 밖에 `className`) | `layoutStyle`(`style`은 deprecated) |
+| 배치 | `layoutStyle`(그 밖에 `className`) | `layoutStyle`(`style`은 제거된 속성) |
 
 ## 함정
 

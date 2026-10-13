@@ -15,8 +15,7 @@ export type ScreenFlowAction = Readonly<{
 type Base = Omit<ScreenLayoutProps, "children" | "footer">;
 export type ListDetailScreenProps = Base & {
     list: ReactNode;
-    detail?: {
-        title: string;
+    detail?: Pick<ScreenLayoutProps, "title" | "state" | "stateAction" | "notice"> & {
         content: ReactNode;
     };
     back: ScreenFlowAction;

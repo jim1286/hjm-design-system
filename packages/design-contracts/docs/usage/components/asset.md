@@ -9,7 +9,7 @@
 - 스토리북: `배포/컴포넌트/데이터 표시/이미지·영상 표시` · `배포/컴포넌트/데이터 표시/음성 메모`
 
 개발 중인 프로필 지원에서 `rounded`는 가장 가까운 프로필의 `tokens.radius.md`를 따른다.
-프로필이 없으면 기존 12px이고 명시한 square/circle은 그대로다. 이 보강은 아직 미게시이며
+프로필이 없으면 기존 12px이고 명시한 square/circle은 그대로다. 이 보강은 1.15.0 변경이며
 1.12.1의 기존 Asset 제공 여부와 구분한다([근거](../../../../../docs/qa/2026-10-07-3dicons-page-review.md)).
 
 ## 언제 쓰나
@@ -89,7 +89,7 @@ import { VoiceNote } from "@hjmds/react-native/voice-note";
 | `children` | `ReactNode` 또는 `(state: { animate: boolean }) => ReactNode` | 필수 | `animate`는 `lottie`·`video`이고 reduced motion이 아닐 때만 `true`다 |
 | `accessory` | `ReactNode` | — | 액자 바깥 모서리에 붙는 작은 표식(재생 아이콘, 상태 점) |
 | `layoutStyle` | margin·width·flex·`alignSelf` | — | Asset·AssetGroup 바깥 배치 전용 |
-| Native `style`(Asset·AssetGroup) | — | — | deprecated — `layoutStyle` 또는 descriptor `size`/`shape`(개발 모드 1회 경고, 다음 major 제거) |
+| Native `style`(Asset·AssetGroup) | — | — | 제거된 속성 — `layoutStyle` 또는 descriptor `size`/`shape` |
 | `AssetGroup` `label` · `size` | `string` · `AssetSize` | `label` 필수 · `size` `medium` | 겹침은 크기의 30%로 Avatar와 같다 |
 | `VoiceNote` `descriptor` | `{ title, state: "paused" \| "playing" \| "loading" \| "error", duration: number \| null, position: number, disabled? }` | 필수 | `duration: null`(메타데이터 미확인)과 `0`이면 재생·탐색이 막힌다 |
 | `VoiceNote` `labels` | `{ play, pause, seek, loading, error, retry, backward, forward }`(모두 `string`) | 필수 | i18n 문구 |
@@ -101,7 +101,7 @@ import { VoiceNote } from "@hjmds/react-native/voice-note";
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 정사각 액자. 한 변 `small` 32 · `medium` 48 · `large` 72 · `xlarge` 120. 모서리 `square` 0 · `rounded` `radius.md`(무프로필 12, 미게시 보강에서는 프로필 값) · `circle` foundation `radius.full`. 터치 대상이 아니므로 누를 수 있게 하려면 감싸는 버튼·행이 최소 44를 확보한다 | `assetRecipe.sizes`·`shapes`, `.hjm-asset__frame` |
+| 크기 | 정사각 액자. 한 변 `small` 32 · `medium` 48 · `large` 72 · `xlarge` 120. 모서리 `square` 0 · `rounded` `radius.md`(무프로필 12, 프로필이 있으면 프로필 값) · `circle` foundation `radius.full`. 터치 대상이 아니므로 누를 수 있게 하려면 감싸는 버튼·행이 최소 44를 확보한다 | `assetRecipe.sizes`·`shapes`, `.hjm-asset__frame` |
 | 간격 | `accessory`는 액자 끝·아래 모서리 바깥으로 `spacing.xxs` 4 띄워 붙으므로 옆 요소와 `spacing.xs` 8 이상 띄운다. `AssetGroup` 겹침은 크기의 30%(48이면 −14) | `assetRecipe.accessory`·`overlapRatio`, `react/src/asset.tsx` |
 | 순서·정렬 | 늘어나지 않는 인라인 요소(Web `inline-flex`, `flex: 0 0 auto`). 행 안에서는 시작 쪽에 둔다. 한 줄에 종류가 다른 그림을 섞을 때 모두 같은 `size`·`shape`를 준다 | `.hjm-asset`, `assetBehavior.scenarios` |
 | 고정·스크롤 | 고정 영역이 없다 | — |
@@ -112,6 +112,12 @@ import { VoiceNote } from "@hjmds/react-native/voice-note";
 - 뜻이 있는 그림은 `accessibilityLabel`을, 장식은 `decorative: true`만 준다. 이름 없는 비장식과
   둘 다 준 경우 모두 렌더 중 `TypeError`가 난다.
 - reduced motion에서는 숨기지 말고 `animate`로 재생을 멈춘다. 판단을 제품에서 다시 만들지 않는다.
+- `animate`는 허용 값이다. 슬롯의 플레이어가 값 변경에 맞춰 멈추거나 정지 원화로 전환하도록
+  연결한다. autoplay 초기값만 넘기면 실행 중 설정 변경을 반영하지 못할 수 있다.
+- 1회 완료 연출은 플레이어의 반복 옵션을 명시한다(Lottie React Native는 설치 버전 API를
+  확인해 `loop={false}`). 확인된 결과 ID로 재생 여부를 관리해 재진입만으로 다시 축하하지 않는다.
+  재생 완료 콜백으로 작업 성공을 확정하거나 다음 버튼을 늦게 열지 않는다. 자산 실패에도
+  상태·다음 행동을 남긴다([2026-10-12 근거와 선택 기준](../../../../../docs/INTERACTION_QUALITY.md#캐릭터매체-모션의-채택-기준)).
 - Lottie·비디오·오디오 엔진, 그림 자산은 제품 소유다. HJM은 액자·크기·겹침·표식 위치만 소유한다.
 - 테마별 그림은 제품의 자산 목록에서 선택해 슬롯에 넣는다. Asset이 URL을 만들거나 재질·각도
   변형을 자동 생성하지 않는다. 자산마다 지원하는 조합과 실패 대체를 확인하며, 3D 제공자의
@@ -122,7 +128,7 @@ import { VoiceNote } from "@hjmds/react-native/voice-note";
 
 | 항목 | Web | Native |
 | --- | --- | --- |
-| 배치 prop | `layoutStyle`(+`className`) | `layoutStyle`(`style`은 deprecated). `VoiceNote`는 Native에 `layoutStyle` 없음 |
+| 배치 prop | `layoutStyle`(+`className`) | `layoutStyle`(`style`은 제거된 속성). `VoiceNote`는 Native에 `layoutStyle` 없음 |
 | 매체 크기 | CSS가 자식을 액자 안으로 줄인다(`max-*: 100%`) | 가운데 정렬만 한다. 자식 크기를 직접 준다 |
 | `AssetGroup` 겹침 | CSS로 `.hjm-asset` 형제에 적용 | `children`이 배열일 때만 각 자식을 감싸 적용 |
 | `VoiceNote` 앞뒤 이동 문구 | `labels.backward/forward`를 받지만 쓰지 않는다 | Slider 접근성 동작 문구로 쓴다 |

@@ -158,3 +158,30 @@ it("keeps the panel readable at double text size in a narrow viewport", async ()
   expect(Math.round(footer.getBoundingClientRect().bottom)).toBeLessThanOrEqual(Math.round(box.bottom) + 1);
   expect(body.getBoundingClientRect().height).toBeGreaterThan(0);
 });
+
+it("ignores composing Escape and restores non-modal focus after an accepted close", async () => {
+  const policy: SidePanelDismissPolicy = { modal: false, dismissible: true, dismissWhileBusy: false, escapeDismiss: true };
+  await act(async () => root.render(fixture({ dismissPolicy: policy })));
+  await click("상세 열기");
+  await act(async () => labelled("제목").focus());
+  await act(async () => document.activeElement!.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", isComposing: true, bubbles: true })));
+  expect(panel()).not.toBeNull();
+  await key("Escape");
+  expect(panel()).toBeNull();
+  expect(document.activeElement).toBe(button("상세 열기"));
+});
+
+it("retries controlled closing and preserves external focus for a non-modal owner close", async () => {
+  const change = vi.fn(); const complete = vi.fn();
+  const policy: SidePanelDismissPolicy = { modal: false, dismissible: true, dismissWhileBusy: false, escapeDismiss: true };
+  const view = (open: boolean) => fixture({ open, onOpenChange: change, onDismissComplete: complete, dismissPolicy: policy });
+  await act(async () => root.render(view(true)));
+  await act(async () => labelled("제목").focus());
+  await key("Escape"); await key("Escape");
+  expect(change).toHaveBeenCalledTimes(2);
+  expect(complete).not.toHaveBeenCalled();
+  button("페이지 버튼").focus();
+  await act(async () => root.render(view(false)));
+  expect(document.activeElement).toBe(button("페이지 버튼"));
+  expect(complete).toHaveBeenCalledOnce();
+});

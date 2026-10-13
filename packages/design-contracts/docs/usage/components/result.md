@@ -113,4 +113,4 @@ import { Result } from "@hjmds/react-native/feedback";
 | 아이콘 | `icon`(ReactNode) | `renderIcon({ status, color, backgroundColor })` |
 | 제목 heading 수준 | `headingLevel` | `accessibilityRole="header"` 고정 |
 | 실패 알림 | `role="alert"`(그 외 `status`) | assertive live region, iOS는 `announceForAccessibility` |
-| 바깥 배치 | `className`, `layoutStyle`(HTML `style`도 받음) | `layoutStyle`(`style`은 deprecated — 개발 모드 경고, 다음 major 제거) |
+| 바깥 배치 | `className`, `layoutStyle`(HTML `style`도 받음) | `layoutStyle`(`style`은 제거된 속성) |

@@ -108,8 +108,7 @@ card(vertical)                 grouped(vertical)
   `value`/`defaultValue`가 items에 없으면 `RangeError`를 던진다. 서버 목록은 정리한 뒤 넘긴다.
 - 옛 Native `options` prop은 1.11에서 제거됐다. 넘기면 `TypeError`다([이관표](../../migration-native-legacy-removal.md)).
 - 오류 문구는 `error`로 넘긴다. 그룹 아래에 별도 Text로 직접 그리지 않는다.
-- 배치는 `layoutStyle`로 한다. Native의 `style`과 slot style(`controlStyle`·`indicatorStyle`·`labelStyle` 등)은 deprecated
-  (개발 모드 경고, 다음 major 제거)다([소비 정책 §3.1](../../consumer-policy.md)). 외형은 `presentation`·`size`·`renderIndicator`로 바꾼다.
+- 배치는 `layoutStyle`로 한다. Native의 `style`과 slot style(`controlStyle`·`indicatorStyle`·`labelStyle` 등)은 제거된 속성이다([소비 정책 §3.1](../../consumer-policy.md)). 외형은 `presentation`·`size`·`renderIndicator`로 바꾼다.
 
 ## 플랫폼 차이
 

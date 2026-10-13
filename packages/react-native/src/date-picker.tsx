@@ -11,15 +11,14 @@ import {
   type DatePickerSize,
 } from "@hjmds/design-contracts/components/date-picker";
 import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
-import { useRef, useState, type ReactNode } from "react";
-import { Pressable, View, type StyleProp, type ViewStyle } from "react-native";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { AccessibilityInfo, findNodeHandle, Pressable, View } from "react-native";
 
 import { Calendar } from "./calendar.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 import { Sheet, type SheetProps } from "./overlays.js";
 import { Text } from "./primitives.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 
 export type DatePickerMonthAction = Readonly<{ month: string; label: string }>;
@@ -44,11 +43,6 @@ export type DatePickerProps<Content = unknown> = Readonly<{
   safeAreaInsets?: SheetProps["safeAreaInsets"];
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
-   * the field recipe (`size`) owns appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
 }>;
 
 /** Native single-date trigger backed by the canonical Sheet overlay. */
@@ -68,9 +62,8 @@ export function DatePicker<Content>({
   renderCellContent,
   safeAreaInsets,
   layoutStyle,
-  style,
 }: DatePickerProps<Content>) {
-  warnDeprecatedStyleProps("DatePicker", { style }, "layoutStyle for placement; size owns appearance");
+
   validateDatePickerDescriptor(descriptor);
   const { colors, environment, tokens } = useHjmNativeTheme();
   const controlledOpen = descriptor.open !== undefined;
@@ -80,16 +73,25 @@ export function DatePicker<Content>({
   const [internalSelection, setInternalSelection] = useState(descriptor.defaultSelectedDate ?? null);
   const selectedDate = controlledSelection ? descriptor.selectedDate ?? null : internalSelection;
   const returnFocusRef = useRef<View>(null);
-  const requestOpen = (next: boolean, reason: DatePickerOpenChangeReason) => {
+  const requestOpen = useCallback((next: boolean, reason: DatePickerOpenChangeReason) => {
     if (!controlledOpen) setInternalOpen(next);
     descriptor.onOpenChange?.(next, reason);
-  };
+  }, [controlledOpen, descriptor.onOpenChange]);
+  useEffect(() => {
+    // Locking an open field must dismiss its now-unavailable calendar actions.
+    if (open && (descriptor.disabled || descriptor.readOnly)) requestOpen(false, "programmatic");
+  }, [descriptor.disabled, descriptor.readOnly, open, requestOpen]);
   const commit = (date: string | null, reason: "activate" | "clear") => {
     // A controlled open field can become read-only while its grid remains mounted.
     if (descriptor.disabled || descriptor.readOnly) return;
     if (!controlledSelection) setInternalSelection(date);
     descriptor.onSelectionChange?.(date, reason);
     requestOpen(false, reason === "activate" ? "selection" : "clear");
+    // No Sheet dismissal occurs when the already-closed field loses its clear action.
+    if (reason === "clear" && !open && returnFocusRef.current) {
+      const handle = findNodeHandle(returnFocusRef.current);
+      if (handle !== null) AccessibilityInfo.setAccessibilityFocus(handle);
+    }
   };
   // The outer field owns selection; the shared grid receives only its resolved controlled value.
   const { defaultSelectedDate: _defaultSelectedDate, ...calendarDescriptor } = descriptor;
@@ -98,8 +100,10 @@ export function DatePicker<Content>({
     : descriptor.grid;
   const label = descriptor.label ?? descriptor.accessibilityLabel;
   const triggerText = resolveDatePickerTriggerText(descriptor);
+  // Trigger height and inset use the shared datePickerRecipe instead of the old
+  // divergent Web/Native dimensions (2026-10-06 alignment).
   return (
-    <View style={[{ gap: 6 }, style, layoutStyle]}>
+    <View style={[{ gap: 6 }, layoutStyle]}>
       {/* fieldRecipe.disabledScope: label and trigger row fade, description and error keep full contrast.
           datePickerRecipe has no amount, so the field default applies; before 2026-10-06 nothing dimmed. */}
       {descriptor.label === undefined ? null : <Text emphasis="strong" variant="label" style={descriptor.disabled ? { opacity: fieldRecipe.disabledOpacity } : undefined}>{descriptor.label}</Text>}
@@ -107,12 +111,10 @@ export function DatePicker<Content>({
         <Pressable
           accessibilityLabel={descriptor.accessibilityLabel ?? `${label}, ${triggerText}`}
           accessibilityRole="button"
-          accessibilityState={{ disabled: descriptor.disabled, expanded: open }}
-          disabled={descriptor.disabled}
+          accessibilityState={{ disabled: descriptor.disabled || descriptor.readOnly, expanded: open }}
+          disabled={descriptor.disabled || descriptor.readOnly}
           onPress={() => !descriptor.readOnly && requestOpen(!open, "trigger")}
           ref={returnFocusRef}
-          // Trigger height and inset come from datePickerRecipe.sizes (medium 44 · 16, large 52 · 20), the field frame
-          // Select and NumberField share. Until 2026-10-06 Native drew 48/56 and Web 44/56, three different heights.
           style={({ pressed }) => ({ alignItems: "center", backgroundColor: colors.bg, borderColor: descriptor.invalid || error ? colors.danger : colors.borderControl, borderRadius: tokens.radius[datePickerRecipe.frame.radius], borderWidth: datePickerRecipe.frame.borderWidth, flex: 1, flexDirection: "row", gap: 8, minHeight: datePickerRecipe.sizes[size].minHeight, opacity: pressed ? 0.72 : 1, paddingHorizontal: datePickerRecipe.sizes[size].paddingHorizontal })}
         >
           <Text accessible={false}>▣</Text>

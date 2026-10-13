@@ -334,3 +334,5 @@ export { Collapsible, type CollapsibleProps } from "./collapsible.js";
 export { ContextMenu, type ContextMenuProps } from "./context-menu.js";
 export { Menubar, type MenubarProps } from "./menubar.js";
 export { Asset, AssetGroup, type AssetProps, type AssetGroupProps } from "./asset.js";
+
+export { StatusText, type StatusTextProps } from "./status-text.js";

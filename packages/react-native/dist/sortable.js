@@ -1,4 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { control } from "@hjmds/design-contracts/foundations";
 import { useEffect, useRef, useState } from "react";
 import { AccessibilityInfo, AppState, View } from "react-native";
 import Sortable from "react-native-sortables";
@@ -59,6 +60,6 @@ export function SortableCollection(props) {
                             }, 
                             // Yoga `direction` mirrors the rows under HJM RTL even when the OS is LTR;
                             // without it the grip and the move buttons stayed left-to-right (2026-09-30 audit).
-                            style: { alignItems: "center", direction: environment.direction, flexDirection: "row", gap: tokens.spacing.xs, minHeight: 44 }, children: [_jsx(Text, { children: "\u283F" }), _jsx(Text, { children: item.label })] }) }), props.renderItem(item), _jsxs(View, { style: { direction: environment.direction, flexDirection: "row", flexWrap: "wrap", gap: tokens.spacing.xs }, children: [_jsx(Button, { tone: "ghost", disabled: props.disabled || item.disabled || index === 0, onPress: () => commit(item.id, index - 1, "accessibility-action"), children: props.labels.previous(item) }), _jsx(Button, { tone: "ghost", disabled: props.disabled || item.disabled || index === props.items.length - 1, onPress: () => commit(item.id, index + 1, "accessibility-action"), children: props.labels.next(item) })] })] }) }, `${signature}:${session}:${props.active !== false}`) });
+                            style: { alignItems: "center", direction: environment.direction, flexDirection: "row", gap: tokens.spacing.xs, minHeight: control.minTouchTarget }, children: [_jsx(Text, { children: "\u283F" }), _jsx(Text, { children: item.label })] }) }), props.renderItem(item), _jsxs(View, { style: { direction: environment.direction, flexDirection: "row", flexWrap: "wrap", gap: tokens.spacing.xs }, children: [_jsx(Button, { tone: "ghost", disabled: props.disabled || item.disabled || index === 0, onPress: () => commit(item.id, index - 1, "accessibility-action"), children: props.labels.previous(item) }), _jsx(Button, { tone: "ghost", disabled: props.disabled || item.disabled || index === props.items.length - 1, onPress: () => commit(item.id, index + 1, "accessibility-action"), children: props.labels.next(item) })] })] }) }, `${signature}:${session}:${props.active !== false}`) });
 }
 //# sourceMappingURL=sortable.js.map

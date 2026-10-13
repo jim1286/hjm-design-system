@@ -1,16 +1,17 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { resolveOriginTransition } from "@hjmds/design-contracts/content-transition";
+import { focusAccessibleHost } from "./internal/accessible-focus.js";
 import { createAlertDialogSession, getAlertDialogInitialFocus, validateAlertDialogRequest, } from "@hjmds/design-contracts/components/alert-dialog";
-import { hjmCompositionStyleKeys } from "./composition-style.js";
+import {} from "./composition-style.js";
 import { canDismissSheet, createSheetLifecycle, sheetBehaviorDefaults, } from "@hjmds/design-contracts/components/sheet";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { backdrop, easing, glyph, spacing } from "@hjmds/design-contracts/foundations";
 import { alertDialogRecipe, dialogRecipe, sheetRecipe, } from "@hjmds/design-contracts/recipes";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, } from "react";
-import { AccessibilityInfo, Animated, Easing, Keyboard, Modal, Platform, ScrollView, Pressable, StyleSheet, View, findNodeHandle, useWindowDimensions, } from "react-native";
+import { Animated, Easing, Keyboard, Modal, Platform, ScrollView, Pressable, View, useWindowDimensions, } from "react-native";
 import { Button, IconButton } from "./actions.js";
 import { scheduleAfterNativeModalTeardown, shouldAwaitNativeModalDismiss, } from "./internal/modal-lifecycle.js";
-import { isDevelopment, warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
+import { isDevelopment } from "./internal/diagnostics.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 import { Text } from "./primitives.js";
@@ -20,6 +21,12 @@ import { resolveNativeShadowElevation } from "./internal/styles.js";
 function CloseGlyph() {
     return _jsx(FixedGlyph, { fontSize: glyph.sm, children: "\u00D7" });
 }
+// Keep interaction visibility off native-driven animation hosts. In iOS 26.5,
+// Dialog/AlertDialog/Sheet lost their AX descendants on a second presentation
+// while still painting; a non-animated boundary preserves reopen accessibility.
+function ModalInteractionBoundary({ visible, children }) {
+    return _jsx(View, { accessibilityElementsHidden: !visible, importantForAccessibility: visible ? "auto" : "no-hide-descendants", pointerEvents: visible ? "auto" : "none", style: { flex: 1 }, children: children });
+}
 // BT-QA-027: maximum text made a centered BurnTok confirmation taller than the
 // window, putting its title/cancel off-screen. Keep full copy in a bounded scroll
 // and actions outside it; capping fonts or clipping copy would hide the decision.
@@ -27,6 +34,47 @@ function DialogScrollBody({ children, gap }) {
     return _jsx(ScrollView, { style: { flexGrow: 0, flexShrink: 1 }, contentContainerStyle: { gap }, keyboardShouldPersistTaps: "handled", 
         // Positioner owns safe-area clearance.
         automaticallyAdjustContentInsets: false, automaticallyAdjustKeyboardInsets: false, children: children });
+}
+// Dialog input QA on iOS 26.5 exposed a Save action behind the keyboard.
+// Share Sheet's measured viewport math so centered modals also avoid double
+// clearance on Android adjustResize and ignore undocked/floating keyboards.
+function useModalKeyboardViewport(active, enabled = true) {
+    const { width: windowWidth, height: windowHeight } = useWindowDimensions();
+    const [modalHeight, setModalHeight] = useState(null);
+    const [keyboardFrame, setKeyboardFrame] = useState(null);
+    useEffect(() => {
+        if (!active || !enabled) {
+            setKeyboardFrame(null);
+            return;
+        }
+        // A modal may open while an input elsewhere already owns the keyboard. Event-only
+        // tracking misses that case; metrics also restores the correct state on reopen.
+        // RN Web has no metrics() API; its keyboard events can still update the frame.
+        setKeyboardFrame(Keyboard.metrics?.() ?? null);
+        const change = (event) => setKeyboardFrame(event.endCoordinates);
+        const hide = () => setKeyboardFrame(null);
+        const subscriptions = [
+            Keyboard.addListener("keyboardDidShow", change),
+            Keyboard.addListener("keyboardDidHide", hide),
+            ...(Platform.OS === "ios" ? [
+                Keyboard.addListener("keyboardWillChangeFrame", change),
+                Keyboard.addListener("keyboardWillHide", hide),
+            ] : []),
+        ];
+        return () => subscriptions.forEach((subscription) => subscription.remove());
+    }, [enabled, active]);
+    // Modal owns a full-screen coordinate space (statusBarTranslucent). Measure its
+    // actual height so Android adjustResize does not subtract the keyboard twice.
+    const viewportHeight = modalHeight ?? windowHeight;
+    const dockedKeyboard = enabled && keyboardFrame !== null
+        // Android converts IME pixels to float dp independently from window dimensions;
+        // exact width comparison rejected a full-width keyboard by 0.000013 dp on API 36.
+        && keyboardFrame.height > 0 && Math.abs(keyboardFrame.screenX) <= 1
+        && keyboardFrame.width >= windowWidth - 1;
+    const keyboardInset = dockedKeyboard
+        ? Math.max(0, viewportHeight - keyboardFrame.screenY)
+        : 0;
+    return { viewportHeight, keyboardInset, dockedKeyboard, setModalHeight };
 }
 function useDialogViewportPadding() {
     const insets = useHjmNativeSafeAreaInsets();
@@ -64,11 +112,7 @@ function useReasonedOpenState({ open, defaultOpen = false, onOpenChange, }) {
     return [visible, changeOpen];
 }
 function focusNativeTarget(target) {
-    if (!target?.current)
-        return;
-    const handle = findNodeHandle(target.current);
-    if (handle !== null)
-        AccessibilityInfo.setAccessibilityFocus(handle);
+    focusAccessibleHost(target?.current);
 }
 function Scrim() {
     return (_jsx(View, { accessible: false, importantForAccessibility: "no-hide-descendants", style: {
@@ -131,6 +175,7 @@ export function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTi
     const visibleRef = useRef(visible);
     visibleRef.current = visible;
     const [nativeVisible, setNativeVisible] = useState(visible);
+    const keyboardViewport = useModalKeyboardViewport(nativeVisible);
     const nativeVisibleRef = useRef(visible);
     nativeVisibleRef.current = nativeVisible;
     const nativeShownRef = useRef(false);
@@ -323,67 +368,58 @@ export function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTi
             nativeShownRef.current = true;
             startEnter();
             onShow?.(event);
-        }, statusBarTranslucent: true, transparent: true, visible: nativeVisible, children: _jsxs(Animated.View, { accessibilityElementsHidden: !visible, importantForAccessibility: visible ? "auto" : "no-hide-descendants", pointerEvents: visible ? "auto" : "none", style: {
-                flex: 1,
-                justifyContent: "center",
-                opacity: motionProgress,
-                ...viewportPadding,
-            }, children: [_jsx(Scrim, {}), dismissible ? (_jsx(Pressable, { accessible: false, importantForAccessibility: "no-hide-descendants", onPress: () => requestClose("outside"), style: { bottom: 0, left: 0, position: "absolute", right: 0, top: 0 } })) : null, _jsxs(Animated.View, { ref: originContentRef, onLayout: (event) => {
-                        const { width, height } = event.nativeEvent.layout;
-                        const previous = originLayout.current;
-                        originLayout.current = { width, height };
-                        // Error copy, keyboard or rotation may change the destination after entry.
-                        // Fade instead of returning through stale dimensions; a later open remeasures.
-                        if (previous && (previous.width !== width || previous.height !== height))
-                            setOriginTransform(null);
-                    }, accessibilityLabel: [accessibleTitle, description].filter(Boolean).join(", "), accessibilityState: { busy }, accessibilityViewIsModal: true, importantForAccessibility: "yes", role: "dialog", style: [
-                        {
-                            alignSelf: "center",
-                            backgroundColor: contentBackground,
-                            borderColor: contentBorder,
-                            borderRadius: tokens.radius[dialogRecipe.content.radius],
-                            borderWidth: dialogRecipe.content.borderWidth,
-                            ...resolveNativeShadowElevation(surfaceShadow, designProfile !== undefined, 8),
-                            gap: dialogRecipe.content.gap,
-                            maxWidth: sizeRecipe.maxWidth,
-                            maxHeight: "100%",
-                            flexShrink: 1,
-                            padding: sizeRecipe.padding,
-                            shadowColor: surfaceShadow.color,
-                            shadowOffset: { width: 0, height: surfaceShadow.offsetY },
-                            shadowOpacity: surfaceShadow.opacity,
-                            shadowRadius: surfaceShadow.radius,
-                            width: "100%",
-                        },
-                        originTransform && !environment.reducedMotion ? { transform: [
-                                { translateX: motionProgress.interpolate({ inputRange: [0, 1], outputRange: [originTransform.translateX, 0] }) },
-                                { translateY: motionProgress.interpolate({ inputRange: [0, 1], outputRange: [originTransform.translateY, 0] }) },
-                                { scaleX: motionProgress.interpolate({ inputRange: [0, 1], outputRange: [originTransform.scaleX, 1] }) },
-                                { scaleY: motionProgress.interpolate({ inputRange: [0, 1], outputRange: [originTransform.scaleY, 1] }) },
-                            ] } : undefined,
-                        contentStyle,
-                    ], children: [_jsxs(View, { style: { flexShrink: 1, gap: description ? spacing.xs : dialogRecipe.content.gap }, children: [_jsxs(View, { style: {
-                                        alignItems: "flex-start",
-                                        direction: environment.direction,
-                                        flexDirection: "row",
-                                        gap: spacing.sm,
-                                    }, children: [_jsx(View, { style: { flex: 1 }, children: _jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: title }) }), dismissible ? (_jsx(IconButton, { disabled: busy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(CloseGlyph, {}) })) : null] }), description || children ? (_jsxs(DialogScrollBody, { gap: dialogRecipe.content.gap, children: [description ? _jsx(Text, { tone: "muted", children: description }) : null, children] })) : null] }), _jsx(OverlayActions, { busy: busy, onAction: runAction, pendingAction: actionPending, stacked: stackActions, ...(primaryAction === undefined ? {} : { primaryAction }), ...(secondaryAction === undefined ? {} : { secondaryAction }) })] })] }) }));
-}
-const compositionKeys = new Set(hjmCompositionStyleKeys);
-/**
- * 1.x keeps AlertDialog/Sheet `contentStyle` wide; warn only on visual keys (layout use is supported).
- */
-function warnVisualContentStyle(component, contentStyle) {
-    if (contentStyle === undefined || contentStyle === null)
-        return;
-    const flattened = StyleSheet.flatten(contentStyle) ?? {};
-    const hasVisualKey = Object.keys(flattened).some(key => !compositionKeys.has(key));
-    warnDeprecatedStyleProps(component, { contentStyle: hasVisualKey ? contentStyle : undefined }, "layout-only keys in contentStyle and size/placement for appearance");
+        }, statusBarTranslucent: true, transparent: true, visible: nativeVisible, children: _jsx(ModalInteractionBoundary, { visible: visible, children: _jsxs(Animated.View, { onLayout: (event) => keyboardViewport.setModalHeight(event.nativeEvent.layout.height), style: {
+                    flex: 1,
+                    justifyContent: "center",
+                    opacity: motionProgress,
+                    ...viewportPadding,
+                    paddingBottom: keyboardViewport.dockedKeyboard
+                        ? spacing.md + keyboardViewport.keyboardInset
+                        : viewportPadding.paddingBottom,
+                }, children: [_jsx(Scrim, {}), dismissible ? (_jsx(Pressable, { accessible: false, importantForAccessibility: "no-hide-descendants", onPress: () => requestClose("outside"), style: { bottom: 0, left: 0, position: "absolute", right: 0, top: 0 } })) : null, _jsxs(Animated.View, { ref: originContentRef, onLayout: (event) => {
+                            const { width, height } = event.nativeEvent.layout;
+                            const previous = originLayout.current;
+                            originLayout.current = { width, height };
+                            // Error copy, keyboard or rotation may change the destination after entry.
+                            // Fade instead of returning through stale dimensions; a later open remeasures.
+                            if (previous && (previous.width !== width || previous.height !== height))
+                                setOriginTransform(null);
+                        }, accessibilityLabel: [accessibleTitle, description].filter(Boolean).join(", "), accessibilityState: { busy }, accessibilityViewIsModal: true, importantForAccessibility: "yes", role: "dialog", style: [
+                            {
+                                alignSelf: "center",
+                                backgroundColor: contentBackground,
+                                borderColor: contentBorder,
+                                borderRadius: tokens.radius[dialogRecipe.content.radius],
+                                borderWidth: dialogRecipe.content.borderWidth,
+                                ...resolveNativeShadowElevation(surfaceShadow, designProfile !== undefined, 8),
+                                gap: dialogRecipe.content.gap,
+                                maxWidth: sizeRecipe.maxWidth,
+                                maxHeight: "100%",
+                                flexShrink: 1,
+                                padding: sizeRecipe.padding,
+                                shadowColor: surfaceShadow.color,
+                                shadowOffset: { width: 0, height: surfaceShadow.offsetY },
+                                shadowOpacity: surfaceShadow.opacity,
+                                shadowRadius: surfaceShadow.radius,
+                                width: "100%",
+                            },
+                            originTransform && !environment.reducedMotion ? { transform: [
+                                    { translateX: motionProgress.interpolate({ inputRange: [0, 1], outputRange: [originTransform.translateX, 0] }) },
+                                    { translateY: motionProgress.interpolate({ inputRange: [0, 1], outputRange: [originTransform.translateY, 0] }) },
+                                    { scaleX: motionProgress.interpolate({ inputRange: [0, 1], outputRange: [originTransform.scaleX, 1] }) },
+                                    { scaleY: motionProgress.interpolate({ inputRange: [0, 1], outputRange: [originTransform.scaleY, 1] }) },
+                                ] } : undefined,
+                            contentStyle,
+                        ], children: [_jsxs(View, { style: { flexShrink: 1, gap: description ? spacing.xs : dialogRecipe.content.gap }, children: [_jsxs(View, { style: {
+                                            alignItems: "flex-start",
+                                            direction: environment.direction,
+                                            flexDirection: "row",
+                                            gap: spacing.sm,
+                                        }, children: [_jsx(View, { style: { flex: 1 }, children: _jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: title }) }), dismissible ? (_jsx(IconButton, { disabled: busy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(CloseGlyph, {}) })) : null] }), description || children ? (_jsxs(DialogScrollBody, { gap: dialogRecipe.content.gap, children: [description ? _jsx(Text, { tone: "muted", children: description }) : null, children] })) : null] }), _jsx(OverlayActions, { busy: busy, onAction: runAction, pendingAction: actionPending, stacked: stackActions, ...(primaryAction === undefined ? {} : { primaryAction }), ...(secondaryAction === undefined ? {} : { secondaryAction }) })] })] }) }) }));
 }
 /** Contract session owns duplicate confirms, busy dismissal, error and settlement. */
-export function AlertDialog({ open, defaultOpen, onOpenChange, request, returnFocusRef, onResult, contentStyle, onShow, ...modalProps }) {
+export function AlertDialog({ open, defaultOpen, onOpenChange, request, size = alertDialogRecipe.defaults.size, returnFocusRef, onResult, contentStyle, onShow, ...modalProps }) {
     validateAlertDialogRequest(request);
-    warnVisualContentStyle("AlertDialog", contentStyle);
     const viewportPadding = useDialogViewportPadding();
     const { colors, environment, palette, tokens, designProfile } = useHjmNativeTheme();
     // The profile floating role is shared with Web. Modal lifecycle, inset and
@@ -403,6 +439,7 @@ export function AlertDialog({ open, defaultOpen, onOpenChange, request, returnFo
     const visibleRef = useRef(visible);
     visibleRef.current = visible;
     const [nativeVisible, setNativeVisible] = useState(visible);
+    const keyboardViewport = useModalKeyboardViewport(nativeVisible);
     const nativeVisibleRef = useRef(visible);
     nativeVisibleRef.current = nativeVisible;
     const nativeShownRef = useRef(false);
@@ -586,7 +623,7 @@ export function AlertDialog({ open, defaultOpen, onOpenChange, request, returnFo
     };
     const resolvedTone = request.tone ?? alertDialogRecipe.defaults.tone;
     const toneRecipe = alertDialogRecipe.tones[resolvedTone];
-    const sizeRecipe = alertDialogRecipe.sizes[alertDialogRecipe.defaults.size];
+    const sizeRecipe = alertDialogRecipe.sizes[size];
     const stackActions = windowWidth < alertDialogRecipe.actions.stackBelow ||
         environment.textScale >= 1.6;
     const contentBackground = resolveColorReference(alertDialogRecipe.content.background, palette);
@@ -612,62 +649,64 @@ export function AlertDialog({ open, defaultOpen, onOpenChange, request, returnFo
             const pending = pendingExitSessions.current[0];
             if (pending)
                 completeExit(pending.session);
-        }, onRequestClose: () => cancel("back"), onShow: focusLeastDestructive, statusBarTranslucent: true, transparent: true, visible: nativeVisible, children: _jsxs(Animated.View, { accessibilityElementsHidden: !visible, importantForAccessibility: visible ? "auto" : "no-hide-descendants", pointerEvents: visible ? "auto" : "none", style: {
-                flex: 1,
-                justifyContent: "center",
-                opacity: motionProgress,
-                ...viewportPadding,
-            }, children: [_jsx(Scrim, {}), _jsxs(View, { accessibilityLabel: `${request.title}, ${request.description}`, accessibilityState: { busy }, accessibilityViewIsModal: true, importantForAccessibility: "yes", role: "alertdialog", style: [
-                        {
-                            alignSelf: "center",
-                            backgroundColor: contentBackground,
-                            borderColor: contentBorder,
-                            borderRadius: tokens.radius[alertDialogRecipe.content.radius],
-                            borderWidth: alertDialogRecipe.content.borderWidth,
-                            ...resolveNativeShadowElevation(surfaceShadow, designProfile !== undefined, 8),
-                            gap: alertDialogRecipe.content.gap,
-                            maxWidth: sizeRecipe.maxWidth,
-                            maxHeight: "100%",
-                            flexShrink: 1,
-                            padding: sizeRecipe.padding,
-                            shadowColor: surfaceShadow.color,
-                            shadowOffset: {
-                                width: 0,
-                                height: surfaceShadow.offsetY,
+        }, onRequestClose: () => cancel("back"), onShow: focusLeastDestructive, statusBarTranslucent: true, transparent: true, visible: nativeVisible, children: _jsx(ModalInteractionBoundary, { visible: visible, children: _jsxs(Animated.View, { onLayout: (event) => keyboardViewport.setModalHeight(event.nativeEvent.layout.height), style: {
+                    flex: 1,
+                    justifyContent: "center",
+                    opacity: motionProgress,
+                    ...viewportPadding,
+                    paddingBottom: keyboardViewport.dockedKeyboard
+                        ? spacing.md + keyboardViewport.keyboardInset
+                        : viewportPadding.paddingBottom,
+                }, children: [_jsx(Scrim, {}), _jsxs(View, { accessibilityLabel: `${request.title}, ${request.description}`, accessibilityState: { busy }, accessibilityViewIsModal: true, importantForAccessibility: "yes", role: "alertdialog", style: [
+                            {
+                                alignSelf: "center",
+                                backgroundColor: contentBackground,
+                                borderColor: contentBorder,
+                                borderRadius: tokens.radius[alertDialogRecipe.content.radius],
+                                borderWidth: alertDialogRecipe.content.borderWidth,
+                                ...resolveNativeShadowElevation(surfaceShadow, designProfile !== undefined, 8),
+                                gap: alertDialogRecipe.content.gap,
+                                maxWidth: sizeRecipe.maxWidth,
+                                maxHeight: "100%",
+                                flexShrink: 1,
+                                padding: sizeRecipe.padding,
+                                shadowColor: surfaceShadow.color,
+                                shadowOffset: {
+                                    width: 0,
+                                    height: surfaceShadow.offsetY,
+                                },
+                                shadowOpacity: surfaceShadow.opacity,
+                                shadowRadius: surfaceShadow.radius,
+                                width: "100%",
                             },
-                            shadowOpacity: surfaceShadow.opacity,
-                            shadowRadius: surfaceShadow.radius,
-                            width: "100%",
-                        },
-                        contentStyle,
-                    ], children: [_jsxs(DialogScrollBody, { gap: spacing.xs, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: request.title }), _jsx(Text, { tone: "muted", children: request.description }), error ? (_jsx(Text, { accessibilityLiveRegion: "assertive", accessibilityRole: "alert", style: { color: errorColor }, children: error })) : null] }), _jsxs(View, { style: {
-                                direction: environment.direction,
-                                flexDirection: stackActions ? "column" : "row",
-                                gap: stackActions
-                                    ? alertDialogRecipe.actions.stackedGap
-                                    : alertDialogRecipe.actions.gap,
-                            }, children: [stackActions ? confirmAction : null, request.mode === "confirm" ? (_jsx(Pressable, { ref: cancelRef, accessibilityLabel: request.cancelLabel, accessibilityRole: "button", accessibilityState: { disabled: busy }, disabled: busy, onPress: () => cancel("cancel-action"), style: ({ pressed }) => [
-                                        minimumTargetStyle,
-                                        {
-                                            alignItems: "center",
-                                            // The cancel action is a quiet outline on the dialog surface. surfaceAlt
-                                            // turned it into a tinted slab wherever a product brands that token
-                                            // (BurnTok's pale blue, 2026-09-27), competing with the confirm fill.
-                                            backgroundColor: colors.bg,
-                                            borderColor: colors.border,
-                                            borderRadius: tokens.radius.md,
-                                            borderWidth: 1,
-                                            flex: stackActions ? undefined : 1,
-                                            justifyContent: "center",
-                                            minWidth: alertDialogRecipe.actions.minButtonWidth,
-                                            opacity: busy ? 0.5 : pressed ? 0.86 : 1,
-                                            paddingHorizontal: spacing.md,
-                                        },
-                                    ], children: _jsx(Text, { variant: "label", children: request.cancelLabel }) })) : null, stackActions ? null : confirmAction] })] })] }) }));
+                            contentStyle,
+                        ], children: [_jsxs(DialogScrollBody, { gap: spacing.xs, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: request.title }), _jsx(Text, { tone: "muted", children: request.description }), error ? (_jsx(Text, { accessibilityLiveRegion: "assertive", accessibilityRole: "alert", style: { color: errorColor }, children: error })) : null] }), _jsxs(View, { style: {
+                                    direction: environment.direction,
+                                    flexDirection: stackActions ? "column" : "row",
+                                    gap: stackActions
+                                        ? alertDialogRecipe.actions.stackedGap
+                                        : alertDialogRecipe.actions.gap,
+                                }, children: [stackActions ? confirmAction : null, request.mode === "confirm" ? (_jsx(Pressable, { ref: cancelRef, accessibilityLabel: request.cancelLabel, accessibilityRole: "button", accessibilityState: { disabled: busy }, disabled: busy, onPress: () => cancel("cancel-action"), style: ({ pressed }) => [
+                                            minimumTargetStyle,
+                                            {
+                                                alignItems: "center",
+                                                // The cancel action is a quiet outline on the dialog surface. surfaceAlt
+                                                // turned it into a tinted slab wherever a product brands that token
+                                                // (BurnTok's pale blue, 2026-09-27), competing with the confirm fill.
+                                                backgroundColor: colors.bg,
+                                                borderColor: colors.border,
+                                                borderRadius: tokens.radius.md,
+                                                borderWidth: 1,
+                                                flex: stackActions ? undefined : 1,
+                                                justifyContent: "center",
+                                                minWidth: alertDialogRecipe.actions.minButtonWidth,
+                                                opacity: busy ? 0.5 : pressed ? 0.86 : 1,
+                                                paddingHorizontal: spacing.md,
+                                            },
+                                        ], children: _jsx(Text, { variant: "label", children: request.cancelLabel }) })) : null, stackActions ? null : confirmAction] })] })] }) }) }));
 }
 /** Native Sheet applies policy before emitting a concrete dismissal reason. */
 export function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, footer, placement = "bottom", size = sheetRecipe.defaults.size, busy = false, dismissPolicy, closeLabel, returnFocusRef, safeAreaInsets: suppliedSafeAreaInsets, onDismissComplete, contentStyle, keyboardAvoidance = false, scrollable = false, onShow, ...modalProps }) {
-    warnVisualContentStyle("Sheet", contentStyle);
     const { environment, palette, tokens, designProfile } = useHjmNativeTheme();
     // The profile floating role is shared with Web. Modal lifecycle, inset and
     // action state remain recipe-owned; changing decoration must not replace them.
@@ -683,8 +722,6 @@ export function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTit
     };
     const accessibleTitle = resolveOverlayAccessibleTitle(title, accessibilityTitle);
     const { width: windowWidth, height: windowHeight } = useWindowDimensions();
-    const [modalHeight, setModalHeight] = useState(null);
-    const [keyboardFrame, setKeyboardFrame] = useState(null);
     const sizeRatio = sheetRecipe.sizes[size];
     const policy = { ...sheetBehaviorDefaults, ...dismissPolicy };
     const [visible, changeOpen] = useReasonedOpenState({
@@ -697,6 +734,7 @@ export function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTit
     const visibleRef = useRef(visible);
     visibleRef.current = visible;
     const [nativeVisible, setNativeVisible] = useState(visible);
+    const { viewportHeight, keyboardInset, dockedKeyboard, setModalHeight } = useModalKeyboardViewport(nativeVisible, keyboardAvoidance);
     const nativeVisibleRef = useRef(visible);
     nativeVisibleRef.current = nativeVisible;
     const nativeShownRef = useRef(false);
@@ -720,37 +758,6 @@ export function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTit
             throw new RangeError(`Sheet safeAreaInsets.${edge} must be non-negative`);
         }
     }
-    useEffect(() => {
-        if (!nativeVisible || !keyboardAvoidance) {
-            setKeyboardFrame(null);
-            return;
-        }
-        // A sheet may open while an input elsewhere already owns the keyboard. Event-only
-        // tracking misses that case; metrics also restores the correct state on reopen.
-        setKeyboardFrame(Keyboard.metrics() ?? null);
-        const change = (event) => setKeyboardFrame(event.endCoordinates);
-        const hide = () => setKeyboardFrame(null);
-        const subscriptions = [
-            Keyboard.addListener("keyboardDidShow", change),
-            Keyboard.addListener("keyboardDidHide", hide),
-            ...(Platform.OS === "ios" ? [
-                Keyboard.addListener("keyboardWillChangeFrame", change),
-                Keyboard.addListener("keyboardWillHide", hide),
-            ] : []),
-        ];
-        return () => subscriptions.forEach((subscription) => subscription.remove());
-    }, [keyboardAvoidance, nativeVisible]);
-    // Modal owns a full-screen coordinate space (statusBarTranslucent). Measure its
-    // actual height so Android adjustResize does not subtract the keyboard twice.
-    const viewportHeight = modalHeight ?? windowHeight;
-    const dockedKeyboard = keyboardAvoidance && keyboardFrame !== null
-        // Android converts IME pixels to float dp independently from window dimensions;
-        // exact width comparison rejected a full-width keyboard by 0.000013 dp on API 36.
-        && keyboardFrame.height > 0 && Math.abs(keyboardFrame.screenX) <= 1
-        && keyboardFrame.width >= windowWidth - 1;
-    const keyboardInset = dockedKeyboard
-        ? Math.max(0, viewportHeight - keyboardFrame.screenY)
-        : 0;
     const availableHeight = Math.max(0, viewportHeight - keyboardInset - insets.top);
     const bottomInset = dockedKeyboard ? 0 : insets.bottom;
     const cancelDismissFallback = useCallback(() => {
@@ -925,68 +932,68 @@ export function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTit
             nativeShownRef.current = true;
             startEnter();
             onShow?.(event);
-        }, statusBarTranslucent: true, transparent: true, visible: nativeVisible, children: _jsxs(Animated.View, { accessibilityElementsHidden: !visible, importantForAccessibility: visible ? "auto" : "no-hide-descendants", pointerEvents: visible ? "auto" : "none", onLayout: (event) => setModalHeight(event.nativeEvent.layout.height), style: {
-                alignItems: physicalPlacement === "right" ? "flex-end" : "flex-start",
-                flex: 1,
-                justifyContent: physicalPlacement === "bottom" ? "flex-end" : "flex-start",
-                opacity: motionProgress,
-                paddingTop: insets.top,
-                paddingBottom: keyboardInset,
-            }, children: [_jsx(Scrim, {}), policy.dismissible && policy.outsideDismiss ? (_jsx(Pressable, { accessible: false, importantForAccessibility: "no-hide-descendants", onPress: () => requestClose("outside"), style: { bottom: 0, left: 0, position: "absolute", right: 0, top: 0 } })) : null, _jsxs(Animated.View, { accessibilityLabel: [accessibleTitle, description].filter(Boolean).join(", "), accessibilityState: { busy }, accessibilityViewIsModal: true, importantForAccessibility: "yes", role: "dialog", style: [
-                        {
-                            backgroundColor: contentBackground,
-                            borderColor: contentBorder,
-                            borderRadius: tokens.radius[sheetRecipe.content.radius],
-                            borderBottomLeftRadius: physicalPlacement === "bottom" ? 0 : tokens.radius[sheetRecipe.content.radius],
-                            borderBottomRightRadius: physicalPlacement === "bottom" ? 0 : tokens.radius[sheetRecipe.content.radius],
-                            borderWidth: sheetRecipe.content.borderWidth,
-                            ...resolveNativeShadowElevation(surfaceShadow, designProfile !== undefined, 8),
-                            gap: sheetRecipe.body.gap,
-                            // A fixed size ratio drives the height; `auto` lets the content decide
-                            // and the recipe's maxHeightRatio caps it.
-                            height: side
-                                ? availableHeight
-                                : sizeRatio === null
+        }, statusBarTranslucent: true, transparent: true, visible: nativeVisible, children: _jsx(ModalInteractionBoundary, { visible: visible, children: _jsxs(Animated.View, { onLayout: (event) => setModalHeight(event.nativeEvent.layout.height), style: {
+                    alignItems: physicalPlacement === "right" ? "flex-end" : "flex-start",
+                    flex: 1,
+                    justifyContent: physicalPlacement === "bottom" ? "flex-end" : "flex-start",
+                    opacity: motionProgress,
+                    paddingTop: insets.top,
+                    paddingBottom: keyboardInset,
+                }, children: [_jsx(Scrim, {}), policy.dismissible && policy.outsideDismiss ? (_jsx(Pressable, { accessible: false, importantForAccessibility: "no-hide-descendants", onPress: () => requestClose("outside"), style: { bottom: 0, left: 0, position: "absolute", right: 0, top: 0 } })) : null, _jsxs(Animated.View, { accessibilityLabel: [accessibleTitle, description].filter(Boolean).join(", "), accessibilityState: { busy }, accessibilityViewIsModal: true, importantForAccessibility: "yes", role: "dialog", style: [
+                            {
+                                backgroundColor: contentBackground,
+                                borderColor: contentBorder,
+                                borderRadius: tokens.radius[sheetRecipe.content.radius],
+                                borderBottomLeftRadius: physicalPlacement === "bottom" ? 0 : tokens.radius[sheetRecipe.content.radius],
+                                borderBottomRightRadius: physicalPlacement === "bottom" ? 0 : tokens.radius[sheetRecipe.content.radius],
+                                borderWidth: sheetRecipe.content.borderWidth,
+                                ...resolveNativeShadowElevation(surfaceShadow, designProfile !== undefined, 8),
+                                gap: sheetRecipe.body.gap,
+                                // A fixed size ratio drives the height; `auto` lets the content decide
+                                // and the recipe's maxHeightRatio caps it.
+                                height: side
+                                    ? availableHeight
+                                    : sizeRatio === null
+                                        ? undefined
+                                        : Math.min(viewportHeight * sizeRatio, availableHeight),
+                                maxWidth: side ? 420 : undefined,
+                                // maxHeightRatio caps only `auto`. A fixed size is already bounded by availableHeight
+                                // (viewport − top inset − keyboard); capping it too stopped `full` at 90% (2026-10-06 follow-up).
+                                maxHeight: side || sizeRatio !== null
+                                    ? availableHeight
+                                    : Math.min(availableHeight, viewportHeight * sheetRecipe.content.maxHeightRatio),
+                                paddingBottom: sheetRecipe.content.paddingBottom + bottomInset,
+                                paddingLeft: sheetRecipe.content.paddingHorizontal + insets.left,
+                                paddingRight: sheetRecipe.content.paddingHorizontal + insets.right,
+                                // The top safe area limits the viewport, rather than adding a second
+                                // notch-sized gap inside a sheet anchored to the bottom.
+                                paddingTop: sheetRecipe.content.paddingTop,
+                                shadowColor: surfaceShadow.color,
+                                shadowOffset: {
+                                    width: 0,
+                                    height: surfaceShadow.offsetY,
+                                },
+                                shadowOpacity: surfaceShadow.opacity,
+                                shadowRadius: surfaceShadow.radius,
+                                transform: environment.reducedMotion
                                     ? undefined
-                                    : Math.min(viewportHeight * sizeRatio, availableHeight),
-                            maxWidth: side ? 420 : undefined,
-                            // maxHeightRatio caps only `auto`. A fixed size is already bounded by availableHeight
-                            // (viewport − top inset − keyboard); capping it too stopped `full` at 90% (2026-10-06 follow-up).
-                            maxHeight: side || sizeRatio !== null
-                                ? availableHeight
-                                : Math.min(availableHeight, viewportHeight * sheetRecipe.content.maxHeightRatio),
-                            paddingBottom: sheetRecipe.content.paddingBottom + bottomInset,
-                            paddingLeft: sheetRecipe.content.paddingHorizontal + insets.left,
-                            paddingRight: sheetRecipe.content.paddingHorizontal + insets.right,
-                            // The top safe area limits the viewport, rather than adding a second
-                            // notch-sized gap inside a sheet anchored to the bottom.
-                            paddingTop: sheetRecipe.content.paddingTop,
-                            shadowColor: surfaceShadow.color,
-                            shadowOffset: {
-                                width: 0,
-                                height: surfaceShadow.offsetY,
+                                    : side
+                                        ? [{ translateX: translate }]
+                                        : [{ translateY: translate }],
+                                width: side ? "88%" : "100%",
                             },
-                            shadowOpacity: surfaceShadow.opacity,
-                            shadowRadius: surfaceShadow.radius,
-                            transform: environment.reducedMotion
-                                ? undefined
-                                : side
-                                    ? [{ translateX: translate }]
-                                    : [{ translateY: translate }],
-                            width: side ? "88%" : "100%",
-                        },
-                        contentStyle,
-                    ], children: [_jsxs(View, { style: {
-                                alignItems: "center",
-                                minHeight: sheetRecipe.header.minHeight,
-                                flexShrink: 0,
-                                direction: environment.direction,
-                                flexDirection: "row",
-                                gap: spacing.sm,
-                            }, children: [_jsxs(View, { style: { flex: 1, gap: spacing.xs }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: title }), description ? _jsx(Text, { tone: "muted", children: description }) : null] }), policy.dismissible ? (_jsx(IconButton, { disabled: busy && !policy.dismissWhileBusy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(CloseGlyph, {}) })) : null] }), scrollable ? (_jsx(ScrollView, { style: { flexShrink: 1, minHeight: 0, ...bodyFill }, contentContainerStyle: { gap: sheetRecipe.body.gap }, keyboardShouldPersistTaps: "handled", keyboardDismissMode: Platform.OS === "ios" ? "interactive" : "on-drag", automaticallyAdjustKeyboardInsets: false, children: children })) : _jsx(View, { style: { gap: sheetRecipe.body.gap, flexShrink: 1, ...bodyFill }, children: children }), footer ? (_jsx(View, { style: {
-                                gap: sheetRecipe.footer.gap,
-                                flexShrink: 0,
-                                paddingTop: sheetRecipe.footer.paddingTop,
-                            }, children: footer })) : null] })] }) }));
+                            contentStyle,
+                        ], children: [_jsxs(View, { style: {
+                                    alignItems: "center",
+                                    minHeight: sheetRecipe.header.minHeight,
+                                    flexShrink: 0,
+                                    direction: environment.direction,
+                                    flexDirection: "row",
+                                    gap: spacing.sm,
+                                }, children: [_jsxs(View, { style: { flex: 1, gap: spacing.xs }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: title }), description ? _jsx(Text, { tone: "muted", children: description }) : null] }), policy.dismissible ? (_jsx(IconButton, { disabled: busy && !policy.dismissWhileBusy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(CloseGlyph, {}) })) : null] }), scrollable ? (_jsx(ScrollView, { style: { flexShrink: 1, minHeight: 0, ...bodyFill }, contentContainerStyle: { gap: sheetRecipe.body.gap }, keyboardShouldPersistTaps: "handled", keyboardDismissMode: Platform.OS === "ios" ? "interactive" : "on-drag", automaticallyAdjustKeyboardInsets: false, children: children })) : _jsx(View, { style: { gap: sheetRecipe.body.gap, flexShrink: 1, ...bodyFill }, children: children }), footer ? (_jsx(View, { style: {
+                                    gap: sheetRecipe.footer.gap,
+                                    flexShrink: 0,
+                                    paddingTop: sheetRecipe.footer.paddingTop,
+                                }, children: footer })) : null] })] }) }) }));
 }
 //# sourceMappingURL=overlays.js.map

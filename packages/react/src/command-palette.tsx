@@ -130,6 +130,7 @@ export const CommandPalette = forwardRef(function CommandPalette<Key extends str
   // Stale external rows stay visible but inert, as in the Native Combobox.
   const enabled = results.current ? results.items.filter((item) => !item.disabled) : [];
   const [activeId, setActiveId] = useState<Key | null>(null);
+  const pendingActivation = useRef<{ itemId: Key; reason: CommandPaletteActivateReason } | null>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -158,8 +159,8 @@ export const CommandPalette = forwardRef(function CommandPalette<Key extends str
     onActivate(itemId, reason);
     // Running a command always closes the palette — `activation` is a dismiss
     // reason no policy can veto — and the follow-up surface opens after that.
+    pendingActivation.current = { itemId, reason };
     change(false, "activation");
-    if (onActivateAfterDismiss) queueMicrotask(() => onActivateAfterDismiss(itemId, reason));
   };
 
   useModalFocus({
@@ -170,7 +171,17 @@ export const CommandPalette = forwardRef(function CommandPalette<Key extends str
     onEscape: () => requestClose("escape"),
   });
 
+  useEffect(() => {
+    if (open || !pendingActivation.current) return;
+    const { itemId, reason } = pendingActivation.current;
+    pendingActivation.current = null;
+    // A controlled owner may delay closing; wait for teardown and focus release.
+    if (onActivateAfterDismiss) queueMicrotask(() => onActivateAfterDismiss(itemId, reason));
+  }, [open, onActivateAfterDismiss]);
+
   const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    // IME confirmation and candidate navigation belong to the text input.
+    if (event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229) return;
     const intent = getCollectionNavigationIntent(event.key as never);
     if (intent) {
       const target = getCollectionNavigationTarget({ items: enabled }, active?.id ?? null, intent, true);

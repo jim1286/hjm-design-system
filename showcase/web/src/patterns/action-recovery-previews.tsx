@@ -30,24 +30,32 @@ function Frame({ children, reading = false }: { children: ReactNode; reading?: b
 const saveStatusCopy = { idle: "내용을 입력한 뒤 저장해 보세요.", pending: "저장 중이에요.", success: "저장했어요.", error: "저장하지 못했어요. 입력한 내용은 남아 있어요." } as const;
 const bookmarkStatusCopy = { idle: "북마크를 눌러 보세요.", pending: "화면에 먼저 반영했어요. 저장 확인 중이에요.", success: "서버 저장이 확인됐어요.", error: "반영하지 못해 이전 상태로 돌아왔어요." } as const;
 const archiveStatusCopy = { pending: "요청을 확인하고 있어요.", error: "작업에 실패했어요. 마지막으로 확인한 상태를 유지했어요.", archived: "보관했어요. 실행 취소로 되돌릴 수 있어요.", listed: "목록에 있어요." } as const;
+// Retry controls disappear when work starts. Move focus to a persistent action/input
+// synchronously, so completion never steals focus from subsequent user navigation.
 export function SaveRecoveryPreview() {
  const { session, state, request, failureArmed, toggleFailure, busy } = useDemoAction("");
  const [draft, setDraft] = useState("");
+ const saveButton = useRef<HTMLButtonElement>(null); const input = useRef<HTMLInputElement>(null);
+ // A request confirms its submitted snapshot; edits made during that request remain unsaved.
+ const status = state.status === "success" && draft !== state.value
+  ? "제출한 내용은 저장했어요. 현재 입력은 아직 저장하지 않았어요." : saveStatusCopy[state.status];
  return <Frame reading><Heading level="level3">입력은 유지하고 다시 저장</Heading>
-  <TextField label="기록 내용" value={draft} onValueChange={setDraft} />
-  <Button loading={busy} disabled={!draft.trim()} onClick={() => { const submitted = draft; void session.run(() => request(submitted), { retryable: true }); }}>저장</Button>
-  {state.status === "error" && <Button tone="secondary" onClick={() => { void session.retry(); }}>실패한 내용 다시 저장</Button>}
+  <TextField ref={input} label="기록 내용" value={draft} onValueChange={setDraft} />
+  <Button ref={saveButton} loading={busy} disabled={!draft.trim()} onClick={() => { const submitted = draft; void session.run(() => request(submitted), { retryable: true }); }}>저장</Button>
+  {state.status === "error" && <Button tone="secondary" onClick={() => { (draft.trim() ? saveButton.current : input.current)?.focus(); void session.retry(); }}>실패한 내용 다시 저장</Button>}
   <FailureToggle selected={failureArmed} onToggle={toggleFailure} />
-  <Text role="status">{saveStatusCopy[state.status]}</Text>
+  <Text role="status">{status}</Text>
   <Text>저장된 내용: {state.value || "아직 없어요"}</Text>
   <Text>실제 서버 요청 없이 실패와 복구를 확인하는 예제예요. 입력은 이 화면이 열린 동안 유지돼요.</Text>
  </Frame>;
 }
 export function OptimisticRecoveryPreview() {
+ const action = useRef<HTMLButtonElement>(null);
  const { session, state, request, failureArmed, toggleFailure, busy } = useDemoAction(false);
+ // aria-disabled blocks activation through Button while keeping the retry target focusable.
  return <Frame><Heading level="level3">즉시 반영하고 실패하면 복구</Heading>
-  <Button selected={state.value} disabled={busy} onClick={() => { const next = !state.value; void session.run(() => request(next), { optimisticValue: next, retryable: true }); }}>{state.value ? "북마크 해제" : "북마크 추가"}</Button>
-  {state.status === "error" && <Button tone="secondary" onClick={() => { void session.retry(); }}>북마크 다시 반영</Button>}
+  <Button ref={action} selected={state.value} aria-disabled={busy} onClick={() => { const next = !state.value; void session.run(() => request(next), { optimisticValue: next, retryable: true }); }}>{state.value ? "북마크 해제" : "북마크 추가"}</Button>
+  {state.status === "error" && <Button tone="secondary" onClick={() => { action.current?.focus(); void session.retry(); }}>북마크 다시 반영</Button>}
   <FailureToggle selected={failureArmed} onToggle={toggleFailure} />
   <Button tone="ghost" onClick={() => session.reset(false)}>서버에서 새 상태 불러오기</Button>
   <Text role="status">{bookmarkStatusCopy[state.status]}</Text>
@@ -55,12 +63,13 @@ export function OptimisticRecoveryPreview() {
  </Frame>;
 }
 export function UndoRecoveryPreview() {
+ const action = useRef<HTMLButtonElement>(null);
  const { session, state, request, failureArmed, toggleFailure, busy } = useDemoAction(false);
  const statusKey = state.status === "error" || state.status === "pending" ? state.status : state.value ? "archived" : "listed";
  return <Frame><Heading level="level3">보관 후 실행 취소</Heading>
   <Text>{state.value ? "보관함: 리서치 메모" : "목록: 리서치 메모"}</Text>
-  <Button loading={busy} onClick={() => { const next = !state.value; void session.run(() => request(next), { retryable: true }); }}>{state.value ? "실행 취소" : "보관"}</Button>
-  {state.status === "error" && <Button tone="secondary" onClick={() => { void session.retry(); }}>실패한 작업 다시 시도</Button>}
+  <Button ref={action} loading={busy} onClick={() => { const next = !state.value; void session.run(() => request(next), { retryable: true }); }}>{state.value ? "실행 취소" : "보관"}</Button>
+  {state.status === "error" && <Button tone="secondary" onClick={() => { action.current?.focus(); void session.retry(); }}>실패한 작업 다시 시도</Button>}
   <FailureToggle selected={failureArmed} onToggle={toggleFailure} />
   <Text role="status">{archiveStatusCopy[statusKey]}</Text>
   <Text>복구 요청이 성공해야 목록으로 돌아와요. 학습용 예제에는 자동 만료와 실제 서버 요청이 없어요.</Text>

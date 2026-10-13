@@ -1,5 +1,4 @@
 import { type TagsInputCommitResult, type TagsInputPolicy, type TagsInputSuggestion } from "@hjmds/design-contracts/components/tags-input";
-import { type StyleProp, type ViewStyle } from "react-native";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type TagsInputProps = Readonly<{
     label: string;
@@ -20,11 +19,6 @@ export type TagsInputProps = Readonly<{
     disabled?: boolean;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
-     * `tagsInputRecipe` owns appearance. Removed in the next major (consumer-policy.md §3.1).
-     */
-    style?: StyleProp<ViewStyle>;
 }>;
-export declare function TagsInput({ label, tags: controlledTags, defaultTags, onTagsChange, onReject, onDraftChange, policy, suggestions, suggestionsLabel, composeRemoveLabel, placeholder, description, disabled, layoutStyle, style, }: TagsInputProps): import("react").JSX.Element;
+export declare function TagsInput({ label, tags: controlledTags, defaultTags, onTagsChange, onReject, onDraftChange, policy, suggestions, suggestionsLabel, composeRemoveLabel, placeholder, description, disabled, layoutStyle, }: TagsInputProps): import("react").JSX.Element;
 //# sourceMappingURL=tags-input.d.ts.map

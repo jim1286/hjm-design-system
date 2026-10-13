@@ -4,15 +4,15 @@ import { useState } from "react";
 import { control } from "@hjmds/design-contracts/foundations";
 import { Pressable, View } from "react-native";
 import { Text } from "./primitives.js";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
-export function Collapsible({ trigger, children, disabled = false, presentation = "disclosure", keepMounted = false, layoutStyle, style, ...openState }) {
-    warnDeprecatedStyleProps("Collapsible", { style }, "layoutStyle for placement; collapsibleRecipe owns appearance");
+export function Collapsible({ trigger, children, disabled = false, presentation = "disclosure", keepMounted = false, layoutStyle, ...openState }) {
     validateCollapsibleOpenState(openState);
     const controlled = openState.open !== undefined;
     const [internalOpen, setInternalOpen] = useState(openState.defaultOpen ?? false);
     const open = presentation === "inline" || (openState.open ?? internalOpen);
-    return (_jsxs(View, { style: [{ gap: collapsibleRecipe.gap }, style, layoutStyle], children: [_jsxs(Pressable, { accessibilityRole: "button", accessibilityState: { expanded: open, disabled }, disabled: disabled, onPress: () => {
+    return (_jsxs(View, { style: [{ gap: collapsibleRecipe.gap }, layoutStyle], children: [_jsxs(Pressable, { accessibilityRole: "button", accessibilityState: { expanded: open, disabled }, disabled: disabled, onPress: () => {
+                    if (disabled || presentation === "inline")
+                        return;
                     const next = !open;
                     if (!controlled)
                         setInternalOpen(next);

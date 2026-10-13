@@ -75,7 +75,7 @@ import { Timeline } from "@hjmds/react-native/data-display";
 | `items[].tone` | `neutral` · `info` · `success` · `attention` | `neutral` | `warning`·`danger`는 없다 |
 | `composeAccessibleName`(필수) | `(info: { position: number, total: number, label: string }) => string` | — | position은 1부터 |
 | `layoutStyle` | `HjmCompositionStyleProp` | — | 루트 배치. Web·Native 모두 |
-| `style`(Native) | `StyleProp<ViewStyle>` | — | deprecated — `layoutStyle`. 개발 모드에서 한 번 경고하고 다음 major에서 제거된다 |
+| `style`(Native) | 지원하지 않음 | — | 제거된 속성 — `layoutStyle`. 현재 공개 props에서 제거되었다 |
 | 나머지 | Web `<ol>` 속성, Native `ViewProps`(`style` 제외) | — | — |
 
 ## 배치
@@ -94,7 +94,7 @@ import { Timeline } from "@hjmds/react-native/data-display";
 - 빈 배열, 중복 `id`, 앞뒤 공백이 있는 `id`, 빈 문자열 필드, 목록 밖 tone은 실행 중 오류를 던진다.
 - 접근 이름의 어순은 언어마다 다르므로 `composeAccessibleName`은 i18n 키로 만든다.
 - 제품 고유 색(구단 색 등)은 adapter에서 네 tone 중 하나로 먼저 매핑한다. dot 색을 직접 칠하지 않는다.
-- 배치는 `layoutStyle`로 한다. Web `className`/`style`과 Native의 deprecated `style`로 dot·connector·글자 색을 덮지 않는다.
+- 배치는 `layoutStyle`로 한다. Web `className`/`style`과 Native에서 제거된 `style`로 dot·connector·글자 색을 덮지 않는다.
 
 ## 플랫폼 차이
 

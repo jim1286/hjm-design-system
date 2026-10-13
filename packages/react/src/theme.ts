@@ -205,6 +205,7 @@ export function createHjmThemeStyle(
   // Panel toast (2026-10-10): media column, step progress and action alignment come from the same recipe Native reads.
   style["--hjm-toast-media-size"] = `${toastRecipe.media.size}px`;
   style["--hjm-toast-action-align"] = toastRecipe.action.align;
+  style["--hjm-toast-pressed-opacity"] = toastRecipe.states.pressedOpacity;
   style["--hjm-toast-progress-gap"] = `${toastRecipe.progress.gap}px`;
   style["--hjm-toast-progress-dot"] = `${toastRecipe.progress.dotSize}px`;
   style["--hjm-toast-progress-current-scale"] = String(toastRecipe.progress.currentScale);

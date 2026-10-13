@@ -2,7 +2,7 @@ import { jsx as _jsx } from "react/jsx-runtime";
 import { getIconTransform, resolveIconDescriptor, } from "@hjmds/design-contracts/components/icon";
 import { imageRecipe, resolveImageAspectRatio, resolveImageDescriptor, resolveImageFallbackAccessibilityLabel, } from "@hjmds/design-contracts/components/image";
 import { counterBadgeRecipe, formatCounterBadgeCount, iconRecipe, } from "@hjmds/design-contracts/recipes";
-import { forwardRef, useState, } from "react";
+import { forwardRef, useState, useMemo, useRef, useLayoutEffect, } from "react";
 import { classNames } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
 /** Internal, dependency-free semantic glyph registry. All marks share one 24px stroke grid. */
@@ -76,19 +76,30 @@ export const Image = forwardRef(function Image({ src, width, height, fit, decora
         ...(decorative === undefined ? {} : { decorative }),
         ...(accessibilityLabel === undefined ? {} : { accessibilityLabel }),
     });
-    const [state, setState] = useState({
-        src: descriptor.src,
-        status: "loading",
-    });
-    const status = state.src === descriptor.src ? state.status : "loading";
+    // A→B→A is a new request even when the URL repeats. Retire adapter callbacks
+    // at commit/unmount so old network events cannot update state or product observers.
+    // Responsive source candidates and request policy are part of image identity;
+    // a new srcSet must recover even when its fallback src is unchanged.
+    const generation = useMemo(() => ({}), [descriptor.src, imageProps?.srcSet, imageProps?.sizes, imageProps?.crossOrigin, imageProps?.referrerPolicy]);
+    const activeGeneration = useRef(generation);
+    useLayoutEffect(() => {
+        activeGeneration.current = generation;
+        return () => { activeGeneration.current = null; };
+    }, [generation]);
+    const [state, setState] = useState({ generation, status: "loading" });
+    const status = state.generation === generation ? state.status : "loading";
     const { className: imageClassName, style: imageStyle, ...restImageProps } = imageProps ?? {};
     const handleLoad = (event) => {
-        setState({ src: descriptor.src, status: "loaded" });
+        if (activeGeneration.current !== generation)
+            return;
+        setState({ generation, status: "loaded" });
         onLoadStatusChange?.("loaded");
         onLoad?.(event);
     };
     const handleError = (event) => {
-        setState({ src: descriptor.src, status: "error" });
+        if (activeGeneration.current !== generation)
+            return;
+        setState({ generation, status: "error" });
         onLoadStatusChange?.("error");
         onError?.(event);
     };

@@ -7,11 +7,10 @@ import {
   type ToggleGroupSize,
 } from "@hjmds/design-contracts/components/toggle-group";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { useMemo, useState } from "react";
-import { Pressable, View, type StyleProp, type ViewStyle } from "react-native";
+import { useEffect, useMemo, useState } from "react";
+import { Pressable, View } from "react-native";
 import { Text } from "./primitives.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 
 export type ToggleGroupProps<Id extends string = string> = Readonly<{
@@ -22,11 +21,6 @@ export type ToggleGroupProps<Id extends string = string> = Readonly<{
   size?: ToggleGroupSize;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
-   * `toggleGroupRecipe` (`size`) owns appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
 }>;
 
 
@@ -38,14 +32,20 @@ export function ToggleGroup<Id extends string = string>({
   onPressedIdsChange,
   size = toggleGroupRecipe.defaults.size,
   layoutStyle,
-  style,
 }: ToggleGroupProps<Id>) {
-  warnDeprecatedStyleProps("ToggleGroup", { style }, "layoutStyle for placement; toggleGroupRecipe (size) owns appearance");
+
   validateToggleGroupDescriptor(descriptor);
   const theme = useHjmNativeTheme();
   const [internal, setInternal] = useState<ReadonlySet<Id>>(defaultPressedIds ?? new Set<Id>());
   const raw = controlledPressed ?? internal;
   const pressed = useMemo(() => reconcileToggleGroupSelection(descriptor, raw), [descriptor, raw]);
+  useEffect(() => {
+    // Persist pruning so a removed toggle does not revive when the item returns.
+    if (controlledPressed === undefined && pressed !== internal) {
+      setInternal(pressed);
+      onPressedIdsChange?.(pressed);
+    }
+  }, [controlledPressed, internal, onPressedIdsChange, pressed]);
   const metrics = toggleGroupRecipe.sizes[size];
   const commit = (next: ReadonlySet<Id>) => {
     if (controlledPressed === undefined) setInternal(next);
@@ -54,7 +54,7 @@ export function ToggleGroup<Id extends string = string>({
   return (
     <View
       accessibilityLabel={descriptor.accessibilityLabel}
-      style={[{ flexDirection: "row", flexWrap: "wrap", gap: toggleGroupRecipe.gap }, style, layoutStyle]}
+      style={[{ flexDirection: "row", flexWrap: "wrap", gap: toggleGroupRecipe.gap }, layoutStyle]}
     >
       {descriptor.items.map((item) => {
         const on = pressed.has(item.id);

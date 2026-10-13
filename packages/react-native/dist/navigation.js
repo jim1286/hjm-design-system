@@ -9,7 +9,7 @@ import { resolveTabIndicator, resolveTabsAppearance, sampleTabIndicator, } from 
 import { bottomNavigationRecipe, counterBadgeRecipe, loadMoreRecipe, menuRecipe, spinnerRecipe, tabsRecipe, topBarRecipe, } from "@hjmds/design-contracts/recipes";
 import { Fragment, forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState, } from "react";
 import { AccessibilityInfo, ActivityIndicator, Animated, AppState, Easing, Keyboard, Modal, Platform, Pressable, ScrollView, View, findNodeHandle, } from "react-native";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
+import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { RecipeButton } from "./internal/recipe-button.js";
 import { isWebRenderer, webOnly, webTabProps } from "./internal/web-a11y.js";
 import { Button } from "./actions.js";
@@ -35,8 +35,8 @@ export function getDynamicTabPanelId(tabsId) {
 }
 /** External panel host for products that keep routing, query, or list state outside Tabs. */
 export function TabPanel(props) {
-    const { tabsId, activeValue, label, children, layoutStyle, style } = props;
-    warnDeprecatedStyleProps("TabPanel", { style }, "layoutStyle for placement");
+    const { tabsId, activeValue, label, children, layoutStyle } = props;
+    assertNoRemovedStyleProps("TabPanel", props, ["style"]);
     const dynamic = props.mode === "dynamic";
     const value = dynamic ? activeValue : props.value;
     const selected = value === activeValue;
@@ -52,12 +52,12 @@ export function TabPanel(props) {
         (mountPolicy === "visited" && visited);
     if (!mounted)
         return null;
-    return (_jsx(View, { nativeID: getTabPanelId(tabsId, value, dynamic ? "dynamic" : "keyed"), accessibilityLabel: label, accessibilityLabelledBy: getTabId(tabsId, dynamic ? activeValue : value), accessibilityElementsHidden: !selected, importantForAccessibility: selected ? "auto" : "no-hide-descendants", pointerEvents: selected ? "auto" : "none", role: "tabpanel", style: [style, layoutStyle, selected ? null : { display: "none" }], children: children }));
+    return (_jsx(View, { nativeID: getTabPanelId(tabsId, value, dynamic ? "dynamic" : "keyed"), accessibilityLabel: label, accessibilityLabelledBy: getTabId(tabsId, dynamic ? activeValue : value), accessibilityElementsHidden: !selected, importantForAccessibility: selected ? "auto" : "no-hide-descendants", pointerEvents: selected ? "auto" : "none", role: "tabpanel", style: [layoutStyle, selected ? null : { display: "none" }], children: children }));
 }
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export function Tabs(props) {
-    const { id, label, items, value: valueProp, defaultValue, onValueChange, activationMode = tabsBehaviorDefaults.activationMode, mountPolicy = tabsBehaviorDefaults.mountPolicy, panelMode = tabsBehaviorDefaults.panelMode, appearance: suppliedAppearance, orientation = tabsBehaviorDefaults.orientation, direction: directionProp, loop = tabsBehaviorDefaults.loop, size = tabsRecipe.defaults.size, layout = tabsRecipe.defaults.layout, overflow = tabsRecipe.defaults.overflow, renderPanels = true, children, layoutStyle, style, tabListStyle, } = props;
-    warnDeprecatedStyleProps("Tabs", { style, tabListStyle }, "layoutStyle for placement and size/layout/overflow/appearance for the tab list");
+    const { id, label, items, value: valueProp, defaultValue, onValueChange, activationMode = tabsBehaviorDefaults.activationMode, mountPolicy = tabsBehaviorDefaults.mountPolicy, panelMode = tabsBehaviorDefaults.panelMode, appearance: suppliedAppearance, orientation = tabsBehaviorDefaults.orientation, direction: directionProp, loop = tabsBehaviorDefaults.loop, size = tabsRecipe.defaults.size, layout = tabsRecipe.defaults.layout, overflow = tabsRecipe.defaults.overflow, renderPanels = true, children, layoutStyle, } = props;
+    assertNoRemovedStyleProps("Tabs", props, ["style", "tabListStyle"]);
     if (!label.trim())
         throw new TypeError("Tabs label must not be empty");
     if (panelMode === "dynamic" && mountPolicy !== "active") {
@@ -215,9 +215,8 @@ export function Tabs(props) {
                 flexDirection: orientation === "vertical" ? "row" : "column",
                 gap: spacing.md,
             },
-            style,
             layoutStyle,
-        ], children: [_jsxs(ScrollView, { ref: tabScroll, onLayout: event => setTabViewport(event.nativeEvent.layout.width), onContentSizeChange: width => setTabContentWidth(width), nativeID: id, accessibilityLabel: label, accessibilityRole: "tablist", horizontal: orientation === "horizontal", scrollEnabled: scrollable && !fitted, showsHorizontalScrollIndicator: false, showsVerticalScrollIndicator: false, style: tabListStyle, contentContainerStyle: [
+        ], children: [_jsxs(ScrollView, { ref: tabScroll, onLayout: event => setTabViewport(event.nativeEvent.layout.width), onContentSizeChange: width => setTabContentWidth(width), nativeID: id, accessibilityLabel: label, accessibilityRole: "tablist", horizontal: orientation === "horizontal", scrollEnabled: scrollable && !fitted, showsHorizontalScrollIndicator: false, showsVerticalScrollIndicator: false, contentContainerStyle: [
                     {
                         borderBottomColor: orientation === "horizontal"
                             ? resolveColorReference(tabsRecipe.colors.divider, theme.palette)
@@ -273,6 +272,8 @@ export function Tabs(props) {
                                 },
                                 onMoveFocus: (intent) => moveFocus(item.id, intent),
                             })), disabled: item.disabled, onAccessibilityAction: (event) => {
+                                if (item.disabled)
+                                    return;
                                 const action = event.nativeEvent.actionName;
                                 if (action === "activate")
                                     setSelected(item.id);
@@ -281,10 +282,14 @@ export function Tabs(props) {
                                 else if (action === "decrement")
                                     moveFocus(item.id, "previous");
                             }, onFocus: () => {
+                                if (item.disabled)
+                                    return;
                                 setFocusValue(item.id);
                                 if (activationMode === "automatic")
                                     setSelected(item.id);
                             }, onPress: () => {
+                                if (item.disabled)
+                                    return;
                                 setFocusValue(item.id);
                                 setSelected(item.id);
                             }, style: ({ pressed }) => [
@@ -358,8 +363,8 @@ function useBottomNavigationKeyboardVisible() {
     return visible;
 }
 /** Router-owned persistent destinations; activation emits intent without mutating selection. */
-export function BottomNavigation({ descriptor, onActivate, onLongActivate, renderIcon, renderBadge, getItemTestID, primaryAction, configuration = {}, safeAreaBottom = 0, layoutStyle, style, surfaceStyle, listStyle, primaryActionStyle, }) {
-    warnDeprecatedStyleProps("BottomNavigation", { style, surfaceStyle, listStyle, primaryActionStyle }, "layoutStyle for placement and configuration (presentation/density/distribution) for appearance");
+export function BottomNavigation({ descriptor, onActivate, onLongActivate, renderIcon, renderBadge, getItemTestID, primaryAction, configuration = {}, safeAreaBottom = 0, layoutStyle, ...removedProps }) {
+    assertNoRemovedStyleProps("BottomNavigation", removedProps, ["style", "surfaceStyle", "listStyle", "primaryActionStyle"]);
     const resolved = resolveBottomNavigationDescriptor(descriptor);
     if (!Number.isFinite(safeAreaBottom) || safeAreaBottom < 0) {
         throw new RangeError("BottomNavigation safeAreaBottom must be non-negative");
@@ -370,6 +375,8 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
         direction: configuration.direction ?? theme.environment.direction,
     }, resolved.items.length);
     const capsule = presentation.presentation === "capsule";
+    const tile = presentation.selection === "tile";
+    const tileRecipe = bottomNavigationRecipe.selectionTile;
     // Hidden labels keep the item's accessibilityLabel; only the visible Text row is dropped.
     const labelsVisible = presentation.labels === "visible";
     const expandedLabels = theme.environment.textScale >= 1.5 || resolved.items.length > 4;
@@ -387,10 +394,10 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
     const centerGap = bottomNavigationRecipe.distributions[presentation.distribution].centerGap;
     const middleIndex = resolved.items.length / 2 - 1;
     const idleColor = resolveColorReference(bottomNavigationRecipe.colors.idle, theme.palette);
-    const selectedIconColor = resolveColorReference(bottomNavigationRecipe.colors.selectedIcon, theme.palette);
-    const selectedLabelColor = resolveColorReference(bottomNavigationRecipe.colors.selectedLabel, theme.palette);
+    const selectedIconColor = resolveColorReference(tile ? tileRecipe.selectedContent : bottomNavigationRecipe.colors.selectedIcon, theme.palette);
+    const selectedLabelColor = resolveColorReference(tile ? tileRecipe.selectedContent : bottomNavigationRecipe.colors.selectedLabel, theme.palette);
     const pressedBackground = resolveColorReference(bottomNavigationRecipe.states.pressedBackground, theme.palette);
-    const surfaceBackground = resolveColorReference(presentationRecipe.background, theme.palette);
+    const surfaceBackground = resolveColorReference(tile ? tileRecipe.background : presentationRecipe.background, theme.palette);
     const surfaceBorder = resolveColorReference(presentationRecipe.border, theme.palette);
     const badgeMetrics = counterBadgeRecipe.sizes[bottomNavigationRecipe.badge.size];
     const badgeTone = counterBadgeRecipe.tones.danger;
@@ -407,7 +414,6 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
                 paddingTop: presentationRecipe.outerPaddingTop,
                 width: "100%",
             },
-            style,
             layoutStyle,
         ], children: _jsxs(View, { style: [
                 {
@@ -435,7 +441,6 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
                     shadowRadius: surfaceShadow?.radius,
                     width: "100%",
                 },
-                surfaceStyle,
             ], children: [_jsx(View, { accessibilityLabel: resolved.accessibilityLabel, accessibilityRole: "tablist", style: [
                         {
                             alignItems: capsule ? "stretch" : "flex-start",
@@ -444,13 +449,13 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
                             width: capsule ? undefined : "100%",
                             flex: capsule ? 1 : undefined,
                             minWidth: 0,
-                            padding: capsule ? spacing.xxs : 0,
+                            padding: tile ? tileRecipe.padding : capsule ? spacing.xxs : 0,
+                            gap: tile ? tileRecipe.gap : 0,
                             backgroundColor: capsule ? surfaceBackground : undefined,
                             borderRadius: capsule ? radius.full : undefined,
                             borderWidth: capsule ? presentationRecipe.borderWidth : 0,
                             borderColor: surfaceBorder,
                         },
-                        listStyle,
                     ], children: resolved.items.map((item, index) => {
                         const selected = item.id === resolved.selectedKey;
                         const focused = focusedKey === item.id;
@@ -476,12 +481,14 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
                                 minimumTargetStyle,
                                 {
                                     alignItems: "center",
-                                    backgroundColor: pressed ? pressedBackground : capsule && selected ? theme.colors.surfaceAccent : "transparent",
-                                    borderRadius: capsule ? radius.full : theme.tokens.radius.lg,
+                                    backgroundColor: tile && selected
+                                        ? resolveColorReference(tileRecipe.selectedBackground, theme.palette)
+                                        : pressed ? pressedBackground : capsule && selected ? theme.colors.surfaceAccent : "transparent",
+                                    borderRadius: tile ? theme.tokens.radius[tileRecipe.radius] : capsule ? radius.full : theme.tokens.radius.lg,
                                     // Floating edge items touch the frame. Their pressed fill must follow its
                                     // inner curve; the smaller generic radius painted over the border in Spint.
                                     // Match corners instead of clipping the whole surface (which clips shadows/focus).
-                                    ...(presentation.presentation === "floating" ? {
+                                    ...(presentation.presentation === "floating" && !tile ? {
                                         ...(index === 0 ? {
                                             borderTopStartRadius: Math.max(0, theme.tokens.radius[presentationRecipe.radius] - presentationRecipe.borderWidth),
                                             borderBottomStartRadius: Math.max(0, theme.tokens.radius[presentationRecipe.radius] - presentationRecipe.borderWidth),
@@ -582,13 +589,12 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
                         },
                         // Keep creation outside route destinations; absolute center placement overlaps capsule labels.
                         capsule ? { position: "relative", left: undefined, right: undefined, top: undefined, bottom: undefined, flexShrink: 0 } : undefined,
-                        primaryActionStyle,
                     ], children: primaryAction })) : null] }) }));
 }
 /** Recipe-owned icon-over-micro-label action for Native screen chrome. */
 export function TopBarAction(props) {
-    const { label, accessibilityLabel, accessibilityState, children, disabled = false, labelVisibility = "visible", labelStyle, layoutStyle, style, ...intentAndHostProps } = props;
-    warnDeprecatedStyleProps("TopBarAction", { style, labelStyle }, "layoutStyle for placement and labelVisibility/topBarRecipe for appearance");
+    const { label, accessibilityLabel, accessibilityState, children, disabled = false, labelVisibility = "visible", layoutStyle, ...intentAndHostProps } = props;
+    assertNoRemovedStyleProps("TopBarAction", props, ["style", "labelStyle"]);
     if (!label.trim())
         throw new TypeError("TopBarAction label must not be empty");
     const resolvedAccessibilityLabel = accessibilityLabel ?? label;
@@ -630,7 +636,6 @@ export function TopBarAction(props) {
                             color: resolveColorReference(topBarRecipe.actionLabel.color, theme.palette),
                             fontWeight: topBarRecipe.actionLabel.fontWeight,
                         },
-                        labelStyle,
                     ], variant: topBarRecipe.actionLabel.textVariant, children: label })) : null] })),
         disabled,
         onPress: handlePress,
@@ -650,7 +655,6 @@ export function TopBarAction(props) {
                         : 1,
                 paddingHorizontal: topBarRecipe.action.paddingHorizontal,
             },
-            style,
             layoutStyle,
         ],
     };
@@ -664,8 +668,8 @@ export function TopBarAction(props) {
     return props.renderAction?.(controlProps) ?? _jsx(Pressable, { ...controlProps });
 }
 /** Native screen top bar with logical action slots and large-text reflow. */
-export function TopBar({ title, titleLeading, onTitlePress, titleAccessibilityLabel, titleAccessibilityHint, leading, trailing, actions, centered = topBarRecipe.defaults.centered, safeAreaTop = 0, layoutStyle, style, leadingStyle, titleStyle, trailingStyle, }) {
-    warnDeprecatedStyleProps("TopBar", { style, leadingStyle, titleStyle, trailingStyle }, "layoutStyle for placement and centered/topBarRecipe for appearance");
+export function TopBar({ title, titleLeading, onTitlePress, titleAccessibilityLabel, titleAccessibilityHint, leading, trailing, actions, centered = topBarRecipe.defaults.centered, safeAreaTop = 0, layoutStyle, ...removedProps }) {
+    assertNoRemovedStyleProps("TopBar", removedProps, ["style", "leadingStyle", "titleStyle", "trailingStyle"]);
     if (!Number.isFinite(safeAreaTop) || safeAreaTop < 0) {
         throw new RangeError("TopBar safeAreaTop must be non-negative");
     }
@@ -703,7 +707,6 @@ export function TopBar({ title, titleLeading, onTitlePress, titleAccessibilityLa
             color: resolveColorReference(topBarRecipe.title.color, theme.palette),
             fontWeight: topBarRecipe.title.fontWeight,
         },
-        titleStyle,
     ];
     const renderTitle = (containerStyle, numberOfLines) => {
         // Match Web: a clickable title is a UI button; a static heading keeps display.
@@ -744,7 +747,6 @@ export function TopBar({ title, titleLeading, onTitlePress, titleAccessibilityLa
                 paddingHorizontal: topBarRecipe.paddingHorizontal,
                 paddingTop: safeAreaTop,
             },
-            style,
             layoutStyle,
         ], children: largeText ? (
         // These branches have different host hierarchies. Reusing the full-width
@@ -763,7 +765,6 @@ export function TopBar({ title, titleLeading, onTitlePress, titleAccessibilityLa
                                     flexDirection: "row",
                                     minWidth: topBarRecipe.sideMinWidth,
                                 },
-                                leadingStyle,
                             ], children: leading })) : null, hasTitle ? (renderTitle({ flex: 1, flexShrink: 1, minWidth: 0 })) : null, hasTitle && centered && hasLeading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", pointerEvents: "none", style: { minWidth: topBarRecipe.sideMinWidth } })) : null] })) : null, hasTrailingContent ? (_jsx(View, { style: [
                         {
                             direction: theme.environment.direction,
@@ -774,7 +775,6 @@ export function TopBar({ title, titleLeading, onTitlePress, titleAccessibilityLa
                             minWidth: topBarRecipe.sideMinWidth,
                             width: "100%",
                         },
-                        trailingStyle,
                     ], children: trailingContent })) : null] }, "large-text")) : (_jsxs(Fragment, { children: [renderCompactLeadingSlot ? (_jsx(View, { style: [
                         {
                             alignItems: "center",
@@ -784,7 +784,6 @@ export function TopBar({ title, titleLeading, onTitlePress, titleAccessibilityLa
                             justifyContent: "flex-start",
                             minWidth: topBarRecipe.sideMinWidth,
                         },
-                        leadingStyle,
                     ], children: hasLeading ? leading : null })) : null, hasTitle ? (
                 // Keep long route titles readable; the screen-chrome contract promises wrapping, while a one-line cap silently hid the rest.
                 renderTitle({ flex: 2, flexShrink: 1, minWidth: 0 })) : null, renderCompactTrailingSlot ? (_jsx(View, { style: [
@@ -799,15 +798,20 @@ export function TopBar({ title, titleLeading, onTitlePress, titleAccessibilityLa
                             marginStart: hasTitle ? undefined : "auto",
                             minWidth: topBarRecipe.sideMinWidth,
                         },
-                        trailingStyle,
                     ], children: hasTrailingContent ? trailingContent : null })) : null] }, "compact")) }));
 }
 function useMenuAfterDismiss(visible) {
+    const visibleRef = useRef(visible);
+    visibleRef.current = visible;
+    const mountedRef = useRef(true);
+    const generationRef = useRef(0);
     const shownRef = useRef(false);
     const previousVisibleRef = useRef(visible);
     const pendingRef = useRef(null);
     const taskRef = useRef(null);
     const complete = useCallback(() => {
+        if (!mountedRef.current || visibleRef.current)
+            return;
         taskRef.current?.cancel();
         taskRef.current = null;
         shownRef.current = false;
@@ -819,12 +823,32 @@ function useMenuAfterDismiss(visible) {
     useLayoutEffect(() => {
         const wasVisible = previousVisibleRef.current;
         previousVisibleRef.current = visible;
+        if (!wasVisible && visible) {
+            // Reopening invalidates the previous selection; its late teardown must not run under the new menu.
+            generationRef.current += 1;
+            taskRef.current?.cancel();
+            taskRef.current = null;
+            pendingRef.current = null;
+            shownRef.current = false;
+        }
         if (!wasVisible || visible || shouldAwaitNativeModalDismiss(shownRef.current))
             return;
         taskRef.current?.cancel();
-        taskRef.current = scheduleAfterNativeModalTeardown(complete);
+        const generation = generationRef.current;
+        taskRef.current = scheduleAfterNativeModalTeardown(() => {
+            if (generation === generationRef.current)
+                complete();
+        });
     }, [complete, visible]);
-    useEffect(() => () => taskRef.current?.cancel(), []);
+    useEffect(() => {
+        mountedRef.current = true;
+        return () => {
+            mountedRef.current = false;
+            generationRef.current += 1;
+            pendingRef.current = null;
+            taskRef.current?.cancel();
+        };
+    }, []);
     return {
         queue(callback) {
             pendingRef.current = callback;
@@ -836,8 +860,8 @@ function useMenuAfterDismiss(visible) {
     };
 }
 /** Sectioned Native action/selection menu with teardown-safe action callbacks. */
-export function Menu({ triggerLabel, title = triggerLabel, items, sections, source: sourceProp, selection = { mode: "none" }, onAction, onActionAfterDismiss, onSelectionAfterDismiss, open, defaultOpen = false, onOpenChange, onDismiss, disabled = false, readOnly = false, busy = false, readOnlyLabel, asyncState = { status: "idle" }, onRetry, retryLabel, density = menuRecipe.defaults.density, renderLeading, renderTrailing, dismissLabel, trigger, renderTrigger, layoutStyle, style, ...modalProps }) {
-    warnDeprecatedStyleProps("Menu", { style }, "layoutStyle for placement and density for appearance");
+export function Menu({ triggerLabel, title = triggerLabel, items, sections, source: sourceProp, selection = { mode: "none" }, onAction, onActionAfterDismiss, onSelectionAfterDismiss, open, defaultOpen = false, onOpenChange, onDismiss, disabled = false, readOnly = false, busy = false, readOnlyLabel, asyncState = { status: "idle" }, onRetry, retryLabel, density = menuRecipe.defaults.density, renderLeading, renderTrailing, dismissLabel, trigger, renderTrigger, layoutStyle, ...modalProps }) {
+    assertNoRemovedStyleProps("Menu", modalProps, ["style"]);
     const providedSources = [sourceProp, items, sections].filter((candidate) => candidate !== undefined).length;
     if (providedSources !== 1) {
         throw new TypeError("Menu requires exactly one of source, items, or sections");
@@ -1000,7 +1024,7 @@ export function Menu({ triggerLabel, title = triggerLabel, items, sections, sour
                 requestOpen(!visible, "trigger");
         },
     };
-    return (_jsxs(View, { style: [style, layoutStyle], children: [_jsx(View, { ref: triggerRef, children: renderTrigger ? renderTrigger(triggerProps) : (_jsx(Pressable, { accessibilityHint: readOnly ? readOnlyLabel : undefined, accessibilityLabel: triggerLabel, accessibilityRole: "button", accessibilityState: triggerProps.accessibilityState, disabled: disabled || readOnly || busy, onPress: triggerProps.onPress, style: ({ pressed }) => [
+    return (_jsxs(View, { style: [layoutStyle], children: [_jsx(View, { ref: triggerRef, children: renderTrigger ? renderTrigger(triggerProps) : (_jsx(Pressable, { accessibilityHint: readOnly ? readOnlyLabel : undefined, accessibilityLabel: triggerLabel, accessibilityRole: "button", accessibilityState: triggerProps.accessibilityState, disabled: disabled || readOnly || busy, onPress: triggerProps.onPress, style: ({ pressed }) => [
                         minimumTargetStyle,
                         {
                             alignItems: "center",
@@ -1053,6 +1077,8 @@ export const LoadMore = forwardRef(function LoadMore({ descriptor, onLoadMore, m
     stateRef.current = descriptor.state;
     handlerRef.current = onLoadMore;
     const [controllerFacade] = useState(createNativeLoadMoreControllerFacade);
+    const requestGeneration = useRef(0);
+    const requestActive = useRef(false);
     const lastViewportRequest = useRef(null);
     useLayoutEffect(() => {
         const controller = createLoadMoreController({
@@ -1060,13 +1086,21 @@ export const LoadMore = forwardRef(function LoadMore({ descriptor, onLoadMore, m
             onLoadMore: (request) => handlerRef.current(request),
         });
         const detach = controllerFacade.attach(controller);
+        requestGeneration.current += 1;
+        requestActive.current = true;
         lastViewportRequest.current = null;
         return () => {
+            requestGeneration.current += 1;
+            requestActive.current = false;
             detach();
             controller.dispose();
         };
     }, [controllerFacade, mode]);
     const request = useCallback(async (reason) => {
+        // FlatList may have queued onEndReached before the footer was removed.
+        if (!requestActive.current)
+            return "blocked-by-state";
+        const generation = requestGeneration.current;
         const state = stateRef.current;
         if (reason === "viewport" && mode === "automatic" && state.status === "ready") {
             const previous = lastViewportRequest.current;
@@ -1076,18 +1110,22 @@ export const LoadMore = forwardRef(function LoadMore({ descriptor, onLoadMore, m
                 onRequestOutcome?.(outcome, reason);
                 return outcome;
             }
-            lastViewportRequest.current = {
-                mode,
-                requestKey: state.requestKey,
-            };
         }
         try {
             const outcome = await controllerFacade.request(state, reason);
+            if (generation !== requestGeneration.current)
+                return outcome;
+            // Only a successfully completed viewport request retires its cursor.
+            // A blocked next page or a rejection must remain eligible for retry.
+            if (outcome === "started" && reason === "viewport" && state.status === "ready") {
+                lastViewportRequest.current = { mode, requestKey: state.requestKey };
+            }
             onRequestOutcome?.(outcome, reason);
             return outcome;
         }
         catch (error) {
-            onRequestError?.(error, reason);
+            if (generation === requestGeneration.current)
+                onRequestError?.(error, reason);
             // The request was accepted and started; product error state arrives
             // through the controlled descriptor and optional callback. Keep the
             // FlatList imperative bridge rejection-free like the Web observer.

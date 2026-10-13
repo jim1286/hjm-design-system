@@ -83,3 +83,17 @@ it("affix: releases at the containing block end and leaves oversized content in 
   await vi.waitFor(() => expect(host.querySelector<HTMLElement>("[data-hjm-affix]")!.dataset.oversize).toBe("true"));
   expect(getComputedStyle(host.querySelector("[data-hjm-affix]")!).position).toBe("relative");
 });
+
+it("affix: cancels pending observation when unmounted and accepts fresh callbacks", async () => {
+  const first = vi.fn(); const second = vi.fn();
+  const view = (onChange: (value: boolean) => void) => <div data-scroll style={{ height: 200, overflow: "auto" }}><div style={{ height: 100 }} /><Affix onChange={onChange}><button>Action</button></Affix><div style={{ height: 600 }} /></div>;
+  await mount(view(first));
+  await act(async () => root!.render(<HjmProvider>{view(second)}</HjmProvider>));
+  const scroll = host.querySelector<HTMLElement>("[data-scroll]")!;
+  await act(async () => { scroll.scrollTop = 160; scroll.dispatchEvent(new Event("scroll", { bubbles: true })); });
+  await vi.waitFor(() => expect(second).toHaveBeenCalledWith(true));
+  first.mockClear(); second.mockClear();
+  await act(async () => { scroll.dispatchEvent(new Event("scroll", { bubbles: true })); root!.render(null); });
+  await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+  expect(first).not.toHaveBeenCalled(); expect(second).not.toHaveBeenCalled();
+});

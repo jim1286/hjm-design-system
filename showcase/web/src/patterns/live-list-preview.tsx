@@ -6,12 +6,13 @@ import { TextField } from '@hjmds/react/forms';
 import { ContentTransition } from '@hjmds/react/content-transition';
 import { initialLiveList, updateLiveList } from '../../../shared/live-list';
 export function LiveListPreview() {
- // The final delete disables its own button; move focus to the recovery action first.
+ // Safari pointer clicks leave focus in the row. Move it before removal; the
+ // final delete disables its own button, so the recovery action takes over.
  const addButton = useRef<HTMLButtonElement>(null);
  const { items, paused, setPaused, message, add, remove, reverse, edit } = useLiveList();
  return <Stack gap="lg"><Text>메모를 입력한 뒤 기록을 추가하거나 순서를 바꿔 보세요. 기존 입력은 그대로 남아요.</Text>
   <Stack axis="inline" wrap><Button ref={addButton} onClick={() => add(1)}>기록 추가</Button><Button tone="secondary" onClick={() => add(3)}>3개 함께 추가</Button></Stack>
-  <Stack axis="inline" wrap><Button tone="secondary" disabled={items.length < 2} onClick={reverse}>순서 뒤집기</Button><Button tone="secondary" disabled={items.length === 0} onClick={() => { if (items.length === 1) addButton.current?.focus(); remove(); }}>첫 기록 삭제</Button></Stack>
+  <Stack axis="inline" wrap><Button tone="secondary" disabled={items.length < 2} onClick={reverse}>순서 뒤집기</Button><Button tone="secondary" disabled={items.length === 0} onClick={event => { (items.length === 1 ? addButton.current : event.currentTarget)?.focus(); remove(); }}>첫 기록 삭제</Button></Stack>
   <Button tone="ghost" selected={paused} onClick={() => setPaused(value => !value)}>{paused ? '움직임 다시 켜기' : '움직임 멈추기'}</Button>
   <Text role="status">{message}</Text>
   <ContentTransition stateKey="live-list" animateHeight motion={paused ? 'none' : 'system'}>

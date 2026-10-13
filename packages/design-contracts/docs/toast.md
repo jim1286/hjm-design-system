@@ -45,7 +45,7 @@ const result = store.publish({
   `accessibilityLabel`에 완전한 이름을 제공합니다.
 - 기본 알림과 리퀴드 알림은 모두 표시 후 3초에 자동 닫힘을 시작합니다. 리퀴드는 진입 연출 동안 타이머를 멈춥니다.
   2026-10-02 사용자 요청으로 기존 5초 기본값·최솟값을 3초로 변경했습니다.
-- action이 있는 Toast는 기본 persistent입니다. 제품이 명시한 `durationMs`도 3000ms보다
+- action 또는 press가 있는 Toast는 기본 persistent입니다. 제품이 명시한 `durationMs`도 3000ms보다
   짧아질 수 없으며, `null`은 명시적 persistent입니다.
 
 `publish` 결과에는 stable id와 `visible | queued` 위치가 포함됩니다. 호출자는 반환된 함수
@@ -93,10 +93,49 @@ queued(waiting, 3000) ─ show ─→ visible(running, 3000)
 `action` reason으로 닫으며, `dismissOnAction: false`면 알림은 남지만 같은 action은 다시
 실행되지 않습니다. stable id update는 새 revision이므로 새 action을 한 번 실행할 수 있습니다.
 
-`timeout | action | close-action | escape | swipe | programmatic | queue-overflow | interrupted`
+`timeout | action | press | close-action | escape | swipe | programmatic | queue-overflow | interrupted`
 reason 중 하나만 최종 `onDismiss`로 전달됩니다. visible Toast는 exit 완료 시 callback을
 정산하고 queued overflow와 provider teardown은 visual exit 없이 즉시 정산합니다. 중복 action,
 close, exit complete와 두 번째 provider dispose는 아무 상태도 바꾸지 않습니다.
+
+## 카드 전체 활성화 — 2026-10-13 (미게시)
+
+댓글·답장 알림에서 카드 본문을 눌러 관련 화면으로 이동하도록 `press`를 추가했다.
+기존 `action`은 보이는 실행 버튼, `press`는 카드의 본문·미디어·여백을 누르는 동작이다.
+별도 알림 컴포넌트를 만들지 않고 동일 Toast descriptor/session/store에 연결한다.
+
+```ts
+store.publish({
+  id: "reply:42",
+  title: t("reply.receivedTitle"),
+  description: t("reply.receivedBody"),
+  closeLabel: t("common.closeNotification"),
+  press: { accessibilityLabel: t("reply.open"), onPress: openReply },
+});
+```
+
+참조 분석: MIT [expo-dynamic-notifications `use-dismiss-gesture.ts` @ 5de059a](https://github.com/rit3zh/expo-dynamic-notifications/blob/5de059a5cbefbe28c14efbe785166665a7c70bc5/src/hooks/use-dismiss-gesture.ts)는
+`Gesture.Exclusive(pan, tap)`으로 입력을 나누고 성공한 탭에서 콜백 후 dismiss를 예약한다.
+HJM은 그 동작 순서를 독립 구현한다. Native 표준/리퀴드와 Web이 같은 순수 session을 사용하며,
+이미 존재하는 큐·타이머를 교체하거나 optional gesture 의존성을 표준 Toast에 추가하지 않는다.
+
+- `press.accessibilityLabel`과 `press.onPress`는 필수. 라우팅과 문구는 제품 소유다.
+- 카드·실행·닫기는 형제 조작이다. Web의 실제 button은 Tab·Enter·Space와 포커스 표시를 제공한다.
+  Native는 독립 Pressable과 읽을 수 있는 이름/설명을 제공하고, 리퀴드의 상위 swipe responder가 탭을 취소한다.
+- `invokePress`는 visible revision당 한 번 실행하고 콜백 뒤 `press` 사유로 닫는다.
+  action/press의 재진입과 이미 닫히는 카드의 입력은 무시한다. 콜백이 같은 id를 새 revision으로 갱신하면
+  새 내용을 닫지 않으며, provider가 제거되면 기존 `interrupted` 정산을 보존한다.
+- 동기 콜백이 throw해도 닫힘을 시작하고 오류를 호출자에게 전달한다. 비동기 라우팅/요청 완료는 기다리지 않는다.
+- press가 있으면 기본 persistent, 명시적 duration은 기존 3초 하한을 적용한다. press가 없으면 기존 동작 그대로다.
+- 검증 파일: `test/toast-press.test.ts`(contracts), `packages/react/test/toast-press.browser.test.tsx`,
+  `packages/react-native/test/toast-press.test.tsx`, `packages/react-native/test/toast-liquid.test.tsx`.
+  Native host 테스트는 실제 기기 hit-test·스크린리더 검증이나 소비 앱 적용 증거가 아니다.
+
+검증: 계약 41개, Web Chromium 11개, Native host 20개의 관련 테스트 통과.
+세 패키지와 두 Showcase 타입 검사, 세 패키지 빌드 및 Web light/dark 기본 글자 화면을 확인했다.
+전체 회귀·실기기·npm 게시·소비 앱 적용은 미실행. `usage:sync`는 기존 다른 작업의
+`components/carousel.md`·`components/chat-message.md` 절 형식 2건으로 실패했으며 해당 변경은 보존했다.
+공개 API 이름 대응표는 변경 없이 검사 통과했다.
 
 ## Renderer acceptance
 

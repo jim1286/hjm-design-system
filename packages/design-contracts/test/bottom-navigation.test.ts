@@ -459,6 +459,7 @@ describe("BottomNavigation visual and behavior contracts", () => {
       direction: "ltr",
       keyboardBehavior: "hide",
       labels: "visible",
+      selection: "emphasis",
     });
     expect(
       resolveBottomNavigationConfiguration(
@@ -479,6 +480,7 @@ describe("BottomNavigation visual and behavior contracts", () => {
       direction: "rtl",
       keyboardBehavior: "remain",
       labels: "hidden",
+      selection: "emphasis",
     });
     expect(() =>
       validateBottomNavigationConfiguration({ distribution: "center-gap" }, 3),
@@ -541,6 +543,7 @@ describe("BottomNavigation visual and behavior contracts", () => {
       direction: "ltr",
       keyboardBehavior: "hide",
       labels: "visible",
+      selection: "emphasis",
       minItems: 2,
       maxItems: 6,
     });
@@ -570,4 +573,15 @@ it("keeps capsule routing and rejects the incompatible central action gap", () =
   expect(resolveBottomNavigationConfiguration({ presentation: "capsule" }, 4).presentation).toBe("capsule");
   expect(() => resolveBottomNavigationConfiguration({ presentation: "capsule", distribution: "center-gap" }, 4)).toThrow(/capsule/);
   expect(resolveBottomNavigationActivation(descriptor, "messages")).toEqual({ key: "messages", reason: "navigate" });
+});
+
+
+describe("tile selection", () => {
+  it("preserves equal labeled destinations and rejects incompatible layouts", () => {
+    expect(resolveBottomNavigationConfiguration({ presentation: "floating", selection: "tile" }, 3))
+      .toMatchObject({ selection: "tile", distribution: "equal", labels: "visible" });
+    expect(() => resolveBottomNavigationConfiguration({ presentation: "capsule", selection: "tile" }, 3)).toThrow("requires floating");
+    expect(() => resolveBottomNavigationConfiguration({ presentation: "floating", selection: "tile", labels: "hidden" }, 3)).toThrow("visible labels");
+    expect(() => resolveBottomNavigationConfiguration({ presentation: "floating", selection: "tile", distribution: "center-gap" }, 4)).toThrow("equal distribution");
+  });
 });

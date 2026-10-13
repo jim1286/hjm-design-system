@@ -75,7 +75,7 @@ import { Steps } from "@hjmds/react-native/steps";
 | `composeAccessibleName` | `(info: { position: number, total: number, label: string }) => string` | — (필수) | `position`은 1부터 |
 | `renderMark` | `(status: StepStatus, position: number) => ReactNode` | `✓`·`!`·번호 | 원 안 표시를 바꾼다 |
 | `layoutStyle` | `HjmCompositionStyleProp` | — | 루트 배치. Web·Native 모두 |
-| `style`(Native) | `StyleProp<ViewStyle>` | — | deprecated — `layoutStyle`. 개발 모드에서 한 번 경고하고 다음 major에서 제거된다 |
+| `style`(Native) | 지원하지 않음 | — | 제거된 속성 — `layoutStyle`. 현재 공개 props에서 제거되었다 |
 | `StepPlayer` `progress`·`playing` | `number`(0~1)·`boolean` | — (필수) | 호스트 소유 |
 | `StepPlayer` `onPlayingChange`·`onReplay` | `(playing: boolean) => void`·`() => void` | — (필수) | 재생/일시정지·다시 보기 요청 |
 | `StepPlayer` `labels` | `{ play, pause, replay, progress }` | — (필수) | — |
@@ -105,6 +105,6 @@ import { Steps } from "@hjmds/react-native/steps";
 | 항목 | Web | Native |
 | --- | --- | --- |
 | 구조 | `<ol>`, 현재 단계 `aria-current="step"`, 상태 문구는 숨은 텍스트 | `accessibilityRole="summary"`, 단계마다 이름 + `accessibilityHint`에 상태 문구 |
-| 스타일 | `className`·`style`(HTML 속성), 배치는 `layoutStyle` | 배치는 `layoutStyle`(`style`은 deprecated) |
+| 스타일 | `className`·`style`(HTML 속성), 배치는 `layoutStyle` | 배치는 `layoutStyle`(`style`은 제거된 속성) |
 | ref | `forwardRef`(`ol`) | 없음 |
 | import 경로 | root, `/navigation`, `/steps` | root, `/steps`(`/navigation` 없음) |

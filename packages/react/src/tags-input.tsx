@@ -11,6 +11,7 @@ import {
 } from "@hjmds/design-contracts/components/tags-input";
 import {
   forwardRef,
+  useId,
   useRef,
   useState,
   type CSSProperties,
@@ -82,16 +83,20 @@ export const TagsInput = forwardRef<HTMLInputElement, TagsInputProps>(function T
   // removes it. Removing on the first press loses work with no warning.
   const [armedIndex, setArmedIndex] = useState<number | null>(null);
   const [activeSuggestionId, setActiveSuggestionId] = useState<string | null>(null);
-  const openSuggestions = (suggestions?.length ?? 0) > 0 && draft.trim().length > 0;
-  const activeSuggestion = suggestions?.find((item) => item.id === activeSuggestionId) ?? null;
+  const [suggestionsDismissed, setSuggestionsDismissed] = useState(false);
+  const hasSuggestions = (suggestions?.length ?? 0) > 0 && draft.trim().length > 0;
+  const openSuggestions = hasSuggestions && !suggestionsDismissed;
+  const activeSuggestion = suggestions?.find((item) => item.id === activeSuggestionId && !item.disabled) ?? null;
   const inputRef = useRef<HTMLInputElement>(null);
-  const id = `hjm-tags-${label.replace(/\s+/gu, "-")}`;
+  const id = `hjm-tags-${useId().replaceAll(":", "")}`;
 
   const changeDraft = (next: string) => {
     setDraft(next);
+    setSuggestionsDismissed(false);
     onDraftChange?.(next);
   };
   const commit = (value: string) => {
+    if (disabled) return;
     const result = resolveTagsInputCommit(tags, value, policy ?? {});
     if (!result.accepted) { onReject?.(result); return; }
     setTags([...tags, result.value]);
@@ -107,9 +112,12 @@ export const TagsInput = forwardRef<HTMLInputElement, TagsInputProps>(function T
   };
 
   const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    // IME confirmation keys belong to the composition, not tag submission.
+    if (disabled || event.nativeEvent.isComposing || event.keyCode === 229) return;
     const key = event.key;
-    if (openSuggestions && (key === "ArrowDown" || key === "ArrowUp")) {
+    if (hasSuggestions && (key === "ArrowDown" || key === "ArrowUp")) {
       event.preventDefault();
+      setSuggestionsDismissed(false);
       setActiveSuggestionId(resolveTagsInputActiveSuggestion(
         suggestions ?? [],
         activeSuggestionId,
@@ -117,9 +125,10 @@ export const TagsInput = forwardRef<HTMLInputElement, TagsInputProps>(function T
       ));
       return;
     }
-    if (key === "Escape" && activeSuggestionId !== null) {
+    if (key === "Escape" && openSuggestions) {
       // Dismissing the candidate list must not clear what the user typed.
       event.preventDefault();
+      setSuggestionsDismissed(true);
       setActiveSuggestionId(null);
       return;
     }
@@ -185,7 +194,7 @@ export const TagsInput = forwardRef<HTMLInputElement, TagsInputProps>(function T
           role={suggestions ? "combobox" : undefined}
           aria-expanded={suggestions ? openSuggestions : undefined}
           aria-controls={suggestions && openSuggestions ? `${id}-suggestions` : undefined}
-          aria-activedescendant={activeSuggestion ? `${id}-suggestion-${activeSuggestion.id}` : undefined}
+          aria-activedescendant={openSuggestions && activeSuggestion ? `${id}-suggestion-${activeSuggestion.id}` : undefined}
           aria-autocomplete={suggestions ? "list" : undefined}
           onChange={(event) => { changeDraft(event.target.value); setArmedIndex(null); setActiveSuggestionId(null); }}
           onKeyDown={onKeyDown}
@@ -205,7 +214,7 @@ export const TagsInput = forwardRef<HTMLInputElement, TagsInputProps>(function T
               onMouseDown={(event) => {
                 // Commit before blur so the draft is still there to replace.
                 event.preventDefault();
-                if (!item.disabled) commit(item.value ?? item.label);
+                if (!disabled && !item.disabled) commit(item.value ?? item.label);
               }}
               onMouseEnter={() => { if (!item.disabled) setActiveSuggestionId(item.id); }}
             >

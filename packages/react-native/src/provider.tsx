@@ -138,12 +138,18 @@ function useSystemReducedMotion(observe: boolean): boolean {
   useEffect(() => {
     if (!observe) return undefined;
     let active = true;
+    let changed = false;
+    // A live OS event is newer than the initial asynchronous snapshot. Keep
+    // motion suppressed if that snapshot fails, without losing a later event.
     void AccessibilityInfo.isReduceMotionEnabled().then((enabled) => {
-      if (active) setReducedMotion(enabled);
-    });
+      if (active && !changed) setReducedMotion(enabled);
+    }).catch(() => { if (active && !changed) setReducedMotion(true); });
     const subscription = AccessibilityInfo.addEventListener(
       "reduceMotionChanged",
-      setReducedMotion,
+      (enabled) => {
+        changed = true;
+        if (active) setReducedMotion(enabled);
+      },
     );
     return () => {
       active = false;

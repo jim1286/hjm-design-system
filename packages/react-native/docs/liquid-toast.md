@@ -177,3 +177,12 @@ body, Skia fill/outline, raised shadow) and the circular origin, neck, timing an
 profile the settled corner is now 24 (`radius.xl`, `liquidToastRecipe.radius`); with one, the profile's `radius.xl`.
 `buildLiquidToastGeometry`'s default fourth argument follows (24). Device visual acceptance is still pending.
 Contract: [Toast panel](../../design-contracts/docs/toast.md#패널-toast--미게시1172-이후).
+
+## Whole-card navigation (unreleased)
+
+Use `press: { accessibilityLabel: t('reply.open'), onPress: openReply }` on the existing descriptor.
+The card's text, media and padding activate it; action and close remain independent buttons.
+An upward swipe cancels the tap. The shared session executes a visible revision once and begins
+exit with reason `press` after the callback; an update inside that callback keeps its new revision.
+Pressable notices persist unless `durationMs` is explicit, including standard fallback and Web.
+See the [Toast contract](../../design-contracts/docs/toast.md) for source analysis and verification limits.

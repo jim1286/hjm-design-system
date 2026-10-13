@@ -1,3 +1,4 @@
+import { control } from "@hjmds/design-contracts/foundations";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { AccessibilityInfo, AppState, View } from "react-native";
 import Sortable from "react-native-sortables";
@@ -66,7 +67,7 @@ export function SortableCollection(props: SortableCollectionProps) {
             }}
             // Yoga `direction` mirrors the rows under HJM RTL even when the OS is LTR;
             // without it the grip and the move buttons stayed left-to-right (2026-09-30 audit).
-            style={{ alignItems: "center", direction: environment.direction, flexDirection: "row", gap: tokens.spacing.xs, minHeight: 44 }}><Text>⠿</Text><Text>{item.label}</Text></View>
+            style={{ alignItems: "center", direction: environment.direction, flexDirection: "row", gap: tokens.spacing.xs, minHeight: control.minTouchTarget }}><Text>⠿</Text><Text>{item.label}</Text></View>
         </Sortable.Handle>
         {props.renderItem(item)}
         <View style={{ direction: environment.direction, flexDirection: "row", flexWrap: "wrap", gap: tokens.spacing.xs }}>

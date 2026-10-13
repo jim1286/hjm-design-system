@@ -3,6 +3,7 @@ import type { SortableItem } from "@hjmds/design-contracts/components/interactio
 import { type ComposeCarouselAccessibleName } from "@hjmds/design-contracts/components/carousel";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type CarouselMotionProps = {
+    navigation?: "buttons" | "counter";
     slides: readonly SortableItem[];
     currentKey: string;
     onCurrentKeyChange(key: string): void;

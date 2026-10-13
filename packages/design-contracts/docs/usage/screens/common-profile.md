@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 구성 API 지침 참조
-- 검토일: 2026-10-06
+- 검토일: 2026-10-13
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screen-flows.tsx`(`ProfileScreen`·`EditorScreen`), 예제 `showcase/*/screen-flow-previews.tsx`(`AccountFlowPreview`)·`saved-profile-previews.tsx`(`ProfileEditFields`), 기본 얼굴 `showcase/web/src/patterns/ProfileStudio.previews.tsx`·`showcase/native/src/profile-face-preview.tsx`·`showcase/shared/profile-studio.ts`. 2026-10-06 사용자 승인으로 실험 `공통 화면/프로필`을 배포하면서 같은 프로필 수정을 직접 조립으로 보이던 배포 `화면/프로필 편집`과 합쳤다(API 기반 우선, Web id `patterns-profile-studio` 보존, [승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정))
 - 스토리북: `배포/화면/계정/프로필`
 
@@ -101,6 +101,18 @@
 | 실패와 복구 | `실패와 복구`: 다음 저장 실패를 예약한 뒤 저장 → 실패 문구, 초안 유지 → 다시 저장 | 같은 저장 행동 |
 | 로그아웃 확인 | AlertDialog: 제목·설명·[취소][로그아웃] | 확인 뒤 제품이 세션을 끝낸다 |
 
+
+### 프로필과 게시물 상태 분리
+
+2026-10-13 전수 점검에서 최초 조회와 변경 요청의 상태를 같은 골격으로 설명하던 부분을 구체화했다.
+
+| 상황 | 연결 | 유지·복구 |
+| --- | --- | --- |
+| 프로필 조회 전 | 지역화된 기본 title + loading | user가 없을 때 handle·summary를 평가하지 않는다 |
+| 게시물 0개 | 프로필 ready + 게시물 영역만 empty | 프로필과 수정 행동은 계속 보인다 |
+| 프로필 저장 실패 | EditorScreen ready + notice | 보기용 원본과 편집용 초안을 모두 보존한다 |
+| 계정 변경·로그아웃 | 제품 세션과 데이터 초기화 | 이전 계정의 늦은 응답이나 draft를 다음 계정에 재사용하지 않는다 |
+
 ## 사용하는 지침
 
 | 지침 | 쓰는 곳 |
@@ -145,9 +157,9 @@ editing ? <EditorScreen title={t("profile.edit")} submitPlacement="footer" dirty
       {...(!draft.name.trim() ? { error: t("profile.nameRequired") } : {})} />
   </Stack>
 </EditorScreen> : <ProfileScreen
-  title={user.handle}
+  title={user?.handle ?? t("profile.title")}
   actions={<IconButton label={t("profile.accountMenu")} tone="ghost" onClick={openAccountMenu}>{menuIcon}</IconButton>}
-  summary={<ProfileSummary user={user} />}
+  summary={user ? <ProfileSummary user={user} /> : null}
   edit={{ label: t("profile.edit"), onAction: openEditor }}
   state={user ? { kind: "ready" } : { kind: "loading", title: t("profile.loading") }}
 >
@@ -181,9 +193,9 @@ editing ? <EditorScreen title={t("profile.edit")} submitPlacement="footer" dirty
       {...(!draft.name.trim() ? { error: t("profile.nameRequired") } : {})} />
   </Stack>
 </EditorScreen> : <ProfileScreen
-  title={user.handle}
+  title={user?.handle ?? t("profile.title")}
   actions={<IconButton label={t("profile.accountMenu")} tone="ghost" onPress={openAccountMenu}>{menuIcon}</IconButton>}
-  summary={<ProfileSummary user={user} />}
+  summary={user ? <ProfileSummary user={user} /> : null}
   edit={{ label: t("profile.edit"), onAction: openEditor }}
   state={user ? { kind: "ready" } : { kind: "loading", title: t("profile.loading") }}
 >
@@ -194,11 +206,10 @@ editing ? <EditorScreen title={t("profile.edit")} submitPlacement="footer" dirty
 `ProfileSummary`·`MyPostsSection`·`faces`·`openAccountMenu`(계정 Sheet와 로그아웃 AlertDialog)는 제품이 공급한다.
 `save`가 실패하면 `editing`을 유지하고 초안을 지우지 않는다.
 
-## 큰 글자·다크·좁은 폭
+## 다크·좁은 폭
 
 | 조건 | 바뀌는 것 |
 | --- | --- |
-| 큰 글자 | 요약의 수치 줄과 얼굴 줄이 감긴다. 수정 화면 footer는 고정이라 필드만 스크롤된다. 제목 열이 모자라면 계정 메뉴가 다음 줄로 내려간다 |
 | 다크 | semantic 색으로 내용과 표면을 함께 전환한다. Blobatar 얼굴은 seed가 정하고 테마와 무관하다 |
 | 좁은 폭 | 320부터 한 열, 게시물 격자는 3열 그대로 칸이 작아진다 |
 | 키보드 | 수정 화면에서 Native host가 safe area와 키보드를 한 번 처리한다. Web은 포커스된 필드가 footer에 가리지 않는지 확인 |
@@ -218,4 +229,6 @@ editing ? <EditorScreen title={t("profile.edit")} submitPlacement="footer" dirty
 - ProfileScreen에는 footer가 없다. 로그아웃·탈퇴를 footer에 두려 하지 말고 계정 메뉴(Sheet) 또는 본문 끝 `accountActions`에 둔다.
 - 현재 `기본 얼굴 고르기` 스토리는 ProfileScreen·EditorScreen이 아닌 옛 직접 조립 화면이다. `hjm-profile-studio*` 클래스는 공개 스타일이 아니므로 제품에서 가져다 쓰지 않는다. 제품은 위 코드처럼 수정 화면 안에 얼굴 줄을 둔다.
 - `createBlobatarFallback`은 seed가 바뀔 때만 다시 만들도록 `useMemo`로 묶는다.
-- Storybook은 실제 서버·세션·라우터 연동 증거가 아니다. 기본·어두운 테마·큰 글자와 실패와 복구를 각각 확인한다.
+- Storybook은 실제 서버·세션·라우터 연동 증거가 아니다. 기본·어두운 테마와 실패와 복구를 각각 확인한다.
+
+2026-10-13 실제 계정 예제 검수: 실패한 프로필 초안은 유지하고 성공 뒤에만 요약을 갱신한다. 계정 Sheet와 로그아웃 AlertDialog의 returnFocusRef는 계정 메뉴 행동을 가리킨다. 로그아웃을 확정하면 열림 상태도 함께 정리하므로 예제를 다시 열 때 확인창이 되살아나지 않는다. 이는 로컬 예제 상태이며 실제 세션 종료·Native OS 초점/발표 검증과 구분한다.

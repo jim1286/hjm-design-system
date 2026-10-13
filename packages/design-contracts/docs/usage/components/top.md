@@ -60,7 +60,7 @@ import { Top } from "@hjmds/react-native/top";
 | `descriptor.headingLevel` | `1` · `2` · `3` | `1` | 한 라우트가 여러 화면을 담을 때만 낮춘다(Web만 반영) |
 | `trailing` | `ReactNode`(요소 하나) | — | 제목 줄을 같이 쓰는 보조 행동. 공간이 모자라거나 큰 글자면 아래로 내려간다 |
 | `layoutStyle` | `HjmCompositionStyleProp` | — | 루트 배치. Web·Native 모두 |
-| `style`(Native) | `StyleProp<ViewStyle>` | — | deprecated — `layoutStyle`. 개발 모드에서 한 번 경고하고 다음 major에서 제거된다 |
+| `style`(Native) | 지원하지 않음 | — | 제거된 속성 — `layoutStyle`. 현재 공개 props에서 제거되었다 |
 
 ## 배치
 
@@ -78,7 +78,7 @@ import { Top } from "@hjmds/react-native/top";
 - `eyebrow`에는 제목을 한정하는 짧은 말(카테고리·단계)만 넣고 제목에 없는 새 정보를 넣지 않는다.
 - 주 행동을 `trailing`에 두지 않는다. 화면의 주 행동은 [BottomCTA](bottom-cta.md)나 본문 [Button](button.md)이다.
 - 상태가 없다. 제목을 바꾸려면 다른 문자열을 넘긴다.
-- 배치는 `layoutStyle`로 한다(Web `className`도 받는다). Native `style`은 deprecated다. 글자 크기·색은 recipe가 정하므로 덮지 않는다.
+- 배치는 `layoutStyle`로 한다(Web `className`도 받는다). Native `style`은 제거된 속성이다. 글자 크기·색은 recipe가 정하므로 덮지 않는다.
 
 ## 플랫폼 차이
 
@@ -92,4 +92,4 @@ import { Top } from "@hjmds/react-native/top";
 
 2026-10-07 소비 감사에서 두 renderer의 제목 크기·행간·굵기가 foundation으로 확정된 recipe를 직접 읽어 프로필을 우회했다. `large`는 가까운 프로필의 `heading.level2`, `medium`은 `typography.titleLarge`를 읽고 프로필이 없으면 기존 recipe를 유지한다. 시각 역할은 `headingLevel`과 독립이며 display 서체·제목 의미·보조 행동·초점은 바꾸지 않는다.
 
-프로필 연결은 1.15.0 이후 미게시 변경이며, 기본 배포 계약과 실제 Native 기기 검증은 구분한다.
+프로필 연결은 1.16.0 변경이며, 기본 배포 계약과 실제 Native 기기 검증은 구분한다.

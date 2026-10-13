@@ -97,7 +97,7 @@ axis="horizontal"(기본)
 
 - 키보드는 pane 축 방향키만 쓴다(가로면 좌/우, 세로면 위/아래). 다른 방향키와 PageUp/PageDown은 pane 콘텐츠의 것이다.
 - 패널의 Tab 정지점은 넘침에 따라 생기고 사라진다(ResizeObserver·MutationObserver로 다시 잰다). 테스트에서 패널 `tabIndex`를 고정값으로 기대하지 않는다.
-  패널에는 접근성 이름이 없다(이름 prop은 breaking 변경이라 두지 않았다, `splitter.tsx` 주석). 미게시(1.12.1 이후) 변경이며 1.12.1까지는 패널이 포커스를 받지 않았다.
+  패널에는 접근성 이름이 없다(이름 prop은 breaking 변경이라 두지 않았다, `splitter.tsx` 주석). 1.13.0 변경이며 1.12.1까지는 패널이 포커스를 받지 않았다.
 - RTL에서는 ArrowLeft가 increment다. 드래그 거리도 같은 기준으로 잰다.
 - primary pane 폭은 `value`가 아니라 `(value-min)/(max-min)` 비율로 그려진다. `value=min`이면 primary pane이 0%, `max`면 100%다.
   예를 들어 `min=15, max=60, value=30`은 33%로 그려진다. 원하는 실제 폭 범위에 맞춰 `min`/`max`를 정하고 화면에서 확인한다.

@@ -2,11 +2,9 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { authProviderButtonRecipe, resolveAuthProviderSurface, validateAuthProviderButtonDescriptor, } from "@hjmds/design-contracts/components/provider-button";
 import { ActivityIndicator, Pressable, View, } from "react-native";
 import { Text } from "./primitives.js";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
-export function AuthProviderButton({ descriptor, logo, onPress, layoutStyle, style }) {
-    warnDeprecatedStyleProps("AuthProviderButton", { style }, "layoutStyle for placement; authProviderButtonRecipe owns appearance");
+export function AuthProviderButton({ descriptor, logo, onPress, layoutStyle }) {
     validateAuthProviderButtonDescriptor(descriptor);
     const theme = useHjmNativeTheme();
     // The theme picks between the provider's own variants and nothing else.
@@ -28,7 +26,6 @@ export function AuthProviderButton({ descriptor, logo, onPress, layoutStyle, sty
                 opacity: disabled && !busy ? 0.5 : 1,
                 paddingHorizontal: authProviderButtonRecipe.paddingHorizontal,
             },
-            style,
             layoutStyle,
         ], children: [_jsx(View, { style: {
                     alignItems: "center",

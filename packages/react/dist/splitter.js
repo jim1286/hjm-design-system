@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { getNextSplitterValue, resolveSplitterBoundaryValue, resolveSplitterDragValue, resolveSplitterSeparatorOrientation, splitterDefaults, splitterRecipe, validateSplitterDescriptor, } from "@hjmds/design-contracts/components/splitter";
-import { forwardRef, useEffect, useRef, useState, } from "react";
+import { forwardRef, useCallback, useEffect, useRef, useState, } from "react";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
 /*
   The value is a percentage of the root box: `min`/`max`/`step` stay in the
@@ -61,6 +61,22 @@ export const Splitter = forwardRef(function Splitter({ label, min, max, step, ax
     validateSplitterDescriptor(descriptor);
     const rootRef = useRef(null);
     const [dragging, setDragging] = useState(false);
+    const drag = useRef(null);
+    const currentValue = useRef(value);
+    currentValue.current = value;
+    const finishDrag = useCallback(() => {
+        const session = drag.current;
+        if (!session)
+            return;
+        // Release can synchronously produce lostpointercapture; retire ownership first.
+        drag.current = null;
+        setDragging(false);
+        if (session.target.hasPointerCapture(session.pointerId))
+            session.target.releasePointerCapture(session.pointerId);
+        onValueChangeEnd?.(currentValue.current);
+    }, [onValueChangeEnd]);
+    useEffect(() => { if (disabled)
+        finishDrag(); }, [disabled, finishDrag]);
     const commit = (next) => {
         if (next !== value)
             setValue(next);
@@ -93,32 +109,28 @@ export const Splitter = forwardRef(function Splitter({ label, min, max, step, ax
         onValueChangeEnd?.(next);
     };
     const onPointerDown = (event) => {
-        if (disabled || event.button !== 0)
+        if (disabled || event.button !== 0 || drag.current)
             return;
         event.preventDefault();
+        drag.current = { pointerId: event.pointerId, target: event.currentTarget };
         event.currentTarget.setPointerCapture(event.pointerId);
         setDragging(true);
     };
     const resize = (event) => {
         const root = rootRef.current;
-        if (!dragging || !root)
+        if (disabled || drag.current?.pointerId !== event.pointerId || !root)
             return;
         const fraction = fractionFromPointer(root, axis, event.clientX, event.clientY);
         commit(resolveSplitterDragValue(descriptor, min + fraction * (max - min)));
     };
     const endDrag = (event) => {
-        if (!dragging)
-            return;
-        if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-            event.currentTarget.releasePointerCapture(event.pointerId);
-        }
-        setDragging(false);
-        onValueChangeEnd?.(value);
+        if (drag.current?.pointerId === event.pointerId)
+            finishDrag();
     };
     const [primaryScrollable, primaryPaneRef] = useScrollableTabStop();
     const [secondaryScrollable, secondaryPaneRef] = useScrollableTabStop();
     const fraction = max === min ? 0 : (value - min) / (max - min);
-    return (_jsxs("div", { ref: composeRefs(rootRef, forwardedRef), className: classNames("hjm-splitter", className), "data-axis": axis, "data-dragging": dragging || undefined, style: { ...style, ...layoutStyle, "--hjm-splitter-primary": `${fraction * 100}%` }, children: [_jsx("div", { ref: primaryPaneRef, className: "hjm-splitter__pane", tabIndex: primaryScrollable ? 0 : undefined, "data-pane": "primary", children: primaryPane }), _jsx("div", { role: "separator", "aria-orientation": resolveSplitterSeparatorOrientation(axis), "aria-label": label, "aria-valuenow": value, "aria-valuemin": min, "aria-valuemax": max, "aria-valuetext": descriptor.valueText, "aria-disabled": disabled || undefined, tabIndex: disabled ? -1 : 0, className: "hjm-splitter__separator", style: { "--hjm-splitter-hit-target": `${splitterRecipe.separator.hitTarget}px`, "--hjm-splitter-thickness": `${splitterRecipe.separator.thickness}px` }, onKeyDown: onKeyDown, onPointerDown: onPointerDown, onPointerMove: resize, onPointerUp: endDrag, onPointerCancel: endDrag, children: _jsx("span", { className: "hjm-splitter__handle", "aria-hidden": "true" }) }), _jsx("div", { ref: secondaryPaneRef, className: "hjm-splitter__pane", tabIndex: secondaryScrollable ? 0 : undefined, "data-pane": "secondary", children: secondaryPane })] }));
+    return (_jsxs("div", { ref: composeRefs(rootRef, forwardedRef), className: classNames("hjm-splitter", className), "data-axis": axis, "data-dragging": dragging || undefined, style: { ...style, ...layoutStyle, "--hjm-splitter-primary": `${fraction * 100}%` }, children: [_jsx("div", { ref: primaryPaneRef, className: "hjm-splitter__pane", tabIndex: primaryScrollable ? 0 : undefined, "data-pane": "primary", children: primaryPane }), _jsx("div", { role: "separator", "aria-orientation": resolveSplitterSeparatorOrientation(axis), "aria-label": label, "aria-valuenow": value, "aria-valuemin": min, "aria-valuemax": max, "aria-valuetext": descriptor.valueText, "aria-disabled": disabled || undefined, tabIndex: disabled ? -1 : 0, className: "hjm-splitter__separator", style: { "--hjm-splitter-hit-target": `${splitterRecipe.separator.hitTarget}px`, "--hjm-splitter-thickness": `${splitterRecipe.separator.thickness}px` }, onKeyDown: onKeyDown, onPointerDown: onPointerDown, onPointerMove: resize, onPointerUp: endDrag, onPointerCancel: endDrag, onLostPointerCapture: endDrag, children: _jsx("span", { className: "hjm-splitter__handle", "aria-hidden": "true" }) }), _jsx("div", { ref: secondaryPaneRef, className: "hjm-splitter__pane", tabIndex: secondaryScrollable ? 0 : undefined, "data-pane": "secondary", children: secondaryPane })] }));
 });
 function arrowIntent(key, axis, flipped) {
     // Only the axis the panes are arranged along resizes; the other pair of arrow

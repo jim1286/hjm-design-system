@@ -172,3 +172,7 @@ existing Avatar. They are optional factories, not new canonical components or
 root exports. See the [fallback contract](avatar-fallback.md) for installation,
 source recovery and identity/accessibility rules. This addition does not imply
 that the earlier device evidence covers Blobatar.
+
+### 사진 앨범 탐색과 로딩 (2026-10-12)
+
+`CarouselMotion`의 선택적 `navigation="counter"`는 이전·현재/전체·다음 한 줄 컨트롤을 Web/Native에 제공한다. 기존 기본 버튼 탐색·유한한 keyed selection·숨겨진 항목의 초점 차단·동작 줄이기 계약은 유지한다. 번뚝의 사진 넘김을 기존 모션 어댑터에 연결하기 위한 표현이며 새 어댑터/peer를 만들지 않는다. `ImageViewer`의 loading 상태는 액자 중앙 Spinner와 접근성 전용 loadingLabel을 사용한다. 제품의 private query·Expo onDisplay·cachePolicy=none은 host 책임이다.

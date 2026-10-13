@@ -49,10 +49,14 @@ export function createActionSession<T>(initialValue: T): ActionSession<T> {
       // Retrying a mutation must be authorized by the product adapter (idempotency).
       failedAttempt = proposal.retryable ? { task, options: proposal } : undefined;
       publish({ status: "error", value: previous, operationId, error });
+      if (generation !== operationId) return { status: "ignored" };
       return { status: "error", error, operationId };
     }
     if (generation !== operationId) return { status: "ignored" };
     publish({ status: "success", value, operationId });
+    // Subscribers may synchronously switch entities; their new session must not
+    // receive a stale continuation such as closing the editor after this save.
+    if (generation !== operationId) return { status: "ignored" };
     return { status: "success", value, operationId };
   };
   return {
@@ -69,4 +73,32 @@ export function createActionSession<T>(initialValue: T): ActionSession<T> {
       publish({ status: "idle", value });
     },
   };
+}
+
+/** Product-owned comparisons against the last confirmed value, never an optimistic value. */
+export type SaveFeedbackInput = Readonly<{
+  phase: ActionSnapshot<unknown>["status"];
+  dirty: boolean;
+  valid: boolean;
+  hasSaved: boolean;
+  disabled?: boolean;
+}>;
+export type SaveFeedback = Readonly<{
+  feedback: "pending" | "error" | "saved" | "saved-with-changes" | "unsaved" | "unchanged";
+  pending: boolean;
+  currentSaved: boolean;
+  canSubmit: boolean;
+}>;
+
+/** Classifies current-draft feedback without owning requests, equality, validation or copy. */
+export function resolveSaveFeedback({ phase, dirty, valid, hasSaved, disabled = false }: SaveFeedbackInput): SaveFeedback {
+  const pending = phase === "pending";
+  const currentSaved = hasSaved && !dirty;
+  // A response confirms its submitted snapshot, not edits made after submission.
+  // Reverting to the confirmed value also clears an obsolete failure notice.
+  const feedback: SaveFeedback["feedback"] = pending ? "pending"
+    : !dirty ? phase === "success" && hasSaved ? "saved" : "unchanged"
+    : phase === "error" ? "error"
+    : phase === "success" && hasSaved ? "saved-with-changes" : "unsaved";
+  return { feedback, pending, currentSaved, canSubmit: !pending && !disabled && valid && dirty };
 }

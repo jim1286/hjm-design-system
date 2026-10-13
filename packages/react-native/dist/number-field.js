@@ -1,8 +1,8 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { commitNumberFieldInput, numberFieldRecipe, parseNumberFieldInput, resolveNumberFieldDescriptor, resolveNumberFieldInputStepperState, stepNumberFieldInput, } from "@hjmds/design-contracts/components/number-field";
 import { forwardRef, useEffect, useState } from "react";
 import { Pressable, Text as NativeText, TextInput, View, } from "react-native";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useControllableState } from "./internal/state.js";
 import { logicalTextAlign, minimumTargetStyle, resolveNativeFontStyle, resolveNativeTextScaleProps, } from "./internal/styles.js";
 import { useHjmNativeTheme } from "./provider.js";
@@ -15,9 +15,9 @@ function defaultInputMode(min, step) {
     return Number.isInteger(step) ? "numeric" : "decimal";
 }
 /** Expo-independent exact numeric input sharing the Web range/step resolver. */
-export const NumberField = forwardRef(function NumberField({ label, min, max, step, value, defaultValue = null, onValueChange, description, error, required = false, disabled = false, readOnly = false, size = "medium", decrementLabel, incrementLabel, accessibilityLabel, accessibilityHint, getValueText, inputMode, inputStyle, containerStyle, layoutStyle, onBlur, onFocus, onSubmitEditing, ...inputProps }, forwardedRef) {
+export const NumberField = forwardRef(function NumberField({ label, min, max, step, value, defaultValue = null, onValueChange, description, error, required = false, disabled = false, readOnly = false, size = "medium", decrementLabel, incrementLabel, accessibilityLabel, accessibilityHint, getValueText, inputMode, layoutStyle, onBlur, onFocus, onSubmitEditing, ...inputProps }, forwardedRef) {
+    assertNoRemovedStyleProps("NumberField", inputProps, ["inputStyle", "containerStyle"]);
     const { colors, environment, textScaling, tokens } = useHjmNativeTheme();
-    warnDeprecatedStyleProps("NumberField", { inputStyle, containerStyle }, "layoutStyle for placement and size for the control");
     const controlled = value !== undefined;
     const [currentValue, setCurrentValue] = useControllableState({
         ...(value === undefined ? {} : { value }),
@@ -41,6 +41,8 @@ export const NumberField = forwardRef(function NumberField({ label, min, max, st
         setDraft(valueToInput(controlled ? currentValue : next));
     };
     const commitDraft = () => {
+        if (disabled || readOnly)
+            return;
         const next = commitNumberFieldInput(draft, descriptor);
         if (next === undefined) {
             setDraft(valueToInput(currentValue));
@@ -92,7 +94,7 @@ export const NumberField = forwardRef(function NumberField({ label, min, max, st
             },
         };
     const scaledText = (style, allowFontScaling) => resolveNativeTextScaleProps(textScaling, [resolveNativeFontStyle(tokens.fontFamily.ui), style], allowFontScaling);
-    return (_jsxs(View, { style: [{ gap: numberFieldRecipe.support.gap }, containerStyle, layoutStyle], children: [_jsx(NativeText, { ...scaledText([
+    return (_jsxs(View, { style: [{ gap: numberFieldRecipe.support.gap }, layoutStyle], children: [_jsx(NativeText, { ...scaledText([
                     tokens.typography[numberFieldRecipe.support.label.textVariant],
                     {
                         color: colors.textBody,
@@ -145,7 +147,6 @@ export const NumberField = forwardRef(function NumberField({ label, min, max, st
                                 paddingVertical: 0,
                                 textAlign: "center",
                             },
-                            inputStyle,
                         ], inputProps.allowFontScaling), ref: forwardedRef, accessibilityHint: hint, accessibilityLabel: accessibilityLabel ?? visibleLabel, accessibilityRole: "text", accessibilityState: { disabled }, accessibilityValue: accessibilityValue, editable: !disabled, readOnly: readOnly, inputMode: inputMode ?? defaultInputMode(min, descriptor.step), multiline: false, onChangeText: setDraft, onFocus: (event) => {
                             setFocused(true);
                             onFocus?.(event);

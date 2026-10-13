@@ -1832,6 +1832,26 @@ export declare const recipeRegistry: {
             readonly distribution: "equal";
             readonly density: "regular";
         };
+        readonly selectionTile: {
+            readonly background: Readonly<{
+                source: "theme";
+                key: "surfaceAccent";
+                alpha?: number;
+            }>;
+            readonly selectedBackground: Readonly<{
+                source: "theme";
+                key: "primary";
+                alpha?: number;
+            }>;
+            readonly selectedContent: Readonly<{
+                source: "theme";
+                key: "onPrimary";
+                alpha?: number;
+            }>;
+            readonly padding: 4;
+            readonly gap: 4;
+            readonly radius: "lg";
+        };
         readonly adaptive: {
             readonly web: "fixed-compact-viewport";
             readonly native: "navigator-tab-bar";
@@ -4525,6 +4545,23 @@ export declare const recipeRegistry: {
         readonly defaults: {
             readonly density: "comfortable";
             readonly selected: false;
+            readonly tone: "default";
+        };
+        readonly tones: {
+            readonly default: {
+                readonly titleColor: Readonly<{
+                    source: "theme";
+                    key: "textBody";
+                    alpha?: number;
+                }>;
+            };
+            readonly danger: {
+                readonly titleColor: Readonly<{
+                    source: "theme";
+                    key: "danger";
+                    alpha?: number;
+                }>;
+            };
         };
         readonly density: {
             readonly compact: {
@@ -4551,6 +4588,11 @@ export declare const recipeRegistry: {
                 readonly paddingHorizontal: 8;
                 readonly paddingVertical: 16;
             };
+        };
+        readonly loading: {
+            readonly titleWidthPercent: 60;
+            readonly descriptionWidthPercent: 40;
+            readonly trailingWidth: 32;
         };
         readonly gap: 12;
         readonly leadingSize: 40;

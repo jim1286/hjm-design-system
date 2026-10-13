@@ -74,9 +74,19 @@ it("names the range edges for assistive technology, not only in color", async ()
 // spanning sibling days. Use real pointer actions for this regression.
 it("selects the intended range through real pointer hit testing", async () => {
   await act(async () => root.render(<Fixture />));
-  await page.getByRole("gridcell", { name: "2026-09-03", exact: true }).click();
-  await page.getByRole("gridcell", { name: "2026-09-07", exact: true }).click();
+  await act(async () => page.getByRole("gridcell", { name: "2026-09-03", exact: true }).click());
+  await act(async () => page.getByRole("gridcell", { name: "2026-09-07", exact: true }).click());
   expect(status()).toBe("2026-09-03 ~ 2026-09-07");
   const label = day("2026-09-03").querySelector<HTMLElement>(".hjm-calendar__day-label")!;
   expect(getComputedStyle(label).zIndex).toBe("1");
+});
+
+
+it("completes a same-day range and restarts by activating its selected edge", async () => {
+  await act(async () => root.render(<Fixture />));
+  await act(async () => day("2026-09-10").click());
+  await act(async () => day("2026-09-10").click());
+  expect(status()).toBe("2026-09-10 ~ 2026-09-10");
+  await act(async () => day("2026-09-10").click());
+  expect(status()).toBe("2026-09-10 ~ -");
 });

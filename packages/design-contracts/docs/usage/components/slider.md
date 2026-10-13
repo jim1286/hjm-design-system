@@ -104,7 +104,7 @@ Native는 제품 프로필의 `tokens.fontFamily.ui`를 실제 텍스트/입력 
 - `label`·`getValueText`·(Native) `incrementLabel`/`decrementLabel`은 i18n 문구로 준다. 단위·형식은 제품 소유다.
 - 사용자 입력만 step으로 snap된다. 제품이 준 `value`가 범위 안이면 step 밖이어도 그대로 그린다.
 - 색·트랙 두께·thumb 크기는 HJM 소유다. 배치는 `layoutStyle`로 한다. Web `style`/`className`/`inputClassName`은 배치용으로만 쓰고,
-  Native `containerStyle`/`controlStyle`은 deprecated(개발 모드 경고, 다음 major 제거)다.
+  Native `containerStyle`/`controlStyle`은 제거된 속성이다.
 
 ## 플랫폼 차이
 
@@ -113,7 +113,7 @@ Native는 제품 프로필의 `tokens.fontFamily.ui`를 실제 텍스트/입력 
 | 접근성 | `input type="range"`, `aria-valuetext` | role `adjustable`, `accessibilityValue` |
 | 키 조작 | 방향키·Home/End·PageUp/PageDown(step×10) | `increment`/`decrement` action만(페이지 이동 없음) |
 | 필수 추가 문구 | 없음 | `incrementLabel`, `decrementLabel` |
-| 스타일 슬롯 | `layoutStyle`, `style`(루트), `className`, `inputClassName` | `layoutStyle`. `containerStyle`·`controlStyle`은 deprecated(`style` prop 없음) |
+| 스타일 슬롯 | `layoutStyle`, `style`(루트), `className`, `inputClassName` | `layoutStyle`. `containerStyle`·`controlStyle`은 제거된 속성(`style` prop 없음) |
 | 의존성 | 없음 | 없음(PanResponder 사용) |
 
 ## 함정

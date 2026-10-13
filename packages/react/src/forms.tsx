@@ -267,7 +267,7 @@ export type TextFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, "size">
   Readonly<{
     /**
      * Receives the next string value, the same callback name and shape as the
-     * Native TextField and the Web TextArea. Before 1.5.0 Web TextField only had
+     * Native TextField. Web TextArea retains the DOM `onChange` callback. Before 1.5.0 Web TextField only had
      * the DOM `onChange`, so shared form code needed a platform branch. Both
      * fire; `onChange` stays for event access.
      */
@@ -535,7 +535,7 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
       color: "currentColor",
       size: iconRecipe.sizes[searchFieldRecipe.sizes[size].glyph],
     };
-    const canClear = value.length > 0 && !disabled;
+    const canClear = value.length > 0 && !disabled && !props.readOnly;
     return (
       <FieldDisabledOpacityContext.Provider value={searchFieldRecipe.states.disabledOpacity}>
       <TextField

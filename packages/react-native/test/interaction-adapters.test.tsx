@@ -4,6 +4,8 @@ import { afterEach, expect, it, vi } from "vitest";
 import { HjmNativeProvider } from "../src/provider.js";
 import { SortableCollection } from "../src/sortable.js";
 import { SwipeActions } from "../src/swipe-actions.js";
+import { IconButton } from "../src/actions.js";
+import { Text } from "../src/primitives.js";
 import { CarouselMotion } from "../src/carousel-motion.js";
 import { ContentTransition, TextTransition } from "../src/content-transition.js";
 import { Celebration } from "../src/celebration.js";
@@ -103,4 +105,36 @@ it("gives confetti its playback window after native atlas startup and bounds a s
     await act(async () => { await vi.advanceTimersByTimeAsync(5000); });
     expect(complete).toHaveBeenCalledTimes(2);
   } finally { vi.useRealTimers(); }
+});
+
+it("keeps counter carousel boundaries and control intent in sync", async () => {
+  const change = vi.fn();
+  const fixture = (key: string) => <CarouselMotion slides={items} currentKey={key} onCurrentKeyChange={change}
+    navigation="counter" label="Photos" previousLabel="Previous" nextLabel="Next" width={240} height={220} renderSlide={item => item.label} />;
+  await render(fixture("a"));
+  let controls = tree!.root.findAllByType(IconButton);
+  expect(controls[0]!.props.disabled).toBe(true);
+  act(() => controls[1]!.props.onPress());
+  expect(change).toHaveBeenCalledWith("b");
+  await render(fixture("b"));
+  controls = tree!.root.findAllByType(IconButton);
+  expect(controls[1]!.props.disabled).toBe(true);
+  expect(tree!.root.findAllByType(Text).some(node => node.props.children?.join?.("") === "2/2")).toBe(true);
+});
+
+it("ignores an earlier row's completion after a swipe view is recycled", async () => {
+  let completeA!: () => void; let completeB!: () => void;
+  const actionA = vi.fn(() => new Promise<void>(resolve => { completeA = resolve; }));
+  const actionB = vi.fn(() => new Promise<void>(resolve => { completeB = resolve; }));
+  const close = vi.fn();
+  const view = (rowId: string, onAction: typeof actionA) => <SwipeActions rowId={rowId} label="Row" actionsLabel="Actions" openRowId={rowId} onOpenRowChange={close}
+    actions={[{ id: "save", label: "Save" }]} onAction={onAction} onError={() => {}}>content</SwipeActions>;
+  const press = () => find("Swipeable").props.renderRightActions().props.children[0].props.onPress();
+  await render(view("a", actionA), false); act(press);
+  await render(view("b", actionB), false); act(press);
+  await act(async () => { completeA(); });
+  expect(close).not.toHaveBeenCalled();
+  act(press); expect(actionB).toHaveBeenCalledOnce();
+  await act(async () => { completeB(); });
+  expect(close).toHaveBeenCalledExactlyOnceWith(null);
 });

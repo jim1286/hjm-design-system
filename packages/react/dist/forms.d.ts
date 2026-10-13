@@ -60,7 +60,7 @@ type SharedInputProps = FieldCopyProps & Readonly<{
 export type TextFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, "size"> & SharedInputProps & Readonly<{
     /**
      * Receives the next string value, the same callback name and shape as the
-     * Native TextField and the Web TextArea. Before 1.5.0 Web TextField only had
+     * Native TextField. Web TextArea retains the DOM `onChange` callback. Before 1.5.0 Web TextField only had
      * the DOM `onChange`, so shared form code needed a platform branch. Both
      * fire; `onChange` stays for event access.
      */
@@ -91,7 +91,7 @@ export declare const TextField: import("react").ForwardRefExoticComponent<Omit<I
 }> & Readonly<{
     /**
      * Receives the next string value, the same callback name and shape as the
-     * Native TextField and the Web TextArea. Before 1.5.0 Web TextField only had
+     * Native TextField. Web TextArea retains the DOM `onChange` callback. Before 1.5.0 Web TextField only had
      * the DOM `onChange`, so shared form code needed a platform branch. Both
      * fire; `onChange` stays for event access.
      */

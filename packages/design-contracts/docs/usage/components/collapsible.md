@@ -85,7 +85,7 @@ FolderPreview의 Native preview `md`와 앞면 `lg`는 Provider radius를 읽는
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 트리거는 폭을 꽉 채운다. 트리거 최소 높이 44(`control.minTouchTarget`, 두 플랫폼. Native는 미게시(1.12.1 이후)), Web 위아래 `spacing.xs` 8. `FolderPreview` 표지는 최대 260×160 고정 그림 | `.hjm-collapsible__trigger`, `react-native/src/collapsible.tsx`, `react/src/folder-preview.tsx` |
+| 크기 | 트리거는 폭을 꽉 채운다. 트리거 최소 높이 44(`control.minTouchTarget`, 두 플랫폼. Native는 1.13.0 변경), Web 위아래 `spacing.xs` 8. `FolderPreview` 표지는 최대 260×160 고정 그림 | `.hjm-collapsible__trigger`, `react-native/src/collapsible.tsx`, `react/src/folder-preview.tsx` |
 | 간격 | 트리거↔내용, 트리거 안 문구↔표시 `spacing.xs` 8(Web 트리거 안은 `spacing.sm` 12) | `collapsibleRecipe.gap`, `.hjm-collapsible__trigger` |
 | 순서·정렬 | 위→아래 [트리거: 문구 시작 쪽 · ▸/▾ 끝 쪽] → [내용(열렸을 때만)]. `FolderPreview`는 트리거 안에 [표지 그림(가운데)] → [label]이 쌓인다 | `react/src/collapsible.tsx`, `react/src/folder-preview.tsx` |
 | 고정·스크롤 | 고정 영역이 없다. 닫히면 내용이 트리에서 빠져 아래 내용이 올라온다 | `react-native/src/collapsible.tsx` 주석 |
@@ -94,16 +94,16 @@ FolderPreview의 Native preview `md`와 앞면 `lg`는 Provider radius를 읽는
 ## 꼭 지킬 것
 
 - `trigger`는 무엇이 열리는지 알 수 있는 i18n 문구로 넣는다. trigger 안에 다른 버튼·링크를 넣지 않는다(trigger 자체가 버튼이다).
-- 닫힌 내용은 unmount된다. 닫혀도 유지해야 할 입력 상태는 바깥에서 들고 있는다.
+- 기본 `keepMounted=false`에서는 닫힌 내용이 unmount된다. 다시 열 때 로컬 입력을 유지하려면 `keepMounted`를 쓰거나 입력 상태를 바깥에서 관리한다. 숨겨진 내용의 접근성·초점 차단은 HJM이 유지한다.
 - `FolderPreview`의 `previews`는 장식이다(접근성·터치에서 숨김). 항목 이름과 행동은 펼친 `children`에 다시 둔다.
   미리보기 이미지·라벨 문구는 제품 소유다.
-- 배치는 `layoutStyle`로 한다. Native `style`은 deprecated(개발 모드 1회 경고, 다음 major 제거)다.
+- 배치는 `layoutStyle`로 한다. Native `style`은 제거된 속성이다.
 
 ## 플랫폼 차이
 
 | 항목 | Web | Native |
 | --- | --- | --- |
-| 배치 | `layoutStyle`(`FolderPreview`도) | `layoutStyle`. `style`은 deprecated — `layoutStyle`을 쓴다. `FolderPreview`는 배치 prop이 없다 |
+| 배치 | `layoutStyle`(`FolderPreview`도) | `layoutStyle`. `style`은 제거된 속성 — `layoutStyle`을 쓴다. `FolderPreview`는 배치 prop이 없다 |
 | 열린 영역 관계 | `aria-controls` + `role="region"` | 중첩 구조, `accessibilityState.expanded` |
 | 문자열 trigger | 그대로 버튼 내용 | HJM `Text`로 감싼다 |
 | `FolderPreview` 모션 | CSS transform, reduced motion이면 없음 | `ContentTransition`(`scale`) |
@@ -118,3 +118,5 @@ FolderPreview의 Native preview `md`와 앞면 `lg`는 Provider radius를 읽는
 2026-10-07 테마 전환 시 입력이 사라지는 문제를 피하려고 `presentation="inline"`과 `keepMounted`를 추가했다.
 inline은 트리거를 숨기고 항상 내용을 펼친다. 기본 disclosure는 기존 open/defaultOpen 규칙을 유지한다.
 keepMounted가 있어도 닫힌 내용은 포커스·스크린리더·터치 대상에서 제외한다. 단순 read-only 내용은 기존 기본값을 쓴다.
+
+Web에서 외부 상태 변경으로 닫힐 때 내부에 있던 초점은 trigger로 돌아간다. 동시에 disabled면 disclosure host로 복구하고, 이미 외부로 이동한 초점은 유지한다. 열린 도구를 trigger로 직접 닫으면 해당 버튼에 초점을 유지하므로 Enter로 다시 열 수 있다.

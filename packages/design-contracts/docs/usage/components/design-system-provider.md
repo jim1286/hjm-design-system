@@ -86,9 +86,9 @@ expect(checkBrandPaletteContrast(PRODUCT_BRAND_PALETTE)).toEqual({ light: [], da
 | `reducedMotion` | `true` · `false` | `false` | — |
 | `minimumVisualTarget` | `true` · `false` | `false` | — |
 | `brandPalette` | `{ light?, dark? }` | — | 각각 `ThemeColors` 17개 key 중 필요한 것만 넘긴다(부분 병합). 상태 강조색은 덮을 수 없다. 중첩 Provider는 가장 가까운 상위의 값을 물려받는다 |
-| `designProfile` | `HjmDesignProfile` | 가장 가까운 상위 프로필 또는 없음 | 기본 프로필은1.15.0 게시. `hjmDesignPresets` 또는 `defineHjmDesignProfile` 결과만 넣는다. 후속 글자 역할·질감/구성 개선은 아직 미게시다. [프로필 계약](../../design-profile.md)의 토큰·질감·전환·구성·화면 기본값을 상속한다 |
+| `designProfile` | `HjmDesignProfile` | 가장 가까운 상위 프로필 또는 없음 | 기본 프로필·표면 질감은 1.15.0 추가. `hjmDesignPresets` 또는 `defineHjmDesignProfile` 결과만 넣는다. 글자 역할·관련 구성 개선은 1.16.0 변경. [프로필 계약](../../design-profile.md)의 토큰·질감·전환·구성·화면 기본값을 상속한다 |
 | `value` | `DesignSystemProviderValue`(`resolveDesignSystemProviderValue` 결과) | — | 테스트·스토리·임베딩용. 환경 prop·`brandPalette`·`designProfile`과 함께 쓸 수 없고(타입이 막는다), 주면 OS theme·모션 관찰과 상위 `brandPalette` 상속이 멈춘다 |
-| `surfaceEffects`(Native) | `{ renderBackdrop?, insetShadows? }` | 상위 host 또는 없음 | 미게시 실험. 실제 blur host·inset capability를 한 번 등록하며 `{}`로 하위 영역을 해제. [Surface 질감 계약](../../design-profile.md#surfacecard의-유리클레이-질감) |
+| `surfaceEffects`(Native) | `{ renderBackdrop?, insetShadows? }` | 상위 host 또는 없음 | 1.15.0 실험 API. 실제 blur host·inset capability를 한 번 등록하며 `{}`로 하위 영역을 해제. [Surface 질감 계약](../../design-profile.md#surfacecard의-유리클레이-질감) |
 | `safeAreaInsets`(Native) | `{ top?, right?, bottom?, left? }`(pt) | `{}` | 보통 `useSafeAreaInsets()` 결과. 중첩 Provider는 가장 가까운 상위 값을 물려받는다 |
 
 - 제품 상태를 바꾸는 이벤트 prop은 없다. Native의 선택형 `surfaceEffects.renderBackdrop`은 장식 host만 공급한다. 해석된 값은 Web `useHjmTheme()`, Native `useHjmNativeTheme()`로 읽는다.

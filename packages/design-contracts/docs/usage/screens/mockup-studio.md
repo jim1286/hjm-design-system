@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-13
 - 근거: `showcase/web/src/foundations/MockupStudio.stories.tsx`, `src/responsive.ts`(`resolveWindowClass`), `showcase/web/src/studio/MockupStudio.tsx`, `showcase/web/src/studio/SceneTimeline.tsx`, `showcase/shared/mockup-scene.ts`, `showcase/shared/scene-timeline.ts`
 - 스토리북: `배포/화면/화면 틀과 도구/목업 편집`
 
@@ -74,7 +74,7 @@ Native 스토리는 없다(장면 작성은 Web showcase에 둔다는 통합 계
 | 장면 설정 저장 | Button `secondary` | ⑩ 둘째 | 1. JSON 파일 내려받기 |
 | 초기화 | Button `ghost` | ⑩ 셋째(끝) | 1. 확인 없이 모든 설정·이미지를 버린다 |
 | 재생·일시 정지 | Button `secondary` | ⑥ 슬라이더 아래 첫째 | 1. 이미지 없음·모션 줄이기·영상 출력 중이면 `disabled` |
-| 영상 내보내기 | Button `secondary` + 진행 중 `출력 취소` ghost | ⑥ 아래쪽 | 1(+1). 진행률을 라벨에 % 로 표시(`t("editor.videoProgress", { percent })`) |
+| 영상 내보내기 | Button `secondary` + 진행 중 `출력 취소` ghost | ⑥ 아래쪽 | 1(+1). 영상 버튼 아래 `role="progressbar"`에 실제 진행률 0–100% 표시 |
 | 실패 후 다시 시도 | Notice `action` > Button `tone="secondary" size="small"` | ⑤ 실패 Notice 안 | 내보내기 실패일 때만 1. 파일 읽기 실패는 다른 파일을 고르는 것이 복구라 버튼을 두지 않는다 |
 | 설정 고르기 | Button `secondary`(형태·프레임·배경·움직임) · `ghost`(각도·여백·길이·fps) + `selected` | ⑥⑧ 각 줄 | 줄마다 2~5 |
 | 파일 고르기 | `<input type="file">`(PNG·JPEG·WebP / JSON) | ④ | 2 |
@@ -90,9 +90,9 @@ Native 스토리는 없다(장면 작성은 Web showcase에 둔다는 통합 계
 | 기본 | 빈 프레임 미리보기, 상태 "스크린샷을 선택해 시작하세요.", PNG·재생·영상 비활성 | 화면 캡처 선택 |
 | 로딩 | 상태 "스크린샷을 여는 중이에요.", PNG 비활성 | 기다림 |
 | 빈 | 기본과 같다(이미지 없음). 장면 JSON만 불러오면 이미지가 비워지고 "파일을 다시 선택해 주세요" | 같은 캡처 다시 선택 |
-| 오류 | 네트워크·서버 요청이 없다(브라우저 안에서만 처리). ⑤ 자리에 [Notice](../components/notice.md) `tone="danger"`. 이미지 읽기 실패(형식 PNG·JPEG·WebP 밖·20MB·16384px 초과): 이전 이미지·설정 유지. 장면 JSON 실패(64KB 초과·형식 오류): 현재 장면 유지. PNG·포스터 내보내기 실패: `action` 다시 시도, `loading` 해제. 영상: 인코더 미지원·실패면 PNG 대안 안내, 사용자가 취소하면 오류가 아니라 상태 문구. 다시 시도가 또 실패하면 같은 Notice가 같은 자리에 남는다 | 다른 파일 선택 / 다시 시도 / PNG 저장 |
+| 오류 | 아래는 제품 편집기의 복구 규칙이며 현재 도구의 영상·포스터는 SceneTimeline 상태 표시를 따른다. 네트워크·서버 요청이 없다(브라우저 안에서만 처리). ⑤ 자리에 [Notice](../components/notice.md) `tone="danger"`. 이미지 읽기 실패(형식 PNG·JPEG·WebP 밖·20MB·16384px 초과): 이전 이미지·설정 유지. 장면 JSON 실패(64KB 초과·형식 오류): 현재 장면 유지. PNG 내보내기 실패: Notice `action` 다시 시도. 포스터 실패: 타임라인 상태 문구와 기존 포스터 버튼으로 재시도, `loading` 해제. 영상: 인코더 미지원·실패면 PNG 대안 안내, 사용자가 취소하면 오류가 아니라 상태 문구. 다시 시도가 또 실패하면 같은 Notice가 같은 자리에 남는다 | 다른 파일 선택 / 다시 시도 / PNG 저장 |
 | 불러옴 | 상태 "파일명 · 가로 × 세로 화면을 불러왔어요.", 미리보기에 그려짐 | 편집·내보내기 |
-| 영상 출력 중 | 버튼 라벨 "영상 출력 N%"(보간 키), [출력 취소] 등장. 다른 탭으로 가면 취소 | 취소 |
+| 영상 출력 중 | 진행률(0–100%)과 [출력 취소] 등장. 다른 탭으로 가거나 장면·이미지가 바뀌면 이전 출력 취소 | 취소 |
 | 모션 줄이기 | 재생 비활성, 안내 문구. 슬라이더로 정지 장면 확인 | 슬라이더 |
 
 ## 사용하는 지침
@@ -112,6 +112,13 @@ Native 스토리는 없다(장면 작성은 Web showcase에 둔다는 통합 계
 | [BottomCTA](../components/bottom-cta.md) | 제품 편집기의 고정 내보내기 줄 |
 | [화면 여백과 너비](../tokens/layout.md) | gutter·`layout.contentMaxWidth` |
 | [간격](../tokens/spacing.md) | `spacing.sm`·`md`·`xl` |
+
+### 도구와 제품 편집기의 상태 경계
+
+이미지·장면을 다시 불러올 때 현재 미리보기와 편집 입력을 지우지 않는다. 처음부터 이미지가 없는 빈 상태만
+미리보기 영역 중앙에 표시하고, 파일 교체 실패는 이전 이미지·장면을 유지한 채 그 영역의 Notice로 설명한다.
+내보내기는 클릭 시점의 scene/image snapshot을 사용한다. 내보낸 파일과 이후 편집 상태를 구분하고
+완료 전 다운로드 성공을 표시하지 않는다. 장면 JSON에는 원본 이미지를 포함하지 않는다.
 
 ## 코드 골격
 
@@ -172,11 +179,10 @@ const gutter = resolveWindowClass(window.innerWidth) === "compact" ? "compact" :
 // 없음. 목업 편집은 Web showcase 전용이다.
 ```
 
-## 큰 글자·다크·좁은 폭
+## 다크·좁은 폭
 
 | 조건 | 바뀌는 것 |
 | --- | --- |
-| 큰 글자(`textScale` 2) | 모든 버튼 줄이 감긴다. canvas 안 글자는 출력 이미지의 일부라 글자 배율을 따르지 않는다 |
 | 다크 | 화면 UI는 테마 토큰. 출력 이미지 배경은 장면 설정(새벽·잉크·민트)이 정하고 테마와 무관하다 |
 | 좁은 폭 | 한 열 그대로. 폭 600 미만이면 Container gutter `compact` 16. 미리보기는 폭 100%·최대 70vh로 줄고 파일 입력도 폭 100% |
 | 넓은 폭 | 한 열 그대로, Container `content`로 최대 1200. 미리보기 옆에 설정을 두는 두 열 배치는 확인되지 않았다 |
@@ -187,4 +193,13 @@ const gutter = resolveWindowClass(window.innerWidth) === "compact" ? "compact" :
 - PNG는 화면에 보이는 canvas가 아니라 내보낼 때 새로 그린 canvas에서 만든다. 인코딩 중 설정을 바꿔도 결과가 바뀌지 않는다.
 - 초기화는 확인 없이 지운다. 제품 편집기에서 되돌리기 어려운 초기화에는 [InlineConfirm](../components/button.md)이나 [AlertDialog](../components/alert-dialog.md)를 둔다.
 - 구획 제목은 Heading으로 표시한다. 이전 Text heading 예제는 2026-10-06 제목 의미 구조를 맞추면서 수정했다.
-- 현재 스토리는 읽기·내보내기 실패를 상태 Text 문구로만 알리고(Notice·다시 시도 없음), 상태 문구를 템플릿 문자열로 조립한다. PNG 내보내기 중에는 `loading` 대신 `disabled` + 라벨 교체를 쓴다.
+- 현재 스토리는 이미지·장면 읽기와 PNG 내보내기 실패를 Notice로 표시하고 PNG 실패에는 같은 내보내기 함수를 다시 실행하는 행동을 둔다. PNG 버튼은 `loading`을 사용한다. 상태 문구는 Showcase 소유이며 제품은 위 보간 키 예제로 지역화한다. 타임라인의 영상·포스터 실패 표현은 SceneTimeline이 별도로 소유한다.
+
+
+### 출력 작업과 편집 수명
+
+2026-10-13 실행 검수에서 같은 렌더의 연속 클릭이 출력을 중복 시작하고, 초기화·장면 교체 뒤 이전 출력이 새 상태에 결과를 쓰는 경합을 확인했다. PNG·포스터·영상은 각각 작업 식별자와 즉시 잠금을 사용한다. 초기화·파일 선택·언마운트 뒤 늦은 PNG 결과를 버리며, 타임라인의 장면·이미지 변경/언마운트는 진행 중 영상과 포스터 결과를 무효화한다. 사용자가 영상 취소 후 바로 다시 시작해도 이전 진행률·완료가 새 작업에 반영되지 않는다.
+
+주 PNG 내보내기는 시작 시 오프스크린 Canvas에 그린 복사본을 인코딩하므로 제목·비율 편집 중에도 그 출력의 픽셀은 바뀌지 않는다. 재시도 Notice가 사라진 뒤 초점은 완료 시 주 PNG 행동으로 돌아오되, 사용자가 다른 입력이나 빈 영역으로 옮긴 초점은 가져오지 않는다. 타임라인 재생은 부모 callback의 참조가 바뀌어도 기존 시계를 유지한다. 다운로드 안내는 브라우저에 파일 전송을 시작했다는 뜻이며 사용자의 디스크 저장 완료를 판정하지 않는다.
+
+최대 글자와 이를 모사하는 확대 조건은 공통 사용자 지침에 따라 설계·검증에서 제외한다. PNG 픽셀·제어 인코더 회귀를 실제 영상 코덱 품질이나 OS 다운로드 완료 근거로 확대하지 않는다.

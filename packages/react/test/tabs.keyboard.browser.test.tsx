@@ -79,3 +79,50 @@ it("uses an instant roving-focus scroll when reduced motion is requested", async
     inline: "nearest",
   });
 });
+
+const dynamicItems = ["a", "b", "c"].map(id => ({ id, label: id, panel: <p>{id} panel</p> }));
+const key = (value: string) => document.activeElement?.dispatchEvent(new KeyboardEvent("keydown", { key: value, bubbles: true }));
+
+it.each(["remove", "disable"])("restores focus after the focused tab is %s", async (change) => {
+  const render = (items = dynamicItems) => root.render(<HjmProvider><Tabs label="Dynamic" items={items} /></HjmProvider>);
+  await act(async () => render());
+  await act(async () => { host.querySelectorAll<HTMLButtonElement>('[role="tab"]')[0]!.focus(); key("ArrowRight"); });
+  expect(document.activeElement?.textContent).toBe("b");
+  await act(async () => render(change === "remove" ? dynamicItems.filter(item => item.id !== "b") : dynamicItems.map(item => ({ ...item, disabled: item.id === "b" }))));
+  expect(document.activeElement?.getAttribute("role")).toBe("tab");
+  expect(document.activeElement?.textContent).toBe("a");
+  await act(async () => key("ArrowRight"));
+  expect(document.activeElement?.textContent).toBe("c");
+});
+
+it("recovers removed selection without stealing external focus", async () => {
+  const change = vi.fn();
+  const render = (items = dynamicItems) => root.render(<HjmProvider><button>Outside</button><Tabs label="Dynamic" defaultValue="b" items={items} onValueChange={change} /></HjmProvider>);
+  await act(async () => render());
+  const outside = host.querySelector("button")!;
+  outside.focus();
+  await act(async () => render(dynamicItems.filter(item => item.id !== "b")));
+  expect(document.activeElement).toBe(outside);
+  expect(host.querySelector('[aria-selected="true"]')?.textContent).toBe("a");
+  expect(change).toHaveBeenCalledExactlyOnceWith("a");
+});
+
+it("keeps controlled selection until accepted while RTL arrows and endpoints move focus", async () => {
+  const change = vi.fn();
+  const render = (value = "a") => root.render(<HjmProvider direction="rtl"><Tabs label="Controlled" value={value} onValueChange={change} items={dynamicItems} /></HjmProvider>);
+  await act(async () => render());
+  host.querySelector<HTMLButtonElement>('[role="tab"]')!.focus();
+  await act(async () => key("ArrowLeft"));
+  expect(document.activeElement?.textContent).toBe("b");
+  await act(async () => key("Enter"));
+  expect(change).toHaveBeenLastCalledWith("b");
+  expect(host.querySelector('[aria-selected="true"]')?.textContent).toBe("a");
+  await act(async () => render("b"));
+  expect(host.querySelector('[aria-selected="true"]')?.textContent).toBe("b");
+  await act(async () => key("ArrowRight"));
+  expect(document.activeElement?.textContent).toBe("a");
+  await act(async () => key("End"));
+  expect(document.activeElement?.textContent).toBe("c");
+  await act(async () => key("Home"));
+  expect(document.activeElement?.textContent).toBe("a");
+});

@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
-import { AccessibilityInfo, AppState, PanResponder, View, type StyleProp, type ViewStyle } from "react-native";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { AccessibilityInfo, AppState, PanResponder, View } from "react-native";
 import {
   carouselRecipe, resolveCarouselDescriptor, getCarouselNavigationTarget, isCarouselAutoplayActive,
   type CarouselSlideDescriptor, type CarouselSelection, type CarouselAutoplayConfig,
@@ -8,7 +8,6 @@ import {
 import { Button } from "./actions.js";
 import { Text } from "./primitives.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 import { useControllableState } from "./internal/state.js";
 
@@ -22,22 +21,25 @@ export type CarouselProps = CarouselSelection & Readonly<{
   autoplay?: CarouselAutoplayConfig;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
-   * `carouselRecipe` owns appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
 }>;
 
 export function Carousel({ label, slides, renderSlide, composeAccessibleName, labels, autoplay,
-  currentKey, defaultCurrentKey, onCurrentKeyChange, layoutStyle, style }: CarouselProps) {
-  warnDeprecatedStyleProps("Carousel", { style }, "layoutStyle for placement; carouselRecipe owns appearance");
+  currentKey, defaultCurrentKey, onCurrentKeyChange, layoutStyle }: CarouselProps) {
   const { environment, tokens } = useHjmNativeTheme();
-  const [current, setCurrent] = useControllableState({
+  const [storedCurrent, setCurrent] = useControllableState({
     ...(currentKey === undefined ? {} : { value: currentKey }),
     defaultValue: defaultCurrentKey ?? slides[0]?.id ?? "",
     ...(onCurrentKeyChange === undefined ? {} : { onChange: onCurrentKeyChange }),
   });
+  const previousIndex = useRef<number | null>(null);
+  // A host can delete the current uncontrolled slide after mount. Keep its place
+  // in the collection (or the new last slide); explicit invalid keys still fail validation.
+  const recovering = currentKey === undefined && previousIndex.current !== null && !slides.some(slide => slide.id === storedCurrent);
+  const current = recovering ? slides[Math.min(previousIndex.current!, slides.length - 1)]?.id ?? storedCurrent : storedCurrent;
+  useLayoutEffect(() => {
+    previousIndex.current = slides.findIndex(slide => slide.id === current);
+    if (recovering) setCurrent(current);
+  }, [current, recovering, slides, setCurrent]);
   const descriptor = { slides, currentKey: current, ...(autoplay ? { autoplay } : {}) };
   const resolved = resolveCarouselDescriptor(descriptor, { composeAccessibleName });
   if (!label.trim() || Object.values(labels).some((value) => !value.trim())) throw new TypeError("Carousel labels must not be empty");
@@ -78,7 +80,7 @@ export function Carousel({ label, slides, renderSlide, composeAccessibleName, la
     },
   });
   const selected = resolved.find((slide) => slide.current)!;
-  return <View style={[{ gap: carouselRecipe.sizes.medium.gap, direction: environment.direction }, style, layoutStyle]}>
+  return <View style={[{ gap: carouselRecipe.sizes.medium.gap, direction: environment.direction }, layoutStyle]}>
     {autoplay ? <Button tone="ghost" disabled={environment.reducedMotion || screenReader}
       onPress={() => { if (last) setCurrent(slides[0]!.id); setRotating(!rotating || last); }}>
       {rotating && !last && !environment.reducedMotion && !screenReader ? labels.pause : labels.resume}

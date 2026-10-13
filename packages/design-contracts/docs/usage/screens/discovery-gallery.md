@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-13
 - 근거: `showcase/web/src/patterns/DiscoveryGallery.stories.tsx`, `showcase/native/src/DiscoveryGallery.stories.tsx`, `showcase/shared/discovery-gallery.ts`, `src/base-recipes.ts`(`buttonRecipe.states.selected`), `src/grid.ts`
 - 스토리북: `배포/화면/검색/작품 탐색`
 
@@ -28,7 +28,7 @@
 │   작품 검색 (보이는 라벨)                                    │
 │   [🔍 모바일, 작업 공간 ...........  (x)]                  │  SearchField 최소 44
 │              ↕ spacing.xl 24                               │
-│ ② [전체] [웹사이트] [모바일] [대시보드]                       │  ghost, 선택된 것만 selected
+│ ② [전체] [웹사이트] [모바일] [대시보드]                       │  SegmentedControl pills, 단일 선택
 │ ③ [정렬: 인기순] [저장한 작품 2]                             │  secondary(정렬) · ghost+selected(저장만 보기)
 │ ④ "N개의 작품"  (상태 알림)                                 │
 │ (오류면 여기 Notice danger + [다시 시도])                    │
@@ -76,9 +76,9 @@
 | 행동 | 컴포넌트·tone | 위치 | 개수·순서 |
 | --- | --- | --- | --- |
 | 검색 | SearchField `onValueChange` | ① 맨 아래 | 1. 입력 즉시 거른다 |
-| 카테고리 | Button `ghost`, 선택된 것만 `selected` | ② | 카테고리 수, "전체"가 맨 앞 |
+| 카테고리 | SegmentedControl `presentation="pills"` | ② | 카테고리 수, "전체"가 맨 앞 |
 | 정렬 전환 | Button `secondary`, 라벨에 현재 값(`t("gallery.sort", { value: t(sortKey[sort]) })`) | ③ 첫 자리 | 1. 누를 때마다 인기순 ↔ 최신순 |
-| 저장한 작품만 | SegmentedControl `presentation="pills"`, 라벨에 개수 | ③ 정렬 뒤 | 1 |
+| 저장한 작품만 | Button `ghost` + `selected`, 라벨에 개수 | ③ 정렬 뒤 | 1 |
 | 상세 보기 | Button `ghost` | 카드 맨 아래 버튼 줄 첫 자리 | 카드마다 1. `aria-label`/`accessibilityLabel`에 작품 제목 포함 |
 | 카드 저장 | Button `secondary` + `selected`(토글) | 카드 버튼 줄 둘째 자리 | 카드마다 1. 라벨 "저장" ↔ "저장됨", 접근성 이름에 제목과 저장/저장 취소 |
 | 시트 저장(시트의 주 행동) | Button 기본 primary + `selected` | ⑦ Sheet `footer`(Native 꽉 찬 폭, Web 끝 정렬) | 1. 라벨 "컬렉션에 저장" ↔ "저장 취소". 시트를 닫지 않는 토글이다 |
@@ -87,7 +87,7 @@
 | 파괴 행동 | — | — | 없음(저장 취소는 같은 버튼의 토글) |
 
 primary는 화면에서 빈 결과 복구 하나, 시트 안에서 저장 하나다. 시트 안 행동은 그 표면 안에서 세고, `selected`를 준 버튼은
-tone과 관계없이 선택 모양(배경 `bg`, 글자·테두리 `contentBrand`)으로 칠해져 세지 않는다([Button](../components/button.md) "꼭 지킬 것").
+tone과 관계없이 선택 모양(배경 `bg`, 글자 `contentBrand`, 별도 선택 테두리 없음)으로 칠해져 세지 않는다([Button](../components/button.md) "꼭 지킬 것").
 카드 안 버튼은 [보기][저장] 순서로 시작 정렬, `wrap`이다. 카드 전체를 누름 대상으로 만들지 않는다 — 카드 안에 버튼이 둘이라
 겹친 누름 대상이 된다.
 
@@ -96,9 +96,9 @@ tone과 관계없이 선택 모양(배경 `bg`, 글자·테두리 `contentBrand`
 | 상태 | 화면 모습 | 행동 |
 | --- | --- | --- |
 | 기본 | "전체"·인기순, 전체 카드, 결과 수 | 검색·필터·정렬·저장·보기 |
-| 로딩 | 스토리에 없음. ①~③은 그대로, ⑤ 자리에 같은 Grid로 카드 3개 모양의 [Skeleton](../components/skeleton.md)(AspectRatio 1.6 안 `shape="block"` `height="100%"` + 제목 `shape="text"` 60%). 로딩 사실은 영역 단위로 한 번(Web Grid `aria-busy`·`aria-label`, Native 첫 Skeleton `accessibilityLabel`). 검색 중이면 SearchField Web `loading` · Native `busy` + `busyLabel` | 검색·필터는 그대로 |
-| 빈 | ⑤ 자리에 EmptyState(`t("gallery.empty.title")`, 설명) | [필터 초기화] |
-| 오류 | 스토리에 없음. ①~③은 남기고 ④ 아래 [Notice](../components/notice.md) `tone="danger"`(Native `announcement="assertive"` — 기본 `none`). 문구는 원인별 키(`errorKey`: 네트워크 `gallery.error.network`, 서버 `gallery.error.server`). 이전 결과가 있으면 ⑤를 유지하고, 결과가 없으면 EmptyState를 그리지 않는다(빈 결과와 실패를 섞지 않는다). 다시 시도가 또 실패하면 같은 Notice를 같은 자리에 두고 버튼 `loading`만 푼다 | Notice `action` 다시 시도 1개 |
+| 로딩 | 동기 스토리에 없음. 제품 최초 조회는 ScreenLayout 본문 중앙 spinner, 재조회는 기존 결과와 검색·필터를 유지한다 | 같은 요청 중복 실행 방지 |
+| 빈 | 성공 응답 0건일 때만 ScreenLayout 본문 중앙 빈 상태(`t("gallery.empty.title")`, 설명) | [필터 초기화] |
+| 오류 | 스토리에 없음. ①~③은 남기고 ④ 아래 [Notice](../components/notice.md) `tone="danger"`(Native `announcement="assertive"` — 기본 `none`). 문구는 원인별 키(`errorKey`: 네트워크 `gallery.error.network`, 서버 `gallery.error.server`). 이전 결과가 있으면 ⑤를 유지하고, 첫 조회 실패면 ScreenLayout 중앙 오류와 재시도를 사용하고 EmptyState를 그리지 않는다(빈 결과와 실패를 섞지 않는다). 다시 시도가 또 실패하면 같은 Notice를 같은 자리에 두고 버튼 `loading`만 푼다 | Notice `action` 다시 시도 1개 |
 | 저장 토글 | 카드 버튼이 `selected`로 바뀌고 ③ 저장 개수가 늘어난다. 저장만 보기 중 저장 취소하면 카드가 사라지고 결과 수가 읽힌다 | — |
 | 상세 열림 | 시트가 올라오고 같은 그림을 크게 보인다. 시트에서 저장하면 카드 상태도 같이 바뀐다 | 저장·닫기 |
 
@@ -115,7 +115,7 @@ tone과 관계없이 선택 모양(배경 `bg`, 글자·테두리 `contentBrand`
 | [Grid](../components/grid.md) | ⑤ 카드 격자 |
 | [AspectRatio](../components/aspect-ratio.md) · [Image](../components/image.md) | 제품의 실제 썸네일, 로딩 Skeleton 틀 |
 | [EmptyState](../components/empty-state.md) | 결과 없음 |
-| [Skeleton](../components/skeleton.md) | 로딩 |
+| [Skeleton](../components/skeleton.md) | 로딩 | 동기 스토리에 없음. 제품 최초 조회는 ScreenLayout 본문 중앙 spinner, 재조회는 기존 결과와 검색·필터를 유지한다 | 같은 요청 중복 실행 방지 |
 | [Notice](../components/notice.md) | 오류 |
 | [Sheet](../components/sheet.md) | ⑦ 상세 |
 | [화면 여백과 너비](../tokens/layout.md) | gutter·최대 폭·breakpoint |
@@ -123,154 +123,60 @@ tone과 관계없이 선택 모양(배경 `bg`, 글자·테두리 `contentBrand`
 
 ## 코드 골격
 
-카테고리·작품·썸네일·문구는 제품 소유다. `Thumbnail`은 제품 컴포넌트 자리다(AspectRatio 1.6 + Image). 상태마다 다른 문구는
-상태→키 상수 표로 고른다. 아래 두 예는 설치 버전 타입으로 검사했다(`query`·`results`·`selected` 등 상태 값과 핸들러는 제품이 둔다).
+동기 검색·카테고리·독립 저장 토글·상세 Sheet의 실행 원본은
+`showcase/web/src/patterns/DiscoveryGallery.stories.tsx`와
+`showcase/native/src/DiscoveryGallery.stories.tsx`다. 이 이름의 공개 화면 API는 없다.
+제품의 비동기 검색은 [검색 결과와 필터](common-search.md)의 SearchScreen을 먼저 검토한다.
+갤러리 격자가 필요하면 기존 Grid·Sheet와 아래 ScreenLayout 상태를 결합한다.
 
 ```tsx
 // Web
-import { AspectRatio, Container, Grid, Stack, Text } from "@hjmds/react/layout";
-import { Heading } from "@hjmds/react/heading";
+import { ScreenLayout } from "@hjmds/react/screens";
 import { Button } from "@hjmds/react/actions";
-import { SegmentedControl } from "@hjmds/react/selection";
-import { SearchField } from "@hjmds/react/forms";
-import { Sheet } from "@hjmds/react/overlays";
-import { EmptyState, Notice, Skeleton } from "@hjmds/react/feedback";
-import { resolveWindowClass } from "@hjmds/design-contracts/responsive";
+import { Notice } from "@hjmds/react/feedback";
 
-type Category = "all" | "web" | "mobile" | "dashboard";
-type Sort = "popular" | "latest";
-type LoadError = "network" | "server";
-const categories: readonly Category[] = ["all", "web", "mobile", "dashboard"];
-const categoryKey = { all: "gallery.category.all", web: "gallery.category.web", mobile: "gallery.category.mobile", dashboard: "gallery.category.dashboard" } as const satisfies Record<Category, string>;
-const sortKey = { popular: "gallery.sort.popular", latest: "gallery.sort.latest" } as const satisfies Record<Sort, string>;
-const errorKey = { network: "gallery.error.network", server: "gallery.error.server" } as const satisfies Record<LoadError, string>;
-const gutter = resolveWindowClass(window.innerWidth) === "compact" ? "compact" : "regular";
-const gridProps = { columns: { compact: 1, medium: 2, expanded: 3 }, gap: { compact: "xl" }, minColumnWidth: { compact: 320 } } as const;
-
-<main><Container size="content" gutter={gutter}><Stack gap="xl">
-  <Stack gap="md">
-    <Text tone="brand">{t("gallery.eyebrow")}</Text>
-    <Heading level="level3" semanticLevel={1}>{t("gallery.title")}</Heading>
-    <Text as="p">{t("gallery.intro")}</Text>
-    <SearchField label={t("gallery.search")} clearLabel={t("gallery.clear")} loading={loading} value={query} onValueChange={setQuery} />
-  </Stack>
-  <SegmentedControl label={t("gallery.category")} presentation="pills"
-      items={categories.map(id => ({ value: id, label: t(categoryKey[id]) }))} value={category} onValueChange={setCategory} />
-  <Stack axis="inline" wrap gap="sm">
-    <Button tone="secondary" onClick={toggleSort}>{t("gallery.sort", { value: t(sortKey[sort]) })}</Button>
-    <Button tone="ghost" selected={savedOnly} onClick={() => setSavedOnly(v => !v)}>{t("gallery.savedOnly", { count: savedCount })}</Button>
-  </Stack>
-  <Text role="status">{loading ? "" : t("gallery.count", { count: results.length })}</Text>
-  {error ? <Notice tone="danger" title={t(errorKey[error])}
-    action={<Button tone="secondary" size="small" loading={retrying} onClick={retry}>{t("common.retry")}</Button>} /> : null}
-  {loading && results.length === 0 ? (
-    <Grid {...gridProps} aria-busy="true" aria-label={t("gallery.loading")}>
-      {[0, 1, 2].map(i => <Stack key={i} gap="sm"><AspectRatio ratio={1.6} aria-hidden="true"><Skeleton shape="block" height="100%" /></AspectRatio><Skeleton shape="text" width="60%" /></Stack>)}
-    </Grid>
-  ) : results.length ? (
-    <Grid {...gridProps}>
-      {results.map(item => <article key={item.id}><Stack gap="sm">
-        <Thumbnail item={item} />
-        <Text variant="label">{item.title}</Text>
-        <Text tone="muted">{t("gallery.meta", { author: item.author, category: item.categoryLabel })}</Text>
-        <Stack axis="inline" wrap gap="sm">
-          <Button tone="ghost" aria-label={t("gallery.viewNamed", { title: item.title })} onClick={() => setSelected(item)}>{t("gallery.details")}</Button>
-          <Button tone="secondary" selected={isSaved(item)} onClick={() => toggleSaved(item.id)}
-            aria-label={t(isSaved(item) ? "gallery.unsaveNamed" : "gallery.saveNamed", { title: item.title })}>
-            {t(isSaved(item) ? "gallery.saved" : "gallery.save")}</Button>
-        </Stack>
-      </Stack></article>)}
-    </Grid>
-  ) : error ? null : <EmptyState title={t("gallery.empty.title")} description={t("gallery.empty.body")}
-      action={<Button onClick={reset}>{t("gallery.reset")}</Button>} />}
-  <Sheet open={selected !== null} onOpenChange={o => { if (!o) setSelected(null); }}
-    title={selected?.title ?? t("gallery.detail")} closeLabel={t("common.close")}
-    footer={selected ? <Button selected={isSaved(selected)} onClick={() => toggleSaved(selected.id)}
-      aria-label={t(isSaved(selected) ? "gallery.unsaveNamed" : "gallery.saveNamed", { title: selected.title })}>
-      {t(isSaved(selected) ? "gallery.unsave" : "gallery.saveToCollection")}</Button> : null}>
-    {selected ? <Stack gap="lg">
-      <Thumbnail item={selected} />
-      <Text>{t("gallery.meta", { author: selected.author, category: selected.categoryLabel })}</Text>
-      <Text as="p">{selected.description}</Text>
-    </Stack> : null}
-  </Sheet>
-</Stack></Container></main>
+// hasLoaded는 성공한 조회가 있는지다. 0건 성공도 true이며 배열 길이로 대신하지 않는다.
+<>
+<ScreenLayout title={t("gallery.title")} actions={categoryControls}
+  notice={<>{searchAndSort}{hasLoaded && error ? <Notice tone="danger" title={t(errorKey[error])}
+    action={<Button tone="secondary" loading={retrying} onClick={retry}>{t("common.retry")}</Button>} /> : null}</>}
+  state={!hasLoaded
+    ? error ? { kind: "error", title: t(errorKey[error]) } : { kind: "loading", title: t("gallery.loading") }
+    : results.length === 0 ? { kind: "empty", title: t("gallery.empty.title") } : { kind: "ready" }}
+  stateAction={!hasLoaded && error ? <Button loading={retrying} onClick={retry}>{t("common.retry")}</Button>
+    : hasLoaded && results.length === 0 ? <Button onClick={reset}>{t("gallery.reset")}</Button> : null}>
+  {galleryGrid}
+</ScreenLayout>
+{detailSheet}
+</>
 ```
 
 ```tsx
 // Native
-import { ScrollView, useWindowDimensions } from "react-native";
-import { spacing } from "@hjmds/design-contracts/foundations";
-import { resolveWindowClass } from "@hjmds/design-contracts/responsive";
-import { AspectRatio, Container, Grid, Stack, Text } from "@hjmds/react-native/primitives";
-import { Heading } from "@hjmds/react-native/heading";
+import { ScreenLayout } from "@hjmds/react-native/screens";
 import { Button } from "@hjmds/react-native/actions";
-import { SegmentedControl } from "@hjmds/react-native/inputs";
-import { SearchField } from "@hjmds/react-native/inputs";
-import { Sheet } from "@hjmds/react-native/overlays";
-import { EmptyState, Notice, Skeleton } from "@hjmds/react-native/feedback";
+import { Notice } from "@hjmds/react-native/feedback";
 
-// categories·categoryKey·sortKey·errorKey는 Web과 같다.
-const { width } = useWindowDimensions();
-const gutter = resolveWindowClass(width) === "compact" ? "compact" : "regular";
-const gridProps = { columns: { compact: 1, medium: 2, expanded: 3 }, gap: { compact: "xl" }, minColumnWidth: { compact: 320 } } as const;
-
-<ScrollView automaticallyAdjustKeyboardInsets keyboardShouldPersistTaps="handled"
-  contentContainerStyle={{ paddingVertical: spacing.lg }}>
-  <Container size="content" gutter={gutter}><Stack gap="xl">
-    <Stack gap="md">
-      <Text tone="brand">{t("gallery.eyebrow")}</Text>
-      <Heading level="level3" semanticLevel={1}>{t("gallery.title")}</Heading>
-      <Text>{t("gallery.intro")}</Text>
-      <SearchField label={t("gallery.search")} clearLabel={t("gallery.clear")} busy={loading} busyLabel={t("gallery.searching")}
-        value={query} onValueChange={setQuery} />
-    </Stack>
-    <SegmentedControl label={t("gallery.category")} presentation="pills"
-      items={categories.map(id => ({ value: id, label: t(categoryKey[id]) }))} value={category} onValueChange={setCategory} />
-    <Stack axis="inline" wrap gap="sm">
-      <Button tone="secondary" onPress={toggleSort}>{t("gallery.sort", { value: t(sortKey[sort]) })}</Button>
-      <Button tone="ghost" selected={savedOnly} onPress={() => setSavedOnly(v => !v)}>{t("gallery.savedOnly", { count: savedCount })}</Button>
-    </Stack>
-    <Text accessibilityLiveRegion="polite">{loading ? "" : t("gallery.count", { count: results.length })}</Text>
-    {error ? <Notice tone="danger" announcement="assertive" title={t(errorKey[error])}
-      action={<Button tone="secondary" size="small" loading={retrying} onPress={retry}>{t("common.retry")}</Button>} /> : null}
-    {loading && results.length === 0 ? (
-      <Grid {...gridProps}>
-        {[0, 1, 2].map(i => <Stack key={i} gap="sm">
-          <AspectRatio ratio={1.6}><Skeleton shape="block" layoutStyle={{ flex: 1 }} {...(i === 0 ? { accessibilityLabel: t("gallery.loading") } : {})} /></AspectRatio>
-          <Skeleton shape="text" width="60%" />
-        </Stack>)}
-      </Grid>
-    ) : results.length ? (
-      <Grid {...gridProps}>
-        {results.map(item => <Stack key={item.id} gap="sm">
-          <Thumbnail item={item} />
-          <Text variant="label">{item.title}</Text>
-          <Text tone="muted">{t("gallery.meta", { author: item.author, category: item.categoryLabel })}</Text>
-          <Stack axis="inline" wrap gap="sm">
-            <Button tone="ghost" accessibilityLabel={t("gallery.viewNamed", { title: item.title })} onPress={() => setSelected(item)}>{t("gallery.details")}</Button>
-            <Button tone="secondary" selected={isSaved(item)} onPress={() => toggleSaved(item.id)}
-              accessibilityLabel={t(isSaved(item) ? "gallery.unsaveNamed" : "gallery.saveNamed", { title: item.title })}>
-              {t(isSaved(item) ? "gallery.saved" : "gallery.save")}</Button>
-          </Stack>
-        </Stack>)}
-      </Grid>
-    ) : error ? null : <EmptyState title={t("gallery.empty.title")} description={t("gallery.empty.body")}
-        action={<Button onPress={reset}>{t("gallery.reset")}</Button>} />}
-    <Sheet scrollable open={selected !== null} onOpenChange={o => { if (!o) setSelected(null); }}
-      title={selected?.title ?? t("gallery.detail")} closeLabel={t("common.close")}
-      footer={selected ? <Button fullWidth selected={isSaved(selected)} onPress={() => toggleSaved(selected.id)}
-        accessibilityLabel={t(isSaved(selected) ? "gallery.unsaveNamed" : "gallery.saveNamed", { title: selected.title })}>
-        {t(isSaved(selected) ? "gallery.unsave" : "gallery.saveToCollection")}</Button> : null}>
-      {selected ? <Stack gap="lg">
-        <Thumbnail item={selected} />
-        <Text>{t("gallery.meta", { author: selected.author, category: selected.categoryLabel })}</Text>
-        <Text>{selected.description}</Text>
-      </Stack> : null}
-    </Sheet>
-  </Stack></Container>
-</ScrollView>
+<>
+<ScreenLayout title={t("gallery.title")} actions={categoryControls}
+  notice={<>{searchAndSort}{hasLoaded && error ? <Notice tone="danger" announcement="assertive" title={t(errorKey[error])}
+    action={<Button tone="secondary" loading={retrying} onPress={retry}>{t("common.retry")}</Button>} /> : null}</>}
+  state={!hasLoaded
+    ? error ? { kind: "error", title: t(errorKey[error]) } : { kind: "loading", title: t("gallery.loading") }
+    : results.length === 0 ? { kind: "empty", title: t("gallery.empty.title") } : { kind: "ready" }}
+  stateAction={!hasLoaded && error ? <Button loading={retrying} onPress={retry}>{t("common.retry")}</Button>
+    : hasLoaded && results.length === 0 ? <Button onPress={reset}>{t("gallery.reset")}</Button> : null}>
+  {galleryGrid}
+</ScreenLayout>
+{detailSheet}
+</>
 ```
+
+위 ReactNode 슬롯은 제품이 기존 SearchField·SegmentedControl·Grid·Sheet로 구성한다.
+ScreenLayout host는 남은 본문 높이를 확보하고 로딩·오류·빈 상태를 그 영역 중앙에 둔다.
+재조회는 hasLoaded와 마지막 성공 결과를 유지한다. 검색어·필터·정렬을 request key에 넣고 응답 key가
+현재 선택과 같을 때만 적용한다. 이전 검색 결과를 유지하는 동안 그 결과의 현재성은 제품이 표시하고
+맞지 않는 항목의 확정 행동을 막는다. 저장 pending·실패는 해당 작품 ID별로 관리해 전체 격자를 교체하지 않는다.
 
 ## 큰 글자·다크·좁은 폭
 
@@ -287,7 +193,7 @@ const gridProps = { columns: { compact: 1, medium: 2, expanded: 3 }, gap: { comp
 | --- | --- | --- |
 | 격자 | Grid(폭은 `ResizeObserver`로 잰다), 사이 `spacing.xl` 24 | Grid(폭은 `onLayout`으로 잰다), 사이 `spacing.xl` 24 |
 | 그림 접근성 | `aria-hidden="true"` | `accessibilityElementsHidden` + `importantForAccessibility="no-hide-descendants"` |
-| 결과 수 알림 | `role="status"` | 라이브 영역(Android) + iOS는 제품이 직접 알림(문구가 바뀌었을 때만, `AppState` active일 때만 — [대시보드](dashboard.md) 함정) |
+| 결과 수 알림 | `role="status"` | 공개 StatusText(Android live region + iOS active 문구 변경 알림 — [사용법](../components/text.md#statustext)) |
 | 검색 진행 | `loading` | `busy` + `busyLabel`(필수) |
 | 시트 footer | 오른쪽 정렬 가로 줄 | 세로 열, `fullWidth` |
 | 오류 Notice 알림 | `tone="danger"`가 알림 영역 | `announcement="assertive"`를 명시(기본 `none`) |
@@ -304,3 +210,6 @@ const gridProps = { columns: { compact: 1, medium: 2, expanded: 3 }, gap: { comp
 - 시트 확정 행동은 footer에 둔다. Native는 scrollable 본문과 분리해 큰 글자에서도 접근 가능하게 한다.
 - 현재 스토리의 카드 메타는 "작가 · 카테고리 · 좋아요 N"을 한국어 템플릿으로 조립한다. 제품은 `t("gallery.meta", { author, category })`처럼
   보간 키 하나로 둔다. 좋아요 수가 필요하면 같은 키에 값을 더한다.
+
+
+2026-10-13 행동 검수에서 제거/복구 뒤 키보드 문맥 유실을 확인해 보강했다. Web 저장만 보기에서 저장 취소로 카드가 사라지면 저장 필터로 초점을 돌린다. 상세를 닫을 때는 원래 상세 버튼, 해당 카드가 제거됐으면 저장 필터를 양 플랫폼 Sheet returnFocusRef로 지정한다. Web 빈 결과 초기화는 검색 필드로 이어진다. Native ref 연결과 실제 OS 접근성 초점 이동 검증은 구분한다.

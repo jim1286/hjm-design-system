@@ -84,7 +84,7 @@ import { Text } from "@hjmds/react-native/primitives";
 | `interactiveContent` | `boolean` | `false` | 사진 앨범·링크처럼 자식이 버튼을 가지면 `true`. 안쪽 버튼·링크의 누름과 Web Enter/Space는 그 컨트롤이 받는다 |
 | `actions` | `ReactNode` | 없음 | 시각 옆 슬롯. 반응 집계 배지·재시도는 제품이 넣는다 |
 | `children` | `ReactNode` | 필수 | 메시지 본문. Native는 말풍선이 이 텍스트로 읽힌다 |
-| Web `layoutStyle` | `HjmCompositionStyleProp` | 없음 | 메시지 행(`article`) 배치. `transform`은 스와이프 오프셋이 소유한다. 미게시(1.12.1 이후) |
+| Web `layoutStyle` | `HjmCompositionStyleProp` | 없음 | 메시지 행(`article`) 배치. `transform`은 스와이프 오프셋이 소유한다. 1.13.0 변경 |
 
 ## 배치
 
@@ -134,3 +134,7 @@ import { Text } from "@hjmds/react-native/primitives";
 2026-10-06 최근 검색 삭제 기호가 큰 글자에서 잘린 재현에 따라 Native 내장 삭제·메뉴 기호는 고정 아이콘 틀의 크기를 유지한다. 주변 제목·라벨은 계속 확대한다. Chip의 체크와 Toast 닫기는 기존 비확대 경로를 유지하며 회귀 검사에 포함한다. 제품이 전달한 아이콘 슬롯은 제품이 같은 조건을 검증한다.
 
 2026-10-09 번뚝 DM 사용자 요청으로 시각 공개 동작을 공용 ChatMessage에 추가했다. 앱별 PanResponder/PointerEvent 복제를 피하고 세로 스크롤·내부 컨트롤 우선권을 유지한다.
+
+## 대화 스와이프 복귀 (2026-10-12)
+
+번뚝의 좌우 넘김 개선 요청으로 Native의 이동값은 Animated.Value에 전달하고 놓으면 공통 motion.normal(200ms)로 복귀한다. 매 이동마다 메시지 트리를 다시 렌더링하지 않는다. Web도 드래그 중에는 손가락을 따라가고 놓을 때만 200ms 복귀한다. 동작 줄이기는 즉시 복귀한다. 사진 캐러셀처럼 가로 제스처가 있는 메시지는 제품에서 timestampPresentation="always"를 선택해 사진 넘김과 시간 표시가 경쟁하지 않게 한다.

@@ -80,7 +80,7 @@ import { NotificationBell } from "@hjmds/react-native/notification-bell";
 | `onPress`(NotificationBell) | `() => void` | 필수 | Web·Native 모두 `onPress`다(Web도 `onClick`이 아니다) |
 | `active`(NotificationBell) | `true` · `false` | `true` | — |
 | `disabled`(NotificationBell) | `true` · `false` | `false` | — |
-| Web `layoutStyle`(NotificationBell) | `HjmCompositionStyleProp` | — | 루트 배치. 기본 `alignSelf: "flex-start"`보다 우선하지만 `width`는 무시된다(루트는 항상 `max-content`). 떠 있는 배지가 루트의 끝 모서리에 붙어 있어 루트가 넓어지면 아이콘에서 떨어지기 때문이다. margin·`alignSelf`로 배치한다. 미게시(1.12.1 이후) |
+| Web `layoutStyle`(NotificationBell) | `HjmCompositionStyleProp` | — | 루트 배치. 기본 `alignSelf: "flex-start"`보다 우선하지만 `width`는 무시된다(루트는 항상 `max-content`). 떠 있는 배지가 루트의 끝 모서리에 붙어 있어 루트가 넓어지면 아이콘에서 떨어지기 때문이다. margin·`alignSelf`로 배치한다. 1.13.0 변경 |
 
 ## 배치
 
@@ -117,13 +117,13 @@ TopBar
 | 스피너 교체 | 없음 | `renderLoadingIndicator` |
 | 비활성이지만 포커스 유지 | `aria-disabled` | `loading` 기본 동작 |
 | NotificationBell 흔들림 정지 | 문서 숨김·reduced motion | AppState 비활성·reduced motion |
-| 배치 | `layoutStyle`(IconButton·NotificationBell, NotificationBell은 `width` 무시) | IconButton `layoutStyle`. `style`은 deprecated(개발 모드 1회 경고, 다음 major 제거) — `layoutStyle` 또는 `tone`·`size`·`shape`. NotificationBell은 배치 prop이 없어 감싸는 View로 배치한다 |
+| 배치 | `layoutStyle`(IconButton·NotificationBell, NotificationBell은 `width` 무시) | IconButton `layoutStyle`. `style`은 제거된 속성 — `layoutStyle` 또는 `tone`·`size`·`shape`. NotificationBell은 배치 prop이 없어 감싸는 View로 배치한다 |
 
 ## 함정
 
 - children의 색은 버튼이 칠하지 않는다. HJM Icon은 자기 `tone` 색을 쓰므로, `primary`·`danger` 버튼 안에서는
   `tone="inverse"`를 준다. 다른 아이콘 라이브러리의 컴포넌트를 직접 넣으면(Native) 색을 제품이 넘겨야 한다.
-- Native `IconButton` `style`은 deprecated지만 다음 major 전까지 recipe 뒤에 합쳐져 지름·배경까지 바뀐다. 새 코드에서 쓰지 않는다.
+- Native `IconButton`의 `style`은 제거되었다. 배치는 `layoutStyle`, 외형은 `tone`·`size`·`shape`로 지정한다.
 
 2026-10-10 사용자 요청: Button과 같은 선택 표현을 쓴다. 선택은 bg 바탕·contentBrand 아이콘으로
 표시하고 추가 선택 테두리는 없다. aria-pressed/Native selected와 키보드 focus outline은 유지한다.

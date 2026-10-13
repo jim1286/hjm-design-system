@@ -7,7 +7,7 @@ import { Button } from "@hjmds/react-native/actions";
 import { SearchField, TextField } from "@hjmds/react-native/inputs";
 import { Sheet } from "@hjmds/react-native/overlays";
 import { Container, Stack, Text } from "@hjmds/react-native/primitives";
-import { ScrollView, View } from "react-native";
+import { ScrollView, View, type TextInput } from "react-native";
 import { spacing } from "@hjmds/design-contracts/foundations";
 import { PatternStatus } from "./pattern-status";
 
@@ -18,18 +18,31 @@ const displayOptions = Object.keys(displayCopy) as DisplayId[];
 // The product screen owns the outer frame; the preview shows it so the example matches the usage guide.
 function Frame({ children }: { children: ReactNode }) { return <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingVertical: spacing.md }}><Container gutter="compact"><Stack gap="md">{children}</Stack></Container></ScrollView>; }
 
-export function ApplyOrDiscardSelection() {
+// Closing settles this opening synchronously. Old host callbacks must not apply,
+// save or edit a discarded draft, including after a later opening starts.
+function usePreviewSheet() {
  const [open, setOpen] = useState(false);
+ const sequence = useRef(0); const active = useRef(false);
+ const generation = sequence.current;
+ const isCurrent = () => active.current && sequence.current === generation;
+ const start = () => { sequence.current += 1; active.current = true; setOpen(true); };
+ const close = () => { if (!isCurrent()) return false; active.current = false; setOpen(false); return true; };
+ const onOpenChange = (next: boolean) => { if (!next) close(); };
+ return { open, start, close, isCurrent, onOpenChange };
+}
+
+export function ApplyOrDiscardSelection() {
+ const { open, start: openSheet, close, isCurrent, onOpenChange } = usePreviewSheet();
  const [applied, setApplied] = useState<DisplayId>("compact");
  const [draft, setDraft] = useState<DisplayId>(applied);
  const trigger = useRef<View>(null);
- const start = () => { setDraft(applied); setOpen(true); };
+ const start = () => { setDraft(applied); openSheet(); };
  return <Frame><Heading level="level3">선택 후 적용하거나 취소</Heading>
   <PatternStatus>{`현재 표시: ${displayCopy[applied]}`}</PatternStatus>
   <View ref={trigger} collapsable={false}><Button onPress={start}>표시 방식 선택</Button></View>
-  <Sheet open={open} onOpenChange={setOpen} title="표시 방식 선택" closeLabel="닫기" returnFocusRef={trigger}
-   footer={<Stack gap="sm"><Button onPress={() => { setApplied(draft); setOpen(false); }}>선택 적용</Button><Button tone="secondary" onPress={() => setOpen(false)}>선택 취소</Button></Stack>}>
-   <Stack gap="md">{displayOptions.map(id => <Button key={id} tone="secondary" selected={draft === id} onPress={() => setDraft(id)}>{displayCopy[id]}</Button>)}
+  <Sheet open={open} onOpenChange={onOpenChange} title="표시 방식 선택" closeLabel="닫기" returnFocusRef={trigger}
+   footer={<Stack gap="sm"><Button onPress={() => { if (close()) setApplied(draft); }}>선택 적용</Button><Button tone="secondary" onPress={close}>선택 취소</Button></Stack>}>
+   <Stack gap="md">{displayOptions.map(id => <Button key={id} tone="secondary" selected={draft === id} onPress={() => { if (isCurrent()) setDraft(id); }}>{displayCopy[id]}</Button>)}
     <Text>적용을 눌러야 화면이 바뀌어요. 취소하거나 닫으면 기존 선택을 유지해요.</Text>
    </Stack>
   </Sheet>
@@ -37,15 +50,15 @@ export function ApplyOrDiscardSelection() {
 }
 
 export function ReopenDraft() {
- const [open, setOpen] = useState(false); const [draft, setDraft] = useState(""); const [saved, setSaved] = useState("");
+ const { open, start, close, isCurrent, onOpenChange } = usePreviewSheet(); const [draft, setDraft] = useState(""); const [saved, setSaved] = useState("");
  const trigger = useRef<View>(null);
  return <Frame><Heading level="level3">작성 중 닫고 초안 이어쓰기</Heading>
-  <View ref={trigger} collapsable={false}><Button onPress={() => setOpen(true)}>메모 작성</Button></View>
+  <View ref={trigger} collapsable={false}><Button onPress={start}>메모 작성</Button></View>
   <PatternStatus>{draft ? "작성 중인 초안이 있어요." : "작성 중인 초안이 없어요."}</PatternStatus>
   <Text>저장된 메모: {saved || "아직 없어요"}</Text>
-  <Sheet open={open} onOpenChange={setOpen} title="메모 작성" closeLabel="초안을 남기고 닫기" returnFocusRef={trigger} keyboardAvoidance scrollable
-   footer={<Stack gap="sm"><Button disabled={!draft.trim()} onPress={() => { setSaved(draft); setDraft(""); setOpen(false); }}>메모 저장</Button><Button tone="secondary" onPress={() => { setDraft(""); setOpen(false); }}>초안 버리기</Button></Stack>}>
-   <Stack gap="md"><TextField label="메모 내용" value={draft} onValueChange={setDraft} />
+  <Sheet open={open} onOpenChange={onOpenChange} title="메모 작성" closeLabel="초안을 남기고 닫기" returnFocusRef={trigger} keyboardAvoidance scrollable
+   footer={<Stack gap="sm"><Button disabled={!draft.trim()} onPress={() => { if (draft.trim() && close()) { setSaved(draft); setDraft(""); } }}>메모 저장</Button><Button tone="secondary" onPress={() => { if (close()) setDraft(""); }}>초안 버리기</Button></Stack>}>
+   <Stack gap="md"><TextField label="메모 내용" value={draft} onValueChange={value => { if (isCurrent()) setDraft(value); }} />
     <Text>닫았다 다시 열면 이어 쓸 수 있어요. 이 예제는 화면이 열린 동안 초안을 유지해요.</Text>
    </Stack>
   </Sheet>
@@ -61,7 +74,9 @@ function LatestSearchContents({ initialState = "idle" }: Pick<LatestSearchProps,
  const [session] = useState(() => createActionSession<string | null>(null));
  const state = useSyncExternalStore(session.subscribe, session.getSnapshot, session.getSnapshot);
  const [query, setQuery] = useState("일기");
- // Read at execution time so `retry()` re-runs the same task without replaying the armed failure.
+ // Consume failure when each attempt starts; response order must not steal another attempt's failure.
+ const searchRef = useRef<TextInput>(null);
+ const timers = useRef(new Map<ReturnType<typeof setTimeout>, () => void>());
  const failNext = useRef(false);
  const [failureArmed, setFailureArmed] = useState(false);
  const search = (delay: number) => {
@@ -70,8 +85,12 @@ function LatestSearchContents({ initialState = "idle" }: Pick<LatestSearchProps,
   // a server cancellation or a concurrent-mutation policy (action-session.md).
   session.reset(session.getSnapshot().value);
   void session.run(async () => {
-   await new Promise(resolve => setTimeout(resolve, delay));
-   if (failNext.current) { failNext.current = false; setFailureArmed(false); throw new Error("demo-search-failed"); }
+   const fails = failNext.current; failNext.current = false; setFailureArmed(false);
+   await new Promise<void>(resolve => {
+    const timer = setTimeout(() => { timers.current.delete(timer); resolve(); }, delay);
+    timers.current.set(timer, resolve);
+   });
+   if (fails) throw new Error("demo-search-failed");
    return submitted;
   }, { retryable: true });
  };
@@ -79,16 +98,21 @@ function LatestSearchContents({ initialState = "idle" }: Pick<LatestSearchProps,
  useEffect(() => {
   if (initialState === "pending") search(searchDelay.held);
   if (initialState === "error") { failNext.current = true; search(searchDelay.fast); }
-  return () => session.reset(null);
+  return () => {
+   session.reset(null);
+   // Clear demo resources, then settle detached tasks; this is not transport cancellation.
+   for (const [timer, resolve] of timers.current) { clearTimeout(timer); resolve(); }
+   timers.current.clear();
+  };
  }, []);
  const pending = state.status === "pending";
  const message = state.status === "pending" || state.status === "error" ? latestSearchCopy[state.status] : state.value ? `검색 결과: ${state.value}` : latestSearchCopy.idle;
  return <Frame><Heading level="level3">최신 검색 결과 유지</Heading>
-  <SearchField label="검색어" clearLabel="검색어 지우기" value={query} onValueChange={setQuery} busy={pending} busyLabel="검색 중" />
+  <SearchField ref={searchRef} label="검색어" clearLabel="검색어 지우기" value={query} onValueChange={setQuery} busy={pending} busyLabel="검색 중" />
   <Button tone="secondary" disabled={!query.trim()} onPress={() => search(searchDelay.slow)}>느린 응답으로 검색</Button>
   <Button tone="secondary" disabled={!query.trim()} onPress={() => search(searchDelay.fast)}>빠른 응답으로 검색</Button>
   <PatternStatus>{message}</PatternStatus>
-  {state.status === "error" ? <Button tone="secondary" onPress={() => void session.retry()}>다시 검색</Button> : null}
+  {state.status === "error" ? <Button tone="secondary" onPress={() => { searchRef.current?.focus(); void session.retry(); }}>다시 검색</Button> : null}
   <Button tone="ghost" selected={failureArmed} onPress={() => { failNext.current = !failNext.current; setFailureArmed(failNext.current); }}>다음 검색 실패시키기</Button>
   <Text>느린 검색을 시작한 뒤 검색어를 바꿔 빠른 검색을 해보세요. 늦게 도착한 이전 결과가 최신 결과를 덮지 않아요. 실제 서버 요청은 없는 예제예요.</Text>
  </Frame>;

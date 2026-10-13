@@ -70,7 +70,7 @@ import { ContentTransition } from "@hjmds/react-native/content-transition";
 | `travelDirection` | `forward` · `backward` | `forward` | `slide`의 등장 방향. 이전 페이지는 `backward`, 다음 페이지는 `forward`; 언어 방향과 함께 공통 resolver가 계산한다. |
 | `motion` | `system` · `none` | `system` | `system`은 reduced motion을 따르고 `none`은 항상 즉시 교체 |
 | `stateKey` | `string` | — (필수) | 바뀔 때만 새 내용이 나타난다 |
-| `enterOnMount` | boolean | false | 미게시: 새 데이터 항목이 처음 추가될 때도 등장 전환. 이미 표시한 항목은 stable key를 유지한다 |
+| `enterOnMount` | boolean | false | 1.14.0 추가: 새 데이터 항목이 처음 추가될 때도 등장 전환. 이미 표시한 항목은 stable key를 유지한다 |
 | `animateHeight` | boolean | false | 내용의 측정 높이가 바뀔 때 주변 틀 높이를 전환한다. 모션 감소에서는 즉시 반영 |
 | Web `focusTarget` | `RefObject<HTMLElement \| null>` | — | 바뀌기 전 포커스가 안에 있었으면 전환 뒤 이 요소로 옮긴다 |
 | Web `layoutStyle` | 배치 전용 style | — | 바깥 고정 wrapper에 붙는다(키가 바뀌는 안쪽 패널이 아님) |
@@ -103,7 +103,7 @@ import { ContentTransition } from "@hjmds/react-native/content-transition";
 | 앱이 백그라운드로 감 | 해당 없음 | 진행 중 전환을 멈추고 바로 표시 |
 | 배치 prop | `layoutStyle`(바깥 wrapper) | 없음 |
 
-### 측정 기반 overlay 전환 준비 (미게시)
+### 측정 기반 overlay 전환 준비 (1.14.0 추가)
 
 `@hjmds/design-contracts/content-transition`의 `resolveOriginTransition(origin, destination, reducedMotion)`은
 같은 물리 viewport 좌표계의 `TransitionRect { x, y, width, height }` 두 개를 받는다.

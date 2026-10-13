@@ -1,3 +1,12 @@
+import { spacing } from "./foundations.js";
+/** Date and duration parts share grouping, spacing and wrapping rather than rebuilding a fieldset. */
+export const fieldGroupRecipe = {
+    defaults: { layout: "stack" },
+    gap: "md",
+    headingGap: "sm",
+    supportGap: "xs",
+    inline: { minCharacters: 10, minWidth: spacing.xxxl * 3 },
+};
 function requireText(value, name) {
     if (typeof value !== "string" || !value.trim())
         throw new TypeError(`Field group ${name} must be nonempty text`);

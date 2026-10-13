@@ -84,7 +84,7 @@ import { BottomNavigation } from "@hjmds/react-native/navigation";
 | Native `renderBadge` | `(props: { item; badge: { visibleLabel: string; hiddenFromAccessibility: true }; count: number; max?: number; selected: boolean }) => ReactNode` | 기본 배지 | 결과 subtree는 보조기기에서 숨겨진다 |
 | Native `getItemTestID` | `(item) => string \| undefined` | — | — |
 | Native `safeAreaBottom` | 0 이상 숫자 | 0 | recipe 최소 하단 padding에 더한다 |
-| `layoutStyle` | margin·width·flex·`alignSelf` | — | 배치 전용. Native `style`·`surfaceStyle`·`listStyle`·`primaryActionStyle`은 deprecated — layoutStyle 또는 `configuration` |
+| `layoutStyle` | margin·width·flex·`alignSelf` | — | 배치 전용. Native `style`·`surfaceStyle`·`listStyle`·`primaryActionStyle`은 제거된 속성 — layoutStyle 또는 `configuration` |
 
 ## 배치
 
@@ -119,7 +119,7 @@ floating·capsule: 바깥 좌우 16 · 위 8 띄운 둥근 표면, 최대 폭 38
 - icon은 `name`만 넘긴다. 크기·색·굵기는 `renderIcon`이 받은 값을 그대로 적용한다(덮어쓰기 금지).
 - label과 badge `accessibilityLabel`은 i18n 키로 만든다. icon 이름·아이콘 세트는 제품 소유다.
 - 생성 버튼을 항목으로 넣지 않는다. `primaryAction`으로 둔다.
-- 배치는 `layoutStyle`로만 한다. Native의 `style`·`surfaceStyle`·`listStyle`·`primaryActionStyle`은 deprecated(개발 모드 1회 경고, 다음 major 제거)이며 외형은 `configuration`이 소유한다.
+- 배치는 `layoutStyle`로만 한다. Native의 `style`·`surfaceStyle`·`listStyle`·`primaryActionStyle`은 제거된 속성이며 외형은 `configuration`이 소유한다.
 
 ## 플랫폼 차이
 
@@ -131,13 +131,24 @@ floating·capsule: 바깥 좌우 16 · 위 8 띄운 둥근 표면, 최대 폭 38
 | 하단 inset | `env(safe-area-inset-bottom)` 자동 | `safeAreaBottom`(recipe 최소 padding에 더함) |
 | 키보드 감지 | `visualViewport` 높이 | `Keyboard` 이벤트 |
 | `renderIcon`의 `color` | `"currentColor"` | 해석된 색 문자열 |
-| 그 밖 | `className`·`style`·HTML 속성·`layoutStyle` | `renderBadge`, `getItemTestID`, `layoutStyle`(`style`·`surfaceStyle`·`listStyle`·`primaryActionStyle`은 deprecated) |
+| 그 밖 | `className`·`style`·HTML 속성·`layoutStyle` | `renderBadge`, `getItemTestID`, `layoutStyle`(`style`·`surfaceStyle`·`listStyle`·`primaryActionStyle`은 제거된 속성) |
 
 ## 함정
 
 - Web root가 `position: fixed`라 본문 마지막 내용이 막대 아래로 들어간다. 제품 레이아웃이 하단 여백을 둔다.
 - `renderLink` 없이 쓰면 일반 `<a>`로 그려 SPA 전환이 일어나지 않는다.
 - Web `onActivate`는 링크 기본 이동을 막지 않는다. `renderLink`의 라우터 Link가 이동하고 `onActivate`는 계측·맨 위로 스크롤 같은 부수 동작에만 쓴다. 수정키·가운데 클릭에는 불리지 않는다.
-- 현재 Native 내비게이션 연구 스토리(`showcase/native/src/reference-navigation-bars.tsx`)는 deprecated `style`(`paddingHorizontal: 0`)·`listStyle`(`borderRadius`)로 recipe 여백·모서리를 덮고, 제목을 `Text variant="heading"`으로 그린다. 규칙은 `configuration`·`layoutStyle`과 [Heading](heading.md)이다(스토리 수정 후보).
+- Native 내비게이션 연구 스토리(`showcase/native/src/reference-navigation-bars.tsx`)는 `configuration`과 [Heading](heading.md)을 사용한다. 과거의 `style`·`listStyle` override는 제거되었으며, 선택 타일과 모서리는 공개 configuration 축으로 정한다.
 
-미게시(1.14.0 이후): Native의 floating/capsule은 프로필 `shadow.floating`을 읽으며 0-opacity는 Android elevation도 제거한다. bar는 원래 무그림자 계약을 유지한다. Web은 기존 CSS token 경로로 같은 프로필을 읽는다. 선택 route와 이동 intent는 제품이 소유한다.
+1.15.0 변경: Native의 floating/capsule은 프로필 `shadow.floating`을 읽으며 0-opacity는 Android elevation도 제거한다. bar는 원래 무그림자 계약을 유지한다. Web은 기존 CSS token 경로로 같은 프로필을 읽는다. 선택 route와 이동 intent는 제품이 소유한다.
+
+
+### 선택 카드 (2026-10-12)
+
+Spint에서 모든 이름·동일 너비를 유지하면서 선택한 목적지를 분명히 구분하기 위해
+`configuration={{ presentation: "floating", distribution: "equal", density: "compact", selection: "tile" }}`를 추가했다.
+기본 `selection: "emphasis"`는 기존 외형을 유지한다. `tile`은 floating·equal·visible labels에만 허용된다.
+Web·Native 모두 막대에는 surfaceAccent, 선택한 항목에는 primary/onPrimary를 사용한다.
+연한 선택 카드가 도크와 구분되지 않는 사용자 피드백에 따라 선택한 카드 전체를 브랜드 색으로 채운다.
+안쪽 여백과 카드 사이 간격은 spacing.xxs, 카드 모서리는 radius.lg다.
+라우팅·누름 방지·키보드·접근성·배지는 기존 BottomNavigation 계약을 그대로 따른다.

@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import {} from "@hjmds/design-contracts/components/calendar";
 import { resolveDatePickerTriggerText, validateDatePickerDescriptor, } from "@hjmds/design-contracts/components/date-picker";
-import { useEffect, useId, useLayoutEffect, useRef, useState, } from "react";
+import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, } from "react";
 import { Calendar } from "./calendar.js";
 import { classNames } from "./internal.js";
 const popoverViewportInset = 16;
@@ -18,11 +18,17 @@ export function DatePicker({ descriptor, monthLabel, composeAccessibleName, prev
     const controlledSelection = descriptor.selectedDate !== undefined;
     const [internalSelection, setInternalSelection] = useState(descriptor.defaultSelectedDate ?? null);
     const selectedDate = controlledSelection ? descriptor.selectedDate ?? null : internalSelection;
-    const requestOpen = (next, reason) => {
+    const closeReasonRef = useRef("programmatic");
+    const requestOpen = useCallback((next, reason) => {
+        closeReasonRef.current = next ? "programmatic" : reason;
         if (!controlledOpen)
             setInternalOpen(next);
         descriptor.onOpenChange?.(next, reason);
-    };
+    }, [controlledOpen, descriptor.onOpenChange]);
+    useEffect(() => {
+        if (open && (descriptor.disabled || descriptor.readOnly))
+            requestOpen(false, "programmatic");
+    }, [descriptor.disabled, descriptor.readOnly, open, requestOpen]);
     const commit = (date, reason) => {
         // A controlled open field can become read-only while its grid remains mounted.
         if (descriptor.disabled || descriptor.readOnly)
@@ -31,13 +37,17 @@ export function DatePicker({ descriptor, monthLabel, composeAccessibleName, prev
             setInternalSelection(date);
         descriptor.onSelectionChange?.(date, reason);
         requestOpen(false, reason === "activate" ? "selection" : "clear");
+        // Clearing a closed field removes the focused clear button without an open transition.
+        if (reason === "clear")
+            triggerRef.current?.focus();
     };
     const wasOpenRef = useRef(open);
     useEffect(() => {
         const wasOpen = wasOpenRef.current;
         wasOpenRef.current = open;
         if (!open) {
-            if (wasOpen)
+            // Outside/Tab dismissal keeps the user's new target; confirmation/Escape returns here.
+            if (wasOpen && closeReasonRef.current !== "outside" && closeReasonRef.current !== "blur")
                 triggerRef.current?.focus();
             return;
         }
@@ -51,7 +61,7 @@ export function DatePicker({ descriptor, monthLabel, composeAccessibleName, prev
         return () => {
             document.removeEventListener("pointerdown", outside);
         };
-    }, [open]);
+    }, [open, requestOpen]);
     // Keep the popover inside the viewport (2026-09-30 audit WR-0930-3): shift inline, flip up
     // when short. Not portaled: Calendar autoFocus runs before a portal popup is measured.
     useLayoutEffect(() => {
@@ -96,7 +106,13 @@ export function DatePicker({ descriptor, monthLabel, composeAccessibleName, prev
         : descriptor.grid;
     const label = descriptor.label ?? descriptor.accessibilityLabel;
     const triggerText = resolveDatePickerTriggerText(descriptor);
-    return (_jsxs("div", { style: layoutStyle, className: classNames("hjm-date-picker", className), "data-disabled": descriptor.disabled || undefined, "data-invalid": descriptor.invalid || error !== undefined || undefined, "data-size": size, children: [descriptor.label === undefined ? null : _jsx("span", { className: "hjm-date-picker__label", children: descriptor.label }), _jsxs("div", { className: "hjm-date-picker__anchor", children: [_jsxs("button", { "aria-controls": open ? dialogId : undefined, "aria-expanded": open, "aria-haspopup": "dialog", "aria-label": descriptor.accessibilityLabel, className: "hjm-date-picker__trigger", disabled: descriptor.disabled, onClick: () => !descriptor.readOnly && requestOpen(!open, "trigger"), ref: triggerRef, type: "button", children: [_jsx("span", { "aria-hidden": "true", children: "\u25A3" }), _jsx("span", { "data-placeholder": descriptor.displayValue === null || undefined, children: triggerText })] }), selectedDate === null ? null : (_jsx("button", { "aria-label": clearLabel, className: "hjm-date-picker__clear", disabled: descriptor.disabled || descriptor.readOnly, onClick: () => commit(null, "clear"), type: "button", children: "\u00D7" })), open ? (_jsxs("div", { "aria-label": label, className: "hjm-date-picker__popover", id: dialogId, ref: dialogRef, role: "dialog", onKeyDown: (event) => { if (event.key === "Escape") {
+    return (_jsxs("div", { style: layoutStyle, className: classNames("hjm-date-picker", className), onBlur: (event) => {
+            const field = event.currentTarget;
+            queueMicrotask(() => {
+                if (open && dialogRef.current && !field.contains(document.activeElement))
+                    requestOpen(false, "blur");
+            });
+        }, "data-disabled": descriptor.disabled || undefined, "data-invalid": descriptor.invalid || error !== undefined || undefined, "data-size": size, children: [descriptor.label === undefined ? null : _jsx("span", { className: "hjm-date-picker__label", children: descriptor.label }), _jsxs("div", { className: "hjm-date-picker__anchor", children: [_jsxs("button", { "aria-controls": open ? dialogId : undefined, "aria-expanded": open, "aria-haspopup": "dialog", "aria-label": descriptor.accessibilityLabel ?? `${label}, ${triggerText}`, className: "hjm-date-picker__trigger", disabled: descriptor.disabled, onClick: () => !descriptor.readOnly && requestOpen(!open, "trigger"), ref: triggerRef, type: "button", children: [_jsx("span", { "aria-hidden": "true", children: "\u25A3" }), _jsx("span", { "data-placeholder": descriptor.displayValue === null || undefined, children: triggerText })] }), selectedDate === null ? null : (_jsx("button", { "aria-label": clearLabel, className: "hjm-date-picker__clear", disabled: descriptor.disabled || descriptor.readOnly, onClick: () => commit(null, "clear"), type: "button", children: "\u00D7" })), open ? (_jsxs("div", { "aria-label": label, className: "hjm-date-picker__popover", id: dialogId, ref: dialogRef, role: "dialog", onKeyDown: (event) => { if (event.key === "Escape") {
                             event.preventDefault();
                             requestOpen(false, "escape");
                         } }, children: [_jsx("button", { "aria-label": closeLabel, className: "hjm-date-picker__calendar-close", onClick: () => requestOpen(false, "trigger"), type: "button", children: "\u00D7" }), _jsx(Calendar, { descriptor: { ...calendarDescriptor, grid: calendarGrid, monthLabel, selectedDate, onSelectionChange: (date) => commit(date, "activate") }, composeAccessibleName: composeAccessibleName, size: size, autoFocus: true, ...(previousMonth ? { previousMonth } : {}), ...(nextMonth ? { nextMonth } : {}), ...(renderCellContent ? { renderCellContent } : {}), ...(onNavigateBeyondGrid ? { onNavigateBeyondGrid } : {}) })] })) : null] }), description === undefined ? null : _jsx("span", { className: "hjm-date-picker__description", children: description }), error === undefined ? null : _jsx("span", { className: "hjm-date-picker__error", role: "alert", children: error })] }));

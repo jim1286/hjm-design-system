@@ -23,7 +23,12 @@ export function SavedItemsScreen<T extends SavedItem>({items,collections,collect
   const {colors,tokens}=useHjmNativeTheme();
   const {home,collection,visible,selected}=resolveSavedItems(items,collections,collectionId,selectedItemId);
   const groups=[{id:null,title:labels.allItems,itemIds:items.map(item=>item.id)},...collections];
-  return <ListDetailScreen {...screen} title={home?screen.title:collection?.title??labels.allItems}
+  // Empty is a full body state, not a short text row at the top of the grid.
+  const state=(screen.state?.kind??"ready")==="ready"&&!home&&!visible.length
+    ? {kind:"empty" as const,title:labels.empty} : screen.state??{kind:"ready" as const};
+  // Resolve each cover once; four thumbnails must not each rescan membership.
+  const covers=new Map(groups.map(group=>{const ids=new Set(group.itemIds);return [group.id,items.filter(item=>ids.has(item.id)).slice(0,4)] as const;}));
+  return <ListDetailScreen {...screen} state={state} title={home?screen.title:collection?.title??labels.allItems}
     leading={home?screen.leading:<Button tone="ghost" onPress={onBack}>{labels.back}</Button>}
     actions={home?<Button tone="ghost" onPress={onCreateCollection}>{labels.createCollection}</Button>:screen.actions}
     back={{label:labels.back,onAction:onBack}}
@@ -32,9 +37,9 @@ export function SavedItemsScreen<T extends SavedItem>({items,collections,collect
       {home?<><Text variant="caption" tone="muted">{labels.privateNotice}</Text><Grid columns={{compact:2}} gap={{compact:"md"}} minColumnWidth={{compact:80}}>
         {groups.map(group=><Pressable key={group.id===null?"all":`collection:${group.id}`} accessibilityRole="button" accessibilityLabel={group.title} onPress={()=>onOpenCollection(group.id)} style={{gap:spacing.sm}}>
           <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{aspectRatio:1,borderRadius:tokens.radius.md,overflow:"hidden",backgroundColor:colors.surfaceAlt,flexDirection:"row",flexWrap:"wrap"}}>
-            {Array.from({length:4},(_,index)=>{const item=items.filter(item=>group.itemIds.includes(item.id))[index];return <View key={index} style={{width:"50%",height:"50%",padding:spacing.xxs/2}}>{item?renderThumbnail(item):null}</View>})}
+            {Array.from({length:4},(_,index)=>{const item=covers.get(group.id)?.[index];return <View key={index} style={{width:"50%",height:"50%",padding:spacing.xxs/2}}>{item?renderThumbnail(item):null}</View>})}
           </View><Text emphasis="strong">{group.title}</Text>
         </Pressable>)}
-      </Grid></>:visible.length?<Grid columns={{compact:3}} gap={{compact:"xxs"}} minColumnWidth={{compact:44}}>{visible.map(item=><Pressable key={item.id} accessibilityRole="button" accessibilityLabel={item.title} onPress={()=>onOpenItem(item.id)} style={{aspectRatio:1,overflow:"hidden",backgroundColor:colors.surfaceAlt}}>{renderThumbnail(item)}</Pressable>)}</Grid>:<Text accessibilityRole="text" accessibilityLiveRegion="polite">{labels.empty}</Text>}
+      </Grid></>:visible.length?<Grid columns={{compact:3}} gap={{compact:"xxs"}} minColumnWidth={{compact:44}}>{visible.map(item=><Pressable key={item.id} accessibilityRole="button" accessibilityLabel={item.title} onPress={()=>onOpenItem(item.id)} style={{aspectRatio:1,overflow:"hidden",backgroundColor:colors.surfaceAlt}}>{renderThumbnail(item)}</Pressable>)}</Grid>:null}
     </Stack>}/>
 }

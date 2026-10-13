@@ -8,7 +8,7 @@ import { AlertDialog, Sheet, type SheetProps } from "./overlays.js";
 import { UploadItem } from "./upload-item.js";
 import { type UploadItemDescriptor, type UploadItemLabels } from "@hjmds/design-contracts/components/upload-item";
 import { type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
-import { validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchEmptyCause, resolveSearchScreenPhase, screenPatternRecipe, searchScreenRecipe, type SearchEmptyCause, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
+import { validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchScreenPhase, screenPatternRecipe, searchScreenRecipe, type SearchEmptyCause, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
 import { AccessibilityInfo, Keyboard, ScrollView, View, type NativeSyntheticEvent, type TextInputSubmitEditingEventData } from "react-native";
 import { containerRecipe, type ContainerGutter } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./data-display.js";
@@ -23,23 +23,40 @@ export type ScreenFlowAction = Readonly<{label:string; onAction():void; disabled
 function Action({action,secondary=false}:{action:ScreenFlowAction;secondary?:boolean}){return <Button tone={secondary?"ghost":"primary"} disabled={!!(action.disabled||action.pending)} loading={action.pending??false} onPress={action.onAction}>{action.label}</Button>;}
 type Base = Omit<ScreenLayoutProps,"children"|"footer">;
 
-export type ListDetailScreenProps = Base & { list:ReactNode; detail?:{title:string;content:ReactNode}; back:ScreenFlowAction; refresh?:ScreenFlowAction; loadMore?:ScreenFlowAction };
+export type ListDetailScreenProps = Base & { list:ReactNode; detail?:Pick<ScreenLayoutProps,"title"|"state"|"stateAction"|"notice"> & {content:ReactNode}; back:ScreenFlowAction; refresh?:ScreenFlowAction; loadMore?:ScreenFlowAction };
 /** Keep the list mounted so input and scroll survive a detail visit. Routers may instead restore host scroll state. */
 // layoutStyle places the outer host that owns both panes, as on Web, so the screen keeps the same
 // placement while list and detail swap. Passing it to the list ScreenLayout dropped it on detail.
-export function ListDetailScreen({list,detail,back,refresh,loadMore,layoutStyle,...screen}:ListDetailScreenProps){return <View style={[{flex:1},layoutStyle]}><Pane hidden={!!detail}><ScreenLayout {...screen} actions={refresh?<Action action={refresh} secondary/>:screen.actions} footer={loadMore?<Action action={loadMore} secondary/>:null}>{list}</ScreenLayout></Pane>{detail?<Pane><ScreenLayout title={detail.title} leading={<Action action={back} secondary/>}>{detail.content}</ScreenLayout></Pane>:null}</View>;}
+export function ListDetailScreen({list,detail,back,refresh,loadMore,layoutStyle,...screen}:ListDetailScreenProps){return <View style={[{flex:1},layoutStyle]}><Pane hidden={!!detail}><ScreenLayout {...screen} actions={refresh?<Action action={refresh} secondary/>:screen.actions} footer={loadMore?<Action action={loadMore} secondary/>:null}>{list}</ScreenLayout></Pane>{detail?<Pane><ScreenLayout title={detail.title} {...(detail.state === undefined ? {} : {state:detail.state})} stateAction={detail.stateAction} notice={detail.notice} leading={<Action action={back} secondary/>}>{detail.content}</ScreenLayout></Pane>:null}</View>;}
 
 export type EditorScreenProps = Base & {children:ReactNode;submitPlacement?:"header"|"footer";dirty:boolean;submit:ScreenFlowAction;cancel:ScreenFlowAction;discard:Omit<Extract<AlertDialogRequest,{mode:"confirm"}>,"onConfirm"|"fallbackErrorMessage"> & {fallbackErrorMessage:string};draftStatus?:ReactNode};
 export function EditorScreen({children,dirty,submitPlacement="footer",submit,cancel,discard,draftStatus,...screen}:EditorScreenProps){
  const [confirm,setConfirm]=useState(false);
- return <><ScreenLayout {...screen} leading={<Action action={{...cancel,disabled:!!(cancel.disabled||submit.pending),onAction:()=>{if(dirty)setConfirm(true);else cancel.onAction();}}} secondary/>} actions={submitPlacement==="header"?<Action action={submit}/>:screen.actions} footer={submitPlacement==="header"?draftStatus:<Stack gap="sm">{draftStatus}<Action action={submit}/></Stack>}>{children}</ScreenLayout><AlertDialog open={confirm} onOpenChange={setConfirm} request={{...discard,mode:"confirm",onConfirm:()=>cancel.onAction()}}/></>;
+ const cancelLocked=!!(cancel.disabled||cancel.pending||submit.pending);
+ const submitAction={...submit,disabled:!!(submit.disabled||screen.state&&screen.state.kind!=="ready")};
+ // A prompt opened before an external save must not bypass the current leave lock
+ // or reappear once the save finishes. Keep the draft mounted throughout.
+ useEffect(()=>{if(cancelLocked)setConfirm(false);},[cancelLocked]);
+ // Preserve an async host result so AlertDialog can retain failure and retry.
+ const leave=()=>{if(!cancelLocked)return cancel.onAction();};
+ return <><ScreenLayout {...screen}
+  leading={<Action action={{...cancel,disabled:cancelLocked,onAction:()=>{if(cancelLocked)return;if(dirty)setConfirm(true);else leave();}}} secondary/>}
+  actions={submitPlacement==="header"?<Action action={submitAction}/>:screen.actions}
+  footer={submitPlacement==="header"?draftStatus:<Stack gap="sm">{draftStatus}<Action action={submitAction}/></Stack>}
+ >{children}</ScreenLayout><AlertDialog open={confirm&&!cancelLocked} onOpenChange={setConfirm} request={{...discard,mode:"confirm",onConfirm:leave}}/></>;
 }
 
 export type ProfileScreenProps = Base & {summary:ReactNode;edit:ScreenFlowAction;children?:ReactNode;accountActions?:ReactNode};
 export function ProfileScreen({summary,edit,children,accountActions,...screen}:ProfileScreenProps){return <ScreenLayout {...screen}><Stack gap="xl"><Stack gap="md">{summary}<Action action={edit} secondary/></Stack>{children}{accountActions}</Stack></ScreenLayout>;}
 
 export type ModerationScreenProps = Base & {reasonPicker?:ReactNode;reasons:readonly {value:string;label:string}[];reason:string|null;onReasonChange(value:string):void;reasonLabel:string;children?:ReactNode;submit:ScreenFlowAction;block?:{action:ScreenFlowAction;confirmation:Extract<AlertDialogRequest,{mode:"confirm"}>}};
-export function ModerationScreen({reasonPicker,reasons,reason,onReasonChange,reasonLabel,children,submit,block,...screen}:ModerationScreenProps){const [confirm,setConfirm]=useState(false);return <><ScreenLayout {...screen} footer={<Stack gap="sm"><Action action={{...submit,disabled:submit.disabled||!!screen.state&&screen.state.kind!=="ready"||!reasons.some(item=>item.value===reason)}}/>{block?<Action action={{...block.action,onAction:()=>setConfirm(true)}} secondary/>:null}</Stack>}><Stack gap="lg">{reasonPicker??(reasons.length?<RadioGroup accessibilityLabel={reasonLabel} orientation="vertical" items={reasons} value={reason} onValueChange={value=>{if(value)onReasonChange(value);}}/>:null)}{children}</Stack></ScreenLayout>{block?<AlertDialog open={confirm} onOpenChange={setConfirm} request={block.confirmation}/>:null}</>;}
+export function ModerationScreen({reasonPicker,reasons,reason,onReasonChange,reasonLabel,children,submit,block,...screen}:ModerationScreenProps){
+ const [confirm,setConfirm]=useState(false);
+ const hasBlock=!!block;
+ // Withdrawing the action ends that confirmation session; a later action needs
+ // a new explicit press even if the screen itself stays mounted.
+ useEffect(()=>{if(!hasBlock)setConfirm(false);},[hasBlock]);
+ return <><ScreenLayout {...screen} footer={<Stack gap="sm"><Action action={{...submit,disabled:submit.disabled||!!screen.state&&screen.state.kind!=="ready"||!reasons.some(item=>item.value===reason)}}/>{block?<Action action={{...block.action,onAction:()=>setConfirm(true)}} secondary/>:null}</Stack>}><Stack gap="lg">{reasonPicker??(reasons.length?<RadioGroup accessibilityLabel={reasonLabel} orientation="vertical" items={reasons} value={reason} onValueChange={value=>{if(value)onReasonChange(value);}}/>:null)}{children}</Stack></ScreenLayout>{block?<AlertDialog open={confirm} onOpenChange={setConfirm} request={block.confirmation}/>:null}</>;}
 
 
 /** Source choice only: permission, capture, decoding and draft persistence belong to the host. */
@@ -53,8 +70,11 @@ export function PhotoSourceSheet({open,onOpenChange,onSelect,labels,disabled=fal
  // iOS cannot present a camera/picker over a dismissing Modal. Sheet owns the real
  // dismissal completion (including Android fallback), so a timer is not a safe substitute.
  const select=(source:PhotoSource)=>{if(disabled||queued.current)return;queued.current=source;onOpenChange(false);};
- const complete=()=>{const source=queued.current;queued.current=null;if(source&&!disabled)onSelect(source);};
- return <Sheet open={open} onOpenChange={onOpenChange} title={labels.title} closeLabel={labels.cancel} onDismissComplete={complete}><Stack gap="sm">
+ const complete=()=>{const source=queued.current;queued.current=null;if(source&&!disabled&&(source!=="camera"||cameraAvailable))onSelect(source);};
+ // A later close action is cancellation, even if the controlled owner previously
+ // deferred closing after source selection. Do not launch that abandoned picker.
+ const dismiss=(next:boolean)=>{if(!next)queued.current=null;onOpenChange(next);};
+ return <Sheet open={open} onOpenChange={dismiss} title={labels.title} closeLabel={labels.cancel} onDismissComplete={complete}><Stack gap="sm">
  <Button tone="secondary" disabled={disabled} onPress={()=>select("library")}>{labels.library}</Button>
  {cameraAvailable?<Button tone="secondary" disabled={disabled} onPress={()=>select("camera")}>{labels.camera}</Button>:null}
  </Stack></Sheet>;
@@ -197,7 +217,7 @@ function SearchResultsHeader({ summary, applied, cause, onSortChange }: {
   return <Stack gap="sm">
     {summary?.notice}
     {showCount ? <Stack axis="inline" justify="between" align="center" gap="sm" wrap>
-      {summary.count === null ? <Skeleton shape="text" width="30%" accessibilityLabel={summary.loadingLabel} /> : <Text tone="muted">{summary.countLabel(summary.count)}</Text>}
+      {summary.count === null ? <Skeleton shape="text" width="30%" /> : <Text tone="muted">{summary.countLabel(summary.count)}</Text>}
       {sort ? <Menu triggerLabel={sort.triggerLabel} title={sort.label} dismissLabel={sort.dismissLabel}
         items={sort.options.map(option => ({ id: option.id, label: option.label }))}
         selection={{ mode: "single", selectedKey: sort.value, onSelectionChange: next => { if (next) onSortChange(next); } }}
@@ -216,9 +236,9 @@ function SearchResultsBody({ summary, applied, suggested, cause, onCommit, child
   summary: SearchResultSummary | undefined; applied: SearchAppliedFilters | undefined; suggested: SearchSuggestedQueries | undefined;
   cause: SearchEmptyCause; onCommit(query: string): void; children: ReactNode;
 }) {
-  // Two text lines per row approximate ListRow's two-line height so results do not jump when they land.
-  if (summary?.count === null) return <Stack gap="md">{Array.from({ length: searchScreenRecipe.loadingRows }, (_, index) =>
-    <Stack key={index} gap="xs"><Skeleton shape="text" width="70%" /><Skeleton shape="text" width="40%" /></Stack>)}</Stack>;
+  // The row owns its two-line geometry; only the first placeholder is an accessible status.
+  if (summary?.count === null) return <Stack gap="xxs">{Array.from({ length: searchScreenRecipe.loadingRows }, (_, index) =>
+    <ListRow key={index} loading title="" description={summary.loadingLabel} {...(index === 0 ? { loadingLabel: summary.loadingLabel } : {})} />)}</Stack>;
   if (cause === "none" || !summary?.empty) return <>{children}</>;
   return <Stack gap="lg">
     <EmptyState density="compact" announcement="polite" title={summary.empty.title} {...(summary.empty.description === undefined ? {} : { description: summary.empty.description })}
@@ -268,11 +288,12 @@ export type SearchScreenProps<F = unknown> = Base & SearchInputSlot & SearchComm
  recentQueries?:SearchRecentQueries;suggestedQueries?:SearchSuggestedQueries;suggestions?:SearchSuggestions;
  resultSummary?:SearchResultSummary;appliedFilters?:SearchAppliedFilters;filterSheet?:SearchFilterSheet<F>};
 /** Abort is supplied to the host request; the host must ignore aborted responses before committing results. */
-export function SearchScreen<F = unknown>({query,queryLabel,queryField,queryClearLabel,onQueryChange,onSearch,debounceMs=300,filters,recentSearches,children,onSubmit,committedQuery,filtersOverflow="wrap",hostGutter="none",queryLabelVisibility="visible",searching,searchingLabel,recentQueries,suggestedQueries,suggestions,resultSummary,appliedFilters,filterSheet,...screen}:SearchScreenProps<F>){
+export function SearchScreen<F = unknown>({query,queryLabel,queryField,queryClearLabel,onQueryChange,onSearch,debounceMs,filters,recentSearches,children,onSubmit,committedQuery,filtersOverflow="wrap",hostGutter="none",queryLabelVisibility="visible",searching,searchingLabel,recentQueries,suggestedQueries,suggestions,resultSummary,appliedFilters,filterSheet,...screen}:SearchScreenProps<F>){
  // The host owns localized copy. A custom queryField owns its own clear affordance.
  if (queryField == null && !queryClearLabel?.trim()) throw new TypeError("SearchScreen requires a localized queryClearLabel for its default search field");
+ const searchDelay=resolveSearchDebounceMs(debounceMs);
  const callback=useRef(onSearch);callback.current=onSearch;
- useEffect(()=>{const controller=new AbortController();const timer=setTimeout(()=>callback.current(query,{signal:controller.signal}),Math.max(0,debounceMs));return()=>{clearTimeout(timer);controller.abort();};},[query,debounceMs]);
+ useEffect(()=>{const controller=new AbortController();const timer=setTimeout(()=>callback.current(query,{signal:controller.signal}),searchDelay);return()=>{clearTimeout(timer);controller.abort();};},[query,searchDelay]);
  // Every commit path funnels through here so "only committed searches are recorded" holds at the API:
  // onSearch (debounced typing) never reaches onSubmit. Without onSubmit (one-step search) a pick only fills the field.
  // Every commit closes the keyboard so results get the screen. The search key already blurs the field; a picked
@@ -324,20 +345,31 @@ export type OnboardingStep = {id:string;title:string;description:string;content:
 export type OnboardingScreenProps = {steps:readonly OnboardingStep[];index:number;onIndexChange(index:number):void;nextLabel:string;backLabel:string;complete:ScreenFlowAction;skip?:ScreenFlowAction;progressLabel(index:number,total:number):string;layoutStyle?:ScreenLayoutProps["layoutStyle"]};
 // Large headings and a software keyboard can consume the entire fixed header
 // area. Keep step guidance in the existing scroll body, with completion actions fixed.
-export function OnboardingScreen({steps,index,onIndexChange,nextLabel,backLabel,complete,skip,progressLabel,layoutStyle}:OnboardingScreenProps){const position=resolveOnboardingStep(steps.length,index);const step=steps[index]!;return <ScreenLayout {...(layoutStyle===undefined?{}:{layoutStyle})} title={step.title} header={<></>} footer={<Stack gap="sm"><Action action={position.last?complete:{label:nextLabel,onAction:()=>onIndexChange(index+1)}}/>{!position.first?<Action action={{label:backLabel,onAction:()=>onIndexChange(index-1)}} secondary/>:null}</Stack>}><Stack gap="md"><Text variant="titleLarge" accessibilityRole="header">{step.title}</Text><Text tone="muted">{step.description}</Text><Text variant="caption" tone="muted">{progressLabel(index+1,steps.length)}</Text>{skip?<Action action={skip} secondary/>:null}{step.content}</Stack></ScreenLayout>;}
+export function OnboardingScreen({steps,index,onIndexChange,nextLabel,backLabel,complete,skip,progressLabel,layoutStyle}:OnboardingScreenProps){const position=resolveOnboardingStep(steps.length,index);const step=steps[index]!;
+ // Completion and skip persist the same flow: keep navigation stable until the receipt.
+ const pending=!!(complete.pending||skip?.pending);
+ return <ScreenLayout {...(layoutStyle===undefined?{}:{layoutStyle})} title={step.title} header={<></>} footer={<Stack gap="sm"><Action action={position.last?{...complete,disabled:!!(complete.disabled||pending)}:{label:nextLabel,disabled:pending,onAction:()=>onIndexChange(index+1)}}/>{!position.first?<Action action={{label:backLabel,disabled:pending,onAction:()=>onIndexChange(index-1)}} secondary/>:null}</Stack>}><Stack gap="md"><Text variant="titleLarge" accessibilityRole="header">{step.title}</Text><Text tone="muted">{step.description}</Text><Text variant="caption" tone="muted">{progressLabel(index+1,steps.length)}</Text>{skip?<Action action={{...skip,disabled:!!(skip.disabled||pending)}} secondary/>:null}{step.content}</Stack></ScreenLayout>;}
 
 export type CommentThreadItem = Readonly<{id:string;parentId:string|null;author:string;body:ReactNode;bodyText?:string;timeLabel:string;likeCountLabel:string;avatar?:ReactNode;likeIcon:ReactNode;likeLabel:string;likeAction?:ReactNode;actions?:ReactNode;canReply?:boolean;replyDisabled?:boolean}>;
 export type CommentThreadScreenProps = Base & {items:readonly CommentThreadItem[];expandedIds:readonly string[];onExpandedChange(id:string):void;onLike(id:string):void;onReply(id:string):void;replyLabel:string;repliesLabel(count:number,expanded:boolean):string;composer?:ReactNode;threadHeader?:ReactNode;threadFooter?:ReactNode};
 /** Controlled thread: server ordering, permission checks and receipt-based draft clearing belong to the product. */
 export function CommentThreadScreen({items,expandedIds,onExpandedChange,onLike,onReply,replyLabel,repliesLabel,composer,threadHeader,threadFooter,...screen}:CommentThreadScreenProps){
  validateCommentThread(items);
+ // Index replies once; rescanning every item for each root makes long threads quadratic.
+ const roots:CommentThreadItem[]=[], repliesByParent=new Map<string,CommentThreadItem[]>();
+ const expanded=new Set(expandedIds);
+ for(const item of items){
+  if(item.parentId===null)roots.push(item);
+  else {const siblings=repliesByParent.get(item.parentId);if(siblings)siblings.push(item);else repliesByParent.set(item.parentId,[item]);}
+ }
  // The supplied reference joins the author to the first body line and reserves the right edge
  // for reaction and its adjacent overflow action (Oct 7 user request). Keep
  // legacy rich bodies intact; bodyText opts into that compact flow.
+ // Empty metadata must not reserve a line above the body: anonymous comments align with their avatar.
  const row=(item:CommentThreadItem)=><Stack key={item.id} axis="inline" align="start" gap="sm">{item.avatar}<Stack gap="xxs" layoutStyle={{flex:1,minWidth:0}}>
- {item.bodyText!==undefined?<Text><Text emphasis="strong">{item.author}</Text>{" "}{item.bodyText}</Text>:<Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap:"wrap"}}><Text emphasis="strong">{item.author}</Text><Text variant="caption" tone="muted">{item.timeLabel}</Text></Stack>}
+ {item.bodyText!==undefined?<Text><Text emphasis="strong">{item.author}</Text>{" "}{item.bodyText}</Text>:(item.author||item.timeLabel)?<Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap:"wrap"}}>{item.author?<Text emphasis="strong">{item.author}</Text>:null}{item.timeLabel?<Text variant="caption" tone="muted">{item.timeLabel}</Text>:null}</Stack>:null}
  {item.body}<Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap:"wrap"}}>{item.bodyText!==undefined&&item.timeLabel?<Text variant="caption" tone="muted">{item.timeLabel}</Text>:null}{item.likeCountLabel?<Text variant="caption" tone="muted">{item.likeCountLabel}</Text>:null}{(item.canReply??item.parentId===null)?<Button size="small" tone="ghost" disabled={item.replyDisabled??false} onPress={()=>onReply(item.id)}>{replyLabel}</Button>:null}</Stack></Stack><Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexShrink:0}}>{item.likeAction!==undefined?item.likeAction:<IconButton label={item.likeLabel} tone="ghost" onPress={()=>onLike(item.id)}>{item.likeIcon}</IconButton>}{item.actions}</Stack></Stack>;
  // Product context belongs in the same scroll body as comments. Putting a tall
  // overview in the fixed header forced a second scroll region in Spint (2026-10-08).
- return <ScreenLayout {...screen} footer={!screen.state||screen.state.kind==="ready"||screen.state.kind==="empty"?composer:null}><Stack gap="lg">{threadHeader}{items.filter(item=>item.parentId===null).map(item=>{const replies=items.filter(reply=>reply.parentId===item.id);return <Stack key={item.id} gap="xs">{row(item)}{replies.length?<Stack gap="md" layoutStyle={{marginStart:screenPatternRecipe.sectionGap}}><Button layoutStyle={{alignSelf:"flex-start"}} tone="ghost" size="small" accessibilityState={{expanded:expandedIds.includes(item.id)}} onPress={()=>onExpandedChange(item.id)}>{repliesLabel(replies.length,expandedIds.includes(item.id))}</Button>{expandedIds.includes(item.id)?replies.map(row):null}</Stack>:null}</Stack>;})}{threadFooter}</Stack></ScreenLayout>;
+ return <ScreenLayout {...screen} footer={!screen.state||screen.state.kind==="ready"||screen.state.kind==="empty"?composer:null}><Stack gap="lg">{threadHeader}{roots.map(item=>{const replies=repliesByParent.get(item.id)??[];return <Stack key={item.id} gap="xs">{row(item)}{replies.length?<Stack gap="md" layoutStyle={{marginStart:screenPatternRecipe.sectionGap}}><Button layoutStyle={{alignSelf:"flex-start"}} tone="ghost" size="small" accessibilityState={{expanded:expanded.has(item.id)}} onPress={()=>onExpandedChange(item.id)}>{repliesLabel(replies.length,expanded.has(item.id))}</Button>{expanded.has(item.id)?replies.map(row):null}</Stack>:null}</Stack>;})}{threadFooter}</Stack></ScreenLayout>;
 }

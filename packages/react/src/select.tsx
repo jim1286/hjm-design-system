@@ -287,6 +287,11 @@ function SelectInner<Key extends string, SectionKey extends string>(
     [onOpenChange, open, openControlled],
   );
 
+  useEffect(() => {
+    // A field locked while open must stop presenting an actionable option list.
+    if (open && (disabled || readOnly)) changeOpen(false, "programmatic");
+  }, [changeOpen, disabled, open, readOnly]);
+
   const generatedId = useId().replaceAll(":", "");
   const controlId = idProp ?? `hjm-select-${generatedId}`;
   const listboxId = `${controlId}-listbox`;
@@ -434,7 +439,7 @@ function SelectInner<Key extends string, SectionKey extends string>(
   };
   const commit = (key: SelectHighlightKey<Key>) => {
     if (key === emptySelectionKey) {
-      if (disabled || readOnly || !emptySelectionAvailable) return;
+      if (disabled || busy || readOnly || !emptySelectionAvailable) return;
       setSelectedKey(null);
       restoreFocusRef.current = true;
       changeOpen(false, "selection");

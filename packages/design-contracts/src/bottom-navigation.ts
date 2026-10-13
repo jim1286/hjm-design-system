@@ -29,6 +29,8 @@ export type BottomNavigationConfiguration = Readonly<{
   direction?: BottomNavigationDirection;
   keyboardBehavior?: BottomNavigationKeyboardBehavior;
   labels?: BottomNavigationLabels;
+  /** Inset selected destination card, with equal widths and persistent labels. Floating only. */
+  selection?: "emphasis" | "tile";
 }>;
 
 export type ResolvedBottomNavigationConfiguration = Readonly<{
@@ -38,6 +40,7 @@ export type ResolvedBottomNavigationConfiguration = Readonly<{
   direction: BottomNavigationDirection;
   keyboardBehavior: BottomNavigationKeyboardBehavior;
   labels: BottomNavigationLabels;
+  selection: "emphasis" | "tile";
 }>;
 
 /**
@@ -147,12 +150,14 @@ export const bottomNavigationBehaviorDefaults = {
   direction: "ltr",
   keyboardBehavior: "hide",
   labels: "visible",
+  selection: "emphasis",
   minItems: 2,
   maxItems: 6,
 } as const satisfies Readonly<{
   direction: BottomNavigationDirection;
   keyboardBehavior: BottomNavigationKeyboardBehavior;
   labels: BottomNavigationLabels;
+  selection: "emphasis" | "tile";
   minItems: number;
   maxItems: number;
 }>;
@@ -177,6 +182,7 @@ const configurationKeys = new Set([
   "direction",
   "keyboardBehavior",
   "labels",
+  "selection",
 ]);
 const descriptorKeys = new Set(["accessibilityLabel", "items", "selectedKey"]);
 const itemKeys = new Set([
@@ -333,6 +339,14 @@ export function validateBottomNavigationConfiguration(
       `Unsupported BottomNavigation labels: ${String(configuration.labels)}`,
     );
   }
+  if (configuration.selection !== undefined && !["emphasis", "tile"].includes(configuration.selection)) {
+    throw new TypeError("Unsupported BottomNavigation selection");
+  }
+  // Spint's selected card must not inherit capsule's hidden names or unequal widths.
+  if (configuration.selection === "tile" &&
+      (configuration.presentation !== "floating" || configuration.distribution === "center-gap" || configuration.labels === "hidden")) {
+    throw new TypeError("BottomNavigation tile selection requires floating, equal distribution and visible labels");
+  }
   // Capsule actions sit beside the destination surface, so reserving a central gap would duplicate their space.
   if (configuration.presentation === "capsule" && configuration.distribution === "center-gap") {
     throw new TypeError("BottomNavigation capsule uses an adjacent action, not center-gap");
@@ -360,6 +374,7 @@ export function resolveBottomNavigationConfiguration(
       configuration.keyboardBehavior ??
       bottomNavigationBehaviorDefaults.keyboardBehavior,
     labels: configuration.labels ?? bottomNavigationBehaviorDefaults.labels,
+    selection: configuration.selection ?? bottomNavigationBehaviorDefaults.selection,
   };
 }
 

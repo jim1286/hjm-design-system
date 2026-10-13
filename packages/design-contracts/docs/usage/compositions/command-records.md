@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.16.0
-- 검토일: 2026-10-08
+- 검토일: 2026-10-13
 - 근거: [후보 조사](../../../../../docs/qa/2026-10-07-reference-parallel-b.md), 양 Showcase `command-records-preview.tsx`
 - 스토리북: `배포/구성/정보 표시/명령 기록 표시`
 
@@ -59,8 +59,8 @@ Section 제목/설명 → 현재 테마/다음 테마
 | 상태 | 모습 | 포커스·알림 |
 | --- | --- | --- |
 | 기본 | 정확한 전체 원문, 두 패널·두 보기 방식 | 탭 manual focus, Web pre focus/Native selectable Text |
-| 진행 중 | 갱신 버튼 loading, 기존 원문·선택 유지 | 응답 도구만 갱신 상태 확정, Web status/Native PatternStatus |
-| 실패 | danger Notice·같은 갱신 재시도, 이전 원문 유지 | Web alert/Native Notice, Web 응답 뒤 갱신 버튼으로 복귀 |
+| 진행 중 | 갱신 버튼 loading, 기존 원문·선택 유지 | 응답 도구만 갱신 상태 확정, Web status/Native StatusText |
+| 실패 | danger Notice·같은 갱신 재시도, 이전 원문 유지 | Web alert/Native Notice, Web 응답 버튼이 초점을 소유할 때만 갱신 버튼으로 복귀 |
 | 복사 실패 | danger Notice·직접 원문 선택 안내 | 닫기는 안내만 제거하며 성공 아님. Web 닫기 후 복사 버튼으로 복귀 |
 | 복사 성공 | Web ClipboardButton copied | OS 요청 뒤 live status, 진행 중 포커스 유지 |
 
@@ -93,8 +93,9 @@ import { CodeBlock } from "@hjmds/react-native/code-block";
 | --- | --- | --- |
 | 복사 | ClipboardButton·OS Promise·live status | 원문 길게 누르기와 시스템 선택. ClipboardButton API 없음 |
 | 원문 | focus 가능한 pre, 긴 줄 자체 scroll | selectable Text, 긴 줄 horizontal ScrollView |
-| 갱신 응답 뒤 포커스 | fixture는 주 갱신 행동으로 복귀 | 기기/AT 검증 별도 |
-| 진행 알림 | Text role=status | Showcase PatternStatus iOS announce/Android live region. 제품은 같은 정책 연결 |
+| 갱신 응답 뒤 포커스 | 응답 버튼의 초점만 주 갱신 행동으로 복귀. 원문·탭·외부 초점과 명시 blur는 유지 | 기기/AT 검증 별도 |
+| 진행 알림 | Text role=status | 조건부 StatusText에 announceOnMount를 지정해 iOS 첫 진행도 알림. Android는 live region만 사용 |
+| 갱신 실패 알림 | Notice danger의 alert | 기존 Notice announcement="assertive"로 iOS/Android 오류 알림 |
 
 ## 함정
 
@@ -104,3 +105,12 @@ token.text는 공백까지 원문과 같아야 하며 HTML로 삽입하지 않�
 미게시 Web ClipboardButton 후속 수정은 중복 OS 쓰기를 막고, 원문 변경/언마운트 뒤 이전 결과 callback과
 성공 표시를 무시한다. 취소할 수 없는 OS 쓰기가 끝날 때까지 loading 잠금을 유지해 다음 쓰기와 순서가
 뒤집히지 않게 한다. Native 복사 실패 스토리는 제품 host 오류의 표시 fixture이며 실제 OS 거부 재현이 아니다.
+
+
+갱신 버튼은 `loading`으로 중복 실행을 막고 진행 중에도 키보드 초점을 유지한다. 같은 조건의 `disabled`를
+추가하면 Enter로 갱신을 시작할 때 초점이 body로 사라진다. 예제 응답 후 무조건 focus하는 effect도
+원문을 읽던 초점을 빼앗으므로, 응답 버튼이 소유한 초점만 비활성화 전에 주 행동으로 옮긴다.
+
+실제 예제의 탭 변경 중 복사 요청은 완료될 때까지 같은 ClipboardButton 인스턴스에서 잠근다. 이전 원문의
+성공·거부 결과는 새 탭에 표시하지 않으며, 완료 뒤 새 복사는 현재 탭의 원문을 전달한다. 줄 표시·테마·갱신
+전환은 현재 탭과 원문을 유지한다. Native는 같은 선택 연결과 selectable 원문을 제공하며 OS 복사 호출을 추가하지 않는다.

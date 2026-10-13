@@ -1,6 +1,7 @@
 import { isLargeTextScale } from "@hjmds/design-contracts/components/design-system-provider";
 import {
   createToastStore,
+  createToastSession,
   resolveToastDescriptor,
   type ResolvedToastDescriptor,
   type ToastDescriptor,
@@ -95,6 +96,7 @@ type ToastCardProps = Readonly<{
   descriptor: ResolvedToastDescriptor;
   phase: "visible" | "closing";
   onAction(): void;
+  onPress(): void;
   onDismiss(reason: ToastDismissReason): void;
   onPointerPause?(): void;
   onPointerResume?(): void;
@@ -115,6 +117,7 @@ const ToastCard = forwardRef<HTMLDivElement, ToastCardProps>(function ToastCard(
     descriptor,
     phase,
     onAction,
+    onPress,
     onDismiss,
     onPointerPause,
     onPointerResume,
@@ -162,6 +165,17 @@ const ToastCard = forwardRef<HTMLDivElement, ToastCardProps>(function ToastCard(
       >
         {descriptor.announcement}
       </span>
+      {descriptor.press ? (
+        // A sibling button covers the card without nesting action/close buttons in a button.
+        <button
+          type="button"
+          className="hjm-toast__press"
+          aria-label={descriptor.press.accessibilityLabel}
+          aria-describedby={descriptionId}
+          disabled={phase !== "visible"}
+          onClick={onPress}
+        />
+      ) : null}
       <span className="hjm-toast__tone-mark" aria-hidden="true" />
       {descriptor.media === null ? (
         <span className="hjm-toast__icon" aria-hidden="true">
@@ -220,10 +234,25 @@ export const Toast = forwardRef<HTMLDivElement, ToastProps>(function Toast(
   ref,
 ) {
   const resolved = resolveToastDescriptor(descriptor);
-  const actionInvokedRef = useRef(false);
-  useEffect(() => {
-    actionInvokedRef.current = false;
+  // Controlled rendering leaves timing/removal to the host, but shares the store's
+  // once-per-revision invocation and callback-then-dismiss semantics.
+  const session = useMemo(() => {
+    const next = createToastSession(descriptor);
+    next.show();
+    return next;
   }, [descriptor]);
+  const invoke = (kind: "action" | "press") => {
+    if (session.getSnapshot().phase !== "visible") return;
+    try {
+      if (kind === "press") session.invokePress();
+      else session.invokeAction();
+    } finally {
+      const snapshot = session.getSnapshot();
+      if (snapshot.phase === "closing" && snapshot.dismissReason) {
+        onDismissRequest(snapshot.dismissReason);
+      }
+    }
+  };
   return (
     <ToastCard
       ref={ref}
@@ -231,14 +260,9 @@ export const Toast = forwardRef<HTMLDivElement, ToastProps>(function Toast(
       phase="visible"
       {...(className === undefined ? {} : { className })}
       htmlProps={htmlProps}
-      onDismiss={onDismissRequest}
-      onAction={() => {
-        const action = resolved.action;
-        if (!action || actionInvokedRef.current) return;
-        actionInvokedRef.current = true;
-        action.onAction();
-        if (action.dismissOnAction) onDismissRequest("action");
-      }}
+      onDismiss={(reason) => { session.dismiss(reason); onDismissRequest(reason); }}
+      onAction={() => invoke("action")}
+      onPress={() => invoke("press")}
     />
   );
 });
@@ -323,6 +347,7 @@ function renderStoreToast(
       phase={snapshot.phase}
       {...(locale === undefined ? {} : { locale })}
       onAction={() => store.invokeAction(id)}
+      onPress={() => store.invokePress(id)}
       onDismiss={(reason) => store.dismiss(id, reason)}
       onPointerPause={() => store.pause(id, "pointer")}
       onPointerResume={() => store.resume(id, "pointer")}
@@ -484,6 +509,8 @@ export function ToastProvider({
     window.addEventListener("pagehide", pause);
     window.addEventListener("pageshow", resume);
     document.addEventListener("visibilitychange", handleVisibility);
+    // A provider may mount while its tab is already hidden, before any change event.
+    handleVisibility();
     return () => {
       window.removeEventListener("blur", pause);
       window.removeEventListener("focus", resume);

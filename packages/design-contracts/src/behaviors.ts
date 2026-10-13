@@ -467,6 +467,7 @@ export type BehaviorContract = Readonly<{
       | "blur"
       | "timeout"
       | "action"
+      | "press"
       | "close-action"
       | "swipe"
       | "programmatic"
@@ -483,6 +484,7 @@ export type BehaviorContract = Readonly<{
       | "selection"
       | "timeout"
       | "action"
+      | "press"
       | "close-action"
       | "programmatic"
     )[];
@@ -1020,7 +1022,7 @@ export const behaviorRegistry = {
   toast: {
     controlled: [],
     inputs: ["descriptor", "queueSnapshot", "visibleSnapshot"],
-    events: ["onAction", "onDismiss"],
+    events: ["onAction", "onPress", "onDismiss"],
     configuration: {
       priority: ["normal", "high"],
       duplicatePolicy: ["update", "ignore"],
@@ -1036,13 +1038,13 @@ export const behaviorRegistry = {
       roles: ["region", "status", "alert", "button"],
       keyboard: ["Tab", "Enter", "Space", "Escape", "F8"],
       focus: "native",
-      dismiss: ["timeout", "action", "close-action", "escape", "swipe", "programmatic"],
+      dismiss: ["timeout", "action", "press", "close-action", "escape", "swipe", "programmatic"],
     },
     native: {
       roles: ["alert", "button"],
       states: [],
       actions: ["announce", "activate", "dismiss"],
-      dismiss: ["timeout", "action", "close-action", "swipe", "programmatic"],
+      dismiss: ["timeout", "action", "press", "close-action", "swipe", "programmatic"],
     },
     scenarios: [
       "stable-id-duplicate-updates-in-place-without-reordering",
@@ -1052,6 +1054,7 @@ export const behaviorRegistry = {
       "actionable-toast-is-persistent-unless-duration-is-explicit",
       "auto-dismiss-duration-is-never-shorter-than-five-seconds",
       "action-and-dismiss-callbacks-run-exactly-once",
+      "card-press-runs-once-before-dismiss-and-excludes-action-close-and-swipe",
       "programmatic-close-reports-its-own-dismiss-reason",
       "normal-and-high-announcements-use-the-visible-copy-or-explicit-override",
       "tone-is-always-paired-with-a-non-color-mark",

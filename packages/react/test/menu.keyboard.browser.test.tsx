@@ -1,7 +1,7 @@
 import { act } from "react";
 // This proof file is listed by test/executed-scenarios.json; the workspace checker validates its cases against that registry.
 import { createRoot, type Root } from "react-dom/client";
-import { afterEach, beforeEach, expect, it } from "vitest";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { HjmProvider } from "../src/provider.js";
 import { Menu } from "../src/overlays.js";
@@ -88,4 +88,21 @@ it("wraps a long description inside the menu without widening the viewport", asy
   expect(description).toBeDefined();
   expect(copy.scrollWidth).toBeLessThanOrEqual(copy.clientWidth + 2);
   expect(menu.getBoundingClientRect().width).toBeLessThanOrEqual(window.innerWidth + 1);
+});
+
+
+it("retries controlled dismissal after the owner rejects it and restores focus only after acceptance", async () => {
+  const changed = vi.fn();
+  const view = (open: boolean) => <HjmProvider><Menu label="문서" trigger={<button>열기</button>} items={[{ id: "edit", label: "편집" }]} open={open} onOpenChange={changed} /></HjmProvider>;
+  await render(view(true));
+  await flush();
+  const item = document.querySelector<HTMLElement>('[role="menuitem"]')!;
+  await act(async () => key(item, "Escape"));
+  expect(changed).toHaveBeenCalledTimes(1);
+  expect(document.activeElement).toBe(item);
+  await act(async () => key(item, "Escape"));
+  expect(changed).toHaveBeenCalledTimes(2);
+  await render(view(false));
+  expect(document.querySelector('[role="menu"]')).toBeNull();
+  expect(document.activeElement).toBe(host.querySelector("button"));
 });

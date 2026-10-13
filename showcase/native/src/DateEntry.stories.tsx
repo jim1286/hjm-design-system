@@ -7,6 +7,7 @@ import { Button } from "@hjmds/react-native/actions";
 import { Stack, Text } from "@hjmds/react-native/primitives";
 import { resolveDateEntryDraft, type DateEntryDraft, type DateEntryOrder } from "@hjmds/design-contracts/date-entry";
 import { parseExampleDate, dateEntryLabels, dateEntryIssueText } from "../../shared/date-entry-example";
+import { PatternStatus } from "./pattern-status";
 function Demo() {
   const [value, setValue] = useState<DateEntryDraft>({ year: "", month: "", day: "" });
   const [order, setOrder] = useState<DateEntryOrder>(["year", "month", "day"]);
@@ -20,7 +21,7 @@ function Demo() {
       required showErrors={showErrors} description={`예: ${order.map(part => ({ year: "2024", month: "Feb", day: "29" })[part]).join(" / ")}`} />
     <Button onPress={() => { setShowErrors(true); const resolved = resolveDateEntryDraft({ draft: value, order, required: true, parse: parseExampleDate }); setResult(resolved.value ?? ""); }}>날짜 확인</Button>
     <Button tone="secondary" onPress={() => setOrder(order[0] === "year" ? ["day", "month", "year"] : ["year", "month", "day"])}>입력 순서 바꾸기</Button>
-    <Text accessibilityLiveRegion="polite">{result ? `확인한 날짜: ${result}` : "아직 확인하지 않았습니다."}</Text>
+    <PatternStatus>{result ? `확인한 날짜: ${result}` : "아직 확인하지 않았습니다."}</PatternStatus>
   </Stack></ScrollView>;
 }
 const meta = { title: "배포/구성/입력과 작성/날짜 직접 입력", component: Demo } satisfies Meta<typeof Demo>;

@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-13
 - 근거: `showcase/web/src/patterns/NotificationSettings.stories.tsx`, `showcase/native/src/NotificationSettings.stories.tsx`, `src/component-recipes.ts`(`topBarRecipe`·`bottomCtaRecipe`·`sectionRecipe`·`switchRecipe`), `src/container.ts`, `src/responsive.ts`(`resolveWindowClass`), `packages/react/src/styles.css`(`.hjm-top-bar`·`.hjm-bottom-cta`)
 - 스토리북: `배포/화면/설정/알림 설정`
 
@@ -78,11 +78,25 @@ Native 고정 배치
 
 | 상태 | 화면 모습 | 행동 |
 | --- | --- | --- |
-| 기본 | 스위치가 현재 값, 저장 버튼 활성 | 스위치 바꾸기, 저장 |
+| 기본 | 스위치가 메모리 예제의 초기 저장값. 변경이 없으면 저장 버튼 비활성 | 스위치를 바꾸면 저장 가능. 저장값으로 되돌리면 다시 비활성 |
 | 로딩 | 스토리에 없음. 첫 값을 불러오는 동안 Section 안 스위치 자리에 [Skeleton](../components/skeleton.md) `shape="text"`, 저장 버튼 `disabled`. 저장 중이면 `primaryAction`에 `loading`(누름을 막고 같은 자리에 스피너) | 기다림 |
 | 빈 | 해당 없음(설정 항목은 항상 있다). 항목이 조건부면 Section 아래 안내 Text | — |
-| 오류 | 스토리에 없음. **불러오기 실패**: 스위치 대신 [Notice](../components/notice.md) `tone="danger"` + `action` 다시 시도, 저장 버튼 `disabled`. **저장 실패**: Section 끝에 Notice `tone="danger"`(action 없음 — 다시 시도는 저장 버튼이 맡는다), 사용자가 고른 스위치 값을 그대로 두고 `loading`만 푼다. 문구는 네트워크 실패 `settings.error.offline`·서버 실패 `settings.error.server`로 나눈다. 다시 시도가 또 실패하면 같은 Notice가 같은 자리에 남고 문구만 갱신한다. Native는 `announcement="assertive"`(기본 `none`) | 다시 시도 / 다시 저장 |
+| 오류 | **최초 불러오기 실패**(스토리에는 없음): 스위치 대신 [Notice](../components/notice.md) `tone="danger"` + `action` 다시 시도, 저장 버튼 `disabled`. **저장 실패**(스토리에서 `다음 저장 실패시키기`로 실행): Section 끝에 Notice `tone="danger"`(action 없음 — 다시 시도는 저장 버튼이 맡는다), 사용자가 고른 스위치 값을 그대로 두고 `loading`만 푼다. 문구는 네트워크 실패 `settings.error.offline`·서버 실패 `settings.error.server`로 나눈다. 다시 시도가 또 실패하면 같은 Notice가 같은 자리에 남고 문구만 갱신한다. Native는 `announcement="assertive"`(기본 `none`) | 다시 시도 / 다시 저장 |
 | 저장됨 | Section 끝에 Notice `tone="success"`(제목 + 켜짐/꺼짐 요약). 버튼은 "저장했어요"로 바뀌고 비활성. Native Notice `announcement="polite"` | 스위치를 다시 바꾸면 저장 상태가 풀린다 |
+
+
+### 설정 초안의 저장 경계
+
+두 스토리는 `showcase/shared/notification-settings.ts`에서 기존 `createActionSession`을 사용한다. 마지막 저장값과 현재 초안을 따로 표시하며, 저장 중에도 스위치를 수정할 수 있다. 성공은 제출 snapshot만 확정하고 새 초안은 남긴다. 저장 실패 후 하단의 같은 버튼으로 **현재 초안**을 다시 제출한다. 중복 저장은 잠그며 값을 저장값으로 되돌리면 불필요한 저장을 막는다. `예제 실행`의 실패 스위치는 다음 저장 한 번에만 적용한다. 실제 조회·권한·푸시·계정 API 없이 화면이 열려 있는 동안만 유지되는 메모리 데모다.
+
+2026-10-13 전수 점검에서 최초 조회와 변경 요청의 상태를 같은 골격으로 설명하던 부분을 구체화했다.
+
+| 상황 | 연결 | 유지·복구 |
+| --- | --- | --- |
+| 최초 조회 실패 | 설정값 대신 오류·재시도 | 기본 false를 실제 서버 설정처럼 저장하지 않는다 |
+| 사용자 수정 | draft와 마지막 saved 분리 | 값을 바꾸면 저장됨 표시를 해제한다 |
+| 저장 중 재수정 | 제출 snapshot 보관 | 성공은 제출한 값에만 적용한다. 현재 draft가 다르면 다시 저장 가능 상태 |
+| 저장 실패 | 현재 draft 유지 | 하단 저장 버튼으로 재시도하고 별도의 경쟁 저장 버튼을 만들지 않는다 |
 
 ## 사용하는 지침
 
@@ -198,7 +212,7 @@ const gutter = resolveWindowClass(width) === "compact" ? "compact" : "regular";
 | 하단 바 고정 | `position="sticky"` | prop 없음 — `ScrollView` 바깥에 둔다 |
 | 안전 영역 | CSS `env(safe-area-inset-*)`와 `safeAreaTop`/`safeAreaBottom` 중 큰 값 | `safeAreaTop`/`safeAreaBottom`만(기본 0) |
 | 저장·오류 알림 | Notice가 `role="status"` | Notice `announcement` 명시(기본 `none`): 저장됨 `polite`, 오류 `assertive` |
-| 스토리 상태 | 기본·큰 글자(어두운 테마 스토리 없음) | 기본만 |
+| 스토리 상태 | 기본·다크·큰 글자, 기본 화면에서 저장 실패와 재시도 실행 | 기본·다크·큰 글자, 동일 메모리 저장 흐름 |
 
 ## 함정
 

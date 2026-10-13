@@ -53,7 +53,7 @@ import { Tag } from "@hjmds/react-native/data-display";
 | `tone` | `neutral` · `info` · `success` · `attention` · `brand` | `neutral` | `warning`·`danger`는 없다(이유는 계약 문서) |
 | `layoutStyle` | `HjmCompositionStyleProp` | — | 바깥 여백·`alignSelf` 같은 배치. Web·Native 모두 |
 | `accessibilityLabel`(Native) | `string` | 라벨 | — |
-| `style`·`labelStyle`(Native) | `StyleProp` | — | deprecated — `layoutStyle` 또는 `tone`. 개발 모드에서 한 번 경고하고 다음 major에서 제거된다 |
+| `style`·`labelStyle`(Native) | 지원하지 않음 | — | 제거된 속성 — `layoutStyle` 또는 `tone`. 현재 공개 props에서 제거되었다 |
 
 모양은 radius `sm` 사각형, 최소 높이 20(큰 글자에서 늘어남), caption 크기 semibold 글자다.
 
@@ -81,6 +81,6 @@ Native의 모서리는 Provider의 `tokens.radius.sm`이다. metadata 의미와 
 | 항목 | Web | Native |
 | --- | --- | --- |
 | 접근 이름 | 보이는 글자 | 기본은 라벨, `accessibilityLabel`로 바꿀 수 있음 |
-| 추가 style prop | `className`·`style`(HTML 속성) | `style`·`labelStyle`(deprecated) |
+| 추가 style prop | `className`·`style`(HTML 속성) | `style`·`labelStyle`(제거된 속성) |
 | ref | `forwardRef`(`span`) | 없음 |
 | import 경로 | `/display` | `/data-display` |

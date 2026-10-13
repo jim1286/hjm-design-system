@@ -44,10 +44,10 @@
 
 ## 흐름과 상태
 
-1. 열기 직전에 트리거를 실제 viewport/window 좌표로 측정한다. 측정 불가 시 일반 Dialog를 연다.
-2. 제품이 open·draft·saved를 각각 소유한다. 저장 전 닫기는 draft를 지우지 않는다.
+1. 열기 직전에 트리거를 실제 viewport/window 좌표로 측정한다. 측정 불가 시 일반 Dialog를 연다. Native의 비동기 측정은 새 열기·닫기·언마운트 때 이전 요청을 무효화한다. 늦은 측정이 닫힌 창을 다시 열거나 최신 위치를 덮지 않게 한다.
+2. 제품이 open·draft·saved를 각각 소유한다. 저장 전 닫기는 draft를 지우지 않는다. 저장 전 상태는 `null`, 의도적으로 비운 메모를 저장한 결과는 빈 문자열로 구분해 저장 여부를 잘못 안내하지 않는다.
 3. 저장 시 draft를 결과로 확정하고 닫는다. 실패 체험을 예약하면 첫 저장만 실패하고
-   오류·초안을 유지한다. 다시 저장은 성공한다. 실제 서버가 있으면 busy와 확정 응답을 연결한다.
+   오류·초안을 유지한다. 다시 저장은 성공한다. Web은 status/alert, Native는 StatusText의 Android live region·iOS 알림 경로로 결과와 실패를 알린다. 실제 서버가 있으면 busy와 확정 응답을 연결한다.
 4. 닫기 전환이 끝난 뒤 트리거로 초점을 돌린다. 빠른 재열기는 이전 종료 결과를 무시한다.
 5. 모션 감소·잘못된 측정에서는 공간 전환을 생략한다.
 
@@ -88,12 +88,12 @@
 | 모션 감소 | 공간 전환 없음 | 공간 전환 없음, 기존 opacity |
 | 닫기 | Escape·바깥·닫기 | Back·바깥·닫기 |
 
-키보드·회전·스크롤에 의한 목적지 변화, 실제 기기와 제품 테마 비교는 승격 전 검증한다.
+키보드·회전·스크롤에 의한 목적지 변화, 실제 기기와 제품 테마 비교는 제품 도입 시 검증한다. Storybook 배포 분류는 이 검증의 증거가 아니다.
 
 
 ### Web의 페이지 안에서 편집 변형
 
-`Contextual`·`ContextualDark`·`ContextualLargeText`는 기존 Popover의 선택적인 `motionOrigin`을
+`Contextual`·`ContextualDark`는 기존 Popover의 선택적인 `motionOrigin`을
 사용한다. 기본 360px 표면이 버튼 아래 8px 간격으로 열리고 viewport 충돌에 따라 배치가 바뀐다.
 본문은 Stack gap md=16px 안에 오류 → TextField → 저장 순서다. Native는 모달 편집 변형을 쓴다.
 

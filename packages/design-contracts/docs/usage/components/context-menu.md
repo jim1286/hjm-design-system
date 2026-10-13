@@ -86,7 +86,7 @@ import { Pressable } from "react-native";
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 메뉴(Web): 최대 폭 `min(24rem, 90vw)`, 최대 높이 뷰포트 높이 − 2×`spacing.md`(16). 항목 최소 높이 `control.minTouchTarget` 44. 감싼 영역 래퍼(`.hjm-context-menu-host`)는 `min-inline-size: 0`만 가지며 크기·여백을 더하지 않는다 | `packages/react/src/styles.css` `.hjm-context-menu*` |
-| 간격 | 메뉴 안쪽 여백 `spacing.xs` 8(`menuRecipe.surface.padding`, Menu와 같다. 2026-10-06까지 4, 1.12.1 이후 미게시), 항목 여백 `spacing.xs` 8 · `spacing.sm` 12, 라벨–단축키 간격 `spacing.sm` 12 | `packages/react/src/styles.css` `.hjm-context-menu__item` |
+| 간격 | 메뉴 안쪽 여백 `spacing.xs` 8(`menuRecipe.surface.padding`, Menu와 같다. 2026-10-06까지 4, 1.13.0 변경), 항목 여백 `spacing.xs` 8 · `spacing.sm` 12, 라벨–단축키 간격 `spacing.sm` 12 | `packages/react/src/styles.css` `.hjm-context-menu__item` |
 | 순서·정렬 | 항목은 `items` 배열 순서대로 위에서 아래로 그린다. 단축키는 끝에 붙고 줄바꿈하지 않는다. 우클릭·길게 누르기는 누른 좌표, Shift+F10·메뉴 키는 영역의 시작 쪽 아래 모서리에 메뉴를 연다 | `packages/react/src/context-menu.tsx`, `src/context-menu.ts` |
 | 고정·스크롤 | `position: fixed`로 뜨고 뷰포트 밖으로 넘치면 안쪽으로 밀어 넣는다. 최대 높이를 넘으면 메뉴 안에서 스크롤한다 | `packages/react/src/context-menu.tsx` |
 | 좁은 폭·큰 글자 | 좁은 폭에서는 최대 폭이 `90vw`로 줄고 항목 라벨은 줄바꿈한다. Native `NativeContextMenu`의 위치·크기·미리보기는 OS가 정한다 | `packages/react/src/styles.css` |
@@ -136,7 +136,7 @@ import { Pressable } from "react-native";
 | 성숙도 | stable | 실험적 어댑터(기기 증거 전까지 canonical unsupported) |
 
 2026-10-07 Web 키보드 회귀에서 팝업이 정지한 커서 아래에 배치된 뒤 mouseenter가 활성 항목을
-첫 항목으로 되돌리는 문제를 재현했다. 미게시(1.14.0 이후) 수정은 실제 마우스 이동으로 항목을
+첫 항목으로 되돌리는 문제를 재현했다. 1.15.0 변경 수정은 실제 마우스 이동으로 항목을
 바꾸며, 늦은 경계 이벤트만으로 키보드 선택을 덮지 않는다. 클릭·키보드 실행·포커스 복귀와
 Native OS 어댑터는 기존 계약을 유지한다. 고정 대기 시간을 추가하지 않고 입력 의도를 구분했다.
 [검증 기록](../../../../../docs/qa/2026-10-07-command-records.md).

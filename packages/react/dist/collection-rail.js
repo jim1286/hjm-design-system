@@ -11,6 +11,16 @@ export function CollectionRail({ label, items, renderItem, labels, density = col
     const theme = useOptionalHjmTheme(), direction = theme?.environment.direction ?? "ltr";
     const gap = collectionRailRecipe.gap;
     const viewportRef = useRef(null);
+    const detachedFocus = useRef(null);
+    useLayoutEffect(() => {
+        const old = detachedFocus.current;
+        detachedFocus.current = null;
+        // A removed card must leave a keyboard origin in this collection, without
+        // moving focus away from a surviving input or an external control.
+        if (old && !old.isConnected && old.ownerDocument.activeElement === old.ownerDocument.body) {
+            viewportRef.current?.focus({ preventScroll: true });
+        }
+    });
     const anchor = useRef(defaultStartKey ?? items[0]?.id ?? null);
     const initialized = useRef(false);
     if (!initialized.current) {
@@ -104,6 +114,14 @@ export function CollectionRail({ label, items, renderItem, labels, density = col
                     if (pendingOffset.current !== null && Math.abs(offset - pendingOffset.current) <= 0.5)
                         pendingOffset.current = null;
                     publish(current.current.layout, offset);
-                }, children: [_jsx("div", { style: { display: "flex", gap, width: "max-content", minWidth: "100%", paddingBlock: "var(--hjm-space-xs)" }, children: items.map((item, index) => _jsx("div", { role: "listitem", "data-collection-rail-item": item.id, style: { flex: "0 0 auto", width: position.layout.itemWidth || "auto", minWidth: 0 }, onFocusCapture: () => scrollToOffset(getCollectionRailRevealOffset(current.current.layout, current.current.offset, index), false), children: renderItem(item) }, item.id)) }), items.length === 0 ? emptyContent : null] }), _jsxs("div", { "data-collection-rail-controls": true, role: "group", "aria-label": labels.navigation, style: { display: "flex", flexWrap: "wrap", justifyContent: "flex-end", gap: "var(--hjm-space-sm)", marginBlockStart: "var(--hjm-space-sm)" }, children: [_jsx(Button, { tone: "ghost", "aria-disabled": resolved.atStart, onClick: () => navigate("previous"), children: labels.previous }), _jsx(Button, { tone: "ghost", "aria-disabled": resolved.atEnd, onClick: () => navigate("next"), children: labels.next })] })] });
+                }, children: [_jsx("div", { style: { display: "flex", gap, width: "max-content", minWidth: "100%", paddingBlock: "var(--hjm-space-xs)" }, children: items.map((item, index) => _jsx("div", { role: "listitem", "data-collection-rail-item": item.id, ref: node => {
+                                if (!node)
+                                    return;
+                                return () => {
+                                    const active = node.ownerDocument.activeElement;
+                                    if (active instanceof HTMLElement && node.contains(active))
+                                        detachedFocus.current = active;
+                                };
+                            }, style: { flex: "0 0 auto", width: position.layout.itemWidth || "auto", minWidth: 0 }, onFocusCapture: () => scrollToOffset(getCollectionRailRevealOffset(current.current.layout, current.current.offset, index), false), children: renderItem(item) }, item.id)) }), items.length === 0 ? emptyContent : null] }), _jsxs("div", { "data-collection-rail-controls": true, role: "group", "aria-label": labels.navigation, style: { display: "flex", flexWrap: "wrap", justifyContent: "flex-end", gap: "var(--hjm-space-sm)", marginBlockStart: "var(--hjm-space-sm)" }, children: [_jsx(Button, { tone: "ghost", "aria-disabled": resolved.atStart, onClick: () => navigate("previous"), children: labels.previous }), _jsx(Button, { tone: "ghost", "aria-disabled": resolved.atEnd, onClick: () => navigate("next"), children: labels.next })] })] });
 }
 //# sourceMappingURL=collection-rail.js.map

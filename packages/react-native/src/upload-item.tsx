@@ -6,13 +6,12 @@ import {
   type UploadItemLabels,
 } from "@hjmds/design-contracts/components/upload-item";
 import type { ReactNode } from "react";
-import { Pressable, View, type StyleProp, type ViewStyle } from "react-native";
+import { Pressable, View } from "react-native";
 
 import { Progress } from "./feedback.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 import { Text } from "./primitives.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 
 export type UploadItemProps = Readonly<{
@@ -23,15 +22,9 @@ export type UploadItemProps = Readonly<{
   leading?: ReactNode;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
-  /**
-   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
-   * `uploadItemRecipe` owns appearance. Removed in the next major (consumer-policy.md §3.1).
-   */
-  style?: StyleProp<ViewStyle>;
 }>;
 
-export function UploadItem({ descriptor, labels, onCancel, onRetry, leading, layoutStyle, style }: UploadItemProps) {
-  warnDeprecatedStyleProps("UploadItem", { style }, "layoutStyle for placement; uploadItemRecipe owns appearance");
+export function UploadItem({ descriptor, labels, onCancel, onRetry, leading, layoutStyle }: UploadItemProps) {
   const { colors, environment, designProfile } = useHjmNativeTheme();
   // The row md role follows the nearest profile; retain the pre-profile 12px frame.
   const corner = designProfile?.tokens.radius[uploadItemRecipe.row.radius] ?? 12;
@@ -53,7 +46,7 @@ export function UploadItem({ descriptor, labels, onCancel, onRetry, leading, lay
     // element, VoiceOver and TalkBack swallowed Cancel/Retry into it and the
     // action was unreachable (2026-09-30 audit). The file text is one grouped
     // element and the action is a separate button, as the contract's slots list.
-    <View style={[{ alignItems: "center", borderColor: colors.border, borderRadius: corner, borderWidth: 1, direction: environment.direction, flexDirection: "row", gap: uploadItemRecipe.row.gap, minHeight: uploadItemRecipe.row.minHeight, paddingHorizontal: uploadItemRecipe.row.paddingHorizontal, paddingVertical: uploadItemRecipe.row.paddingVertical }, style, layoutStyle]}>
+    <View style={[{ alignItems: "center", borderColor: colors.border, borderRadius: corner, borderWidth: 1, direction: environment.direction, flexDirection: "row", gap: uploadItemRecipe.row.gap, minHeight: uploadItemRecipe.row.minHeight, paddingHorizontal: uploadItemRecipe.row.paddingHorizontal, paddingVertical: uploadItemRecipe.row.paddingVertical }, layoutStyle]}>
       {leading === undefined ? null : <View accessible={false} importantForAccessibility="no-hide-descendants">{leading}</View>}
       {/* Native exposes only a busy state for this lifecycle; success and error remain
           distinguishable through the live status sentence, as documented by the contract. */}

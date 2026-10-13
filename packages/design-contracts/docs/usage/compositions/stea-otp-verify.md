@@ -21,7 +21,7 @@
 | `Card` | 제목("인증번호 확인")·설명을 가진 틀 | [Card](../components/card.md) |
 | `ContentTransition` | 입력 폼 ↔ 성공 결과 전환(기본 `fade`). 입력 중엔 같은 subtree를 유지 | [ContentTransition](../components/content-transition.md) |
 | `OtpField` | `length` 6 숫자 칸. 확인 중 `busy`, 잠김 `disabled`, 틀림·요청 실패 `error` | [OtpField](../components/otp-field.md) |
-| 재전송 안내 문구 | 다시 받은 뒤 "새 인증번호를 보냈어요…", 재전송 실패 문구(muted, live) | [Text](../components/text.md) |
+| 재전송 안내 문구 | 예제는 "예제 인증번호를 다시 받았어요. 246810을 입력해 주세요.", 제품은 실제 재전송 완료·실패 문구(muted, live) | [Text](../components/text.md) |
 | `Button` primary | 확인. 확인 중 `loading` | [Button](../components/button.md) |
 | `Button` ghost | 인증번호 다시 받기. 대기 시간 동안 `disabled`, 라벨이 남은 초를 보여 줌. 재전송 요청 중 `loading` | [Button](../components/button.md) |
 | `Result` `status="success"` | 성공 결과 + 행동 하나. Web은 `icon`을 비우면 CSS가 ✓를 그린다. Native는 기본 glyph가 없으니 `renderIcon`으로 제품 glyph를 넘긴다(비우면 빈 원) | [Result](../components/result.md) |
@@ -93,6 +93,7 @@ Native 화면(ScrollView keyboardShouldPersistTaps="handled", 위아래 spacing.
 | 성공 | `Result` success, 행동 하나(제품의 다음 단계, 예 `otp.continue`). 스토리의 "다른 번호로 다시 해 보기"는 데모 초기화용 | Web: Result(`tabIndex={-1}`)로 포커스 이동 |
 
 - 스토리의 정답 `246810`, 대기 10초(실서비스는 보통 30~60초), 지연 900ms는 데모 값이다. 시도 횟수·대기 시간·검증은 서버와 제품 소유다.
+- 예제는 실제 문자를 보내거나 이전 번호를 폐기하지 않는다. 같은 데모 번호를 사용하는 구현에 맞춰 안내하고, 서버의 재전송 성공으로 표현하지 않는다.
 - 문구 키는 상태별 상수로 둔다(아래 `otpErrorKey`). 상태 이름으로 키를 조립하면 상태 표와 키가 어긋난다.
 
 | 상태 | 문구 키 | 변수 |
@@ -199,8 +200,9 @@ const gutter = resolveWindowClass(width) === "compact" ? "compact" : "regular";
 | --- | --- | --- |
 | 제출 | `<form onSubmit>` + `type="submit"` 버튼(Enter 제출) | `onComplete`로 6자리 도달 시 자동 제출 + 확인 버튼 |
 | 바깥 틀 | 제품 화면 레이아웃(문서 스크롤) | `ScrollView keyboardShouldPersistTaps="handled"` > `Container` |
-| 재전송 후 포커스 | 입력으로 `focus()` | 이동하지 않음(스토리) |
-| 성공 후 포커스 | `Result`(`tabIndex={-1}`)로 이동 | 이동하지 않음(스토리) |
+| 재전송 후 포커스 | 첫 번째·반복 재전송 모두 입력으로 `focus()` | 입력 ref의 `focus()` 호출 |
+| 성공 후 포커스 | 사라지는 폼에 초점이 있었으면 `Result`(`tabIndex={-1}`)로 이동. 사용자가 옮긴 외부 초점은 유지 | 결과 행동을 각각 탐색할 수 있게 유지하며 iOS 성공 안내·Android polite live region 연결 |
+| 성공 뒤 데모 초기화 | 새 입력으로 복귀 | 새 입력 ref의 `focus()` 호출 |
 | 성공 아이콘 | `icon`을 비우면 CSS가 ✓ | `renderIcon`으로 제품 glyph(비우면 빈 원) |
 | 상태 문구 | `role="status"` | `accessibilityLiveRegion="polite"` |
 | busy 표현 | read-only + `aria-busy` | `editable={false}` + `accessibilityState.busy` |

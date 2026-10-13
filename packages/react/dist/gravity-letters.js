@@ -12,8 +12,16 @@ export function GravityLetters({ glyphs, active = false, replayKey = 0, layoutSt
         if (!active || environment.reducedMotion || document.hidden)
             return;
         const recipe = resolveGravityLetters(JSON.parse(signature));
-        const animations = [...root.current.children].map((node, index) => node.animate(gravityLetterMotion.input.map((offset, step) => ({ offset, transform: `translateY(${gravityLetterMotion.y[step]}px) rotate(${step === 0 ? recipe[index].rotation : 0}deg)` })), { duration: gravityLetterMotion.duration, delay: recipe[index].delay, fill: "backwards", easing: "ease-out" }));
+        const animations = [];
         const stop = () => animations.forEach(animation => animation.cancel());
+        // Decoration must not remove the readable page if WAAPI creation fails midway.
+        try {
+            [...root.current.children].forEach((node, index) => animations.push(node.animate(gravityLetterMotion.input.map((offset, step) => ({ offset, transform: `translateY(${gravityLetterMotion.y[step]}px) rotate(${step === 0 ? recipe[index].rotation : 0}deg)` })), { duration: gravityLetterMotion.duration, delay: recipe[index].delay, fill: "backwards", easing: "ease-out" })));
+        }
+        catch {
+            stop();
+            return;
+        }
         const visibility = () => { if (document.hidden)
             stop(); };
         document.addEventListener("visibilitychange", visibility);

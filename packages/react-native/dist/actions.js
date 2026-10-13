@@ -7,7 +7,7 @@ import {} from "@hjmds/design-contracts/recipes/base";
 import { forwardRef } from "react";
 import { ActivityIndicator, Pressable, View, } from "react-native";
 import { RecipeButton } from "./internal/recipe-button.js";
-import { warnDeprecatedStyleProps, warnOnce } from "./internal/deprecated-style.js";
+import { assertNoRemovedStyleProps, warnOnce } from "./internal/diagnostics.js";
 import { minimumTargetStyle, resolveNativeShadowElevation } from "./internal/styles.js";
 import { Icon, Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
@@ -19,9 +19,9 @@ export const Button = forwardRef(function Button(props, ref) {
     }
     return _jsx(RecipeButton, { ...props, ref: ref });
 });
-export const IconButton = forwardRef(function IconButton({ label, children, tone = iconButtonRecipe.defaults.tone, size = iconButtonRecipe.defaults.size, shape = iconButtonRecipe.defaults.shape, selected, disabled = false, loading = false, disableWhileLoading = false, hitSlop, layoutStyle, style, renderLoadingIndicator, onPress, onLongPress, accessibilityState, ...props }, ref) {
+export const IconButton = forwardRef(function IconButton({ label, children, tone = iconButtonRecipe.defaults.tone, size = iconButtonRecipe.defaults.size, shape = iconButtonRecipe.defaults.shape, selected, disabled = false, loading = false, disableWhileLoading = false, hitSlop, layoutStyle, renderLoadingIndicator, onPress, onLongPress, accessibilityState, ...props }, ref) {
     const theme = useHjmNativeTheme();
-    warnDeprecatedStyleProps("IconButton", { style }, "layoutStyle for placement and tone/size/shape/selected for appearance");
+    assertNoRemovedStyleProps("IconButton", props, ["style"]);
     const resolvedLabel = label;
     const resolvedIcon = children;
     if (resolvedLabel === undefined || resolvedLabel.trim().length === 0) {
@@ -65,7 +65,6 @@ export const IconButton = forwardRef(function IconButton({ label, children, tone
                             : 1,
                 width: visibleDiameter,
             },
-            style,
             layoutStyle,
         ], children: loading ? (renderLoadingIndicator?.({ color: presentation.content, size: "small" }) ?? (_jsx(ActivityIndicator, { color: presentation.content, size: "small" }))) : (_jsx(View, { accessible: false, style: {
                 alignItems: "center",
@@ -75,10 +74,10 @@ export const IconButton = forwardRef(function IconButton({ label, children, tone
             }, children: resolvedIcon })) }));
 });
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
-export function Link({ descriptor, onNavigate, leading, trailing, renderIcon, accessibilityHint, layoutStyle, style, ...props }) {
+export function Link({ descriptor, onNavigate, leading, trailing, renderIcon, accessibilityHint, layoutStyle, ...props }) {
     const { colors, environment } = useHjmNativeTheme();
     const resolved = resolveLinkDescriptor(descriptor);
-    warnDeprecatedStyleProps("Link", { style }, "layoutStyle for placement; linkRecipe owns link appearance");
+    assertNoRemovedStyleProps("Link", props, ["style"]);
     // Until 1.12 the resolver validated leadingIcon/trailingIcon but Native never drew them, so a
     // descriptor shared with Web silently lost its chevron. A missing renderIcon now warns instead of
     // throwing: throwing would crash apps that already passed icons which were simply invisible.
@@ -106,7 +105,6 @@ export function Link({ descriptor, onNavigate, leading, trailing, renderIcon, ac
                 gap: spacing.xs,
                 opacity: pressed ? 0.72 : 1,
             },
-            style,
             layoutStyle,
         ], children: [leadingNode ? _jsx(View, { accessible: false, children: leadingNode }) : null, _jsx(Text, { fontRole: "ui", style: { color: colors.contentBrand, textDecorationLine: "underline" }, variant: "bodyLarge", children: resolved.label }), trailingNode ? _jsx(View, { accessible: false, children: trailingNode }) : null] }));
 }
@@ -122,8 +120,8 @@ function isBottomCTAAction(value) {
         && typeof value.onPress === "function";
 }
 /** Native sticky-action content; products own its screen-edge positioning. */
-export function BottomCTA({ primaryAction, secondaryAction, description, accessibilityLabel, safeAreaBottom = 0, layoutStyle, style, testID, }) {
-    warnDeprecatedStyleProps("BottomCTA", { style }, "layoutStyle for placement; bottomCtaRecipe owns appearance");
+export function BottomCTA({ primaryAction, secondaryAction, description, accessibilityLabel, safeAreaBottom = 0, layoutStyle, testID, ...removedProps }) {
+    assertNoRemovedStyleProps("BottomCTA", removedProps, ["style"]);
     if (!Number.isFinite(safeAreaBottom) || safeAreaBottom < 0) {
         throw new RangeError("BottomCTA safeAreaBottom must be non-negative");
     }
@@ -156,7 +154,6 @@ export function BottomCTA({ primaryAction, secondaryAction, description, accessi
                 shadowOpacity: surfaceShadow.opacity,
                 shadowRadius: surfaceShadow.radius,
             },
-            style,
             layoutStyle,
         ], children: [description ? _jsx(Text, { tone: "muted", variant: "caption", children: description }) : null, _jsxs(View, { style: {
                     direction: environment.direction,

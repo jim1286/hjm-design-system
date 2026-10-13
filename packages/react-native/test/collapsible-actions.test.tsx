@@ -60,3 +60,7 @@ it("retains local content on collapse and expands inline tools without an access
   expect(mounts).toBe(1);
   expect(renderer.root.findByType(Pressable).props.style.display).toBe("none");
 });
+it("blocks a host activation after the disclosure becomes disabled",()=>{
+ let changes=0;const view=(disabled:boolean)=><HjmNativeProvider><Collapsible trigger="Details" disabled={disabled} onOpenChange={()=>changes++}><Text>Content</Text></Collapsible></HjmNativeProvider>;
+ act(()=>{renderer=create(view(false));});act(()=>renderer.update(view(true)));act(()=>renderer.root.findByType(Pressable).props.onPress());expect(changes).toBe(0);expect(renderer.root.findByType(Pressable).props.accessibilityState.expanded).toBe(false);
+});

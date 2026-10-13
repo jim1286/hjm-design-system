@@ -32,7 +32,7 @@
 | 중앙에서 작업 실행 | `presentation: "floating"`, `distribution: "center-gap"` | 막대 정중앙(목적지 사이 빈칸 위) | 생성이 앱의 핵심 행동이고 목적지가 짝수(2·4·6)일 때 |
 | 탐색 옆에서 작업 실행 | `presentation: "capsule"`, `distribution: "equal"` | 캡슐 밖 끝 쪽, 캡슐과 `spacing.xs` 8 간격 | 행동이 목적지와 섞여 보이면 안 될 때, 목적지가 홀수일 때 |
 | 선택한 목적지 이름 표시 | `presentation: "capsule"`, 행동 없음 | — | 아이콘만으로 목적지가 모호해 선택 항목의 이름을 보여야 할 때 |
-| 사각 영역으로 현재 위치 표시 | `capsule` + 목록·항목 radius `lg` 16 | — | 둥근 캡슐이 제품 표현과 맞지 않을 때(radius 변경은 제품 스타일) |
+| 사각 영역으로 현재 위치 표시 | `floating` + `selection: "tile"` | — | 같은 폭의 목적지에서 현재 위치를 채운 사각 타일로 표시할 때 |
 
 ```text
 중앙에서 작업 실행 (floating + center-gap)         탐색 옆에서 작업 실행 (capsule)
@@ -59,8 +59,7 @@
 | 하단 안전 영역 | — | 막대 아래 | Web `env(safe-area-inset-bottom)` + `spacing.xs` 8, Native `safeAreaBottom` |
 | 스크롤 본문 | 제품 화면 | 막대 위 | Web은 하단 여백을 막대 높이만큼 제품이 둔다. Native는 막대가 flex 형제라 겹치지 않는다 |
 
-capsule은 기본 크기에서 선택되지 않은 항목의 이름을 접는다. 큰 글자(계약 기준 1.5 이상)이거나 목적지가 5~6개면
-모든 이름을 세로로 보인다. 접힌 항목도 접근성 이름은 유지된다.
+capsule은 기본 크기에서 선택되지 않은 항목의 이름을 접는다. 목적지가 5~6개면 모든 이름을 세로로 보인다. 접힌 항목도 접근성 이름은 유지된다.
 
 ## 흐름과 상태
 
@@ -76,7 +75,6 @@ capsule은 기본 크기에서 선택되지 않은 항목의 이름을 접는다
 | 실패 | — (막대 자체는 실패하지 않는다. 목적지 화면의 불러오기 실패·재요청 실패는 그 화면의 [Result](../components/result.md)·[Notice](../components/notice.md)가 표시한다. `primaryAction`이 연 작성 화면의 저장 실패는 [저장과 재시도](action-recovery-save.md)를 따른다) | — |
 | 배지 | 숫자 배지(`count`·`max`) | 배지 `accessibilityLabel`을 항목 이름과 함께 읽는다 |
 | 키보드 열림 | 막대가 숨는다(`remain`이면 유지) | — |
-| 큰 글자 | capsule의 모든 이름이 세로로 보인다 | 같다 |
 
 ## 코드 골격
 
@@ -151,14 +149,17 @@ const gutter = resolveWindowClass(useWindowDimensions().width) === "compact" ? "
 | --- | --- | --- |
 | 배치 | CSS `position: fixed`(스토리는 갤러리용으로 `relative`로 덮음), 본문 하단 여백은 제품 | 화면 루트 세로 flex의 마지막 자식 또는 navigator `tabBar` |
 | 목적지 | 링크(`getHref` 필수, `renderLink`) | tab 역할 + `onActivate` 필수 |
-| 사각 선택 표현 | 공개 축이 없다. 스토리는 CSS로 목록·항목 radius를 `lg`로 덮는다 | 공개 축이 없다. 스토리는 deprecated `listStyle={{ borderRadius: radius.lg }}`로 덮는다 |
+| 사각 선택 표현 | `configuration.selection="tile"`와 floating/equal, 항상 라벨 표시 | Web과 같은 공개 configuration |
 | 행동 아이콘 색 | `currentColor` | `colors.onPrimary`를 직접 넘김 |
 
 ## 함정
 
 - `center-gap`은 홀수 목적지에서, `capsule`과 함께 쓰면 오류다.
 - 생성 행동을 목적지 항목으로 넣지 않는다. 선택 상태가 생성 화면으로 옮겨 가 탭 의미가 깨진다.
-- "사각 영역으로 현재 위치 표시"는 `configuration` 축이 아니라 radius 덮어쓰기다. Native `listStyle`·`style`은 deprecated(다음 major에서 제거)라 제품에 옮기면 그때 깨진다. 필요하면 공개 축 추가를 먼저 요청한다.
+- "사각 영역으로 현재 위치 표시"는 `selection="tile"`을 쓴다. `presentation="floating"`, `distribution="equal"`, 보이는 라벨 계약을 유지하고 내부 CSS·Native listStyle로 외형을 우회하지 않는다.
 - 구획 제목은 Heading으로 표시한다. 이전 Text heading 예제는 2026-10-06 제목 의미 구조를 맞추면서 수정했다.
-- 현재 스토리는 Native 막대에 deprecated `style={{ paddingHorizontal: 0 }}`를 준다(320 폭 갤러리용). 제품은 바깥 좌우 `spacing.md` 16을 그대로 둔다.
 - 현재 스토리는 바깥 틀(본문 스크롤·하단 여백)이 없고 막대를 갤러리 카드 안에 둔다. 제품은 바깥 틀 행대로 둔다.
+
+2026-10-13 예제는 사각 선택 표현을 공개 tile 축으로 이관하고 내부 radius·padding CSS와 Native deprecated 스타일을 제거했다. Web 갤러리의 `style.position="relative"`는 fixed 막대를 문서 흐름에서 비교하기 위한 showcase 전용 배치다. 제품 하단 탐색에는 복사하지 않으며 `layoutStyle`은 position을 지원하지 않는다.
+
+비교 예제는 목적지 이름과 현재 선택만 바꾸는 메모리 데모다. 주 행동은 작성 화면을 열지 않고 실행 횟수를 올린다. Web 링크는 인스턴스별 fragment를 사용해 현재 선택과 브라우저 뒤로·앞으로 이동을 동기화하고 다른 막대의 주소는 무시한다. 표현 preset을 바꾸면 해당 막대의 초기 선택과 실행 횟수로 새로 시작한다. 실제 router·작성 화면·저장 API는 제품이 연결한다.

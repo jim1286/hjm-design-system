@@ -74,13 +74,13 @@ Native 화면에서 같은 일이 필요하면 이 구성을 옮기지 않는다
 2. HEX 입력은 Enter·blur에 확정되고 Escape는 마지막 `value`로 되돌린다.
 3. 문서 표시: 워터마크 위에서 본문을 선택하고 버튼을 누른다. 워터마크는 상태가 없다.
 4. 고정 실행 영역: 스크롤하면 Affix가 상단에 붙고 `onChange(true)`, 다시 올리면 `onChange(false)`가 온다.
-5. 저장: 버튼이 `loading`이 되고, 실패하면 Notice danger가 나오며 버튼을 다시 누를 수 있다. 성공하면 Notice를 내린다.
+5. 현재 예제의 저장은 동기 메모리 확정이다. 성공 뒤 같은 버튼을 다시 눌러 저장이 해제되지 않으며, 문서 표시·고정 실행 영역의 저장 상태는 독립적이다. 제품 비동기 저장에 연결할 때는 `loading`과 실패 Notice를 공급하고 성공하면 Notice를 내린다.
 
 | 상태 | 모습 | 포커스·알림 |
 | --- | --- | --- |
-| 기본 | ColorPicker는 `value` 색, 워터마크 타일, Affix는 일반 위치(`data-affixed` 없음) | — |
-| 진행 중 | 저장 버튼 `loading`(Watermark·Affix 안). ColorPicker는 요청이 없다 | 포커스는 버튼에 남는다 |
-| 실패 | 저장 실패 Notice danger, 버튼 다시 활성. Affix 고정 중이면 버튼은 그대로 위에 붙어 있다 | Notice `danger`는 `role="alert"` |
+| 기본 | ColorPicker는 `value` 색, 워터마크 타일, Affix는 일반 위치(`data-affixed="false"`) | — |
+| 진행 중(제품 연결) | 저장 버튼 `loading`(Watermark·Affix 안). ColorPicker는 요청이 없다 | 포커스는 버튼에 남는다 |
+| 실패(제품 연결) | 저장 실패 Notice danger, 버튼 다시 활성. Affix 고정 중이면 버튼은 그대로 위에 붙어 있다 | Notice `danger`는 `role="alert"` |
 | HEX 잘못 입력 | `labels.invalid` 문구가 오류로 보이고 외부 값은 그대로 | 오류 문구는 alert |
 | 프리셋 선택됨 | 선택한 견본 테두리가 primary 색, `aria-pressed="true"` | — |
 | `disabled` | fieldset 전체 흐림(opacity 0.5), 입력·프리셋 막힘 | 포커스 불가 |
@@ -143,4 +143,4 @@ import { Stack, Text } from "@hjmds/react/layout";
 - 세 컴포넌트 모두 root barrel에 없다. granular subpath(`@hjmds/react/color-picker` 등)로만 import한다.
 - Affix `offset`이 음수이거나 유한하지 않으면 `TypeError`를 던진다.
 - Watermark 범위(`tileWidth` ≥ 80, `tileHeight` ≥ 60, `rotate` -90~90, `opacity` 0~1, 줄 1~3개·각 120자 이하)를 벗어나면 `TypeError`다.
-- 현재 스토리의 저장은 라벨만 "저장됨"으로 바꾸는 토글이다. 진행 중·실패 경로가 없다.
+- 현재 스토리의 저장은 메모리 상태만 확정하며 실제 파일·서버 저장이나 진행 중·실패 경로는 없다. 성공 뒤 `aria-disabled`로 중복 실행을 막아 키보드 초점과 sticky 안의 버튼 노드를 유지한다. 제품의 저장·실패 경로는 위 코드 골격처럼 제품이 공급한다.

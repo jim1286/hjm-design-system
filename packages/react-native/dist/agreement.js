@@ -6,35 +6,41 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, View } from "react-native";
 import { mixedCheckboxState } from "./internal/state.js";
 import { Text } from "./primitives.js";
-import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
-export function Agreement({ descriptor, checkedIds: controlledChecked, defaultCheckedIds, onCheckedIdsChange, onStateChange, onDetail, requiredLabel, optionalLabel, layoutStyle, style, }) {
-    warnDeprecatedStyleProps("Agreement", { style }, "layoutStyle for placement; agreementRecipe owns appearance");
+export function Agreement({ descriptor, checkedIds: controlledChecked, defaultCheckedIds, onCheckedIdsChange, onStateChange, onDetail, requiredLabel, optionalLabel, layoutStyle, }) {
     validateAgreementDescriptor(descriptor);
     const theme = useHjmNativeTheme();
     const [internal, setInternal] = useState(defaultCheckedIds ?? new Set());
     const raw = controlledChecked ?? internal;
     const checked = useMemo(() => reconcileAgreementSelection(descriptor, raw), [descriptor, raw]);
     const state = resolveAgreementState(descriptor, checked);
-    // Report the initial state once on mount. Until 2026-10-06 only user toggles reported, so
-    // `defaultCheckedIds`/`checkedIds` that already satisfied every required item never produced a
-    // first `satisfied: true` and a submit button wired to this callback stayed disabled. Mount-only
-    // (not on every derived change) keeps the callback count to "initial + one per toggle"; StrictMode
-    // may repeat the same snapshot, which is idempotent for a consumer that stores it.
-    const initialStateRef = useRef(state);
-    const onStateChangeRef = useRef(onStateChange);
-    onStateChangeRef.current = onStateChange;
+    // Persist removed consent IDs so reinserting a row cannot silently consent again.
     useEffect(() => {
-        onStateChangeRef.current?.(initialStateRef.current);
-    }, []);
+        if (controlledChecked === undefined && checked !== raw) {
+            setInternal(checked);
+            onCheckedIdsChange?.(checked);
+        }
+    }, [checked, controlledChecked, raw, onCheckedIdsChange]);
+    // Report accepted state, including external value/required-item changes. A rejected
+    // controlled request must not enable the product's submit button optimistically.
+    const reported = useRef(undefined);
+    useEffect(() => {
+        const previous = reported.current;
+        if (previous && previous.state.all === state.all && previous.state.satisfied === state.satisfied
+            && previous.state.missingRequiredIds.length === state.missingRequiredIds.length
+            && previous.state.missingRequiredIds.every((id, index) => id === state.missingRequiredIds[index])
+            && previous.checked.size === checked.size && [...checked].every(id => previous.checked.has(id)))
+            return;
+        reported.current = { checked, state };
+        onStateChange?.(state);
+    });
     const commit = (next) => {
         if (descriptor.disabled)
             return;
         if (controlledChecked === undefined)
             setInternal(next);
         onCheckedIdsChange?.(next);
-        onStateChange?.(resolveAgreementState(descriptor, next));
     };
     const markColor = resolveColorReference(agreementRecipe.item.selectedIndicator, theme.palette);
     const borderColor = resolveColorReference(agreementRecipe.item.focus.color, theme.palette);
@@ -59,7 +65,7 @@ export function Agreement({ descriptor, checkedIds: controlledChecked, defaultCh
         _jsx(View, { accessible: false, style: value === "mixed"
                 ? { width: 10, height: 2, backgroundColor: glyphColor }
                 : { width: 8, height: 4, borderLeftWidth: 2, borderBottomWidth: 2, borderColor: glyphColor, transform: [{ rotate: "-45deg" }] } })) }));
-    return (_jsxs(View, { accessibilityLabel: descriptor.accessibilityLabel, accessibilityRole: "none", style: [{ gap: agreementRecipe.gap }, style, layoutStyle], children: [_jsxs(Pressable, { accessibilityLabel: descriptor.allLabel, accessibilityRole: "checkbox", accessibilityState: { ...mixedCheckboxState(state.all), disabled: descriptor.disabled === true }, disabled: descriptor.disabled === true, onPress: () => commit(toggleAgreementAll(descriptor, checked)), style: {
+    return (_jsxs(View, { accessibilityLabel: descriptor.accessibilityLabel, accessibilityRole: "none", style: [{ gap: agreementRecipe.gap }, layoutStyle], children: [_jsxs(Pressable, { accessibilityLabel: descriptor.allLabel, accessibilityRole: "checkbox", accessibilityState: { ...mixedCheckboxState(state.all), disabled: descriptor.disabled === true }, disabled: descriptor.disabled === true, onPress: () => commit(toggleAgreementAll(descriptor, checked)), style: {
                     alignItems: "center",
                     opacity: descriptor.disabled ? agreementRecipe.states.disabledOpacity : 1,
                     backgroundColor: resolveColorReference(agreementRecipe.all.background, theme.palette),

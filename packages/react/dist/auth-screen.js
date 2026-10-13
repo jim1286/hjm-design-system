@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { resolveAuthScreenDescriptor, } from "@hjmds/design-contracts/components/auth-screen";
-import { forwardRef } from "react";
+import { forwardRef, useLayoutEffect, useRef } from "react";
 import { classNames } from "./internal.js";
 /**
  * Two regions: hero + main stay one vertically centred block, the footer sits at
@@ -14,6 +14,18 @@ export const AuthScreenLayout = forwardRef(function AuthScreenLayout({ hero, mai
     });
     const showFooter = resolved.hasFooter && footer !== undefined && footer !== null;
     const pending = pendingLabel !== undefined;
+    const actionsRef = useRef(null);
+    const focusedAction = useRef(null);
+    const wasPending = useRef(pending);
+    useLayoutEffect(() => {
+        // Inert loading content sends keyboard focus to body. Resume at the same
+        // action after failure/cancellation, unless the user moved somewhere else.
+        const target = focusedAction.current;
+        if (wasPending.current && !pending && document.activeElement === document.body && target?.isConnected && actionsRef.current?.contains(target)) {
+            target.focus({ preventScroll: true });
+        }
+        wasPending.current = pending;
+    }, [pending]);
     if (pending && !pendingLabel.trim())
         throw new TypeError("AuthScreen pendingLabel must not be empty");
     return (_jsxs(Element, { ...props, ref: forwardedRef, className: classNames("hjm-auth-screen", className), "data-density": resolved.density, style: {
@@ -25,6 +37,7 @@ export const AuthScreenLayout = forwardRef(function AuthScreenLayout({ hero, mai
             ["--hjm-auth-screen-padding-block"]: `${resolved.paddingBlock}px`,
             ...props.style,
             ...layoutStyle,
-        }, children: [_jsxs("div", { className: "hjm-auth-screen__block", children: [_jsx("div", { className: "hjm-auth-screen__hero", children: hero }), _jsxs("div", { className: "hjm-auth-screen__main", "data-card": mainCard || undefined, "aria-busy": pending || undefined, children: [_jsx("div", { className: "hjm-auth-screen__actions", inert: pending, "aria-hidden": pending || undefined, style: pending ? { visibility: "hidden" } : undefined, children: main }), pending ? _jsx("div", { className: "hjm-auth-screen__pending", role: "status", "aria-label": pendingLabel, children: _jsx("span", { className: "hjm-auth-provider-button__spinner", "aria-hidden": "true" }) }) : null] })] }), showFooter ? _jsx("div", { className: "hjm-auth-screen__footer", children: footer }) : null] }));
+        }, children: [_jsxs("div", { className: "hjm-auth-screen__block", children: [_jsx("div", { className: "hjm-auth-screen__hero", children: hero }), _jsxs("div", { className: "hjm-auth-screen__main", "data-card": mainCard || undefined, "aria-busy": pending || undefined, children: [_jsx("div", { ref: actionsRef, className: "hjm-auth-screen__actions", inert: pending, "aria-hidden": pending || undefined, onFocusCapture: event => { focusedAction.current = event.target; }, onBlurCapture: event => { if (!pending && !event.currentTarget.contains(event.relatedTarget))
+                                    focusedAction.current = null; }, style: pending ? { visibility: "hidden" } : undefined, children: main }), pending ? _jsx("div", { className: "hjm-auth-screen__pending", role: "status", "aria-label": pendingLabel, children: _jsx("span", { className: "hjm-auth-provider-button__spinner", "aria-hidden": "true" }) }) : null] })] }), showFooter ? _jsx("div", { className: "hjm-auth-screen__footer", children: footer }) : null] }));
 });
 //# sourceMappingURL=auth-screen.js.map

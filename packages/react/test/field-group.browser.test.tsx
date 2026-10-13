@@ -69,3 +69,22 @@ it("wraps long group copy at 320px with large text and RTL in both themes", asyn
     expect(host.querySelector("input")!.getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
   }
 });
+
+it("switches inline grouping without remounting focused inputs and wraps at narrow width", async () => {
+  const render = (layout: "stack" | "inline") => <HjmProvider><FieldGroup layout={layout}
+    descriptor={{ label: "Related fields", fields: [{ id: "a", label: "First" }, { id: "b", label: "Second" }] }}
+    renderField={({ controlProps }) => <TextField {...controlProps} defaultValue="Draft" />} /></HjmProvider>;
+  host.style.width = "600px";
+  await act(async () => root.render(render("stack")));
+  const [first, second] = [...host.querySelectorAll("input")];
+  expect(second!.getBoundingClientRect().top).toBeGreaterThan(first!.getBoundingClientRect().bottom);
+  await act(async () => first!.focus());
+  await act(async () => root.render(render("inline")));
+  expect(host.querySelector("input")).toBe(first);
+  expect(document.activeElement).toBe(first);
+  expect(first!.value).toBe("Draft");
+  expect(second!.getBoundingClientRect().top).toBe(first!.getBoundingClientRect().top);
+  host.style.width = "150px";
+  expect(second!.getBoundingClientRect().top).toBeGreaterThan(first!.getBoundingClientRect().bottom);
+  expect(host.scrollWidth).toBeLessThanOrEqual(150);
+});

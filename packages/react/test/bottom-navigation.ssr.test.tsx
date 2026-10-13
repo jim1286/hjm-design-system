@@ -101,3 +101,15 @@ describe("Web BottomNavigation", () => {
     expect(markup).toContain('class="hjm-bottom-navigation__item"');
   });
 });
+
+
+it("renders tile destinations as equal persistent named links", () => {
+  const markup = renderToStaticMarkup(<HjmProvider systemTheme="light">
+    <BottomNavigation descriptor={descriptor} configuration={{ presentation: "floating", selection: "tile" }} getHref={item => `/${item.id}`} renderIcon={() => null} />
+  </HjmProvider>);
+  expect(markup).toContain('data-selection="tile"');
+  expect(markup).toContain('data-distribution="equal"');
+  expect(markup).toContain('data-labels="visible"');
+  expect(markup).toContain('aria-current="page"');
+  expect(markup).toContain('href="/search"');
+});

@@ -10,6 +10,7 @@ import { Dialog } from "@hjmds/react-native/overlays";
 import { OverviewScreen } from "@hjmds/react-native/design-profile";
 import { paperSurfaceCopy as copy, paperSurfaceModes, type PaperSurfaceMode } from "../../shared/paper-surface";
 import { profileOptions } from "../../shared/design-profile";
+import { PatternStatus } from "./pattern-status";
 export function PaperSurfacePreview() {
   const [index, setIndex] = useState(1), [mode, setMode] = useState<PaperSurfaceMode>("theme");
   const [interval, setInterval] = useState("24"), [draft, setDraft] = useState<string>(copy.initial), [saved, setSaved] = useState("");
@@ -25,7 +26,7 @@ export function PaperSurfacePreview() {
     <SegmentedControl label={copy.interval} items={[{ value: "24", label: copy.compact }, { value: "40", label: copy.relaxed }]} value={interval} onValueChange={setInterval} disabled={mode !== "ruled"} />
     <Text variant="caption">{profileOptions[index]!.label}</Text><Button onPress={() => setIndex(current => (current + 1) % profileOptions.length)}>{copy.next}</Button>
     <View style={{ height: 640 }}><OverviewScreen title={copy.screen} description={copy.description} toolbarLabel={copy.draft}
-      toolbar={<TextField label={copy.draft} value={draft} onValueChange={setDraft} />} notice={<Text accessibilityLiveRegion="polite">{saved}</Text>}
+      toolbar={<TextField label={copy.draft} value={draft} onValueChange={setDraft} />} notice={<PatternStatus>{saved}</PatternStatus>}
       items={copy.entries.map(item => ({ id: item.id, children: <Stack gap="sm"><Text variant="title">{item.title}</Text><Text>{item.body}</Text></Stack> }))}
       footer={<Stack gap="sm"><Button onPress={() => setSaved(`${copy.saved}: ${draft}`)}>{copy.save}</Button><View ref={trigger} collapsable={false}><Button tone="secondary" onPress={() => setOpen(true)}>{copy.detail}</Button></View></Stack>} /></View>
     <Dialog open={open} onOpenChange={setOpen} title={copy.screen} closeLabel={copy.close} returnFocusRef={trigger}><Text>{draft}</Text></Dialog>

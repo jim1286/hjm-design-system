@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode, type RefObject } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode, type Ref, type RefObject } from "react";
 import { ScreenLayout, type ScreenLayoutProps } from "./screens.js";
 import { Button, IconButton } from "./actions.js";
 import { Stack, Text, Grid, VisuallyHidden } from "./layout.js";
@@ -8,7 +8,7 @@ import { AlertDialog, Menu, Sheet, type SheetProps } from "./overlays.js";
 import { UploadItem } from "./upload-item.js";
 import { type UploadItemDescriptor, type UploadItemLabels } from "@hjmds/design-contracts/components/upload-item";
 import { type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
-import { validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchEmptyCause, resolveSearchScreenPhase, resolveFocusAfterRemoval, screenPatternRecipe, searchScreenRecipe, type SearchEmptyCause, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
+import { validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchScreenPhase, resolveFocusAfterRemoval, screenPatternRecipe, searchScreenRecipe, type SearchEmptyCause, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
 import { resolveWindowClass } from "@hjmds/design-contracts/responsive";
 import { containerRecipe, type ContainerGutter } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./display.js";
@@ -17,41 +17,64 @@ import { EmptyState, Skeleton } from "./feedback.js";
 
 /** Copy, pending state and mutations are controlled by the consuming product. */
 export type ScreenFlowAction = Readonly<{label:string; onAction():void; disabled?:boolean; pending?:boolean}>;
-function Action({action,secondary=false}:{action:ScreenFlowAction;secondary?:boolean}){return <Button tone={secondary?"ghost":"primary"} disabled={!!(action.disabled||action.pending)} loading={action.pending??false} onClick={action.onAction}>{action.label}</Button>;}
+function Action({action,secondary=false,buttonRef}:{action:ScreenFlowAction;secondary?:boolean;buttonRef?:Ref<HTMLButtonElement>}){return <Button ref={buttonRef} tone={secondary?"ghost":"primary"} disabled={!!(action.disabled||action.pending)} loading={action.pending??false} onClick={action.onAction}>{action.label}</Button>;}
 type Base = Omit<ScreenLayoutProps,"children"|"footer">;
 
-export type ListDetailScreenProps = Base & { list:ReactNode; detail?:{title:string;content:ReactNode}; back:ScreenFlowAction; refresh?:ScreenFlowAction; loadMore?:ScreenFlowAction };
+export type ListDetailScreenProps = Base & { list:ReactNode; detail?:Pick<ScreenLayoutProps,"title"|"state"|"stateAction"|"notice"> & {content:ReactNode}; back:ScreenFlowAction; refresh?:ScreenFlowAction; loadMore?:ScreenFlowAction };
 /** Keep the list mounted so input and scroll survive a detail visit. Routers may instead restore host scroll state. */
 export function ListDetailScreen({list,detail,back,refresh,loadMore,layoutStyle,...screen}:ListDetailScreenProps){
  const open=!!detail;
  // Seed with the first render: a deep link that mounts with detail open is not a user transition,
  // so it must not pull focus from wherever the host left it (address bar, router focus target).
  const listHost=useRef<HTMLDivElement>(null),detailHost=useRef<HTMLDivElement>(null),returnFocus=useRef<HTMLElement|null>(null),wasOpen=useRef(open);
+ // The retained host is a fallback when a virtualized list removes its focused item.
  // Hidden lists preserve scroll but drop browser focus; retain the trigger and move into the
  // detail once, then restore it (or the list body if the item was removed). See usage/ListDetailScreen.
  useLayoutEffect(()=>{
   if(open&&!wasOpen.current)detailHost.current?.querySelector<HTMLElement>("button")?.focus({preventScroll:true});
-  if(!open&&wasOpen.current){const target=returnFocus.current; if(target?.isConnected&&!target.closest("[hidden]"))target.focus({preventScroll:true});else listHost.current?.querySelector<HTMLElement>('[tabindex="0"]')?.focus({preventScroll:true});}
+  if(!open&&wasOpen.current){
+  const target=returnFocus.current;
+  if(target?.isConnected&&!target.closest("[hidden]"))target.focus({preventScroll:true});
+  // A retained trigger can also become disabled while detail is open.
+  if(document.activeElement!==target)(listHost.current?.querySelector<HTMLElement>('[tabindex="0"]')??listHost.current)?.focus({preventScroll:true});
+ }
   wasOpen.current=open;
  },[open]);
  // layoutStyle places the outer host that owns both panes, not the inner list ScreenLayout.
  return <div style={{height:"100%",...layoutStyle}}>
-  <div ref={listHost} hidden={open} style={{height:"100%"}} onFocusCapture={event=>{returnFocus.current=event.target as HTMLElement;}}><ScreenLayout {...screen} actions={refresh?<Action action={refresh} secondary/>:screen.actions} footer={loadMore?<Action action={loadMore} secondary/>:null}>{list}</ScreenLayout></div>
-  {detail?<div ref={detailHost} style={{height:"100%"}}><ScreenLayout title={detail.title} leading={<Action action={back} secondary/>}>{detail.content}</ScreenLayout></div>:null}
+  <div ref={listHost} tabIndex={-1} hidden={open} style={{height:"100%"}} onFocusCapture={event=>{returnFocus.current=event.target as HTMLElement;}}><ScreenLayout {...screen} actions={refresh?<Action action={refresh} secondary/>:screen.actions} footer={loadMore?<Action action={loadMore} secondary/>:null}>{list}</ScreenLayout></div>
+  {detail?<div ref={detailHost} style={{height:"100%"}}><ScreenLayout title={detail.title} {...(detail.state === undefined ? {} : {state:detail.state})} stateAction={detail.stateAction} notice={detail.notice} leading={<Action action={back} secondary/>}>{detail.content}</ScreenLayout></div>:null}
  </div>;
 }
 
 export type EditorScreenProps = Base & {children:ReactNode;submitPlacement?:"header"|"footer";dirty:boolean;submit:ScreenFlowAction;cancel:ScreenFlowAction;discard:Omit<Extract<AlertDialogRequest,{mode:"confirm"}>,"onConfirm"|"fallbackErrorMessage"> & {fallbackErrorMessage:string};draftStatus?:ReactNode};
 export function EditorScreen({children,dirty,submitPlacement="footer",submit,cancel,discard,draftStatus,...screen}:EditorScreenProps){
  const [confirm,setConfirm]=useState(false);
- return <><ScreenLayout {...screen} leading={<Action action={{...cancel,disabled:!!(cancel.disabled||submit.pending),onAction:()=>{if(dirty)setConfirm(true);else cancel.onAction();}}} secondary/>} actions={submitPlacement==="header"?<Action action={submit}/>:screen.actions} footer={submitPlacement==="header"?draftStatus:<Stack gap="sm">{draftStatus}<Action action={submit}/></Stack>}>{children}</ScreenLayout><AlertDialog open={confirm} onOpenChange={setConfirm} request={{...discard,mode:"confirm",onConfirm:()=>cancel.onAction()}}/></>;
+ const cancelLocked=!!(cancel.disabled||cancel.pending||submit.pending);
+ const submitAction={...submit,disabled:!!(submit.disabled||screen.state&&screen.state.kind!=="ready")};
+ // A prompt opened before an external save must not bypass the current leave lock
+ // or reappear once the save finishes. Keep the draft mounted throughout.
+ useEffect(()=>{if(cancelLocked)setConfirm(false);},[cancelLocked]);
+ // Preserve an async host result so AlertDialog can retain failure and retry.
+ const leave=()=>{if(!cancelLocked)return cancel.onAction();};
+ return <><ScreenLayout {...screen}
+  leading={<Action action={{...cancel,disabled:cancelLocked,onAction:()=>{if(cancelLocked)return;if(dirty)setConfirm(true);else leave();}}} secondary/>}
+  actions={submitPlacement==="header"?<Action action={submitAction}/>:screen.actions}
+  footer={submitPlacement==="header"?draftStatus:<Stack gap="sm">{draftStatus}<Action action={submitAction}/></Stack>}
+ >{children}</ScreenLayout><AlertDialog open={confirm&&!cancelLocked} onOpenChange={setConfirm} request={{...discard,mode:"confirm",onConfirm:leave}}/></>;
 }
 
 export type ProfileScreenProps = Base & {summary:ReactNode;edit:ScreenFlowAction;children?:ReactNode;accountActions?:ReactNode};
 export function ProfileScreen({summary,edit,children,accountActions,...screen}:ProfileScreenProps){return <ScreenLayout {...screen}><Stack gap="xl"><Stack gap="md">{summary}<Action action={edit} secondary/></Stack>{children}{accountActions}</Stack></ScreenLayout>;}
 
 export type ModerationScreenProps = Base & {reasonPicker?:ReactNode;reasons:readonly {value:string;label:string}[];reason:string|null;onReasonChange(value:string):void;reasonLabel:string;children?:ReactNode;submit:ScreenFlowAction;block?:{action:ScreenFlowAction;confirmation:Extract<AlertDialogRequest,{mode:"confirm"}>}};
-export function ModerationScreen({reasonPicker,reasons,reason,onReasonChange,reasonLabel,children,submit,block,...screen}:ModerationScreenProps){const [confirm,setConfirm]=useState(false);return <><ScreenLayout {...screen} footer={<Stack gap="sm"><Action action={{...submit,disabled:submit.disabled||!!screen.state&&screen.state.kind!=="ready"||!reasons.some(item=>item.value===reason)}}/>{block?<Action action={{...block.action,onAction:()=>setConfirm(true)}} secondary/>:null}</Stack>}><Stack gap="lg">{reasonPicker??(reasons.length?<RadioGroup accessibilityLabel={reasonLabel} orientation="vertical" items={reasons} value={reason} onValueChange={value=>{if(value)onReasonChange(value);}}/>:null)}{children}</Stack></ScreenLayout>{block?<AlertDialog open={confirm} onOpenChange={setConfirm} request={block.confirmation}/>:null}</>;}
+export function ModerationScreen({reasonPicker,reasons,reason,onReasonChange,reasonLabel,children,submit,block,...screen}:ModerationScreenProps){
+ const [confirm,setConfirm]=useState(false);
+ const hasBlock=!!block;
+ // Withdrawing the action ends that confirmation session; a later action needs
+ // a new explicit press even if the screen itself stays mounted.
+ useEffect(()=>{if(!hasBlock)setConfirm(false);},[hasBlock]);
+ return <><ScreenLayout {...screen} footer={<Stack gap="sm"><Action action={{...submit,disabled:submit.disabled||!!screen.state&&screen.state.kind!=="ready"||!reasons.some(item=>item.value===reason)}}/>{block?<Action action={{...block.action,onAction:()=>setConfirm(true)}} secondary/>:null}</Stack>}><Stack gap="lg">{reasonPicker??(reasons.length?<RadioGroup accessibilityLabel={reasonLabel} orientation="vertical" items={reasons} value={reason} onValueChange={value=>{if(value)onReasonChange(value);}}/>:null)}{children}</Stack></ScreenLayout>{block?<AlertDialog open={confirm} onOpenChange={setConfirm} request={block.confirmation}/>:null}</>;}
 
 
 /** Source choice only: permission, capture, decoding and draft persistence belong to the host. */
@@ -72,7 +95,70 @@ export function PhotoSourceSheet({open,onOpenChange,onSelect,labels,disabled=fal
 export type MediaSelectionItem = {descriptor:UploadItemDescriptor;preview?:ReactNode};
 export type MediaSelectionScreenProps = Base & {library?:ReactNode;selectionSummary?:ReactNode;items:readonly MediaSelectionItem[];add:ScreenFlowAction;done:ScreenFlowAction;labels:UploadItemLabels;actionLabels:{remove:string;moveUp:string;moveDown:string};removeLabel(item:MediaSelectionItem):string;moveUpLabel(item:MediaSelectionItem):string;moveDownLabel(item:MediaSelectionItem):string;onRemove(id:string):void;onMove(id:string,direction:-1|1):void;onRetry(id:string):void;onCancel(id:string):void};
 /** A photo is the primary content; upload status stays below it instead of replacing the thumbnail. */
-export function MediaSelectionScreen({library,selectionSummary,items,add,done,labels,actionLabels,removeLabel,moveUpLabel,moveDownLabel,onRemove,onMove,onRetry,onCancel,...screen}:MediaSelectionScreenProps){return <ScreenLayout {...screen} actions={<Action action={add} secondary/>} footer={<Stack gap="sm">{selectionSummary}<Action action={done}/></Stack>}>{library??<Grid columns={{compact:2,expanded:3}} gap={{compact:"md"}}>{items.map((item,index)=><Stack key={item.descriptor.id} gap="xs">{item.preview}<UploadItem descriptor={item.descriptor} labels={labels} onRetry={onRetry} onCancel={onCancel}/><Stack axis="inline" gap="xxs" layoutStyle={{flexWrap:"wrap"}}><Button aria-label={moveUpLabel(item)} size="small" tone="ghost" disabled={index===0} onClick={()=>onMove(item.descriptor.id,-1)}>{actionLabels.moveUp}</Button><Button aria-label={moveDownLabel(item)} size="small" tone="ghost" disabled={index===items.length-1} onClick={()=>onMove(item.descriptor.id,1)}>{actionLabels.moveDown}</Button><Button aria-label={removeLabel(item)} size="small" tone="ghost" onClick={()=>onRemove(item.descriptor.id)}>{actionLabels.remove}</Button></Stack></Stack>)}</Grid>}</ScreenLayout>;}
+export function MediaSelectionScreen({library,selectionSummary,items,add,done,labels,actionLabels,removeLabel,moveUpLabel,moveDownLabel,onRemove,onMove,onRetry,onCancel,...screen}:MediaSelectionScreenProps){
+ const grid = useRef<HTMLDivElement>(null), addButton = useRef<HTMLButtonElement>(null);
+ const focusedItem = useRef<{node:HTMLElement;id:string;index:number;body:HTMLElement|null}|null>(null);
+ useLayoutEffect(() => {
+  const previous = focusedItem.current, host = grid.current;
+  if (!previous) return;
+  const active = document.activeElement;
+  if (!host) {
+   focusedItem.current = null;
+   // Empty-state replacement unmounts the grid; the ordinary last-removal
+   // destination still applies. Other state/library replacements own their focus.
+   if (!previous.node.isConnected && !items.length && screen.state?.kind === "empty" && library == null
+    && (active === document.body || active === previous.body) && !addButton.current?.disabled) addButton.current?.focus({preventScroll:true});
+   return;
+  }
+  const index = items.findIndex(item => item.descriptor.id === previous.id), moved = index >= 0 && index !== previous.index;
+  if (index >= 0) previous.index = index;
+  const reveal = (node:HTMLElement) => {
+   const body = previous.body;
+   if (!body?.contains(node) || body.dataset.scroll !== "screen") return;
+   const bounds = node.getBoundingClientRect(), clip = body.getBoundingClientRect();
+   // Scroll only the owned body, by the minimum needed to keep the action visible.
+   if (bounds.top < clip.top) body.scrollTop += Math.floor(bounds.top - clip.top);
+   else if (bounds.bottom > clip.bottom) body.scrollTop += Math.ceil(bounds.bottom - clip.bottom);
+  };
+  const disabled = previous.node.matches(":disabled");
+  if (active !== document.body && active !== previous.body && !(active === previous.node && disabled)) {
+   if (active === previous.node && moved) reveal(previous.node);
+   return;
+  }
+  // A keyed reorder may detach a focused node; a boundary move may disable it.
+  // Recover only focus owned by this grid, after the product accepts the change.
+  const id = index < 0 ? items[Math.min(previous.index, items.length - 1)]?.descriptor.id : previous.id;
+  const row = Array.from(host.querySelectorAll<HTMLElement>("[data-hjm-media-item]")).find(node => node.dataset.hjmMediaItem === id);
+  const target = index >= 0 && previous.node.isConnected && !disabled ? previous.node
+   : row?.querySelector<HTMLButtonElement>(index < 0 ? '[data-media-action="remove"]' : 'button[data-media-action]:not(:disabled)')
+    ?? (!addButton.current?.disabled ? addButton.current : null);
+  focusedItem.current = null;
+  if (target) { target.focus({preventScroll:true}); reveal(target); }
+ });
+ return <ScreenLayout {...screen} actions={<Action action={add} secondary buttonRef={addButton}/>} footer={<Stack gap="sm">{selectionSummary}<Action action={done}/></Stack>}>
+  {library??<Grid ref={grid} columns={{compact:2,expanded:3}} gap={{compact:"md"}}
+   onFocusCapture={event => {
+    const node = event.target as HTMLElement, row = node.closest<HTMLElement>("[data-hjm-media-item]");
+    const id = row?.dataset.hjmMediaItem;
+    if (id !== undefined) focusedItem.current = {node,id,index:items.findIndex(item => item.descriptor.id === id),body:node.closest<HTMLElement>(".hjm-screen__body")};
+   }}
+   onBlurCapture={event => {
+    const node = event.target as HTMLElement;
+    // Explicit blur/outside focus relinquishes ownership; DOM removal and a newly
+    // disabled move button retain it until the layout effect chooses a successor.
+    if (event.relatedTarget ? !event.currentTarget.contains(event.relatedTarget as Node) : node.isConnected && !node.matches(":disabled")) focusedItem.current = null;
+   }}>
+   {items.map((item,index)=><Stack key={item.descriptor.id} data-hjm-media-item={item.descriptor.id} gap="xs">
+    {item.preview}<UploadItem descriptor={item.descriptor} labels={labels} onRetry={onRetry} onCancel={onCancel}/>
+    <Stack axis="inline" gap="xxs" layoutStyle={{flexWrap:"wrap"}}>
+     <Button data-media-action="up" aria-label={moveUpLabel(item)} size="small" tone="ghost" disabled={index===0} onClick={()=>onMove(item.descriptor.id,-1)}>{actionLabels.moveUp}</Button>
+     <Button data-media-action="down" aria-label={moveDownLabel(item)} size="small" tone="ghost" disabled={index===items.length-1} onClick={()=>onMove(item.descriptor.id,1)}>{actionLabels.moveDown}</Button>
+     <Button data-media-action="remove" aria-label={removeLabel(item)} size="small" tone="ghost" onClick={()=>onRemove(item.descriptor.id)}>{actionLabels.remove}</Button>
+    </Stack>
+   </Stack>)}
+  </Grid>}
+ </ScreenLayout>;
+}
 
 
 /*
@@ -284,7 +370,7 @@ function SearchResultsBody({ summary, applied, suggested, cause, onCommit, onCle
 }) {
   // Loading keeps each row's own height (ListRow `loading`), so the list does not jump when results land.
   if (summary?.count === null) return <Stack gap="xxs">{Array.from({ length: searchScreenRecipe.loadingRows }, (_, index) =>
-    <ListRow key={index} loading title="" description="" {...(index === 0 ? { loadingLabel: summary.loadingLabel } : {})} />)}</Stack>;
+    <ListRow key={index} loading title="" description={summary.loadingLabel} {...(index === 0 ? { loadingLabel: summary.loadingLabel } : {})} />)}</Stack>;
   if (cause === "none" || !summary?.empty) return <>{children}</>;
   return <Stack gap="lg">
     <EmptyState density="compact" title={summary.empty.title} {...(summary.empty.description === undefined ? {} : { description: summary.empty.description })}
@@ -341,11 +427,12 @@ export type SearchScreenProps<F = unknown> = Base & SearchInputSlot & SearchComm
  recentQueries?:SearchRecentQueries;suggestedQueries?:SearchSuggestedQueries;suggestions?:SearchSuggestions;
  resultSummary?:SearchResultSummary;appliedFilters?:SearchAppliedFilters;filterSheet?:SearchFilterSheet<F>};
 /** Abort is supplied to the host request; the host must ignore aborted responses before committing results. */
-export function SearchScreen<F = unknown>({query,queryLabel,queryField,queryClearLabel,onQueryChange,onSearch,debounceMs=300,filters,recentSearches,children,onSubmit,committedQuery,filtersOverflow="wrap",hostGutter="none",queryLabelVisibility="visible",searching,searchingLabel,recentQueries,suggestedQueries,suggestions,resultSummary,appliedFilters,filterSheet,...screen}:SearchScreenProps<F>){
+export function SearchScreen<F = unknown>({query,queryLabel,queryField,queryClearLabel,onQueryChange,onSearch,debounceMs,filters,recentSearches,children,onSubmit,committedQuery,filtersOverflow="wrap",hostGutter="none",queryLabelVisibility="visible",searching,searchingLabel,recentQueries,suggestedQueries,suggestions,resultSummary,appliedFilters,filterSheet,...screen}:SearchScreenProps<F>){
  // The host owns localized copy. A custom queryField owns its own clear affordance.
  if (queryField == null && !queryClearLabel?.trim()) throw new TypeError("SearchScreen requires a localized queryClearLabel for its default search field");
+ const searchDelay=resolveSearchDebounceMs(debounceMs);
  const callback=useRef(onSearch);callback.current=onSearch;
- useEffect(()=>{const controller=new AbortController();const timer=setTimeout(()=>callback.current(query,{signal:controller.signal}),Math.max(0,debounceMs));return()=>{clearTimeout(timer);controller.abort();};},[query,debounceMs]);
+ useEffect(()=>{const controller=new AbortController();const timer=setTimeout(()=>callback.current(query,{signal:controller.signal}),searchDelay);return()=>{clearTimeout(timer);controller.abort();};},[query,searchDelay]);
  const fieldHost=useRef<HTMLDivElement>(null),bodyHost=useRef<HTMLDivElement>(null);
  const input=useCallback(()=>fieldHost.current?.querySelector<HTMLElement>("input"),[]);
  const focus=useSearchRemovalFocus(recentQueries?.items.length??0,appliedFilters?.items.length??0,input);
@@ -404,20 +491,31 @@ export function PermissionScreen({status,illustration,explanation,request,settin
 
 export type OnboardingStep = {id:string;title:string;description:string;content:ReactNode};
 export type OnboardingScreenProps = {steps:readonly OnboardingStep[];index:number;onIndexChange(index:number):void;nextLabel:string;backLabel:string;complete:ScreenFlowAction;skip?:ScreenFlowAction;progressLabel(index:number,total:number):string;layoutStyle?:ScreenLayoutProps["layoutStyle"]};
-export function OnboardingScreen({steps,index,onIndexChange,nextLabel,backLabel,complete,skip,progressLabel,layoutStyle}:OnboardingScreenProps){const position=resolveOnboardingStep(steps.length,index);const step=steps[index]!;return <ScreenLayout {...(layoutStyle===undefined?{}:{layoutStyle})} title={step.title} description={step.description} actions={skip?<Action action={skip} secondary/>:null} notice={<Text variant="caption" tone="muted">{progressLabel(index+1,steps.length)}</Text>} footer={<Stack gap="sm"><Action action={position.last?complete:{label:nextLabel,onAction:()=>onIndexChange(index+1)}}/>{!position.first?<Action action={{label:backLabel,onAction:()=>onIndexChange(index-1)}} secondary/>:null}</Stack>}>{step.content}</ScreenLayout>;}
+export function OnboardingScreen({steps,index,onIndexChange,nextLabel,backLabel,complete,skip,progressLabel,layoutStyle}:OnboardingScreenProps){const position=resolveOnboardingStep(steps.length,index);const step=steps[index]!;
+ // Completion and skip persist the same flow: keep navigation stable until the receipt.
+ const pending=!!(complete.pending||skip?.pending);
+ return <ScreenLayout {...(layoutStyle===undefined?{}:{layoutStyle})} title={step.title} description={step.description} actions={skip?<Action action={{...skip,disabled:!!(skip.disabled||pending)}} secondary/>:null} notice={<Text variant="caption" tone="muted">{progressLabel(index+1,steps.length)}</Text>} footer={<Stack gap="sm"><Action action={position.last?{...complete,disabled:!!(complete.disabled||pending)}:{label:nextLabel,disabled:pending,onAction:()=>onIndexChange(index+1)}}/>{!position.first?<Action action={{label:backLabel,disabled:pending,onAction:()=>onIndexChange(index-1)}} secondary/>:null}</Stack>}>{step.content}</ScreenLayout>;}
 
 export type CommentThreadItem = Readonly<{id:string;parentId:string|null;author:string;body:ReactNode;bodyText?:string;timeLabel:string;likeCountLabel:string;avatar?:ReactNode;likeIcon:ReactNode;likeLabel:string;likeAction?:ReactNode;actions?:ReactNode;canReply?:boolean;replyDisabled?:boolean}>;
 export type CommentThreadScreenProps = Base & {items:readonly CommentThreadItem[];expandedIds:readonly string[];onExpandedChange(id:string):void;onLike(id:string):void;onReply(id:string):void;replyLabel:string;repliesLabel(count:number,expanded:boolean):string;composer?:ReactNode;threadHeader?:ReactNode;threadFooter?:ReactNode};
 /** Controlled thread: server ordering, permission checks and receipt-based draft clearing belong to the product. */
 export function CommentThreadScreen({items,expandedIds,onExpandedChange,onLike,onReply,replyLabel,repliesLabel,composer,threadHeader,threadFooter,...screen}:CommentThreadScreenProps){
  validateCommentThread(items);
+ // Index replies once; rescanning every item for each root makes long threads quadratic.
+ const roots:CommentThreadItem[]=[], repliesByParent=new Map<string,CommentThreadItem[]>();
+ const expanded=new Set(expandedIds);
+ for(const item of items){
+  if(item.parentId===null)roots.push(item);
+  else {const siblings=repliesByParent.get(item.parentId);if(siblings)siblings.push(item);else repliesByParent.set(item.parentId,[item]);}
+ }
  // The supplied reference joins the author to the first body line and reserves the right edge
  // for reaction and its adjacent overflow action (Oct 7 user request). Keep
  // legacy rich bodies intact; bodyText opts into that compact flow.
+ // Empty metadata must not reserve a line above the body: anonymous comments align with their avatar.
  const row=(item:CommentThreadItem)=><Stack key={item.id} axis="inline" align="start" gap="sm">{item.avatar}<Stack gap="xxs" layoutStyle={{flex:1,minWidth:0}}>
- {item.bodyText!==undefined?<Text><Text emphasis="strong">{item.author}</Text>{" "}{item.bodyText}</Text>:<Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap:"wrap"}}><Text emphasis="strong">{item.author}</Text><Text variant="caption" tone="muted">{item.timeLabel}</Text></Stack>}
+ {item.bodyText!==undefined?<Text><Text emphasis="strong">{item.author}</Text>{" "}{item.bodyText}</Text>:(item.author||item.timeLabel)?<Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap:"wrap"}}>{item.author?<Text emphasis="strong">{item.author}</Text>:null}{item.timeLabel?<Text variant="caption" tone="muted">{item.timeLabel}</Text>:null}</Stack>:null}
  {item.body}<Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap:"wrap"}}>{item.bodyText!==undefined&&item.timeLabel?<Text variant="caption" tone="muted">{item.timeLabel}</Text>:null}{item.likeCountLabel?<Text variant="caption" tone="muted">{item.likeCountLabel}</Text>:null}{(item.canReply??item.parentId===null)?<Button size="small" tone="ghost" disabled={item.replyDisabled??false} onClick={()=>onReply(item.id)}>{replyLabel}</Button>:null}</Stack></Stack><Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexShrink:0}}>{item.likeAction!==undefined?item.likeAction:<IconButton label={item.likeLabel} tone="ghost" onClick={()=>onLike(item.id)}>{item.likeIcon}</IconButton>}{item.actions}</Stack></Stack>;
  // Product context belongs in the same scroll body as comments. Putting a tall
  // overview in the fixed header forced a second scroll region in Spint (2026-10-08).
- return <ScreenLayout {...screen} footer={!screen.state||screen.state.kind==="ready"||screen.state.kind==="empty"?composer:null}><Stack gap="lg">{threadHeader}{items.filter(item=>item.parentId===null).map(item=>{const replies=items.filter(reply=>reply.parentId===item.id);return <Stack key={item.id} gap="xs">{row(item)}{replies.length?<Stack gap="md" layoutStyle={{marginInlineStart:screenPatternRecipe.sectionGap}}><Button layoutStyle={{alignSelf:"flex-start"}} tone="ghost" size="small" aria-expanded={expandedIds.includes(item.id)} onClick={()=>onExpandedChange(item.id)}>{repliesLabel(replies.length,expandedIds.includes(item.id))}</Button>{expandedIds.includes(item.id)?replies.map(row):null}</Stack>:null}</Stack>;})}{threadFooter}</Stack></ScreenLayout>;
+ return <ScreenLayout {...screen} footer={!screen.state||screen.state.kind==="ready"||screen.state.kind==="empty"?composer:null}><Stack gap="lg">{threadHeader}{roots.map(item=>{const replies=repliesByParent.get(item.id)??[];return <Stack key={item.id} gap="xs">{row(item)}{replies.length?<Stack gap="md" layoutStyle={{marginInlineStart:screenPatternRecipe.sectionGap}}><Button layoutStyle={{alignSelf:"flex-start"}} tone="ghost" size="small" aria-expanded={expanded.has(item.id)} onClick={()=>onExpandedChange(item.id)}>{repliesLabel(replies.length,expanded.has(item.id))}</Button>{expanded.has(item.id)?replies.map(row):null}</Stack>:null}</Stack>;})}{threadFooter}</Stack></ScreenLayout>;
 }

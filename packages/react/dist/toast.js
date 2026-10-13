@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { isLargeTextScale } from "@hjmds/design-contracts/components/design-system-provider";
-import { createToastStore, resolveToastDescriptor, } from "@hjmds/design-contracts/components/toast";
+import { createToastStore, createToastSession, resolveToastDescriptor, } from "@hjmds/design-contracts/components/toast";
 import { toastRecipe, } from "@hjmds/design-contracts/recipes";
 import { createContext, forwardRef, useContext, useEffect, useId, useMemo, useRef, useState, useSyncExternalStore, } from "react";
 import { createPortal } from "react-dom";
@@ -27,7 +27,7 @@ function ToastProgress({ progress }) {
             return (_jsxs("li", { className: "hjm-toast__progress-step", "data-state": state, "aria-current": state === "current" ? "step" : undefined, children: [_jsx("span", { className: "hjm-toast__progress-dot", "aria-hidden": "true" }), _jsx("span", { className: "hjm-toast__progress-label", children: step })] }, `${index}-${step}`));
         }) }));
 }
-const ToastCard = forwardRef(function ToastCard({ descriptor, phase, onAction, onDismiss, onPointerPause, onPointerResume, onFocusPause, onFocusResume, locale, className, htmlProps, }, ref) {
+const ToastCard = forwardRef(function ToastCard({ descriptor, phase, onAction, onPress, onDismiss, onPointerPause, onPointerResume, onFocusPause, onFocusResume, locale, className, htmlProps, }, ref) {
     const baseId = useId().replaceAll(":", "");
     const titleId = `${baseId}-toast-title`;
     const descriptionId = `${baseId}-toast-description`;
@@ -42,7 +42,9 @@ const ToastCard = forwardRef(function ToastCard({ descriptor, phase, onAction, o
             htmlProps?.onBlurCapture?.(event);
             if (!event.currentTarget.contains(event.relatedTarget))
                 onFocusResume?.();
-        }, onKeyDown: handleKeyDown, children: [_jsx("span", { className: "hjm-visually-hidden", role: descriptor.priority === "high" ? "alert" : "status", children: descriptor.announcement }), _jsx("span", { className: "hjm-toast__tone-mark", "aria-hidden": "true" }), descriptor.media === null ? (_jsx("span", { className: "hjm-toast__icon", "aria-hidden": "true", children: _jsx(ToneGlyph, { tone: descriptor.tone }) })) : (
+        }, onKeyDown: handleKeyDown, children: [_jsx("span", { className: "hjm-visually-hidden", role: descriptor.priority === "high" ? "alert" : "status", children: descriptor.announcement }), descriptor.press ? (
+            // A sibling button covers the card without nesting action/close buttons in a button.
+            _jsx("button", { type: "button", className: "hjm-toast__press", "aria-label": descriptor.press.accessibilityLabel, "aria-describedby": descriptionId, disabled: phase !== "visible", onClick: onPress })) : null, _jsx("span", { className: "hjm-toast__tone-mark", "aria-hidden": "true" }), descriptor.media === null ? (_jsx("span", { className: "hjm-toast__icon", "aria-hidden": "true", children: _jsx(ToneGlyph, { tone: descriptor.tone }) })) : (
             // Product media (mascot, avatar) takes the badge column; it is decorative, the copy carries meaning.
             _jsx("span", { className: "hjm-toast__media", "aria-hidden": "true", children: descriptor.media })), _jsxs("span", { className: "hjm-toast__content", children: [descriptor.title ? (_jsx("strong", { id: titleId, className: "hjm-toast__title", children: descriptor.title })) : null, _jsx("span", { id: descriptionId, className: "hjm-toast__description", children: descriptor.description }), descriptor.progress ? _jsx(ToastProgress, { progress: descriptor.progress }) : null] }), descriptor.action ? (_jsx("button", { type: "button", className: "hjm-toast__action", "aria-label": descriptor.action.accessibilityLabel, onClick: onAction, children: descriptor.action.label })) : null, _jsx("button", { type: "button", className: "hjm-toast__close", "aria-label": descriptor.closeLabel, onClick: () => onDismiss("close-action"), children: _jsx("svg", { "aria-hidden": "true", viewBox: "0 0 24 24", width: "16", height: "16", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", focusable: "false", children: _jsx("path", { d: "M18 6 6 18M6 6l12 12" }) }) })] }));
 });
@@ -53,19 +55,30 @@ export const Toast = forwardRef(function Toast(
 // consumers that already pass them, so the rest is forwarded (the card keeps its own role/labelling).
 { descriptor, onDismissRequest, className, ...htmlProps }, ref) {
     const resolved = resolveToastDescriptor(descriptor);
-    const actionInvokedRef = useRef(false);
-    useEffect(() => {
-        actionInvokedRef.current = false;
+    // Controlled rendering leaves timing/removal to the host, but shares the store's
+    // once-per-revision invocation and callback-then-dismiss semantics.
+    const session = useMemo(() => {
+        const next = createToastSession(descriptor);
+        next.show();
+        return next;
     }, [descriptor]);
-    return (_jsx(ToastCard, { ref: ref, descriptor: resolved, phase: "visible", ...(className === undefined ? {} : { className }), htmlProps: htmlProps, onDismiss: onDismissRequest, onAction: () => {
-            const action = resolved.action;
-            if (!action || actionInvokedRef.current)
-                return;
-            actionInvokedRef.current = true;
-            action.onAction();
-            if (action.dismissOnAction)
-                onDismissRequest("action");
-        } }));
+    const invoke = (kind) => {
+        if (session.getSnapshot().phase !== "visible")
+            return;
+        try {
+            if (kind === "press")
+                session.invokePress();
+            else
+                session.invokeAction();
+        }
+        finally {
+            const snapshot = session.getSnapshot();
+            if (snapshot.phase === "closing" && snapshot.dismissReason) {
+                onDismissRequest(snapshot.dismissReason);
+            }
+        }
+    };
+    return (_jsx(ToastCard, { ref: ref, descriptor: resolved, phase: "visible", ...(className === undefined ? {} : { className }), htmlProps: htmlProps, onDismiss: (reason) => { session.dismiss(reason); onDismissRequest(reason); }, onAction: () => invoke("action"), onPress: () => invoke("press") }));
 });
 const ToastContext = createContext(null);
 export function useToast() {
@@ -86,7 +99,7 @@ function renderStoreToast(snapshot, store, locale) {
     if (snapshot.phase !== "visible" && snapshot.phase !== "closing")
         return null;
     const id = snapshot.descriptor.id;
-    return (_jsx(ToastCard, { descriptor: snapshot.descriptor, phase: snapshot.phase, ...(locale === undefined ? {} : { locale }), onAction: () => store.invokeAction(id), onDismiss: (reason) => store.dismiss(id, reason), onPointerPause: () => store.pause(id, "pointer"), onPointerResume: () => store.resume(id, "pointer"), onFocusPause: () => store.pause(id, "focus"), onFocusResume: () => store.resume(id, "focus") }, id));
+    return (_jsx(ToastCard, { descriptor: snapshot.descriptor, phase: snapshot.phase, ...(locale === undefined ? {} : { locale }), onAction: () => store.invokeAction(id), onPress: () => store.invokePress(id), onDismiss: (reason) => store.dismiss(id, reason), onPointerPause: () => store.pause(id, "pointer"), onPointerResume: () => store.resume(id, "pointer"), onFocusPause: () => store.pause(id, "focus"), onFocusResume: () => store.resume(id, "focus") }, id));
 }
 export function ToastProvider({ children, label, placement = toastRecipe.defaults.placement, store, initialToasts = [], maxVisible, maxQueued, duplicatePolicy, timerUpdatePolicy, overflowPolicy, portalContainer, locale, bottomOffset = 0, hotkey, hotkeyHelp, }) {
     if (label.trim().length === 0)
@@ -216,6 +229,8 @@ export function ToastProvider({ children, label, placement = toastRecipe.default
         window.addEventListener("pagehide", pause);
         window.addEventListener("pageshow", resume);
         document.addEventListener("visibilitychange", handleVisibility);
+        // A provider may mount while its tab is already hidden, before any change event.
+        handleVisibility();
         return () => {
             window.removeEventListener("blur", pause);
             window.removeEventListener("focus", resume);

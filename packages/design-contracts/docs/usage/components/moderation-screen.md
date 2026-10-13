@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.17.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-13
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screens.tsx`·`src/screen-flows.tsx`; 기존 개별 지침을 새 규격으로 통합. 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
 - 스토리북: `배포/화면/소통/신고와 차단`
 
@@ -111,3 +111,4 @@ import { ModerationScreen } from "@hjmds/react-native/screen-flows";
 - 차단 버튼의 `block.action.onAction`은 호출되지 않는다. 버튼은 확인 대화상자만 열고, 실제 차단은 `confirmation.onConfirm`에서 한다.
 - 서버 신고·권한·차단 mutation, 완료 후 이동은 제품 소유다. 사유 목록과 정책 문구도 제품이 정한다.
 - 확인 대화상자의 성공 후 닫힘·실패 문구는 [AlertDialog](alert-dialog.md) 계약을 따른다.
+- `block`을 제거하면 열린 확인 세션도 종료한다. 나중에 차단 행동을 다시 공급해도 사용자가 버튼을 새로 눌러야 확인창이 열린다. 2026-10-13 사라진 행동의 확인 상태가 부활하던 경로를 수정했다. 대상이 바뀌는 제품은 대상 id를 화면 key/초안·요청 수명에 함께 연결한다.
