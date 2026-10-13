@@ -16,7 +16,7 @@ it("uses profile floating strength for navigation and upward footer shadows whil
   try {
     for (const profile of [undefined, ...Object.values(hjmDesignPresets), custom]) {
       for (const presentation of ["bar", "floating", "capsule"] as const) {
-        const content = <HjmNativeProvider theme="dark" direction="rtl" textScale={2} reducedMotion {...(profile ? { designProfile: profile } : {})}>
+        const content = <HjmNativeProvider theme="dark" direction="rtl" textScale={1} reducedMotion {...(profile ? { designProfile: profile } : {})}>
           <BottomCTA accessibilityLabel="저장 행동" safeAreaBottom={24} primaryAction={{ label: "저장", onPress }} />
           <BottomNavigation descriptor={descriptor} configuration={{ presentation }} renderIcon={() => <View />} getItemTestID={item => `route-${item.id}`} onActivate={onActivate} />
         </HjmNativeProvider>;

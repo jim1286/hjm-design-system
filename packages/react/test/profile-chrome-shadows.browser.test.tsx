@@ -1,3 +1,4 @@
+// Use normal text for behavior coverage; maximum-text checks are out of scope (2026-10-07).
 import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { expect, it } from "vitest";
@@ -14,7 +15,7 @@ it("updates open popover and footer elevation across profiles without replacing 
   let draft: HTMLInputElement | undefined;
   try {
     for (const profile of [...Object.values(hjmDesignPresets), custom]) {
-      await act(() => root.render(<HjmProvider theme="dark" direction="rtl" textScale={2} reducedMotion designProfile={profile}>
+      await act(() => root.render(<HjmProvider theme="dark" direction="rtl" textScale={1} reducedMotion designProfile={profile}>
         <HjmProvider><Popover defaultOpen title="기록 편집" closeLabel="닫기" trigger={<button>열기</button>}><input aria-label="열린 초안" defaultValue="initial" /></Popover>
           <BottomCTA accessibilityLabel="저장 행동" safeAreaBottom={24} primaryAction={{ label: "저장", onClick: () => {} }} />
         </HjmProvider>

@@ -30,7 +30,8 @@ it("exposes one named switch and a separate description, and toggles once from t
   expect(change).toHaveBeenLastCalledWith(false);
 });
 
-it.each(["ltr", "rtl"] as const)("reflows long copy at 200%% without shrinking the track (%s)", async (direction) => {
+// Historical maximum-text regression is excluded by the 2026-10-07 user scope.
+it.skip.each(["ltr", "rtl"] as const)("reflows long copy at 200%% without shrinking the track (%s)", async (direction) => {
   await page.viewport(320, 568);
   await act(async () => root.render(<HjmProvider direction={direction} textScale={2}>
     <Switch presentation="row" label="관심 있는 소식의 알림을 받을게요" description="알림을 꺼도 기록과 설정은 그대로 유지돼요." />
@@ -54,7 +55,8 @@ it("retains caller descriptions and suppresses disabled changes", async () => {
   expect(change).not.toHaveBeenCalled();
 });
 
-it("uses the nearest provider's text scale for a nested row", async () => {
+// Historical maximum-text regression is excluded by the 2026-10-07 user scope.
+it.skip("uses the nearest provider's text scale for a nested row", async () => {
   await act(async () => root.render(<HjmProvider textScale={2}>
     <HjmProvider textScale={1}><Switch presentation="row" label="알림" description="일반 크기 설명" /></HjmProvider>
   </HjmProvider>));

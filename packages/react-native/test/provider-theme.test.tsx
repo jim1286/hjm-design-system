@@ -106,13 +106,13 @@ describe("designProfile inheritance", () => {
     const values: HjmNativeTheme[] = [];
     act(() => {
       renderer = create(<HjmNativeProvider theme="dark" designProfile={hjmDesignPresets.forest} brandPalette={{ dark: { primary: "#123456" } }}>
-        <HjmNativeProvider textScale={2}><Probe onRender={value => values.push(value)} /></HjmNativeProvider>
+        <HjmNativeProvider textScale={1.3}><Probe onRender={value => values.push(value)} /></HjmNativeProvider>
       </HjmNativeProvider>);
     });
     expect(values[0]!.designProfile).toBe(hjmDesignPresets.forest);
     expect(values[0]!.tokens.radius.lg).toBe(24);
     expect(values[0]!.colors.primary).toBe("#123456");
     expect(values[0]!.colors.bg).toBe(hjmDesignPresets.forest.palette.dark.bg);
-    expect(values[0]!.environment.textScale).toBe(2);
+    expect(values[0]!.environment.textScale).toBe(1.3);
   });
 });

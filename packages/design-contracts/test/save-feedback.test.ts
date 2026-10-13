@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { createActionSession, resolveSaveFeedback, type SaveFeedbackInput } from "../src/action-session.js";
+import { createActionSession, resolveSaveFeedback, type SaveFeedback, type SaveFeedbackInput } from "../src/action-session.js";
 
 const base = { phase: "idle", dirty: true, valid: true, hasSaved: false } satisfies SaveFeedbackInput;
 describe("current-draft save feedback", () => {
-  it.each([
+  const cases: [Partial<SaveFeedbackInput>, SaveFeedback["feedback"], boolean, boolean][] = [
     [{}, "unsaved", true, false],
     [{ dirty: false }, "unchanged", false, false],
     [{ dirty: false, hasSaved: true }, "unchanged", false, true],
@@ -16,7 +16,8 @@ describe("current-draft save feedback", () => {
     [{ phase: "error", dirty: false, hasSaved: true }, "unchanged", false, true],
     [{ phase: "success", dirty: false, hasSaved: true }, "saved", false, true],
     [{ phase: "success", hasSaved: true }, "saved-with-changes", true, false],
-  ] satisfies [Partial<SaveFeedbackInput>, string, boolean, boolean][])("classifies %j", (input, feedback, canSubmit, currentSaved) => {
+  ];
+  it.each(cases)("classifies %j", (input, feedback, canSubmit, currentSaved) => {
     expect(resolveSaveFeedback({ ...base, ...input })).toEqual({ feedback, canSubmit, currentSaved, pending: input.phase === "pending" });
   });
   it("keeps B unsaved after A succeeds and submits the current draft after a failure", async () => {

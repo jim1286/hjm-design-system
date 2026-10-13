@@ -42,9 +42,9 @@ const cases: ReadonlyArray<readonly [string, string, () => ReactNode]> = [
 ];
 
 describe("built-in glyphs in fixed icon frames", () => {
-  it.each(cases)("%s keeps its 1x glyph size at large text", (_name, glyph, fixture) => {
+  it.each(cases)("%s keeps its 1x glyph size under normal native and controlled scaling", (_name, glyph, fixture) => {
     const base = glyphs(fixture(), glyph, 1);
-    for (const scale of [undefined, 2, 3] as const) {
+    for (const scale of [undefined, 1.3] as const) {
       const scaled = glyphs(fixture(), glyph, scale);
       for (const [index, item] of scaled.entries()) {
         expect(item.allowFontScaling).toBe(false);

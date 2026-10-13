@@ -19,7 +19,7 @@ it("inherits rounded asset corners while preserving explicit shapes and native m
   try {
     for (const profile of [undefined, ...Object.values(hjmDesignPresets), custom]) {
       for (const theme of ["light", "dark"] as const) {
-        const next = <HjmNativeProvider theme={theme} textScale={2} direction="rtl" reducedMotion {...(profile ? { designProfile: profile } : {})}>
+        const next = <HjmNativeProvider theme={theme} textScale={1} direction="rtl" reducedMotion {...(profile ? { designProfile: profile } : {})}>
           <HjmNativeProvider>{(["rounded", "square", "circle"] as const).map(shape => <Asset key={shape} descriptor={{ kind: "image", size: "xlarge", shape, accessibilityLabel: shape }}><Media /></Asset>)}</HjmNativeProvider>
         </HjmNativeProvider>;
         act(() => { if (tree) tree.update(next); else tree = create(next); });

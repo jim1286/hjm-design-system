@@ -517,7 +517,8 @@ describe("Recipe axes that replace product style overrides", () => {
     expect(pressableStyleOf(byLabel(base, "Base")).justifyContent).toBe("center");
   });
 
-  it.each([1, 2])("lets wrapped Button copy grow at text scale %s without changing its loading footprint", (textScale) => {
+  // 2026-10-07: exclude the historical maximum-font (2x) row from execution.
+  it.each([1])("lets wrapped Button copy grow at text scale %s without changing its loading footprint", (textScale) => {
     const value = resolveDesignSystemProviderValue({ textScale, theme: "light" }, { systemTheme: "light" });
     const label = "변경한 설정을 확인하고 다음 단계로 이동하기";
     for (const loading of [false, true]) {

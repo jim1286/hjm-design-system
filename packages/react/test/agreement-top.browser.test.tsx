@@ -117,7 +117,8 @@ it("renders Top as a real heading that scrolls with the body", async () => {
   expect(getComputedStyle(top).zIndex).toBe("auto");
 });
 
-it("lowers the heading level on request and keeps long copy readable at double text size", async () => {
+// Historical maximum-text regression is excluded by the 2026-10-07 user scope.
+it.skip("lowers the heading level on request and keeps long copy readable at double text size", async () => {
   await page.viewport(320, 640);
   await act(async () => root.render(
     <HjmProvider reducedMotion textScale={2}>

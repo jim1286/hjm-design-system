@@ -84,7 +84,7 @@ afterEach(() => {
 
 describe("Native Provider text-scale parity", () => {
   it("leaves OS scaling enabled and recipe sizes unmultiplied by default", () => {
-    __setWindowDimensions({ width: 800, height: 600, scale: 2, fontScale: 2 });
+    __setWindowDimensions({ width: 800, height: 600, scale: 2, fontScale: 1.3 });
     const renderer = render(
       <HjmNativeProvider reducedMotion theme="light">
         <ProductControls />
@@ -109,8 +109,8 @@ describe("Native Provider text-scale parity", () => {
       .toBe(typography[sliderRecipe.sizes.medium.labelVariant].fontSize);
   });
 
-  it("applies explicit scale 1 and 2 deterministically without a Native second pass", () => {
-    __setWindowDimensions({ width: 800, height: 600, scale: 2, fontScale: 2 });
+  it("applies explicit scale 1 and 1.3 deterministically without a Native second pass", () => {
+    __setWindowDimensions({ width: 800, height: 600, scale: 2, fontScale: 1.3 });
     const atOne = render(
       <HjmNativeProvider reducedMotion textScale={1} theme="light">
         <TextField accessibilityLabel="1배 입력" allowFontScaling />
@@ -121,42 +121,42 @@ describe("Native Provider text-scale parity", () => {
     expect(flattenStyle(oneInput.props.style).fontSize)
       .toBe(typography[fieldRecipe.textVariant].fontSize);
 
-    const atTwo = render(
-      <HjmNativeProvider reducedMotion textScale={2} theme="light">
+    const atCustom = render(
+      <HjmNativeProvider reducedMotion textScale={1.3} theme="light">
         <ProductControls />
         <Text allowFontScaling style={{ fontSize: 11, lineHeight: 14 }}>
           사용자 크기
         </Text>
       </HjmNativeProvider>,
     );
-    const field = inputByLabel(atTwo, "이름");
-    const combobox = inputByLabel(atTwo, "도시");
-    const number = inputByLabel(atTwo, "수량");
-    const sliderLabel = textByCopy(atTwo, "점수 레이블");
-    const customText = textByCopy(atTwo, "사용자 크기");
+    const field = inputByLabel(atCustom, "이름");
+    const combobox = inputByLabel(atCustom, "도시");
+    const number = inputByLabel(atCustom, "수량");
+    const sliderLabel = textByCopy(atCustom, "점수 레이블");
+    const customText = textByCopy(atCustom, "사용자 크기");
     const controls = [field, combobox, number, sliderLabel];
     expect(controls.every((control) => control.props.allowFontScaling === false)).toBe(true);
     expect(controls.every(
       (control) => control.props.maxFontSizeMultiplier === undefined,
     )).toBe(true);
     expect(flattenStyle(field.props.style).fontSize)
-      .toBe(typography[fieldRecipe.textVariant].fontSize * 2);
+      .toBe(typography[fieldRecipe.textVariant].fontSize * 1.3);
     expect(flattenStyle(combobox.props.style).fontSize)
-      .toBe(typography[comboboxRecipe.sizes.medium.textVariant].fontSize * 2);
+      .toBe(typography[comboboxRecipe.sizes.medium.textVariant].fontSize * 1.3);
     expect(flattenStyle(number.props.style).fontSize)
-      .toBe(typography[numberFieldRecipe.sizes.medium.textVariant].fontSize * 2);
+      .toBe(typography[numberFieldRecipe.sizes.medium.textVariant].fontSize * 1.3);
     expect(flattenStyle(sliderLabel.props.style).fontSize)
-      .toBe(typography[sliderRecipe.sizes.medium.labelVariant].fontSize * 2);
+      .toBe(typography[sliderRecipe.sizes.medium.labelVariant].fontSize * 1.3);
     expect(customText.props.allowFontScaling).toBe(false);
     expect(flattenStyle(customText.props.style)).toMatchObject({
-      fontSize: 22,
-      lineHeight: 28,
+      fontSize: 11 * 1.3,
+      lineHeight: 14 * 1.3,
     });
   });
 
   it("inherits or replaces a nested controlled scale instead of multiplying it", () => {
     const renderer = render(
-      <HjmNativeProvider reducedMotion textScale={2} theme="light">
+      <HjmNativeProvider reducedMotion textScale={1.3} theme="light">
         <HjmNativeProvider>
           <TextField accessibilityLabel="상속 입력" />
         </HjmNativeProvider>
@@ -170,7 +170,7 @@ describe("Native Provider text-scale parity", () => {
     expect(inherited.props.allowFontScaling).toBe(false);
     expect(replaced.props.allowFontScaling).toBe(false);
     expect(flattenStyle(inherited.props.style).fontSize)
-      .toBe(typography[fieldRecipe.textVariant].fontSize * 2);
+      .toBe(typography[fieldRecipe.textVariant].fontSize * 1.3);
     expect(flattenStyle(replaced.props.style).fontSize)
       .toBe(typography[fieldRecipe.textVariant].fontSize);
   });

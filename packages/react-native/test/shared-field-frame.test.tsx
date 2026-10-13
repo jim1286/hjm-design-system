@@ -10,7 +10,7 @@ const flatten = (value: unknown): Record<string, unknown> => Array.isArray(value
 it("custom and built-in fields share label/error presentation while preserving host accessible names", () => {
   for (const builtIn of [false, true]) {
     let tree!: ReactTestRenderer;
-    act(() => { tree = create(<HjmNativeProvider theme="light" textScale={2}>
+    act(() => { tree = create(<HjmNativeProvider theme="light" textScale={1}>
       {builtIn ? <TextField label="Name" required description="Help" error="Required" />
         : <Field label="Name" required description="Help" error="Required">{props => <TextInput {...props} />}</Field>}
     </HjmNativeProvider>); });

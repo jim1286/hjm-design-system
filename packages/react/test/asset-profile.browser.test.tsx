@@ -1,3 +1,4 @@
+// Use normal text for behavior coverage; maximum-text checks are out of scope (2026-10-07).
 import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { expect, it } from "vitest";
@@ -15,7 +16,7 @@ it("inherits rounded asset corners without changing explicit geometry or remount
   try {
     for (const profile of [undefined, ...Object.values(hjmDesignPresets), custom]) {
       for (const theme of ["light", "dark"] as const) {
-        await act(() => root.render(<HjmProvider theme={theme} textScale={2} direction="rtl" reducedMotion {...(profile ? { designProfile: profile } : {})}>
+        await act(() => root.render(<HjmProvider theme={theme} textScale={1} direction="rtl" reducedMotion {...(profile ? { designProfile: profile } : {})}>
           <HjmProvider>{(["rounded", "square", "circle"] as const).map(shape => <Asset key={shape} descriptor={{ kind: "image", size: "xlarge", shape, accessibilityLabel: shape }}>
             <input aria-label={`media-${shape}`} defaultValue="draft" />
           </Asset>)}</HjmProvider>

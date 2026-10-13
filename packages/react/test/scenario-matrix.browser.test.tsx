@@ -393,8 +393,11 @@ describe("@hjmds/react environment scenario proofs", () => {
     }
   });
 
-  it.each(matrixCases)("$componentId $scenario", async ({ componentId, scenario }) => {
-    const environment = environments.find(({ id }) => id === scenario)!;
-    await checks[scenario as keyof typeof checks](fixtures.get(componentId)!, environment);
-  });
+  // Keep historical maximum-text cases registered without executing them (2026-10-07 user scope).
+  for (const { componentId, scenario } of matrixCases) {
+    it.skipIf(scenario === "large-text")(`${componentId} ${scenario}`, async () => {
+      const environment = environments.find(({ id }) => id === scenario)!;
+      await checks[scenario as keyof typeof checks](fixtures.get(componentId)!, environment);
+    });
+  }
 });

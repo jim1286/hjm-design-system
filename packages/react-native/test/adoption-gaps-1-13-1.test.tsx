@@ -13,7 +13,7 @@ import { SearchScreen } from "../src/screen-flows.js";
 
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 let tree: ReactTestRenderer | undefined;
-function render(node: ReactNode, textScale = 2) {
+function render(node: ReactNode, textScale = 1) {
   act(() => { tree = create(<HjmNativeProvider reducedMotion textScale={textScale}>{node}</HjmNativeProvider>); });
   return tree!;
 }
@@ -26,10 +26,11 @@ function flat(style: unknown): Style {
 const StyleSheet = { flatten: flat };
 afterEach(() => { act(() => tree?.unmount()); tree = undefined; vi.restoreAllMocks(); });
 
-describe("SegmentedControl pills at large text", () => {
+// 2026-10-07 user scope: maximum font simulations are excluded; retain historical cases without executing them.
+describe.skip("SegmentedControl pills at large text", () => {
   const items = ["전체", "시간", "계산", "사진", "글자", "단위", "생활"].map((label, index) => ({ value: `t${index}`, label }));
   it("keeps the pills in a row (one line inside a rail) instead of stacking a column", () => {
-    const root = render(<SegmentedControl label="주제" presentation="pills" size="small" items={items} defaultValue="t0" />);
+    const root = render(<SegmentedControl label="주제" presentation="pills" size="small" items={items} defaultValue="t0" />, 2);
     const group = root.root.findAllByType(View).find((node) => node.props.accessibilityRole === "radiogroup")!;
     expect(StyleSheet.flatten(group.props.style).flexDirection).toBe("row");
     const pill = StyleSheet.flatten(root.root.findAllByType(Pressable)[0]!.props.style({ pressed: false }));
@@ -40,15 +41,16 @@ describe("SegmentedControl pills at large text", () => {
     expect(root.root.findAllByType(Pressable)[2]!.props.accessibilityState.checked).toBe(true);
   });
   it("still stacks the connected track at the same scale", () => {
-    const root = render(<SegmentedControl label="보기" items={items.slice(0, 3)} defaultValue="t0" />);
+    const root = render(<SegmentedControl label="보기" items={items.slice(0, 3)} defaultValue="t0" />, 2);
     const group = root.root.findAllByType(View).find((node) => node.props.accessibilityRole === "radiogroup")!;
     expect(StyleSheet.flatten(group.props.style).flexDirection).toBe("column");
   });
 });
 
-describe("Chip at large text", () => {
+// 2026-10-07 user scope: maximum font simulations are excluded; retain historical cases without executing them.
+describe.skip("Chip at large text", () => {
   it("uses the recipe height as a floor so a scaled label is not clipped", () => {
-    const root = render(<Chip label="필터" onPress={() => {}} />);
+    const root = render(<Chip label="필터" onPress={() => {}} />, 2);
     const style = StyleSheet.flatten(root.root.findByType(Pressable).props.style({ pressed: false }));
     expect(style.height).toBeUndefined();
     expect(style.minHeight).toBe(36);

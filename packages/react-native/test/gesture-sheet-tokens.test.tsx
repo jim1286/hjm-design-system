@@ -18,17 +18,17 @@ const flatten = (style: unknown): Record<string, unknown> => Array.isArray(style
 
 it("themes the optional keyboard-tracking editor without scaling twice or replacing its controlled draft", () => {
   const profile = defineHjmDesignProfile({ extends: "paper", tokens: { radius: { md: 29 }, typography: { body: { fontSize: 21, lineHeight: 32 } }, fontFamily: { ui: ["ProductUI"] } } });
-  const ui = (themed: boolean) => <HjmNativeProvider reducedMotion textScale={2} {...(themed ? { designProfile: profile } : {})}><GestureSheetInput value="입력 중" /></HjmNativeProvider>;
+  const ui = (themed: boolean) => <HjmNativeProvider reducedMotion textScale={1.3} {...(themed ? { designProfile: profile } : {})}><GestureSheetInput value="입력 중" /></HjmNativeProvider>;
   let tree!: ReturnType<typeof create>;
   try {
     act(() => { tree = create(ui(true)); });
     const input = tree.root.findByType(TextInput);
-    expect(flatten(input.props.style)).toMatchObject({ fontSize: 42, lineHeight: 64, borderRadius: 29, fontFamily: "ProductUI" });
+    expect(flatten(input.props.style)).toMatchObject({ fontSize: 21 * 1.3, lineHeight: 32 * 1.3, borderRadius: 29, fontFamily: "ProductUI" });
     expect(input.props.allowFontScaling).toBe(false);
     act(() => tree.update(ui(false)));
     expect(tree.root.findByType(TextInput)).toBe(input);
     expect(input.props.value).toBe("입력 중");
-    expect(flatten(input.props.style)).toMatchObject({ fontSize: 28, lineHeight: 40, borderRadius: 12 });
+    expect(flatten(input.props.style)).toMatchObject({ fontSize: 14 * 1.3, lineHeight: 20 * 1.3, borderRadius: 12 });
     expect(flatten(input.props.style).fontFamily).toBeUndefined();
   } finally { if (tree) act(() => tree.unmount()); }
 });

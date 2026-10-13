@@ -1,3 +1,4 @@
+// Use normal text for behavior coverage; maximum-text checks are out of scope (2026-10-07).
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 import {
@@ -107,7 +108,7 @@ describe("advanced renderer SSR", () => {
 
   it("uses disclosure, image fallback, separator, dl, and table HTML", () => {
     const markup = renderToStaticMarkup(
-      <HjmProvider systemTheme="light" textScale={2}>
+      <HjmProvider systemTheme="light" textScale={1}>
         <Accordion
           defaultValue={["summary"]}
           items={[{ id: "summary", title: "요약", panel: "시즌 요약" }]}

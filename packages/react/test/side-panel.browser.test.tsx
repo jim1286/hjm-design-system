@@ -137,7 +137,8 @@ it("lets a controlled owner close a busy panel and completes the dismissal once"
   expect(complete.mock.calls).toEqual([[{ reason: "programmatic" }]]);
 });
 
-it("keeps the panel readable at double text size in a narrow viewport", async () => {
+// Historical maximum-text regression is excluded by the 2026-10-07 user scope.
+it.skip("keeps the panel readable at double text size in a narrow viewport", async () => {
   await page.viewport(320, 640);
   await act(async () => root.render(
     <HjmProvider reducedMotion textScale={2}>

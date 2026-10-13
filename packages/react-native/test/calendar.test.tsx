@@ -14,7 +14,7 @@ let renderer: ReactTestRenderer;
 afterEach(() => { if (renderer) act(() => renderer.unmount()); });
 it.each(["ltr", "rtl"] as const)("keeps each date accessible and pages independently of selection in %s", (direction) => {
   const select = vi.fn(); const month = vi.fn();
-  act(() => { renderer = create(<HjmNativeProvider direction={direction} textScale={2}><Calendar descriptor={{ grid, monthLabel: "2026년 9월", defaultSelectedDate: "2026-09-01", onSelectionChange: select, onFocusedMonthChange: month }} nextMonth={{ month: "2026-10", label: "다음 달" }} composeAccessibleName={({ date }) => date} /></HjmNativeProvider>); });
+  act(() => { renderer = create(<HjmNativeProvider direction={direction} textScale={1}><Calendar descriptor={{ grid, monthLabel: "2026년 9월", defaultSelectedDate: "2026-09-01", onSelectionChange: select, onFocusedMonthChange: month }} nextMonth={{ month: "2026-10", label: "다음 달" }} composeAccessibleName={({ date }) => date} /></HjmNativeProvider>); });
   const target = (label: string) => renderer.root.findAllByType(Pressable).find((node) => node.props.accessibilityLabel === label)!;
   expect(target("2026-09-02").props.accessibilityState).toMatchObject({ disabled: true });
   act(() => target("2026-09-02").props.onPress()); expect(select).not.toHaveBeenCalled();

@@ -54,7 +54,7 @@ describe("DesignSystemEnvironment validation", () => {
     expect(() =>
       validateDesignSystemEnvironmentInput({ textScale: Number.POSITIVE_INFINITY }),
     ).toThrow(/textScale/);
-    expect(() => validateDesignSystemEnvironmentInput({ textScale: 2.35 })).not.toThrow();
+    expect(() => validateDesignSystemEnvironmentInput({ textScale: 1.35 })).not.toThrow();
   });
 
   it("rejects a non-boolean reducedMotion", () => {
@@ -158,6 +158,7 @@ describe("DesignSystemEnvironment resolution", () => {
   });
 
   it("uses input, parent, system signals, and defaults in that order", () => {
+    // Precedence needs distinct ordinary scales, not the excluded scale-2 simulation.
     const parent = resolveDesignSystemEnvironment(
       { theme: "dark", direction: "rtl", minimumVisualTarget: true, textScale: 1.5, reducedMotion: true },
       { systemTheme: "light" },
@@ -168,7 +169,7 @@ describe("DesignSystemEnvironment resolution", () => {
         {
           systemTheme: "light",
           systemDirection: "rtl",
-          systemTextScale: 2,
+          systemTextScale: 1.2,
           systemReducedMotion: false,
           parent,
         },
@@ -184,13 +185,13 @@ describe("DesignSystemEnvironment resolution", () => {
 
     expect(
       resolveDesignSystemEnvironment(
-        { theme: "light", textScale: 2, reducedMotion: false },
+        { theme: "light", textScale: 1.25, reducedMotion: false },
         { systemTheme: "dark", parent },
       ),
     ).toEqual({
       theme: "light",
       direction: "rtl",
-      textScale: 2,
+      textScale: 1.25,
       reducedMotion: false,
       minimumVisualTarget: true,
       density: "comfortable",

@@ -67,7 +67,8 @@ it("uses an explicit initial focus target and prevents an aria-disabled trigger 
   await act(async () => root.render(<Content />)); await click("열기"); expect(dialog()).toBeNull(); await click("사용"); await click("열기");
   await expect.poll(() => document.activeElement?.getAttribute("aria-label")).toBe("둘째");
 });
-it.each(["ltr", "rtl"] as const)("keeps long content inside 320px at 2x text in %s with side placement fallback", async (direction) => {
+// Historical maximum-text regression is excluded by the 2026-10-07 user scope.
+it.skip.each(["ltr", "rtl"] as const)("keeps long content inside 320px at 2x text in %s with side placement fallback", async (direction) => {
   await page.viewport(320, 640);
   await act(async () => root.render(<HjmProvider reducedMotion direction={direction} textScale={2}><div style={{ paddingInlineStart: 120 }}><Popover defaultOpen title="아주 길게 입력한 설정 제목" closeLabel="닫기" descriptor={{ placement: "start" }} trigger={<button>설정</button>}><p>{"긴 문장을 반복해서 읽어봅니다. ".repeat(40)}</p><button>확인</button></Popover></div></HjmProvider>));
   await expect.poll(() => dialog()?.style.visibility).toBe("visible");

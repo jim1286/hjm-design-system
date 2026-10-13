@@ -8,7 +8,7 @@ import { ContentTransition } from "../src/content-transition.js";
 import { Slider } from "../src/slider.js";
 import { HjmNativeProvider } from "../src/provider.js";
 import { startedAnimatedTimings } from "./react-native.mock.js";
-function render(child:ReactNode,reducedMotion=false){let tree:ReactTestRenderer;act(()=>{tree=create(<HjmNativeProvider theme="dark" direction="rtl" textScale={2} reducedMotion={reducedMotion}>{child}</HjmNativeProvider>);});return tree!;}
+function render(child:ReactNode,reducedMotion=false){let tree:ReactTestRenderer;act(()=>{tree=create(<HjmNativeProvider theme="dark" direction="rtl" textScale={1} reducedMotion={reducedMotion}>{child}</HjmNativeProvider>);});return tree!;}
 const label=(n:number|null)=>n===null?"미평가":`${n}점`;
 it("exposes native radio states, forwards a score and prevents disabled activation",()=>{
  const change=vi.fn();const tree=render(<Rating label="평가" value={2} getValueLabel={label} onValueChange={change}/>);

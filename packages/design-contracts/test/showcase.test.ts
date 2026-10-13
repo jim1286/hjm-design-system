@@ -23,18 +23,26 @@ describe("showcase contract", () => {
     expect(new Set(showcaseScenarios.map(({ id }) => id)).size).toBe(showcaseScenarios.length);
   });
 
-  it("maps every fixture to the canonical Provider environment", () => {
+  it("maps in-scope fixtures to the canonical Provider environment", () => {
     expect(
-      showcaseEnvironmentMatrix.map((environment) =>
-        getShowcaseEnvironmentInput(environment),
-      ),
+      showcaseEnvironmentMatrix
+        // 2026-10-07: keep historical registry data, but do not execute scale-2 fixtures.
+        .filter(({ id }) => id !== "large-text")
+        .map((environment) => getShowcaseEnvironmentInput(environment)),
     ).toEqual([
       { theme: "light", direction: "ltr", textScale: 1, reducedMotion: false },
       { theme: "dark", direction: "ltr", textScale: 1, reducedMotion: false },
-      { theme: "light", direction: "ltr", textScale: 2, reducedMotion: false },
       { theme: "light", direction: "rtl", textScale: 1, reducedMotion: false },
       { theme: "light", direction: "ltr", textScale: 1, reducedMotion: true },
     ]);
+  });
+
+  // Historical scale-2 mapping remains documented without running the excluded condition.
+  it.skip("maps the historical large-text fixture to scale 2", () => {
+    const environment = showcaseEnvironmentMatrix.find(({ id }) => id === "large-text")!;
+    expect(getShowcaseEnvironmentInput(environment)).toEqual({
+      theme: "light", direction: "ltr", textScale: 2, reducedMotion: false,
+    });
   });
 
   it("creates one stable story id for every catalog entry", () => {

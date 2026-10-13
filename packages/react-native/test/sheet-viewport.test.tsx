@@ -143,9 +143,9 @@ describe("Sheet input viewport", () => {
     expect(onOpenChange).not.toHaveBeenCalled();
   });
 
-  it("preserves long title and description without truncation at large text", () => {
+  it("preserves long title and description without truncation", () => {
     const longCopy = "계정 설정을 확인하고 저장하기 전에 모든 변경 사항을 검토해 주세요. 이 문장은 큰 글자에서도 잘리면 안 됩니다.";
-    render(tree({ title: longCopy, description: longCopy }, 2));
+    render(tree({ title: longCopy, description: longCopy }));
     const visibleText = dialog().findAllByType(Text).map((node) => node.props.children);
     expect(visibleText).toContain(longCopy);
     expect(visibleText.filter((value) => value === longCopy)).toHaveLength(2);
@@ -191,7 +191,8 @@ describe("Overlay element titles", () => {
 });
 
 
-it.each(["sheet", "dialog"] as const)("keeps the %s close icon fixed while content scales to 200%%", kind => {
+// 2026-10-07 user scope: maximum font simulations are excluded; retain historical cases without executing them.
+it.skip.each(["sheet", "dialog"] as const)("keeps the %s close icon fixed while content scales to 200%%", kind => {
   const Overlay = kind === "sheet" ? Sheet : Dialog;
   const onOpenChange = vi.fn();
   render(<HjmNativeProvider reducedMotion textScale={2}>

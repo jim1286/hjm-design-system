@@ -79,21 +79,24 @@ it("pauses for navigation, background and reduced motion without React commits p
 const thinkingOrbEnvironments = executedScenarioRegistry.executions.find(
   execution => execution.proofFile === "test/thinking-orb.test.tsx",
 )!.scenarios;
-it.each(thinkingOrbEnvironments)("thinking-orb $id environment", async environment => {
-  const frame = vi.fn(() => 0);
-  vi.stubGlobal("requestAnimationFrame", frame);
-  vi.stubGlobal("cancelAnimationFrame", () => {});
-  vi.spyOn(AccessibilityInfo, "isReduceMotionEnabled").mockResolvedValue(false);
-  const label = "검색 중 — 길이가 긴 작업 설명도 접근성 이름에 그대로 전달합니다";
-  await act(async () => { renderer = create(
-    <HjmNativeProvider theme={environment.theme as "light" | "dark"} direction={environment.direction as "ltr" | "rtl"} textScale={environment.textScale} reducedMotion={environment.reducedMotion}>
-      <ThinkingOrb label={label} state="searching" />
-    </HjmNativeProvider>,
-  ); });
-  const host = renderer!.root.findAllByType(View).find(node => node.props.accessibilityRole === "progressbar");
-  expect(host?.props.accessibilityLabel).toBe(label);
-  expect(records.bounds.at(-1)).toEqual([64, 64]);
-  const canvas = renderer!.root.findAllByType(View).find(node => node.props.importantForAccessibility === "no-hide-descendants");
-  expect(canvas?.props.accessible).toBe(false);
-  if (environment.reducedMotion) expect(frame).not.toHaveBeenCalled();
-});
+// 2026-10-07 user scope: maximum font simulations are excluded; retain historical cases without executing them.
+for (const environment of thinkingOrbEnvironments) {
+  it.skipIf(environment.id === "large-text")(`thinking-orb ${environment.id} environment`, async () => {
+    const frame = vi.fn(() => 0);
+    vi.stubGlobal("requestAnimationFrame", frame);
+    vi.stubGlobal("cancelAnimationFrame", () => {});
+    vi.spyOn(AccessibilityInfo, "isReduceMotionEnabled").mockResolvedValue(false);
+    const label = "검색 중 — 길이가 긴 작업 설명도 접근성 이름에 그대로 전달합니다";
+    await act(async () => { renderer = create(
+      <HjmNativeProvider theme={environment.theme as "light" | "dark"} direction={environment.direction as "ltr" | "rtl"} textScale={environment.textScale} reducedMotion={environment.reducedMotion}>
+        <ThinkingOrb label={label} state="searching" />
+      </HjmNativeProvider>,
+    ); });
+    const host = renderer!.root.findAllByType(View).find(node => node.props.accessibilityRole === "progressbar");
+    expect(host?.props.accessibilityLabel).toBe(label);
+    expect(records.bounds.at(-1)).toEqual([64, 64]);
+    const canvas = renderer!.root.findAllByType(View).find(node => node.props.importantForAccessibility === "no-hide-descendants");
+    expect(canvas?.props.accessible).toBe(false);
+    if (environment.reducedMotion) expect(frame).not.toHaveBeenCalled();
+  });
+}

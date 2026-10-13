@@ -1,3 +1,4 @@
+// Use normal text for behavior coverage; maximum-text checks are out of scope (2026-10-07).
 import { act, useState } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { page, userEvent } from "vitest/browser";
@@ -16,7 +17,7 @@ afterEach(async () => { await act(async () => root.unmount()); host.remove(); aw
 
 it("shows one shared spinner with accessible copy and keeps the cancel action reachable", async () => {
   const cancel = vi.fn();
-  await act(async () => root.render(<HjmProvider theme="dark" textScale={2}><div style={{ height: 650 }}>
+  await act(async () => root.render(<HjmProvider theme="dark" textScale={1}><div style={{ height: 650 }}>
     <ScreenLayout title="저장됨" state={{ kind: "loading", title: "저장한 항목을 불러오는 중", description: "잠시 기다려 주세요" }} stateAction={<Button onClick={cancel}>취소</Button>} />
   </div></HjmProvider>));
   const state = host.querySelector<HTMLElement>(".hjm-screen__state")!;
@@ -28,10 +29,10 @@ it("shows one shared spinner with accessible copy and keeps the cancel action re
   expect(cancel).toHaveBeenCalledTimes(1);
 });
 
-it("centers a replacement in the actual body and keeps long RTL large text and actions reachable", async () => {
+it("centers a replacement in the actual body and keeps long RTL copy and actions reachable", async () => {
   await page.viewport(390, 844);
   for (const theme of ["light", "dark"] as const) {
-    for (const scale of [1, 2]) {
+    for (const scale of [1]) {
       await act(async () => root.render(<HjmProvider theme={theme} textScale={scale} direction="rtl"><div style={{ height: 650 }}>
         <ScreenLayout title="알림" state={{ kind: "error", title: "불러오지 못했어요", description: "연결을 확인한 뒤 다시 시도해 주세요." }} stateAction={<Button>다시 시도</Button>} />
       </div></HjmProvider>));
@@ -42,7 +43,7 @@ it("centers a replacement in the actual body and keeps long RTL large text and a
       expect(host.querySelector('[role="alert"]')?.contains(host.querySelector("button"))).toBe(false);
     }
   }
-  await act(async () => root.render(<HjmProvider textScale={2}><div style={{ height: 380 }}><ScreenLayout title="긴 화면" state={{ kind: "error", title: "복구 안내", description: "긴 번역을 읽고 다시 시도해 주세요. ".repeat(40) }} stateAction={<Button>복구</Button>} /></div></HjmProvider>));
+  await act(async () => root.render(<HjmProvider textScale={1}><div style={{ height: 380 }}><ScreenLayout title="긴 화면" state={{ kind: "error", title: "복구 안내", description: "긴 번역을 읽고 다시 시도해 주세요. ".repeat(40) }} stateAction={<Button>복구</Button>} /></div></HjmProvider>));
   const body = host.querySelector<HTMLElement>(".hjm-screen__body")!;
   expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
   expect(host.querySelector<HTMLElement>(".hjm-screen__state")!.getBoundingClientRect().top).toBeGreaterThanOrEqual(body.getBoundingClientRect().top);

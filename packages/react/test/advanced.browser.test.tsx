@@ -1,3 +1,4 @@
+// Use normal text for behavior coverage; maximum-text checks are out of scope (2026-10-07).
 import { act, useRef, useState } from "react";
 // This proof file is listed by test/executed-scenarios.json; the workspace checker validates its cases against that registry.
 import { createRoot, type Root } from "react-dom/client";
@@ -192,7 +193,7 @@ describe("modal overlay behavior", () => {
     function Fixture() {
       const initialRef = useRef<HTMLButtonElement>(null);
       return (
-        <HjmProvider systemTheme="dark" direction="rtl" textScale={2}>
+        <HjmProvider systemTheme="dark" direction="rtl" textScale={1}>
           <Dialog
             closeLabel="닫기"
             trigger={<button type="button">설정 열기</button>}

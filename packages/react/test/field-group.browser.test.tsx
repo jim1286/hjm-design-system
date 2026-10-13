@@ -60,7 +60,8 @@ it("keeps node identity and focus on reorder, skips disabled controls and guards
   await act(async () => userEvent.keyboard("{Tab}"));
   expect(document.activeElement).not.toBe(host.querySelectorAll("input")[1]);
 });
-it("wraps long group copy at 320px with large text and RTL in both themes", async () => {
+// Historical maximum-text regression is excluded by the 2026-10-07 user scope.
+it.skip("wraps long group copy at 320px with large text and RTL in both themes", async () => {
   for (const theme of ["light", "dark"] as const) for (const direction of ["ltr", "rtl"] as const) {
     await act(async () => root.render(<HjmProvider theme={theme} direction={direction} textScale={2}><FieldGroup
       descriptor={{ label: "매우 긴 배송지 설명과 연락처 입력 그룹", description: "긴 설명을 읽고 관련 입력을 확인합니다.", fields }}

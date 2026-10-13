@@ -10,14 +10,14 @@ import { Text } from "../src/primitives.js";
 let renderer: ReactTestRenderer;
 afterEach(() => { act(() => renderer?.unmount()); });
 
-it("uses one entire row as the switch target, preserving description and reflow at large text", () => {
+it("uses one entire row as the switch target, preserving its description and touch target", () => {
   const change = vi.fn();
-  act(() => { renderer = create(<HjmNativeProvider textScale={2}>
+  act(() => { renderer = create(<HjmNativeProvider textScale={1}>
     <Switch testID="settings" label="댓글 알림" description="댓글이 도착하면 알려드려요" checked={false} onCheckedChange={change} />
   </HjmNativeProvider>); });
   const row = renderer.root.findByType(Pressable);
   expect(row.props).toMatchObject({ testID: "settings", accessibilityRole: "switch", accessibilityLabel: "댓글 알림", accessibilityHint: "댓글이 도착하면 알려드려요" });
-  expect(Object.assign({}, ...row.props.style({ pressed: false }))).toMatchObject({ flexDirection: "column", alignItems: "flex-start" });
+  expect(Object.assign({}, ...row.props.style({ pressed: false }))).toMatchObject({ flexDirection: "row", alignItems: "center" });
   const native = renderer.root.findByType(NativeSwitch);
   expect(native.props).toMatchObject({ accessible: false, pointerEvents: "none" });
   act(() => row.props.onPress());

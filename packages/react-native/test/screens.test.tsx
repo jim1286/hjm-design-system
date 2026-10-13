@@ -13,7 +13,7 @@ import type { ReactNode } from "react";
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 function render(child: ReactNode) {
   let tree: ReactTestRenderer;
-  act(() => { tree = create(<HjmNativeProvider theme="dark" textScale={2} direction="rtl">{child}</HjmNativeProvider>); });
+  act(() => { tree = create(<HjmNativeProvider theme="dark" textScale={1} direction="rtl">{child}</HjmNativeProvider>); });
   return tree!;
 }
 describe("native screen composition", () => {

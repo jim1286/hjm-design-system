@@ -1,3 +1,4 @@
+// Use normal text for behavior coverage; maximum-text checks are out of scope (2026-10-07).
 import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { expect, it } from "vitest";
@@ -80,7 +81,7 @@ it("uses profile selection motion but respects an explicit component override", 
   } finally { await act(() => root.unmount()); host.remove(); }
 });
 
-it("applies every heading level at the browser boundary while preserving semantic levels and text scaling", async () => {
+it("applies every heading level at the browser boundary while preserving semantic levels at normal text size", async () => {
   await page.viewport(390, 844);
   const host = document.createElement("div"); document.body.append(host); const root = createRoot(host);
   const custom = defineHjmDesignProfile({ extends: "paper", tokens: { heading: {
@@ -92,7 +93,7 @@ it("applies every heading level at the browser boundary while preserving semanti
   try {
     for (const profile of [undefined, ...Object.values(hjmDesignPresets), custom]) {
       for (const theme of ["light", "dark"] as const) {
-        await act(() => root.render(<HjmProvider theme={theme} textScale={2} direction="rtl" reducedMotion {...(profile ? { designProfile: profile } : {})}>
+        await act(() => root.render(<HjmProvider theme={theme} textScale={1} direction="rtl" reducedMotion {...(profile ? { designProfile: profile } : {})}>
           <HjmProvider>{levels.map(level => <Heading key={level} level={level} semanticLevel={4}>긴 제목 {level}</Heading>)}</HjmProvider>
         </HjmProvider>));
         const nodes = host.querySelectorAll<HTMLElement>(".hjm-heading");
@@ -100,8 +101,8 @@ it("applies every heading level at the browser boundary while preserving semanti
           const expected = (profile?.tokens.heading ?? heading)[level];
           const node = nodes[index]!; const style = getComputedStyle(node);
           expect(node.tagName).toBe("H4"); expect(node.dataset.level).toBe(level);
-          expect(Number.parseFloat(style.fontSize)).toBe(expected.fontSize * 2);
-          expect(Number.parseFloat(style.lineHeight)).toBe(expected.lineHeight * 2);
+          expect(Number.parseFloat(style.fontSize)).toBe(expected.fontSize);
+          expect(Number.parseFloat(style.lineHeight)).toBe(expected.lineHeight);
           expect(style.fontWeight).toBe(expected.fontWeight);
           expect(node.scrollWidth).toBeLessThanOrEqual(node.clientWidth + 1);
         });
@@ -118,7 +119,7 @@ it("updates portal and toast shadows from the nearest profile without replacing 
       let original: HTMLInputElement | undefined;
       for (const profile of [hjmDesignPresets.clay, hjmDesignPresets.terminal, custom]) {
         const draft = <input aria-label="열린 초안" defaultValue="initial" />;
-        await act(() => root.render(<HjmProvider theme="dark" reducedMotion textScale={2} direction="rtl" designProfile={profile}>
+        await act(() => root.render(<HjmProvider theme="dark" reducedMotion textScale={1} direction="rtl" designProfile={profile}>
           {kind === "dialog" ? <Dialog open onOpenChange={() => {}} title="기록" closeLabel="닫기">{draft}</Dialog> : <Sheet open onOpenChange={() => {}} title="기록" closeLabel="닫기">{draft}</Sheet>}
           <Toast descriptor={{ id: "saved", description: "저장했어요", closeLabel: "닫기" }} onDismissRequest={() => {}} />
         </HjmProvider>));
@@ -174,7 +175,7 @@ it("themes selectable code font and metrics across nested product profiles witho
   const host = document.createElement("div"); document.body.append(host); const root = createRoot(host);
   const product = defineHjmDesignProfile({ extends: "paper", tokens: { fontFamily: { code: ["Courier New", "monospace"] }, typography: { body: { fontSize: 19, lineHeight: 30 } } } });
   const code = 'const 기록 = 12;\n';
-  const render = (profile: typeof product) => act(() => root.render(<HjmProvider theme="dark" direction="rtl" textScale={2} reducedMotion designProfile={profile}>
+  const render = (profile: typeof product) => act(() => root.render(<HjmProvider theme="dark" direction="rtl" textScale={1} reducedMotion designProfile={profile}>
     <HjmProvider><CodeBlock code={code} label="소스" tokens={[{text:'const',tone:'keyword'},{text:' 기록 = 12;\n'}]} wrap /></HjmProvider>
   </HjmProvider>));
   try {
@@ -182,13 +183,13 @@ it("themes selectable code font and metrics across nested product profiles witho
     const pre = host.querySelector('pre')!; const source = host.querySelector('code')!; pre.focus();
     expect(source.textContent).toBe(code);
     expect(getComputedStyle(source).fontFamily).toContain('Courier New');
-    expect(getComputedStyle(source).fontSize).toBe('38px');
+    expect(getComputedStyle(source).fontSize).toBe('19px');
     expect(getComputedStyle(source).direction).toBe('ltr');
-    expect(getComputedStyle(source).lineHeight).toBe('60px');
+    expect(getComputedStyle(source).lineHeight).toBe('30px');
     await render(hjmDesignPresets.retro);
     expect(host.querySelector('pre')).toBe(pre); expect(host.querySelector('code')).toBe(source);
     expect(document.activeElement).toBe(pre); expect(source.textContent).toBe(code);
     expect(getComputedStyle(source).fontFamily).not.toContain('Courier New');
-    expect(getComputedStyle(source).fontSize).toBe(`${hjmDesignPresets.retro.tokens.typography.body.fontSize * 2}px`);
+    expect(getComputedStyle(source).fontSize).toBe(`${hjmDesignPresets.retro.tokens.typography.body.fontSize}px`);
   } finally { await act(() => root.unmount()); host.remove(); }
 });

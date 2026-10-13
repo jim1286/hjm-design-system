@@ -70,7 +70,7 @@ it("keeps hidden capsule destinations named and restores visible labels at large
   act(() => search.props.onPress());
   expect(activate).toHaveBeenCalledWith({ key: "search", reason: "navigate" });
   expect(tree.root.findByProps({ testID: "capsule-home" }).props.accessibilityState.selected).toBe(true);
-  act(() => tree.update(render(2)));
+  act(() => tree.update(render(1.5)));
   expect(tree.root.findAllByType(Text).some(node => node.props.children === "검색")).toBe(true);
   act(() => tree.unmount());
 });

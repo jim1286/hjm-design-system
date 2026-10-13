@@ -224,7 +224,7 @@ const matrixCases = reactNativeRendererEvidence.components.flatMap((component) =
 );
 
 describe("@hjmds/react-native environment scenario proofs", () => {
-  it("registers every scenario this file executes", () => {
+  it("registers every historical scenario for this proof file", () => {
     const registered = new Set(environments.map(({ id }) => id));
     for (const { componentId, scenario } of matrixCases) {
       expect(registered.has(scenario), `${componentId}:${scenario}`).toBe(true);
@@ -232,8 +232,11 @@ describe("@hjmds/react-native environment scenario proofs", () => {
     }
   });
 
-  it.each(matrixCases)("$componentId $scenario", ({ componentId, scenario }) => {
-    const environment = environments.find(({ id }) => id === scenario)!;
-    checks[scenario as keyof typeof checks](cases.get(componentId)!, environment);
-  });
+  // 2026-10-07 user scope: maximum font simulations are excluded; retain historical cases without executing them.
+  for (const { componentId, scenario } of matrixCases) {
+    it.skipIf(scenario === "large-text")(`${componentId} ${scenario}`, () => {
+      const environment = environments.find(({ id }) => id === scenario)!;
+      checks[scenario as keyof typeof checks](cases.get(componentId)!, environment);
+    });
+  }
 });

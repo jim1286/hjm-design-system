@@ -288,3 +288,7 @@ Node24.20.0과 각 앱의 설치 TypeScript를 사용했다. Spint의 첫 임시
 배포 Mac에서 처음 2.0.0을 준비했으나, 게시 전에 사용자가 "마이너 버전 올려"로 지정했다. 세 패키지를 1.19.0, renderer peer를 `>=1.19.0 <1.20.0`으로 수정하고 source/evidence/manifest/dist를 다시 생성했다. 버전·release artifacts 검사는 통과했고 버전 커밋 `f6884e2d`를 push해 원격 SHA를 확인했다. 제거 API의 breaking 성격은 이관표에 유지하며 사용자 지정 minor 번호를 일반적인 하위 호환 보장으로 표현하지 않는다. 이 시점에는 npm 게시·소비 설치가 아직 미실행이다.
 
 게시 경계 재검토에서 장식 복구 안내만 담긴 두 usage stub를 발견해 GravityLetters·GridReveal 정본문서에 합쳤다. 기존 Text/Image 사용 지침의 정본 링크를 유지했고 선택 지침 2개 검사·색인 갱신을 통과했다.
+
+버전 push의 Showcase CI `38358053750`은 Web 정적 빌드·artifact 검사 후 contracts 테스트 소스의 TS2339로 실패했다. save-feedback fixture가 빈 객체를 포함한 union으로 추론되어 optional phase를 읽지 못한 것이며, tuple 배열의 명시 타입으로 수정했다. contracts typecheck와 해당 13개 테스트가 통과했다. 공개 resolver API는 바꾸지 않았다.
+
+릴리스 게이트가 실행하는 package 테스트에 2026-10-07 제외한 최대 글자 모사 조건이 남아 있음을 확인해, 전용 사례는 본문을 보존하고 skip하며 다른 행동의 불필요한 2배 fixture는 일반 크기로 바꿨다. 역사 registry/scenario와 제품 source는 보존했다. 수정 표적 검사는 contracts46건(최대 전용2건 제외), Web Chromium37·SSR3·Showcase theme1건, Native148건 통과했다. Native matrix의 이름 필터에 의한 skip을 최대 글자 제외 수로 합산하지 않는다. 이 결과는 게시 전 표적 검사이며 전체 릴리스 CI·기기 검증 성공을 뜻하지 않는다.

@@ -1,3 +1,4 @@
+// Use normal text for behavior coverage; maximum-text checks are out of scope (2026-10-07).
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -59,12 +60,12 @@ describe("Web BottomNavigation activation", () => {
   });
 });
 
-it("keeps capsule links named and route state controlled at 200% text", async () => {
+it("keeps capsule links named and route state controlled at normal text size", async () => {
   const activate = vi.fn();
-  await act(async () => root.render(<HjmProvider systemTheme="light" textScale={2}>
+  await act(async () => root.render(<HjmProvider systemTheme="light" textScale={1}>
     <BottomNavigation descriptor={descriptor} configuration={{ presentation: "capsule", direction: "rtl" }} getHref={item => `#${item.id}`} onActivate={activate} renderIcon={() => null} primaryAction={<button type="button">추가</button>}/>
   </HjmProvider>));
-  expect(container.querySelector('nav')?.getAttribute('data-expanded-labels')).toBe('true');
+  expect(container.querySelector('nav')?.getAttribute('data-expanded-labels')).toBe('false');
   const search = container.querySelector<HTMLAnchorElement>('a[href="#search"]')!;
   expect(search.getAttribute('aria-label')).toBe('검색');
   await act(async () => search.click());

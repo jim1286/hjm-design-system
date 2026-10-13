@@ -22,7 +22,7 @@ const mono = () => Platform.OS === "ios" ? "Menlo" : "monospace";
 
 it("keeps each editor and its draft while inherited UI fonts reach raw hosts across ten presets and reset", () => {
   let tree!: ReactTestRenderer;
-  const ui = (profile: typeof custom | undefined) => <HjmNativeProvider reducedMotion theme="dark" textScale={2} direction="rtl" {...(profile ? { designProfile: profile } : {})}>
+  const ui = (profile: typeof custom | undefined) => <HjmNativeProvider reducedMotion theme="dark" textScale={1.3} direction="rtl" {...(profile ? { designProfile: profile } : {})}>
     <HjmNativeProvider>
       <Text>본문</Text>
       <TextField label="필드" />
@@ -53,8 +53,8 @@ it("keeps each editor and its draft while inherited UI fonts reach raw hosts acr
       });
       const tagsEditor = tree.root.findByType(TagsInput).findByType(TextInput);
       expect(flatten(tagsEditor.props.style)).toMatchObject({
-        fontSize: (profile?.tokens.typography.body.fontSize ?? 14) * 2,
-        lineHeight: (profile?.tokens.typography.body.lineHeight ?? 20) * 2,
+        fontSize: (profile?.tokens.typography.body.fontSize ?? 14) * 1.3,
+        lineHeight: (profile?.tokens.typography.body.lineHeight ?? 20) * 1.3,
       });
       const label = tree.root.findAllByType(NativeText).find(node => node.props.children === "본문")!;
       expect(flatten(label.props.style).fontFamily).toBe(expectedUI);

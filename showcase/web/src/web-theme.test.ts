@@ -46,12 +46,12 @@ describe("Showcase Web theme adapter", () => {
   it("resolves dark theme and effective reduced-motion durations", () => {
     const style = createWebThemeStyle(
       resolveDesignSystemProviderValue(
-        { direction: "rtl", reducedMotion: true, textScale: 2, theme: "dark" },
+        { direction: "rtl", reducedMotion: true, textScale: 1, theme: "dark" },
         { systemTheme: "light" },
       ),
     );
     expect(style["--hjm-color-bg"]).toBe(THEMES.dark.bg);
-    expect(style["--hjm-text-scale"]).toBe(2);
+    expect(style["--hjm-text-scale"]).toBe(1);
     expect(style["--hjm-motion-scale"]).toBe(0);
     expect(style["--hjm-motion-preset-micro-effective-duration"]).toBe("0ms");
     expect(style["--hjm-motion-preset-enter-effective-duration"]).toBe(

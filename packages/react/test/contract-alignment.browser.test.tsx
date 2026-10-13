@@ -1,3 +1,4 @@
+// Use normal text for behavior coverage; maximum-text checks are out of scope (2026-10-07).
 import { StrictMode, act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -752,7 +753,7 @@ describe("supplemental active renderers", () => {
       );
     }
     await render(
-      <HjmProvider systemTheme="dark" direction="rtl" textScale={2} reducedMotion>
+      <HjmProvider systemTheme="dark" direction="rtl" textScale={1} reducedMotion>
         <ToastProvider label="알림 목록">
           <Publisher />
         </ToastProvider>
@@ -762,7 +763,7 @@ describe("supplemental active renderers", () => {
     await flush();
     const portal = document.body.querySelector<HTMLElement>('[data-hjm-portal="toast"]')!;
     expect(portal.getAttribute("dir")).toBe("rtl");
-    expect(portal.getAttribute("data-text-scale")).toBe("2");
+    expect(portal.getAttribute("data-text-scale")).toBe("1");
     const toast = portal.querySelector<HTMLElement>('.hjm-toast')!;
     const actionButton = [...toast.querySelectorAll<HTMLButtonElement>("button")]
       .find((button) => button.textContent?.includes("실행 취소"))!;

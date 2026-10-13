@@ -132,7 +132,8 @@ it("locks pending required consent while retaining focus, detail access and the 
   expect(states.mock.lastCall?.[0].satisfied).toBe(true);
 });
 
-it("keeps large-text labels wide and selection marks inside their fixed frames", async () => {
+// Historical maximum-text regression is excluded by the 2026-10-07 user scope.
+it.skip("keeps large-text labels wide and selection marks inside their fixed frames", async () => {
   container.style.width = '358px';
   await render(<HjmProvider reducedMotion textScale={2}><Agreement descriptor={{accessibilityLabel:'약관',allLabel:'전체 동의',items:[{id:'terms',label:'개인정보 처리방침',required:true,detail:{label:'개인정보 처리방침 읽기'}}]}} defaultCheckedIds={new Set(['terms'])} requiredLabel="(필수)" optionalLabel="(선택)" /></HjmProvider>);
   const toggle = container.querySelector('.hjm-agreement__toggle')!.getBoundingClientRect();

@@ -21,7 +21,7 @@ it("groups comment heart and overflow in one inline action row without merging t
  act(()=>actions[1]!.props.onPress());expect(more).toHaveBeenCalledOnce();expect(like).toHaveBeenCalledOnce();
  act(()=>tree.unmount());
 });
-function render(child:ReactNode){let tree:ReactTestRenderer;act(()=>{tree=create(<HjmNativeProvider theme="dark" textScale={2}>{child}</HjmNativeProvider>);});return tree!;}
+function render(child:ReactNode){let tree:ReactTestRenderer;act(()=>{tree=create(<HjmNativeProvider theme="dark" textScale={1}>{child}</HjmNativeProvider>);});return tree!;}
 it("keeps dirty draft mounted while native discard confirmation is shown",()=>{const leave=vi.fn();const tree=render(<EditorScreen title="작성" dirty submit={{label:"저장",onAction:()=>{}}} cancel={{label:"닫기",onAction:leave}} discard={{mode:"confirm",title:"버릴까요",description:"초안",confirmLabel:"버리기",cancelLabel:"유지",fallbackErrorMessage:"실패"}}>내용</EditorScreen>);act(()=>tree.root.findAllByType(Button).find(button=>button.props.children==="닫기")!.props.onPress());expect(leave).not.toHaveBeenCalled();expect(tree.root.findByType(AlertDialog).props.open).toBe(true);act(()=>tree.unmount());});
 it("disables reporting without a selected reason and forwards valid selection",()=>{const select=vi.fn();const tree=render(<ModerationScreen title="신고" reasons={[{value:"spam",label:"스팸"}]} reason={null} onReasonChange={select} reasonLabel="사유" submit={{label:"신고하기",onAction:()=>{}}}/>);expect(tree.root.findAllByType(Button).find(button=>button.props.children==="신고하기")!.props.disabled).toBe(true);act(()=>tree.root.findByType(RadioGroup).props.onValueChange("spam"));expect(select).toHaveBeenCalledWith("spam");act(()=>tree.unmount());});
 it("uses the settings callback only for denied permission",()=>{const request=vi.fn(),settings=vi.fn();const tree=render(<PermissionScreen title="알림" status="denied" explanation="안내" request={{label:"허용",onAction:request}} settings={{label:"설정",onAction:settings}} continueAction={{label:"계속",onAction:()=>{}}}/>);expect(request).not.toHaveBeenCalled();act(()=>tree.root.findByType(Button).props.onPress());expect(settings).toHaveBeenCalledOnce();act(()=>tree.unmount());});
@@ -94,7 +94,7 @@ it("announces whether a reply group is expanded", async () => {
  const tree=render(thread([]));
  const toggle=()=>tree.root.findAllByType(Button).find(button=>String(button.props.children).startsWith("답글 ")||button.props.children==="답글 숨기기")!;
  expect(toggle().props.accessibilityState).toEqual({expanded:false});
- act(()=>tree.update(<HjmNativeProvider theme="dark" textScale={2}>{thread(["root"])}</HjmNativeProvider>));
+ act(()=>tree.update(<HjmNativeProvider theme="dark" textScale={1}>{thread(["root"])}</HjmNativeProvider>));
  expect(toggle().props.accessibilityState).toEqual({expanded:true});
  act(()=>tree.unmount());
 });
@@ -106,7 +106,7 @@ it("commits the default native search field from the keyboard search key only wh
  const tree=render(field({}));
  expect(tree.root.findByType(TextInput).props.returnKeyType).toBeUndefined();
  expect(tree.root.findByType(TextInput).props.onSubmitEditing).toBeUndefined();
- act(()=>tree.update(<HjmNativeProvider theme="dark" textScale={2}>{field({onSubmit:submit})}</HjmNativeProvider>));
+ act(()=>tree.update(<HjmNativeProvider theme="dark" textScale={1}>{field({onSubmit:submit})}</HjmNativeProvider>));
  const input=tree.root.findByType(TextInput);
  expect(input.props.returnKeyType).toBe("search");
  act(()=>input.props.onSubmitEditing({nativeEvent:{text:"산책"}}));
@@ -127,14 +127,14 @@ it("puts scroll-mode filters in one horizontal rail that bleeds over the screen 
  const horizontal=(tree:ReactTestRenderer)=>tree.root.findAllByType(ScrollView).filter(view=>view.props.horizontal);
  const tree=render(screen({}));
  expect(horizontal(tree)).toHaveLength(0);
- act(()=>tree.update(<HjmNativeProvider theme="dark" textScale={2}>{screen({filtersOverflow:"scroll"})}</HjmNativeProvider>));
+ act(()=>tree.update(<HjmNativeProvider theme="dark" textScale={1}>{screen({filtersOverflow:"scroll"})}</HjmNativeProvider>));
  const [rail]=horizontal(tree);
  expect(rail).toBeDefined();
  expect(rail!.findAllByType(Button)).toHaveLength(1);
  expect(StyleSheet.flatten(rail!.props.style).marginHorizontal).toBe(-16);
  expect(StyleSheet.flatten(rail!.props.contentContainerStyle).paddingHorizontal).toBe(16);
  expect(rail!.props.keyboardShouldPersistTaps).toBe("handled");
- act(()=>tree.update(<HjmNativeProvider theme="dark" textScale={2}>{screen({filtersOverflow:"scroll",contentInset:"none"})}</HjmNativeProvider>));
+ act(()=>tree.update(<HjmNativeProvider theme="dark" textScale={1}>{screen({filtersOverflow:"scroll",contentInset:"none"})}</HjmNativeProvider>));
  expect(Math.abs(StyleSheet.flatten(horizontal(tree)[0]!.props.style).marginHorizontal as number)).toBe(0);
  act(()=>tree.unmount());
 });
@@ -160,11 +160,11 @@ it("places ListDetailScreen and SavedItemsScreen layoutStyle on the host that ow
   expect(hosts[0]!.findAllByType(ScreenLayout)).toHaveLength(screens);
   expect(tree.root.findAllByType(ScreenLayout).every(layout=>layout.props.layoutStyle===undefined)).toBe(true);
  };
- const list=(detail?:{title:string;content:ReactNode})=><HjmNativeProvider theme="dark" textScale={2}><ListDetailScreen title="목록" list={null} back={{label:"뒤로",onAction:()=>{}}} layoutStyle={{marginTop:307}} {...(detail?{detail}:{})}/></HjmNativeProvider>;
+ const list=(detail?:{title:string;content:ReactNode})=><HjmNativeProvider theme="dark" textScale={1}><ListDetailScreen title="목록" list={null} back={{label:"뒤로",onAction:()=>{}}} layoutStyle={{marginTop:307}} {...(detail?{detail}:{})}/></HjmNativeProvider>;
  const tree=render(null);
  act(()=>tree.update(list()));check(tree,1);
  act(()=>tree.update(list({title:"상세",content:"본문"})));check(tree,2);
- const saved=(selectedItemId?:string)=><HjmNativeProvider theme="dark" textScale={2}><SavedItemsScreen title="저장됨" items={[{id:"a",title:"항목"}]} collections={[]} collectionId={null} {...(selectedItemId?{selectedItemId}:{})} labels={{allItems:"전체",back:"뒤로",createCollection:"새 컬렉션",privateNotice:"나만 보기",empty:"없음"}} onOpenCollection={()=>{}} onOpenItem={()=>{}} onBack={()=>{}} onCreateCollection={()=>{}} renderThumbnail={()=>null} renderDetail={item=>item.title} layoutStyle={{marginTop:307}}/></HjmNativeProvider>;
+ const saved=(selectedItemId?:string)=><HjmNativeProvider theme="dark" textScale={1}><SavedItemsScreen title="저장됨" items={[{id:"a",title:"항목"}]} collections={[]} collectionId={null} {...(selectedItemId?{selectedItemId}:{})} labels={{allItems:"전체",back:"뒤로",createCollection:"새 컬렉션",privateNotice:"나만 보기",empty:"없음"}} onOpenCollection={()=>{}} onOpenItem={()=>{}} onBack={()=>{}} onCreateCollection={()=>{}} renderThumbnail={()=>null} renderDetail={item=>item.title} layoutStyle={{marginTop:307}}/></HjmNativeProvider>;
  act(()=>tree.update(saved()));check(tree,1);
  act(()=>tree.update(saved("a")));check(tree,2);
  act(()=>tree.unmount());
@@ -192,7 +192,7 @@ describe("SearchScreen two-step search", () => {
    <Button onPress={()=>{}}>결과 목록</Button>
   </SearchScreen>;
  }
- const wrap=(node:ReactNode)=><HjmNativeProvider theme="dark" textScale={2}>{node}</HjmNativeProvider>;
+ const wrap=(node:ReactNode)=><HjmNativeProvider theme="dark" textScale={1}>{node}</HjmNativeProvider>;
  const buttons=(tree:ReactTestRenderer)=>tree.root.findAllByType(Button).map(node=>String(node.props.children));
  const rowTitles=async(tree:ReactTestRenderer)=>{const {ListRow}=await import("../src/data-display.js");return tree.root.findAllByType(ListRow).map(node=>node.props.title as string);};
  const pressRow=async(tree:ReactTestRenderer,title:string)=>{const {ListRow}=await import("../src/data-display.js");act(()=>tree.root.findAllByType(ListRow).find(node=>node.props.title===title)!.props.onPress());};

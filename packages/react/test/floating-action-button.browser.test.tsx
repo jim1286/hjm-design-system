@@ -1,3 +1,4 @@
+// Use normal text for behavior coverage; maximum-text checks are out of scope (2026-10-07).
 import { act, createRef, useState } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -56,7 +57,7 @@ describe("FloatingActionButton", () => {
     expect(button.querySelector(".hjm-fab__icon")?.getAttribute("aria-hidden")).toBe("true");
   });
   it.each(["ltr", "rtl"] as const)("reserves the last content above the fixed action in %s", async (direction) => {
-    await page.viewport(320, 500); await act(async () => root.render(<ScrollFixture scale={2} direction={direction} />));
+    await page.viewport(320, 500); await act(async () => root.render(<ScrollFixture scale={1} direction={direction} />));
     const scroll = host.querySelector<HTMLElement>("[data-scroll]")!;
     await act(async () => { scroll.scrollTop = scroll.scrollHeight; scroll.dispatchEvent(new Event("scroll")); });
     const last = host.querySelector("[data-last]")!.getBoundingClientRect();
@@ -68,8 +69,8 @@ describe("FloatingActionButton", () => {
   });
   it("reports actual multiline height and preserves ref and activation", async () => {
     await page.viewport(320, 600); const clearance = vi.fn(); const click = vi.fn(); const ref = createRef<HTMLButtonElement>();
-    await act(async () => root.render(<HjmProvider textScale={2} reducedMotion>
-      <FloatingActionButton ref={ref} descriptor={{ label: "오늘의 새로운 기록을 남겨볼까요", icon: { name: "add" } }}
+    await act(async () => root.render(<HjmProvider textScale={1} reducedMotion>
+      <FloatingActionButton ref={ref} descriptor={{ label: "오늘의 새로운 기록을 남겨볼까요. 지금 떠오르는 생각을 함께 기록해요.", icon: { name: "add" } }}
         renderIcon={() => <span>＋</span>} onClick={click} onContentClearanceChange={clearance} />
     </HjmProvider>));
     const button = ref.current!; expect(button).toBe(host.querySelector(".hjm-fab"));

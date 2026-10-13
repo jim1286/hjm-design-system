@@ -9,7 +9,7 @@ import { startedAnimatedTimings } from "./react-native.mock.js";
 let tree:ReactTestRenderer|undefined;
 afterEach(()=>{act(()=>tree?.unmount());tree=undefined;AppState.currentState="active";});
 const items=[{value:"day",label:"하루"},{value:"month",label:"한 달"}];
-function Fixture({reduced=false,slide=true}:{reduced?:boolean;slide?:boolean}){const[value,set]=useState("day");return <HjmNativeProvider theme="dark" direction="rtl" textScale={2} reducedMotion={reduced}><SegmentedControl label="기간" items={items} value={value} onValueChange={set} selectionMotion={slide?"slide":"none"}/></HjmNativeProvider>;}
+function Fixture({reduced=false,slide=true}:{reduced?:boolean;slide?:boolean}){const[value,set]=useState("day");return <HjmNativeProvider theme="dark" direction="rtl" textScale={1} reducedMotion={reduced}><SegmentedControl label="기간" items={items} value={value} onValueChange={set} selectionMotion={slide?"slide":"none"}/></HjmNativeProvider>;}
 function mount(reduced=false){act(()=>{tree=create(<Fixture reduced={reduced}/>);});const radios=tree!.root.findAllByType(Pressable);act(()=>radios.forEach((node,i)=>node.props.onLayout({nativeEvent:{layout:{x:4,y:4+i*64,width:240,height:60}}})));return radios;}
 it("keeps radio states and fixed host geometry while only selection artwork animates",()=>{
  const radios=mount();startedAnimatedTimings.length=0;act(()=>radios[1]!.props.onPress());

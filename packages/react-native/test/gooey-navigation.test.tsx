@@ -25,7 +25,7 @@ import { vi } from 'vitest';
 it.each(['standard','gooey'] as const)('reveals selected overflowing %s tabs after RTL layout and controlled changes',appearance=>{
  let tree!:ReactTestRenderer;const scrollTo=vi.fn();
  const items=[{id:'first',label:'First'},{id:'last',label:'Last'}];
- const render=(value:string)=><HjmNativeProvider textScale={2}><Tabs label="Sections" items={items} value={value} onValueChange={()=>{}} direction="rtl" appearance={appearance}/></HjmNativeProvider>;
+ const render=(value:string)=><HjmNativeProvider textScale={1}><Tabs label="Sections" items={items} value={value} onValueChange={()=>{}} direction="rtl" appearance={appearance}/></HjmNativeProvider>;
  try{
   act(()=>{tree=create(render('first'),{createNodeMock:()=>({scrollTo})});});
   const scroll=tree.root.findByType(ScrollView);

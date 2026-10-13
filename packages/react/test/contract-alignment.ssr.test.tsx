@@ -1,3 +1,4 @@
+// Use normal text for behavior coverage; maximum-text checks are out of scope (2026-10-07).
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 import {
@@ -15,7 +16,7 @@ import {
 describe("active renderer SSR evidence", () => {
   it("renders the six supplemental components without browser globals", () => {
     const markup = renderToStaticMarkup(
-      <HjmProvider systemTheme="dark" direction="rtl" textScale={2}>
+      <HjmProvider systemTheme="dark" direction="rtl" textScale={1}>
         <Icon name="back" />
         <Icon name="info" decorative={false} accessibilityLabel="정보" />
         <CounterBadge count={120} max={99} />

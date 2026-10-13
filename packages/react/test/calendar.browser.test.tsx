@@ -41,7 +41,8 @@ it("allows a product to page and restore exact overflow focus without changing c
   expect(document.activeElement).toBe(date("2026-10-01")); expect(change).not.toHaveBeenCalled();
   expect(host.querySelectorAll('[aria-selected="true"]')).toHaveLength(0);
 });
-it.each(["ltr", "rtl"] as const)("preserves 7 target columns and one tab stop under 2x text in %s", async (direction) => {
+// Historical maximum-text regression is excluded by the 2026-10-07 user scope.
+it.skip.each(["ltr", "rtl"] as const)("preserves 7 target columns and one tab stop under 2x text in %s", async (direction) => {
   await page.viewport(320, 720); const ref = createRef<CalendarHandle>();
   await act(async () => root.render(<HjmProvider textScale={2} direction={direction}><Calendar ref={ref} descriptor={{ grid, monthLabel: "아주 길게 표시한 2026년 9월 달력" }} composeAccessibleName={({ date }) => date} renderCellContent={(cell) => cell.date.endsWith("03") ? "·" : null} /></HjmProvider>));
   await act(async () => ref.current?.focusDate("2026-09-03"));

@@ -17,7 +17,8 @@ afterEach(async () => { await act(async () => root.unmount()); host.remove(); })
 const themes = ["전체", "시간", "계산", "사진", "글자", "단위", "생활"].map((label, index) => ({ value: `t${index}`, label }));
 const tops = (nodes: Iterable<Element>) => new Set(Array.from(nodes, (node) => Math.round(node.getBoundingClientRect().top)));
 
-it("keeps pills in a row at large text and one line inside the scroll rail, while connected still stacks", async () => {
+// Historical maximum-text regression is excluded by the 2026-10-07 user scope.
+it.skip("keeps pills in a row at large text and one line inside the scroll rail, while connected still stacks", async () => {
   await act(async () => root.render(<HjmProvider textScale={2}><div style={{ inlineSize: "900px" }}>
     <SegmentedControl label="주제" presentation="pills" size="small" items={themes.slice(0, 3)} defaultValue="t0" />
   </div></HjmProvider>));
@@ -40,7 +41,8 @@ it("keeps pills in a row at large text and one line inside the scroll rail, whil
   expect(tops(host.querySelectorAll(".hjm-segmented__item")).size).toBe(3);
 });
 
-it("grows a chip with its label at large text (Native now matches)", async () => {
+// Historical maximum-text regression is excluded by the 2026-10-07 user scope.
+it.skip("grows a chip with its label at large text (Native now matches)", async () => {
   await act(async () => root.render(<HjmProvider textScale={2}><Chip label="필터" onPress={() => {}} /></HjmProvider>));
   const chip = host.querySelector<HTMLElement>(".hjm-chip")!;
   const label = chip.querySelector<HTMLElement>(".hjm-chip__label") ?? chip;

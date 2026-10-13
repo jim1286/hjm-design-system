@@ -1,3 +1,4 @@
+// Use normal text for behavior coverage; maximum-text checks are out of scope (2026-10-07).
 import { act } from "react";
 // This proof file is listed by test/executed-scenarios.json; the workspace checker validates its cases against that registry.
 import { createRoot, type Root } from "react-dom/client";
@@ -24,7 +25,7 @@ let root: Root;
 
 async function render(node: React.ReactNode) {
   await act(async () => root.render(
-    <HjmProvider direction="rtl" systemTheme="dark" textScale={2}>
+    <HjmProvider direction="rtl" systemTheme="dark" textScale={1}>
       {node}
     </HjmProvider>,
   ));
@@ -45,7 +46,7 @@ afterEach(async () => {
 });
 
 describe("UploadItem responsive progress copy", () => {
-  it("shows one detailed value and preserves a non-breaking 44px action at RTL 200%", async () => {
+  it("shows one detailed value and preserves a non-breaking 44px action in RTL", async () => {
     const onCancel = vi.fn();
     const detail = "1.2 MB 중 64% 업로드";
     await render(

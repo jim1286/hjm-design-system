@@ -46,7 +46,8 @@ it("uses a strict Gregorian demo adapter without accepting date overflow", () =>
   expect(parseExampleDate({year:"20",month:"Feb",day:"29"}).status).toBe("incomplete");
 });
 
-it("keeps one group error and stable editable nodes at 200% in narrow LTR/RTL themes", async () => {
+// Historical maximum-text regression is excluded by the 2026-10-07 user scope.
+it.skip("keeps one group error and stable editable nodes at 200% in narrow LTR/RTL themes", async () => {
   for (const theme of ["light", "dark"] as const) for (const direction of ["ltr", "rtl"] as const) {
     const value = { year: "", month: "", day: "" };
     const render = (order: readonly ["year", "month", "day"] | readonly ["day", "month", "year"]) =>

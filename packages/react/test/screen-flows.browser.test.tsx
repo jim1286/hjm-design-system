@@ -1,3 +1,4 @@
+// Use normal text for behavior coverage; maximum-text checks are out of scope (2026-10-07).
 import { act, useState, type ReactNode } from "react";
 import {createRoot,type Root} from "react-dom/client";
 import {page,userEvent} from "vitest/browser";
@@ -9,7 +10,7 @@ it("keeps comment overflow beside the heart with separate keyboard actions at na
  const {IconButton}=await import("../src/actions.js");
  const like=vi.fn(),more=vi.fn();host.style.width="320px";host.style.height="720px";
  for(const theme of ["light","dark"] as const)for(const direction of ["ltr","rtl"] as const){
-  await act(async()=>root.render(<HjmProvider theme={theme} direction={direction} textScale={2}><CommentThreadScreen title="댓글" items={[{id:"one",parentId:null,author:"작성자가 긴 댓글",body:"본문을 읽은 뒤 답글을 작성할 수 있습니다.",timeLabel:"방금",likeCountLabel:"좋아요 3개",likeIcon:"♡",likeLabel:"댓글 좋아요",actions:<IconButton label="댓글 더보기" tone="ghost" onClick={more}>⋮</IconButton>}]} expandedIds={[]} onExpandedChange={()=>{}} onLike={like} onReply={()=>{}} replyLabel="답글" repliesLabel={()=>"답글 더 보기"}/></HjmProvider>));
+  await act(async()=>root.render(<HjmProvider theme={theme} direction={direction} textScale={1}><CommentThreadScreen title="댓글" items={[{id:"one",parentId:null,author:"작성자가 긴 댓글",body:"본문을 읽은 뒤 답글을 작성할 수 있습니다.",timeLabel:"방금",likeCountLabel:"좋아요 3개",likeIcon:"♡",likeLabel:"댓글 좋아요",actions:<IconButton label="댓글 더보기" tone="ghost" onClick={more}>⋮</IconButton>}]} expandedIds={[]} onExpandedChange={()=>{}} onLike={like} onReply={()=>{}} replyLabel="답글" repliesLabel={()=>"답글 더 보기"}/></HjmProvider>));
   const heart=host.querySelector<HTMLButtonElement>('button[aria-label="댓글 좋아요"]')!,overflow=host.querySelector<HTMLButtonElement>('button[aria-label="댓글 더보기"]')!;
   expect(heart.parentElement).toBe(overflow.parentElement);
   expect([...heart.parentElement!.children]).toEqual([heart,overflow]);

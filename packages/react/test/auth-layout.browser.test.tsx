@@ -1,3 +1,4 @@
+// Use normal text for behavior coverage; maximum-text checks are out of scope (2026-10-07).
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { page } from "vitest/browser";
@@ -16,9 +17,9 @@ beforeEach(() => {
 });
 afterEach(async () => { await act(async () => root.unmount()); container.remove(); await page.viewport(1280, 720); });
 
-it("keeps one main landmark and leaves consent reachable with long copy at 200%", async () => {
+it("keeps one main landmark and leaves consent reachable with long copy at normal text size", async () => {
   await page.viewport(320, 568);
-  await act(async () => root.render(<HjmProvider textScale={2}>
+  await act(async () => root.render(<HjmProvider textScale={1}>
     <main><AuthScreenLayout as="section" aria-label="로그인"
       hero={<Text variant="titleLarge">기록과 연결을 안전하게 이어가세요</Text>}
       main={<>{Array.from({ length: 4 }, (_, i) => <Button key={i}>계정을 연결하고 계속하기 {i + 1}</Button>)}</>}

@@ -37,7 +37,7 @@ describe("Native FloatingActionButton", () => {
   });
   it.each(["ltr", "rtl"] as const)("positions at logical end and reports measured safe-area clearance in %s", (direction) => {
     const clearance = vi.fn(); const press = vi.fn();
-    act(() => { renderer = create(<HjmNativeProvider direction={direction} textScale={2} reducedMotion>
+    act(() => { renderer = create(<HjmNativeProvider direction={direction} textScale={1} reducedMotion>
       <FloatingActionButton descriptor={{ label: "새 기록", icon: { name: "add" } }} renderIcon={() => <View />}
         onContentClearanceChange={clearance} onPress={press} safeAreaBottomInset={34} />
     </HjmNativeProvider>); });

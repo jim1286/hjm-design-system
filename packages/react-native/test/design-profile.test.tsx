@@ -30,7 +30,7 @@ it("retains native collection and tool drafts across every profile and closed/in
     useEffect(() => { mounts++; }, []);
     return <TextInput accessibilityLabel={label} value={value} onChangeText={setValue} />;
   }
-  const render = (preset: HjmDesignPreset) => <HjmNativeProvider theme="dark" textScale={2} direction="rtl" reducedMotion designProfile={hjmDesignPresets[preset]}>
+  const render = (preset: HjmDesignPreset) => <HjmNativeProvider theme="dark" textScale={1.3} direction="rtl" reducedMotion designProfile={hjmDesignPresets[preset]}>
     <OverviewScreen title="기록" toolbarLabel="도구" toolbar={<Draft label="도구 초안" />}
       items={[{ id: "record", children: <Draft label="기록 초안" /> }]} />
   </HjmNativeProvider>;
@@ -111,7 +111,7 @@ it("sends all five themed heading metrics to the native text host without changi
   try {
     for (const profile of [undefined, ...Object.values(hjmDesignPresets), custom]) {
       for (const theme of ["light", "dark"] as const) {
-        const render = <HjmNativeProvider theme={theme} textScale={2} direction="rtl" reducedMotion {...(profile ? { designProfile: profile } : {})}>
+        const render = <HjmNativeProvider theme={theme} textScale={1.3} direction="rtl" reducedMotion {...(profile ? { designProfile: profile } : {})}>
           <HjmNativeProvider>{levels.map(level => <Heading key={level} level={level} semanticLevel={4}>긴 제목 {level}</Heading>)}</HjmNativeProvider>
         </HjmNativeProvider>;
         act(() => { if (tree) tree.update(render); else tree = create(render); });
@@ -121,7 +121,7 @@ it("sends all five themed heading metrics to the native text host without changi
           const style = flatten(host.props.style);
           expect(host.props.accessibilityRole).toBe("header"); expect(host.props["aria-level"]).toBe(4);
           expect(host.props.allowFontScaling).toBe(false);
-          expect(style.fontSize).toBe(expected.fontSize * 2); expect(style.lineHeight).toBe(expected.lineHeight * 2);
+          expect(style.fontSize).toBe(expected.fontSize * 1.3); expect(style.lineHeight).toBe(expected.lineHeight * 1.3);
           expect(style.fontWeight).toBe(expected.fontWeight);
         });
       }
@@ -143,7 +143,7 @@ it("themes open native overlays while keeping their draft subtree and modal sema
     }
     try {
       for (const profile of profiles) {
-        const render = <HjmNativeProvider theme="dark" textScale={2} direction="rtl" reducedMotion {...(profile ? { designProfile: profile } : {})}>
+        const render = <HjmNativeProvider theme="dark" textScale={1.3} direction="rtl" reducedMotion {...(profile ? { designProfile: profile } : {})}>
           {kind === "dialog" ? <Dialog open onOpenChange={() => {}} title="기록" closeLabel="닫기"><Draft /></Dialog> : kind === "sheet" ? <Sheet open onOpenChange={() => {}} title="기록" closeLabel="닫기"><Draft /></Sheet> : <AlertDialog open onOpenChange={() => {}} request={{ mode: "confirm", title: "저장할까요?", description: "기록을 저장해요.", confirmLabel: "저장", cancelLabel: "취소" }} />}
         </HjmNativeProvider>;
         act(() => { if (tree) tree.update(render); else tree = create(render); });

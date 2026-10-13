@@ -10,7 +10,7 @@ it.each(["checked", "mixed", "chip"] as const)("keeps %s artwork within its slot
   const change = vi.fn();
   const sizes: number[] = [];
   const labels: number[] = [];
-  for (const scale of [1.5, 2] as const) {
+  for (const scale of [1.3, 1.5] as const) {
     let renderer!: ReactTestRenderer;
     act(() => { renderer = create(<HjmNativeProvider reducedMotion textScale={scale}>
       {kind === "chip"
@@ -31,5 +31,5 @@ it.each(["checked", "mixed", "chip"] as const)("keeps %s artwork within its slot
     act(() => renderer.unmount());
   }
   expect(sizes[1]).toBe(sizes[0]);
-  expect(labels[1]! / labels[0]!).toBeCloseTo(2 / 1.5);
+  expect(labels[1]! / labels[0]!).toBeCloseTo(1.5 / 1.3);
 });

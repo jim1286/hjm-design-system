@@ -31,7 +31,7 @@ const grid = { cells: Array.from({ length: 7 }, (_, index) => ({ date: `2026-10-
 
 it("retains consent, tags and edited drafts while inherited form corners follow every theme and reset", () => {
   let tree!: ReactTestRenderer;
-  const ui = (profile: typeof custom | undefined) => <HjmNativeProvider reducedMotion textScale={2} direction="rtl" {...(profile ? { designProfile: profile } : {})}>
+  const ui = (profile: typeof custom | undefined) => <HjmNativeProvider reducedMotion textScale={1.3} direction="rtl" {...(profile ? { designProfile: profile } : {})}>
     <HjmNativeProvider>
       <Agreement descriptor={{ accessibilityLabel: "약관", allLabel: "전체 동의", items: [{ id: "terms", label: "이용약관", required: true }] }} requiredLabel="필수" optionalLabel="선택" />
       <TagsInput label="태그" defaultTags={["숲"]} composeRemoveLabel={tag => `${tag} 삭제`} />
@@ -79,7 +79,7 @@ it("updates actual display, collection and navigation hosts using a product prof
     let tree!: ReactTestRenderer;
     try {
       for (const profile of [custom, hjmDesignPresets.retro, undefined]) {
-        const ui = <HjmNativeProvider reducedMotion theme="dark" textScale={2} direction="rtl" {...(profile ? { designProfile: profile } : {})}>{entry.node}</HjmNativeProvider>;
+        const ui = <HjmNativeProvider reducedMotion theme="dark" textScale={1.3} direction="rtl" {...(profile ? { designProfile: profile } : {})}>{entry.node}</HjmNativeProvider>;
         act(() => { if (tree) tree.update(ui); else tree = create(ui); });
         const style = entry.select?.(tree) ?? flatten(tree.root.findAllByType(View)[0]!.props.style);
         expect(style.borderRadius, entry.name).toBe((profile?.tokens.radius ?? radius)[entry.role]);
@@ -110,23 +110,23 @@ it("preserves menu selection and load actions while a product profile reaches na
 it("uses product text metrics for large password frames, calendar content and selectable code exactly once", () => {
   let tree!: ReactTestRenderer;
   try {
-    act(() => { tree = create(<HjmNativeProvider reducedMotion textScale={2} designProfile={custom}>
+    act(() => { tree = create(<HjmNativeProvider reducedMotion textScale={1.3} designProfile={custom}>
       <PasswordField autofillHint="current" label="비밀번호" defaultValue="초안" size="large" revealLabel="보기" concealLabel="숨기기" />
       <Calendar descriptor={{ grid, monthLabel: "10월" }} composeAccessibleName={({ date }) => date} renderCellContent={() => <View testID="custom-day" />} />
       <CodeBlock label="소스" code={"const 기록 = 12;\n"} />
       <ActivityHeatmap label="활동" descriptor={{ startDate: "2026-10-07", endDate: "2026-10-07", days: [{ date: "2026-10-07", value: 1 }] }} formatDay={date => date} />
     </HjmNativeProvider>); });
     const input = tree.root.findByType(PasswordField).findByType(TextInput);
-    expect(flatten(input.props.style).fontSize).toBe(54);
-    expect(flatten(input.props.style).lineHeight).toBe(80);
-    expect(flatten(input.props.style).minHeight).toBeGreaterThanOrEqual(80);
+    expect(flatten(input.props.style).fontSize).toBe(27 * 1.3);
+    expect(flatten(input.props.style).lineHeight).toBe(40 * 1.3);
+    expect(flatten(input.props.style).minHeight).toBeGreaterThanOrEqual(40 * 1.3);
     expect(input.props.allowFontScaling).toBe(false);
     act(() => tree.root.findByType(PasswordField).findAllByType(Pressable).find(node => node.props.accessibilityLabel === "보기")!.props.onPress());
     expect(tree.root.findByType(PasswordField).findByType(TextInput).props.value).toBe("초안");
     const cell = tree.root.findByType(Calendar).findAllByType(View).find(node => node.props.children?.props?.testID === "custom-day")!;
-    expect(flatten(cell.props.style).minHeight).toBe(56);
+    expect(flatten(cell.props.style).minHeight).toBe(28 * 1.3);
     const source = tree.root.findByType(CodeBlock).findAllByType(NativeText).find(node => node.props.selectable)!;
-    expect(flatten(source.props.style)).toMatchObject({ fontSize: 38, lineHeight: 60, fontFamily: "ProductMono", writingDirection: "ltr", textAlign: "left" });
+    expect(flatten(source.props.style)).toMatchObject({ fontSize: 19 * 1.3, lineHeight: 30 * 1.3, fontFamily: "ProductMono", writingDirection: "ltr", textAlign: "left" });
     expect(source.props.accessibilityLabel).toBe("소스\nconst 기록 = 12;\n");
     expect(tree.root.findByType(ActivityHeatmap).findAllByType(View).some(node => flatten(node.props.style).borderRadius === 0.75)).toBe(true);
   } finally { if (tree) act(() => tree.unmount()); }
