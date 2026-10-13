@@ -178,10 +178,10 @@ it("TransferList: select-all leaves mixed with a state Android rebuilds", () => 
   const selectAll = () => hosts((node) => node.props.accessibilityLabel === "Available, Select all")[0]!;
   const row = (label: string) => hosts((node) => String(node.type) === "Pressable" && node.props.accessibilityLabel === label)[0]!;
   act(() => row("Walk").props.onPress());
-  expect(selectAll().props.accessibilityState).toEqual({ checked: "mixed", busy: false });
+  expect(selectAll().props.accessibilityState).toEqual({ checked: "mixed", busy: false, disabled: false });
   act(() => row("Meal").props.onPress());
-  expect(selectAll().props.accessibilityState).toEqual({ checked: true, busy: false });
+  expect(selectAll().props.accessibilityState).toEqual({ checked: true, busy: false, disabled: false });
   act(() => row("Walk").props.onPress());
   act(() => row("Meal").props.onPress());
-  expect(selectAll().props.accessibilityState).toEqual({ checked: false, busy: false });
+  expect(selectAll().props.accessibilityState).toEqual({ checked: false, busy: false, disabled: false });
 });
