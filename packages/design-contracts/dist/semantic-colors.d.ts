@@ -281,6 +281,15 @@ export declare const semanticColors: {
             key: "primary";
             alpha?: number;
         }>;
+        /**
+         * Lower edge of a raised object, composited over its own fill so one shade
+         * darkens any brand color (BottomNavigation raised tile, Spint 2026-10-13).
+         */
+        readonly depth: Readonly<{
+            source: "theme";
+            key: "text";
+            alpha?: number;
+        }>;
     };
 };
 //# sourceMappingURL=semantic-colors.d.ts.map

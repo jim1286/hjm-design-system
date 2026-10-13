@@ -2227,8 +2227,8 @@ export declare const bottomNavigationRecipe: {
     /**
      * Opt-in thick plank for tile selection (Spint wooden sign, 2026-10-13). The
      * lower edges replace the floating shadow so the bar reads as one flat object.
-     * The selected edge darkens the brand fill with translucent body text because
-     * no palette role names a "pressed brand" shade.
+     * The selected edge darkens the brand fill with `interaction.depth` because no
+     * palette role names a "pressed brand" shade.
      */
     readonly raisedSurface: {
         readonly background: Readonly<{

@@ -85,5 +85,10 @@ export const semanticColors = {
     focus: themeColor("contentBrand", 0.08),
     pressed: themeColor("text", 0.1),
     selected: themeColor("primary", 0.1),
+    /**
+     * Lower edge of a raised object, composited over its own fill so one shade
+     * darkens any brand color (BottomNavigation raised tile, Spint 2026-10-13).
+     */
+    depth: themeColor("text", 0.45),
   },
 } as const;
