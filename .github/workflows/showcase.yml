@@ -12,6 +12,10 @@ on:
       - packages/react-native/package.json
   workflow_dispatch:
     inputs:
+      verify_only:
+        description: Verify and measure without publishing Storybook or Pages
+        type: boolean
+        default: false
       full_regression:
         description: Run all package, native, browser and evidence regression checks
         type: boolean
@@ -92,8 +96,9 @@ jobs:
           PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s deploy/storybook -p test_artifact.py
           bash -n deploy/storybook/publish.sh
 
+      # CI diagnostics need the same checks without changing the public site.
       - name: Prepare Storybook delivery artifact
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && !inputs.verify_only
         env:
           STORYBOOK_ARTIFACT: ${{ runner.temp }}/hjm-storybook
         run: |
@@ -102,7 +107,7 @@ jobs:
           cp deploy/storybook/redirect/index.html deploy/storybook/redirect/404.html
 
       - name: Upload Storybook delivery artifact
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && !inputs.verify_only
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: hjm-storybook-${{ github.sha }}
@@ -114,7 +119,7 @@ jobs:
           include-hidden-files: true
 
       - name: Upload Storybook
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && !inputs.verify_only
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: deploy/storybook/redirect
@@ -128,7 +133,7 @@ jobs:
           CI_METRICS_SUMMARY: '1'
 
   deploy:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && !inputs.verify_only
     needs: verify
     runs-on: ubuntu-latest
     timeout-minutes: 10

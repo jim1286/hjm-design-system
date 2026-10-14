@@ -55,6 +55,9 @@ package의 `package.json` 중 하나가 바뀔 때이며, 의존성·설정 변�
 일반 테마 개발의 확인은 로컬 Storybook으로 수행한다. 2026-10-10 도메인 이관 승인으로
 실제 Web Storybook은 자체 VPS에 검사한 artifact를 명시적으로 게시한다. artifact 생성/Pages 안내
 게시를 VPS 공개 완료로 보고하지 않고 [실행 정본](../deploy/storybook/README.md)의 공개 검증을 따른다.
+2026-10-14 CI 관측 검증에서 수동 main 검사가 Pages 게시까지 실행하는 결합을 확인했다.
+`showcase.yml`의 `verify_only=true`는 동일한 선택 범위의 검사와 실행 시간 요약을 수행하고,
+배포 artifact 생성·업로드와 Pages 게시만 생략한다. 기본값 false는 기존 게시 동작을 유지한다.
 원격 트리거 축소는 필요한 로컬 검증을 제거하는 변경이 아니다. npm 게시와 tag 생성은
 기존 수동 `version-packages.yml`의 release 검사를 유지하며 자동 게시로 바꾸지 않는다.
 GitHub 자체의 보안 분석·Dependabot 실행은 이 두 품질 workflow의 제어 범위와 별개다.
