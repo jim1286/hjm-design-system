@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.17.1
-- 검토일: 2026-10-13
+- 검토일: 2026-10-14
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screens.tsx`·`src/screen-flows.tsx`; 기존 개별 지침을 새 규격으로 통합. 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
 - 스토리북: `배포/화면/화면 틀과 도구/화면 골격과 상태`
 
@@ -96,6 +96,8 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 | 좁은 폭·큰 글자 | 제목 열 최소 폭 `headerMinWidth` 120 × 글자 배율, 모자라면 `actions`가 다음 줄로 내려간다; 제목은 줄바꿈(`overflow-wrap: anywhere`)되고 자르지 않는다; Native safe area·탭바 inset은 host | `screenPatternRecipe.headerMinWidth`, Web `.hjm-screen__heading` |
 
 ## 꼭 지킬 것
+
+- Native에서 `headerAlignment="center"` + `titleVisibility="hidden"`이고 설명·사용자 지정 헤더가 없으면 아이콘 헤더는 최소 48pt, 세로 여백 2pt다. 2026-10-14 야잘알의 상단 버튼–탭 사이 빈 공간 피드백으로 제목용 60pt 높이를 줄였다. `notice`가 없을 때만 본문 상단 여백을 최대 4pt로 줄이며, `notice`에 둔 탭과 본문 카테고리 사이 기본 16pt 간격은 유지한다. 좌우 여백·하단 여백·터치 영역은 그대로다.
 
 - Web의 화면 스크롤 본문은 Tab으로 진입할 수 있다. `scroll="content"`의 정상 본문은 자식이 키보드 스크롤을 소유하지만, 오류·빈 상태 등 대체 안내는 화면 스크롤로 바뀌며 Tab 진입도 함께 복원된다.
 - Web에서 본문에 초점을 가진 입력·재시도 버튼이 상태 전환으로 제거되면 같은 본문으로 초점을 복구한다. `scroll="content"`의 본문은 이 복구만을 위한 `tabIndex=-1`을 가지며 일반 Tab 순서에는 추가되지 않는다. 사용자가 다른 컨트롤이나 바깥 영역으로 초점을 옮긴 경우에는 이동시키지 않는다. 2026-10-13 재시도·권한 제한 전환에서 초점이 body로 유실된 경로를 수정했다.

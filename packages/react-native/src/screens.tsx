@@ -54,6 +54,12 @@ export function ScreenLayout({ title, titleVisibility = "visible", headerAlignme
   const profileLayout = presentation === undefined ? undefined : resolveDesignProfileScreen(presentation);
   const recipe = screenPatternRecipe;
   const padding = contentInset === "none" ? 0 : recipe.padding;
+  // Icon-only route headers need no title breathing room: otherwise the 60pt
+  // heading plus full body inset leaves category tabs detached from navigation.
+  const compactHeader = header == null && showHeader && headerAlignment === "center" && titleVisibility === "hidden" && !description;
+  const headerVerticalPadding = compactHeader ? 2 : 8;
+  // A notice can contain navigation tabs; keep its separation from body filters.
+  const bodyPaddingTop = compactHeader && !notice ? Math.min(padding, 4) : padding;
   const body = state.kind === "ready" ? children : <View style={{ marginVertical: "auto", flexShrink: 0, alignItems: "center", gap: recipe.stateGap, paddingVertical: profileLayout?.gap ?? recipe.sectionGap }}>
     {/* Keep loading copy in Spinner's accessibility name rather than a visible
         second status, matching the shared spinner-only loading contract. */}
@@ -67,14 +73,14 @@ export function ScreenLayout({ title, titleVisibility = "visible", headerAlignme
         large text), while TopBar is a fixed-height app bar with a single-line title and safe-area top.
         Importing it would also pull navigation.js (tabs/gooey indicator) into every screens graph.
         Hosts that want the app bar pass <TopBar> through `header`. */}
-    {header ?? (!showHeader ? null : headerAlignment === "center" ? <View style={{ minHeight: 60, paddingHorizontal: padding + sideWidth + recipe.itemGap, paddingVertical: 8, justifyContent: "center" }}>
+    {header ?? (!showHeader ? null : headerAlignment === "center" ? <View style={{ minHeight: compactHeader ? 48 : 60, paddingHorizontal: padding + sideWidth + recipe.itemGap, paddingVertical: headerVerticalPadding, justifyContent: "center" }}>
       {/* Measure unconstrained control rows before reserving equal space on both sides. */}
-      <View onLayout={event => setLeadingWidth(event.nativeEvent.layout.width)} style={{ position: "absolute", left: padding, top: 8, bottom: 8, justifyContent: "center", flexDirection: "row", alignItems: "center" }}>{leading}</View>
+      <View onLayout={event => setLeadingWidth(event.nativeEvent.layout.width)} style={{ position: "absolute", left: padding, top: headerVerticalPadding, bottom: headerVerticalPadding, justifyContent: "center", flexDirection: "row", alignItems: "center" }}>{leading}</View>
       <View style={{ minWidth: 0, alignItems: "center", gap: 4 }}>
         {titleVisibility === "visible" && <Text variant="title" align="center" accessibilityRole="header">{title}</Text>}
         {description && <Text align="center" tone="muted">{description}</Text>}
       </View>
-      <View onLayout={event => setActionsWidth(event.nativeEvent.layout.width)} style={{ position: "absolute", right: padding, top: 8, bottom: 8, justifyContent: "center", flexDirection: "row", alignItems: "center" }}>{actions}</View>
+      <View onLayout={event => setActionsWidth(event.nativeEvent.layout.width)} style={{ position: "absolute", right: padding, top: headerVerticalPadding, bottom: headerVerticalPadding, justifyContent: "center", flexDirection: "row", alignItems: "center" }}>{actions}</View>
     </View> : <View style={{ flexDirection: profileLayout?.headerAxis ?? "row", flexWrap: "wrap", alignItems: profileLayout ? (profileLayout.centered ? "center" : "flex-start") : "center", padding, gap: recipe.itemGap }}>
       {/* Reserve a readable title column; wrapping moves actions below it at large text. */}
       {leading}<View style={{ flexGrow: 1, flexShrink: 1, ...(profileLayout?.headerAxis === "column" ? { width: "100%" as const } : { flexBasis: recipe.headerMinWidth * environment.textScale }) }}>
@@ -85,8 +91,8 @@ export function ScreenLayout({ title, titleVisibility = "visible", headerAlignme
     </View>)}
     {notice ? <View style={{ paddingHorizontal: padding }}>{notice}</View> : null}
     {scroll === "screen" || resolved.replacesContent ? <ScrollView {...scrollProps} ref={scrollRef} style={{ flex: 1 }} keyboardShouldPersistTaps="handled"
-      contentContainerStyle={{ flexGrow: 1, padding }} accessibilityState={{ busy: resolved.busy }}>{body}</ScrollView>
-      : <View style={{ flex: 1, minHeight: 0, padding }}>{body}</View>}
+      contentContainerStyle={{ flexGrow: 1, padding, paddingTop: bodyPaddingTop }} accessibilityState={{ busy: resolved.busy }}>{body}</ScrollView>
+      : <View style={{ flex: 1, minHeight: 0, padding, paddingTop: bodyPaddingTop }}>{body}</View>}
     {footer ? <View style={{ padding, borderTopWidth: contentInset === "none" ? 0 : 1, borderColor: colors.border }}>{footer}</View> : null}
   </View>;
 }
