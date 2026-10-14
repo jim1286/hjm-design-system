@@ -4,7 +4,7 @@ import { componentStory } from "../story-factory";
 
 // Role overview page: canonical components of one role on one page (Web only). Moved under 개요 on 2026-10-06 with its
 // id kept so the old 배포/컴포넌트/<역할> URLs still open; each component also has its own item now (docs/STORYBOOK_NAVIGATION.md §1.2).
-const meta = { includeStories: ["UploadItem","Avatar","Badge","CounterBadge","Card","List","ListRow","VirtualList","Accordion","Collapsible","Asset","Statistic","Timeline","DataTable","Tree","Calendar","Carousel","DescriptionList","Image","QRCode","Tag"], id: "components-data-display", title: "배포/컴포넌트/개요/데이터 표시 모아 보기", component: ContractStory, parameters: { controls: { disable: true } } } satisfies Meta<typeof ContractStory>;
+const meta = { includeStories: ["UploadItem","Avatar","Badge","CounterBadge","Card","List","ListRow","VirtualList","Accordion","Collapsible","Asset","Statistic","Timeline","Chart","DataTable","Tree","Calendar","Carousel","DescriptionList","Image","QRCode","Tag"], id: "components-data-display", title: "배포/컴포넌트/개요/데이터 표시 모아 보기", component: ContractStory, parameters: { controls: { disable: true } } } satisfies Meta<typeof ContractStory>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
@@ -22,6 +22,8 @@ export const Collapsible: Story = { ...componentStory("Collapsible"), name: "접
 export const Asset: Story = { ...componentStory("Asset"), name: "이미지·영상 표시" };
 export const Statistic: Story = { ...componentStory("Statistic"), name: "수치 표시" };
 export const Timeline: Story = { ...componentStory("Timeline"), name: "타임라인" };
+// Keep canonical overview coverage alongside the dedicated chart gallery.
+export const Chart: Story = { ...componentStory("Chart"), name: "차트" };
 export const DataTable: Story = { ...componentStory("DataTable"), name: "데이터 표" };
 export const Tree: Story = { ...componentStory("Tree"), name: "트리 목록" };
 // Catalog category data-display is the Storybook role too (2026-10-06 follow-up reverted the same-day move to 입력).
