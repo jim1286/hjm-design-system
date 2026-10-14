@@ -2839,7 +2839,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-date-picker__calendar-close:focus-visible { outline: 2px solid var(--hjm-color-focus); outline-offset: 2px; }
 
 /* Reserve a common annotation row; dates with a dot must not sit above their neighbours. */
-.hjm-calendar__day-label { display: grid; place-items: center; inline-size: var(--hjm-calendar-cell-size); min-block-size: var(--hjm-calendar-cell-size); border: 1px solid transparent; border-radius: var(--hjm-radius-full); }
+.hjm-calendar__day-label { display: grid; place-items: center; inline-size: var(--hjm-calendar-indicator-size, var(--hjm-calendar-cell-size)); min-block-size: var(--hjm-calendar-indicator-size, var(--hjm-calendar-cell-size)); border: 1px solid transparent; border-radius: var(--hjm-radius-full); }
 
 .hjm-calendar__day-label { font-size: var(--hjm-type-body-size); line-height: var(--hjm-type-body-line-height); }
 .hjm-calendar[data-size="large"] .hjm-calendar__day-label { font-size: var(--hjm-type-body-large-size); line-height: var(--hjm-type-body-large-line-height); }

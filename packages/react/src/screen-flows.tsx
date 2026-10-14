@@ -20,7 +20,7 @@ export type ScreenFlowAction = Readonly<{label:string; onAction():void; disabled
 function Action({action,secondary=false,buttonRef}:{action:ScreenFlowAction;secondary?:boolean;buttonRef?:Ref<HTMLButtonElement>}){return <Button ref={buttonRef} tone={secondary?"ghost":"primary"} disabled={!!(action.disabled||action.pending)} loading={action.pending??false} onClick={action.onAction}>{action.label}</Button>;}
 type Base = Omit<ScreenLayoutProps,"children"|"footer">;
 
-export type ListDetailScreenProps = Base & { list:ReactNode; detail?:Pick<ScreenLayoutProps,"title"|"state"|"stateAction"|"notice"> & {content:ReactNode}; back:ScreenFlowAction; refresh?:ScreenFlowAction; loadMore?:ScreenFlowAction };
+export type ListDetailScreenProps = Base & { list:ReactNode; detail?:Pick<ScreenLayoutProps,"title"|"state"|"stateAction"|"notice"|"titleVisibility"|"headerAlignment"> & {content:ReactNode}; back:ScreenFlowAction; refresh?:ScreenFlowAction; loadMore?:ScreenFlowAction };
 /** Keep the list mounted so input and scroll survive a detail visit. Routers may instead restore host scroll state. */
 export function ListDetailScreen({list,detail,back,refresh,loadMore,layoutStyle,...screen}:ListDetailScreenProps){
  const open=!!detail;
@@ -43,7 +43,7 @@ export function ListDetailScreen({list,detail,back,refresh,loadMore,layoutStyle,
  // layoutStyle places the outer host that owns both panes, not the inner list ScreenLayout.
  return <div style={{height:"100%",...layoutStyle}}>
   <div ref={listHost} tabIndex={-1} hidden={open} style={{height:"100%"}} onFocusCapture={event=>{returnFocus.current=event.target as HTMLElement;}}><ScreenLayout {...screen} actions={refresh?<Action action={refresh} secondary/>:screen.actions} footer={loadMore?<Action action={loadMore} secondary/>:null}>{list}</ScreenLayout></div>
-  {detail?<div ref={detailHost} style={{height:"100%"}}><ScreenLayout title={detail.title} {...(detail.state === undefined ? {} : {state:detail.state})} stateAction={detail.stateAction} notice={detail.notice} leading={<Action action={back} secondary/>}>{detail.content}</ScreenLayout></div>:null}
+  {detail?<div ref={detailHost} style={{height:"100%"}}><ScreenLayout title={detail.title} {...(detail.titleVisibility === undefined ? {} : { titleVisibility: detail.titleVisibility })} {...(detail.headerAlignment === undefined ? {} : { headerAlignment: detail.headerAlignment })} {...(detail.state === undefined ? {} : {state:detail.state})} stateAction={detail.stateAction} notice={detail.notice} leading={<Action action={back} secondary/>}>{detail.content}</ScreenLayout></div>:null}
  </div>;
 }
 

@@ -2991,13 +2991,21 @@ export declare const recipeRegistry: {
             }>;
         };
         readonly sizes: {
+            readonly compact: {
+                readonly cellDiameter: 44;
+                readonly indicatorDiameter: 28;
+                readonly textVariant: "body";
+                readonly glyph: "sm";
+            };
             readonly medium: {
                 readonly cellDiameter: 44;
+                readonly indicatorDiameter: 44;
                 readonly textVariant: "body";
                 readonly glyph: "sm";
             };
             readonly large: {
                 readonly cellDiameter: 44;
+                readonly indicatorDiameter: 44;
                 readonly textVariant: "bodyLarge";
                 readonly glyph: "md";
             };

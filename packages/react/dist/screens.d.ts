@@ -6,6 +6,9 @@ import { type ListRowProps } from "./display.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type ScreenLayoutProps = Readonly<{
     title: string;
+    /** Hide redundant route names while retaining descriptions and a named screen. */
+    titleVisibility?: "visible" | "hidden";
+    headerAlignment?: "start" | "center";
     /** Preserve host navigation while the shared shell owns content and state. */
     header?: ReactNode;
     contentInset?: "default" | "none";
@@ -30,7 +33,7 @@ export type ScreenLayoutProps = Readonly<{
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Shared screen shell. Routing, data, permission checks and mutation state remain product-owned. */
-export declare function ScreenLayout({ title, header, contentInset, presentation: suppliedPresentation, description, leading, actions, notice, footer, state, stateAction, children, scroll, as: Element, className, layoutStyle }: ScreenLayoutProps): import("react").JSX.Element;
+export declare function ScreenLayout({ title, titleVisibility, headerAlignment, header, contentInset, presentation: suppliedPresentation, description, leading, actions, notice, footer, state, stateAction, children, scroll, as: Element, className, layoutStyle }: ScreenLayoutProps): import("react").JSX.Element;
 export type SettingsScreenSection = Readonly<{
     id: string;
     title: string;

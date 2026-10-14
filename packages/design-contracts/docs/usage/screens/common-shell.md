@@ -118,3 +118,7 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 - 초기 로딩만 본문 교체; 갱신 실패는 notice로 본문 유지.
 - 이 화면에는 전송 행동이 없어 `실패와 초안 복구` 스토리를 2026-10-06 뺐다. 갱신 실패 복구는 `연결 복구`로 확인한다.
 - Storybook은 실제 서버·OS 권한·라우터 연동 증거가 아니다. 기본·다크·큰 글자와 실패/복구를 각각 확인한다.
+
+### 숨긴 페이지 이름과 가운데 문맥
+
+2026-10-14 야잘알에서 페이지 이름이 탭·필터와 중복되고 날짜가 왼쪽으로 밀린 사용자 피드백으로 `ScreenLayout`의 `titleVisibility="hidden"`과 `headerAlignment="center"`를 추가했다. 페이지 이름은 화면 식별값으로 유지하고 날짜·선수명 같은 실제 문맥만 표시할 수 있다. Native는 좌우 행동 영역의 큰 폭을 양쪽에 동일하게 확보해 중앙을 고정한다. `ListDetailScreen.detail`도 두 옵션을 전달한다. 기본값 visible/start는 기존 배치를 유지한다.

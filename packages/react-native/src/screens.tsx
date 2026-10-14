@@ -3,7 +3,7 @@ import { MessageReactions } from "./internal/message-reactions.js";
 import type { ReactionPickerProps } from "./reaction-picker.js";
 import { Button, IconButton } from "./actions.js";
 import { TextArea } from "./inputs.js";
-import { useEffect, useMemo, useRef, type Ref, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type Ref, type ReactNode } from "react";
 import { Animated, PanResponder, ScrollView, View, type AccessibilityActionEvent, type TextInput, type ScrollViewProps } from "react-native";
 import { Spinner } from "./internal/spinner.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
@@ -18,6 +18,9 @@ import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type ScreenLayoutProps = Readonly<{
   title: string;
+  /** Hide redundant route names while retaining descriptions and a named screen. */
+  titleVisibility?: "visible" | "hidden";
+  headerAlignment?: "start" | "center";
   /** Host navigation can supply its existing header while the shared shell owns scrolling and state. */
   header?: ReactNode;
   /** Hosts that already inset routes avoid applying the shared gutter twice. */
@@ -41,7 +44,10 @@ export type ScreenLayoutProps = Readonly<{
   scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator">;
 }>;
 
-export function ScreenLayout({ title, header, contentInset = "default", presentation: suppliedPresentation, description, leading, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps }: ScreenLayoutProps) {
+export function ScreenLayout({ title, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", presentation: suppliedPresentation, description, leading, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps }: ScreenLayoutProps) {
+  const [leadingWidth, setLeadingWidth] = useState(0), [actionsWidth, setActionsWidth] = useState(0);
+  const sideWidth = Math.max(leadingWidth, actionsWidth);
+  const showHeader = titleVisibility === "visible" || !!description || !!leading || !!actions;
   const resolved = resolveScreenContentState(state);
   const { colors, environment, designProfile } = useHjmNativeTheme();
   const presentation = suppliedPresentation ?? designProfile?.screens.overview;
@@ -61,14 +67,22 @@ export function ScreenLayout({ title, header, contentInset = "default", presenta
         large text), while TopBar is a fixed-height app bar with a single-line title and safe-area top.
         Importing it would also pull navigation.js (tabs/gooey indicator) into every screens graph.
         Hosts that want the app bar pass <TopBar> through `header`. */}
-    {header ?? <View style={{ flexDirection: profileLayout?.headerAxis ?? "row", flexWrap: "wrap", alignItems: profileLayout ? (profileLayout.centered ? "center" : "flex-start") : "center", padding, gap: recipe.itemGap }}>
+    {header ?? (!showHeader ? null : headerAlignment === "center" ? <View style={{ minHeight: 60, paddingHorizontal: padding + sideWidth + recipe.itemGap, paddingVertical: 8, justifyContent: "center" }}>
+      {/* Measure unconstrained control rows before reserving equal space on both sides. */}
+      <View onLayout={event => setLeadingWidth(event.nativeEvent.layout.width)} style={{ position: "absolute", left: padding, top: 8, bottom: 8, justifyContent: "center", flexDirection: "row", alignItems: "center" }}>{leading}</View>
+      <View style={{ minWidth: 0, alignItems: "center", gap: 4 }}>
+        {titleVisibility === "visible" && <Text variant="title" align="center" accessibilityRole="header">{title}</Text>}
+        {description && <Text align="center" tone="muted">{description}</Text>}
+      </View>
+      <View onLayout={event => setActionsWidth(event.nativeEvent.layout.width)} style={{ position: "absolute", right: padding, top: 8, bottom: 8, justifyContent: "center", flexDirection: "row", alignItems: "center" }}>{actions}</View>
+    </View> : <View style={{ flexDirection: profileLayout?.headerAxis ?? "row", flexWrap: "wrap", alignItems: profileLayout ? (profileLayout.centered ? "center" : "flex-start") : "center", padding, gap: recipe.itemGap }}>
       {/* Reserve a readable title column; wrapping moves actions below it at large text. */}
       {leading}<View style={{ flexGrow: 1, flexShrink: 1, ...(profileLayout?.headerAxis === "column" ? { width: "100%" as const } : { flexBasis: recipe.headerMinWidth * environment.textScale }) }}>
         {/* Profile headings share the Web heading role; preserve the legacy title role without a profile. */}
-        <Text variant={profileLayout ? "heading" : "titleLarge"} {...(profileLayout?.centered ? { align: "center" as const } : {})} accessibilityRole="header">{title}</Text>
+        {titleVisibility === "visible" && <Text variant={profileLayout ? "heading" : "titleLarge"} {...(profileLayout?.centered ? { align: "center" as const } : {})} accessibilityRole="header">{title}</Text>}
         {description ? <Text tone="muted" {...(profileLayout?.centered ? { align: "center" as const } : {})}>{description}</Text> : null}
       </View>{actions}
-    </View>}
+    </View>)}
     {notice ? <View style={{ paddingHorizontal: padding }}>{notice}</View> : null}
     {scroll === "screen" || resolved.replacesContent ? <ScrollView {...scrollProps} ref={scrollRef} style={{ flex: 1 }} keyboardShouldPersistTaps="handled"
       contentContainerStyle={{ flexGrow: 1, padding }} accessibilityState={{ busy: resolved.busy }}>{body}</ScrollView>

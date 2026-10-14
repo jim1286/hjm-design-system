@@ -15,6 +15,9 @@ import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type ScreenLayoutProps = Readonly<{
   title: string;
+  /** Hide redundant route names while retaining descriptions and a named screen. */
+  titleVisibility?: "visible" | "hidden";
+  headerAlignment?: "start" | "center";
   /** Preserve host navigation while the shared shell owns content and state. */
   header?: ReactNode;
   contentInset?: "default" | "none";
@@ -40,8 +43,9 @@ export type ScreenLayoutProps = Readonly<{
 }>;
 
 /** Shared screen shell. Routing, data, permission checks and mutation state remain product-owned. */
-export function ScreenLayout({ title, header, contentInset = "default", presentation: suppliedPresentation, description, leading, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", as: Element = "main", className, layoutStyle }: ScreenLayoutProps) {
+export function ScreenLayout({ title, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", presentation: suppliedPresentation, description, leading, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", as: Element = "main", className, layoutStyle }: ScreenLayoutProps) {
   const id = useId();
+  const showHeader = titleVisibility === "visible" || !!description || !!leading || !!actions;
   // Screens historically work with the stylesheet alone. Optional context keeps
   // that path while inheriting profiles from an enclosing Provider when present.
   const designProfile = useDesignProfileDefaults();
@@ -63,12 +67,16 @@ export function ScreenLayout({ title, header, contentInset = "default", presenta
     if (previous && !previous.isConnected) lastBodyFocus.current = null;
   });
   const recipe = screenPatternRecipe;
-  return <Element aria-labelledby={header ? undefined : id} aria-label={header ? title : undefined} data-content-inset={contentInset} data-presentation={presentation} className={classNames("hjm-screen", className)}
+  return <Element aria-labelledby={header || titleVisibility === "hidden" ? undefined : id} aria-label={header || titleVisibility === "hidden" ? title : undefined} data-content-inset={contentInset} data-presentation={presentation} className={classNames("hjm-screen", className)}
     style={{ backgroundColor: designProfile?.material.canvas ? "transparent" : undefined, "--hjm-screen-width": `${profileLayout?.maxWidth ?? recipe.maxWidth}px`, "--hjm-screen-padding": `${contentInset === "none" ? 0 : recipe.padding}px`, "--hjm-screen-gap": `${profileLayout?.gap ?? recipe.sectionGap}px`, "--hjm-screen-item-gap": `${recipe.itemGap}px`, "--hjm-screen-state-gap": `${recipe.stateGap}px`, "--hjm-screen-header-min": `${recipe.headerMinWidth}px`, ...layoutStyle } as React.CSSProperties}>
-    {header ?? <header className="hjm-screen__header" style={profileLayout ? { flexDirection: profileLayout.headerAxis, alignItems: profileLayout.centered ? "center" : undefined, textAlign: profileLayout.centered ? "center" : undefined } : undefined}>
-      {leading}<div className="hjm-screen__heading"><Heading level="level3" semanticLevel={1} id={id}>{title}</Heading>
+    {header ?? (showHeader ? headerAlignment === "center" ? <header className="hjm-screen__header" style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr)", alignItems: "center" }}>
+      <div>{leading}</div><div className="hjm-screen__heading" style={{ textAlign: "center", minWidth: 0 }}>
+        {titleVisibility === "visible" && <Heading level="level3" semanticLevel={1} id={id}>{title}</Heading>}
+        {description ? <Text as="p" tone="muted">{description}</Text> : null}</div><div style={{ justifySelf: "end" }}>{actions}</div>
+    </header> : <header className="hjm-screen__header" style={profileLayout ? { flexDirection: profileLayout.headerAxis, alignItems: profileLayout.centered ? "center" : undefined, textAlign: profileLayout.centered ? "center" : undefined } : undefined}>
+      {leading}<div className="hjm-screen__heading">{titleVisibility === "visible" && <Heading level="level3" semanticLevel={1} id={id}>{title}</Heading>}
         {description ? <Text as="p" tone="muted">{description}</Text> : null}</div>{actions}
-    </header>}
+    </header> : null)}
     {notice ? <div className="hjm-screen__notice">{notice}</div> : null}
     {/* Scrollable read-only screens still need a keyboard entry point. */}
     <div ref={bodyRef} tabIndex={bodyScroll === "content" ? -1 : 0}

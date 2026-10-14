@@ -222,8 +222,10 @@ export const calendarRecipe = {
         color: semanticColors.content.secondary,
     },
     sizes: {
-        medium: { cellDiameter: control.minTouchTarget, textVariant: "body", glyph: "sm" },
-        large: { cellDiameter: glyph.xxl, textVariant: "bodyLarge", glyph: "md" },
+        // Dense annotated calendars need a smaller visual marker without shrinking the hit target.
+        compact: { cellDiameter: control.minTouchTarget, indicatorDiameter: 28, textVariant: "body", glyph: "sm" },
+        medium: { cellDiameter: control.minTouchTarget, indicatorDiameter: control.minTouchTarget, textVariant: "body", glyph: "sm" },
+        large: { cellDiameter: glyph.xxl, indicatorDiameter: glyph.xxl, textVariant: "bodyLarge", glyph: "md" },
     },
     day: {
         radius: "full",

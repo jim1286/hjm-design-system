@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
-import { Pressable, ScrollView, TextInput } from "react-native";
+import { Pressable, ScrollView, TextInput, View, StyleSheet } from "react-native";
 import { afterEach, expect, it, vi } from "vitest";
 import { HjmNativeProvider } from "../src/provider.js";
 import { Button } from "../src/actions.js";
@@ -34,4 +34,18 @@ it("keeps host refresh and keyboard ownership when content scrolling is replaced
  render(ui({kind:'ready'}));expect(tree!.root.findAllByType(ScrollView)).toHaveLength(0);
  render(ui({kind:'error',title:'Failed'}));const scroll=tree!.root.findByType(ScrollView);expect(scroll.props.refreshControl).toBe(refresh);expect(scroll.props.keyboardDismissMode).toBe('interactive');expect(scroll.props.keyboardShouldPersistTaps).toBe('handled');act(()=>button('Retry').props.onPress());expect(retry).toHaveBeenCalledTimes(1);
  render(ui({kind:'ready'}));expect(tree!.root.findAllByType(ScrollView)).toHaveLength(0);expect(JSON.stringify(tree!.toJSON())).toContain('List owns scrolling');
+});
+
+it("hides the route name and centers context between unequal navigation controls", () => {
+ const back=vi.fn();
+ render(<ScreenLayout title="Route name" titleVisibility="hidden" headerAlignment="center" description="2026.10.14" leading={<Pressable onPress={back}><Text>Back</Text></Pressable>} actions={<Text>Two actions</Text>}><Text>Body</Text></ScreenLayout>);
+ expect(JSON.stringify(tree!.toJSON())).not.toContain('Route name');
+ const measures=tree!.root.findAllByType(View).filter(node=>node.props.onLayout);
+ expect(measures).toHaveLength(2);
+ act(()=>{measures[0]!.props.onLayout({nativeEvent:{layout:{width:44}}});measures[1]!.props.onLayout({nativeEvent:{layout:{width:96}}});});
+ const centered=tree!.root.findAllByType(View).find(node=>StyleSheet.flatten(node.props.style)?.minHeight===60)!;
+ expect(StyleSheet.flatten(centered.props.style).paddingHorizontal).toBeGreaterThanOrEqual(112);
+ expect(measures.every(node=>StyleSheet.flatten(node.props.style).position==='absolute')).toBe(true);
+ expect(tree!.root.findAllByType(Text).find(node=>node.props.children==='2026.10.14')!.props.align).toBe('center');
+ act(()=>tree!.root.findByType(Pressable).props.onPress());expect(back).toHaveBeenCalledOnce();
 });

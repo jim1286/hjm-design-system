@@ -154,7 +154,7 @@ export type CalendarNavigationResult = Readonly<{
  * month and refocuses the corresponding day.
  */
 export declare function getCalendarNavigationTarget<Content>(grid: CalendarGridDescriptor<Content>, currentDate: string, intent: CalendarNavigationIntent): CalendarNavigationResult;
-export type CalendarSize = "medium" | "large";
+export type CalendarSize = "compact" | "medium" | "large";
 /**
  * `today` and `selected` are visually independent (a non-selected today and
  * a selected past day must both read clearly) and neither is color-only:
@@ -199,13 +199,21 @@ export declare const calendarRecipe: {
         }>;
     };
     readonly sizes: {
+        readonly compact: {
+            readonly cellDiameter: 44;
+            readonly indicatorDiameter: 28;
+            readonly textVariant: "body";
+            readonly glyph: "sm";
+        };
         readonly medium: {
             readonly cellDiameter: 44;
+            readonly indicatorDiameter: 44;
             readonly textVariant: "body";
             readonly glyph: "sm";
         };
         readonly large: {
             readonly cellDiameter: 44;
+            readonly indicatorDiameter: 44;
             readonly textVariant: "bodyLarge";
             readonly glyph: "md";
         };

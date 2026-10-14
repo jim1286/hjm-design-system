@@ -7,6 +7,9 @@ import { type ListRowProps } from "./data-display.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type ScreenLayoutProps = Readonly<{
     title: string;
+    /** Hide redundant route names while retaining descriptions and a named screen. */
+    titleVisibility?: "visible" | "hidden";
+    headerAlignment?: "start" | "center";
     /** Host navigation can supply its existing header while the shared shell owns scrolling and state. */
     header?: ReactNode;
     /** Hosts that already inset routes avoid applying the shared gutter twice. */
@@ -29,7 +32,7 @@ export type ScreenLayoutProps = Readonly<{
     scrollRef?: Ref<ScrollView>;
     scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator">;
 }>;
-export declare function ScreenLayout({ title, header, contentInset, presentation: suppliedPresentation, description, leading, actions, notice, footer, state, stateAction, children, scroll, layoutStyle, testID, scrollRef, scrollProps }: ScreenLayoutProps): import("react").JSX.Element;
+export declare function ScreenLayout({ title, titleVisibility, headerAlignment, header, contentInset, presentation: suppliedPresentation, description, leading, actions, notice, footer, state, stateAction, children, scroll, layoutStyle, testID, scrollRef, scrollProps }: ScreenLayoutProps): import("react").JSX.Element;
 export type SettingsScreenSection = Readonly<{
     id: string;
     title: string;
