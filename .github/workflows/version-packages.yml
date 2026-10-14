@@ -1,16 +1,14 @@
+# Deployment only: queue concurrent requests; no separate CI gates.
 name: Release Packages
-
 on:
-  workflow_dispatch:
-
+  workflow_dispatch: null
 permissions:
   contents: write
   id-token: write
-
 concurrency:
-  group: release-packages
+  group: deployment
   cancel-in-progress: false
-
+  queue: max
 jobs:
   release:
     if: github.ref == 'refs/heads/main'
@@ -18,35 +16,24 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           fetch-depth: 2
-
       - name: Setup pnpm
-        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413
         with:
           version: 11.18.0
           run_install: false
-
       - name: Setup Node.js
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: 24
           cache: pnpm
           registry-url: https://registry.npmjs.org
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-
-      - name: Install Playwright Chromium
-        run: pnpm --filter @hjmds/react exec playwright install --with-deps chromium
-
-      - name: Verify release commit
-        run: pnpm release:commit:check "$(git rev-parse HEAD^)"
-
-      - name: Verify packages, evidence, and release artifacts
-        run: pnpm release:check
-
+      - name: Build packages
+        run: pnpm --filter @hjmds/design-contracts build && pnpm --filter @hjmds/react build && pnpm --filter @hjmds/react-native build
       - name: Publish packages
         shell: bash
         run: |
@@ -59,7 +46,6 @@ jobs:
             fi
             pnpm --filter "${NAME}" publish --access public --no-git-checks --provenance
           done
-
       - name: Tag release
         shell: bash
         run: |

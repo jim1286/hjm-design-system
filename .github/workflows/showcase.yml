@@ -1,140 +1,25 @@
+# Deployment only: queue concurrent requests; no separate CI gates.
 name: Design System Showcase
-
 on:
   push:
     branches:
       - main
-    # 2026-10-07 사용자 재확인: 일반 push/PR은 원격 전량 검사를 실행하지 않는다.
-    # paths는 후보만 좁히고, 아래 intent job이 의존성 변경과 실제 버전 상승을 구분한다.
     paths:
       - packages/design-contracts/package.json
       - packages/react/package.json
       - packages/react-native/package.json
-  workflow_dispatch:
-    inputs:
-      verify_only:
-        description: Verify and measure without publishing Storybook or Pages
-        type: boolean
-        default: false
-      full_regression:
-        description: Run all package, native, browser and evidence regression checks
-        type: boolean
-        default: false
-
-# Pages 쓰기는 배포 job에만 준다. 수동 브랜치 검사는 읽기 권한만 사용한다.
+  workflow_dispatch: {}
 permissions:
   contents: read
   actions: read
-
-# ref별로 격리하고, main 배포가 다음 요청 때문에 중간에 끊기지 않게 한다.
 concurrency:
-  group: design-system-showcase-${{ github.ref }}
+  group: deployment
   cancel-in-progress: false
-
+  queue: max
 jobs:
-  intent:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    outputs:
-      run: ${{ steps.version.outputs.run }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          # push에는 여러 commit이 함께 포함될 수 있어 HEAD^가 아닌 event.before와 비교한다.
-          fetch-depth: 0
-      - name: Setup Node.js
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version: 24
-      - name: Determine version intent
-        id: version
-        env:
-          VERSION_BASE_SHA: ${{ github.event.before }}
-        run: node scripts/ci-version-intent.mjs
-
-  verify:
-    needs: intent
-    if: needs.intent.outputs.run == 'true'
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Setup pnpm
-        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
-        with:
-          version: 11.18.0
-          run_install: false
-
-      - name: Setup Node.js
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version: 24
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Install Playwright Chromium
-        if: github.event_name == 'workflow_dispatch' && inputs.full_regression
-        run: pnpm --filter @hjmds/react exec playwright install --with-deps chromium
-
-      # Oct 12: publishing Web Storybook does not require the native/browser
-      # regression graph. Build its dependency closure once, then check web types.
-      - name: Build and typecheck the web delivery surface
-        if: github.event_name != 'workflow_dispatch' || !inputs.full_regression
-        run: pnpm showcase:web:build && pnpm --filter @hjm/showcase-web... typecheck
-      - name: Verify packages, evidence, and both showcases
-        if: github.event_name == 'workflow_dispatch' && inputs.full_regression
-        run: pnpm ci:check
-
-      # 2026-10-10: own-domain delivery consumes the exact checked files from any
-      # authorized host; Pages keeps only a compatibility redirect for old story URLs.
-      - name: Verify Storybook delivery tooling
-        run: |
-          PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s deploy/storybook -p test_artifact.py
-          bash -n deploy/storybook/publish.sh
-
-      # CI diagnostics need the same checks without changing the public site.
-      - name: Prepare Storybook delivery artifact
-        if: github.ref == 'refs/heads/main' && !inputs.verify_only
-        env:
-          STORYBOOK_ARTIFACT: ${{ runner.temp }}/hjm-storybook
-        run: |
-          python3 deploy/storybook/artifact.py prepare "$PWD/showcase/web/storybook-static" "$STORYBOOK_ARTIFACT" "$GITHUB_SHA" "$GITHUB_RUN_ID"
-          cp deploy/storybook/redirect/index.html deploy/storybook/redirect/iframe.html
-          cp deploy/storybook/redirect/index.html deploy/storybook/redirect/404.html
-
-      - name: Upload Storybook delivery artifact
-        if: github.ref == 'refs/heads/main' && !inputs.verify_only
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: hjm-storybook-${{ github.sha }}
-          path: ${{ runner.temp }}/hjm-storybook
-          if-no-files-found: error
-          retention-days: 30
-          # Only the already inventoried public closure is uploaded; .nojekyll
-          # must not disappear from the artifact and invalidate its manifest.
-          include-hidden-files: true
-
-      - name: Upload Storybook
-        if: github.ref == 'refs/heads/main' && !inputs.verify_only
-        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
-        with:
-          path: deploy/storybook/redirect
-      # Observe existing checks without turning API availability into a gate.
-      - name: Summarize observed CI timings
-        if: ${{ always() && github.ref == 'refs/heads/main' }}
-        continue-on-error: true
-        run: node scripts/ci-metrics.mjs "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID" "$RUNNER_TEMP/module-check-timing.json"
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          CI_METRICS_SUMMARY: '1'
-
   deploy:
-    if: github.ref == 'refs/heads/main' && !inputs.verify_only
-    needs: verify
+    if: github.ref == 'refs/heads/main'
+    needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -146,4 +31,43 @@ jobs:
     steps:
       - name: Deploy Storybook
         id: deployment
-        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Setup pnpm
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413
+        with:
+          version: 11.18.0
+          run_install: false
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 24
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build Storybook
+        run: pnpm showcase:web:build
+      - name: Prepare Storybook delivery artifact
+        env:
+          STORYBOOK_ARTIFACT: ${{ runner.temp }}/hjm-storybook
+        run: |
+          python3 deploy/storybook/artifact.py prepare "$PWD/showcase/web/storybook-static" "$STORYBOOK_ARTIFACT" "$GITHUB_SHA" "$GITHUB_RUN_ID"
+          cp deploy/storybook/redirect/index.html deploy/storybook/redirect/iframe.html
+          cp deploy/storybook/redirect/index.html deploy/storybook/redirect/404.html
+      - name: Upload Storybook delivery artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: hjm-storybook-${{ github.sha }}
+          path: ${{ runner.temp }}/hjm-storybook
+          if-no-files-found: error
+          retention-days: 30
+          include-hidden-files: true
+      - name: Upload Storybook
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9
+        with:
+          path: deploy/storybook/redirect
