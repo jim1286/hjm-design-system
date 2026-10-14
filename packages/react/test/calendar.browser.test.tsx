@@ -125,3 +125,13 @@ it("opens the DatePicker popover upward when it would pass the bottom edge and t
   expect(rect.bottom).toBeLessThanOrEqual(trigger.top);
   expect(rect.top).toBeGreaterThanOrEqual(0);
 });
+
+it("shrinks compact selection circles while keeping full date hit targets", async () => {
+  const change = vi.fn();
+  await act(async () => root.render(<HjmProvider><Calendar size="compact" descriptor={{ grid, monthLabel: "September", defaultSelectedDate: "2026-09-01", onSelectionChange: change }} composeAccessibleName={({ date }) => date} renderCellContent={() => "W"} /></HjmProvider>));
+  const target = date("2026-09-01"), marker = target.querySelector<HTMLElement>(".hjm-calendar__day-label")!;
+  expect(marker.getBoundingClientRect().width).toBe(28);
+  expect(target.getBoundingClientRect().width).toBeGreaterThanOrEqual(44);
+  expect(target.getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
+  await act(async () => date("2026-09-04").click()); expect(change).toHaveBeenCalledWith("2026-09-04");
+});

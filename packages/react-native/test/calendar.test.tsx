@@ -2,7 +2,7 @@ import { createRef } from "react";
 // This proof file is listed by test/executed-scenarios.json; the workspace checker validates its cases against that registry.
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, expect, it, vi } from "vitest";
-import { AccessibilityInfo, Pressable, ScrollView, StyleSheet, Text } from "react-native";
+import { AccessibilityInfo, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { DatePicker } from "../src/date-picker.js";
 import { Calendar } from "../src/calendar.js";
 import { HjmNativeProvider } from "../src/provider.js";
@@ -64,4 +64,16 @@ it.each(["ltr", "rtl"] as const)("reserves equal columns for leading and trailin
     expect(columns).toHaveLength(7);
     for (const column of columns) expect(StyleSheet.flatten(column.props.style)).toMatchObject({ flex: 1, minWidth: 44 });
   }
+});
+
+it("keeps compact date markers small while preserving the tap and selection contract", () => {
+  const select = vi.fn();
+  act(() => { renderer = create(<HjmNativeProvider><Calendar size="compact" descriptor={{ grid, monthLabel: "September", defaultSelectedDate: "2026-09-01", onSelectionChange: select }} composeAccessibleName={({ date }) => date} renderCellContent={() => "W"} /></HjmNativeProvider>); });
+  const target = renderer.root.findAllByType(Pressable).find(node => node.props.accessibilityLabel === "2026-09-01")!;
+  expect(StyleSheet.flatten(target.props.style)).toMatchObject({ minWidth: 44, minHeight: 44 });
+  const marker = target.findAllByType(View).find(node => StyleSheet.flatten(node.props.style)?.width === 28)!;
+  expect(StyleSheet.flatten(marker.props.style)).toMatchObject({ width: 28, minHeight: 28, borderRadius: 14 });
+  expect(target.props.accessibilityState.selected).toBe(true);
+  const other = renderer.root.findAllByType(Pressable).find(node => node.props.accessibilityLabel === "2026-09-04")!;
+  act(() => other.props.onPress()); expect(select).toHaveBeenCalledWith("2026-09-04");
 });

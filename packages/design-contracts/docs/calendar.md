@@ -49,7 +49,7 @@ import { Calendar } from "@hjmds/react/calendar";
 />
 ```
 
-두 renderer는 `size="medium" | "large"`, `renderCellContent`,
+두 renderer는 `size="compact" | "medium" | "large"`, `renderCellContent`,
 `ref.current.focusDate(date)`를 지원한다. focus 요청 날짜가 다음 렌더에서 도착하면 그때 적용한다.
 Web의 `autoFocus`는 기본 false이며 DatePicker가 열린 격자에만 true로 설정한다.
 
@@ -83,3 +83,5 @@ Native 테스트는 개별 날짜의 접근성·비활성·선택, 명시적 월
 기기나 하드웨어 키보드 탐색 검증을 뜻하지 않는다.
 DatePicker의 기존 선택·닫기·방향키 회귀와 controlled-open 읽기 전용/disabled 활성화 방지도 검사한다.
 전체 패키지·Showcase 검증 및 브라우저 확인은 `react-native-completion.md` 실행 기록에 남긴다.
+
+`compact`는 2026-10-14 경기 달력의 날짜 원 크기 피드백을 반영한 선택지다. 날짜 원은 28px로 표시하고, 날짜 버튼의 최소 44px 터치 영역은 유지한다. 기존 medium·large의 모양은 바꾸지 않는다.

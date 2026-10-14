@@ -58,6 +58,7 @@ export function Calendar<Content>({ descriptor, composeAccessibleName, previousM
     if (handle != null) { AccessibilityInfo.setAccessibilityFocus(handle); pending.current = undefined; }
   }, [gridKey, request]);
   const diameter = recipe.sizes[size].cellDiameter;
+  const indicatorDiameter = recipe.sizes[size].indicatorDiameter;
   // Yoga distributes remaining space after minimum widths: omitting the minimum on
   // fillers collapses them and shifts partial weeks away from the weekday columns.
   const columnStyle = { flex: 1, minWidth: diameter };
@@ -93,7 +94,7 @@ export function Calendar<Content>({ descriptor, composeAccessibleName, previousM
               style={{ ...columnStyle, minHeight: diameter, alignItems: "center", justifyContent: "flex-start",
                 borderRadius: diameter / 2,
                 opacity: !cell.selectable ? recipe.day.disabledOpacity : cell.outsideFocusedMonth ? recipe.day.outsideFocusedMonthOpacity : 1 }}>
-              <View accessible={false} style={{ width: diameter, minHeight: diameter, alignItems: "center", justifyContent: "center", borderRadius: diameter / 2, borderWidth: recipe.day.today.borderWidth, borderColor: cell.isToday ? resolveColorReference(recipe.day.today.border, palette) : "transparent", backgroundColor: cell.isSelected ? colors.primary : "transparent" }}>
+              <View accessible={false} style={{ width: indicatorDiameter, minHeight: indicatorDiameter, alignItems: "center", justifyContent: "center", borderRadius: indicatorDiameter / 2, borderWidth: recipe.day.today.borderWidth, borderColor: cell.isToday ? resolveColorReference(recipe.day.today.border, palette) : "transparent", backgroundColor: cell.isSelected ? colors.primary : "transparent" }}>
               <Text
               fontRole="ui" accessible={false} variant={recipe.sizes[size].textVariant} align="center"
                 style={{ color: cell.isSelected ? colors.onPrimary : colors.textBody, fontVariant: ["tabular-nums"] }}>{Number(cell.date.slice(-2))}</Text></View>

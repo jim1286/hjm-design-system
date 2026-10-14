@@ -354,7 +354,7 @@ export function getCalendarNavigationTarget<Content>(
     : { overflow: forward ? "after" : "before" };
 }
 
-export type CalendarSize = "medium" | "large";
+export type CalendarSize = "compact" | "medium" | "large";
 
 /**
  * `today` and `selected` are visually independent (a non-selected today and
@@ -393,8 +393,10 @@ export const calendarRecipe = {
     color: semanticColors.content.secondary,
   },
   sizes: {
-    medium: { cellDiameter: control.minTouchTarget, textVariant: "body", glyph: "sm" },
-    large: { cellDiameter: glyph.xxl, textVariant: "bodyLarge", glyph: "md" },
+    // Dense annotated calendars need a smaller visual marker without shrinking the hit target.
+    compact: { cellDiameter: control.minTouchTarget, indicatorDiameter: 28, textVariant: "body", glyph: "sm" },
+    medium: { cellDiameter: control.minTouchTarget, indicatorDiameter: control.minTouchTarget, textVariant: "body", glyph: "sm" },
+    large: { cellDiameter: glyph.xxl, indicatorDiameter: glyph.xxl, textVariant: "bodyLarge", glyph: "md" },
   },
   day: {
     radius: "full" as const,
@@ -418,7 +420,7 @@ export const calendarRecipe = {
     navIcon: { previous: SemanticIconName; next: SemanticIconName };
   };
   weekdayLabel: { textVariant: TextVariant; color: ColorReference };
-  sizes: Record<CalendarSize, { cellDiameter: number; textVariant: TextVariant; glyph: GlyphSize }>;
+  sizes: Record<CalendarSize, { cellDiameter: number; indicatorDiameter: number; textVariant: TextVariant; glyph: GlyphSize }>;
   day: {
     radius: "full";
     label: { color: ColorReference; numericVariant: "tabular" };
