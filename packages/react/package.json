@@ -1,6 +1,6 @@
 {
   "name": "@hjmds/react",
-  "version": "1.24.0",
+  "version": "1.25.0",
   "description": "Accessible React 19 renderers for HJM design contracts.",
   "license": "MIT",
   "publishConfig": {
@@ -600,7 +600,7 @@
     "test:visual": "vitest run --config vitest.visual.config.ts"
   },
   "peerDependencies": {
-    "@hjmds/design-contracts": "^1.24.0",
+    "@hjmds/design-contracts": "^1.25.0",
     "react": ">=19.0.0",
     "react-dom": ">=19.0.0",
     "@number-flow/react": "0.6.2",

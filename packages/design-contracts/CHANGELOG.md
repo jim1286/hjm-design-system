@@ -1,5 +1,11 @@
 # @hjmds/design-contracts
 
+## 1.25.0
+
+### Minor Changes
+
+- 13127b9: Expose TopBar titleContent for an independently interactive product control in the shared title slot, exclusive with text title affordances.
+
 ## 1.24.0
 
 ### Minor Changes
