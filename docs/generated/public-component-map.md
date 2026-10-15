@@ -4,7 +4,7 @@
 
 ## @hjmds/react
 
-고유 공개 컴포넌트 및 provider 이름 174개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 179개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -69,6 +69,7 @@
 | Field | Field | canonical | root, ./forms |
 | FieldGroup | Field | optional-extension | ./field-group |
 | FilePicker | FilePicker | canonical | root, ./file-picker, ./forms |
+| FilterRecovery | 별도 보조 기능 | supplemental | ./collection-editing |
 | FloatingActionButton | FloatingActionButton | canonical | root, ./floating-action-button |
 | FolderPreview | Collapsible | optional-extension | ./folder-preview |
 | Form | Form | canonical | root, ./forms |
@@ -82,6 +83,7 @@
 | Image | Image | canonical | root, ./display |
 | ImageComparison | 별도 보조 기능 | supplemental | ./image-comparison |
 | InlineConfirm | Button | optional-extension | ./inline-confirm |
+| InlineEdit | 별도 보조 기능 | supplemental | ./collection-editing |
 | Layout | Layout | canonical | root, ./layout |
 | LineChart | Chart | companion-or-alternative | ./chart |
 | LineScore | DataTable | companion-or-alternative | ./data-table |
@@ -125,6 +127,7 @@
 | RadioGroup | RadioGroup | canonical | root, ./selection |
 | Rating | 별도 보조 기능 | supplemental | ./rating |
 | ReactionPicker | Button | optional-extension | ./reaction-picker |
+| RepeatableFieldGroup | 별도 보조 기능 | supplemental | ./collection-editing |
 | Result | Result | canonical | root, ./feedback |
 | SavedItemsScreen | 별도 보조 기능 | supplemental | ./saved-items |
 | ScatterChart | Chart | companion-or-alternative | ./chart |
@@ -135,6 +138,7 @@
 | Section | Section | canonical | root, ./layout |
 | SegmentedControl | SegmentedControl | canonical | root, ./selection |
 | Select | Select | canonical | root, ./forms |
+| SelectionActionBar | 별도 보조 기능 | supplemental | ./collection-editing |
 | SettingsScreen | 별도 보조 기능 | supplemental | ./screens |
 | Sheet | Sheet | canonical | root, ./overlays |
 | Sidebar | Sidebar | canonical | root, ./sidebar |
@@ -156,6 +160,7 @@
 | SwipeActions | 별도 보조 기능 | supplemental | ./swipe-actions |
 | Switch | Switch | canonical | root, ./selection |
 | Table | DataTable | companion-or-alternative | root, ./display |
+| TableColumnSettings | 별도 보조 기능 | supplemental | ./collection-editing |
 | TabPanel | Tabs | companion-or-alternative | root, ./navigation |
 | Tabs | Tabs | canonical | root, ./navigation |
 | Tag | Tag | canonical | root, ./display |
@@ -185,7 +190,7 @@
 
 ## @hjmds/react-native
 
-고유 공개 컴포넌트 및 provider 이름 161개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 166개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -242,6 +247,7 @@
 | Field | Field | canonical | root, ./forms |
 | FieldGroup | Field | optional-extension | ./field-group |
 | FilePicker | FilePicker | canonical | root, ./file-picker, ./inputs |
+| FilterRecovery | 별도 보조 기능 | supplemental | ./collection-editing |
 | FloatingActionButton | FloatingActionButton | canonical | root, ./floating-action-button |
 | FolderPreview | Collapsible | optional-extension | ./folder-preview |
 | Form | Form | canonical | root, ./forms |
@@ -259,6 +265,7 @@
 | ImageComparison | 별도 보조 기능 | supplemental | ./image-comparison |
 | ImageViewer | Image | optional-extension | ./image-viewer |
 | InlineConfirm | Button | optional-extension | ./inline-confirm |
+| InlineEdit | 별도 보조 기능 | supplemental | ./collection-editing |
 | KeyboardAvoiding | 별도 보조 기능 | supplemental | root, ./keyboard |
 | KeyboardDock | 별도 보조 기능 | supplemental | ./keyboard-controller |
 | KeyboardFormScrollView | 별도 보조 기능 | supplemental | ./keyboard-controller |
@@ -301,6 +308,7 @@
 | RadioGroup | RadioGroup | canonical | root, ./inputs |
 | Rating | 별도 보조 기능 | supplemental | ./rating |
 | ReactionPicker | Button | optional-extension | ./reaction-picker |
+| RepeatableFieldGroup | 별도 보조 기능 | supplemental | ./collection-editing |
 | Result | Result | canonical | root, ./feedback |
 | SavedItemsScreen | 별도 보조 기능 | supplemental | ./saved-items |
 | ScatterChart | Chart | companion-or-alternative | ./chart |
@@ -311,6 +319,7 @@
 | Section | Section | canonical | root, ./primitives |
 | SegmentedControl | SegmentedControl | canonical | root, ./inputs |
 | Select | Select | canonical | root, ./forms |
+| SelectionActionBar | 별도 보조 기능 | supplemental | ./collection-editing |
 | SettingsScreen | 별도 보조 기능 | supplemental | ./screens |
 | SharedTransitionElement | 별도 보조 기능 | supplemental | ./screen-transition |
 | SharedTransitionScreen | 별도 보조 기능 | supplemental | ./screen-transition |
@@ -329,6 +338,7 @@
 | Surface | Surface | canonical | root, ./primitives |
 | SwipeActions | 별도 보조 기능 | supplemental | ./swipe-actions |
 | Switch | Switch | canonical | root, ./inputs |
+| TableColumnSettings | 별도 보조 기능 | supplemental | ./collection-editing |
 | TabPanel | Tabs | companion-or-alternative | root, ./navigation, ./top-bar |
 | Tabs | Tabs | canonical | root, ./navigation, ./top-bar |
 | Tag | Tag | canonical | root, ./data-display |

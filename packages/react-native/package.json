@@ -543,6 +543,12 @@
       "react-native": "./dist/activity-chip.js",
       "import": "./dist/activity-chip.js",
       "default": "./dist/activity-chip.js"
+    },
+    "./collection-editing": {
+      "types": "./dist/collection-editing.d.ts",
+      "react-native": "./dist/collection-editing.js",
+      "import": "./dist/collection-editing.js",
+      "default": "./dist/collection-editing.js"
     }
   },
   "files": [

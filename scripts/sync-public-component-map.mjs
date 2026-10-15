@@ -44,6 +44,8 @@ const extensions = {
 // canonical row. A null family is explicit; never silently grow the frozen catalog.
 const supplemental = new Set([
   "Rating", "ImageComparison",
+  // Controlled collection compositions reuse FieldGroup, ActionSession and DataTable; no new canonical rows.
+  "InlineEdit", "RepeatableFieldGroup", "SelectionActionBar", "FilterRecovery", "TableColumnSettings",
   "CodeBlock", "ActivityHeatmap",
   // Screen compositions reuse canonical primitives; they do not expand the frozen catalog.
   "SavedItemsScreen", "CommentThreadScreen", "ListDetailScreen", "EditorScreen", "ProfileScreen", "ModerationScreen", "MediaSelectionScreen", "PhotoSourceSheet", "SearchScreen", "PermissionScreen", "OnboardingScreen",

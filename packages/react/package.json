@@ -527,6 +527,11 @@
       "types": "./dist/chart.d.ts",
       "import": "./dist/chart.js",
       "default": "./dist/chart.js"
+    },
+    "./collection-editing": {
+      "types": "./dist/collection-editing.d.ts",
+      "import": "./dist/collection-editing.js",
+      "default": "./dist/collection-editing.js"
     }
   },
   "files": [

@@ -595,6 +595,15 @@
         "role": "canonical"
       },
       {
+        "name": "FilterRecovery",
+        "source": "packages/react/src/collection-editing.tsx",
+        "entries": [
+          "./collection-editing"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "FloatingActionButton",
         "source": "packages/react/src/floating-action-button.tsx",
         "entries": [
@@ -718,6 +727,15 @@
         ],
         "canonicalComponent": "Button",
         "role": "optional-extension"
+      },
+      {
+        "name": "InlineEdit",
+        "source": "packages/react/src/collection-editing.tsx",
+        "entries": [
+          "./collection-editing"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "Layout",
@@ -1130,6 +1148,15 @@
         "role": "optional-extension"
       },
       {
+        "name": "RepeatableFieldGroup",
+        "source": "packages/react/src/collection-editing.tsx",
+        "entries": [
+          "./collection-editing"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "Result",
         "source": "packages/react/src/feedback.tsx",
         "entries": [
@@ -1223,6 +1250,15 @@
         ],
         "canonicalComponent": "Select",
         "role": "canonical"
+      },
+      {
+        "name": "SelectionActionBar",
+        "source": "packages/react/src/collection-editing.tsx",
+        "entries": [
+          "./collection-editing"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "SettingsScreen",
@@ -1430,6 +1466,15 @@
         ],
         "canonicalComponent": "DataTable",
         "role": "companion-or-alternative"
+      },
+      {
+        "name": "TableColumnSettings",
+        "source": "packages/react/src/collection-editing.tsx",
+        "entries": [
+          "./collection-editing"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "TabPanel",
@@ -2204,6 +2249,15 @@
         "role": "canonical"
       },
       {
+        "name": "FilterRecovery",
+        "source": "packages/react-native/src/collection-editing.tsx",
+        "entries": [
+          "./collection-editing"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "FloatingActionButton",
         "source": "packages/react-native/src/floating-action-button.tsx",
         "entries": [
@@ -2364,6 +2418,15 @@
         ],
         "canonicalComponent": "Button",
         "role": "optional-extension"
+      },
+      {
+        "name": "InlineEdit",
+        "source": "packages/react-native/src/collection-editing.tsx",
+        "entries": [
+          "./collection-editing"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "KeyboardAvoiding",
@@ -2765,6 +2828,15 @@
         "role": "optional-extension"
       },
       {
+        "name": "RepeatableFieldGroup",
+        "source": "packages/react-native/src/collection-editing.tsx",
+        "entries": [
+          "./collection-editing"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "Result",
         "source": "packages/react-native/src/feedback.tsx",
         "entries": [
@@ -2858,6 +2930,15 @@
         ],
         "canonicalComponent": "Select",
         "role": "canonical"
+      },
+      {
+        "name": "SelectionActionBar",
+        "source": "packages/react-native/src/collection-editing.tsx",
+        "entries": [
+          "./collection-editing"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "SettingsScreen",
@@ -3032,6 +3113,15 @@
         ],
         "canonicalComponent": "Switch",
         "role": "canonical"
+      },
+      {
+        "name": "TableColumnSettings",
+        "source": "packages/react-native/src/collection-editing.tsx",
+        "entries": [
+          "./collection-editing"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "TabPanel",
