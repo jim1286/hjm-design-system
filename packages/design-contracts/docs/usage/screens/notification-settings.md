@@ -89,7 +89,12 @@ ScreenLayout: 제목(고정) → 본문(스크롤) → footer(고정)
 
 예제는 ScreenLayout·CompositionLayout에 설정 데이터와 저장 콜백을 연결한다. 메모리 저장 fixture를 운영 요청으로 취급하지 않는다.
 
-## 테마·폭
+## 큰 글자·다크·좁은 폭
+
+| 조건 | 바뀌는 것 |
+| --- | --- |
+| 다크 | 공통 semantic token으로 전환 |
+| 좁은 폭 | 공통 화면·구성의 줄바꿈과 간격을 사용 |
 
 ScreenLayout이 화면 여백과 스크롤을, CompositionLayout이 묶음 간격을 관리한다. 테마는 공통 semantic token을 사용한다. footer 안에서 BottomCTA를 중첩해 여백과 경계선을 두 번 적용하지 않는다.
 
