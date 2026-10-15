@@ -1,5 +1,15 @@
 # @hjmds/react-native
 
+## 1.22.0
+
+### Minor Changes
+
+- 4fa2a54: Add optional SearchScreen resultSummary.countVisibility for searches that show a list without a visual result total. Hidden totals preserve sorting, loading rows, empty states, and accessible announcements. Requested for Yajalal Expo search on 2026-10-14.
+
+### Patch Changes
+
+- 4fa2a54: Allow ComparisonTable to hide duplicate side names while keeping accessible row identity; improve comparison row spacing and contrast.
+
 ## 1.21.0
 
 ### Minor Changes
