@@ -23,7 +23,7 @@ Flutter 앱에는 React 컴포넌트를 주입할 수 없다. 화면 역할과 �
 
 ## 선택 기준과 소유권
 
-모든 화면·구성의 공통 구조는 HJM이 제공한다. [선택 지침](usage/SELECTION.md)의 소유권을 따르며, 제품은 데이터·문구·추가 기능만 연결한다. 전용 구성이 없는 영역은 `CompositionLayout`, 가상화 댓글 행은 `CommentThreadRow`를 사용해 기본 배치를 복제하지 않는다. 두 API는 현재 checkout의 미게시 추가분이다.
+모든 화면·구성의 공통 구조는 HJM이 제공한다. [선택 지침](usage/SELECTION.md)의 소유권을 따르며, 제품은 데이터·문구·추가 기능만 연결한다. 전용 구성이 없는 영역은 `CompositionLayout`, 가상화 댓글 행은 `CommentThreadRow`를 사용해 기본 배치를 복제하지 않는다. 두 API는 1.23.0부터 제공한다.
 
 
 - 로그인: 기존 `auth-screen`의 `AuthScreenLayout` + `AuthProviderButton`을 그대로 쓴다.
