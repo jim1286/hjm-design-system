@@ -200,3 +200,28 @@ class HjmConfirmDialog extends StatelessWidget {
     ],
   );
 }
+
+/// Shared modal body owns keyboard clearance, safe area and scrolling.
+/// The product still owns showModalBottomSheet's result and dismissal policy.
+class HjmSheetLayout extends StatelessWidget {
+  const HjmSheetLayout({super.key, required this.child, this.scrollKey});
+  final Widget child;
+  final Key? scrollKey;
+  @override
+  Widget build(BuildContext context) => AnimatedPadding(
+    duration: const Duration(milliseconds: 180), curve: Curves.easeOutCubic,
+    padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
+    child: SafeArea(top: false, child: SingleChildScrollView(key: scrollKey,
+      padding: const EdgeInsets.all(HjmLayout.padding), child: child)),
+  );
+}
+
+class HjmActionGroup extends StatelessWidget {
+  const HjmActionGroup({super.key, required this.primary, required this.secondary});
+  final Widget primary;
+  final Widget secondary;
+  @override
+  Widget build(BuildContext context) => Row(spacing: HjmLayout.gap, children: [
+    Expanded(child: secondary), Expanded(flex: 2, child: primary),
+  ]);
+}

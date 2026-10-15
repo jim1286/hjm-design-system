@@ -4,7 +4,7 @@
 이 패키지는 HJM이 소유하는 정식 Flutter 구현이다. npm React renderer와 별도 package이며
 pub.dev 게시를 의미하지 않는다. 소비자는 이 저장소의 검증한 Git SHA와 `packages/flutter`를 고정한다.
 
-`HjmScreenLayout`, `HjmCompositionLayout`, `HjmContentState`, `HjmListRow`, `HjmBadge`, `HjmActionButton`, `HjmConfirmDialog`를 제공한다.
+`HjmScreenLayout`, `HjmCompositionLayout`, `HjmContentState`, `HjmListRow`, `HjmBadge`, `HjmActionButton`, `HjmConfirmDialog`, `HjmSheetLayout`, `HjmActionGroup`를 제공한다.
 공통 영역 순서·제목/배지·목록/상태 배치는 여기서 소유한다. 제품은 ThemeData, 문구, 데이터,
 권한과 콜백을 공급한다. 지도/카메라/광고/도메인 그림은 콘텐츠 슬롯에 유지한다.
 `screen-patterns.ts`의 상태 의미와 간격을 따르며 Dart enum으로 잘못된 상태를 제한한다.
