@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "designSystemVersion": "1.20.0",
+  "designSystemVersion": "1.21.0",
   "source": "packages/design-contracts/docs/generated/showcase-manifest.json",
   "surfaces": {
     "web": {
       "packageName": "@hjmds/react",
-      "packageVersion": "1.20.0",
+      "packageVersion": "1.21.0",
       "activeComponents": 104,
       "claimedComponents": 103,
       "completeScenarioComponents": 103,
@@ -4088,7 +4088,8 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility"
+            "accessibility",
+            "keyboard"
           ],
           "claimedScenarios": [],
           "missingScenarios": [
@@ -4098,7 +4099,8 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility"
+            "accessibility",
+            "keyboard"
           ]
         },
         {
@@ -5670,7 +5672,7 @@
     },
     "native": {
       "packageName": "@hjmds/react-native",
-      "packageVersion": "1.20.0",
+      "packageVersion": "1.21.0",
       "activeComponents": 85,
       "claimedComponents": 83,
       "completeScenarioComponents": 83,
@@ -9166,7 +9168,8 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility"
+            "accessibility",
+            "native-actions"
           ],
           "claimedScenarios": [],
           "missingScenarios": [
@@ -9176,7 +9179,8 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility"
+            "accessibility",
+            "native-actions"
           ]
         },
         {
@@ -9194,7 +9198,8 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility"
+            "accessibility",
+            "native-actions"
           ],
           "claimedScenarios": [],
           "missingScenarios": [
@@ -9204,7 +9209,8 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility"
+            "accessibility",
+            "native-actions"
           ]
         },
         {

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "designSystemVersion": "1.20.0",
+  "designSystemVersion": "1.21.0",
   "packageName": "@hjmds/design-contracts",
   "components": [
     {
@@ -3497,7 +3497,8 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility"
+            "accessibility",
+            "native-actions"
           ]
         }
       ],
@@ -3533,7 +3534,8 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility"
+            "accessibility",
+            "keyboard"
           ]
         },
         {
@@ -3545,7 +3547,8 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility"
+            "accessibility",
+            "native-actions"
           ]
         }
       ],

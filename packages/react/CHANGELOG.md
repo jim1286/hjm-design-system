@@ -1,5 +1,33 @@
 # @hjmds/react
 
+## 1.21.0
+
+### Minor Changes
+
+- 76d1f53: Add opt-in hidden route titles and centered contextual screen headers, including list-detail panes. Preserve default headings, state handling, navigation and editor cancellation.
+- fb292cc: Chart and DataTable absorption (2026-10-14 user request to absorb well-known chart and table libraries; Yajalal had rebuilt the same scrubbing line chart, bars and sortable stat table on its own).
+
+  - Chart: new `@hjmds/design-contracts/components/chart` geometry contract (line/area/stacked area, grouped and stacked bars, pie/donut, radar, scatter, nice ticks, monotone curve, focus stepping, `describeChart` text alternative) and `LineChart`, `BarChart`, `PieChart`, `RadarChart`, `ScatterChart`, `Sparkline`, `ChartLegend` on Web (`@hjmds/react/chart`, SVG) and Native (`@hjmds/react-native/chart`, react-native-svg). Missing values draw as gaps, bars always include zero, `invert` puts the best rank on top, radar axes share one domain, pie ignores negative values, and series colors come from the product or the dataviz palette (never status colors). Line charts scrub by horizontal drag and step via arrow keys (Web slider) or adjustable increment/decrement (Native). This reverses the earlier tokens-only decision; dataviz token values are unchanged.
+  - DataTable: new Native renderer `@hjmds/react-native/data-table` (pinned columns plus horizontal scroll, `onRowPress`/`selectedRowId`). Column options `sortDescFirst` and `pinned: "start"`, renderer `summaryRow` slot on Web and Native. `getNextDataTableSortState` takes an optional first direction (default ascending, unchanged behavior).
+  - Sorting helpers in `@hjmds/design-contracts/components/data-table`: `dataTableFirstSortDirection`, `toDataTableSortValue`, `compareDataTableValues`, `sortDataTableRows` (stable, missing values last in both directions) and `splitPinnedDataTableColumns`. Renderers still never reorder rows.
+
+- e8a0a15: Add controlled inline editing, repeatable field groups, scoped selection actions, search filter recovery and table column settings through collection-editing subpaths on Web and Native. Reuse existing FieldGroup and ActionSession behavior, retain drafts on failure and leave persistence and operation-specific undo with products.
+- 4b1dbef: Add six controlled data-workflow compositions including CSV mapping with validated funnel/cohort/correlation/target/histogram calculations and matching Web/Native entrypoints.
+
+  Add independent controlled PieChart category exclusion with real totals, recalculated percentages, stable colors and a total-aware center slot.
+
+  Add SplitAction, AccountSwitcher, PasswordRulesField and PricingChoice compositions with controlled selections, actual async callbacks, failure recovery and product-owned password rules and billing contracts.
+
+  Add MediaTransport with real engine-controlled play/pause/seek, matching Web/Native morphing controls, unknown-duration handling, pending request guards and failure recovery. Keep SVG frame updates outside React rendering.
+
+  Add TransferTask and StreamingAnswer compositions driven by actual transfer observations, explicit stream completion, confirmed cancellation and retained partial output.
+
+  Add BezierEditor, Web ShortcutRecorder, FollowProfileCard, EventAttendanceCard, ExpandableSearch, ReplyMessage/ReplyComposer and ToggleFeedbackButton with product-owned adapters, request guards and failure recovery.
+
+  Add Button completion sizing, MessageComposer near-limit feedback, continuously observed Tabs pager position, BarChart geometry transitions and LineChart transitions/scrub emphasis. Preserve existing selection contracts and motion cancellation without React frame renders.
+
+- 6603ac4: Add an opt-in compact Calendar size with 28px date indicators and unchanged 44px minimum date targets, for dense annotated calendars such as baseball schedules. Medium and large keep their existing appearance.
+
 ## 1.20.0
 
 ### Minor Changes
