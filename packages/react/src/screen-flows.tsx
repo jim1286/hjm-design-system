@@ -8,7 +8,7 @@ import { AlertDialog, Menu, Sheet, type SheetProps } from "./overlays.js";
 import { UploadItem } from "./upload-item.js";
 import { type UploadItemDescriptor, type UploadItemLabels } from "@hjmds/design-contracts/components/upload-item";
 import { type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
-import { validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchScreenPhase, resolveFocusAfterRemoval, screenPatternRecipe, searchScreenRecipe, type SearchEmptyCause, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
+import { validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchScreenPhase, resolveFocusAfterRemoval, screenPatternRecipe, profileSummaryRecipe, searchScreenRecipe, type SearchEmptyCause, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
 import { resolveWindowClass } from "@hjmds/design-contracts/responsive";
 import { containerRecipe, type ContainerGutter } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./display.js";
@@ -527,4 +527,25 @@ export function CommentThreadScreen({items,expandedIds,onExpandedChange,onLike,o
  // Product context belongs in the same scroll body as comments. Putting a tall
  // overview in the fixed header forced a second scroll region in Spint (2026-10-08).
  return <ScreenLayout {...screen} footer={!screen.state||screen.state.kind==="ready"||screen.state.kind==="empty"?composer:null}><Stack gap="lg">{threadHeader}{roots.map(item=>{const replies=repliesByParent.get(item.id)??[];return <Stack key={item.id} gap="xs">{row(item)}{replies.length?<Stack gap="md" layoutStyle={{marginInlineStart:screenPatternRecipe.sectionGap}}><Button layoutStyle={{alignSelf:"flex-start"}} tone="ghost" size="small" aria-expanded={expanded.has(item.id)} onClick={()=>onExpandedChange(item.id)}>{repliesLabel(replies.length,expanded.has(item.id))}</Button>{expanded.has(item.id)?replies.map(row):null}</Stack>:null}</Stack>;})}{threadFooter}</Stack></ScreenLayout>;
+}
+
+export type ProfileSummaryProps = Readonly<{
+  name: string;
+  headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
+  avatar: ReactNode;
+  badge?: ReactNode;
+  nameActions?: ReactNode;
+  stats?: readonly Readonly<{ id: string; value: string; label: string; onPress?(): void; disabled?: boolean }>[];
+  actions?: ReactNode;
+  children?: ReactNode;
+}>;
+
+/** Profile identity and counts are common; routing and mutations stay controlled by the product. */
+export function ProfileSummary({ name, headingLevel = 2, avatar, badge, nameActions, stats = [], actions, children }: ProfileSummaryProps) {
+  return <CompositionLayout title={name} headingLevel={headingLevel} leading={<span style={{ display: "flex", width: profileSummaryRecipe.avatarSize, height: profileSummaryRecipe.avatarSize, flexShrink: 0, borderRadius: "50%", overflow: "hidden" }}>{avatar}</span>} badge={badge} actions={nameActions} footer={children}>
+    {stats.length ? <Stack axis="inline" gap="md" wrap>{stats.map(stat => stat.onPress
+      ? <Button key={stat.id} tone="ghost" aria-label={`${stat.value} ${stat.label}`} disabled={stat.disabled ?? false} onClick={stat.onPress}><Stack gap="xxs" align="center"><Text emphasis="strong">{stat.value}</Text><Text variant="caption" tone="muted">{stat.label}</Text></Stack></Button>
+      : <Stack key={stat.id} gap="xxs" align="center"><Text emphasis="strong">{stat.value}</Text><Text variant="caption" tone="muted">{stat.label}</Text></Stack>)}</Stack> : null}
+    {actions ? <Stack axis="inline" gap="sm" wrap>{actions}</Stack> : null}
+  </CompositionLayout>;
 }

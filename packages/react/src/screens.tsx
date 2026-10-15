@@ -1,3 +1,4 @@
+import { iconTileRecipe, notificationRowRecipe as notificationRecipe } from "@hjmds/design-contracts/screen-patterns";
 import { resolveComposerLimit, type ComposerLengthFeedback } from "@hjmds/design-contracts/communication";
 import { Progress } from "./feedback.js";
 import { resolveDesignProfileScreen, type DesignProfileScreenPresentation } from "@hjmds/design-contracts/design-profile-layout";
@@ -97,10 +98,10 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
         }
       }}
       className="hjm-screen__body" data-content-alignment={contentAlignment} data-scroll={bodyScroll} data-replacement={resolved.replacesContent || undefined} aria-busy={resolved.busy || undefined}>
-      {state.kind === "ready" ? (contentAlignment === "center" ? <div className="hjm-screen__centered-content">{children}</div> : children) : <div className="hjm-screen__state">
+      {state.kind === "ready" ? (contentAlignment === "center" ? <div className="hjm-screen__centered-content">{children}</div> : children) : <div className="hjm-screen__state" role={resolved.busy ? undefined : state.kind === "error" ? "alert" : "status"}>
         {/* Loading copy is an accessible name; visible copy beside the spinner
             contradicts the shared spinner-only loading contract. */}
-        {resolved.busy ? <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} /> : <div role={state.kind === "error" ? "alert" : "status"}>
+        {resolved.busy ? <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} /> : <div>
           <Stack gap="sm" align="center"><Text variant="title">{state.title}</Text>
             {state.description ? <Text tone="muted">{state.description}</Text> : null}</Stack>
         </div>}
@@ -225,6 +226,8 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
 /** Shared structure for embedded compositions. The parent supplies size; this never creates a second scroller. */
 export type CompositionLayoutProps = Readonly<{
   title?: string;
+  /** Document heading level; visual treatment remains the shared composition title. */
+  headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
   description?: string;
   badge?: ReactNode;
   leading?: ReactNode;
@@ -238,20 +241,56 @@ export type CompositionLayoutProps = Readonly<{
   loadingIndicator?: ReactNode;
   layoutStyle?: HjmCompositionStyleProp;
 }>;
-export function CompositionLayout({title, description, badge, leading, actions, notice, children, footer, state = {kind: "ready"}, stateAction, loadingIndicator, layoutStyle}: CompositionLayoutProps) {
+export function CompositionLayout({title, headingLevel = 3, description, badge, leading, actions, notice, children, footer, state = {kind: "ready"}, stateAction, loadingIndicator, layoutStyle}: CompositionLayoutProps) {
   const resolved = resolveScreenContentState(state);
   return <Stack gap="md" {...(layoutStyle === undefined ? {} : {layoutStyle})}>
     {title || description || badge || leading || actions ? <Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap: "wrap"}}>
       {leading}<Stack gap="xxs" layoutStyle={{flex: 1, minWidth: 0}}>
-        <Stack axis="inline" gap="xs" align="center" layoutStyle={{flexWrap: "wrap"}}>{title ? <Heading level="level3">{title}</Heading> : null}{badge}</Stack>
+        <Stack axis="inline" gap="xs" align="center" layoutStyle={{flexWrap: "wrap"}}>{title ? <Heading level="level3" semanticLevel={headingLevel}>{title}</Heading> : null}{badge}</Stack>
         {description ? <Text tone="muted">{description}</Text> : null}
       </Stack>{actions}
     </Stack> : null}
     {notice}
-    {state.kind === "ready" ? children : <Stack gap="sm" align="center" justify="center" layoutStyle={{flex: 1}}>
-      {resolved.busy ? (loadingIndicator ? <div role="status" aria-busy="true" aria-label={[state.title, state.description].filter(Boolean).join(". ")}><div aria-hidden="true">{loadingIndicator}</div></div> : <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} />) : <div role={state.kind === "error" ? "alert" : "status"}><Text variant="title">{state.title}</Text>{state.description ? <Text tone="muted">{state.description}</Text> : null}</div>}
+    {state.kind === "ready" ? children : <Stack gap="sm" align="center" justify="center" role={resolved.busy ? undefined : state.kind === "error" ? "alert" : "status"} layoutStyle={{flex: 1}}>
+      {resolved.busy ? (loadingIndicator ? <div role="status" aria-busy="true" aria-label={[state.title, state.description].filter(Boolean).join(". ")}><div aria-hidden="true">{loadingIndicator}</div></div> : <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} />) : <div><Text variant="title">{state.title}</Text>{state.description ? <Text tone="muted">{state.description}</Text> : null}</div>}
       {stateAction}
     </Stack>}
     {footer}
   </Stack>;
+}
+
+export type NotificationRowProps = Readonly<{
+  /** Text and inline emphasis only; interactive content belongs outside the row. */
+  preview: ReactNode;
+  metadata: string;
+  avatar: ReactNode;
+  avatarBadge?: ReactNode;
+  thumbnail?: ReactNode;
+  unread?: boolean;
+}>;
+
+/** Router host owns the sole target and localized accessible name, as with ConversationRow. */
+export function NotificationRow({ preview, metadata, avatar, avatarBadge, thumbnail, unread = false }: NotificationRowProps) {
+  const r = notificationRecipe;
+  return <span aria-hidden="true" data-hjm-notification-row="true" style={{ display: "flex", alignItems: "center", gap: r.gap, padding: `${r.paddingBlock}px ${r.paddingInline}px`, width: "100%", minWidth: 0, boxSizing: "border-box" }}>
+    <span style={{ position: "relative", width: r.avatarSize, height: r.avatarSize, flexShrink: 0 }}>
+      <span style={{ display: "flex", width: "100%", height: "100%", overflow: "hidden", borderRadius: "50%" }}>{avatar}</span>
+      {avatarBadge ? <span style={{ position: "absolute", bottom: 0, right: 0, display: "flex", alignItems: "center", justifyContent: "center", width: r.avatarBadgeSize, height: r.avatarBadgeSize, borderRadius: "50%", background: "var(--hjm-color-surface)", border: "2px solid var(--hjm-color-surface)", boxSizing: "border-box" }}>{avatarBadge}</span> : null}
+    </span>
+    <span style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: r.contentGap }}>
+      <Text style={{ display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: r.previewLines, overflow: "hidden" }}>{preview}</Text>
+      <span style={{ display: "flex", alignItems: "center", gap: r.contentGap }}><Text variant="caption" tone="muted">{metadata}</Text>{unread ? <span data-hjm-unread-dot="true" style={{ width: r.unreadSize, height: r.unreadSize, borderRadius: "50%", flexShrink: 0, background: "var(--hjm-color-content-brand)" }} /> : null}</span>
+    </span>
+    {thumbnail ? <span style={{ width: r.thumbnailSize, height: r.thumbnailSize, flexShrink: 0, overflow: "hidden", borderRadius: "var(--hjm-radius-sm)" }}>{thumbnail}</span> : null}
+  </span>;
+}
+
+export type IconTileProps = Readonly<{ icon: ReactNode; label: string; overlay?: ReactNode; labelLines?: 1 | 2; ghost?: boolean }>;
+/** Presentation shared by launcher and profile grids; the host owns navigation or drag behavior. */
+export function IconTile({icon, label, overlay, labelLines = 1, ghost = false}: IconTileProps) {
+  const r = iconTileRecipe;
+  return <span data-hjm-icon-tile="true" style={{display: "flex", flexDirection: "column", alignItems: "center", gap: r.gap, minWidth: 0, width: "100%", overflow: "visible"}}>
+    <span style={{position: "relative", display: "flex", alignItems: "center", justifyContent: "center", width: r.iconSize, height: r.iconSize, flexShrink: 0, borderRadius: r.iconRadius, background: "var(--hjm-color-surface-alt)", color: "var(--hjm-color-text)", boxShadow: ghost ? undefined : "0 0 0 1px var(--hjm-color-border)", outline: ghost ? "1px dashed var(--hjm-color-text-muted)" : undefined, opacity: ghost ? r.ghostOpacity : 1, fontSize: 32}}>{icon}{overlay}</span>
+    <Text variant="caption" style={{display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: labelLines, width: "100%", maxWidth: labelLines === 2 ? r.multilineLabelMaxWidth : r.labelMaxWidth, minHeight: labelLines === 2 ? r.multilineLabelMinHeight : undefined, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "normal", overflowWrap: "anywhere", textAlign: "center", fontWeight: 500}}>{label}</Text>
+  </span>;
 }

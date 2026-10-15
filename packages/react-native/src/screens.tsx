@@ -1,3 +1,4 @@
+import { iconTileRecipe, notificationRowRecipe as notificationRecipe } from "@hjmds/design-contracts/screen-patterns";
 import { resolveComposerLimit, type ComposerLengthFeedback } from "@hjmds/design-contracts/communication";
 import { Progress } from "./feedback.js";
 import { resolveDesignProfileScreen, type DesignProfileScreenPresentation } from "@hjmds/design-contracts/design-profile-layout";
@@ -254,6 +255,8 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
 /** Shared structure for embedded compositions. The parent supplies size; this never creates a second scroller. */
 export type CompositionLayoutProps = Readonly<{
   title?: string;
+  /** Document heading level; visual treatment remains the shared composition title. */
+  headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
   description?: string;
   badge?: ReactNode;
   leading?: ReactNode;
@@ -267,12 +270,12 @@ export type CompositionLayoutProps = Readonly<{
   loadingIndicator?: ReactNode;
   layoutStyle?: HjmCompositionStyleProp;
 }>;
-export function CompositionLayout({title, description, badge, leading, actions, notice, children, footer, state = {kind: "ready"}, stateAction, loadingIndicator, layoutStyle}: CompositionLayoutProps) {
+export function CompositionLayout({title, headingLevel = 3, description, badge, leading, actions, notice, children, footer, state = {kind: "ready"}, stateAction, loadingIndicator, layoutStyle}: CompositionLayoutProps) {
   const resolved = resolveScreenContentState(state);
   return <Stack gap="md" {...(layoutStyle === undefined ? {} : {layoutStyle})}>
     {title || description || badge || leading || actions ? <Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap: "wrap"}}>
       {leading}<Stack gap="xxs" layoutStyle={{flex: 1, minWidth: 0}}>
-        <Stack axis="inline" gap="xs" align="center" layoutStyle={{flexWrap: "wrap"}}>{title ? <Text variant="title" accessibilityRole="header">{title}</Text> : null}{badge}</Stack>
+        <Stack axis="inline" gap="xs" align="center" layoutStyle={{flexWrap: "wrap"}}>{title ? <Text variant="title" accessibilityRole="header" aria-level={headingLevel}>{title}</Text> : null}{badge}</Stack>
         {description ? <Text tone="muted">{description}</Text> : null}
       </Stack>{actions}
     </Stack> : null}
@@ -283,4 +286,41 @@ export function CompositionLayout({title, description, badge, leading, actions, 
     </Stack>}
     {footer}
   </Stack>;
+}
+
+export type NotificationRowProps = Readonly<{
+  /** Text and inline emphasis only; interactive content belongs outside the row. */
+  preview: ReactNode;
+  metadata: string;
+  avatar: ReactNode;
+  avatarBadge?: ReactNode;
+  thumbnail?: ReactNode;
+  unread?: boolean;
+}>;
+
+/** The host supplies navigation/disabled state and the complete accessible name. */
+export function NotificationRow({ preview, metadata, avatar, avatarBadge, thumbnail, unread = false }: NotificationRowProps) {
+  const r = notificationRecipe, { colors, tokens } = useHjmNativeTheme();
+  return <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ flexDirection: "row", alignItems: "center", gap: r.gap, paddingVertical: r.paddingBlock, paddingHorizontal: r.paddingInline, width: "100%", minWidth: 0 }}>
+    <View style={{ width: r.avatarSize, height: r.avatarSize, flexShrink: 0 }}>
+      <View style={{ width: "100%", height: "100%", overflow: "hidden", borderRadius: r.avatarSize / 2 }}>{avatar}</View>
+      {avatarBadge ? <View style={{ position: "absolute", bottom: 0, right: 0, alignItems: "center", justifyContent: "center", width: r.avatarBadgeSize, height: r.avatarBadgeSize, borderRadius: r.avatarBadgeSize / 2, backgroundColor: colors.surface, borderWidth: 2, borderColor: colors.surface }}>{avatarBadge}</View> : null}
+    </View>
+    <View style={{ flex: 1, minWidth: 0, gap: r.contentGap }}>
+      <Text numberOfLines={r.previewLines}>{preview}</Text>
+      <View style={{ flexDirection: "row", alignItems: "center", gap: r.contentGap }}><Text variant="caption" tone="muted">{metadata}</Text>{unread ? <View testID="hjm-unread-dot" style={{ width: r.unreadSize, height: r.unreadSize, borderRadius: r.unreadSize / 2, flexShrink: 0, backgroundColor: colors.contentBrand }} /> : null}</View>
+    </View>
+    {thumbnail ? <View style={{ width: r.thumbnailSize, height: r.thumbnailSize, flexShrink: 0, overflow: "hidden", borderRadius: tokens.radius.sm }}>{thumbnail}</View> : null}
+  </View>;
+}
+
+export type IconTileProps = Readonly<{ icon: ReactNode; label: string; overlay?: ReactNode; labelLines?: 1 | 2; ghost?: boolean }>;
+/** Presentation shared by launcher and profile grids; the host owns navigation or drag behavior. */
+export function IconTile({icon, label, overlay, labelLines = 1, ghost = false}: IconTileProps) {
+  const r = iconTileRecipe;
+  const {colors} = useHjmNativeTheme();
+  return <View style={{alignItems: "center", gap: r.gap, minWidth: 0, width: "100%", overflow: "visible"}}>
+    <View style={{position: "relative", alignItems: "center", justifyContent: "center", width: r.iconSize, height: r.iconSize, borderRadius: r.iconSize * .22, backgroundColor: colors.surfaceAlt, borderWidth: 1, borderStyle: ghost ? "dashed" : "solid", opacity: ghost ? r.ghostOpacity : 1, borderColor: colors.border}}>{icon}{overlay}</View>
+    <Text variant="caption" numberOfLines={labelLines} style={{width: "100%", minHeight: labelLines === 2 ? r.multilineLabelMinHeight : undefined, maxWidth: labelLines === 2 ? r.multilineLabelMaxWidth : r.labelMaxWidth, textAlign: "center", fontWeight: "500"}}>{label}</Text>
+  </View>;
 }

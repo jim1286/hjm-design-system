@@ -234,3 +234,13 @@ editing ? <EditorScreen title={t("profile.edit")} submitPlacement="footer" dirty
 - Storybook은 실제 서버·세션·라우터 연동 증거가 아니다. 기본·어두운 테마와 실패와 복구를 각각 확인한다.
 
 2026-10-13 실제 계정 예제 검수: 실패한 프로필 초안은 유지하고 성공 뒤에만 요약을 갱신한다. 계정 Sheet와 로그아웃 AlertDialog의 returnFocusRef는 계정 메뉴 행동을 가리킨다. 로그아웃을 확정하면 열림 상태도 함께 정리하므로 예제를 다시 열 때 확인창이 되살아나지 않는다. 이는 로컬 예제 상태이며 실제 세션 종료·Native OS 초점/발표 검증과 구분한다.
+
+## 프로필 요약
+
+`ProfileSummary`(`@hjmds/react/screen-flows`, `@hjmds/react-native/screen-flows`)는 아바타·이름·배지·이름 행동 → 통계 → 행동 → 추가 소개의 기본 배치를 제공한다.
+`name`/`avatar`/`badge`/`nameActions`와 `stats: {id,value,label,onPress?,disabled?}[]`, `actions`, `children`을 연결한다.
+통계의 목적지·팔로우 요청·차단 권한·문구는 제품이 소유하며 요약은 저장 성공을 추정하지 않는다.
+`ProfileScreen.summary`나 제품의 가상화 목록 header에서 같은 요약을 재사용한다.
+단일 팔로우 카드는 `FollowProfileCard`의 요청/실패 계약을 유지하고 다중 통계를 위한 대체 엔진으로 복제하지 않는다.
+
+`headingLevel`은 화면의 제목 계층에 맞춰 선택한다(기본 2). 아바타 72px 원형 프레임과 수치·행동 배치는 HJM이 소유한다.

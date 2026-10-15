@@ -809,6 +809,15 @@
         "role": "canonical"
       },
       {
+        "name": "IconTile",
+        "source": "packages/react/src/screens.tsx",
+        "entries": [
+          "./screens"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "Image",
         "source": "packages/react/src/supplemental-display.tsx",
         "entries": [
@@ -1081,6 +1090,15 @@
         "role": "supplemental"
       },
       {
+        "name": "NotificationRow",
+        "source": "packages/react/src/screens.tsx",
+        "entries": [
+          "./screens"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "NumberField",
         "source": "packages/react/src/number-field.tsx",
         "entries": [
@@ -1209,6 +1227,15 @@
       },
       {
         "name": "ProfileScreen",
+        "source": "packages/react/src/screen-flows.tsx",
+        "entries": [
+          "./screen-flows"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "ProfileSummary",
         "source": "packages/react/src/screen-flows.tsx",
         "entries": [
           "./screen-flows"
@@ -2707,6 +2734,15 @@
         "role": "canonical"
       },
       {
+        "name": "IconTile",
+        "source": "packages/react-native/src/screens.tsx",
+        "entries": [
+          "./screens"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "Image",
         "source": "packages/react-native/src/data-display.tsx",
         "entries": [
@@ -3008,6 +3044,15 @@
         "role": "supplemental"
       },
       {
+        "name": "NotificationRow",
+        "source": "packages/react-native/src/screens.tsx",
+        "entries": [
+          "./screens"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "NumberField",
         "source": "packages/react-native/src/number-field.tsx",
         "entries": [
@@ -3046,6 +3091,16 @@
         ],
         "canonicalComponent": null,
         "role": "supplemental"
+      },
+      {
+        "name": "Pagination",
+        "source": "packages/react-native/src/pagination.tsx",
+        "entries": [
+          ".",
+          "./pagination"
+        ],
+        "canonicalComponent": "Pagination",
+        "role": "canonical"
       },
       {
         "name": "PasswordField",
@@ -3105,6 +3160,15 @@
       },
       {
         "name": "ProfileScreen",
+        "source": "packages/react-native/src/screen-flows.tsx",
+        "entries": [
+          "./screen-flows"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "ProfileSummary",
         "source": "packages/react-native/src/screen-flows.tsx",
         "entries": [
           "./screen-flows"

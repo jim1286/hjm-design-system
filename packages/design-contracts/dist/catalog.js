@@ -136,7 +136,7 @@ export const componentCatalog = [
     // Product routes and device QA remain consumer-owned; the Web renderer and route-link proofs now pass.
     { name: "Breadcrumb", category: "navigation", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), recipe: "breadcrumbRecipe", behavior: "breadcrumb" },
     // Numeric-only rendering has no visible prose slot; four-digit page layout remains in the 320px/2x/RTL proof.
-    { name: "Pagination", category: "navigation", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), recipe: "paginationRecipe", behavior: "pagination" },
+    { name: "Pagination", category: "navigation", platform: "shared", status: "stable", ...surfaceMaturity("stable", "beta"), recipe: "paginationRecipe", behavior: "pagination" },
     { name: "LoadMore", category: "navigation", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "loadMoreRecipe", behavior: "loadMore", ...evidenceNeeded("Web keyboard fallback·viewport observer와 Native onEndReached·retry action에서 requestKey 중복 방지, busy/error/complete 상태와 긴 현지화 문구를 검증했습니다. Native FlatList/device 통합은 소비 앱 QA입니다.") },
     // This non-interactive progress summary now has long-label matrix coverage on both renderers.
     { name: "Steps", category: "navigation", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "stepsRecipe", ...evidenceNeeded("단일 cursor에서 상태를 파생하는 Web·Native renderer와 기본 실행 증거가 연결됐습니다. 실제 다단계 흐름과 보조기기 증거가 더 필요합니다.") },

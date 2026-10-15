@@ -2,23 +2,23 @@
 
 - 단계: 컴포넌트
 - 상태: 배포
-- 지원: Web
+- 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-15
 - 근거: [Pagination](../../pagination.md), `src/pagination.ts`(`paginationRecipe`)
 - 스토리북: `배포/컴포넌트/탐색/페이지 이동`
 
 ## 언제 쓰나
 
 총 개수(또는 총 페이지 수)가 정해진 결과 집합에서 사용자가 **임의의 페이지로 바로 이동**해야 할 때
-Web에서 쓴다. 검색 결과, 관리자 테이블, 기록 목록이 여기에 속한다.
+Web·Native에서 쓴다. 검색 결과, 관리자 테이블, 기록 목록이 여기에 속한다.
 
 ## 쓰지 않을 때
 
 | 상황 | 대신 쓸 것 |
 | --- | --- |
 | 총량을 모르거나 계속 이어지는 피드 | [LoadMore](load-more.md) |
-| Native 긴 목록 | [LoadMore](load-more.md), [VirtualList](virtual-list.md) (Pagination은 Web 전용) |
+| 끝없이 이어지는 Native 피드 | [LoadMore](load-more.md), [VirtualList](virtual-list.md) |
 | 단계형 흐름의 이전/다음 | [Steps](steps.md) |
 | 이미지·카드 넘기기 | [Carousel](carousel.md) |
 
@@ -28,7 +28,7 @@ Web에서 쓴다. 검색 결과, 관리자 테이블, 기록 목록이 여기에
 
 | 이름 | 역할 | Web | Native |
 | --- | --- | --- | --- |
-| `Pagination` | 기본 | `@hjmds/react`, `/navigation`, `/pagination` | — |
+| `Pagination` | 기본 | `@hjmds/react`, `/navigation`, `/pagination` | `@hjmds/react-native`, `/pagination` |
 
 ## 최소 사용 예
 
@@ -46,7 +46,9 @@ import { Pagination } from "@hjmds/react/pagination";
 />
 ```
 
-Native 예는 없다(renderer 없음).
+Native는 같은 props로 `@hjmds/react-native/pagination`에서 가져온다. 조회 중에는 `disabled`로 이전·번호·다음 행동을 함께 잠근다. `testID`는 탐색 묶음에 붙는다.
+
+2026-10-15 다에리의 유한 편지 목록에서 페이지 번호가 이미 제품 기능이었으나 renderer 부재로 공통 배치를 복제한 원인을 수정했다. Native renderer는 다음 게시본부터 제공하며 현재 후보 상태다.
 
 ## 축과 기본값
 

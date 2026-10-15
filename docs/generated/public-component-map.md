@@ -4,7 +4,7 @@
 
 ## @hjmds/react
 
-고유 공개 컴포넌트 및 provider 이름 203개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 206개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -92,6 +92,7 @@
 | HjmProvider | DesignSystemProvider | canonical | root, ./provider |
 | Icon | Icon | canonical | root, ./display |
 | IconButton | IconButton | canonical | root, ./actions |
+| IconTile | 별도 보조 기능 | supplemental | ./screens |
 | Image | Image | canonical | root, ./display |
 | ImageComparison | 별도 보조 기능 | supplemental | ./image-comparison |
 | ImportFieldMapping | 별도 보조 기능 | supplemental | ./data-workflows |
@@ -121,6 +122,7 @@
 | NotificationBell | IconButton | optional-extension | ./notification-bell |
 | NotificationInboxScreen | 별도 보조 기능 | supplemental | ./screens |
 | NotificationItem | 별도 보조 기능 | supplemental | ./screens |
+| NotificationRow | 별도 보조 기능 | supplemental | ./screens |
 | NumberField | NumberField | canonical | root, ./forms, ./number-field |
 | OnboardingScreen | 별도 보조 기능 | supplemental | ./screen-flows |
 | OtpField | OtpField | canonical | root, ./forms, ./otp-field |
@@ -135,6 +137,7 @@
 | Popover | Popover | canonical | root, ./popover |
 | PricingChoice | 별도 보조 기능 | supplemental | ./task-controls |
 | ProfileScreen | 별도 보조 기능 | supplemental | ./screen-flows |
+| ProfileSummary | 별도 보조 기능 | supplemental | ./screen-flows |
 | Progress | Progress | canonical | root, ./feedback |
 | ProgressiveBlur | 별도 보조 기능 | supplemental | ./progressive-blur |
 | QRCode | QRCode | canonical | ./qr-code |
@@ -214,7 +217,7 @@
 
 ## @hjmds/react-native
 
-고유 공개 컴포넌트 및 provider 이름 189개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 193개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -297,6 +300,7 @@
 | HjmNativeProvider | DesignSystemProvider | canonical | root, ./provider |
 | Icon | Icon | canonical | root, ./primitives |
 | IconButton | IconButton | canonical | root, ./actions, ./bottom-cta |
+| IconTile | 별도 보조 기능 | supplemental | ./screens |
 | Image | Image | canonical | root, ./data-display |
 | ImageComparison | 별도 보조 기능 | supplemental | ./image-comparison |
 | ImageViewer | Image | optional-extension | ./image-viewer |
@@ -329,10 +333,12 @@
 | NotificationBell | IconButton | optional-extension | ./notification-bell |
 | NotificationInboxScreen | 별도 보조 기능 | supplemental | ./screens |
 | NotificationItem | 별도 보조 기능 | supplemental | ./screens |
+| NotificationRow | 별도 보조 기능 | supplemental | ./screens |
 | NumberField | NumberField | canonical | root, ./inputs, ./number-field |
 | OnboardingScreen | 별도 보조 기능 | supplemental | ./screen-flows |
 | OtpField | OtpField | canonical | root, ./inputs, ./otp-field |
 | OverviewScreen | 별도 보조 기능 | supplemental | ./design-profile |
+| Pagination | Pagination | canonical | root, ./pagination |
 | PasswordField | PasswordField | canonical | root, ./inputs, ./password-field |
 | PasswordRulesField | 별도 보조 기능 | supplemental | ./task-controls |
 | PermissionScreen | 별도 보조 기능 | supplemental | ./screen-flows |
@@ -340,6 +346,7 @@
 | PieChart | Chart | companion-or-alternative | ./chart |
 | PricingChoice | 별도 보조 기능 | supplemental | ./task-controls |
 | ProfileScreen | 별도 보조 기능 | supplemental | ./screen-flows |
+| ProfileSummary | 별도 보조 기능 | supplemental | ./screen-flows |
 | Progress | Progress | canonical | root, ./feedback |
 | ProgressiveBlur | 별도 보조 기능 | supplemental | ./progressive-blur |
 | QRCode | QRCode | canonical | ./qr-code |

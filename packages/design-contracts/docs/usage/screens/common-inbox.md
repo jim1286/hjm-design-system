@@ -123,3 +123,11 @@ import { NotificationInboxScreen, NotificationItem } from "@hjmds/react-native/s
 - 읽음 저장 실패와 초기 조회 실패를 분리한다. 읽음 오류와 실패 예약은 알림 행동에만 연결하고, 대화로 이동해도 메시지 전송 오류로 표시하지 않는다.
 - 읽음 저장 실패는 본문을 교체하지 않고 `notice`에 한 줄로 알리며 알림은 읽지 않음으로 남는다(스토리 `읽음 저장 실패와 복구`). 묶음 제목(오늘·이번 주)은 Heading `level5`다.
 - Storybook은 실제 서버·OS 권한·라우터 연동 증거가 아니다. 기본·다크와 실패/복구를 각각 확인한다.
+
+## 알림 미리보기 행
+
+전체 행을 링크/Pressable로 사용하는 제품은 같은 `screens` subpath의 `NotificationRow`를 쓴다.
+`preview`는 이름 강조를 포함한 인라인 텍스트, `metadata`는 지역화 시각, `avatar`·`avatarBadge`·`thumbnail`은 제품 자산이다.
+44px 아바타와 썸네일, 우하단 20px 종류 배지, 2줄 미리보기와 6px 읽지 않음 점의 배치는 HJM이 소유한다.
+제품은 바깥 링크/Pressable 한 곳에 이동·disabled·전체 접근성 이름을 제공한다. 행 내부에 별도 버튼을 넣지 않는다.
+단순 제목/설명 알림은 기존 `NotificationItem`을 그대로 사용한다. 두 API는 같은 알림함의 콘텐츠 밀도에 따른 선택이다.

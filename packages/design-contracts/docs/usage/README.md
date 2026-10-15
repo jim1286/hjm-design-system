@@ -6,7 +6,7 @@
 버튼 위치에서 시작해 구성·컴포넌트 지침으로 내려가고, 값은 토큰 지침에서 고른다.
 [선택 기준](SELECTION.md)으로 그대로 사용·공개 슬롯 확장·제품 전용 구성을 고른다. 설치 버전의 지침을 본다: `node_modules/@hjmds/design-contracts/docs/usage/`.
 제공 기준은 확인한 기본 API 버전이며 최초 출시 버전이 아니다. 구성·화면은 각 API 지침의 제공 버전을 확인한다.
-API 안정성은 1.24.0의 생성 manifest에서 읽은 정규(canonical) API 기준이다. 동반·선택형 확장은 개별 계약을 확인한다.
+API 안정성은 1.25.0의 생성 manifest에서 읽은 정규(canonical) API 기준이다. 동반·선택형 확장은 개별 계약을 확인한다.
 Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품 반영을 의미하지 않는다.
 `분류`는 Storybook 제목 `<배포|실험>/<단계>/<분류>/<항목>`의 셋째 마디이고, 토큰·구성·화면은 Storybook 메뉴와 같은 순서다.
 
@@ -90,6 +90,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [Heading](components/heading.md) | 글자와 아이콘 | 자리를 모르는 큰 제목 글자 하나가 필요할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Icon](components/icon.md) | 글자와 아이콘 | HJM semantic 이름(`search`, `back`, `chevronEnd`, `notifications` 등 43개)으로 고르는 그림 기호에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [IconButton](components/icon-button.md) | 동작 | 보이는 글자 없이 아이콘만으로 표시하는 행동에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [IconTile](components/icon-tile.md) | — | 프로필·런처 격자의 아이콘 위/제목 아래 항목에 쓴다. | 미게시(1.25.0 이후) | Web · Native | 개별 API 계약 참조 | 실험 |
 | [Image](components/image.md) | 데이터 표시 | 원본 크기를 아는 사진·차트 이미지를 로드 전에 자리를 잡아 두고, 실패해도 의미를 잃지 않게 보여 줄 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [ImageComparison](components/image-comparison.md) | 데이터 표시 | 같은 좌표와 비율의 두 이미지를 겹쳐 변화량을 비교할 때 쓴다. | 1.14.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [KeyboardAvoiding](components/keyboard-avoiding.md) | — | 추가 native peer 없이 하단 행동(BottomCTA, 채팅 입력창)이 소프트웨어 키보드에 가려지지 않게 할 때 쓴다. | 1.12.1 | Native | 개별 API 계약 참조 | 배포 |
@@ -112,16 +113,18 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [Notice](components/notice.md) | 상태와 알림 | 화면 흐름 안 **제자리에 남아 있는** 상태 알림에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [NotificationInboxScreen](components/notification-inbox-screen.md) | 화면/소통 | 알림함 화면 전체 틀에 쓴다. | 1.17.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [NotificationItem](components/notification-item.md) | 구성/정보 표시 | 알림함의 알림 한 행에 쓴다. | 1.17.1 | Web · Native | 개별 API 계약 참조 | 배포 |
+| [NotificationRow](components/notification-row.md) | — | 알림 목록에서 아바타, 유형 배지, 미리보기, 시간, 읽지 않음 표시, 선택적 썸네일을 나란히 배치한다. |  | Web · Native | 개별 API 계약 참조 | 후보 |
 | [NumberField](components/number-field.md) | 입력 | 범위가 정해진 **정확한 수 하나**를 입력받을 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [OnboardingScreen](components/onboarding-screen.md) | 화면/소개 | 첫 실행 소개·초기 설정처럼 **몇 단계를 차례로 넘기는 화면**에 쓴다. | 1.14.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [OtpField](components/otp-field.md) | 입력 | 문자·메일로 받은 **숫자 인증번호**를 칸 모양으로 입력받을 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [OverviewScreen](components/overview-screen.md) | 레이아웃 | 같은 데이터와 기능을 유지하면서 테마별 행·카드·격자와 도구 배치를 선택하는 목록 화면에 쓴다. | 1.15.0 | Web · Native | 개별 API 계약 참조 | 배포 |
-| [Pagination](components/pagination.md) | 탐색 | 총 개수(또는 총 페이지 수)가 정해진 결과 집합에서 사용자가 **임의의 페이지로 바로 이동**해야 할 때 Web에서 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |
+| [Pagination](components/pagination.md) | 탐색 | 총 개수(또는 총 페이지 수)가 정해진 결과 집합에서 사용자가 **임의의 페이지로 바로 이동**해야 할 때 Web·Native에서 쓴다. | 1.12.1 | Web · Native | Web stable / Native beta | 배포 |
 | [PasswordField](components/password-field.md) | 입력 | 비밀번호를 입력받고, 필요할 때만 값을 눈으로 확인하게 할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [PermissionScreen](components/permission-screen.md) | 화면/소개 | 카메라·위치·알림 같은 권한이 **왜 필요한지 설명하고 다음 행동을 고르게 하는** 화면에 쓴다. | 1.17.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [PhotoSourceSheet](components/photo-source-sheet.md) | 구성/선택과 필터 | 사진 버튼 하나에서 **앨범에서 고르기 / 촬영하기**를 고르게 할 때 쓴다. | 1.17.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Popover](components/popover.md) | 오버레이 | 트리거에 붙어 뜨는 비모달 표면 안에 **포커스를 받는 임의 콘텐츠**를 둘 때 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |
 | [ProfileScreen](components/profile-screen.md) | 화면/계정 | 내 프로필(또는 계정) 화면 틀에 쓴다. | 1.17.1 | Web · Native | 개별 API 계약 참조 | 배포 |
+| [ProfileSummary](components/profile-summary.md) | — | 프로필의 아바타·이름·배지·통계 수치·행동을 구성한다. |  | Web · Native | 개별 API 계약 참조 | 후보 |
 | [Progress](components/progress.md) | 상태와 알림 | 작업이 얼마나 진행됐는지 보여 줄 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [ProgressiveBlur](components/progressive-blur.md) | 시각 효과 | 스크롤 영역의 바깥에 더 내용이 있음을 알리거나 장식 이미지 가장자리를 흐릴 때 쓴다. | 1.14.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [QRCode](components/qr-code.md) | 데이터 표시 | 문자열(초대 링크, 연결 코드, 결제·체크인 URL)을 다른 기기의 카메라로 스캔하게 할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |

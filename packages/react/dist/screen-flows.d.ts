@@ -334,5 +334,23 @@ export type CommentThreadRowProps = Readonly<{
 export declare function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyle }: CommentThreadRowProps): import("react").JSX.Element;
 /** Controlled thread: server ordering, permission checks and receipt-based draft clearing belong to the product. */
 export declare function CommentThreadScreen({ items, expandedIds, onExpandedChange, onLike, onReply, replyLabel, repliesLabel, composer, threadHeader, threadFooter, ...screen }: CommentThreadScreenProps): import("react").JSX.Element;
+export type ProfileSummaryProps = Readonly<{
+    name: string;
+    headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
+    avatar: ReactNode;
+    badge?: ReactNode;
+    nameActions?: ReactNode;
+    stats?: readonly Readonly<{
+        id: string;
+        value: string;
+        label: string;
+        onPress?(): void;
+        disabled?: boolean;
+    }>[];
+    actions?: ReactNode;
+    children?: ReactNode;
+}>;
+/** Profile identity and counts are common; routing and mutations stay controlled by the product. */
+export declare function ProfileSummary({ name, headingLevel, avatar, badge, nameActions, stats, actions, children }: ProfileSummaryProps): import("react").JSX.Element;
 export {};
 //# sourceMappingURL=screen-flows.d.ts.map

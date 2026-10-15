@@ -164,4 +164,14 @@ export function timestampRevealOffset(dx, dy) {
     // A 12px dead zone and 2:1 direction bias avoid turning taps/list scrolling into a time gesture.
     return dx > 12 && dx > Math.abs(dy) * 2 ? Math.min(dx, 88) : 0;
 }
+/** Notification previews need an actor/type badge and a separate subject thumbnail.
+ * Keep this geometry shared so inboxes do not recreate the same row per product. */
+export const notificationRowRecipe = {
+    gap: 12, contentGap: 4, avatarSize: 44, avatarBadgeSize: 20,
+    thumbnailSize: 44, unreadSize: 6, previewLines: 2, paddingBlock: 12, paddingInline: 16,
+};
+/** Shared profile identity geometry; product owns the avatar content. */
+export const profileSummaryRecipe = Object.freeze({ avatarSize: 72 });
+/** Launcher artwork stays above its caption; product overlays may extend beyond the icon frame. */
+export const iconTileRecipe = Object.freeze({ iconSize: 64, labelMaxWidth: 72, multilineLabelMaxWidth: 84, multilineLabelMinHeight: 44, ghostOpacity: 0.55, gap: 6, iconRadius: "22%" });
 //# sourceMappingURL=screen-patterns.js.map

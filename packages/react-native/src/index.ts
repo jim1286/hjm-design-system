@@ -288,3 +288,5 @@ export { AuthProviderButton, type AuthProviderButtonProps } from "./provider-but
 export { AuthScreenLayout, type AuthScreenLayoutProps } from "./auth-screen.js";
 
 export { StatusText, type StatusTextProps } from "./status-text.js";
+
+export { Pagination, type PaginationProps } from "./pagination.js";

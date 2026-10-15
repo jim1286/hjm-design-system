@@ -6,26 +6,12 @@
 바로 이동할 수 있어야 한다. 이는 계속 스크롤해서 다음 항목을 불러오는 열린
 목록과는 다른 문제다.
 
-## Pagination과 LoadMore의 경계 (로드맵이 이미 그은 선)
+## Pagination과 LoadMore의 경계
 
-`docs/expansion-roadmap.md`는 이미 명시한다: "Native 긴 목록에는 페이지 번호
-보다 LoadMore/infinite loading을 사용한다." 그래서 Pagination은 `platform:
-web` 전용이고 LoadMore(`shared`)는 두 플랫폼 다 있다. 이유는 표면적
-"페이지 번호 vs 무한 스크롤" 취향이 아니라 총량과 입력 장치의 차이다.
-
-- Pagination은 **안정된 총 개수/총 페이지**를 전제한다 — 사용자가 "42페이지로
-  가겠다"는 의도를 표현할 수 있는 자리다.
-- LoadMore는 **총량을 몰라도** 되고, 사용자는 "다음 조금 더"만 의도한다 —
-  `LoadMoreState`에 `totalPages` 개념 자체가 없다.
-- 마우스/키보드가 있는 Web에서는 임의 페이지 클릭이 싸다. 터치로 스크롤하는
-  Native 긴 목록에서는 페이지 번호 탭이 스크롤 관성과 경쟁하고, 오차 없이
-  작은 숫자를 누르기도 어렵다.
-
-두 계약은 서로를 참조하지 않는다(`src/load-more.ts`는 Pagination을 모르고
-반대도 마찬가지). 제품이 고르는 기준은 이 문서에 있다: **총량이 고정되고
-사용자가 임의 페이지로 점프해야 하면 Pagination, 그렇지 않고 계속 이어지는
-피드면 LoadMore.** 같은 화면에 두 계약을 동시에 쓸 이유는 없다 — 하나의
-목록은 둘 중 하나의 탐색 모델만 가진다.
+총량이 정해지고 임의 페이지로 이동하는 목록은 Web·Native 모두 Pagination을 쓴다.
+끝없이 이어지는 피드는 LoadMore를 사용한다. 하나의 목록에는 탐색 모델 하나만 연결한다.
+2026-10-15 다에리 전수 점검에서 Native 번호 탐색을 제품이 복제한 원인이 renderer 부재로
+확인되어 같은 descriptor/resolver를 쓰는 Native renderer를 추가했다. 기존 Web API는 유지한다.
 
 ## 일반화한 계약
 

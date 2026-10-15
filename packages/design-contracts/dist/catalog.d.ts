@@ -724,11 +724,11 @@ export declare const componentCatalog: readonly [{
     readonly behavior: "pagination";
     readonly surfaceStatus: {
         readonly web: "stable";
-        readonly native: "unsupported";
+        readonly native: "beta";
     };
     readonly name: "Pagination";
     readonly category: "navigation";
-    readonly platform: "web";
+    readonly platform: "shared";
     readonly status: "stable";
 }, {
     readonly roadmap: {

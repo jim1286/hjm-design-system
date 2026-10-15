@@ -79,3 +79,26 @@ it("keeps a product title control interactive in the common title slot", async (
   const button=host.querySelector<HTMLButtonElement>(".hjm-top-bar__title button")!;
   expect(button).not.toBeNull(); await act(async()=>button.click()); expect(toggle).toHaveBeenCalledOnce();
 });
+
+import { ProfileSummary } from '../src/screen-flows.js';
+import { NotificationRow } from '../src/screens.js';
+it('keeps profile commands independent and inbox previews under one named router target', async () => {
+  const followers = vi.fn(), edit = vi.fn();
+  await act(async () => root.render(<HjmProvider><ProfileSummary name="Person" headingLevel={1} avatar={<span>portrait</span>}
+    stats={[{id:'followers',value:'12',label:'Followers',onPress:followers},{id:'posts',value:'3',label:'Posts'}]}
+    nameActions={<button onClick={edit}>Edit</button>} />
+    <a href="/entry" aria-label="Person replied. Now. Unread"><NotificationRow preview={<><strong>Person</strong> replied</>} metadata="Now" avatar={<span>portrait</span>} avatarBadge={<span>reply</span>} thumbnail={<span>subject</span>} unread /></a></HjmProvider>));
+  expect(host.querySelector('h1')?.textContent).toBe('Person');
+  const count = host.querySelector<HTMLButtonElement>('button[aria-label="12 Followers"]')!;
+  await act(async () => count.click()); expect(followers).toHaveBeenCalledOnce(); expect(edit).not.toHaveBeenCalled();
+  expect(host.querySelectorAll('a')).toHaveLength(1);
+  expect(host.querySelector('a button')).toBeNull();
+  expect(host.querySelector('[data-hjm-notification-row]')?.getAttribute('aria-hidden')).toBe('true');
+  expect(host.querySelector('[data-hjm-unread-dot]')).not.toBeNull();
+});
+it('names loading status and keeps retry inside the announced failure group', async () => {
+  await act(async () => root.render(<ScreenLayout title="Search" state={{kind:'loading',title:'Loading'}} />));
+  expect(host.querySelector('[role="status"]')?.getAttribute('aria-label')).toBe('Loading');
+  await act(async () => root.render(<ScreenLayout title="Search" state={{kind:'error',title:'Failed'}} stateAction={<button>Retry</button>} />));
+  expect(host.querySelector('[role="alert"] button')?.textContent).toBe('Retry');
+});

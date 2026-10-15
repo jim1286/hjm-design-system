@@ -137,6 +137,8 @@ export declare function ChatMessage({ direction, author, timestamp, timestampPre
 /** Shared structure for embedded compositions. The parent supplies size; this never creates a second scroller. */
 export type CompositionLayoutProps = Readonly<{
     title?: string;
+    /** Document heading level; visual treatment remains the shared composition title. */
+    headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
     description?: string;
     badge?: ReactNode;
     leading?: ReactNode;
@@ -150,5 +152,25 @@ export type CompositionLayoutProps = Readonly<{
     loadingIndicator?: ReactNode;
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function CompositionLayout({ title, description, badge, leading, actions, notice, children, footer, state, stateAction, loadingIndicator, layoutStyle }: CompositionLayoutProps): import("react").JSX.Element;
+export declare function CompositionLayout({ title, headingLevel, description, badge, leading, actions, notice, children, footer, state, stateAction, loadingIndicator, layoutStyle }: CompositionLayoutProps): import("react").JSX.Element;
+export type NotificationRowProps = Readonly<{
+    /** Text and inline emphasis only; interactive content belongs outside the row. */
+    preview: ReactNode;
+    metadata: string;
+    avatar: ReactNode;
+    avatarBadge?: ReactNode;
+    thumbnail?: ReactNode;
+    unread?: boolean;
+}>;
+/** Router host owns the sole target and localized accessible name, as with ConversationRow. */
+export declare function NotificationRow({ preview, metadata, avatar, avatarBadge, thumbnail, unread }: NotificationRowProps): import("react").JSX.Element;
+export type IconTileProps = Readonly<{
+    icon: ReactNode;
+    label: string;
+    overlay?: ReactNode;
+    labelLines?: 1 | 2;
+    ghost?: boolean;
+}>;
+/** Presentation shared by launcher and profile grids; the host owns navigation or drag behavior. */
+export declare function IconTile({ icon, label, overlay, labelLines, ghost }: IconTileProps): import("react").JSX.Element;
 //# sourceMappingURL=screens.d.ts.map

@@ -5,15 +5,9 @@ import { control, opacity, spacing } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
 
 /**
- * Web-only by roadmap decision, not an oversight: "Native 긴 목록에는 페이지
- * 번호보다 LoadMore/infinite loading을 사용한다" (docs/load-more.md). Numbered
- * pages assume a stable total and a pointing device/keyboard that can jump
- * around; a touch list scrolling through hundreds of rows has neither. The two
- * contracts do not need to know about each other — LoadMore never becomes
- * Pagination and vice versa — but a product choosing between them should pick
- * Pagination for a bounded, page-addressable result set (search results,
- * admin tables) and LoadMore for an open-ended feed the user just keeps
- * scrolling.
+ * Bounded, page-addressable results share this contract on Web and Native.
+ * 2026-10-15 Diairy audit found product-owned Native pagination duplicated this
+ * window/selection model. Open-ended feeds remain the separate LoadMore contract.
  */
 export type PaginationByCount = Readonly<{
   currentPage: number;

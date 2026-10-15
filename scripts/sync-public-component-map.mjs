@@ -53,8 +53,8 @@ const supplemental = new Set([
   "InlineEdit", "RepeatableFieldGroup", "SelectionActionBar", "FilterRecovery", "TableColumnSettings",
   "CodeBlock", "ActivityHeatmap",
   // Screen compositions reuse canonical primitives; they do not expand the frozen catalog.
-  "CompositionLayout", "CommentThreadRow", "ConversationRow", "SavedItemsScreen", "CommentThreadScreen", "ListDetailScreen", "EditorScreen", "ProfileScreen", "ModerationScreen", "MediaSelectionScreen", "PhotoSourceSheet", "SearchScreen", "PermissionScreen", "OnboardingScreen",
-  "OverviewScreen", "ScreenLayout", "SettingsScreen", "NotificationInboxScreen", "NotificationItem", "ChatScreen", "MessageComposer", "ChatMessage",
+  "CompositionLayout", "CommentThreadRow", "ConversationRow", "SavedItemsScreen", "CommentThreadScreen", "ListDetailScreen", "EditorScreen", "ProfileScreen", "ProfileSummary", "ModerationScreen", "MediaSelectionScreen", "PhotoSourceSheet", "SearchScreen", "PermissionScreen", "OnboardingScreen",
+  "OverviewScreen", "ScreenLayout", "SettingsScreen", "NotificationInboxScreen", "NotificationItem", "NotificationRow", "IconTile", "ChatScreen", "MessageComposer", "ChatMessage",
   "KeyboardAvoiding", "KeyboardMotionProvider", "KeyboardDock", "KeyboardFormScrollView",
   "SortableCollection", "SwipeActions", "ContentTransition", "TextTransition", "Celebration",
   "SharedTransitionScreen", "SharedTransitionElement", "EffectSurface", "ProgressiveBlur",

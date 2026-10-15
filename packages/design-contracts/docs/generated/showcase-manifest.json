@@ -2593,11 +2593,11 @@
       "storyId": "navigation/pagination",
       "name": "Pagination",
       "category": "navigation",
-      "platform": "web",
+      "platform": "shared",
       "contractStatus": "stable",
       "surfaces": {
         "web": "stable",
-        "native": "unsupported"
+        "native": "beta"
       },
       "requirements": [
         {
@@ -2616,6 +2616,17 @@
             "reduced-motion",
             "accessibility",
             "keyboard"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
           ]
         }
       ],

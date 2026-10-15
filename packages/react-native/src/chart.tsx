@@ -1,5 +1,5 @@
 import { useCallback, useId, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { AppState, PanResponder, Pressable, Text as NativeText, View, type GestureResponderEvent, type LayoutChangeEvent } from "react-native";
+import { AppState, Platform, PanResponder, Pressable, Text as NativeText, View, type GestureResponderEvent, type LayoutChangeEvent } from "react-native";
 import Svg, { Circle, ClipPath, Defs, G, Line, LinearGradient, Path, Rect, Stop, Text as SvgText } from "react-native-svg";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { resolveDatavizSeriesColor } from "@hjmds/design-contracts/dataviz";
@@ -13,6 +13,10 @@ import {
 import { spacing } from "@hjmds/design-contracts/foundations";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
+
+// react-native-svg forwards native-only props to SVG DOM on Expo Web. Keep the
+// decorative drawing hidden with the host platform's accessibility property.
+const decorativeSvgAccessibility = Platform.OS === "web" ? { "aria-hidden": true as const } : { accessible: false };
 
 /*
  * Native chart renderers (2026-10-14). Geometry, domains, stacking, gaps and accessibility text come
@@ -202,7 +206,7 @@ export function LineChart({ categories, series, accessibilityLabel, formatValue,
     accessibilityValue={{ text: focus === null ? missingLabel : `${categories[focus]} ${series.map(item => { const v = item.values[focus]; return isChartNumber(v) ? formatValue(v) : missingLabel; }).join(", ")}` }}
     accessibilityActions={[{ name: "increment" }, { name: "decrement" }]} onAccessibilityAction={event => set(stepChartIndex(available, focus, event.nativeEvent.actionName === "increment" ? 1 : -1), false)}
     onLayout={onLayout} style={{ height }} {...handlers}>
-    {g && <Svg width={width} height={height} accessible={false}>
+    {g && <Svg width={width} height={height} {...decorativeSvgAccessibility}>
       <Defs>{scrubEmphasis && <ClipPath id={`hjmScrub${id}`}><Rect x={scrubEmphasis === "after" && focus !== null ? g.xs[focus] ?? g.plot.left : g.plot.left} y={0} width={focus === null ? width : scrubEmphasis === "after" ? g.plot.right - (g.xs[focus] ?? g.plot.left) : (g.xs[focus] ?? g.plot.right) - g.plot.left} height={height} /></ClipPath>}{series.map((item, s) => <LinearGradient key={item.id} id={`hjmArea${id}${s}`} x1="0" y1="0" x2="0" y2="1"><Stop offset="0" stopColor={palette.seriesColor(item, s)} stopOpacity={chartRecipe.area.topOpacity} /><Stop offset="1" stopColor={palette.seriesColor(item, s)} stopOpacity={chartRecipe.area.bottomOpacity} /></LinearGradient>)}</Defs>
       {(tickOverride ?? g.ticks).map(tick => <Line key={tick} x1={g.plot.left} x2={g.plot.right} y1={g.y(tick)} y2={g.y(tick)} stroke={palette.grid} strokeWidth={chartRecipe.chrome.gridWidth} />)}
       {(showAxis || valueAxis) && <AxisLabels ticks={tickOverride ?? g.ticks} y={g.y} x={g.plot.left - 6} color={palette.label} format={formatValue} />}
@@ -279,7 +283,7 @@ export function BarChart({ categories, series, accessibilityLabel, formatValue, 
     accessibilityValue={{ text: focus === null ? "" : `${categories[focus]} ${series.map(item => { const v = item.values[focus]; return isChartNumber(v) ? formatValue(v) : missingLabel; }).join(", ")}` }}
     accessibilityActions={[{ name: "increment" }, { name: "decrement" }]} onAccessibilityAction={event => set(stepChartIndex(available, focus, event.nativeEvent.actionName === "increment" ? 1 : -1), false)}
     onLayout={onLayout} style={{ height: resolvedHeight }} {...handlers}>
-    {g && <Svg width={width} height={resolvedHeight} accessible={false}>
+    {g && <Svg width={width} height={resolvedHeight} {...decorativeSvgAccessibility}>
       {g.ticks.map(tick => vertical
         ? <Line key={tick} x1={g.plot.left} x2={g.plot.right} y1={g.value(tick)} y2={g.value(tick)} stroke={palette.grid} strokeWidth={chartRecipe.chrome.gridWidth} />
         : <Line key={tick} y1={g.plot.top} y2={g.plot.bottom} x1={g.value(tick)} x2={g.value(tick)} stroke={palette.grid} strokeWidth={chartRecipe.chrome.gridWidth} />)}
@@ -345,7 +349,7 @@ export function PieChart({ data, accessibilityLabel, formatValue, donut = true, 
   const summary = data.map((d, i) => exclusion?.excludedIds.includes(d.id) ? "" : `${d.label} ${isChartNumber(d.value) ? formatValue(d.value) : ""}${percent(i) !== undefined ? ` (${Math.round(percent(i)!)}%)` : ""}`).filter(Boolean).join(", ");
   return <View style={{ gap: spacing.md }}>
     <View accessible accessibilityRole="image" accessibilityLabel={`${accessibilityLabel}. ${summary}`} style={{ width: size, height: size, alignSelf: "center" }}>
-      <Svg width={size} height={size} accessible={false}>
+      <Svg width={size} height={size} {...decorativeSvgAccessibility}>
         {slices.map(slice => <Path key={slice.index} d={slice.path} fill={colorOf(slice.index)} opacity={selected && data[slice.index]!.id !== selected ? 0.35 : 1} {...(onSelect || selectedId !== undefined ? { onPress: () => select(data[slice.index]!.id === selected ? null : data[slice.index]!.id) } : {})} />)}
         {slices.filter(slice => !donut && slice.percent >= chartRecipe.pie.minLabelPercent * 2).map(slice => <SvgText key={`t${slice.index}`} x={slice.centroid.x} y={slice.centroid.y + 4} fontSize={11} fontWeight="700" fill="#FFFFFF" textAnchor="middle">{`${Math.round(slice.percent)}%`}</SvgText>)}
       </Svg>
@@ -374,7 +378,7 @@ export function RadarChart({ categories, series, accessibilityLabel, formatValue
   const g = resolveRadarGeometry({ categories, series, cx: size / 2, cy: size / 2, radius, levels, ...(domain ? { domain } : {}) });
   return <View style={{ gap: spacing.sm }}>
     <View accessible accessibilityRole="image" accessibilityLabel={`${accessibilityLabel}. ${describeChart(categories, series, formatValue, missingLabel)}`} style={{ width: size, height: size, alignSelf: "center" }}>
-      <Svg width={size} height={size} accessible={false}>
+      <Svg width={size} height={size} {...decorativeSvgAccessibility}>
         {g.rings.map((ring, i) => <Path key={i} d={ring} fill="none" stroke={palette.grid} strokeWidth={chartRecipe.chrome.gridWidth} />)}
         {g.axes.map(axis => <Line key={axis.index} x1={size / 2} y1={size / 2} x2={axis.end.x} y2={axis.end.y} stroke={palette.grid} strokeWidth={chartRecipe.chrome.gridWidth} />)}
         {g.polygons.map(polygon => { const color = palette.seriesColor(series[polygon.seriesIndex]!, polygon.seriesIndex); return <G key={polygon.seriesIndex}>
@@ -420,7 +424,7 @@ export function ScatterChart({ points, accessibilityLabel, xLabel, yLabel, forma
         const at = ordered.findIndex(p => p.id === focused), next = ordered[Math.min(ordered.length - 1, Math.max(0, (at < 0 ? -1 : at) + (event.nativeEvent.actionName === "increment" ? 1 : -1)))];
         if (next) choose(next.id);
       }} onLayout={onLayout} style={{ height }} {...handlers}>
-      {g && <Svg width={width} height={height} accessible={false}>
+      {g && <Svg width={width} height={height} {...decorativeSvgAccessibility}>
         {g.yTicks.map(tick => { const y = g.plot.bottom - (tick - g.yDomain[0]) / ((g.yDomain[1] - g.yDomain[0]) || 1) * (g.plot.bottom - g.plot.top); return <G key={`y${tick}`}><Line x1={g.plot.left} x2={g.plot.right} y1={y} y2={y} stroke={palette.grid} strokeWidth={chartRecipe.chrome.gridWidth} /><SvgText x={g.plot.left - 6} y={y + 4} fontSize={10} fill={palette.label} textAnchor="end">{formatY(tick)}</SvgText></G>; })}
         {g.xTicks.map(tick => { const x = g.plot.left + (tick - g.xDomain[0]) / ((g.xDomain[1] - g.xDomain[0]) || 1) * (g.plot.right - g.plot.left); return <SvgText key={`x${tick}`} x={x} y={height - 4} fontSize={10} fill={palette.label} textAnchor="middle">{formatX(tick)}</SvgText>; })}
         {g.points.map(p => <Circle key={p.id} cx={p.px} cy={p.py} r={p.id === focused ? chartRecipe.scatter.focusRadius : chartRecipe.scatter.radius} fill={palette.seriesColor({}, p.seriesIndex ?? 0)} opacity={focused && p.id !== focused ? 0.45 : 0.9} stroke={p.id === focused ? palette.background : "none"} strokeWidth={2} />)}
@@ -448,7 +452,7 @@ export function Sparkline({ values, color, invert = false, domain, width = chart
   const pad = chartRecipe.sparkline.padding;
   const g = resolveLineGeometry({ categories: values.map((_, i) => String(i)), series: [{ id: "s", label: "s", values }], width, height, insets: { top: pad, right: pad, bottom: pad, left: pad }, invert, domain });
   const segments = splitSegments(g.plots[0]!);
-  const svg = <Svg width={width} height={height} accessible={false}>
+  const svg = <Svg width={width} height={height} {...decorativeSvgAccessibility}>
     <Defs><LinearGradient id={`hjmSpark${id}`} x1="0" y1="0" x2="0" y2="1"><Stop offset="0" stopColor={stroke} stopOpacity={0.28} /><Stop offset="1" stopColor={stroke} stopOpacity={0} /></LinearGradient></Defs>
     {segments.map((segment, i) => <Path key={`a${i}`} d={areaPath(segment, height)} fill={`url(#hjmSpark${id})`} />)}
     {segments.map((segment, i) => <Path key={`l${i}`} d={linePath(segment)} stroke={stroke} strokeWidth={chartRecipe.sparkline.strokeWidth} fill="none" strokeLinejoin="round" strokeLinecap="round" />)}

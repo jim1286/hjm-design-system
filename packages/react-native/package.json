@@ -608,6 +608,12 @@
       "types": "./dist/conversation-row.d.ts",
       "import": "./dist/conversation-row.js",
       "default": "./dist/conversation-row.js"
+    },
+    "./pagination": {
+      "types": "./dist/pagination.d.ts",
+      "react-native": "./dist/pagination.js",
+      "import": "./dist/pagination.js",
+      "default": "./dist/pagination.js"
     }
   },
   "files": [

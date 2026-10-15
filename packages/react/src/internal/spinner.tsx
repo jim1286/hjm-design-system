@@ -34,6 +34,7 @@ export const Spinner = forwardRef<HTMLSpanElement, SpinnerProps>(function Spinne
       data-size={size}
       data-tone={tone}
       role="status"
+      aria-label={label}
       aria-live="polite"
     >
       <span className="hjm-spinner__glyph" aria-hidden="true" />

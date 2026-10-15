@@ -32,4 +32,5 @@ export { KeyboardAvoiding, resolveKeyboardAvoidanceBehavior } from "./keyboard.j
 export { AuthProviderButton } from "./provider-button.js";
 export { AuthScreenLayout } from "./auth-screen.js";
 export { StatusText } from "./status-text.js";
+export { Pagination } from "./pagination.js";
 //# sourceMappingURL=index.js.map

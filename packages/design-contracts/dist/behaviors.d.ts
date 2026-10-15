@@ -1407,9 +1407,9 @@ export declare const behaviorRegistry: {
             readonly focus: "native";
         };
         readonly native: {
-            readonly roles: readonly [];
-            readonly states: readonly [];
-            readonly actions: readonly [];
+            readonly roles: readonly ["button"];
+            readonly states: readonly ["selected", "disabled"];
+            readonly actions: readonly ["activate"];
         };
         readonly scenarios: readonly ["current-page-marked-and-announced-without-a-composed-live-region-spam", "ellipsis-is-decorative-and-excluded-from-the-accessible-tree", "previous-disabled-on-first-page-next-disabled-on-last-page", "single-page-renders-no-ellipsis-and-no-disabled-dead-buttons", "page-window-never-produces-two-consecutive-ellipses", "nav-landmark-present-with-a-localized-accessible-name"];
     };

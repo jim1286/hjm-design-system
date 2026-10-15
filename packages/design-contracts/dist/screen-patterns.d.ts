@@ -169,4 +169,31 @@ export declare const searchScreenRecipe: {
 export declare function resolveSearchDebounceMs(value?: number): number;
 /** Horizontal intent preserves vertical scrolling and uses one reveal distance across renderers. */
 export declare function timestampRevealOffset(dx: number, dy: number): number;
+/** Notification previews need an actor/type badge and a separate subject thumbnail.
+ * Keep this geometry shared so inboxes do not recreate the same row per product. */
+export declare const notificationRowRecipe: {
+    readonly gap: 12;
+    readonly contentGap: 4;
+    readonly avatarSize: 44;
+    readonly avatarBadgeSize: 20;
+    readonly thumbnailSize: 44;
+    readonly unreadSize: 6;
+    readonly previewLines: 2;
+    readonly paddingBlock: 12;
+    readonly paddingInline: 16;
+};
+/** Shared profile identity geometry; product owns the avatar content. */
+export declare const profileSummaryRecipe: Readonly<{
+    avatarSize: 72;
+}>;
+/** Launcher artwork stays above its caption; product overlays may extend beyond the icon frame. */
+export declare const iconTileRecipe: Readonly<{
+    iconSize: 64;
+    labelMaxWidth: 72;
+    multilineLabelMaxWidth: 84;
+    multilineLabelMinHeight: 44;
+    ghostOpacity: 0.55;
+    gap: 6;
+    iconRadius: "22%";
+}>;
 //# sourceMappingURL=screen-patterns.d.ts.map

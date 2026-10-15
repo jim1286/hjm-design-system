@@ -9,7 +9,7 @@ import { AlertDialog, Menu, Sheet } from "./overlays.js";
 import { UploadItem } from "./upload-item.js";
 import {} from "@hjmds/design-contracts/components/upload-item";
 import {} from "@hjmds/design-contracts/components/alert-dialog";
-import { validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchScreenPhase, resolveFocusAfterRemoval, screenPatternRecipe, searchScreenRecipe } from "@hjmds/design-contracts/screen-patterns";
+import { validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchScreenPhase, resolveFocusAfterRemoval, screenPatternRecipe, profileSummaryRecipe, searchScreenRecipe } from "@hjmds/design-contracts/screen-patterns";
 import { resolveWindowClass } from "@hjmds/design-contracts/responsive";
 import { containerRecipe } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./display.js";
@@ -331,5 +331,11 @@ export function CommentThreadScreen({ items, expandedIds, onExpandedChange, onLi
     // Product context belongs in the same scroll body as comments. Putting a tall
     // overview in the fixed header forced a second scroll region in Spint (2026-10-08).
     return _jsx(ScreenLayout, { ...screen, footer: !screen.state || screen.state.kind === "ready" || screen.state.kind === "empty" ? composer : null, children: _jsxs(Stack, { gap: "lg", children: [threadHeader, roots.map(item => { const replies = repliesByParent.get(item.id) ?? []; return _jsxs(Stack, { gap: "xs", children: [row(item), replies.length ? _jsxs(Stack, { gap: "md", layoutStyle: { marginInlineStart: screenPatternRecipe.sectionGap }, children: [_jsx(Button, { layoutStyle: { alignSelf: "flex-start" }, tone: "ghost", size: "small", "aria-expanded": expanded.has(item.id), onClick: () => onExpandedChange(item.id), children: repliesLabel(replies.length, expanded.has(item.id)) }), expanded.has(item.id) ? replies.map(row) : null] }) : null] }, item.id); }), threadFooter] }) });
+}
+/** Profile identity and counts are common; routing and mutations stay controlled by the product. */
+export function ProfileSummary({ name, headingLevel = 2, avatar, badge, nameActions, stats = [], actions, children }) {
+    return _jsxs(CompositionLayout, { title: name, headingLevel: headingLevel, leading: _jsx("span", { style: { display: "flex", width: profileSummaryRecipe.avatarSize, height: profileSummaryRecipe.avatarSize, flexShrink: 0, borderRadius: "50%", overflow: "hidden" }, children: avatar }), badge: badge, actions: nameActions, footer: children, children: [stats.length ? _jsx(Stack, { axis: "inline", gap: "md", wrap: true, children: stats.map(stat => stat.onPress
+                    ? _jsx(Button, { tone: "ghost", "aria-label": `${stat.value} ${stat.label}`, disabled: stat.disabled ?? false, onClick: stat.onPress, children: _jsxs(Stack, { gap: "xxs", align: "center", children: [_jsx(Text, { emphasis: "strong", children: stat.value }), _jsx(Text, { variant: "caption", tone: "muted", children: stat.label })] }) }, stat.id)
+                    : _jsxs(Stack, { gap: "xxs", align: "center", children: [_jsx(Text, { emphasis: "strong", children: stat.value }), _jsx(Text, { variant: "caption", tone: "muted", children: stat.label })] }, stat.id)) }) : null, actions ? _jsx(Stack, { axis: "inline", gap: "sm", wrap: true, children: actions }) : null] });
 }
 //# sourceMappingURL=screen-flows.js.map

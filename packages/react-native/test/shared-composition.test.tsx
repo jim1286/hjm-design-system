@@ -52,3 +52,18 @@ it("preserves a title action and announces its subtitle context", () => {
   act(()=>action.props.onPress()); expect(open).toHaveBeenCalledOnce();
   expect(JSON.stringify(tree!.toJSON())).toContain("설명");act(()=>tree!.unmount());
 });
+
+import { ProfileSummary } from '../src/screen-flows.js';
+import { NotificationRow } from '../src/screens.js';
+it('preserves independent profile actions and hides duplicate notification semantics from the host target', () => {
+  let tree: ReactTestRenderer; const followers = vi.fn(), edit = vi.fn();
+  act(() => { tree = create(<HjmNativeProvider><ProfileSummary name="Person" avatar={<Text>portrait</Text>}
+    stats={[{id:'followers',value:'12',label:'Followers',onPress:followers}]}
+    nameActions={<Button onPress={edit}>Edit</Button>} />
+    <NotificationRow preview={<Text>Person replied</Text>} metadata="Now" avatar={<Text>portrait</Text>} unread /></HjmNativeProvider>); });
+  const count = tree!.root.findAllByType(Button).find(node => node.props.accessibilityLabel === '12 Followers')!;
+  act(() => count.props.onPress()); expect(followers).toHaveBeenCalledOnce(); expect(edit).not.toHaveBeenCalled();
+  expect(tree!.root.findAll(node => node.props.testID === 'hjm-unread-dot').length).toBeGreaterThan(0);
+  expect(tree!.root.findAll(node => node.props.importantForAccessibility === 'no-hide-descendants').length).toBeGreaterThan(0);
+  act(() => tree!.unmount());
+});

@@ -976,7 +976,7 @@ export const behaviorRegistry = {
             keyboard: ["Tab", "Enter", "Space"],
             focus: "native",
         },
-        native: { roles: [], states: [], actions: [] },
+        native: { roles: ["button"], states: ["selected", "disabled"], actions: ["activate"] },
         scenarios: [...paginationBehaviorScenarios],
     },
     /*

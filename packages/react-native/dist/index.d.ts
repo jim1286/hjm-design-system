@@ -32,4 +32,5 @@ export { KeyboardAvoiding, resolveKeyboardAvoidanceBehavior, type KeyboardAvoidi
 export { AuthProviderButton, type AuthProviderButtonProps } from "./provider-button.js";
 export { AuthScreenLayout, type AuthScreenLayoutProps } from "./auth-screen.js";
 export { StatusText, type StatusTextProps } from "./status-text.js";
+export { Pagination, type PaginationProps } from "./pagination.js";
 //# sourceMappingURL=index.d.ts.map
