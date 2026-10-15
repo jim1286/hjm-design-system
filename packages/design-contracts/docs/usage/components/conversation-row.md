@@ -3,7 +3,7 @@
 - 단계: 컴포넌트
 - 상태: 실험
 - 지원: Web · Native
-- 적용: 미게시(1.23.0 이후)
+- 적용: 1.24.0
 - 검토일: 2026-10-15
 - 근거: `src/conversation-row.ts`의 `conversationRowRecipe`
 - 스토리북: 별도 예제 미등록

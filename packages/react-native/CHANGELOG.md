@@ -1,5 +1,11 @@
 # @hjmds/react-native
 
+## 1.24.0
+
+### Minor Changes
+
+- e73ae51: Provide shared conversation rows and product composition slots for toolbar subtitles, branded loading artwork, centered screen content, transparent product canvases, and native scroll host events. Preserve product data, branding, and navigation while moving common layout and state behavior into HJM.
+
 ## 1.23.0
 
 ### Minor Changes
