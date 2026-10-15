@@ -190,6 +190,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [버튼에서 이어지는 편집](compositions/origin-dialog.md) | 입력과 작성 | 현재 화면의 항목을 짧게 편집하고 돌아올 때 출발 위치를 시각적으로 연결한다. | 1.14.0 | Web · Native | 구성 API별 | 배포 |
 | [빠른 메모 작성](compositions/floating-action-button.md) | 입력과 작성 | 스크롤되는 기록 목록 위에 떠 있는 생성 버튼으로 짧은 입력 대화상자를 열고, 저장하면 새 항목을 목록 맨 위에 넣을 때 쓴다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
 | [선택 내용 검토와 수정](compositions/reference-review.md) | 입력과 작성 | 선택 내용을 검토하고 수정 후 명시적으로 확정 흐름이 필요할 때 쓴다. | 구성 API 지침 참조 | Web · Native | 구성 API별 | 배포 |
+| [선택과 실제 실행](compositions/task-controls.md) | 입력과 작성 | 선택만 하는 화면과 선택 뒤 실제 요청을 실행하는 화면의 상태를 혼동하지 않도록 도입했다. | 미게시(1.20.0 이후) | Web · Native | 구성 API별 | 실험 |
 | [인증번호 확인과 다시 입력](compositions/stea-otp-verify.md) | 입력과 작성 | 문자·메일로 받은 숫자 인증번호를 입력하고 서버 확인을 기다린 뒤, 틀리면 남은 횟수를 보여 주고 다시 받게 하는 흐름에 쓴다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
 | [입력 시트](compositions/input-sheet.md) | 입력과 작성 | 현재 화면 위에 하단 시트를 띄워 짧은 입력(이름 바꾸기, 메모 한 줄)을 받고, 키보드가 올라와도 본문을 스크롤하며 완료 버튼에 닿게 할 때 쓴다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
 | [입력을 유지하는 도구](compositions/context-toolbar.md) | 입력과 작성 | 작성 중인 입력을 보존한 채 선택적 도구를 펼쳐야 할 때 쓴다. | 1.14.0 | Web · Native | 구성 API별 | 배포 |

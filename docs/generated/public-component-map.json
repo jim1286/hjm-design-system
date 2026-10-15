@@ -13,6 +13,15 @@
         "role": "canonical"
       },
       {
+        "name": "AccountSwitcher",
+        "source": "packages/react/src/task-controls.tsx",
+        "entries": [
+          "./task-controls"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "ActivityChip",
         "source": "packages/react/src/activity-chip.tsx",
         "entries": [
@@ -1072,6 +1081,15 @@
         "role": "canonical"
       },
       {
+        "name": "PasswordRulesField",
+        "source": "packages/react/src/task-controls.tsx",
+        "entries": [
+          "./task-controls"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "PermissionScreen",
         "source": "packages/react/src/screen-flows.tsx",
         "entries": [
@@ -1107,6 +1125,15 @@
         ],
         "canonicalComponent": "Popover",
         "role": "canonical"
+      },
+      {
+        "name": "PricingChoice",
+        "source": "packages/react/src/task-controls.tsx",
+        "entries": [
+          "./task-controls"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "ProfileScreen",
@@ -1402,6 +1429,15 @@
         ],
         "canonicalComponent": "Spinner",
         "role": "canonical"
+      },
+      {
+        "name": "SplitAction",
+        "source": "packages/react/src/task-controls.tsx",
+        "entries": [
+          "./task-controls"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "Splitter",
@@ -1796,6 +1832,15 @@
         ],
         "canonicalComponent": "Accordion",
         "role": "canonical"
+      },
+      {
+        "name": "AccountSwitcher",
+        "source": "packages/react-native/src/task-controls.tsx",
+        "entries": [
+          "./task-controls"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "ActivityChip",
@@ -2816,6 +2861,15 @@
         "role": "canonical"
       },
       {
+        "name": "PasswordRulesField",
+        "source": "packages/react-native/src/task-controls.tsx",
+        "entries": [
+          "./task-controls"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "PermissionScreen",
         "source": "packages/react-native/src/screen-flows.tsx",
         "entries": [
@@ -2841,6 +2895,15 @@
         ],
         "canonicalComponent": "Chart",
         "role": "companion-or-alternative"
+      },
+      {
+        "name": "PricingChoice",
+        "source": "packages/react-native/src/task-controls.tsx",
+        "entries": [
+          "./task-controls"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "ProfileScreen",
@@ -3124,6 +3187,15 @@
         ],
         "canonicalComponent": "Spinner",
         "role": "canonical"
+      },
+      {
+        "name": "SplitAction",
+        "source": "packages/react-native/src/task-controls.tsx",
+        "entries": [
+          "./task-controls"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "Stack",

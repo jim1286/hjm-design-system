@@ -4,11 +4,12 @@
 
 ## @hjmds/react
 
-고유 공개 컴포넌트 및 provider 이름 185개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 189개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
 | Accordion | Accordion | canonical | root, ./display |
+| AccountSwitcher | 별도 보조 기능 | supplemental | ./task-controls |
 | ActivityChip | 별도 보조 기능 | supplemental | ./activity-chip, ./feedback |
 | ActivityHeatmap | 별도 보조 기능 | supplemental | ./activity-heatmap |
 | Affix | Affix | canonical | ./affix |
@@ -119,10 +120,12 @@
 | OverviewScreen | 별도 보조 기능 | supplemental | ./design-profile |
 | Pagination | Pagination | canonical | root, ./navigation, ./pagination |
 | PasswordField | PasswordField | canonical | root, ./forms, ./password-field |
+| PasswordRulesField | 별도 보조 기능 | supplemental | ./task-controls |
 | PermissionScreen | 별도 보조 기능 | supplemental | ./screen-flows |
 | PhotoSourceSheet | 별도 보조 기능 | supplemental | ./screen-flows |
 | PieChart | Chart | companion-or-alternative | ./chart |
 | Popover | Popover | canonical | root, ./popover |
+| PricingChoice | 별도 보조 기능 | supplemental | ./task-controls |
 | ProfileScreen | 별도 보조 기능 | supplemental | ./screen-flows |
 | Progress | Progress | canonical | root, ./feedback |
 | ProgressiveBlur | 별도 보조 기능 | supplemental | ./progressive-blur |
@@ -154,6 +157,7 @@
 | SortableCollection | 별도 보조 기능 | supplemental | ./sortable |
 | Sparkline | Chart | companion-or-alternative | ./chart |
 | Spinner | Spinner | canonical | root, ./feedback |
+| SplitAction | 별도 보조 기능 | supplemental | ./task-controls |
 | Splitter | Splitter | canonical | root, ./splitter |
 | Stack | Stack | canonical | root, ./layout |
 | Statistic | Statistic | canonical | root, ./display |
@@ -196,11 +200,12 @@
 
 ## @hjmds/react-native
 
-고유 공개 컴포넌트 및 provider 이름 172개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 176개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
 | Accordion | Accordion | canonical | root, ./data-display |
+| AccountSwitcher | 별도 보조 기능 | supplemental | ./task-controls |
 | ActivityChip | 별도 보조 기능 | supplemental | ./activity-chip, ./feedback |
 | ActivityHeatmap | 별도 보조 기능 | supplemental | ./activity-heatmap |
 | Agreement | Agreement | canonical | root, ./agreement |
@@ -307,9 +312,11 @@
 | OtpField | OtpField | canonical | root, ./inputs, ./otp-field |
 | OverviewScreen | 별도 보조 기능 | supplemental | ./design-profile |
 | PasswordField | PasswordField | canonical | root, ./inputs, ./password-field |
+| PasswordRulesField | 별도 보조 기능 | supplemental | ./task-controls |
 | PermissionScreen | 별도 보조 기능 | supplemental | ./screen-flows |
 | PhotoSourceSheet | 별도 보조 기능 | supplemental | ./screen-flows |
 | PieChart | Chart | companion-or-alternative | ./chart |
+| PricingChoice | 별도 보조 기능 | supplemental | ./task-controls |
 | ProfileScreen | 별도 보조 기능 | supplemental | ./screen-flows |
 | Progress | Progress | canonical | root, ./feedback |
 | ProgressiveBlur | 별도 보조 기능 | supplemental | ./progressive-blur |
@@ -340,6 +347,7 @@
 | SortableCollection | 별도 보조 기능 | supplemental | ./sortable |
 | Sparkline | Chart | companion-or-alternative | ./chart |
 | Spinner | Spinner | canonical | root, ./feedback |
+| SplitAction | 별도 보조 기능 | supplemental | ./task-controls |
 | Stack | Stack | canonical | root, ./primitives |
 | Statistic | Statistic | canonical | root, ./data-display |
 | StatisticGroup | Statistic | companion-or-alternative | root, ./data-display |

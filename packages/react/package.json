@@ -537,6 +537,11 @@
       "types": "./dist/data-workflows.d.ts",
       "import": "./dist/data-workflows.js",
       "default": "./dist/data-workflows.js"
+    },
+    "./task-controls": {
+      "types": "./dist/task-controls.d.ts",
+      "import": "./dist/task-controls.js",
+      "default": "./dist/task-controls.js"
     }
   },
   "files": [

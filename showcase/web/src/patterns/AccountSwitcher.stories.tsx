@@ -1,0 +1,9 @@
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { AccountSwitcherPreview } from "./TaskControls.previews";
+import { Container } from "@hjmds/react/layout";
+const meta = { id: "compositions-task-accountswitcher", title: "실험/구성/탐색과 이동/계정 전환", component: AccountSwitcherPreview, decorators: [(Story) => <Container size="reading"><Story /></Container>] } satisfies Meta<typeof AccountSwitcherPreview>;
+export default meta;
+type Story = StoryObj<typeof meta>;
+export const Default: Story = { name: "기본" };
+export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

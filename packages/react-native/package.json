@@ -555,6 +555,12 @@
       "react-native": "./dist/data-workflows.js",
       "import": "./dist/data-workflows.js",
       "default": "./dist/data-workflows.js"
+    },
+    "./task-controls": {
+      "types": "./dist/task-controls.d.ts",
+      "react-native": "./dist/task-controls.js",
+      "import": "./dist/task-controls.js",
+      "default": "./dist/task-controls.js"
     }
   },
   "files": [
