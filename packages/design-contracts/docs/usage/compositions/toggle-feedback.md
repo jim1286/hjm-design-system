@@ -3,7 +3,7 @@
 - 단계: 구성
 - 상태: 배포
 - 지원: Web · Native
-- 적용: 미게시(1.20.0 이후)
+- 적용: 1.21.0
 - 검토일: 2026-10-15
 - 근거: [선택 반응 계약](../../toggle-feedback.md), `src/toggle-feedback.ts`, 양 renderer의 `src/toggle-feedback.tsx`
 - 스토리북: `배포/구성/직접 조작과 모션/선택 반응 버튼`

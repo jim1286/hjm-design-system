@@ -126,7 +126,7 @@ import { Button } from "@hjmds/react-native/actions";
 2026-10-10 사용자 요청으로 선택 시 추가되는 테두리를 제거했다. `selected` 접근성 상태와
 contentBrand 글자·아이콘 색은 유지하며 키보드 focus outline은 선택과 별도로 유지한다.
 
-## 저장 확정 라벨과 프레임 예약 (미게시 · 2026-10-15)
+## 저장 확정 라벨과 프레임 예약 (npm 1.21.0 · 2026-10-15)
 
 `completion={{ confirmed, label }}`는 실제 mutation의 확정 결과를 표시한다. 두 라벨의
 공간을 처음부터 예약하므로 `children`을 저장 중/완료 문구로 교체하지 않는다.

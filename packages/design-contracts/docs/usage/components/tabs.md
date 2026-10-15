@@ -142,7 +142,7 @@ import { Tabs } from "@hjmds/react-native/navigation";
 - 외부 `TabPanel`을 쓸 때 Tabs에 `id`를 주지 않으면 Web은 생성 id를 써서 `tabsId`를 맞출 수 없다.
   `id`를 명시하고 같은 값을 `TabPanel tabsId`에 넘긴다.
 
-## 가로 페이저와 연속 밑줄 연결 (미게시)
+## 가로 페이저와 연속 밑줄 연결 (npm 1.21.0)
 
 실제 페이저의 소수 index를 `swipePosition`에 발행한다. 별도 state 갱신 없이 기존
 측정된 탭 밑줄만 따라간다. 첫 항목은 0, 두 번째로 절반 이동하면 0.5다. 패널 선택은

@@ -96,10 +96,12 @@ function SearchSuggestionList({ query, suggestions, onCommit }) {
 }
 function SearchResultsHeader({ summary, applied, cause, onSortChange }) {
     const sort = summary?.sort;
-    const showCount = summary && cause === "none";
-    if (!summary?.notice && !showCount && !applied?.items.length)
+    const showCount = summary && cause === "none" && summary.countVisibility !== "hidden";
+    // A count-free search still owns its sorting action; do not hide it with the total.
+    const showSort = summary && cause === "none" && sort;
+    if (!summary?.notice && !showCount && !showSort && !applied?.items.length)
         return null;
-    return _jsxs(Stack, { gap: "sm", children: [summary?.notice, showCount ? _jsxs(Stack, { axis: "inline", justify: "between", align: "center", gap: "sm", wrap: true, children: [summary.count === null ? _jsx(Skeleton, { shape: "text", width: "30%" }) : _jsx(Text, { tone: "muted", children: summary.countLabel(summary.count) }), sort ? _jsx(Menu, { triggerLabel: sort.triggerLabel, title: sort.label, dismissLabel: sort.dismissLabel, items: sort.options.map(option => ({ id: option.id, label: option.label })), selection: { mode: "single", selectedKey: sort.value, onSelectionChange: next => { if (next)
+    return _jsxs(Stack, { gap: "sm", children: [summary?.notice, showCount || showSort ? _jsxs(Stack, { axis: "inline", justify: showCount ? "between" : "end", align: "center", gap: "sm", wrap: true, children: [showCount ? (summary.count === null ? _jsx(Skeleton, { shape: "text", width: "30%" }) : _jsx(Text, { tone: "muted", children: summary.countLabel(summary.count) })) : null, sort ? _jsx(Menu, { triggerLabel: sort.triggerLabel, title: sort.label, dismissLabel: sort.dismissLabel, items: sort.options.map(option => ({ id: option.id, label: option.label })), selection: { mode: "single", selectedKey: sort.value, onSelectionChange: next => { if (next)
                                 onSortChange(next); } }, renderTrigger: trigger => _jsx(Button, { size: "small", tone: "ghost", accessibilityState: trigger.accessibilityState, onPress: trigger.onPress, ...(sort.icon === undefined ? {} : { trailing: sort.icon }), children: sort.triggerLabel }) }) : null] }) : null, applied?.items.length ? _jsxs(Stack, { axis: "inline", wrap: true, gap: "xs", align: "center", children: [applied.items.map(item => _jsx(Chip, { label: item.label, accessibilityLabel: applied.removeLabel(item.label), trailing: applied.removeIcon ?? _jsx(FixedGlyph, { tone: "muted", children: "\u00D7" }), onPress: () => applied.onRemove(item.key) }, item.key)), _jsx(Button, { tone: "ghost", size: "small", onPress: applied.onClearAll, children: applied.clearAllLabel })] }) : null] });
 }
 function SearchResultsBody({ summary, applied, suggested, cause, onCommit, children }) {

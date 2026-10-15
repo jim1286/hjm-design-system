@@ -165,17 +165,19 @@ export type ComparisonTableProps = Readonly<{
   rows: readonly ComparisonRow[];
   /** Side names and accent colors (team colors). */
   sides: readonly [Readonly<{ name: string; color: string }>, Readonly<{ name: string; color: string }>];
+  /** Hide duplicate visual names when the two sides are already identified above; spoken row labels retain them. */
+  showSideNames?: boolean;
   accessibilityLabel: string;
   className?: string;
   layoutStyle?: HjmCompositionStyleProp;
 }>;
 
-export function ComparisonTable({ rows, sides, accessibilityLabel, className, layoutStyle }: ComparisonTableProps) {
+export function ComparisonTable({ rows, sides, showSideNames = true, accessibilityLabel, className, layoutStyle }: ComparisonTableProps) {
   return (
     <section className={classNames("hjm-table-family", "hjm-comparison-table", className)} style={withFamilyStyle(layoutStyle)} aria-label={accessibilityLabel}>
-      <div className="hjm-comparison-table__sides" aria-hidden="true">
+      {showSideNames && <div className="hjm-comparison-table__sides" aria-hidden="true">
         {sides.map((side, index) => <span key={index} style={{ color: side.color }}>{side.name}</span>)}
-      </div>
+      </div>}
       <ul className="hjm-comparison-table__rows" role="list">
         {rows.map((row) => {
           const { winner, shares } = resolveComparisonRow(row);
@@ -194,7 +196,7 @@ export function ComparisonTable({ rows, sides, accessibilityLabel, className, la
                   <span key={index} className="hjm-comparison-table__track" data-side={index}>
                     <span
                       className="hjm-comparison-table__bar"
-                      style={{ inlineSize: `${Math.round(shares[index] * 1000) / 10}%`, background: sides[index].color, opacity: winner === null || winner === index ? 1 : 0.35 }}
+                      style={{ inlineSize: `${Math.round(shares[index] * 1000) / 10}%`, background: sides[index].color, opacity: winner === null || winner === index ? 1 : 0.6 }}
                     />
                   </span>
                 ))}

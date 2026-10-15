@@ -1,6 +1,6 @@
 # 목록 편집과 복구 구성
 
-검토일: 2026-10-15 · 상태: 개발 구현, 미게시 · Web / React Native
+검토일: 2026-10-15 · 상태: Storybook 배포 · npm 1.21.0 · Web / React Native
 
 Lucian UX/UI [#033](https://lucianlabs.dev/uxui-prompt/#033), [#092](https://lucianlabs.dev/uxui-prompt/#092),
 [#131](https://lucianlabs.dev/uxui-prompt/#131), [#144](https://lucianlabs.dev/uxui-prompt/#144),
@@ -27,7 +27,7 @@ Lucian UX/UI [#033](https://lucianlabs.dev/uxui-prompt/#033), [#092](https://luc
 - Web: `@hjmds/react/collection-editing`
 - Native: `@hjmds/react-native/collection-editing`
 - 순수 모델/헬퍼: `@hjmds/design-contracts/collection-editing`
-- root barrel에 추가하지 않는다. 양 플랫폼 공개 API가 있지만 현재 미게시이며 앱 설치 버전의 제공을 의미하지 않는다.
+- root barrel에 추가하지 않는다. 양 플랫폼 공개 API가 있지만 1.21.0으로 게시되었으며 소비 앱에서 같은 버전을 설치한 뒤 사용한다.
 - 다섯 구성은 각각 `배포/구성/…` Storybook에 있다. 실행 예제와 배치는 [사용 지침](usage/compositions/collection-editing.md)을 따른다.
 
 ## 주요 타입
@@ -80,4 +80,4 @@ Chromium에는 375px host에서 두 브랜드 fixture(violet/green)의 light/dar
 
 새 Web story ID 15개는 원본을 읽는 기존 생성 로직으로 등록했다. 선택적 전체 Storybook 규약 검사에서
 기존 `components-data-display--chart` ID의 snapshot 누락을 발견했지만 이번 구성과 무관해 변경하지 않았다.
-전체 회귀·실기기·VoiceOver/TalkBack·성능 측정·npm 게시·소비 앱 적용은 미실행이다.
+전체 회귀·실기기·VoiceOver/TalkBack·성능 측정·소비 화면 적용은 미실행이다. npm 1.21.0 게시·설치 범위는 도입 기록을 따른다.

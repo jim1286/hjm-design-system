@@ -3,7 +3,7 @@
 - 단계: 컴포넌트
 - 상태: 배포
 - 지원: Web · Native
-- 적용: 미게시(1.20.0 이후)
+- 적용: 1.21.0
 - 검토일: 2026-10-15
 - 근거: [Chart](../../chart.md), `src/chart.ts`(`chartRecipe`, `describeChart`, `resolveLineGeometry`), `src/dataviz.ts`(`resolveDatavizSeriesColor`, `datavizChromeTokens`)
 - 스토리북: `배포/컴포넌트/데이터 표시/차트`

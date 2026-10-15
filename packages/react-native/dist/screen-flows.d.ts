@@ -149,6 +149,8 @@ export type SearchSort = Readonly<{
 }>;
 export type SearchResultSummary = Readonly<{
     count: number | null;
+    /** Hide the visual total without losing loading, empty-state or announcement behavior. */
+    countVisibility?: "visible" | "hidden";
     countLabel(count: number): string;
     loadingLabel: string;
     sort?: SearchSort;

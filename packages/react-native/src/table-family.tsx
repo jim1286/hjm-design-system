@@ -116,30 +116,32 @@ export type ComparisonTableProps = Readonly<{
   rows: readonly ComparisonRow[];
   /** Side names and accent colors (team colors). */
   sides: readonly [Readonly<{ name: string; color: string }>, Readonly<{ name: string; color: string }>];
+  /** Hide duplicate visual names when the two sides are already identified above; spoken row labels retain them. */
+  showSideNames?: boolean;
   accessibilityLabel: string;
   layoutStyle?: HjmCompositionStyleProp;
 }>;
 
-export function ComparisonTable({ rows, sides, accessibilityLabel, layoutStyle }: ComparisonTableProps) {
+export function ComparisonTable({ rows, sides, showSideNames = true, accessibilityLabel, layoutStyle }: ComparisonTableProps) {
   const { colors, color } = usePalette();
   const [width, setWidth] = useState(0);
   return <View accessibilityLabel={accessibilityLabel} onLayout={event => setWidth(event.nativeEvent.layout.width)} style={[{ borderRadius: 12, backgroundColor: colors.surface, paddingVertical: spacing.xs }, layoutStyle]}>
-    <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: spacing.md, paddingVertical: spacing.xs }}>
+    {showSideNames && <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: spacing.md, paddingVertical: spacing.xs }}>
       {sides.map((side, index) => <NativeText key={index} numberOfLines={1} style={{ color: side.color, fontSize: 13, fontWeight: "800" }}>{side.name}</NativeText>)}
-    </View>
-    {rows.map(row => {
+    </View>}
+    {rows.map((row, rowIndex) => {
       const { winner, shares } = resolveComparisonRow(row);
       const shown = row.display ?? [row.values[0] === null ? "—" : String(row.values[0]), row.values[1] === null ? "—" : String(row.values[1])];
-      const half = Math.max(0, width / 2 - spacing.md - 4);
-      return <View key={row.id} accessible accessibilityLabel={`${row.label} ${sides[0].name} ${shown[0]}, ${sides[1].name} ${shown[1]}`} style={{ paddingHorizontal: spacing.md, paddingVertical: 7, borderTopWidth: 1, borderColor: color(dataTableRecipe.row.borderBottom), gap: 5 }}>
+      const half = Math.max(0, width / 2 - spacing.md - spacing.sm / 2);
+      return <View key={row.id} accessible accessibilityLabel={`${row.label} ${sides[0].name} ${shown[0]}, ${sides[1].name} ${shown[1]}`} style={{ paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderTopWidth: rowIndex === 0 && !showSideNames ? 0 : 1, borderColor: color(dataTableRecipe.row.borderBottom), gap: spacing.xs }}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <NativeText style={{ flex: 1, color: winner === 0 ? colors.text : colors.textMuted, fontSize: 15, fontWeight: winner === 0 ? "800" : "500", ...num }}>{shown[0]}</NativeText>
-          <NativeText style={{ color: colors.textMuted, fontSize: 12, fontWeight: "600" }}>{row.label}</NativeText>
-          <NativeText style={{ flex: 1, textAlign: "right", color: winner === 1 ? colors.text : colors.textMuted, fontSize: 15, fontWeight: winner === 1 ? "800" : "500", ...num }}>{shown[1]}</NativeText>
+          <NativeText style={{ flex: 1, color: winner === 0 ? colors.text : colors.textSub, fontSize: 16, fontWeight: winner === 0 ? "800" : "500", ...num }}>{shown[0]}</NativeText>
+          <NativeText style={{ color: colors.text, fontSize: 13, fontWeight: "600" }}>{row.label}</NativeText>
+          <NativeText style={{ flex: 1, textAlign: "right", color: winner === 1 ? colors.text : colors.textSub, fontSize: 16, fontWeight: winner === 1 ? "800" : "500", ...num }}>{shown[1]}</NativeText>
         </View>
-        <View style={{ flexDirection: "row", gap: 8, height: 4 }}>
+        <View style={{ flexDirection: "row", gap: spacing.sm, height: 5 }}>
           {[0, 1].map(index => <View key={index} style={{ flex: 1, flexDirection: index === 0 ? "row-reverse" : "row", backgroundColor: colors.surfaceAlt, borderRadius: 2 }}>
-            <View style={{ width: half * shares[index as 0 | 1], borderRadius: 2, backgroundColor: sides[index as 0 | 1].color, opacity: winner === null || winner === index ? 1 : 0.35 }} />
+            <View style={{ width: half * shares[index as 0 | 1], borderRadius: 2, backgroundColor: sides[index as 0 | 1].color, opacity: winner === null || winner === index ? 1 : 0.6 }} />
           </View>)}
         </View>
       </View>;

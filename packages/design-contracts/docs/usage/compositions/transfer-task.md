@@ -3,7 +3,7 @@
 - 단계: 구성
 - 상태: 배포
 - 지원: Web · Native
-- 적용: 미게시(1.20.0 이후)
+- 적용: 1.21.0
 - 검토일: 2026-10-15
 - 근거: [실제 전송 계약](../../transfer-task.md), `src/transfer-task.ts`, 양 renderer `src/transfer-task.tsx`
 - 스토리북: `배포/구성/피드백과 복구/전송 진행과 취소`
@@ -83,4 +83,4 @@ import { TransferTask } from "@hjmds/react-native/transfer-task";
 - 취소 클릭만으로 취소 완료를 표시하지 않는다. abort 요청과 실제 AbortError를 구분한다.
 - 압축 Content-Length와 decoded byte 수를 같은 단위라고 가정하지 않는다.
 - 부분 파일 정리·요청 멱등성·저장/서버 확정은 실제 adapter 소유다.
-- 미게시 API다. 수신 성공을 OS 저장·운영 업로드·기기 검증 완료로 표현하지 않는다.
+- npm 1.21.0 API다. 수신 성공을 OS 저장·운영 업로드·기기 검증 완료로 표현하지 않는다.

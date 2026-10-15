@@ -3,7 +3,7 @@
 - 단계: 구성
 - 상태: 배포
 - 지원: Web · Native
-- 적용: 미게시(1.20.0 이후)
+- 적용: 1.21.0
 - 검토일: 2026-10-15
 - 근거: [연결 계약](../../communication.md), `src/communication.ts`, 양 renderer `src/communication.tsx`, `src/screens.tsx`
 - 스토리북: `배포/구성/선택과 필터/펼치는 상단 검색`, `배포/구성/입력과 작성/메시지 답장 연결`

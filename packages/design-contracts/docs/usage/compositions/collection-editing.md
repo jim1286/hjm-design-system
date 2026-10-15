@@ -3,7 +3,7 @@
 - 단계: 구성
 - 상태: 배포
 - 지원: Web · Native
-- 적용: 미게시(1.20.0 이후)
+- 적용: 1.21.0
 - 검토일: 2026-10-15
 - 근거: [목록 편집과 복구 계약](../../collection-editing.md), `src/collection-editing.ts`, 양 renderer의 `src/collection-editing.tsx`
 - 스토리북: `배포/구성/입력과 작성/제목 바로 편집`, `배포/구성/입력과 작성/반복 입력`, `배포/구성/선택과 필터/선택 항목 묶음 작업`, `배포/구성/피드백과 복구/검색 필터 완화`, `배포/구성/선택과 필터/표 열 설정`
@@ -107,4 +107,4 @@ import { InlineEdit } from "@hjmds/react-native/collection-editing";
 - 원본 데모의 고정 성공·전체 복구를 복사하지 않는다. 실패를 callback에서 삼키면 HJM은 성공으로 해석한다.
 - `onAdd`가 반환한 ID와 새 field ID가 같아야 한다. 입력 값을 배열 index에 저장하지 않는다.
 - 표 원본 descriptor의 pinned·width·sort를 보존한다. 설정 화면의 잠금은 서버 권한 검증을 대체하지 않는다.
-- 현재 개발 미게시 API다. 소비 제품의 설치 버전에서 제공된다고 안내하지 않는다.
+- npm 1.21.0 API다. 소비 제품의 실제 설치 버전을 확인한다.

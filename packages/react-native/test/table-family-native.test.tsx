@@ -54,3 +54,16 @@ it("labels comparison rows with both sides", () => {
     expect(hosts(tree, props => props.accessibilityLabel === "평균자책 LG 3.20, KIA 4.10")).toHaveLength(1);
   } finally { act(() => tree.unmount()); }
 });
+
+
+it("hides repeated side headings while retaining season identity in spoken rows", () => {
+  const tree = render(<ComparisonTable accessibilityLabel="비교" showSideNames={false}
+    sides={[{ name: "구자욱 2026", color: "#1769db" }, { name: "구자욱 2024", color: "#8B95A1" }]}
+    rows={[{ id: "avg", label: "타율", values: [0.371, 0.343], display: [".371", ".343"] }]} />);
+  try {
+    expect(texts(tree)).not.toContain("구자욱 2026");
+    expect(texts(tree)).not.toContain("구자욱 2024");
+    expect(texts(tree)).toEqual(expect.arrayContaining(["타율", ".371", ".343"]));
+    expect(hosts(tree, props => props.accessibilityLabel === "타율 구자욱 2026 .371, 구자욱 2024 .343")).toHaveLength(1);
+  } finally { act(() => tree.unmount()); }
+});

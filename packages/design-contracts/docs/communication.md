@@ -1,6 +1,6 @@
 # 검색·메시지 연결 구성 계약
 
-검토일: 2026-10-15 · Lucian 027·028·078 · Storybook 배포 · 미게시
+검토일: 2026-10-15 · Lucian 027·028·078 · Storybook 배포 · npm 1.21.0
 
 `@hjmds/{design-contracts,react,react-native}/communication` 선택 subpath를 제공한다.
 기존 `screens`의 MessageComposer에는 선택 속성 `lengthFeedback`만 추가한다.

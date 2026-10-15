@@ -149,3 +149,13 @@ it("comparison rows favor the better side, including lower-is-better stats", asy
   const [left, right] = [...items[0]!.querySelectorAll<HTMLElement>(".hjm-comparison-table__bar")];
   expect(parseFloat(left!.style.inlineSize)).toBeGreaterThan(parseFloat(right!.style.inlineSize));
 });
+
+
+it("hides duplicate comparison headings and keeps both season names accessible", async () => {
+  await render(<ComparisonTable accessibilityLabel="선수 비교" showSideNames={false}
+    sides={[{ name: "구자욱 2026", color: "#1769db" }, { name: "구자욱 2024", color: "#8B95A1" }]}
+    rows={[{ id: "avg", label: "타율", values: [0.371, 0.343], display: [".371", ".343"] }]} />);
+  expect(document.querySelector(".hjm-comparison-table__sides")).toBeNull();
+  expect(document.querySelector(".hjm-visually-hidden")!.textContent).toBe("타율 구자욱 2026 .371, 구자욱 2024 .343");
+  expect(getComputedStyle(document.querySelector(".hjm-comparison-table__row")!).borderTopWidth).toBe("0px");
+});

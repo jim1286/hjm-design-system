@@ -3,7 +3,7 @@
 - 단계: 구성
 - 상태: 배포
 - 지원: Web · Native
-- 적용: 미게시(1.20.0 이후)
+- 적용: 1.21.0
 - 검토일: 2026-10-15
 - 근거: [미디어 제어 계약](../../media-transport.md), `src/media-transport.ts`, 양 renderer `src/media-transport.tsx`
 - 스토리북: `배포/구성/직접 조작과 모션/미디어 재생 제어`
@@ -84,4 +84,4 @@ import { MediaTransport } from "@hjmds/react-native/media-transport";
 - duration null/0에 가짜 분모나 임의 길이를 넣지 않는다.
 - active=false는 컨트롤 수명이다. 플레이어 pause/dispose도 제품 adapter에서 수행한다.
 - 다른 미디어 엔티티로 전환할 때 key를 바꾸고 이전 플레이어·요청을 정리한다.
-- Native 재생 모듈 없음 안내를 실제 재생 성공으로 기록하지 않는다. 새 API는 아직 미게시다.
+- Native 재생 모듈 없음 안내를 실제 재생 성공으로 기록하지 않는다. 새 API는 npm 1.21.0에서 제공한다.

@@ -214,6 +214,8 @@ export type SearchSort = Readonly<{
 export type SearchResultSummary = Readonly<{
   /** Result total for the committed query; `null` while it loads (skeleton rows replace `children`). */
   count: number | null;
+  /** Hide the visual total without losing loading, empty-state or announcement behavior. */
+  countVisibility?: "visible" | "hidden";
   countLabel(count: number): string;
   /** Announced while loading. */
   loadingLabel: string;
@@ -346,12 +348,14 @@ function SearchResultsHeader({ summary, applied, cause, appliedHost, onRemove, o
   appliedHost: RefObject<HTMLDivElement | null>; onRemove(key: string, index: number): void; onClearAll(): void; onSortChange(id: string): void;
 }) {
   const sort = summary?.sort;
-  const showCount = summary && cause === "none";
-  if (!summary?.notice && !showCount && !applied?.items.length) return null;
+  const showCount = summary && cause === "none" && summary.countVisibility !== "hidden";
+  // A count-free search still owns its sorting action; do not hide it with the total.
+  const showSort = summary && cause === "none" && sort;
+  if (!summary?.notice && !showCount && !showSort && !applied?.items.length) return null;
   return <Stack gap="sm">
     {summary?.notice}
-    {showCount ? <Stack axis="inline" justify="between" align="center" gap="sm" wrap>
-      {summary.count === null ? <Skeleton shape="text" width="30%" /> : <Text tone="muted">{summary.countLabel(summary.count)}</Text>}
+    {showCount || showSort ? <Stack axis="inline" justify={showCount ? "between" : "end"} align="center" gap="sm" wrap>
+      {showCount ? (summary!.count === null ? <Skeleton shape="text" width="30%" /> : <Text tone="muted">{summary!.countLabel(summary!.count)}</Text>) : null}
       {sort ? <Menu label={sort.label} align="end" selectionMode="single" value={sort.value} onValueChange={onSortChange}
         items={sort.options.map(option => ({ id: option.id, label: option.label }))}
         trigger={<Button size="small" tone="ghost" {...(sort.icon === undefined ? {} : { trailing: sort.icon })}>{sort.triggerLabel}</Button>} /> : null}

@@ -1,6 +1,6 @@
 # 실제 전송 진행과 취소
 
-검토일: 2026-10-15 · Storybook 배포 · Web/Native · 미게시(1.20.0 이후)
+검토일: 2026-10-15 · Storybook 배포 · Web/Native · npm 1.21.0
 
 Lucian 004·083의 시간 기반 진행 시연을 실제 전송량·작업 종료·취소 신호와 연결하기 위해 기존 Button/Progress를 합성한다.
 단순 외부 controlled 진행 표시만 필요하면 Progress를 직접 쓴다. TransferTask는 시작 요청·중복 방지·AbortSignal·실패 재시도가 함께 필요할 때 쓴다.

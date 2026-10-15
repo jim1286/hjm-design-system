@@ -3,7 +3,7 @@
 - 단계: 구성
 - 상태: 배포
 - 지원: Web · Native
-- 적용: 미게시(1.20.0 이후)
+- 적용: 1.21.0
 - 검토일: 2026-10-15
 - 근거: [스트림 응답 계약](../../streaming-answer.md), `src/streaming-answer.ts`, 양 renderer `src/streaming-answer.tsx`
 - 스토리북: `배포/구성/피드백과 복구/스트림 응답과 중지`

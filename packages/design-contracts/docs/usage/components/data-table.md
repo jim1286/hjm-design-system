@@ -194,3 +194,7 @@ const sorted = sortDataTableRows(players, sort, (player, columnId) => toDataTabl
 - 2026-10-14 작성 시점에 Native renderer와 Native Storybook 등록은 구현 중이다. Native 행은 renderer가 들어온 뒤 실제 Props와 다시 대조한다.
 - `cellStyle`은 셀마다 호출된다. 백분위 표본(열 전체 값)은 함수 밖에서 한 번 만들어 두고 셀에서는 조회만 한다.
 - `columnGroups`의 묶음은 고정 열 경계를 넘지 않게 나눈다. Web은 묶음 안 열이 모두 고정일 때만 묶음 머리 칸도 고정된다.
+
+### ComparisonTable 중복 머리글
+
+2026-10-14 야잘알 비교 화면에서 상단 선택 카드의 선수·시즌이 표에 반복되어 읽는 흐름을 끊었다. Web/Native의 `showSideNames={false}`로 시각 머리글만 숨긴다(기본 `true`). `sides`는 계속 전달하며 각 행의 접근성 이름에는 양쪽 이름과 수치를 보존한다. 상단에서 양쪽 대상을 식별할 수 있을 때만 사용한다. 행 여백과 막대 간격을 넓히고 지표·비우세 수치의 대비를 유지해 기록을 구분한다.

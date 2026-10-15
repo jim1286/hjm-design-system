@@ -156,6 +156,8 @@ export type SearchSort = Readonly<{
 export type SearchResultSummary = Readonly<{
     /** Result total for the committed query; `null` while it loads (skeleton rows replace `children`). */
     count: number | null;
+    /** Hide the visual total without losing loading, empty-state or announcement behavior. */
+    countVisibility?: "visible" | "hidden";
     countLabel(count: number): string;
     /** Announced while loading. */
     loadingLabel: string;

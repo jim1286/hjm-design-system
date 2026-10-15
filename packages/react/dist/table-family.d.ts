@@ -58,9 +58,11 @@ export type ComparisonTableProps = Readonly<{
         name: string;
         color: string;
     }>];
+    /** Hide duplicate visual names when the two sides are already identified above; spoken row labels retain them. */
+    showSideNames?: boolean;
     accessibilityLabel: string;
     className?: string;
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function ComparisonTable({ rows, sides, accessibilityLabel, className, layoutStyle }: ComparisonTableProps): import("react").JSX.Element;
+export declare function ComparisonTable({ rows, sides, showSideNames, accessibilityLabel, className, layoutStyle }: ComparisonTableProps): import("react").JSX.Element;
 //# sourceMappingURL=table-family.d.ts.map

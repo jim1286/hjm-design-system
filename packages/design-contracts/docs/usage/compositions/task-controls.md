@@ -3,7 +3,7 @@
 - 단계: 구성
 - 상태: 배포
 - 지원: Web · Native
-- 적용: 미게시(1.20.0 이후)
+- 적용: 1.21.0
 - 검토일: 2026-10-15
 - 근거: [작업 선택 계약](../../task-controls.md), `src/task-controls.ts`, 양 renderer의 `src/task-controls.tsx`
 - 스토리북: `배포/구성/입력과 작성/분할 실행`, `배포/구성/입력과 작성/비밀번호 규칙 확인`, `배포/구성/탐색과 이동/계정 전환`, `배포/구성/선택과 필터/요금 주기 선택`
@@ -90,4 +90,4 @@ import { AccountSwitcher } from "@hjmds/react-native/task-controls";
 - 가격 formatter가 실제 amountMinor/interval/intervalCount와 일치해야 한다. 할인·월 환산액은 추정하지 않는다.
 - 옵션 선택으로 결제를 시작하지 않는다. 실제 결제·약관·상품 검증은 onContinue 뒤 제품 흐름 책임이다.
 - 다른 엔티티/세션으로 전환할 때 host key를 바꾸고 늦은 제품 API 응답도 제품 상태 계층에서 검증한다.
-- 신규 미게시 API다. 기기·실제 로그인·결제·npm 게시 완료로 안내하지 않는다.
+- npm 1.21.0 API다. 기기·실제 로그인·결제 검증과 npm 게시를 구분한다.

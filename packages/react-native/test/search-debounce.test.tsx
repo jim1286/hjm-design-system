@@ -40,3 +40,22 @@ describe("SearchScreen shared debounce", () => {
     expect(search).toHaveBeenCalledOnce();
   });
 });
+
+
+describe("SearchScreen hidden result count", () => {
+  function results(count: number | null, hidden = true) {
+    return <HjmNativeProvider reducedMotion><SearchScreen title="검색" queryLabel="검색어" queryField={<Text>입력</Text>} query="구" committedQuery="구" onSubmit={() => {}} onQueryChange={() => {}} onSearch={() => {}} resultSummary={{ count, countVisibility: hidden ? "hidden" : "visible", countLabel: n => `total:${n}`, loadingLabel: "검색 로딩", empty: { title: "결과 없음" } }}><Text>선수 결과</Text></SearchScreen></HjmNativeProvider>;
+  }
+  it("removes the visual total but preserves results and empty/loading states", () => {
+    act(() => { tree = create(results(24)); });
+    expect(JSON.stringify(tree!.toJSON())).not.toContain("total:24");
+    expect(JSON.stringify(tree!.toJSON())).toContain("선수 결과");
+    act(() => { tree!.update(results(24, false)); });
+    expect(JSON.stringify(tree!.toJSON())).toContain("total:24");
+    act(() => { tree!.update(results(0)); });
+    expect(JSON.stringify(tree!.toJSON())).toContain("결과 없음");
+    act(() => { tree!.update(results(null)); });
+    expect(JSON.stringify(tree!.toJSON())).toContain("검색 로딩");
+    expect(JSON.stringify(tree!.toJSON())).not.toContain("선수 결과");
+  });
+});
