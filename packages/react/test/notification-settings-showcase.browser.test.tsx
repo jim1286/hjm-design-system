@@ -12,7 +12,7 @@ beforeEach(async () => {
  await act(async () => root.render(<HjmProvider reducedMotion><Screen/></HjmProvider>));
 });
 afterEach(async () => { await act(async () => root.unmount()); host.remove(); });
-const save = () => host.querySelector<HTMLButtonElement>(".hjm-bottom-cta button")!;
+const save = () => host.querySelector<HTMLButtonElement>('button:not([role="switch"])')!;
 const toggle = (name: string) => act(async () => {
  const input = [...host.querySelectorAll<HTMLButtonElement>('button[role="switch"]')].find(node => node.textContent?.includes(name));
  expect(input).toBeDefined(); input!.click();
