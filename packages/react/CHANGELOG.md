@@ -1,5 +1,11 @@
 # @hjmds/react
 
+## 1.26.1
+
+### Patch Changes
+
+- d5f01c2: Align static and actionable profile statistics in equal-width, vertically centered cells, preserving independent callbacks and disabled states.
+
 ## 1.26.0
 
 ### Minor Changes
