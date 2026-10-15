@@ -1,3 +1,4 @@
+import 'dart:ui' show SemanticsAction;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hjm_flutter/hjm_flutter.dart';
@@ -33,4 +34,17 @@ void main() {
     expect(find.text('Map'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
+  testWidgets('localized row label keeps the accessibility tap action', (tester) async {
+    final handle = tester.ensureSemantics();
+    var calls = 0;
+    await tester.pumpWidget(MaterialApp(home: Scaffold(body: DecoratedBox(decoration: const BoxDecoration(color: Colors.white), child: HjmListRow(
+      title: 'Station', semanticLabel: 'Station, Seoul', selected: true, onTap: () => calls++,
+    )))));
+    final node = tester.getSemantics(find.bySemanticsLabel('Station, Seoul'));
+    expect(node.getSemanticsData().hasAction(SemanticsAction.tap), isTrue);
+    await tester.tap(find.text('Station'));
+    expect(calls, 1);
+    handle.dispose();
+  });
+
 }

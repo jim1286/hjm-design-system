@@ -123,12 +123,13 @@ class HjmListRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Semantics(
     label: semanticLabel, excludeSemantics: semanticLabel != null,
-    button: onTap != null, selected: selected,
-    child: ListTile(title: Text(title),
+    button: onTap != null, selected: selected, onTap: semanticLabel == null ? null : onTap,
+    // ListTile paints ink on Material; own it so product decoration cannot cover interactions.
+    child: Material(type: MaterialType.transparency, child: ListTile(title: Text(title),
       subtitle: description == null && metadata == null ? null : Text([metadata, description].nonNulls.join('\n')),
       leading: leading, trailing: trailing, onTap: onTap, selected: selected,
       contentPadding: const EdgeInsets.symmetric(horizontal: HjmLayout.padding, vertical: 4),
-    ),
+    )),
   );
 }
 
