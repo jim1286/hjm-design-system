@@ -70,7 +70,7 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `title` | `string` | 필수 | 화면 제목. `header`를 주면 접근성 이름으로만 쓴다 |
-| `titleBadge` | `ReactNode` | 없음 | 기본 제목 바로 옆 배지. 값·의미는 제품, 간격·정렬은 HJM. `header` 교체 또는 제목 숨김이면 그리지 않는다. 미게시 추가 API |
+| `titleBadge` | `ReactNode` | 없음 | 기본 제목 바로 옆 배지. 값·의미는 제품, 간격·정렬은 HJM. `header` 교체 또는 제목 숨김이면 그리지 않는다. 1.23.0 추가 API |
 | `header` | `ReactNode` | 없음 | 기존 navigator 헤더 유지용. 주면 기본 헤더(`leading`·제목·`description`·`actions`)를 그리지 않는다 |
 | `description` | `string` | 없음 | 제목 아래 muted 설명 |
 | `leading` · `actions` | `ReactNode` | 없음 | 제목 앞(뒤로 가기)·뒤(도구) 슬롯 |

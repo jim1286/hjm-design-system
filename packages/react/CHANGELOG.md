@@ -1,5 +1,11 @@
 # @hjmds/react
 
+## 1.23.0
+
+### Minor Changes
+
+- 33855df: Expose CompositionLayout for shared composition regions and CommentThreadRow for virtualized comment lists. Add ScreenLayout titleBadge placement and reuse composition layout in profile screens. Align all screen/composition ownership guidance: HJM owns structure and presentation; products connect data and extensions.
+
 ## 1.22.0
 
 ### Minor Changes

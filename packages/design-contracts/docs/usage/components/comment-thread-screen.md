@@ -28,7 +28,7 @@
 | 이름 | 역할 | Web | Native |
 | --- | --- | --- | --- |
 | `CommentThreadScreen` | 화면 조합 | `/screen-flows` | `/screen-flows` |
-| `CommentThreadRow` | 가상화 목록에서도 같은 댓글 행 재사용(미게시) | `/screen-flows` | `/screen-flows` |
+| `CommentThreadRow` | 가상화 목록에서도 같은 댓글 행 재사용(1.23.0) | `/screen-flows` | `/screen-flows` |
 | `CommentThreadItem`(타입) | 댓글 한 개의 데이터 | `/screen-flows` | `/screen-flows` |
 
 루트 barrel에는 없다. optional native peer를 요구하지 않는다.
