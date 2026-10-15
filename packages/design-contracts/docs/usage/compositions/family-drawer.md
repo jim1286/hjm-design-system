@@ -4,9 +4,11 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-15
 - 근거: [Sheet](../../sheet.md), [Steps](../../steps.md), `src/component-recipes.ts` `sheetRecipe`, `src/steps.ts`(`currentStepStatus`), `packages/react-native/src/overlays.tsx`(footer), `showcase/shared/family-drawer.ts`
 - 스토리북: `배포/구성/입력과 작성/단계별 드로어`
+
+공통 구조·배치·상태·배지의 소유권은 [화면과 구성 선택](../SELECTION.md#소유권)을 따른다. 앱은 데이터·문구·브랜드·추가 기능을 공개 슬롯과 콜백으로 연결한다. 아래 코드 골격을 앱별 기본 구조 복제의 근거로 사용하지 않는다. 전용 구성 API가 없는 콘텐츠 묶음은 [CompositionLayout](../components/composition-layout.md)의 제목·배지·행동·본문·상태·footer 슬롯을 사용한다.
 
 ## 언제 쓰나
 
@@ -17,7 +19,7 @@
 
 | 컴포넌트 | 역할 | 지침 |
 | --- | --- | --- |
-| `Container` · `ScrollView` | 시작 화면의 바깥 틀. 제품 화면이 소유한다 | [Container](../components/container.md), [화면 여백](../tokens/layout.md) |
+| `Container` · `ScrollView` | 시작 화면의 바깥 틀. HJM 화면 골격이 소유한다 | [Container](../components/container.md), [화면 여백](../tokens/layout.md) |
 | `Heading level="level2"`, `Text` | 시작 화면의 제목·설명 | [Heading](../components/heading.md), [Text](../components/text.md) |
 | `Button` primary | 시트를 여는 트리거(시작 화면의 주 행동) | [Button](../components/button.md) |
 | `Sheet` | 하단 시트. 제목·닫기·`footer`, 안전 영역·스크롤·`busy` | [Sheet](../components/sheet.md) |

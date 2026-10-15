@@ -300,6 +300,15 @@ export type CommentThreadScreenProps = Base & {
     threadHeader?: ReactNode;
     threadFooter?: ReactNode;
 };
+export type CommentThreadRowProps = Readonly<{
+    layoutStyle?: ScreenLayoutProps["layoutStyle"];
+    item: CommentThreadItem;
+    onLike(id: string): void;
+    onReply(id: string): void;
+    replyLabel: string;
+}>;
+/** Virtualized hosts reuse the same row as CommentThreadScreen; product slots add content, not a second layout. */
+export declare function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyle }: CommentThreadRowProps): import("react").JSX.Element;
 /** Controlled thread: server ordering, permission checks and receipt-based draft clearing belong to the product. */
 export declare function CommentThreadScreen({ items, expandedIds, onExpandedChange, onLike, onReply, replyLabel, repliesLabel, composer, threadHeader, threadFooter, ...screen }: CommentThreadScreenProps): import("react").JSX.Element;
 export {};

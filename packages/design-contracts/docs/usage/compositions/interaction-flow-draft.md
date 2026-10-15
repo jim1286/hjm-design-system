@@ -4,9 +4,11 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-15
 - 근거: [제품 상호작용 품질](../../../../../docs/INTERACTION_QUALITY.md), [공통 실행과 실패 복구 · 초안과 실행 취소](../../action-session.md#초안과-실행-취소), [Sheet 계약](../../sheet.md), `showcase/web/src/patterns/interaction-flow-previews.tsx`, `showcase/native/src/interaction-flow-previews.tsx`. 2026-10-06 사용자 승인으로 스토리북 배포(이전 `실험/구성/상호작용 예제/닫았다 열고 초안 이어쓰기`, [승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정))
 - 스토리북: `배포/구성/입력과 작성/닫았다 열고 초안 이어쓰기`
+
+공통 구조·배치·상태·배지의 소유권은 [화면과 구성 선택](../SELECTION.md#소유권)을 따른다. 앱은 데이터·문구·브랜드·추가 기능을 공개 슬롯과 콜백으로 연결한다. 아래 코드 골격을 앱별 기본 구조 복제의 근거로 사용하지 않는다. 전용 구성 API가 없는 콘텐츠 묶음은 [CompositionLayout](../components/composition-layout.md)의 제목·배지·행동·본문·상태·footer 슬롯을 사용한다.
 
 ## 언제 쓰나
 

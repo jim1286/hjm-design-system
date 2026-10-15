@@ -4,9 +4,11 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 구성 API 지침 참조
-- 검토일: 2026-10-06
+- 검토일: 2026-10-15
 - 근거: [MessageComposer](../components/message-composer.md), [공통 실행과 실패 복구](../../action-session.md), `showcase/web/src/patterns/conversation-previews.tsx`, `showcase/native/src/conversation-previews.tsx`. 2026-10-06 사용자 승인으로 스토리북 배포(이전 `실험/구성/입력과 작성/메시지 작성`, [승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정))
 - 스토리북: `배포/구성/입력과 작성/메시지 작성`
+
+공통 구조·배치·상태·배지의 소유권은 [화면과 구성 선택](../SELECTION.md#소유권)을 따른다. 앱은 데이터·문구·브랜드·추가 기능을 공개 슬롯과 콜백으로 연결한다. 아래 코드 골격을 앱별 기본 구조 복제의 근거로 사용하지 않는다. 전용 구성 API가 없는 콘텐츠 묶음은 [CompositionLayout](../components/composition-layout.md)의 제목·배지·행동·본문·상태·footer 슬롯을 사용한다.
 
 ## 언제 쓰나
 
@@ -115,7 +117,7 @@ import { Text } from "@hjmds/react-native/primitives";
 ## 함정
 
 - 실패 시 글·사진·답장 대상을 지우지 않는다. 성공을 먼저 표시하고 지우면 재전송할 내용이 사라진다.
-- Enter 전송을 덧붙이지 않는다. IME 조합 중 Enter를 전송으로 가로채면 한글 마지막 글자가 빠진다.
+- Enter는 기본 줄바꿈이다. 데스크톱 채팅에서 Enter 전송이 필요하면 [MessageComposer](../components/message-composer.md)의 `submitMode="send"`를 사용한다. Web은 Shift+Enter·IME 조합 중 Enter를 전송하지 않는다. 제품에서 별도 키 핸들러로 전송을 덧붙이면 이 보호를 우회해 한글 마지막 글자가 빠질 수 있다. Native는 별도로 선택하지 않으면 줄바꿈을 유지한다.
 - 스토리의 "다음 전송 실패시키기"·350ms 지연·예제 사진은 로컬 시연이다. 업로드·서버 저장·권한은 제품이 연결한다.
 
 2026-10-13 예제 검수: Web의 원형 전송 버튼이 잠기거나 없어질 때 초점이 body로 빠져나가던 경로를 `inputRef`로 보완했다. 전송 시작 때만 입력에 초점을 두므로 대기 중 사용자가 다른 곳으로 옮긴 초점을 완료 시 다시 가져오지 않는다. 실패 후 수정한 초안으로 재시도하며, 사진·답장 대상은 성공을 확인한 뒤에만 정리한다.

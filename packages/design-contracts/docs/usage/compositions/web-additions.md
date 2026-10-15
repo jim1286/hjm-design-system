@@ -4,9 +4,11 @@
 - 상태: 배포
 - 지원: Web
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-15
 - 근거: [ColorPicker](../../color-picker.md), [Watermark](../../watermark.md), [Affix](../../affix.md), `showcase/web/src/patterns/WebAdditions.stories.tsx`, `packages/react/src/affix.tsx`, `packages/react/src/styles.css`(`.hjm-color-picker`, `.hjm-watermark`, `.hjm-affix`), `src/affix.ts`, `src/color-picker.ts`
 - 스토리북: `배포/구성/비교와 검증/웹 전용 보조 컴포넌트`
+
+공통 구조·배치·상태·배지의 소유권은 [화면과 구성 선택](../SELECTION.md#소유권)을 따른다. 앱은 데이터·문구·브랜드·추가 기능을 공개 슬롯과 콜백으로 연결한다. 아래 코드 골격을 앱별 기본 구조 복제의 근거로 사용하지 않는다. 전용 구성 API가 없는 콘텐츠 묶음은 [CompositionLayout](../components/composition-layout.md)의 제목·배지·행동·본문·상태·footer 슬롯을 사용한다.
 
 ## 언제 쓰나
 
@@ -57,16 +59,16 @@ Native 화면에서 같은 일이 필요하면 이 구성을 옮기지 않는다
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
-| 바깥 틀 | 제품 페이지 레이아웃(문서 스크롤) | 세 스토리 모두 바깥 폭·여백을 정하지 않는다. 페이지 본문은 [Container](../components/container.md)가 정한다. Affix만 가장 가까운 스크롤 조상(문서 또는 제품의 `overflow: auto` 영역)에 붙는다. Web 전용이라 안전 영역·화면 키보드 처리는 없다 | Container gutter 폭 600 미만 `compact` 16 · 이상 `regular` 20 |
+| 바깥 틀 | HJM ScreenLayout의 본문 | 세 스토리 모두 바깥 폭·여백을 정하지 않는다. 페이지 본문은 [Container](../components/container.md)가 정한다. Affix만 가장 가까운 스크롤 조상(문서 또는 제품의 `overflow: auto` 영역)에 붙는다. Web 전용이라 안전 영역·화면 키보드 처리는 없다 | Container gutter 폭 600 미만 `compact` 16 · 이상 `regular` 20 |
 | 색 입력 줄 | `ColorPicker` 색 견본 + HEX | fieldset 첫 줄, 좁으면 줄바꿈(`flex-wrap`) | 입력 최소 높이 `colorPickerRecipe.minTargetSize` 44, 색 견본 폭 3rem, 줄 간격 0.75rem |
 | 불투명도·미리보기·프리셋 | `ColorPicker` 내부 | 색 입력 아래 순서대로 | 각 위 여백 0.75rem, 프리셋 사이 0.5rem, 프리셋 최소 높이 44 |
-| 선택값 | live 문구 | ColorPicker 바로 아래 | 제품 레이아웃 소유 |
+| 선택값 | live 문구 | ColorPicker 바로 아래 | HJM 구성 레이아웃 소유 |
 | 워터마크 | `Watermark` | 감싼 본문 전체를 덮는 오버레이(`inset: 0`) | `tileWidth` 240 · `tileHeight` 160 · `rotate` -22 · `opacity` 0.12(기본값), 색 `--hjm-color-text-sub` |
 | 고정 행동 | `Affix` | 스크롤 조상 상단 + `offset` | `offset` 기본 0, 띄울 때는 spacing 토큰 값(스토리 `spacing.xs` 8). 스크롤 조상보다 높으면 고정하지 않고 흐름에 남는다 |
 | 저장 실패 | `Notice` danger | 저장 버튼 위(Watermark 본문 안, Affix 아래 본문 첫머리) | 버튼과 `spacing.md` 16 |
 
 - ColorPicker 내부 간격은 CSS가 rem 값으로 직접 둔다(`padding: 1rem`, `gap: 0.75rem`·`0.5rem`). 제품에서 덮지 않는다.
-- Affix는 스크롤 조상 안에서만 붙는다. 그 조상의 높이·overflow는 제품 레이아웃이 정한다(스토리의 280px 박스는 데모 값).
+- Affix는 스크롤 조상 안에서만 붙는다. 그 조상의 높이·overflow는 HJM 화면 골격이 정한다(스토리의 280px 박스는 데모 값).
 
 ## 흐름과 상태
 

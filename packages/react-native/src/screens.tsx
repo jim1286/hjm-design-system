@@ -20,6 +20,8 @@ import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type ScreenLayoutProps = Readonly<{
   title: string;
+  /** The shared header owns badge placement; the product supplies its meaning and label. */
+  titleBadge?: ReactNode;
   /** Hide redundant route names while retaining descriptions and a named screen. */
   titleVisibility?: "visible" | "hidden";
   headerAlignment?: "start" | "center";
@@ -46,7 +48,7 @@ export type ScreenLayoutProps = Readonly<{
   scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator">;
 }>;
 
-export function ScreenLayout({ title, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", presentation: suppliedPresentation, description, leading, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps }: ScreenLayoutProps) {
+export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", presentation: suppliedPresentation, description, leading, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps }: ScreenLayoutProps) {
   const [leadingWidth, setLeadingWidth] = useState(0), [actionsWidth, setActionsWidth] = useState(0);
   const sideWidth = Math.max(leadingWidth, actionsWidth);
   const showHeader = titleVisibility === "visible" || !!description || !!leading || !!actions;
@@ -79,7 +81,7 @@ export function ScreenLayout({ title, titleVisibility = "visible", headerAlignme
       {/* Measure unconstrained control rows before reserving equal space on both sides. */}
       <View onLayout={event => setLeadingWidth(event.nativeEvent.layout.width)} style={{ position: "absolute", left: padding, top: headerVerticalPadding, bottom: headerVerticalPadding, justifyContent: "center", flexDirection: "row", alignItems: "center" }}>{leading}</View>
       <View style={{ minWidth: 0, alignItems: "center", gap: 4 }}>
-        {titleVisibility === "visible" && <Text variant="title" align="center" accessibilityRole="header">{title}</Text>}
+        {titleVisibility === "visible" && <Stack axis="inline" gap="xs" align="center" justify="center" layoutStyle={{flexWrap: "wrap"}}><Text variant="title" align="center" accessibilityRole="header">{title}</Text>{titleBadge}</Stack>}
         {description && <Text align="center" tone="muted">{description}</Text>}
       </View>
       <View onLayout={event => setActionsWidth(event.nativeEvent.layout.width)} style={{ position: "absolute", right: padding, top: headerVerticalPadding, bottom: headerVerticalPadding, justifyContent: "center", flexDirection: "row", alignItems: "center" }}>{actions}</View>
@@ -87,7 +89,7 @@ export function ScreenLayout({ title, titleVisibility = "visible", headerAlignme
       {/* Reserve a readable title column; wrapping moves actions below it at large text. */}
       {leading}<View style={{ flexGrow: 1, flexShrink: 1, ...(profileLayout?.headerAxis === "column" ? { width: "100%" as const } : { flexBasis: recipe.headerMinWidth * environment.textScale }) }}>
         {/* Profile headings share the Web heading role; preserve the legacy title role without a profile. */}
-        {titleVisibility === "visible" && <Text variant={profileLayout ? "heading" : "titleLarge"} {...(profileLayout?.centered ? { align: "center" as const } : {})} accessibilityRole="header">{title}</Text>}
+        {titleVisibility === "visible" && <Stack axis="inline" gap="xs" align="center" justify={profileLayout?.centered ? "center" : "start"} wrap><Text variant={profileLayout ? "heading" : "titleLarge"} {...(profileLayout?.centered ? { align: "center" as const } : {})} accessibilityRole="header">{title}</Text>{titleBadge}</Stack>}
         {description ? <Text tone="muted" {...(profileLayout?.centered ? { align: "center" as const } : {})}>{description}</Text> : null}
       </View>{actions}
     </View>)}
@@ -243,4 +245,36 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
     {outgoing ? avatar : null}
     </Animated.View>
   </View>;
+}
+
+/** Shared structure for embedded compositions. The parent supplies size; this never creates a second scroller. */
+export type CompositionLayoutProps = Readonly<{
+  title?: string;
+  description?: string;
+  badge?: ReactNode;
+  leading?: ReactNode;
+  actions?: ReactNode;
+  notice?: ReactNode;
+  children?: ReactNode;
+  footer?: ReactNode;
+  state?: ScreenContentState;
+  stateAction?: ReactNode;
+  layoutStyle?: HjmCompositionStyleProp;
+}>;
+export function CompositionLayout({title, description, badge, leading, actions, notice, children, footer, state = {kind: "ready"}, stateAction, layoutStyle}: CompositionLayoutProps) {
+  const resolved = resolveScreenContentState(state);
+  return <Stack gap="md" {...(layoutStyle === undefined ? {} : {layoutStyle})}>
+    {title || description || badge || leading || actions ? <Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap: "wrap"}}>
+      {leading}<Stack gap="xxs" layoutStyle={{flex: 1, minWidth: 0}}>
+        <Stack axis="inline" gap="xs" align="center" layoutStyle={{flexWrap: "wrap"}}>{title ? <Text variant="title" accessibilityRole="header">{title}</Text> : null}{badge}</Stack>
+        {description ? <Text tone="muted">{description}</Text> : null}
+      </Stack>{actions}
+    </Stack> : null}
+    {notice}
+    {state.kind === "ready" ? children : <Stack gap="sm" align="center" justify="center" layoutStyle={{flex: 1}}>
+      {resolved.busy ? <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} /> : <View accessibilityRole={state.kind === "error" ? "alert" : "text"} accessibilityLiveRegion="polite"><Text variant="title" align="center">{state.title}</Text>{state.description ? <Text tone="muted" align="center">{state.description}</Text> : null}</View>}
+      {stateAction}
+    </Stack>}
+    {footer}
+  </Stack>;
 }

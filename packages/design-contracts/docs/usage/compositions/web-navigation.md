@@ -4,9 +4,11 @@
 - 상태: 배포
 - 지원: Web
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-15
 - 근거: [Breadcrumb](../../breadcrumb.md), [Pagination](../../pagination.md), `showcase/web/src/patterns/WebNavigation.stories.tsx`, `packages/react/src/styles.css`(`.hjm-breadcrumb`, `.hjm-pagination`), `src/component-recipes.ts`(`listRowRecipe`)
 - 스토리북: `배포/구성/탐색과 이동/보관함과 페이지 이동`
+
+공통 구조·배치·상태·배지의 소유권은 [화면과 구성 선택](../SELECTION.md#소유권)을 따른다. 앱은 데이터·문구·브랜드·추가 기능을 공개 슬롯과 콜백으로 연결한다. 아래 코드 골격을 앱별 기본 구조 복제의 근거로 사용하지 않는다. 전용 구성 API가 없는 콘텐츠 묶음은 [CompositionLayout](../components/composition-layout.md)의 제목·배지·행동·본문·상태·footer 슬롯을 사용한다.
 
 ## 언제 쓰나
 
@@ -52,7 +54,7 @@ Web에서 상위 보관함 → 하위 모음으로 들어가고, 그 모음의 �
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
-| 바깥 틀 | 제품 페이지 레이아웃(문서 스크롤) > [Container](../components/container.md) | 이 구성은 바깥 폭·여백을 정하지 않는다(스토리는 Stack만 그린다). 목록 화면이므로 페이지 본문은 Container `size="content"`가 정한다. 고정 영역·안전 영역·키보드 처리는 없다 | Container gutter 폭 600 미만 `compact` 16 · 이상 `regular` 20 |
+| 바깥 틀 | HJM ScreenLayout의 본문 > [Container](../components/container.md) | 이 구성은 바깥 폭·여백을 정하지 않는다(스토리는 Stack만 그린다). 목록 화면이므로 페이지 본문은 Container `size="content"`가 정한다. 고정 영역·안전 영역·키보드 처리는 없다 | Container gutter 폭 600 미만 `compact` 16 · 이상 `regular` 20 |
 | 경로 | `Breadcrumb` | 콘텐츠 맨 위, 스크롤과 함께 | 항목·구분자 사이 `spacing.xxs` 4, 좁으면 줄바꿈 |
 | 콘텐츠 머리 | `Section` 제목·설명 | 경로 아래 | 경로와 `spacing.lg` 20 |
 | 범위 | status 문구 | 머리 아래, 목록 위 | `spacing.md` 16 |

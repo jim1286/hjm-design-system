@@ -4,9 +4,11 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-15
 - 근거: `showcase/web/src/patterns/stea-expression-previews.tsx`(`FlipInfoCard`), `showcase/native/src/stea-expression-previews.tsx`, `showcase/shared/stea-expressions.ts`(`flipCopy`), `src/content-transition.ts`, `src/card.ts`
 - 스토리북: `배포/구성/정보 표시/앞면과 상세 정보 전환`
+
+공통 구조·배치·상태·배지의 소유권은 [화면과 구성 선택](../SELECTION.md#소유권)을 따른다. 앱은 데이터·문구·브랜드·추가 기능을 공개 슬롯과 콜백으로 연결한다. 아래 코드 골격을 앱별 기본 구조 복제의 근거로 사용하지 않는다. 전용 구성 API가 없는 콘텐츠 묶음은 [CompositionLayout](../components/composition-layout.md)의 제목·배지·행동·본문·상태·footer 슬롯을 사용한다.
 
 ## 언제 쓰나
 
@@ -52,7 +54,7 @@
 | 전환 버튼 | `Button` secondary | 면 아래, 전환되는 면 **밖**, 꽉 찬 폭(Stack 기본 stretch) | 높이 `control.buttonHeight.medium` 44, 면과 `spacing.md` 16 |
 
 - 버튼은 두 면 모두에서 같은 자리(면 아래, 면 밖)에 둔다. 면 안에 두면 면이 바뀔 때 포커스한 버튼이 사라진다.
-- 두 면의 높이가 다르면 버튼이 위아래로 움직인다. 면 높이를 고정하려면 제품 레이아웃에서 최소 높이를 준다(스토리는 고정하지 않는다).
+- 두 면의 높이가 다르면 버튼이 위아래로 움직인다. 면 높이 전환이 필요하면 HJM ContentTransition의 공개 크기 전환을 사용한다(스토리는 고정하지 않는다).
 - 전환 버튼은 보기 전환이라 primary가 아니라 secondary다([Button](../components/button.md)).
 
 ## 흐름과 상태

@@ -419,6 +419,15 @@
         "role": "canonical"
       },
       {
+        "name": "CommentThreadRow",
+        "source": "packages/react/src/screen-flows.tsx",
+        "entries": [
+          "./screen-flows"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "CommentThreadScreen",
         "source": "packages/react/src/screen-flows.tsx",
         "entries": [
@@ -435,6 +444,15 @@
         ],
         "canonicalComponent": "DataTable",
         "role": "companion-or-alternative"
+      },
+      {
+        "name": "CompositionLayout",
+        "source": "packages/react/src/screens.tsx",
+        "entries": [
+          "./screens"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "Container",
@@ -2273,6 +2291,15 @@
         "role": "canonical"
       },
       {
+        "name": "CommentThreadRow",
+        "source": "packages/react-native/src/screen-flows.tsx",
+        "entries": [
+          "./screen-flows"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "CommentThreadScreen",
         "source": "packages/react-native/src/screen-flows.tsx",
         "entries": [
@@ -2289,6 +2316,15 @@
         ],
         "canonicalComponent": "DataTable",
         "role": "companion-or-alternative"
+      },
+      {
+        "name": "CompositionLayout",
+        "source": "packages/react-native/src/screens.tsx",
+        "entries": [
+          "./screens"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "Container",

@@ -6,7 +6,7 @@
 버튼 위치에서 시작해 구성·컴포넌트 지침으로 내려가고, 값은 토큰 지침에서 고른다.
 [선택 기준](SELECTION.md)으로 그대로 사용·공개 슬롯 확장·제품 전용 구성을 고른다. 설치 버전의 지침을 본다: `node_modules/@hjmds/design-contracts/docs/usage/`.
 제공 기준은 확인한 기본 API 버전이며 최초 출시 버전이 아니다. 구성·화면은 각 API 지침의 제공 버전을 확인한다.
-API 안정성은 1.21.0의 생성 manifest에서 읽은 정규(canonical) API 기준이다. 동반·선택형 확장은 개별 계약을 확인한다.
+API 안정성은 1.22.0의 생성 manifest에서 읽은 정규(canonical) API 기준이다. 동반·선택형 확장은 개별 계약을 확인한다.
 Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품 반영을 의미하지 않는다.
 `분류`는 Storybook 제목 `<배포|실험>/<단계>/<분류>/<항목>`의 셋째 마디이고, 토큰·구성·화면은 Storybook 메뉴와 같은 순서다.
 
@@ -66,6 +66,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [Combobox](components/combobox.md) | 입력 | 주어진 목록에서 하나를 고르는데 목록이 길어 입력으로 좁혀야 할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [CommandPalette](components/command-palette.md) | 오버레이 | ⌘K 스타일로 앱 전체의 **행동**을 검색해 실행하는 모달에 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |
 | [CommentThreadScreen](components/comment-thread-screen.md) | 화면/소통 | 게시물·콘텐츠 아래의 댓글 화면 한 장에 쓴다. | 1.17.1 | Web · Native | 개별 API 계약 참조 | 배포 |
+| [CompositionLayout](components/composition-layout.md) | 화면/설정 | 카드·패널·화면 본문 안의 콘텐츠 묶음에 제목·배지·행동·안내·본문·하단 영역이 필요할 때 쓴다. | 미게시(1.22.0 이후) | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Container](components/container.md) | 레이아웃 | 화면 본문의 최대 폭과 좌우(논리 방향) 여백을 맞출 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [ContentTransition](components/content-transition.md) | 시각 효과 | 같은 자리의 내용이 상태에 따라 바뀔 때(필터 결과 패널, 단계별 본문) 새 내용이 짧게 나타나도록 감싼다. | 1.12.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [ContextMenu](components/context-menu.md) | 탐색 | Web에서 제품이 소유한 영역(카드·목록 행·캔버스)의 우클릭·길게 누르기·Shift+F10에 명령 목록을 띄울 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native unsupported | 배포 |

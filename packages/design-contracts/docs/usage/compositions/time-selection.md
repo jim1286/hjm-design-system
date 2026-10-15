@@ -4,9 +4,11 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-13
+- 검토일: 2026-10-15
 - 근거: `showcase/web/src/patterns/TimeSelection.stories.tsx`, `showcase/native/src/TimeSelection.stories.tsx`, `showcase/native/src/pattern-status.tsx`, `showcase/shared/time-example.ts`, `src/foundations.ts`(`control`, `spacing`), `src/component-recipes.ts`(`stackRecipe`, `sectionRecipe`), `src/container.ts`
 - 스토리북: `배포/구성/선택과 필터/시간 선택`
+
+공통 구조·배치·상태·배지의 소유권은 [화면과 구성 선택](../SELECTION.md#소유권)을 따른다. 앱은 데이터·문구·브랜드·추가 기능을 공개 슬롯과 콜백으로 연결한다. 아래 코드 골격을 앱별 기본 구조 복제의 근거로 사용하지 않는다. 전용 구성 API가 없는 콘텐츠 묶음은 [CompositionLayout](../components/composition-layout.md)의 제목·배지·행동·본문·상태·footer 슬롯을 사용한다.
 
 ## 언제 쓰나
 
@@ -55,7 +57,7 @@ Native 화면(ScrollView, 위아래 spacing.lg 20) > Container gutter compact 16
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
-| 바깥 틀 | Web: 제품 화면 레이아웃(문서 스크롤). Native: `ScrollView` > `Container` | Web 스토리도 Container gutter="compact" 안에 Section을 둔다. Native는 `ScrollView` 안 [Container](../components/container.md)에 둔다. Select는 키보드 대신 목록 표면(Web popover, Native modal sheet)을 열어 키보드 처리는 없다. 안전 영역은 화면 골격(내비게이션 헤더·탭 바)이 맡는다 | Native ScrollView 위아래 `spacing.lg` 20, 양 Story의 Container gutter는 `compact` 16이며 폭에 따라 자동 변경되지 않음 |
+| 바깥 틀 | Web: HJM ScreenLayout의 본문. Native: `ScrollView` > `Container` | Web 스토리도 Container gutter="compact" 안에 Section을 둔다. Native는 `ScrollView` 안 [Container](../components/container.md)에 둔다. Select는 키보드 대신 목록 표면(Web popover, Native modal sheet)을 열어 키보드 처리는 없다. 안전 영역은 화면 골격(내비게이션 헤더·탭 바)이 맡는다 | Native ScrollView 위아래 `spacing.lg` 20, 양 Story의 Container gutter는 `compact` 16이며 폭에 따라 자동 변경되지 않음 |
 | 머리 | Section 제목·설명 | 흐름 맨 위, 스크롤과 함께 | 제목–설명 `spacing.xxs` 4, 머리–내용 `spacing.xs` 8 |
 | 입력 | Select 시 → 분 | 머리 아래, 시가 먼저 | 필드 `control.fieldHeight` 44, 사이 `spacing.md` 16 |
 | 상태 | 상태 문구 | 입력 바로 아래 | 위 `spacing.md` 16 |
@@ -164,7 +166,7 @@ const gutter = resolveWindowClass(width) === "compact" ? "compact" : "regular";
 | 필수 문구 | `emptySelectionLabel`(선택 해제 항목) | `dismissLabel`(시트 닫기) |
 | 상태 문구 낭독 | `role="status"` | 공개 StatusText(Android live region + iOS 변경 알림) |
 | 확정 Notice 발표 | 늘 live region | `announcement`를 지정해야 발표(기본 `none`) |
-| 바깥 틀 | 제품 화면 레이아웃(문서 스크롤) | `ScrollView` > `Container` |
+| 바깥 틀 | HJM ScreenLayout의 본문 | `ScrollView` > `Container` |
 
 ## 함정
 

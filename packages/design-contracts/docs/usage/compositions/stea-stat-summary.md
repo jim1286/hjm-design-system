@@ -4,9 +4,11 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-15
 - 근거: [Statistic](../../statistic.md), [Progress](../../progress.md), `showcase/shared/stea-compositions.ts`, `showcase/{web/src/patterns,native/src}/stea-composition-previews.tsx`(`StatChangeSummary`, Native `Frame`), `src/container.ts`
 - 스토리북: `배포/구성/정보 표시/수치와 이전 대비 변화`
+
+공통 구조·배치·상태·배지의 소유권은 [화면과 구성 선택](../SELECTION.md#소유권)을 따른다. 앱은 데이터·문구·브랜드·추가 기능을 공개 슬롯과 콜백으로 연결한다. 아래 코드 골격을 앱별 기본 구조 복제의 근거로 사용하지 않는다. 전용 구성 API가 없는 콘텐츠 묶음은 [CompositionLayout](../components/composition-layout.md)의 제목·배지·행동·본문·상태·footer 슬롯을 사용한다.
 
 ## 언제 쓰나
 
@@ -47,7 +49,7 @@ Native 화면(ScrollView, 위아래 spacing.lg 20) > Container gutter 16(폭 < 6
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
-| 바깥 틀 | Web: 제품 화면 레이아웃(문서 스크롤). Native: `ScrollView` > `Container` | 이 구성은 바깥 폭·여백을 정하지 않는다(스토리는 Card만 그린다). Native는 Card를 `ScrollView` 안 [Container](../components/container.md)에 둔다. 입력이 없어 키보드 처리는 없다. 안전 영역은 화면 골격(내비게이션 헤더·탭 바)이 맡는다 | Native ScrollView 위아래 `spacing.lg` 20, Container gutter 폭 600 미만 `compact` 16 · 이상 `regular` 20(`layout.pagePadding`) |
+| 바깥 틀 | Web: HJM ScreenLayout의 본문. Native: `ScrollView` > `Container` | 이 구성은 바깥 폭·여백을 정하지 않는다(스토리는 Card만 그린다). Native는 Card를 `ScrollView` 안 [Container](../components/container.md)에 둔다. 입력이 없어 키보드 처리는 없다. 안전 영역은 화면 골격(내비게이션 헤더·탭 바)이 맡는다 | Native ScrollView 위아래 `spacing.lg` 20, Container gutter 폭 600 미만 `compact` 16 · 이상 `regular` 20(`layout.pagePadding`) |
 | 틀 | Card | 바깥 틀 안, 함께 스크롤 | padding `md` 16, radius `lg` 16, 테두리 있음 |
 | 기간 선택 | SegmentedControl | 카드 본문 맨 위 | `size` `medium`, 아래 `spacing.lg` 20 |
 | 수치 목록 | Stack > Statistic ×3 | 기간 선택 아래 | 수치 사이 `spacing.md` 16, 값은 `comfortable`(`heading` 크기) |

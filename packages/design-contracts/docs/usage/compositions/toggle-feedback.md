@@ -8,6 +8,8 @@
 - 근거: [선택 반응 계약](../../toggle-feedback.md), `src/toggle-feedback.ts`, 양 renderer의 `src/toggle-feedback.tsx`
 - 스토리북: `배포/구성/직접 조작과 모션/선택 반응 버튼`
 
+공통 구조·배치·상태·배지의 소유권은 [화면과 구성 선택](../SELECTION.md#소유권)을 따른다. 앱은 데이터·문구·브랜드·추가 기능을 공개 슬롯과 콜백으로 연결한다. 아래 코드 골격을 앱별 기본 구조 복제의 근거로 사용하지 않는다. 전용 구성 API가 없는 콘텐츠 묶음은 [CompositionLayout](../components/composition-layout.md)의 제목·배지·행동·본문·상태·footer 슬롯을 사용한다.
+
 ## 언제 쓰나
 
 구독·북마크·좋아요에서 선택 요청과 실제 인원 수의 실패 복구, 국소 모션이 함께 필요할 때 쓴다.

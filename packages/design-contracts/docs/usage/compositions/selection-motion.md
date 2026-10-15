@@ -4,15 +4,17 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.14.0
-- 검토일: 2026-10-07
+- 검토일: 2026-10-15
 - 근거: 공개 API를 사용하는 `showcase/*/reference-adoption-previews.tsx`
 - 스토리북: `배포/구성/직접 조작과 모션/선택 배경 이동`
 
 승급: 2026-10-07 사용자 승인, [검토 결과](../../../../../docs/qa/2026-10-07-experiment-promotion-release.md). Storybook 분류이며 제품 적용 증거는 별도다.
 
+공통 구조·배치·상태·배지의 소유권은 [화면과 구성 선택](../SELECTION.md#소유권)을 따른다. 앱은 데이터·문구·브랜드·추가 기능을 공개 슬롯과 콜백으로 연결한다. 아래 코드 골격을 앱별 기본 구조 복제의 근거로 사용하지 않는다. 전용 구성 API가 없는 콘텐츠 묶음은 [CompositionLayout](../components/composition-layout.md)의 제목·배지·행동·본문·상태·footer 슬롯을 사용한다.
+
 ## 언제 쓰나
 
-짧은 단일 선택의 현재 항목을 이어지는 배경으로 보여 줄 때 쓴다. 선택 값·키보드·초점은 기존 SegmentedControl이 소유한다. 별도 신규 wrapper API가 아니라 아래 공개 컴포넌트의 조합 규격이다.
+짧은 단일 선택의 현재 항목을 이어지는 배경으로 보여 줄 때 쓴다. 선택 값·키보드·초점은 기존 SegmentedControl이 소유한다. 기본 외곽 배치는 CompositionLayout이 제공하고 아래 공개 API가 해당 상호작용을 담당한다.
 
 ## 구성 요소
 

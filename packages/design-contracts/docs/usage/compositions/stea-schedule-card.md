@@ -4,9 +4,11 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-15
 - 근거: `showcase/web/src/patterns/stea-composition-previews.tsx`(`ScheduleDayList`), `showcase/native/src/stea-composition-previews.tsx`(`ScheduleDayList`, `Frame`), `showcase/shared/stea-compositions.ts`(`scheduleCopy`), `src/card.ts`, `src/component-recipes.ts`(`segmentedControlRecipe`, `listRowRecipe`), `src/container.ts`
 - 스토리북: `배포/구성/선택과 필터/날짜 선택과 예정 목록`
+
+공통 구조·배치·상태·배지의 소유권은 [화면과 구성 선택](../SELECTION.md#소유권)을 따른다. 앱은 데이터·문구·브랜드·추가 기능을 공개 슬롯과 콜백으로 연결한다. 아래 코드 골격을 앱별 기본 구조 복제의 근거로 사용하지 않는다. 전용 구성 API가 없는 콘텐츠 묶음은 [CompositionLayout](../components/composition-layout.md)의 제목·배지·행동·본문·상태·footer 슬롯을 사용한다.
 
 ## 언제 쓰나
 
@@ -48,7 +50,7 @@ Native 화면(ScrollView, 위아래 spacing.lg 20) > Container gutter 16(폭 < 6
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
-| 바깥 틀 | Web: 제품 화면 레이아웃(문서 스크롤). Native: `ScrollView` > `Container` | 이 구성은 바깥 폭·여백을 정하지 않는다(스토리는 Card만 그린다). Native는 Card를 `ScrollView` 안 [Container](../components/container.md)에 둔다. 입력이 없어 키보드 처리는 없다. 안전 영역은 화면 골격(내비게이션 헤더·탭 바)이 맡는다 | Native ScrollView 위아래 `spacing.lg` 20, Container gutter 폭 600 미만 `compact` 16 · 이상 `regular` 20(`layout.pagePadding`) |
+| 바깥 틀 | Web: HJM ScreenLayout의 본문. Native: `ScrollView` > `Container` | 이 구성은 바깥 폭·여백을 정하지 않는다(스토리는 Card만 그린다). Native는 Card를 `ScrollView` 안 [Container](../components/container.md)에 둔다. 입력이 없어 키보드 처리는 없다. 안전 영역은 화면 골격(내비게이션 헤더·탭 바)이 맡는다 | Native ScrollView 위아래 `spacing.lg` 20, Container gutter 폭 600 미만 `compact` 16 · 이상 `regular` 20(`layout.pagePadding`) |
 | 틀 | `Card` | 바깥 틀 안, 스크롤과 함께 | body padding `spacing.md` 16, 안쪽 `Stack gap="md"` 16 |
 | 날짜 | `SegmentedControl` medium | Card 머리 아래 | 최소 높이 `control.minTouchTarget` 44, 트랙 padding·항목 사이 Native `spacing.xxs` 4 / Web CSS 2px |
 | 목록 | `List` + `ListRow` | 날짜 아래 | 두 줄 행 최소 `layout.rowHeight.twoLine` 68(comfortable), 날짜와 `spacing.md` 16 |
@@ -160,7 +162,7 @@ const gutter = resolveWindowClass(width) === "compact" ? "compact" : "regular";
 | `Card`·`List` import | `@hjmds/react/display` | `@hjmds/react-native/data-display` |
 | 큰 글자 | `data-large-text`에서 세로로 쌓음 | 기준 글자 크기 이상에서 세로로 쌓음 |
 | 트랙 padding·항목 간격 | CSS 2px | `spacing.xxs` 4 |
-| 바깥 틀 | 제품 화면 레이아웃(문서 스크롤) | `ScrollView` > `Container` |
+| 바깥 틀 | HJM ScreenLayout의 본문 | `ScrollView` > `Container` |
 | 실패 Notice 발표 | `danger`는 늘 `role="alert"` | `announcement="assertive"`를 지정해야 발표(기본 `none`) |
 
 ## 함정

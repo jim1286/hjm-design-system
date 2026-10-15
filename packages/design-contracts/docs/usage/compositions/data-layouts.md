@@ -4,9 +4,11 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-15
 - 근거: [Masonry](../../masonry.md), [VirtualList](../../virtual-list.md), [QRCode](../../qr-code.md), `src/masonry.ts`, `src/qr-code-recipe.ts`, `src/foundations.ts`(`layout`), `showcase/web/src/patterns/DataLayouts.stories.tsx`, `showcase/native/src/data-layout-preview.tsx`
 - 스토리북: `배포/구성/정보 표시/카드 묶음과 긴 목록`
+
+공통 구조·배치·상태·배지의 소유권은 [화면과 구성 선택](../SELECTION.md#소유권)을 따른다. 앱은 데이터·문구·브랜드·추가 기능을 공개 슬롯과 콜백으로 연결한다. 아래 코드 골격을 앱별 기본 구조 복제의 근거로 사용하지 않는다. 전용 구성 API가 없는 콘텐츠 묶음은 [CompositionLayout](../components/composition-layout.md)의 제목·배지·행동·본문·상태·footer 슬롯을 사용한다.
 
 ## 언제 쓰나
 
@@ -51,7 +53,7 @@ VirtualList, 다른 기기로 넘길 링크는 QRCode다. 세 스토리(카드 �
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
-| 바깥 틀 | 카드 묶음: Web 문서 스크롤 > `Container`, Native `ScrollView` > `Container`. 가상 목록: `Container`만(바깥 세로 스크롤 없음). QR: 카드·시트 본문 | 제품 화면이 소유. 상단 안전 영역은 내비게이션 헤더가 맡는다 | 좌우 `Container gutter`: 폭 600 미만 `compact` 16, 이상 `regular` 20([화면 여백](../tokens/layout.md)). Native ScrollView 위아래 `paddingVertical: spacing.lg` 20 |
+| 바깥 틀 | 카드 묶음: Web 문서 스크롤 > `Container`, Native `ScrollView` > `Container`. 가상 목록: `Container`만(바깥 세로 스크롤 없음). QR: 카드·시트 본문 | HJM 화면 골격이 소유. 상단 안전 영역은 내비게이션 헤더가 맡는다 | 좌우 `Container gutter`: 폭 600 미만 `compact` 16, 이상 `regular` 20([화면 여백](../tokens/layout.md)). Native ScrollView 위아래 `paddingVertical: spacing.lg` 20 |
 | 카드 묶음 | Masonry | 본문 흐름 안, 페이지와 함께 스크롤 | `columns` 기본 2(600 이상에서 늘린다), `gap`은 숫자(기본 12 = `spacing.sm`), `width`는 Container 안쪽에 놓인 실제 호스트의 측정 폭 |
 | 카드 | 제품 `renderItem` | 가장 짧은 열 아래 | 높이는 `getItemHeight`가 확정, 안쪽 여백 `spacing.sm` 12 |
 | 다음 페이지 | [LoadMore](../components/load-more.md) | Masonry 다음 형제, 같은 스크롤 | LoadMore 기본 |

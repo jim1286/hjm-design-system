@@ -4,9 +4,11 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-15
 - 근거: [OtpField](../../otp-field.md), `showcase/web/src/patterns/stea-composition-previews.tsx`(`OtpVerifyRecover`), `showcase/native/src/stea-composition-previews.tsx`(`OtpVerifyRecover`, `Frame`), `showcase/shared/stea-compositions.ts`(`otpReducer`·`otpErrorMessage`), `src/otp-field.ts`, `src/result.ts`, `src/card.ts`, `src/container.ts`
 - 스토리북: `배포/구성/입력과 작성/인증번호 확인과 다시 입력`
+
+공통 구조·배치·상태·배지의 소유권은 [화면과 구성 선택](../SELECTION.md#소유권)을 따른다. 앱은 데이터·문구·브랜드·추가 기능을 공개 슬롯과 콜백으로 연결한다. 아래 코드 골격을 앱별 기본 구조 복제의 근거로 사용하지 않는다. 전용 구성 API가 없는 콘텐츠 묶음은 [CompositionLayout](../components/composition-layout.md)의 제목·배지·행동·본문·상태·footer 슬롯을 사용한다.
 
 ## 언제 쓰나
 
@@ -61,7 +63,7 @@ Native 화면(ScrollView keyboardShouldPersistTaps="handled", 위아래 spacing.
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
-| 바깥 틀 | Web: 제품 화면 레이아웃(문서 스크롤). Native: `ScrollView` > `Container` | 이 구성은 바깥 폭·여백을 정하지 않는다. 스토리는 Card만 그린다. Web 단독 화면이면 [Container](../components/container.md) 같은 읽기 폭 컨테이너는 제품이 고른다. Native는 Card를 `ScrollView`(`keyboardShouldPersistTaps="handled"`) 안 `Container`에 둔다. 입력이 한 칸이라 [KeyboardFormScrollView](../components/keyboard-form-scroll-view.md)(실험, `react-native-keyboard-controller` 설치와 앱 루트 `KeyboardMotionProvider` 필요)는 기본값이 아니며, 여러 필드 폼 안에 이 구성을 넣을 때만 쓴다. 안전 영역은 화면 골격(내비게이션 헤더·탭 바)이 맡는다 | Native ScrollView 위아래 `spacing.lg` 20, Container gutter 폭 600 미만 `compact` 16 · 이상 `regular` 20(`layout.pagePadding`) |
+| 바깥 틀 | Web: HJM ScreenLayout의 본문. Native: `ScrollView` > `Container` | 이 구성은 바깥 폭·여백을 정하지 않는다. 스토리는 Card만 그린다. Web 단독 화면이면 [Container](../components/container.md) 같은 읽기 폭 컨테이너는 제품이 고른다. Native는 Card를 `ScrollView`(`keyboardShouldPersistTaps="handled"`) 안 `Container`에 둔다. 입력이 한 칸이라 [KeyboardFormScrollView](../components/keyboard-form-scroll-view.md)(실험, `react-native-keyboard-controller` 설치와 앱 루트 `KeyboardMotionProvider` 필요)는 기본값이 아니며, 여러 필드 폼 안에 이 구성을 넣을 때만 쓴다. 안전 영역은 화면 골격(내비게이션 헤더·탭 바)이 맡는다 | Native ScrollView 위아래 `spacing.lg` 20, Container gutter 폭 600 미만 `compact` 16 · 이상 `regular` 20(`layout.pagePadding`) |
 | 틀 | `Card` | 바깥 틀 안, 스크롤과 함께 | body padding `spacing.md` 16, 제목–설명 `spacing.xs` 8 |
 | 입력 | `OtpField` medium | Card 머리 아래 맨 위 | 칸 `control.minTouchTarget` 44, 칸 사이 `spacing.xs` 8 (`large`: 52 / `spacing.sm` 12) |
 | 재전송 안내 | Text muted | 입력 아래, 재전송 후·재전송 실패 때만 | `Stack gap="md"` 16 |
@@ -199,7 +201,7 @@ const gutter = resolveWindowClass(width) === "compact" ? "compact" : "regular";
 | 항목 | Web | Native |
 | --- | --- | --- |
 | 제출 | `<form onSubmit>` + `type="submit"` 버튼(Enter 제출) | `onComplete`로 6자리 도달 시 자동 제출 + 확인 버튼 |
-| 바깥 틀 | 제품 화면 레이아웃(문서 스크롤) | `ScrollView keyboardShouldPersistTaps="handled"` > `Container` |
+| 바깥 틀 | HJM ScreenLayout의 본문 | `ScrollView keyboardShouldPersistTaps="handled"` > `Container` |
 | 재전송 후 포커스 | 첫 번째·반복 재전송 모두 입력으로 `focus()` | 입력 ref의 `focus()` 호출 |
 | 성공 후 포커스 | 사라지는 폼에 초점이 있었으면 `Result`(`tabIndex={-1}`)로 이동. 사용자가 옮긴 외부 초점은 유지 | 결과 행동을 각각 탐색할 수 있게 유지하며 iOS 성공 안내·Android polite live region 연결 |
 | 성공 뒤 데모 초기화 | 새 입력으로 복귀 | 새 입력 ref의 `focus()` 호출 |

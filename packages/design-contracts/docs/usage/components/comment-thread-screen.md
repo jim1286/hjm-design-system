@@ -28,6 +28,7 @@
 | 이름 | 역할 | Web | Native |
 | --- | --- | --- | --- |
 | `CommentThreadScreen` | 화면 조합 | `/screen-flows` | `/screen-flows` |
+| `CommentThreadRow` | 가상화 목록에서도 같은 댓글 행 재사용(미게시) | `/screen-flows` | `/screen-flows` |
 | `CommentThreadItem`(타입) | 댓글 한 개의 데이터 | `/screen-flows` | `/screen-flows` |
 
 루트 barrel에는 없다. optional native peer를 요구하지 않는다.
@@ -118,7 +119,7 @@ threadHeader도 댓글과 함께 숨겨지므로 항상 보여야 하는 안내�
   `TypeError`가 난다. 답글의 답글은 표현하지 않으므로 제품이 최상위로 평탄화한다.
 - 모든 문구·시각·좋아요 수 라벨은 제품 i18n에서 만든다. `likeCountLabel`이 빈 문자열이면 그리지 않는다.
 - 좋아요 저장·길게 누르기·이모지 선택, 답글 권한(`canReply`/`replyDisabled`)은 제품 데이터로 정한다.
-- 기본 `scroll`은 `ScreenLayout`과 같은 `screen`이다. 댓글을 가상화 목록으로 그리면 직접 `scroll="content"`를 준다.
+- 기본 `scroll`은 `ScreenLayout`과 같은 `screen`이다. 이 화면 자체는 가상화하지 않는다. 가상화가 필요하면 `ScreenLayout scroll="content"` 안 플랫폼 목록에 `CommentThreadRow`를 연결한다. `scroll="content"`만 바꾼다고 이 화면이 가상화 목록이 되지는 않는다.
 
 ## 플랫폼 차이
 
@@ -145,3 +146,5 @@ trigger로 공급한다. `actions`는 자유 노드 슬롯을 유지하고 메�
 
 2026-10-12 Spint의 작성자 없는 개발 댓글에서 빈 머리글이 본문을 아래로 밀었다.
 `author`와 `timeLabel`이 모두 비면 머리글 행을 생략해 avatar와 본문 시작 높이를 맞춘다. Web·Native 동일하다.
+
+`CommentThreadRow`는 `item`, `onLike`, `onReply`, `replyLabel`을 받으며 화면 내부도 같은 구현을 사용한다. 가상화 host는 항목 ID·페이지·스크롤을 연결하고 댓글 내부 간격·작성자·본문·시각·반응·메뉴 배치를 복제하지 않는다. `bodyText`가 있으면 작성자와 본문을 이어 쓰고 시각을 하단에, 없으면 작성자와 시각을 머리글에 표시한다.

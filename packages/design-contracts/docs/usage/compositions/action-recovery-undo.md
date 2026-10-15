@@ -4,9 +4,11 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-15
 - 근거: [공통 실행과 실패 복구 · 초안과 실행 취소](../../action-session.md#초안과-실행-취소), `src/action-session.ts`, `showcase/web/src/patterns/action-recovery-previews.tsx`, `showcase/native/src/action-recovery-previews.tsx`. 2026-10-06 사용자 승인으로 스토리북 배포(이전 `실험/구성/공통 동작/보관과 실행 취소`, [승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정))
 - 스토리북: `배포/구성/피드백과 복구/보관과 실행 취소`
+
+공통 구조·배치·상태·배지의 소유권은 [화면과 구성 선택](../SELECTION.md#소유권)을 따른다. 앱은 데이터·문구·브랜드·추가 기능을 공개 슬롯과 콜백으로 연결한다. 아래 코드 골격을 앱별 기본 구조 복제의 근거로 사용하지 않는다. 전용 구성 API가 없는 콘텐츠 묶음은 [CompositionLayout](../components/composition-layout.md)의 제목·배지·행동·본문·상태·footer 슬롯을 사용한다.
 
 ## 언제 쓰나
 
@@ -29,7 +31,7 @@
 | `Text` | 상태 문구. Web `role="status"`, Native 접근성 알림 | [Text](../components/text.md) |
 | `Stack` | 세로 쌓기 `gap="md"` | [Stack](../components/stack.md) |
 | `Toast` `action`(선택) | 행이 사라지는 목록에서 실행 취소 진입점 | [Toast](../components/toast.md) |
-| `Container` · `ScrollView` | 바깥 틀. 제품 화면이 소유한다 | [Container](../components/container.md), [화면 여백](../tokens/layout.md) |
+| `Container` · `ScrollView` | 바깥 틀. HJM 화면 골격이 소유한다 | [Container](../components/container.md), [화면 여백](../tokens/layout.md) |
 
 Toast의 `action`을 진입점으로 쓰면 토스트는 진입점만, 세션은 진행·실패 상태만 소유한다. Toast 지침대로 그 알림에서만 할 수 있는
 행동은 두지 않으므로 보관함 화면 등 다른 곳에도 복구 경로를 둔다. 스토리의 "다음 요청 실패시키기"·350ms 지연은 데모 전용이고,

@@ -4,9 +4,11 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-15
 - 근거: [Steps](../../steps.md), [Timeline](../../timeline.md), `showcase/web/src/patterns/stea-composition-previews.tsx`(`OrderProgressRetry`), `showcase/native/src/stea-composition-previews.tsx`(`OrderProgressRetry`, `Frame`), `showcase/shared/stea-compositions.ts`(`orderReducer`, `orderStepsDescriptor`), `src/steps.ts`, `src/container.ts`
 - 스토리북: `배포/구성/피드백과 복구/처리 단계와 재시도`
+
+공통 구조·배치·상태·배지의 소유권은 [화면과 구성 선택](../SELECTION.md#소유권)을 따른다. 앱은 데이터·문구·브랜드·추가 기능을 공개 슬롯과 콜백으로 연결한다. 아래 코드 골격을 앱별 기본 구조 복제의 근거로 사용하지 않는다. 전용 구성 API가 없는 콘텐츠 묶음은 [CompositionLayout](../components/composition-layout.md)의 제목·배지·행동·본문·상태·footer 슬롯을 사용한다.
 
 ## 언제 쓰나
 
@@ -55,7 +57,7 @@ Native 화면(ScrollView, 위아래 spacing.lg 20) > Container gutter 16(폭 < 6
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
-| 바깥 틀 | Web: 제품 화면 레이아웃(문서 스크롤). Native: `ScrollView` > `Container` | 이 구성은 바깥 폭·여백을 정하지 않는다(스토리는 Card만 그린다). Native는 Card를 `ScrollView` 안 [Container](../components/container.md)에 둔다. 입력이 없어 키보드 처리는 없다. 안전 영역은 화면 골격(내비게이션 헤더·탭 바)이 맡는다 | Native ScrollView 위아래 `spacing.lg` 20, Container gutter 폭 600 미만 `compact` 16 · 이상 `regular` 20(`layout.pagePadding`) |
+| 바깥 틀 | Web: HJM ScreenLayout의 본문. Native: `ScrollView` > `Container` | 이 구성은 바깥 폭·여백을 정하지 않는다(스토리는 Card만 그린다). Native는 Card를 `ScrollView` 안 [Container](../components/container.md)에 둔다. 입력이 없어 키보드 처리는 없다. 안전 영역은 화면 골격(내비게이션 헤더·탭 바)이 맡는다 | Native ScrollView 위아래 `spacing.lg` 20, Container gutter 폭 600 미만 `compact` 16 · 이상 `regular` 20(`layout.pagePadding`) |
 | 틀 | `Card` | 바깥 틀 안, 스크롤과 함께 | body padding `spacing.md` 16, 안쪽 `Stack gap="lg"` 20 |
 | 단계 | `Steps` | Card 머리 아래 맨 위 | 단계 사이 `stepsRecipe.gap` `spacing.xs` 8, 표시 원 `glyph.md` |
 | 진행 | 진행 문구 | 단계 아래 | `spacing.lg` 20 |
@@ -173,7 +175,7 @@ const gutter = resolveWindowClass(width) === "compact" ? "compact" : "regular";
 | --- | --- | --- |
 | 진행 문구 자리 | 빈 `role="status"`를 항상 마운트(알림 자리 유지) | 문구가 있을 때만 마운트(iOS는 live region을 무시하고 빈 Text가 틈을 남김, 2026-10-02 시뮬레이터 확인) |
 | 이벤트 | `onClick` | `onPress` |
-| 바깥 틀 | 제품 화면 레이아웃(문서 스크롤) | `ScrollView` > `Container` |
+| 바깥 틀 | HJM ScreenLayout의 본문 | `ScrollView` > `Container` |
 | 실패 Notice 발표 | `danger`는 늘 `role="alert"` | `announcement="assertive"`를 지정해야 발표(기본 `none`) |
 
 ## 함정

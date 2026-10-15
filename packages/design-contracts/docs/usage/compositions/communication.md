@@ -8,6 +8,8 @@
 - 근거: [연결 계약](../../communication.md), `src/communication.ts`, 양 renderer `src/communication.tsx`, `src/screens.tsx`
 - 스토리북: `배포/구성/선택과 필터/펼치는 상단 검색`, `배포/구성/입력과 작성/메시지 답장 연결`
 
+공통 구조·배치·상태·배지의 소유권은 [화면과 구성 선택](../SELECTION.md#소유권)을 따른다. 앱은 데이터·문구·브랜드·추가 기능을 공개 슬롯과 콜백으로 연결한다. 아래 코드 골격을 앱별 기본 구조 복제의 근거로 사용하지 않는다. 전용 구성 API가 없는 콘텐츠 묶음은 [CompositionLayout](../components/composition-layout.md)의 제목·배지·행동·본문·상태·footer 슬롯을 사용한다.
+
 ## 언제 쓰나
 
 상단 검색 버튼에서 검색 영역을 펼치거나 채팅의 실제 메시지를 선택해 답장을 전송할 때 쓴다. 이미 전체 화면으로 제공하는 검색에는 SearchScreen을 바로 쓴다. 입력 자동 높이·채팅 swipe 엔진·최근 검색 저장을 새로 만들지 않는다.

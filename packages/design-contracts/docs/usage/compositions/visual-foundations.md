@@ -4,9 +4,11 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-15
 - 근거: [EffectSurface](../../effect-surface.md), [Avatar fallback](../../avatar-fallback.md), [Icon](../../icon.md), `showcase/shared/visual-foundations.ts`, `showcase/{web/src/patterns,native/src}/visual-previews.tsx`, `src/container.ts`, `packages/react/src/composition-style.ts`
 - 스토리북: `배포/구성/비교와 검증/시각 효과 모음`
+
+공통 구조·배치·상태·배지의 소유권은 [화면과 구성 선택](../SELECTION.md#소유권)을 따른다. 앱은 데이터·문구·브랜드·추가 기능을 공개 슬롯과 콜백으로 연결한다. 아래 코드 골격을 앱별 기본 구조 복제의 근거로 사용하지 않는다. 전용 구성 API가 없는 콘텐츠 묶음은 [CompositionLayout](../components/composition-layout.md)의 제목·배지·행동·본문·상태·footer 슬롯을 사용한다.
 
 ## 언제 쓰나
 
@@ -58,7 +60,7 @@ Native 화면(ScrollView, 위아래 spacing.lg 20) > Container gutter 16(폭 < 6
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
-| 바깥 틀 | Web: 제품 화면 레이아웃(문서 스크롤) > Stack. Native: `ScrollView` > `Container` > Stack | 이 구성은 바깥 폭·여백을 정하지 않는다. Native는 `ScrollView` 안 [Container](../components/container.md)에 둔다. 입력이 없어 키보드 처리는 없다. 안전 영역은 화면 골격(내비게이션 헤더·탭 바)이 맡는다 | Native ScrollView 위아래 `spacing.lg` 20, Container gutter 폭 600 미만 `compact` 16 · 이상 `regular` 20. 묶음 사이 Stack `gap="xl"` 24 |
+| 바깥 틀 | Web: HJM ScreenLayout의 본문 > Stack. Native: `ScrollView` > `Container` > Stack | 이 구성은 바깥 폭·여백을 정하지 않는다. Native는 `ScrollView` 안 [Container](../components/container.md)에 둔다. 입력이 없어 키보드 처리는 없다. 안전 영역은 화면 골격(내비게이션 헤더·탭 바)이 맡는다 | Native ScrollView 위아래 `spacing.lg` 20, Container gutter 폭 600 미만 `compact` 16 · 이상 `regular` 20. 묶음 사이 Stack `gap="xl"` 24 |
 | 효과 표면 | EffectSurface > 안쪽 틀 > Stack `gap="lg"` | 세로로 쌓음(비교용. 실제 화면은 히어로 하나) | EffectSurface는 여백이 없다. 안쪽 틀 여백 `spacing.xl` 24(두 플랫폼 같음, [랜딩](../screens/landing.md) 히어로와 같다), 내용 사이 `spacing.lg` 20, `intensity` 0.4(예) |
 | 아이콘 행 | Icon `size="lg"` + Text | 가로(Stack `axis="inline"`) | 아이콘 `lg` 28, 사이 `spacing.md` 16 |
 | 얼굴 행 | Avatar ×2 + Text | 가로(Stack `axis="inline"`) | 두 플랫폼 48(Web `size="large"`, Native `size={48}`), 사이 `spacing.md` 16 |
@@ -171,7 +173,7 @@ seed·문구·아이콘 세트·얼굴 목록은 제품 소유다. `createBlobat
 | --- | --- | --- |
 | 효과 표면 안쪽 틀 | `div` + CSS `padding: var(--hjm-space-xl)`(`layoutStyle`은 padding을 받지 않는다) | `View style={{ padding: spacing.xl }}` |
 | Avatar 크기 | 이름 단계 `large` 48 | 숫자 pt `48` |
-| 바깥 틀 | 제품 화면 레이아웃(문서 스크롤) | `ScrollView` > `Container` |
+| 바깥 틀 | HJM ScreenLayout의 본문 | `ScrollView` > `Container` |
 | 가려짐 알림 | 없음 | EffectSurface `visible`(화면 focus) |
 | Icon 크기 지정 | `size` prop | `descriptor.size` |
 | 표정 접근성 이름 | `name`에 넣음 | `accessibilityLabel` |

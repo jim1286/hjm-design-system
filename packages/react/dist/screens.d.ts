@@ -7,6 +7,8 @@ import { type ListRowProps } from "./display.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type ScreenLayoutProps = Readonly<{
     title: string;
+    /** The shared header owns badge placement; the product supplies its meaning and label. */
+    titleBadge?: ReactNode;
     /** Hide redundant route names while retaining descriptions and a named screen. */
     titleVisibility?: "visible" | "hidden";
     headerAlignment?: "start" | "center";
@@ -34,7 +36,7 @@ export type ScreenLayoutProps = Readonly<{
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Shared screen shell. Routing, data, permission checks and mutation state remain product-owned. */
-export declare function ScreenLayout({ title, titleVisibility, headerAlignment, header, contentInset, presentation: suppliedPresentation, description, leading, actions, notice, footer, state, stateAction, children, scroll, as: Element, className, layoutStyle }: ScreenLayoutProps): import("react").JSX.Element;
+export declare function ScreenLayout({ title, titleBadge, titleVisibility, headerAlignment, header, contentInset, presentation: suppliedPresentation, description, leading, actions, notice, footer, state, stateAction, children, scroll, as: Element, className, layoutStyle }: ScreenLayoutProps): import("react").JSX.Element;
 export type SettingsScreenSection = Readonly<{
     id: string;
     title: string;
@@ -128,4 +130,19 @@ export type ChatMessageProps = ChatMessageDescriptor & Readonly<{
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare function ChatMessage({ direction, author, timestamp, timestampPresentation, bubbleTail, deliveryLabel, avatar, reply, actions, replyAction, replyLink, reactions, children, interactiveContent, layoutStyle }: ChatMessageProps): import("react").JSX.Element;
+/** Shared structure for embedded compositions. The parent supplies size; this never creates a second scroller. */
+export type CompositionLayoutProps = Readonly<{
+    title?: string;
+    description?: string;
+    badge?: ReactNode;
+    leading?: ReactNode;
+    actions?: ReactNode;
+    notice?: ReactNode;
+    children?: ReactNode;
+    footer?: ReactNode;
+    state?: ScreenContentState;
+    stateAction?: ReactNode;
+    layoutStyle?: HjmCompositionStyleProp;
+}>;
+export declare function CompositionLayout({ title, description, badge, leading, actions, notice, children, footer, state, stateAction, layoutStyle }: CompositionLayoutProps): import("react").JSX.Element;
 //# sourceMappingURL=screens.d.ts.map

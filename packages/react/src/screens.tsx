@@ -17,6 +17,8 @@ import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type ScreenLayoutProps = Readonly<{
   title: string;
+  /** The shared header owns badge placement; the product supplies its meaning and label. */
+  titleBadge?: ReactNode;
   /** Hide redundant route names while retaining descriptions and a named screen. */
   titleVisibility?: "visible" | "hidden";
   headerAlignment?: "start" | "center";
@@ -45,7 +47,7 @@ export type ScreenLayoutProps = Readonly<{
 }>;
 
 /** Shared screen shell. Routing, data, permission checks and mutation state remain product-owned. */
-export function ScreenLayout({ title, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", presentation: suppliedPresentation, description, leading, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", as: Element = "main", className, layoutStyle }: ScreenLayoutProps) {
+export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", presentation: suppliedPresentation, description, leading, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", as: Element = "main", className, layoutStyle }: ScreenLayoutProps) {
   const id = useId();
   const showHeader = titleVisibility === "visible" || !!description || !!leading || !!actions;
   // Screens historically work with the stylesheet alone. Optional context keeps
@@ -73,10 +75,10 @@ export function ScreenLayout({ title, titleVisibility = "visible", headerAlignme
     style={{ backgroundColor: designProfile?.material.canvas ? "transparent" : undefined, "--hjm-screen-width": `${profileLayout?.maxWidth ?? recipe.maxWidth}px`, "--hjm-screen-padding": `${contentInset === "none" ? 0 : recipe.padding}px`, "--hjm-screen-gap": `${profileLayout?.gap ?? recipe.sectionGap}px`, "--hjm-screen-item-gap": `${recipe.itemGap}px`, "--hjm-screen-state-gap": `${recipe.stateGap}px`, "--hjm-screen-header-min": `${recipe.headerMinWidth}px`, ...layoutStyle } as React.CSSProperties}>
     {header ?? (showHeader ? headerAlignment === "center" ? <header className="hjm-screen__header" style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr)", alignItems: "center" }}>
       <div>{leading}</div><div className="hjm-screen__heading" style={{ textAlign: "center", minWidth: 0 }}>
-        {titleVisibility === "visible" && <Heading level="level3" semanticLevel={1} id={id}>{title}</Heading>}
+        {titleVisibility === "visible" && <Stack axis="inline" gap="xs" align="center" justify="center" wrap><Heading level="level3" semanticLevel={1} id={id}>{title}</Heading>{titleBadge}</Stack>}
         {description ? <Text as="p" tone="muted">{description}</Text> : null}</div><div style={{ justifySelf: "end" }}>{actions}</div>
     </header> : <header className="hjm-screen__header" style={profileLayout ? { flexDirection: profileLayout.headerAxis, alignItems: profileLayout.centered ? "center" : undefined, textAlign: profileLayout.centered ? "center" : undefined } : undefined}>
-      {leading}<div className="hjm-screen__heading">{titleVisibility === "visible" && <Heading level="level3" semanticLevel={1} id={id}>{title}</Heading>}
+      {leading}<div className="hjm-screen__heading">{titleVisibility === "visible" && <Stack axis="inline" gap="xs" align="center" justify={profileLayout?.centered ? "center" : "start"} wrap><Heading level="level3" semanticLevel={1} id={id}>{title}</Heading>{titleBadge}</Stack>}
         {description ? <Text as="p" tone="muted">{description}</Text> : null}</div>{actions}
     </header> : null)}
     {notice ? <div className="hjm-screen__notice">{notice}</div> : null}
@@ -214,4 +216,36 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
     </div>
     </div>
   </article>;
+}
+
+/** Shared structure for embedded compositions. The parent supplies size; this never creates a second scroller. */
+export type CompositionLayoutProps = Readonly<{
+  title?: string;
+  description?: string;
+  badge?: ReactNode;
+  leading?: ReactNode;
+  actions?: ReactNode;
+  notice?: ReactNode;
+  children?: ReactNode;
+  footer?: ReactNode;
+  state?: ScreenContentState;
+  stateAction?: ReactNode;
+  layoutStyle?: HjmCompositionStyleProp;
+}>;
+export function CompositionLayout({title, description, badge, leading, actions, notice, children, footer, state = {kind: "ready"}, stateAction, layoutStyle}: CompositionLayoutProps) {
+  const resolved = resolveScreenContentState(state);
+  return <Stack gap="md" {...(layoutStyle === undefined ? {} : {layoutStyle})}>
+    {title || description || badge || leading || actions ? <Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap: "wrap"}}>
+      {leading}<Stack gap="xxs" layoutStyle={{flex: 1, minWidth: 0}}>
+        <Stack axis="inline" gap="xs" align="center" layoutStyle={{flexWrap: "wrap"}}>{title ? <Heading level="level3">{title}</Heading> : null}{badge}</Stack>
+        {description ? <Text tone="muted">{description}</Text> : null}
+      </Stack>{actions}
+    </Stack> : null}
+    {notice}
+    {state.kind === "ready" ? children : <Stack gap="sm" align="center" justify="center" layoutStyle={{flex: 1}}>
+      {resolved.busy ? <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} /> : <div role={state.kind === "error" ? "alert" : "status"}><Text variant="title">{state.title}</Text>{state.description ? <Text tone="muted">{state.description}</Text> : null}</div>}
+      {stateAction}
+    </Stack>}
+    {footer}
+  </Stack>;
 }

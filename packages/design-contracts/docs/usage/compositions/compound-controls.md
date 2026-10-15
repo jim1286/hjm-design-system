@@ -4,9 +4,11 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-13
+- 검토일: 2026-10-15
 - 근거: [복합 입력 계약](../../compound-controls.md), `showcase/shared/compound-controls.ts`, `showcase/{web/src/patterns,native/src}/compound-previews.tsx`
 - 스토리북: `배포/구성/비교와 검증/복합 입력 모음`
+
+공통 구조·배치·상태·배지의 소유권은 [화면과 구성 선택](../SELECTION.md#소유권)을 따른다. 앱은 데이터·문구·브랜드·추가 기능을 공개 슬롯과 콜백으로 연결한다. 아래 코드 골격을 앱별 기본 구조 복제의 근거로 사용하지 않는다. 전용 구성 API가 없는 콘텐츠 묶음은 [CompositionLayout](../components/composition-layout.md)의 제목·배지·행동·본문·상태·footer 슬롯을 사용한다.
 
 ## 언제 쓰나
 
@@ -24,7 +26,7 @@
 | ReactionPicker (`/reaction-picker`) | 반응 하나를 고르거나 해제(`ghost` `pill` 토글 버튼 묶음) | [Button](../components/button.md) |
 | NotificationBell (`/notification-bell`) | 읽지 않은 수가 있는 종 아이콘 버튼 | [IconButton](../components/icon-button.md) |
 | `Stack` | 블록 안 세로 쌓기 `gap="xl"` | [Stack](../components/stack.md) |
-| `Container` · `ScrollView` | 바깥 틀. 제품 화면이 소유한다 | [Container](../components/container.md), [화면 여백](../tokens/layout.md) |
+| `Container` · `ScrollView` | 바깥 틀. HJM 화면 골격이 소유한다 | [Container](../components/container.md), [화면 여백](../tokens/layout.md) |
 | Switch, Button `ghost`·`primary` | 스토리의 실패 응답 토글·다시 시작·알림 추가(데모 전용, 제품에는 넣지 않는다) | [Switch](../components/switch.md), [Button](../components/button.md) |
 
 ## 배치

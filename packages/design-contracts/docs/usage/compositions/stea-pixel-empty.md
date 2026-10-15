@@ -4,9 +4,11 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-15
 - 근거: `src/component-recipes.ts` `emptyStateRecipe`, `packages/react/src/styles.css` `.hjm-empty-state`, `showcase/shared/stea-expressions.ts`, `showcase/{web/src/patterns,native/src}/stea-expression-previews.tsx`(`PixelEmptyState`, Native `Frame`), `src/container.ts`
 - 스토리북: `배포/구성/피드백과 복구/캐릭터와 시작 행동`
+
+공통 구조·배치·상태·배지의 소유권은 [화면과 구성 선택](../SELECTION.md#소유권)을 따른다. 앱은 데이터·문구·브랜드·추가 기능을 공개 슬롯과 콜백으로 연결한다. 아래 코드 골격을 앱별 기본 구조 복제의 근거로 사용하지 않는다. 전용 구성 API가 없는 콘텐츠 묶음은 [CompositionLayout](../components/composition-layout.md)의 제목·배지·행동·본문·상태·footer 슬롯을 사용한다.
 
 ## 언제 쓰나
 
@@ -45,7 +47,7 @@ Native 화면(ScrollView, 위아래 spacing.lg 20) > Container gutter 16(폭 < 6
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
-| 바깥 틀 | Web: 제품 화면 레이아웃(문서 스크롤). Native: `ScrollView` > `Container` | 이 구성은 바깥 폭·여백을 정하지 않는다(Web 스토리는 Stack만 그린다). Native는 `ScrollView` 안 [Container](../components/container.md)에 둔다. 입력이 없어 키보드 처리는 없다. 안전 영역은 화면 골격(내비게이션 헤더·탭 바)이 맡는다 | Native ScrollView 위아래 `spacing.lg` 20, Container gutter 폭 600 미만 `compact` 16 · 이상 `regular` 20(`layout.pagePadding`) |
+| 바깥 틀 | Web: HJM ScreenLayout의 본문. Native: `ScrollView` > `Container` | 이 구성은 바깥 폭·여백을 정하지 않는다(Web 스토리는 Stack만 그린다). Native는 `ScrollView` 안 [Container](../components/container.md)에 둔다. 입력이 없어 키보드 처리는 없다. 안전 영역은 화면 골격(내비게이션 헤더·탭 바)이 맡는다 | Native ScrollView 위아래 `spacing.lg` 20, Container gutter 폭 600 미만 `compact` 16 · 이상 `regular` 20(`layout.pagePadding`) |
 | 빈 상태 | EmptyState `density="regular"` | 본문 가운데 | 위아래 Web `spacing.xxl` 32 / Native `spacing.xxxl` 40, 좌우 `spacing.xl` 24, 슬롯 사이 `spacing.xs` 8 |
 | 캐릭터 | Web `icon` / Native `illustration` | EmptyState 맨 위 | 96×96(12칸 × `spacing.xs` 8). Native도 그림 노드 자체의 96×96 크기를 사용한다 |
 | 시작 행동 | Button `primary` | EmptyState `action` | 높이 44, 하나만 |
@@ -131,7 +133,7 @@ const gutter = resolveWindowClass(width) === "compact" ? "compact" : "regular";
 | 세로 여백 | `.hjm-empty-state` `spacing.xxl` 32 | recipe `spacing.xxxl` 40 |
 | 일시정지 감지 | `document.hidden` | `AppState` |
 | 상태 문구 자리 | 빈 `role="status"`를 늘 마운트 | 문구가 있을 때만 마운트 |
-| 바깥 틀 | 제품 화면 레이아웃(문서 스크롤) | `ScrollView` > `Container` |
+| 바깥 틀 | HJM ScreenLayout의 본문 | `ScrollView` > `Container` |
 
 ## 함정
 

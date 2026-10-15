@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { ScreenLayout } from "./screens.js";
+import { CompositionLayout, ScreenLayout } from "./screens.js";
 import { Button, IconButton } from "./actions.js";
 import { Stack, Text, Grid, VisuallyHidden } from "./layout.js";
 import { SearchField } from "./forms.js";
@@ -58,7 +58,7 @@ export function EditorScreen({ children, dirty, submitPlacement = "footer", subm
                         else
                             leave(); } }, secondary: true }), actions: submitPlacement === "header" ? _jsx(Action, { action: submitAction }) : screen.actions, footer: submitPlacement === "header" ? draftStatus : _jsxs(Stack, { gap: "sm", children: [draftStatus, _jsx(Action, { action: submitAction })] }), children: children }), _jsx(AlertDialog, { open: confirm && !cancelLocked, onOpenChange: setConfirm, request: { ...discard, mode: "confirm", onConfirm: leave } })] });
 }
-export function ProfileScreen({ summary, edit, children, accountActions, ...screen }) { return _jsx(ScreenLayout, { ...screen, children: _jsxs(Stack, { gap: "xl", children: [_jsxs(Stack, { gap: "md", children: [summary, _jsx(Action, { action: edit, secondary: true })] }), children, accountActions] }) }); }
+export function ProfileScreen({ summary, edit, children, accountActions, ...screen }) { return _jsx(ScreenLayout, { ...screen, children: _jsxs(Stack, { gap: "xl", children: [_jsx(CompositionLayout, { footer: _jsx(Action, { action: edit, secondary: true }), children: summary }), children, accountActions] }) }); }
 export function ModerationScreen({ reasonPicker, reasons, reason, onReasonChange, reasonLabel, children, submit, block, ...screen }) {
     const [confirm, setConfirm] = useState(false);
     const hasBlock = !!block;
@@ -302,6 +302,10 @@ export function OnboardingScreen({ steps, index, onIndexChange, nextLabel, backL
     const pending = !!(complete.pending || skip?.pending);
     return _jsx(ScreenLayout, { ...(layoutStyle === undefined ? {} : { layoutStyle }), title: step.title, description: step.description, actions: skip ? _jsx(Action, { action: { ...skip, disabled: !!(skip.disabled || pending) }, secondary: true }) : null, notice: _jsx(Text, { variant: "caption", tone: "muted", children: progressLabel(index + 1, steps.length) }), footer: _jsxs(Stack, { gap: "sm", children: [_jsx(Action, { action: position.last ? { ...complete, disabled: !!(complete.disabled || pending) } : { label: nextLabel, disabled: pending, onAction: () => onIndexChange(index + 1) } }), !position.first ? _jsx(Action, { action: { label: backLabel, disabled: pending, onAction: () => onIndexChange(index - 1) }, secondary: true }) : null] }), children: step.content });
 }
+/** Virtualized hosts reuse the same row as CommentThreadScreen; product slots add content, not a second layout. */
+export function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyle }) {
+    return _jsxs(Stack, { axis: "inline", align: "start", gap: "sm", ...(layoutStyle === undefined ? {} : { layoutStyle }), children: [item.avatar, _jsxs(Stack, { gap: "xxs", layoutStyle: { flex: 1, minWidth: 0 }, children: [item.bodyText !== undefined ? _jsxs(Text, { children: [_jsx(Text, { emphasis: "strong", children: item.author }), " ", item.bodyText] }) : (item.author || item.timeLabel) ? _jsxs(Stack, { axis: "inline", gap: "sm", align: "center", layoutStyle: { flexWrap: "wrap" }, children: [item.author ? _jsx(Text, { emphasis: "strong", children: item.author }) : null, item.timeLabel ? _jsx(Text, { variant: "caption", tone: "muted", children: item.timeLabel }) : null] }) : null, item.body, _jsxs(Stack, { axis: "inline", gap: "sm", align: "center", layoutStyle: { flexWrap: "wrap" }, children: [item.bodyText !== undefined && item.timeLabel ? _jsx(Text, { variant: "caption", tone: "muted", children: item.timeLabel }) : null, item.likeCountLabel ? _jsx(Text, { variant: "caption", tone: "muted", children: item.likeCountLabel }) : null, (item.canReply ?? item.parentId === null) ? _jsx(Button, { size: "small", tone: "ghost", disabled: item.replyDisabled ?? false, onClick: () => onReply(item.id), children: replyLabel }) : null] })] }), _jsxs(Stack, { axis: "inline", gap: "xxs", align: "center", layoutStyle: { flexShrink: 0 }, children: [item.likeAction !== undefined ? item.likeAction : _jsx(IconButton, { label: item.likeLabel, tone: "ghost", onClick: () => onLike(item.id), children: item.likeIcon }), item.actions] })] }, item.id);
+}
 /** Controlled thread: server ordering, permission checks and receipt-based draft clearing belong to the product. */
 export function CommentThreadScreen({ items, expandedIds, onExpandedChange, onLike, onReply, replyLabel, repliesLabel, composer, threadHeader, threadFooter, ...screen }) {
     validateCommentThread(items);
@@ -319,11 +323,7 @@ export function CommentThreadScreen({ items, expandedIds, onExpandedChange, onLi
                 repliesByParent.set(item.parentId, [item]);
         }
     }
-    // The supplied reference joins the author to the first body line and reserves the right edge
-    // for reaction and its adjacent overflow action (Oct 7 user request). Keep
-    // legacy rich bodies intact; bodyText opts into that compact flow.
-    // Empty metadata must not reserve a line above the body: anonymous comments align with their avatar.
-    const row = (item) => _jsxs(Stack, { axis: "inline", align: "start", gap: "sm", children: [item.avatar, _jsxs(Stack, { gap: "xxs", layoutStyle: { flex: 1, minWidth: 0 }, children: [item.bodyText !== undefined ? _jsxs(Text, { children: [_jsx(Text, { emphasis: "strong", children: item.author }), " ", item.bodyText] }) : (item.author || item.timeLabel) ? _jsxs(Stack, { axis: "inline", gap: "sm", align: "center", layoutStyle: { flexWrap: "wrap" }, children: [item.author ? _jsx(Text, { emphasis: "strong", children: item.author }) : null, item.timeLabel ? _jsx(Text, { variant: "caption", tone: "muted", children: item.timeLabel }) : null] }) : null, item.body, _jsxs(Stack, { axis: "inline", gap: "sm", align: "center", layoutStyle: { flexWrap: "wrap" }, children: [item.bodyText !== undefined && item.timeLabel ? _jsx(Text, { variant: "caption", tone: "muted", children: item.timeLabel }) : null, item.likeCountLabel ? _jsx(Text, { variant: "caption", tone: "muted", children: item.likeCountLabel }) : null, (item.canReply ?? item.parentId === null) ? _jsx(Button, { size: "small", tone: "ghost", disabled: item.replyDisabled ?? false, onClick: () => onReply(item.id), children: replyLabel }) : null] })] }), _jsxs(Stack, { axis: "inline", gap: "xxs", align: "center", layoutStyle: { flexShrink: 0 }, children: [item.likeAction !== undefined ? item.likeAction : _jsx(IconButton, { label: item.likeLabel, tone: "ghost", onClick: () => onLike(item.id), children: item.likeIcon }), item.actions] })] }, item.id);
+    const row = (item) => _jsx(CommentThreadRow, { item: item, onLike: onLike, onReply: onReply, replyLabel: replyLabel }, item.id);
     // Product context belongs in the same scroll body as comments. Putting a tall
     // overview in the fixed header forced a second scroll region in Spint (2026-10-08).
     return _jsx(ScreenLayout, { ...screen, footer: !screen.state || screen.state.kind === "ready" || screen.state.kind === "empty" ? composer : null, children: _jsxs(Stack, { gap: "lg", children: [threadHeader, roots.map(item => { const replies = repliesByParent.get(item.id) ?? []; return _jsxs(Stack, { gap: "xs", children: [row(item), replies.length ? _jsxs(Stack, { gap: "md", layoutStyle: { marginInlineStart: screenPatternRecipe.sectionGap }, children: [_jsx(Button, { layoutStyle: { alignSelf: "flex-start" }, tone: "ghost", size: "small", "aria-expanded": expanded.has(item.id), onClick: () => onExpandedChange(item.id), children: repliesLabel(replies.length, expanded.has(item.id)) }), expanded.has(item.id) ? replies.map(row) : null] }) : null] }, item.id); }), threadFooter] }) });

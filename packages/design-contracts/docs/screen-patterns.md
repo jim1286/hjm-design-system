@@ -1,6 +1,6 @@
 # 반복 화면 조합
 
-검토일: 2026-10-06 · 상태: Storybook 배포(2026-10-06 사용자 승인) · 패키지 게시/제품 적용 전
+검토일: 2026-10-15 · 상태: Storybook 배포(2026-10-06 사용자 승인) · 패키지 적용 범위는 개별 API 사용 지침 참조
 
 사용자가 로그인·설정·알림·채팅 화면을 미리 일반화해 개발 생산성을 높이도록 요청했다.
 기존 AuthScreenLayout, Section, ListRow, TopBar, Layout, EmptyState, action-session,
@@ -23,6 +23,9 @@ Flutter 앱에는 React 컴포넌트를 주입할 수 없다. 화면 역할과 �
 
 ## 선택 기준과 소유권
 
+모든 화면·구성의 공통 구조는 HJM이 제공한다. [선택 지침](usage/SELECTION.md)의 소유권을 따르며, 제품은 데이터·문구·추가 기능만 연결한다. 전용 구성이 없는 영역은 `CompositionLayout`, 가상화 댓글 행은 `CommentThreadRow`를 사용해 기본 배치를 복제하지 않는다. 두 API는 현재 checkout의 미게시 추가분이다.
+
+
 - 로그인: 기존 `auth-screen`의 `AuthScreenLayout` + `AuthProviderButton`을 그대로 쓴다.
   새 LoginScreen alias나 제공자 preset은 만들지 않는다. 카드 유지·중앙 로딩·정책 고지는
   [로그인 계약](auth-screen.md)을 따른다.
@@ -38,8 +41,10 @@ Flutter 앱에는 React 컴포넌트를 주입할 수 없다. 화면 역할과 �
 - `ChatMessage`: 발신/수신 정렬, 작성자, 아바타, 답장 인용, 전송 상태와 시각을 합성한다.
   기존 Asset/VoiceNote 등은 children에 넣고 영수증·반응·재시도는 제품이 넘긴다. 전체 타임라인을
   live region으로 만들지 않으므로 과거 메시지 로딩 때 읽기 순서를 가로채지 않는다.
-- `MessageComposer`: 기존 TextArea와 Button을 조합한다. 빈 입력·pending·disabled에서는
-  전송하지 않고 Enter는 줄 바꿈으로 유지한다(IME 조합과 충돌 방지). 제품 onSend에 원문을
+- `MessageComposer`: 기존 TextArea와 Button을 조합한다. 글·첨부·추가 콘텐츠가 모두 없거나 pending·disabled이면
+  전송하지 않는다. Enter는 기본 줄바꿈이며 데스크톱 채팅의 Enter 전송은 공개 `submitMode="send"`로 선택한다.
+  Web의 Shift+Enter·IME 조합 중 Enter는 전송하지 않는다. 제품별 키 처리로 이 보호를 우회하지 않는다.
+  세부 플랫폼 동작은 [MessageComposer 사용 지침](usage/components/message-composer.md)을 따른다. 제품 onSend에 원문을
   전달하며 초안 초기화는 서버 영수증을 받은 제품만 수행한다. 1~5줄은 짧은 작성창이 타임라인을
   밀어내지 않도록 정한 기본값이며 더 긴 입력은 TextArea 안에서 스크롤한다.
 - `ChatScreen`: `composer`와 타임라인을 분리한다. 기본 `scroll="content"`로 FlatList 등
@@ -66,7 +71,9 @@ Web host는 실제 남은 높이를 제공해야 한다(예: flex route의 `heig
 `height:100dvh`). Native host는 safe area와 탭/상단 navigation inset을 먼저 제외한다.
 HJM이 기종별 높이나 중첩 safe area를 추측하지 않는다. Native ChatScreen은 기존
 `KeyboardAvoiding` 또는 제품 keyboard adapter 하나로 감싸며 둘을 동시에 적용하지 않는다.
-ready 이외의 채팅에는 작성창을 숨겨 접근 제한·초기 로딩에서 전송 조작이 노출되지 않게 한다.
+채팅 작성창은 `ready`와 `empty`에서 유지하고 `loading`·`error`·`restricted`에서 숨긴다.
+빈 대화에서도 첫 메시지를 작성할 수 있어야 하기 때문이다. 전송 실패는 기존 `ready` 또는 `empty`와
+초안을 유지한 채 `notice`로 알린다. [채팅 화면 지침](usage/screens/common-chat.md#첫-메시지부터-실패-복구까지)을 따른다.
 
 ## 사용 예시
 

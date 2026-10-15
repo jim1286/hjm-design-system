@@ -4,9 +4,11 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-13
+- 검토일: 2026-10-15
 - 근거: `showcase/web/src/patterns/Landing.stories.tsx`·`Landing.previews.tsx`(진입점)·`showcase/web/src/patterns/landing-preview.tsx`(기본 본체), `showcase/native/src/Landing.stories.tsx`·`introduction-preview.tsx`(진입점)·`showcase/native/src/landing-preview.tsx`(기본 본체), 변형 `showcase/*/reference-flow-previews.tsx`(`ServiceIntroduction`), `showcase/shared/landing-pattern.ts`, `showcase/native/src/pattern-status.tsx`, `packages/react/src/effect-surface.tsx`, `packages/react-native/src/effect-surface.tsx`. 2026-10-06 사용자 승인으로 실험 `서비스 소개/제품 체험 중심`(설명과 사례 중심 포함)을 배포하면서 같은 소개 목적의 배포 `화면/랜딩 화면`과 한 항목으로 합쳤다(Web id `patterns-landing` 보존, [승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정))
 - 스토리북: `배포/화면/소개/서비스 소개`
+
+공통 구조·배치·상태·배지의 소유권은 [화면과 구성 선택](../SELECTION.md#소유권)을 따른다. 앱은 데이터·문구·브랜드·추가 기능을 공개 슬롯과 콜백으로 연결한다. 아래 코드 골격을 앱별 기본 구조 복제의 근거로 사용하지 않는다. 전용 화면 API가 없는 제품 콘텐츠는 `ScreenLayout`의 본문에 HJM 구성을 연결한다.
 
 ## 목적
 
@@ -25,7 +27,7 @@
 │   (폭 < 600 compact 16 · 이상 regular 20) │
 │   Native 위아래 spacing.lg 20             │
 │ ┌ ① 히어로 EffectSurface(mesh+grain) ──┐ │
-│ │ (안쪽 여백 spacing.xl 24 — 제품이 줌) │ │
+│ │ (안쪽 여백 spacing.xl 24 — HJM 구성 소유) │ │
 │ │ eyebrow  Text tone=muted             │ │  Stack gap lg 20
 │ │ 제목     Heading level1 (h1)         │ │
 │ │ 소개     Text as=p                   │ │
