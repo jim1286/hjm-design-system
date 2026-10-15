@@ -155,3 +155,47 @@ class HjmBadge extends StatelessWidget {
     ));
   }
 }
+
+enum HjmActionTone { primary, secondary, danger }
+
+class HjmActionButton extends StatelessWidget {
+  const HjmActionButton({super.key, required this.label, required this.onPressed,
+    this.icon, this.tone = HjmActionTone.primary});
+  final String label;
+  final VoidCallback? onPressed;
+  final IconData? icon;
+  final HjmActionTone tone;
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    final (background, foreground) = switch (tone) {
+      HjmActionTone.primary => (colors.primary, colors.onPrimary),
+      HjmActionTone.secondary => (colors.surfaceContainerHighest, colors.onSurface),
+      HjmActionTone.danger => (colors.error, colors.onError),
+    };
+    final style = FilledButton.styleFrom(backgroundColor: background, foregroundColor: foreground,
+      minimumSize: const Size.fromHeight(52), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)));
+    return icon == null ? FilledButton(onPressed: onPressed, style: style, child: Text(label))
+      : FilledButton.icon(onPressed: onPressed, style: style, icon: Icon(icon), label: Text(label));
+  }
+}
+
+class HjmConfirmDialog extends StatelessWidget {
+  const HjmConfirmDialog({super.key, required this.title, required this.description,
+    required this.cancelLabel, required this.confirmLabel, required this.onCancel, required this.onConfirm});
+  final String title;
+  final String description;
+  final String cancelLabel;
+  final String confirmLabel;
+  final VoidCallback onCancel;
+  final VoidCallback onConfirm;
+  @override
+  Widget build(BuildContext context) => AlertDialog(
+    title: Text(title), content: Text(description), actions: [
+      TextButton(onPressed: onCancel, child: Text(cancelLabel)),
+      FilledButton(onPressed: onConfirm,
+        style: FilledButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.error,
+          foregroundColor: Theme.of(context).colorScheme.onError), child: Text(confirmLabel)),
+    ],
+  );
+}
