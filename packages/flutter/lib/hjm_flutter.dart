@@ -212,7 +212,9 @@ class HjmSheetLayout extends StatelessWidget {
     duration: const Duration(milliseconds: 180), curve: Curves.easeOutCubic,
     padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
     child: SafeArea(top: false, child: SingleChildScrollView(key: scrollKey,
-      padding: const EdgeInsets.all(HjmLayout.padding), child: child)),
+      // The modal host owns the drag-handle/header clearance above this body.
+      // Repeating a top gutter pushes bottom actions out of short sheet viewports.
+      padding: const EdgeInsets.fromLTRB(HjmLayout.padding, 0, HjmLayout.padding, HjmLayout.padding), child: child)),
   );
 }
 
