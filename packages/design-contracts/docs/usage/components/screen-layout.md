@@ -79,12 +79,14 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 | `state` | `{ kind: "ready" }` · `{ kind: "loading" \| "empty" \| "error" \| "restricted"; title; description? }` | `{ kind: "ready" }` | ready가 아니면 children을 그리지 않고 상태와 `stateAction`을 가운데에 놓는다. 로딩은 Spinner 하나만 보이고 `title`·`description`은 Spinner의 접근성 이름이 된다 |
 | `stateAction` | `ReactNode` | 없음 | 상태 안내 아래 행동(재시도 등) |
 | `scroll` | `"screen"` · `"content"` | `"screen"` | `content`는 본문 자식(가상화 목록)이 스크롤을 소유한다. 상태 교체 중에는 `screen`으로 돌아간다 |
+| `contentAlignment` | `"start"` · `"center"` | `"start"` | ready 본문을 사용 영역 중앙에 배치. 긴 본문은 위가 잘리지 않게 스크롤한다. 로그인/제품 안내를 가짜 query state로 바꾸지 않는다(1.23.0 이후 미게시) |
+| `surface` | `"default"` · `"transparent"` | `"default"` | 투명은 제품 host의 배경·wallpaper를 보존. 배경색 style 우회 대신 사용(1.23.0 이후 미게시) |
 | `contentInset` | `"default"` · `"none"` | `"default"` | `none`은 헤더·notice·본문·footer padding을 0으로(Native는 footer 위 테두리도 뺀다) |
 | `presentation` | `"dashboard"` · `"editorial"` · `"landscape"` | 가장 가까운 profile.screens.overview / 없으면 기존 골격 | [디자인 프로필](../../design-profile.md)의 제공 범위를 따른다. 명시값이 프로필을 이긴다. 헤더 배치·읽기 폭만 바꾸고 상태·입력·행동 슬롯은 유지한다 |
 | `as` (Web) | `"main"` · `"section"` | `"main"` | 제품 셸에 이미 `<main>`이 있으면 `section` |
 | `layoutStyle` | `HjmCompositionStyleProp` | 없음 | 화면 루트 배치 전용(예: 분할 화면의 `flex`·`width`). ScreenLayout 위에 만든 화면은 모두 이 prop을 루트까지 넘긴다 |
 | `className` (Web) | `string` | 없음 | 식별·배치 보조. 색·여백을 덮지 않는다 |
-| `testID` · `scrollRef` · `scrollProps` (Native) | `string` · `Ref<ScrollView>` · `refreshControl`·`keyboardDismissMode`·스크롤 막대 표시 | 없음 | ScrollView가 있을 때(`scroll="screen"` 또는 상태 교체 중)만 `scrollRef`·`scrollProps`가 연결된다 |
+| `testID` · `scrollRef` · `scrollProps` (Native) | `string` · `Ref<ScrollView>` · `refreshControl`·`keyboardDismissMode`·스크롤 막대 표시·`onScroll`·`onScrollBeginDrag`·`onScrollEndDrag`·`scrollEventThrottle`·`alwaysBounceVertical`·`automaticallyAdjustKeyboardInsets` | 없음 | ScrollView가 있을 때(`scroll="screen"` 또는 상태 교체 중)만 `scrollRef`·`scrollProps`가 연결된다 |
 
 ## 배치
 

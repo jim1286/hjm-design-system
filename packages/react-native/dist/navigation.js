@@ -697,8 +697,10 @@ export function TopBarAction(props) {
     return props.renderAction?.(controlProps) ?? _jsx(Pressable, { ...controlProps });
 }
 /** Native screen top bar with logical action slots and large-text reflow. */
-export function TopBar({ title, titleLeading, onTitlePress, titleAccessibilityLabel, titleAccessibilityHint, leading, trailing, actions, centered = topBarRecipe.defaults.centered, safeAreaTop = 0, layoutStyle, ...removedProps }) {
+export function TopBar({ title, subtitle, titleLeading, onTitlePress, titleAccessibilityLabel, titleAccessibilityHint, leading, trailing, actions, centered = topBarRecipe.defaults.centered, safeAreaTop = 0, layoutStyle, ...removedProps }) {
     assertNoRemovedStyleProps("TopBar", removedProps, ["style", "leadingStyle", "titleStyle", "trailingStyle"]);
+    if (subtitle !== undefined && !subtitle.trim())
+        throw new TypeError("TopBar subtitle must not be empty");
     if (!Number.isFinite(safeAreaTop) || safeAreaTop < 0) {
         throw new RangeError("TopBar safeAreaTop must be non-negative");
     }
@@ -718,7 +720,8 @@ export function TopBar({ title, titleLeading, onTitlePress, titleAccessibilityLa
     const hasTrailingContent = hasTrailing || hasActions;
     const hasTitle = title !== undefined;
     const resolvedTitle = title ?? "";
-    if (!hasTitle && (titleLeading !== undefined ||
+    if (!hasTitle && (subtitle !== undefined ||
+        titleLeading !== undefined ||
         onTitlePress !== undefined ||
         titleAccessibilityLabel !== undefined ||
         titleAccessibilityHint !== undefined)) {
@@ -739,12 +742,12 @@ export function TopBar({ title, titleLeading, onTitlePress, titleAccessibilityLa
     ];
     const renderTitle = (containerStyle, numberOfLines) => {
         // Match Web: a clickable title is a UI button; a static heading keeps display.
-        const titleContent = (_jsxs(_Fragment, { children: [titleLeading !== undefined && titleLeading !== null && titleLeading !== false ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", pointerEvents: "none", children: titleLeading })) : null, _jsx(Text, { fontRole: onTitlePress ? "ui" : "display", ...(onTitlePress
-                        ? { accessible: false }
-                        : {
-                            accessibilityLabel: titleAccessibilityLabel,
-                            accessibilityRole: "header",
-                        }), numberOfLines: numberOfLines, style: [{ flexShrink: 1, minWidth: 0 }, resolvedTitleStyle], variant: topBarRecipe.title.textVariant, children: resolvedTitle })] }));
+        const titleContent = (_jsxs(_Fragment, { children: [titleLeading !== undefined && titleLeading !== null && titleLeading !== false ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", pointerEvents: "none", children: titleLeading })) : null, _jsxs(View, { style: { flexShrink: 1, minWidth: 0 }, children: [_jsx(Text, { fontRole: onTitlePress ? "ui" : "display", ...(onTitlePress
+                                ? { accessible: false }
+                                : {
+                                    accessibilityLabel: titleAccessibilityLabel,
+                                    accessibilityRole: "header",
+                                }), numberOfLines: numberOfLines, style: [{ flexShrink: 1, minWidth: 0 }, resolvedTitleStyle], variant: topBarRecipe.title.textVariant, children: resolvedTitle }), subtitle ? _jsx(Text, { variant: "caption", tone: "muted", align: centered ? "center" : "auto", children: subtitle }) : null] })] }));
         const commonStyle = [
             containerStyle,
             {
@@ -758,7 +761,7 @@ export function TopBar({ title, titleLeading, onTitlePress, titleAccessibilityLa
             },
         ];
         if (onTitlePress) {
-            return (_jsx(Pressable, { accessible: true, accessibilityHint: titleAccessibilityHint, accessibilityLabel: titleAccessibilityLabel ?? resolvedTitle, accessibilityRole: "button", onPress: onTitlePress, style: ({ pressed }) => [
+            return (_jsx(Pressable, { accessible: true, accessibilityHint: titleAccessibilityHint, accessibilityLabel: titleAccessibilityLabel ?? [resolvedTitle, subtitle].filter(Boolean).join(". "), accessibilityRole: "button", onPress: onTitlePress, style: ({ pressed }) => [
                     commonStyle,
                     { opacity: pressed ? topBarRecipe.titleAction.pressedOpacity : 1 },
                 ], children: titleContent }));

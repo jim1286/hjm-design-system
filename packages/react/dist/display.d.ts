@@ -76,6 +76,10 @@ export type ListRowProps = Omit<HTMLAttributes<HTMLElement>, "title" | "onClick"
     description?: ReactNode;
     leading?: ReactNode;
     trailing?: ReactNode;
+    /** Independent command outside the row's navigation target. */
+    trailingAction?: ReactNode;
+    /** Supply a framework Link without replacing the shared row layout. */
+    renderLink?: (props: React.ComponentPropsWithRef<"a">) => ReactNode;
     density?: ListRowDensity;
     /** Semantic emphasis for destructive destinations; selection stays independent. */
     tone?: keyof typeof listRowRecipe.tones;
@@ -101,6 +105,10 @@ export declare const ListRow: import("react").ForwardRefExoticComponent<Omit<HTM
     description?: ReactNode;
     leading?: ReactNode;
     trailing?: ReactNode;
+    /** Independent command outside the row's navigation target. */
+    trailingAction?: ReactNode;
+    /** Supply a framework Link without replacing the shared row layout. */
+    renderLink?: (props: React.ComponentPropsWithRef<"a">) => ReactNode;
     density?: ListRowDensity;
     /** Semantic emphasis for destructive destinations; selection stays independent. */
     tone?: keyof typeof listRowRecipe.tones;

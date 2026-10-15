@@ -161,3 +161,10 @@ Web은 항목과 바깥 선택 영역의 크기를 함께 관찰한다. 2026-10-
 - 조작 가능 영역·글자는 움직이거나 확대하지 않는다. 새 사용 예제는 [선택 배경 이동](../compositions/selection-motion.md)이다.
 
 2026-10-07 큰 글자 UI 확인에서 Web 2배 글자 줄은 40px인데 pill 배경은 28px였다. Native처럼 세로 padding에도 pills.inset(spacing.xs=8px)을 적용해 배경이 전체 줄을 감싸게 했다. 고정 높이를 늘리는 대신 줄 높이를 따라가므로 3배·줄바꿈도 유지한다.
+
+### Text presentation (미게시, 1.23.0 이후)
+
+`presentation="text"`는 캡슐 없이 라디오 항목과 짧은 선택 표시를 그린다. `textEmphasis="strong" | "regular"`
+기본 strong이며 조용한 관계 목록은 regular다. 기존 `items/value/onValueChange`와 키보드·disabled 계약을 유지한다.
+글자 탭의 radio 의미를 제품에서 재구현하던 문제를 없애기 위해 추가했다(2026-10-15 BurnTok 전사 이관).
+선택 표시는 16×2, 목표 높이는 44, 항목 간격은 md이며 text 모드는 slide artwork를 사용하지 않는다.

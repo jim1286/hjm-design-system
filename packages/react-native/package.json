@@ -603,6 +603,11 @@
       "react-native": "./dist/streaming-answer.js",
       "import": "./dist/streaming-answer.js",
       "default": "./dist/streaming-answer.js"
+    },
+    "./conversation-row": {
+      "types": "./dist/conversation-row.d.ts",
+      "import": "./dist/conversation-row.js",
+      "default": "./dist/conversation-row.js"
     }
   },
   "files": [

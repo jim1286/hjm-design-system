@@ -1,3 +1,4 @@
+import { TopBar } from "../src/navigation.js";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { expect, it, vi } from "vitest";
 import { ScrollView } from "react-native";
@@ -31,4 +32,23 @@ it("connects shared row actions to the actual item and renders the common screen
   expect(JSON.stringify(tree!.toJSON())).toContain("배지");
   expect(tree!.root.findAllByType(ScrollView)).toHaveLength(0);
   act(() => tree!.unmount());
+});
+it("keeps prompt semantics and forwards host drag callbacks without nesting a scroller", () => {
+  let tree: ReactTestRenderer; const begin = vi.fn(), end = vi.fn();
+  act(() => { tree = create(<HjmNativeProvider><ScreenLayout title="안내" titleVisibility="hidden" surface="transparent" contentAlignment="center" scrollProps={{onScrollBeginDrag:begin,onScrollEndDrag:end,scrollEventThrottle:16,automaticallyAdjustKeyboardInsets:true}}><Text>로그인</Text></ScreenLayout></HjmNativeProvider>); });
+  const scrolls=tree!.root.findAllByType(ScrollView); expect(scrolls).toHaveLength(1);
+  act(() => {scrolls[0]!.props.onScrollBeginDrag({nativeEvent:{contentOffset:{y:10}}});scrolls[0]!.props.onScrollEndDrag({nativeEvent:{contentOffset:{y:0}}});});
+  expect(begin).toHaveBeenCalledOnce();expect(end).toHaveBeenCalledOnce();
+  expect(JSON.stringify(tree!.toJSON())).toContain('"backgroundColor":"transparent"');
+  act(() => tree!.update(<HjmNativeProvider><CompositionLayout state={{kind:"loading",title:"찾는 중"}} loadingIndicator={<Text>브랜드 그림</Text>} /></HjmNativeProvider>));
+  expect(tree!.root.findAll(node=>node.props.accessibilityRole==="progressbar" && node.props.accessibilityLabel==="찾는 중").length).toBeGreaterThan(0);
+  expect(tree!.root.findAllByType(ScrollView)).toHaveLength(0);
+  act(() => tree!.unmount());
+});
+it("preserves a title action and announces its subtitle context", () => {
+  let tree: ReactTestRenderer; const open=vi.fn();
+  act(() => {tree=create(<HjmNativeProvider><TopBar title="도구" subtitle="설명" onTitlePress={open} /></HjmNativeProvider>);});
+  const action=tree!.root.findAll(node=>node.props.accessibilityRole==="button" && node.props.accessibilityLabel==="도구. 설명")[0]!;
+  act(()=>action.props.onPress()); expect(open).toHaveBeenCalledOnce();
+  expect(JSON.stringify(tree!.toJSON())).toContain("설명");act(()=>tree!.unmount());
 });

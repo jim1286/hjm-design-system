@@ -316,3 +316,14 @@ it("omits empty metadata above anonymous comment body",async()=>{
  expect(column.props.children[1].props.children).toBe("Comment body");
  act(()=>tree!.unmount());
 });
+
+it("resets the native onboarding body on a controlled step change",()=>{
+ const scrollTo=vi.fn();
+ const step=(index:number)=><HjmNativeProvider><OnboardingScreen steps={[{id:"one",title:"First",description:"Guide",content:"Story"},{id:"two",title:"Second",description:"Guide",content:"Story"}]} index={index} onIndexChange={()=>{}} nextLabel="Next" backLabel="Back" complete={{label:"Complete",onAction:()=>{}}} progressLabel={()=>"Progress"}/></HjmNativeProvider>;
+ let tree:ReactTestRenderer;
+ act(()=>{tree=create(step(0),{createNodeMock:()=>({scrollTo})});});
+ scrollTo.mockClear();
+ act(()=>tree.update(step(1)));
+ expect(scrollTo).toHaveBeenCalledWith({y:0,animated:false});
+ act(()=>tree.unmount());
+});

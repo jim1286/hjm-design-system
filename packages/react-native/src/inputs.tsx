@@ -1887,7 +1887,8 @@ export type SegmentedControlProps<Value extends string = string> =
     defaultValue?: Value;
     onValueChange?: (value: Value) => void;
     size?: SegmentedControlSize;
-    presentation?: "connected" | "pills";
+    presentation?: "connected" | "pills" | "text";
+    textEmphasis?: "regular" | "strong";
     /** Move only decorative selection artwork, never labels or hit targets. */
     selectionMotion?: "none" | "slide";
     disabled?: boolean;
@@ -1904,6 +1905,7 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
   onValueChange,
   size = segmentedControlRecipe.defaults.size,
   presentation = "connected",
+  textEmphasis = "strong",
   selectionMotion: suppliedSelectionMotion,
   disabled = false,
   layoutStyle,
@@ -1912,13 +1914,14 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
   if ("options" in props || !Array.isArray(items)) throw new TypeError("SegmentedControl requires items; options was removed");
 
   const pills = presentation === "pills";
+  const textOnly = presentation === "text";
   const resolvedItems = items;
   const theme = useHjmNativeTheme();
   const { environment } = theme;
   const sizeContract = segmentedControlRecipe.sizes[size];
   // Pills keep their row at large text (segmentedControlRecipe.pills.largeTextLayout, 1.13.1): they wrap in a
   // block and stay one line in a rail. Stacking them made a filter rail a ~440pt column (utilverse, 2026-10-06).
-  const stacked = !pills && segmentedControlRecipe.adaptive.largeTextLayout === "stacked"
+  const stacked = !pills && !textOnly && segmentedControlRecipe.adaptive.largeTextLayout === "stacked"
     && environment.textScale >= segmentedControlRecipe.adaptive.stackAtFontScale;
   const descriptors = resolvedItems.map((item) => ({
       id: item.value,
@@ -1949,7 +1952,7 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
   }, [collectionFallback, controlled, setSelected, storedValueValid]);
   const [itemRects, setItemRects] = useState<Record<string, SelectionHighlightRect>>({});
   const selectedRect = itemRects[selected];
-  const selectionMotion = suppliedSelectionMotion ?? theme.designProfile?.interactions.selectionMotion ?? "none";
+  const selectionMotion = textOnly ? "none" : suppliedSelectionMotion ?? theme.designProfile?.interactions.selectionMotion ?? "none";
   const movingHighlight = selectionMotion === "slide" && selectedRect !== undefined;
   const highlightRect = selectedRect && pills ? { ...selectedRect, y: selectedRect.y + segmentedControlRecipe.pills.inset, height: selectedRect.height - 2 * segmentedControlRecipe.pills.inset } : selectedRect;
   return (
@@ -1958,7 +1961,7 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
       accessibilityRole="radiogroup"
       style={[
         {
-          backgroundColor: pills ? "transparent" : resolveColorReference(
+          backgroundColor: pills || textOnly ? "transparent" : resolveColorReference(
             segmentedControlRecipe.container.background,
             theme.palette,
           ),
@@ -1967,12 +1970,12 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
             theme.palette,
           ),
           borderRadius: theme.tokens.radius[segmentedControlRecipe.container.radius],
-          borderWidth: pills ? 0 : segmentedControlRecipe.container.borderWidth,
+          borderWidth: pills || textOnly ? 0 : segmentedControlRecipe.container.borderWidth,
           direction: environment.direction,
           flexDirection: stacked ? "column" : "row",
           flexWrap: pills ? "wrap" : "nowrap",
-          gap: pills ? segmentedControlRecipe.pills.gap : segmentedControlRecipe.container.gap,
-          padding: pills ? 0 : segmentedControlRecipe.container.padding,
+          gap: textOnly ? segmentedControlRecipe.text.gap : pills ? segmentedControlRecipe.pills.gap : segmentedControlRecipe.container.gap,
+          padding: pills || textOnly ? 0 : segmentedControlRecipe.container.padding,
         },
         layoutStyle,
       ]}
@@ -1990,7 +1993,7 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
         const leading = item.leading ?? item.renderLeading?.({
           selected: isSelected,
           disabled: optionDisabled,
-          color: contentColor,
+          color: textOnly ? (isSelected ? theme.colors.text : theme.colors.textMuted) : contentColor,
           size: glyph.sm,
         });
         return (
@@ -2013,7 +2016,7 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
             style={({ pressed }) => [
               {
                 alignItems: "center",
-                backgroundColor: !movingHighlight && !pills && isSelected
+                backgroundColor: !textOnly && !movingHighlight && !pills && isSelected
                   ? resolveColorReference(
                       segmentedControlRecipe.item.selectedBackground,
                       theme.palette,
@@ -2026,13 +2029,13 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
                     )
                   : "transparent",
                 borderRadius: theme.tokens.radius[segmentedControlRecipe.item.radius],
-                borderWidth: !pills && isSelected
+                borderWidth: !textOnly && !pills && isSelected
                   ? segmentedControlRecipe.item.selectedBorderWidth
                   : 0,
-                flex: stacked || pills ? undefined : 1,
+                flex: stacked || pills || textOnly ? undefined : 1,
                 maxWidth: pills ? "100%" : undefined,
                 // Leading artwork and its label share a row; column layout squeezed theme options.
-                flexDirection: "row",
+                flexDirection: textOnly ? "column" : "row",
                 gap: segmentedControlRecipe.item.gap,
                 justifyContent: "center",
                 minHeight: pills ? segmentedControlRecipe.pills.minHeight : sizeContract.minHeight,
@@ -2041,7 +2044,7 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
                   : pressed
                     ? segmentedControlRecipe.item.pressedOpacity
                     : 1,
-                paddingHorizontal: pills ? spacing.md : sizeContract.paddingHorizontal,
+                paddingHorizontal: textOnly ? 0 : pills ? spacing.md : sizeContract.paddingHorizontal,
                 paddingVertical: pills ? segmentedControlRecipe.pills.inset : undefined,
                 width: stacked ? "100%" : undefined,
               },
@@ -2061,16 +2064,17 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
               fontRole="ui"
               align="center"
               style={{
-                color: contentColor,
-                fontWeight: isSelected
+                color: textOnly ? (isSelected ? theme.colors.text : theme.colors.textMuted) : contentColor,
+                fontWeight: textOnly ? segmentedControlRecipe.text[textEmphasis][isSelected ? "selected":"idle"] : isSelected
                   ? segmentedControlRecipe.item.selectedFontWeight
                   : segmentedControlRecipe.item.fontWeight,
               }}
               tone={isSelected ? "brand" : "muted"}
-              variant={sizeContract.textVariant}
+              variant={textOnly ? "bodyLarge" : sizeContract.textVariant}
             >
               {item.label}
             </Text>
+            {textOnly ? <View accessible={false} style={{width:segmentedControlRecipe.text.indicatorWidth,height:segmentedControlRecipe.text.indicatorHeight,borderRadius:segmentedControlRecipe.text.indicatorRadius,backgroundColor:isSelected ? theme.colors.contentBrand:"transparent"}}/> : null}
           </Pressable>
         );
       })}

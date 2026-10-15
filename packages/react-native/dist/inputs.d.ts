@@ -248,7 +248,8 @@ export type SegmentedControlProps<Value extends string = string> = SegmentedCont
     defaultValue?: Value;
     onValueChange?: (value: Value) => void;
     size?: SegmentedControlSize;
-    presentation?: "connected" | "pills";
+    presentation?: "connected" | "pills" | "text";
+    textEmphasis?: "regular" | "strong";
     /** Move only decorative selection artwork, never labels or hit targets. */
     selectionMotion?: "none" | "slide";
     disabled?: boolean;

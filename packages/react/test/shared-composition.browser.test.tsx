@@ -1,3 +1,4 @@
+import { TopBar } from "../src/top-bar.js";
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
@@ -43,4 +44,31 @@ it("owns title badge placement and omits it with a replaced or hidden header", a
   expect(host.querySelector("h1")?.parentElement?.textContent).toBe("목록12");
   await act(async () => root.render(<HjmProvider><ScreenLayout title="목록" titleVisibility="hidden" titleBadge={<span>12</span>}>내용</ScreenLayout></HjmProvider>));
   expect(host.textContent).not.toContain("12");
+});
+it("centers a ready prompt without losing overflow and preserves the host canvas", async () => {
+  host.style.height = "300px";
+  await act(async () => root.render(<HjmProvider host="contents"><ScreenLayout title="안내" titleVisibility="hidden" contentAlignment="center" surface="transparent"><button>로그인</button></ScreenLayout></HjmProvider>));
+  const body = host.querySelector<HTMLElement>(".hjm-screen__body")!;
+  const prompt = host.querySelector<HTMLElement>(".hjm-screen__centered-content")!;
+  expect(Math.abs((body.getBoundingClientRect().top + body.getBoundingClientRect().bottom) / 2 - (prompt.getBoundingClientRect().top + prompt.getBoundingClientRect().bottom) / 2)).toBeLessThan(2);
+  expect(getComputedStyle(host.querySelector(".hjm-screen")!).backgroundColor).toBe("rgba(0, 0, 0, 0)");
+  await act(async () => root.render(<HjmProvider host="contents"><ScreenLayout title="안내" titleVisibility="hidden" contentAlignment="center"><div style={{height: 700}}>긴 안내</div></ScreenLayout></HjmProvider>));
+  expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
+  expect(body.querySelector(".hjm-screen__centered-content")!.getBoundingClientRect().top).toBeGreaterThanOrEqual(body.getBoundingClientRect().top);
+});
+it("announces custom loading artwork with shared copy and returns to real content", async () => {
+  const render = (loading: boolean) => root.render(<HjmProvider><CompositionLayout state={loading ? {kind:"loading",title:"찾는 중"} : {kind:"ready"}} loadingIndicator={<svg data-brand-loader />}>결과</CompositionLayout></HjmProvider>);
+  await act(async () => render(true));
+  expect(host.querySelector('[role="status"]')?.getAttribute("aria-label")).toBe("찾는 중");
+  expect(host.textContent).not.toContain("찾는 중");
+  expect(host.querySelector('[data-brand-loader]')?.parentElement?.getAttribute("aria-hidden")).toBe("true");
+  await act(async () => render(false));
+  expect(host.querySelector('[data-brand-loader]')).toBeNull(); expect(host.textContent).toBe("결과");
+});
+it("keeps a toolbar subtitle separate from its named title action", async () => {
+  const open = vi.fn();
+  await act(async () => root.render(<HjmProvider><TopBar title="도구" subtitle="설명" onTitleClick={open} titleAccessibilityLabel="도구 상세" /></HjmProvider>));
+  expect(host.querySelector(".hjm-top-bar__subtitle")?.textContent).toBe("설명");
+  await act(async () => host.querySelector<HTMLButtonElement>('button[aria-label="도구 상세"]')!.click());
+  expect(open).toHaveBeenCalledOnce();
 });

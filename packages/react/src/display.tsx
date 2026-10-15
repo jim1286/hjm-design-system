@@ -224,6 +224,10 @@ export type ListRowProps = Omit<HTMLAttributes<HTMLElement>, "title" | "onClick"
     description?: ReactNode;
     leading?: ReactNode;
     trailing?: ReactNode;
+    /** Independent command outside the row's navigation target. */
+    trailingAction?: ReactNode;
+    /** Supply a framework Link without replacing the shared row layout. */
+    renderLink?: (props: React.ComponentPropsWithRef<"a">) => ReactNode;
     density?: ListRowDensity;
     /** Semantic emphasis for destructive destinations; selection stays independent. */
     tone?: keyof typeof listRowRecipe.tones;
@@ -251,6 +255,8 @@ export const ListRow = forwardRef<HTMLElement, ListRowProps>(function ListRow(
     description,
     leading,
     trailing,
+    trailingAction,
+    renderLink,
     density: densityProp,
     tone = listRowRecipe.defaults.tone,
     leadingShape = "square",
@@ -316,7 +322,7 @@ export const ListRow = forwardRef<HTMLElement, ListRowProps>(function ListRow(
         }
       : {};
 
-  return createElement(
+  const row = createElement(
     element,
     {
       ...props,
@@ -343,4 +349,6 @@ export const ListRow = forwardRef<HTMLElement, ListRowProps>(function ListRow(
     </span>,
     trailing ? <span className="hjm-list-row__trailing">{trailing}</span> : null,
   );
+  const linked = href && renderLink ? renderLink(row.props as React.ComponentPropsWithRef<"a">) : row;
+  return trailingAction ? <div style={{display:"flex",alignItems:"center",gap:listRowRecipe.gap}}><div style={{flex:1,minWidth:0}}>{linked}</div><div style={{flexShrink:0}}>{trailingAction}</div></div> : linked;
 });

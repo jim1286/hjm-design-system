@@ -1273,6 +1273,8 @@ export function TopBarAction(props: TopBarActionProps) {
 
 export type TopBarProps = Readonly<{
   title?: string;
+  /** Secondary product context below the title. */
+  subtitle?: string;
   /** Optional visual before the title, such as a small product avatar. */
   titleLeading?: ReactNode;
   /** Makes the complete title slot a named 44pt action. */
@@ -1292,6 +1294,7 @@ export type TopBarProps = Readonly<{
 /** Native screen top bar with logical action slots and large-text reflow. */
 export function TopBar({
   title,
+  subtitle,
   titleLeading,
   onTitlePress,
   titleAccessibilityLabel,
@@ -1305,6 +1308,7 @@ export function TopBar({
   ...removedProps
 }: TopBarProps) {
   assertNoRemovedStyleProps("TopBar", removedProps, ["style", "leadingStyle", "titleStyle", "trailingStyle"]);
+  if (subtitle !== undefined && !subtitle.trim()) throw new TypeError("TopBar subtitle must not be empty");
   if (!Number.isFinite(safeAreaTop) || safeAreaTop < 0) {
     throw new RangeError("TopBar safeAreaTop must be non-negative");
   }
@@ -1325,6 +1329,7 @@ export function TopBar({
   const hasTitle = title !== undefined;
   const resolvedTitle = title ?? "";
   if (!hasTitle && (
+    subtitle !== undefined ||
     titleLeading !== undefined ||
     onTitlePress !== undefined ||
     titleAccessibilityLabel !== undefined ||
@@ -1362,6 +1367,7 @@ export function TopBar({
             {titleLeading}
           </View>
         ) : null}
+        <View style={{ flexShrink: 1, minWidth: 0 }}>
         <Text
           fontRole={onTitlePress ? "ui" : "display"}
           {...(onTitlePress
@@ -1376,6 +1382,8 @@ export function TopBar({
         >
           {resolvedTitle}
         </Text>
+        {subtitle ? <Text variant="caption" tone="muted" align={centered ? "center" : "auto"}>{subtitle}</Text> : null}
+        </View>
       </>
     );
     const commonStyle: StyleProp<ViewStyle> = [
@@ -1395,7 +1403,7 @@ export function TopBar({
         <Pressable
           accessible
           accessibilityHint={titleAccessibilityHint}
-          accessibilityLabel={titleAccessibilityLabel ?? resolvedTitle}
+          accessibilityLabel={titleAccessibilityLabel ?? [resolvedTitle, subtitle].filter(Boolean).join(". ")}
           accessibilityRole="button"
           onPress={onTitlePress}
           style={({ pressed }) => [

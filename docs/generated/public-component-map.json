@@ -484,6 +484,15 @@
         "role": "canonical"
       },
       {
+        "name": "ConversationRow",
+        "source": "packages/react/src/conversation-row.tsx",
+        "entries": [
+          "./conversation-row"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "ConversionFunnel",
         "source": "packages/react/src/data-workflows.tsx",
         "entries": [
@@ -2341,6 +2350,15 @@
         "source": "packages/react-native/src/content-transition.tsx",
         "entries": [
           "./content-transition"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "ConversationRow",
+        "source": "packages/react-native/src/conversation-row.tsx",
+        "entries": [
+          "./conversation-row"
         ],
         "canonicalComponent": null,
         "role": "supplemental"

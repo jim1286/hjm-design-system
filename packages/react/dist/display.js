@@ -31,7 +31,7 @@ export const Card = forwardRef(function Card({ title, description, leading, medi
                                         ? null
                                         : createElement(`h${headingLevel}`, { className: "hjm-card__title", "data-slot": "title" }, title), description === undefined ? null : (_jsx(Text, { as: "p", tone: "muted", className: "hjm-card__description", "data-slot": "description", children: description }))] })] })) : null, children === undefined ? null : (_jsx("div", { className: "hjm-card__content", "data-slot": "content", children: children }))] }), actions ? _jsx("div", { className: "hjm-card__actions", "data-slot": "actions", children: actions }) : null] }));
 });
-export const ListRow = forwardRef(function ListRow({ title, description, leading, trailing, density: densityProp, tone = listRowRecipe.defaults.tone, leadingShape = "square", selected = listRowRecipe.defaults.selected, disabled = false, loading = false, loadingLabel, href, onClick, className, layoutStyle, style, ...props }, ref) {
+export const ListRow = forwardRef(function ListRow({ title, description, leading, trailing, trailingAction, renderLink, density: densityProp, tone = listRowRecipe.defaults.tone, leadingShape = "square", selected = listRowRecipe.defaults.selected, disabled = false, loading = false, loadingLabel, href, onClick, className, layoutStyle, style, ...props }, ref) {
     // The hook runs unconditionally — `??` would short-circuit it and break the
     // rules of hooks on the very first row that passes `density`.
     const densityDefault = useHjmDensityDefault({
@@ -59,7 +59,7 @@ export const ListRow = forwardRef(function ListRow({ title, description, leading
                 "aria-pressed": selected,
             }
             : {};
-    return createElement(element, {
+    const row = createElement(element, {
         ...props,
         ...interactiveProps,
         ref,
@@ -75,5 +75,7 @@ export const ListRow = forwardRef(function ListRow({ title, description, leading
     }, leading
         ? _jsx("span", { className: "hjm-list-row__leading", "data-shape": leadingShape, children: leading })
         : null, _jsxs("span", { className: "hjm-list-row__content", children: [_jsx("span", { className: "hjm-list-row__title", children: title }), description ? (_jsx("span", { className: "hjm-list-row__description", children: description })) : null] }), trailing ? _jsx("span", { className: "hjm-list-row__trailing", children: trailing }) : null);
+    const linked = href && renderLink ? renderLink(row.props) : row;
+    return trailingAction ? _jsxs("div", { style: { display: "flex", alignItems: "center", gap: listRowRecipe.gap }, children: [_jsx("div", { style: { flex: 1, minWidth: 0 }, children: linked }), _jsx("div", { style: { flexShrink: 0 }, children: trailingAction })] }) : linked;
 });
 //# sourceMappingURL=display.js.map

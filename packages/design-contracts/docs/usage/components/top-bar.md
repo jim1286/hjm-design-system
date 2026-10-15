@@ -72,6 +72,7 @@ import { TopBar, TopBarAction } from "@hjmds/react-native/top-bar";
 | `headingLevel` | 1~6 | 1 | Web만. 페이지 구조에 맞춘다 |
 | `onTitleClick`(Web) | `(event: MouseEvent<HTMLButtonElement>) => void` | — | 제목을 버튼으로 만든다 |
 | `onTitlePress`(Native) | `(event: GestureResponderEvent) => void` | — | 제목을 버튼으로 만든다 |
+| `subtitle` | `string` | — | 제목 아래 보조 문맥. 제목이 필요하며 배치·색·글자 규격은 HJM이 소유(1.23.0 이후 미게시) |
 | `titleLeading` | `ReactNode` | — | 제목 앞 작은 시각 요소 |
 | `leading` / `actions`(별칭 `trailing`) | `ReactNode` | — | 둘 중 한 이름만 쓴다 |
 | `layoutStyle` | `HjmCompositionStyleProp` | — | 루트 배치. Web·Native 모두 |

@@ -805,7 +805,8 @@ export type SegmentedControlProps = Omit<
     defaultValue?: string;
     onValueChange?: (value: string) => void;
     size?: SegmentedControlSize;
-    presentation?: "connected" | "pills";
+    presentation?: "connected" | "pills" | "text";
+    textEmphasis?: "regular" | "strong";
     /** Move only the selection artwork; radio semantics and hit targets stay fixed. */
     selectionMotion?: "none" | "slide";
     name?: string;
@@ -825,6 +826,7 @@ export const SegmentedControl = forwardRef<
     onValueChange,
     size = segmentedControlRecipe.defaults.size,
     presentation = "connected",
+    textEmphasis = "strong",
     selectionMotion: suppliedSelectionMotion,
     name,
     className,
@@ -835,7 +837,7 @@ export const SegmentedControl = forwardRef<
   ref,
 ) {
   const designProfile = useDesignProfileDefaults();
-  const selectionMotion = suppliedSelectionMotion ?? designProfile?.interactions.selectionMotion ?? "none";
+  const selectionMotion = presentation === "text" ? "none" : suppliedSelectionMotion ?? designProfile?.interactions.selectionMotion ?? "none";
   validateItems("SegmentedControl", items);
   const descriptors = items.map((item) => ({
     id: item.value,
@@ -906,6 +908,8 @@ export const SegmentedControl = forwardRef<
       className={classNames("hjm-segmented", className)}
       data-size={size}
       data-presentation={presentation}
+      data-text-emphasis={presentation === "text" ? textEmphasis : undefined}
+      role={presentation === "text" ? "radiogroup" : undefined}
     >
       <legend className="hjm-visually-hidden">{label}</legend>
       <div className="hjm-segmented__items" ref={trackRef}>

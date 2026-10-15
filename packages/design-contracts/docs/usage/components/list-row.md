@@ -135,3 +135,10 @@ Native 원형 leading의 `full`은 Provider token에서 읽지만 고정 원형 
 예상하면 `description`을 제공한다(자리표시 중 문구 자체는 표시하지 않는다). loading 동안 행과
 trailingAction은 실행할 수 없으며 실제 슬롯 내용도 마운트하지 않는다. 여러 로딩 행 중 첫 행에만
 `loadingLabel`을 주고 나머지는 접근성 트리에서 숨긴다. 검색 화면도 임의 Skeleton 조립 대신 이 계약을 쓴다.
+
+### 독립 행동과 라우터 연결 (미게시, 1.23.0 이후)
+
+Web도 Native와 같이 `trailingAction`을 지원한다. 이 슬롯은 행의 link/button 바깥에 놓이므로
+팔로우·삭제 같은 행동을 링크에 중첩하지 않는다. `renderLink`는 HJM이 만든 anchor props를
+프레임워크 Link에 전달하는 연결점이다. 배치·제목·앞/뒤 슬롯은 HJM이 계속 만든다.
+예: `renderLink={props => <Link {...props} href={props.href!} />}`.

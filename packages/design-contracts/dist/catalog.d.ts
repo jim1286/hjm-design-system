@@ -6042,6 +6042,22 @@ export declare const recipeRegistry: {
         };
     };
     readonly segmentedControlRecipe: {
+        readonly text: {
+            readonly gap: 16;
+            readonly indicatorWidth: 16;
+            readonly indicatorHeight: 2;
+            readonly indicatorRadius: 999;
+            readonly minHeight: 44;
+            readonly labelGap: 4;
+            readonly regular: {
+                readonly idle: "400";
+                readonly selected: "600";
+            };
+            readonly strong: {
+                readonly idle: "500";
+                readonly selected: "700";
+            };
+        };
         readonly slots: readonly ["root", "item", "label", "indicator"];
         readonly defaults: {
             readonly size: "medium";

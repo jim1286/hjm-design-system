@@ -186,7 +186,8 @@ export type SegmentedControlProps = Omit<FieldsetHTMLAttributes<HTMLFieldSetElem
     defaultValue?: string;
     onValueChange?: (value: string) => void;
     size?: SegmentedControlSize;
-    presentation?: "connected" | "pills";
+    presentation?: "connected" | "pills" | "text";
+    textEmphasis?: "regular" | "strong";
     /** Move only the selection artwork; radio semantics and hit targets stay fixed. */
     selectionMotion?: "none" | "slide";
     name?: string;
@@ -200,7 +201,8 @@ export declare const SegmentedControl: import("react").ForwardRefExoticComponent
     defaultValue?: string;
     onValueChange?: (value: string) => void;
     size?: SegmentedControlSize;
-    presentation?: "connected" | "pills";
+    presentation?: "connected" | "pills" | "text";
+    textEmphasis?: "regular" | "strong";
     /** Move only the selection artwork; radio semantics and hit targets stay fixed. */
     selectionMotion?: "none" | "slide";
     name?: string;

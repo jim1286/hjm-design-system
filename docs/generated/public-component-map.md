@@ -4,7 +4,7 @@
 
 ## @hjmds/react
 
-고유 공개 컴포넌트 및 provider 이름 202개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 203개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -58,6 +58,7 @@
 | Container | Container | canonical | root, ./layout |
 | ContentTransition | 별도 보조 기능 | supplemental | ./content-transition |
 | ContextMenu | ContextMenu | canonical | root, ./context-menu |
+| ConversationRow | 별도 보조 기능 | supplemental | ./conversation-row |
 | ConversionFunnel | 별도 보조 기능 | supplemental | ./data-workflows |
 | CorrelationMatrix | 별도 보조 기능 | supplemental | ./data-workflows |
 | CounterBadge | CounterBadge | canonical | root, ./display |
@@ -213,7 +214,7 @@
 
 ## @hjmds/react-native
 
-고유 공개 컴포넌트 및 provider 이름 188개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 189개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -259,6 +260,7 @@
 | CompositionLayout | 별도 보조 기능 | supplemental | ./screens |
 | Container | Container | canonical | root, ./primitives |
 | ContentTransition | 별도 보조 기능 | supplemental | ./content-transition |
+| ConversationRow | 별도 보조 기능 | supplemental | ./conversation-row |
 | ConversionFunnel | 별도 보조 기능 | supplemental | ./data-workflows |
 | CorrelationMatrix | 별도 보조 기능 | supplemental | ./data-workflows |
 | CounterBadge | CounterBadge | canonical | root, ./data-display |

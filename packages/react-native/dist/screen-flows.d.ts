@@ -279,6 +279,7 @@ export type CommentThreadItem = Readonly<{
     body: ReactNode;
     bodyText?: string;
     timeLabel: string;
+    timeDateTime?: string;
     likeCountLabel: string;
     avatar?: ReactNode;
     likeIcon: ReactNode;

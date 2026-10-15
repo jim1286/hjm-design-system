@@ -2,6 +2,8 @@ import { type HTMLAttributes, type MouseEventHandler, type ReactNode } from "rea
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type TopBarProps = Omit<HTMLAttributes<HTMLDivElement>, "title" | "children"> & Readonly<{
     title?: string;
+    /** Secondary product context; the shared title slot owns its placement. */
+    subtitle?: string;
     titleLeading?: ReactNode;
     onTitleClick?: MouseEventHandler<HTMLButtonElement>;
     titleAccessibilityLabel?: string;
@@ -17,6 +19,8 @@ export type TopBarProps = Omit<HTMLAttributes<HTMLDivElement>, "title" | "childr
 /** Screen chrome stays composable inside pages and dialogs, without adding a second banner landmark. */
 export declare const TopBar: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLDivElement>, "title" | "children"> & Readonly<{
     title?: string;
+    /** Secondary product context; the shared title slot owns its placement. */
+    subtitle?: string;
     titleLeading?: ReactNode;
     onTitleClick?: MouseEventHandler<HTMLButtonElement>;
     titleAccessibilityLabel?: string;

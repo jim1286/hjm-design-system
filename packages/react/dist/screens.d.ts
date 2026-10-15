@@ -15,6 +15,10 @@ export type ScreenLayoutProps = Readonly<{
     /** Preserve host navigation while the shared shell owns content and state. */
     header?: ReactNode;
     contentInset?: "default" | "none";
+    /** Center a product prompt in the available body without inventing a query state. */
+    contentAlignment?: "start" | "center";
+    /** Keep a product wallpaper supplied by the outer host visible. */
+    surface?: "default" | "transparent";
     /** Explicit layout wins over the nearest design profile. */
     presentation?: DesignProfileScreenPresentation;
     description?: string;
@@ -36,7 +40,7 @@ export type ScreenLayoutProps = Readonly<{
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Shared screen shell. Routing, data, permission checks and mutation state remain product-owned. */
-export declare function ScreenLayout({ title, titleBadge, titleVisibility, headerAlignment, header, contentInset, presentation: suppliedPresentation, description, leading, actions, notice, footer, state, stateAction, children, scroll, as: Element, className, layoutStyle }: ScreenLayoutProps): import("react").JSX.Element;
+export declare function ScreenLayout({ title, titleBadge, titleVisibility, headerAlignment, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, description, leading, actions, notice, footer, state, stateAction, children, scroll, as: Element, className, layoutStyle }: ScreenLayoutProps): import("react").JSX.Element;
 export type SettingsScreenSection = Readonly<{
     id: string;
     title: string;
@@ -142,7 +146,9 @@ export type CompositionLayoutProps = Readonly<{
     footer?: ReactNode;
     state?: ScreenContentState;
     stateAction?: ReactNode;
+    /** Brand visual only; the shared state group owns copy, centering and announcement. */
+    loadingIndicator?: ReactNode;
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function CompositionLayout({ title, description, badge, leading, actions, notice, children, footer, state, stateAction, layoutStyle }: CompositionLayoutProps): import("react").JSX.Element;
+export declare function CompositionLayout({ title, description, badge, leading, actions, notice, children, footer, state, stateAction, loadingIndicator, layoutStyle }: CompositionLayoutProps): import("react").JSX.Element;
 //# sourceMappingURL=screens.d.ts.map

@@ -959,6 +959,9 @@ export const comboboxRecipe = {
 };
 
 export const segmentedControlRecipe = {
+  // Text navigation reuses radio selection, without cloning a product-only tab engine.
+  text: { gap: spacing.md, indicatorWidth: 16, indicatorHeight: 2, indicatorRadius: radius.full,
+    minHeight: control.minTouchTarget, labelGap: spacing.xxs, regular: {idle:"400",selected:"600"}, strong:{idle:"500",selected:"700"} },
   slots: ["root", "item", "label", "indicator"] as const,
   defaults: { size: "medium" },
   // Category filters share the single-selection engine, with a compact surface inside a 44 target.

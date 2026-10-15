@@ -66,3 +66,15 @@ it("centers an empty saved collection while keeping explicit failures and home c
   await act(async()=>root.render(<HjmProvider><SavedItemsScreen {...props}/></HjmProvider>));
   expect(host.querySelector(".hjm-screen__state")).toBeNull(); expect(host.textContent).toContain("Create");
 });
+
+it("resets the onboarding body scroll when the controlled step changes", async () => {
+  const renderStep = (index: number) => <HjmProvider><OnboardingScreen
+    steps={[{id:"one",title:"First",description:"First guide",content:"Story"},{id:"two",title:"Second",description:"Second guide",content:"Story"}]}
+    index={index} onIndexChange={()=>{}} nextLabel="Next" backLabel="Back" complete={{label:"Complete",onAction:()=>{}}} progressLabel={(i,n)=>`${i}/${n}`}/></HjmProvider>;
+  await act(async()=>root.render(renderStep(0)));
+  const body = host.querySelector<HTMLElement>(".hjm-screen__body")!;
+  body.scrollTop = 160;
+  await act(async()=>root.render(renderStep(1)));
+  expect(body.scrollTop).toBe(0);
+  expect(host.textContent).toContain("Second guide");
+});

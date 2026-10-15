@@ -29,6 +29,10 @@ export type ScreenLayoutProps = Readonly<{
   header?: ReactNode;
   /** Hosts that already inset routes avoid applying the shared gutter twice. */
   contentInset?: "default" | "none";
+  /** Center a product prompt in the available body without inventing a query state. */
+  contentAlignment?: "start" | "center";
+  /** Keep a product wallpaper supplied by the outer host visible. */
+  surface?: "default" | "transparent";
   /** Explicit layout wins over the nearest design profile. */
   presentation?: DesignProfileScreenPresentation;
   description?: string;
@@ -45,10 +49,10 @@ export type ScreenLayoutProps = Readonly<{
   layoutStyle?: HjmCompositionStyleProp;
   testID?: string;
   scrollRef?: Ref<ScrollView>;
-  scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator">;
+  scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator" | "onScroll" | "onScrollBeginDrag" | "onScrollEndDrag" | "scrollEventThrottle" | "alwaysBounceVertical" | "automaticallyAdjustKeyboardInsets">;
 }>;
 
-export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", presentation: suppliedPresentation, description, leading, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps }: ScreenLayoutProps) {
+export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, leading, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps }: ScreenLayoutProps) {
   const [leadingWidth, setLeadingWidth] = useState(0), [actionsWidth, setActionsWidth] = useState(0);
   const sideWidth = Math.max(leadingWidth, actionsWidth);
   const showHeader = titleVisibility === "visible" || !!description || !!leading || !!actions;
@@ -64,7 +68,7 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
   const headerVerticalPadding = compactHeader ? 2 : 8;
   // A notice can contain navigation tabs; keep its separation from body filters.
   const bodyPaddingTop = compactHeader && !notice ? Math.min(padding, 4) : padding;
-  const body = state.kind === "ready" ? children : <View style={{ marginVertical: "auto", flexShrink: 0, alignItems: "center", gap: recipe.stateGap, paddingVertical: profileLayout?.gap ?? recipe.sectionGap }}>
+  const body = state.kind === "ready" ? (contentAlignment === "center" ? <View style={{ marginVertical: "auto", flexShrink: 0, width: "100%" }}>{children}</View> : children) : <View style={{ marginVertical: "auto", flexShrink: 0, alignItems: "center", gap: recipe.stateGap, paddingVertical: profileLayout?.gap ?? recipe.sectionGap }}>
     {/* Keep loading copy in Spinner's accessibility name rather than a visible
         second status, matching the shared spinner-only loading contract. */}
     {resolved.busy ? <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} /> : <View accessibilityLiveRegion={resolved.announcement} style={{ alignItems: "center", gap: recipe.itemGap }}>
@@ -72,7 +76,7 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
       {state.description ? <Text tone="muted" align="center">{state.description}</Text> : null}
     </View>}{stateAction}
   </View>;
-  return <View testID={testID} style={[{ flex: 1, minHeight: 0, width: "100%", maxWidth: profileLayout?.maxWidth ?? recipe.maxWidth, alignSelf: "center", backgroundColor: designProfile?.material.canvas ? "transparent" : colors.bg }, layoutStyle]}>
+  return <View testID={testID} style={[{ flex: 1, minHeight: 0, width: "100%", maxWidth: profileLayout?.maxWidth ?? recipe.maxWidth, alignSelf: "center", backgroundColor: surface === "transparent" || designProfile?.material.canvas ? "transparent" : colors.bg }, layoutStyle]}>
     {/* Not TopBar: this is the page heading (titleLarge + description, actions wrap under the title at
         large text), while TopBar is a fixed-height app bar with a single-line title and safe-area top.
         Importing it would also pull navigation.js (tabs/gooey indicator) into every screens graph.
@@ -259,9 +263,11 @@ export type CompositionLayoutProps = Readonly<{
   footer?: ReactNode;
   state?: ScreenContentState;
   stateAction?: ReactNode;
+  /** Brand visual only; the shared state group owns copy, centering and announcement. */
+  loadingIndicator?: ReactNode;
   layoutStyle?: HjmCompositionStyleProp;
 }>;
-export function CompositionLayout({title, description, badge, leading, actions, notice, children, footer, state = {kind: "ready"}, stateAction, layoutStyle}: CompositionLayoutProps) {
+export function CompositionLayout({title, description, badge, leading, actions, notice, children, footer, state = {kind: "ready"}, stateAction, loadingIndicator, layoutStyle}: CompositionLayoutProps) {
   const resolved = resolveScreenContentState(state);
   return <Stack gap="md" {...(layoutStyle === undefined ? {} : {layoutStyle})}>
     {title || description || badge || leading || actions ? <Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap: "wrap"}}>
@@ -272,7 +278,7 @@ export function CompositionLayout({title, description, badge, leading, actions, 
     </Stack> : null}
     {notice}
     {state.kind === "ready" ? children : <Stack gap="sm" align="center" justify="center" layoutStyle={{flex: 1}}>
-      {resolved.busy ? <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} /> : <View accessibilityRole={state.kind === "error" ? "alert" : "text"} accessibilityLiveRegion="polite"><Text variant="title" align="center">{state.title}</Text>{state.description ? <Text tone="muted" align="center">{state.description}</Text> : null}</View>}
+      {resolved.busy ? (loadingIndicator ? <View accessible accessibilityRole="progressbar" accessibilityLabel={[state.title, state.description].filter(Boolean).join(". ")} accessibilityState={{ busy: true }} accessibilityLiveRegion="polite" style={{ alignItems: "center", gap: screenPatternRecipe.itemGap }}><View accessibilityElementsHidden importantForAccessibility="no-hide-descendants">{loadingIndicator}</View></View> : <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} />) : <View accessibilityRole={state.kind === "error" ? "alert" : "text"} accessibilityLiveRegion="polite"><Text variant="title" align="center">{state.title}</Text>{state.description ? <Text tone="muted" align="center">{state.description}</Text> : null}</View>}
       {stateAction}
     </Stack>}
     {footer}

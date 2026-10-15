@@ -167,6 +167,8 @@ export type TopBarActionProps = TopBarButtonActionProps | TopBarLinkActionProps;
 export declare function TopBarAction(props: TopBarActionProps): import("react").JSX.Element;
 export type TopBarProps = Readonly<{
     title?: string;
+    /** Secondary product context below the title. */
+    subtitle?: string;
     /** Optional visual before the title, such as a small product avatar. */
     titleLeading?: ReactNode;
     /** Makes the complete title slot a named 44pt action. */
@@ -183,7 +185,7 @@ export type TopBarProps = Readonly<{
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Native screen top bar with logical action slots and large-text reflow. */
-export declare function TopBar({ title, titleLeading, onTitlePress, titleAccessibilityLabel, titleAccessibilityHint, leading, trailing, actions, centered, safeAreaTop, layoutStyle, ...removedProps }: TopBarProps): import("react").JSX.Element;
+export declare function TopBar({ title, subtitle, titleLeading, onTitlePress, titleAccessibilityLabel, titleAccessibilityHint, leading, trailing, actions, centered, safeAreaTop, layoutStyle, ...removedProps }: TopBarProps): import("react").JSX.Element;
 /** Flat and sectioned menus share collection identifiers and rendering slots. */
 export type MenuItem<Value extends string = string> = Omit<CollectionItemDescriptor<Value>, "textValue"> & Readonly<{
     textValue?: string;

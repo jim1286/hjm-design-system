@@ -25,6 +25,10 @@ export type ScreenLayoutProps = Readonly<{
   /** Preserve host navigation while the shared shell owns content and state. */
   header?: ReactNode;
   contentInset?: "default" | "none";
+  /** Center a product prompt in the available body without inventing a query state. */
+  contentAlignment?: "start" | "center";
+  /** Keep a product wallpaper supplied by the outer host visible. */
+  surface?: "default" | "transparent";
   /** Explicit layout wins over the nearest design profile. */
   presentation?: DesignProfileScreenPresentation;
   description?: string;
@@ -47,7 +51,7 @@ export type ScreenLayoutProps = Readonly<{
 }>;
 
 /** Shared screen shell. Routing, data, permission checks and mutation state remain product-owned. */
-export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", presentation: suppliedPresentation, description, leading, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", as: Element = "main", className, layoutStyle }: ScreenLayoutProps) {
+export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, leading, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", as: Element = "main", className, layoutStyle }: ScreenLayoutProps) {
   const id = useId();
   const showHeader = titleVisibility === "visible" || !!description || !!leading || !!actions;
   // Screens historically work with the stylesheet alone. Optional context keeps
@@ -72,7 +76,7 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
   });
   const recipe = screenPatternRecipe;
   return <Element aria-labelledby={header || titleVisibility === "hidden" ? undefined : id} aria-label={header || titleVisibility === "hidden" ? title : undefined} data-content-inset={contentInset} data-presentation={presentation} className={classNames("hjm-screen", className)}
-    style={{ backgroundColor: designProfile?.material.canvas ? "transparent" : undefined, "--hjm-screen-width": `${profileLayout?.maxWidth ?? recipe.maxWidth}px`, "--hjm-screen-padding": `${contentInset === "none" ? 0 : recipe.padding}px`, "--hjm-screen-gap": `${profileLayout?.gap ?? recipe.sectionGap}px`, "--hjm-screen-item-gap": `${recipe.itemGap}px`, "--hjm-screen-state-gap": `${recipe.stateGap}px`, "--hjm-screen-header-min": `${recipe.headerMinWidth}px`, ...layoutStyle } as React.CSSProperties}>
+    style={{ backgroundColor: surface === "transparent" || designProfile?.material.canvas ? "transparent" : undefined, "--hjm-screen-width": `${profileLayout?.maxWidth ?? recipe.maxWidth}px`, "--hjm-screen-padding": `${contentInset === "none" ? 0 : recipe.padding}px`, "--hjm-screen-gap": `${profileLayout?.gap ?? recipe.sectionGap}px`, "--hjm-screen-item-gap": `${recipe.itemGap}px`, "--hjm-screen-state-gap": `${recipe.stateGap}px`, "--hjm-screen-header-min": `${recipe.headerMinWidth}px`, ...layoutStyle } as React.CSSProperties}>
     {header ?? (showHeader ? headerAlignment === "center" ? <header className="hjm-screen__header" style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr)", alignItems: "center" }}>
       <div>{leading}</div><div className="hjm-screen__heading" style={{ textAlign: "center", minWidth: 0 }}>
         {titleVisibility === "visible" && <Stack axis="inline" gap="xs" align="center" justify="center" wrap><Heading level="level3" semanticLevel={1} id={id}>{title}</Heading>{titleBadge}</Stack>}
@@ -92,8 +96,8 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
           lastBodyFocus.current = null;
         }
       }}
-      className="hjm-screen__body" data-scroll={bodyScroll} data-replacement={resolved.replacesContent || undefined} aria-busy={resolved.busy || undefined}>
-      {state.kind === "ready" ? children : <div className="hjm-screen__state">
+      className="hjm-screen__body" data-content-alignment={contentAlignment} data-scroll={bodyScroll} data-replacement={resolved.replacesContent || undefined} aria-busy={resolved.busy || undefined}>
+      {state.kind === "ready" ? (contentAlignment === "center" ? <div className="hjm-screen__centered-content">{children}</div> : children) : <div className="hjm-screen__state">
         {/* Loading copy is an accessible name; visible copy beside the spinner
             contradicts the shared spinner-only loading contract. */}
         {resolved.busy ? <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} /> : <div role={state.kind === "error" ? "alert" : "status"}>
@@ -230,9 +234,11 @@ export type CompositionLayoutProps = Readonly<{
   footer?: ReactNode;
   state?: ScreenContentState;
   stateAction?: ReactNode;
+  /** Brand visual only; the shared state group owns copy, centering and announcement. */
+  loadingIndicator?: ReactNode;
   layoutStyle?: HjmCompositionStyleProp;
 }>;
-export function CompositionLayout({title, description, badge, leading, actions, notice, children, footer, state = {kind: "ready"}, stateAction, layoutStyle}: CompositionLayoutProps) {
+export function CompositionLayout({title, description, badge, leading, actions, notice, children, footer, state = {kind: "ready"}, stateAction, loadingIndicator, layoutStyle}: CompositionLayoutProps) {
   const resolved = resolveScreenContentState(state);
   return <Stack gap="md" {...(layoutStyle === undefined ? {} : {layoutStyle})}>
     {title || description || badge || leading || actions ? <Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap: "wrap"}}>
@@ -243,7 +249,7 @@ export function CompositionLayout({title, description, badge, leading, actions, 
     </Stack> : null}
     {notice}
     {state.kind === "ready" ? children : <Stack gap="sm" align="center" justify="center" layoutStyle={{flex: 1}}>
-      {resolved.busy ? <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} /> : <div role={state.kind === "error" ? "alert" : "status"}><Text variant="title">{state.title}</Text>{state.description ? <Text tone="muted">{state.description}</Text> : null}</div>}
+      {resolved.busy ? (loadingIndicator ? <div role="status" aria-busy="true" aria-label={[state.title, state.description].filter(Boolean).join(". ")}><div aria-hidden="true">{loadingIndicator}</div></div> : <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} />) : <div role={state.kind === "error" ? "alert" : "status"}><Text variant="title">{state.title}</Text>{state.description ? <Text tone="muted">{state.description}</Text> : null}</div>}
       {stateAction}
     </Stack>}
     {footer}

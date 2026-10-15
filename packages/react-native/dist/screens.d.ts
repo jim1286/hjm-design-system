@@ -17,6 +17,10 @@ export type ScreenLayoutProps = Readonly<{
     header?: ReactNode;
     /** Hosts that already inset routes avoid applying the shared gutter twice. */
     contentInset?: "default" | "none";
+    /** Center a product prompt in the available body without inventing a query state. */
+    contentAlignment?: "start" | "center";
+    /** Keep a product wallpaper supplied by the outer host visible. */
+    surface?: "default" | "transparent";
     /** Explicit layout wins over the nearest design profile. */
     presentation?: DesignProfileScreenPresentation;
     description?: string;
@@ -33,9 +37,9 @@ export type ScreenLayoutProps = Readonly<{
     layoutStyle?: HjmCompositionStyleProp;
     testID?: string;
     scrollRef?: Ref<ScrollView>;
-    scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator">;
+    scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator" | "onScroll" | "onScrollBeginDrag" | "onScrollEndDrag" | "scrollEventThrottle" | "alwaysBounceVertical" | "automaticallyAdjustKeyboardInsets">;
 }>;
-export declare function ScreenLayout({ title, titleBadge, titleVisibility, headerAlignment, header, contentInset, presentation: suppliedPresentation, description, leading, actions, notice, footer, state, stateAction, children, scroll, layoutStyle, testID, scrollRef, scrollProps }: ScreenLayoutProps): import("react").JSX.Element;
+export declare function ScreenLayout({ title, titleBadge, titleVisibility, headerAlignment, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, description, leading, actions, notice, footer, state, stateAction, children, scroll, layoutStyle, testID, scrollRef, scrollProps }: ScreenLayoutProps): import("react").JSX.Element;
 export type SettingsScreenSection = Readonly<{
     id: string;
     title: string;
@@ -136,7 +140,9 @@ export type CompositionLayoutProps = Readonly<{
     footer?: ReactNode;
     state?: ScreenContentState;
     stateAction?: ReactNode;
+    /** Brand visual only; the shared state group owns copy, centering and announcement. */
+    loadingIndicator?: ReactNode;
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function CompositionLayout({ title, description, badge, leading, actions, notice, children, footer, state, stateAction, layoutStyle }: CompositionLayoutProps): import("react").JSX.Element;
+export declare function CompositionLayout({ title, description, badge, leading, actions, notice, children, footer, state, stateAction, loadingIndicator, layoutStyle }: CompositionLayoutProps): import("react").JSX.Element;
 //# sourceMappingURL=screens.d.ts.map

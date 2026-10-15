@@ -7,6 +7,8 @@ import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type TopBarProps = Omit<HTMLAttributes<HTMLDivElement>, "title" | "children"> & Readonly<{
   title?: string;
+  /** Secondary product context; the shared title slot owns its placement. */
+  subtitle?: string;
   titleLeading?: ReactNode;
   onTitleClick?: MouseEventHandler<HTMLButtonElement>;
   titleAccessibilityLabel?: string;
@@ -22,16 +24,17 @@ export type TopBarProps = Omit<HTMLAttributes<HTMLDivElement>, "title" | "childr
 
 /** Screen chrome stays composable inside pages and dialogs, without adding a second banner landmark. */
 export const TopBar = forwardRef<HTMLDivElement, TopBarProps>(function TopBar({
-  title, titleLeading, onTitleClick, titleAccessibilityLabel, headingLevel = 1,
+  title, subtitle, titleLeading, onTitleClick, titleAccessibilityLabel, headingLevel = 1,
   leading, trailing, actions, centered = topBarRecipe.defaults.centered, safeAreaTop = 0,
   className, style, layoutStyle, ...props
 }, ref) {
   const theme = useOptionalHjmTheme();
+  if (subtitle !== undefined && !subtitle.trim()) throw new TypeError("TopBar subtitle must not be empty");
   if (!Number.isFinite(safeAreaTop) || safeAreaTop < 0) throw new RangeError("TopBar safeAreaTop must be non-negative");
   if (title !== undefined && !title.trim()) throw new TypeError("TopBar title must not be empty");
   if (titleAccessibilityLabel !== undefined && !titleAccessibilityLabel.trim()) throw new TypeError("TopBar titleAccessibilityLabel must not be empty");
   if (actions !== undefined && trailing !== undefined) throw new TypeError("TopBar accepts either trailing or actions");
-  if (title === undefined && (titleLeading !== undefined || onTitleClick !== undefined || titleAccessibilityLabel !== undefined)) {
+  if (title === undefined && (subtitle !== undefined || titleLeading !== undefined || onTitleClick !== undefined || titleAccessibilityLabel !== undefined)) {
     throw new TypeError("TopBar title affordances require a title");
   }
   const Heading = `h${headingLevel}` as "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
@@ -49,6 +52,7 @@ export const TopBar = forwardRef<HTMLDivElement, TopBarProps>(function TopBar({
         {onTitleClick ? <Button tone="ghost" onClick={onTitleClick} aria-label={titleAccessibilityLabel} leading={titleLeading}>{title}</Button>
           : <span aria-label={titleAccessibilityLabel}>{titleLeading}{title}</span>}
       </Heading>}
+      {subtitle ? <span className="hjm-top-bar__subtitle">{subtitle}</span> : null}
     </div>
     <div className="hjm-top-bar__trailing">{actions ?? trailing}</div>
   </div>;
