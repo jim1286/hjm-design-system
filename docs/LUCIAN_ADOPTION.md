@@ -32,10 +32,10 @@
 | 056 | 월·연 요금 전환 카드 | 구성 후보 | task-controls 양 플랫폼 구현·검사 통과 | 제품 적용 미실행 |
 | 059 | 참석 응답 이벤트 카드 | 구성 후보 | EventAttendanceCard 양 플랫폼 구현·검사 통과 | 실제 응답·캘린더 callback 완료 반영; 제품 기기 API 연결 미실행 |
 | 092 | 필터를 풀어 주는 빈 검색 결과 | 구성 후보 | 구현 커밋 e8a0a152 / 관련 검사 통과 | 소비 제품 적용 미실행 |
-| 116 | 베지어 이징 곡선 | 구성 후보 | BezierEditor 양 플랫폼 구현·검사 통과 | 두 제어점 4좌표 편집·실제 easing 미리 보기; 토큰 자동 저장 없음; npm 게시 미실행 |
+| 116 | 베지어 이징 곡선 | 구성 후보 | BezierEditor 양 플랫폼 구현·검사 통과 | 두 제어점 4좌표 편집·실제 easing 미리 보기; 토큰 자동 저장 없음; 제품 적용 미실행 |
 | 130 | CSV 필드 연결 | 구성 후보 | data-workflows 구현 / 계산·Web·Native 검사 통과 | 소비 제품 적용 미실행 |
 | 131 | 동행자 입력 묶음 | 구성 후보 | 구현 커밋 e8a0a152 / 관련 검사 통과 | 소비 제품 적용 미실행 |
-| 141 | 단축키 조합 기록 | 구성 후보 | ShortcutRecorder Web 구현·검사 통과 | 실제 키 기록·충돌/예약키·등록 callback; Native 미지원 명시; npm 게시 미실행 |
+| 141 | 단축키 조합 기록 | 구성 후보 | ShortcutRecorder Web 구현·검사 통과 | 실제 키 기록·충돌/예약키·등록 callback; Native 미지원 명시; 제품 적용 미실행 |
 | 144 | 열 순서 편집 | 구성 후보 | 구현 커밋 e8a0a152 / 관련 검사 통과 | 소비 제품 적용 미실행 |
 | 160 | 이탈을 드러내는 전환 깔때기 | 구성 후보 | data-workflows 구현 / 계산·Web·Native 검사 통과 | 소비 제품 적용 미실행 |
 | 161 | 주차별로 남는 고객 격자 | 구성 후보 | data-workflows 구현 / 계산·Web·Native 검사 통과 | 소비 제품 적용 미실행 |
@@ -71,6 +71,35 @@ Showcase 타입 검사 양쪽 통과. 실행 예제 연결 중 Web Showcase 50�
 
 2026-10-15 사용자 릴리스 요청으로 `3889d45d36beb864ef65c99c0d01912031963150`을 fixed minor 1.21.0으로 게시했다. [Release Packages 38684758486](https://github.com/jim1286/hjm-design-system/actions/runs/38684758486) 성공과 canonical `v1.21.0` 태그를 확인했다. 05:14:47 UTC에 공식 세 tarball의 SHA512/SHA1 및 publish/SLSA provenance가 같은 source commit과 일치함을 확인했다. 게시 로그와 외부 다운로드 가능 시점 사이에는 약 8분의 차이가 있었다.
 
-소비 저장소별 설치·검사 결과는 아래에 기록한다. 새 구성 전체가 모든 제품 화면에 삽입됐다는 의미는 아니며, 제품이 실제 사용하는 API와 계약을 같은 train으로 맞춘다.
+소비 저장소별 설치·검사 결과는 아래에 기록한다. 새 구성 전체가 모든 제품 화면에 삽입됐다는 의미는 아니며, 제품이 실제 사용하는 API와 계약을 같은 게시 버전으로 맞춘다.
 
-전수 소비 설치에서 야잘알이 로컬 개발 소스의 `SearchScreen.resultSummary.countVisibility`와 `ComparisonTable.showSideNames`를 이미 사용하고 있으나 1.21.0 게시 타입에는 없는 점을 확인했다. 앱 표시 계약을 삭제하지 않고 기존 공용 구현·문서·테스트를 보존 반영해 후속 1.22.0 train에 포함한다. Web 비교 2·SSR 검색 1·Native 비교/검색 3건이 통과했다. 두 renderer의 동일 원본 빌드·타입 성공은 앞선 검사 결과를 재사용한다.
+전수 소비 설치에서 야잘알이 로컬 개발 소스의 `SearchScreen.resultSummary.countVisibility`와 `ComparisonTable.showSideNames`를 이미 사용하고 있으나 1.21.0 게시 타입에는 없는 점을 확인했다. 앱 표시 계약을 삭제하지 않고 기존 공용 구현·문서·테스트를 보존 반영해 후속 1.22.0에 포함한다. Web 비교 2·SSR 검색 1·Native 비교/검색 3건이 통과했다. 두 renderer의 동일 원본 빌드·타입 성공은 앞선 검사 결과를 재사용한다.
+
+## 1.22.0 최종 소비 버전
+
+야잘알의 기존 검색 결과 수 표시·비교표 이름 표시 계약을 함께 게시하기 위해 1.22.0으로 정렬했다. source는 `245afec5bdddb2c95ecff1aa7f4d403690d220d4`이며 [Release Packages 38686883716](https://github.com/jim1286/hjm-design-system/actions/runs/38686883716)의 성공과 canonical `v1.22.0` 태그를 확인했다. 2026-10-15 05:33:40 UTC에 세 공식 tarball의 SHA512/SHA1, npm publish attestation 및 SLSA provenance가 이 source와 일치함을 확인했다. [Showcase 38686861823](https://github.com/jim1286/hjm-design-system/actions/runs/38686861823)은 빌드·Pages 배포에 성공했다. 대표 Storybook VPS의 별도 게시는 수행하지 않았다.
+
+중앙 release profile·catalog·예시 계약은 `app-portfolio`의 `83ae76c70a864f7905c8aef7bbf5bb65c7fa6721`에 반영했다. 야잘알의 기존 SSR 테스트가 요구하는 `@types/react-dom` 19.2.7을 개발 의존성·중앙 라이브러리 정책에 연결했으며, 해당 제품의 정적 라이브러리 정책 검사는 통과했다. 이 타입 추가는 SSR 테스트를 보존하기 위한 것이며 앱 실행 의존성을 올리는 변경은 아니다.
+
+제품 적용은 실제 소비 manifest·lockfile·설치본과 계약/catalog를 1.22.0으로 맞춘 범위다. 각 제품에서 사용하지 않는 구성을 화면에 일괄 삽입하거나, 제품 API adapter·기기 QA·스토어 제출·운영 웹 배포를 완료했다는 의미가 아니다. 위 항목별 남은 조건은 해당 기능을 실제 제품에서 연결할 때의 범위를 유지한다. 보관 중이며 checkout이 없는 taground·mofun은 재개하지 않았다.
+
+
+최종 11개 직접 소비 manifest와 설치된 `@hjmds/*` 버전을 조회해 모두 1.22.0임을 확인했다. 8개 앱 계약의 contracts·renderer·catalog train도 같은 버전이며, Flutter는 `native-adapter`로 유지했다. 검사는 게시 패키지를 사용하도록 `HJM_LOCAL_SOURCE=0`으로 수행했다. 1.21.0에서 통과한 변경 없는 관련 동작 검사는 재사용하고 최종 1.22.0 설치에서 타입을 다시 확인했다.
+
+| 소비 저장소 | 적용·검사 | 최종 커밋 |
+| --- | --- | --- |
+| 번뚝 | Web·Native frozen 설치·게시 패키지 타입 통과; Web/Native 관련 동작 17건 재사용 | `2a94bfeccd4733940ba81e1d8836b148fa05aed6` |
+| 다에리 | Web·Native frozen 설치·게시 패키지 타입 통과; Web/Native 관련 동작 22건 재사용 | `063673edf877a4adc1820c43f93ef4609153488c` |
+| Spint | 모바일 frozen 설치·게시 패키지 타입 통과; 관련 동작 17건 재사용 | `a72dd9990736c6f637726ada5555eba4aa4f146f` |
+| Utilverse | 모바일 frozen 설치·게시 패키지 타입 통과; 관련 동작 3건 재사용 | `e625370c6258b2b78ade9213f540832ca7b56f94` |
+| Unairplane | 모바일 frozen 설치·게시 패키지 타입 통과; 관련 동작 12건 재사용 | `94ef07727a5ede9d072c3be480f5ebccdc05482e` |
+| 야잘알 | 모바일 frozen 설치·게시 패키지 타입 통과; 검색·비교 API 및 SSR 타입 오류 해소; 관련 동작 3건 재사용 | `b377b535a1a7493e5357a26f6c6311aa4b9360b4` |
+| portfolio-site | Web manifest·lock·설치본·계약/catalog, 타입·i18n 통과; 관련 artifact 3건 재사용 | `36ee31c9a5b7bb34cd38d87a9909f4ae0e545bb9` |
+| choose-window | Flutter 계약·release/catalog만 정렬, digest·선택 design 검증 통과; Dart 원본 변경 없음 | `9b86d603f0eaa5c7f8e3b37644cdcf22a86dc281` |
+| app-release-hub | contracts manifest·lock·설치본, 타입 통과; 관련 static policy 3건 재사용 | `a80bdbca6ab23ab575cc326d08faa2229f76913c` |
+
+위 소비 저장소는 모두 `main`에 커밋·push한 뒤 원격 SHA 일치를 확인했다.
+
+선택의창 전체 contract 도구는 기존 `tools/check-evidence.mjs`가 없어 실행 실패했다. 해당 도구를 고쳤거나 Flutter analyze·빌드·기기 검사를 완료했다고 보고하지 않는다. 다른 저장소의 관련 타입·동작 검사 성공과는 별도로 남긴다.
+
+본 작업의 임시 다운로드 확인 기록과 비교 파일은 제거했다. 기존 작업의 소스·미추적 자료는 보존했으며 작업용 브랜치·워크트리를 만들지 않았다. 사용자가 요청한 Native Storybook의 8187 Metro와 시뮬레이터는 인계용으로 계속 열어 둔다.
