@@ -543,9 +543,12 @@ export type ProfileSummaryProps = Readonly<{
 /** Profile identity and counts are common; routing and mutations stay controlled by the product. */
 export function ProfileSummary({ name, headingLevel = 2, avatar, badge, nameActions, stats = [], actions, children }: ProfileSummaryProps) {
   return <CompositionLayout title={name} headingLevel={headingLevel} leading={<span style={{ display: "flex", width: profileSummaryRecipe.avatarSize, height: profileSummaryRecipe.avatarSize, flexShrink: 0, borderRadius: "50%", overflow: "hidden" }}>{avatar}</span>} badge={badge} actions={nameActions} footer={children}>
-    {stats.length ? <Stack axis="inline" gap="md" wrap>{stats.map(stat => stat.onPress
-      ? <Button key={stat.id} tone="ghost" aria-label={`${stat.value} ${stat.label}`} disabled={stat.disabled ?? false} onClick={stat.onPress}><Stack gap="xxs" align="center"><Text emphasis="strong">{stat.value}</Text><Text variant="caption" tone="muted">{stat.label}</Text></Stack></Button>
-      : <Stack key={stat.id} gap="xxs" align="center"><Text emphasis="strong">{stat.value}</Text><Text variant="caption" tone="muted">{stat.label}</Text></Stack>)}</Stack> : null}
+    {/* Static and actionable counts occupy identical cells; button hit areas must not shift their baselines. */}
+    {stats.length ? <Stack axis="inline" gap="md" align="stretch" layoutStyle={{ width: "100%" }}>{stats.map(stat =>
+      <Stack key={stat.id} gap="xxs" align="center" justify="center" layoutStyle={{ flex: 1, minWidth: 0 }}>
+        {stat.onPress ? <Button tone="ghost" aria-label={`${stat.value} ${stat.label}`} disabled={stat.disabled ?? false} onClick={stat.onPress} layoutStyle={{ width: "100%" }}><Stack gap="xxs" align="center"><Text emphasis="strong">{stat.value}</Text><Text variant="caption" tone="muted">{stat.label}</Text></Stack></Button>
+          : <><Text emphasis="strong">{stat.value}</Text><Text variant="caption" tone="muted">{stat.label}</Text></>}
+      </Stack>)}</Stack> : null}
     {actions ? <Stack axis="inline" gap="sm" wrap>{actions}</Stack> : null}
   </CompositionLayout>;
 }
