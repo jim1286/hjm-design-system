@@ -43,4 +43,14 @@ export function resolveGooeyIndicator(from, to) {
     const right = Math.max(from.x + from.width, to.x + to.width);
     return { duration: 320, input: [0, 0.45, 1], x: [from.x, left, to.x], width: [from.width, right - left, to.width] };
 }
+export function resolveSwipeTabIndicator(rects, position) {
+    if (!Number.isFinite(position) || rects.length === 0)
+        return null;
+    const clamped = Math.max(0, Math.min(rects.length - 1, position));
+    const index = Math.floor(clamped), fraction = clamped - index;
+    const from = rects[index], to = rects[Math.min(index + 1, rects.length - 1)];
+    if (!from || !to)
+        return null;
+    return { x: from.x + (to.x - from.x) * fraction, width: from.width + (to.width - from.width) * fraction };
+}
 //# sourceMappingURL=gooey-navigation.js.map

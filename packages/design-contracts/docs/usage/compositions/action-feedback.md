@@ -88,12 +88,12 @@ const feedback = resolveSaveFeedback({
 
 ```tsx
 // Web
-<Button loading={feedback.pending} disabled={!feedback.canSubmit} onClick={save}>{feedback.pending ? pendingLabel : saveLabel}</Button>
+<Button loading={feedback.pending} disabled={!feedback.canSubmit} completion={{ confirmed: feedback.currentSaved, label: savedLabel }} onClick={save}>{saveLabel}</Button>
 ```
 
 ```tsx
 // Native
-<Button loading={feedback.pending} disabled={!feedback.canSubmit} onPress={save}>{feedback.pending ? pendingLabel : saveLabel}</Button>
+<Button loading={feedback.pending} disabled={!feedback.canSubmit} completion={{ confirmed: feedback.currentSaved, label: savedLabel }} onPress={save}>{saveLabel}</Button>
 ```
 
 Web은 `@hjmds/react`의 해당 granular entry, Native는 `@hjmds/react-native` entry를 쓴다.
@@ -111,3 +111,19 @@ Button의 실행 콜백은 Web `onClick`, Native `onPress`로 연결한다. 위 
 | --- | --- | --- |
 | 배치/테마 | Stack과 HjmProvider | Stack과 HjmNativeProvider |
 | 좁은 폭 | 줄바꿈·단일 내용 | 같은 순서, OS 화면 검증은 별도 |
+
+
+## 확정 라벨의 크기 예약 (미게시 · 2026-10-15)
+
+Lucian 001의 저장→진행→완료 프레임 유지를 기존 Button의 `completion` 옵션으로 보완한다.
+기본 행동 문자열은 항상 같은 children으로 두고, 완료 문자열은 `completion.label`로 처음부터
+알린다. `confirmed`는 `resolveSaveFeedback.currentSaved`처럼 **현재 입력과 마지막 확정
+응답**을 비교한 결과다. 요청 진행 중 편집했다면 이전 응답이 성공해도 완료 라벨을 표시하지
+않는다. 저장 중에는 중앙 로딩만 보이고, 실패하면 같은 기본 행동 문자열로 돌아온다.
+서버가 확정하기 전에는 완료를 표시하지 않으며 자동 성공 타이머·중복 mutation 엔진을 넣지 않는다.
+
+Web은 두 라벨을 겹쳐 측정하고 Native는 두 라벨의 고유 폭과 최대 높이를 미리 예약한다.
+자세한 초기 Native 행 예약과 문자열 제한은 [Button](../components/button.md#저장-확정-라벨과-프레임-예약-미게시--2026-10-15)을 따른다.
+기존 결과 영역이 live region을 소유한다. Button이 별도 자동 알림을 만들지 않아 저장 중·완료
+안내가 중복 발표되지 않는다. Showcase는 같은 공개 Button API를 사용하며, 예제 요청임을
+계속 밝힌다. 실제 제품은 자신의 네트워크 요청·정규화된 확정 응답을 기존 session에 전달한다.

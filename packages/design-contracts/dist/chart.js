@@ -395,4 +395,20 @@ export function resolvePieVisibility(data, excludedIds = []) {
         throw new RangeError("Pie total must be finite");
     return { values, total, includedCount: data.length - excluded.size, observedCount: values.filter(value => value !== null).length };
 }
+/** Match both actual polyline vertices before period morphing. Union knots preserve
+ * every observation for linear paths; work is bounded by the caller for large data. */
+export function prepareChartLineMorph(from, to) {
+    if (from.length < 2 || to.length < 2)
+        return null;
+    const knots = [...new Set([...from.map((_, i) => i / (from.length - 1)), ...to.map((_, i) => i / (to.length - 1))])].sort((a, b) => a - b);
+    const sample = (points, position) => {
+        const index = position * (points.length - 1), start = Math.floor(index), end = Math.min(points.length - 1, start + 1), t = index - start;
+        return { x: points[start].x + (points[end].x - points[start].x) * t, y: points[start].y + (points[end].y - points[start].y) * t };
+    };
+    const first = knots.map(k => sample(from, k)), last = knots.map(k => sample(to, k));
+    return (progress) => {
+        const t = Math.max(0, Math.min(1, progress));
+        return first.map((point, i) => ({ x: point.x + (last[i].x - point.x) * t, y: point.y + (last[i].y - point.y) * t }));
+    };
+}
 //# sourceMappingURL=chart.js.map

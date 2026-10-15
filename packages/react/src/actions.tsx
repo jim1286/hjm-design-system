@@ -17,6 +17,7 @@ import {
   type LinkVariant,
 } from "@hjmds/design-contracts/recipes";
 import {
+  Children,
   forwardRef,
   type AnchorHTMLAttributes,
   type CSSProperties,
@@ -47,6 +48,8 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> &
     /** Toggle state. Paints the selected treatment and sets `aria-pressed`. */
     selected?: boolean;
     loading?: boolean;
+    /** Explicit confirmed mutation result. Both text labels remain measured in every state. */
+    completion?: Readonly<{ confirmed: boolean; label: string }>;
     leading?: ReactNode;
     trailing?: ReactNode;
       /** Canonical layout-only placement. Controlled visual keys are excluded. */
@@ -61,6 +64,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     align = buttonRecipe.defaults.align,
     selected,
     loading = false,
+    completion,
     leading,
     trailing,
     disabled,
@@ -74,6 +78,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   },
   ref,
 ) {
+  const textParts = completion ? Children.toArray(children) : [];
+  if (completion && (!completion.label.trim() || typeof completion.confirmed !== "boolean" || textParts.length === 0 || !textParts.every(part => typeof part === "string" || typeof part === "number"))) {
+    throw new TypeError("Button completion requires a nonempty label, a boolean confirmed value and text-only children");
+  }
+  const idleLabel = completion ? textParts.join("") : children;
+  const currentLabel = completion?.confirmed && !loading ? completion.label : idleLabel;
   // Preserve a focusable disabled action (e.g. a Carousel boundary).
   const ariaDisabled = props["aria-disabled"] === true || props["aria-disabled"] === "true";
   const unavailable = disabled === true || loading || ariaDisabled;
@@ -105,7 +115,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       onClick={handleClick}
     >
       {leading}
-      <span className="hjm-button__label">{children}</span>
+      {completion ? <span style={{ display: "inline-grid", minWidth: 0 }}>
+        {/* Both labels contribute intrinsic dimensions, including wrapping/font changes. */}
+        <span aria-hidden="true" className="hjm-button__label" style={{ gridArea: "1 / 1", visibility: "hidden" }}>{idleLabel}</span>
+        <span aria-hidden="true" className="hjm-button__label" style={{ gridArea: "1 / 1", visibility: "hidden" }}>{completion.label}</span>
+        <span className="hjm-button__label" style={{ gridArea: "1 / 1", alignSelf: "center" }}>{currentLabel}</span>
+      </span> : <span className="hjm-button__label">{children}</span>}
       {trailing}
       {loading ? <span className="hjm-button__loading-indicator" aria-hidden="true"><span className="hjm-button__spinner" /></span> : null}
     </button>

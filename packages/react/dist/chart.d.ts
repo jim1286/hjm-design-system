@@ -48,19 +48,24 @@ export type LineChartProps = CartesianCommon & FocusProps & Readonly<{
     }>;
     /** Bubble text above the cursor while scrubbing; defaults to the category. */
     cursorLabel?: (index: number) => string;
+    /** Morph actual data changes; reduced motion snaps immediately. */
+    animateChanges?: boolean;
+    /** Keep the chosen side in series color; mute the other side. */
+    scrubEmphasis?: "before" | "after";
     /** Value labels only (rank charts: "1위" at the top). */
     valueAxis?: boolean;
     /** Overrides grid/label ticks. */
     ticks?: readonly number[];
 }>;
-export declare function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, width: fallbackWidth, curve, area, stacked, invert, domain, includeZero, referenceValue, extremes, showAxis, valueAxis, ticks: tickOverride, cursorLabel, className, layoutStyle, ...focusProps }: LineChartProps): import("react").JSX.Element;
+export declare function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, width: fallbackWidth, curve, area, stacked, invert, domain, includeZero, referenceValue, extremes, showAxis, valueAxis, ticks: tickOverride, cursorLabel, animateChanges, scrubEmphasis, className, layoutStyle, ...focusProps }: LineChartProps): import("react").JSX.Element;
 export type BarChartProps = CartesianCommon & FocusProps & Readonly<{
     orientation?: ChartOrientation;
     layout?: ChartBarLayout;
     /** Value label at each bar end (the stack total for stacked bars). */
     showValues?: boolean;
+    animateChanges?: boolean;
 }>;
-export declare function BarChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, width: fallbackWidth, orientation, layout, domain, showAxis, showValues, className, layoutStyle, ...focusProps }: BarChartProps): import("react").JSX.Element;
+export declare function BarChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, width: fallbackWidth, orientation, layout, domain, showAxis, showValues, animateChanges, className, layoutStyle, ...focusProps }: BarChartProps): import("react").JSX.Element;
 export type ChartLegendItem = Readonly<{
     id: string;
     label: string;

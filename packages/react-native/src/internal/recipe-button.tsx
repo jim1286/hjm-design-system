@@ -8,7 +8,7 @@ import {
   buttonRecipe,
   resolveButtonLabelLines,
 } from "@hjmds/design-contracts/recipes/base";
-import { Children, forwardRef, type ReactNode } from "react";
+import { Children, forwardRef, useState, type ReactNode } from "react";
 import {
   ActivityIndicator,
   Pressable,
@@ -52,6 +52,7 @@ export const RecipeButton = forwardRef<NativeView, RecipeButtonProps>(
       selected,
       disabled = false,
       loading = false,
+      completion,
       disableWhileLoading = false,
       growWithContent = false,
       loadingLabel,
@@ -72,7 +73,7 @@ export const RecipeButton = forwardRef<NativeView, RecipeButtonProps>(
     }: RecipeButtonProps,
     ref,
   ) {
-    const { colors, environment, tokens } = useHjmNativeTheme();
+    const { colors, environment, tokens, textScaling } = useHjmNativeTheme();
     const labelLines = resolveButtonLabelLines(
       isLargeTextScale(environment.textScale),
     );
@@ -81,7 +82,12 @@ export const RecipeButton = forwardRef<NativeView, RecipeButtonProps>(
     // Preserve the idle content's measured width while the pending label remains the accessible name.
     const content = joinTextChildren(children);
     const textContent = typeof content === "string" || typeof content === "number";
-    const announcedContent = loading && loadingLabel !== undefined ? loadingLabel : content;
+    if (completion && (!completion.label.trim() || typeof completion.confirmed !== "boolean" || !textContent)) {
+      throw new TypeError("Button completion requires a nonempty label, a boolean confirmed value and text-only children");
+    }
+    const completed = completion?.confirmed === true && !loading;
+    const currentContent = completed ? completion.label : content;
+    const announcedContent = loading && loadingLabel !== undefined ? loadingLabel : currentContent;
     if (content === undefined || content === null || content === false) {
       throw new TypeError("Button requires children");
     }
@@ -98,6 +104,20 @@ export const RecipeButton = forwardRef<NativeView, RecipeButtonProps>(
       sizeContract.height,
       environment.minimumVisualTarget,
     );
+    // Yoga has no intrinsic overlapping grid. Hidden flow labels supply the maximum
+    // width; a recipe-height slot exists before their first native measurement.
+    const measurementKey = completion ? JSON.stringify([content, completion.label, size, tokens.fontFamily, tokens.typography[sizeContract.textVariant], environment.textScale, labelStyle]) : "";
+    const [labelMeasurements, setLabelMeasurements] = useState<{ key: string; idle: number; complete: number }>({ key: "", idle: 0, complete: 0 });
+    const labelMetric = tokens.typography[sizeContract.textVariant];
+    const initialSlotHeight = labelMetric.lineHeight * textScaling.scale * (labelLines ?? 1);
+    const measured = labelMeasurements.key === measurementKey ? Math.max(labelMeasurements.idle, labelMeasurements.complete) : 0;
+    const slotHeight = Math.max(initialSlotHeight, measured);
+    const measureLabel = (label: "idle" | "complete", height: number) => {
+      setLabelMeasurements(previous => {
+        const current = previous.key === measurementKey ? previous : { key: measurementKey, idle: 0, complete: 0 };
+        return current[label] === height ? current : { ...current, [label]: height };
+      });
+    };
     return (
       <Pressable
         {...props}
@@ -154,7 +174,15 @@ export const RecipeButton = forwardRef<NativeView, RecipeButtonProps>(
         ]}
       >
         {loading && leading != null ? <View style={{ opacity: 0 }}>{leading}</View> : leading}
-        {textContent ? (
+        {completion ? <View style={{ flexShrink: 1, minWidth: 0, height: slotHeight }}>
+          <View pointerEvents="none" accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ height: 0, opacity: 0 }}>
+            <Text fontRole="ui" emphasis="medium" variant={sizeContract.textVariant} {...(labelLines === null ? {} : { numberOfLines: labelLines })} onLayout={event => measureLabel("idle", event.nativeEvent.layout.height)} style={[{ color: contentColor, flexShrink: 0, minWidth: 0 }, labelStyle]}>{content}</Text>
+            <Text fontRole="ui" emphasis="medium" variant={sizeContract.textVariant} {...(labelLines === null ? {} : { numberOfLines: labelLines })} onLayout={event => measureLabel("complete", event.nativeEvent.layout.height)} style={[{ color: contentColor, flexShrink: 0, minWidth: 0 }, labelStyle]}>{completion.label}</Text>
+          </View>
+          <View pointerEvents="none" style={{ position: "absolute", inset: 0, justifyContent: "center", opacity: loading ? 0 : 1 }}>
+            <Text fontRole="ui" align={align === "leading" ? "auto" : "center"} emphasis="medium" variant={sizeContract.textVariant} {...(labelLines === null ? {} : { numberOfLines: labelLines })} style={[{ color: contentColor, minWidth: 0 }, labelStyle]}>{currentContent}</Text>
+          </View>
+        </View> : textContent ? (
           <Text
               fontRole="ui"
             align={align === "leading" ? "auto" : "center"}

@@ -1,3 +1,4 @@
+import { Button } from "@hjmds/react/actions";
 import { useState, type ReactNode } from "react";
 import type { DataTableSortState } from "@hjmds/design-contracts/components/data-table";
 import { sortDataTableRows, toDataTableSortValue } from "@hjmds/design-contracts/components/data-table";
@@ -21,15 +22,28 @@ function Example({ title, children }: Readonly<{ title: string; children: ReactN
 /** Stock-style quote: the header follows the scrubbed month; release returns to the latest one. */
 function LineExample() {
   const [focus, setFocus] = useState<number | null>(null);
-  const index = focus ?? opsSeries[0]!.values.length - 1, value = opsSeries[0]!.values[index];
+  const [recent, setRecent] = useState(false);
+  const labels = recent ? months.slice(-3) : months;
+  const values = opsSeries.map(item => ({ ...item, values: recent ? item.values.slice(-3) : item.values }));
+  const index = focus ?? values[0]!.values.length - 1, value = values[0]!.values[index];
   return (
     <Example title={copy.line}>
       <Text as="p" variant="heading">{value == null ? copy.missing : formatRate(value)}</Text>
-      <Text as="p" variant="caption" tone="muted">{months[index]}</Text>
-      <LineChart categories={months} series={opsSeries} accessibilityLabel={copy.line} formatValue={formatRate} missingLabel={copy.missing}
+      <Text as="p" variant="caption" tone="muted">{labels[index]}</Text>
+      <Button onClick={() => { setFocus(null); setRecent(current => !current); }}>{recent ? "전체 기간" : "최근 3개월"}</Button>
+      <LineChart animateChanges scrubEmphasis="before" categories={labels} series={values} accessibilityLabel={copy.line} formatValue={formatRate} missingLabel={copy.missing}
         referenceValue="first" extremes={{ high: copy.high, low: copy.low }} onFocusChange={(next, { scrubbing }) => setFocus(scrubbing ? next : null)} />
     </Example>
   );
+}
+
+function BarExample() {
+  const [recent, setRecent] = useState(false);
+  const categories = recent ? months.slice(-3) : months;
+  const series = homeRunSeries.map(item => ({ ...item, values: recent ? item.values.slice(-3) : item.values }));
+  return <Example title={copy.bar}><Button onClick={() => setRecent(current => !current)}>{recent ? "전체 기간" : "최근 3개월"}</Button>
+    <BarChart animateChanges categories={categories} series={series} showValues accessibilityLabel={copy.bar} formatValue={formatCount} missingLabel={copy.missing} />
+  </Example>;
 }
 
 function PieExample() {
@@ -50,7 +64,7 @@ export function ChartGalleryPreview({ only }: Readonly<{ only?: ChartKind }>) {
             <LineChart categories={months} series={comparisonSeries} curve="monotone" showAxis accessibilityLabel={copy.line} formatValue={formatRate} missingLabel={copy.missing} />
           </Example>
         ) : null}
-        {show("bar") ? <Example title={copy.bar}><BarChart categories={months} series={homeRunSeries} showValues accessibilityLabel={copy.bar} formatValue={formatCount} missingLabel={copy.missing} /></Example> : null}
+        {show("bar") ? <BarExample /> : null}
         {show("horizontal") ? <Example title={copy.horizontal}><BarChart categories={teams} series={teamHomeRuns} orientation="horizontal" showValues accessibilityLabel={copy.horizontal} formatValue={formatCount} missingLabel={copy.missing} /></Example> : null}
         {show("stacked") ? <Example title={copy.stacked}><BarChart categories={months} series={hitMixSeries} layout="stacked" showAxis accessibilityLabel={copy.stacked} formatValue={formatCount} missingLabel={copy.missing} /></Example> : null}
         {show("pie") ? <Example title={copy.pie}><PieExample /></Example> : null}

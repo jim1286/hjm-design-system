@@ -65,3 +65,23 @@ not choose a different panel lifetime: products still own controlled drafts or
 `mountPolicy`. The [QA record](../../../docs/qa/2026-10-07-design-profile-research.md)
 separates actual Chromium checks from Native mock-host tests; Native device
 appearance/performance and experiment promotion remain pending.
+
+## Pager-driven underline (unpublished · 2026-10-15)
+
+Lucian 048 requires an underline to follow the actual fractional pager position rather than
+animating after a selection has already settled. Horizontal `Tabs.swipePosition` accepts a
+`TabSwipePosition` source (`get(): number`, `subscribe(listener): unsubscribe`). Position 0 is
+the first item; 1.4 is 40% between the second and third. The source should publish actual scroll
+or pager events; `Tabs` never starts, captures or cancels page gestures.
+
+Both renderers interpolate measured physical tab rectangles using `resolveSwipeTabIndicator`.
+Out-of-range positions clamp; non-finite positions and incomplete layout are ignored. Web writes
+the indicator's left/width directly; Native writes two `Animated.Value`s. No React update occurs
+per source frame. This direct user-driven position remains continuous under reduced motion;
+there is no autonomous easing to suppress. Vertical tabs ignore the source.
+
+Selection, keyboard navigation, disabled tabs and panel mounting remain owned by the ordinary
+`value`/`onValueChange` contract. The product commits selection on pager settle and drives the
+pager when a tab is activated. `swipePosition` only moves the underline, so publishing a frame
+never silently activates an off-screen panel. Source subscriptions are removed on replacement
+or unmount, and tab remeasurement reapplies the current source position.

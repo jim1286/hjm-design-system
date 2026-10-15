@@ -391,5 +391,8 @@ export declare function resolvePieVisibility(data: readonly Readonly<{
     observedCount: number;
 };
 export type PieVisibilitySummary = ReturnType<typeof resolvePieVisibility>;
+/** Match both actual polyline vertices before period morphing. Union knots preserve
+ * every observation for linear paths; work is bounded by the caller for large data. */
+export declare function prepareChartLineMorph(from: readonly XY[], to: readonly XY[]): ((progress: number) => XY[]) | null;
 export {};
 //# sourceMappingURL=chart.d.ts.map

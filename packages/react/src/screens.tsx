@@ -1,3 +1,5 @@
+import { resolveComposerLimit, type ComposerLengthFeedback } from "@hjmds/design-contracts/communication";
+import { Progress } from "./feedback.js";
 import { resolveDesignProfileScreen, type DesignProfileScreenPresentation } from "@hjmds/design-contracts/design-profile-layout";
 import { MessageReactions } from "./internal/message-reactions.js";
 import type { ReactionPickerProps } from "./reaction-picker.js";
@@ -140,6 +142,8 @@ export function ChatScreen({ composer, scroll = "content", ...props }: ChatScree
 
 export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCount"> & Readonly<{
   maxLength?: number;
+  /** Opt-in count/ring appears only near the actual maxLength; never trims drafts. */
+  lengthFeedback?: ComposerLengthFeedback;
   sendDisabled?: boolean;
   additionalContent?: boolean;
   leadingAction?: ReactNode;
@@ -160,10 +164,12 @@ export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCo
   /** Canonical layout-only placement on the composer root. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
 }>;
-export function MessageComposer({ value, label, sendLabel, placeholder = label, description, error, invalid = false, submitMode = "newline", onBlur, disabled = false, pending = false, onValueChange, onSend, maxLength, sendDisabled = false, additionalContent = false, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation = "inline", attachmentAction, attachments = [], onRemoveAttachment, layoutStyle }: MessageComposerProps) {
+export function MessageComposer({ value, label, sendLabel, placeholder = label, description, error, invalid = false, submitMode = "newline", onBlur, disabled = false, pending = false, onValueChange, onSend, maxLength, lengthFeedback, sendDisabled = false, additionalContent = false, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation = "inline", attachmentAction, attachments = [], onRemoveAttachment, layoutStyle }: MessageComposerProps) {
   validateMessageAttachments(attachments);
   if (attachments.length && !onRemoveAttachment) throw new TypeError("Attachments require a removal callback");
-  const canSend = !sendDisabled && canSubmitMessage({ value, label, sendLabel, disabled, pending, attachmentCount: attachments.length + (additionalContent ? 1 : 0) });
+  if (lengthFeedback && maxLength === undefined) throw new TypeError("Composer length feedback requires maxLength");
+  const limit = !lengthFeedback ? null : resolveComposerLimit(value, maxLength!, lengthFeedback.threshold);
+  const canSend = !sendDisabled && !limit?.exceeded && canSubmitMessage({ value, label, sendLabel, disabled, pending, attachmentCount: attachments.length + (additionalContent ? 1 : 0) });
   const locked = disabled || pending;
   // A bounded corner radius keeps multiline/large-text content inside the field instead of a tall pill.
   const hasContent = !!value.trim() || attachments.length > 0 || additionalContent;
@@ -178,7 +184,7 @@ export function MessageComposer({ value, label, sendLabel, placeholder = label, 
       onChange={event => { if (!locked) onValueChange(event.currentTarget.value); }} minVisibleLines={screenPatternRecipe.composerMinLines} maxVisibleLines={screenPatternRecipe.composerMaxLines}
       {...(sendIcon ? { trailing: hasContent || pending ? send : attach } : {})} />
       {sendIcon ? null : send}
-    </div></div>;
+    </div>{lengthFeedback && limit?.near ? <Progress shape="circular" label={lengthFeedback.label} value={Math.min(limit.used, limit.max)} max={limit.max} valueText={lengthFeedback.formatCount(limit.used, limit.max)}><Text variant="caption">{lengthFeedback.formatCount(limit.used, limit.max)}</Text></Progress> : null}</div>;
 }
 
 export type ChatMessageProps = ChatMessageDescriptor & Readonly<{ children: ReactNode; interactiveContent?: boolean; avatar?: ReactNode; reply?: ReactNode; actions?: ReactNode; replyAction?: Readonly<{label:string; onPress():void; disabled?:boolean}>; replyLink?: Readonly<{label:string; onPress():void}>; reactions?: ReactionPickerProps & Readonly<{ closeLabel: string; menuAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean }> }>;

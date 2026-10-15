@@ -37,10 +37,11 @@ export function ActionFeedbackPreview() {
   const [draft,setDraft]=useState("");
   const status=state.status;
   // The completed snapshot does not confirm edits made while its request was pending.
-  const currentSaved=state.value!==""&&draft.trim()===state.value;
+  const feedback = resolveSaveFeedback({ phase: state.status, dirty: draft.trim() !== state.value, valid: !!draft.trim(), hasSaved: state.value !== "" });
+  const { currentSaved } = feedback;
   const save=()=>{const submitted=draft.trim();if(submitted)void session.run(()=>request(submitted),{retryable:true});};
   return <Stack gap="md"><Text variant="heading">입력은 남기고, 결과는 분명하게</Text><TextField label="기록 제목" value={draft} onValueChange={setDraft} />
-    <Button loading={busy} disabled={!draft.trim()} onClick={save}>{busy?"기록 저장 중":status==="error"?"다시 저장":currentSaved?"✓ 다시 저장":"기록 저장"}</Button>
+    <Button loading={busy} disabled={!feedback.canSubmit} completion={{ confirmed: currentSaved, label: "✓ 기록을 저장했어요" }} onClick={save}>기록 저장</Button>
     <ContentTransition stateKey={status} animateHeight><Text role="status">{busy?"저장을 확인하고 있어요":status==="error"?"저장하지 못했어요. 제목은 남아 있으니 다시 시도해 주세요.":state.value&&!currentSaved?"현재 제목은 아직 저장하지 않았어요.":currentSaved?"현재 제목을 저장했어요.":"제목을 입력한 뒤 저장해 주세요."}</Text></ContentTransition>
     {state.value?<Text>저장한 제목: {state.value}</Text>:null}
     <Button tone="ghost" selected={failureArmed} disabled={busy} onClick={toggleFailure}>예제: 다음 저장 실패</Button>

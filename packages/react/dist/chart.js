@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useCallback, useId, useLayoutEffect, useMemo, useRef, useState, } from "react";
 import { resolveDatavizSeriesColor } from "@hjmds/design-contracts/dataviz";
-import { areaPath, chartRecipe, describeChart, isChartNumber, linePath, nearestChartIndex, nearestScatterPoint, observedIndices, resolveBarGeometry, resolveLineGeometry, resolvePieGeometry, resolvePieVisibility, resolveRadarGeometry, resolveScatterGeometry, scaleLinear, seriesExtremes, splitSegments, stackValues, stepChartIndex, validateChartSeries, } from "@hjmds/design-contracts/components/chart";
+import { prepareChartLineMorph, areaPath, chartRecipe, describeChart, isChartNumber, linePath, nearestChartIndex, nearestScatterPoint, observedIndices, resolveBarGeometry, resolveLineGeometry, resolvePieGeometry, resolvePieVisibility, resolveRadarGeometry, resolveScatterGeometry, scaleLinear, seriesExtremes, splitSegments, stackValues, stepChartIndex, validateChartSeries, } from "@hjmds/design-contracts/components/chart";
 import { spacing } from "@hjmds/design-contracts/foundations";
 import { useOptionalHjmTheme } from "./provider.js";
 import { classNames } from "./internal.js";
@@ -12,7 +12,7 @@ import { classNames } from "./internal.js";
  * `@hjmds/react-native/chart` so products write one chart description for both surfaces.
  * Interaction follows react-native-wagmi-charts (press-and-drag cursor, release returns to the
  * latest value) with pointer events and `touch-action: pan-y` so vertical page scrolling still wins.
- * No transitions are used, so reduced motion needs no separate branch.
+ * Optional data morphing updates SVG hosts directly and respects reduced motion.
  */
 // ---------------------------------------------------------------------------------------------
 // Shared helpers
@@ -69,11 +69,15 @@ function useMeasuredWidth(fallback) {
     return [setNode, width];
 }
 /** Controlled/uncontrolled focus plus a transient scrub index (same model as the Native renderer). */
-function useFocus({ focusIndex, defaultFocusIndex = null, onFocusChange, holdOnRelease = false }, fallback) {
+function useFocus({ focusIndex, defaultFocusIndex = null, onFocusChange, holdOnRelease = false }, fallback, categories) {
+    const categoryKey = (index) => index === null || categories?.[index] === undefined ? null : JSON.stringify([categories[index], categories.slice(0, index).filter(value => value === categories[index]).length]);
+    const selectedKey = useRef(categoryKey(defaultFocusIndex));
     const [own, setOwn] = useState(defaultFocusIndex);
     const [scrub, setScrub] = useState(null);
     const last = useRef(null);
-    const settled = focusIndex !== undefined ? focusIndex : own;
+    const mapped = categories && selectedKey.current !== null ? categories.findIndex((_, index) => categoryKey(index) === selectedKey.current) : own;
+    const ownSelection = mapped === -1 ? null : mapped;
+    const settled = focusIndex !== undefined ? (categories && (focusIndex === null || categories[focusIndex] === undefined) ? null : focusIndex) : ownSelection;
     const focus = scrub ?? settled ?? fallback;
     const set = useCallback((index, scrubbing) => {
         if (scrubbing) {
@@ -82,11 +86,13 @@ function useFocus({ focusIndex, defaultFocusIndex = null, onFocusChange, holdOnR
         }
         else {
             setScrub(null);
-            if (focusIndex === undefined)
+            if (focusIndex === undefined) {
+                selectedKey.current = categoryKey(index);
                 setOwn(index);
+            }
         }
         onFocusChange?.(index, { scrubbing });
-    }, [focusIndex, onFocusChange]);
+    }, [focusIndex, onFocusChange, categories]);
     const release = useCallback(() => set(holdOnRelease ? last.current : null, false), [set, holdOnRelease]);
     return { focus, scrubbing: scrub !== null, set, release };
 }
@@ -145,12 +151,81 @@ function CursorBubble({ x, width, text }) {
     const half = 44, center = Math.min(width - half, Math.max(half, x));
     return _jsx("span", { className: "hjm-chart__bubble", "aria-hidden": "true", style: { left: center }, children: text });
 }
-export function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height = chartRecipe.heights.regular, width: fallbackWidth = 320, curve = "linear", area, stacked = false, invert = false, domain, includeZero, referenceValue, extremes, showAxis = false, valueAxis = false, ticks: tickOverride, cursorLabel, className, layoutStyle, ...focusProps }) {
+// Paths/rectangles update their host attributes directly; values, axes and accessibility
+// always come from the latest real data. No per-frame React reconciliation.
+function MotionLinePath({ points, lower, floor, curve, animate, ...rest }) {
+    const reducedMotion = useOptionalHjmTheme()?.environment.reducedMotion;
+    const node = useRef(null);
+    const previous = useRef(null);
+    const path = (p, base, edge) => base === undefined ? linePath(p, curve) : areaPath(p, base, curve, edge);
+    const signature = JSON.stringify([points, lower, floor, curve]);
+    useLayoutEffect(() => {
+        const before = previous.current;
+        const target = { points, lower, floor };
+        previous.current = target;
+        // A bounded morph avoids multiplying frame work for dense historical datasets.
+        const morph = animate && !reducedMotion && !document.hidden && before && points.length + before.points.length <= 1024 ? prepareChartLineMorph(before.points, points) : null;
+        if (!morph) {
+            node.current?.setAttribute("d", path(points, floor, lower));
+            return;
+        }
+        const lowerMorph = before?.lower && lower ? prepareChartLineMorph(before.lower, lower) : null;
+        let frame = 0, start;
+        const paint = (t) => {
+            const current = t === 1 ? target : { points: morph(t), lower: lowerMorph?.(t) ?? lower, floor: floor === undefined ? undefined : (before?.floor ?? floor) + (floor - (before?.floor ?? floor)) * t };
+            previous.current = current;
+            const d = path(current.points, current.floor, current.lower);
+            node.current?.setAttribute("d", d);
+        };
+        const tick = (now) => { start ??= now; const t = Math.min(1, (now - start) / 220); paint(1 - (1 - t) ** 3); if (t < 1)
+            frame = requestAnimationFrame(tick); };
+        paint(0);
+        frame = requestAnimationFrame(tick);
+        const visibility = () => { if (document.hidden) {
+            cancelAnimationFrame(frame);
+            paint(1);
+        } };
+        document.addEventListener("visibilitychange", visibility);
+        return () => { cancelAnimationFrame(frame); document.removeEventListener("visibilitychange", visibility); };
+    }, [signature, animate, reducedMotion]);
+    return _jsx("path", { ...rest, ref: node, d: path(points, floor, lower) });
+}
+function MotionBar({ bar, animate, vertical = true, rounded = true, ...rest }) {
+    const reducedMotion = useOptionalHjmTheme()?.environment.reducedMotion;
+    const node = useRef(null), previous = useRef(null);
+    const signature = JSON.stringify([bar, vertical, rounded]);
+    useLayoutEffect(() => {
+        const before = previous.current;
+        previous.current = bar;
+        if (!animate || reducedMotion || !before || document.hidden) {
+            node.current?.setAttribute("d", barPath(bar, vertical, bar.value < 0, rounded));
+            return;
+        }
+        let frame = 0, start;
+        const paint = (t) => {
+            const value = { ...bar, x: before.x + (bar.x - before.x) * t, y: before.y + (bar.y - before.y) * t, width: before.width + (bar.width - before.width) * t, height: before.height + (bar.height - before.height) * t };
+            previous.current = value;
+            node.current?.setAttribute("d", barPath(value, vertical, value.value < 0, rounded));
+        };
+        const tick = (now) => { start ??= now; const t = Math.min(1, (now - start) / 220); paint(1 - (1 - t) ** 3); if (t < 1)
+            frame = requestAnimationFrame(tick); };
+        paint(0);
+        frame = requestAnimationFrame(tick);
+        const visibility = () => { if (document.hidden) {
+            cancelAnimationFrame(frame);
+            paint(1);
+        } };
+        document.addEventListener("visibilitychange", visibility);
+        return () => { cancelAnimationFrame(frame); document.removeEventListener("visibilitychange", visibility); };
+    }, [signature, animate, reducedMotion]);
+    return _jsx("path", { ...rest, ref: node, d: barPath(bar, vertical, bar.value < 0, rounded) });
+}
+export function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height = chartRecipe.heights.regular, width: fallbackWidth = 320, curve = "linear", area, stacked = false, invert = false, domain, includeZero, referenceValue, extremes, showAxis = false, valueAxis = false, ticks: tickOverride, cursorLabel, animateChanges = false, scrubEmphasis, className, layoutStyle, ...focusProps }) {
     validateChartSeries(categories, series);
     const colorOf = useSeriesColor(), id = useSvgId(), descriptionId = `${id}-description`;
     const [measure, width] = useMeasuredWidth(fallbackWidth);
     const available = useMemo(() => observedIndices(series), [series]);
-    const { focus, scrubbing, set, release } = useFocus(focusProps, available.at(-1) ?? null);
+    const { focus, scrubbing, set, release } = useFocus(focusProps, available.at(-1) ?? null, categories);
     const insets = showAxis || valueAxis ? chartRecipe.insets.axis : chartRecipe.insets.plot;
     const g = useMemo(() => resolveLineGeometry({
         categories, series, width, height, insets, invert, stacked,
@@ -168,10 +243,10 @@ export function LineChart({ categories, series, accessibilityLabel, formatValue,
         event.preventDefault();
         set(next, false);
     };
-    return (_jsxs("div", { ref: measure, className: classNames("hjm-chart", "hjm-chart--line", className), style: { ...chromeStyle, ...layoutStyle }, "data-scrubbing": scrubbing || undefined, children: [_jsxs("div", { className: "hjm-chart__plot", role: "slider", tabIndex: 0, "aria-label": accessibilityLabel, "aria-describedby": descriptionId, "aria-valuemin": 0, "aria-valuemax": Math.max(0, categories.length - 1), "aria-valuenow": focus ?? 0, "aria-valuetext": focus === null ? missingLabel : valueText(categories, series, focus, formatValue, missingLabel), style: { blockSize: height }, onKeyDown: onKeyDown, ...handlers, children: [_jsxs("svg", { width: width, height: height, viewBox: `0 0 ${width} ${height}`, "aria-hidden": "true", focusable: "false", children: [_jsx("defs", { children: series.map((item, s) => (_jsxs("linearGradient", { id: `${id}-area-${s}`, x1: "0", y1: "0", x2: "0", y2: "1", children: [_jsx("stop", { offset: "0", stopColor: colorOf(item, s), stopOpacity: chartRecipe.area.topOpacity }), _jsx("stop", { offset: "1", stopColor: colorOf(item, s), stopOpacity: chartRecipe.area.bottomOpacity })] }, item.id))) }), (tickOverride ?? g.ticks).map((tick) => _jsx("line", { className: "hjm-chart__grid", x1: g.plot.left, x2: g.plot.right, y1: g.y(tick), y2: g.y(tick) }, tick)), showAxis || valueAxis ? (tickOverride ?? g.ticks).map((tick) => _jsx("text", { className: "hjm-chart__label", x: g.plot.left - 6, y: g.y(tick), dominantBaseline: "middle", textAnchor: "end", children: formatValue(tick) }, `t${tick}`)) : null, isChartNumber(reference) ? (_jsx("line", { className: "hjm-chart__reference", x1: g.plot.left, x2: g.plot.right, y1: g.y(reference), y2: g.y(reference), strokeDasharray: chartRecipe.reference.dash.join(" ") })) : null, series.map((item, s) => {
+    return (_jsxs("div", { ref: measure, className: classNames("hjm-chart", "hjm-chart--line", className), style: { ...chromeStyle, ...layoutStyle }, "data-scrubbing": scrubbing || undefined, children: [_jsxs("div", { className: "hjm-chart__plot", role: "slider", tabIndex: 0, "aria-label": accessibilityLabel, "aria-describedby": descriptionId, "aria-valuemin": 0, "aria-valuemax": Math.max(0, categories.length - 1), "aria-valuenow": focus ?? 0, "aria-valuetext": focus === null ? missingLabel : valueText(categories, series, focus, formatValue, missingLabel), style: { blockSize: height }, onKeyDown: onKeyDown, ...handlers, children: [_jsxs("svg", { width: width, height: height, viewBox: `0 0 ${width} ${height}`, "aria-hidden": "true", focusable: "false", children: [_jsxs("defs", { children: [_jsx("clipPath", { id: `${id}-scrub`, children: _jsx("rect", { x: scrubEmphasis === "after" && focus !== null ? g.xs[focus] ?? g.plot.left : g.plot.left, y: 0, width: focus === null ? width : scrubEmphasis === "after" ? g.plot.right - (g.xs[focus] ?? g.plot.left) : (g.xs[focus] ?? g.plot.right) - g.plot.left, height: height }) }), series.map((item, s) => (_jsxs("linearGradient", { id: `${id}-area-${s}`, x1: "0", y1: "0", x2: "0", y2: "1", children: [_jsx("stop", { offset: "0", stopColor: colorOf(item, s), stopOpacity: chartRecipe.area.topOpacity }), _jsx("stop", { offset: "1", stopColor: colorOf(item, s), stopOpacity: chartRecipe.area.bottomOpacity })] }, item.id)))] }), (tickOverride ?? g.ticks).map((tick) => _jsx("line", { className: "hjm-chart__grid", x1: g.plot.left, x2: g.plot.right, y1: g.y(tick), y2: g.y(tick) }, tick)), showAxis || valueAxis ? (tickOverride ?? g.ticks).map((tick) => _jsx("text", { className: "hjm-chart__label", x: g.plot.left - 6, y: g.y(tick), dominantBaseline: "middle", textAnchor: "end", children: formatValue(tick) }, `t${tick}`)) : null, isChartNumber(reference) ? (_jsx("line", { className: "hjm-chart__reference", x1: g.plot.left, x2: g.plot.right, y1: g.y(reference), y2: g.y(reference), strokeDasharray: chartRecipe.reference.dash.join(" ") })) : null, series.map((item, s) => {
                                 const color = colorOf(item, s), segments = splitSegments(g.plots[s]);
                                 const lower = g.lower?.[s];
-                                return (_jsxs("g", { "data-series": item.id, children: [showArea || stacked ? segments.map((segment, i) => (_jsx("path", { className: "hjm-chart__area", d: areaPath(segment, g.plot.bottom, curve, lower ? segment.map((p) => lower[p.index]) : undefined), fill: `url(#${id}-area-${s})` }, `a${i}`))) : null, segments.map((segment, i) => (_jsx("path", { className: "hjm-chart__line", d: linePath(segment, curve), stroke: color, strokeWidth: chartRecipe.line.strokeWidth, fill: "none", strokeLinejoin: "round", strokeLinecap: "round" }, `l${i}`))), segments.filter((segment) => segment.length === 1).map((segment) => (_jsx("circle", { cx: segment[0].x, cy: segment[0].y, r: 3, fill: color }, `d${segment[0].index}`)))] }, item.id));
+                                return (_jsxs("g", { "data-series": item.id, children: [showArea || stacked ? segments.map((segment, i) => (_jsx(MotionLinePath, { animate: animateChanges, points: segment, floor: g.plot.bottom, curve: curve, lower: lower ? segment.map((p) => lower[p.index]) : undefined, className: "hjm-chart__area", fill: `url(#${id}-area-${s})` }, `a${i}`))) : null, segments.map((segment, i) => (_jsxs("g", { children: [_jsx(MotionLinePath, { animate: animateChanges, points: segment, curve: curve, className: "hjm-chart__line", stroke: scrubEmphasis && focus !== null ? "var(--hjm-chart-axis-label)" : color, strokeWidth: chartRecipe.line.strokeWidth, fill: "none", strokeLinejoin: "round", strokeLinecap: "round" }), scrubEmphasis && focus !== null && _jsx("g", { clipPath: `url(#${id}-scrub)`, children: _jsx(MotionLinePath, { animate: animateChanges, points: segment, curve: curve, className: "hjm-chart__line", stroke: color, strokeWidth: chartRecipe.line.strokeWidth, fill: "none", strokeLinejoin: "round", strokeLinecap: "round" }) })] }, `l${i}`))), segments.filter((segment) => segment.length === 1).map((segment) => (_jsx("circle", { cx: segment[0].x, cy: segment[0].y, r: 3, fill: color }, `d${segment[0].index}`)))] }, item.id));
                             }), focus !== null && g.xs[focus] !== undefined ? (_jsxs("g", { className: "hjm-chart__focus", children: [_jsx("line", { className: "hjm-chart__cursor", x1: g.xs[focus], x2: g.xs[focus], y1: g.plot.top - 4, y2: g.plot.bottom, strokeWidth: chartRecipe.cursor.strokeWidth, strokeDasharray: scrubbing ? undefined : chartRecipe.cursor.dash.join(" ") }), series.map((item, s) => {
                                         const p = g.plots[s][focus];
                                         if (!p)
@@ -202,7 +277,7 @@ function barPath(bar, vertical, negative, round) {
         return `M${n(x)},${n(y)}H${n(x + w - r)}Q${n(x + w)},${n(y)} ${n(x + w)},${n(y + r)}V${n(y + h - r)}Q${n(x + w)},${n(y + h)} ${n(x + w - r)},${n(y + h)}H${n(x)}Z`;
     return `M${n(x + w)},${n(y)}V${n(y + h)}H${n(x + r)}Q${n(x)},${n(y + h)} ${n(x)},${n(y + h - r)}V${n(y + r)}Q${n(x)},${n(y)} ${n(x + r)},${n(y)}Z`;
 }
-export function BarChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, width: fallbackWidth = 320, orientation = "vertical", layout = "grouped", domain, showAxis = false, showValues = false, className, layoutStyle, ...focusProps }) {
+export function BarChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, width: fallbackWidth = 320, orientation = "vertical", layout = "grouped", domain, showAxis = false, showValues = false, animateChanges = false, className, layoutStyle, ...focusProps }) {
     validateChartSeries(categories, series);
     const colorOf = useSeriesColor(), id = useSvgId(), descriptionId = `${id}-description`;
     const [measure, width] = useMeasuredWidth(fallbackWidth);
@@ -210,11 +285,15 @@ export function BarChart({ categories, series, accessibilityLabel, formatValue, 
     // Horizontal bars grow with the category count so labels never overlap (same rule as Native).
     const resolvedHeight = height ?? (vertical ? chartRecipe.heights.regular : Math.max(chartRecipe.heights.compact, categories.length * 36 + spacing.lg));
     const available = useMemo(() => observedIndices(series), [series]);
-    const { focus, scrubbing, set } = useFocus(focusProps, null);
+    const { focus, scrubbing, set } = useFocus(focusProps, null, categories);
     const insets = vertical
         ? (showAxis ? chartRecipe.insets.axis : { ...chartRecipe.insets.plot, bottom: spacing.lg })
         : { top: spacing.xs, right: showValues ? 48 : spacing.sm, bottom: spacing.xs, left: 72 };
     const g = useMemo(() => resolveBarGeometry({ categories, series, width, height: resolvedHeight, insets, orientation, layout, ...(domain ? { domain } : {}) }), [categories, series, width, resolvedHeight, insets, orientation, layout, domain]);
+    const categoryKeys = useMemo(() => {
+        const occurrences = new Map();
+        return categories.map(label => { const occurrence = occurrences.get(label) ?? 0; occurrences.set(label, occurrence + 1); return JSON.stringify([label, occurrence]); });
+    }, [categories]);
     // Only the outermost segment of each stack (per sign) gets rounded corners.
     const outer = useMemo(() => {
         if (layout !== "stacked")
@@ -254,7 +333,7 @@ export function BarChart({ categories, series, accessibilityLabel, formatValue, 
         : null;
     return (_jsxs("div", { ref: measure, className: classNames("hjm-chart", "hjm-chart--bar", className), style: { ...chromeStyle, ...layoutStyle }, "data-orientation": orientation, "data-scrubbing": scrubbing || undefined, children: [_jsxs("div", { className: "hjm-chart__plot", role: "slider", tabIndex: 0, "aria-label": accessibilityLabel, "aria-describedby": descriptionId, "aria-orientation": vertical ? "horizontal" : "vertical", "aria-valuemin": 0, "aria-valuemax": Math.max(0, categories.length - 1), "aria-valuenow": focus ?? 0, "aria-valuetext": focus === null ? accessibilityLabel : valueText(categories, series, focus, formatValue, missingLabel), style: { blockSize: resolvedHeight }, onKeyDown: onKeyDown, ...handlers, children: [_jsxs("svg", { width: width, height: resolvedHeight, viewBox: `0 0 ${width} ${resolvedHeight}`, "aria-hidden": "true", focusable: "false", children: [g.ticks.map((tick) => vertical
                                 ? _jsx("line", { className: "hjm-chart__grid", x1: g.plot.left, x2: g.plot.right, y1: g.value(tick), y2: g.value(tick) }, tick)
-                                : _jsx("line", { className: "hjm-chart__grid", y1: g.plot.top, y2: g.plot.bottom, x1: g.value(tick), x2: g.value(tick) }, tick)), showAxis && vertical ? g.ticks.map((tick) => _jsx("text", { className: "hjm-chart__label", x: g.plot.left - 6, y: g.value(tick), dominantBaseline: "middle", textAnchor: "end", children: formatValue(tick) }, `t${tick}`)) : null, g.bars.map((bar) => (_jsx("path", { className: "hjm-chart__bar", "data-index": bar.index, d: barPath(bar, vertical, bar.value < 0, outer ? outer.has(`${bar.seriesIndex}-${bar.index}`) : true), fill: colorOf(series[bar.seriesIndex], bar.seriesIndex), opacity: focus === null || focus === bar.index ? 1 : chartRecipe.bar.restOpacity }, `${bar.seriesIndex}-${bar.index}`))), showValues && layout === "grouped" ? g.bars.map((bar) => (_jsx("text", { className: "hjm-chart__label hjm-chart__value", x: vertical ? bar.x + bar.width / 2 : bar.x + bar.width + 4, y: vertical ? bar.y - 4 : bar.y + bar.height / 2, dominantBaseline: vertical ? undefined : "middle", textAnchor: vertical ? "middle" : "start", children: formatValue(bar.value) }, `v${bar.seriesIndex}-${bar.index}`))) : null, totals ? totals.map((total, i) => {
+                                : _jsx("line", { className: "hjm-chart__grid", y1: g.plot.top, y2: g.plot.bottom, x1: g.value(tick), x2: g.value(tick) }, tick)), showAxis && vertical ? g.ticks.map((tick) => _jsx("text", { className: "hjm-chart__label", x: g.plot.left - 6, y: g.value(tick), dominantBaseline: "middle", textAnchor: "end", children: formatValue(tick) }, `t${tick}`)) : null, g.bars.map((bar) => (_jsx(MotionBar, { bar: bar, animate: animateChanges && g.bars.length <= 200, vertical: vertical, rounded: outer ? outer.has(`${bar.seriesIndex}-${bar.index}`) : true, className: "hjm-chart__bar", "data-index": bar.index, fill: colorOf(series[bar.seriesIndex], bar.seriesIndex), opacity: focus === null || focus === bar.index ? 1 : chartRecipe.bar.restOpacity }, `${series[bar.seriesIndex].id}-${categoryKeys[bar.index]}`))), showValues && layout === "grouped" ? g.bars.map((bar) => (_jsx("text", { className: "hjm-chart__label hjm-chart__value", x: vertical ? bar.x + bar.width / 2 : bar.x + bar.width + 4, y: vertical ? bar.y - 4 : bar.y + bar.height / 2, dominantBaseline: vertical ? undefined : "middle", textAnchor: vertical ? "middle" : "start", children: formatValue(bar.value) }, `v${bar.seriesIndex}-${bar.index}`))) : null, totals ? totals.map((total, i) => {
                                 if (!available.includes(i))
                                     return null;
                                 const end = g.value(Math.max(0, ...stackValues(series).map((row) => row[i]?.[1] ?? 0)));

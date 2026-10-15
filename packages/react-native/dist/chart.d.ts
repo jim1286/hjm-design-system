@@ -36,8 +36,12 @@ export type LineChartProps = Readonly<{
     /** Overrides grid/label ticks (rank charts: [1, 5, 10]). */
     ticks?: readonly number[];
     cursorLabel?: (index: number) => string;
+    /** Morph actual data changes; reduced motion snaps immediately. */
+    animateChanges?: boolean;
+    /** Keep the chosen side in series color; mute the other side. */
+    scrubEmphasis?: "before" | "after";
 } & FocusProps>;
-export declare function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, curve, area, stacked, invert, domain, includeZero, referenceValue, extremes, showAxis, valueAxis, ticks: tickOverride, cursorLabel, ...focusProps }: LineChartProps): import("react").JSX.Element;
+export declare function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, curve, area, stacked, invert, domain, includeZero, referenceValue, extremes, showAxis, valueAxis, ticks: tickOverride, cursorLabel, animateChanges, scrubEmphasis, ...focusProps }: LineChartProps): import("react").JSX.Element;
 export type BarChartProps = Readonly<{
     categories: readonly string[];
     series: readonly ChartSeries[];
@@ -50,8 +54,9 @@ export type BarChartProps = Readonly<{
     domain?: readonly [number, number];
     showAxis?: boolean;
     showValues?: boolean;
+    animateChanges?: boolean;
 } & FocusProps>;
-export declare function BarChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, orientation, layout, domain, showAxis, showValues, ...focusProps }: BarChartProps): import("react").JSX.Element;
+export declare function BarChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, orientation, layout, domain, showAxis, showValues, animateChanges, ...focusProps }: BarChartProps): import("react").JSX.Element;
 export type ChartLegendItem = Readonly<{
     id: string;
     label: string;

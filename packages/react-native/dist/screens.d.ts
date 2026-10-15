@@ -1,3 +1,4 @@
+import { type ComposerLengthFeedback } from "@hjmds/design-contracts/communication";
 import { type DesignProfileScreenPresentation } from "@hjmds/design-contracts/design-profile-layout";
 import type { ReactionPickerProps } from "./reaction-picker.js";
 import { type Ref, type ReactNode } from "react";
@@ -63,6 +64,8 @@ export type ChatScreenProps = Omit<ScreenLayoutProps, "footer"> & Readonly<{
 export declare function ChatScreen({ composer, scroll, ...props }: ChatScreenProps): import("react").JSX.Element;
 export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCount"> & Readonly<{
     maxLength?: number;
+    /** Opt-in count/ring appears only near the actual maxLength; never trims drafts. */
+    lengthFeedback?: ComposerLengthFeedback;
     sendDisabled?: boolean;
     additionalContent?: boolean;
     leadingAction?: ReactNode;
@@ -93,7 +96,7 @@ export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCo
     }>)[];
     onRemoveAttachment?: (id: string) => void;
 }>;
-export declare function MessageComposer({ value, label, sendLabel, placeholder, description, error, invalid, submitMode, onBlur, disabled, pending, onValueChange, onSend, maxLength, sendDisabled, additionalContent, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation, attachmentAction, attachments, onRemoveAttachment }: MessageComposerProps): import("react").JSX.Element;
+export declare function MessageComposer({ value, label, sendLabel, placeholder, description, error, invalid, submitMode, onBlur, disabled, pending, onValueChange, onSend, maxLength, lengthFeedback, sendDisabled, additionalContent, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation, attachmentAction, attachments, onRemoveAttachment }: MessageComposerProps): import("react").JSX.Element;
 export type ChatMessageProps = ChatMessageDescriptor & Readonly<{
     children: ReactNode;
     interactiveContent?: boolean;

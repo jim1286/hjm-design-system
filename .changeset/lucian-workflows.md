@@ -11,3 +11,9 @@ Add independent controlled PieChart category exclusion with real totals, recalcu
 Add SplitAction, AccountSwitcher, PasswordRulesField and PricingChoice compositions with controlled selections, actual async callbacks, failure recovery and product-owned password rules and billing contracts.
 
 Add MediaTransport with real engine-controlled play/pause/seek, matching Web/Native morphing controls, unknown-duration handling, pending request guards and failure recovery. Keep SVG frame updates outside React rendering.
+
+Add TransferTask and StreamingAnswer compositions driven by actual transfer observations, explicit stream completion, confirmed cancellation and retained partial output.
+
+Add BezierEditor, Web ShortcutRecorder, FollowProfileCard, EventAttendanceCard, ExpandableSearch, ReplyMessage/ReplyComposer and ToggleFeedbackButton with product-owned adapters, request guards and failure recovery.
+
+Add Button completion sizing, MessageComposer near-limit feedback, continuously observed Tabs pager position, BarChart geometry transitions and LineChart transitions/scrub emphasis. Preserve existing selection contracts and motion cancellation without React frame renders.

@@ -4,7 +4,7 @@
 
 ## @hjmds/react
 
-고유 공개 컴포넌트 및 provider 이름 190개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 200개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -26,6 +26,7 @@
 | AvatarGroup | Avatar | companion-or-alternative | root, ./display |
 | Badge | Badge | canonical | root, ./display |
 | BarChart | Chart | companion-or-alternative | ./chart |
+| BezierEditor | 별도 보조 기능 | supplemental | ./authoring-tools |
 | BottomCTA | BottomCTA | canonical | root, ./bottom-cta |
 | BottomInfo | BottomInfo | canonical | root, ./bottom-info |
 | BottomNavigation | BottomNavigation | canonical | root, ./navigation |
@@ -70,12 +71,15 @@
 | EditorScreen | 별도 보조 기능 | supplemental | ./screen-flows |
 | EffectSurface | 별도 보조 기능 | supplemental | ./effect-surface |
 | EmptyState | EmptyState | canonical | root, ./feedback |
+| EventAttendanceCard | 별도 보조 기능 | supplemental | ./social-compositions |
+| ExpandableSearch | 별도 보조 기능 | supplemental | ./communication |
 | Field | Field | canonical | root, ./forms |
 | FieldGroup | Field | optional-extension | ./field-group |
 | FilePicker | FilePicker | canonical | root, ./file-picker, ./forms |
 | FilterRecovery | 별도 보조 기능 | supplemental | ./collection-editing |
 | FloatingActionButton | FloatingActionButton | canonical | root, ./floating-action-button |
 | FolderPreview | Collapsible | optional-extension | ./folder-preview |
+| FollowProfileCard | 별도 보조 기능 | supplemental | ./social-compositions |
 | Form | Form | canonical | root, ./forms |
 | GravityLetters | Text | optional-extension | ./gravity-letters |
 | Grid | Grid | canonical | root, ./layout |
@@ -137,6 +141,8 @@
 | Rating | 별도 보조 기능 | supplemental | ./rating |
 | ReactionPicker | Button | optional-extension | ./reaction-picker |
 | RepeatableFieldGroup | 별도 보조 기능 | supplemental | ./collection-editing |
+| ReplyComposer | 별도 보조 기능 | supplemental | ./communication |
+| ReplyMessage | 별도 보조 기능 | supplemental | ./communication |
 | Result | Result | canonical | root, ./feedback |
 | SavedItemsScreen | 별도 보조 기능 | supplemental | ./saved-items |
 | ScatterChart | Chart | companion-or-alternative | ./chart |
@@ -150,6 +156,7 @@
 | SelectionActionBar | 별도 보조 기능 | supplemental | ./collection-editing |
 | SettingsScreen | 별도 보조 기능 | supplemental | ./screens |
 | Sheet | Sheet | canonical | root, ./overlays |
+| ShortcutRecorder | 별도 보조 기능 | supplemental | ./authoring-tools |
 | Sidebar | Sidebar | canonical | root, ./sidebar |
 | SidePanel | SidePanel | canonical | root, ./side-panel |
 | Skeleton | Skeleton | canonical | root, ./feedback |
@@ -166,6 +173,7 @@
 | StatusText | Text | companion-or-alternative | root, ./status-text |
 | StepPlayer | Steps | optional-extension | ./step-player |
 | Steps | Steps | canonical | root, ./navigation, ./steps |
+| StreamingAnswer | 별도 보조 기능 | supplemental | ./streaming-answer |
 | Surface | Surface | canonical | root, ./layout |
 | SwipeActions | 별도 보조 기능 | supplemental | ./swipe-actions |
 | Switch | Switch | canonical | root, ./selection |
@@ -186,12 +194,14 @@
 | Timeline | Timeline | canonical | root, ./display |
 | Toast | Toast | canonical | root, ./toast |
 | ToastProvider | Toast | companion-or-alternative | root, ./toast |
+| ToggleFeedbackButton | 별도 보조 기능 | supplemental | ./toggle-feedback |
 | ToggleGroup | ToggleGroup | canonical | root, ./toggle-group |
 | Tooltip | Tooltip | canonical | root, ./overlays |
 | Top | Top | canonical | root, ./top |
 | TopBar | TopBar | canonical | root, ./top-bar |
 | Tour | Tour | canonical | root, ./tour |
 | TransferList | TransferList | canonical | root, ./transfer-list |
+| TransferTask | 별도 보조 기능 | supplemental | ./transfer-task |
 | Tree | Tree | canonical | root, ./tree |
 | UploadItem | UploadItem | canonical | root, ./display, ./upload-item |
 | VirtualList | VirtualList | canonical | ./virtual-list |
@@ -201,7 +211,7 @@
 
 ## @hjmds/react-native
 
-고유 공개 컴포넌트 및 provider 이름 177개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 186개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -220,6 +230,7 @@
 | Avatar | Avatar | canonical | root, ./data-display |
 | Badge | Badge | canonical | root, ./data-display |
 | BarChart | Chart | companion-or-alternative | ./chart |
+| BezierEditor | 별도 보조 기능 | supplemental | ./authoring-tools |
 | BottomCTA | BottomCTA | canonical | root, ./actions, ./bottom-cta |
 | BottomInfo | BottomInfo | canonical | root, ./bottom-info |
 | BottomNavigation | BottomNavigation | canonical | root, ./navigation, ./top-bar |
@@ -259,12 +270,15 @@
 | EditorScreen | 별도 보조 기능 | supplemental | ./screen-flows |
 | EffectSurface | 별도 보조 기능 | supplemental | ./effect-surface |
 | EmptyState | EmptyState | canonical | root, ./feedback |
+| EventAttendanceCard | 별도 보조 기능 | supplemental | ./social-compositions |
+| ExpandableSearch | 별도 보조 기능 | supplemental | ./communication |
 | Field | Field | canonical | root, ./forms |
 | FieldGroup | Field | optional-extension | ./field-group |
 | FilePicker | FilePicker | canonical | root, ./file-picker, ./inputs |
 | FilterRecovery | 별도 보조 기능 | supplemental | ./collection-editing |
 | FloatingActionButton | FloatingActionButton | canonical | root, ./floating-action-button |
 | FolderPreview | Collapsible | optional-extension | ./folder-preview |
+| FollowProfileCard | 별도 보조 기능 | supplemental | ./social-compositions |
 | Form | Form | canonical | root, ./forms |
 | GestureSheet | Sheet | optional-extension | ./sheet-gesture |
 | GestureSheetInput | Field | optional-extension | ./sheet-gesture |
@@ -329,6 +343,8 @@
 | Rating | 별도 보조 기능 | supplemental | ./rating |
 | ReactionPicker | Button | optional-extension | ./reaction-picker |
 | RepeatableFieldGroup | 별도 보조 기능 | supplemental | ./collection-editing |
+| ReplyComposer | 별도 보조 기능 | supplemental | ./communication |
+| ReplyMessage | 별도 보조 기능 | supplemental | ./communication |
 | Result | Result | canonical | root, ./feedback |
 | SavedItemsScreen | 별도 보조 기능 | supplemental | ./saved-items |
 | ScatterChart | Chart | companion-or-alternative | ./chart |
@@ -356,6 +372,7 @@
 | StatusText | Text | companion-or-alternative | root, ./status-text |
 | StepPlayer | Steps | optional-extension | ./step-player |
 | Steps | Steps | canonical | root, ./steps |
+| StreamingAnswer | 별도 보조 기능 | supplemental | ./streaming-answer |
 | Surface | Surface | canonical | root, ./primitives |
 | SwipeActions | 별도 보조 기능 | supplemental | ./swipe-actions |
 | Switch | Switch | canonical | root, ./inputs |
@@ -374,11 +391,13 @@
 | Timeline | Timeline | canonical | root, ./data-display |
 | Toast | Toast | canonical | root, ./feedback |
 | ToastRegion | Toast | companion-or-alternative | root, ./feedback |
+| ToggleFeedbackButton | 별도 보조 기능 | supplemental | ./toggle-feedback |
 | ToggleGroup | ToggleGroup | canonical | root, ./toggle-group |
 | Top | Top | canonical | root, ./top |
 | TopBar | TopBar | canonical | root, ./navigation, ./top-bar |
 | TopBarAction | TopBar | companion-or-alternative | root, ./navigation, ./top-bar |
 | TransferList | TransferList | canonical | root, ./transfer-list |
+| TransferTask | 별도 보조 기능 | supplemental | ./transfer-task |
 | UploadItem | UploadItem | canonical | root, ./upload-item |
 | VirtualList | VirtualList | canonical | ./virtual-list |
 | VoiceNote | Asset | optional-extension | ./voice-note |

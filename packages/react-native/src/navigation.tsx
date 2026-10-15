@@ -46,6 +46,7 @@ import {
   spacing,
 } from "@hjmds/design-contracts/foundations";
 import {
+  resolveSwipeTabIndicator, type TabSwipePosition,
   resolveTabIndicator,
   resolveTabsAppearance,
   sampleTabIndicator,
@@ -156,6 +157,8 @@ type TabsBaseProps<Value extends string> = Readonly<{
   mountPolicy?: TabsMountPolicy;
   panelMode?: TabsPanelMode;
   appearance?: TabsAppearance;
+  /** Fractional pager position; selection commits through onValueChange. Horizontal only. */
+  swipePosition?: TabSwipePosition;
   orientation?: TabsOrientation;
   direction?: TabsDirection;
   loop?: boolean;
@@ -266,6 +269,7 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
     mountPolicy = tabsBehaviorDefaults.mountPolicy,
     panelMode = tabsBehaviorDefaults.panelMode,
     appearance: suppliedAppearance,
+    swipePosition,
     orientation = tabsBehaviorDefaults.orientation,
     direction: directionProp,
     loop = tabsBehaviorDefaults.loop,
@@ -318,7 +322,7 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
   const [visited, setVisited] = useState<ReadonlySet<Value>>(() => new Set([selected]));
   const tabRefs = useRef(new Map<Value, View>());
   const appearance = resolveTabsAppearance(suppliedAppearance, theme.designProfile?.interactions.selectionMotion, orientation);
-  const movingIndicator = appearance !== "standard";
+  const movingIndicator = appearance !== "standard" || (orientation === "horizontal" && swipePosition !== undefined);
   const [indicatorRects, setIndicatorRects] = useState<Record<string, GooeyIndicatorRect>>({});
   const tabScroll = useRef<ScrollView>(null);
   const [tabViewport, setTabViewport] = useState(0);
@@ -332,6 +336,8 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
   }, [selected, destination, tabViewport, tabContentWidth, direction, orientation, scrollable, fitted]);
   const previousIndicator = useRef<{ value: Value; rect: GooeyIndicatorRect } | null>(null);
   const progress = useRef(new Animated.Value(1)).current;
+  const swipeX = useRef(new Animated.Value(0)).current;
+  const swipeWidth = useRef(new Animated.Value(0)).current;
   const [indicatorRecipe, setIndicatorRecipe] = useState<ReturnType<typeof resolveTabIndicator> | null>(null);
   const recipeRef = useRef<ReturnType<typeof resolveTabIndicator> | null>(null);
   const progressFrame = useRef(1);
@@ -345,7 +351,7 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
     const interrupted = interruptedIndicator.current;
     interruptedIndicator.current = null;
     progress.stopAnimation(); progress.setValue(1);
-    if (appearance === "standard" || !destination) {
+    if (swipePosition || appearance === "standard" || !destination) {
       previousIndicator.current = null; recipeRef.current = null; setIndicatorRecipe(null); return;
     }
     const previous = previousIndicator.current;
@@ -369,8 +375,19 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
       interruptedIndicator.current = recipeRef.current ? sampleTabIndicator(recipeRef.current, progressFrame.current) : null;
       stop(); subscription.remove();
     };
-  }, [appearance, selected, destination, environment.reducedMotion, progress]);
+  }, [appearance, selected, destination, environment.reducedMotion, progress, swipePosition]);
 
+
+  useLayoutEffect(() => {
+    if (!swipePosition || orientation !== "horizontal") return;
+    const place = (position = swipePosition.get()) => {
+      const rect = resolveSwipeTabIndicator(tabItems.map(item => indicatorRects[item.id]), position);
+      if (!rect) return;
+      swipeX.setValue(rect.x); swipeWidth.setValue(rect.width);
+    };
+    place();
+    return swipePosition.subscribe(place);
+  }, [swipePosition, indicatorRects, orientation, swipeX, swipeWidth, tabItems]);
   useEffect(() => {
     if (!controlled && !storedValueValid) setSelected(collectionFallback);
   }, [collectionFallback, controlled, setSelected, storedValueValid]);
@@ -456,11 +473,11 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
           },
         ]}
       >
-        {movingIndicator && indicatorRecipe ? <Animated.View pointerEvents="none" accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{
+        {movingIndicator && (indicatorRecipe || swipePosition) ? <Animated.View pointerEvents="none" accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{
           position: "absolute", bottom: 0, height: appearance === "gooey" ? 6 : tabsRecipe.indicatorHeight, borderRadius: theme.tokens.radius.full,
           backgroundColor: resolveColorReference(tabsRecipe.colors.indicator, theme.palette),
-          left: progress.interpolate({ inputRange: [...indicatorRecipe.input], outputRange: [...indicatorRecipe.x] }),
-          width: progress.interpolate({ inputRange: [...indicatorRecipe.input], outputRange: [...indicatorRecipe.width] }),
+          left: swipePosition ? swipeX : progress.interpolate({ inputRange: [...indicatorRecipe!.input], outputRange: [...indicatorRecipe!.x] }),
+          width: swipePosition ? swipeWidth : progress.interpolate({ inputRange: [...indicatorRecipe!.input], outputRange: [...indicatorRecipe!.width] }),
         }} /> : null}
         {tabItems.map((item) => {
           const active = selected === item.id;
@@ -587,7 +604,7 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
                   <Text align="center" tone="brand" variant="caption">{item.badge}</Text>
                 </View>
               ) : null}
-              {active && (!movingIndicator || !indicatorRecipe) ? (
+              {active && (!movingIndicator || (!indicatorRecipe && !swipePosition)) ? (
                 <View
                   accessibilityElementsHidden
                   accessible={false}

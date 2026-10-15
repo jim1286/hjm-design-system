@@ -125,3 +125,42 @@ import { Button } from "@hjmds/react-native/actions";
 
 2026-10-10 사용자 요청으로 선택 시 추가되는 테두리를 제거했다. `selected` 접근성 상태와
 contentBrand 글자·아이콘 색은 유지하며 키보드 focus outline은 선택과 별도로 유지한다.
+
+## 저장 확정 라벨과 프레임 예약 (미게시 · 2026-10-15)
+
+`completion={{ confirmed, label }}`는 실제 mutation의 확정 결과를 표시한다. 두 라벨의
+공간을 처음부터 예약하므로 `children`을 저장 중/완료 문구로 교체하지 않는다.
+`confirmed`는 현재 초안과 마지막 서버 확정 값이 같은지 제품이 판단해 전달한다.
+`loading`이 true이면 확정 라벨보다 중앙 로딩을 우선한다. 타이머로 완료로 바꾸지 않는다.
+버튼은 별도 live region을 만들지 않으므로 결과 안내가 필요하면 기존 결과 영역 하나로 알린다.
+
+```tsx
+// Web
+<Button loading={feedback.pending} disabled={!feedback.canSubmit}
+  completion={{ confirmed: feedback.currentSaved, label: t("saved") }} onClick={save}>
+  {t("save")}
+</Button>
+```
+
+```tsx
+// Native
+<Button loading={feedback.pending} disabled={!feedback.canSubmit}
+  completion={{ confirmed: feedback.currentSaved, label: t("saved") }} onPress={save}>
+  {t("save")}
+</Button>
+```
+
+이 옵션의 children은 문자열·숫자 또는 그것들만의 배열이어야 한다. 아이콘은 기존
+leading/trailing을 쓴다. 임의 JSX를 숨겨 복제하면 내부 상태·포커스가 중복되므로 허용하지
+않는다. 옵션 없는 Button의 기존 JSX children 계약은 유지한다.
+Web은 두 숨김 라벨을 같은 grid 영역에 놓아 두 라벨의 최대 고유 폭·높이를 예약한다.
+Native는 두 숨김 라벨을 같은 flow에 항상 두어 Yoga의 최대 고유 폭을 사용하고,
+현재 recipe 행 높이×줄 상한을 초기 높이로 예약한다. 각 라벨의 native layout 높이가
+더 크면 최댓값을 반영한다. 따라서 짧은 라벨만 있어도 Native slot은 기존 줄 상한만큼
+공간을 예약할 수 있다. 폭·글꼴·라벨이 바뀌면 두 라벨을 다시 측정한다.
+상태만 바뀌는 동안에는 같은 라벨 쌍과 아이콘을 유지해야 프레임이 고정된다.
+
+Button의 loading은 표시와 UI 재실행을 막는 기능이다. 같은 프레임의 중복 실행·늦은 응답
+무효화는 기존 action-session 또는 제품 mutation이 맡는다. 저장 실패 뒤에는 입력과
+마지막 확정 값을 유지한다. [버튼 완료 피드백](../compositions/action-feedback.md)의
+`resolveSaveFeedback` 조합을 사용한다.

@@ -3,7 +3,7 @@ import { type BottomNavigationActivation, type BottomNavigationConfiguration, ty
 import { type CollectionSource } from "@hjmds/design-contracts/components/collection";
 import type { LinkDestination } from "@hjmds/design-contracts/components/link";
 import { type LoadMoreDescriptor, type LoadMoreMode, type LoadMoreRequestHandler, type LoadMoreRequestOutcome, type LoadMoreRequestReason } from "@hjmds/design-contracts/components/load-more";
-import { type TabsAppearance } from "@hjmds/design-contracts/gooey-navigation";
+import { type TabSwipePosition, type TabsAppearance } from "@hjmds/design-contracts/gooey-navigation";
 import { type LoadMoreDensity, type MenuDensity, type TabSize, type TabsLayout, type TabsOverflow } from "@hjmds/design-contracts/recipes";
 import { type ReactElement, type ReactNode } from "react";
 import { type ModalProps, type PressableProps } from "react-native";
@@ -44,6 +44,8 @@ type TabsBaseProps<Value extends string> = Readonly<{
     mountPolicy?: TabsMountPolicy;
     panelMode?: TabsPanelMode;
     appearance?: TabsAppearance;
+    /** Fractional pager position; selection commits through onValueChange. Horizontal only. */
+    swipePosition?: TabSwipePosition;
     orientation?: TabsOrientation;
     direction?: TabsDirection;
     loop?: boolean;

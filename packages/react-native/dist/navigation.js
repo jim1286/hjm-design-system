@@ -5,7 +5,7 @@ import { resolveBottomNavigationActivation, resolveBottomNavigationConfiguration
 import { flattenCollectionItems, validateCollection, } from "@hjmds/design-contracts/components/collection";
 import { createLoadMoreController, validateLoadMoreDescriptor, } from "@hjmds/design-contracts/components/load-more";
 import { backdrop, easing, glyph, radius, spacing, } from "@hjmds/design-contracts/foundations";
-import { resolveTabIndicator, resolveTabsAppearance, sampleTabIndicator, } from "@hjmds/design-contracts/gooey-navigation";
+import { resolveSwipeTabIndicator, resolveTabIndicator, resolveTabsAppearance, sampleTabIndicator, } from "@hjmds/design-contracts/gooey-navigation";
 import { bottomNavigationRecipe, counterBadgeRecipe, loadMoreRecipe, menuRecipe, spinnerRecipe, tabsRecipe, topBarRecipe, } from "@hjmds/design-contracts/recipes";
 import { Fragment, forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState, } from "react";
 import { AccessibilityInfo, ActivityIndicator, Animated, AppState, Easing, Keyboard, Modal, Platform, Pressable, ScrollView, View, findNodeHandle, } from "react-native";
@@ -56,7 +56,7 @@ export function TabPanel(props) {
 }
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export function Tabs(props) {
-    const { id, label, items, value: valueProp, defaultValue, onValueChange, activationMode = tabsBehaviorDefaults.activationMode, mountPolicy = tabsBehaviorDefaults.mountPolicy, panelMode = tabsBehaviorDefaults.panelMode, appearance: suppliedAppearance, orientation = tabsBehaviorDefaults.orientation, direction: directionProp, loop = tabsBehaviorDefaults.loop, size = tabsRecipe.defaults.size, layout = tabsRecipe.defaults.layout, overflow = tabsRecipe.defaults.overflow, renderPanels = true, children, layoutStyle, } = props;
+    const { id, label, items, value: valueProp, defaultValue, onValueChange, activationMode = tabsBehaviorDefaults.activationMode, mountPolicy = tabsBehaviorDefaults.mountPolicy, panelMode = tabsBehaviorDefaults.panelMode, appearance: suppliedAppearance, swipePosition, orientation = tabsBehaviorDefaults.orientation, direction: directionProp, loop = tabsBehaviorDefaults.loop, size = tabsRecipe.defaults.size, layout = tabsRecipe.defaults.layout, overflow = tabsRecipe.defaults.overflow, renderPanels = true, children, layoutStyle, } = props;
     assertNoRemovedStyleProps("Tabs", props, ["style", "tabListStyle"]);
     if (!label.trim())
         throw new TypeError("Tabs label must not be empty");
@@ -103,7 +103,7 @@ export function Tabs(props) {
     const [visited, setVisited] = useState(() => new Set([selected]));
     const tabRefs = useRef(new Map());
     const appearance = resolveTabsAppearance(suppliedAppearance, theme.designProfile?.interactions.selectionMotion, orientation);
-    const movingIndicator = appearance !== "standard";
+    const movingIndicator = appearance !== "standard" || (orientation === "horizontal" && swipePosition !== undefined);
     const [indicatorRects, setIndicatorRects] = useState({});
     const tabScroll = useRef(null);
     const [tabViewport, setTabViewport] = useState(0);
@@ -118,6 +118,8 @@ export function Tabs(props) {
     }, [selected, destination, tabViewport, tabContentWidth, direction, orientation, scrollable, fitted]);
     const previousIndicator = useRef(null);
     const progress = useRef(new Animated.Value(1)).current;
+    const swipeX = useRef(new Animated.Value(0)).current;
+    const swipeWidth = useRef(new Animated.Value(0)).current;
     const [indicatorRecipe, setIndicatorRecipe] = useState(null);
     const recipeRef = useRef(null);
     const progressFrame = useRef(1);
@@ -132,7 +134,7 @@ export function Tabs(props) {
         interruptedIndicator.current = null;
         progress.stopAnimation();
         progress.setValue(1);
-        if (appearance === "standard" || !destination) {
+        if (swipePosition || appearance === "standard" || !destination) {
             previousIndicator.current = null;
             recipeRef.current = null;
             setIndicatorRecipe(null);
@@ -162,7 +164,20 @@ export function Tabs(props) {
             stop();
             subscription.remove();
         };
-    }, [appearance, selected, destination, environment.reducedMotion, progress]);
+    }, [appearance, selected, destination, environment.reducedMotion, progress, swipePosition]);
+    useLayoutEffect(() => {
+        if (!swipePosition || orientation !== "horizontal")
+            return;
+        const place = (position = swipePosition.get()) => {
+            const rect = resolveSwipeTabIndicator(tabItems.map(item => indicatorRects[item.id]), position);
+            if (!rect)
+                return;
+            swipeX.setValue(rect.x);
+            swipeWidth.setValue(rect.width);
+        };
+        place();
+        return swipePosition.subscribe(place);
+    }, [swipePosition, indicatorRects, orientation, swipeX, swipeWidth, tabItems]);
     useEffect(() => {
         if (!controlled && !storedValueValid)
             setSelected(collectionFallback);
@@ -234,11 +249,11 @@ export function Tabs(props) {
                         flexGrow: fitted ? 1 : 0,
                         flexDirection: orientation === "vertical" ? "column" : "row",
                     },
-                ], children: [movingIndicator && indicatorRecipe ? _jsx(Animated.View, { pointerEvents: "none", accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
+                ], children: [movingIndicator && (indicatorRecipe || swipePosition) ? _jsx(Animated.View, { pointerEvents: "none", accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
                             position: "absolute", bottom: 0, height: appearance === "gooey" ? 6 : tabsRecipe.indicatorHeight, borderRadius: theme.tokens.radius.full,
                             backgroundColor: resolveColorReference(tabsRecipe.colors.indicator, theme.palette),
-                            left: progress.interpolate({ inputRange: [...indicatorRecipe.input], outputRange: [...indicatorRecipe.x] }),
-                            width: progress.interpolate({ inputRange: [...indicatorRecipe.input], outputRange: [...indicatorRecipe.width] }),
+                            left: swipePosition ? swipeX : progress.interpolate({ inputRange: [...indicatorRecipe.input], outputRange: [...indicatorRecipe.x] }),
+                            width: swipePosition ? swipeWidth : progress.interpolate({ inputRange: [...indicatorRecipe.input], outputRange: [...indicatorRecipe.width] }),
                         } }) : null, tabItems.map((item) => {
                         const active = selected === item.id;
                         return (_jsxs(Pressable, { onLayout: orientation === "horizontal" ? event => {
@@ -323,7 +338,7 @@ export function Tabs(props) {
                                         backgroundColor: colors.bg,
                                         borderRadius: radius.full,
                                         paddingHorizontal: spacing.xs,
-                                    }, children: _jsx(Text, { align: "center", tone: "brand", variant: "caption", children: item.badge }) })) : null, active && (!movingIndicator || !indicatorRecipe) ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", style: {
+                                    }, children: _jsx(Text, { align: "center", tone: "brand", variant: "caption", children: item.badge }) })) : null, active && (!movingIndicator || (!indicatorRecipe && !swipePosition)) ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", style: {
                                         backgroundColor: resolveColorReference(tabsRecipe.colors.indicator, theme.palette),
                                         ...(orientation === "horizontal"
                                             ? {

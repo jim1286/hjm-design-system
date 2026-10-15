@@ -49,3 +49,19 @@ export function resolveGooeyIndicator(from: GooeyIndicatorRect, to: GooeyIndicat
   const right = Math.max(from.x + from.width, to.x + to.width);
   return { duration: 320, input: [0, 0.45, 1], x: [from.x, left, to.x], width: [from.width, right - left, to.width] } as const;
 }
+
+/** A pager publishes fractional item indexes without rendering React each frame.
+ * Selection and panel activation stay owned by value/onValueChange at settle. */
+export type TabSwipePosition = Readonly<{
+  get: () => number;
+  subscribe: (listener: (position: number) => void) => () => void;
+}>;
+
+export function resolveSwipeTabIndicator(rects: readonly (GooeyIndicatorRect | undefined)[], position: number): GooeyIndicatorRect | null {
+  if (!Number.isFinite(position) || rects.length === 0) return null;
+  const clamped = Math.max(0, Math.min(rects.length - 1, position));
+  const index = Math.floor(clamped), fraction = clamped - index;
+  const from = rects[index], to = rects[Math.min(index + 1, rects.length - 1)];
+  if (!from || !to) return null;
+  return { x: from.x + (to.x - from.x) * fraction, width: from.width + (to.width - from.width) * fraction };
+}

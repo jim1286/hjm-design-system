@@ -1,13 +1,14 @@
-import { useCallback, useId, useMemo, useRef, useState, type ReactNode } from "react";
-import { PanResponder, Pressable, Text as NativeText, View, type GestureResponderEvent, type LayoutChangeEvent } from "react-native";
-import Svg, { Circle, Defs, G, Line, LinearGradient, Path, Rect, Stop, Text as SvgText } from "react-native-svg";
+import { useCallback, useId, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { AppState, PanResponder, Pressable, Text as NativeText, View, type GestureResponderEvent, type LayoutChangeEvent } from "react-native";
+import Svg, { Circle, ClipPath, Defs, G, Line, LinearGradient, Path, Rect, Stop, Text as SvgText } from "react-native-svg";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { resolveDatavizSeriesColor } from "@hjmds/design-contracts/dataviz";
 import {
+  prepareChartLineMorph,
   areaPath, chartRecipe, describeChart, isChartNumber, linePath, nearestChartIndex, nearestScatterPoint, observedIndices,
   resolveBarGeometry, resolveLineGeometry, resolvePieGeometry, resolvePieVisibility, type PieVisibilitySummary, resolveRadarGeometry, resolveScatterGeometry, seriesExtremes,
   splitSegments, stepChartIndex, validateChartSeries,
-  type ChartBarLayout, type ChartCurve, type ChartOrientation, type ChartSeries, type ScatterDatum,
+  type ChartBar, type ChartBarLayout, type ChartCurve, type ChartOrientation, type ChartSeries, type ScatterDatum,
 } from "@hjmds/design-contracts/components/chart";
 import { spacing } from "@hjmds/design-contracts/foundations";
 import { Text } from "./primitives.js";
@@ -53,16 +54,20 @@ function useWidth(initial = 0): [number, (event: LayoutChangeEvent) => void] {
 }
 
 /** Controlled/uncontrolled focus with a separate transient scrub index. */
-function useFocus({ focusIndex, defaultFocusIndex = null, onFocusChange, holdOnRelease = false }: FocusProps, fallback: number | null) {
+function useFocus({ focusIndex, defaultFocusIndex = null, onFocusChange, holdOnRelease = false }: FocusProps, fallback: number | null, categories?: readonly string[]) {
+  const categoryKey = (index: number | null) => index === null || categories?.[index] === undefined ? null : JSON.stringify([categories[index], categories.slice(0, index).filter(value => value === categories[index]).length]);
+  const selectedKey = useRef<string | null>(categoryKey(defaultFocusIndex));
   const [own, setOwn] = useState<number | null>(defaultFocusIndex);
   const [scrub, setScrub] = useState<number | null>(null);
   const last = useRef<number | null>(null);
-  const settled = focusIndex !== undefined ? focusIndex : own;
+  const mapped = categories && selectedKey.current !== null ? categories.findIndex((_, index) => categoryKey(index) === selectedKey.current) : own;
+  const ownSelection = mapped === -1 ? null : mapped;
+  const settled = focusIndex !== undefined ? (categories && (focusIndex === null || categories[focusIndex] === undefined) ? null : focusIndex) : ownSelection;
   const focus = scrub ?? settled ?? fallback;
   const set = useCallback((index: number | null, scrubbing: boolean) => {
-    if (scrubbing) { setScrub(index); last.current = index; } else { setScrub(null); if (focusIndex === undefined) setOwn(index); }
+    if (scrubbing) { setScrub(index); last.current = index; } else { setScrub(null); if (focusIndex === undefined) { selectedKey.current = categoryKey(index); setOwn(index); } }
     onFocusChange?.(index, { scrubbing });
-  }, [focusIndex, onFocusChange]);
+  }, [focusIndex, onFocusChange, categories]);
   const release = useCallback(() => set(holdOnRelease ? last.current : null, false), [set, holdOnRelease]);
   return { focus, scrubbing: scrub !== null, set, release };
 }
@@ -102,6 +107,55 @@ function AxisLabels({ ticks, y, x, color, format }: { ticks: readonly number[]; 
   return <>{ticks.map(tick => <SvgText key={tick} x={x} y={y(tick) + 4} fontSize={10} fill={color} textAnchor="end">{format(tick)}</SvgText>)}</>;
 }
 
+// Paths/rectangles update their host attributes directly; values, axes and accessibility
+// always come from the latest real data. No per-frame React reconciliation.
+function MotionLinePath({ points, lower, floor, curve, animate, ...rest }: React.ComponentProps<typeof Path> & { points: readonly { x: number; y: number }[]; lower?: readonly { x: number; y: number }[] | undefined; floor?: number | undefined; curve: ChartCurve; animate: boolean }) {
+  const reducedMotion = useHjmNativeTheme().environment.reducedMotion;
+  const node = useRef<Readonly<{ setNativeProps(props: Readonly<Record<string, unknown>>): void }> | null>(null);
+  const previous = useRef<{ points: readonly { x: number; y: number }[]; lower?: readonly { x: number; y: number }[] | undefined; floor?: number | undefined } | null>(null);
+  const path = (p: readonly { x: number; y: number }[], base?: number, edge?: readonly { x: number; y: number }[]) => base === undefined ? linePath(p, curve) : areaPath(p, base, curve, edge);
+  const signature = JSON.stringify([points, lower, floor, curve]);
+  useLayoutEffect(() => {
+    const before = previous.current;
+    const target = { points, lower, floor };
+    previous.current = target;
+    // A bounded morph avoids multiplying frame work for dense historical datasets.
+    const morph = animate && !reducedMotion && AppState.currentState === "active" && before && points.length + before.points.length <= 1024 ? prepareChartLineMorph(before.points, points) : null;
+    if (!morph) { node.current?.setNativeProps({ d: path(points, floor, lower) }); return; }
+    const lowerMorph = before?.lower && lower ? prepareChartLineMorph(before.lower, lower) : null;
+    let frame = 0, start: number | undefined;
+    const paint = (t: number) => {
+      const current = t === 1 ? target : { points: morph(t), lower: lowerMorph?.(t) ?? lower, floor: floor === undefined ? undefined : (before?.floor ?? floor) + (floor - (before?.floor ?? floor)) * t };
+      previous.current = current;
+      const d = path(current.points, current.floor, current.lower); node.current?.setNativeProps({ d });
+    };
+    const tick = (now: number) => { start ??= now; const t = Math.min(1, (now - start) / 220); paint(1 - (1 - t) ** 3); if (t < 1) frame = requestAnimationFrame(tick); };
+    paint(0); frame = requestAnimationFrame(tick);
+    const subscription = AppState.addEventListener("change", state => { if (state !== "active") { cancelAnimationFrame(frame); paint(1); } });
+    return () => { cancelAnimationFrame(frame); subscription.remove(); };
+  }, [signature, animate, reducedMotion]);
+  return <Path {...rest} ref={node as React.Ref<React.ComponentRef<typeof Path>>} d={path(points, floor, lower)} />;
+}
+function MotionBar({ bar, animate, ...rest }: React.ComponentProps<typeof Rect> & { bar: ChartBar; animate: boolean; vertical?: boolean; rounded?: boolean }) {
+  const reducedMotion = useHjmNativeTheme().environment.reducedMotion;
+  const node = useRef<Readonly<{ setNativeProps(props: Readonly<Record<string, unknown>>): void }> | null>(null), previous = useRef<ChartBar | null>(null);
+  const signature = JSON.stringify(bar);
+  useLayoutEffect(() => {
+    const before = previous.current; previous.current = bar;
+    if (!animate || reducedMotion || !before || AppState.currentState !== "active") { node.current?.setNativeProps({ x: bar.x, y: bar.y, width: bar.width, height: bar.height }); return; }
+    let frame = 0, start: number | undefined;
+    const paint = (t: number) => {
+      const value = { ...bar, x: before.x + (bar.x - before.x) * t, y: before.y + (bar.y - before.y) * t, width: before.width + (bar.width - before.width) * t, height: before.height + (bar.height - before.height) * t };
+      previous.current = value; node.current?.setNativeProps({ x: value.x, y: value.y, width: value.width, height: value.height });
+    };
+    const tick = (now: number) => { start ??= now; const t = Math.min(1, (now - start) / 220); paint(1 - (1 - t) ** 3); if (t < 1) frame = requestAnimationFrame(tick); };
+    paint(0); frame = requestAnimationFrame(tick);
+    const subscription = AppState.addEventListener("change", state => { if (state !== "active") { cancelAnimationFrame(frame); paint(1); } });
+    return () => { cancelAnimationFrame(frame); subscription.remove(); };
+  }, [signature, animate, reducedMotion]);
+  return <Rect {...rest} ref={node as React.Ref<React.ComponentRef<typeof Rect>>} x={bar.x} y={bar.y} width={bar.width} height={bar.height} />;
+}
+
 // ---------------------------------------------------------------------------------------------
 // LineChart
 // ---------------------------------------------------------------------------------------------
@@ -127,13 +181,17 @@ export type LineChartProps = Readonly<{
   /** Overrides grid/label ticks (rank charts: [1, 5, 10]). */
   ticks?: readonly number[];
   cursorLabel?: (index: number) => string;
+  /** Morph actual data changes; reduced motion snaps immediately. */
+  animateChanges?: boolean;
+  /** Keep the chosen side in series color; mute the other side. */
+  scrubEmphasis?: "before" | "after";
 } & FocusProps>;
 
-export function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height = chartRecipe.heights.regular, curve = "linear", area, stacked = false, invert = false, domain, includeZero, referenceValue, extremes, showAxis = false, valueAxis = false, ticks: tickOverride, cursorLabel, ...focusProps }: LineChartProps) {
+export function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height = chartRecipe.heights.regular, curve = "linear", area, stacked = false, invert = false, domain, includeZero, referenceValue, extremes, showAxis = false, valueAxis = false, ticks: tickOverride, cursorLabel, animateChanges = false, scrubEmphasis, ...focusProps }: LineChartProps) {
   const palette = useChartPalette(), id = useId().replace(/[^a-zA-Z0-9]/g, "");
   const [width, onLayout] = useWidth();
   const available = useMemo(() => observedIndices(series), [series]);
-  const { focus, scrubbing, set, release } = useFocus(focusProps, available.at(-1) ?? null);
+  const { focus, scrubbing, set, release } = useFocus(focusProps, available.at(-1) ?? null, categories);
   const insets = showAxis || valueAxis ? chartRecipe.insets.axis : chartRecipe.insets.plot;
   const g = useMemo(() => width > 0 ? resolveLineGeometry({ categories, series, width, height, insets, invert, stacked, domain, includeZero }) : null, [categories, series, width, height, insets, invert, stacked, domain, includeZero]);
   const handlers = useScrub(x => g ? nearestChartIndex(g.xs, x, available) : null, index => set(index, true), release);
@@ -145,7 +203,7 @@ export function LineChart({ categories, series, accessibilityLabel, formatValue,
     accessibilityActions={[{ name: "increment" }, { name: "decrement" }]} onAccessibilityAction={event => set(stepChartIndex(available, focus, event.nativeEvent.actionName === "increment" ? 1 : -1), false)}
     onLayout={onLayout} style={{ height }} {...handlers}>
     {g && <Svg width={width} height={height} accessible={false}>
-      <Defs>{series.map((item, s) => <LinearGradient key={item.id} id={`hjmArea${id}${s}`} x1="0" y1="0" x2="0" y2="1"><Stop offset="0" stopColor={palette.seriesColor(item, s)} stopOpacity={chartRecipe.area.topOpacity} /><Stop offset="1" stopColor={palette.seriesColor(item, s)} stopOpacity={chartRecipe.area.bottomOpacity} /></LinearGradient>)}</Defs>
+      <Defs>{scrubEmphasis && <ClipPath id={`hjmScrub${id}`}><Rect x={scrubEmphasis === "after" && focus !== null ? g.xs[focus] ?? g.plot.left : g.plot.left} y={0} width={focus === null ? width : scrubEmphasis === "after" ? g.plot.right - (g.xs[focus] ?? g.plot.left) : (g.xs[focus] ?? g.plot.right) - g.plot.left} height={height} /></ClipPath>}{series.map((item, s) => <LinearGradient key={item.id} id={`hjmArea${id}${s}`} x1="0" y1="0" x2="0" y2="1"><Stop offset="0" stopColor={palette.seriesColor(item, s)} stopOpacity={chartRecipe.area.topOpacity} /><Stop offset="1" stopColor={palette.seriesColor(item, s)} stopOpacity={chartRecipe.area.bottomOpacity} /></LinearGradient>)}</Defs>
       {(tickOverride ?? g.ticks).map(tick => <Line key={tick} x1={g.plot.left} x2={g.plot.right} y1={g.y(tick)} y2={g.y(tick)} stroke={palette.grid} strokeWidth={chartRecipe.chrome.gridWidth} />)}
       {(showAxis || valueAxis) && <AxisLabels ticks={tickOverride ?? g.ticks} y={g.y} x={g.plot.left - 6} color={palette.label} format={formatValue} />}
       {isChartNumber(reference) && <Line x1={g.plot.left} x2={g.plot.right} y1={g.y(reference)} y2={g.y(reference)} stroke={palette.label} strokeDasharray={[...chartRecipe.reference.dash]} strokeWidth={1} />}
@@ -153,8 +211,11 @@ export function LineChart({ categories, series, accessibilityLabel, formatValue,
         const color = palette.seriesColor(item, s), segments = splitSegments(g.plots[s]!);
         const lowerSegments = g.lower ? splitSegments(g.lower[s]!) : null;
         return <G key={item.id}>
-          {(showArea || stacked) && segments.map((segment, i) => <Path key={`a${i}`} d={areaPath(segment, g.plot.bottom, curve, lowerSegments?.[i])} fill={`url(#hjmArea${id}${s})`} />)}
-          {segments.map((segment, i) => <Path key={`l${i}`} d={linePath(segment, curve)} stroke={color} strokeWidth={chartRecipe.line.strokeWidth} fill="none" strokeLinejoin="round" strokeLinecap="round" />)}
+          {(showArea || stacked) && segments.map((segment, i) => <MotionLinePath animate={animateChanges} points={segment} floor={g.plot.bottom} curve={curve} lower={lowerSegments?.[i]} key={`a${i}`} fill={`url(#hjmArea${id}${s})`} />)}
+          {segments.map((segment, i) => <G key={`l${i}`}>
+            <MotionLinePath animate={animateChanges} points={segment} curve={curve} stroke={scrubEmphasis && focus !== null ? palette.label : color} strokeWidth={chartRecipe.line.strokeWidth} fill="none" strokeLinejoin="round" strokeLinecap="round" />
+            {scrubEmphasis && focus !== null && <G clipPath={`url(#hjmScrub${id})`}><MotionLinePath animate={animateChanges} points={segment} curve={curve} stroke={color} strokeWidth={chartRecipe.line.strokeWidth} fill="none" strokeLinejoin="round" strokeLinecap="round" /></G>}
+          </G>)}
           {segments.filter(segment => segment.length === 1).map(segment => <Circle key={`d${segment[0]!.index}`} cx={segment[0]!.x} cy={segment[0]!.y} r={3} fill={color} />)}
         </G>;
       })}
@@ -194,20 +255,25 @@ export type BarChartProps = Readonly<{
   domain?: readonly [number, number];
   showAxis?: boolean;
   showValues?: boolean;
+  animateChanges?: boolean;
 } & FocusProps>;
 
-export function BarChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, orientation = "vertical", layout = "grouped", domain, showAxis = false, showValues = false, ...focusProps }: BarChartProps) {
+export function BarChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, orientation = "vertical", layout = "grouped", domain, showAxis = false, showValues = false, animateChanges = false, ...focusProps }: BarChartProps) {
   const palette = useChartPalette();
   const [width, onLayout] = useWidth();
   const vertical = orientation === "vertical";
   // Horizontal bars grow with the category count so labels never overlap (gifted-charts horizontal mode).
   const resolvedHeight = height ?? (vertical ? chartRecipe.heights.regular : Math.max(chartRecipe.heights.compact, categories.length * 36 + spacing.lg));
   const available = useMemo(() => observedIndices(series), [series]);
-  const { focus, scrubbing, set } = useFocus(focusProps, null);
+  const { focus, scrubbing, set } = useFocus(focusProps, null, categories);
   const insets = vertical
     ? (showAxis ? chartRecipe.insets.axis : { ...chartRecipe.insets.plot, bottom: spacing.lg })
     : { top: spacing.xs, right: showValues ? 48 : spacing.sm, bottom: spacing.xs, left: 72 };
   const g = useMemo(() => width > 0 ? resolveBarGeometry({ categories, series, width, height: resolvedHeight, insets, orientation, layout, domain }) : null, [categories, series, width, resolvedHeight, insets, orientation, layout, domain]);
+  const categoryKeys = useMemo(() => {
+    const occurrences = new Map<string, number>();
+    return categories.map(label => { const occurrence = occurrences.get(label) ?? 0; occurrences.set(label, occurrence + 1); return JSON.stringify([label, occurrence]); });
+  }, [categories]);
   const handlers = useScrub((x, y) => g ? nearestChartIndex(g.centers, vertical ? x : y, available) : null, index => set(index, true), () => set(focus, false));
   return <View accessible accessibilityRole="adjustable" accessibilityLabel={accessibilityLabel} accessibilityHint={describeChart(categories, series, formatValue, missingLabel)}
     accessibilityValue={{ text: focus === null ? "" : `${categories[focus]} ${series.map(item => { const v = item.values[focus]; return isChartNumber(v) ? formatValue(v) : missingLabel; }).join(", ")}` }}
@@ -218,7 +284,7 @@ export function BarChart({ categories, series, accessibilityLabel, formatValue, 
         ? <Line key={tick} x1={g.plot.left} x2={g.plot.right} y1={g.value(tick)} y2={g.value(tick)} stroke={palette.grid} strokeWidth={chartRecipe.chrome.gridWidth} />
         : <Line key={tick} y1={g.plot.top} y2={g.plot.bottom} x1={g.value(tick)} x2={g.value(tick)} stroke={palette.grid} strokeWidth={chartRecipe.chrome.gridWidth} />)}
       {showAxis && vertical && <AxisLabels ticks={g.ticks} y={g.value} x={g.plot.left - 6} color={palette.label} format={formatValue} />}
-      {g.bars.map(bar => <Rect key={`${bar.seriesIndex}-${bar.index}`} x={bar.x} y={bar.y} width={bar.width} height={bar.height} rx={chartRecipe.bar.radius} fill={palette.seriesColor(series[bar.seriesIndex]!, bar.seriesIndex)} opacity={focus === null || focus === bar.index ? 1 : chartRecipe.bar.restOpacity} />)}
+      {g.bars.map(bar => <MotionBar key={`${series[bar.seriesIndex]!.id}-${categoryKeys[bar.index]}`} bar={bar} animate={animateChanges && g.bars.length <= 200} rx={chartRecipe.bar.radius} fill={palette.seriesColor(series[bar.seriesIndex]!, bar.seriesIndex)} opacity={focus === null || focus === bar.index ? 1 : chartRecipe.bar.restOpacity} />)}
       {showValues && layout === "grouped" && g.bars.map(bar => <SvgText key={`v${bar.seriesIndex}-${bar.index}`} x={vertical ? bar.x + bar.width / 2 : bar.x + bar.width + 4} y={vertical ? bar.y - 4 : bar.y + bar.height / 2 + 4} fontSize={10} fontWeight="600" fill={palette.legend} textAnchor={vertical ? "middle" : "start"}>{formatValue(bar.value)}</SvgText>)}
       {categories.map((category, i) => vertical
         ? (categories.length <= 12 || i % Math.ceil(categories.length / 12) === 0) && <SvgText key={category + i} x={g.centers[i]!} y={resolvedHeight - 4} fontSize={10} fill={focus === i ? palette.legend : palette.label} textAnchor="middle">{category}</SvgText>

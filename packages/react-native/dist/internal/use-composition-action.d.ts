@@ -1,17 +1,17 @@
-export declare function useCompositionAction(disabled?: boolean): {
+export declare function useCompositionAction<T = string>(disabled?: boolean): {
     session: Readonly<{
-        getSnapshot(): import("@hjmds/design-contracts/action-session").ActionSnapshot<string | null>;
+        getSnapshot(): import("@hjmds/design-contracts/action-session").ActionSnapshot<T | null>;
         subscribe(listener: () => void): () => void;
-        run(task: import("@hjmds/design-contracts/action-session").ActionTask<string | null>, options?: Readonly<{
-            optimisticValue?: string | null;
+        run(task: import("@hjmds/design-contracts/action-session").ActionTask<T | null>, options?: Readonly<{
+            optimisticValue?: T | null;
             retryable?: boolean;
-        }> | undefined): Promise<import("@hjmds/design-contracts/action-session").ActionOutcome<string | null>>;
-        retry(): Promise<import("@hjmds/design-contracts/action-session").ActionOutcome<string | null>>;
-        reset(value: string | null): void;
+        }> | undefined): Promise<import("@hjmds/design-contracts/action-session").ActionOutcome<T | null>>;
+        retry(): Promise<import("@hjmds/design-contracts/action-session").ActionOutcome<T | null>>;
+        reset(value: T | null): void;
     }>;
     pending: boolean;
     failed: boolean;
-    active: string | null;
-    run: (key: string, task: () => void | Promise<void>) => Promise<import("@hjmds/design-contracts/action-session").ActionOutcome<string | null>>;
+    active: T | null;
+    run: (key: T, task: () => void | Promise<void>) => Promise<import("@hjmds/design-contracts/action-session").ActionOutcome<T | null>>;
 };
 //# sourceMappingURL=use-composition-action.d.ts.map

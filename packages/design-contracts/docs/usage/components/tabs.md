@@ -141,3 +141,28 @@ import { Tabs } from "@hjmds/react-native/navigation";
 - Native `Tabs`는 예전 `options` prop을 받으면 `TypeError`("options was removed")를 던진다. `items`로 옮긴다.
 - 외부 `TabPanel`을 쓸 때 Tabs에 `id`를 주지 않으면 Web은 생성 id를 써서 `tabsId`를 맞출 수 없다.
   `id`를 명시하고 같은 값을 `TabPanel tabsId`에 넘긴다.
+
+## 가로 페이저와 연속 밑줄 연결 (미게시)
+
+실제 페이저의 소수 index를 `swipePosition`에 발행한다. 별도 state 갱신 없이 기존
+측정된 탭 밑줄만 따라간다. 첫 항목은 0, 두 번째로 절반 이동하면 0.5다. 패널 선택은
+페이지가 정착했을 때 `onValueChange`와 동일한 제품 상태로 확정하고, 탭 활성화에서는
+제품 페이저를 해당 index로 이동한다. 이 옵션은 페이지 제스처를 가로채지 않는다.
+세로 Tabs는 무시한다. source의 `subscribe`는 반드시 unsubscribe 함수를 반환한다.
+
+```tsx
+// Web
+<Tabs label={t("pages")} items={items} value={selected} onValueChange={selectAndScrollPager}
+  swipePosition={{ get: () => pager.index, subscribe: listener => pager.onPosition(listener) }}
+  renderPanels={false} />
+```
+
+```tsx
+// Native: pager.onScroll/position 이벤트를 같은 source에 연결한다.
+<Tabs label={t("pages")} items={items} value={selected} onValueChange={selectAndScrollPager}
+  swipePosition={{ get: () => pager.index, subscribe: listener => pager.onPosition(listener) }}
+  renderPanels={false} />
+```
+
+source 객체는 렌더마다 바꾸지 않도록 `useMemo` 또는 제품 어댑터의 안정 인스턴스를
+사용한다. source는 시각적 위치만 전달하므로 접근성·키보드 선택을 대신하지 않는다.

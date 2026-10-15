@@ -1,4 +1,4 @@
-import { resolveTabIndicator, resolveTabsAppearance, type TabsAppearance, type GooeyIndicatorRect } from "@hjmds/design-contracts/gooey-navigation";
+import { resolveSwipeTabIndicator, type TabSwipePosition, resolveTabIndicator, resolveTabsAppearance, type TabsAppearance, type GooeyIndicatorRect } from "@hjmds/design-contracts/gooey-navigation";
 import { easing } from "@hjmds/design-contracts/foundations";
 export type { TabsAppearance };
 import {
@@ -71,6 +71,8 @@ export type TabsProps = Omit<HTMLAttributes<HTMLDivElement>, "dir" | "onChange">
     mountPolicy?: TabsMountPolicy;
     panelMode?: TabsPanelMode;
     appearance?: TabsAppearance;
+    /** Fractional pager position; selection commits through onValueChange. Horizontal only. */
+    swipePosition?: TabSwipePosition;
     orientation?: TabsOrientation;
     direction?: TabsDirection;
     loop?: boolean;
@@ -259,6 +261,7 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
     mountPolicy = tabsBehaviorDefaults.mountPolicy,
     panelMode = tabsBehaviorDefaults.panelMode,
     appearance: suppliedAppearance,
+    swipePosition,
     orientation = tabsBehaviorDefaults.orientation,
     direction: directionProp,
     loop = tabsBehaviorDefaults.loop,
@@ -320,7 +323,7 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
   const theme = useOptionalHjmTheme();
   const direction = directionProp ?? theme?.environment.direction ?? tabsBehaviorDefaults.direction;
   const appearance = resolveTabsAppearance(suppliedAppearance, theme?.designProfile?.interactions.selectionMotion, orientation);
-  const movingIndicator = appearance !== "standard";
+  const movingIndicator = appearance !== "standard" || (orientation === "horizontal" && swipePosition !== undefined);
   // Recreated label/panel elements must not cancel motion on unrelated draft edits;
   // resize observation covers their geometry, while stable IDs detect reordering.
   const itemOrder = JSON.stringify(items.map(item => item.id));
@@ -330,7 +333,7 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
   useLayoutEffect(() => {
     const indicator = indicatorRef.current;
     const tab = tabRefs.current.get(value);
-    if (appearance === "standard" || !indicator || !tab) { previousIndicator.current = null; interruptedIndicator.current = null; return; }
+    if (swipePosition || appearance === "standard" || !indicator || !tab) { previousIndicator.current = null; interruptedIndicator.current = null; return; }
     let animation: Animation | undefined;
     const sample = () => {
       const style = getComputedStyle(indicator);
@@ -368,8 +371,27 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
       interruptedIndicator.current = (animation?.playState === "running" || animation?.playState === "paused") ? sample() : null;
       animation?.cancel(); observer.disconnect(); document.removeEventListener("visibilitychange", visibility);
     };
-  }, [movingIndicator, appearance, value, itemOrder, direction, theme?.environment.reducedMotion]);
+  }, [movingIndicator, appearance, value, itemOrder, direction, theme?.environment.reducedMotion, swipePosition]);
 
+
+  useLayoutEffect(() => {
+    if (!swipePosition || orientation !== "horizontal") return;
+    const indicator = indicatorRef.current;
+    if (!indicator) return;
+    const place = (position = swipePosition.get()) => {
+      const rect = resolveSwipeTabIndicator(items.map(item => { const tab = tabRefs.current.get(item.id); return tab ? { x: tab.offsetLeft, width: tab.offsetWidth } : undefined; }), position);
+      if (!rect) return;
+      indicator.style.left = `${rect.x}px`; indicator.style.width = `${rect.width}px`;
+    };
+    place();
+    const unsubscribe = swipePosition.subscribe(place);
+    const observer = new ResizeObserver(() => place());
+    for (const tab of tabRefs.current.values()) observer.observe(tab);
+    // RTL natural-width lists can move physical x when only the list width changes.
+    const list = indicator.parentElement;
+    if (list) observer.observe(list);
+    return () => { unsubscribe(); observer.disconnect(); };
+  }, [swipePosition, itemOrder, orientation, direction]);
 
   useEffect(() => {
     if (!controlled && !storedSelectionIsValid) setValue(collectionFallback);

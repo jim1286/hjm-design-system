@@ -201,6 +201,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [사진 촬영과 앨범 선택](compositions/photo-source.md) | 선택과 필터 | 명시적으로 선택 후 플랫폼 picker 실행 흐름이 필요할 때 쓴다. | 구성 API 지침 참조 | Web · Native | 구성 API별 | 배포 |
 | [선택 후 적용·취소](compositions/interaction-flow-apply.md) | 선택과 필터 | 표시 방식·정렬·필터처럼 시트에서 여러 번 바꿔 본 뒤 적용을 눌러야 화면에 반영되고, 취소하거나 닫으면 기존 선택을 유지해야 할 때 쓴다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
 | [시간 선택](compositions/time-selection.md) | 선택과 필터 | 알림 시각·마감 시각처럼 하루 안의 시각 하나를 시·분 두 Select로 나눠 고르게 할 때 쓴다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
+| [펼치는 검색과 실제 메시지 답장](compositions/communication.md) | 선택과 필터 | 상단 검색 버튼에서 검색 영역을 펼치거나 채팅의 실제 메시지를 선택해 답장을 전송할 때 쓴다. | 미게시(1.20.0 이후) | Web · Native | 구성 API별 | 실험 |
 | [보관함과 페이지 이동](compositions/web-navigation.md) | 탐색과 이동 | Web에서 상위 보관함 → 하위 모음으로 들어가고, 그 모음의 긴 목록을 페이지 단위로 넘겨 보는 탐색에 쓴다. | 1.12.1 | Web | 구성 API별 | 배포 |
 | [펼침과 메뉴](compositions/disclosure.md) | 탐색과 이동 | Web에서 내용을 숨겼다 펼치거나(Collapsible), 대상에 붙은 작업 메뉴를 우클릭·키보드로 열거나(ContextMenu), 데스크톱 앱처럼 상단 메뉴 막대를 두는(Menubar) 세 방식을 각각 보여 주는 모음이다. | 1.12.1 | Web | 구성 API별 | 배포 |
 | [대화 메시지](compositions/common-message.md) | 정보 표시 | 말풍선 하나하나에 반응·답장·원문 이동·전송 실패 후 다시 보내기를 붙일 때 쓴다. | 구성 API 지침 참조 | Web · Native | 구성 API별 | 배포 |
@@ -214,13 +215,16 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [질감 비교](compositions/texture-comparison.md) | 정보 표시 | 기존 반복 점 grain과 불규칙한 정적 noise를 같은 배경·강도로 비교할 때 쓴다. | 1.14.0 | Web · Native | 구성 API별 | 배포 |
 | [추가해도 유지되는 목록](compositions/live-list.md) | 정보 표시 | 입력 중인 목록에 새 데이터가 추가되거나 순서가 바뀌어도 기존 초안과 항목의 정체성을 유지할 때 쓴다. | 1.14.0 | Web · Native | 구성 API별 | 배포 |
 | [카드 묶음과 긴 목록](compositions/data-layouts.md) | 정보 표시 | 많은 항목을 화면에 늘어놓을 방식을 고를 때 쓴다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
+| [팔로우 프로필과 행사 참석 응답](compositions/social-compositions.md) | 정보 표시 | 프로필 팔로우나 행사 참석 응답의 실제 요청과 수치의 실패 복구가 필요할 때 사용한다. | 미게시(1.20.0 이후) | Web · Native | 구성 API별 | 실험 |
 | [그림과 시작 안내](compositions/illustrated-outcome.md) | 피드백과 복구 | 빈 목록에서 시작을 안내하고 짧은 온보딩을 거쳐 결과를 보여 줄 때 쓴다. | 1.14.0 | Web · Native | 구성 API별 | 배포 |
 | [백그라운드 작업 상태](compositions/activity-status.md) | 피드백과 복구 | 사용자가 다른 화면을 보는 동안 계속되는 작업 하나(검수·생성·업로드)의 진행을 헤더의 작은 칩으로 알리고, 칩을 누르면 같은 작업의 패널 Toast가 열려 단계와 결과를 보여 줄 때 쓴다. | 미게시(1.17.2 이후) | Web · Native | 구성 API별 | 배포 |
 | [버튼 완료 피드백](compositions/action-feedback.md) | 피드백과 복구 | 입력을 유지하며 저장의 진행·성공·재시도 가능 실패를 보여 줄 때 쓴다. | 1.14.0 | Web · Native | 구성 API별 | 배포 |
 | [변경 저장과 이탈 확인](compositions/reference-settings.md) | 피드백과 복구 | 저장값과 편집 초안을 비교해 이탈 확인 흐름이 필요할 때 쓴다. | 구성 API 지침 참조 | Web · Native | 구성 API별 | 배포 |
 | [보관과 실행 취소](compositions/action-recovery-undo.md) | 피드백과 복구 | 보관·숨기기·목록에서 빼기처럼 제품이 역연산을 제공하는 작업 뒤에, 같은 자리에서 실행 취소를 주고 그 복구 요청이 성공해야 화면을 되돌릴 때 쓴다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
 | [선택과 오류 복구](compositions/upload-recovery.md) | 피드백과 복구 | 파일 선택과 전송 상태의 취소·재시도를 연결할 때 쓴다. | 1.14.0 | Web · Native | 구성 API별 | 배포 |
+| [스트림 응답과 중지](compositions/streaming-answer.md) | 피드백과 복구 | 실제 provider가 보내는 응답 delta를 표시하고 중지·재생성·오류를 같은 영역에서 제공할 때 쓴다. | 미게시(1.20.0 이후) | Web · Native | 구성 API별 | 실험 |
 | [저장과 재시도](compositions/action-recovery-save.md) | 피드백과 복구 | 입력한 내용을 서버에 저장하는 폼 한 덩어리에서 저장 중 중복 실행을 막고, 실패하면 입력을 지우지 않은 채 제출했던 값 그대로 다시 보낼 때 쓴다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
+| [전송 진행과 취소](compositions/transfer-task.md) | 피드백과 복구 | 실제 다운로드·업로드·작업의 시작/대기/진행·취소·실패 복구를 한 구성으로 제공할 때 쓴다. | 미게시(1.20.0 이후) | Web · Native | 구성 API별 | 실험 |
 | [중단해도 남는 현재 상태](compositions/expo-interactions.md) | 피드백과 복구 | 버튼으로 상태를 빠르게 바꾸거나 전환 도중 내용을 닫아도 현재 상태가 바로 보이고 남아야 하는 영역에 쓴다. | 1.12.1 | Native | 구성 API별 | 배포 |
 | [즉시 반영과 복구](compositions/action-recovery-optimistic.md) | 피드백과 복구 | 북마크·좋아요·알림 켜기처럼 되돌려도 피해가 없는 저위험 토글을 누르는 즉시 화면에 반영하고, 서버가 실패하면 직전 확인 값으로 되돌릴 때 쓴다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
 | [처리 단계와 재시도](compositions/stea-order-progress.md) | 피드백과 복구 | 주문·신청처럼 서버가 단계를 하나씩 확정하는 처리 과정을 보여 주고, 확정에 실패하면 같은 단계를 다시 요청하게 할 때 쓴다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
@@ -228,6 +232,8 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [끌기·밀기·화면 전환](compositions/interaction-adapters.md) | 직접 조작과 모션 | 순서 바꾸기·행 작업·내용 전환·카드 넘기기·달성 축하·카드 확대 화면 전환 같은 선택형 상호작용 어댑터를 한 화면에서 함께 쓸 때, 각 어댑터를 어디에 놓고 무엇으로 감싸야 하는지 확인하는 구성이다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
 | [높이가 이어지는 패널](compositions/adaptive-content.md) | 직접 조작과 모션 | 패널의 길이가 달라질 때 아래 행동이 새 높이로 이동해야 하는 작은 내용 영역에 쓴다. | 1.14.0 | Web · Native | 구성 API별 | 배포 |
 | [미디어 재생 제어](compositions/media-transport.md) | 직접 조작과 모션 | 실제 오디오/영상 엔진의 재생·일시 정지·유한 길이 탐색을 같은 구조로 제공할 때 쓴다. | 미게시(1.20.0 이후) | Web · Native | 구성 API별 | 실험 |
+| [베지어·단축키 편집 도구](compositions/authoring-tools.md) | 직접 조작과 모션 | 제품 안의 모션 편집기에서 두 제어점의 곡선을 조정하거나 웹 앱의 사용자 단축키를 실제로 등록할 때 쓴다. | 미게시(1.20.0 이후) | Web · Native | 구성 API별 | 실험 |
+| [선택 반응 버튼](compositions/toggle-feedback.md) | 직접 조작과 모션 | 구독·북마크·좋아요에서 선택 요청과 실제 인원 수의 실패 복구, 국소 모션이 함께 필요할 때 쓴다. | 미게시(1.20.0 이후) | Web · Native | 구성 API별 | 실험 |
 | [선택 배경 이동](compositions/selection-motion.md) | 직접 조작과 모션 | 짧은 단일 선택의 현재 항목을 이어지는 배경으로 보여 줄 때 쓴다. | 1.14.0 | Web · Native | 구성 API별 | 배포 |
 | [숫자 변화와 메뉴 변형](compositions/optional-motion.md) | 직접 조작과 모션 | 선택 설치 모션(숫자 자리 단위 변화, 메뉴 형태 변환)을 기존 컴포넌트 자리에 끼워 넣을 때 쓴다. | 1.12.1 | Web | 구성 API별 | 배포 |
 | [이미지·시트·키보드 조작](compositions/optional-adapters.md) | 직접 조작과 모션 | Native 앱 한 화면에서 이미지 확대 보기, 끌어서 높이를 바꾸는 시트, OS 길게 누르기 메뉴, 키보드를 따라 올라가는 하단 행동을 함께 쓸 때 provider 중첩 순서와 각 요소의 자리를 확인하는 구성이다. | 1.12.1 | Native | 구성 API별 | 배포 |

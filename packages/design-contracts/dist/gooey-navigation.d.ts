@@ -28,4 +28,11 @@ export declare function resolveGooeyIndicator(from: GooeyIndicatorRect, to: Gooe
     readonly x: readonly [number, number, number];
     readonly width: readonly [number, number, number];
 };
+/** A pager publishes fractional item indexes without rendering React each frame.
+ * Selection and panel activation stay owned by value/onValueChange at settle. */
+export type TabSwipePosition = Readonly<{
+    get: () => number;
+    subscribe: (listener: (position: number) => void) => () => void;
+}>;
+export declare function resolveSwipeTabIndicator(rects: readonly (GooeyIndicatorRect | undefined)[], position: number): GooeyIndicatorRect | null;
 //# sourceMappingURL=gooey-navigation.d.ts.map

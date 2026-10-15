@@ -1,0 +1,68 @@
+import { act } from "react";
+import { createRoot } from "react-dom/client";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
+import { BarChart, LineChart } from "../src/chart.js";
+import { HjmProvider } from "../src/provider.js";
+import { linePath, resolveLineGeometry } from "@hjmds/design-contracts/components/chart";
+import "../src/styles.css";
+(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+let host: HTMLDivElement; let root: ReturnType<typeof createRoot>;
+beforeEach(() => { host = document.createElement("div"); host.style.width = "320px"; document.body.append(host); root = createRoot(host); });
+afterEach(async () => { await act(async () => root.unmount()); host.remove(); vi.restoreAllMocks(); });
+const common = { accessibilityLabel: "Actual series", formatValue: String, missingLabel: "—" };
+const data = (values: number[]) => [{ id: "s", label: "S", values }];
+it("morphs actual period data across differing lengths and settles at exact geometry", async () => {
+  let time = 0, next = 0; const frames = new Map<number, FrameRequestCallback>();
+  vi.spyOn(window, "requestAnimationFrame").mockImplementation(callback => { frames.set(++next, callback); return next; });
+  vi.spyOn(window, "cancelAnimationFrame").mockImplementation(id => { if (id !== undefined && id !== null) frames.delete(id); });
+  const tick = () => { time += 110; const callbacks = [...frames.values()]; frames.clear(); callbacks.forEach(callback => callback(time)); };
+  const render = (values: number[]) => root.render(<HjmProvider reducedMotion={false}><LineChart {...common} area={false} animateChanges categories={values.map((_, i) => String(i))} series={data(values)} /></HjmProvider>);
+  await act(async () => render([0, 10, 0]));
+  const old = host.querySelector(".hjm-chart__line")!.getAttribute("d");
+  await act(async () => render([10, 0, 7, 2, 8]));
+  expect(frames.size).toBe(1);
+  tick(); tick();
+  const intermediate = host.querySelector(".hjm-chart__line")!.getAttribute("d");
+  expect(intermediate).not.toBe(old);
+  tick();
+  const g = resolveLineGeometry({ categories: ["0", "1", "2", "3", "4"], series: data([10, 0, 7, 2, 8]), width: 320, height: 180 });
+  // The chart's regular recipe height is used rather than a fixture constant.
+  const svg = host.querySelector("svg")!;
+  const exact = resolveLineGeometry({ categories: ["0", "1", "2", "3", "4"], series: data([10, 0, 7, 2, 8]), width: 320, height: Number(svg.getAttribute("height")) });
+  expect(g.plots[0]).toHaveLength(5);
+  expect(host.querySelector(".hjm-chart__line")!.getAttribute("d")).toBe(linePath(exact.plots[0]!.filter(p => p !== null)));
+  expect(frames.size).toBe(0);
+  expect(host.querySelector('[role="slider"]')!.getAttribute("aria-valuetext")).toBe("4 8");
+});
+it("retains category selection on reorder and skips tweening under reduced motion", async () => {
+  const raf = vi.spyOn(window, "requestAnimationFrame");
+  const render = (categories: string[], values: number[]) => root.render(<HjmProvider reducedMotion><BarChart {...common} defaultFocusIndex={1} animateChanges categories={categories} series={data(values)} /></HjmProvider>);
+  await act(async () => render(["A", "B"], [3, 5]));
+  await act(async () => render(["B", "C", "A"], [9, 7, 2]));
+  expect(host.querySelector('[role="slider"]')!.getAttribute("aria-valuetext")).toBe("B 9");
+  expect(raf).not.toHaveBeenCalled();
+  expect(host.querySelectorAll(".hjm-chart__bar")).toHaveLength(3);
+});
+it("splits line emphasis exactly at the selected observation without changing data", async () => {
+  await act(async () => root.render(<HjmProvider><LineChart {...common} categories={["A", "B", "C"]} series={data([2, 7, 3])} focusIndex={1} scrubEmphasis="before" /></HjmProvider>));
+  const paths = host.querySelectorAll(".hjm-chart__line"); expect(paths).toHaveLength(2);
+  expect(paths[0]!.getAttribute("d")).toBe(paths[1]!.getAttribute("d"));
+  const rect = host.querySelector("clipPath rect")!;
+  expect(Number(rect.getAttribute("width"))).toBeGreaterThan(0);
+  expect(paths[1]!.parentElement!.getAttribute("clip-path")).toContain("-scrub");
+});
+it("moves the same category bar across reordered real data and cancels motion when disabled", async () => {
+  let next = 0; const frames = new Map<number, FrameRequestCallback>();
+  vi.spyOn(window, "requestAnimationFrame").mockImplementation(callback => { frames.set(++next, callback); return next; });
+  vi.spyOn(window, "cancelAnimationFrame").mockImplementation(id => { if (id !== undefined && id !== null) frames.delete(id); });
+  const render = (changed: boolean, reducedMotion = false) => root.render(<HjmProvider reducedMotion={reducedMotion}><BarChart {...common} animateChanges categories={changed ? ["B", "A"] : ["A", "B"]} series={data(changed ? [9, 3] : [3, 5])} /></HjmProvider>);
+  await act(async () => render(false));
+  const oldA = host.querySelector('.hjm-chart__bar[data-index="0"]')!, original = oldA.getAttribute("d");
+  await act(async () => render(true));
+  expect(host.querySelector('.hjm-chart__bar[data-index="1"]')).toBe(oldA);
+  expect(oldA.getAttribute("d")).toBe(original);
+  expect(frames.size).toBe(2);
+  await act(async () => render(true, true));
+  expect(oldA.getAttribute("d")).not.toBe(original);
+  expect(frames.size).toBe(0);
+});

@@ -15,6 +15,11 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & Readonly<{
     /** Toggle state. Paints the selected treatment and sets `aria-pressed`. */
     selected?: boolean;
     loading?: boolean;
+    /** Explicit confirmed mutation result. Both text labels remain measured in every state. */
+    completion?: Readonly<{
+        confirmed: boolean;
+        label: string;
+    }>;
     leading?: ReactNode;
     trailing?: ReactNode;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
@@ -30,6 +35,11 @@ export declare const Button: import("react").ForwardRefExoticComponent<ButtonHTM
     /** Toggle state. Paints the selected treatment and sets `aria-pressed`. */
     selected?: boolean;
     loading?: boolean;
+    /** Explicit confirmed mutation result. Both text labels remain measured in every state. */
+    completion?: Readonly<{
+        confirmed: boolean;
+        label: string;
+    }>;
     leading?: ReactNode;
     trailing?: ReactNode;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */

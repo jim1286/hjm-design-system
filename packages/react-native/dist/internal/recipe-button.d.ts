@@ -9,6 +9,10 @@ export declare const RecipeButton: import("react").ForwardRefExoticComponent<Omi
     selected?: boolean;
     disabled?: boolean;
     loading?: boolean;
+    completion?: Readonly<{
+        confirmed: boolean;
+        label: string;
+    }>;
     disableWhileLoading?: boolean;
     growWithContent?: boolean;
     loadingLabel?: ReactNode;

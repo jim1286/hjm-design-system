@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { resolveTabIndicator, resolveTabsAppearance } from "@hjmds/design-contracts/gooey-navigation";
+import { resolveSwipeTabIndicator, resolveTabIndicator, resolveTabsAppearance } from "@hjmds/design-contracts/gooey-navigation";
 import { easing } from "@hjmds/design-contracts/foundations";
 import { getTabNavigationIntent, getTabNavigationTarget, resolveInitialTabValue, tabsBehaviorDefaults, } from "@hjmds/design-contracts/behaviors";
 import { iconRecipe, tabsRecipe, } from "@hjmds/design-contracts/recipes";
@@ -81,7 +81,7 @@ export function TabPanel(props) {
     return (_jsx(TabPanelHost, { ...hostProps, id: getTabPanelId(tabsId, value, dynamic ? "dynamic" : "keyed"), labelledBy: getTabId(tabsId, dynamic ? activeValue : value), selected: selected, dynamic: dynamic, children: children }));
 }
 export const Tabs = forwardRef(function Tabs(props, ref) {
-    const { label, items, activationMode = tabsBehaviorDefaults.activationMode, mountPolicy = tabsBehaviorDefaults.mountPolicy, panelMode = tabsBehaviorDefaults.panelMode, appearance: suppliedAppearance, orientation = tabsBehaviorDefaults.orientation, direction: directionProp, loop = tabsBehaviorDefaults.loop, size = tabsRecipe.defaults.size, layout = tabsRecipe.defaults.layout, overflow = tabsRecipe.defaults.overflow, renderPanels = true, className, id, value: valueProp, defaultValue, onValueChange, layoutStyle, ...rest } = props;
+    const { label, items, activationMode = tabsBehaviorDefaults.activationMode, mountPolicy = tabsBehaviorDefaults.mountPolicy, panelMode = tabsBehaviorDefaults.panelMode, appearance: suppliedAppearance, swipePosition, orientation = tabsBehaviorDefaults.orientation, direction: directionProp, loop = tabsBehaviorDefaults.loop, size = tabsRecipe.defaults.size, layout = tabsRecipe.defaults.layout, overflow = tabsRecipe.defaults.overflow, renderPanels = true, className, id, value: valueProp, defaultValue, onValueChange, layoutStyle, ...rest } = props;
     validateItems(items);
     if (label.trim().length === 0)
         throw new TypeError("Tabs label must not be empty");
@@ -127,7 +127,7 @@ export const Tabs = forwardRef(function Tabs(props, ref) {
     const theme = useOptionalHjmTheme();
     const direction = directionProp ?? theme?.environment.direction ?? tabsBehaviorDefaults.direction;
     const appearance = resolveTabsAppearance(suppliedAppearance, theme?.designProfile?.interactions.selectionMotion, orientation);
-    const movingIndicator = appearance !== "standard";
+    const movingIndicator = appearance !== "standard" || (orientation === "horizontal" && swipePosition !== undefined);
     // Recreated label/panel elements must not cancel motion on unrelated draft edits;
     // resize observation covers their geometry, while stable IDs detect reordering.
     const itemOrder = JSON.stringify(items.map(item => item.id));
@@ -137,7 +137,7 @@ export const Tabs = forwardRef(function Tabs(props, ref) {
     useLayoutEffect(() => {
         const indicator = indicatorRef.current;
         const tab = tabRefs.current.get(value);
-        if (appearance === "standard" || !indicator || !tab) {
+        if (swipePosition || appearance === "standard" || !indicator || !tab) {
             previousIndicator.current = null;
             interruptedIndicator.current = null;
             return;
@@ -186,7 +186,31 @@ export const Tabs = forwardRef(function Tabs(props, ref) {
             observer.disconnect();
             document.removeEventListener("visibilitychange", visibility);
         };
-    }, [movingIndicator, appearance, value, itemOrder, direction, theme?.environment.reducedMotion]);
+    }, [movingIndicator, appearance, value, itemOrder, direction, theme?.environment.reducedMotion, swipePosition]);
+    useLayoutEffect(() => {
+        if (!swipePosition || orientation !== "horizontal")
+            return;
+        const indicator = indicatorRef.current;
+        if (!indicator)
+            return;
+        const place = (position = swipePosition.get()) => {
+            const rect = resolveSwipeTabIndicator(items.map(item => { const tab = tabRefs.current.get(item.id); return tab ? { x: tab.offsetLeft, width: tab.offsetWidth } : undefined; }), position);
+            if (!rect)
+                return;
+            indicator.style.left = `${rect.x}px`;
+            indicator.style.width = `${rect.width}px`;
+        };
+        place();
+        const unsubscribe = swipePosition.subscribe(place);
+        const observer = new ResizeObserver(() => place());
+        for (const tab of tabRefs.current.values())
+            observer.observe(tab);
+        // RTL natural-width lists can move physical x when only the list width changes.
+        const list = indicator.parentElement;
+        if (list)
+            observer.observe(list);
+        return () => { unsubscribe(); observer.disconnect(); };
+    }, [swipePosition, itemOrder, orientation, direction]);
     useEffect(() => {
         if (!controlled && !storedSelectionIsValid)
             setValue(collectionFallback);

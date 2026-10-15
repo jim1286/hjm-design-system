@@ -246,3 +246,32 @@ import { BarChart, Sparkline } from "@hjmds/react-native/chart";
 
 Native centerContent에는 Text 등 Native 노드를 쓴다. 모두 제외하거나 합계 0이면 조각을 그리지 않는다.
 항목 ID·색 인덱스는 그대로 보존하고 실제 포함값으로 비율을 재계산한다. 차트 의미 전달에는 수치·checkbox 상태도 사용한다.
+
+## 데이터 전환과 스크럽 분할 강조
+
+실제 기간 필터 결과를 교체할 때 `LineChart`·`BarChart`에 `animateChanges`를 준다.
+`LineChart`는 `scrubEmphasis="before"`(또는 `"after"`)로 포커스 한쪽만 계열 색으로
+강조할 수 있다. 축·접근성 값은 최신 데이터이며 전환 경로 자체는 관측값이 아니다.
+고주기 스트림에서는 기본값 false를 유지한다. 큰 자료(선 구간 양쪽 합계 1,024점 초과,
+막대 200개 초과)·reduced motion은 즉시 교체한다. 제어 포커스는 제품이 범주 변경 후
+새 index로 맞추고, 비제어 포커스는 같은 범주 레이블을 따라간다.
+
+```tsx
+// Web: API가 돌려준 기간별 실제 데이터다.
+<LineChart categories={period.labels} series={period.series}
+  accessibilityLabel={t("trend")} formatValue={formatValue} missingLabel={t("missing")}
+  animateChanges scrubEmphasis="before" holdOnRelease />
+<BarChart categories={comparison.labels} series={comparison.series}
+  accessibilityLabel={t("comparison")} formatValue={formatValue} missingLabel={t("missing")}
+  animateChanges showAxis />
+```
+
+```tsx
+// Native: 같은 데이터와 옵션을 @hjmds/react-native/chart에 전달한다.
+<LineChart categories={period.labels} series={period.series}
+  accessibilityLabel={t("trend")} formatValue={formatValue} missingLabel={t("missing")}
+  animateChanges scrubEmphasis="before" holdOnRelease />
+<BarChart categories={comparison.labels} series={comparison.series}
+  accessibilityLabel={t("comparison")} formatValue={formatValue} missingLabel={t("missing")}
+  animateChanges showAxis />
+```

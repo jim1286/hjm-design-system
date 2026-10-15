@@ -756,6 +756,42 @@
       "react-native": "./dist/media-transport.js",
       "import": "./dist/media-transport.js",
       "default": "./dist/media-transport.js"
+    },
+    "./transfer-task": {
+      "types": "./dist/transfer-task.d.ts",
+      "react-native": "./dist/transfer-task.js",
+      "import": "./dist/transfer-task.js",
+      "default": "./dist/transfer-task.js"
+    },
+    "./authoring-tools": {
+      "types": "./dist/authoring-tools.d.ts",
+      "react-native": "./dist/authoring-tools.js",
+      "import": "./dist/authoring-tools.js",
+      "default": "./dist/authoring-tools.js"
+    },
+    "./social-compositions": {
+      "types": "./dist/social-compositions.d.ts",
+      "react-native": "./dist/social-compositions.js",
+      "import": "./dist/social-compositions.js",
+      "default": "./dist/social-compositions.js"
+    },
+    "./communication": {
+      "types": "./dist/communication.d.ts",
+      "react-native": "./dist/communication.js",
+      "import": "./dist/communication.js",
+      "default": "./dist/communication.js"
+    },
+    "./toggle-feedback": {
+      "types": "./dist/toggle-feedback.d.ts",
+      "react-native": "./dist/toggle-feedback.js",
+      "import": "./dist/toggle-feedback.js",
+      "default": "./dist/toggle-feedback.js"
+    },
+    "./streaming-answer": {
+      "types": "./dist/streaming-answer.d.ts",
+      "react-native": "./dist/streaming-answer.js",
+      "import": "./dist/streaming-answer.js",
+      "default": "./dist/streaming-answer.js"
     }
   },
   "files": [

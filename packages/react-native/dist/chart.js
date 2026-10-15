@@ -1,10 +1,10 @@
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
-import { useCallback, useId, useMemo, useRef, useState } from "react";
-import { PanResponder, Pressable, Text as NativeText, View } from "react-native";
-import Svg, { Circle, Defs, G, Line, LinearGradient, Path, Rect, Stop, Text as SvgText } from "react-native-svg";
+import { useCallback, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { AppState, PanResponder, Pressable, Text as NativeText, View } from "react-native";
+import Svg, { Circle, ClipPath, Defs, G, Line, LinearGradient, Path, Rect, Stop, Text as SvgText } from "react-native-svg";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { resolveDatavizSeriesColor } from "@hjmds/design-contracts/dataviz";
-import { areaPath, chartRecipe, describeChart, isChartNumber, linePath, nearestChartIndex, nearestScatterPoint, observedIndices, resolveBarGeometry, resolveLineGeometry, resolvePieGeometry, resolvePieVisibility, resolveRadarGeometry, resolveScatterGeometry, seriesExtremes, splitSegments, stepChartIndex, validateChartSeries, } from "@hjmds/design-contracts/components/chart";
+import { prepareChartLineMorph, areaPath, chartRecipe, describeChart, isChartNumber, linePath, nearestChartIndex, nearestScatterPoint, observedIndices, resolveBarGeometry, resolveLineGeometry, resolvePieGeometry, resolvePieVisibility, resolveRadarGeometry, resolveScatterGeometry, seriesExtremes, splitSegments, stepChartIndex, validateChartSeries, } from "@hjmds/design-contracts/components/chart";
 import { spacing } from "@hjmds/design-contracts/foundations";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
@@ -27,11 +27,15 @@ function useWidth(initial = 0) {
     return [width, useCallback((event) => setWidth(Math.round(event.nativeEvent.layout.width)), [])];
 }
 /** Controlled/uncontrolled focus with a separate transient scrub index. */
-function useFocus({ focusIndex, defaultFocusIndex = null, onFocusChange, holdOnRelease = false }, fallback) {
+function useFocus({ focusIndex, defaultFocusIndex = null, onFocusChange, holdOnRelease = false }, fallback, categories) {
+    const categoryKey = (index) => index === null || categories?.[index] === undefined ? null : JSON.stringify([categories[index], categories.slice(0, index).filter(value => value === categories[index]).length]);
+    const selectedKey = useRef(categoryKey(defaultFocusIndex));
     const [own, setOwn] = useState(defaultFocusIndex);
     const [scrub, setScrub] = useState(null);
     const last = useRef(null);
-    const settled = focusIndex !== undefined ? focusIndex : own;
+    const mapped = categories && selectedKey.current !== null ? categories.findIndex((_, index) => categoryKey(index) === selectedKey.current) : own;
+    const ownSelection = mapped === -1 ? null : mapped;
+    const settled = focusIndex !== undefined ? (categories && (focusIndex === null || categories[focusIndex] === undefined) ? null : focusIndex) : ownSelection;
     const focus = scrub ?? settled ?? fallback;
     const set = useCallback((index, scrubbing) => {
         if (scrubbing) {
@@ -40,11 +44,13 @@ function useFocus({ focusIndex, defaultFocusIndex = null, onFocusChange, holdOnR
         }
         else {
             setScrub(null);
-            if (focusIndex === undefined)
+            if (focusIndex === undefined) {
+                selectedKey.current = categoryKey(index);
                 setOwn(index);
+            }
         }
         onFocusChange?.(index, { scrubbing });
-    }, [focusIndex, onFocusChange]);
+    }, [focusIndex, onFocusChange, categories]);
     const release = useCallback(() => set(holdOnRelease ? last.current : null, false), [set, holdOnRelease]);
     return { focus, scrubbing: scrub !== null, set, release };
 }
@@ -79,21 +85,88 @@ function CursorBubble({ x, width, text, surface, color }) {
 function AxisLabels({ ticks, y, x, color, format }) {
     return _jsx(_Fragment, { children: ticks.map(tick => _jsx(SvgText, { x: x, y: y(tick) + 4, fontSize: 10, fill: color, textAnchor: "end", children: format(tick) }, tick)) });
 }
-export function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height = chartRecipe.heights.regular, curve = "linear", area, stacked = false, invert = false, domain, includeZero, referenceValue, extremes, showAxis = false, valueAxis = false, ticks: tickOverride, cursorLabel, ...focusProps }) {
+// Paths/rectangles update their host attributes directly; values, axes and accessibility
+// always come from the latest real data. No per-frame React reconciliation.
+function MotionLinePath({ points, lower, floor, curve, animate, ...rest }) {
+    const reducedMotion = useHjmNativeTheme().environment.reducedMotion;
+    const node = useRef(null);
+    const previous = useRef(null);
+    const path = (p, base, edge) => base === undefined ? linePath(p, curve) : areaPath(p, base, curve, edge);
+    const signature = JSON.stringify([points, lower, floor, curve]);
+    useLayoutEffect(() => {
+        const before = previous.current;
+        const target = { points, lower, floor };
+        previous.current = target;
+        // A bounded morph avoids multiplying frame work for dense historical datasets.
+        const morph = animate && !reducedMotion && AppState.currentState === "active" && before && points.length + before.points.length <= 1024 ? prepareChartLineMorph(before.points, points) : null;
+        if (!morph) {
+            node.current?.setNativeProps({ d: path(points, floor, lower) });
+            return;
+        }
+        const lowerMorph = before?.lower && lower ? prepareChartLineMorph(before.lower, lower) : null;
+        let frame = 0, start;
+        const paint = (t) => {
+            const current = t === 1 ? target : { points: morph(t), lower: lowerMorph?.(t) ?? lower, floor: floor === undefined ? undefined : (before?.floor ?? floor) + (floor - (before?.floor ?? floor)) * t };
+            previous.current = current;
+            const d = path(current.points, current.floor, current.lower);
+            node.current?.setNativeProps({ d });
+        };
+        const tick = (now) => { start ??= now; const t = Math.min(1, (now - start) / 220); paint(1 - (1 - t) ** 3); if (t < 1)
+            frame = requestAnimationFrame(tick); };
+        paint(0);
+        frame = requestAnimationFrame(tick);
+        const subscription = AppState.addEventListener("change", state => { if (state !== "active") {
+            cancelAnimationFrame(frame);
+            paint(1);
+        } });
+        return () => { cancelAnimationFrame(frame); subscription.remove(); };
+    }, [signature, animate, reducedMotion]);
+    return _jsx(Path, { ...rest, ref: node, d: path(points, floor, lower) });
+}
+function MotionBar({ bar, animate, ...rest }) {
+    const reducedMotion = useHjmNativeTheme().environment.reducedMotion;
+    const node = useRef(null), previous = useRef(null);
+    const signature = JSON.stringify(bar);
+    useLayoutEffect(() => {
+        const before = previous.current;
+        previous.current = bar;
+        if (!animate || reducedMotion || !before || AppState.currentState !== "active") {
+            node.current?.setNativeProps({ x: bar.x, y: bar.y, width: bar.width, height: bar.height });
+            return;
+        }
+        let frame = 0, start;
+        const paint = (t) => {
+            const value = { ...bar, x: before.x + (bar.x - before.x) * t, y: before.y + (bar.y - before.y) * t, width: before.width + (bar.width - before.width) * t, height: before.height + (bar.height - before.height) * t };
+            previous.current = value;
+            node.current?.setNativeProps({ x: value.x, y: value.y, width: value.width, height: value.height });
+        };
+        const tick = (now) => { start ??= now; const t = Math.min(1, (now - start) / 220); paint(1 - (1 - t) ** 3); if (t < 1)
+            frame = requestAnimationFrame(tick); };
+        paint(0);
+        frame = requestAnimationFrame(tick);
+        const subscription = AppState.addEventListener("change", state => { if (state !== "active") {
+            cancelAnimationFrame(frame);
+            paint(1);
+        } });
+        return () => { cancelAnimationFrame(frame); subscription.remove(); };
+    }, [signature, animate, reducedMotion]);
+    return _jsx(Rect, { ...rest, ref: node, x: bar.x, y: bar.y, width: bar.width, height: bar.height });
+}
+export function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height = chartRecipe.heights.regular, curve = "linear", area, stacked = false, invert = false, domain, includeZero, referenceValue, extremes, showAxis = false, valueAxis = false, ticks: tickOverride, cursorLabel, animateChanges = false, scrubEmphasis, ...focusProps }) {
     const palette = useChartPalette(), id = useId().replace(/[^a-zA-Z0-9]/g, "");
     const [width, onLayout] = useWidth();
     const available = useMemo(() => observedIndices(series), [series]);
-    const { focus, scrubbing, set, release } = useFocus(focusProps, available.at(-1) ?? null);
+    const { focus, scrubbing, set, release } = useFocus(focusProps, available.at(-1) ?? null, categories);
     const insets = showAxis || valueAxis ? chartRecipe.insets.axis : chartRecipe.insets.plot;
     const g = useMemo(() => width > 0 ? resolveLineGeometry({ categories, series, width, height, insets, invert, stacked, domain, includeZero }) : null, [categories, series, width, height, insets, invert, stacked, domain, includeZero]);
     const handlers = useScrub(x => g ? nearestChartIndex(g.xs, x, available) : null, index => set(index, true), release);
     const showArea = area ?? series.length === 1;
     const reference = referenceValue === "first" ? series[0]?.values.find(isChartNumber) : referenceValue;
     const marks = extremes && !scrubbing ? seriesExtremes(series[0]?.values ?? []) : null;
-    return _jsxs(View, { accessible: true, accessibilityRole: "adjustable", accessibilityLabel: accessibilityLabel, accessibilityHint: describeChart(categories, series, formatValue, missingLabel), accessibilityValue: { text: focus === null ? missingLabel : `${categories[focus]} ${series.map(item => { const v = item.values[focus]; return isChartNumber(v) ? formatValue(v) : missingLabel; }).join(", ")}` }, accessibilityActions: [{ name: "increment" }, { name: "decrement" }], onAccessibilityAction: event => set(stepChartIndex(available, focus, event.nativeEvent.actionName === "increment" ? 1 : -1), false), onLayout: onLayout, style: { height }, ...handlers, children: [g && _jsxs(Svg, { width: width, height: height, accessible: false, children: [_jsx(Defs, { children: series.map((item, s) => _jsxs(LinearGradient, { id: `hjmArea${id}${s}`, x1: "0", y1: "0", x2: "0", y2: "1", children: [_jsx(Stop, { offset: "0", stopColor: palette.seriesColor(item, s), stopOpacity: chartRecipe.area.topOpacity }), _jsx(Stop, { offset: "1", stopColor: palette.seriesColor(item, s), stopOpacity: chartRecipe.area.bottomOpacity })] }, item.id)) }), (tickOverride ?? g.ticks).map(tick => _jsx(Line, { x1: g.plot.left, x2: g.plot.right, y1: g.y(tick), y2: g.y(tick), stroke: palette.grid, strokeWidth: chartRecipe.chrome.gridWidth }, tick)), (showAxis || valueAxis) && _jsx(AxisLabels, { ticks: tickOverride ?? g.ticks, y: g.y, x: g.plot.left - 6, color: palette.label, format: formatValue }), isChartNumber(reference) && _jsx(Line, { x1: g.plot.left, x2: g.plot.right, y1: g.y(reference), y2: g.y(reference), stroke: palette.label, strokeDasharray: [...chartRecipe.reference.dash], strokeWidth: 1 }), series.map((item, s) => {
+    return _jsxs(View, { accessible: true, accessibilityRole: "adjustable", accessibilityLabel: accessibilityLabel, accessibilityHint: describeChart(categories, series, formatValue, missingLabel), accessibilityValue: { text: focus === null ? missingLabel : `${categories[focus]} ${series.map(item => { const v = item.values[focus]; return isChartNumber(v) ? formatValue(v) : missingLabel; }).join(", ")}` }, accessibilityActions: [{ name: "increment" }, { name: "decrement" }], onAccessibilityAction: event => set(stepChartIndex(available, focus, event.nativeEvent.actionName === "increment" ? 1 : -1), false), onLayout: onLayout, style: { height }, ...handlers, children: [g && _jsxs(Svg, { width: width, height: height, accessible: false, children: [_jsxs(Defs, { children: [scrubEmphasis && _jsx(ClipPath, { id: `hjmScrub${id}`, children: _jsx(Rect, { x: scrubEmphasis === "after" && focus !== null ? g.xs[focus] ?? g.plot.left : g.plot.left, y: 0, width: focus === null ? width : scrubEmphasis === "after" ? g.plot.right - (g.xs[focus] ?? g.plot.left) : (g.xs[focus] ?? g.plot.right) - g.plot.left, height: height }) }), series.map((item, s) => _jsxs(LinearGradient, { id: `hjmArea${id}${s}`, x1: "0", y1: "0", x2: "0", y2: "1", children: [_jsx(Stop, { offset: "0", stopColor: palette.seriesColor(item, s), stopOpacity: chartRecipe.area.topOpacity }), _jsx(Stop, { offset: "1", stopColor: palette.seriesColor(item, s), stopOpacity: chartRecipe.area.bottomOpacity })] }, item.id))] }), (tickOverride ?? g.ticks).map(tick => _jsx(Line, { x1: g.plot.left, x2: g.plot.right, y1: g.y(tick), y2: g.y(tick), stroke: palette.grid, strokeWidth: chartRecipe.chrome.gridWidth }, tick)), (showAxis || valueAxis) && _jsx(AxisLabels, { ticks: tickOverride ?? g.ticks, y: g.y, x: g.plot.left - 6, color: palette.label, format: formatValue }), isChartNumber(reference) && _jsx(Line, { x1: g.plot.left, x2: g.plot.right, y1: g.y(reference), y2: g.y(reference), stroke: palette.label, strokeDasharray: [...chartRecipe.reference.dash], strokeWidth: 1 }), series.map((item, s) => {
                         const color = palette.seriesColor(item, s), segments = splitSegments(g.plots[s]);
                         const lowerSegments = g.lower ? splitSegments(g.lower[s]) : null;
-                        return _jsxs(G, { children: [(showArea || stacked) && segments.map((segment, i) => _jsx(Path, { d: areaPath(segment, g.plot.bottom, curve, lowerSegments?.[i]), fill: `url(#hjmArea${id}${s})` }, `a${i}`)), segments.map((segment, i) => _jsx(Path, { d: linePath(segment, curve), stroke: color, strokeWidth: chartRecipe.line.strokeWidth, fill: "none", strokeLinejoin: "round", strokeLinecap: "round" }, `l${i}`)), segments.filter(segment => segment.length === 1).map(segment => _jsx(Circle, { cx: segment[0].x, cy: segment[0].y, r: 3, fill: color }, `d${segment[0].index}`))] }, item.id);
+                        return _jsxs(G, { children: [(showArea || stacked) && segments.map((segment, i) => _jsx(MotionLinePath, { animate: animateChanges, points: segment, floor: g.plot.bottom, curve: curve, lower: lowerSegments?.[i], fill: `url(#hjmArea${id}${s})` }, `a${i}`)), segments.map((segment, i) => _jsxs(G, { children: [_jsx(MotionLinePath, { animate: animateChanges, points: segment, curve: curve, stroke: scrubEmphasis && focus !== null ? palette.label : color, strokeWidth: chartRecipe.line.strokeWidth, fill: "none", strokeLinejoin: "round", strokeLinecap: "round" }), scrubEmphasis && focus !== null && _jsx(G, { clipPath: `url(#hjmScrub${id})`, children: _jsx(MotionLinePath, { animate: animateChanges, points: segment, curve: curve, stroke: color, strokeWidth: chartRecipe.line.strokeWidth, fill: "none", strokeLinejoin: "round", strokeLinecap: "round" }) })] }, `l${i}`)), segments.filter(segment => segment.length === 1).map(segment => _jsx(Circle, { cx: segment[0].x, cy: segment[0].y, r: 3, fill: color }, `d${segment[0].index}`))] }, item.id);
                     }), focus !== null && _jsxs(_Fragment, { children: [_jsx(Line, { x1: g.xs[focus], x2: g.xs[focus], y1: g.plot.top - 4, y2: g.plot.bottom, stroke: palette.label, strokeWidth: chartRecipe.cursor.strokeWidth, ...(scrubbing ? {} : { strokeDasharray: [...chartRecipe.cursor.dash] }) }), series.map((item, s) => { const p = g.plots[s][focus]; const color = palette.seriesColor(item, s); return p ? _jsxs(G, { children: [_jsx(Circle, { cx: p.x, cy: p.y, r: chartRecipe.line.focusHaloRadius, fill: color, opacity: chartRecipe.line.focusHaloOpacity }), _jsx(Circle, { cx: p.x, cy: p.y, r: chartRecipe.line.pointRadius, fill: color, stroke: palette.background, strokeWidth: 2 })] }, item.id) : null; })] }), marks && extremes && [[marks.max, extremes.high], [marks.min, extremes.low]].filter(([index], i) => i === 0 || index !== marks.max).map(([index, label]) => {
                         const p = g.plots[0][index];
                         // Place the label on the open side of the point: above when it sits in the upper half of the
@@ -102,22 +175,26 @@ export function LineChart({ categories, series, accessibilityLabel, formatValue,
                         return p ? _jsx(SvgText, { x: Math.min(g.plot.right - 4, Math.max(g.plot.left + 4, p.x)), y: Math.max(10, Math.min(height - 2, p.y + (above ? -10 : 16))), fontSize: 11, fontWeight: "600", fill: palette.label, textAnchor: p.x < width * 0.2 ? "start" : p.x > width * 0.8 ? "end" : "middle", children: `${label} ${formatValue(p.value)}` }, label) : null;
                     }), showAxis && categories.length > 0 && _jsxs(_Fragment, { children: [_jsx(SvgText, { x: g.xs[0], y: height - 4, fontSize: 10, fill: palette.label, textAnchor: "start", children: categories[0] }), _jsx(SvgText, { x: g.xs.at(-1), y: height - 4, fontSize: 10, fill: palette.label, textAnchor: "end", children: categories.at(-1) })] })] }), g && scrubbing && focus !== null && _jsx(CursorBubble, { x: g.xs[focus], width: width, text: cursorLabel?.(focus) ?? categories[focus], surface: palette.surface, color: palette.legend })] });
 }
-export function BarChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, orientation = "vertical", layout = "grouped", domain, showAxis = false, showValues = false, ...focusProps }) {
+export function BarChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, orientation = "vertical", layout = "grouped", domain, showAxis = false, showValues = false, animateChanges = false, ...focusProps }) {
     const palette = useChartPalette();
     const [width, onLayout] = useWidth();
     const vertical = orientation === "vertical";
     // Horizontal bars grow with the category count so labels never overlap (gifted-charts horizontal mode).
     const resolvedHeight = height ?? (vertical ? chartRecipe.heights.regular : Math.max(chartRecipe.heights.compact, categories.length * 36 + spacing.lg));
     const available = useMemo(() => observedIndices(series), [series]);
-    const { focus, scrubbing, set } = useFocus(focusProps, null);
+    const { focus, scrubbing, set } = useFocus(focusProps, null, categories);
     const insets = vertical
         ? (showAxis ? chartRecipe.insets.axis : { ...chartRecipe.insets.plot, bottom: spacing.lg })
         : { top: spacing.xs, right: showValues ? 48 : spacing.sm, bottom: spacing.xs, left: 72 };
     const g = useMemo(() => width > 0 ? resolveBarGeometry({ categories, series, width, height: resolvedHeight, insets, orientation, layout, domain }) : null, [categories, series, width, resolvedHeight, insets, orientation, layout, domain]);
+    const categoryKeys = useMemo(() => {
+        const occurrences = new Map();
+        return categories.map(label => { const occurrence = occurrences.get(label) ?? 0; occurrences.set(label, occurrence + 1); return JSON.stringify([label, occurrence]); });
+    }, [categories]);
     const handlers = useScrub((x, y) => g ? nearestChartIndex(g.centers, vertical ? x : y, available) : null, index => set(index, true), () => set(focus, false));
     return _jsxs(View, { accessible: true, accessibilityRole: "adjustable", accessibilityLabel: accessibilityLabel, accessibilityHint: describeChart(categories, series, formatValue, missingLabel), accessibilityValue: { text: focus === null ? "" : `${categories[focus]} ${series.map(item => { const v = item.values[focus]; return isChartNumber(v) ? formatValue(v) : missingLabel; }).join(", ")}` }, accessibilityActions: [{ name: "increment" }, { name: "decrement" }], onAccessibilityAction: event => set(stepChartIndex(available, focus, event.nativeEvent.actionName === "increment" ? 1 : -1), false), onLayout: onLayout, style: { height: resolvedHeight }, ...handlers, children: [g && _jsxs(Svg, { width: width, height: resolvedHeight, accessible: false, children: [g.ticks.map(tick => vertical
                         ? _jsx(Line, { x1: g.plot.left, x2: g.plot.right, y1: g.value(tick), y2: g.value(tick), stroke: palette.grid, strokeWidth: chartRecipe.chrome.gridWidth }, tick)
-                        : _jsx(Line, { y1: g.plot.top, y2: g.plot.bottom, x1: g.value(tick), x2: g.value(tick), stroke: palette.grid, strokeWidth: chartRecipe.chrome.gridWidth }, tick)), showAxis && vertical && _jsx(AxisLabels, { ticks: g.ticks, y: g.value, x: g.plot.left - 6, color: palette.label, format: formatValue }), g.bars.map(bar => _jsx(Rect, { x: bar.x, y: bar.y, width: bar.width, height: bar.height, rx: chartRecipe.bar.radius, fill: palette.seriesColor(series[bar.seriesIndex], bar.seriesIndex), opacity: focus === null || focus === bar.index ? 1 : chartRecipe.bar.restOpacity }, `${bar.seriesIndex}-${bar.index}`)), showValues && layout === "grouped" && g.bars.map(bar => _jsx(SvgText, { x: vertical ? bar.x + bar.width / 2 : bar.x + bar.width + 4, y: vertical ? bar.y - 4 : bar.y + bar.height / 2 + 4, fontSize: 10, fontWeight: "600", fill: palette.legend, textAnchor: vertical ? "middle" : "start", children: formatValue(bar.value) }, `v${bar.seriesIndex}-${bar.index}`)), categories.map((category, i) => vertical
+                        : _jsx(Line, { y1: g.plot.top, y2: g.plot.bottom, x1: g.value(tick), x2: g.value(tick), stroke: palette.grid, strokeWidth: chartRecipe.chrome.gridWidth }, tick)), showAxis && vertical && _jsx(AxisLabels, { ticks: g.ticks, y: g.value, x: g.plot.left - 6, color: palette.label, format: formatValue }), g.bars.map(bar => _jsx(MotionBar, { bar: bar, animate: animateChanges && g.bars.length <= 200, rx: chartRecipe.bar.radius, fill: palette.seriesColor(series[bar.seriesIndex], bar.seriesIndex), opacity: focus === null || focus === bar.index ? 1 : chartRecipe.bar.restOpacity }, `${series[bar.seriesIndex].id}-${categoryKeys[bar.index]}`)), showValues && layout === "grouped" && g.bars.map(bar => _jsx(SvgText, { x: vertical ? bar.x + bar.width / 2 : bar.x + bar.width + 4, y: vertical ? bar.y - 4 : bar.y + bar.height / 2 + 4, fontSize: 10, fontWeight: "600", fill: palette.legend, textAnchor: vertical ? "middle" : "start", children: formatValue(bar.value) }, `v${bar.seriesIndex}-${bar.index}`)), categories.map((category, i) => vertical
                         ? (categories.length <= 12 || i % Math.ceil(categories.length / 12) === 0) && _jsx(SvgText, { x: g.centers[i], y: resolvedHeight - 4, fontSize: 10, fill: focus === i ? palette.legend : palette.label, textAnchor: "middle", children: category }, category + i)
                         : _jsx(SvgText, { x: g.plot.left - 8, y: g.centers[i] + 4, fontSize: 11, fill: focus === i ? palette.legend : palette.label, textAnchor: "end", children: category }, category + i))] }), g && scrubbing && focus !== null && vertical && _jsx(CursorBubble, { x: g.centers[focus], width: width, text: `${categories[focus]} ${series.map(item => { const v = item.values[focus]; return isChartNumber(v) ? formatValue(v) : missingLabel; }).join(" · ")}`, surface: palette.surface, color: palette.legend })] });
 }

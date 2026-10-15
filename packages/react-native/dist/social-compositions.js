@@ -1,0 +1,40 @@
+"use client";
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { useState } from "react";
+import { resolveFollowProposal, resolveAttendanceProposal } from "@hjmds/design-contracts/social-compositions";
+import { Button } from "./actions.js";
+import { AnimatedStatistic } from "./statistic-motion.js";
+import { Avatar, Card } from "./data-display.js";
+import { Stack, Text } from "./primitives.js";
+import { useCompositionAction } from "./internal/use-composition-action.js";
+function Failure({ failed, label }) {
+    return failed ? _jsx(Text, { accessibilityRole: "alert", accessibilityLiveRegion: "assertive", align: "center", tone: "danger", children: label }) : null;
+}
+export function FollowProfileCard(props) {
+    if (!props.profileId.trim())
+        throw new TypeError("Follow profile requires a stable id");
+    return _jsx(FollowProfileBody, { ...props }, props.profileId);
+}
+function FollowProfileBody(props) {
+    resolveFollowProposal(props.state, props.state.following);
+    const action = useCompositionAction(props.disabled);
+    // Capture the proposal once; changing server counts during the request must not add the delta twice.
+    const displayed = action.active ?? props.state;
+    return _jsx(Card, { title: props.name, description: props.description, leading: props.avatar ?? _jsx(Avatar, { name: props.name, decorative: true }), children: _jsxs(Stack, { gap: "md", children: [_jsx(AnimatedStatistic, { descriptor: { id: "social-count", label: props.labels.count }, value: displayed.count, locale: props.locale }), _jsx(Button, { selected: displayed.following, loading: action.pending, loadingLabel: props.labels.pending, disabled: props.disabled === true, onPress: () => { const proposal = resolveFollowProposal(props.state, !props.state.following); void action.run(proposal, () => props.onFollowChange(proposal.following)); }, children: displayed.following ? props.labels.following : props.labels.follow }), _jsx(Failure, { failed: action.failed, label: props.labels.error })] }) });
+}
+export function EventAttendanceCard(props) {
+    if (!props.eventId.trim())
+        throw new TypeError("Event attendance requires a stable id");
+    return _jsx(EventAttendanceBody, { ...props }, props.eventId);
+}
+function EventAttendanceBody(props) {
+    resolveAttendanceProposal(props.state, props.choices, props.state.responseId);
+    const action = useCompositionAction(props.disabled), [calendarAdded, setCalendarAdded] = useState(false);
+    const displayed = action.active === null || action.active === "calendar" ? props.state : action.active;
+    const locked = props.disabled === true || action.pending;
+    return _jsx(Card, { title: props.title, description: props.description, children: _jsxs(Stack, { gap: "md", children: [_jsx(Text, { children: props.dateLabel }), _jsx(AnimatedStatistic, { descriptor: { id: "social-count", label: props.labels.count }, value: displayed.count, locale: props.locale }), _jsx(Stack, { axis: "inline", gap: "xs", wrap: true, children: props.participants.map(person => _jsxs(Stack, { axis: "inline", gap: "xs", children: [person.avatar ?? _jsx(Avatar, { name: person.name, decorative: true }), _jsx(Text, { children: person.name })] }, person.id)) }), _jsx(Text, { emphasis: "strong", children: props.labels.response }), _jsx(Stack, { axis: "inline", gap: "xs", wrap: true, children: props.choices.map(choice => _jsx(Button, { selected: displayed.responseId === choice.id, disabled: locked || choice.disabled === true, loading: action.pending && action.active !== "calendar" && displayed.responseId === choice.id, loadingLabel: props.labels.pending, onPress: () => { if (choice.disabled || choice.id === props.state.responseId)
+                            return; const proposal = resolveAttendanceProposal(props.state, props.choices, choice.id); void action.run(proposal, () => props.onResponseChange(choice.id)); }, children: choice.label }, choice.id)) }), _jsx(Button, { tone: "secondary", disabled: locked || calendarAdded, loading: action.active === "calendar", loadingLabel: props.labels.pending, onPress: () => { if (calendarAdded)
+                        return; void action.run("calendar", props.onAddToCalendar).then(outcome => { if (outcome.status === "success")
+                        setCalendarAdded(true); }); }, children: calendarAdded ? props.labels.calendarAdded : props.labels.calendar }), _jsx(Failure, { failed: action.failed, label: props.labels.error })] }) });
+}
+//# sourceMappingURL=social-compositions.js.map

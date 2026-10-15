@@ -62,6 +62,8 @@ export type ButtonProps = Omit<
     selected?: boolean;
     disabled?: boolean;
     loading?: boolean;
+    /** Explicit confirmed mutation result. Both text labels reserve the same slot in every state. */
+    completion?: Readonly<{ confirmed: boolean; label: string }>;
     /** Keep the busy control discoverable by default; opt in only for legacy disabled semantics. */
     disableWhileLoading?: boolean;
     /** Allow the control to grow beyond its recipe height for large or custom content. */

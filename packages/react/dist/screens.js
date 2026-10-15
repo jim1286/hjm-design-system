@@ -1,4 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { resolveComposerLimit } from "@hjmds/design-contracts/communication";
+import { Progress } from "./feedback.js";
 import { resolveDesignProfileScreen } from "@hjmds/design-contracts/design-profile-layout";
 import { MessageReactions } from "./internal/message-reactions.js";
 import { Button, IconButton } from "./actions.js";
@@ -60,11 +62,14 @@ export function ChatScreen({ composer, scroll = "content", ...props }) {
     // An empty conversation must still allow its first message; unavailable states hide input.
     return _jsx(ScreenLayout, { ...props, scroll: scroll, footer: !props.state || props.state.kind === "ready" || props.state.kind === "empty" ? composer : null });
 }
-export function MessageComposer({ value, label, sendLabel, placeholder = label, description, error, invalid = false, submitMode = "newline", onBlur, disabled = false, pending = false, onValueChange, onSend, maxLength, sendDisabled = false, additionalContent = false, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation = "inline", attachmentAction, attachments = [], onRemoveAttachment, layoutStyle }) {
+export function MessageComposer({ value, label, sendLabel, placeholder = label, description, error, invalid = false, submitMode = "newline", onBlur, disabled = false, pending = false, onValueChange, onSend, maxLength, lengthFeedback, sendDisabled = false, additionalContent = false, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation = "inline", attachmentAction, attachments = [], onRemoveAttachment, layoutStyle }) {
     validateMessageAttachments(attachments);
     if (attachments.length && !onRemoveAttachment)
         throw new TypeError("Attachments require a removal callback");
-    const canSend = !sendDisabled && canSubmitMessage({ value, label, sendLabel, disabled, pending, attachmentCount: attachments.length + (additionalContent ? 1 : 0) });
+    if (lengthFeedback && maxLength === undefined)
+        throw new TypeError("Composer length feedback requires maxLength");
+    const limit = !lengthFeedback ? null : resolveComposerLimit(value, maxLength, lengthFeedback.threshold);
+    const canSend = !sendDisabled && !limit?.exceeded && canSubmitMessage({ value, label, sendLabel, disabled, pending, attachmentCount: attachments.length + (additionalContent ? 1 : 0) });
     const locked = disabled || pending;
     // A bounded corner radius keeps multiline/large-text content inside the field instead of a tall pill.
     const hasContent = !!value.trim() || attachments.length > 0 || additionalContent;
@@ -80,7 +85,7 @@ export function MessageComposer({ value, label, sendLabel, placeholder = label, 
                             if (canSend)
                                 onSend(value);
                         } }, onChange: event => { if (!locked)
-                            onValueChange(event.currentTarget.value); }, minVisibleLines: screenPatternRecipe.composerMinLines, maxVisibleLines: screenPatternRecipe.composerMaxLines, ...(sendIcon ? { trailing: hasContent || pending ? send : attach } : {}) }), sendIcon ? null : send] })] });
+                            onValueChange(event.currentTarget.value); }, minVisibleLines: screenPatternRecipe.composerMinLines, maxVisibleLines: screenPatternRecipe.composerMaxLines, ...(sendIcon ? { trailing: hasContent || pending ? send : attach } : {}) }), sendIcon ? null : send] }), lengthFeedback && limit?.near ? _jsx(Progress, { shape: "circular", label: lengthFeedback.label, value: Math.min(limit.used, limit.max), max: limit.max, valueText: lengthFeedback.formatCount(limit.used, limit.max), children: _jsx(Text, { variant: "caption", children: lengthFeedback.formatCount(limit.used, limit.max) }) }) : null] });
 }
 export function ChatMessage({ direction, author, timestamp, timestampPresentation = "always", bubbleTail = false, deliveryLabel, avatar, reply, actions, replyAction, replyLink, reactions, children, interactiveContent = false, layoutStyle }) {
     const theme = useOptionalHjmTheme();

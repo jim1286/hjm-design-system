@@ -178,6 +178,15 @@
         "role": "companion-or-alternative"
       },
       {
+        "name": "BezierEditor",
+        "source": "packages/react/src/authoring-tools.tsx",
+        "entries": [
+          "./authoring-tools"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "BottomCTA",
         "source": "packages/react/src/bottom-cta.tsx",
         "entries": [
@@ -601,6 +610,24 @@
         "role": "canonical"
       },
       {
+        "name": "EventAttendanceCard",
+        "source": "packages/react/src/social-compositions.tsx",
+        "entries": [
+          "./social-compositions"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "ExpandableSearch",
+        "source": "packages/react/src/communication.tsx",
+        "entries": [
+          "./communication"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "Field",
         "source": "packages/react/src/forms.tsx",
         "entries": [
@@ -657,6 +684,15 @@
         ],
         "canonicalComponent": "Collapsible",
         "role": "optional-extension"
+      },
+      {
+        "name": "FollowProfileCard",
+        "source": "packages/react/src/social-compositions.tsx",
+        "entries": [
+          "./social-compositions"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "Form",
@@ -1238,6 +1274,24 @@
         "role": "supplemental"
       },
       {
+        "name": "ReplyComposer",
+        "source": "packages/react/src/communication.tsx",
+        "entries": [
+          "./communication"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "ReplyMessage",
+        "source": "packages/react/src/communication.tsx",
+        "entries": [
+          "./communication"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "Result",
         "source": "packages/react/src/feedback.tsx",
         "entries": [
@@ -1359,6 +1413,15 @@
         ],
         "canonicalComponent": "Sheet",
         "role": "canonical"
+      },
+      {
+        "name": "ShortcutRecorder",
+        "source": "packages/react/src/authoring-tools.tsx",
+        "entries": [
+          "./authoring-tools"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "Sidebar",
@@ -1517,6 +1580,15 @@
         ],
         "canonicalComponent": "Steps",
         "role": "canonical"
+      },
+      {
+        "name": "StreamingAnswer",
+        "source": "packages/react/src/streaming-answer.tsx",
+        "entries": [
+          "./streaming-answer"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "Surface",
@@ -1713,6 +1785,15 @@
         "role": "companion-or-alternative"
       },
       {
+        "name": "ToggleFeedbackButton",
+        "source": "packages/react/src/toggle-feedback.tsx",
+        "entries": [
+          "./toggle-feedback"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "ToggleGroup",
         "source": "packages/react/src/toggle-group.tsx",
         "entries": [
@@ -1771,6 +1852,15 @@
         ],
         "canonicalComponent": "TransferList",
         "role": "canonical"
+      },
+      {
+        "name": "TransferTask",
+        "source": "packages/react/src/transfer-task.tsx",
+        "entries": [
+          "./transfer-task"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "Tree",
@@ -1977,6 +2067,15 @@
         ],
         "canonicalComponent": "Chart",
         "role": "companion-or-alternative"
+      },
+      {
+        "name": "BezierEditor",
+        "source": "packages/react-native/src/authoring-tools.tsx",
+        "entries": [
+          "./authoring-tools"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "BottomCTA",
@@ -2354,6 +2453,24 @@
         "role": "canonical"
       },
       {
+        "name": "EventAttendanceCard",
+        "source": "packages/react-native/src/social-compositions.tsx",
+        "entries": [
+          "./social-compositions"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "ExpandableSearch",
+        "source": "packages/react-native/src/communication.tsx",
+        "entries": [
+          "./communication"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "Field",
         "source": "packages/react-native/src/forms.tsx",
         "entries": [
@@ -2410,6 +2527,15 @@
         ],
         "canonicalComponent": "Collapsible",
         "role": "optional-extension"
+      },
+      {
+        "name": "FollowProfileCard",
+        "source": "packages/react-native/src/social-compositions.tsx",
+        "entries": [
+          "./social-compositions"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "Form",
@@ -3017,6 +3143,24 @@
         "role": "supplemental"
       },
       {
+        "name": "ReplyComposer",
+        "source": "packages/react-native/src/communication.tsx",
+        "entries": [
+          "./communication"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "ReplyMessage",
+        "source": "packages/react-native/src/communication.tsx",
+        "entries": [
+          "./communication"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "Result",
         "source": "packages/react-native/src/feedback.tsx",
         "entries": [
@@ -3275,6 +3419,15 @@
         "role": "canonical"
       },
       {
+        "name": "StreamingAnswer",
+        "source": "packages/react-native/src/streaming-answer.tsx",
+        "entries": [
+          "./streaming-answer"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "Surface",
         "source": "packages/react-native/src/primitives.tsx",
         "entries": [
@@ -3451,6 +3604,15 @@
         "role": "companion-or-alternative"
       },
       {
+        "name": "ToggleFeedbackButton",
+        "source": "packages/react-native/src/toggle-feedback.tsx",
+        "entries": [
+          "./toggle-feedback"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "ToggleGroup",
         "source": "packages/react-native/src/toggle-group.tsx",
         "entries": [
@@ -3501,6 +3663,15 @@
         ],
         "canonicalComponent": "TransferList",
         "role": "canonical"
+      },
+      {
+        "name": "TransferTask",
+        "source": "packages/react-native/src/transfer-task.tsx",
+        "entries": [
+          "./transfer-task"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "UploadItem",

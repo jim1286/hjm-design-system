@@ -13,6 +13,7 @@ import {
 import type { ColorReference } from "@hjmds/design-contracts/color-references";
 import { resolveDatavizSeriesColor } from "@hjmds/design-contracts/dataviz";
 import {
+  prepareChartLineMorph,
   areaPath,
   chartRecipe,
   describeChart,
@@ -52,7 +53,7 @@ import type { HjmCompositionStyleProp } from "./composition-style.js";
  * `@hjmds/react-native/chart` so products write one chart description for both surfaces.
  * Interaction follows react-native-wagmi-charts (press-and-drag cursor, release returns to the
  * latest value) with pointer events and `touch-action: pan-y` so vertical page scrolling still wins.
- * No transitions are used, so reduced motion needs no separate branch.
+ * Optional data morphing updates SVG hosts directly and respects reduced motion.
  */
 
 // ---------------------------------------------------------------------------------------------
@@ -124,17 +125,21 @@ type FocusProps = Readonly<{
 }>;
 
 /** Controlled/uncontrolled focus plus a transient scrub index (same model as the Native renderer). */
-function useFocus({ focusIndex, defaultFocusIndex = null, onFocusChange, holdOnRelease = false }: FocusProps, fallback: number | null) {
+function useFocus({ focusIndex, defaultFocusIndex = null, onFocusChange, holdOnRelease = false }: FocusProps, fallback: number | null, categories?: readonly string[]) {
+  const categoryKey = (index: number | null) => index === null || categories?.[index] === undefined ? null : JSON.stringify([categories[index], categories.slice(0, index).filter(value => value === categories[index]).length]);
+  const selectedKey = useRef<string | null>(categoryKey(defaultFocusIndex));
   const [own, setOwn] = useState<number | null>(defaultFocusIndex);
   const [scrub, setScrub] = useState<number | null>(null);
   const last = useRef<number | null>(null);
-  const settled = focusIndex !== undefined ? focusIndex : own;
+  const mapped = categories && selectedKey.current !== null ? categories.findIndex((_, index) => categoryKey(index) === selectedKey.current) : own;
+  const ownSelection = mapped === -1 ? null : mapped;
+  const settled = focusIndex !== undefined ? (categories && (focusIndex === null || categories[focusIndex] === undefined) ? null : focusIndex) : ownSelection;
   const focus = scrub ?? settled ?? fallback;
   const set = useCallback((index: number | null, scrubbing: boolean) => {
     if (scrubbing) { setScrub(index); last.current = index; }
-    else { setScrub(null); if (focusIndex === undefined) setOwn(index); }
+    else { setScrub(null); if (focusIndex === undefined) { selectedKey.current = categoryKey(index); setOwn(index); } }
     onFocusChange?.(index, { scrubbing });
-  }, [focusIndex, onFocusChange]);
+  }, [focusIndex, onFocusChange, categories]);
   const release = useCallback(() => set(holdOnRelease ? last.current : null, false), [set, holdOnRelease]);
   return { focus, scrubbing: scrub !== null, set, release };
 }
@@ -211,6 +216,55 @@ type CartesianCommon = ChartRootProps & Readonly<{
   showAxis?: boolean;
 }>;
 
+// Paths/rectangles update their host attributes directly; values, axes and accessibility
+// always come from the latest real data. No per-frame React reconciliation.
+function MotionLinePath({ points, lower, floor, curve, animate, ...rest }: Omit<React.SVGProps<SVGPathElement>, "points" | "ref"> & { points: readonly { x: number; y: number }[]; lower?: readonly { x: number; y: number }[] | undefined; floor?: number | undefined; curve: ChartCurve; animate: boolean }) {
+  const reducedMotion = useOptionalHjmTheme()?.environment.reducedMotion;
+  const node = useRef<SVGPathElement | null>(null);
+  const previous = useRef<{ points: readonly { x: number; y: number }[]; lower?: readonly { x: number; y: number }[] | undefined; floor?: number | undefined } | null>(null);
+  const path = (p: readonly { x: number; y: number }[], base?: number, edge?: readonly { x: number; y: number }[]) => base === undefined ? linePath(p, curve) : areaPath(p, base, curve, edge);
+  const signature = JSON.stringify([points, lower, floor, curve]);
+  useLayoutEffect(() => {
+    const before = previous.current;
+    const target = { points, lower, floor };
+    previous.current = target;
+    // A bounded morph avoids multiplying frame work for dense historical datasets.
+    const morph = animate && !reducedMotion && !document.hidden && before && points.length + before.points.length <= 1024 ? prepareChartLineMorph(before.points, points) : null;
+    if (!morph) { node.current?.setAttribute("d", path(points, floor, lower)); return; }
+    const lowerMorph = before?.lower && lower ? prepareChartLineMorph(before.lower, lower) : null;
+    let frame = 0, start: number | undefined;
+    const paint = (t: number) => {
+      const current = t === 1 ? target : { points: morph(t), lower: lowerMorph?.(t) ?? lower, floor: floor === undefined ? undefined : (before?.floor ?? floor) + (floor - (before?.floor ?? floor)) * t };
+      previous.current = current;
+      const d = path(current.points, current.floor, current.lower); node.current?.setAttribute("d", d);
+    };
+    const tick = (now: number) => { start ??= now; const t = Math.min(1, (now - start) / 220); paint(1 - (1 - t) ** 3); if (t < 1) frame = requestAnimationFrame(tick); };
+    paint(0); frame = requestAnimationFrame(tick);
+    const visibility = () => { if (document.hidden) { cancelAnimationFrame(frame); paint(1); } }; document.addEventListener("visibilitychange", visibility);
+    return () => { cancelAnimationFrame(frame); document.removeEventListener("visibilitychange", visibility); };
+  }, [signature, animate, reducedMotion]);
+  return <path {...rest} ref={node} d={path(points, floor, lower)} />;
+}
+function MotionBar({ bar, animate, vertical = true, rounded = true, ...rest }: React.SVGProps<SVGPathElement> & { bar: ChartBar; animate: boolean; vertical?: boolean; rounded?: boolean }) {
+  const reducedMotion = useOptionalHjmTheme()?.environment.reducedMotion;
+  const node = useRef<SVGPathElement | null>(null), previous = useRef<ChartBar | null>(null);
+  const signature = JSON.stringify([bar, vertical, rounded]);
+  useLayoutEffect(() => {
+    const before = previous.current; previous.current = bar;
+    if (!animate || reducedMotion || !before || document.hidden) { node.current?.setAttribute("d", barPath(bar, vertical, bar.value < 0, rounded)); return; }
+    let frame = 0, start: number | undefined;
+    const paint = (t: number) => {
+      const value = { ...bar, x: before.x + (bar.x - before.x) * t, y: before.y + (bar.y - before.y) * t, width: before.width + (bar.width - before.width) * t, height: before.height + (bar.height - before.height) * t };
+      previous.current = value; node.current?.setAttribute("d", barPath(value, vertical, value.value < 0, rounded));
+    };
+    const tick = (now: number) => { start ??= now; const t = Math.min(1, (now - start) / 220); paint(1 - (1 - t) ** 3); if (t < 1) frame = requestAnimationFrame(tick); };
+    paint(0); frame = requestAnimationFrame(tick);
+    const visibility = () => { if (document.hidden) { cancelAnimationFrame(frame); paint(1); } }; document.addEventListener("visibilitychange", visibility);
+    return () => { cancelAnimationFrame(frame); document.removeEventListener("visibilitychange", visibility); };
+  }, [signature, animate, reducedMotion]);
+  return <path {...rest} ref={node} d={barPath(bar, vertical, bar.value < 0, rounded)} />;
+}
+
 // ---------------------------------------------------------------------------------------------
 // LineChart
 // ---------------------------------------------------------------------------------------------
@@ -229,6 +283,10 @@ export type LineChartProps = CartesianCommon & FocusProps & Readonly<{
   extremes?: Readonly<{ high: string; low: string }>;
   /** Bubble text above the cursor while scrubbing; defaults to the category. */
   cursorLabel?: (index: number) => string;
+  /** Morph actual data changes; reduced motion snaps immediately. */
+  animateChanges?: boolean;
+  /** Keep the chosen side in series color; mute the other side. */
+  scrubEmphasis?: "before" | "after";
   /** Value labels only (rank charts: "1위" at the top). */
   valueAxis?: boolean;
   /** Overrides grid/label ticks. */
@@ -238,13 +296,13 @@ export type LineChartProps = CartesianCommon & FocusProps & Readonly<{
 export function LineChart({
   categories, series, accessibilityLabel, formatValue, missingLabel, height = chartRecipe.heights.regular, width: fallbackWidth = 320,
   curve = "linear", area, stacked = false, invert = false, domain, includeZero, referenceValue, extremes, showAxis = false,
-  valueAxis = false, ticks: tickOverride, cursorLabel, className, layoutStyle, ...focusProps
+  valueAxis = false, ticks: tickOverride, cursorLabel, animateChanges = false, scrubEmphasis, className, layoutStyle, ...focusProps
 }: LineChartProps) {
   validateChartSeries(categories, series);
   const colorOf = useSeriesColor(), id = useSvgId(), descriptionId = `${id}-description`;
   const [measure, width] = useMeasuredWidth(fallbackWidth);
   const available = useMemo(() => observedIndices(series), [series]);
-  const { focus, scrubbing, set, release } = useFocus(focusProps, available.at(-1) ?? null);
+  const { focus, scrubbing, set, release } = useFocus(focusProps, available.at(-1) ?? null, categories);
   const insets = showAxis || valueAxis ? chartRecipe.insets.axis : chartRecipe.insets.plot;
   const g = useMemo(() => resolveLineGeometry({
     categories, series, width, height, insets, invert, stacked,
@@ -279,6 +337,7 @@ export function LineChart({
       >
         <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} aria-hidden="true" focusable="false">
           <defs>
+            <clipPath id={`${id}-scrub`}><rect x={scrubEmphasis === "after" && focus !== null ? g.xs[focus] ?? g.plot.left : g.plot.left} y={0} width={focus === null ? width : scrubEmphasis === "after" ? g.plot.right - (g.xs[focus] ?? g.plot.left) : (g.xs[focus] ?? g.plot.right) - g.plot.left} height={height} /></clipPath>
             {series.map((item, s) => (
               <linearGradient key={item.id} id={`${id}-area-${s}`} x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0" stopColor={colorOf(item, s)} stopOpacity={chartRecipe.area.topOpacity} />
@@ -297,10 +356,11 @@ export function LineChart({
             return (
               <g key={item.id} data-series={item.id}>
                 {showArea || stacked ? segments.map((segment, i) => (
-                  <path key={`a${i}`} className="hjm-chart__area" d={areaPath(segment, g.plot.bottom, curve, lower ? segment.map((p) => lower[p.index]!) : undefined)} fill={`url(#${id}-area-${s})`} />
+                  <MotionLinePath animate={animateChanges} points={segment} floor={g.plot.bottom} curve={curve} lower={lower ? segment.map((p) => lower[p.index]!) : undefined} key={`a${i}`} className="hjm-chart__area" fill={`url(#${id}-area-${s})`} />
                 )) : null}
                 {segments.map((segment, i) => (
-                  <path key={`l${i}`} className="hjm-chart__line" d={linePath(segment, curve)} stroke={color} strokeWidth={chartRecipe.line.strokeWidth} fill="none" strokeLinejoin="round" strokeLinecap="round" />
+                  <g key={`l${i}`}><MotionLinePath animate={animateChanges} points={segment} curve={curve} className="hjm-chart__line" stroke={scrubEmphasis && focus !== null ? "var(--hjm-chart-axis-label)" : color} strokeWidth={chartRecipe.line.strokeWidth} fill="none" strokeLinejoin="round" strokeLinecap="round" />
+                    {scrubEmphasis && focus !== null && <g clipPath={`url(#${id}-scrub)`}><MotionLinePath animate={animateChanges} points={segment} curve={curve} className="hjm-chart__line" stroke={color} strokeWidth={chartRecipe.line.strokeWidth} fill="none" strokeLinejoin="round" strokeLinecap="round" /></g>}</g>
                 ))}
                 {/* An isolated observation between gaps has no line, so it gets a dot. */}
                 {segments.filter((segment) => segment.length === 1).map((segment) => (
@@ -358,6 +418,7 @@ export type BarChartProps = CartesianCommon & FocusProps & Readonly<{
   layout?: ChartBarLayout;
   /** Value label at each bar end (the stack total for stacked bars). */
   showValues?: boolean;
+  animateChanges?: boolean;
 }>;
 
 /** Rounds only the value end of a bar so stacks read as one column. */
@@ -374,7 +435,7 @@ function barPath(bar: ChartBar, vertical: boolean, negative: boolean, round: boo
 
 export function BarChart({
   categories, series, accessibilityLabel, formatValue, missingLabel, height, width: fallbackWidth = 320, orientation = "vertical",
-  layout = "grouped", domain, showAxis = false, showValues = false, className, layoutStyle, ...focusProps
+  layout = "grouped", domain, showAxis = false, showValues = false, animateChanges = false, className, layoutStyle, ...focusProps
 }: BarChartProps) {
   validateChartSeries(categories, series);
   const colorOf = useSeriesColor(), id = useSvgId(), descriptionId = `${id}-description`;
@@ -383,12 +444,16 @@ export function BarChart({
   // Horizontal bars grow with the category count so labels never overlap (same rule as Native).
   const resolvedHeight = height ?? (vertical ? chartRecipe.heights.regular : Math.max(chartRecipe.heights.compact, categories.length * 36 + spacing.lg));
   const available = useMemo(() => observedIndices(series), [series]);
-  const { focus, scrubbing, set } = useFocus(focusProps, null);
+  const { focus, scrubbing, set } = useFocus(focusProps, null, categories);
   const insets: ChartInsets = vertical
     ? (showAxis ? chartRecipe.insets.axis : { ...chartRecipe.insets.plot, bottom: spacing.lg })
     : { top: spacing.xs, right: showValues ? 48 : spacing.sm, bottom: spacing.xs, left: 72 };
   const g = useMemo(() => resolveBarGeometry({ categories, series, width, height: resolvedHeight, insets, orientation, layout, ...(domain ? { domain } : {}) }),
     [categories, series, width, resolvedHeight, insets, orientation, layout, domain]);
+  const categoryKeys = useMemo(() => {
+    const occurrences = new Map<string, number>();
+    return categories.map(label => { const occurrence = occurrences.get(label) ?? 0; occurrences.set(label, occurrence + 1); return JSON.stringify([label, occurrence]); });
+  }, [categories]);
   // Only the outermost segment of each stack (per sign) gets rounded corners.
   const outer = useMemo(() => {
     if (layout !== "stacked") return null;
@@ -438,11 +503,11 @@ export function BarChart({
             : <line key={tick} className="hjm-chart__grid" y1={g.plot.top} y2={g.plot.bottom} x1={g.value(tick)} x2={g.value(tick)} />)}
           {showAxis && vertical ? g.ticks.map((tick) => <text key={`t${tick}`} className="hjm-chart__label" x={g.plot.left - 6} y={g.value(tick)} dominantBaseline="middle" textAnchor="end">{formatValue(tick)}</text>) : null}
           {g.bars.map((bar) => (
-            <path
-              key={`${bar.seriesIndex}-${bar.index}`}
+            <MotionBar
+              key={`${series[bar.seriesIndex]!.id}-${categoryKeys[bar.index]}`}
+              bar={bar} animate={animateChanges && g.bars.length <= 200} vertical={vertical} rounded={outer ? outer.has(`${bar.seriesIndex}-${bar.index}`) : true}
               className="hjm-chart__bar"
               data-index={bar.index}
-              d={barPath(bar, vertical, bar.value < 0, outer ? outer.has(`${bar.seriesIndex}-${bar.index}`) : true)}
               fill={colorOf(series[bar.seriesIndex]!, bar.seriesIndex)}
               opacity={focus === null || focus === bar.index ? 1 : chartRecipe.bar.restOpacity}
             />

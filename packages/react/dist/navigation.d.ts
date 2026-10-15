@@ -1,4 +1,4 @@
-import { type TabsAppearance } from "@hjmds/design-contracts/gooey-navigation";
+import { type TabSwipePosition, type TabsAppearance } from "@hjmds/design-contracts/gooey-navigation";
 export type { TabsAppearance };
 import { type TabsActivationMode, type TabsDirection, type TabsMountPolicy, type TabsOrientation, type TabsPanelMode } from "@hjmds/design-contracts/behaviors";
 import { type TabSize, type TabsLayout, type TabsOverflow } from "@hjmds/design-contracts/recipes";
@@ -34,6 +34,8 @@ export type TabsProps = Omit<HTMLAttributes<HTMLDivElement>, "dir" | "onChange">
     mountPolicy?: TabsMountPolicy;
     panelMode?: TabsPanelMode;
     appearance?: TabsAppearance;
+    /** Fractional pager position; selection commits through onValueChange. Horizontal only. */
+    swipePosition?: TabSwipePosition;
     orientation?: TabsOrientation;
     direction?: TabsDirection;
     loop?: boolean;

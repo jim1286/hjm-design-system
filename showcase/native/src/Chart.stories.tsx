@@ -1,3 +1,4 @@
+import { Button } from "@hjmds/react-native/actions";
 import { useState } from "react";
 import { ScrollView } from "react-native";
 import type { Meta, StoryObj } from "@storybook/react-native";
@@ -15,11 +16,24 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 /** Stock-style quote: the header follows the scrubbed month, release returns to the latest one. */
 function LineExample() {
   const [focus, setFocus] = useState<number | null>(null);
-  const index = focus ?? opsSeries[0]!.values.length - 1, value = opsSeries[0]!.values[index];
+  const [recent, setRecent] = useState(false);
+  const labels = recent ? months.slice(-3) : months;
+  const values = opsSeries.map(item => ({ ...item, values: recent ? item.values.slice(-3) : item.values }));
+  const index = focus ?? values[0]!.values.length - 1, value = values[0]!.values[index];
   return <Section title={copy.line}>
     <Text variant="heading">{value == null ? copy.missing : formatRate(value)}</Text>
-    <Text variant="caption" tone="muted">{months[index]}</Text>
-    <LineChart categories={months} series={opsSeries} accessibilityLabel={copy.line} formatValue={formatRate} missingLabel={copy.missing} referenceValue="first" extremes={{ high: copy.high, low: copy.low }} onFocusChange={(next, { scrubbing }) => setFocus(scrubbing ? next : null)} />
+    <Text variant="caption" tone="muted">{labels[index]}</Text>
+      <Button onPress={() => { setFocus(null); setRecent(current => !current); }}>{recent ? "전체 기간" : "최근 3개월"}</Button>
+    <LineChart animateChanges scrubEmphasis="before" categories={labels} series={values} accessibilityLabel={copy.line} formatValue={formatRate} missingLabel={copy.missing} referenceValue="first" extremes={{ high: copy.high, low: copy.low }} onFocusChange={(next, { scrubbing }) => setFocus(scrubbing ? next : null)} />
+  </Section>;
+}
+
+function BarExample() {
+  const [recent, setRecent] = useState(false);
+  const categories = recent ? months.slice(-3) : months;
+  const series = homeRunSeries.map(item => ({ ...item, values: recent ? item.values.slice(-3) : item.values }));
+  return <Section title={copy.bar}><Button onPress={() => setRecent(current => !current)}>{recent ? "전체 기간" : "최근 3개월"}</Button>
+    <BarChart animateChanges categories={categories} series={series} showValues accessibilityLabel={copy.bar} formatValue={formatCount} missingLabel={copy.missing} />
   </Section>;
 }
 
@@ -35,7 +49,7 @@ function Gallery({ only }: { only?: "line" | "bar" | "horizontal" | "stacked" | 
   return <ScrollView><Stack gap="xl">
     {show("line") && <LineExample />}
     {show("line") && only === "line" && <Section title={`${copy.line} · 비교`}><LineChart categories={months} series={comparisonSeries} curve="monotone" showAxis accessibilityLabel={copy.line} formatValue={formatRate} missingLabel={copy.missing} /></Section>}
-    {show("bar") && <Section title={copy.bar}><BarChart categories={months} series={homeRunSeries} showValues accessibilityLabel={copy.bar} formatValue={formatCount} missingLabel={copy.missing} /></Section>}
+    {show("bar") && <BarExample />}
     {show("horizontal") && <Section title={copy.horizontal}><BarChart categories={teams} series={teamHomeRuns} orientation="horizontal" showValues accessibilityLabel={copy.horizontal} formatValue={formatCount} missingLabel={copy.missing} /></Section>}
     {show("stacked") && <Section title={copy.stacked}><BarChart categories={months} series={hitMixSeries} layout="stacked" showAxis accessibilityLabel={copy.stacked} formatValue={formatCount} missingLabel={copy.missing} /></Section>}
     {show("pie") && <Section title={copy.pie}><PieExample /></Section>}
