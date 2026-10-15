@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-native";
 import { FunnelPreview } from "./data-workflows-preview";
 import { Container } from "@hjmds/react-native/primitives";
-const meta = { title: "실험/구성/정보 표시/전환 퍼널", component: FunnelPreview, decorators: [(Story) => <Container size="reading"><Story /></Container>] } satisfies Meta<typeof FunnelPreview>;
+const meta = { title: "배포/구성/정보 표시/전환 퍼널", component: FunnelPreview, decorators: [(Story) => <Container size="reading"><Story /></Container>] } satisfies Meta<typeof FunnelPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

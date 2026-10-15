@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-native";
 import { FollowProfilePreview } from "./social-compositions-preview";
 import { Container } from "@hjmds/react-native/primitives";
-const meta = {  title: "실험/구성/정보 표시/팔로우 프로필", component: FollowProfilePreview, decorators: [(Story) => <Container size="reading"><Story /></Container>] } satisfies Meta<typeof FollowProfilePreview>;
+const meta = {  title: "배포/구성/정보 표시/팔로우 프로필", component: FollowProfilePreview, decorators: [(Story) => <Container size="reading"><Story /></Container>] } satisfies Meta<typeof FollowProfilePreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

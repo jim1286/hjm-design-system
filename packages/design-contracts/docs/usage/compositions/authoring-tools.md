@@ -1,12 +1,12 @@
 # 베지어·단축키 편집 도구
 
 - 단계: 구성
-- 상태: 실험
+- 상태: 배포
 - 지원: Web · Native
 - 적용: 미게시(1.20.0 이후)
 - 검토일: 2026-10-15
 - 근거: [편집 도구 계약](../../authoring-tools.md), `src/authoring-tools.ts`, 양 renderer `src/authoring-tools.tsx`
-- 스토리북: `실험/구성/직접 조작과 모션/베지어 이징 편집`, Web `실험/구성/직접 조작과 모션/단축키 조합 기록`
+- 스토리북: `배포/구성/직접 조작과 모션/베지어 이징 편집`, Web `배포/구성/직접 조작과 모션/단축키 조합 기록`
 
 ShortcutRecorder는 Web 전용이다. Native는 BezierEditor만 지원한다.
 

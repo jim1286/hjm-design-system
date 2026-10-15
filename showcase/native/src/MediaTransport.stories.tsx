@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-native";
 import { MediaTransportPreview } from "./media-transport-preview";
 import { Container } from "@hjmds/react-native/primitives";
-const meta = { title: "실험/구성/직접 조작과 모션/미디어 재생 제어", component: MediaTransportPreview, decorators: [(Story) => <Container size="reading"><Story /></Container>] } satisfies Meta<typeof MediaTransportPreview>;
+const meta = { title: "배포/구성/직접 조작과 모션/미디어 재생 제어", component: MediaTransportPreview, decorators: [(Story) => <Container size="reading"><Story /></Container>] } satisfies Meta<typeof MediaTransportPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

@@ -1,6 +1,6 @@
 # 스트림 응답과 중지 계약
 
-검토일: 2026-10-15 · Lucian 086 · 실험 · 미게시
+검토일: 2026-10-15 · Lucian 086 · Storybook 배포 · 미게시
 
 `@hjmds/{design-contracts,react,react-native}/streaming-answer` 선택 subpath를 제공한다.
 고정 답변을 글자 단위로 재생하거나 타이머로 완료시키지 않고 실제 제공자 이벤트를 소비한다.

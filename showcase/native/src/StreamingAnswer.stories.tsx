@@ -15,6 +15,6 @@ function Preview(){
  })()}/>
  <Text variant="caption">실제 text/plain 스트림 주소를 입력해 연결하세요. 고정 답변이나 가짜 지연을 재생하지 않습니다. AI 제공자 연결·인증·요청 데이터는 제품 adapter가 소유합니다.</Text></Stack>;
 }
-const meta={title:"실험/구성/피드백과 복구/스트림 응답과 중지",component:Preview,decorators:[Story=><Container size="reading"><Story/></Container>]} satisfies Meta<typeof Preview>;
+const meta={title:"배포/구성/피드백과 복구/스트림 응답과 중지",component:Preview,decorators:[Story=><Container size="reading"><Story/></Container>]} satisfies Meta<typeof Preview>;
 export default meta;type Story=StoryObj<typeof meta>;
 export const Default:Story={name:"기본"};export const Dark:Story={name:"어두운 테마",globals:{theme:"dark"}};export const LargeText:Story={name:"큰 글자",globals:{textScale:"2"}};

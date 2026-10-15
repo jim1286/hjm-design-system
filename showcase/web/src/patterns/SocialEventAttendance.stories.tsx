@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { EventAttendancePreview } from "./social-compositions-preview";
 import { Container } from "@hjmds/react/layout";
-const meta = { id: "compositions-social-eventattendance", title: "실험/구성/선택과 필터/행사 참석 응답", component: EventAttendancePreview, decorators: [(Story) => <Container size="reading"><Story /></Container>] } satisfies Meta<typeof EventAttendancePreview>;
+const meta = { id: "compositions-social-eventattendance", title: "배포/구성/선택과 필터/행사 참석 응답", component: EventAttendancePreview, decorators: [(Story) => <Container size="reading"><Story /></Container>] } satisfies Meta<typeof EventAttendancePreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

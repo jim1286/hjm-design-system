@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-native";
 import { BezierEditorPreview } from "./authoring-tools-preview";
 import { Container } from "@hjmds/react-native/primitives";
-const meta = { title: "실험/구성/직접 조작과 모션/베지어 이징 편집", component: BezierEditorPreview, decorators: [(Story) => <Container size="reading"><Story /></Container>] } satisfies Meta<typeof BezierEditorPreview>;
+const meta = { title: "배포/구성/직접 조작과 모션/베지어 이징 편집", component: BezierEditorPreview, decorators: [(Story) => <Container size="reading"><Story /></Container>] } satisfies Meta<typeof BezierEditorPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

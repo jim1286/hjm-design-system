@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { AccountSwitcherPreview } from "./TaskControls.previews";
 import { Container } from "@hjmds/react/layout";
-const meta = { id: "compositions-task-accountswitcher", title: "실험/구성/탐색과 이동/계정 전환", component: AccountSwitcherPreview, decorators: [(Story) => <Container size="reading"><Story /></Container>] } satisfies Meta<typeof AccountSwitcherPreview>;
+const meta = { id: "compositions-task-accountswitcher", title: "배포/구성/탐색과 이동/계정 전환", component: AccountSwitcherPreview, decorators: [(Story) => <Container size="reading"><Story /></Container>] } satisfies Meta<typeof AccountSwitcherPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

@@ -1,6 +1,6 @@
 # 데이터 해석과 가져오기 구성
 
-검토일: 2026-10-15 · 실험 · Web/Native · 미게시(1.20.0 이후)
+검토일: 2026-10-15 · Storybook 배포 · Web/Native · 미게시(1.20.0 이후)
 
 Lucian 130·160–164를 검토하면서 기존 표·차트·통계의 실제 데이터 연결을 재사용할 필요를 확인했다.
 별도의 표/차트 엔진을 만들지 않고 DataTable, BarChart, Statistic, Progress, Select를 합성한다.

@@ -28,7 +28,7 @@ Lucian UX/UI [#033](https://lucianlabs.dev/uxui-prompt/#033), [#092](https://luc
 - Native: `@hjmds/react-native/collection-editing`
 - 순수 모델/헬퍼: `@hjmds/design-contracts/collection-editing`
 - root barrel에 추가하지 않는다. 양 플랫폼 공개 API가 있지만 현재 미게시이며 앱 설치 버전의 제공을 의미하지 않는다.
-- 다섯 구성은 각각 `실험/구성/…` Storybook에 있다. 실행 예제와 배치는 [사용 지침](usage/compositions/collection-editing.md)을 따른다.
+- 다섯 구성은 각각 `배포/구성/…` Storybook에 있다. 실행 예제와 배치는 [사용 지침](usage/compositions/collection-editing.md)을 따른다.
 
 ## 주요 타입
 

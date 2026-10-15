@@ -1,6 +1,6 @@
 # 선택 뒤 실제 작업을 실행하는 구성
 
-검토일: 2026-10-15 · 실험 · 미게시(1.20.0 이후) · Web/Native
+검토일: 2026-10-15 · Storybook 배포 · 미게시(1.20.0 이후) · Web/Native
 
 Lucian 010·036·037·056의 공통 작업 흐름을 기존 Menu/Button/PasswordField/Progress/RadioGroup/Card로 합성한다.
 새 메뉴·입력·작업 상태 엔진을 만들지 않는다. 공개 진입점은 `@hjmds/{react,react-native}/task-controls`,

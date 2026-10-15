@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-native";
 import { CorrelationPreview } from "./data-workflows-preview";
 import { Container } from "@hjmds/react-native/primitives";
-const meta = { title: "실험/구성/정보 표시/상관 행렬", component: CorrelationPreview, decorators: [(Story) => <Container size="reading"><Story /></Container>] } satisfies Meta<typeof CorrelationPreview>;
+const meta = { title: "배포/구성/정보 표시/상관 행렬", component: CorrelationPreview, decorators: [(Story) => <Container size="reading"><Story /></Container>] } satisfies Meta<typeof CorrelationPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

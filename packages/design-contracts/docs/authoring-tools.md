@@ -1,6 +1,6 @@
 # 편집 도구 구성 계약
 
-검토일: 2026-10-15 · Lucian 116·141 · 실험 · 미게시
+검토일: 2026-10-15 · Lucian 116·141 · Storybook 배포 · 미게시
 
 `@hjmds/design-contracts/authoring-tools`, `@hjmds/react/authoring-tools`,
 `@hjmds/react-native/authoring-tools` 선택 subpath로 제공한다.
