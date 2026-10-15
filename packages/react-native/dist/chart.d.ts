@@ -1,5 +1,5 @@
 import { type ReactNode } from "react";
-import { type ChartBarLayout, type ChartCurve, type ChartOrientation, type ChartSeries, type ScatterDatum } from "@hjmds/design-contracts/components/chart";
+import { type PieVisibilitySummary, type ChartBarLayout, type ChartCurve, type ChartOrientation, type ChartSeries, type ScatterDatum } from "@hjmds/design-contracts/components/chart";
 type FocusProps = Readonly<{
     focusIndex?: number | null;
     defaultFocusIndex?: number | null;
@@ -58,8 +58,13 @@ export type ChartLegendItem = Readonly<{
     color: string;
     value?: string;
 }>;
-export declare function ChartLegend({ items, selectedId, onSelect }: Readonly<{
+export declare function ChartLegend({ items, selectedId, onSelect, exclusion }: Readonly<{
     items: readonly ChartLegendItem[];
+    exclusion?: Readonly<{
+        excludedIds: readonly string[];
+        onToggle: (id: string) => void;
+        label: (item: ChartLegendItem, included: boolean) => string;
+    }>;
     selectedId?: string | null;
     onSelect?: (id: string | null) => void;
 }>): import("react").JSX.Element;
@@ -75,13 +80,19 @@ export type PieChartProps = Readonly<{
     formatValue: (value: number) => string;
     donut?: boolean;
     size?: number;
-    centerContent?: ReactNode;
+    centerContent?: ReactNode | ((summary: PieVisibilitySummary) => ReactNode);
+    /** Controlled denominator filtering, independent of selectedId emphasis. */
+    exclusion?: Readonly<{
+        excludedIds: readonly string[];
+        onExcludedIdsChange: (ids: readonly string[]) => void;
+        label: (datum: PieDatum, included: boolean) => string;
+    }>;
     selectedId?: string | null;
     defaultSelectedId?: string | null;
     onSelect?: (id: string | null) => void;
     showLegend?: boolean;
 }>;
-export declare function PieChart({ data, accessibilityLabel, formatValue, donut, size, centerContent, selectedId, defaultSelectedId, onSelect, showLegend }: PieChartProps): import("react").JSX.Element;
+export declare function PieChart({ data, accessibilityLabel, formatValue, donut, size, centerContent, selectedId, defaultSelectedId, onSelect, showLegend, exclusion }: PieChartProps): import("react").JSX.Element;
 export type RadarChartProps = Readonly<{
     categories: readonly string[];
     series: readonly ChartSeries[];

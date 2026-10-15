@@ -32,6 +32,13 @@ function LineExample() {
   );
 }
 
+function PieExample() {
+  const [excluded, setExcluded] = useState<readonly string[]>([]);
+  return <PieChart data={pitchMix} accessibilityLabel={copy.pie} formatValue={String} onSelect={() => undefined}
+    exclusion={{ excludedIds: excluded, onExcludedIdsChange: setExcluded, label: (datum, included) => `${datum.label} ${included ? "포함" : "제외"}` }}
+    centerContent={summary => <Text variant="title">합계 {summary.total}</Text>} />;
+}
+
 export function ChartGalleryPreview({ only }: Readonly<{ only?: ChartKind }>) {
   const show = (kind: ChartKind) => only === undefined || only === kind;
   return (
@@ -46,7 +53,7 @@ export function ChartGalleryPreview({ only }: Readonly<{ only?: ChartKind }>) {
         {show("bar") ? <Example title={copy.bar}><BarChart categories={months} series={homeRunSeries} showValues accessibilityLabel={copy.bar} formatValue={formatCount} missingLabel={copy.missing} /></Example> : null}
         {show("horizontal") ? <Example title={copy.horizontal}><BarChart categories={teams} series={teamHomeRuns} orientation="horizontal" showValues accessibilityLabel={copy.horizontal} formatValue={formatCount} missingLabel={copy.missing} /></Example> : null}
         {show("stacked") ? <Example title={copy.stacked}><BarChart categories={months} series={hitMixSeries} layout="stacked" showAxis accessibilityLabel={copy.stacked} formatValue={formatCount} missingLabel={copy.missing} /></Example> : null}
-        {show("pie") ? <Example title={copy.pie}><PieChart data={pitchMix} accessibilityLabel={copy.pie} formatValue={(v) => `${v}%`} centerContent={<Text variant="title">{copy.pie}</Text>} onSelect={() => undefined} /></Example> : null}
+        {show("pie") ? <Example title={copy.pie}><PieExample /></Example> : null}
         {show("radar") ? <Example title={copy.radar}><RadarChart categories={ratingAxes} series={ratingSeries} domain={[0, 100]} accessibilityLabel={copy.radar} formatValue={formatCount} missingLabel={copy.missing} /></Example> : null}
         {show("scatter") ? <Example title={copy.scatter}><ScatterChart points={scatterPoints} xLabel={copy.x} yLabel={copy.y} formatX={formatRate} formatY={formatCount} accessibilityLabel={copy.scatter} /></Example> : null}
         {show("sparkline") ? (

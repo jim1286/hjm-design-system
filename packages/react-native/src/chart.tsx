@@ -5,7 +5,7 @@ import { resolveColorReference } from "@hjmds/design-contracts/color-references"
 import { resolveDatavizSeriesColor } from "@hjmds/design-contracts/dataviz";
 import {
   areaPath, chartRecipe, describeChart, isChartNumber, linePath, nearestChartIndex, nearestScatterPoint, observedIndices,
-  resolveBarGeometry, resolveLineGeometry, resolvePieGeometry, resolveRadarGeometry, resolveScatterGeometry, seriesExtremes,
+  resolveBarGeometry, resolveLineGeometry, resolvePieGeometry, resolvePieVisibility, type PieVisibilitySummary, resolveRadarGeometry, resolveScatterGeometry, seriesExtremes,
   splitSegments, stepChartIndex, validateChartSeries,
   type ChartBarLayout, type ChartCurve, type ChartOrientation, type ChartSeries, type ScatterDatum,
 } from "@hjmds/design-contracts/components/chart";
@@ -233,7 +233,7 @@ export function BarChart({ categories, series, accessibilityLabel, formatValue, 
 // ---------------------------------------------------------------------------------------------
 
 export type ChartLegendItem = Readonly<{ id: string; label: string; color: string; value?: string }>;
-export function ChartLegend({ items, selectedId, onSelect }: Readonly<{ items: readonly ChartLegendItem[]; selectedId?: string | null; onSelect?: (id: string | null) => void }>) {
+export function ChartLegend({ items, selectedId, onSelect, exclusion }: Readonly<{ items: readonly ChartLegendItem[]; exclusion?: Readonly<{ excludedIds: readonly string[]; onToggle: (id: string) => void; label: (item: ChartLegendItem, included: boolean) => string }>; selectedId?: string | null; onSelect?: (id: string | null) => void }>) {
   const palette = useChartPalette();
   return <View style={{ gap: spacing.xxs }}>{items.map(item => {
     const content = <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs, minHeight: 32, opacity: selectedId && selectedId !== item.id ? 0.5 : 1 }}>
@@ -241,8 +241,9 @@ export function ChartLegend({ items, selectedId, onSelect }: Readonly<{ items: r
       <Text variant="body" layoutStyle={{ flex: 1 }} numberOfLines={1}>{item.label}</Text>
       {item.value !== undefined && <NativeText style={{ color: palette.legend, fontSize: 13, fontWeight: "700", fontVariant: ["tabular-nums"] }}>{item.value}</NativeText>}
     </View>;
-    return onSelect ? <Pressable key={item.id} accessibilityRole="button" accessibilityState={{ selected: selectedId === item.id }} accessibilityLabel={`${item.label}${item.value ? ` ${item.value}` : ""}`} onPress={() => onSelect(selectedId === item.id ? null : item.id)}>{content}</Pressable>
+    const selection = onSelect ? <Pressable key={item.id} accessibilityRole="button" accessibilityState={{ selected: selectedId === item.id }} accessibilityLabel={`${item.label}${item.value ? ` ${item.value}` : ""}`} onPress={() => onSelect(selectedId === item.id ? null : item.id)}>{content}</Pressable>
       : <View key={item.id} accessible accessibilityLabel={`${item.label}${item.value ? ` ${item.value}` : ""}`}>{content}</View>;
+    return exclusion ? <View key={item.id} style={{ flexDirection: "row", alignItems: "center", gap: spacing.sm }}><Pressable style={{ minHeight: 44, minWidth: 44, alignItems: "center", justifyContent: "center" }} accessibilityRole="checkbox" accessibilityState={{ checked: !exclusion.excludedIds.includes(item.id) }} accessibilityLabel={exclusion.label(item, !exclusion.excludedIds.includes(item.id))} onPress={() => exclusion.onToggle(item.id)}><Text>{exclusion.excludedIds.includes(item.id) ? "□" : "✓"}</Text></Pressable><View style={{ flex: 1 }}>{selection}</View></View> : selection;
   })}</View>;
 }
 
@@ -253,31 +254,38 @@ export type PieChartProps = Readonly<{
   formatValue: (value: number) => string;
   donut?: boolean;
   size?: number;
-  centerContent?: ReactNode;
+  centerContent?: ReactNode | ((summary: PieVisibilitySummary) => ReactNode);
+  /** Controlled denominator filtering, independent of selectedId emphasis. */
+  exclusion?: Readonly<{ excludedIds: readonly string[]; onExcludedIdsChange: (ids: readonly string[]) => void; label: (datum: PieDatum, included: boolean) => string }>;
   selectedId?: string | null;
   defaultSelectedId?: string | null;
   onSelect?: (id: string | null) => void;
   showLegend?: boolean;
 }>;
-export function PieChart({ data, accessibilityLabel, formatValue, donut = true, size = 180, centerContent, selectedId, defaultSelectedId = null, onSelect, showLegend = true }: PieChartProps) {
+export function PieChart({ data, accessibilityLabel, formatValue, donut = true, size = 180, centerContent, selectedId, defaultSelectedId = null, onSelect, showLegend = true, exclusion }: PieChartProps) {
   const palette = useChartPalette();
   const [own, setOwn] = useState<string | null>(defaultSelectedId);
-  const selected = selectedId !== undefined ? selectedId : own;
+  const candidate = selectedId !== undefined ? selectedId : own;
+  const selected = candidate !== null && exclusion?.excludedIds.includes(candidate) ? null : candidate;
   const select = (id: string | null) => { if (selectedId === undefined) setOwn(id); onSelect?.(id); };
   const radius = size / 2 - 6, inner = donut ? radius * chartRecipe.pie.donutRatio : 0;
-  const slices = resolvePieGeometry(data.map(d => d.value), { cx: size / 2, cy: size / 2, radius, innerRadius: inner });
+  const visibility = resolvePieVisibility(data, exclusion?.excludedIds);
+  const slices = resolvePieGeometry(visibility.values, { cx: size / 2, cy: size / 2, radius, innerRadius: inner });
+  const center = typeof centerContent === "function" ? centerContent(visibility) : centerContent;
+  const legendExclusion = exclusion ? { excludedIds: exclusion.excludedIds, label: (item: ChartLegendItem, included: boolean) => exclusion.label(data.find(datum => datum.id === item.id)!, included),
+    onToggle: (id: string) => exclusion.onExcludedIdsChange(exclusion.excludedIds.includes(id) ? exclusion.excludedIds.filter(key => key !== id) : [...exclusion.excludedIds, id]) } : undefined;
   const colorOf = (index: number) => data[index]!.color ?? palette.seriesColor({}, index);
   const percent = (index: number): number | undefined => slices.find(slice => slice.index === index)?.percent;
-  const summary = data.map((d, i) => `${d.label} ${isChartNumber(d.value) ? formatValue(d.value) : ""}${percent(i) !== undefined ? ` (${Math.round(percent(i)!)}%)` : ""}`).join(", ");
+  const summary = data.map((d, i) => exclusion?.excludedIds.includes(d.id) ? "" : `${d.label} ${isChartNumber(d.value) ? formatValue(d.value) : ""}${percent(i) !== undefined ? ` (${Math.round(percent(i)!)}%)` : ""}`).filter(Boolean).join(", ");
   return <View style={{ gap: spacing.md }}>
     <View accessible accessibilityRole="image" accessibilityLabel={`${accessibilityLabel}. ${summary}`} style={{ width: size, height: size, alignSelf: "center" }}>
       <Svg width={size} height={size} accessible={false}>
         {slices.map(slice => <Path key={slice.index} d={slice.path} fill={colorOf(slice.index)} opacity={selected && data[slice.index]!.id !== selected ? 0.35 : 1} {...(onSelect || selectedId !== undefined ? { onPress: () => select(data[slice.index]!.id === selected ? null : data[slice.index]!.id) } : {})} />)}
         {slices.filter(slice => !donut && slice.percent >= chartRecipe.pie.minLabelPercent * 2).map(slice => <SvgText key={`t${slice.index}`} x={slice.centroid.x} y={slice.centroid.y + 4} fontSize={11} fontWeight="700" fill="#FFFFFF" textAnchor="middle">{`${Math.round(slice.percent)}%`}</SvgText>)}
       </Svg>
-      {donut && centerContent != null && <View pointerEvents="none" style={{ position: "absolute", inset: 0, alignItems: "center", justifyContent: "center" }}>{centerContent}</View>}
+      {donut && center != null && <View pointerEvents="none" style={{ position: "absolute", inset: 0, alignItems: "center", justifyContent: "center" }}>{center}</View>}
     </View>
-    {showLegend && <ChartLegend items={data.map((d, i) => ({ id: d.id, label: d.label, color: colorOf(i), value: isChartNumber(d.value) ? `${formatValue(d.value)}${percent(i) !== undefined ? ` · ${Math.round(percent(i)!)}%` : ""}` : "—" }))} selectedId={selected} {...(onSelect || selectedId !== undefined ? { onSelect: select } : {})} />}
+    {showLegend && <ChartLegend items={data.map((d, i) => ({ id: d.id, label: d.label, color: colorOf(i), value: isChartNumber(d.value) ? `${formatValue(d.value)}${percent(i) !== undefined ? ` · ${Math.round(percent(i)!)}%` : ""}` : "—" }))} selectedId={selected} {...(legendExclusion ? { exclusion: legendExclusion } : {})} {...(onSelect || selectedId !== undefined ? { onSelect: select } : {})} />}
   </View>;
 }
 

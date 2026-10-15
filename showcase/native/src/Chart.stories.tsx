@@ -23,6 +23,13 @@ function LineExample() {
   </Section>;
 }
 
+function PieExample() {
+  const [excluded, setExcluded] = useState<readonly string[]>([]);
+  return <PieChart data={pitchMix} accessibilityLabel={copy.pie} formatValue={String} onSelect={() => undefined}
+    exclusion={{ excludedIds: excluded, onExcludedIdsChange: setExcluded, label: (datum, included) => `${datum.label} ${included ? "포함" : "제외"}` }}
+    centerContent={summary => <Text variant="title">합계 {summary.total}</Text>} />;
+}
+
 function Gallery({ only }: { only?: "line" | "bar" | "horizontal" | "stacked" | "pie" | "radar" | "scatter" | "sparkline" }) {
   const show = (kind: typeof only) => only === undefined || only === kind;
   return <ScrollView><Stack gap="xl">
@@ -31,7 +38,7 @@ function Gallery({ only }: { only?: "line" | "bar" | "horizontal" | "stacked" | 
     {show("bar") && <Section title={copy.bar}><BarChart categories={months} series={homeRunSeries} showValues accessibilityLabel={copy.bar} formatValue={formatCount} missingLabel={copy.missing} /></Section>}
     {show("horizontal") && <Section title={copy.horizontal}><BarChart categories={teams} series={teamHomeRuns} orientation="horizontal" showValues accessibilityLabel={copy.horizontal} formatValue={formatCount} missingLabel={copy.missing} /></Section>}
     {show("stacked") && <Section title={copy.stacked}><BarChart categories={months} series={hitMixSeries} layout="stacked" showAxis accessibilityLabel={copy.stacked} formatValue={formatCount} missingLabel={copy.missing} /></Section>}
-    {show("pie") && <Section title={copy.pie}><PieChart data={pitchMix} accessibilityLabel={copy.pie} formatValue={v => `${v}%`} centerContent={<Text variant="title">{copy.pie}</Text>} onSelect={() => undefined} /></Section>}
+    {show("pie") && <Section title={copy.pie}><PieExample /></Section>}
     {show("radar") && <Section title={copy.radar}><RadarChart categories={ratingAxes} series={ratingSeries} domain={[0, 100]} accessibilityLabel={copy.radar} formatValue={formatCount} missingLabel={copy.missing} /></Section>}
     {show("scatter") && <Section title={copy.scatter}><ScatterChart points={scatterPoints} xLabel={copy.x} yLabel={copy.y} formatX={formatRate} formatY={formatCount} accessibilityLabel={copy.scatter} /></Section>}
     {show("sparkline") && <Section title={copy.sparkline}><Stack axis="inline" gap="md" align="center"><Sparkline values={opsSeries[0]!.values} /><Text>{formatRate(0.934)}</Text></Stack></Section>}

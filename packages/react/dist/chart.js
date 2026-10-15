@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useCallback, useId, useLayoutEffect, useMemo, useRef, useState, } from "react";
 import { resolveDatavizSeriesColor } from "@hjmds/design-contracts/dataviz";
-import { areaPath, chartRecipe, describeChart, isChartNumber, linePath, nearestChartIndex, nearestScatterPoint, observedIndices, resolveBarGeometry, resolveLineGeometry, resolvePieGeometry, resolveRadarGeometry, resolveScatterGeometry, scaleLinear, seriesExtremes, splitSegments, stackValues, stepChartIndex, validateChartSeries, } from "@hjmds/design-contracts/components/chart";
+import { areaPath, chartRecipe, describeChart, isChartNumber, linePath, nearestChartIndex, nearestScatterPoint, observedIndices, resolveBarGeometry, resolveLineGeometry, resolvePieGeometry, resolvePieVisibility, resolveRadarGeometry, resolveScatterGeometry, scaleLinear, seriesExtremes, splitSegments, stackValues, stepChartIndex, validateChartSeries, } from "@hjmds/design-contracts/components/chart";
 import { spacing } from "@hjmds/design-contracts/foundations";
 import { useOptionalHjmTheme } from "./provider.js";
 import { classNames } from "./internal.js";
@@ -268,17 +268,18 @@ export function BarChart({ categories, series, accessibilityLabel, formatValue, 
                         : null] }), _jsx("p", { id: descriptionId, className: "hjm-visually-hidden", children: describeChart(categories, series, formatValue, missingLabel) })] }));
 }
 /** Swatch + label (+ value). Color is never the only encoding: every row carries its label. */
-export function ChartLegend({ items, selectedId, onSelect, className, layoutStyle }) {
+export function ChartLegend({ items, selectedId, onSelect, exclusion, className, layoutStyle }) {
     return (_jsx("ul", { className: classNames("hjm-chart-legend", className), style: { ...chromeStyle, ...layoutStyle }, "data-interactive": onSelect ? "" : undefined, children: items.map((item) => {
             const content = (_jsxs(_Fragment, { children: [_jsx("span", { className: "hjm-chart-legend__swatch", "aria-hidden": "true", style: { background: item.color } }), _jsx("span", { className: "hjm-chart-legend__label", children: item.label }), item.value !== undefined ? _jsx("span", { className: "hjm-chart-legend__value", children: item.value }) : null] }));
             const dimmed = selectedId != null && selectedId !== item.id;
-            return (_jsx("li", { className: "hjm-chart-legend__item", "data-dimmed": dimmed || undefined, children: onSelect ? (_jsx("button", { type: "button", className: "hjm-chart-legend__button", "aria-pressed": selectedId === item.id, onClick: () => onSelect(selectedId === item.id ? null : item.id), children: content })) : content }, item.id));
+            return (_jsxs("li", { className: "hjm-chart-legend__item", "data-dimmed": dimmed || undefined, children: [exclusion ? _jsx("input", { type: "checkbox", checked: !exclusion.excludedIds.includes(item.id), "aria-label": exclusion.label(item, !exclusion.excludedIds.includes(item.id)), onChange: () => exclusion.onToggle(item.id) }) : null, onSelect ? (_jsx("button", { type: "button", className: "hjm-chart-legend__button", "aria-pressed": selectedId === item.id, onClick: () => onSelect(selectedId === item.id ? null : item.id), children: content })) : content] }, item.id));
         }) }));
 }
-export function PieChart({ data, accessibilityLabel, formatValue, donut = true, size = 180, centerContent, selectedId, defaultSelectedId = null, onSelect, showLegend = true, className, layoutStyle, }) {
+export function PieChart({ data, accessibilityLabel, formatValue, donut = true, size = 180, centerContent, selectedId, defaultSelectedId = null, onSelect, showLegend = true, exclusion, className, layoutStyle, }) {
     const colorOf = useSeriesColor(), id = useSvgId(), descriptionId = `${id}-description`;
     const [own, setOwn] = useState(defaultSelectedId);
-    const selected = selectedId !== undefined ? selectedId : own;
+    const candidate = selectedId !== undefined ? selectedId : own;
+    const selected = candidate !== null && exclusion?.excludedIds.includes(candidate) ? null : candidate;
     const interactive = onSelect !== undefined || selectedId !== undefined;
     const select = (next) => { if (selectedId === undefined)
         setOwn(next); onSelect?.(next); };
@@ -286,12 +287,16 @@ export function PieChart({ data, accessibilityLabel, formatValue, donut = true, 
     // The selected slice moves outward by this much, so it is reserved inside the box.
     const lift = 4;
     const radius = size / 2 - lift - 2, inner = donut ? radius * chartRecipe.pie.donutRatio : 0;
-    const slices = resolvePieGeometry(data.map((d) => d.value), { cx: size / 2, cy: size / 2, radius, innerRadius: inner });
+    const visibility = resolvePieVisibility(data, exclusion?.excludedIds);
+    const slices = resolvePieGeometry(visibility.values, { cx: size / 2, cy: size / 2, radius, innerRadius: inner });
+    const center = typeof centerContent === "function" ? centerContent(visibility) : centerContent;
+    const legendExclusion = exclusion ? { excludedIds: exclusion.excludedIds, label: (item, included) => exclusion.label(data.find(datum => datum.id === item.id), included),
+        onToggle: (id) => exclusion.onExcludedIdsChange(exclusion.excludedIds.includes(id) ? exclusion.excludedIds.filter(key => key !== id) : [...exclusion.excludedIds, id]) } : undefined;
     const colorAt = (index) => colorOf(data[index], index);
     const percentOf = (index) => slices.find((slice) => slice.index === index)?.percent;
     const percentText = (index) => { const p = percentOf(index); return p === undefined ? "" : `${Math.round(p)}%`; };
     const rowValue = (d, i) => isChartNumber(d.value) ? `${formatValue(d.value)}${percentOf(i) !== undefined ? ` · ${percentText(i)}` : ""}` : "—";
-    const summary = data.map((d, i) => `${d.label} ${isChartNumber(d.value) ? formatValue(d.value) : ""}${percentOf(i) !== undefined ? ` (${percentText(i)})` : ""}`.trim()).join(", ");
+    const summary = data.map((d, i) => exclusion?.excludedIds.includes(d.id) ? "" : `${d.label} ${isChartNumber(d.value) ? formatValue(d.value) : ""}${percentOf(i) !== undefined ? ` (${percentText(i)})` : ""}`.trim()).filter(Boolean).join(", ");
     // With a legend, its rows are the keyboard path; slices stay pointer targets so each item has
     // one tab stop. Without a legend the slices themselves become the buttons.
     const sliceButtons = interactive && !showLegend;
@@ -310,7 +315,7 @@ export function PieChart({ data, accessibilityLabel, formatValue, donut = true, 
                                             toggle(datum.id);
                                         },
                                     } : {}) }, datum.id));
-                            }), !donut ? slices.filter((slice) => slice.percent >= chartRecipe.pie.minLabelPercent * 2).map((slice) => (_jsx("text", { className: "hjm-chart__slice-label", x: slice.centroid.x, y: slice.centroid.y, dominantBaseline: "middle", textAnchor: "middle", children: percentText(slice.index) }, `t${slice.index}`))) : null] }), donut && centerContent != null ? _jsx("div", { className: "hjm-chart__pie-center", children: centerContent }) : null] }), showLegend ? (_jsx(ChartLegend, { items: data.map((d, i) => ({ id: d.id, label: d.label, color: colorAt(i), value: rowValue(d, i) })), selectedId: selected, ...(interactive ? { onSelect: select } : {}) })) : null, _jsx("p", { id: descriptionId, className: "hjm-visually-hidden", children: summary })] }));
+                            }), !donut ? slices.filter((slice) => slice.percent >= chartRecipe.pie.minLabelPercent * 2).map((slice) => (_jsx("text", { className: "hjm-chart__slice-label", x: slice.centroid.x, y: slice.centroid.y, dominantBaseline: "middle", textAnchor: "middle", children: percentText(slice.index) }, `t${slice.index}`))) : null] }), donut && center != null ? _jsx("div", { className: "hjm-chart__pie-center", children: center }) : null] }), showLegend ? (_jsx(ChartLegend, { items: data.map((d, i) => ({ id: d.id, label: d.label, color: colorAt(i), value: rowValue(d, i) })), selectedId: selected, ...(legendExclusion ? { exclusion: legendExclusion } : {}), ...(interactive ? { onSelect: select } : {}) })) : null, _jsx("p", { id: descriptionId, className: "hjm-visually-hidden", children: summary })] }));
 }
 export function RadarChart({ categories, series, accessibilityLabel, formatValue, missingLabel, domain, levels = chartRecipe.radar.levels, size = 240, showLegend, className, layoutStyle, }) {
     validateChartSeries(categories, series);

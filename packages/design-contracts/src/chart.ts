@@ -450,3 +450,16 @@ export const chartBehavior = {
     "pie-slices-ignore-negative-and-missing-values",
   ],
 } as const satisfies BehaviorContract;
+
+/** Excluding a slice changes the denominator; selecting one only emphasizes it (Lucian 097). */
+export function resolvePieVisibility(data: readonly Readonly<{ id: string; value: number | null }>[], excludedIds: readonly string[] = []) {
+  const ids = new Set(data.map(datum => datum.id)), excluded = new Set(excludedIds);
+  if (ids.size !== data.length || data.some(datum => !datum.id.trim())) throw new TypeError("Pie data requires distinct nonempty ids");
+  if (excluded.size !== excludedIds.length || excludedIds.some(id => !ids.has(id))) throw new TypeError("Excluded pie ids must be distinct known ids");
+  // Keep the existing geometry contract: negative/nonfinite/missing values never enter a share.
+  const values = data.map(datum => excluded.has(datum.id) || !isChartNumber(datum.value) || datum.value < 0 ? null : datum.value);
+  const total = values.reduce<number>((sum, value) => sum + (value ?? 0), 0);
+  if (!Number.isFinite(total)) throw new RangeError("Pie total must be finite");
+  return { values, total, includedCount: data.length - excluded.size, observedCount: values.filter(value => value !== null).length };
+}
+export type PieVisibilitySummary = ReturnType<typeof resolvePieVisibility>;

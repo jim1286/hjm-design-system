@@ -172,3 +172,13 @@
 - 계약 검사는 `test/chart.test.ts`(기하·빈 값·쌓기·척도·포커스·텍스트 대안)다.
 - 2026-10-14 작성 시점에 두 renderer는 구현 중이다. renderer 테스트·Storybook(`배포/컴포넌트/데이터 표시/차트`)·기기 확인 결과는
   들어온 뒤 이 절에 따로 기록한다. 계약 검사 통과를 renderer 검증이나 제품 반영으로 보고하지 않는다.
+
+## 도넛 항목 제외 (2026-10-15, Lucian 097)
+
+선택 강조만으로 범주를 제외한 것처럼 보이던 차이를 해소하기 위해 PieChart에 controlled `exclusion`을 추가했다.
+`excludedIds`, `onExcludedIdsChange`, 제품 문구 `label(datum,included)`를 전달한다. 기존 selectedId/onSelect는 강조만 소유하며 별도 범례 checkbox가 분모를 바꾼다.
+공유 `resolvePieVisibility`가 원본 인덱스를 보존해 색 변화를 막고, 합계와 geometry에서 제외값을 null로 처리한다.
+`centerContent`는 기존 ReactNode 또는 `(summary) => ReactNode`를 받는다. summary.total은 실제 포함된 관측값 합계, observedCount는 실제 관측 수다.
+모두 제외/0/미관측이면 조각이 없고 합계 0이다. 100%나 가짜 조각을 만들지 않는다. 제외된 항목이 다시 포함되면 원래 색과 선택 강조를 되찾는다.
+Native도 포함 여부 checkbox와 독립된 강조 행동을 제공한다. onExcludedIdsChange는 데이터 자체를 삭제하지 않는다.
+미게시 개발 API이며 제품 데이터/선택의 controlled 반영은 소비 제품이 소유한다.

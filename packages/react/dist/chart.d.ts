@@ -1,5 +1,5 @@
 import { type ReactNode } from "react";
-import { type ChartBarLayout, type ChartCurve, type ChartOrientation, type ChartSeries, type ScatterDatum } from "@hjmds/design-contracts/components/chart";
+import { type PieVisibilitySummary, type ChartBarLayout, type ChartCurve, type ChartOrientation, type ChartSeries, type ScatterDatum } from "@hjmds/design-contracts/components/chart";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 type FocusDetail = Readonly<{
     scrubbing: boolean;
@@ -69,12 +69,17 @@ export type ChartLegendItem = Readonly<{
 }>;
 export type ChartLegendProps = ChartRootProps & Readonly<{
     items: readonly ChartLegendItem[];
+    exclusion?: Readonly<{
+        excludedIds: readonly string[];
+        onToggle: (id: string) => void;
+        label: (item: ChartLegendItem, included: boolean) => string;
+    }>;
     selectedId?: string | null;
     /** When given, rows are toggle buttons; pressing the selected row clears the selection. */
     onSelect?: (id: string | null) => void;
 }>;
 /** Swatch + label (+ value). Color is never the only encoding: every row carries its label. */
-export declare function ChartLegend({ items, selectedId, onSelect, className, layoutStyle }: ChartLegendProps): import("react").JSX.Element;
+export declare function ChartLegend({ items, selectedId, onSelect, exclusion, className, layoutStyle }: ChartLegendProps): import("react").JSX.Element;
 export type PieDatum = Readonly<{
     id: string;
     label: string;
@@ -88,13 +93,19 @@ export type PieChartProps = ChartRootProps & Readonly<{
     donut?: boolean;
     size?: number;
     /** Rendered in the donut hole (ignored for a full pie). */
-    centerContent?: ReactNode;
+    centerContent?: ReactNode | ((summary: PieVisibilitySummary) => ReactNode);
+    /** Controlled denominator filtering, independent of selectedId emphasis. */
+    exclusion?: Readonly<{
+        excludedIds: readonly string[];
+        onExcludedIdsChange: (ids: readonly string[]) => void;
+        label: (datum: PieDatum, included: boolean) => string;
+    }>;
     selectedId?: string | null;
     defaultSelectedId?: string | null;
     onSelect?: (id: string | null) => void;
     showLegend?: boolean;
 }>;
-export declare function PieChart({ data, accessibilityLabel, formatValue, donut, size, centerContent, selectedId, defaultSelectedId, onSelect, showLegend, className, layoutStyle, }: PieChartProps): import("react").JSX.Element;
+export declare function PieChart({ data, accessibilityLabel, formatValue, donut, size, centerContent, selectedId, defaultSelectedId, onSelect, showLegend, exclusion, className, layoutStyle, }: PieChartProps): import("react").JSX.Element;
 export type RadarChartProps = ChartRootProps & Readonly<{
     /** At least three axes. */
     categories: readonly string[];

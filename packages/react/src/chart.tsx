@@ -23,7 +23,7 @@ import {
   observedIndices,
   resolveBarGeometry,
   resolveLineGeometry,
-  resolvePieGeometry,
+  resolvePieGeometry, resolvePieVisibility, type PieVisibilitySummary,
   resolveRadarGeometry,
   resolveScatterGeometry,
   scaleLinear,
@@ -481,14 +481,14 @@ export function BarChart({
 
 export type ChartLegendItem = Readonly<{ id: string; label: string; color: string; value?: string }>;
 export type ChartLegendProps = ChartRootProps & Readonly<{
-  items: readonly ChartLegendItem[];
+  items: readonly ChartLegendItem[]; exclusion?: Readonly<{ excludedIds: readonly string[]; onToggle: (id: string) => void; label: (item: ChartLegendItem, included: boolean) => string }>;
   selectedId?: string | null;
   /** When given, rows are toggle buttons; pressing the selected row clears the selection. */
   onSelect?: (id: string | null) => void;
 }>;
 
 /** Swatch + label (+ value). Color is never the only encoding: every row carries its label. */
-export function ChartLegend({ items, selectedId, onSelect, className, layoutStyle }: ChartLegendProps) {
+export function ChartLegend({ items, selectedId, onSelect, exclusion, className, layoutStyle }: ChartLegendProps) {
   return (
     <ul className={classNames("hjm-chart-legend", className)} style={{ ...chromeStyle, ...layoutStyle }} data-interactive={onSelect ? "" : undefined}>
       {items.map((item) => {
@@ -502,6 +502,7 @@ export function ChartLegend({ items, selectedId, onSelect, className, layoutStyl
         const dimmed = selectedId != null && selectedId !== item.id;
         return (
           <li key={item.id} className="hjm-chart-legend__item" data-dimmed={dimmed || undefined}>
+            {exclusion ? <input type="checkbox" checked={!exclusion.excludedIds.includes(item.id)} aria-label={exclusion.label(item, !exclusion.excludedIds.includes(item.id))} onChange={() => exclusion.onToggle(item.id)} /> : null}
             {onSelect ? (
               <button type="button" className="hjm-chart-legend__button" aria-pressed={selectedId === item.id} onClick={() => onSelect(selectedId === item.id ? null : item.id)}>
                 {content}
@@ -526,7 +527,9 @@ export type PieChartProps = ChartRootProps & Readonly<{
   donut?: boolean;
   size?: number;
   /** Rendered in the donut hole (ignored for a full pie). */
-  centerContent?: ReactNode;
+  centerContent?: ReactNode | ((summary: PieVisibilitySummary) => ReactNode);
+  /** Controlled denominator filtering, independent of selectedId emphasis. */
+  exclusion?: Readonly<{ excludedIds: readonly string[]; onExcludedIdsChange: (ids: readonly string[]) => void; label: (datum: PieDatum, included: boolean) => string }>;
   selectedId?: string | null;
   defaultSelectedId?: string | null;
   onSelect?: (id: string | null) => void;
@@ -535,23 +538,28 @@ export type PieChartProps = ChartRootProps & Readonly<{
 
 export function PieChart({
   data, accessibilityLabel, formatValue, donut = true, size = 180, centerContent, selectedId, defaultSelectedId = null, onSelect,
-  showLegend = true, className, layoutStyle,
+  showLegend = true, exclusion, className, layoutStyle,
 }: PieChartProps) {
   const colorOf = useSeriesColor(), id = useSvgId(), descriptionId = `${id}-description`;
   const [own, setOwn] = useState<string | null>(defaultSelectedId);
-  const selected = selectedId !== undefined ? selectedId : own;
+  const candidate = selectedId !== undefined ? selectedId : own;
+  const selected = candidate !== null && exclusion?.excludedIds.includes(candidate) ? null : candidate;
   const interactive = onSelect !== undefined || selectedId !== undefined;
   const select = (next: string | null) => { if (selectedId === undefined) setOwn(next); onSelect?.(next); };
   const toggle = (next: string) => select(selected === next ? null : next);
   // The selected slice moves outward by this much, so it is reserved inside the box.
   const lift = 4;
   const radius = size / 2 - lift - 2, inner = donut ? radius * chartRecipe.pie.donutRatio : 0;
-  const slices = resolvePieGeometry(data.map((d) => d.value), { cx: size / 2, cy: size / 2, radius, innerRadius: inner });
+  const visibility = resolvePieVisibility(data, exclusion?.excludedIds);
+  const slices = resolvePieGeometry(visibility.values, { cx: size / 2, cy: size / 2, radius, innerRadius: inner });
+  const center = typeof centerContent === "function" ? centerContent(visibility) : centerContent;
+  const legendExclusion = exclusion ? { excludedIds: exclusion.excludedIds, label: (item: ChartLegendItem, included: boolean) => exclusion.label(data.find(datum => datum.id === item.id)!, included),
+    onToggle: (id: string) => exclusion.onExcludedIdsChange(exclusion.excludedIds.includes(id) ? exclusion.excludedIds.filter(key => key !== id) : [...exclusion.excludedIds, id]) } : undefined;
   const colorAt = (index: number) => colorOf(data[index]!, index);
   const percentOf = (index: number) => slices.find((slice) => slice.index === index)?.percent;
   const percentText = (index: number) => { const p = percentOf(index); return p === undefined ? "" : `${Math.round(p)}%`; };
   const rowValue = (d: PieDatum, i: number) => isChartNumber(d.value) ? `${formatValue(d.value)}${percentOf(i) !== undefined ? ` · ${percentText(i)}` : ""}` : "—";
-  const summary = data.map((d, i) => `${d.label} ${isChartNumber(d.value) ? formatValue(d.value) : ""}${percentOf(i) !== undefined ? ` (${percentText(i)})` : ""}`.trim()).join(", ");
+  const summary = data.map((d, i) => exclusion?.excludedIds.includes(d.id) ? "" : `${d.label} ${isChartNumber(d.value) ? formatValue(d.value) : ""}${percentOf(i) !== undefined ? ` (${percentText(i)})` : ""}`.trim()).filter(Boolean).join(", ");
   // With a legend, its rows are the keyboard path; slices stay pointer targets so each item has
   // one tab stop. Without a legend the slices themselves become the buttons.
   const sliceButtons = interactive && !showLegend;
@@ -591,12 +599,13 @@ export function PieChart({
             <text key={`t${slice.index}`} className="hjm-chart__slice-label" x={slice.centroid.x} y={slice.centroid.y} dominantBaseline="middle" textAnchor="middle">{percentText(slice.index)}</text>
           )) : null}
         </svg>
-        {donut && centerContent != null ? <div className="hjm-chart__pie-center">{centerContent}</div> : null}
+        {donut && center != null ? <div className="hjm-chart__pie-center">{center}</div> : null}
       </div>
       {showLegend ? (
         <ChartLegend
           items={data.map((d, i) => ({ id: d.id, label: d.label, color: colorAt(i), value: rowValue(d, i) }))}
           selectedId={selected}
+          {...(legendExclusion ? { exclusion: legendExclusion } : {})}
           {...(interactive ? { onSelect: select } : {})}
         />
       ) : null}

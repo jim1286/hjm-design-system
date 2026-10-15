@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 미게시(1.20.0 이후)
-- 검토일: 2026-10-14
+- 검토일: 2026-10-15
 - 근거: [Chart](../../chart.md), `src/chart.ts`(`chartRecipe`, `describeChart`, `resolveLineGeometry`), `src/dataviz.ts`(`resolveDatavizSeriesColor`, `datavizChromeTokens`)
 - 스토리북: `배포/컴포넌트/데이터 표시/차트`
 
@@ -231,3 +231,18 @@ import { BarChart, Sparkline } from "@hjmds/react-native/chart";
 - 스크럽과 화살표 이동은 관측값이 있는 index만 지난다. 모든 계열이 `null`인 범주에는 포커스가 가지 않는다.
 - 2026-10-14 작성 시점에 Web·Native renderer와 Storybook 항목은 구현 중이다. prop 표는 공유 사양 기준이며 renderer가 들어온 뒤
   실제 Props 타입과 다시 대조한다.
+
+## 도넛 범주를 실제로 제외하기
+
+범주를 강조하려면 selectedId/onSelect, 분모에서 빼려면 exclusion을 쓴다. 기존 강조 API의 의미는 바꾸지 않았다.
+
+```tsx
+// Web — Native는 @hjmds/react-native/chart에서 같은 PieChart를 가져온다.
+<PieChart data={data} accessibilityLabel={t("share")} formatValue={formatCount}
+  exclusion={{ excludedIds, onExcludedIdsChange: setExcludedIds,
+    label: (datum, included) => t(included ? "included" : "excluded", { name: datum.label }) }}
+  centerContent={summary => <span>{formatCount(summary.total)}</span>} />;
+```
+
+Native centerContent에는 Text 등 Native 노드를 쓴다. 모두 제외하거나 합계 0이면 조각을 그리지 않는다.
+항목 ID·색 인덱스는 그대로 보존하고 실제 포함값으로 비율을 재계산한다. 차트 의미 전달에는 수치·checkbox 상태도 사용한다.

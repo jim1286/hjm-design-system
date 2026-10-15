@@ -380,5 +380,16 @@ export declare const chartBehavior: {
     };
     readonly scenarios: readonly ["missing-values-split-the-line-instead-of-drawing-zero", "bars-and-stacks-always-include-a-zero-baseline", "inverted-scale-puts-the-best-rank-on-top", "scrubbing-reports-the-focused-index-and-releasing-restores-the-latest", "the-focused-point-is-reachable-without-a-drag-via-adjustable-or-arrow-keys", "series-colors-come-from-the-product-or-the-dataviz-palette-never-status-colors", "every-chart-exposes-a-product-formatted-text-alternative", "radar-axes-share-one-domain", "pie-slices-ignore-negative-and-missing-values"];
 };
+/** Excluding a slice changes the denominator; selecting one only emphasizes it (Lucian 097). */
+export declare function resolvePieVisibility(data: readonly Readonly<{
+    id: string;
+    value: number | null;
+}>[], excludedIds?: readonly string[]): {
+    values: (number | null)[];
+    total: number;
+    includedCount: number;
+    observedCount: number;
+};
+export type PieVisibilitySummary = ReturnType<typeof resolvePieVisibility>;
 export {};
 //# sourceMappingURL=chart.d.ts.map
