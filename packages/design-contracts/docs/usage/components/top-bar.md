@@ -126,3 +126,11 @@ NavigationBar의 Native 프레임 모서리는 Provider의 `tokens.radius.xl`을
 | 큰 글자 | CSS가 제목을 다음 행으로 | 글자 배율이 `largeTextThreshold` 이상이면 leading+제목 행 아래에 행동 행 |
 | 행동 컴포넌트 | 일반 `IconButton`·`Link` | `TopBarAction`(아이콘 + 마이크로 라벨, 44pt) |
 | `NavigationBar` 배경 | 지원 시 blur + 92% 불투명 | 불투명 surface(blur 없음) |
+
+### 제품 제어를 중앙에 넣기
+
+`titleContent`는 제목 자리에 제품 상태 칩 같은 독립 제어를 넣는 공개 슬롯이다.
+배치·중앙 정렬은 TopBar가 맡고 제품은 제어의 데이터·접근성 이름·행동만 연결한다.
+`title`, `subtitle`, `titleLeading`, 제목 클릭/접근성 props와 함께 쓰지 않는다.
+실행 미리보기의 펼침 칩을 앱이 자체 헤더로 다시 조립하던 문제를 없애기 위해 추가했다.
+색은 기존 provider의 브랜드/semantic palette 범위로 연결한다.

@@ -7,6 +7,8 @@ import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type TopBarProps = Omit<HTMLAttributes<HTMLDivElement>, "title" | "children"> & Readonly<{
   title?: string;
+  /** Product control in the shared title slot; exclusive with text title affordances. */
+  titleContent?: ReactNode;
   /** Secondary product context; the shared title slot owns its placement. */
   subtitle?: string;
   titleLeading?: ReactNode;
@@ -24,11 +26,14 @@ export type TopBarProps = Omit<HTMLAttributes<HTMLDivElement>, "title" | "childr
 
 /** Screen chrome stays composable inside pages and dialogs, without adding a second banner landmark. */
 export const TopBar = forwardRef<HTMLDivElement, TopBarProps>(function TopBar({
-  title, subtitle, titleLeading, onTitleClick, titleAccessibilityLabel, headingLevel = 1,
+  title, titleContent, subtitle, titleLeading, onTitleClick, titleAccessibilityLabel, headingLevel = 1,
   leading, trailing, actions, centered = topBarRecipe.defaults.centered, safeAreaTop = 0,
   className, style, layoutStyle, ...props
 }, ref) {
   const theme = useOptionalHjmTheme();
+  if (titleContent !== undefined && (title !== undefined || subtitle !== undefined || titleLeading !== undefined || onTitleClick !== undefined || titleAccessibilityLabel !== undefined)) {
+    throw new TypeError("TopBar titleContent is exclusive with title affordances");
+  }
   if (subtitle !== undefined && !subtitle.trim()) throw new TypeError("TopBar subtitle must not be empty");
   if (!Number.isFinite(safeAreaTop) || safeAreaTop < 0) throw new RangeError("TopBar safeAreaTop must be non-negative");
   if (title !== undefined && !title.trim()) throw new TypeError("TopBar title must not be empty");
@@ -48,10 +53,10 @@ export const TopBar = forwardRef<HTMLDivElement, TopBarProps>(function TopBar({
     } as CSSProperties}>
     <div className="hjm-top-bar__leading">{leading}</div>
     <div className="hjm-top-bar__title">
-      {title === undefined ? null : <Heading className="hjm-top-bar__heading">
+      {titleContent ?? (title === undefined ? null : <Heading className="hjm-top-bar__heading">
         {onTitleClick ? <Button tone="ghost" onClick={onTitleClick} aria-label={titleAccessibilityLabel} leading={titleLeading}>{title}</Button>
           : <span aria-label={titleAccessibilityLabel}>{titleLeading}{title}</span>}
-      </Heading>}
+      </Heading>)}
       {subtitle ? <span className="hjm-top-bar__subtitle">{subtitle}</span> : null}
     </div>
     <div className="hjm-top-bar__trailing">{actions ?? trailing}</div>

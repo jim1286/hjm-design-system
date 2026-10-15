@@ -697,8 +697,11 @@ export function TopBarAction(props) {
     return props.renderAction?.(controlProps) ?? _jsx(Pressable, { ...controlProps });
 }
 /** Native screen top bar with logical action slots and large-text reflow. */
-export function TopBar({ title, subtitle, titleLeading, onTitlePress, titleAccessibilityLabel, titleAccessibilityHint, leading, trailing, actions, centered = topBarRecipe.defaults.centered, safeAreaTop = 0, layoutStyle, ...removedProps }) {
+export function TopBar({ title, titleContent: customTitleContent, subtitle, titleLeading, onTitlePress, titleAccessibilityLabel, titleAccessibilityHint, leading, trailing, actions, centered = topBarRecipe.defaults.centered, safeAreaTop = 0, layoutStyle, ...removedProps }) {
     assertNoRemovedStyleProps("TopBar", removedProps, ["style", "leadingStyle", "titleStyle", "trailingStyle"]);
+    if (customTitleContent !== undefined && (title !== undefined || subtitle !== undefined || titleLeading !== undefined || onTitlePress !== undefined || titleAccessibilityLabel !== undefined || titleAccessibilityHint !== undefined)) {
+        throw new TypeError("TopBar titleContent is exclusive with title affordances");
+    }
     if (subtitle !== undefined && !subtitle.trim())
         throw new TypeError("TopBar subtitle must not be empty");
     if (!Number.isFinite(safeAreaTop) || safeAreaTop < 0) {
@@ -718,7 +721,7 @@ export function TopBar({ title, subtitle, titleLeading, onTitlePress, titleAcces
     }
     const trailingContent = hasTrailing ? trailing : actions;
     const hasTrailingContent = hasTrailing || hasActions;
-    const hasTitle = title !== undefined;
+    const hasTitle = title !== undefined || customTitleContent !== undefined;
     const resolvedTitle = title ?? "";
     if (!hasTitle && (subtitle !== undefined ||
         titleLeading !== undefined ||
@@ -760,6 +763,8 @@ export function TopBar({ title, subtitle, titleLeading, onTitlePress, titleAcces
                 minWidth: topBarRecipe.titleAction.minWidth,
             },
         ];
+        if (customTitleContent !== undefined)
+            return _jsx(View, { accessible: false, style: commonStyle, children: customTitleContent });
         if (onTitlePress) {
             return (_jsx(Pressable, { accessible: true, accessibilityHint: titleAccessibilityHint, accessibilityLabel: titleAccessibilityLabel ?? [resolvedTitle, subtitle].filter(Boolean).join(". "), accessibilityRole: "button", onPress: onTitlePress, style: ({ pressed }) => [
                     commonStyle,

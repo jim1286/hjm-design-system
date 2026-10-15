@@ -1273,6 +1273,8 @@ export function TopBarAction(props: TopBarActionProps) {
 
 export type TopBarProps = Readonly<{
   title?: string;
+  /** Product control in the shared title slot; exclusive with text title affordances. */
+  titleContent?: ReactNode;
   /** Secondary product context below the title. */
   subtitle?: string;
   /** Optional visual before the title, such as a small product avatar. */
@@ -1294,6 +1296,7 @@ export type TopBarProps = Readonly<{
 /** Native screen top bar with logical action slots and large-text reflow. */
 export function TopBar({
   title,
+  titleContent: customTitleContent,
   subtitle,
   titleLeading,
   onTitlePress,
@@ -1308,6 +1311,9 @@ export function TopBar({
   ...removedProps
 }: TopBarProps) {
   assertNoRemovedStyleProps("TopBar", removedProps, ["style", "leadingStyle", "titleStyle", "trailingStyle"]);
+  if (customTitleContent !== undefined && (title !== undefined || subtitle !== undefined || titleLeading !== undefined || onTitlePress !== undefined || titleAccessibilityLabel !== undefined || titleAccessibilityHint !== undefined)) {
+    throw new TypeError("TopBar titleContent is exclusive with title affordances");
+  }
   if (subtitle !== undefined && !subtitle.trim()) throw new TypeError("TopBar subtitle must not be empty");
   if (!Number.isFinite(safeAreaTop) || safeAreaTop < 0) {
     throw new RangeError("TopBar safeAreaTop must be non-negative");
@@ -1326,7 +1332,7 @@ export function TopBar({
   }
   const trailingContent = hasTrailing ? trailing : actions;
   const hasTrailingContent = hasTrailing || hasActions;
-  const hasTitle = title !== undefined;
+  const hasTitle = title !== undefined || customTitleContent !== undefined;
   const resolvedTitle = title ?? "";
   if (!hasTitle && (
     subtitle !== undefined ||
@@ -1398,6 +1404,7 @@ export function TopBar({
         minWidth: topBarRecipe.titleAction.minWidth,
       },
     ];
+    if (customTitleContent !== undefined) return <View accessible={false} style={commonStyle}>{customTitleContent}</View>;
     if (onTitlePress) {
       return (
         <Pressable

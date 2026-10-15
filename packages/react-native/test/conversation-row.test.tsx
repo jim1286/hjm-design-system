@@ -1,3 +1,4 @@
+import {TopBar} from "../src/navigation.js";
 import {act,create,type ReactTestRenderer} from "react-test-renderer";
 import {it,expect,vi} from "vitest";
 import {Pressable} from "react-native";
@@ -11,4 +12,11 @@ it("text navigation retains radio activation and conversation metadata",()=>{
  const options=tree!.root.findAllByType(Pressable).filter(node=>node.props.accessibilityRole==="radio");
  expect(options).toHaveLength(2);act(()=>options[1]!.props.onPress());expect(change).toHaveBeenCalledWith("following");
  expect(JSON.stringify(tree!.toJSON())).toContain(" · now");act(()=>tree!.unmount());
+});
+
+it("preserves independent center control activation in TopBar",()=>{
+ let tree:ReactTestRenderer;const toggle=vi.fn();
+ act(()=>{tree=create(<HjmNativeProvider><TopBar titleContent={<Pressable accessibilityLabel="작업 상태" onPress={toggle}/>}/></HjmNativeProvider>);});
+ const control=tree!.root.findAllByType(Pressable).find(node=>node.props.accessibilityLabel==="작업 상태")!;
+ act(()=>control.props.onPress());expect(toggle).toHaveBeenCalledOnce();act(()=>tree!.unmount());
 });

@@ -72,3 +72,10 @@ it("keeps a toolbar subtitle separate from its named title action", async () => 
   await act(async () => host.querySelector<HTMLButtonElement>('button[aria-label="도구 상세"]')!.click());
   expect(open).toHaveBeenCalledOnce();
 });
+
+it("keeps a product title control interactive in the common title slot", async () => {
+  const toggle=vi.fn();
+  await act(async () => root.render(<HjmProvider><TopBar titleContent={<button onClick={toggle}>작업 상태</button>}/></HjmProvider>));
+  const button=host.querySelector<HTMLButtonElement>(".hjm-top-bar__title button")!;
+  expect(button).not.toBeNull(); await act(async()=>button.click()); expect(toggle).toHaveBeenCalledOnce();
+});
