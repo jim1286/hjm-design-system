@@ -4,7 +4,7 @@
 
 ## @hjmds/react
 
-고유 공개 컴포넌트 및 provider 이름 189개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 190개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -101,6 +101,7 @@
 | Masonry | Masonry | canonical | ./masonry |
 | MatrixTable | DataTable | companion-or-alternative | ./data-table |
 | MediaSelectionScreen | 별도 보조 기능 | supplemental | ./screen-flows |
+| MediaTransport | 별도 보조 기능 | supplemental | ./media-transport |
 | Mentions | Mentions | canonical | root, ./mentions |
 | Menu | Menu | canonical | root, ./overlays |
 | Menubar | Menubar | canonical | root, ./menubar |
@@ -200,7 +201,7 @@
 
 ## @hjmds/react-native
 
-고유 공개 컴포넌트 및 provider 이름 176개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 177개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -297,6 +298,7 @@
 | Masonry | Masonry | canonical | ./masonry |
 | MatrixTable | DataTable | companion-or-alternative | ./data-table |
 | MediaSelectionScreen | 별도 보조 기능 | supplemental | ./screen-flows |
+| MediaTransport | 별도 보조 기능 | supplemental | ./media-transport |
 | Mentions | Mentions | canonical | root, ./mentions |
 | Menu | Menu | canonical | root, ./navigation, ./top-bar |
 | MessageComposer | 별도 보조 기능 | supplemental | ./screens |

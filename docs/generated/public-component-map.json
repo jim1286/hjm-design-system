@@ -896,6 +896,15 @@
         "role": "supplemental"
       },
       {
+        "name": "MediaTransport",
+        "source": "packages/react/src/media-transport.tsx",
+        "entries": [
+          "./media-transport"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "Mentions",
         "source": "packages/react/src/mentions.tsx",
         "entries": [
@@ -2711,6 +2720,15 @@
         "source": "packages/react-native/src/screen-flows.tsx",
         "entries": [
           "./screen-flows"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "MediaTransport",
+        "source": "packages/react-native/src/media-transport.tsx",
+        "entries": [
+          "./media-transport"
         ],
         "canonicalComponent": null,
         "role": "supplemental"

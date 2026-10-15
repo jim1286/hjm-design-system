@@ -45,6 +45,7 @@ const extensions = {
 const supplemental = new Set([
   "Rating", "ImageComparison",
   // Controlled collection compositions reuse FieldGroup, ActionSession and DataTable; no new canonical rows.
+  "MediaTransport",
   "SplitAction", "AccountSwitcher", "PasswordRulesField", "PricingChoice",
   "ImportFieldMapping", "ConversionFunnel", "CohortRetentionTable", "CorrelationMatrix", "TargetSummary", "HistogramExplorer",
   "InlineEdit", "RepeatableFieldGroup", "SelectionActionBar", "FilterRecovery", "TableColumnSettings",

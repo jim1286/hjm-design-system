@@ -542,6 +542,11 @@
       "types": "./dist/task-controls.d.ts",
       "import": "./dist/task-controls.js",
       "default": "./dist/task-controls.js"
+    },
+    "./media-transport": {
+      "types": "./dist/media-transport.d.ts",
+      "import": "./dist/media-transport.js",
+      "default": "./dist/media-transport.js"
     }
   },
   "files": [

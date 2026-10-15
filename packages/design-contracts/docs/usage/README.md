@@ -227,6 +227,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [캐릭터와 시작 행동](compositions/stea-pixel-empty.md) | 피드백과 복구 | 아직 만든 것이 없는 첫 빈 화면에 제품 캐릭터를 움직여 보이고 첫 행동 하나로 이끌 때 쓴다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
 | [끌기·밀기·화면 전환](compositions/interaction-adapters.md) | 직접 조작과 모션 | 순서 바꾸기·행 작업·내용 전환·카드 넘기기·달성 축하·카드 확대 화면 전환 같은 선택형 상호작용 어댑터를 한 화면에서 함께 쓸 때, 각 어댑터를 어디에 놓고 무엇으로 감싸야 하는지 확인하는 구성이다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
 | [높이가 이어지는 패널](compositions/adaptive-content.md) | 직접 조작과 모션 | 패널의 길이가 달라질 때 아래 행동이 새 높이로 이동해야 하는 작은 내용 영역에 쓴다. | 1.14.0 | Web · Native | 구성 API별 | 배포 |
+| [미디어 재생 제어](compositions/media-transport.md) | 직접 조작과 모션 | 실제 오디오/영상 엔진의 재생·일시 정지·유한 길이 탐색을 같은 구조로 제공할 때 쓴다. | 미게시(1.20.0 이후) | Web · Native | 구성 API별 | 실험 |
 | [선택 배경 이동](compositions/selection-motion.md) | 직접 조작과 모션 | 짧은 단일 선택의 현재 항목을 이어지는 배경으로 보여 줄 때 쓴다. | 1.14.0 | Web · Native | 구성 API별 | 배포 |
 | [숫자 변화와 메뉴 변형](compositions/optional-motion.md) | 직접 조작과 모션 | 선택 설치 모션(숫자 자리 단위 변화, 메뉴 형태 변환)을 기존 컴포넌트 자리에 끼워 넣을 때 쓴다. | 1.12.1 | Web | 구성 API별 | 배포 |
 | [이미지·시트·키보드 조작](compositions/optional-adapters.md) | 직접 조작과 모션 | Native 앱 한 화면에서 이미지 확대 보기, 끌어서 높이를 바꾸는 시트, OS 길게 누르기 메뉴, 키보드를 따라 올라가는 하단 행동을 함께 쓸 때 provider 중첩 순서와 각 요소의 자리를 확인하는 구성이다. | 1.12.1 | Native | 구성 API별 | 배포 |
