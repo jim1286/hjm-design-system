@@ -344,6 +344,15 @@
         "role": "supplemental"
       },
       {
+        "name": "CohortRetentionTable",
+        "source": "packages/react/src/data-workflows.tsx",
+        "entries": [
+          "./data-workflows"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "Collapsible",
         "source": "packages/react/src/collapsible.tsx",
         "entries": [
@@ -437,6 +446,24 @@
         ],
         "canonicalComponent": "ContextMenu",
         "role": "canonical"
+      },
+      {
+        "name": "ConversionFunnel",
+        "source": "packages/react/src/data-workflows.tsx",
+        "entries": [
+          "./data-workflows"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "CorrelationMatrix",
+        "source": "packages/react/src/data-workflows.tsx",
+        "entries": [
+          "./data-workflows"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "CounterBadge",
@@ -671,6 +698,15 @@
         "role": "canonical"
       },
       {
+        "name": "HistogramExplorer",
+        "source": "packages/react/src/data-workflows.tsx",
+        "entries": [
+          "./data-workflows"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "HjmProvider",
         "source": "packages/react/src/provider.tsx",
         "entries": [
@@ -715,6 +751,15 @@
         "source": "packages/react/src/image-comparison.tsx",
         "entries": [
           "./image-comparison"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "ImportFieldMapping",
+        "source": "packages/react/src/data-workflows.tsx",
+        "entries": [
+          "./data-workflows"
         ],
         "canonicalComponent": null,
         "role": "supplemental"
@@ -1517,6 +1562,15 @@
         "role": "canonical"
       },
       {
+        "name": "TargetSummary",
+        "source": "packages/react/src/data-workflows.tsx",
+        "entries": [
+          "./data-workflows"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "TaskList",
         "source": "packages/react/src/task-list.tsx",
         "entries": [
@@ -2028,6 +2082,15 @@
         "role": "supplemental"
       },
       {
+        "name": "CohortRetentionTable",
+        "source": "packages/react-native/src/data-workflows.tsx",
+        "entries": [
+          "./data-workflows"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "Collapsible",
         "source": "packages/react-native/src/collapsible.tsx",
         "entries": [
@@ -2089,6 +2152,24 @@
         "source": "packages/react-native/src/content-transition.tsx",
         "entries": [
           "./content-transition"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "ConversionFunnel",
+        "source": "packages/react-native/src/data-workflows.tsx",
+        "entries": [
+          "./data-workflows"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "CorrelationMatrix",
+        "source": "packages/react-native/src/data-workflows.tsx",
+        "entries": [
+          "./data-workflows"
         ],
         "canonicalComponent": null,
         "role": "supplemental"
@@ -2352,6 +2433,15 @@
         "role": "canonical"
       },
       {
+        "name": "HistogramExplorer",
+        "source": "packages/react-native/src/data-workflows.tsx",
+        "entries": [
+          "./data-workflows"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "HjmNativeProvider",
         "source": "packages/react-native/src/provider.tsx",
         "entries": [
@@ -2409,6 +2499,15 @@
         ],
         "canonicalComponent": "Image",
         "role": "optional-extension"
+      },
+      {
+        "name": "ImportFieldMapping",
+        "source": "packages/react-native/src/data-workflows.tsx",
+        "entries": [
+          "./data-workflows"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "InlineConfirm",
@@ -3164,6 +3263,15 @@
         ],
         "canonicalComponent": "TagsInput",
         "role": "canonical"
+      },
+      {
+        "name": "TargetSummary",
+        "source": "packages/react-native/src/data-workflows.tsx",
+        "entries": [
+          "./data-workflows"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "TaskList",

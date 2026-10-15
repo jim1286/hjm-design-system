@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
-import { createActionSession } from "@hjmds/design-contracts/action-session";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { useCompositionAction } from "./internal/use-composition-action.js";
 import { assertDistinctIds, changeColumnSettings, collectionEditingRecipe, focusAfterRemoval, recoverableFilters, snapshotSelection, type ColumnSetting, type FilterRecoveryOption, type FocusTarget, type SelectionAction } from "@hjmds/design-contracts/collection-editing";
 import { Button } from "./actions.js";
 import { TextField } from "./forms.js";
@@ -9,20 +9,7 @@ import { Checkbox } from "./selection.js";
 import { Stack, Text } from "./layout.js";
 import { FieldGroup, type FieldGroupBinding, type FieldGroupProps } from "./field-group.js";
 
-function useEditingAction(disabled = false) {
-  const available = useRef(true), disabledRef = useRef(disabled);
-  disabledRef.current = disabled;
-  const [session] = useState(() => createActionSession<string | null>(null));
-  const state = useSyncExternalStore(session.subscribe, session.getSnapshot, session.getSnapshot);
-  // Reset detaches responses after unmount, including a keyed change to another entity.
-  useEffect(() => { available.current = true; return () => { available.current = false; session.reset(null); }; }, [session]);
-  return { session, pending: state.status === "pending", failed: state.status === "error",
-    active: state.status === "pending" ? state.value : null,
-    run: (key: string, task: () => void | Promise<void>) => {
-      if (!available.current || disabledRef.current) return Promise.resolve({ status: "ignored" as const });
-      return session.run(async () => { await task(); return null; }, { optimisticValue: key });
-    } };
-}
+
 function ErrorMessage({ children }: { children: ReactNode }) {
   return <div role="alert" style={{ display: "grid", placeItems: "center", textAlign: "center" }}><Text tone="danger">{children}</Text></div>;
 }
@@ -36,7 +23,7 @@ export type InlineEditProps = Readonly<{
 export function InlineEdit(props: InlineEditProps) { return <InlineEditBody key={props.id} {...props} />; }
 function InlineEditBody(props: InlineEditProps) {
   const [editing, setEditing] = useState(false), [draft, setDraft] = useState(props.value);
-  const action = useEditingAction(props.disabled);
+  const action = useCompositionAction(props.disabled);
   const input = useRef<HTMLInputElement>(null), trigger = useRef<HTMLButtonElement>(null), group = useRef<HTMLDivElement>(null);
   const restore = useRef(false);
   useLayoutEffect(() => {
@@ -115,7 +102,7 @@ export type SelectionActionBarProps = Readonly<{
   recovery?: Readonly<{ label: string; onUndo: () => void | Promise<void> }>;
 }>;
 export function SelectionActionBar(props: SelectionActionBarProps) {
-  const action = useEditingAction(props.disabled);
+  const action = useCompositionAction(props.disabled);
   assertDistinctIds(props.actions); snapshotSelection(props.selectedIds);
   if (!props.selectedIds.length && !props.recovery && !action.pending && !action.failed) return null;
   return <div role="group" aria-label={props.selectionLabel(props.selectedIds.length)}><Stack gap="sm">
@@ -141,7 +128,7 @@ export type FilterRecoveryProps = Readonly<{
   errorLabel: string; disabled?: boolean;
 }>;
 export function FilterRecovery(props: FilterRecoveryProps) {
-  const action = useEditingAction(props.disabled), options = recoverableFilters(props.options);
+  const action = useCompositionAction(props.disabled), options = recoverableFilters(props.options);
   return <div role="group" aria-label={props.title} style={{ display: "grid", placeItems: "center", textAlign: "center" }}><Stack gap="sm" align="center">
     <Text emphasis="strong">{props.title}</Text>{props.description ? <Text tone="muted">{props.description}</Text> : null}
     {options.map(option => <Button key={option.id} tone="secondary" loading={action.active === option.id} disabled={props.disabled === true || (action.pending && action.active !== option.id)}

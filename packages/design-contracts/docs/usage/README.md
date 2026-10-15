@@ -184,6 +184,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [단계별 드로어](compositions/family-drawer.md) | 입력과 작성 | 초대 → 설정 → 확인처럼 짧은 단계 2~5개를 현재 화면을 떠나지 않고 하단 시트 안에서 차례로 진행할 때 쓴다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
 | [닫았다 열고 초안 이어쓰기](compositions/interaction-flow-draft.md) | 입력과 작성 | 메모·댓글처럼 시트에서 쓰던 글을 저장하지 않고 닫았다가 다시 열었을 때, 쓰던 초안을 그대로 이어 쓰게 할 때 쓴다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
 | [댓글 작성](compositions/purpose-input-comment.md) | 입력과 작성 | 게시물·기록 아래에서 댓글이나 특정 댓글에 대한 답글을 남기고, 실패하면 글과 답글 대상을 그대로 남겨 다시 등록하게 할 때 쓴다. | 구성 API 지침 참조 | Web · Native | 구성 API별 | 배포 |
+| [데이터 해석과 가져오기](compositions/data-workflows.md) | 입력과 작성 | CSV 열 연결, 순차 퍼널, 가입 시점별 잔존율, 지표 상관, 목표, 분포 구간 탐색에 쓴다. | 미게시(1.20.0 이후) | Web · Native | 구성 API별 | 실험 |
 | [메시지 작성](compositions/purpose-input-message.md) | 입력과 작성 | 대화 화면 하단에서 글과 사진 여러 장을 함께 보내고, 실패하면 글·사진·답장 대상을 그대로 남겨 다시 보내게 할 때 쓴다. | 구성 API 지침 참조 | Web · Native | 구성 API별 | 배포 |
 | [목록 편집과 복구](compositions/collection-editing.md) | 입력과 작성 | 목록의 제목을 바로 고치거나, 입력 행을 늘리거나, 여러 항목에 같은 행동을 하거나, 빈 검색에서 조건을 풀거나, 표의 열을 설정할 때 쓴다. | 미게시(1.20.0 이후) | Web · Native | 구성 API별 | 실험 |
 | [버튼에서 이어지는 편집](compositions/origin-dialog.md) | 입력과 작성 | 현재 화면의 항목을 짧게 편집하고 돌아올 때 출발 위치를 시각적으로 연결한다. | 1.14.0 | Web · Native | 구성 API별 | 배포 |

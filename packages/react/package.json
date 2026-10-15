@@ -532,6 +532,11 @@
       "types": "./dist/collection-editing.d.ts",
       "import": "./dist/collection-editing.js",
       "default": "./dist/collection-editing.js"
+    },
+    "./data-workflows": {
+      "types": "./dist/data-workflows.d.ts",
+      "import": "./dist/data-workflows.js",
+      "default": "./dist/data-workflows.js"
     }
   },
   "files": [

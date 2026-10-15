@@ -1,35 +1,20 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
-import { createActionSession } from "@hjmds/design-contracts/action-session";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCompositionAction } from "./internal/use-composition-action.js";
 import { assertDistinctIds, changeColumnSettings, collectionEditingRecipe, focusAfterRemoval, recoverableFilters, snapshotSelection } from "@hjmds/design-contracts/collection-editing";
 import { Button } from "./actions.js";
 import { TextField } from "./forms.js";
 import { Checkbox } from "./selection.js";
 import { Stack, Text } from "./layout.js";
 import { FieldGroup } from "./field-group.js";
-function useEditingAction(disabled = false) {
-    const available = useRef(true), disabledRef = useRef(disabled);
-    disabledRef.current = disabled;
-    const [session] = useState(() => createActionSession(null));
-    const state = useSyncExternalStore(session.subscribe, session.getSnapshot, session.getSnapshot);
-    // Reset detaches responses after unmount, including a keyed change to another entity.
-    useEffect(() => { available.current = true; return () => { available.current = false; session.reset(null); }; }, [session]);
-    return { session, pending: state.status === "pending", failed: state.status === "error",
-        active: state.status === "pending" ? state.value : null,
-        run: (key, task) => {
-            if (!available.current || disabledRef.current)
-                return Promise.resolve({ status: "ignored" });
-            return session.run(async () => { await task(); return null; }, { optimisticValue: key });
-        } };
-}
 function ErrorMessage({ children }) {
     return _jsx("div", { role: "alert", style: { display: "grid", placeItems: "center", textAlign: "center" }, children: _jsx(Text, { tone: "danger", children: children }) });
 }
 export function InlineEdit(props) { return _jsx(InlineEditBody, { ...props }, props.id); }
 function InlineEditBody(props) {
     const [editing, setEditing] = useState(false), [draft, setDraft] = useState(props.value);
-    const action = useEditingAction(props.disabled);
+    const action = useCompositionAction(props.disabled);
     const input = useRef(null), trigger = useRef(null), group = useRef(null);
     const restore = useRef(false);
     useLayoutEffect(() => {
@@ -106,7 +91,7 @@ export function RepeatableFieldGroup({ renderField, addLabel, removeLabel, minFi
                 }, children: addLabel })] });
 }
 export function SelectionActionBar(props) {
-    const action = useEditingAction(props.disabled);
+    const action = useCompositionAction(props.disabled);
     assertDistinctIds(props.actions);
     snapshotSelection(props.selectedIds);
     if (!props.selectedIds.length && !props.recovery && !action.pending && !action.failed)
@@ -123,7 +108,7 @@ export function SelectionActionBar(props) {
                             }, children: props.recovery.label }) : null] }), action.failed ? _jsx(ErrorMessage, { children: props.errorLabel }) : null] }) });
 }
 export function FilterRecovery(props) {
-    const action = useEditingAction(props.disabled), options = recoverableFilters(props.options);
+    const action = useCompositionAction(props.disabled), options = recoverableFilters(props.options);
     return _jsx("div", { role: "group", "aria-label": props.title, style: { display: "grid", placeItems: "center", textAlign: "center" }, children: _jsxs(Stack, { gap: "sm", align: "center", children: [_jsx(Text, { emphasis: "strong", children: props.title }), props.description ? _jsx(Text, { tone: "muted", children: props.description }) : null, options.map(option => _jsx(Button, { tone: "secondary", loading: action.active === option.id, disabled: props.disabled === true || (action.pending && action.active !== option.id), onClick: () => { if (!props.disabled)
                         void action.run(option.id, () => props.onApply(option.id)); }, children: props.optionLabel(option) }, option.id)), action.failed ? _jsx(ErrorMessage, { children: props.errorLabel }) : null] }) });
 }

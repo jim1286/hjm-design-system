@@ -1,25 +1,13 @@
-import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { AccessibilityInfo, Platform, View, type TextInput } from "react-native";
-import { createActionSession } from "@hjmds/design-contracts/action-session";
+import { useCompositionAction } from "./internal/use-composition-action.js";
 import { assertDistinctIds, changeColumnSettings, collectionEditingRecipe, focusAfterRemoval, recoverableFilters, snapshotSelection, type ColumnSetting, type FilterRecoveryOption, type FocusTarget, type SelectionAction } from "@hjmds/design-contracts/collection-editing";
 import { Button } from "./actions.js";
 import { TextField, Checkbox } from "./inputs.js";
 import { Stack, Text } from "./primitives.js";
 import { FieldGroup, type FieldGroupBinding, type FieldGroupProps } from "./field-group.js";
 
-function useEditingAction(disabled = false) {
-  const available = useRef(true), disabledRef = useRef(disabled);
-  disabledRef.current = disabled;
-  const [session] = useState(() => createActionSession<string | null>(null));
-  const state = useSyncExternalStore(session.subscribe, session.getSnapshot, session.getSnapshot);
-  useEffect(() => { available.current = true; return () => { available.current = false; session.reset(null); }; }, [session]);
-  return { session, pending: state.status === "pending", failed: state.status === "error",
-    active: state.status === "pending" ? state.value : null,
-    run: (key: string, task: () => void | Promise<void>) => {
-      if (!available.current || disabledRef.current) return Promise.resolve({ status: "ignored" as const });
-      return session.run(async () => { await task(); return null; }, { optimisticValue: key });
-    } };
-}
+
 function ErrorMessage({ children }: { children: string }) {
   useEffect(() => {
     // Native live regions announce updates on Android; iOS needs an explicit announcement.
@@ -36,7 +24,7 @@ export type InlineEditProps = Readonly<{
 export function InlineEdit(props: InlineEditProps) { return <InlineEditBody key={props.id} {...props} />; }
 function InlineEditBody(props: InlineEditProps) {
   const [editing, setEditing] = useState(false), [draft, setDraft] = useState(props.value);
-  const action = useEditingAction(props.disabled);
+  const action = useCompositionAction(props.disabled);
   const input = useRef<TextInput>(null), trigger = useRef<View>(null), restore = useRef(false);
   useLayoutEffect(() => {
     if (editing) input.current?.focus();
@@ -104,7 +92,7 @@ export type SelectionActionBarProps = Readonly<{
   recovery?: Readonly<{ label: string; onUndo: () => void | Promise<void> }>;
 }>;
 export function SelectionActionBar(props: SelectionActionBarProps) {
-  const action = useEditingAction(props.disabled);
+  const action = useCompositionAction(props.disabled);
   assertDistinctIds(props.actions); snapshotSelection(props.selectedIds);
   if (!props.selectedIds.length && !props.recovery && !action.pending && !action.failed) return null;
   return <View accessible={false}><Stack gap="sm">
@@ -130,7 +118,7 @@ export type FilterRecoveryProps = Readonly<{
   errorLabel: string; disabled?: boolean;
 }>;
 export function FilterRecovery(props: FilterRecoveryProps) {
-  const action = useEditingAction(props.disabled), options = recoverableFilters(props.options);
+  const action = useCompositionAction(props.disabled), options = recoverableFilters(props.options);
   return <View style={{ alignItems: "center", justifyContent: "center" }}><Stack gap="sm" align="center">
     <Text emphasis="strong" align="center">{props.title}</Text>{props.description ? <Text tone="muted" align="center">{props.description}</Text> : null}
     {options.map(option => <Button key={option.id} tone="secondary" loading={action.active === option.id} disabled={props.disabled === true || (action.pending && action.active !== option.id)}

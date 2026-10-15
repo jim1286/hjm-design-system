@@ -549,6 +549,12 @@
       "react-native": "./dist/collection-editing.js",
       "import": "./dist/collection-editing.js",
       "default": "./dist/collection-editing.js"
+    },
+    "./data-workflows": {
+      "types": "./dist/data-workflows.d.ts",
+      "react-native": "./dist/data-workflows.js",
+      "import": "./dist/data-workflows.js",
+      "default": "./dist/data-workflows.js"
     }
   },
   "files": [

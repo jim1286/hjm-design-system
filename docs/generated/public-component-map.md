@@ -4,7 +4,7 @@
 
 ## @hjmds/react
 
-고유 공개 컴포넌트 및 provider 이름 179개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 185개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -43,6 +43,7 @@
 | Chip | Chip | canonical | root, ./selection |
 | ClipboardButton | Button | companion-or-alternative | root, ./clipboard |
 | CodeBlock | 별도 보조 기능 | supplemental | ./code-block |
+| CohortRetentionTable | 별도 보조 기능 | supplemental | ./data-workflows |
 | Collapsible | Collapsible | canonical | root, ./collapsible |
 | CollectionRail | List | companion-or-alternative | ./collection-rail |
 | ColorPicker | ColorPicker | canonical | ./color-picker |
@@ -53,6 +54,8 @@
 | Container | Container | canonical | root, ./layout |
 | ContentTransition | 별도 보조 기능 | supplemental | ./content-transition |
 | ContextMenu | ContextMenu | canonical | root, ./context-menu |
+| ConversionFunnel | 별도 보조 기능 | supplemental | ./data-workflows |
+| CorrelationMatrix | 별도 보조 기능 | supplemental | ./data-workflows |
 | CounterBadge | CounterBadge | canonical | root, ./display |
 | DataTable | DataTable | canonical | root, ./data-table |
 | DateEntry | Field | optional-extension | ./date-entry |
@@ -77,11 +80,13 @@
 | Grid | Grid | canonical | root, ./layout |
 | GridReveal | Image | optional-extension | ./grid-reveal |
 | Heading | Heading | canonical | root, ./heading |
+| HistogramExplorer | 별도 보조 기능 | supplemental | ./data-workflows |
 | HjmProvider | DesignSystemProvider | canonical | root, ./provider |
 | Icon | Icon | canonical | root, ./display |
 | IconButton | IconButton | canonical | root, ./actions |
 | Image | Image | canonical | root, ./display |
 | ImageComparison | 별도 보조 기능 | supplemental | ./image-comparison |
+| ImportFieldMapping | 별도 보조 기능 | supplemental | ./data-workflows |
 | InlineConfirm | Button | optional-extension | ./inline-confirm |
 | InlineEdit | 별도 보조 기능 | supplemental | ./collection-editing |
 | Layout | Layout | canonical | root, ./layout |
@@ -165,6 +170,7 @@
 | Tabs | Tabs | canonical | root, ./navigation |
 | Tag | Tag | canonical | root, ./display |
 | TagsInput | TagsInput | canonical | root, ./tags-input |
+| TargetSummary | 별도 보조 기능 | supplemental | ./data-workflows |
 | TaskList | List | optional-extension | ./task-list |
 | Text | Text | canonical | root, ./layout |
 | TextArea | TextArea | canonical | root, ./forms |
@@ -190,7 +196,7 @@
 
 ## @hjmds/react-native
 
-고유 공개 컴포넌트 및 provider 이름 166개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 172개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -224,6 +230,7 @@
 | CheckboxGroup | CheckboxGroup | canonical | root, ./inputs |
 | Chip | Chip | canonical | root, ./inputs |
 | CodeBlock | 별도 보조 기능 | supplemental | ./code-block |
+| CohortRetentionTable | 별도 보조 기능 | supplemental | ./data-workflows |
 | Collapsible | Collapsible | canonical | root, ./collapsible |
 | CollectionRail | List | companion-or-alternative | ./collection-rail |
 | Combobox | Combobox | canonical | root, ./forms |
@@ -231,6 +238,8 @@
 | ComparisonTable | DataTable | companion-or-alternative | ./data-table |
 | Container | Container | canonical | root, ./primitives |
 | ContentTransition | 별도 보조 기능 | supplemental | ./content-transition |
+| ConversionFunnel | 별도 보조 기능 | supplemental | ./data-workflows |
+| CorrelationMatrix | 별도 보조 기능 | supplemental | ./data-workflows |
 | CounterBadge | CounterBadge | canonical | root, ./data-display |
 | DataTable | DataTable | canonical | ./data-table |
 | DateEntry | Field | optional-extension | ./date-entry |
@@ -258,12 +267,14 @@
 | Grid | Grid | canonical | root, ./primitives |
 | GridReveal | Image | optional-extension | ./grid-reveal |
 | Heading | Heading | canonical | root, ./heading |
+| HistogramExplorer | 별도 보조 기능 | supplemental | ./data-workflows |
 | HjmNativeProvider | DesignSystemProvider | canonical | root, ./provider |
 | Icon | Icon | canonical | root, ./primitives |
 | IconButton | IconButton | canonical | root, ./actions, ./bottom-cta |
 | Image | Image | canonical | root, ./data-display |
 | ImageComparison | 별도 보조 기능 | supplemental | ./image-comparison |
 | ImageViewer | Image | optional-extension | ./image-viewer |
+| ImportFieldMapping | 별도 보조 기능 | supplemental | ./data-workflows |
 | InlineConfirm | Button | optional-extension | ./inline-confirm |
 | InlineEdit | 별도 보조 기능 | supplemental | ./collection-editing |
 | KeyboardAvoiding | 별도 보조 기능 | supplemental | root, ./keyboard |
@@ -343,6 +354,7 @@
 | Tabs | Tabs | canonical | root, ./navigation, ./top-bar |
 | Tag | Tag | canonical | root, ./data-display |
 | TagsInput | TagsInput | canonical | root, ./tags-input |
+| TargetSummary | 별도 보조 기능 | supplemental | ./data-workflows |
 | TaskList | List | optional-extension | ./task-list |
 | Text | Text | canonical | root, ./primitives |
 | TextArea | TextArea | canonical | root, ./inputs |
