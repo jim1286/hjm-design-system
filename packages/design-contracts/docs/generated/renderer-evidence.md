@@ -1,11 +1,11 @@
 # Renderer evidence coverage
 
-> Generated for HJM 1.25.0. Do not edit directly; run `pnpm evidence:sync`.
+> Generated for HJM 1.26.0. Do not edit directly; run `pnpm evidence:sync`.
 
 This projection joins the canonical surface maturity manifest with first-party renderer claims. Missing scenarios are explicit beta promotion debt; stable surfaces are blocked by CI until none remain.
 
 - web: 103/104 active implementations; 103/104 required scenario sets
-- native: 83/85 active implementations; 83/85 required scenario sets
+- native: 83/86 active implementations; 83/86 required scenario sets
 
 | Component | Surface | Maturity | Renderer package | Export | Claimed scenarios | Missing required scenarios | Executable proofs |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -162,6 +162,7 @@ This projection joins the canonical surface maturity manifest with first-party r
 | Tabs | native | stable | @hjmds/react-native | ./navigation | default, accessibility, dark, large-text, rtl, reduced-motion, long-copy, native-actions | none | test/default-render.test.tsx#tabs, test/scenario-matrix.test.tsx#tabs, test/tabs-actions.test.tsx#tabs |
 | TopBar | native | stable | @hjmds/react-native | ./navigation | default, accessibility, dark, large-text, rtl, reduced-motion, long-copy | none | test/default-render.test.tsx#top-bar, test/scenario-matrix.test.tsx#top-bar |
 | BottomNavigation | native | stable | @hjmds/react-native | ./navigation | default, accessibility, dark, large-text, rtl, reduced-motion, long-copy, native-actions | none | test/default-render.test.tsx#bottom-navigation, test/scenario-matrix.test.tsx#bottom-navigation, test/bottom-navigation.interaction.test.tsx#bottom-navigation |
+| Pagination | native | beta | @hjmds/react-native | unclaimed | none | default, dark, large-text, rtl, reduced-motion, accessibility | none |
 | LoadMore | native | stable | @hjmds/react-native | ./navigation | default, accessibility, dark, large-text, rtl, reduced-motion, long-copy, native-actions | none | test/default-render.test.tsx#load-more, test/scenario-matrix.test.tsx#load-more, test/load-more.interactions.test.tsx#load-more |
 | Steps | native | stable | @hjmds/react-native | ./steps | default, accessibility, dark, large-text, rtl, reduced-motion, long-copy | none | test/default-render.test.tsx#steps, test/scenario-matrix.test.tsx#steps |
 | Menu | native | stable | @hjmds/react-native | ./navigation | default, accessibility, dark, large-text, rtl, reduced-motion, native-actions, long-copy | none | test/default-render.test.tsx#menu, test/scenario-matrix.test.tsx#menu, test/menu-actions.test.tsx#menu |

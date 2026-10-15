@@ -1,5 +1,11 @@
 # @hjmds/react-native
 
+## 1.26.0
+
+### Minor Changes
+
+- 1bae9c1: Share notification rows, profile summaries and icon tiles across product screens, add Native Pagination, preserve heading semantics and expose complete centered state announcements. Use platform-correct accessibility properties for Native charts rendered on Web.
+
 ## 1.25.0
 
 ### Minor Changes

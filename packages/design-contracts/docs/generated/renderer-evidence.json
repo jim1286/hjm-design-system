@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "designSystemVersion": "1.25.0",
+  "designSystemVersion": "1.26.0",
   "source": "packages/design-contracts/docs/generated/showcase-manifest.json",
   "surfaces": {
     "web": {
       "packageName": "@hjmds/react",
-      "packageVersion": "1.25.0",
+      "packageVersion": "1.26.0",
       "activeComponents": 104,
       "claimedComponents": 103,
       "completeScenarioComponents": 103,
@@ -5672,8 +5672,8 @@
     },
     "native": {
       "packageName": "@hjmds/react-native",
-      "packageVersion": "1.25.0",
-      "activeComponents": 85,
+      "packageVersion": "1.26.0",
+      "activeComponents": 86,
       "claimedComponents": 83,
       "completeScenarioComponents": 83,
       "components": [
@@ -8373,6 +8373,32 @@
             "native-actions"
           ],
           "missingScenarios": []
+        },
+        {
+          "componentId": "pagination",
+          "name": "Pagination",
+          "status": "beta",
+          "claimed": false,
+          "subpath": null,
+          "exportNames": [],
+          "proofs": [],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [],
+          "missingScenarios": [
+            "default",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
         },
         {
           "componentId": "load-more",
