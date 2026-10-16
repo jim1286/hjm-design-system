@@ -2249,6 +2249,10 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-sheet[data-placement="bottom"][data-detent="full"] { max-block-size: 100%; }
 /* Detent handle: a control, so it carries the shared minimum target. */
 .hjm-sheet__handle-row { display: flex; justify-content: center; flex: 0 0 auto; }
+/* Drag-to-dismiss zone (handle + header) of bottom sheets; vertical drags must not scroll the page. */
+.hjm-sheet__drag { flex: 0 0 auto; }
+.hjm-sheet__drag[data-swipe] { touch-action: none; cursor: grab; }
+.hjm-sheet[data-dragging] { transition: none !important; }
 .hjm-sheet__handle {
   display: grid;
   place-items: center;
@@ -3093,6 +3097,9 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-chat-message__bubble[data-photo-only]::before { display: none; }
 .hjm-chat-screen:not([data-content-inset="none"]) .hjm-screen__body { padding-inline: 10px; }
 .hjm-chat-screen__footer { position: relative; }
+.hjm-message-composer__trailing { display: inline-grid; place-items: center; }
+.hjm-message-composer__trailing > * { grid-area: 1 / 1; }
+.hjm-message-composer__reserve { visibility: hidden; }
 .hjm-message-composer__reply-card { display: flex; flex-direction: column; gap: var(--hjm-space-sm); padding: var(--hjm-space-sm); border-radius: var(--hjm-radius-xl); background: var(--hjm-color-surface); }
 .hjm-message-composer__reply { display: flex; align-items: flex-start; gap: var(--hjm-space-sm); }
 .hjm-message-composer__reply-text { flex: 1; min-inline-size: 0; display: flex; flex-direction: column; gap: 2px; }

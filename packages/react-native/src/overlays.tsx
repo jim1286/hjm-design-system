@@ -13,7 +13,9 @@ import { type HjmCompositionStyleProp } from "./composition-style.js";
 import {
   canDismissSheet,
   createSheetLifecycle,
-  sheetBehaviorDefaults,
+  resolveSheetCloseButton,
+  resolveSheetDismissPolicy,
+  sheetDragRecipe,
   type SheetDismissPolicy,
   type SheetDismissReason,
   type SheetOpenChangeDetails,
@@ -41,6 +43,7 @@ import {
   Easing,
   Keyboard,
   Modal,
+  PanResponder,
   Platform,
   ScrollView,
   Pressable,
@@ -1142,6 +1145,8 @@ export type SheetProps = NativeModalProps &
     keyboardAvoidance?: boolean;
     /** Keep the header/footer fixed while long content scrolls. Do not nest a virtualized list. */
     scrollable?: boolean;
+    /** Visible × in the header. Off by default for bottom sheets, which close by dragging (2026-10-16). */
+    showClose?: boolean;
   }>;
 
 /** Native Sheet applies policy before emitting a concrete dismissal reason. */
@@ -1165,6 +1170,7 @@ export function Sheet({
   contentStyle,
   keyboardAvoidance = false,
   scrollable = false,
+  showClose,
   onShow,
   ...modalProps
 }: SheetProps) {
@@ -1184,7 +1190,8 @@ export function Sheet({
   const accessibleTitle = resolveOverlayAccessibleTitle(title, accessibilityTitle);
   const { width: windowWidth, height: windowHeight } = useWindowDimensions();
   const sizeRatio = sheetRecipe.sizes[size];
-  const policy: SheetDismissPolicy = { ...sheetBehaviorDefaults, ...dismissPolicy };
+  const policy: SheetDismissPolicy = resolveSheetDismissPolicy(placement, dismissPolicy);
+  const closeVisible = resolveSheetCloseButton(placement, showClose);
   const [visible, changeOpen] = useReasonedOpenState({
     ...(open === undefined ? {} : { open }),
     ...(defaultOpen === undefined ? {} : { defaultOpen }),
@@ -1402,10 +1409,31 @@ export function Sheet({
   const hiddenTranslation = physicalPlacement === "left"
     ? -translationDistance
     : translationDistance;
-  const translate = motionProgress.interpolate({
+  const enterTranslate = motionProgress.interpolate({
     inputRange: [0, 1],
     outputRange: [hiddenTranslation, 0],
   });
+  // Drag-to-dismiss (2026-10-16 user decision): the handle and header follow the finger downward;
+  // release past the distance or velocity threshold closes with reason "swipe", otherwise it springs back.
+  const [dragOffset] = useState(() => new Animated.Value(0));
+  const sheetHeight = useRef(0);
+  const showHandle = !side && policy.dismissible && policy.swipeDismiss;
+  const closeBlocked = busy && !policy.dismissWhileBusy;
+  const canSwipe = showHandle && !closeBlocked;
+  const requestCloseRef = useRef(requestClose);
+  requestCloseRef.current = requestClose;
+  const settleDrag = () => Animated.spring(dragOffset, { toValue: 0, useNativeDriver: true, bounciness: 0 }).start();
+  const dragResponder = PanResponder.create({
+    onMoveShouldSetPanResponder: (_, gesture) => canSwipe && gesture.dy > sheetDragRecipe.activationDistance && Math.abs(gesture.dy) > Math.abs(gesture.dx),
+    onPanResponderMove: (_, gesture) => dragOffset.setValue(Math.max(0, gesture.dy)),
+    onPanResponderRelease: (_, gesture) => {
+      if (gesture.dy > sheetHeight.current * sheetDragRecipe.dismissDistanceRatio || gesture.vy > sheetDragRecipe.dismissVelocity) requestCloseRef.current("swipe");
+      else settleDrag();
+    },
+    onPanResponderTerminate: settleDrag,
+  });
+  useEffect(() => { if (visible) dragOffset.setValue(0); }, [visible, dragOffset]);
+  const translate = enterTranslate;
   // A fixed-height sheet (side, or a `size` step) gives the body the height left after header and footer,
   // as Web `.hjm-sheet__body { flex: 1 1 auto }` does, so a `flex: 1` child (a SearchScreen, a list) fills it.
   // The content-sized body collapsed such a child to 0pt and only the search field painted (utilverse chat
@@ -1467,6 +1495,8 @@ export function Sheet({
             accessibilityState={{ busy }}
             accessibilityViewIsModal
             importantForAccessibility="yes"
+            onAccessibilityEscape={() => requestClose("escape")}
+            onLayout={(event) => { sheetHeight.current = event.nativeEvent.layout.height; }}
             role="dialog"
             style={[
               {
@@ -1510,12 +1540,21 @@ export function Sheet({
                   ? undefined
                   : side
                     ? [{ translateX: translate }]
-                    : [{ translateY: translate }],
+                    // Two translateY entries compose: the enter/exit motion plus the live drag offset.
+                    : [{ translateY: translate }, { translateY: dragOffset }],
                 width: side ? "88%" : "100%",
               },
               contentStyle,
             ]}
           >
+            <View {...(canSwipe ? dragResponder.panHandlers : {})} style={{ flexShrink: 0 }}>
+            {showHandle && sheetRecipe.handle.visibleByDefault ? (
+              // The handle doubles as a close control so switch and screen-reader users need no drag.
+              <Pressable accessibilityRole="button" accessibilityLabel={closeLabel} accessibilityState={{ disabled: closeBlocked }} disabled={closeBlocked} onPress={() => requestClose("close-action")} hitSlop={spacing.sm}
+                style={{ alignSelf: "center", paddingVertical: spacing.xs }}>
+                <View style={{ width: sheetRecipe.handle.width, height: sheetRecipe.handle.height, borderRadius: tokens.radius[sheetRecipe.handle.radius], backgroundColor: resolveColorReference(sheetRecipe.handle.color, palette) }} />
+              </Pressable>
+            ) : null}
             <View
               style={{
                 alignItems: "center",
@@ -1530,7 +1569,7 @@ export function Sheet({
                 <Text accessibilityRole="header" tone="primary" variant="title">{title}</Text>
                 {description ? <Text tone="muted">{description}</Text> : null}
               </View>
-              {policy.dismissible ? (
+              {policy.dismissible && closeVisible ? (
                 <IconButton
                   disabled={busy && !policy.dismissWhileBusy}
                   label={closeLabel}
@@ -1539,6 +1578,7 @@ export function Sheet({
                   <CloseGlyph />
                 </IconButton>
               ) : null}
+            </View>
             </View>
             {/* Keyboard clearance belongs to the enclosing modal; UIKit must not add it again. */}
             {scrollable ? (

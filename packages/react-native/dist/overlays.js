@@ -3,12 +3,12 @@ import { resolveOriginTransition } from "@hjmds/design-contracts/content-transit
 import { focusAccessibleHost } from "./internal/accessible-focus.js";
 import { createAlertDialogSession, getAlertDialogInitialFocus, validateAlertDialogRequest, } from "@hjmds/design-contracts/components/alert-dialog";
 import {} from "./composition-style.js";
-import { canDismissSheet, createSheetLifecycle, sheetBehaviorDefaults, } from "@hjmds/design-contracts/components/sheet";
+import { canDismissSheet, createSheetLifecycle, resolveSheetCloseButton, resolveSheetDismissPolicy, sheetDragRecipe, } from "@hjmds/design-contracts/components/sheet";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { backdrop, easing, glyph, spacing } from "@hjmds/design-contracts/foundations";
 import { alertDialogRecipe, dialogRecipe, sheetRecipe, } from "@hjmds/design-contracts/recipes";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, } from "react";
-import { Animated, Easing, Keyboard, Modal, Platform, ScrollView, Pressable, View, useWindowDimensions, } from "react-native";
+import { Animated, Easing, Keyboard, Modal, PanResponder, Platform, ScrollView, Pressable, View, useWindowDimensions, } from "react-native";
 import { Button, IconButton } from "./actions.js";
 import { scheduleAfterNativeModalTeardown, shouldAwaitNativeModalDismiss, } from "./internal/modal-lifecycle.js";
 import { isDevelopment } from "./internal/diagnostics.js";
@@ -706,7 +706,7 @@ export function AlertDialog({ open, defaultOpen, onOpenChange, request, size = a
                                         ], children: _jsx(Text, { variant: "label", children: request.cancelLabel }) })) : null, stackActions ? null : confirmAction] })] })] }) }) }));
 }
 /** Native Sheet applies policy before emitting a concrete dismissal reason. */
-export function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, footer, placement = "bottom", size = sheetRecipe.defaults.size, busy = false, dismissPolicy, closeLabel, returnFocusRef, safeAreaInsets: suppliedSafeAreaInsets, onDismissComplete, contentStyle, keyboardAvoidance = false, scrollable = false, onShow, ...modalProps }) {
+export function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, footer, placement = "bottom", size = sheetRecipe.defaults.size, busy = false, dismissPolicy, closeLabel, returnFocusRef, safeAreaInsets: suppliedSafeAreaInsets, onDismissComplete, contentStyle, keyboardAvoidance = false, scrollable = false, showClose, onShow, ...modalProps }) {
     const { environment, palette, tokens, designProfile } = useHjmNativeTheme();
     // The profile floating role is shared with Web. Modal lifecycle, inset and
     // action state remain recipe-owned; changing decoration must not replace them.
@@ -723,7 +723,8 @@ export function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTit
     const accessibleTitle = resolveOverlayAccessibleTitle(title, accessibilityTitle);
     const { width: windowWidth, height: windowHeight } = useWindowDimensions();
     const sizeRatio = sheetRecipe.sizes[size];
-    const policy = { ...sheetBehaviorDefaults, ...dismissPolicy };
+    const policy = resolveSheetDismissPolicy(placement, dismissPolicy);
+    const closeVisible = resolveSheetCloseButton(placement, showClose);
     const [visible, changeOpen] = useReasonedOpenState({
         ...(open === undefined ? {} : { open }),
         ...(defaultOpen === undefined ? {} : { defaultOpen }),
@@ -910,10 +911,34 @@ export function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTit
     const hiddenTranslation = physicalPlacement === "left"
         ? -translationDistance
         : translationDistance;
-    const translate = motionProgress.interpolate({
+    const enterTranslate = motionProgress.interpolate({
         inputRange: [0, 1],
         outputRange: [hiddenTranslation, 0],
     });
+    // Drag-to-dismiss (2026-10-16 user decision): the handle and header follow the finger downward;
+    // release past the distance or velocity threshold closes with reason "swipe", otherwise it springs back.
+    const [dragOffset] = useState(() => new Animated.Value(0));
+    const sheetHeight = useRef(0);
+    const showHandle = !side && policy.dismissible && policy.swipeDismiss;
+    const closeBlocked = busy && !policy.dismissWhileBusy;
+    const canSwipe = showHandle && !closeBlocked;
+    const requestCloseRef = useRef(requestClose);
+    requestCloseRef.current = requestClose;
+    const settleDrag = () => Animated.spring(dragOffset, { toValue: 0, useNativeDriver: true, bounciness: 0 }).start();
+    const dragResponder = PanResponder.create({
+        onMoveShouldSetPanResponder: (_, gesture) => canSwipe && gesture.dy > sheetDragRecipe.activationDistance && Math.abs(gesture.dy) > Math.abs(gesture.dx),
+        onPanResponderMove: (_, gesture) => dragOffset.setValue(Math.max(0, gesture.dy)),
+        onPanResponderRelease: (_, gesture) => {
+            if (gesture.dy > sheetHeight.current * sheetDragRecipe.dismissDistanceRatio || gesture.vy > sheetDragRecipe.dismissVelocity)
+                requestCloseRef.current("swipe");
+            else
+                settleDrag();
+        },
+        onPanResponderTerminate: settleDrag,
+    });
+    useEffect(() => { if (visible)
+        dragOffset.setValue(0); }, [visible, dragOffset]);
+    const translate = enterTranslate;
     // A fixed-height sheet (side, or a `size` step) gives the body the height left after header and footer,
     // as Web `.hjm-sheet__body { flex: 1 1 auto }` does, so a `flex: 1` child (a SearchScreen, a list) fills it.
     // The content-sized body collapsed such a child to 0pt and only the search field painted (utilverse chat
@@ -939,7 +964,7 @@ export function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTit
                     opacity: motionProgress,
                     paddingTop: insets.top,
                     paddingBottom: keyboardInset,
-                }, children: [_jsx(Scrim, {}), policy.dismissible && policy.outsideDismiss ? (_jsx(Pressable, { accessible: false, importantForAccessibility: "no-hide-descendants", onPress: () => requestClose("outside"), style: { bottom: 0, left: 0, position: "absolute", right: 0, top: 0 } })) : null, _jsxs(Animated.View, { accessibilityLabel: [accessibleTitle, description].filter(Boolean).join(", "), accessibilityState: { busy }, accessibilityViewIsModal: true, importantForAccessibility: "yes", role: "dialog", style: [
+                }, children: [_jsx(Scrim, {}), policy.dismissible && policy.outsideDismiss ? (_jsx(Pressable, { accessible: false, importantForAccessibility: "no-hide-descendants", onPress: () => requestClose("outside"), style: { bottom: 0, left: 0, position: "absolute", right: 0, top: 0 } })) : null, _jsxs(Animated.View, { accessibilityLabel: [accessibleTitle, description].filter(Boolean).join(", "), accessibilityState: { busy }, accessibilityViewIsModal: true, importantForAccessibility: "yes", onAccessibilityEscape: () => requestClose("escape"), onLayout: (event) => { sheetHeight.current = event.nativeEvent.layout.height; }, role: "dialog", style: [
                             {
                                 backgroundColor: contentBackground,
                                 borderColor: contentBorder,
@@ -979,18 +1004,21 @@ export function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTit
                                     ? undefined
                                     : side
                                         ? [{ translateX: translate }]
-                                        : [{ translateY: translate }],
+                                        // Two translateY entries compose: the enter/exit motion plus the live drag offset.
+                                        : [{ translateY: translate }, { translateY: dragOffset }],
                                 width: side ? "88%" : "100%",
                             },
                             contentStyle,
-                        ], children: [_jsxs(View, { style: {
-                                    alignItems: "center",
-                                    minHeight: sheetRecipe.header.minHeight,
-                                    flexShrink: 0,
-                                    direction: environment.direction,
-                                    flexDirection: "row",
-                                    gap: spacing.sm,
-                                }, children: [_jsxs(View, { style: { flex: 1, gap: spacing.xs }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: title }), description ? _jsx(Text, { tone: "muted", children: description }) : null] }), policy.dismissible ? (_jsx(IconButton, { disabled: busy && !policy.dismissWhileBusy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(CloseGlyph, {}) })) : null] }), scrollable ? (_jsx(ScrollView, { style: { flexShrink: 1, minHeight: 0, ...bodyFill }, contentContainerStyle: { gap: sheetRecipe.body.gap }, keyboardShouldPersistTaps: "handled", keyboardDismissMode: Platform.OS === "ios" ? "interactive" : "on-drag", automaticallyAdjustKeyboardInsets: false, children: children })) : _jsx(View, { style: { gap: sheetRecipe.body.gap, flexShrink: 1, ...bodyFill }, children: children }), footer ? (_jsx(View, { style: {
+                        ], children: [_jsxs(View, { ...(canSwipe ? dragResponder.panHandlers : {}), style: { flexShrink: 0 }, children: [showHandle && sheetRecipe.handle.visibleByDefault ? (
+                                    // The handle doubles as a close control so switch and screen-reader users need no drag.
+                                    _jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: closeLabel, accessibilityState: { disabled: closeBlocked }, disabled: closeBlocked, onPress: () => requestClose("close-action"), hitSlop: spacing.sm, style: { alignSelf: "center", paddingVertical: spacing.xs }, children: _jsx(View, { style: { width: sheetRecipe.handle.width, height: sheetRecipe.handle.height, borderRadius: tokens.radius[sheetRecipe.handle.radius], backgroundColor: resolveColorReference(sheetRecipe.handle.color, palette) } }) })) : null, _jsxs(View, { style: {
+                                            alignItems: "center",
+                                            minHeight: sheetRecipe.header.minHeight,
+                                            flexShrink: 0,
+                                            direction: environment.direction,
+                                            flexDirection: "row",
+                                            gap: spacing.sm,
+                                        }, children: [_jsxs(View, { style: { flex: 1, gap: spacing.xs }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: title }), description ? _jsx(Text, { tone: "muted", children: description }) : null] }), policy.dismissible && closeVisible ? (_jsx(IconButton, { disabled: busy && !policy.dismissWhileBusy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(CloseGlyph, {}) })) : null] })] }), scrollable ? (_jsx(ScrollView, { style: { flexShrink: 1, minHeight: 0, ...bodyFill }, contentContainerStyle: { gap: sheetRecipe.body.gap }, keyboardShouldPersistTaps: "handled", keyboardDismissMode: Platform.OS === "ios" ? "interactive" : "on-drag", automaticallyAdjustKeyboardInsets: false, children: children })) : _jsx(View, { style: { gap: sheetRecipe.body.gap, flexShrink: 1, ...bodyFill }, children: children }), footer ? (_jsx(View, { style: {
                                     gap: sheetRecipe.footer.gap,
                                     flexShrink: 0,
                                     paddingTop: sheetRecipe.footer.paddingTop,

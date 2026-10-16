@@ -41,8 +41,29 @@ export const sheetBehaviorDefaults = {
   dismissWhileBusy: false,
   outsideDismiss: true,
   escapeOrBackDismiss: true,
-  swipeDismiss: false,
+  // 2026-10-16 user decision: dragging a bottom sheet down is a required way to close it.
+  swipeDismiss: true,
 } as const satisfies SheetDismissPolicy;
+
+/**
+ * Bottom sheets close by dragging only (2026-10-16 user decision): no backdrop tap and no visible ×
+ * by default. Escape/system back and the handle's close action stay so keyboard, switch and
+ * screen-reader users can still dismiss without a drag gesture. Other placements keep the old defaults.
+ */
+export function resolveSheetDismissPolicy(placement: string, override: Partial<SheetDismissPolicy> = {}): SheetDismissPolicy {
+  return { ...sheetBehaviorDefaults, ...(placement === "bottom" ? { outsideDismiss: false } : {}), ...override };
+}
+export function resolveSheetCloseButton(placement: string, showClose?: boolean): boolean {
+  return showClose ?? placement !== "bottom";
+}
+
+/** Release thresholds for the drag-to-dismiss gesture shared by both renderers. */
+export const sheetDragRecipe = {
+  activationDistance: 6,
+  dismissDistanceRatio: 0.25,
+  /** px per millisecond: a quick flick closes before the distance threshold. */
+  dismissVelocity: 0.5,
+} as const;
 
 /**
  * Resolves an attempted close without platform knowledge. Programmatic close is

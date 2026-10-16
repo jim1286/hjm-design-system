@@ -26,7 +26,7 @@ for (const textScale of [1, 2]) {
   it.skipIf(textScale === 2)(`aligns the Sheet heading and close control without product CSS at text scale ${textScale}`, async () => {
     await page.viewport(320, 568);
     await act(async () => root.render(<HjmProvider reducedMotion textScale={textScale}>
-      <Sheet open onOpenChange={() => {}} title="설정" closeLabel="닫기"><p>설정을 변경해 주세요.</p></Sheet>
+      <Sheet open showClose onOpenChange={() => {}} title="설정" closeLabel="닫기"><p>설정을 변경해 주세요.</p></Sheet>
     </HjmProvider>));
     const sheet = document.querySelector<HTMLElement>(".hjm-sheet")!;
     const title = sheet.querySelector<HTMLElement>(".hjm-sheet__title")!.getBoundingClientRect();

@@ -14,7 +14,9 @@ import {
 import {
   createSheetLifecycle,
   resolveNextSheetDetent,
-  sheetBehaviorDefaults,
+  resolveSheetCloseButton,
+  resolveSheetDismissPolicy,
+  sheetDragRecipe,
   type SheetDetent,
   type SheetDismissPolicy,
   type SheetDismissReason,
@@ -486,6 +488,8 @@ export type SheetProps = ModalOpenState<SheetOpenChangeDetails> &
     modalPriority?: number;
     portalContainer?: HTMLElement;
     className?: string;
+    /** Visible × in the header. Off by default for bottom sheets, which close by dragging (2026-10-16). */
+    showClose?: boolean;
   }>;
 
 export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
@@ -513,6 +517,7 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
     defaultOpen,
     onOpenChange,
     className,
+    showClose,
   },
   forwardedRef,
 ) {
@@ -522,7 +527,15 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
     ...(defaultOpen === undefined ? {} : { defaultOpen }),
     ...(onOpenChange === undefined ? {} : { onOpenChange }),
   });
-  const policy: SheetDismissPolicy = { ...sheetBehaviorDefaults, ...dismissPolicy };
+  const policy: SheetDismissPolicy = resolveSheetDismissPolicy(placement, dismissPolicy);
+  const closeVisible = resolveSheetCloseButton(placement, showClose);
+  // Drag-to-dismiss (2026-10-16 user decision): handle and header follow the pointer downward and a
+  // release past the distance or velocity threshold closes with reason "swipe".
+  const showHandle = placement === "bottom" && policy.dismissible && policy.swipeDismiss;
+  const closeBlocked = busy && !policy.dismissWhileBusy;
+  const canSwipe = showHandle && !closeBlocked;
+  const dragRef = useRef<{ pointerId: number; y: number; t: number; moved: boolean } | null>(null);
+  const [dragY, setDragY] = useState(0);
   const lifecycleRef = useRef(createSheetLifecycle(open));
   const previousOpenRef = useRef(open);
   const currentOpenRef = useRef(open);
@@ -637,12 +650,39 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
               data-detent={activeDetent ?? (size === "auto" ? undefined : size)}
               data-has-footer={footer ? true : undefined}
               data-state={busy ? "busy" : "idle"}
+              data-dragging={dragY > 0 || undefined}
+              style={dragY > 0 ? { transform: `translateY(${dragY}px)` } : undefined}
             >
               {/*
                 The handle is a real control, not a drag-only affordance: a
                 keyboard or switch user must be able to change the height too.
                 Gesture physics stay with the product and report the same way.
               */}
+              <div className="hjm-sheet__drag" data-swipe={canSwipe || undefined}
+                onPointerDown={(event) => {
+                  if (!canSwipe || event.button !== 0 || (event.target as HTMLElement).closest("a,input,textarea,select,.hjm-dialog__close")) return;
+                  dragRef.current = { pointerId: event.pointerId, y: event.clientY, t: event.timeStamp, moved: false };
+                }}
+                onPointerMove={(event) => {
+                  const drag = dragRef.current;
+                  if (!drag || drag.pointerId !== event.pointerId) return;
+                  const dy = event.clientY - drag.y;
+                  if (!drag.moved && dy < sheetDragRecipe.activationDistance) return;
+                  if (!drag.moved) { drag.moved = true; event.currentTarget.setPointerCapture(event.pointerId); }
+                  setDragY(Math.max(0, dy));
+                }}
+                onPointerUp={(event) => {
+                  const drag = dragRef.current;
+                  dragRef.current = null;
+                  if (!drag || drag.pointerId !== event.pointerId || !drag.moved) return;
+                  const dy = event.clientY - drag.y;
+                  const velocity = dy / Math.max(1, event.timeStamp - drag.t);
+                  const height = contentRef.current?.getBoundingClientRect().height ?? 0;
+                  setDragY(0);
+                  if (dy > height * sheetDragRecipe.dismissDistanceRatio || velocity > sheetDragRecipe.dismissVelocity) requestClose("swipe");
+                }}
+                onPointerCancel={() => { dragRef.current = null; setDragY(0); }}
+              >
               {detents && detentLabels && activeDetent ? (
                 <div className="hjm-sheet__handle-row">
                   <button
@@ -662,13 +702,20 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
                     <span aria-hidden="true" className="hjm-sheet__handle-bar" />
                   </button>
                 </div>
+              ) : showHandle ? (
+                // Without detents the handle is the visible close control for keyboard and switch users.
+                <div className="hjm-sheet__handle-row">
+                  <button type="button" className="hjm-sheet__handle" aria-label={closeLabel} disabled={closeBlocked} onClick={() => requestClose("close-action")}>
+                    <span aria-hidden="true" className="hjm-sheet__handle-bar" />
+                  </button>
+                </div>
               ) : null}
               <header className="hjm-sheet__header">
                 <div>
                   <h2 id={titleId} className="hjm-sheet__title">{title}</h2>
                   {description ? <p id={descriptionId} className="hjm-sheet__description">{description}</p> : null}
                 </div>
-                {policy.dismissible ? (
+                {policy.dismissible && closeVisible ? (
                   <button
                     type="button"
                     className="hjm-dialog__close"
@@ -680,6 +727,7 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
                   </button>
                 ) : null}
               </header>
+              </div>
               {children ? <div className="hjm-sheet__body">{children}</div> : null}
               {footer ? <footer className="hjm-sheet__footer">{footer}</footer> : null}
             </div>

@@ -614,7 +614,8 @@ it("dismisses a menu inside a dialog before the containing dialog on Escape", as
 it("allows a controlled Sheet owner to reject dismissal and receive a later retry", async () => {
   const changed = vi.fn();
   await render(<HjmProvider reducedMotion><Sheet open title="선택" closeLabel="닫기" onOpenChange={changed} /></HjmProvider>);
-  const close = document.querySelector<HTMLButtonElement>(".hjm-sheet .hjm-dialog__close")!;
+  // 2026-10-16: bottom sheets hide × by default; the handle is the visible close control.
+  const close = document.querySelector<HTMLButtonElement>(".hjm-sheet .hjm-sheet__handle")!;
   await act(async () => close.click());
   expect(changed).toHaveBeenCalledTimes(1);
   await act(async () => close.click());

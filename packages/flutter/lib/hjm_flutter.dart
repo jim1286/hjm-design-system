@@ -201,6 +201,24 @@ class HjmConfirmDialog extends StatelessWidget {
   );
 }
 
+/// Bottom sheets close by dragging (2026-10-16 user decision, same as Web/Native Sheet): the drag
+/// handle is shown, backdrop taps do not dismiss and no close × is drawn. System back stays available.
+/// Pass `isDismissible: true` only where a product deliberately keeps backdrop dismissal.
+Future<T?> showHjmBottomSheet<T>({
+  required BuildContext context,
+  required WidgetBuilder builder,
+  bool isDismissible = false,
+  bool isScrollControlled = true,
+}) => showModalBottomSheet<T>(
+  context: context,
+  builder: builder,
+  enableDrag: true,
+  showDragHandle: true,
+  isDismissible: isDismissible,
+  isScrollControlled: isScrollControlled,
+  useSafeArea: true,
+);
+
 /// Shared modal body owns keyboard clearance, safe area and scrolling.
 /// The product still owns showModalBottomSheet's result and dismissal policy.
 class HjmSheetLayout extends StatelessWidget {

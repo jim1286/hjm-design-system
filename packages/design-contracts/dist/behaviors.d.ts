@@ -508,7 +508,7 @@ export declare const behaviorRegistry: {
             readonly dismissWhileBusy: false;
             readonly outsideDismiss: true;
             readonly escapeOrBackDismiss: true;
-            readonly swipeDismiss: false;
+            readonly swipeDismiss: true;
         };
         readonly stateAxes: {
             readonly availability: readonly ["enabled", "busy"];

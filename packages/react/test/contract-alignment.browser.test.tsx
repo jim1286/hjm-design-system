@@ -519,6 +519,8 @@ describe("provider coordination and modal exactly-once lifecycles", () => {
     await render(
       <HjmProvider systemTheme="light">
         <Sheet
+          // Bottom sheets default to drag-only; opt back into backdrop dismissal to test deduplication.
+          dismissPolicy={{ outsideDismiss: true }}
           closeLabel="닫기"
           open
           onOpenChange={onOpenChange}

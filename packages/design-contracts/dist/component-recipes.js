@@ -1307,7 +1307,8 @@ export const sheetRecipe = {
         height: 4,
         radius: "full",
         color: semanticColors.content.secondary,
-        visibleByDefault: false,
+        // Bottom sheets now always offer drag-to-dismiss, so the handle is visible whenever it is allowed.
+        visibleByDefault: true,
         showWhen: "swipe-dismiss-enabled",
     },
     header: { minHeight: control.minTouchTarget, gap: spacing.sm },

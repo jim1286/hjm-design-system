@@ -29,7 +29,21 @@ export declare const sheetBehaviorDefaults: {
     readonly dismissWhileBusy: false;
     readonly outsideDismiss: true;
     readonly escapeOrBackDismiss: true;
-    readonly swipeDismiss: false;
+    readonly swipeDismiss: true;
+};
+/**
+ * Bottom sheets close by dragging only (2026-10-16 user decision): no backdrop tap and no visible ×
+ * by default. Escape/system back and the handle's close action stay so keyboard, switch and
+ * screen-reader users can still dismiss without a drag gesture. Other placements keep the old defaults.
+ */
+export declare function resolveSheetDismissPolicy(placement: string, override?: Partial<SheetDismissPolicy>): SheetDismissPolicy;
+export declare function resolveSheetCloseButton(placement: string, showClose?: boolean): boolean;
+/** Release thresholds for the drag-to-dismiss gesture shared by both renderers. */
+export declare const sheetDragRecipe: {
+    readonly activationDistance: 6;
+    readonly dismissDistanceRatio: 0.25;
+    /** px per millisecond: a quick flick closes before the distance threshold. */
+    readonly dismissVelocity: 0.5;
 };
 /**
  * Resolves an attempted close without platform knowledge. Programmatic close is

@@ -95,6 +95,8 @@ export type SheetProps = ModalOpenState<SheetOpenChangeDetails> & Readonly<{
     modalPriority?: number;
     portalContainer?: HTMLElement;
     className?: string;
+    /** Visible × in the header. Off by default for bottom sheets, which close by dragging (2026-10-16). */
+    showClose?: boolean;
 }>;
 export declare const Sheet: import("react").ForwardRefExoticComponent<SheetProps & import("react").RefAttributes<HTMLDivElement>>;
 export type TooltipProps = OpenState<TooltipOpenChangeDetails> & Readonly<{

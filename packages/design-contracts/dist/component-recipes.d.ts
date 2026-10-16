@@ -3107,7 +3107,7 @@ export declare const sheetRecipe: {
             key: "textMuted";
             alpha?: number;
         }>;
-        readonly visibleByDefault: false;
+        readonly visibleByDefault: true;
         readonly showWhen: "swipe-dismiss-enabled";
     };
     readonly header: {

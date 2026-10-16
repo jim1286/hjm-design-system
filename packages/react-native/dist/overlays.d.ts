@@ -109,8 +109,10 @@ export type SheetProps = NativeModalProps & ReasonedOpenProps<SheetOpenChangeDet
     keyboardAvoidance?: boolean;
     /** Keep the header/footer fixed while long content scrolls. Do not nest a virtualized list. */
     scrollable?: boolean;
+    /** Visible × in the header. Off by default for bottom sheets, which close by dragging (2026-10-16). */
+    showClose?: boolean;
 }>;
 /** Native Sheet applies policy before emitting a concrete dismissal reason. */
-export declare function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, footer, placement, size, busy, dismissPolicy, closeLabel, returnFocusRef, safeAreaInsets: suppliedSafeAreaInsets, onDismissComplete, contentStyle, keyboardAvoidance, scrollable, onShow, ...modalProps }: SheetProps): import("react").JSX.Element;
+export declare function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, footer, placement, size, busy, dismissPolicy, closeLabel, returnFocusRef, safeAreaInsets: suppliedSafeAreaInsets, onDismissComplete, contentStyle, keyboardAvoidance, scrollable, showClose, onShow, ...modalProps }: SheetProps): import("react").JSX.Element;
 export {};
 //# sourceMappingURL=overlays.d.ts.map

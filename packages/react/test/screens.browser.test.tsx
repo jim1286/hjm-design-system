@@ -117,7 +117,8 @@ it("switches from attachment to send and retains removable photos until the prod
   const props = {label:"메시지",sendLabel:"전송",value:"",onValueChange:vi.fn(),onSend:send,sendIcon:<span>↑</span>,attachmentAction:{label:"사진 추가",icon:<span>+</span>,onPress:vi.fn()},onRemoveAttachment:remove};
   await act(async () => root.render(<HjmProvider><MessageComposer {...props}/></HjmProvider>));
   await expect.element(page.getByRole("button",{name:"사진 추가"})).toBeVisible();
-  expect(host.querySelector('[aria-label="전송"]')).toBeNull();
+  // The inert, aria-hidden reserve keeps the field height; only the visible slot may offer send.
+  expect(host.querySelector('.hjm-message-composer__visible [aria-label="전송"]')).toBeNull();
   const attachments = [{id:"a",removeLabel:"첫 사진 삭제",preview:<img alt="첫 사진"/>},{id:"b",removeLabel:"둘째 사진 삭제",preview:<img alt="둘째 사진"/>}];
   await act(async () => root.render(<HjmProvider><MessageComposer {...props} attachments={attachments}/></HjmProvider>));
   await page.getByRole("button",{name:"전송",exact:true}).click();

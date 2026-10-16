@@ -3,7 +3,7 @@ import { useOverlayOriginMotion } from "./internal/overlay-origin-motion.js";
 import { layer } from "@hjmds/design-contracts/foundations";
 import { resolveMenuTypeahead } from "./menu-typeahead.js";
 import { createAlertDialogSession, getAlertDialogInitialFocus, validateAlertDialogRequest, } from "@hjmds/design-contracts/components/alert-dialog";
-import { createSheetLifecycle, resolveNextSheetDetent, sheetBehaviorDefaults, } from "@hjmds/design-contracts/components/sheet";
+import { createSheetLifecycle, resolveNextSheetDetent, resolveSheetCloseButton, resolveSheetDismissPolicy, sheetDragRecipe, } from "@hjmds/design-contracts/components/sheet";
 import { resolveTooltipDescriptor, tooltipBehaviorDefaults, } from "@hjmds/design-contracts/components/tooltip";
 import { dialogRecipe, menuRecipe, sheetRecipe, tooltipRecipe, } from "@hjmds/design-contracts/recipes";
 import { cloneElement, forwardRef, useCallback, useEffect, useId, useRef, useState, useSyncExternalStore, } from "react";
@@ -177,14 +177,22 @@ export const AlertDialog = forwardRef(function AlertDialog({ trigger, request, i
                 changeOpen(true, { reason: "trigger" });
             }), open ? (_jsx(HjmPortal, { ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("div", { className: "hjm-overlay", "data-kind": "alert-dialog", "data-modal-priority": modalPriority, "data-state": "open", style: { zIndex: modalLayer }, children: _jsxs("div", { ref: composeRefs(contentRef, forwardedRef), id: contentId, role: "alertdialog", "aria-modal": "true", "aria-labelledby": titleId, "aria-describedby": `${descriptionId}${error ? ` ${errorId}` : ""}`, "aria-busy": busy || undefined, tabIndex: -1, className: classNames("hjm-alert-dialog", className), "data-hjm-modal-content": "", "data-size": size, "data-tone": tone, "data-state": busy ? "busy" : error ? "error" : "idle", children: [icon ? _jsx("div", { className: "hjm-alert-dialog__icon", "aria-hidden": "true", children: icon }) : null, _jsx("h2", { id: titleId, className: "hjm-alert-dialog__title", children: request.title }), _jsx("p", { id: descriptionId, className: "hjm-alert-dialog__description", children: request.description }), error ? _jsx("p", { id: errorId, className: "hjm-alert-dialog__error", role: "alert", children: error }) : null, _jsxs("div", { className: "hjm-alert-dialog__actions", children: [request.mode === "confirm" ? (_jsx(Button, { ref: cancelRef, tone: "secondary", disabled: busy || closing, onClick: () => cancel("cancel-action"), children: request.cancelLabel })) : null, _jsx(Button, { ref: confirmRef, tone: tone === "danger" ? "danger" : "primary", loading: busy, disabled: closing, onClick: () => void confirm(), children: request.confirmLabel })] })] }) }) })) : null] }));
 });
-export const Sheet = forwardRef(function Sheet({ trigger, title, description, children, footer, placement = sheetRecipe.defaults.placement, size = sheetRecipe.defaults.size, detents, activeDetent, onDetentChange, detentLabels, busy = false, dismissPolicy, closeLabel, initialFocusRef, returnFocusRef, onDismissComplete, modalPriority = 0, portalContainer, open: openProp, defaultOpen, onOpenChange, className, }, forwardedRef) {
+export const Sheet = forwardRef(function Sheet({ trigger, title, description, children, footer, placement = sheetRecipe.defaults.placement, size = sheetRecipe.defaults.size, detents, activeDetent, onDetentChange, detentLabels, busy = false, dismissPolicy, closeLabel, initialFocusRef, returnFocusRef, onDismissComplete, modalPriority = 0, portalContainer, open: openProp, defaultOpen, onOpenChange, className, showClose, }, forwardedRef) {
     const modalLayer = getModalLayer(modalPriority);
     const [open, changeOpen] = useOpenState({
         ...(openProp === undefined ? {} : { open: openProp }),
         ...(defaultOpen === undefined ? {} : { defaultOpen }),
         ...(onOpenChange === undefined ? {} : { onOpenChange }),
     });
-    const policy = { ...sheetBehaviorDefaults, ...dismissPolicy };
+    const policy = resolveSheetDismissPolicy(placement, dismissPolicy);
+    const closeVisible = resolveSheetCloseButton(placement, showClose);
+    // Drag-to-dismiss (2026-10-16 user decision): handle and header follow the pointer downward and a
+    // release past the distance or velocity threshold closes with reason "swipe".
+    const showHandle = placement === "bottom" && policy.dismissible && policy.swipeDismiss;
+    const closeBlocked = busy && !policy.dismissWhileBusy;
+    const canSwipe = showHandle && !closeBlocked;
+    const dragRef = useRef(null);
+    const [dragY, setDragY] = useState(0);
     const lifecycleRef = useRef(createSheetLifecycle(open));
     const previousOpenRef = useRef(open);
     const currentOpenRef = useRef(open);
@@ -263,14 +271,43 @@ export const Sheet = forwardRef(function Sheet({ trigger, title, description, ch
                             event.preventDefault();
                             requestClose("outside");
                         }
-                    }, children: _jsxs("div", { ref: composeRefs(contentRef, forwardedRef), id: contentId, role: "dialog", "aria-modal": "true", "aria-labelledby": titleId, "aria-describedby": description ? descriptionId : undefined, "aria-busy": busy || undefined, tabIndex: -1, className: classNames("hjm-sheet", className), "data-hjm-modal-content": "", "data-placement": placement, "data-detent": activeDetent ?? (size === "auto" ? undefined : size), "data-has-footer": footer ? true : undefined, "data-state": busy ? "busy" : "idle", children: [detents && detentLabels && activeDetent ? (_jsx("div", { className: "hjm-sheet__handle-row", children: _jsx("button", { type: "button", className: "hjm-sheet__handle", "aria-label": resolveNextSheetDetent(detents, activeDetent, "expand") === null
-                                        ? detentLabels.collapse
-                                        : detentLabels.expand, onClick: () => {
-                                        const expand = resolveNextSheetDetent(detents, activeDetent, "expand");
-                                        const next = expand ?? resolveNextSheetDetent(detents, activeDetent, "collapse");
-                                        if (next !== null)
-                                            onDetentChange?.(next);
-                                    }, children: _jsx("span", { "aria-hidden": "true", className: "hjm-sheet__handle-bar" }) }) })) : null, _jsxs("header", { className: "hjm-sheet__header", children: [_jsxs("div", { children: [_jsx("h2", { id: titleId, className: "hjm-sheet__title", children: title }), description ? _jsx("p", { id: descriptionId, className: "hjm-sheet__description", children: description }) : null] }), policy.dismissible ? (_jsx("button", { type: "button", className: "hjm-dialog__close", "aria-label": closeLabel, disabled: busy && !policy.dismissWhileBusy, onClick: () => requestClose("close-action"), children: "\u00D7" })) : null] }), children ? _jsx("div", { className: "hjm-sheet__body", children: children }) : null, footer ? _jsx("footer", { className: "hjm-sheet__footer", children: footer }) : null] }) }) })) : null] }));
+                    }, children: _jsxs("div", { ref: composeRefs(contentRef, forwardedRef), id: contentId, role: "dialog", "aria-modal": "true", "aria-labelledby": titleId, "aria-describedby": description ? descriptionId : undefined, "aria-busy": busy || undefined, tabIndex: -1, className: classNames("hjm-sheet", className), "data-hjm-modal-content": "", "data-placement": placement, "data-detent": activeDetent ?? (size === "auto" ? undefined : size), "data-has-footer": footer ? true : undefined, "data-state": busy ? "busy" : "idle", "data-dragging": dragY > 0 || undefined, style: dragY > 0 ? { transform: `translateY(${dragY}px)` } : undefined, children: [_jsxs("div", { className: "hjm-sheet__drag", "data-swipe": canSwipe || undefined, onPointerDown: (event) => {
+                                    if (!canSwipe || event.button !== 0 || event.target.closest("a,input,textarea,select,.hjm-dialog__close"))
+                                        return;
+                                    dragRef.current = { pointerId: event.pointerId, y: event.clientY, t: event.timeStamp, moved: false };
+                                }, onPointerMove: (event) => {
+                                    const drag = dragRef.current;
+                                    if (!drag || drag.pointerId !== event.pointerId)
+                                        return;
+                                    const dy = event.clientY - drag.y;
+                                    if (!drag.moved && dy < sheetDragRecipe.activationDistance)
+                                        return;
+                                    if (!drag.moved) {
+                                        drag.moved = true;
+                                        event.currentTarget.setPointerCapture(event.pointerId);
+                                    }
+                                    setDragY(Math.max(0, dy));
+                                }, onPointerUp: (event) => {
+                                    const drag = dragRef.current;
+                                    dragRef.current = null;
+                                    if (!drag || drag.pointerId !== event.pointerId || !drag.moved)
+                                        return;
+                                    const dy = event.clientY - drag.y;
+                                    const velocity = dy / Math.max(1, event.timeStamp - drag.t);
+                                    const height = contentRef.current?.getBoundingClientRect().height ?? 0;
+                                    setDragY(0);
+                                    if (dy > height * sheetDragRecipe.dismissDistanceRatio || velocity > sheetDragRecipe.dismissVelocity)
+                                        requestClose("swipe");
+                                }, onPointerCancel: () => { dragRef.current = null; setDragY(0); }, children: [detents && detentLabels && activeDetent ? (_jsx("div", { className: "hjm-sheet__handle-row", children: _jsx("button", { type: "button", className: "hjm-sheet__handle", "aria-label": resolveNextSheetDetent(detents, activeDetent, "expand") === null
+                                                ? detentLabels.collapse
+                                                : detentLabels.expand, onClick: () => {
+                                                const expand = resolveNextSheetDetent(detents, activeDetent, "expand");
+                                                const next = expand ?? resolveNextSheetDetent(detents, activeDetent, "collapse");
+                                                if (next !== null)
+                                                    onDetentChange?.(next);
+                                            }, children: _jsx("span", { "aria-hidden": "true", className: "hjm-sheet__handle-bar" }) }) })) : showHandle ? (
+                                    // Without detents the handle is the visible close control for keyboard and switch users.
+                                    _jsx("div", { className: "hjm-sheet__handle-row", children: _jsx("button", { type: "button", className: "hjm-sheet__handle", "aria-label": closeLabel, disabled: closeBlocked, onClick: () => requestClose("close-action"), children: _jsx("span", { "aria-hidden": "true", className: "hjm-sheet__handle-bar" }) }) })) : null, _jsxs("header", { className: "hjm-sheet__header", children: [_jsxs("div", { children: [_jsx("h2", { id: titleId, className: "hjm-sheet__title", children: title }), description ? _jsx("p", { id: descriptionId, className: "hjm-sheet__description", children: description }) : null] }), policy.dismissible && closeVisible ? (_jsx("button", { type: "button", className: "hjm-dialog__close", "aria-label": closeLabel, disabled: busy && !policy.dismissWhileBusy, onClick: () => requestClose("close-action"), children: "\u00D7" })) : null] })] }), children ? _jsx("div", { className: "hjm-sheet__body", children: children }) : null, footer ? _jsx("footer", { className: "hjm-sheet__footer", children: footer }) : null] }) }) })) : null] }));
 });
 export const Tooltip = forwardRef(function Tooltip({ trigger, content, placement, align, pointerOpenDelayMs = tooltipBehaviorDefaults.pointerOpenDelayMs, focusOpenDelayMs = tooltipBehaviorDefaults.focusOpenDelayMs, portalContainer, open: openProp, defaultOpen, onOpenChange, className, layoutStyle, }, ref) {
     const descriptor = resolveTooltipDescriptor({

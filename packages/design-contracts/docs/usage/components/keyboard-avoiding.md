@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Native
 - 적용: 1.12.1
-- 검토일: 2026-10-07
+- 검토일: 2026-10-16
 - 근거: [Native platform](../../native-platform.md#키보드-회피), 판정 `resolveKeyboardInset`(`src/native-platform.ts`)
 - 스토리북: 없음
 
@@ -62,6 +62,8 @@ import { BottomCTA } from "@hjmds/react-native/bottom-cta";
 | `resolveKeyboardAvoidanceBehavior` | `(platform: "ios" \| "android") => KeyboardAvoidanceBehavior` | — | RN `KeyboardAvoidingView`를 직접 쓸 때의 `behavior` 판정. 이 컴포넌트는 쓰지 않는다 |
 
 - 콜백·상태 prop은 없다. 키보드 높이는 컴포넌트 안에서 키보드 이벤트로 잰다.
+
+2026-10-16: 키보드 높이 전체가 아니라 이 영역의 아래 끝과 키보드 윗변이 실제로 겹치는 만큼만 아래 여백으로 준다. 탭 막대·도구 막대 위에 놓인 화면에서 키보드와 작성창 사이에 빈 띠가 생기던 문제를 고쳤다(미게시).
 
 ## 배치
 

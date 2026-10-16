@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-13
+- 검토일: 2026-10-16
 - 근거: [Sheet 입력 화면과 가용 영역](../../sheet.md), [optional adapters](../../optional-adapters.md)(Native 제스처 확장), `src/component-recipes.ts`(`sheetRecipe`), `src/sheet.ts`(`sheetBehaviorDefaults`)
 - 스토리북: `배포/컴포넌트/오버레이/시트`
 
@@ -84,7 +84,8 @@ import { Sheet } from "@hjmds/react-native/overlays";
 | `open` · `defaultOpen` | `boolean` | 비제어 `false` | Web은 제어하면 `onOpenChange` 필수, 비제어면 `trigger` 필수 |
 | `onOpenChange` | `(open: boolean, detail: { reason }) => void` | — | reason: `trigger` · `close-action` · `escape` · `back` · `outside` · `swipe` · `programmatic`. Android 하드웨어 back은 Native에서만 `back` |
 | `onDismissComplete` | `(detail: { reason }) => void` | — | 표면이 실제로 사라진 뒤 한 번. 다음 modal·화면 이동은 여기서 |
-| `dismissPolicy` | `{ dismissible?, dismissWhileBusy?, outsideDismiss?, escapeOrBackDismiss?, swipeDismiss? }` | `dismissible` true · `dismissWhileBusy` false · `outsideDismiss` true · `escapeOrBackDismiss` true · `swipeDismiss` false | 닫기 허용 범위 |
+| `dismissPolicy` | `{ dismissible?, dismissWhileBusy?, outsideDismiss?, escapeOrBackDismiss?, swipeDismiss? }` | `dismissible` true · `dismissWhileBusy` false · `outsideDismiss` 하단 false / 옆 true · `escapeOrBackDismiss` true · `swipeDismiss` true(미게시 변경, 이전 false) | 닫기 허용 범위. `resolveSheetDismissPolicy(placement, override)` |
+| `showClose` | `boolean` | 하단 `false` · 옆 `true`(미게시) | 머리의 × 표시. 하단 시트는 드래그로 닫는 것이 기본이라 끈다 |
 | `busy` | `boolean` | `false` | 사용자 닫기를 막는다 |
 | `title` · `closeLabel` | 문구 | 필수 | Native `title`이 element면 `accessibilityTitle`(string) 필수 |
 | `description` · `footer` | 노드(Native `description`은 `string`) | — | `footer`는 스크롤 밖 고정. 저장 행동은 여기 |
@@ -112,7 +113,7 @@ import { Sheet } from "@hjmds/react-native/overlays";
 | --- | --- | --- |
 | 크기 | 하단 시트 높이: `auto` 내용 높이(최대 화면 높이 × `maxHeightRatio` 0.9), `medium` 60%, `large` 85%, `full` 위 safe area 안 전체 높이(0.9 상한 없음). Web 하단 시트 최대 폭 640. 위 두 모서리만 `radius.xl` 24. 옆 시트(`start`·`end`): Web 폭 `min(28rem, 100%)`·높이 화면 − 32, Native 폭 88%(최대 420)·화면 높이 | `sheetRecipe.sizes`·`content`·`web`, `.hjm-sheet`, Native `Sheet` |
 | 간격 | 두 플랫폼 같은 값: 좌우 `content.paddingHorizontal`(`spacing.lg` 20), 위·아래 `content.paddingTop/Bottom`(`spacing.sm` 12, 하단 시트는 아래 safe area를 더함), 머리·본문·footer 사이 `body.gap`(`spacing.md` 16), footer 위 `footer.paddingTop`(`spacing.sm` 12), 제목–닫기 `header.gap`(`spacing.sm` 12), footer 버튼 사이 `footer.gap`(`spacing.sm` 12) | `.hjm-sheet__*`, `sheetRecipe.content`·`body`·`footer` |
-| 순서·정렬 | 머리(제목·설명 + 닫기) → 본문 → `footer`. 머리 최소 높이 44(`control.minTouchTarget`), 닫기는 끝 쪽에서 제목 세로 중앙. Web footer는 오른쪽 정렬 가로 줄 [보조][주]. Native footer는 세로 열이라 꽉 찬 폭 버튼을 주 행동 먼저 둔다. Web에서 `detents`를 주면 위 가운데 36×4 손잡이 버튼(터치 최소 폭 44 · 높이 `spacing.lg` 20). Native 기본 Sheet는 손잡이가 없다 | `sheetRecipe.header`·`handle`, `.hjm-sheet__footer`, `.hjm-sheet__handle` |
+| 순서·정렬 | 머리(제목·설명 + 닫기) → 본문 → `footer`. 머리 최소 높이 44(`control.minTouchTarget`), 닫기는 끝 쪽에서 제목 세로 중앙. Web footer는 오른쪽 정렬 가로 줄 [보조][주]. Native footer는 세로 열이라 꽉 찬 폭 버튼을 주 행동 먼저 둔다. 하단 시트는 항상 위 가운데 36×4 손잡이(터치 최소 폭 44)를 둔다. `detents`가 있으면 높이 전환 버튼, 없으면 `closeLabel` 이름의 닫기 버튼이다. 손잡이·머리 영역을 아래로 끌어 `sheetDragRecipe.dismissDistanceRatio`(시트 높이의 25%) 또는 `dismissVelocity` 0.5px/ms를 넘기면 `swipe`로 닫고, 아니면 제자리로 돌아간다(미게시, Web·Native 동일) | `sheetRecipe.header`·`handle`, `.hjm-sheet__footer`, `.hjm-sheet__handle` |
 | 고정·스크롤 | 본문만 스크롤, 머리·`footer` 고정(Native는 `scrollable`일 때 ScrollView). 고정 높이(`medium`·`large`·`full`, 옆 시트)에서는 본문이 머리·footer를 뺀 남은 높이를 차지하고 `footer`는 시트 아래에 붙는다. 그래서 본문의 `flex: 1` 자식(SearchScreen, 목록 화면)이 그 높이를 채운다(Web `.hjm-sheet__body` `flex: 1 1 auto`, Native 본문 `flexGrow: 1`·`minHeight: 0`, 1.13.1 변경). `auto`는 내용 높이 그대로다. 저장·확인은 `footer`에. 아래 안전 영역은 시트가 자기 여백에 더한다(`spacing.sm` 12 + 아래 inset, Web은 `env(safe-area-inset-bottom)`). 위 inset은 시트가 올라갈 높이를 줄인다. 제품이 inset을 다시 더하지 않는다 | `.hjm-sheet__body`, `sheetRecipe.safeArea`, Native `Sheet` |
 | 좁은 폭·큰 글자 | 폭 < 640이면 하단 시트가 화면 폭을 채운다. Web footer는 줄을 바꾼다. 큰 글자로 내용이 길어지면 `auto`는 최대 90%에서 멈추고 본문이 스크롤된다(`full`은 위 safe area까지) | `.hjm-sheet[data-placement="bottom"]`, `maxHeightRatio` |
 
@@ -135,6 +136,8 @@ import { Sheet } from "@hjmds/react-native/overlays";
 
 ## 꼭 지킬 것
 
+- 하단 시트는 드래그로 내려 닫을 수 있어야 한다(2026-10-16 사용자 결정, 필수). 배경 탭 닫기와 ×는 기본으로 끈다. 드래그를 쓸 수 없는 사용자를 위해 손잡이 닫기 버튼, Escape·Android back, VoiceOver 닫기 제스처는 유지한다. `swipeDismiss: false`는 결제 확인처럼 실수로 닫히면 안 되는 흐름에만 쓰고 이유를 제품 코드에 남긴다.
+
 - 입력 폼 Native Sheet는 `keyboardAvoidance`와 `scrollable`을 함께 켜고, 제품의 키보드 listener·maxHeight·
   중첩 ScrollView를 지운다. 본문이 FlatList 등 가상화 목록이면 `scrollable={false}`로 둔다.
 - 저장 버튼은 `footer`에 둔다. 저장 중에는 `busy`로 닫기를 막는다.
@@ -145,6 +148,8 @@ import { Sheet } from "@hjmds/react-native/overlays";
 - Web Sheet는 `layoutStyle`을 받지 않는다(Web `layoutStyle` 제외 15개 중 하나). 표면 위치·크기는 `placement`·`size`가 정한다.
 
 ## 플랫폼 차이
+
+Flutter 제품은 `showModalBottomSheet` 대신 `showHjmBottomSheet`(`hjm_flutter`)로 연다. 같은 기본값(드래그 닫기·손잡이 표시·배경 탭 닫기 끔·× 없음)을 적용하고 본문은 `HjmSheetLayout`을 쓴다(미게시).
 
 | 항목 | Web | Native |
 | --- | --- | --- |
