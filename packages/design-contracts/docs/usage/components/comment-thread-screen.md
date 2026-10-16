@@ -90,7 +90,7 @@ import { MessageComposer } from "@hjmds/react-native/screens";
 `CommentThreadItem`: `id`, `parentId`(`null`이면 최상위), `author`, `body`(노드), `timeLabel`, `likeCountLabel`,
 `likeIcon`, `likeLabel`은 필수. 선택은 `bodyText`(작성자와 본문을 한 줄 흐름으로), `avatar`, `likeAction`(기본
 좋아요 버튼 교체, `null`이면 생략), `actions`(하트 바로 옆의 더보기 메뉴 등), `canReply`(기본: 최상위만 true), `replyDisabled`.
-`reactions`(미게시)를 주면 작성자·본문을 길게 눌러 ChatMessage와 같은 메뉴(반응 줄 → 미리보기 → 시각 → 답글 달기 → `menuActions` → `reportAction` 신고)가 열린다. 답글 달기는 `canReply`일 때 `onReply`로 자동 연결되고, 아이콘은 `reactions.replyIcon`으로 넘긴다. `reactionSummary`는 답글 달기 앞에 놓는 선택된 반응 표시 슬롯이다. 반응 옵션을 비우면(`options: []`) 반응 줄 없이 동작 목록(답글 달기 → `menuActions` → 신고)만 연다(인스타그램 댓글 길게 누르기 실측). 댓글 메뉴에는 시각 제목을 두지 않는다(행에 이미 보인다).
+`reactions`(미게시)를 주면 작성자·본문을 길게 눌러 ChatMessage와 같은 메뉴(반응 줄 → 미리보기 → 시각 → 답글 달기 → `menuActions` → `reportAction` 신고)가 열린다. 답글 달기는 `canReply`일 때 `onReply`로 자동 연결되고, 아이콘은 `reactions.replyIcon`으로 넘긴다. `reactionSummary`는 답글 달기 앞에 놓는 선택된 반응 표시 슬롯이다. 댓글의 기본은 반응 옵션을 비운(`options: []`) 동작 목록 전용 메뉴다(답글 달기 → `menuActions` → 신고, 인스타그램 댓글 길게 누르기 실측). 댓글 이모지는 길게 누르기가 아니라 작성창 쪽 입력으로 다룬다. 반응 줄은 제품이 명시적으로 댓글 반응을 운영할 때만 옵션을 넣는다. 댓글 메뉴에는 시각 제목을 두지 않는다(행에 이미 보인다).
 `media`(미게시, 선택)는 본문 아래 사진·스티커이며 최대 폭 `commentThreadRecipe.mediaMaxWidth` 160, radius 12로 감싼다. `likeCountLabel`은 하트 아래 숫자만(예: "15") 넣고 0이면 빈 문자열로 숨긴다. 개수를 포함한 전체 문장은 `likeLabel`에 둔다.
 
 ## 배치

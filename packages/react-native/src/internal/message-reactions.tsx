@@ -50,14 +50,23 @@ export function MessageReactions({ children, closeLabel, replyAction, menuAction
     if (wasOpen.current && !open && Platform.OS !== "ios") { restore(); runQueuedAction(); }
     wasOpen.current = open;
   }, [open]);
-  const top = Math.max((insets.top ?? 0) + tokens.spacing.sm, Math.min((anchor ?? height / 2) - 76, height - (insets.bottom ?? 0) - (picker.more ? 440 : 200)));
+  // The anchor is the pressed content's top edge, so the preview stays where it was (strip above it,
+  // actions below), as in the measured hold menus. A fixed −76 offset lifted action-only comment menus.
+  const stripOffset = picker.options.length ? holdMenuRecipe.stripHeight + holdMenuRecipe.gap : 0;
+  const reserve = stripOffset + rows.length * holdMenuRecipe.actionRowHeight + 160 + (picker.more ? 240 : 0);
+  const top = Math.max((insets.top ?? 0) + tokens.spacing.sm, Math.min((anchor ?? height / 2) - stripOffset, height - (insets.bottom ?? 0) - reserve));
+  const openAt = (fallbackY: number) => {
+    const node = trigger.current;
+    if (node && typeof node.measureInWindow === "function") node.measureInWindow((_x, y) => setAnchor(y));
+    else setAnchor(fallbackY);
+  };
   return <>
     {/* No accessibilityLabel: the platform names the target from the bubble text, so the message is
         read. picker.label was the name before and hid the body (2026-10-06 review); it is now the hint. */}
     {/* flexShrink lets a long bubble wrap beside its time instead of pushing the time off screen. */}
     <Pressable ref={trigger} style={{ flexShrink: 1 }} accessible={!interactiveContent} disabled={picker.disabled ?? false} accessibilityRole="button" accessibilityHint={picker.label}
       accessibilityState={{ disabled: picker.disabled ?? false }} delayLongPress={screenPatternRecipe.reactionHoldMs}
-      onLongPress={event => setAnchor(event.nativeEvent.pageY)}
+      onLongPress={event => openAt(event.nativeEvent.pageY)}
       accessibilityActions={[{ name: "activate", label: picker.label }, ...(replyAction && !replyAction.disabled ? [{name:"reply",label:replyAction.label}] : [])]}
       onAccessibilityAction={event => { if(event.nativeEvent.actionName === "reply") { if(replyAction && !replyAction.disabled) replyAction.onPress(); } else if (!picker.disabled) setAnchor(height / 2); }}>{children}</Pressable>
     {/* An interactive album must keep its own page buttons in the AX tree. A separate menu target

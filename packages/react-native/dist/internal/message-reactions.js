@@ -44,8 +44,19 @@ export function MessageReactions({ children, closeLabel, replyAction, menuAction
         }
         wasOpen.current = open;
     }, [open]);
-    const top = Math.max((insets.top ?? 0) + tokens.spacing.sm, Math.min((anchor ?? height / 2) - 76, height - (insets.bottom ?? 0) - (picker.more ? 440 : 200)));
-    return _jsxs(_Fragment, { children: [_jsx(Pressable, { ref: trigger, style: { flexShrink: 1 }, accessible: !interactiveContent, disabled: picker.disabled ?? false, accessibilityRole: "button", accessibilityHint: picker.label, accessibilityState: { disabled: picker.disabled ?? false }, delayLongPress: screenPatternRecipe.reactionHoldMs, onLongPress: event => setAnchor(event.nativeEvent.pageY), accessibilityActions: [{ name: "activate", label: picker.label }, ...(replyAction && !replyAction.disabled ? [{ name: "reply", label: replyAction.label }] : [])], onAccessibilityAction: event => { if (event.nativeEvent.actionName === "reply") {
+    // The anchor is the pressed content's top edge, so the preview stays where it was (strip above it,
+    // actions below), as in the measured hold menus. A fixed −76 offset lifted action-only comment menus.
+    const stripOffset = picker.options.length ? holdMenuRecipe.stripHeight + holdMenuRecipe.gap : 0;
+    const reserve = stripOffset + rows.length * holdMenuRecipe.actionRowHeight + 160 + (picker.more ? 240 : 0);
+    const top = Math.max((insets.top ?? 0) + tokens.spacing.sm, Math.min((anchor ?? height / 2) - stripOffset, height - (insets.bottom ?? 0) - reserve));
+    const openAt = (fallbackY) => {
+        const node = trigger.current;
+        if (node && typeof node.measureInWindow === "function")
+            node.measureInWindow((_x, y) => setAnchor(y));
+        else
+            setAnchor(fallbackY);
+    };
+    return _jsxs(_Fragment, { children: [_jsx(Pressable, { ref: trigger, style: { flexShrink: 1 }, accessible: !interactiveContent, disabled: picker.disabled ?? false, accessibilityRole: "button", accessibilityHint: picker.label, accessibilityState: { disabled: picker.disabled ?? false }, delayLongPress: screenPatternRecipe.reactionHoldMs, onLongPress: event => openAt(event.nativeEvent.pageY), accessibilityActions: [{ name: "activate", label: picker.label }, ...(replyAction && !replyAction.disabled ? [{ name: "reply", label: replyAction.label }] : [])], onAccessibilityAction: event => { if (event.nativeEvent.actionName === "reply") {
                     if (replyAction && !replyAction.disabled)
                         replyAction.onPress();
                 }

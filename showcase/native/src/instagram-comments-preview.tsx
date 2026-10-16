@@ -20,15 +20,15 @@ const initial:Comment[] = [
  {id:6,parentId:null,user:"yuna",body:"저장해두고 주말에 가봐야겠어요 ☕️",time:"5시간",likes:5},
 ];
 type Props={stateKind?:"ready"|"loading"|"empty"|"error"|"restricted";tools?:boolean};
-const commentReactionOptions=[{id:"heart",emoji:"❤️",label:"하트"},{id:"laugh",emoji:"😂",label:"웃겨요"},{id:"wow",emoji:"😮",label:"놀라워요"},{id:"sad",emoji:"😢",label:"슬퍼요"},{id:"angry",emoji:"😡",label:"화나요"},{id:"thumbs",emoji:"👍",label:"최고예요"}];
 export function InstagramCommentsPreview({stateKind="ready",tools=false}:Props){
  // Demo failure toggle: a failed send keeps the draft and says so next to the composer.
  const [failNext,setFailNext]=useState(false),[sendFailed,setSendFailed]=useState(false);
  const {colors,tokens}=useHjmNativeTheme();
  const [comments,setComments]=useState<Comment[]>(stateKind==="empty"?[]:initial);
  const [liked,setLiked]=useState<number[]>([]);
- // 2026-10-16: long-press opens reactions with the time, reply and report (replaces the overflow menu).
- const [reactions,setReactions]=useState<Record<number,string|null>>({}),[reported,setReported]=useState<string|null>(null);
+ // 2026-10-16: long-press opens the action menu only (reply, report), like the Instagram comment sheet;
+ // emoji belong to the composer, not to the hold menu.
+ const [reported,setReported]=useState<string|null>(null);
  const [expanded,setExpanded]=useState<number[]>([]);
  const [reply,setReply]=useState<Comment|null>(null);
  const [draft,setDraft]=useState("");
@@ -49,7 +49,7 @@ export function InstagramCommentsPreview({stateKind="ready",tools=false}:Props){
  </Stack></Stack>;
 
  return <Stack gap="sm">{reported?<Text tone="muted">{`${reported}님의 댓글 신고를 접수했어요.`}</Text>:null}{tools?<Button tone="secondary" selected={failNext} onPress={()=>setFailNext(v=>!v)}>{failNext?"전송 실패 예약됨":"다음 전송 실패"}</Button>:null}{/* The story host owns keyboard avoidance (ChatScreen/CommentThreadScreen contract); without it the composer sat under the keyboard. */}<KeyboardAvoiding style={{height:720}}>{closed?<ScreenLayout title="게시물"><Text>산책길에서 찾은 작은 여유</Text><Button onPress={()=>setClosed(false)}>댓글 보기</Button></ScreenLayout>:<CommentThreadScreen  title="댓글" notice={<Stack axis="inline" gap="sm" align="start"><Avatar decorative name="jimin" size={32}/><Stack gap="xxs"><Text emphasis="strong">jimin</Text><Text>산책길에서 찾은 작은 여유.</Text><Text variant="caption" tone="muted">오늘 · 게시물</Text></Stack></Stack>} actions={<IconButton label="댓글 닫기" tone="ghost" onPress={()=>setClosed(true)}><X size={20} color={colors.textMuted}/></IconButton>} state={state} stateAction={kind==="error"||kind==="restricted"?<Button onPress={()=>setRecovered(true)}>{kind==="error"?"다시 시도":"로그인"}</Button>:null} composer={kind==="ready"||kind==="empty"?composer:null}
- items={comments.map(comment=>({id:String(comment.id),parentId:comment.parentId===null?null:String(comment.parentId),author:comment.user,body:<Text>{comment.body}</Text>,timeLabel:comment.time,likeCountLabel:(()=>{const count=comment.likes+(liked.includes(comment.id)?1:0);return count?String(count):"";})(),avatar:<Avatar name={comment.user} size={32} decorative />,likeLabel:`${comment.user} 댓글 ${liked.includes(comment.id)?"좋아요 취소":"좋아요"}, 좋아요 ${comment.likes+(liked.includes(comment.id)?1:0)}개`,reactions:{label:`${comment.user} 댓글에 반응`,closeLabel:"닫기",options:commentReactionOptions,value:reactions[comment.id]??null,onValueChange:(value:string|null)=>setReactions(current=>({...current,[comment.id]:value})),reportAction:{label:"신고",icon:<MessageSquareWarning size={20} color={colors.danger}/>,onPress:()=>setReported(comment.user)},replyIcon:<Reply size={20} color={colors.text}/>},reactionSummary:reactions[comment.id]?<Text>{commentReactionOptions.find(option=>option.id===reactions[comment.id])?.emoji}</Text>:null,likeIcon:<Heart size={16} color={liked.includes(comment.id)?colors.danger:colors.textMuted} fill={liked.includes(comment.id)?colors.danger:"none"}/>}))}
+ items={comments.map(comment=>({id:String(comment.id),parentId:comment.parentId===null?null:String(comment.parentId),author:comment.user,body:<Text>{comment.body}</Text>,timeLabel:comment.time,likeCountLabel:(()=>{const count=comment.likes+(liked.includes(comment.id)?1:0);return count?String(count):"";})(),avatar:<Avatar name={comment.user} size={32} decorative />,likeLabel:`${comment.user} 댓글 ${liked.includes(comment.id)?"좋아요 취소":"좋아요"}, 좋아요 ${comment.likes+(liked.includes(comment.id)?1:0)}개`,reactions:{label:`${comment.user} 댓글 메뉴`,closeLabel:"닫기",options:[],value:null,onValueChange:()=>{},reportAction:{label:"신고",icon:<MessageSquareWarning size={20} color={colors.danger}/>,onPress:()=>setReported(comment.user)},replyIcon:<Reply size={20} color={colors.text}/>},likeIcon:<Heart size={16} color={liked.includes(comment.id)?colors.danger:colors.textMuted} fill={liked.includes(comment.id)?colors.danger:"none"}/>}))}
  expandedIds={expanded.map(String)} onExpandedChange={id=>setExpanded(ids=>ids.includes(Number(id))?ids.filter(value=>value!==Number(id)):[...ids,Number(id)])}
  onLike={id=>toggleLike(Number(id))}
  onReply={id=>replyTo(comments.find(item=>String(item.id)===id)!)} replyLabel="답글 달기" repliesLabel={(count,open)=>open?"답글 숨기기":`— 답글 ${count}개 보기`} />}</KeyboardAvoiding></Stack>;
