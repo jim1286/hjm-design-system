@@ -44,7 +44,7 @@ export function InstagramCommentsPreview({stateKind="ready",tools=false}:Props){
  // User-supplied screenshot takes precedence: white ArrowUp in a blue circle; latest instruction places it inside the input.
  // Share the DM field and send transition; comments intentionally have no photo actions.
  const composer=<Stack axis="inline" gap="sm" align="center"><Avatar name="jimin" size={32} decorative/><Stack layoutStyle={{flex:1,minWidth:0}}>
-  <MessageComposer context={sendFailed?<Text tone="danger">댓글을 보내지 못했어요. 작성한 내용은 남아 있어요.</Text>:null} inputRef={input} label={reply?`${reply.user}님에게 답글`:"댓글 달기"} sendLabel="댓글 전송" value={draft} onValueChange={setDraft} onSend={send} sendPresentation="circle" sendIcon={<ArrowUp size={20} strokeWidth={2} color={colors.onPrimary}/>}
+  <MessageComposer quickInserts={{label:"이모지 빠른 입력",items:[{id:"heart",emoji:"❤️",label:"하트 입력"},{id:"raise",emoji:"🙌",label:"만세 입력"},{id:"fire",emoji:"🔥",label:"불꽃 입력"},{id:"clap",emoji:"👏",label:"박수 입력"},{id:"sad",emoji:"😢",label:"눈물 입력"},{id:"love",emoji:"😍",label:"하트 눈 입력"},{id:"wow",emoji:"😮",label:"놀람 입력"},{id:"laugh",emoji:"😂",label:"웃음 입력"}]}} context={sendFailed?<Text tone="danger">댓글을 보내지 못했어요. 작성한 내용은 남아 있어요.</Text>:null} inputRef={input} label={reply?`${reply.user}님에게 답글`:"댓글 달기"} sendLabel="댓글 전송" value={draft} onValueChange={setDraft} onSend={send} sendPresentation="circle" sendIcon={<ArrowUp size={20} strokeWidth={2} color={colors.onPrimary}/>}
    {...(reply ? {replyTo:{author:`${reply.user}님에게 답글`,excerpt:reply.body,cancelLabel:"답글 취소",onCancel:()=>{setReply(null);focus();}}} : {})}/>
  </Stack></Stack>;
 

@@ -81,6 +81,8 @@ export function resolveChatMediaColumns(count) {
  * full-width reaction strip ~60pt with ~30pt emoji, the pressed bubble itself as preview, and a ~200pt
  * action card aligned to the bubble's side with ~56pt rows. 12pt between the three blocks.
  */
+/** Emoji row above a comment composer (Instagram comment sheet, 2026-10-16): evenly spread 44pt targets. */
+export const composerQuickInsertRecipe = { itemSize: 44, emojiSize: 26, gap: spacing.xs };
 export const holdMenuRecipe = {
     inset: 10,
     gap: spacing.sm,

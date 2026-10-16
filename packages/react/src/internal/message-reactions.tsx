@@ -5,7 +5,7 @@ import { Popover } from "../popover.js";
 import { ReactionPicker, type ReactionPickerProps } from "../reaction-picker.js";
 
 /** One row of the hold menu. Products supply copy and icons; HJM owns order, size and tone. */
-export type MessageMenuAction = Readonly<{ id: string; label: string; icon?: ReactNode; onPress(): void; disabled?: boolean }>;
+export type MessageMenuAction = Readonly<{ id: string; label: string; icon?: ReactNode; onPress(): void; disabled?: boolean; /** Shows › for rows that open a further list. */ submenu?: boolean }>;
 type Props = ReactionPickerProps & Readonly<{ closeLabel: string; menuAction?: Readonly<{label:string;onPress():void;disabled?:boolean}>; children: ReactNode; interactiveContent?:boolean; /** Comments reuse the hold menu without chat bubble styling. */ triggerClassName?: string;
   replyAction?: Readonly<{label:string;onPress():void;disabled?:boolean;icon?:ReactNode}>;
   /** Shown above the actions, e.g. the exact send time that a run only shows once. */
@@ -50,7 +50,7 @@ export function MessageReactions({ children, closeLabel, menuAction, interactive
     {menuTitle || rows.length ? <div className="hjm-message-menu">
       {menuTitle ? <Text variant="caption" tone="muted" className="hjm-message-menu__title">{menuTitle}</Text> : null}
       {rows.map(row => <button key={row.id} type="button" className="hjm-message-menu__item" data-tone={row.danger ? "danger" : undefined} disabled={row.disabled} onClick={() => { setOpen(false); row.onPress(); }}>
-        {row.icon ? <span className="hjm-message-menu__icon" aria-hidden="true">{row.icon}</span> : null}{row.label}</button>)}
+        {row.icon ? <span className="hjm-message-menu__icon" aria-hidden="true">{row.icon}</span> : null}<span className="hjm-message-menu__label">{row.label}</span>{row.submenu ? <span className="hjm-message-menu__chevron" aria-hidden="true">›</span> : null}</button>)}
     </div> : null}
   </Popover>;
 }

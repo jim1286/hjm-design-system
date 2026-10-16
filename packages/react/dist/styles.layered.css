@@ -3097,6 +3097,11 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-chat-message__bubble[data-photo-only]::before { display: none; }
 .hjm-chat-screen:not([data-content-inset="none"]) .hjm-screen__body { padding-inline: 10px; }
 .hjm-chat-screen__footer { position: relative; }
+.hjm-message-composer__quick { display: flex; justify-content: space-between; gap: var(--hjm-space-xs); }
+.hjm-message-composer__quick-item { inline-size: var(--hjm-quick-size); block-size: var(--hjm-quick-size); border: 0; border-radius: 50%; background: none; font-size: var(--hjm-quick-emoji); line-height: 1; cursor: pointer; }
+.hjm-message-composer__quick-item:hover:not(:disabled) { background: var(--hjm-color-surface); }
+.hjm-message-composer__quick-item:focus-visible { outline: 2px solid var(--hjm-color-focus, currentColor); outline-offset: 2px; }
+.hjm-message-composer__quick-item:disabled { opacity: 0.5; cursor: default; }
 .hjm-message-composer__trailing { display: inline-grid; place-items: center; }
 .hjm-message-composer__trailing > * { grid-area: 1 / 1; }
 .hjm-message-composer__reserve { visibility: hidden; }
@@ -3113,6 +3118,13 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-message-menu__item:disabled { opacity: 0.5; cursor: default; }
 .hjm-message-menu__item[data-tone="danger"] { color: var(--hjm-color-danger); }
 .hjm-message-menu__icon { inline-size: 24px; display: inline-flex; justify-content: center; }
+.hjm-message-menu__label { flex: 1; min-inline-size: 0; }
+.hjm-message-menu__chevron { color: var(--hjm-color-text-muted); }
+/* Measured DM hold menu (holdMenuRecipe): touch rows 56, emoji 28 in 48 targets, card radius 18 when actions exist. */
+@media (pointer: coarse) { .hjm-message-menu__item { min-block-size: 56px; } }
+.hjm-message-reactions .hjm-reaction-picker__glyph { font-size: 28px; line-height: 1; }
+.hjm-message-reactions .hjm-reaction-picker__options > .hjm-button { min-inline-size: 48px; min-block-size: 48px; padding-inline: 0; }
+.hjm-message-reactions:has(.hjm-message-menu) { border-radius: 18px; inline-size: max(200px, max-content); }
 /* 2026-10-16 comment standard (measured Instagram iOS comment sheet, commentThreadRecipe). */
 .hjm-comment-thread { display: flex; flex-direction: column; }
 .hjm-comment-row__avatar { flex: 0 0 auto; display: flex; justify-content: center; }
