@@ -26,6 +26,7 @@ Magic UI Animated List의 소개 페이지 순차 노출에서 새 항목의 등
 | ContentTransition | 새 항목 등장과 바깥 높이 전환 | [내용 전환](../components/content-transition.md) |
 | TextField | 제품이 항목 id별로 보존하는 메모 | [필드](../components/field.md) |
 | Button · Text | 명시적 데이터 변경과 변경 결과 | [버튼](../components/button.md), [글자](../components/text.md) |
+| 미리보기 도구(Showcase `PreviewTools`) | 움직임 멈추기 같은 예제 전용 조작. 제품 행동과 분리한 `small` ghost 버튼([선택 조립 규칙](../SELECTION.md#조립-규칙필수)) | — |
 
 ## 배치
 
@@ -33,7 +34,8 @@ Magic UI Animated List의 소개 페이지 순차 노출에서 새 항목의 등
 [안내]
 [기록 추가] [3개 함께 추가]
 [순서 뒤집기] [첫 기록 삭제]
-[움직임 멈추기]
+미리보기 도구
+[움직임 멈추기]   ← small ghost, 예제 전용
 [변경 결과]
 ┌ 기록 목록 ────────────┐
 │ 제목·설명              │
@@ -47,6 +49,7 @@ Magic UI Animated List의 소개 페이지 순차 노출에서 새 항목의 등
 | --- | --- | --- | --- |
 | 바깥 틀 | Web: Stack, Native: KeyboardAvoiding → ScrollView → Stack | 위에서 아래. Native canvas는 자체 스크롤이 없으므로 명시적 host 사용 | gap lg=20px, Native keyboardShouldPersistTaps="handled"·하단 spacing.md |
 | 변경 행동 | inline Stack · Button | 목록 위, 좁으면 감김 | 기본 Stack/Button recipe |
+| 예제 도구 | 미리보기 도구 캡션 + Button `size="small"` `tone="ghost"` | 변경 행동 아래 | 캡션과 버튼 사이 `spacing.xs` 8. 제품에는 복사하지 않는다 |
 | 데이터 | List | 변경 결과 아래 | separator full, 공통 ListRow/TextField 크기 |
 | 등장 | ContentTransition | 각 stable id 항목 | rise=12px, motion.normal, easing.enter |
 | 높이 | ContentTransition animateHeight | 목록 바깥 | 같은 stateKey를 유지하며 실제 측정 높이만 전환 |

@@ -5,7 +5,7 @@
 - 지원: Native
 - 적용: 1.12.1
 - 검토일: 2026-10-15
-- 근거: `showcase/native/src/ExpoInteractions.stories.tsx`, `src/content-transition.ts`, `src/foundations.ts`(`spacing`, `layout`), `packages/react-native/src/content-transition.tsx`, `packages/react-native/src/internal/recipe-button.tsx`(`selected`)
+- 근거: `showcase/native/src/ExpoInteractions.stories.tsx`, `src/content-transition.ts`, `src/foundations.ts`(`spacing`, `layout`), `packages/react-native/src/content-transition.tsx`, `packages/react-native/src/inputs.tsx`(`Switch`)
 - 스토리북: `배포/구성/피드백과 복구/중단해도 남는 현재 상태`
 
 공통 구조·배치·상태·배지의 소유권은 [화면과 구성 선택](../SELECTION.md#소유권)을 따른다. 앱은 데이터·문구·브랜드·추가 기능을 공개 슬롯과 콜백으로 연결한다. 아래 코드 골격을 앱별 기본 구조 복제의 근거로 사용하지 않는다. 전용 구성 API가 없는 콘텐츠 묶음은 [CompositionLayout](../components/composition-layout.md)의 제목·배지·행동·본문·상태·footer 슬롯을 사용한다.
@@ -22,7 +22,7 @@
 | --- | --- | --- |
 | `ScrollView` · `Container` | 바깥 틀. HJM 화면 골격이 소유한다 | [Container](../components/container.md), [화면 여백](../tokens/layout.md) |
 | `Heading level="level5"`, `Text` | 영역 제목(18)과 설명 | [Heading](../components/heading.md), [Text](../components/text.md) |
-| `Button tone="secondary" selected` | 동작 줄이기 같은 켜고 끄는 설정(토글 버튼) | [Button](../components/button.md) |
+| `Switch presentation="row"` | 동작 줄이기 같은 켜고 끄는 설정 | [Switch](../components/switch.md) |
 | `Button` `primary`·`secondary`·`ghost` | 다음 상태 · 처음으로 · 내용 닫기/열기 | [Button](../components/button.md) |
 | `Stack` | 영역 세로 쌓기 `gap="md"`, 행동 묶음 `gap="sm"` | [Stack](../components/stack.md) |
 | `ContentTransition` | `stateKey`가 바뀔 때 새 내용을 `preset="rise"`로 들인다 | [ContentTransition](../components/content-transition.md) |
@@ -37,7 +37,7 @@
 │ ┌ Stack gap="md" 16 ─────────────────────────────┐ │
 │ │ 제목 (Heading level5)                          │ │
 │ │ 설명 (Text)                                    │ │
-│ │ [ 동작 줄이기 ]  ← secondary + selected 토글    │ │
+│ │ 동작 줄이기                    [  ○] ← Switch row│ │
 │ │ ┌ 행동 묶음 Stack gap="sm" 12 ───────────────┐ │ │
 │ │ │ [ 다음 상태 ]   primary   ← 주 행동이 맨 위 │ │ │
 │ │ │ [ 처음으로 ]    secondary ← 보조 행동       │ │ │
@@ -54,13 +54,13 @@
 | --- | --- | --- | --- |
 | 바깥 틀 | `ScrollView` > `Container size="reading"` | 화면 전체, 스크롤. 상단 안전 영역은 내비게이션 헤더(또는 [TopBar](../components/top-bar.md))가 맡는다. 입력이 없어 키보드 처리는 없다 | 위아래 `contentContainerStyle` `paddingVertical: spacing.lg` 20. 좌우 `Container gutter`: 폭 600 미만 `compact` 16, 이상 `regular` 20([화면 여백](../tokens/layout.md)) |
 | 머리 | `Heading` + `Text` | Stack 맨 위 | 사이 `spacing.md` 16 |
-| 설정 토글 | `Button tone="secondary" selected` | 머리 아래 | 높이 `medium` 44(`control.buttonHeight`). Stack 기본 `align="stretch"`로 꽉 찬 폭 |
+| 설정 토글 | `Switch presentation="row"` | 머리 아래 | 꽉 찬 폭 행, track `medium` 52×32. 큰 글자에서는 track이 라벨 아래로 내려간다 |
 | 행동 묶음 | `Stack gap="sm"` + Button ×3 세로 | 토글 아래, 주 행동이 위 | 버튼 사이 `spacing.sm` 12, 각 높이 44 |
 | 바뀌는 내용 | `ContentTransition` | 행동 묶음 아래, 함께 스크롤 | `rise` 세로 12 이동, 시간 `motion.normal`, 곡선 `easing.enter`. 래퍼 자체 크기·여백 없음 |
 
 - 한 영역(구획 하나) 안이므로 요소 사이는 `layout.contentGap`(`Stack gap="md"` 16)이다([화면 여백](../tokens/layout.md)).
-- 한 화면의 primary는 "다음 상태" 하나다. 토글은 `tone="secondary"`로 두고 켜졌을 때만 `selected` 표시(배경 `bg`, 글자·테두리 `contentBrand`)가 된다.
-  `selected={false}`인 버튼은 tone 색으로 칠해지므로 tone을 비우면 꺼진 토글이 primary 채움이 된다([Button](../components/button.md) 꼭 지킬 것의 예외 규칙).
+- 한 화면의 primary는 "다음 상태" 하나다. 켜고 끄는 설정은 [선택 조립 규칙](../SELECTION.md#조립-규칙필수)대로 `Switch`로 두고 `selected` Button으로 흉내 내지 않는다.
+  2026-10-16 사용자 지적으로 글자 버튼 토글은 켜짐/꺼짐이 테두리 없는 글자로만 구분돼 설정으로 읽히지 않았다.
 
 ## 흐름과 상태
 
@@ -98,6 +98,7 @@ import { resolveWindowClass } from "@hjmds/design-contracts/responsive";
 import { Button } from "@hjmds/react-native/actions";
 import { ContentTransition } from "@hjmds/react-native/content-transition";
 import { Heading } from "@hjmds/react-native/heading";
+import { Switch } from "@hjmds/react-native/inputs";
 import { Container, Stack, Text } from "@hjmds/react-native/primitives";
 
 const flowStateKey = ["flow.state.ready", "flow.state.review", "flow.state.done"] as const;
@@ -113,7 +114,7 @@ function FlowStatus() {
         <Stack gap="md">
           <Heading level="level5" semanticLevel={2}>{t("flow.title")}</Heading>
           <Text>{t("flow.description")}</Text>
-          <Button tone="secondary" selected={reduced} onPress={() => setReduced((value) => !value)}>{t("flow.reduceMotion")}</Button>
+          <Switch presentation="row" label={t("flow.reduceMotion")} checked={reduced} onCheckedChange={setReduced} />
           <Stack gap="sm">
             <Button onPress={() => setIndex((value) => (value + 1) % flowStateKey.length)}>{t("flow.next")}</Button>
             <Button tone="secondary" onPress={() => setIndex(0)}>{t("flow.reset")}</Button>
@@ -149,4 +150,4 @@ function FlowStatus() {
 - 다음 상태 계산을 전환 완료 콜백에 묶으면 빠른 연속 누름과 중간 닫기에서 상태가 어긋난다.
 - ContentTransition은 움직이는 동안 래퍼 밖으로 세로 12만큼 밀려 나온다. 바로 아래 요소와 붙이지 않는다.
 - 예제는 `Container gutter="compact"`와 `Stack gap="md"`로 바깥 틀을 공유하고 행동 묶음은 `Stack gap="sm"`으로 둔다. Native 위아래 여백은 `spacing.md` 16이다.
-- 제목은 Heading, 동작 줄이기 토글은 secondary, 작업 결과는 iOS 알림도 처리하는 예제 helper를 쓴다. 제품은 같은 계약을 자체 상태 알림에 연결한다.
+- 제목은 Heading, 동작 줄이기는 Switch, 작업 결과는 iOS 알림도 처리하는 예제 helper를 쓴다. 제품은 같은 계약을 자체 상태 알림에 연결한다.

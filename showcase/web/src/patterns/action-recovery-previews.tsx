@@ -4,6 +4,7 @@ import { createActionSession } from "@hjmds/design-contracts/action-session";
 import { Button } from "@hjmds/react/actions";
 import { TextField } from "@hjmds/react/forms";
 import { Container, Stack, Text } from "@hjmds/react/layout";
+import { PreviewToolButton, PreviewTools } from "./preview-tools.js";
 
 
 export function useDemoAction<T>(initial: T) {
@@ -21,9 +22,8 @@ export function useDemoAction<T>(initial: T) {
  };
  return { session, state, request, failureArmed, toggleFailure, busy: state.status === "pending" };
 }
-function FailureToggle({ selected, onToggle }: { selected: boolean; onToggle(): void }) {
- return <Button tone="secondary" selected={selected} onClick={onToggle}>다음 요청 실패시키기</Button>;
-}
+// Demo-only controls (failure arming, simulated server refresh) sit in PreviewTools after the composition
+// so they never read as product actions (SELECTION.md 조립 규칙).
 // The product screen owns the outer frame; the preview shows it so the example matches the usage guide.
 function Frame({ children, reading = false }: { children: ReactNode; reading?: boolean }) { return <Container gutter="compact" {...(reading ? { size: "reading" as const } : {})}><Stack gap="md">{children}</Stack></Container>; }
 // Status copy is a status→copy table like the product's status→i18n-key table; no template-built keys.
@@ -43,10 +43,10 @@ export function SaveRecoveryPreview() {
   <TextField ref={input} label="기록 내용" value={draft} onValueChange={setDraft} />
   <Button ref={saveButton} loading={busy} disabled={!draft.trim()} onClick={() => { const submitted = draft; void session.run(() => request(submitted), { retryable: true }); }}>저장</Button>
   {state.status === "error" && <Button tone="secondary" onClick={() => { (draft.trim() ? saveButton.current : input.current)?.focus(); void session.retry(); }}>실패한 내용 다시 저장</Button>}
-  <FailureToggle selected={failureArmed} onToggle={toggleFailure} />
   <Text role="status">{status}</Text>
   <Text>저장된 내용: {state.value || "아직 없어요"}</Text>
   <Text>실제 서버 요청 없이 실패와 복구를 확인하는 예제예요. 입력은 이 화면이 열린 동안 유지돼요.</Text>
+  <PreviewTools><PreviewToolButton selected={failureArmed} onClick={toggleFailure}>다음 요청 실패시키기</PreviewToolButton></PreviewTools>
  </Frame>;
 }
 export function OptimisticRecoveryPreview() {
@@ -56,10 +56,9 @@ export function OptimisticRecoveryPreview() {
  return <Frame><Heading level="level3">즉시 반영하고 실패하면 복구</Heading>
   <Button ref={action} selected={state.value} aria-disabled={busy} onClick={() => { const next = !state.value; void session.run(() => request(next), { optimisticValue: next, retryable: true }); }}>{state.value ? "북마크 해제" : "북마크 추가"}</Button>
   {state.status === "error" && <Button tone="secondary" onClick={() => { action.current?.focus(); void session.retry(); }}>북마크 다시 반영</Button>}
-  <FailureToggle selected={failureArmed} onToggle={toggleFailure} />
-  <Button tone="ghost" onClick={() => session.reset(false)}>서버에서 새 상태 불러오기</Button>
   <Text role="status">{bookmarkStatusCopy[state.status]}</Text>
   <Text>지연 중 새 상태를 불러오면 이전 요청의 응답은 화면을 덮어쓰지 않아요. 실제 서버 통신은 없는 예제예요.</Text>
+  <PreviewTools><PreviewToolButton selected={failureArmed} onClick={toggleFailure}>다음 요청 실패시키기</PreviewToolButton><PreviewToolButton onClick={() => session.reset(false)}>서버에서 새 상태 불러오기</PreviewToolButton></PreviewTools>
  </Frame>;
 }
 export function UndoRecoveryPreview() {
@@ -70,8 +69,8 @@ export function UndoRecoveryPreview() {
   <Text>{state.value ? "보관함: 리서치 메모" : "목록: 리서치 메모"}</Text>
   <Button ref={action} loading={busy} onClick={() => { const next = !state.value; void session.run(() => request(next), { retryable: true }); }}>{state.value ? "실행 취소" : "보관"}</Button>
   {state.status === "error" && <Button tone="secondary" onClick={() => { action.current?.focus(); void session.retry(); }}>실패한 작업 다시 시도</Button>}
-  <FailureToggle selected={failureArmed} onToggle={toggleFailure} />
   <Text role="status">{archiveStatusCopy[statusKey]}</Text>
   <Text>복구 요청이 성공해야 목록으로 돌아와요. 학습용 예제에는 자동 만료와 실제 서버 요청이 없어요.</Text>
+  <PreviewTools><PreviewToolButton selected={failureArmed} onClick={toggleFailure}>다음 요청 실패시키기</PreviewToolButton></PreviewTools>
  </Frame>;
 }

@@ -1,4 +1,5 @@
 import { iconTileRecipe, notificationRowRecipe as notificationRecipe } from "@hjmds/design-contracts/screen-patterns";
+import { iconButtonRecipe } from "@hjmds/design-contracts/recipes";
 import { resolveComposerLimit, type ComposerLengthFeedback } from "@hjmds/design-contracts/communication";
 import { Progress } from "./feedback.js";
 import { resolveDesignProfileScreen, type DesignProfileScreenPresentation } from "@hjmds/design-contracts/design-profile-layout";
@@ -209,6 +210,7 @@ export function MessageComposer({ leading, quickInserts, value, label, sendLabel
   const limit = !lengthFeedback ? null : resolveComposerLimit(value, maxLength!, lengthFeedback.threshold);
   const canSend = !sendDisabled && !limit?.exceeded && canSubmitMessage({ value, label, sendLabel, disabled, pending, attachmentCount: attachments.length + (additionalContent ? 1 : 0) });
   const locked = disabled || pending;
+  const sendDiameter = iconButtonRecipe.sizes[sendPresentation === "circle" ? "small" : "medium"].diameter;
   // A bounded corner radius keeps multiline/large-text content inside the field instead of a tall pill.
   const hasContent = !!value.trim() || attachments.length > 0 || additionalContent;
   const { colors, tokens } = useHjmNativeTheme();
@@ -223,9 +225,9 @@ export function MessageComposer({ leading, quickInserts, value, label, sendLabel
       submitBehavior={submitMode === "send" ? "submit" : "newline"} onSubmitEditing={() => { if (submitMode === "send" && canSend) onSend(value); }}
       layoutStyle={{ flex: 1 }} onValueChange={onValueChange} minVisibleLines={screenPatternRecipe.composerMinLines} maxVisibleLines={screenPatternRecipe.composerMaxLines}
       {...(sendIcon ? { trailing: <View style={{ alignSelf: "center", marginStart: tokens.spacing.sm, marginEnd: sendPresentation === "circle" ? tokens.spacing.xs - tokens.spacing.md : 0 }}>
-        {/* Reserve the send button's footprint so typing the first character never resizes the field. */}
-        <View style={{ opacity: 0 }} pointerEvents="none" accessibilityElementsHidden importantForAccessibility="no-hide-descendants">{send}</View>
-        <View style={{ position: "absolute", top: 0, bottom: 0, start: 0, end: 0, alignItems: "center", justifyContent: "center" }}>{hasContent || pending ? send : attach}</View>
+        {/* Reserve the send button's diameter so typing the first character never resizes the field.
+            A hidden duplicate button made two "send" controls; size from the recipe instead. */}
+        <View style={{ minWidth: sendDiameter, minHeight: sendDiameter, alignItems: "center", justifyContent: "center" }}>{hasContent || pending ? send : attach}</View>
       </View> } : {})} />
       {sendIcon ? null : send}
     </View></>;
@@ -236,7 +238,7 @@ export function MessageComposer({ leading, quickInserts, value, label, sendLabel
       <FixedGlyph fontSize={composerQuickInsertRecipe.emojiSize} lineHeight={composerQuickInsertRecipe.emojiSize + 6}>{item.emoji}</FixedGlyph>
     </Pressable>)}
   </View> : null;
-  return <Stack gap="sm">{context}{quickRow}{/* Replying wraps target, attachments and input in one card (2026-10-16 reference). */}{replyTo ? <View style={{ backgroundColor: colors.surface, borderRadius: tokens.radius.xl, padding: tokens.spacing.sm, gap: tokens.spacing.sm }}><View style={{ flexDirection: "row", alignItems: "flex-start", gap: tokens.spacing.sm }}><View style={{ flex: 1, minWidth: 0, gap: 2 }}><Text emphasis="strong">{replyTo.author}</Text><Text variant="caption" tone="muted" numberOfLines={1}>{replyTo.excerpt}</Text></View><IconButton label={replyTo.cancelLabel} tone="secondary" size="small" shape="circle" disabled={locked} onPress={replyTo.onCancel}><FixedGlyph>×</FixedGlyph></IconButton></View>{composerBody}</View> : composerBody}{lengthFeedback && limit?.near ? <Progress shape="circular" label={lengthFeedback.label} value={Math.min(limit.used, limit.max)} max={limit.max} valueText={lengthFeedback.formatCount(limit.used, limit.max)}><Text variant="caption">{lengthFeedback.formatCount(limit.used, limit.max)}</Text></Progress> : null}</Stack>;
+  return <Stack gap="sm">{context}{quickRow}{/* Replying wraps target, attachments and input in one card (2026-10-16 reference). */}{/* One stable wrapper whether or not replying, so the input is never remounted (focus stays). */}<View style={[{ gap: tokens.spacing.sm }, replyTo ? { backgroundColor: colors.surface, borderRadius: tokens.radius.xl, padding: tokens.spacing.sm } : null]}>{replyTo ? <View style={{ flexDirection: "row", alignItems: "flex-start", gap: tokens.spacing.sm }}><View style={{ flex: 1, minWidth: 0, gap: 2 }}><Text emphasis="strong">{replyTo.author}</Text><Text variant="caption" tone="muted" numberOfLines={1}>{replyTo.excerpt}</Text></View><IconButton label={replyTo.cancelLabel} tone="secondary" size="small" shape="circle" disabled={locked} onPress={replyTo.onCancel}><FixedGlyph>×</FixedGlyph></IconButton></View> : null}{composerBody}</View>{lengthFeedback && limit?.near ? <Progress shape="circular" label={lengthFeedback.label} value={Math.min(limit.used, limit.max)} max={limit.max} valueText={lengthFeedback.formatCount(limit.used, limit.max)}><Text variant="caption">{lengthFeedback.formatCount(limit.used, limit.max)}</Text></Progress> : null}</Stack>;
 }
 
 export type ChatMessageProps = ChatMessageDescriptor & Readonly<{ children: ReactNode; interactiveContent?: boolean; avatar?: ReactNode; reply?: ReactNode; actions?: ReactNode; replyAction?: Readonly<{label:string; onPress():void; disabled?:boolean; icon?:ReactNode}>; replyLink?: Readonly<{label:string; onPress():void}>; /** HJM-drawn quote ("X에게 답장" + one-line excerpt) heading the bubble; preferred over a custom `reply` node. */ replyQuote?: Readonly<{ title: string; excerpt: string }>; /** Photos sent in the message. Products own the image source, viewer and upload; HJM owns the layout. */ media?: readonly Readonly<{ id: string; label: string; preview: ReactNode; aspectRatio?: number; onPress?(): void }>[]; reactions?: ReactionPickerProps & Readonly<{ closeLabel: string; menuAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean }>; menuActions?: readonly MessageMenuAction[]; reportAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean; icon?: ReactNode }> }> }>;

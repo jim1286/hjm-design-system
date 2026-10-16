@@ -1,6 +1,8 @@
 import riverPhoto from "../../../shared/photos/river.jpg";
 import { ProviderLogo } from "./provider-logo";
 import { SettingsPagePreview } from "./settings-page-preview";
+import { PreviewTools, PreviewToolButton } from "./preview-tools";
+import { Chip } from "@hjmds/react/selection";
 import { useEffect, useRef, useState, type ReactNode, type Ref } from "react";
 import { NotificationInboxScreen, NotificationItem, ChatScreen, ChatMessage, MessageComposer, ScreenLayout } from "@hjmds/react/screens";
 import { AuthScreenLayout } from "@hjmds/react/auth-screen";
@@ -133,7 +135,7 @@ function ScreenPreview({ kind: initialKind, stateKind = "ready", tools = false }
   let screen;
   if (kind === "settings") screen = <SettingsPagePreview leading={back} state={state} stateAction={retry} />;
   else if (kind === "notifications") screen = <NotificationInboxScreen title="알림" leading={back} state={notificationState} stateAction={retry} notice={readError ? notice : null}
-    filters={<Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap:"wrap"}}>{["전체","답글","읽지 않음"].map(value=><Button ref={notificationTab === value ? notificationFilter : undefined} key={value} size="small" tone="ghost" selected={notificationTab===value} onClick={()=>setNotificationTab(value)}>{value}</Button>)}</Stack>}
+    filters={<Stack axis="inline" gap="xs" wrap role="radiogroup" aria-label="알림 필터">{["전체","답글","읽지 않음"].map(value=><Chip ref={notificationTab === value ? notificationFilter : undefined} key={value} label={value} selectionMode="single" selected={notificationTab===value} onSelectedChange={()=>setNotificationTab(value)} />)}</Stack>}
     actions={<IconButton label="알림 설정" tone="ghost" onClick={() => setKind("settings")}><Glyph name="settings" /></IconButton>}>
     <Stack gap="xl">{groups.map(group => <Stack key={group.title} gap="sm"><Heading level="level5" semanticLevel={2}>{group.title}</Heading>{group.items.map(entry => <NotificationItem data-notification-id={entry.id} key={entry.id} title={entry.title} description={entry.description}
       leading={<Person name={entry.name} />} trailing={<Glyph name={entry.icon} />} read={readIds.includes(entry.id) || entry.id === 4} statusLabel={readIds.includes(entry.id) || entry.id === 4 ? "확인함" : "새 알림"} timestamp={entry.time}
@@ -167,7 +169,7 @@ function ScreenPreview({ kind: initialKind, stateKind = "ready", tools = false }
   if (atHome) screen = <ScreenLayout title="나의 공간" description="오늘의 이야기와 소식을 만나 보세요."><Stack gap="sm">{([['settings', '설정'], ['notifications', '알림'], ['chat', '서연과의 대화']] as const).map(([target, label]) => <ListRow key={target} title={label} trailing={<Glyph name="next" />} onClick={() => { setKind(target); setAtHome(false); }} />)}</Stack></ScreenLayout>;
   else if (detail && kind !== "login") screen = <ScreenLayout title={kind === "notifications" ? "도착한 이야기" : kind === "chat" ? "대화 정보" : "상세 정보"} leading={<IconButton label="뒤로" tone="ghost" onClick={() => setDetail(null)}><Glyph name="back" /></IconButton>}><Stack gap="lg"><Text>{detail}</Text>{kind === "notifications" && notificationDetailId === 1 ? <Button onClick={() => { setDetail(null); setKind("chat"); }}>대화 이어가기</Button> : null}</Stack></ScreenLayout>;
   const toggleCopy = kind === "chat" || kind === "notifications" ? failToggleCopy[kind] : null;
-  return <Stack gap="sm">{tools && toggleCopy ? <Button tone="secondary" selected={failNext === kind} onClick={() => setFailNext(v => v === kind ? null : kind === "chat" || kind === "notifications" ? kind : null)}>{toggleCopy[failNext === kind ? 1 : 0]}</Button> : null}<Frame containerRef={routeHost} login={kind === "login"}>{screen}</Frame></Stack>;
+  return <Stack gap="sm">{tools && toggleCopy ? <PreviewTools><PreviewToolButton selected={failNext === kind} onClick={() => setFailNext(v => v === kind ? null : kind === "chat" || kind === "notifications" ? kind : null)}>{toggleCopy[failNext === kind ? 1 : 0]}</PreviewToolButton></PreviewTools> : null}<Frame containerRef={routeHost} login={kind === "login"}>{screen}</Frame></Stack>;
 }
 
 export function LoginScreenPreview(props: ScreenPreviewOptions) { return <ScreenPreview kind="login" {...props} />; }

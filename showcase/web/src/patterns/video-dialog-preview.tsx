@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Button } from "@hjmds/react/actions";
+import { PreviewTools, PreviewToolButton } from "./preview-tools.js";
 import { Dialog } from "@hjmds/react/overlays";
 import { Stack, Text } from "@hjmds/react/layout";
 import { TextField } from "@hjmds/react/forms";
@@ -74,7 +75,7 @@ export function VideoDialogPreview() {
     <Text>짧은 영상을 확인하고 작성 중인 메모로 돌아오세요.</Text>
     <TextField label="영상 메모" value={draft} onValueChange={setDraft} />
     <Button ref={trigger} onClick={() => setOpen(true)}>영상 미리보기</Button>
-    <Button tone="ghost" selected={broken} onClick={() => setBroken(v => !v)}>{broken ? "정상 영상으로 보기" : "불러오기 실패 체험"}</Button>
+    <PreviewTools><PreviewToolButton selected={broken} onClick={() => setBroken(v => !v)}>{broken ? "정상 영상으로 보기" : "불러오기 실패 체험"}</PreviewToolButton></PreviewTools>
     <Dialog open={open} onOpenChange={setOpen} title="색상 패턴 미리보기" description="재생 버튼을 누르면 영상이 시작돼요." closeLabel="영상 닫기" size="large" returnFocusRef={trigger}>
       {open ? <Player key={attempt} restoreFocus={attempt > 0} broken={broken} retry={() => { setBroken(false); setAttempt(v => v + 1); }} /> : null}
     </Dialog>

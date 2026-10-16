@@ -19,6 +19,7 @@ beforeEach(async()=>{
 afterEach(async()=>{await act(async()=>root.unmount());host.remove();for(const url of blobs.keys())URL.revokeObjectURL(url);vi.restoreAllMocks();});
 const button=(name:string)=>[...host.querySelectorAll<HTMLButtonElement>("button")].find(n=>n.textContent===name)!;
 const click=(name:string)=>act(async()=>button(name).click());
+const radio=(name:string)=>[...host.querySelectorAll<HTMLInputElement>("input[type=radio]")].find(n=>n.closest("label")?.textContent===name)!;
 const pngFile=()=>{const canvas=document.createElement("canvas");canvas.width=1;canvas.height=1;const data=canvas.toDataURL("image/png").split(",")[1]!;return new File([Uint8Array.from(atob(data),c=>c.charCodeAt(0))],"capture.png",{type:"image/png"});};
 const choose=async(file:File,label="화면 캡처")=>act(async()=>{const input=host.querySelector<HTMLInputElement>(`input[aria-label="${label}"]`)!;const transfer=new DataTransfer();transfer.items.add(file);input.files=transfer.files;input.dispatchEvent(new Event("change",{bubbles:true}));});
 async function loaded(){
@@ -42,7 +43,7 @@ it("keeps the current capture after invalid input and retries a failed PNG as re
  const encode=HTMLCanvasElement.prototype.toBlob;let encoded:Promise<void>|undefined;
  vi.spyOn(HTMLCanvasElement.prototype,"toBlob").mockImplementation(function(this:HTMLCanvasElement,callback,type,quality){encoded=new Promise(resolve=>encode.call(this,blob=>{callback(blob);resolve();},type,quality));}).mockImplementationOnce(callback=>callback(null));
  await click("PNG 내보내기");expect(host.textContent).toContain("PNG를 내보내지 못했어요");
- await act(async()=>{button("다시 내보내기").click();button("정사각형").click();await encoded;});expect(downloads).toHaveLength(1);
+ await act(async()=>{button("다시 내보내기").click();radio("정사각형").click();await encoded;});expect(radio("정사각형").checked).toBe(true);expect(downloads).toHaveLength(1);
  expect(downloads[0]!.blob.type).toBe("image/png");const decoded=await createImageBitmap(downloads[0]!.blob);expect([decoded.width,decoded.height]).toEqual([1080,1440]);decoded.close();
 });
 it("ignores an older decode after a newer image and after reset",async()=>{

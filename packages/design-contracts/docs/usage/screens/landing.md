@@ -101,7 +101,7 @@ ScreenLayout(제목 = 소개 문장, 최대 720, 바깥 padding spacing.md 16) �
 | 파괴 행동 | — | — | 없음 |
 
 화면의 primary는 히어로 행동 하나다. 시트 `footer`의 제출은 시트 안에서 따로 센다.
-두 변형은 히어로 행동과 끝 행동 카드의 버튼이 같은 Sheet를 연다(같은 행동 반복). FAQ는 Collapsible 대신 `selected` 토글 Button 하나로 답을 연다.
+두 변형은 히어로 행동과 끝 행동 카드의 버튼이 같은 Sheet를 연다(같은 행동 반복). FAQ도 기본처럼 Collapsible로 답을 연다. 펼치고 접기를 `selected` 토글 Button으로 흉내 내지 않는다([선택 조립 규칙](../SELECTION.md#조립-규칙필수), 2026-10-16 사용자 지적).
 
 키보드: Native 시트는 `keyboardAvoidance`로 키보드 위에 붙고 `footer`가 키보드 위에 고정돼 제출 버튼이 가려지지 않는다.
 바깥 ScrollView에는 입력이 없다.
@@ -256,6 +256,7 @@ const gutter = resolveWindowClass(width) === "compact" ? "compact" : "regular";
 ```tsx
 // Web
 import { Button } from "@hjmds/react/actions";
+import { Collapsible } from "@hjmds/react/collapsible";
 import { Heading } from "@hjmds/react/heading";
 import { TextField } from "@hjmds/react/forms";
 import { Grid, Stack, Surface, Text } from "@hjmds/react/layout";
@@ -276,8 +277,7 @@ import { ScreenLayout } from "@hjmds/react/screens";
       <Grid columns={{ compact: 3 }} gap={{ compact: "xl" }} minColumnWidth={{ compact: 240 }}>
         {features.map((item) => <Stack key={item.id} gap="sm"><Heading level="level5" semanticLevel={2}>{item.title}</Heading><Text>{item.body}</Text></Stack>)}
       </Grid>
-      <Button tone="secondary" selected={faqOpen} onClick={toggleFaq}>{t("intro.faq.question")}</Button>
-      {faqOpen ? <Text>{t("intro.faq.answer")}</Text> : null}
+      <Collapsible trigger={t("intro.faq.question")}><Text>{t("intro.faq.answer")}</Text></Collapsible>
       <Surface padding="lg">
         <Stack gap="md">
           <Heading level="level5" semanticLevel={2}>{t("intro.closing")}</Heading>
@@ -296,6 +296,7 @@ import { ScreenLayout } from "@hjmds/react/screens";
 ```tsx
 // Native
 import { Button } from "@hjmds/react-native/actions";
+import { Collapsible } from "@hjmds/react-native/collapsible";
 import { Heading } from "@hjmds/react-native/heading";
 import { TextField } from "@hjmds/react-native/inputs";
 import { Grid, Stack, Surface, Text } from "@hjmds/react-native/primitives";
@@ -316,8 +317,7 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
       <Grid columns={{ compact: 3 }} gap={{ compact: "xl" }} minColumnWidth={{ compact: 240 }}>
         {features.map((item) => <Stack key={item.id} gap="sm"><Heading level="level5">{item.title}</Heading><Text>{item.body}</Text></Stack>)}
       </Grid>
-      <Button tone="secondary" selected={faqOpen} onPress={toggleFaq}>{t("intro.faq.question")}</Button>
-      {faqOpen ? <Text>{t("intro.faq.answer")}</Text> : null}
+      <Collapsible trigger={t("intro.faq.question")}><Text>{t("intro.faq.answer")}</Text></Collapsible>
       <Surface padding="lg">
         <Stack gap="md">
           <Heading level="level5">{t("intro.closing")}</Heading>
@@ -361,6 +361,6 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 - 기본 예제의 위·아래 CTA는 같은 시트를 연다. 히어로는 primary, FAQ 뒤의 반복 행동은 secondary다.
 - 미리보기 행은 번역 문구나 배열 위치 대신 생성 시 부여한 id로 유지한다.
 - 기본·변형 예제의 저장은 메모리에만 남는다. 기본 예제는 저장 없이 닫으면 초안을 보존하고 성공하면 비운다. 변형은 Sheet를 닫아도 입력 초안이 남는다. 운영 저장·실패 처리는 위 오류 행 규칙을 따른다.
-- 현재 변형 스토리는 FAQ를 Collapsible이 아니라 `selected` 토글 Button 하나로 그린다. 질문이 여럿이면 기본처럼 Collapsible을 쓴다.
+- 변형 스토리도 FAQ를 Collapsible로 그린다. 2026-10-16 이전에는 `selected` 토글 Button 하나였으나 펼침 의미가 눌림 토글로 읽혀 바꿨다.
 
 제품 체험·편집형 ServiceIntroduction 변형도 Web에서 CTA 클릭의 `event.currentTarget`을 복귀 대상으로 기록한다. Safari의 포인터 클릭은 버튼에 초점을 주지 않을 수 있어, 열기 직전 `document.activeElement`만으로 복귀 대상을 추정하지 않는다. 이 변형은 저장한 한 장면을 다시 편집하는 예제이므로 닫기뿐 아니라 저장 뒤 재열기에도 입력값을 유지한다. 새 기록을 계속 추가하는 기본 랜딩의 성공 후 입력 초기화와 구분한다.

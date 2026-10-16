@@ -1,4 +1,4 @@
-import { SegmentedControl } from "@hjmds/react/selection";
+import { Chip, SegmentedControl } from "@hjmds/react/selection";
 import { Heading } from "@hjmds/react/heading";
 import { useRef, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
@@ -20,6 +20,7 @@ function Artwork({ entry }: { entry: GalleryEntry }) {
  </div>)}
  </div>;
 }
+const sortItems = [{ value: "popular", label: "인기순" }, { value: "latest", label: "최신순" }] as const;
 function DiscoveryGallery() {
  const [query,setQuery] = useState(""); const [category,setCategory] = useState<GalleryCategory>("전체");
  const [sort,setSort] = useState<"popular" | "latest">("popular"); const [saved,setSaved] = useState<string[]>([]); const [savedOnly,setSavedOnly] = useState(false); const [selected,setSelected] = useState<GalleryEntry | null>(null);
@@ -36,7 +37,7 @@ function DiscoveryGallery() {
  const reset=()=>{setQuery("");setCategory("전체");setSavedOnly(false);searchRef.current?.focus();};
  return <main><Container gutter="compact"><Stack gap="xl"><Stack gap="md"><Text tone="brand">작은 아이디어가 시작되는 곳</Text><Heading level="level3" semanticLevel={1}  >다음 화면의 영감을 찾아보세요</Heading><Text>마음에 드는 화면을 살펴보고 나만의 컬렉션에 담아보세요.</Text><SearchField ref={searchRef} label="작품 검색" placeholder="모바일, 작업 공간, 서연" clearLabel="검색어 지우기"  value={query} onValueChange={setQuery}/></Stack>
  <SegmentedControl label="작품 카테고리" presentation="pills" items={galleryCategories.map(item => ({ value: item, label: item }))} value={category} onValueChange={value => { const item = galleryCategories.find(item => item === value); if (item) setCategory(item); }}/>
- <Stack axis="inline" wrap gap="sm"><Button tone="secondary" onClick={()=>setSort(current=>current==="popular"?"latest":"popular")}>정렬: {sort==="popular"?"인기순":"최신순"}</Button><Button ref={savedFilterRef} tone="ghost" selected={savedOnly} onClick={()=>setSavedOnly(current=>!current)}>저장한 작품 {saved.length}</Button></Stack>
+ <Stack axis="inline" wrap gap="sm" align="center"><SegmentedControl label="정렬" size="small" items={sortItems} value={sort} onValueChange={value=>{if(value==="popular"||value==="latest")setSort(value);}}/><Chip ref={savedFilterRef} label={`저장한 작품만 ${saved.length}`} selectionMode="multiple" selected={savedOnly} onSelectedChange={()=>setSavedOnly(current=>!current)}/></Stack>
  <Text role="status">{results.length}개의 작품</Text>
  {results.length ? <Grid columns={{ compact: 1, medium: 2, expanded: 3 }} gap={{ compact: "xl" }} minColumnWidth={{ compact: 320 }}>{results.map(item=><article key={item.id}><Stack gap="sm"><Artwork entry={item}/><Text variant="label">{item.title}</Text><Text tone="muted">{item.author} · {item.category} · 좋아요 {item.likes}</Text><Stack axis="inline" wrap gap="sm"><Button ref={node=>{if(node)detailRefs.current.set(item.id,node);else detailRefs.current.delete(item.id);}} tone="ghost" onClick={()=>{returnFocusRef.current=detailRefs.current.get(item.id)??savedFilterRef.current;setSelected(item);}} aria-label={`${item.title} 보기`}>자세히 보기</Button><Button aria-label={`${item.title} ${saved.includes(item.id)?"저장 취소":"저장"}`} tone="secondary" selected={saved.includes(item.id)} onClick={()=>{if(savedOnly&&saved.includes(item.id))savedFilterRef.current?.focus();toggle(item.id);}}>{saved.includes(item.id)?"저장됨":"저장"}</Button></Stack></Stack></article>)}</Grid> : <EmptyState title="찾는 작품이 없어요" description="다른 검색어나 카테고리로 다시 찾아보세요." action={<Button onClick={reset}>필터 초기화</Button>}/>}
  <Text tone="muted">직접 만든 예제 작품입니다. 저장은 이 미리보기에서만 유지됩니다.</Text>

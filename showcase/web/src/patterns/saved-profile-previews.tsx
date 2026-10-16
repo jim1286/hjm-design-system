@@ -6,6 +6,7 @@ import { Button, IconButton } from "@hjmds/react/actions";
 import { SearchField, TextField, TextArea } from "@hjmds/react/forms";
 import { ListRow } from "@hjmds/react/display";
 import { Sheet } from "@hjmds/react/overlays";
+import { Notice } from "@hjmds/react/feedback";
 import { Bookmark, ArrowLeft, LockKeyhole } from "lucide-react";
 import { PreviewPhoto, ProfilePhoto } from "./reference-screen-parts";
 import { screenPatternRecipe, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
@@ -31,7 +32,7 @@ export function SavedItemsPreview({stateKind="ready"}: Options){
  onOpenCollection={setCollectionId} onOpenItem={setSelectedItemId} onBack={back}
  onCreateCollection={()=>{setName("");setChosen([]);setCreating(true);}}
  stateAction={kind==="error"||kind==="restricted"?<Button onClick={()=>setRecovered(true)}>{kind==="error"?"다시 불러오기":"예제 계정으로 이어가기"}</Button>:null}
- notice={removed!==null?<Stack axis="inline" wrap align="center" justify="between"><Text role="status">저장한 항목에서 삭제했습니다.</Text><Button tone="secondary" size="small" onClick={restore}>실행 취소</Button></Stack>:null}
+ notice={removed!==null?<Notice title="저장한 항목에서 삭제했습니다." action={<Button tone="secondary" size="small" onClick={restore}>실행 취소</Button>}/>:null}
  renderThumbnail={item=><PreviewPhoto index={item.photo} square label={item.title}/>}
  renderDetail={item=><Stack gap="md"><Stack axis="inline" align="center" justify="between"><Text emphasis="strong">{item.author}</Text><IconButton label={`${item.title} 저장 해제`} tone="ghost" onClick={()=>{setSaved(ids=>ids.filter(id=>id!==item.id));setRemoved(item.id);setSelectedItemId(null);}}><Bookmark size={20}/></IconButton></Stack><PreviewPhoto index={item.photo} square label={item.title}/><Text>{item.body}</Text></Stack>}/>
  <Sheet open={creating} onOpenChange={setCreating} title="새 컬렉션" closeLabel="닫기" footer={<Button disabled={!name.trim()} onClick={create}>만들기</Button>}>

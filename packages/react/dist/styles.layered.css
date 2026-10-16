@@ -3106,8 +3106,9 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-message-composer__quick-item:disabled { opacity: 0.5; cursor: default; }
 .hjm-message-composer__trailing { display: inline-grid; place-items: center; }
 .hjm-message-composer__trailing > * { grid-area: 1 / 1; }
-.hjm-message-composer__reserve { visibility: hidden; }
-.hjm-message-composer__reply-card { display: flex; flex-direction: column; gap: var(--hjm-space-sm); padding: var(--hjm-space-sm); border-radius: var(--hjm-radius-xl); background: var(--hjm-color-surface); }
+
+.hjm-message-composer__reply-card { display: flex; flex-direction: column; gap: var(--hjm-space-sm); }
+.hjm-message-composer__reply-card[data-replying] { padding: var(--hjm-space-sm); border-radius: var(--hjm-radius-xl); background: var(--hjm-color-surface); }
 .hjm-message-composer__reply { display: flex; align-items: flex-start; gap: var(--hjm-space-sm); }
 .hjm-message-composer__reply-text { flex: 1; min-inline-size: 0; display: flex; flex-direction: column; gap: 2px; }
 .hjm-message-composer__reply-excerpt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

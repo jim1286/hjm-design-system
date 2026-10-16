@@ -4,7 +4,8 @@ import { afterEach, expect, it, vi } from "vitest";
 import { AccessibilityInfo, Platform } from "react-native";
 import { HjmNativeProvider } from "@hjmds/react-native/provider";
 import { BottomNavigation } from "@hjmds/react-native/navigation";
-import { Button, IconButton } from "@hjmds/react-native/actions";
+import { IconButton } from "@hjmds/react-native/actions";
+import { SegmentedControl } from "@hjmds/react-native/inputs";
 import { NavigationBehaviorPreview } from "../../../showcase/native/src/reference-navigation-bars.js";
 import { navigationBarReferences, navigationBehaviorGroups } from "../../../showcase/shared/navigation-bar-references.js";
 vi.mock("react-native-svg", async () => { const { View } = await import("react-native"); return { default: View, Svg: View, Circle: View, Path: View, G: View, Rect: View, Line: View, Polyline: View, Polygon: View, Ellipse: View }; });
@@ -13,7 +14,7 @@ let tree:ReactTestRenderer;
 afterEach(()=>{if(tree)act(()=>tree.unmount());});
 it.each(navigationBehaviorGroups)("keeps $id destination, preset and primary action states separate",group=>{
  act(()=>{tree=create(<HjmNativeProvider reducedMotion><NavigationBehaviorPreview behavior={group.id}/></HjmNativeProvider>);});
- for(const id of group.references){const reference=navigationBarReferences.find(item=>item.id===id)!;if(group.references.length>1)act(()=>tree.root.findAllByType(Button).find(item=>(Array.isArray(item.props.children)?item.props.children.join(""):item.props.children)===`${reference.source} 표현`)!.props.onPress());
+ for(const id of group.references){const reference=navigationBarReferences.find(item=>item.id===id)!;if(group.references.length>1){const selector=()=>tree.root.findByType(SegmentedControl).props;expect(selector().label).toBe(`${group.title} 참고 표현`);expect(selector().items.find((item:{value:string})=>item.value===id)?.label).toBe(reference.source);act(()=>selector().onValueChange(id));expect(selector().value).toBe(id);}
  const navigation=()=>tree.root.findByType(BottomNavigation).props;expect(navigation().descriptor.selectedKey).toBe(id==="project"?"1":"0");const target=String(reference.items.length-1);act(()=>navigation().onActivate({key:target,reason:"navigate"}));expect(navigation().descriptor.selectedKey).toBe(target);act(()=>navigation().onActivate({key:target,reason:"reselect"}));expect(navigation().descriptor.selectedKey).toBe(target);
  if("action" in reference){act(()=>{const action=tree.root.findByType(IconButton).props.onPress;action();action();});expect(navigation().descriptor.selectedKey).toBe(target);expect(JSON.stringify(tree.toJSON())).toContain(`${reference.items[Number(target)]} 선택 · ${reference.action} 2회`);}
  }

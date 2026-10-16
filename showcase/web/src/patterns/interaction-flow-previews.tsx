@@ -7,12 +7,16 @@ import { Button } from "@hjmds/react/actions";
 import { SearchField, TextField } from "@hjmds/react/forms";
 import { Sheet } from "@hjmds/react/overlays";
 import { Container, Stack, Text } from "@hjmds/react/layout";
+import { RadioGroup } from "@hjmds/react/selection";
+import { PreviewToolButton, PreviewTools } from "./preview-tools";
 
 
 // Selection state holds ids; visible copy comes from an id→copy table like the product's id→i18n-key table.
 const displayCopy = { compact: "간결하게", detailed: "자세하게", large: "크게 보기" } as const;
 type DisplayId = keyof typeof displayCopy;
 const displayOptions = Object.keys(displayCopy) as DisplayId[];
+// Single choice uses RadioGroup, not selected Buttons (SELECTION.md 조립 규칙).
+const displayItems = displayOptions.map(id => ({ value: id, label: displayCopy[id] }));
 // The product screen owns the outer frame; the preview shows it so the example matches the usage guide.
 function Frame({ children }: { children: ReactNode }) { return <Container gutter="compact"><Stack gap="md">{children}</Stack></Container>; }
 
@@ -40,7 +44,7 @@ export function ApplyOrDiscardSelection() {
   <Button ref={trigger} onClick={start}>표시 방식 선택</Button>
   <Sheet open={open} onOpenChange={onOpenChange} title="표시 방식 선택" closeLabel="닫기" returnFocusRef={trigger}
    footer={<Stack axis="inline" justify="end" wrap gap="sm"><Button tone="secondary" onClick={close}>선택 취소</Button><Button onClick={() => { if (close()) setApplied(draft); }}>선택 적용</Button></Stack>}>
-   <Stack gap="md">{displayOptions.map(id => <Button key={id} tone="secondary" selected={draft === id} onClick={() => { if (isCurrent()) setDraft(id); }}>{displayCopy[id]}</Button>)}
+   <Stack gap="md"><RadioGroup accessibilityLabel="표시 방식" orientation="vertical" value={draft} items={displayItems} onValueChange={value => { const id = displayOptions.find(option => option === value); if (id && isCurrent()) setDraft(id); }} />
     <Text>적용을 눌러야 화면이 바뀌어요. 취소하거나 닫으면 기존 선택을 유지해요.</Text>
    </Stack>
   </Sheet>
@@ -111,8 +115,9 @@ function LatestSearchContents({ initialState = "idle" }: Pick<LatestSearchProps,
   <Button tone="secondary" disabled={!query.trim()} onClick={() => search(searchDelay.fast)}>빠른 응답으로 검색</Button>
   <Text role="status">{message}</Text>
   {state.status === "error" ? <Button tone="secondary" onClick={() => { searchRef.current?.focus(); void session.retry(); }}>다시 검색</Button> : null}
-  <Button tone="ghost" selected={failureArmed} onClick={() => { failNext.current = !failNext.current; setFailureArmed(failNext.current); }}>다음 검색 실패시키기</Button>
   <Text>느린 검색을 시작한 뒤 검색어를 바꿔 빠른 검색을 해보세요. 늦게 도착한 이전 결과가 최신 결과를 덮지 않아요. 실제 서버 요청은 없는 예제예요.</Text>
+  {/* Failure arming is a demo-only tool, kept after the composition. */}
+  <PreviewTools><PreviewToolButton selected={failureArmed} onClick={() => { failNext.current = !failNext.current; setFailureArmed(failNext.current); }}>다음 검색 실패시키기</PreviewToolButton></PreviewTools>
  </Frame>;
 }
 

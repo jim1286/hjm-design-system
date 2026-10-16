@@ -19,9 +19,11 @@ const settle = () => act(async () => { await vi.advanceTimersByTimeAsync(420); }
 it("keeps the native input sheet pending and retains its draft for failure recovery", async () => {
   vi.useFakeTimers();
   act(() => { tree = create(<HjmNativeProvider><InputSheet /></HjmNativeProvider>); });
+  // The failure tool sits outside the sheet body (SELECTION.md 조립 규칙), so it is armed before opening.
+  press("다음 저장 실패시키기"); expect(button("다음 저장 실패시키기").props.selected).toBe(true);
   press("입력 시트 열기"); expect(button("저장").props.disabled).toBe(true);
   act(() => tree.root.findByType(TextField).props.onValueChange("남길 이름"));
-  press("다음 저장 실패시키기"); press("저장");
+  press("저장");
   expect(tree.root.findByType(TextField).props.disabled).toBe(true);
   close(); expect(tree.root.findByType(Sheet).props.open).toBe(true);
   await settle(); expect(JSON.stringify(tree.toJSON())).toContain("저장하지 못했어요.");
@@ -35,8 +37,8 @@ it("keeps the native input sheet pending and retains its draft for failure recov
 it("resumes a failed native drawer and resets only after confirmed completion", async () => {
   vi.useFakeTimers();
   act(() => { tree = create(<HjmNativeProvider><FamilyDrawer /></HjmNativeProvider>); });
-  press("공간 설정하기"); press("계속"); press("계속");
-  press("다음 저장 실패시키기"); press("설정 마치기");
+  press("다음 저장 실패시키기"); press("공간 설정하기"); press("계속"); press("계속");
+  expect(button("다음 저장 실패시키기").props.selected).toBe(true); press("설정 마치기");
   expect(button("이전").props.disabled).toBe(true);
   close(); expect(tree.root.findByType(Sheet).props.open).toBe(true);
   await settle(); close(); await settle(); press("공간 설정하기"); await settle();

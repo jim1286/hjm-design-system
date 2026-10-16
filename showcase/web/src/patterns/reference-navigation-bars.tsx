@@ -2,7 +2,8 @@ import { Heading } from "@hjmds/react/heading";
 import "./reference-navigation-bars.css";
 import { useEffect, useId, useState } from "react";
 import { BottomNavigation } from "@hjmds/react/navigation";
-import { Button, IconButton } from "@hjmds/react/actions";
+import { IconButton } from "@hjmds/react/actions";
+import { SegmentedControl } from "@hjmds/react/selection";
 import { Stack, Text } from "@hjmds/react/layout";
 import { HjmProvider } from "@hjmds/react/provider";
 import { createLucideGlyph } from "@hjmds/react/icon-lucide";
@@ -58,7 +59,8 @@ export function NavigationBehaviorPreview({ behavior }: { behavior: NavigationBe
  const [preset, setPreset] = useState<string>(options[0]!.id);
  const reference = options.find(item => item.id === preset) ?? options[0]!;
  return <Stack gap="md"><Heading level="level3">{group.title}</Heading>
-  {options.length > 1 && <Stack gap="sm">{options.map(item => <Button key={item.id} tone="secondary" selected={reference.id === item.id} onClick={() => setPreset(item.id)}>{item.source} 표현</Button>)}</Stack>}
+  {/* 2026-10-16 assembly rule (SELECTION.md 조립 규칙): picking one reference is a single-choice control, not a row of selected Buttons. */}
+  {options.length > 1 && <SegmentedControl label={`${group.title} 참고 표현`} items={options.map(item => ({ value: item.id, label: item.source }))} value={reference.id} onValueChange={setPreset} />}
   <ReferenceBar key={reference.id} reference={reference} />
  </Stack>;
 }

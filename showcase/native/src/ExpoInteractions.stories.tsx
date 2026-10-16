@@ -5,6 +5,7 @@ import { spacing } from "@hjmds/design-contracts/foundations";
 import { Button } from "@hjmds/react-native/actions";
 import { Text, Container, Stack } from "@hjmds/react-native/primitives";
 import { ContentTransition } from "@hjmds/react-native/content-transition";
+import { Switch } from "@hjmds/react-native/inputs";
 
 import { Heading } from "@hjmds/react-native/heading";
 import { PatternStatus } from "./pattern-status";
@@ -23,7 +24,8 @@ function ExpoInteractionPreview() {
   const [reduced, setReduced] = useState(false);
   return <ScrollView contentContainerStyle={{ paddingVertical: spacing.md }}><Container gutter="compact"><Stack gap="md">
     <Heading level="level5">{copy.title}</Heading><Text>{copy.description}</Text>
-    <Button tone="secondary" selected={reduced} onPress={() => setReduced(value => !value)}>{copy.motion}</Button>
+    {/* 2026-10-16 assembly rule (SELECTION.md 조립 규칙): an on/off setting is a Switch, not a selected Button. */}
+    <Switch presentation="row" label={copy.motion} checked={reduced} onCheckedChange={setReduced} />
     <Stack gap="sm">
       <Button onPress={() => setIndex(value => (value + 1) % copy.states.length)}>{copy.next}</Button>
       <Button tone="secondary" onPress={() => setIndex(0)}>{copy.cancel}</Button>

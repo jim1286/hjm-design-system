@@ -10,6 +10,8 @@ import { Avatar } from "@hjmds/react-native/data-display";
 import { createBlobatarFallback } from "@hjmds/react-native/avatar-blobatar";
 import { EffectSurface } from "@hjmds/react-native/effect-surface";
 import { Button } from "@hjmds/react-native/actions";
+// 2026-10-16 assembly rule (SELECTION.md 조립 규칙): turning background motion on/off is a Switch.
+import { Switch } from "@hjmds/react-native/inputs";
 import { spacing } from "@hjmds/design-contracts/foundations";
 import { profileFaces } from "../../shared/profile-studio";
 const glyph = createLucideGlyph({ search: Search, settings: Settings, notifications: Bell, back: ArrowLeft });
@@ -19,7 +21,7 @@ function Frame({ children }: { children: ReactNode }) {
 // Small labels need normal text contrast over the moving glow; brand text fell below 4.5:1.
 export function Effects() {
   const [active, setActive] = useState(false);
-  return <Frame><Button selected={active} onPress={() => setActive(!active)}>{copy.motion}</Button>
+  return <Frame><Switch presentation="row" label={copy.motion} checked={active} onCheckedChange={setActive} />
     {([['mesh'], ['glow'], ['grain'], ['mesh', 'glow', 'grain']] as const).map(layers => <EffectSurface key={layers.join('-')} descriptor={{ layers, active, seed: "morning", intensity: 0.4 }}>
       <View style={{ padding: spacing.xxl }}><Stack gap="lg"><Text variant="label">{layers.join(' + ')}</Text><Heading level="level2">{copy.title}</Heading><Text>{copy.description}</Text><Button tone="secondary">{copy.action}</Button></Stack></View>
     </EffectSurface>)}

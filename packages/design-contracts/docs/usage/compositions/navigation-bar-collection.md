@@ -23,7 +23,7 @@
 | BottomNavigation | 목적지 2~6개, 선택 상태, 배지 | [BottomNavigation](../components/bottom-navigation.md) |
 | IconButton `tone="primary" size="large" shape="circle"` | `primaryAction`: 목적지가 아닌 행동 | [IconButton](../components/icon-button.md) |
 | HjmProvider / HjmNativeProvider `brandPalette` | 막대 범위의 제품 색(스토리 색은 예시) | [DesignSystemProvider](../components/design-system-provider.md) |
-| Button `secondary` `selected` | 스토리에서 참고 표현을 고르는 선택기(제품에는 필요 없음) | [Button](../components/button.md) |
+| SegmentedControl | 스토리에서 참고 표현을 고르는 단일 선택기(제품에는 필요 없음). `selected` Button 나열로 만들지 않는다([선택 조립 규칙](../SELECTION.md#조립-규칙필수)) | [SegmentedControl](../components/segmented-control.md) |
 
 ## 배치
 

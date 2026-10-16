@@ -2,7 +2,7 @@ import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { AccessibilityInfo } from "react-native";
 import { HjmNativeProvider } from "@hjmds/react-native/provider";
-import { TextField } from "@hjmds/react-native/inputs";
+import { Switch, TextField } from "@hjmds/react-native/inputs";
 import { Button } from "@hjmds/react-native/actions";
 import { FirstTask, RecoverableSettings, SelectionReview } from "../../../showcase/native/src/reference-flow-previews.js";
 let tree: ReactTestRenderer;
@@ -17,8 +17,9 @@ const field=()=>tree.root.findByType(TextField);
 const input=(value:string)=>act(()=>field().props.onValueChange(value));
 const text=()=>JSON.stringify(tree.toJSON());
 const settle=()=>act(async()=>{await new Promise(resolve=>setTimeout(resolve,420));});
+const notification=()=>tree.root.findByType(Switch);
 it("first task bounds repeated back and composes repeated notification toggles",()=>{
- render(FirstTask);press("이 주제로 기록하기");act(()=>{const toggle=button("기록 알림 켜짐").props.onPress;toggle();toggle();});expect(button("기록 알림 켜짐")).toBeDefined();
+ render(FirstTask);press("이 주제로 기록하기");expect(notification().props.checked).toBe(true);act(()=>{const toggle=notification().props.onCheckedChange;toggle(false);toggle(true);});expect(notification().props.checked).toBe(true);act(()=>notification().props.onCheckedChange(false));expect(notification().props.checked).toBe(false);
  act(()=>{const back=button("이전 단계").props.onPress;back();back();});expect(text()).toContain("1단계 · 주제");
 });
 it("settings protects submitted data from queued editing, revert and leave callbacks",async()=>{

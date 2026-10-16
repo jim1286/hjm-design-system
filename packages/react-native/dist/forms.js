@@ -1,5 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
+import { useKeyboardOverlap } from "./keyboard.js";
 import { NativeFieldFrame } from "./internal/field-frame.js";
 import { focusAccessibleHost } from "./internal/accessible-focus.js";
 import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
@@ -569,6 +570,8 @@ export function Combobox({ label, accessibilityLabel, items, sections, source: s
                     return renderOption(item, optionIndex);
                 })] }, section.id));
     }) : filteredItems.map(renderOption);
+    const modalRoot = useRef(null);
+    const modalKeyboardOverlap = useKeyboardOverlap(modalRoot, visible);
     return (_jsxs(View, { style: [{ gap: spacing.xs }, layoutStyle], children: [label ? _jsxs(Text, { tone: "primary", variant: "label", style: disabled ? { opacity: fieldRecipe.disabledOpacity } : undefined, children: [label, required ? " *" : ""] }) : null, _jsxs(View, { style: {
                     alignItems: "center",
                     backgroundColor: colors.bg,
@@ -629,7 +632,7 @@ export function Combobox({ label, accessibilityLabel, items, sections, source: s
                         }, placeholder: placeholder, placeholderTextColor: colors.textWeak, value: query }), query.length > 0 && !readOnly ? (_jsx(Pressable, { accessibilityLabel: clearLabel, accessibilityRole: "button", disabled: disabled || busy || viewStatus === "loading", onPress: clear, style: minimumTargetStyle, children: _jsx(Text, { align: "center", tone: "muted", variant: "title", children: "\u00D7" }) })) : null] }), error ? (_jsx(Text, { accessibilityLiveRegion: "assertive", tone: "danger", variant: "caption", children: error })) : description ? (_jsx(Text, { tone: "muted", variant: "caption", children: description })) : null, _jsx(Modal, { ...modalProps, animationType: "none", onDismiss: modalDismiss.onDismiss, onRequestClose: () => dismiss("escape"), onShow: () => {
                     modalDismiss.onShow();
                     focusInitialOption();
-                }, transparent: true, visible: visible, children: _jsxs(View, { style: { flex: 1, justifyContent: "flex-end" }, children: [_jsx(Pressable, { accessibilityLabel: dismissLabel, accessibilityRole: "button", onPress: () => dismiss("outside"), style: { backgroundColor: backdrop.modal.color, opacity: backdrop.modal.opacity, bottom: 0, left: 0, position: "absolute", right: 0, top: 0 } }), _jsxs(View, { accessibilityLabel: resultsAccessibilityLabel ?? accessibleName, accessibilityRole: "radiogroup", accessibilityViewIsModal: true, style: {
+                }, transparent: true, visible: visible, children: _jsxs(View, { ref: modalRoot, style: { flex: 1, justifyContent: "flex-end", paddingBottom: modalKeyboardOverlap }, children: [_jsx(Pressable, { accessibilityLabel: dismissLabel, accessibilityRole: "button", onPress: () => dismiss("outside"), style: { backgroundColor: backdrop.modal.color, opacity: backdrop.modal.opacity, bottom: 0, left: 0, position: "absolute", right: 0, top: 0 } }), _jsxs(View, { accessibilityLabel: resultsAccessibilityLabel ?? accessibleName, accessibilityRole: "radiogroup", accessibilityViewIsModal: true, style: {
                                 backgroundColor: colors.bg,
                                 borderTopLeftRadius: tokens.radius.lg,
                                 borderTopRightRadius: tokens.radius.lg,

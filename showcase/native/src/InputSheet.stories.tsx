@@ -8,6 +8,7 @@ import { Stack, Text } from "@hjmds/react-native/primitives";
 import { useDemoAction } from "./action-recovery-previews";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { PatternStatus } from "./pattern-status";
+import { PreviewToolButton, PreviewTools } from "./preview-tools";
 
 function InputSheet() {
   const insets = useSafeAreaInsets();
@@ -36,11 +37,13 @@ function InputSheet() {
           if (state.status !== "idle") session.reset(state.value);
         }} />
         {state.status === "error" ? <Notice tone="danger" announcement="assertive" title="저장하지 못했어요. 입력한 이름은 남아 있어요." /> : null}
-        <Button tone="secondary" selected={failureArmed} disabled={busy} onPress={toggleFailure}>다음 저장 실패시키기</Button>
         <Text>서버 통신 없이 실패와 복구를 확인하는 예제예요. 닫아도 이 화면이 유지되는 동안 입력한 이름은 남아 있어요.</Text>
         {Array.from({ length: 8 }, (_, index) => <Text key={index}>본문을 스크롤해도 저장 버튼에 접근할 수 있어요.</Text>)}
       </Stack>
     </Sheet>
+    {/* Demo-only failure arming stays outside the sheet body, after the composition (SELECTION.md 조립 규칙):
+        arm it before opening, so the sheet only holds the product's own actions. */}
+    <PreviewTools><PreviewToolButton selected={failureArmed} disabled={busy} onPress={toggleFailure}>다음 저장 실패시키기</PreviewToolButton></PreviewTools>
   </Stack>;
 }
 const meta = { title: "배포/구성/입력과 작성/입력 시트", component: InputSheet } satisfies Meta<typeof InputSheet>;

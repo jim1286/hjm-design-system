@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { AppState, type View } from "react-native";
 import { videoDialogHost } from "./video-dialog-host";
 import { Button } from "@hjmds/react-native/actions";
+import { PreviewTools, PreviewToolButton } from "./preview-tools";
 import { Dialog } from "@hjmds/react-native/overlays";
 import { Stack, Text } from "@hjmds/react-native/primitives";
 import { TextField } from "@hjmds/react-native/inputs";
@@ -44,7 +45,7 @@ export function VideoDialogPreview() {
     <Text>짧은 영상을 확인하고 작성 중인 메모로 돌아오세요.</Text>
     <TextField label="영상 메모" value={draft} onValueChange={setDraft} />
     <Button ref={trigger} onPress={() => setOpen(true)}>영상 미리보기</Button>
-    <Button tone="ghost" selected={broken} onPress={() => setBroken(v => !v)}>{broken ? "정상 영상으로 보기" : "불러오기 실패 체험"}</Button>
+    <PreviewTools><PreviewToolButton selected={broken} onPress={() => setBroken(v => !v)}>{broken ? "정상 영상으로 보기" : "불러오기 실패 체험"}</PreviewToolButton></PreviewTools>
     <Dialog open={open} onOpenChange={setOpen} title="색상 패턴 미리보기" description={videoHost ? "재생 버튼을 누르면 영상이 시작돼요." : "영상 대신 아래 텍스트 설명을 확인할 수 있어요."} closeLabel="영상 닫기" size="large" returnFocusRef={trigger}>
       {open ? videoHost ? <Player key={attempt} host={videoHost} broken={broken} retry={() => { setBroken(false); setAttempt(v => v + 1); }} /> :
         <Stack gap="md"><Text>이 개발 앱에는 영상 재생 모듈이 없습니다. Expo Video를 포함한 앱에서 재생을 확인해 주세요.</Text><Text variant="caption">영상 설명: 여러 색의 패턴이 6초 동안 움직입니다. 소리는 없습니다.</Text></Stack> : null}

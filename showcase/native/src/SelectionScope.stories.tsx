@@ -8,6 +8,7 @@ import { ScrollView } from "react-native";
 import { spacing } from "@hjmds/design-contracts/foundations";
 import { useDemoAction } from "./action-recovery-previews";
 import { PatternStatus } from "./pattern-status";
+import { PreviewToolButton, PreviewTools } from "./preview-tools";
 
 // Scope and result copy are id→copy tables like the product's id→i18n-key tables (selection-scope.md).
 const scopeCopy = { cover: "대표 사진만", group: "묶음 전체" } as const;
@@ -42,7 +43,8 @@ function SelectionScopePreview() {
           {`${count}개 공유 대상으로 정하기`}
         </Button>
         <PatternStatus>{resultCopy[result](count)}</PatternStatus>
-        <Button tone="ghost" selected={failureArmed} disabled={busy} onPress={changeFailure}>다음 적용 실패시키기</Button>
+        {/* Demo-only failure arming stays after the composition (SELECTION.md 조립 규칙). */}
+        <PreviewTools><PreviewToolButton selected={failureArmed} disabled={busy} onPress={changeFailure}>다음 적용 실패시키기</PreviewToolButton></PreviewTools>
       </Stack>
     </Container></ScrollView>
   );

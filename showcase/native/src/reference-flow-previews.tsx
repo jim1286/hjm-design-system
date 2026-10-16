@@ -4,15 +4,17 @@ import { Heading } from "@hjmds/react-native/heading";
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 import { AccessibilityInfo, BackHandler, findNodeHandle, ScrollView, View, type TextInput } from "react-native";
 import { spacing, radius } from "@hjmds/design-contracts/foundations";
-import { Button } from "@hjmds/react-native/actions";
+import { Button, type ButtonTone } from "@hjmds/react-native/actions";
 import { Chip, SearchField, SegmentedControl, Switch, TextField } from "@hjmds/react-native/inputs";
 import { Grid, Stack, Surface, Text } from "@hjmds/react-native/primitives";
 import { ScreenLayout } from "@hjmds/react-native/screens";
 import { Sheet } from "@hjmds/react-native/overlays";
 import { Steps } from "@hjmds/react-native/steps";
 import { EmptyState, Notice } from "@hjmds/react-native/feedback";
+import { Collapsible } from "@hjmds/react-native/collapsible";
 import { useHjmNativeTheme } from "@hjmds/react-native/provider";
 import { PatternStatus } from "./pattern-status";
+import { PreviewTools, PreviewToolButton } from "./preview-tools";
 import { useDemoAction } from "./action-recovery-previews";
 import { categories, records, emptyFilters, filterRecords, initialDraft, sameDraft, draftError, editorCopy, scopeCopy, flowSteps, stepLabels, stepName, introFeatures, comparisonModeCopy, type ComparisonMode, type EditorKind, type Draft } from "../../shared/reference-flows";
 
@@ -24,9 +26,13 @@ function Frame({ children }: { children: ReactNode }) {
 function Title({ children }: { children: string }) { return <Heading level="level3" >{children}</Heading>; }
 function Status({ children, ...props }: { children: string; announceOnMount?: boolean }) { return <PatternStatus {...props}>{children}</PatternStatus>; }
 function Row({ children }: { children: ReactNode }) { return <Stack axis="inline" wrap gap="sm">{children}</Stack>; }
-function Action({ children, onAction, disabled = false, loading = false, selected, primary = false }: { children: string; onAction(): void; disabled?: boolean; loading?: boolean; selected?: boolean; primary?: boolean }) {
-  const host = useRef<View>(null); const target = useContext(ReturnFocus);
-  return <View ref={host} collapsable={false} style={{ flexShrink: 1 }}><Button tone={primary ? "primary" : "secondary"} onPress={() => { if (target) target.current = host.current; onAction(); }} disabled={disabled} loading={loading} {...(selected === undefined ? {} : { selected })}>{children}</Button></View>;
+// Horizontal action rows follow the button guide: secondary → primary, end-aligned.
+function ActionRow({ children }: { children: ReactNode }) { return <Stack axis="inline" wrap gap="sm" justify="end">{children}</Stack>; }
+// 2026-10-16 review: the Button itself is the return-focus target. A wrapping `View flexShrink:1` made
+// each button's width follow its label inside rows, so the same actions rendered at different widths.
+function Action({ children, onAction, disabled = false, loading = false, selected, tone = "secondary", hostRef }: { children: string; onAction(): void; disabled?: boolean; loading?: boolean; selected?: boolean; tone?: ButtonTone; hostRef?: RefObject<View | null> }) {
+  const own = useRef<View>(null); const host = hostRef ?? own; const target = useContext(ReturnFocus);
+  return <Button ref={host} tone={tone} onPress={() => { if (target) target.current = host.current; onAction(); }} disabled={disabled} loading={loading} {...(selected === undefined ? {} : { selected })}>{children}</Button>;
 }
 function Field({ label, value, onChange, disabled = false, error }: { label: string; value: string; onChange(value: string): void; disabled?: boolean; error?: string }) {
   return <TextField label={label} value={value} onValueChange={onChange} disabled={disabled} {...(error ? { error } : {})} />;
@@ -110,25 +116,24 @@ function Editor({ kind }: { kind: EditorKind }) {
   }, [navigation]);
   const summary = <Stack gap="md"><Text variant="title">{draft.title || "아직 입력하지 않았어요"}</Text><Text>{draft.category} · 알림 {draft.enabled ? "켜짐" : "꺼짐"}</Text></Stack>;
   return <Frame><Text tone="brand" variant="label">기록의 시작</Text><View ref={stageRef} accessible accessibilityRole="header" accessibilityLabel={copy.title}><Title>{copy.title}</Title></View><Text tone="muted">{copy.intro}</Text>
-    {paused ? <Surface padding="lg"><Stack gap="lg"><Title>{kind === "settings" ? "설정에서 나왔어요" : "초안이 남아 있어요"}</Title>{summary}<Row><Action primary onAction={() => setPaused(false)}>이어하기</Action><Action onAction={reset}>처음부터</Action></Row></Stack></Surface>
-    : done ? <Surface padding="lg"><Stack gap="lg"><Notice tone="success" title={copy.complete} />{summary}<Text>{viewResult ? "저장한 기록의 상세 내용입니다." : "확인된 결과를 바로 열어 볼 수 있어요."}</Text><Row><Action primary onAction={() => { if (kind === "settings") session.reset(state.value); else setViewResult(value => !value); }}>{kind === "settings" ? "계속 수정하기" : viewResult ? "완료 화면으로" : "저장한 기록 보기"}</Action><Action onAction={reset}>다시 해보기</Action></Row></Stack></Surface>
+    {paused ? <Surface padding="lg"><Stack gap="lg"><Title>{kind === "settings" ? "설정에서 나왔어요" : "초안이 남아 있어요"}</Title>{summary}<ActionRow><Action onAction={reset}>처음부터</Action><Action tone="primary" onAction={() => setPaused(false)}>이어하기</Action></ActionRow></Stack></Surface>
+    : done ? <Surface padding="lg"><Stack gap="lg"><Notice tone="success" title={copy.complete} />{summary}<Text>{viewResult ? "저장한 기록의 상세 내용입니다." : "확인된 결과를 바로 열어 볼 수 있어요."}</Text><ActionRow><Action onAction={reset}>다시 해보기</Action><Action tone="primary" onAction={() => { if (kind === "settings") session.reset(state.value); else setViewResult(value => !value); }}>{kind === "settings" ? "계속 수정하기" : viewResult ? "완료 화면으로" : "저장한 기록 보기"}</Action></ActionRow></Stack></Surface>
     : <Stack gap="lg">
       {kind !== "settings" && <Steps descriptor={{ steps: flowSteps, currentStepId: flowSteps[stage]!.id, currentStepStatus: invalid || state.status === "error" ? "error" : "current" }} statusLabels={stepLabels} composeAccessibleName={stepName} />}
       <Surface padding="lg"><Stack gap="lg">
         <Status>{kind === "settings" ? dirty ? "저장하지 않은 변경이 있어요" : "저장된 설정입니다" : `${stage + 1}단계 · ${flowSteps[stage]!.label}`}</Status>
-        {stage === 0 ? <><Heading level="level5">어떤 장면을 기록할까요?</Heading><Row>{categories.map(category => <Chip key={category} label={category} selectionMode="single" selected={draft.category === category} onPress={() => change({ category })} />)}</Row><Action primary onAction={() => { if (!locked()) setStage(1); }}>이 주제로 기록하기</Action><Action onAction={() => { if (!locked()) setStage(1); }}>나중에 정하기</Action></>
+        {stage === 0 ? <><Heading level="level5">어떤 장면을 기록할까요?</Heading><Row>{categories.map(category => <Chip key={category} label={category} selectionMode="single" selected={draft.category === category} onPress={() => change({ category })} />)}</Row><Action tone="primary" onAction={() => { if (!locked()) setStage(1); }}>이 주제로 기록하기</Action><Action onAction={() => { if (!locked()) setStage(1); }}>나중에 정하기</Action></>
         : stage === 1 ? <><TextField ref={inputRef} label={copy.field} value={draft.title} disabled={busy} onValueChange={title => change({ title })} {...(invalid ? { error: draftError(draft) ?? "" } : {})} /><Row>{categories.map(category => <Chip key={category} label={category} selectionMode="single" disabled={busy} selected={draft.category === category} onPress={() => change({ category })} />)}</Row>
           {/* 2026-10-16 review: an on/off setting is a Switch, not a text button. */}<Switch label="기록 알림" description="기록할 시간에 알려 드려요." checked={draft.enabled} disabled={busy} onCheckedChange={enabled => change({ enabled })} />
-          {kind === "settings" ? <Stack gap="sm"><Action primary loading={busy} disabled={!dirty} onAction={save}>{copy.submit}</Action><Action disabled={busy || !dirty} onAction={revert}>변경 되돌리기</Action></Stack> : <Action primary onAction={review}>기록 확인</Action>}</>
-        : <>{summary}<Row><Action disabled={busy} onAction={() => { if (!locked()) setStage(1); }}>내용 수정</Action><Action primary loading={busy} onAction={save}>{state.status === "error" ? "입력한 내용 다시 저장" : copy.submit}</Action></Row></>}
+          {kind === "settings" ? <Stack gap="sm"><Action tone="primary" loading={busy} disabled={!dirty} onAction={save}>{copy.submit}</Action><Action disabled={busy || !dirty} onAction={revert}>변경 되돌리기</Action></Stack> : <Action tone="primary" onAction={review}>기록 확인</Action>}</>
+        : <>{summary}<ActionRow><Action disabled={busy} onAction={() => { if (!locked()) setStage(1); }}>내용 수정</Action><Action tone="primary" loading={busy} onAction={save}>{state.status === "error" ? "입력한 내용 다시 저장" : copy.submit}</Action></ActionRow></>}
         {state.status === "error" && <Notice tone="danger" title="저장하지 못했어요" description="입력은 그대로 남아 있어요. 내용을 확인하고 다시 저장해 주세요." />}
       </Stack></Surface>
-      <Row>{stage > 0 && kind === "first" && <Action disabled={busy} onAction={() => { if (!locked()) setStage(previous => Math.max(0, previous - 1)); }}>이전 단계</Action>}<View ref={leaveRef} collapsable={false}><Action disabled={busy} onAction={() => { returnFocusRef.current = leaveRef.current; leave(); }}>{kind === "settings" ? "설정 나가기" : "초안 남기고 쉬기"}</Action></View></Row>
-      {/* Demo-only control: separated and quiet so it never reads as a product action (2026-10-16 review). */}
-      <Stack gap="xs"><Text tone="muted" variant="caption">미리보기 도구</Text><Button size="small" tone="ghost" layoutStyle={{ alignSelf: "flex-start" }} disabled={busy} selected={failureArmed} onPress={() => { if (!locked()) toggleFailure(); }}>{failureArmed ? "다음 저장 실패 예약됨" : "다음 저장 실패시키기"}</Button></Stack>
+      <Row>{stage > 0 && kind === "first" && <Action disabled={busy} onAction={() => { if (!locked()) setStage(previous => Math.max(0, previous - 1)); }}>이전 단계</Action>}<Action hostRef={leaveRef} disabled={busy} onAction={() => { returnFocusRef.current = leaveRef.current; leave(); }}>{kind === "settings" ? "설정 나가기" : "초안 남기고 쉬기"}</Action></Row>
+      <PreviewTools><PreviewToolButton disabled={busy} selected={failureArmed} onPress={() => { if (!locked()) toggleFailure(); }}>{failureArmed ? "다음 저장 실패 예약됨" : "다음 저장 실패시키기"}</PreviewToolButton></PreviewTools>
     </Stack>}
     <Text tone="muted" variant="caption">{scopeCopy}</Text>
-    <Sheet returnFocusRef={returnFocusRef} open={confirmLeave} onOpenChange={open => { if (!open) setConfirmLeave(false); }} closeLabel="닫기" keyboardAvoidance scrollable title="저장하지 않은 변경이 있어요" footer={<Stack gap="sm"><Action primary onAction={() => setConfirmLeave(false)}>계속 수정</Action><Action onAction={() => { if (locked()) return; revert(); setConfirmLeave(false); setPaused(true); returnFocusRef.current = stageRef.current; }}>변경 버리고 나가기</Action></Stack>}><Text>변경을 버리면 마지막으로 저장한 설정으로 돌아가요.</Text></Sheet>
+    <Sheet returnFocusRef={returnFocusRef} open={confirmLeave} onOpenChange={open => { if (!open) setConfirmLeave(false); }} closeLabel="닫기" keyboardAvoidance scrollable title="저장하지 않은 변경이 있어요" footer={<Stack gap="sm"><Action tone="primary" onAction={() => setConfirmLeave(false)}>계속 수정</Action><Action tone="danger" onAction={() => { if (locked()) return; revert(); setConfirmLeave(false); setPaused(true); returnFocusRef.current = stageRef.current; }}>변경 버리고 나가기</Action></Stack>}><Text>변경을 버리면 마지막으로 저장한 설정으로 돌아가요.</Text></Sheet>
   </Frame>;
 }
 export function FirstTask() { return <Editor kind="first" />; }
@@ -139,20 +144,20 @@ export function ServiceIntroduction({ editorial = false }: { editorial?: boolean
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState("");
   const [note, setNote] = useState("");
-  const [faq, setFaq] = useState(false);
   // Both CTAs open the same sheet, so the screen still has one primary intent.
-  const intro = <Stack gap="lg"><Text tone="brand" variant="label">오늘의 한 장면</Text><Text>대단한 이야기일 필요 없어요. 지금 기억하고 싶은 순간부터 시작해요.</Text><Action primary onAction={() => setOpen(true)}>첫 장면 남기기</Action></Stack>;
+  const intro = <Stack gap="lg"><Text tone="brand" variant="label">오늘의 한 장면</Text><Text>대단한 이야기일 필요 없어요. 지금 기억하고 싶은 순간부터 시작해요.</Text><Action tone="primary" onAction={() => setOpen(true)}>첫 장면 남기기</Action></Stack>;
   const preview = <Surface padding="lg"><Stack gap="lg"><Text variant="label">{note ? "방금 남긴 장면" : "직접 만든 기록 예시"}</Text><Art label="산책의 빛" /><Heading level="level5">{note || records[0].title}</Heading><Text>{note ? "이 미리보기에 저장했어요." : records[0].body}</Text></Stack></Surface>;
   const story = <Stack gap="lg"><Heading level="level4">매일 쓰지 않아도 괜찮아요</Heading><Text>다시 시작한 날부터 이어지는 기록. 빈칸을 채우는 대신 남기고 싶은 것을 골라요.</Text><Text>한 줄을 적고, 주제를 고르고, 나중에 다시 읽어요.</Text></Stack>;
   return <ScreenHost><ScreenLayout title={editorial ? "오래 남는 건, 작은 장면이에요" : "지나간 하루를 한 줄로 붙잡아요"} scrollProps={{ keyboardDismissMode: "on-drag" }}><Stack gap="xl">
     {editorial ? intro : null}
     <Grid columns={{ compact: 2 }} gap={{ compact: "xl" }} minColumnWidth={twoColumnMin}>{editorial ? story : intro}{preview}</Grid>
     <Grid columns={{ compact: 3 }} gap={{ compact: "xl" }} minColumnWidth={twoColumnMin}>{introFeatures.map(feature => <Stack key={feature.id} gap="sm"><Text tone="brand" variant="label">{feature.order}</Text><Heading level="level5">{feature.title}</Heading><Text>{feature.body}</Text></Stack>)}</Grid>
-    <Action selected={faq} onAction={() => setFaq(value => !value)}>기록은 어디에 저장되나요?</Action>{faq && <Text>{scopeCopy}</Text>}
-    <Surface padding="lg"><Stack gap="md"><Heading level="level5">오늘, 어떤 장면을 남길까요?</Heading><Action primary onAction={() => setOpen(true)}>한 줄 써보기</Action></Stack></Surface>
+    {/* A question that reveals its answer is a disclosure, not a selected Button (2026-10-16 review). */}
+    <Collapsible trigger="기록은 어디에 저장되나요?"><Text>{scopeCopy}</Text></Collapsible>
+    <Surface padding="lg"><Stack gap="md"><Heading level="level5">오늘, 어떤 장면을 남길까요?</Heading><Action tone="primary" onAction={() => setOpen(true)}>한 줄 써보기</Action></Stack></Surface>
     {note && <Status announceOnMount>{`저장한 장면: ${note}`}</Status>}<Text tone="muted" variant="caption">{scopeCopy}</Text>
   </Stack></ScreenLayout>
-    <Modal open={open} onClose={() => setOpen(false)} title="첫 장면 남기기" footer={<Action primary disabled={!draft.trim()} onAction={() => { setNote(draft.trim()); setOpen(false); }}>미리보기에 저장</Action>}><Field label="기억하고 싶은 장면" value={draft} onChange={setDraft} /></Modal>
+    <Modal open={open} onClose={() => setOpen(false)} title="첫 장면 남기기" footer={<Action tone="primary" disabled={!draft.trim()} onAction={() => { setNote(draft.trim()); setOpen(false); }}>미리보기에 저장</Action>}><Field label="기억하고 싶은 장면" value={draft} onChange={setDraft} /></Modal>
   </ScreenHost>;
 }
 

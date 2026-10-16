@@ -24,6 +24,7 @@ function Artwork({ entry }: { entry: GalleryEntry }) {
  </View>)}
  </View>;
 }
+const sortItems = [{ value: "popular", label: "인기순" }, { value: "latest", label: "최신순" }] as const;
 // Reuse the status bridge: iOS does not announce Android accessibilityLiveRegion updates.
 function DiscoveryGallery() {
  const [query,setQuery] = useState(""); const [category,setCategory] = useState<GalleryCategory>("전체");
@@ -40,7 +41,7 @@ function DiscoveryGallery() {
  const reset=()=>{setQuery("");setCategory("전체");setSavedOnly(false);};
  return <ScrollView automaticallyAdjustKeyboardInsets keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingVertical: spacing.lg }}><Container gutter="compact"><Stack gap="xl"><Stack gap="md"><Text tone="brand">작은 아이디어가 시작되는 곳</Text><Heading level="level3" >다음 화면의 영감을 찾아보세요</Heading><Text>마음에 드는 화면을 살펴보고 나만의 컬렉션에 담아보세요.</Text><SearchField label="작품 검색" placeholder="모바일, 작업 공간, 서연" clearLabel="검색어 지우기" busyLabel="검색 중" value={query} onValueChange={setQuery}/></Stack>
  <SegmentedControl label="작품 카테고리" presentation="pills" items={galleryCategories.map(item => ({ value: item, label: item }))} value={category} onValueChange={value => { const item = galleryCategories.find(item => item === value); if (item) setCategory(item); }}/>
- <Stack axis="inline" wrap gap="sm"><Button tone="secondary" onPress={()=>setSort(current=>current==="popular"?"latest":"popular")}>{`정렬: ${sort==="popular"?"인기순":"최신순"}`}</Button><Button ref={savedFilterRef} tone="ghost" selected={savedOnly} onPress={()=>setSavedOnly(current=>!current)}>{`저장한 작품 ${saved.length}`}</Button></Stack>
+ <Stack axis="inline" wrap gap="sm" align="center"><SegmentedControl label="정렬" size="small" items={sortItems} value={sort} onValueChange={setSort}/>{/* TODO(remove when native Chip forwards a View ref): the saved-only filter is the Sheet's focus fallback, so it stays a Button until it can become Chip selectionMode="multiple" like Web. */}<Button ref={savedFilterRef} tone="ghost" selected={savedOnly} onPress={()=>setSavedOnly(current=>!current)}>{`저장한 작품 ${saved.length}`}</Button></Stack>
  <PatternStatus>{`${results.length}개의 작품`}</PatternStatus>
  {results.length ? <Grid columns={{ compact: 1, medium: 2, expanded: 3 }} gap={{ compact: "xl" }} minColumnWidth={{ compact: 320 }}>{results.map(item=><View key={item.id}><Stack gap="sm"><Artwork entry={item}/><Text variant="label">{item.title}</Text><Text tone="muted">{item.author} · {item.category} · 좋아요 {item.likes}</Text><Stack axis="inline" wrap gap="sm"><Button ref={node=>{if(node)detailRefs.current.set(item.id,node);else detailRefs.current.delete(item.id);}} tone="ghost" onPress={()=>{returnFocusRef.current=detailRefs.current.get(item.id)??savedFilterRef.current;setSelected(item);}} accessibilityLabel={`${item.title} 보기`}>자세히 보기</Button><Button accessibilityLabel={`${item.title} ${saved.includes(item.id)?"저장 취소":"저장"}`} tone="secondary" selected={saved.includes(item.id)} onPress={()=>toggle(item.id)}>{saved.includes(item.id)?"저장됨":"저장"}</Button></Stack></Stack></View>)}</Grid> : <EmptyState title="찾는 작품이 없어요" description="다른 검색어나 카테고리로 다시 찾아보세요." action={<Button onPress={reset}>필터 초기화</Button>}/>}
  <Text tone="muted">직접 만든 예제 작품입니다. 저장은 이 미리보기에서만 유지됩니다.</Text>

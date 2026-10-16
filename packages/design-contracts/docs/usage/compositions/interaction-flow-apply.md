@@ -29,7 +29,7 @@
 | `Text` 상태 | 현재 적용된 값 `t("display.current", { value })` | [Text](../components/text.md) |
 | `Button` 트리거 | 시트를 연다. 열 때 임시 선택을 적용 값으로 초기화. 화면의 primary 하나 | [Button](../components/button.md) |
 | `Sheet` | 선택 영역. `title`·`closeLabel` 필수, `returnFocusRef`로 트리거에 포커스 복귀 | [Sheet](../components/sheet.md) |
-| `Button selected`(secondary) × N | 선택지. 임시 선택(draft)만 바꾼다 | [Button](../components/button.md) |
+| `RadioGroup` | 선택지. 임시 선택(draft)만 바꾼다 | [RadioGroup](../components/radio-group.md) |
 | `Button` 적용 / `Button` 취소(secondary) | 시트 `footer`. 적용만 확정 값을 바꾼다 | [Button](../components/button.md) |
 
 ## 배치
@@ -47,9 +47,9 @@
 ┌ Sheet ───────────────────────────────┐
 │ 표시 방식 선택                   [×] │ ← header 고정, 닫기 = 취소와 같음
 ├──────────────────────────────────────┤
-│ [ 간결하게   ✓ ]  (selected)         │ ↑ body 스크롤
-│ [ 자세하게     ]                     │ │ 선택지 간격 spacing.md 16
-│ [ 크게 보기    ]                     │ │
+│ (●) 간결하게                         │ ↑ body 스크롤
+│ ( ) 자세하게                         │ │ RadioGroup card, 행 56
+│ ( ) 크게 보기                        │ │
 │ 안내: 적용해야 바뀐다                │ ↓
 ├──────────────────────────────────────┤
 │ Web:    [선택 취소] [선택 적용]       │ ← footer 고정, 오른쪽 정렬, gap 12
@@ -65,21 +65,21 @@
 | 현재 값 | `Text` | 제목 아래, 트리거 위 | `spacing.md` 16 |
 | 트리거 | `Button`(primary) | 현재 값 아래 | `medium` 44(`control.buttonHeight`) |
 | 시트 머리 | `Sheet` header | 시트 위 고정 | Native 최소 높이 `control.minTouchTarget` 44, 제목–닫기 `spacing.sm` 12; Web 여백 `spacing.lg` 20, 제목–닫기 `spacing.md` 16 |
-| 선택지 | `Button selected` × N | 시트 body, 스크롤 | 높이 44, 간격 `spacing.md` 16. 본문 안 선택지 묶음은 `Stack gap="md"`로 명시한다. 설치한 버전의 Sheet body gap과 중첩 여부를 확인하며 checkout 상태를 npm 게시 증거로 삼지 않는다 |
+| 선택지 | `RadioGroup`(`presentation="card"`, `accessibilityLabel` = 시트 제목) | 시트 body, 스크롤 | 행 최소 높이 56(`layout.rowHeight.singleLine`), 항목 사이 `spacing.xs` 8(`selectionGroupRecipe`). 안내 문구와는 `Stack gap="md"` 16. 설치한 버전의 Sheet body gap과 중첩 여부를 확인하며 checkout 상태를 npm 게시 증거로 삼지 않는다 |
 | 행동 | `Button` 적용·취소 | 시트 footer, 스크롤 밖 고정 | 간격 `spacing.sm` 12(`sheetRecipe.footer.gap`), Native 위 여백 `spacing.sm` 12 |
 | 시트 틀 | `Sheet` | 하단, 모달 | Web 최대 폭 640(`sheetRecipe.web.maxWidth`)·최대 높이 90%, Native 가로 여백 `spacing.lg` 20·최대 높이 90%(`maxHeightRatio` 0.9), 하단 안전 영역 추가 |
 
 - footer 순서는 [Sheet](../components/sheet.md) 배치 규칙을 따른다. Web footer는 오른쪽 정렬 가로 줄 **[취소][적용]**(보조 → 주 행동), Native footer는 세로 열이라
   **적용(primary) 먼저, 취소(secondary) 아래**다. 두 renderer의 footer가 이미 `gap` 12를 주므로 버튼을 `Stack`으로 다시 감싸지 않는다.
-- primary 개수: 화면에서는 트리거 하나, 시트 안에서는 적용 하나를 센다. 선택지는 `selected`를 준 secondary라 세지 않는다([Button](../components/button.md) 꼭 지킬 것).
-- 선택지가 단일 선택이면 Button 묶음 대신 [RadioGroup](../components/radio-group.md)도 쓸 수 있다. 의미(임시 선택 → 적용)는 같다.
+- primary 개수: 화면에서는 트리거 하나, 시트 안에서는 적용 하나를 센다. 선택지는 RadioGroup이라 버튼으로 세지 않는다.
+- 선택지를 `selected` Button 나열로 만들지 않는다. 2026-10-16 사용자 지적으로 선택 버튼 줄이 테두리 없는 글자처럼 보였다. 하나 고르기는 [선택 조립 규칙](../SELECTION.md#조립-규칙필수)대로 RadioGroup(선택지가 짧은 2~4개면 SegmentedControl)을 쓴다. 의미(임시 선택 → 적용)는 같다.
 
 근거: `src/component-recipes.ts`(`sheetRecipe`), `packages/react/src/styles.css`(`.hjm-sheet__footer`, `.hjm-sheet__body`), `packages/react-native/src/overlays.tsx`(Sheet footer `View`), `src/foundations.ts`(`layout`, `heading`)
 
 ## 흐름과 상태
 
 1. 트리거를 누르면 임시 선택을 현재 적용 값으로 초기화하고 시트를 연다.
-2. 선택지를 누르면 임시 선택만 바뀐다(`selected` 표시). 화면 본문의 현재 값은 그대로다.
+2. 선택지를 누르면 임시 선택만 바뀐다(라디오 선택 표시). 화면 본문의 현재 값은 그대로다.
 3. 적용을 누르면 확정 값을 임시 선택으로 바꾸고 시트를 닫는다.
 4. 취소·닫기(×)·바깥 누름·Escape·Android back은 확정 값을 바꾸지 않고 닫는다.
 5. 닫히면 포커스가 트리거로 돌아온다.
@@ -105,6 +105,7 @@ import { Button } from "@hjmds/react/actions";
 import { Heading } from "@hjmds/react/heading";
 import { Container, Stack, Text } from "@hjmds/react/layout";
 import { Sheet } from "@hjmds/react/overlays";
+import { RadioGroup } from "@hjmds/react/selection";
 
 const displayKey = { compact: "display.compact", detailed: "display.detailed", large: "display.large" } as const;
 type DisplayId = keyof typeof displayKey;
@@ -128,10 +129,10 @@ const trigger = useRef<HTMLButtonElement>(null);
       <Button tone="secondary" onClick={() => setOpen(false)}>{t("display.cancel")}</Button>
       <Button onClick={() => { setApplied(draft); setOpen(false); }}>{t("display.apply")}</Button>
     </>}>
-    <Stack gap="md">{/* 선택지 묶음 내부 간격 */}
-      {options.map((id) => (
-        <Button key={id} tone="secondary" selected={draft === id} onClick={() => setDraft(id)}>{t(displayKey[id])}</Button>
-      ))}
+    <Stack gap="md">
+      <RadioGroup accessibilityLabel={t("display.choose")} presentation="card"
+        items={options.map((id) => ({ value: id, label: t(displayKey[id]) }))}
+        value={draft} onValueChange={(next) => setDraft(next as DisplayId)} />
       <Text>{t("display.applyHint")}</Text>
     </Stack>
   </Sheet>
@@ -145,6 +146,7 @@ import { useRef, useState } from "react";
 import { ScrollView, View, useWindowDimensions } from "react-native";
 import { Button } from "@hjmds/react-native/actions";
 import { Heading } from "@hjmds/react-native/heading";
+import { RadioGroup } from "@hjmds/react-native/inputs";
 import { Sheet } from "@hjmds/react-native/overlays";
 import { Container, Stack } from "@hjmds/react-native/primitives";
 import { useHjmNativeTheme } from "@hjmds/react-native/provider";
@@ -172,9 +174,9 @@ const trigger = useRef<View>(null);
     <Button onPress={() => { setApplied(draft); setOpen(false); }}>{t("display.apply")}</Button>
     <Button tone="secondary" onPress={() => setOpen(false)}>{t("display.cancel")}</Button>
   </>}>
-  {options.map((id) => (
-    <Button key={id} tone="secondary" selected={draft === id} onPress={() => setDraft(id)}>{t(displayKey[id])}</Button>
-  ))}
+  <RadioGroup<DisplayId> accessibilityLabel={t("display.choose")} presentation="card"
+    items={options.map((id) => ({ value: id, label: t(displayKey[id]) }))}
+    value={draft} onValueChange={(next) => next && setDraft(next)} />
 </Sheet>
 ```
 

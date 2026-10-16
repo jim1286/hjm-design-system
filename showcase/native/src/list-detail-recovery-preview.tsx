@@ -5,6 +5,7 @@ import { TextField } from "@hjmds/react-native/inputs";
 import { ListRow } from "@hjmds/react-native/data-display";
 import { Stack, Text } from "@hjmds/react-native/primitives";
 import { useDemoAction } from "./action-recovery-previews";
+import { PreviewTools, PreviewToolButton } from "./preview-tools";
 
 /** The list owns its filter; detail requests never replace that mounted pane. */
 export function ListDetailRecoveryPreview() {
@@ -15,10 +16,9 @@ export function ListDetailRecoveryPreview() {
   const load = () => { setOpen(true); void session.run(() => request("상세 내용을 불러왔어요."), { retryable: true }); };
   const close = () => { session.reset(""); setOpen(false); };
   return <ListDetailScreen title="목록을 유지하는 상세 복구"
-    notice={<Text>실제 서버 없이 지연과 실패를 재현해요. 목록에 입력한 값은 상세에서 돌아와도 남아요.</Text>}
+    notice={<Stack gap="sm"><Text tone="muted">실제 서버 없이 지연과 실패를 재현해요. 목록에 입력한 값은 상세에서 돌아와도 남아요.</Text><PreviewTools><PreviewToolButton selected={failureArmed} onPress={toggleFailure}>다음 상세 조회 실패시키기</PreviewToolButton></PreviewTools></Stack>}
     list={<Stack gap="md">
       <TextField label="목록 메모" value={filter} onValueChange={setFilter}/>
-      <Button tone="secondary" selected={failureArmed} onPress={toggleFailure}>다음 상세 조회 실패시키기</Button>
       <ListRow title="산책 기록" description="상세를 열어 보세요" onPress={load}/>
     </Stack>}
     back={{ label: "목록으로", onAction: close }}

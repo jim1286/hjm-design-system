@@ -7,6 +7,7 @@ import { ListRow } from '@hjmds/react-native/data-display';
 import { Button, IconButton } from '@hjmds/react-native/actions';
 import { ChatMessage, MessageComposer, NotificationItem, NotificationInboxScreen } from '@hjmds/react-native/screens';
 import { AuthProviderButton } from '@hjmds/react-native/provider-button';
+import { Chip } from '@hjmds/react-native/inputs';
 import { LoginScreenPreview, NotificationScreenPreview, ChatScreenPreview } from '../../../showcase/native/src/common-screen-previews';
 vi.mock('react-native-svg',async()=>{const {View}=await import('react-native');return {default:View,Svg:View,Circle:View,Path:View,G:View,Rect:View,Line:View,Polyline:View,Polygon:View,Ellipse:View};});
 (globalThis as {IS_REACT_ACT_ENVIRONMENT?:boolean}).IS_REACT_ACT_ENVIRONMENT=true;
@@ -15,6 +16,8 @@ afterEach(async()=>{if(tree)await act(async()=>tree.unmount());vi.useRealTimers(
 const render=(ui:ReactNode)=>act(async()=>{tree=create(<HjmNativeProvider reducedMotion>{ui}</HjmNativeProvider>,{createNodeMock:()=>({scrollToIndex:vi.fn(),scrollToOffset:vi.fn()})});});
 const button=(label:string)=>tree.root.findAllByType(Button).find(n=>n.props.children===label)!;
 const press=(label:string)=>act(()=>button(label).props.onPress());
+const chip=(label:string)=>tree.root.findAllByType(Chip).find(n=>n.props.label===label)!;
+const choose=(label:string)=>act(()=>chip(label).props.onPress(true));
 const back=()=>act(()=>tree.root.findAllByType(IconButton).find(n=>n.props.label==='뒤로')!.props.onPress());
 const text=()=>tree.root.findAll(node=>String(node.type)==='Text').map(node=>node.children.filter(child=>typeof child==='string').join('')).join(' ');
 const advance=(ms:number)=>act(async()=>{await vi.advanceTimersByTimeAsync(ms);});
@@ -25,7 +28,7 @@ it('detaches a held login completion after cancellation and on unmount',async()=
  vi.useFakeTimers();const schedule=vi.spyOn(globalThis,'setTimeout');await render(<LoginScreenPreview/>);act(()=>tree.root.findAllByType(AuthProviderButton)[0]!.props.onPress());const job=schedule.mock.calls.find(args=>args[1]===600)![0];press('예제 로그인 취소');act(()=>{if(typeof job==='function')job();});expect(text()).not.toContain('나의 공간');act(()=>tree.root.findAllByType(AuthProviderButton)[0]!.props.onPress());act(()=>tree.unmount());expect(vi.getTimerCount()).toBe(0);
 });
 it('shows unread empty state after all unread rows are opened and returned',async()=>{
- await render(<NotificationScreenPreview/>);press('읽지 않음');for(let i=0;i<3;i++){act(()=>tree.root.findAllByType(NotificationItem)[0]!.props.onPress());back();}expect(tree.root.findByType(NotificationInboxScreen).props.state.kind).toBe('empty');press('전체');expect(tree.root.findAllByType(NotificationItem)).toHaveLength(4);
+ await render(<NotificationScreenPreview/>);choose('읽지 않음');expect(chip('읽지 않음').props.selected).toBe(true);expect(chip('전체').props.selected).toBe(false);for(let i=0;i<3;i++){act(()=>tree.root.findAllByType(NotificationItem)[0]!.props.onPress());back();}expect(tree.root.findByType(NotificationInboxScreen).props.state.kind).toBe('empty');choose('전체');expect(tree.root.findAllByType(NotificationItem)).toHaveLength(4);
 });
 it('does not route an unrelated notification into the fixed Soyeon conversation',async()=>{
  await render(<NotificationScreenPreview/>);act(()=>tree.root.findAllByType(NotificationItem)[1]!.props.onPress());expect(Boolean(button('대화 이어가기'))).toBe(false);back();act(()=>tree.root.findAllByType(NotificationItem)[0]!.props.onPress());press('대화 이어가기');expect(tree.root.findByType(MessageComposer)).toBeDefined();

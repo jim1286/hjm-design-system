@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { Button } from "@hjmds/react/actions";
+import { PreviewTools, PreviewToolButton } from "./preview-tools";
 import { EmptyState, Result } from "@hjmds/react/feedback";
 import { OnboardingScreen } from "@hjmds/react/screen-flows";
 import { Stack, Text } from "@hjmds/react/layout";
@@ -36,7 +37,7 @@ export function IllustratedOutcomePreview() {
  }, [stage, index]);
  const notebook = showArtwork ? <Artwork kind="notebook"/> : null;
  return <Stack ref={host} gap="lg" onBlurCapture={event => { if (event.target === transitionFocus.current && event.target.isConnected) transitionFocus.current = null; }}>
-  <Button tone="ghost" selected={!showArtwork} onClick={()=>setShowArtwork(v=>!v)}>{showArtwork ? "그림 없이 보기" : "그림 다시 보기"}</Button>
+  <PreviewTools><PreviewToolButton selected={!showArtwork} onClick={()=>setShowArtwork(v=>!v)}>{showArtwork ? "그림 없이 보기" : "그림 다시 보기"}</PreviewToolButton></PreviewTools>
   {stage === "empty" ? <EmptyState title="첫 기록을 기다리고 있어요" description="기록을 시작하는 두 단계를 체험해 보세요." icon={notebook} action={<Button ref={start} onClick={()=>{rememberFocus();setIndex(0);setStage("intro");}}>기록 시작하기</Button>}/> : stage === "intro" ?
    <OnboardingScreen steps={[
     {id:"welcome",title:"작은 장면부터 기록해요",description:"그림은 분위기를 더하고, 제목과 버튼은 할 일을 안내해요.",content:notebook},

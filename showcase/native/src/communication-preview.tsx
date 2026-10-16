@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { ExpandableSearch,ReplyMessage,ReplyComposer } from "@hjmds/react-native/communication";
 import type { ReplyTarget } from "@hjmds/design-contracts/communication";
-import { Button } from "@hjmds/react-native/actions";
+import { PreviewToolButton, PreviewTools } from "./preview-tools";
 import { Stack,Text } from "@hjmds/react-native/primitives";
+// The failure switch is a demo-only tool, kept in PreviewTools after the composition (SELECTION.md 조립 규칙).
 const documents=["여행 일정", "여행 준비물", "디자인 검토", "주간 회의"];
 export function ExpandableSearchPreview(){
  const [expanded,setExpanded]=useState(false),[query,setQuery]=useState(""),[recent,setRecent]=useState<string[]>([]);
@@ -17,5 +18,7 @@ export function ReplyComposerPreview(){
  return <Stack gap="md"><ReplyMessage messageId="message-72" author="서연" timestamp="오후 2:32" direction="incoming" replyLabel="이 메시지에 답장" onReply={id=>setTarget({id,author:"서연",excerpt:"검토할 문서를 보내 드렸어요."})}>검토할 문서를 보내 드렸어요.</ReplyMessage>
  <ReplyComposer value={draft} onValueChange={setDraft} label="답장 내용" sendLabel="전송" maxLength={24} lengthFeedback={{label:"입력 길이",formatCount:(used,max)=>`${used}/${max}`}} replyTarget={target} onReplyCancel={()=>setTarget(null)} cancelReplyLabel="답장 취소" errorLabel="전송하지 못했어요. 초안을 보존했어요."
  onSend={async(value,{replyToId})=>{if(fail)throw new Error("Local fixture rejection");setReceipt(`로컬 수신: ${replyToId??"답장 대상 없음"} · ${value}`);setDraft("");setTarget(null);}}/>
- <Button tone="ghost" onPress={()=>setFail(value=>!value)}>{fail?"로컬 수신 허용":"실패 응답 확인"}</Button>{receipt?<Text>{receipt}</Text>:null}<Text variant="caption">가로로 밀거나 Alt+방향키로 실제 message-72를 선택합니다. 로컬 수신 예제이며 서버 전송은 하지 않습니다.</Text></Stack>;
+
+ {receipt?<Text>{receipt}</Text>:null}<Text variant="caption">가로로 밀거나 Alt+방향키로 실제 message-72를 선택합니다. 로컬 수신 예제이며 서버 전송은 하지 않습니다.</Text>
+ <PreviewTools><PreviewToolButton selected={fail} onPress={()=>setFail(value=>!value)}>실패 응답 확인</PreviewToolButton></PreviewTools></Stack>;
 }

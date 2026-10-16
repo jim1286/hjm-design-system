@@ -1,11 +1,12 @@
 import { Heading } from "@hjmds/react/heading";
-import { SceneTimeline } from "./SceneTimeline.js";
+import { SceneTimeline, SettingChoice } from "./SceneTimeline.js";
 import { sampleSceneTimeline } from "../../../shared/scene-timeline.js";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Container, Stack, Surface, Text } from "@hjmds/react/layout";
 import { Button } from "@hjmds/react/actions";
 import { Notice } from "@hjmds/react/feedback";
 import { TextField } from "@hjmds/react/forms";
+import { Switch } from "@hjmds/react/selection";
 import { initialMockupScene, parseMockupScene, serializeMockupScene, sceneDimensions, type MockupScene } from "../../../shared/mockup-scene.js";
 import { downloadStudioBlob, drawMockup, mockupPng } from "./draw-mockup.js";
 
@@ -95,12 +96,13 @@ export function MockupStudio() {
     <SceneTimeline scene={scene} image={image} frame={frame} onFrame={setFrame} onTimeline={timeline => patch({ timeline })}/>
     <TextField label="제목" value={scene.title} maxLength={80} onValueChange={title => patch({ title })}/>
     <TextField label="설명" value={scene.subtitle} maxLength={120} onValueChange={subtitle => patch({ subtitle })}/>
-    <Text emphasis="strong">출력 비율</Text><Stack axis="inline" wrap gap="sm">{([ ["portrait", "세로"], ["square", "정사각형"], ["landscape", "가로"] ] as const).map(([format, label]) => <Button key={format} selected={scene.format === format} tone="secondary" onClick={() => patch({ format })}>{label}</Button>)}</Stack>
-    <Text emphasis="strong">프레임</Text><Stack axis="inline" wrap gap="sm">{([ ["phone", "휴대폰"], ["browser", "브라우저"] ] as const).map(([frame, label]) => <Button key={frame} selected={scene.frame === frame} tone="secondary" onClick={() => patch({ frame })}>{label}</Button>)}</Stack>
-    <Text emphasis="strong">배경</Text><Stack axis="inline" wrap gap="sm">{([ ["dawn", "새벽"], ["ink", "잉크"], ["mint", "민트"] ] as const).map(([background, label]) => <Button key={background} selected={scene.background === background} tone="secondary" onClick={() => patch({ background })}>{label}</Button>)}</Stack>
-    <Text emphasis="strong">각도</Text><Stack axis="inline" wrap gap="sm">{[-12, -6, 0, 6, 12].map(angle => <Button key={angle} selected={scene.angle === angle} tone="ghost" onClick={() => patch({ angle })}>{angle}°</Button>)}</Stack>
-    <Text emphasis="strong">여백</Text><Stack axis="inline" wrap gap="sm">{([ [50, "좁게"], [90, "보통"], [140, "넓게"] ] as const).map(([padding, label]) => <Button key={padding} selected={scene.padding === padding} tone="ghost" onClick={() => patch({ padding })}>{label}</Button>)}</Stack>
-    <Button tone="secondary" selected={scene.shadow} onClick={() => patch({ shadow: !scene.shadow })}>그림자</Button>
+    <SettingChoice label="출력 비율" options={["portrait", "square", "landscape"] as const} format={format => ({ portrait: "세로", square: "정사각형", landscape: "가로" })[format]} value={scene.format} onChange={format => patch({ format })}/>
+    <SettingChoice label="프레임" options={["phone", "browser"] as const} format={frame => frame === "phone" ? "휴대폰" : "브라우저"} value={scene.frame} onChange={frame => patch({ frame })}/>
+    <SettingChoice label="배경" options={["dawn", "ink", "mint"] as const} format={background => ({ dawn: "새벽", ink: "잉크", mint: "민트" })[background]} value={scene.background} onChange={background => patch({ background })}/>
+    <SettingChoice label="각도" options={[-12, -6, 0, 6, 12]} format={angle => `${angle}°`} value={scene.angle} onChange={angle => patch({ angle })}/>
+    <SettingChoice label="여백" options={[50, 90, 140]} format={padding => ({ 50: "좁게", 90: "보통", 140: "넓게" } as Record<number, string>)[padding] ?? `${padding}px`} value={scene.padding} onChange={padding => patch({ padding })}/>
+    {/* On/off setting: Switch, not a selected Button (SELECTION.md 조립 규칙). */}
+    <Switch presentation="row" label="그림자" checked={scene.shadow} onCheckedChange={shadow => patch({ shadow })}/>
     <TextField label="화면 출처" value={scene.asset.source} onValueChange={source => patch({ asset: { ...scene.asset, source } })}/>
     <TextField label="허용 사용 범위" value={scene.asset.usage} onValueChange={usage => patch({ asset: { ...scene.asset, usage } })}/>
     <Stack axis="inline" wrap gap="sm"><Button ref={pngButton} disabled={!image || loading || exporting} loading={exporting} onClick={() => void savePng()}>PNG 내보내기</Button><Button tone="secondary" onClick={() => downloadStudioBlob(new Blob([serializeMockupScene(scene)], { type: "application/json" }), "hjm-scene.json")}>장면 설정 저장</Button><Button tone="ghost" onClick={() => { request.current++; retirePng(); imageRef.current?.close(); imageRef.current = null; setImage(null); setScene(initialMockupScene); setFrame(0); setLoading(false); setFailure(null); setStatus("스크린샷을 선택해 시작하세요."); }}>초기화</Button></Stack>

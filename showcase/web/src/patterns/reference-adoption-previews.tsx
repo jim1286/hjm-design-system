@@ -15,7 +15,9 @@ import { UploadItem } from "@hjmds/react/upload-item";
 import { Collapsible } from "@hjmds/react/collapsible";
 import type { FilePickerSelectionResult } from "@hjmds/design-contracts/components/file-picker";
 import type { UploadItemDescriptor } from "@hjmds/design-contracts/components/upload-item";
+import { StatusText } from "@hjmds/react/status-text";
 import { useDemoAction } from "./action-recovery-previews.js";
+import { PreviewTools, PreviewToolButton } from "./preview-tools.js";
 import { beforeImage, afterImage, scoreLabel, sampleFile, uploadLabels, mergeUploadSelection, changeUploadState } from "../../../shared/reference-adoption.js";
 import "./reference-adoption.css";
 export function RatingPreview() {
@@ -42,10 +44,10 @@ export function ActionFeedbackPreview() {
   const save=()=>{const submitted=draft.trim();if(submitted)void session.run(()=>request(submitted),{retryable:true});};
   return <Stack gap="md"><Text variant="heading">입력은 남기고, 결과는 분명하게</Text><TextField label="기록 제목" value={draft} onValueChange={setDraft} />
     <Button loading={busy} disabled={!feedback.canSubmit} completion={{ confirmed: currentSaved, label: "✓ 기록을 저장했어요" }} onClick={save}>기록 저장</Button>
-    <ContentTransition stateKey={status} animateHeight><Text role="status">{busy?"저장을 확인하고 있어요":status==="error"?"저장하지 못했어요. 제목은 남아 있으니 다시 시도해 주세요.":state.value&&!currentSaved?"현재 제목은 아직 저장하지 않았어요.":currentSaved?"현재 제목을 저장했어요.":"제목을 입력한 뒤 저장해 주세요."}</Text></ContentTransition>
+    <ContentTransition stateKey={status} animateHeight><StatusText>{busy?"저장을 확인하고 있어요":status==="error"?"저장하지 못했어요. 제목은 남아 있으니 다시 시도해 주세요.":state.value&&!currentSaved?"현재 제목은 아직 저장하지 않았어요.":currentSaved?"현재 제목을 저장했어요.":"제목을 입력한 뒤 저장해 주세요."}</StatusText></ContentTransition>
     {state.value?<Text>저장한 제목: {state.value}</Text>:null}
-    <Button tone="ghost" selected={failureArmed} disabled={busy} onClick={toggleFailure}>예제: 다음 저장 실패</Button>
-    <Text>실제 서버 요청 없는 예제예요. 다시 저장하면 현재 입력한 제목을 사용해요.</Text></Stack>;
+    <Text>실제 서버 요청 없는 예제예요. 다시 저장하면 현재 입력한 제목을 사용해요.</Text>
+    <PreviewTools><PreviewToolButton selected={failureArmed} disabled={busy} onClick={toggleFailure}>{failureArmed ? "다음 저장 실패 예약됨" : "다음 저장 실패시키기"}</PreviewToolButton></PreviewTools></Stack>;
 }
 export function UploadRecoveryPreview() {
   const [items,setItems]=useState<UploadItemDescriptor[]>([]); const [notice,setNotice]=useState("");
@@ -69,9 +71,11 @@ export function UploadRecoveryPreview() {
     <Button ref={addExample} tone="secondary" onClick={()=>select({accepted:[sampleFile],rejected:[]})}>예제 사진 추가</Button>
     {/* Keep the demo boundary visible when a rejection replaces the status notice. */}
     <Text>파일은 서버로 전송하지 않습니다. 아래 예제 응답으로 상태를 확인하세요.</Text>
-    {notice ? <Text role="status">{notice}</Text> : null}
+    {notice ? <StatusText>{notice}</StatusText> : null}
     {items.map(item=><Surface key={item.id} padding="md"><div role="group" aria-label={item.name} tabIndex={-1} ref={node=>{ if(node) fileRegions.current.set(item.id,node); else fileRegions.current.delete(item.id); }}><Stack gap="sm"><UploadItem descriptor={item} labels={uploadLabels} onCancel={()=>change(item,{status:"pending"})} onRetry={()=>change(item,{status:"uploading",progress:null})} />
-      <Stack axis="inline" wrap>{item.state.status==="pending"?<Button onClick={()=>change(item,{status:"uploading",progress:null})}>전송 시작</Button>:null}{item.state.status==="uploading"?<><Button tone="secondary" onClick={()=>change(item,{status:"success"})}>예제: 성공 응답</Button><Button tone="secondary" onClick={()=>change(item,{status:"error",message:"연결이 끊겼어요. 다시 전송해 주세요."})}>예제: 실패 응답</Button></>:null}<Button tone="ghost" disabled={item.state.status==="uploading"} onClick={()=>{if(itemsRef.current.find(current=>current.id===item.id)!==item||item.state.status==="uploading")return;addExample.current?.focus();update(itemsRef.current.filter(file=>file.id!==item.id));}}>선택에서 제거</Button></Stack></Stack></div></Surface>)}
+      <Stack axis="inline" wrap>{item.state.status==="pending"?<Button onClick={()=>change(item,{status:"uploading",progress:null})}>전송 시작</Button>:null}<Button tone="ghost" disabled={item.state.status==="uploading"} onClick={()=>{if(itemsRef.current.find(current=>current.id===item.id)!==item||item.state.status==="uploading")return;addExample.current?.focus();update(itemsRef.current.filter(file=>file.id!==item.id));}}>선택에서 제거</Button></Stack>
+      {/* Simulated server responses are demo-only tools, not file actions (2026-10-16 review). */}
+      {item.state.status==="uploading"?<PreviewTools><PreviewToolButton onClick={()=>change(item,{status:"success"})}>성공 응답 보내기</PreviewToolButton><PreviewToolButton onClick={()=>change(item,{status:"error",message:"연결이 끊겼어요. 다시 전송해 주세요."})}>실패 응답 보내기</PreviewToolButton></PreviewTools>:null}</Stack></div></Surface>)}
   </Stack>;
 }
 export function ProductBentoPreview() {
@@ -96,13 +100,15 @@ export function ProductBentoPreview() {
     <div className="hjm-reference-bento"><Surface padding="lg"><ImageComparisonPreview /></Surface><Stack gap="md"><Surface padding="lg"><Stack gap="sm"><Heading level="level5" semanticLevel={2}>한 줄로 시작</Heading><Text>짧은 제목을 적고, 필요한 만큼 이야기를 더하세요.</Text></Stack></Surface><Surface padding="lg"><Stack gap="sm"><Heading level="level5" semanticLevel={2}>내가 고른 장면</Heading><Text>다시 보고 싶은 순간을 직접 선택해요.</Text></Stack></Surface></Stack></div>
     {started ? <TextField label="첫 기록 제목" value={draft} onValueChange={setDraft} autoFocus /> : null}
     {details ? <Surface padding="md"><Text>사진을 비교하고 제목을 적으면 이 화면의 미리보기에 추가돼요. 다른 사람에게 전송되지는 않아요.</Text></Surface> : null}
+    <StatusText>{status}</StatusText>
+    {state.value ? <Text>저장된 제목: {state.value}</Text> : null}
+    {/* Demo tools stay above the CTA so the CTA remains the surface's closing action (2026-10-16 review). */}
+    {started ? <PreviewTools><PreviewToolButton selected={failureArmed} disabled={busy} onClick={toggleFailure}>{failureArmed ? "다음 저장 실패 예약됨" : "다음 저장 실패시키기"}</PreviewToolButton></PreviewTools> : null}
     <BottomCTA description={started ? "입력한 제목으로 미리보기를 만들어요." : "먼저 사진을 비교하거나 첫 기록을 작성해 보세요."}
       primaryAction={{ label: started ? currentSaved ? "저장했어요" : "미리보기에 저장" : "첫 기록 시작하기", onClick: started ? save : () => setStarted(true), loading: busy, loadingLabel: "미리보기 저장 중", disabled: started && !feedback.canSubmit }}
       secondaryAction={{ label: started ? "소개로 돌아가기" : details ? "사용 방법 접기" : "사용 방법 보기", onClick: started ? back : () => setDetails(value => !value), disabled: busy }}/>
     <BottomInfo items={["실제 서버 요청 없이 체험하는 예제예요.", "제목은 이 화면이 열려 있는 동안만 유지돼요. 계정 생성이나 결제는 없어요."]}/>
-    {started ? <Button tone="ghost" selected={failureArmed} disabled={busy} onClick={toggleFailure}>다음 저장 실패 체험</Button> : null}
-    <Text role="status">{status}</Text>
-    {state.value ? <Text>저장된 제목: {state.value}</Text> : null}</Stack>;
+    </Stack>;
 }
 export function ContextToolbarPreview() {
   const [open, setOpen] = useState(false);
@@ -114,7 +120,7 @@ export function ContextToolbarPreview() {
     <Collapsible open={open} onOpenChange={setOpen} trigger={<span>표현 도구 · {choice}</span>}>
       <SegmentedControl label="기록 표현" presentation="pills" items={["기본", "인용", "강조"].map(label => ({ value: label, label }))} value={choice} onValueChange={setChoice} />
     </Collapsible>
-    <Text role="status">선택한 표현: {choice}</Text>
+    <StatusText>{`선택한 표현: ${choice}`}</StatusText>
   </Stack>;
 }
 

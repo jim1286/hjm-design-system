@@ -7,6 +7,8 @@ import { TextField, SegmentedControl } from "@hjmds/react-native/inputs";
 import { View } from "react-native";
 import { ScreenLayout } from "@hjmds/react-native/screens";
 import { KeyboardAvoiding } from "@hjmds/react-native/keyboard";
+// Live result copy uses the public StatusText companion (Android live region + iOS announcement), not a raw live Text.
+import { PatternStatus } from "./pattern-status";
 export function TextureComparisonPreview() {
   const [strength, setStrength] = useState("subtle");
   const [lastAction, setLastAction] = useState("");
@@ -22,7 +24,7 @@ export function TextureComparisonPreview() {
         <Button tone="secondary" onPress={()=>setLastAction(item.label)}>{item.label} 선택</Button>
       </Stack></View>
     </EffectSurface>)}
-    <Text accessibilityLiveRegion="polite">{lastAction ? `${lastAction}에서 눌렀어요.` : "각 배경 안의 입력과 버튼을 확인하세요."}</Text>
+    <PatternStatus>{lastAction ? `${lastAction}에서 눌렀어요.` : "각 배경 안의 입력과 버튼을 확인하세요."}</PatternStatus>
     <Text>정적 타일 비교이며 원본 SVG 필터와 픽셀·성능이 같다는 뜻은 아니에요.</Text>
   </Stack>;
   return <KeyboardAvoiding style={{flex:1}}><ScreenLayout title="질감 비교" contentInset="none">{content}</ScreenLayout></KeyboardAvoiding>;

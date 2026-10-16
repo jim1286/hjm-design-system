@@ -31,7 +31,7 @@
 │   [🔍 모바일, 작업 공간 ...........  (x)]                  │  SearchField 최소 44
 │              ↕ spacing.xl 24                               │
 │ ② [전체] [웹사이트] [모바일] [대시보드]                       │  SegmentedControl pills, 단일 선택
-│ ③ [정렬: 인기순] [저장한 작품 2]                             │  secondary(정렬) · ghost+selected(저장만 보기)
+│ ③ [ 인기순 | 최신순 ]  [✓ 저장한 작품 2]                     │  SegmentedControl(정렬) · Chip multiple(저장만 보기)
 │ ④ "N개의 작품"  (상태 알림)                                 │
 │ (오류면 여기 Notice danger + [다시 시도])                    │
 │ ⑤ 카드 Grid                                                │
@@ -67,7 +67,7 @@
 | 바깥 틀 | Web `main` > [Container](../components/container.md) `size="content"` `gutter` > Stack `gap="xl"`, 문서 스크롤 · Native `ScrollView` `automaticallyAdjustKeyboardInsets` `keyboardShouldPersistTaps="handled"` > Container `size="content"` `gutter` > Stack `gap="xl"` | 화면 전체, 세로 스크롤 하나 | 좌우 Container gutter: 폭 < 600 `compact` 16, 이상 `regular` 20([화면 여백](../tokens/layout.md)). Native ScrollView 위아래 `spacing.lg` 20(`paddingVertical`). 직계 요소 사이 `spacing.xl` 24. 위 안전 영역은 내비게이션 헤더·[TopBar](../components/top-bar.md) `safeAreaTop`이 맡는다. 아래 고정 영역이 없다. 키보드가 떠 있으면 Native ScrollView가 inset을 늘리고 첫 탭으로 필터·카드 버튼이 눌린다 |
 | ① 머리 | Stack `gap="md"` > Text(brand) · [Heading](../components/heading.md) `level="level3"` `semanticLevel={1}` · Text(소개) · SearchField | 맨 위(카드 배경 없음) | 요소 사이 `spacing.md` 16. SearchField는 두 플랫폼 모두 보이는 `label` |
 | ② 카테고리 | Stack `axis="inline" wrap gap="sm"` > SegmentedControl `presentation="pills"` | 머리 아래 | 높이 44, 사이 `spacing.sm` 12 |
-| ③ 정렬·저장 보기 | Stack `axis="inline" wrap gap="sm"` > Button `secondary` · `ghost` + `selected` | 카테고리 아래 | 사이 12 |
+| ③ 정렬·저장 보기 | Stack `axis="inline" wrap gap="sm"` > SegmentedControl `size="small"`(정렬) · Chip `selectionMode="multiple"`(저장만 보기) | 카테고리 아래 | 사이 12. SegmentedControl 항목 최소 36(+hitSlop 4), Chip `small` 36 |
 | ④ 결과 수 | Text `role="status"`(Web) · `accessibilityLiveRegion="polite"` Text(Native) | 정렬 줄 아래 | — |
 | ⑤ 격자 | [Grid](../components/grid.md) `columns={{ compact: 1, medium: 2, expanded: 3 }}` `gap={{ compact: "xl" }}` `minColumnWidth={{ compact: 320 }}` | 결과 수 아래 | 열·행 사이 `spacing.xl` 24(두 플랫폼 공통). 열 수는 창 폭 class로 고르고, 본문이 좁으면 `minColumnWidth` 320이 열을 줄인다 |
 | ⑤ 카드 | `article`(Web) > Stack `gap="sm"` > 그림·Text·버튼 줄 | 격자 칸 | 그림 비율 1.6([AspectRatio](../components/aspect-ratio.md) `ratio={1.6}`), 모서리 `radius.lg` 16, 카드 안 `spacing.sm` 12 |
@@ -79,14 +79,16 @@
 | --- | --- | --- | --- |
 | 검색 | SearchField `onValueChange` | ① 맨 아래 | 1. 입력 즉시 거른다 |
 | 카테고리 | SegmentedControl `presentation="pills"` | ② | 카테고리 수, "전체"가 맨 앞 |
-| 정렬 전환 | Button `secondary`, 라벨에 현재 값(`t("gallery.sort", { value: t(sortKey[sort]) })`) | ③ 첫 자리 | 1. 누를 때마다 인기순 ↔ 최신순 |
-| 저장한 작품만 | Button `ghost` + `selected`, 라벨에 개수 | ③ 정렬 뒤 | 1 |
+| 정렬 | SegmentedControl `size="small"`, `label={t("gallery.sort.label")}`, 항목 인기순·최신순(`sortKey`) | ③ 첫 자리 | 1. 하나만 고른다 |
+| 저장한 작품만 | Chip `selectionMode="multiple"`(체크 역할), 라벨에 개수 | ③ 정렬 뒤 | 1. 결과를 거르는 필터라 행동 토글 Button이 아니다 |
 | 상세 보기 | Button `ghost` | 카드 맨 아래 버튼 줄 첫 자리 | 카드마다 1. `aria-label`/`accessibilityLabel`에 작품 제목 포함 |
 | 카드 저장 | Button `secondary` + `selected`(토글) | 카드 버튼 줄 둘째 자리 | 카드마다 1. 라벨 "저장" ↔ "저장됨", 접근성 이름에 제목과 저장/저장 취소 |
 | 시트 저장(시트의 주 행동) | Button 기본 primary + `selected` | ⑦ Sheet `footer`(Native 꽉 찬 폭, Web 끝 정렬) | 1. 라벨 "컬렉션에 저장" ↔ "저장 취소". 시트를 닫지 않는 토글이다 |
 | 빈 결과 복구 | EmptyState `action` > Button(기본 primary) | EmptyState 맨 아래 | 1. 검색어·카테고리·저장만 보기를 초기화(정렬은 유지) |
 | 다시 시도 | [Notice](../components/notice.md) `action` > Button `tone="secondary" size="small"` | ④ 아래 Notice 끝 | 1. 오류일 때만 |
 | 파괴 행동 | — | — | 없음(저장 취소는 같은 버튼의 토글) |
+
+정렬·저장만 보기는 선택이므로 [선택 조립 규칙](../SELECTION.md#조립-규칙필수)대로 SegmentedControl·Chip을 쓴다. 2026-10-16 사용자 지적으로 `selected` 버튼 줄이 테두리 없는 글자처럼 보여 바꿨다. 카드·시트 저장은 항목에 대한 행동이 눌림 상태를 갖는 토글이라 Button `selected`를 유지한다.
 
 primary는 화면에서 빈 결과 복구 하나, 시트 안에서 저장 하나다. 시트 안 행동은 그 표면 안에서 세고, `selected`를 준 버튼은
 tone과 관계없이 선택 모양(배경 `bg`, 글자 `contentBrand`, 별도 선택 테두리 없음)으로 칠해져 세지 않는다([Button](../components/button.md) "꼭 지킬 것").
@@ -111,7 +113,8 @@ tone과 관계없이 선택 모양(배경 `bg`, 글자 `contentBrand`, 별도 �
 | [Container](../components/container.md) | 바깥 틀 폭·좌우 여백 |
 | [Heading](../components/heading.md) | ① 화면 제목 |
 | [SearchField](../components/search-field.md) | ① 검색 |
-| [Button](../components/button.md) | 카테고리·정렬·저장 보기·카드 행동·시트 저장·다시 시도 |
+| [SegmentedControl](../components/segmented-control.md) · [Chip](../components/chip.md) | ② 카테고리, ③ 정렬·저장만 보기 |
+| [Button](../components/button.md) | 카드 행동·시트 저장·다시 시도 |
 | [Stack](../components/stack.md) | 세로 리듬, 버튼 줄, 카드 안 |
 | [Text](../components/text.md) | 머리 문구, 카드 제목·메타 |
 | [Grid](../components/grid.md) | ⑤ 카드 격자 |
@@ -208,7 +211,7 @@ ScreenLayout host는 남은 본문 높이를 확보하고 로딩·오류·빈 �
   새 제품은 Heading `level3`·`semanticLevel={1}`을 쓴다.
 - 예제의 바깥 틀은 양 플랫폼 모두 `Container gutter="compact"`다. 제품의 넓은 화면에서는 위 배치 표의 반응형 gutter를 선택한다.
 - 양 플랫폼 격자는 Grid를 사용한다. 창 폭의 열 수가 본문보다 넓으면 `minColumnWidth`가 실제 열 수를 줄인다.
-- 카테고리는 `SegmentedControl presentation="pills"`의 단일 선택 계약을 사용한다. 저장만 보기는 독립 토글이므로 Button `selected`를 유지한다.
+- 카테고리는 `SegmentedControl presentation="pills"`, 정렬은 `SegmentedControl size="small"`의 단일 선택 계약을 사용한다. 저장만 보기는 결과 필터라 Chip `selectionMode="multiple"`을 쓴다. Button `selected`는 카드·시트의 저장 토글에만 남긴다.
 - 시트 확정 행동은 footer에 둔다. Native는 scrollable 본문과 분리해 큰 글자에서도 접근 가능하게 한다.
 - 현재 스토리의 카드 메타는 "작가 · 카테고리 · 좋아요 N"을 한국어 템플릿으로 조립한다. 제품은 `t("gallery.meta", { author, category })`처럼
   보간 키 하나로 둔다. 좋아요 수가 필요하면 같은 키에 값을 더한다.

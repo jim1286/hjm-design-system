@@ -1,4 +1,4 @@
-import { AccessibilityInfo } from "react-native";
+import { AccessibilityInfo, Pressable } from "react-native";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { HjmNativeProvider } from "@hjmds/react-native/provider";
@@ -6,6 +6,7 @@ import { Button } from "@hjmds/react-native/actions";
 import { TextField } from "@hjmds/react-native/inputs";
 import { Text } from "@hjmds/react-native/primitives";
 import { Sheet } from "@hjmds/react-native/overlays";
+import { Collapsible } from "@hjmds/react-native/collapsible";
 import { ServiceIntroduction } from "../../../showcase/native/src/reference-flow-previews.js";
 import { scopeCopy } from "../../../showcase/shared/reference-flows.js";
 let tree: ReactTestRenderer;
@@ -18,6 +19,8 @@ const field = () => tree.root.findByType(TextField);
 const input = (value: string) => act(() => field().props.onValueChange(value));
 const sheet = () => tree.root.findByType(Sheet);
 const settle = () => act(async () => { await vi.advanceTimersByTimeAsync(420); });
+const faq = () => tree.root.findByType(Collapsible);
+const toggleFaq = () => act(() => faq().findAllByType(Pressable)[0]!.props.onPress());
 const close = () => act(() => sheet().props.onOpenChange(false));
 
 it.each([false, true])("keeps FAQ, both CTA drafts and saved value through close/reopen (editorial=%s)", async editorial => {
@@ -25,8 +28,9 @@ it.each([false, true])("keeps FAQ, both CTA drafts and saved value through close
   await act(async () => { tree = create(<HjmNativeProvider reducedMotion><ServiceIntroduction editorial={editorial} /></HjmNativeProvider>, { createNodeMock: () => ({}) }); });
   const occurrences = () => tree.root.findAllByType(Text).filter(node => node.props.children === scopeCopy).length;
   expect(occurrences()).toBe(1);
-  press("기록은 어디에 저장되나요?"); expect(occurrences()).toBe(2);
-  press("기록은 어디에 저장되나요?"); expect(occurrences()).toBe(1);
+  expect(faq().props.trigger).toBe("기록은 어디에 저장되나요?");
+  toggleFaq(); expect(occurrences()).toBe(2); expect(faq().findAllByType(Pressable)[0]!.props.accessibilityState.expanded).toBe(true);
+  toggleFaq(); expect(occurrences()).toBe(1); expect(faq().findAllByType(Pressable)[0]!.props.accessibilityState.expanded).toBe(false);
   press("첫 장면 남기기"); await settle();
   expect(button("미리보기에 저장").props.disabled).toBe(true);
   const firstReturnTarget = sheet().props.returnFocusRef.current;

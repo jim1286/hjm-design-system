@@ -11,7 +11,9 @@
 ## 언제 쓰나
 
 사용자가 누르면 무언가가 일어나는 텍스트 행동에 쓴다. 저장·확인·다음 같은 화면의 주 행동,
-보조 행동, 삭제처럼 되돌리기 어려운 행동, 켜고 끄는 토글 버튼(`selected`)이 여기에 속한다.
+보조 행동, 삭제처럼 되돌리기 어려운 행동이 여기에 속한다. `selected`는 항목 저장·북마크, 켜 둔
+도구 막대 도구처럼 **행동 자체가 눌림 상태를 갖는 토글**에만 쓴다. 여러 선택지 중 하나·여럿을 고르거나
+설정을 켜고 끄는 데는 쓰지 않는다([선택 조립 규칙](../SELECTION.md#조립-규칙필수)).
 
 ## 쓰지 않을 때
 
@@ -20,7 +22,9 @@
 | 아이콘만 있는 행동 | [IconButton](icon-button.md) |
 | 화면 하단에 고정된 주 행동 | [BottomCTA](bottom-cta.md) |
 | 다른 페이지·URL로 이동 | [Link](link.md) (`tone="link"` 버튼은 같은 화면 안의 행동용) |
-| 여러 선택지 중 하나를 고름 | [SegmentedControl](segmented-control.md), [ToggleGroup](toggle-group.md) |
+| 여러 선택지 중 하나를 고름 | [SegmentedControl](segmented-control.md), [RadioGroup](radio-group.md), [ToggleGroup](toggle-group.md), `Chip`(`selectionMode="single"`) |
+| 여러 개를 고름 | `Chip`(`selectionMode="multiple"`), [CheckboxGroup](checkbox-group.md) |
+| 설정 켜고 끄기 | [Switch](switch.md)(설정 목록은 [ListRow](list-row.md) + Switch) |
 | 소셜 로그인 | [AuthProviderButton](auth-provider-button.md) |
 | 복사 | `ClipboardButton`(Web, 아래 표) |
 | 떠 있는 주 행동 | [FloatingActionButton](floating-action-button.md) |
@@ -62,7 +66,7 @@ import { Button } from "@hjmds/react-native/actions";
 | `size` | `small` · `medium` · `large` | `medium` | 높이 36 · 44 · 52 |
 | `shape` | `rounded` · `pill` | `rounded` | `radius.md` · `full` |
 | `align` | `center` · `leading` | `center` | `leading`은 꽉 찬 폭의 행 행동 |
-| `selected` | `boolean` | — | 주면 토글 버튼. Web `aria-pressed`, Native 접근성 state |
+| `selected` | `boolean` | — | 눌림 상태를 갖는 행동 토글(저장·북마크, 켜 둔 도구). Web `aria-pressed`, Native 접근성 state. 선택지 고르기·설정 켜고 끄기에는 쓰지 않는다 |
 | `loading` | `boolean` | `false` | 기존 문구·아이콘을 시각적으로 숨기고 중앙 스피너 하나만 표시한다. 같은 children을 유지해 크기를 보존하고 누름을 막는다. 접근성 이름·포커스는 유지한다(Web `aria-disabled`, Native는 `disableWhileLoading`으로만 옛 disabled 동작) |
 | Web `onClick` | `(event: MouseEvent<HTMLButtonElement>) => void` | — | `disabled`·`loading`·`aria-disabled`이면 부르지 않는다 |
 | Native `onPress` | `(event: GestureResponderEvent) => void` | — | 같은 조건에서 부르지 않는다 |
@@ -106,7 +110,9 @@ import { Button } from "@hjmds/react-native/actions";
   Native에서 `style`·`labelStyle`을 넘기면 실행 중 `TypeError`가 난다.
 - 색은 tone과 제품 테마 토큰으로 바꾼다. 버튼마다 브랜드 색을 하드코딩하지 않는다.
 - 진행 중 상태는 `loading`으로 표시하고 같은 자리에 별도 Spinner를 겹치지 않는다. children을 빈 문자열이나 다른 길이의 진행 문구로 바꾸지 않는다. 렌더러가 문구·아이콘을 숨긴 자리에 중앙 스피너만 표시하고 기존 크기·접근성 이름을 유지한다. 2026-10-06 독립 검증에서 이 사용자 요구가 사용 지침에는 빠져 있음을 확인해 명시했다.
-- "한 화면 `primary` 하나"의 예외는 다음과 같다. `selected`를 준 버튼은 tone과 관계없이 `buttonRecipe.states.selected`(배경 `bg`, 글자 `contentBrand`, 선택 테두리 없음)로 칠해져 primary 채움이 아니므로 세지 않고(Web `.hjm-button[data-selected="true"]`, Native `internal/recipe-button.tsx`, 검색·작품 탐색 스토리의 필터 줄), Sheet·Dialog 안의 행동은 그 표면 안에서 primary 하나를 센다([Sheet](sheet.md) `footer`, 작품 탐색·랜딩 스토리의 시트).
+- "한 화면 `primary` 하나"의 예외는 다음과 같다. `selected`를 준 버튼은 tone과 관계없이 `buttonRecipe.states.selected`(배경 `bg`, 글자 `contentBrand`, 선택 테두리 없음)로 칠해져 primary 채움이 아니므로 세지 않고(Web `.hjm-button[data-selected="true"]`, Native `internal/recipe-button.tsx`, 작품 카드의 저장 토글), Sheet·Dialog 안의 행동은 그 표면 안에서 primary 하나를 센다([Sheet](sheet.md) `footer`, 작품 탐색·랜딩 스토리의 시트).
+
+- `selected` 버튼 여러 개를 나란히 두어 하나 고르기·여러 개 고르기·켜고 끄기를 흉내 내지 않는다. 2026-10-16 사용자 지적으로 예제의 선택 버튼 줄이 테두리 없는 글자처럼 보이고 폭이 제각각이었다. 그 의도는 [선택 조립 규칙](../SELECTION.md#조립-규칙필수)의 SegmentedControl·RadioGroup·Chip·Switch를 쓴다.
 
 - 긴 소개 화면에서 위·아래 CTA가 **동일한 행동**으로 이어지고 서로 다른 스크롤 구간에 있으면 둘 다 primary를 허용한다. 큰 글자에서 첫 CTA가 멀어지는 문제를 보완하기 위한 예외이며, 서로 다른 가입·구매 행동을 동시에 강조하는 근거로 쓰지 않는다.
 

@@ -24,7 +24,8 @@
 | Avatar + `createBlobatarFallback` | 사진이 없을 때 seed로 정해지는 얼굴, `expression: "happy"` | [Avatar](../components/avatar.md) |
 | TextTransition | 문장이 바뀔 때 `fade`·`rise`·`slide`·`scale` 전환 | [TextTransition](../components/text-transition.md) |
 | Heading | 효과 표면 안 제목, 얼굴 묶음 제목(`level2`) | [Heading](../components/heading.md) |
-| Button | 효과 켜기(`selected`)·다음 장면 | [Button](../components/button.md) |
+| Switch | 배경 움직임 켜고 끄기(`presentation="row"`) | [Switch](../components/switch.md) |
+| Button | 다음 장면 | [Button](../components/button.md) |
 | `ScrollView` + `Container`(Native) | 바깥 틀. 세로 스크롤·위아래 여백, 좌우 gutter | [Container](../components/container.md), [화면 여백과 너비](../tokens/layout.md) |
 
 비교 결과로 고르는 기준이다.
@@ -41,7 +42,7 @@
 ```text
 Native 화면(ScrollView, 위아래 spacing.lg 20) > Container gutter 16(폭 < 600) · 20(폭 ≥ 600)
 배경 효과 (Stack gap spacing.xl 24)
-[ 배경 움직임 ]  ← selected 토글
+배경 움직임                [  ○]  ← Switch row
 ┌──── EffectSurface (mesh) ────────────────────┐
 │ 안쪽 여백 spacing.xl 24(두 플랫폼 같음)       │
 │ mesh                (label)                   │
@@ -68,7 +69,7 @@ Native 화면(ScrollView, 위아래 spacing.lg 20) > Container gutter 16(폭 < 6
 
 ## 흐름과 상태
 
-1. "배경 움직임"을 켜면 모든 EffectSurface `active`가 켜져 천천히 움직인다. 다시 누르면 멈춘다.
+1. "배경 움직임" Switch를 켜면 모든 EffectSurface `active`가 켜져 천천히 움직인다. 끄면 멈춘다. 켜고 끄기는 [선택 조립 규칙](../SELECTION.md#조립-규칙필수)대로 `selected` Button이 아니라 Switch다.
 2. "다음 장면"을 누르면 네 preset의 문장이 동시에 다음 문장으로 바뀐다.
 
 - 장면 문구 키는 순서 있는 상수 배열로 둔다(`sceneKeys[index]`). 번호로 키를 조립하지 않는다.
@@ -78,7 +79,7 @@ Native 화면(ScrollView, 위아래 spacing.lg 20) > Container gutter 16(폭 < 6
 | 기본 | 효과 정지(`active` 기본 `false`) | 효과 층은 장식 |
 | 진행 중 | — (요청이 없다). 문장 전환 중에는 이전 문장이 나가고 새 문장이 들어온다 | — |
 | 실패 | — (요청이 없다). 프로필 사진이 없거나 로드에 실패하면 Avatar가 `renderFallback`(Blobatar)으로 바꾼다 | Avatar 이름이 읽힌다 |
-| 움직임 켬 | 층이 `period` 주기(기본 12초)로 움직인다 | 토글 버튼 `selected` 상태로 알린다 |
+| 움직임 켬 | 층이 `period` 주기(기본 12초)로 움직인다 | Switch의 켜짐 상태로 알린다 |
 | reduced motion | 효과·전환 모두 즉시·정지 | — |
 | 사진 없음 | Blobatar 얼굴, 같은 seed는 같은 얼굴 | 그림은 장식, Avatar 이름이 읽힌다 |
 | 다크 | 효과 색이 `primary`·`contentBrand`·`surfaceAccent` 테마 값을 따른다 | — |

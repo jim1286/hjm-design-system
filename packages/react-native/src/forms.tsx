@@ -1,4 +1,5 @@
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
+import { useKeyboardOverlap } from "./keyboard.js";
 import { NativeFieldFrame } from "./internal/field-frame.js";
 import { focusAccessibleHost } from "./internal/accessible-focus.js";
 import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
@@ -1160,6 +1161,8 @@ export function Combobox<
     );
   }) : filteredItems.map(renderOption);
 
+  const modalRoot = useRef<View>(null);
+  const modalKeyboardOverlap = useKeyboardOverlap(modalRoot, visible);
   return (
     <View style={[{ gap: spacing.xs }, layoutStyle]}>
       {/* fieldRecipe.disabledScope: label and input frame fade, the support text does not. comboboxRecipe has no
@@ -1264,7 +1267,8 @@ export function Combobox<
         transparent
         visible={visible}
       >
-        <View style={{ flex: 1, justifyContent: "flex-end" }}>
+        {/* The bottom results panel rises above the keyboard; it covered the typed query (2026-10-16 keyboard audit). */}
+        <View ref={modalRoot} style={{ flex: 1, justifyContent: "flex-end", paddingBottom: modalKeyboardOverlap }}>
           <Pressable
             accessibilityLabel={dismissLabel}
             accessibilityRole="button"

@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { Button } from '@hjmds/react/actions';
+import { PreviewTools, PreviewToolButton } from './preview-tools';
 import { Popover } from '@hjmds/react/popover';
 import { Dialog } from '@hjmds/react/overlays';
 import { TextField } from '@hjmds/react/forms';
@@ -15,7 +16,7 @@ export function OriginDialogPreview() {
  const [error, setError] = useState(false);
  return <Stack gap="lg"><Text>버튼에서 편집 화면으로 이어집니다. 닫았다 열어도 작성 중인 내용을 유지해요.</Text>
   <Button ref={trigger} onClick={() => { setOrigin(trigger.current?.getBoundingClientRect()); setOpen(true); }}>메모 편집</Button>
-  <Button tone="ghost" selected={failNext} onClick={() => setFailNext(value => !value)}>{failNext ? "저장 실패 예약됨" : "저장 실패 체험"}</Button>
+  <PreviewTools><PreviewToolButton selected={failNext} onClick={() => setFailNext(value => !value)}>{failNext ? "저장 실패 예약됨" : "저장 실패 체험"}</PreviewToolButton></PreviewTools>
   <Text role="status">{saved === null ? '아직 저장하지 않았어요.' : saved.trim() ? `저장한 메모: ${saved}` : '빈 메모를 저장했어요.'}</Text>
   <Dialog open={open} onOpenChange={setOpen} title="여행 메모" closeLabel="편집 닫기" returnFocusRef={trigger}
    {...(origin ? { motionOrigin: origin } : {})} footer={<Button onClick={() => { setError(false); if (failNext) { setFailNext(false); setError(true); return; } setSaved(draft); setOpen(false); }}>저장</Button>}>
@@ -43,7 +44,7 @@ export function OriginPopoverPreview() {
     <Button onClick={() => { setError(false); if (failNext) { setFailNext(false); setError(true); return; } setSaved(draft); close(); }}>저장</Button>
    </Stack>}
   </Popover>
-  <Button tone="ghost" selected={failNext} onClick={() => setFailNext(value => !value)}>{failNext ? '저장 실패 예약됨' : '저장 실패 체험'}</Button>
+  <PreviewTools><PreviewToolButton selected={failNext} onClick={() => setFailNext(value => !value)}>{failNext ? '저장 실패 예약됨' : '저장 실패 체험'}</PreviewToolButton></PreviewTools>
   <Text role="status">{saved === null ? '아직 저장하지 않았어요.' : saved.trim() ? `저장한 메모: ${saved}` : '빈 메모를 저장했어요.'}</Text>
  </Stack>;
 }

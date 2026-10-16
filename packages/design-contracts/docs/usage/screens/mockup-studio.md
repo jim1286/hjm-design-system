@@ -37,19 +37,19 @@ Native 스토리는 없다(장면 작성은 Web showcase에 둔다는 통합 계
 │    제목 Heading level3 · semanticLevel 2   │
 │    Slider 재생 위치 / "0.00 / 3.00초 · 30fps"│
 │    [재생] [처음으로]                       │  secondary · ghost
-│    움직임 [천천히 떠오르기][화면 등장]      │  secondary + selected
-│    길이 [3초][6초][9초]  [24fps][30fps]     │  ghost + selected
+│    움직임 [천천히 떠오르기|화면 등장]       │  SegmentedControl
+│    길이 [3초|6초|9초] · 초당 프레임 [24|30] │  SegmentedControl
 │    [현재 장면을 포스터로] [포스터 PNG 저장] │  secondary
 │    [영상 내보내기] ([출력 취소])            │  secondary · ghost(진행 중만)
 │    상태 문구 / 안내                        │
 │ ⑦ TextField 제목(≤80) · 설명(≤120)         │
-│ ⑧ 선택 묶음: 각 "라벨(strong) + 버튼 줄"    │
-│    출력 비율 [세로][정사각형][가로]  secondary│
-│    프레임 [휴대폰][브라우저]          secondary│
-│    배경 [새벽][잉크][민트]           secondary│
-│    각도 [-12°][-6°][0°][6°][12°]     ghost   │
-│    여백 [좁게][보통][넓게]           ghost   │
-│    [그림자]  ← secondary 토글               │
+│ ⑧ 선택 묶음: 각 "제목(strong) + 세그먼트"   │
+│    출력 비율 [세로|정사각형|가로]  세그먼트 │
+│    프레임 [휴대폰|브라우저]        세그먼트 │
+│    배경 [새벽|잉크|민트]           세그먼트 │
+│    각도 [-12°|-6°|0°|6°|12°]       세그먼트 │
+│    여백 [좁게|보통|넓게]           세그먼트 │
+│    그림자                    [  ●] Switch  │
 │ ⑨ TextField 화면 출처 · 허용 사용 범위      │
 │ ⑩ [PNG 내보내기] [장면 설정 저장] [초기화]  │  ← 주 행동 줄(맨 아래)
 │     primary        secondary      ghost     │
@@ -63,9 +63,9 @@ Native 스토리는 없다(장면 작성은 Web showcase에 둔다는 통합 계
 | ① 제목 | Stack `gap="sm"` > Heading `level="level3"` `semanticLevel={1}` · Text `as="p"` | 맨 위 | 사이 `spacing.sm` 12 |
 | ② 미리보기 | Surface `padding="md"` > `canvas`(`role="img"`, `aria-label`=제목 + 프레임) | 제목 아래, 스크롤과 함께 움직임 | 안쪽 `spacing.md` 16, 폭 100%, 최대 높이 70vh |
 | ③~⑤ 출력·파일·상태 | Text muted · `<input type="file">` ×2(제품은 FilePicker) · Text `role="status"`, 실패면 그 자리에 Notice `tone="danger"` | 미리보기 아래 | 사이 24 |
-| ⑥ 타임라인 | Stack `gap="md"` > Heading `level="level3"` `semanticLevel={2}` · Slider · Button 줄들 | 상태 아래 | 사이 `spacing.md` 16, 버튼 줄 `Stack axis="inline" wrap gap="sm"` 12 |
+| ⑥ 타임라인 | Stack `gap="md"` > Heading `level="level3"` `semanticLevel={2}` · Slider · Button 줄 · 설정 선택(움직임·길이·초당 프레임 SegmentedControl) | 상태 아래 | 사이 `spacing.md` 16, 버튼 줄 `Stack axis="inline" wrap gap="sm"` 12 |
 | ⑦⑨ 텍스트 입력 | TextField ×4 | 타임라인 아래·선택 묶음 아래 | 높이 44(`control.fieldHeight`) |
-| ⑧ 선택 묶음 | Text `emphasis="strong"` + Stack `axis="inline" wrap gap="sm"` > Button `selected` | 텍스트 입력 사이 | 라벨과 줄이 바깥 Stack 직계라 사이 24 |
+| ⑧ 선택 묶음 | Stack `gap="xs"` > Text `emphasis="strong"`(보이는 제목) + SegmentedControl(`label` = 같은 제목), 그림자는 Switch `presentation="row"` | 텍스트 입력 사이 | 제목과 컨트롤 사이 `spacing.xs` 8, 묶음 사이 24. SegmentedControl 항목 최소 44 |
 | ⑩ 내보내기 줄 | Stack `axis="inline" wrap gap="sm"` > Button ×3 | 설정 목록 맨 아래 | 사이 12 |
 
 ## 버튼과 행동 위치
@@ -78,11 +78,11 @@ Native 스토리는 없다(장면 작성은 Web showcase에 둔다는 통합 계
 | 재생·일시 정지 | Button `secondary` | ⑥ 슬라이더 아래 첫째 | 1. 이미지 없음·모션 줄이기·영상 출력 중이면 `disabled` |
 | 영상 내보내기 | Button `secondary` + 진행 중 `출력 취소` ghost | ⑥ 아래쪽 | 1(+1). 영상 버튼 아래 `role="progressbar"`에 실제 진행률 0–100% 표시 |
 | 실패 후 다시 시도 | Notice `action` > Button `tone="secondary" size="small"` | ⑤ 실패 Notice 안 | 내보내기 실패일 때만 1. 파일 읽기 실패는 다른 파일을 고르는 것이 복구라 버튼을 두지 않는다 |
-| 설정 고르기 | Button `secondary`(형태·프레임·배경·움직임) · `ghost`(각도·여백·길이·fps) + `selected` | ⑥⑧ 각 줄 | 줄마다 2~5 |
+| 설정 고르기 | SegmentedControl(출력 비율·프레임·배경·각도·여백·움직임·길이·초당 프레임) · Switch(그림자) | ⑥⑧ 각 묶음 | 묶음마다 선택지 2~5. 불러온 장면의 각도·여백이 선택지에 없으면 그 값을 항목으로 더해 현재 장면을 그대로 보인다 |
 | 파일 고르기 | `<input type="file">`(PNG·JPEG·WebP / JSON) | ④ | 2 |
 
-주 행동은 PNG 내보내기 하나다. 재생·영상 내보내기는 `secondary`로 둔다. 설정 버튼의 `selected`는 선택 표시라 primary 수에
-세지 않는다([Button](../components/button.md) "꼭 지킬 것"의 예외). 내보내기 줄은 맨 아래 흐름 배치라 긴 설정을 지나야 닿는다.
+주 행동은 PNG 내보내기 하나다. 재생·영상 내보내기는 `secondary`로 둔다. 설정은 하나 고르기·켜고 끄기라 [선택 조립 규칙](../SELECTION.md#조립-규칙필수)대로
+SegmentedControl·Switch를 쓴다. 2026-10-16 사용자 지적 전에는 `selected` Button 줄이었고 선택 상태가 테두리 없는 글자로만 보이고 폭이 제각각이었다. 내보내기 줄은 맨 아래 흐름 배치라 긴 설정을 지나야 닿는다.
 제품 편집기에서 주 행동을 늘 보이게 하려면 [BottomCTA](../components/bottom-cta.md) `position="sticky"`로 옮긴다.
 
 ## 상태
@@ -133,6 +133,7 @@ import { Heading } from "@hjmds/react/heading";
 import { Button } from "@hjmds/react/actions";
 import { TextField } from "@hjmds/react/forms";
 import { Notice } from "@hjmds/react/feedback";
+import { SegmentedControl, Switch } from "@hjmds/react/selection";
 import { resolveWindowClass } from "@hjmds/design-contracts/responsive";
 
 // 상태→키 표. 보간이 필요한 문구는 값으로 넘긴다.
@@ -164,10 +165,12 @@ const gutter = resolveWindowClass(window.innerWidth) === "compact" ? "compact" :
     </Stack>
   </Stack>
   <TextField label={t("editor.caption")} value={caption} maxLength={80} onValueChange={setCaption} />
-  <Text emphasis="strong">{t("editor.format")}</Text>
-  <Stack axis="inline" wrap gap="sm">
-    {formats.map(f => <Button key={f.id} tone="secondary" selected={format === f.id} onClick={() => setFormat(f.id)}>{t(f.labelKey)}</Button>)}
+  <Stack gap="xs">
+    <Text emphasis="strong">{t("editor.format")}</Text>
+    <SegmentedControl label={t("editor.format")} items={formats.map(f => ({ value: f.id, label: t(f.labelKey) }))}
+      value={format} onValueChange={setFormat} />
   </Stack>
+  <Switch presentation="row" label={t("editor.shadow")} checked={shadow} onCheckedChange={setShadow} />
   <Stack axis="inline" wrap gap="sm">
     <Button loading={exporting} disabled={!ready} onClick={exportPng}>{t("editor.export")}</Button>
     <Button tone="secondary" onClick={saveScene}>{t("editor.saveScene")}</Button>

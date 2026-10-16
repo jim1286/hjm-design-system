@@ -5,6 +5,7 @@ import { Heading } from "@hjmds/react-native/heading";
 import { Button, IconButton } from "@hjmds/react-native/actions";
 import { TextField, TextArea } from "@hjmds/react-native/inputs";
 import { Sheet } from "@hjmds/react-native/overlays";
+import { Notice } from "@hjmds/react-native/feedback";
 import { Bookmark } from "lucide-react-native";
 import { PreviewPhoto, ProfilePhoto } from "./reference-screen-parts";
 import { type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
@@ -31,7 +32,7 @@ export function SavedItemsPreview({stateKind="ready"}: Options){
  onOpenCollection={setCollectionId} onOpenItem={setSelectedItemId} onBack={back}
  onCreateCollection={()=>{setName("");setChosen([]);setCreating(true);}}
  stateAction={kind==="error"||kind==="restricted"?<Button onPress={()=>setRecovered(true)}>{kind==="error"?"다시 불러오기":"예제 계정으로 이어가기"}</Button>:null}
- notice={removed!==null?<Stack axis="inline" wrap align="center" justify="between"><Text accessibilityLiveRegion="polite">저장한 항목에서 삭제했습니다.</Text><Button tone="secondary" size="small" onPress={restore}>실행 취소</Button></Stack>:null}
+ notice={removed!==null?<Notice announcement="polite" title="저장한 항목에서 삭제했습니다." action={<Button tone="secondary" size="small" onPress={restore}>실행 취소</Button>}/>:null}
  renderThumbnail={item=><PreviewPhoto index={item.photo} rounded={false} square label={item.title}/>}
  renderDetail={item=><Stack gap="md"><Stack axis="inline" align="center" justify="between"><Text emphasis="strong">{item.author}</Text><IconButton label={`${item.title} 저장 해제`} tone="ghost" onPress={()=>{setSaved(ids=>ids.filter(id=>id!==item.id));setRemoved(item.id);setSelectedItemId(null);}}><Bookmark size={20}/></IconButton></Stack><PreviewPhoto index={item.photo} square label={item.title}/><Text>{item.body}</Text></Stack>}/>
  {/* Photo buttons need content height; the sheet owns scroll and keyboard clearance once. */}

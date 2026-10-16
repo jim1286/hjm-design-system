@@ -9,7 +9,8 @@ import { records } from "../../../showcase/shared/reference-flows.js";
 let tree: ReactTestRenderer; let hostId=0;
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 afterEach(() => act(() => tree?.unmount()));
-const render = () => act(() => { tree=create(<HjmNativeProvider reducedMotion><RecordComparison/></HjmNativeProvider>, {createNodeMock: element => String(element.type) === "View" ? { hostId: ++hostId } : null}); });
+const render = () => act(() => { tree=create(<HjmNativeProvider reducedMotion><RecordComparison/></HjmNativeProvider>, // The return-focus host is the Button itself (its Pressable host), not a wrapping View.
+  {createNodeMock: element => ["View", "Pressable"].includes(String(element.type)) ? { hostId: ++hostId } : null}); });
 const button = (name: string) => tree.root.findAllByType(Button).find(node => node.props.children === name)!;
 const press = (name: string) => act(() => button(name).props.onPress());
 const query = (value: string) => act(() => tree.root.findByType(SearchField).props.onValueChange(value));

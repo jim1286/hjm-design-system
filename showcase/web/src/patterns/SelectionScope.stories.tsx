@@ -5,6 +5,7 @@ import { Button } from "@hjmds/react/actions";
 import { SegmentedControl } from "@hjmds/react/selection";
 import { Container, Stack, Text } from "@hjmds/react/layout";
 import { useDemoAction } from "./action-recovery-previews";
+import { PreviewToolButton, PreviewTools } from "./preview-tools";
 
 // Scope and result copy are id→copy tables like the product's id→i18n-key tables (selection-scope.md).
 const scopeCopy = { cover: "대표 사진만", group: "묶음 전체" } as const;
@@ -39,7 +40,8 @@ function SelectionScopePreview() {
           {`${count}개 공유 대상으로 정하기`}
         </Button>
         <Text role="status">{resultCopy[result](count)}</Text>
-        <Button tone="ghost" selected={failureArmed} disabled={busy} onClick={changeFailure}>다음 적용 실패시키기</Button>
+        {/* Demo-only failure arming stays after the composition (SELECTION.md 조립 규칙). */}
+        <PreviewTools><PreviewToolButton selected={failureArmed} disabled={busy} onClick={changeFailure}>다음 적용 실패시키기</PreviewToolButton></PreviewTools>
       </Stack>
     </Container>
   );

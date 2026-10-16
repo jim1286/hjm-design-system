@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { AccessibilityInfo, AppState, Image as NativeImage, Platform } from "react-native";
 import { KeyboardAvoiding } from "@hjmds/react-native/keyboard";
 import { Button } from "@hjmds/react-native/actions";
+import { PreviewTools, PreviewToolButton } from "./preview-tools";
 import { EmptyState, Result } from "@hjmds/react-native/feedback";
 import { OnboardingScreen } from "@hjmds/react-native/screen-flows";
 import { Stack, Text } from "@hjmds/react-native/primitives";
@@ -32,7 +33,7 @@ export function IllustratedOutcomePreview() {
   }
  }, [stage, resultDescription]);
  const notebook = showArtwork ? <Artwork kind="notebook"/> : null;
- const artworkToggle = <Button tone="ghost" selected={!showArtwork} onPress={()=>setShowArtwork(v=>!v)}>{showArtwork ? "그림 없이 보기" : "그림 다시 보기"}</Button>;
+ const artworkToggle = <PreviewTools><PreviewToolButton selected={!showArtwork} onPress={()=>setShowArtwork(v=>!v)}>{showArtwork ? "그림 없이 보기" : "그림 다시 보기"}</PreviewToolButton></PreviewTools>;
  const artworkNote = <Text variant="caption" tone="muted">그림이 없어도 안내와 모든 행동을 사용할 수 있어요.</Text>;
  // OnboardingScreen owns a flex scroll host; its parent must provide bounded
  // height or the body collapses under the footer. Put demonstration controls in

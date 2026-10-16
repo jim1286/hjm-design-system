@@ -10,6 +10,7 @@ import { ContentTransition } from "@hjmds/react-native/content-transition";
 import { familyCopy as copy, familyStepName } from "../../shared/family-drawer";
 import { useDemoAction } from "./action-recovery-previews";
 import { PatternStatus } from "./pattern-status";
+import { PreviewToolButton, PreviewTools } from "./preview-tools";
 
 function FamilyDrawer() {
   const [open, setOpen] = useState(false);
@@ -41,10 +42,12 @@ function FamilyDrawer() {
         <Steps descriptor={{ steps: copy.steps, currentStepId: copy.steps[step]!.id, currentStepStatus: state.status === "error" ? "error" : "current" }} statusLabels={copy.statusLabels} composeAccessibleName={familyStepName} />
         <ContentTransition stateKey={String(step)} preset="slide"><Stack gap="md"><Heading level="level3">{panel.title}</Heading><Text>{panel.body}</Text></Stack></ContentTransition>
         {state.status === "error" ? <Notice tone="danger" announcement="assertive" title="설정을 저장하지 못했어요. 현재 단계에서 다시 시도해 주세요." /> : null}
-        <Button tone="secondary" selected={failureArmed} disabled={busy} onPress={toggleFailure}>다음 저장 실패시키기</Button>
         <Text>서버 통신 없는 단계·복구 예제예요. 닫은 뒤 다시 열면 현재 단계로 이어져요.</Text>
       </Stack>
     </Sheet>
+    {/* Demo-only failure arming stays outside the sheet body, after the composition (SELECTION.md 조립 규칙):
+        arm it before opening, so the sheet only holds the product's own actions. */}
+    <PreviewTools><PreviewToolButton selected={failureArmed} disabled={busy} onPress={toggleFailure}>다음 저장 실패시키기</PreviewToolButton></PreviewTools>
   </Stack>;
 }
 export default { title: "배포/구성/입력과 작성/단계별 드로어", component: FamilyDrawer } satisfies Meta<typeof FamilyDrawer>;

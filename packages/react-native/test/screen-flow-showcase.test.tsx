@@ -18,7 +18,7 @@ const {AccountFlowPreview,CollectionFlowPreview,EditorFlowPreview,OnboardingFlow
 if(previousJpg)nodeRequire.extensions['.jpg']=previousJpg;else delete nodeRequire.extensions['.jpg'];
 (globalThis as {IS_REACT_ACT_ENVIRONMENT?:boolean}).IS_REACT_ACT_ENVIRONMENT=true;
 let tree:ReactTestRenderer;beforeEach(()=>vi.useFakeTimers());afterEach(()=>{if(tree)act(()=>tree.unmount());vi.useRealTimers();});
-const render=(ui:ReactNode)=>act(()=>{tree=create(<HjmNativeProvider reducedMotion>{ui}</HjmNativeProvider>,{createNodeMock:()=>({focus:vi.fn()})});});
+const render=(ui:ReactNode)=>act(()=>{tree=create(<HjmNativeProvider reducedMotion>{ui}</HjmNativeProvider>,{createNodeMock:()=>({focus:vi.fn(),scrollTo:vi.fn()})});});
 const button=(label:string)=>tree.root.findAllByType(Button).find(n=>n.props.children===label)!;
 const press=(label:string)=>act(()=>button(label).props.onPress());
 const text=()=>tree.root.findAllByType(Text).map(n=>n.props.children).join(' ');
