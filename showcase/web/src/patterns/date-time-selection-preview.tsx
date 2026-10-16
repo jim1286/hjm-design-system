@@ -49,7 +49,7 @@ export function DateTimeSelectionPreview(props: DateTimeSelectionProps) {
     {model.status === "failed" ? <Notice tone="danger" title={copy.failed} /> : null}
     {model.status === "saved" ? <Notice tone="success" title={copy.saved} description={dateTimeSelectionDisplay(model.saved!)} /> : null}
     <Collapsible trigger={copy.tools} defaultOpen>
-      <Stack gap="sm"><Button tone="secondary" disabled={!busy} onClick={event => {
+      <Stack gap="xs"><Button tone="secondary" disabled={!busy} onClick={event => {
         // Safari pointer activation need not focus the clicked button.
         restoreResponseFocus.current = document.activeElement === event.currentTarget || event.detail > 0;
         send({ type: "respond" });

@@ -45,11 +45,11 @@ export function ListDetailScreen({list,detail,back,refresh,loadMore,layoutStyle,
  // layoutStyle places the outer host that owns both panes, not the inner list ScreenLayout.
  return <div style={{height:"100%",...layoutStyle}}>
   <div ref={listHost} tabIndex={-1} hidden={open} style={{height:"100%"}} onFocusCapture={event=>{returnFocus.current=event.target as HTMLElement;}}><ScreenLayout {...screen} {...(refresh||screen.actions?{actions:<Stack axis="inline" gap="xs" align="center">{/* Refresh no longer replaces the screen's own actions (2026-10-16 composition review). */}{screen.actions}{refresh?<Action action={refresh} secondary/>:null}</Stack>}:{})} footer={loadMore?<Action action={loadMore} secondary/>:null}>{list}</ScreenLayout></div>
-  {detail?<div ref={detailHost} style={{height:"100%"}}><ScreenLayout title={detail.title} {...(detail.titleVisibility === undefined ? {} : { titleVisibility: detail.titleVisibility })} {...(detail.headerAlignment === undefined ? {} : { headerAlignment: detail.headerAlignment })} {...(detail.state === undefined ? {} : {state:detail.state})} stateAction={detail.stateAction} notice={detail.notice} leading={<Action action={back} secondary/>}>{detail.content}</ScreenLayout></div>:null}
+  {detail?<div ref={detailHost} style={{height:"100%"}}><ScreenLayout title={detail.title} {...(detail.titleVisibility === undefined ? {} : { titleVisibility: detail.titleVisibility })} {...(detail.headerAlignment === undefined ? {} : { headerAlignment: detail.headerAlignment })} {...(detail.state === undefined ? {} : {state:detail.state})} stateAction={detail.stateAction} notice={detail.notice} exit={{kind:"back",label:back.label,onClick:back.onAction,disabled:!!(back.disabled||back.pending)}}>{detail.content}</ScreenLayout></div>:null}
  </div>;
 }
 
-export type EditorScreenProps = Base & {children:ReactNode;submitPlacement?:"header"|"footer";dirty:boolean;submit:ScreenFlowAction;cancel:ScreenFlowAction;discard:Omit<Extract<AlertDialogRequest,{mode:"confirm"}>,"onConfirm"|"fallbackErrorMessage"> & {fallbackErrorMessage:string};draftStatus?:ReactNode};
+export type EditorScreenProps = Omit<Base,"leading"|"exit"> & {children:ReactNode;submitPlacement?:"header"|"footer";dirty:boolean;submit:ScreenFlowAction;cancel:ScreenFlowAction;discard:Omit<Extract<AlertDialogRequest,{mode:"confirm"}>,"onConfirm"|"fallbackErrorMessage"> & {fallbackErrorMessage:string};draftStatus?:ReactNode};
 export function EditorScreen({children,dirty,submitPlacement="footer",submit,cancel,discard,draftStatus,...screen}:EditorScreenProps){
  const [confirm,setConfirm]=useState(false);
  const cancelLocked=!!(cancel.disabled||cancel.pending||submit.pending);
@@ -60,7 +60,7 @@ export function EditorScreen({children,dirty,submitPlacement="footer",submit,can
  // Preserve an async host result so AlertDialog can retain failure and retry.
  const leave=()=>{if(!cancelLocked)return cancel.onAction();};
  return <><ScreenLayout {...screen}
-  leading={<Action action={{...cancel,disabled:cancelLocked,onAction:()=>{if(cancelLocked)return;if(dirty)setConfirm(true);else leave();}}} secondary/>}
+  exit={{kind:"close",label:cancel.label,disabled:cancelLocked,onClick:()=>{if(cancelLocked)return;if(dirty)setConfirm(true);else leave();}}}
   actions={submitPlacement==="header"?<Action action={submitAction}/>:screen.actions}
   footer={submitPlacement==="header"?draftStatus:<Stack gap="sm">{draftStatus}<Action action={submitAction}/></Stack>}
  >{children}</ScreenLayout><AlertDialog open={confirm&&!cancelLocked} onOpenChange={setConfirm} request={{...discard,mode:"confirm",onConfirm:leave}}/></>;

@@ -26,7 +26,7 @@ export type ListDetailScreenProps = Base & {
 };
 /** Keep the list mounted so input and scroll survive a detail visit. Routers may instead restore host scroll state. */
 export declare function ListDetailScreen({ list, detail, back, refresh, loadMore, layoutStyle, ...screen }: ListDetailScreenProps): import("react").JSX.Element;
-export type EditorScreenProps = Base & {
+export type EditorScreenProps = Omit<Base, "leading" | "exit"> & {
     children: ReactNode;
     submitPlacement?: "header" | "footer";
     dirty: boolean;

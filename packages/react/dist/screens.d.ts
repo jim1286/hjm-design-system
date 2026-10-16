@@ -4,6 +4,7 @@ import { type MessageMenuAction } from "./internal/message-reactions.js";
 import type { ReactionPickerProps } from "./reaction-picker.js";
 import { type Ref, type ReactNode } from "react";
 import { type MessageAttachmentDescriptor, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
+import { type ScreenExit } from "./internal/screen-exit.js";
 import { type ListRowProps } from "./display.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type ScreenLayoutProps = Readonly<{
@@ -23,6 +24,9 @@ export type ScreenLayoutProps = Readonly<{
     /** Explicit layout wins over the nearest design profile. */
     presentation?: DesignProfileScreenPresentation;
     description?: string;
+    /** Leaving this screen (back, close, settings exit): icon-only button fixed at the header's leading edge. */
+    exit?: ScreenExit;
+    /** Other leading content. Never a text exit button; use `exit`. */
     leading?: ReactNode;
     actions?: ReactNode;
     notice?: ReactNode;
@@ -41,7 +45,7 @@ export type ScreenLayoutProps = Readonly<{
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Shared screen shell. Routing, data, permission checks and mutation state remain product-owned. */
-export declare function ScreenLayout({ title, titleBadge, titleVisibility, headerAlignment, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, description, leading, actions, notice, footer, state, stateAction, children, scroll, as: Element, className, layoutStyle, hjmTitleLeading }: ScreenLayoutProps & Readonly<{
+export declare function ScreenLayout({ title, titleBadge, titleVisibility, headerAlignment, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, description, exit, leading: leadingSlot, actions, notice, footer, state, stateAction, children, scroll, as: Element, className, layoutStyle, hjmTitleLeading }: ScreenLayoutProps & Readonly<{
     hjmTitleLeading?: ReactNode;
 }>): import("react").JSX.Element;
 export type SettingsScreenSection = Readonly<{

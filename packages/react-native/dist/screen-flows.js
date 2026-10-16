@@ -23,7 +23,7 @@ function Action({ action, secondary = false }) { return _jsx(Button, { tone: sec
 /** Keep the list mounted so input and scroll survive a detail visit. Routers may instead restore host scroll state. */
 // layoutStyle places the outer host that owns both panes, as on Web, so the screen keeps the same
 // placement while list and detail swap. Passing it to the list ScreenLayout dropped it on detail.
-export function ListDetailScreen({ list, detail, back, refresh, loadMore, layoutStyle, ...screen }) { return _jsxs(View, { style: [{ flex: 1 }, layoutStyle], children: [_jsx(Pane, { hidden: !!detail, children: _jsx(ScreenLayout, { ...screen, ...(refresh || screen.actions ? { actions: _jsxs(Stack, { axis: "inline", gap: "xs", align: "center", children: [screen.actions, refresh ? _jsx(Action, { action: refresh, secondary: true }) : null] }) } : {}), footer: loadMore ? _jsx(Action, { action: loadMore, secondary: true }) : null, children: list }) }), detail ? _jsx(Pane, { children: _jsx(ScreenLayout, { title: detail.title, ...(detail.titleVisibility === undefined ? {} : { titleVisibility: detail.titleVisibility }), ...(detail.headerAlignment === undefined ? {} : { headerAlignment: detail.headerAlignment }), ...(detail.state === undefined ? {} : { state: detail.state }), stateAction: detail.stateAction, notice: detail.notice, leading: detail.leading ?? _jsx(Action, { action: back, secondary: true }), children: detail.content }) }) : null] }); }
+export function ListDetailScreen({ list, detail, back, refresh, loadMore, layoutStyle, ...screen }) { return _jsxs(View, { style: [{ flex: 1 }, layoutStyle], children: [_jsx(Pane, { hidden: !!detail, children: _jsx(ScreenLayout, { ...screen, ...(refresh || screen.actions ? { actions: _jsxs(Stack, { axis: "inline", gap: "xs", align: "center", children: [screen.actions, refresh ? _jsx(Action, { action: refresh, secondary: true }) : null] }) } : {}), footer: loadMore ? _jsx(Action, { action: loadMore, secondary: true }) : null, children: list }) }), detail ? _jsx(Pane, { children: _jsx(ScreenLayout, { title: detail.title, ...(detail.titleVisibility === undefined ? {} : { titleVisibility: detail.titleVisibility }), ...(detail.headerAlignment === undefined ? {} : { headerAlignment: detail.headerAlignment }), ...(detail.state === undefined ? {} : { state: detail.state }), stateAction: detail.stateAction, notice: detail.notice, exit: { kind: "back", label: back.label, onPress: back.onAction, disabled: !!(back.disabled || back.pending) }, children: detail.content }) }) : null] }); }
 export function EditorScreen({ children, dirty, submitPlacement = "footer", submit, cancel, discard, draftStatus, ...screen }) {
     const [confirm, setConfirm] = useState(false);
     const cancelLocked = !!(cancel.disabled || cancel.pending || submit.pending);
@@ -35,11 +35,11 @@ export function EditorScreen({ children, dirty, submitPlacement = "footer", subm
     // Preserve an async host result so AlertDialog can retain failure and retry.
     const leave = () => { if (!cancelLocked)
         return cancel.onAction(); };
-    return _jsxs(_Fragment, { children: [_jsx(ScreenLayout, { ...screen, leading: _jsx(Action, { action: { ...cancel, disabled: cancelLocked, onAction: () => { if (cancelLocked)
-                            return; if (dirty)
-                            setConfirm(true);
-                        else
-                            leave(); } }, secondary: true }), actions: submitPlacement === "header" ? _jsx(Action, { action: submitAction }) : screen.actions, footer: submitPlacement === "header" ? draftStatus : _jsxs(Stack, { gap: "sm", children: [draftStatus, _jsx(Action, { action: submitAction })] }), children: children }), _jsx(AlertDialog, { open: confirm && !cancelLocked, onOpenChange: setConfirm, request: { ...discard, mode: "confirm", onConfirm: leave } })] });
+    return _jsxs(_Fragment, { children: [_jsx(ScreenLayout, { ...screen, exit: { kind: "close", label: cancel.label, disabled: cancelLocked, onPress: () => { if (cancelLocked)
+                        return; if (dirty)
+                        setConfirm(true);
+                    else
+                        leave(); } }, actions: submitPlacement === "header" ? _jsx(Action, { action: submitAction }) : screen.actions, footer: submitPlacement === "header" ? draftStatus : _jsxs(Stack, { gap: "sm", children: [draftStatus, _jsx(Action, { action: submitAction })] }), children: children }), _jsx(AlertDialog, { open: confirm && !cancelLocked, onOpenChange: setConfirm, request: { ...discard, mode: "confirm", onConfirm: leave } })] });
 }
 export function ProfileScreen({ summary, edit, children, accountActions, ...screen }) { return _jsx(ScreenLayout, { ...screen, children: _jsxs(Stack, { gap: "xl", children: [_jsx(CompositionLayout, { footer: _jsx(Action, { action: edit, secondary: true }), children: summary }), children, accountActions] }) }); }
 export function ModerationScreen({ reasonPicker, reasons, reason, onReasonChange, reasonLabel, children, submit, block, ...screen }) {

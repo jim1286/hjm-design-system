@@ -12,12 +12,16 @@ import { Animated, PanResponder, Pressable, ScrollView, View } from "react-nativ
 import { Spinner } from "./internal/spinner.js";
 import { KeyboardAvoidanceContext, useInsideKeyboardAvoidance, useKeyboardOverlap, useScrollFocusedInputIntoView } from "./keyboard.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
-import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns } from "@hjmds/design-contracts/screen-patterns";
+import { ScreenExitButton } from "./internal/screen-exit.js";
+import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, validateScreenExit } from "@hjmds/design-contracts/screen-patterns";
 import { motion } from "@hjmds/design-contracts/foundations";
 import { Stack, Text } from "./primitives.js";
 import { ListRow } from "./data-display.js";
 import { useHjmNativeTheme } from "./provider.js";
-export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, leading, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance = true, hjmBodyInlinePadding, hjmTitleLeading }) {
+export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, leading: leadingSlot, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance = true, hjmBodyInlinePadding, hjmTitleLeading }) {
+    if (exit)
+        validateScreenExit(exit, leadingSlot !== undefined);
+    const leading = exit ? _jsx(ScreenExitButton, { ...exit }) : leadingSlot;
     const insideAvoidance = useInsideKeyboardAvoidance();
     const avoidKeyboard = keyboardAvoidance && !insideAvoidance;
     const rootRef = useRef(null);

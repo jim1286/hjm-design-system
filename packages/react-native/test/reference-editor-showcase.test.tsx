@@ -3,7 +3,7 @@ import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { AccessibilityInfo } from "react-native";
 import { HjmNativeProvider } from "@hjmds/react-native/provider";
 import { Switch, TextField } from "@hjmds/react-native/inputs";
-import { Button } from "@hjmds/react-native/actions";
+import { Button, IconButton } from "@hjmds/react-native/actions";
 import { FirstTask, RecoverableSettings, SelectionReview } from "../../../showcase/native/src/reference-flow-previews.js";
 let tree: ReactTestRenderer;
 (globalThis as {IS_REACT_ACT_ENVIRONMENT?:boolean}).IS_REACT_ACT_ENVIRONMENT=true;
@@ -11,7 +11,8 @@ const focus=vi.fn();
 beforeEach(()=>{focus.mockClear();vi.stubGlobal("requestAnimationFrame",(callback:()=>void)=>setTimeout(callback,0));vi.stubGlobal("cancelAnimationFrame",clearTimeout);});
 afterEach(()=>{if(tree)act(()=>tree.unmount());vi.unstubAllGlobals();vi.restoreAllMocks();});
 const render=(Component:typeof FirstTask)=>act(()=>{tree=create(<HjmNativeProvider reducedMotion><Component/></HjmNativeProvider>,{createNodeMock:()=>({focus})});});
-const button=(label:string)=>tree.root.findAllByType(Button).find(node=>node.props.children===label)!;
+// Leaving is the header exit icon (2026-10-17); find it by its accessible label.
+const button=(label:string)=>tree.root.findAllByType(Button).find(node=>node.props.children===label)??tree.root.findAllByType(IconButton).find(node=>node.props.label===label)!;
 const press=(label:string)=>act(()=>{const target=button(label);if(!target)throw new Error(`Missing ${label}: ${tree.root.findAllByType(Button).map(node=>node.props.children).join(",")}`);target.props.onPress();});
 const field=()=>tree.root.findByType(TextField);
 const input=(value:string)=>act(()=>field().props.onValueChange(value));

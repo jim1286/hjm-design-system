@@ -4,13 +4,13 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-07
+- 검토일: 2026-10-17
 - 근거: [화면 제목과 마지막 행동](../../screen-chrome.md), [NavigationBar](../../navigation-bar.md), `src/component-recipes.ts`(`topBarRecipe`)
 - 스토리북: `배포/컴포넌트/탐색/상단 탐색 막대`, `배포/컴포넌트/탐색/검색·메뉴가 있는 상단 바`, `배포/컴포넌트/탐색/내비게이션 바`
 
 ## 언제 쓰나
 
-화면 맨 위에 붙는 **크롬**에 쓴다. 뒤로가기·닫기(`leading`), 짧은 화면 이름(`title`), 소수의 행동
+화면 맨 위에 붙는 **크롬**에 쓴다. 뒤로가기·닫기(`exit`), 짧은 화면 이름(`title`), 소수의 행동
 (`actions`/`trailing`)을 담는다. 스크롤과 무관한 자리이며 safe area 위쪽 여백을 처리한다.
 
 ## 쓰지 않을 때
@@ -38,12 +38,11 @@ Top과 TopBar의 구분: TopBar는 고정 크롬(이동·화면 이름·액션),
 
 ```tsx
 // Web
-import { IconButton } from "@hjmds/react/actions";
 import { TopBar } from "@hjmds/react/top-bar";
 
 <TopBar
   title={t("settings.title")}
-  leading={<IconButton label={t("common.back")} onClick={goBack}><BackIcon /></IconButton>}
+  exit={{ kind: "back", label: t("common.back"), onClick: goBack }}
 />
 ```
 
@@ -54,11 +53,7 @@ import { TopBar, TopBarAction } from "@hjmds/react-native/top-bar";
 <TopBar
   title={t("settings.title")}
   safeAreaTop={insets.top}
-  leading={
-    <TopBarAction label={t("common.back")} labelVisibility="accessibility-only" onPress={goBack}>
-      <BackIcon />
-    </TopBarAction>
-  }
+  exit={{ kind: "back", label: t("common.back"), onPress: goBack }}
   actions={<TopBarAction label={t("common.save")} onPress={save}><SaveIcon /></TopBarAction>}
 />
 ```
@@ -74,7 +69,8 @@ import { TopBar, TopBarAction } from "@hjmds/react-native/top-bar";
 | `onTitlePress`(Native) | `(event: GestureResponderEvent) => void` | — | 제목을 버튼으로 만든다 |
 | `subtitle` | `string` | — | 제목 아래 보조 문맥. 제목이 필요하며 배치·색·글자 규격은 HJM이 소유(1.24.0) |
 | `titleLeading` | `ReactNode` | — | 제목 앞 작은 시각 요소 |
-| `leading` / `actions`(별칭 `trailing`) | `ReactNode` | — | 둘 중 한 이름만 쓴다 |
+| `exit` | `{ kind: "back" \| "close"; label; onClick(Web) \| onPress(Native); disabled? }` | — | 화면 나가기를 시작 쪽 아이콘 버튼으로 고정한다(글자 없음, `label`은 보조기술 이름). `leading`과 함께 주면 `TypeError`. [ScreenLayout `exit`](screen-layout.md)과 같은 버튼. 2026-10-17 추가, 미게시 |
+| `leading` / `actions`(별칭 `trailing`) | `ReactNode` | — | `actions`·`trailing`은 둘 중 한 이름만 쓴다. 뒤로·닫기는 `leading`으로 만들지 않고 `exit`을 쓴다 |
 | `layoutStyle` | `HjmCompositionStyleProp` | — | 루트 배치. Web·Native 모두 |
 | Native `style`·`leadingStyle`·`titleStyle`·`trailingStyle` | 지원하지 않음 | — | 제거된 속성 — `layoutStyle` 또는 `centered`. 현재 공개 props에서 제거되었다 |
 | `TopBarAction` `intent` | `button` · `link` | `button` | `button`은 `onPress: (event) => void`, `link`는 `destination` + `onNavigate?: (destination: LinkDestination) => void \| Promise<void>` 또는 `renderLink` |

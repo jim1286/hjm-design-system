@@ -42,7 +42,7 @@ export function DateTimeSelectionPreview(props: DateTimeSelectionProps) {
     {model.status === "failed" ? <Notice tone="danger" announcement="assertive" title={copy.failed} /> : null}
     {model.status === "saved" ? <Notice tone="success" announcement="polite" title={copy.saved} description={dateTimeSelectionDisplay(model.saved!)} /> : null}
     <Collapsible trigger={copy.tools} defaultOpen>
-      <Stack gap="sm"><Button tone="secondary" disabled={!busy} onPress={() => send({ type: "respond" })}>{copy.respond}</Button>
+      <Stack gap="xs"><Button tone="secondary" disabled={!busy} onPress={() => send({ type: "respond" })}>{copy.respond}</Button>
         <Button tone="ghost" disabled={locked} onPress={() => send({ type: "armFailure" })}>{model.failNext ? copy.armed : copy.fail}</Button>
       </Stack>
     </Collapsible>

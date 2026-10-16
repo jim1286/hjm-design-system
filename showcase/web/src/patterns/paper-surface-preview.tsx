@@ -24,7 +24,7 @@ export function PaperSurfacePreview() {
     <OverviewScreen title={copy.screen} description={copy.description} toolbarLabel={copy.draft}
       toolbar={<TextField label={copy.draft} value={draft} onValueChange={setDraft} />} notice={<Text role="status">{saved}</Text>}
       items={copy.entries.map(item => ({ id: item.id, children: <Stack gap="sm"><Text variant="title">{item.title}</Text><Text>{item.body}</Text></Stack> }))}
-      footer={<Stack gap="sm"><Button onClick={() => setSaved(`${copy.saved}: ${draft}`)}>{copy.save}</Button><Dialog title={copy.screen} closeLabel={copy.close} trigger={<Button tone="secondary">{copy.detail}</Button>}><Text>{draft}</Text></Dialog></Stack>} />
+      footer={<Stack gap="xs"><Button onClick={() => setSaved(`${copy.saved}: ${draft}`)}>{copy.save}</Button><Dialog title={copy.screen} closeLabel={copy.close} trigger={<Button tone="secondary">{copy.detail}</Button>}><Text>{draft}</Text></Dialog></Stack>} />
     <Text variant="caption">{copy.scope}</Text>
   </Stack></HjmProvider>;
 }

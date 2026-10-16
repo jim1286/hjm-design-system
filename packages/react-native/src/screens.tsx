@@ -12,7 +12,8 @@ import { Animated, PanResponder, Pressable, ScrollView, View, type Accessibility
 import { Spinner } from "./internal/spinner.js";
 import { KeyboardAvoidanceContext, useInsideKeyboardAvoidance, useKeyboardOverlap, useScrollFocusedInputIntoView } from "./keyboard.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
-import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
+import { ScreenExitButton, type ScreenExit } from "./internal/screen-exit.js";
+import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, validateScreenExit, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
 import { motion } from "@hjmds/design-contracts/foundations";
 import { Stack, Text } from "./primitives.js";
 import { ListRow, type ListRowProps } from "./data-display.js";
@@ -41,6 +42,9 @@ export type ScreenLayoutProps = Readonly<{
   /** Explicit layout wins over the nearest design profile. */
   presentation?: DesignProfileScreenPresentation;
   description?: string;
+  /** Leaving this screen (back, close, settings exit): icon-only button fixed at the header's leading edge. */
+  exit?: ScreenExit;
+  /** Other leading content. Never a text exit button; use `exit`. */
   leading?: ReactNode;
   actions?: ReactNode;
   notice?: ReactNode;
@@ -62,7 +66,9 @@ export type ScreenLayoutProps = Readonly<{
   scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator" | "onScroll" | "onScrollBeginDrag" | "onScrollEndDrag" | "scrollEventThrottle" | "alwaysBounceVertical" | "automaticallyAdjustKeyboardInsets">;
 }>;
 
-export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, leading, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance = true, hjmBodyInlinePadding, hjmTitleLeading }: ScreenLayoutProps & ScreenLayoutPrivateProps) {
+export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, leading: leadingSlot, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance = true, hjmBodyInlinePadding, hjmTitleLeading }: ScreenLayoutProps & ScreenLayoutPrivateProps) {
+  if (exit) validateScreenExit(exit, leadingSlot !== undefined);
+  const leading = exit ? <ScreenExitButton {...exit} /> : leadingSlot;
   const insideAvoidance = useInsideKeyboardAvoidance();
   const avoidKeyboard = keyboardAvoidance && !insideAvoidance;
   const rootRef = useRef<View>(null);

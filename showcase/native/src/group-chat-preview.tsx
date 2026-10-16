@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { FlatList, Image, View } from "react-native";
-import { ArrowUp, ChevronLeft } from "lucide-react-native";
+import { ArrowUp } from "lucide-react-native";
 import { useHjmNativeTheme } from "@hjmds/react-native/provider";
-import { IconButton } from "@hjmds/react-native/actions";
 import { Text } from "@hjmds/react-native/primitives";
 import { Avatar } from "@hjmds/react-native/data-display";
 import { KeyboardAvoiding } from "@hjmds/react-native/keyboard";
@@ -42,7 +41,7 @@ export function GroupChatPreview() {
     setDraft(""); setReplyTarget(null);
   };
   return <KeyboardAvoiding style={{ height: 720 }}>
-    <ChatScreen title="산책 모임" titleBadge={<Text tone="muted">4</Text>} leading={<IconButton label="뒤로" tone="ghost" onPress={() => setStatus("목록으로 돌아가요.")}><ChevronLeft size={22} color={colors.text} /></IconButton>}
+    <ChatScreen title="산책 모임" titleBadge={<Text tone="muted">4</Text>} exit={{ kind: "back", label: "뒤로", onPress: () => setStatus("목록으로 돌아가요.") }}
       avatar={<Avatar name="산책 모임" size={32} decorative source={members.seoyeon!.photo} />}
       notice={status ? <Text tone="muted">{status}</Text> : null}
       composer={<MessageComposer value={draft} onValueChange={setDraft} label="메시지 보내기" sendLabel="전송" onSend={send} sendPresentation="circle" sendIcon={<ArrowUp size={20} strokeWidth={2} color={colors.onPrimary} />}

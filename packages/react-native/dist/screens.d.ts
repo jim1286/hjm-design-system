@@ -4,6 +4,7 @@ import { type MessageMenuAction } from "./internal/message-reactions.js";
 import type { ReactionPickerProps } from "./reaction-picker.js";
 import { type Ref, type ReactNode } from "react";
 import { ScrollView, type TextInput, type ScrollViewProps } from "react-native";
+import { type ScreenExit } from "./internal/screen-exit.js";
 import { type MessageAttachmentDescriptor, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
 import { type ListRowProps } from "./data-display.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
@@ -30,6 +31,9 @@ export type ScreenLayoutProps = Readonly<{
     /** Explicit layout wins over the nearest design profile. */
     presentation?: DesignProfileScreenPresentation;
     description?: string;
+    /** Leaving this screen (back, close, settings exit): icon-only button fixed at the header's leading edge. */
+    exit?: ScreenExit;
+    /** Other leading content. Never a text exit button; use `exit`. */
     leading?: ReactNode;
     actions?: ReactNode;
     notice?: ReactNode;
@@ -50,7 +54,7 @@ export type ScreenLayoutProps = Readonly<{
     keyboardAvoidance?: boolean;
     scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator" | "onScroll" | "onScrollBeginDrag" | "onScrollEndDrag" | "scrollEventThrottle" | "alwaysBounceVertical" | "automaticallyAdjustKeyboardInsets">;
 }>;
-export declare function ScreenLayout({ title, titleBadge, titleVisibility, headerAlignment, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, description, leading, actions, notice, footer, state, stateAction, children, scroll, layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance, hjmBodyInlinePadding, hjmTitleLeading }: ScreenLayoutProps & ScreenLayoutPrivateProps): import("react").JSX.Element;
+export declare function ScreenLayout({ title, titleBadge, titleVisibility, headerAlignment, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, description, exit, leading: leadingSlot, actions, notice, footer, state, stateAction, children, scroll, layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance, hjmBodyInlinePadding, hjmTitleLeading }: ScreenLayoutProps & ScreenLayoutPrivateProps): import("react").JSX.Element;
 export type SettingsScreenSection = Readonly<{
     id: string;
     title: string;

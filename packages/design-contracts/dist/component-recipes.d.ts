@@ -3043,6 +3043,15 @@ export declare const statisticRecipe: {
         };
     };
 };
+/**
+ * Gap between adjacent buttons in one action group (2026-10-17 user rule: stacked bottom buttons looked
+ * loose at 12). Stacked (column) groups use 8, inline (row) groups keep 12 so tap targets stay apart.
+ * AlertDialog already used these values; Sheet/Dialog footers and composed screens now share them.
+ */
+export declare const actionGroupRecipe: {
+    readonly inlineGap: 12;
+    readonly stackedGap: 8;
+};
 export declare const sheetRecipe: {
     readonly slots: readonly ["backdrop", "positioner", "content", "handle", "header", "title", "body", "footer", "close"];
     readonly defaults: {
@@ -3140,7 +3149,7 @@ export declare const sheetRecipe: {
             alpha?: number;
         }>;
         readonly textVariant: "body";
-        readonly gap: 12;
+        readonly gap: 8;
         readonly paddingTop: 12;
     };
     readonly transition: {

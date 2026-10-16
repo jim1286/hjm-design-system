@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { ChevronDown, ChevronLeft, History, Search, SlidersHorizontal, X } from "lucide-react";
+import { ChevronDown, History, Search, SlidersHorizontal, X } from "lucide-react";
 import { SearchScreen } from "@hjmds/react/screen-flows";
 import { ScreenLayout } from "@hjmds/react/screens";
 import { Stack, Text } from "@hjmds/react/layout";
@@ -71,6 +71,10 @@ export function SearchDiscoveryPreview({ view = "idle", tools = false }: SearchD
     returnTo.current = { element, scrollTop: bodyOf()?.scrollTop ?? 0 };
     setDetail(entry);
   };
+  // Opening detail moves focus to its header back button (was IconButton autoFocus before `exit`).
+  const detailHost = useRef<HTMLDivElement>(null);
+  const detailOpen = !!detail;
+  useLayoutEffect(() => { if (detailOpen) detailHost.current?.querySelector<HTMLElement>("button")?.focus(); }, [detailOpen]);
   const closeDetail = () => {
     pendingFocus.current = () => {
       const body = bodyOf();
@@ -115,7 +119,7 @@ export function SearchDiscoveryPreview({ view = "idle", tools = false }: SearchD
       {/* Keep the search mounted behind detail so query, conditions, sort and scroll survive the round trip. */}
       <div ref={searchHost} hidden={!!detail || home} style={{ height: "100%" }}>
         <SearchScreen title={copy.screenTitle} queryLabel={copy.queryLabel} queryClearLabel={copy.clear}
-          leading={<IconButton label={copy.back} tone="ghost" onClick={() => setHome(true)}><ChevronLeft size={20} /></IconButton>}
+          exit={{ kind: "back", label: copy.back, onClick: () => setHome(true) }}
           state={restricted ? { kind: "restricted", title: copy.restrictedTitle, description: copy.restrictedBody } : { kind: "ready" }}
           stateAction={restricted ? <Button onClick={() => setRestricted(false)}>{copy.login}</Button> : null}
           query={query} onQueryChange={value => { setQuery(value); if (!value.trim()) setCommitted(""); }}
@@ -149,9 +153,9 @@ export function SearchDiscoveryPreview({ view = "idle", tools = false }: SearchD
           </Stack>
         </SearchScreen>
       </div>
-      {detail ? <ScreenLayout title={copy.detailTitle} leading={<IconButton autoFocus label={copy.back} tone="ghost" onClick={closeDetail}><ChevronLeft size={20} /></IconButton>}>
+      {detail ? <div ref={detailHost} style={{ display: "contents" }}><ScreenLayout title={copy.detailTitle} exit={{ kind: "back", label: copy.back, onClick: closeDetail }}>
         <Stack gap="lg">{detail.hasPhoto ? <PreviewPhoto index={Number(detail.id) % 3} label={detail.title} /> : null}<Heading level="level4" semanticLevel={2}>{detail.title}</Heading><Text tone="muted">{entryDescription(detail)}</Text><Text>{detail.excerpt}</Text></Stack>
-      </ScreenLayout> : null}
+      </ScreenLayout></div> : null}
       {home ? <ScreenLayout title={copy.home}><Button onClick={() => setHome(false)}>{copy.reopen}</Button></ScreenLayout> : null}
     </div>
   </Stack>;

@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-07
+- 검토일: 2026-10-17
 - 근거: [버튼 라벨 줄바꿈](../../button-label.md), `src/base-recipes.ts`(`buttonRecipe`), `src/foundations.ts`(`control.buttonHeight`)
 - 스토리북: `배포/컴포넌트/동작/버튼`, `배포/컴포넌트/동작/버튼 안에서 확인`, `배포/컴포넌트/동작/반응 선택`
 
@@ -84,7 +84,7 @@ import { Button } from "@hjmds/react-native/actions";
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 높이 `small` 36 · `medium` 44 · `large` 52. `small`만 hitSlop 4로 터치 영역 44 | `control.buttonHeight`, `control.buttonHitSlop` |
-| 간격 | 나란한 버튼 사이 `spacing.sm` 12. Dialog·Sheet 행동 영역 좌우·아래 여백 `spacing.lg` 20 | `.hjm-dialog__footer` |
+| 간격 | 한 묶음의 버튼 사이: **세로로 쌓으면 `spacing.xs` 8, 가로로 나란하면 `spacing.sm` 12**(2026-10-17 사용자 지시: 세로로 쌓은 하단 버튼 12 간격이 벌어져 보였다). 예제·제품의 `Stack`도 같은 값을 쓴다. Dialog·Sheet 행동 영역 좌우·아래 여백 `spacing.lg` 20 | `actionGroupRecipe`, `.hjm-dialog__footer`, Native Sheet footer |
 | 순서·정렬 | 가로 행동 줄은 **보조 → 주**, 끝 정렬. 세로 순서는 배치 소유자의 계약을 따른다: Dialog는 보조 → 주, Native Sheet는 주 → 보조, 좁은 AlertDialog는 주 → 보조. 본문의 짧은 선택·확정 구성은 해당 구성의 순서다. 목록 행 끝은 `small` + `ghost`/`secondary`, `primary` 금지 | `renderAction` 순서(Native overlays), `.hjm-dialog__footer` |
 | 고정·스크롤 | 화면 맨 아래 고정 주 행동은 Button 대신 [BottomCTA](bottom-cta.md)(안전 영역·키보드 처리) | — |
 | 좁은 폭·큰 글자 | 폭 < 600(`breakpoint.medium`)이면 AlertDialog 행동을 세로로 쌓고 주 행동이 위(DOM은 [취소][확인] 유지). 라벨은 두 줄까지, 큰 글자에서는 상한 해제 | `.hjm-alert-dialog__actions`, [버튼 라벨](../../button-label.md) |

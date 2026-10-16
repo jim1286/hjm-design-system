@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.17.1
-- 검토일: 2026-10-13
+- 검토일: 2026-10-17
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screens.tsx`·`src/screen-flows.tsx`; 기존 개별 지침을 새 규격으로 통합. 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
 - 스토리북: `배포/화면/콘텐츠/목록과 상세`
 
@@ -65,7 +65,7 @@ import { ListDetailScreen } from "@hjmds/react-native/screen-flows";
 | --- | --- | --- | --- |
 | `list` | `ReactNode` | 필수 | 목록 pane 본문. 상세가 열려도 mount를 유지한다 |
 | `detail` | `{ title; content; state?; stateAction?; notice? }` | 없음 | 있으면 상세 pane을 보이고 목록 pane을 숨긴다. 닫힌 상태는 prop을 빼서 표현한다(`undefined`를 넘기지 않는다) |
-| `back` | `ScreenFlowAction`(`{ label, onAction(), disabled?, pending? }`) | 필수 | 상세 pane `leading` 자리의 ghost 버튼 |
+| `back` | `ScreenFlowAction`(`{ label, onAction(), disabled?, pending? }`) | 필수 | 상세 pane 헤더 시작 쪽 ‹ 아이콘 버튼(`ScreenLayout` `exit` `back`). `label`은 보조기술 이름이고 글자는 보이지 않는다. 2026-10-17부터 글자 버튼 대신 아이콘이며 Native `detail.leading`(제품 뒤로 아이콘 대체)은 제거됐다 |
 | `refresh` | `ScreenFlowAction` | 없음 | 목록 pane `actions` 자리의 ghost 버튼. 주면 `actions`를 덮는다 |
 | `loadMore` | `ScreenFlowAction` | 없음 | 목록 pane footer의 ghost 버튼 |
 | `layoutStyle` | `HjmCompositionStyleProp` | 없음 | Web·Native 모두 목록·상세 pane을 함께 담는 **바깥 틀**에 적용한다(안쪽 목록 ScreenLayout이 아니다). 목록/상세 전환과 상관없이 같은 루트에 남는다(1.13.0) |
@@ -99,5 +99,5 @@ import { ListDetailScreen } from "@hjmds/react-native/screen-flows";
 ## 함정
 
 - `refresh`를 주면 ScreenLayout `actions`는 무시된다. 둘 다 필요하면 `refresh` 대신 `actions`에 직접 조합한다.
-- 상세 pane은 `title`·`state`·`stateAction`·`notice`와 `back`(leading)을 받는다. 상세 쪽 `description`·`actions`·footer 자리는 없다.
+- 상세 pane은 `title`·`state`·`stateAction`·`notice`와 `back`(헤더 `exit`)을 받는다. 상세 쪽 `description`·`actions`·footer 자리는 없다.
 - `loadMore`는 상태 없는 버튼이다. 끝·오류·중복 요청 방지가 필요하면 LoadMore를 쓴다.

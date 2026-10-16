@@ -1,4 +1,5 @@
 import { type HTMLAttributes, type MouseEventHandler, type ReactNode } from "react";
+import { type ScreenExit } from "./internal/screen-exit.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type TopBarProps = Omit<HTMLAttributes<HTMLDivElement>, "title" | "children"> & Readonly<{
     title?: string;
@@ -10,6 +11,8 @@ export type TopBarProps = Omit<HTMLAttributes<HTMLDivElement>, "title" | "childr
     onTitleClick?: MouseEventHandler<HTMLButtonElement>;
     titleAccessibilityLabel?: string;
     headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
+    /** Leaving this screen: icon-only back/close fixed at the leading edge (2026-10-17). Exclusive with `leading`. */
+    exit?: ScreenExit;
     leading?: ReactNode;
     trailing?: ReactNode;
     actions?: ReactNode;
@@ -29,6 +32,8 @@ export declare const TopBar: import("react").ForwardRefExoticComponent<Omit<HTML
     onTitleClick?: MouseEventHandler<HTMLButtonElement>;
     titleAccessibilityLabel?: string;
     headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
+    /** Leaving this screen: icon-only back/close fixed at the leading edge (2026-10-17). Exclusive with `leading`. */
+    exit?: ScreenExit;
     leading?: ReactNode;
     trailing?: ReactNode;
     actions?: ReactNode;

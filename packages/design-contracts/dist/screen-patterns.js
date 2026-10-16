@@ -13,6 +13,20 @@ export function resolveScreenContentState(state = { kind: "ready" }) {
         announcement: state.kind === "error" ? "assertive" : "polite",
     };
 }
+export const screenExitRecipe = {
+    /** Chevron arm length and stroke; close cross arm length. Drawn, not font glyphs, so every platform matches. */
+    chevronSize: 10,
+    closeSize: 14,
+    stroke: 2,
+};
+export function validateScreenExit(exit, hasLeading) {
+    if (exit.kind !== "back" && exit.kind !== "close")
+        throw new TypeError("Screen exit kind must be back or close");
+    if (!exit.label.trim())
+        throw new TypeError("Screen exit needs a localized accessible label");
+    if (hasLeading)
+        throw new TypeError("Screen exit owns the leading slot; do not also pass leading");
+}
 // Reuse reading-width and spacing tokens; do not derive geometry from a product's device or artwork.
 export const screenPatternRecipe = {
     maxWidth: layout.readingMaxWidth,

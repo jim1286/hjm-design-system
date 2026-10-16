@@ -318,3 +318,18 @@ it("moves the swipe layer without rendering message content for every drag frame
   expect(renders).toHaveBeenCalledTimes(initial);
   act(() => tree.unmount());
 });
+
+describe("ScreenLayout exit", () => {
+  it("renders the exit as a labelled leading icon button and rejects a second leading control", async () => {
+    const { IconButton } = await import("../src/actions.js");
+    const back = vi.fn();
+    const tree = render(<ScreenLayout title="설정" exit={{ kind: "back", label: "설정 나가기", onPress: back }}><Text>본문</Text></ScreenLayout>);
+    const exit = tree.root.findByType(IconButton);
+    expect(exit.props.label).toBe("설정 나가기");
+    expect(tree.root.findAllByType(Button)).toHaveLength(0);
+    act(() => exit.props.onPress());
+    expect(back).toHaveBeenCalledOnce();
+    act(() => tree.unmount());
+    expect(() => render(<ScreenLayout title="설정" exit={{ kind: "close", label: "닫기", onPress: back }} leading={<Text>x</Text>} />)).toThrow(TypeError);
+  });
+});

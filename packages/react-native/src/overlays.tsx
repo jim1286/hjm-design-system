@@ -24,6 +24,7 @@ import {
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { backdrop, easing, glyph, spacing } from "@hjmds/design-contracts/foundations";
 import {
+  actionGroupRecipe,
   alertDialogRecipe,
   dialogRecipe,
   sheetRecipe,
@@ -264,7 +265,7 @@ function OverlayActions({
       style={{
         direction: environment.direction,
         flexDirection: stacked ? "column" : "row",
-        gap: spacing.sm,
+        gap: stacked ? actionGroupRecipe.stackedGap : actionGroupRecipe.inlineGap,
       }}
     >
       {secondaryAction ? renderAction(secondaryAction, "secondary") : null}

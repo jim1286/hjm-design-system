@@ -87,7 +87,7 @@ function ActivityStatusScreen({ initial = "idle", panelFocus }: ActivityStatusPr
   return (
     <Stack gap="md">
       <TopBar
-        leading={<IconButton label={copy.back}>←</IconButton>}
+        exit={{ kind: "back", label: copy.back, onClick: () => {} }}
         title={copy.screenTitle}
         trailing={phase === "idle" ? undefined : (
           <ActivityChip

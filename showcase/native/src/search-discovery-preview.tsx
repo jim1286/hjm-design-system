@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { View } from "react-native";
-import { ChevronDown, ChevronLeft, History, Search, SlidersHorizontal, X } from "lucide-react-native";
+import { ChevronDown, History, Search, SlidersHorizontal, X } from "lucide-react-native";
 import { SearchScreen } from "@hjmds/react-native/screen-flows";
 import { ScreenLayout } from "@hjmds/react-native/screens";
 import { Stack, Text } from "@hjmds/react-native/primitives";
-import { Button, IconButton } from "@hjmds/react-native/actions";
+import { Button } from "@hjmds/react-native/actions";
 import { Chip, Switch } from "@hjmds/react-native/inputs";
 import { ListRow } from "@hjmds/react-native/data-display";
 import { Heading } from "@hjmds/react-native/heading";
@@ -102,7 +102,7 @@ export function SearchDiscoveryPreview({ view = "idle", tools = false }: SearchD
       {/* Keep the search mounted behind detail so query, conditions and sort survive the round trip. */}
       <View style={{ flex: 1, display: detail || home ? "none" : "flex" }}>
         <SearchScreen title={copy.screenTitle} queryLabel={copy.queryLabel} queryClearLabel={copy.clear}
-          leading={<IconButton label={copy.back} tone="ghost" onPress={() => setHome(true)}><ChevronLeft color={colors.text} size={20} /></IconButton>}
+          exit={{ kind: "back", label: copy.back, onPress: () => setHome(true) }}
           state={restricted ? { kind: "restricted", title: copy.restrictedTitle, description: copy.restrictedBody } : { kind: "ready" }}
           stateAction={restricted ? <Button onPress={() => setRestricted(false)}>{copy.login}</Button> : null}
           query={query} onQueryChange={value => { setQuery(value); if (!value.trim()) setCommitted(""); }}
@@ -137,7 +137,7 @@ export function SearchDiscoveryPreview({ view = "idle", tools = false }: SearchD
           </Stack>
         </SearchScreen>
       </View>
-      {detail ? <ScreenLayout title={copy.detailTitle} leading={<IconButton label={copy.back} tone="ghost" onPress={() => setDetail(null)}><ChevronLeft color={colors.text} size={20} /></IconButton>}>
+      {detail ? <ScreenLayout title={copy.detailTitle} exit={{ kind: "back", label: copy.back, onPress: () => setDetail(null) }}>
         <Stack gap="lg">{detail.hasPhoto ? <PreviewPhoto index={Number(detail.id) % 3} label={detail.title} /> : null}<Heading level="level4">{detail.title}</Heading><Text tone="muted">{entryDescription(detail)}</Text><Text>{detail.excerpt}</Text></Stack>
       </ScreenLayout> : null}
       {home ? <ScreenLayout title={copy.home}><Button onPress={() => setHome(false)}>{copy.reopen}</Button></ScreenLayout> : null}

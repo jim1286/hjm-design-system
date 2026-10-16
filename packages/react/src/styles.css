@@ -3097,6 +3097,9 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-chat-screen:not([data-content-inset="none"]) .hjm-screen__body { padding-inline: 10px; }
 .hjm-chat-screen__footer { position: relative; }
 /* ImageChoiceGroup (2026-10-16): square tiles, brand ring + check when chosen. */
+/* Screen exit (2026-10-17): back chevron follows reading direction. */
+.hjm-screen__exit-glyph[data-kind="back"]:dir(rtl) { transform: scaleX(-1); }
+
 .hjm-image-choice { display: flex; flex-direction: column; gap: var(--hjm-space-xs); }
 .hjm-image-choice__label { font-weight: 600; }
 .hjm-image-choice__tiles { display: flex; flex-wrap: wrap; gap: var(--hjm-image-choice-gap); }

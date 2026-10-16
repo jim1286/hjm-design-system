@@ -12,6 +12,22 @@ export declare function resolveScreenContentState(state?: ScreenContentState): {
     readonly busy: boolean;
     readonly announcement: "polite" | "assertive";
 };
+/**
+ * Leaving a screen (back, close, "설정 나가기") is an icon-only button fixed at the header's leading edge
+ * (2026-10-17 user rule: exits had drifted into body text buttons with mixed glyphs). The label is read
+ * by assistive tech only. `back` mirrors in RTL; `close` is for modal-style routes.
+ */
+export type ScreenExitKind = "back" | "close";
+export declare const screenExitRecipe: {
+    /** Chevron arm length and stroke; close cross arm length. Drawn, not font glyphs, so every platform matches. */
+    readonly chevronSize: 10;
+    readonly closeSize: 14;
+    readonly stroke: 2;
+};
+export declare function validateScreenExit(exit: Readonly<{
+    kind: string;
+    label: string;
+}>, hasLeading: boolean): void;
 export declare const screenPatternRecipe: {
     readonly maxWidth: 720;
     readonly padding: 16;

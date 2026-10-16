@@ -9,6 +9,7 @@ import { type ReactElement, type ReactNode } from "react";
 import { type ModalProps, type PressableProps } from "react-native";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type { TabsAppearance };
+import { type ScreenExit } from "./internal/screen-exit.js";
 export type TabItem<Value extends string = string> = Readonly<{
     id: Value;
     label: string;
@@ -177,6 +178,8 @@ export type TopBarProps = Readonly<{
     onTitlePress?: NonNullable<PressableProps["onPress"]>;
     titleAccessibilityLabel?: string;
     titleAccessibilityHint?: string;
+    /** Leaving this screen: icon-only back/close fixed at the leading edge (2026-10-17). Exclusive with `leading`. */
+    exit?: ScreenExit;
     leading?: ReactNode;
     trailing?: ReactNode;
     /** Semantic alias for trailing actions; do not combine with `trailing`. */
@@ -187,7 +190,7 @@ export type TopBarProps = Readonly<{
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Native screen top bar with logical action slots and large-text reflow. */
-export declare function TopBar({ title, titleContent: customTitleContent, subtitle, titleLeading, onTitlePress, titleAccessibilityLabel, titleAccessibilityHint, leading, trailing, actions, centered, safeAreaTop, layoutStyle, ...removedProps }: TopBarProps): import("react").JSX.Element;
+export declare function TopBar({ title, titleContent: customTitleContent, subtitle, titleLeading, onTitlePress, titleAccessibilityLabel, titleAccessibilityHint, exit, leading: leadingSlot, trailing, actions, centered, safeAreaTop, layoutStyle, ...removedProps }: TopBarProps): import("react").JSX.Element;
 /** Flat and sectioned menus share collection identifiers and rendering slots. */
 export type MenuItem<Value extends string = string> = Omit<CollectionItemDescriptor<Value>, "textValue"> & Readonly<{
     textValue?: string;

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { PatternStatus } from "./pattern-status";
 import { ScrollView, Text as NativeText, View } from "react-native";
 import { ActivityChip } from "@hjmds/react-native/activity-chip";
-import { Button, IconButton } from "@hjmds/react-native/actions";
+import { Button } from "@hjmds/react-native/actions";
 import { ToastRegion, useToastRegion } from "@hjmds/react-native/feedback";
 import { Container, Stack, Text } from "@hjmds/react-native/primitives";
 import { TopBar } from "@hjmds/react-native/top-bar";
@@ -66,7 +66,7 @@ function ActivityStatusScreen({ initial = "idle" }: ActivityStatusProps) {
   return (
     <View style={{ flex: 1 }}>
       <TopBar
-        leading={<IconButton label={copy.back} onPress={() => {}}><NativeText accessible={false}>←</NativeText></IconButton>}
+        exit={{ kind: "back", label: copy.back, onPress: () => {} }}
         title={copy.screenTitle}
         {...(phase === "idle" ? {} : {
           trailing: (

@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.17.1
-- 검토일: 2026-10-16
+- 검토일: 2026-10-17
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screens.tsx`·`src/screen-flows.tsx`; 기존 개별 지침을 새 규격으로 통합. 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
 - 스토리북: `배포/화면/화면 틀과 도구/화면 골격과 상태`
 
@@ -35,13 +35,12 @@
 
 ```tsx
 // Web
-import { IconButton } from "@hjmds/react/actions";
 import { BottomCTA } from "@hjmds/react/bottom-cta";
 import { ScreenLayout } from "@hjmds/react/screens";
 
 <ScreenLayout
   title={t("saved.title")}
-  leading={<IconButton label={t("common.back")} onClick={goBack}><BackGlyph /></IconButton>}
+  exit={{ kind: "back", label: t("common.back"), onClick: goBack }}
   state={isLoading ? { kind: "loading", title: t("saved.loading") } : { kind: "ready" }}
   footer={<BottomCTA primaryAction={{ label: t("saved.add"), onClick: add }} />}
 >
@@ -74,7 +73,8 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 | `titleBadge` | `ReactNode` | 없음 | 기본 제목 바로 옆 배지. 값·의미는 제품, 간격·정렬은 HJM. `header` 교체 또는 제목 숨김이면 그리지 않는다. 1.23.0 추가 API |
 | `header` | `ReactNode` | 없음 | 기존 navigator 헤더 유지용. 주면 기본 헤더(`leading`·제목·`description`·`actions`)를 그리지 않는다 |
 | `description` | `string` | 없음 | 제목 아래 muted 설명 |
-| `leading` · `actions` | `ReactNode` | 없음 | 제목 앞(뒤로 가기)·뒤(도구) 슬롯 |
+| `exit` | `{ kind: "back" \| "close"; label; onClick(Web) \| onPress(Native); disabled? }` | 없음 | 화면 나가기(뒤로·닫기·"설정 나가기")를 헤더 시작 쪽 아이콘 버튼으로 고정한다. 글자는 보이지 않고 `label`은 보조기술 이름이다. `back`은 ‹(RTL 반전), `close`는 ×. `leading`과 함께 주면 `TypeError`. 미게시(1.26.1 이후) |
+| `leading` · `actions` | `ReactNode` | 없음 | 제목 앞·뒤(도구) 슬롯. 나가기 버튼은 `leading`으로 직접 만들지 않고 `exit`을 쓴다 |
 | `notice` | `ReactNode` | 없음 | 헤더 아래 비차단 안내. 상태 교체 중에도 남는다 |
 | `footer` | `ReactNode` | 없음 | 하단 고정 행동 |
 | `state` | `{ kind: "ready" }` · `{ kind: "loading" \| "empty" \| "error" \| "restricted"; title; description? }` | `{ kind: "ready" }` | ready가 아니면 children을 그리지 않고 상태와 `stateAction`을 가운데에 놓는다. 로딩은 Spinner 하나만 보이고 `title`·`description`은 Spinner의 접근성 이름이 된다 |
@@ -100,6 +100,8 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 | 좁은 폭·큰 글자 | 제목 열 최소 폭 `headerMinWidth` 120 × 글자 배율, 모자라면 `actions`가 다음 줄로 내려간다; 제목은 줄바꿈(`overflow-wrap: anywhere`)되고 자르지 않는다; Native safe area·탭바 inset은 host | `screenPatternRecipe.headerMinWidth`, Web `.hjm-screen__heading` |
 
 ## 꼭 지킬 것
+
+- **나가기는 `exit` 하나로 헤더 시작 쪽에 둔다(필수).** 본문·하단의 "나가기"·"닫기"·"뒤로"·"취소하고 나가기" 글자 버튼, 화면마다 다른 화살표(`←` 글자, 제품 아이콘)로 만든 뒤로 버튼을 두지 않는다. 2026-10-17 사용자 지시: `변경 저장과 이탈 확인` 예제의 "설정 나가기"가 본문 버튼으로 떠 있었고, 제품마다 뒤로 버튼 모양이 달랐다(야잘알 자체 `BackButton`, 예제의 `←`·`ChevronLeft`). 변경이 있을 때의 확인 대화상자는 제품이 `exit` 콜백에서 띄운다. 기존 navigator 헤더를 쓰는 화면은 그 헤더의 뒤로 버튼이 같은 자리를 맡는다.
 
 - Native에서 `headerAlignment="center"` + `titleVisibility="hidden"`이고 설명·사용자 지정 헤더가 없으면 아이콘 헤더는 최소 48pt, 세로 여백 2pt다. 2026-10-14 야잘알의 상단 버튼–탭 사이 빈 공간 피드백으로 제목용 60pt 높이를 줄였다. `notice`가 없을 때만 본문 상단 여백을 최대 4pt로 줄이며, `notice`에 둔 탭과 본문 카테고리 사이 기본 16pt 간격은 유지한다. 좌우 여백·하단 여백·터치 영역은 그대로다.
 

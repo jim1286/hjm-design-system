@@ -1,7 +1,7 @@
 import {act,create,type ReactTestRenderer} from "react-test-renderer";
 import {describe,expect,it,vi} from "vitest";
 import {HjmNativeProvider} from "../src/provider.js";
-import {Button} from "../src/actions.js";
+import {Button,IconButton} from "../src/actions.js";
 import {RadioGroup} from "../src/inputs.js";
 import {AlertDialog} from "../src/overlays.js";
 import {EditorScreen,ModerationScreen,PermissionScreen,OnboardingScreen,SearchScreen} from "../src/screen-flows.js";
@@ -11,7 +11,7 @@ import {Text} from "../src/primitives.js";
 it("groups comment heart and overflow in one inline action row without merging their handlers",async()=>{
  const {CommentThreadScreen}=await import("../src/screen-flows.js");
  const {Stack}=await import("../src/primitives.js");
- const {IconButton}=await import("../src/actions.js");
+
  const like=vi.fn(),more=vi.fn();
  const tree=render(<CommentThreadScreen title="댓글" items={[{id:"one",parentId:null,author:"작성자",body:"본문",timeLabel:"방금",likeCountLabel:"좋아요 3개",likeIcon:<Text>♡</Text>,likeLabel:"댓글 좋아요",actions:<IconButton label="댓글 더보기" onPress={more}>⋮</IconButton>}]} expandedIds={[]} onExpandedChange={()=>{}} onLike={like} onReply={()=>{}} replyLabel="답글" repliesLabel={()=>"답글 더 보기"}/>);
  const row=tree.root.findAllByType(Stack).find(node=>node.props.axis==="inline"&&node.props.gap==="xxs"&&node.props.layoutStyle?.flexShrink===0)!;
@@ -22,7 +22,7 @@ it("groups comment heart and overflow in one inline action row without merging t
  act(()=>tree.unmount());
 });
 function render(child:ReactNode){let tree:ReactTestRenderer;act(()=>{tree=create(<HjmNativeProvider theme="dark" textScale={1}>{child}</HjmNativeProvider>);});return tree!;}
-it("keeps dirty draft mounted while native discard confirmation is shown",()=>{const leave=vi.fn();const tree=render(<EditorScreen title="작성" dirty submit={{label:"저장",onAction:()=>{}}} cancel={{label:"닫기",onAction:leave}} discard={{mode:"confirm",title:"버릴까요",description:"초안",confirmLabel:"버리기",cancelLabel:"유지",fallbackErrorMessage:"실패"}}>내용</EditorScreen>);act(()=>tree.root.findAllByType(Button).find(button=>button.props.children==="닫기")!.props.onPress());expect(leave).not.toHaveBeenCalled();expect(tree.root.findByType(AlertDialog).props.open).toBe(true);act(()=>tree.unmount());});
+it("keeps dirty draft mounted while native discard confirmation is shown",()=>{const leave=vi.fn();const tree=render(<EditorScreen title="작성" dirty submit={{label:"저장",onAction:()=>{}}} cancel={{label:"닫기",onAction:leave}} discard={{mode:"confirm",title:"버릴까요",description:"초안",confirmLabel:"버리기",cancelLabel:"유지",fallbackErrorMessage:"실패"}}>내용</EditorScreen>);act(()=>tree.root.findAllByType(IconButton).find(button=>button.props.label==="닫기")!.props.onPress());expect(leave).not.toHaveBeenCalled();expect(tree.root.findByType(AlertDialog).props.open).toBe(true);act(()=>tree.unmount());});
 it("disables reporting without a selected reason and forwards valid selection",()=>{const select=vi.fn();const tree=render(<ModerationScreen title="신고" reasons={[{value:"spam",label:"스팸"}]} reason={null} onReasonChange={select} reasonLabel="사유" submit={{label:"신고하기",onAction:()=>{}}}/>);expect(tree.root.findAllByType(Button).find(button=>button.props.children==="신고하기")!.props.disabled).toBe(true);act(()=>tree.root.findByType(RadioGroup).props.onValueChange("spam"));expect(select).toHaveBeenCalledWith("spam");act(()=>tree.unmount());});
 it("uses the settings callback only for denied permission",()=>{const request=vi.fn(),settings=vi.fn();const tree=render(<PermissionScreen title="알림" status="denied" explanation="안내" request={{label:"허용",onAction:request}} settings={{label:"설정",onAction:settings}} continueAction={{label:"계속",onAction:()=>{}}}/>);expect(request).not.toHaveBeenCalled();act(()=>tree.root.findByType(Button).props.onPress());expect(settings).toHaveBeenCalledOnce();act(()=>tree.unmount());});
 it("completes a one-step onboarding without an invalid next cursor",()=>{const finish=vi.fn(),move=vi.fn();const tree=render(<OnboardingScreen steps={[{id:"one",title:"시작",description:"안내",content:"내용"}]} index={0} onIndexChange={move} nextLabel="다음" backLabel="이전" complete={{label:"완료",onAction:finish}} progressLabel={()=>"1/1"}/>);act(()=>tree.root.findByType(Button).props.onPress());expect(finish).toHaveBeenCalledOnce();expect(move).not.toHaveBeenCalled();act(()=>tree.unmount());});

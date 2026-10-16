@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import { SettingsScreen } from "@hjmds/react/screens";
+import { SettingsScreen, type ScreenLayoutProps } from "@hjmds/react/screens";
 import { Button } from "@hjmds/react/actions";
 import { Stack, Text } from "@hjmds/react/layout";
 import { Avatar, ListRow } from "@hjmds/react/display";
@@ -17,13 +17,13 @@ function Icon({ name }: { name: keyof typeof icons }) {
   
   return <Component size={20} strokeWidth={1.8} color={"currentColor"} />;
 }
-type Props = { leading: ReactNode; state: ScreenContentState; stateAction: ReactNode };
+type Props = { exit: NonNullable<ScreenLayoutProps["exit"]>; state: ScreenContentState; stateAction: ReactNode };
 type Panel = "theme" | "language" | "profile" | "privacy" | "help" | null;
 const themes = [{ value: "system", label: "기기 설정 따르기" }, { value: "light", label: "라이트 모드" }, { value: "dark", label: "다크 모드" }];
 const languages = [{ value: "ko", label: "한국어" }, { value: "en", label: "English" }, { value: "ja", label: "日本語" }];
 
 /** Local fixture state models product-owned settings; it never writes an account or OS permission. */
-export function SettingsPagePreview({ leading, state, stateAction }: Props) {
+export function SettingsPagePreview({ exit, state, stateAction }: Props) {
   const [panel, setPanel] = useState<Panel>(null);
   const [theme, setTheme] = useState("system");
   const [language, setLanguage] = useState("ko");
@@ -39,7 +39,7 @@ export function SettingsPagePreview({ leading, state, stateAction }: Props) {
   const settingsState: ScreenContentState = state.kind === "loading" ? { kind: "loading", title: "설정을 불러오고 있어요" }
     : state.kind === "error" ? { kind: "error", title: "설정을 불러오지 못했어요", description: "연결을 확인하고 다시 시도해 주세요." }
     : state.kind === "restricted" ? { kind: "restricted", title: "내 설정을 이어서 사용하세요", description: "로그인하면 계정에 저장한 설정을 가져올 수 있어요." } : state;
-  return <HjmProvider {...themeOverride}><SettingsScreen title="설정" leading={leading} state={settingsState} stateAction={stateAction}
+  return <HjmProvider {...themeOverride}><SettingsScreen title="설정" exit={exit} state={settingsState} stateAction={stateAction}
     profile={<Stack gap="md" align="center"><Avatar name={name} size="large"/><Stack gap="xs" align="center"><Text variant="title" emphasis="strong">{name}</Text><Text variant="caption" tone="muted">@jimin</Text></Stack><Button size="small" tone="ghost" onClick={()=>{setDraftName(name);setPanel("profile");}}>프로필 수정</Button></Stack>}
 
     sections={[

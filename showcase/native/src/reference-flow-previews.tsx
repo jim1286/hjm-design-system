@@ -1,8 +1,7 @@
-import { Container } from "@hjmds/react-native/primitives";
 import { Heading } from "@hjmds/react-native/heading";
 // Platform views share data/validation and the existing action-session demo; no new public engine.
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
-import { AccessibilityInfo, BackHandler, findNodeHandle, ScrollView, View, type TextInput } from "react-native";
+import { AccessibilityInfo, BackHandler, findNodeHandle, View, type TextInput } from "react-native";
 import { spacing, radius } from "@hjmds/design-contracts/foundations";
 import { Button, type ButtonTone } from "@hjmds/react-native/actions";
 import { Chip, SearchField, SegmentedControl, Switch, TextField } from "@hjmds/react-native/inputs";
@@ -19,10 +18,6 @@ import { useDemoAction } from "./action-recovery-previews";
 import { categories, records, emptyFilters, filterRecords, initialDraft, sameDraft, draftError, editorCopy, scopeCopy, flowSteps, stepLabels, stepName, introFeatures, comparisonModeCopy, type ComparisonMode, type EditorKind, type Draft } from "../../shared/reference-flows";
 
 const ReturnFocus = createContext<RefObject<View | null> | undefined>(undefined);
-function Frame({ children }: { children: ReactNode }) {
-  const target = useRef<View>(null);
-  return <ReturnFocus.Provider value={target}><ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingVertical: spacing.lg, paddingBottom: spacing.xxxl }}><Container><Stack gap="xl">{children}</Stack></Container></ScrollView></ReturnFocus.Provider>;
-}
 function Title({ children }: { children: string }) { return <Heading level="level3" >{children}</Heading>; }
 function Status({ children, ...props }: { children: string; announceOnMount?: boolean }) { return <PatternStatus {...props}>{children}</PatternStatus>; }
 function Row({ children }: { children: ReactNode }) { return <Stack axis="inline" wrap gap="sm">{children}</Stack>; }
@@ -85,7 +80,7 @@ function Editor({ kind }: { kind: EditorKind }) {
     if (current.status !== "idle") session.reset(current.value);
   };
   const reset = () => { if (locked()) return; const next = initialDraft(kind); session.reset(next); setDraft(next); setStage(kind === "first" ? 0 : 1); setPaused(false); setInvalid(false); setViewResult(false); };
-  const leave = () => { if (locked()) return; returnFocusRef.current = leaveRef.current; if (kind === "settings" && dirty) setConfirmLeave(true); else setPaused(true); };
+  const leave = () => { if (locked()) return; returnFocusRef.current = stageRef.current; if (kind === "settings" && dirty) setConfirmLeave(true); else setPaused(true); };
   const validate = () => { if (!draftError(draft)) return true; setInvalid(true); inputRef.current?.focus(); return false; };
   const review = () => { if (!locked() && validate()) setStage(2); };
   const save = () => { if (locked() || !validate()) return; const submitted = { ...draft }; void session.run(() => request(submitted), { retryable: true }); };
@@ -99,7 +94,6 @@ function Editor({ kind }: { kind: EditorKind }) {
     return () => subscription.remove();
   }, [paused, confirmLeave, busy, dirty]);
   const stageRef = useRef<View>(null);
-  const leaveRef = useRef<View>(null);
   const returnFocusRef = useRef<View>(null);
   const navigation = `${stage}:${paused}:${done}:${viewResult}`;
   const previousNavigation = useRef(navigation);
@@ -115,7 +109,9 @@ function Editor({ kind }: { kind: EditorKind }) {
     return () => cancelAnimationFrame(frame);
   }, [navigation]);
   const summary = <Stack gap="md"><Text variant="title">{draft.title || "아직 입력하지 않았어요"}</Text><Text>{draft.category} · 알림 {draft.enabled ? "켜짐" : "꺼짐"}</Text></Stack>;
-  return <Frame><Text tone="brand" variant="label">기록의 시작</Text><View ref={stageRef} accessible accessibilityRole="header" accessibilityLabel={copy.title}><Title>{copy.title}</Title></View><Text tone="muted">{copy.intro}</Text>
+  // 2026-10-17 user rule: leaving ("설정 나가기", "초안 남기고 쉬기") is the header's leading icon button, not a body text button.
+  const exit = paused || done ? {} : { exit: { kind: kind === "settings" ? "back" as const : "close" as const, label: kind === "settings" ? "설정 나가기" : "초안 남기고 쉬기", disabled: busy, onPress: leave } };
+  return <ScreenLayout title={copy.title} headerAlignment="center" layoutStyle={{ flex: 1 }} {...exit}><Stack gap="xl"><View ref={stageRef} accessible accessibilityLabel={copy.intro}><Text tone="muted">{copy.intro}</Text></View>
     {paused ? <Surface padding="lg"><Stack gap="lg"><Title>{kind === "settings" ? "설정에서 나왔어요" : "초안이 남아 있어요"}</Title>{summary}<ActionRow><Action onAction={reset}>처음부터</Action><Action tone="primary" onAction={() => setPaused(false)}>이어하기</Action></ActionRow></Stack></Surface>
     : done ? <Surface padding="lg"><Stack gap="lg"><Notice tone="success" title={copy.complete} />{summary}<Text>{viewResult ? "저장한 기록의 상세 내용입니다." : "확인된 결과를 바로 열어 볼 수 있어요."}</Text><ActionRow><Action onAction={reset}>다시 해보기</Action><Action tone="primary" onAction={() => { if (kind === "settings") session.reset(state.value); else setViewResult(value => !value); }}>{kind === "settings" ? "계속 수정하기" : viewResult ? "완료 화면으로" : "저장한 기록 보기"}</Action></ActionRow></Stack></Surface>
     : <Stack gap="lg">
@@ -125,16 +121,16 @@ function Editor({ kind }: { kind: EditorKind }) {
         {stage === 0 ? <><Heading level="level5">어떤 장면을 기록할까요?</Heading><Row>{categories.map(category => <Chip key={category} label={category} selectionMode="single" selected={draft.category === category} onPress={() => change({ category })} />)}</Row><Action tone="primary" onAction={() => { if (!locked()) setStage(1); }}>이 주제로 기록하기</Action><Action onAction={() => { if (!locked()) setStage(1); }}>나중에 정하기</Action></>
         : stage === 1 ? <><TextField ref={inputRef} label={copy.field} value={draft.title} disabled={busy} onValueChange={title => change({ title })} {...(invalid ? { error: draftError(draft) ?? "" } : {})} /><Row>{categories.map(category => <Chip key={category} label={category} selectionMode="single" disabled={busy} selected={draft.category === category} onPress={() => change({ category })} />)}</Row>
           {/* 2026-10-16 review: an on/off setting is a Switch, not a text button. */}<Switch label="기록 알림" description="기록할 시간에 알려 드려요." checked={draft.enabled} disabled={busy} onCheckedChange={enabled => change({ enabled })} />
-          {kind === "settings" ? <Stack gap="sm"><Action tone="primary" loading={busy} disabled={!dirty} onAction={save}>{copy.submit}</Action><Action disabled={busy || !dirty} onAction={revert}>변경 되돌리기</Action></Stack> : <Action tone="primary" onAction={review}>기록 확인</Action>}</>
+          {kind === "settings" ? <Stack gap="xs"><Action tone="primary" loading={busy} disabled={!dirty} onAction={save}>{copy.submit}</Action><Action disabled={busy || !dirty} onAction={revert}>변경 되돌리기</Action></Stack> : <Action tone="primary" onAction={review}>기록 확인</Action>}</>
         : <>{summary}<ActionRow><Action disabled={busy} onAction={() => { if (!locked()) setStage(1); }}>내용 수정</Action><Action tone="primary" loading={busy} onAction={save}>{state.status === "error" ? "입력한 내용 다시 저장" : copy.submit}</Action></ActionRow></>}
         {state.status === "error" && <Notice tone="danger" title="저장하지 못했어요" description="입력은 그대로 남아 있어요. 내용을 확인하고 다시 저장해 주세요." />}
       </Stack></Surface>
-      <Row>{stage > 0 && kind === "first" && <Action disabled={busy} onAction={() => { if (!locked()) setStage(previous => Math.max(0, previous - 1)); }}>이전 단계</Action>}<Action hostRef={leaveRef} disabled={busy} onAction={() => { returnFocusRef.current = leaveRef.current; leave(); }}>{kind === "settings" ? "설정 나가기" : "초안 남기고 쉬기"}</Action></Row>
+      {stage > 0 && kind === "first" && <Row><Action disabled={busy} onAction={() => { if (!locked()) setStage(previous => Math.max(0, previous - 1)); }}>이전 단계</Action></Row>}
       <PreviewTools><PreviewToolButton disabled={busy} selected={failureArmed} onPress={() => { if (!locked()) toggleFailure(); }}>{failureArmed ? "다음 저장 실패 예약됨" : "다음 저장 실패시키기"}</PreviewToolButton></PreviewTools>
     </Stack>}
     <Text tone="muted" variant="caption">{scopeCopy}</Text>
-    <Sheet returnFocusRef={returnFocusRef} open={confirmLeave} onOpenChange={open => { if (!open) setConfirmLeave(false); }} closeLabel="닫기" keyboardAvoidance scrollable title="저장하지 않은 변경이 있어요" footer={<Stack gap="sm"><Action tone="primary" onAction={() => setConfirmLeave(false)}>계속 수정</Action><Action tone="danger" onAction={() => { if (locked()) return; revert(); setConfirmLeave(false); setPaused(true); returnFocusRef.current = stageRef.current; }}>변경 버리고 나가기</Action></Stack>}><Text>변경을 버리면 마지막으로 저장한 설정으로 돌아가요.</Text></Sheet>
-  </Frame>;
+    <Sheet returnFocusRef={returnFocusRef} open={confirmLeave} onOpenChange={open => { if (!open) setConfirmLeave(false); }} closeLabel="닫기" keyboardAvoidance scrollable title="저장하지 않은 변경이 있어요" footer={<Stack gap="xs"><Action tone="primary" onAction={() => setConfirmLeave(false)}>계속 수정</Action><Action tone="danger" onAction={() => { if (locked()) return; revert(); setConfirmLeave(false); setPaused(true); returnFocusRef.current = stageRef.current; }}>변경 버리고 나가기</Action></Stack>}><Text>변경을 버리면 마지막으로 저장한 설정으로 돌아가요.</Text></Sheet>
+  </Stack></ScreenLayout>;
 }
 export function FirstTask() { return <Editor kind="first" />; }
 export function RecoverableSettings() { return <Editor kind="settings" />; }

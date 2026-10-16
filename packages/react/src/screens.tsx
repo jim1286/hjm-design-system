@@ -9,9 +9,10 @@ import { Button, IconButton } from "./actions.js";
 import { useOptionalHjmTheme } from "./provider.js";
 import { TextArea } from "./forms.js";
 import { useId, useLayoutEffect, useRef, useState, type Ref, type ReactNode } from "react";
-import { isReplySwipe, timestampRevealOffset, shouldSubmitMessageKey, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
+import { isReplySwipe, timestampRevealOffset, shouldSubmitMessageKey, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, validateScreenExit, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
 import { Heading } from "./heading.js";
 import { Spinner } from "./internal/spinner.js";
+import { ScreenExitButton, type ScreenExit } from "./internal/screen-exit.js";
 import { Section, Stack, Text } from "./layout.js";
 import { ListRow, type ListRowProps } from "./display.js";
 import { classNames, useDesignProfileDefaults } from "./internal.js";
@@ -34,6 +35,9 @@ export type ScreenLayoutProps = Readonly<{
   /** Explicit layout wins over the nearest design profile. */
   presentation?: DesignProfileScreenPresentation;
   description?: string;
+  /** Leaving this screen (back, close, settings exit): icon-only button fixed at the header's leading edge. */
+  exit?: ScreenExit;
+  /** Other leading content. Never a text exit button; use `exit`. */
   leading?: ReactNode;
   actions?: ReactNode;
   notice?: ReactNode;
@@ -53,8 +57,10 @@ export type ScreenLayoutProps = Readonly<{
 }>;
 
 /** Shared screen shell. Routing, data, permission checks and mutation state remain product-owned. */
-export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, leading, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", as: Element = "main", className, layoutStyle , hjmTitleLeading }: ScreenLayoutProps & Readonly<{ /** Internal: ChatScreen header photo. */ hjmTitleLeading?: ReactNode }>) {
+export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, leading: leadingSlot, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", as: Element = "main", className, layoutStyle , hjmTitleLeading }: ScreenLayoutProps & Readonly<{ /** Internal: ChatScreen header photo. */ hjmTitleLeading?: ReactNode }>) {
   const id = useId();
+  if (exit) validateScreenExit(exit, leadingSlot !== undefined);
+  const leading = exit ? <ScreenExitButton {...exit} /> : leadingSlot;
   const showHeader = titleVisibility === "visible" || !!description || !!leading || !!actions;
   // Screens historically work with the stylesheet alone. Optional context keeps
   // that path while inheriting profiles from an enclosing Provider when present.
@@ -79,9 +85,11 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
   const recipe = screenPatternRecipe;
   return <Element aria-labelledby={header || titleVisibility === "hidden" ? undefined : id} aria-label={header || titleVisibility === "hidden" ? title : undefined} data-content-inset={contentInset} data-presentation={presentation} className={classNames("hjm-screen", className)}
     style={{ backgroundColor: surface === "transparent" || designProfile?.material.canvas ? "transparent" : undefined, "--hjm-screen-width": `${profileLayout?.maxWidth ?? recipe.maxWidth}px`, "--hjm-screen-padding": `${contentInset === "none" ? 0 : recipe.padding}px`, "--hjm-screen-gap": `${profileLayout?.gap ?? recipe.sectionGap}px`, "--hjm-screen-item-gap": `${recipe.itemGap}px`, "--hjm-screen-state-gap": `${recipe.stateGap}px`, "--hjm-screen-header-min": `${recipe.headerMinWidth}px`, ...layoutStyle } as React.CSSProperties}>
-    {header ?? (showHeader ? headerAlignment === "center" ? <header className="hjm-screen__header" style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr)", alignItems: "center" }}>
+    {header ?? (showHeader ? headerAlignment === "center" ? <header className="hjm-screen__header" style={{ display: "grid", gridTemplateColumns: "1fr minmax(0, auto) 1fr", alignItems: "center" }}>
+      {/* Equal side columns sized by their controls and a title-size (18) heading, matching Native's measured
+          centered header (2026-10-17: the fixed 1:2:1 split with a level3 heading wrapped short titles). */}
       <div>{leading}</div><div className="hjm-screen__heading" style={{ textAlign: "center", minWidth: 0 }}>
-        {titleVisibility === "visible" && <Stack axis="inline" gap="xs" align="center" justify="center" wrap>{hjmTitleLeading}<Heading level="level3" semanticLevel={1} id={id}>{title}</Heading>{titleBadge}</Stack>}
+        {titleVisibility === "visible" && <Stack axis="inline" gap="xs" align="center" justify="center" wrap>{hjmTitleLeading}<Heading level="level5" semanticLevel={1} id={id}>{title}</Heading>{titleBadge}</Stack>}
         {description ? <Text as="p" tone="muted">{description}</Text> : null}</div><div style={{ justifySelf: "end" }}>{actions}</div>
     </header> : <header className="hjm-screen__header" style={profileLayout ? { flexDirection: profileLayout.headerAxis, alignItems: profileLayout.centered ? "center" : undefined, textAlign: profileLayout.centered ? "center" : undefined } : undefined}>
       {leading}<div className="hjm-screen__heading">{titleVisibility === "visible" && <Stack axis="inline" gap="xs" align="center" justify={profileLayout?.centered ? "center" : "start"} wrap><Heading level="level3" semanticLevel={1} id={id}>{title}</Heading>{titleBadge}</Stack>}

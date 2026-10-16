@@ -1,6 +1,8 @@
 import { topBarRecipe } from "@hjmds/design-contracts/recipes";
 import { forwardRef, type CSSProperties, type HTMLAttributes, type MouseEventHandler, type ReactNode } from "react";
 import { Button } from "./actions.js";
+import { ScreenExitButton, type ScreenExit } from "./internal/screen-exit.js";
+import { validateScreenExit } from "@hjmds/design-contracts/screen-patterns";
 import { classNames } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
@@ -15,6 +17,8 @@ export type TopBarProps = Omit<HTMLAttributes<HTMLDivElement>, "title" | "childr
   onTitleClick?: MouseEventHandler<HTMLButtonElement>;
   titleAccessibilityLabel?: string;
   headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
+  /** Leaving this screen: icon-only back/close fixed at the leading edge (2026-10-17). Exclusive with `leading`. */
+  exit?: ScreenExit;
   leading?: ReactNode;
   trailing?: ReactNode;
   actions?: ReactNode;
@@ -27,10 +31,12 @@ export type TopBarProps = Omit<HTMLAttributes<HTMLDivElement>, "title" | "childr
 /** Screen chrome stays composable inside pages and dialogs, without adding a second banner landmark. */
 export const TopBar = forwardRef<HTMLDivElement, TopBarProps>(function TopBar({
   title, titleContent, subtitle, titleLeading, onTitleClick, titleAccessibilityLabel, headingLevel = 1,
-  leading, trailing, actions, centered = topBarRecipe.defaults.centered, safeAreaTop = 0,
+  exit, leading: leadingSlot, trailing, actions, centered = topBarRecipe.defaults.centered, safeAreaTop = 0,
   className, style, layoutStyle, ...props
 }, ref) {
   const theme = useOptionalHjmTheme();
+  if (exit) validateScreenExit(exit, leadingSlot !== undefined);
+  const leading = exit ? <ScreenExitButton {...exit} /> : leadingSlot;
   if (titleContent !== undefined && (title !== undefined || subtitle !== undefined || titleLeading !== undefined || onTitleClick !== undefined || titleAccessibilityLabel !== undefined)) {
     throw new TypeError("TopBar titleContent is exclusive with title affordances");
   }

@@ -1,7 +1,6 @@
 import riverPhoto from "../../../shared/photos/river.jpg";
 import { useState } from "react";
-import { ArrowUp, ChevronLeft } from "lucide-react";
-import { IconButton } from "@hjmds/react/actions";
+import { ArrowUp } from "lucide-react";
 import { Text } from "@hjmds/react/layout";
 import { Avatar } from "@hjmds/react/display";
 import { ChatMessage, ChatScreen, MessageComposer } from "@hjmds/react/screens";
@@ -40,7 +39,7 @@ export function GroupChatPreview() {
     setDraft(""); setReplyTarget(null);
   };
   return <div style={{ height: 720 }}>
-    <ChatScreen title="산책 모임" as="section" titleBadge={<Text tone="muted">4</Text>} leading={<IconButton label="뒤로" tone="ghost" onClick={() => setStatus("목록으로 돌아가요.")}><ChevronLeft size={22} /></IconButton>}
+    <ChatScreen title="산책 모임" as="section" titleBadge={<Text tone="muted">4</Text>} exit={{ kind: "back", label: "뒤로", onClick: () => setStatus("목록으로 돌아가요.") }}
       avatar={<Avatar name="산책 모임" size="small" src={members.seoyeon!.photo} alt="" />}
       notice={status ? <Text tone="muted">{status}</Text> : null}
       composer={<MessageComposer value={draft} onValueChange={setDraft} label="메시지 보내기" sendLabel="전송" onSend={send} sendPresentation="circle" sendIcon={<ArrowUp size={20} strokeWidth={2} color="var(--hjm-color-on-primary)" />}

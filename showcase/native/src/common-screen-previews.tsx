@@ -112,7 +112,7 @@ function ScreenPreview({ kind: initialKind, stateKind = "ready", tools = false }
     setMessages(current => [...current, {id:`sent-${current.length}`,author:"나",direction:"outgoing",timestamp:"지금",text:value,...(photos.length ? {photos:photos.length} : {}),...(replyTarget ? {replyTo:replyTarget} : {})}]); setReplyTarget(null); setPhotos([]); setDraft(""); setFailed(false);
   }} />;
   const retry = state.kind === "error" || state.kind === "restricted" ? <Button onPress={() => setRecovered(true)}>{state.kind === "restricted" ? "로그인" : "다시 연결"}</Button> : null;
-  const back = <IconButton label="뒤로" tone="ghost" onPress={() => { setDetail(null); setAtHome(true); }}><Glyph name="back" /></IconButton>;
+  const back = { kind: "back" as const, label: "뒤로", onPress: () => { setDetail(null); setAtHome(true); } };
   const entries = [
     { id: 1, name: "서연", title: "서연님이 답글을 남겼어요", description: "저도 그 산책길 좋아해요. 다음에 같이 걸어요!", time: "5분 전", icon: "chat" as const },
     { id: 2, name: "민준", title: "민준님이 내 이야기에 공감했어요", description: "작은 일에도 기분 좋아지는 하루", time: "28분 전", icon: "heart" as const },
@@ -123,15 +123,15 @@ function ScreenPreview({ kind: initialKind, stateKind = "ready", tools = false }
   const notificationState = state.kind === "ready" && visibleEntries.length === 0 ? states.empty : state;
   const groups = [{ title: "오늘", items: visibleEntries.filter(entry => entry.id !== 4) }, { title: "이번 주", items: visibleEntries.filter(entry => entry.id === 4) }].filter(group => group.items.length > 0);
   let screen;
-  if (kind === "settings") screen = <SettingsPagePreview leading={back} state={state} stateAction={retry} />;
-  else if (kind === "notifications") screen = <NotificationInboxScreen title="알림" leading={back} state={notificationState} stateAction={retry} notice={readError ? notice : null}
+  if (kind === "settings") screen = <SettingsPagePreview exit={back} state={state} stateAction={retry} />;
+  else if (kind === "notifications") screen = <NotificationInboxScreen title="알림" exit={back} state={notificationState} stateAction={retry} notice={readError ? notice : null}
     filters={<Stack axis="inline" gap="xs" wrap accessibilityRole="radiogroup" accessibilityLabel="알림 필터">{["전체","답글","읽지 않음"].map(value=><Chip key={value} label={value} selectionMode="single" selected={notificationTab===value} onPress={()=>setNotificationTab(value)} />)}</Stack>}
     actions={<IconButton label="알림 설정" tone="ghost" onPress={() => setKind("settings")}><Glyph name="settings" /></IconButton>}>
     <Stack gap="xl">{groups.map(group => <Stack key={group.title} gap="sm"><Heading level="level5">{group.title}</Heading>{group.items.map(entry => <NotificationItem key={entry.id} title={entry.title} description={entry.description}
       leading={<Person name={entry.name} />} trailing={<Glyph name={entry.icon} />} read={readIds.includes(entry.id) || entry.id === 4} statusLabel={readIds.includes(entry.id) || entry.id === 4 ? "확인함" : "새 알림"} timestamp={entry.time}
       onPress={() => { if (failNext === "notifications") { setFailNext(null); setReadError(true); return; } setReadError(false); setReadIds(ids => ids.includes(entry.id) ? ids : [...ids, entry.id]); setNotificationDetailId(entry.id); setDetail(entry.description); }} />)}</Stack>)}</Stack>
   </NotificationInboxScreen>;
-  else if (kind === "chat") screen = <ChatScreen title="서연" leading={back} avatar={<Person name="서연"/>} state={state} stateAction={retry} composer={composer}
+  else if (kind === "chat") screen = <ChatScreen title="서연" exit={back} avatar={<Person name="서연"/>} state={state} stateAction={retry} composer={composer}
     actions={<IconButton label="대화 정보" tone="ghost" onPress={() => setDetail("서연님과 나누는 대화예요.")}><Glyph name="more" /></IconButton>}>
     <FlatList ref={listRef} data={timeline} keyExtractor={message => message.id} keyboardShouldPersistTaps="handled"
       ListHeaderComponent={<Stack align="center"><Text variant="caption" tone="muted">10월 5일 월요일</Text></Stack>}
@@ -154,11 +154,11 @@ function ScreenPreview({ kind: initialKind, stateKind = "ready", tools = false }
     {...(loginBusy ? { pendingLabel: "로그인 중" } : {})}
     main={<Stack gap="sm">{loginError ? <Notice tone="danger" title="로그인하지 못했어요" description="잠시 후 다시 시도해 주세요." /> : null}<AuthProviderButton descriptor={{ provider: "google", label: "Google" }} logo={<ProviderLogo provider="google" />} onPress={startLogin} /><AuthProviderButton descriptor={{ provider: "apple", label: "Apple" }} logo={<ProviderLogo provider="apple" />} onPress={startLogin} /></Stack>}
     footer={<Stack gap="xs" align="center"><Text variant="caption" tone="muted">계속하면 이용약관과 개인정보처리방침에 동의해요.</Text><Stack axis="inline" gap="md"><Button size="small" tone="ghost" onPress={() => setDetail("이용약관 예제 · 실제 서비스의 약관을 연결하는 영역이에요.")}>이용약관</Button><Button size="small" tone="ghost" onPress={() => setDetail("개인정보처리방침 예제 · 수집 항목과 보관 기간을 안내하는 영역이에요.")}>개인정보처리방침</Button></Stack>{detail ? <Text variant="caption">{detail}</Text> : null}{loginBusy ? <Button tone="ghost" onPress={cancelLogin}>예제 로그인 취소</Button> : null}</Stack>} />;
-  else screen = <ScreenLayout title="내 소식" leading={back} state={state} stateAction={retry}><Text>나에게 도착한 이야기를 여기에서 확인해요.</Text></ScreenLayout>;
+  else screen = <ScreenLayout title="내 소식" exit={back} state={state} stateAction={retry}><Text>나에게 도착한 이야기를 여기에서 확인해요.</Text></ScreenLayout>;
   // Local navigation keeps the fixture reversible without changing the host router.
   // Only notification 1 belongs to the supplied Soyeon timeline; other details must not open it.
   if (atHome) screen = <ScreenLayout title="나의 공간" description="오늘의 이야기와 소식을 만나 보세요."><Stack gap="sm">{([['settings', '설정'], ['notifications', '알림'], ['chat', '서연과의 대화']] as const).map(([target, label]) => <ListRow key={target} title={label} trailing={<Glyph name="next" />} onPress={() => { setKind(target); setAtHome(false); }} />)}</Stack></ScreenLayout>;
-  else if (detail && kind !== "login") screen = <ScreenLayout title={kind === "notifications" ? "도착한 이야기" : kind === "chat" ? "대화 정보" : "상세 정보"} leading={<IconButton label="뒤로" tone="ghost" onPress={() => setDetail(null)}><Glyph name="back" /></IconButton>}><Stack gap="lg"><Text>{detail}</Text>{kind === "notifications" && notificationDetailId === 1 ? <Button onPress={() => { setDetail(null); setKind("chat"); }}>대화 이어가기</Button> : null}</Stack></ScreenLayout>;
+  else if (detail && kind !== "login") screen = <ScreenLayout title={kind === "notifications" ? "도착한 이야기" : kind === "chat" ? "대화 정보" : "상세 정보"} exit={{ kind: "back", label: "뒤로", onPress: () => setDetail(null) }}><Stack gap="lg"><Text>{detail}</Text>{kind === "notifications" && notificationDetailId === 1 ? <Button onPress={() => { setDetail(null); setKind("chat"); }}>대화 이어가기</Button> : null}</Stack></ScreenLayout>;
   const toggleCopy = kind === "chat" || kind === "notifications" ? failToggleCopy[kind] : null;
   return <Stack gap="sm">{tools && toggleCopy ? <PreviewTools><PreviewToolButton selected={failNext === kind} onPress={() => setFailNext(v => v === kind ? null : kind === "chat" || kind === "notifications" ? kind : null)}>{toggleCopy[failNext === kind ? 1 : 0]}</PreviewToolButton></PreviewTools> : null}<Frame login={kind === "login"}>{screen}</Frame></Stack>;
 }

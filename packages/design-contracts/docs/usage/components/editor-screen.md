@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.17.1
-- 검토일: 2026-10-13
+- 검토일: 2026-10-17
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screens.tsx`·`src/screen-flows.tsx`; 기존 개별 지침을 새 규격으로 통합. 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
 - 스토리북: `배포/화면/콘텐츠/작성과 수정`, `배포/화면/계정/프로필`
 
@@ -93,18 +93,18 @@ import { TextField } from "@hjmds/react-native/inputs";
 | --- | --- | --- | --- |
 | `dirty` | `boolean` | 필수 | `true`에서 닫기를 누르면 `discard` 확인창을 띄우고, 확인하면 `cancel.onAction`을 부른다. `false`면 바로 부른다 |
 | `submit` | `ScreenFlowAction`(`{ label, onAction(), disabled?, pending? }`) | 필수 | `pending`이면 loading·비활성. 그동안 닫기 버튼도 비활성. 본문 `state`가 `ready`가 아니면 저장 비활성 |
-| `cancel` | `ScreenFlowAction` | 필수 | `leading` 자리의 ghost 닫기 버튼 |
+| `cancel` | `ScreenFlowAction` | 필수 | 헤더 시작 쪽 × 아이콘 닫기 버튼(`ScreenLayout` `exit` `close`). `label`은 보조기술 이름이다. 2026-10-17부터 글자 버튼 대신 아이콘 |
 | `discard` | AlertDialog confirm 요청에서 `onConfirm`을 뺀 것 + `fallbackErrorMessage: string` | 필수 | `onConfirm`은 EditorScreen이 채운다 |
 | `submitPlacement` | `"footer"` · `"header"` | `"footer"` | `header`면 저장이 상단 `actions` 자리로 가고 footer에는 `draftStatus`만 남는다 |
 | `draftStatus` | `ReactNode` | 없음 | 초안 저장 상태 안내. footer에 놓인다 |
 | `children` | `ReactNode` | 필수 | 편집 본문 |
-| 나머지 | `ScreenLayout`과 같음(`children`·`footer` 제외) | — | `leading`은 닫기 버튼으로 덮인다. `submitPlacement="footer"`일 때만 `actions`가 그대로 전달된다 |
+| 나머지 | `ScreenLayout`과 같음(`children`·`footer` 제외) | — | `leading`·`exit`은 받지 않는다(닫기가 그 자리를 소유).  `submitPlacement="footer"`일 때만 `actions`가 그대로 전달된다 |
 
 ## 배치
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | ScreenLayout 폭(최대 720) 안에 입력 본문; 저장·닫기는 `Button` 기본 크기 | `ScreenLayout`, `screen-flows.tsx` `Action` |
+| 크기 | ScreenLayout 폭(최대 720) 안에 입력 본문; 저장은 `Button` 기본 크기, 닫기는 `IconButton` | `ScreenLayout`, `screen-flows.tsx` `Action` |
 | 간격 | 화면 padding `spacing.md` 16; footer 안 `draftStatus`–저장 `spacing.sm` 12(`Stack gap="sm"`); 본문 안 입력 간격은 제품(Form 등) 소유 | Web·Native `EditorScreen` |
 | 순서·정렬 | 헤더(닫기 → 제목 → [저장: header 배치]) → 본문 → footer(`draftStatus` → 저장) | `EditorScreen` 렌더 순서 |
 | 고정·스크롤 | 헤더·footer 고정, 본문 스크롤(`scroll` 기본 `"screen"`); 이탈 확인은 AlertDialog 오버레이 | `ScreenLayout`, `AlertDialog` |

@@ -18,8 +18,7 @@ type Base = Omit<ScreenLayoutProps, "children" | "footer">;
 export type ListDetailScreenProps = Base & {
     list: ReactNode;
     detail?: Pick<ScreenLayoutProps, "title" | "state" | "stateAction" | "notice" | "titleVisibility" | "headerAlignment"> & {
-        content: ReactNode; /** Product back control (icon button) replacing the text action; `back` still names it. */
-        leading?: ReactNode;
+        content: ReactNode;
     };
     back: ScreenFlowAction;
     refresh?: ScreenFlowAction;
@@ -27,7 +26,7 @@ export type ListDetailScreenProps = Base & {
 };
 /** Keep the list mounted so input and scroll survive a detail visit. Routers may instead restore host scroll state. */
 export declare function ListDetailScreen({ list, detail, back, refresh, loadMore, layoutStyle, ...screen }: ListDetailScreenProps): import("react").JSX.Element;
-export type EditorScreenProps = Base & {
+export type EditorScreenProps = Omit<Base, "leading" | "exit"> & {
     children: ReactNode;
     submitPlacement?: "header" | "footer";
     dirty: boolean;

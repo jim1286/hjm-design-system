@@ -2,11 +2,16 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { topBarRecipe } from "@hjmds/design-contracts/recipes";
 import { forwardRef } from "react";
 import { Button } from "./actions.js";
+import { ScreenExitButton } from "./internal/screen-exit.js";
+import { validateScreenExit } from "@hjmds/design-contracts/screen-patterns";
 import { classNames } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
 /** Screen chrome stays composable inside pages and dialogs, without adding a second banner landmark. */
-export const TopBar = forwardRef(function TopBar({ title, titleContent, subtitle, titleLeading, onTitleClick, titleAccessibilityLabel, headingLevel = 1, leading, trailing, actions, centered = topBarRecipe.defaults.centered, safeAreaTop = 0, className, style, layoutStyle, ...props }, ref) {
+export const TopBar = forwardRef(function TopBar({ title, titleContent, subtitle, titleLeading, onTitleClick, titleAccessibilityLabel, headingLevel = 1, exit, leading: leadingSlot, trailing, actions, centered = topBarRecipe.defaults.centered, safeAreaTop = 0, className, style, layoutStyle, ...props }, ref) {
     const theme = useOptionalHjmTheme();
+    if (exit)
+        validateScreenExit(exit, leadingSlot !== undefined);
+    const leading = exit ? _jsx(ScreenExitButton, { ...exit }) : leadingSlot;
     if (titleContent !== undefined && (title !== undefined || subtitle !== undefined || titleLeading !== undefined || onTitleClick !== undefined || titleAccessibilityLabel !== undefined)) {
         throw new TypeError("TopBar titleContent is exclusive with title affordances");
     }

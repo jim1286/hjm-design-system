@@ -106,6 +106,8 @@ import { isWebRenderer, webOnly, webTabProps } from "./internal/web-a11y.js";
 export type { TabsAppearance };
 
 import { Button } from "./actions.js";
+import { ScreenExitButton, type ScreenExit } from "./internal/screen-exit.js";
+import { validateScreenExit } from "@hjmds/design-contracts/screen-patterns";
 import { Spinner } from "./feedback.js";
 import {
 scheduleAfterNativeModalTeardown,
@@ -1283,6 +1285,8 @@ export type TopBarProps = Readonly<{
   onTitlePress?: NonNullable<PressableProps["onPress"]>;
   titleAccessibilityLabel?: string;
   titleAccessibilityHint?: string;
+  /** Leaving this screen: icon-only back/close fixed at the leading edge (2026-10-17). Exclusive with `leading`. */
+  exit?: ScreenExit;
   leading?: ReactNode;
   trailing?: ReactNode;
   /** Semantic alias for trailing actions; do not combine with `trailing`. */
@@ -1302,7 +1306,8 @@ export function TopBar({
   onTitlePress,
   titleAccessibilityLabel,
   titleAccessibilityHint,
-  leading,
+  exit,
+  leading: leadingSlot,
   trailing,
   actions,
   centered = topBarRecipe.defaults.centered,
@@ -1311,6 +1316,8 @@ export function TopBar({
   ...removedProps
 }: TopBarProps) {
   assertNoRemovedStyleProps("TopBar", removedProps, ["style", "leadingStyle", "titleStyle", "trailingStyle"]);
+  if (exit) validateScreenExit(exit, leadingSlot !== undefined);
+  const leading = exit ? <ScreenExitButton {...exit} /> : leadingSlot;
   if (customTitleContent !== undefined && (title !== undefined || subtitle !== undefined || titleLeading !== undefined || onTitlePress !== undefined || titleAccessibilityLabel !== undefined || titleAccessibilityHint !== undefined)) {
     throw new TypeError("TopBar titleContent is exclusive with title affordances");
   }

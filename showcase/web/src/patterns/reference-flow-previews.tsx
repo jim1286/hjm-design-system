@@ -2,7 +2,7 @@ import { Heading } from "@hjmds/react/heading";
 import { useEffect, useRef, useState, type ReactNode, type MouseEvent, type RefObject } from "react";
 import { Button, type ButtonTone } from "@hjmds/react/actions";
 import { SearchField, TextField } from "@hjmds/react/forms";
-import { Container, Grid, Stack, Surface, Text } from "@hjmds/react/layout";
+import { Grid, Stack, Surface, Text } from "@hjmds/react/layout";
 import { Chip, SegmentedControl, Switch } from "@hjmds/react/selection";
 import { Collapsible } from "@hjmds/react/collapsible";
 import { StatusText } from "@hjmds/react/status-text";
@@ -19,7 +19,6 @@ import "./reference-flows.css";
 // Compositions take the route's frame from Container; screens use ScreenLayout inside the host height.
 // 2026-10-06: the earlier `.hjm-reference` CSS padding/max-width re-implemented Container's gutter and
 // width, and the screens bypassed ScreenLayout, so the usage guide had to describe a different frame.
-function Frame({ children }: { children: ReactNode }) { return <main><Container><Stack gap="xl">{children}</Stack></Container></main>; }
 function ScreenHost({ children }: { children: ReactNode }) { return <div style={{ blockSize: "90dvh" }}>{children}</div>; }
 // Two columns fold to one below 240 (`spacing.xxxl` × 6), the same reading minimum as before.
 const twoColumnMin = { compact: spacing.xxxl * 6 };
@@ -73,7 +72,9 @@ function Editor({ kind }: { kind: EditorKind }) {
   const previousNavigation = useRef(navigation);
   useEffect(() => { if (previousNavigation.current !== navigation) stageRef.current?.focus(); previousNavigation.current = navigation; }, [navigation]);
   const summary = <Stack gap="md"><Text variant="title">{draft.title || "아직 입력하지 않았어요"}</Text><Text>{draft.category} · 알림 {draft.enabled ? "켜짐" : "꺼짐"}</Text></Stack>;
-  return <Frame><Text tone="brand" variant="label">기록의 시작</Text><div ref={stageRef} tabIndex={-1}><Title>{copy.title}</Title></div><Text tone="muted">{copy.intro}</Text>
+  // 2026-10-17 user rule: leaving ("설정 나가기", "초안 남기고 쉬기") is the header's leading icon button, not a body text button.
+  const exit = paused || done ? {} : { exit: { kind: kind === "settings" ? "back" as const : "close" as const, label: kind === "settings" ? "설정 나가기" : "초안 남기고 쉬기", disabled: busy, onClick: () => { returnFocusRef.current = document.activeElement as HTMLElement | null; leave(); } } };
+  return <ScreenHost><ScreenLayout title={copy.title} headerAlignment="center" {...exit}><Stack gap="xl"><div ref={stageRef} tabIndex={-1} aria-label={copy.title}><Text tone="muted">{copy.intro}</Text></div>
     {paused ? <Surface padding="lg"><Stack gap="lg"><Title>{kind === "settings" ? "설정에서 나왔어요" : "초안이 남아 있어요"}</Title>{summary}<ActionRow><Action onAction={reset}>처음부터</Action><Action tone="primary" onAction={() => setPaused(false)}>이어하기</Action></ActionRow></Stack></Surface>
     : done ? <Surface padding="lg"><Stack gap="lg"><Notice tone="success" title={copy.complete} />{summary}<Text>{viewResult ? "저장한 기록의 상세 내용입니다." : "확인된 결과를 바로 열어 볼 수 있어요."}</Text><ActionRow><Action onAction={reset}>다시 해보기</Action><Action tone="primary" onAction={() => { if (kind === "settings") session.reset(state.value); else setViewResult(value => !value); }}>{kind === "settings" ? "계속 수정하기" : viewResult ? "완료 화면으로" : "저장한 기록 보기"}</Action></ActionRow></Stack></Surface>
     : <Stack gap="lg">
@@ -83,16 +84,16 @@ function Editor({ kind }: { kind: EditorKind }) {
         {stage === 0 ? <><Heading level="level5" semanticLevel={2}>어떤 장면을 기록할까요?</Heading><Row>{categories.map(category => <Chip key={category} label={category} selectionMode="single" selected={draft.category === category} onSelectedChange={() => change({ category })} />)}</Row><Action tone="primary" onAction={() => { if (!locked()) setStage(1); }}>이 주제로 기록하기</Action><Action onAction={() => { if (!locked()) setStage(1); }}>나중에 정하기</Action></>
         : stage === 1 ? <><TextField ref={inputRef} label={copy.field} value={draft.title} disabled={busy} onValueChange={title => change({ title })} {...(invalid ? { error: draftError(draft) ?? "" } : {})} /><Row>{categories.map(category => <Chip key={category} label={category} selectionMode="single" disabled={busy} selected={draft.category === category} onSelectedChange={() => change({ category })} />)}</Row>
           {/* 2026-10-16 review: an on/off setting is a Switch, not a text button. */}<Switch label="기록 알림" description="기록할 시간에 알려 드려요." checked={draft.enabled} disabled={busy} onCheckedChange={enabled => change({ enabled })} />
-          {kind === "settings" ? <Stack gap="sm"><Action tone="primary" loading={busy} disabled={!dirty} onAction={save}>{copy.submit}</Action><Action disabled={busy || !dirty} onAction={revert}>변경 되돌리기</Action></Stack> : <Action tone="primary" onAction={review}>기록 확인</Action>}</>
+          {kind === "settings" ? <Stack gap="xs"><Action tone="primary" loading={busy} disabled={!dirty} onAction={save}>{copy.submit}</Action><Action disabled={busy || !dirty} onAction={revert}>변경 되돌리기</Action></Stack> : <Action tone="primary" onAction={review}>기록 확인</Action>}</>
         : <>{summary}<ActionRow><Action disabled={busy} onAction={() => { if (!locked()) setStage(1); }}>내용 수정</Action><Action tone="primary" loading={busy} onAction={save}>{state.status === "error" ? "입력한 내용 다시 저장" : copy.submit}</Action></ActionRow></>}
         {state.status === "error" && <Notice tone="danger" title="저장하지 못했어요" description="입력은 그대로 남아 있어요. 내용을 확인하고 다시 저장해 주세요." />}
       </Stack></Surface>
-      <Row>{stage > 0 && kind === "first" && <Action disabled={busy} onAction={() => { if (!locked()) setStage(previous => Math.max(0, previous - 1)); }}>이전 단계</Action>}<Action disabled={busy} onAction={event => { returnFocusRef.current = event.currentTarget; leave(); }}>{kind === "settings" ? "설정 나가기" : "초안 남기고 쉬기"}</Action></Row>
+      {stage > 0 && kind === "first" && <Row><Action disabled={busy} onAction={() => { if (!locked()) setStage(previous => Math.max(0, previous - 1)); }}>이전 단계</Action></Row>}
       <PreviewTools><PreviewToolButton disabled={busy} selected={failureArmed} onClick={() => { if (!locked()) toggleFailure(); }}>{failureArmed ? "다음 저장 실패 예약됨" : "다음 저장 실패시키기"}</PreviewToolButton></PreviewTools>
     </Stack>}
     <Text tone="muted" variant="caption">{scopeCopy}</Text>
     <Modal returnFocusRef={returnFocusRef} open={confirmLeave} onClose={() => setConfirmLeave(false)} title="저장하지 않은 변경이 있어요" footer={<ActionRow><Action tone="danger" onAction={() => { if (locked()) return; revert(); setConfirmLeave(false); setPaused(true); returnFocusRef.current = stageRef.current; }}>변경 버리고 나가기</Action><Action tone="primary" onAction={() => setConfirmLeave(false)}>계속 수정</Action></ActionRow>}><Text>변경을 버리면 마지막으로 저장한 설정으로 돌아가요.</Text></Modal>
-  </Frame>;
+  </Stack></ScreenLayout></ScreenHost>;
 }
 export function FirstTask() { return <Editor kind="first" />; }
 export function RecoverableSettings() { return <Editor kind="settings" />; }

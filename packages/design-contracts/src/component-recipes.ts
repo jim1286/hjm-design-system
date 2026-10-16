@@ -1703,6 +1703,13 @@ export const statisticRecipe = {
   };
 };
 
+/**
+ * Gap between adjacent buttons in one action group (2026-10-17 user rule: stacked bottom buttons looked
+ * loose at 12). Stacked (column) groups use 8, inline (row) groups keep 12 so tap targets stay apart.
+ * AlertDialog already used these values; Sheet/Dialog footers and composed screens now share them.
+ */
+export const actionGroupRecipe = { inlineGap: spacing.sm, stackedGap: spacing.xs } as const;
+
 export const sheetRecipe = {
   slots: ["backdrop", "positioner", "content", "handle", "header", "title", "body", "footer", "close"] as const,
   defaults: { placement: "bottom", size: "auto" },
@@ -1761,7 +1768,8 @@ export const sheetRecipe = {
   footer: {
     color: semanticColors.content.body,
     textVariant: "body",
-    gap: spacing.sm,
+    // Native stacks footer actions in a column.
+    gap: actionGroupRecipe.stackedGap,
     paddingTop: spacing.sm,
   },
   transition: { enter: motionPreset.enter, exit: motionPreset.exit },
@@ -1859,8 +1867,8 @@ export const alertDialogRecipe = {
   error: formSupportContract.error,
   // Stacked: confirm on top, cancel below, tighter gap (reported 2026-09-27). Row stays [cancel][confirm].
   actions: {
-    gap: spacing.sm,
-    stackedGap: spacing.xs,
+    gap: actionGroupRecipe.inlineGap,
+    stackedGap: actionGroupRecipe.stackedGap,
     stackedOrder: "confirm-first",
     stackBelow: breakpoint.medium,
     minButtonWidth: 96,

@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 구성 API 지침 참조
-- 검토일: 2026-10-15
+- 검토일: 2026-10-17
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screen-flows.tsx`(`ProfileScreen`·`EditorScreen`), 예제 `showcase/*/screen-flow-previews.tsx`(`AccountFlowPreview`)·`saved-profile-previews.tsx`(`ProfileEditFields`), 기본 얼굴 `showcase/web/src/patterns/ProfileStudio.previews.tsx`·`showcase/native/src/profile-face-preview.tsx`·`showcase/shared/profile-studio.ts`. 2026-10-06 사용자 승인으로 실험 `공통 화면/프로필`을 배포하면서 같은 프로필 수정을 직접 조립으로 보이던 배포 `화면/프로필 편집`과 합쳤다(API 기반 우선, Web id `patterns-profile-studio` 보존, [승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정))
 - 스토리북: `배포/화면/계정/프로필`
 
@@ -84,7 +84,7 @@
 | 게시물 열기 | 사진 칸 전체 | 격자 | 칸마다 1. 상세는 ScreenLayout + `leading` 뒤로 |
 | 로그아웃 | 계정 Sheet `footer` Button ghost → AlertDialog `confirm` | Sheet 아래 | 1. 확인 뒤 실행 |
 | 저장 | EditorScreen `submit` → Button primary(`pending`이면 `loading`) | 수정 footer 끝 | 1. 바뀐 것이 없거나 이름이 비면 비활성 |
-| 닫기 | EditorScreen `cancel` → Button ghost(머리 `leading`) | 수정 머리 앞 | 1. dirty면 `discard` 확인(danger) |
+| 닫기 | EditorScreen `cancel` → 헤더 시작 쪽 × 아이콘(`exit` `close`) | 수정 머리 앞 | 1. dirty면 `discard` 확인(danger) |
 | 사진 변경 | Button `secondary` `small` → Sheet | 수정 본문 사진 아래 | 1 |
 | 기본 얼굴 고르기 | Button ghost + `selected` > Avatar | 사진 영역 | 얼굴 수만큼 |
 | 다시 시도 | `stateAction` Button | 상태 안내 아래 | 오류·로그인 필요일 때 1 |

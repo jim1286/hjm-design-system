@@ -44,7 +44,7 @@ export function ApplyOrDiscardSelection() {
   <PatternStatus>{`현재 표시: ${displayCopy[applied]}`}</PatternStatus>
   <View ref={trigger} collapsable={false}><Button onPress={start}>표시 방식 선택</Button></View>
   <Sheet open={open} onOpenChange={onOpenChange} title="표시 방식 선택" closeLabel="닫기" returnFocusRef={trigger}
-   footer={<Stack gap="sm"><Button onPress={() => { if (close()) setApplied(draft); }}>선택 적용</Button><Button tone="secondary" onPress={close}>선택 취소</Button></Stack>}>
+   footer={<Stack gap="xs"><Button onPress={() => { if (close()) setApplied(draft); }}>선택 적용</Button><Button tone="secondary" onPress={close}>선택 취소</Button></Stack>}>
    <Stack gap="md"><RadioGroup<DisplayId> accessibilityLabel="표시 방식" orientation="vertical" value={draft} items={displayItems} onValueChange={id => { if (id && isCurrent()) setDraft(id); }} />
     <Text>적용을 눌러야 화면이 바뀌어요. 취소하거나 닫으면 기존 선택을 유지해요.</Text>
    </Stack>
@@ -60,7 +60,7 @@ export function ReopenDraft() {
   <PatternStatus>{draft ? "작성 중인 초안이 있어요." : "작성 중인 초안이 없어요."}</PatternStatus>
   <Text>저장된 메모: {saved || "아직 없어요"}</Text>
   <Sheet open={open} onOpenChange={onOpenChange} title="메모 작성" closeLabel="초안을 남기고 닫기" returnFocusRef={trigger} keyboardAvoidance scrollable
-   footer={<Stack gap="sm"><Button disabled={!draft.trim()} onPress={() => { if (draft.trim() && close()) { setSaved(draft); setDraft(""); } }}>메모 저장</Button><Button tone="secondary" onPress={() => { if (close()) setDraft(""); }}>초안 버리기</Button></Stack>}>
+   footer={<Stack gap="xs"><Button disabled={!draft.trim()} onPress={() => { if (draft.trim() && close()) { setSaved(draft); setDraft(""); } }}>메모 저장</Button><Button tone="secondary" onPress={() => { if (close()) setDraft(""); }}>초안 버리기</Button></Stack>}>
    <Stack gap="md"><TextField label="메모 내용" value={draft} onValueChange={value => { if (isCurrent()) setDraft(value); }} />
     <Text>닫았다 다시 열면 이어 쓸 수 있어요. 이 예제는 화면이 열린 동안 초안을 유지해요.</Text>
    </Stack>

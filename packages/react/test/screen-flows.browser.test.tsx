@@ -100,7 +100,8 @@ it("does not steal focus when the detail is already open on first mount (deep li
   await act(async()=>root.render(<HjmProvider><ListDetailScreen {...props}/></HjmProvider>));
   host.querySelector<HTMLButtonElement>("button")!.focus();
   await act(async()=>root.render(<HjmProvider><ListDetailScreen {...props} detail={{title:"상세",content:"본문"}}/></HjmProvider>));
-  expect(document.activeElement?.textContent).toBe("돌아가기");
+  // The back control is the header exit icon (2026-10-17); its name is the aria-label.
+  expect(document.activeElement?.getAttribute("aria-label")).toBe("돌아가기");
  }finally{outside.remove();}
 });
 

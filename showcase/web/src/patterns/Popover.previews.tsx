@@ -41,7 +41,7 @@ export function ConfirmPopoverPreview() {
     <List label="내 기록"><ListRow title="느리게 걸었던 오후" description={archived ? "보관함에 있어요" : "일상의 기록"} /></List>
     {archived ? <><Notice tone="success" title="보관함으로 옮겼어요" /><Button ref={undoButton} tone="secondary" onClick={() => setArchived(false)}>보관 취소</Button></> :
       <Popover title="이 기록을 보관할까요?" description="보관을 취소하면 다시 꺼낼 수 있어요." closeLabel="닫기" trigger={<Button ref={archiveButton} tone="secondary">기록 보관하기</Button>} initialFocusRef={cancel}>
-        {({ close }) => <Stack gap="sm"><Button ref={cancel} tone="secondary" onClick={close}>계속 보기</Button><Button onClick={() => { close(); setArchived(true); }}>보관하기</Button></Stack>}
+        {({ close }) => <Stack gap="xs"><Button ref={cancel} tone="secondary" onClick={close}>계속 보기</Button><Button onClick={() => { close(); setArchived(true); }}>보관하기</Button></Stack>}
       </Popover>}
   </Stack></Section>;
 }

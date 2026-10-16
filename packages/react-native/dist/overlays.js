@@ -7,7 +7,7 @@ import { KeyboardAvoidanceContext } from "./keyboard.js";
 import { canDismissSheet, createSheetLifecycle, resolveSheetCloseButton, resolveSheetDismissPolicy, sheetDragRecipe, } from "@hjmds/design-contracts/components/sheet";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { backdrop, easing, glyph, spacing } from "@hjmds/design-contracts/foundations";
-import { alertDialogRecipe, dialogRecipe, sheetRecipe, } from "@hjmds/design-contracts/recipes";
+import { actionGroupRecipe, alertDialogRecipe, dialogRecipe, sheetRecipe, } from "@hjmds/design-contracts/recipes";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, } from "react";
 import { Animated, Easing, Keyboard, Modal, PanResponder, Platform, ScrollView, Pressable, View, useWindowDimensions, } from "react-native";
 import { Button, IconButton } from "./actions.js";
@@ -136,7 +136,7 @@ function OverlayActions({ primaryAction, secondaryAction, busy, stacked = false,
     return (_jsxs(View, { style: {
             direction: environment.direction,
             flexDirection: stacked ? "column" : "row",
-            gap: spacing.sm,
+            gap: stacked ? actionGroupRecipe.stackedGap : actionGroupRecipe.inlineGap,
         }, children: [secondaryAction ? renderAction(secondaryAction, "secondary") : null, primaryAction ? renderAction(primaryAction, "primary") : null] }));
 }
 function resolveOverlayAccessibleTitle(title, accessibilityTitle) {
