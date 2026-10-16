@@ -4,15 +4,17 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-07
+- 검토일: 2026-10-16
 - 근거: [ContextMenu](../../context-menu.md), [선택 어댑터](../../optional-adapters.md), recipe `menuRecipe`
 - 스토리북: `배포/컴포넌트/탐색/상황별 메뉴`
 
 ## 언제 쓰나
 
 Web에서 제품이 소유한 영역(카드·목록 행·캔버스)의 우클릭·길게 누르기·Shift+F10에 명령 목록을
-띄울 때 쓴다. 같은 명령은 화면의 다른 경로(버튼·Menu)에도 있어야 한다. Native canonical 구현은 없고,
-OS 길게 누르기 메뉴가 필요하면 선택 어댑터 `NativeContextMenu`를 쓴다.
+띄울 때 쓴다. 같은 명령은 화면의 다른 경로(버튼·Menu)에도 있어야 한다. Native는 추가 의존성 없는
+canonical `ContextMenu`(`@hjmds/react-native/context-menu`, 미게시, 2026-10-16)가 채팅 길게 누르기 메뉴와 같은
+모양(배경 어둡게 + 누른 위치 근처 카드, 행 높이 48, 아이콘 24 칸, 위험 항목 빨간 글자)으로 연다. 대화 목록·댓글처럼
+행을 길게 눌러 여는 동작 목록은 이것을 쓴다. OS 고유 메뉴가 꼭 필요할 때만 선택 어댑터 `NativeContextMenu`를 쓴다.
 
 ## 쓰지 않을 때
 
@@ -22,7 +24,7 @@ OS 길게 누르기 메뉴가 필요하면 선택 어댑터 `NativeContextMenu`�
 | 앱 상단 메뉴 막대(Web) | [Menubar](menubar.md) |
 | 목록 행을 밀어 나오는 행동 | [SwipeActions](swipe-actions.md) |
 | 텍스트 선택·링크·이미지 위의 브라우저 기본 메뉴 대체 | 쓰지 않는다([계약](../../context-menu.md)) |
-| Native에서 추가 의존성 없이 행동 목록 | [Menu](menu.md), [Sheet](sheet.md) |
+| 버튼으로 여는 Native 행동 목록 | [Menu](menu.md), [Sheet](sheet.md) |
 
 ## 공개 이름과 import
 
@@ -48,6 +50,19 @@ import { ContextMenu } from "@hjmds/react/context-menu";
   onAction={(id) => runPostAction(post, id)}
 >
   <PostCard post={post} />
+</ContextMenu>
+```
+
+```tsx
+// Native canonical — 호스트 Pressable의 탭·이름은 그대로, 길게 누르기와 접근성 동작만 더한다
+import { ContextMenu } from "@hjmds/react-native/context-menu";
+
+<ContextMenu accessibilityLabel={t("chat.rowMenu")} onAction={(id) => runRowAction(room, id)}
+  items={[
+    { id: "unread", label: t("chat.markUnread"), icon: <MailOpen /> },
+    { id: "block", label: t("chat.block"), tone: "danger", icon: <Ban /> },
+  ]}>
+  <Pressable accessibilityRole="link" accessibilityLabel={summary} onPress={openRoom}><ConversationRow {...row} /></Pressable>
 </ContextMenu>
 ```
 

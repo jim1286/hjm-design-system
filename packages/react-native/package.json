@@ -286,6 +286,12 @@
       "import": "./dist/sheet-gesture.js",
       "default": "./dist/sheet-gesture.js"
     },
+    "./context-menu": {
+      "types": "./dist/context-menu.d.ts",
+      "react-native": "./dist/context-menu.js",
+      "import": "./dist/context-menu.js",
+      "default": "./dist/context-menu.js"
+    },
     "./context-menu-native": {
       "types": "./dist/context-menu-native.d.ts",
       "react-native": "./dist/context-menu-native.js",
