@@ -85,11 +85,11 @@ export function MessageReactions({ children, closeLabel, replyAction, menuAction
           </ScrollView>
           {/* onAccessibilityTap is iOS-only, so TalkBack could not close through this focus target.
               The standard activate action is delivered on both platforms. */}
+          {/* No visible ×: the measured hold menus close on a backdrop tap (2026-10-16). This 1pt target keeps
+              the first screen-reader focus and an activate-to-close action on both platforms. */}
           <View ref={firstAction} accessible accessibilityRole="button" accessibilityLabel={closeLabel}
             accessibilityActions={[{ name: "activate" }]} onAccessibilityAction={event => { if (event.nativeEvent.actionName === "activate") close(); }}
-            style={{ alignSelf: "flex-start", backgroundColor: colors.bg, borderRadius: tokens.radius.full }}>
-            <IconButton label={closeLabel} tone="ghost" onPress={close}><FixedGlyph>×</FixedGlyph></IconButton>
-          </View>
+            style={{ position: "absolute", top: 0, start: 0, width: 1, height: 1, overflow: "hidden" }} />
         </View>
       </View>
     </Modal>

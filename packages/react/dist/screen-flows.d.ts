@@ -332,7 +332,8 @@ export type CommentReactions = ReactionPickerProps & Readonly<{
         disabled?: boolean;
         icon?: ReactNode;
     }>;
-    interactiveContent?: boolean;
+    interactiveContent?: boolean; /** Icon for the automatic "reply" row of the hold menu. */
+    replyIcon?: ReactNode;
 }>;
 export type CommentThreadScreenProps = Base & {
     items: readonly CommentThreadItem[];

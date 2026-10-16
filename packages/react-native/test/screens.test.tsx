@@ -109,7 +109,8 @@ it("native hold opens a controlled reaction, same choice removes it and disablin
   const hold = () => act(() => tree.root.findAllByType(Pressable).find(node => node.props.onLongPress)!.props.onLongPress({nativeEvent:{pageY:250}}));
   hold();
   expect(tree.root.findByType(Modal).props.visible).toBe(true);
-  act(() => tree.root.findByType(Button).props.onPress());
+  // 2026-10-16: strip reactions are 44pt circles (Pressable), named by the reaction label.
+  act(() => tree.root.findAll(node => node.props.accessibilityLabel === "좋아요" && typeof node.props.onPress === "function")[0]!.props.onPress());
   expect(change).toHaveBeenCalledWith(null);
   expect(tree.root.findByType(Modal).props.visible).toBe(false);
   hold();
