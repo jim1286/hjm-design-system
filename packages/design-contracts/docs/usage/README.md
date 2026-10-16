@@ -33,6 +33,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | 지침 | 분류 | 언제 쓰나 | 제공 기준 | 지원 | API 안정성 | Storybook |
 | --- | --- | --- | --- | --- | --- | --- |
 | [Accordion](components/accordion.md) | 데이터 표시 | 서로 관계가 있는 여러 접힘 항목을 한 그룹으로 보일 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [AccountSwitcher](components/account-switcher.md) | 구성/탐색과 이동 | 확인된 현재 계정을 보여 주고 메뉴에서 다른 계정을 골라 실제 세션 전환을 요청할 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [ActivityChip](components/activity-chip.md) | 상태와 알림 | 백그라운드에서 돌고 있는 작업 하나(검수·업로드·동기화)의 상태를 헤더의 빈 자리에 짧게 보여 주고, 누르면 그 작업의 진행 패널(Toast 패널)을 여닫을 때 쓴다. | 미게시(1.17.2 이후) | Web · Native | 개별 API 계약 참조 | 배포 |
 | [ActivityHeatmap](components/activity-heatmap.md) | 데이터 표시 | 최대 1년(366일) 범위의 일별 활동량을 한눈에 보여 주는 읽기 전용 개요에 쓴다. | 1.12.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Affix](components/affix.md) | 기반 기능 | Web에서 스크롤하는 동안 요약·필터·저장 버튼 같은 작은 영역을 가장 가까운 스크롤 조상의 상단에 붙여 두고, 부모가 끝나면 함께 풀리게 할 때 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |
@@ -45,6 +46,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [AuthScreenLayout](components/auth-screen-layout.md) | 레이아웃 | 로그인·가입 진입 화면의 배치에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Avatar](components/avatar.md) | 데이터 표시 | 사람·계정을 사진 또는 이니셜로 나타낼 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Badge](components/badge.md) | 데이터 표시 | 항목의 상태나 분류를 짧은 글자 하나로 붙일 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [BezierEditor](components/bezier-editor.md) | 구성/직접 조작과 모션 | CSS `cubic-bezier` 이징 네 좌표를 슬라이더로 편집하고 곡선과 움직임 미리 보기를 함께 보여 줄 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [BottomCTA](components/bottom-cta.md) | 동작 | 화면의 결론 행동(저장·다음·결제·가입)을 본문 아래 하단 영역에 둘 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [BottomInfo](components/bottom-info.md) | 상태와 알림 | 주 행동 아래에 늘 붙어 있는 작은 조건 문장에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [BottomNavigation](components/bottom-navigation.md) | 탐색 | 앱의 안정된 최상위 route(홈·검색·메시지·내 정보) 2~6개 사이를 이동하는 하단 막대에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
@@ -61,16 +63,20 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [CheckboxGroup](components/checkbox-group.md) | 입력 | 한 질문에 대한 여러 선택지 중 0개 이상을 고르게 할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Chip](components/chip.md) | 입력 | 누를 수 있는 작은 pill이다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [CodeBlock](components/code-block.md) | 데이터 표시 | 코드·명령·설정 조각을 읽기 전용으로 보여 주고 사용자가 선택·복사하게 할 때 쓴다. | 1.12.1 | Web · Native | 개별 API 계약 참조 | 배포 |
+| [CohortRetentionTable](components/cohort-retention-table.md) | 구성/정보 표시 | 가입 시점(코호트)별로 기간마다 남은 인원 비율을 직사각형 표와 heat 색으로 비교할 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Collapsible](components/collapsible.md) | 데이터 표시 | 이웃 없이 혼자 접었다 펴는 한 덩어리에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [ColorPicker](components/color-picker.md) | 입력 | 사용자가 콘텐츠 색(라벨 색, 태그 색, 테마 편집기의 사용자 값 등)을 sRGB HEX로 고르는 폼 입력에 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |
 | [Combobox](components/combobox.md) | 입력 | 주어진 목록에서 하나를 고르는데 목록이 길어 입력으로 좁혀야 할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [CommandPalette](components/command-palette.md) | 오버레이 | ⌘K 스타일로 앱 전체의 **행동**을 검색해 실행하는 모달에 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |
+| [CommentThreadRow](components/comment-thread-row.md) | — | 가상화 목록(FlatList·가상 스크롤러)처럼 제품이 댓글 목록을 직접 그려야 할 때 댓글 한 행을 그린다. | 1.23.0 | Web · Native | 개별 API 계약 참조 | 실험 |
 | [CommentThreadScreen](components/comment-thread-screen.md) | 화면/소통 | 게시물·콘텐츠 아래의 댓글 화면 한 장에 쓴다. | 1.17.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [CompositionLayout](components/composition-layout.md) | 화면/설정 | 카드·패널·화면 본문 안의 콘텐츠 묶음에 제목·배지·행동·안내·본문·하단 영역이 필요할 때 쓴다. | 1.23.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Container](components/container.md) | 레이아웃 | 화면 본문의 최대 폭과 좌우(논리 방향) 여백을 맞출 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [ContentTransition](components/content-transition.md) | 시각 효과 | 같은 자리의 내용이 상태에 따라 바뀔 때(필터 결과 패널, 단계별 본문) 새 내용이 짧게 나타나도록 감싼다. | 1.12.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [ContextMenu](components/context-menu.md) | 탐색 | Web에서 제품이 소유한 영역(카드·목록 행·캔버스)의 우클릭·길게 누르기·Shift+F10에 명령 목록을 띄울 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native unsupported | 배포 |
 | [ConversationRow](components/conversation-row.md) | 화면/소통 | 대화 목록에서 상대, 마지막 메시지, 상대 시각, 안 읽음 점을 표시한다. | 1.24.0 | Web · Native | 개별 API 계약 참조 | 실험 |
+| [ConversionFunnel](components/conversion-funnel.md) | 구성/정보 표시 | 순차 단계(열기 → 작성 → 저장 등)의 인원을 가로 막대로 보여 주고, 단계를 골라 전체 대비·직전 대비 전환율과 이탈 수를 문구로 읽을 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
+| [CorrelationMatrix](components/correlation-matrix.md) | 구성/정보 표시 | 여러 지표 사이의 상관계수(-1~1)를 정사각 대칭 표와 양·음 두 방향 heat 색으로 보여 줄 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [CounterBadge](components/counter-badge.md) | 데이터 표시 | 읽지 않은 알림·메시지·장바구니 수처럼 **셀 수 있는 개수**를 아이콘·행 옆에 작게 보일 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [DataTable](components/data-table.md) | 데이터 표시 | 여러 행의 데이터를 열로 맞춰 훑고, 열 기준으로 정렬하거나 행을 골라 일괄 작업할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native beta | 배포 |
 | [DatePicker](components/date-picker.md) | 입력 | 폼·필터 자리에서 날짜 **하나**를 고를 때 쓴다(생년월일, 방문일, 시작일 필터). 평소에는 필드 트리거만 보이고, 누르면 Web은 필드에 붙은 팝오버, Native는 Sheet 안에 같은 달력 격자를 연다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
@@ -82,17 +88,24 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [EditorScreen](components/editor-screen.md) | 화면/콘텐츠 | 글쓰기·프로필 수정처럼 한 화면 전체가 편집 흐름일 때 쓴다. | 1.17.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [EffectSurface](components/effect-surface.md) | 시각 효과 | 환영·온보딩·빈 히어로처럼 분위기를 주는 배경이 필요할 때 내용 뒤에 장식 레이어(mesh·glow·grain)를 깐다. | 1.12.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [EmptyState](components/empty-state.md) | 상태와 알림 | 목록이 비었거나 검색 결과가 0건이라 **아직 없음**을 알릴 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [EventAttendanceCard](components/event-attendance-card.md) | 구성/선택과 필터 | 행사·모임 카드에서 일정, 참석자 수, 참석자 목록을 보여 주고 참석 응답(참석·미정·불참 등)과 캘린더 추가를 실제 요청으로 처리할 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
+| [ExpandableSearch](components/expandable-search.md) | 구성/선택과 필터 | 평소에는 검색 열기 버튼 하나만 두고, 누르면 그 자리에서 검색 입력·제안·최근 검색·결과를 펼칠 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Field](components/field.md) | 입력 | 라벨·도움말·오류를 가진 입력 칸에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [FilePicker](components/file-picker.md) | 입력 | 사용자가 업로드할 로컬 파일을 고르게 할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [FilterRecovery](components/filter-recovery.md) | 구성/피드백과 복구 | 검색·필터 결과가 비었을 때 실제로 결과가 생기는 필터 완화 제안을 보여 주고, 사용자가 고른 하나를 명시적으로 적용할 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [FloatingActionButton](components/floating-action-button.md) | 동작 | 목록·피드처럼 스크롤되는 콘텐츠 위에 떠 있는 **단일 생성 행동**(새 기록 추가, 새 글 작성)에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [FollowProfileCard](components/follow-profile-card.md) | 구성/정보 표시 | 프로필 카드에서 팔로우·팔로잉 전환과 팔로워 수를 실제 mutation 결과와 함께 보여 줄 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Form](components/form.md) | 입력 | 여러 Field를 한 화면에 쌓고 한 번에 제출할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Grid](components/grid.md) | 레이아웃 | 카드·타일처럼 같은 모양의 자식을 창 크기에 따라 열 수를 바꿔 배치할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Heading](components/heading.md) | 글자와 아이콘 | 자리를 모르는 큰 제목 글자 하나가 필요할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [HistogramExplorer](components/histogram-explorer.md) | 구성/정보 표시 | 실제 관측값 배열의 분포를 동폭 구간 막대로 보여 주고, 사용자가 구간 수를 바꿔 볼 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Icon](components/icon.md) | 글자와 아이콘 | HJM semantic 이름(`search`, `back`, `chevronEnd`, `notifications` 등 43개)으로 고르는 그림 기호에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [IconButton](components/icon-button.md) | 동작 | 보이는 글자 없이 아이콘만으로 표시하는 행동에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
-| [IconTile](components/icon-tile.md) | — | 프로필·런처 격자의 아이콘 위/제목 아래 항목에 쓴다. | 미게시(1.25.0 이후) | Web · Native | 개별 API 계약 참조 | 실험 |
+| [IconTile](components/icon-tile.md) | — | 프로필·런처 격자의 아이콘 위/제목 아래 항목에 쓴다. | 1.26.0 | Web · Native | 개별 API 계약 참조 | 실험 |
 | [Image](components/image.md) | 데이터 표시 | 원본 크기를 아는 사진·차트 이미지를 로드 전에 자리를 잡아 두고, 실패해도 의미를 잃지 않게 보여 줄 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [ImageComparison](components/image-comparison.md) | 데이터 표시 | 같은 좌표와 비율의 두 이미지를 겹쳐 변화량을 비교할 때 쓴다. | 1.14.0 | Web · Native | 개별 API 계약 참조 | 배포 |
+| [ImportFieldMapping](components/import-field-mapping.md) | 구성/입력과 작성 | CSV 등 원본 열을 제품의 대상 필드에 연결하고, 검증을 통과한 연결만 가져오기로 넘길 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
+| [InlineEdit](components/inline-edit.md) | 구성/입력과 작성 | 목록·상세의 제목처럼 이미 확정된 짧은 값 하나를 그 자리에서 명시적으로 편집·저장·취소할 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [KeyboardAvoiding](components/keyboard-avoiding.md) | — | 추가 native peer 없이 하단 행동(BottomCTA, 채팅 입력창)이 소프트웨어 키보드에 가려지지 않게 할 때 쓴다. | 1.12.1 | Native | 개별 API 계약 참조 | 배포 |
 | [KeyboardDock](components/keyboard-dock.md) | 구성/직접 조작과 모션 | `react-native-keyboard-controller`를 설치한 앱에서 화면 하단에 고정된 행동(BottomCTA, 채팅 입력창)이 키보드와 함께 위아래로 움직이게 할 때 쓴다(Native 전용, 별도 보조 기능. API 성숙도는 실험적 어댑터). 내부는 `KeyboardStickyView`이며, 여백을 바꾸는 대신 키보드 움직임을 따라 translate 한다. | 1.12.1 | Native | 개별 API 계약 참조 | 배포 |
 | [KeyboardFormScrollView](components/keyboard-form-scroll-view.md) | 구성/직접 조작과 모션 | 입력 필드가 여러 개인 세로 스크롤 폼(가입, 프로필 수정, 주소 입력)에서 포커스된 필드가 키보드에 가려지지 않게 스크롤해 줄 때 쓴다(Native 전용, 별도 보조 기능. API 성숙도는 실험적 어댑터). 내부는 `react-native-keyboard-controller`의 `KeyboardAwareScrollView`이고, `keyboardShouldPersistTaps="handled"`로 고정돼 키보드가 열린 채 버튼을 눌러도 탭이 전달된다. | 1.12.1 | Native | 개별 API 계약 참조 | 배포 |
@@ -105,6 +118,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [LoadMore](components/load-more.md) | 탐색 | 이미 그린 항목을 그대로 둔 채 목록 끝에서 다음 페이지를 요청하는 footer에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Masonry](components/masonry.md) | 레이아웃 | 높이가 서로 다른 카드(사진 피드, 핀보드, 갤러리)를 여러 열에 빈틈없이 쌓을 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [MediaSelectionScreen](components/media-selection-screen.md) | 화면/콘텐츠 | 고른 사진·영상을 큰 썸네일 격자로 보여 주고, 각 항목의 업로드 상태·재시도·취소·순서 이동·삭제와 "추가"·"완료" 행동을 한 화면에 묶을 때 쓴다. | 1.17.1 | Web · Native | 개별 API 계약 참조 | 배포 |
+| [MediaTransport](components/media-transport.md) | 구성/직접 조작과 모션 | 제품의 실제 오디오·영상 엔진에 재생·일시 정지·유한 길이 탐색 제어를 붙일 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Mentions](components/mentions.md) | 입력 | 여러 줄 입력 중 `@`(사람)·`#`(해시태그) 같은 트리거를 치면 후보를 띄우고, 고른 후보를 트리거부터 커서까지 자리에 넣고 공백 하나를 붙이는 입력에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Menu](components/menu.md) | 탐색 | 트리거 버튼을 누르면 뜨는 **항목 목록**에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Menubar](components/menubar.md) | 탐색 | 데스크톱 Web 앱 상단에 항상 같은 자리에 있는 가로 메뉴 막대(파일·편집·보기)에 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |
@@ -113,24 +127,29 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [Notice](components/notice.md) | 상태와 알림 | 화면 흐름 안 **제자리에 남아 있는** 상태 알림에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [NotificationInboxScreen](components/notification-inbox-screen.md) | 화면/소통 | 알림함 화면 전체 틀에 쓴다. | 1.17.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [NotificationItem](components/notification-item.md) | 구성/정보 표시 | 알림함의 알림 한 행에 쓴다. | 1.17.1 | Web · Native | 개별 API 계약 참조 | 배포 |
-| [NotificationRow](components/notification-row.md) | — | 알림 목록에서 아바타, 유형 배지, 미리보기, 시간, 읽지 않음 표시, 선택적 썸네일을 나란히 배치한다. |  | Web · Native | 개별 API 계약 참조 | 후보 |
+| [NotificationRow](components/notification-row.md) | — | 알림 목록에서 아바타, 유형 배지, 미리보기, 시간, 읽지 않음 표시, 선택적 썸네일을 나란히 배치한다. | 1.26.0 | Web · Native | 개별 API 계약 참조 | 실험 |
 | [NumberField](components/number-field.md) | 입력 | 범위가 정해진 **정확한 수 하나**를 입력받을 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [OnboardingScreen](components/onboarding-screen.md) | 화면/소개 | 첫 실행 소개·초기 설정처럼 **몇 단계를 차례로 넘기는 화면**에 쓴다. | 1.14.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [OtpField](components/otp-field.md) | 입력 | 문자·메일로 받은 **숫자 인증번호**를 칸 모양으로 입력받을 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [OverviewScreen](components/overview-screen.md) | 레이아웃 | 같은 데이터와 기능을 유지하면서 테마별 행·카드·격자와 도구 배치를 선택하는 목록 화면에 쓴다. | 1.15.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Pagination](components/pagination.md) | 탐색 | 총 개수(또는 총 페이지 수)가 정해진 결과 집합에서 사용자가 **임의의 페이지로 바로 이동**해야 할 때 Web·Native에서 쓴다. | 1.12.1 | Web · Native | Web stable / Native beta | 배포 |
 | [PasswordField](components/password-field.md) | 입력 | 비밀번호를 입력받고, 필요할 때만 값을 눈으로 확인하게 할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [PasswordRulesField](components/password-rules-field.md) | 구성/입력과 작성 | 새 비밀번호 입력 아래에 제품이 정한 규칙의 충족 개수와 규칙별 상태를 함께 보여 줄 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [PermissionScreen](components/permission-screen.md) | 화면/소개 | 카메라·위치·알림 같은 권한이 **왜 필요한지 설명하고 다음 행동을 고르게 하는** 화면에 쓴다. | 1.17.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [PhotoSourceSheet](components/photo-source-sheet.md) | 구성/선택과 필터 | 사진 버튼 하나에서 **앨범에서 고르기 / 촬영하기**를 고르게 할 때 쓴다. | 1.17.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Popover](components/popover.md) | 오버레이 | 트리거에 붙어 뜨는 비모달 표면 안에 **포커스를 받는 임의 콘텐츠**를 둘 때 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |
+| [PricingChoice](components/pricing-choice.md) | 구성/선택과 필터 | 요금제·결제 주기 중 하나를 고르고, 선택한 실제 가격과 혜택을 확인한 뒤 [계속]으로 제품 결제 흐름을 시작할 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [ProfileScreen](components/profile-screen.md) | 화면/계정 | 내 프로필(또는 계정) 화면 틀에 쓴다. | 1.17.1 | Web · Native | 개별 API 계약 참조 | 배포 |
-| [ProfileSummary](components/profile-summary.md) | — | 프로필의 아바타·이름·배지·통계 수치·행동을 구성한다. |  | Web · Native | 개별 API 계약 참조 | 후보 |
+| [ProfileSummary](components/profile-summary.md) | — | 프로필의 아바타·이름·배지·통계 수치·행동을 구성한다. | 1.26.0 | Web · Native | 개별 API 계약 참조 | 실험 |
 | [Progress](components/progress.md) | 상태와 알림 | 작업이 얼마나 진행됐는지 보여 줄 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [ProgressiveBlur](components/progressive-blur.md) | 시각 효과 | 스크롤 영역의 바깥에 더 내용이 있음을 알리거나 장식 이미지 가장자리를 흐릴 때 쓴다. | 1.14.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [QRCode](components/qr-code.md) | 데이터 표시 | 문자열(초대 링크, 연결 코드, 결제·체크인 URL)을 다른 기기의 카메라로 스캔하게 할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Radio](components/radio.md) | 입력 | 라디오 한 개를 제품이 직접 배치해야 할 때만 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [RadioGroup](components/radio-group.md) | 입력 | 한 화면에 펼쳐 둔 선택지 중 정확히 하나를 고를 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Rating](components/rating.md) | 입력 | 정수 점수를 선택하거나 계산된 소수 평균을 읽기 전용으로 보여 줄 때 쓴다. | 1.14.0 | Web · Native | 개별 API 계약 참조 | 배포 |
+| [RepeatableFieldGroup](components/repeatable-field-group.md) | 구성/입력과 작성 | 참여자 이름·연락처처럼 같은 입력 행을 사용자가 추가·삭제하는 묶음에 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
+| [ReplyComposer](components/reply-composer.md) | 구성/입력과 작성 | 답장 대상(실제 메시지 id·저자·발췌)을 가진 작성창에서 실제 전송 Promise를 기다리고, 실패하면 초안을 보존해 다시 보낼 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
+| [ReplyMessage](components/reply-message.md) | 구성/입력과 작성 | 대화 타임라인의 메시지에 실제 메시지 id를 묶은 답장 동작을 붙일 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Result](components/result.md) | 상태와 알림 | 사용자 행동 뒤 흐름이 **끝난** 화면에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [SavedItemsScreen](components/saved-items-screen.md) | 화면/콘텐츠 | 저장한 이미지·게시물을 컬렉션 표지 → 사진 격자 → 상세 순서로 탐색할 때 쓴다. | 1.17.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [ScreenLayout](components/screen-layout.md) | 화면/화면 틀과 도구 | 한 라우트 화면의 뼈대가 필요할 때 쓴다. | 1.17.1 | Web · Native | 개별 API 계약 참조 | 배포 |
@@ -139,10 +158,12 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [Section](components/section.md) | 레이아웃 | 화면 안의 내용 묶음에 제목·설명·머리 행동(“모두 보기”, “편집”)을 붙일 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [SegmentedControl](components/segmented-control.md) | 입력 | 2~4개의 짧은 보기 중 **항상 하나가 선택된** 전환에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Select](components/select.md) | 입력 | 폼 한 칸에서 여러 선택지 중 하나를 고르게 할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [SelectionActionBar](components/selection-action-bar.md) | 구성/선택과 필터 | 목록에서 여러 항목을 고른 뒤 보관·삭제 같은 같은 행동을 한 번에 실행하고, 방금 확정된 작업만 되돌릴 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [SettingsScreen](components/settings-screen.md) | 화면/설정 | 앱의 설정 화면 전체에 쓴다. | 1.17.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [SharedTransitionElement](components/shared-transition-element.md) | 구성/직접 조작과 모션 | 목록의 카드(사진·썸네일)를 눌러 상세 화면으로 갈 때, 같은 요소가 두 화면 사이에서 확대·축소되어 이어지는 공유 요소 전환에 쓴다. | 1.12.1 | Native | 개별 API 계약 참조 | 배포 |
 | [SharedTransitionScreen](components/shared-transition-screen.md) | 구성/직접 조작과 모션 | `createHjmTransitionStack()`으로 만든 stack에서 공유 요소 전환을 쓸 때, **각 라우트 본문**을 감싼다. | 1.12.1 | Native | 개별 API 계약 참조 | 배포 |
 | [Sheet](components/sheet.md) | 오버레이 | 현재 화면 위에 모달로 띄우는 보조 작업 패널에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [ShortcutRecorder](components/shortcut-recorder.md) | 구성/직접 조작과 모션 | Web 앱에서 사용자가 수정키+키 조합을 눌러 기록하고, 확인 뒤 실제 단축키로 등록하게 할 때 쓴다. | 1.21.0 | Web | 개별 API 계약 참조 | 배포 |
 | [Sidebar](components/sidebar.md) | 탐색 | 데스크톱 Web의 세로 내비게이션에 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |
 | [SidePanel](components/side-panel.md) | 오버레이 | Web 화면 가장자리(시작·끝)에 도킹되어 밀려 나오는 보조 패널에 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |
 | [Skeleton](components/skeleton.md) | 상태와 알림 | 데이터가 오기 전, 곧 채워질 콘텐츠의 **모양을 미리 보여 줄 때** 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
@@ -150,16 +171,20 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [Slider](components/slider.md) | 입력 | 범위 안에서 값 하나를 대략적으로, 연속 조작으로 고를 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [SortableCollection](components/sortable-collection.md) | 입력 | 작은 목록의 순서를 사용자가 바꾸고, 그 순서를 제품이 저장할 때 쓴다(즐겨찾기 순서, 할 일 순서 등). 드래그와 함께 각 행에 "앞으로/뒤로" 버튼과 키보드·접근성 action이 항상 붙는다. | 1.12.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Spinner](components/spinner.md) | 상태와 알림 | 진행량을 모르고 도착할 내용의 모양도 정해지지 않은 **짧은 대기**를 한 자리에서 알릴 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [SplitAction](components/split-action.md) | 구성/입력과 작성 | 실행 버튼 하나와 실행 방식 선택 메뉴를 나란히 둔다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Splitter](components/splitter.md) | 레이아웃 | 넓은 Web 화면에서 두 영역의 경계를 사용자가 드래그나 키보드로 옮겨 크기를 정할 때 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |
 | [Stack](components/stack.md) | 레이아웃 | 자식들을 한 방향으로 늘어놓고 사이 간격을 토큰으로 맞출 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Statistic](components/statistic.md) | 데이터 표시 | 라벨이 붙은 **숫자 지표 하나**(또는 여러 개)를 보여 줄 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Steps](components/steps.md) | 탐색 | 여러 단계로 된 **선형 흐름에서 지금 어디인지** 보여 줄 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [StreamingAnswer](components/streaming-answer.md) | 구성/피드백과 복구 | AI 응답처럼 제공자가 조각(`delta`)으로 보내는 답을 받는 대로 표시하고, 생성·다시 생성·중지를 한 묶음으로 제공한다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Surface](components/surface.md) | 레이아웃 | 배경·테두리·radius를 가진 **의미 없는 상자**가 필요할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [SwipeActions](components/swipe-actions.md) | 구성/직접 조작과 모션 | 목록 행 하나에 붙은 **삭제·보관 같은 행 단위 행동**을, Native에서는 행을 밀어 드러내고 Web에서는 행 아래 버튼으로 바로 보여 줄 때 쓴다. | 1.12.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Switch](components/switch.md) | 입력 | 켜고 끄는 즉시 반영되는 설정 하나에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [TableColumnSettings](components/table-column-settings.md) | 구성/선택과 필터 | 표의 열마다 보이기 체크박스와 앞으로·뒤로 이동 버튼을 제공해 열 표시와 순서를 바꾼다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Tabs](components/tabs.md) | 탐색 | 같은 화면 안에서 **서로 다른 패널 여러 개 중 하나를 보여 줄 때** 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Tag](components/tag.md) | 데이터 표시 | 반복해서 나오는 **정적 메타데이터 한 조각**에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [TagsInput](components/tags-input.md) | 입력 | 사용자가 **자유 입력으로 여러 값을 모으는 필드**에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [TargetSummary](components/target-summary.md) | 구성/정보 표시 | 실적과 목표를 받아 실적 수치, 달성 설명, 달성률 막대를 한 묶음으로 보여 준다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Text](components/text.md) | 글자와 아이콘 | 화면의 모든 일반 글자에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [TextArea](components/text-area.md) | 입력 | 여러 줄 자유 글을 받는 입력에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [TextFormat](components/text-format.md) | 글자와 아이콘 | 도움말·개발자 안내·약관 본문 안에서 단축키(`⌘S`), 짧은 코드 조각(`pnpm add …`), 인용문을 표시할 때 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |
@@ -167,12 +192,14 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [ThinkingOrb](components/thinking-orb.md) | 상태와 알림 | AI 에이전트가 실제로 검색·생성·듣기 같은 작업을 하는 동안 그 단계를 보여 줄 때만 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Timeline](components/timeline.md) | 데이터 표시 | 이미 일어난 일을 시간 순서대로 보여 줄 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Toast](components/toast.md) | 상태와 알림 | 방금 한 행동의 결과처럼 **무시해도 안전한 짧은 알림**에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [ToggleFeedbackButton](components/toggle-feedback-button.md) | 구성/직접 조작과 모션 | 좋아요·저장·알림 받기처럼 켜고 끄는 선택에 반응 모션과 개수를 붙인다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [ToggleGroup](components/toggle-group.md) | 입력 | 여러 개를 동시에 켜고 끄는 짧은 버튼 묶음에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Tooltip](components/tooltip.md) | 오버레이 | Web에서 이미 이름과 focus를 가진 컨트롤(대개 IconButton)에 **짧은 보충 설명 한 문장**을 붙일 때 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |
 | [Top](components/top.md) | 레이아웃 | 화면 **본문의 첫 블록**에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [TopBar](components/top-bar.md) | 탐색 | 화면 맨 위에 붙는 **크롬**에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Tour](components/tour.md) | 오버레이 | 새 화면·새 기능을 처음 만난 사용자에게 화면의 여러 요소를 순서대로 짚어 설명할 때 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |
 | [TransferList](components/transfer-list.md) | 입력 | 한 항목 집합을 두 목록으로 나누고 사용자가 항목을 오가게 할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [TransferTask](components/transfer-task.md) | 구성/피드백과 복구 | 업로드·다운로드·동기화처럼 실제 전송 계층이 진행량을 알려 주는 작업에 시작·취소·진행률·결과를 한 묶음으로 붙인다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Tree](components/tree.md) | 데이터 표시 | 깊이가 정해지지 않은 계층 데이터를 펼치고 접으며 탐색하고, 그 안에서 하나 또는 여럿을 고를 때 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |
 | [UploadItem](components/upload-item.md) | 데이터 표시 | 사용자가 고른 파일 **한 개**의 업로드 상태(대기·전송 중·완료·실패)를 한 행으로 보여 줄 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [VirtualList](components/virtual-list.md) | 데이터 표시 | 행 높이가 **모두 같은** 긴 목록(수백~수천 행)을 정해진 높이 안에서 스크롤할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |

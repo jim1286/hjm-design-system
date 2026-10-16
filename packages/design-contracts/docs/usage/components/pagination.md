@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-15
+- 검토일: 2026-10-16
 - 근거: [Pagination](../../pagination.md), `src/pagination.ts`(`paginationRecipe`)
 - 스토리북: `배포/컴포넌트/탐색/페이지 이동`
 
@@ -46,9 +46,24 @@ import { Pagination } from "@hjmds/react/pagination";
 />
 ```
 
-Native는 같은 props로 `@hjmds/react-native/pagination`에서 가져온다. 조회 중에는 `disabled`로 이전·번호·다음 행동을 함께 잠근다. `testID`는 탐색 묶음에 붙는다.
+```tsx
+// Native
+import { Pagination } from "@hjmds/react-native/pagination";
 
-2026-10-15 다에리의 유한 편지 목록에서 페이지 번호가 이미 제품 기능이었으나 renderer 부재로 공통 배치를 복제한 원인을 수정했다. Native renderer는 다음 게시본부터 제공하며 현재 후보 상태다.
+<Pagination
+  label={t("records.pagination")}
+  descriptor={{ currentPage: page, totalCount: total, pageSize: 20 }}
+  labels={{ previous: t("pagination.previous"), next: t("pagination.next") }}
+  composeAccessibleName={({ page, totalPages, current }) =>
+    t(current ? "pagination.current" : "pagination.goTo", { page, totalPages })}
+  onPageChange={(next) => setPage(next)}
+  disabled={isFetching}
+/>
+```
+
+Native는 같은 props를 받는다. 조회 중에는 `disabled`로 이전·번호·다음 행동을 함께 잠근다. `testID`는 탐색 묶음에 붙는다.
+
+2026-10-15 다에리의 유한 편지 목록에서 페이지 번호가 이미 제품 기능이었으나 renderer 부재로 공통 배치를 복제한 원인을 수정했다. Native renderer는 1.26.0부터 게시본에 포함된다.
 
 ## 축과 기본값
 

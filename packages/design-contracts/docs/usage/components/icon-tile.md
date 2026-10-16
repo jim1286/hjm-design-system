@@ -3,8 +3,8 @@
 - 단계: 컴포넌트
 - 상태: 실험
 - 지원: Web · Native
-- 적용: 미게시(1.25.0 이후)
-- 검토일: 2026-10-15
+- 적용: 1.26.0
+- 검토일: 2026-10-16
 - 근거: `src/screen-patterns.ts`의 `iconTileRecipe`
 - 스토리북: 별도 예제 미등록
 
@@ -25,7 +25,7 @@
 
 | 이름 | 역할 | Web | Native |
 | --- | --- | --- | --- |
-| IconTile | 런처 항목 표시 | `@hjmds/react/screens` | `@hjmds/react-native/screens` |
+| `IconTile` | 런처 항목 표시 | `@hjmds/react/screens` | `@hjmds/react-native/screens` |
 
 ## 최소 사용 예
 
@@ -59,7 +59,15 @@ import { IconTile } from "@hjmds/react-native/screens";
 
 ## 배치
 
-아이콘 위·한 줄 말줄임 제목 아래로 중앙 정렬한다. Grid나 가상 목록의 host가 열 수와 외부 여백을 정한다. HJM 내부 selector를 제품에서 덮지 않는다.
+| 항목 | 값 | 근거 |
+| --- | --- | --- |
+| 크기 | 아이콘 64×64(radius 22%), 제목 최대 폭 72 · 두 줄이면 84와 최소 높이 44 | `iconTileRecipe` |
+| 간격 | 아이콘과 제목 사이 6 | `iconTileRecipe.gap` |
+| 순서·정렬 | 아이콘(overlay 포함) 위 → 제목 아래, 가로 가운데, 제목 가운데 정렬 | 양 renderer |
+| 고정·스크롤 | Grid나 가상 목록의 host가 열 수·외부 여백·스크롤을 정한다 | 별도 scroller 없음 |
+| 좁은 폭·큰 글자 | 제목은 `labelLines`(1 또는 2)줄에서 말줄임, overlay는 잘리지 않는다 | 양 renderer |
+
+아이콘 위·한 줄 말줄임 제목 아래로 중앙 정렬한다. HJM 내부 selector를 제품에서 덮지 않는다.
 
 ## 꼭 지킬 것
 
