@@ -1,5 +1,7 @@
 import { type ReactNode } from "react";
 import { type ScreenLayoutProps } from "./screens.js";
+import { type MessageMenuAction } from "./internal/message-reactions.js";
+import type { ReactionPickerProps } from "./reaction-picker.js";
 import { type SheetProps } from "./overlays.js";
 import { type UploadItemDescriptor, type UploadItemLabels } from "@hjmds/design-contracts/components/upload-item";
 import { type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
@@ -310,6 +312,27 @@ export type CommentThreadItem = Readonly<{
     actions?: ReactNode;
     canReply?: boolean;
     replyDisabled?: boolean;
+    /** Long-press the comment (author and body) to react; the product owns the stored value and summary. */
+    reactions?: CommentReactions;
+    reactionSummary?: ReactNode;
+    /** Optional photo or sticker under the body; HJM bounds its width and corners, the product sizes the image. */
+    media?: ReactNode;
+}>;
+export type CommentReactions = ReactionPickerProps & Readonly<{
+    closeLabel: string;
+    menuAction?: Readonly<{
+        label: string;
+        onPress(): void;
+        disabled?: boolean;
+    }>;
+    menuActions?: readonly MessageMenuAction[];
+    reportAction?: Readonly<{
+        label: string;
+        onPress(): void;
+        disabled?: boolean;
+        icon?: ReactNode;
+    }>;
+    interactiveContent?: boolean;
 }>;
 export type CommentThreadScreenProps = Base & {
     items: readonly CommentThreadItem[];

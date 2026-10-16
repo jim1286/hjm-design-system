@@ -312,8 +312,10 @@ it("omits empty metadata above anonymous comment body",async()=>{
  let tree:ReactTestRenderer;
  act(()=>{tree=create(<HjmNativeProvider><CommentThreadScreen title="Comments" items={[{id:"one",parentId:null,author:"",timeLabel:"",body:<Text>Comment body</Text>,avatar:<Text>Avatar</Text>,likeCountLabel:"",likeIcon:null,likeLabel:"Like",likeAction:null,canReply:false}]} expandedIds={[]} onExpandedChange={()=>{}} onLike={()=>{}} onReply={()=>{}} replyLabel="Reply" repliesLabel={()=>"Replies"}/></HjmNativeProvider>);});
  const column=tree!.root.findAllByType(View).find(node=>node.props.style?.flex===1&&node.props.style?.minWidth===0)!;
- expect(column.props.children[0]).toBeNull();
- expect(column.props.children[1].props.children).toBe("Comment body");
+ // Identity (author/time) and body form one hold target fragment ahead of the action row.
+ const identity=column.props.children[0];
+ expect(identity.props.children[0]).toBeNull();
+ expect(identity.props.children[1].props.children).toBe("Comment body");
  act(()=>tree!.unmount());
 });
 

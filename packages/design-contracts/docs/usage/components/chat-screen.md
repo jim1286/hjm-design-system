@@ -72,6 +72,7 @@ import { ChatScreen, MessageComposer } from "@hjmds/react-native/screens";
 | `composer`(필수) | `MessageComposer` 등 작성창 | `ready`와 `empty`에서 보인다(빈 대화의 첫 메시지 입력) |
 | `state` / `stateAction` | `loading`·`empty`·`error`·`restricted` + 지역화 `title` | ready 외에는 본문을 교체한다 |
 | `notice` | 새로고침 실패 같은 비차단 안내 | 초안 유지가 필요하면 `state` 대신 이것 |
+| `avatar` | 상대·방 사진 노드 | 미게시. 가운데 정렬 제목 앞에 놓는다. 단톡방은 인원 수를 `titleBadge`(흐린 글자)로 넘긴다 |
 | `jumpToLatest` | `{ label, icon, onPress() }` | 미게시. 독자가 최신 메시지에서 벗어났을 때만 넘긴다. 작성창 위 끝 쪽에 원형 `IconButton size="small"`(secondary)로 떠 있고, 스크롤 위치 판단은 제품이 한다 |
 
 ## 축과 기본값
@@ -79,6 +80,7 @@ import { ChatScreen, MessageComposer } from "@hjmds/react-native/screens";
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `composer` | `ReactNode` | 필수 | footer에 고정되는 작성창. `ready`와 `empty`에서 보인다(빈 대화의 첫 메시지 입력) |
+| `headerAlignment` | `"center"` · `"start"` | `"center"`(미게시 변경, 이전 `"start"`) | 뒤로·도구 사이에 상대 이름을 가운데 둔다(카카오톡·인스타그램 실측) |
 | `scroll` | `"content"` · `"screen"` | `"content"` | 가상화 목록이 스크롤을 소유하므로 작은 예제 외에는 바꾸지 않는다 |
 | `contentInset` | `"default"` · `"none"` | `"default"` | 이미 gutter를 주는 route 안에서는 `"none"`으로 이중 여백을 막는다 |
 | `state` | `ScreenContentState`(`{ kind: "ready" }` 또는 `{ kind, title, description? }`) | `{ kind: "ready" }` | ready 외에는 본문을 교체한다. composer는 loading·error·restricted에서 숨긴다 |
@@ -90,7 +92,7 @@ import { ChatScreen, MessageComposer } from "@hjmds/react-native/screens";
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 폭 최대 `layout.readingMaxWidth` 720, 가운데 정렬; 높이는 host가 준 남은 높이(Web `block-size: 100%`, Native `flex: 1`) | `screenPatternRecipe.maxWidth`, Web `.hjm-screen`, Native `ScreenLayout` |
-| 간격 | 헤더·본문·footer padding `spacing.md` 16; 헤더 안 간격 Web 16 / Native `spacing.sm` 12; 메시지 사이 간격은 `ChatMessage`의 `groupPosition`이 소유(타임라인 목록 gap 0) | `screenPatternRecipe.padding`·`itemGap`, Web `.hjm-screen__header` |
+| 간격 | 헤더·footer padding `spacing.md` 16, 타임라인 본문 좌우 `chatMessageRecipe.timelineInset` 10(미게시, 위아래는 16); 헤더 안 간격 Web 16 / Native `spacing.sm` 12; 메시지 사이 간격은 `ChatMessage`의 `groupPosition`이 소유(타임라인 목록 gap 0) | `screenPatternRecipe.padding`·`itemGap`, Web `.hjm-screen__header` |
 | 순서·정렬 | 헤더 → notice → 타임라인 → composer(footer) | `ScreenLayout` 렌더 순서 |
 | 고정·스크롤 | 헤더·composer 고정, 타임라인이 content 스크롤; footer 위 테두리 1, Web은 하단 safe area만큼 padding을 늘린다 | Web `.hjm-screen__footer`, Native footer `borderTopWidth` |
 | 좁은 폭·큰 글자 | 제목 열 최소 폭 `headerMinWidth` 120 × 글자 배율, 모자라면 actions가 다음 줄로 내려간다; Native safe area·키보드는 host | `screenPatternRecipe.headerMinWidth` |

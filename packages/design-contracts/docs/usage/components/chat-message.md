@@ -74,17 +74,19 @@ import { Text } from "@hjmds/react-native/primitives";
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `direction` | `"incoming"` · `"outgoing"` | 필수 | 수신은 시작 쪽, 발신은 끝 쪽에 붙는다 |
-| `author` | `string` | 필수 | 묶음의 첫 말풍선에서만 그린다. 1:1 대화처럼 작성자를 숨길 때는 빈 문자열 |
+| `author` | `string` | 필수 | 수신 묶음의 첫 말풍선에서만 그린다. 발신(내 메시지)은 그리지 않는다(Web은 행 이름으로만 쓴다). 1:1 대화처럼 작성자를 숨길 때는 빈 문자열 |
 | `groupPosition` | `"single"` · `"first"` · `"middle"` · `"last"` | `"single"` | 미게시. `resolveChatMessageGroups(items)`가 같은 작성자·같은 표시 시각의 연속 메시지를 묶어 돌려준다. 첫 말풍선에만 작성자·아바타·꼬리, 끝 말풍선에만 시각을 그리고 뒤 말풍선은 아바타 폭을 비워 둔다 |
 | `timestamp` | `string` | 필수 | 제품이 포맷한 시각. 묶음 판정에도 같은 문자열을 쓴다. 말풍선 아래 끝 옆(수신 오른쪽·발신 왼쪽)에 그린다 |
 | `timestampPresentation` | `"always"` · `"swipe"` | `"always"` | `swipe`는 수신은 오른쪽·발신은 왼쪽으로 끄는 동안 반대편 여백에 시각을 보여 주고 놓으면 숨긴다. 이 모드에서는 같은 제스처로 답장을 실행하지 않는다. 시각은 보조기술에서도 읽을 수 있다. |
-| `bubbleTail` | `boolean` | `true`(미게시 변경, 이전 `false`) | 묶음 첫 말풍선의 위쪽 모서리(수신 시작 쪽·발신 끝 쪽)에 같은 표면의 꼬리를 그린다. 행 양쪽 `spacing.xs` 8 여백으로 잘림을 막는다 |
+| `bubbleTail` | `boolean` | `true`(미게시 변경, 이전 `false`) | 묶음 첫 말풍선의 위쪽 모서리(수신 시작 쪽·발신 끝 쪽)에 윗변이 이어지는 삼각 꼬리(`tailWidth` 7 × `tailHeight` 10)를 같은 표면으로 그리고, 그 모서리 radius를 `tailCornerRadius` 4로 줄인다. 행 양쪽 `spacing.xs` 8 여백으로 잘림을 막는다 |
 | `deliveryLabel` | `string` | 없음 | 시각 뒤에 ` · `로 붙는 전송 상태 |
 | `avatar` | `ReactNode` | 없음 | 버블 옆 아바타. `chatMessageRecipe.avatarSize` 36 크기로 넘긴다. 묶음 뒤 말풍선에서는 같은 폭을 비워 정렬을 유지한다 |
 | `reply` | `ReactNode` | 없음 | 인용 노드. `replyLink`가 없으면 버블 맨 위에 그리고 아래 구분선(1)으로 답장 본문과 나눈다 |
-| `replyLink` | `{ label, onPress() }` | 없음 | `reply`와 같이 주면 인용을 버블 밖 ghost 버튼으로 그려 원문 이동에 쓴다 |
-| `replyAction` | `{ label, onPress(), disabled? }` | 없음 | `replySwipeDistance` 60px 이상이고 세로 이동의 2배를 넘는 가로 스와이프로 실행(`isReplySwipe`). 보이는 답장 버튼은 없다 |
-| `reactions` | `ReactionPickerProps & { closeLabel, menuAction? }` | 없음 | `reactionHoldMs` 450ms 길게 누르면 반응 메뉴가 열린다. 같은 반응 재선택은 `null`. 메뉴 안 picker는 `layout="strip"`(이모지 `typography.title` 18/26). `label`은 Web에서 말풍선 이름·Popover 제목, Native에서 접근성 힌트·동작 이름 |
+| `replyQuote` | `{ title, excerpt }` | 없음 | 미게시. 말풍선 맨 위에 HJM이 인용을 그린다: 제목(예: "서연에게 답장", 본문 글자) → 원문 한 줄(흐린 글자, 넘치면 말줄임) → 구분선 1 → 답장 본문. 자유 노드 `reply`보다 우선 사용한다 |
+| `replyLink` | `{ label, onPress() }` | 없음 | 인용과 같이 주면 말풍선 안 인용을 눌러 원문으로 이동한다(Native는 말풍선의 "원문으로 이동" 접근성 동작도 제공). 이전에는 버블 밖 ghost 버튼이었다 |
+| `media` | `{ id, label, preview, aspectRatio?, onPress? }[]` | 없음 | 미게시. 보낸 사진. 폭 `chatMessageRecipe.mediaWidth` 210, 한 장은 `aspectRatio`(기본 1), 여러 장은 정사각 칸(`resolveChatMediaColumns`: 2·4장 2열, 그 외 3열, 간격 2), 바깥 radius 14. 글 없이 사진만 보내면 말풍선 표면·꼬리를 그리지 않는다. `onPress`가 있으면 사진마다 버튼(크게 보기는 제품) |
+| `replyAction` | `{ label, onPress(), disabled?, icon? }` | 없음 | `replySwipeDistance` 60px 이상이고 세로 이동의 2배를 넘는 가로 스와이프로 실행(`isReplySwipe`). `reactions`가 있으면 길게 누른 메뉴의 첫 항목으로도 보인다(미게시) |
+| `reactions` | `ReactionPickerProps & { closeLabel, menuActions?, reportAction?, menuAction? }` | 없음 | `reactionHoldMs` 450ms 길게 누르면 메뉴가 열린다: 반응 줄(이모지 `typography.title` 18/26, `more`면 +) → 메시지 미리보기 → 카드(맨 위 `timestamp` 정확한 시각 → `replyAction` → `menuActions` → `menuAction` → `reportAction` 빨간 글자). 항목은 높이 44, 아이콘 24 칸. 같은 반응 재선택은 `null`. `label`은 Web에서 말풍선 이름·Popover 제목, Native에서 접근성 힌트·동작 이름. 시각·동작 카드와 `reportAction`·`menuActions`는 미게시(2026-10-16 인스타그램 DM 길게 누르기 실측 반영) |
 | `interactiveContent` | `boolean` | `false` | 사진 앨범·링크처럼 자식이 버튼을 가지면 `true`. 안쪽 버튼·링크의 누름과 Web Enter/Space는 그 컨트롤이 받는다 |
 | `actions` | `ReactNode` | 없음 | 시각 옆 슬롯. 반응 집계 배지·재시도는 제품이 넣는다 |
 | `children` | `ReactNode` | 필수 | 메시지 본문. Native는 말풍선이 이 텍스트로 읽힌다 |

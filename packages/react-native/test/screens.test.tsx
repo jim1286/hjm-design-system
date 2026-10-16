@@ -143,7 +143,8 @@ it("native reply gesture preserves timeline scrolling and routes quote taps sepa
   expect(reply).toHaveBeenCalledTimes(1);
   act(()=>gesture.props.onResponderRelease({}, {dx:-80,dy:5}));
   expect(reply).toHaveBeenCalledTimes(2);
-  act(()=>tree.root.findAllByType(Button).find(node=>node.props.accessibilityLabel === "원문으로 이동")!.props.onPress());
+  // 2026-10-16: the quote is a link inside the bubble instead of a ghost button outside it.
+  act(()=>tree.root.findAll(node=>node.props.accessibilityLabel === "원문으로 이동" && typeof node.props.onPress === "function")[0]!.props.onPress());
   expect(jump).toHaveBeenCalledTimes(1);
   act(()=>tree.unmount());
 });
@@ -180,7 +181,8 @@ it("opens the host menu only after the iOS reaction modal dismisses", async()=>{
  const menu=vi.fn();
  const tree=render(<ChatMessage direction="incoming" author="서연" timestamp="지금" reactions={{label:"반응",closeLabel:"닫기",options:[{id:"heart",emoji:"❤️",label:"하트"}],value:null,onValueChange:()=>{},menuAction:{label:"메뉴",onPress:menu}}}><Text>내용</Text></ChatMessage>);
  act(()=>tree.root.findAllByType(Pressable).find(node=>node.props.onLongPress)!.props.onLongPress({nativeEvent:{pageY:250}}));
- act(()=>tree.root.findAllByType(Button).find(node=>node.props.children==="메뉴")!.props.onPress());
+ // 2026-10-16: menu actions are rows in the hold menu card.
+ act(()=>tree.root.findAll(node=>node.props.accessibilityLabel==="메뉴"&&typeof node.props.onPress==="function")[0]!.props.onPress());
  expect(menu).not.toHaveBeenCalled();
  expect(tree.root.findByType(Modal).props.visible).toBe(false);
  act(()=>tree.root.findByType(Modal).props.onDismiss());

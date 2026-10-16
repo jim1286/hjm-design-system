@@ -13,6 +13,8 @@ import { AccessibilityInfo, Keyboard, Pressable, ScrollView, View, type NativeSy
 import { containerRecipe, type ContainerGutter } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./data-display.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
+import { MessageReactions, type MessageMenuAction } from "./internal/message-reactions.js";
+import type { ReactionPickerProps } from "./reaction-picker.js";
 import { Heading } from "./heading.js";
 import { Menu } from "./navigation.js";
 import { EmptyState, Skeleton } from "./feedback.js";
@@ -357,7 +359,12 @@ export function OnboardingScreen({steps,index,onIndexChange,nextLabel,backLabel,
  const pending=!!(complete.pending||skip?.pending);
  return <ScreenLayout scrollRef={scrollRef} {...(layoutStyle===undefined?{}:{layoutStyle})} title={step.title} header={<></>} footer={<Stack gap="sm"><Action action={position.last?{...complete,disabled:!!(complete.disabled||pending)}:{label:nextLabel,disabled:pending,onAction:()=>onIndexChange(index+1)}}/>{!position.first?<Action action={{label:backLabel,disabled:pending,onAction:()=>onIndexChange(index-1)}} secondary/>:null}</Stack>}><Stack gap="md"><Text variant="titleLarge" accessibilityRole="header">{step.title}</Text><Text tone="muted">{step.description}</Text><Text variant="caption" tone="muted">{progressLabel(index+1,steps.length)}</Text>{skip?<Action action={{...skip,disabled:!!(skip.disabled||pending)}} secondary/>:null}{step.content}</Stack></ScreenLayout>;}
 
-export type CommentThreadItem = Readonly<{id:string;parentId:string|null;author:string;body:ReactNode;bodyText?:string;timeLabel:string;timeDateTime?:string;likeCountLabel:string;avatar?:ReactNode;likeIcon:ReactNode;likeLabel:string;likeAction?:ReactNode;actions?:ReactNode;canReply?:boolean;replyDisabled?:boolean}>;
+export type CommentThreadItem = Readonly<{id:string;parentId:string|null;author:string;body:ReactNode;bodyText?:string;timeLabel:string;timeDateTime?:string;likeCountLabel:string;avatar?:ReactNode;likeIcon:ReactNode;likeLabel:string;likeAction?:ReactNode;actions?:ReactNode;canReply?:boolean;replyDisabled?:boolean;
+ /** Long-press the comment (author and body) to react; the product owns the stored value and summary. */
+ reactions?:CommentReactions;reactionSummary?:ReactNode;
+ /** Optional photo or sticker under the body; HJM bounds its width and corners, the product sizes the image. */
+ media?:ReactNode}>;
+export type CommentReactions = ReactionPickerProps & Readonly<{closeLabel:string;menuAction?:Readonly<{label:string;onPress():void;disabled?:boolean}>;menuActions?:readonly MessageMenuAction[];reportAction?:Readonly<{label:string;onPress():void;disabled?:boolean;icon?:ReactNode}>;interactiveContent?:boolean}>;
 export type CommentThreadScreenProps = Base & {items:readonly CommentThreadItem[];expandedIds:readonly string[];onExpandedChange(id:string):void;onLike(id:string):void;onReply(id:string):void;replyLabel:string;repliesLabel(count:number,expanded:boolean):string;composer?:ReactNode;threadHeader?:ReactNode;threadFooter?:ReactNode};
 export type CommentThreadRowProps = Readonly<{ layoutStyle?: ScreenLayoutProps["layoutStyle"]; item: CommentThreadItem; onLike(id: string): void; onReply(id: string): void; replyLabel: string }>;
 /** Quiet secondary actions (reply, expand) read as muted copy beside the body, not as filled buttons. */
@@ -370,8 +377,10 @@ export function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyl
  const avatarSize=item.parentId===null?commentThreadRecipe.avatarSize:commentThreadRecipe.replyAvatarSize;
  // The like count sits under the heart so the text column carries only identity, body and reply.
  return <Stack key={item.id} axis="inline" align="start" gap="xs" {...(layoutStyle === undefined ? {} : {layoutStyle})}>{item.avatar?<View style={{width:avatarSize,alignItems:"center"}}>{item.avatar}</View>:null}<View style={{flex:1,minWidth:0,gap:commentThreadRecipe.lineGap}}>
- {item.bodyText!==undefined?<Text><Text emphasis="strong">{item.author}</Text>{" "}{item.bodyText}</Text>:(item.author||item.timeLabel)?<Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexWrap:"wrap"}}>{item.author?<Text variant="caption" emphasis="strong">{item.author}</Text>:null}{item.timeLabel?<Text variant="caption" tone="muted">{item.timeLabel}</Text>:null}</Stack>:null}
- {item.body}{(item.bodyText!==undefined&&item.timeLabel)||(item.canReply??item.parentId===null)?<Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap:"wrap"}}>{item.bodyText!==undefined&&item.timeLabel?<Text variant="caption" tone="muted">{item.timeLabel}</Text>:null}{(item.canReply??item.parentId===null)?<CommentTextAction label={replyLabel} disabled={item.replyDisabled??false} onPress={()=>onReply(item.id)}/>:null}</Stack>:null}</View>
+ {/* Only identity and body are the hold target, so the reply action keeps its own button semantics. */}
+ {(()=>{const identity=<>{item.bodyText!==undefined?<Text><Text emphasis="strong">{item.author}</Text>{" "}{item.bodyText}</Text>:(item.author||item.timeLabel)?<Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexWrap:"wrap"}}>{item.author?<Text variant="caption" emphasis="strong">{item.author}</Text>:null}{item.timeLabel?<Text variant="caption" tone="muted">{item.timeLabel}</Text>:null}</Stack>:null}
+ {item.body}{item.media?<View style={{maxWidth:commentThreadRecipe.mediaMaxWidth,borderRadius:commentThreadRecipe.mediaRadius,overflow:"hidden",marginTop:commentThreadRecipe.avatarGap/2,alignSelf:"flex-start"}}>{item.media}</View>:null}</>;return item.reactions?<MessageReactions {...item.reactions} {...((item.canReply??item.parentId===null)&&!item.replyDisabled ? {replyAction:{label:replyLabel,onPress:()=>onReply(item.id)}} : {})}><View style={{gap:commentThreadRecipe.lineGap}}>{identity}</View></MessageReactions>:identity;})()}
+ {(item.bodyText!==undefined&&item.timeLabel)||(item.canReply??item.parentId===null)||item.reactionSummary?<Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap:"wrap"}}>{item.bodyText!==undefined&&item.timeLabel?<Text variant="caption" tone="muted">{item.timeLabel}</Text>:null}{item.reactionSummary}{(item.canReply??item.parentId===null)?<CommentTextAction label={replyLabel} disabled={item.replyDisabled??false} onPress={()=>onReply(item.id)}/>:null}</Stack>:null}</View>
  <View style={{flexShrink:0}}><Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexShrink:0}}>{item.likeAction!==undefined?item.likeAction:<IconButton label={item.likeLabel} tone="ghost" onPress={()=>onLike(item.id)}>{item.likeIcon}</IconButton>}{item.actions}</Stack>{item.likeCountLabel?<View style={{width:commentThreadRecipe.likeColumnWidth}}><Text variant="caption" tone="muted" align="center">{item.likeCountLabel}</Text></View>:null}</View></Stack>;
 }
 

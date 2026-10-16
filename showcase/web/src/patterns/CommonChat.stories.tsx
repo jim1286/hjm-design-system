@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ChatScreenPreview } from "./common-screen-previews";
+import { GroupChatPreview } from "./group-chat-preview";
 const meta = { id: "common-screen-chat", title: "배포/화면/소통/채팅", component: ChatScreenPreview } satisfies Meta<typeof ChatScreenPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -11,3 +12,5 @@ export const Restricted: Story = { name: "로그인 필요", args: { stateKind: 
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
 export const Recovery: Story = { name: "실패와 복구", args: { tools: true } };
+// 2026-10-16: group room with several members, photos, quotes and the hold menu.
+export const Group: Story = { name: "단톡방", render: () => <GroupChatPreview /> };

@@ -91,6 +91,8 @@ const groupedMessages = [
   { id: "g6", authorId: "seoyeon", timestamp: "오후 3:04", text: "좋아요" },
 ];
 const groupPositions = resolveChatMessageGroups(groupedMessages);
+// Neutral landscape sample: shows photo avatars without depicting a real person.
+const SEOYEON_PHOTO = "https://images.unsplash.com/photo-1472396961693-142e6e269027?w=96&h=96&fit=crop";
 
 export function ChatMessagePreview() {
   const [reaction, setReaction] = useState<string | null>(null);
@@ -115,15 +117,15 @@ export function ChatMessagePreview() {
     <Heading level="level3">대화 메시지</Heading>
     <Stack gap="lg">
       <div style={{ outline: highlight ? "2px solid var(--hjm-color-content-brand)" : undefined, borderRadius: "var(--hjm-radius-md)" }}>
-        <ChatMessage direction="incoming" author="서연" timestamp="오후 2:30" avatar={<Avatar name="서연" size="small" />}
+        <ChatMessage direction="incoming" author="서연" timestamp="오후 2:30" avatar={<Avatar name="서연" size="small" src={SEOYEON_PHOTO} alt="" />}
           replyAction={{ label: "답장", onPress: () => setStatus("서연님의 메시지에 답장을 준비했어요.") }}
-          reactions={{ label: "메시지에 반응", closeLabel: "반응 닫기", value: reaction, onValueChange: setReaction, options: reactionOptions }}
+          reactions={{ label: "메시지에 반응", closeLabel: "반응 닫기", value: reaction, onValueChange: setReaction, options: reactionOptions, reportAction: { label: "신고", onPress: () => setStatus("서연님의 메시지 신고를 접수했어요.") } }}
           actions={reaction ? <Text>{reactionOptions.find(option => option.id === reaction)?.emoji}</Text> : null}>
           <Text>지난번 이야기한 산책길, 가 보셨어요?</Text>
         </ChatMessage>
       </div>
       <ChatMessage direction="outgoing" author="나" timestamp="오후 2:32" deliveryLabel="읽음"
-        reply={<Text variant="caption">서연 · 지난번 이야기한 산책길, 가 보셨어요?</Text>}
+        replyQuote={{ title: "서연에게 답장", excerpt: "지난번 이야기한 산책길, 가 보셨어요?" }}
         replyLink={{ label: "원문 메시지로 이동", onPress: () => { setHighlight(true); setStatus("원문 메시지를 표시했어요."); } }}>
         <Text>네! 생각보다 조용해서 좋았어요.</Text>
       </ChatMessage>
@@ -134,7 +136,7 @@ export function ChatMessagePreview() {
     </Stack>
     <Heading level="level3">묶음 표시</Heading>
     {/* Timeline lists add no gap: each message's group position owns the spacing above it. */}
-    <div>{groupedMessages.map(message => <ChatMessage key={message.id} direction={message.authorId === "me" ? "outgoing" : "incoming"} author={message.authorId === "me" ? "" : "서연"} timestamp={message.timestamp} groupPosition={groupPositions.get(message.id) ?? "single"} {...(message.authorId === "me" ? {} : { avatar: <Avatar name="서연" size="small" /> })}><Text>{message.text}</Text></ChatMessage>)}</div>
+    <div>{groupedMessages.map(message => <ChatMessage key={message.id} direction={message.authorId === "me" ? "outgoing" : "incoming"} author={message.authorId === "me" ? "" : "서연"} timestamp={message.timestamp} groupPosition={groupPositions.get(message.id) ?? "single"} {...(message.authorId === "me" ? {} : { avatar: <Avatar name="서연" size="small" src={SEOYEON_PHOTO} alt="" /> })}><Text>{message.text}</Text></ChatMessage>)}</div>
     <Text ref={receipt} tabIndex={-1} role="status">{state.status === "error" ? "다시 보내지 못했어요. 메시지는 그대로 남아 있어요." : status}</Text>
     <Button tone="ghost" selected={failureArmed} disabled={busy || delivered} onClick={toggleFailure}>다음 전송 실패시키기</Button>
   </Frame>;

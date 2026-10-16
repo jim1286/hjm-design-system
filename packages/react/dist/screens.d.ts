@@ -1,5 +1,6 @@
 import { type ComposerLengthFeedback } from "@hjmds/design-contracts/communication";
 import { type DesignProfileScreenPresentation } from "@hjmds/design-contracts/design-profile-layout";
+import { type MessageMenuAction } from "./internal/message-reactions.js";
 import type { ReactionPickerProps } from "./reaction-picker.js";
 import { type Ref, type ReactNode } from "react";
 import { type MessageAttachmentDescriptor, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
@@ -40,7 +41,9 @@ export type ScreenLayoutProps = Readonly<{
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Shared screen shell. Routing, data, permission checks and mutation state remain product-owned. */
-export declare function ScreenLayout({ title, titleBadge, titleVisibility, headerAlignment, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, description, leading, actions, notice, footer, state, stateAction, children, scroll, as: Element, className, layoutStyle }: ScreenLayoutProps): import("react").JSX.Element;
+export declare function ScreenLayout({ title, titleBadge, titleVisibility, headerAlignment, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, description, leading, actions, notice, footer, state, stateAction, children, scroll, as: Element, className, layoutStyle, hjmTitleLeading }: ScreenLayoutProps & Readonly<{
+    hjmTitleLeading?: ReactNode;
+}>): import("react").JSX.Element;
 export type SettingsScreenSection = Readonly<{
     id: string;
     title: string;
@@ -67,9 +70,17 @@ export type NotificationItemProps = Omit<ListRowProps, "description" | "selected
 export declare function NotificationItem({ read, statusLabel, timestamp, description, title, className, ...props }: NotificationItemProps): import("react").JSX.Element;
 export type ChatScreenProps = Omit<ScreenLayoutProps, "footer"> & Readonly<{
     composer: ReactNode;
+    /** Shown while the reader is away from the latest message; the host owns scroll position and visibility. */
+    jumpToLatest?: Readonly<{
+        label: string;
+        icon: ReactNode;
+        onPress(): void;
+    }>;
+    /** Peer or room photo beside the centered title; group rooms add the member count through `titleBadge`. */
+    avatar?: ReactNode;
 }>;
 /** Caller supplies a virtualized timeline and keyboard-aware composer; no implicit auto-scroll or send. */
-export declare function ChatScreen({ composer, scroll, ...props }: ChatScreenProps): import("react").JSX.Element;
+export declare function ChatScreen({ composer, jumpToLatest, avatar, scroll, headerAlignment, ...props }: ChatScreenProps): import("react").JSX.Element;
 export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCount"> & Readonly<{
     maxLength?: number;
     /** Opt-in count/ring appears only near the actual maxLength; never trims drafts. */
@@ -117,11 +128,23 @@ export type ChatMessageProps = ChatMessageDescriptor & Readonly<{
         label: string;
         onPress(): void;
         disabled?: boolean;
+        icon?: ReactNode;
     }>;
     replyLink?: Readonly<{
         label: string;
         onPress(): void;
-    }>;
+    }>; /** HJM-drawn quote ("X에게 답장" + one-line excerpt) heading the bubble; preferred over a custom `reply` node. */
+    replyQuote?: Readonly<{
+        title: string;
+        excerpt: string;
+    }>; /** Photos sent in the message. Products own the image source, viewer and upload; HJM owns the layout. */
+    media?: readonly Readonly<{
+        id: string;
+        label: string;
+        preview: ReactNode;
+        aspectRatio?: number;
+        onPress?(): void;
+    }>[];
     reactions?: ReactionPickerProps & Readonly<{
         closeLabel: string;
         menuAction?: Readonly<{
@@ -129,11 +152,18 @@ export type ChatMessageProps = ChatMessageDescriptor & Readonly<{
             onPress(): void;
             disabled?: boolean;
         }>;
+        menuActions?: readonly MessageMenuAction[];
+        reportAction?: Readonly<{
+            label: string;
+            onPress(): void;
+            disabled?: boolean;
+            icon?: ReactNode;
+        }>;
     }>;
     /** Canonical layout-only placement on the message row. The swipe offset still owns `transform`. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function ChatMessage({ direction, author, timestamp, timestampPresentation, bubbleTail, deliveryLabel, avatar, reply, actions, replyAction, replyLink, reactions, children, interactiveContent, layoutStyle }: ChatMessageProps): import("react").JSX.Element;
+export declare function ChatMessage({ direction, author, timestamp, timestampPresentation, bubbleTail, groupPosition, deliveryLabel, avatar, reply, replyQuote, media, actions, replyAction, replyLink, reactions, children, interactiveContent, layoutStyle }: ChatMessageProps): import("react").JSX.Element;
 /** Shared structure for embedded compositions. The parent supplies size; this never creates a second scroller. */
 export type CompositionLayoutProps = Readonly<{
     title?: string;

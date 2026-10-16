@@ -2,15 +2,15 @@ import { iconTileRecipe, notificationRowRecipe as notificationRecipe } from "@hj
 import { resolveComposerLimit, type ComposerLengthFeedback } from "@hjmds/design-contracts/communication";
 import { Progress } from "./feedback.js";
 import { resolveDesignProfileScreen, type DesignProfileScreenPresentation } from "@hjmds/design-contracts/design-profile-layout";
-import { MessageReactions } from "./internal/message-reactions.js";
+import { MessageReactions, type MessageMenuAction } from "./internal/message-reactions.js";
 import type { ReactionPickerProps } from "./reaction-picker.js";
 import { Button, IconButton } from "./actions.js";
 import { TextArea } from "./inputs.js";
 import { useEffect, useMemo, useRef, useState, type Ref, type ReactNode } from "react";
-import { Animated, PanResponder, ScrollView, View, type AccessibilityActionEvent, type TextInput, type ScrollViewProps } from "react-native";
+import { Animated, PanResponder, Pressable, ScrollView, View, type AccessibilityActionEvent, type TextInput, type ScrollViewProps } from "react-native";
 import { Spinner } from "./internal/spinner.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
-import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, resolveChatMessageGroupDisplay, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
+import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
 import { motion } from "@hjmds/design-contracts/foundations";
 import { Stack, Text } from "./primitives.js";
 import { ListRow, type ListRowProps } from "./data-display.js";
@@ -19,6 +19,8 @@ import type { FieldPrivateProps } from "./internal/field-private.js";
 import { useHjmNativeTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
+/** Internal: lets ChatScreen narrow only the timeline gutter without a public spacing escape hatch. */
+type ScreenLayoutPrivateProps = Readonly<{ hjmBodyInlinePadding?: number; hjmTitleLeading?: ReactNode }>;
 export type ScreenLayoutProps = Readonly<{
   title: string;
   /** The shared header owns badge placement; the product supplies its meaning and label. */
@@ -53,7 +55,7 @@ export type ScreenLayoutProps = Readonly<{
   scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator" | "onScroll" | "onScrollBeginDrag" | "onScrollEndDrag" | "scrollEventThrottle" | "alwaysBounceVertical" | "automaticallyAdjustKeyboardInsets">;
 }>;
 
-export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, leading, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps }: ScreenLayoutProps) {
+export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, leading, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps, hjmBodyInlinePadding, hjmTitleLeading }: ScreenLayoutProps & ScreenLayoutPrivateProps) {
   const [leadingWidth, setLeadingWidth] = useState(0), [actionsWidth, setActionsWidth] = useState(0);
   const sideWidth = Math.max(leadingWidth, actionsWidth);
   const showHeader = titleVisibility === "visible" || !!description || !!leading || !!actions;
@@ -86,7 +88,7 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
       {/* Measure unconstrained control rows before reserving equal space on both sides. */}
       <View onLayout={event => setLeadingWidth(event.nativeEvent.layout.width)} style={{ position: "absolute", left: padding, top: headerVerticalPadding, bottom: headerVerticalPadding, justifyContent: "center", flexDirection: "row", alignItems: "center" }}>{leading}</View>
       <View style={{ minWidth: 0, alignItems: "center", gap: 4 }}>
-        {titleVisibility === "visible" && <Stack axis="inline" gap="xs" align="center" justify="center" layoutStyle={{flexWrap: "wrap"}}><Text variant="title" align="center" accessibilityRole="header">{title}</Text>{titleBadge}</Stack>}
+        {titleVisibility === "visible" && <Stack axis="inline" gap="xs" align="center" justify="center" layoutStyle={{flexWrap: "wrap"}}>{hjmTitleLeading}<Text variant="title" align="center" accessibilityRole="header">{title}</Text>{titleBadge}</Stack>}
         {description && <Text align="center" tone="muted">{description}</Text>}
       </View>
       <View onLayout={event => setActionsWidth(event.nativeEvent.layout.width)} style={{ position: "absolute", right: padding, top: headerVerticalPadding, bottom: headerVerticalPadding, justifyContent: "center", flexDirection: "row", alignItems: "center" }}>{actions}</View>
@@ -100,8 +102,8 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
     </View>)}
     {notice ? <View style={{ paddingHorizontal: padding }}>{notice}</View> : null}
     {scroll === "screen" || resolved.replacesContent ? <ScrollView {...scrollProps} ref={scrollRef} style={{ flex: 1 }} keyboardShouldPersistTaps="handled"
-      contentContainerStyle={{ flexGrow: 1, padding, paddingTop: bodyPaddingTop }} accessibilityState={{ busy: resolved.busy }}>{body}</ScrollView>
-      : <View style={{ flex: 1, minHeight: 0, padding, paddingTop: bodyPaddingTop }}>{body}</View>}
+      contentContainerStyle={{ flexGrow: 1, padding, paddingTop: bodyPaddingTop, ...(hjmBodyInlinePadding === undefined || contentInset === "none" ? {} : { paddingHorizontal: hjmBodyInlinePadding }) }} accessibilityState={{ busy: resolved.busy }}>{body}</ScrollView>
+      : <View style={{ flex: 1, minHeight: 0, padding, paddingTop: bodyPaddingTop, ...(hjmBodyInlinePadding === undefined || contentInset === "none" ? {} : { paddingHorizontal: hjmBodyInlinePadding }) }}>{body}</View>}
     {footer ? <View style={{ padding, borderTopWidth: contentInset === "none" ? 0 : 1, borderColor: colors.border }}>{footer}</View> : null}
   </View>;
 }
@@ -140,13 +142,16 @@ export type ChatScreenProps = Omit<ScreenLayoutProps, "footer"> & Readonly<{
   composer: ReactNode;
   /** Shown while the reader is away from the latest message; the host owns scroll position and visibility. */
   jumpToLatest?: Readonly<{ label: string; icon: ReactNode; onPress(): void }>;
+  /** Peer or room photo beside the centered title; group rooms add the member count through `titleBadge`. */
+  avatar?: ReactNode;
 }>;
 /** Wrap with existing KeyboardAvoiding (or the host's keyboard adapter), never both. */
-export function ChatScreen({ composer, jumpToLatest, scroll = "content", ...props }: ChatScreenProps) {
+export function ChatScreen({ composer, jumpToLatest, avatar, scroll = "content", headerAlignment = "center", ...props }: ChatScreenProps) {
   // An empty conversation must still allow its first message; unavailable states hide input.
   const showComposer = !props.state || props.state.kind === "ready" || props.state.kind === "empty";
   // Anchor the jump control to the composer edge so it floats over the timeline without measuring the footer.
-  return <ScreenLayout {...props} scroll={scroll} footer={showComposer ? <View style={{ position: "relative" }}>
+  // Conversations center the peer between back and tools and use the measured 10pt timeline gutter (2026-10-16).
+  return <ScreenLayout {...props} scroll={scroll} headerAlignment={headerAlignment} hjmBodyInlinePadding={chatMessageRecipe.timelineInset} hjmTitleLeading={avatar} footer={showComposer ? <View style={{ position: "relative" }}>
     {jumpToLatest ? <View style={{ position: "absolute", bottom: "100%", end: 0, marginBottom: chatMessageRecipe.jumpToLatestGap + screenPatternRecipe.padding }}><IconButton label={jumpToLatest.label} size="small" shape="circle" tone="secondary" onPress={jumpToLatest.onPress}>{jumpToLatest.icon}</IconButton></View> : null}
     {composer}</View> : null} />;
 }
@@ -186,8 +191,7 @@ export function MessageComposer({ value, label, sendLabel, placeholder = label, 
   const compactField: FieldPrivateProps = { hjmCompactMultiline: true };
   const attach = attachmentAction ? <IconButton label={attachmentAction.label} tone="ghost" disabled={locked || (attachmentAction.disabled ?? false)} onPress={attachmentAction.onPress}>{attachmentAction.icon}</IconButton> : null;
   const send = sendIcon ? <IconButton label={sendLabel} size={sendPresentation === "circle" ? "small" : "medium"} shape="circle" tone={sendPresentation === "circle" ? "primary" : "ghost"} disabled={!canSend} loading={pending} onPress={() => { if (canSend) onSend(value); }}>{sendIcon}</IconButton> : <Button disabled={!canSend} loading={pending} onPress={() => { if (canSend) onSend(value); }}>{sendLabel}</Button>;
-  return <Stack gap="sm">{context}{replyTo ? <Stack axis="inline" gap="sm" align="center"><Stack gap="xxs"><Text variant="caption" emphasis="strong">{replyTo.author}</Text><Text variant="caption" tone="muted">{replyTo.excerpt}</Text></Stack><IconButton label={replyTo.cancelLabel} tone="ghost" disabled={locked} onPress={replyTo.onCancel}><FixedGlyph>×</FixedGlyph></IconButton></Stack> : null}
-    {attachments.length ? <ScrollView horizontal showsHorizontalScrollIndicator={false} keyboardShouldPersistTaps="handled" contentContainerStyle={{ gap: tokens.spacing.sm, alignItems: "center" }}>
+  return <Stack gap="sm">{context}{/* Replying wraps target, attachments and input in one card (2026-10-16 reference). */}{replyTo ? <View style={{ backgroundColor: colors.surface, borderRadius: tokens.radius.xl, padding: tokens.spacing.sm, gap: tokens.spacing.sm }}><View style={{ flexDirection: "row", alignItems: "flex-start", gap: tokens.spacing.sm }}><View style={{ flex: 1, minWidth: 0, gap: 2 }}><Text emphasis="strong">{replyTo.author}</Text><Text variant="caption" tone="muted" numberOfLines={1}>{replyTo.excerpt}</Text></View><IconButton label={replyTo.cancelLabel} tone="secondary" size="small" shape="circle" disabled={locked} onPress={replyTo.onCancel}><FixedGlyph>×</FixedGlyph></IconButton></View>{attachments.length ? <ScrollView horizontal showsHorizontalScrollIndicator={false} keyboardShouldPersistTaps="handled" contentContainerStyle={{ gap: tokens.spacing.sm, alignItems: "center" }}>
       {attachments.map(item => <View key={item.id} style={{ width: screenPatternRecipe.attachmentSize, height: screenPatternRecipe.attachmentSize }}>{/* Mask only the photo so the remove control is not clipped by rounded corners. */}<View style={{ width: "100%", height: "100%", overflow: "hidden", borderRadius: tokens.radius.md }}>{item.preview}</View>
         <View style={{ position: "absolute", top: 0, right: 0 }}><IconButton label={item.removeLabel} tone="ghost" size="small" disabled={locked || (item.disabled ?? false)} onPress={() => { if (!locked && !item.disabled) onRemoveAttachment?.(item.id); }}><View style={{ backgroundColor: colors.bg, borderRadius: tokens.radius.full, width: screenPatternRecipe.attachmentRemoveSize, height: screenPatternRecipe.attachmentRemoveSize, alignItems: "center", justifyContent: "center" }}><FixedGlyph fontSize={18} lineHeight={24}>×</FixedGlyph></View></IconButton></View>
       </View>)}{attach}</ScrollView> : null}
@@ -196,11 +200,20 @@ export function MessageComposer({ value, label, sendLabel, placeholder = label, 
       layoutStyle={{ flex: 1 }} onValueChange={onValueChange} minVisibleLines={screenPatternRecipe.composerMinLines} maxVisibleLines={screenPatternRecipe.composerMaxLines}
       {...(sendIcon ? { trailing: <View style={{ alignSelf: "center", marginStart: tokens.spacing.sm, marginEnd: sendPresentation === "circle" ? tokens.spacing.xs - tokens.spacing.md : 0 }}>{hasContent || pending ? send : attach}</View> } : {})} />
       {sendIcon ? null : send}
-    </View>{lengthFeedback && limit?.near ? <Progress shape="circular" label={lengthFeedback.label} value={Math.min(limit.used, limit.max)} max={limit.max} valueText={lengthFeedback.formatCount(limit.used, limit.max)}><Text variant="caption">{lengthFeedback.formatCount(limit.used, limit.max)}</Text></Progress> : null}</Stack>;
+    </View></View> : <>{attachments.length ? <ScrollView horizontal showsHorizontalScrollIndicator={false} keyboardShouldPersistTaps="handled" contentContainerStyle={{ gap: tokens.spacing.sm, alignItems: "center" }}>
+      {attachments.map(item => <View key={item.id} style={{ width: screenPatternRecipe.attachmentSize, height: screenPatternRecipe.attachmentSize }}>{/* Mask only the photo so the remove control is not clipped by rounded corners. */}<View style={{ width: "100%", height: "100%", overflow: "hidden", borderRadius: tokens.radius.md }}>{item.preview}</View>
+        <View style={{ position: "absolute", top: 0, right: 0 }}><IconButton label={item.removeLabel} tone="ghost" size="small" disabled={locked || (item.disabled ?? false)} onPress={() => { if (!locked && !item.disabled) onRemoveAttachment?.(item.id); }}><View style={{ backgroundColor: colors.bg, borderRadius: tokens.radius.full, width: screenPatternRecipe.attachmentRemoveSize, height: screenPatternRecipe.attachmentRemoveSize, alignItems: "center", justifyContent: "center" }}><FixedGlyph fontSize={18} lineHeight={24}>×</FixedGlyph></View></IconButton></View>
+      </View>)}{attach}</ScrollView> : null}
+    <View style={{ flexDirection: "row", alignItems: "flex-end", gap: screenPatternRecipe.itemGap }}>{/* One-row start like Web; public minVisibleLines keeps the editor floor (field-private.ts). */}<TextArea {...compactField} ref={inputRef} maxLength={maxLength} leadingAction={leadingAction} shape="large" accessibilityLabel={label} placeholder={placeholder} {...(description === undefined ? {} : {description})} {...(error === undefined ? {} : {error})} invalid={invalid} onBlur={onBlur} value={value} disabled={locked}
+      submitBehavior={submitMode === "send" ? "submit" : "newline"} onSubmitEditing={() => { if (submitMode === "send" && canSend) onSend(value); }}
+      layoutStyle={{ flex: 1 }} onValueChange={onValueChange} minVisibleLines={screenPatternRecipe.composerMinLines} maxVisibleLines={screenPatternRecipe.composerMaxLines}
+      {...(sendIcon ? { trailing: <View style={{ alignSelf: "center", marginStart: tokens.spacing.sm, marginEnd: sendPresentation === "circle" ? tokens.spacing.xs - tokens.spacing.md : 0 }}>{hasContent || pending ? send : attach}</View> } : {})} />
+      {sendIcon ? null : send}
+    </View></>}{lengthFeedback && limit?.near ? <Progress shape="circular" label={lengthFeedback.label} value={Math.min(limit.used, limit.max)} max={limit.max} valueText={lengthFeedback.formatCount(limit.used, limit.max)}><Text variant="caption">{lengthFeedback.formatCount(limit.used, limit.max)}</Text></Progress> : null}</Stack>;
 }
 
-export type ChatMessageProps = ChatMessageDescriptor & Readonly<{ children: ReactNode; interactiveContent?: boolean; avatar?: ReactNode; reply?: ReactNode; actions?: ReactNode; replyAction?: Readonly<{label:string; onPress():void; disabled?:boolean}>; replyLink?: Readonly<{label:string; onPress():void}>; reactions?: ReactionPickerProps & Readonly<{ closeLabel: string; menuAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean }> }> }>;
-export function ChatMessage({ direction, author, timestamp, timestampPresentation = "always", bubbleTail = true, groupPosition = "single", deliveryLabel, avatar, reply, actions, replyAction, replyLink, reactions, children, interactiveContent=false }: ChatMessageProps) {
+export type ChatMessageProps = ChatMessageDescriptor & Readonly<{ children: ReactNode; interactiveContent?: boolean; avatar?: ReactNode; reply?: ReactNode; actions?: ReactNode; replyAction?: Readonly<{label:string; onPress():void; disabled?:boolean; icon?:ReactNode}>; replyLink?: Readonly<{label:string; onPress():void}>; /** HJM-drawn quote ("X에게 답장" + one-line excerpt) heading the bubble; preferred over a custom `reply` node. */ replyQuote?: Readonly<{ title: string; excerpt: string }>; /** Photos sent in the message. Products own the image source, viewer and upload; HJM owns the layout. */ media?: readonly Readonly<{ id: string; label: string; preview: ReactNode; aspectRatio?: number; onPress?(): void }>[]; reactions?: ReactionPickerProps & Readonly<{ closeLabel: string; menuAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean }>; menuActions?: readonly MessageMenuAction[]; reportAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean; icon?: ReactNode }> }> }>;
+export function ChatMessage({ direction, author, timestamp, timestampPresentation = "always", bubbleTail = true, groupPosition = "single", deliveryLabel, avatar, reply, replyQuote, media = [], actions, replyAction, replyLink, reactions, children, interactiveContent=false }: ChatMessageProps) {
   const { colors, tokens, environment } = useHjmNativeTheme();
   const display = resolveChatMessageGroupDisplay(groupPosition);
   const revealTime = timestampPresentation === "swipe" && !!timestamp;
@@ -225,25 +238,43 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
     onPanResponderTerminationRequest: () => true,
   }), [replyAction, revealTime, outgoing, environment.reducedMotion, offset]);
   const canReply = !!replyAction && !replyAction.disabled;
-  const replyAccessibility = canReply ? {
+  // The in-bubble quote link is merged into the bubble element, so expose it as a bubble action too.
+  const quoteLink = replyLink && (replyQuote || reply) ? replyLink : undefined;
+  const replyAccessibility = canReply || quoteLink ? {
     accessible: true,
-    accessibilityActions: [{ name: "reply", label: replyAction!.label }],
-    onAccessibilityAction: (event: AccessibilityActionEvent) => { if (event.nativeEvent.actionName === "reply") replyAction!.onPress(); },
+    accessibilityActions: [...(canReply ? [{ name: "reply", label: replyAction!.label }] : []), ...(quoteLink ? [{ name: "openOriginal", label: quoteLink.label }] : [])],
+    onAccessibilityAction: (event: AccessibilityActionEvent) => { if (event.nativeEvent.actionName === "reply" && canReply) replyAction!.onPress(); else if (event.nativeEvent.actionName === "openOriginal") quoteLink?.onPress(); },
   } : {};
-  const captionCarriesReply = interactiveContent && !reactions;
+  // Pressable photos keep their own targets, like any interactive bubble content.
+  const interactive = interactiveContent || media.some(item => !!item.onPress);
+  const captionCarriesReply = interactive && !reactions;
   // A run shows its time once, beside its last bubble; delivery state stays on every bubble.
   const visibleTime = revealTime || !display.showTimestamp ? "" : timestamp;
   const meta = [visibleTime, deliveryLabel].filter(Boolean).join(" · ");
   const surface = outgoing ? colors.surfaceAccent : colors.surface;
   // Filled, borderless bubbles separate authors by surface and side (2026-10-16 timeline standard).
-  const bubbleStyle = { backgroundColor: surface, borderRadius: chatMessageRecipe.bubbleRadius, paddingHorizontal: chatMessageRecipe.bubblePaddingInline, paddingVertical: chatMessageRecipe.bubblePaddingBlock, gap: tokens.spacing.xs, flexShrink: 1 };
-  // The tip sits at the run's first top corner and shares the bubble surface, so no seam shows.
-  const tail = bubbleTail && display.showTail ? <View pointerEvents="none" accessible={false} style={{ position: "absolute", top: tokens.spacing.xxs, ...(outgoing ? { right: -chatMessageRecipe.tailSize / 3 } : { left: -chatMessageRecipe.tailSize / 3 }), width: chatMessageRecipe.tailSize, height: chatMessageRecipe.tailSize, backgroundColor: surface, transform: [{ rotate: "45deg" }] }} /> : null;
+  const showTail = bubbleTail && display.showTail && !(media.length > 0 && !reply && !replyQuote && (children === null || children === undefined || children === false || children === ""));
+  // The tipped corner tightens so the tip continues the bubble's top edge instead of a separate bump.
+  const bubbleStyle = { backgroundColor: surface, borderRadius: chatMessageRecipe.bubbleRadius, ...(showTail ? (outgoing ? { borderTopEndRadius: chatMessageRecipe.tailCornerRadius } : { borderTopStartRadius: chatMessageRecipe.tailCornerRadius }) : {}), paddingHorizontal: chatMessageRecipe.bubblePaddingInline, paddingVertical: chatMessageRecipe.bubblePaddingBlock, gap: tokens.spacing.xs, flexShrink: 1 };
+  // A flat-topped triangle in the bubble surface points outward from the run's first top corner.
+  const tail = showTail ? <View pointerEvents="none" accessible={false} style={{ position: "absolute", top: 0, ...(outgoing ? { end: -chatMessageRecipe.tailWidth + 1, borderEndWidth: chatMessageRecipe.tailWidth, borderEndColor: "transparent" } : { start: -chatMessageRecipe.tailWidth + 1, borderStartWidth: chatMessageRecipe.tailWidth, borderStartColor: "transparent" }), width: 0, height: 0, borderTopWidth: chatMessageRecipe.tailHeight, borderTopColor: surface }} /> : null;
   // A quoted reply heads the bubble and is divided from the answer, as in the measured reference.
-  const bubbleContent = <>{tail}{reply && !replyLink ? <View style={{ borderBottomWidth: 1, borderColor: colors.border, paddingBottom: tokens.spacing.xs }}>{reply}</View> : null}{children}</>;
+  const quote = replyQuote ? <View style={{ gap: 2 }}><Text emphasis="strong">{replyQuote.title}</Text><Text tone="muted" numberOfLines={1}>{replyQuote.excerpt}</Text></View> : reply;
+  // The quote stays inside the bubble; with replyLink a tap on it jumps to the original (2026-10-16 reference).
+  const columns = media.length ? resolveChatMediaColumns(media.length) : 1;
+  const tile = media.length > 1 ? (chatMessageRecipe.mediaWidth - chatMessageRecipe.mediaGap * (columns - 1)) / columns : chatMessageRecipe.mediaWidth;
+  const mediaBlock = media.length ? <View style={{ width: chatMessageRecipe.mediaWidth, flexDirection: "row", flexWrap: "wrap", gap: chatMessageRecipe.mediaGap, borderRadius: chatMessageRecipe.bubbleRadius, overflow: "hidden" }}>
+    {media.map(item => { const size = { width: tile, aspectRatio: media.length > 1 ? 1 : item.aspectRatio ?? 1 }; return item.onPress ? <Pressable key={item.id} accessibilityRole="imagebutton" accessibilityLabel={item.label} onPress={item.onPress} style={size}>{item.preview}</Pressable> : <View key={item.id} accessible accessibilityRole="image" accessibilityLabel={item.label} style={size}>{item.preview}</View>; })}
+  </View> : null;
+  // A photo-only message drops the bubble surface so the photo itself is the message.
+  const photoOnly = media.length > 0 && !reply && !replyQuote && (children === null || children === undefined || children === false || children === "");
+  const bubbleContent = <>{tail}{quote ? <View style={{ borderBottomWidth: 1, borderColor: colors.border, paddingBottom: tokens.spacing.xs }}>{replyLink ? <Pressable accessibilityRole="link" accessibilityLabel={replyLink.label} onPress={replyLink.onPress}>{quote}</Pressable> : quote}</View> : null}{mediaBlock}{photoOnly ? null : children}</>;
   // Later bubbles of a run keep the avatar column so their edges line up under the first bubble.
   const avatarSlot = !avatar ? null : display.showAvatar ? <View style={{ width: chatMessageRecipe.avatarSize, alignItems: "center" }}>{avatar}</View> : <View accessible={false} style={{ width: chatMessageRecipe.avatarSize }} />;
-  return <View {...gesture.panHandlers} style={{ position: "relative", overflow: "hidden", marginTop: display.spacingBefore, paddingHorizontal: bubbleTail ? tokens.spacing.xs : 0 }}>
+  return <View {...gesture.panHandlers} style={{ position: "relative", overflow: "hidden", marginTop: display.spacingBefore,
+    // Reserve tip room only where it protrudes: the trailing edge of own messages, or the leading edge
+    // when no avatar column hosts it. Symmetric 8pt padding narrowed every row (2026-10-16 review).
+    ...(bubbleTail ? (outgoing ? { paddingEnd: chatMessageRecipe.tailWidth } : avatar ? {} : { paddingStart: chatMessageRecipe.tailWidth }) : {}) }}>
     {revealTime ? <Animated.View pointerEvents="none" style={{ position: "absolute", ...(outgoing ? { right: 0, alignItems: "flex-end" as const } : { left: 0 }), top: 0, bottom: 0, width: 80, justifyContent: "center", opacity: offset.interpolate({ inputRange: [-16, 0, 16], outputRange: [1, 0, 1], extrapolate: "clamp" }) }}><Text variant="caption" tone="muted">{timestamp}</Text></Animated.View> : null}
     <Animated.View style={{ transform:[{translateX:offset}], flexDirection: "row", justifyContent: outgoing ? "flex-end" : "flex-start", alignItems: "flex-start", gap: chatMessageRecipe.avatarGap }}>
     {!outgoing ? avatarSlot : null}
@@ -255,13 +286,14 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
         the reply action moves to the time (or author) caption instead of a new visible button. */}
     {/* Leave a visible opposite edge so authorship survives monochrome themes; never truncate message text. */}
     <View style={{ maxWidth: screenPatternRecipe.messageMaxWidth, flexShrink: 1, gap: chatMessageRecipe.authorGap, alignItems: outgoing ? "flex-end" : "flex-start" }}>
-      {author && display.showAuthor?<Text variant="caption" tone="muted" {...(captionCarriesReply && !meta ? replyAccessibility : {})}>{author}</Text>:null}
-      {reply && replyLink ? <Button tone="ghost" accessibilityLabel={replyLink.label} onPress={replyLink.onPress}>{reply}</Button> : null}
+      {author && display.showAuthor && !outgoing?<Text variant="caption" tone="muted" {...(captionCarriesReply && !meta ? replyAccessibility : {})}>{author}</Text>:null}
       {/* Time and delivery sit beside the bubble's bottom edge, on the side facing the open space. */}
-      <View style={{ flexDirection: outgoing ? "row-reverse" : "row", alignItems: "flex-end", gap: chatMessageRecipe.metaGap, maxWidth: "100%" }}>
-      {reactions ? <MessageReactions {...reactions} interactiveContent={interactiveContent} {...(replyAction ? {replyAction} : {})}>
-        <View style={bubbleStyle}>{bubbleContent}</View>
-      </MessageReactions> : <View style={bubbleStyle} accessible={!interactiveContent} {...(interactiveContent ? {} : replyAccessibility)}>{bubbleContent}</View>}
+      {/* Stretch to the column's resolved width: a percentage max width here is unresolved while Yoga
+          measures an auto-width column, so long bubbles pushed the time off screen. */}
+      <View style={{ flexDirection: outgoing ? "row-reverse" : "row", alignItems: "flex-end", gap: chatMessageRecipe.metaGap, alignSelf: "stretch" }}>
+      {reactions ? <MessageReactions {...reactions} interactiveContent={interactive} {...(timestamp ? { menuTitle: timestamp } : {})} {...(replyAction && !replyAction.disabled ? {replyAction} : {})}>
+        <View style={photoOnly ? { flexShrink: 1 } : bubbleStyle}>{bubbleContent}</View>
+      </MessageReactions> : <View style={photoOnly ? { flexShrink: 1 } : bubbleStyle} accessible={!interactive} {...(interactive ? {} : replyAccessibility)}>{bubbleContent}</View>}
       {meta||actions?<Stack axis="inline" gap="xs" align="center" layoutStyle={{ flexShrink: 0 }}>{meta?<Text variant="caption" tone="muted" {...(captionCarriesReply ? replyAccessibility : {})}>{meta}</Text>:null}{actions}</Stack>:null}
       </View>
     </View>

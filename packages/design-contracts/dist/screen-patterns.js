@@ -1,4 +1,4 @@
-import { layout, spacing } from "./foundations.js";
+import { layout, radius, spacing } from "./foundations.js";
 export function resolveScreenContentState(state = { kind: "ready" }) {
     if (!["ready", "loading", "empty", "error", "restricted"].includes(state.kind)) {
         throw new TypeError("Unknown screen content state");
@@ -59,9 +59,23 @@ export const chatMessageRecipe = {
     // Bubbles of one run read as a stack; a new author or minute starts a visibly separate group.
     runGap: 6,
     groupGap: spacing.sm,
-    tailSize: 10,
+    // Flat-topped tip continuing the bubble's top edge; the tipped corner tightens to meet it.
+    tailWidth: 7,
+    tailHeight: 10,
+    tailCornerRadius: 4,
     jumpToLatestGap: spacing.xs,
+    // Timeline side gutter (measured 10pt); header and composer keep the screen padding.
+    timelineInset: 10,
+    // Photos render without the bubble surface (measured reference: ~210pt wide, bubble radius).
+    mediaWidth: 210,
+    mediaGap: 2,
 };
+/** Column count for a photo set: pairs read as 2-up, other counts as 3-up; one photo spans the width. */
+export function resolveChatMediaColumns(count) {
+    if (!Number.isSafeInteger(count) || count < 1)
+        throw new RangeError("Chat media requires at least one item");
+    return count === 1 ? 1 : count === 2 || count === 4 ? 2 : 3;
+}
 /**
  * Runs break when the author or the displayed timestamp changes, so each minute shows its time once
  * and a new minute re-introduces the author (KakaoTalk behavior). Products pass the same localized
@@ -115,6 +129,9 @@ export const commentThreadRecipe = {
     replyIndent: 32 + spacing.xs,
     // The heart keeps the 44pt touch target even though the measured reference draws a smaller glyph.
     likeColumnWidth: 44,
+    // Optional photo/sticker under the body; the measured reference keeps it thumbnail-sized.
+    mediaMaxWidth: 160,
+    mediaRadius: radius.md,
 };
 /** Replies are one level deep; reject orphaned/duplicate records instead of silently losing them. */
 export function validateCommentThread(items) {

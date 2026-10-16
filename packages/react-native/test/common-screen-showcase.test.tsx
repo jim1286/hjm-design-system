@@ -31,7 +31,7 @@ it('does not route an unrelated notification into the fixed Soyeon conversation'
  await render(<NotificationScreenPreview/>);act(()=>tree.root.findAllByType(NotificationItem)[1]!.props.onPress());expect(Boolean(button('대화 이어가기'))).toBe(false);back();act(()=>tree.root.findAllByType(NotificationItem)[0]!.props.onPress());press('대화 이어가기');expect(tree.root.findByType(MessageComposer)).toBeDefined();
 });
 it('preserves chat input and reply ownership while visiting conversation details',async()=>{
- await render(<ChatScreenPreview/>);const composer=()=>tree.root.findByType(MessageComposer);act(()=>composer().props.onValueChange('작성 중인 답장'));act(()=>tree.root.findAllByType(ChatMessage)[0]!.props.replyAction.onPress());act(()=>tree.root.findAllByType(IconButton).find(n=>n.props.label==='대화 정보')!.props.onPress());back();expect(composer().props.value).toBe('작성 중인 답장');expect(composer().props.replyTo.author).toBe('서연');act(()=>composer().props.replyTo.onCancel());expect(composer().props.value).toBe('작성 중인 답장');expect(composer().props.replyTo).toBeUndefined();
+ await render(<ChatScreenPreview/>);const composer=()=>tree.root.findByType(MessageComposer);act(()=>composer().props.onValueChange('작성 중인 답장'));act(()=>tree.root.findAllByType(ChatMessage)[0]!.props.replyAction.onPress());act(()=>tree.root.findAllByType(IconButton).find(n=>n.props.label==='대화 정보')!.props.onPress());back();expect(composer().props.value).toBe('작성 중인 답장');expect(composer().props.replyTo.author).toBe('서연에게 답장');act(()=>composer().props.replyTo.onCancel());expect(composer().props.value).toBe('작성 중인 답장');expect(composer().props.replyTo).toBeUndefined();
 });
 
 it('restarts the original-message highlight when the same reply is followed again',async()=>{

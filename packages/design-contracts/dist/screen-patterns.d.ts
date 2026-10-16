@@ -68,9 +68,16 @@ export declare const chatMessageRecipe: {
     readonly bubblePaddingBlock: 6;
     readonly runGap: 6;
     readonly groupGap: 12;
-    readonly tailSize: 10;
+    readonly tailWidth: 7;
+    readonly tailHeight: 10;
+    readonly tailCornerRadius: 4;
     readonly jumpToLatestGap: 8;
+    readonly timelineInset: 10;
+    readonly mediaWidth: 210;
+    readonly mediaGap: 2;
 };
+/** Column count for a photo set: pairs read as 2-up, other counts as 3-up; one photo spans the width. */
+export declare function resolveChatMediaColumns(count: number): 1 | 2 | 3;
 /** Position inside a run of consecutive messages from one author within one displayed minute. */
 export type ChatMessageGroupPosition = "single" | "first" | "middle" | "last";
 /**
@@ -124,6 +131,8 @@ export declare const commentThreadRecipe: {
     readonly rowGap: 12;
     readonly replyIndent: number;
     readonly likeColumnWidth: 44;
+    readonly mediaMaxWidth: 160;
+    readonly mediaRadius: 12;
 };
 /** Replies are one level deep; reject orphaned/duplicate records instead of silently losing them. */
 export declare function validateCommentThread(items: readonly {

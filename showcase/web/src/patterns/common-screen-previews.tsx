@@ -12,7 +12,7 @@ import { Top } from "@hjmds/react/top";
 import { Notice } from "@hjmds/react/feedback";
 import { Avatar } from "@hjmds/react/display";
 import { Bell, ChevronLeft, ChevronRight, Globe2, HelpCircle, ShieldCheck, Volume2, Sparkles, MoreHorizontal, CheckCheck, MessageCircle, Heart, Palette, Settings2, Image as ImageIcon, ArrowUp } from "lucide-react";
-import type { ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
+import { resolveChatMessageGroups, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
 import { ListRow } from "@hjmds/react/display";
 
 const extraReactions = [{"id": "smile", "emoji": "😀", "label": "웃는 얼굴"}, {"id": "grin", "emoji": "😁", "label": "활짝 웃음"}, {"id": "wink", "emoji": "😉", "label": "윙크"}, {"id": "love", "emoji": "😍", "label": "반한 얼굴"}, {"id": "kiss", "emoji": "😘", "label": "입맞춤"}, {"id": "cool", "emoji": "😎", "label": "멋진 얼굴"}, {"id": "think", "emoji": "🤔", "label": "생각 중"}, {"id": "party", "emoji": "🥳", "label": "축하"}, {"id": "please", "emoji": "🥺", "label": "부탁"}, {"id": "sleep", "emoji": "😴", "label": "졸려요"}, {"id": "angry", "emoji": "😡", "label": "화나요"}, {"id": "sick", "emoji": "🤒", "label": "아파요"}, {"id": "clap", "emoji": "👏", "label": "박수"}, {"id": "thumb", "emoji": "👍", "label": "최고"}, {"id": "thanks", "emoji": "🙏", "label": "감사"}, {"id": "wave", "emoji": "👋", "label": "인사"}, {"id": "strong", "emoji": "💪", "label": "힘내요"}, {"id": "ok", "emoji": "👌", "label": "좋아요 표시"}, {"id": "sparkles", "emoji": "✨", "label": "반짝임"}, {"id": "star", "emoji": "⭐", "label": "별"}, {"id": "hundred", "emoji": "💯", "label": "백 점"}, {"id": "confetti", "emoji": "🎉", "label": "축하 꽃가루"}, {"id": "flower", "emoji": "🌸", "label": "벚꽃"}, {"id": "sun", "emoji": "☀️", "label": "해"}, {"id": "moon", "emoji": "🌙", "label": "달"}, {"id": "rainbow", "emoji": "🌈", "label": "무지개"}, {"id": "coffee", "emoji": "☕", "label": "커피"}, {"id": "cake", "emoji": "🎂", "label": "케이크"}, {"id": "pizza", "emoji": "🍕", "label": "피자"}, {"id": "gift", "emoji": "🎁", "label": "선물"}, {"id": "cat", "emoji": "🐱", "label": "고양이"}, {"id": "dog", "emoji": "🐶", "label": "강아지"}];
@@ -30,7 +30,7 @@ function Glyph({ name }: { name: keyof typeof glyphs }) { const GlyphIcon = glyp
 function Person({ name }: { name: string }) { return <Avatar name={name} size="small" />; }
 function Frame({ children, login = false, containerRef }: { children: ReactNode; login?: boolean; containerRef: Ref<HTMLDivElement> }) { return <div ref={containerRef} style={{ height: login ? "auto" : "90dvh", width: "100%" }}>{children}</div>; }
 type ReplyTarget = {id:string; author:string; text:string};
-type DemoMessage = ReplyTarget & {direction:"incoming"|"outgoing"; timestamp:string; replyTo?:ReplyTarget};
+type DemoMessage = ReplyTarget & {direction:"incoming"|"outgoing"; timestamp:string; replyTo?:ReplyTarget; photos?:number};
 const initialMessages: DemoMessage[] = [
  {id:"first",author:"서연",direction:"incoming",timestamp:"오후 2:30",text:"오늘 날씨 정말 좋네요. 지난번 이야기한 산책길, 가 보셨어요?"},
  {id:"second",author:"나",direction:"outgoing",timestamp:"오후 2:32",text:"네! 생각보다 조용해서 좋았어요. 사진도 몇 장 남겼어요."},
@@ -111,11 +111,11 @@ function ScreenPreview({ kind: initialKind, stateKind = "ready", tools = false }
   const cancelLogin = () => { loginRequest.current = null; clearTimeout(loginJob.current); loginJob.current = undefined; setLoginBusy(false); }; // LS-09: cancel restores buttons without a failure sentence
   const [readError, setReadError] = useState(false);
   const notice = kind === "chat" && failed ? <Text tone="danger">보내지 못했어요. 작성한 메시지는 남아 있어요.</Text> : kind === "notifications" && readError ? <Text tone="danger">읽음 표시를 저장하지 못했어요. 알림을 다시 눌러 주세요.</Text> : detail ? <Stack gap="sm"><Text>{detail}</Text><Button tone="ghost" onClick={() => setDetail(null)}>닫기</Button></Stack> : null;
-  const composer = <MessageComposer value={draft} onValueChange={setDraft} label="메시지 보내기" sendLabel="전송" context={notice} {...(replyTarget ? {replyTo:{author:replyTarget.author,excerpt:replyTarget.text,cancelLabel:"답장 취소",onCancel:() => setReplyTarget(null)}} : {})} sendPresentation="circle" sendIcon={<ArrowUp size={20} strokeWidth={2} color="var(--hjm-color-on-primary)"/>} attachmentAction={{label:"사진 추가", icon:<ImageIcon size={20}/>, onPress:() => setPhotos(current => [...current, (current.at(-1) ?? -1) + 1])}}
+  const composer = <MessageComposer value={draft} onValueChange={setDraft} label="메시지 보내기" sendLabel="전송" context={notice} {...(replyTarget ? {replyTo:{author:`${replyTarget.author}에게 답장`,excerpt:replyTarget.text,cancelLabel:"답장 취소",onCancel:() => setReplyTarget(null)}} : {})} sendPresentation="circle" sendIcon={<ArrowUp size={20} strokeWidth={2} color="var(--hjm-color-on-primary)"/>} attachmentAction={{label:"사진 추가", icon:<ImageIcon size={20}/>, onPress:() => setPhotos(current => [...current, (current.at(-1) ?? -1) + 1])}}
     attachments={photos.map((id,index) => ({id:String(id),removeLabel:`사진 ${index + 1} 삭제`,preview:<img src={riverPhoto} alt={`선택한 사진 ${index + 1}`} />}))}
     onRemoveAttachment={id => setPhotos(current => current.filter(photo => String(photo) !== id))} onSend={value => {
     if (failNext === "chat") { setFailed(true); setFailNext(null); return; }
-    setMessages(current => [...current, {id:`sent-${current.length}`,author:"나",direction:"outgoing",timestamp:"지금",text:value || `사진 ${photos.length}장`,...(replyTarget ? {replyTo:replyTarget} : {})}]); setReplyTarget(null); setPhotos([]); setDraft(""); setFailed(false);
+    setMessages(current => [...current, {id:`sent-${current.length}`,author:"나",direction:"outgoing",timestamp:"지금",text:value,...(photos.length ? {photos:photos.length} : {}),...(replyTarget ? {replyTo:replyTarget} : {})}]); setReplyTarget(null); setPhotos([]); setDraft(""); setFailed(false);
   }} />;
   const retry = state.kind === "error" || state.kind === "restricted" ? <Button onClick={() => setRecovered(true)}>{state.kind === "restricted" ? "로그인" : "다시 연결"}</Button> : null;
   const back = <IconButton label="뒤로" tone="ghost" onClick={() => { setDetail(null); setAtHome(true); }}><Glyph name="back" /></IconButton>;
@@ -128,6 +128,8 @@ function ScreenPreview({ kind: initialKind, stateKind = "ready", tools = false }
   const visibleEntries = entries.filter(entry => notificationTab === "전체" || notificationTab === "답글" && entry.icon === "chat" || notificationTab === "읽지 않음" && !readIds.includes(entry.id) && entry.id !== 4);
   const notificationState = state.kind === "ready" && visibleEntries.length === 0 ? states.empty : state;
   const groups = [{ title: "오늘", items: visibleEntries.filter(entry => entry.id !== 4) }, { title: "이번 주", items: visibleEntries.filter(entry => entry.id === 4) }].filter(group => group.items.length > 0);
+  // Group positions own the gaps between messages (resolveChatMessageGroups).
+  const groupPositions = resolveChatMessageGroups([...initialMessages,...messages].map(message => ({id:message.id,authorId:message.author,timestamp:message.timestamp})));
   let screen;
   if (kind === "settings") screen = <SettingsPagePreview leading={back} state={state} stateAction={retry} />;
   else if (kind === "notifications") screen = <NotificationInboxScreen title="알림" leading={back} state={notificationState} stateAction={retry} notice={readError ? notice : null}
@@ -137,19 +139,23 @@ function ScreenPreview({ kind: initialKind, stateKind = "ready", tools = false }
       leading={<Person name={entry.name} />} trailing={<Glyph name={entry.icon} />} read={readIds.includes(entry.id) || entry.id === 4} statusLabel={readIds.includes(entry.id) || entry.id === 4 ? "확인함" : "새 알림"} timestamp={entry.time}
       onClick={() => { if (failNext === "notifications") { setFailNext(null); setReadError(true); return; } setReadError(false); setReadIds(ids => ids.includes(entry.id) ? ids : [...ids, entry.id]); setNotificationDetailId(entry.id); setDetail(entry.description); }} />)}</Stack>)}</Stack>
   </NotificationInboxScreen>;
-  else if (kind === "chat") screen = <ChatScreen title="서연" leading={<Stack axis="inline" gap="xs" align="center">{back}<Person name="서연"/></Stack>} state={state} stateAction={retry} scroll="screen" composer={composer}
+  else if (kind === "chat") screen = <ChatScreen title="서연" leading={back} avatar={<Person name="서연"/>} state={state} stateAction={retry} scroll="screen" composer={composer}
     actions={<IconButton label="대화 정보" tone="ghost" onClick={() => setDetail("서연님과 나누는 대화예요.")}><Glyph name="more" /></IconButton>}>
-    <Stack gap="lg"><Stack align="center"><Text variant="caption" tone="muted">10월 5일 월요일</Text></Stack>
-      {[...initialMessages,...messages].map(message => <div tabIndex={-1} key={message.id} ref={node => {if(node) messageNodes.current.set(message.id,node); else messageNodes.current.delete(message.id);}} style={{outline:highlight===message.id ? "2px solid var(--hjm-color-content-brand)" : undefined,borderRadius:"var(--hjm-radius-md)"}}>
-        <ChatMessage direction={message.direction} author={message.author} timestamp={message.timestamp}
+    {/* The first message group already carries its own top gap. */}
+    <div><Stack align="center"><Text variant="caption" tone="muted">10월 5일 월요일</Text></Stack>
+      {/* Group positions own the gaps between messages, so this wrapper adds none. */}
+      <div>{[...initialMessages,...messages].map(message => <div tabIndex={-1} key={message.id} ref={node => {if(node) messageNodes.current.set(message.id,node); else messageNodes.current.delete(message.id);}} style={{outline:highlight===message.id ? "2px solid var(--hjm-color-content-brand)" : undefined,borderRadius:"var(--hjm-radius-md)"}}>
+        <ChatMessage direction={message.direction} author={message.author} timestamp={message.timestamp} groupPosition={groupPositions.get(message.id) ?? "single"}
+          {...(message.direction === "incoming" ? {avatar:<Person name={message.author}/>} : {})}
+          {...(message.photos ? {media:Array.from({length:message.photos},(_,index) => ({id:`${message.id}-${index}`,label:`보낸 사진 ${index + 1}`,preview:<img src={riverPhoto} alt="" style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}} />}))} : {})}
           replyAction={{label:"답장",onPress:() => setReplyTarget(message)}}
-          {...(message.replyTo ? {reply:<Text variant="caption">{message.replyTo.author} · {message.replyTo.text}</Text>,replyLink:{label:"원문 메시지로 이동",onPress:() => jump(message.replyTo!.id)}} : {})}
+          {...(message.replyTo ? {replyQuote:{title:`${message.replyTo.author}에게 답장`,excerpt:message.replyTo.text},replyLink:{label:"원문 메시지로 이동",onPress:() => jump(message.replyTo!.id)}} : {})}
           {...(message.id === "first" ? {reactions:{label:"메시지에 반응",closeLabel:"반응 닫기",value:reaction,onValueChange:setReaction,more:{label:"더 많은 이모지",options:extraReactions},options:[{id:"heart",emoji:"❤️",label:"좋아요"},{id:"laugh",emoji:"😂",label:"웃겨요"},{id:"wow",emoji:"😮",label:"놀라워요"},{id:"sad",emoji:"😢",label:"슬퍼요"},{id:"fire",emoji:"🔥",label:"멋져요"}]}} : {})}
           actions={message.id === "first" && reaction ? <Text>{({heart:"❤️",laugh:"😂",wow:"😮",sad:"😢",fire:"🔥"} as Record<string,string>)[reaction] ?? extraReactions.find(item => item.id === reaction)?.emoji}</Text> : null}>
-          <Text>{message.text}</Text>
-        </ChatMessage></div>)}
+          {message.text ? <Text>{message.text}</Text> : null}
+        </ChatMessage></div>)}</div>
 
-    </Stack>
+    </div>
   </ChatScreen>;
   else if (kind === "login") screen = <AuthScreenLayout hero={<Stack gap="lg" align="center"><Glyph name="chat"/><Top descriptor={{ eyebrow: "이야기", title: "당신의 일상을 이야기로 남겨요", description: "사진 한 장, 짧은 한 줄로 시작하세요." }} /></Stack>} mainCard
     {...(loginBusy ? { pendingLabel: "로그인 중" } : {})}

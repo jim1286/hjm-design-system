@@ -5,6 +5,8 @@ import { type UploadItemDescriptor, type UploadItemLabels } from "@hjmds/design-
 import { type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
 import { type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
 import { type ContainerGutter } from "@hjmds/design-contracts/components/container";
+import { type MessageMenuAction } from "./internal/message-reactions.js";
+import type { ReactionPickerProps } from "./reaction-picker.js";
 /** Copy, pending state and mutations are controlled by the consuming product. */
 export type ScreenFlowAction = Readonly<{
     label: string;
@@ -288,6 +290,27 @@ export type CommentThreadItem = Readonly<{
     actions?: ReactNode;
     canReply?: boolean;
     replyDisabled?: boolean;
+    /** Long-press the comment (author and body) to react; the product owns the stored value and summary. */
+    reactions?: CommentReactions;
+    reactionSummary?: ReactNode;
+    /** Optional photo or sticker under the body; HJM bounds its width and corners, the product sizes the image. */
+    media?: ReactNode;
+}>;
+export type CommentReactions = ReactionPickerProps & Readonly<{
+    closeLabel: string;
+    menuAction?: Readonly<{
+        label: string;
+        onPress(): void;
+        disabled?: boolean;
+    }>;
+    menuActions?: readonly MessageMenuAction[];
+    reportAction?: Readonly<{
+        label: string;
+        onPress(): void;
+        disabled?: boolean;
+        icon?: ReactNode;
+    }>;
+    interactiveContent?: boolean;
 }>;
 export type CommentThreadScreenProps = Base & {
     items: readonly CommentThreadItem[];

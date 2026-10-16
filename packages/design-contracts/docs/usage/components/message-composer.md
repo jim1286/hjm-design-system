@@ -106,6 +106,7 @@ import { Image } from "react-native";
 | 크기 | 입력 `composerMinLines` 1 ~ `composerMaxLines` 5줄(넘으면 입력 안에서 스크롤), `shape="large"`; 첨부 썸네일 `attachmentSize` 80(radius `radius.md`); 제거 버튼은 `IconButton size="small"` 36 + 사방 hit 4(실제 타깃 44), 그 안 보이는 원 `attachmentRemoveSize` 24; circle 전송은 `IconButton size="small"` 36 | `screen-patterns.ts`, `icon-button-recipe.ts` `sizes.small`, Web `styles.css`, Native `MessageComposer` |
 | 간격 | 세로 묶음(context·답장 대상·첨부·입력 줄) 사이와 입력–텍스트 전송 버튼 사이 `screenPatternRecipe.itemGap`(`spacing.sm` 12, 두 플랫폼. 2026-10-06까지 Web은 8, 1.13.0 변경); 답장 대상 줄·첨부 사이 `spacing.sm` 12; circle 전송은 입력 글자와 `spacing.sm` 12, 오른쪽 끝 8 | `screenPatternRecipe.itemGap`, Web `.hjm-message-composer`·`__row`(`--hjm-message-composer-gap`), Native `Stack gap="sm"`·`itemGap` |
 | 순서·정렬 | `context` → 답장 대상(작성자·발췌 → 취소) → 첨부 썸네일(→ 첨부 버튼) → 입력·전송 한 줄, 전송은 입력 아래쪽(`flex-end`)에 맞춘다. 입력 줄 안은 `leadingAction` → 글자 → (아이콘 모드) 전송/첨부 | 렌더 순서, Web `forms.tsx` `hjm-field__leading` |
+| 답장 중 | 미게시(2026-10-16 카카오톡 실측): `replyTo`가 있으면 답장 대상(제목 굵게 + 원문 한 줄 말줄임 + 원형 × `IconButton size="small"` secondary)·첨부·입력 줄을 `surface` 배경, radius `radius.xl` 24, 안쪽 `spacing.sm` 12 카드 하나로 감싼다. `replyTo.author`에는 "소희에게 답장"처럼 완성된 문구를 넘긴다 | Web·Native `MessageComposer` |
 | 고정·스크롤 | 자체 고정 없음: 화면 composer 슬롯(footer)에 넣는다; 첨부는 가로 스크롤; 키보드 adapter는 host 하나만 | ChatScreen·CommentThreadScreen `composer` |
 | 좁은 폭·큰 글자 | 입력이 남은 폭을 채우고(`flex: 1`, 최소 폭 0) 전송 버튼은 줄지 않는다; 큰 글자에서도 5줄 상한 뒤 입력 안 스크롤로 기록을 가리지 않는다 | Web `.hjm-message-composer__row`, Native `layoutStyle={{ flex: 1 }}` |
 
