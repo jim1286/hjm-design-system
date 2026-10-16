@@ -3096,8 +3096,10 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-chat-message__bubble[data-photo-only]::before { display: none; }
 .hjm-chat-screen:not([data-content-inset="none"]) .hjm-screen__body { padding-inline: 10px; }
 .hjm-chat-screen__footer { position: relative; }
+.hjm-message-composer__leading { flex: 0 0 auto; align-self: center; display: inline-flex; }
 .hjm-message-composer__quick { display: flex; justify-content: space-between; gap: var(--hjm-space-xs); }
-.hjm-message-composer__quick-item { inline-size: var(--hjm-quick-size); block-size: var(--hjm-quick-size); border: 0; border-radius: 50%; background: none; font-size: var(--hjm-quick-emoji); line-height: 1; cursor: pointer; }
+/* Items share the composer width (max 44px) so eight emoji fit beside a host avatar. */
+.hjm-message-composer__quick-item { flex: 1 1 0; min-inline-size: 0; max-inline-size: var(--hjm-quick-size); block-size: var(--hjm-quick-size); border: 0; border-radius: 50%; background: none; font-size: var(--hjm-quick-emoji); line-height: 1; cursor: pointer; }
 .hjm-message-composer__quick-item:hover:not(:disabled) { background: var(--hjm-color-surface); }
 .hjm-message-composer__quick-item:focus-visible { outline: 2px solid var(--hjm-color-focus, currentColor); outline-offset: 2px; }
 .hjm-message-composer__quick-item:disabled { opacity: 0.5; cursor: default; }

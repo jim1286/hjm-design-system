@@ -171,6 +171,8 @@ export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCo
   onValueChange(value: string): void;
   onSend(value: string): void;
   /** Emoji row above the input; a tap appends the emoji to the draft (measured comment sheet, 2026-10-16). */
+  /** Outside the field, beside the input row (e.g. the writer's avatar); the quick-insert row stays full width. */
+  leading?: ReactNode;
   quickInserts?: Readonly<{ label: string; items: readonly Readonly<{ id: string; emoji: string; label: string }>[] }>;
   context?: ReactNode;
   replyTo?: Readonly<{ author: string; excerpt: string; cancelLabel: string; onCancel(): void }>;
@@ -184,7 +186,7 @@ export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCo
   /** Canonical layout-only placement on the composer root. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
 }>;
-export function MessageComposer({ quickInserts, value, label, sendLabel, placeholder = label, description, error, invalid = false, submitMode = "newline", onBlur, disabled = false, pending = false, onValueChange, onSend, maxLength, lengthFeedback, sendDisabled = false, additionalContent = false, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation = "inline", attachmentAction, attachments = [], onRemoveAttachment, layoutStyle }: MessageComposerProps) {
+export function MessageComposer({ leading, quickInserts, value, label, sendLabel, placeholder = label, description, error, invalid = false, submitMode = "newline", onBlur, disabled = false, pending = false, onValueChange, onSend, maxLength, lengthFeedback, sendDisabled = false, additionalContent = false, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation = "inline", attachmentAction, attachments = [], onRemoveAttachment, layoutStyle }: MessageComposerProps) {
   validateMessageAttachments(attachments);
   if (attachments.length && !onRemoveAttachment) throw new TypeError("Attachments require a removal callback");
   if (lengthFeedback && maxLength === undefined) throw new TypeError("Composer length feedback requires maxLength");
@@ -198,7 +200,7 @@ export function MessageComposer({ quickInserts, value, label, sendLabel, placeho
   // Readonly pending input preserves the keyboard/focus for receipt failure recovery; disabling it would blur desktop chat.
   // Enter is opt-in and IME-safe; receipt-driven clearing and failed-send recovery belong to the host.
   const composerBody = <>{attachments.length ? <div className="hjm-message-composer__attachments">{attachments.map(item => <div key={item.id} className="hjm-message-composer__attachment"><div className="hjm-message-composer__preview">{item.preview}</div><span className="hjm-message-composer__remove"><IconButton label={item.removeLabel} tone="ghost" size="small" disabled={locked || item.disabled} onClick={() => { if (!locked && !item.disabled) onRemoveAttachment?.(item.id); }}><span className="hjm-message-composer__remove-glyph" aria-hidden="true">×</span></IconButton></span></div>)}{attach}</div> : null}
-    <div className="hjm-message-composer__row"><TextArea ref={inputRef} maxLength={maxLength} leadingAction={leadingAction} shape="large" rows={screenPatternRecipe.composerMinLines} aria-label={label} placeholder={placeholder} description={description} error={error} aria-invalid={invalid || undefined} onBlur={onBlur} value={value} disabled={disabled} readOnly={pending} aria-busy={pending || undefined}
+    <div className="hjm-message-composer__row">{leading ? <span className="hjm-message-composer__leading">{leading}</span> : null}<TextArea ref={inputRef} maxLength={maxLength} leadingAction={leadingAction} shape="large" rows={screenPatternRecipe.composerMinLines} aria-label={label} placeholder={placeholder} description={description} error={error} aria-invalid={invalid || undefined} onBlur={onBlur} value={value} disabled={disabled} readOnly={pending} aria-busy={pending || undefined}
       onKeyDown={event => { if (shouldSubmitMessageKey({key:event.key, shiftKey:event.shiftKey, isComposing:event.nativeEvent.isComposing, keyCode:event.nativeEvent.keyCode}, submitMode)) { event.preventDefault(); if (canSend) onSend(value); } }}
       onChange={event => { if (!locked) onValueChange(event.currentTarget.value); }} minVisibleLines={screenPatternRecipe.composerMinLines} maxVisibleLines={screenPatternRecipe.composerMaxLines}
       {...(sendIcon ? { trailing: <span className="hjm-message-composer__trailing">{/* Reserve the send footprint so typing never resizes the field. */}<span className="hjm-message-composer__reserve" aria-hidden="true" inert>{send}</span><span className="hjm-message-composer__visible">{hasContent || pending ? send : attach}</span></span> } : {})} />

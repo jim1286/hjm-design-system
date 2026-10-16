@@ -94,6 +94,8 @@ export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCo
     onValueChange(value: string): void;
     onSend(value: string): void;
     /** Emoji row above the input; a tap appends the emoji to the draft (measured comment sheet, 2026-10-16). */
+    /** Outside the field, beside the input row (e.g. the writer's avatar); the quick-insert row stays full width. */
+    leading?: ReactNode;
     quickInserts?: Readonly<{
         label: string;
         items: readonly Readonly<{
@@ -126,7 +128,7 @@ export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCo
     /** Canonical layout-only placement on the composer root. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function MessageComposer({ quickInserts, value, label, sendLabel, placeholder, description, error, invalid, submitMode, onBlur, disabled, pending, onValueChange, onSend, maxLength, lengthFeedback, sendDisabled, additionalContent, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation, attachmentAction, attachments, onRemoveAttachment, layoutStyle }: MessageComposerProps): import("react").JSX.Element;
+export declare function MessageComposer({ leading, quickInserts, value, label, sendLabel, placeholder, description, error, invalid, submitMode, onBlur, disabled, pending, onValueChange, onSend, maxLength, lengthFeedback, sendDisabled, additionalContent, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation, attachmentAction, attachments, onRemoveAttachment, layoutStyle }: MessageComposerProps): import("react").JSX.Element;
 export type ChatMessageProps = ChatMessageDescriptor & Readonly<{
     children: ReactNode;
     interactiveContent?: boolean;

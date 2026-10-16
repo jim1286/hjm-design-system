@@ -169,6 +169,8 @@ export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCo
   onValueChange(value: string): void;
   onSend(value: string): void;
   /** Emoji row above the input; a tap appends the emoji to the draft (measured comment sheet, 2026-10-16). */
+  /** Outside the field, beside the input row (e.g. the writer's avatar); the quick-insert row stays full width. */
+  leading?: ReactNode;
   quickInserts?: Readonly<{ label: string; items: readonly Readonly<{ id: string; emoji: string; label: string }>[] }>;
   context?: ReactNode;
   replyTo?: Readonly<{ author: string; excerpt: string; cancelLabel: string; onCancel(): void }>;
@@ -180,7 +182,7 @@ export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCo
   attachments?: readonly (MessageAttachmentDescriptor & Readonly<{ preview: ReactNode }>)[];
   onRemoveAttachment?: (id: string) => void;
 }>;
-export function MessageComposer({ quickInserts, value, label, sendLabel, placeholder = label, description, error, invalid = false, submitMode = "newline", onBlur, disabled = false, pending = false, onValueChange, onSend, maxLength, lengthFeedback, sendDisabled = false, additionalContent = false, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation = "inline", attachmentAction, attachments = [], onRemoveAttachment }: MessageComposerProps) {
+export function MessageComposer({ leading, quickInserts, value, label, sendLabel, placeholder = label, description, error, invalid = false, submitMode = "newline", onBlur, disabled = false, pending = false, onValueChange, onSend, maxLength, lengthFeedback, sendDisabled = false, additionalContent = false, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation = "inline", attachmentAction, attachments = [], onRemoveAttachment }: MessageComposerProps) {
   validateMessageAttachments(attachments);
   if (attachments.length && !onRemoveAttachment) throw new TypeError("Attachments require a removal callback");
   if (lengthFeedback && maxLength === undefined) throw new TypeError("Composer length feedback requires maxLength");
@@ -197,7 +199,7 @@ export function MessageComposer({ quickInserts, value, label, sendLabel, placeho
       {attachments.map(item => <View key={item.id} style={{ width: screenPatternRecipe.attachmentSize, height: screenPatternRecipe.attachmentSize }}>{/* Mask only the photo so the remove control is not clipped by rounded corners. */}<View style={{ width: "100%", height: "100%", overflow: "hidden", borderRadius: tokens.radius.md }}>{item.preview}</View>
         <View style={{ position: "absolute", top: 0, right: 0 }}><IconButton label={item.removeLabel} tone="ghost" size="small" disabled={locked || (item.disabled ?? false)} onPress={() => { if (!locked && !item.disabled) onRemoveAttachment?.(item.id); }}><View style={{ backgroundColor: colors.bg, borderRadius: tokens.radius.full, width: screenPatternRecipe.attachmentRemoveSize, height: screenPatternRecipe.attachmentRemoveSize, alignItems: "center", justifyContent: "center" }}><FixedGlyph fontSize={18} lineHeight={24}>×</FixedGlyph></View></IconButton></View>
       </View>)}{attach}</ScrollView> : null}
-    <View style={{ flexDirection: "row", alignItems: "flex-end", gap: screenPatternRecipe.itemGap }}>{/* One-row start like Web; public minVisibleLines keeps the editor floor (field-private.ts). */}<TextArea {...compactField} ref={inputRef} maxLength={maxLength} leadingAction={leadingAction} shape="large" accessibilityLabel={label} placeholder={placeholder} {...(description === undefined ? {} : {description})} {...(error === undefined ? {} : {error})} invalid={invalid} onBlur={onBlur} value={value} disabled={locked}
+    <View style={{ flexDirection: "row", alignItems: "flex-end", gap: screenPatternRecipe.itemGap }}>{leading ? <View style={{ alignSelf: "center", flexShrink: 0 }}>{leading}</View> : null}{/* One-row start like Web; public minVisibleLines keeps the editor floor (field-private.ts). */}<TextArea {...compactField} ref={inputRef} maxLength={maxLength} leadingAction={leadingAction} shape="large" accessibilityLabel={label} placeholder={placeholder} {...(description === undefined ? {} : {description})} {...(error === undefined ? {} : {error})} invalid={invalid} onBlur={onBlur} value={value} disabled={locked}
       submitBehavior={submitMode === "send" ? "submit" : "newline"} onSubmitEditing={() => { if (submitMode === "send" && canSend) onSend(value); }}
       layoutStyle={{ flex: 1 }} onValueChange={onValueChange} minVisibleLines={screenPatternRecipe.composerMinLines} maxVisibleLines={screenPatternRecipe.composerMaxLines}
       {...(sendIcon ? { trailing: <View style={{ alignSelf: "center", marginStart: tokens.spacing.sm, marginEnd: sendPresentation === "circle" ? tokens.spacing.xs - tokens.spacing.md : 0 }}>
@@ -209,7 +211,8 @@ export function MessageComposer({ quickInserts, value, label, sendLabel, placeho
     </View></>;
   const quickRow = quickInserts?.items.length ? <View accessibilityLabel={quickInserts.label} style={{ flexDirection: "row", justifyContent: "space-between", gap: composerQuickInsertRecipe.gap }}>
     {quickInserts.items.map(item => <Pressable key={item.id} accessibilityRole="button" accessibilityLabel={item.label} accessibilityState={{ disabled: locked }} disabled={locked} onPress={() => onValueChange(value + item.emoji)}
-      style={({ pressed }) => ({ width: composerQuickInsertRecipe.itemSize, height: composerQuickInsertRecipe.itemSize, borderRadius: composerQuickInsertRecipe.itemSize / 2, alignItems: "center", justifyContent: "center", opacity: locked ? 0.5 : 1, backgroundColor: pressed ? colors.surface : "transparent" })}>
+      // Items share the composer width (max 44pt each) so eight emoji fit even beside a host avatar.
+      style={({ pressed }) => ({ flexGrow: 1, flexShrink: 1, flexBasis: 0, maxWidth: composerQuickInsertRecipe.itemSize, height: composerQuickInsertRecipe.itemSize, borderRadius: composerQuickInsertRecipe.itemSize / 2, alignItems: "center", justifyContent: "center", opacity: locked ? 0.5 : 1, backgroundColor: pressed ? colors.surface : "transparent" })}>
       <FixedGlyph fontSize={composerQuickInsertRecipe.emojiSize} lineHeight={composerQuickInsertRecipe.emojiSize + 6}>{item.emoji}</FixedGlyph>
     </Pressable>)}
   </View> : null;
