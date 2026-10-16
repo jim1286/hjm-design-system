@@ -44,7 +44,7 @@ export function ListDetailScreen({list,detail,back,refresh,loadMore,layoutStyle,
  },[open]);
  // layoutStyle places the outer host that owns both panes, not the inner list ScreenLayout.
  return <div style={{height:"100%",...layoutStyle}}>
-  <div ref={listHost} tabIndex={-1} hidden={open} style={{height:"100%"}} onFocusCapture={event=>{returnFocus.current=event.target as HTMLElement;}}><ScreenLayout {...screen} actions={refresh?<Action action={refresh} secondary/>:screen.actions} footer={loadMore?<Action action={loadMore} secondary/>:null}>{list}</ScreenLayout></div>
+  <div ref={listHost} tabIndex={-1} hidden={open} style={{height:"100%"}} onFocusCapture={event=>{returnFocus.current=event.target as HTMLElement;}}><ScreenLayout {...screen} {...(refresh||screen.actions?{actions:<Stack axis="inline" gap="xs" align="center">{/* Refresh no longer replaces the screen's own actions (2026-10-16 composition review). */}{screen.actions}{refresh?<Action action={refresh} secondary/>:null}</Stack>}:{})} footer={loadMore?<Action action={loadMore} secondary/>:null}>{list}</ScreenLayout></div>
   {detail?<div ref={detailHost} style={{height:"100%"}}><ScreenLayout title={detail.title} {...(detail.titleVisibility === undefined ? {} : { titleVisibility: detail.titleVisibility })} {...(detail.headerAlignment === undefined ? {} : { headerAlignment: detail.headerAlignment })} {...(detail.state === undefined ? {} : {state:detail.state})} stateAction={detail.stateAction} notice={detail.notice} leading={<Action action={back} secondary/>}>{detail.content}</ScreenLayout></div>:null}
  </div>;
 }

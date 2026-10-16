@@ -828,6 +828,15 @@
         "role": "canonical"
       },
       {
+        "name": "ImageChoiceGroup",
+        "source": "packages/react/src/image-choice.tsx",
+        "entries": [
+          "./image-choice"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "ImageComparison",
         "source": "packages/react/src/image-comparison.tsx",
         "entries": [
@@ -2382,6 +2391,15 @@
         "role": "supplemental"
       },
       {
+        "name": "ContextMenu",
+        "source": "packages/react-native/src/context-menu.tsx",
+        "entries": [
+          "./context-menu"
+        ],
+        "canonicalComponent": "ContextMenu",
+        "role": "canonical"
+      },
+      {
         "name": "ConversationRow",
         "source": "packages/react-native/src/conversation-row.tsx",
         "entries": [
@@ -2753,6 +2771,15 @@
         "role": "canonical"
       },
       {
+        "name": "ImageChoiceGroup",
+        "source": "packages/react-native/src/image-choice.tsx",
+        "entries": [
+          "./image-choice"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "ImageComparison",
         "source": "packages/react-native/src/image-comparison.tsx",
         "entries": [
@@ -2793,6 +2820,15 @@
         "source": "packages/react-native/src/collection-editing.tsx",
         "entries": [
           "./collection-editing"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "KeyboardAvoidanceContext",
+        "source": "packages/react-native/src/keyboard.tsx",
+        "entries": [
+          "./keyboard"
         ],
         "canonicalComponent": null,
         "role": "supplemental"

@@ -805,7 +805,8 @@ export function SegmentedControl(props) {
             })] }));
 }
 /** Action/filter chip with role-specific, controlled selection semantics. */
-export function Chip({ label, size = chipRecipe.defaults.size, disabled = false, leading, trailing, accessibilityLabel, accessibilityHint, layoutStyle, leadingStyle, indicatorStyle, trailingStyle, renderSelectionIndicator, selectionMode = "action", selected, onPress, }) {
+/** Forwards the host View ref so a chip can be a focus-return target (2026-10-16, DiscoveryGallery). */
+export const Chip = forwardRef(function Chip({ label, size = chipRecipe.defaults.size, disabled = false, leading, trailing, accessibilityLabel, accessibilityHint, layoutStyle, leadingStyle, indicatorStyle, trailingStyle, renderSelectionIndicator, selectionMode = "action", selected, onPress, }, ref) {
     const theme = useHjmNativeTheme();
     const selectable = selectionMode !== "action";
     const active = selectable && selected === true;
@@ -814,7 +815,7 @@ export function Chip({ label, size = chipRecipe.defaults.size, disabled = false,
     const contentColor = resolveColorReference(presentation.content, theme.palette);
     const indicatorColor = resolveColorReference(chipRecipe.selectionIndicator.color, theme.palette);
     const role = selectionMode === "single" ? "radio" : selectionMode === "multiple" ? "checkbox" : "button";
-    return (_jsxs(Pressable, { accessibilityHint: accessibilityHint, accessibilityLabel: accessibilityLabel ?? label, accessibilityRole: role, accessibilityState: selectable ? { checked: active, disabled } : { disabled }, ...webOnly(selectable
+    return (_jsxs(Pressable, { ref: ref, accessibilityHint: accessibilityHint, accessibilityLabel: accessibilityLabel ?? label, accessibilityRole: role, accessibilityState: selectable ? { checked: active, disabled } : { disabled }, ...webOnly(selectable
             ? webChoiceProps({
                 kind: role === "radio" ? "radio" : "checkbox",
                 checked: active,
@@ -870,5 +871,5 @@ export function Chip({ label, size = chipRecipe.defaults.size, disabled = false,
                             : chipRecipe.label.fontWeight,
                     },
                 ], variant: metrics.textVariant, children: label }), trailing ? _jsx(View, { accessible: false, style: trailingStyle, children: trailing }) : null] }));
-}
+});
 //# sourceMappingURL=inputs.js.map

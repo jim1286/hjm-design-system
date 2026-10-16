@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { SavedItemsScreen } from "@hjmds/react/saved-items";
-import { Stack, Text, Surface, Grid } from "@hjmds/react/layout";
+import { Stack, Text, Surface } from "@hjmds/react/layout";
 import { Heading } from "@hjmds/react/heading";
 import { Button, IconButton } from "@hjmds/react/actions";
 import { SearchField, TextField, TextArea } from "@hjmds/react/forms";
 import { ListRow } from "@hjmds/react/display";
+import { ImageChoiceGroup } from "@hjmds/react/image-choice";
 import { Sheet } from "@hjmds/react/overlays";
 import { Notice } from "@hjmds/react/feedback";
 import { Bookmark, ArrowLeft, LockKeyhole } from "lucide-react";
@@ -37,7 +38,8 @@ export function SavedItemsPreview({stateKind="ready"}: Options){
  renderDetail={item=><Stack gap="md"><Stack axis="inline" align="center" justify="between"><Text emphasis="strong">{item.author}</Text><IconButton label={`${item.title} 저장 해제`} tone="ghost" onClick={()=>{setSaved(ids=>ids.filter(id=>id!==item.id));setRemoved(item.id);setSelectedItemId(null);}}><Bookmark size={20}/></IconButton></Stack><PreviewPhoto index={item.photo} square label={item.title}/><Text>{item.body}</Text></Stack>}/>
  <Sheet open={creating} onOpenChange={setCreating} title="새 컬렉션" closeLabel="닫기" footer={<Button disabled={!name.trim()} onClick={create}>만들기</Button>}>
   <Stack gap="md"><TextField label="컬렉션 이름" placeholder="이름을 입력하세요" value={name} onValueChange={setName} maxLength={40}/><Text tone="muted">컬렉션에 담을 게시물을 선택하세요.</Text>
-  <Grid columns={{compact:3}} gap={{compact:"xxs"}} minColumnWidth={{compact:44}}>{items.map(item=><Button key={item.id} tone="ghost" selected={chosen.includes(item.id)} onClick={()=>setChosen(ids=>ids.includes(item.id)?ids.filter(id=>id!==item.id):[...ids,item.id])} aria-label={`${item.title} 선택`}><PreviewPhoto index={item.photo} square label={item.title}/></Button>)}</Grid></Stack>
+  <ImageChoiceGroup label="컬렉션에 담을 게시물" selectionMode="multiple" value={chosen} onValueChange={setChosen}
+   items={items.map(item=>({id:item.id,label:item.title,image:<PreviewPhoto index={item.photo} square label=""/>}))}/></Stack>
  </Sheet></>;
  return <div style={{height:"90dvh"}}>{body}</div>;
 }
@@ -48,5 +50,7 @@ export function ProfileEditFields({name,bio,photo,onNameChange,onBioChange,onPho
   <Stack align="center" gap="md"><ProfilePhoto name={name||"내 프로필"} index={photo}/><Button tone="secondary" size="small" disabled={disabled} onClick={()=>setChoosePhoto(true)}>프로필 사진 변경</Button><Text variant="caption" tone="muted">내 이야기에 함께 표시되는 사진이에요.</Text></Stack>
   <Stack gap="lg"><Heading level="level5">공개 프로필</Heading><TextField label="이름" description="다른 사람에게 표시할 이름이에요." value={name} onValueChange={onNameChange} disabled={disabled} maxLength={30} {...(!name.trim()?{error:"이름을 입력해 주세요."}:{})}/><TextArea label="소개" description="좋아하는 것, 요즘의 관심사를 들려주세요." value={bio} onChange={event=>onBioChange(event.currentTarget.value)} minVisibleLines={3} maxLength={160} disabled={disabled}/><Text variant="caption" tone="muted">{bio.length} / 160</Text></Stack>
   <Surface padding="md"><Stack gap="xs"><Text variant="caption" tone="muted">사용자 이름</Text><Text emphasis="strong">@jimin</Text><Text variant="caption" tone="muted">계정을 구분하는 고유한 이름이에요.</Text></Stack></Surface>
- </Stack><Sheet open={choosePhoto} onOpenChange={setChoosePhoto} title="프로필 사진 선택" closeLabel="닫기" footer={<Button tone="secondary" onClick={()=>setChoosePhoto(false)}>취소</Button>}><Stack gap="md"><Text tone="muted">예제 사진을 골라 프로필에 적용해 보세요.</Text><Stack axis="inline" wrap gap="sm">{[0,1,2].map(index=><Stack key={index} gap="sm"><ProfilePhoto name={`예제 사진 ${index+1}`} index={index}/><Button tone="ghost" selected={photo===index} onClick={()=>{onPhotoChange(index);setChoosePhoto(false);}}>{`사진 ${index+1} 선택`}</Button></Stack>)}</Stack></Stack></Sheet></>;
+ </Stack><Sheet open={choosePhoto} onOpenChange={setChoosePhoto} title="프로필 사진 선택" closeLabel="닫기" footer={<Button tone="secondary" onClick={()=>setChoosePhoto(false)}>취소</Button>}><Stack gap="md"><Text tone="muted">예제 사진을 골라 프로필에 적용해 보세요.</Text><ImageChoiceGroup label="프로필 사진" selectionMode="single" value={String(photo)} disabled={disabled}
+   onValueChange={id=>{onPhotoChange(Number(id));setChoosePhoto(false);}}
+   items={[0,1,2].map(index=>({id:String(index),label:`예제 사진 ${index+1}`,image:<PreviewPhoto index={index} square label=""/>}))}/></Stack></Sheet></>;
 }

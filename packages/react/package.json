@@ -213,6 +213,11 @@
       "import": "./dist/clipboard.js",
       "default": "./dist/clipboard.js"
     },
+    "./image-choice": {
+      "types": "./dist/image-choice.d.ts",
+      "import": "./dist/image-choice.js",
+      "default": "./dist/image-choice.js"
+    },
     "./toggle-group": {
       "types": "./dist/toggle-group.d.ts",
       "import": "./dist/toggle-group.js",

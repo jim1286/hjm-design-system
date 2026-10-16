@@ -55,7 +55,10 @@ const supplemental = new Set([
   // Screen compositions reuse canonical primitives; they do not expand the frozen catalog.
   "CompositionLayout", "CommentThreadRow", "ConversationRow", "SavedItemsScreen", "CommentThreadScreen", "ListDetailScreen", "EditorScreen", "ProfileScreen", "ProfileSummary", "ModerationScreen", "MediaSelectionScreen", "PhotoSourceSheet", "SearchScreen", "PermissionScreen", "OnboardingScreen",
   "OverviewScreen", "ScreenLayout", "SettingsScreen", "NotificationInboxScreen", "NotificationItem", "NotificationRow", "IconTile", "ChatScreen", "MessageComposer", "ChatMessage",
-  "KeyboardAvoiding", "KeyboardMotionProvider", "KeyboardDock", "KeyboardFormScrollView",
+  // 2026-10-16: the context lets ScreenLayout/Sheet skip duplicate keyboard padding inside KeyboardAvoiding.
+  "KeyboardAvoiding", "KeyboardAvoidanceContext", "KeyboardMotionProvider", "KeyboardDock", "KeyboardFormScrollView",
+  // 2026-10-16: picking by image reuses radio/checkbox semantics; no new canonical catalog row.
+  "ImageChoiceGroup",
   "SortableCollection", "SwipeActions", "ContentTransition", "TextTransition", "Celebration",
   "SharedTransitionScreen", "SharedTransitionElement", "EffectSurface", "ProgressiveBlur",
   // 2026-10-10: disclosure trigger for the panel Toast (composition activity-status). Not a Chip variant

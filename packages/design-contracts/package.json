@@ -475,6 +475,12 @@
       "import": "./dist/toast.js",
       "default": "./dist/toast.js"
     },
+    "./components/image-choice": {
+      "types": "./dist/image-choice.d.ts",
+      "react-native": "./dist/image-choice.js",
+      "import": "./dist/image-choice.js",
+      "default": "./dist/image-choice.js"
+    },
     "./components/toggle-group": {
       "types": "./dist/toggle-group.d.ts",
       "react-native": "./dist/toggle-group.js",

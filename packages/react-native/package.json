@@ -136,6 +136,12 @@
       "import": "./dist/heading.js",
       "default": "./dist/heading.js"
     },
+    "./image-choice": {
+      "types": "./dist/image-choice.d.ts",
+      "react-native": "./dist/image-choice.js",
+      "import": "./dist/image-choice.js",
+      "default": "./dist/image-choice.js"
+    },
     "./toggle-group": {
       "types": "./dist/toggle-group.d.ts",
       "react-native": "./dist/toggle-group.js",

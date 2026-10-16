@@ -6,6 +6,8 @@ import { Avatar } from "@hjmds/react-native/data-display";
 import { createBlobatarFallback } from "@hjmds/react-native/avatar-blobatar";
 import { Button } from "@hjmds/react-native/actions";
 import { TextField, Switch } from "@hjmds/react-native/inputs";
+import { ImageChoiceGroup } from "@hjmds/react-native/image-choice";
+import { imageChoiceRecipe } from "@hjmds/design-contracts/components/image-choice";
 import { Stack, Surface, Text } from "@hjmds/react-native/primitives";
 import { spacing } from "@hjmds/design-contracts/foundations";
 import { profileCopy as copy, profileFaces, initialProfile } from "../../shared/profile-studio";
@@ -21,7 +23,8 @@ export function ProfileFacePreview() {
   const dirty = JSON.stringify(draft) !== JSON.stringify(saved);
   const change = (next: Partial<typeof draft>) => { setDraft({ ...draft, ...next }); setApplied(false); };
   // 2026-10-16 composition review: sections and the preview card use Stack/Surface spacing instead of raw View gaps
-  // and a hand-drawn border card. Face choice stays an avatar button group: HJM has no image-choice component yet.
+  // and a hand-drawn border card. Faces render at the tile size so the Blobatar fills the ImageChoiceGroup tile; the
+  // tile carries the face name, so the artwork itself stays decorative.
   return <ScrollView automaticallyAdjustKeyboardInsets keyboardDismissMode="on-drag" keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: spacing.xl }}>
     <Stack gap="xl">
       <Stack gap="sm"><Text variant="label" tone="brand">{copy.eyebrow}</Text><Heading level="level3">{copy.title}</Heading><Text tone="muted">{copy.intro}</Text></Stack>
@@ -31,9 +34,8 @@ export function ProfileFacePreview() {
         <Heading level="level3">{draft.name.trim() || copy.profile}</Heading><Text tone="muted">{copy.member}</Text>
       </Stack></Surface>
       <Stack gap="md"><Text variant="title" accessibilityRole="header">{copy.appearance}</Text><Text tone="muted">{copy.appearanceHint}</Text>
-        <Stack axis="inline" wrap gap="sm">{profileFaces.map(item => <Button key={item.seed} tone="ghost" selected={draft.seed === item.seed} accessibilityLabel={item.label} onPress={() => change({ seed: item.seed })}>
-          <Avatar name={item.label} decorative size={40} renderFallback={createBlobatarFallback({ seed: item.seed })} />
-        </Button>)}</Stack>
+        <ImageChoiceGroup label={copy.appearance} selectionMode="single" value={draft.seed} onValueChange={seed => change({ seed })}
+          items={profileFaces.map(item => ({ id: item.seed, label: item.label, image: createBlobatarFallback({ seed: item.seed })({ size: imageChoiceRecipe.tileSize, decorative: true }) }))} />
         <TextField label={copy.name} description={copy.nameHint} value={draft.name} {...(!draft.name.trim() ? { error: copy.empty } : {})} onValueChange={name => change({ name })} />
       </Stack>
       <Stack gap="md"><Text variant="title" accessibilityRole="header">{copy.preferences}</Text><Switch label={copy.notification} description={copy.notificationHint} checked={draft.notifications} onCheckedChange={notifications => change({ notifications })} /></Stack>

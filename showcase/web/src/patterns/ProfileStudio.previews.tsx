@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 import { Avatar } from "@hjmds/react/display";
 import { createBlobatarFallback } from "@hjmds/react/avatar-blobatar";
 import { Button } from "@hjmds/react/actions";
+import { ImageChoiceGroup } from "@hjmds/react/image-choice";
+import { imageChoiceRecipe } from "@hjmds/design-contracts/components/image-choice";
 import { TextField } from "@hjmds/react/forms";
 import { Switch } from "@hjmds/react/selection";
 import { Heading } from "@hjmds/react/heading";
@@ -19,8 +21,8 @@ export function AvatarFacePreview() {
   const dirty = JSON.stringify(draft) !== JSON.stringify(saved);
   const change = (next: Partial<typeof draft>) => { setDraft({ ...draft, ...next }); setApplied(false); };
   // 2026-10-16 composition review: the intro, preview card, form sections and action row use Stack/Surface/Grid
-  // instead of page CSS; only the outer page width/padding stays in profile-studio.css. Face choice stays an avatar
-  // button group because HJM has no image-choice component yet.
+  // instead of page CSS; only the outer page width/padding stays in profile-studio.css. Faces render at the
+  // ImageChoiceGroup tile size so the Blobatar fills the tile; the tile carries the face name.
   return <main className="hjm-profile-studio">
     <Stack gap="xxxl">
       <Stack gap="sm"><Text tone="brand" variant="label">{copy.eyebrow}</Text>
@@ -34,10 +36,8 @@ export function AvatarFacePreview() {
         </Stack></Surface>
         <form onSubmit={event => { event.preventDefault(); if (draft.name.trim()) { setSaved(draft); setApplied(true); } }}><Stack gap="xl">
           <Stack gap="md"><Text variant="title" role="heading" aria-level={2}>{copy.appearance}</Text><Text tone="muted">{copy.appearanceHint}</Text>
-            <Stack axis="inline" wrap gap="sm" role="group" aria-label={copy.appearance}>{profileFaces.map(item =>
-              <Button type="button" key={item.seed} tone="ghost" selected={draft.seed === item.seed} onClick={() => change({ seed: item.seed })} aria-label={item.label}>
-                <Avatar name={item.label} alt="" size="medium" renderFallback={createBlobatarFallback({ seed: item.seed })} />
-              </Button>)}</Stack>
+            <ImageChoiceGroup label={copy.appearance} selectionMode="single" value={draft.seed} onValueChange={seed => change({ seed })}
+              items={profileFaces.map(item => ({ id: item.seed, label: item.label, image: createBlobatarFallback({ seed: item.seed })({ size: imageChoiceRecipe.tileSize, decorative: true }) }))} />
             <TextField label={copy.name} description={copy.nameHint} value={draft.name} {...(!draft.name.trim() ? { error: copy.empty } : {})} onChange={event => change({ name: event.target.value })} required />
           </Stack>
           <Stack gap="md"><Text variant="title" role="heading" aria-level={2}>{copy.preferences}</Text><Switch label={copy.notification} description={copy.notificationHint} checked={draft.notifications} onCheckedChange={notifications => change({ notifications })} /></Stack>

@@ -103,9 +103,11 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [IconButton](components/icon-button.md) | 동작 | 보이는 글자 없이 아이콘만으로 표시하는 행동에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [IconTile](components/icon-tile.md) | — | 프로필·런처 격자의 아이콘 위/제목 아래 항목에 쓴다. | 1.26.0 | Web · Native | 개별 API 계약 참조 | 실험 |
 | [Image](components/image.md) | 데이터 표시 | 원본 크기를 아는 사진·차트 이미지를 로드 전에 자리를 잡아 두고, 실패해도 의미를 잃지 않게 보여 줄 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [ImageChoiceGroup](components/image-choice-group.md) | 화면/계정 | 아바타 얼굴, 프로필 사진, 모음에 넣을 사진처럼 **그림을 보고 고르는** 단일·다중 선택에 쓴다. | 미게시(1.26.1 이후) | Web · Native | 개별 API 계약 참조 | 배포 |
 | [ImageComparison](components/image-comparison.md) | 데이터 표시 | 같은 좌표와 비율의 두 이미지를 겹쳐 변화량을 비교할 때 쓴다. | 1.14.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [ImportFieldMapping](components/import-field-mapping.md) | 구성/입력과 작성 | CSV 등 원본 열을 제품의 대상 필드에 연결하고, 검증을 통과한 연결만 가져오기로 넘길 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [InlineEdit](components/inline-edit.md) | 구성/입력과 작성 | 목록·상세의 제목처럼 이미 확정된 짧은 값 하나를 그 자리에서 명시적으로 편집·저장·취소할 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
+| [KeyboardAvoidanceContext](components/keyboard-avoidance-context.md) | — | 제품이 직접 만든 키보드 대응 영역 안에서 HJM `ScreenLayout`·`Sheet`가 여백을 두 번 주지 않게 할 때 쓴다. | 미게시(1.26.1 이후) | Native | 개별 API 계약 참조 | 실험 |
 | [KeyboardAvoiding](components/keyboard-avoiding.md) | — | 추가 native peer 없이 하단 행동(BottomCTA, 채팅 입력창)이 소프트웨어 키보드에 가려지지 않게 할 때 쓴다. | 1.12.1 | Native | 개별 API 계약 참조 | 배포 |
 | [KeyboardDock](components/keyboard-dock.md) | 구성/직접 조작과 모션 | `react-native-keyboard-controller`를 설치한 앱에서 화면 하단에 고정된 행동(BottomCTA, 채팅 입력창)이 키보드와 함께 위아래로 움직이게 할 때 쓴다(Native 전용, 별도 보조 기능. API 성숙도는 실험적 어댑터). 내부는 `KeyboardStickyView`이며, 여백을 바꾸는 대신 키보드 움직임을 따라 translate 한다. | 1.12.1 | Native | 개별 API 계약 참조 | 배포 |
 | [KeyboardFormScrollView](components/keyboard-form-scroll-view.md) | 구성/직접 조작과 모션 | 입력 필드가 여러 개인 세로 스크롤 폼(가입, 프로필 수정, 주소 입력)에서 포커스된 필드가 키보드에 가려지지 않게 스크롤해 줄 때 쓴다(Native 전용, 별도 보조 기능. API 성숙도는 실험적 어댑터). 내부는 `react-native-keyboard-controller`의 `KeyboardAwareScrollView`이고, `keyboardShouldPersistTaps="handled"`로 고정돼 키보드가 열린 채 버튼을 눌러도 탭이 전달된다. | 1.12.1 | Native | 개별 API 계약 참조 | 배포 |

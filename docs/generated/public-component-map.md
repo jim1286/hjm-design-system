@@ -4,7 +4,7 @@
 
 ## @hjmds/react
 
-고유 공개 컴포넌트 및 provider 이름 206개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 207개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -94,6 +94,7 @@
 | IconButton | IconButton | canonical | root, ./actions |
 | IconTile | 별도 보조 기능 | supplemental | ./screens |
 | Image | Image | canonical | root, ./display |
+| ImageChoiceGroup | 별도 보조 기능 | supplemental | ./image-choice |
 | ImageComparison | 별도 보조 기능 | supplemental | ./image-comparison |
 | ImportFieldMapping | 별도 보조 기능 | supplemental | ./data-workflows |
 | InlineConfirm | Button | optional-extension | ./inline-confirm |
@@ -217,7 +218,7 @@
 
 ## @hjmds/react-native
 
-고유 공개 컴포넌트 및 provider 이름 193개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 196개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -263,6 +264,7 @@
 | CompositionLayout | 별도 보조 기능 | supplemental | ./screens |
 | Container | Container | canonical | root, ./primitives |
 | ContentTransition | 별도 보조 기능 | supplemental | ./content-transition |
+| ContextMenu | ContextMenu | canonical | ./context-menu |
 | ConversationRow | 별도 보조 기능 | supplemental | ./conversation-row |
 | ConversionFunnel | 별도 보조 기능 | supplemental | ./data-workflows |
 | CorrelationMatrix | 별도 보조 기능 | supplemental | ./data-workflows |
@@ -302,11 +304,13 @@
 | IconButton | IconButton | canonical | root, ./actions, ./bottom-cta |
 | IconTile | 별도 보조 기능 | supplemental | ./screens |
 | Image | Image | canonical | root, ./data-display |
+| ImageChoiceGroup | 별도 보조 기능 | supplemental | ./image-choice |
 | ImageComparison | 별도 보조 기능 | supplemental | ./image-comparison |
 | ImageViewer | Image | optional-extension | ./image-viewer |
 | ImportFieldMapping | 별도 보조 기능 | supplemental | ./data-workflows |
 | InlineConfirm | Button | optional-extension | ./inline-confirm |
 | InlineEdit | 별도 보조 기능 | supplemental | ./collection-editing |
+| KeyboardAvoidanceContext | 별도 보조 기능 | supplemental | ./keyboard |
 | KeyboardAvoiding | 별도 보조 기능 | supplemental | root, ./keyboard |
 | KeyboardDock | 별도 보조 기능 | supplemental | ./keyboard-controller |
 | KeyboardFormScrollView | 별도 보조 기능 | supplemental | ./keyboard-controller |

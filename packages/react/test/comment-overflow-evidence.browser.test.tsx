@@ -1,6 +1,6 @@
 import {act} from 'react';
 import {createRoot} from 'react-dom/client';
-import {page,userEvent} from 'vitest/browser';
+import {page} from 'vitest/browser';
 import {expect,it} from 'vitest';
 import {HjmProvider} from '../src/provider.js';
 import {InstagramCommentsPreview} from '../../../showcase/web/src/patterns/instagram-comments-preview.js';

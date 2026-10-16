@@ -4,7 +4,7 @@ import { type PasswordFieldAutofillHint, type PasswordFieldSize } from "@hjmds/d
 import { type OtpFieldSize, type OtpFieldPresentation } from "@hjmds/design-contracts/components/otp-field";
 import { type CheckboxGroupSelection, type CheckboxState, type SelectionItemDescriptor, type SelectionOrientation } from "@hjmds/design-contracts/behaviors";
 import { type ReactNode } from "react";
-import { TextInput, type GestureResponderEvent, type SwitchProps as NativeSwitchProps, type TextInputProps } from "react-native";
+import { TextInput, View, type GestureResponderEvent, type SwitchProps as NativeSwitchProps, type TextInputProps } from "react-native";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 type FieldAccessibleName = Readonly<{
     label: string;
@@ -289,6 +289,7 @@ type SelectionChipProps = Readonly<{
 }>;
 export type ChipProps = ChipBaseProps & (ActionChipProps | SelectionChipProps);
 /** Action/filter chip with role-specific, controlled selection semantics. */
-export declare function Chip({ label, size, disabled, leading, trailing, accessibilityLabel, accessibilityHint, layoutStyle, leadingStyle, indicatorStyle, trailingStyle, renderSelectionIndicator, selectionMode, selected, onPress, }: ChipProps): import("react").JSX.Element;
+/** Forwards the host View ref so a chip can be a focus-return target (2026-10-16, DiscoveryGallery). */
+export declare const Chip: import("react").ForwardRefExoticComponent<ChipProps & import("react").RefAttributes<View>>;
 export {};
 //# sourceMappingURL=inputs.d.ts.map

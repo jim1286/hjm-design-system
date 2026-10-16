@@ -3096,6 +3096,17 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-chat-message__bubble[data-photo-only]::before { display: none; }
 .hjm-chat-screen:not([data-content-inset="none"]) .hjm-screen__body { padding-inline: 10px; }
 .hjm-chat-screen__footer { position: relative; }
+/* ImageChoiceGroup (2026-10-16): square tiles, brand ring + check when chosen. */
+.hjm-image-choice { display: flex; flex-direction: column; gap: var(--hjm-space-xs); }
+.hjm-image-choice__label { font-weight: 600; }
+.hjm-image-choice__tiles { display: flex; flex-wrap: wrap; gap: var(--hjm-image-choice-gap); }
+.hjm-image-choice__tile { position: relative; inline-size: calc(var(--hjm-image-choice-size) + (var(--hjm-image-choice-ring) + var(--hjm-image-choice-offset)) * 2); aspect-ratio: 1; padding: var(--hjm-image-choice-offset); border: var(--hjm-image-choice-ring) solid transparent; border-radius: calc(var(--hjm-image-choice-radius) + var(--hjm-image-choice-ring) + var(--hjm-image-choice-offset)); background: none; cursor: pointer; }
+.hjm-image-choice__tile[data-selected] { border-color: var(--hjm-color-content-brand); }
+.hjm-image-choice__tile:focus-visible { outline: 2px solid var(--hjm-color-focus, currentColor); outline-offset: 2px; }
+.hjm-image-choice__tile:disabled { opacity: 0.5; cursor: default; }
+.hjm-image-choice__image { display: block; inline-size: 100%; block-size: 100%; overflow: hidden; border-radius: var(--hjm-image-choice-radius); background: var(--hjm-color-surface); }
+.hjm-image-choice__image > img { inline-size: 100%; block-size: 100%; object-fit: cover; display: block; }
+.hjm-image-choice__check { position: absolute; inset-block-start: 0; inset-inline-end: 0; inline-size: var(--hjm-image-choice-check); block-size: var(--hjm-image-choice-check); border-radius: 50%; background: var(--hjm-color-content-brand); color: var(--hjm-color-on-primary); font-size: 12px; line-height: var(--hjm-image-choice-check); text-align: center; }
 .hjm-message-composer__leading { flex: 0 0 auto; align-self: center; display: inline-flex; }
 .hjm-message-composer__quick { display: flex; justify-content: space-between; gap: var(--hjm-space-xs); }
 /* Items share the composer width (max 44px) so eight emoji fit beside a host avatar. */

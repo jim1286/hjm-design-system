@@ -2118,7 +2118,8 @@ type SelectionChipProps = Readonly<{
 export type ChipProps = ChipBaseProps & (ActionChipProps | SelectionChipProps);
 
 /** Action/filter chip with role-specific, controlled selection semantics. */
-export function Chip({
+/** Forwards the host View ref so a chip can be a focus-return target (2026-10-16, DiscoveryGallery). */
+export const Chip = forwardRef<View, ChipProps>(function Chip({
   label,
   size = chipRecipe.defaults.size,
   disabled = false,
@@ -2135,7 +2136,7 @@ export function Chip({
   selectionMode = "action",
   selected,
   onPress,
-}: ChipProps) {
+}, ref) {
   const theme = useHjmNativeTheme();
 
   const selectable = selectionMode !== "action";
@@ -2150,6 +2151,7 @@ export function Chip({
   const role = selectionMode === "single" ? "radio" : selectionMode === "multiple" ? "checkbox" : "button";
   return (
     <Pressable
+      ref={ref}
       accessibilityHint={accessibilityHint}
       accessibilityLabel={accessibilityLabel ?? label}
       accessibilityRole={role}
@@ -2239,4 +2241,4 @@ export function Chip({
       {trailing ? <View accessible={false} style={trailingStyle}>{trailing}</View> : null}
     </Pressable>
   );
-}
+});
