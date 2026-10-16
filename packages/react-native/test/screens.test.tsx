@@ -28,7 +28,7 @@ describe("native screen composition", () => {
     act(() => tree.update(<HjmNativeProvider><ScreenLayout {...props} notice={<Text>타자 · 투수</Text>}><Text>타율 · 홈런</Text></ScreenLayout></HjmNativeProvider>));
     expect(tree.root.findByType(ScrollView).props.contentContainerStyle.paddingTop).toBe(16);
     act(() => tree.update(<HjmNativeProvider><ScreenLayout {...props} titleVisibility="visible"><Text>본문</Text></ScreenLayout></HjmNativeProvider>));
-    expect(tree.root.findAllByType(View).some(node => node.props.style?.minHeight === 60)).toBe(true);
+    expect(tree.root.findAllByType(View).some(node => node.props.style?.minHeight === 52)).toBe(true);
     expect(tree.root.findByType(ScrollView).props.contentContainerStyle.paddingTop).toBe(16);
     act(() => tree.update(<HjmNativeProvider><ScreenLayout {...props} contentInset="none"><Text>본문</Text></ScreenLayout></HjmNativeProvider>));
     expect(tree.root.findByType(ScrollView).props.contentContainerStyle.paddingTop).toBe(0);

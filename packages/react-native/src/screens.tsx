@@ -93,7 +93,9 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
   // Icon-only route headers need no title breathing room: otherwise the 60pt
   // heading plus full body inset leaves category tabs detached from navigation.
   const compactHeader = header == null && showHeader && headerAlignment === "center" && titleVisibility === "hidden" && !description;
-  const headerVerticalPadding = compactHeader ? 2 : 8;
+  // Titled centered headers match the iOS navigation bar band: 44 control + 4 above/below = 52
+  // (2026-10-17 user: top spacing too loose at 60).
+  const headerVerticalPadding = compactHeader ? 2 : 4;
   // A notice can contain navigation tabs; keep its separation from body filters.
   const bodyPaddingTop = compactHeader && !notice ? Math.min(padding, 4) : padding;
   const body = state.kind === "ready" ? (contentAlignment === "center" ? <View style={{ marginVertical: "auto", flexShrink: 0, width: "100%" }}>{children}</View> : children) : <View style={{ marginVertical: "auto", flexShrink: 0, alignItems: "center", gap: recipe.stateGap, paddingVertical: profileLayout?.gap ?? recipe.sectionGap }}>
@@ -110,7 +112,7 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
         large text), while TopBar is a fixed-height app bar with a single-line title and safe-area top.
         Importing it would also pull navigation.js (tabs/gooey indicator) into every screens graph.
         Hosts that want the app bar pass <TopBar> through `header`. */}
-    {header ?? (!showHeader ? null : headerAlignment === "center" ? <View style={{ minHeight: compactHeader ? 48 : 60, paddingHorizontal: padding + sideWidth + recipe.itemGap, paddingVertical: headerVerticalPadding, justifyContent: "center" }}>
+    {header ?? (!showHeader ? null : headerAlignment === "center" ? <View style={{ minHeight: compactHeader ? 48 : 52, paddingHorizontal: padding + sideWidth + recipe.itemGap, paddingVertical: headerVerticalPadding, justifyContent: "center" }}>
       {/* Measure unconstrained control rows before reserving equal space on both sides. */}
       <View onLayout={event => setLeadingWidth(event.nativeEvent.layout.width)} style={{ position: "absolute", left: padding, top: headerVerticalPadding, bottom: headerVerticalPadding, justifyContent: "center", flexDirection: "row", alignItems: "center" }}>{leading}</View>
       <View style={{ minWidth: 0, alignItems: "center", gap: 4 }}>

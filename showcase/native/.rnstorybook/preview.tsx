@@ -4,9 +4,12 @@ import { StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { HjmNativeProvider, useHjmNativeTheme } from "@hjmds/react-native/provider";
 
-function Canvas({ children }: { children: ReactNode }) {
+// Screens own their gutter (ScreenLayout padding, header exit). Wrapping them in the 16pt canvas doubled
+// the top and side spacing on Native only, since Web Storybook is fullscreen (2026-10-17 "상단 여백 줄여").
+// 화면 stories and stories marked `layout: "fullscreen"` render edge to edge; component demos keep the canvas.
+function Canvas({ children, fullscreen }: { children: ReactNode; fullscreen: boolean }) {
   const { colors } = useHjmNativeTheme();
-  return <View style={[styles.canvas, { backgroundColor: colors.bg }]}>{children}</View>;
+  return <View style={[fullscreen ? styles.fullscreen : styles.canvas, { backgroundColor: colors.bg }]}>{children}</View>;
 }
 
 // Window insets reach every renderer through the provider, so overlays such as
@@ -101,12 +104,12 @@ const preview: Preview = {
         textScale={context.globals.textScale === "2" ? 2 : context.globals.textScale === "1.5" ? 1.5 : 1}
         reducedMotion={context.globals.motion === "reduced"}
       >
-        <Canvas><Story /></Canvas>
+        <Canvas fullscreen={context.parameters.layout === "fullscreen" || context.title.split("/")[1] === "화면"}><Story /></Canvas>
       </Insets>
     ),
   ],
 };
 
-const styles = StyleSheet.create({ canvas: { flex: 1, padding: 16 } });
+const styles = StyleSheet.create({ canvas: { flex: 1, padding: 16 }, fullscreen: { flex: 1 } });
 
 export default preview;
