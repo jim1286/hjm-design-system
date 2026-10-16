@@ -8,8 +8,8 @@ import { AlertDialog, Sheet, type SheetProps } from "./overlays.js";
 import { UploadItem } from "./upload-item.js";
 import { type UploadItemDescriptor, type UploadItemLabels } from "@hjmds/design-contracts/components/upload-item";
 import { type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
-import { validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchScreenPhase, screenPatternRecipe, profileSummaryRecipe, searchScreenRecipe, type SearchEmptyCause, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
-import { AccessibilityInfo, Keyboard, ScrollView, View, type NativeSyntheticEvent, type TextInputSubmitEditingEventData } from "react-native";
+import { validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchScreenPhase, screenPatternRecipe, commentThreadRecipe, profileSummaryRecipe, searchScreenRecipe, type SearchEmptyCause, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
+import { AccessibilityInfo, Keyboard, Pressable, ScrollView, View, type NativeSyntheticEvent, type TextInputSubmitEditingEventData } from "react-native";
 import { containerRecipe, type ContainerGutter } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./data-display.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
@@ -360,11 +360,19 @@ export function OnboardingScreen({steps,index,onIndexChange,nextLabel,backLabel,
 export type CommentThreadItem = Readonly<{id:string;parentId:string|null;author:string;body:ReactNode;bodyText?:string;timeLabel:string;timeDateTime?:string;likeCountLabel:string;avatar?:ReactNode;likeIcon:ReactNode;likeLabel:string;likeAction?:ReactNode;actions?:ReactNode;canReply?:boolean;replyDisabled?:boolean}>;
 export type CommentThreadScreenProps = Base & {items:readonly CommentThreadItem[];expandedIds:readonly string[];onExpandedChange(id:string):void;onLike(id:string):void;onReply(id:string):void;replyLabel:string;repliesLabel(count:number,expanded:boolean):string;composer?:ReactNode;threadHeader?:ReactNode;threadFooter?:ReactNode};
 export type CommentThreadRowProps = Readonly<{ layoutStyle?: ScreenLayoutProps["layoutStyle"]; item: CommentThreadItem; onLike(id: string): void; onReply(id: string): void; replyLabel: string }>;
+/** Quiet secondary actions (reply, expand) read as muted copy beside the body, not as filled buttons. */
+function CommentTextAction({label,onPress,disabled=false,expanded}:Readonly<{label:string;onPress():void;disabled?:boolean;expanded?:boolean}>){
+ return <Pressable accessibilityRole="button" accessibilityLabel={label} accessibilityState={{disabled,...(expanded===undefined?{}:{expanded})}} disabled={disabled} hitSlop={commentThreadRecipe.avatarGap} onPress={onPress} style={{alignSelf:"flex-start",opacity:disabled?0.5:1}}><Text variant="caption" tone="muted" emphasis="strong">{label}</Text></Pressable>;
+}
+
 /** Virtualized hosts reuse the same row as CommentThreadScreen; product slots add content, not a second layout. */
 export function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyle }: CommentThreadRowProps) {
- return <Stack key={item.id} axis="inline" align="start" gap="sm" {...(layoutStyle === undefined ? {} : {layoutStyle})}>{item.avatar}<Stack gap="xxs" layoutStyle={{flex:1,minWidth:0}}>
- {item.bodyText!==undefined?<Text><Text emphasis="strong">{item.author}</Text>{" "}{item.bodyText}</Text>:(item.author||item.timeLabel)?<Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap:"wrap"}}>{item.author?<Text emphasis="strong">{item.author}</Text>:null}{item.timeLabel?<Text variant="caption" tone="muted">{item.timeLabel}</Text>:null}</Stack>:null}
- {item.body}<Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap:"wrap"}}>{item.bodyText!==undefined&&item.timeLabel?<Text variant="caption" tone="muted">{item.timeLabel}</Text>:null}{item.likeCountLabel?<Text variant="caption" tone="muted">{item.likeCountLabel}</Text>:null}{(item.canReply??item.parentId===null)?<Button size="small" tone="ghost" disabled={item.replyDisabled??false} onPress={()=>onReply(item.id)}>{replyLabel}</Button>:null}</Stack></Stack><Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexShrink:0}}>{item.likeAction!==undefined?item.likeAction:<IconButton label={item.likeLabel} tone="ghost" onPress={()=>onLike(item.id)}>{item.likeIcon}</IconButton>}{item.actions}</Stack></Stack>;
+ const avatarSize=item.parentId===null?commentThreadRecipe.avatarSize:commentThreadRecipe.replyAvatarSize;
+ // The like count sits under the heart so the text column carries only identity, body and reply.
+ return <Stack key={item.id} axis="inline" align="start" gap="xs" {...(layoutStyle === undefined ? {} : {layoutStyle})}>{item.avatar?<View style={{width:avatarSize,alignItems:"center"}}>{item.avatar}</View>:null}<View style={{flex:1,minWidth:0,gap:commentThreadRecipe.lineGap}}>
+ {item.bodyText!==undefined?<Text><Text emphasis="strong">{item.author}</Text>{" "}{item.bodyText}</Text>:(item.author||item.timeLabel)?<Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexWrap:"wrap"}}>{item.author?<Text variant="caption" emphasis="strong">{item.author}</Text>:null}{item.timeLabel?<Text variant="caption" tone="muted">{item.timeLabel}</Text>:null}</Stack>:null}
+ {item.body}{(item.bodyText!==undefined&&item.timeLabel)||(item.canReply??item.parentId===null)?<Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap:"wrap"}}>{item.bodyText!==undefined&&item.timeLabel?<Text variant="caption" tone="muted">{item.timeLabel}</Text>:null}{(item.canReply??item.parentId===null)?<CommentTextAction label={replyLabel} disabled={item.replyDisabled??false} onPress={()=>onReply(item.id)}/>:null}</Stack>:null}</View>
+ <View style={{flexShrink:0}}><Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexShrink:0}}>{item.likeAction!==undefined?item.likeAction:<IconButton label={item.likeLabel} tone="ghost" onPress={()=>onLike(item.id)}>{item.likeIcon}</IconButton>}{item.actions}</Stack>{item.likeCountLabel?<View style={{width:commentThreadRecipe.likeColumnWidth}}><Text variant="caption" tone="muted" align="center">{item.likeCountLabel}</Text></View>:null}</View></Stack>;
 }
 
 /** Controlled thread: server ordering, permission checks and receipt-based draft clearing belong to the product. */
@@ -380,7 +388,7 @@ export function CommentThreadScreen({items,expandedIds,onExpandedChange,onLike,o
  const row=(item:CommentThreadItem)=><CommentThreadRow key={item.id} item={item} onLike={onLike} onReply={onReply} replyLabel={replyLabel}/>;
  // Product context belongs in the same scroll body as comments. Putting a tall
  // overview in the fixed header forced a second scroll region in Spint (2026-10-08).
- return <ScreenLayout {...screen} footer={!screen.state||screen.state.kind==="ready"||screen.state.kind==="empty"?composer:null}><Stack gap="lg">{threadHeader}{roots.map(item=>{const replies=repliesByParent.get(item.id)??[];return <Stack key={item.id} gap="xs">{row(item)}{replies.length?<Stack gap="md" layoutStyle={{marginStart:screenPatternRecipe.sectionGap}}><Button layoutStyle={{alignSelf:"flex-start"}} tone="ghost" size="small" accessibilityState={{expanded:expanded.has(item.id)}} onPress={()=>onExpandedChange(item.id)}>{repliesLabel(replies.length,expanded.has(item.id))}</Button>{expanded.has(item.id)?replies.map(row):null}</Stack>:null}</Stack>;})}{threadFooter}</Stack></ScreenLayout>;
+ return <ScreenLayout {...screen} footer={!screen.state||screen.state.kind==="ready"||screen.state.kind==="empty"?composer:null}><Stack gap="lg">{threadHeader}<View style={{gap:commentThreadRecipe.rowGap}}>{roots.map(item=>{const replies=repliesByParent.get(item.id)??[];return <View key={item.id} style={{gap:commentThreadRecipe.rowGap}}>{row(item)}{replies.length?<View style={{gap:commentThreadRecipe.rowGap,marginStart:commentThreadRecipe.replyIndent}}><CommentTextAction label={repliesLabel(replies.length,expanded.has(item.id))} expanded={expanded.has(item.id)} onPress={()=>onExpandedChange(item.id)}/>{expanded.has(item.id)?replies.map(row):null}</View>:null}</View>;})}</View>{threadFooter}</Stack></ScreenLayout>;
 }
 
 export type ProfileSummaryProps = Readonly<{

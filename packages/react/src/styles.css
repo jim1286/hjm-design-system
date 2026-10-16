@@ -3055,20 +3055,37 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-message-composer__row { display: flex; gap: var(--hjm-message-composer-gap, var(--hjm-space-sm)); align-items: flex-end; }
 .hjm-message-composer__row > .hjm-field { flex: 1; min-inline-size: 0; }
 .hjm-message-composer__row > .hjm-button { flex-shrink: 0; }
-.hjm-chat-message { display: flex; align-items: flex-start; gap: var(--hjm-space-xs); }
+/* 2026-10-16 timeline standard (measured KakaoTalk iOS chat room, chatMessageRecipe): filled borderless
+   bubbles, one avatar/author/tip per run, time beside the run's last bubble. */
+.hjm-chat-message { display: flex; align-items: flex-start; gap: 8px; }
 .hjm-chat-message[data-direction="outgoing"] { flex-direction: row-reverse; }
+.hjm-chat-message__avatar { flex: 0 0 var(--hjm-chat-avatar-size); inline-size: var(--hjm-chat-avatar-size); display: flex; justify-content: center; }
 /* A visible opposite edge distinguishes authorship even without color; long copy still wraps. */
 .hjm-chat-message__content { max-inline-size: var(--hjm-message-max-width); min-inline-size: 0; display: flex; flex-direction: column; align-items: flex-start; gap: var(--hjm-space-xxs); }
 .hjm-chat-message[data-direction="outgoing"] .hjm-chat-message__content { align-items: flex-end; }
-.hjm-chat-message__bubble { border: var(--hjm-stroke-default) solid var(--hjm-color-border); border-radius: var(--hjm-radius-lg); background: var(--hjm-color-bg); padding: var(--hjm-space-sm); overflow-wrap: anywhere; white-space: pre-wrap; }
+.hjm-chat-message__body { display: flex; align-items: flex-end; gap: var(--hjm-space-xxs); max-inline-size: 100%; min-inline-size: 0; }
+.hjm-chat-message[data-direction="outgoing"] .hjm-chat-message__body { flex-direction: row-reverse; }
+.hjm-chat-message__bubble { border-radius: 14px; background: var(--hjm-color-surface); padding: 6px 10px; min-inline-size: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
 .hjm-chat-message[data-direction="outgoing"] .hjm-chat-message__bubble { background: var(--hjm-color-surface-accent); }
-/* One surface and a partial border join the tip to the body without an interior seam. */
+/* The tip shares the bubble surface at the run's first top corner, so no seam shows. */
 .hjm-chat-message[data-tail] .hjm-chat-message__bubble { position: relative; }
-.hjm-chat-message[data-tail] .hjm-chat-message__bubble::before { content: ""; position: absolute; bottom: var(--hjm-space-sm); inset-inline-start: -5px; width: 8px; height: 8px; background: var(--hjm-color-bg); border-inline-start: var(--hjm-stroke-default) solid var(--hjm-color-border); border-bottom: var(--hjm-stroke-default) solid var(--hjm-color-border); transform: rotate(45deg); pointer-events: none; }
-.hjm-chat-message[data-tail][data-direction="outgoing"] .hjm-chat-message__bubble::before { inset-inline-start: auto; inset-inline-end: -5px; background: var(--hjm-color-surface-accent); border-inline-start: 0; border-inline-end: var(--hjm-stroke-default) solid var(--hjm-color-border); transform: rotate(-45deg); }
+.hjm-chat-message[data-tail] .hjm-chat-message__bubble::before { content: ""; position: absolute; top: var(--hjm-space-xxs); inset-inline-start: -3px; width: 10px; height: 10px; background: var(--hjm-color-surface); transform: rotate(45deg); pointer-events: none; }
+.hjm-chat-message[data-tail][data-direction="outgoing"] .hjm-chat-message__bubble::before { inset-inline-start: auto; inset-inline-end: -3px; background: var(--hjm-color-surface-accent); }
 
-.hjm-chat-message__meta { display: flex; align-items: center; gap: var(--hjm-space-xs); }
-.hjm-chat-message__reply { border-inline-start: 2px solid var(--hjm-color-content-brand); padding-inline-start: var(--hjm-space-xs); margin-block-end: var(--hjm-space-xs); }
+.hjm-chat-message__meta { display: flex; flex-shrink: 0; align-items: center; gap: var(--hjm-space-xs); }
+/* A quoted reply heads the bubble and is divided from the answer. */
+.hjm-chat-message__reply { border-block-end: 1px solid var(--hjm-color-border); padding-block-end: var(--hjm-space-xs); margin-block-end: var(--hjm-space-xs); }
+.hjm-chat-screen__footer { position: relative; }
+/* 2026-10-16 comment standard (measured Instagram iOS comment sheet, commentThreadRecipe). */
+.hjm-comment-thread { display: flex; flex-direction: column; }
+.hjm-comment-row__avatar { flex: 0 0 auto; display: flex; justify-content: center; }
+.hjm-comment-row__text { flex: 1; min-inline-size: 0; display: flex; flex-direction: column; }
+.hjm-comment-row__like { flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-start; }
+.hjm-comment-row__like-count { text-align: center; }
+.hjm-comment-row__action { align-self: flex-start; padding: 0; border: 0; background: none; color: var(--hjm-color-text-muted); font: inherit; font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); font-weight: 600; cursor: pointer; }
+.hjm-comment-row__action:disabled { opacity: 0.5; cursor: default; }
+.hjm-comment-row__action:focus-visible { outline: 2px solid var(--hjm-color-focus, currentColor); outline-offset: 2px; border-radius: var(--hjm-radius-sm); }
+.hjm-chat-screen__jump { position: absolute; inset-block-end: calc(100% + var(--hjm-space-xs) + var(--hjm-screen-padding)); inset-inline-end: 0; }
 
 /* A composer starts at one control row rather than the document editor minimum;
    content sizing grows up to the shared line cap without stealing the timeline. */

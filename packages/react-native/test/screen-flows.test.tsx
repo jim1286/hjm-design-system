@@ -6,7 +6,7 @@ import {RadioGroup} from "../src/inputs.js";
 import {AlertDialog} from "../src/overlays.js";
 import {EditorScreen,ModerationScreen,PermissionScreen,OnboardingScreen,SearchScreen} from "../src/screen-flows.js";
 import {useState, type ReactNode} from "react";
-import {ScrollView,StyleSheet,TextInput} from "react-native";
+import {ScrollView,StyleSheet,TextInput,View} from "react-native";
 import {Text} from "../src/primitives.js";
 it("groups comment heart and overflow in one inline action row without merging their handlers",async()=>{
  const {CommentThreadScreen}=await import("../src/screen-flows.js");
@@ -14,7 +14,7 @@ it("groups comment heart and overflow in one inline action row without merging t
  const {IconButton}=await import("../src/actions.js");
  const like=vi.fn(),more=vi.fn();
  const tree=render(<CommentThreadScreen title="댓글" items={[{id:"one",parentId:null,author:"작성자",body:"본문",timeLabel:"방금",likeCountLabel:"좋아요 3개",likeIcon:<Text>♡</Text>,likeLabel:"댓글 좋아요",actions:<IconButton label="댓글 더보기" onPress={more}>⋮</IconButton>}]} expandedIds={[]} onExpandedChange={()=>{}} onLike={like} onReply={()=>{}} replyLabel="답글" repliesLabel={()=>"답글 더 보기"}/>);
- const row=tree.root.findAllByType(Stack).find(node=>node.props.axis==="inline"&&node.props.gap==="xxs")!;
+ const row=tree.root.findAllByType(Stack).find(node=>node.props.axis==="inline"&&node.props.gap==="xxs"&&node.props.layoutStyle?.flexShrink===0)!;
  expect(row.props.layoutStyle.flexShrink).toBe(0);
  const actions=row.findAllByType(IconButton);expect(actions.map(action=>action.props.label)).toEqual(["댓글 좋아요","댓글 더보기"]);
  act(()=>actions[0]!.props.onPress());expect(like).toHaveBeenCalledExactlyOnceWith("one");expect(more).not.toHaveBeenCalled();
@@ -92,10 +92,11 @@ it("announces whether a reply group is expanded", async () => {
  const items=[{id:"root",parentId:null,author:"작성자",body:"내용",timeLabel:"지금",likeCountLabel:"",likeIcon:null,likeLabel:"좋아요",likeAction:null},{id:"child",parentId:"root",author:"답글러",body:"답글",timeLabel:"지금",likeCountLabel:"",likeIcon:null,likeLabel:"좋아요",likeAction:null}];
  const thread=(expandedIds:string[])=><CommentThreadScreen title="댓글" items={items} expandedIds={expandedIds} onExpandedChange={()=>{}} onLike={()=>{}} onReply={()=>{}} replyLabel="답글" repliesLabel={(count,open)=>open?"답글 숨기기":`답글 ${count}개`}/>;
  const tree=render(thread([]));
- const toggle=()=>tree.root.findAllByType(Button).find(button=>String(button.props.children).startsWith("답글 ")||button.props.children==="답글 숨기기")!;
- expect(toggle().props.accessibilityState).toEqual({expanded:false});
+ // 2026-10-16: the expand control is quiet copy (CommentTextAction), still an accessible button.
+ const toggle=()=>tree.root.findAll(node=>node.props.accessibilityRole==="button"&&typeof node.props.accessibilityLabel==="string"&&node.props.accessibilityLabel.startsWith("답글 ")&&!!node.props.accessibilityState)[0]!;
+ expect(toggle().props.accessibilityState).toEqual({disabled:false,expanded:false});
  act(()=>tree.update(<HjmNativeProvider theme="dark" textScale={1}>{thread(["root"])}</HjmNativeProvider>));
- expect(toggle().props.accessibilityState).toEqual({expanded:true});
+ expect(toggle().props.accessibilityState).toEqual({disabled:false,expanded:true});
  act(()=>tree.unmount());
 });
 
@@ -308,10 +309,9 @@ it("scrolls thread introduction with comments and replaces it on restricted stat
 
 it("omits empty metadata above anonymous comment body",async()=>{
  const {CommentThreadScreen}=await import("../src/screen-flows.js");
- const {Stack}=await import("../src/primitives.js");
  let tree:ReactTestRenderer;
  act(()=>{tree=create(<HjmNativeProvider><CommentThreadScreen title="Comments" items={[{id:"one",parentId:null,author:"",timeLabel:"",body:<Text>Comment body</Text>,avatar:<Text>Avatar</Text>,likeCountLabel:"",likeIcon:null,likeLabel:"Like",likeAction:null,canReply:false}]} expandedIds={[]} onExpandedChange={()=>{}} onLike={()=>{}} onReply={()=>{}} replyLabel="Reply" repliesLabel={()=>"Replies"}/></HjmNativeProvider>);});
- const column=tree!.root.findAllByType(Stack).find(node=>node.props.layoutStyle?.flex===1&&node.props.layoutStyle?.minWidth===0)!;
+ const column=tree!.root.findAllByType(View).find(node=>node.props.style?.flex===1&&node.props.style?.minWidth===0)!;
  expect(column.props.children[0]).toBeNull();
  expect(column.props.children[1].props.children).toBe("Comment body");
  act(()=>tree!.unmount());

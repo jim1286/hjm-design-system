@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.17.1
-- 검토일: 2026-10-07
+- 검토일: 2026-10-16
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screens.tsx`·`src/screen-flows.tsx`; 기존 개별 지침을 새 규격으로 통합. 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
 - 스토리북: `배포/구성/정보 표시/대화 메시지`, `배포/화면/소통/채팅`
 
@@ -66,18 +66,22 @@ import { Text } from "@hjmds/react-native/primitives";
 </ChatMessage>
 ```
 
+2026-10-16 사용자 결정으로 대화 타임라인의 공통 기준을 카카오톡 iOS 채팅방 실측(@3x 캡처)으로 바꿨다.
+묶음 단위 표시·촘촘한 말풍선·시각 위치를 흡수했고 노란 말풍선 같은 브랜드 색은 가져오지 않았다(색은 semantic token).
+
 ## 축과 기본값
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `direction` | `"incoming"` · `"outgoing"` | 필수 | 수신은 시작 쪽, 발신은 끝 쪽에 붙는다 |
-| `author` | `string` | 필수 | 빈 문자열이면 작성자 줄을 그리지 않는다(연속 메시지 그룹) |
-| `timestamp` | `string` | 필수 | 제품이 포맷한 시각. 빈 문자열이고 `deliveryLabel`·`actions`도 없으면 메타 줄을 그리지 않는다 |
+| `author` | `string` | 필수 | 묶음의 첫 말풍선에서만 그린다. 1:1 대화처럼 작성자를 숨길 때는 빈 문자열 |
+| `groupPosition` | `"single"` · `"first"` · `"middle"` · `"last"` | `"single"` | 미게시. `resolveChatMessageGroups(items)`가 같은 작성자·같은 표시 시각의 연속 메시지를 묶어 돌려준다. 첫 말풍선에만 작성자·아바타·꼬리, 끝 말풍선에만 시각을 그리고 뒤 말풍선은 아바타 폭을 비워 둔다 |
+| `timestamp` | `string` | 필수 | 제품이 포맷한 시각. 묶음 판정에도 같은 문자열을 쓴다. 말풍선 아래 끝 옆(수신 오른쪽·발신 왼쪽)에 그린다 |
 | `timestampPresentation` | `"always"` · `"swipe"` | `"always"` | `swipe`는 수신은 오른쪽·발신은 왼쪽으로 끄는 동안 반대편 여백에 시각을 보여 주고 놓으면 숨긴다. 이 모드에서는 같은 제스처로 답장을 실행하지 않는다. 시각은 보조기술에서도 읽을 수 있다. |
-| `bubbleTail` | `boolean` | `false` | 말풍선 본체와 이어진 꼬리를 수신 시작 쪽·발신 끝 쪽에 표시한다. 같은 표면·테두리를 쓰며 행 양쪽 `spacing.xs` 8 여백으로 잘림을 막는다. |
+| `bubbleTail` | `boolean` | `true`(미게시 변경, 이전 `false`) | 묶음 첫 말풍선의 위쪽 모서리(수신 시작 쪽·발신 끝 쪽)에 같은 표면의 꼬리를 그린다. 행 양쪽 `spacing.xs` 8 여백으로 잘림을 막는다 |
 | `deliveryLabel` | `string` | 없음 | 시각 뒤에 ` · `로 붙는 전송 상태 |
-| `avatar` | `ReactNode` | 없음 | 버블 옆 아바타 |
-| `reply` | `ReactNode` | 없음 | 인용 노드. `replyLink`가 없으면 버블 안 인용으로 그린다 |
+| `avatar` | `ReactNode` | 없음 | 버블 옆 아바타. `chatMessageRecipe.avatarSize` 36 크기로 넘긴다. 묶음 뒤 말풍선에서는 같은 폭을 비워 정렬을 유지한다 |
+| `reply` | `ReactNode` | 없음 | 인용 노드. `replyLink`가 없으면 버블 맨 위에 그리고 아래 구분선(1)으로 답장 본문과 나눈다 |
 | `replyLink` | `{ label, onPress() }` | 없음 | `reply`와 같이 주면 인용을 버블 밖 ghost 버튼으로 그려 원문 이동에 쓴다 |
 | `replyAction` | `{ label, onPress(), disabled? }` | 없음 | `replySwipeDistance` 60px 이상이고 세로 이동의 2배를 넘는 가로 스와이프로 실행(`isReplySwipe`). 보이는 답장 버튼은 없다 |
 | `reactions` | `ReactionPickerProps & { closeLabel, menuAction? }` | 없음 | `reactionHoldMs` 450ms 길게 누르면 반응 메뉴가 열린다. 같은 반응 재선택은 `null`. 메뉴 안 picker는 `layout="strip"`(이모지 `typography.title` 18/26). `label`은 Web에서 말풍선 이름·Popover 제목, Native에서 접근성 힌트·동작 이름 |
@@ -90,9 +94,9 @@ import { Text } from "@hjmds/react-native/primitives";
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 말풍선 열 최대 폭 `screenPatternRecipe.messageMaxWidth` 84%; 버블 radius `radius.lg`, 테두리 1(발신은 Native에서 테두리 없음) | `screen-patterns.ts`, Web `styles.css` `.hjm-chat-message__bubble`, Native `screens.tsx` |
-| 간격 | 아바타–버블 열 `spacing.xs` 8; 작성자·버블·메타 줄 사이 `spacing.xxs` 4; 버블 안 padding `spacing.sm` 12; 버블 안 인용 왼쪽 선 2 + `spacing.xs` 8; 메타 줄 시각–`actions` `spacing.xs` 8 | Web `.hjm-chat-message*`, Native `ChatMessage` |
-| 순서·정렬 | incoming 시작 쪽, outgoing 끝 쪽; 작성자 → (replyLink 인용) → 버블 → 시각·전송 상태·actions | 렌더 순서 |
+| 크기 | 말풍선 열 최대 폭 `screenPatternRecipe.messageMaxWidth` 84%; 말풍선 radius `chatMessageRecipe.bubbleRadius` 14, 안쪽 padding 세로 6·가로 10, 테두리 없음(수신 `surface`, 발신 `surfaceAccent`); 아바타 36; 꼬리 10 | `chatMessageRecipe`, Web `.hjm-chat-message*`, Native `ChatMessage` |
+| 간격 | 묶음 사이 `groupGap` 12, 같은 묶음 말풍선 사이 `runGap` 6(메시지 행이 위쪽 여백으로 소유하므로 타임라인 목록에는 gap을 주지 않는다); 아바타–버블 `avatarGap` 8; 작성자–버블 `authorGap` 4; 버블–시각 `metaGap` 4; 인용 아래 `spacing.xs` 8 | `chatMessageRecipe`, `resolveChatMessageGroupDisplay` |
+| 순서·정렬 | incoming 시작 쪽, outgoing 끝 쪽; (첫 말풍선) 작성자 → (replyLink 인용) → 버블 + 아래 끝 옆 시각·전송 상태·actions | 렌더 순서 |
 | 고정·스크롤 | 자체 고정 없음, 타임라인(ChatScreen 본문)이 스크롤; 반응 메뉴는 Web Popover · Native 전체 화면 `Modal`; 답장 스와이프 중 가로 이동은 ±72로 제한 | Web·Native `ChatMessage` |
 | 좁은 폭·큰 글자 | 버블은 84% 안에서 줄바꿈되고 본문을 자르지 않는다(Web `overflow-wrap: anywhere`, `white-space: pre-wrap`); 반대쪽 16% 여백은 작성자 구분을 위해 남긴다 | Web `.hjm-chat-message__bubble`, Native `maxWidth`·`flexShrink: 1` |
 

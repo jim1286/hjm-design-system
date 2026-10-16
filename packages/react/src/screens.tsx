@@ -8,7 +8,7 @@ import { Button, IconButton } from "./actions.js";
 import { useOptionalHjmTheme } from "./provider.js";
 import { TextArea } from "./forms.js";
 import { useId, useLayoutEffect, useRef, useState, type Ref, type ReactNode } from "react";
-import { isReplySwipe, timestampRevealOffset, shouldSubmitMessageKey, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
+import { isReplySwipe, timestampRevealOffset, shouldSubmitMessageKey, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, resolveChatMessageGroupDisplay, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
 import { Heading } from "./heading.js";
 import { Spinner } from "./internal/spinner.js";
 import { Section, Stack, Text } from "./layout.js";
@@ -140,11 +140,19 @@ export function NotificationItem({ read, statusLabel, timestamp, description, ti
     description={<Stack gap="xxs">{description}<Text variant="caption" tone="muted">{statusLabel} · {timestamp}</Text></Stack>} />;
 }
 
-export type ChatScreenProps = Omit<ScreenLayoutProps, "footer"> & Readonly<{ composer: ReactNode }>;
+export type ChatScreenProps = Omit<ScreenLayoutProps, "footer"> & Readonly<{
+  composer: ReactNode;
+  /** Shown while the reader is away from the latest message; the host owns scroll position and visibility. */
+  jumpToLatest?: Readonly<{ label: string; icon: ReactNode; onPress(): void }>;
+}>;
 /** Caller supplies a virtualized timeline and keyboard-aware composer; no implicit auto-scroll or send. */
-export function ChatScreen({ composer, scroll = "content", ...props }: ChatScreenProps) {
+export function ChatScreen({ composer, jumpToLatest, scroll = "content", ...props }: ChatScreenProps) {
   // An empty conversation must still allow its first message; unavailable states hide input.
-  return <ScreenLayout {...props} scroll={scroll} footer={!props.state || props.state.kind === "ready" || props.state.kind === "empty" ? composer : null} />;
+  const showComposer = !props.state || props.state.kind === "ready" || props.state.kind === "empty";
+  // Anchor the jump control to the composer edge so it floats over the timeline without measuring the footer.
+  return <ScreenLayout {...props} scroll={scroll} footer={showComposer ? <div className="hjm-chat-screen__footer">
+    {jumpToLatest ? <div className="hjm-chat-screen__jump"><IconButton label={jumpToLatest.label} size="small" shape="circle" tone="secondary" onClick={jumpToLatest.onPress}>{jumpToLatest.icon}</IconButton></div> : null}
+    {composer}</div> : null} />;
 }
 
 export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCount"> & Readonly<{
@@ -197,8 +205,11 @@ export function MessageComposer({ value, label, sendLabel, placeholder = label, 
 export type ChatMessageProps = ChatMessageDescriptor & Readonly<{ children: ReactNode; interactiveContent?: boolean; avatar?: ReactNode; reply?: ReactNode; actions?: ReactNode; replyAction?: Readonly<{label:string; onPress():void; disabled?:boolean}>; replyLink?: Readonly<{label:string; onPress():void}>; reactions?: ReactionPickerProps & Readonly<{ closeLabel: string; menuAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean }> }>;
   /** Canonical layout-only placement on the message row. The swipe offset still owns `transform`. */
   layoutStyle?: HjmCompositionStyleProp }>;
-export function ChatMessage({ direction, author, timestamp, timestampPresentation = "always", bubbleTail = false, deliveryLabel, avatar, reply, actions, replyAction, replyLink, reactions, children, interactiveContent=false, layoutStyle }: ChatMessageProps) {
+export function ChatMessage({ direction, author, timestamp, timestampPresentation = "always", bubbleTail = true, groupPosition = "single", deliveryLabel, avatar, reply, actions, replyAction, replyLink, reactions, children, interactiveContent=false, layoutStyle }: ChatMessageProps) {
   const theme = useOptionalHjmTheme();
+  const display = resolveChatMessageGroupDisplay(groupPosition);
+  // A run shows its time once, beside its last bubble; delivery state stays on every bubble.
+  const visibleTime = display.showTimestamp ? timestamp : "";
   const revealTime = timestampPresentation === "swipe" && !!timestamp;
   // Only the pointer that began a drag can finish it; another touch must not reply or cancel it.
   const start = useRef<{x:number;y:number;pointerId:number} | null>(null);
@@ -210,14 +221,18 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
     onPointerDown={event => { if (start.current || (!revealTime && (!replyAction || replyAction.disabled)) || event.button !== 0 || (event.target as HTMLElement).closest("button,a,input,textarea")) return; start.current = {x:event.clientX,y:event.clientY,pointerId:event.pointerId}; }}
     onPointerMove={event => { if (!start.current || start.current.pointerId !== event.pointerId) return; const dx=event.clientX-start.current.x,dy=event.clientY-start.current.y; if (Math.abs(dy)>10 && Math.abs(dy)>Math.abs(dx)) {finish();return;} if (revealTime) setOffset((direction === "outgoing" ? -1 : 1) * timestampRevealOffset(direction === "outgoing" ? -dx : dx,dy)); else if (Math.abs(dx)>Math.abs(dy)*2) setOffset(Math.max(-72,Math.min(72,dx))); }}
     onPointerUp={event => { if (start.current?.pointerId !== event.pointerId) return; if (!revealTime && start.current && replyAction && !replyAction.disabled && isReplySwipe(event.clientX-start.current.x,event.clientY-start.current.y)) replyAction.onPress(); finish(); }} onPointerCancel={event => { if (start.current?.pointerId === event.pointerId) finish(); }} onPointerLeave={event => { if (start.current?.pointerId === event.pointerId) finish(); }}
-    style={{ ...layoutStyle, position: "relative", overflow: "hidden", paddingInline: bubbleTail ? "var(--hjm-space-xs)" : undefined, touchAction: revealTime || replyAction ? "pan-y" : undefined }} aria-label={author}>
+    style={{ ...layoutStyle, position: "relative", overflow: "hidden", marginBlockStart: display.spacingBefore, paddingInline: bubbleTail ? "var(--hjm-space-xs)" : undefined, touchAction: revealTime || replyAction ? "pan-y" : undefined }} aria-label={author}>
     {revealTime ? <time style={{ position: "absolute", ...(direction === "outgoing" ? { right: 0, justifyContent: "flex-end" } : { left: 0 }), top: 0, bottom: 0, width: 80, display: "flex", alignItems: "center", opacity: offset !== 0 ? 1 : 0, pointerEvents: "none" }}><Text variant="caption" tone="muted">{timestamp}</Text></time> : null}
-    <div className="hjm-chat-message" style={{ transform: `translateX(${offset}px)`, transition: start.current || theme?.environment.reducedMotion ? "none" : "transform var(--hjm-motion-normal, 200ms) ease-out", "--hjm-message-max-width": screenPatternRecipe.messageMaxWidth } as React.CSSProperties} data-direction={direction} data-tail={bubbleTail || undefined}>
-    {avatar ? <div className="hjm-chat-message__avatar">{avatar}</div> : null}
-    <div className="hjm-chat-message__content">{author?<Text variant="caption" tone="muted">{author}</Text>:null}
+    <div className="hjm-chat-message" style={{ transform: `translateX(${offset}px)`, transition: start.current || theme?.environment.reducedMotion ? "none" : "transform var(--hjm-motion-normal, 200ms) ease-out", "--hjm-message-max-width": screenPatternRecipe.messageMaxWidth, "--hjm-chat-avatar-size": `${chatMessageRecipe.avatarSize}px` } as React.CSSProperties} data-direction={direction} data-tail={(bubbleTail && display.showTail) || undefined}>
+    {/* Later bubbles of a run keep the avatar column so their edges line up under the first bubble. */}
+    {avatar ? <div className="hjm-chat-message__avatar" aria-hidden={display.showAvatar ? undefined : true}>{display.showAvatar ? avatar : null}</div> : null}
+    <div className="hjm-chat-message__content">{author && display.showAuthor?<Text variant="caption" tone="muted">{author}</Text>:null}
       {reply && replyLink ? <Button tone="ghost" aria-label={replyLink.label} onClick={replyLink.onPress}>{reply}</Button> : null}
+      {/* Time and delivery sit beside the bubble's bottom edge, on the side facing the open space. */}
+      <div className="hjm-chat-message__body">
       {reactions ? <MessageReactions {...reactions} interactiveContent={interactiveContent}>{reply && !replyLink ? <div className="hjm-chat-message__reply">{reply}</div> : null}{children}</MessageReactions> : <div className="hjm-chat-message__bubble">{reply && !replyLink ? <div className="hjm-chat-message__reply">{reply}</div> : null}{children}</div>}
-      {(!revealTime && timestamp)||deliveryLabel||actions?<div className="hjm-chat-message__meta">{(!revealTime && timestamp)||deliveryLabel?<Text variant="caption" tone="muted">{[revealTime ? "" : timestamp, deliveryLabel].filter(Boolean).join(" · ")}</Text>:null}{actions}</div>:null}
+      {(!revealTime && visibleTime)||deliveryLabel||actions?<div className="hjm-chat-message__meta">{(!revealTime && visibleTime)||deliveryLabel?<Text variant="caption" tone="muted">{[revealTime ? "" : visibleTime, deliveryLabel].filter(Boolean).join(" · ")}</Text>:null}{actions}</div>:null}
+      </div>
     </div>
     </div>
   </article>;

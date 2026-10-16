@@ -27,7 +27,7 @@ it("connects shared row actions to the actual item and renders the common screen
   const item = {id: "one", parentId: null, author: "작성자", body: <Text>내용</Text>, timeLabel: "방금", likeCountLabel: "3", likeIcon: <Text>♡</Text>, likeLabel: "좋아요"};
   act(() => { tree = create(<HjmNativeProvider><ScreenLayout title="댓글" titleBadge={<Text>배지</Text>} scroll="content"><CommentThreadRow item={item} onLike={like} onReply={reply} replyLabel="답글"/></ScreenLayout></HjmNativeProvider>); });
   act(() => tree!.root.findByType(IconButton).props.onPress());
-  act(() => tree!.root.findByType(Button).props.onPress());
+  act(() => tree!.root.find(node => node.props.accessibilityRole === "button" && node.props.accessibilityLabel === "답글" && !!node.props.onPress).props.onPress());
   expect(like).toHaveBeenCalledWith("one"); expect(reply).toHaveBeenCalledWith("one");
   expect(JSON.stringify(tree!.toJSON())).toContain("배지");
   expect(tree!.root.findAllByType(ScrollView)).toHaveLength(0);

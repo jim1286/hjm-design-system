@@ -53,16 +53,56 @@ export declare function shouldSubmitMessageKey(event: Readonly<{
     keyCode?: number;
 }>, mode?: "newline" | "send"): boolean;
 export declare function canSubmitMessage({ value, disabled, pending, attachmentCount }: MessageComposerDescriptor): boolean;
+/**
+ * Shared timeline geometry. 2026-10-16 user decision: the common chat standard follows the measured
+ * KakaoTalk iOS chat room (@3x capture: bubble ~35pt tall, radius ~14, run gap ~6, group gap ~12,
+ * avatar ~34, avatar gap 8). Brand colors and artwork are not copied; surfaces stay semantic tokens.
+ */
+export declare const chatMessageRecipe: {
+    readonly avatarSize: 36;
+    readonly avatarGap: 8;
+    readonly authorGap: 4;
+    readonly metaGap: 4;
+    readonly bubbleRadius: 14;
+    readonly bubblePaddingInline: 10;
+    readonly bubblePaddingBlock: 6;
+    readonly runGap: 6;
+    readonly groupGap: 12;
+    readonly tailSize: 10;
+    readonly jumpToLatestGap: 8;
+};
+/** Position inside a run of consecutive messages from one author within one displayed minute. */
+export type ChatMessageGroupPosition = "single" | "first" | "middle" | "last";
+/**
+ * Runs break when the author or the displayed timestamp changes, so each minute shows its time once
+ * and a new minute re-introduces the author (KakaoTalk behavior). Products pass the same localized
+ * timestamp string they render; HJM never parses dates.
+ */
+export declare function resolveChatMessageGroups(items: readonly Readonly<{
+    id: string;
+    authorId: string;
+    timestamp: string;
+}>[]): ReadonlyMap<string, ChatMessageGroupPosition>;
+/** What one bubble shows for its run position; both renderers read this instead of re-deriving rules. */
+export declare function resolveChatMessageGroupDisplay(position?: ChatMessageGroupPosition): {
+    readonly showAuthor: boolean;
+    readonly showAvatar: boolean;
+    readonly showTail: boolean;
+    readonly showTimestamp: boolean;
+    readonly spacingBefore: 12 | 6;
+};
 /** Bubble alignment expresses authorship, not delivery; delivery text always comes from the product receipt. */
 export type ChatMessageDescriptor = Readonly<{
     direction: "incoming" | "outgoing";
     author: string;
     timestamp: string;
     deliveryLabel?: string;
-    /** Inward drag reveals time (incoming right, outgoing left) while delivery state remains visible; default preserves existing captions. */
+    /** Inward drag reveals time (incoming right, outgoing left) while delivery state remains visible; default shows time beside the last bubble of a run. */
     timestampPresentation?: "always" | "swipe";
-    /** Connected authorship tip; opt-in keeps existing card-like conversations unchanged. */
+    /** Authorship tip on the run's first bubble. Default on since the 2026-10-16 timeline standard. */
     bubbleTail?: boolean;
+    /** From resolveChatMessageGroups; omitted means a standalone message. */
+    groupPosition?: ChatMessageGroupPosition;
 }>;
 /** A denied permission goes to settings; rendering never requests OS access automatically. */
 export type PermissionScreenStatus = "prompt" | "denied" | "granted" | "unavailable";
@@ -70,6 +110,20 @@ export declare function resolvePermissionAction(status: PermissionScreenStatus):
 export declare function resolveOnboardingStep(total: number, index: number): {
     first: boolean;
     last: boolean;
+};
+/**
+ * Shared comment-row geometry. 2026-10-16 user decision: comments follow the measured Instagram iOS
+ * comment sheet (@3x capture: avatar 32 / reply 24, avatar gap 8, like count under the heart,
+ * "Reply" as quiet text below the body, replies indented to the text column). Artwork is not copied.
+ */
+export declare const commentThreadRecipe: {
+    readonly avatarSize: 32;
+    readonly replyAvatarSize: 24;
+    readonly avatarGap: 8;
+    readonly lineGap: 2;
+    readonly rowGap: 12;
+    readonly replyIndent: number;
+    readonly likeColumnWidth: 44;
 };
 /** Replies are one level deep; reject orphaned/duplicate records instead of silently losing them. */
 export declare function validateCommentThread(items: readonly {

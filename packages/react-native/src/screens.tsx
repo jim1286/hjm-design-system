@@ -10,7 +10,7 @@ import { useEffect, useMemo, useRef, useState, type Ref, type ReactNode } from "
 import { Animated, PanResponder, ScrollView, View, type AccessibilityActionEvent, type TextInput, type ScrollViewProps } from "react-native";
 import { Spinner } from "./internal/spinner.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
-import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
+import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, resolveChatMessageGroupDisplay, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
 import { motion } from "@hjmds/design-contracts/foundations";
 import { Stack, Text } from "./primitives.js";
 import { ListRow, type ListRowProps } from "./data-display.js";
@@ -136,11 +136,19 @@ export function NotificationItem({ read, statusLabel, timestamp, description, ..
     description={[description, `${statusLabel} · ${timestamp}`].filter(Boolean).join("\n")} />;
 }
 
-export type ChatScreenProps = Omit<ScreenLayoutProps, "footer"> & Readonly<{ composer: ReactNode }>;
+export type ChatScreenProps = Omit<ScreenLayoutProps, "footer"> & Readonly<{
+  composer: ReactNode;
+  /** Shown while the reader is away from the latest message; the host owns scroll position and visibility. */
+  jumpToLatest?: Readonly<{ label: string; icon: ReactNode; onPress(): void }>;
+}>;
 /** Wrap with existing KeyboardAvoiding (or the host's keyboard adapter), never both. */
-export function ChatScreen({ composer, scroll = "content", ...props }: ChatScreenProps) {
+export function ChatScreen({ composer, jumpToLatest, scroll = "content", ...props }: ChatScreenProps) {
   // An empty conversation must still allow its first message; unavailable states hide input.
-  return <ScreenLayout {...props} scroll={scroll} footer={!props.state || props.state.kind === "ready" || props.state.kind === "empty" ? composer : null} />;
+  const showComposer = !props.state || props.state.kind === "ready" || props.state.kind === "empty";
+  // Anchor the jump control to the composer edge so it floats over the timeline without measuring the footer.
+  return <ScreenLayout {...props} scroll={scroll} footer={showComposer ? <View style={{ position: "relative" }}>
+    {jumpToLatest ? <View style={{ position: "absolute", bottom: "100%", end: 0, marginBottom: chatMessageRecipe.jumpToLatestGap + screenPatternRecipe.padding }}><IconButton label={jumpToLatest.label} size="small" shape="circle" tone="secondary" onPress={jumpToLatest.onPress}>{jumpToLatest.icon}</IconButton></View> : null}
+    {composer}</View> : null} />;
 }
 
 export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCount"> & Readonly<{
@@ -192,8 +200,9 @@ export function MessageComposer({ value, label, sendLabel, placeholder = label, 
 }
 
 export type ChatMessageProps = ChatMessageDescriptor & Readonly<{ children: ReactNode; interactiveContent?: boolean; avatar?: ReactNode; reply?: ReactNode; actions?: ReactNode; replyAction?: Readonly<{label:string; onPress():void; disabled?:boolean}>; replyLink?: Readonly<{label:string; onPress():void}>; reactions?: ReactionPickerProps & Readonly<{ closeLabel: string; menuAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean }> }> }>;
-export function ChatMessage({ direction, author, timestamp, timestampPresentation = "always", bubbleTail = false, deliveryLabel, avatar, reply, actions, replyAction, replyLink, reactions, children, interactiveContent=false }: ChatMessageProps) {
+export function ChatMessage({ direction, author, timestamp, timestampPresentation = "always", bubbleTail = true, groupPosition = "single", deliveryLabel, avatar, reply, actions, replyAction, replyLink, reactions, children, interactiveContent=false }: ChatMessageProps) {
   const { colors, tokens, environment } = useHjmNativeTheme();
+  const display = resolveChatMessageGroupDisplay(groupPosition);
   const revealTime = timestampPresentation === "swipe" && !!timestamp;
   const outgoing = direction === "outgoing";
   const offset = useRef(new Animated.Value(0)).current;
@@ -222,16 +231,22 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
     onAccessibilityAction: (event: AccessibilityActionEvent) => { if (event.nativeEvent.actionName === "reply") replyAction!.onPress(); },
   } : {};
   const captionCarriesReply = interactiveContent && !reactions;
-  const visibleTime = revealTime ? "" : timestamp;
+  // A run shows its time once, beside its last bubble; delivery state stays on every bubble.
+  const visibleTime = revealTime || !display.showTimestamp ? "" : timestamp;
   const meta = [visibleTime, deliveryLabel].filter(Boolean).join(" · ");
-  const bubbleStyle = { backgroundColor: outgoing ? colors.surfaceAccent : colors.bg, borderWidth: outgoing ? 0 : 1, borderColor: colors.border, borderRadius: tokens.radius.lg, padding: tokens.spacing.sm, gap: tokens.spacing.xs };
-  // Paint the tip with the bubble's own surface/border; a detached triangle leaves a seam.
-  const tail = bubbleTail ? <View pointerEvents="none" accessible={false} style={{ position: "absolute", bottom: tokens.spacing.sm, ...(outgoing ? { right: -4 } : { left: -4 }), width: 8, height: 8, backgroundColor: outgoing ? colors.surfaceAccent : colors.bg, borderLeftWidth: outgoing ? 0 : 1, borderBottomWidth: outgoing ? 0 : 1, borderColor: colors.border, transform: [{ rotate: outgoing ? "225deg" : "45deg" }] }} /> : null;
-  const bubbleContent = <>{tail}{reply && !replyLink ? <View style={{ borderStartWidth: 2, borderColor: colors.contentBrand, paddingStart: tokens.spacing.xs }}>{reply}</View> : null}{children}</>;
-  return <View {...gesture.panHandlers} style={{ position: "relative", overflow: "hidden", paddingHorizontal: bubbleTail ? tokens.spacing.xs : 0 }}>
+  const surface = outgoing ? colors.surfaceAccent : colors.surface;
+  // Filled, borderless bubbles separate authors by surface and side (2026-10-16 timeline standard).
+  const bubbleStyle = { backgroundColor: surface, borderRadius: chatMessageRecipe.bubbleRadius, paddingHorizontal: chatMessageRecipe.bubblePaddingInline, paddingVertical: chatMessageRecipe.bubblePaddingBlock, gap: tokens.spacing.xs, flexShrink: 1 };
+  // The tip sits at the run's first top corner and shares the bubble surface, so no seam shows.
+  const tail = bubbleTail && display.showTail ? <View pointerEvents="none" accessible={false} style={{ position: "absolute", top: tokens.spacing.xxs, ...(outgoing ? { right: -chatMessageRecipe.tailSize / 3 } : { left: -chatMessageRecipe.tailSize / 3 }), width: chatMessageRecipe.tailSize, height: chatMessageRecipe.tailSize, backgroundColor: surface, transform: [{ rotate: "45deg" }] }} /> : null;
+  // A quoted reply heads the bubble and is divided from the answer, as in the measured reference.
+  const bubbleContent = <>{tail}{reply && !replyLink ? <View style={{ borderBottomWidth: 1, borderColor: colors.border, paddingBottom: tokens.spacing.xs }}>{reply}</View> : null}{children}</>;
+  // Later bubbles of a run keep the avatar column so their edges line up under the first bubble.
+  const avatarSlot = !avatar ? null : display.showAvatar ? <View style={{ width: chatMessageRecipe.avatarSize, alignItems: "center" }}>{avatar}</View> : <View accessible={false} style={{ width: chatMessageRecipe.avatarSize }} />;
+  return <View {...gesture.panHandlers} style={{ position: "relative", overflow: "hidden", marginTop: display.spacingBefore, paddingHorizontal: bubbleTail ? tokens.spacing.xs : 0 }}>
     {revealTime ? <Animated.View pointerEvents="none" style={{ position: "absolute", ...(outgoing ? { right: 0, alignItems: "flex-end" as const } : { left: 0 }), top: 0, bottom: 0, width: 80, justifyContent: "center", opacity: offset.interpolate({ inputRange: [-16, 0, 16], outputRange: [1, 0, 1], extrapolate: "clamp" }) }}><Text variant="caption" tone="muted">{timestamp}</Text></Animated.View> : null}
-    <Animated.View style={{ transform:[{translateX:offset}], flexDirection: "row", justifyContent: outgoing ? "flex-end" : "flex-start", gap: tokens.spacing.xs }}>
-    {!outgoing ? avatar : null}
+    <Animated.View style={{ transform:[{translateX:offset}], flexDirection: "row", justifyContent: outgoing ? "flex-end" : "flex-start", alignItems: "flex-start", gap: chatMessageRecipe.avatarGap }}>
+    {!outgoing ? avatarSlot : null}
     {/* Accessibility (2026-10-06 review): a row-level accessible View named by `author`, and a reaction
         target named by `picker.label`, both replaced the body so screen readers never heard the message.
         The row stays a plain container; the bubble is one element whose name is its own text (iOS and
@@ -239,15 +254,18 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
         Author and time remain separate text elements. Interactive content keeps its child controls, so
         the reply action moves to the time (or author) caption instead of a new visible button. */}
     {/* Leave a visible opposite edge so authorship survives monochrome themes; never truncate message text. */}
-    <View style={{ maxWidth: screenPatternRecipe.messageMaxWidth, flexShrink: 1, gap: tokens.spacing.xxs, alignItems: outgoing ? "flex-end" : "flex-start" }}>
-      {author?<Text variant="caption" tone="muted" {...(captionCarriesReply && !meta ? replyAccessibility : {})}>{author}</Text>:null}
+    <View style={{ maxWidth: screenPatternRecipe.messageMaxWidth, flexShrink: 1, gap: chatMessageRecipe.authorGap, alignItems: outgoing ? "flex-end" : "flex-start" }}>
+      {author && display.showAuthor?<Text variant="caption" tone="muted" {...(captionCarriesReply && !meta ? replyAccessibility : {})}>{author}</Text>:null}
       {reply && replyLink ? <Button tone="ghost" accessibilityLabel={replyLink.label} onPress={replyLink.onPress}>{reply}</Button> : null}
+      {/* Time and delivery sit beside the bubble's bottom edge, on the side facing the open space. */}
+      <View style={{ flexDirection: outgoing ? "row-reverse" : "row", alignItems: "flex-end", gap: chatMessageRecipe.metaGap, maxWidth: "100%" }}>
       {reactions ? <MessageReactions {...reactions} interactiveContent={interactiveContent} {...(replyAction ? {replyAction} : {})}>
         <View style={bubbleStyle}>{bubbleContent}</View>
       </MessageReactions> : <View style={bubbleStyle} accessible={!interactiveContent} {...(interactiveContent ? {} : replyAccessibility)}>{bubbleContent}</View>}
-      {meta||actions?<Stack axis="inline" gap="xs" align="center">{meta?<Text variant="caption" tone="muted" {...(captionCarriesReply ? replyAccessibility : {})}>{meta}</Text>:null}{actions}</Stack>:null}
+      {meta||actions?<Stack axis="inline" gap="xs" align="center" layoutStyle={{ flexShrink: 0 }}>{meta?<Text variant="caption" tone="muted" {...(captionCarriesReply ? replyAccessibility : {})}>{meta}</Text>:null}{actions}</Stack>:null}
+      </View>
     </View>
-    {outgoing ? avatar : null}
+    {outgoing ? avatarSlot : null}
     </Animated.View>
   </View>;
 }

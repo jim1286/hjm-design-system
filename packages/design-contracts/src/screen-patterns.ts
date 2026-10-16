@@ -67,16 +67,65 @@ export function canSubmitMessage({ value, disabled = false, pending = false, att
   return !disabled && !pending && (value.trim().length > 0 || attachmentCount > 0);
 }
 
+/**
+ * Shared timeline geometry. 2026-10-16 user decision: the common chat standard follows the measured
+ * KakaoTalk iOS chat room (@3x capture: bubble ~35pt tall, radius ~14, run gap ~6, group gap ~12,
+ * avatar ~34, avatar gap 8). Brand colors and artwork are not copied; surfaces stay semantic tokens.
+ */
+export const chatMessageRecipe = {
+  avatarSize: 36,
+  avatarGap: spacing.xs,
+  authorGap: spacing.xxs,
+  metaGap: spacing.xxs,
+  bubbleRadius: 14,
+  bubblePaddingInline: 10,
+  bubblePaddingBlock: 6,
+  // Bubbles of one run read as a stack; a new author or minute starts a visibly separate group.
+  runGap: 6,
+  groupGap: spacing.sm,
+  tailSize: 10,
+  jumpToLatestGap: spacing.xs,
+} as const;
+
+/** Position inside a run of consecutive messages from one author within one displayed minute. */
+export type ChatMessageGroupPosition = "single" | "first" | "middle" | "last";
+
+/**
+ * Runs break when the author or the displayed timestamp changes, so each minute shows its time once
+ * and a new minute re-introduces the author (KakaoTalk behavior). Products pass the same localized
+ * timestamp string they render; HJM never parses dates.
+ */
+export function resolveChatMessageGroups(items: readonly Readonly<{ id: string; authorId: string; timestamp: string }>[]): ReadonlyMap<string, ChatMessageGroupPosition> {
+  const positions = new Map<string, ChatMessageGroupPosition>();
+  items.forEach((item, index) => {
+    if (!item.id.trim() || positions.has(item.id)) throw new TypeError("Chat messages require unique, nonempty ids");
+    const same = (other: (typeof items)[number] | undefined) => !!other && other.authorId === item.authorId && other.timestamp === item.timestamp;
+    const before = same(items[index - 1]), after = same(items[index + 1]);
+    positions.set(item.id, before ? (after ? "middle" : "last") : after ? "first" : "single");
+  });
+  return positions;
+}
+
+/** What one bubble shows for its run position; both renderers read this instead of re-deriving rules. */
+export function resolveChatMessageGroupDisplay(position: ChatMessageGroupPosition = "single") {
+  if (!["single", "first", "middle", "last"].includes(position)) throw new TypeError("Unknown chat message group position");
+  const starts = position === "single" || position === "first";
+  const ends = position === "single" || position === "last";
+  return { showAuthor: starts, showAvatar: starts, showTail: starts, showTimestamp: ends, spacingBefore: starts ? chatMessageRecipe.groupGap : chatMessageRecipe.runGap } as const;
+}
+
 /** Bubble alignment expresses authorship, not delivery; delivery text always comes from the product receipt. */
 export type ChatMessageDescriptor = Readonly<{
   direction: "incoming" | "outgoing";
   author: string;
   timestamp: string;
   deliveryLabel?: string;
-  /** Inward drag reveals time (incoming right, outgoing left) while delivery state remains visible; default preserves existing captions. */
+  /** Inward drag reveals time (incoming right, outgoing left) while delivery state remains visible; default shows time beside the last bubble of a run. */
   timestampPresentation?: "always" | "swipe";
-  /** Connected authorship tip; opt-in keeps existing card-like conversations unchanged. */
+  /** Authorship tip on the run's first bubble. Default on since the 2026-10-16 timeline standard. */
   bubbleTail?: boolean;
+  /** From resolveChatMessageGroups; omitted means a standalone message. */
+  groupPosition?: ChatMessageGroupPosition;
 }>;
 
 /** A denied permission goes to settings; rendering never requests OS access automatically. */
@@ -88,6 +137,23 @@ export function resolveOnboardingStep(total:number,index:number){
  if(!Number.isInteger(total)||total<1||!Number.isInteger(index)||index<0||index>=total)throw new RangeError("Onboarding requires a valid step index");
  return {first:index===0,last:index===total-1};
 }
+
+/**
+ * Shared comment-row geometry. 2026-10-16 user decision: comments follow the measured Instagram iOS
+ * comment sheet (@3x capture: avatar 32 / reply 24, avatar gap 8, like count under the heart,
+ * "Reply" as quiet text below the body, replies indented to the text column). Artwork is not copied.
+ */
+export const commentThreadRecipe = {
+  avatarSize: 32,
+  replyAvatarSize: 24,
+  avatarGap: spacing.xs,
+  lineGap: 2,
+  rowGap: spacing.sm,
+  // Replies align with the parent's text column instead of an arbitrary section inset.
+  replyIndent: 32 + spacing.xs,
+  // The heart keeps the 44pt touch target even though the measured reference draws a smaller glyph.
+  likeColumnWidth: 44,
+} as const;
 
 /** Replies are one level deep; reject orphaned/duplicate records instead of silently losing them. */
 export function validateCommentThread(items:readonly {id:string;parentId:string|null}[]){

@@ -11,6 +11,7 @@ import { Heading } from "@hjmds/react-native/heading";
 import { Container, Stack, Surface, Text } from "@hjmds/react-native/primitives";
 import { Avatar } from "@hjmds/react-native/data-display";
 import { ChatMessage, MessageComposer, NotificationItem } from "@hjmds/react-native/screens";
+import { resolveChatMessageGroups } from "@hjmds/design-contracts/screen-patterns";
 import { compositionBrandFixtures } from "../../shared/composition-brand-fixtures";
 import { useDemoAction } from "./action-recovery-previews";
 import { PatternStatus } from "./pattern-status";
@@ -83,6 +84,17 @@ const reactionOptions = [{ id: "heart", emoji: "❤️", label: "좋아요" }, {
 // Delivery ids map to copy through a table; the product supplies its own localized receipts.
 const deliveryCopy = { failed: "전송 실패", pending: "보내는 중", sent: "전송됨" } as const;
 
+// 2026-10-16 timeline standard: runs break on author or displayed minute (resolveChatMessageGroups).
+const groupedMessages = [
+  { id: "g1", authorId: "seoyeon", timestamp: "오후 3:01", text: "오늘 공원 갔다 왔어요" },
+  { id: "g2", authorId: "seoyeon", timestamp: "오후 3:01", text: "벚꽃이 벌써 다 폈더라고요" },
+  { id: "g3", authorId: "seoyeon", timestamp: "오후 3:01", text: "사진 보내 드릴게요" },
+  { id: "g4", authorId: "me", timestamp: "오후 3:02", text: "와 부러워요" },
+  { id: "g5", authorId: "me", timestamp: "오후 3:02", text: "주말에 같이 가요!" },
+  { id: "g6", authorId: "seoyeon", timestamp: "오후 3:04", text: "좋아요" },
+];
+const groupPositions = resolveChatMessageGroups(groupedMessages);
+
 export function ChatMessagePreview() {
   const { colors } = useHjmNativeTheme();
   const [reaction, setReaction] = useState<string | null>(null);
@@ -121,6 +133,9 @@ export function ChatMessagePreview() {
         <Text>주말 오후는 어때요?</Text>
       </ChatMessage>
     </Stack>
+    <Heading level="level3">묶음 표시</Heading>
+    {/* Timeline lists add no gap: each message's group position owns the spacing above it. */}
+    <View>{groupedMessages.map(message => <ChatMessage key={message.id} direction={message.authorId === "me" ? "outgoing" : "incoming"} author={message.authorId === "me" ? "" : "서연"} timestamp={message.timestamp} groupPosition={groupPositions.get(message.id) ?? "single"} {...(message.authorId === "me" ? {} : { avatar: <Avatar name="서연" size={36} decorative /> })}><Text>{message.text}</Text></ChatMessage>)}</View>
     <PatternStatus>{state.status === "error" ? "다시 보내지 못했어요. 메시지는 그대로 남아 있어요." : status}</PatternStatus>
     <Button tone="ghost" selected={failureArmed} disabled={busy || delivered} onPress={toggleFailure}>다음 전송 실패시키기</Button>
   </Frame>;
