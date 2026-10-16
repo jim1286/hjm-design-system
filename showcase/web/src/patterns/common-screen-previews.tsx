@@ -11,7 +11,7 @@ import { Heading } from "@hjmds/react/heading";
 import { Top } from "@hjmds/react/top";
 import { Notice } from "@hjmds/react/feedback";
 import { Avatar } from "@hjmds/react/display";
-import { Bell, ChevronLeft, ChevronRight, Globe2, HelpCircle, ShieldCheck, Volume2, Sparkles, MoreHorizontal, CheckCheck, MessageCircle, Heart, Palette, Settings2, Image as ImageIcon, ArrowUp, Reply, MessageSquareWarning } from "lucide-react";
+import { Bell, ChevronLeft, ChevronRight, Globe2, HelpCircle, ShieldCheck, Volume2, Sparkles, MoreHorizontal, CheckCheck, MessageCircle, Heart, Palette, Settings2, Image as ImageIcon, ArrowUp, Reply, MessageSquareWarning, Trash2 } from "lucide-react";
 import { resolveChatMessageGroups, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
 import { ListRow } from "@hjmds/react/display";
 
@@ -150,7 +150,7 @@ function ScreenPreview({ kind: initialKind, stateKind = "ready", tools = false }
           {...(message.photos ? {media:Array.from({length:message.photos},(_,index) => ({id:`${message.id}-${index}`,label:`보낸 사진 ${index + 1}`,preview:<img src={riverPhoto} alt="" style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}} />}))} : {})}
           replyAction={{label:"답장",icon:<Reply size={20}/>,onPress:() => setReplyTarget(message)}}
           {...(message.replyTo ? {replyQuote:{title:`${message.replyTo.author}에게 답장`,excerpt:message.replyTo.text},replyLink:{label:"원문 메시지로 이동",onPress:() => jump(message.replyTo!.id)}} : {})}
-          {...(message.id === "first" ? {reactions:{label:"메시지에 반응",closeLabel:"반응 닫기",reportAction:{label:"신고",icon:<MessageSquareWarning size={20} color="var(--hjm-color-danger)"/>,onPress:() => setDetail("서연님의 메시지 신고를 접수했어요.")},value:reaction,onValueChange:setReaction,more:{label:"더 많은 이모지",options:extraReactions},options:[{id:"heart",emoji:"❤️",label:"좋아요"},{id:"laugh",emoji:"😂",label:"웃겨요"},{id:"wow",emoji:"😮",label:"놀라워요"},{id:"sad",emoji:"😢",label:"슬퍼요"},{id:"fire",emoji:"🔥",label:"멋져요"}]}} : {})}
+          {...(message.id === "first" ? {reactions:{label:"메시지에 반응",closeLabel:"반응 닫기",menuActions:[{id:"delete-mine",label:"내 계정에서 삭제",icon:<Trash2 size={20}/>,onPress:() => setDetail("내 계정에서 메시지를 삭제했어요.")}],reportAction:{label:"신고",icon:<MessageSquareWarning size={20} color="var(--hjm-color-danger)"/>,onPress:() => setDetail("서연님의 메시지 신고를 접수했어요.")},value:reaction,onValueChange:setReaction,more:{label:"더 많은 이모지",options:extraReactions},options:[{id:"heart",emoji:"❤️",label:"좋아요"},{id:"laugh",emoji:"😂",label:"웃겨요"},{id:"wow",emoji:"😮",label:"놀라워요"},{id:"sad",emoji:"😢",label:"슬퍼요"},{id:"fire",emoji:"🔥",label:"멋져요"}]}} : {})}
           actions={message.id === "first" && reaction ? <Text>{({heart:"❤️",laugh:"😂",wow:"😮",sad:"😢",fire:"🔥"} as Record<string,string>)[reaction] ?? extraReactions.find(item => item.id === reaction)?.emoji}</Text> : null}>
           {message.text ? <Text>{message.text}</Text> : null}
         </ChatMessage></div>)}</div>

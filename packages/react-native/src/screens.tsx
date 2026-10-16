@@ -287,7 +287,7 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
       {/* Stretch to the column's resolved width: a percentage max width here is unresolved while Yoga
           measures an auto-width column, so long bubbles pushed the time off screen. */}
       <View style={{ flexDirection: outgoing ? "row-reverse" : "row", alignItems: "flex-end", gap: chatMessageRecipe.metaGap, alignSelf: "stretch" }}>
-      {reactions ? <MessageReactions {...reactions} interactiveContent={interactive} {...(timestamp ? { menuTitle: timestamp } : {})} {...(replyAction && !replyAction.disabled ? {replyAction} : {})}>
+      {reactions ? <MessageReactions {...reactions} align={outgoing ? "end" : "start"} interactiveContent={interactive} {...(timestamp ? { menuTitle: timestamp } : {})} {...(replyAction && !replyAction.disabled ? {replyAction} : {})}>
         <View style={photoOnly ? { flexShrink: 1 } : bubbleStyle}>{bubbleContent}</View>
       </MessageReactions> : <View style={photoOnly ? { flexShrink: 1 } : bubbleStyle} accessible={!interactive} {...(interactive ? {} : replyAccessibility)}>{bubbleContent}</View>}
       {meta||actions?<Stack axis="inline" gap="xs" align="center" layoutStyle={{ flexShrink: 0 }}>{meta?<Text variant="caption" tone="muted" {...(captionCarriesReply ? replyAccessibility : {})}>{meta}</Text>:null}{actions}</Stack>:null}

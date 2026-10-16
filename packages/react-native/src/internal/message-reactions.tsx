@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { AccessibilityInfo, Modal, Platform, Pressable, ScrollView, View, findNodeHandle, useWindowDimensions } from "react-native";
 import { scrim } from "@hjmds/design-contracts/foundations";
-import { screenPatternRecipe } from "@hjmds/design-contracts/screen-patterns";
+import { holdMenuRecipe, screenPatternRecipe } from "@hjmds/design-contracts/screen-patterns";
 import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "../provider.js";
 import { IconButton } from "../actions.js";
 import { FixedGlyph } from "./fixed-glyph.js";
@@ -9,15 +9,19 @@ import { Text } from "../primitives.js";
 import { ReactionPicker, type ReactionPickerProps } from "../reaction-picker.js";
 
 /** One row of the hold menu. Products supply copy and icons; HJM owns order, size and tone. */
-export type MessageMenuAction = Readonly<{ id: string; label: string; icon?: ReactNode; onPress(): void; disabled?: boolean }>;
+export type MessageMenuAction = Readonly<{ id: string; label: string; icon?: ReactNode; onPress(): void; disabled?: boolean; /** Shows › for rows that open a further list (e.g. "더 보기"). */ submenu?: boolean }>;
 type Props = ReactionPickerProps & Readonly<{ closeLabel: string; menuAction?: Readonly<{label:string;onPress():void;disabled?:boolean}>; children: ReactNode; interactiveContent?:boolean; replyAction?: Readonly<{label:string;onPress():void;disabled?:boolean;icon?:ReactNode}>;
   /** Shown above the actions, e.g. the exact send time that a run only shows once. */
   menuTitle?: string;
   menuActions?: readonly MessageMenuAction[];
   /** Always last and in the danger tone, matching the measured reference menu (2026-10-16). */
-  reportAction?: Readonly<{label:string;onPress():void;disabled?:boolean;icon?:ReactNode}> }>;
+  reportAction?: Readonly<{label:string;onPress():void;disabled?:boolean;icon?:ReactNode}>;
+  /** Side of the pressed content: own messages align the preview and action card to the end. */
+  align?: "start" | "end";
+  /** Comments are plain text, so their preview gets a surface; chat bubbles already have one. */
+  previewSurface?: boolean }>;
 /** Core RN composition: no optional context-menu/Expo dependency enters the screens subpath. */
-export function MessageReactions({ children, closeLabel, replyAction, menuAction, menuTitle, menuActions = [], reportAction, interactiveContent=false, ...picker }: Props) {
+export function MessageReactions({ children, closeLabel, replyAction, menuAction, menuTitle, menuActions = [], reportAction, interactiveContent=false, align = "start", previewSurface = false, ...picker }: Props) {
   // Reply leads and report trails; legacy single menuAction keeps its place before report.
   const rows: (MessageMenuAction & { danger?: boolean })[] = [
     ...(replyAction ? [{ id: "reply", ...replyAction }] : []),
@@ -27,7 +31,7 @@ export function MessageReactions({ children, closeLabel, replyAction, menuAction
   ];
   const { colors, tokens, environment } = useHjmNativeTheme();
   const insets = useHjmNativeSafeAreaInsets();
-  const { width, height } = useWindowDimensions();
+  const { height } = useWindowDimensions();
   const [anchor, setAnchor] = useState<number>();
   const trigger = useRef<View>(null);
   const firstAction = useRef<View>(null);
@@ -63,23 +67,25 @@ export function MessageReactions({ children, closeLabel, replyAction, menuAction
       onRequestClose={close} onDismiss={() => { restore(); runQueuedAction(); }} onShow={focusPicker}>
       <View style={{ flex: 1 }}>
         <Pressable accessible={false} importantForAccessibility="no-hide-descendants" onPress={close} style={{ position: "absolute", inset: 0, backgroundColor: scrim }} />
-        <View accessibilityViewIsModal onAccessibilityEscape={close} style={{ position: "absolute", top, left: tokens.spacing.md, width: Math.min(width - tokens.spacing.md * 2, screenPatternRecipe.reactionMenuWidth), gap: tokens.spacing.sm, maxHeight: Math.max(0,height-top-(insets.bottom??0)-tokens.spacing.sm) }}>
+        <View accessibilityViewIsModal onAccessibilityEscape={close} style={{ position: "absolute", top, left: holdMenuRecipe.inset, right: holdMenuRecipe.inset, maxHeight: Math.max(0,height-top-(insets.bottom??0)-tokens.spacing.sm) }}>
           {/* A full album can exceed the menu reservation. Scroll its content while keeping Close
               pinned inside the safe area; the device audit found Close clipped below the screen. */}
-          <ScrollView style={{flexShrink:1}} contentContainerStyle={{gap:tokens.spacing.sm}} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+          <ScrollView style={{flexShrink:1}} contentContainerStyle={{gap:holdMenuRecipe.gap}} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
           {/* Action-only menus (comments, 2026-10-16 reference) pass no options and show no strip. */}
-          {picker.options.length ? <View style={{ backgroundColor: colors.bg, borderRadius: picker.more ? tokens.radius.lg : tokens.radius.full, padding: tokens.spacing.xs }}>
+          {picker.options.length ? <View style={{ backgroundColor: colors.bg, borderRadius: picker.more ? tokens.radius.lg : tokens.radius.full, minHeight: holdMenuRecipe.stripHeight, justifyContent: "center", paddingHorizontal: tokens.spacing.xs }}>
             <ReactionPicker {...picker} layout="strip" onValueChange={value => { picker.onValueChange(value); close(); }} />
           </View> : null}
-          <View style={{ backgroundColor: colors.bg, borderRadius: tokens.radius.lg, padding: tokens.spacing.sm }}>{children}</View>
-          {menuTitle || rows.length ? <View style={{ backgroundColor: colors.bg, borderRadius: tokens.radius.lg, paddingVertical: tokens.spacing.xs }}>
+          {/* The pressed bubble itself is the preview, kept on its own side like the timeline. */}
+          <View style={[{ alignSelf: align === "end" ? "flex-end" : "flex-start", maxWidth: screenPatternRecipe.messageMaxWidth }, previewSurface ? { backgroundColor: colors.bg, borderRadius: tokens.radius.lg, padding: tokens.spacing.sm } : null]}>{children}</View>
+          {menuTitle || rows.length ? <View style={{ alignSelf: align === "end" ? "flex-end" : "flex-start", width: holdMenuRecipe.actionWidth, maxWidth: "100%", backgroundColor: colors.bg, borderRadius: holdMenuRecipe.actionRadius, paddingVertical: tokens.spacing.xs, overflow: "hidden" }}>
             {menuTitle ? <View style={{ paddingHorizontal: tokens.spacing.md, paddingVertical: tokens.spacing.xs }}><Text variant="caption" tone="muted">{menuTitle}</Text></View> : null}
             {/* Queue the action until the modal is gone: iOS cannot present a product sheet over it. */}
             {rows.map(row => <Pressable key={row.id} accessibilityRole="button" accessibilityLabel={row.label} accessibilityState={{ disabled: row.disabled ?? false }} disabled={row.disabled ?? false}
               onPress={() => { queuedAction.current = row.onPress; close(); }}
-              style={({ pressed }) => ({ minHeight: 44, flexDirection: "row", alignItems: "center", gap: tokens.spacing.sm, paddingHorizontal: tokens.spacing.md, opacity: row.disabled ? 0.5 : 1, backgroundColor: pressed ? colors.surface : "transparent" })}>
-              {row.icon ? <View style={{ width: 24, alignItems: "center" }}>{row.icon}</View> : null}
-              <Text tone={row.danger ? "danger" : "body"}>{row.label}</Text>
+              style={({ pressed }) => ({ minHeight: holdMenuRecipe.actionRowHeight, flexDirection: "row", alignItems: "center", gap: tokens.spacing.sm, paddingHorizontal: tokens.spacing.md, opacity: row.disabled ? 0.5 : 1, backgroundColor: pressed ? colors.surface : "transparent" })}>
+              {row.icon ? <View style={{ width: holdMenuRecipe.iconSize, alignItems: "center" }}>{row.icon}</View> : null}
+              <View style={{ flex: 1, minWidth: 0 }}><Text tone={row.danger ? "danger" : "body"}>{row.label}</Text></View>
+              {row.submenu ? <FixedGlyph>›</FixedGlyph> : null}
             </Pressable>)}
           </View> : null}
           </ScrollView>

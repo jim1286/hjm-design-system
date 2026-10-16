@@ -78,6 +78,22 @@ export declare const chatMessageRecipe: {
 };
 /** Column count for a photo set: pairs read as 2-up, other counts as 3-up; one photo spans the width. */
 export declare function resolveChatMediaColumns(count: number): 1 | 2 | 3;
+/**
+ * Long-press menu geometry measured from the Instagram iOS DM hold menu (2026-10-16 @3x capture):
+ * full-width reaction strip ~60pt with ~30pt emoji, the pressed bubble itself as preview, and a ~200pt
+ * action card aligned to the bubble's side with ~56pt rows. 12pt between the three blocks.
+ */
+export declare const holdMenuRecipe: {
+    readonly inset: 10;
+    readonly gap: 12;
+    readonly stripHeight: 60;
+    readonly stripItemSize: 48;
+    readonly emojiSize: 28;
+    readonly actionWidth: 200;
+    readonly actionRowHeight: 56;
+    readonly actionRadius: 18;
+    readonly iconSize: 24;
+};
 /** Position inside a run of consecutive messages from one author within one displayed minute. */
 export type ChatMessageGroupPosition = "single" | "first" | "middle" | "last";
 /**

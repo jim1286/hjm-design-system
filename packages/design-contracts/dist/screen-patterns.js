@@ -77,6 +77,22 @@ export function resolveChatMediaColumns(count) {
     return count === 1 ? 1 : count === 2 || count === 4 ? 2 : 3;
 }
 /**
+ * Long-press menu geometry measured from the Instagram iOS DM hold menu (2026-10-16 @3x capture):
+ * full-width reaction strip ~60pt with ~30pt emoji, the pressed bubble itself as preview, and a ~200pt
+ * action card aligned to the bubble's side with ~56pt rows. 12pt between the three blocks.
+ */
+export const holdMenuRecipe = {
+    inset: 10,
+    gap: spacing.sm,
+    stripHeight: 60,
+    stripItemSize: 48,
+    emojiSize: 28,
+    actionWidth: 200,
+    actionRowHeight: 56,
+    actionRadius: 18,
+    iconSize: 24,
+};
+/**
  * Runs break when the author or the displayed timestamp changes, so each minute shows its time once
  * and a new minute re-introduces the author (KakaoTalk behavior). Products pass the same localized
  * timestamp string they render; HJM never parses dates.

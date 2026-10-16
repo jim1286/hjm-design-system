@@ -6,7 +6,8 @@ export type MessageMenuAction = Readonly<{
     label: string;
     icon?: ReactNode;
     onPress(): void;
-    disabled?: boolean;
+    disabled?: boolean; /** Shows › for rows that open a further list (e.g. "더 보기"). */
+    submenu?: boolean;
 }>;
 type Props = ReactionPickerProps & Readonly<{
     closeLabel: string;
@@ -33,8 +34,12 @@ type Props = ReactionPickerProps & Readonly<{
         disabled?: boolean;
         icon?: ReactNode;
     }>;
+    /** Side of the pressed content: own messages align the preview and action card to the end. */
+    align?: "start" | "end";
+    /** Comments are plain text, so their preview gets a surface; chat bubbles already have one. */
+    previewSurface?: boolean;
 }>;
 /** Core RN composition: no optional context-menu/Expo dependency enters the screens subpath. */
-export declare function MessageReactions({ children, closeLabel, replyAction, menuAction, menuTitle, menuActions, reportAction, interactiveContent, ...picker }: Props): import("react").JSX.Element;
+export declare function MessageReactions({ children, closeLabel, replyAction, menuAction, menuTitle, menuActions, reportAction, interactiveContent, align, previewSurface, ...picker }: Props): import("react").JSX.Element;
 export {};
 //# sourceMappingURL=message-reactions.d.ts.map
