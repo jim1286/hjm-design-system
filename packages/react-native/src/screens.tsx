@@ -6,9 +6,10 @@ import { MessageReactions, type MessageMenuAction } from "./internal/message-rea
 import type { ReactionPickerProps } from "./reaction-picker.js";
 import { Button, IconButton } from "./actions.js";
 import { TextArea } from "./inputs.js";
-import { useEffect, useMemo, useRef, useState, type Ref, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type Ref, type ReactNode } from "react";
 import { Animated, PanResponder, Pressable, ScrollView, View, type AccessibilityActionEvent, type TextInput, type ScrollViewProps } from "react-native";
 import { Spinner } from "./internal/spinner.js";
+import { KeyboardAvoidanceContext, useInsideKeyboardAvoidance, useKeyboardOverlap, useScrollFocusedInputIntoView } from "./keyboard.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
 import { motion } from "@hjmds/design-contracts/foundations";
@@ -52,10 +53,27 @@ export type ScreenLayoutProps = Readonly<{
   layoutStyle?: HjmCompositionStyleProp;
   testID?: string;
   scrollRef?: Ref<ScrollView>;
+  /**
+   * Keeps the footer and focused field above the keyboard (default on, 2026-10-16 keyboard audit).
+   * Skipped inside KeyboardAvoiding or a keyboard-aware Sheet/Dialog, which already handle it.
+   */
+  keyboardAvoidance?: boolean;
   scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator" | "onScroll" | "onScrollBeginDrag" | "onScrollEndDrag" | "scrollEventThrottle" | "alwaysBounceVertical" | "automaticallyAdjustKeyboardInsets">;
 }>;
 
-export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, leading, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps, hjmBodyInlinePadding, hjmTitleLeading }: ScreenLayoutProps & ScreenLayoutPrivateProps) {
+export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, leading, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance = true, hjmBodyInlinePadding, hjmTitleLeading }: ScreenLayoutProps & ScreenLayoutPrivateProps) {
+  const insideAvoidance = useInsideKeyboardAvoidance();
+  const avoidKeyboard = keyboardAvoidance && !insideAvoidance;
+  const rootRef = useRef<View>(null);
+  const keyboardOverlap = useKeyboardOverlap(rootRef, avoidKeyboard);
+  const bodyScroll = useRef<ScrollView | null>(null);
+  const trackScroll = useScrollFocusedInputIntoView(bodyScroll, avoidKeyboard);
+  // ScrollView decorates object refs with scrollTo/scrollToEnd; mirror that instance into the host ref
+  // after commit (child layout effects run before host effects) instead of passing a callback ref.
+  useLayoutEffect(() => {
+    if (typeof scrollRef === "function") scrollRef(bodyScroll.current);
+    else if (scrollRef) (scrollRef as { current: ScrollView | null }).current = bodyScroll.current;
+  });
   const [leadingWidth, setLeadingWidth] = useState(0), [actionsWidth, setActionsWidth] = useState(0);
   const sideWidth = Math.max(leadingWidth, actionsWidth);
   const showHeader = titleVisibility === "visible" || !!description || !!leading || !!actions;
@@ -101,10 +119,11 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
       </View>{actions}
     </View>)}
     {notice ? <View style={{ paddingHorizontal: padding }}>{notice}</View> : null}
-    {scroll === "screen" || resolved.replacesContent ? <ScrollView {...scrollProps} ref={scrollRef} style={{ flex: 1 }} keyboardShouldPersistTaps="handled"
+    {scroll === "screen" || resolved.replacesContent ? <ScrollView {...scrollProps} ref={bodyScroll} style={{ flex: 1 }} keyboardShouldPersistTaps="handled" scrollEventThrottle={scrollProps?.scrollEventThrottle ?? 16} onScroll={event => { trackScroll(event); scrollProps?.onScroll?.(event); }}
       contentContainerStyle={{ flexGrow: 1, padding, paddingTop: bodyPaddingTop, ...(hjmBodyInlinePadding === undefined || contentInset === "none" ? {} : { paddingHorizontal: hjmBodyInlinePadding }) }} accessibilityState={{ busy: resolved.busy }}>{body}</ScrollView>
       : <View style={{ flex: 1, minHeight: 0, padding, paddingTop: bodyPaddingTop, ...(hjmBodyInlinePadding === undefined || contentInset === "none" ? {} : { paddingHorizontal: hjmBodyInlinePadding }) }}>{body}</View>}
     {footer ? <View style={{ padding, borderTopWidth: contentInset === "none" ? 0 : 1, borderColor: colors.border }}>{footer}</View> : null}
+    </KeyboardAvoidanceContext.Provider>
   </View>;
 }
 

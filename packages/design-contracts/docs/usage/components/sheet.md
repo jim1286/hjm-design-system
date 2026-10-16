@@ -85,6 +85,7 @@ import { Sheet } from "@hjmds/react-native/overlays";
 | `onOpenChange` | `(open: boolean, detail: { reason }) => void` | — | reason: `trigger` · `close-action` · `escape` · `back` · `outside` · `swipe` · `programmatic`. Android 하드웨어 back은 Native에서만 `back` |
 | `onDismissComplete` | `(detail: { reason }) => void` | — | 표면이 실제로 사라진 뒤 한 번. 다음 modal·화면 이동은 여기서 |
 | `dismissPolicy` | `{ dismissible?, dismissWhileBusy?, outsideDismiss?, escapeOrBackDismiss?, swipeDismiss? }` | `dismissible` true · `dismissWhileBusy` false · `outsideDismiss` 하단 false / 옆 true · `escapeOrBackDismiss` true · `swipeDismiss` true(미게시 변경, 이전 false) | 닫기 허용 범위. `resolveSheetDismissPolicy(placement, override)` |
+| `keyboardAvoidance` (Native) | `boolean` | `true`(미게시 변경, 이전 `false`) | 모달이 키보드 높이만큼 비킨다. 입력 시트가 옵션을 빠뜨려 가려지던 문제(2026-10-16 키보드 전수 조사)로 기본을 켰다. 안쪽 `ScreenLayout`은 중복 처리하지 않는다 |
 | `showClose` | `boolean` | 하단 `false` · 옆 `true`(미게시) | 머리의 × 표시. 하단 시트는 드래그로 닫는 것이 기본이라 끈다 |
 | `busy` | `boolean` | `false` | 사용자 닫기를 막는다 |
 | `title` · `closeLabel` | 문구 | 필수 | Native `title`이 element면 `accessibilityTitle`(string) 필수 |

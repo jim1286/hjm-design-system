@@ -10,6 +10,7 @@ import {
   type AlertDialogSession,
 } from "@hjmds/design-contracts/components/alert-dialog";
 import { type HjmCompositionStyleProp } from "./composition-style.js";
+import { KeyboardAvoidanceContext } from "./keyboard.js";
 import {
   canDismissSheet,
   createSheetLifecycle,
@@ -658,7 +659,7 @@ export function Dialog({
               {description || children ? (
                 <DialogScrollBody gap={dialogRecipe.content.gap}>
                   {description ? <Text tone="muted">{description}</Text> : null}
-                  {children}
+                  <KeyboardAvoidanceContext.Provider value>{children}</KeyboardAvoidanceContext.Provider>
                 </DialogScrollBody>
               ) : null}
             </View>
@@ -1141,7 +1142,7 @@ export type SheetProps = NativeModalProps &
     onDismissComplete?: (detail: Readonly<{ reason: SheetDismissReason }>) => void;
     /** Layout-only placement; semantic size and the recipe own appearance. */
     contentStyle?: HjmCompositionStyleProp;
-    /** Opt in when the body contains inputs; the modal owns keyboard clearance. */
+    /** The modal owns keyboard clearance; on by default (2026-10-16). Turn off only for input-free sheets with custom motion. */
     keyboardAvoidance?: boolean;
     /** Keep the header/footer fixed while long content scrolls. Do not nest a virtualized list. */
     scrollable?: boolean;
@@ -1168,7 +1169,8 @@ export function Sheet({
   safeAreaInsets: suppliedSafeAreaInsets,
   onDismissComplete,
   contentStyle,
-  keyboardAvoidance = false,
+  // Default on since the 2026-10-16 keyboard audit: input sheets that forgot the opt-in were covered.
+  keyboardAvoidance = true,
   scrollable = false,
   showClose,
   onShow,
@@ -1589,9 +1591,9 @@ export function Sheet({
                 keyboardDismissMode={Platform.OS === "ios" ? "interactive" : "on-drag"}
                 automaticallyAdjustKeyboardInsets={false}
               >
-                {children}
+                <KeyboardAvoidanceContext.Provider value={keyboardAvoidance}>{children}</KeyboardAvoidanceContext.Provider>
               </ScrollView>
-            ) : <View style={{ gap: sheetRecipe.body.gap, flexShrink: 1, ...bodyFill }}>{children}</View>}
+            ) : <View style={{ gap: sheetRecipe.body.gap, flexShrink: 1, ...bodyFill }}><KeyboardAvoidanceContext.Provider value={keyboardAvoidance}>{children}</KeyboardAvoidanceContext.Provider></View>}
             {footer ? (
               <View
                 style={{

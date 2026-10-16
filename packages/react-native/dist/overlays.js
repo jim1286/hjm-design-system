@@ -3,6 +3,7 @@ import { resolveOriginTransition } from "@hjmds/design-contracts/content-transit
 import { focusAccessibleHost } from "./internal/accessible-focus.js";
 import { createAlertDialogSession, getAlertDialogInitialFocus, validateAlertDialogRequest, } from "@hjmds/design-contracts/components/alert-dialog";
 import {} from "./composition-style.js";
+import { KeyboardAvoidanceContext } from "./keyboard.js";
 import { canDismissSheet, createSheetLifecycle, resolveSheetCloseButton, resolveSheetDismissPolicy, sheetDragRecipe, } from "@hjmds/design-contracts/components/sheet";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { backdrop, easing, glyph, spacing } from "@hjmds/design-contracts/foundations";
@@ -415,7 +416,7 @@ export function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTi
                                             direction: environment.direction,
                                             flexDirection: "row",
                                             gap: spacing.sm,
-                                        }, children: [_jsx(View, { style: { flex: 1 }, children: _jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: title }) }), dismissible ? (_jsx(IconButton, { disabled: busy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(CloseGlyph, {}) })) : null] }), description || children ? (_jsxs(DialogScrollBody, { gap: dialogRecipe.content.gap, children: [description ? _jsx(Text, { tone: "muted", children: description }) : null, children] })) : null] }), _jsx(OverlayActions, { busy: busy, onAction: runAction, pendingAction: actionPending, stacked: stackActions, ...(primaryAction === undefined ? {} : { primaryAction }), ...(secondaryAction === undefined ? {} : { secondaryAction }) })] })] }) }) }));
+                                        }, children: [_jsx(View, { style: { flex: 1 }, children: _jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: title }) }), dismissible ? (_jsx(IconButton, { disabled: busy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(CloseGlyph, {}) })) : null] }), description || children ? (_jsxs(DialogScrollBody, { gap: dialogRecipe.content.gap, children: [description ? _jsx(Text, { tone: "muted", children: description }) : null, _jsx(KeyboardAvoidanceContext.Provider, { value: true, children: children })] })) : null] }), _jsx(OverlayActions, { busy: busy, onAction: runAction, pendingAction: actionPending, stacked: stackActions, ...(primaryAction === undefined ? {} : { primaryAction }), ...(secondaryAction === undefined ? {} : { secondaryAction }) })] })] }) }) }));
 }
 /** Contract session owns duplicate confirms, busy dismissal, error and settlement. */
 export function AlertDialog({ open, defaultOpen, onOpenChange, request, size = alertDialogRecipe.defaults.size, returnFocusRef, onResult, contentStyle, onShow, ...modalProps }) {
@@ -706,7 +707,9 @@ export function AlertDialog({ open, defaultOpen, onOpenChange, request, size = a
                                         ], children: _jsx(Text, { variant: "label", children: request.cancelLabel }) })) : null, stackActions ? null : confirmAction] })] })] }) }) }));
 }
 /** Native Sheet applies policy before emitting a concrete dismissal reason. */
-export function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, footer, placement = "bottom", size = sheetRecipe.defaults.size, busy = false, dismissPolicy, closeLabel, returnFocusRef, safeAreaInsets: suppliedSafeAreaInsets, onDismissComplete, contentStyle, keyboardAvoidance = false, scrollable = false, showClose, onShow, ...modalProps }) {
+export function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, footer, placement = "bottom", size = sheetRecipe.defaults.size, busy = false, dismissPolicy, closeLabel, returnFocusRef, safeAreaInsets: suppliedSafeAreaInsets, onDismissComplete, contentStyle, 
+// Default on since the 2026-10-16 keyboard audit: input sheets that forgot the opt-in were covered.
+keyboardAvoidance = true, scrollable = false, showClose, onShow, ...modalProps }) {
     const { environment, palette, tokens, designProfile } = useHjmNativeTheme();
     // The profile floating role is shared with Web. Modal lifecycle, inset and
     // action state remain recipe-owned; changing decoration must not replace them.
@@ -1018,7 +1021,7 @@ export function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTit
                                             direction: environment.direction,
                                             flexDirection: "row",
                                             gap: spacing.sm,
-                                        }, children: [_jsxs(View, { style: { flex: 1, gap: spacing.xs }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: title }), description ? _jsx(Text, { tone: "muted", children: description }) : null] }), policy.dismissible && closeVisible ? (_jsx(IconButton, { disabled: busy && !policy.dismissWhileBusy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(CloseGlyph, {}) })) : null] })] }), scrollable ? (_jsx(ScrollView, { style: { flexShrink: 1, minHeight: 0, ...bodyFill }, contentContainerStyle: { gap: sheetRecipe.body.gap }, keyboardShouldPersistTaps: "handled", keyboardDismissMode: Platform.OS === "ios" ? "interactive" : "on-drag", automaticallyAdjustKeyboardInsets: false, children: children })) : _jsx(View, { style: { gap: sheetRecipe.body.gap, flexShrink: 1, ...bodyFill }, children: children }), footer ? (_jsx(View, { style: {
+                                        }, children: [_jsxs(View, { style: { flex: 1, gap: spacing.xs }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: title }), description ? _jsx(Text, { tone: "muted", children: description }) : null] }), policy.dismissible && closeVisible ? (_jsx(IconButton, { disabled: busy && !policy.dismissWhileBusy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(CloseGlyph, {}) })) : null] })] }), scrollable ? (_jsx(ScrollView, { style: { flexShrink: 1, minHeight: 0, ...bodyFill }, contentContainerStyle: { gap: sheetRecipe.body.gap }, keyboardShouldPersistTaps: "handled", keyboardDismissMode: Platform.OS === "ios" ? "interactive" : "on-drag", automaticallyAdjustKeyboardInsets: false, children: _jsx(KeyboardAvoidanceContext.Provider, { value: keyboardAvoidance, children: children }) })) : _jsx(View, { style: { gap: sheetRecipe.body.gap, flexShrink: 1, ...bodyFill }, children: _jsx(KeyboardAvoidanceContext.Provider, { value: keyboardAvoidance, children: children }) }), footer ? (_jsx(View, { style: {
                                     gap: sheetRecipe.footer.gap,
                                     flexShrink: 0,
                                     paddingTop: sheetRecipe.footer.paddingTop,

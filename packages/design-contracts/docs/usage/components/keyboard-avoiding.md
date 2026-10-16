@@ -63,6 +63,8 @@ import { BottomCTA } from "@hjmds/react-native/bottom-cta";
 
 - 콜백·상태 prop은 없다. 키보드 높이는 컴포넌트 안에서 키보드 이벤트로 잰다.
 
+2026-10-16 키보드 전수 조사: `ScreenLayout`(따라서 `ChatScreen`·`CommentThreadScreen`·`EditorScreen` 등)이 `keyboardAvoidance`(기본 켬)로 스스로 키보드와 겹치는 만큼 비키고, 본문 스크롤은 포커스된 입력칸을 보이게 스크롤한다(`useScrollFocusedInputIntoView`). 이 컴포넌트·키보드를 처리하는 `Sheet`·`Dialog` 안에서는 `KeyboardAvoidanceContext`로 중복 처리를 건너뛴다. 따라서 화면을 이 컴포넌트로 따로 감쌀 필요는 없고, 감싸도 여백이 두 번 생기지 않는다.
+
 2026-10-16: 키보드 높이 전체가 아니라 이 영역의 아래 끝과 키보드 윗변이 실제로 겹치는 만큼만 아래 여백으로 준다. 탭 막대·도구 막대 위에 놓인 화면에서 키보드와 작성창 사이에 빈 띠가 생기던 문제를 고쳤다(미게시).
 
 ## 배치

@@ -5,7 +5,7 @@ import { createContext, useContext, useEffect, useRef, useState, type ReactNode,
 import { AccessibilityInfo, BackHandler, findNodeHandle, ScrollView, View, type TextInput } from "react-native";
 import { spacing, radius } from "@hjmds/design-contracts/foundations";
 import { Button } from "@hjmds/react-native/actions";
-import { SearchField, SegmentedControl, TextField } from "@hjmds/react-native/inputs";
+import { Chip, SearchField, SegmentedControl, Switch, TextField } from "@hjmds/react-native/inputs";
 import { Grid, Stack, Surface, Text } from "@hjmds/react-native/primitives";
 import { ScreenLayout } from "@hjmds/react-native/screens";
 import { Sheet } from "@hjmds/react-native/overlays";
@@ -116,15 +116,16 @@ function Editor({ kind }: { kind: EditorKind }) {
       {kind !== "settings" && <Steps descriptor={{ steps: flowSteps, currentStepId: flowSteps[stage]!.id, currentStepStatus: invalid || state.status === "error" ? "error" : "current" }} statusLabels={stepLabels} composeAccessibleName={stepName} />}
       <Surface padding="lg"><Stack gap="lg">
         <Status>{kind === "settings" ? dirty ? "저장하지 않은 변경이 있어요" : "저장된 설정입니다" : `${stage + 1}단계 · ${flowSteps[stage]!.label}`}</Status>
-        {stage === 0 ? <><Heading level="level5">어떤 장면을 기록할까요?</Heading><Row>{categories.map(category => <Action key={category} selected={draft.category === category} onAction={() => change({ category })}>{category}</Action>)}</Row><Action primary onAction={() => { if (!locked()) setStage(1); }}>이 주제로 기록하기</Action><Action onAction={() => { if (!locked()) setStage(1); }}>나중에 정하기</Action></>
-        : stage === 1 ? <><TextField ref={inputRef} label={copy.field} value={draft.title} disabled={busy} onValueChange={title => change({ title })} {...(invalid ? { error: draftError(draft) ?? "" } : {})} /><Row>{categories.map(category => <Action key={category} disabled={busy} selected={draft.category === category} onAction={() => change({ category })}>{category}</Action>)}</Row>
-          <Action disabled={busy} selected={draft.enabled} onAction={() => change(previous => ({ enabled: !previous.enabled }))}>{draft.enabled ? "기록 알림 켜짐" : "기록 알림 꺼짐"}</Action>
-          {kind === "settings" ? <Row><Action primary loading={busy} disabled={!dirty} onAction={save}>{copy.submit}</Action><Action disabled={busy || !dirty} onAction={revert}>변경 되돌리기</Action></Row> : <Action primary onAction={review}>기록 확인</Action>}</>
+        {stage === 0 ? <><Heading level="level5">어떤 장면을 기록할까요?</Heading><Row>{categories.map(category => <Chip key={category} label={category} selectionMode="single" selected={draft.category === category} onPress={() => change({ category })} />)}</Row><Action primary onAction={() => { if (!locked()) setStage(1); }}>이 주제로 기록하기</Action><Action onAction={() => { if (!locked()) setStage(1); }}>나중에 정하기</Action></>
+        : stage === 1 ? <><TextField ref={inputRef} label={copy.field} value={draft.title} disabled={busy} onValueChange={title => change({ title })} {...(invalid ? { error: draftError(draft) ?? "" } : {})} /><Row>{categories.map(category => <Chip key={category} label={category} selectionMode="single" disabled={busy} selected={draft.category === category} onPress={() => change({ category })} />)}</Row>
+          {/* 2026-10-16 review: an on/off setting is a Switch, not a text button. */}<Switch label="기록 알림" description="기록할 시간에 알려 드려요." checked={draft.enabled} disabled={busy} onCheckedChange={enabled => change({ enabled })} />
+          {kind === "settings" ? <Stack gap="sm"><Action primary loading={busy} disabled={!dirty} onAction={save}>{copy.submit}</Action><Action disabled={busy || !dirty} onAction={revert}>변경 되돌리기</Action></Stack> : <Action primary onAction={review}>기록 확인</Action>}</>
         : <>{summary}<Row><Action disabled={busy} onAction={() => { if (!locked()) setStage(1); }}>내용 수정</Action><Action primary loading={busy} onAction={save}>{state.status === "error" ? "입력한 내용 다시 저장" : copy.submit}</Action></Row></>}
         {state.status === "error" && <Notice tone="danger" title="저장하지 못했어요" description="입력은 그대로 남아 있어요. 내용을 확인하고 다시 저장해 주세요." />}
       </Stack></Surface>
       <Row>{stage > 0 && kind === "first" && <Action disabled={busy} onAction={() => { if (!locked()) setStage(previous => Math.max(0, previous - 1)); }}>이전 단계</Action>}<View ref={leaveRef} collapsable={false}><Action disabled={busy} onAction={() => { returnFocusRef.current = leaveRef.current; leave(); }}>{kind === "settings" ? "설정 나가기" : "초안 남기고 쉬기"}</Action></View></Row>
-      <Action disabled={busy} selected={failureArmed} onAction={() => { if (!locked()) toggleFailure(); }}>{failureArmed ? "다음 저장 실패 예약됨" : "다음 저장 실패시키기"}</Action>
+      {/* Demo-only control: separated and quiet so it never reads as a product action (2026-10-16 review). */}
+      <Stack gap="xs"><Text tone="muted" variant="caption">미리보기 도구</Text><Button size="small" tone="ghost" layoutStyle={{ alignSelf: "flex-start" }} disabled={busy} selected={failureArmed} onPress={() => { if (!locked()) toggleFailure(); }}>{failureArmed ? "다음 저장 실패 예약됨" : "다음 저장 실패시키기"}</Button></Stack>
     </Stack>}
     <Text tone="muted" variant="caption">{scopeCopy}</Text>
     <Sheet returnFocusRef={returnFocusRef} open={confirmLeave} onOpenChange={open => { if (!open) setConfirmLeave(false); }} closeLabel="닫기" keyboardAvoidance scrollable title="저장하지 않은 변경이 있어요" footer={<Stack gap="sm"><Action primary onAction={() => setConfirmLeave(false)}>계속 수정</Action><Action onAction={() => { if (locked()) return; revert(); setConfirmLeave(false); setPaused(true); returnFocusRef.current = stageRef.current; }}>변경 버리고 나가기</Action></Stack>}><Text>변경을 버리면 마지막으로 저장한 설정으로 돌아가요.</Text></Sheet>

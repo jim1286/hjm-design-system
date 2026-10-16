@@ -105,7 +105,7 @@ export type SheetProps = NativeModalProps & ReasonedOpenProps<SheetOpenChangeDet
     }>) => void;
     /** Layout-only placement; semantic size and the recipe own appearance. */
     contentStyle?: HjmCompositionStyleProp;
-    /** Opt in when the body contains inputs; the modal owns keyboard clearance. */
+    /** The modal owns keyboard clearance; on by default (2026-10-16). Turn off only for input-free sheets with custom motion. */
     keyboardAvoidance?: boolean;
     /** Keep the header/footer fixed while long content scrolls. Do not nest a virtualized list. */
     scrollable?: boolean;

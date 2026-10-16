@@ -116,8 +116,9 @@ describe("Sheet input viewport", () => {
     expect(dialog().findAllByType(Text).some((node) => node.props.children === "저장")).toBe(true);
   });
 
-  it("keeps keyboard handling opt-in and caps side sheets to the same usable viewport", () => {
-    render(tree());
+  // 2026-10-16: keyboard handling is on by default; an explicit opt-out still leaves the viewport alone.
+  it("keeps an explicit keyboard opt-out and caps side sheets to the same usable viewport", () => {
+    render(tree({ keyboardAvoidance: false }));
     act(() => keyboard.__emit("keyboardDidShow", 200));
     expect(positioner().props.style.paddingBottom).toBe(0);
     act(() => renderer!.update(tree({ keyboardAvoidance: true, placement: "end" })));
