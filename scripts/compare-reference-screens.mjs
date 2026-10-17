@@ -14,6 +14,8 @@
 // Usage:
 //   pnpm compare:screens
 //   pnpm compare:screens -- --only common-screen-chat--default,patterns-search--default
+//   pnpm compare:screens -- --stage 구성,화면   (every 구성/화면 story's first export, for full audits)
+// Each story is captured as Web mobile (402pt), Web desktop (1280px) and Native.
 //   env: HJM_COMPARE_UDID (simulator, default booted iPhone 17 Pro below),
 //        HJM_COMPARE_WEB_ORIGIN, HJM_COMPARE_EXPO_URL, HJM_COMPARE_OUT
 //
@@ -51,7 +53,7 @@ const STORIES = [
 
 const args = process.argv.slice(2);
 const onlyIndex = args.indexOf('--only');
-const selected = onlyIndex >= 0 ? args[onlyIndex + 1].split(',') : STORIES;
+const stageIndex = args.indexOf('--stage');
 const udid = process.env.HJM_COMPARE_UDID ?? 'AC433031-1746-46C6-86A9-143A1FC839F8';
 const webOrigin = process.env.HJM_COMPARE_WEB_ORIGIN ?? 'http://localhost:6006';
 const expoUrl = process.env.HJM_COMPARE_EXPO_URL ?? 'exp://127.0.0.1:8084';
@@ -65,6 +67,16 @@ if (!booted.includes(udid)) throw new Error(`Simulator ${udid} is not booted. Op
 const index = await fetch(`${webOrigin}/index.json`).then(r => r.json()).catch(() => {
   throw new Error(`Web Storybook is not reachable at ${webOrigin}`);
 });
+// --stage picks one representative story (the first export) per 구성/화면 title for audits.
+function stageStories(stages) {
+  const firstPerTitle = new Map();
+  for (const entry of Object.values(index.entries)) {
+    if (entry.type !== 'story' || !stages.includes(entry.title.split('/')[1])) continue;
+    if (!firstPerTitle.has(entry.title)) firstPerTitle.set(entry.title, entry.id);
+  }
+  return [...firstPerTitle.values()];
+}
+const selected = onlyIndex >= 0 ? args[onlyIndex + 1].split(',') : stageIndex >= 0 ? stageStories(args[stageIndex + 1].split(',')) : STORIES;
 const nativeSources = await Promise.all((await fs.readdir(path.join(root, 'showcase/native/src')))
   .filter(f => /\.stories\.tsx?$/.test(f))
   .map(f => fs.readFile(path.join(root, 'showcase/native/src', f), 'utf8')));
@@ -100,6 +112,7 @@ await fs.mkdir(out, {recursive: true});
 const browser = await chromium.launch({headless: true});
 // iPhone 17 Pro: 402×874 pt at 3x, the same frame `simctl io screenshot` returns (1206×2622).
 const page = await browser.newPage({viewport: {width: 402, height: 874}, deviceScaleFactor: 3});
+const desktop = await browser.newPage({viewport: {width: 1280, height: 800}, deviceScaleFactor: 1});
 const composer = await browser.newPage({viewport: {width: 1000, height: 1000}, deviceScaleFactor: 1});
 const results = [];
 
@@ -111,6 +124,7 @@ for (const webId of selected) {
   const dir = path.join(out, webId);
   await fs.mkdir(dir, {recursive: true});
   const webFile = path.join(dir, 'web.png');
+  const desktopFile = path.join(dir, 'web-desktop.png');
   const nativeFile = path.join(dir, 'native.png');
 
   const pageErrors = [];
@@ -133,6 +147,15 @@ for (const webId of selected) {
     result.webError = error.message.split('\n')[0];
   }
   page.off('pageerror', onError);
+  try {
+    await desktop.goto(`${webOrigin}/iframe.html?id=${encodeURIComponent(webId)}&viewMode=story`, {waitUntil: 'networkidle'});
+    await desktop.locator('#storybook-root > *, body.sb-show-errordisplay').first().waitFor({state: 'attached'});
+    await desktop.evaluate(() => document.fonts.ready);
+    await desktop.screenshot({path: desktopFile});
+    result.webDesktop = 'captured';
+  } catch (error) {
+    result.webDesktop = 'failed';
+  }
 
   const native = nativeIdFor(entry);
   result.nativeId = native.id;
@@ -157,11 +180,12 @@ for (const webId of selected) {
     body{margin:0;font:600 28px system-ui;background:#e5e7eb}
     h1{margin:0;padding:16px 24px;font-size:30px;background:#111827;color:#fff}
     main{display:flex;gap:24px;padding:24px}
-    figure{margin:0;width:603px} figcaption{margin-bottom:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    figure{margin:0;width:603px} figure.wide{width:1280px} figure.wide img{width:1280px} figcaption{margin-bottom:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     img{width:603px;display:block;border:1px solid #9ca3af}
     .missing{width:603px;height:1311px;display:grid;place-items:center;background:#fff;border:1px dashed #9ca3af}
   </style><h1>${entry.title} / ${entry.name} · ${webId}</h1><main>
     ${await panel('Web (402pt)', webFile, result.web.startsWith('captured'))}
+    ${(await panel('Web desktop (1280px)', desktopFile, result.webDesktop === 'captured')).replace('<figure>', '<figure class="wide">')}
     ${await panel(`Native · ${native.id ?? ''}`, nativeFile, result.native.startsWith('captured'))}
   </main>`, {waitUntil: 'load'});
   await composer.screenshot({path: path.join(dir, 'compare.png'), fullPage: true});

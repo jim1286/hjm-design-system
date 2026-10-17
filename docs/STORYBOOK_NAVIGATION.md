@@ -218,6 +218,7 @@ stories 파일 안 구현(§1.7 목표), 상태 arg 이름. 빌드 index 기준 
 
 2026-10-17 사용자 요청: 공통 화면의 Web·앱 차이를 사용자가 눈으로 찾지 않도록 도구로 모아 본다.
 `pnpm compare:screens`([`scripts/compare-reference-screens.mjs`](../scripts/compare-reference-screens.mjs))는 기준 화면 12개
+- 전수 점검은 `pnpm compare:screens -- --stage 토큰`(또는 `컴포넌트`·`구성`·`화면`)으로 단계별 대표 스토리를 모두 찍는다. 각 스토리는 웹 모바일(402)·웹 데스크톱(1280)·앱 세 가지로 저장된다.
 (채팅·댓글·대화 목록·알림함·설정 두 종·목록과 상세·작성과 수정·로그인·검색·화면 골격의 빈 상태/오류)를 Web Storybook과
 시뮬레이터의 Native Storybook에서 캡처하고 `artifacts/screen-compare/<시각>/<web id>/compare.png`(왼쪽 Web | 오른쪽 Native)와
 `summary.json`을 만든다. `--only <id,id>`로 일부만 찍는다.
