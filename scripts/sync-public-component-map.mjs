@@ -56,9 +56,8 @@ const supplemental = new Set([
   "CompositionLayout", "CommentThreadRow", "ConversationRow", "SavedItemsScreen", "CommentThreadScreen", "ListDetailScreen", "EditorScreen", "ProfileScreen", "ProfileSummary", "ModerationScreen", "MediaSelectionScreen", "PhotoSourceSheet", "SearchScreen", "PermissionScreen", "OnboardingScreen",
   "OverviewScreen", "ScreenLayout", "SettingsScreen", "NotificationInboxScreen", "NotificationItem", "NotificationRow", "IconTile", "ChatScreen", "MessageComposer", "ChatMessage",
   // 2026-10-16: the context lets ScreenLayout/Sheet skip duplicate keyboard padding inside KeyboardAvoiding.
+  // KeyboardAvoidanceContext is a companion of KeyboardAvoiding with no UI semantics of its own (stays supplemental).
   "KeyboardAvoiding", "KeyboardAvoidanceContext", "KeyboardMotionProvider", "KeyboardDock", "KeyboardFormScrollView",
-  // 2026-10-16: picking by image reuses radio/checkbox semantics; no new canonical catalog row.
-  "ImageChoiceGroup",
   "SortableCollection", "SwipeActions", "ContentTransition", "TextTransition", "Celebration",
   "SharedTransitionScreen", "SharedTransitionElement", "EffectSurface", "ProgressiveBlur",
   // 2026-10-10: disclosure trigger for the panel Toast (composition activity-status). Not a Chip variant

@@ -1242,13 +1242,15 @@ describe("expanded cross-platform component contracts", () => {
       dismissWhileBusy: false,
       outsideDismiss: true,
       escapeOrBackDismiss: true,
-      swipeDismiss: false,
+      // 2026-10-16: drag-to-dismiss is mandatory for bottom sheets (b394f918).
+      swipeDismiss: true,
     });
     expect(canDismissSheet("close-action", false)).toBe(true);
     expect(canDismissSheet("outside", false)).toBe(true);
     expect(canDismissSheet("escape", false)).toBe(true);
     expect(canDismissSheet("back", true)).toBe(false);
-    expect(canDismissSheet("swipe", false)).toBe(false);
+    expect(canDismissSheet("swipe", false)).toBe(true);
+    expect(canDismissSheet("swipe", true)).toBe(false);
 
     const lockedPolicy: import("../src/index.js").SheetDismissPolicy = {
       ...sheetBehaviorDefaults,
@@ -1285,7 +1287,7 @@ describe("expanded cross-platform component contracts", () => {
       mode: "additive",
       minimumPadding: spacing.sm,
     });
-    expect(sheetRecipe.handle.visibleByDefault).toBe(false);
+    expect(sheetRecipe.handle.visibleByDefault).toBe(true);
     expect(sheetRecipe.handle.showWhen).toBe("swipe-dismiss-enabled");
     for (const region of [sheetRecipe.title, sheetRecipe.body, sheetRecipe.footer]) {
       expect(typography).toHaveProperty(region.textVariant);

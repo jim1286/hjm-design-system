@@ -39,6 +39,7 @@ export declare const componentIds: {
     readonly RadioGroup: "radio-group";
     readonly Switch: "switch";
     readonly Chip: "chip";
+    readonly ImageChoiceGroup: "image-choice-group";
     readonly SegmentedControl: "segmented-control";
     readonly ToggleGroup: "toggle-group";
     readonly TagsInput: "tags-input";

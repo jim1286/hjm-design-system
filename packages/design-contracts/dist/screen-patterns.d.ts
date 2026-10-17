@@ -13,6 +13,18 @@ export declare function resolveScreenContentState(state?: ScreenContentState): {
     readonly announcement: "polite" | "assertive";
 };
 /**
+ * Native header band heights. Titled centered headers match the iOS navigation bar (44 control + 4 + 4);
+ * icon-only centered headers are compact (2026-10-14 야잘알 tab spacing, 2026-10-17 "상단 여백 줄여").
+ * Body top padding shrinks only under a compact header without a notice.
+ */
+export declare const screenHeaderRecipe: {
+    readonly minHeight: 52;
+    readonly paddingVertical: 4;
+    readonly compactMinHeight: 48;
+    readonly compactPaddingVertical: 2;
+    readonly compactBodyTop: 4;
+};
+/**
  * Leaving a screen (back, close, "설정 나가기") is an icon-only button fixed at the header's leading edge
  * (2026-10-17 user rule: exits had drifted into body text buttons with mixed glyphs). The label is read
  * by assistive tech only. `back` mirrors in RTL; `close` is for modal-style routes.

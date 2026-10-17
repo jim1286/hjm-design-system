@@ -13,6 +13,11 @@
       "name": "Chart",
       "date": "2026-10-14",
       "rationale": "사용자가 차트·표 라이브러리 흡수를 명시적으로 요청함. 2026-09-29 토큰만 남기고 지운 Chart를 되살려 Line·Bar·Pie·Radar·Scatter·Sparkline·ChartLegend를 한 계약의 동반 API로 둔다. Yajalal이 같은 스크럽 선 차트·막대를 직접 다시 만든 것이 근거. docs/chart.md"
+    },
+    {
+      "name": "ImageChoiceGroup",
+      "date": "2026-10-17",
+      "rationale": "사용자 요청으로 이미지 단일·다중 선택을 독립 계약으로 등록함. 예제가 selected 버튼으로 그림 선택을 흉내 내던 문제의 해결 컴포넌트이며 radio/checkbox 접근성 의미를 가진다. 동결 해제 조건(핵심 8개 stable)이 충족돼 해제 진행 중. docs/usage/components/image-choice-group.md"
     }
   ],
   "names": [

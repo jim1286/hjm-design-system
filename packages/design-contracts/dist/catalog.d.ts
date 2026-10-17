@@ -454,6 +454,16 @@ export declare const componentCatalog: readonly [{
     readonly platform: "shared";
     readonly status: "stable";
 }, {
+    readonly recipe: "imageChoiceRecipe";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "ImageChoiceGroup";
+    readonly category: "input";
+    readonly platform: "shared";
+    readonly status: "beta";
+}, {
     readonly recipe: "segmentedControlRecipe";
     readonly behavior: "segmentedControl";
     readonly surfaceStatus: {
@@ -1291,6 +1301,14 @@ export type ComponentName = (typeof componentCatalog)[number]["name"];
 export declare function summarizeComponentRoadmap(entries?: readonly ComponentCatalogEntry[]): Readonly<Record<ComponentRoadmapState, number>>;
 /** One typed registry prevents catalog recipe names from drifting into strings. */
 export declare const recipeRegistry: {
+    readonly imageChoiceRecipe: {
+        readonly tileSize: 72;
+        readonly gap: 8;
+        readonly radius: 12;
+        readonly ringWidth: 2;
+        readonly ringOffset: 2;
+        readonly checkSize: 20;
+    };
     readonly affixRecipe: {
         readonly edge: "top";
         readonly offset: 0;
@@ -6409,7 +6427,7 @@ export declare const recipeRegistry: {
                 alpha?: number;
             }>;
             readonly textVariant: "body";
-            readonly gap: 12;
+            readonly gap: 8;
             readonly paddingTop: 12;
         };
         readonly transition: {

@@ -129,8 +129,9 @@ describe("component reference coverage", () => {
 
     // 2026-09-29 promotion: every beta renderer now has complete required evidence; Form's focus path was implemented, and ThinkingOrb Native passed installed iOS/Android Skia smoke.
     // 2026-10-14: Chart (both renderers) and the new Native DataTable start as beta until device evidence.
-    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.web === "beta").map(entry => entry.name)).toEqual(["Chart"]);
-    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.native === "beta").map(entry => entry.name)).toEqual(["DataTable", "Chart"]);
+    // 2026-10-17: ImageChoiceGroup registers as beta on both renderers until behavior matrices cover it.
+    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.web === "beta").map(entry => entry.name)).toEqual(["ImageChoiceGroup", "Chart"]);
+    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.native === "beta").map(entry => entry.name)).toEqual(["ImageChoiceGroup", "Pagination", "DataTable", "Chart"]);
     expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.web === "stable")).toHaveLength(103);
     expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.native === "stable")).toHaveLength(83);
   });

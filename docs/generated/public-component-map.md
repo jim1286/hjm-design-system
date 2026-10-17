@@ -94,7 +94,7 @@
 | IconButton | IconButton | canonical | root, ./actions |
 | IconTile | 별도 보조 기능 | supplemental | ./screens |
 | Image | Image | canonical | root, ./display |
-| ImageChoiceGroup | 별도 보조 기능 | supplemental | ./image-choice |
+| ImageChoiceGroup | ImageChoiceGroup | canonical | ./image-choice |
 | ImageComparison | 별도 보조 기능 | supplemental | ./image-comparison |
 | ImportFieldMapping | 별도 보조 기능 | supplemental | ./data-workflows |
 | InlineConfirm | Button | optional-extension | ./inline-confirm |
@@ -304,7 +304,7 @@
 | IconButton | IconButton | canonical | root, ./actions, ./bottom-cta |
 | IconTile | 별도 보조 기능 | supplemental | ./screens |
 | Image | Image | canonical | root, ./data-display |
-| ImageChoiceGroup | 별도 보조 기능 | supplemental | ./image-choice |
+| ImageChoiceGroup | ImageChoiceGroup | canonical | ./image-choice |
 | ImageComparison | 별도 보조 기능 | supplemental | ./image-comparison |
 | ImageViewer | Image | optional-extension | ./image-viewer |
 | ImportFieldMapping | 별도 보조 기능 | supplemental | ./data-workflows |

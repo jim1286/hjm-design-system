@@ -2,6 +2,7 @@ import { affixRecipe } from "./affix.js";
 import { watermarkRecipe } from "./watermark.js";
 import { colorPickerRecipe } from "./color-picker.js";
 import { masonryRecipe } from "./masonry.js";
+import { imageChoiceRecipe } from "./image-choice.js";
 import { virtualListRecipe } from "./virtual-list.js";
 import { qrCodeRecipe } from "./qr-code-recipe.js";
 import { thinkingOrbRecipe } from "./thinking-orb-recipe.js";
@@ -99,6 +100,9 @@ export const componentCatalog = [
     { name: "Switch", category: "input", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "switchRecipe", behavior: "switch" },
     // Web Space and Native host press now verify selectable Chip state changes.
     { name: "Chip", category: "input", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "chipRecipe", behavior: "chip" },
+    // Image tile single/multiple selection (2026-10-17 registration: independent radio/checkbox semantics).
+    // Beta until renderer behavior matrices cover it; unit tests cover toggle and validation only.
+    { name: "ImageChoiceGroup", category: "input", platform: "shared", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "imageChoiceRecipe" },
     // Web arrow-key selection and Native host press now prove option changes.
     { name: "SegmentedControl", category: "input", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "segmentedControlRecipe", behavior: "segmentedControl" },
     // Web Space and Native host press now verify the pressed-id set transition.
@@ -219,6 +223,7 @@ import { floatingActionButtonRecipe } from "./floating-action-button.js";
 import { gridRecipe } from "./grid.js";
 /** One typed registry prevents catalog recipe names from drifting into strings. */
 export const recipeRegistry = {
+    imageChoiceRecipe,
     affixRecipe,
     watermarkRecipe,
     colorPickerRecipe,

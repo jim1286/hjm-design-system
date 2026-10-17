@@ -52,6 +52,7 @@ export const componentIds = {
   RadioGroup: "radio-group",
   Switch: "switch",
   Chip: "chip",
+  ImageChoiceGroup: "image-choice-group",
   SegmentedControl: "segmented-control",
   ToggleGroup: "toggle-group",
   TagsInput: "tags-input",

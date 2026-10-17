@@ -13,6 +13,18 @@ export function resolveScreenContentState(state = { kind: "ready" }) {
         announcement: state.kind === "error" ? "assertive" : "polite",
     };
 }
+/**
+ * Native header band heights. Titled centered headers match the iOS navigation bar (44 control + 4 + 4);
+ * icon-only centered headers are compact (2026-10-14 야잘알 tab spacing, 2026-10-17 "상단 여백 줄여").
+ * Body top padding shrinks only under a compact header without a notice.
+ */
+export const screenHeaderRecipe = {
+    minHeight: 52,
+    paddingVertical: spacing.xxs,
+    compactMinHeight: 48,
+    compactPaddingVertical: 2,
+    compactBodyTop: spacing.xxs,
+};
 export const screenExitRecipe = {
     /** Chevron arm length and stroke; close cross arm length. Drawn, not font glyphs, so every platform matches. */
     chevronSize: 10,

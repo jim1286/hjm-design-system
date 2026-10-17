@@ -833,8 +833,8 @@
         "entries": [
           "./image-choice"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "ImageChoiceGroup",
+        "role": "canonical"
       },
       {
         "name": "ImageComparison",
@@ -2776,8 +2776,8 @@
         "entries": [
           "./image-choice"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "ImageChoiceGroup",
+        "role": "canonical"
       },
       {
         "name": "ImageComparison",
