@@ -129,6 +129,26 @@
         "role": "canonical"
       },
       {
+        "name": "AuthScreenFooter",
+        "source": "packages/react/src/auth-screen.tsx",
+        "entries": [
+          ".",
+          "./auth-screen"
+        ],
+        "canonicalComponent": "AuthScreenLayout",
+        "role": "companion-or-alternative"
+      },
+      {
+        "name": "AuthScreenHero",
+        "source": "packages/react/src/auth-screen.tsx",
+        "entries": [
+          ".",
+          "./auth-screen"
+        ],
+        "canonicalComponent": "AuthScreenLayout",
+        "role": "companion-or-alternative"
+      },
+      {
         "name": "AuthScreenLayout",
         "source": "packages/react/src/auth-screen.tsx",
         "entries": [
@@ -300,8 +320,8 @@
         "entries": [
           "./screens"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "ChatMessage",
+        "role": "canonical"
       },
       {
         "name": "ChatScreen",
@@ -309,8 +329,8 @@
         "entries": [
           "./screens"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "ChatScreen",
+        "role": "canonical"
       },
       {
         "name": "Checkbox",
@@ -353,6 +373,16 @@
         "role": "companion-or-alternative"
       },
       {
+        "name": "ClipboardIconButton",
+        "source": "packages/react/src/clipboard.tsx",
+        "entries": [
+          ".",
+          "./clipboard"
+        ],
+        "canonicalComponent": "IconButton",
+        "role": "companion-or-alternative"
+      },
+      {
         "name": "CodeBlock",
         "source": "packages/react/src/code-block.tsx",
         "entries": [
@@ -379,6 +409,16 @@
         ],
         "canonicalComponent": "Collapsible",
         "role": "canonical"
+      },
+      {
+        "name": "CollapsibleMarker",
+        "source": "packages/react/src/collapsible.tsx",
+        "entries": [
+          ".",
+          "./collapsible"
+        ],
+        "canonicalComponent": "Collapsible",
+        "role": "companion-or-alternative"
       },
       {
         "name": "CollectionRail",
@@ -424,8 +464,8 @@
         "entries": [
           "./screen-flows"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "CommentThreadRow",
+        "role": "canonical"
       },
       {
         "name": "CommentThreadScreen",
@@ -433,8 +473,8 @@
         "entries": [
           "./screen-flows"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "CommentThreadScreen",
+        "role": "canonical"
       },
       {
         "name": "ComparisonTable",
@@ -451,8 +491,8 @@
         "entries": [
           "./screens"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "CompositionLayout",
+        "role": "canonical"
       },
       {
         "name": "Container",
@@ -614,8 +654,8 @@
         "entries": [
           "./screen-flows"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "EditorScreen",
+        "role": "canonical"
       },
       {
         "name": "EffectSurface",
@@ -814,8 +854,8 @@
         "entries": [
           "./screens"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "IconTile",
+        "role": "canonical"
       },
       {
         "name": "Image",
@@ -926,8 +966,8 @@
         "entries": [
           "./screen-flows"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "ListDetailScreen",
+        "role": "canonical"
       },
       {
         "name": "ListRow",
@@ -973,8 +1013,8 @@
         "entries": [
           "./screen-flows"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "MediaSelectionScreen",
+        "role": "canonical"
       },
       {
         "name": "MediaTransport",
@@ -1021,8 +1061,8 @@
         "entries": [
           "./screens"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "MessageComposer",
+        "role": "canonical"
       },
       {
         "name": "ModerationScreen",
@@ -1030,8 +1070,8 @@
         "entries": [
           "./screen-flows"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "ModerationScreen",
+        "role": "canonical"
       },
       {
         "name": "MorphingMenu",
@@ -1086,8 +1126,8 @@
         "entries": [
           "./screens"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "NotificationInboxScreen",
+        "role": "canonical"
       },
       {
         "name": "NotificationItem",
@@ -1095,8 +1135,8 @@
         "entries": [
           "./screens"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "NotificationItem",
+        "role": "canonical"
       },
       {
         "name": "NotificationRow",
@@ -1104,8 +1144,8 @@
         "entries": [
           "./screens"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "NotificationRow",
+        "role": "canonical"
       },
       {
         "name": "NumberField",
@@ -1124,8 +1164,8 @@
         "entries": [
           "./screen-flows"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "OnboardingScreen",
+        "role": "canonical"
       },
       {
         "name": "OtpField",
@@ -1194,8 +1234,8 @@
         "entries": [
           "./screen-flows"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "PermissionScreen",
+        "role": "canonical"
       },
       {
         "name": "PhotoSourceSheet",
@@ -1203,8 +1243,8 @@
         "entries": [
           "./screen-flows"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "PhotoSourceSheet",
+        "role": "canonical"
       },
       {
         "name": "PieChart",
@@ -1240,8 +1280,8 @@
         "entries": [
           "./screen-flows"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "ProfileScreen",
+        "role": "canonical"
       },
       {
         "name": "ProfileSummary",
@@ -1249,8 +1289,8 @@
         "entries": [
           "./screen-flows"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "ProfileSummary",
+        "role": "canonical"
       },
       {
         "name": "Progress",
@@ -1388,8 +1428,8 @@
         "entries": [
           "./screens"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "ScreenLayout",
+        "role": "canonical"
       },
       {
         "name": "ScrollProgress",
@@ -1416,8 +1456,8 @@
         "entries": [
           "./screen-flows"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "SearchScreen",
+        "role": "canonical"
       },
       {
         "name": "Section",
@@ -1464,8 +1504,8 @@
         "entries": [
           "./screens"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "SettingsScreen",
+        "role": "canonical"
       },
       {
         "name": "Sheet",
@@ -2093,6 +2133,26 @@
         "role": "canonical"
       },
       {
+        "name": "AuthScreenFooter",
+        "source": "packages/react-native/src/auth-screen.tsx",
+        "entries": [
+          ".",
+          "./auth-screen"
+        ],
+        "canonicalComponent": "AuthScreenLayout",
+        "role": "companion-or-alternative"
+      },
+      {
+        "name": "AuthScreenHero",
+        "source": "packages/react-native/src/auth-screen.tsx",
+        "entries": [
+          ".",
+          "./auth-screen"
+        ],
+        "canonicalComponent": "AuthScreenLayout",
+        "role": "companion-or-alternative"
+      },
+      {
         "name": "AuthScreenLayout",
         "source": "packages/react-native/src/auth-screen.tsx",
         "entries": [
@@ -2246,8 +2306,8 @@
         "entries": [
           "./screens"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "ChatMessage",
+        "role": "canonical"
       },
       {
         "name": "ChatScreen",
@@ -2255,8 +2315,8 @@
         "entries": [
           "./screens"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "ChatScreen",
+        "role": "canonical"
       },
       {
         "name": "Checkbox",
@@ -2317,6 +2377,16 @@
         "role": "canonical"
       },
       {
+        "name": "CollapsibleMarker",
+        "source": "packages/react-native/src/collapsible.tsx",
+        "entries": [
+          ".",
+          "./collapsible"
+        ],
+        "canonicalComponent": "Collapsible",
+        "role": "companion-or-alternative"
+      },
+      {
         "name": "CollectionRail",
         "source": "packages/react-native/src/collection-rail.tsx",
         "entries": [
@@ -2341,8 +2411,8 @@
         "entries": [
           "./screen-flows"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "CommentThreadRow",
+        "role": "canonical"
       },
       {
         "name": "CommentThreadScreen",
@@ -2350,8 +2420,8 @@
         "entries": [
           "./screen-flows"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "CommentThreadScreen",
+        "role": "canonical"
       },
       {
         "name": "ComparisonTable",
@@ -2368,8 +2438,8 @@
         "entries": [
           "./screens"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "CompositionLayout",
+        "role": "canonical"
       },
       {
         "name": "Container",
@@ -2529,8 +2599,8 @@
         "entries": [
           "./screen-flows"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "EditorScreen",
+        "role": "canonical"
       },
       {
         "name": "EffectSurface",
@@ -2757,8 +2827,8 @@
         "entries": [
           "./screens"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "IconTile",
+        "role": "canonical"
       },
       {
         "name": "Image",
@@ -2925,8 +2995,8 @@
         "entries": [
           "./screen-flows"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "ListDetailScreen",
+        "role": "canonical"
       },
       {
         "name": "ListRow",
@@ -2973,8 +3043,8 @@
         "entries": [
           "./screen-flows"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "MediaSelectionScreen",
+        "role": "canonical"
       },
       {
         "name": "MediaTransport",
@@ -3012,8 +3082,8 @@
         "entries": [
           "./screens"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "MessageComposer",
+        "role": "canonical"
       },
       {
         "name": "ModerationScreen",
@@ -3021,8 +3091,8 @@
         "entries": [
           "./screen-flows"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "ModerationScreen",
+        "role": "canonical"
       },
       {
         "name": "NativeContextMenu",
@@ -3067,8 +3137,8 @@
         "entries": [
           "./screens"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "NotificationInboxScreen",
+        "role": "canonical"
       },
       {
         "name": "NotificationItem",
@@ -3076,8 +3146,8 @@
         "entries": [
           "./screens"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "NotificationItem",
+        "role": "canonical"
       },
       {
         "name": "NotificationRow",
@@ -3085,8 +3155,8 @@
         "entries": [
           "./screens"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "NotificationRow",
+        "role": "canonical"
       },
       {
         "name": "NumberField",
@@ -3105,8 +3175,8 @@
         "entries": [
           "./screen-flows"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "OnboardingScreen",
+        "role": "canonical"
       },
       {
         "name": "OtpField",
@@ -3164,8 +3234,8 @@
         "entries": [
           "./screen-flows"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "PermissionScreen",
+        "role": "canonical"
       },
       {
         "name": "PhotoSourceSheet",
@@ -3173,8 +3243,8 @@
         "entries": [
           "./screen-flows"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "PhotoSourceSheet",
+        "role": "canonical"
       },
       {
         "name": "PieChart",
@@ -3200,8 +3270,8 @@
         "entries": [
           "./screen-flows"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "ProfileScreen",
+        "role": "canonical"
       },
       {
         "name": "ProfileSummary",
@@ -3209,8 +3279,8 @@
         "entries": [
           "./screen-flows"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "ProfileSummary",
+        "role": "canonical"
       },
       {
         "name": "Progress",
@@ -3348,8 +3418,8 @@
         "entries": [
           "./screens"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "ScreenLayout",
+        "role": "canonical"
       },
       {
         "name": "ScrollProgress",
@@ -3376,8 +3446,8 @@
         "entries": [
           "./screen-flows"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "SearchScreen",
+        "role": "canonical"
       },
       {
         "name": "Section",
@@ -3424,8 +3494,8 @@
         "entries": [
           "./screens"
         ],
-        "canonicalComponent": null,
-        "role": "supplemental"
+        "canonicalComponent": "SettingsScreen",
+        "role": "canonical"
       },
       {
         "name": "SharedTransitionElement",

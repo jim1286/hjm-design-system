@@ -1,99 +1,31 @@
-import * as masonry from "../src/masonry.js";
-import * as virtualList from "../src/virtual-list.js";
-import * as qrCode from "../src/qr-code.js";
-import * as agreement from "../src/agreement.js";
-import * as calendar from "../src/calendar.js";
-import * as providerButton from "../src/provider-button.js";
-import * as authScreen from "../src/auth-screen.js";
-import * as headingModule from "../src/heading.js";
-import * as bottomInfo from "../src/bottom-info.js";
-import * as collapsible from "../src/collapsible.js";
-import * as asset from "../src/asset.js";
-import * as tagsInput from "../src/tags-input.js";
-import * as dateRange from "../src/date-range.js";
-import * as mentions from "../src/mentions.js";
-import * as transferList from "../src/transfer-list.js";
-import * as toggleGroup from "../src/toggle-group.js";
-import * as top from "../src/top.js";
-import * as floatingActionButton from "../src/floating-action-button.js";
-import * as carousel from "../src/carousel.js";
 import { readFile } from "node:fs/promises";
 import { URL, fileURLToPath } from "node:url";
 import { describe, expect, it, vi } from "vitest";
-import * as thinkingOrb from "../src/thinking-orb.js";
+import { componentCatalog, getComponentSurfaceStatus, type ComponentCatalogEntry } from "@hjmds/design-contracts";
 // This test checks real public exports, not native binary loading; installed linkage
 // is covered by the documented iOS/Android showcase smoke.
 vi.mock("react-native-reanimated", () => ({ useSharedValue: vi.fn() }));
 vi.mock("@shopify/react-native-skia", () => ({}));
 vi.mock("react-native-svg", () => ({}));
 
-import * as actions from "../src/actions.js";
-import * as screens from "../src/screens.js";
-import * as screenFlows from "../src/screen-flows.js";
-import * as dataDisplay from "../src/data-display.js";
-import * as datePicker from "../src/date-picker.js";
 import {
   reactNativeRendererEvidence,
   reactNativeRendererEvidenceSchemaVersion,
 } from "../src/evidence.js";
-import * as feedback from "../src/feedback.js";
-import * as filePicker from "../src/file-picker.js";
-import * as forms from "../src/forms.js";
-import * as inputs from "../src/inputs.js";
-import * as navigation from "../src/navigation.js";
-import * as numberField from "../src/number-field.js";
-import * as overlays from "../src/overlays.js";
-import * as otpField from "../src/otp-field.js";
-import * as passwordField from "../src/password-field.js";
-import * as primitives from "../src/primitives.js";
-import * as provider from "../src/provider.js";
-import * as slider from "../src/slider.js";
-import * as steps from "../src/steps.js";
-import * as uploadItem from "../src/upload-item.js";
-import * as imageChoice from "../src/image-choice.js";
 
-const publicModules: Readonly<Record<string, Readonly<Record<string, unknown>>>> = {
-  "./thinking-orb": thinkingOrb,
-  "./masonry": masonry,
-  "./virtual-list": virtualList,
-  "./qr-code": qrCode,
-  "./carousel": carousel,
-  "./floating-action-button": floatingActionButton,
-  "./actions": actions,
-  "./screens": screens,
-  "./screen-flows": screenFlows,
-  "./data-display": dataDisplay,
-  "./date-picker": datePicker,
-  "./calendar": calendar,
-  "./agreement": agreement,
-  "./top": top,
-  "./heading": headingModule,
-  "./toggle-group": toggleGroup,
-  "./bottom-info": bottomInfo,
-  "./collapsible": collapsible,
-  "./asset": asset,
-  "./tags-input": tagsInput,
-  "./date-range": dateRange,
-  "./mentions": mentions,
-  "./transfer-list": transferList,
-  "./provider-button": providerButton,
-  "./auth-screen": authScreen,
-  "./feedback": feedback,
-  "./file-picker": filePicker,
-  "./forms": forms,
-  "./inputs": inputs,
-  "./navigation": navigation,
-  "./number-field": numberField,
-  "./overlays": overlays,
-  "./otp-field": otpField,
-  "./password-field": passwordField,
-  "./primitives": primitives,
-  "./provider": provider,
-  "./slider": slider,
-  "./steps": steps,
-  "./upload-item": uploadItem,
-  "./image-choice": imageChoice,
-};
+// Resolve a claim's subpath through package.json exports to its source module, so the test does not keep a
+// second hand-written subpath → module map that every new entry had to extend (2026-10-18).
+const sourceModules = import.meta.glob<Readonly<Record<string, unknown>>>("../src/*.{ts,tsx}");
+const packageExports = (JSON.parse(await readFile(fileURLToPath(new URL("../package.json", import.meta.url)), "utf8")) as {
+  exports: Record<string, { import?: string }>;
+}).exports;
+async function publicModule(subpath: string): Promise<Readonly<Record<string, unknown>> | undefined> {
+  const target = packageExports[subpath]?.import;
+  if (!target) return undefined;
+  const base = target.replace(/^\.\/dist\//, "../src/").replace(/\.js$/, "");
+  const loader = sourceModules[`${base}.tsx`] ?? sourceModules[`${base}.ts`];
+  return loader ? loader() : undefined;
+}
 
 describe("@hjmds/react-native renderer evidence", () => {
   it("is versioned, unique, and tied to the package release", async () => {
@@ -110,7 +42,9 @@ describe("@hjmds/react-native renderer evidence", () => {
     const componentIds = reactNativeRendererEvidence.components.map(
       ({ componentId }) => componentId,
     );
-    expect(componentIds).toHaveLength(105);
+    // One claim per active Native row of the catalog (evidence.ts derives them); the count is not a second list.
+    const activeNativeRows = (componentCatalog as readonly ComponentCatalogEntry[]).filter((entry) => ["stable", "beta"].includes(getComponentSurfaceStatus(entry, "native")));
+    expect(componentIds).toHaveLength(activeNativeRows.length);
     expect(componentIds).toContain("thinking-orb");
     expect(componentIds).toContain("combobox");
     expect(componentIds).toContain("load-more");
@@ -119,8 +53,8 @@ describe("@hjmds/react-native renderer evidence", () => {
 
   it("only claims real granular exports and executable proof for every scenario", async () => {
     for (const component of reactNativeRendererEvidence.components) {
-      const publicModule = publicModules[component.subpath];
-      expect(publicModule, component.subpath).toBeDefined();
+      const module = await publicModule(component.subpath);
+      expect(module, component.subpath).toBeDefined();
       expect(component.exportNames.length, component.componentId).toBeGreaterThan(0);
       expect(component.scenarios.length, component.componentId).toBeGreaterThan(0);
       expect(new Set(component.exportNames).size, component.componentId).toBe(
@@ -150,7 +84,7 @@ describe("@hjmds/react-native renderer evidence", () => {
         expect([proofText, ...importedFixtures].join("\n"), proof.file).toContain(`componentId: "${proof.caseId}"`);
       }
       for (const exportName of component.exportNames) {
-        expect(publicModule, component.subpath).toHaveProperty(exportName);
+        expect(module, component.subpath).toHaveProperty(exportName);
       }
     }
   });

@@ -34,6 +34,17 @@ export type ComponentCatalogEntry = Readonly<{
     /** Why the row exists at its current maturity and what event moves it forward. */
     roadmap?: ComponentRoadmap;
     /**
+     * Stable kebab-case id. Defaults to the kebab form of `name` (`componentIdOf`). Set it only when a row
+     * was renamed after its id shipped, so documentation keys and consumer catalog snapshots survive.
+     */
+    id?: string;
+    /** Purpose-based Korean item name used by both Storybooks (docs/STORYBOOK_NAVIGATION.md §1.3). */
+    label?: string;
+    /** Public renderer symbols that are named regions or variants of this contract, not rows of their own. */
+    companions?: readonly string[];
+    /** Optional extensions that reuse this contract without inheriting its maturity (public-component-map.md). */
+    extensions?: readonly string[];
+    /**
      * 만들지 않기로 **확정한** 항목의 사유. `status`는 구현 성숙도 축이고 이것은
      * "만들 것인가"라는 다른 질문이라 직교 필드로 둔다.
      *
@@ -75,6 +86,9 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Text";
+    readonly label: "본문 글자";
+    readonly companions: readonly ["StatusText"];
+    readonly extensions: readonly ["GravityLetters"];
     readonly category: "foundation";
     readonly platform: "shared";
     readonly status: "stable";
@@ -87,6 +101,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "unsupported";
     };
     readonly name: "TextFormat";
+    readonly label: "글자 서식";
     readonly category: "foundation";
     readonly platform: "web";
     readonly status: "stable";
@@ -98,6 +113,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Heading";
+    readonly label: "제목";
     readonly category: "foundation";
     readonly platform: "shared";
     readonly status: "stable";
@@ -108,6 +124,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Icon";
+    readonly label: "아이콘";
     readonly category: "foundation";
     readonly platform: "shared";
     readonly status: "stable";
@@ -118,6 +135,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Surface";
+    readonly label: "배경 영역";
     readonly category: "layout";
     readonly platform: "shared";
     readonly status: "stable";
@@ -128,6 +146,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Divider";
+    readonly label: "구분선";
     readonly category: "layout";
     readonly platform: "shared";
     readonly status: "stable";
@@ -138,6 +157,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Section";
+    readonly label: "섹션";
     readonly category: "layout";
     readonly platform: "shared";
     readonly status: "stable";
@@ -149,6 +169,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Stack";
+    readonly label: "가로·세로 배치";
     readonly category: "layout";
     readonly platform: "shared";
     readonly status: "stable";
@@ -159,6 +180,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Container";
+    readonly label: "컨테이너";
     readonly category: "layout";
     readonly platform: "shared";
     readonly status: "stable";
@@ -173,6 +195,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "AspectRatio";
+    readonly label: "화면 비율";
     readonly category: "layout";
     readonly platform: "shared";
     readonly status: "stable";
@@ -187,6 +210,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Grid";
+    readonly label: "격자";
     readonly category: "layout";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -203,6 +227,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Layout";
+    readonly label: "화면 기본 구조";
     readonly category: "layout";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -214,6 +239,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Top";
+    readonly label: "화면 제목과 설명";
     readonly category: "layout";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -224,6 +250,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Masonry";
+    readonly label: "높이가 다른 카드 배치";
     readonly category: "layout";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -240,6 +267,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "unsupported";
     };
     readonly name: "Splitter";
+    readonly label: "분할 영역 조절";
     readonly category: "layout";
     readonly platform: "web";
     readonly status: "stable";
@@ -250,6 +278,9 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Button";
+    readonly label: "버튼";
+    readonly companions: readonly ["ClipboardButton"];
+    readonly extensions: readonly ["ReactionPicker", "InlineConfirm"];
     readonly category: "action";
     readonly platform: "shared";
     readonly status: "stable";
@@ -260,6 +291,9 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "IconButton";
+    readonly label: "아이콘 버튼";
+    readonly companions: readonly ["ClipboardIconButton"];
+    readonly extensions: readonly ["NotificationBell"];
     readonly category: "action";
     readonly platform: "shared";
     readonly status: "stable";
@@ -271,6 +305,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Link";
+    readonly label: "링크";
     readonly category: "action";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -281,6 +316,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "BottomCTA";
+    readonly label: "하단 실행 버튼";
     readonly category: "action";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -297,6 +333,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "FloatingActionButton";
+    readonly label: "플로팅 실행 버튼";
     readonly category: "action";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -313,6 +350,9 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "AuthScreenLayout";
+    readonly label: "로그인 화면";
+    readonly id: "auth-screen";
+    readonly companions: readonly ["AuthScreenHero", "AuthScreenFooter"];
     readonly category: "layout";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -329,6 +369,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "AuthProviderButton";
+    readonly label: "소셜 로그인 버튼";
     readonly category: "action";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -340,6 +381,9 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Field";
+    readonly label: "입력 필드";
+    readonly companions: readonly ["TextField"];
+    readonly extensions: readonly ["FieldGroup", "DateEntry", "GestureSheetInput"];
     readonly category: "input";
     readonly platform: "shared";
     readonly status: "stable";
@@ -351,6 +395,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "SearchField";
+    readonly label: "검색 입력";
     readonly category: "input";
     readonly platform: "shared";
     readonly status: "stable";
@@ -361,6 +406,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "TextArea";
+    readonly label: "여러 줄 입력";
     readonly category: "input";
     readonly platform: "shared";
     readonly status: "stable";
@@ -373,6 +419,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "PasswordField";
+    readonly label: "비밀번호 입력";
     readonly category: "input";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -385,6 +432,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "OtpField";
+    readonly label: "인증번호 입력";
     readonly category: "input";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -396,6 +444,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Checkbox";
+    readonly label: "체크박스";
     readonly category: "input";
     readonly platform: "shared";
     readonly status: "stable";
@@ -406,6 +455,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Radio";
+    readonly label: "라디오 버튼";
     readonly category: "input";
     readonly platform: "shared";
     readonly status: "stable";
@@ -417,6 +467,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "CheckboxGroup";
+    readonly label: "체크박스 그룹";
     readonly category: "input";
     readonly platform: "shared";
     readonly status: "stable";
@@ -428,6 +479,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "RadioGroup";
+    readonly label: "라디오 버튼 그룹";
     readonly category: "input";
     readonly platform: "shared";
     readonly status: "stable";
@@ -439,6 +491,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Switch";
+    readonly label: "스위치";
     readonly category: "input";
     readonly platform: "shared";
     readonly status: "stable";
@@ -450,6 +503,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Chip";
+    readonly label: "선택 칩";
     readonly category: "input";
     readonly platform: "shared";
     readonly status: "stable";
@@ -460,6 +514,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "beta";
     };
     readonly name: "ImageChoiceGroup";
+    readonly label: "이미지 선택";
     readonly category: "input";
     readonly platform: "shared";
     readonly status: "beta";
@@ -471,6 +526,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "SegmentedControl";
+    readonly label: "버튼형 선택";
     readonly category: "input";
     readonly platform: "shared";
     readonly status: "stable";
@@ -486,6 +542,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "ToggleGroup";
+    readonly label: "토글 그룹";
     readonly category: "input";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -502,6 +559,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "TagsInput";
+    readonly label: "태그 입력";
     readonly category: "input";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -517,6 +575,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Slider";
+    readonly label: "슬라이더";
     readonly category: "input";
     readonly platform: "shared";
     readonly status: "stable";
@@ -528,6 +587,8 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "NumberField";
+    readonly label: "숫자 입력";
+    readonly extensions: readonly ["DurationField"];
     readonly category: "input";
     readonly platform: "shared";
     readonly status: "stable";
@@ -539,6 +600,8 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Select";
+    readonly label: "목록에서 선택";
+    readonly companions: readonly ["NativeSelect"];
     readonly category: "input";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -554,6 +617,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Combobox";
+    readonly label: "검색형 선택";
     readonly category: "input";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -565,6 +629,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "DatePicker";
+    readonly label: "날짜 선택";
     readonly category: "input";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -577,6 +642,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "DateRangePicker";
+    readonly label: "기간 선택";
     readonly category: "input";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -587,6 +653,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "unsupported";
     };
     readonly name: "ColorPicker";
+    readonly label: "색상 선택기";
     readonly category: "input";
     readonly platform: "web";
     readonly status: "stable";
@@ -603,6 +670,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "FilePicker";
+    readonly label: "파일 선택";
     readonly category: "input";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -614,6 +682,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Form";
+    readonly label: "입력 양식";
     readonly category: "input";
     readonly platform: "shared";
     readonly status: "stable";
@@ -629,6 +698,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Agreement";
+    readonly label: "약관 동의";
     readonly category: "input";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -640,6 +710,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Mentions";
+    readonly label: "사용자 언급";
     readonly category: "input";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -652,6 +723,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "TransferList";
+    readonly label: "목록 간 항목 이동";
     readonly category: "input";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -663,6 +735,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "UploadItem";
+    readonly label: "업로드 항목";
     readonly category: "data-display";
     readonly platform: "shared";
     readonly status: "stable";
@@ -678,6 +751,8 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Tabs";
+    readonly label: "탭";
+    readonly companions: readonly ["TabPanel"];
     readonly category: "navigation";
     readonly platform: "shared";
     readonly status: "stable";
@@ -688,6 +763,8 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "TopBar";
+    readonly label: "상단 탐색 막대";
+    readonly companions: readonly ["NavigationBar", "TopBarAction"];
     readonly category: "navigation";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -700,6 +777,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "unsupported";
     };
     readonly name: "Sidebar";
+    readonly label: "사이드바";
     readonly category: "navigation";
     readonly platform: "web";
     readonly status: "stable";
@@ -715,6 +793,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "BottomNavigation";
+    readonly label: "하단 탐색";
     readonly category: "navigation";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -726,6 +805,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "unsupported";
     };
     readonly name: "Breadcrumb";
+    readonly label: "이동 경로";
     readonly category: "navigation";
     readonly platform: "web";
     readonly status: "stable";
@@ -737,6 +817,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "beta";
     };
     readonly name: "Pagination";
+    readonly label: "페이지 이동";
     readonly category: "navigation";
     readonly platform: "shared";
     readonly status: "stable";
@@ -752,6 +833,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "LoadMore";
+    readonly label: "더 보기";
     readonly category: "navigation";
     readonly platform: "shared";
     readonly status: "stable";
@@ -766,6 +848,8 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Steps";
+    readonly label: "단계 탐색";
+    readonly extensions: readonly ["StepPlayer"];
     readonly category: "navigation";
     readonly platform: "shared";
     readonly status: "stable";
@@ -777,6 +861,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "unsupported";
     };
     readonly name: "Menubar";
+    readonly label: "메뉴 막대";
     readonly category: "navigation";
     readonly platform: "web";
     readonly status: "stable";
@@ -788,6 +873,8 @@ export declare const componentCatalog: readonly [{
         readonly native: "unsupported";
     };
     readonly name: "ContextMenu";
+    readonly label: "상황별 메뉴";
+    readonly extensions: readonly ["NativeContextMenu"];
     readonly category: "navigation";
     readonly platform: "web";
     readonly status: "stable";
@@ -800,6 +887,8 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Menu";
+    readonly label: "메뉴";
+    readonly extensions: readonly ["MorphingMenu"];
     readonly category: "navigation";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -811,6 +900,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "unsupported";
     };
     readonly name: "Anchor";
+    readonly label: "문서 내 바로가기";
     readonly category: "navigation";
     readonly platform: "web";
     readonly status: "stable";
@@ -821,6 +911,8 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Avatar";
+    readonly label: "아바타";
+    readonly companions: readonly ["AvatarGroup"];
     readonly category: "data-display";
     readonly platform: "shared";
     readonly status: "stable";
@@ -837,6 +929,9 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Asset";
+    readonly label: "이미지·영상 표시";
+    readonly companions: readonly ["AssetGroup"];
+    readonly extensions: readonly ["VoiceNote"];
     readonly category: "data-display";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -847,6 +942,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Badge";
+    readonly label: "배지";
     readonly category: "data-display";
     readonly platform: "shared";
     readonly status: "stable";
@@ -857,6 +953,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "CounterBadge";
+    readonly label: "숫자 배지";
     readonly category: "data-display";
     readonly platform: "shared";
     readonly status: "stable";
@@ -867,6 +964,8 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Card";
+    readonly label: "카드";
+    readonly extensions: readonly ["DocumentResource"];
     readonly category: "data-display";
     readonly platform: "shared";
     readonly status: "stable";
@@ -877,6 +976,9 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "List";
+    readonly label: "목록";
+    readonly companions: readonly ["CollectionRail"];
+    readonly extensions: readonly ["TaskList"];
     readonly category: "data-display";
     readonly platform: "shared";
     readonly status: "stable";
@@ -887,6 +989,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "ListRow";
+    readonly label: "목록 행";
     readonly category: "data-display";
     readonly platform: "shared";
     readonly status: "stable";
@@ -898,6 +1001,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "VirtualList";
+    readonly label: "가상 목록";
     readonly category: "data-display";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -910,6 +1014,9 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Collapsible";
+    readonly label: "접기와 펼치기";
+    readonly companions: readonly ["CollapsibleMarker"];
+    readonly extensions: readonly ["FolderPreview"];
     readonly category: "data-display";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -925,6 +1032,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Accordion";
+    readonly label: "아코디언";
     readonly category: "data-display";
     readonly platform: "shared";
     readonly status: "stable";
@@ -935,6 +1043,9 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Statistic";
+    readonly label: "수치 표시";
+    readonly companions: readonly ["StatisticGroup"];
+    readonly extensions: readonly ["AnimatedStatistic"];
     readonly category: "data-display";
     readonly platform: "shared";
     readonly status: "stable";
@@ -949,6 +1060,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Timeline";
+    readonly label: "타임라인";
     readonly category: "data-display";
     readonly platform: "shared";
     readonly status: "stable";
@@ -960,6 +1072,8 @@ export declare const componentCatalog: readonly [{
         readonly native: "beta";
     };
     readonly name: "DataTable";
+    readonly label: "데이터 표";
+    readonly companions: readonly ["Table", "LineScore", "MatrixTable", "ComparisonTable"];
     readonly category: "data-display";
     readonly platform: "shared";
     readonly status: "stable";
@@ -971,6 +1085,8 @@ export declare const componentCatalog: readonly [{
         readonly native: "beta";
     };
     readonly name: "Chart";
+    readonly label: "차트";
+    readonly companions: readonly ["LineChart", "BarChart", "PieChart", "RadarChart", "ScatterChart", "Sparkline", "ChartLegend"];
     readonly category: "data-display";
     readonly platform: "shared";
     readonly status: "beta";
@@ -982,6 +1098,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "unsupported";
     };
     readonly name: "Tree";
+    readonly label: "트리 목록";
     readonly category: "data-display";
     readonly platform: "web";
     readonly status: "stable";
@@ -993,6 +1110,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Calendar";
+    readonly label: "달력";
     readonly category: "data-display";
     readonly platform: "shared";
     readonly status: "stable";
@@ -1004,6 +1122,8 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Carousel";
+    readonly label: "캐러셀";
+    readonly extensions: readonly ["CarouselMotion"];
     readonly category: "data-display";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -1015,6 +1135,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "DescriptionList";
+    readonly label: "설명 목록";
     readonly category: "data-display";
     readonly platform: "shared";
     readonly status: "stable";
@@ -1029,6 +1150,8 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Image";
+    readonly label: "이미지";
+    readonly extensions: readonly ["GridReveal", "ImageViewer"];
     readonly category: "data-display";
     readonly platform: "shared";
     readonly status: "stable";
@@ -1039,6 +1162,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "QRCode";
+    readonly label: "큐알 코드";
     readonly category: "data-display";
     readonly platform: "shared";
     readonly status: "stable";
@@ -1049,6 +1173,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Tag";
+    readonly label: "태그";
     readonly category: "data-display";
     readonly platform: "shared";
     readonly status: "stable";
@@ -1061,6 +1186,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "unsupported";
     };
     readonly name: "Tour";
+    readonly label: "사용 안내 둘러보기";
     readonly category: "overlay";
     readonly platform: "web";
     readonly status: "stable";
@@ -1071,6 +1197,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "EmptyState";
+    readonly label: "빈 상태";
     readonly category: "feedback";
     readonly platform: "shared";
     readonly status: "stable";
@@ -1081,6 +1208,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Notice";
+    readonly label: "안내 메시지";
     readonly category: "feedback";
     readonly platform: "shared";
     readonly status: "stable";
@@ -1091,6 +1219,8 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Progress";
+    readonly label: "진행 표시";
+    readonly extensions: readonly ["ScrollProgress"];
     readonly category: "feedback";
     readonly platform: "shared";
     readonly status: "stable";
@@ -1101,6 +1231,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "ThinkingOrb";
+    readonly label: "생각 중 표시";
     readonly category: "feedback";
     readonly platform: "shared";
     readonly status: "stable";
@@ -1111,6 +1242,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Spinner";
+    readonly label: "로딩 표시";
     readonly category: "feedback";
     readonly platform: "shared";
     readonly status: "stable";
@@ -1121,6 +1253,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Skeleton";
+    readonly label: "스켈레톤";
     readonly category: "feedback";
     readonly platform: "shared";
     readonly status: "stable";
@@ -1131,6 +1264,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Result";
+    readonly label: "결과 안내";
     readonly category: "feedback";
     readonly platform: "shared";
     readonly status: "stable";
@@ -1146,6 +1280,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "BottomInfo";
+    readonly label: "하단 안내";
     readonly category: "feedback";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -1158,6 +1293,8 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Toast";
+    readonly label: "토스트";
+    readonly companions: readonly ["ToastProvider", "ToastRegion"];
     readonly category: "feedback";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -1168,6 +1305,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "unsupported";
     };
     readonly name: "Watermark";
+    readonly label: "워터마크";
     readonly category: "feedback";
     readonly platform: "web";
     readonly status: "stable";
@@ -1179,6 +1317,8 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Dialog";
+    readonly label: "대화상자";
+    readonly companions: readonly ["OverlayStackProvider"];
     readonly category: "overlay";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -1190,6 +1330,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "AlertDialog";
+    readonly label: "확인 대화상자";
     readonly category: "overlay";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -1201,6 +1342,8 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Sheet";
+    readonly label: "시트";
+    readonly extensions: readonly ["GestureSheet", "GestureSheetProvider"];
     readonly category: "overlay";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -1212,6 +1355,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "unsupported";
     };
     readonly name: "SidePanel";
+    readonly label: "측면 패널";
     readonly category: "overlay";
     readonly platform: "web";
     readonly status: "stable";
@@ -1223,6 +1367,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "unsupported";
     };
     readonly name: "Popover";
+    readonly label: "팝오버";
     readonly category: "overlay";
     readonly platform: "web";
     readonly status: "stable";
@@ -1234,6 +1379,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "unsupported";
     };
     readonly name: "Tooltip";
+    readonly label: "툴팁";
     readonly category: "overlay";
     readonly platform: "web";
     readonly status: "stable";
@@ -1245,6 +1391,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "unsupported";
     };
     readonly name: "CommandPalette";
+    readonly label: "명령 검색";
     readonly category: "overlay";
     readonly platform: "web";
     readonly status: "stable";
@@ -1255,6 +1402,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "unsupported";
     };
     readonly name: "Affix";
+    readonly label: "고정 배치";
     readonly category: "utility";
     readonly platform: "web";
     readonly status: "stable";
@@ -1266,6 +1414,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "DesignSystemProvider";
+    readonly label: "디자인 시스템 설정";
     readonly category: "provider";
     readonly platform: "shared";
     readonly status: "stable";
@@ -1278,6 +1427,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "unsupported";
     };
     readonly name: "SkipNav";
+    readonly label: "본문 바로가기";
     readonly category: "utility";
     readonly platform: "web";
     readonly status: "stable";
@@ -1293,231 +1443,259 @@ export declare const componentCatalog: readonly [{
         readonly native: "unsupported";
     };
     readonly name: "VisuallyHidden";
+    readonly label: "화면 읽기 도구용 글자";
     readonly category: "utility";
     readonly platform: "web";
     readonly status: "stable";
 }, {
     readonly recipe: "screenPatternRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "ScreenLayout";
+    readonly label: "화면 골격";
     readonly category: "layout";
     readonly platform: "adaptive";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "screenPatternRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "CompositionLayout";
+    readonly label: "구성 골격";
     readonly category: "layout";
     readonly platform: "adaptive";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "screenPatternRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "SettingsScreen";
+    readonly label: "설정 화면";
     readonly category: "layout";
     readonly platform: "adaptive";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "searchScreenRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "SearchScreen";
+    readonly label: "검색 화면";
     readonly category: "layout";
     readonly platform: "adaptive";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "screenPatternRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "EditorScreen";
+    readonly label: "편집 화면";
     readonly category: "layout";
     readonly platform: "adaptive";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "screenPatternRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "PermissionScreen";
+    readonly label: "권한 화면";
     readonly category: "layout";
     readonly platform: "adaptive";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "screenPatternRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "OnboardingScreen";
+    readonly label: "온보딩 화면";
     readonly category: "layout";
     readonly platform: "adaptive";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "screenPatternRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "ModerationScreen";
+    readonly label: "신고 화면";
     readonly category: "layout";
     readonly platform: "adaptive";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "screenPatternRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "ChatScreen";
+    readonly label: "채팅 화면";
     readonly category: "layout";
     readonly platform: "adaptive";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "screenPatternRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "NotificationInboxScreen";
+    readonly label: "알림함 화면";
     readonly category: "layout";
     readonly platform: "adaptive";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "commentThreadRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "CommentThreadScreen";
+    readonly label: "댓글 화면";
     readonly category: "layout";
     readonly platform: "adaptive";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "screenPatternRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "ListDetailScreen";
+    readonly label: "목록 상세 화면";
     readonly category: "layout";
     readonly platform: "adaptive";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "screenPatternRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "MediaSelectionScreen";
+    readonly label: "미디어 선택 화면";
     readonly category: "layout";
     readonly platform: "adaptive";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "screenPatternRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "ProfileScreen";
+    readonly label: "프로필 화면";
     readonly category: "layout";
     readonly platform: "adaptive";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "chatMessageRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "ChatMessage";
+    readonly label: "채팅 말풍선";
     readonly category: "data-display";
     readonly platform: "adaptive";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "notificationRowRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "NotificationRow";
+    readonly label: "알림 미리보기 행";
     readonly category: "data-display";
     readonly platform: "adaptive";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "listRowRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "NotificationItem";
+    readonly label: "알림 목록 항목";
     readonly category: "data-display";
     readonly platform: "adaptive";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "commentThreadRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "CommentThreadRow";
+    readonly label: "댓글 행";
     readonly category: "data-display";
     readonly platform: "adaptive";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "profileSummaryRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "ProfileSummary";
+    readonly label: "프로필 요약";
     readonly category: "data-display";
     readonly platform: "adaptive";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "iconTileRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "IconTile";
+    readonly label: "아이콘 타일";
     readonly category: "data-display";
     readonly platform: "adaptive";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "composerQuickInsertRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "MessageComposer";
+    readonly label: "메시지 작성창";
     readonly category: "input";
     readonly platform: "adaptive";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "sheetRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "PhotoSourceSheet";
+    readonly label: "사진 출처 시트";
     readonly category: "overlay";
     readonly platform: "adaptive";
-    readonly status: "beta";
+    readonly status: "stable";
 }];
 export type ComponentName = (typeof componentCatalog)[number]["name"];
+/**
+ * Kebab id of a catalog row: the explicit `id` override, else the kebab form of `name`
+ * (QRCode → qr-code, BottomCTA → bottom-cta). `component-definitions.ts` mirrors this at the type level.
+ */
+export declare function componentIdOf(entry: Pick<ComponentCatalogEntry, "name" | "id">): string;
 export declare function summarizeComponentRoadmap(entries?: readonly ComponentCatalogEntry[]): Readonly<Record<ComponentRoadmapState, number>>;
 /** One typed registry prevents catalog recipe names from drifting into strings. */
 export declare const recipeRegistry: {

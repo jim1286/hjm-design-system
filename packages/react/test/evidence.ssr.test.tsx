@@ -1,134 +1,26 @@
-import * as affix from "../src/affix.js";
-import * as watermark from "../src/watermark.js";
-import * as colorPicker from "../src/color-picker.js";
-import * as masonry from "../src/masonry.js";
-import * as virtualList from "../src/virtual-list.js";
-import * as qrCode from "../src/qr-code.js";
-import * as thinkingOrb from "../src/thinking-orb.js";
-import * as popover from "../src/popover.js";
-import * as anchor from "../src/anchor.js";
-import * as pagination from "../src/pagination.js";
-import * as breadcrumb from "../src/breadcrumb.js";
-import * as calendar from "../src/calendar.js";
-import * as floatingActionButton from "../src/floating-action-button.js";
-import * as topBar from "../src/top-bar.js";
-import * as bottomCta from "../src/bottom-cta.js";
-import * as carousel from "../src/carousel.js";
 import { readFile } from "node:fs/promises";
 import { URL, fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
+import { componentCatalog, getComponentSurfaceStatus, type ComponentCatalogEntry } from "@hjmds/design-contracts";
 
-import * as actions from "../src/actions.js";
-import * as screens from "../src/screens.js";
-import * as screenFlows from "../src/screen-flows.js";
-import * as datePicker from "../src/date-picker.js";
-import * as display from "../src/display-public.js";
 import {
   reactRendererEvidence,
   reactRendererEvidenceSchemaVersion,
 } from "../src/evidence.js";
-import * as feedback from "../src/feedback.js";
-import * as filePicker from "../src/file-picker.js";
-import * as forms from "../src/forms-public.js";
-import * as layout from "../src/layout.js";
-import * as navigation from "../src/navigation-public.js";
-import * as numberField from "../src/number-field.js";
-import * as overlays from "../src/overlays.js";
-import * as otpField from "../src/otp-field.js";
-import * as passwordField from "../src/password-field.js";
-import * as provider from "../src/provider.js";
-import * as selection from "../src/selection.js";
-import * as slider from "../src/slider.js";
-import * as steps from "../src/steps.js";
-import * as sidePanel from "../src/side-panel.js";
-import * as splitter from "../src/splitter.js";
-import * as tour from "../src/tour.js";
-import * as tree from "../src/tree.js";
-import * as transferList from "../src/transfer-list.js";
-import * as mentions from "../src/mentions.js";
-import * as commandPalette from "../src/command-palette.js";
-import * as agreement from "../src/agreement.js";
-import * as top from "../src/top.js";
-import * as headingModule from "../src/heading.js";
-import * as textFormats from "../src/text-formats.js";
-import * as toggleGroup from "../src/toggle-group.js";
-import * as tagsInput from "../src/tags-input.js";
-import * as skipNav from "../src/skip-nav.js";
-import * as bottomInfo from "../src/bottom-info.js";
-import * as sidebar from "../src/sidebar.js";
-import * as dateRange from "../src/date-range.js";
-import * as providerButton from "../src/provider-button.js";
-import * as authScreen from "../src/auth-screen.js";
-import * as dataTable from "../src/data-table.js";
-import * as collapsible from "../src/collapsible.js";
-import * as contextMenu from "../src/context-menu.js";
-import * as menubar from "../src/menubar.js";
-import * as asset from "../src/asset.js";
-import * as toast from "../src/toast.js";
-import * as uploadItem from "../src/upload-item.js";
 
-const publicModules: Readonly<Record<string, Readonly<Record<string, unknown>>>> = {
-  "./thinking-orb": thinkingOrb,
-  "./top-bar": topBar,
-  "./bottom-cta": bottomCta,
-  "./color-picker": colorPicker,
-  "./watermark": watermark,
-  "./affix": affix,
-  "./masonry": masonry,
-  "./virtual-list": virtualList,
-  "./qr-code": qrCode,
-  "./carousel": carousel,
-  "./floating-action-button": floatingActionButton,
-  "./actions": actions,
-  "./screens": screens,
-  "./screen-flows": screenFlows,
-  "./date-picker": datePicker,
-  "./calendar": calendar,
-  "./anchor": anchor,
-  "./side-panel": sidePanel,
-  "./splitter": splitter,
-  "./tour": tour,
-  "./tree": tree,
-  "./transfer-list": transferList,
-  "./mentions": mentions,
-  "./command-palette": commandPalette,
-  "./agreement": agreement,
-  "./top": top,
-  "./heading": headingModule,
-  "./text-formats": textFormats,
-  "./toggle-group": toggleGroup,
-  "./tags-input": tagsInput,
-  "./skip-nav": skipNav,
-  "./bottom-info": bottomInfo,
-  "./sidebar": sidebar,
-  "./date-range": dateRange,
-  "./provider-button": providerButton,
-  "./auth-screen": authScreen,
-  "./data-table": dataTable,
-  "./collapsible": collapsible,
-  "./context-menu": contextMenu,
-  "./menubar": menubar,
-  "./asset": asset,
-  "./popover": popover,
-  "./pagination": pagination,
-  "./breadcrumb": breadcrumb,
-  "./display": display,
-  "./feedback": feedback,
-  "./file-picker": filePicker,
-  "./forms": forms,
-  "./layout": layout,
-  "./navigation": navigation,
-  "./number-field": numberField,
-  "./overlays": overlays,
-  "./otp-field": otpField,
-  "./password-field": passwordField,
-  "./provider": provider,
-  "./selection": selection,
-  "./slider": slider,
-  "./steps": steps,
-  "./toast": toast,
-  "./upload-item": uploadItem,
-};
+// Resolve a claim's subpath through package.json exports to its source module, so the test does not keep a
+// second hand-written subpath → module map that every new entry had to extend (2026-10-18).
+const sourceModules = import.meta.glob<Readonly<Record<string, unknown>>>("../src/*.{ts,tsx}");
+const packageExports = (JSON.parse(await readFile(fileURLToPath(new URL("../package.json", import.meta.url)), "utf8")) as {
+  exports: Record<string, { import?: string }>;
+}).exports;
+async function publicModule(subpath: string): Promise<Readonly<Record<string, unknown>> | undefined> {
+  const target = packageExports[subpath]?.import;
+  if (!target) return undefined;
+  const base = target.replace(/^\.\/dist\//, "../src/").replace(/\.js$/, "");
+  const loader = sourceModules[`${base}.tsx`] ?? sourceModules[`${base}.ts`];
+  return loader ? loader() : undefined;
+}
 
 describe("@hjmds/react renderer evidence", () => {
   it("is versioned, unique, and tied to the package release", async () => {
@@ -143,15 +35,16 @@ describe("@hjmds/react renderer evidence", () => {
     });
 
     const componentIds = reactRendererEvidence.components.map(({ componentId }) => componentId);
-    // 2026-10-17: 103 + 22 screen composition rows (catalog.ts).
-    expect(componentIds).toHaveLength(125);
+    // One claim per active Web row of the catalog (evidence.ts derives them); the count is not a second list.
+    const activeWebRows = (componentCatalog as readonly ComponentCatalogEntry[]).filter((entry) => ["stable", "beta"].includes(getComponentSurfaceStatus(entry, "web")));
+    expect(componentIds).toHaveLength(activeWebRows.length);
     expect(new Set(componentIds).size).toBe(componentIds.length);
   });
 
   it("only claims real granular exports and executable proof for every scenario", async () => {
     for (const component of reactRendererEvidence.components) {
-      const publicModule = publicModules[component.subpath];
-      expect(publicModule, component.subpath).toBeDefined();
+      const module = await publicModule(component.subpath);
+      expect(module, component.subpath).toBeDefined();
       expect(component.exportNames.length, component.componentId).toBeGreaterThan(0);
       expect(component.scenarios.length, component.componentId).toBeGreaterThan(0);
       expect(new Set(component.exportNames).size, component.componentId).toBe(
@@ -181,7 +74,7 @@ describe("@hjmds/react renderer evidence", () => {
         expect([proofText, ...importedFixtures].join("\n"), proof.file).toContain(`componentId: "${proof.caseId}"`);
       }
       for (const exportName of component.exportNames) {
-        expect(publicModule, component.subpath).toHaveProperty(exportName);
+        expect(module, component.subpath).toHaveProperty(exportName);
       }
     }
   });

@@ -8,7 +8,7 @@ import { Dialog } from "@hjmds/react-native/overlays";
 import { TextArea } from "@hjmds/react-native/inputs";
 import { Container } from "@hjmds/react-native/primitives";
 import { semanticGlyph } from "./semantic-glyphs";
-import { nativeRendererStoryGroups } from "./story-registry";
+import { componentIds } from "@hjmds/design-contracts";
 
 // Not exported: CSF registers every named export as a story, which showed an unnamed menu entry (2026-10-06).
 function FloatingNotesPreview() {
@@ -41,6 +41,6 @@ function FloatingNotesPreview() {
 const meta = { title: "배포/구성/입력과 작성/빠른 메모 작성", component: FloatingNotesPreview } satisfies Meta<typeof FloatingNotesPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const Default: Story = { name: "기본", parameters: { hjm: { componentIds: nativeRendererStoryGroups.floatingActionButton } } };
+export const Default: Story = { name: "기본", parameters: { hjm: { componentIds: [componentIds.FloatingActionButton] } } };
 export const Dark: Story = { ...Default, name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { ...Default, name: "큰 글자", globals: { textScale: "2" } };

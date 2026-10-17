@@ -1,144 +1,33 @@
-import { type ComponentCatalogEntry, type ComponentCategory, type ComponentName, type ComponentPlatform, type ComponentStatus, type ComponentSurface as CatalogComponentSurface, type ComponentSurfaceStatus as CatalogComponentSurfaceStatus, type RecipeName } from "./catalog.js";
+import { componentCatalog, type ComponentCatalogEntry, type ComponentCategory, type ComponentName, type ComponentPlatform, type ComponentStatus, type ComponentSurface as CatalogComponentSurface, type ComponentSurfaceStatus as CatalogComponentSurfaceStatus, type RecipeName } from "./catalog.js";
 import type { BehaviorName } from "./behaviors.js";
 export type ComponentKind = "primitive" | "component" | "provider" | "utility";
 /** Kept here as aliases for existing `component-definitions` consumers. */
 export type ComponentSurface = CatalogComponentSurface;
 export type ComponentSurfaceStatus = CatalogComponentSurfaceStatus;
-/** Stable IDs survive display-name and category changes. */
-export declare const componentIds: {
-    readonly Text: "text";
-    readonly TextFormat: "text-format";
-    readonly Heading: "heading";
-    readonly Icon: "icon";
-    readonly Surface: "surface";
-    readonly Divider: "divider";
-    readonly Section: "section";
-    readonly Stack: "stack";
-    readonly Container: "container";
-    readonly AspectRatio: "aspect-ratio";
-    readonly Grid: "grid";
-    readonly Layout: "layout";
-    readonly Top: "top";
-    readonly Masonry: "masonry";
-    readonly Splitter: "splitter";
-    readonly Button: "button";
-    readonly IconButton: "icon-button";
-    readonly Link: "link";
-    readonly BottomCTA: "bottom-cta";
-    readonly FloatingActionButton: "floating-action-button";
-    readonly AuthProviderButton: "auth-provider-button";
-    readonly AuthScreenLayout: "auth-screen";
-    readonly Field: "field";
-    readonly SearchField: "search-field";
-    readonly TextArea: "text-area";
-    readonly PasswordField: "password-field";
-    readonly OtpField: "otp-field";
-    readonly Checkbox: "checkbox";
-    readonly Radio: "radio";
-    readonly CheckboxGroup: "checkbox-group";
-    readonly RadioGroup: "radio-group";
-    readonly Switch: "switch";
-    readonly Chip: "chip";
-    readonly ImageChoiceGroup: "image-choice-group";
-    readonly SegmentedControl: "segmented-control";
-    readonly ToggleGroup: "toggle-group";
-    readonly TagsInput: "tags-input";
-    readonly Slider: "slider";
-    readonly NumberField: "number-field";
-    readonly Select: "select";
-    readonly Combobox: "combobox";
-    readonly DatePicker: "date-picker";
-    readonly DateRangePicker: "date-range-picker";
-    readonly ColorPicker: "color-picker";
-    readonly FilePicker: "file-picker";
-    readonly Form: "form";
-    readonly Agreement: "agreement";
-    readonly Mentions: "mentions";
-    readonly TransferList: "transfer-list";
-    readonly UploadItem: "upload-item";
-    readonly Tabs: "tabs";
-    readonly TopBar: "top-bar";
-    readonly Sidebar: "sidebar";
-    readonly BottomNavigation: "bottom-navigation";
-    readonly Breadcrumb: "breadcrumb";
-    readonly Pagination: "pagination";
-    readonly LoadMore: "load-more";
-    readonly Steps: "steps";
-    readonly Menubar: "menubar";
-    readonly ContextMenu: "context-menu";
-    readonly Menu: "menu";
-    readonly Anchor: "anchor";
-    readonly Avatar: "avatar";
-    readonly Badge: "badge";
-    readonly CounterBadge: "counter-badge";
-    readonly Card: "card";
-    readonly List: "list";
-    readonly ListRow: "list-row";
-    readonly VirtualList: "virtual-list";
-    readonly Collapsible: "collapsible";
-    readonly Asset: "asset";
-    readonly Accordion: "accordion";
-    readonly Statistic: "statistic";
-    readonly Timeline: "timeline";
-    readonly DataTable: "data-table";
-    readonly Chart: "chart";
-    readonly Tree: "tree";
-    readonly Calendar: "calendar";
-    readonly Carousel: "carousel";
-    readonly DescriptionList: "description-list";
-    readonly Image: "image";
-    readonly QRCode: "qr-code";
-    readonly Tag: "tag";
-    readonly Tour: "tour";
-    readonly EmptyState: "empty-state";
-    readonly Notice: "notice";
-    readonly Progress: "progress";
-    readonly ThinkingOrb: "thinking-orb";
-    readonly Spinner: "spinner";
-    readonly Skeleton: "skeleton";
-    readonly Result: "result";
-    readonly BottomInfo: "bottom-info";
-    readonly Toast: "toast";
-    readonly Watermark: "watermark";
-    readonly Dialog: "dialog";
-    readonly AlertDialog: "alert-dialog";
-    readonly Sheet: "sheet";
-    readonly SidePanel: "side-panel";
-    readonly Popover: "popover";
-    readonly Tooltip: "tooltip";
-    readonly CommandPalette: "command-palette";
-    readonly Affix: "affix";
-    readonly DesignSystemProvider: "design-system-provider";
-    readonly SkipNav: "skip-nav";
-    readonly VisuallyHidden: "visually-hidden";
-    readonly ScreenLayout: "screen-layout";
-    readonly CompositionLayout: "composition-layout";
-    readonly SettingsScreen: "settings-screen";
-    readonly SearchScreen: "search-screen";
-    readonly EditorScreen: "editor-screen";
-    readonly PermissionScreen: "permission-screen";
-    readonly OnboardingScreen: "onboarding-screen";
-    readonly ModerationScreen: "moderation-screen";
-    readonly ChatScreen: "chat-screen";
-    readonly NotificationInboxScreen: "notification-inbox-screen";
-    readonly CommentThreadScreen: "comment-thread-screen";
-    readonly ListDetailScreen: "list-detail-screen";
-    readonly MediaSelectionScreen: "media-selection-screen";
-    readonly ProfileScreen: "profile-screen";
-    readonly ChatMessage: "chat-message";
-    readonly NotificationRow: "notification-row";
-    readonly NotificationItem: "notification-item";
-    readonly CommentThreadRow: "comment-thread-row";
-    readonly ProfileSummary: "profile-summary";
-    readonly IconTile: "icon-tile";
-    readonly MessageComposer: "message-composer";
-    readonly PhotoSourceSheet: "photo-source-sheet";
-};
+type Letter<C extends string> = C extends Lowercase<C> ? (C extends Uppercase<C> ? "other" : "lower") : "upper";
+type NextIsLower<T extends string> = T extends `${infer N}${string}` ? (Letter<N> extends "lower" ? true : false) : false;
+type Separator<Prev extends string, H extends string, T extends string> = Letter<H> extends "upper" ? (Prev extends "" ? "" : Letter<Prev> extends "upper" ? (NextIsLower<T> extends true ? "-" : "") : "-") : "";
+/** Type-level twin of `componentIdOf` so ids stay literal types without a second hand-kept map. */
+export type KebabCase<S extends string, Prev extends string = "", Acc extends string = ""> = S extends `${infer H}${infer T}` ? KebabCase<T, H, `${Acc}${Separator<Prev, H, T>}${Lowercase<H>}`> : Acc;
+type CatalogEntry = (typeof componentCatalog)[number];
+type ComponentIdOf<E extends CatalogEntry> = E extends {
+    readonly id: infer I extends string;
+} ? I : KebabCase<E["name"]>;
+/**
+ * Stable IDs survive display-name and category changes. Since 2026-10-18 they derive from the catalog row
+ * (`id` override, else kebab of `name`) instead of a second hand-kept map that every registration had to touch.
+ */
+export declare const componentIds: { readonly [E in CatalogEntry as E["name"]]: ComponentIdOf<E>; };
 export type ComponentId = (typeof componentIds)[ComponentName];
 export type ComponentDefinition = Readonly<{
     id: ComponentId;
     name: ComponentName;
+    /** Korean Storybook item name; falls back to the API name for rows authored without one. */
+    label: string;
     category: ComponentCategory;
+    /** Public symbols that belong to this contract (named regions, variants) and optional extensions of it. */
+    companions: readonly string[];
+    extensions: readonly string[];
     kind: ComponentKind;
     contract: Readonly<{
         status: ComponentStatus;
@@ -167,4 +56,5 @@ export type ComponentDefinition = Readonly<{
  */
 export declare const componentDefinitions: readonly ComponentDefinition[];
 export declare function getComponentDefinition(idOrName: ComponentId | ComponentName): ComponentDefinition | undefined;
+export {};
 //# sourceMappingURL=component-definitions.d.ts.map

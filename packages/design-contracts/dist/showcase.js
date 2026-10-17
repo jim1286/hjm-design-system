@@ -150,6 +150,10 @@ const textlessComponentNames = new Set([
     // These own form/range behavior but no long-form text slot; their child fields
     // and calendar cells own their copy, so duplicating that proof here misattributes it.
     "Form", "DateRangePicker",
+    // 2026-10-18: Chart's category/series labels are short identifiers and its text alternative is a hidden
+    // description for assistive technology; ImageChoiceGroup tiles carry accessible names, not visible copy.
+    // Neither has a long-form text slot, so the long-copy proof would measure a product caption, not the component.
+    "Chart", "ImageChoiceGroup",
 ]);
 // These behaviors expose no interaction on either rendered surface.
 const semanticOnlyBehaviors = new Set([
@@ -177,6 +181,9 @@ const nativeActionBehaviors = new Set([
     "toggleGroup", "transferList", "uploadItem",
     // 2026-10-14: Native DataTable sort/row actions and chart adjustable stepping.
     "dataTable", "chart",
+    // 2026-10-18: Pagination became shared with a Native beta renderer (1bae9c1a); its page buttons declare the
+    // activate action, so the Native surface owns a native-actions requirement like every other action behavior.
+    "pagination",
 ]);
 function getRendererShowcaseScenarios(entry, surface) {
     const requirements = rendererRequirements.filter((scenario) => scenario !== "long-copy" || !textlessComponentNames.has(entry.name));

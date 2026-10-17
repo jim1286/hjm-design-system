@@ -1,44 +1,27 @@
-import { readFileSync, readdirSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { join } from "node:path";
 import ts from "typescript";
-import { reactNativeRendererEvidence } from "@hjmds/react-native/evidence";
 import { describe, expect, it } from "vitest";
 
 const sourceRoot = fileURLToPath(new URL(".", import.meta.url));
-const files = [...readdirSync(join(sourceRoot, "components")).map(name => join(sourceRoot, "components", name)), ...["Calendar", "Carousel", "ThinkingOrb"].map(name => join(sourceRoot, `${name}.stories.tsx`))];
-
 describe("individual native component navigation", () => {
-  it("gives every supported renderer one unique component entry with default and accessibility fixtures", () => {
-    const ids: string[] = [];
-    const titles: string[] = [];
-    for (const file of files) {
-      const source = readFileSync(file, "utf8");
-      const title = source.match(/title: "(배포\/컴포넌트\/[^\"]+)"/)?.[1];
-      expect(title, file).toBeDefined();
-      titles.push(title!);
-      const id = source.match(/componentIds: \["([^\"]+)"\]/)?.[1];
-      expect(id, file).toBeDefined();
-      ids.push(id!);
-      for (const state of ["Default", "Dark", "LargeText"]) expect(source, file).toContain(`export const ${state}:`);
-      // Importing a CSF module as a fixture registers stories as a side effect and can duplicate entries.
-      expect(source, file).not.toMatch(/from ["'][^"']*\.stories/);
-    }
-    expect(ids.sort()).toEqual(reactNativeRendererEvidence.components.map(component => component.componentId).sort());
-    expect(new Set(titles).size).toBe(files.length);
-  });
-
+  // Canonical coverage and navigation are checked against catalog surface support by check-storybook S9.
+  // Do not maintain a second file allowlist or require retired maximum-text fixtures here.
   it("isolates individual renderers and preserves overlay opening actions", () => {
-    const source = readFileSync(join(sourceRoot, "component-examples.tsx"), "utf8");
-    const ast = ts.createSourceFile("fixtures.tsx", source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
-    const fixture = (name: string) => ast.statements.find((node): node is ts.FunctionDeclaration => ts.isFunctionDeclaration(node) && node.name?.text === name)?.getText(ast);
+    // Dialog and AlertDialog examples live in dialog-examples.tsx since fde269f2 (2026-10-13); read both sources.
+    const asts = ["component-examples.tsx", "dialog-examples.tsx"].map(file =>
+      ts.createSourceFile(file, readFileSync(join(sourceRoot, file), "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX));
+    const fixture = (name: string) => asts.flatMap(ast => ast.statements
+      .filter((node): node is ts.FunctionDeclaration => ts.isFunctionDeclaration(node) && node.name?.text === name)
+      .map(node => node.getText(ast)))[0];
     expect(fixture("ButtonExample")).toContain('<Button disabled={variant === "disabled"} loading={variant === "loading"}');
     expect(fixture("ButtonExample")).not.toContain("<IconButton");
     expect(fixture("AvatarExample")).not.toContain("<Badge");
     expect(fixture("FieldExample")).toContain('variant === "error"');
-    for (const [name, setter] of [["DialogExample", "setDialogOpen"], ["AlertDialogExample", "setAlertOpen"], ["SheetExample", "setSheetOpen"]]) {
+    for (const [name, setter] of [["DialogExample", "setOpen"], ["AlertDialogExample", "setOpen"], ["SheetExample", "setSheetOpen"]]) {
       expect(fixture(name!)).toContain(`${setter}(true)`);
-      expect(fixture(name!)).toContain(`onOpenChange={${setter}}`);
+      expect(fixture(name!)).toMatch(new RegExp(`onOpenChange=\\{(${setter}|\\(next\\) => \\{ ${setter}\\(next\\); \\})\\}`));
     }
   });
 });

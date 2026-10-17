@@ -18,7 +18,8 @@ describe("@hjmds/react default renderer proofs", () => {
     const evidenceIds = reactRendererEvidence.components.map(({ componentId }) => componentId);
     const fixtureIds = defaultRenderFixtures.map(({ componentId }) => componentId);
 
-    expect(fixtureIds).toEqual(evidenceIds);
+    // Claims follow catalog order while fixtures are grouped by file; the set is what must match (2026-10-18).
+    expect([...fixtureIds].sort()).toEqual([...evidenceIds].sort());
     expect(new Set(fixtureIds).size).toBe(fixtureIds.length);
     const execution = executedScenarioRegistry.executions.find(
       ({ proofFile }) => proofFile === "test/default-render.ssr.test.tsx",

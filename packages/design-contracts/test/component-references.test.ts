@@ -84,6 +84,19 @@ describe("component reference coverage", () => {
     expect(componentDefinitions).toHaveLength(componentCatalog.length);
     expect(new Set(componentDefinitions.map(({ id }) => id)).size).toBe(componentDefinitions.length);
     expect(Object.keys(componentIds)).toHaveLength(componentCatalog.length);
+    // 2026-10-18: ids derive from the row; the type-level KebabCase must agree with the runtime helper.
+    expect(componentIds.QRCode).toBe("qr-code");
+    expect(componentIds.BottomCTA).toBe("bottom-cta");
+    expect(componentIds.AuthScreenLayout).toBe("auth-screen");
+    expect(new Set(Object.values(componentIds)).size).toBe(componentCatalog.length);
+    for (const entry of componentCatalog as readonly ComponentCatalogEntry[]) {
+      expect(entry.label, `${entry.name} label`).toMatch(/[가-힣]/);
+      for (const symbol of [...(entry.companions ?? []), ...(entry.extensions ?? [])]) {
+        expect(Object.hasOwn(componentIds, symbol), `${entry.name} lists catalog row ${symbol} as a companion`).toBe(false);
+      }
+    }
+    const labels = componentCatalog.map((entry) => entry.label);
+    expect(new Set(labels).size).toBe(labels.length);
 
     expect(getComponentDefinition("button")).toMatchObject({
       name: "Button",
@@ -130,11 +143,11 @@ describe("component reference coverage", () => {
     // 2026-09-29 promotion: every beta renderer now has complete required evidence; Form's focus path was implemented, and ThinkingOrb Native passed installed iOS/Android Skia smoke.
     // 2026-10-14: Chart (both renderers) and the new Native DataTable start as beta until device evidence.
     // 2026-10-17: ImageChoiceGroup registers as beta on both renderers until behavior matrices cover it.
-    // 2026-10-17 screen compositions registered: the 22 screen compositions start as beta on both renderers (catalog.ts comment).
-    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.web === "beta").map(entry => entry.name)).toEqual(["ImageChoiceGroup", "Chart", "ScreenLayout", "CompositionLayout", "SettingsScreen", "SearchScreen", "EditorScreen", "PermissionScreen", "OnboardingScreen", "ModerationScreen", "ChatScreen", "NotificationInboxScreen", "CommentThreadScreen", "ListDetailScreen", "MediaSelectionScreen", "ProfileScreen", "ChatMessage", "NotificationRow", "NotificationItem", "CommentThreadRow", "ProfileSummary", "IconTile", "MessageComposer", "PhotoSourceSheet"]);
-    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.native === "beta").map(entry => entry.name)).toEqual(["ImageChoiceGroup", "Pagination", "DataTable", "Chart", "ScreenLayout", "CompositionLayout", "SettingsScreen", "SearchScreen", "EditorScreen", "PermissionScreen", "OnboardingScreen", "ModerationScreen", "ChatScreen", "NotificationInboxScreen", "CommentThreadScreen", "ListDetailScreen", "MediaSelectionScreen", "ProfileScreen", "ChatMessage", "NotificationRow", "NotificationItem", "CommentThreadRow", "ProfileSummary", "IconTile", "MessageComposer", "PhotoSourceSheet"]);
-    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.web === "stable")).toHaveLength(103);
-    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.native === "stable")).toHaveLength(83);
+    // 2026-10-18: the 22 screen/composition rows now satisfy their renderer evidence requirements.
+    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.web === "beta").map(entry => entry.name)).toEqual(["ImageChoiceGroup", "Chart"]);
+    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.native === "beta").map(entry => entry.name)).toEqual(["ImageChoiceGroup", "Pagination", "DataTable", "Chart"]);
+    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.web === "stable")).toHaveLength(125);
+    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.native === "stable")).toHaveLength(105);
   });
 
   it("keeps legacy custom catalog entries working during the surface-status migration", () => {

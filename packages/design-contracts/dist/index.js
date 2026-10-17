@@ -17,7 +17,7 @@ export { resolveResponsiveValue, resolveWindowClass, validateResponsiveValue, wi
 export { gridDefaults, gridGaps, gridRecipe, resolveGridLayout, validateGridDescriptor, } from "./grid.js";
 export { accordionRecipe, alertDialogRecipe, avatarRecipe, badgeRecipe, bottomNavigationRecipe, bottomCtaRecipe, buttonRecipe, cardRecipe, chipRecipe, comboboxRecipe, counterBadgeRecipe, dialogRecipe, dividerRecipe, emptyStateRecipe, fieldRecipe, formatCounterBadgeCount, iconButtonRecipe, iconRecipe, linkRecipe, listRecipe, listRowRecipe, loadMoreRecipe, menuRecipe, noticeRecipe, progressRecipe, searchFieldRecipe, selectRecipe, selectionGroupRecipe, sectionRecipe, segmentedControlRecipe, selectionControlRecipe, sheetRecipe, skeletonRecipe, spinnerRecipe, surfaceDefaults, surfaceGeometry, stackRecipe, statisticRecipe, surfaceRecipe, switchRecipe, tabsRecipe, textRecipe, resolveTextDefaultWeight, toastRecipe, tooltipRecipe, topBarRecipe, } from "./recipes.js";
 export { accentColor, resolveColorReference, solidAccentColor, themeColor, } from "./color-references.js";
-export { componentCatalog, getComponentSurfaceStatus, recipeRegistry, summarizeComponentRoadmap, } from "./catalog.js";
+export { componentCatalog, componentIdOf, getComponentSurfaceStatus, recipeRegistry, summarizeComponentRoadmap, } from "./catalog.js";
 export { designSystemVersion } from "./version.js";
 export { antDesignReferenceComponents, antDesignReferenceSystem, getAntDesignReferencesFor, summarizeAntDesignCoverage, } from "./component-references.js";
 export { componentDefinitions, componentIds, getComponentDefinition, } from "./component-definitions.js";

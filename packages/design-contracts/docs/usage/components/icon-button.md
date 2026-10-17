@@ -39,6 +39,7 @@ Dialog·Sheet footer 행동, 목록 끝 "더 보기", 온보딩 다음·이전, 
 | --- | --- | --- | --- |
 | `IconButton` | 기본 | `@hjmds/react`, `/actions` | `@hjmds/react-native`, `/actions`, `/bottom-cta` |
 | `NotificationBell` | 확장 — 미확인 수 배지 + 증가 시 한 번 흔들림 | `/notification-bell` | `/notification-bell` |
+| `ClipboardIconButton` | 동반(복사) — 아이콘만 있는 복사 도구 행동. `value`, `labels: { idle; copied }`(두 상태의 접근성 이름), `onCopy?`, `onCopyError?`, `feedbackDuration?`(ms), `tone` 기본 `ghost` | `@hjmds/react`, `/clipboard` | — |
 
 `NotificationBell`은 granular subpath로만 import 된다. 추가 peer는 없다.
 

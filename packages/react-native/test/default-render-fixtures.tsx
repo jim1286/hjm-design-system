@@ -1,7 +1,12 @@
 // 2026-10-17 screen compositions registered: screen compositions (catalog rows added the same day).
 import { Text as RNText } from "react-native";
 import { ChatMessage, ChatScreen, CompositionLayout, IconTile, MessageComposer, NotificationInboxScreen, NotificationItem, NotificationRow, ScreenLayout, SettingsScreen } from "../src/screens.js";
-import { CommentThreadRow, CommentThreadScreen, EditorScreen, ListDetailScreen, MediaSelectionScreen, ModerationScreen, PermissionScreen, PhotoSourceSheet, ProfileScreen, ProfileSummary, SearchScreen } from "../src/screen-flows.js";
+import { CommentThreadRow, CommentThreadScreen, EditorScreen, ListDetailScreen, MediaSelectionScreen, ModerationScreen, OnboardingScreen, PermissionScreen, PhotoSourceSheet, ProfileScreen, ProfileSummary, SearchScreen } from "../src/screen-flows.js";
+// 2026-10-18: active Native rows that had no first-party default proof (chart, data-table, pagination) and the
+// onboarding screen, whose mount scroll needs the host ScrollView mock (host-node-mock.ts).
+import { LineChart } from "../src/chart.js";
+import { DataTable } from "../src/data-table.js";
+import { Pagination } from "../src/pagination.js";
 import { Masonry } from "../src/masonry.js";
 import { VirtualList } from "../src/virtual-list.js";
 import { QRCode } from "../src/qr-code.js";
@@ -817,7 +822,8 @@ export const defaultRenderCases = [
   },
   {
     componentId: "comment-thread-row",
-    renderLongCopy: (copy) => <CommentThreadRow item={{ ...screenComments[0]!, body: copy }} onLike={screenNoop} onReply={screenNoop} replyLabel="답글" />,
+    // bodyText is the row's inline text slot; body is a product ReactNode slot the proof must not measure.
+    renderLongCopy: (copy) => <CommentThreadRow item={{ ...screenComments[0]!, bodyText: copy }} onLike={screenNoop} onReply={screenNoop} replyLabel="답글" />,
     render: () => <CommentThreadRow item={screenComments[0]!} onLike={screenNoop} onReply={screenNoop} replyLabel="답글" />,
   },
   {
@@ -827,14 +833,35 @@ export const defaultRenderCases = [
   },
   {
     componentId: "icon-tile",
+    renderLongCopy: (copy) => <IconTile icon={<RNText>★</RNText>} label={copy} labelLines={2} />,
     render: () => <IconTile icon={<RNText>★</RNText>} label="도구" />,
   },
   {
     componentId: "message-composer",
+    renderLongCopy: (copy) => <MessageComposer value="" label="메시지" sendLabel="전송" description={copy} onValueChange={screenNoop} onSend={screenNoop} />,
     render: () => <MessageComposer value="" label="메시지" sendLabel="전송" onValueChange={screenNoop} onSend={screenNoop} />,
   },
   {
     componentId: "photo-source-sheet",
+    renderLongCopy: (copy) => <PhotoSourceSheet open onOpenChange={screenNoop} onSelect={screenNoop} labels={{ ...screenPhotoLabels, library: copy }} />,
     render: () => <PhotoSourceSheet open onOpenChange={screenNoop} onSelect={screenNoop} labels={screenPhotoLabels} />,
+  },
+  {
+    componentId: "onboarding-screen",
+    renderLongCopy: (copy) => <OnboardingScreen steps={[{ id: "one", title: "시작", description: copy, content: null }, { id: "two", title: "다음", description: "안내", content: null }]} index={0} onIndexChange={screenNoop} nextLabel="다음" backLabel="이전" complete={{ label: "완료", onAction: screenNoop }} progressLabel={(step, total) => `${step}/${total}`} />,
+    render: () => <OnboardingScreen steps={[{ id: "one", title: "시작", description: "안내", content: null }, { id: "two", title: "다음", description: "안내", content: null }]} index={0} onIndexChange={screenNoop} nextLabel="다음" backLabel="이전" complete={{ label: "완료", onAction: screenNoop }} progressLabel={(step, total) => `${step}/${total}`} />,
+  },
+  {
+    componentId: "chart",
+    render: () => <LineChart categories={["3월", "4월", "5월"]} series={[{ id: "ops", label: "OPS", values: [0.8, null, 0.9] }]} accessibilityLabel="월별 OPS" formatValue={(value) => value.toFixed(3)} missingLabel="기록 없음" />,
+  },
+  {
+    componentId: "data-table",
+    renderLongCopy: (copy) => <DataTable columns={[{ id: "name", header: "선수" }, { id: "avg", header: "타율", align: "end" }]} rows={[{ id: "a" }, { id: "b" }]} labels={{ table: "타율 순위", sortColumn: (header) => header }} renderCell={(row, column) => (column === "name" ? (row === "a" ? copy : "레이예스") : ".351")} />,
+    render: () => <DataTable columns={[{ id: "name", header: "선수" }, { id: "avg", header: "타율", align: "end" }]} rows={[{ id: "a" }, { id: "b" }]} labels={{ table: "타율 순위", sortColumn: (header) => header }} renderCell={(row, column) => (column === "name" ? (row === "a" ? "구자욱" : "레이예스") : ".351")} />,
+  },
+  {
+    componentId: "pagination",
+    render: () => <Pagination label="페이지" descriptor={{ currentPage: 2, totalPages: 8 }} labels={{ previous: "이전", next: "다음" }} composeAccessibleName={({ page, current }) => `${current ? "현재" : "이동"} ${page}`} onPageChange={screenNoop} />,
   },
 ] as const satisfies readonly DefaultRenderCase[];

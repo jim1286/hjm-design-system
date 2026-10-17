@@ -1,10 +1,10 @@
 # HJM 공개 컴포넌트와 카탈로그 대응표
 
-카탈로그는 의미 계약, package exports는 실제 사용 가능한 API다. 2026-10-01 중복 조사에서 TextField와 Table 등 공개 이름이 카탈로그 밖이라 전체 범위를 놓칠 수 있음을 확인해 이 대응표를 추가했다. source와 manifest에서 생성하며 새로운 미분류 공개 이름은 검사에서 실패한다. 표의 역할은 stable 성숙도나 기기 검증을 뜻하지 않는다.
+카탈로그는 의미 계약, package exports는 실제 사용 가능한 API다. 2026-10-01 중복 조사에서 TextField와 Table 등 공개 이름이 카탈로그 밖이라 전체 범위를 놓칠 수 있음을 확인해 이 대응표를 추가했다. source와 manifest에서 생성하며 새로운 미분류 공개 이름은 검사에서 실패한다. 표의 역할은 stable 성숙도나 기기 검증을 뜻하지 않는다. 2026-10-18부터 companion·extension 분류는 catalog 행의 `companions`·`extensions`에서 읽는다.
 
 ## @hjmds/react
 
-고유 공개 컴포넌트 및 provider 이름 207개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 211개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -21,6 +21,8 @@
 | Asset | Asset | canonical | root, ./asset |
 | AssetGroup | Asset | companion-or-alternative | root, ./asset |
 | AuthProviderButton | AuthProviderButton | canonical | root, ./provider-button |
+| AuthScreenFooter | AuthScreenLayout | companion-or-alternative | root, ./auth-screen |
+| AuthScreenHero | AuthScreenLayout | companion-or-alternative | root, ./auth-screen |
 | AuthScreenLayout | AuthScreenLayout | canonical | root, ./auth-screen |
 | Avatar | Avatar | canonical | root, ./display |
 | AvatarGroup | Avatar | companion-or-alternative | root, ./display |
@@ -38,23 +40,25 @@
 | CarouselMotion | Carousel | optional-extension | ./carousel-motion |
 | Celebration | 별도 보조 기능 | supplemental | ./celebration |
 | ChartLegend | Chart | companion-or-alternative | ./chart |
-| ChatMessage | 별도 보조 기능 | supplemental | ./screens |
-| ChatScreen | 별도 보조 기능 | supplemental | ./screens |
+| ChatMessage | ChatMessage | canonical | ./screens |
+| ChatScreen | ChatScreen | canonical | ./screens |
 | Checkbox | Checkbox | canonical | root, ./selection |
 | CheckboxGroup | CheckboxGroup | canonical | root, ./selection |
 | Chip | Chip | canonical | root, ./selection |
 | ClipboardButton | Button | companion-or-alternative | root, ./clipboard |
+| ClipboardIconButton | IconButton | companion-or-alternative | root, ./clipboard |
 | CodeBlock | 별도 보조 기능 | supplemental | ./code-block |
 | CohortRetentionTable | 별도 보조 기능 | supplemental | ./data-workflows |
 | Collapsible | Collapsible | canonical | root, ./collapsible |
+| CollapsibleMarker | Collapsible | companion-or-alternative | root, ./collapsible |
 | CollectionRail | List | companion-or-alternative | ./collection-rail |
 | ColorPicker | ColorPicker | canonical | ./color-picker |
 | Combobox | Combobox | canonical | root, ./forms |
 | CommandPalette | CommandPalette | canonical | root, ./command-palette |
-| CommentThreadRow | 별도 보조 기능 | supplemental | ./screen-flows |
-| CommentThreadScreen | 별도 보조 기능 | supplemental | ./screen-flows |
+| CommentThreadRow | CommentThreadRow | canonical | ./screen-flows |
+| CommentThreadScreen | CommentThreadScreen | canonical | ./screen-flows |
 | ComparisonTable | DataTable | companion-or-alternative | ./data-table |
-| CompositionLayout | 별도 보조 기능 | supplemental | ./screens |
+| CompositionLayout | CompositionLayout | canonical | ./screens |
 | Container | Container | canonical | root, ./layout |
 | ContentTransition | 별도 보조 기능 | supplemental | ./content-transition |
 | ContextMenu | ContextMenu | canonical | root, ./context-menu |
@@ -71,7 +75,7 @@
 | Divider | Divider | canonical | root, ./display |
 | DocumentResource | Card | optional-extension | ./document-resource |
 | DurationField | NumberField | optional-extension | ./duration-field |
-| EditorScreen | 별도 보조 기능 | supplemental | ./screen-flows |
+| EditorScreen | EditorScreen | canonical | ./screen-flows |
 | EffectSurface | 별도 보조 기능 | supplemental | ./effect-surface |
 | EmptyState | EmptyState | canonical | root, ./feedback |
 | EventAttendanceCard | 별도 보조 기능 | supplemental | ./social-compositions |
@@ -92,7 +96,7 @@
 | HjmProvider | DesignSystemProvider | canonical | root, ./provider |
 | Icon | Icon | canonical | root, ./display |
 | IconButton | IconButton | canonical | root, ./actions |
-| IconTile | 별도 보조 기능 | supplemental | ./screens |
+| IconTile | IconTile | canonical | ./screens |
 | Image | Image | canonical | root, ./display |
 | ImageChoiceGroup | ImageChoiceGroup | canonical | ./image-choice |
 | ImageComparison | 별도 보조 기능 | supplemental | ./image-comparison |
@@ -104,41 +108,41 @@
 | LineScore | DataTable | companion-or-alternative | ./data-table |
 | Link | Link | canonical | root, ./actions |
 | List | List | canonical | root, ./display |
-| ListDetailScreen | 별도 보조 기능 | supplemental | ./screen-flows |
+| ListDetailScreen | ListDetailScreen | canonical | ./screen-flows |
 | ListRow | ListRow | canonical | root, ./display |
 | LoadMore | LoadMore | canonical | root, ./navigation |
 | Masonry | Masonry | canonical | ./masonry |
 | MatrixTable | DataTable | companion-or-alternative | ./data-table |
-| MediaSelectionScreen | 별도 보조 기능 | supplemental | ./screen-flows |
+| MediaSelectionScreen | MediaSelectionScreen | canonical | ./screen-flows |
 | MediaTransport | 별도 보조 기능 | supplemental | ./media-transport |
 | Mentions | Mentions | canonical | root, ./mentions |
 | Menu | Menu | canonical | root, ./overlays |
 | Menubar | Menubar | canonical | root, ./menubar |
-| MessageComposer | 별도 보조 기능 | supplemental | ./screens |
-| ModerationScreen | 별도 보조 기능 | supplemental | ./screen-flows |
+| MessageComposer | MessageComposer | canonical | ./screens |
+| ModerationScreen | ModerationScreen | canonical | ./screen-flows |
 | MorphingMenu | Menu | optional-extension | ./menu-morph |
 | NativeSelect | Select | companion-or-alternative | root, ./forms |
 | NavigationBar | TopBar | companion-or-alternative | ./navigation-bar |
 | Notice | Notice | canonical | root, ./feedback |
 | NotificationBell | IconButton | optional-extension | ./notification-bell |
-| NotificationInboxScreen | 별도 보조 기능 | supplemental | ./screens |
-| NotificationItem | 별도 보조 기능 | supplemental | ./screens |
-| NotificationRow | 별도 보조 기능 | supplemental | ./screens |
+| NotificationInboxScreen | NotificationInboxScreen | canonical | ./screens |
+| NotificationItem | NotificationItem | canonical | ./screens |
+| NotificationRow | NotificationRow | canonical | ./screens |
 | NumberField | NumberField | canonical | root, ./forms, ./number-field |
-| OnboardingScreen | 별도 보조 기능 | supplemental | ./screen-flows |
+| OnboardingScreen | OnboardingScreen | canonical | ./screen-flows |
 | OtpField | OtpField | canonical | root, ./forms, ./otp-field |
 | OverlayStackProvider | Dialog | companion-or-alternative | root, ./overlay-stack |
 | OverviewScreen | 별도 보조 기능 | supplemental | ./design-profile |
 | Pagination | Pagination | canonical | root, ./navigation, ./pagination |
 | PasswordField | PasswordField | canonical | root, ./forms, ./password-field |
 | PasswordRulesField | 별도 보조 기능 | supplemental | ./task-controls |
-| PermissionScreen | 별도 보조 기능 | supplemental | ./screen-flows |
-| PhotoSourceSheet | 별도 보조 기능 | supplemental | ./screen-flows |
+| PermissionScreen | PermissionScreen | canonical | ./screen-flows |
+| PhotoSourceSheet | PhotoSourceSheet | canonical | ./screen-flows |
 | PieChart | Chart | companion-or-alternative | ./chart |
 | Popover | Popover | canonical | root, ./popover |
 | PricingChoice | 별도 보조 기능 | supplemental | ./task-controls |
-| ProfileScreen | 별도 보조 기능 | supplemental | ./screen-flows |
-| ProfileSummary | 별도 보조 기능 | supplemental | ./screen-flows |
+| ProfileScreen | ProfileScreen | canonical | ./screen-flows |
+| ProfileSummary | ProfileSummary | canonical | ./screen-flows |
 | Progress | Progress | canonical | root, ./feedback |
 | ProgressiveBlur | 별도 보조 기능 | supplemental | ./progressive-blur |
 | QRCode | QRCode | canonical | ./qr-code |
@@ -153,15 +157,15 @@
 | Result | Result | canonical | root, ./feedback |
 | SavedItemsScreen | 별도 보조 기능 | supplemental | ./saved-items |
 | ScatterChart | Chart | companion-or-alternative | ./chart |
-| ScreenLayout | 별도 보조 기능 | supplemental | ./screens |
+| ScreenLayout | ScreenLayout | canonical | ./screens |
 | ScrollProgress | Progress | optional-extension | ./scroll-progress |
 | SearchField | SearchField | canonical | root, ./forms |
-| SearchScreen | 별도 보조 기능 | supplemental | ./screen-flows |
+| SearchScreen | SearchScreen | canonical | ./screen-flows |
 | Section | Section | canonical | root, ./layout |
 | SegmentedControl | SegmentedControl | canonical | root, ./selection |
 | Select | Select | canonical | root, ./forms |
 | SelectionActionBar | 별도 보조 기능 | supplemental | ./collection-editing |
-| SettingsScreen | 별도 보조 기능 | supplemental | ./screens |
+| SettingsScreen | SettingsScreen | canonical | ./screens |
 | Sheet | Sheet | canonical | root, ./overlays |
 | ShortcutRecorder | 별도 보조 기능 | supplemental | ./authoring-tools |
 | Sidebar | Sidebar | canonical | root, ./sidebar |
@@ -218,7 +222,7 @@
 
 ## @hjmds/react-native
 
-고유 공개 컴포넌트 및 provider 이름 196개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 199개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -233,6 +237,8 @@
 | Asset | Asset | canonical | root, ./asset |
 | AssetGroup | Asset | companion-or-alternative | root, ./asset |
 | AuthProviderButton | AuthProviderButton | canonical | root, ./provider-button |
+| AuthScreenFooter | AuthScreenLayout | companion-or-alternative | root, ./auth-screen |
+| AuthScreenHero | AuthScreenLayout | companion-or-alternative | root, ./auth-screen |
 | AuthScreenLayout | AuthScreenLayout | canonical | root, ./auth-screen |
 | Avatar | Avatar | canonical | root, ./data-display |
 | Badge | Badge | canonical | root, ./data-display |
@@ -248,20 +254,21 @@
 | CarouselMotion | Carousel | optional-extension | ./carousel-motion |
 | Celebration | 별도 보조 기능 | supplemental | ./celebration |
 | ChartLegend | Chart | companion-or-alternative | ./chart |
-| ChatMessage | 별도 보조 기능 | supplemental | ./screens |
-| ChatScreen | 별도 보조 기능 | supplemental | ./screens |
+| ChatMessage | ChatMessage | canonical | ./screens |
+| ChatScreen | ChatScreen | canonical | ./screens |
 | Checkbox | Checkbox | canonical | root, ./inputs |
 | CheckboxGroup | CheckboxGroup | canonical | root, ./inputs |
 | Chip | Chip | canonical | root, ./inputs |
 | CodeBlock | 별도 보조 기능 | supplemental | ./code-block |
 | CohortRetentionTable | 별도 보조 기능 | supplemental | ./data-workflows |
 | Collapsible | Collapsible | canonical | root, ./collapsible |
+| CollapsibleMarker | Collapsible | companion-or-alternative | root, ./collapsible |
 | CollectionRail | List | companion-or-alternative | ./collection-rail |
 | Combobox | Combobox | canonical | root, ./forms |
-| CommentThreadRow | 별도 보조 기능 | supplemental | ./screen-flows |
-| CommentThreadScreen | 별도 보조 기능 | supplemental | ./screen-flows |
+| CommentThreadRow | CommentThreadRow | canonical | ./screen-flows |
+| CommentThreadScreen | CommentThreadScreen | canonical | ./screen-flows |
 | ComparisonTable | DataTable | companion-or-alternative | ./data-table |
-| CompositionLayout | 별도 보조 기능 | supplemental | ./screens |
+| CompositionLayout | CompositionLayout | canonical | ./screens |
 | Container | Container | canonical | root, ./primitives |
 | ContentTransition | 별도 보조 기능 | supplemental | ./content-transition |
 | ContextMenu | ContextMenu | canonical | ./context-menu |
@@ -278,7 +285,7 @@
 | Divider | Divider | canonical | root, ./data-display |
 | DocumentResource | Card | optional-extension | ./document-resource |
 | DurationField | NumberField | optional-extension | ./duration-field |
-| EditorScreen | 별도 보조 기능 | supplemental | ./screen-flows |
+| EditorScreen | EditorScreen | canonical | ./screen-flows |
 | EffectSurface | 별도 보조 기능 | supplemental | ./effect-surface |
 | EmptyState | EmptyState | canonical | root, ./feedback |
 | EventAttendanceCard | 별도 보조 기능 | supplemental | ./social-compositions |
@@ -302,7 +309,7 @@
 | HjmNativeProvider | DesignSystemProvider | canonical | root, ./provider |
 | Icon | Icon | canonical | root, ./primitives |
 | IconButton | IconButton | canonical | root, ./actions, ./bottom-cta |
-| IconTile | 별도 보조 기능 | supplemental | ./screens |
+| IconTile | IconTile | canonical | ./screens |
 | Image | Image | canonical | root, ./data-display |
 | ImageChoiceGroup | ImageChoiceGroup | canonical | ./image-choice |
 | ImageComparison | 별도 보조 기능 | supplemental | ./image-comparison |
@@ -320,37 +327,37 @@
 | LineScore | DataTable | companion-or-alternative | ./data-table |
 | Link | Link | canonical | root, ./actions, ./bottom-cta |
 | List | List | canonical | root, ./data-display |
-| ListDetailScreen | 별도 보조 기능 | supplemental | ./screen-flows |
+| ListDetailScreen | ListDetailScreen | canonical | ./screen-flows |
 | ListRow | ListRow | canonical | root, ./data-display |
 | LoadMore | LoadMore | canonical | root, ./navigation, ./top-bar |
 | Masonry | Masonry | canonical | ./masonry |
 | MatrixTable | DataTable | companion-or-alternative | ./data-table |
-| MediaSelectionScreen | 별도 보조 기능 | supplemental | ./screen-flows |
+| MediaSelectionScreen | MediaSelectionScreen | canonical | ./screen-flows |
 | MediaTransport | 별도 보조 기능 | supplemental | ./media-transport |
 | Mentions | Mentions | canonical | root, ./mentions |
 | Menu | Menu | canonical | root, ./navigation, ./top-bar |
-| MessageComposer | 별도 보조 기능 | supplemental | ./screens |
-| ModerationScreen | 별도 보조 기능 | supplemental | ./screen-flows |
+| MessageComposer | MessageComposer | canonical | ./screens |
+| ModerationScreen | ModerationScreen | canonical | ./screen-flows |
 | NativeContextMenu | ContextMenu | optional-extension | ./context-menu-native |
 | NavigationBar | TopBar | companion-or-alternative | ./navigation-bar |
 | Notice | Notice | canonical | root, ./feedback |
 | NotificationBell | IconButton | optional-extension | ./notification-bell |
-| NotificationInboxScreen | 별도 보조 기능 | supplemental | ./screens |
-| NotificationItem | 별도 보조 기능 | supplemental | ./screens |
-| NotificationRow | 별도 보조 기능 | supplemental | ./screens |
+| NotificationInboxScreen | NotificationInboxScreen | canonical | ./screens |
+| NotificationItem | NotificationItem | canonical | ./screens |
+| NotificationRow | NotificationRow | canonical | ./screens |
 | NumberField | NumberField | canonical | root, ./inputs, ./number-field |
-| OnboardingScreen | 별도 보조 기능 | supplemental | ./screen-flows |
+| OnboardingScreen | OnboardingScreen | canonical | ./screen-flows |
 | OtpField | OtpField | canonical | root, ./inputs, ./otp-field |
 | OverviewScreen | 별도 보조 기능 | supplemental | ./design-profile |
 | Pagination | Pagination | canonical | root, ./pagination |
 | PasswordField | PasswordField | canonical | root, ./inputs, ./password-field |
 | PasswordRulesField | 별도 보조 기능 | supplemental | ./task-controls |
-| PermissionScreen | 별도 보조 기능 | supplemental | ./screen-flows |
-| PhotoSourceSheet | 별도 보조 기능 | supplemental | ./screen-flows |
+| PermissionScreen | PermissionScreen | canonical | ./screen-flows |
+| PhotoSourceSheet | PhotoSourceSheet | canonical | ./screen-flows |
 | PieChart | Chart | companion-or-alternative | ./chart |
 | PricingChoice | 별도 보조 기능 | supplemental | ./task-controls |
-| ProfileScreen | 별도 보조 기능 | supplemental | ./screen-flows |
-| ProfileSummary | 별도 보조 기능 | supplemental | ./screen-flows |
+| ProfileScreen | ProfileScreen | canonical | ./screen-flows |
+| ProfileSummary | ProfileSummary | canonical | ./screen-flows |
 | Progress | Progress | canonical | root, ./feedback |
 | ProgressiveBlur | 별도 보조 기능 | supplemental | ./progressive-blur |
 | QRCode | QRCode | canonical | ./qr-code |
@@ -365,15 +372,15 @@
 | Result | Result | canonical | root, ./feedback |
 | SavedItemsScreen | 별도 보조 기능 | supplemental | ./saved-items |
 | ScatterChart | Chart | companion-or-alternative | ./chart |
-| ScreenLayout | 별도 보조 기능 | supplemental | ./screens |
+| ScreenLayout | ScreenLayout | canonical | ./screens |
 | ScrollProgress | Progress | optional-extension | ./scroll-progress |
 | SearchField | SearchField | canonical | root, ./inputs |
-| SearchScreen | 별도 보조 기능 | supplemental | ./screen-flows |
+| SearchScreen | SearchScreen | canonical | ./screen-flows |
 | Section | Section | canonical | root, ./primitives |
 | SegmentedControl | SegmentedControl | canonical | root, ./inputs |
 | Select | Select | canonical | root, ./forms |
 | SelectionActionBar | 별도 보조 기능 | supplemental | ./collection-editing |
-| SettingsScreen | 별도 보조 기능 | supplemental | ./screens |
+| SettingsScreen | SettingsScreen | canonical | ./screens |
 | SharedTransitionElement | 별도 보조 기능 | supplemental | ./screen-transition |
 | SharedTransitionScreen | 별도 보조 기능 | supplemental | ./screen-transition |
 | Sheet | Sheet | canonical | root, ./overlays |

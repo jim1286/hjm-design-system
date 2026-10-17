@@ -49,6 +49,11 @@ const generatedComponents = await Promise.all(showcaseManifest.map(async (entry)
     id: definition.id,
     storyId: entry.storyId,
     name: definition.name,
+    // 2026-10-18: Storybook and API-map projections read the label and companion names from here instead of
+    // their own hand-kept maps (catalog.ts registration input).
+    label: definition.label,
+    companions: definition.companions,
+    extensions: definition.extensions,
     category: definition.category,
     platform: definition.surfaces.parity,
     contractStatus: definition.contract.status,

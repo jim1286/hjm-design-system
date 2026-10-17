@@ -435,6 +435,7 @@ export {
 
 export {
   componentCatalog,
+  componentIdOf,
   getComponentSurfaceStatus,
   recipeRegistry,
   summarizeComponentRoadmap,

@@ -355,16 +355,14 @@ const checks: Readonly<Record<Exclude<ReactRendererEvidenceScenario, "default" |
   },
   async "long-copy"(fixture, environment) {
     // Viewport-fixed chrome must use the same width as the deliberately narrow fixture.
-    if (["floating-action-button", "bottom-navigation", "dialog"].includes(fixture.componentId)) await page.viewport(containerWidth, 720);
+    if (fixture.portalRole || fixture.viewportChrome) await page.viewport(containerWidth, 720);
     expect(fixture.renderLongCopy, "long-copy needs a fixture that puts the copy in the component").toBeDefined();
     await mount(environment, fixture.renderLongCopy!(longCopy));
     const element = findMarker(fixture.marker);
-    // Modal and tooltip content lives in a portal outside its owning trigger root.
-    const contentRoot = fixture.componentId === "dialog"
-      ? document.body.querySelector<HTMLElement>('[role="dialog"]')
-      : fixture.componentId === "tooltip"
-        ? document.body.querySelector<HTMLElement>('[role="tooltip"]')
-        : element;
+    // Modal and tooltip content lives in a portal outside its owning trigger root; the fixture declares the role.
+    const contentRoot = fixture.portalRole
+      ? document.body.querySelector<HTMLElement>(`[role="${fixture.portalRole}"]`)
+      : element;
     const holder = contentRoot === null
       ? undefined
       : subtree(contentRoot).reverse().find((node) => (node.textContent ?? "").includes(longCopy));

@@ -1,5 +1,27 @@
 # Stable Core
 
+## 2026-10-18 화면·구성 22종 승격
+
+ScreenLayout, CompositionLayout, SettingsScreen, SearchScreen, EditorScreen, PermissionScreen,
+OnboardingScreen, ModerationScreen, ChatScreen, NotificationInboxScreen, CommentThreadScreen,
+ListDetailScreen, MediaSelectionScreen, ProfileScreen, ChatMessage, NotificationRow, NotificationItem,
+CommentThreadRow, ProfileSummary, IconTile, MessageComposer, PhotoSourceSheet의 계약과 Web·Native
+surface를 stable로 올렸다. 이름과 기존 id는 유지한다.
+
+인계된 default/evidence 통과 결과를 재사용하고, 이번 작업에서 해당 행의 환경 매트릭스를 실행했다.
+함께 확인한 Chart·ImageChoiceGroup을 포함해 Web 118건, Native 109건과 별도 Onboarding·Pagination·DataTable·Chart
+관련 Native 검사 20건이 통과했다. 최대 글자 조건은 사용자 지침에 따라 실행하지 않았다.
+ScreenLayout의 포커스 가능한 본문 이름, ListRow 계열 fixture의 계약상 부모 여백, Native host API 모델과
+DataTable RTL 들여쓰기·정렬을 바로잡았다. contracts component-references 13건과 Web preview 3건·Native registry 1건,
+세 패키지 build와 두 Showcase 타입 검사도 통과했다. 제품 수나 별도 승인 절차를 조건으로 추가하지 않았다.
+
+기기 QA·npm 게시·소비 앱 적용은 이번 결과가 아니다. Chart·ImageChoiceGroup과 Native Pagination·DataTable의
+기존 beta 상태는 이번 22종 승격 범위 밖이므로 유지했다.
+
+기존 별개 Storybook 정적 문제는 미해결이다: Web `showcase/web/src/patterns/CommonChat.stories.tsx` 및
+Native `showcase/native/src/CommonChat.stories.tsx`의 Group 스토리 순서(S4), Web `showcase/web/src/patterns/ShortcutRecorder.stories.tsx`의
+플랫폼 전용 항목 차이 기록(S6). canonical 등록·S9 누락은 없으며 이 세 건을 전체 Storybook 검사 통과로 보고하지 않는다.
+
 ## 2026-09-30 선택형 상호작용 어댑터·Liquid Toast 승격
 
 `sortable`·`swipe-actions`·`content-transition`·`carousel-motion`·`celebration`(Web·Native)과 Native Liquid Toast를

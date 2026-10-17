@@ -75,6 +75,24 @@ recipe/behavior 배열, Web/Native별 status와 고정 documentation story ID를
 평면 `componentCatalog`는 호환 view로 유지하며 renderer가 순차적으로 definition schema로
 이동합니다.
 
+## 등록 입력과 실행 증거
+
+2026-10-18부터 `catalog.ts`의 한 행이 canonical 이름·안정성·지원 surface·한국어 `label`·공개 `companions`와
+`extensions`를 소유한다. `id`는 기본 kebab 변환으로 얻되 이미 게시한 키가 다를 때만 재정의한다.
+`componentIds`는 이 행에서 리터럴 타입을 유지하며 파생되고 `componentDefinitions`는 정규화한 view다.
+이전에는 같은 등록 사실을 여덟 목록에서 관리해 22종 화면·구성 등록이 86개 파일 변경으로 번졌다.
+
+공개 export 분석기는 이 행의 소유권을 실제 renderer exports와 합쳐 API 대응표와 renderer export index를 생성한다.
+Renderer evidence는 활성 행·요구 시나리오·해당 index에서 기본 claim을 계산하고 별도 행동 proof만 명시한다.
+등록이 테스트 통과를 뜻하지 않는다. default fixture·환경 매트릭스·행동 proof는 실제 renderer를 실행해야 한다.
+지원하지 못한 시나리오는 gap으로 기록하며 stable 승격에서는 그 차이를 확인한다.
+
+Showcase 이름·recipe·behavior 등록도 행을 소비하고 실행 예제는 별도로 작성한다. 정적 CSF가 필요한 개요·개별 항목은
+기존 Storybook 도구의 `storybook:sync`로 생성하며 URL id와 고유 예제를 보존한다.
+포트폴리오의 게시 catalog snapshot은 새 train의 `name`·`companions`·canonical `id`를 함께 보존한다.
+소비 검사는 설치한 train의 snapshot으로 보조 심볼을 연결하고, optional extension에는 기본 API의 stable 상태를 상속하지 않는다.
+기존 train의 id-only snapshot과 digest는 유지하며 그 train을 사용하는 동안만 과거 alias 해석을 유지한다.
+
 ## 플랫폼 분류
 
 - `shared`: 같은 semantic API와 시각 계약을 Web/RN renderer가 각각 구현하는 목표

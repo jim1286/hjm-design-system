@@ -1,150 +1,108 @@
+import { getRequiredShowcaseEvidence } from "@hjmds/design-contracts/showcase";
+import { componentCatalog, componentIdOf, getComponentSurfaceStatus } from "@hjmds/design-contracts/catalog";
+import { publicExportEntries } from "./public-exports.generated.js";
 export const reactNativeRendererEvidenceSchemaVersion = 2;
 const defaultProofFile = "test/default-render.test.tsx";
 const matrixProofFile = "test/scenario-matrix.test.tsx";
+const stableCoreProofFile = "test/stable-core.test.tsx";
 /**
- * Environment scenarios proven by scenario-matrix.test against the resolved
- * styles in the rendered host tree. Until 1.5.0 every component claimed all
- * seven scenarios from a test that only checked that rendering did not throw.
- * The test renderer cannot lay out text, so long-copy here proves the copy sits
- * in a wrapping Text (no single-line truncation), not measured overflow.
+ * Scenarios a component does not pass yet; reported as promotion debt and
+ * forbidden on stable surfaces (scripts/check-workspace-sync.mjs). The test
+ * renderer cannot lay out text, so long-copy here proves the copy sits in a
+ * wrapping Text (no single-line truncation), not measured overflow.
  */
-const matrixScenarios = ["accessibility", "dark", "large-text", "rtl", "reduced-motion"];
-/** Scenarios a component does not pass yet; reported as promotion debt. */
-const nativeScenarioGaps = {
-    // 2026-10-17 screen compositions registered: CommentThreadRow renders the body through a nested Text the
-    // long-copy check does not see as the holder; beta debt until the row exposes the copy slot directly.
-    "comment-thread-row": ["long-copy"],
+const nativeScenarioGaps = {};
+const nativeAction = (file = stableCoreProofFile) => ({ proofs: [{ scenarios: ["native-actions"], file }] });
+const nativeActionAndLongCopy = (file) => ({ proofs: [{ scenarios: ["native-actions", "long-copy"], file }] });
+const claimExtras = {
+    "design-system-provider": { exportNames: ["useHjmNativeTheme"] },
+    link: nativeAction(),
+    field: nativeAction(),
+    "search-field": nativeAction(),
+    "password-field": nativeAction(),
+    "otp-field": nativeAction(),
+    "number-field": nativeAction(),
+    slider: nativeAction(),
+    form: nativeAction("test/form.interaction.test.tsx"),
+    "date-picker": nativeAction(),
+    calendar: nativeAction("test/calendar.test.tsx"),
+    agreement: nativeAction("test/agreement.interaction.test.tsx"),
+    "toggle-group": nativeAction(),
+    collapsible: nativeAction("test/collapsible-actions.test.tsx"),
+    "tags-input": nativeAction(),
+    "date-range-picker": nativeAction("test/date-range-actions.test.tsx"),
+    mentions: nativeAction("test/mentions-actions.test.tsx"),
+    "transfer-list": nativeAction("test/transfer-list-actions.test.tsx"),
+    "auth-provider-button": nativeAction(),
+    "file-picker": nativeAction("test/file-picker-host-action.test.tsx"),
+    checkbox: nativeAction(),
+    "checkbox-group": nativeAction(),
+    "radio-group": nativeAction(),
+    switch: nativeAction(),
+    "segmented-control": nativeAction(),
+    select: nativeAction(),
+    combobox: nativeAction(),
+    chip: nativeAction(),
+    tabs: nativeAction("test/tabs-actions.test.tsx"),
+    carousel: nativeAction("test/carousel.test.tsx"),
+    "floating-action-button": nativeAction(),
+    menu: nativeActionAndLongCopy("test/menu-actions.test.tsx"),
+    "upload-item": nativeAction("test/upload-item.test.tsx"),
+    // ThinkingOrb runs its whole environment matrix in its own file (Skia timing), not in scenario-matrix.
+    "thinking-orb": { proofs: [{ scenarios: ["dark", "large-text", "rtl", "reduced-motion", "accessibility"], file: "test/thinking-orb.test.tsx" }] },
+    dialog: nativeAction("test/dialog-actions.test.tsx"),
+    "alert-dialog": nativeAction("test/alert-dialog-actions.test.tsx"),
+    sheet: nativeActionAndLongCopy("test/sheet-viewport.test.tsx"),
+    "bottom-navigation": nativeAction("test/bottom-navigation.interaction.test.tsx"),
+    "load-more": nativeAction("test/load-more.interactions.test.tsx"),
+    accordion: nativeAction("test/accordion-actions.test.tsx"),
+    // The Native toast surface is the region host, not a Toast element. This claim covers standard chrome;
+    // Liquid's mock lifecycle tests and showcase do not certify device motion, VoiceOver/TalkBack, or the
+    // optional runtime support matrix.
+    toast: { symbols: ["ToastRegion"], exportNames: ["useToastRegion"], ...nativeAction() },
 };
-/** Cases that render long copy inside the component (renderLongCopy). */
-const nativeLongCopyCases = new Set([
-    "masonry", "virtual-list", "qr-code",
-    "design-system-provider",
-    "aspect-ratio",
-    "grid",
-    "layout",
-    "steps",
-    "auth-screen",
-    "radio",
-    "list",
-    "timeline",
-    "bottom-info",
-    "top-bar",
-    "stack",
-    "container",
-    "text",
-    "surface",
-    "button",
-    "text-area",
-    "card",
-    "notice",
-    "list-row",
-    "tag",
-    "accordion",
-    "file-picker",
-    "agreement",
-    "bottom-navigation",
-    "load-more",
-    "tabs",
-    "badge",
-    "chip",
-    "select",
-    "combobox",
-    "link",
-    "heading",
-    "empty-state",
-    "top",
-    "section",
-    "segmented-control",
-    "bottom-cta",
-    "result",
-    "progress",
-    "description-list",
-    "toast",
-    "statistic",
-    "radio-group",
-    "checkbox-group",
-    "auth-provider-button",
-    "password-field",
-    "search-field",
-    "number-field",
-    "field",
-    "floating-action-button",
-    "checkbox",
-    "switch",
-    "toggle-group",
-    "slider",
-    "otp-field",
-    "date-picker",
-    "tags-input",
-    "mentions",
-    "transfer-list",
-    "upload-item",
-    "collapsible",
-    "calendar",
-    "carousel",
-    "dialog",
-    "alert-dialog",
-    // 2026-10-17 screen compositions registered.
-    "screen-layout",
-    "composition-layout",
-    "settings-screen",
-    "search-screen",
-    "editor-screen",
-    "permission-screen",
-    "onboarding-screen",
-    "moderation-screen",
-    "chat-screen",
-    "notification-inbox-screen",
-    "comment-thread-screen",
-    "list-detail-screen",
-    "media-selection-screen",
-    "profile-screen",
-    "chat-message",
-    "notification-row",
-    "notification-item",
-    "comment-thread-row",
-    "profile-summary",
-]);
-function defaultClaim(componentId, exportNames, subpath) {
+const exportEntries = publicExportEntries;
+/**
+ * One claim per active Native row of the catalog. The subpath is the symbol's canonical granular entry, the
+ * export names are the row's own symbol plus the companions published on that entry, and the scenarios are
+ * the row's required Native evidence minus recorded gaps. native-actions is never implied: it comes only from
+ * a dedicated proof.
+ */
+function derivedClaim(entry) {
+    const componentId = componentIdOf(entry);
+    const extras = claimExtras[componentId] ?? {};
+    const symbols = extras.symbols ?? (entry.name === "DesignSystemProvider" ? ["HjmNativeProvider"] : [entry.name, ...(entry.companions ?? [])]);
+    // A row whose own name is not a symbol (Chart) claims through its first published companion.
+    const subpath = symbols.map((symbol) => exportEntries[symbol]?.[0]).find((entry) => entry !== undefined);
+    if (!subpath)
+        throw new Error(`${entry.name} has no granular @hjmds/react-native export to claim evidence on`);
+    const exportNames = [
+        ...symbols.filter((symbol) => exportEntries[symbol]?.includes(subpath)),
+        ...(extras.exportNames ?? []),
+    ];
+    const required = getRequiredShowcaseEvidence(entry).find((evidence) => evidence.surface === "native")?.scenarios ?? [];
     const gaps = nativeScenarioGaps[componentId] ?? [];
-    const matrix = [
-        ...matrixScenarios.filter((scenario) => !gaps.includes(scenario)),
-        ...(nativeLongCopyCases.has(componentId) && !gaps.includes("long-copy") ? ["long-copy"] : []),
+    const extraProofs = extras.proofs ?? [];
+    const proven = new Set(extraProofs.flatMap((proof) => proof.scenarios));
+    const matrix = required.filter((scenario) => scenario !== "default" && scenario !== "native-actions" && scenario !== "keyboard" && scenario !== "contract"
+        && !gaps.includes(scenario) && !proven.has(scenario));
+    const proofs = [
+        { scenarios: ["default"], file: defaultProofFile, caseId: componentId },
+        ...(matrix.length === 0 ? [] : [{ scenarios: matrix, file: matrixProofFile, caseId: componentId }]),
+        ...extraProofs.map((proof) => ({ ...proof, caseId: componentId })),
     ];
     return {
         componentId,
         exportNames,
         subpath,
-        scenarios: ["default", ...matrix],
-        proofs: [
-            { scenarios: ["default"], file: defaultProofFile, caseId: componentId },
-            ...(matrix.length === 0 ? [] : [{ scenarios: matrix, file: matrixProofFile, caseId: componentId }]),
-        ],
+        scenarios: proofs.flatMap((proof) => proof.scenarios),
+        proofs,
     };
 }
-function nativeActionClaim(componentId, exportNames, subpath, proofFile = "test/stable-core.test.tsx") {
-    const base = defaultClaim(componentId, exportNames, subpath);
-    return {
-        ...base,
-        scenarios: [...base.scenarios, "native-actions"],
-        proofs: [
-            ...base.proofs,
-            {
-                scenarios: ["native-actions"],
-                file: proofFile,
-                caseId: componentId,
-            },
-        ],
-    };
-}
-function nativeActionAndLongCopyClaim(componentId, exportNames, subpath, proofFile) {
-    const base = defaultClaim(componentId, exportNames, subpath);
-    return {
-        ...base,
-        scenarios: [...base.scenarios, "native-actions", "long-copy"],
-        proofs: [...base.proofs, { scenarios: ["native-actions", "long-copy"], file: proofFile, caseId: componentId }],
-    };
-}
+const activeNativeEntries = componentCatalog.filter((entry) => {
+    const status = getComponentSurfaceStatus(entry, "native");
+    return status === "stable" || status === "beta";
+});
 /**
  * First-party Native renderer claims. These are automated component-level
  * smoke claims, not device, TalkBack, or VoiceOver certification. Scenario
@@ -155,126 +113,6 @@ export const reactNativeRendererEvidence = {
     packageName: "@hjmds/react-native",
     packageVersion: "1.29.0",
     surface: "native",
-    components: [
-        defaultClaim("design-system-provider", ["HjmNativeProvider", "useHjmNativeTheme"], "./provider"),
-        defaultClaim("text", ["Text"], "./primitives"),
-        defaultClaim("surface", ["Surface"], "./primitives"),
-        defaultClaim("stack", ["Stack"], "./primitives"),
-        defaultClaim("container", ["Container"], "./primitives"),
-        defaultClaim("aspect-ratio", ["AspectRatio"], "./primitives"),
-        defaultClaim("grid", ["Grid"], "./primitives"),
-        defaultClaim("layout", ["Layout"], "./primitives"),
-        defaultClaim("icon", ["Icon"], "./primitives"),
-        defaultClaim("section", ["Section"], "./primitives"),
-        defaultClaim("button", ["Button"], "./actions"),
-        defaultClaim("icon-button", ["IconButton"], "./actions"),
-        nativeActionClaim("link", ["Link"], "./actions"),
-        defaultClaim("bottom-cta", ["BottomCTA"], "./actions"),
-        nativeActionClaim("field", ["Field"], "./forms"),
-        nativeActionClaim("search-field", ["SearchField"], "./inputs"),
-        defaultClaim("text-area", ["TextArea"], "./inputs"),
-        nativeActionClaim("password-field", ["PasswordField"], "./password-field"),
-        nativeActionClaim("otp-field", ["OtpField"], "./otp-field"),
-        nativeActionClaim("image-choice-group", ["ImageChoiceGroup"], "./image-choice", "test/image-choice.test.tsx"),
-        nativeActionClaim("number-field", ["NumberField"], "./number-field"),
-        nativeActionClaim("slider", ["Slider"], "./slider"),
-        nativeActionClaim("form", ["Form"], "./forms", "test/form.interaction.test.tsx"),
-        nativeActionClaim("date-picker", ["DatePicker"], "./date-picker"),
-        nativeActionClaim("calendar", ["Calendar"], "./calendar", "test/calendar.test.tsx"),
-        nativeActionClaim("agreement", ["Agreement"], "./agreement", "test/agreement.interaction.test.tsx"),
-        defaultClaim("top", ["Top"], "./top"),
-        defaultClaim("heading", ["Heading"], "./heading"),
-        nativeActionClaim("toggle-group", ["ToggleGroup"], "./toggle-group"),
-        defaultClaim("bottom-info", ["BottomInfo"], "./bottom-info"),
-        nativeActionClaim("collapsible", ["Collapsible"], "./collapsible", "test/collapsible-actions.test.tsx"),
-        defaultClaim("asset", ["Asset", "AssetGroup"], "./asset"),
-        nativeActionClaim("tags-input", ["TagsInput"], "./tags-input"),
-        nativeActionClaim("date-range-picker", ["DateRangePicker"], "./date-range", "test/date-range-actions.test.tsx"),
-        nativeActionClaim("mentions", ["Mentions"], "./mentions", "test/mentions-actions.test.tsx"),
-        nativeActionClaim("transfer-list", ["TransferList"], "./transfer-list", "test/transfer-list-actions.test.tsx"),
-        nativeActionClaim("auth-provider-button", ["AuthProviderButton"], "./provider-button"),
-        defaultClaim("auth-screen", ["AuthScreenLayout", "AuthScreenHero", "AuthScreenFooter"], "./auth-screen"),
-        nativeActionClaim("file-picker", ["FilePicker"], "./file-picker", "test/file-picker-host-action.test.tsx"),
-        nativeActionClaim("checkbox", ["Checkbox"], "./inputs"),
-        defaultClaim("radio", ["Radio"], "./inputs"),
-        nativeActionClaim("checkbox-group", ["CheckboxGroup"], "./inputs"),
-        nativeActionClaim("radio-group", ["RadioGroup"], "./inputs"),
-        nativeActionClaim("switch", ["Switch"], "./inputs"),
-        nativeActionClaim("segmented-control", ["SegmentedControl"], "./inputs"),
-        nativeActionClaim("select", ["Select"], "./forms"),
-        nativeActionClaim("combobox", ["Combobox"], "./forms"),
-        nativeActionClaim("chip", ["Chip"], "./inputs"),
-        nativeActionClaim("tabs", ["Tabs"], "./navigation", "test/tabs-actions.test.tsx"),
-        nativeActionClaim("carousel", ["Carousel"], "./carousel", "test/carousel.test.tsx"),
-        nativeActionClaim("floating-action-button", ["FloatingActionButton"], "./floating-action-button"),
-        defaultClaim("steps", ["Steps"], "./steps"),
-        defaultClaim("top-bar", ["TopBar", "TopBarAction"], "./navigation"),
-        nativeActionAndLongCopyClaim("menu", ["Menu"], "./navigation", "test/menu-actions.test.tsx"),
-        defaultClaim("badge", ["Badge"], "./data-display"),
-        defaultClaim("avatar", ["Avatar"], "./data-display"),
-        defaultClaim("card", ["Card"], "./data-display"),
-        defaultClaim("list-row", ["ListRow"], "./data-display"),
-        defaultClaim("tag", ["Tag"], "./data-display"),
-        defaultClaim("timeline", ["Timeline"], "./data-display"),
-        defaultClaim("description-list", ["DescriptionList"], "./data-display"),
-        defaultClaim("image", ["Image"], "./data-display"),
-        defaultClaim("counter-badge", ["CounterBadge"], "./data-display"),
-        defaultClaim("list", ["List"], "./data-display"),
-        defaultClaim("statistic", ["Statistic", "StatisticGroup"], "./data-display"),
-        nativeActionClaim("upload-item", ["UploadItem"], "./upload-item", "test/upload-item.test.tsx"),
-        defaultClaim("empty-state", ["EmptyState"], "./feedback"),
-        defaultClaim("result", ["Result"], "./feedback"),
-        defaultClaim("notice", ["Notice"], "./feedback"),
-        defaultClaim("progress", ["Progress"], "./feedback"),
-        defaultClaim("skeleton", ["Skeleton"], "./feedback"),
-        {
-            componentId: "thinking-orb", exportNames: ["ThinkingOrb"], subpath: "./thinking-orb",
-            scenarios: ["default", "dark", "large-text", "rtl", "reduced-motion", "accessibility"],
-            proofs: [
-                { scenarios: ["default"], file: defaultProofFile, caseId: "thinking-orb" },
-                { scenarios: ["dark", "large-text", "rtl", "reduced-motion", "accessibility"], file: "test/thinking-orb.test.tsx", caseId: "thinking-orb" },
-            ],
-        },
-        defaultClaim("masonry", ["Masonry"], "./masonry"),
-        defaultClaim("virtual-list", ["VirtualList"], "./virtual-list"),
-        defaultClaim("qr-code", ["QRCode"], "./qr-code"),
-        defaultClaim("spinner", ["Spinner"], "./feedback"),
-        nativeActionClaim("dialog", ["Dialog"], "./overlays", "test/dialog-actions.test.tsx"),
-        nativeActionClaim("alert-dialog", ["AlertDialog"], "./overlays", "test/alert-dialog-actions.test.tsx"),
-        nativeActionAndLongCopyClaim("sheet", ["Sheet"], "./overlays", "test/sheet-viewport.test.tsx"),
-        nativeActionClaim("bottom-navigation", ["BottomNavigation"], "./navigation", "test/bottom-navigation.interaction.test.tsx"),
-        nativeActionClaim("load-more", ["LoadMore"], "./navigation", "test/load-more.interactions.test.tsx"),
-        nativeActionClaim("accordion", ["Accordion"], "./data-display", "test/accordion-actions.test.tsx"),
-        defaultClaim("divider", ["Divider"], "./data-display"),
-        // This claim covers standard chrome. Liquid's mock lifecycle tests and showcase do not
-        // certify device motion, VoiceOver/TalkBack, or the optional runtime support matrix.
-        nativeActionClaim("toast", ["ToastRegion", "useToastRegion"], "./feedback"),
-        // 2026-10-17 screen compositions registered. Beta on both surfaces; gaps in nativeScenarioGaps are promotion debt.
-        defaultClaim("screen-layout", ["ScreenLayout"], "./screens"),
-        defaultClaim("composition-layout", ["CompositionLayout"], "./screens"),
-        defaultClaim("settings-screen", ["SettingsScreen"], "./screens"),
-        defaultClaim("search-screen", ["SearchScreen"], "./screen-flows"),
-        defaultClaim("editor-screen", ["EditorScreen"], "./screen-flows"),
-        defaultClaim("permission-screen", ["PermissionScreen"], "./screen-flows"),
-        // OnboardingScreen: no Native claim yet. Its mount effect calls ScrollView.scrollTo on the host ref, and the
-        // shared test-renderer harness (createNodeMock: () => ({})) has no host scroll method, so the default proof
-        // throws. The fix is a host-method guard in screen-flows.tsx (file under another session's edit on
-        // 2026-10-17); until then the Native surface stays beta without renderer evidence.
-        defaultClaim("moderation-screen", ["ModerationScreen"], "./screen-flows"),
-        defaultClaim("chat-screen", ["ChatScreen"], "./screens"),
-        defaultClaim("notification-inbox-screen", ["NotificationInboxScreen"], "./screens"),
-        defaultClaim("comment-thread-screen", ["CommentThreadScreen"], "./screen-flows"),
-        defaultClaim("list-detail-screen", ["ListDetailScreen"], "./screen-flows"),
-        defaultClaim("media-selection-screen", ["MediaSelectionScreen"], "./screen-flows"),
-        defaultClaim("profile-screen", ["ProfileScreen"], "./screen-flows"),
-        defaultClaim("chat-message", ["ChatMessage"], "./screens"),
-        defaultClaim("notification-row", ["NotificationRow"], "./screens"),
-        defaultClaim("notification-item", ["NotificationItem"], "./screens"),
-        defaultClaim("comment-thread-row", ["CommentThreadRow"], "./screen-flows"),
-        defaultClaim("profile-summary", ["ProfileSummary"], "./screen-flows"),
-        defaultClaim("icon-tile", ["IconTile"], "./screens"),
-        defaultClaim("message-composer", ["MessageComposer"], "./screens"),
-        defaultClaim("photo-source-sheet", ["PhotoSourceSheet"], "./screen-flows"),
-    ],
+    components: activeNativeEntries.map(derivedClaim),
 };
 //# sourceMappingURL=evidence.js.map

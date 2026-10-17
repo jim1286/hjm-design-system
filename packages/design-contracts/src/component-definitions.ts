@@ -1,5 +1,6 @@
 import {
   componentCatalog,
+  componentIdOf,
   getComponentSurfaceStatus,
   type ComponentCatalogEntry,
   type ComponentCategory,
@@ -17,144 +18,36 @@ export type ComponentKind = "primitive" | "component" | "provider" | "utility";
 export type ComponentSurface = CatalogComponentSurface;
 export type ComponentSurfaceStatus = CatalogComponentSurfaceStatus;
 
-/** Stable IDs survive display-name and category changes. */
-export const componentIds = {
-  Text: "text",
-  TextFormat: "text-format",
-  Heading: "heading",
-  Icon: "icon",
-  Surface: "surface",
-  Divider: "divider",
-  Section: "section",
-  Stack: "stack",
-  Container: "container",
-  AspectRatio: "aspect-ratio",
-  Grid: "grid",
-  Layout: "layout",
-  Top: "top",
-  Masonry: "masonry",
-  Splitter: "splitter",
-  Button: "button",
-  IconButton: "icon-button",
-  Link: "link",
-  BottomCTA: "bottom-cta",
-  FloatingActionButton: "floating-action-button",
-  AuthProviderButton: "auth-provider-button",
-  AuthScreenLayout: "auth-screen",
-  Field: "field",
-  SearchField: "search-field",
-  TextArea: "text-area",
-  PasswordField: "password-field",
-  OtpField: "otp-field",
-  Checkbox: "checkbox",
-  Radio: "radio",
-  CheckboxGroup: "checkbox-group",
-  RadioGroup: "radio-group",
-  Switch: "switch",
-  Chip: "chip",
-  ImageChoiceGroup: "image-choice-group",
-  SegmentedControl: "segmented-control",
-  ToggleGroup: "toggle-group",
-  TagsInput: "tags-input",
-  Slider: "slider",
-  NumberField: "number-field",
-  Select: "select",
-  Combobox: "combobox",
-  DatePicker: "date-picker",
-  DateRangePicker: "date-range-picker",
-  ColorPicker: "color-picker",
-  FilePicker: "file-picker",
-  Form: "form",
-  Agreement: "agreement",
-  Mentions: "mentions",
-  TransferList: "transfer-list",
-  UploadItem: "upload-item",
-  Tabs: "tabs",
-  TopBar: "top-bar",
-  Sidebar: "sidebar",
-  BottomNavigation: "bottom-navigation",
-  Breadcrumb: "breadcrumb",
-  Pagination: "pagination",
-  LoadMore: "load-more",
-  Steps: "steps",
-  Menubar: "menubar",
-  ContextMenu: "context-menu",
-  Menu: "menu",
-  Anchor: "anchor",
-  Avatar: "avatar",
-  Badge: "badge",
-  CounterBadge: "counter-badge",
-  Card: "card",
-  List: "list",
-  ListRow: "list-row",
-  VirtualList: "virtual-list",
-  Collapsible: "collapsible",
-  Asset: "asset",
-  Accordion: "accordion",
-  Statistic: "statistic",
-  Timeline: "timeline",
-  DataTable: "data-table",
-  Chart: "chart",
-  Tree: "tree",
-  Calendar: "calendar",
-  Carousel: "carousel",
-  DescriptionList: "description-list",
-  Image: "image",
-  QRCode: "qr-code",
-  Tag: "tag",
-  Tour: "tour",
-  EmptyState: "empty-state",
-  Notice: "notice",
-  Progress: "progress",
-  ThinkingOrb: "thinking-orb",
-  Spinner: "spinner",
-  Skeleton: "skeleton",
-  Result: "result",
-  BottomInfo: "bottom-info",
-  Toast: "toast",
-  Watermark: "watermark",
-  Dialog: "dialog",
-  AlertDialog: "alert-dialog",
-  Sheet: "sheet",
-  SidePanel: "side-panel",
-  Popover: "popover",
-  Tooltip: "tooltip",
-  CommandPalette: "command-palette",
-  Affix: "affix",
-  DesignSystemProvider: "design-system-provider",
-  SkipNav: "skip-nav",
-  VisuallyHidden: "visually-hidden",
-  // 2026-10-17 screen compositions registered.
-  ScreenLayout: "screen-layout",
-  CompositionLayout: "composition-layout",
-  SettingsScreen: "settings-screen",
-  SearchScreen: "search-screen",
-  EditorScreen: "editor-screen",
-  PermissionScreen: "permission-screen",
-  OnboardingScreen: "onboarding-screen",
-  ModerationScreen: "moderation-screen",
-  ChatScreen: "chat-screen",
-  NotificationInboxScreen: "notification-inbox-screen",
-  CommentThreadScreen: "comment-thread-screen",
-  ListDetailScreen: "list-detail-screen",
-  MediaSelectionScreen: "media-selection-screen",
-  ProfileScreen: "profile-screen",
-  ChatMessage: "chat-message",
-  NotificationRow: "notification-row",
-  NotificationItem: "notification-item",
-  CommentThreadRow: "comment-thread-row",
-  ProfileSummary: "profile-summary",
-  IconTile: "icon-tile",
-  MessageComposer: "message-composer",
-  PhotoSourceSheet: "photo-source-sheet",
-} as const satisfies Readonly<Record<ComponentName, string>>;
+type Letter<C extends string> = C extends Lowercase<C> ? (C extends Uppercase<C> ? "other" : "lower") : "upper";
+type NextIsLower<T extends string> = T extends `${infer N}${string}` ? (Letter<N> extends "lower" ? true : false) : false;
+type Separator<Prev extends string, H extends string, T extends string> = Letter<H> extends "upper"
+  ? (Prev extends "" ? "" : Letter<Prev> extends "upper" ? (NextIsLower<T> extends true ? "-" : "") : "-")
+  : "";
+/** Type-level twin of `componentIdOf` so ids stay literal types without a second hand-kept map. */
+export type KebabCase<S extends string, Prev extends string = "", Acc extends string = ""> =
+  S extends `${infer H}${infer T}` ? KebabCase<T, H, `${Acc}${Separator<Prev, H, T>}${Lowercase<H>}`> : Acc;
+type CatalogEntry = (typeof componentCatalog)[number];
+type ComponentIdOf<E extends CatalogEntry> = E extends { readonly id: infer I extends string } ? I : KebabCase<E["name"]>;
+
+/**
+ * Stable IDs survive display-name and category changes. Since 2026-10-18 they derive from the catalog row
+ * (`id` override, else kebab of `name`) instead of a second hand-kept map that every registration had to touch.
+ */
+export const componentIds = Object.fromEntries(
+  componentCatalog.map((entry) => [entry.name, componentIdOf(entry)]),
+) as { readonly [E in CatalogEntry as E["name"]]: ComponentIdOf<E> };
 
 export type ComponentId = (typeof componentIds)[ComponentName];
 
 export type ComponentDefinition = Readonly<{
   id: ComponentId;
   name: ComponentName;
+  /** Korean Storybook item name; falls back to the API name for rows authored without one. */
+  label: string;
   category: ComponentCategory;
+  /** Public symbols that belong to this contract (named regions, variants) and optional extensions of it. */
+  companions: readonly string[];
+  extensions: readonly string[];
   kind: ComponentKind;
   contract: Readonly<{
     status: ComponentStatus;
@@ -198,7 +91,10 @@ export const componentDefinitions: readonly ComponentDefinition[] = componentCat
   return {
     id,
     name,
+    label: entry.label ?? name,
     category: entry.category,
+    companions: entry.companions ?? [],
+    extensions: entry.extensions ?? [],
     kind: kindByCategory[entry.category],
     contract: {
       status: entry.status,

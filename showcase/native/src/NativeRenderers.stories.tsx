@@ -83,7 +83,6 @@ import {
   Text,
 } from "@hjmds/react-native/primitives";
 
-import { nativeRendererStoryGroups } from "./story-registry";
 
 import { spacing } from "@hjmds/design-contracts/foundations";
 
@@ -656,14 +655,15 @@ function AgreementPreview() {
   );
 }
 
-export const Default: Story = { name: "기본", parameters: { hjm: { componentIds: nativeRendererStoryGroups.foundations } }, render: () => <FoundationsPreview /> };
-export const Actions: Story = { name: "동작", parameters: { hjm: { componentIds: nativeRendererStoryGroups.actions } }, render: () => <ActionsPreview /> };
-export const AgreementStory: Story = { name: "약관 동의", parameters: { hjm: { componentIds: nativeRendererStoryGroups.agreement } }, render: () => <AgreementPreview /> };
-export const Inputs: Story = { name: "입력", parameters: { hjm: { componentIds: nativeRendererStoryGroups.inputs } }, render: () => <InputsPreview /> };
-export const Navigation: Story = { name: "탐색", parameters: { hjm: { componentIds: nativeRendererStoryGroups.navigation } }, render: () => <NavigationPreview /> };
-export const DataDisplay: Story = { name: "데이터 표시", parameters: { hjm: { componentIds: nativeRendererStoryGroups.dataDisplay } }, render: () => <DataDisplayPreview /> };
-export const Feedback: Story = { name: "상태와 알림", parameters: { hjm: { componentIds: nativeRendererStoryGroups.feedback } }, render: () => <FeedbackPreview /> };
-export const Overlays: Story = { name: "오버레이", parameters: { hjm: { componentIds: nativeRendererStoryGroups.overlays } }, render: () => <OverlaysPreview /> };
+// This legacy gallery is an authored composition, not the catalog coverage registry. Individual CSF items own coverage.
+export const Default: Story = { name: "기본", render: () => <FoundationsPreview /> };
+export const Actions: Story = { name: "동작", render: () => <ActionsPreview /> };
+export const AgreementStory: Story = { name: "약관 동의", render: () => <AgreementPreview /> };
+export const Inputs: Story = { name: "입력", render: () => <InputsPreview /> };
+export const Navigation: Story = { name: "탐색", render: () => <NavigationPreview /> };
+export const DataDisplay: Story = { name: "데이터 표시", render: () => <DataDisplayPreview /> };
+export const Feedback: Story = { name: "상태와 알림", render: () => <FeedbackPreview /> };
+export const Overlays: Story = { name: "오버레이", render: () => <OverlaysPreview /> };
 export const Dark: Story = { ...Default, name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { ...Default, name: "큰 글자", globals: { textScale: "2" } };
 

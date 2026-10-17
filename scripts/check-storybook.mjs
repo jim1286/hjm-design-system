@@ -17,6 +17,7 @@ import { dirname, relative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const { componentDefinitions } = await import(pathToFileURL(resolve(root, "packages/design-contracts/dist/component-definitions.js")).href);
 const snapshotPath = resolve(root, "showcase/web/story-ids.json");
 
 // ── 규격 상수. 바꾸면 docs/STORYBOOK_NAVIGATION.md §1과 두 preview.tsx의 storySort를 같은 변경에서 고친다. ──
@@ -100,35 +101,27 @@ const BRAND_PREFIX = "제품 색 · ";
 const WEB_DOCS = "Web Storybook의 컴포넌트 탐색 문서. Native 앱 메뉴는 개별 항목만 둔다";
 const WEB_API = "Web 전용 공개 API(사용 지침 지원: Web)";
 const NATIVE_API = "Native 전용 공개 API(사용 지침 지원: Native)";
+// Navigation vocabulary belongs here; component identity, labels and surface support belong to the catalog.
+const catalogRoles = {
+  foundation: "글자와 아이콘", layout: "레이아웃", action: "동작", input: "입력", navigation: "탐색",
+  "data-display": "데이터 표시", feedback: "상태와 알림", overlay: "오버레이", provider: "기반 기능", utility: "기반 기능",
+};
+const supported = (entry, surface) => ["stable", "beta"].includes(entry.surfaces[surface].status);
+const roleSlugs = { foundation: "foundation", layout: "layout", action: "actions", input: "inputs", navigation: "navigation", "data-display": "data-display", feedback: "feedback", overlay: "overlays", provider: "infrastructure", utility: "infrastructure" };
+const componentTitle = entry => `컴포넌트/${catalogRoles[entry.category]}/${entry.label}`;
+function platformOnlyComponents(surface) {
+  const other = surface === "web" ? "native" : "web";
+  return Object.fromEntries(componentDefinitions.filter(entry => supported(entry, surface) && !supported(entry, other))
+    .map(entry => [componentTitle(entry), surface === "web" ? WEB_API : NATIVE_API]));
+}
 export const PLATFORM_ONLY = {
   web: {
     "컴포넌트/개요/사용 안내": WEB_DOCS,
     "컴포넌트/개요/컴포넌트 찾기": WEB_DOCS,
     "컴포넌트/개요/구현·검증 현황": WEB_DOCS,
     ...Object.fromEntries(GROUP_ROLES.map((role) => [`컴포넌트/개요/${role} 모아 보기`, `${WEB_DOCS}. 2026-10-06 이전 역할 묶음 URL(id) 보존용`])),
-    "컴포넌트/글자와 아이콘/글자 서식": WEB_API,
-    "컴포넌트/레이아웃/분할 영역 조절": WEB_API,
-    "컴포넌트/데이터 표시/트리 목록": WEB_API,
-    "컴포넌트/상태와 알림/워터마크": WEB_API,
-    "컴포넌트/기반 기능/고정 배치": WEB_API,
-    "컴포넌트/기반 기능/본문 바로가기": WEB_API,
-    "컴포넌트/기반 기능/화면 읽기 도구용 글자": WEB_API,
-    "컴포넌트/입력/색상 선택기": WEB_API,
-    "컴포넌트/오버레이/명령 검색": WEB_API,
-    // 2026-10-17 screen compositions registered: Native OnboardingScreen has no renderer evidence yet (its mount
-    // effect needs ScrollView.scrollTo, absent from the shared test-renderer harness), so the Native item waits.
-    "컴포넌트/레이아웃/온보딩 화면": "Native 증거 claim 대기(screen-flows.tsx scrollTo 가드 필요)",
-    "컴포넌트/탐색/문서 내 바로가기": WEB_API,
-    "컴포넌트/탐색/사이드바": WEB_API,
+    ...platformOnlyComponents("web"),
     "컴포넌트/탐색/사이드바 전환": WEB_API,
-    "컴포넌트/탐색/이동 경로": WEB_API,
-    "컴포넌트/탐색/페이지 이동": WEB_API,
-    "컴포넌트/탐색/상황별 메뉴": WEB_API,
-    "컴포넌트/탐색/메뉴 막대": WEB_API,
-    "컴포넌트/오버레이/사용 안내 둘러보기": WEB_API,
-    "컴포넌트/오버레이/측면 패널": WEB_API,
-    "컴포넌트/오버레이/팝오버": WEB_API,
-    "컴포넌트/오버레이/툴팁": WEB_API,
     "구성/탐색과 이동/보관함과 페이지 이동": "넓은 화면 사이드바·이동 경로·페이지 이동 조합. 구성 요소가 Web 전용 API다",
     "구성/직접 조작과 모션/숫자 변화와 메뉴 변형": "Web 모션 연동 예제. Native 대응은 끌기·밀기·화면 전환과 이미지·시트·키보드 조작이 맡는다",
     "구성/비교와 검증/웹 전용 보조 컴포넌트": "Web 전용 API 모음 자체가 대상이다",
@@ -136,6 +129,7 @@ export const PLATFORM_ONLY = {
     "화면/화면 틀과 도구/목업 편집": "Web 작성 도구. 통합 계획이 Native runtime UI 밖에 두기로 했다(docs/plans 참조)",
   },
   native: {
+    ...platformOnlyComponents("native"),
     "컴포넌트/입력/단계별 선택": NATIVE_API,
     "컴포넌트/상태와 알림/리퀴드 토스트": "Native 선택 설치 확장(enhanced Toast). Web Toast에는 같은 표현이 없다",
     "구성/비교와 검증/네이티브 컴포넌트 기기 확인": "Native renderer를 기기에서 한 화면에 모아 보는 확인용 항목",
@@ -513,6 +507,15 @@ export async function checkModel(model) {
     }
   }
 
+  // S9: a catalog row cannot acquire renderer/story coverage merely by being listed in a derived registry.
+  for (const entry of componentDefinitions) {
+    for (const surface of ["web", "native"]) {
+      if (supported(entry, surface) && !sets[surface].has(componentTitle(entry))) {
+        problems.push(`S9 ${surface} ${entry.name}: canonical item ${componentTitle(entry)} is missing (run pnpm storybook:sync and implement its preview)`);
+      }
+    }
+  }
+
   // S7 툴바 globals, S8 storySort
   const expected = expectedStorySort();
   for (const [platform, preview] of Object.entries(model.previews)) {
@@ -553,7 +556,41 @@ export async function checkModel(model) {
   return { problems, newIds, storyIds: [...currentStoryIds].sort(), counts };
 }
 
+/** CSF needs literal exports for static indexing. Generate metadata, retaining custom examples and shipped URL ids. */
+async function syncCatalogStories() {
+  const model = await collectModel();
+  for (const surface of ["web", "native"]) {
+    for (const entry of componentDefinitions.filter(entry => supported(entry, surface))) {
+      const title = componentTitle(entry);
+      const existing = model.files.find(file => file.platform === surface && file.title?.split("/").slice(1).join("/") === title);
+      if (existing) continue;
+      const path = resolve(root, `showcase/${surface}/src/components/${entry.name}.stories.tsx`);
+      // Never replace an authored story on a rename. Update its title explicitly to retain custom exports/URLs.
+      try { await readFile(path); throw new Error(`Existing story needs catalog title update: ${path}`); }
+      catch (error) { if (error.code !== "ENOENT") throw error; }
+      const web = surface === "web";
+      const component = web ? "ContractStory" : "NativeComponentPreview";
+      const args = web ? `name: "${entry.name}"` : `componentId: "${entry.id}", variant: "default"`;
+      const source = `// Catalog scaffold. Keep custom examples here; metadata is checked against catalog.ts.\nimport type { Meta, StoryObj } from "@storybook/${web ? "react-vite" : "react-native"}";\nimport { ${component} } from "${web ? "./preview-registry" : "../component-examples"}";\nconst meta = { ${web ? `id: "components-${roleSlugs[entry.category]}-${entry.id}", ` : ""}title: "실험/${title}", component: ${component}, args: { ${args} }, parameters: { ${web ? "" : `hjm: { componentIds: ["${entry.id}"] }, `}controls: { disable: true } } } satisfies Meta<typeof ${component}>;\nexport default meta;\ntype Story = StoryObj<typeof meta>;\nexport const Default: Story = { name: "기본" };\nexport const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };\n`;
+      // A newly supported counterpart inherits the existing item's navigation root, never its API maturity.
+      const counterpart = model.files.find(file => file.platform !== surface && file.title?.split("/").slice(1).join("/") === title);
+      await writeFile(path, counterpart ? source.replace(`title: "실험/`, `title: "${counterpart.title.split("/")[0]}/`) : source);
+    }
+  }
+  const overviewFiles = { foundation: "Foundation", layout: "Layout", action: "Actions", input: "Inputs", navigation: "Navigation", "data-display": "DataDisplay", feedback: "Feedback", overlay: "Overlays", utility: "Infrastructure" };
+  for (const [category, filename] of Object.entries(overviewFiles)) {
+    const path = resolve(root, `showcase/web/src/components/overview/${filename}.stories.tsx`);
+    const previous = await readFile(path, "utf8");
+    const id = previous.match(/id:\s*"([^"]+)"/)?.[1];
+    if (!id) throw new Error(`Overview URL id missing: ${path}`);
+    const entries = componentDefinitions.filter(entry => supported(entry, "web") && (entry.category === category || category === "utility" && entry.category === "provider"));
+    const source = `// Generated from catalog.ts by pnpm storybook:sync. URL id retained.\nimport type { Meta, StoryObj } from "@storybook/react-vite";\nimport { ContractStory } from "../preview-registry";\nimport { componentStory } from "../story-factory";\nconst meta = { includeStories: ${JSON.stringify(entries.map(entry => entry.name))}, id: "${id}", title: "배포/컴포넌트/개요/${catalogRoles[category]} 모아 보기", component: ContractStory, parameters: { controls: { disable: true } } } satisfies Meta<typeof ContractStory>;\nexport default meta;\ntype Story = StoryObj<typeof meta>;\n${entries.map(entry => `export const ${entry.name}: Story = { ...componentStory("${entry.name}"), name: ${JSON.stringify(entry.label)} };`).join("\n")}\n`;
+    if (source !== previous) await writeFile(path, source);
+  }
+}
+
 async function main() {
+  if (process.argv.includes("--write-stories")) await syncCatalogStories();
   const model = await collectModel();
   const result = await checkModel(model);
   if (process.argv.includes("--write-ids")) {

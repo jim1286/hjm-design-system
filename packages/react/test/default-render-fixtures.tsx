@@ -2,6 +2,8 @@
 import { ChatMessage, ChatScreen, CompositionLayout, IconTile, MessageComposer, NotificationInboxScreen, NotificationItem, NotificationRow, ScreenLayout, SettingsScreen } from "../src/screens.js";
 import { CommentThreadRow, CommentThreadScreen, EditorScreen, ListDetailScreen, MediaSelectionScreen, ModerationScreen, OnboardingScreen, PermissionScreen, PhotoSourceSheet, ProfileScreen, ProfileSummary, SearchScreen } from "../src/screen-flows.js";
 import { ColorPicker } from "../src/color-picker.js";
+import { LineChart } from "../src/chart.js";
+import { ImageChoiceGroup } from "../src/image-choice.js";
 import { Watermark } from "../src/watermark.js";
 import { Affix } from "../src/affix.js";
 import { Masonry } from "../src/masonry.js";
@@ -122,6 +124,10 @@ export type DefaultRenderFixture = Readonly<{
   marker: string;
   /** Portal-backed components can expose only their trigger during server rendering. */
   ssrMarker?: string;
+  /** Content rendered in a body portal: the long-copy proof inspects this role instead of the marker's subtree. */
+  portalRole?: "dialog" | "tooltip";
+  /** Chrome fixed to the viewport (FAB, bottom navigation): the long-copy proof narrows the viewport to the container. */
+  viewportChrome?: boolean;
   render(): ReactNode;
   /**
    * Renders the component with `copy` in its primary text slot. Only fixtures
@@ -757,6 +763,7 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   { componentId: "anchor", marker: "hjm-anchor", renderLongCopy: (copy) => <Anchor label={copy} items={[{ id: "intro", label: copy }]} />, render: () => <Anchor label="목차" items={[{ id: "intro", label: "소개" }]} /> },
   {
     componentId: "bottom-navigation",
+    viewportChrome: true,
     marker: "hjm-bottom-navigation",
     renderLongCopy: (copy) => (
       <BottomNavigation
@@ -808,6 +815,7 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   },
   {
     componentId: "floating-action-button",
+    viewportChrome: true,
     marker: "hjm-fab",
     renderLongCopy: (copy) => <FloatingActionButton descriptor={{ label: copy, icon: { name: "add" } }} renderIcon={() => <span>＋</span>} onContentClearanceChange={() => {}} />,
     render: () => <FloatingActionButton descriptor={{ label: "새 기록", icon: { name: "add" } }}
@@ -856,7 +864,8 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "list-row",
     marker: "hjm-list-row",
-    renderLongCopy: (copy) => <ListRow title={copy} />,
+    // ListRow surfaces bleed into the host gutter by contract; use the supported padded container.
+    renderLongCopy: (copy) => <div style={{ paddingInline: 16 }}><ListRow title={copy} /></div>,
     render: () => <ListRow title="List row" />,
   },
   {
@@ -1032,6 +1041,7 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
     componentId: "dialog",
     // Portal content intentionally waits for hydration; SSR proves the trigger while browser evidence inspects the modal.
     marker: "role=\"dialog\"",
+    portalRole: "dialog",
     ssrMarker: "Open dialog",
     renderLongCopy: (copy) => (
       <Dialog closeLabel="Close" onOpenChange={() => undefined} open title={copy} description={copy} trigger={<button type="button">Open dialog</button>}>
@@ -1074,6 +1084,7 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "tooltip",
     marker: "hjm-tooltip",
+    portalRole: "tooltip",
     renderLongCopy: (copy) => (
       <Tooltip defaultOpen trigger={<button type="button">Help</button>} content={copy} />
     ),
@@ -1195,13 +1206,14 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "notification-item",
     marker: "hjm-notification-item",
-    renderLongCopy: (copy) => <NotificationItem title={copy} read={false} statusLabel="읽지 않음" timestamp="방금" />,
+    renderLongCopy: (copy) => <div style={{ paddingInline: 16 }}><NotificationItem title={copy} read={false} statusLabel="읽지 않음" timestamp="방금" /></div>,
     render: () => <NotificationItem title="답글" read={false} statusLabel="읽지 않음" timestamp="방금" />,
   },
   {
     componentId: "comment-thread-row",
     marker: "hjm-comment-row__text",
-    renderLongCopy: (copy) => <CommentThreadRow item={{ ...screenComments[0]!, body: <span>{copy}</span> }} onLike={screenNoop} onReply={screenNoop} replyLabel="답글" />,
+    // bodyText is the row's inline text slot; body is a product ReactNode slot the proof must not measure.
+    renderLongCopy: (copy) => <CommentThreadRow item={{ ...screenComments[0]!, bodyText: copy }} onLike={screenNoop} onReply={screenNoop} replyLabel="답글" />,
     render: () => <CommentThreadRow item={screenComments[0]!} onLike={screenNoop} onReply={screenNoop} replyLabel="답글" />,
   },
   {
@@ -1213,16 +1225,31 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "icon-tile",
     marker: "data-hjm-icon-tile",
+    renderLongCopy: (copy) => <IconTile icon={<span aria-hidden="true">★</span>} label={copy} labelLines={2} />,
     render: () => <IconTile icon={<span aria-hidden="true">★</span>} label="도구" />,
   },
   {
     componentId: "message-composer",
     marker: "hjm-message-composer",
+    renderLongCopy: (copy) => <MessageComposer value="" label="메시지" sendLabel="전송" description={copy} onValueChange={screenNoop} onSend={screenNoop} />,
     render: () => <MessageComposer value="" label="메시지" sendLabel="전송" onValueChange={screenNoop} onSend={screenNoop} />,
   },
   {
     componentId: "photo-source-sheet",
     marker: "hjm-sheet",
+    portalRole: "dialog",
+    renderLongCopy: (copy) => <PhotoSourceSheet open onOpenChange={screenNoop} onSelect={screenNoop} labels={{ ...screenPhotoLabels, library: copy }} />,
     render: () => <PhotoSourceSheet open onOpenChange={screenNoop} onSelect={screenNoop} labels={screenPhotoLabels} />,
+  },
+  // 2026-10-18: both rows were active Web contracts without first-party evidence (check-workspace-sync failed on them).
+  {
+    componentId: "chart",
+    marker: "hjm-chart",
+    render: () => <LineChart categories={["3월", "4월", "5월"]} series={[{ id: "ops", label: "OPS", values: [0.8, null, 0.9] }]} accessibilityLabel="월별 OPS" formatValue={(value) => value.toFixed(3)} missingLabel="기록 없음" />,
+  },
+  {
+    componentId: "image-choice-group",
+    marker: "hjm-image-choice",
+    render: () => <ImageChoiceGroup label="프로필 사진" selectionMode="single" value="a" onValueChange={screenNoop} items={[{ id: "a", label: "웃는 얼굴", image: <span aria-hidden="true" /> }, { id: "b", label: "윙크", image: <span aria-hidden="true" /> }]} />,
   },
 ];

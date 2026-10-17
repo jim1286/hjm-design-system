@@ -846,6 +846,12 @@ function EditorScreenExample({ variant: _variant }: { variant: PreviewVariant })
 function PermissionScreenExample({ variant: _variant }: { variant: PreviewVariant }) {
   return (<StoryFrame><PermissionScreen title="카메라" status="prompt" explanation={<RNText>사진을 올리려면 카메라가 필요해요</RNText>} request={screenAction("허용")} settings={screenAction("설정")} continueAction={screenAction("계속")} /></StoryFrame>);
 }
+function OnboardingScreenExample({ variant: _variant }: { variant: PreviewVariant }) {
+  const [index, setIndex] = useState(0);
+  return <StoryFrame><OnboardingScreen index={index} onIndexChange={setIndex}
+    steps={[{ id: "start", title: "환영합니다", description: "서비스의 기능을 알아보세요.", content: <Text>검색하고 기록을 정리하세요.</Text> }, { id: "ready", title: "준비 완료", description: "지금 시작해 보세요.", content: <Text>설정에서 언제든 바꿀 수 있어요.</Text> }]}
+    nextLabel="다음" backLabel="이전" complete={{ label: "처음으로", onAction: () => setIndex(0) }} progressLabel={(step, total) => `${step} / ${total}`} /></StoryFrame>;
+}
 function ModerationScreenExample({ variant: _variant }: { variant: PreviewVariant }) {
   return (<StoryFrame><ModerationScreen title="신고" reasons={[{ value: "spam", label: "스팸" }]} reason={null} onReasonChange={screenNoop} reasonLabel="사유" submit={screenAction("보내기")} /></StoryFrame>);
 }
@@ -980,6 +986,7 @@ const examples = {
 "search-screen": SearchScreenExample,
 "editor-screen": EditorScreenExample,
 "permission-screen": PermissionScreenExample,
+"onboarding-screen": OnboardingScreenExample,
 "moderation-screen": ModerationScreenExample,
 "chat-screen": ChatScreenExample,
 "notification-inbox-screen": NotificationInboxScreenExample,

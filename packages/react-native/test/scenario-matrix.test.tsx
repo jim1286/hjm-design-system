@@ -2,10 +2,16 @@ import type { ReactNode } from "react";
 import { act, create, type ReactTestRendererJSON } from "react-test-renderer";
 import { resolveDesignSystemProviderValue } from "@hjmds/design-contracts/components/design-system-provider";
 import { bottomNavigationRecipe } from "@hjmds/design-contracts/recipes";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it , vi } from "vitest";
+// Chart paints with react-native-svg; the test host renders its primitives as plain views (chart.test.tsx does the same).
+vi.mock("react-native-svg", async () => {
+  const { View } = await import("react-native");
+  return { default: View, Circle: View, ClipPath: View, Defs: View, G: View, Line: View, LinearGradient: View, Path: View, Rect: View, Stop: View, Text: View };
+});
 import { HjmNativeProvider } from "../src/index.js";
 import { reactNativeRendererEvidence, type ReactNativeRendererEvidenceScenario } from "../src/evidence.js";
 import { defaultRenderCases, type DefaultRenderCase } from "./default-render-fixtures.js";
+import { createHostNodeMock } from "./host-node-mock.js";
 import executedScenarioRegistry from "./executed-scenarios.json" with { type: "json" };
 import { startedAnimatedTimings } from "./react-native.mock.js";
 
@@ -50,7 +56,7 @@ function render(environment: Environment, node: ReactNode): HostNode[] {
       >
         {node}
       </HjmNativeProvider>,
-      { createNodeMock: () => ({}) },
+      { createNodeMock: createHostNodeMock },
     );
   });
   json = renderer!.toJSON();

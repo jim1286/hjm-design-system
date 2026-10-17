@@ -315,12 +315,15 @@ describe("Pagination visual recipe", () => {
 });
 
 describe("Pagination catalog and crosswalk", () => {
-  it("exposes the verified Web stable component while retaining the navigation category", () => {
+  it("exposes the shared stable contract while retaining the navigation category", () => {
+    // 2026-10-18: the row became shared when the Native renderer shipped as beta (1bae9c1a); the literal
+    // "web" expectation here was the stale copy, not the catalog.
     const entry = componentCatalog.find((item) => item.name === "Pagination");
     expect(entry).toMatchObject({
       category: "navigation",
-      platform: "web",
+      platform: "shared",
       status: "stable",
+      surfaceStatus: { web: "stable", native: "beta" },
     });
   });
 

@@ -1,177 +1,129 @@
+import { getRequiredShowcaseEvidence } from "@hjmds/design-contracts/showcase";
+import { componentCatalog, componentIdOf, getComponentSurfaceStatus } from "@hjmds/design-contracts/catalog";
+import { publicExportEntries } from "./public-exports.generated.js";
 export const reactRendererEvidenceSchemaVersion = 2;
 const defaultProofFile = "test/default-render.ssr.test.tsx";
 const matrixProofFile = "test/scenario-matrix.browser.test.tsx";
-/**
- * Environment scenarios proven in a real browser by scenario-matrix.browser.
- * Until 1.5.0 every component claimed all seven scenarios from one SSR test
- * that only checked the provider wrapper's attributes. A component now claims
- * a matrix scenario only if the matrix assertion for it passes.
- */
-const matrixScenarios = ["accessibility", "dark", "large-text", "rtl", "reduced-motion"];
+const stableCoreProofFile = "test/stable-core.browser.test.tsx";
 /**
  * Scenarios a component does not pass yet. Each entry is promotion debt that
  * the generated evidence projection reports; remove it when the component is
- * fixed and the matrix case passes.
+ * fixed and the matrix case passes. Stable surfaces cannot carry a gap
+ * (scripts/check-workspace-sync.mjs).
  */
-const webScenarioGaps = {
-    // 2026-10-17 screen compositions registered: measured in scenario-matrix.browser on registration day.
-    // MediaSelectionScreen's add/grid controls lack an accessible name in the minimal fixture; NotificationItem and
-    // CommentThreadRow clamp or wrap the primary copy outside the inspected text slot. Each stays beta debt until fixed.
-    "media-selection-screen": ["accessibility"],
-    "notification-item": ["long-copy"],
-    "comment-thread-row": ["long-copy"],
+const webScenarioGaps = {};
+const keyboard = (file = stableCoreProofFile) => ({ proofs: [{ scenarios: ["keyboard"], file }] });
+const keyboardAndLongCopy = (file) => ({ proofs: [{ scenarios: ["keyboard", "long-copy"], file }] });
+const claimExtras = {
+    "design-system-provider": { exportNames: ["useHjmTheme"] },
+    layout: keyboard(),
+    link: keyboard(),
+    field: keyboard(),
+    "search-field": keyboard(),
+    "password-field": keyboard(),
+    "otp-field": keyboard(),
+    "number-field": keyboard(),
+    slider: keyboard(),
+    form: keyboard("test/form.keyboard.browser.test.tsx"),
+    "date-picker": keyboard(),
+    calendar: keyboard("test/calendar.browser.test.tsx"),
+    "file-picker": keyboard("test/file-picker.keyboard.browser.test.tsx"),
+    checkbox: keyboard(),
+    "checkbox-group": keyboard(),
+    "radio-group": keyboard(),
+    switch: keyboard(),
+    "segmented-control": keyboard(),
+    chip: keyboard(),
+    tabs: keyboard("test/tabs.keyboard.browser.test.tsx"),
+    breadcrumb: keyboard("test/page-navigation.browser.test.tsx"),
+    pagination: keyboard("test/pagination.keyboard.browser.test.tsx"),
+    popover: keyboardAndLongCopy("test/popover.browser.test.tsx"),
+    "side-panel": keyboardAndLongCopy("test/side-panel.browser.test.tsx"),
+    splitter: keyboard("test/splitter.browser.test.tsx"),
+    tour: keyboardAndLongCopy("test/tour.browser.test.tsx"),
+    tree: keyboard("test/tree.browser.test.tsx"),
+    "transfer-list": keyboard("test/transfer-list.browser.test.tsx"),
+    mentions: keyboard("test/mentions.browser.test.tsx"),
+    "command-palette": keyboardAndLongCopy("test/command-palette.browser.test.tsx"),
+    agreement: keyboard("test/agreement.keyboard.browser.test.tsx"),
+    "toggle-group": keyboard(),
+    "tags-input": keyboard(),
+    "skip-nav": keyboardAndLongCopy("test/skip-nav.browser.test.tsx"),
+    sidebar: keyboard("test/sidebar.browser.test.tsx"),
+    "date-range-picker": keyboard("test/date-range.keyboard.browser.test.tsx"),
+    "auth-provider-button": keyboard(),
+    "data-table": keyboard("test/data-table.keyboard.browser.test.tsx"),
+    collapsible: keyboard("test/collapsible.keyboard.browser.test.tsx"),
+    "context-menu": keyboardAndLongCopy("test/context-menu.interactions.browser.test.tsx"),
+    menubar: keyboard("test/menubar.keyboard.browser.test.tsx"),
+    anchor: keyboard("test/anchor.browser.test.tsx"),
+    "bottom-navigation": keyboard("test/bottom-navigation.keyboard.browser.test.tsx"),
+    "load-more": keyboard("test/load-more.interactions.browser.test.tsx"),
+    carousel: keyboard("test/carousel.browser.test.tsx"),
+    "floating-action-button": keyboard(),
+    accordion: keyboard("test/accordion.keyboard.browser.test.tsx"),
+    "upload-item": keyboard("test/upload-item.browser.test.tsx"),
+    // ThinkingOrb runs its whole environment matrix in its own file (canvas timing), not in scenario-matrix.
+    "thinking-orb": { proofs: [{ scenarios: ["dark", "large-text", "rtl", "reduced-motion", "accessibility"], file: "test/thinking-orb.browser.test.tsx" }] },
+    "color-picker": keyboard("test/web-additions.browser.test.tsx"),
+    // SSR proves semantics but cannot catch the close-only row seen in BurnTok.
+    // Keep real geometry evidence attached without promoting catalog maturity.
+    toast: {
+        exportNames: ["useToast"],
+        proofs: [
+            { scenarios: ["keyboard"], file: stableCoreProofFile },
+            { scenarios: ["dark", "long-copy", "large-text", "rtl"], file: "test/toast-layout.browser.test.tsx" },
+        ],
+    },
+    select: keyboard(),
+    combobox: keyboard(),
+    dialog: keyboard("test/advanced.browser.test.tsx"),
+    "alert-dialog": keyboardAndLongCopy("test/alert-dialog.keyboard.browser.test.tsx"),
+    sheet: keyboardAndLongCopy("test/sheet-layout.browser.test.tsx"),
+    tooltip: keyboard("test/tooltip.browser.test.tsx"),
+    menu: keyboardAndLongCopy("test/menu.keyboard.browser.test.tsx"),
 };
-/** Fixtures that render long copy inside the component (renderLongCopy). */
-const webLongCopyFixtures = new Set([
-    "masonry", "virtual-list", "qr-code", "color-picker", "watermark", "affix",
-    "design-system-provider",
-    "text-format",
-    "aspect-ratio",
-    "grid",
-    "splitter",
-    "layout",
-    "steps",
-    "breadcrumb",
-    "auth-screen",
-    "radio",
-    "list",
-    "timeline",
-    "bottom-info",
-    "stack",
-    "container",
-    "text",
-    "surface",
-    "button",
-    "field",
-    "text-area",
-    "card",
-    "notice",
-    "list-row",
-    "tag",
-    "accordion",
-    "file-picker",
-    "agreement",
-    "bottom-navigation",
-    "load-more",
-    "tabs",
-    "badge",
-    "chip",
-    "link",
-    "select",
-    "combobox",
-    "heading",
-    "empty-state",
-    "top",
-    "section",
-    "segmented-control",
-    "top-bar",
-    "mentions",
-    "bottom-cta",
-    "result",
-    "progress",
-    "description-list",
-    "toast",
-    "statistic",
-    "radio-group",
-    "checkbox-group",
-    "auth-provider-button",
-    "password-field",
-    "search-field",
-    "number-field",
-    "floating-action-button",
-    "checkbox",
-    "switch",
-    "toggle-group",
-    "slider",
-    "otp-field",
-    "date-picker",
-    "menubar",
-    "sidebar",
-    "transfer-list",
-    "upload-item",
-    "tags-input",
-    "data-table",
-    "collapsible",
-    "anchor",
-    "tree",
-    "carousel",
-    "calendar",
-    "dialog",
-    "tooltip",
-    // 2026-10-17 screen compositions registered.
-    "screen-layout",
-    "composition-layout",
-    "settings-screen",
-    "search-screen",
-    "editor-screen",
-    "permission-screen",
-    "onboarding-screen",
-    "moderation-screen",
-    "chat-screen",
-    "notification-inbox-screen",
-    "comment-thread-screen",
-    "list-detail-screen",
-    "media-selection-screen",
-    "profile-screen",
-    "chat-message",
-    "notification-row",
-    "notification-item",
-    "comment-thread-row",
-    "profile-summary",
-]);
-function defaultClaim(componentId, exportNames, subpath) {
+const exportEntries = publicExportEntries;
+/**
+ * One claim per active Web row of the catalog. The subpath is the symbol's canonical granular entry, the export
+ * names are the row's own symbol plus the companions published on that entry, and the scenarios are the row's
+ * required Web evidence minus recorded gaps. Keyboard is never implied: it comes only from a dedicated proof.
+ */
+function derivedClaim(entry) {
+    const componentId = componentIdOf(entry);
+    const extras = claimExtras[componentId] ?? {};
+    const symbols = entry.name === "DesignSystemProvider" ? ["HjmProvider"] : [entry.name, ...(entry.companions ?? [])];
+    // A row whose own name is not a symbol (Chart) claims through its first published companion.
+    const subpath = symbols.map((symbol) => exportEntries[symbol]?.[0]).find((entry) => entry !== undefined);
+    if (!subpath)
+        throw new Error(`${entry.name} has no granular @hjmds/react export to claim evidence on`);
+    const exportNames = [
+        ...symbols.filter((symbol) => exportEntries[symbol]?.includes(subpath)),
+        ...(extras.exportNames ?? []),
+    ];
+    const required = getRequiredShowcaseEvidence(entry).find((evidence) => evidence.surface === "web")?.scenarios ?? [];
     const gaps = webScenarioGaps[componentId] ?? [];
-    const matrix = [
-        ...matrixScenarios.filter((scenario) => !gaps.includes(scenario)),
-        ...(webLongCopyFixtures.has(componentId) && !gaps.includes("long-copy") ? ["long-copy"] : []),
+    const extraProofs = extras.proofs ?? [];
+    const proven = new Set(extraProofs.flatMap((proof) => proof.scenarios));
+    const matrix = required.filter((scenario) => scenario !== "default" && scenario !== "keyboard" && scenario !== "native-actions" && scenario !== "contract"
+        && !gaps.includes(scenario) && !proven.has(scenario));
+    const proofs = [
+        { scenarios: ["default"], file: defaultProofFile, caseId: componentId },
+        ...(matrix.length === 0 ? [] : [{ scenarios: matrix, file: matrixProofFile, caseId: componentId }]),
+        ...extraProofs.map((proof) => ({ ...proof, caseId: componentId })),
     ];
     return {
         componentId,
         exportNames,
         subpath,
-        scenarios: ["default", ...matrix],
-        proofs: [
-            { scenarios: ["default"], file: defaultProofFile, caseId: componentId },
-            ...(matrix.length === 0 ? [] : [{ scenarios: matrix, file: matrixProofFile, caseId: componentId }]),
-        ],
+        scenarios: proofs.flatMap((proof) => proof.scenarios),
+        proofs,
     };
 }
-function keyboardClaim(componentId, exportNames, subpath, proofFile = "test/stable-core.browser.test.tsx") {
-    const base = defaultClaim(componentId, exportNames, subpath);
-    return {
-        ...base,
-        scenarios: [...base.scenarios, "keyboard"],
-        proofs: [
-            ...base.proofs,
-            {
-                scenarios: ["keyboard"],
-                file: proofFile,
-                caseId: componentId,
-            },
-        ],
-    };
-}
-function keyboardAndLongCopyClaim(componentId, exportNames, subpath, proofFile) {
-    const base = defaultClaim(componentId, exportNames, subpath);
-    return {
-        ...base,
-        scenarios: [...base.scenarios, "keyboard", "long-copy"],
-        proofs: [...base.proofs, { scenarios: ["keyboard", "long-copy"], file: proofFile, caseId: componentId }],
-    };
-}
-function toastClaim() {
-    const base = defaultClaim("toast", ["Toast", "ToastProvider", "useToast"], "./toast");
-    return {
-        ...base,
-        scenarios: [...base.scenarios, "keyboard"],
-        // SSR proves semantics but cannot catch the close-only row seen in BurnTok.
-        // Keep real geometry evidence attached without promoting catalog maturity.
-        proofs: [...base.proofs,
-            { scenarios: ["keyboard"], file: "test/stable-core.browser.test.tsx", caseId: "toast" },
-            { scenarios: ["dark", "long-copy", "large-text", "rtl"], file: "test/toast-layout.browser.test.tsx", caseId: "toast" },
-        ],
-    };
-}
+const activeWebEntries = componentCatalog.filter((entry) => {
+    const status = getComponentSurfaceStatus(entry, "web");
+    return status === "stable" || status === "beta";
+});
 /**
  * First-party Web renderer claims. Scenario axes remain fail-closed: the
  * default scenario is an SSR render, the environment and accessibility
@@ -184,146 +136,6 @@ export const reactRendererEvidence = {
     packageName: "@hjmds/react",
     packageVersion: "1.29.0",
     surface: "web",
-    components: [
-        defaultClaim("top-bar", ["TopBar"], "./top-bar"),
-        defaultClaim("bottom-cta", ["BottomCTA"], "./bottom-cta"),
-        defaultClaim("design-system-provider", ["HjmProvider", "useHjmTheme"], "./provider"),
-        defaultClaim("text", ["Text"], "./layout"),
-        defaultClaim("surface", ["Surface"], "./layout"),
-        defaultClaim("icon", ["Icon"], "./display"),
-        defaultClaim("stack", ["Stack"], "./layout"),
-        defaultClaim("container", ["Container"], "./layout"),
-        defaultClaim("aspect-ratio", ["AspectRatio"], "./layout"),
-        defaultClaim("grid", ["Grid"], "./layout"),
-        keyboardClaim("layout", ["Layout"], "./layout"),
-        defaultClaim("button", ["Button"], "./actions"),
-        defaultClaim("icon-button", ["IconButton"], "./actions"),
-        keyboardClaim("link", ["Link"], "./actions"),
-        keyboardClaim("field", ["Field", "TextField"], "./forms"),
-        keyboardClaim("search-field", ["SearchField"], "./forms"),
-        defaultClaim("text-area", ["TextArea"], "./forms"),
-        keyboardClaim("password-field", ["PasswordField"], "./password-field"),
-        keyboardClaim("otp-field", ["OtpField"], "./otp-field"),
-        keyboardClaim("number-field", ["NumberField"], "./number-field"),
-        keyboardClaim("slider", ["Slider"], "./slider"),
-        keyboardClaim("form", ["Form"], "./forms", "test/form.keyboard.browser.test.tsx"),
-        keyboardClaim("date-picker", ["DatePicker"], "./date-picker"),
-        keyboardClaim("calendar", ["Calendar"], "./calendar", "test/calendar.browser.test.tsx"),
-        keyboardClaim("file-picker", ["FilePicker"], "./file-picker", "test/file-picker.keyboard.browser.test.tsx"),
-        keyboardClaim("checkbox", ["Checkbox"], "./selection"),
-        defaultClaim("radio", ["Radio"], "./selection"),
-        keyboardClaim("checkbox-group", ["CheckboxGroup"], "./selection"),
-        keyboardClaim("radio-group", ["RadioGroup"], "./selection"),
-        keyboardClaim("switch", ["Switch"], "./selection"),
-        keyboardClaim("segmented-control", ["SegmentedControl"], "./selection"),
-        keyboardClaim("chip", ["Chip"], "./selection"),
-        keyboardClaim("tabs", ["Tabs"], "./navigation", "test/tabs.keyboard.browser.test.tsx"),
-        keyboardClaim("breadcrumb", ["Breadcrumb"], "./breadcrumb", "test/page-navigation.browser.test.tsx"),
-        keyboardClaim("pagination", ["Pagination"], "./pagination", "test/pagination.keyboard.browser.test.tsx"),
-        keyboardAndLongCopyClaim("popover", ["Popover"], "./popover", "test/popover.browser.test.tsx"),
-        keyboardAndLongCopyClaim("side-panel", ["SidePanel"], "./side-panel", "test/side-panel.browser.test.tsx"),
-        keyboardClaim("splitter", ["Splitter"], "./splitter", "test/splitter.browser.test.tsx"),
-        keyboardAndLongCopyClaim("tour", ["Tour"], "./tour", "test/tour.browser.test.tsx"),
-        keyboardClaim("tree", ["Tree"], "./tree", "test/tree.browser.test.tsx"),
-        keyboardClaim("transfer-list", ["TransferList"], "./transfer-list", "test/transfer-list.browser.test.tsx"),
-        keyboardClaim("mentions", ["Mentions"], "./mentions", "test/mentions.browser.test.tsx"),
-        keyboardAndLongCopyClaim("command-palette", ["CommandPalette"], "./command-palette", "test/command-palette.browser.test.tsx"),
-        keyboardClaim("agreement", ["Agreement"], "./agreement", "test/agreement.keyboard.browser.test.tsx"),
-        defaultClaim("top", ["Top"], "./top"),
-        defaultClaim("heading", ["Heading"], "./heading"),
-        defaultClaim("text-format", ["TextFormat"], "./text-formats"),
-        keyboardClaim("toggle-group", ["ToggleGroup"], "./toggle-group"),
-        keyboardClaim("tags-input", ["TagsInput"], "./tags-input"),
-        keyboardAndLongCopyClaim("skip-nav", ["SkipNav"], "./skip-nav", "test/skip-nav.browser.test.tsx"),
-        defaultClaim("bottom-info", ["BottomInfo"], "./bottom-info"),
-        keyboardClaim("sidebar", ["Sidebar"], "./sidebar", "test/sidebar.browser.test.tsx"),
-        keyboardClaim("date-range-picker", ["DateRangePicker"], "./date-range", "test/date-range.keyboard.browser.test.tsx"),
-        keyboardClaim("auth-provider-button", ["AuthProviderButton"], "./provider-button"),
-        defaultClaim("auth-screen", ["AuthScreenLayout", "AuthScreenHero", "AuthScreenFooter"], "./auth-screen"),
-        keyboardClaim("data-table", ["DataTable"], "./data-table", "test/data-table.keyboard.browser.test.tsx"),
-        keyboardClaim("collapsible", ["Collapsible"], "./collapsible", "test/collapsible.keyboard.browser.test.tsx"),
-        keyboardAndLongCopyClaim("context-menu", ["ContextMenu"], "./context-menu", "test/context-menu.interactions.browser.test.tsx"),
-        keyboardClaim("menubar", ["Menubar"], "./menubar", "test/menubar.keyboard.browser.test.tsx"),
-        defaultClaim("asset", ["Asset", "AssetGroup"], "./asset"),
-        keyboardClaim("anchor", ["Anchor"], "./anchor", "test/anchor.browser.test.tsx"),
-        keyboardClaim("bottom-navigation", ["BottomNavigation"], "./navigation", "test/bottom-navigation.keyboard.browser.test.tsx"),
-        keyboardClaim("load-more", ["LoadMore"], "./navigation", "test/load-more.interactions.browser.test.tsx"),
-        keyboardClaim("carousel", ["Carousel"], "./carousel", "test/carousel.browser.test.tsx"),
-        keyboardClaim("floating-action-button", ["FloatingActionButton"], "./floating-action-button"),
-        defaultClaim("steps", ["Steps"], "./steps"),
-        defaultClaim("badge", ["Badge"], "./display"),
-        defaultClaim("avatar", ["Avatar"], "./display"),
-        defaultClaim("counter-badge", ["CounterBadge"], "./display"),
-        defaultClaim("card", ["Card"], "./display"),
-        defaultClaim("list", ["List"], "./display"),
-        defaultClaim("list-row", ["ListRow"], "./display"),
-        defaultClaim("tag", ["Tag"], "./display"),
-        keyboardClaim("accordion", ["Accordion"], "./display", "test/accordion.keyboard.browser.test.tsx"),
-        defaultClaim("divider", ["Divider"], "./display"),
-        defaultClaim("statistic", ["Statistic", "StatisticGroup"], "./display"),
-        defaultClaim("section", ["Section"], "./layout"),
-        keyboardClaim("upload-item", ["UploadItem"], "./upload-item", "test/upload-item.browser.test.tsx"),
-        defaultClaim("timeline", ["Timeline"], "./display"),
-        defaultClaim("description-list", ["DescriptionList"], "./display"),
-        defaultClaim("image", ["Image"], "./display"),
-        defaultClaim("empty-state", ["EmptyState"], "./feedback"),
-        defaultClaim("notice", ["Notice"], "./feedback"),
-        defaultClaim("progress", ["Progress"], "./feedback"),
-        {
-            componentId: "thinking-orb",
-            exportNames: ["ThinkingOrb"],
-            subpath: "./thinking-orb",
-            scenarios: ["default", "dark", "large-text", "rtl", "reduced-motion", "accessibility"],
-            proofs: [
-                { scenarios: ["default"], file: defaultProofFile, caseId: "thinking-orb" },
-                {
-                    scenarios: ["dark", "large-text", "rtl", "reduced-motion", "accessibility"],
-                    file: "test/thinking-orb.browser.test.tsx",
-                    caseId: "thinking-orb",
-                },
-            ],
-        },
-        keyboardClaim("color-picker", ["ColorPicker"], "./color-picker", "test/web-additions.browser.test.tsx"),
-        defaultClaim("watermark", ["Watermark"], "./watermark"),
-        defaultClaim("affix", ["Affix"], "./affix"),
-        defaultClaim("masonry", ["Masonry"], "./masonry"),
-        defaultClaim("virtual-list", ["VirtualList"], "./virtual-list"),
-        defaultClaim("qr-code", ["QRCode"], "./qr-code"),
-        defaultClaim("spinner", ["Spinner"], "./feedback"),
-        defaultClaim("skeleton", ["Skeleton"], "./feedback"),
-        defaultClaim("result", ["Result"], "./feedback"),
-        toastClaim(),
-        keyboardClaim("select", ["Select"], "./forms"),
-        keyboardClaim("combobox", ["Combobox"], "./forms"),
-        keyboardClaim("dialog", ["Dialog"], "./overlays", "test/advanced.browser.test.tsx"),
-        keyboardAndLongCopyClaim("alert-dialog", ["AlertDialog"], "./overlays", "test/alert-dialog.keyboard.browser.test.tsx"),
-        keyboardAndLongCopyClaim("sheet", ["Sheet"], "./overlays", "test/sheet-layout.browser.test.tsx"),
-        keyboardClaim("tooltip", ["Tooltip"], "./overlays", "test/tooltip.browser.test.tsx"),
-        defaultClaim("visually-hidden", ["VisuallyHidden"], "./layout"),
-        keyboardAndLongCopyClaim("menu", ["Menu"], "./overlays", "test/menu.keyboard.browser.test.tsx"),
-        // 2026-10-17 screen compositions registered. Beta on both surfaces; gaps in webScenarioGaps are promotion debt.
-        defaultClaim("screen-layout", ["ScreenLayout"], "./screens"),
-        defaultClaim("composition-layout", ["CompositionLayout"], "./screens"),
-        defaultClaim("settings-screen", ["SettingsScreen"], "./screens"),
-        defaultClaim("search-screen", ["SearchScreen"], "./screen-flows"),
-        defaultClaim("editor-screen", ["EditorScreen"], "./screen-flows"),
-        defaultClaim("permission-screen", ["PermissionScreen"], "./screen-flows"),
-        defaultClaim("onboarding-screen", ["OnboardingScreen"], "./screen-flows"),
-        defaultClaim("moderation-screen", ["ModerationScreen"], "./screen-flows"),
-        defaultClaim("chat-screen", ["ChatScreen"], "./screens"),
-        defaultClaim("notification-inbox-screen", ["NotificationInboxScreen"], "./screens"),
-        defaultClaim("comment-thread-screen", ["CommentThreadScreen"], "./screen-flows"),
-        defaultClaim("list-detail-screen", ["ListDetailScreen"], "./screen-flows"),
-        defaultClaim("media-selection-screen", ["MediaSelectionScreen"], "./screen-flows"),
-        defaultClaim("profile-screen", ["ProfileScreen"], "./screen-flows"),
-        defaultClaim("chat-message", ["ChatMessage"], "./screens"),
-        defaultClaim("notification-row", ["NotificationRow"], "./screens"),
-        defaultClaim("notification-item", ["NotificationItem"], "./screens"),
-        defaultClaim("comment-thread-row", ["CommentThreadRow"], "./screen-flows"),
-        defaultClaim("profile-summary", ["ProfileSummary"], "./screen-flows"),
-        defaultClaim("icon-tile", ["IconTile"], "./screens"),
-        defaultClaim("message-composer", ["MessageComposer"], "./screens"),
-        defaultClaim("photo-source-sheet", ["PhotoSourceSheet"], "./screen-flows"),
-    ],
+    components: activeWebEntries.map(derivedClaim),
 };
 //# sourceMappingURL=evidence.js.map
