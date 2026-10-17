@@ -42,4 +42,9 @@ export function DrawnPencil({ size, color, strokeWidth = 2 }) {
     const body = size * 0.24, length = size * 0.62, tip = body / 2;
     return _jsx(View, { ...hidden, style: { width: size, height: size, alignItems: "center", justifyContent: "center" }, children: _jsxs(View, { style: { alignItems: "center", transform: [{ rotate: "45deg" }] }, children: [_jsx(View, { style: { width: body, height: length, borderWidth: strokeWidth, borderColor: color, borderTopLeftRadius: strokeWidth, borderTopRightRadius: strokeWidth } }), _jsx(View, { style: { width: 0, height: 0, borderLeftWidth: tip, borderRightWidth: tip, borderTopWidth: tip * 1.2, borderLeftColor: "transparent", borderRightColor: "transparent", borderTopColor: color } })] }) });
 }
+/** Vertical "more" dots (Web CommentThreadRow draws the same three circles on the 24-unit grid). Symmetric, so it does not mirror. */
+export function DrawnMoreVertical({ size, color }) {
+    const dot = size * 0.15;
+    return _jsx(View, { ...hidden, style: { width: size, height: size, alignItems: "center", justifyContent: "space-between", paddingVertical: size * 0.135 }, children: [0, 1, 2].map(index => _jsx(View, { style: { width: dot, height: dot, borderRadius: dot / 2, backgroundColor: color } }, index)) });
+}
 //# sourceMappingURL=drawn-glyphs.js.map

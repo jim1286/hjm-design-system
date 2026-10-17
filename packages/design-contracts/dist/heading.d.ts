@@ -32,12 +32,12 @@ export declare const headingRecipe: {
         readonly level1: {
             readonly fontSize: 40;
             readonly lineHeight: 48;
-            readonly fontWeight: "800";
+            readonly fontWeight: "700";
         };
         readonly level2: {
             readonly fontSize: 32;
             readonly lineHeight: 40;
-            readonly fontWeight: "800";
+            readonly fontWeight: "700";
         };
         readonly level3: {
             readonly fontSize: 24;

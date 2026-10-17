@@ -1,4 +1,5 @@
-import { layout, radius, spacing } from "./foundations.js";
+import { glyph, layout, radius, spacing } from "./foundations.js";
+import type { MenuItemDescriptor } from "./behaviors.js";
 
 /** Initial load replaces the body; refresh/save errors belong beside retained content. */
 export type ScreenContentState =
@@ -56,6 +57,16 @@ export function validateScreenExit(exit: Readonly<{ kind: string; label: string 
   if (!exit.label.trim()) throw new TypeError("Screen exit needs a localized accessible label");
   if (hasLeading) throw new TypeError("Screen exit owns the leading slot; do not also pass leading");
 }
+
+/**
+ * Who owns the screen gutters. `default`: the shared shell pads header, notice, body and footer. `none`: the host
+ * route already insets everything (≈45 product call sites rely on this meaning, so it cannot change).
+ * `body-edge`: header, notice and footer keep the shell padding; only the body's inline padding is 0 so full-width
+ * list rows (ConversationRow, ListRow-based items) supply their own inset — review S5#9 measured DM avatars ~32pt
+ * from the edge because body padding and row padding stacked (2026-10-17 user decision).
+ */
+export type ScreenContentInset = "default" | "none" | "body-edge";
+export const screenContentInsets = ["default", "none", "body-edge"] as const satisfies readonly ScreenContentInset[];
 
 // Reuse reading-width and spacing tokens; do not derive geometry from a product's device or artwork.
 export const screenPatternRecipe = {
@@ -227,7 +238,24 @@ export const commentThreadRecipe = {
   // Optional photo/sticker under the body; the measured reference keeps it thumbnail-sized.
   mediaMaxWidth: 160,
   mediaRadius: radius.md,
+  // The trailing vertical-dots menu glyph; the button keeps the shared 44pt IconButton target.
+  menuGlyphSize: glyph.sm,
 } as const;
+
+/**
+ * Items of the HJM-owned per-comment "more" menu (2026-10-17: message/comment structure belongs to HJM, review S4#7).
+ * Same vocabulary as Menu/ContextMenu; the product supplies only ids, localized labels, tone and availability.
+ */
+export type CommentMenuItemDescriptor<Key extends string = string> = Pick<MenuItemDescriptor<Key>, "id" | "label" | "disabled" | "tone">;
+/** Danger actions (delete, block) always sit last so a destructive row is never the first target; order is otherwise kept. */
+export function resolveCommentMenuItems<Key extends string>(items: readonly CommentMenuItemDescriptor<Key>[]): readonly CommentMenuItemDescriptor<Key>[] {
+  const ids = new Set<string>();
+  for (const item of items) {
+    if (!item.id.trim() || ids.has(item.id) || !item.label.trim()) throw new TypeError("Comment menu items require unique ids and localized labels");
+    ids.add(item.id);
+  }
+  return [...items.filter(item => item.tone !== "danger"), ...items.filter(item => item.tone === "danger")];
+}
 
 /** Replies are one level deep; reject orphaned/duplicate records instead of silently losing them. */
 export function validateCommentThread(items:readonly {id:string;parentId:string|null}[]){

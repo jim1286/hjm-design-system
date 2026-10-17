@@ -434,6 +434,15 @@ describe("foundation and recipe contracts", () => {
     expect(heading.level2.fontSize).toBeGreaterThan(heading.level3.fontSize);
   });
 
+  it("renders label at medium by default and bolds display headings (2026-10-17 decision)", () => {
+    expect(typography.label.fontWeight).toBe(fontWeight.medium);
+    expect([heading.level1.fontWeight, heading.level2.fontWeight]).toEqual([fontWeight.bold, fontWeight.bold]);
+    const { resolveTextDefaultWeight } = designSystem;
+    expect(resolveTextDefaultWeight("label", typography, false)).toBe("500");
+    expect(resolveTextDefaultWeight("title", typography, false)).toBeUndefined();
+    expect(resolveTextDefaultWeight("title", typography, true)).toBe(typography.title.fontWeight);
+  });
+
   it("keeps every interactive control at least 44 units tall", () => {
     expect(control.minTouchTarget).toBeGreaterThanOrEqual(44);
     for (const size of Object.keys(control.buttonHeight) as Array<

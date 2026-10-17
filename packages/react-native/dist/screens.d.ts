@@ -5,7 +5,7 @@ import type { ReactionPickerProps } from "./reaction-picker.js";
 import { type Ref, type ReactNode } from "react";
 import { ScrollView, type TextInput, type ScrollViewProps } from "react-native";
 import { type ScreenExit } from "./internal/screen-exit.js";
-import { type MessageAttachmentDescriptor, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
+import { type MessageAttachmentDescriptor, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState, type ScreenContentInset } from "@hjmds/design-contracts/screen-patterns";
 import { type ListRowProps } from "./data-display.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 /** Internal: lets ChatScreen narrow only the timeline gutter without a public spacing escape hatch. */
@@ -23,8 +23,11 @@ export type ScreenLayoutProps = Readonly<{
     headerAlignment?: "start" | "center";
     /** Host navigation can supply its existing header while the shared shell owns scrolling and state. */
     header?: ReactNode;
-    /** Hosts that already inset routes avoid applying the shared gutter twice. */
-    contentInset?: "default" | "none";
+    /**
+     * Hosts that already inset routes avoid applying the shared gutter twice (`none`). `body-edge` keeps the header,
+     * notice and footer gutter and drops only the body's horizontal padding so full-width list rows own their inset.
+     */
+    contentInset?: ScreenContentInset;
     /** Center a product prompt in the available body without inventing a query state. */
     contentAlignment?: "start" | "center";
     /** Keep a product wallpaper supplied by the outer host visible. */

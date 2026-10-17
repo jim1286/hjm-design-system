@@ -21,6 +21,27 @@ it("groups comment heart and overflow in one inline action row without merging t
  act(()=>actions[1]!.props.onPress());expect(more).toHaveBeenCalledOnce();expect(like).toHaveBeenCalledOnce();
  act(()=>tree.unmount());
 });
+it("renders the HJM comment menu at the row's trailing edge with danger items last",async()=>{
+ // 2026-10-17 (review S4#7): HJM owns the vertical-dots button and menu; the product supplies items and callbacks.
+ const {CommentThreadScreen}=await import("../src/screen-flows.js");
+ const {Menu}=await import("../src/navigation.js");
+ const onAction=vi.fn();
+ const items=[{id:"mine",parentId:null,author:"jimin",body:"내 댓글",timeLabel:"방금",likeCountLabel:"",likeIcon:<Text>♡</Text>,likeLabel:"좋아요"},{id:"other",parentId:null,author:"seoyeon",body:"다른 댓글",timeLabel:"방금",likeCountLabel:"",likeIcon:<Text>♡</Text>,likeLabel:"좋아요 2"}];
+ const tree=render(<CommentThreadScreen title="댓글" items={items} expandedIds={[]} onExpandedChange={()=>{}} onLike={()=>{}} onReply={()=>{}} replyLabel="답글 달기" repliesLabel={()=>"더 보기"}
+  commentMenu={{label:item=>`${item.author} 댓글 더 보기`,dismissLabel:"닫기",items:item=>item.author==="jimin"?[{id:"delete",label:"삭제",tone:"danger"},{id:"reply",label:"답글 달기"}]:[],onAction}}/>);
+ const menus=tree.root.findAllByType(Menu);
+ expect(menus).toHaveLength(1);
+ expect(menus[0]!.props.triggerLabel).toBe("jimin 댓글 더 보기");
+ expect(menus[0]!.props.items.map((item:{id:string})=>item.id)).toEqual(["reply","delete"]);
+ const buttons=tree.root.findAllByType(IconButton).filter(button=>button.props.label==="jimin 댓글 더 보기");
+ expect(buttons).toHaveLength(1);
+ // The menu button follows the heart in the trailing action row.
+ const labels=tree.root.findAllByType(IconButton).map(button=>button.props.label);
+ expect(labels.indexOf("jimin 댓글 더 보기")).toBe(labels.indexOf("좋아요")+1);
+ act(()=>{void menus[0]!.props.onActionAfterDismiss("delete");});
+ expect(onAction).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({id:"mine"}),"delete");
+ act(()=>tree.unmount());
+});
 function render(child:ReactNode){let tree:ReactTestRenderer;act(()=>{tree=create(<HjmNativeProvider theme="dark" textScale={1}>{child}</HjmNativeProvider>);});return tree!;}
 it("keeps dirty draft mounted while native discard confirmation is shown",()=>{const leave=vi.fn();const tree=render(<EditorScreen title="작성" dirty submit={{label:"저장",onAction:()=>{}}} cancel={{label:"닫기",onAction:leave}} discard={{mode:"confirm",title:"버릴까요",description:"초안",confirmLabel:"버리기",cancelLabel:"유지",fallbackErrorMessage:"실패"}}>내용</EditorScreen>);act(()=>tree.root.findAllByType(IconButton).find(button=>button.props.label==="닫기")!.props.onPress());expect(leave).not.toHaveBeenCalled();expect(tree.root.findByType(AlertDialog).props.open).toBe(true);act(()=>tree.unmount());});
 it("disables reporting without a selected reason and forwards valid selection",()=>{const select=vi.fn();const tree=render(<ModerationScreen title="신고" reasons={[{value:"spam",label:"스팸"}]} reason={null} onReasonChange={select} reasonLabel="사유" submit={{label:"신고하기",onAction:()=>{}}}/>);expect(tree.root.findAllByType(Button).find(button=>button.props.children==="신고하기")!.props.disabled).toBe(true);act(()=>tree.root.findByType(RadioGroup).props.onValueChange("spam"));expect(select).toHaveBeenCalledWith("spam");act(()=>tree.unmount());});

@@ -14,7 +14,7 @@ import { KeyboardAvoidanceContext, useInsideKeyboardAvoidance, useKeyboardOverla
 import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { ScreenExitButton, type ScreenExit } from "./internal/screen-exit.js";
 import { ScreenFooterContext } from "./internal/screen-footer.js";
-import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, screenHeaderRecipe, validateScreenExit, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
+import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, screenHeaderRecipe, validateScreenExit, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState, type ScreenContentInset } from "@hjmds/design-contracts/screen-patterns";
 import { motion } from "@hjmds/design-contracts/foundations";
 import { Stack, Text } from "./primitives.js";
 import { Heading } from "./heading.js";
@@ -36,8 +36,11 @@ export type ScreenLayoutProps = Readonly<{
   headerAlignment?: "start" | "center";
   /** Host navigation can supply its existing header while the shared shell owns scrolling and state. */
   header?: ReactNode;
-  /** Hosts that already inset routes avoid applying the shared gutter twice. */
-  contentInset?: "default" | "none";
+  /**
+   * Hosts that already inset routes avoid applying the shared gutter twice (`none`). `body-edge` keeps the header,
+   * notice and footer gutter and drops only the body's horizontal padding so full-width list rows own their inset.
+   */
+  contentInset?: ScreenContentInset;
   /** Center a product prompt in the available body without inventing a query state. */
   contentAlignment?: "start" | "center";
   /** Keep a product wallpaper supplied by the outer host visible. */
@@ -94,6 +97,9 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
   const profileLayout = presentation === undefined ? undefined : resolveDesignProfileScreen(presentation);
   const recipe = screenPatternRecipe;
   const padding = contentInset === "none" ? 0 : recipe.padding;
+  // body-edge (review S5#9): list rows supply their own 16pt inset, so the body adds none; ChatScreen's narrower
+  // timeline gutter only replaces the shared default gutter.
+  const bodyInline = contentInset === "default" ? hjmBodyInlinePadding ?? padding : 0;
   // Icon-only route headers need no title breathing room: otherwise the 60pt
   // heading plus full body inset leaves category tabs detached from navigation.
   const compactHeader = header == null && showHeader && headerAlignment === "center" && titleVisibility === "hidden" && !description;
@@ -132,8 +138,8 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
     </View>)}
     {notice ? <View style={{ paddingHorizontal: padding }}>{notice}</View> : null}
     {scroll === "screen" || resolved.replacesContent ? <ScrollView {...scrollProps} ref={bodyScroll} style={{ flex: 1 }} keyboardShouldPersistTaps="handled" scrollEventThrottle={scrollProps?.scrollEventThrottle ?? 16} onScroll={event => { trackScroll(event); scrollProps?.onScroll?.(event); }}
-      contentContainerStyle={{ flexGrow: 1, padding, paddingTop: bodyPaddingTop, ...(hjmBodyInlinePadding === undefined || contentInset === "none" ? {} : { paddingHorizontal: hjmBodyInlinePadding }) }} accessibilityState={{ busy: resolved.busy }}>{body}</ScrollView>
-      : <View style={{ flex: 1, minHeight: 0, padding, paddingTop: bodyPaddingTop, ...(hjmBodyInlinePadding === undefined || contentInset === "none" ? {} : { paddingHorizontal: hjmBodyInlinePadding }) }}>{body}</View>}
+      contentContainerStyle={{ flexGrow: 1, padding, paddingTop: bodyPaddingTop, paddingHorizontal: bodyInline }} accessibilityState={{ busy: resolved.busy }}>{body}</ScrollView>
+      : <View style={{ flex: 1, minHeight: 0, padding, paddingTop: bodyPaddingTop, paddingHorizontal: bodyInline }}>{body}</View>}
     {footer ? <View style={{ padding, borderTopWidth: contentInset === "none" ? 0 : 1, borderColor: colors.border }}><ScreenFooterContext.Provider value>{footer}</ScreenFooterContext.Provider></View> : null}
     </KeyboardAvoidanceContext.Provider>
   </View>;
@@ -364,13 +370,13 @@ export type CompositionLayoutProps = Readonly<{
 }>;
 export function CompositionLayout({title, headingLevel = 3, description, badge, leading, actions, notice, children, footer, state = {kind: "ready"}, stateAction, loadingIndicator, layoutStyle}: CompositionLayoutProps) {
   const resolved = resolveScreenContentState(state);
+  // Same Heading level3 as Web; a title-variant Text rendered smaller and lighter on Native (2026-10-17 review).
   return <Stack gap="md" {...(layoutStyle === undefined ? {} : {layoutStyle})}>
     {title || description || badge || leading || actions ? <Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap: "wrap"}}>
       {leading}<Stack gap="xxs" layoutStyle={{flex: 1, minWidth: 0}}>
         <Stack axis="inline" gap="xs" align="center" layoutStyle={{flexWrap: "wrap"}}>{title ? <Heading level="level3" semanticLevel={headingLevel}>{title}</Heading> : null}{badge}</Stack>
         {description ? <Text tone="muted">{description}</Text> : null}
       </Stack>{actions}
-  // Same Heading level3 as Web; a title-variant Text rendered smaller and lighter on Native (2026-10-17 review).
     </Stack> : null}
     {notice}
     {state.kind === "ready" ? children : <Stack gap="sm" align="center" justify="center" layoutStyle={{flex: 1}}>

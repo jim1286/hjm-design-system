@@ -8,7 +8,7 @@ import { resolveColorReference } from "@hjmds/design-contracts/color-references"
 import { withAlpha } from "@hjmds/design-contracts/colors";
 import { glyph, resolveTextFontRole, resolveFontFamilyStack, } from "@hjmds/design-contracts/foundations";
 import { surfaceDefaults, surfaceGeometry, surfaceRecipe, } from "@hjmds/design-contracts/recipes/base";
-import { sectionRecipe, stackRecipe, textRecipe, } from "@hjmds/design-contracts/recipes";
+import { resolveTextDefaultWeight, sectionRecipe, stackRecipe, textRecipe, } from "@hjmds/design-contracts/recipes";
 import { Children, Component, Fragment, forwardRef, isValidElement, useEffect, useMemo, useState, } from "react";
 import { PixelRatio, StyleSheet, Text as NativeText, View, useWindowDimensions, } from "react-native";
 import { useHjmNativeTheme } from "./provider.js";
@@ -57,7 +57,7 @@ export const Text = forwardRef(function Text({ children, variant = textRecipe.de
         tokens.typography[variant],
         {
             color: toneColors[tone],
-            fontWeight: designProfile && suppliedEmphasis === undefined ? tokens.typography[variant].fontWeight : textRecipe.emphasis[emphasis],
+            fontWeight: (suppliedEmphasis === undefined ? resolveTextDefaultWeight(variant, tokens.typography, Boolean(designProfile)) : undefined) ?? textRecipe.emphasis[emphasis],
             ...resolveNativeFontStyle(resolveFontFamilyStack(tokens.fontFamily, familyRole), familyRole === "code" ? "code" : "ui"),
             textAlign: align ?? inheritedAlign ?? logicalTextAlign(environment.direction),
         },

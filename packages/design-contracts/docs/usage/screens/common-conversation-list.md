@@ -4,7 +4,7 @@
 - 상태: 실험
 - 지원: Web · Native
 - 적용: 구성 API 지침 참조
-- 검토일: 2026-10-16
+- 검토일: 2026-10-17
 - 근거: 2026-10-16 사용자가 제공한 인스타그램 iOS DM 목록·길게 누르기 캡처. 행은 [ConversationRow](../components/conversation-row.md), 행 메뉴는 [ContextMenu](../components/context-menu.md)(Native canonical은 같은 날 추가, 미게시)
 - 스토리북: `실험/화면/소통/대화 목록`
 
@@ -23,9 +23,9 @@ host: 남은 높이·safe area
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
-| 바깥 틀 | ScreenLayout(`scroll="content"`) | route 본문 | 화면 recipe padding 16 |
+| 바깥 틀 | ScreenLayout(`scroll="content"`, `contentInset="body-edge"`) | route 본문 | 헤더·notice는 화면 recipe padding 16, 본문 좌우는 0(행이 여백 소유) |
 | 검색 | SearchField(라벨 "대화 검색", 검색 아이콘, placeholder "이름이나 메시지 검색") | `notice` | 화면 recipe itemGap 12. 결과가 없으면 `state.empty` |
-| 행 | 라우팅 host(Pressable·링크) + ConversationRow | 본문 목록 | 아바타 56, 가로 sm·세로 10, 행 padding은 recipe 소유 |
+| 행 | 라우팅 host(Pressable·링크) + ConversationRow | 본문 목록 | 아바타 56, 행 padding 가로 16(`conversationRowRecipe.paddingInline`)·세로 10, 화면 끝에서 아바타까지 16 |
 | 행 메뉴 | ContextMenu | 행 host를 감싼다 | Native 카드 폭 최대 280, 행 48, 아이콘 24 |
 
 ## 버튼과 행동 위치
@@ -106,3 +106,4 @@ import { ContextMenu } from "@hjmds/react/context-menu";
 
 - 헤더 새 대화 IconButton·`notice` 검색·Web 메뉴 아이콘: 2026-10-17 화면 검토(S5)에서 예제가 새 대화 행동 없이, `notice`에 데모 안내 문구를 두고, Web과 Native 문구·메뉴 모양이 갈라진 것을 확인했다. 예제 데이터·문구는 `showcase/shared/conversation-list.ts` 하나를 두 플랫폼이 읽는다.
 - 검색 아이콘·placeholder, 행동 결과 줄의 위치: 같은 날 재검증에서 notice로 옮긴 SearchField가 아이콘도 placeholder도 없는 빈 상자였고, 데모 행동 결과("미리보기 도구")가 기본 스토리 화면 위에 여백 없이 붙어 있었다. 아이콘은 Web `renderSearchIcon`·Native `renderLeading`(lucide `Search`)이고, 결과 줄은 다른 화면처럼 도구 스토리("행동 결과 확인")에서만 보인다.
+- 본문 `contentInset="body-edge"`: 2026-10-17 사용자 결정. 화면 검토 S5#9에서 본문 padding 16과 행 padding 16이 겹쳐 아바타가 약 32pt 안쪽에서 시작했다(인스타그램 DM 약 16). 기존 `none`은 앱 사용처가 "host가 모든 여백 소유"로 써서 의미를 바꿀 수 없었다.

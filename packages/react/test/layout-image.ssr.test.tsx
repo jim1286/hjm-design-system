@@ -2,7 +2,7 @@ import type { ReactElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
-import { Layout } from "../src/layout.js";
+import { Layout, Text } from "../src/layout.js";
 import { BottomNavigation } from "../src/bottom-navigation.js";
 import type { BottomNavigationDescriptor } from "@hjmds/design-contracts/components/bottom-navigation";
 import {
@@ -194,5 +194,14 @@ describe("Image Web renderer", () => {
     expect(() => renderToStaticMarkup(<Image {...invalid} />)).toThrow(
       /must not provide accessibilityLabel/,
     );
+  });
+});
+
+describe("Text Web default weight", () => {
+  it("renders label at 500 without a profile while other variants keep regular and explicit emphasis wins", () => {
+    // 2026-10-17 decision: label sits between body 400 and titles 600 on both renderers.
+    expect(renderToStaticMarkup(<Text variant="label">라벨</Text>)).toContain("font-weight:500");
+    expect(renderToStaticMarkup(<Text variant="title">제목</Text>)).not.toContain("font-weight");
+    expect(renderToStaticMarkup(<Text variant="label" emphasis="strong">라벨</Text>)).not.toContain("font-weight");
   });
 });

@@ -37,7 +37,8 @@ host: 남은 높이·safe area·키보드
 
 | 행동 | 컴포넌트·tone | 위치 | 개수·순서 |
 | --- | --- | --- | --- |
-| 작업 | CommentThreadScreen 공개 행동 슬롯 | 좋아요와 세로 점 더보기는 댓글 오른쪽의 같은 행; 답글은 본문 아래; 보내기는 하단 composer | 같은 표면에 경쟁하는 primary 하나만 |
+| 작업 | CommentThreadScreen 공개 행동 슬롯 | 좋아요와 세로 점 더보기는 댓글 오른쪽의 같은 행(더보기는 `commentMenu`로 HJM이 행 끝에 그린다); 답글은 본문 아래; 보내기는 하단 composer | 같은 표면에 경쟁하는 primary 하나만 |
+| 댓글 메뉴 | `commentMenu` 항목 | 세로 점 버튼 → 메뉴(답글 달기 → 신고, 내 댓글이면 삭제는 danger로 끝) | 항목·권한은 제품, 순서·위치·이름 규칙은 HJM |
 | 복구 | Button·secondary | 오류 근처 | 재시도할 대상과 범위를 표시 |
 
 ## 상태
@@ -125,12 +126,13 @@ import { MessageComposer } from "@hjmds/react-native/screens";
 - 빈 댓글에서도 작성창 유지; 실패한 전송은 초안 유지.
 - Storybook은 실제 서버·OS 권한·라우터 연동 증거가 아니다. 기본·다크·큰 글자와 실패/복구를 각각 확인한다.
 
-두 renderer의 `CommentThreadItem.actions`는
-좋아요 바로 뒤에 둔다. Storybook 예제는 공개 Menu와 MoreVertical을 쓰며 메뉴의 답글/좋아요는
-기존 controlled callback을 호출한다. 제품의 신고·삭제 권한이나 서버를 예제에서 추정하지 않는다.
+두 renderer의 `CommentThreadItem.actions`는 기존 호환 슬롯으로 좋아요 바로 뒤에 남는다. 더보기 메뉴는 `actions`로 조립하지 않고
+`commentMenu`를 쓴다. Storybook 예제(`instagram-comments-preview`)는 원댓글에 "답글 달기", 남의 댓글에 "신고",
+내 댓글에 "삭제"(danger)를 넣고 기존 controlled callback을 호출한다. 제품의 신고·삭제 권한이나 서버를 예제에서 추정하지 않는다.
 
 ## 근거
 
 - 댓글 목록과 입력의 독립 복구 상황 표: 2026-10-13 전수 점검 — 최초 조회와 변경 요청의 상태를 같은 골격으로 설명하던 부분을 구체화했다.
 - threadHeader가 댓글과 본문 스크롤 공유: 2026-10-08 Spint에서 고정 header 안의 소개가 잘려 스팟 선택이 숨었다.
 - `actions`를 좋아요 바로 뒤에 둠: 2026-10-07 하트 옆 더보기 요청.
+- 더보기 메뉴를 HJM `commentMenu`로: 2026-10-17 사용자 결정. 2026-10-15 규칙(메시지·댓글의 공통 구조는 HJM 소유)과 화면 검토 S4#7(예제·제품이 `actions`로 메뉴 버튼을 직접 조립)에 따른다.

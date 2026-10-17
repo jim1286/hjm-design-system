@@ -9,7 +9,7 @@ import { Button, IconButton } from "./actions.js";
 import { useOptionalHjmTheme } from "./provider.js";
 import { TextArea } from "./forms.js";
 import { useId, useLayoutEffect, useRef, useState, type Ref, type ReactNode } from "react";
-import { isReplySwipe, timestampRevealOffset, shouldSubmitMessageKey, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, screenHeaderRecipe, validateScreenExit, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
+import { isReplySwipe, timestampRevealOffset, shouldSubmitMessageKey, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, screenHeaderRecipe, validateScreenExit, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState, type ScreenContentInset } from "@hjmds/design-contracts/screen-patterns";
 import { Heading } from "./heading.js";
 import { Spinner } from "./internal/spinner.js";
 import { ScreenExitButton, type ScreenExit } from "./internal/screen-exit.js";
@@ -29,7 +29,8 @@ export type ScreenLayoutProps = Readonly<{
   headerAlignment?: "start" | "center";
   /** Preserve host navigation while the shared shell owns content and state. */
   header?: ReactNode;
-  contentInset?: "default" | "none";
+  /** `none`: host owns every inset. `body-edge`: only the body drops its inline padding so list rows own their inset. */
+  contentInset?: ScreenContentInset;
   /** Center a product prompt in the available body without inventing a query state. */
   contentAlignment?: "start" | "center";
   /** Keep a product wallpaper supplied by the outer host visible. */

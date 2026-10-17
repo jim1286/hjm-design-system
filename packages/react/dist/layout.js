@@ -8,8 +8,8 @@ import { resolveAspectRatioDescriptor, } from "@hjmds/design-contracts/component
 import { resolveContainerDescriptor, } from "@hjmds/design-contracts/components/container";
 import { layoutRecipe, validateLayoutWebDescriptor, } from "@hjmds/design-contracts/components/layout";
 import { surfaceDefaults, surfaceGeometry, surfaceRecipe, } from "@hjmds/design-contracts/recipes/base";
-import { stackRecipe, textRecipe, } from "@hjmds/design-contracts/recipes";
-import { resolveTextFontRole } from "@hjmds/design-contracts/foundations";
+import { resolveTextDefaultWeight, stackRecipe, textRecipe, } from "@hjmds/design-contracts/recipes";
+import { resolveTextFontRole, typography } from "@hjmds/design-contracts/foundations";
 import { createElement, forwardRef, useId, useRef, } from "react";
 import { classNames, composeRefs, useElementWidth, useWindowWidth, } from "./internal.js";
 function hasRegionContent(content) {
@@ -97,6 +97,9 @@ export const Layout = forwardRef(function Layout({ children, header, footer, sid
 export const Text = forwardRef(function Text({ as = "span", variant = textRecipe.defaults.variant, fontRole, tone = textRecipe.defaults.tone, emphasis: suppliedEmphasis, className, layoutStyle, style, ...props }, ref) {
     const profile = useDesignProfileDefaults();
     const emphasis = suppliedEmphasis ?? textRecipe.defaults.emphasis;
+    const defaultWeight = suppliedEmphasis === undefined
+        ? resolveTextDefaultWeight(variant, profile?.tokens.typography ?? typography, profile !== undefined)
+        : undefined;
     return createElement(as, {
         ...props,
         ref,
@@ -105,8 +108,9 @@ export const Text = forwardRef(function Text({ as = "span", variant = textRecipe
         "data-font-role": resolveTextFontRole(variant, fontRole ?? (props.role === "heading" ? "display" : undefined)),
         "data-tone": tone,
         "data-emphasis": emphasis,
-        // Placement wins over the legacy `style`, matching Surface's ordering.
-        style: { ...style, ...layoutStyle, ...(profile && suppliedEmphasis === undefined ? { fontWeight: profile.tokens.typography[variant].fontWeight } : {}) },
+        // The variant default weight goes first so caller `style`/placement win, matching Native's style order
+        // (it used to be spread last and overrode an explicit style weight under a profile).
+        style: { ...(defaultWeight === undefined ? {} : { fontWeight: defaultWeight }), ...style, ...layoutStyle },
     });
 });
 export const Surface = forwardRef(function Surface({ as = "div", tone = surfaceDefaults.tone, bordered, padding = surfaceDefaults.padding, radius = surfaceDefaults.radius, className, layoutStyle, style, ...props }, ref) {

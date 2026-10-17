@@ -5,7 +5,7 @@ import type { ReactionPickerProps } from "./reaction-picker.js";
 import { type SheetProps } from "./overlays.js";
 import { type UploadItemDescriptor, type UploadItemLabels } from "@hjmds/design-contracts/components/upload-item";
 import { type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
-import { type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
+import { type CommentMenuItemDescriptor, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
 import { type ContainerGutter } from "@hjmds/design-contracts/components/container";
 /** Copy, pending state and mutations are controlled by the consuming product. */
 /** `icon` renders an icon-only button named by `label`; header actions (top-right) use it so a centered title keeps its width (2026-10-17). */
@@ -342,6 +342,19 @@ export type CommentReactions = ReactionPickerProps & Readonly<{
     interactiveContent?: boolean; /** Icon for the automatic "reply" row of the hold menu. */
     replyIcon?: ReactNode;
 }>;
+/**
+ * HJM-owned "more" menu per comment (2026-10-17: common comment structure belongs to HJM, review S4#7). HJM draws the
+ * vertical-dots button at the row's trailing edge and opens the shared Menu with danger items last; the product supplies
+ * only the localized button name, the items allowed for that comment and the action callback.
+ */
+export type CommentMenu = Readonly<{
+    /** Localized accessible name of the button, e.g. "seoyeon 댓글 더 보기". */
+    label(item: CommentThreadItem): string;
+    /** Items allowed for this comment (permission is product-owned). An empty list omits the button for that row. */
+    items(item: CommentThreadItem): readonly CommentMenuItemDescriptor[];
+    /** Runs after the menu closes, so a confirmation dialog can open without competing with the menu for focus. */
+    onAction(item: CommentThreadItem, id: string): void;
+}>;
 export type CommentThreadScreenProps = Base & {
     items: readonly CommentThreadItem[];
     expandedIds: readonly string[];
@@ -353,6 +366,7 @@ export type CommentThreadScreenProps = Base & {
     composer?: ReactNode;
     threadHeader?: ReactNode;
     threadFooter?: ReactNode;
+    commentMenu?: CommentMenu;
 };
 export type CommentThreadRowProps = Readonly<{
     layoutStyle?: ScreenLayoutProps["layoutStyle"];
@@ -360,11 +374,12 @@ export type CommentThreadRowProps = Readonly<{
     onLike(id: string): void;
     onReply(id: string): void;
     replyLabel: string;
+    commentMenu?: CommentMenu;
 }>;
 /** Virtualized hosts reuse the same row as CommentThreadScreen; product slots add content, not a second layout. */
-export declare function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyle }: CommentThreadRowProps): import("react").JSX.Element;
+export declare function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyle, commentMenu }: CommentThreadRowProps): import("react").JSX.Element;
 /** Controlled thread: server ordering, permission checks and receipt-based draft clearing belong to the product. */
-export declare function CommentThreadScreen({ items, expandedIds, onExpandedChange, onLike, onReply, replyLabel, repliesLabel, composer, threadHeader, threadFooter, ...screen }: CommentThreadScreenProps): import("react").JSX.Element;
+export declare function CommentThreadScreen({ items, expandedIds, onExpandedChange, onLike, onReply, replyLabel, repliesLabel, composer, threadHeader, threadFooter, commentMenu, ...screen }: CommentThreadScreenProps): import("react").JSX.Element;
 export type ProfileSummaryProps = Readonly<{
     name: string;
     headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;

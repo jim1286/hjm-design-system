@@ -25,10 +25,12 @@ export function ConversationListPreview({ tools = false }: { tools?: boolean }) 
   // The demo result line is a preview tool, not screen content: only the tools story shows it, as other screen stories
   // keep demo controls out of the default canvas (2026-10-17 review). The product's notice slot holds search.
   // Host height stands in for the product route.
+  // ConversationRow owns its 16pt inline inset, so the body uses contentInset="body-edge" while header and search keep
+  // the screen gutter: rows start 16 from the edge like Instagram DM instead of 32 (review S5#9).
   return <Stack gap="sm">
     {tools ? <PreviewTools><PatternStatus tone="muted">{status}</PatternStatus></PreviewTools> : null}
     <View style={{ height: 720, width: "100%" }}>
-      <ScreenLayout title={copy.title} scroll="content"
+      <ScreenLayout title={copy.title} scroll="content" contentInset="body-edge"
         actions={<IconButton label={copy.compose} tone="ghost" onPress={() => setStatus(`${copy.compose}를 시작해요.`)}><SquarePen size={20} color={colors.text} /></IconButton>}
         notice={<SearchField label={copy.search} clearLabel={copy.clearSearch} busyLabel={copy.searching} placeholder={copy.searchPlaceholder} renderLeading={({ color, size }) => <Search color={color} size={size} />} value={query} onValueChange={setQuery} />}
         state={rows.length ? { kind: "ready" } : { kind: "empty", title: copy.noMatch }}>

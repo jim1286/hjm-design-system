@@ -18,6 +18,7 @@ export {
   alertDialogRecipe,
   avatarRecipe,
   resolveAvatarInitialsTextVariant,
+  resolveTextDefaultWeight,
   badgeRecipe,
   bottomNavigationRecipe,
   bottomCtaRecipe,

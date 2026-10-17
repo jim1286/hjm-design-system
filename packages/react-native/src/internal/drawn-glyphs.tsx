@@ -70,3 +70,11 @@ export function DrawnPencil({ size, color, strokeWidth = 2 }: Readonly<{ size: n
     </View>
   </View>;
 }
+
+/** Vertical "more" dots (Web CommentThreadRow draws the same three circles on the 24-unit grid). Symmetric, so it does not mirror. */
+export function DrawnMoreVertical({ size, color }: Readonly<{ size: number; color: string }>) {
+  const dot = size * 0.15;
+  return <View {...hidden} style={{ width: size, height: size, alignItems: "center", justifyContent: "space-between", paddingVertical: size * 0.135 }}>
+    {[0, 1, 2].map(index => <View key={index} style={{ width: dot, height: dot, borderRadius: dot / 2, backgroundColor: color }} />)}
+  </View>;
+}

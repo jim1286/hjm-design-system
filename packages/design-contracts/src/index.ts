@@ -353,6 +353,7 @@ export {
   switchRecipe,
   tabsRecipe,
   textRecipe,
+  resolveTextDefaultWeight,
   toastRecipe,
   tooltipRecipe,
   topBarRecipe,

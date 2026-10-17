@@ -1,3 +1,4 @@
+import type { MenuItemDescriptor } from "./behaviors.js";
 /** Initial load replaces the body; refresh/save errors belong beside retained content. */
 export type ScreenContentState = Readonly<{
     kind: "ready";
@@ -46,6 +47,15 @@ export declare function validateScreenExit(exit: Readonly<{
     kind: string;
     label: string;
 }>, hasLeading: boolean): void;
+/**
+ * Who owns the screen gutters. `default`: the shared shell pads header, notice, body and footer. `none`: the host
+ * route already insets everything (≈45 product call sites rely on this meaning, so it cannot change).
+ * `body-edge`: header, notice and footer keep the shell padding; only the body's inline padding is 0 so full-width
+ * list rows (ConversationRow, ListRow-based items) supply their own inset — review S5#9 measured DM avatars ~32pt
+ * from the edge because body padding and row padding stacked (2026-10-17 user decision).
+ */
+export type ScreenContentInset = "default" | "none" | "body-edge";
+export declare const screenContentInsets: readonly ["default", "none", "body-edge"];
 export declare const screenPatternRecipe: {
     readonly maxWidth: 720;
     readonly padding: 16;
@@ -189,7 +199,15 @@ export declare const commentThreadRecipe: {
     readonly likeColumnWidth: 44;
     readonly mediaMaxWidth: 160;
     readonly mediaRadius: 12;
+    readonly menuGlyphSize: 20;
 };
+/**
+ * Items of the HJM-owned per-comment "more" menu (2026-10-17: message/comment structure belongs to HJM, review S4#7).
+ * Same vocabulary as Menu/ContextMenu; the product supplies only ids, localized labels, tone and availability.
+ */
+export type CommentMenuItemDescriptor<Key extends string = string> = Pick<MenuItemDescriptor<Key>, "id" | "label" | "disabled" | "tone">;
+/** Danger actions (delete, block) always sit last so a destructive row is never the first target; order is otherwise kept. */
+export declare function resolveCommentMenuItems<Key extends string>(items: readonly CommentMenuItemDescriptor<Key>[]): readonly CommentMenuItemDescriptor<Key>[];
 /** Replies are one level deep; reject orphaned/duplicate records instead of silently losing them. */
 export declare function validateCommentThread(items: readonly {
     id: string;

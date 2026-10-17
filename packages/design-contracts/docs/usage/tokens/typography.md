@@ -20,7 +20,7 @@
 | 토큰 | 값 | Web CSS 변수 | Native 경로 | 용도 |
 | --- | --- | --- | --- | --- |
 | `typography.caption` | 11 / 줄 16 / 400 | `--hjm-type-caption-size` · `-line-height` · `-weight` | `theme.tokens.typography.caption` | 가장 작은 보조 표기, AuthScreen 정책 링크 |
-| `typography.label` | 12 / 줄 18 / 600 | `--hjm-type-label-*` | `theme.tokens.typography.label` | 라벨·도움말·small 버튼 글자 |
+| `typography.label` | 12 / 줄 18 / 500 | `--hjm-type-label-*` | `theme.tokens.typography.label` | 라벨·도움말·small 버튼 글자 |
 | `typography.body` | 14 / 줄 20 / 400 | `--hjm-type-body-*` | `theme.tokens.typography.body` | 기본 본문·medium 버튼·필드 글자 |
 | `typography.bodyLarge` | 16 / 줄 24 / 400 | `--hjm-type-body-large-*` | `theme.tokens.typography.bodyLarge` | 읽기용 긴 본문·large 버튼 글자 |
 | `typography.title` | 18 / 줄 26 / 600 | `--hjm-type-title-*` | `theme.tokens.typography.title` | 카드 제목(`heading.level5`) |
@@ -28,15 +28,17 @@
 | `typography.heading` | 24 / 줄 32 / 600 | `--hjm-type-heading-*` | `theme.tokens.typography.heading` | 화면의 가장 큰 제목 |
 
 굵기 열은 토큰 원본값이다. 프로필 없는 Text는 기본 `emphasis="regular"`(400)를 사용하므로
-variant만 지정해도 위 굵기가 자동 적용되는 것은 아니다. 프로필이 있으면 생략한 emphasis는
-프로필의 variant 굵기를 읽고, 명시한 emphasis는 언제나 우선한다. Heading은 제목 단계의 굵기를 쓴다.
+variant만 지정해도 위 굵기가 자동 적용되는 것은 아니다. 예외는 `label`이다. `label`은 프로필이 없어도
+생략한 emphasis가 토큰 굵기 500을 따른다(`textRecipe.variantWeight`, `resolveTextDefaultWeight`).
+프로필이 있으면 생략한 emphasis는 프로필의 variant 굵기를 읽고, 명시한 emphasis는 언제나 우선한다.
+Heading은 제목 단계의 굵기를 쓴다. 두 renderer가 같은 resolver를 쓴다.
 
 ### 문서 제목 단계(`heading`, Heading `level`)
 
 | 토큰 | 값 | Web CSS 변수 | Native 경로 | 용도 |
 | --- | --- | --- | --- | --- |
-| `heading.level1` | 40 / 줄 48 / 800 | — | `heading.level1` | 랜딩·문서의 대표 제목 |
-| `heading.level2` | 32 / 줄 40 / 800 | — | `heading.level2` | 긴 페이지의 큰 구획 제목 |
+| `heading.level1` | 40 / 줄 48 / 700 | — | `heading.level1` | 랜딩·문서의 대표 제목 |
+| `heading.level2` | 32 / 줄 40 / 700 | — | `heading.level2` | 긴 페이지의 큰 구획 제목 |
 | `heading.level3` | = `typography.heading` 24 | `--hjm-type-heading-*` | `heading.level3` | 화면 제목 |
 | `heading.level4` | = `typography.titleLarge` 20 | `--hjm-type-title-large-*` | `heading.level4` | 구획 제목 |
 | `heading.level5` | = `typography.title` 18 | `--hjm-type-title-*` | `heading.level5` | 카드 제목 |
@@ -52,8 +54,17 @@ variant만 지정해도 위 굵기가 자동 적용되는 것은 아니다. 프�
 | `numeric.tabular` · `proportional` | `tabular-nums` · `proportional-nums` | — | `numeric.<이름>` | 바뀌는 숫자(카운터·통계·날짜 칸)는 `tabular`로 폭을 고정 |
 | `largeTextThreshold` | 1.6 | 루트 `data-large-text="true"` | `largeTextThreshold` | 글자 배율이 이 값 이상이면 큰 글자 배치로 바꾼다 |
 
+Native는 `fonts="pretendard"`일 때 500을 `Pretendard-Medium`, 700을 `Pretendard-Bold` face로 그린다.
+`@hjmds/react-native/fonts`의 `hjmPretendardFonts`가 400~800 다섯 face를 모두 번들한다. Web은 Pretendard Variable 한 파일이 모든 굵기를 덮는다.
+
 Native 경로의 `theme`은 `useHjmNativeTheme()`, 나머지 이름은 `@hjmds/design-contracts/foundations` import다.
 Web 크기 변수는 `rem × --hjm-text-scale`이라 Provider의 `textScale`을 따른다.
+
+## 근거
+
+2026-10-17 사용자 결정: `label`은 폼 라벨·섹션 부제목이 본문 대비 약해 500(본문 400과 제목 600 사이)으로 정하고
+Web·Native 모두 기본으로 그린다. `heading.level1`·`level2`는 Pretendard 800이 큰 크기에서 무겁고 거칠어 700으로
+낮췄다(제목 단계 3~5는 같은 날 600). 브루탈리즘 프리셋은 강한 강조 프리셋이라 level1·2를 800으로 명시해 유지한다.
 
 ## 쓰는 법
 

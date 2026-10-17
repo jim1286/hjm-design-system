@@ -1,4 +1,4 @@
-import { layout, radius, spacing } from "./foundations.js";
+import { glyph, layout, radius, spacing } from "./foundations.js";
 export function resolveScreenContentState(state = { kind: "ready" }) {
     if (!["ready", "loading", "empty", "error", "restricted"].includes(state.kind)) {
         throw new TypeError("Unknown screen content state");
@@ -45,6 +45,7 @@ export function validateScreenExit(exit, hasLeading) {
     if (hasLeading)
         throw new TypeError("Screen exit owns the leading slot; do not also pass leading");
 }
+export const screenContentInsets = ["default", "none", "body-edge"];
 // Reuse reading-width and spacing tokens; do not derive geometry from a product's device or artwork.
 export const screenPatternRecipe = {
     maxWidth: layout.readingMaxWidth,
@@ -182,7 +183,19 @@ export const commentThreadRecipe = {
     // Optional photo/sticker under the body; the measured reference keeps it thumbnail-sized.
     mediaMaxWidth: 160,
     mediaRadius: radius.md,
+    // The trailing vertical-dots menu glyph; the button keeps the shared 44pt IconButton target.
+    menuGlyphSize: glyph.sm,
 };
+/** Danger actions (delete, block) always sit last so a destructive row is never the first target; order is otherwise kept. */
+export function resolveCommentMenuItems(items) {
+    const ids = new Set();
+    for (const item of items) {
+        if (!item.id.trim() || ids.has(item.id) || !item.label.trim())
+            throw new TypeError("Comment menu items require unique ids and localized labels");
+        ids.add(item.id);
+    }
+    return [...items.filter(item => item.tone !== "danger"), ...items.filter(item => item.tone === "danger")];
+}
 /** Replies are one level deep; reject orphaned/duplicate records instead of silently losing them. */
 export function validateCommentThread(items) {
     const roots = new Set(items.filter(item => item.parentId === null).map(item => item.id));

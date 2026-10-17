@@ -20,7 +20,7 @@
 | 컴포넌트 | 역할 | 지침 |
 | --- | --- | --- |
 | `Container` · `ScrollView` | 시작 화면의 바깥 틀. HJM 화면 골격이 소유한다 | [Container](../components/container.md), [화면 여백](../tokens/layout.md) |
-| `Heading level="level3"`, `Text` | 시작 화면의 제목·설명. 화면 제목은 semibold `level3`이며 heavy 표시 역할 `level1`·`level2`는 쓰지 않는다 | [Heading](../components/heading.md), [Text](../components/text.md) |
+| `Heading level="level3"`, `Text` | 시작 화면의 제목·설명. 화면 제목은 semibold `level3`이며 bold 표시 역할 `level1`·`level2`는 쓰지 않는다 | [Heading](../components/heading.md), [Text](../components/text.md) |
 | `Button` primary | 시트를 여는 트리거(시작 화면의 주 행동) | [Button](../components/button.md) |
 | `Sheet` | 하단 시트. 제목·닫기·`footer`, 안전 영역·스크롤·`busy` | [Sheet](../components/sheet.md) |
 | `Steps` | 현재 단계와 전체 단계 수, 실패하면 현재 단계 `error` | [Steps](../components/steps.md) |

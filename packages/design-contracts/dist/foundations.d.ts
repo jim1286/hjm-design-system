@@ -80,7 +80,7 @@ export declare const typography: {
     readonly label: {
         readonly fontSize: 12;
         readonly lineHeight: 18;
-        readonly fontWeight: "600";
+        readonly fontWeight: "500";
     };
     readonly body: {
         readonly fontSize: 14;
@@ -120,12 +120,12 @@ export declare const heading: {
     readonly level1: {
         readonly fontSize: 40;
         readonly lineHeight: 48;
-        readonly fontWeight: "800";
+        readonly fontWeight: "700";
     };
     readonly level2: {
         readonly fontSize: 32;
         readonly lineHeight: 40;
-        readonly fontWeight: "800";
+        readonly fontWeight: "700";
     };
     readonly level3: {
         readonly fontSize: 24;

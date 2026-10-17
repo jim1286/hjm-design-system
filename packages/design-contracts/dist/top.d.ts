@@ -56,7 +56,7 @@ export declare const topRecipe: {
             readonly title: {
                 readonly fontSize: 32;
                 readonly lineHeight: 40;
-                readonly fontWeight: "800";
+                readonly fontWeight: "700";
             };
             readonly paddingTop: 24;
             readonly paddingBottom: 16;

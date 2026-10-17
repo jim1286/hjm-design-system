@@ -23,6 +23,37 @@ it("keeps comment overflow beside the heart with separate keyboard actions at na
   await userEvent.keyboard("{Enter}");expect(more).toHaveBeenCalledTimes(like.mock.calls.length);
  }
 });
+it("opens the HJM comment menu from the trailing vertical-dots button with danger items last",async()=>{
+ // 2026-10-17 (review S4#7): HJM owns the button position, name and menu; the product supplies items and callbacks.
+ const onAction=vi.fn();host.style.width="360px";host.style.height="720px";
+ const items=[{id:"mine",parentId:null,author:"jimin",body:"내 댓글",timeLabel:"방금",likeCountLabel:"",likeIcon:"♡",likeLabel:"좋아요"},{id:"other",parentId:null,author:"seoyeon",body:"다른 댓글",timeLabel:"방금",likeCountLabel:"",likeIcon:"♡",likeLabel:"좋아요 2"}];
+ await act(async()=>root.render(<HjmProvider><CommentThreadScreen title="댓글" items={items} expandedIds={[]} onExpandedChange={()=>{}} onLike={()=>{}} onReply={()=>{}} replyLabel="답글 달기" repliesLabel={()=>"더 보기"}
+  commentMenu={{label:item=>`${item.author} 댓글 더 보기`,items:item=>item.author==="jimin"?[{id:"delete",label:"삭제",tone:"danger"},{id:"reply",label:"답글 달기"}]:[],onAction}}/></HjmProvider>));
+ expect(host.querySelectorAll('button[aria-label$="댓글 더 보기"]')).toHaveLength(1);
+ const heart=host.querySelector<HTMLButtonElement>('button[aria-label="좋아요"]')!,more=host.querySelector<HTMLButtonElement>('button[aria-label="jimin 댓글 더 보기"]')!;
+ // Same trailing row as the heart, after it.
+ expect(heart.compareDocumentPosition(more)&Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+ expect(Math.abs(heart.getBoundingClientRect().y-more.getBoundingClientRect().y)).toBeLessThan(1);
+ expect(more.querySelectorAll("circle")).toHaveLength(3);
+ await userEvent.click(more);
+ const menuItems=await vi.waitFor(()=>{const found=[...document.querySelectorAll<HTMLElement>('[role="menuitem"]')];if(found.length!==2)throw new Error("menu not open");return found;});
+ // Menu adds its non-color danger cue to the delete row.
+ expect(menuItems.map(item=>item.textContent?.trim())).toEqual(["답글 달기",expect.stringMatching(/삭제$/)]);
+ await userEvent.click(menuItems[1]!);
+ await vi.waitFor(()=>expect(onAction).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({id:"mine"}),"delete"));
+});
+it("body-edge removes only the body's inline padding while header, notice and footer keep the screen gutter",async()=>{
+ // Review S5#9: list rows own their 16px inset; body padding stacked them 32px from the edge. "none" keeps its meaning.
+ const {ScreenLayout}=await import("../src/screens.js");host.style.width="360px";host.style.height="640px";
+ await act(async()=>root.render(<HjmProvider><ScreenLayout title="메시지" contentInset="body-edge" notice={<p>검색</p>} footer={<p>하단</p>}><p>행</p></ScreenLayout></HjmProvider>));
+ const css=(selector:string)=>getComputedStyle(host.querySelector(selector)!);
+ expect(css(".hjm-screen__body").paddingInlineStart).toBe("0px");expect(css(".hjm-screen__body").paddingInlineEnd).toBe("0px");expect(css(".hjm-screen__body").paddingTop).toBe("16px");
+ expect(css(".hjm-screen__header").paddingInlineStart).toBe("16px");expect(css(".hjm-screen__notice").paddingInlineStart).toBe("16px");expect(css(".hjm-screen__footer").paddingInlineStart).toBe("16px");
+ await act(async()=>root.render(<HjmProvider><ScreenLayout title="메시지" contentInset="none"><p>행</p></ScreenLayout></HjmProvider>));
+ expect(css(".hjm-screen__body").paddingTop).toBe("0px");expect(css(".hjm-screen__header").paddingInlineStart).toBe("0px");
+ await act(async()=>root.render(<HjmProvider><ScreenLayout title="메시지"><p>행</p></ScreenLayout></HjmProvider>));
+ expect(css(".hjm-screen__body").paddingInlineStart).toBe("16px");
+});
 let host:HTMLDivElement,root:Root;
 beforeEach(()=>{(globalThis as typeof globalThis & {IS_REACT_ACT_ENVIRONMENT:boolean}).IS_REACT_ACT_ENVIRONMENT=true;host=document.createElement("div");document.body.append(host);root=createRoot(host);});
 afterEach(async()=>{await act(async()=>root.unmount());host.remove();});

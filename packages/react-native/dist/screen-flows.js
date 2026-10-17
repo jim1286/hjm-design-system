@@ -9,7 +9,10 @@ import { AlertDialog, Sheet } from "./overlays.js";
 import { UploadItem } from "./upload-item.js";
 import {} from "@hjmds/design-contracts/components/upload-item";
 import {} from "@hjmds/design-contracts/components/alert-dialog";
-import { validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchScreenPhase, screenPatternRecipe, commentThreadRecipe, profileSummaryRecipe, searchScreenRecipe } from "@hjmds/design-contracts/screen-patterns";
+import { validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchScreenPhase, screenPatternRecipe, commentThreadRecipe, profileSummaryRecipe, searchScreenRecipe, resolveCommentMenuItems } from "@hjmds/design-contracts/screen-patterns";
+import { resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
+import { DrawnMoreVertical } from "./internal/drawn-glyphs.js";
+import { useHjmNativeTheme } from "./provider.js";
 import { AccessibilityInfo, Keyboard, Pressable, ScrollView, View } from "react-native";
 import { containerRecipe } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./data-display.js";
@@ -205,17 +208,25 @@ export function OnboardingScreen({ steps, index, onIndexChange, nextLabel, backL
 function CommentTextAction({ label, onPress, disabled = false, expanded }) {
     return _jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: label, accessibilityState: { disabled, ...(expanded === undefined ? {} : { expanded }) }, disabled: disabled, hitSlop: commentThreadRecipe.avatarGap, onPress: onPress, style: { alignSelf: "flex-start", opacity: disabled ? 0.5 : 1 }, children: _jsx(Text, { variant: "caption", tone: "muted", emphasis: "strong", children: label }) });
 }
+function CommentMenuButton({ item, menu }) {
+    const { palette } = useHjmNativeTheme();
+    const items = resolveCommentMenuItems(menu.items(item));
+    if (!items.length)
+        return null;
+    const label = menu.label(item);
+    return _jsx(Menu, { triggerLabel: label, title: label, dismissLabel: menu.dismissLabel, items: items.map(entry => ({ id: entry.id, label: entry.label, ...(entry.tone === undefined ? {} : { tone: entry.tone }), ...(entry.disabled === undefined ? {} : { disabled: entry.disabled }) })), onActionAfterDismiss: id => menu.onAction(item, id), renderTrigger: trigger => _jsx(IconButton, { label: label, tone: "ghost", onPress: trigger.onPress, children: _jsx(DrawnMoreVertical, { size: commentThreadRecipe.menuGlyphSize, color: resolveIconButtonPresentation("ghost", palette).content }) }) });
+}
 /** Virtualized hosts reuse the same row as CommentThreadScreen; product slots add content, not a second layout. */
-export function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyle }) {
+export function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyle, commentMenu }) {
     const avatarSize = item.parentId === null ? commentThreadRecipe.avatarSize : commentThreadRecipe.replyAvatarSize;
     // The like count sits under the heart so the text column carries only identity, body and reply.
     return _jsxs(Stack, { axis: "inline", align: "start", gap: "xs", ...(layoutStyle === undefined ? {} : { layoutStyle }), children: [item.avatar ? _jsx(View, { style: { width: avatarSize, alignItems: "center" }, children: item.avatar }) : null, _jsxs(View, { style: { flex: 1, minWidth: 0, gap: commentThreadRecipe.lineGap }, children: [(() => {
                         const identity = _jsxs(_Fragment, { children: [item.bodyText !== undefined ? _jsxs(Text, { children: [_jsx(Text, { emphasis: "strong", children: item.author }), " ", item.bodyText] }) : (item.author || item.timeLabel) ? _jsxs(Stack, { axis: "inline", gap: "xxs", align: "center", layoutStyle: { flexWrap: "wrap" }, children: [item.author ? _jsx(Text, { variant: "caption", emphasis: "strong", children: item.author }) : null, item.timeLabel ? _jsx(Text, { variant: "caption", tone: "muted", children: item.timeLabel }) : null] }) : null, item.body, item.media ? _jsx(View, { style: { maxWidth: commentThreadRecipe.mediaMaxWidth, borderRadius: commentThreadRecipe.mediaRadius, overflow: "hidden", marginTop: commentThreadRecipe.avatarGap / 2, alignSelf: "flex-start" }, children: item.media }) : null] });
                         return item.reactions ? _jsx(MessageReactions, { previewSurface: true, ...item.reactions, ...((item.canReply ?? item.parentId === null) && !item.replyDisabled ? { replyAction: { label: replyLabel, onPress: () => onReply(item.id), ...(item.reactions.replyIcon === undefined ? {} : { icon: item.reactions.replyIcon }) } } : {}), children: _jsx(View, { style: { gap: commentThreadRecipe.lineGap }, children: identity }) }) : identity;
-                    })(), (item.bodyText !== undefined && item.timeLabel) || (item.canReply ?? item.parentId === null) || item.reactionSummary ? _jsxs(Stack, { axis: "inline", gap: "sm", align: "center", layoutStyle: { flexWrap: "wrap" }, children: [item.bodyText !== undefined && item.timeLabel ? _jsx(Text, { variant: "caption", tone: "muted", children: item.timeLabel }) : null, item.reactionSummary, (item.canReply ?? item.parentId === null) ? _jsx(CommentTextAction, { label: replyLabel, disabled: item.replyDisabled ?? false, onPress: () => onReply(item.id) }) : null] }) : null] }), _jsxs(View, { style: { flexShrink: 0 }, children: [_jsxs(Stack, { axis: "inline", gap: "xxs", align: "center", layoutStyle: { flexShrink: 0 }, children: [item.likeAction !== undefined ? item.likeAction : _jsx(IconButton, { label: item.likeLabel, tone: "ghost", onPress: () => onLike(item.id), children: item.likeIcon }), item.actions] }), item.likeCountLabel ? _jsx(View, { style: { width: commentThreadRecipe.likeColumnWidth }, children: _jsx(Text, { variant: "caption", tone: "muted", align: "center", children: item.likeCountLabel }) }) : null] })] }, item.id);
+                    })(), (item.bodyText !== undefined && item.timeLabel) || (item.canReply ?? item.parentId === null) || item.reactionSummary ? _jsxs(Stack, { axis: "inline", gap: "sm", align: "center", layoutStyle: { flexWrap: "wrap" }, children: [item.bodyText !== undefined && item.timeLabel ? _jsx(Text, { variant: "caption", tone: "muted", children: item.timeLabel }) : null, item.reactionSummary, (item.canReply ?? item.parentId === null) ? _jsx(CommentTextAction, { label: replyLabel, disabled: item.replyDisabled ?? false, onPress: () => onReply(item.id) }) : null] }) : null] }), _jsxs(View, { style: { flexShrink: 0 }, children: [_jsxs(Stack, { axis: "inline", gap: "xxs", align: "center", layoutStyle: { flexShrink: 0 }, children: [item.likeAction !== undefined ? item.likeAction : _jsx(IconButton, { label: item.likeLabel, tone: "ghost", onPress: () => onLike(item.id), children: item.likeIcon }), item.actions, commentMenu ? _jsx(CommentMenuButton, { item: item, menu: commentMenu }) : null] }), item.likeCountLabel ? _jsx(View, { style: { width: commentThreadRecipe.likeColumnWidth }, children: _jsx(Text, { variant: "caption", tone: "muted", align: "center", children: item.likeCountLabel }) }) : null] })] }, item.id);
 }
 /** Controlled thread: server ordering, permission checks and receipt-based draft clearing belong to the product. */
-export function CommentThreadScreen({ items, expandedIds, onExpandedChange, onLike, onReply, replyLabel, repliesLabel, composer, threadHeader, threadFooter, ...screen }) {
+export function CommentThreadScreen({ items, expandedIds, onExpandedChange, onLike, onReply, replyLabel, repliesLabel, composer, threadHeader, threadFooter, commentMenu, ...screen }) {
     validateCommentThread(items);
     // Index replies once; rescanning every item for each root makes long threads quadratic.
     const roots = [], repliesByParent = new Map();
@@ -231,7 +242,7 @@ export function CommentThreadScreen({ items, expandedIds, onExpandedChange, onLi
                 repliesByParent.set(item.parentId, [item]);
         }
     }
-    const row = (item) => _jsx(CommentThreadRow, { item: item, onLike: onLike, onReply: onReply, replyLabel: replyLabel }, item.id);
+    const row = (item) => _jsx(CommentThreadRow, { item: item, onLike: onLike, onReply: onReply, replyLabel: replyLabel, ...(commentMenu === undefined ? {} : { commentMenu }) }, item.id);
     // Product context belongs in the same scroll body as comments. Putting a tall
     // overview in the fixed header forced a second scroll region in Spint (2026-10-08).
     return _jsx(ScreenLayout, { ...screen, footer: !screen.state || screen.state.kind === "ready" || screen.state.kind === "empty" ? composer : null, children: _jsxs(Stack, { gap: "lg", children: [threadHeader, _jsx(View, { style: { gap: commentThreadRecipe.rowGap }, children: roots.map(item => { const replies = repliesByParent.get(item.id) ?? []; return _jsxs(View, { style: { gap: commentThreadRecipe.rowGap }, children: [row(item), replies.length ? _jsxs(View, { style: { gap: commentThreadRecipe.rowGap, marginStart: commentThreadRecipe.replyIndent }, children: [_jsx(CommentTextAction, { label: repliesLabel(replies.length, expanded.has(item.id)), expanded: expanded.has(item.id), onPress: () => onExpandedChange(item.id) }), expanded.has(item.id) ? replies.map(row) : null] }) : null] }, item.id); }) }), threadFooter] }) });

@@ -32,6 +32,7 @@ import {
   type SurfaceTone,
 } from "@hjmds/design-contracts/recipes/base";
 import {
+  resolveTextDefaultWeight,
   stackRecipe,
   textRecipe,
   type StackAlign,
@@ -41,7 +42,7 @@ import {
   type TextEmphasis,
   type TextTone,
 } from "@hjmds/design-contracts/recipes";
-import { resolveTextFontRole, type FontRole, type TextVariant } from "@hjmds/design-contracts/foundations";
+import { resolveTextFontRole, typography, type FontRole, type TextVariant } from "@hjmds/design-contracts/foundations";
 import {
   createElement,
   forwardRef,
@@ -339,6 +340,9 @@ export const Text = forwardRef<HTMLElement, TextProps>(function Text(
 ) {
   const profile = useDesignProfileDefaults();
   const emphasis = suppliedEmphasis ?? textRecipe.defaults.emphasis;
+  const defaultWeight = suppliedEmphasis === undefined
+    ? resolveTextDefaultWeight(variant, profile?.tokens.typography ?? typography, profile !== undefined)
+    : undefined;
   return createElement(as, {
     ...props,
     ref,
@@ -347,8 +351,9 @@ export const Text = forwardRef<HTMLElement, TextProps>(function Text(
     "data-font-role": resolveTextFontRole(variant, fontRole ?? (props.role === "heading" ? "display" : undefined)),
     "data-tone": tone,
     "data-emphasis": emphasis,
-    // Placement wins over the legacy `style`, matching Surface's ordering.
-    style: { ...style, ...layoutStyle, ...(profile && suppliedEmphasis === undefined ? { fontWeight: profile.tokens.typography[variant].fontWeight } : {}) },
+    // The variant default weight goes first so caller `style`/placement win, matching Native's style order
+    // (it used to be spread last and overrode an explicit style weight under a profile).
+    style: { ...(defaultWeight === undefined ? {} : { fontWeight: defaultWeight }), ...style, ...layoutStyle },
   });
 });
 

@@ -40,6 +40,7 @@ import {
   type SurfaceTone as ContractSurfaceTone,
 } from "@hjmds/design-contracts/recipes/base";
 import {
+  resolveTextDefaultWeight,
   sectionRecipe,
   stackRecipe,
   textRecipe,
@@ -223,7 +224,7 @@ export const Text = forwardRef<NativeText, TextProps>(function Text(
       tokens.typography[variant],
       {
         color: toneColors[tone],
-        fontWeight: designProfile && suppliedEmphasis === undefined ? tokens.typography[variant].fontWeight : textRecipe.emphasis[emphasis],
+        fontWeight: (suppliedEmphasis === undefined ? resolveTextDefaultWeight(variant, tokens.typography, Boolean(designProfile)) : undefined) ?? textRecipe.emphasis[emphasis],
         ...resolveNativeFontStyle(resolveFontFamilyStack(tokens.fontFamily, familyRole), familyRole === "code" ? "code" : "ui"),
         textAlign: align ?? inheritedAlign ?? logicalTextAlign(environment.direction),
       },

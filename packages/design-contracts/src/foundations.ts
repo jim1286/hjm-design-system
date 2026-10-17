@@ -115,11 +115,13 @@ export type NumericVariant = keyof typeof numeric;
 
 export const typography = {
   caption: { fontSize: 11, lineHeight: 16, fontWeight: fontWeight.regular },
-  label: { fontSize: 12, lineHeight: 18, fontWeight: fontWeight.semibold },
+  // Label (form labels, section subtitles) sits between body 400 and titles 600: at 600 it competed with
+  // titles, and Text rendered it 400 outside a profile, too weak against body (2026-10-17 user decision).
+  label: { fontSize: 12, lineHeight: 18, fontWeight: fontWeight.medium },
   body: { fontSize: 14, lineHeight: 20, fontWeight: fontWeight.regular },
   bodyLarge: { fontSize: 16, lineHeight: 24, fontWeight: fontWeight.regular },
   // Title steps are semibold (2026-10-17 user review: 800, then 700, still read too heavy on route
-  // titles). Display levels 1–2 keep heavy.
+  // titles). Display levels 1–2 are bold, see `heading`.
   title: { fontSize: 18, lineHeight: 26, fontWeight: fontWeight.semibold },
   titleLarge: { fontSize: 20, lineHeight: 28, fontWeight: fontWeight.semibold },
   heading: { fontSize: 24, lineHeight: 32, fontWeight: fontWeight.semibold },
@@ -145,8 +147,10 @@ export function resolveTextFontRole(variant: TextVariant, role?: FontRole): Font
  * additive display roles for dense product pages and documentation.
  */
 export const heading = {
-  level1: { fontSize: 40, lineHeight: 48, fontWeight: fontWeight.heavy },
-  level2: { fontSize: 32, lineHeight: 40, fontWeight: fontWeight.heavy },
+  // Bold, not heavy: Pretendard 800 read heavy and rough at 32–40px (2026-10-17 user decision), while
+  // staying one step above the semibold title levels 3–5.
+  level1: { fontSize: 40, lineHeight: 48, fontWeight: fontWeight.bold },
+  level2: { fontSize: 32, lineHeight: 40, fontWeight: fontWeight.bold },
   level3: typography.heading,
   level4: typography.titleLarge,
   level5: typography.title,

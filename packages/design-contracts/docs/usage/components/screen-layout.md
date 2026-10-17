@@ -82,7 +82,7 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 | `scroll` | `"screen"` · `"content"` | `"screen"` | `content`는 본문 자식(가상화 목록)이 스크롤을 소유한다. 상태 교체 중에는 `screen`으로 돌아간다 |
 | `contentAlignment` | `"start"` · `"center"` | `"start"` | ready 본문을 사용 영역 중앙에 배치. 긴 본문은 위가 잘리지 않게 스크롤한다. 로그인/제품 안내를 가짜 query state로 바꾸지 않는다(1.24.0) |
 | `surface` | `"default"` · `"transparent"` | `"default"` | 투명은 제품 host의 배경·wallpaper를 보존. 배경색 style 우회 대신 사용(1.24.0) |
-| `contentInset` | `"default"` · `"none"` | `"default"` | `none`은 헤더·notice·본문·footer padding을 0으로(Native는 footer 위 테두리도 뺀다) |
+| `contentInset` | `"default"` · `"none"` · `"body-edge"` | `"default"` | `none`은 헤더·notice·본문·footer padding을 0으로(Native는 footer 위 테두리도 뺀다). host가 모든 여백을 이미 줄 때 쓴다. `body-edge`는 헤더·notice·footer 여백(16)과 footer 테두리를 유지하고 **본문 좌우 padding만 0**으로 한다. 자기 좌우 여백을 가진 전체 폭 목록 행(ConversationRow·NotificationRow 등 행 padding 16)을 본문에 바로 둘 때 쓴다(미게시). 값 목록은 계약 `ScreenContentInset`·`screenContentInsets` |
 | `presentation` | `"dashboard"` · `"editorial"` · `"landscape"` | 가장 가까운 profile.screens.overview / 없으면 기존 골격 | [디자인 프로필](../../design-profile.md)의 제공 범위를 따른다. 명시값이 프로필을 이긴다. 헤더 배치·읽기 폭만 바꾸고 상태·입력·행동 슬롯은 유지한다 |
 | `as` (Web) | `"main"` · `"section"` | `"main"` | 제품 셸에 이미 `<main>`이 있으면 `section` |
 | `layoutStyle` | `HjmCompositionStyleProp` | 없음 | 화면 루트 배치 전용(예: 분할 화면의 `flex`·`width`). ScreenLayout 위에 만든 화면은 모두 이 prop을 루트까지 넘긴다 |
@@ -94,7 +94,7 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 폭 100%, 최대 `screenPatternRecipe.maxWidth`(`layout.readingMaxWidth` 720), 가운데 정렬; 높이는 host가 준 남은 높이(Web `block-size: 100%`, Native `flex: 1`) | Web `.hjm-screen`, Native `ScreenLayout` |
-| 간격 | 바깥 padding `screenPatternRecipe.padding`(`spacing.md` 16)을 헤더 사방·notice 좌우·본문 사방·footer 사방에 준다(`contentInset="none"`이면 0); 헤더 안 `exit`·제목·`actions` 간격 `itemGap`(`spacing.sm`) 12(두 플랫폼, `contentInset="none"`이어도 유지); 상태 안내는 위아래 `sectionGap`(`spacing.xl`) 24, 안내–`stateAction` `stateGap`(`spacing.md`) 16 | Web `src/screens.tsx`(`--hjm-screen-item-gap`·`--hjm-screen-state-gap`)·`.hjm-screen__*`, Native `ScreenLayout` |
+| 간격 | 바깥 padding `screenPatternRecipe.padding`(`spacing.md` 16)을 헤더 사방·notice 좌우·본문 사방·footer 사방에 준다(`contentInset="none"`이면 0, `"body-edge"`면 본문 좌우만 0); 헤더 안 `exit`·제목·`actions` 간격 `itemGap`(`spacing.sm`) 12(두 플랫폼, `contentInset="none"`이어도 유지); 상태 안내는 위아래 `sectionGap`(`spacing.xl`) 24, 안내–`stateAction` `stateGap`(`spacing.md`) 16 | Web `src/screens.tsx`(`--hjm-screen-item-gap`·`--hjm-screen-state-gap`)·`.hjm-screen__*`, Native `ScreenLayout` |
 | 제목 | 기본 가운데 `Heading` `screenHeaderRecipe.centeredTitleLevel`(level5), `headerAlignment="start"`면 `titleLevel`(level3). 추가 기능 버튼(`actions`)은 끝(오른쪽) 위, 나가기(`exit`)는 시작(왼쪽) 위. 헤더 높이는 두 플랫폼 모두 `screenHeaderRecipe`의 고정 띠 | `screenHeaderRecipe` |
 | 순서·정렬 | 헤더(`exit` → 제목·설명 → `actions`) → notice → 본문 → footer; 상태 안내는 본문 세로 가운데 | 렌더 순서 |
 | 고정·스크롤 | 헤더·notice·footer 고정, `scroll="screen"`은 본문이 스크롤, `"content"`는 자식이 스크롤; footer 위 테두리 1, Web은 하단 safe area만큼 padding을 늘린다 | Web `data-scroll`·`.hjm-screen__footer`, Native `ScrollView` |
@@ -130,9 +130,15 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 
 - 이미 `<main>`이 있는 제품 셸 안에서는 `as="section"`을 준다. 중첩 main이 생긴다.
 
+- 본문 좌우 여백을 직접 빼려고 목록에 음수 margin이나 제품 CSS를 쓰지 않는다. 행이 자기 여백을 가지면 `contentInset="body-edge"`, host가 모든 여백을 가지면 `"none"`이다. 본문 안에 행 여백이 없는 제목·문단을 함께 두는 화면(설정 묶음 제목, 알림 그룹 제목 + ListRow)은 `default`를 유지한다. ListRow 좌우 여백은 8이라 본문 여백을 빼면 제목이 화면 끝에 붙는다.
+
 ### 디자인 프로필의 화면 표현
 
 `presentation` 명시값, 가장 가까운 프로필의 screens.overview, 기존 화면 골격 순으로 선택한다.
 dashboard는 가로 헤더/1200 목록 폭, editorial은 세로 헤더/720 읽기 폭, landscape는 중앙 세로 헤더/1200 폭이다.
 폭은 foundations의 contentMaxWidth/readingMaxWidth다. 프로필을 지정하지 않으면 기존 recipe 배치를 유지한다.
 같은 header/body/notice/footer 및 상태 엔진을 유지하며 입력 subtree를 테마별로 교체하지 않는다.
+
+## 근거
+
+- `contentInset="body-edge"`: 2026-10-17 사용자 결정. 화면 검토 S5#9에서 대화 목록 아바타가 화면 끝에서 약 32pt 안쪽에서 시작했다. 본문 padding 16과 ConversationRow 자체 padding 16이 겹쳤다(인스타그램 DM은 약 16). 앱 약 45곳이 "host가 모든 여백을 소유한다"는 뜻으로 `none`을 쓰고 있어 `none`의 의미를 바꿀 수 없었으므로 값을 새로 추가했다. ChatScreen의 10 타임라인 여백은 `default`일 때만 공통 여백을 대신한다.

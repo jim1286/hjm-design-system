@@ -28,4 +28,9 @@ export declare function DrawnPencil({ size, color, strokeWidth }: Readonly<{
     color: string;
     strokeWidth?: number;
 }>): import("react").JSX.Element;
+/** Vertical "more" dots (Web CommentThreadRow draws the same three circles on the 24-unit grid). Symmetric, so it does not mirror. */
+export declare function DrawnMoreVertical({ size, color }: Readonly<{
+    size: number;
+    color: string;
+}>): import("react").JSX.Element;
 //# sourceMappingURL=drawn-glyphs.d.ts.map

@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-07
+- 검토일: 2026-10-17
 - 근거: [Heading](../../heading.md), recipe `headingRecipe`(`src/heading.ts`)
 - 스토리북: `배포/컴포넌트/글자와 아이콘/제목`
 
@@ -48,7 +48,7 @@ import { Heading } from "@hjmds/react-native/heading";
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `level`(필수) | `level1` 40px · `level2` 32px · `level3` 24px · `level4` 20px · `level5` 18px | — | recipe 기본은 `level3`이지만 두 renderer 모두 prop을 필수로 받는다 |
+| `level`(필수) | `level1` 40px/700 · `level2` 32px/700 · `level3` 24px/600 · `level4` 20px/600 · `level5` 18px/600 | — | recipe 기본은 `level3`이지만 두 renderer 모두 prop을 필수로 받는다 |
 | `semanticLevel` | 1~6 | `level`의 숫자 | 크게 보이지만 구조상 h4인 카드 제목처럼 시각 크기와 문서 단계가 다르면 둘을 따로 적는다 |
 | `layoutStyle` | 배치 key(margin·폭·정렬 등) | — | 바깥 배치만. 크기·줄 높이·굵기·색은 받지 않는다 |
 
@@ -85,6 +85,10 @@ import { Heading } from "@hjmds/react-native/heading";
 | 추가 prop | `HTMLAttributes`(`id`, `className`, `style` 등), ref | 없음 |
 | 배치 | `layoutStyle`. `style`도 합쳐진다(크기 변수는 덮이지 않음) | `layoutStyle`. `style`(TextStyle)은 제거된 속성 — `layoutStyle` 또는 `level` |
 | 글자 배율 | `--hjm-text-scale`로 확대 | Native `Text`의 글자 배율 |
+
+## 근거
+
+2026-10-17 사용자 결정: `level1`·`level2`는 Pretendard 800이 큰 크기에서 무겁고 거칠어 700(bold)으로 낮췄다. 같은 날 600으로 낮춘 `level3`~`level5`보다 한 단계 굵게 유지한다. Native는 `fonts="pretendard"`일 때 `Pretendard-Bold` face로 그린다. `Top size="large"` 제목도 `heading.level2`라 함께 700이 된다. 브루탈리즘 프리셋은 level1·2를 800으로 명시한다.
 
 ## 함정
 

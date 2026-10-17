@@ -24,7 +24,23 @@ export const textRecipe = {
         medium: fontWeight.semibold,
         strong: fontWeight.bold,
     },
+    /**
+     * Variants whose omitted `emphasis` renders the variant's typography weight even without a design profile.
+     * Label's 500 has no emphasis step (`medium` is 600), and the shared `regular` default drew form labels at
+     * body weight (2026-10-17 user decision: label 500 on Web and Native). Other variants keep `regular`.
+     */
+    variantWeight: ["label"],
 };
+/**
+ * Weight Text renders when the caller omits `emphasis`; `undefined` means `textRecipe.defaults.emphasis` applies.
+ * Inside a design profile every variant follows the profile's typography weight; outside one only
+ * `textRecipe.variantWeight` variants do. An explicit `emphasis` always wins and never reaches this resolver.
+ */
+export function resolveTextDefaultWeight(variant, typographyTokens, designProfileActive) {
+    return designProfileActive || textRecipe.variantWeight.includes(variant)
+        ? typographyTokens[variant].fontWeight
+        : undefined;
+}
 export const iconRecipe = {
     slots: ["root"],
     defaults: {

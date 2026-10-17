@@ -3026,6 +3026,9 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-screen__heading > * { margin: 0; }
 .hjm-screen__notice { padding-inline: var(--hjm-screen-padding); flex: 0 0 auto; }
 .hjm-screen__body { flex: 1 1 0%; min-block-size: 0; min-inline-size: 0; padding: var(--hjm-screen-padding); overflow-wrap: anywhere; }
+/* contentInset="body-edge": header, notice and footer keep the gutter; full-width list rows own their inline inset
+   (review S5#9: body 16 + row 16 put DM avatars ~32 from the edge). "none" keeps its host-owns-all meaning. */
+.hjm-screen[data-content-inset="body-edge"] > .hjm-screen__body { padding-inline: 0; }
 .hjm-screen__body[data-scroll="screen"] { overflow-y: auto; }
 .hjm-screen__body[data-scroll="content"] { display: flex; flex-direction: column; overflow: hidden; }
 .hjm-screen__body[data-content-alignment="center"] { display: flex; flex-direction: column; }
@@ -3089,7 +3092,8 @@ button.hjm-chat-message__media-item { cursor: pointer; }
 button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm-color-focus, currentColor); outline-offset: -2px; }
 .hjm-chat-message__bubble[data-photo-only] { background: none; padding: 0; }
 .hjm-chat-message__bubble[data-photo-only]::before { display: none; }
-.hjm-chat-screen:not([data-content-inset="none"]) .hjm-screen__body { padding-inline: 10px; }
+/* Only the shared default gutter narrows to the timeline gutter; "none" and "body-edge" keep their own meaning. */
+.hjm-chat-screen[data-content-inset="default"] .hjm-screen__body { padding-inline: 10px; }
 .hjm-chat-screen__footer { position: relative; }
 /* ImageChoiceGroup (2026-10-16): square tiles, brand ring + check when chosen. */
 /* Screen exit (2026-10-17): back chevron follows reading direction. */

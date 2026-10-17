@@ -2312,7 +2312,7 @@ export declare const recipeRegistry: {
                 readonly title: {
                     readonly fontSize: 32;
                     readonly lineHeight: 40;
-                    readonly fontWeight: "800";
+                    readonly fontWeight: "700";
                 };
                 readonly paddingTop: 24;
                 readonly paddingBottom: 16;
@@ -2420,12 +2420,12 @@ export declare const recipeRegistry: {
             readonly level1: {
                 readonly fontSize: 40;
                 readonly lineHeight: 48;
-                readonly fontWeight: "800";
+                readonly fontWeight: "700";
             };
             readonly level2: {
                 readonly fontSize: 32;
                 readonly lineHeight: 40;
-                readonly fontWeight: "800";
+                readonly fontWeight: "700";
             };
             readonly level3: {
                 readonly fontSize: 24;
@@ -7943,6 +7943,7 @@ export declare const recipeRegistry: {
             readonly medium: "600";
             readonly strong: "700";
         };
+        readonly variantWeight: readonly ["label"];
     };
     readonly timelineRecipe: {
         readonly slots: readonly ["root", "item", "dot", "connector", "content", "timestamp", "label", "description"];

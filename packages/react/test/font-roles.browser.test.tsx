@@ -36,7 +36,8 @@ it("translates family roles through titles, card bodies, controls and the portal
     expect(family(".hjm-button")).toBe("Arial");
     expect(family(".hjm-dialog__title")).toBe("Georgia");
     expect(family(".hjm-dialog .hjm-text")).toBe("Palatino");
-    expect(family('[data-testid="reset"]')).toContain("Inter");
+    // The neutral preset restores the default UI stack, bundled Pretendard since 2026-10-17 (Inter was never loaded).
+    expect(family('[data-testid="reset"]')).toContain("Pretendard");
   } finally { await act(() => root.unmount()); host.remove(); }
 });
 

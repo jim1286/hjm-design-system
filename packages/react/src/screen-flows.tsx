@@ -10,7 +10,7 @@ import { AlertDialog, Menu, Sheet, type SheetProps } from "./overlays.js";
 import { UploadItem } from "./upload-item.js";
 import { type UploadItemDescriptor, type UploadItemLabels } from "@hjmds/design-contracts/components/upload-item";
 import { type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
-import { validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchScreenPhase, resolveFocusAfterRemoval, screenPatternRecipe, commentThreadRecipe, profileSummaryRecipe, searchScreenRecipe, type SearchEmptyCause, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
+import { validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchScreenPhase, resolveFocusAfterRemoval, screenPatternRecipe, commentThreadRecipe, profileSummaryRecipe, searchScreenRecipe, resolveCommentMenuItems, type CommentMenuItemDescriptor, type SearchEmptyCause, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
 import { resolveWindowClass } from "@hjmds/design-contracts/responsive";
 import { containerRecipe, type ContainerGutter } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./display.js";
@@ -23,11 +23,11 @@ export type ScreenFlowAction = Readonly<{label:string; onAction():void; disabled
 /** Header tool action (refresh, add): icon-only so it never pushes the centered title. A required text `add` made
  * products route exits ("취소") through it as a header text button (2026-10-17 screen review); exits use `exit`. */
 export type ScreenFlowIconAction = ScreenFlowAction & Readonly<{icon:ReactNode}>;
-type Base = Omit<ScreenLayoutProps,"children"|"footer">;
 function Action({action,secondary=false,buttonRef}:{action:ScreenFlowAction;secondary?:boolean;buttonRef?:Ref<HTMLButtonElement>}){if(action.icon)return <IconButton ref={buttonRef} label={action.label} tone="ghost" disabled={!!(action.disabled||action.pending)} onClick={action.onAction}>{action.icon}</IconButton>;return <Button ref={buttonRef} tone={secondary?"ghost":"primary"} disabled={!!(action.disabled||action.pending)} loading={action.pending??false} onClick={action.onAction}>{action.label}</Button>;}
+type Base = Omit<ScreenLayoutProps,"children"|"footer">;
 // Stacked footer/sheet buttons use Stack gap "xs" (actionGroupRecipe.stackedGap 8); 12 read as split groups (button.md, 2026-10-17).
-export type ListDetailScreenProps = Base & { list:ReactNode; detail?:Pick<ScreenLayoutProps,"title"|"state"|"stateAction"|"notice"|"titleVisibility"|"headerAlignment"> & {content:ReactNode}; back:ScreenFlowAction; refresh?:ScreenFlowIconAction; loadMore?:ScreenFlowAction };
 
+export type ListDetailScreenProps = Base & { list:ReactNode; detail?:Pick<ScreenLayoutProps,"title"|"state"|"stateAction"|"notice"|"titleVisibility"|"headerAlignment"> & {content:ReactNode}; back:ScreenFlowAction; refresh?:ScreenFlowIconAction; loadMore?:ScreenFlowAction };
 /** Keep the list mounted so input and scroll survive a detail visit. Routers may instead restore host scroll state. */
 export function ListDetailScreen({list,detail,back,refresh,loadMore,layoutStyle,...screen}:ListDetailScreenProps){
  const open=!!detail;
@@ -49,8 +49,8 @@ export function ListDetailScreen({list,detail,back,refresh,loadMore,layoutStyle,
  },[open]);
  // layoutStyle places the outer host that owns both panes, not the inner list ScreenLayout.
  // "더 보기" ends the list inside the scroll body, centered like LoadMore; the fixed footer is the bottom CTA slot (2026-10-17 review).
-  <div ref={listHost} tabIndex={-1} hidden={open} style={{height:"100%"}} onFocusCapture={event=>{returnFocus.current=event.target as HTMLElement;}}><ScreenLayout {...screen} {...(refresh||screen.actions?{actions:<Stack axis="inline" gap="xs" align="center">{/* Refresh no longer replaces the screen's own actions (2026-10-16 composition review). */}{screen.actions}{refresh?<Action action={refresh} secondary/>:null}</Stack>}:{})}>{loadMore?<div style={{display:"flex",flexDirection:"column",flex:"1 1 auto",minHeight:0,gap:screenPatternRecipe.itemGap}}>{list}<div style={{display:"flex",justifyContent:"center"}}><Action action={loadMore} secondary/></div></div>:list}</ScreenLayout></div>
  return <div style={{height:"100%",...layoutStyle}}>
+  <div ref={listHost} tabIndex={-1} hidden={open} style={{height:"100%"}} onFocusCapture={event=>{returnFocus.current=event.target as HTMLElement;}}><ScreenLayout {...screen} {...(refresh||screen.actions?{actions:<Stack axis="inline" gap="xs" align="center">{/* Refresh no longer replaces the screen's own actions (2026-10-16 composition review). */}{screen.actions}{refresh?<Action action={refresh} secondary/>:null}</Stack>}:{})}>{loadMore?<div style={{display:"flex",flexDirection:"column",flex:"1 1 auto",minHeight:0,gap:screenPatternRecipe.itemGap}}>{list}<div style={{display:"flex",justifyContent:"center"}}><Action action={loadMore} secondary/></div></div>:list}</ScreenLayout></div>
   {detail?<div ref={detailHost} style={{height:"100%"}}><ScreenLayout title={detail.title} {...(detail.titleVisibility === undefined ? {} : { titleVisibility: detail.titleVisibility })} {...(detail.headerAlignment === undefined ? {} : { headerAlignment: detail.headerAlignment })} {...(detail.state === undefined ? {} : {state:detail.state})} stateAction={detail.stateAction} notice={detail.notice} exit={{kind:"back",label:back.label,onClick:back.onAction,disabled:!!(back.disabled||back.pending)}}>{detail.content}</ScreenLayout></div>:null}
  </div>;
 }
@@ -517,15 +517,37 @@ export type CommentThreadItem = Readonly<{id:string;parentId:string|null;author:
  /** Optional photo or sticker under the body; HJM bounds its width and corners, the product sizes the image. */
  media?:ReactNode}>;
 export type CommentReactions = ReactionPickerProps & Readonly<{closeLabel:string;menuAction?:Readonly<{label:string;onPress():void;disabled?:boolean}>;menuActions?:readonly MessageMenuAction[];reportAction?:Readonly<{label:string;onPress():void;disabled?:boolean;icon?:ReactNode}>;interactiveContent?:boolean;/** Icon for the automatic "reply" row of the hold menu. */replyIcon?:ReactNode}>;
-export type CommentThreadScreenProps = Base & {items:readonly CommentThreadItem[];expandedIds:readonly string[];onExpandedChange(id:string):void;onLike(id:string):void;onReply(id:string):void;replyLabel:string;repliesLabel(count:number,expanded:boolean):string;composer?:ReactNode;threadHeader?:ReactNode;threadFooter?:ReactNode};
-export type CommentThreadRowProps = Readonly<{ layoutStyle?: ScreenLayoutProps["layoutStyle"]; item: CommentThreadItem; onLike(id: string): void; onReply(id: string): void; replyLabel: string }>;
+/**
+ * HJM-owned "more" menu per comment (2026-10-17: common comment structure belongs to HJM, review S4#7). HJM draws the
+ * vertical-dots button at the row's trailing edge and opens the shared Menu with danger items last; the product supplies
+ * only the localized button name, the items allowed for that comment and the action callback.
+ */
+export type CommentMenu = Readonly<{
+  /** Localized accessible name of the button, e.g. "seoyeon 댓글 더 보기". */
+  label(item: CommentThreadItem): string;
+  /** Items allowed for this comment (permission is product-owned). An empty list omits the button for that row. */
+  items(item: CommentThreadItem): readonly CommentMenuItemDescriptor[];
+  /** Runs after the menu closes, so a confirmation dialog can open without competing with the menu for focus. */
+  onAction(item: CommentThreadItem, id: string): void;
+}>;
+export type CommentThreadScreenProps = Base & {items:readonly CommentThreadItem[];expandedIds:readonly string[];onExpandedChange(id:string):void;onLike(id:string):void;onReply(id:string):void;replyLabel:string;repliesLabel(count:number,expanded:boolean):string;composer?:ReactNode;threadHeader?:ReactNode;threadFooter?:ReactNode;commentMenu?:CommentMenu};
+export type CommentThreadRowProps = Readonly<{ layoutStyle?: ScreenLayoutProps["layoutStyle"]; item: CommentThreadItem; onLike(id: string): void; onReply(id: string): void; replyLabel: string; commentMenu?: CommentMenu }>;
 /** Quiet secondary actions (reply, expand) read as muted copy beside the body, not as filled buttons. */
 function CommentTextAction({label,onPress,disabled=false,expanded}:Readonly<{label:string;onPress():void;disabled?:boolean;expanded?:boolean}>){
  return <button type="button" className="hjm-comment-row__action" disabled={disabled} aria-expanded={expanded} onClick={onPress}>{label}</button>;
 }
 
+/** Vertical dots drawn in the icon grid, matching Native's drawn glyph (the semantic `more` icon is horizontal). */
+function CommentMenuGlyph(){const size=commentThreadRecipe.menuGlyphSize;return <svg aria-hidden="true" focusable="false" width={size} height={size} viewBox="0 0 24 24" fill="currentColor">{[5,12,19].map(y=><circle key={y} cx="12" cy={y} r="1.75"/>)}</svg>;}
+function CommentMenuButton({item,menu}:Readonly<{item:CommentThreadItem;menu:CommentMenu}>){
+ const items=resolveCommentMenuItems(menu.items(item));
+ if(!items.length)return null;
+ const label=menu.label(item);
+ return <Menu label={label} align="end" trigger={<IconButton label={label} tone="ghost"><CommentMenuGlyph/></IconButton>} items={items.map(entry=>({id:entry.id,label:entry.label,textValue:entry.label,...(entry.tone===undefined?{}:{tone:entry.tone}),...(entry.disabled===undefined?{}:{disabled:entry.disabled})}))} onActionAfterDismiss={id=>menu.onAction(item,id)}/>;
+}
+
 /** Virtualized hosts reuse the same row as CommentThreadScreen; product slots add content, not a second layout. */
-export function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyle }: CommentThreadRowProps) {
+export function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyle, commentMenu }: CommentThreadRowProps) {
  const avatarSize=item.parentId===null?commentThreadRecipe.avatarSize:commentThreadRecipe.replyAvatarSize;
  const canReply=item.canReply??item.parentId===null;
  const time=item.timeLabel?<time dateTime={item.timeDateTime}><Text variant="caption" tone="muted">{item.timeLabel}</Text></time>:null;
@@ -535,11 +557,11 @@ export function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyl
  {(()=>{const identity=<>{item.bodyText!==undefined?<Text><Text emphasis="strong">{item.author}</Text>{" "}{item.bodyText}</Text>:(item.author||item.timeLabel)?<Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexWrap:"wrap"}}>{item.author?<Text variant="caption" emphasis="strong">{item.author}</Text>:null}{time}</Stack>:null}
  {item.body}{item.media?<div className="hjm-comment-row__media" style={{maxInlineSize:commentThreadRecipe.mediaMaxWidth,borderRadius:commentThreadRecipe.mediaRadius}}>{item.media}</div>:null}</>;return item.reactions?<MessageReactions {...item.reactions} {...((item.canReply??item.parentId===null)&&!item.replyDisabled ? {replyAction:{label:replyLabel,onPress:()=>onReply(item.id),...(item.reactions.replyIcon===undefined?{}:{icon:item.reactions.replyIcon})}} : {})} triggerClassName="hjm-comment-row__reactions">{identity}</MessageReactions>:identity;})()}
  {(item.bodyText!==undefined&&time)||canReply||item.reactionSummary?<Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap:"wrap"}}>{item.bodyText!==undefined?time:null}{item.reactionSummary}{canReply?<CommentTextAction label={replyLabel} disabled={item.replyDisabled??false} onPress={()=>onReply(item.id)}/>:null}</Stack>:null}</div>
- <div className="hjm-comment-row__like"><Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexShrink:0}}>{item.likeAction!==undefined?item.likeAction:<IconButton label={item.likeLabel} tone="ghost" onClick={()=>onLike(item.id)}>{item.likeIcon}</IconButton>}{item.actions}</Stack>{item.likeCountLabel?<div className="hjm-comment-row__like-count" style={{inlineSize:commentThreadRecipe.likeColumnWidth}}><Text variant="caption" tone="muted">{item.likeCountLabel}</Text></div>:null}</div></Stack>;
+ <div className="hjm-comment-row__like"><Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexShrink:0}}>{item.likeAction!==undefined?item.likeAction:<IconButton label={item.likeLabel} tone="ghost" onClick={()=>onLike(item.id)}>{item.likeIcon}</IconButton>}{item.actions}{commentMenu?<CommentMenuButton item={item} menu={commentMenu}/>:null}</Stack>{item.likeCountLabel?<div className="hjm-comment-row__like-count" style={{inlineSize:commentThreadRecipe.likeColumnWidth}}><Text variant="caption" tone="muted">{item.likeCountLabel}</Text></div>:null}</div></Stack>;
 }
 
 /** Controlled thread: server ordering, permission checks and receipt-based draft clearing belong to the product. */
-export function CommentThreadScreen({items,expandedIds,onExpandedChange,onLike,onReply,replyLabel,repliesLabel,composer,threadHeader,threadFooter,...screen}:CommentThreadScreenProps){
+export function CommentThreadScreen({items,expandedIds,onExpandedChange,onLike,onReply,replyLabel,repliesLabel,composer,threadHeader,threadFooter,commentMenu,...screen}:CommentThreadScreenProps){
  validateCommentThread(items);
  // Index replies once; rescanning every item for each root makes long threads quadratic.
  const roots:CommentThreadItem[]=[], repliesByParent=new Map<string,CommentThreadItem[]>();
@@ -548,7 +570,7 @@ export function CommentThreadScreen({items,expandedIds,onExpandedChange,onLike,o
   if(item.parentId===null)roots.push(item);
   else {const siblings=repliesByParent.get(item.parentId);if(siblings)siblings.push(item);else repliesByParent.set(item.parentId,[item]);}
  }
- const row=(item:CommentThreadItem)=><CommentThreadRow key={item.id} item={item} onLike={onLike} onReply={onReply} replyLabel={replyLabel}/>;
+ const row=(item:CommentThreadItem)=><CommentThreadRow key={item.id} item={item} onLike={onLike} onReply={onReply} replyLabel={replyLabel} {...(commentMenu===undefined?{}:{commentMenu})}/>;
  // Product context belongs in the same scroll body as comments. Putting a tall
  // overview in the fixed header forced a second scroll region in Spint (2026-10-08).
  return <ScreenLayout {...screen} footer={!screen.state||screen.state.kind==="ready"||screen.state.kind==="empty"?composer:null}><Stack gap="lg">{threadHeader}<div className="hjm-comment-thread" style={{gap:commentThreadRecipe.rowGap}}>{roots.map(item=>{const replies=repliesByParent.get(item.id)??[];return <div key={item.id} className="hjm-comment-thread" style={{gap:commentThreadRecipe.rowGap}}>{row(item)}{replies.length?<div className="hjm-comment-thread" style={{gap:commentThreadRecipe.rowGap,marginInlineStart:commentThreadRecipe.replyIndent}}><CommentTextAction label={repliesLabel(replies.length,expanded.has(item.id))} expanded={expanded.has(item.id)} onPress={()=>onExpandedChange(item.id)}/>{expanded.has(item.id)?replies.map(row):null}</div>:null}</div>;})}</div>{threadFooter}</Stack></ScreenLayout>;

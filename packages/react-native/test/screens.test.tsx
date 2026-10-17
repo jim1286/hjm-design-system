@@ -33,6 +33,21 @@ describe("native screen composition", () => {
     expect(tree.root.findByType(ScrollView).props.contentContainerStyle.paddingTop).toBe(0);
     act(() => tree.unmount());
   });
+  it("body-edge drops only the body's inline padding while header, notice and footer keep the gutter", () => {
+    // Review S5#9: list rows own their 16pt inset, so body padding stacked them 32pt from the edge.
+    const tree = render(<ScreenLayout title="메시지" contentInset="body-edge" notice={<Text>검색</Text>} footer={<Text>하단</Text>}><Text>행</Text></ScreenLayout>);
+    expect(tree.root.findByType(ScrollView).props.contentContainerStyle).toMatchObject({ padding: 16, paddingTop: 16, paddingHorizontal: 0 });
+    expect(tree.root.findAllByType(View).some(node => node.props.style?.paddingHorizontal === 16 && node.props.style?.padding === undefined)).toBe(true);
+    expect(tree.root.findAllByType(View).some(node => node.props.style?.padding === 16 && node.props.style?.borderTopWidth === 1)).toBe(true);
+    act(() => tree.update(<HjmNativeProvider><ScreenLayout title="메시지" contentInset="body-edge" scroll="content"><Text>행</Text></ScreenLayout></HjmNativeProvider>));
+    expect(tree.root.findAllByType(View).some(node => node.props.style?.flex === 1 && node.props.style?.padding === 16 && node.props.style?.paddingHorizontal === 0)).toBe(true);
+    // ChatScreen's narrower timeline gutter replaces only the shared default gutter.
+    act(() => tree.update(<HjmNativeProvider><ChatScreen title="채팅" scroll="screen" contentInset="body-edge" composer={<Text>작성창</Text>}><Text>메시지</Text></ChatScreen></HjmNativeProvider>));
+    expect(tree.root.findByType(ScrollView).props.contentContainerStyle.paddingHorizontal).toBe(0);
+    act(() => tree.update(<HjmNativeProvider><ScreenLayout title="메시지"><Text>행</Text></ScreenLayout></HjmNativeProvider>));
+    expect(tree.root.findByType(ScrollView).props.contentContainerStyle.paddingHorizontal).toBe(16);
+    act(() => tree.unmount());
+  });
   it("does not nest a virtualized timeline in ScrollView and hides private content and composer", () => {
     const tree = render(<ChatScreen title="채팅" composer={<Text>작성창</Text>}><Text>메시지</Text></ChatScreen>);
     expect(tree.root.findAllByType(ScrollView)).toHaveLength(0);

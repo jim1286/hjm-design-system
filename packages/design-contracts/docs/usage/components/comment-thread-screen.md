@@ -30,6 +30,7 @@
 | `CommentThreadScreen` | 화면 조합 | `/screen-flows` | `/screen-flows` |
 | `CommentThreadRow` | 가상화 목록에서도 같은 댓글 행 재사용(1.23.0) | `/screen-flows` | `/screen-flows` |
 | `CommentThreadItem`(타입) | 댓글 한 개의 데이터 | `/screen-flows` | `/screen-flows` |
+| `CommentMenu`(타입) | 댓글별 세로 점 더보기 메뉴 설정(미게시) | `/screen-flows` | `/screen-flows` |
 
 루트 barrel에는 없다. optional native peer를 요구하지 않는다.
 
@@ -86,6 +87,7 @@ import { MessageComposer } from "@hjmds/react-native/screens";
 | `replyLabel`·`repliesLabel(count, expanded)` | 지역화 문구. 복수형·펼침 상태는 제품 i18n이 만든다. 펼침 버튼 이름이 이 문구이므로 `expanded`에 따라 "답글 3개 보기"/"답글 숨기기"처럼 상태가 드러나게 만든다 |
 | `composer` | 작성창(보통 `MessageComposer`의 `replyTo`·`sendIcon`). `ready`·`empty`일 때만 보인다 |
 | `threadFooter` | 더 보기·커서 페이지네이션 |
+| `commentMenu`(미게시) | 댓글별 더보기 메뉴. `label(item)` 버튼·메뉴의 지역화 접근성 이름(예: "seoyeon 댓글 더 보기"), `items(item)` 그 댓글에 허용된 항목(`{ id, label, tone?: "danger", disabled? }`, Menu·ContextMenu와 같은 항목 어휘), `onAction(item, id)` 메뉴가 닫힌 뒤 호출. Native는 메뉴 시트의 닫기 문구 `dismissLabel`도 받는다. 항목이 비면 그 행에는 버튼을 그리지 않는다. 같은 prop을 `CommentThreadRow`도 받는다 |
 
 `CommentThreadItem`: `id`, `parentId`(`null`이면 최상위), `author`, `body`(노드), `timeLabel`, `likeCountLabel`,
 `likeIcon`, `likeLabel`은 필수. 선택은 `bodyText`(작성자와 본문을 한 줄 흐름으로), `avatar`, `likeAction`(기본
@@ -111,7 +113,7 @@ threadHeader도 댓글과 함께 숨겨지므로 항상 보여야 하는 안내�
 | --- | --- | --- |
 | 크기 | ScreenLayout 폭(최대 720); 아바타 `commentThreadRecipe.avatarSize` 32, 답글 아바타 `replyAvatarSize` 24(제품은 이 크기로 넘긴다); 본문 열이 남은 폭을 채우고(`flex: 1`, 최소 폭 0) 오른쪽 끝에 좋아요(44 터치 영역)·`actions`를 한 행으로, 좋아요 수는 하트 아래 가운데; 답글·펼침은 흐린 글자 버튼(caption, 굵게) | `commentThreadRecipe`, Web·Native `CommentThreadRow` |
 | 간격 | 화면 padding `spacing.md` 16; 댓글 행 사이 `rowGap` 12(최상위·답글 동일); 답글 묶음은 부모 글 열에 맞춰 `replyIndent` 40 들여쓰기; 아바타–본문 `avatarGap` 8; 작성자·본문·답글 줄 사이 `lineGap` 2; 작성자–시각 `spacing.xxs` 4; 좋아요–actions `spacing.xxs` 4 | `commentThreadRecipe` |
-| 순서·정렬 | 최상위 댓글(아바타 → 작성자·시각 → 본문 → 답글 달기) + 행 오른쪽 좋아요 → `actions`, 그 아래 좋아요 수 → 답글 펼침 → 펼친 답글 → … → `threadFooter` → composer(footer) | 렌더 순서 |
+| 순서·정렬 | 최상위 댓글(아바타 → 작성자·시각 → 본문 → 답글 달기) + 행 오른쪽 좋아요 → `actions` → `commentMenu` 세로 점 버튼(끝), 그 아래 좋아요 수 → 답글 펼침 → 펼친 답글 → … → `threadFooter` → composer(footer) | 렌더 순서 |
 | 고정·스크롤 | 헤더·composer 고정, 댓글은 본문 화면 스크롤(`scroll` 기본 `"screen"`); composer는 `ready`·`empty`에서만 | `ScreenLayout`, `screen-flows.tsx` |
 | 좁은 폭·큰 글자 | 시각·좋아요 수·답글 버튼 줄과 작성자 줄은 줄바꿈(`flexWrap: "wrap"`); 답글은 한 단계만 들여써 좁은 폭에서도 본문 폭을 지킨다 | `screen-flows.tsx` |
 
@@ -139,8 +141,12 @@ threadHeader도 댓글과 함께 숨겨지므로 항상 보여야 하는 안내�
 - ChatScreen과 CommentThreadScreen 모두 `ready`·`empty`에서 작성창을 보인다.
   `loading`·`error`·`restricted`에서는 둘 다 숨는다.
 
-댓글의 추가 행동은 하트 바로 옆에 둔다. 두 버튼은 같은 가로 행이며 더보기 glyph는 세로 점3개(`MoreVertical`)를 제품이 Menu
-trigger로 공급한다. `actions`는 자유 노드 슬롯을 유지하고 메뉴 권한/항목/전송은 제품 소유다.
+댓글의 추가 행동은 하트 바로 옆에 둔다. 두 버튼은 같은 가로 행이다. 더보기 메뉴는 `commentMenu`로 HJM이 그린다(미게시):
+행 끝의 세로 점 3개 ghost IconButton(44 터치 영역, glyph `commentThreadRecipe.menuGlyphSize` 20, Web SVG·Native 그린 점으로 같은 모양),
+지역화 접근성 이름, Web은 버튼에 붙는 Menu 팝오버(`align="end"`), Native는 Menu 시트. `tone: "danger"` 항목(삭제·차단)은
+계약 `resolveCommentMenuItems`가 항상 끝으로 옮기고, 메뉴는 위험 표시를 색과 함께 글자 단서로도 붙인다. 제품은 항목·권한·콜백만 공급하고
+버튼·메뉴를 `actions`로 다시 조립하지 않는다. `actions`는 기존 호출 호환을 위해 자유 노드 슬롯으로 남고 하트와 메뉴 버튼 사이에 놓인다.
+삭제 확인 대화상자는 제품이 `onAction`에서 띄운다(메뉴가 닫힌 뒤 호출되므로 포커스·모달이 겹치지 않는다).
 순서는 좋아요 → 더보기이며 RTL에서는 논리 방향을 따른다. `likeAction=null`도 그대로 지원한다.
 이 배치 수정은 1.16.1 변경이다. 실제 설치 버전과 제품 화면 검증은 별도로 확인한다.
 
@@ -155,3 +161,4 @@ trigger로 공급한다. `actions`는 자유 노드 슬롯을 유지하고 메�
 - Web 답글 펼침 `aria-expanded`: 2026-10-06 추가.
 - 추가 행동을 하트 옆에: 2026-10-07 사용자 요청 — 본문 아래 위치는 답글 행동과 섞였고 세로로 쌓으면 하트와 더보기의 관계가 떨어져 보였다.
 - 작성자·시각이 모두 비면 머리글 생략: 2026-10-12 Spint의 작성자 없는 개발 댓글에서 빈 머리글이 본문을 아래로 밀었다.
+- `commentMenu`(HJM 세로 점 더보기): 2026-10-17 사용자 결정. 2026-10-15 규칙(메시지·댓글의 공통 구조는 HJM이 맡고 앱은 데이터·문구·권한만 연결)에 따라, 화면 검토 S4#7에서 제품·예제마다 `actions`로 더보기 버튼·아이콘·메뉴를 직접 조립해 위치와 이름이 갈라진 것을 HJM 공개 prop으로 옮겼다. 위험 항목을 끝에 두는 규칙은 대화 목록 ContextMenu와 같다.

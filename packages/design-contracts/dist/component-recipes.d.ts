@@ -1,4 +1,4 @@
-import { control, spacing } from "./foundations.js";
+import { control, spacing, type FontWeightValue, type TextVariant } from "./foundations.js";
 export { iconButtonRecipe, resolveIconButtonPresentation, type IconButtonShape, type IconButtonSize, type IconButtonTone, type ResolvedIconButtonPresentation, } from "./icon-button-recipe.js";
 export { counterBadgeDefaults, counterBadgeRecipe, formatCounterBadgeCount, type CounterBadgeSize, type CounterBadgeTone, type CounterBadgeVariant, } from "./counter-badge-recipe.js";
 export { progressRecipe, type ProgressShape, type ProgressSize, type ProgressTone, } from "./progress-recipe.js";
@@ -59,7 +59,21 @@ export declare const textRecipe: {
         readonly medium: "600";
         readonly strong: "700";
     };
+    /**
+     * Variants whose omitted `emphasis` renders the variant's typography weight even without a design profile.
+     * Label's 500 has no emphasis step (`medium` is 600), and the shared `regular` default drew form labels at
+     * body weight (2026-10-17 user decision: label 500 on Web and Native). Other variants keep `regular`.
+     */
+    readonly variantWeight: readonly ["label"];
 };
+/**
+ * Weight Text renders when the caller omits `emphasis`; `undefined` means `textRecipe.defaults.emphasis` applies.
+ * Inside a design profile every variant follows the profile's typography weight; outside one only
+ * `textRecipe.variantWeight` variants do. An explicit `emphasis` always wins and never reaches this resolver.
+ */
+export declare function resolveTextDefaultWeight(variant: TextVariant, typographyTokens: Readonly<Record<TextVariant, Readonly<{
+    fontWeight: FontWeightValue;
+}>>>, designProfileActive: boolean): FontWeightValue | undefined;
 export type IconTone = "primary" | "secondary" | "decorative" | "brand" | "info" | "success" | "warning" | "danger" | "inverse";
 export type IconWeight = "regular" | "strong";
 export declare const iconRecipe: {

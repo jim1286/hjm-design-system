@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-07
+- 검토일: 2026-10-17
 - 근거: `src/component-recipes.ts`(`textRecipe`), [Gravity Letters](../../gravity-letters.md)
 - 스토리북: `배포/컴포넌트/글자와 아이콘/본문 글자`, `배포/컴포넌트/시각 효과/중력 글자`
 
@@ -61,7 +61,7 @@ import { Text } from "@hjmds/react-native/primitives";
 | --- | --- | --- | --- |
 | `variant` | `caption`(11) · `label`(12) · `body`(14) · `bodyLarge`(16) · `title`(18) · `titleLarge`(20) · `heading`(24) | `body` | 화면·섹션 제목은 모양이 아니라 [Heading](heading.md)으로 쓴다 |
 | `fontRole` | `ui` · `display` · `reading` · `code` | 제목 variant는 display, 본문은 reading, caption/label은 ui | 명시값이 기본을 덮는다. [역할 지침](../tokens/font-roles.md), 1.16.0 변경 |
-| `emphasis` | `regular` · `medium`(semibold) · `strong`(bold) | 프로필이 있으면 variant 굵기, 없으면 `regular` | 명시값이 프로필과 variant보다 우선 |
+| `emphasis` | `regular` · `medium`(semibold) · `strong`(bold) | 프로필이 있으면 variant 굵기, 없으면 `regular`. `label`은 프로필과 무관하게 variant 굵기 500 | 명시값이 프로필과 variant보다 우선 |
 | `tone` | `primary` · `body` · `muted` · `subtle` · `weak` · `brand` · `danger` · `inverse` | `primary` | — |
 | `as` | `span` · `p` · `div` · `strong` · `small` | `span` | Web만. 문단은 `as="p"` |
 | `align` | `TextStyle["textAlign"]` | 쓰기 방향의 시작 쪽 | Native만 |
@@ -103,7 +103,13 @@ Native는 Text의 역할을 해당 stack에, 입력/조작 host는 제품 프로
 ## 함정
 
 - `emphasis`를 명시하면 `variant`의 굵기를 덮는다. `designProfile`이 있으면 생략한 `emphasis`는 해당 프로필의 `tokens.typography[variant].fontWeight`를 따른다. 프로필이 없으면 기존 기본값 `regular`를 유지하므로 `variant="title"`도 보통 굵기로 그려진다. 그 경우 굵은 제목은 `emphasis="strong"`으로 지정한다(두 renderer 동일).
+- `variant="label"`은 예외로, 프로필이 없어도 생략한 `emphasis`가 `typography.label` 굵기 500(medium)으로 그려진다. 500은 `emphasis` 단계에 없으므로(`medium`은 600) label을 400으로 그리려면 `emphasis="regular"`를 명시한다.
+  Web은 이 기본 굵기를 inline `font-weight`로 주며 `data-emphasis`는 `regular`로 남는다. Native는 `fonts="pretendard"`일 때 `Pretendard-Medium` face로 그린다.
 
+
+## 근거
+
+2026-10-17 사용자 결정: 폼 라벨·섹션 부제목이 본문 대비 약해 `label` 기본 굵기를 500으로 정했다(본문 400과 제목 600 사이). 이전에는 토큰이 600이었지만 프로필 없는 Text는 400으로 그렸다. 두 renderer는 `resolveTextDefaultWeight`(`src/component-recipes.ts`) 하나로 기본 굵기를 고른다.
 
 ## StatusText
 
