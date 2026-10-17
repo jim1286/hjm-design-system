@@ -45,7 +45,7 @@ it("fits full sortable headers and innings values in both header and body column
     measurement("150 ⅓", 64);
     const header = tree.root.find(n => typeof n.type === "string" && n.props.accessibilityLabel === "평균자책점 정렬");
     expect(header.props.style.width).toBe(112);
-    const cell = tree.root.findAll(n => typeof n.type === "string" && n.props.children === "150 ⅓" && n.props.numberOfLines === 1)[0]!;
+    const cell = tree.root.findAll(n => typeof n.type === "string" && n.props.children === "150 ⅓" && n.props.onLayout === undefined)[0]!;
     let cellBox = cell.parent;
     while (cellBox && typeof cellBox.props.style?.width !== "number") cellBox = cellBox.parent;
     expect(cellBox!.props.style.width).toBe(80);

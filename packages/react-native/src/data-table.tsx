@@ -60,7 +60,10 @@ export type DataTableProps<ColumnKey extends string = string, RowKey extends str
 }>;
 
 const DEFAULT_WIDTH = 72, PINNED_WIDTH = 96;
-const alignOf = (align: DataTableColumnDescriptor["align"]) => align === "end" ? "right" : align === "center" ? "center" : "left";
+// React Native textAlign has no logical start/end; mirror through the provider direction so RTL tables read
+// from the right like the Web renderer's logical alignment (2026-10-18 scenario-matrix rtl proof).
+const alignOf = (align: DataTableColumnDescriptor["align"], direction: "ltr" | "rtl") =>
+  align === "center" ? "center" : (align === "end") !== (direction === "rtl") ? "right" : "left";
 
 export function DataTable<ColumnKey extends string = string, RowKey extends string = string>({
   columns, rows, labels, renderCell, sortState = null, sortCycle = dataTableDefaults.sortCycle, onSortChange, onRowPress, selectedRowId = null,
@@ -71,6 +74,7 @@ export function DataTable<ColumnKey extends string = string, RowKey extends stri
   validateDataTableRows(rows);
   validateDataTableSortState(sortState, columns);
   const theme = useHjmNativeTheme(), { colors } = theme;
+  const direction = theme.environment.direction;
   const color = (reference: Parameters<typeof resolveColorReference>[0]) => resolveColorReference(reference, theme.palette);
   const [width, setWidth] = useState(0), [atEnd, setAtEnd] = useState(false), [pressed, setPressed] = useState<RowKey | null>(null);
   const [textWidths, setTextWidths] = useState<Record<string, number>>({});
@@ -96,7 +100,7 @@ export function DataTable<ColumnKey extends string = string, RowKey extends stri
     const sortable = column.sortable ?? dataTableColumnDefaults.sortable;
     const active = sortState?.columnId === column.id ? sortState.direction : null;
     const textColor = active ? color(dataTableRecipe.sortButton.activeColor) : color(dataTableRecipe.header.color);
-    const content = <NativeText numberOfLines={1} style={{ color: textColor, fontSize: 12, fontWeight: dataTableRecipe.header.fontWeight, textAlign: alignOf(column.align ?? dataTableColumnDefaults.align) }}>
+    const content = <NativeText numberOfLines={1} style={{ color: textColor, fontSize: 12, fontWeight: dataTableRecipe.header.fontWeight, textAlign: alignOf(column.align ?? dataTableColumnDefaults.align, direction) }}>
       {column.header}{active ? (active === "ascending" ? " ▲" : " ▼") : ""}
     </NativeText>;
     const style = { width: widthOf(column, pinnedColumn), flexShrink: 0, height: headerHeight, paddingHorizontal: pad.paddingHorizontal / 2, justifyContent: "center" as const };
@@ -107,12 +111,14 @@ export function DataTable<ColumnKey extends string = string, RowKey extends stri
   }
   const heatBase = { high: heatColors?.high ?? color(dataTableFamilyRecipe.heat.high), low: heatColors?.low ?? color(dataTableFamilyRecipe.heat.low) };
   function cell(node: ReactNode, column: DataTableColumnDescriptor<ColumnKey>, pinnedColumn: boolean, emphasis: boolean, key: string, decoration: Readonly<{ tone?: DataTableCellTone | null; heat?: DataTableCellHeat | null }> | null = null, indent = 0) {
-    const align = alignOf(column.align ?? dataTableColumnDefaults.align);
+    const align = alignOf(column.align ?? dataTableColumnDefaults.align, direction);
     const tone = decoration?.tone ? dataTableFamilyRecipe.tone[decoration.tone] : null, heat = decoration?.heat ?? null;
-    return <View key={key} style={{ width: widthOf(column, pinnedColumn), flexShrink: 0, height: rowHeight - 1, paddingHorizontal: pad.paddingHorizontal / 2, paddingLeft: pad.paddingHorizontal / 2 + indent, justifyContent: "center", alignItems: align === "right" ? "flex-end" : align === "center" ? "center" : "flex-start" }}>
+    // Yoga inherits the table direction: start/end alignment and indentation stay logical.
+    return <View key={key} style={{ width: widthOf(column, pinnedColumn), flexShrink: 0, height: rowHeight - 1, paddingHorizontal: pad.paddingHorizontal / 2, paddingStart: pad.paddingHorizontal / 2 + indent, justifyContent: "center", alignItems: column.align === "end" ? "flex-end" : column.align === "center" ? "center" : "flex-start" }}>
       {heat && <View pointerEvents="none" style={{ position: "absolute", left: 2, right: 2, top: 4, bottom: 4, borderRadius: 6, backgroundColor: heatBase[heat.side], opacity: dataTableFamilyRecipe.heatAlpha[heat.strength] }} />}
       {typeof node === "string" || typeof node === "number"
-        ? <NativeText numberOfLines={1} style={{ color: tone ? color(tone.color) : emphasis ? colors.text : color(dataTableRecipe.cell.color), fontSize: 14, fontWeight: tone ? tone.fontWeight : emphasis ? textRecipe.emphasis.medium : textRecipe.emphasis.regular, textAlign: align, fontVariant: ["tabular-nums"] }}>{String(node)}</NativeText>
+        // The measured natural column width preserves complete values; do not ellipsize while native layout settles.
+        ? <NativeText style={{ color: tone ? color(tone.color) : emphasis ? colors.text : color(dataTableRecipe.cell.color), fontSize: 14, fontWeight: tone ? tone.fontWeight : emphasis ? textRecipe.emphasis.medium : textRecipe.emphasis.regular, textAlign: align, fontVariant: ["tabular-nums"] }}>{String(node)}</NativeText>
         : node}
     </View>;
   }
@@ -164,17 +170,17 @@ export function DataTable<ColumnKey extends string = string, RowKey extends stri
   const status = asyncState.status;
   const bodyMessage = status === "loading" || status === "error" || rows.length === 0 ? emptyLabel : null;
   const columnsBody = <View style={{ flexDirection: "row" }}>
-    {pinned.length > 0 && <View style={{ borderRightWidth: overflow ? 1 : 0, borderColor: color(dataTableRecipe.row.borderBottom) }}>{bodyRows("pinned")}{summary(pinned, "pinned")}</View>}
+    {pinned.length > 0 && <View style={{ borderEndWidth: overflow ? 1 : 0, borderColor: color(dataTableRecipe.row.borderBottom) }}>{bodyRows("pinned")}{summary(pinned, "pinned")}</View>}
     <View style={{ flex: 1 }}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} onScroll={onScroll} scrollEventThrottle={16}>
         <View>{bodyRows("scrolling")}{summary(scrolling, "scrolling")}</View>
       </ScrollView>
-      {overflow && !atEnd && <View pointerEvents="none" accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 24, flexDirection: "row" }}>
+      {overflow && !atEnd && <View pointerEvents="none" accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ position: "absolute", end: 0, top: 0, bottom: 0, width: 24, flexDirection: "row" }}>
         {[0.15, 0.35, 0.55, 0.8].map(alpha => <View key={alpha} style={{ flex: 1, backgroundColor: colors.surface, opacity: alpha }} />)}
       </View>}
     </View>
   </View>;
-  return <View style={[{ gap: spacing.sm }, layoutStyle]}>
+  return <View style={[{ gap: spacing.sm, direction }, layoutStyle]}>
     <ScrollView horizontal scrollEnabled={false} pointerEvents="none" aria-hidden accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ position: "absolute", left: 0, right: 0, top: 0, height: 0, opacity: 0 }}>
       <View style={{ flexDirection: "row" }}>{columns.map(column => {
         const values = [...rows.map(row => renderCell(row.id, column.id)), summaryRow?.(column.id)]
@@ -190,7 +196,7 @@ export function DataTable<ColumnKey extends string = string, RowKey extends stri
         ? <View style={{ minHeight: 120, alignItems: "center", justifyContent: "center", padding: spacing.md }}><Text tone={status === "error" ? "danger" : "muted"} align="center">{bodyMessage}</Text></View>
         : <>
           <View style={{ flexDirection: "row", backgroundColor: headerBackground }}>
-            {pinned.length > 0 && <View style={{ borderRightWidth: overflow ? 1 : 0, borderColor: color(dataTableRecipe.row.borderBottom) }}>{bands(pinned, "pinned")}<View style={{ flexDirection: "row" }}>{pinned.map(column => header(column, true))}</View></View>}
+            {pinned.length > 0 && <View style={{ borderEndWidth: overflow ? 1 : 0, borderColor: color(dataTableRecipe.row.borderBottom) }}>{bands(pinned, "pinned")}<View style={{ flexDirection: "row" }}>{pinned.map(column => header(column, true))}</View></View>}
             <ScrollView ref={headerScroll} horizontal scrollEnabled={false} showsHorizontalScrollIndicator={false} style={{ flex: 1 }}>
               <View>{bands(scrolling, "scrolling")}<View style={{ flexDirection: "row" }}>{scrolling.map(column => header(column, false))}</View></View>
             </ScrollView>
