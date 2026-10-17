@@ -1,5 +1,11 @@
 # @hjmds/react-native
 
+## 1.27.1
+
+### Patch Changes
+
+- d9b51dc: ScreenLayout with `contentInset="none"` no longer tells BottomCTA that the footer owns its bar, so BottomCTA keeps its own border, padding and surface there; the Web footer drops its top rule under `none`, as on Native.
+
 ## 1.27.0
 
 ### Minor Changes
