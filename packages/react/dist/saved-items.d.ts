@@ -25,7 +25,7 @@ export type SavedItemsScreenProps<T extends SavedItem> = Omit<ListDetailScreenPr
  * Collection membership and persistence belong to the app; the shell preserves the grid on detail visits.
  *
  * Header slots per level: on the collection home the shell owns `actions` (the create-collection
- * button) and the product's `leading`; inside a collection it owns `leading` (back) and keeps the
+ * button) and the product's `exit`; inside a collection it owns `exit` (back) and keeps the
  * product's `actions`. A product `actions` passed for the home is therefore not rendered there —
  * Native ships the same rule, so changing it is a cross-platform API decision, not a Web fix.
  */

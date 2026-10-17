@@ -35,10 +35,11 @@ export type ScreenLayoutProps = Readonly<{
   /** Explicit layout wins over the nearest design profile. */
   presentation?: DesignProfileScreenPresentation;
   description?: string;
-  /** Leaving this screen (back, close, settings exit): icon-only button fixed at the header's leading edge. */
+  /**
+   * Leaving this screen (back, close, settings exit): icon-only button fixed at the header's leading edge.
+   * The leading edge has no free slot (2026-10-17): every product use was a hand-made back button.
+   */
   exit?: ScreenExit;
-  /** Other leading content. Never a text exit button; use `exit`. */
-  leading?: ReactNode;
   actions?: ReactNode;
   notice?: ReactNode;
   footer?: ReactNode;
@@ -57,10 +58,10 @@ export type ScreenLayoutProps = Readonly<{
 }>;
 
 /** Shared screen shell. Routing, data, permission checks and mutation state remain product-owned. */
-export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, leading: leadingSlot, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", as: Element = "main", className, layoutStyle , hjmTitleLeading }: ScreenLayoutProps & Readonly<{ /** Internal: ChatScreen header photo. */ hjmTitleLeading?: ReactNode }>) {
+export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", as: Element = "main", className, layoutStyle , hjmTitleLeading }: ScreenLayoutProps & Readonly<{ /** Internal: ChatScreen header photo. */ hjmTitleLeading?: ReactNode }>) {
   const id = useId();
-  if (exit) validateScreenExit(exit, leadingSlot !== undefined);
-  const leading = exit ? <ScreenExitButton {...exit} /> : leadingSlot;
+  if (exit) validateScreenExit(exit, false);
+  const leading = exit ? <ScreenExitButton {...exit} /> : null;
   const showHeader = titleVisibility === "visible" || !!description || !!leading || !!actions;
   // Screens historically work with the stylesheet alone. Optional context keeps
   // that path while inheriting profiles from an enclosing Provider when present.

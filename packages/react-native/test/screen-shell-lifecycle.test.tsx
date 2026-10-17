@@ -3,10 +3,10 @@ import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { Pressable, ScrollView, TextInput, View, StyleSheet } from "react-native";
 import { afterEach, expect, it, vi } from "vitest";
 import { HjmNativeProvider } from "../src/provider.js";
-import { Button } from "../src/actions.js";
+import { Button, IconButton } from "../src/actions.js";
 import { NotificationInboxScreen, ScreenLayout, SettingsScreen } from "../src/screens.js";
 import { Text } from "../src/primitives.js";
-import type { ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
+import { screenHeaderRecipe, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT=true;
 let tree:ReactTestRenderer|undefined;
 afterEach(()=>{if(tree)act(()=>tree!.unmount());tree=undefined;});
@@ -38,14 +38,14 @@ it("keeps host refresh and keyboard ownership when content scrolling is replaced
 
 it("hides the route name and centers context between unequal navigation controls", () => {
  const back=vi.fn();
- render(<ScreenLayout title="Route name" titleVisibility="hidden" headerAlignment="center" description="2026.10.14" leading={<Pressable onPress={back}><Text>Back</Text></Pressable>} actions={<Text>Two actions</Text>}><Text>Body</Text></ScreenLayout>);
+ render(<ScreenLayout title="Route name" titleVisibility="hidden" headerAlignment="center" description="2026.10.14" exit={{kind:"back",label:"Back",onPress:back}} actions={<Text>Two actions</Text>}><Text>Body</Text></ScreenLayout>);
  expect(JSON.stringify(tree!.toJSON())).not.toContain('Route name');
  const measures=tree!.root.findAllByType(View).filter(node=>node.props.onLayout);
  expect(measures).toHaveLength(2);
  act(()=>{measures[0]!.props.onLayout({nativeEvent:{layout:{width:44}}});measures[1]!.props.onLayout({nativeEvent:{layout:{width:96}}});});
- const centered=tree!.root.findAllByType(View).find(node=>StyleSheet.flatten(node.props.style)?.minHeight===60)!;
+ const centered=tree!.root.findAllByType(View).find(node=>StyleSheet.flatten(node.props.style)?.minHeight===screenHeaderRecipe.minHeight)!;
  expect(StyleSheet.flatten(centered.props.style).paddingHorizontal).toBeGreaterThanOrEqual(112);
  expect(measures.every(node=>StyleSheet.flatten(node.props.style).position==='absolute')).toBe(true);
  expect(tree!.root.findAllByType(Text).find(node=>node.props.children==='2026.10.14')!.props.align).toBe('center');
- act(()=>tree!.root.findByType(Pressable).props.onPress());expect(back).toHaveBeenCalledOnce();
+ act(()=>tree!.root.findByType(IconButton).props.onPress());expect(back).toHaveBeenCalledOnce();
 });

@@ -18,13 +18,12 @@ function render(child: ReactNode) {
 }
 describe("native screen composition", () => {
   it("compacts icon-only headers without collapsing notice tabs into body filters", () => {
-    const props = { title: "기록실", titleVisibility: "hidden" as const, headerAlignment: "center" as const, leading: <View testID="back-control" style={{ width: 44, height: 44 }} /> };
+    const props = { title: "기록실", titleVisibility: "hidden" as const, headerAlignment: "center" as const, exit: { kind: "back" as const, label: "뒤로", onPress: () => {} } };
     const tree = render(<ScreenLayout {...props}><Text>카테고리</Text></ScreenLayout>);
     const header = tree.root.findAllByType(View).find(node => node.props.style?.minHeight === 48)!;
     expect(header).toBeDefined();
     expect(header.props.style.paddingVertical).toBe(2);
     expect(tree.root.findByType(ScrollView).props.contentContainerStyle).toMatchObject({ padding: 16, paddingTop: 4 });
-    expect(tree.root.findByProps({ testID: "back-control" }).props.style.height).toBe(44);
     act(() => tree.update(<HjmNativeProvider><ScreenLayout {...props} notice={<Text>타자 · 투수</Text>}><Text>타율 · 홈런</Text></ScreenLayout></HjmNativeProvider>));
     expect(tree.root.findByType(ScrollView).props.contentContainerStyle.paddingTop).toBe(16);
     act(() => tree.update(<HjmNativeProvider><ScreenLayout {...props} titleVisibility="visible"><Text>본문</Text></ScreenLayout></HjmNativeProvider>));
@@ -320,7 +319,7 @@ it("moves the swipe layer without rendering message content for every drag frame
 });
 
 describe("ScreenLayout exit", () => {
-  it("renders the exit as a labelled leading icon button and rejects a second leading control", async () => {
+  it("renders the exit as a labelled leading icon button", async () => {
     const { IconButton } = await import("../src/actions.js");
     const back = vi.fn();
     const tree = render(<ScreenLayout title="설정" exit={{ kind: "back", label: "설정 나가기", onPress: back }}><Text>본문</Text></ScreenLayout>);
@@ -330,6 +329,5 @@ describe("ScreenLayout exit", () => {
     act(() => exit.props.onPress());
     expect(back).toHaveBeenCalledOnce();
     act(() => tree.unmount());
-    expect(() => render(<ScreenLayout title="설정" exit={{ kind: "close", label: "닫기", onPress: back }} leading={<Text>x</Text>} />)).toThrow(TypeError);
   });
 });

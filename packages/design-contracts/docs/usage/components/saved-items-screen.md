@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.17.1
-- 검토일: 2026-10-07
+- 검토일: 2026-10-17
 - 근거: [반복 화면 계약](../../screen-patterns.md); 저장한 항목을 Instagram의 컬렉션 탐색 방식으로 바꾸라는 사용자 요청. 기존 ListDetailScreen·Grid를 합성하며 별도 저장 엔진은 만들지 않는다. 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
 - 스토리북: `배포/화면/콘텐츠/저장한 항목`
 
@@ -84,7 +84,7 @@ import { SavedItemsScreen } from "@hjmds/react-native/saved-items";
 | labels | SavedItemsLabels, 필수 | — | 모든 공개 문구를 지역화하여 공급 |
 | onOpenCollection · onOpenItem · onCreateCollection | 콜백, 필수 | — | 제품 상태/라우터 변경 요청 |
 | onBack | `() => void`, 필수 | — | 한 단계만 올라간다. 상세가 열려 있으면 제품이 `selectedItemId`를 비우고, 아니면 `collectionId`를 생략해 컬렉션 홈으로 간다. 화면은 제품 history를 모른다 |
-| actions · leading | ScreenLayout 상속 | 없음 | 홈에서는 제품 `actions` 대신 컬렉션 만들기 버튼이 그 자리를 쓰고 제품 `leading`은 유지된다. 컬렉션·상세에서는 `leading`이 뒤로 버튼이 되고 제품 `actions`가 보인다 |
+| actions · exit | ScreenLayout 상속 | 없음 | 홈에서는 제품 `actions` 대신 컬렉션 만들기 버튼이 그 자리를 쓰고 제품 `exit`은 유지된다. 컬렉션·상세에서는 `exit`이 뒤로 아이콘이 되고 제품 `actions`가 보인다 |
 | renderThumbnail · renderDetail | `(item) => ReactNode`, 필수 | — | 사진·상세 슬롯, API·자산은 제품 소유 |
 | state · notice | ScreenLayout 상속 | ready · 없음 | 조회 상태, 저장 해제/복구 안내 |
 | layoutStyle | `HjmCompositionStyleProp` | 없음 | Web·Native 모두 목록·상세를 담는 ListDetailScreen 바깥 틀에 적용한다(컬렉션·격자·상세 전환과 상관없이 같은 루트). 1.13.0 변경 |
@@ -107,7 +107,7 @@ Native collection cover의 모서리는 Provider의 `tokens.radius.md`다. 저�
 | 행동 | 컴포넌트·tone | 위치 | 개수·순서 |
 | --- | --- | --- | --- |
 | 새 컬렉션 | `Button` ghost(`labels.createCollection`) → `onCreateCollection` | 홈 헤더 `actions` 자리(홈에 넘긴 제품 `actions`는 그리지 않는다). 생성 Sheet와 그 footer 확정 버튼은 제품이 그린다 | 홈에서만 1개. 컬렉션·상세에서는 제품 `actions`로 바뀐다 |
-| 뒤로 | `Button` ghost(`labels.back`) → `onBack` | 컬렉션·상세 헤더 `leading` | 1개. 상세 → 격자 → 홈으로 한 단계씩, 단계는 제품이 상태를 비워 정한다 |
+| 뒤로 | 헤더 ‹ 아이콘(`exit` `back`, 이름 `labels.back`) → `onBack` | 컬렉션·상세 헤더 시작 쪽 | 1개. 상세 → 격자 → 홈으로 한 단계씩, 단계는 제품이 상태를 비워 정한다 |
 | 컬렉션·게시물 열기 | 표지·썸네일 전체가 버튼 → `onOpenCollection` · `onOpenItem` | 격자 각 칸 | 항목마다 1개 |
 | 저장 해제 | `IconButton` ghost(제품) | `renderDetail` 머리 줄 끝(제목과 같은 줄) | 상세마다 1개. 실행 취소는 `notice` |
 

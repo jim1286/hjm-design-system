@@ -17,11 +17,11 @@ import { Section, Stack, Text } from "./layout.js";
 import { ListRow } from "./display.js";
 import { classNames, useDesignProfileDefaults } from "./internal.js";
 /** Shared screen shell. Routing, data, permission checks and mutation state remain product-owned. */
-export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, leading: leadingSlot, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", as: Element = "main", className, layoutStyle, hjmTitleLeading }) {
+export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", as: Element = "main", className, layoutStyle, hjmTitleLeading }) {
     const id = useId();
     if (exit)
-        validateScreenExit(exit, leadingSlot !== undefined);
-    const leading = exit ? _jsx(ScreenExitButton, { ...exit }) : leadingSlot;
+        validateScreenExit(exit, false);
+    const leading = exit ? _jsx(ScreenExitButton, { ...exit }) : null;
     const showHeader = titleVisibility === "visible" || !!description || !!leading || !!actions;
     // Screens historically work with the stylesheet alone. Optional context keeps
     // that path while inheriting profiles from an enclosing Provider when present.

@@ -29,7 +29,7 @@ export type SavedItemsScreenProps<T extends SavedItem> = Omit<ListDetailScreenPr
  * Collection membership and persistence belong to the app; the shell preserves the grid on detail visits.
  *
  * Header slots per level: on the collection home the shell owns `actions` (the create-collection
- * button) and the product's `leading`; inside a collection it owns `leading` (back) and keeps the
+ * button) and the product's `exit`; inside a collection it owns `exit` (back) and keeps the
  * product's `actions`. A product `actions` passed for the home is therefore not rendered there —
  * Native ships the same rule, so changing it is a cross-platform API decision, not a Web fix.
  */
@@ -42,7 +42,7 @@ export function SavedItemsScreen<T extends SavedItem>({items,collections,collect
   // Resolve each cover once; four thumbnails must not each rescan membership.
   const covers=new Map(groups.map(group=>{const ids=new Set(group.itemIds);return [group.id,items.filter(item=>ids.has(item.id)).slice(0,4)] as const;}));
   return <ListDetailScreen {...screen} state={state} title={home?screen.title:collection?.title??labels.allItems}
-    leading={home?screen.leading:<Button tone="ghost" onClick={onBack}>{labels.back}</Button>}
+    {...(home?(screen.exit?{exit:screen.exit}:{}):{exit:{kind:"back" as const,label:labels.back,onClick:onBack}})}
     actions={home?<Button tone="ghost" onClick={onCreateCollection}>{labels.createCollection}</Button>:screen.actions}
     back={{label:labels.back,onAction:onBack}}
     {...(selected?{detail:{title:selected.title,content:renderDetail(selected)}}:{})}

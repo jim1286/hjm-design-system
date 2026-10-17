@@ -71,10 +71,10 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 | `keyboardAvoidance` (Native) | `boolean` | `true`(미게시) | 키보드와 실제로 겹치는 만큼 footer·본문을 올리고 포커스된 입력칸을 스크롤해 보인다. `KeyboardAvoiding`·키보드 처리 Sheet/Dialog 안에서는 건너뛴다 |
 | `title` | `string` | 필수 | 화면 제목. `header`를 주면 접근성 이름으로만 쓴다 |
 | `titleBadge` | `ReactNode` | 없음 | 기본 제목 바로 옆 배지. 값·의미는 제품, 간격·정렬은 HJM. `header` 교체 또는 제목 숨김이면 그리지 않는다. 1.23.0 추가 API |
-| `header` | `ReactNode` | 없음 | 기존 navigator 헤더 유지용. 주면 기본 헤더(`leading`·제목·`description`·`actions`)를 그리지 않는다 |
+| `header` | `ReactNode` | 없음 | 기존 navigator 헤더 유지용. 주면 기본 헤더(`exit`·제목·`description`·`actions`)를 그리지 않는다 |
 | `description` | `string` | 없음 | 제목 아래 muted 설명 |
-| `exit` | `{ kind: "back" \| "close"; label; onClick(Web) \| onPress(Native); disabled? }` | 없음 | 화면 나가기(뒤로·닫기·"설정 나가기")를 헤더 시작 쪽 아이콘 버튼으로 고정한다. 글자는 보이지 않고 `label`은 보조기술 이름이다. `back`은 ‹(RTL 반전), `close`는 ×. `leading`과 함께 주면 `TypeError`. 미게시(1.26.1 이후) |
-| `leading` · `actions` | `ReactNode` | 없음 | 제목 앞·뒤(도구) 슬롯. 나가기 버튼은 `leading`으로 직접 만들지 않고 `exit`을 쓴다 |
+| `exit` | `{ kind: "back" \| "close"; label; onClick(Web) \| onPress(Native); disabled? }` | 없음 | 화면 나가기(뒤로·닫기·"설정 나가기")를 헤더 시작 쪽 아이콘 버튼으로 고정한다. 글자는 보이지 않고 `label`은 보조기술 이름이다. `back`은 ‹(RTL 반전), `close`는 ×. 헤더 시작 쪽에는 이 버튼 외의 자유 슬롯이 없다. 미게시(1.26.1 이후) |
+| `actions` | `ReactNode` | 없음 | 제목 뒤(도구) 슬롯. 시작 쪽 `leading` 슬롯은 2026-10-17 제거됐다 — 제품 사용처가 모두 직접 만든 뒤로 버튼이었다 |
 | `notice` | `ReactNode` | 없음 | 헤더 아래 비차단 안내. 상태 교체 중에도 남는다 |
 | `footer` | `ReactNode` | 없음 | 하단 고정 행동 |
 | `state` | `{ kind: "ready" }` · `{ kind: "loading" \| "empty" \| "error" \| "restricted"; title; description? }` | `{ kind: "ready" }` | ready가 아니면 children을 그리지 않고 상태와 `stateAction`을 가운데에 놓는다. 로딩은 Spinner 하나만 보이고 `title`·`description`은 Spinner의 접근성 이름이 된다 |
@@ -94,8 +94,8 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 폭 100%, 최대 `screenPatternRecipe.maxWidth`(`layout.readingMaxWidth` 720), 가운데 정렬; 높이는 host가 준 남은 높이(Web `block-size: 100%`, Native `flex: 1`) | Web `.hjm-screen`, Native `ScreenLayout` |
-| 간격 | 바깥 padding `screenPatternRecipe.padding`(`spacing.md` 16)을 헤더 사방·notice 좌우·본문 사방·footer 사방에 준다(`contentInset="none"`이면 0); 헤더 안 `leading`·제목·`actions` 간격 `itemGap`(`spacing.sm`) 12(두 플랫폼, `contentInset="none"`이어도 유지); 상태 안내는 위아래 `sectionGap`(`spacing.xl`) 24, 안내–`stateAction` `stateGap`(`spacing.md`) 16 | Web `src/screens.tsx`(`--hjm-screen-item-gap`·`--hjm-screen-state-gap`)·`.hjm-screen__*`, Native `ScreenLayout` |
-| 순서·정렬 | 헤더(`leading` → 제목·설명 → `actions`) → notice → 본문 → footer; 상태 안내는 본문 세로 가운데 | 렌더 순서 |
+| 간격 | 바깥 padding `screenPatternRecipe.padding`(`spacing.md` 16)을 헤더 사방·notice 좌우·본문 사방·footer 사방에 준다(`contentInset="none"`이면 0); 헤더 안 `exit`·제목·`actions` 간격 `itemGap`(`spacing.sm`) 12(두 플랫폼, `contentInset="none"`이어도 유지); 상태 안내는 위아래 `sectionGap`(`spacing.xl`) 24, 안내–`stateAction` `stateGap`(`spacing.md`) 16 | Web `src/screens.tsx`(`--hjm-screen-item-gap`·`--hjm-screen-state-gap`)·`.hjm-screen__*`, Native `ScreenLayout` |
+| 순서·정렬 | 헤더(`exit` → 제목·설명 → `actions`) → notice → 본문 → footer; 상태 안내는 본문 세로 가운데 | 렌더 순서 |
 | 고정·스크롤 | 헤더·notice·footer 고정, `scroll="screen"`은 본문이 스크롤, `"content"`는 자식이 스크롤; footer 위 테두리 1, Web은 하단 safe area만큼 padding을 늘린다 | Web `data-scroll`·`.hjm-screen__footer`, Native `ScrollView` |
 | 좁은 폭·큰 글자 | 제목 열 최소 폭 `headerMinWidth` 120 × 글자 배율, 모자라면 `actions`가 다음 줄로 내려간다; 제목은 줄바꿈(`overflow-wrap: anywhere`)되고 자르지 않는다; Native safe area·탭바 inset은 host | `screenPatternRecipe.headerMinWidth`, Web `.hjm-screen__heading` |
 

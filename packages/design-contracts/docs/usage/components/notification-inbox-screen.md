@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.17.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-17
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screens.tsx`·`src/screen-flows.tsx`; 기존 개별 지침을 새 규격으로 통합. 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
 - 스토리북: `배포/화면/소통/알림함`
 
@@ -70,7 +70,7 @@ import { NotificationInboxScreen } from "@hjmds/react-native/screens";
 | `state` | `ready` · `loading` · `empty` · `error` · `restricted`. ready 외에는 지역화 `title` 필수 |
 | `stateAction` | 재시도·로그인 같은 실제 행동 |
 | `children` | 알림 목록(데이터·페이지 합치기·더 보기는 제품) |
-| `header`, `leading`, `actions` | 기존 내비게이션 헤더, 뒤로 가기, “모두 읽음” 같은 행동 |
+| `header`, `exit`, `actions` | 기존 내비게이션 헤더, 뒤로 가기 아이콘, “모두 읽음” 같은 행동 |
 
 ## 배치
 
@@ -78,7 +78,7 @@ import { NotificationInboxScreen } from "@hjmds/react-native/screens";
 | --- | --- | --- |
 | 크기 | ScreenLayout 폭(최대 720) 안에서 알림 행이 폭을 채운다 | `ScreenLayout`, `NotificationItem`(ListRow) |
 | 간격 | 화면 padding `spacing.md` 16(notice 영역은 좌우만); `notice`–`filters` `spacing.sm` 12; 행 사이 간격은 목록(제품) 소유 | Web·Native `NotificationInboxScreen` `Stack gap="sm"` |
-| 순서·정렬 | 헤더(`leading` → 제목 → `actions`) → `notice` → `filters` → 알림 목록 | 렌더 순서 |
+| 순서·정렬 | 헤더(`exit` → 제목 → `actions`) → `notice` → `filters` → 알림 목록 | 렌더 순서 |
 | 고정·스크롤 | `notice`·`filters`는 헤더 아래 고정되고 상태 교체 중에도 남는다; 목록은 기본 화면 스크롤(`scroll="screen"`), 가상화 목록이면 `scroll="content"` | `ScreenLayout` `notice`·`scroll` |
 | 좁은 폭·큰 글자 | 제목 열 최소 폭 120 × 글자 배율, 모자라면 `actions`(모두 읽음 등)가 다음 줄로 내려간다; 필터 줄바꿈·가로 스크롤은 `filters` 소유 | `screenPatternRecipe.headerMinWidth` |
 

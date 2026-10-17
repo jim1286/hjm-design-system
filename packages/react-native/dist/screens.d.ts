@@ -31,10 +31,11 @@ export type ScreenLayoutProps = Readonly<{
     /** Explicit layout wins over the nearest design profile. */
     presentation?: DesignProfileScreenPresentation;
     description?: string;
-    /** Leaving this screen (back, close, settings exit): icon-only button fixed at the header's leading edge. */
+    /**
+     * Leaving this screen (back, close, settings exit): icon-only button fixed at the header's leading edge.
+     * The leading edge has no free slot (2026-10-17): every product use was a hand-made back button.
+     */
     exit?: ScreenExit;
-    /** Other leading content. Never a text exit button; use `exit`. */
-    leading?: ReactNode;
     actions?: ReactNode;
     notice?: ReactNode;
     footer?: ReactNode;
@@ -54,7 +55,7 @@ export type ScreenLayoutProps = Readonly<{
     keyboardAvoidance?: boolean;
     scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator" | "onScroll" | "onScrollBeginDrag" | "onScrollEndDrag" | "scrollEventThrottle" | "alwaysBounceVertical" | "automaticallyAdjustKeyboardInsets">;
 }>;
-export declare function ScreenLayout({ title, titleBadge, titleVisibility, headerAlignment, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, description, exit, leading: leadingSlot, actions, notice, footer, state, stateAction, children, scroll, layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance, hjmBodyInlinePadding, hjmTitleLeading }: ScreenLayoutProps & ScreenLayoutPrivateProps): import("react").JSX.Element;
+export declare function ScreenLayout({ title, titleBadge, titleVisibility, headerAlignment, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, description, exit, actions, notice, footer, state, stateAction, children, scroll, layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance, hjmBodyInlinePadding, hjmTitleLeading }: ScreenLayoutProps & ScreenLayoutPrivateProps): import("react").JSX.Element;
 export type SettingsScreenSection = Readonly<{
     id: string;
     title: string;

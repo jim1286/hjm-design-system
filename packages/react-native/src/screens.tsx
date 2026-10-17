@@ -42,10 +42,11 @@ export type ScreenLayoutProps = Readonly<{
   /** Explicit layout wins over the nearest design profile. */
   presentation?: DesignProfileScreenPresentation;
   description?: string;
-  /** Leaving this screen (back, close, settings exit): icon-only button fixed at the header's leading edge. */
+  /**
+   * Leaving this screen (back, close, settings exit): icon-only button fixed at the header's leading edge.
+   * The leading edge has no free slot (2026-10-17): every product use was a hand-made back button.
+   */
   exit?: ScreenExit;
-  /** Other leading content. Never a text exit button; use `exit`. */
-  leading?: ReactNode;
   actions?: ReactNode;
   notice?: ReactNode;
   footer?: ReactNode;
@@ -66,9 +67,9 @@ export type ScreenLayoutProps = Readonly<{
   scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator" | "onScroll" | "onScrollBeginDrag" | "onScrollEndDrag" | "scrollEventThrottle" | "alwaysBounceVertical" | "automaticallyAdjustKeyboardInsets">;
 }>;
 
-export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, leading: leadingSlot, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance = true, hjmBodyInlinePadding, hjmTitleLeading }: ScreenLayoutProps & ScreenLayoutPrivateProps) {
-  if (exit) validateScreenExit(exit, leadingSlot !== undefined);
-  const leading = exit ? <ScreenExitButton {...exit} /> : leadingSlot;
+export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance = true, hjmBodyInlinePadding, hjmTitleLeading }: ScreenLayoutProps & ScreenLayoutPrivateProps) {
+  if (exit) validateScreenExit(exit, false);
+  const leading = exit ? <ScreenExitButton {...exit} /> : null;
   const insideAvoidance = useInsideKeyboardAvoidance();
   const avoidKeyboard = keyboardAvoidance && !insideAvoidance;
   const rootRef = useRef<View>(null);

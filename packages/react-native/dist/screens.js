@@ -18,10 +18,10 @@ import { motion } from "@hjmds/design-contracts/foundations";
 import { Stack, Text } from "./primitives.js";
 import { ListRow } from "./data-display.js";
 import { useHjmNativeTheme } from "./provider.js";
-export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, leading: leadingSlot, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance = true, hjmBodyInlinePadding, hjmTitleLeading }) {
+export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance = true, hjmBodyInlinePadding, hjmTitleLeading }) {
     if (exit)
-        validateScreenExit(exit, leadingSlot !== undefined);
-    const leading = exit ? _jsx(ScreenExitButton, { ...exit }) : leadingSlot;
+        validateScreenExit(exit, false);
+    const leading = exit ? _jsx(ScreenExitButton, { ...exit }) : null;
     const insideAvoidance = useInsideKeyboardAvoidance();
     const avoidKeyboard = keyboardAvoidance && !insideAvoidance;
     const rootRef = useRef(null);

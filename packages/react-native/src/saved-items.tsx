@@ -29,7 +29,7 @@ export function SavedItemsScreen<T extends SavedItem>({items,collections,collect
   // Resolve each cover once; four thumbnails must not each rescan membership.
   const covers=new Map(groups.map(group=>{const ids=new Set(group.itemIds);return [group.id,items.filter(item=>ids.has(item.id)).slice(0,4)] as const;}));
   return <ListDetailScreen {...screen} state={state} title={home?screen.title:collection?.title??labels.allItems}
-    leading={home?screen.leading:<Button tone="ghost" onPress={onBack}>{labels.back}</Button>}
+    {...(home?(screen.exit?{exit:screen.exit}:{}):{exit:{kind:"back" as const,label:labels.back,onPress:onBack}})}
     actions={home?<Button tone="ghost" onPress={onCreateCollection}>{labels.createCollection}</Button>:screen.actions}
     back={{label:labels.back,onAction:onBack}}
     {...(selected?{detail:{title:selected.title,content:renderDetail(selected)}}:{})}
