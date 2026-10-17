@@ -1467,6 +1467,12 @@ export const alertDialogRecipe = {
     },
     transition: dialogRecipe.transition,
 };
+// First-line anchor (2026-10-17 user: "기본 토스트 좌우랑 글자 라인이 안맞는데"). The badge box is the one
+// line every leading column, first text line and close glyph centre on; the close keeps its 44 touch target but
+// overhangs so its glyph, not its hit area, sets the visible inset. Derived here so both renderers read numbers.
+const toastBadgeDiameter = 32;
+const toastCloseDiameter = control.minTouchTarget;
+const toastCloseGlyph = "xs";
 export const toastRecipe = {
     slots: [
         "viewport",
@@ -1542,13 +1548,20 @@ export const toastRecipe = {
         radius: "xl",
         shadow: floatingSurfaceContract.shadow,
         minHeight: layout.rowHeight.singleLine,
-        padding: spacing.md,
+        // block sm + anchor 32 + sm = the 56 single-line row; inline md on both edges so the badge's start inset
+        // equals the close glyph's end inset (Web had sm/xs/sm/md, Native md on all sides — 2026-10-17 measurement).
+        padding: { block: spacing.sm, inline: spacing.md },
         gap: spacing.sm,
         maxWidth: 420,
     },
+    // First text line (title, else description) is centred on this box: content insets its first line by
+    // (blockSize − first-line line-height) / 2. Multi-line copy grows downward; the lead and close stay beside
+    // the first line instead of centring on the whole block. Product media (44) start-aligns to the same top and
+    // is not the anchor: centring the title on the media pushed the description below the avatar.
+    anchor: { blockSize: toastBadgeDiameter },
     // Retired in 1.10.0 (width 0): the icon badge carries tone. Kept so the slot contract stays additive.
     toneMark: { width: 0, radius: "full" },
-    icon: { glyph: "sm", badgeDiameter: 32, badgeRadius: "full" },
+    icon: { glyph: "sm", badgeDiameter: toastBadgeDiameter, badgeRadius: "full" },
     // A product media (mascot, avatar) replaces the tone badge in the same leading column. 44 keeps a
     // character legible; it is decorative, so the tone still lives in `data-tone` and the copy.
     media: { size: 44 },
@@ -1590,8 +1603,12 @@ export const toastRecipe = {
     },
     close: {
         color: semanticColors.content.secondary,
-        diameter: control.minTouchTarget,
-        glyph: "xs",
+        diameter: toastCloseDiameter,
+        glyph: toastCloseGlyph,
+        // Negative block margin on both sides: the 44 target centres on the anchor line without stretching the row.
+        blockOverhang: (toastCloseDiameter - toastBadgeDiameter) / 2,
+        // Negative inline-end margin: the glyph box ends at the md padding edge, mirroring the badge's start inset.
+        inlineOverhang: (toastCloseDiameter - glyph[toastCloseGlyph]) / 2,
     },
     states: {
         pressedOpacity: opacity.pressed,

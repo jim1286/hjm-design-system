@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-13
+- 검토일: 2026-10-17
 - 근거: [Toast](../../toast.md), [Liquid Toast](../../../../react-native/docs/liquid-toast.md), `src/component-recipes.ts`(`toastRecipe`)
 - 스토리북: `배포/컴포넌트/상태와 알림/토스트`, `배포/컴포넌트/상태와 알림/리퀴드 토스트`, `배포/구성/피드백과 복구/백그라운드 작업 상태`
 
@@ -119,6 +119,8 @@ Native의 선택형 `/toast-liquid`도 가장 가까운 프로필의 `radius.xl`
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 카드 최대 폭 420(Web `min(420px, 100vw − 2×spacing.md)`, Native 화면 폭 − 안전 영역 − 2×16에서 420으로 자름). 최소 높이 56(`layout.rowHeight.singleLine`). 모서리 `radius.xl` 24(패널, 미게시 1.17.2 이후. 그전 `lg` 16). 열은 [아이콘 배지 32 또는 `media` 44][문구][닫기 44]. `action`은 높이 44(`control.minTouchTarget`), 좌우 여백 `spacing.md` 16의 pill. `progress` 점 6(현재 단계 1.4배) | `toastRecipe.viewport`·`surface`·`icon`·`action`, `.hjm-toast`, `react-native/src/feedback.tsx` |
+| 안쪽 여백 | 카드 위아래 `spacing.sm` 12, 좌우 양쪽 `spacing.md` 16(`toastRecipe.surface.padding`, 미게시). 닫기는 44 터치 영역을 유지하되 끝 쪽으로 (44 − 글리프 14)/2 = 15만큼 여백에 겹쳐(`close.inlineOverhang`) × 글리프 끝이 카드 끝에서 16 — 배지의 시작 여백 16과 같다. RTL에서도 논리 방향(시작·끝)으로 대칭이다. `action`·`progress`는 문구 열에 맞춘다 | `toastRecipe.surface`·`close`, `.hjm-toast`·`.hjm-toast__close`, `react-native/src/feedback.tsx` |
+| 첫 줄 기준 | 배지 32 상자(`toastRecipe.anchor.blockSize`)가 기준선이다. 첫 줄(제목, 없으면 설명)은 (32 − 그 줄의 행간)/2만큼 내려 배지 가운데에 맞추고, 닫기는 위아래 −(44 − 32)/2 = −6(`close.blockOverhang`)으로 같은 가운데에 둔 채 행을 늘리지 않는다. 한 줄이면 12 + 32 + 12 = 56에 배지·글자·닫기 가운데가 모두 28. 여러 줄이면 배지·닫기는 첫 줄 옆에 남고 나머지 줄은 아래로 자란다(문구 덩어리 전체의 가운데에 맞추지 않는다). `media` 44는 같은 위쪽에서 시작하고 기준 상자가 아니다 — 제목을 media 가운데에 맞추면 설명이 아바타 아래로 밀려나서다. Web은 첫 줄의 `1lh`, Native는 body 토큰 행간 × 현재 글자 배율로 계산해 프로필·글자 확대에서도 맞는다 | `toastRecipe.anchor`·`close`, `.hjm-toast__content`, `react-native/src/feedback.tsx` |
 | 간격 | 화면 가장자리에서 `spacing.md` 16 + 안전 영역(`safeAreaMode: "additive"`). 여러 장 사이 `spacing.sm` 12. 카드 안 열 간격 `spacing.sm` 12 | `toastRecipe.viewport`, `.hjm-toast-viewport` |
 | 순서·정렬 | 기본은 아래 가운데(`placement="bottom"`). 위쪽 배치는 위에서 아래로, 아래쪽 배치는 가장자리부터 위로 쌓인다. 문구 열 안 순서는 제목 → 설명 → `progress` → `action`. `action`은 문구 아래 시작 쪽(`toastRecipe.action.align` `start`, 미게시 1.17.2 이후. 그전 둘째 줄 끝) | `toastRecipe.placements`, `.hjm-toast__action` |
 | 고정·스크롤 | 화면 흐름 밖에 떠 있는 층이라 본문 레이아웃에 자리를 만들지 않는다. 하단 고정 바(BottomNavigation·BottomCTA)가 있으면 Web `bottomOffset`(px 또는 CSS 길이), Native `keyboardOffset`으로 그 위에 띄운다. Native 아래쪽 배치는 `avoidKeyboard`(기본 true)로 키보드 위에 선다 | `react/src/toast.tsx`, `react-native/src/feedback.tsx`(`ToastRegion`) |
@@ -202,3 +204,10 @@ Native의 선택형 `/toast-liquid`도 가장 가까운 프로필의 `radius.xl`
 Web은 전체 영역의 투명한 button과 두 제어 버튼을 형제로, Native는 뒤쪽 Pressable과 위쪽 제어 버튼을
 독립적으로 배치한다. label은 동작 이름, 설명은 기존 알림 문구이며 기본 카드 배치와 크기는 바뀌지 않는다.
 라우터는 HJM이 가져오지 않고 제품 콜백이 실행한다. 화면 이동 뒤 provider가 없어져도 중복 실행하지 않는다.
+
+## 근거
+
+2026-10-17 사용자 지적("기본 토스트 좌우랑 글자 라인이 안맞는데"). Web 402 한 줄 알림에서 카드 안쪽 기준으로 배지 가운데 28, 글자 32~33,
+닫기 글리프 30이 서로 달랐고(배지 `start`·문구 `center`·닫기 `start`−4의 세 정렬), 시작 여백 16과 닫기 글리프 끝 여백 22가 비대칭이었다
+(여백 12/8/12/16 안에 44 터치 영역). Native는 사방 16 여백과 문구 `center` 정렬로 따로 어긋났다. 첫 줄 기준과 대칭 여백을 recipe 값으로 두고
+두 renderer가 같은 값을 읽게 바꿨다. 수정 후 한 줄·여러 줄·action·media·RTL 모두 가운데 28(테두리 포함 29), 양쪽 여백 16으로 측정됐다.

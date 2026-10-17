@@ -51,10 +51,10 @@ Toast 카드 한 장의 내부 배치(톤 배지·제목·설명·닫기·실행
 | --- | --- | --- | --- |
 | 바깥 틀 | `ToastProvider` viewport(앱 루트 하나) | 화면 콘텐츠·스크롤 위에 `position: fixed`로 떠 있다. 콘텐츠 스크롤과 무관하고 콘텐츠 여백을 바꾸지 않는다. 안전 영역은 viewport가 `env(safe-area-inset-*)`로 직접 피한다. 하단 고정 바는 `bottomOffset`으로 피한다. 모바일 Web 화면 키보드는 따로 피하지 않는다 | 가장자리 `max(spacing.md 16, safe-area)`, `layer.toast` 1000, viewport는 포인터를 통과시킨다(`pointer-events: none`, 카드만 받음) |
 | viewport | `ToastProvider` | 화면 고정(`position: fixed`), 기본 하단 가운데. `top`·`top-start`·`top-end`·`bottom-start`·`bottom-end` 선택 | 가장자리 `max(spacing.md 16, safe-area)`, 최대 폭 `min(420, 100vw - 32)`, 카드 사이 `spacing.sm` 12. 하단이면 새 카드가 아래부터 쌓인다 |
-| 카드 | `Toast` | viewport 안. 단독 controlled 사용에서도 카드가 최대 폭 `min(420, 100%)`(Native `toastRecipe.surface.maxWidth` 420)을 지킨다 | 최소 높이 3.5rem, padding 위아래 `spacing.sm` 12·시작 `spacing.md` 16·끝 `spacing.xs` 8, 열 간격 `spacing.sm` 12, radius `lg` 16 |
-| 배지 | tone 아이콘 | 첫 줄 시작 | 지름 `toastRecipe.icon.badgeDiameter` 32 |
-| 문구 | 제목 + 설명 | 첫 줄 가운데, 남은 폭 전부 | 제목–설명 `spacing.xxs` 4, `word-break: keep-all`, 잘림 없음 |
-| 닫기 | IconButton | 첫 줄 끝 | `control.minTouchTarget` 44 × 44 |
+| 카드 | `Toast` | viewport 안. 단독 controlled 사용에서도 카드가 최대 폭 `min(420, 100%)`(Native `toastRecipe.surface.maxWidth` 420)을 지킨다 | 최소 높이 3.5rem, padding 위아래 `spacing.sm` 12·좌우 `spacing.md` 16(`toastRecipe.surface.padding`, 2026-10-17 대칭화), 열 간격 `spacing.sm` 12, radius `lg` 16 |
+| 배지 | tone 아이콘 | 첫 줄 시작. 배지 32 상자가 첫 줄 기준(`toastRecipe.anchor`) | 지름 `toastRecipe.icon.badgeDiameter` 32 |
+| 문구 | 제목 + 설명 | 첫 줄(제목, 없으면 설명)을 배지 가운데에 맞추고 나머지 줄은 아래로 자람, 남은 폭 전부 | 제목–설명 `spacing.xxs` 4, `word-break: keep-all`, 잘림 없음 |
+| 닫기 | IconButton | 첫 줄 끝, 글리프 가운데를 첫 줄에 맞춤 | `control.minTouchTarget` 44 × 44, 위아래 −6·끝 −15로 여백에 겹쳐 글리프 끝이 카드 끝에서 16(`close.blockOverhang`·`inlineOverhang`) |
 | 실행 | 알약 버튼 | 둘째 줄, 문구 열부터 끝까지, 끝 정렬 | 최소 높이 44, 좌우 `spacing.md` 16, 줄 간격 `spacing.xs` 8 |
 
 - 하단에 고정 바(BottomNavigation·BottomCTA)가 있으면 `bottomOffset`으로 그 높이만큼 띄운다.

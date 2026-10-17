@@ -6,6 +6,7 @@ import { HjmProvider } from "../src/provider.js";
 import { Toast } from "../src/toast.js";
 import { Notice } from "../src/feedback.js";
 import { Button } from "../src/actions.js";
+import { toastRecipe } from "@hjmds/design-contracts/recipes";
 import executedScenarioRegistry from "./executed-scenarios.json" with { type: "json" };
 import "../src/styles.css";
 
@@ -68,6 +69,42 @@ describe(`${evidence.componentId} compact layout`, () => {
     expect(close.height).toBeGreaterThanOrEqual(44);
     expect(toast.scrollWidth).toBeLessThanOrEqual(toast.clientWidth);
   });
+
+  // 2026-10-17 user: "기본 토스트 좌우랑 글자 라인이 안맞는데" — badge 28 / copy 32-33 / close glyph 30 and 16 vs 22 insets.
+  for (const direction of ["ltr", "rtl"] as const) {
+    it.each([
+      ["single line", { id: "saved", description: "저장했어요", closeLabel: "닫기" }],
+      ["title over wrapped copy", { id: "review", title: "검토하고 있어요", description: "다 되면 알려 드릴게요. 그동안 써 보셔도 돼요. 다 되면 알려 드릴게요.", closeLabel: "닫기" }],
+    ] as const)(`centres badge, first line and close glyph on one anchor with mirrored insets (${direction}, %s)`, async (_, descriptor) => {
+      await page.viewport(402, 844);
+      await act(async () => root.render(
+        <HjmProvider direction={direction}>
+          <Toast descriptor={descriptor} onDismissRequest={() => {}} />
+        </HjmProvider>,
+      ));
+      const toast = container.querySelector<HTMLElement>(".hjm-toast")!;
+      const style = getComputedStyle(toast);
+      const box = toast.getBoundingClientRect();
+      const top = box.top + parseFloat(style.borderTopWidth) + parseFloat(style.paddingTop);
+      const centre = (rect: DOMRect) => rect.top + rect.height / 2 - top;
+      const badge = toast.querySelector(".hjm-toast__icon")!.getBoundingClientRect();
+      const first = toast.querySelector<HTMLElement>(".hjm-toast__title, .hjm-toast__description")!;
+      const firstLine = first.getBoundingClientRect().top + parseFloat(getComputedStyle(first).lineHeight) / 2 - top;
+      const glyph = toast.querySelector(".hjm-toast__close svg")!.getBoundingClientRect();
+      const anchor = toastRecipe.anchor.blockSize / 2;
+      expect(centre(badge)).toBeCloseTo(anchor, 0);
+      expect(firstLine).toBeCloseTo(anchor, 0);
+      expect(centre(glyph)).toBeCloseTo(anchor, 0);
+      const padStart = parseFloat(style.borderInlineStartWidth) + toastRecipe.surface.padding.inline;
+      const startInset = direction === "ltr" ? badge.left - box.left : box.right - badge.right;
+      const endInset = direction === "ltr" ? box.right - glyph.right : glyph.left - box.left;
+      expect(startInset).toBeCloseTo(padStart, 0);
+      expect(endInset).toBeCloseTo(startInset, 0);
+      if (descriptor.id === "saved") {
+        expect(box.height - 2 * parseFloat(style.borderTopWidth)).toBeCloseTo(toastRecipe.surface.minHeight, 0);
+      }
+    });
+  }
 
   // Keep historical maximum-text cases registered without executing them (2026-10-07 user scope).
   for (const scenario of layoutScenarios) {

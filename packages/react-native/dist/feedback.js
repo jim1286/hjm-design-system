@@ -359,7 +359,16 @@ function ToastSurface({ snapshot, managedMotion = false, announces = true, suspe
         size: glyph[toastRecipe.icon.glyph],
         tone: resolved.tone,
     });
-    const closeControl = _jsx(IconButton, { label: resolved.closeLabel, onBlur: resumeFocus, onFocus: pauseFocus, onPress: () => onDismiss("close-action"), children: _jsx(NativeText, { accessible: false, allowFontScaling: false, style: { color: theme.colors.textMuted, fontSize: glyph[toastRecipe.close.glyph] }, children: "\u00D7" }) });
+    // First-line anchor (toastRecipe.anchor, 2026-10-17): centre the first copy line on the badge box using the line
+    // height Text actually renders (token × the Provider's controlled or OS text scale), so badge/media column, first
+    // line and close share one centre and extra lines grow downward. Negative when a large line exceeds the box.
+    const firstLineVariant = resolved.title ? toastRecipe.title.textVariant : toastRecipe.description.textVariant;
+    const firstLineHeight = theme.tokens.typography[firstLineVariant].lineHeight * theme.textScaling.scale;
+    const firstLineInset = (toastRecipe.anchor.blockSize - firstLineHeight) / 2;
+    const closeControl = _jsx(IconButton, { label: resolved.closeLabel, onBlur: resumeFocus, onFocus: pauseFocus, onPress: () => onDismiss("close-action"), 
+        // The 44 target overhangs: block so it centres on the anchor without stretching the row, inline-end so the glyph
+        // (not the hit area) ends at the md padding edge like the badge's start inset (toastRecipe.close).
+        layoutStyle: { marginVertical: -toastRecipe.close.blockOverhang, marginEnd: -toastRecipe.close.inlineOverhang }, children: _jsx(NativeText, { accessible: false, allowFontScaling: false, style: { color: theme.colors.textMuted, fontSize: glyph[toastRecipe.close.glyph] }, children: "\u00D7" }) });
     return (_jsxs(Animated.View, { accessible: false, onTouchCancel: () => onResume("pointer"), onTouchEnd: () => onResume("pointer"), onTouchStart: () => onPause("pointer"), style: [
             {
                 alignItems: "stretch",
@@ -373,7 +382,8 @@ function ToastSurface({ snapshot, managedMotion = false, announces = true, suspe
                 minHeight: managedMotion ? liquidToastRecipe.minHeight : toastRecipe.surface.minHeight,
                 opacity: managedMotion ? 1 : motionProgress,
                 overflow: "hidden",
-                padding: toastRecipe.surface.padding,
+                paddingHorizontal: toastRecipe.surface.padding.inline,
+                paddingVertical: toastRecipe.surface.padding.block,
                 shadowColor: surfaceShadow.color,
                 shadowOffset: { width: 0, height: surfaceShadow.offsetY },
                 shadowOpacity: managedMotion ? 0 : surfaceShadow.opacity,
@@ -423,7 +433,7 @@ function ToastSurface({ snapshot, managedMotion = false, announces = true, suspe
                             height: toastRecipe.icon.badgeDiameter,
                             justifyContent: "center",
                             width: toastRecipe.icon.badgeDiameter,
-                        }, children: renderedToneIcon })), _jsxs(View, { pointerEvents: resolved.press ? "box-none" : "auto", style: { alignSelf: "center", flex: 1, gap: toastRecipe.content.gap, minWidth: 0 }, children: [_jsxs(View, { pointerEvents: resolved.press ? "none" : "auto", style: { gap: toastRecipe.content.gap }, children: [resolved.title ? (_jsx(Text, { style: {
+                        }, children: renderedToneIcon })), _jsxs(View, { pointerEvents: resolved.press ? "box-none" : "auto", style: { flex: 1, gap: toastRecipe.content.gap, minHeight: toastRecipe.anchor.blockSize, minWidth: 0 }, children: [_jsxs(View, { pointerEvents: resolved.press ? "none" : "auto", style: { gap: toastRecipe.content.gap, marginTop: firstLineInset }, children: [resolved.title ? (_jsx(Text, { style: {
                                             color: resolveColorReference(toastRecipe.title.color, theme.palette),
                                             fontWeight: toastRecipe.title.fontWeight,
                                         }, variant: toastRecipe.title.textVariant, children: resolved.title })) : null, _jsx(Text, { style: { color: resolveColorReference(toastRecipe.description.color, theme.palette) }, variant: toastRecipe.description.textVariant, children: resolved.description }), resolved.progress ? _jsx(ToastProgressRow, { progress: resolved.progress }) : null] }), resolved.action ? (

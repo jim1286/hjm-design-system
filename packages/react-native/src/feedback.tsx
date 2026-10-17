@@ -868,11 +868,21 @@ function ToastSurface({
     tone: resolved.tone,
   });
 
+  // First-line anchor (toastRecipe.anchor, 2026-10-17): centre the first copy line on the badge box using the line
+  // height Text actually renders (token × the Provider's controlled or OS text scale), so badge/media column, first
+  // line and close share one centre and extra lines grow downward. Negative when a large line exceeds the box.
+  const firstLineVariant = resolved.title ? toastRecipe.title.textVariant : toastRecipe.description.textVariant;
+  const firstLineHeight = theme.tokens.typography[firstLineVariant].lineHeight * theme.textScaling.scale;
+  const firstLineInset = (toastRecipe.anchor.blockSize - firstLineHeight) / 2;
+
   const closeControl = <IconButton
     label={resolved.closeLabel}
     onBlur={resumeFocus}
     onFocus={pauseFocus}
     onPress={() => onDismiss("close-action")}
+    // The 44 target overhangs: block so it centres on the anchor without stretching the row, inline-end so the glyph
+    // (not the hit area) ends at the md padding edge like the badge's start inset (toastRecipe.close).
+    layoutStyle={{ marginVertical: -toastRecipe.close.blockOverhang, marginEnd: -toastRecipe.close.inlineOverhang }}
   >
     <NativeText accessible={false} allowFontScaling={false} style={{ color: theme.colors.textMuted, fontSize: glyph[toastRecipe.close.glyph] }}>×</NativeText>
   </IconButton>;
@@ -896,7 +906,8 @@ function ToastSurface({
           minHeight: managedMotion ? liquidToastRecipe.minHeight : toastRecipe.surface.minHeight,
           opacity: managedMotion ? 1 : motionProgress,
           overflow: "hidden",
-          padding: toastRecipe.surface.padding,
+          paddingHorizontal: toastRecipe.surface.padding.inline,
+          paddingVertical: toastRecipe.surface.padding.block,
           shadowColor: surfaceShadow.color,
           shadowOffset: { width: 0, height: surfaceShadow.offsetY },
           shadowOpacity: managedMotion ? 0 : surfaceShadow.opacity,
@@ -1003,8 +1014,8 @@ function ToastSurface({
             {renderedToneIcon}
           </View>
         )}
-        <View pointerEvents={resolved.press ? "box-none" : "auto"} style={{ alignSelf: "center", flex: 1, gap: toastRecipe.content.gap, minWidth: 0 }}>
-          <View pointerEvents={resolved.press ? "none" : "auto"} style={{ gap: toastRecipe.content.gap }}>
+        <View pointerEvents={resolved.press ? "box-none" : "auto"} style={{ flex: 1, gap: toastRecipe.content.gap, minHeight: toastRecipe.anchor.blockSize, minWidth: 0 }}>
+          <View pointerEvents={resolved.press ? "none" : "auto"} style={{ gap: toastRecipe.content.gap, marginTop: firstLineInset }}>
             {resolved.title ? (
               <Text
                 style={{

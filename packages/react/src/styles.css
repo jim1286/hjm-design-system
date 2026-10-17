@@ -2667,7 +2667,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
    controlled Toast outside the viewport keeps it too (it stretched to 1200px in the layout story, 2026-10-17 review).
    1.10.0 layout: [tone badge][title + description][close] / action pill on its own row, end-aligned.
    The 2px tone strip is retired — the tinted badge carries tone (toastRecipe.toneMark width 0). */
-.hjm-toast { position: relative; min-inline-size: 0; max-inline-size: min(26.25rem, 100%); min-block-size: 3.5rem; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; column-gap: var(--hjm-space-sm); row-gap: var(--hjm-space-xs); padding: var(--hjm-space-sm) var(--hjm-space-xs) var(--hjm-space-sm) var(--hjm-space-md); overflow: hidden; border: var(--hjm-toast-border-width) solid var(--hjm-toast-border); border-radius: var(--hjm-toast-radius); color: var(--hjm-color-text); background: var(--hjm-toast-background); box-shadow: var(--hjm-toast-shadow); pointer-events: auto; }
+.hjm-toast { position: relative; min-inline-size: 0; max-inline-size: min(26.25rem, 100%); min-block-size: 3.5rem; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; column-gap: var(--hjm-space-sm); row-gap: var(--hjm-space-xs); padding: var(--hjm-toast-padding-block) var(--hjm-toast-padding-inline); overflow: hidden; border: var(--hjm-toast-border-width) solid var(--hjm-toast-border); border-radius: var(--hjm-toast-radius); color: var(--hjm-color-text); background: var(--hjm-toast-background); box-shadow: var(--hjm-toast-shadow); pointer-events: auto; }
 /* Whole-card activation is a sibling surface; explicit controls stay above it. */
 .hjm-toast__press { position: absolute; inset: 0; z-index: 1; border: 0; border-radius: inherit; padding: 0; background: transparent; cursor: pointer; }
 .hjm-toast__press:focus-visible { outline: 2px solid var(--hjm-color-content-brand); outline-offset: -2px; }
@@ -2679,10 +2679,14 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-toast[data-tone="success"] .hjm-toast__icon { color: var(--hjm-toast-accent-success); background: var(--hjm-toast-badge-success); }
 .hjm-toast[data-tone="warning"] .hjm-toast__icon { color: var(--hjm-toast-accent-warning); background: var(--hjm-toast-badge-warning); }
 .hjm-toast[data-tone="danger"] .hjm-toast__icon { color: var(--hjm-toast-accent-danger); background: var(--hjm-toast-badge-danger); }
-.hjm-toast__content { grid-column: 2; grid-row: 1; align-self: center; min-inline-size: 0; display: grid; gap: var(--hjm-space-xxs); padding-block: var(--hjm-space-xxs); overflow-wrap: anywhere; word-break: keep-all; }
+/* First-line anchor (toastRecipe.anchor, 2026-10-17): the first line (title, else description) is centred on the
+   badge box via its own line height (1lh), so profile and text-scale line heights stay aligned; extra lines grow
+   downward while the lead column and close stay beside the first line. */
+.hjm-toast__content { grid-column: 2; grid-row: 1; align-self: start; min-inline-size: 0; min-block-size: var(--hjm-toast-anchor-size); display: grid; align-content: start; gap: var(--hjm-space-xxs); overflow-wrap: anywhere; word-break: keep-all; }
+.hjm-toast__content > :first-child { margin-block-start: calc((var(--hjm-toast-anchor-size) - 1lh) / 2); }
 .hjm-toast__title { font-weight: var(--hjm-font-weight-bold); line-height: var(--hjm-toast-title-line-height, 1.35); }
 .hjm-toast__description { color: var(--hjm-toast-description-color); line-height: var(--hjm-toast-description-line-height, 1.45); }
-.hjm-toast__close { grid-column: 3; grid-row: 1; align-self: start; display: grid; place-items: center; inline-size: var(--hjm-control-min-touch-target); min-block-size: var(--hjm-control-min-touch-target); margin-block-start: calc(-1 * var(--hjm-space-xxs)); border: 0; border-radius: 50%; color: var(--hjm-color-text-muted); background: transparent; cursor: pointer; }
+.hjm-toast__close { grid-column: 3; grid-row: 1; align-self: start; display: grid; place-items: center; inline-size: var(--hjm-toast-close-size); block-size: var(--hjm-toast-close-size); margin-block: calc(-1 * var(--hjm-toast-close-block-overhang)); margin-inline-end: calc(-1 * var(--hjm-toast-close-inline-overhang)); padding: 0; border: 0; border-radius: 50%; color: var(--hjm-color-text-muted); background: transparent; cursor: pointer; }
 .hjm-toast__close:hover { color: var(--hjm-color-text); }
 /* 2026-10-10 panel toast: product media replaces the tone badge in the leading column (toastRecipe.media),
    and a running task shows its steps under the description (toastRecipe.progress). */
@@ -2694,7 +2698,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-toast__progress-step[data-state="done"] .hjm-toast__progress-dot { background: var(--hjm-toast-progress-done); }
 .hjm-toast__progress-step[data-state="current"] { color: var(--hjm-toast-progress-current-label); font-weight: var(--hjm-font-weight-bold); }
 .hjm-toast__progress-step[data-state="current"] .hjm-toast__progress-dot { background: var(--hjm-toast-progress-done); transform: scale(var(--hjm-toast-progress-current-scale)); }
-.hjm-toast__action { grid-column: 2 / -1; grid-row: 2; justify-self: var(--hjm-toast-action-align, start); margin-inline-end: var(--hjm-space-xs); min-block-size: var(--hjm-control-min-touch-target); max-inline-size: 100%; padding-inline: var(--hjm-space-md); border: 0; border-radius: 999px; color: var(--hjm-toast-action-color); background: var(--hjm-toast-action-background); font: inherit; font-weight: var(--hjm-font-weight-bold); overflow-wrap: anywhere; text-align: center; cursor: pointer; }
+.hjm-toast__action { grid-column: 2 / -1; grid-row: 2; justify-self: var(--hjm-toast-action-align, start); min-block-size: var(--hjm-control-min-touch-target); max-inline-size: 100%; padding-inline: var(--hjm-space-md); border: 0; border-radius: 999px; color: var(--hjm-toast-action-color); background: var(--hjm-toast-action-background); font: inherit; font-weight: var(--hjm-font-weight-bold); overflow-wrap: anywhere; text-align: center; cursor: pointer; }
 .hjm-toast__action:hover { filter: brightness(0.97); }
 .hjm-toast[data-state="closing"] { opacity: 0; transform: translateY(var(--hjm-space-xs)); transition: opacity var(--hjm-toast-exit-duration) var(--hjm-toast-exit-easing), transform var(--hjm-toast-exit-duration) var(--hjm-toast-exit-easing); }
 
@@ -2716,6 +2720,9 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   outline: 2px solid var(--hjm-color-content-brand);
   outline-offset: 2px;
 }
+/* The close target overhangs into the card padding (toastRecipe.close.inlineOverhang), so an outer ring would be
+   clipped by the card's overflow; draw it inside the 44 target instead. */
+.hjm-toast__close:focus-visible { outline-offset: -2px; }
 
 @keyframes hjm-spin { to { transform: rotate(360deg); } }
 @keyframes hjm-pulse { from { opacity: var(--hjm-skeleton-from-opacity); } to { opacity: var(--hjm-skeleton-to-opacity); } }

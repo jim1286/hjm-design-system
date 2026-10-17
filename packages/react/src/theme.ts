@@ -203,6 +203,13 @@ export function createHjmThemeStyle(
     style[`--hjm-toast-badge-${tone}`] = resolveColorReference(contract.badge, palette);
   }
   style["--hjm-toast-badge-size"] = `${toastRecipe.icon.badgeDiameter}px`;
+  // First-line anchor geometry (2026-10-17): the same padding, anchor and close overhang Native reads.
+  style["--hjm-toast-padding-block"] = `${toastRecipe.surface.padding.block}px`;
+  style["--hjm-toast-padding-inline"] = `${toastRecipe.surface.padding.inline}px`;
+  style["--hjm-toast-anchor-size"] = `${toastRecipe.anchor.blockSize}px`;
+  style["--hjm-toast-close-size"] = `${toastRecipe.close.diameter}px`;
+  style["--hjm-toast-close-block-overhang"] = `${toastRecipe.close.blockOverhang}px`;
+  style["--hjm-toast-close-inline-overhang"] = `${toastRecipe.close.inlineOverhang}px`;
   style["--hjm-toast-action-background"] = resolveColorReference(toastRecipe.action.background, palette);
   style["--hjm-toast-action-color"] = resolveColorReference(toastRecipe.action.color, palette);
   style["--hjm-toast-description-color"] = resolveColorReference(toastRecipe.description.color, palette);

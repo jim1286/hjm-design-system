@@ -3622,9 +3622,15 @@ export declare const toastRecipe: {
             readonly offsetY: 4;
         };
         readonly minHeight: 56;
-        readonly padding: 16;
+        readonly padding: {
+            readonly block: 12;
+            readonly inline: 16;
+        };
         readonly gap: 12;
         readonly maxWidth: 420;
+    };
+    readonly anchor: {
+        readonly blockSize: 32;
     };
     readonly toneMark: {
         readonly width: 0;
@@ -3710,6 +3716,8 @@ export declare const toastRecipe: {
         }>;
         readonly diameter: 44;
         readonly glyph: "xs";
+        readonly blockOverhang: number;
+        readonly inlineOverhang: number;
     };
     readonly states: {
         readonly pressedOpacity: 0.86;

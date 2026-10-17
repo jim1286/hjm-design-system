@@ -20,6 +20,7 @@ import {
   toastRecipe,
   type ToastPlacement,
 } from "@hjmds/design-contracts/recipes";
+import { glyph } from "@hjmds/design-contracts/foundations";
 import {
   createContext,
   forwardRef,
@@ -43,6 +44,9 @@ import { createHjmThemeStyle } from "./theme.js";
 
 // 1.10.0: stroked SVG glyphs inside a tinted badge (toastRecipe.icon). Text glyphs ("●", "i", "!") rendered at
 // font metrics, so neutral read as a stray grey dot and info/danger looked like typos. currentColor = tone accent.
+// The close glyph box is the size toastRecipe.close.inlineOverhang is derived from (2026-10-17 alignment fix).
+const closeGlyphSize = glyph[toastRecipe.close.glyph];
+
 const toneGlyphPaths = {
   notifications: "M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0",
   info: "M12 16v-4M12 8h.01M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0Z",
@@ -210,7 +214,7 @@ const ToastCard = forwardRef<HTMLDivElement, ToastCardProps>(function ToastCard(
         aria-label={descriptor.closeLabel}
         onClick={() => onDismiss("close-action")}
       >
-        <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" focusable="false">
+        <svg aria-hidden="true" viewBox="0 0 24 24" width={closeGlyphSize} height={closeGlyphSize} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" focusable="false">
           <path d="M18 6 6 18M6 6l12 12" />
         </svg>
       </button>
