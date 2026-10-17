@@ -2120,6 +2120,7 @@ export declare const recipeRegistry: {
         readonly paddingTop: 12;
         readonly paddingBottom: 12;
         readonly gap: 12;
+        readonly contentMaxWidth: 720;
         readonly background: Readonly<{
             source: "theme";
             key: "bg";
@@ -2246,6 +2247,7 @@ export declare const recipeRegistry: {
         };
         readonly itemLayout: {
             readonly labelBasis: "70%";
+            readonly paddingHorizontal: 16;
         };
         readonly detail: {
             readonly color: Readonly<{
@@ -2535,6 +2537,12 @@ export declare const recipeRegistry: {
                 key: "textBody";
                 alpha?: number;
             }>;
+            readonly border: Readonly<{
+                source: "theme";
+                key: "borderControl";
+                alpha?: number;
+            }>;
+            readonly borderWidth: 1;
         };
         readonly remove: {
             readonly minTouchTarget: 44;
@@ -2977,6 +2985,7 @@ export declare const recipeRegistry: {
         readonly defaults: {
             readonly size: "medium";
         };
+        readonly maxWidth: number;
         readonly header: {
             readonly gap: 8;
             readonly monthLabel: {
@@ -5392,13 +5401,13 @@ export declare const recipeRegistry: {
         readonly sizes: {
             readonly medium: {
                 readonly minHeight: 44;
-                readonly paddingHorizontal: 16;
+                readonly paddingHorizontal: 4;
                 readonly textVariant: "body";
                 readonly stepperDiameter: 44;
             };
             readonly large: {
                 readonly minHeight: 52;
-                readonly paddingHorizontal: 20;
+                readonly paddingHorizontal: 8;
                 readonly textVariant: "bodyLarge";
                 readonly stepperDiameter: 44;
             };
@@ -6202,6 +6211,7 @@ export declare const recipeRegistry: {
             readonly checkbox: "sm";
             readonly radio: "full";
         };
+        readonly indicatorBorderWidth: 2;
         readonly presentations: {
             readonly plain: {
                 readonly background: null;
@@ -7107,7 +7117,7 @@ export declare const recipeRegistry: {
             readonly textVariant: "label";
         };
         readonly moveControls: {
-            readonly gap: 12;
+            readonly gap: 8;
         };
         readonly moveButton: {
             readonly minTarget: 44;

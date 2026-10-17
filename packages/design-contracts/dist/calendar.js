@@ -1,4 +1,4 @@
-import { control, fontWeight, glyph, opacity, spacing, stroke } from "./foundations.js";
+import { control, fontWeight, glyph, layout, opacity, spacing, stroke } from "./foundations.js";
 import { focusIndicatorContract } from "./component-contracts.js";
 import { semanticColors } from "./semantic-colors.js";
 const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
@@ -207,6 +207,9 @@ export const calendarRecipe = {
         "content",
     ],
     defaults: { size: "medium" },
+    // A week stays scannable: the 1280 Web host spread seven columns to ~135px each (2026-10-17 review). Same width as the
+    // DatePicker popover.
+    maxWidth: layout.readingMaxWidth / 2,
     header: {
         gap: spacing.xs,
         monthLabel: {

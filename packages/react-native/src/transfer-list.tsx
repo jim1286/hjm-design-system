@@ -12,12 +12,15 @@ import {
   type TransferListSelection,
 } from "@hjmds/design-contracts/components/transfer-list";
 import { reconcileCheckboxSelection, type SelectItemDescriptor } from "@hjmds/design-contracts/behaviors";
-import { control, spacing } from "@hjmds/design-contracts/foundations";
+import { control, glyph, spacing } from "@hjmds/design-contracts/foundations";
+import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 import { Button } from "./actions.js";
 import { Text } from "./primitives.js";
 import { mixedCheckboxState, useControllableState } from "./internal/state.js";
+import { DrawnChevron } from "./internal/drawn-glyphs.js";
+import { SelectionMark } from "./internal/selection-mark.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 
@@ -59,7 +62,7 @@ export function TransferList<Id extends string = string>({
   layoutStyle,
 }: TransferListProps<Id>) {
 
-  const { colors, designProfile } = useHjmNativeTheme();
+  const { colors, designProfile, palette, environment } = useHjmNativeTheme();
   // Panels share the Web md role; preserve the pre-profile frame when no profile is selected.
   const corner = designProfile?.tokens.radius[transferListRecipe.panel.radius] ?? 12;
   const [storedTargetKeys, setTargetKeys] = useControllableState<ReadonlySet<Id>>({
@@ -100,32 +103,37 @@ export function TransferList<Id extends string = string>({
     if (result.movedIds.length > 0) onMove?.(result.movedIds, direction);
   };
 
+  const panelBorder = resolveColorReference(transferListRecipe.panel.border, palette);
   const renderPanel = (panel: TransferListPanel) => {
     const rows = panels[panel];
     const selectAll = resolveTransferListSelectAllState(descriptor, selection, panel);
+    const title = panel === "source" ? labels.source : labels.target;
+    // Same structure as Web: one bordered panel holding a [title | select-all] header and checkbox rows.
     return (
-      <View style={{ flex: 1, gap: spacing.xs }}>
-        <Pressable
-          accessibilityRole="checkbox"
-          // `mixed` is the contract's answer, not a third visual state invented
-          // here: some rows checked is neither on nor off.
-          // mixedCheckboxState keeps Android from holding a stale ", mixed" suffix.
-          accessibilityState={mixedCheckboxState(selectAll, { disabled: !rows.some(item => !item.disabled) })}
-          accessibilityLabel={`${panel === "source" ? labels.source : labels.target}, ${labels.selectAll}`}
-          disabled={!rows.some(item => !item.disabled)}
-          onPress={() => setSelection(toggleTransferListSelectAll(descriptor, selection, panel))}
-          style={{ minHeight: control.minTouchTarget, justifyContent: "center" }}
-        >
-          <Text variant="label">{labels.selectAll}</Text>
-        </Pressable>
+      <View style={{ backgroundColor: resolveColorReference(transferListRecipe.panel.background, palette), borderColor: panelBorder, borderRadius: corner, borderWidth: transferListRecipe.panel.borderWidth, overflow: "hidden" }}>
+        <View style={{ alignItems: "center", borderBottomColor: panelBorder, borderBottomWidth: transferListRecipe.panel.borderWidth, direction: environment.direction, flexDirection: "row", gap: spacing.xs, minHeight: transferListRecipe.panelHeader.minHeight, paddingHorizontal: transferListRecipe.panelHeader.paddingHorizontal }}>
+          <Text fontRole="ui" emphasis="strong" style={{ flex: 1 }} variant={transferListRecipe.panelHeader.title.textVariant}>{title}</Text>
+          <Pressable
+            accessibilityRole="checkbox"
+            // `mixed` is the contract's answer, not a third visual state invented
+            // here: some rows checked is neither on nor off.
+            // mixedCheckboxState keeps Android from holding a stale ", mixed" suffix.
+            accessibilityState={mixedCheckboxState(selectAll, { disabled: !rows.some(item => !item.disabled) })}
+            accessibilityLabel={`${title}, ${labels.selectAll}`}
+            disabled={!rows.some(item => !item.disabled)}
+            onPress={() => setSelection(toggleTransferListSelectAll(descriptor, selection, panel))}
+            style={{ alignItems: "center", justifyContent: "center", minHeight: control.minTouchTarget, minWidth: control.minTouchTarget }}
+          >
+            <SelectionMark checked={selectAll} />
+          </Pressable>
+        </View>
         <ScrollView
           accessibilityRole="list"
-          accessibilityLabel={panel === "source" ? labels.source : labels.target}
-          style={{ borderWidth: 1, borderColor: colors.border, borderRadius: corner }}
-          contentContainerStyle={rows.length === 0 ? { flexGrow: 1, justifyContent: "center", alignItems: "center" } : undefined}
+          accessibilityLabel={title}
+          contentContainerStyle={{ padding: spacing.xxs, ...(rows.length === 0 ? { flexGrow: 1, justifyContent: "center", alignItems: "center" } : {}) }}
         >
           {rows.length === 0 ? (
-            <Text tone="muted" variant="caption" align="center" style={{ padding: spacing.sm }}>{labels.empty}</Text>
+            <Text tone="muted" variant={transferListRecipe.emptyState.textVariant} align="center" style={{ padding: spacing.sm }}>{labels.empty}</Text>
           ) : (
             rows.map((item) => {
               const checked = selection[panel].has(item.id as Id);
@@ -137,10 +145,10 @@ export function TransferList<Id extends string = string>({
                   accessibilityState={{ checked, disabled: item.disabled === true }}
                   disabled={item.disabled === true}
                   onPress={() => setSelection(toggleTransferListSelection(descriptor, selection, panel, item.id as Id))}
-                  style={{ minHeight: control.minTouchTarget, justifyContent: "center", paddingHorizontal: spacing.sm }}
+                  style={{ alignItems: "center", direction: environment.direction, flexDirection: "row", gap: transferListRecipe.item.gap, minHeight: control.minTouchTarget, opacity: item.disabled ? 0.5 : 1, paddingHorizontal: transferListRecipe.item.paddingHorizontal }}
                 >
-                  <Text
-              fontRole="ui">{checked ? "✓ " : ""}{item.label}</Text>
+                  <SelectionMark checked={checked} />
+                  <Text fontRole="ui" style={{ flex: 1 }}>{item.label}</Text>
                 </Pressable>
               );
             })
@@ -151,23 +159,24 @@ export function TransferList<Id extends string = string>({
   };
 
   return (
-    <View style={[{ gap: spacing.sm }, layoutStyle]}>
-      <Text variant="label">{labels.source}</Text>
+    <View style={[{ gap: spacing.md }, layoutStyle]}>
       {renderPanel("source")}
       {/*
         The actions sit between the panels stacked, not side by side: a phone
         has no room for two columns plus a button rail, and stacking keeps the
-        reading order "list, what to do with it, other list".
+        reading order "list, what to do with it, other list". Stacked buttons
+        share one width and the stacked gap, and point down/up at their panel.
       */}
-      <View style={{ flexDirection: "row", gap: spacing.sm, justifyContent: "center" }}>
-        <Button tone="secondary" disabled={!canMove("source")} onPress={() => move("toTarget")}>
+      <View style={{ alignItems: "stretch", gap: transferListRecipe.moveControls.gap }}>
+        <Button tone="secondary" disabled={!canMove("source")} onPress={() => move("toTarget")}
+          leading={<DrawnChevron direction="down" size={glyph.sm} color={colors.text} />}>
           {labels.toTarget}
         </Button>
-        <Button tone="secondary" disabled={!canMove("target")} onPress={() => move("toSource")}>
+        <Button tone="secondary" disabled={!canMove("target")} onPress={() => move("toSource")}
+          leading={<DrawnChevron direction="up" size={glyph.sm} color={colors.text} />}>
           {labels.toSource}
         </Button>
       </View>
-      <Text variant="label">{labels.target}</Text>
       {renderPanel("target")}
     </View>
   );

@@ -412,31 +412,6 @@
 }
 .hjm-password-field__toggle:disabled { cursor: not-allowed; opacity: 0.6; }
 .hjm-password-field__toggle:focus-visible { outline: 2px solid var(--hjm-color-content-brand); outline-offset: -2px; }
-.hjm-password-field__toggle > span:empty {
-  position: relative;
-  inline-size: 18px;
-  block-size: 12px;
-  display: block;
-  border: 2px solid currentColor;
-  border-radius: 70% 20%;
-  transform: rotate(45deg);
-}
-.hjm-password-field__toggle > span:empty::after {
-  content: "";
-  position: absolute;
-  inset: 2px;
-  border-radius: 50%;
-  background: currentColor;
-}
-.hjm-password-field__toggle[data-revealed] > span:empty::before {
-  content: "";
-  position: absolute;
-  z-index: 1;
-  inset-block-start: 4px;
-  inset-inline-start: -3px;
-  inline-size: 22px;
-  border-block-start: 2px solid currentColor;
-}
 .hjm-otp-field__control {
   --hjm-otp-slot-size: var(--hjm-control-min-touch-target);
   --hjm-otp-gap: var(--hjm-space-xs);
@@ -609,13 +584,14 @@
 }
 .hjm-number-field__input {
   block-size: 100%;
-  padding-inline: var(--hjm-space-md);
+  min-inline-size: 3ch;
+  padding-inline: var(--hjm-space-xxs); /* numberFieldRecipe.sizes.medium.paddingHorizontal */
   text-align: center;
   font-variant-numeric: tabular-nums;
 }
 .hjm-number-field[data-size="large"] .hjm-number-field__input {
   min-block-size: calc(var(--hjm-control-button-large) - 2px);
-  padding-inline: var(--hjm-space-lg);
+  padding-inline: var(--hjm-space-xs);
   font-size: var(--hjm-type-body-large-size);
   line-height: var(--hjm-type-body-large-line-height);
 }
@@ -773,13 +749,15 @@
 .hjm-choice__indicator { flex: 0 0 24px; display: grid; place-items: center; inline-size: 24px; block-size: 24px; margin-block-start: 2px; border: 2px solid var(--hjm-color-text-muted); background: var(--hjm-color-bg); }
 .hjm-choice[data-size="small"] .hjm-choice__indicator { flex-basis: 20px; inline-size: 20px; block-size: 20px; }
 .hjm-choice__leading { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; color: var(--hjm-color-text-muted); }
-.hjm-choice[data-kind="checkbox"] .hjm-choice__indicator { border-radius: var(--hjm-radius-sm); }
+/* Agreement and TransferList rows draw the same indicator outside a .hjm-choice, keyed on the indicator itself. */
+.hjm-choice[data-kind="checkbox"] .hjm-choice__indicator, .hjm-choice__indicator[data-kind="checkbox"] { border-radius: var(--hjm-radius-sm); }
 .hjm-choice[data-kind="radio"] .hjm-choice__indicator { border-radius: 50%; }
-.hjm-choice[data-state="checked"] .hjm-choice__indicator, .hjm-choice[data-state="mixed"] .hjm-choice__indicator { border-color: var(--hjm-color-primary); background: var(--hjm-color-primary); }
-.hjm-choice[data-state="checked"] .hjm-choice__indicator::after { content: ""; inline-size: 8px; block-size: 4px; border-inline-start: 2px solid var(--hjm-color-on-primary); border-block-end: 2px solid var(--hjm-color-on-primary); transform: rotate(-45deg); }
-[dir="rtl"] .hjm-choice[data-state="checked"] .hjm-choice__indicator::after { transform: rotate(45deg); }
+.hjm-choice[data-state="checked"] .hjm-choice__indicator, .hjm-choice[data-state="mixed"] .hjm-choice__indicator,
+.hjm-choice__indicator[data-state="checked"], .hjm-choice__indicator[data-state="mixed"] { border-color: var(--hjm-color-primary); background: var(--hjm-color-primary); }
+.hjm-choice[data-state="checked"] .hjm-choice__indicator::after, .hjm-choice__indicator[data-kind="checkbox"][data-state="checked"]::after { content: ""; inline-size: 8px; block-size: 4px; border-inline-start: 2px solid var(--hjm-color-on-primary); border-block-end: 2px solid var(--hjm-color-on-primary); transform: rotate(-45deg); }
+[dir="rtl"] .hjm-choice[data-state="checked"] .hjm-choice__indicator::after, [dir="rtl"] .hjm-choice__indicator[data-kind="checkbox"][data-state="checked"]::after { transform: rotate(45deg); }
 .hjm-choice[data-kind="radio"][data-state="checked"] .hjm-choice__indicator::after { inline-size: 8px; block-size: 8px; border: 0; border-radius: 50%; background: var(--hjm-color-on-primary); transform: none; }
-.hjm-choice[data-state="mixed"] .hjm-choice__indicator::after { content: ""; inline-size: 10px; block-size: 2px; background: var(--hjm-color-on-primary); }
+.hjm-choice[data-state="mixed"] .hjm-choice__indicator::after, .hjm-choice__indicator[data-state="mixed"]::after { content: ""; inline-size: 10px; block-size: 2px; background: var(--hjm-color-on-primary); }
 .hjm-choice__copy { display: grid; gap: var(--hjm-space-xxs); padding-block: 2px; }
 .hjm-choice[data-state="checked"] .hjm-choice__copy > :first-child,
 .hjm-choice[data-state="mixed"] .hjm-choice__copy > :first-child { font-weight: var(--hjm-font-weight-bold); }
@@ -1434,22 +1412,11 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   border-block-end: 1px solid var(--hjm-color-border);
 }
 .hjm-transfer-list__title { font-weight: var(--hjm-font-weight-bold); overflow-wrap: anywhere; }
-.hjm-transfer-list__select-all,
-.hjm-transfer-list__mark {
-  display: grid;
-  place-items: center;
-  flex: 0 0 auto;
-  inline-size: var(--hjm-space-md);
-  block-size: var(--hjm-space-md);
-  border: 1px solid var(--hjm-color-border-control);
-  border-radius: var(--hjm-radius-sm);
-  background: transparent;
-  color: var(--hjm-color-on-primary);
-  font-size: var(--hjm-type-label-size);
-}
-.hjm-transfer-list__select-all[aria-checked="true"],
-.hjm-transfer-list__select-all[aria-checked="mixed"],
-.hjm-transfer-list__mark[data-checked] { border-color: var(--hjm-color-primary); background: var(--hjm-color-primary); }
+.hjm-transfer-list__select-all { display: grid; place-items: center; flex: 0 0 auto; padding: 0; border: 0; background: transparent; }
+/* These rows center the indicator, so drop the 2px top offset Checkbox uses to sit on its first text line. */
+.hjm-transfer-list__select-all > .hjm-choice__indicator,
+.hjm-transfer-list__option > .hjm-choice__indicator,
+.hjm-agreement .hjm-choice__indicator { margin-block-start: 0; }
 .hjm-transfer-list__options { display: flex; flex-direction: column; padding: var(--hjm-space-xxs); }
 .hjm-transfer-list__option {
   /* transferListRecipe.item = collectionItemContract: padding/gap sm 12, radius md (2026-10-06; Web had 8 and radius sm, Native 12). */
@@ -1472,7 +1439,14 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-transfer-list__empty:focus-visible,
 .hjm-transfer-list__select-all:focus-visible { outline: 2px solid var(--hjm-color-focus); outline-offset: -2px; }
 .hjm-transfer-list__empty { margin: 0; padding: var(--hjm-space-md) var(--hjm-space-sm); color: var(--hjm-color-text-muted); text-align: center; }
-.hjm-transfer-list__actions { display: flex; flex-direction: column; gap: var(--hjm-space-sm); /* transferListRecipe.moveControls.gap sm 12, as Native */ padding-block-start: var(--hjm-space-xl); }
+.hjm-transfer-list__actions { display: flex; flex-direction: column; gap: var(--hjm-space-xs); /* transferListRecipe.moveControls.gap xs 8 (stacked buttons), as Native */ padding-block-start: var(--hjm-space-xl); }
+.hjm-transfer-list__move-icon[data-orientation="stacked"] { display: none; }
+/* Stacked panels: the buttons follow the source panel directly and point down/up at the panel they move to. */
+@media (max-width: 30rem) {
+  .hjm-transfer-list__actions { padding-block-start: 0; }
+  .hjm-transfer-list__move-icon[data-orientation="inline"] { display: none; }
+  .hjm-transfer-list__move-icon[data-orientation="stacked"] { display: inline-block; }
+}
 
 /* AuthProviderButton ------------------------------------------------------ */
 /* Provider guideline colors cannot follow the theme without failing provider review.
@@ -1956,7 +1930,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   flex-wrap: wrap;
   align-items: center;
   gap: var(--hjm-space-xs);
-  padding-inline: var(--hjm-space-sm);
+  padding-inline: var(--hjm-space-md); /* agreementRecipe.itemLayout.paddingHorizontal: marks align with the all row */
 }
 /* agreementRecipe.itemLayout.labelBasis: details wrap before consent copy is
    squeezed into vertical text at 2x scale (Utilverse adoption QA, 2026-10-07). */
@@ -1987,23 +1961,6 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   font-size: var(--hjm-type-label-size);
   text-decoration: underline;
 }
-.hjm-agreement__mark {
-  display: grid;
-  place-items: center;
-  flex: 0 0 auto;
-  inline-size: var(--hjm-space-md);
-  block-size: var(--hjm-space-md);
-  border: 1px solid var(--hjm-color-border-control);
-  border-radius: var(--hjm-radius-sm);
-  color: var(--hjm-color-on-primary);
-  font-size: var(--hjm-type-label-size);
-}
-/* A mark is fixed artwork, not font-scaled copy. The former text glyph escaped
-   the 16px frame when the provider doubled label typography. */
-.hjm-agreement__mark[data-state="true"] .hjm-agreement__ink { inline-size: 8px; block-size: 4px; border-left: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(-45deg); }
-.hjm-agreement__mark[data-state="mixed"] .hjm-agreement__ink { inline-size: 10px; block-size: 2px; background: currentColor; }
-.hjm-agreement__mark[data-state="true"],
-.hjm-agreement__mark[data-state="mixed"] { border-color: var(--hjm-color-primary); background: var(--hjm-color-primary); }
 .hjm-agreement__all:focus-visible,
 .hjm-agreement__toggle:focus-visible,
 .hjm-agreement__detail:focus-visible { outline: 2px solid var(--hjm-color-focus); outline-offset: 2px; }
@@ -2670,7 +2627,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-date-picker { display: grid; gap: var(--hjm-space-xs); }
 .hjm-date-picker__label { color: var(--hjm-color-text); font-weight: var(--hjm-font-weight-semibold); }
 .hjm-date-picker__anchor { position: relative; display: flex; align-items: center; }
-.hjm-date-picker__trigger { inline-size: 100%; min-block-size: var(--hjm-control-min-touch-target); display: flex; align-items: center; gap: var(--hjm-space-sm); padding-inline: var(--hjm-space-md) 3rem; border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-md); color: var(--hjm-color-text-body); background: var(--hjm-color-bg); font: inherit; text-align: start; cursor: pointer; }
+.hjm-date-picker__trigger { inline-size: 100%; min-block-size: var(--hjm-control-min-touch-target); display: flex; align-items: center; gap: var(--hjm-space-sm); padding-inline: var(--hjm-space-md) 3rem; border: 1px solid var(--hjm-color-border-control); border-radius: var(--hjm-radius-md); color: var(--hjm-color-text-body); background: var(--hjm-color-bg); font: inherit; text-align: start; cursor: pointer; }
 /* datePickerRecipe.sizes.large.minHeight is control.buttonHeight.large (52), as Select/NumberField large. Web drew 56 until 2026-10-06. */
 .hjm-date-picker[data-size="large"] .hjm-date-picker__trigger { min-block-size: var(--hjm-control-button-large); padding-inline-start: var(--hjm-space-lg); }
 .hjm-date-picker[data-invalid] .hjm-date-picker__trigger { border-color: var(--hjm-color-danger); }
@@ -2678,7 +2635,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
    looked enabled on both platforms. datePickerRecipe has no amount, so the field default applies. */
 .hjm-date-picker[data-disabled] :is(.hjm-date-picker__label, .hjm-date-picker__anchor) { opacity: var(--hjm-field-disabled-opacity); }
 .hjm-date-picker__trigger [data-placeholder] { color: var(--hjm-color-text-muted); }
-.hjm-date-picker__clear { position: absolute; inset-inline-end: 0; inline-size: var(--hjm-control-min-touch-target); block-size: var(--hjm-control-min-touch-target); border: 0; color: var(--hjm-color-text-muted); background: transparent; font: inherit; cursor: pointer; }
+.hjm-date-picker__clear { position: absolute; inset-inline-end: 0; }
 .hjm-date-picker__popover { position: absolute; z-index: var(--hjm-layer-dropdown); inset-block-start: calc(100% + var(--hjm-space-xs)); inset-inline-start: 0; inline-size: min(22.5rem, calc(100vw - 2rem)); padding: var(--hjm-space-sm); border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-lg); color: var(--hjm-color-text); background: var(--hjm-color-bg); box-shadow: var(--hjm-shadow-floating); }
 .hjm-date-picker__description { color: var(--hjm-color-text-muted); }
 .hjm-date-picker__error { color: var(--hjm-color-danger); }
@@ -2836,7 +2793,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 
 /* Keep the seven-column spatial model and minimum targets; narrow hosts scroll
    the grid instead of shrinking dates or wrapping a week onto another row. */
-.hjm-calendar { display: grid; gap: var(--hjm-space-xs); min-inline-size: 0; }
+.hjm-calendar { display: grid; gap: var(--hjm-space-xs); min-inline-size: 0; max-inline-size: var(--hjm-calendar-max-width); }
 .hjm-calendar__header { display: grid; grid-template-columns: var(--hjm-control-min-touch-target) minmax(0, 1fr) var(--hjm-control-min-touch-target); align-items: center; gap: var(--hjm-space-xs); }
 .hjm-calendar__header strong { text-align: center; overflow-wrap: anywhere; font-size: var(--hjm-type-title-size); line-height: var(--hjm-type-title-line-height); font-weight: var(--hjm-font-weight-bold); }
 .hjm-calendar__header button { min-block-size: var(--hjm-control-min-touch-target); border: 0; border-radius: var(--hjm-radius-full); background: transparent; color: var(--hjm-color-text-body); font: inherit; cursor: pointer; }
@@ -2851,8 +2808,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-calendar__day[data-disabled] { opacity: var(--hjm-calendar-disabled-opacity); cursor: not-allowed; }
 .hjm-calendar__content { max-inline-size: 100%; min-block-size: var(--hjm-type-label-line-height); font-size: var(--hjm-type-label-size); line-height: var(--hjm-type-label-line-height); overflow-wrap: anywhere; }
 .hjm-calendar__header button:focus-visible, .hjm-calendar__day:focus-visible { outline: 2px solid var(--hjm-color-focus); outline-offset: 2px; }
-.hjm-date-picker__calendar-close { display: block; margin-inline-start: auto; inline-size: var(--hjm-control-min-touch-target); min-block-size: var(--hjm-control-min-touch-target); border: 0; border-radius: var(--hjm-radius-full); background: transparent; color: inherit; font: inherit; cursor: pointer; }
-.hjm-date-picker__calendar-close:focus-visible { outline: 2px solid var(--hjm-color-focus); outline-offset: 2px; }
+.hjm-date-picker__calendar-close { display: flex; margin-inline-start: auto; }
 
 /* Reserve a common annotation row; dates with a dot must not sit above their neighbours. */
 .hjm-calendar__day-label { display: grid; place-items: center; inline-size: var(--hjm-calendar-indicator-size, var(--hjm-calendar-cell-size)); min-block-size: var(--hjm-calendar-indicator-size, var(--hjm-calendar-cell-size)); border: 1px solid transparent; border-radius: var(--hjm-radius-full); }

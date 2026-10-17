@@ -161,7 +161,7 @@ export declare const transferListRecipe: {
         readonly textVariant: "label";
     };
     readonly moveControls: {
-        readonly gap: 12;
+        readonly gap: 8;
     };
     readonly moveButton: {
         readonly minTarget: 44;

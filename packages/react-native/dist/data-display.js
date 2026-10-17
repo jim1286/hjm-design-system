@@ -636,7 +636,8 @@ function renderStatistic({ descriptor, density = "comfortable", presentation = "
                 borderWidth: presentationContract.borderWidth,
                 gap: densityContract.gap,
                 minWidth: 0,
-                padding: densityContract.padding,
+                // Plain statistics align with surrounding text; only the surface plate is inset (Web keys on data-presentation).
+                padding: presentation === "surface" ? densityContract.padding : 0,
             },
             layoutStyle,
         ], children: [_jsx(Text, { accessible: false, style: [

@@ -7,7 +7,7 @@ export type TaskListProps = Readonly<{
     onCompletedChange: (id: string, completed: boolean) => void;
     disabled?: boolean;
     emptyContent?: ReactNode;
-    /** Independent row action below the checkbox; apply disabled to the supplied control. */
+    /** Independent row action beside the checkbox; apply disabled to the supplied control. */
     renderItemAction?: (context: Readonly<{
         item: TaskItem;
         disabled: boolean;

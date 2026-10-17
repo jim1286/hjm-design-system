@@ -5,6 +5,7 @@ import { passwordFieldRecipe, resolvePasswordFieldDescriptor, } from "@hjmds/des
 import { getOtpFieldSlotValues, otpFieldRecipe, resolveOtpFieldValue, } from "@hjmds/design-contracts/components/otp-field";
 import { createContext, forwardRef, useContext, useEffect, useId, useLayoutEffect, useRef, useState, } from "react";
 import { composeRefs, classNames, useControllableState } from "./internal.js";
+import { Icon } from "./supplemental-display.js";
 /*
   How far a disabled field fades its label and control (fieldRecipe.disabledScope). The
   frame defaults to fieldRecipe.disabledOpacity; SearchField and PasswordField render
@@ -181,7 +182,7 @@ export const PasswordField = forwardRef(function PasswordField({ value: valuePro
                         };
                     }
                     setRevealed(!revealed);
-                }, type: "button", children: renderToggleIcon?.(toggleAppearance) ?? _jsx("span", { "aria-hidden": "true" }) })), type: resolved.webInputType, value: value }) }));
+                }, type: "button", children: renderToggleIcon?.(toggleAppearance) ?? _jsx(Icon, { name: toggleAppearance.name, size: "sm" }) })), type: resolved.webInputType, value: value }) }));
 });
 /** One accessible numeric input rendered as decorative OTP slots. */
 export const OtpField = forwardRef(function OtpField({ id, label, description, error, required, disabled, readOnly, busy = false, length, value: valueProp, defaultValue = "", onValueChange, onComplete, onChange, size = otpFieldRecipe.defaults.size, presentation = "boxes", fieldClassName, className, onFocus, onBlur, "aria-describedby": ariaDescribedBy, "aria-invalid": ariaInvalid, "aria-label": ariaLabel, layoutStyle, ...props }, ref) {

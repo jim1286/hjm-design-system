@@ -3,6 +3,7 @@ import {
   type ResolvedCalendarDateCell,
 } from "@hjmds/design-contracts/components/calendar";
 import {
+  datePickerRecipe,
   resolveDatePickerTriggerText,
   validateDatePickerDescriptor,
   type DatePickerDescriptor,
@@ -19,7 +20,9 @@ import {
   type ReactNode,
 } from "react";
 
+import { IconButton } from "./actions.js";
 import { Calendar, type CalendarOverflow, type CalendarHandle } from "./calendar.js";
+import { Icon } from "./supplemental-display.js";
 import { classNames } from "./internal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
@@ -179,15 +182,15 @@ export function DatePicker<Content>({
           ref={triggerRef}
           type="button"
         >
-          <span aria-hidden="true">▣</span>
+          <Icon name="calendar" size={datePickerRecipe.sizes[size].glyph} />
           <span data-placeholder={descriptor.displayValue === null || undefined}>{triggerText}</span>
         </button>
         {selectedDate === null ? null : (
-          <button aria-label={clearLabel} className="hjm-date-picker__clear" disabled={descriptor.disabled || descriptor.readOnly} onClick={() => commit(null, "clear")} type="button">×</button>
+          <IconButton label={clearLabel} tone="ghost" className="hjm-date-picker__clear" disabled={descriptor.disabled || descriptor.readOnly} onClick={() => commit(null, "clear")}><Icon name="close" /></IconButton>
         )}
         {open ? (
           <div aria-label={label} className="hjm-date-picker__popover" id={dialogId} ref={dialogRef} role="dialog" onKeyDown={(event) => { if (event.key === "Escape") { event.preventDefault(); requestOpen(false, "escape"); } }}>
-            <button aria-label={closeLabel} className="hjm-date-picker__calendar-close" onClick={() => requestOpen(false, "trigger")} type="button">×</button>
+            <IconButton label={closeLabel} tone="ghost" className="hjm-date-picker__calendar-close" onClick={() => requestOpen(false, "trigger")}><Icon name="close" /></IconButton>
             <Calendar descriptor={{ ...calendarDescriptor, grid: calendarGrid, monthLabel, selectedDate, onSelectionChange: (date) => commit(date, "activate") }}
               composeAccessibleName={composeAccessibleName} size={size} autoFocus
               {...(previousMonth ? { previousMonth } : {})} {...(nextMonth ? { nextMonth } : {})}

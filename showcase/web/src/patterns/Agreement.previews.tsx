@@ -9,14 +9,7 @@ import { Notice } from "@hjmds/react/feedback";
 import { Stack, Text } from "@hjmds/react/layout";
 import { SegmentedControl } from "@hjmds/react/selection";
 import { PreviewTools } from "./preview-tools";
-import { authExample as auth, authPreviewDelayMs, topExample as topCopy } from "../../../shared/component-examples";
-
-const items = [
-  { id: "terms", label: "서비스 이용약관", required: true, detail: { label: "전문 보기", href: "#terms" } },
-  { id: "privacy", label: "개인정보 처리방침", required: true, detail: { label: "전문 보기", href: "#privacy" } },
-  { id: "age", label: "만 14세 이상입니다", required: true },
-  { id: "marketing", label: "마케팅 정보 수신", description: "새 소식과 이벤트를 알려드려요. 언제든 끌 수 있어요.", detail: { label: "전문 보기" } },
-];
+import { agreementExample as agreement, authExample as auth, authPreviewDelayMs, topExample as topCopy } from "../../../shared/component-examples";
 
 /*
   가입 화면 한 장이 이 세 조각으로 끝난다: Top(무엇을 묻는 화면인지), 본문, Agreement.
@@ -28,25 +21,25 @@ export function AgreementPreview() {
   const [missing, setMissing] = useState<readonly string[]>([]);
   const [joined, setJoined] = useState(false);
   const [email, setEmail] = useState("");
-  const labelOf = (id: string) => items.find((item) => item.id === id)?.label ?? id;
+  const labelOf = (id: string) => agreement.items.find((item) => item.id === id)?.label ?? id;
   return (
     <Stack gap="md">
-      <Top descriptor={{ eyebrow: "가입", title: "기록을 시작할까요", description: "이메일과 약관 동의만 있으면 돼요." }} />
-      <TextField label="이메일" value={email} onChange={(event) => setEmail(event.target.value)} />
+      <Top descriptor={agreement.top} />
+      <TextField label={agreement.emailLabel} value={email} onChange={(event) => setEmail(event.target.value)} />
       <Agreement
-        descriptor={{ accessibilityLabel: "가입 약관 동의", allLabel: "전체 동의하기", items }}
+        descriptor={{ accessibilityLabel: agreement.accessibilityLabel, allLabel: agreement.allLabel, items: agreement.items }}
         checkedIds={checked}
         onCheckedIdsChange={setChecked}
         onStateChange={(state) => { setSatisfied(state.satisfied); setMissing(state.missingRequiredIds); }}
-        requiredLabel="(필수)"
-        optionalLabel="(선택)"
+        requiredLabel={agreement.requiredLabel}
+        optionalLabel={agreement.optionalLabel}
       />
       {/* 문장은 제품이 만든다 — 계약은 어떤 항목이 남았는지만 알려준다. */}
-      {missing.length ? <p role="status">{missing.map(labelOf).join(", ")}에 동의해 주세요</p> : null}
+      {missing.length ? <p role="status">{agreement.missing(missing.map(labelOf))}</p> : null}
       <Button disabled={!satisfied || email.trim().length === 0} onClick={() => setJoined(true)}>
-        가입하고 시작하기
+        {agreement.submit}
       </Button>
-      {joined ? <Notice tone="success" title="가입했어요" description="이제 첫 기록을 남겨보세요." /> : null}
+      {joined ? <Notice tone="success" title={agreement.joined.title} description={agreement.joined.description} /> : null}
     </Stack>
   );
 }

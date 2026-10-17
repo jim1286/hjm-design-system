@@ -289,7 +289,8 @@ export function Select({ label, accessibilityLabel, source: sourceProp, items, s
                     {
                         alignItems: "center",
                         backgroundColor: colors.bg,
-                        borderColor: error ? colors.danger : colors.border,
+                        // Same frame border source as TextField and Web .hjm-field__control (it drew the lighter divider color).
+                        borderColor: colors[error ? fieldRecipe.states.invalid.border : fieldRecipe.states.idle.border],
                         borderRadius: tokens.radius.md,
                         borderWidth: error ? 2 : 1,
                         direction: environment.direction,
@@ -575,7 +576,7 @@ export function Combobox({ label, accessibilityLabel, items, sections, source: s
     return (_jsxs(View, { style: [{ gap: spacing.xs }, layoutStyle], children: [label ? _jsxs(Text, { tone: "primary", variant: "label", style: disabled ? { opacity: fieldRecipe.disabledOpacity } : undefined, children: [label, required ? " *" : ""] }) : null, _jsxs(View, { style: {
                     alignItems: "center",
                     backgroundColor: colors.bg,
-                    borderColor: error ? colors.danger : colors.border,
+                    borderColor: colors[error ? fieldRecipe.states.invalid.border : fieldRecipe.states.idle.border],
                     borderRadius: tokens.radius.md,
                     borderWidth: error ? 2 : 1,
                     direction: environment.direction,

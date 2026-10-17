@@ -13,6 +13,7 @@ import { spacing } from "@hjmds/design-contracts/foundations";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, View } from "react-native";
 import { mixedCheckboxState } from "./internal/state.js";
+import { SelectionMark } from "./internal/selection-mark.js";
 import { Text } from "./primitives.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { useHjmNativeTheme } from "./provider.js";
@@ -80,36 +81,9 @@ export function Agreement<Id extends string = string>({
     onCheckedIdsChange?.(next);
   };
 
-  const markColor = resolveColorReference(agreementRecipe.item.selectedIndicator, theme.palette);
-  const borderColor = resolveColorReference(agreementRecipe.item.focus.color, theme.palette);
-  // The glyph sits on the brand fill, so it takes onPrimary, the same token as the
-  // Checkbox indicator (selectionControlRecipe.states.indicator). agreementRecipe.all.color
-  // is the row text color and measured 2.19:1 on the fill (2026-09-30 audit). Read from
-  // the theme rather than the recipes entry, which would add a module to this subpath.
-  const glyphColor = theme.colors.onPrimary;
-  const mark = (value: boolean | "mixed") => (
-    <View
-      style={{
-        alignItems: "center",
-        backgroundColor: value === false ? "transparent" : markColor,
-        borderColor: value === false ? borderColor : markColor,
-        borderRadius: theme.tokens.radius.sm,
-        borderWidth: 1,
-        height: spacing.md,
-        flexShrink: 0,
-        justifyContent: "center",
-        width: spacing.md,
-      }}
-    >
-      {value === false ? null : (
-        // Fixed artwork: HJM Text scales even if OS scaling is disabled, which
-        // pushed the previous check glyph outside this 16pt frame at 2x.
-        <View accessible={false} style={value === "mixed"
-          ? { width: 10, height: 2, backgroundColor: glyphColor }
-          : { width: 8, height: 4, borderLeftWidth: 2, borderBottomWidth: 2, borderColor: glyphColor, transform: [{ rotate: "-45deg" }] }} />
-      )}
-    </View>
-  );
+  // Consent rows are multi-select: Checkbox's indicator (grey control border unchecked, brand fill checked), not a
+  // 16pt brand-outlined box that read as a radio (2026-10-17 review).
+  const mark = (value: boolean | "mixed") => <SelectionMark checked={value} />;
 
   return (
     <View accessibilityLabel={descriptor.accessibilityLabel} accessibilityRole="none" style={[{ gap: agreementRecipe.gap }, layoutStyle]}>
@@ -142,7 +116,7 @@ export function Agreement<Id extends string = string>({
               fontRole="ui" variant={agreementRecipe.all.textVariant}>{descriptor.allLabel}</Text>
       </Pressable>
       {descriptor.items.map((item) => (
-        <View key={item.id} style={{ gap: spacing.xxs }}>
+        <View key={item.id} style={{ gap: spacing.xxs, paddingHorizontal: agreementRecipe.itemLayout.paddingHorizontal }}>
           <View style={{ alignItems: "center", flexDirection: "row", flexWrap: "wrap", gap: spacing.xs }}>
             <Pressable
               // Named explicitly so the check glyph never leaks into the name ("✓, Terms").

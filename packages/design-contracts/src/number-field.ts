@@ -256,15 +256,17 @@ export const numberFieldRecipe = {
   frame: fieldFrameContract,
   support: formSupportContract,
   sizes: {
+    // The value is centered between the steppers, so this inset only matters when the field is narrow; the field
+    // frame's 16 consumed the whole value slot inside a 128px DurationField part (2026-10-17 review).
     medium: {
       minHeight: fieldFrameContract.minHeight,
-      paddingHorizontal: fieldFrameContract.paddingHorizontal,
+      paddingHorizontal: spacing.xxs,
       textVariant: "body",
       stepperDiameter: control.minTouchTarget,
     },
     large: {
       minHeight: control.buttonHeight.large,
-      paddingHorizontal: spacing.lg,
+      paddingHorizontal: spacing.xs,
       textVariant: "bodyLarge",
       stepperDiameter: control.minTouchTarget,
     },

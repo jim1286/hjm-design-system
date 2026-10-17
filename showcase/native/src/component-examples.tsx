@@ -58,6 +58,7 @@ import {
   SegmentedControl,
   Switch,
   TextArea,
+  TextField,
 } from "@hjmds/react-native/inputs";
 import { Slider } from "@hjmds/react-native/slider";
 import { Steps } from "@hjmds/react-native/steps";
@@ -109,18 +110,39 @@ import {
   surfaceExample,
   textExample,
   topExample,
+  agreementExample,
+  checkboxExample,
+  checkboxGroupExample,
+  chipExample,
+  comboboxExample,
+  dateRangeExample,
+  datePickerExample,
+  fieldExample,
+  filePickerExample,
+  formExample,
+  mentionsExample,
+  numberFieldExample,
+  otpFieldExample,
+  passwordFieldExample,
+  radioExample,
+  radioGroupExample,
+  searchFieldExample,
+  segmentedControlExample,
+  selectExample,
+  sliderExample,
+  switchExample,
+  tagsInputExample,
+  textAreaExample,
+  toggleGroupExample,
+  toggleGroupStatus,
+  transferListExample,
 } from "../../shared/component-examples";
+import { calendarExampleGrid } from "../../shared/calendar-example";
+import type { DateRangeValue } from "@hjmds/design-contracts/components/date-range";
 const noop = () => undefined;
 
-const previewCalendarGrid = {
-  cells: [
-    ...Array.from({ length: 1 }, () => ({})),
-    ...Array.from({ length: 28 }, (_, index) => ({ date: `2027-02-${String(index + 1).padStart(2, "0")}` })),
-    ...Array.from({ length: 6 }, () => ({})),
-  ],
-  weekdayLabels: ["일", "월", "화", "수", "목", "금", "토"],
-  todayDate: "2027-02-19",
-} as const;
+// Shared calendar fixture keeps weekday placement identical to Web (the hand-written grid matched only February 2027).
+const previewCalendarGrid = calendarExampleGrid(datePickerExample.month);
 
 function StoryFrame({ children }: { children: ReactNode }) {
   return (
@@ -267,39 +289,46 @@ const { busyId, start } = useAuthPending();
 return (<StoryFrame><ProviderButtons busyId={busyId} onPress={start} /></StoryFrame>);
 }
 
+// Input examples read the shared spec (showcase/shared/component-examples.ts) so labels, items, initial selection,
+// disabled rows and descriptions match the Web stories (2026-10-17 review C).
 function AgreementExample({ variant }: { variant: PreviewVariant }) {
+const copy = agreementExample;
 const [checked, setChecked] = useState<ReadonlySet<string>>(new Set());
-const [detail, setDetail] = useState("None");
-return (<StoryFrame><Agreement
-        checkedIds={checked}
-        onCheckedIdsChange={setChecked}
-        onDetail={(id) => setDetail(id)}
-        optionalLabel="(optional)"
-        requiredLabel="(required)"
-        descriptor={{
-          accessibilityLabel: "Sign-up agreements",
-          allLabel: "Agree to everything",
-          items: [
-            { id: "terms", label: "Terms of service", required: true, detail: { label: "Read" } },
-            { id: "privacy", label: "Privacy policy", required: true, detail: { label: "Read" } },
-            { id: "marketing", label: "Marketing updates", description: "You can turn this off any time." },
-          ],
-        }}
-      /></StoryFrame>);
+const [satisfied, setSatisfied] = useState(false);
+const [missing, setMissing] = useState<readonly string[]>([]);
+const [joined, setJoined] = useState(false);
+const [email, setEmail] = useState("");
+const labelOf = (id: string) => copy.items.find((item) => item.id === id)?.label ?? id;
+return (<StoryFrame><Stack gap="md">
+  <Top descriptor={copy.top} />
+  <TextField label={copy.emailLabel} value={email} onValueChange={setEmail} />
+  <Agreement
+    descriptor={{ accessibilityLabel: copy.accessibilityLabel, allLabel: copy.allLabel, items: copy.items }}
+    checkedIds={checked}
+    onCheckedIdsChange={setChecked}
+    onStateChange={(state) => { setSatisfied(state.satisfied); setMissing(state.missingRequiredIds); }}
+    requiredLabel={copy.requiredLabel}
+    optionalLabel={copy.optionalLabel}
+  />
+  {missing.length ? <Text accessibilityLiveRegion="polite">{copy.missing(missing.map(labelOf))}</Text> : null}
+  <Button disabled={!satisfied || email.trim().length === 0} onPress={() => setJoined(true)}>{copy.submit}</Button>
+  {joined ? <Notice tone="success" title={copy.joined.title} description={copy.joined.description} /> : null}
+</Stack></StoryFrame>);
 }
 
 function FieldExample({ variant }: { variant: PreviewVariant }) {
-return (<StoryFrame><Field disabled={variant === "disabled"} error={variant === "error" ? "Please check this value." : ""} label="Custom field" description="The frame also supports custom controls.">
-        {(controlProps) => <TextInput {...controlProps} defaultValue="Custom value" style={styles.customInput} />}
+return (<StoryFrame><Field disabled={variant === "disabled"} error={variant === "error" ? fieldExample.error : ""} label={fieldExample.label} description={fieldExample.description}>
+        {(controlProps) => <TextInput {...controlProps} defaultValue={fieldExample.value} style={styles.customInput} />}
       </Field></StoryFrame>);
 }
 
 function SearchFieldExample({ variant }: { variant: PreviewVariant }) {
-const [query, setQuery] = useState("김도영");
+const [query, setQuery] = useState<string>(searchFieldExample.value);
 return (<StoryFrame><SearchField
-        busyLabel="Searching"
-        clearLabel="Clear search"
-        label="Search"
+        busyLabel={searchFieldExample.busyLabel}
+        clearLabel={searchFieldExample.clearLabel}
+        label={searchFieldExample.label}
+        description={searchFieldExample.description}
         value={query}
         onValueChange={setQuery}
         onClear={() => setQuery("")}
@@ -307,221 +336,213 @@ return (<StoryFrame><SearchField
 }
 
 function TextAreaExample({ variant }: { variant: PreviewVariant }) {
-const [notes, setNotes] = useState("여러 줄 입력도 공통 필드 계약을 사용합니다.");
-return (<StoryFrame><TextArea label="Notes" value={notes} onValueChange={setNotes} /></StoryFrame>);
+const [notes, setNotes] = useState<string>(textAreaExample.value);
+return (<StoryFrame><TextArea label={textAreaExample.label} description={textAreaExample.description} value={notes} onValueChange={setNotes} /></StoryFrame>);
 }
 
 function PasswordFieldExample({ variant }: { variant: PreviewVariant }) {
 return (<StoryFrame><PasswordField
         autofillHint="current"
-        concealLabel="Hide password"
-        defaultValue="hjm-password"
-        label="Password"
-        revealLabel="Show password"
-        description="Reveal state never changes the password value."
+        concealLabel={passwordFieldExample.concealLabel}
+        defaultValue={passwordFieldExample.value}
+        label={passwordFieldExample.label}
+        revealLabel={passwordFieldExample.revealLabel}
+        description={passwordFieldExample.description}
       /></StoryFrame>);
 }
 
 function OtpFieldExample({ variant }: { variant: PreviewVariant }) {
 return (<StoryFrame><OtpField
-        defaultValue="128"
-        label="Verification code"
-        length={6}
-        description="Type or paste the full six-digit code."
+        defaultValue={otpFieldExample.value}
+        label={otpFieldExample.label}
+        length={otpFieldExample.length}
+        description={otpFieldExample.description}
       /></StoryFrame>);
 }
 
 function NumberFieldExample({ variant }: { variant: PreviewVariant }) {
 return (<StoryFrame><NumberField
-        decrementLabel="Decrease quantity"
-        defaultValue={2}
-        incrementLabel="Increase quantity"
-        label="Quantity"
-        min={0}
-        max={10}
+        decrementLabel={numberFieldExample.decrementLabel}
+        defaultValue={numberFieldExample.value}
+        incrementLabel={numberFieldExample.incrementLabel}
+        label={numberFieldExample.label}
+        min={numberFieldExample.min}
+        max={numberFieldExample.max}
       /></StoryFrame>);
 }
 
 function SliderExample({ variant }: { variant: PreviewVariant }) {
 return (<StoryFrame><Slider
-        decrementLabel="Decrease completion"
-        defaultValue={72}
-        incrementLabel="Increase completion"
-        label="Completion"
-        min={0}
-        max={100}
-        getValueText={(value) => `${value}%`}
+        decrementLabel={sliderExample.decrementLabel}
+        defaultValue={sliderExample.value}
+        incrementLabel={sliderExample.incrementLabel}
+        label={sliderExample.label}
+        min={sliderExample.min}
+        max={sliderExample.max}
+        getValueText={sliderExample.valueText}
       /></StoryFrame>);
 }
 
 function FormExample({ variant }: { variant: PreviewVariant }) {
-const [query, setQuery] = useState("김도영");
-const [saved, setSaved] = useState(0);
+const [owner, setOwner] = useState<string>(formExample.field.value);
+const [message, setMessage] = useState("");
 return (<StoryFrame><Form
-        fallbackErrorMessage="Could not save"
-        label="Profile form"
-        onSubmit={() => setSaved((value) => value + 1)}
-        submitLabel="Save profile"
-        values={{ query }}
+        fallbackErrorMessage={formExample.fallbackError}
+        label={formExample.label}
+        onSubmit={() => setMessage(formExample.result)}
+        submitLabel={formExample.submit}
+        values={{ owner }}
       >
-        <Text tone="muted">Saved {saved} times. Form owns submit feedback while products own values.</Text>
-      </Form></StoryFrame>);
+        <SearchField label={formExample.field.label} clearLabel={formExample.field.clearLabel} busyLabel={formExample.field.busyLabel} value={owner} onValueChange={setOwner} onClear={() => setOwner("")} />
+      </Form>{message ? <Notice tone="success" title={message} /> : null}</StoryFrame>);
 }
 
 function DatePickerExample({ variant }: { variant: PreviewVariant }) {
 const [visitDate, setVisitDate] = useState<string | null>(null);
 return (<StoryFrame><DatePicker
-        clearLabel="Clear date"
-        closeLabel="Close calendar"
-        composeAccessibleName={({ date, isToday, isSelected }) => `${date}${isToday ? ", today" : ""}${isSelected ? ", selected" : ""}`}
-        descriptor={{ grid: previewCalendarGrid, displayValue: visitDate, placeholder: "Choose a date", label: "Visit date", selectedDate: visitDate, onSelectionChange: setVisitDate, defaultOpen: false }}
-        monthLabel="February 2027"
+        clearLabel={datePickerExample.clearLabel}
+        closeLabel={datePickerExample.closeLabel}
+        composeAccessibleName={datePickerExample.accessibleName}
+        descriptor={{ grid: previewCalendarGrid, displayValue: visitDate, placeholder: datePickerExample.placeholder, label: datePickerExample.label, selectedDate: visitDate, onSelectionChange: setVisitDate, defaultOpen: false }}
+        monthLabel={datePickerExample.monthLabel}
       /></StoryFrame>);
 }
 
 function FilePickerExample({ variant }: { variant: PreviewVariant }) {
-const [picked, setPicked] = useState("None");
+const [message, setMessage] = useState("");
 return (<StoryFrame><FilePicker
-        buttonLabel="Choose images"
+        buttonLabel={filePickerExample.buttonLabel}
         descriptor={{ mode: "multiple", accept: ["image/*"], maxCount: 4 }}
-        hint="PNG or JPG, up to four"
-        label="Attachments"
+        hint={filePickerExample.hint}
+        label={filePickerExample.label}
         onPick={async () => [{ id: "preview", name: "preview.png", mimeType: "image/png", sizeBytes: 1024 }]}
         onPickError={noop}
-        onSelect={(files) => setPicked(files.accepted.map((file) => file.name).join(", "))}
-      /><Text accessibilityLiveRegion="polite">Selected attachment: {picked}</Text></StoryFrame>);
+        onSelect={() => setMessage(filePickerExample.result)}
+      /><PreviewResult message={message} /></StoryFrame>);
 }
 
 function CheckboxExample({ variant }: { variant: PreviewVariant }) {
-const [checked, setChecked] = useState(false);
-return (<StoryFrame><Checkbox label="Accept terms" checked={checked} onCheckedChange={setChecked} /></StoryFrame>);
+const [checked, setChecked] = useState<boolean>(checkboxExample.checked);
+return (<StoryFrame><Checkbox label={checkboxExample.label} description={checkboxExample.description} checked={checked} onCheckedChange={setChecked} /></StoryFrame>);
 }
 
 function RadioExample({ variant }: { variant: PreviewVariant }) {
-return (<StoryFrame><Radio label="Standalone choice" defaultChecked /></StoryFrame>);
+return (<StoryFrame><Radio label={radioExample.label} description={radioExample.description} defaultChecked={radioExample.checked} /></StoryFrame>);
 }
 
 function CheckboxGroupExample({ variant }: { variant: PreviewVariant }) {
-const [checks, setChecks] = useState<ReadonlySet<string>>(new Set(["email"]));
-return (<StoryFrame><CheckboxGroup
-        label="Channels"
-        value={checks}
-        onValueChange={setChecks}
-        items={[
-          { id: "email", label: "Email" },
-          { id: "push", label: "Push" },
-        ]}
-      /></StoryFrame>);
+const [checks, setChecks] = useState<ReadonlySet<string>>(new Set(checkboxGroupExample.initial));
+return (<StoryFrame><CheckboxGroup label={checkboxGroupExample.label} value={checks} onValueChange={setChecks} items={checkboxGroupExample.items} /></StoryFrame>);
 }
 
 function RadioGroupExample({ variant }: { variant: PreviewVariant }) {
-const [radio, setRadio] = useState<string | null>("standard");
-return (<StoryFrame><RadioGroup
-        label="Delivery"
-        value={radio}
-        onValueChange={setRadio}
-        items={[
-          { value: "standard", label: "Standard" },
-          { value: "express", label: "Express" },
-        ]}
-      /></StoryFrame>);
+const [radio, setRadio] = useState<string | null>(radioGroupExample.initial);
+return (<StoryFrame><RadioGroup label={radioGroupExample.label} value={radio} onValueChange={setRadio} items={radioGroupExample.items} /></StoryFrame>);
 }
 
 function SwitchExample({ variant }: { variant: PreviewVariant }) {
-const [switched, setSwitched] = useState(true);
-return (<StoryFrame><Switch label="Notifications" checked={switched} onCheckedChange={setSwitched} /></StoryFrame>);
+const [switched, setSwitched] = useState<boolean>(switchExample.checked);
+return (<StoryFrame><Switch label={switchExample.label} checked={switched} onCheckedChange={setSwitched} /></StoryFrame>);
 }
 
 function SegmentedControlExample({ variant }: { variant: PreviewVariant }) {
-const [segment, setSegment] = useState("list");
-return (<StoryFrame><SegmentedControl
-        label="View"
-        value={segment}
-        onValueChange={setSegment}
-        items={[
-          { value: "list", label: "List" },
-          { value: "grid", label: "Grid" },
-        ]}
-      /></StoryFrame>);
+const [segment, setSegment] = useState<string>(segmentedControlExample.initial);
+return (<StoryFrame><SegmentedControl label={segmentedControlExample.label} value={segment} onValueChange={setSegment} items={segmentedControlExample.items} /></StoryFrame>);
 }
 
 function SelectExample({ variant }: { variant: PreviewVariant }) {
-const [select, setSelect] = useState<string | null>("ko");
+const [select, setSelect] = useState<string | null>(selectExample.initial);
 return (<StoryFrame><Select
-        dismissLabel="Close"
-        label="Language"
-        placeholder="Choose a language"
+        dismissLabel={selectExample.dismissLabel}
+        label={selectExample.label}
+        placeholder={selectExample.placeholder}
         selectedKey={select}
         onSelectionChange={setSelect}
-        items={[
-          { id: "ko", label: "Korean", textValue: "Korean" },
-          { id: "en", label: "English", textValue: "English" },
-        ]}
+        items={selectExample.items}
       /></StoryFrame>);
 }
 
 function ComboboxExample({ variant }: { variant: PreviewVariant }) {
 const [city, setCity] = useState<string | null>(null);
 return (<StoryFrame><Combobox
-        clearLabel="Clear city"
-        dismissLabel="Close"
-        emptyMessage="No cities"
-        label="City"
-        loadingMessage="Loading cities"
-        placeholder="Choose a city"
+        clearLabel={comboboxExample.clearLabel}
+        dismissLabel={comboboxExample.dismissLabel}
+        emptyMessage={comboboxExample.emptyMessage}
+        label={comboboxExample.label}
+        loadingMessage={comboboxExample.loadingMessage}
+        placeholder={comboboxExample.placeholder}
         selectedKey={city}
         onSelectionChange={setCity}
-        items={[
-          { id: "seoul", label: "Seoul", textValue: "Seoul" },
-          { id: "busan", label: "Busan", textValue: "Busan" },
-        ]}
+        items={comboboxExample.items.map(({ id, label }) => ({ id, label, textValue: label }))}
       /></StoryFrame>);
 }
 
 function ChipExample({ variant }: { variant: PreviewVariant }) {
-const [chip, setChip] = useState(false);
-return (<StoryFrame><Chip label="Featured" selected={chip} onPress={setChip} selectionMode="multiple" /></StoryFrame>);
+const [selected, setSelected] = useState<ReadonlySet<string>>(new Set(chipExample.initial));
+return (<StoryFrame><Stack axis="inline" gap="sm" wrap accessibilityLabel={chipExample.label}>{chipExample.items.map(item => <Chip key={item.id} label={item.label} selectionMode="multiple" selected={selected.has(item.id)}
+  onPress={(next) => setSelected(current => { const updated = new Set(current); if (next) updated.add(item.id); else updated.delete(item.id); return updated; })} />)}</Stack></StoryFrame>);
 }
 
 function ToggleGroupExample({ variant }: { variant: PreviewVariant }) {
-return (<StoryFrame><ToggleGroup
-        descriptor={{
-          accessibilityLabel: "Text styling",
-          items: [{ id: "bold", label: "Bold" }, { id: "italic", label: "Italic" }],
-        }}
-      /></StoryFrame>);
+const copy = toggleGroupExample;
+const [style, setStyle] = useState<ReadonlySet<string>>(new Set(copy.style.initial));
+const [filters, setFilters] = useState<ReadonlySet<string>>(new Set());
+return (<StoryFrame><Section title={copy.title} description={copy.description}><Stack gap="md">
+  <ToggleGroup descriptor={{ accessibilityLabel: copy.style.label, items: copy.style.items }} pressedIds={style} onPressedIdsChange={setStyle} />
+  <Text accessibilityLiveRegion="polite">{toggleGroupStatus(style)}</Text>
+  <ToggleGroup size="small" descriptor={{ accessibilityLabel: copy.filters.label, items: copy.filters.items }} pressedIds={filters} onPressedIdsChange={setFilters} />
+</Stack></Section></StoryFrame>);
 }
 
 function TagsInputExample({ variant }: { variant: PreviewVariant }) {
-return (<StoryFrame><TagsInput label="Interests" composeRemoveLabel={(tag) => `Remove ${tag}`} defaultTags={["walking"]} /></StoryFrame>);
+const copy = tagsInputExample;
+const [tags, setTags] = useState<readonly string[]>(copy.initial);
+const [message, setMessage] = useState<string | null>(null);
+return (<StoryFrame><Section title={copy.title} description={copy.description}><Stack gap="md">
+  <TagsInput label={copy.label} description={copy.fieldDescription} placeholder={copy.placeholder} tags={tags}
+    onTagsChange={(next) => { setTags(next); setMessage(null); }} policy={{ maxTags: copy.maxTags }}
+    onReject={(result) => setMessage(result.reason === "duplicate" ? copy.duplicate(result.value) : result.reason === "limit" ? copy.limit : null)}
+    composeRemoveLabel={copy.removeLabel} />
+  {message ? <Notice tone="warning" title={message} /> : null}
+</Stack></Section></StoryFrame>);
 }
 
+const dateRangeGrid = calendarExampleGrid(dateRangeExample.month);
 function DateRangePickerExample({ variant }: { variant: PreviewVariant }) {
-return (<StoryFrame><DateRangePicker
-        descriptor={{ grid: previewCalendarGrid, monthLabel: "February 2027" }}
-        composeAccessibleName={({ date }) => date}
-        rangeLabels={{ start: "range start", end: "range end", between: "inside range" }}
-      /></StoryFrame>);
+const copy = dateRangeExample;
+const [value, setValue] = useState<DateRangeValue>({ start: null, end: null });
+return (<StoryFrame><Section title={copy.title} description={copy.description}><Stack gap="md">
+  <DateRangePicker descriptor={{ grid: dateRangeGrid, monthLabel: copy.monthLabel }} composeAccessibleName={({ date }) => date}
+    value={value} onValueChange={setValue} rangeLabels={copy.rangeLabels} />
+  <Text accessibilityLiveRegion="polite">{copy.status(value.start, value.end)}</Text>
+</Stack></Section></StoryFrame>);
 }
 
 function MentionsExample({ variant }: { variant: PreviewVariant }) {
-const [mention, setMention] = useState("");
-return (<StoryFrame><Mentions
-        accessibilityLabel="Note"
-        value={mention}
-        onValueChange={setMention}
-        triggers={[{ id: "user", trigger: "@" }]}
-        candidates={[{ id: "sky", label: "skyline" }]}
-        emptyMessage="No matches"
-        listLabel="Mention candidates"
-      /></StoryFrame>);
+const copy = mentionsExample;
+const [text, setText] = useState("");
+const [query, setQuery] = useState<string | null>(null);
+const [saved, setSaved] = useState<string | null>(null);
+const candidates = query === null ? [] : copy.people.filter((person) => person.label.startsWith(query));
+return (<StoryFrame><Section title={copy.title} description={copy.description}><Stack gap="md">
+  <Mentions label={copy.label} description={copy.fieldDescription} value={text} onValueChange={setText}
+    triggers={[{ id: "person", trigger: "@" }]} candidates={candidates} onMentionQueryChange={(match) => setQuery(match?.query ?? null)}
+    emptyMessage={copy.emptyMessage} listLabel={copy.listLabel} />
+  <Button disabled={text.trim().length === 0} onPress={() => setSaved(text.trim())}>{copy.save}</Button>
+  {saved ? <List label={copy.savedList}><ListRow title={saved} /></List> : <Notice title={copy.emptySaved.title} description={copy.emptySaved.description} />}
+</Stack></Section></StoryFrame>);
 }
 
 function TransferListExample({ variant }: { variant: PreviewVariant }) {
-return (<StoryFrame><TransferList
-        items={[{ id: "walk", label: "Walk", textValue: "Walk" }, { id: "meal", label: "Meal", textValue: "Meal" }]}
-        labels={{ source: "Available", target: "Chosen", toTarget: "Add", toSource: "Remove", selectAll: "Select all", empty: "Nothing here" }}
-      /></StoryFrame>);
+const copy = transferListExample;
+const [target, setTarget] = useState<ReadonlySet<string>>(new Set(copy.initialTarget));
+const [announcement, setAnnouncement] = useState("");
+const labelOf = (id: string) => copy.records.find((record) => record.id === id)?.label ?? id;
+return (<StoryFrame><Section title={copy.title} description={copy.description}><Stack gap="md">
+  <TransferList items={copy.records} targetKeys={target} onTargetKeysChange={setTarget} labels={copy.labels}
+    onMove={(ids, direction) => setAnnouncement(copy.moved(ids.map(labelOf), direction))} />
+  <PreviewResult message={announcement} />
+</Stack></Section></StoryFrame>);
 }
 
 function TabsExample({ variant }: { variant: PreviewVariant }) {

@@ -151,7 +151,8 @@ export const transferListRecipe = {
     },
     item: collectionItemContract,
     emptyState: { color: semanticColors.content.secondary, textVariant: "label" },
-    moveControls: { gap: spacing.sm },
+    // The move buttons always stack (beside or between the panels), so they take the stacked-button gap.
+    moveControls: { gap: spacing.xs },
     moveButton: {
         minTarget: control.minTouchTarget,
         color: semanticColors.content.brand,

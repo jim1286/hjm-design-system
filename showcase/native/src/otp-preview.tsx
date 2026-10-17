@@ -2,19 +2,21 @@ import { useState } from "react";
 import { ScrollView } from "react-native";
 import { OtpField } from "@hjmds/react-native/inputs";
 import { Stack, Text } from "@hjmds/react-native/primitives";
-import { Button } from "@hjmds/react-native/actions";
+import { PreviewTools, PreviewToolButton } from "./preview-tools";
+import { otpPreviewExample as copy } from "../../shared/component-examples";
 
+// The error toggle is a demo control, so it sits under 미리보기 도구 instead of reading as a product action (2026-10-17).
 export function OtpPreview() {
   const [value, setValue] = useState("");
   const [error, setError] = useState(false);
   // The number pad has no return key: scrolling must keep error/recovery actions reachable at 200% text.
   return <ScrollView automaticallyAdjustKeyboardInsets keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
     <Stack gap="xl">
-      <Text>한 번에 붙여넣어도, 한 글자씩 입력해도 같은 인증번호입니다.</Text>
-      <OtpField label="인증번호 · 카드형" length={6} value={value} onValueChange={setValue}/>
-      <OtpField label="인증번호 · 밑줄형" presentation="underline" length={6} value={value} onValueChange={setValue} {...(error ? { error: "인증번호를 다시 확인해 주세요." } : {})}/>
-      <Text>{value.length === 6 ? "입력이 완료됐어요." : "6자리 숫자를 입력해 주세요."}</Text>
-      <Button tone="ghost" onPress={() => setError(!error)}>{error ? "오류 해제" : "오류 상태 보기"}</Button>
+      <Text>{copy.intro}</Text>
+      <OtpField label={copy.cardLabel} length={copy.length} value={value} onValueChange={setValue}/>
+      <OtpField label={copy.underlineLabel} presentation="underline" length={copy.length} value={value} onValueChange={setValue} {...(error ? { error: copy.error } : {})}/>
+      <Text>{value.length === copy.length ? copy.complete : copy.incomplete}</Text>
+      <PreviewTools><PreviewToolButton selected={error} onPress={() => setError(!error)}>{copy.showError}</PreviewToolButton></PreviewTools>
     </Stack>
   </ScrollView>;
 }

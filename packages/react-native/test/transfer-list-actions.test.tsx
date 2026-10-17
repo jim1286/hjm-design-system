@@ -47,14 +47,15 @@ it("exposes the two named Native lists and moves a row with the standard host pr
   expect(sourceList.props.accessibilityRole).toBe("list");
   expect(targetList.props.accessibilityRole).toBe("list");
   expect(targetList.props.contentContainerStyle).toMatchObject({ flexGrow: 1, justifyContent: "center", alignItems: "center" });
-  expect(sourceList.props.contentContainerStyle).toBeUndefined();
+  expect(sourceList.props.contentContainerStyle).not.toHaveProperty("justifyContent");
 
   const sourceRow = renderer!.root.findAllByType(Pressable)
     .find((node) => node.props.accessibilityLabel === longLabel)!;
   expect(sourceRow.props.accessibilityRole).toBe("checkbox");
   expect(sourceRow.props.accessibilityState).toMatchObject({ checked: false, disabled: false });
   const renderedCopy = sourceRow.findByType(Text);
-  expect((renderedCopy.props.children as string[]).join("")).toBe(longLabel);
+  // The check is drawn artwork now, so the row text is the label alone (it used to carry a "✓ " prefix).
+  expect(renderedCopy.props.children).toBe(longLabel);
   expect(renderedCopy.props.numberOfLines).toBeUndefined();
   expect(renderedCopy.props.allowFontScaling).not.toBe(false);
 

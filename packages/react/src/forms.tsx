@@ -39,6 +39,7 @@ import {
   type TextareaHTMLAttributes,
 } from "react";
 import { composeRefs, classNames, useControllableState } from "./internal.js";
+import { Icon } from "./supplemental-display.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 type FieldCopyProps = Readonly<{
@@ -708,7 +709,7 @@ export const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(
             }}
             type="button"
           >
-            {renderToggleIcon?.(toggleAppearance) ?? <span aria-hidden="true" />}
+            {renderToggleIcon?.(toggleAppearance) ?? <Icon name={toggleAppearance.name} size="sm" />}
           </button>
         )}
         type={resolved.webInputType}

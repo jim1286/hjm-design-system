@@ -5,12 +5,15 @@ import { Accessibility } from "@dnd-kit/dom";
 import { DragDropProvider } from "@dnd-kit/react";
 import { useSortable, isSortable } from "@dnd-kit/react/sortable";
 import { reorderIntent, validateItems } from "@hjmds/design-contracts/components/interaction-adapters";
-import { Button } from "./actions.js";
+import { Button, IconButton } from "./actions.js";
+import { Icon } from "./supplemental-display.js";
 import { useHjmTheme } from "./provider.js";
 function Row({ item, index, children, disabled, reduced, labels, move, count }) {
     const { ref, handleRef } = useSortable({ id: item.id, index, disabled: disabled || item.disabled === true,
         ...(reduced ? { transition: null } : {}) });
-    return _jsxs("li", { ref: ref, "data-item-id": item.id, style: { display: "grid", gridTemplateColumns: "auto minmax(0, 1fr)", alignItems: "center", gap: "var(--hjm-space-sm)", paddingBlock: "var(--hjm-space-xs)" }, children: [_jsx(Button, { ref: handleRef, tone: "ghost", type: "button", disabled: disabled || item.disabled, "aria-label": labels.handle(item), style: { minWidth: control.minTouchTarget, minHeight: control.minTouchTarget, touchAction: "none", cursor: "grab" }, children: "\u283F" }), _jsx("div", { style: { minWidth: 0, overflowWrap: "anywhere" }, children: children }), _jsxs("div", { style: { gridColumn: "1 / -1", display: "flex", flexWrap: "wrap", gap: "var(--hjm-space-xs)" }, children: [_jsx(Button, { tone: "ghost", disabled: disabled || item.disabled || index === 0, onClick: () => move(index - 1), children: labels.previous(item) }), _jsx(Button, { tone: "ghost", disabled: disabled || item.disabled || index === count - 1, onClick: () => move(index + 1), children: labels.next(item) })] })] });
+    // One row: [handle | item | move]. The move pair is a tool, so it is two named icon buttons stacked in the trailing
+    // column; the old text buttons on their own line made every item take three lines (2026-10-17 review).
+    return _jsxs("li", { ref: ref, "data-item-id": item.id, style: { display: "grid", gridTemplateColumns: "auto minmax(0, 1fr) auto", alignItems: "center", gap: "var(--hjm-space-sm)", paddingBlock: "var(--hjm-space-xs)" }, children: [_jsx(Button, { ref: handleRef, tone: "ghost", type: "button", disabled: disabled || item.disabled, "aria-label": labels.handle(item), style: { minWidth: control.minTouchTarget, minHeight: control.minTouchTarget, touchAction: "none", cursor: "grab" }, children: "\u283F" }), _jsx("div", { style: { minWidth: 0, overflowWrap: "anywhere" }, children: children }), _jsxs("div", { style: { display: "flex", flexDirection: "column" }, children: [_jsx(IconButton, { tone: "ghost", "data-sortable-move": "previous", label: labels.previous(item), disabled: disabled || item.disabled || index === 0, onClick: () => move(index - 1), children: _jsx(Icon, { name: "chevronUp" }) }), _jsx(IconButton, { tone: "ghost", "data-sortable-move": "next", label: labels.next(item), disabled: disabled || item.disabled || index === count - 1, onClick: () => move(index + 1), children: _jsx(Icon, { name: "chevronDown" }) })] })] });
 }
 /** Small controlled collections only; persistence and rollback belong to the host. */
 export function SortableCollection(props) {
@@ -50,7 +53,10 @@ export function SortableCollection(props) {
         if (!row)
             return;
         refocus.current = null;
-        const [handle, previous, next] = [...row.querySelectorAll("button")];
+        // Query by role: the item content may hold its own buttons (TaskList's delete action) between handle and moves.
+        const handle = row.querySelector("button");
+        const previous = row.querySelector('[data-sortable-move="previous"]');
+        const next = row.querySelector('[data-sortable-move="next"]');
         const preferred = pending.direction === "previous" ? previous : next;
         const fallback = pending.direction === "previous" ? next : previous;
         (preferred && !preferred.disabled ? preferred : fallback && !fallback.disabled ? fallback : handle)?.focus();

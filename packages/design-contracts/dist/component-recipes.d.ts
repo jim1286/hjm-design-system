@@ -2073,6 +2073,7 @@ export declare const selectionControlRecipe: {
         readonly checkbox: "sm";
         readonly radio: "full";
     };
+    readonly indicatorBorderWidth: 2;
     readonly presentations: {
         readonly plain: {
             readonly background: null;

@@ -173,7 +173,8 @@ export const agreementRecipe = {
   item: collectionItemContract,
   // Reserve most row width for consent text. Long detail labels wrap below it
   // instead of squeezing large Korean labels into one-character columns.
-  itemLayout: { labelBasis: "70%" as const },
+  // Items share the all row's start inset so every consent mark sits on one line (2026-10-17: items used sm 12, all md 16).
+  itemLayout: { labelBasis: "70%" as const, paddingHorizontal: spacing.md },
   detail: {
     color: semanticColors.content.secondary,
     textVariant: "label" as const,
@@ -195,7 +196,7 @@ export const agreementRecipe = {
     color: ColorReference;
   };
   item: typeof collectionItemContract;
-  itemLayout: { labelBasis: "70%" };
+  itemLayout: { labelBasis: "70%"; paddingHorizontal: number };
   detail: { color: ColorReference; textVariant: "label"; minHeight: number };
   required: { color: ColorReference; textVariant: "label" };
   gap: number;

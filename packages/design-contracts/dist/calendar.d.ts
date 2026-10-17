@@ -166,6 +166,7 @@ export declare const calendarRecipe: {
     readonly defaults: {
         readonly size: "medium";
     };
+    readonly maxWidth: number;
     readonly header: {
         readonly gap: 8;
         readonly monthLabel: {

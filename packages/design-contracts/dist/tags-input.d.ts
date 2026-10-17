@@ -99,6 +99,12 @@ export declare const tagsInputRecipe: {
             key: "textBody";
             alpha?: number;
         }>;
+        readonly border: Readonly<{
+            source: "theme";
+            key: "borderControl";
+            alpha?: number;
+        }>;
+        readonly borderWidth: 1;
     };
     /** 삭제 버튼은 태그보다 작아도 되지만 포인터 타깃은 공용 최소값을 지킨다. */
     readonly remove: {

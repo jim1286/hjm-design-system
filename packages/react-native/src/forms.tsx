@@ -640,7 +640,8 @@ export function Select<
           {
             alignItems: "center",
             backgroundColor: colors.bg,
-            borderColor: error ? colors.danger : colors.border,
+            // Same frame border source as TextField and Web .hjm-field__control (it drew the lighter divider color).
+            borderColor: colors[error ? fieldRecipe.states.invalid.border : fieldRecipe.states.idle.border],
             borderRadius: tokens.radius.md,
             borderWidth: error ? 2 : 1,
             direction: environment.direction,
@@ -1172,7 +1173,7 @@ export function Combobox<
         style={{
           alignItems: "center",
           backgroundColor: colors.bg,
-          borderColor: error ? colors.danger : colors.border,
+          borderColor: colors[error ? fieldRecipe.states.invalid.border : fieldRecipe.states.idle.border],
           borderRadius: tokens.radius.md,
           borderWidth: error ? 2 : 1,
           direction: environment.direction,

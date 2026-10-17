@@ -1,4 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { commitNumberFieldInput, numberFieldRecipe, parseNumberFieldInput, resolveNumberFieldDescriptor, resolveNumberFieldInputStepperState, stepNumberFieldInput, } from "@hjmds/design-contracts/components/number-field";
 import { forwardRef, useEffect, useState } from "react";
@@ -17,7 +18,7 @@ function defaultInputMode(min, step) {
 /** Expo-independent exact numeric input sharing the Web range/step resolver. */
 export const NumberField = forwardRef(function NumberField({ label, min, max, step, value, defaultValue = null, onValueChange, description, error, required = false, disabled = false, readOnly = false, size = "medium", decrementLabel, incrementLabel, accessibilityLabel, accessibilityHint, getValueText, inputMode, layoutStyle, onBlur, onFocus, onSubmitEditing, ...inputProps }, forwardedRef) {
     assertNoRemovedStyleProps("NumberField", inputProps, ["inputStyle", "containerStyle"]);
-    const { colors, environment, textScaling, tokens } = useHjmNativeTheme();
+    const { colors, environment, palette, textScaling, tokens } = useHjmNativeTheme();
     const controlled = value !== undefined;
     const [currentValue, setCurrentValue] = useControllableState({
         ...(value === undefined ? {} : { value }),
@@ -107,11 +108,13 @@ export const NumberField = forwardRef(function NumberField({ label, min, max, st
                 ]), children: visibleLabel }), _jsxs(View, { style: {
                     alignItems: "center",
                     backgroundColor: colors.bg,
-                    borderColor: error
-                        ? colors.danger
+                    // The recipe's field frame (control border), as TextField and Web; idle drew the lighter divider color
+                    // (2026-10-17 review).
+                    borderColor: resolveColorReference(error
+                        ? numberFieldRecipe.frame.invalidBorder
                         : focused
-                            ? colors.contentBrand
-                            : colors.border,
+                            ? numberFieldRecipe.frame.focusBorder
+                            : numberFieldRecipe.frame.border, palette),
                     borderRadius: tokens.radius[numberFieldRecipe.frame.radius],
                     borderWidth: error || focused ? 2 : numberFieldRecipe.frame.borderWidth,
                     direction: environment.direction,

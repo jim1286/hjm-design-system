@@ -66,7 +66,7 @@ export function Calendar<Content>({ descriptor, composeAccessibleName, previousM
   }, [gridKey, request, autoFocus, active]);
   const titleId = `hjm-calendar-${useId()}`;
   return <div ref={root} className={classNames("hjm-calendar", className)} data-size={size}
-    style={{ ...layoutStyle, "--hjm-calendar-cell-size": `${recipe.sizes[size].cellDiameter}px`,
+    style={{ "--hjm-calendar-max-width": `${recipe.maxWidth}px`, ...layoutStyle, "--hjm-calendar-cell-size": `${recipe.sizes[size].cellDiameter}px`,
       "--hjm-calendar-indicator-size": `${recipe.sizes[size].indicatorDiameter}px`,
       "--hjm-calendar-disabled-opacity": recipe.day.disabledOpacity,
       "--hjm-calendar-outside-opacity": recipe.day.outsideFocusedMonthOpacity } as CSSProperties}>

@@ -3,65 +3,41 @@ import { ToggleGroup } from "@hjmds/react/toggle-group";
 import { TagsInput } from "@hjmds/react/tags-input";
 import { Notice } from "@hjmds/react/feedback";
 import { Stack, Section } from "@hjmds/react/layout";
+import { tagsInputExample as tags, toggleGroupExample as toggle, toggleGroupStatus } from "../../../shared/component-examples.js";
 
 export function ToggleGroupPreview() {
-  const [style, setStyle] = useState<ReadonlySet<string>>(new Set(["bold"]));
+  const [style, setStyle] = useState<ReadonlySet<string>>(new Set(toggle.style.initial));
   const [filters, setFilters] = useState<ReadonlySet<string>>(new Set());
-  const preview = [...style].sort().join(" + ") || "꾸미지 않음";
   return (
-    <Section title="여러 개를 함께 켜기" description="하나만 고르는 자리는 SegmentedControl이 맡습니다.">
+    <Section title={toggle.title} description={toggle.description}>
       <Stack gap="md">
-        <ToggleGroup
-          descriptor={{
-            accessibilityLabel: "글자 꾸미기",
-            items: [
-              { id: "bold", label: "굵게" },
-              { id: "italic", label: "기울임" },
-              { id: "underline", label: "밑줄" },
-              { id: "strike", label: "취소선", disabled: true },
-            ],
-          }}
-          pressedIds={style}
-          onPressedIdsChange={setStyle}
-        />
-        <p role="status">{preview}</p>
-        <ToggleGroup
-          size="small"
-          descriptor={{
-            accessibilityLabel: "기록 필터",
-            items: [
-              { id: "photo", label: "사진 있음" },
-              { id: "long", label: "긴 글" },
-              { id: "favorite", label: "즐겨찾기" },
-            ],
-          }}
-          pressedIds={filters}
-          onPressedIdsChange={setFilters}
-        />
+        <ToggleGroup descriptor={{ accessibilityLabel: toggle.style.label, items: toggle.style.items }} pressedIds={style} onPressedIdsChange={setStyle} />
+        <p role="status">{toggleGroupStatus(style)}</p>
+        <ToggleGroup size="small" descriptor={{ accessibilityLabel: toggle.filters.label, items: toggle.filters.items }} pressedIds={filters} onPressedIdsChange={setFilters} />
       </Stack>
     </Section>
   );
 }
 
 export function TagsInputPreview() {
-  const [tags, setTags] = useState<readonly string[]>(["산책"]);
+  const [value, setValue] = useState<readonly string[]>(tags.initial);
   const [message, setMessage] = useState<string | null>(null);
   return (
-    <Section title="태그로 모아두기" description="목록에 없는 말도 직접 만들 수 있어요.">
+    <Section title={tags.title} description={tags.description}>
       <Stack gap="md">
         <TagsInput
-          label="태그"
-          description="Enter로 추가하고, 빈 칸에서 지우기를 두 번 누르면 마지막 태그가 지워져요."
-          placeholder="태그를 적어보세요"
-          tags={tags}
-          onTagsChange={(next) => { setTags(next); setMessage(null); }}
-          policy={{ maxTags: 5 }}
+          label={tags.label}
+          description={tags.fieldDescription}
+          placeholder={tags.placeholder}
+          tags={value}
+          onTagsChange={(next) => { setValue(next); setMessage(null); }}
+          policy={{ maxTags: tags.maxTags }}
           onReject={(result) => setMessage(
-            result.reason === "duplicate" ? `${result.value}은(는) 이미 있어요`
-              : result.reason === "limit" ? "태그는 5개까지 넣을 수 있어요"
+            result.reason === "duplicate" ? tags.duplicate(result.value)
+              : result.reason === "limit" ? tags.limit
                 : null,
           )}
-          composeRemoveLabel={(tag) => `${tag} 지우기`}
+          composeRemoveLabel={tags.removeLabel}
         />
         {/* 문구는 제품이 만든다 — 계약은 거절 사유만 알려 준다. */}
         {message ? <Notice tone="warning" title={message} /> : null}
@@ -69,4 +45,3 @@ export function TagsInputPreview() {
     </Section>
   );
 }
-

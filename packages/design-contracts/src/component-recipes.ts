@@ -1129,6 +1129,8 @@ export const selectionControlRecipe = {
     },
   },
   shapes: { checkbox: "sm", radio: "full" },
+  // Web drew 2px and Native 1px; Agreement and TransferList now reuse this indicator, so the width is one value.
+  indicatorBorderWidth: stroke.strong,
   presentations: {
     plain: {
       background: null,

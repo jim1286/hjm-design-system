@@ -1,13 +1,23 @@
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 import { moveTransferListSelection, reconcileTransferListSelection, resolveTransferListFocusAfterMove, resolveTransferListPanels, resolveTransferListSelectAllState, toggleTransferListSelectAll, toggleTransferListSelection, validateTransferListDescriptor, } from "@hjmds/design-contracts/components/transfer-list";
 import { reconcileCheckboxSelection } from "@hjmds/design-contracts/behaviors";
 import { forwardRef, useEffect, useLayoutEffect, useMemo, useRef, useState, } from "react";
 import { Button } from "./actions.js";
+import { Icon } from "./supplemental-display.js";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
 const emptySelection = () => ({
     source: new Set(),
     target: new Set(),
 });
+// Rows are multi-select: Checkbox's indicator, not a 16px rounded box that read as a radio.
+function SelectionMark({ state }) {
+    return _jsx("span", { "aria-hidden": "true", className: "hjm-choice__indicator", "data-kind": "checkbox", "data-state": state === "mixed" ? "mixed" : state ? "checked" : "unchecked" });
+}
+// The panels sit side by side or stack depending on width (CSS), so both directions are drawn and CSS shows the one
+// that points at the destination panel; products no longer bake "→" into the label.
+function MoveIcon({ inline, stacked }) {
+    return _jsxs(_Fragment, { children: [_jsx(Icon, { name: inline, size: "sm", className: "hjm-transfer-list__move-icon", "data-orientation": "inline" }), _jsx(Icon, { name: stacked, size: "sm", className: "hjm-transfer-list__move-icon", "data-orientation": "stacked" })] });
+}
 export const TransferList = forwardRef(function TransferList({ items, labels, targetKeys: controlledTargetKeys, defaultTargetKeys, onTargetKeysChange, onMove, className, layoutStyle, }, forwardedRef) {
     const [storedTargetKeys, setTargetKeys] = useControllableState({
         ...(controlledTargetKeys === undefined ? {} : { value: controlledTargetKeys }),
@@ -146,9 +156,9 @@ export const TransferList = forwardRef(function TransferList({ items, labels, ta
                 moveSingle(panel, item.id);
             }
         };
-        return (_jsxs("div", { className: "hjm-transfer-list__panel", role: "group", "aria-label": labels[panel], children: [_jsxs("div", { className: "hjm-transfer-list__header", children: [_jsx("span", { className: "hjm-transfer-list__title", children: labels[panel] }), _jsx("button", { type: "button", role: "checkbox", "aria-checked": selectAllState === "mixed" ? "mixed" : String(selectAllState === true), "aria-label": `${labels[panel]} ${labels.selectAll}`, className: "hjm-transfer-list__select-all", disabled: !panelItems.some(item => !item.disabled), onClick: () => setSelection(toggleTransferListSelectAll(descriptor, selection, panel)), children: selectAllState === true ? "✓" : selectAllState === "mixed" ? "–" : "" })] }), panelItems.length === 0 ? (_jsx("p", { className: "hjm-transfer-list__empty", "data-hjm-transfer-empty": panel, tabIndex: -1, children: labels.empty })) : (_jsx("div", { role: "listbox", "aria-multiselectable": "true", "aria-label": labels[panel], className: "hjm-transfer-list__options", children: panelItems.map((item) => (_jsxs("div", { role: "option", "data-hjm-transfer-row": `${panel}:${item.id}`, "aria-selected": selected.has(item.id), "aria-disabled": item.disabled || undefined, tabIndex: item.id === activeId ? 0 : -1, className: "hjm-transfer-list__option", onFocus: () => { focusedPanel.current = panel; setFocused((previous) => ({ ...previous, [panel]: item.id })); }, onClick: () => setSelection(toggleTransferListSelection(descriptor, selection, panel, item.id)), onKeyDown: (event) => onKeyDown(event, item), children: [_jsx("span", { "aria-hidden": "true", className: "hjm-transfer-list__mark", "data-checked": selected.has(item.id) || undefined, children: selected.has(item.id) ? "✓" : "" }), _jsx("span", { children: item.label })] }, item.id))) }))] }));
+        return (_jsxs("div", { className: "hjm-transfer-list__panel", role: "group", "aria-label": labels[panel], children: [_jsxs("div", { className: "hjm-transfer-list__header", children: [_jsx("span", { className: "hjm-transfer-list__title", children: labels[panel] }), _jsx("button", { type: "button", role: "checkbox", "aria-checked": selectAllState === "mixed" ? "mixed" : String(selectAllState === true), "aria-label": `${labels[panel]} ${labels.selectAll}`, className: "hjm-transfer-list__select-all", disabled: !panelItems.some(item => !item.disabled), onClick: () => setSelection(toggleTransferListSelectAll(descriptor, selection, panel)), children: _jsx(SelectionMark, { state: selectAllState }) })] }), panelItems.length === 0 ? (_jsx("p", { className: "hjm-transfer-list__empty", "data-hjm-transfer-empty": panel, tabIndex: -1, children: labels.empty })) : (_jsx("div", { role: "listbox", "aria-multiselectable": "true", "aria-label": labels[panel], className: "hjm-transfer-list__options", children: panelItems.map((item) => (_jsxs("div", { role: "option", "data-hjm-transfer-row": `${panel}:${item.id}`, "aria-selected": selected.has(item.id), "aria-disabled": item.disabled || undefined, tabIndex: item.id === activeId ? 0 : -1, className: "hjm-transfer-list__option", onFocus: () => { focusedPanel.current = panel; setFocused((previous) => ({ ...previous, [panel]: item.id })); }, onClick: () => setSelection(toggleTransferListSelection(descriptor, selection, panel, item.id)), onKeyDown: (event) => onKeyDown(event, item), children: [_jsx(SelectionMark, { state: selected.has(item.id) }), _jsx("span", { children: item.label })] }, item.id))) }))] }));
     };
     return (_jsxs("div", { ref: composeRefs(rootRef, forwardedRef), style: layoutStyle, className: classNames("hjm-transfer-list", className), onFocusCapture: () => { focusWithin.current = true; }, onBlurCapture: event => { if (!event.currentTarget.contains(event.relatedTarget))
-            focusWithin.current = false; }, children: [renderPanel("source"), _jsxs("div", { className: "hjm-transfer-list__actions", children: [_jsx(Button, { tone: "secondary", disabled: !canMove("source"), onClick: () => move("toTarget"), children: labels.toTarget }), _jsx(Button, { tone: "secondary", disabled: !canMove("target"), onClick: () => move("toSource"), children: labels.toSource })] }), renderPanel("target")] }));
+            focusWithin.current = false; }, children: [renderPanel("source"), _jsxs("div", { className: "hjm-transfer-list__actions", children: [_jsx(Button, { tone: "secondary", disabled: !canMove("source"), onClick: () => move("toTarget"), leading: _jsx(MoveIcon, { inline: "chevronEnd", stacked: "chevronDown" }), children: labels.toTarget }), _jsx(Button, { tone: "secondary", disabled: !canMove("target"), onClick: () => move("toSource"), leading: _jsx(MoveIcon, { inline: "chevronStart", stacked: "chevronUp" }), children: labels.toSource })] }), renderPanel("target")] }));
 });
 //# sourceMappingURL=transfer-list.js.map

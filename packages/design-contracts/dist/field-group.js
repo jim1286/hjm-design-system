@@ -1,11 +1,17 @@
-import { spacing } from "./foundations.js";
+import { control, spacing } from "./foundations.js";
 /** Date and duration parts share grouping, spacing and wrapping rather than rebuilding a fieldset. */
 export const fieldGroupRecipe = {
     defaults: { layout: "stack" },
     gap: "md",
     headingGap: "sm",
     supportGap: "xs",
-    inline: { minCharacters: 10, minWidth: spacing.xxxl * 3 },
+    inline: {
+        /** @deprecated Renderers read `minWidth` (scaled by text size) so Web and Native wrap at the same width. */
+        minCharacters: 10,
+        // Two 44pt steppers and a two-digit value: 120 (and Web's 10ch, about 96px) left a DurationField NumberField no
+        // room to draw its value at 402pt (2026-10-17 review).
+        minWidth: control.minTouchTarget * 2 + spacing.xxxl,
+    },
 };
 function requireText(value, name) {
     if (typeof value !== "string" || !value.trim())

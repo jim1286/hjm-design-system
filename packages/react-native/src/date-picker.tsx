@@ -11,11 +11,14 @@ import {
   type DatePickerSize,
 } from "@hjmds/design-contracts/components/date-picker";
 import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
+import { glyph } from "@hjmds/design-contracts/foundations";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { AccessibilityInfo, findNodeHandle, Pressable, View } from "react-native";
 
+import { IconButton } from "./actions.js";
 import { Calendar } from "./calendar.js";
-import { minimumTargetStyle } from "./internal/styles.js";
+import { DrawnCalendar } from "./internal/drawn-glyphs.js";
+import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { Sheet, type SheetProps } from "./overlays.js";
 import { Text } from "./primitives.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
@@ -117,14 +120,14 @@ export function DatePicker<Content>({
           ref={returnFocusRef}
           style={({ pressed }) => ({ alignItems: "center", backgroundColor: colors.bg, borderColor: descriptor.invalid || error ? colors.danger : colors.borderControl, borderRadius: tokens.radius[datePickerRecipe.frame.radius], borderWidth: datePickerRecipe.frame.borderWidth, flex: 1, flexDirection: "row", gap: 8, minHeight: datePickerRecipe.sizes[size].minHeight, opacity: pressed ? 0.72 : 1, paddingHorizontal: datePickerRecipe.sizes[size].paddingHorizontal })}
         >
-          <Text accessible={false}>▣</Text>
+          <DrawnCalendar size={glyph[datePickerRecipe.sizes[size].glyph]} color={colors.textMuted} />
           <Text
               fontRole="ui" style={{ color: descriptor.displayValue === null ? colors.textMuted : colors.textBody }}>{triggerText}</Text>
         </Pressable>
         {selectedDate === null ? null : (
-          <Pressable accessibilityLabel={clearLabel} accessibilityRole="button" disabled={descriptor.disabled || descriptor.readOnly} onPress={() => commit(null, "clear")} style={({ pressed }) => [minimumTargetStyle, { alignItems: "center", justifyContent: "center", opacity: pressed ? 0.72 : 1 }]}>
-            <Text tone="muted">×</Text>
-          </Pressable>
+          <IconButton label={clearLabel} tone="ghost" disabled={descriptor.disabled === true || descriptor.readOnly === true} onPress={() => commit(null, "clear")}>
+            <FixedGlyph tone="muted" fontSize={glyph.sm}>×</FixedGlyph>
+          </IconButton>
         )}
       </View>
       {description === undefined ? null : <Text tone="muted" variant="label">{description}</Text>}

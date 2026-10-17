@@ -29,12 +29,9 @@ export type AgreementProps<Id extends string = string> = Readonly<{
   layoutStyle?: HjmCompositionStyleProp;
 }>;
 
+// Consent rows are multi-select, so they draw Checkbox's indicator; a 16px box with radius sm read as a radio dot.
 function Mark({ state }: { state: boolean | "mixed" }) {
-  return (
-    <span aria-hidden="true" className="hjm-agreement__mark" data-state={String(state)}>
-      {state === false ? null : <span className="hjm-agreement__ink" />}
-    </span>
-  );
+  return <span aria-hidden="true" className="hjm-choice__indicator" data-kind="checkbox" data-state={state === "mixed" ? "mixed" : state ? "checked" : "unchecked"} />;
 }
 
 export const Agreement = forwardRef(function Agreement<Id extends string = string>(

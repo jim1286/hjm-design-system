@@ -8,6 +8,7 @@ export declare const fieldGroupRecipe: {
     readonly headingGap: "sm";
     readonly supportGap: "xs";
     readonly inline: {
+        /** @deprecated Renderers read `minWidth` (scaled by text size) so Web and Native wrap at the same width. */
         readonly minCharacters: 10;
         readonly minWidth: number;
     };

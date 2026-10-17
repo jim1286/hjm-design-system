@@ -22,6 +22,7 @@ import {
   type KeyboardEvent,
 } from "react";
 import { Button } from "./actions.js";
+import { Icon } from "./supplemental-display.js";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
@@ -51,6 +52,20 @@ const emptySelection = <Id extends string>(): TransferListSelection<Id> => ({
   source: new Set<Id>(),
   target: new Set<Id>(),
 });
+
+// Rows are multi-select: Checkbox's indicator, not a 16px rounded box that read as a radio.
+function SelectionMark({ state }: { state: boolean | "mixed" }) {
+  return <span aria-hidden="true" className="hjm-choice__indicator" data-kind="checkbox" data-state={state === "mixed" ? "mixed" : state ? "checked" : "unchecked"} />;
+}
+
+// The panels sit side by side or stack depending on width (CSS), so both directions are drawn and CSS shows the one
+// that points at the destination panel; products no longer bake "→" into the label.
+function MoveIcon({ inline, stacked }: { inline: "chevronEnd" | "chevronStart"; stacked: "chevronDown" | "chevronUp" }) {
+  return <>
+    <Icon name={inline} size="sm" className="hjm-transfer-list__move-icon" data-orientation="inline" />
+    <Icon name={stacked} size="sm" className="hjm-transfer-list__move-icon" data-orientation="stacked" />
+  </>;
+}
 
 export const TransferList = forwardRef(function TransferList<Id extends string = string>(
   {
@@ -197,7 +212,7 @@ export const TransferList = forwardRef(function TransferList<Id extends string =
             disabled={!panelItems.some(item => !item.disabled)}
             onClick={() => setSelection(toggleTransferListSelectAll(descriptor, selection, panel))}
           >
-            {selectAllState === true ? "✓" : selectAllState === "mixed" ? "–" : ""}
+            <SelectionMark state={selectAllState} />
           </button>
         </div>
         {panelItems.length === 0 ? (
@@ -217,9 +232,7 @@ export const TransferList = forwardRef(function TransferList<Id extends string =
                 onClick={() => setSelection(toggleTransferListSelection(descriptor, selection, panel, item.id))}
                 onKeyDown={(event) => onKeyDown(event, item)}
               >
-                <span aria-hidden="true" className="hjm-transfer-list__mark" data-checked={selected.has(item.id) || undefined}>
-                  {selected.has(item.id) ? "✓" : ""}
-                </span>
+                <SelectionMark state={selected.has(item.id)} />
                 <span>{item.label}</span>
               </div>
             ))}
@@ -235,10 +248,12 @@ export const TransferList = forwardRef(function TransferList<Id extends string =
       onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) focusWithin.current = false; }}>
       {renderPanel("source")}
       <div className="hjm-transfer-list__actions">
-        <Button tone="secondary" disabled={!canMove("source")} onClick={() => move("toTarget")}>
+        <Button tone="secondary" disabled={!canMove("source")} onClick={() => move("toTarget")}
+          leading={<MoveIcon inline="chevronEnd" stacked="chevronDown" />}>
           {labels.toTarget}
         </Button>
-        <Button tone="secondary" disabled={!canMove("target")} onClick={() => move("toSource")}>
+        <Button tone="secondary" disabled={!canMove("target")} onClick={() => move("toSource")}
+          leading={<MoveIcon inline="chevronStart" stacked="chevronUp" />}>
           {labels.toSource}
         </Button>
       </div>

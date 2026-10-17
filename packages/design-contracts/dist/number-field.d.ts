@@ -135,13 +135,13 @@ export declare const numberFieldRecipe: {
     readonly sizes: {
         readonly medium: {
             readonly minHeight: 44;
-            readonly paddingHorizontal: 16;
+            readonly paddingHorizontal: 4;
             readonly textVariant: "body";
             readonly stepperDiameter: 44;
         };
         readonly large: {
             readonly minHeight: 52;
-            readonly paddingHorizontal: 20;
+            readonly paddingHorizontal: 8;
             readonly textVariant: "bodyLarge";
             readonly stepperDiameter: 44;
         };

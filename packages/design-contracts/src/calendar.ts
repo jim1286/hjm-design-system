@@ -2,7 +2,7 @@ import type { ColorReference } from "./color-references.js";
 import type { BehaviorContract, WebKeyboardKey } from "./behaviors.js";
 import type { DesignSystemDirection } from "./design-system-provider.js";
 import type { SemanticIconName } from "./icon.js";
-import { control, fontWeight, glyph, opacity, spacing, stroke, type FontWeightValue, type GlyphSize, type TextVariant } from "./foundations.js";
+import { control, fontWeight, glyph, layout, opacity, spacing, stroke, type FontWeightValue, type GlyphSize, type TextVariant } from "./foundations.js";
 import { focusIndicatorContract } from "./component-contracts.js";
 import { semanticColors } from "./semantic-colors.js";
 
@@ -378,6 +378,9 @@ export const calendarRecipe = {
     "content",
   ] as const,
   defaults: { size: "medium" },
+  // A week stays scannable: the 1280 Web host spread seven columns to ~135px each (2026-10-17 review). Same width as the
+  // DatePicker popover.
+  maxWidth: layout.readingMaxWidth / 2,
   header: {
     gap: spacing.xs,
     monthLabel: {
@@ -413,6 +416,7 @@ export const calendarRecipe = {
 } as const satisfies {
   slots: readonly string[];
   defaults: { size: CalendarSize };
+  maxWidth: number;
   header: {
     gap: number;
     monthLabel: { textVariant: TextVariant; fontWeight: FontWeightValue; color: ColorReference };

@@ -153,6 +153,25 @@ import {
   stackExample,
   surfaceExample,
   textExample,
+  checkboxExample,
+  checkboxGroupExample,
+  chipExample,
+  comboboxExample,
+  datePickerExample,
+  fieldExample,
+  filePickerExample,
+  formExample,
+  numberFieldExample,
+  otpFieldExample,
+  passwordFieldExample,
+  radioExample,
+  radioGroupExample,
+  searchFieldExample,
+  segmentedControlExample,
+  selectExample,
+  sliderExample,
+  switchExample,
+  textAreaExample,
 } from "../../../shared/component-examples.js";
 
 // The old empty-state button had no handler. Keep creation and search recovery observable
@@ -412,7 +431,7 @@ function assertNever(value: never): never {
 }
 
 // Derive weekday placement from the shared calendar fixture; hand-written offsets put February 1, 2027 under Wednesday instead of Monday.
-const previewCalendarGrid = calendarExampleGrid("2027-02");
+const previewCalendarGrid = calendarExampleGrid(datePickerExample.month);
 
 /** Only mature, Web-supported contracts can reach this renderer. */
 function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) {
@@ -429,26 +448,26 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "Button": return <ObservablePreview>{({ setMessage }) => <HjmStack axis="inline" gap="md" wrap><HjmButton onClick={() => setMessage(buttonExample.primary.result)}>{buttonExample.primary.label}</HjmButton><HjmButton tone="secondary" onClick={() => setMessage(buttonExample.secondary.result)}>{buttonExample.secondary.label}</HjmButton><HjmButton disabled>{buttonExample.disabled}</HjmButton></HjmStack>}</ObservablePreview>;
     case "IconButton": return <ObservablePreview>{({ setMessage }) => <HjmStack axis="inline" gap="md">{iconButtonExample.map((item) => <HjmIconButton key={item.icon} label={item.label} tone={item.tone} onClick={() => setMessage(item.result)}><HjmIcon name={item.icon} /></HjmIconButton>)}</HjmStack>}</ObservablePreview>;
     case "Link": return <HjmLink href={`#${linkExample.href.slice(1)}`}>{linkExample.label}</HjmLink>;
-    case "Field": return <HjmField className="hjm-demo-field" controlId="showcase-player-name" label="이름" description="필수 정보는 입력 아래에서 설명합니다.">{(controlProps) => <input {...controlProps} defaultValue="홍길동" />}</HjmField>;
-    case "SearchField": return <HjmSearchField label="선수 검색" clearLabel="검색어 지우기" defaultValue="야구" description="검색어 지우기 버튼도 키보드로 사용할 수 있습니다." />;
-    case "TextArea": return <HjmTextArea label="설명" defaultValue="여러 줄 입력 예시" description="긴 설명도 레이아웃 안에서 줄바꿈됩니다." />;
-    case "PasswordField": return <HjmPasswordField label="비밀번호" autofillHint="current" revealLabel="비밀번호 보기" concealLabel="비밀번호 숨기기" defaultValue="hjm-password" description="표시 전환은 값과 독립적으로 동작합니다." />;
+    case "Field": return <HjmField className="hjm-demo-field" controlId="showcase-player-name" label={fieldExample.label} description={fieldExample.description}>{(controlProps) => <input {...controlProps} defaultValue={fieldExample.value} />}</HjmField>;
+    case "SearchField": return <HjmSearchField label={searchFieldExample.label} clearLabel={searchFieldExample.clearLabel} defaultValue={searchFieldExample.value} description={searchFieldExample.description} />;
+    case "TextArea": return <HjmTextArea label={textAreaExample.label} defaultValue={textAreaExample.value} description={textAreaExample.description} />;
+    case "PasswordField": return <HjmPasswordField label={passwordFieldExample.label} autofillHint="current" revealLabel={passwordFieldExample.revealLabel} concealLabel={passwordFieldExample.concealLabel} defaultValue={passwordFieldExample.value} description={passwordFieldExample.description} />;
     case "ImageChoiceGroup": return <ImageChoicePreview />;
-    case "OtpField": return <HjmOtpField label="인증번호" length={6} defaultValue="128" description="여섯 자리를 한 번에 입력하거나 붙여넣을 수 있습니다." />;
-    case "NumberField": return <HjmNumberField label="수량" min={0} max={10} defaultValue={2} decrementLabel="수량 줄이기" incrementLabel="수량 늘리기" />;
-    case "Slider": return <HjmSlider label="완성도" min={0} max={100} defaultValue={72} getValueText={(value) => `${value}%`} />;
-    case "Form": return <ObservablePreview>{({ message, setMessage, selected, setSelected }) => <HjmForm onSubmit={() => setMessage("저장했어요")} actions={<HjmButton type="submit">저장</HjmButton>}><HjmSearchField label="담당자" clearLabel="담당자 지우기" defaultValue="홍길동" /></HjmForm>}</ObservablePreview>;
+    case "OtpField": return <HjmOtpField label={otpFieldExample.label} length={otpFieldExample.length} defaultValue={otpFieldExample.value} description={otpFieldExample.description} />;
+    case "NumberField": return <HjmNumberField label={numberFieldExample.label} min={numberFieldExample.min} max={numberFieldExample.max} defaultValue={numberFieldExample.value} decrementLabel={numberFieldExample.decrementLabel} incrementLabel={numberFieldExample.incrementLabel} />;
+    case "Slider": return <HjmSlider label={sliderExample.label} min={sliderExample.min} max={sliderExample.max} defaultValue={sliderExample.value} getValueText={sliderExample.valueText} />;
+    case "Form": return <ObservablePreview>{({ setMessage }) => <HjmForm onSubmit={() => setMessage(formExample.result)} actions={<HjmButton type="submit">{formExample.submit}</HjmButton>}><HjmSearchField label={formExample.field.label} clearLabel={formExample.field.clearLabel} defaultValue={formExample.field.value} /></HjmForm>}</ObservablePreview>;
     case "DatePicker": return <DatePickerPreview />;
-    case "FilePicker": return <ObservablePreview>{({ message, setMessage, selected, setSelected }) => <HjmFilePicker buttonLabel="파일 선택" descriptor={{ mode: "multiple", accept: ["image/*"], maxCount: 4 }} dropzoneLabel="이미지를 여기에 놓으세요" hint="PNG 또는 JPG, 최대 4개" label="첨부 이미지" onSelect={() => setMessage("파일을 선택했어요")} />}</ObservablePreview>;
-    case "Checkbox": return <HjmCheckbox label="동의합니다" description="선택 상태와 설명이 함께 노출됩니다." defaultChecked />;
-    case "Radio": return <HjmRadio label="단일 선택" description="독립 radio item renderer입니다." name="showcase-radio" defaultChecked />;
-    case "CheckboxGroup": return <HjmCheckboxGroup label="선택 그룹" defaultValue={new Set(["first"])} items={[{ id: "first", label: "첫 번째 선택" }, { id: "second", label: "두 번째 선택" }, { id: "disabled", label: "사용할 수 없음", disabled: true }]} />;
-    case "RadioGroup": return <HjmRadioGroup label="선택 그룹" defaultValue="first" items={[{ value: "first", label: "첫 번째 선택" }, { value: "second", label: "두 번째 선택" }, { value: "disabled", label: "사용할 수 없음", disabled: true }]} />;
-    case "Switch": return <HjmSwitch label="알림 받기" defaultChecked />;
-    case "SegmentedControl": return <HjmSegmentedControl label="보기 방식" defaultValue="list" items={[{ value: "list", label: "목록" }, { value: "grid", label: "격자" }]} />;
-    case "Chip": return <ObservablePreview>{({ message, setMessage, selected, setSelected }) => <HjmStack axis="inline" gap="sm" wrap><HjmChip label="전체" selectionMode="single" selected={selected} onSelectedChange={setSelected} /><HjmChip label="완료" selectionMode="multiple" selected={!selected} onSelectedChange={(next) => setSelected(!next)} /></HjmStack>}</ObservablePreview>;
-    case "Select": return <HjmSelect label="언어" name="language" placeholder="언어 선택" emptySelectionLabel="선택 안 함" defaultSelectedKey="ko" items={[{ id: "ko", label: "한국어", textValue: "한국어" }, { id: "en", label: "English", textValue: "English" }]} />;
-    case "Combobox": return <HjmCombobox label="도시" emptyMessage="검색 결과가 없습니다" loadingMessage="검색 중" selectionRequiredMessage="도시를 선택하세요" items={[{ value: "seoul", label: "서울" }, { value: "busan", label: "부산" }]} />;
+    case "FilePicker": return <ObservablePreview>{({ setMessage }) => <HjmFilePicker buttonLabel={filePickerExample.buttonLabel} descriptor={{ mode: "multiple", accept: ["image/*"], maxCount: 4 }} dropzoneLabel={filePickerExample.dropzoneLabel} hint={filePickerExample.hint} label={filePickerExample.label} onSelect={() => setMessage(filePickerExample.result)} />}</ObservablePreview>;
+    case "Checkbox": return <HjmCheckbox label={checkboxExample.label} description={checkboxExample.description} defaultChecked={checkboxExample.checked} />;
+    case "Radio": return <HjmRadio label={radioExample.label} description={radioExample.description} name="showcase-radio" defaultChecked={radioExample.checked} />;
+    case "CheckboxGroup": return <HjmCheckboxGroup label={checkboxGroupExample.label} defaultValue={new Set<string>(checkboxGroupExample.initial)} items={checkboxGroupExample.items} />;
+    case "RadioGroup": return <HjmRadioGroup label={radioGroupExample.label} defaultValue={radioGroupExample.initial} items={radioGroupExample.items} />;
+    case "Switch": return <HjmSwitch label={switchExample.label} defaultChecked={switchExample.checked} />;
+    case "SegmentedControl": return <HjmSegmentedControl label={segmentedControlExample.label} defaultValue={segmentedControlExample.initial} items={segmentedControlExample.items} />;
+    case "Chip": return <ChipPreview />;
+    case "Select": return <HjmSelect label={selectExample.label} name="language" placeholder={selectExample.placeholder} emptySelectionLabel={selectExample.emptySelectionLabel} defaultSelectedKey={selectExample.initial} items={selectExample.items} />;
+    case "Combobox": return <HjmCombobox label={comboboxExample.label} placeholder={comboboxExample.placeholder} emptyMessage={comboboxExample.emptyMessage} loadingMessage={comboboxExample.loadingMessage} selectionRequiredMessage={comboboxExample.selectionRequiredMessage} items={comboboxExample.items.map(({ id, label }) => ({ value: id, label }))} />;
     case "Tabs": return <HjmTabs label="선수 정보" items={[{ id: "first", label: "첫 번째", panel: "첫 번째 패널 내용" }, { id: "second", label: "두 번째", panel: "두 번째 패널 내용" }]} />;
     case "BottomNavigation": return <HjmBottomNavigation descriptor={{ accessibilityLabel: "주요 탐색", selectedKey: "home", items: [{ id: "home", label: "홈", icon: { name: "home" } }, { id: "profile", label: "프로필", icon: { name: "user" } }] }} getHref={({ id }) => `#${id}`} renderIcon={({ name }) => <HjmIcon name={name} />} />;
     case "LoadMore": return <ObservablePreview>{({ message, setMessage, selected, setSelected }) => <HjmLoadMore descriptor={{ state: { status: "ready", requestKey: "showcase-next" }, labels: { loadMore: "더 보기", loading: "불러오는 중", retry: "다시 시도", complete: "모두 불러왔습니다" } }} onLoadMore={async () => { setMessage("추가 항목을 불러왔어요"); }} />}</ObservablePreview>;
@@ -1114,7 +1133,14 @@ function DatePickerPreview() {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   // Display formatting is product-owned; keeping null after selection made the
   // demo appear to discard a date even though Calendar selection had changed.
-  return <HjmDatePicker clearLabel="날짜 지우기" closeLabel="달력 닫기"
-    composeAccessibleName={({ date, isToday, isSelected }) => `${date}${isToday ? ", 오늘" : ""}${isSelected ? ", 선택됨" : ""}`}
-    descriptor={{ grid: previewCalendarGrid, displayValue: selectedDate, placeholder: "날짜를 선택하세요", label: "관람일", selectedDate, onSelectionChange: setSelectedDate }} monthLabel="2027년 2월" />;
+  return <HjmDatePicker clearLabel={datePickerExample.clearLabel} closeLabel={datePickerExample.closeLabel}
+    composeAccessibleName={datePickerExample.accessibleName}
+    descriptor={{ grid: previewCalendarGrid, displayValue: selectedDate, placeholder: datePickerExample.placeholder, label: datePickerExample.label, selectedDate, onSelectionChange: setSelectedDate }} monthLabel={datePickerExample.monthLabel} />;
+}
+
+// Two independent filter chips (multiple selection), as Native; the old pair coupled a single and a multiple chip.
+function ChipPreview() {
+  const [selected, setSelected] = useState<ReadonlySet<string>>(new Set(chipExample.initial));
+  return <HjmStack axis="inline" gap="sm" wrap role="group" aria-label={chipExample.label}>{chipExample.items.map((item) => <HjmChip key={item.id} label={item.label} selectionMode="multiple" selected={selected.has(item.id)}
+    onSelectedChange={(next) => setSelected((current) => { const updated = new Set(current); if (next) updated.add(item.id); else updated.delete(item.id); return updated; })} />)}</HjmStack>;
 }

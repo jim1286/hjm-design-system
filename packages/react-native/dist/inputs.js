@@ -2,6 +2,7 @@ import { createElement as _createElement } from "react";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
+import { SelectionMark } from "./internal/selection-mark.js";
 import { FieldMessage, NativeFieldFrame } from "./internal/field-frame.js";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { glyph, spacing, typography, motion as motionTiming, } from "@hjmds/design-contracts/foundations";
@@ -428,25 +429,12 @@ function ChoiceRow({ kind, label, description, checked, disabled, readOnly, requ
         : selected
             ? selectionControlRecipe.states.selectedBorder
             : plate.border;
-    const controlBorder = invalid
-        ? selectionControlRecipe.states.invalidBorder
-        : selected
-            ? selectionControlRecipe.states.checkedBorder
-            : selectionControlRecipe.states.idleBorder;
     const resolvedHint = [
         accessibilityHint ?? description,
         required ? requiredLabel : undefined,
         readOnly ? readOnlyLabel : undefined,
         invalid ? invalidLabel : undefined,
     ].filter(Boolean).join(". ") || undefined;
-    // Selection marks are artwork inside a fixed box, not readable copy. HJM Text
-    // applies controlled textScale even with allowFontScaling=false, clipping at 200%.
-    const defaultIndicator = kind === "radio" ? (checked === true ? (_jsx(View, { style: {
-            backgroundColor: indicatorColor,
-            borderRadius: theme.tokens.radius.full,
-            height: metrics.control * selectionControlRecipe.radioDotRatio,
-            width: metrics.control * selectionControlRecipe.radioDotRatio,
-        } })) : null) : checked ? (_jsx(NativeText, { accessible: false, allowFontScaling: false, style: { ...typography.label, color: indicatorColor, textAlign: "center" }, children: checked === "mixed" ? "−" : "✓" })) : null;
     return (_jsxs(Pressable, { accessibilityHint: resolvedHint, accessibilityLabel: label, accessibilityRole: kind, 
         // See mixedCheckboxState: a checkbox leaving "mixed" kept the suffix on Android.
         accessibilityState: kind === "checkbox" ? mixedCheckboxState(checked, { disabled: disabled || readOnly }) : { checked, disabled: disabled || readOnly }, ...webOnly(webChoiceProps({
@@ -482,20 +470,7 @@ function ChoiceRow({ kind, label, description, checked, disabled, readOnly, requ
                 paddingVertical: plate.useSizePadding ? metrics.paddingVertical : 0,
             },
             layoutStyle,
-        ], children: [indicator === "default" ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", style: [
-                    {
-                        alignItems: "center",
-                        backgroundColor: resolveColorReference(selected
-                            ? selectionControlRecipe.states.checkedBackground
-                            : selectionControlRecipe.states.idleBackground, theme.palette),
-                        borderColor: resolveColorReference(controlBorder, theme.palette),
-                        borderRadius: theme.tokens.radius[selectionControlRecipe.shapes[kind]],
-                        borderWidth: 1,
-                        height: metrics.control,
-                        justifyContent: "center",
-                        width: metrics.control,
-                    },
-                ], children: _jsx(View, { children: renderIndicator?.(appearance) ?? defaultIndicator }) })) : null, resolvedLeading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", children: resolvedLeading })) : null, _jsxs(View, { style: [{ flex: 1, gap: spacing.xxs, minWidth: 0 }], children: [_jsx(Text, { fontRole: "ui", style: [
+        ], children: [indicator === "default" ? (_jsx(SelectionMark, { kind: kind, checked: checked, size: size, invalid: invalid ?? false, children: renderIndicator?.(appearance) })) : null, resolvedLeading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", children: resolvedLeading })) : null, _jsxs(View, { style: [{ flex: 1, gap: spacing.xxs, minWidth: 0 }], children: [_jsx(Text, { fontRole: "ui", style: [
                             {
                                 color: resolveColorReference(selectionControlRecipe.label.color, theme.palette),
                                 fontWeight: selected

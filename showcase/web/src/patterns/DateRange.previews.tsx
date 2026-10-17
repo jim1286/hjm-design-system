@@ -1,4 +1,5 @@
 import { calendarExampleGrid } from "../../../shared/calendar-example.js";
+import { dateRangeExample as dateRange } from "../../../shared/component-examples.js";
 import { useState } from "react";
 import type { DateRangeValue } from "@hjmds/design-contracts/components/date-range";
 import { DateRangePicker } from "@hjmds/react/date-range";
@@ -11,23 +12,21 @@ import { Stack, Section } from "@hjmds/react/layout";
 
 // Shared date generation preserves weekday offsets and complete months;
 // a flat 28-day fixture put September 1 under Sunday and hid the final days.
-const grid = calendarExampleGrid("2026-09");
+const grid = calendarExampleGrid(dateRange.month);
 
 export function DateRangePreview() {
   const [value, setValue] = useState<DateRangeValue>({ start: null, end: null });
   return (
-    <Section title="기간으로 골라보기" description="시작일을 누르고 종료일을 누르면 돼요.">
+    <Section title={dateRange.title} description={dateRange.description}>
       <Stack gap="md">
         <DateRangePicker
-          descriptor={{ grid, monthLabel: "2026년 9월" }}
+          descriptor={{ grid, monthLabel: dateRange.monthLabel }}
           composeAccessibleName={({ date }) => date}
           value={value}
           onValueChange={setValue}
-          rangeLabels={{ start: "시작일", end: "종료일", between: "기간 안" }}
+          rangeLabels={dateRange.rangeLabels}
         />
-        <p role="status">
-          {value.start === null ? "기간을 골라 주세요" : value.end === null ? `${value.start}부터 …` : `${value.start} ~ ${value.end}`}
-        </p>
+        <p role="status">{dateRange.status(value.start, value.end)}</p>
       </Stack>
     </Section>
   );

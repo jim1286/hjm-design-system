@@ -12,7 +12,7 @@ function Star({ fraction }) {
 export function Rating(props) {
     const { label, value, readOnly = false, disabled = false, getValueLabel, clearLabel } = props;
     const { max, fractions } = resolveRating(props);
-    const { environment, colors } = useHjmNativeTheme();
+    const { environment, colors, tokens } = useHjmNativeTheme();
     const valueLabel = getValueLabel(value);
     if (!valueLabel.trim() || (clearLabel !== undefined && !clearLabel.trim()))
         throw new TypeError("Rating text must not be empty");
@@ -25,7 +25,7 @@ export function Rating(props) {
                     if (!optionLabel.trim())
                         throw new TypeError("Rating option text must not be empty");
                     return _jsx(Pressable, { accessibilityRole: "radio", accessibilityLabel: optionLabel, accessibilityState: { checked: value === score, disabled }, disabled: disabled, onPress: () => { if (!disabled)
-                            props.onValueChange?.(score); }, style: ({ pressed }) => ({ minWidth: control.minTouchTarget, minHeight: control.minTouchTarget, alignItems: "center", justifyContent: "center", borderWidth: 1, borderColor: value === score ? colors.contentBrand : colors.border, opacity: disabled ? 0.5 : pressed ? 0.7 : 1 }), children: _jsx(Star, { fraction: fractions[index] }) }, score);
-                }) }), _jsx(Text, { accessibilityLiveRegion: "polite", children: valueLabel }), clearLabel ? _jsx(Button, { tone: "ghost", disabled: disabled || value === null, onPress: () => props.onValueChange?.(null), children: clearLabel }) : null] });
+                            props.onValueChange?.(score); }, style: ({ pressed }) => ({ minWidth: control.minTouchTarget, minHeight: control.minTouchTarget, alignItems: "center", justifyContent: "center", borderRadius: tokens.radius.sm, borderWidth: 1, borderColor: value === score ? colors.contentBrand : colors.border, opacity: disabled ? 0.5 : pressed ? 0.7 : 1 }), children: _jsx(Star, { fraction: fractions[index] }) }, score);
+                }) }), _jsx(Text, { accessibilityLiveRegion: "polite", children: valueLabel }), clearLabel ? _jsx(Button, { tone: "ghost", layoutStyle: { alignSelf: "flex-start" }, disabled: disabled || value === null, onPress: () => props.onValueChange?.(null), children: clearLabel }) : null] });
 }
 //# sourceMappingURL=rating.js.map

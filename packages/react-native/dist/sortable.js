@@ -1,17 +1,18 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { control } from "@hjmds/design-contracts/foundations";
+import { control, glyph } from "@hjmds/design-contracts/foundations";
 import { useEffect, useRef, useState } from "react";
 import { AccessibilityInfo, AppState, View } from "react-native";
 import Sortable from "react-native-sortables";
 import { reorderIntent, validateItems } from "@hjmds/design-contracts/components/interaction-adapters";
-import { Button } from "./actions.js";
+import { IconButton } from "./actions.js";
+import { DrawnChevron } from "./internal/drawn-glyphs.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 export function SortableCollection(props) {
     validateItems(props.items);
     if (!props.label.trim())
         throw new TypeError("SortableCollection needs a label");
-    const { tokens, environment } = useHjmNativeTheme();
+    const { tokens, environment, colors } = useHjmNativeTheme();
     const snapshot = useRef("");
     const dragging = useRef(false);
     const latest = useRef(props);
@@ -53,13 +54,14 @@ export function SortableCollection(props) {
                     return;
                 dragging.current = false;
                 commit(key, toIndex, "drag");
-            }, renderItem: ({ item, index }) => _jsxs(View, { style: { padding: tokens.spacing.xs, gap: tokens.spacing.xs }, children: [_jsx(Sortable.Handle, { mode: props.disabled || item.disabled ? "non-draggable" : "draggable", children: _jsxs(View, { accessible: true, accessibilityRole: "adjustable", accessibilityLabel: props.labels.handle(item), accessibilityValue: { text: props.labels.position(item, index + 1, props.items.length) }, accessibilityActions: [{ name: "decrement", label: props.labels.previous(item) }, { name: "increment", label: props.labels.next(item) }], onAccessibilityAction: ({ nativeEvent }) => {
+            }, renderItem: ({ item, index }) => _jsxs(View, { style: { alignItems: "center", direction: environment.direction, flexDirection: "row", gap: tokens.spacing.sm, paddingVertical: tokens.spacing.xs }, children: [_jsx(Sortable.Handle, { mode: props.disabled || item.disabled ? "non-draggable" : "draggable", children: _jsx(View, { accessible: true, accessibilityRole: "adjustable", accessibilityLabel: props.labels.handle(item), accessibilityValue: { text: props.labels.position(item, index + 1, props.items.length) }, accessibilityActions: [{ name: "decrement", label: props.labels.previous(item) }, { name: "increment", label: props.labels.next(item) }], onAccessibilityAction: ({ nativeEvent }) => {
                                 if (nativeEvent.actionName === "increment" || nativeEvent.actionName === "decrement") {
                                     commit(item.id, index + (nativeEvent.actionName === "increment" ? 1 : -1), "accessibility-action");
                                 }
                             }, 
                             // Yoga `direction` mirrors the rows under HJM RTL even when the OS is LTR;
                             // without it the grip and the move buttons stayed left-to-right (2026-09-30 audit).
-                            style: { alignItems: "center", direction: environment.direction, flexDirection: "row", gap: tokens.spacing.xs, minHeight: control.minTouchTarget }, children: [_jsx(Text, { children: "\u283F" }), _jsx(Text, { children: item.label })] }) }), props.renderItem(item), _jsxs(View, { style: { direction: environment.direction, flexDirection: "row", flexWrap: "wrap", gap: tokens.spacing.xs }, children: [_jsx(Button, { tone: "ghost", disabled: props.disabled || item.disabled || index === 0, onPress: () => commit(item.id, index - 1, "accessibility-action"), children: props.labels.previous(item) }), _jsx(Button, { tone: "ghost", disabled: props.disabled || item.disabled || index === props.items.length - 1, onPress: () => commit(item.id, index + 1, "accessibility-action"), children: props.labels.next(item) })] })] }) }, `${signature}:${session}:${props.active !== false}`) });
+                            // The handle names the item only to assistive tech; a visible label repeated the row's own title (2026-10-17).
+                            style: { alignItems: "center", justifyContent: "center", minHeight: control.minTouchTarget, minWidth: control.minTouchTarget }, children: _jsx(Text, { accessible: false, children: "\u283F" }) }) }), _jsx(View, { style: { flex: 1, minWidth: 0 }, children: props.renderItem(item) }), _jsxs(View, { children: [_jsx(IconButton, { tone: "ghost", label: props.labels.previous(item), disabled: props.disabled || item.disabled || index === 0, onPress: () => commit(item.id, index - 1, "accessibility-action"), children: _jsx(DrawnChevron, { direction: "up", size: glyph.md, color: colors.text }) }), _jsx(IconButton, { tone: "ghost", label: props.labels.next(item), disabled: props.disabled || item.disabled || index === props.items.length - 1, onPress: () => commit(item.id, index + 1, "accessibility-action"), children: _jsx(DrawnChevron, { direction: "down", size: glyph.md, color: colors.text }) })] })] }) }, `${signature}:${session}:${props.active !== false}`) });
 }
 //# sourceMappingURL=sortable.js.map

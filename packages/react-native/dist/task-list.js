@@ -12,13 +12,14 @@ export function TaskList({ label, items, onCompletedChange, disabled = false, em
     const renderItem = (item) => {
         const control = _jsx(Checkbox, { label: item.label, checked: item.completed, disabled: disabled || item.disabled === true, onCheckedChange: completed => onCompletedChange(item.id, completed), ...(item.description === undefined ? {} : { description: item.description }) });
         const action = renderItemAction?.({ item, disabled: disabled || item.disabled === true });
-        // Match Web's separate action line: pressing an action must not toggle completion or squeeze enlarged labels.
-        return _jsxs(View, { style: { padding: spacing.md }, children: [control, action == null ? null : _jsx(View, { style: { marginTop: spacing.sm }, children: action })] });
+        // Same as Web: the action sits beside Checkbox (never inside its label, so pressing it cannot toggle completion) and
+        // long labels wrap inside the checkbox column; a separate action line made each task two to three lines tall.
+        return _jsxs(View, { style: { alignItems: "center", flexDirection: "row", gap: spacing.sm }, children: [_jsx(View, { style: { flex: 1, minWidth: 0 }, children: control }), action] });
     };
     if (items.length === 0)
         return _jsx(List, { label: label, children: emptyContent });
     if (renderCollection)
         return _jsx(_Fragment, { children: renderCollection({ items, renderItem }) });
-    return _jsx(List, { label: label, appearance: "grouped", children: items.map(item => _jsx(View, { children: renderItem(item) }, item.id)) });
+    return _jsx(List, { label: label, appearance: "grouped", children: items.map(item => _jsx(View, { style: { padding: spacing.md }, children: renderItem(item) }, item.id)) });
 }
 //# sourceMappingURL=task-list.js.map

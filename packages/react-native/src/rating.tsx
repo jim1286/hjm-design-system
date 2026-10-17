@@ -16,7 +16,7 @@ function Star({ fraction }: { fraction: number }) {
 export function Rating(props: RatingProps) {
   const { label, value, readOnly = false, disabled = false, getValueLabel, clearLabel } = props;
   const { max, fractions } = resolveRating(props);
-  const { environment, colors } = useHjmNativeTheme();
+  const { environment, colors, tokens } = useHjmNativeTheme();
   const valueLabel = getValueLabel(value);
   if (!valueLabel.trim() || (clearLabel !== undefined && !clearLabel.trim())) throw new TypeError("Rating text must not be empty");
   const row = { flexDirection: "row" as const, flexWrap: "wrap" as const, gap: spacing.xs, direction: environment.direction };
@@ -27,7 +27,7 @@ export function Rating(props: RatingProps) {
       if (!optionLabel.trim()) throw new TypeError("Rating option text must not be empty");
       return <Pressable key={score} accessibilityRole="radio" accessibilityLabel={optionLabel} accessibilityState={{ checked: value === score, disabled }} disabled={disabled}
         onPress={() => { if (!disabled) props.onValueChange?.(score); }}
-        style={({ pressed }) => ({ minWidth: control.minTouchTarget, minHeight: control.minTouchTarget, alignItems: "center", justifyContent: "center", borderWidth: 1, borderColor: value === score ? colors.contentBrand : colors.border, opacity: disabled ? 0.5 : pressed ? 0.7 : 1 })}><Star fraction={fractions[index]!} /></Pressable>;
+        style={({ pressed }) => ({ minWidth: control.minTouchTarget, minHeight: control.minTouchTarget, alignItems: "center", justifyContent: "center", borderRadius: tokens.radius.sm, borderWidth: 1, borderColor: value === score ? colors.contentBrand : colors.border, opacity: disabled ? 0.5 : pressed ? 0.7 : 1 })}><Star fraction={fractions[index]!} /></Pressable>;
     })}
-  </View><Text accessibilityLiveRegion="polite">{valueLabel}</Text>{clearLabel ? <Button tone="ghost" disabled={disabled || value === null} onPress={() => props.onValueChange?.(null)}>{clearLabel}</Button> : null}</View>;
+  </View><Text accessibilityLiveRegion="polite">{valueLabel}</Text>{clearLabel ? <Button tone="ghost" layoutStyle={{ alignSelf: "flex-start" }} disabled={disabled || value === null} onPress={() => props.onValueChange?.(null)}>{clearLabel}</Button> : null}</View>;
 }

@@ -4,7 +4,8 @@ import { Accessibility, type DragStartEvent, type DragEndEvent } from "@dnd-kit/
 import { DragDropProvider } from "@dnd-kit/react";
 import { useSortable, isSortable } from "@dnd-kit/react/sortable";
 import { reorderIntent, validateItems, type SortableItem, type SortableLabels, type ReorderIntent } from "@hjmds/design-contracts/components/interaction-adapters";
-import { Button } from "./actions.js";
+import { Button, IconButton } from "./actions.js";
+import { Icon } from "./supplemental-display.js";
 import { useHjmTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
@@ -21,14 +22,15 @@ function Row({ item, index, children, disabled, reduced, labels, move, count }: 
 }) {
   const { ref, handleRef } = useSortable({ id: item.id, index, disabled: disabled || item.disabled === true,
     ...(reduced ? { transition: null } : {}) });
-  return <li ref={ref} data-item-id={item.id} style={{ display: "grid", gridTemplateColumns: "auto minmax(0, 1fr)", alignItems: "center", gap: "var(--hjm-space-sm)", paddingBlock: "var(--hjm-space-xs)" }}>
+  // One row: [handle | item | move]. The move pair is a tool, so it is two named icon buttons stacked in the trailing
+  // column; the old text buttons on their own line made every item take three lines (2026-10-17 review).
+  return <li ref={ref} data-item-id={item.id} style={{ display: "grid", gridTemplateColumns: "auto minmax(0, 1fr) auto", alignItems: "center", gap: "var(--hjm-space-sm)", paddingBlock: "var(--hjm-space-xs)" }}>
     <Button ref={handleRef} tone="ghost" type="button" disabled={disabled || item.disabled} aria-label={labels.handle(item)}
       style={{ minWidth: control.minTouchTarget, minHeight: control.minTouchTarget, touchAction: "none", cursor: "grab" }}>⠿</Button>
     <div style={{ minWidth: 0, overflowWrap: "anywhere" }}>{children}</div>
-    {/* Separate action line preserves readable item labels at 200% text in narrow hosts. */}
-    <div style={{ gridColumn: "1 / -1", display: "flex", flexWrap: "wrap", gap: "var(--hjm-space-xs)" }}>
-      <Button tone="ghost" disabled={disabled || item.disabled || index === 0} onClick={() => move(index - 1)}>{labels.previous(item)}</Button>
-      <Button tone="ghost" disabled={disabled || item.disabled || index === count - 1} onClick={() => move(index + 1)}>{labels.next(item)}</Button>
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <IconButton tone="ghost" data-sortable-move="previous" label={labels.previous(item)} disabled={disabled || item.disabled || index === 0} onClick={() => move(index - 1)}><Icon name="chevronUp" /></IconButton>
+      <IconButton tone="ghost" data-sortable-move="next" label={labels.next(item)} disabled={disabled || item.disabled || index === count - 1} onClick={() => move(index + 1)}><Icon name="chevronDown" /></IconButton>
     </div>
   </li>;
 }
@@ -66,7 +68,10 @@ export function SortableCollection(props: SortableCollectionProps) {
     const row = list.current?.querySelector<HTMLElement>(`[data-item-id="${CSS.escape(pending.id)}"]`);
     if (!row) return;
     refocus.current = null;
-    const [handle, previous, next] = [...row.querySelectorAll<HTMLButtonElement>("button")];
+    // Query by role: the item content may hold its own buttons (TaskList's delete action) between handle and moves.
+    const handle = row.querySelector<HTMLButtonElement>("button");
+    const previous = row.querySelector<HTMLButtonElement>('[data-sortable-move="previous"]');
+    const next = row.querySelector<HTMLButtonElement>('[data-sortable-move="next"]');
     const preferred = pending.direction === "previous" ? previous : next;
     const fallback = pending.direction === "previous" ? next : previous;
     (preferred && !preferred.disabled ? preferred : fallback && !fallback.disabled ? fallback : handle)?.focus();

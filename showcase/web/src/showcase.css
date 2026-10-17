@@ -295,6 +295,9 @@ textarea {
 /* Previews are phone-first compositions; letting them fill the 1280 stage stretched fields and primary buttons to ~900px
    (2026-10-17 review). Cap the renderer at the medium window class and keep it start-aligned. */
 .hjm-stage > [data-hjm-renderer] { inline-size: 100%; max-inline-size: var(--hjm-breakpoint-medium); }
+/* Input stories that render their composition directly (Agreement, Rating, DateRange…) take the same cap; contract
+   pages (.hjm-page) keep their own wider layout. */
+.hjm-showcase-input-preview > :not(.hjm-page) { max-inline-size: var(--hjm-breakpoint-medium); }
 
 /* DatePicker positions its calendar inside the reference; a scrolling stage clipped the open calendar and even scrolled its trigger away. */
 .hjm-stage[data-inline-overlay="true"] { overflow: visible; }
@@ -317,7 +320,7 @@ textarea {
   outline-offset: calc(var(--hjm-stroke-default) + var(--hjm-stroke-strong));
 }
 
-.hjm-demo-field { display: grid; inline-size: 100%; gap: calc(var(--hjm-space-xs) - var(--hjm-stroke-default)); max-width: 420px; color: var(--hjm-color-text-body); }
+.hjm-demo-field { display: grid; inline-size: 100%; gap: calc(var(--hjm-space-xs) - var(--hjm-stroke-default)); color: var(--hjm-color-text-body); }
 .hjm-demo-field > span { font-weight: var(--hjm-font-weight-bold); }
 .hjm-demo-field input, .hjm-demo-field textarea, .hjm-demo-field select {
   min-height: var(--hjm-control-min-touch-target); padding: calc(var(--hjm-space-xs) + var(--hjm-stroke-strong)) var(--hjm-space-sm); border: var(--hjm-stroke-default) solid var(--hjm-color-border);

@@ -69,7 +69,7 @@ export function Calendar<Content>({ descriptor, composeAccessibleName, previousM
         style={[minimumTargetStyle, { alignItems: "center", justifyContent: "center" }]}>
         <Text accessible={false}>{(reason === "previous") !== (environment.direction === "rtl") ? "‹" : "›"}</Text>
       </Pressable> : <View accessible={false} style={minimumTargetStyle} />;
-  return <View style={[layoutStyle, { gap: recipe.header.gap, direction: environment.direction }]}>
+  return <View style={[{ maxWidth: recipe.maxWidth, width: "100%" }, layoutStyle, { gap: recipe.header.gap, direction: environment.direction }]}>
     <View style={{ flexDirection: "row", alignItems: "center", gap: recipe.header.gap }}>
       {nav(previousMonth, "previous")}
       <Text accessibilityRole="header" accessibilityLiveRegion="polite" variant={recipe.header.monthLabel.textVariant}

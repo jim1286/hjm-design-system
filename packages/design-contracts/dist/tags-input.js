@@ -1,5 +1,5 @@
 import { fieldFrameContract, focusIndicatorContract } from "./component-contracts.js";
-import { control, spacing } from "./foundations.js";
+import { control, spacing, stroke } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
 /**
  * 활성 후보를 방향키로 옮긴 결과. 목록 끝에서 순환한다 — 후보가 보통 짧아서 끝에
@@ -67,6 +67,8 @@ export const tagsInputRecipe = {
         gap: spacing.xxs,
         background: semanticColors.canvas,
         color: semanticColors.content.body,
+        border: semanticColors.border.control,
+        borderWidth: stroke.default,
     },
     /** 삭제 버튼은 태그보다 작아도 되지만 포인터 타깃은 공용 최소값을 지킨다. */
     remove: { minTouchTarget: control.minTouchTarget, color: semanticColors.content.secondary },

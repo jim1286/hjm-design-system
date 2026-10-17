@@ -140,7 +140,7 @@ it.skip("keeps large-text labels wide and selection marks inside their fixed fra
   const detail = container.querySelector('.hjm-agreement__detail')!.getBoundingClientRect();
   expect(toggle.width).toBeGreaterThan(300);
   expect(detail.top).toBeGreaterThanOrEqual(toggle.bottom);
-  for (const mark of container.querySelectorAll('.hjm-agreement__mark')) {
+  for (const mark of container.querySelectorAll('.hjm-agreement .hjm-choice__indicator')) {
     const range = document.createRange(); range.selectNodeContents(mark);
     const frame = mark.getBoundingClientRect();
     for (const drawn of range.getClientRects()) {

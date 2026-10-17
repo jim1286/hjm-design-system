@@ -28,7 +28,7 @@ export function FieldGroup({ descriptor, renderField, layout = fieldGroupRecipe.
     <legend style={{ maxInlineSize: "100%", overflowWrap: "anywhere", marginBlockEnd: `var(--hjm-space-${recipe.headingGap})` }}>{resolved.label}</legend>
     {resolved.description ? <p id={`${groupId}-description`}>{resolved.description}</p> : null}
     {resolved.error ? <p id={`${groupId}-error`} role="alert" style={{ color: "var(--hjm-color-danger)" }}>{resolved.error}</p> : null}
-    <div style={{ display: "grid", gridTemplateColumns: layout === "inline" ? `repeat(auto-fit, minmax(min(100%, ${recipe.inline.minCharacters}ch), 1fr))` : undefined, gap: `var(--hjm-space-${recipe.gap})`, minInlineSize: 0 }}>
+    <div style={{ display: "grid", gridTemplateColumns: layout === "inline" ? `repeat(auto-fit, minmax(min(100%, calc(${recipe.inline.minWidth}px * var(--hjm-text-scale, 1))), 1fr))` : undefined, gap: `var(--hjm-space-${recipe.gap})`, minInlineSize: 0 }}>
       {resolved.fields.map(field => {
         // Encode product ids rather than indexes: reordering must preserve control identity and focus.
         const id = `${groupId}-field-${encodeURIComponent(field.id)}`;

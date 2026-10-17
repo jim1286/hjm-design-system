@@ -114,6 +114,8 @@ export function TagsInput({
               gap: spacing.xxs,
               paddingHorizontal: spacing.xs,
               borderRadius: 999,
+              borderWidth: tagsInputRecipe.tag.borderWidth,
+              borderColor: resolveColorReference(tagsInputRecipe.tag.border, palette),
               backgroundColor: surface,
             }}
           >

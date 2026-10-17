@@ -116,7 +116,7 @@ export const componentCatalog = [
     // Long labels and Web arrow/Enter plus Native host option activation now have renderer proofs.
     { name: "Select", category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "selectRecipe", behavior: "select" },
     // Long labels and Web filter/ArrowDown/Enter plus Native option/after-dismiss actions now have renderer proofs.
-    { name: "Combobox", category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "comboboxRecipe", behavior: "combobox", ...evidenceNeeded("Filtered collection selection is covered per renderer. Native commits the selected key after its host sheet dismisses; Web keyboard selection remains its own interaction contract.") },
+    { name: "Combobox", category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "comboboxRecipe", behavior: "combobox", ...evidenceNeeded("걸러진 목록에서 고르는 동작을 웹·앱 각각 검증했습니다. 앱은 시트가 닫힌 뒤 선택한 값을 확정하고, 웹 키보드 선택은 별도 상호작용 계약으로 남습니다.") },
     // Product adoption and device QA follow the consumer release; both renderer contracts now have complete required proofs.
     { name: "DatePicker", category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "datePickerRecipe", behavior: "datePicker" },
     { name: "DateRangePicker", category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), aliases: ["DateRange"], recipe: "calendarRecipe", behavior: "dateRange" },

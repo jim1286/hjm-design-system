@@ -1,9 +1,10 @@
-import { control } from "@hjmds/design-contracts/foundations";
+import { control, glyph } from "@hjmds/design-contracts/foundations";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { AccessibilityInfo, AppState, View } from "react-native";
 import Sortable from "react-native-sortables";
 import { reorderIntent, validateItems, type SortableItem, type SortableLabels, type ReorderIntent } from "@hjmds/design-contracts/components/interaction-adapters";
-import { Button } from "./actions.js";
+import { IconButton } from "./actions.js";
+import { DrawnChevron } from "./internal/drawn-glyphs.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 
@@ -17,7 +18,7 @@ export type SortableCollectionProps = {
 export function SortableCollection(props: SortableCollectionProps) {
   validateItems(props.items);
   if (!props.label.trim()) throw new TypeError("SortableCollection needs a label");
-  const { tokens, environment } = useHjmNativeTheme();
+  const { tokens, environment, colors } = useHjmNativeTheme();
   const snapshot = useRef("");
   const dragging = useRef(false);
   const latest = useRef(props); latest.current = props;
@@ -54,7 +55,7 @@ export function SortableCollection(props: SortableCollectionProps) {
         if (!dragging.current || snapshot.current !== signature) return;
         dragging.current = false; commit(key, toIndex, "drag");
       }}
-      renderItem={({ item, index }) => <View style={{ padding: tokens.spacing.xs, gap: tokens.spacing.xs }}>
+      renderItem={({ item, index }) => <View style={{ alignItems: "center", direction: environment.direction, flexDirection: "row", gap: tokens.spacing.sm, paddingVertical: tokens.spacing.xs }}>
         <Sortable.Handle mode={props.disabled || item.disabled ? "non-draggable" : "draggable"}>
           {/* Localized text avoids iOS treating ordinal positions as percentages. */}
           <View accessible accessibilityRole="adjustable" accessibilityLabel={props.labels.handle(item)}
@@ -67,12 +68,14 @@ export function SortableCollection(props: SortableCollectionProps) {
             }}
             // Yoga `direction` mirrors the rows under HJM RTL even when the OS is LTR;
             // without it the grip and the move buttons stayed left-to-right (2026-09-30 audit).
-            style={{ alignItems: "center", direction: environment.direction, flexDirection: "row", gap: tokens.spacing.xs, minHeight: control.minTouchTarget }}><Text>⠿</Text><Text>{item.label}</Text></View>
+            // The handle names the item only to assistive tech; a visible label repeated the row's own title (2026-10-17).
+            style={{ alignItems: "center", justifyContent: "center", minHeight: control.minTouchTarget, minWidth: control.minTouchTarget }}><Text accessible={false}>⠿</Text></View>
         </Sortable.Handle>
-        {props.renderItem(item)}
-        <View style={{ direction: environment.direction, flexDirection: "row", flexWrap: "wrap", gap: tokens.spacing.xs }}>
-          <Button tone="ghost" disabled={props.disabled || item.disabled || index === 0} onPress={() => commit(item.id, index - 1, "accessibility-action")}>{props.labels.previous(item)}</Button>
-          <Button tone="ghost" disabled={props.disabled || item.disabled || index === props.items.length - 1} onPress={() => commit(item.id, index + 1, "accessibility-action")}>{props.labels.next(item)}</Button>
+        <View style={{ flex: 1, minWidth: 0 }}>{props.renderItem(item)}</View>
+        {/* Same as Web: one row, the move pair stacked as named icon buttons in the trailing column. */}
+        <View>
+          <IconButton tone="ghost" label={props.labels.previous(item)} disabled={props.disabled || item.disabled || index === 0} onPress={() => commit(item.id, index - 1, "accessibility-action")}><DrawnChevron direction="up" size={glyph.md} color={colors.text} /></IconButton>
+          <IconButton tone="ghost" label={props.labels.next(item)} disabled={props.disabled || item.disabled || index === props.items.length - 1} onPress={() => commit(item.id, index + 1, "accessibility-action")}><DrawnChevron direction="down" size={glyph.md} color={colors.text} /></IconButton>
         </View>
       </View>} />
   </View>;

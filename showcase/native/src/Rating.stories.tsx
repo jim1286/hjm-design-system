@@ -1,24 +1,27 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-native";
-import { Slider } from "@hjmds/react-native/slider";
-import { Statistic } from "@hjmds/react-native/data-display";
+import { Rating } from "@hjmds/react-native/rating";
 import { Button } from "@hjmds/react-native/actions";
-import { Stack, Text } from "@hjmds/react-native/primitives";
+import { Section, Stack, Text } from "@hjmds/react-native/primitives";
 import { Notice } from "@hjmds/react-native/feedback";
-function RatingPreview({ step = 1 }: { step?: 1 | 0.5 }) {
-  const [score, setScore] = useState(3); const [saved, setSaved] = useState<number | null>(null);
-  return <Stack gap="md"><Text variant="title" emphasis="strong">오늘의 경험은 어땠나요?</Text><Text tone="muted">1점부터 5점 사이에서 골라주세요.</Text>
-    <Slider label="내 점수" min={1} max={5} step={step} value={score} onValueChange={(value) => { setScore(value); setSaved(null); }} getValueText={(value) => `5점 만점에 ${value}점`} incrementLabel="점수 올리기" decrementLabel="점수 내리기" />
-    <Statistic descriptor={{ id: "my-score", label: "선택한 점수", value: `${score} / 5` }} />
-    <Button onPress={() => setSaved(score)}>점수 저장</Button>
-    {saved !== null ? <Notice tone="success" title={`${saved}점으로 저장했어요`} /> : null}
-  </Stack>;
+import { ratingExample as copy } from "../../shared/component-examples";
+// 2026-10-17 review: this "별점" story showed a Slider; it now renders HJM Rating like the Web story.
+function RatingPreview() {
+  const [score, setScore] = useState<number | null>(copy.initial); const [saved, setSaved] = useState<number | null>(null);
+  return <Section title={copy.title} description={copy.description}><Stack gap="md">
+    <Rating label={copy.label} value={score} onValueChange={(value) => { setScore(value); setSaved(null); }} getValueLabel={copy.valueLabel} clearLabel={copy.clearLabel} />
+    <Button disabled={score === null} onPress={() => setSaved(score)}>{copy.save}</Button>
+    {saved !== null ? <Notice tone="success" title={copy.saved(saved)} /> : null}
+  </Stack></Section>;
+}
+function AveragePreview({ label, value, hint }: { label: string; value: number; hint?: string }) {
+  return <Stack gap="xs"><Rating label={label} value={value} readOnly getValueLabel={copy.valueLabel} />{hint ? <Text tone="muted" variant="caption">{hint}</Text> : null}</Stack>;
 }
 const meta = { title: "배포/컴포넌트/입력/별점", component: RatingPreview } satisfies Meta<typeof RatingPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본",};
-export const HalfPoint: Story = { name: "반점 단위", args: { step: 0.5 } };
-export const ReadOnlyAverage: Story = { name: "평균 점수 표시", render: () => <Statistic descriptor={{ id: "average-score", label: "평균 만족도", value: "4.3 / 5", hint: "예시 응답 120개" }} /> };
+export const HalfPoint: Story = { name: "반점 단위", render: () => <AveragePreview label={copy.half.label} value={copy.half.value} /> };
+export const ReadOnlyAverage: Story = { name: "평균 점수 표시", render: () => <AveragePreview label={copy.average.label} value={copy.average.value} hint={copy.average.hint} /> };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

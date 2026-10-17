@@ -134,6 +134,7 @@ export declare const agreementRecipe: {
     };
     readonly itemLayout: {
         readonly labelBasis: "70%";
+        readonly paddingHorizontal: 16;
     };
     readonly detail: {
         readonly color: Readonly<{

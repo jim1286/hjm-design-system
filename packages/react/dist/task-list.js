@@ -10,13 +10,14 @@ export function TaskList({ label, items, onCompletedChange, disabled = false, em
     const renderItem = (item) => {
         const control = _jsx(Checkbox, { label: item.label, checked: item.completed, disabled: disabled || item.disabled === true, onCheckedChange: completed => onCompletedChange(item.id, completed), ...(item.description === undefined ? {} : { description: item.description }) });
         const action = renderItemAction?.({ item, disabled: disabled || item.disabled === true });
-        // Independent actions must not live inside Checkbox's label. A separate line preserves long labels at large text sizes.
-        return _jsxs("div", { style: { padding: "var(--hjm-space-md)" }, children: [control, action == null ? null : _jsx("div", { style: { marginBlockStart: "var(--hjm-space-sm)" }, children: action })] });
+        // The action sits beside Checkbox, never inside its label (pressing it must not toggle completion); long labels wrap
+        // inside the checkbox column. A separate action line made each task two to three lines tall (2026-10-17 review).
+        return _jsxs("div", { style: { display: "grid", gridTemplateColumns: action == null ? "minmax(0, 1fr)" : "minmax(0, 1fr) auto", alignItems: "center", gap: "var(--hjm-space-sm)" }, children: [control, action] });
     };
     if (items.length === 0)
         return _jsx(List, { label: label, ...(layoutStyle === undefined ? {} : { layoutStyle }), children: emptyContent });
     if (renderCollection)
         return _jsx(_Fragment, { children: renderCollection({ items, renderItem }) });
-    return _jsx(List, { label: label, appearance: "grouped", ...(layoutStyle === undefined ? {} : { layoutStyle }), children: items.map(item => _jsx("div", { children: renderItem(item) }, item.id)) });
+    return _jsx(List, { label: label, appearance: "grouped", ...(layoutStyle === undefined ? {} : { layoutStyle }), children: items.map(item => _jsx("div", { style: { padding: "var(--hjm-space-md)" }, children: renderItem(item) }, item.id)) });
 }
 //# sourceMappingURL=task-list.js.map
