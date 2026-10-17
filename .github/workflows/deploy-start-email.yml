@@ -1,9 +1,9 @@
-# The owner requested start and completion emails through the same Gmail channel.
+# The owner requested start and completion emails only for release workflows.
 # Observe both independently so SMTP failure does not change deployment dependencies.
-name: Deployment email
+name: Release email
 on:
   workflow_run:
-    workflows: ["Design System Showcase", "Release Packages"]
+    workflows: ["Release Packages"]
     types: [in_progress, completed]
     branches: [main]
 permissions: {}
@@ -50,11 +50,11 @@ jobs:
                   'action_required': '조치 필요', 'stale': '만료',
                   'startup_failure': '시작 실패',
               }.get(conclusion, conclusion)
-              label = f'배포 종료 · {result}'
-              description = f'배포 워크플로가 종료되었습니다. 결과: {result} ({conclusion})'
+              label = f'릴리스 종료 · {result}'
+              description = f'릴리스 워크플로가 종료되었습니다. 결과: {result} ({conclusion})'
           else:
-              label = '배포 시작'
-              description = '배포 워크플로가 실행을 시작했습니다.'
+              label = '릴리스 시작'
+              description = '릴리스 워크플로가 실행을 시작했습니다.'
           message = EmailMessage()
           message['From'] = username
           message['To'] = recipient
