@@ -33,6 +33,8 @@ type CartesianCommon = ChartRootProps & Readonly<{
 }>;
 export type LineChartProps = CartesianCommon & FocusProps & Readonly<{
     curve?: ChartCurve;
+    /** Separate dotted vertical drops at the observed edges of missing periods; no bridge or invented values. */
+    missingConnection?: "none" | "dotted";
     /** Gradient area under each line. Defaults to on for a single series. */
     area?: boolean;
     stacked?: boolean;
@@ -57,7 +59,7 @@ export type LineChartProps = CartesianCommon & FocusProps & Readonly<{
     /** Overrides grid/label ticks. */
     ticks?: readonly number[];
 }>;
-export declare function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, width: fallbackWidth, curve, area, stacked, invert, domain, includeZero, referenceValue, extremes, showAxis, valueAxis, ticks: tickOverride, cursorLabel, animateChanges, scrubEmphasis, className, layoutStyle, ...focusProps }: LineChartProps): import("react").JSX.Element;
+export declare function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, width: fallbackWidth, curve, missingConnection, area, stacked, invert, domain, includeZero, referenceValue, extremes, showAxis, valueAxis, ticks: tickOverride, cursorLabel, animateChanges, scrubEmphasis, className, layoutStyle, ...focusProps }: LineChartProps): import("react").JSX.Element;
 export type BarChartProps = CartesianCommon & FocusProps & Readonly<{
     orientation?: ChartOrientation;
     layout?: ChartBarLayout;

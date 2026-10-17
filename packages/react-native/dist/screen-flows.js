@@ -1,6 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useEffect, useRef, useState } from "react";
 import { CompositionLayout, ScreenLayout } from "./screens.js";
+import { ScreenExitButton } from "./internal/screen-exit.js";
 import { Button, IconButton } from "./actions.js";
 import { Stack, Text, Grid } from "./primitives.js";
 import { SearchField } from "./inputs.js";
@@ -189,7 +190,12 @@ export function SearchScreen({ query, queryLabel, queryField, queryClearLabel, o
     const body = phase === "idle" ? _jsxs(_Fragment, { children: [idle, committedQuery === undefined ? children : null] })
         : phase === "typing" ? (suggestions ? _jsx(SearchSuggestionList, { query: query, suggestions: suggestions, onCommit: commit }) : null)
             : _jsxs(_Fragment, { children: [_jsx(SearchResultsHeader, { summary: resultSummary, applied: appliedFilters, cause: cause, onSortChange: changeSort }), _jsx(SearchResultsBody, { summary: resultSummary, applied: appliedFilters, suggested: suggestedQueries, cause: cause, onCommit: commit, children: children })] });
-    return _jsxs(_Fragment, { children: [_jsx(ScreenLayout, { ...screen, scrollRef: scrollRef, notice: _jsxs(Stack, { gap: "sm", children: [queryField ?? _jsx(SearchField, { ...labelProps, clearLabel: queryClearLabel, value: query, onValueChange: onQueryChange, busy: searching ?? false, busyLabel: searchingLabel ?? queryLabel, ...submitProps }), filterSlot, screen.notice] }), children: _jsx(Stack, { gap: "lg", children: body }) }), filterSheet ? _jsx(SearchFilterSheetView, { sheet: filterSheet }) : null] });
+    // Search-first routes have no visible heading: navigation and input share one row.
+    // Keep explicit host headers and described/titled screens in their existing layout.
+    const inlineNavigation = screen.titleVisibility === "hidden" && screen.header == null && !screen.description;
+    const input = queryField ?? _jsx(SearchField, { ...labelProps, clearLabel: queryClearLabel, value: query, onValueChange: onQueryChange, busy: searching ?? false, busyLabel: searchingLabel ?? queryLabel, ...submitProps });
+    const queryRow = inlineNavigation ? _jsxs(Stack, { axis: "inline", align: "center", gap: "sm", children: [screen.exit ? _jsx(ScreenExitButton, { ...screen.exit }) : null, _jsx(View, { style: { flex: 1, minWidth: 0 }, children: input }), screen.actions] }) : input;
+    return _jsxs(_Fragment, { children: [_jsx(ScreenLayout, { ...screen, ...(inlineNavigation ? { header: _jsx(_Fragment, {}) } : {}), scrollRef: scrollRef, notice: _jsxs(Stack, { gap: "sm", children: [queryRow, filterSlot, screen.notice] }), children: _jsx(Stack, { gap: "lg", children: body }) }), filterSheet ? _jsx(SearchFilterSheetView, { sheet: filterSheet }) : null] });
 }
 export function PermissionScreen({ status, illustration, explanation, request, settings, continueAction, skip, ...screen }) { const kind = resolvePermissionAction(status); const primary = kind === "request" ? request : kind === "settings" ? settings : kind === "continue" ? continueAction : null; return _jsx(ScreenLayout, { ...screen, footer: _jsxs(Stack, { gap: "xs", children: [primary ? _jsx(Action, { action: primary }) : null, skip ? _jsx(Action, { action: skip, secondary: true }) : null] }), children: _jsxs(Stack, { gap: "xl", align: "center", children: [illustration, explanation] }) }); }
 // Large headings and a software keyboard can consume the entire fixed header

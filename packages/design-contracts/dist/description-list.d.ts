@@ -14,6 +14,8 @@ export type DescriptionListDescriptor<Id extends string = string> = Readonly<{
     items: readonly DescriptionItemDescriptor<Id>[];
     /** Renderer preference; the resolver may still collapse this to 1. */
     columns?: DescriptionListColumns;
+    /** Inline pairs share a label column and separators for long records. */
+    layout?: "stacked" | "inline";
 }>;
 export declare const descriptionListDefaults: {
     readonly columns: 2;
@@ -21,6 +23,7 @@ export declare const descriptionListDefaults: {
 export type ResolvedDescriptionListDescriptor<Id extends string = string> = Readonly<{
     items: readonly DescriptionItemDescriptor<Id>[];
     columns: DescriptionListColumns;
+    layout: "stacked" | "inline";
 }>;
 export declare function validateDescriptionItem<Id extends string>(item: DescriptionItemDescriptor<Id>): void;
 export declare function validateDescriptionList<Id extends string>(descriptor: DescriptionListDescriptor<Id>): void;

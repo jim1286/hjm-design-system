@@ -15,21 +15,27 @@ export function DataTable({ columns, rows, labels, renderCell, sortState = null,
     const theme = useHjmNativeTheme(), { colors } = theme;
     const color = (reference) => resolveColorReference(reference, theme.palette);
     const [width, setWidth] = useState(0), [atEnd, setAtEnd] = useState(false), [pressed, setPressed] = useState(null);
+    const [textWidths, setTextWidths] = useState({});
     const { pinned, scrolling } = useMemo(() => splitPinnedDataTableColumns(columns), [columns]);
     const pad = dataTableRecipe.density[density];
     const rowHeight = density === "compact" ? 40 : 48, headerHeight = density === "compact" ? 34 : 40;
-    const pinnedWidth = pinned.reduce((sum, column) => sum + (column.width ?? PINNED_WIDTH), 0);
+    // A declared width is a minimum: exact records and complete headers must remain readable.
+    // Measure with the native font in an unconstrained horizontal rail, independent of the
+    // visible column width, so truncation cannot feed a smaller width back into sizing.
+    const measure = (key, measured) => setTextWidths(previous => previous[key] === measured ? previous : { ...previous, [key]: measured });
+    const naturalWidth = (column, pinnedColumn) => Math.max(column.width ?? (pinnedColumn ? PINNED_WIDTH : DEFAULT_WIDTH), Math.ceil(Math.max(textWidths[`${column.id}:header`] ?? 0, textWidths[`${column.id}:body`] ?? 0)) + pad.paddingHorizontal);
+    const pinnedWidth = pinned.reduce((sum, column) => sum + naturalWidth(column, true), 0);
     // Short tables stretch scrolling columns to fill the card; wide ones keep their widths and scroll.
-    const natural = scrolling.reduce((sum, column) => sum + (column.width ?? DEFAULT_WIDTH), 0);
+    const natural = scrolling.reduce((sum, column) => sum + naturalWidth(column, false), 0);
     const stretch = width > 0 && natural > 0 && natural < width - pinnedWidth ? (width - pinnedWidth) / natural : 1;
-    const widthOf = (column, pinnedColumn) => pinnedColumn ? column.width ?? PINNED_WIDTH : (column.width ?? DEFAULT_WIDTH) * stretch;
+    const widthOf = (column, pinnedColumn) => naturalWidth(column, pinnedColumn) * (pinnedColumn ? 1 : stretch);
     const overflow = width > 0 && pinnedWidth + natural > width + 1;
     function header(column, pinnedColumn) {
         const sortable = column.sortable ?? dataTableColumnDefaults.sortable;
         const active = sortState?.columnId === column.id ? sortState.direction : null;
         const textColor = active ? color(dataTableRecipe.sortButton.activeColor) : color(dataTableRecipe.header.color);
         const content = _jsxs(NativeText, { numberOfLines: 1, style: { color: textColor, fontSize: 12, fontWeight: "700", textAlign: alignOf(column.align ?? dataTableColumnDefaults.align) }, children: [column.header, active ? (active === "ascending" ? " ▲" : " ▼") : ""] });
-        const style = { width: widthOf(column, pinnedColumn), height: headerHeight, paddingHorizontal: pad.paddingHorizontal / 2, justifyContent: "center" };
+        const style = { width: widthOf(column, pinnedColumn), flexShrink: 0, height: headerHeight, paddingHorizontal: pad.paddingHorizontal / 2, justifyContent: "center" };
         return sortable && onSortChange
             ? _jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: labels.sortColumn(column.header, sortState?.columnId === column.id ? sortState : null), hitSlop: 4, onPress: () => onSortChange(getNextDataTableSortState(sortState, column.id, sortCycle, dataTableFirstSortDirection(column))), style: style, children: content }, column.id)
             : _jsx(View, { accessibilityRole: "header", style: style, children: content }, column.id);
@@ -38,7 +44,7 @@ export function DataTable({ columns, rows, labels, renderCell, sortState = null,
     function cell(node, column, pinnedColumn, emphasis, key, decoration = null, indent = 0) {
         const align = alignOf(column.align ?? dataTableColumnDefaults.align);
         const tone = decoration?.tone ? dataTableFamilyRecipe.tone[decoration.tone] : null, heat = decoration?.heat ?? null;
-        return _jsxs(View, { style: { width: widthOf(column, pinnedColumn), height: rowHeight - 1, paddingHorizontal: pad.paddingHorizontal / 2, paddingLeft: pad.paddingHorizontal / 2 + indent, justifyContent: "center", alignItems: align === "right" ? "flex-end" : align === "center" ? "center" : "flex-start" }, children: [heat && _jsx(View, { pointerEvents: "none", style: { position: "absolute", left: 2, right: 2, top: 4, bottom: 4, borderRadius: 6, backgroundColor: heatBase[heat.side], opacity: dataTableFamilyRecipe.heatAlpha[heat.strength] } }), typeof node === "string" || typeof node === "number"
+        return _jsxs(View, { style: { width: widthOf(column, pinnedColumn), flexShrink: 0, height: rowHeight - 1, paddingHorizontal: pad.paddingHorizontal / 2, paddingLeft: pad.paddingHorizontal / 2 + indent, justifyContent: "center", alignItems: align === "right" ? "flex-end" : align === "center" ? "center" : "flex-start" }, children: [heat && _jsx(View, { pointerEvents: "none", style: { position: "absolute", left: 2, right: 2, top: 4, bottom: 4, borderRadius: 6, backgroundColor: heatBase[heat.side], opacity: dataTableFamilyRecipe.heatAlpha[heat.strength] } }), typeof node === "string" || typeof node === "number"
                     ? _jsx(NativeText, { numberOfLines: 1, style: { color: tone ? color(tone.color) : emphasis ? colors.text : color(dataTableRecipe.cell.color), fontSize: 14, fontWeight: tone ? tone.fontWeight : emphasis ? "700" : "500", textAlign: align, fontVariant: ["tabular-nums"] }, children: String(node) })
                     : node] }, key);
     }
@@ -82,7 +88,11 @@ export function DataTable({ columns, rows, labels, renderCell, sortState = null,
     const status = asyncState.status;
     const bodyMessage = status === "loading" || status === "error" || rows.length === 0 ? emptyLabel : null;
     const columnsBody = _jsxs(View, { style: { flexDirection: "row" }, children: [pinned.length > 0 && _jsxs(View, { style: { borderRightWidth: overflow ? 1 : 0, borderColor: color(dataTableRecipe.row.borderBottom) }, children: [bodyRows("pinned"), summary(pinned, "pinned")] }), _jsxs(View, { style: { flex: 1 }, children: [_jsx(ScrollView, { horizontal: true, showsHorizontalScrollIndicator: false, onScroll: onScroll, scrollEventThrottle: 16, children: _jsxs(View, { children: [bodyRows("scrolling"), summary(scrolling, "scrolling")] }) }), overflow && !atEnd && _jsx(View, { pointerEvents: "none", accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { position: "absolute", right: 0, top: 0, bottom: 0, width: 24, flexDirection: "row" }, children: [0.15, 0.35, 0.55, 0.8].map(alpha => _jsx(View, { style: { flex: 1, backgroundColor: colors.surface, opacity: alpha } }, alpha)) })] })] });
-    return _jsxs(View, { style: [{ gap: spacing.sm }, layoutStyle], children: [_jsx(View, { accessibilityLabel: labels.table, onLayout: event => setWidth(event.nativeEvent.layout.width), style: { borderRadius: 12, overflow: "hidden", backgroundColor: colors.surface }, children: bodyMessage
+    return _jsxs(View, { style: [{ gap: spacing.sm }, layoutStyle], children: [_jsx(ScrollView, { horizontal: true, scrollEnabled: false, pointerEvents: "none", "aria-hidden": true, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { position: "absolute", left: 0, right: 0, top: 0, height: 0, opacity: 0 }, children: _jsx(View, { style: { flexDirection: "row" }, children: columns.map(column => {
+                        const values = [...rows.map(row => renderCell(row.id, column.id)), summaryRow?.(column.id)]
+                            .filter((value) => typeof value === "string" || typeof value === "number");
+                        return _jsxs(View, { style: { flexShrink: 0 }, children: [_jsx(NativeText, { onLayout: event => measure(`${column.id}:header`, event.nativeEvent.layout.width), style: { fontSize: 12, fontWeight: "700", flexShrink: 0 }, children: `${column.header}${column.sortable ? ` ▲\n${column.header} ▼` : ""}` }), _jsx(NativeText, { onLayout: event => measure(`${column.id}:body`, event.nativeEvent.layout.width), style: { fontSize: 14, fontWeight: "700", fontVariant: ["tabular-nums"], flexShrink: 0 }, children: values.join("\n") })] }, column.id);
+                    }) }) }), _jsx(View, { accessibilityLabel: labels.table, onLayout: event => setWidth(event.nativeEvent.layout.width), style: { borderRadius: 12, overflow: "hidden", backgroundColor: colors.surface }, children: bodyMessage
                     ? _jsx(View, { style: { minHeight: 120, alignItems: "center", justifyContent: "center", padding: spacing.md }, children: _jsx(Text, { tone: status === "error" ? "danger" : "muted", align: "center", children: bodyMessage }) })
                     : _jsxs(_Fragment, { children: [_jsxs(View, { style: { flexDirection: "row", backgroundColor: headerBackground }, children: [pinned.length > 0 && _jsxs(View, { style: { borderRightWidth: overflow ? 1 : 0, borderColor: color(dataTableRecipe.row.borderBottom) }, children: [bands(pinned, "pinned"), _jsx(View, { style: { flexDirection: "row" }, children: pinned.map(column => header(column, true)) })] }), _jsx(ScrollView, { ref: headerScroll, horizontal: true, scrollEnabled: false, showsHorizontalScrollIndicator: false, style: { flex: 1 }, children: _jsxs(View, { children: [bands(scrolling, "scrolling"), _jsx(View, { style: { flexDirection: "row" }, children: scrolling.map(column => header(column, false)) })] }) })] }), maxBodyHeight ? _jsx(ScrollView, { nestedScrollEnabled: true, style: { maxHeight: maxBodyHeight }, children: columnsBody }) : columnsBody] }) }), footer] });
 }

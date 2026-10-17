@@ -154,6 +154,7 @@ export declare function StatisticGroup<Id extends string = string>({ label, desc
 export type DescriptionListProps<Id extends string = string> = Omit<HTMLAttributes<HTMLDListElement>, "children"> & Readonly<{
     items: readonly DescriptionItemDescriptor<Id>[];
     columns?: DescriptionListColumns;
+    layout?: "stacked" | "inline";
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;

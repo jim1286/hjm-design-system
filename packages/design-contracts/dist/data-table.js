@@ -362,6 +362,11 @@ export const dataTableFamilyRecipe = {
     /** Indent per sub-row depth level (substitutes under a starter, players under a team). */
     depthIndent: spacing.md,
     headerBand: { color: semanticColors.content.secondary, borderBottom: semanticColors.border.subtle },
+    /**
+     * Live period (LineScore) and "my team" row (MatrixTable). These tables sit on the surface tone, where DataTable's
+     * canvas-colored selected row read as a white gap that split the table (2026-10-17 review E17).
+     */
+    highlight: { background: semanticColors.surface.brand },
 };
 /**
  * Period columns are padded to `minPeriods` (9 innings) and extend for extra innings; totals follow.

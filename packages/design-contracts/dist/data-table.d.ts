@@ -373,6 +373,17 @@ export declare const dataTableFamilyRecipe: {
             alpha?: number;
         }>;
     };
+    /**
+     * Live period (LineScore) and "my team" row (MatrixTable). These tables sit on the surface tone, where DataTable's
+     * canvas-colored selected row read as a white gap that split the table (2026-10-17 review E17).
+     */
+    readonly highlight: {
+        readonly background: Readonly<{
+            source: "theme";
+            key: "surfaceAccent";
+            alpha?: number;
+        }>;
+    };
 };
 export type LineScoreTeam = Readonly<{
     id: string;

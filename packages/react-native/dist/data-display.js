@@ -368,7 +368,8 @@ export function DescriptionList({ label, descriptor, availableWidth, layoutStyle
     assertNoRemovedStyleProps("DescriptionList", props, ["style", "itemStyle"]);
     const resolved = resolveDescriptionListDescriptor(descriptor);
     const { width: windowWidth } = useWindowDimensions();
-    const { environment } = useHjmNativeTheme();
+    const { environment, colors } = useHjmNativeTheme();
+    const inline = resolved.layout === "inline";
     const [measuredWidth, setMeasuredWidth] = useState(null);
     const innerWidth = availableWidth ?? measuredWidth ?? windowWidth;
     if (!Number.isFinite(innerWidth) || innerWidth <= 0) {
@@ -390,10 +391,13 @@ export function DescriptionList({ label, descriptor, availableWidth, layoutStyle
                 direction: environment.direction,
                 flexDirection: "row",
                 flexWrap: "wrap",
-                gap: spacing.sm,
+                gap: inline ? 0 : spacing.sm,
             },
             layoutStyle,
-        ], children: resolved.items.map((item) => (_jsxs(View, { accessibilityLabel: `${item.label}, ${item.value}`, accessible: true, style: [{ gap: spacing.xxs, width: itemWidth }], children: [_jsx(Text, { accessible: false, tone: "muted", variant: "label", children: item.label }), _jsx(Text, { accessible: false, tone: "primary", children: item.value })] }, item.id))) }));
+        ], children: resolved.items.map((item, index) => (_jsxs(View, { accessibilityLabel: `${item.label}, ${item.value}`, accessible: true, style: [{ gap: spacing.xxs, width: itemWidth }, inline && {
+                    flexDirection: "row", alignItems: "flex-start", gap: spacing.sm,
+                    paddingVertical: spacing.sm, borderTopWidth: index === 0 ? 0 : 1, borderColor: colors.border,
+                }], children: [_jsx(Text, { accessible: false, tone: "muted", variant: "label", layoutStyle: inline ? { width: "24%" } : undefined, children: item.label }), _jsx(Text, { accessible: false, tone: "primary", layoutStyle: inline ? { flex: 1, minWidth: 0 } : undefined, children: item.value })] }, item.id))) }));
 }
 function resolveImageSourceKey(source) {
     if (typeof source === "number")

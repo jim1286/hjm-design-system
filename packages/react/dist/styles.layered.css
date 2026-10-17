@@ -3278,4 +3278,9 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-segmented[data-presentation="text"][data-text-emphasis="regular"] .hjm-segmented__item { font-weight:400; }
 .hjm-segmented[data-presentation="text"][data-text-emphasis="regular"] .hjm-segmented__item[data-state="checked"] { font-weight:600; }
 
+/* Long read-only records need a stable label column across wrapped values. */
+.hjm-description-list[data-layout="inline"] { gap: 0; }
+.hjm-description-list[data-layout="inline"] .hjm-description-list__item { grid-template-columns: 24% minmax(0, 1fr); gap: var(--hjm-space-sm); padding-block: var(--hjm-space-sm); }
+.hjm-description-list[data-layout="inline"] .hjm-description-list__item + .hjm-description-list__item { border-block-start: 1px solid var(--hjm-color-border); }
+
 }

@@ -25,6 +25,9 @@ export function validateDescriptionList(descriptor) {
         descriptor.columns !== 2) {
         throw new RangeError("DescriptionList columns must be 1 or 2");
     }
+    if (descriptor.layout !== undefined && descriptor.layout !== "stacked" && descriptor.layout !== "inline") {
+        throw new RangeError("DescriptionList layout must be stacked or inline");
+    }
     const ids = new Set();
     for (const item of descriptor.items) {
         validateDescriptionItem(item);
@@ -38,7 +41,8 @@ export function resolveDescriptionListDescriptor(descriptor) {
     validateDescriptionList(descriptor);
     return {
         items: descriptor.items,
-        columns: descriptor.columns ?? descriptionListDefaults.columns,
+        columns: descriptor.layout === "inline" ? 1 : descriptor.columns ?? descriptionListDefaults.columns,
+        layout: descriptor.layout ?? "stacked",
     };
 }
 export const descriptionListRecipe = {

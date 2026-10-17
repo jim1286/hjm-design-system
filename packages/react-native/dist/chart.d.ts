@@ -20,6 +20,8 @@ export type LineChartProps = Readonly<{
     missingLabel: string;
     height?: number;
     curve?: ChartCurve;
+    /** Separate dotted vertical drops at the observed edges of missing periods; no bridge or invented values. */
+    missingConnection?: "none" | "dotted";
     area?: boolean;
     stacked?: boolean;
     invert?: boolean;
@@ -41,7 +43,7 @@ export type LineChartProps = Readonly<{
     /** Keep the chosen side in series color; mute the other side. */
     scrubEmphasis?: "before" | "after";
 } & FocusProps>;
-export declare function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, curve, area, stacked, invert, domain, includeZero, referenceValue, extremes, showAxis, valueAxis, ticks: tickOverride, cursorLabel, animateChanges, scrubEmphasis, ...focusProps }: LineChartProps): import("react").JSX.Element;
+export declare function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, curve, missingConnection, area, stacked, invert, domain, includeZero, referenceValue, extremes, showAxis, valueAxis, ticks: tickOverride, cursorLabel, animateChanges, scrubEmphasis, ...focusProps }: LineChartProps): import("react").JSX.Element;
 export type BarChartProps = Readonly<{
     categories: readonly string[];
     series: readonly ChartSeries[];

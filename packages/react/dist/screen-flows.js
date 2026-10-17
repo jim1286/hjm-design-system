@@ -1,6 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { CompositionLayout, ScreenLayout } from "./screens.js";
+import { ScreenExitButton } from "./internal/screen-exit.js";
 import { Button, IconButton } from "./actions.js";
 import { MessageReactions } from "./internal/message-reactions.js";
 import { Stack, Text, Grid, VisuallyHidden } from "./layout.js";
@@ -295,7 +296,12 @@ export function SearchScreen({ query, queryLabel, queryField, queryClearLabel, o
     const body = phase === "idle" ? _jsxs(_Fragment, { children: [idle, committedQuery === undefined ? children : null] })
         : phase === "typing" ? (suggestions ? _jsx(SearchSuggestionList, { query: query, suggestions: suggestions, onCommit: pick }) : null)
             : _jsxs(_Fragment, { children: [_jsx(SearchResultsHeader, { summary: resultSummary, applied: appliedFilters, cause: cause, appliedHost: focus.appliedHost, onRemove: removeApplied, onClearAll: clearApplied, onSortChange: changeSort }), _jsx(SearchResultsBody, { summary: resultSummary, applied: appliedFilters, suggested: suggestedQueries, cause: cause, onCommit: pick, onClearAll: clearApplied, children: children })] });
-    return _jsxs(_Fragment, { children: [_jsx(ScreenLayout, { ...screen, notice: _jsxs(Stack, { gap: "sm", ref: fieldHost, children: [queryField ?? _jsx(SearchField, { ...labelProps, clearLabel: queryClearLabel, value: query, onValueChange: onQueryChange, loading: searching ?? false, ...submitProps }), filterSlot, screen.notice] }), children: _jsxs(Stack, { gap: "lg", ref: bodyHost, className: "hjm-search-screen__results", tabIndex: -1, children: [suggestions || resultSummary || searchingLabel ? _jsx(SearchAnnouncement, { text: announcement }) : null, body] }) }), filterSheet ? _jsx(SearchFilterSheetView, { sheet: filterSheet }) : null] });
+    // Search-first routes have no visible heading: navigation and input share one row.
+    // Keep explicit host headers and described/titled screens in their existing layout.
+    const inlineNavigation = screen.titleVisibility === "hidden" && screen.header == null && !screen.description;
+    const searchInput = queryField ?? _jsx(SearchField, { ...labelProps, clearLabel: queryClearLabel, value: query, onValueChange: onQueryChange, loading: searching ?? false, ...submitProps });
+    const queryRow = inlineNavigation ? _jsxs(Stack, { axis: "inline", align: "center", gap: "sm", children: [screen.exit ? _jsx(ScreenExitButton, { ...screen.exit }) : null, _jsx("div", { style: { flex: 1, minWidth: 0 }, children: searchInput }), screen.actions] }) : searchInput;
+    return _jsxs(_Fragment, { children: [_jsx(ScreenLayout, { ...screen, ...(inlineNavigation ? { header: _jsx(_Fragment, {}) } : {}), notice: _jsxs(Stack, { gap: "sm", ref: fieldHost, children: [queryRow, filterSlot, screen.notice] }), children: _jsxs(Stack, { gap: "lg", ref: bodyHost, className: "hjm-search-screen__results", tabIndex: -1, children: [suggestions || resultSummary || searchingLabel ? _jsx(SearchAnnouncement, { text: announcement }) : null, body] }) }), filterSheet ? _jsx(SearchFilterSheetView, { sheet: filterSheet }) : null] });
 }
 export function PermissionScreen({ status, illustration, explanation, request, settings, continueAction, skip, ...screen }) { const kind = resolvePermissionAction(status); const primary = kind === "request" ? request : kind === "settings" ? settings : kind === "continue" ? continueAction : null; return _jsx(ScreenLayout, { ...screen, footer: _jsxs(Stack, { gap: "xs", children: [primary ? _jsx(Action, { action: primary }) : null, skip ? _jsx(Action, { action: skip, secondary: true }) : null] }), children: _jsxs(Stack, { gap: "xl", align: "center", children: [illustration, explanation] }) }); }
 export function OnboardingScreen({ steps, index, onIndexChange, nextLabel, backLabel, complete, skip, progressLabel, layoutStyle }) {

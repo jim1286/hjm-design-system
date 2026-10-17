@@ -3996,6 +3996,8 @@ export declare const recipeRegistry: {
             readonly pointRadius: 4.5;
             readonly focusHaloRadius: 9;
             readonly focusHaloOpacity: 0.25;
+            readonly missingDash: readonly [1, 5];
+            readonly missingOpacity: 0.55;
         };
         readonly area: {
             readonly topOpacity: 0.32;
