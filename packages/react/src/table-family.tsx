@@ -1,7 +1,7 @@
-import type { CSSProperties, ReactNode } from "react";
+import { useLayoutEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import type { ColorReference } from "@hjmds/design-contracts/color-references";
 import {
-  dataTableFamilyRecipe, dataTableRecipe, formatLineScoreCell, resolveComparisonRow, resolveLineScore, resolveMatrix,
+  dataTableFamilyRecipe, formatLineScoreCell, resolveComparisonRow, resolveLineScore, resolveMatrix,
   type ComparisonRow, type DataTableCellHeat, type DataTableCellTone, type LineScoreTeam, type MatrixCell,
 } from "@hjmds/design-contracts/components/data-table";
 import { classNames } from "./internal.js";
@@ -27,8 +27,8 @@ export function tableCssColor(reference: ColorReference): string {
     : `color-mix(in srgb, var(${name}) ${Math.round(reference.alpha * 100)}%, transparent)`;
 }
 
-/** Live period and "my team" row reuse the shared selected-row tint. */
-const familyStyle = { "--hjm-table-family-selected": tableCssColor(dataTableRecipe.row.selectedBackground) } as CSSProperties;
+/** Live period and "my team" row share the family highlight tint. */
+const familyStyle = { "--hjm-table-family-selected": tableCssColor(dataTableFamilyRecipe.highlight.background) } as CSSProperties;
 const withFamilyStyle = (layoutStyle: HjmCompositionStyleProp | undefined) => ({ ...familyStyle, ...layoutStyle }) as CSSProperties;
 
 export type TableHeatColors = Readonly<{ high: string; low: string }>;
@@ -57,6 +57,12 @@ export function tableCellEmphasis(
 
 /* ---------------------------------------------- Line score ------------------------------------- */
 
+/**
+ * Team and total columns stay pinned while only the periods scroll, as on Native: at 402px the totals — the result —
+ * scrolled off with the extra innings (2026-10-17 review E17). Totals have a fixed width so each can pin at its offset.
+ */
+const totalOffset = (count: number, index: number): CSSProperties => ({ insetInlineEnd: `calc(var(--hjm-line-score-total-width) * ${count - 1 - index})` });
+
 export type LineScoreProps = Readonly<{
   teams: readonly LineScoreTeam[];
   /** Total column headers in order, e.g. ["R", "H", "E", "B"]. The first one decides the leader. */
@@ -76,18 +82,27 @@ export function LineScore({ teams, totals, currentPeriod = null, minPeriods, ren
   const score = resolveLineScore(teams, { totals, currentPeriod, ...(minPeriods !== undefined ? { minPeriods } : {}) });
   const periods = score.columns.filter((column) => column.kind === "period");
   const totalColumns = score.columns.filter((column) => column.kind === "total");
+  // Open the period strip at the live (or latest) period, as Native: starting at inning 1 hid extra innings behind the
+  // pinned totals and read as a shorter game (2026-10-17 review N4). scroll-padding keeps it clear of the totals.
+  const host = useRef<HTMLDivElement>(null);
+  const focusPeriod = score.currentPeriod ?? periods.length;
+  useLayoutEffect(() => {
+    const container = host.current;
+    if (!container || container.scrollWidth <= container.clientWidth) return;
+    container.querySelector<HTMLElement>(`thead [data-period="${focusPeriod}"]`)?.scrollIntoView({ block: "nearest", inline: "nearest" });
+  }, [focusPeriod, periods.length]);
   return (
-    <div className={classNames("hjm-table-family", "hjm-line-score", className)} style={withFamilyStyle(layoutStyle)}>
+    <div ref={host} className={classNames("hjm-table-family", "hjm-line-score", className)} style={{ ...withFamilyStyle(layoutStyle), "--hjm-line-score-total-count": totalColumns.length } as CSSProperties}>
       <table className="hjm-line-score__table" aria-label={accessibilityLabel}>
         <thead>
           <tr>
             <td className="hjm-line-score__team" />
             {periods.map((column, index) => {
               const live = score.currentPeriod === index + 1;
-              return <th key={column.id} scope="col" className="hjm-line-score__period" aria-current={live ? "true" : undefined} data-current={live || undefined}>{column.header}</th>;
+              return <th key={column.id} scope="col" className="hjm-line-score__period" data-period={index + 1} aria-current={live ? "true" : undefined} data-current={live || undefined}>{column.header}</th>;
             })}
             {totalColumns.map((column, index) => (
-              <th key={column.id} scope="col" className={classNames("hjm-line-score__total", index === 0 && "hjm-line-score__total-edge")}>{column.header}</th>
+              <th key={column.id} scope="col" className={classNames("hjm-line-score__total", index === 0 && "hjm-line-score__total-edge")} style={totalOffset(totalColumns.length, index)}>{column.header}</th>
             ))}
           </tr>
         </thead>
@@ -102,7 +117,7 @@ export function LineScore({ teams, totals, currentPeriod = null, minPeriods, ren
                 return <td key={column.id} className="hjm-line-score__period" data-current={score.currentPeriod === index + 1 || undefined} data-scored={typeof value === "number" && value > 0 || undefined}>{formatLineScoreCell(value)}</td>;
               })}
               {totalColumns.map((column, index) => (
-                <td key={column.id} className={classNames("hjm-line-score__total", index === 0 && "hjm-line-score__total-edge")}>{team.totals[column.header] ?? "—"}</td>
+                <td key={column.id} className={classNames("hjm-line-score__total", index === 0 && "hjm-line-score__total-edge")} style={totalOffset(totalColumns.length, index)}>{team.totals[column.header] ?? "—"}</td>
               ))}
             </tr>
           ))}

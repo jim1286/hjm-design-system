@@ -7,6 +7,7 @@ import { useState, type ReactNode } from "react";
 import { control } from "@hjmds/design-contracts/foundations";
 import { Pressable, View } from "react-native";
 import { Text } from "./primitives.js";
+import { useHjmNativeTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type CollapsibleProps = CollapsibleOpenState &
@@ -19,13 +20,18 @@ export type CollapsibleProps = CollapsibleOpenState &
     presentation?: "disclosure" | "inline";
     /** Preserve local input state while hidden; hidden content stays inaccessible. */
     keepMounted?: boolean;
+    /**
+     * `none` leaves the open/closed mark to the trigger, which then places `CollapsibleMarker` itself — for triggers
+     * whose label is not a single row, where the end-aligned mark floated alone (FolderPreview, 2026-10-17 review).
+     */
+    marker?: "end" | "none";
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
-export function Collapsible({ trigger, children, disabled = false, presentation = "disclosure", keepMounted = false, layoutStyle, ...openState }: CollapsibleProps) {
+export function Collapsible({ trigger, children, disabled = false, presentation = "disclosure", keepMounted = false, marker = "end", layoutStyle, ...openState }: CollapsibleProps) {
   validateCollapsibleOpenState(openState as CollapsibleOpenState);
   const controlled = openState.open !== undefined;
   const [internalOpen, setInternalOpen] = useState(openState.defaultOpen ?? false);
@@ -48,12 +54,18 @@ export function Collapsible({ trigger, children, disabled = false, presentation 
       >
         {typeof trigger === "string" ? <Text
               fontRole="ui">{trigger}</Text> : trigger}
-        {/* Decoration only: the expanded state travels through accessibilityState. */}
-        <Text accessibilityElementsHidden importantForAccessibility="no">{open ? "▾" : "▸"}</Text>
+        {marker === "end" ? <CollapsibleMarker open={open} /> : null}
       </Pressable>
       {/* Display and accessibility agree: retained input state must not leave
           collapsed tools reachable to assistive technology or hit testing. */}
       {open || keepMounted ? <View accessibilityElementsHidden={!open} importantForAccessibility={open ? "auto" : "no-hide-descendants"} style={{ display: open ? "flex" : "none" }}>{children}</View> : null}
     </View>
   );
+}
+
+/** Decoration only: the expanded state travels through the trigger's accessibilityState. */
+export function CollapsibleMarker({ open }: Readonly<{ open: boolean }>) {
+  const { environment } = useHjmNativeTheme();
+  // The closed mark points toward the reading end, so it mirrors in RTL like Web's scaleX(-1).
+  return <Text accessibilityElementsHidden importantForAccessibility="no">{open ? "▾" : environment.direction === "rtl" ? "◂" : "▸"}</Text>;
 }

@@ -277,7 +277,7 @@ export { Top, type TopProps } from "./top.js";
 export { Heading, type HeadingProps } from "./heading.js";
 export { ToggleGroup, type ToggleGroupProps } from "./toggle-group.js";
 export { BottomInfo, type BottomInfoProps } from "./bottom-info.js";
-export { Collapsible, type CollapsibleProps } from "./collapsible.js";
+export { Collapsible, CollapsibleMarker, type CollapsibleProps } from "./collapsible.js";
 export { Asset, AssetGroup, type AssetProps, type AssetGroupProps } from "./asset.js";
 export { TagsInput, type TagsInputProps } from "./tags-input.js";
 export { DateRangePicker, type DateRangePickerProps } from "./date-range.js";

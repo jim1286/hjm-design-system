@@ -1,5 +1,6 @@
 import { forwardRef, useCallback, useEffect, useRef, useState, type ReactNode } from "react";
-import { Button, type ButtonProps } from "./actions.js";
+import { Button, IconButton, type ButtonProps, type IconButtonProps } from "./actions.js";
+import { Icon } from "./supplemental-display.js";
 
 // `onCopy` also names the DOM clipboard event handler on ButtonProps; intersected, the
 // value callback had to accept a ClipboardEvent too and no product could pass it. The
@@ -17,6 +18,66 @@ export type ClipboardButtonProps = Omit<ButtonProps, "children" | "onClick" | "o
 
 const defaultFeedbackDuration = 2000;
 
+type ClipboardCopyOptions = Readonly<{ value: string; feedbackDuration: number; onCopy?: ((value: string) => void) | undefined; onCopyError?: ((error: unknown) => void) | undefined }>;
+
+/** One copy state machine for the labelled and the icon presentation. */
+function useClipboardCopy({ value, feedbackDuration, onCopy, onCopyError }: ClipboardCopyOptions) {
+  const [copied, setCopied] = useState(false);
+  const [copying, setCopying] = useState(false);
+  const pending = useRef(false);
+  const generation = useRef(0);
+  const mounted = useRef(false);
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useEffect(() => {
+    mounted.current = true;
+    setCopying(pending.current);
+    return () => {
+      mounted.current = false;
+      generation.current += 1;
+      if (timer.current !== undefined) clearTimeout(timer.current);
+    };
+  }, []);
+  useEffect(() => {
+    // A new value makes the previous "copied" claim false: it referred to the
+    // old string, and leaving it up tells the user something untrue.
+    generation.current += 1;
+    setCopied(false);
+    if (timer.current !== undefined) clearTimeout(timer.current);
+  }, [value]);
+
+  const copy = useCallback(async () => {
+    // OS clipboard promises cannot be cancelled. A per-value generation ignores
+    // obsolete feedback/callbacks instead of announcing an old source as copied.
+    // A ref also closes the gap before React paints the unavailable busy button.
+    if (!mounted.current || pending.current) return;
+    const request = ++generation.current;
+    pending.current = true;
+    setCopying(true);
+    setCopied(false);
+    if (timer.current !== undefined) clearTimeout(timer.current);
+    try {
+      await navigator.clipboard.writeText(value);
+      if (!mounted.current || request !== generation.current) return;
+      setCopied(true);
+      if (timer.current !== undefined) clearTimeout(timer.current);
+      timer.current = setTimeout(() => setCopied(false), feedbackDuration);
+      onCopy?.(value);
+    } catch (error) {
+      // Clipboard access can be denied; swallowing that would leave the user
+      // believing the value was copied.
+      if (mounted.current && request === generation.current) onCopyError?.(error);
+    } finally {
+      // Keep the OS write single-flight across value changes as well: starting a
+      // second write early could let the first overwrite its clipboard contents.
+      pending.current = false;
+      if (mounted.current) setCopying(false);
+    }
+  }, [value, feedbackDuration, onCopy, onCopyError]);
+
+  return { copied, copying, copy };
+}
+
+
 /**
  * Copying is three things products kept re-deriving: the async clipboard call,
  * the temporary "copied" state, and announcing that state to a screen reader.
@@ -31,64 +92,44 @@ export const ClipboardButton = forwardRef<HTMLButtonElement, ClipboardButtonProp
     { value, labels, feedbackDuration = defaultFeedbackDuration, onCopy, onCopyError, tone = "secondary", ...props },
     forwardedRef,
   ) {
-    const [copied, setCopied] = useState(false);
-    const [copying, setCopying] = useState(false);
-    const pending = useRef(false);
-    const generation = useRef(0);
-    const mounted = useRef(false);
-    const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-    useEffect(() => {
-      mounted.current = true;
-      setCopying(pending.current);
-      return () => {
-        mounted.current = false;
-        generation.current += 1;
-        if (timer.current !== undefined) clearTimeout(timer.current);
-      };
-    }, []);
-    useEffect(() => {
-      // A new value makes the previous "copied" claim false: it referred to the
-      // old string, and leaving it up tells the user something untrue.
-      generation.current += 1;
-      setCopied(false);
-      if (timer.current !== undefined) clearTimeout(timer.current);
-    }, [value]);
-
-    const copy = useCallback(async () => {
-      // OS clipboard promises cannot be cancelled. A per-value generation ignores
-      // obsolete feedback/callbacks instead of announcing an old source as copied.
-      // A ref also closes the gap before React paints the unavailable busy button.
-      if (!mounted.current || pending.current) return;
-      const request = ++generation.current;
-      pending.current = true;
-      setCopying(true);
-      setCopied(false);
-      if (timer.current !== undefined) clearTimeout(timer.current);
-      try {
-        await navigator.clipboard.writeText(value);
-        if (!mounted.current || request !== generation.current) return;
-        setCopied(true);
-        if (timer.current !== undefined) clearTimeout(timer.current);
-        timer.current = setTimeout(() => setCopied(false), feedbackDuration);
-        onCopy?.(value);
-      } catch (error) {
-        // Clipboard access can be denied; swallowing that would leave the user
-        // believing the value was copied.
-        if (mounted.current && request === generation.current) onCopyError?.(error);
-      } finally {
-        // Keep the OS write single-flight across value changes as well: starting a
-        // second write early could let the first overwrite its clipboard contents.
-        pending.current = false;
-        if (mounted.current) setCopying(false);
-      }
-    }, [value, feedbackDuration, onCopy, onCopyError]);
-
+    const { copied, copying, copy } = useClipboardCopy({ value, feedbackDuration, onCopy, onCopyError });
     return (
       <>
         <Button {...props} tone={tone} loading={props.loading || copying} ref={forwardedRef} onClick={() => { void copy(); }}>
           {copied ? labels.copied : labels.idle}
         </Button>
         {/* The state change is announced, not only painted. */}
+        <span role="status" className="hjm-visually-hidden">{copied ? labels.copied : ""}</span>
+      </>
+    );
+  },
+);
+
+export type ClipboardIconButtonProps = Omit<IconButtonProps, "children" | "label" | "onClick" | "onCopy" | "selected"> &
+  Readonly<{
+    value: string;
+    /** Localized accessible names for both states; the icon carries no visible text. */
+    labels: Readonly<{ idle: string; copied: string }>;
+    feedbackDuration?: number;
+    onCopy?: (value: string) => void;
+    onCopyError?: (error: unknown) => void;
+  }>;
+
+/**
+ * Copy as a tool action (a code block or share-link header): an icon button named by the localized label, copy → check
+ * while the copied state lasts. A bordered text button there read as a form action (2026-10-17 review E10).
+ */
+export const ClipboardIconButton = forwardRef<HTMLButtonElement, ClipboardIconButtonProps>(
+  function ClipboardIconButton(
+    { value, labels, feedbackDuration = defaultFeedbackDuration, onCopy, onCopyError, tone = "ghost", ...props },
+    forwardedRef,
+  ) {
+    const { copied, copying, copy } = useClipboardCopy({ value, feedbackDuration, onCopy, onCopyError });
+    return (
+      <>
+        <IconButton {...props} tone={tone} label={copied ? labels.copied : labels.idle} loading={props.loading || copying} ref={forwardedRef} onClick={() => { void copy(); }}>
+          <Icon name={copied ? "check" : "copy"} />
+        </IconButton>
         <span role="status" className="hjm-visually-hidden">{copied ? labels.copied : ""}</span>
       </>
     );

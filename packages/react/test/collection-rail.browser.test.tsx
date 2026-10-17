@@ -14,7 +14,7 @@ beforeEach(() => {
 });
 afterEach(async () => { await act(async () => root.unmount()); host.remove(); });
 const viewport = () => host.querySelector<HTMLElement>("[data-collection-rail-viewport]")!;
-const button = (text: string) => [...host.querySelectorAll("button")].find(node => node.textContent === text)!;
+const button = (text: string) => [...host.querySelectorAll("button")].find(node => node.textContent === text || node.getAttribute("aria-label") === text)!;
 async function render(direction: "ltr" | "rtl" = "ltr", profile: "paper" | "forest" = "paper", collection = items, reducedMotion = true) {
   await act(async () => root.render(<HjmProvider direction={direction} reducedMotion={reducedMotion} designProfile={hjmDesignPresets[profile]}>
     <CollectionRail label="기록 모음" items={collection} labels={{ previous: "이전", next: "다음", navigation: "기록 탐색" }}

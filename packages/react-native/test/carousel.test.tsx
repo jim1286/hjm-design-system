@@ -4,7 +4,7 @@ import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { AccessibilityInfo, View } from "react-native";
 import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
 import { Carousel, type CarouselProps } from "../src/carousel.js";
-import { Button } from "../src/actions.js";
+import { IconButton } from "../src/actions.js";
 import { Text } from "../src/primitives.js";
 import { HjmNativeProvider } from "../src/provider.js";
 
@@ -22,14 +22,15 @@ async function render(props: Partial<Omit<CarouselProps, "currentKey" | "default
   await act(async () => { renderer = create(<HjmNativeProvider direction={direction} reducedMotion={reducedMotion}><Carousel {...base} {...props} /></HjmNativeProvider>); });
 }
 const position = () => renderer.root.findAllByType(View).find((node) => node.props.accessibilityRole === "adjustable")!;
-const next = () => renderer.root.findAllByType(Button).find((node) => node.props.children === "다음")!;
+const next = () => renderer.root.findAllByType(IconButton).find((node) => node.props.label === "다음")!;
 
 describe("Native Carousel", () => {
   it("keeps hidden content out of the accessibility tree and clamps adjustable actions", async () => {
     vi.spyOn(AccessibilityInfo, "isScreenReaderEnabled").mockResolvedValue(true);
     const announce = vi.spyOn(AccessibilityInfo, "announceForAccessibility");
     await render();
-    const hidden = renderer.root.findAllByType(View).filter((node) => node.props.accessibilityElementsHidden);
+    // Slides only: the drawn previous/next chevrons are hidden decoration too.
+    const hidden = renderer.root.findAllByType(View).filter((node) => node.props.accessibilityElementsHidden && node.props.pointerEvents === "none");
     expect(hidden).toHaveLength(1); expect(hidden[0]!.props.importantForAccessibility).toBe("no-hide-descendants");
     act(() => position().props.onAccessibilityAction({ nativeEvent: { actionName: "increment" } }));
     expect(position().props.accessibilityValue.now).toBe(2);
@@ -46,10 +47,8 @@ describe("Native Carousel", () => {
       { name: "increment", label: "다음" },
       { name: "decrement", label: "이전" },
     ]);
-    const dots = renderer.root.findAllByType(Button).filter((node) => node.props.accessibilityState?.selected !== undefined);
-    expect(dots.map((dot) => [dot.props.accessibilityLabel, dot.props.accessibilityState.selected])).toEqual([
-      ["1/2 첫 소식", true], ["2/2 다음 소식", false],
-    ]);
+    // The dot row is the adjustable element (a page control); previous/next are separately named icon buttons.
+    expect(renderer.root.findAllByType(IconButton).map((node) => [node.props.label, node.props.disabled])).toEqual([["이전", true], ["다음", false]]);
     act(() => position().props.onAccessibilityAction({ nativeEvent: { actionName: "decrement" } }));
     expect(position().props.accessibilityValue.now).toBe(1);
     act(() => position().props.onAccessibilityAction({ nativeEvent: { actionName: "increment" } }));
@@ -66,8 +65,8 @@ describe("Native Carousel", () => {
     expect(position().props.accessibilityLabel).toBe(`${copy}: 1/2 ${copy}`);
     expect(renderer.root.findAllByType(Text).some((node) => node.props.children === copy)).toBe(true);
     expect(renderer.root.findAllByType(View).some((node) => node.props.accessibilityLabel === copy)).toBe(true);
-    const navButtons = renderer.root.findAllByType(Button);
-    expect(navButtons.some((node) => node.props.children === copy)).toBe(true);
+    const navButtons = renderer.root.findAllByType(IconButton);
+    expect(navButtons.some((node) => node.props.label === copy)).toBe(true);
   });
   it.each(["ltr", "rtl"] as const)("moves one card for a deliberate horizontal swipe in %s", async (direction) => {
     await render({}, direction);
@@ -102,7 +101,6 @@ it("recovers an uncontrolled removed slide at its previous position and keeps co
   await act(async () => renderer.update(view([three[0]!, three[2]!])));
   expect(position().props.accessibilityValue.text).toBe("2/2 마지막 소식");
   expect(next().props.disabled).toBe(true);
-  expect(renderer.root.findAllByType(Button).find(node => node.props.accessibilityState?.selected)?.props.accessibilityLabel).toBe("2/2 마지막 소식");
   expect(change).toHaveBeenCalledExactlyOnceWith("c");
   await act(async () => renderer.update(view(three)));
   expect(position().props.accessibilityValue.text).toBe("3/3 마지막 소식");
@@ -111,7 +109,7 @@ it("recovers an uncontrolled removed slide at its previous position and keeps co
   await act(async () => renderer.update(view([{ id: "x", label: "새 항목" }])));
   expect(position().props.accessibilityValue.text).toBe("1/1 새 항목");
   expect(next().props.disabled).toBe(true);
-  expect(renderer.root.findAllByType(Button).find(node => node.props.children === "이전")?.props.disabled).toBe(true);
+  expect(renderer.root.findAllByType(IconButton).find(node => node.props.label === "이전")?.props.disabled).toBe(true);
   expect(change.mock.calls).toEqual([["c"], ["b"], ["x"]]);
 });
 

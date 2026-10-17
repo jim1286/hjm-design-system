@@ -67,7 +67,7 @@ export function FixedHeaderPreview() {
 
 export function LineScorePreview() {
   return (
-    <Section title="라인스코어" description="9회까지 칸을 채우고 연장이면 늘어나요. 진행 중인 회는 강조해요.">
+    <Section title={copy.lineScoreTitle} description={copy.lineScoreDescription}>
       <Stack gap="lg">
         <LineScore teams={finalGame} totals={lineScoreTotals} accessibilityLabel={copy.lineScore} />
         <LineScore teams={liveGame} totals={lineScoreTotals} currentPeriod={liveGamePeriod} accessibilityLabel={copy.liveScore} />
@@ -78,7 +78,7 @@ export function LineScorePreview() {
 
 export function MatrixPreview() {
   return (
-    <Section title={copy.matrix} description="행 구단 기준 승-패-무예요. 자기 자신과의 칸은 비워 둬요.">
+    <Section title={copy.matrix} description={copy.matrixDescription}>
       <MatrixTable ids={kboTeams} labelOf={(id) => kboTeamNames[id]} getCell={headToHeadCell} highlightId="lg" accessibilityLabel={copy.matrix} />
     </Section>
   );
@@ -86,7 +86,7 @@ export function MatrixPreview() {
 
 export function ComparisonPreview() {
   return (
-    <Section title={copy.comparison} description="더 좋은 쪽을 굵게, 막대를 길게 보여 줘요. 평균자책과 WHIP는 낮을수록 좋아요.">
+    <Section title={copy.comparison} description={copy.comparisonDescription}>
       <ComparisonTable rows={pitcherComparison} sides={comparisonSides} accessibilityLabel={copy.comparison} />
     </Section>
   );

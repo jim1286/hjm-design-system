@@ -13,6 +13,9 @@
   line-height: var(--hjm-type-body-line-height, 1.25rem);
   background: var(--hjm-color-bg);
   color: var(--hjm-color-text);
+  /* Korean wraps between words, not inside them ("표 / 정." at 402, 2026-10-17 review E19). It inherits to every
+     HJM text; overflow-wrap: anywhere on the text rules still breaks unspaced URLs and identifiers. */
+  word-break: keep-all;
 }
 
 /* host="contents": the element only carries the theme variables, dir and data
@@ -266,7 +269,9 @@
    Selection uses content color without an added border (2026-10-10 user request); focus stays separate. */
 .hjm-button[data-selected="true"], .hjm-icon-button[data-selected="true"] { color: var(--hjm-color-content-brand); background: var(--hjm-color-bg); border-color: transparent; }
 .hjm-button:active:not(:disabled):not([aria-disabled="true"]), .hjm-icon-button:active:not(:disabled):not([aria-disabled="true"]) { opacity: var(--hjm-button-pressed-opacity); }
-.hjm-button:disabled, .hjm-icon-button:disabled { cursor: not-allowed; opacity: var(--hjm-button-disabled-opacity); }
+/* data-state="disabled" also covers focusable boundaries (aria-disabled, e.g. Carousel previous on the first slide),
+   which looked enabled while Native dimmed them (2026-10-17 review E9). */
+.hjm-button:disabled, .hjm-icon-button:disabled, .hjm-button[data-state="disabled"], .hjm-icon-button[data-state="disabled"] { cursor: not-allowed; opacity: var(--hjm-button-disabled-opacity); }
 /* 라벨은 자르지 않고 두 줄까지 접는다(buttonRecipe.label). 잘린 행동 라벨은 무엇을 하는
    버튼인지 잃고, 무제한 줄바꿈은 하단 CTA 행 같은 남의 레이아웃을 밀어낸다. */
 .hjm-button__label { min-inline-size: 0; overflow-wrap: anywhere; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: var(--hjm-button-label-lines, 2); overflow: hidden; }
@@ -856,9 +861,9 @@
 .hjm-tabs[data-orientation="vertical"] .hjm-tabs__tab[data-state="selected"]::after { inset-block: 0; inset-inline-start: auto; inset-inline-end: 0; inline-size: 2px; block-size: auto; }
 
 .hjm-badge, .hjm-tag { display: inline-flex; align-items: center; gap: var(--hjm-space-xxs); max-inline-size: 100%; overflow-wrap: anywhere; }
-.hjm-badge { min-block-size: 24px; padding: 2px var(--hjm-space-xs); border: 1px solid transparent; border-radius: var(--hjm-radius-full); color: var(--hjm-color-text-muted); background: var(--hjm-color-bg); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); font-weight: var(--hjm-font-weight-bold); }
+.hjm-badge { min-block-size: 24px; padding: 2px var(--hjm-space-xs); border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-full); color: var(--hjm-color-text-muted); background: var(--hjm-color-bg); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); font-weight: var(--hjm-font-weight-bold); }
 .hjm-badge[data-size="small"] { min-block-size: 20px; padding-inline: var(--hjm-space-xxs); font-size: var(--hjm-type-caption-size); } /* badgeRecipe.sizes.small.paddingHorizontal xxs 4 (2026-10-06; Web had kept medium's 8) */
-.hjm-badge[data-tone="strong"] { color: var(--hjm-color-bg); background: var(--hjm-color-text); }
+.hjm-badge[data-tone="strong"] { color: var(--hjm-color-bg); background: var(--hjm-color-text); border-color: transparent; } /* neutral/brand plates are canvas-white and need badgeRecipe's border to stay visible (2026-10-17) */
 .hjm-badge[data-tone="brand"] { color: var(--hjm-color-content-brand); }
 .hjm-badge[data-tone="info"], .hjm-tag[data-tone="info"] { color: var(--hjm-accent-info); background: var(--hjm-color-bg); border-color: color-mix(in srgb, var(--hjm-accent-info) 30%, transparent); }
 .hjm-badge[data-tone="success"], .hjm-tag[data-tone="success"] { color: var(--hjm-accent-success); background: color-mix(in srgb, var(--hjm-accent-success) 14%, transparent); border-color: color-mix(in srgb, var(--hjm-accent-success) 30%, transparent); }
@@ -872,7 +877,7 @@
 .hjm-badge[data-variant="outline"][data-tone="warning"] { border-color: color-mix(in srgb, var(--hjm-accent-warning) 30%, transparent); }
 .hjm-badge[data-variant="outline"][data-tone="attention"] { border-color: color-mix(in srgb, var(--hjm-accent-attention) 30%, transparent); }
 .hjm-badge[data-variant="outline"][data-tone="danger"] { border-color: color-mix(in srgb, var(--hjm-color-danger) 30%, transparent); }
-.hjm-tag { min-block-size: 20px; padding-inline: var(--hjm-space-xxs); border: 1px solid transparent; border-radius: var(--hjm-radius-sm); color: var(--hjm-color-text-muted); background: var(--hjm-color-bg); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); font-weight: var(--hjm-font-weight-semibold); }
+.hjm-tag { min-block-size: 20px; padding-inline: var(--hjm-space-xxs); border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-sm); color: var(--hjm-color-text-muted); background: var(--hjm-color-bg); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); font-weight: var(--hjm-font-weight-semibold); }
 .hjm-tag[data-tone="brand"] { color: var(--hjm-color-content-brand); background: var(--hjm-color-bg); }
 .hjm-tag[data-tone="info"] { background: var(--hjm-color-bg); }
 .hjm-tag[data-tone="success"] { background: color-mix(in srgb, var(--hjm-accent-success) 10%, transparent); }
@@ -973,7 +978,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 /* Indent only the divider: moving the row shifted every title after the first
    and narrowed its text column in the notification-settings composition. */
 .hjm-list[data-separator="indented"] > .hjm-list__item + .hjm-list__item { position: relative; }
-.hjm-list[data-separator="indented"] > .hjm-list__item + .hjm-list__item::before { content: ""; position: absolute; inset-block-start: 0; inset-inline: calc(40px + var(--hjm-space-sm)) 0; border-block-start: 1px solid var(--hjm-color-border); pointer-events: none; } /* listRecipe.separators.indented.insetStart = leading 40 + sm 12 = 52, as Native (2026-10-06; Web had 24) */
+.hjm-list[data-separator="indented"] > .hjm-list__item + .hjm-list__item::before { content: ""; position: absolute; inset-block-start: 0; inset-inline: calc(var(--hjm-space-xs) + 40px + var(--hjm-space-sm)) 0; border-block-start: 1px solid var(--hjm-color-border); pointer-events: none; } /* listRecipe.separators.indented.insetStart = row padding 8 + leading 40 + sm 12 = 60, as Native (2026-10-17) */
 
 /* statisticRecipe.density (2026-10-06 follow-up): line gap comfortable xs 8 · compact xxs 4, surface padding md 16 · sm 12,
    group gap xs 8. Web had drawn 4/2, a fixed 16 and 12, Native read the recipe. */
@@ -1250,12 +1255,17 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-line-score__table th.hjm-line-score__team { padding-inline: var(--hjm-space-sm); text-align: start; color: var(--hjm-color-text-muted); font-weight: var(--hjm-font-weight-semibold); }
 .hjm-line-score__team-content { display: inline-flex; align-items: center; gap: var(--hjm-space-xs); }
 .hjm-line-score__table tr[data-leader] th.hjm-line-score__team { color: var(--hjm-color-text); font-weight: var(--hjm-font-weight-bold); }
+.hjm-line-score { --hjm-line-score-total-width: 30px; scroll-padding-inline-end: calc(var(--hjm-line-score-total-width) * var(--hjm-line-score-total-count, 0)); }
+.hjm-line-score__table .hjm-line-score__team, .hjm-line-score__table .hjm-line-score__total { position: sticky; z-index: 1; background: var(--hjm-color-surface); }
+.hjm-line-score__table .hjm-line-score__team { inset-inline-start: 0; }
 .hjm-line-score__table td.hjm-line-score__period { min-inline-size: 26px; color: var(--hjm-color-text-sub); }
 .hjm-line-score__table td[data-scored] { color: var(--hjm-color-text); font-weight: var(--hjm-font-weight-bold); }
 .hjm-line-score__table [data-current] { background: var(--hjm-table-family-selected); }
 .hjm-line-score__table th[data-current] { color: var(--hjm-color-content-brand); }
-.hjm-line-score__total { min-inline-size: 30px; color: var(--hjm-color-text-muted); font-weight: var(--hjm-font-weight-semibold); }
-.hjm-line-score__total-edge { border-inline-start: 1px solid var(--hjm-color-border); }
+.hjm-line-score__total { inline-size: var(--hjm-line-score-total-width); min-inline-size: var(--hjm-line-score-total-width); color: var(--hjm-color-text-muted); font-weight: var(--hjm-font-weight-semibold); }
+/* A collapsed-table border stays with the table, not the pinned cell, so the edge is an inset shadow. */
+.hjm-line-score__total-edge { box-shadow: inset 1px 0 0 var(--hjm-color-border); }
+.hjm-line-score__total-edge:dir(rtl) { box-shadow: inset -1px 0 0 var(--hjm-color-border); }
 .hjm-line-score__table tbody .hjm-line-score__total-edge { color: var(--hjm-color-text); font-weight: var(--hjm-font-weight-bold); }
 .hjm-matrix-table__table th, .hjm-matrix-table__table td { padding: var(--hjm-space-xs); text-align: center; white-space: nowrap; border-block-start: 1px solid var(--hjm-color-border); }
 .hjm-matrix-table__table thead th { border-block-start: 0; color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); font-weight: var(--hjm-font-weight-bold); }
@@ -2772,14 +2782,11 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-carousel__slide input { max-inline-size: 100%; }
 .hjm-carousel__rotation { justify-self: start; }
 .hjm-carousel__controls, .hjm-carousel__dots { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: var(--hjm-space-xs); }
+.hjm-carousel__controls { flex-wrap: nowrap; } .hjm-carousel__dots { flex-shrink: 1; min-inline-size: 0; }
 .hjm-carousel__dot { display: grid; place-items: center; min-inline-size: var(--hjm-control-min-touch-target); min-block-size: var(--hjm-control-min-touch-target); border: 0; border-radius: var(--hjm-radius-full); background: transparent; cursor: pointer; }
-.hjm-carousel__dot > span { inline-size: var(--hjm-space-xs); block-size: var(--hjm-space-xs); border-radius: var(--hjm-radius-full); background: var(--hjm-color-border); }
+.hjm-carousel__dot > span { inline-size: var(--hjm-space-xs); block-size: var(--hjm-space-xs); border-radius: var(--hjm-radius-full); background: var(--hjm-color-text-weak); } /* carouselRecipe.dot.color.inactive (border.strong), as Native */
 .hjm-carousel__dot[data-current="true"] > span { background: var(--hjm-color-content-brand); }
 .hjm-carousel__dot:focus-visible { outline: 2px solid var(--hjm-color-content-brand); outline-offset: 2px; }
-/* Keep previous/next paired when scaled text would wrap only one to a new row. */
-.hjm-carousel[data-large-text="true"] .hjm-carousel__controls { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-.hjm-carousel[data-large-text="true"] .hjm-carousel__dots { grid-column: 1 / -1; grid-row: 1; }
-.hjm-carousel[data-large-text="true"] .hjm-carousel__controls > .hjm-button { grid-row: 2; }
 
 /* The viewport action follows the content in DOM order. Its measured clearance
    belongs on the scroll content, not on the fixed button (docs/floating-action-button.md). */
@@ -2851,6 +2858,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 /* The marker is decoration: aria-expanded carries the state, so it only needs
    to keep one box while the glyph changes. */
 .hjm-collapsible__marker { flex: 0 0 auto; inline-size: 1em; color: var(--hjm-color-text-muted); text-align: center; }
+[dir="rtl"] .hjm-collapsible__marker[data-state="closed"] { transform: scaleX(-1); } /* the closed mark points toward the reading end */
 .hjm-collapsible__content { min-inline-size: 0; overflow-wrap: anywhere; }
 
 /* Both surfaces reuse the menu's floating look; only the anchor differs. */
@@ -2883,8 +2891,9 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-asset__frame { inline-size: var(--hjm-asset-size); block-size: var(--hjm-asset-size); display: grid; place-items: center; overflow: hidden; border: var(--hjm-stroke-default) solid var(--hjm-color-border); border-radius: var(--hjm-asset-radius); background: var(--hjm-color-bg); }
 .hjm-asset__media { inline-size: 100%; block-size: 100%; display: grid; place-items: center; }
 .hjm-asset__media > * { max-inline-size: 100%; max-block-size: 100%; }
-/* The accessory hangs off the outer corner so it never covers the frame's middle. */
-.hjm-asset__accessory { position: absolute; inset-block-end: var(--hjm-asset-accessory-offset); inset-inline-end: var(--hjm-asset-accessory-offset); transform: translate(25%, 25%); display: inline-flex; }
+/* The accessory hangs off the outer end/bottom corner, assetRecipe.accessory.offset outside, as Native and the usage
+   guide; a physical translate(25%) moved it into the frame in RTL (2026-10-17 review E22). */
+.hjm-asset__accessory { position: absolute; inset-block-end: calc(-1 * var(--hjm-asset-accessory-offset)); inset-inline-end: calc(-1 * var(--hjm-asset-accessory-offset)); display: inline-flex; }
 .hjm-asset-group { display: inline-flex; align-items: center; }
 .hjm-asset-group > .hjm-asset + .hjm-asset { margin-inline-start: var(--hjm-asset-overlap); }
 

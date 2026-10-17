@@ -17,6 +17,10 @@ export const chartCopy = {
   table: "타자 기록",
   sortColumn: (header: string, direction: { direction: "ascending" | "descending" } | null) => `${header}, ${direction ? (direction.direction === "descending" ? "높은 순 정렬됨" : "낮은 순 정렬됨") : "정렬하려면 누르세요"}`,
   total: "평균",
+  // A period switch is a single choice between two views, so both Storybooks use a SegmentedControl; a full-width
+  // primary button per chart put two primaries on one surface (2026-10-17 review E16).
+  period: "기간",
+  periods: [{ value: "all", label: "전체 기간" }, { value: "recent", label: "최근 3개월" }],
 } as const;
 
 export const months = ["3월", "4월", "5월", "6월", "7월", "8월", "9월"];

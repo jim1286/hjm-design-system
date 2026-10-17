@@ -243,7 +243,7 @@ describe("web showcase coverage", () => {
         Affix: ["top", 0, "sticky", "flow"],
         Masonry: ["shortest-column", "source", 12],
         VirtualList: ["fixed-row-window", 3, "source"],
-        QRCode: [2, 4, "#000000", "#ffffff"],
+        QRCode: [2, 4, "#000000", "#ffffff", 12],
       };
       if (algorithmRecipes[name]) {
         expect(consumedRecipeValues, name).toEqual(algorithmRecipes[name]);
@@ -262,6 +262,8 @@ describe("web showcase coverage", () => {
         presentation.style.minHeight !== undefined ||
           presentation.style.minWidth !== undefined ||
           presentation.style["--hjm-evidence-color"] !== undefined ||
+          // Inset metrics are evidence-only so they do not shift the renderer (List's 52 inset, 2026-10-17).
+          presentation.style["--hjm-evidence-metric"] !== undefined ||
           presentation.style.gap !== undefined ||
           presentation.style.paddingBlock !== undefined ||
           presentation.style.paddingInline !== undefined ||

@@ -4,7 +4,8 @@ import {
   type CarouselSlideDescriptor, type CarouselSelection, type CarouselAutoplayConfig,
   type ComposeCarouselAccessibleName,
 } from "@hjmds/design-contracts/components/carousel";
-import { Button } from "./actions.js";
+import { Button, IconButton } from "./actions.js";
+import { Icon } from "./supplemental-display.js";
 import { isLargeTextScale } from "@hjmds/design-contracts/components/design-system-provider";
 import { assignRef, classNames, useControllableState } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
@@ -112,13 +113,14 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
       </div>)}
     </div>
     <div className="hjm-carousel__controls" data-carousel-controls role="group" aria-label={labels.navigation}>
-      <Button tone="ghost" aria-disabled={current === slides[0]!.id} onClick={() => move("previous")}>{labels.previous}</Button>
+      {/* Previous/next are tool actions: icon buttons named by the localized label (2026-10-17 review E9). */}
+      <IconButton label={labels.previous} tone="ghost" aria-disabled={current === slides[0]!.id} onClick={() => move("previous")}><Icon name="chevronStart" /></IconButton>
       <div className="hjm-carousel__dots">
         {resolved.map((slide) => <button key={slide.id} type="button" aria-label={slide.accessibleName}
           aria-disabled={slide.current} data-current={slide.current} className="hjm-carousel__dot"
           onClick={() => select(slide.id)}><span aria-hidden="true" /></button>)}
       </div>
-      <Button tone="ghost" aria-disabled={last} onClick={() => move("next")}>{labels.next}</Button>
+      <IconButton label={labels.next} tone="ghost" aria-disabled={last} onClick={() => move("next")}><Icon name="chevronEnd" /></IconButton>
     </div>
   </div>;
 });

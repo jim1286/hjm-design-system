@@ -93,7 +93,7 @@ Native `grouped` 프레임은 Provider의 `tokens.radius.lg`를 읽는다. plain
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 화면 본문 폭을 채우는 세로 묶음이다. `grouped`는 배경 `--hjm-color-bg`와 모서리 `radius.lg` 16으로 한 덩어리가 된다 | `design-contracts/src/foundations.ts`(`radius`), `react/src/styles.css`(`.hjm-list`) |
-| 간격 | 행 사이 간격은 없고 구분선 1px(`--hjm-color-border`)만 들어간다. `indented` 구분선의 시작 들여쓰기: 52(leading 40 + `spacing.sm` 12, `listRecipe.separators.indented`, 두 플랫폼). 끝 쪽은 둘 다 0. 덩어리 바깥 여백·섹션 사이 간격은 감싸는 Stack이 준다(페이지 좌우 여백은 `layout.pagePadding`, 섹션 간격은 `layout.sectionGap` = `spacing.xl` 24) | `design-contracts/src/component-recipes.ts`(`listRecipe`), `design-contracts/src/foundations.ts`(`layout`), `react/src/styles.css`(`.hjm-list`), `react-native/src/data-display.tsx`(List) |
+| 간격 | 행 사이 간격은 없고 구분선 1px(`--hjm-color-border`)만 들어간다. `indented` 구분선의 시작 들여쓰기: 60(행 좌우 여백 `spacing.xs` 8 + leading 40 + `spacing.sm` 12, 글자 시작과 같은 위치, `listRecipe.separators.indented`, 두 플랫폼. 2026-10-17 전에는 행 여백을 빼서 52였다). 끝 쪽은 둘 다 0. 덩어리 바깥 여백·섹션 사이 간격은 감싸는 Stack이 준다(페이지 좌우 여백은 `layout.pagePadding`, 섹션 간격은 `layout.sectionGap` = `spacing.xl` 24) | `design-contracts/src/component-recipes.ts`(`listRecipe`), `design-contracts/src/foundations.ts`(`layout`), `react/src/styles.css`(`.hjm-list`), `react-native/src/data-display.tsx`(List) |
 | 순서·정렬 | 다음 페이지 요청은 목록 바로 아래에 [LoadMore](load-more.md)를 둔다 | — |
 | 고정·스크롤 | List 자체는 스크롤하지 않는다. 화면 스크롤 안에 둔다 | `react-native/src/data-display.tsx`(List) |
 | 좁은 폭·큰 글자 | — | — |

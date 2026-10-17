@@ -2,7 +2,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { collapsibleRecipe, validateCollapsibleOpenState, } from "@hjmds/design-contracts/components/collapsible";
 import { forwardRef, useId, useLayoutEffect, useRef, useState } from "react";
 import { assignRef, classNames } from "./internal.js";
-export const Collapsible = forwardRef(function Collapsible({ trigger, children, disabled = false, presentation = "disclosure", keepMounted = false, className, layoutStyle, ...openState }, forwardedRef) {
+export const Collapsible = forwardRef(function Collapsible({ trigger, children, disabled = false, presentation = "disclosure", keepMounted = false, marker = "end", className, layoutStyle, ...openState }, forwardedRef) {
     validateCollapsibleOpenState(openState);
     const controlled = openState.open !== undefined;
     const [internalOpen, setInternalOpen] = useState(openState.defaultOpen ?? false);
@@ -36,7 +36,11 @@ export const Collapsible = forwardRef(function Collapsible({ trigger, children, 
                     if (!controlled)
                         setInternalOpen(next);
                     openState.onOpenChange?.(next);
-                }, children: [trigger, _jsx("span", { "aria-hidden": "true", className: "hjm-collapsible__marker", children: open ? "▾" : "▸" })] }), open || keepMounted ? (_jsx("div", { ref: content, onFocusCapture: () => { focusedContent.current = true; }, onBlurCapture: event => { if (event.relatedTarget instanceof Node && !event.currentTarget.contains(event.relatedTarget))
+                }, children: [trigger, marker === "end" ? _jsx(CollapsibleMarker, { open: open }) : null] }), open || keepMounted ? (_jsx("div", { ref: content, onFocusCapture: () => { focusedContent.current = true; }, onBlurCapture: event => { if (event.relatedTarget instanceof Node && !event.currentTarget.contains(event.relatedTarget))
                     focusedContent.current = false; }, hidden: !open, id: `${id}-content`, role: "region", className: "hjm-collapsible__content", children: children })) : null] }));
 });
+/** The decorative open/closed mark; the expanded state itself travels through the trigger's aria-expanded. */
+export function CollapsibleMarker({ open }) {
+    return _jsx("span", { "aria-hidden": "true", className: "hjm-collapsible__marker", "data-state": open ? "open" : "closed", children: open ? "▾" : "▸" });
+}
 //# sourceMappingURL=collapsible.js.map

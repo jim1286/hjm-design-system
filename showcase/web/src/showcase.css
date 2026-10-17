@@ -295,9 +295,9 @@ textarea {
 /* Previews are phone-first compositions; letting them fill the 1280 stage stretched fields and primary buttons to ~900px
    (2026-10-17 review). Cap the renderer at the medium window class and keep it start-aligned. */
 .hjm-stage > [data-hjm-renderer] { inline-size: 100%; max-inline-size: var(--hjm-breakpoint-medium); }
-/* Input stories that render their composition directly (Agreement, Rating, DateRange…) take the same cap; contract
-   pages (.hjm-page) keep their own wider layout. */
-.hjm-showcase-input-preview > :not(.hjm-page) { max-inline-size: var(--hjm-breakpoint-medium); }
+/* Input and data-display stories that render their composition directly (Agreement, Rating, Chart, LineScore…) take
+   the same cap; contract pages (.hjm-page) keep their own wider layout. */
+.hjm-showcase-component-preview > :not(.hjm-page) { max-inline-size: var(--hjm-breakpoint-medium); }
 
 /* DatePicker positions its calendar inside the reference; a scrolling stage clipped the open calendar and even scrolled its trigger away. */
 .hjm-stage[data-inline-overlay="true"] { overflow: visible; }
@@ -359,7 +359,6 @@ textarea {
 .hjm-showcase-menu button:hover { background: var(--hjm-color-bg); }
 .hjm-danger { color: var(--hjm-color-danger) !important; }
 
-.hjm-showcase-avatar { width: var(--hjm-space-xxxl); height: var(--hjm-space-xxxl); display: inline-grid; place-items: center; flex: 0 0 auto; border-radius: 50%; background: var(--hjm-color-bg); color: var(--hjm-color-content-brand); font-weight: var(--hjm-font-weight-heavy); }
 .hjm-avatar-lg { width: calc(var(--hjm-space-xxl) * 2); height: calc(var(--hjm-space-xxl) * 2); }
 .hjm-demo-badge { display: inline-flex; min-height: calc(var(--hjm-space-xl) + var(--hjm-space-xxs)); align-items: center; padding-inline: calc(var(--hjm-space-xs) + var(--hjm-stroke-strong)); border-radius: var(--hjm-radius-full); background: var(--hjm-color-bg); color: var(--hjm-color-content-brand); font-weight: var(--hjm-font-weight-bold); }
 .hjm-success { background: color-mix(in srgb, var(--hjm-accent-success) 14%, var(--hjm-color-bg)); color: color-mix(in srgb, var(--hjm-accent-success) 88%, var(--hjm-color-text)); }

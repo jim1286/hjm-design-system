@@ -32,7 +32,7 @@ beforeEach(() => {
   root = createRoot(host);
 });
 afterEach(async () => { await act(async () => root.unmount()); host.remove(); vi.useRealTimers(); await page.viewport(1280, 720); });
-const button = (text: string) => [...host.querySelectorAll("button")].find((node) => node.textContent === text)!;
+const button = (text: string) => [...host.querySelectorAll("button")].find((node) => node.textContent === text || node.getAttribute("aria-label") === text)!;
 const current = () => host.querySelector('.hjm-carousel__slide:not([hidden])')?.getAttribute("aria-label");
 async function render(props: Partial<Omit<CarouselProps, "currentKey" | "defaultCurrentKey" | "onCurrentKeyChange">> & CarouselSelection = {}, direction: "ltr" | "rtl" = "ltr", reducedMotion = false) {
   await act(async () => root.render(<HjmProvider direction={direction} reducedMotion={reducedMotion}><Carousel {...base} {...props} /></HjmProvider>));

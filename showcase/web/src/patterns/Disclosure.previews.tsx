@@ -4,6 +4,7 @@ import { ContextMenu } from "@hjmds/react/context-menu";
 import { Menubar } from "@hjmds/react/menubar";
 import { Notice } from "@hjmds/react/feedback";
 import { Stack, Text } from "@hjmds/react/layout";
+import { collapsibleExample } from "../../../shared/component-examples.js";
 
 /*
   Accordion이 아니라 Collapsible인 이유를 한 화면에서 보여 준다: 이웃이 없으니
@@ -12,8 +13,8 @@ import { Stack, Text } from "@hjmds/react/layout";
 export function CollapsiblePreview() {
   return (
     <Stack gap="md">
-      <Collapsible trigger="배송 정보 더 보기" defaultOpen>
-        <Text>주문 다음 날 도착합니다. 도착 전날 알림을 보내드려요.</Text>
+      <Collapsible trigger={collapsibleExample.trigger} defaultOpen>
+        <Text>{collapsibleExample.body}</Text>
       </Collapsible>
     </Stack>
   );

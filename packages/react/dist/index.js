@@ -41,7 +41,7 @@ export { Agreement } from "./agreement.js";
 export { Top } from "./top.js";
 export { Heading } from "./heading.js";
 export { TextFormat } from "./text-formats.js";
-export { ClipboardButton } from "./clipboard.js";
+export { ClipboardButton, ClipboardIconButton } from "./clipboard.js";
 export { ToggleGroup } from "./toggle-group.js";
 export { TagsInput } from "./tags-input.js";
 export { SkipNav } from "./skip-nav.js";
@@ -52,7 +52,7 @@ export { OverlayStackProvider, useOverlayStack, useDialog, useSheet, } from "./o
 export { AuthProviderButton } from "./provider-button.js";
 export { AuthScreenLayout } from "./auth-screen.js";
 export { DataTable } from "./data-table.js";
-export { Collapsible } from "./collapsible.js";
+export { Collapsible, CollapsibleMarker } from "./collapsible.js";
 export { ContextMenu } from "./context-menu.js";
 export { Menubar } from "./menubar.js";
 export { Asset, AssetGroup } from "./asset.js";

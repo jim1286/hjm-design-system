@@ -64,7 +64,11 @@ export const Text = forwardRef(function Text({ children, variant = textRecipe.de
         style,
         layoutStyle,
     ], allowFontScaling);
-    return (_jsx(NativeText, { ...props, allowFontScaling: resolvedText.allowFontScaling, ref: ref, style: resolveBundledFace(resolvedText.style), children: children }));
+    return (_jsx(NativeText
+    // iOS otherwise breaks Korean inside words ("표 / 정."), unlike Web's word-break: keep-all (2026-10-17 review N10).
+    , { 
+        // iOS otherwise breaks Korean inside words ("표 / 정."), unlike Web's word-break: keep-all (2026-10-17 review N10).
+        lineBreakStrategyIOS: "hangul-word", ...props, allowFontScaling: resolvedText.allowFontScaling, ref: ref, style: resolveBundledFace(resolvedText.style), children: children }));
 });
 /**
  * Bundled Pretendard registers one face per weight; RN cannot pick a weight inside a custom family on every

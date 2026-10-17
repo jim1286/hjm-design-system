@@ -1,4 +1,4 @@
-export type DrawnChevronDirection = "up" | "down";
+export type DrawnChevronDirection = "up" | "down" | "start" | "end";
 export declare function DrawnChevron({ direction, size, color, strokeWidth }: Readonly<{
     direction: DrawnChevronDirection;
     size: number;

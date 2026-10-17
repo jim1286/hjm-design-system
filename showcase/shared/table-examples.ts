@@ -15,6 +15,12 @@ export const tableFamilyCopy = {
   running: "주루",
   starters: "선발",
   substitutes: "교체",
+  // Section copy both Storybooks show above LineScore / MatrixTable / ComparisonTable; Native used the accessibility
+  // names ("LG 대 KIA 경기 점수") as visible titles and showed no description (2026-10-17 review N3).
+  lineScoreTitle: "라인스코어",
+  lineScoreDescription: "9회까지 칸을 채우고 연장이면 늘어나요. 진행 중인 회는 강조해요.",
+  matrixDescription: "행 구단 기준 승-패-무예요. 자기 자신과의 칸은 비워 둬요.",
+  comparisonDescription: "더 좋은 쪽을 굵게, 막대를 길게 보여 줘요. 평균자책과 WHIP는 낮을수록 좋아요.",
   sortColumn: (header: string, direction: { direction: "ascending" | "descending" } | null) => `${header}, ${direction ? (direction.direction === "descending" ? "높은 순 정렬됨" : "낮은 순 정렬됨") : "정렬하려면 누르세요"}`,
 } as const;
 

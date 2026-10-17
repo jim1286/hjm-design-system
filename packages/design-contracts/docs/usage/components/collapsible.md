@@ -73,7 +73,8 @@ import { FolderPreview } from "@hjmds/react-native/folder-preview";
 | `open` + `onOpenChange` | `boolean` + `(open: boolean) => void` | — | 제어. `open`만 주고 `onOpenChange`를 빼면 `TypeError`를 던진다 |
 | `defaultOpen` · `onOpenChange` | `boolean` · `(open: boolean) => void` | `defaultOpen` `false` | 비제어. `open`과 `defaultOpen`을 함께 주면 `TypeError`를 던진다 |
 | `trigger` | `ReactNode` | 필수 | 버튼 문구. Native는 문자열이면 HJM `Text`로 감싼다 |
-| `disabled` | `boolean` | `false` | trigger 옆의 ▸/▾ 표시는 HJM이 그리며 장식으로 숨겨진다 |
+| `disabled` | `boolean` | `false` | trigger 옆의 ▸/▾ 표시는 HJM이 그리며 장식으로 숨겨진다. 닫힘 표시는 RTL에서 ◂로 뒤집힌다 |
+| `marker` | `end` · `none` | `end` | `none`이면 표시를 그리지 않고, 한 줄이 아닌 trigger가 `CollapsibleMarker`(`open`)를 직접 둔다(FolderPreview가 사용) |
 | `layoutStyle` | margin·width·flex·`alignSelf` | — | 바깥 배치 |
 | `FolderPreview` `open` · `onOpenChange` | `boolean` · `(open: boolean) => void` | 필수(항상 controlled) | — |
 | `FolderPreview` `previews` · `label` | `readonly ReactNode[]` · `string` | 필수 | `previews`는 앞의 세 개만 그리고, `label`이 비면 `TypeError`를 던진다 |
@@ -87,7 +88,7 @@ FolderPreview의 Native preview `md`와 앞면 `lg`는 Provider radius를 읽는
 | --- | --- | --- |
 | 크기 | 트리거는 폭을 꽉 채운다. 트리거 최소 높이 44(`control.minTouchTarget`, 두 플랫폼. Native는 1.13.0 변경), Web 위아래 `spacing.xs` 8. `FolderPreview` 표지는 최대 260×160 고정 그림 | `.hjm-collapsible__trigger`, `react-native/src/collapsible.tsx`, `react/src/folder-preview.tsx` |
 | 간격 | 트리거↔내용, 트리거 안 문구↔표시 `spacing.xs` 8(Web 트리거 안은 `spacing.sm` 12) | `collapsibleRecipe.gap`, `.hjm-collapsible__trigger` |
-| 순서·정렬 | 위→아래 [트리거: 문구 시작 쪽 · ▸/▾ 끝 쪽] → [내용(열렸을 때만)]. `FolderPreview`는 트리거 안에 [표지 그림(가운데)] → [label]이 쌓인다 | `react/src/collapsible.tsx`, `react/src/folder-preview.tsx` |
+| 순서·정렬 | 위→아래 [트리거: 문구 시작 쪽 · ▸/▾ 끝 쪽] → [내용(열렸을 때만)]. `FolderPreview`는 트리거 안에 [표지 그림] → [label ▸/▾ 한 줄]이 가운데 정렬로 쌓이고, 그림과 label 사이는 `spacing.sm` 12다(2026-10-17, label이 시작 쪽·표시가 끝 쪽에 떨어져 있던 것을 고침) | `react/src/collapsible.tsx`, `react/src/folder-preview.tsx` |
 | 고정·스크롤 | 고정 영역이 없다. 닫히면 내용이 트리에서 빠져 아래 내용이 올라온다 | `react-native/src/collapsible.tsx` 주석 |
 | 좁은 폭·큰 글자 | 트리거 문구·내용이 줄바꿈된다(`overflow-wrap: anywhere`). `FolderPreview` 표지는 폭이 260보다 좁으면 줄어든다(`maxWidth: 260`) | `.hjm-collapsible__content`, `folder-preview.tsx` |
 

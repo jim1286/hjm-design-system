@@ -1,4 +1,4 @@
-import { Button } from "@hjmds/react/actions";
+import { SegmentedControl } from "@hjmds/react/selection";
 import { useState, type ReactNode } from "react";
 import type { DataTableSortState } from "@hjmds/design-contracts/components/data-table";
 import { sortDataTableRows, toDataTableSortValue } from "@hjmds/design-contracts/components/data-table";
@@ -16,7 +16,7 @@ import {
 export type ChartKind = "line" | "bar" | "horizontal" | "stacked" | "pie" | "radar" | "scatter" | "sparkline";
 
 function Example({ title, children }: Readonly<{ title: string; children: ReactNode }>) {
-  return <Stack gap="sm"><Text as="p" variant="title">{title}</Text>{children}</Stack>;
+  return <Stack gap="sm"><Text as="p" variant="title" emphasis="medium">{title}</Text>{children}</Stack>;
 }
 
 /** Stock-style quote: the header follows the scrubbed month; release returns to the latest one. */
@@ -30,7 +30,7 @@ function LineExample() {
     <Example title={copy.line}>
       <Text as="p" variant="heading">{value == null ? copy.missing : formatRate(value)}</Text>
       <Text as="p" variant="caption" tone="muted">{labels[index]}</Text>
-      <Button onClick={() => { setFocus(null); setRecent(current => !current); }}>{recent ? "전체 기간" : "최근 3개월"}</Button>
+      <SegmentedControl label={copy.period} items={copy.periods} value={recent ? "recent" : "all"} onValueChange={(next) => { setFocus(null); setRecent(next === "recent"); }} />
       <LineChart animateChanges scrubEmphasis="before" categories={labels} series={values} accessibilityLabel={copy.line} formatValue={formatRate} missingLabel={copy.missing}
         referenceValue="first" extremes={{ high: copy.high, low: copy.low }} onFocusChange={(next, { scrubbing }) => setFocus(scrubbing ? next : null)} />
     </Example>
@@ -41,7 +41,7 @@ function BarExample() {
   const [recent, setRecent] = useState(false);
   const categories = recent ? months.slice(-3) : months;
   const series = homeRunSeries.map(item => ({ ...item, values: recent ? item.values.slice(-3) : item.values }));
-  return <Example title={copy.bar}><Button onClick={() => setRecent(current => !current)}>{recent ? "전체 기간" : "최근 3개월"}</Button>
+  return <Example title={copy.bar}><SegmentedControl label={copy.period} items={copy.periods} value={recent ? "recent" : "all"} onValueChange={(next) => setRecent(next === "recent")} />
     <BarChart animateChanges categories={categories} series={series} showValues accessibilityLabel={copy.bar} formatValue={formatCount} missingLabel={copy.missing} />
   </Example>;
 }

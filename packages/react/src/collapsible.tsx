@@ -17,13 +17,18 @@ export type CollapsibleProps = CollapsibleOpenState &
     presentation?: "disclosure" | "inline";
     /** Preserve local input state while hidden; hidden content stays inaccessible. */
     keepMounted?: boolean;
+    /**
+     * `none` leaves the open/closed mark to the trigger, which then places `CollapsibleMarker` itself — for triggers
+     * whose label is not a single row, where the end-aligned mark floated alone (FolderPreview, 2026-10-17 review).
+     */
+    marker?: "end" | "none";
     className?: string;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 export const Collapsible = forwardRef<HTMLDivElement, CollapsibleProps>(function Collapsible(
-  { trigger, children, disabled = false, presentation = "disclosure", keepMounted = false, className, layoutStyle, ...openState },
+  { trigger, children, disabled = false, presentation = "disclosure", keepMounted = false, marker = "end", className, layoutStyle, ...openState },
   forwardedRef,
 ) {
   validateCollapsibleOpenState(openState as CollapsibleOpenState);
@@ -74,7 +79,7 @@ export const Collapsible = forwardRef<HTMLDivElement, CollapsibleProps>(function
         }}
       >
         {trigger}
-        <span aria-hidden="true" className="hjm-collapsible__marker">{open ? "▾" : "▸"}</span>
+        {marker === "end" ? <CollapsibleMarker open={open} /> : null}
       </button>
       {/* Optional persistence keeps theme changes and closing tools from erasing local
           drafts. The HTML hidden boundary removes closed content from focus and speech. */}
@@ -84,3 +89,8 @@ export const Collapsible = forwardRef<HTMLDivElement, CollapsibleProps>(function
     </div>
   );
 });
+
+/** The decorative open/closed mark; the expanded state itself travels through the trigger's aria-expanded. */
+export function CollapsibleMarker({ open }: Readonly<{ open: boolean }>) {
+  return <span aria-hidden="true" className="hjm-collapsible__marker" data-state={open ? "open" : "closed"}>{open ? "▾" : "▸"}</span>;
+}

@@ -4,7 +4,8 @@ import {
   getCollectionRailTargetOffset, getCollectionRailItemOffset, getCollectionRailRevealOffset,
   getCollectionRailKeyboardIntent, type CollectionRailItem, type CollectionRailDensity, type CollectionRailLayout,
 } from "@hjmds/design-contracts/collection-rail";
-import { Button } from "./actions.js";
+import { IconButton } from "./actions.js";
+import { Icon } from "./supplemental-display.js";
 import { useOptionalHjmTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
@@ -138,8 +139,9 @@ export function CollectionRail({ label, items, renderItem, labels, density = col
     </div>
     <div data-collection-rail-controls role="group" aria-label={labels.navigation}
       style={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-end", gap: "var(--hjm-space-sm)", marginBlockStart: "var(--hjm-space-sm)" }}>
-      <Button tone="ghost" aria-disabled={resolved.atStart} onClick={() => navigate("previous")}>{labels.previous}</Button>
-      <Button tone="ghost" aria-disabled={resolved.atEnd} onClick={() => navigate("next")}>{labels.next}</Button>
+      {/* Tool actions: icon buttons named by the localized label, as Carousel (2026-10-17 review E9). */}
+      <IconButton label={labels.previous} tone="ghost" aria-disabled={resolved.atStart} onClick={() => navigate("previous")}><Icon name="chevronStart" /></IconButton>
+      <IconButton label={labels.next} tone="ghost" aria-disabled={resolved.atEnd} onClick={() => navigate("next")}><Icon name="chevronEnd" /></IconButton>
     </div>
   </div>;
 }

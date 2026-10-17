@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from "react";
+import { type CSSProperties, type ReactNode } from "react";
 import type { ColorReference } from "@hjmds/design-contracts/color-references";
 import { type ComparisonRow, type DataTableCellHeat, type DataTableCellTone, type LineScoreTeam, type MatrixCell } from "@hjmds/design-contracts/components/data-table";
 import type { HjmCompositionStyleProp } from "./composition-style.js";

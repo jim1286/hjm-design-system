@@ -18,8 +18,8 @@ type WebDesignSystemProviderProps = Readonly<{
   input: DesignSystemEnvironmentInput;
   systemTheme?: ResolvedTheme;
   edgeToEdge?: boolean;
-  /** Phone-first input previews rendered directly (not through a contract page) get the stage's width cap. */
-  inputPreview?: boolean;
+  /** Phone-first component previews rendered directly (not through a contract page) get the stage's width cap. */
+  componentPreview?: boolean;
 }>;
 
 /** Showcase's thin React adapter over the renderer-neutral provider contract. */
@@ -28,7 +28,7 @@ export function WebDesignSystemProvider({
   input,
   systemTheme = "light",
   edgeToEdge = false,
-  inputPreview = false,
+  componentPreview = false,
 }: WebDesignSystemProviderProps) {
   const parent = useContext(WebDesignSystemEnvironmentContext);
   const providerValue = resolveDesignSystemProviderValue(
@@ -41,7 +41,7 @@ export function WebDesignSystemProvider({
   return (
     <WebDesignSystemEnvironmentContext.Provider value={environment}>
       <HjmProvider
-        className={["hjm-story-root", edgeToEdge ? "hjm-showcase-edge-to-edge" : null, inputPreview ? "hjm-showcase-input-preview" : null].filter(Boolean).join(" ")}
+        className={["hjm-story-root", edgeToEdge ? "hjm-showcase-edge-to-edge" : null, componentPreview ? "hjm-showcase-component-preview" : null].filter(Boolean).join(" ")}
         direction={environment.direction}
         reducedMotion={environment.reducedMotion}
         systemTheme={environment.theme}

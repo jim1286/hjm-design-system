@@ -1,13 +1,16 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { AccessibilityInfo, AppState, PanResponder, View } from "react-native";
+import { AccessibilityInfo, AppState, PanResponder, Pressable, View } from "react-native";
 import { carouselRecipe, resolveCarouselDescriptor, getCarouselNavigationTarget, isCarouselAutoplayActive, } from "@hjmds/design-contracts/components/carousel";
-import { Button } from "./actions.js";
-import { Text } from "./primitives.js";
+import { Button, IconButton } from "./actions.js";
+import { resolveColorReference } from "@hjmds/design-contracts/color-references";
+import { resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
+import { glyph } from "@hjmds/design-contracts/foundations";
+import { DrawnChevron } from "./internal/drawn-glyphs.js";
 import { useHjmNativeTheme } from "./provider.js";
 import { useControllableState } from "./internal/state.js";
 export function Carousel({ label, slides, renderSlide, composeAccessibleName, labels, autoplay, currentKey, defaultCurrentKey, onCurrentKeyChange, layoutStyle }) {
-    const { environment, tokens } = useHjmNativeTheme();
+    const { environment, palette, tokens } = useHjmNativeTheme();
     const [storedCurrent, setCurrent] = useControllableState({
         ...(currentKey === undefined ? {} : { value: currentKey }),
         defaultValue: defaultCurrentKey ?? slides[0]?.id ?? "",
@@ -69,9 +72,10 @@ export function Carousel({ label, slides, renderSlide, composeAccessibleName, la
         },
     });
     const selected = resolved.find((slide) => slide.current);
+    const chevronColor = resolveIconButtonPresentation("ghost", palette, false).content;
     return _jsxs(View, { style: [{ gap: carouselRecipe.sizes.medium.gap, direction: environment.direction }, layoutStyle], children: [autoplay ? _jsx(Button, { tone: "ghost", disabled: environment.reducedMotion || screenReader, onPress: () => { if (last)
-                    setCurrent(slides[0].id); setRotating(!rotating || last); }, children: rotating && !last && !environment.reducedMotion && !screenReader ? labels.pause : labels.resume }) : null, _jsx(View, { ...swipe.panHandlers, onTouchStart: () => setRotating(false), onFocus: () => setRotating(false), children: resolved.map((slide) => _jsx(View, { style: slide.inert ? { display: "none" } : undefined, accessibilityElementsHidden: slide.inert, importantForAccessibility: slide.inert ? "no-hide-descendants" : "auto", pointerEvents: slide.inert ? "none" : "auto", children: renderSlide(slide) }, slide.id)) }), _jsx(View, { accessible: true, accessibilityRole: "adjustable", accessibilityLabel: `${label}: ${selected.accessibleName}`, accessibilityValue: { min: 1, max: slides.length, now: selected.position, text: selected.accessibleName }, accessibilityActions: [{ name: "increment", label: labels.next }, { name: "decrement", label: labels.previous }], onAccessibilityAction: ({ nativeEvent }) => { if (nativeEvent.actionName === "increment")
-                    move("next"); if (nativeEvent.actionName === "decrement")
-                    move("previous"); }, children: _jsx(Text, { align: "center", variant: "caption", children: selected.accessibleName }) }), _jsxs(View, { accessibilityLabel: labels.navigation, onFocus: () => setRotating(false), style: { flexDirection: "row", flexWrap: "wrap", gap: tokens.spacing.xs, justifyContent: "center" }, children: [_jsx(Button, { tone: "ghost", disabled: current === slides[0].id, onPress: () => move("previous"), children: labels.previous }), resolved.map((slide) => _jsx(Button, { tone: slide.current ? "secondary" : "ghost", accessibilityLabel: slide.accessibleName, accessibilityState: { selected: slide.current }, onPress: () => select(slide.id), children: String(slide.position) }, slide.id)), _jsx(Button, { tone: "ghost", disabled: last, onPress: () => move("next"), children: labels.next })] })] });
+                    setCurrent(slides[0].id); setRotating(!rotating || last); }, children: rotating && !last && !environment.reducedMotion && !screenReader ? labels.pause : labels.resume }) : null, _jsx(View, { ...swipe.panHandlers, onTouchStart: () => setRotating(false), onFocus: () => setRotating(false), children: resolved.map((slide) => _jsx(View, { style: slide.inert ? { display: "none" } : undefined, accessibilityElementsHidden: slide.inert, importantForAccessibility: slide.inert ? "no-hide-descendants" : "auto", pointerEvents: slide.inert ? "none" : "auto", children: renderSlide(slide) }, slide.id)) }), _jsxs(View, { accessibilityLabel: labels.navigation, onFocus: () => setRotating(false), style: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: tokens.spacing.xs }, children: [_jsx(IconButton, { label: labels.previous, tone: "ghost", disabled: current === slides[0].id, onPress: () => move("previous"), children: _jsx(DrawnChevron, { direction: "start", size: glyph[carouselRecipe.sizes.medium.controlIcon], color: chevronColor }) }), _jsx(View, { accessible: true, accessibilityRole: "adjustable", accessibilityLabel: `${label}: ${selected.accessibleName}`, accessibilityValue: { min: 1, max: slides.length, now: selected.position, text: selected.accessibleName }, accessibilityActions: [{ name: "increment", label: labels.next }, { name: "decrement", label: labels.previous }], onAccessibilityAction: ({ nativeEvent }) => { if (nativeEvent.actionName === "increment")
+                            move("next"); if (nativeEvent.actionName === "decrement")
+                            move("previous"); }, style: { flexDirection: "row", flexShrink: 1, flexWrap: "wrap", justifyContent: "center" }, children: resolved.map((slide) => _jsx(Pressable, { accessible: false, accessibilityLabel: slide.accessibleName, onPress: () => select(slide.id), style: { alignItems: "center", height: carouselRecipe.dot.hitTarget, justifyContent: "center", width: carouselRecipe.dot.hitTarget }, children: _jsx(View, { style: { backgroundColor: resolveColorReference(slide.current ? carouselRecipe.dot.color.current : carouselRecipe.dot.color.inactive, palette), borderRadius: carouselRecipe.dot.diameter / 2, height: carouselRecipe.dot.diameter, width: carouselRecipe.dot.diameter } }) }, slide.id)) }), _jsx(IconButton, { label: labels.next, tone: "ghost", disabled: last, onPress: () => move("next"), children: _jsx(DrawnChevron, { direction: "end", size: glyph[carouselRecipe.sizes.medium.controlIcon], color: chevronColor }) })] })] });
 }
 //# sourceMappingURL=carousel.js.map

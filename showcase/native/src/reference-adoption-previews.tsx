@@ -29,7 +29,7 @@ export function RatingPreview() {
 }
 export function ImageComparisonPreview() {
   const [value, setValue] = useState(50);
-  return <Stack gap="md"><Text variant="heading">같은 장면, 다른 색감</Text><ImageComparison decrementLabel="보정 전 비율 줄이기" incrementLabel="보정 전 비율 늘리기" label="보정 전 이미지 비율" before={beforeImage} after={afterImage} value={value} onValueChange={setValue} getValueText={n=>`${n}%`} /><Stack axis="inline" wrap><Button tone="secondary" onPress={()=>setValue(100)}>보정 전 전체 보기</Button><Button tone="secondary" onPress={()=>setValue(0)}>보정 후 전체 보기</Button></Stack></Stack>;
+  return <Stack gap="md"><Text variant="heading" emphasis="medium">같은 장면, 다른 색감</Text><ImageComparison decrementLabel="보정 전 비율 줄이기" incrementLabel="보정 전 비율 늘리기" label="보정 전 이미지 비율" before={beforeImage} after={afterImage} value={value} onValueChange={setValue} getValueText={n=>`${n}%`} /><Stack axis="inline" gap="sm" wrap><Button tone="secondary" onPress={()=>setValue(100)}>보정 전 전체 보기</Button><Button tone="secondary" onPress={()=>setValue(0)}>보정 후 전체 보기</Button></Stack></Stack>;
 }
 export function AdaptiveContentPreview() {
   const [panel, setPanel] = useState("summary");

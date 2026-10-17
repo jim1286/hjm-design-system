@@ -1,20 +1,22 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { AnimatedStatistic } from "@hjmds/react/statistic-motion";
-import { Button } from "@hjmds/react/actions";
+import { PreviewToolButton, PreviewTools } from "./preview-tools";
+import { animatedStatisticTools as tools } from "../../../shared/component-examples";
 import { Stack } from "@hjmds/react/layout";
 
 function Preview({ locale = "ko-KR", format, initialValue = 1280, label = "이번 주 기록" }: { locale?: string; format?: Intl.NumberFormatOptions; initialValue?: number; label?: string }) {
   const [value, setValue] = useState(initialValue);
   // Reference count-up demos expose intermediate values. Keep the actual value
   // and locale here so the comparison cannot suggest fabricated product counts.
-  return <Stack gap="xl">
+  // The value changes are demo-only tools, so they sit under "미리보기 도구" without a primary (2026-10-17 review E13).
+  return <Stack gap="lg">
     <AnimatedStatistic descriptor={{ id: "weekly-records", label, hint: "로컬 예제 데이터" }} value={value} locale={locale} {...(format ? { format } : {})} />
-    <Stack axis="inline" gap="sm" wrap>
-      <Button tone="secondary" onClick={() => setValue(current => current - 125)}>줄이기</Button>
-      <Button onClick={() => setValue(current => current + 125)}>늘리기</Button>
-      <Button tone="secondary" onClick={() => setValue(0)}>0으로</Button>
-    </Stack>
+    <PreviewTools>
+      <PreviewToolButton onClick={() => setValue(current => current - tools.step)}>{tools.decrease}</PreviewToolButton>
+      <PreviewToolButton onClick={() => setValue(current => current + tools.step)}>{tools.increase}</PreviewToolButton>
+      <PreviewToolButton onClick={() => setValue(0)}>{tools.reset}</PreviewToolButton>
+    </PreviewTools>
   </Stack>;
 }
 const meta = { includeStories: ["Default", "Decimal", "NonLatinDigits", "Scientific", "Dark", "LargeText", "ReducedMotion", "Rtl"], id: "components-display-animated-statistic", title: "배포/컴포넌트/데이터 표시/움직이는 수치", component: Preview } satisfies Meta<typeof Preview>;

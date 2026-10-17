@@ -28,10 +28,10 @@ export function Asset({ descriptor, children, accessory, layoutStyle }) {
                     borderColor: resolveColorReference(assetRecipe.border, palette),
                     backgroundColor: resolveColorReference(assetRecipe.background, palette),
                 }, children: typeof children === "function" ? children({ animate }) : children }), accessory ? (_jsx(View
-            // Outside the frame's corner so it never covers the media's middle.
+            // Outside the frame's end/bottom corner so it never covers the media's middle; `end` mirrors in RTL like Web.
             , { 
-                // Outside the frame's corner so it never covers the media's middle.
-                style: { position: "absolute", bottom: -assetRecipe.accessory.offset, right: -assetRecipe.accessory.offset }, children: accessory })) : null] }));
+                // Outside the frame's end/bottom corner so it never covers the media's middle; `end` mirrors in RTL like Web.
+                style: { position: "absolute", bottom: -assetRecipe.accessory.offset, end: -assetRecipe.accessory.offset }, children: accessory })) : null] }));
 }
 /** Overlaps assets with the same ratio Avatar uses — they share a row on purpose. */
 export function AssetGroup({ label, size = assetRecipe.defaults.size, children, layoutStyle }) {

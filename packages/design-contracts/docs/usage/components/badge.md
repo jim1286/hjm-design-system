@@ -47,7 +47,7 @@ import { Badge } from "@hjmds/react-native/data-display";
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `tone` | `neutral` · `strong` · `brand` · `info` · `success` · `warning` · `attention` · `danger` | `neutral` | `brand`는 판이 중립색이고 글자만 브랜드색이다. 브랜드 틴트는 "선택됨"을 뜻하므로 정적 표시에 쓰지 않는다. `strong`은 `neutral`보다 한 단계 강한 잉크 판이며 승패처럼 한눈에 갈려야 하는 사실에 쓴다 |
+| `tone` | `neutral` · `strong` · `brand` · `info` · `success` · `warning` · `attention` · `danger` | `neutral` | `neutral`·`brand` 판은 캔버스색이라 `border.default` 테두리로 판을 그린다(2026-10-17, 테두리 없이 일반 글자처럼 보였다). `brand`는 판이 중립색이고 글자만 브랜드색이다. 브랜드 틴트는 "선택됨"을 뜻하므로 정적 표시에 쓰지 않는다. `strong`은 `neutral`보다 한 단계 강한 잉크 판이며 승패처럼 한눈에 갈려야 하는 사실에 쓴다 |
 | `variant` | `filled` · `outline` | `filled` | — |
 | `size` | `small` · `medium` | `medium` | — |
 | `leading` | `ReactNode` | — | 라벨 앞 아이콘 자리이며 보조기기에서 숨겨진다 |

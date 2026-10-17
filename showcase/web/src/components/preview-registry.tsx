@@ -180,7 +180,21 @@ import {
   tabsExample,
   tooltipExample,
   topBarExample,
+  accordionExample,
+  avatarExample,
+  badgeExample,
+  cardExample,
+  counterBadgeExample,
+  descriptionListExample,
+  imageExample,
+  listExample,
+  listRowExample,
+  statisticExample,
+  tagExample,
+  timelineExample,
+  uploadItemExample,
 } from "../../../shared/component-examples.js";
+import mountainPhoto from "../../../shared/photos/mountain.jpg";
 
 // The old empty-state button had no handler. Keep creation and search recovery observable
 // without adding a second data-state engine; this is a local, disposable fixture.
@@ -447,7 +461,7 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "Text": return <HjmStack gap="xs"><HjmText as="p" variant="title" emphasis="strong">{textExample.title}</HjmText><HjmText as="p">{textExample.body}</HjmText><HjmText as="p" tone="muted" variant="label">{textExample.caption}</HjmText></HjmStack>;
     case "Icon": return <HjmStack axis="inline" gap="md" wrap role="group" aria-label={iconExample.label}>{iconExample.items.map((item) => <HjmIcon key={item.name} name={item.name} decorative={false} accessibilityLabel={item.label} {...("tone" in item ? { tone: item.tone } : {})} />)}</HjmStack>;
     case "Surface": return <HjmSurface as="article" bordered padding="lg"><HjmStack gap="xs"><HjmText as="strong">{surfaceExample.title}</HjmText><HjmText as="p" tone="muted">{surfaceExample.body}</HjmText></HjmStack></HjmSurface>;
-    case "Card": return <HjmCard leading={<span aria-hidden="true">✨</span>} title="Card 제목" description="계약이 보장하는 여백과 정렬로 긴 설명도 안정적으로 표시합니다." actions={<HjmButton size="small">자세히</HjmButton>} />;
+    case "Card": return <ObservablePreview>{({ setMessage }) => <HjmCard title={cardExample.title} description={cardExample.description} actions={<HjmButton size="small" tone="secondary" onClick={() => setMessage(cardExample.result)}>{cardExample.action}</HjmButton>} />}</ObservablePreview>;
     case "Stack": return <HjmStack gap="sm">{stackExample.map((label) => <HjmSurface key={label} bordered padding="sm"><HjmText>{label}</HjmText></HjmSurface>)}</HjmStack>;
     case "Container": return <HjmContainer size="reading"><HjmSurface bordered padding="md"><HjmText>{containerExample}</HjmText></HjmSurface></HjmContainer>;
     case "AspectRatio": return <HjmContainer size="reading"><HjmAspectRatio ratio="wide"><HjmSurface bordered tone="subtle" padding="md"><HjmText tone="muted">{aspectRatioExample}</HjmText></HjmSurface></HjmAspectRatio></HjmContainer>;
@@ -513,22 +527,22 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "Carousel": return <HjmCarousel label="이번 주 소식" slides={[{ id: "one", label: "좋아하는 소식만 골라요" }, { id: "two", label: "언제든 설정을 바꿀 수 있어요" }]} labels={{ previous: "이전", next: "다음", pause: "멈추기", resume: "재생하기", navigation: "소식 이동" }} composeAccessibleName={({ position, total, label }) => `${position}/${total} ${label}`} renderSlide={({ label }) => <HjmText>{label}</HjmText>} />;
     case "Steps": return <HjmSteps composeAccessibleName={stepsExample.accessibleName} descriptor={{ steps: stepsExample.steps, currentStepId: stepsExample.currentStepId }} statusLabels={stepsExample.statusLabels} />;
     case "Menu": return <ObservablePreview>{({ setMessage }) => <HjmMenu trigger={<HjmIconButton label={menuExample.triggerLabel} tone="ghost"><HjmIcon name="more" /></HjmIconButton>} label={menuExample.label} items={menuExample.items} onAction={(id) => setMessage(menuExample.result(menuExample.items.find((item) => item.id === id)?.label ?? id))} />}</ObservablePreview>;
-    case "Badge": return <HjmStack axis="inline" gap="sm"><HjmBadge>진행 중</HjmBadge><HjmBadge tone="success">완료</HjmBadge></HjmStack>;
-    case "Avatar": return <HjmAvatar name="홍길동" />;
-    case "CounterBadge": return <HjmStack axis="inline" align="center" gap="xs"><HjmIconButton label="알림 12개"><HjmIcon name="notifications" /></HjmIconButton><HjmCounterBadge count={12} /></HjmStack>;
+    case "Badge": return <HjmStack axis="inline" gap="sm">{badgeExample.map((item) => <HjmBadge key={item.label} {...("tone" in item ? { tone: item.tone } : {})}>{item.label}</HjmBadge>)}</HjmStack>;
+    case "Avatar": return <HjmAvatar name={avatarExample.name} />;
+    case "CounterBadge": return <CounterBadgePreview />;
     case "TopBar": return <HjmTopBar title={topBarExample.title} leading={<HjmIconButton label={topBarExample.back} tone="ghost"><HjmIcon name="chevronStart" /></HjmIconButton>} actions={<HjmButton tone="ghost">{topBarExample.done}</HjmButton>} />;
     case "BottomCTA": return <ObservablePreview>{({ setMessage }) => <HjmBottomCTA description={bottomCtaExample.description} primaryAction={{ label: bottomCtaExample.primary.label, onClick: () => setMessage(bottomCtaExample.primary.result) }} secondaryAction={{ label: bottomCtaExample.secondary.label, onClick: () => setMessage(bottomCtaExample.secondary.result) }} />}</ObservablePreview>;
-    case "List": return <HjmList label="선수 목록"><HjmListRow title="홍길동" description="내야수" /><HjmListRow title="김하늘" description="외야수" /></HjmList>;
-    case "ListRow": return <ObservablePreview>{({ message, setMessage, selected, setSelected }) => <HjmListRow title="홍길동" description="선수 상세 보기" leading={<span className="hjm-showcase-avatar">홍</span>} trailing={<span aria-hidden>›</span>} onClick={() => setMessage("선수 상세를 열었어요")} />}</ObservablePreview>;
-    case "Tag": return <HjmStack axis="inline" gap="sm" wrap><HjmTag>내야수</HjmTag><HjmTag tone="success">등록 선수</HjmTag><HjmTag>2026 시즌</HjmTag></HjmStack>;
-    case "Accordion": return <HjmAccordion aria-label="자주 묻는 질문" items={[{ id: "shipping", title: "언제 도착하나요?", panel: "내일 도착할 예정입니다." }]} />;
+    case "List": return <HjmList label={listExample.label}>{listExample.items.map((item) => <HjmListRow key={item.id} title={item.title} description={item.description} leading={<HjmAvatar name={item.title} aria-hidden="true" />} leadingShape="circle" />)}</HjmList>;
+    case "ListRow": return <ObservablePreview>{({ setMessage }) => <HjmListRow title={listRowExample.title} description={listRowExample.description} leading={<HjmAvatar name={listRowExample.title} aria-hidden="true" />} leadingShape="circle" trailing={<HjmIcon name="chevronEnd" />} onClick={() => setMessage(listRowExample.result)} />}</ObservablePreview>;
+    case "Tag": return <HjmStack axis="inline" gap="sm" wrap>{tagExample.map((item) => <HjmTag key={item.label} {...("tone" in item ? { tone: item.tone } : {})}>{item.label}</HjmTag>)}</HjmStack>;
+    case "Accordion": return <HjmAccordion aria-label={accordionExample.label} items={accordionExample.items} />;
     case "Divider": return <HjmStack gap="sm"><HjmText>{dividerExample.above}</HjmText><HjmDivider /><HjmText>{dividerExample.below}</HjmText></HjmStack>;
-    case "Statistic": return <HjmStatistic descriptor={{ id: "orders", label: "오늘 주문", value: "128", trend: { direction: "up", label: "어제보다 12% 증가" } }} />;
+    case "Statistic": return <HjmStatistic descriptor={statisticExample} />;
     case "Section": return <HjmSection title={sectionExample.title} description={sectionExample.description}><HjmText>{sectionExample.body}</HjmText></HjmSection>;
-    case "UploadItem": return <ObservablePreview>{({ message, setMessage, selected, setSelected }) => <HjmUploadItem descriptor={{ id: "photo", name: "profile-photo.png", sizeLabel: "1.2 MB", state: { status: "uploading", progress: 0.64, progressLabel: "1.2 MB 중 64% 업로드" } }} labels={{ pending: "대기 중", uploading: "업로드 중", success: "업로드 완료", cancel: "취소", retry: "다시 시도" }} onCancel={() => setMessage("업로드를 취소했어요")} />}</ObservablePreview>;
-    case "Timeline": return <HjmTimeline composeAccessibleName={({ position, total, label }) => `${total}개 중 ${position}번째, ${label}`} items={[{ id: "created", label: "아이디어 생성", timestamp: "10:00", tone: "info" }, { id: "completed", label: "실행 완료", timestamp: "10:12", description: "결과를 저장했습니다.", tone: "success" }]} />;
-    case "DescriptionList": return <HjmDescriptionList items={[{ id: "status", label: "상태", value: "준비됨" }, { id: "owner", label: "담당", value: "홍길동" }]} />;
-    case "Image": return <HjmImage src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 180'%3E%3Crect width='320' height='180' fill='%23dbeafe'/%3E%3C/svg%3E" width={320} height={180} decorative={false} accessibilityLabel="연한 파란색 이미지 예시" />;
+    case "UploadItem": return <ObservablePreview>{({ setMessage }) => <HjmUploadItem descriptor={uploadItemExample.descriptor} labels={uploadItemExample.labels} onCancel={() => setMessage(uploadItemExample.result)} />}</ObservablePreview>;
+    case "Timeline": return <HjmTimeline composeAccessibleName={timelineExample.accessibleName} items={timelineExample.items} />;
+    case "DescriptionList": return <HjmDescriptionList aria-label={descriptionListExample.label} items={descriptionListExample.items} />;
+    case "Image": return <HjmImage src={mountainPhoto} width={imageExample.width} height={imageExample.height} fit="cover" decorative={false} accessibilityLabel={imageExample.label} />;
     case "EmptyState": return <EmptyStateRecoveryPreview />;
     case "Notice": return <HjmNotice title="저장 전 확인" description="입력한 내용을 다시 확인해 주세요." />;
     case "Progress": return <HjmProgress label="업로드" value={64} valueText="64%" />;
@@ -699,11 +713,10 @@ function resolveRecipePresentation(
     const appliedMetric = metricProperty === "minHeight"
       ? Math.min(metric.value, 96)
       : metric.value;
+    // Inset/padding metrics stay evidence-only (--hjm-evidence-metric): applied to the wrapper they shifted the real
+    // renderer, e.g. List's indented-separator inset (52) pushed every row 52px inward (2026-10-17 review E5).
     if (metricProperty === "aspectRatio") style.aspectRatio = appliedMetric;
-    else if (metricProperty === "paddingInlineStart") style.paddingInlineStart = appliedMetric;
-    else if (metricProperty === "paddingInlineEnd") style.paddingInlineEnd = appliedMetric;
-    else if (metricProperty === "paddingInline") style.paddingInline = appliedMetric;
-    else if (metricProperty === "paddingBlock") style.paddingBlock = appliedMetric;
+    else if (metricProperty === "paddingInlineStart" || metricProperty === "paddingInlineEnd" || metricProperty === "paddingInline" || metricProperty === "paddingBlock") { /* evidence-only */ }
     else if (metricProperty === "gap") style.gap = appliedMetric;
     else if (metricProperty === "borderWidth") style.borderWidth = appliedMetric;
     else if (metricProperty === "borderRadius") style.borderRadius = appliedMetric;
@@ -1132,6 +1145,18 @@ function BottomNavigationPreview() {
     <HjmBottomNavigation descriptor={{ accessibilityLabel: bottomNavigationExample.label, selectedKey: selected, items: bottomNavigationExample.items }}
       getHref={({ id }) => `#${id}`} onActivate={({ key }) => setSelected(key)} renderIcon={({ name }) => <HjmIcon name={name} />} />
   </div>;
+}
+
+// The count overlays the bell's top-end corner (floating, the NotificationBell placement) and sits inline at a row's end;
+// a separate inline badge beside the bell did not read as the bell's count (2026-10-17 review E7).
+function CounterBadgePreview() {
+  return <HjmStack gap="md" align="start">
+    <span style={{ position: "relative", display: "inline-flex" }}>
+      <HjmIconButton label={counterBadgeExample.bellLabel}><HjmIcon name="notifications" /></HjmIconButton>
+      <span style={{ position: "absolute", top: 0, insetInlineEnd: 0, pointerEvents: "none" }}><HjmCounterBadge count={counterBadgeExample.count} variant="floating" /></span>
+    </span>
+    <HjmListRow title={counterBadgeExample.inbox} trailing={<HjmCounterBadge count={counterBadgeExample.inboxValue} accessibilityLabel={counterBadgeExample.inboxCount} />} />
+  </HjmStack>;
 }
 
 // Loaded rows are appended to a real list; LoadMore's own busy/complete footer reports progress (2026-10-17 D14).

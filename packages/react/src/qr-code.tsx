@@ -11,7 +11,7 @@ export function QRCode({ value, label, size = 192, level = "M", fallback, layout
   if (!label.trim() || fallback == null || fallback === false || !Number.isFinite(size) || size < modules * qrCodeRecipe.minModuleSize) throw new TypeError("QRCode needs an accessible label, alternative action and at least two pixels per module");
   // Integer-sized modules plus a four-module white quiet zone preserve scan geometry in both themes.
   const actualSize = Math.floor(size / modules) * modules;
-  return <div data-hjm-qr-code style={layoutStyle}><svg role="img" aria-label={label} width={actualSize} height={actualSize} viewBox={`0 0 ${modules} ${modules}`} shapeRendering="crispEdges">
+  return <div data-hjm-qr-code style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: qrCodeRecipe.fallbackGap, ...layoutStyle }}><svg role="img" aria-label={label} width={actualSize} height={actualSize} viewBox={`0 0 ${modules} ${modules}`} shapeRendering="crispEdges">
     <rect width={modules} height={modules} fill={qrCodeRecipe.background} /><path d={qrPath(matrix)} fill={qrCodeRecipe.foreground} />
   </svg>{fallback}</div>;
 }

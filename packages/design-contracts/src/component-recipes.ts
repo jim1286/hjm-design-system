@@ -298,11 +298,13 @@ export const badgeRecipe = {
     },
   },
   tones: {
+    // A canvas-colored plate is invisible on the canvas, so neutral and brand badges read as plain text beside a
+    // tinted success badge (2026-10-17 review E3). The plate stays white (canvas) and the neutral border draws it.
     neutral: {
       content: semanticColors.content.secondary,
       outlineContent: semanticColors.content.secondary,
       background: semanticColors.canvas,
-      border: null,
+      border: semanticColors.border.default,
     },
     strong: {
       content: semanticColors.content.inverse,
@@ -320,7 +322,7 @@ export const badgeRecipe = {
       // with one option switched on. The plate goes neutral and the brand
       // stays in the copy.
       background: semanticColors.canvas,
-      border: null,
+      border: semanticColors.border.default,
     },
     info: {
       content: semanticColors.feedback.info.foreground,
@@ -527,7 +529,9 @@ export const listRecipe = {
   separators: {
     none: null,
     full: { insetStart: 0, insetEnd: 0 },
-    indented: { insetStart: 40 + spacing.sm, insetEnd: 0 },
+    // Starts where the row text starts: row padding (xs, every ListRow density) + leading 40 + gap sm. Without the row
+    // padding the line began 8px before the text (2026-10-17 review E5).
+    indented: { insetStart: spacing.xs + 40 + spacing.sm, insetEnd: 0 },
   },
   background: null,
 } as const;

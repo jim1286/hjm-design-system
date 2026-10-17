@@ -17,7 +17,7 @@ function Preview({ state }: { state?: "empty" }) {
   const [selected, setSelected] = useState<string | null>(null);
   const rows = useMemo(() => state === "empty" ? [] : sortDataTableRows(Object.keys(tableRows).map(id => ({ id })), sort, (row, column) => toDataTableSortValue(tableRows[row.id]![column])), [sort, state]);
   return <ScrollView><Stack gap="md">
-    <Text variant="title">{copy.table}</Text>
+    <Text variant="title" emphasis="medium">{copy.table}</Text>
     <DataTable columns={tableColumns} rows={rows} labels={{ table: copy.table, sortColumn: copy.sortColumn }} renderCell={(row, column) => tableRows[row]![column]!}
       sortState={sort} onSortChange={setSort} onRowPress={setSelected} selectedRowId={selected} emptyLabel={copy.missing}
       summaryRow={column => column === "name" ? copy.total : column === "avg" ? ".348" : column === "team" ? "" : "—"} />

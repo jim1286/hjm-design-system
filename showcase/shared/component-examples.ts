@@ -463,3 +463,107 @@ export const tooltipExample = {
   content: "자세한 도움말",
   hint: "도움말 버튼에 초점을 두거나 가리키면 설명이 보여요.",
 } as const;
+
+// ---- 데이터 표시 (2026-10-17 review E): Native showed English placeholders ("Live", "Generated app", "Morning loop",
+// "Cancel") with different counts and tones, plus debug lines ("Selected row: None"), so neither renderer could be compared.
+
+export const qrCodeExample = { href: "https://example.com/한글", label: "공유 페이지 QR 코드", fallback: "공유 페이지 열기" } as const;
+
+export const badgeExample = [{ label: "진행 중" }, { label: "완료", tone: "success" }] as const;
+
+export const tagExample = [{ label: "내야수" }, { label: "등록 선수", tone: "success" }, { label: "2026 시즌" }] as const;
+
+export const avatarExample = { name: "홍길동" } as const;
+
+export const cardExample = {
+  title: "오늘의 산책 기록",
+  description: "골목길을 따라 40분 걸었어요.",
+  action: "자세히",
+  result: "산책 기록을 열었어요",
+} as const;
+
+/** Rows lead with an Avatar so the List's indented separator starts under the text, as its default assumes. */
+export const listExample = {
+  label: "선수 목록",
+  items: [
+    { id: "hong", title: "홍길동", description: "내야수" },
+    { id: "kim", title: "김하늘", description: "외야수" },
+  ],
+} as const;
+
+export const listRowExample = { title: "홍길동", description: "선수 상세 보기", result: "선수 상세를 열었어요" } as const;
+
+export const counterBadgeExample = {
+  count: 3,
+  bellLabel: "알림 3개",
+  inbox: "받은 편지함",
+  inboxCount: "읽지 않은 편지 12개",
+  inboxValue: 12,
+} as const;
+
+export const statisticExample = { id: "orders", label: "오늘 주문", value: "128", trend: { direction: "up", label: "어제보다 12% 증가" } } as const;
+
+export const timelineExample = {
+  items: [
+    { id: "created", label: "아이디어 생성", timestamp: "10:00", tone: "info" },
+    { id: "completed", label: "실행 완료", timestamp: "10:12", description: "결과를 저장했습니다.", tone: "success" },
+  ],
+  accessibleName: ({ position, total, label }: { position: number; total: number; label: string }) => `${total}개 중 ${position}번째, ${label}`,
+} as const;
+
+export const descriptionListExample = {
+  label: "선수 정보",
+  items: [{ id: "status", label: "상태", value: "준비됨" }, { id: "owner", label: "담당", value: "홍길동" }],
+} as const;
+
+export const imageExample = { label: "산 능선 사진", width: 320, height: 180 } as const;
+
+export const uploadItemExample = {
+  descriptor: { id: "photo", name: "profile-photo.png", sizeLabel: "1.2 MB", state: { status: "uploading", progress: 0.64, progressLabel: "1.2 MB 중 64% 업로드" } },
+  labels: { pending: "대기 중", uploading: "업로드 중", success: "업로드 완료", cancel: "업로드 취소", retry: "다시 시도" },
+  result: "업로드를 취소했어요",
+} as const;
+
+export const accordionExample = {
+  label: "자주 묻는 질문",
+  items: [{ id: "shipping", title: "언제 도착하나요?", panel: "내일 도착할 예정입니다." }],
+} as const;
+
+export const collapsibleExample = { trigger: "배송 정보 더 보기", body: "주문 다음 날 도착합니다. 도착 전날 알림을 보내드려요." } as const;
+
+export const assetExample = {
+  title: "이미지·영상 표시",
+  description: "아이콘·사진·움직이는 그림·영상을 같은 액자 규칙으로 맞춰요.",
+  groupLabel: "오늘 도착한 편지들",
+  group: [
+    { id: "icon", kind: "icon", glyph: "◇" },
+    { id: "forest", kind: "image", glyph: "🌲", label: "숲 사진" },
+    { id: "fox", kind: "lottie", glyph: "🦊", label: "달리는 여우", playable: true },
+  ],
+  sizes: [
+    { id: "moon", kind: "image", size: "small", shape: "circle", glyph: "🌙", label: "작은 원형" },
+    { id: "sun", kind: "image", size: "medium", shape: "square", glyph: "🌞", label: "중간 정사각" },
+    { id: "intro", kind: "video", size: "xlarge", glyph: "🎬", label: "소개 영상", playable: true },
+  ],
+} as const;
+
+/** Expression names are shown in Korean; the raw pose id ("idle") used to be printed under the avatar (review E12). */
+export const animatedBlobatarExample = {
+  name: "미리보기",
+  seed: "hjm-motion-demo",
+  expressionLabel: "표정",
+  motion: "움직임",
+  expressions: [
+    { value: "idle", label: "기본" },
+    { value: "happy", label: "기쁨" },
+    { value: "sad", label: "슬픔" },
+    { value: "surprised", label: "놀람" },
+    { value: "wink", label: "윙크" },
+    { value: "sleepy", label: "졸림" },
+    { value: "thinking", label: "생각" },
+  ],
+} as const;
+
+export const animatedStatisticTools = { decrease: "줄이기", increase: "늘리기", reset: "0으로", step: 125 } as const;
+
+export const voiceNoteTools = { loading: "불러오는 중 상태", error: "오류 상태" } as const;

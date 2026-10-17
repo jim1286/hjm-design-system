@@ -5,7 +5,10 @@ import {
   getCollectionRailTargetOffset, getCollectionRailItemOffset, getCollectionRailRevealOffset, getCollectionRailPhysicalOffset,
   type CollectionRailItem, type CollectionRailDensity,
 } from "@hjmds/design-contracts/collection-rail";
-import { Button } from "./actions.js";
+import { IconButton } from "./actions.js";
+import { glyph } from "@hjmds/design-contracts/foundations";
+import { resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
+import { DrawnChevron } from "./internal/drawn-glyphs.js";
 import { useHjmNativeTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
@@ -22,7 +25,8 @@ export function CollectionRail({ label, items, renderItem, labels, density = col
   emptyContent, defaultStartKey, onStartKeyChange, layoutStyle, testID }: CollectionRailProps) {
   validateCollectionRail(items);
   if (!label.trim() || Object.values(labels).some(value => !value.trim())) throw new TypeError("CollectionRail labels must not be empty");
-  const { environment, tokens } = useHjmNativeTheme(), direction = environment.direction;
+  const { environment, palette, tokens } = useHjmNativeTheme(), direction = environment.direction;
+  const chevronColor = resolveIconButtonPresentation("ghost", palette, false).content;
   const scroll = useRef<ScrollView>(null);
   const [width, setWidth] = useState(0), [offset, setOffset] = useState(0);
   const layout = resolveCollectionRailLayout(items.length, width, density, tokens.spacing.md);
@@ -91,8 +95,9 @@ export function CollectionRail({ label, items, renderItem, labels, density = col
       {items.length === 0 ? emptyContent : null}
     </ScrollView>
     <View accessibilityLabel={labels.navigation} style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "flex-end", gap: tokens.spacing.sm, marginTop: tokens.spacing.sm }}>
-      <Button tone="ghost" disabled={state.atStart} onPress={() => navigate("previous")}>{labels.previous}</Button>
-      <Button tone="ghost" disabled={state.atEnd} onPress={() => navigate("next")}>{labels.next}</Button>
+      {/* Tool actions: icon buttons named by the localized label, matching Web (2026-10-17 review E9). */}
+      <IconButton label={labels.previous} tone="ghost" disabled={state.atStart} onPress={() => navigate("previous")}><DrawnChevron direction="start" size={glyph.sm} color={chevronColor} /></IconButton>
+      <IconButton label={labels.next} tone="ghost" disabled={state.atEnd} onPress={() => navigate("next")}><DrawnChevron direction="end" size={glyph.sm} color={chevronColor} /></IconButton>
     </View>
   </View>;
 }

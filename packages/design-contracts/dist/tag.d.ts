@@ -41,7 +41,11 @@ export declare const tagRecipe: {
                 key: "textMuted";
                 alpha?: number;
             }>;
-            readonly border: null;
+            readonly border: Readonly<{
+                source: "theme";
+                key: "border";
+                alpha?: number;
+            }>;
         };
         readonly brand: {
             readonly background: Readonly<{
@@ -54,7 +58,11 @@ export declare const tagRecipe: {
                 key: "contentBrand";
                 alpha?: number;
             }>;
-            readonly border: null;
+            readonly border: Readonly<{
+                source: "theme";
+                key: "border";
+                alpha?: number;
+            }>;
         };
         readonly info: {
             readonly background: Readonly<{

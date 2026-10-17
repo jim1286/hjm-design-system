@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { ScrollView, Text as NativeText, View } from "react-native";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import {
@@ -42,6 +42,16 @@ export function LineScore({ teams, totals, currentPeriod = null, minPeriods, ren
   // visible name, which stays in the row's accessibility label (2026-10-14 Yajalal device check: "L…").
   const CELL = 23, TOTAL = 27, ROW = 36, NAME = renderTeam ? 40 : 64;
   const header = color(dataTableRecipe.header.color), live = color(dataTableRecipe.sortButton.activeColor);
+  // Extra innings overflow the period strip. Open it at the live period (or the latest one) and flash the scroll
+  // indicator; starting at inning 1 hid the 9th–11th and read as an eight-inning game (2026-10-17 review N4).
+  const strip = useRef<ScrollView>(null), viewport = useRef(0);
+  const focusIndex = score.currentPeriod ?? periods.length;
+  const revealPeriod = (contentWidth: number) => {
+    const overflow = contentWidth - viewport.current;
+    if (viewport.current <= 0 || overflow <= 0) return;
+    strip.current?.scrollTo({ x: Math.min(overflow, Math.max(0, focusIndex * CELL - viewport.current)), animated: false });
+    strip.current?.flashScrollIndicators();
+  };
   const rowLabel = (team: LineScoreTeam) => `${team.name} ${totalColumns.map(column => `${column.header} ${team.totals[column.header] ?? "—"}`).join(", ")}`;
   return <View accessibilityLabel={accessibilityLabel} style={[{ flexDirection: "row", borderRadius: 12, overflow: "hidden", backgroundColor: colors.surface, paddingVertical: spacing.xs }, layoutStyle]}>
     <View>
@@ -50,10 +60,11 @@ export function LineScore({ teams, totals, currentPeriod = null, minPeriods, ren
         {renderTeam ? renderTeam(team) : <NativeText numberOfLines={1} style={{ flex: 1, color: score.leaderId === team.id ? colors.text : colors.textBody, fontSize: 14, fontWeight: score.leaderId === team.id ? "800" : "600" }}>{team.name}</NativeText>}
       </View>)}
     </View>
-    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1, justifyContent: "flex-end" }}>
+    <ScrollView ref={strip} horizontal style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1, justifyContent: "flex-end" }}
+      onLayout={event => { viewport.current = event.nativeEvent.layout.width; }} onContentSizeChange={revealPeriod}>
       {periods.map((column, index) => {
         const isLive = score.currentPeriod === index + 1;
-        return <View key={column.id} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden style={{ width: CELL, alignItems: "center", borderRadius: 8, backgroundColor: isLive ? color(dataTableRecipe.row.selectedBackground) : "transparent" }}>
+        return <View key={column.id} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden style={{ width: CELL, alignItems: "center", borderRadius: 8, backgroundColor: isLive ? color(dataTableFamilyRecipe.highlight.background) : "transparent" }}>
           <NativeText style={{ height: 26, lineHeight: 26, color: isLive ? live : header, fontSize: 11, fontWeight: "700" }}>{column.header}</NativeText>
           {teams.map(team => <NativeText key={team.id} style={{ height: ROW, lineHeight: ROW, color: team.periods[index] ? colors.text : colors.textMuted, fontSize: 14, fontWeight: team.periods[index] ? "700" : "500", ...num }}>{formatLineScoreCell(team.periods[index])}</NativeText>)}
         </View>;
@@ -89,20 +100,21 @@ export function MatrixTable<Key extends string = string>({ ids, labelOf, getCell
   return <View accessibilityLabel={accessibilityLabel} style={[{ flexDirection: "row", borderRadius: 12, overflow: "hidden", backgroundColor: colors.surface }, layoutStyle]}>
     <View style={{ borderRightWidth: 1, borderColor: border }}>
       <View style={{ height: 32 }} />
-      {ids.map(id => <View key={id} style={{ width: NAME, height: ROW, justifyContent: "center", paddingHorizontal: spacing.sm, borderTopWidth: 1, borderColor: border, backgroundColor: id === highlightId ? color(dataTableRecipe.row.selectedBackground) : "transparent" }}>
+      {ids.map(id => <View key={id} style={{ width: NAME, height: ROW, justifyContent: "center", paddingHorizontal: spacing.sm, borderTopWidth: 1, borderColor: border, backgroundColor: id === highlightId ? color(dataTableFamilyRecipe.highlight.background) : "transparent" }}>
         <NativeText numberOfLines={1} style={{ color: colors.text, fontSize: 13, fontWeight: "700" }}>{labelOf(id)}</NativeText>
       </View>)}
     </View>
     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
       <View>
         <View style={{ flexDirection: "row", height: 32 }}>{ids.map(id => <NativeText key={id} accessibilityRole="header" numberOfLines={1} style={{ width: CELL, lineHeight: 32, textAlign: "center", color: color(dataTableRecipe.header.color), fontSize: 12, fontWeight: "700" }}>{labelOf(id)}</NativeText>)}</View>
-        {matrix.map((cells, rowIndex) => <View key={ids[rowIndex]} style={{ flexDirection: "row", height: ROW, borderTopWidth: 1, borderColor: border, backgroundColor: ids[rowIndex] === highlightId ? color(dataTableRecipe.row.selectedBackground) : "transparent" }}>
+        {matrix.map((cells, rowIndex) => <View key={ids[rowIndex]} style={{ flexDirection: "row", height: ROW, borderTopWidth: 1, borderColor: border, backgroundColor: ids[rowIndex] === highlightId ? color(dataTableFamilyRecipe.highlight.background) : "transparent" }}>
           {cells.map((cell, columnIndex) => {
             const name = `${labelOf(ids[rowIndex]!)} 대 ${labelOf(ids[columnIndex]!)}`;
             if (cell === "self") return <View key={columnIndex} accessibilityElementsHidden importantForAccessibility="no" style={{ width: CELL, backgroundColor: color(dataTableFamilyRecipe.groupRow.background) }} />;
             const tone = cell?.tone ? dataTableFamilyRecipe.tone[cell.tone] : null;
             return <View key={columnIndex} accessible accessibilityLabel={`${name} ${cell?.label ?? "—"}`} style={{ width: CELL, alignItems: "center", justifyContent: "center" }}>
-              {cell?.heat && <View pointerEvents="none" style={{ position: "absolute", left: 3, right: 3, top: 5, bottom: 5, borderRadius: 6, backgroundColor: heat[cell.heat.side], opacity: dataTableFamilyRecipe.heatAlpha[cell.heat.strength] }} />}
+              {/* Heat fills the whole cell, as Web's cell background; an inset pill made the same table look different (2026-10-17 N5). */}
+              {cell?.heat && <View pointerEvents="none" style={{ position: "absolute", left: 0, right: 0, top: 0, bottom: 0, backgroundColor: heat[cell.heat.side], opacity: dataTableFamilyRecipe.heatAlpha[cell.heat.strength] }} />}
               <NativeText numberOfLines={1} style={{ color: tone ? color(tone.color) : colors.textBody, fontSize: 12, fontWeight: tone ? tone.fontWeight : "600", ...num }}>{cell?.label ?? "—"}</NativeText>
             </View>;
           })}

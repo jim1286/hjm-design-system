@@ -61,8 +61,8 @@ export function Asset({ descriptor, children, accessory, layoutStyle }: AssetPro
       </View>
       {accessory ? (
         <View
-          // Outside the frame's corner so it never covers the media's middle.
-          style={{ position: "absolute", bottom: -assetRecipe.accessory.offset, right: -assetRecipe.accessory.offset }}
+          // Outside the frame's end/bottom corner so it never covers the media's middle; `end` mirrors in RTL like Web.
+          style={{ position: "absolute", bottom: -assetRecipe.accessory.offset, end: -assetRecipe.accessory.offset }}
         >
           {accessory}
         </View>

@@ -6,16 +6,20 @@ import { useHjmNativeTheme } from "../provider.js";
 // Agreement check and PasswordField eye. They mirror Web's built-in `calendar` / `chevron*` paths (24-unit grid)
 // instead of the text placeholders "▣" and "→" these controls used before (2026-10-17 review).
 const hidden = { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants" };
+const chevronTurn = { up: 45, down: 225, start: -45, end: 135 };
 export function DrawnChevron({ direction, size, color, strokeWidth = 2 }) {
     const arm = size * 0.36;
     // Physical sides follow the reading direction (scenario matrix rtl): the top+start corner rotated toward the
-    // tip draws the same up/down chevron in LTR and RTL.
+    // tip draws the same up/down chevron in LTR and RTL, and start/end chevrons point to the reading start/end.
     const rtl = useHjmNativeTheme().environment.direction === "rtl";
-    const turn = (direction === "up" ? 45 : 225) * (rtl ? -1 : 1);
+    const turn = chevronTurn[direction] * (rtl ? -1 : 1);
+    const vertical = direction === "up" || direction === "down";
+    const tipLeft = (direction === "start") !== rtl;
     return _jsx(View, { ...hidden, style: { width: size, height: size, alignItems: "center", justifyContent: "center" }, children: _jsx(View, { style: {
                 width: arm, height: arm, borderColor: color, borderTopWidth: strokeWidth, ...(rtl ? { borderRightWidth: strokeWidth } : { borderLeftWidth: strokeWidth }),
-                // A rotated corner: 45deg opens downward (points up), 225deg points down. Offset keeps the tip optically centered.
-                transform: [{ translateY: direction === "up" ? arm * 0.2 : -arm * 0.2 }, { rotate: `${turn}deg` }],
+                // A rotated corner: 45deg opens downward (points up), 225deg points down, -45/135 point left/right in LTR.
+                // The offset keeps the tip optically centered.
+                transform: [vertical ? { translateY: direction === "up" ? arm * 0.2 : -arm * 0.2 } : { translateX: tipLeft ? arm * 0.2 : -arm * 0.2 }, { rotate: `${turn}deg` }],
             } }) });
 }
 export function DrawnCalendar({ size, color, strokeWidth = 2 }) {

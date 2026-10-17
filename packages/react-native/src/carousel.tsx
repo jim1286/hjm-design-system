@@ -1,12 +1,15 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import { AccessibilityInfo, AppState, PanResponder, View } from "react-native";
+import { AccessibilityInfo, AppState, PanResponder, Pressable, View } from "react-native";
 import {
   carouselRecipe, resolveCarouselDescriptor, getCarouselNavigationTarget, isCarouselAutoplayActive,
   type CarouselSlideDescriptor, type CarouselSelection, type CarouselAutoplayConfig,
   type ComposeCarouselAccessibleName,
 } from "@hjmds/design-contracts/components/carousel";
-import { Button } from "./actions.js";
-import { Text } from "./primitives.js";
+import { Button, IconButton } from "./actions.js";
+import { resolveColorReference } from "@hjmds/design-contracts/color-references";
+import { resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
+import { glyph } from "@hjmds/design-contracts/foundations";
+import { DrawnChevron } from "./internal/drawn-glyphs.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 import { useControllableState } from "./internal/state.js";
@@ -25,7 +28,7 @@ export type CarouselProps = CarouselSelection & Readonly<{
 
 export function Carousel({ label, slides, renderSlide, composeAccessibleName, labels, autoplay,
   currentKey, defaultCurrentKey, onCurrentKeyChange, layoutStyle }: CarouselProps) {
-  const { environment, tokens } = useHjmNativeTheme();
+  const { environment, palette, tokens } = useHjmNativeTheme();
   const [storedCurrent, setCurrent] = useControllableState({
     ...(currentKey === undefined ? {} : { value: currentKey }),
     defaultValue: defaultCurrentKey ?? slides[0]?.id ?? "",
@@ -80,6 +83,7 @@ export function Carousel({ label, slides, renderSlide, composeAccessibleName, la
     },
   });
   const selected = resolved.find((slide) => slide.current)!;
+  const chevronColor = resolveIconButtonPresentation("ghost", palette, false).content;
   return <View style={[{ gap: carouselRecipe.sizes.medium.gap, direction: environment.direction }, layoutStyle]}>
     {autoplay ? <Button tone="ghost" disabled={environment.reducedMotion || screenReader}
       onPress={() => { if (last) setCurrent(slides[0]!.id); setRotating(!rotating || last); }}>
@@ -92,18 +96,26 @@ export function Carousel({ label, slides, renderSlide, composeAccessibleName, la
         {renderSlide(slide)}
       </View>)}
     </View>
-    {/* A separate adjustable position preserves access to interactive card children. */}
-    <View accessible accessibilityRole="adjustable" accessibilityLabel={`${label}: ${selected.accessibleName}`}
-      accessibilityValue={{ min: 1, max: slides.length, now: selected.position, text: selected.accessibleName }}
-      accessibilityActions={[{ name: "increment", label: labels.next }, { name: "decrement", label: labels.previous }]}
-      onAccessibilityAction={({ nativeEvent }) => { if (nativeEvent.actionName === "increment") move("next"); if (nativeEvent.actionName === "decrement") move("previous"); }}>
-      <Text align="center" variant="caption">{selected.accessibleName}</Text>
-    </View>
-    <View accessibilityLabel={labels.navigation} onFocus={() => setRotating(false)} style={{ flexDirection: "row", flexWrap: "wrap", gap: tokens.spacing.xs, justifyContent: "center" }}>
-      <Button tone="ghost" disabled={current === slides[0]!.id} onPress={() => move("previous")}>{labels.previous}</Button>
-      {resolved.map((slide) => <Button key={slide.id} tone={slide.current ? "secondary" : "ghost"}
-        accessibilityLabel={slide.accessibleName} accessibilityState={{ selected: slide.current }} onPress={() => select(slide.id)}>{String(slide.position)}</Button>)}
-      <Button tone="ghost" disabled={last} onPress={() => move("next")}>{labels.next}</Button>
+    {/* Same controls as Web: previous/next icon buttons around position dots (2026-10-17 review N6; Native showed a
+        caption plus numbered buttons with the current page as a secondary button). The dot row is one adjustable
+        element, like a platform page control, which also keeps interactive card children reachable. */}
+    <View accessibilityLabel={labels.navigation} onFocus={() => setRotating(false)} style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: tokens.spacing.xs }}>
+      <IconButton label={labels.previous} tone="ghost" disabled={current === slides[0]!.id} onPress={() => move("previous")}>
+        <DrawnChevron direction="start" size={glyph[carouselRecipe.sizes.medium.controlIcon]} color={chevronColor} />
+      </IconButton>
+      <View accessible accessibilityRole="adjustable" accessibilityLabel={`${label}: ${selected.accessibleName}`}
+        accessibilityValue={{ min: 1, max: slides.length, now: selected.position, text: selected.accessibleName }}
+        accessibilityActions={[{ name: "increment", label: labels.next }, { name: "decrement", label: labels.previous }]}
+        onAccessibilityAction={({ nativeEvent }) => { if (nativeEvent.actionName === "increment") move("next"); if (nativeEvent.actionName === "decrement") move("previous"); }}
+        style={{ flexDirection: "row", flexShrink: 1, flexWrap: "wrap", justifyContent: "center" }}>
+        {resolved.map((slide) => <Pressable key={slide.id} accessible={false} accessibilityLabel={slide.accessibleName} onPress={() => select(slide.id)}
+          style={{ alignItems: "center", height: carouselRecipe.dot.hitTarget, justifyContent: "center", width: carouselRecipe.dot.hitTarget }}>
+          <View style={{ backgroundColor: resolveColorReference(slide.current ? carouselRecipe.dot.color.current : carouselRecipe.dot.color.inactive, palette), borderRadius: carouselRecipe.dot.diameter / 2, height: carouselRecipe.dot.diameter, width: carouselRecipe.dot.diameter }} />
+        </Pressable>)}
+      </View>
+      <IconButton label={labels.next} tone="ghost" disabled={last} onPress={() => move("next")}>
+        <DrawnChevron direction="end" size={glyph[carouselRecipe.sizes.medium.controlIcon]} color={chevronColor} />
+      </IconButton>
     </View>
   </View>;
 }

@@ -5,7 +5,7 @@ import { Heading } from "@hjmds/react-native/heading";
 import { ToggleGroup } from "@hjmds/react-native/toggle-group";
 import { BottomInfo } from "@hjmds/react-native/bottom-info";
 import { Collapsible } from "@hjmds/react-native/collapsible";
-import { Asset } from "@hjmds/react-native/asset";
+import { Asset, AssetGroup } from "@hjmds/react-native/asset";
 import { AuthProviderButton } from "@hjmds/react-native/provider-button";
 import { AuthScreenLayout } from "@hjmds/react-native/auth-screen";
 import { Carousel } from "@hjmds/react-native/carousel";
@@ -144,8 +144,24 @@ import {
   stepsExample,
   tabsExample,
   topBarExample,
+  accordionExample,
+  assetExample,
+  avatarExample,
+  badgeExample,
+  cardExample,
+  collapsibleExample,
+  counterBadgeExample,
+  descriptionListExample,
+  imageExample,
+  listExample,
+  listRowExample,
+  statisticExample,
+  tagExample,
+  timelineExample,
+  uploadItemExample,
 } from "../../shared/component-examples";
 import { calendarExampleGrid } from "../../shared/calendar-example";
+import { listRowRecipe } from "@hjmds/design-contracts/recipes";
 import type { DateRangeValue } from "@hjmds/design-contracts/components/date-range";
 const noop = () => undefined;
 
@@ -604,107 +620,90 @@ return (<StoryFrame><Section title={copy.title} description={copy.description}><
 </Stack></Section></StoryFrame>);
 }
 
+// Native Avatar defaults to 44pt; list rows pass the recipe leading size (40), which Web medium already is.
+// Data-display examples read the same shared spec as Web (2026-10-17 review N1): English placeholders, other counts and
+// debug lines ("Selected row: None", "Cancelled: No") made the two renderers incomparable.
 function BadgeExample({ variant }: { variant: PreviewVariant }) {
-return (<StoryFrame><Badge label="Live" tone="success" /></StoryFrame>);
+return (<StoryFrame><Stack axis="inline" gap="sm">{badgeExample.map(item => <Badge key={item.label} label={item.label} {...("tone" in item ? { tone: item.tone } : {})} />)}</Stack></StoryFrame>);
 }
 
 function AvatarExample({ variant }: { variant: PreviewVariant }) {
-return (<StoryFrame><Avatar accessibilityLabel="HJM profile" name="HJM Profile" /></StoryFrame>);
+return (<StoryFrame><Avatar accessibilityLabel={avatarExample.name} name={avatarExample.name} /></StoryFrame>);
 }
 
 function CardExample({ variant }: { variant: PreviewVariant }) {
-return (<StoryFrame><Card
-        leading={<Text aria-hidden>✨</Text>}
-        title="Generated app"
-        description="Shared padding and hierarchy remain stable with longer descriptive copy."
-        tone="accent"
-      >
-        <Text>Composable body content</Text>
-      </Card></StoryFrame>);
+const [message, setMessage] = useState("");
+return (<StoryFrame><Card title={cardExample.title} description={cardExample.description} actions={<Button size="small" tone="secondary" onPress={() => setMessage(cardExample.result)}>{cardExample.action}</Button>} /><PreviewResult message={message} /></StoryFrame>);
 }
 
 function ListRowExample({ variant }: { variant: PreviewVariant }) {
-const [row, setRow] = useState("None");
-return (<StoryFrame><ListRow title="Morning loop" description="Updated just now" onPress={() => setRow("Morning loop")} /><Text accessibilityLiveRegion="polite">Selected row: {row}</Text></StoryFrame>);
+const [message, setMessage] = useState("");
+return (<StoryFrame><ListRow title={listRowExample.title} description={listRowExample.description} leading={<Avatar decorative name={listRowExample.title} size={listRowRecipe.leadingSize} />} leadingShape="circle" trailing={<Icon descriptor={{ name: "chevronEnd" }} renderGlyph={semanticGlyph} />} onPress={() => setMessage(listRowExample.result)} /><PreviewResult message={message} /></StoryFrame>);
 }
 
 function TagExample({ variant }: { variant: PreviewVariant }) {
-return (<StoryFrame><Tag tone="info">Featured</Tag></StoryFrame>);
+return (<StoryFrame><Stack axis="inline" gap="sm" wrap>{tagExample.map(item => <Tag key={item.label} {...("tone" in item ? { tone: item.tone } : {})}>{item.label}</Tag>)}</Stack></StoryFrame>);
 }
 
 function TimelineExample({ variant }: { variant: PreviewVariant }) {
-return (<StoryFrame><Timeline
-        composeAccessibleName={({ position, total, label }) => `${position} of ${total}, ${label}`}
-        items={[
-          { id: "created", label: "Created", timestamp: "09:30", tone: "success" },
-          { id: "shared", label: "Shared", timestamp: "10:15", tone: "info" },
-        ]}
-      /></StoryFrame>);
+return (<StoryFrame><Timeline composeAccessibleName={timelineExample.accessibleName} items={timelineExample.items} /></StoryFrame>);
 }
 
 function DescriptionListExample({ variant }: { variant: PreviewVariant }) {
-return (<StoryFrame><DescriptionList
-        availableWidth={320}
-        label="Creation metadata"
-        descriptor={{ items: [
-          { id: "status", label: "Status", value: "Ready" },
-          { id: "owner", label: "Owner", value: "HJM" },
-        ] }}
-      /></StoryFrame>);
+return (<StoryFrame><DescriptionList label={descriptionListExample.label} descriptor={{ items: descriptionListExample.items }} /></StoryFrame>);
 }
 
 function ImageExample({ variant }: { variant: PreviewVariant }) {
-return (<StoryFrame><Image
-        accessibilityLabel="Blue preview placeholder"
-        decorative={false}
-        height={180}
-        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAAFElEQVR4nGM0qz/CgA0wYRUdtBIAKh8BiZNSY5sAAAAASUVORK5CYII="
-        width={320}
-      /></StoryFrame>);
+return (<StoryFrame><Image accessibilityLabel={imageExample.label} decorative={false} fit="cover" width={imageExample.width} height={imageExample.height} src={require("../../shared/photos/mountain.jpg")} /></StoryFrame>);
 }
 
+// Floating on the bell's top-end corner (the NotificationBell placement) and inline at a row's end, as Web.
 function CounterBadgeExample({ variant }: { variant: PreviewVariant }) {
-return (<StoryFrame><CounterBadge count={128} accessibilityLabel="128 unread items" /></StoryFrame>);
+return (<StoryFrame><Stack gap="md" align="start">
+  <View style={{ position: "relative" }}>
+    <IconButton label={counterBadgeExample.bellLabel}><Icon descriptor={{ name: "notifications" }} renderGlyph={semanticGlyph} /></IconButton>
+    <View pointerEvents="none" style={{ position: "absolute", top: 0, end: 0 }}><CounterBadge count={counterBadgeExample.count} variant="floating" /></View>
+  </View>
+  <ListRow title={counterBadgeExample.inbox} trailing={<CounterBadge count={counterBadgeExample.inboxValue} accessibilityLabel={counterBadgeExample.inboxCount} />} />
+</Stack></StoryFrame>);
 }
 
 function ListExample({ variant }: { variant: PreviewVariant }) {
-const [row, setRow] = useState("None");
-return (<StoryFrame><List label="Recent items">
-        <ListRow title="Morning loop" description="Updated just now" onPress={() => setRow("Morning loop")} />
-        <ListRow title="Night signal" description="Updated yesterday" onPress={() => setRow("Night signal")} />
-      </List></StoryFrame>);
+return (<StoryFrame><List label={listExample.label}>{listExample.items.map(item => <ListRow key={item.id} title={item.title} description={item.description} leading={<Avatar decorative name={item.title} size={listRowRecipe.leadingSize} />} leadingShape="circle" />)}</List></StoryFrame>);
 }
 
 function StatisticExample({ variant }: { variant: PreviewVariant }) {
-return (<StoryFrame><Statistic descriptor={{ id: "views", label: "Views", value: "12.4K" }} /></StoryFrame>);
+return (<StoryFrame><Statistic descriptor={statisticExample} /></StoryFrame>);
 }
 
 function UploadItemExample({ variant }: { variant: PreviewVariant }) {
-const [cancelled, setCancelled] = useState(false);
-return (<StoryFrame><UploadItem
-        descriptor={{ id: "photo", name: "profile-photo.png", sizeLabel: "1.2 MB", state: { status: "uploading", progress: 0.64, progressLabel: "64% uploaded" } }}
-        labels={{ pending: "Pending", uploading: "Uploading", success: "Complete", cancel: "Cancel", retry: "Retry" }}
-        onCancel={() => setCancelled(true)}
-      /><Text accessibilityLiveRegion="polite">Cancelled: {cancelled ? "Yes" : "No"}</Text></StoryFrame>);
+const [message, setMessage] = useState("");
+return (<StoryFrame><UploadItem descriptor={uploadItemExample.descriptor} labels={uploadItemExample.labels} onCancel={() => setMessage(uploadItemExample.result)} /><PreviewResult message={message} /></StoryFrame>);
 }
 
 function AccordionExample({ variant }: { variant: PreviewVariant }) {
-return (<StoryFrame><Accordion
-        label="Details"
-        items={[{ value: "details", title: "Details", content: <Text>Expandable content</Text> }]}
-      /></StoryFrame>);
+return (<StoryFrame><Accordion label={accordionExample.label} items={accordionExample.items.map(item => ({ value: item.id, title: item.title, content: <Text>{item.panel}</Text> }))} /></StoryFrame>);
 }
 
 function CollapsibleExample({ variant }: { variant: PreviewVariant }) {
-return (<StoryFrame><Collapsible trigger="Shipping details" defaultOpen>
-        <Text>Arrives tomorrow</Text>
-      </Collapsible></StoryFrame>);
+return (<StoryFrame><Collapsible trigger={collapsibleExample.trigger} defaultOpen><Text>{collapsibleExample.body}</Text></Collapsible></StoryFrame>);
 }
 
 function AssetExample({ variant }: { variant: PreviewVariant }) {
-return (<StoryFrame><Asset descriptor={{ kind: "lottie", accessibilityLabel: "Running fox" }}>
-        <Text>Fox</Text>
-      </Asset></StoryFrame>);
+const play = <Icon descriptor={{ name: "play" }} renderGlyph={semanticGlyph} />;
+return (<StoryFrame><Section title={assetExample.title} description={assetExample.description}><Stack gap="lg">
+  <Stack gap="xs">
+    <Text variant="label" tone="muted">{assetExample.groupLabel}</Text>
+    <AssetGroup label={assetExample.groupLabel} size="large">
+      {assetExample.group.map(item => <Asset key={item.id} descriptor={"label" in item ? { kind: item.kind, size: "large", accessibilityLabel: item.label } : { kind: item.kind, size: "large", decorative: true }}
+        {...("playable" in item ? { accessory: play } : {})}><Text>{item.glyph}</Text></Asset>)}
+    </AssetGroup>
+  </Stack>
+  <Stack axis="inline" gap="sm" align="end">
+    {assetExample.sizes.map(item => <Asset key={item.id} descriptor={{ kind: item.kind, size: item.size, ...("shape" in item ? { shape: item.shape } : {}), accessibilityLabel: item.label }}
+      {...("playable" in item ? { accessory: play } : {})}><Text>{item.glyph}</Text></Asset>)}
+  </Stack>
+</Stack></Section></StoryFrame>);
 }
 
 // A local fixture exercises recovery; the previous Create draft button was a no-op.

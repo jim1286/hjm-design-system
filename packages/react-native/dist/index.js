@@ -22,7 +22,7 @@ export { Top } from "./top.js";
 export { Heading } from "./heading.js";
 export { ToggleGroup } from "./toggle-group.js";
 export { BottomInfo } from "./bottom-info.js";
-export { Collapsible } from "./collapsible.js";
+export { Collapsible, CollapsibleMarker } from "./collapsible.js";
 export { Asset, AssetGroup } from "./asset.js";
 export { TagsInput } from "./tags-input.js";
 export { DateRangePicker } from "./date-range.js";

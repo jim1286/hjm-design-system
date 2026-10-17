@@ -1,5 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { dataTableFamilyRecipe, dataTableRecipe, formatLineScoreCell, resolveComparisonRow, resolveLineScore, resolveMatrix, } from "@hjmds/design-contracts/components/data-table";
+import { useLayoutEffect, useRef } from "react";
+import { dataTableFamilyRecipe, formatLineScoreCell, resolveComparisonRow, resolveLineScore, resolveMatrix, } from "@hjmds/design-contracts/components/data-table";
 import { classNames } from "./internal.js";
 /*
  * Table family companions (2026-10-14): layouts products kept hand-building next to DataTable.
@@ -18,8 +19,8 @@ export function tableCssColor(reference) {
         ? `var(${name})`
         : `color-mix(in srgb, var(${name}) ${Math.round(reference.alpha * 100)}%, transparent)`;
 }
-/** Live period and "my team" row reuse the shared selected-row tint. */
-const familyStyle = { "--hjm-table-family-selected": tableCssColor(dataTableRecipe.row.selectedBackground) };
+/** Live period and "my team" row share the family highlight tint. */
+const familyStyle = { "--hjm-table-family-selected": tableCssColor(dataTableFamilyRecipe.highlight.background) };
 const withFamilyStyle = (layoutStyle) => ({ ...familyStyle, ...layoutStyle });
 /**
  * Cell emphasis as inline style. Heat paints a background *image* so pinned cells keep their opaque
@@ -40,17 +41,33 @@ export function tableCellEmphasis(decoration, heatColors) {
     }
     return { style: style, ...(tone ? { tone } : {}), ...(heat ? { heat: `${heat.side}-${heat.strength}` } : {}) };
 }
+/* ---------------------------------------------- Line score ------------------------------------- */
+/**
+ * Team and total columns stay pinned while only the periods scroll, as on Native: at 402px the totals — the result —
+ * scrolled off with the extra innings (2026-10-17 review E17). Totals have a fixed width so each can pin at its offset.
+ */
+const totalOffset = (count, index) => ({ insetInlineEnd: `calc(var(--hjm-line-score-total-width) * ${count - 1 - index})` });
 export function LineScore({ teams, totals, currentPeriod = null, minPeriods, renderTeam, accessibilityLabel, className, layoutStyle }) {
     const score = resolveLineScore(teams, { totals, currentPeriod, ...(minPeriods !== undefined ? { minPeriods } : {}) });
     const periods = score.columns.filter((column) => column.kind === "period");
     const totalColumns = score.columns.filter((column) => column.kind === "total");
-    return (_jsx("div", { className: classNames("hjm-table-family", "hjm-line-score", className), style: withFamilyStyle(layoutStyle), children: _jsxs("table", { className: "hjm-line-score__table", "aria-label": accessibilityLabel, children: [_jsx("thead", { children: _jsxs("tr", { children: [_jsx("td", { className: "hjm-line-score__team" }), periods.map((column, index) => {
+    // Open the period strip at the live (or latest) period, as Native: starting at inning 1 hid extra innings behind the
+    // pinned totals and read as a shorter game (2026-10-17 review N4). scroll-padding keeps it clear of the totals.
+    const host = useRef(null);
+    const focusPeriod = score.currentPeriod ?? periods.length;
+    useLayoutEffect(() => {
+        const container = host.current;
+        if (!container || container.scrollWidth <= container.clientWidth)
+            return;
+        container.querySelector(`thead [data-period="${focusPeriod}"]`)?.scrollIntoView({ block: "nearest", inline: "nearest" });
+    }, [focusPeriod, periods.length]);
+    return (_jsx("div", { ref: host, className: classNames("hjm-table-family", "hjm-line-score", className), style: { ...withFamilyStyle(layoutStyle), "--hjm-line-score-total-count": totalColumns.length }, children: _jsxs("table", { className: "hjm-line-score__table", "aria-label": accessibilityLabel, children: [_jsx("thead", { children: _jsxs("tr", { children: [_jsx("td", { className: "hjm-line-score__team" }), periods.map((column, index) => {
                                 const live = score.currentPeriod === index + 1;
-                                return _jsx("th", { scope: "col", className: "hjm-line-score__period", "aria-current": live ? "true" : undefined, "data-current": live || undefined, children: column.header }, column.id);
-                            }), totalColumns.map((column, index) => (_jsx("th", { scope: "col", className: classNames("hjm-line-score__total", index === 0 && "hjm-line-score__total-edge"), children: column.header }, column.id)))] }) }), _jsx("tbody", { children: teams.map((team) => (_jsxs("tr", { "data-leader": score.leaderId === team.id || undefined, children: [_jsx("th", { scope: "row", className: "hjm-line-score__team", children: _jsxs("span", { className: "hjm-line-score__team-content", children: [renderTeam?.(team), _jsx("span", { children: team.name })] }) }), periods.map((column, index) => {
+                                return _jsx("th", { scope: "col", className: "hjm-line-score__period", "data-period": index + 1, "aria-current": live ? "true" : undefined, "data-current": live || undefined, children: column.header }, column.id);
+                            }), totalColumns.map((column, index) => (_jsx("th", { scope: "col", className: classNames("hjm-line-score__total", index === 0 && "hjm-line-score__total-edge"), style: totalOffset(totalColumns.length, index), children: column.header }, column.id)))] }) }), _jsx("tbody", { children: teams.map((team) => (_jsxs("tr", { "data-leader": score.leaderId === team.id || undefined, children: [_jsx("th", { scope: "row", className: "hjm-line-score__team", children: _jsxs("span", { className: "hjm-line-score__team-content", children: [renderTeam?.(team), _jsx("span", { children: team.name })] }) }), periods.map((column, index) => {
                                 const value = team.periods[index];
                                 return _jsx("td", { className: "hjm-line-score__period", "data-current": score.currentPeriod === index + 1 || undefined, "data-scored": typeof value === "number" && value > 0 || undefined, children: formatLineScoreCell(value) }, column.id);
-                            }), totalColumns.map((column, index) => (_jsx("td", { className: classNames("hjm-line-score__total", index === 0 && "hjm-line-score__total-edge"), children: team.totals[column.header] ?? "—" }, column.id)))] }, team.id))) })] }) }));
+                            }), totalColumns.map((column, index) => (_jsx("td", { className: classNames("hjm-line-score__total", index === 0 && "hjm-line-score__total-edge"), style: totalOffset(totalColumns.length, index), children: team.totals[column.header] ?? "—" }, column.id)))] }, team.id))) })] }) }));
 }
 export function MatrixTable({ ids, labelOf, getCell, highlightId = null, heatColors, accessibilityLabel, className, layoutStyle }) {
     const matrix = resolveMatrix(ids, getCell);

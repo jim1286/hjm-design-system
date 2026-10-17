@@ -42,13 +42,11 @@ granular subpath로만 가져온다. 이 subpath는 optional peer를 import 한�
 // Web
 import { Button } from "@hjmds/react/actions";
 import { QRCode } from "@hjmds/react/qr-code";
-import { Stack } from "@hjmds/react/layout";
-import { spacing } from "@hjmds/design-contracts/foundations";
 
 <QRCode
   value={inviteUrl}
   label={t("invite.qrLabel")}
-  fallback={<Stack layoutStyle={{ marginTop: spacing.md }}><Button tone="secondary" onClick={copyLink}>{t("invite.copyLink")}</Button></Stack>}
+  fallback={<Button tone="secondary" onClick={copyLink}>{t("invite.copyLink")}</Button>}
 />
 ```
 
@@ -56,14 +54,12 @@ import { spacing } from "@hjmds/design-contracts/foundations";
 // Native
 import { Button } from "@hjmds/react-native/actions";
 import { QRCode } from "@hjmds/react-native/qr-code";
-import { Stack } from "@hjmds/react-native/primitives";
-import { spacing } from "@hjmds/design-contracts/foundations";
 
 <QRCode
   value={inviteUrl}
   label={t("invite.qrLabel")}
   size={224}
-  fallback={<Stack layoutStyle={{ marginTop: spacing.md }}><Button tone="secondary" onPress={copyLink}>{t("invite.copyLink")}</Button></Stack>}
+  fallback={<Button tone="secondary" onPress={copyLink}>{t("invite.copyLink")}</Button>}
 />
 ```
 
@@ -85,8 +81,8 @@ import { spacing } from "@hjmds/design-contracts/foundations";
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 기본 192×192. 실제 변은 (모듈 수 + 여백 4모듈×2)의 정수배로 내림돼 `size`보다 조금 작을 수 있다. 모듈당 최소 2px. 흰 여백 4모듈이 그림 안에 포함되므로 바깥에 흰 테두리를 또 두르지 않는다 | `qrCodeRecipe.quietZone`·`minModuleSize`, `qr-code.tsx` |
-| 간격 | QR과 `fallback` 사이 간격을 컴포넌트가 주지 않는다(Web CSS 없음, Native는 감싼 `View`만). `fallback` 슬롯 안의 [Stack](stack.md)에 `layoutStyle={{ marginTop: spacing.md }}`로 16을 준다. QRCode 바깥 Stack은 내부 두 요소의 간격을 바꿀 수 없다 | `packages/react/src/qr-code.tsx`, `packages/react-native/src/qr-code.tsx` |
-| 순서·정렬 | QR 위, `fallback` 바로 아래. 가운데 정렬은 감싸는 레이아웃이 한다 | 같은 파일 |
+| 간격 | QR과 `fallback` 사이는 `qrCodeRecipe.fallbackGap` 12(`spacing.sm`)를 컴포넌트가 준다(2026-10-17. 그전에는 간격·정렬이 없어 Web에서 링크가 QR 오른쪽 아래에 붙었다) | `qrCodeRecipe`, `packages/react/src/qr-code.tsx`, `packages/react-native/src/qr-code.tsx` |
+| 순서·정렬 | QR 위, `fallback` 아래. 루트가 세로로 쌓고 둘을 가운데 정렬한다 | 같은 파일 |
 | 고정·스크롤 | 고정되지 않는다. 카드·시트 본문 안에 둔다 | — |
 | 좁은 폭·큰 글자 | 좁은 폭에서 `size`를 화면 폭보다 크게 두지 않는다. 큰 글자에서도 QR 크기는 그대로이고 `fallback`만 커진다 | — |
 
@@ -95,7 +91,7 @@ import { spacing } from "@hjmds/design-contracts/foundations";
 │      ┌────────┐      │
 │      │ ▓▒▓▒▓▒ │ 192  │  ← 흰 여백 4모듈 포함
 │      └────────┘      │
-│    (fallback marginTop md)      │
+│    (fallbackGap 12)      │
 │    [ 링크 복사 ]     │  ← fallback (필수)
 └──────────────────────┘
 ```

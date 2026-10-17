@@ -161,10 +161,10 @@ export const componentCatalog = [
     { name: "ListRow", category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "listRowRecipe" },
     { name: "VirtualList", category: "data-display", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), aliases: ["Listy"], recipe: "virtualListRecipe" },
     { name: "Collapsible", category: "data-display", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), aliases: ["Disclosure"], recipe: "collapsibleRecipe", behavior: "collapsible" },
-    { name: "Accordion", category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "accordionRecipe", behavior: "disclosureGroup", ...evidenceNeeded("그룹 내 disclosure 상태와 trigger·panel 접근성 관계를 Web 키보드와 Native press 회귀로 확인했습니다.") },
+    { name: "Accordion", category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "accordionRecipe", behavior: "disclosureGroup", ...evidenceNeeded("묶음 안의 펼침 상태와 제목·내용의 접근성 연결을 웹 키보드와 앱 누르기 회귀 검사로 확인했습니다.") },
     { name: "Statistic", category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "statisticRecipe" },
     // Timeline labels are visible prose and now have long-copy matrix coverage on both renderers.
-    { name: "Timeline", category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "timelineRecipe", ...evidenceNeeded("두 제품의 이력 UI가 공통 descriptor와 Web/RN dot·connector renderer를 소비합니다. 남은 renderer 증거는 generated 보고서에서 추적합니다.") },
+    { name: "Timeline", category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "timelineRecipe", ...evidenceNeeded("두 제품의 이력 화면이 같은 항목 설명과 웹·앱의 점·연결선 렌더러를 씁니다. 남은 렌더러 증거는 자동 생성 보고서에서 추적합니다.") },
     // 2026-10-14: Native DataTable renderer added (pinned columns, sortDescFirst, summary row); beta until device evidence.
     { name: "DataTable", category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "beta"), recipe: "dataTableRecipe", behavior: "dataTable" },
     // 2026-10-14 user request: chart drawing absorbed from product libraries (docs/chart.md); one family for all chart types.
@@ -174,7 +174,7 @@ export const componentCatalog = [
     { name: "Carousel", category: "data-display", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "carouselRecipe", behavior: "carousel" },
     { name: "DescriptionList", category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "descriptionListRecipe", aliases: ["Descriptions"] },
     // Image alt is accessibility copy, not visible renderer text; load and fallback behavior remain covered.
-    { name: "Image", category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "imageRecipe", ...evidenceNeeded("Web load/error/fallback·framework adapter와 Native fallback·optimized-host adapter가 기본 실행 증거를 제공합니다. 남은 renderer 증거는 generated 보고서에서 추적합니다.") },
+    { name: "Image", category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "imageRecipe", ...evidenceNeeded("웹은 불러오기·실패·대체 표시와 프레임워크 연결, 앱은 대체 표시와 최적화 호스트 연결이 기본 실행 증거입니다. 남은 렌더러 증거는 자동 생성 보고서에서 추적합니다.") },
     { name: "QRCode", category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "qrCodeRecipe" },
     { name: "Tag", category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "tagRecipe" },
     { name: "Tour", category: "overlay", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), recipe: "tourRecipe", behavior: "tour", aliases: ["CoachMark"] },

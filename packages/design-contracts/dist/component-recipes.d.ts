@@ -335,7 +335,11 @@ export declare const badgeRecipe: {
                 key: "bg";
                 alpha?: number;
             }>;
-            readonly border: null;
+            readonly border: Readonly<{
+                source: "theme";
+                key: "border";
+                alpha?: number;
+            }>;
         };
         readonly strong: {
             readonly content: Readonly<{
@@ -371,7 +375,11 @@ export declare const badgeRecipe: {
                 key: "bg";
                 alpha?: number;
             }>;
-            readonly border: null;
+            readonly border: Readonly<{
+                source: "theme";
+                key: "border";
+                alpha?: number;
+            }>;
         };
         readonly info: {
             readonly content: Readonly<{

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { View } from "react-native";
 import { spacing } from "@hjmds/design-contracts/foundations";
 import { resolveImageComparison, type ImageComparisonDescriptor } from "@hjmds/design-contracts/reference-controls";
+import { imageRecipe } from "@hjmds/design-contracts/components/image";
 import { Slider } from "./slider.js";
 import { Image } from "./data-display.js";
 import { Text } from "./primitives.js";
@@ -10,15 +11,17 @@ export type ImageComparisonProps = ImageComparisonDescriptor & Readonly<{ onValu
 export function ImageComparison(props: ImageComparisonProps) {
   const { before, after, label, value, onValueChange, getValueText, disabled = false, decrementLabel, incrementLabel } = props;
   const { aspectRatio, fraction } = resolveImageComparison(props);
-  const { colors } = useHjmNativeTheme();
+  const { colors, tokens } = useHjmNativeTheme();
   const [width, setWidth] = useState(0);
   // Render both images at the full measured width. Resizing the clipped image
   // itself would zoom it and make before/after coordinates incomparable.
   const height = width / aspectRatio;
+  // The frame takes the images' own corner radius; a square frame showed the surface through their rounded corners
+  // (2026-10-17 review N9).
   // Match the physical left/right image coordinates instead of mirroring only
   // the captions in RTL; the slider keeps its normal localized interaction.
   return <View style={{ gap: spacing.xs }}><View style={{ direction: "ltr", flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", gap: spacing.sm }}><Text>{before.label}</Text><Text>{after.label}</Text></View>
-    <View onLayout={event => setWidth(event.nativeEvent.layout.width)} style={{ aspectRatio, width: "100%", overflow: "hidden", backgroundColor: colors.surfaceAlt, direction: "ltr" }}>
+    <View onLayout={event => setWidth(event.nativeEvent.layout.width)} style={{ aspectRatio, width: "100%", overflow: "hidden", borderRadius: tokens.radius[imageRecipe.radius], backgroundColor: colors.surfaceAlt, direction: "ltr" }}>
       {width > 0 ? <>
         <Image src={after.src} width={width} height={height} decorative={false} accessibilityLabel={after.label} />
         <View style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: width * fraction, overflow: "hidden" }}><Image src={before.src} width={width} height={height} decorative={false} accessibilityLabel={before.label} /></View>

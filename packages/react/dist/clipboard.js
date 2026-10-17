@@ -1,18 +1,10 @@
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
-import { Button } from "./actions.js";
+import { Button, IconButton } from "./actions.js";
+import { Icon } from "./supplemental-display.js";
 const defaultFeedbackDuration = 2000;
-/**
- * Copying is three things products kept re-deriving: the async clipboard call,
- * the temporary "copied" state, and announcing that state to a screen reader.
- * The last one is the part that was always missing — a label that only changes
- * visually tells a non-sighted user nothing happened.
- */
-export const ClipboardButton = forwardRef(function ClipboardButton(
-// Default `secondary` (2026-10-06): copying is a helper beside the screen's main action, and the
-// inherited Button default `primary` added a second primary to screens that already had one.
-// Pass `tone="primary"` explicitly when copying *is* the screen's main action.
-{ value, labels, feedbackDuration = defaultFeedbackDuration, onCopy, onCopyError, tone = "secondary", ...props }, forwardedRef) {
+/** One copy state machine for the labelled and the icon presentation. */
+function useClipboardCopy({ value, feedbackDuration, onCopy, onCopyError }) {
     const [copied, setCopied] = useState(false);
     const [copying, setCopying] = useState(false);
     const pending = useRef(false);
@@ -73,6 +65,28 @@ export const ClipboardButton = forwardRef(function ClipboardButton(
                 setCopying(false);
         }
     }, [value, feedbackDuration, onCopy, onCopyError]);
+    return { copied, copying, copy };
+}
+/**
+ * Copying is three things products kept re-deriving: the async clipboard call,
+ * the temporary "copied" state, and announcing that state to a screen reader.
+ * The last one is the part that was always missing — a label that only changes
+ * visually tells a non-sighted user nothing happened.
+ */
+export const ClipboardButton = forwardRef(function ClipboardButton(
+// Default `secondary` (2026-10-06): copying is a helper beside the screen's main action, and the
+// inherited Button default `primary` added a second primary to screens that already had one.
+// Pass `tone="primary"` explicitly when copying *is* the screen's main action.
+{ value, labels, feedbackDuration = defaultFeedbackDuration, onCopy, onCopyError, tone = "secondary", ...props }, forwardedRef) {
+    const { copied, copying, copy } = useClipboardCopy({ value, feedbackDuration, onCopy, onCopyError });
     return (_jsxs(_Fragment, { children: [_jsx(Button, { ...props, tone: tone, loading: props.loading || copying, ref: forwardedRef, onClick: () => { void copy(); }, children: copied ? labels.copied : labels.idle }), _jsx("span", { role: "status", className: "hjm-visually-hidden", children: copied ? labels.copied : "" })] }));
+});
+/**
+ * Copy as a tool action (a code block or share-link header): an icon button named by the localized label, copy → check
+ * while the copied state lasts. A bordered text button there read as a form action (2026-10-17 review E10).
+ */
+export const ClipboardIconButton = forwardRef(function ClipboardIconButton({ value, labels, feedbackDuration = defaultFeedbackDuration, onCopy, onCopyError, tone = "ghost", ...props }, forwardedRef) {
+    const { copied, copying, copy } = useClipboardCopy({ value, feedbackDuration, onCopy, onCopyError });
+    return (_jsxs(_Fragment, { children: [_jsx(IconButton, { ...props, tone: tone, label: copied ? labels.copied : labels.idle, loading: props.loading || copying, ref: forwardedRef, onClick: () => { void copy(); }, children: _jsx(Icon, { name: copied ? "check" : "copy" }) }), _jsx("span", { role: "status", className: "hjm-visually-hidden", children: copied ? labels.copied : "" })] }));
 });
 //# sourceMappingURL=clipboard.js.map

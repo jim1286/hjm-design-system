@@ -1357,6 +1357,7 @@ export declare const recipeRegistry: {
         readonly minModuleSize: 2;
         readonly foreground: "#000000";
         readonly background: "#ffffff";
+        readonly fallbackGap: 12;
     };
     readonly accordionRecipe: {
         readonly slots: readonly ["root", "item", "header", "trigger", "title", "indicator", "panel", "divider"];
@@ -1688,7 +1689,11 @@ export declare const recipeRegistry: {
                     key: "bg";
                     alpha?: number;
                 }>;
-                readonly border: null;
+                readonly border: Readonly<{
+                    source: "theme";
+                    key: "border";
+                    alpha?: number;
+                }>;
             };
             readonly strong: {
                 readonly content: Readonly<{
@@ -1724,7 +1729,11 @@ export declare const recipeRegistry: {
                     key: "bg";
                     alpha?: number;
                 }>;
-                readonly border: null;
+                readonly border: Readonly<{
+                    source: "theme";
+                    key: "border";
+                    alpha?: number;
+                }>;
             };
             readonly info: {
                 readonly content: Readonly<{
@@ -1927,6 +1936,7 @@ export declare const recipeRegistry: {
                     readonly offsetY: 4;
                 };
                 readonly maxWidth: 480;
+                readonly contentMaxWidth: null;
                 readonly outerPaddingHorizontal: 16;
                 readonly outerPaddingTop: 8;
             };
@@ -1946,6 +1956,7 @@ export declare const recipeRegistry: {
                 readonly radius: null;
                 readonly shadow: null;
                 readonly maxWidth: null;
+                readonly contentMaxWidth: 480;
                 readonly outerPaddingHorizontal: 0;
                 readonly outerPaddingTop: 0;
             };
@@ -1970,6 +1981,7 @@ export declare const recipeRegistry: {
                     readonly offsetY: 4;
                 };
                 readonly maxWidth: 384;
+                readonly contentMaxWidth: null;
                 readonly outerPaddingHorizontal: 16;
                 readonly outerPaddingTop: 8;
             };
@@ -7786,7 +7798,11 @@ export declare const recipeRegistry: {
                     key: "textMuted";
                     alpha?: number;
                 }>;
-                readonly border: null;
+                readonly border: Readonly<{
+                    source: "theme";
+                    key: "border";
+                    alpha?: number;
+                }>;
             };
             readonly brand: {
                 readonly background: Readonly<{
@@ -7799,7 +7815,11 @@ export declare const recipeRegistry: {
                     key: "contentBrand";
                     alpha?: number;
                 }>;
-                readonly border: null;
+                readonly border: Readonly<{
+                    source: "theme";
+                    key: "border";
+                    alpha?: number;
+                }>;
             };
             readonly info: {
                 readonly background: Readonly<{

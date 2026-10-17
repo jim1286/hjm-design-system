@@ -91,11 +91,11 @@ import { Carousel } from "@hjmds/react-native/carousel";
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 부모 폭을 채우고 슬라이드 높이는 내용이 정한다(현재 슬라이드만 보인다). 이전·다음은 ghost Button(medium 44), Web 점은 지름 8에 터치 영역 44(`control.minTouchTarget`) | `carouselRecipe.dot`, `.hjm-carousel__dot` |
+| 크기 | 부모 폭을 채우고 슬라이드 높이는 내용이 정한다(현재 슬라이드만 보인다). 이전·다음은 문구를 접근성 이름으로 받는 ghost IconButton(chevronStart/chevronEnd, `carouselRecipe.sizes.medium.controlIcon`), 점은 지름 8에 터치 영역 44(`control.minTouchTarget`), 색은 `carouselRecipe.dot.color`. 두 플랫폼 동일 | `carouselRecipe.dot`, `.hjm-carousel__dot` |
 | 간격 | 영역 사이(재생 버튼·슬라이드·조작 줄) `spacing.sm` 12, 조작 줄 안 `spacing.xs` 8 | `carouselRecipe.sizes.medium.gap`, `.hjm-carousel__controls` |
-| 순서·정렬 | 위→아래 [일시정지/재개(autoplay일 때, 시작 쪽)] → [슬라이드] → [이전][점 · · ·][다음] 가운데 정렬. Native는 점 대신 번호 버튼(현재 `secondary`, 나머지 `ghost`)을 이전·다음 사이에 둔다 | `react/src/carousel.tsx`, `react-native/src/carousel.tsx` |
+| 순서·정렬 | 위→아래 [일시정지/재개(autoplay일 때, 시작 쪽)] → [슬라이드] → [이전][점 · · ·][다음] 가운데 정렬. Native 점 줄은 하나의 adjustable 요소(플랫폼 page control과 같은 방식)라 화면 낭독기는 위·아래 쓸기로 넘긴다. 위치 문구는 화면에 쓰지 않고 접근성 값으로만 전한다(2026-10-17) | `react/src/carousel.tsx`, `react-native/src/carousel.tsx` |
 | 고정·스크롤 | 고정 영역이 없다. 슬라이드 넘김은 버튼·점(또는 `CarouselMotion` 스와이프)으로 하고 가로 스크롤 영역을 만들지 않는다 | `.hjm-carousel__slide[hidden]` |
-| 좁은 폭·큰 글자 | 조작 줄은 줄바꿈된다. Web 큰 글자에서는 점이 첫 줄, [이전][다음]이 둘째 줄 두 칸으로 나뉜다 | `.hjm-carousel[data-large-text="true"] .hjm-carousel__controls` |
+| 좁은 폭·큰 글자 | [이전][점][다음]은 한 줄을 유지하고 점 묶음만 줄바꿈된다. 아이콘 버튼이라 큰 글자에서도 폭이 늘지 않는다 | `.hjm-carousel__controls`, `react-native/src/carousel.tsx` |
 
 ## 꼭 지킬 것
 

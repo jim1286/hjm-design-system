@@ -40,15 +40,16 @@ export const tagRecipe = {
     slots: ["root", "label"],
     defaults: tagDefaults,
     tones: {
+        // Same as badgeRecipe: a canvas plate without a border vanished on the canvas (2026-10-17 review E3).
         neutral: {
             background: semanticColors.canvas,
             content: semanticColors.content.secondary,
-            border: null,
+            border: semanticColors.border.default,
         },
         brand: {
             background: semanticColors.canvas,
             content: semanticColors.content.brand,
-            border: null,
+            border: semanticColors.border.default,
         },
         info: {
             background: semanticColors.canvas,
