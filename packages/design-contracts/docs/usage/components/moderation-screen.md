@@ -37,6 +37,7 @@ import { ModerationScreen } from "@hjmds/react/screen-flows";
 
 <ModerationScreen
   title={t("report.title")}
+  exit={{ kind: "close", label: t("common.close"), onClick: closeReport }}
   reasonLabel={t("report.reason")}
   reasons={[
     { value: "spam", label: t("report.reason.spam") },
@@ -63,6 +64,7 @@ import { ModerationScreen } from "@hjmds/react-native/screen-flows";
 
 <ModerationScreen
   title={t("report.title")}
+  exit={{ kind: "close", label: t("common.close"), onPress: closeReport }}
   reasonLabel={t("report.reason")}
   reasons={[
     { value: "spam", label: t("report.reason.spam") },
@@ -93,14 +95,14 @@ import { ModerationScreen } from "@hjmds/react-native/screen-flows";
 | `children` | 상세 설명 입력 등 추가 내용 |
 | `submit` | 신고 행동 `{ label, onAction, disabled?, pending? }` |
 | `block` | 차단 버튼 행동과 `AlertDialog` 확인 요청(`mode: "confirm"`) |
-| ScreenLayout props | `title`, `description`, `header`, `leading`, `actions`, `notice`, `state`, `stateAction` 등(`footer` 제외) |
+| ScreenLayout props | `title`, `description`, `exit`(push·모달로 여는 신고 화면의 닫기/뒤로, 헤더 시작 끝), `header`, `actions`, `notice`, `state`, `stateAction` 등(`footer` 제외) |
 
 ## 배치
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | ScreenLayout 폭(최대 720); 사유는 세로 `RadioGroup`, 신고·차단은 `Button` 기본 크기 | `ModerationScreen`, `screen-flows.tsx` `Action` |
-| 간격 | 화면 padding `spacing.md` 16; 본문 사유 선택–`children` `spacing.lg` 20; footer 신고–차단 `spacing.sm` 12 | Web·Native `ModerationScreen` `Stack gap="lg"`·`gap="sm"` |
+| 간격 | 화면 padding `spacing.md` 16; 본문 사유 선택–`children` `spacing.lg` 20; footer 신고–차단 `spacing.xs` 8(세로로 쌓은 버튼, `actionGroupRecipe.stackedGap`) | Web·Native `ModerationScreen` `Stack gap="lg"`·`gap="xs"` |
 | 순서·정렬 | 헤더(제목) → 본문(사유 → 추가 설명 `children`) → footer(신고 primary → 차단 ghost) | 렌더 순서 |
 | 고정·스크롤 | 헤더·footer 고정, 본문 화면 스크롤; 차단 확인은 AlertDialog 오버레이 | `ScreenLayout`, `AlertDialog` |
 | 좁은 폭·큰 글자 | 사유 문구는 줄바꿈되고 항목이 세로로 늘어난다; footer 버튼은 세로로 쌓여 좁은 폭에서도 나란히 줄지 않는다 | `RadioGroup orientation="vertical"`, `Stack` |
@@ -110,5 +112,6 @@ import { ModerationScreen } from "@hjmds/react-native/screen-flows";
 - 신고 버튼은 `reason`이 `reasons` 안의 값이 아니거나 `state`가 `ready`가 아니면 자동으로 막힌다. `reasonPicker`를 쓸 때도 `reasons`에 유효한 값을 넣어야 버튼이 열린다.
 - 차단 버튼의 `block.action.onAction`은 호출되지 않는다. 버튼은 확인 대화상자만 열고, 실제 차단은 `confirmation.onConfirm`에서 한다.
 - 서버 신고·권한·차단 mutation, 완료 후 이동은 제품 소유다. 사유 목록과 정책 문구도 제품이 정한다.
+- 신고 화면은 push·모달로 열리므로 `exit`로 나갈 길을 준다. 2026-10-17 화면 검토(S5)에서 exit 없는 예제가 나갈 수 없는 화면으로 렌더링됐다.
 - 확인 대화상자의 성공 후 닫힘·실패 문구는 [AlertDialog](alert-dialog.md) 계약을 따른다.
 - `block`을 제거하면 열린 확인 세션도 종료한다. 나중에 차단 행동을 다시 공급해도 사용자가 버튼을 새로 눌러야 확인창이 열린다. 2026-10-13 사라진 행동의 확인 상태가 부활하던 경로를 수정했다. 대상이 바뀌는 제품은 대상 id를 화면 key/초안·요청 수명에 함께 연결한다.

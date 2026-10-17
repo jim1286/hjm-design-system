@@ -29,7 +29,7 @@ export function OverviewScreen({ items, toolbar, toolbarLabel, collection: suppl
   // Retain the same effect/grid/surface subtree when the profile changes: optional
   // decoration can disappear without remounting fields, focus or local state.
   const canvas = designProfile?.material.canvas ?? { layers: ["mesh"] as const, intensity: 0, active: false };
-  return <EffectSurface descriptor={canvas} layoutStyle={{ width: "100%" }}>
+  return <EffectSurface descriptor={canvas} radius="none" layoutStyle={{ width: "100%" }}>
     <ScreenLayout {...screen}>
       <Stack gap="xl">
         {toolbar ? <Collapsible trigger={toolbarLabel} open={toolsOpen} onOpenChange={setToolsOpen} presentation={toolbarPresentation === "inline" ? "inline" : "disclosure"} keepMounted layoutStyle={overviewToolbarLayout}>{toolbar}</Collapsible> : null}

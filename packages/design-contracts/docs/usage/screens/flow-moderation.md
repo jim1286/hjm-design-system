@@ -31,6 +31,7 @@ host: 남은 높이·safe area·키보드
 
 | 행동 | 컴포넌트·tone | 위치 | 개수·순서 |
 | --- | --- | --- | --- |
+| 닫기 | ScreenLayout `exit` `kind="close"` | 헤더 시작 끝 아이콘 버튼 | 1. 신고하지 않고 화면을 닫는다 |
 | 작업 | ModerationScreen 공개 행동 슬롯 | 신고는 footer; 차단은 별도 확인 후 실행 | 같은 표면에 경쟁하는 primary 하나만 |
 | 복구 | Button·secondary | 오류 근처 | 재시도할 대상과 범위를 표시 |
 
@@ -70,6 +71,7 @@ import { ModerationScreen } from "@hjmds/react/screen-flows";
 
 <ModerationScreen
   title={t("report.title")}
+  exit={{ kind: "close", label: t("common.close"), onClick: closeReport }}
   reasonLabel={t("report.reason")}
   reasons={[
     { value: "spam", label: t("report.reason.spam") },
@@ -96,6 +98,7 @@ import { ModerationScreen } from "@hjmds/react-native/screen-flows";
 
 <ModerationScreen
   title={t("report.title")}
+  exit={{ kind: "close", label: t("common.close"), onPress: closeReport }}
   reasonLabel={t("report.reason")}
   reasons={[
     { value: "spam", label: t("report.reason.spam") },
@@ -135,3 +138,4 @@ import { ModerationScreen } from "@hjmds/react-native/screen-flows";
 ## 근거
 
 - 신고와 차단의 서로 다른 결과 상황 표: 2026-10-13 전수 점검 — 최초 조회와 변경 요청의 상태를 같은 골격으로 설명하던 부분을 구체화했다.
+- 닫기 `exit`: 2026-10-17 화면 검토(S5)에서 exit 없는 신고 예제가 나갈 길 없는 화면으로 렌더링돼 예제·코드 골격에 추가했다.

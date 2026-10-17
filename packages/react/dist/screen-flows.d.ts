@@ -16,6 +16,11 @@ export type ScreenFlowAction = Readonly<{
     pending?: boolean;
     icon?: ReactNode;
 }>;
+/** Header tool action (refresh, add): icon-only so it never pushes the centered title. A required text `add` made
+ * products route exits ("취소") through it as a header text button (2026-10-17 screen review); exits use `exit`. */
+export type ScreenFlowIconAction = ScreenFlowAction & Readonly<{
+    icon: ReactNode;
+}>;
 type Base = Omit<ScreenLayoutProps, "children" | "footer">;
 export type ListDetailScreenProps = Base & {
     list: ReactNode;
@@ -23,7 +28,7 @@ export type ListDetailScreenProps = Base & {
         content: ReactNode;
     };
     back: ScreenFlowAction;
-    refresh?: ScreenFlowAction;
+    refresh?: ScreenFlowIconAction;
     loadMore?: ScreenFlowAction;
 };
 /** Keep the list mounted so input and scroll survive a detail visit. Routers may instead restore host scroll state. */
@@ -86,7 +91,7 @@ export type MediaSelectionScreenProps = Base & {
     library?: ReactNode;
     selectionSummary?: ReactNode;
     items: readonly MediaSelectionItem[];
-    add: ScreenFlowAction;
+    add?: ScreenFlowIconAction;
     done: ScreenFlowAction;
     labels: UploadItemLabels;
     actionLabels: {

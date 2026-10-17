@@ -64,14 +64,14 @@
 제품은 이 고르기를 수정 화면 사진 영역(또는 사진 고르기 Sheet)에 넣는다.
 
 ```text
-[◉][◯][◯][◯]   ← 얼굴 선택 Button ghost + selected > Avatar 40, wrap gap sm 12
+[◉][◯][◯][◯]   ← ImageChoiceGroup selectionMode="single", 타일 72, 사이 spacing.xs 8
 미리보기 Avatar 64 renderFallback = 고른 얼굴
 ```
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
 | 바깥 틀 | 수정 화면 본문(EditorScreen) 안 | 사진 영역 | 위 표의 수정 화면을 따른다 |
-| 얼굴 줄 | Stack `axis="inline" wrap gap="sm"` > Button `tone="ghost"` `selected` > Avatar(`createBlobatarFallback({ seed })`) | 사진 아래 | 사이 `spacing.sm` 12, 선택지 Avatar 40, 미리보기 64 |
+| 얼굴 줄 | [ImageChoiceGroup](../components/image-choice-group.md) `selectionMode="single"`, 항목 `image` = `createBlobatarFallback({ seed })({ size: imageChoiceRecipe.tileSize, decorative: true })`, 이름은 항목 `label` | 사진 아래 | 타일 `imageChoiceRecipe.tileSize` 72, 사이 `imageChoiceRecipe.gap`(`spacing.xs` 8), 미리보기 64 |
 
 ## 버튼과 행동 위치
 
@@ -79,13 +79,13 @@
 | --- | --- | --- | --- |
 | 프로필 수정 | `edit` → Button ghost | 요약 아래 | 1 |
 | 계정 메뉴 | IconButton ghost(접근성 이름 "계정 메뉴") | 머리 끝(`actions`) | 1. 로그아웃·연결 계정은 메뉴 안 |
-| 게시물·저장됨 전환 | Button ghost + `selected` | 게시물 영역 맨 위 | 2. `selected`는 primary로 세지 않는다 |
+| 게시물·저장됨 전환 | [SegmentedControl](../components/segmented-control.md)(label "프로필 보기") | 게시물 영역 맨 위 | 2개 항목, 단일 선택. 선택 상태를 ghost Button으로 흉내 내지 않는다 |
 | 게시물 열기 | 사진 칸 전체 | 격자 | 칸마다 1. 상세는 ScreenLayout + `exit` 뒤로 아이콘 |
 | 로그아웃 | 계정 Sheet `footer` Button ghost → AlertDialog `confirm` | Sheet 아래 | 1. 확인 뒤 실행 |
 | 저장 | EditorScreen `submit` → Button primary(`pending`이면 `loading`) | 수정 footer 끝 | 1. 바뀐 것이 없거나 이름이 비면 비활성 |
 | 닫기 | EditorScreen `cancel` → 헤더 시작 쪽 × 아이콘(`exit` `close`) | 수정 머리 앞 | 1. dirty면 `discard` 확인(danger) |
 | 사진 변경 | Button `secondary` `small` → Sheet | 수정 본문 사진 아래 | 1 |
-| 기본 얼굴 고르기 | Button ghost + `selected` > Avatar | 사진 영역 | 얼굴 수만큼 |
+| 기본 얼굴 고르기 | ImageChoiceGroup `selectionMode="single"` | 사진 영역 | 얼굴 수만큼, 단일 선택 |
 | 다시 시도 | `stateAction` Button | 상태 안내 아래 | 오류·로그인 필요일 때 1 |
 
 ## 상태
@@ -247,3 +247,4 @@ editing ? <EditorScreen title={t("profile.edit")} submitPlacement="footer" dirty
 - 프로필과 게시물 상태 분리 상황 표: 2026-10-13 전수 점검 — 최초 조회와 변경 요청의 상태를 같은 골격으로 설명하던 부분을 구체화했다.
 - 한 항목 구성: 2026-10-06 같은 예제를 그리던 `기본 흐름/프로필과 계정`(실험 정리 단계)과 배포 직접 조립 `프로필 편집`을 합쳤고, 프로필 편집 고유의 기본 얼굴 고르기를 별도 스토리·절로 옮겼다.
 - 계정 예제 상태(초안 유지·returnFocusRef·로그아웃 정리): 2026-10-13 실제 계정 예제 검수.
+- 게시물·저장됨 전환과 기본 얼굴 고르기 컴포넌트: 2026-10-17 화면 검토(S6)에서 지침의 "Button ghost + selected"가 선택 규칙(선택 상태 ghost 버튼 흉내 금지)과 실제 예제(SegmentedControl, ImageChoiceGroup)와 다른 것을 확인해 실제 구현에 맞췄다.

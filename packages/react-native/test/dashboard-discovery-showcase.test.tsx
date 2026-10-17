@@ -2,7 +2,7 @@ import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, expect, it } from "vitest";
 import { HjmNativeProvider } from "@hjmds/react-native/provider";
 import { Button } from "@hjmds/react-native/actions";
-import { SegmentedControl, SearchField } from "@hjmds/react-native/inputs";
+import { Chip, SegmentedControl, SearchField } from "@hjmds/react-native/inputs";
 import { Sheet } from "@hjmds/react-native/overlays";
 import { AnimatedStatistic } from "@hjmds/react-native/statistic-motion";
 import { ActivityHeatmap } from "@hjmds/react-native/activity-heatmap";
@@ -13,7 +13,8 @@ let tree: ReactTestRenderer;
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 afterEach(() => act(() => tree?.unmount()));
 const render = (screen: "dashboard" | "gallery") => act(() => { tree = create(<HjmNativeProvider reducedMotion>{screen === "dashboard" ? <Dashboard/> : <Gallery/>}</HjmNativeProvider>, {createNodeMock: element => String(element.type) === "Pressable" ? { label: typeof element.props === "object" && element.props !== null && "accessibilityLabel" in element.props ? element.props.accessibilityLabel : undefined } : null}); });
-const button = (name: string) => tree.root.findAllByType(Button).find(node => (node.props.accessibilityLabel ?? node.props.children) === name)!;
+// The saved-only filter is a Chip (selection, not a pressed Button) since 2026-10-16.
+const button = (name: string) => tree.root.findAllByType(Button).find(node => (node.props.accessibilityLabel ?? node.props.children) === name) ?? tree.root.findAllByType(Chip).find(node => node.props.label === name)!;
 const press = (name: string) => act(() => button(name).props.onPress());
 const segmented = (label: string) => tree.root.findAllByType(SegmentedControl).find(node => node.props.label === label)!;
 const text = () => JSON.stringify(tree.toJSON());
@@ -30,19 +31,19 @@ it("combines filters, resets empty results and shares saving between detail and 
  act(() => tree.root.findByType(SearchField).props.onValueChange("없는 작품")); expect(text()).toContain("찾는 작품이 없어요"); press("필터 초기화");
  expect(tree.root.findByType(SearchField).props.value).toBe(""); expect(text()).toContain("6개의 작품");
  press("초록을 기록하는 하루 보기"); const sheet = tree.root.findByType(Sheet);
- act(() => sheet.props.footer.props.onPress()); expect(button("저장한 작품 1")).toBeDefined(); expect(tree.root.findByType(Sheet).props.footer.props.selected).toBe(true);
- act(() => sheet.props.onOpenChange(false)); press("저장한 작품 1"); expect(text()).toContain("1개의 작품"); press("초록을 기록하는 하루 저장 취소"); expect(text()).toContain("찾는 작품이 없어요");
+ act(() => sheet.props.footer.props.onPress()); expect(button("저장한 작품만 1")).toBeDefined(); expect(tree.root.findByType(Sheet).props.footer.props.selected).toBe(true);
+ act(() => sheet.props.onOpenChange(false)); press("저장한 작품만 1"); expect(text()).toContain("1개의 작품"); press("초록을 기록하는 하루 저장 취소"); expect(text()).toContain("찾는 작품이 없어요");
 });
 it("applies each rapid sort and saved-only host toggle rather than reusing an old captured value", () => {
  render("gallery"); act(() => { const callback = segmented("정렬").props.onValueChange; callback("latest"); callback("popular"); }); expect(segmented("정렬").props.value).toBe("popular");
- act(() => { const callback = button("저장한 작품 0").props.onPress; callback(); callback(); }); expect(button("저장한 작품 0").props.selected).toBe(false); expect(text()).toContain("6개의 작품");
+ act(() => { const callback = button("저장한 작품만 0").props.onPress; callback(); callback(); }); expect(button("저장한 작품만 0").props.selected).toBe(false); expect(text()).toContain("6개의 작품");
 });
 
 it("provides a stable sheet return target after its saved-only origin disappears", () => {
- render("gallery"); press("초록을 기록하는 하루 저장"); press("저장한 작품 1"); press("초록을 기록하는 하루 보기");
+ render("gallery"); press("초록을 기록하는 하루 저장"); press("저장한 작품만 1"); press("초록을 기록하는 하루 보기");
  const sheet = tree.root.findByType(Sheet); expect(sheet.props.returnFocusRef.current.label).toBe("초록을 기록하는 하루 보기");
  act(() => sheet.props.footer.props.onPress()); act(() => sheet.props.onOpenChange(false));
  expect(tree.root.findByType(Sheet).props.returnFocusRef.current).not.toBeNull();
- expect(tree.root.findByType(Sheet).props.returnFocusRef.current.label).toBe("저장한 작품 0");
- expect(button("저장한 작품 0").props.selected).toBe(true);
+ expect(tree.root.findByType(Sheet).props.returnFocusRef.current.label).toBe("저장한 작품만 0");
+ expect(button("저장한 작품만 0").props.selected).toBe(true);
 });

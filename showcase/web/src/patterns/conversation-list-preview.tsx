@@ -1,36 +1,39 @@
 import { useState } from "react";
-import { Text } from "@hjmds/react/layout";
+import { Ban, BellOff, MailOpen, SquarePen, Trash2 } from "lucide-react";
+import { Stack, Text } from "@hjmds/react/layout";
+import { IconButton } from "@hjmds/react/actions";
+import { SearchField } from "@hjmds/react/forms";
 import { Avatar } from "@hjmds/react/display";
 import { ConversationRow } from "@hjmds/react/conversation-row";
 import { ContextMenu } from "@hjmds/react/context-menu";
 import { ScreenLayout } from "@hjmds/react/screens";
+import { PreviewTools } from "./preview-tools";
+import { conversationActionResult, conversationListActions, conversationListCopy as copy, conversationOpened, conversationRowMenuLabel, conversationRowSummary, filterConversations, type ConversationListAction } from "../../../shared/conversation-list";
 
 // 2026-10-16 conversation list: right-click/long-press opens the measured DM action menu
 // (mark unread, mute, then block/delete in the danger tone). Click still opens the conversation.
-const photo = (id: string) => `https://images.unsplash.com/${id}?w=96&h=96&fit=crop`;
-const rows = [
-  { id: "seoyeon", name: "서연", preview: "토요일 2시에 만나요", time: "3분", unread: true, photo: photo("photo-1472396961693-142e6e269027") },
-  { id: "walk", name: "산책 모임", preview: "지우: 지난주에 찍은 길이에요", time: "1시간", unread: false, photo: photo("photo-1501785888041-af3ef285b470") },
-  { id: "minjun", name: "민준", preview: "사진 고마워요!", time: "어제", unread: false, photo: photo("photo-1441974231531-c6227db76b6e") },
-];
-const done: Record<string, string> = { unread: "읽지 않음으로 표시했어요", mute: "알림을 해제했어요", block: "차단했어요", delete: "대화를 삭제했어요" };
+const icons: Record<ConversationListAction, typeof MailOpen> = { unread: MailOpen, mute: BellOff, block: Ban, delete: Trash2 };
 
 export function ConversationListPreview() {
-  const [status, setStatus] = useState("행을 길게 누르거나 우클릭해 보세요.");
-  return <div style={{ height: 720 }}>
-    <ScreenLayout title="메시지" as="section" scroll="content" notice={<Text tone="muted">{status}</Text>}>
-      <div>{rows.map(row => <ContextMenu key={row.id} accessibilityLabel={`${row.name} 대화 메뉴`}
-        items={[
-          { id: "unread", label: "읽지 않은 상태로 표시", textValue: "읽지 않은 상태로 표시" },
-          { id: "mute", label: "알림 해제", textValue: "알림 해제" },
-          { id: "block", label: "차단", textValue: "차단", tone: "danger" },
-          { id: "delete", label: "삭제", textValue: "삭제", tone: "danger" },
-        ]}
-        onAction={id => setStatus(`${row.name}: ${done[id]}`)}>
-        <a href={`#${row.id}`} aria-label={`${row.name}, ${row.preview}, ${row.time}${row.unread ? ", 읽지 않음" : ""}`} onClick={event => { event.preventDefault(); setStatus(`${row.name} 대화를 열어요.`); }} style={{ display: "block", color: "inherit", textDecoration: "none" }}>
-          <ConversationRow title={row.name} preview={row.preview} metadata={row.time} unread={row.unread} avatar={<Avatar name={row.name} size="large" src={row.photo} alt="" />} />
-        </a>
-      </ContextMenu>)}</div>
-    </ScreenLayout>
-  </div>;
+  const [status, setStatus] = useState<string>(copy.hint);
+  const [query, setQuery] = useState("");
+  const rows = filterConversations(query);
+  // The demo result line is a preview tool, not screen content; the product's notice slot holds search.
+  return <Stack gap="sm" style={{ height: 720 }}>
+    <PreviewTools><Text tone="muted" role="status">{status}</Text></PreviewTools>
+    <div style={{ flex: 1, minHeight: 0 }}>
+      <ScreenLayout title={copy.title} as="section" scroll="content"
+        actions={<IconButton label={copy.compose} tone="ghost" onClick={() => setStatus(`${copy.compose}를 시작해요.`)}><SquarePen size={20} /></IconButton>}
+        notice={<SearchField label={copy.search} clearLabel={copy.clearSearch} value={query} onValueChange={setQuery} />}
+        state={rows.length ? { kind: "ready" } : { kind: "empty", title: copy.noMatch }}>
+        <div>{rows.map(row => <ContextMenu key={row.id} accessibilityLabel={conversationRowMenuLabel(row)}
+          items={conversationListActions.map(action => { const Icon = icons[action.id]; return { id: action.id, label: action.label, textValue: action.label, icon: <Icon size={20} />, ...(action.danger ? { tone: "danger" as const } : {}) }; })}
+          onAction={id => setStatus(conversationActionResult(row, id))}>
+          <a href={`#${row.id}`} aria-label={conversationRowSummary(row)} onClick={event => { event.preventDefault(); setStatus(conversationOpened(row)); }} style={{ display: "block", color: "inherit", textDecoration: "none" }}>
+            <ConversationRow title={row.name} preview={row.preview} metadata={row.time} unread={row.unread} avatar={<Avatar name={row.name} size="large" src={row.photo} alt="" />} />
+          </a>
+        </ContextMenu>)}</div>
+      </ScreenLayout>
+    </div>
+  </Stack>;
 }

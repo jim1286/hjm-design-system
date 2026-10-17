@@ -165,7 +165,7 @@ it("places ListDetailScreen and SavedItemsScreen layoutStyle on the host that ow
  const tree=render(null);
  act(()=>tree.update(list()));check(tree,1);
  act(()=>tree.update(list({title:"상세",content:"본문"})));check(tree,2);
- const saved=(selectedItemId?:string)=><HjmNativeProvider theme="dark" textScale={1}><SavedItemsScreen title="저장됨" items={[{id:"a",title:"항목"}]} collections={[]} collectionId={null} {...(selectedItemId?{selectedItemId}:{})} labels={{allItems:"전체",back:"뒤로",createCollection:"새 컬렉션",privateNotice:"나만 보기",empty:"없음"}} onOpenCollection={()=>{}} onOpenItem={()=>{}} onBack={()=>{}} onCreateCollection={()=>{}} renderThumbnail={()=>null} renderDetail={item=>item.title} layoutStyle={{marginTop:307}}/></HjmNativeProvider>;
+ const saved=(selectedItemId?:string)=><HjmNativeProvider theme="dark" textScale={1}><SavedItemsScreen title="저장됨" items={[{id:"a",title:"항목"}]} collections={[]} collectionId={null} {...(selectedItemId?{selectedItemId}:{})} labels={{allItems:"전체",back:"뒤로",createCollection:"새 컬렉션",privateNotice:"나만 보기",empty:"없음"}} onOpenCollection={()=>{}} onOpenItem={()=>{}} onBack={()=>{}} onCreateCollection={()=>{}} createCollectionIcon="+" renderThumbnail={()=>null} renderDetail={item=>item.title} layoutStyle={{marginTop:307}}/></HjmNativeProvider>;
  act(()=>tree.update(saved()));check(tree,1);
  act(()=>tree.update(saved("a")));check(tree,2);
  act(()=>tree.unmount());

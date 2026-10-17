@@ -1,15 +1,17 @@
 import { useState, useSyncExternalStore } from "react";
+import { View } from "react-native";
 import { createActionSession, resolveSaveFeedback } from "@hjmds/design-contracts/action-session";
-import { createNotificationSettingsExample, initialNotificationSettings, sameNotificationSettings, notificationSettingsSummary } from "../../shared/notification-settings";
+import { createNotificationSettingsExample, initialNotificationSettings, sameNotificationSettings, notificationSettingsSummary, notificationSettingsCopy as copy } from "../../shared/notification-settings";
 import type { Meta, StoryObj } from "@storybook/react-native";
 
 import { ScreenLayout, CompositionLayout } from "@hjmds/react-native/screens";
 import { Button } from "@hjmds/react-native/actions";
-import { Stack, Text } from "@hjmds/react-native/primitives";
+import { Stack } from "@hjmds/react-native/primitives";
 import { Switch } from "@hjmds/react-native/inputs";
 import { Notice } from "@hjmds/react-native/feedback";
+import { PreviewToolButton, PreviewTools } from "./preview-tools";
 
-function NotificationSettings() {
+function NotificationSettings({ tools = false }: { tools?: boolean }) {
   const [draft, setDraft] = useState(initialNotificationSettings);
   const [example] = useState(() => createNotificationSettingsExample(createActionSession));
   const state = useSyncExternalStore(example.session.subscribe, example.session.getSnapshot, example.session.getSnapshot);
@@ -24,25 +26,23 @@ function NotificationSettings() {
     void example.save(draft, failNext);
     setFailNext(false);
   };
-  return <ScreenLayout title="알림 설정" footer={
-    <CompositionLayout description={pending ? "저장 중에도 선택을 바꿀 수 있어요. 새 선택은 다음 저장에 반영돼요." : dirty ? "아직 저장하지 않은 변경이 있어요." : "현재 저장된 설정이에요."}
-      footer={<Button onPress={save} loading={pending} disabled={!feedback.canSubmit}>{pending ? "저장 중" : saved ? "저장했어요" : !dirty ? "변경 사항이 없어요" : feedback.feedback === "error" ? "다시 저장하기" : "이 설정으로 저장하기"}</Button>} />
+  const screen = <ScreenLayout title={copy.title} footer={
+    <CompositionLayout description={pending ? copy.footer.pending : dirty ? copy.footer.dirty : copy.footer.clean}
+      footer={<Button onPress={save} loading={pending} disabled={!feedback.canSubmit}>{pending ? copy.action.pending : saved ? copy.action.saved : !dirty ? copy.action.clean : feedback.feedback === "error" ? copy.action.retry : copy.action.submit}</Button>} />
   }><Stack gap="xl">
-      <CompositionLayout title="필요한 소식만 받아요" description="원하는 알림을 골라주세요. 언제든 바꿀 수 있어요.">
+      <CompositionLayout title={copy.sectionTitle} description={copy.sectionDescription}>
         <Stack gap="md">
-          <Switch presentation="row" label="내 활동 알림" description="댓글과 답글이 도착하면 알려드려요."
+          <Switch presentation="row" label={copy.activity.label} description={copy.activity.description}
             checked={draft.activity} onCheckedChange={(activity) => setDraft(current => ({ ...current, activity }))} />
-          <Switch presentation="row" label="주간 모아보기" description="일주일의 소식을 한 번에 받아요."
+          <Switch presentation="row" label={copy.digest.label} description={copy.digest.description}
             checked={draft.digest} onCheckedChange={(digest) => setDraft(current => ({ ...current, digest }))} />
         </Stack>
-        <Text>{`저장된 설정: ${notificationSettingsSummary(state.value)}`}</Text>
-        {feedback.feedback === "error" ? <Notice announcement="assertive" tone="danger" title="저장하지 못했어요" description="선택한 설정은 그대로예요. 아래 버튼으로 다시 저장해 주세요." /> : null}
-        {(saved || feedback.feedback === "saved-with-changes") ? <Notice announcement="polite" tone={saved ? "success" : "info"} title={saved ? "알림 설정을 저장했어요" : "이전 선택을 저장했어요"} description={saved ? notificationSettingsSummary(state.value) : "새로 바꾼 설정은 아직 저장하지 않았어요."} /> : null}
-      </CompositionLayout>
-      <CompositionLayout title="예제 실행" description="이 화면에서만 유지되는 메모리 예제예요. 실제 알림 권한·푸시·계정 설정은 바뀌지 않아요.">
-        <Switch presentation="row" label="다음 저장 실패시키기" checked={failNext} disabled={pending} onCheckedChange={setFailNext} />
+        {feedback.feedback === "error" ? <Notice announcement="assertive" tone="danger" title={copy.error.title} description={copy.error.description} /> : null}
+        {(saved || feedback.feedback === "saved-with-changes") ? <Notice announcement="polite" tone={saved ? "success" : "info"} title={saved ? copy.savedTitle : copy.savedWithChanges.title} description={saved ? notificationSettingsSummary(state.value) : copy.savedWithChanges.description} /> : null}
       </CompositionLayout>
   </Stack></ScreenLayout>;
+  // The demo failure tool sits above the route host, outside the product screen; the host takes the remaining height.
+  return tools ? <View style={{ flex: 1 }}><PreviewTools><PreviewToolButton selected={failNext} disabled={pending} onPress={() => setFailNext(current => !current)}>{copy.failNext}</PreviewToolButton></PreviewTools><View style={{ flex: 1 }}>{screen}</View></View> : screen;
 
 }
 
@@ -53,3 +53,4 @@ export const Default: Story = { name: "기본",};
 
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
+export const Recovery: Story = { name: "실패와 복구", args: { tools: true } };

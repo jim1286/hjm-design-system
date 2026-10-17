@@ -76,6 +76,10 @@ export function createHjmThemeStyle(value) {
     // does not carry a second copy of the same numbers.
     style["--hjm-list-row-gap"] = rem(listRowRecipe.gap);
     style["--hjm-list-row-leading-size"] = rem(listRowRecipe.leadingSize);
+    // Native already pins a described switch to the two-line list-row height; Web
+    // let content decide (~48), so neighbouring settings rows differed by platform.
+    style["--hjm-switch-row-min-height"] = rem(switchRecipe.rowMinHeight);
+    style["--hjm-switch-row-two-line-min-height"] = rem(switchRecipe.rowTwoLineMinHeight);
     for (const [name, value] of Object.entries(switchRecipe.sizes)) {
         style[`--hjm-switch-${kebab(name)}-width`] = rem(value.width);
         style[`--hjm-switch-${kebab(name)}-height`] = rem(value.height);

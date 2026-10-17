@@ -9,7 +9,7 @@ let host: HTMLDivElement, root: Root;
 beforeEach(() => { (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true; host = document.createElement("div"); document.body.append(host); root = createRoot(host); });
 afterEach(async () => { await act(async () => root.unmount()); host.remove(); });
 const props = {
- title: "선택 사진", add: { label: "사진 추가", onAction: vi.fn() }, done: { label: "완료", onAction: vi.fn() },
+ title: "선택 사진", add: { label: "사진 추가", icon: "+", onAction: vi.fn() }, done: { label: "완료", onAction: vi.fn() },
  labels: { pending: "대기", uploading: "업로드", success: "완료됨", cancel: "업로드 취소", retry: "업로드 재시도" },
  actionLabels: { remove: "제거", moveUp: "앞으로", moveDown: "뒤로" },
  removeLabel: (item: MediaSelectionItem) => `${item.descriptor.id} 제거`, moveUpLabel: (item: MediaSelectionItem) => `${item.descriptor.id} 앞으로`, moveDownLabel: (item: MediaSelectionItem) => `${item.descriptor.id} 뒤로`,
@@ -30,7 +30,7 @@ it("keeps removal focus at the adjacent item and finally at add", async () => {
  button("b 제거").focus(); await act(async () => userEvent.keyboard("{Enter}"));
  expect(document.activeElement).toBe(button("c 제거")); expect(host.querySelector('input[aria-label="c 설명"]')).toBe(c);
  await act(async () => userEvent.keyboard("{Enter}")); expect(document.activeElement).toBe(button("a 제거"));
- await act(async () => userEvent.keyboard("{Enter}")); expect(document.activeElement?.textContent).toBe("사진 추가");
+ await act(async () => userEvent.keyboard("{Enter}")); expect(document.activeElement?.getAttribute("aria-label")).toBe("사진 추가");
 });
 it("keeps a reordered preview mounted and transfers boundary focus to an enabled action on that item", async () => {
  await act(async () => root.render(<HjmProvider><Example /></HjmProvider>));
@@ -74,7 +74,7 @@ it("returns to add when removing the last item replaces the grid with an empty s
  }
  await act(async () => root.render(<HjmProvider><EmptyExample /></HjmProvider>));
  button("a 제거").focus(); await act(async () => userEvent.keyboard("{Enter}"));
- expect(document.activeElement?.textContent).toBe("사진 추가");
+ expect(document.activeElement?.getAttribute("aria-label")).toBe("사진 추가");
 });
 it("keeps a moved action visible within the scrollable body", async () => {
  function LongExample() {

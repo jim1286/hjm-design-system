@@ -849,3 +849,7 @@ textarea {
 .hjm-profile-material-sample { position: relative; padding: var(--hjm-space-xl); }
 .hjm-profile-material-sample__backdrop { position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(125deg, var(--hjm-color-primary) 0 var(--hjm-space-lg), var(--hjm-color-surface-accent) var(--hjm-space-lg) calc(var(--hjm-space-lg) * 2)); }
 .hjm-profile-material-sample__content { position: relative; }
+
+/* Mockup studio (2026-10-17 screen review): with two resolved Grid columns the preview stays in view while the
+   settings column scrolls inside the ScreenLayout body; one column keeps normal document order. */
+.mockup-studio[data-columns="2"] > .mockup-studio__preview { position: sticky; inset-block-start: 0; align-self: start; }

@@ -11,7 +11,7 @@ let tree: ReactTestRenderer | undefined;
 afterEach(() => { if (tree) act(() => tree!.unmount()); tree = undefined; });
 const item = (id: string): MediaSelectionItem => ({ descriptor: { id, name: `${id}.jpg`, state: { status: "success" } }, preview: <TextInput accessibilityLabel={`${id} 설명`} defaultValue="초안" /> });
 const props = {
- title: "선택 사진", add: { label: "사진 추가", onAction: vi.fn() }, done: { label: "완료", onAction: vi.fn() },
+ title: "선택 사진", add: { label: "사진 추가", icon: "+", onAction: vi.fn() }, done: { label: "완료", onAction: vi.fn() },
  labels: { pending: "대기", uploading: "업로드", success: "완료됨", cancel: "업로드 취소", retry: "업로드 재시도" },
  actionLabels: { remove: "제거", moveUp: "앞으로", moveDown: "뒤로" },
  removeLabel: (item: MediaSelectionItem) => `${item.descriptor.id} 제거`, moveUpLabel: (item: MediaSelectionItem) => `${item.descriptor.id} 앞으로`, moveDownLabel: (item: MediaSelectionItem) => `${item.descriptor.id} 뒤로`,

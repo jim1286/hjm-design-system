@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-native";
 import { DateTimeSelectionPreview } from "./date-time-selection-preview";
-const meta = { title: "배포/구성/선택과 필터/날짜와 시각 선택", component: DateTimeSelectionPreview } satisfies Meta<typeof DateTimeSelectionPreview>;
+// edgeToEdge like Web: the preview paints its own profile background, so the 16pt story canvas would frame it in the outer theme.
+const meta = { title: "배포/구성/선택과 필터/날짜와 시각 선택", component: DateTimeSelectionPreview, parameters: { hjm: { edgeToEdge: true } } } satisfies Meta<typeof DateTimeSelectionPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

@@ -1,17 +1,20 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
-import { afterEach, expect, it } from "vitest";
+import { afterEach, expect, it, vi } from "vitest";
 import { HjmNativeProvider } from "@hjmds/react-native/provider";
 import { Button } from "@hjmds/react-native/actions";
 import { SearchField, SegmentedControl } from "@hjmds/react-native/inputs";
 import { Sheet } from "@hjmds/react-native/overlays";
 import { RecordComparison } from "../../../showcase/native/src/reference-flow-previews.js";
+// The example's product search glyph (lucide → react-native-svg) is not loadable in the node host.
+vi.mock("lucide-react-native", () => ({ Search: () => null }));
 import { records } from "../../../showcase/shared/reference-flows.js";
 let tree: ReactTestRenderer; let hostId=0;
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 afterEach(() => act(() => tree?.unmount()));
 const render = () => act(() => { tree=create(<HjmNativeProvider reducedMotion><RecordComparison/></HjmNativeProvider>, // The return-focus host is the Button itself (its Pressable host), not a wrapping View.
   {createNodeMock: element => ["View", "Pressable"].includes(String(element.type)) ? { hostId: ++hostId } : null}); });
-const button = (name: string) => tree.root.findAllByType(Button).find(node => node.props.children === name)!;
+// Card actions show short verbs; the record title lives in the accessible name.
+const button = (name: string) => tree.root.findAllByType(Button).find(node => (node.props.accessibilityLabel ?? node.props.children) === name)!;
 const press = (name: string) => act(() => button(name).props.onPress());
 const query = (value: string) => act(() => tree.root.findByType(SearchField).props.onValueChange(value));
 const mode = (value: string) => act(() => tree.root.findByType(SegmentedControl).props.onValueChange(value));

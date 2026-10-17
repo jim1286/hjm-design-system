@@ -6,6 +6,8 @@ import { Button } from "@hjmds/react-native/actions";
 import { SegmentedControl, TextField } from "@hjmds/react-native/inputs";
 import { CommandRecordsPreview } from "../../../showcase/native/src/command-records-preview.js";
 import { ServiceIntroduction } from "../../../showcase/native/src/reference-flow-previews.js";
+// reference-flow-previews imports a lucide search glyph (react-native-svg), which the node host cannot load.
+vi.mock("lucide-react-native", () => ({ Search: () => null }));
 import { commandCopy } from "../../../showcase/shared/command-records.js";
 import { profileCopy, profileOptions } from "../../../showcase/shared/design-profile.js";
 let tree: ReactTestRenderer;

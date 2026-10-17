@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { HjmNativeProvider } from "@hjmds/react-native/provider";
+import { useState, type ReactNode } from "react";
+import { HjmNativeProvider, useHjmNativeTheme } from "@hjmds/react-native/provider";
 import { hjmDesignPresets } from "@hjmds/design-contracts/design-profile";
 import { profileOptions, profileCopy } from "../../shared/design-profile";
 import { DatePicker } from "@hjmds/react-native/date-picker";
@@ -47,5 +47,13 @@ export function DateTimeSelectionPreview(props: DateTimeSelectionProps) {
     </PreviewTools>
   </Stack></Section></Container>;
   // Match the deployed time-selection host; product navigation owns safe-area padding.
-  return <HjmNativeProvider designProfile={hjmDesignPresets[profile.id]}><ScrollView contentContainerStyle={{ paddingVertical: spacing.lg }}>{contents}</ScrollView></HjmNativeProvider>;
+  return <HjmNativeProvider designProfile={hjmDesignPresets[profile.id]}><ProfileSurface>{contents}</ProfileSurface></HjmNativeProvider>;
+}
+
+// HjmNativeProvider only supplies context, while Web's HjmProvider root paints --hjm-color-bg. Without this the
+// selected profile tinted only the fields and the page stayed on the outer story theme (2026-10-17 review).
+// It must render inside the nested provider so useHjmNativeTheme reads the selected profile, not the story theme.
+function ProfileSurface({ children }: { children: ReactNode }) {
+  const { colors } = useHjmNativeTheme();
+  return <ScrollView style={{ flex: 1, backgroundColor: colors.bg }} contentContainerStyle={{ paddingVertical: spacing.lg }}>{children}</ScrollView>;
 }

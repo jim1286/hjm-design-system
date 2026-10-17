@@ -36,7 +36,7 @@
 │          (완료 저장 실패면) Notice danger + 다시 시도                   │
 ├──────────────────────────── footer(고정, 위 테두리 1) ─────────────────┤
 │ [          다음 / 시작하기          ]  ← primary, 마지막 단계는 complete │
-│ [               이전                ]  ← ghost, 첫 단계에는 없음        │  사이 spacing.sm 12
+│ [               이전                ]  ← ghost, 첫 단계에는 없음        │  사이 spacing.xs 8
 └ 아래 safe area(Web은 footer padding이 늘어난다) ──────────────────────┘
 ```
 
@@ -50,7 +50,7 @@
 | 단계 본문 | `steps[index].content` | 진행 문구 아래, 본문 스크롤 | 본문 안 간격은 제품 소유. 예제는 Stack `gap="lg"` 20 |
 | 관심 주제 | Stack `axis="inline" wrap gap="xs"`(Web `role="group"` + 이름) > [Chip](../components/chip.md) `selectionMode="multiple"` | 2단계 content 안 | 칩 높이 `small` 36(Native hitSlop으로 터치 44), 사이 `spacing.xs` 8 |
 | 저장 실패 | [Notice](../components/notice.md) `tone="danger"` + `action` | 마지막 단계 content 맨 아래 | 본문 Stack 간격을 따른다 |
-| footer | Stack `gap="sm"` > Button primary(다음·완료) → Button ghost(이전) | 맨 아래, 고정 | 사이 `spacing.sm` 12, 위 테두리 1 |
+| footer | Stack `gap="xs"` > Button primary(다음·완료) → Button ghost(이전) | 맨 아래, 고정 | 사이 `spacing.xs` 8(세로로 쌓은 버튼), 위 테두리 1 |
 
 ## 버튼과 행동 위치
 
@@ -199,3 +199,4 @@ Native는 기존 ScreenLayout의 본문 스크롤 안으로 단계 안내를 옮
 - 한 항목 구성: 2026-10-06 배포 직접 조립 온보딩(Steps·ContentTransition·여러 개 고르는 주제 버튼)을 이 항목으로 합치고 그 고유 상태인 관심 주제 고르기를 2단계로 옮겼다.
 - 관심 주제 Chip `multiple`: 2026-10-06 ghost+`selected` Button에서 바꿨다. 여러 개 고르기는 checkbox 역할로 읽혀야 하는데 Button `selected`는 눌림 토글(`aria-pressed`)로 읽히고, 한 줄짜리 주제 선택에 CheckboxGroup은 세로 목록이라 화면을 많이 차지한다.
 - Native 단계 안내를 본문 스크롤 안에 둠: 2026-10-07 iOS 26.5 / 200% 글자에서 키보드가 열린 시작 안내의 고정 머리가 본문 높이를 모두 소비했다([검토 결과](../../../../../docs/qa/2026-10-07-experiment-promotion-release.md)).
+- footer 버튼 간격 8: 2026-10-17 사용자 지시(button.md 간격) — 세로로 쌓은 하단 버튼의 12 간격이 벌어져 보였다.

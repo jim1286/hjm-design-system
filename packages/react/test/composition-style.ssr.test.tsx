@@ -372,7 +372,7 @@ describe("web composition style", () => {
       [308, "hjm-screen", <EditorScreen title="Edit" dirty={false} submit={action} cancel={action} discard={{ ...confirm }} layoutStyle={{ marginTop: 308 }}>body</EditorScreen>],
       [309, "hjm-screen", <ProfileScreen title="Profile" summary={null} edit={action} layoutStyle={{ marginTop: 309 }} />],
       [310, "hjm-screen", <ModerationScreen title="Report" reasons={[]} reason={null} onReasonChange={() => {}} reasonLabel="Reason" submit={action} layoutStyle={{ marginTop: 310 }} />],
-      [311, "hjm-screen", <MediaSelectionScreen title="Media" items={[]} add={action} done={action} labels={{ pending: "p", uploading: "u", success: "s", cancel: "c", retry: "r" }}
+      [311, "hjm-screen", <MediaSelectionScreen title="Media" items={[]} done={action} labels={{ pending: "p", uploading: "u", success: "s", cancel: "c", retry: "r" }}
         actionLabels={{ remove: "r", moveUp: "u", moveDown: "d" }} removeLabel={() => "r"} moveUpLabel={() => "u"} moveDownLabel={() => "d"}
         onRemove={() => {}} onMove={() => {}} onRetry={() => {}} onCancel={() => {}} layoutStyle={{ marginTop: 311 }} />],
       [312, "hjm-screen", <SearchScreen title="Search" query="" queryLabel="Query" queryClearLabel="Clear" onQueryChange={() => {}} onSearch={() => {}} layoutStyle={{ marginTop: 312 }}>{null}</SearchScreen>],
@@ -382,7 +382,7 @@ describe("web composition style", () => {
       [315, "hjm-screen", <CommentThreadScreen title="Comments" items={[]} expandedIds={[]} onExpandedChange={() => {}} onLike={() => {}} onReply={() => {}} replyLabel="Reply"
         repliesLabel={(count) => `${count}`} layoutStyle={{ marginTop: 315 }} />],
       [316, "<div", <SavedItemsScreen title="Saved" items={[]} collections={[]} labels={{ allItems: "All", back: "Back", createCollection: "New", privateNotice: "Private", empty: "Empty" }}
-        onOpenCollection={() => {}} onOpenItem={() => {}} onBack={() => {}} onCreateCollection={() => {}} renderThumbnail={() => null} renderDetail={() => null} layoutStyle={{ marginTop: 316 }} />],
+        onOpenCollection={() => {}} onOpenItem={() => {}} onBack={() => {}} onCreateCollection={() => {}} createCollectionIcon="+" renderThumbnail={() => null} renderDetail={() => null} layoutStyle={{ marginTop: 316 }} />],
     ];
     for (const [px, rootMarker, element] of placed) {
       const markup = renderToStaticMarkup(<HjmProvider theme="light" systemTheme="light">{element}</HjmProvider>);

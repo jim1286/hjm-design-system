@@ -31,7 +31,7 @@ host: 남은 높이·safe area·키보드
 
 | 행동 | 컴포넌트·tone | 위치 | 개수·순서 |
 | --- | --- | --- | --- |
-| 새 컬렉션 | Button·ghost(내장, `labels.createCollection`) | 첫 화면 머리 오른쪽 actions 자리 | 하나. 누르면 `onCreateCollection` → 제품 Sheet(footer에 만들기 Button 하나) |
+| 새 컬렉션 | IconButton·ghost(내장, 아이콘 `createCollectionIcon`, 이름 `labels.createCollection`) | 첫 화면 머리 오른쪽 actions 자리 | 하나. 누르면 `onCreateCollection` → 제품 Sheet(footer에 만들기 Button 하나) |
 | 뒤로 | 헤더 ‹ 아이콘(내장 `exit`, 이름 `labels.back`) | 컬렉션·상세 헤더 시작 쪽 | 하나. 상세 → 격자 → 컬렉션 순으로 `onBack` |
 | 게시물 열기 | 격자 칸(내장 버튼) | 게시물 격자 | 칸마다 하나, `onOpenItem` |
 | 저장 해제 | IconButton·ghost(제품이 `renderDetail`에 둔다) | 상세 본문 머리 행 오른쪽(왼쪽은 작성자) | 하나. 해제 후 상세를 닫고 격자로 복귀 |
@@ -77,7 +77,7 @@ import { SavedItemsScreen } from "@hjmds/react/saved-items";
   {...(collectionId !== undefined ? { collectionId } : {})}
   selectedItemId={selectedItemId} labels={labels} state={state}
   onOpenCollection={openCollection} onOpenItem={openItem} onBack={goBack}
-  onCreateCollection={openCreateSheet}
+  onCreateCollection={openCreateSheet} createCollectionIcon={<AddGlyph />}
   notice={undoNotice}
   renderThumbnail={renderThumbnail}
   renderDetail={(item) => <Stack gap="md">
@@ -99,7 +99,7 @@ import { SavedItemsScreen } from "@hjmds/react-native/saved-items";
   {...(collectionId !== undefined ? { collectionId } : {})}
   selectedItemId={selectedItemId} labels={labels} state={state}
   onOpenCollection={openCollection} onOpenItem={openItem} onBack={goBack}
-  onCreateCollection={openCreateSheet}
+  onCreateCollection={openCreateSheet} createCollectionIcon={<AddGlyph />}
   notice={undoNotice}
   renderThumbnail={renderThumbnail}
   renderDetail={(item) => <Stack gap="md">
@@ -143,4 +143,5 @@ import { SavedItemsScreen } from "@hjmds/react-native/saved-items";
 ## 근거
 
 - 저장 해제와 목록 복귀 상황 표: 2026-10-13 전수 점검 — 최초 조회와 변경 요청의 상태를 같은 골격으로 설명하던 부분을 구체화했다.
+- 새 컬렉션 IconButton: 2026-10-17 화면 검토 — 지침은 글자 버튼, 예제는 `+` 아이콘으로 달랐다. 머리 도구 행동은 아이콘이라는 [IconButton](../components/icon-button.md) 규칙에 맞춰 글자 버튼 대체 분기를 없앴다.
 - 사진 선택 Button `growWithContent`: 2026-10-06 시뮬레이터에서 고정 44 높이에 사진을 넣어 행이 겹치는 것을 재현했다.

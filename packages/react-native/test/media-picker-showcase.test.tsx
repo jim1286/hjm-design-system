@@ -35,7 +35,7 @@ it("limits selection, retries only failure, preserves reordered completion and f
 it("removes pending uploads and can return from an empty review without resurrection", async () => {
  render(); pressPhoto("강과 산 1"); act(() => screen().done.onAction()); act(() => screen().onCancel("0")); await settle();
  expect(screen().items).toHaveLength(0); expect(screen().done.disabled).toBe(true);
- act(() => screen().add.onAction()); expect(screen().title).toBe("사진 선택"); expect(screen().done.disabled).toBe(true);
+ expect(screen().exit).toMatchObject({ kind: "back", label: "선택으로 돌아가기" }); act(() => screen().exit.onPress()); expect(screen().title).toBe("사진 선택"); expect(screen().exit.kind).toBe("close"); expect(screen().done.disabled).toBe(true);
 });
 it("ignores an old request after the same photo is removed and selected again, and after unmount disposal", async () => {
  const completions: Array<() => void> = [];

@@ -28,7 +28,13 @@ export type FilePickerProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | 
     label: ReactNode;
     buttonLabel: string;
     dropzoneLabel: ReactNode;
-    onSelect: (result: FilePickerSelectionResult) => void;
+    /**
+     * `files` maps each accepted candidate id to the browser `File`, so the product can read or upload
+     * the bytes it accepted. Before this a Web product had no access to the File and fell back to a raw
+     * `<input type="file">` (2026-10-17 mockup studio review). Native products already own the file
+     * reference through their `onPick` adapter, so Native keeps the single-argument callback.
+     */
+    onSelect: (result: FilePickerSelectionResult, files: ReadonlyMap<string, File>) => void;
     existingCount?: number;
     disabled?: boolean;
     hint?: ReactNode;
@@ -75,13 +81,16 @@ export const FilePicker = forwardRef<HTMLDivElement, FilePickerProps>(function F
     // The OS dialog may finish after the owner locks this field. Empty input
     // changes represent no selection and must not erase a product's file list.
     if (disabled || files.length === 0) return;
-    const candidates: FilePickerCandidate[] = Array.from(files).map((file, index) => ({
+    const sources = Array.from(files);
+    const candidates: FilePickerCandidate[] = sources.map((file, index) => ({
       id: getCandidateId(file, index),
       name: file.name,
       mimeType: file.type,
       sizeBytes: file.size,
     }));
-    onSelect(resolveFilePickerSelection(candidates, resolved, existingCount));
+    const result = resolveFilePickerSelection(candidates, resolved, existingCount);
+    const accepted = new Set(result.accepted.map(candidate => candidate.id));
+    onSelect(result, new Map(candidates.flatMap((candidate, index) => accepted.has(candidate.id) ? [[candidate.id, sources[index]!] as const] : [])));
   };
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     try { if (event.currentTarget.files) commit(event.currentTarget.files); }

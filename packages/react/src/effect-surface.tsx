@@ -1,15 +1,18 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { resolveEffectSurface, type EffectSurfaceDescriptor } from "@hjmds/design-contracts/effect-surface";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { surfaceGeometry, type SurfacePadding } from "@hjmds/design-contracts/recipes/base";
+import { surfaceDefaults, surfaceGeometry, type SurfacePadding, type SurfaceRadius } from "@hjmds/design-contracts/recipes/base";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { useHjmTheme } from "./provider.js";
 export type EffectSurfaceProps = Readonly<{ descriptor?: EffectSurfaceDescriptor; children: ReactNode; className?: string;
   /** Content inset inside the decorated area (Surface padding scale). Consumers otherwise wrapped children in raw padded elements. */
   padding?: SurfacePadding;
+  /** Corner radius of the decorated area. Defaults to the Surface radius so a framed hero clips its
+   * decoration to the same corners as the Surface it wraps; full-bleed canvases pass `"none"`. */
+  radius?: SurfaceRadius | "none";
   /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */ layoutStyle?: HjmCompositionStyleProp; }>;
 /** Decorative layers never receive pointer events or own the content's name. */
-export function EffectSurface({ descriptor = {}, children, className, padding = "none", layoutStyle }: EffectSurfaceProps) {
+export function EffectSurface({ descriptor = {}, children, className, padding = "none", radius = surfaceDefaults.radius, layoutStyle }: EffectSurfaceProps) {
   const { palette, environment } = useHjmTheme();
   const effect = resolveEffectSurface(descriptor);
   const id = useId().replace(/:/g, "");
@@ -42,7 +45,7 @@ export function EffectSurface({ descriptor = {}, children, className, padding = 
     return () => { animation?.cancel(); document.removeEventListener("visibilitychange", sync); };
   }, [hasAtmosphere, effect.active, effect.period, environment.reducedMotion, visible]);
   const colors = effect.colors.map(color => resolveColorReference(color, palette));
-  return <div ref={host} className={className} data-hjm-effect-surface="" style={{ ...layoutStyle, position: "relative", isolation: "isolate", overflow: "hidden", background: palette.theme.bg }}>
+  return <div ref={host} className={className} data-hjm-effect-surface="" style={{ ...layoutStyle, position: "relative", isolation: "isolate", overflow: "hidden", borderRadius: radius === "none" ? 0 : `var(--hjm-radius-${radius})`, background: palette.theme.bg }}>
     <svg ref={layer} aria-hidden="true" focusable="false" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", opacity: effect.intensity }}>
       {/* Keep noise in CSS-pixel units; the existing geometric layers retain their viewBox. */}
       <defs>{effect.noise && <><pattern id={`${id}-noise-tile`} width={effect.noise.size} height={effect.noise.size} x={effect.noise.offset} patternUnits="userSpaceOnUse"><image href={effect.noise.uri} width={effect.noise.size} height={effect.noise.size} /></pattern><mask id={`${id}-noise-mask`} x={0} y={0} width="100%" height="100%" maskUnits="userSpaceOnUse"><rect width="100%" height="100%" fill={`url(#${id}-noise-tile)`} /></mask></>}</defs>

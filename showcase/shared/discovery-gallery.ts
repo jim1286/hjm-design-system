@@ -14,3 +14,12 @@ export function selectGalleryEntries(query: string, category: GalleryCategory, s
   return galleryEntries.filter(item => (category === "전체" || item.category === category) && (!savedOnly || saved.includes(item.id)) && terms.every(term => `${item.title} ${item.category} ${item.author}`.normalize("NFKC").toLocaleLowerCase("ko-KR").includes(term)))
     .sort((a,b) => sort === "popular" ? b.likes - a.likes : b.created - a.created);
 }
+/** Visible copy inside the decorative card artwork, shared so Web and Native draw the same Korean specimen. */
+export const galleryArtworkCopy = {
+  editorialEyebrow: "독립 스튜디오",
+  editorialHeadline: ["공간을", "만들다."],
+  editorialLink: "작업 둘러보기 ↗",
+  dashboardTitle: "작업 공간 / 개요",
+  mobileTabs: ["오늘", "둘러보기", "저장함"],
+  mobileCaptions: ["새로운 하루", "더 찾아보기", "내가 고른 것"],
+} as const;

@@ -44,8 +44,8 @@ import { ContextMenu } from "@hjmds/react/context-menu";
 <ContextMenu
   accessibilityLabel={t("post.actions")}
   items={[
-    { id: "share", label: t("post.share"), textValue: t("post.share") },
-    { id: "delete", label: t("post.delete"), textValue: t("post.delete"), tone: "danger" },
+    { id: "share", label: t("post.share"), textValue: t("post.share"), icon: <Share size={20} /> },
+    { id: "delete", label: t("post.delete"), textValue: t("post.delete"), tone: "danger", icon: <Trash2 size={20} /> },
   ]}
   onAction={(id) => runPostAction(post, id)}
 >
@@ -88,8 +88,8 @@ import { Pressable } from "react-native";
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| Web `items` | `{ id, label, textValue, shortcut?, disabled?, tone?: "default" \| "danger" }[]` | — (필수) | `MenuItemDescriptor`. `description`은 그리지 않는다 |
-| Native `items` | `{ id: string, label: string, disabled?, tone?: "default" \| "danger" }[]` | — (필수) | 비거나 id 중복·빈 라벨이면 `TypeError` |
+| Web `items` | `{ id, label, textValue, shortcut?, disabled?, tone?: "default" \| "danger", icon? }[]` | — (필수) | `ContextMenuItem` = `MenuItemDescriptor` + `icon`. `description`은 그리지 않는다. `icon`은 장식(`aria-hidden`)이며 `currentColor`로 항목 색(위험 포함)을 따른다 |
+| Native `items` | `{ id: string, label: string, disabled?, tone?: "default" \| "danger", icon? }[]` | — (필수) | 비거나 id 중복·빈 라벨이면 `TypeError` |
 | `onAction` | Web `(id: Key) => void` · Native `(id: string) => void` | — (필수) | 고른 항목 id. 메뉴는 닫힌다 |
 | Web `accessibilityLabel` | `string` | — (필수) | 메뉴 이름 |
 | Native `onOpenChange` | `(open: boolean) => void` | — | OS 메뉴가 열리고 닫힐 때 |
@@ -101,8 +101,8 @@ import { Pressable } from "react-native";
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 메뉴(Web): 최대 폭 `min(24rem, 90vw)`, 최대 높이 뷰포트 높이 − 2×`spacing.md`(16). 항목 최소 높이 `control.minTouchTarget` 44. 감싼 영역 래퍼(`.hjm-context-menu-host`)는 `min-inline-size: 0`만 가지며 크기·여백을 더하지 않는다 | `packages/react/src/styles.css` `.hjm-context-menu*` |
-| 간격 | 메뉴 안쪽 여백 `spacing.xs` 8(`menuRecipe.surface.padding`, Menu와 같다. 2026-10-06까지 4, 1.13.0 변경), 항목 여백 `spacing.xs` 8 · `spacing.sm` 12, 라벨–단축키 간격 `spacing.sm` 12 | `packages/react/src/styles.css` `.hjm-context-menu__item` |
-| 순서·정렬 | 항목은 `items` 배열 순서대로 위에서 아래로 그린다. 단축키는 끝에 붙고 줄바꿈하지 않는다. 우클릭·길게 누르기는 누른 좌표, Shift+F10·메뉴 키는 영역의 시작 쪽 아래 모서리에 메뉴를 연다 | `packages/react/src/context-menu.tsx`, `src/context-menu.ts` |
+| 간격 | 메뉴 안쪽 여백 `spacing.xs` 8(`menuRecipe.surface.padding`, Menu와 같다. 2026-10-06까지 4, 1.13.0 변경), 항목 여백 `spacing.xs` 8 · `spacing.sm` 12, 아이콘 칸 24 · 아이콘–라벨, 라벨–단축키 간격 `spacing.sm` 12(Native canonical과 같다) | `packages/react/src/styles.css` `.hjm-context-menu__item` |
+| 순서·정렬 | 항목은 `items` 배열 순서대로 위에서 아래로 그린다. 아이콘은 라벨 앞, 라벨이 남은 폭을 차지하고 단축키는 끝에 붙고 줄바꿈하지 않는다. 우클릭·길게 누르기는 누른 좌표, Shift+F10·메뉴 키는 영역의 시작 쪽 아래 모서리에 메뉴를 연다 | `packages/react/src/context-menu.tsx`, `src/context-menu.ts` |
 | 고정·스크롤 | `position: fixed`로 뜨고 뷰포트 밖으로 넘치면 안쪽으로 밀어 넣는다. 최대 높이를 넘으면 메뉴 안에서 스크롤한다 | `packages/react/src/context-menu.tsx` |
 | 좁은 폭·큰 글자 | 좁은 폭에서는 최대 폭이 `90vw`로 줄고 항목 라벨은 줄바꿈한다. Native `NativeContextMenu`의 위치·크기·미리보기는 OS가 정한다 | `packages/react/src/styles.css` |
 
@@ -156,3 +156,4 @@ Native OS 어댑터는 기존 계약을 유지한다. 고정 대기 시간이 �
 ## 근거
 
 - 마우스 이동으로만 활성 항목 변경: 2026-10-07 Web 키보드 회귀에서 팝업이 정지한 커서 아래에 배치된 뒤 mouseenter가 활성 항목을 첫 항목으로 되돌리는 문제를 재현했다([검증 기록](../../../../../docs/qa/2026-10-07-command-records.md)).
+- Web 항목 `icon`: 2026-10-17 화면 검토(S5)에서 같은 대화 목록 메뉴가 Native에서는 아이콘 24 칸과 함께, Web에서는 글자만으로 그려지는 차이를 확인해 Web ContextMenu에 같은 칸을 추가했다.

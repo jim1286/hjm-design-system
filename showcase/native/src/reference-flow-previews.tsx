@@ -1,6 +1,7 @@
 import { Heading } from "@hjmds/react-native/heading";
 // Platform views share data/validation and the existing action-session demo; no new public engine.
 import { useEffect, useRef, useState } from "react";
+import { Search } from "lucide-react-native";
 import { AccessibilityInfo, BackHandler, findNodeHandle, View, type TextInput } from "react-native";
 import { spacing, radius } from "@hjmds/design-contracts/foundations";
 import { Button } from "@hjmds/react-native/actions";
@@ -15,7 +16,7 @@ import { useHjmNativeTheme } from "@hjmds/react-native/provider";
 import { StatusText } from "@hjmds/react-native/status-text";
 import { PreviewTools, PreviewToolButton } from "./preview-tools";
 import { useDemoAction } from "./action-recovery-previews";
-import { categories, records, emptyFilters, filterRecords, initialDraft, sameDraft, draftError, editorCopy, scopeCopy, flowSteps, stepLabels, stepName, introFeatures, comparisonModeCopy, type ComparisonMode, type EditorKind, type Draft } from "../../shared/reference-flows";
+import { categories, records, emptyFilters, filterRecords, initialDraft, sameDraft, draftError, editorCopy, scopeCopy, flowSteps, stepLabels, stepName, introFeatures, comparisonModeCopy, comparisonActionCopy, type ComparisonMode, type EditorKind, type Draft } from "../../shared/reference-flows";
 
 // Screens render ScreenLayout inside a 720-high host View like the other screen previews.
 // 2026-10-06: they used the composition Frame (ScrollView + Container) and a width/fontScale column
@@ -143,10 +144,10 @@ export function RecordComparison() {
   // Each record's read button is the sheet's return-focus target for that record.
   const readButtons = useRef(new Map<string, View>()); const returnFocusRef = useRef<View>(null);
   const results = filterRecords(query, emptyFilters());
-  const cards = results.map(record => <Surface key={record.id} padding="lg"><Stack gap={mode === "list" ? "sm" : "lg"}>{mode === "image" && record.image && <Art label={record.category} />}<Text tone="muted" variant="caption">{record.category}</Text><Heading level={mode === "reading" ? "level4" : "level5"}>{record.title}</Heading>{mode !== "list" && <Text>{record.body}</Text>}<Stack axis="inline" wrap gap="sm"><Button tone="secondary" ref={node => { if (node) readButtons.current.set(record.id, node); else readButtons.current.delete(record.id); }} onPress={() => { returnFocusRef.current = readButtons.current.get(record.id) ?? null; setSelected(record); }}>{`${record.title} 읽기`}</Button><Button tone="secondary" selected={saved.includes(record.id)} onPress={() => setSaved(current => current.includes(record.id) ? current.filter(id => id !== record.id) : [...current, record.id])}>{`${record.title} ${saved.includes(record.id) ? "저장 취소" : "저장"}`}</Button></Stack></Stack></Surface>);
+  const cards = results.map(record => <Surface key={record.id} padding="lg"><Stack gap={mode === "list" ? "sm" : "lg"}>{mode === "image" && record.image && <Art label={record.category} />}<Text tone="muted" variant="caption">{record.category}</Text><Heading level={mode === "reading" ? "level4" : "level5"}>{record.title}</Heading>{mode !== "list" && <Text>{record.body}</Text>}<Stack axis="inline" wrap gap="sm"><Button tone="secondary" ref={node => { if (node) readButtons.current.set(record.id, node); else readButtons.current.delete(record.id); }} onPress={() => { returnFocusRef.current = readButtons.current.get(record.id) ?? null; setSelected(record); }} accessibilityLabel={comparisonActionCopy.readName(record.title)}>{comparisonActionCopy.read}</Button><Button tone="secondary" selected={saved.includes(record.id)} accessibilityLabel={comparisonActionCopy.saveName(record.title, saved.includes(record.id))} onPress={() => setSaved(current => current.includes(record.id) ? current.filter(id => id !== record.id) : [...current, record.id])}>{saved.includes(record.id) ? comparisonActionCopy.unsave : comparisonActionCopy.save}</Button></Stack></Stack></Surface>);
   return <View style={{ height: 720 }}><ScreenLayout title="무엇을 먼저 보고 싶나요?" description="데이터와 행동은 유지하고 정보의 밀도와 순서를 비교해 보세요." scrollProps={{ keyboardDismissMode: "on-drag" }}><Stack gap="xl">
     <SegmentedControl label="보기 방식" items={(Object.keys(comparisonModeCopy) as ComparisonMode[]).map(value => ({ value, label: comparisonModeCopy[value] }))} value={mode} onValueChange={setMode} />
-    <SearchField label="같은 기록 검색" clearLabel="검색어 지우기" value={query} onValueChange={setQuery} busyLabel="검색 중" /><StatusText>{`${comparisonModeCopy[mode]} · ${results.length}개의 기록 · ${saved.length}개 저장`}</StatusText>
+    <SearchField label="같은 기록 검색" clearLabel="검색어 지우기" placeholder={comparisonActionCopy.searchPlaceholder} renderLeading={({ color, size }) => <Search color={color} size={size} />} value={query} onValueChange={setQuery} busyLabel="검색 중" /><StatusText>{`${comparisonModeCopy[mode]} · ${results.length}개의 기록 · ${saved.length}개 저장`}</StatusText>
     {!results.length ? <EmptyState density="compact" announcement="polite" title="찾는 기록이 없어요" description="다른 검색어로 찾아보세요." action={<Button tone="secondary" onPress={() => setQuery("")}>검색 초기화</Button>} />
     : mode === "image" ? <Grid columns={{ compact: 2 }} gap={{ compact: "xl" }} minColumnWidth={twoColumnMin}>{cards}</Grid> : <Stack gap="lg">{cards}</Stack>}
     <Text tone="muted" variant="caption">직접 만든 기록과 추상 일러스트입니다. 사진이 없는 기록도 본문을 온전히 보여 줍니다.</Text>

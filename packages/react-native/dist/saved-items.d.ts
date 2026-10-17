@@ -13,8 +13,8 @@ export type SavedItemsScreenProps<T extends SavedItem> = Omit<ListDetailScreenPr
     onOpenItem(id: string): void;
     onBack(): void;
     onCreateCollection(): void;
-    /** Same contract as Web: present renders an IconButton named by `labels.createCollection` (2026-10-17 icon-button usage rule). */
-    createCollectionIcon?: ReactNode;
+    /** Same contract as Web: required IconButton glyph named by `labels.createCollection` (2026-10-17 icon-button usage rule). */
+    createCollectionIcon: ReactNode;
     renderThumbnail(item: T): ReactNode;
     renderDetail(item: T): ReactNode;
 };

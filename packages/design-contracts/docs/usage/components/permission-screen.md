@@ -94,7 +94,7 @@ import { Linking } from "react-native";
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | ScreenLayout 폭(최대 720); 그림 크기는 `illustration`(제품) 소유; 행동은 `Button` 기본 크기 | `PermissionScreen` |
-| 간격 | 화면 padding `spacing.md` 16; 본문 그림–설명 `spacing.xl` 24(가운데 정렬); footer 주 행동–나중에 `spacing.sm` 12 | Web·Native `PermissionScreen` `Stack gap="xl" align="center"`·`gap="sm"` |
+| 간격 | 화면 padding `spacing.md` 16; 본문 그림–설명 `spacing.xl` 24(가운데 정렬); footer 주 행동–나중에 `spacing.xs` 8(세로로 쌓은 버튼, `actionGroupRecipe.stackedGap`) | Web·Native `PermissionScreen` `Stack gap="xl" align="center"`·`gap="xs"` |
 | 순서·정렬 | 헤더(제목) → 본문(그림 → 설명, 가운데) → footer(상태별 주 행동 primary → 나중에 ghost) | 렌더 순서, `resolvePermissionAction` |
 | 고정·스크롤 | 헤더·footer 고정, 본문 화면 스크롤; OS 권한 창은 제품이 `request.onAction`에서 호출 | `ScreenLayout` |
 | 좁은 폭·큰 글자 | 설명은 줄바꿈되고 본문이 스크롤된다; footer 버튼은 세로로 쌓인다; `unavailable`이면 주 행동 없이 `skip`만 남는다 | `PermissionScreen` |

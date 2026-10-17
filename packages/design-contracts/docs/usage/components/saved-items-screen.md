@@ -84,7 +84,7 @@ import { SavedItemsScreen } from "@hjmds/react-native/saved-items";
 | selectedItemId | `string` 또는 `null`, 생략 시 상세 없음 | — | 현재 컬렉션에 존재하는 항목만 상세로 표시 |
 | labels | SavedItemsLabels, 필수 | — | 모든 공개 문구를 지역화하여 공급 |
 | onOpenCollection · onOpenItem · onCreateCollection | 콜백, 필수 | — | 제품 상태/라우터 변경 요청 |
-| createCollectionIcon | `ReactNode` | — | 주면 새 컬렉션 행동을 `IconButton`(이름 `labels.createCollection`)으로 그린다. 도구성 행동은 아이콘으로 둔다([IconButton](icon-button.md)). 없으면 기존 ghost 글자 버튼 |
+| createCollectionIcon | `ReactNode`, 필수 | — | 새 컬렉션 행동 `IconButton`(이름 `labels.createCollection`)의 아이콘. 도구성 행동은 아이콘으로 둔다([IconButton](icon-button.md)). 미게시(1.18.0 이후): 글자 버튼 대체 분기를 없애고 필수로 바꿨다 |
 | onBack | `() => void`, 필수 | — | 한 단계만 올라간다. 상세가 열려 있으면 제품이 `selectedItemId`를 비우고, 아니면 `collectionId`를 생략해 컬렉션 홈으로 간다. 화면은 제품 history를 모른다 |
 | actions · exit | ScreenLayout 상속 | 없음 | 홈에서는 제품 `actions` 대신 컬렉션 만들기 버튼이 그 자리를 쓰고 제품 `exit`은 유지된다. 컬렉션·상세에서는 `exit`이 뒤로 아이콘이 되고 제품 `actions`가 보인다 |
 | renderThumbnail · renderDetail | `(item) => ReactNode`, 필수 | — | 사진·상세 슬롯, API·자산은 제품 소유 |
@@ -108,7 +108,7 @@ Native collection cover의 모서리는 Provider의 `tokens.radius.md`다. 저�
 
 | 행동 | 컴포넌트·tone | 위치 | 개수·순서 |
 | --- | --- | --- | --- |
-| 새 컬렉션 | `createCollectionIcon`이 있으면 ghost `IconButton`(이름 `labels.createCollection`), 없으면 `Button` ghost → `onCreateCollection` | 홈 헤더 `actions` 자리(홈에 넘긴 제품 `actions`는 그리지 않는다). 생성 Sheet와 그 footer 확정 버튼은 제품이 그린다 | 홈에서만 1개. 컬렉션·상세에서는 제품 `actions`로 바뀐다 |
+| 새 컬렉션 | ghost `IconButton`(아이콘 `createCollectionIcon`, 이름 `labels.createCollection`) → `onCreateCollection` | 홈 헤더 `actions` 자리(홈에 넘긴 제품 `actions`는 그리지 않는다). 생성 Sheet와 그 footer 확정 버튼은 제품이 그린다 | 홈에서만 1개. 컬렉션·상세에서는 제품 `actions`로 바뀐다 |
 | 뒤로 | 헤더 ‹ 아이콘(`exit` `back`, 이름 `labels.back`) → `onBack` | 컬렉션·상세 헤더 시작 쪽 | 1개. 상세 → 격자 → 홈으로 한 단계씩, 단계는 제품이 상태를 비워 정한다 |
 | 컬렉션·게시물 열기 | 표지·썸네일 전체가 버튼 → `onOpenCollection` · `onOpenItem` | 격자 각 칸 | 항목마다 1개 |
 | 저장 해제 | `IconButton` ghost(제품) | `renderDetail` 머리 줄 끝(제목과 같은 줄) | 상세마다 1개. 실행 취소는 `notice` |

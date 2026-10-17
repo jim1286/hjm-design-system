@@ -24,7 +24,7 @@ host: 남은 높이·safe area
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
 | 바깥 틀 | ScreenLayout(`scroll="content"`) | route 본문 | 화면 recipe padding 16 |
-| 검색 | SearchField | `notice` | 화면 recipe itemGap 12 |
+| 검색 | SearchField(라벨 "대화 검색") | `notice` | 화면 recipe itemGap 12. 결과가 없으면 `state.empty` |
 | 행 | 라우팅 host(Pressable·링크) + ConversationRow | 본문 목록 | 아바타 56, 가로 sm·세로 10, 행 padding은 recipe 소유 |
 | 행 메뉴 | ContextMenu | 행 host를 감싼다 | Native 카드 폭 최대 280, 행 48, 아이콘 24 |
 
@@ -75,8 +75,8 @@ import { ConversationRow } from "@hjmds/react/conversation-row";
 import { ContextMenu } from "@hjmds/react/context-menu";
 
 <ContextMenu accessibilityLabel={t("dm.rowMenu", { name })} onAction={id => runRowAction(room, id)}
-  items={[{ id: "unread", label: t("dm.markUnread"), textValue: t("dm.markUnread") },
-    { id: "delete", label: t("dm.delete"), textValue: t("dm.delete"), tone: "danger" }]}>
+  items={[{ id: "unread", label: t("dm.markUnread"), textValue: t("dm.markUnread"), icon: <MailOpen size={20} /> },
+    { id: "delete", label: t("dm.delete"), textValue: t("dm.delete"), tone: "danger", icon: <Trash2 size={20} /> }]}>
   <Link href={roomHref} aria-label={summary}><ConversationRow title={name} preview={last} metadata={time} unread={unread} avatar={avatar} /></Link>
 </ContextMenu>
 ```
@@ -95,8 +95,13 @@ import { ContextMenu } from "@hjmds/react/context-menu";
 | --- | --- | --- |
 | 메뉴 열기 | 우클릭·길게 누름·Shift+F10 | 길게 누름, 보조기술은 행의 "메뉴" 동작 |
 | 메뉴 표시 | 포인터 위치 Popover | 배경 어둡게 + 누른 위치 근처 카드 |
+| 메뉴 아이콘 | 항목 `icon`, 24 칸, `currentColor`로 항목 색을 따른다 | 항목 `icon`, 24 칸, 색은 제품이 테마 색으로 넘긴다 |
 
 ## 함정
 
 - 행 host를 ContextMenu 안에 하나만 둔다. Native ContextMenu는 그 host에 길게 누르기와 접근성 동작을 덧붙이므로, 별도 Pressable로 다시 감싸면 탭이 먹힌다.
 - 위험 동작(차단·삭제)은 확인 대화상자를 제품이 띄운다. 메뉴 항목 선택 즉시 삭제하지 않는다.
+
+## 근거
+
+- 헤더 새 대화 IconButton·`notice` 검색·Web 메뉴 아이콘: 2026-10-17 화면 검토(S5)에서 예제가 새 대화 행동 없이, `notice`에 데모 안내 문구를 두고, Web과 Native 문구·메뉴 모양이 갈라진 것을 확인했다. 예제 데이터·문구는 `showcase/shared/conversation-list.ts` 하나를 두 플랫폼이 읽는다.

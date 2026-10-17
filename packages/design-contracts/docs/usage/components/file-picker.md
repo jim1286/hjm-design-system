@@ -67,6 +67,7 @@ import { FilePicker } from "@hjmds/react-native/file-picker";
 | `existingCount` | 0 이상 정수 | `0` | 여러 번 나눠 고르는 흐름은 이미 고른 개수를 넘겨야 `maxCount`가 누적으로 판정된다 |
 | `descriptor` | `{ mode?, accept?: readonly string[], maxSizeBytes?, maxCount? }` | — | `accept`는 MIME 패턴(`image/*`) 또는 확장자(`.pdf`). 비우면 제한 없음 |
 | `onSelect` | `(result: { accepted: readonly FilePickerCandidate[]; rejected: readonly FilePickerRejection[] }) => void` | 필수 | 받아들인 것과 거부한 것을 한 번에 준다 |
+| Web `onSelect` 두 번째 인자 `files` | `ReadonlyMap<string, File>` | — | 받아들인 후보 id → 브라우저 `File`. 제품이 내용을 읽거나 올릴 때 쓴다. 거부된 파일은 들어 있지 않다. 미게시(1.18.0 이후). Native는 `onPick` adapter가 파일 참조를 소유한다 |
 | Native `onPick` | `() => Promise<readonly FilePickerCandidate[] \| null>` | 필수 | 제품 adapter. 취소면 `null` |
 | Native `onPickError` | `(error: unknown) => void` | 필수 | `onPick`이 reject하면 이쪽으로만 온다 |
 | Web `getCandidateId` | `(file: File, index: number) => string` | `name:size:lastModified:index` | 후보 id 규칙 |
@@ -121,3 +122,7 @@ import { FilePicker } from "@hjmds/react-native/file-picker";
 2026-10-07 소비 감사에서 Native 선택 버튼의 모서리 12가 프로필을 우회했다. Web 버튼의 기존 `radius.md`와 같은 역할을 Native도 가까운 프로필에서 읽으며, 프로필이 없으면 기존 12를 유지한다. 선택 어댑터·비활성/진행 상태·파일 검증은 바꾸지 않는다.
 
 프로필 연결은 1.16.0 변경이며, 기본 배포 계약과 실제 Native 기기 검증은 구분한다.
+
+## 근거
+
+- Web `onSelect`의 `files` 인자: 2026-10-17 목업 편집 화면 검토 — 제품이 고른 `File`을 받을 방법이 없어 화면이 브라우저 기본 `<input type="file">`(영어 "Choose File")로 조립돼 있었다.

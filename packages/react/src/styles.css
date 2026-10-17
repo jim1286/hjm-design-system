@@ -784,7 +784,7 @@
 .hjm-checkbox-group[data-orientation="horizontal"][data-presentation="plain"] .hjm-checkbox-group__items { gap: var(--hjm-space-sm); }
 .hjm-checkbox-group[data-orientation="horizontal"][data-presentation="grouped"] .hjm-checkbox-group__items { gap: 0; }
 
-.hjm-switch { display: inline-flex; align-items: center; gap: var(--hjm-space-sm); min-block-size: var(--hjm-control-min-touch-target); padding: 0; border: 0; color: inherit; background: transparent; font: inherit; cursor: pointer; }
+.hjm-switch { display: inline-flex; align-items: center; gap: var(--hjm-space-sm); min-block-size: var(--hjm-switch-row-min-height); padding: 0; border: 0; color: inherit; background: transparent; font: inherit; cursor: pointer; }
 /* Disabled switch colors preserve on/off contrast; row opacity would erase state
    and double-fade the calibrated38% track. Only the label fades (switchRecipe.colors). */
 .hjm-switch:disabled { cursor: not-allowed; }
@@ -798,6 +798,8 @@
 .hjm-switch__copy { display: flex; flex-direction: column; gap: var(--hjm-space-xxs); min-inline-size: 0; text-align: start; overflow-wrap: anywhere; }
 .hjm-switch__description { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); }
 .hjm-switch[data-presentation="row"] { display: flex; inline-size: 100%; justify-content: space-between; }
+/* switchRecipe.rowTwoLineMinHeight (= list-row comfortable two-line 68), same as Native for a described switch. */
+.hjm-switch[data-two-line="true"] { min-block-size: var(--hjm-switch-row-two-line-min-height); }
 .hjm-switch[data-presentation="row"] .hjm-switch__copy { order: -1; flex: 1; }
 /* Inherited layout variables reset at nested providers and keep ./selection independent. */
 .hjm-root { --hjm-switch-row-direction: row; --hjm-switch-row-align: center; --hjm-switch-copy-flex: 1; }
@@ -815,7 +817,8 @@
 .hjm-switch[data-state="checked"] .hjm-switch__thumb { transform: translateX(var(--hjm-switch-track-offset)); box-shadow: 0 1px 3px rgb(0 0 0 / 20%); }
 [dir="rtl"] .hjm-switch[data-state="checked"] .hjm-switch__thumb { transform: translateX(calc(-1 * var(--hjm-switch-track-offset))); }
 
-.hjm-segmented { min-inline-size: 0; padding: 0; border: 0; }
+/* margin: 0 resets the UA fieldset 2px inline margin (as the other HJM fieldsets do); it offset the track from the parent edges. */
+.hjm-segmented { min-inline-size: 0; margin: 0; padding: 0; border: 0; }
 /* segmentedControlRecipe (2026-10-06 follow-up): track padding/gap spacing.xxs 4, radius lg, 1px border; item radius md,
    medium 44 · padding md, small 36 · padding sm with a 4px vertical hit slop. Web had drawn a 2px track with radius md,
    no small size, and a 1px selected ring; Native already read the recipe. */
@@ -901,7 +904,10 @@
 
 .hjm-card { overflow: hidden; }
 .hjm-card__media > * { display: block; inline-size: 100%; }
-.hjm-card__body { display: grid; gap: var(--hjm-space-xs); padding: var(--hjm-space-md); }
+/* The implicit auto column grew to the min-content of slotted children (e.g. a SegmentedControl with max-content items),
+   pushing content past the card padding at narrow widths (2026-10-17 STEA schedule card at 402). minmax(0, 1fr) keeps every
+   slot inside the padded body so scroll/wrap rules of the child apply. */
+.hjm-card__body { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--hjm-space-xs); padding: var(--hjm-space-md); }
 .hjm-card__header { display: flex; align-items: flex-start; gap: var(--hjm-space-sm); min-inline-size: 0; }
 .hjm-card__leading { flex: 0 0 auto; display: inline-grid; place-items: center; line-height: 1; }
 .hjm-card__copy { flex: 1 1 auto; min-inline-size: 0; display: grid; gap: var(--hjm-space-xs); }
@@ -2868,6 +2874,9 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-context-menu__item { min-block-size: var(--hjm-control-min-touch-target); display: flex; align-items: center; justify-content: space-between; gap: var(--hjm-space-sm); padding: var(--hjm-space-xs) var(--hjm-space-sm); border-radius: var(--hjm-radius-sm); color: var(--hjm-color-text-body); cursor: pointer; }
 /* Wrap long labels so commands stay readable inside the viewport-bounded menu; truncation was rejected because it hides command meaning. */
 .hjm-context-menu__item > span { min-inline-size: 0; overflow-wrap: anywhere; }
+/* Leading icon slot is 24 wide with the item gap (sm 12) before the label, as Native ContextMenu; the label takes the rest so a trailing shortcut stays at the end. */
+.hjm-context-menu__icon { flex: 0 0 24px; display: inline-flex; align-items: center; justify-content: center; }
+.hjm-context-menu__label { flex: 1 1 auto; }
 .hjm-context-menu__item[data-active] { background: var(--hjm-color-bg);  box-shadow: inset 0 0 0 1px var(--hjm-color-content-brand); }
 .hjm-context-menu__item[data-tone="danger"] { color: var(--hjm-color-danger); }
 .hjm-context-menu__item[aria-disabled="true"] { opacity: 0.5; cursor: not-allowed; }

@@ -21,10 +21,17 @@ import { AnchoredPortal } from "./portal.js";
 import { getModalLayer } from "./modal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
+/**
+ * Platform-neutral item plus an optional decorative leading icon, matching Native
+ * `NativeCanonicalContextMenuItem.icon` so one product menu renders the same on both (2026-10-17 parity review).
+ * The icon inherits the item color (danger tone included) through `currentColor`.
+ */
+export type ContextMenuItem<Key extends string = string> = ContextMenuItemDescriptor<Key> & Readonly<{ icon?: ReactNode }>;
+
 export type ContextMenuProps<Key extends string = string> = Readonly<{
   /** The region the menu belongs to; right-click and long-press are bound here. */
   children: ReactNode;
-  items: readonly ContextMenuItemDescriptor<Key>[];
+  items: readonly ContextMenuItem<Key>[];
   accessibilityLabel: string;
   onAction: (id: Key) => void;
   className?: string;
@@ -222,7 +229,8 @@ export function ContextMenu<Key extends string = string>({
                     returnFocusRef.current?.focus();
                   }}
                 >
-                  <span>{item.label}</span>
+                  {item.icon ? <span className="hjm-context-menu__icon" aria-hidden="true">{item.icon}</span> : null}
+                  <span className="hjm-context-menu__label">{item.label}</span>
                   {item.shortcut ? <kbd className="hjm-context-menu__shortcut">{item.shortcut}</kbd> : null}
                 </div>
               );

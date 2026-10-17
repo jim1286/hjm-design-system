@@ -13,6 +13,8 @@ const button=(name:string)=>page.getByRole('button',{name,exact:true});
 const click=(name:string)=>act(async()=>button(name).click());
 const radio=(name:string)=>page.getByRole('radio',{name,exact:true});
 const choose=(name:string)=>act(async()=>radio(name).click());
+// Preview on/off tools render as selection chips (preview-tools.tsx), exposed as checkboxes.
+const toggle=(name:string)=>act(async()=>page.getByRole('checkbox',{name,exact:true}).click());
 const wait=(ms:number)=>act(async()=>{await new Promise(resolve=>setTimeout(resolve,ms));});
 const openNotification=(title:string)=>act(async()=>page.getByRole('button',{name:new RegExp(title)}).click());
 it('cancels a same-render duplicate login and restarts without an old completion',async()=>{
@@ -29,9 +31,9 @@ it('preserves chat draft on detail return and moves keyboard focus to the reply 
 });
 
 it('keeps a read-failure tool from failing an unrelated chat send',async()=>{
- await render(<NotificationScreenPreview tools/>);await click('다음 읽음 저장 실패');await click('뒤로');await click('서연과의 대화');const input=host.querySelector('textarea')!;await act(async()=>{Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype,'value')!.set!.call(input,'정상 전송');input.dispatchEvent(new Event('input',{bubbles:true}));});await click('전송');expect(host.querySelector('textarea')!.value).toBe('');expect(host.textContent).not.toContain('보내지 못했어요');
+ await render(<NotificationScreenPreview tools/>);await toggle('다음 읽음 저장 실패');await click('뒤로');await click('서연과의 대화');const input=host.querySelector('textarea')!;await act(async()=>{Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype,'value')!.set!.call(input,'정상 전송');input.dispatchEvent(new Event('input',{bubbles:true}));});await click('전송');expect(host.querySelector('textarea')!.value).toBe('');expect(host.textContent).not.toContain('보내지 못했어요');
 });
 
 it('contains a failed read in the inbox and retries that row after returning',async()=>{
- await render(<NotificationScreenPreview tools/>);await click('다음 읽음 저장 실패');await openNotification('서연님이 답글을 남겼어요');expect(host.textContent).toContain('읽음 표시를 저장하지 못했어요');expect(host.querySelector('[data-notification-id="1"]')!.getAttribute('data-unread')).toBe('true');await click('뒤로');await click('서연과의 대화');expect(host.textContent).not.toContain('읽음 표시를 저장하지 못했어요');await click('뒤로');await click('알림');await openNotification('서연님이 답글을 남겼어요');await click('뒤로');expect(document.activeElement).toBe(host.querySelector('[data-notification-id="1"]'));expect(host.querySelector('[data-notification-id="1"]')!.getAttribute('data-unread')).toBeNull();
+ await render(<NotificationScreenPreview tools/>);await toggle('다음 읽음 저장 실패');await openNotification('서연님이 답글을 남겼어요');expect(host.textContent).toContain('읽음 표시를 저장하지 못했어요');expect(host.querySelector('[data-notification-id="1"]')!.getAttribute('data-unread')).toBe('true');await click('뒤로');await click('서연과의 대화');expect(host.textContent).not.toContain('읽음 표시를 저장하지 못했어요');await click('뒤로');await click('알림');await openNotification('서연님이 답글을 남겼어요');await click('뒤로');expect(document.activeElement).toBe(host.querySelector('[data-notification-id="1"]'));expect(host.querySelector('[data-notification-id="1"]')!.getAttribute('data-unread')).toBeNull();
 });

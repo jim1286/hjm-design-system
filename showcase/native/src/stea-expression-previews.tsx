@@ -75,7 +75,7 @@ export function PixelEmptyState() {
   const [paused, setPaused] = useState(false);
   const [started, setStarted] = useState(false);
   // flexGrow down the chain lets EmptyState take the free height and center in the body; long content still scrolls.
-  return <ScrollView contentContainerStyle={{ flexGrow: 1, paddingVertical: spacing.lg }}><Container layoutStyle={{ flexGrow: 1 }}><Stack gap="md" layoutStyle={{ flexGrow: 1 }}>
+  return <ScrollView contentContainerStyle={{ flexGrow: 1, paddingVertical: spacing.lg }}><Container size="reading" layoutStyle={{ flexGrow: 1 }}><Stack gap="md" layoutStyle={{ flexGrow: 1 }}>
     <EmptyState illustration={<PixelSprite paused={paused} />} title={pixelCopy.title} description={pixelCopy.description}
       action={<Button onPress={() => setStarted(true)}>{pixelCopy.start}</Button>} />
     {/* 5초 넘게 반복되는 움직임은 멈출 수 있어야 한다(WCAG 2.2.2). 켜고 끄는 제어라 Switch다. */}

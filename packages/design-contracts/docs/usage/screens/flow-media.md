@@ -31,7 +31,7 @@ host: 남은 높이·safe area·키보드
 
 | 행동 | 컴포넌트·tone | 위치 | 개수·순서 |
 | --- | --- | --- | --- |
-| 작업 | `add` Button·secondary / `done` Button·primary / 항목 행동 Button·ghost·small | 추가는 헤더 actions, 완료는 footer(선택 요약 아래), 위로·아래로·제거는 각 칸 미리보기 아래 | primary는 완료 하나. 칸마다 위로 → 아래로 → 제거, 첫 칸의 위로·마지막 칸의 아래로는 비활성 |
+| 작업 | `exit` 아이콘 / `add` IconButton·ghost(선택) / `done` Button·primary / 항목 행동 Button·ghost·small | 나가기는 헤더 시작, 추가는 헤더 actions 끝, 완료는 footer(선택 요약 아래), 위로·아래로·제거는 각 칸 미리보기 아래 | primary는 완료 하나. 칸마다 위로 → 아래로 → 제거, 첫 칸의 위로·마지막 칸의 아래로는 비활성 |
 | 복구 | Button·secondary | 오류 근처 | 재시도할 대상과 범위를 표시 |
 
 ## 상태
@@ -50,7 +50,7 @@ Web·Native `media-picker-preview.tsx`는 최대 5장을 순서대로 고른 뒤
 
 | 상황 | 연결 | 유지·복구 |
 | --- | --- | --- |
-| 선택 0개 | empty + add | 새 사진 선택은 계속 가능하고 done은 제품 정책에 따라 잠근다 |
+| 선택 0개 | empty (+ add가 있으면 활성) | 새 사진 선택은 계속 가능하고 done은 제품 정책에 따라 잠근다 |
 | 업로드 혼재 | 썸네일·순서와 각 UploadItem 상태 유지 | 실패한 항목만 재시도한다. 성공한 사진을 다시 업로드하지 않는다 |
 | 완료 가능 | 필수 항목 모두 서버 확정 | 업로드 중이 아니어도 실패·취소 항목이 남으면 done을 바로 활성화하지 않는다 |
 | 권한 제한 | restricted + 권한 안내 행동 | 로컬 썸네일이 존재한다는 이유로 OS 접근 권한을 얻었다고 판단하지 않는다 |
@@ -74,7 +74,8 @@ import { MediaSelectionScreen } from "@hjmds/react/screen-flows";
   title={t("media.title")}
   items={picked.map((p) => ({ descriptor: { id: p.id, name: p.fileName, state: p.upload },
     preview: <img src={p.uri} alt="" width={p.width} height={p.height} /> }))}
-  add={{ label: t("media.add"), onAction: openPicker }}
+  exit={{ kind: "close", label: t("media.close"), onClick: close }}
+  add={{ label: t("media.add"), icon: <PlusIcon aria-hidden />, onAction: openPicker }}
   done={{ label: t("media.done"), onAction: submit, disabled: uploading || !canComplete }}
   labels={{ pending: t("upload.pending"), uploading: t("upload.uploading"),
     success: t("upload.success"), cancel: t("upload.cancel"), retry: t("upload.retry") }}
@@ -96,7 +97,8 @@ import { Image } from "react-native";
   title={t("media.title")}
   items={picked.map((p) => ({ descriptor: { id: p.id, name: p.fileName, state: p.upload },
     preview: <Image src={p.uri} width={p.width} height={p.height} /> }))}
-  add={{ label: t("media.add"), onAction: openPicker }}
+  exit={{ kind: "close", label: t("media.close"), onPress: close }}
+  add={{ label: t("media.add"), icon: <PlusIcon color={colors.text} />, onAction: openPicker }}
   done={{ label: t("media.done"), onAction: submit, disabled: uploading || !canComplete }}
   labels={{ pending: t("upload.pending"), uploading: t("upload.uploading"),
     success: t("upload.success"), cancel: t("upload.cancel"), retry: t("upload.retry") }}
@@ -129,3 +131,4 @@ import { Image } from "react-native";
 ## 근거
 
 - 항목별 업로드와 완료 조건 상황 표: 2026-10-13 전수 점검 — 최초 조회와 변경 요청의 상태를 같은 골격으로 설명하던 부분을 구체화했다.
+- 나가기 `exit`·아이콘 `add`: 2026-10-17 화면 검토 — 필수 글자 `add`에 "취소"가 들어가 헤더 끝 글자 버튼이 가운데 제목을 밀었고 Native에서 "취"로 잘렸다.

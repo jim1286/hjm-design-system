@@ -331,7 +331,7 @@ export { AuthProviderButton, type AuthProviderButtonProps } from "./provider-but
 export { AuthScreenLayout, type AuthScreenLayoutProps } from "./auth-screen.js";
 export { DataTable, type DataTableProps, type DataTableLabels } from "./data-table.js";
 export { Collapsible, CollapsibleMarker, type CollapsibleProps } from "./collapsible.js";
-export { ContextMenu, type ContextMenuProps } from "./context-menu.js";
+export { ContextMenu, type ContextMenuItem, type ContextMenuProps } from "./context-menu.js";
 export { Menubar, type MenubarProps } from "./menubar.js";
 export { Asset, AssetGroup, type AssetProps, type AssetGroupProps } from "./asset.js";
 

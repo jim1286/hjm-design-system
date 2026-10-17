@@ -301,7 +301,7 @@ export function CompositionLayout({title, headingLevel = 3, description, badge, 
     </Stack> : null}
     {notice}
     {state.kind === "ready" ? children : <Stack gap="sm" align="center" justify="center" role={resolved.busy ? undefined : state.kind === "error" ? "alert" : "status"} layoutStyle={{flex: 1}}>
-      {resolved.busy ? (loadingIndicator ? <div role="status" aria-busy="true" aria-label={[state.title, state.description].filter(Boolean).join(". ")}><div aria-hidden="true">{loadingIndicator}</div></div> : <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} />) : <div><Text variant="title">{state.title}</Text>{state.description ? <Text tone="muted">{state.description}</Text> : null}</div>}
+      {resolved.busy ? (loadingIndicator ? <div role="status" aria-busy="true" aria-label={[state.title, state.description].filter(Boolean).join(". ")}><div aria-hidden="true">{loadingIndicator}</div></div> : <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} />) : <div style={{ textAlign: "center" }}>{/* Block, centered lines as Native; inline spans ran title and description together. */}<Text as="p" variant="title">{state.title}</Text>{state.description ? <Text as="p" tone="muted">{state.description}</Text> : null}</div>}
       {stateAction}
     </Stack>}
     {footer}

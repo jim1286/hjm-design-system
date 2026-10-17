@@ -93,7 +93,7 @@ import { OnboardingScreen } from "@hjmds/react-native/screen-flows";
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | ScreenLayout의 기본 최대 폭 720; 다음·완료·이전은 `Button` 기본 크기 | `screenPatternRecipe.maxWidth` |
-| 간격 | 기본 화면 padding `spacing.md` 16; footer 다음/완료–이전 `spacing.sm` 12; Native 본문 제목·설명·진행·건너뛰기·content 사이 `spacing.md` 16. 단계 content 내부 간격은 제품 소유 | ScreenLayout·양 renderer OnboardingScreen |
+| 간격 | 기본 화면 padding `spacing.md` 16; footer 다음/완료–이전 `spacing.xs` 8(세로로 쌓은 버튼, `actionGroupRecipe.stackedGap`); Native 본문 제목·설명·진행·건너뛰기·content 사이 `spacing.md` 16. 단계 content 내부 간격은 제품 소유 | ScreenLayout·양 renderer OnboardingScreen |
 | 순서·정렬 | Web: 헤더(제목·설명 → 건너뛰기) → 진행 문구 → content. Native: 본문(제목 → 설명 → 진행 문구 → 건너뛰기 → content). 둘 다 footer는 다음 또는 완료 → 이전, 첫 단계는 이전 없음 | 실제 렌더 순서 |
 | 고정·스크롤 | Web은 헤더·진행 문구·footer가 본문 스크롤 밖. Native는 제목·설명·진행·건너뛰기·content가 함께 스크롤하고 footer만 고정 | Native의 빈 header·기본 scroll="screen" |
 | 좁은 폭·큰 글자 | Web 헤더 제목 열은 최소 폭 120 × 글자 배율이며 actions가 줄바꿈한다. Native는 본문 세로 Stack을 사용한다. 둘 다 footer 버튼은 세로로 쌓인다 | ScreenLayout·OnboardingScreen |

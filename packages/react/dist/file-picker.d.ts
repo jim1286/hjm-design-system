@@ -6,7 +6,13 @@ export type FilePickerProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | 
     label: ReactNode;
     buttonLabel: string;
     dropzoneLabel: ReactNode;
-    onSelect: (result: FilePickerSelectionResult) => void;
+    /**
+     * `files` maps each accepted candidate id to the browser `File`, so the product can read or upload
+     * the bytes it accepted. Before this a Web product had no access to the File and fell back to a raw
+     * `<input type="file">` (2026-10-17 mockup studio review). Native products already own the file
+     * reference through their `onPick` adapter, so Native keeps the single-argument callback.
+     */
+    onSelect: (result: FilePickerSelectionResult, files: ReadonlyMap<string, File>) => void;
     existingCount?: number;
     disabled?: boolean;
     hint?: ReactNode;
@@ -22,7 +28,13 @@ export declare const FilePicker: import("react").ForwardRefExoticComponent<Omit<
     label: ReactNode;
     buttonLabel: string;
     dropzoneLabel: ReactNode;
-    onSelect: (result: FilePickerSelectionResult) => void;
+    /**
+     * `files` maps each accepted candidate id to the browser `File`, so the product can read or upload
+     * the bytes it accepted. Before this a Web product had no access to the File and fell back to a raw
+     * `<input type="file">` (2026-10-17 mockup studio review). Native products already own the file
+     * reference through their `onPick` adapter, so Native keeps the single-argument callback.
+     */
+    onSelect: (result: FilePickerSelectionResult, files: ReadonlyMap<string, File>) => void;
     existingCount?: number;
     disabled?: boolean;
     hint?: ReactNode;

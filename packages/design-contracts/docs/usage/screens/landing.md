@@ -93,8 +93,8 @@ ScreenLayout(제목 = 소개 문장, 최대 720, 바깥 padding spacing.md 16) �
 
 | 행동 | 컴포넌트·tone | 위치 | 개수·순서 |
 | --- | --- | --- | --- |
-| 주 행동(체험 시작) | Button 기본 primary, `medium` | ① 히어로 소개문 바로 아래 | 1 |
-| 같은 행동 반복 | Button `secondary`, 같은 라벨·같은 동작 | ⑤ FAQ 다음 | 1. 기능·FAQ를 읽은 뒤 위로 돌아가지 않고 체험할 수 있도록 끝에 한 번 더 둔다 |
+| 주 행동(체험 시작) | Button 기본 primary, `medium` | ① 히어로 소개문 바로 아래. Web은 히어로 Stack `align="start"`로 내용 폭을 유지한다(넓은 폭에서 1200 Container 폭으로 늘리지 않는다) | 1 |
+| 같은 행동 반복 | Button `secondary`, 같은 라벨·같은 동작 | ⑤ FAQ 다음. Web은 범위 안내와 함께 `Stack gap="xl" align="start"`로 감싸 내용 폭 | 1. 기능·FAQ를 읽은 뒤 위로 돌아가지 않고 체험할 수 있도록 끝에 한 번 더 둔다 |
 | FAQ 펼치기 | Collapsible 트리거 | ④ 각 질문 행 전체 | 질문마다 1 |
 | 입력 제출 | Button 기본 primary | ⑥ Sheet `footer`(Web 끝 정렬, Native 꽉 찬 폭) | 1. 시트 안에서 따로 센다([Button](../components/button.md#꼭-지킬-것)) |
 | 시트 닫기 | Sheet `closeLabel` | 시트 머리 끝 | 1. 기본 예제는 닫아도 초안을 유지한다. 제품이 비동기 저장을 연결하면 저장 중에는 Sheet `busy`로 막는다 |
@@ -177,7 +177,7 @@ const gutter = resolveWindowClass(window.innerWidth) === "compact" ? "compact" :
 <main><Container size="content" gutter={gutter}><Stack gap="xl">
   {/* 장식과 콘텐츠 여백은 기존 EffectSurface + Surface로 분리한다. */}
   <EffectSurface descriptor={{ layers: ["mesh", "grain"], seed: "landing", active: false }}><Surface padding="xl">
-    <Stack gap="lg">
+    <Stack gap="lg" align="start">
       <Text tone="muted">{t("landing.eyebrow")}</Text>
       <Heading level="level1">{t("landing.title")}</Heading>
       <Text as="p">{t("landing.intro")}</Text>
@@ -194,8 +194,8 @@ const gutter = resolveWindowClass(window.innerWidth) === "compact" ? "compact" :
     <Heading level="level3">{t(f.titleKey)}</Heading><Text>{t(f.bodyKey)}</Text></Stack></Surface>)}
   <Heading level="level2">{t("landing.faq")}</Heading>
   {faqs.map(q => <Collapsible key={q.id} trigger={t(q.questionKey)}><Text>{t(q.answerKey)}</Text></Collapsible>)}
-  <Button tone="secondary" onClick={start}>{t("landing.cta")}</Button>
-  <Text tone="muted">{t("landing.scope")}</Text>
+  <Stack gap="xl" align="start"><Button tone="secondary" onClick={start}>{t("landing.cta")}</Button>
+  <Text tone="muted">{t("landing.scope")}</Text></Stack>
 </Stack></Container>
   <Sheet title={t("landing.sheetTitle")} closeLabel={t("common.close")} open={open} onOpenChange={setOpen} busy={saving}
     footer={<Button loading={saving} onClick={submit}>{t("landing.submit")}</Button>}>
@@ -369,3 +369,4 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 - FAQ는 Collapsible(기본·변형): 2026-10-16 사용자 지적 — 변형 스토리가 `selected` 토글 Button 하나로 펼침을 흉내 내 눌림 토글로 읽혔다.
 - 닫을 때 초안 보존·성공 제출만 한 번 추가: 2026-10-13 실제 예제 검수에서 닫은 뒤 초안 소실과 연속 제출 시 중복 행을 재현했다.
 - 히어로 padding·시트 저장 footer: 2026-10-06 지침과 예제 정합성 수정.
+- Web CTA 내용 폭(`align="start"`): 2026-10-17 화면 리뷰 — 1280 폭에서 두 CTA가 Container 폭(약 1160)으로 늘어났다. 히어로 장식은 EffectSurface `radius`(기본 Surface `lg`)로 잘라 둥근 모서리 밖으로 비치지 않게 했다.

@@ -629,3 +629,18 @@ export const toastExample = {
   showReply: "답장 알림 띄우기",
   showAgain: "다시 띄우기",
 } as const;
+
+/** Screen-shell story (common-shell.md): one screen tool in `actions`, one primary action in `footer`, a short body list. */
+export const screenShellExample = {
+  title: "내 소식",
+  intro: "나에게 도착한 이야기를 여기에서 확인해요.",
+  settingsLabel: "소식 설정",
+  settingsDetail: "소식 설정 예제 · 받을 소식을 고르는 화면을 연결하는 자리예요.",
+  primaryLabel: "이야기 남기기",
+  primaryDetail: "이야기 작성 예제 · 새 이야기를 쓰는 화면을 연결하는 자리예요.",
+  items: [
+    { id: "photo", title: "서연님이 사진을 올렸어요", description: "방금 전" },
+    { id: "reply", title: "민준님이 내 이야기에 답글을 남겼어요", description: "10분 전" },
+    { id: "follow", title: "지우님이 회원님을 구독하기 시작했어요", description: "어제" },
+  ],
+} as const;

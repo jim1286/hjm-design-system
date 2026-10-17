@@ -21,9 +21,13 @@ import { EmptyState, Skeleton } from "./feedback.js";
 /** `icon` renders an icon-only button named by `label`; header actions (top-right) use it so a centered title keeps its width (2026-10-17). */
 export type ScreenFlowAction = Readonly<{label:string; onAction():void; disabled?:boolean; pending?:boolean; icon?:ReactNode}>;
 function Action({action,secondary=false,buttonRef}:{action:ScreenFlowAction;secondary?:boolean;buttonRef?:Ref<HTMLButtonElement>}){if(action.icon)return <IconButton ref={buttonRef} label={action.label} tone="ghost" disabled={!!(action.disabled||action.pending)} onClick={action.onAction}>{action.icon}</IconButton>;return <Button ref={buttonRef} tone={secondary?"ghost":"primary"} disabled={!!(action.disabled||action.pending)} loading={action.pending??false} onClick={action.onAction}>{action.label}</Button>;}
+/** Header tool action (refresh, add): icon-only so it never pushes the centered title. A required text `add` made
+ * products route exits ("취소") through it as a header text button (2026-10-17 screen review); exits use `exit`. */
+export type ScreenFlowIconAction = ScreenFlowAction & Readonly<{icon:ReactNode}>;
 type Base = Omit<ScreenLayoutProps,"children"|"footer">;
 
-export type ListDetailScreenProps = Base & { list:ReactNode; detail?:Pick<ScreenLayoutProps,"title"|"state"|"stateAction"|"notice"|"titleVisibility"|"headerAlignment"> & {content:ReactNode}; back:ScreenFlowAction; refresh?:ScreenFlowAction; loadMore?:ScreenFlowAction };
+// Stacked footer/sheet buttons use Stack gap "xs" (actionGroupRecipe.stackedGap 8); 12 read as split groups (button.md, 2026-10-17).
+export type ListDetailScreenProps = Base & { list:ReactNode; detail?:Pick<ScreenLayoutProps,"title"|"state"|"stateAction"|"notice"|"titleVisibility"|"headerAlignment"> & {content:ReactNode}; back:ScreenFlowAction; refresh?:ScreenFlowIconAction; loadMore?:ScreenFlowAction };
 /** Keep the list mounted so input and scroll survive a detail visit. Routers may instead restore host scroll state. */
 export function ListDetailScreen({list,detail,back,refresh,loadMore,layoutStyle,...screen}:ListDetailScreenProps){
  const open=!!detail;
@@ -45,7 +49,8 @@ export function ListDetailScreen({list,detail,back,refresh,loadMore,layoutStyle,
  },[open]);
  // layoutStyle places the outer host that owns both panes, not the inner list ScreenLayout.
  return <div style={{height:"100%",...layoutStyle}}>
-  <div ref={listHost} tabIndex={-1} hidden={open} style={{height:"100%"}} onFocusCapture={event=>{returnFocus.current=event.target as HTMLElement;}}><ScreenLayout {...screen} {...(refresh||screen.actions?{actions:<Stack axis="inline" gap="xs" align="center">{/* Refresh no longer replaces the screen's own actions (2026-10-16 composition review). */}{screen.actions}{refresh?<Action action={refresh} secondary/>:null}</Stack>}:{})} footer={loadMore?<Action action={loadMore} secondary/>:null}>{list}</ScreenLayout></div>
+ // "더 보기" ends the list inside the scroll body, centered like LoadMore; the fixed footer is the bottom CTA slot (2026-10-17 review).
+  <div ref={listHost} tabIndex={-1} hidden={open} style={{height:"100%"}} onFocusCapture={event=>{returnFocus.current=event.target as HTMLElement;}}><ScreenLayout {...screen} {...(refresh||screen.actions?{actions:<Stack axis="inline" gap="xs" align="center">{/* Refresh no longer replaces the screen's own actions (2026-10-16 composition review). */}{screen.actions}{refresh?<Action action={refresh} secondary/>:null}</Stack>}:{})}>{loadMore?<div style={{display:"flex",flexDirection:"column",flex:"1 1 auto",minHeight:0,gap:screenPatternRecipe.itemGap}}>{list}<div style={{display:"flex",justifyContent:"center"}}><Action action={loadMore} secondary/></div></div>:list}</ScreenLayout></div>
   {detail?<div ref={detailHost} style={{height:"100%"}}><ScreenLayout title={detail.title} {...(detail.titleVisibility === undefined ? {} : { titleVisibility: detail.titleVisibility })} {...(detail.headerAlignment === undefined ? {} : { headerAlignment: detail.headerAlignment })} {...(detail.state === undefined ? {} : {state:detail.state})} stateAction={detail.stateAction} notice={detail.notice} exit={{kind:"back",label:back.label,onClick:back.onAction,disabled:!!(back.disabled||back.pending)}}>{detail.content}</ScreenLayout></div>:null}
  </div>;
 }
@@ -77,7 +82,7 @@ export function ModerationScreen({reasonPicker,reasons,reason,onReasonChange,rea
  // Withdrawing the action ends that confirmation session; a later action needs
  // a new explicit press even if the screen itself stays mounted.
  useEffect(()=>{if(!hasBlock)setConfirm(false);},[hasBlock]);
- return <><ScreenLayout {...screen} footer={<Stack gap="sm"><Action action={{...submit,disabled:submit.disabled||!!screen.state&&screen.state.kind!=="ready"||!reasons.some(item=>item.value===reason)}}/>{block?<Action action={{...block.action,onAction:()=>setConfirm(true)}} secondary/>:null}</Stack>}><Stack gap="lg">{reasonPicker??(reasons.length?<RadioGroup accessibilityLabel={reasonLabel} orientation="vertical" items={reasons} value={reason} onValueChange={value=>{if(value)onReasonChange(value);}}/>:null)}{children}</Stack></ScreenLayout>{block?<AlertDialog open={confirm} onOpenChange={setConfirm} request={block.confirmation}/>:null}</>;}
+ return <><ScreenLayout {...screen} footer={<Stack gap="xs"><Action action={{...submit,disabled:submit.disabled||!!screen.state&&screen.state.kind!=="ready"||!reasons.some(item=>item.value===reason)}}/>{block?<Action action={{...block.action,onAction:()=>setConfirm(true)}} secondary/>:null}</Stack>}><Stack gap="lg">{reasonPicker??(reasons.length?<RadioGroup accessibilityLabel={reasonLabel} orientation="vertical" items={reasons} value={reason} onValueChange={value=>{if(value)onReasonChange(value);}}/>:null)}{children}</Stack></ScreenLayout>{block?<AlertDialog open={confirm} onOpenChange={setConfirm} request={block.confirmation}/>:null}</>;}
 
 
 /** Source choice only: permission, capture, decoding and draft persistence belong to the host. */
@@ -89,14 +94,14 @@ export function PhotoSourceSheet({open,onOpenChange,onSelect,labels,disabled=fal
  // File-input click must stay in the user's activation stack. Deferring until the
  // sheet animation ends can cause browsers to reject camera/album selection.
  const select=(source:PhotoSource)=>{if(disabled)return;onOpenChange(false);onSelect(source);};
- return <Sheet open={open} onOpenChange={onOpenChange} title={labels.title} closeLabel={labels.cancel}><Stack gap="sm">
+ return <Sheet open={open} onOpenChange={onOpenChange} title={labels.title} closeLabel={labels.cancel}><Stack gap="xs">
  <Button tone="secondary" disabled={disabled} onClick={()=>select("library")}>{labels.library}</Button>
  {cameraAvailable?<Button tone="secondary" disabled={disabled} onClick={()=>select("camera")}>{labels.camera}</Button>:null}
  </Stack></Sheet>;
 }
 
 export type MediaSelectionItem = {descriptor:UploadItemDescriptor;preview?:ReactNode};
-export type MediaSelectionScreenProps = Base & {library?:ReactNode;selectionSummary?:ReactNode;items:readonly MediaSelectionItem[];add:ScreenFlowAction;done:ScreenFlowAction;labels:UploadItemLabels;actionLabels:{remove:string;moveUp:string;moveDown:string};removeLabel(item:MediaSelectionItem):string;moveUpLabel(item:MediaSelectionItem):string;moveDownLabel(item:MediaSelectionItem):string;onRemove(id:string):void;onMove(id:string,direction:-1|1):void;onRetry(id:string):void;onCancel(id:string):void};
+export type MediaSelectionScreenProps = Base & {library?:ReactNode;selectionSummary?:ReactNode;items:readonly MediaSelectionItem[];add?:ScreenFlowIconAction;done:ScreenFlowAction;labels:UploadItemLabels;actionLabels:{remove:string;moveUp:string;moveDown:string};removeLabel(item:MediaSelectionItem):string;moveUpLabel(item:MediaSelectionItem):string;moveDownLabel(item:MediaSelectionItem):string;onRemove(id:string):void;onMove(id:string,direction:-1|1):void;onRetry(id:string):void;onCancel(id:string):void};
 /** A photo is the primary content; upload status stays below it instead of replacing the thumbnail. */
 export function MediaSelectionScreen({library,selectionSummary,items,add,done,labels,actionLabels,removeLabel,moveUpLabel,moveDownLabel,onRemove,onMove,onRetry,onCancel,...screen}:MediaSelectionScreenProps){
  const grid = useRef<HTMLDivElement>(null), addButton = useRef<HTMLButtonElement>(null);
@@ -138,7 +143,7 @@ export function MediaSelectionScreen({library,selectionSummary,items,add,done,la
   focusedItem.current = null;
   if (target) { target.focus({preventScroll:true}); reveal(target); }
  });
- return <ScreenLayout {...screen} actions={<Action action={add} secondary buttonRef={addButton}/>} footer={<Stack gap="sm">{selectionSummary}<Action action={done}/></Stack>}>
+ return <ScreenLayout {...screen} {...(add||screen.actions?{actions:<Stack axis="inline" gap="xs" align="center">{screen.actions}{add?<Action action={add} buttonRef={addButton}/>:null}</Stack>}:{})} footer={<Stack gap="sm">{selectionSummary}<Action action={done}/></Stack>}>
   {library??<Grid ref={grid} columns={{compact:2,expanded:3}} gap={{compact:"md"}}
    onFocusCapture={event => {
     const node = event.target as HTMLElement, row = node.closest<HTMLElement>("[data-hjm-media-item]");
@@ -494,7 +499,7 @@ export function SearchScreen<F = unknown>({query,queryLabel,queryField,queryClea
 }
 
 export type PermissionScreenProps = Base & {status:PermissionScreenStatus;illustration?:ReactNode;explanation:ReactNode;request:ScreenFlowAction;settings:ScreenFlowAction;continueAction:ScreenFlowAction;skip?:ScreenFlowAction};
-export function PermissionScreen({status,illustration,explanation,request,settings,continueAction,skip,...screen}:PermissionScreenProps){const kind=resolvePermissionAction(status);const primary=kind==="request"?request:kind==="settings"?settings:kind==="continue"?continueAction:null;return <ScreenLayout {...screen} footer={<Stack gap="sm">{primary?<Action action={primary}/>:null}{skip?<Action action={skip} secondary/>:null}</Stack>}><Stack gap="xl" align="center">{illustration}{explanation}</Stack></ScreenLayout>;}
+export function PermissionScreen({status,illustration,explanation,request,settings,continueAction,skip,...screen}:PermissionScreenProps){const kind=resolvePermissionAction(status);const primary=kind==="request"?request:kind==="settings"?settings:kind==="continue"?continueAction:null;return <ScreenLayout {...screen} footer={<Stack gap="xs">{primary?<Action action={primary}/>:null}{skip?<Action action={skip} secondary/>:null}</Stack>}><Stack gap="xl" align="center">{illustration}{explanation}</Stack></ScreenLayout>;}
 
 export type OnboardingStep = {id:string;title:string;description:string;content:ReactNode};
 export type OnboardingScreenProps = {steps:readonly OnboardingStep[];index:number;onIndexChange(index:number):void;nextLabel:string;backLabel:string;complete:ScreenFlowAction;skip?:ScreenFlowAction;progressLabel(index:number,total:number):string;layoutStyle?:ScreenLayoutProps["layoutStyle"]};
@@ -504,7 +509,7 @@ export function OnboardingScreen({steps,index,onIndexChange,nextLabel,backLabel,
  // ScreenLayout owns this scroll region; keep focus while resetting each new step.
  useLayoutEffect(()=>{const body=host.current?.querySelector<HTMLElement>(".hjm-screen__body");if(body)body.scrollTop=0;},[index]);
  const pending=!!(complete.pending||skip?.pending);
- return <div ref={host} style={{display:"contents"}}><ScreenLayout {...(layoutStyle===undefined?{}:{layoutStyle})} title={step.title} description={step.description} actions={skip?<Action action={{...skip,disabled:!!(skip.disabled||pending)}} secondary/>:null} notice={<Text variant="caption" tone="muted">{progressLabel(index+1,steps.length)}</Text>} footer={<Stack gap="sm"><Action action={position.last?{...complete,disabled:!!(complete.disabled||pending)}:{label:nextLabel,disabled:pending,onAction:()=>onIndexChange(index+1)}}/>{!position.first?<Action action={{label:backLabel,disabled:pending,onAction:()=>onIndexChange(index-1)}} secondary/>:null}</Stack>}>{step.content}</ScreenLayout></div>;}
+ return <div ref={host} style={{display:"contents"}}><ScreenLayout {...(layoutStyle===undefined?{}:{layoutStyle})} title={step.title} description={step.description} actions={skip?<Action action={{...skip,disabled:!!(skip.disabled||pending)}} secondary/>:null} notice={<Text variant="caption" tone="muted">{progressLabel(index+1,steps.length)}</Text>} footer={<Stack gap="xs"><Action action={position.last?{...complete,disabled:!!(complete.disabled||pending)}:{label:nextLabel,disabled:pending,onAction:()=>onIndexChange(index+1)}}/>{!position.first?<Action action={{label:backLabel,disabled:pending,onAction:()=>onIndexChange(index-1)}} secondary/>:null}</Stack>}>{step.content}</ScreenLayout></div>;}
 
 export type CommentThreadItem = Readonly<{id:string;parentId:string|null;author:string;body:ReactNode;bodyText?:string;timeLabel:string;timeDateTime?:string;likeCountLabel:string;avatar?:ReactNode;likeIcon:ReactNode;likeLabel:string;likeAction?:ReactNode;actions?:ReactNode;canReply?:boolean;replyDisabled?:boolean;
  /** Long-press the comment (author and body) to react; the product owns the stored value and summary. */

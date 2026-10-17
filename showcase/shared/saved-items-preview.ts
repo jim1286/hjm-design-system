@@ -14,3 +14,8 @@ export const savedPreviewCollections = [
  {id:"places",title:"가고 싶은 곳",itemIds:["1","3","5","7"]},
  {id:"daily",title:"일상의 영감",itemIds:["2","4","6","8"]},
 ];
+// Web and Native read the same visible copy so the two previews cannot drift in wording or tone (해요체).
+export function savedPreviewLabels(itemOpen: boolean) {
+ return {allItems:"모든 게시물",privateNotice:"저장한 내용은 회원님만 볼 수 있어요.",back:itemOpen?"컬렉션으로":"저장됨으로",empty:"이 컬렉션에는 아직 게시물이 없어요.",createCollection:"새 컬렉션"} as const;
+}
+export const savedPreviewRemovedNotice = "저장한 항목에서 삭제했어요.";

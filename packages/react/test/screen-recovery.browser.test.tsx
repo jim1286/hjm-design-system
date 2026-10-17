@@ -58,13 +58,13 @@ it("preserves server root and reply order when replies precede their roots", asy
 });
 it("centers an empty saved collection while keeping explicit failures and home creation", async () => {
   const {SavedItemsScreen}=await import("../src/saved-items.js");
-  const props={title:"Saved",items:[],collections:[],labels:{allItems:"All",back:"Back",createCollection:"Create",privateNotice:"Private",empty:"No saved items"},onOpenCollection:()=>{},onOpenItem:()=>{},onBack:()=>{},onCreateCollection:()=>{},renderThumbnail:()=>null,renderDetail:()=>null};
+  const props={title:"Saved",items:[],collections:[],labels:{allItems:"All",back:"Back",createCollection:"Create",privateNotice:"Private",empty:"No saved items"},onOpenCollection:()=>{},onOpenItem:()=>{},onBack:()=>{},onCreateCollection:()=>{},createCollectionIcon:"+",renderThumbnail:()=>null,renderDetail:()=>null};
   await act(async()=>root.render(<HjmProvider><SavedItemsScreen {...props} collectionId={null}/></HjmProvider>));
   expect(host.querySelector(".hjm-screen__state")?.textContent).toBe("No saved items");
   await act(async()=>root.render(<HjmProvider><SavedItemsScreen {...props} collectionId={null} state={{kind:"error",title:"Failed"}}/></HjmProvider>));
   expect(host.querySelector(".hjm-screen__state")?.textContent).toBe("Failed");
   await act(async()=>root.render(<HjmProvider><SavedItemsScreen {...props}/></HjmProvider>));
-  expect(host.querySelector(".hjm-screen__state")).toBeNull(); expect(host.textContent).toContain("Create");
+  expect(host.querySelector(".hjm-screen__state")).toBeNull(); expect(host.querySelector(`button[aria-label="Create"]`)).not.toBeNull();
 });
 
 it("resets the onboarding body scroll when the controlled step changes", async () => {

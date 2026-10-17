@@ -68,7 +68,7 @@ function PixelSprite({ paused }: { paused: boolean }) {
 export function PixelEmptyState() {
   const [paused, setPaused] = useState(false);
   const [started, setStarted] = useState(false);
-  // The story fills the canvas (hjm.fillCanvas); EmptyState takes the free height and centers in the body.
+  // The story fills the canvas (hjm.fillCanvas) inside a reading Container decorator; EmptyState takes the free height and centers in the body.
   return <Stack gap="md" layoutStyle={{ flexGrow: 1 }}>
     <EmptyState icon={<PixelSprite paused={paused} />} title={pixelCopy.title} description={pixelCopy.description}
       action={<Button onClick={() => setStarted(true)}>{pixelCopy.start}</Button>} />

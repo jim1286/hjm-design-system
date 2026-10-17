@@ -38,7 +38,7 @@ it("preserves root and reply order independently of the source interleaving", ()
 });
 it("uses the shared centered state for empty saved items without replacing an explicit error", async () => {
   const {SavedItemsScreen}=await import("../src/saved-items.js");
-  const props={title:"Saved",items:[],collections:[],labels:{allItems:"All",back:"Back",createCollection:"Create",privateNotice:"Private",empty:"No saved items"},onOpenCollection:()=>{},onOpenItem:()=>{},onBack:()=>{},onCreateCollection:()=>{},renderThumbnail:()=>null,renderDetail:()=>null};
+  const props={title:"Saved",items:[],collections:[],labels:{allItems:"All",back:"Back",createCollection:"Create",privateNotice:"Private",empty:"No saved items"},onOpenCollection:()=>{},onOpenItem:()=>{},onBack:()=>{},onCreateCollection:()=>{},createCollectionIcon:"+",renderThumbnail:()=>null,renderDetail:()=>null};
   const tree=render(<SavedItemsScreen {...props} collectionId={null}/>);
   expect(tree.root.findByType(ScreenLayout).props.state).toEqual({kind:"empty",title:"No saved items"});
   act(()=>tree.update(<HjmNativeProvider><SavedItemsScreen {...props} collectionId={null} state={{kind:"error",title:"Failed"}}/></HjmNativeProvider>));

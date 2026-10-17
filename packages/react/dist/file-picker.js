@@ -20,13 +20,16 @@ export const FilePicker = forwardRef(function FilePicker({ descriptor, label, bu
         // changes represent no selection and must not erase a product's file list.
         if (disabled || files.length === 0)
             return;
-        const candidates = Array.from(files).map((file, index) => ({
+        const sources = Array.from(files);
+        const candidates = sources.map((file, index) => ({
             id: getCandidateId(file, index),
             name: file.name,
             mimeType: file.type,
             sizeBytes: file.size,
         }));
-        onSelect(resolveFilePickerSelection(candidates, resolved, existingCount));
+        const result = resolveFilePickerSelection(candidates, resolved, existingCount);
+        const accepted = new Set(result.accepted.map(candidate => candidate.id));
+        onSelect(result, new Map(candidates.flatMap((candidate, index) => accepted.has(candidate.id) ? [[candidate.id, sources[index]]] : [])));
     };
     const handleChange = (event) => {
         try {

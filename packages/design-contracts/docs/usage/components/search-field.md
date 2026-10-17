@@ -71,7 +71,7 @@ import { SearchField } from "@hjmds/react-native/inputs";
 | `onClear` | `() => void` | — | 지우기 버튼을 누른 뒤 |
 | `loading`(Web) / `busy`(Native) | `boolean` | `false` | 진행 중에는 지우기 대신 진행 표시가 뒤에 선다 |
 | `clearLabel` | 문자열 | — | 필수, 지우기 버튼 접근성 이름. Native는 `busyLabel`도 필수 |
-| `renderSearchIcon`(Web) · `renderLeading`(Native) | `(props) => ReactNode` — Web `{ color: "currentColor", size }`, Native `{ color, size, disabled }` | 기본 돋보기 | 제품 아이콘 adapter |
+| `renderSearchIcon`(Web) · `renderLeading`(Native) | `(props) => ReactNode` — Web `{ color: "currentColor", size }`, Native `{ color, size, disabled }` | 없음 | 제품 돋보기 adapter. HJM은 아이콘을 내장하지 않으므로 넘기지 않으면 앞쪽 아이콘이 없다 |
 | `renderClearIcon` · `renderLoadingIndicator`(Web) · `renderBusyIndicator`(Native) | 위와 같은 모양 | 기본 아이콘·스피너 | — |
 | `layoutStyle` | 배치 전용 style 객체 | — | 필드 전체 배치. Web `style`은 안쪽 input에 붙는다 |
 | `label` / `aria-label`(Web) / `accessibilityLabel`(Native) | 문자열 | — | 하나는 필수. 없으면 렌더 중 `TypeError` |

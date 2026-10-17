@@ -2,7 +2,7 @@ import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, expect, it, vi } from "vitest";
 import { TextInput } from "react-native";
 import { HjmNativeProvider } from "../src/provider.js";
-import { Button } from "../src/actions.js";
+import { Button, IconButton } from "../src/actions.js";
 import { AlertDialog } from "../src/overlays.js";
 import { EditorScreen, ModerationScreen, PermissionScreen, type EditorScreenProps } from "../src/screen-flows.js";
 vi.mock("react-native-safe-area-context", () => ({ useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 0, left: 0 }) }));
@@ -10,7 +10,8 @@ vi.mock("react-native-safe-area-context", () => ({ useSafeAreaInsets: () => ({ t
 let tree: ReactTestRenderer | undefined;
 afterEach(() => { if (tree) act(() => tree!.unmount()); tree = undefined; });
 const discard = { mode: "confirm", title: "초안을 버릴까요?", description: "입력이 사라집니다", confirmLabel: "버리기", cancelLabel: "계속 작성", fallbackErrorMessage: "실패" } as const;
-const button = (label: string) => tree!.root.findAllByType(Button).find(node => node.props.children === label)!;
+// EditorScreen cancel renders as the header exit IconButton, named by its label.
+const button = (label: string) => tree!.root.findAllByType(Button).find(node => node.props.children === label) ?? tree!.root.findAllByType(IconButton).find(node => node.props.label === label)!;
 const render = (content: React.ReactNode) => act(() => {
   const element = <HjmNativeProvider reducedMotion>{content}</HjmNativeProvider>;
   if (tree) tree.update(element); else tree = create(element);

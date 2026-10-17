@@ -21,7 +21,8 @@ const button=(name:string)=>[...host.querySelectorAll<HTMLButtonElement>("button
 const click=(name:string)=>act(async()=>button(name).click());
 const radio=(name:string)=>[...host.querySelectorAll<HTMLInputElement>("input[type=radio]")].find(n=>n.closest("label")?.textContent===name)!;
 const pngFile=()=>{const canvas=document.createElement("canvas");canvas.width=1;canvas.height=1;const data=canvas.toDataURL("image/png").split(",")[1]!;return new File([Uint8Array.from(atob(data),c=>c.charCodeAt(0))],"capture.png",{type:"image/png"});};
-const choose=async(file:File,label="화면 캡처")=>act(async()=>{const input=host.querySelector<HTMLInputElement>(`input[aria-label="${label}"]`)!;const transfer=new DataTransfer();transfer.items.add(file);input.files=transfer.files;input.dispatchEvent(new Event("change",{bubbles:true}));});
+// FilePicker names its file input by the visible label span (aria-labelledby).
+const choose=async(file:File,label="화면 캡처")=>act(async()=>{const input=[...host.querySelectorAll<HTMLInputElement>("input[type=file]")].find(n=>document.getElementById(n.getAttribute("aria-labelledby")!)?.textContent===label)!;const transfer=new DataTransfer();transfer.items.add(file);input.files=transfer.files;input.dispatchEvent(new Event("change",{bubbles:true}));});
 async function loaded(){
  const decode=createImageBitmap.bind(globalThis);let pending:Promise<ImageBitmap>|undefined;
  const spy=vi.spyOn(globalThis,"createImageBitmap").mockImplementationOnce(source=>{pending=decode(source);return pending;});
@@ -74,8 +75,8 @@ it("shows scene import progress, rejects stale JSON and preserves the editor on 
  const contents=serializeMockupScene({...initialMockupScene,title:"가져온 장면"});
  const text=vi.spyOn(File.prototype,"text").mockImplementationOnce(()=>new Promise(resolve=>{finish=resolve;}));
  const json=()=>new File([contents],"scene.json",{type:"application/json"});
- await choose(json(),"장면 설정 불러오기");expect(host.textContent).toContain("장면 설정을 읽는 중이에요.");expect(button("PNG 내보내기").disabled).toBe(true);
+ await choose(json(),"장면 설정");expect(host.textContent).toContain("장면 설정을 읽는 중이에요.");expect(button("PNG 내보내기").disabled).toBe(true);
  await loaded();await act(async()=>finish(contents));expect(host.querySelector('canvas')!.getAttribute("aria-label")).not.toContain("가져온 장면");
- text.mockResolvedValueOnce("{");await choose(json(),"장면 설정 불러오기");expect(host.textContent).toContain("장면 설정을 읽지 못했어요");expect(button("PNG 내보내기").disabled).toBe(false);
- text.mockResolvedValueOnce(contents);await choose(json(),"장면 설정 불러오기");expect(host.querySelector('canvas')!.getAttribute("aria-label")).toContain("가져온 장면");expect(button("PNG 내보내기").disabled).toBe(true);expect(host.textContent).toContain("파일을 다시 선택해 주세요");
+ text.mockResolvedValueOnce("{");await choose(json(),"장면 설정");expect(host.textContent).toContain("장면 설정을 읽지 못했어요");expect(button("PNG 내보내기").disabled).toBe(false);
+ text.mockResolvedValueOnce(contents);await choose(json(),"장면 설정");expect(host.querySelector('canvas')!.getAttribute("aria-label")).toContain("가져온 장면");expect(button("PNG 내보내기").disabled).toBe(true);expect(host.textContent).toContain("파일을 다시 선택해 주세요");
 });

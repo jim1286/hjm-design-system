@@ -24,7 +24,7 @@ host: 남은 높이·safe area·키보드
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
 | 바깥 틀 | ScreenLayout | route 본문 | [API 배치 규칙](../components/screen-layout.md#배치), host 남은 높이 |
-| 내용 | Stack `gap="xl"` > SegmentedControl → SearchField → 상태 문구 → 카드(Surface `padding="lg"`) | 표현 방식 선택 → 검색 → 같은 데이터 목록·읽기·이미지 표현 | 구획 사이 `spacing.xl` 24. 목록·읽기는 Stack `gap="lg"` 한 열, 이미지는 Grid 두 열(`minColumnWidth` 240 = `spacing.xxxl` 40 × 6) |
+| 내용 | Stack `gap="xl"` > SegmentedControl → SearchField(제품 돋보기 adapter + placeholder) → 상태 문구 → 카드(Surface `padding="lg"`) | 표현 방식 선택 → 검색 → 같은 데이터 목록·읽기·이미지 표현 | 구획 사이 `spacing.xl` 24. 목록·읽기는 Stack `gap="lg"` 한 열, 이미지는 Grid 두 열(`minColumnWidth` 240 = `spacing.xxxl` 40 × 6) |
 | 상태 | state 또는 해당 API 상태 | 본문 자리·비차단 notice | 입력 중 실패는 본문 높이와 초안을 유지 |
 
 ## 버튼과 행동 위치
@@ -32,7 +32,7 @@ host: 남은 높이·safe area·키보드
 | 행동 | 컴포넌트·tone | 위치 | 개수·순서 |
 | --- | --- | --- | --- |
 | 보기 방식 | SegmentedControl(`label` 보기 방식) | 검색 위 | 세 값, 항상 하나 선택 |
-| 읽기 · 저장 | Button secondary · Button secondary `selected` | 카드 아래 | 카드마다 [읽기][저장]. 저장은 그 카드에 대한 행동의 눌림 토글이라 `selected`를 허용한다. 보기 방식처럼 선택지를 고르는 곳에는 쓰지 않는다([선택 조립 규칙](../SELECTION.md#조립-규칙필수)) |
+| 읽기 · 저장 | Button secondary · Button secondary `selected` | 카드 아래 | 카드마다 한 줄 [읽기][저장](선택하면 `저장 취소`). 보이는 문구는 짧은 동사이고 카드 제목을 포함한 이름은 접근성 이름(Web `aria-label`, Native `accessibilityLabel`)으로 둔다. 저장은 그 카드에 대한 행동의 눌림 토글이라 `selected`를 허용한다. 보기 방식처럼 선택지를 고르는 곳에는 쓰지 않는다([선택 조립 규칙](../SELECTION.md#조립-규칙필수)) |
 | 검색 초기화 | EmptyState `action` > Button secondary | 결과 없음 자리 | 하나. 이 화면에는 primary가 없다 |
 | 읽기 마치기 | Button(Sheet footer) | 상세 Sheet | 하나 |
 

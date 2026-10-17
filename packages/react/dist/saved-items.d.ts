@@ -19,11 +19,11 @@ export type SavedItemsScreenProps<T extends SavedItem> = Omit<ListDetailScreenPr
     onBack(): void;
     onCreateCollection(): void;
     /**
-     * Product-supplied glyph for the create-collection header action. When present the action renders
-     * as an IconButton named by `labels.createCollection` (tool actions use icons, 2026-10-17 usage rule
-     * in docs/usage/components/icon-button.md); omitted keeps the text button for existing products.
+     * Product-supplied glyph for the create-collection header action, rendered as an IconButton named
+     * by `labels.createCollection`. Required because header tool actions are icons (2026-10-17 usage
+     * rule in docs/usage/components/icon-button.md); a text-button fallback let screens drift from it.
      */
-    createCollectionIcon?: ReactNode;
+    createCollectionIcon: ReactNode;
     renderThumbnail(item: T): ReactNode;
     renderDetail(item: T): ReactNode;
 };

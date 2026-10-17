@@ -42,11 +42,11 @@ it('restarts the original-message highlight when the same reply is followed agai
 });
 
 it('does not carry an armed read failure into a later chat send',async()=>{
- await render(<NotificationScreenPreview tools/>);press('다음 읽음 저장 실패');back();act(()=>tree.root.findAllByType(ListRow).find(row=>row.props.title==='서연과의 대화')!.props.onPress());const composer=()=>tree.root.findByType(MessageComposer);act(()=>composer().props.onValueChange('정상 전송'));act(()=>composer().props.onSend('정상 전송'));expect(composer().props.value).toBe('');expect(text()).not.toContain('보내지 못했어요');
+ await render(<NotificationScreenPreview tools/>);choose('다음 읽음 저장 실패');back();act(()=>tree.root.findAllByType(ListRow).find(row=>row.props.title==='서연과의 대화')!.props.onPress());const composer=()=>tree.root.findByType(MessageComposer);act(()=>composer().props.onValueChange('정상 전송'));act(()=>composer().props.onSend('정상 전송'));expect(composer().props.value).toBe('');expect(text()).not.toContain('보내지 못했어요');
 });
 
 it('keeps an inbox read error out of the conversation composer',async()=>{
- await render(<NotificationScreenPreview tools/>);press('다음 읽음 저장 실패');act(()=>tree.root.findAllByType(NotificationItem)[0]!.props.onPress());expect(text()).toContain('읽음 표시를 저장하지 못했어요');expect(tree.root.findAllByType(NotificationItem)[0]!.props.read).toBe(false);back();act(()=>tree.root.findAllByType(ListRow).find(row=>row.props.title==='서연과의 대화')!.props.onPress());expect(text()).not.toContain('읽음 표시를 저장하지 못했어요');
+ await render(<NotificationScreenPreview tools/>);choose('다음 읽음 저장 실패');act(()=>tree.root.findAllByType(NotificationItem)[0]!.props.onPress());expect(text()).toContain('읽음 표시를 저장하지 못했어요');expect(tree.root.findAllByType(NotificationItem)[0]!.props.read).toBe(false);back();act(()=>tree.root.findAllByType(ListRow).find(row=>row.props.title==='서연과의 대화')!.props.onPress());expect(text()).not.toContain('읽음 표시를 저장하지 못했어요');
 });
 
 it('enters a ready conversation after retrying the login failure fixture',async()=>{

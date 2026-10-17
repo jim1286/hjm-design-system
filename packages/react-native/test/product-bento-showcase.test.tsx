@@ -2,8 +2,7 @@ import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, beforeEach, expect, it } from "vitest";
 import { HjmNativeProvider } from "@hjmds/react-native/provider";
 import { BottomCTA } from "@hjmds/react-native/bottom-cta";
-import { TextField } from "@hjmds/react-native/inputs";
-import { Button } from "@hjmds/react-native/actions";
+import { Chip, TextField } from "@hjmds/react-native/inputs";
 import { ProductBentoPreview } from "../../../showcase/native/src/reference-adoption-previews.js";
 let tree: ReactTestRenderer;
 (globalThis as {IS_REACT_ACT_ENVIRONMENT?:boolean}).IS_REACT_ACT_ENVIRONMENT=true;
@@ -27,7 +26,7 @@ it("guards pending back/duplicate actions and distinguishes the new draft from s
  primary();await settle();expect(cta().primaryAction.label).toBe("저장했어요");expect(cta().primaryAction.disabled).toBe(true);
 });
 it("keeps the last saved title on failure and saves the current retry draft",async()=>{
- primary();input("첫 제목");primary();await settle();input("실패할 제목");act(()=>tree.root.findAllByType(Button).find(node=>node.props.children==="다음 저장 실패시키기")!.props.onPress());primary();await settle();
+ primary();input("첫 제목");primary();await settle();input("실패할 제목");act(()=>tree.root.findAllByType(Chip).find(node=>node.props.label==="다음 저장 실패시키기")!.props.onPress());primary();await settle();
  expect(text()).toContain("저장하지 못했어요");expect(text()).toContain("첫 제목");expect(tree.root.findByType(TextField).props.value).toBe("실패할 제목");
  input("다시 쓴 제목");primary();await settle();expect(text()).not.toContain("저장하지 못했어요");expect(text()).toContain("다시 쓴 제목");
 });

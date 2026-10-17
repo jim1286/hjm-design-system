@@ -73,6 +73,7 @@ footer
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 부모의 가용 폭·높이 | 별도 고정 높이나 스크롤 없음 |
+| 제목·상태 문구 | 제목은 두 플랫폼 모두 `Heading level3`(문서 단계는 `headingLevel`). 상태 블록은 제목(`Text title`)·설명이 블록 줄로 가운데 정렬된다 | renderer. 2026-10-17 화면 검토: Native 제목이 작은 `Text title`이었고 Web 상태 문구가 한 줄로 이어져 왼쪽 정렬됐다 |
 | 간격 | 영역 spacing.md 16, 제목 행 spacing.sm 12, 배지 spacing.xs 8, 제목/설명 spacing.xxs 4 | Stack props |
 | 순서·정렬 | 머리글 → notice → 본문 → footer | renderer |
 | 고정·스크롤 | 부모 HJM 화면이 소유, 자체 ScrollView 없음 | renderer |

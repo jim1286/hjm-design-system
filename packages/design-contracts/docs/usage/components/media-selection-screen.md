@@ -43,7 +43,8 @@ import { MediaSelectionScreen } from "@hjmds/react/screen-flows";
   title={t("media.title")}
   items={picked.map((p) => ({ descriptor: { id: p.id, name: p.fileName, state: p.upload },
     preview: <img src={p.uri} alt="" width={p.width} height={p.height} /> }))}
-  add={{ label: t("media.add"), onAction: openPicker }}
+  exit={{ kind: "close", label: t("media.close"), onClick: close }}
+  add={{ label: t("media.add"), icon: <PlusIcon aria-hidden />, onAction: openPicker }}
   done={{ label: t("media.done"), onAction: submit, disabled: uploading || !canComplete }}
   labels={{ pending: t("upload.pending"), uploading: t("upload.uploading"),
     success: t("upload.success"), cancel: t("upload.cancel"), retry: t("upload.retry") }}
@@ -65,7 +66,8 @@ import { Image } from "react-native";
   title={t("media.title")}
   items={picked.map((p) => ({ descriptor: { id: p.id, name: p.fileName, state: p.upload },
     preview: <Image src={p.uri} width={p.width} height={p.height} /> }))}
-  add={{ label: t("media.add"), onAction: openPicker }}
+  exit={{ kind: "close", label: t("media.close"), onPress: close }}
+  add={{ label: t("media.add"), icon: <PlusIcon color={colors.text} />, onAction: openPicker }}
   done={{ label: t("media.done"), onAction: submit, disabled: uploading || !canComplete }}
   labels={{ pending: t("upload.pending"), uploading: t("upload.uploading"),
     success: t("upload.success"), cancel: t("upload.cancel"), retry: t("upload.retry") }}
@@ -87,14 +89,14 @@ Web의 `<img alt="">`는 장식용 미리보기다. 사진 이름은 `removeLabe
 | `items` | `readonly { descriptor: UploadItemDescriptor; preview?: ReactNode }[]` | 필수 | descriptor는 `id`·`name`·선택 `sizeLabel`·`state`(`pending` · `uploading` · `success` · `error`) |
 | `library` | `ReactNode` | 없음 | 주면 `items` 격자 대신 이 슬롯을 그린다 |
 | `selectionSummary` | `ReactNode` | 없음 | footer에서 `done` 위 |
-| `add` | `ScreenFlowAction`(`{ label, onAction(), disabled?, pending? }`) | 필수 | 상단 `actions` 자리의 ghost 버튼 |
+| `add` | `ScreenFlowIconAction`(`{ label, icon, onAction(), disabled?, pending? }`) | 없음 | 상단 `actions` 끝의 IconButton(이름 `label`). 실제로 사진을 더 고르는 행동일 때만 준다. 화면 나가기(닫기·취소·선택으로 돌아가기)는 `exit` |
 | `done` | `ScreenFlowAction` | 필수 | footer의 primary 버튼 |
 | `labels` | `UploadItemLabels`(`{ pending, uploading, success, cancel, retry }`) | 필수 | 각 항목 UploadItem 문구 |
 | `actionLabels` | `{ remove, moveUp, moveDown }` | 필수 | 항목 아래 버튼의 짧은 표시 문구 |
 | `removeLabel` · `moveUpLabel` · `moveDownLabel` | `(item: MediaSelectionItem) => string` | 필수 | 사진 이름을 포함한 접근성 이름 |
 | `onMove` | `(id: string, direction: -1 \| 1) => void` | 필수 | 첫 항목의 위로·마지막 항목의 아래로는 비활성 |
 | `onRemove` · `onRetry` · `onCancel` | `(id: string) => void` | 필수 | 삭제, UploadItem 재시도·취소 |
-| 나머지 | `ScreenLayout`과 같음(`children`·`footer` 제외) | — | `actions`는 `add`가 덮는다 |
+| 나머지 | `ScreenLayout`과 같음(`children`·`footer` 제외) | — | `actions`를 주면 `add` 앞에 같은 행으로 놓인다 |
 
 ## 배치
 
@@ -115,7 +117,7 @@ Web의 `<img alt="">`는 장식용 미리보기다. 사진 이름은 `removeLabe
 
 ## 함정
 
-- `actions`를 넘겨도 `add` 버튼이 그 자리를 덮는다. 다른 상단 행동은 `leading`이나 `notice`로 둔다.
+- 나가기를 `add`로 넘기지 않는다. 2026-10-17 화면 검토에서 필수였던 글자 `add`에 "취소"를 넣어 헤더 끝 글자 버튼이 가운데 제목을 밀고 Native에서 "취"로 잘렸다. 그래서 `add`를 선택 항목으로 바꾸고 아이콘을 필수로 했다. 나가기는 헤더 시작의 `exit` 아이콘이다.
 - `library`를 주면 `items` 격자와 업로드 상태 표시는 그려지지 않는다. 선택 결과는 `selectionSummary`로 보여 준다.
 
 ## 삭제·순서 변경 후 Web 키보드 초점

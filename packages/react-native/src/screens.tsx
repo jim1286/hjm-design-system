@@ -366,9 +366,10 @@ export function CompositionLayout({title, headingLevel = 3, description, badge, 
   return <Stack gap="md" {...(layoutStyle === undefined ? {} : {layoutStyle})}>
     {title || description || badge || leading || actions ? <Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap: "wrap"}}>
       {leading}<Stack gap="xxs" layoutStyle={{flex: 1, minWidth: 0}}>
-        <Stack axis="inline" gap="xs" align="center" layoutStyle={{flexWrap: "wrap"}}>{title ? <Text variant="title" accessibilityRole="header" aria-level={headingLevel}>{title}</Text> : null}{badge}</Stack>
+        <Stack axis="inline" gap="xs" align="center" layoutStyle={{flexWrap: "wrap"}}>{title ? <Heading level="level3" semanticLevel={headingLevel}>{title}</Heading> : null}{badge}</Stack>
         {description ? <Text tone="muted">{description}</Text> : null}
       </Stack>{actions}
+  // Same Heading level3 as Web; a title-variant Text rendered smaller and lighter on Native (2026-10-17 review).
     </Stack> : null}
     {notice}
     {state.kind === "ready" ? children : <Stack gap="sm" align="center" justify="center" layoutStyle={{flex: 1}}>

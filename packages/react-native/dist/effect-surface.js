@@ -4,13 +4,13 @@ import { Animated, AppState, View, StyleSheet } from "react-native";
 import Svg, { Circle, Defs, Ellipse, RadialGradient, Stop, Pattern, Rect, Mask, Image as SvgImage } from "react-native-svg";
 import { resolveEffectSurface } from "@hjmds/design-contracts/effect-surface";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { surfaceGeometry } from "@hjmds/design-contracts/recipes/base";
+import { surfaceDefaults, surfaceGeometry } from "@hjmds/design-contracts/recipes/base";
 import { useHjmNativeTheme } from "./provider.js";
-export function EffectSurface({ descriptor = {}, children, style, padding = "none", visible = true }) {
-    const { palette } = useHjmNativeTheme();
+export function EffectSurface({ descriptor = {}, children, style, padding = "none", radius = surfaceDefaults.radius, visible = true }) {
+    const { palette, tokens } = useHjmNativeTheme();
     // Validate caller input outside the fallback; a broken descriptor is not a host failure.
     const effect = resolveEffectSurface(descriptor);
-    return _jsxs(View, { style: [{ overflow: "hidden", backgroundColor: palette.theme.bg, padding: surfaceGeometry.paddings[padding] }, style], children: [_jsx(DecorationBoundary, { children: _jsx(EffectDecoration, { effect: effect, visible: visible }) }), children] });
+    return _jsxs(View, { style: [{ overflow: "hidden", borderRadius: radius === "none" ? 0 : tokens.radius[radius], backgroundColor: palette.theme.bg, padding: surfaceGeometry.paddings[padding] }, style], children: [_jsx(DecorationBoundary, { children: _jsx(EffectDecoration, { effect: effect, visible: visible }) }), children] });
 }
 // A failed optional SVG/Animated host must not unmount the product's content.
 // Stay on the base surface until remount instead of repeatedly retrying a broken host.

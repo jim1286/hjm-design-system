@@ -16,6 +16,8 @@ import { Avatar } from "@hjmds/react/display";
 import { Bell, ChevronLeft, ChevronRight, Globe2, HelpCircle, ShieldCheck, Volume2, Sparkles, MoreHorizontal, CheckCheck, MessageCircle, Heart, Palette, Settings2, Image as ImageIcon, ArrowUp, Reply, MessageSquareWarning, Trash2 } from "lucide-react";
 import { resolveChatMessageGroups, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
 import { ListRow } from "@hjmds/react/display";
+import { BottomCTA } from "@hjmds/react/bottom-cta";
+import { screenShellExample } from "../../../shared/component-examples";
 
 const extraReactions = [{"id": "smile", "emoji": "😀", "label": "웃는 얼굴"}, {"id": "grin", "emoji": "😁", "label": "활짝 웃음"}, {"id": "wink", "emoji": "😉", "label": "윙크"}, {"id": "love", "emoji": "😍", "label": "반한 얼굴"}, {"id": "kiss", "emoji": "😘", "label": "입맞춤"}, {"id": "cool", "emoji": "😎", "label": "멋진 얼굴"}, {"id": "think", "emoji": "🤔", "label": "생각 중"}, {"id": "party", "emoji": "🥳", "label": "축하"}, {"id": "please", "emoji": "🥺", "label": "부탁"}, {"id": "sleep", "emoji": "😴", "label": "졸려요"}, {"id": "angry", "emoji": "😡", "label": "화나요"}, {"id": "sick", "emoji": "🤒", "label": "아파요"}, {"id": "clap", "emoji": "👏", "label": "박수"}, {"id": "thumb", "emoji": "👍", "label": "최고"}, {"id": "thanks", "emoji": "🙏", "label": "감사"}, {"id": "wave", "emoji": "👋", "label": "인사"}, {"id": "strong", "emoji": "💪", "label": "힘내요"}, {"id": "ok", "emoji": "👌", "label": "좋아요 표시"}, {"id": "sparkles", "emoji": "✨", "label": "반짝임"}, {"id": "star", "emoji": "⭐", "label": "별"}, {"id": "hundred", "emoji": "💯", "label": "백 점"}, {"id": "confetti", "emoji": "🎉", "label": "축하 꽃가루"}, {"id": "flower", "emoji": "🌸", "label": "벚꽃"}, {"id": "sun", "emoji": "☀️", "label": "해"}, {"id": "moon", "emoji": "🌙", "label": "달"}, {"id": "rainbow", "emoji": "🌈", "label": "무지개"}, {"id": "coffee", "emoji": "☕", "label": "커피"}, {"id": "cake", "emoji": "🎂", "label": "케이크"}, {"id": "pizza", "emoji": "🍕", "label": "피자"}, {"id": "gift", "emoji": "🎁", "label": "선물"}, {"id": "cat", "emoji": "🐱", "label": "고양이"}, {"id": "dog", "emoji": "🐶", "label": "강아지"}];
 
@@ -110,8 +112,12 @@ function ScreenPreview({ kind: initialKind, stateKind = "ready", tools = false }
     }, loginDelay);
   };
   const cancelLogin = () => { loginRequest.current = null; clearTimeout(loginJob.current); loginJob.current = undefined; setLoginBusy(false); }; // LS-09: cancel restores buttons without a failure sentence
-  const [readError, setReadError] = useState(false);
-  const notice = kind === "chat" && failed ? <Text tone="danger">보내지 못했어요. 작성한 메시지는 남아 있어요.</Text> : kind === "notifications" && readError ? <Text tone="danger">읽음 표시를 저장하지 못했어요. 알림을 다시 눌러 주세요.</Text> : detail ? <Stack gap="sm"><Text>{detail}</Text><Button tone="ghost" onClick={() => setDetail(null)}>닫기</Button></Stack> : null;
+  // Which read request failed decides the recovery copy; null when the last request succeeded.
+  const [readError, setReadError] = useState<"item" | "all" | null>(null);
+  const [markingAll, setMarkingAll] = useState(false);
+  const markAllJob = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useEffect(() => () => clearTimeout(markAllJob.current), []);
+  const notice = kind === "chat" && failed ? <Text tone="danger">보내지 못했어요. 작성한 메시지는 남아 있어요.</Text> : kind === "notifications" && readError ? <Notice tone="danger" title="읽음 표시를 저장하지 못했어요." description={readError === "all" ? "모두 읽음을 다시 눌러 주세요." : "알림을 다시 눌러 주세요."} /> : detail ? <Stack gap="sm"><Text>{detail}</Text><Button tone="ghost" onClick={() => setDetail(null)}>닫기</Button></Stack> : null;
   const composer = <MessageComposer value={draft} onValueChange={setDraft} label="메시지 보내기" sendLabel="전송" context={notice} {...(replyTarget ? {replyTo:{author:`${replyTarget.author}에게 답장`,excerpt:replyTarget.text,cancelLabel:"답장 취소",onCancel:() => setReplyTarget(null)}} : {})} sendPresentation="circle" sendIcon={<ArrowUp size={20} strokeWidth={2} color="var(--hjm-color-on-primary)"/>} attachmentAction={{label:"사진 추가", icon:<ImageIcon size={20}/>, onPress:() => setPhotos(current => [...current, (current.at(-1) ?? -1) + 1])}}
     attachments={photos.map((id,index) => ({id:String(id),removeLabel:`사진 ${index + 1} 삭제`,preview:<img src={riverPhoto} alt={`선택한 사진 ${index + 1}`} />}))}
     onRemoveAttachment={id => setPhotos(current => current.filter(photo => String(photo) !== id))} onSend={value => {
@@ -126,6 +132,16 @@ function ScreenPreview({ kind: initialKind, stateKind = "ready", tools = false }
     { id: 3, name: "지우", title: "함께 나누던 대화가 이어졌어요", description: "내일 3시, 같은 장소에서 만나요.", time: "1시간 전", icon: "chat" as const },
     { id: 4, name: "안내", title: "이번 주의 이야기가 모였어요", description: "소중했던 순간을 다시 만나 보세요.", time: "어제", icon: "spark" as const },
   ];
+  const unreadIds = entries.filter(entry => entry.id !== 4 && !readIds.includes(entry.id)).map(entry => entry.id);
+  // common-inbox "모두 읽음 진행": mark the requested items at once, keep the button pending until the
+  // (demo) request settles, and on failure revert only the items this request changed.
+  const markAllRead = () => {
+    const requested = unreadIds, fail = failNext === "notifications";
+    if (fail) setFailNext(null);
+    setReadError(null); setMarkingAll(true); setReadIds(ids => [...ids, ...requested.filter(id => !ids.includes(id))]);
+    clearTimeout(markAllJob.current);
+    markAllJob.current = setTimeout(() => { setMarkingAll(false); if (fail) { setReadIds(ids => ids.filter(id => !requested.includes(id))); setReadError("all"); } }, 400);
+  };
   const visibleEntries = entries.filter(entry => notificationTab === "전체" || notificationTab === "답글" && entry.icon === "chat" || notificationTab === "읽지 않음" && !readIds.includes(entry.id) && entry.id !== 4);
   const notificationState = state.kind === "ready" && visibleEntries.length === 0 ? states.empty : state;
   const groups = [{ title: "오늘", items: visibleEntries.filter(entry => entry.id !== 4) }, { title: "이번 주", items: visibleEntries.filter(entry => entry.id === 4) }].filter(group => group.items.length > 0);
@@ -135,10 +151,10 @@ function ScreenPreview({ kind: initialKind, stateKind = "ready", tools = false }
   if (kind === "settings") screen = <SettingsPagePreview exit={back} state={state} stateAction={retry} />;
   else if (kind === "notifications") screen = <NotificationInboxScreen title="알림" exit={back} state={notificationState} stateAction={retry} notice={readError ? notice : null}
     filters={<Stack axis="inline" gap="xs" wrap role="radiogroup" aria-label="알림 필터">{["전체","답글","읽지 않음"].map(value=><Chip ref={notificationTab === value ? notificationFilter : undefined} key={value} label={value} selectionMode="single" selected={notificationTab===value} onSelectedChange={()=>setNotificationTab(value)} />)}</Stack>}
-    actions={<IconButton label="알림 설정" tone="ghost" onClick={() => setKind("settings")}><Glyph name="settings" /></IconButton>}>
+    actions={<Stack axis="inline" gap="xs"><IconButton label="모두 읽음" tone="ghost" loading={markingAll} disabled={!markingAll && unreadIds.length === 0} onClick={markAllRead}><Glyph name="check" /></IconButton><IconButton label="알림 설정" tone="ghost" onClick={() => setKind("settings")}><Glyph name="settings" /></IconButton></Stack>}>
     <Stack gap="xl">{groups.map(group => <Stack key={group.title} gap="sm"><Heading level="level5" semanticLevel={2}>{group.title}</Heading>{group.items.map(entry => <NotificationItem data-notification-id={entry.id} key={entry.id} title={entry.title} description={entry.description}
       leading={<Person name={entry.name} />} trailing={<Glyph name={entry.icon} />} read={readIds.includes(entry.id) || entry.id === 4} statusLabel={readIds.includes(entry.id) || entry.id === 4 ? "확인함" : "새 알림"} timestamp={entry.time}
-      onClick={() => { if (failNext === "notifications") { setFailNext(null); setReadError(true); return; } setReadError(false); setReadIds(ids => ids.includes(entry.id) ? ids : [...ids, entry.id]); setNotificationDetailId(entry.id); setDetail(entry.description); }} />)}</Stack>)}</Stack>
+      onClick={() => { if (failNext === "notifications") { setFailNext(null); setReadError("item"); return; } setReadError(null); setReadIds(ids => ids.includes(entry.id) ? ids : [...ids, entry.id]); setNotificationDetailId(entry.id); setDetail(entry.description); }} />)}</Stack>)}</Stack>
   </NotificationInboxScreen>;
   else if (kind === "chat") screen = <ChatScreen title="서연" exit={back} avatar={<Person name="서연"/>} state={state} stateAction={retry} scroll="screen" composer={composer}
     actions={<IconButton label="대화 정보" tone="ghost" onClick={() => setDetail("서연님과 나누는 대화예요.")}><Glyph name="more" /></IconButton>}>
@@ -162,13 +178,20 @@ function ScreenPreview({ kind: initialKind, stateKind = "ready", tools = false }
     {...(loginBusy ? { pendingLabel: "로그인 중" } : {})}
     main={<Stack gap="sm">{loginError ? <Notice tone="danger" title="로그인하지 못했어요" description="잠시 후 다시 시도해 주세요." /> : null}<AuthProviderButton descriptor={{ provider: "google", label: "Google" }} logo={<ProviderLogo provider="google" />} onClick={startLogin} /><AuthProviderButton descriptor={{ provider: "apple", label: "Apple" }} logo={<ProviderLogo provider="apple" />} onClick={startLogin} /></Stack>}
     footer={<Stack gap="xs" align="center"><Text variant="caption" tone="muted">계속하면 이용약관과 개인정보처리방침에 동의해요.</Text><Stack axis="inline" gap="md"><Button size="small" tone="ghost" onClick={() => setDetail("이용약관 예제 · 실제 서비스의 약관을 연결하는 영역이에요.")}>이용약관</Button><Button size="small" tone="ghost" onClick={() => setDetail("개인정보처리방침 예제 · 수집 항목과 보관 기간을 안내하는 영역이에요.")}>개인정보처리방침</Button></Stack>{detail ? <Text variant="caption">{detail}</Text> : null}{loginBusy ? <Button tone="ghost" onClick={cancelLogin}>예제 로그인 취소</Button> : null}</Stack>} />;
-  else screen = <ScreenLayout title="내 소식" exit={back} state={state} stateAction={retry}><Text>나에게 도착한 이야기를 여기에서 확인해요.</Text></ScreenLayout>;
+  // The shell story shows every ScreenLayout slot: exit, one screen tool in actions, body, and the primary action in footer.
+  else screen = <ScreenLayout title={screenShellExample.title} exit={back} state={state} stateAction={retry}
+    actions={<IconButton label={screenShellExample.settingsLabel} tone="ghost" onClick={() => setDetail(screenShellExample.settingsDetail)}><Glyph name="settings" /></IconButton>}
+    footer={<BottomCTA primaryAction={{ label: screenShellExample.primaryLabel, onClick: () => setDetail(screenShellExample.primaryDetail) }} />}>
+    <Stack gap="md"><Text>{screenShellExample.intro}</Text><Stack gap="sm">{screenShellExample.items.map(item => <ListRow key={item.id} title={item.title} description={item.description} />)}</Stack></Stack>
+  </ScreenLayout>;
   // Local navigation keeps the fixture reversible without changing the host router.
   // Only notification 1 belongs to the supplied Soyeon timeline; other details must not open it.
   if (atHome) screen = <ScreenLayout title="나의 공간" description="오늘의 이야기와 소식을 만나 보세요."><Stack gap="sm">{([['settings', '설정'], ['notifications', '알림'], ['chat', '서연과의 대화']] as const).map(([target, label]) => <ListRow key={target} title={label} trailing={<Glyph name="next" />} onClick={() => { setKind(target); setAtHome(false); }} />)}</Stack></ScreenLayout>;
   else if (detail && kind !== "login") screen = <ScreenLayout title={kind === "notifications" ? "도착한 이야기" : kind === "chat" ? "대화 정보" : "상세 정보"} exit={{ kind: "back", label: "뒤로", onClick: () => setDetail(null) }}><Stack gap="lg"><Text>{detail}</Text>{kind === "notifications" && notificationDetailId === 1 ? <Button onClick={() => { setDetail(null); setKind("chat"); }}>대화 이어가기</Button> : null}</Stack></ScreenLayout>;
   const toggleCopy = kind === "chat" || kind === "notifications" ? failToggleCopy[kind] : null;
-  return <Stack gap="sm">{tools && toggleCopy ? <PreviewTools><PreviewToolButton selected={failNext === kind} onClick={() => setFailNext(v => v === kind ? null : kind === "chat" || kind === "notifications" ? kind : null)}>{toggleCopy[failNext === kind ? 1 : 0]}</PreviewToolButton></PreviewTools> : null}{/* Host height stands in for the product route; login sizes to its content. */}<div ref={routeHost} style={{ height: kind === "login" ? "auto" : "90dvh", width: "100%" }}>{screen}</div></Stack>;
+  // The story canvas is the product route: tools take their content height and the route host fills the rest
+  // (a fixed 90dvh left a band under the chat composer). Login sizes to its content.
+  return <Stack gap="sm" {...(kind === "login" ? {} : { style: { height: "100dvh" } })}>{tools && toggleCopy ? <PreviewTools><PreviewToolButton selected={failNext === kind} onClick={() => setFailNext(v => v === kind ? null : kind === "chat" || kind === "notifications" ? kind : null)}>{toggleCopy[failNext === kind ? 1 : 0]}</PreviewToolButton></PreviewTools> : null}<div ref={routeHost} style={kind === "login" ? { width: "100%" } : { flex: 1, minHeight: 0, width: "100%" }}>{screen}</div></Stack>;
 }
 
 export function LoginScreenPreview(props: ScreenPreviewOptions) { return <ScreenPreview kind="login" {...props} />; }

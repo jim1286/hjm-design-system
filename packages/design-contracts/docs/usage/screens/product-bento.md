@@ -5,7 +5,7 @@
 - 지원: Web · Native
 - 적용: 1.14.0
 - 검토일: 2026-10-17
-- 근거: `reference-adoption-previews.tsx`, `reference-adoption.css`
+- 근거: `reference-adoption-previews.tsx`, `reference-adoption.css`, `showcase/shared/reference-adoption.ts`
 - 스토리북: `배포/화면/소개/기능 카드와 주 행동`
 
 승급: 2026-10-07 사용자 승인, [검토 결과](../../../../../docs/qa/2026-10-07-experiment-promotion-release.md). Storybook 분류이며 제품 적용 증거는 별도다.
@@ -26,18 +26,19 @@
 [사용 방법(선택)]
 [보조 행동] [주 행동]
 [항상 보이는 체험·저장 범위]
-[처리 결과 · 저장된 제목]
+[처리 결과 · 저장된 제목]  ← 시작했거나 저장한 제목이 있을 때만
 ```
 
 좁은 Web과 Native는 비교→설명 두 장→첫 행동 순서로 한 열에 놓는다.
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
-| 바깥 틀 | Web Stack / Native KeyboardAvoiding → ScreenLayout → Stack | Web 문서 스크롤 / Native 고정 제목 아래 본문 스크롤 | 본문 lg=20px, Native 제목 간격 md=16px, contentInset none |
+| 바깥 틀 | ScreenLayout(`titleVisibility="hidden"`, Native는 KeyboardAvoiding 안) → Stack gap lg | 본문 스크롤. 브랜드·제목·설명도 본문과 함께 스크롤하고 본문 Heading이 화면 제목(semanticLevel 1) | 화면 padding `screenPatternRecipe.padding` md=16, 최대 폭 720, 브랜드–제목–설명 사이 md=16 |
 | 기능 | Surface/Stack | 설명 다음 | padding lg=20px, 카드 gap md=16px |
 | 제목/본문 | Text/Stack | 각 카드 안 | sm=12px |
 | 첫 행동 | BottomCTA | 기능·입력 뒤 | description → 보조/주 행동, flow 배치 |
 | 조건 | BottomInfo | 주 행동 바로 아래 | 항상 유지, 예제의 로컬 저장 범위 설명 |
+| 처리 결과 | StatusText(Native PatternStatus) · Text | 조건 아래 | 시작했거나 저장한 제목이 있을 때만. 손대지 않은 소개에는 저장 상태가 없다 |
 
 ## 버튼과 행동 위치
 
@@ -52,7 +53,7 @@
 
 | 상태 | 화면 모습 | 행동 |
 | --- | --- | --- |
-| 기본 | 설명과 비교·주/보조 행동·조건 안내 | 첫 입력 또는 사용 방법으로 이동 |
+| 기본 | 설명과 비교·주/보조 행동·조건 안내. 저장 상태 문구 없음 | 첫 입력 또는 사용 방법으로 이동 |
 | 로딩 | 현재 예제는 로컬 이미지 비교. 제품 네트워크 이미지가 있으면 미리보기 내부에 상태 배치 | 주 행동은 제품 가용성에 맞춤 |
 | 빈 | 제품 자료가 없으면 비교 영역 생략 | 문구와 첫 행동 유지 |
 | 오류 | 이미지 실패 대체 또는 저장 실패 문구·제목 유지 | 현재 제목으로 다시 저장 |
@@ -82,22 +83,28 @@
 ```tsx
 // Web
 import { Heading } from "@hjmds/react/heading";
+import { ScreenLayout } from "@hjmds/react/screens";
+<ScreenLayout title={title} titleVisibility="hidden">
 <Stack gap="lg">
-  <Heading level="level3" semanticLevel={1}>{title}</Heading>
+  <Stack gap="md"><Text tone="brand" variant="label">{brand}</Text><Heading level="level3" semanticLevel={1}>{title}</Heading><Text>{intro}</Text></Stack>
   <Surface padding="lg"><ImageComparison {...comparison} /></Surface>
   <BottomCTA primaryAction={{ label: startLabel, onClick: start }} secondaryAction={{ label: helpLabel, onClick: showHelp }} />
   <BottomInfo items={conditions} />
+  {started || savedTitle ? <StatusText>{status}</StatusText> : null}
 </Stack>
+</ScreenLayout>
 ```
 
 ```tsx
 // Native: screen-owned scrolling keeps the CTA reachable below long previews.
 <KeyboardAvoiding style={{ flex: 1 }}>
-<ScreenLayout title={title} contentInset="none">
+<ScreenLayout title={title} titleVisibility="hidden">
 <Stack gap="lg">
+  <Stack gap="md"><Text tone="brand" variant="label">{brand}</Text><Heading level="level3" semanticLevel={1}>{title}</Heading><Text>{intro}</Text></Stack>
   <Surface padding="lg"><ImageComparison {...comparison} decrementLabel={decrementLabel} incrementLabel={incrementLabel} /></Surface>
   <BottomCTA primaryAction={{ label: startLabel, onPress: start }} secondaryAction={{ label: helpLabel, onPress: showHelp }} />
   <BottomInfo items={conditions} />
+  {started || savedTitle ? <PatternStatus>{status}</PatternStatus> : null}
 </Stack>
 </ScreenLayout>
 </KeyboardAvoiding>
@@ -130,3 +137,4 @@ Native ImageComparison에는 증감 행동 label을 추가한다. 제품의 계�
 
 - BottomCTA/BottomInfo 역할 분리: 2026-10-07 CTA Gallery의 Webflow 데스크톱·모바일 캡처에서 주/보조 행동의 위계를, Ente 캡처에서 플랫폼 조건에 맞춘 행동 묶음을 확인했다.
 - Native 예제의 ScreenLayout·KeyboardAvoiding: 2026-10-07 스크롤 없는 Canvas에서 CTA가 화면 밖으로 잘리는 것을 실제로 확인했다.
+- 두 플랫폼 ScreenLayout·기본 inset·결과 문구 위치: 2026-10-17 화면 검토 — Web은 바깥 틀 없이 화면 끝에 붙고 넓은 폭에서 CTA만 가운데 열에 놓였으며, Native는 `contentInset="none"`으로 카드 모서리가 화면 끝에 닿았다. 손대지 않은 소개에 "아직 저장하지 않았어요."가 CTA 위에 보였다.

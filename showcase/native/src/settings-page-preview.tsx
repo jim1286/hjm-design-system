@@ -5,13 +5,13 @@ import { Stack, Text } from "@hjmds/react-native/primitives";
 import { Heading } from "@hjmds/react-native/heading";
 import { Avatar, ListRow } from "@hjmds/react-native/data-display";
 import { Sheet } from "@hjmds/react-native/overlays";
-import { Bell, ChevronRight, Globe2, HelpCircle, ShieldCheck, Volume2, Palette, UserRound } from "lucide-react-native";
+import { Bell, ChevronRight, Globe2, HelpCircle, Info, ShieldCheck, Volume2, Palette, UserRound } from "lucide-react-native";
 import type { ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
 import { avatarRecipe } from "@hjmds/design-contracts/recipes";
 import { HjmNativeProvider, useHjmNativeTheme } from "@hjmds/react-native/provider";
 import { RadioGroup, Switch, TextField } from "@hjmds/react-native/inputs";
 
-const icons = { bell: Bell, next: ChevronRight, language: Globe2, help: HelpCircle, shield: ShieldCheck, sound: Volume2, palette: Palette, user: UserRound };
+const icons = { bell: Bell, next: ChevronRight, language: Globe2, help: HelpCircle, shield: ShieldCheck, sound: Volume2, palette: Palette, user: UserRound, info: Info };
 function Icon({ name }: { name: keyof typeof icons }) {
   const Component = icons[name];
   const { colors } = useHjmNativeTheme();
@@ -48,7 +48,7 @@ export function SettingsPagePreview({ exit, state, stateAction }: Props) {
         <ListRow title="답글·메시지 알림" leading={<Icon name="bell" />} trailing={<Switch label="답글·메시지 알림" labelVisibility="hidden" checked={replies} onCheckedChange={setReplies} />} />
         <ListRow title="앱 효과음" leading={<Icon name="sound" />} trailing={<Switch label="앱 효과음" labelVisibility="hidden" checked={sounds} onCheckedChange={setSounds} />} />
       </Stack> },
-      { id: "account", title: "계정 및 지원", children: <Stack gap="xxs">{row("개인정보와 보안", "shield", "", "privacy")}{row("도움말", "help", "", "help")}<ListRow title="앱 버전" trailing={<Text variant="caption" tone="muted">1.0.0</Text>} /></Stack> },
+      { id: "account", title: "계정 및 지원", children: <Stack gap="xxs">{row("개인정보와 보안", "shield", "", "privacy")}{row("도움말", "help", "", "help")}<ListRow title="앱 버전" leading={<Icon name="info" />} trailing={<Text variant="caption" tone="muted">1.0.0</Text>} /></Stack> },
     ]} />
     <Sheet open={panel !== null} onOpenChange={open => { if (!open) setPanel(null); }} title={panel ? titles[panel] : "설정"} closeLabel="닫기"
       // Sheet actions live in the pinned footer, not at the end of the scrolling body (sheet usage guide).

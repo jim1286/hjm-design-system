@@ -94,7 +94,7 @@ import { PhotoSourceSheet } from "@hjmds/react-native/screen-flows";
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | Sheet 기본 `placement="bottom"`·`size="auto"`(내용 높이, 화면 높이 0.9 상한), Web 최대 폭 640; 선택 버튼은 `tone="secondary"` `Button` 두 개 | `sheetRecipe`, `screen-flows.tsx` |
-| 간격 | 시트 안 여백은 Sheet 소유(두 플랫폼 좌우 `spacing.lg` 20 · 위아래 `spacing.sm` 12 + 하단 safe area); 두 버튼 사이 `spacing.sm` 12; 바깥에 padding을 더하지 않는다 | Web `.hjm-sheet__body`, Native `sheetRecipe.content`, `Stack gap="sm"` |
+| 간격 | 시트 안 여백은 Sheet 소유(두 플랫폼 좌우 `spacing.lg` 20 · 위아래 `spacing.sm` 12 + 하단 safe area); 두 버튼 사이 `spacing.xs` 8(세로로 쌓은 버튼, `actionGroupRecipe.stackedGap`); 바깥에 padding을 더하지 않는다 | Web `.hjm-sheet__body`, Native `sheetRecipe.content`, `Stack gap="xs"` |
 | 순서·정렬 | Sheet 제목·닫기 → 앨범 → 촬영(`cameraAvailable`일 때만) | Web `screen-flows.tsx` 59–60행, Native 50–51행 |
 | 고정·스크롤 | 화면 하단에 뜨는 오버레이(배경 막) — 선택 뒤 picker 호출 시점은 플랫폼 차이 참고 | `Sheet` |
 | 좁은 폭·큰 글자 | 버튼 문구는 줄바꿈되고 Sheet 높이가 늘어난다(0.9 상한을 넘으면 본문 스크롤); 카메라가 없으면 버튼 하나만 남는다 | `sheetRecipe.content.maxHeightRatio` |

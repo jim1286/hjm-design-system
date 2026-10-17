@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { ListDetailScreen, type ListDetailScreenProps } from "./screen-flows.js";
 import { Stack, Text, Grid } from "./layout.js";
-import { Button, IconButton } from "./actions.js";
+import { IconButton } from "./actions.js";
 
 import { resolveSavedItems, type SavedItem, type SavedCollection, type SavedItemsLabels } from "@hjmds/design-contracts/screen-patterns";
 export type { SavedItem, SavedCollection, SavedItemsLabels } from "@hjmds/design-contracts/screen-patterns";
@@ -22,11 +22,11 @@ export type SavedItemsScreenProps<T extends SavedItem> = Omit<ListDetailScreenPr
   onBack(): void;
   onCreateCollection(): void;
   /**
-   * Product-supplied glyph for the create-collection header action. When present the action renders
-   * as an IconButton named by `labels.createCollection` (tool actions use icons, 2026-10-17 usage rule
-   * in docs/usage/components/icon-button.md); omitted keeps the text button for existing products.
+   * Product-supplied glyph for the create-collection header action, rendered as an IconButton named
+   * by `labels.createCollection`. Required because header tool actions are icons (2026-10-17 usage
+   * rule in docs/usage/components/icon-button.md); a text-button fallback let screens drift from it.
    */
-  createCollectionIcon?: ReactNode;
+  createCollectionIcon: ReactNode;
   renderThumbnail(item: T): ReactNode;
   renderDetail(item: T): ReactNode;
 };
@@ -49,7 +49,7 @@ export function SavedItemsScreen<T extends SavedItem>({items,collections,collect
   const covers=new Map(groups.map(group=>{const ids=new Set(group.itemIds);return [group.id,items.filter(item=>ids.has(item.id)).slice(0,4)] as const;}));
   return <ListDetailScreen {...screen} state={state} title={home?screen.title:collection?.title??labels.allItems}
     {...(home?(screen.exit?{exit:screen.exit}:{}):{exit:{kind:"back" as const,label:labels.back,onClick:onBack}})}
-    actions={home?(createCollectionIcon===undefined?<Button tone="ghost" onClick={onCreateCollection}>{labels.createCollection}</Button>:<IconButton label={labels.createCollection} tone="ghost" onClick={onCreateCollection}>{createCollectionIcon}</IconButton>):screen.actions}
+    actions={home?<IconButton label={labels.createCollection} tone="ghost" onClick={onCreateCollection}>{createCollectionIcon}</IconButton>:screen.actions}
     back={{label:labels.back,onAction:onBack}}
     {...(selected?{detail:{title:selected.title,content:renderDetail(selected)}}:{})}
     list={<Stack gap="md">

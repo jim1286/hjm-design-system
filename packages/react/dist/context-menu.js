@@ -154,7 +154,7 @@ export function ContextMenu({ children, items, accessibilityLabel, onAction, cla
                                 onAction(item.id);
                                 setAnchor(null);
                                 returnFocusRef.current?.focus();
-                            }, children: [_jsx("span", { children: item.label }), item.shortcut ? _jsx("kbd", { className: "hjm-context-menu__shortcut", children: item.shortcut }) : null] }, item.id));
+                            }, children: [item.icon ? _jsx("span", { className: "hjm-context-menu__icon", "aria-hidden": "true", children: item.icon }) : null, _jsx("span", { className: "hjm-context-menu__label", children: item.label }), item.shortcut ? _jsx("kbd", { className: "hjm-context-menu__shortcut", children: item.shortcut }) : null] }, item.id));
                     }) }) })) : null] }));
 }
 //# sourceMappingURL=context-menu.js.map

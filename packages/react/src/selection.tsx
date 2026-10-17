@@ -763,6 +763,7 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch
       data-size={size}
       data-presentation={presentation}
       data-label-visibility={labelVisibility}
+      data-two-line={hasDescription || undefined}
       aria-labelledby={props["aria-labelledby"] ?? (props["aria-label"] ? undefined : labelId)}
       aria-describedby={[props["aria-describedby"], hasDescription ? descriptionId : undefined].filter(Boolean).join(" ") || undefined}
       data-state={checked ? "checked" : "unchecked"}

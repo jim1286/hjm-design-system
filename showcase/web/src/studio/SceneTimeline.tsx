@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Button } from "@hjmds/react/actions";
+import { Button, IconButton } from "@hjmds/react/actions";
+import { Pause, Play, SkipBack } from "lucide-react";
 import { Stack, Text } from "@hjmds/react/layout";
 import { Heading } from "@hjmds/react/heading";
 import { Slider } from "@hjmds/react/slider";
@@ -73,10 +74,15 @@ export function SceneTimeline({ scene, image, frame, onFrame, onTimeline }: { sc
     } catch { if (posterOperation.current === operation) setStatus("포스터를 저장하지 못했어요."); }
     finally { if (posterOperation.current === operation) { posterOperation.current = null; setPosterBusy(false); } }
   }
-  return <Stack gap="md"><Heading level="level3" semanticLevel={2}>장면 타임라인</Heading>
-    <Slider label="재생 위치" min={0} max={total} step={1} value={Math.min(frame, total)} onValueChange={value => { setPlaying(false); onFrame(value); }} getValueText={value => `${(value / timeline.fps).toFixed(2)}초`}/>
+  // Section heading sits below the screen title (level5, as other screen sections); playback controls are media
+  // tool actions, so they are named IconButtons beside the scrubber (2026-10-17 screen review).
+  return <Stack gap="md"><Heading level="level5" semanticLevel={2}>장면 타임라인</Heading>
+    <Stack axis="inline" gap="sm" align="end">
+      <IconButton label={playing ? "일시 정지" : "재생"} tone="secondary" disabled={!image || environment.reducedMotion || busy} onClick={() => setPlaying(value => !value)}>{playing ? <Pause size={20}/> : <Play size={20}/>}</IconButton>
+      <IconButton label="처음으로" tone="ghost" onClick={() => { setPlaying(false); onFrame(0); }}><SkipBack size={20}/></IconButton>
+      <div style={{ flex: 1, minWidth: 0 }}><Slider label="재생 위치" min={0} max={total} step={1} value={Math.min(frame, total)} onValueChange={value => { setPlaying(false); onFrame(value); }} getValueText={value => `${(value / timeline.fps).toFixed(2)}초`}/></div>
+    </Stack>
     <Text>{(Math.min(frame,total) / timeline.fps).toFixed(2)} / {timeline.duration.toFixed(2)}초 · {timeline.fps}fps</Text>
-    <Stack axis="inline" wrap gap="sm"><Button tone="secondary" disabled={!image || environment.reducedMotion || busy} onClick={() => setPlaying(value => !value)}>{playing ? "일시 정지" : "재생"}</Button><Button tone="ghost" onClick={() => { setPlaying(false); onFrame(0); }}>처음으로</Button></Stack>
     {environment.reducedMotion ? <Text tone="muted">모션 줄이기가 켜져 있어요. 슬라이더로 정지된 장면을 확인할 수 있습니다.</Text> : null}
     <SettingChoice label="움직임" options={["float", "arrive"] as const} format={preset => preset === "float" ? "천천히 떠오르기" : "화면 등장"} value={timeline.preset} onChange={preset => onTimeline({ ...timeline, preset })}/>
     <SettingChoice label="길이" options={[3, 6, 9] as const} format={duration => `${duration}초`} value={timeline.duration} onChange={duration => { onFrame(0); onTimeline({ ...timeline, duration, posterFrame: Math.min(timeline.posterFrame, duration * timeline.fps) }); }}/>

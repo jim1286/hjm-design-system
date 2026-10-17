@@ -1,6 +1,6 @@
 ---
-"@hjmds/react": patch
-"@hjmds/react-native": patch
+"@hjmds/react": minor
+"@hjmds/react-native": minor
 ---
 
-Add optional icon slots for tool actions: `SavedItemsScreen` `createCollectionIcon` (Web and Native) and Web `Popover` `closeIcon` render an `IconButton` named by the existing label. Omitting them keeps the text button.
+Icon slots for tool actions: `SavedItemsScreen` now requires `createCollectionIcon` (Web and Native) and always renders the create-collection action as an `IconButton` named by `labels.createCollection`; the text-button fallback is removed because header tool actions are icons. Migrate by passing the product's add glyph. Web `Popover` `closeIcon` is optional and renders an `IconButton` named by the existing label; omitting it keeps the text button.
