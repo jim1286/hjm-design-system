@@ -4,6 +4,7 @@ import { type ToastDescriptor, type ToastDismissReason, type ToastDuplicatePolic
 import { type ReactNode } from "react";
 import { type ViewProps, type ViewStyle } from "react-native";
 import type { ToastPresentationAdapter } from "./internal/toast-presentation.js";
+import { type ButtonShape } from "@hjmds/design-contracts/recipes/base";
 export type { ToastPresentationAdapter } from "./internal/toast-presentation.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type AnnouncementMode = "none" | "polite" | "assertive";
@@ -89,6 +90,11 @@ export type SkeletonProps = Readonly<{
      * placeholder is not rebuilt from loose bars in every product. `width` sizes the whole group.
      */
     lines?: number;
+    /**
+     * `button` only: the Button `shape` this placeholder stands in for (default: Button's default). Products that use
+     * `shape="pill"` buttons pass the same value so the placeholder matches (BurnTok, 2026-10-17).
+     */
+    buttonShape?: ButtonShape;
     width?: ViewStyle["width"];
     height?: number;
     radius?: number;
@@ -104,7 +110,7 @@ export type SkeletonProps = Readonly<{
  * width/height/radius stay for callers already on the 0.9 train and win over
  * `shape`. Migration: .changeset/skeleton-pulse-by-default.md
  */
-export declare function Skeleton({ shape, animated, lines, width, height, radius: radiusValue, accessibilityLabel, layoutStyle, }: SkeletonProps): import("react").JSX.Element;
+export declare function Skeleton({ shape, animated, lines, buttonShape, width, height, radius: radiusValue, accessibilityLabel, layoutStyle, }: SkeletonProps): import("react").JSX.Element;
 export type ToastProps = Readonly<{
     descriptor: ToastDescriptor;
     onDismiss?: (reason: ToastDismissReason) => void;

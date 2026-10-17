@@ -57,6 +57,15 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
                     }
                 }, className: "hjm-screen__body", "data-content-alignment": contentAlignment, "data-scroll": bodyScroll, "data-replacement": resolved.replacesContent || undefined, "aria-busy": resolved.busy || undefined, children: state.kind === "ready" ? (contentAlignment === "center" ? _jsx("div", { className: "hjm-screen__centered-content", children: children }) : children) : _jsxs("div", { className: "hjm-screen__state", children: [resolved.busy ? _jsx(Spinner, { label: [state.title, state.description].filter(Boolean).join(". ") }) : _jsx("div", { role: state.kind === "error" ? "alert" : "status", children: _jsxs(Stack, { gap: "sm", align: "center", children: [_jsx(Text, { variant: "title", children: state.title }), state.description ? _jsx(Text, { tone: "muted", children: state.description }) : null] }) }), stateAction] }) }), footer ? _jsx("footer", { className: "hjm-screen__footer", children: _jsx(ScreenFooterContext.Provider, { value: contentInset !== "none", children: footer }) }) : null] });
 }
+/**
+ * Style for a product scroller that owns the body with `scroll="content"`: it reaches across the body gutter
+ * (`--hjm-screen-body-inline`) and pads it back, so items stay on the gutter while the clip moves to the screen edges and
+ * a bleeding CollectionRail inside scrolls edge to edge (same name and shape as Native; spint home 2026-10-17).
+ * Outside a screen body the variable is unset and the room is 0; CSS resolves the distance, so no context is read.
+ */
+export function useScreenBodyScrollRoom() {
+    return { style: { marginInline: "calc(-1 * var(--hjm-screen-body-inline, 0px))", paddingInline: "var(--hjm-screen-body-inline, 0px)" } };
+}
 export function SettingsScreen({ profile, sections, ...props }) {
     // Keep semantic section headings while using the smaller settings label role.
     return _jsx(ScreenLayout, { ...props, children: _jsxs(Stack, { gap: "md", children: [profile, sections.map(section => _jsx(Section, { className: "hjm-settings-section", title: _jsx(Text, { variant: "label", emphasis: "strong", tone: "muted", children: section.title }), description: section.description, children: section.children }, section.id))] }) });

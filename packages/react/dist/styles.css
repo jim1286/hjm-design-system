@@ -1194,6 +1194,8 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-skeleton[data-shape="circle"] { flex: none; inline-size: var(--hjm-skeleton-circle-size); block-size: var(--hjm-skeleton-circle-size); border-radius: var(--hjm-radius-full); }
 .hjm-skeleton[data-shape="media"] { min-block-size: 0; aspect-ratio: var(--hjm-skeleton-media-aspect); }
 .hjm-skeleton[data-shape="button"] { min-block-size: var(--hjm-skeleton-button-height); }
+/* Same shape axis as .hjm-button[data-shape="pill"], so a pill product's button placeholder is a pill too. */
+.hjm-skeleton[data-button-shape="pill"] { border-radius: var(--hjm-radius-full); }
 .hjm-skeleton-lines { display: flex; flex-direction: column; gap: var(--hjm-skeleton-lines-gap); inline-size: 100%; }
 .hjm-skeleton-lines > [data-last] { inline-size: var(--hjm-skeleton-last-line-width); }
 .hjm-skeleton[data-animated="true"], .hjm-skeleton-lines[data-animated="true"] { animation: hjm-pulse var(--hjm-skeleton-duration) var(--hjm-skeleton-easing) infinite alternate; }
@@ -1713,6 +1715,9 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   min-block-size: 100dvh;
   padding-inline: var(--hjm-auth-screen-padding-inline);
   padding-block: var(--hjm-auth-screen-padding-block);
+  /* Bottom inset is max(paddingBlock, home indicator), never their sum: the ScreenLayout footer rule, and Native
+     AuthScreenLayout safeAreaBottom (2026-10-17 1.28 adoption: products wrapped the layout in their own inset). */
+  padding-block-end: max(var(--hjm-auth-screen-padding-block), env(safe-area-inset-bottom, 0px));
 }
 .hjm-auth-screen__block {
   display: flex;
@@ -3163,10 +3168,14 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-screen__heading { flex: 1 1 calc(var(--hjm-screen-header-min) * var(--hjm-text-scale, 1)); min-inline-size: 0; overflow-wrap: anywhere; }
 .hjm-screen__heading > * { margin: 0; }
 .hjm-screen__notice { padding-inline: var(--hjm-screen-padding); flex: 0 0 auto; }
-.hjm-screen__body { flex: 1 1 0%; min-block-size: 0; min-inline-size: 0; padding: var(--hjm-screen-padding); overflow-wrap: anywhere; }
+/* --hjm-screen-body-inline is the body's inline padding and the distance a bleeding CollectionRail crosses (Native
+   ScreenBodyInsetContext); inset variants change this one value instead of the padding itself. */
+.hjm-screen__body { --hjm-screen-body-inline: var(--hjm-screen-padding); flex: 1 1 0%; min-block-size: 0; min-inline-size: 0; padding: var(--hjm-screen-padding); padding-inline: var(--hjm-screen-body-inline); overflow-wrap: anywhere; }
 /* contentInset="body-edge": header, notice and footer keep the gutter; full-width list rows own their inline inset
    (review S5#9: body 16 + row 16 put DM avatars ~32 from the edge). "none" keeps its host-owns-all meaning. */
-.hjm-screen[data-content-inset="body-edge"] > .hjm-screen__body { padding-inline: 0; }
+.hjm-screen[data-content-inset="body-edge"] > .hjm-screen__body { --hjm-screen-body-inline: 0px; }
+/* Overlay content is not in the screen body, even when rendered inside it: a bleeding rail there stays in its box. */
+.hjm-sheet, .hjm-dialog, .hjm-alert-dialog, .hjm-popover { --hjm-screen-body-inline: 0px; }
 /* contentInset="none" hands every inset to the host: no footer rule, as on Native (BottomCTA then draws its own bar). */
 .hjm-screen[data-content-inset="none"] > .hjm-screen__footer { border-block-start: 0; }
 .hjm-screen__body[data-scroll="screen"] { overflow-y: auto; }
@@ -3183,6 +3192,9 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
    the polite count announcement says what arrived. */
 .hjm-search-screen__results:focus { outline: none; }
 .hjm-search-screen__filters > * { inline-size: max-content; }
+/* CollectionRail bleed: same room rule as the search filter rail, with the body gutter as the distance (Native
+   listRowScrollRoom(ScreenBodyInsetContext)). Outside a screen body the variable is unset and nothing moves. */
+.hjm-collection-rail__viewport[data-bleed] { --b: var(--hjm-screen-body-inline, 0px); margin-inline: calc(-1 * var(--b)); padding-inline: var(--b); scroll-padding-inline: var(--b); }
 
 /* Settings use spacing and rules, not shaded cards, per the 2026-10-05 product direction. */
 /* Settings rows already establish their own boundaries; a second strong rule competes with controls. */
@@ -3233,7 +3245,7 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-chat-message__bubble[data-photo-only] { background: none; padding: 0; }
 .hjm-chat-message__bubble[data-photo-only]::before { display: none; }
 /* Only the shared default gutter narrows to the timeline gutter; "none" and "body-edge" keep their own meaning. */
-.hjm-chat-screen[data-content-inset="default"] .hjm-screen__body { padding-inline: 10px; }
+.hjm-chat-screen[data-content-inset="default"] .hjm-screen__body { --hjm-screen-body-inline: 10px; }
 .hjm-chat-screen__footer { position: relative; }
 /* ImageChoiceGroup (2026-10-16): square tiles, brand ring + check when chosen. */
 /* Screen exit (2026-10-17): back chevron follows reading direction. */

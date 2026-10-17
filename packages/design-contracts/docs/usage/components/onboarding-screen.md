@@ -87,6 +87,7 @@ import { OnboardingScreen } from "@hjmds/react-native/screen-flows";
 | `skip` | 선택. Web은 헤더 actions, Native는 본문 진행 문구 다음에 보조 버튼으로 놓인다 |
 | `progressLabel(current, total)` | 1부터 센 현재 단계와 전체 수로 진행 문구를 만든다 |
 | `layoutStyle` | 선택. ScreenLayout 루트의 공개 배치 슬롯 |
+| `safeAreaBottom` (Native) | 선택, 기본 0. ScreenLayout에 그대로 넘겨 footer(다음·이전) 아래 여백이 `max(16, inset)`이 된다. 바깥 SafeAreaView bottom·`16 + inset` 패딩 래퍼 대신 쓴다(1.28.1, 2026-10-17 야잘알·다에리가 각자 감쌌다) |
 
 ## 배치
 

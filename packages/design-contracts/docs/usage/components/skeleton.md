@@ -67,7 +67,8 @@ import { Skeleton } from "@hjmds/react-native/feedback";
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `shape` | `block`(높이 `spacing.xxl` 32·radius `md`) · `text`(`spacing.md` 16·`sm`) · `circle`(`glyph.xxl` 44 지름·`full`) · `media`(폭 100%·16:9·`md`) · `button`(`control.buttonHeight.medium` 44·`md`) | `block` | 모양과 기본 크기. `media`·`button`은 2026-10-17 추가 |
+| `shape` | `block`(높이 `spacing.xxl` 32·radius `md`) · `text`(`spacing.md` 16·`sm`) · `circle`(`glyph.xxl` 44 지름·`full`) · `media`(폭 100%·16:9·`md`) · `button`(`control.buttonHeight.medium` 44·Button 기본 모양의 모서리 `md`, `buttonShape`로 바꿈) | `block` | 모양과 기본 크기. `media`·`button`은 2026-10-17 추가 |
+| `buttonShape` | `rounded` · `pill`(Button `shape`와 같은 축) | Button 기본값(`rounded`) | `button` 전용. 모서리를 `buttonRecipe.shapes`(rounded `md` · pill `full`)와 테마 radius에서 가져온다. 알약 버튼을 쓰는 제품(번뚝)은 버튼에 준 `shape="pill"`을 그대로 넘긴다(1.28.1) |
 | `lines` | 양의 정수 | `1` | `text` 전용. 줄 수만큼 그리고 마지막 줄은 60%(`skeletonRecipe.lines.lastLineWidthPercent`), 줄 간격 `spacing.xs` 8. 펄스는 묶음 하나로 돈다. `width`는 묶음 전체 폭 |
 | `animated` | `boolean` | `true`(펄스) | 0.9.12까지는 `false`였다. 정지 블록이 필요하면 `animated={false}`를 명시한다. reduced motion이면 두 renderer 모두 펄스를 멈추고 불투명한 끝 값으로 그린다(recipe `reducedMotion: "static"`) |
 | `width` | Web `string \| number` · Native `ViewStyle["width"]` | 폭 100%(circle은 지름) | — |

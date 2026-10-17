@@ -5,7 +5,7 @@ import { IconButton } from "./actions.js";
 import { Icon } from "./supplemental-display.js";
 import { useOptionalHjmTheme } from "./provider.js";
 /** Finite all-mounted list placement; Card, inputs and Dialog keep their own state. */
-export function CollectionRail({ label, items, renderItem, labels, density = collectionRailRecipe.defaults.density, emptyContent, defaultStartKey, onStartKeyChange, layoutStyle, ...props }) {
+export function CollectionRail({ label, items, renderItem, labels, density = collectionRailRecipe.defaults.density, emptyContent, defaultStartKey, onStartKeyChange, bleed = false, layoutStyle, ...props }) {
     validateCollectionRail(items);
     if (!label.trim() || Object.values(labels).some(value => !value.trim()))
         throw new TypeError("CollectionRail labels must not be empty");
@@ -66,7 +66,10 @@ export function CollectionRail({ label, items, renderItem, labels, density = col
             return;
         let initialMeasurement = true;
         function measure() {
-            const next = resolveCollectionRailLayout(itemsRef.current.length, viewport.clientWidth, density, gap);
+            // clientWidth includes the bleed padding; item geometry uses the gutter-aligned box inside it.
+            const style = getComputedStyle(viewport);
+            const room = (parseFloat(style.paddingLeft) || 0) + (parseFloat(style.paddingRight) || 0);
+            const next = resolveCollectionRailLayout(itemsRef.current.length, Math.max(0, viewport.clientWidth - room), density, gap);
             // ResizeObserver also delivers an initial unchanged box. Re-aligning then
             // would undo a focus reveal that happened after the layout effect.
             if (!initialMeasurement && next.viewport === current.current.layout.viewport)
@@ -92,7 +95,7 @@ export function CollectionRail({ label, items, renderItem, labels, density = col
         const observer = new ResizeObserver(measure);
         observer.observe(viewport);
         return () => observer.disconnect();
-    }, [identity, density, gap, direction]);
+    }, [identity, density, gap, direction, bleed]);
     function navigate(intent) {
         scrollToOffset(getCollectionRailTargetOffset(current.current.layout, pendingOffset.current ?? current.current.offset, intent), true);
     }
@@ -110,7 +113,7 @@ export function CollectionRail({ label, items, renderItem, labels, density = col
                 event.preventDefault();
                 navigate(intent);
             }
-        }, children: [_jsxs("div", { ref: viewportRef, role: "list", "aria-label": label, tabIndex: 0, "data-collection-rail-viewport": true, style: { overflowX: "auto", overscrollBehaviorX: "contain", minWidth: 0 }, onPointerDown: () => { pendingOffset.current = null; }, onWheel: () => { pendingOffset.current = null; }, onScroll: event => {
+        }, children: [_jsxs("div", { ref: viewportRef, role: "list", "aria-label": label, tabIndex: 0, "data-collection-rail-viewport": true, "data-bleed": bleed || undefined, className: "hjm-collection-rail__viewport", style: { overflowX: "auto", overscrollBehaviorX: "contain", minWidth: 0 }, onPointerDown: () => { pendingOffset.current = null; }, onWheel: () => { pendingOffset.current = null; }, onScroll: event => {
                     const offset = direction === "rtl" ? -event.currentTarget.scrollLeft : event.currentTarget.scrollLeft;
                     if (pendingOffset.current !== null && Math.abs(offset - pendingOffset.current) <= 0.5)
                         pendingOffset.current = null;

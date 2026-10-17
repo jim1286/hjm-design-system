@@ -8,6 +8,7 @@ import { resolveResultDescriptor, resultRecipe, } from "@hjmds/design-contracts/
 import { liquidToastRecipe, createToastSession, createToastStore, resolveToastDescriptor, toastBehaviorDefaults, } from "@hjmds/design-contracts/components/toast";
 import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, } from "react";
 import { Text as NativeText, AccessibilityInfo, Animated, AppState, Easing, Keyboard, Platform, Pressable, View, useWindowDimensions, } from "react-native";
+import { buttonRecipe } from "@hjmds/design-contracts/recipes/base";
 import { Button, IconButton } from "./actions.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
@@ -222,7 +223,7 @@ export { Spinner } from "./internal/spinner.js";
  * width/height/radius stay for callers already on the 0.9 train and win over
  * `shape`. Migration: .changeset/skeleton-pulse-by-default.md
  */
-export function Skeleton({ shape = skeletonRecipe.defaults.shape, animated = skeletonRecipe.defaults.animated, lines = skeletonRecipe.defaults.lines, width, height, radius: radiusValue, accessibilityLabel, layoutStyle, }) {
+export function Skeleton({ shape = skeletonRecipe.defaults.shape, animated = skeletonRecipe.defaults.animated, lines = skeletonRecipe.defaults.lines, buttonShape = buttonRecipe.defaults.shape, width, height, radius: radiusValue, accessibilityLabel, layoutStyle, }) {
     const { environment, palette, tokens } = useHjmNativeTheme();
     const shapeSpec = skeletonRecipe.shapes[shape];
     const { duration, easing: easingName, fromOpacity, toOpacity } = skeletonRecipe.animation;
@@ -260,7 +261,8 @@ export function Skeleton({ shape = skeletonRecipe.defaults.shape, animated = ske
     // Filled placeholder, no outline: canvas + hairline was invisible on white (2026-10-17, skeleton.md rationale).
     const fill = {
         backgroundColor: resolveColorReference(skeletonRecipe.background, palette),
-        borderRadius: radiusValue ?? tokens.radius[shapeSpec.radius],
+        // A button placeholder takes the corner from the same Button shape axis and theme radius as Button itself.
+        borderRadius: radiusValue ?? tokens.radius[shape === "button" ? buttonRecipe.shapes[buttonShape] : shapeSpec.radius],
     };
     // A labelled skeleton is the region's single busy announcement; an unlabelled one is hidden on both platforms.
     const accessibility = {

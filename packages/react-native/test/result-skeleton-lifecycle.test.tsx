@@ -20,3 +20,11 @@ it('stops skeleton loops on reduced motion, explicit inactivity and unmount',()=
  render(<Skeleton accessibilityLabel="Loading"/>,false);expect(loops).toHaveLength(1);expect(loops[0]!.start).toHaveBeenCalledOnce();render(<Skeleton accessibilityLabel="Loading"/>,true);expect(loops[0]!.stop).toHaveBeenCalledOnce();expect(loops).toHaveLength(1);
  render(<Skeleton accessibilityLabel="Loading"/>,false);expect(loops).toHaveLength(2);render(<Skeleton animated={false} accessibilityLabel="Loading"/>,false);expect(loops[1]!.stop).toHaveBeenCalledOnce();render(<Skeleton/>,false);expect(loops).toHaveLength(3);act(()=>tree!.unmount());tree=undefined;expect(loops[2]!.stop).toHaveBeenCalledOnce();
 });
+// 2026-10-17 BurnTok: pill-button products need pill button placeholders from the same Button shape axis and theme radius.
+it('takes the button skeleton corner from the Button shape axis',()=>{
+ const radiusOf=(element:React.ReactElement)=>{let t!:ReactTestRenderer;act(()=>{t=create(<HjmNativeProvider reducedMotion>{element}</HjmNativeProvider>);});
+  const node=t.root.findAll(n=>typeof n.type==='string'&&[n.props.style].flat(3).some((s:{borderRadius?:number}|undefined)=>s?.borderRadius!==undefined))[0]!;
+  const r=Object.assign({},...[node.props.style].flat(3).filter(Boolean)).borderRadius;act(()=>t.unmount());return r;};
+ expect(radiusOf(<Skeleton shape="button"/>)).toBe(radiusOf(<Skeleton shape="block"/>));
+ expect(radiusOf(<Skeleton shape="button" buttonShape="pill"/>)).toBe(radiusOf(<Skeleton shape="circle"/>));
+});

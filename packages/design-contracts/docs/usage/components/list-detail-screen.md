@@ -68,6 +68,7 @@ import { ListDetailScreen } from "@hjmds/react-native/screen-flows";
 | `back` | `ScreenFlowAction`(`{ label, onAction(), disabled?, pending? }`) | 필수 | 상세 pane 헤더 시작 쪽 ‹ 아이콘 버튼(`ScreenLayout` `exit` `back`). `label`은 보조기술 이름이고 글자는 보이지 않는다. 2026-10-17부터 글자 버튼 대신 아이콘이며 Native `detail.leading`(제품 뒤로 아이콘 대체)은 제거됐다 |
 | `refresh` | `ScreenFlowAction` | 없음 | 목록 pane `actions` 자리의 ghost 버튼. 주면 `actions`를 덮는다 |
 | `loadMore` | `ScreenFlowAction` | 없음 | 목록 pane footer의 ghost 버튼 |
+| `safeAreaBottom` (Native) | 0 이상의 유한수 | `0` | 목록·상세 pane **둘 다**의 ScreenLayout에 넘긴다(두 pane이 같은 창 아래에 닿는다). 1.28.0까지 상세 pane에는 전달되지 않아 상세 본문 끝이 홈 인디케이터 아래에 놓였다(야잘알, 2026-10-17). Web은 `env()`로 자동 |
 | `layoutStyle` | `HjmCompositionStyleProp` | 없음 | Web·Native 모두 목록·상세 pane을 함께 담는 **바깥 틀**에 적용한다(안쪽 목록 ScreenLayout이 아니다). 목록/상세 전환과 상관없이 같은 루트에 남는다(1.13.0) |
 | 나머지 | `ScreenLayout`과 같음(`children`·`footer` 제외) | — | 목록 pane에만 적용된다(`title` 필수, `state`, `scroll` 등) |
 

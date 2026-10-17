@@ -65,3 +65,40 @@ describe("Native finite collection host translation", () => {
     expect(renderer!.root.findAllByType(TextInput)).toHaveLength(0);
   });
 });
+
+describe("CollectionRail bleed", () => {
+  // 2026-10-17 spint home: an edge-to-edge rail inside the default inset body, first/last items on the gutter.
+  it("crosses the ScreenLayout body gutter and keeps item geometry on the gutter box", async () => {
+    const { ScreenLayout } = await import("../src/screens.js");
+    const element = (bleed: boolean) => <HjmNativeProvider reducedMotion><ScreenLayout title="홈">
+      <CollectionRail bleed={bleed} label="더 보기" items={items} labels={{ previous: "이전", next: "다음", navigation: "탐색" }}
+        renderItem={item => <View accessibilityLabel={item.label} />} /></ScreenLayout></HjmNativeProvider>;
+    await act(async () => { renderer = create(element(true), { createNodeMock: node => node.type === "ScrollView" ? { scrollTo } : null }); });
+    const rail = () => renderer!.root.findAllByType(ScrollView).find(node => node.props.horizontal)!;
+    expect(rail().props.style).toMatchObject({ marginHorizontal: -16 });
+    expect(rail().props.contentContainerStyle).toMatchObject({ paddingHorizontal: 16 });
+    act(() => rail().props.onLayout({ nativeEvent: { layout: { width: 432 } } }));
+    // Viewport 432 - 2*16 = 400 gutter box: item width min(360, 400 - 32) = 360; content = 5*360 + 4*16 + 2*16.
+    expect(rail().props.contentContainerStyle.width).toBe(5 * 360 + 4 * 16 + 32);
+    await act(async () => { renderer!.update(element(false)); });
+    expect(rail().props.style.marginHorizontal).toBe(-0);
+  });
+  it("does not bleed outside a screen body", async () => {
+    await act(async () => { renderer = create(<HjmNativeProvider><CollectionRail bleed label="더 보기" items={items}
+      labels={{ previous: "이전", next: "다음", navigation: "탐색" }} renderItem={() => null} /></HjmNativeProvider>,
+    { createNodeMock: () => ({ scrollTo }) }); });
+    expect(track().props.contentContainerStyle.paddingHorizontal).toBe(0);
+  });
+});
+
+describe("useScreenBodyScrollRoom", () => {
+  it("moves a content scroller's clip to the screen edges and keeps items on the gutter", async () => {
+    const { ScreenLayout, useScreenBodyScrollRoom } = await import("../src/screens.js");
+    let room: ReturnType<typeof useScreenBodyScrollRoom> | undefined;
+    function Probe() { room = useScreenBodyScrollRoom(); return null; }
+    await act(async () => { renderer = create(<HjmNativeProvider><ScreenLayout title="홈" scroll="content"><Probe /></ScreenLayout></HjmNativeProvider>); });
+    expect(room).toEqual({ style: { marginHorizontal: -16 }, contentContainerStyle: { paddingHorizontal: 16 } });
+    await act(async () => { renderer!.update(<HjmNativeProvider><ScreenLayout title="홈" scroll="content" contentInset="body-edge"><Probe /></ScreenLayout></HjmNativeProvider>); });
+    expect(room!.contentContainerStyle.paddingHorizontal).toBe(0);
+  });
+});

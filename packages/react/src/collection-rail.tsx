@@ -17,12 +17,18 @@ export type CollectionRailProps = Omit<HTMLAttributes<HTMLDivElement>, "children
   defaultStartKey?: string;
   /** Observed leading item, independent of product selection/detail state. Empty lists report null. */
   onStartKeyChange?: (key: string | null) => void;
+  /**
+   * Scroll to the screen edges from inside the default inset ScreenLayout body: the viewport reaches past the body
+   * gutter (`--hjm-screen-body-inline`) and pads it back, so the first and last items rest on the gutter (no
+   * `body-edge` + per-section gutter, spint home 2026-10-17). Place the rail directly in the body.
+   */
+  bleed?: boolean;
   layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 /** Finite all-mounted list placement; Card, inputs and Dialog keep their own state. */
 export function CollectionRail({ label, items, renderItem, labels, density = collectionRailRecipe.defaults.density,
-  emptyContent, defaultStartKey, onStartKeyChange, layoutStyle, ...props }: CollectionRailProps) {
+  emptyContent, defaultStartKey, onStartKeyChange, bleed = false, layoutStyle, ...props }: CollectionRailProps) {
   validateCollectionRail(items);
   if (!label.trim() || Object.values(labels).some(value => !value.trim())) throw new TypeError("CollectionRail labels must not be empty");
   const theme = useOptionalHjmTheme(), direction = theme?.environment.direction ?? "ltr";
@@ -73,7 +79,10 @@ export function CollectionRail({ label, items, renderItem, labels, density = col
     if (!viewport) return;
     let initialMeasurement = true;
     function measure() {
-      const next = resolveCollectionRailLayout(itemsRef.current.length, viewport!.clientWidth, density, gap);
+      // clientWidth includes the bleed padding; item geometry uses the gutter-aligned box inside it.
+      const style = getComputedStyle(viewport!);
+      const room = (parseFloat(style.paddingLeft) || 0) + (parseFloat(style.paddingRight) || 0);
+      const next = resolveCollectionRailLayout(itemsRef.current.length, Math.max(0, viewport!.clientWidth - room), density, gap);
       // ResizeObserver also delivers an initial unchanged box. Re-aligning then
       // would undo a focus reveal that happened after the layout effect.
       if (!initialMeasurement && next.viewport === current.current.layout.viewport) return;
@@ -96,7 +105,7 @@ export function CollectionRail({ label, items, renderItem, labels, density = col
     measure();
     const observer = new ResizeObserver(measure); observer.observe(viewport);
     return () => observer.disconnect();
-  }, [identity, density, gap, direction]);
+  }, [identity, density, gap, direction, bleed]);
 
   function navigate(intent: "previous" | "next" | "first" | "last") {
     scrollToOffset(getCollectionRailTargetOffset(current.current.layout, pendingOffset.current ?? current.current.offset, intent), true);
@@ -113,7 +122,8 @@ export function CollectionRail({ label, items, renderItem, labels, density = col
       const intent = getCollectionRailKeyboardIntent(event.key, direction);
       if (intent) { event.preventDefault(); navigate(intent); }
     }}>
-    <div ref={viewportRef} role="list" aria-label={label} tabIndex={0} data-collection-rail-viewport
+    <div ref={viewportRef} role="list" aria-label={label} tabIndex={0} data-collection-rail-viewport data-bleed={bleed || undefined}
+      className="hjm-collection-rail__viewport"
       style={{ overflowX: "auto", overscrollBehaviorX: "contain", minWidth: 0 }}
       onPointerDown={() => { pendingOffset.current = null; }} onWheel={() => { pendingOffset.current = null; }}
       onScroll={event => {

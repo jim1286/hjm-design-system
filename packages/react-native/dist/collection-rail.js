@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useContext, useLayoutEffect, useRef, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { collectionRailRecipe, validateCollectionRail, resolveCollectionRailLayout, resolveCollectionRailViewport, getCollectionRailTargetOffset, getCollectionRailItemOffset, getCollectionRailRevealOffset, getCollectionRailPhysicalOffset, } from "@hjmds/design-contracts/collection-rail";
 import { IconButton } from "./actions.js";
@@ -7,13 +7,20 @@ import { glyph } from "@hjmds/design-contracts/foundations";
 import { resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
 import { DrawnChevron } from "./internal/drawn-glyphs.js";
 import { useHjmNativeTheme } from "./provider.js";
-export function CollectionRail({ label, items, renderItem, labels, density = collectionRailRecipe.defaults.density, emptyContent, defaultStartKey, onStartKeyChange, layoutStyle, testID }) {
+import { ScreenBodyInsetContext } from "./internal/screen-body-inset.js";
+import { listRowScrollRoom } from "./internal/list-row-scroll-room.js";
+export function CollectionRail({ label, items, renderItem, labels, density = collectionRailRecipe.defaults.density, emptyContent, defaultStartKey, onStartKeyChange, bleed = false, layoutStyle, testID }) {
     validateCollectionRail(items);
     if (!label.trim() || Object.values(labels).some(value => !value.trim()))
         throw new TypeError("CollectionRail labels must not be empty");
     const { environment, palette, tokens } = useHjmNativeTheme(), direction = environment.direction;
     const chevronColor = resolveIconButtonPresentation("ghost", palette, false).content;
     const scroll = useRef(null);
+    // Same viewport/content room rule as the ListRow bleed, with the screen gutter as the outset. Item geometry keeps
+    // using the gutter-aligned width, so offsets and item widths are unchanged by the bleed.
+    const bodyInset = useContext(ScreenBodyInsetContext);
+    const room = listRowScrollRoom(bleed ? bodyInset : 0);
+    const outset = room.content.paddingHorizontal;
     const [width, setWidth] = useState(0), [offset, setOffset] = useState(0);
     const layout = resolveCollectionRailLayout(items.length, width, density, tokens.spacing.md);
     const geometry = useRef(layout);
@@ -65,7 +72,7 @@ export function CollectionRail({ label, items, renderItem, labels, density = col
     // Use one physical coordinate system on iOS/Android. Reverse only row
     // placement in RTL; keep data, reading order and child state keyed by ID.
     const contentWidth = useRef(0);
-    return _jsxs(View, { testID: testID, style: [{ direction, minWidth: 0 }, layoutStyle], children: [_jsxs(ScrollView, { ref: scroll, horizontal: true, accessibilityRole: "list", accessibilityLabel: label, onLayout: event => setWidth(event.nativeEvent.layout.width), onContentSizeChange: nextWidth => {
+    return _jsxs(View, { testID: testID, style: [{ direction, minWidth: 0 }, layoutStyle], children: [_jsxs(ScrollView, { ref: scroll, horizontal: true, accessibilityRole: "list", accessibilityLabel: label, onLayout: event => setWidth(Math.max(0, event.nativeEvent.layout.width - outset * 2)), onContentSizeChange: nextWidth => {
                     // The physical scroll range exists after content layout. Re-align only
                     // for width changes; an edited card's height must not reset touch scroll.
                     if (nextWidth !== contentWidth.current) {
@@ -77,8 +84,8 @@ export function CollectionRail({ label, items, renderItem, labels, density = col
                     if (pendingOffset.current !== null && Math.abs(next - pendingOffset.current) <= 0.5)
                         pendingOffset.current = null;
                     publish(next);
-                }, scrollEventThrottle: 16, keyboardShouldPersistTaps: "handled", removeClippedSubviews: false, style: { direction: "ltr" }, contentContainerStyle: { direction: "ltr", flexDirection: direction === "rtl" ? "row-reverse" : "row",
-                    gap: tokens.spacing.md, width: Math.max(layout.contentWidth, width), paddingVertical: tokens.spacing.xs }, children: [items.map((item, index) => _jsx(View, { style: { width: layout.itemWidth, direction }, onFocus: () => { focusedKey.current = item.id; scrollToOffset(getCollectionRailRevealOffset(geometry.current, logicalOffset.current, index), false); }, onBlur: () => { if (focusedKey.current === item.id)
+                }, scrollEventThrottle: 16, keyboardShouldPersistTaps: "handled", removeClippedSubviews: false, style: { direction: "ltr", ...room.viewport }, contentContainerStyle: { direction: "ltr", flexDirection: direction === "rtl" ? "row-reverse" : "row",
+                    gap: tokens.spacing.md, width: Math.max(layout.contentWidth, width) + outset * 2, paddingVertical: tokens.spacing.xs, ...room.content }, children: [items.map((item, index) => _jsx(View, { style: { width: layout.itemWidth, direction }, onFocus: () => { focusedKey.current = item.id; scrollToOffset(getCollectionRailRevealOffset(geometry.current, logicalOffset.current, index), false); }, onBlur: () => { if (focusedKey.current === item.id)
                             focusedKey.current = null; }, children: renderItem(item) }, item.id)), items.length === 0 ? emptyContent : null] }), _jsxs(View, { accessibilityLabel: labels.navigation, style: { flexDirection: "row", flexWrap: "wrap", justifyContent: "flex-end", gap: tokens.spacing.sm, marginTop: tokens.spacing.sm }, children: [_jsx(IconButton, { label: labels.previous, tone: "ghost", disabled: state.atStart, onPress: () => navigate("previous"), children: _jsx(DrawnChevron, { direction: "start", size: glyph.sm, color: chevronColor }) }), _jsx(IconButton, { label: labels.next, tone: "ghost", disabled: state.atEnd, onPress: () => navigate("next"), children: _jsx(DrawnChevron, { direction: "end", size: glyph.sm, color: chevronColor }) })] })] });
 }
 //# sourceMappingURL=collection-rail.js.map

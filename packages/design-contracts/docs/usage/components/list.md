@@ -157,6 +157,7 @@ import { CollectionRail } from "@hjmds/react/collection-rail";
 | `defaultStartKey` | item ID | 첫 항목 | 초기 위치만. 선택/상세 값 아님 |
 | `onStartKeyChange` | `(key: string|null) => void` | 생략 | 앞쪽 항목 변화 관찰; 선택 확정 callback 아님 |
 | `emptyContent` | ReactNode | 생략 | 제품의 빈 목록 내용 |
+| `bleed` | boolean | `false` | 1.28.1. 기본 inset ScreenLayout 본문 안에서 화면 좌우 끝까지 스크롤하고 첫·끝 항목은 본문 여백(기본 `spacing.md` 16, ChatScreen 10)에 맞춘다. viewport가 여백만큼 밖으로 나가고 같은 양을 안쪽 padding으로 되돌린다(ListRow bleed와 같은 규칙, Web `--hjm-screen-body-inline`, Native 본문 inset context). 본문 바로 아래 섹션으로 둔다 — Card·Surface 안, `body-edge`/`none` 본문, Sheet·Dialog 안에서는 넘을 여백이 0이라 움직이지 않는다 |
 | `layoutStyle` | 공개 배치 key | 생략 | 루트 배치. 카드 시각 표현은 Card/Provider |
 
 #### 배치
@@ -168,6 +169,25 @@ import { CollectionRail } from "@hjmds/react/collection-rail";
 | 순서·정렬 | items 데이터 순서와 stable key 유지; controls 끝쪽. RTL은 논리 방향 번역 | resolver 및 renderer의 명시적 direction |
 | 고정·스크롤 | viewport만 실제 가로 scroll, controls는 밖. 끝에서 멈추고 자동 이동 없음 | 공통 maxOffset·target resolver |
 | 좁은 폭·큰 글자 | 기본 글자의 좁은 폭에서 실제 측정으로 카드 폭을 줄임. 최대 글자 조건은 제외 | 2026-10-07 사용자 범위, root AGENTS.md |
+
+#### 화면 끝까지 닿는 가로 목록(`bleed`)
+
+```text
+│←16→│ 제목(본문 여백)            │
+│[카드1][카드2][카드3][카…  ← 스크롤하면 화면 끝까지, 처음·끝 카드는 16 여백선
+```
+
+한 섹션만 화면 끝까지 스크롤하려고 화면 전체를 `contentInset="body-edge"`로 바꾸고 섹션마다 `Container gutter`를 다시 주지 않는다(spint 홈 "더 보기" 2026-10-17). 기본 inset을 두고 그 섹션의 CollectionRail에 `bleed`를 준다.
+`scroll="content"`에서 제품 목록(FlatList·스크롤 `div`)이 본문을 스크롤하면 그 viewport가 여백 안에서 rail을 자른다. 그 목록에 `useScreenBodyScrollRoom()`(`/screens`, Web·Native 같은 이름)을 준다 — Native `style`·`contentContainerStyle`, Web `style`. viewport는 화면 끝까지, 내용은 여백선에 그대로 남고, 안의 `bleed` rail이 끝까지 스크롤한다.
+
+```tsx
+// Native: spint 홈처럼 FlatList가 본문을 스크롤하는 화면
+const room = useScreenBodyScrollRoom();
+<ScreenLayout title={t("hot.title")} scroll="content">
+  <FlatList style={[{ flex: 1 }, room.style]} contentContainerStyle={room.contentContainerStyle} data={rows} renderItem={renderCard}
+    ListHeaderComponent={<CollectionRail bleed label={t("more.title")} items={more} labels={railLabels} renderItem={renderTile} />} />
+</ScreenLayout>
+```
 
 #### 꼭 지킬 것
 

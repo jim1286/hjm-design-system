@@ -12,6 +12,14 @@ export type AuthScreenLayoutProps = AuthScreenDescriptor & Readonly<{
     mainCard?: boolean;
     /** Consent notice and policy links. Omit with `hasFooter: false`. */
     footer?: ReactNode;
+    /**
+     * Bottom safe-area inset of the window edge this screen reaches (`useSafeAreaInsets().bottom`; 0 inside a host that
+     * already insets the bottom). The layout's bottom padding becomes max(paddingBlock, inset) — the ScreenLayout rule,
+     * never their sum — so policy links clear the home indicator / Android gesture bar without a product wrapper
+     * (2026-10-17 1.28 adoption: diairy, utilverse and spint each wrapped this layout in their own bottom inset).
+     * Pass it instead of a bottom SafeAreaView edge, never both.
+     */
+    safeAreaBottom?: number;
     testID?: string;
     layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -20,10 +28,13 @@ export type AuthScreenLayoutProps = AuthScreenDescriptor & Readonly<{
  * the bottom. Content taller than the viewport scrolls instead of pushing the
  * footer off screen — that is why the outer element is a ScrollView whose content
  * container grows.
- * Review forms must accept submit taps while focused; iOS owns the scroll inset
+ * Review forms must accept submit taps while focused; iOS owns the keyboard scroll inset
  * so a product does not have to wrap this in another keyboard-avoiding view.
+ * Safe areas follow ScreenLayout: the host owns the top edge and `safeAreaBottom` the bottom. iOS automatic content
+ * inset adjustment is off because it added the home-indicator inset on iOS only, on top of paddingBlock, which made
+ * every product add its own Android inset (spint) or wrap the layout (diairy, utilverse) — 2026-10-17.
  */
-export declare function AuthScreenLayout({ hero, main, footer, density, hasFooter, pendingLabel, mainCard, layoutStyle, testID, }: AuthScreenLayoutProps): import("react").JSX.Element;
+export declare function AuthScreenLayout({ hero, main, footer, density, hasFooter, pendingLabel, mainCard, safeAreaBottom, layoutStyle, testID, }: AuthScreenLayoutProps): import("react").JSX.Element;
 export type AuthScreenHeroProps = AuthScreenHeroDescriptor & Readonly<{
     /** Product mark asset. HJM never ships product marks. */
     mark?: ReactNode;

@@ -1,7 +1,9 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { authScreenRecipe, resolveAuthScreenDescriptor, validateAuthScreenHeroDescriptor, validateAuthScreenPolicyLinks, } from "@hjmds/design-contracts/components/auth-screen";
-import { createContext, Fragment, useContext } from "react";
+import { createContext, Fragment, useContext, useMemo, useRef } from "react";
 import { InheritedTextAlignContext } from "./internal/text-align.js";
+import { resolveScreenBottomPadding } from "./internal/screen-footer.js";
+import { useKeyboardOverlap } from "./keyboard.js";
 import { Text } from "./primitives.js";
 import { ActivityIndicator, Platform, Pressable, ScrollView, View, } from "react-native";
 import { useHjmNativeTheme } from "./provider.js";
@@ -20,10 +22,13 @@ function AuthActionCard({ children, style }) {
  * the bottom. Content taller than the viewport scrolls instead of pushing the
  * footer off screen — that is why the outer element is a ScrollView whose content
  * container grows.
- * Review forms must accept submit taps while focused; iOS owns the scroll inset
+ * Review forms must accept submit taps while focused; iOS owns the keyboard scroll inset
  * so a product does not have to wrap this in another keyboard-avoiding view.
+ * Safe areas follow ScreenLayout: the host owns the top edge and `safeAreaBottom` the bottom. iOS automatic content
+ * inset adjustment is off because it added the home-indicator inset on iOS only, on top of paddingBlock, which made
+ * every product add its own Android inset (spint) or wrap the layout (diairy, utilverse) — 2026-10-17.
  */
-export function AuthScreenLayout({ hero, main, footer, density, hasFooter, pendingLabel, mainCard = false, layoutStyle, testID, }) {
+export function AuthScreenLayout({ hero, main, footer, density, hasFooter, pendingLabel, mainCard = false, safeAreaBottom = 0, layoutStyle, testID, }) {
     const MainContainer = mainCard ? AuthActionCard : View;
     const resolved = resolveAuthScreenDescriptor({
         ...(density === undefined ? {} : { density }),
@@ -33,11 +38,20 @@ export function AuthScreenLayout({ hero, main, footer, density, hasFooter, pendi
     const pending = pendingLabel !== undefined;
     if (pending && !pendingLabel.trim())
         throw new TypeError("AuthScreen pendingLabel must not be empty");
-    return (_jsxs(ScrollView, { style: [{ flex: 1 }, layoutStyle], testID: testID, keyboardShouldPersistTaps: "handled", keyboardDismissMode: Platform.OS === "ios" ? "interactive" : "on-drag", automaticallyAdjustKeyboardInsets: true, contentContainerStyle: {
+    if (!Number.isFinite(safeAreaBottom) || safeAreaBottom < 0)
+        throw new RangeError("AuthScreenLayout safeAreaBottom must be non-negative");
+    const scrollRef = useRef(null);
+    // Only a keyboard flag: automaticallyAdjustKeyboardInsets already pads the overlap, which clears the home indicator.
+    // The ScrollView class exposes its host view (with measureInWindow) through getNativeScrollRef.
+    const keyboardHost = useMemo(() => ({ get current() { return scrollRef.current?.getNativeScrollRef?.() ?? null; } }), []);
+    const keyboardOpen = useKeyboardOverlap(keyboardHost) > 0;
+    const paddingBottom = resolveScreenBottomPadding(resolved.paddingBlock, safeAreaBottom, keyboardOpen);
+    return (_jsxs(ScrollView, { ref: scrollRef, style: [{ flex: 1 }, layoutStyle], testID: testID, keyboardShouldPersistTaps: "handled", keyboardDismissMode: Platform.OS === "ios" ? "interactive" : "on-drag", automaticallyAdjustKeyboardInsets: true, contentContainerStyle: {
             flexGrow: 1,
             paddingHorizontal: resolved.paddingInline,
-            paddingVertical: resolved.paddingBlock,
-        }, contentInsetAdjustmentBehavior: "automatic", children: [_jsxs(View, { style: {
+            paddingTop: resolved.paddingBlock,
+            paddingBottom,
+        }, children: [_jsxs(View, { style: {
                     flexGrow: 1,
                     flexShrink: 0,
                     width: "100%",
@@ -78,7 +92,7 @@ export function AuthScreenFooter({ notice, links, children }) {
     // Height comes from a background-less minHeight (Android ignores hitSlop outside the parent row);
     // only the inline extension up to the separator uses hitSlop.
     const hitSlop = { left: recipe.linkGap, right: recipe.linkGap };
-    return (_jsxs(View, { style: { width: "100%", alignItems: "center", gap: recipe.noticeGap }, children: [notice ? _jsx(Text, { variant: recipe.notice.textVariant, tone: recipe.notice.tone, children: notice }) : null, _jsx(View, { style: { flexDirection: "row", flexWrap: "wrap", justifyContent: "center", alignItems: "center", columnGap: recipe.linkGap }, children: links.map((link, index) => (_jsxs(Fragment, { children: [index > 0 ? _jsx(Text, { variant: recipe.link.textVariant, tone: recipe.notice.tone, accessible: false, importantForAccessibility: "no", children: recipe.separator }) : null, _jsx(Pressable, { accessibilityRole: "link", accessibilityLabel: link.label, hitSlop: hitSlop, onPress: link.onPress, style: { minHeight: authScreenRecipe.footerMinTouchTarget, justifyContent: "center" }, children: _jsx(Text, { variant: recipe.link.textVariant, tone: recipe.link.tone, style: { textDecorationLine: recipe.link.underline ? "underline" : "none" }, children: link.label }) })] }, `${index}:${link.label}`))) }), children] }));
+    return (_jsxs(View, { style: { width: "100%", alignItems: "center", gap: recipe.noticeGap }, children: [notice ? _jsx(Text, { variant: recipe.notice.textVariant, tone: recipe.notice.tone, children: notice }) : null, _jsx(View, { style: { flexDirection: "row", flexWrap: "wrap", justifyContent: "center", alignItems: "center", columnGap: recipe.linkGap }, children: links.map((link, index) => (_jsxs(Fragment, { children: [index > 0 ? _jsx(Text, { variant: recipe.link.textVariant, tone: recipe.notice.tone, accessible: false, importantForAccessibility: "no", children: recipe.separator }) : null, _jsx(Pressable, { accessibilityRole: "link", accessibilityLabel: link.label, ...(link.accessibilityHint === undefined ? {} : { accessibilityHint: link.accessibilityHint }), hitSlop: hitSlop, onPress: link.onPress, style: { minHeight: authScreenRecipe.footerMinTouchTarget, justifyContent: "center" }, children: _jsx(Text, { variant: recipe.link.textVariant, tone: recipe.link.tone, style: { textDecorationLine: recipe.link.underline ? "underline" : "none" }, children: link.label }) })] }, `${index}:${link.label}`))) }), children] }));
 }
 export { authScreenRecipe };
 //# sourceMappingURL=auth-screen.js.map

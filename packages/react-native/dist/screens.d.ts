@@ -67,6 +67,21 @@ export type ScreenLayoutProps = Readonly<{
     scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator" | "onScroll" | "onScrollBeginDrag" | "onScrollEndDrag" | "scrollEventThrottle" | "alwaysBounceVertical" | "automaticallyAdjustKeyboardInsets">;
 }>;
 export declare function ScreenLayout({ title, titleBadge, titleVisibility, headerAlignment, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, description, exit, actions, notice, footer, state, stateAction, children, scroll, layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance, safeAreaBottom, hjmBodyInlinePadding, hjmTitleLeading }: ScreenLayoutProps & ScreenLayoutPrivateProps): import("react").JSX.Element;
+/**
+ * Styles for a product scroller that owns the body with `scroll="content"` (FlatList, SectionList): `style` reaches
+ * across the ScreenLayout body gutter and `contentContainerStyle` pads it back, so items stay on the gutter while the
+ * clip moves to the screen edges. A bleeding CollectionRail inside then scrolls edge to edge instead of being cut by
+ * the list (spint home re-added a gutter per section under `body-edge` to get one edge-to-edge rail, 2026-10-17).
+ * Outside a ScreenLayout body it returns zero room.
+ */
+export declare function useScreenBodyScrollRoom(): {
+    style: {
+        marginHorizontal: number;
+    };
+    contentContainerStyle: {
+        paddingHorizontal: number;
+    };
+};
 export type SettingsScreenSection = Readonly<{
     id: string;
     title: string;

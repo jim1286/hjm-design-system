@@ -66,7 +66,15 @@ export type AuthScreenHeroDescriptor = Readonly<{
 }>;
 
 /** 정책 링크 한 개. 목적지와 문구는 제품 소유다. */
-export type AuthScreenPolicyLinkDescriptor = Readonly<{ label: string }>;
+export type AuthScreenPolicyLinkDescriptor = Readonly<{
+  label: string;
+  /**
+   * Supplementary announcement after the label, e.g. the product's localized "opens in browser" (Web aria-describedby
+   * text / RN accessibilityHint). The visible label stays the link's name; spint dropped its hint when it adopted
+   * AuthScreenFooter because the links had no slot for it (2026-10-17).
+   */
+  accessibilityHint?: string;
+}>;
 
 export const authScreenDefaults = {
   density: "regular",
@@ -178,7 +186,10 @@ export function validateAuthScreenPolicyLinks(links: readonly AuthScreenPolicyLi
   if (!Array.isArray(links) || links.length === 0) {
     throw new TypeError("AuthScreen footer needs at least one policy link");
   }
-  for (const link of links) assertNonEmpty(link?.label, "policy link label");
+  for (const link of links) {
+    assertNonEmpty(link?.label, "policy link label");
+    if (link.accessibilityHint !== undefined) assertNonEmpty(link.accessibilityHint, "policy link accessibilityHint");
+  }
 }
 
 export function resolveAuthScreenDescriptor(

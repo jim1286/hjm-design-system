@@ -1,5 +1,6 @@
 import { collectionItemContract, fieldFrameContract, floatingSurfaceContract, focusIndicatorContract, formSupportContract, } from "./component-contracts.js";
 import { backdrop, breakpoint, control, glyph, layer, largeTextThreshold, layout, fontWeight, motion, motionPreset, opacity, radius, spacing, stroke, typography, } from "./foundations.js";
+import { buttonRecipe } from "./base-recipes.js";
 import { semanticColors } from "./semantic-colors.js";
 import { tooltipDescriptorDefaults } from "./tooltip.js";
 import { bottomNavigationRecipeDefaults } from "./bottom-navigation-defaults.js";
@@ -1171,13 +1172,15 @@ export const skeletonRecipe = {
     // 2026-10-17 사용자 요청: canvas 채움 + 1px 테두리는 흰 배경에서 거의 보이지 않아 로딩 모양을 알 수 없었다.
     // 2026-09-29 "넓은 회색 면은 canvas" 방향의 예외로, 자리표시는 채운 면이어야 모양이 읽힌다(skeleton.md 근거).
     background: semanticColors.surface.placeholder,
-    // `aspectRatio`가 있으면 높이 대신 폭에 비례한다(media). `button`은 medium 버튼 높이·모서리와 같다.
+    // `aspectRatio`가 있으면 높이 대신 폭에 비례한다(media). `button`은 medium 버튼 높이와 Button 기본 모양의 모서리다.
+    // 2026-10-17: 번뚝처럼 알약 버튼을 쓰는 제품은 자리표시도 알약이어야 하므로 모서리는 `buttonShape` 축
+    // (buttonRecipe.shapes와 같은 이름·같은 기본값)으로 고르고, 이 값은 그 기본값에서 나온다.
     shapes: {
         block: { radius: "md", defaultHeight: spacing.xxl, aspectRatio: null },
         text: { radius: "sm", defaultHeight: spacing.md, aspectRatio: null },
         circle: { radius: "full", defaultHeight: glyph.xxl, aspectRatio: null },
         media: { radius: "md", defaultHeight: null, aspectRatio: 16 / 9 },
-        button: { radius: "md", defaultHeight: control.buttonHeight.medium, aspectRatio: null },
+        button: { radius: buttonRecipe.shapes[buttonRecipe.defaults.shape], defaultHeight: control.buttonHeight.medium, aspectRatio: null },
     },
     // `lines` > 1 (text 전용): 줄 사이 간격과 짧게 끝나는 마지막 줄. 16 막대 + 8 간격 = 본문 큰 글자 줄 높이 24.
     lines: { gap: spacing.xs, lastLineWidthPercent: 60 },

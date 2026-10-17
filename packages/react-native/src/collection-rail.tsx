@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { useContext, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { ScrollView, View } from "react-native";
 import {
   collectionRailRecipe, validateCollectionRail, resolveCollectionRailLayout, resolveCollectionRailViewport,
@@ -10,6 +10,8 @@ import { glyph } from "@hjmds/design-contracts/foundations";
 import { resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
 import { DrawnChevron } from "./internal/drawn-glyphs.js";
 import { useHjmNativeTheme } from "./provider.js";
+import { ScreenBodyInsetContext } from "./internal/screen-body-inset.js";
+import { listRowScrollRoom } from "./internal/list-row-scroll-room.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type CollectionRailLabels = Readonly<{ previous: string; next: string; navigation: string }>;
@@ -18,16 +20,27 @@ export type CollectionRailProps = Readonly<{
   labels: CollectionRailLabels; density?: CollectionRailDensity; emptyContent?: ReactNode;
   /** Initial scroll anchor, not a selected item or an open detail target. */
   defaultStartKey?: string; onStartKeyChange?: (key: string | null) => void;
+  /**
+   * Scroll to the screen edges from inside the default inset ScreenLayout body: the viewport reaches past the body
+   * gutter and pads it back, so the first and last items rest on the gutter (no `body-edge` + per-section gutter).
+   * Place the rail directly in the body; inside overlays or `body-edge`/`none` bodies there is no gutter to cross.
+   */
+  bleed?: boolean;
   layoutStyle?: HjmCompositionStyleProp; testID?: string;
 }>;
 
 export function CollectionRail({ label, items, renderItem, labels, density = collectionRailRecipe.defaults.density,
-  emptyContent, defaultStartKey, onStartKeyChange, layoutStyle, testID }: CollectionRailProps) {
+  emptyContent, defaultStartKey, onStartKeyChange, bleed = false, layoutStyle, testID }: CollectionRailProps) {
   validateCollectionRail(items);
   if (!label.trim() || Object.values(labels).some(value => !value.trim())) throw new TypeError("CollectionRail labels must not be empty");
   const { environment, palette, tokens } = useHjmNativeTheme(), direction = environment.direction;
   const chevronColor = resolveIconButtonPresentation("ghost", palette, false).content;
   const scroll = useRef<ScrollView>(null);
+  // Same viewport/content room rule as the ListRow bleed, with the screen gutter as the outset. Item geometry keeps
+  // using the gutter-aligned width, so offsets and item widths are unchanged by the bleed.
+  const bodyInset = useContext(ScreenBodyInsetContext);
+  const room = listRowScrollRoom(bleed ? bodyInset : 0);
+  const outset = room.content.paddingHorizontal;
   const [width, setWidth] = useState(0), [offset, setOffset] = useState(0);
   const layout = resolveCollectionRailLayout(items.length, width, density, tokens.spacing.md);
   const geometry = useRef(layout); geometry.current = layout;
@@ -71,7 +84,7 @@ export function CollectionRail({ label, items, renderItem, labels, density = col
   const contentWidth = useRef(0);
   return <View testID={testID} style={[{ direction, minWidth: 0 }, layoutStyle]}>
     <ScrollView ref={scroll} horizontal accessibilityRole="list" accessibilityLabel={label}
-      onLayout={event => setWidth(event.nativeEvent.layout.width)}
+      onLayout={event => setWidth(Math.max(0, event.nativeEvent.layout.width - outset * 2))}
       onContentSizeChange={nextWidth => {
         // The physical scroll range exists after content layout. Re-align only
         // for width changes; an edited card's height must not reset touch scroll.
@@ -84,9 +97,9 @@ export function CollectionRail({ label, items, renderItem, labels, density = col
         publish(next);
       }}
       scrollEventThrottle={16} keyboardShouldPersistTaps="handled" removeClippedSubviews={false}
-      style={{ direction: "ltr" }}
+      style={{ direction: "ltr", ...room.viewport }}
       contentContainerStyle={{ direction: "ltr", flexDirection: direction === "rtl" ? "row-reverse" : "row",
-        gap: tokens.spacing.md, width: Math.max(layout.contentWidth, width), paddingVertical: tokens.spacing.xs }}>
+        gap: tokens.spacing.md, width: Math.max(layout.contentWidth, width) + outset * 2, paddingVertical: tokens.spacing.xs, ...room.content }}>
       {items.map((item, index) => <View key={item.id} style={{ width: layout.itemWidth, direction }}
         onFocus={() => { focusedKey.current = item.id; scrollToOffset(getCollectionRailRevealOffset(geometry.current, logicalOffset.current, index), false); }}
         onBlur={() => { if (focusedKey.current === item.id) focusedKey.current = null; }}>

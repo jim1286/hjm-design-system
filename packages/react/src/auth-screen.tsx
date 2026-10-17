@@ -9,7 +9,7 @@ import {
   type AuthScreenPolicyLinkDescriptor,
 } from "@hjmds/design-contracts/components/auth-screen";
 import { typography, type TextVariant } from "@hjmds/design-contracts/foundations";
-import { createContext, createElement, forwardRef, Fragment, useContext, useLayoutEffect, useRef, type CSSProperties, type HTMLAttributes, type ReactNode } from "react";
+import { createContext, createElement, forwardRef, Fragment, useContext, useLayoutEffect, useRef, type CSSProperties, type HTMLAttributeAnchorTarget, type HTMLAttributes, type ReactNode, useId } from "react";
 import { classNames, useDesignProfileDefaults } from "./internal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
@@ -153,6 +153,12 @@ export type AuthScreenPolicyLink = AuthScreenPolicyLinkDescriptor &
   Readonly<{
     /** Document URL; renders an anchor. */
     href?: string;
+    /**
+     * Anchor target with `href`, e.g. `_blank` for policy documents that open beside the app (diairy web lost its
+     * new-tab links on adoption, 2026-10-17). `rel` defaults to "noreferrer noopener" for `_blank`, as on Link.
+     */
+    target?: HTMLAttributeAnchorTarget;
+    rel?: string;
     /** In-app handler; renders a button when there is no `href`. */
     onClick?: () => void;
   }>;
@@ -176,6 +182,7 @@ export function AuthScreenFooter({ notice, links, children }: AuthScreenFooterPr
   const recipe = authScreenRecipe.footer;
   const weight = useTypeWeight();
   const linkStyle = { fontWeight: weight(recipe.link.textVariant) };
+  const hintId = useId();
   return (
     <div className="hjm-auth-screen__footer-content" style={{ gap: recipe.noticeGap }}>
       {notice ? <p className="hjm-text" data-variant={recipe.notice.textVariant} data-font-role="ui" data-tone={recipe.notice.tone} style={{ fontWeight: weight(recipe.notice.textVariant) }}>{notice}</p> : null}
@@ -187,8 +194,13 @@ export function AuthScreenFooter({ notice, links, children }: AuthScreenFooterPr
           <Fragment key={`${index}:${link.label}`}>
             {index > 0 ? <span className="hjm-text hjm-auth-screen__separator" data-variant={recipe.link.textVariant} data-tone={recipe.notice.tone} aria-hidden="true">{recipe.separator}</span> : null}
             {link.href !== undefined
-              ? <a className="hjm-text hjm-auth-screen__link" data-variant={recipe.link.textVariant} data-font-role="ui" data-tone={recipe.link.tone} style={linkStyle} href={link.href} onClick={link.onClick}>{link.label}</a>
-              : <button type="button" className="hjm-text hjm-auth-screen__link" data-variant={recipe.link.textVariant} data-font-role="ui" data-tone={recipe.link.tone} style={linkStyle} onClick={link.onClick}>{link.label}</button>}
+              ? <a className="hjm-text hjm-auth-screen__link" data-variant={recipe.link.textVariant} data-font-role="ui" data-tone={recipe.link.tone} style={linkStyle} href={link.href}
+                  target={link.target} rel={link.rel ?? (link.target === "_blank" ? "noreferrer noopener" : undefined)}
+                  aria-describedby={link.accessibilityHint === undefined ? undefined : `${hintId}-${index}`} onClick={link.onClick}>{link.label}</a>
+              : <button type="button" className="hjm-text hjm-auth-screen__link" data-variant={recipe.link.textVariant} data-font-role="ui" data-tone={recipe.link.tone} style={linkStyle}
+                  aria-describedby={link.accessibilityHint === undefined ? undefined : `${hintId}-${index}`} onClick={link.onClick}>{link.label}</button>}
+            {/* Native announces the hint after the label; Web reads the same text as the link's description. */}
+            {link.accessibilityHint === undefined ? null : <span id={`${hintId}-${index}`} className="hjm-visually-hidden">{link.accessibilityHint}</span>}
           </Fragment>
         ))}
       </div>

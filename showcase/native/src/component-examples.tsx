@@ -293,7 +293,7 @@ return (<AuthScreenLayout mainCard
         {...(busyId !== null || variant === "loading" ? { pendingLabel: authExample.pendingLabel } : {})}
         hero={<AuthScreenHero title={authExample.hero.title} description={authExample.hero.description} />}
         main={<ProviderButtons busyId={null} onPress={start} />}
-        footer={<AuthScreenFooter links={authExample.policyLinks.map(label => ({ label, onPress: () => undefined }))} />}
+        footer={<AuthScreenFooter links={authExample.policyLinks.map(label => ({ label, onPress: () => undefined, accessibilityHint: "브라우저에서 열려요" }))} />}
       />);
 }
 
@@ -760,7 +760,7 @@ const { sections, textLines, rowLines, rowCount, cardLines, buttonWidth } = skel
 return (<StoryFrame><Stack gap="lg" accessible accessibilityLabel={skeletonExample.label} accessibilityState={{ busy: true }}>
   <Stack gap="sm"><Text tone="muted" variant="label">{sections.shapes}</Text>
     <Skeleton shape="text" lines={textLines} />
-    <Stack axis="inline" gap="sm" align="center"><Skeleton shape="circle" /><Skeleton shape="button" width={buttonWidth} /></Stack>
+    <Stack axis="inline" gap="sm" align="center"><Skeleton shape="circle" /><Skeleton shape="button" width={buttonWidth} /><Skeleton shape="button" buttonShape="pill" width={buttonWidth} /></Stack>
     <Skeleton shape="media" />
   </Stack>
   <Stack gap="sm"><Text tone="muted" variant="label">{sections.listRow}</Text>

@@ -59,6 +59,12 @@ export type AuthScreenHeroDescriptor = Readonly<{
 /** 정책 링크 한 개. 목적지와 문구는 제품 소유다. */
 export type AuthScreenPolicyLinkDescriptor = Readonly<{
     label: string;
+    /**
+     * Supplementary announcement after the label, e.g. the product's localized "opens in browser" (Web aria-describedby
+     * text / RN accessibilityHint). The visible label stays the link's name; spint dropped its hint when it adopted
+     * AuthScreenFooter because the links had no slot for it (2026-10-17).
+     */
+    accessibilityHint?: string;
 }>;
 export declare const authScreenDefaults: {
     readonly density: "regular";

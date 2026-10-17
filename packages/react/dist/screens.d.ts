@@ -51,6 +51,15 @@ export type ScreenLayoutProps = Readonly<{
 export declare function ScreenLayout({ title, titleBadge, titleVisibility, headerAlignment, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, description, exit, actions, notice, footer, state, stateAction, children, scroll, as: Element, className, layoutStyle, hjmTitleLeading }: ScreenLayoutProps & Readonly<{
     hjmTitleLeading?: ReactNode;
 }>): import("react").JSX.Element;
+/**
+ * Style for a product scroller that owns the body with `scroll="content"`: it reaches across the body gutter
+ * (`--hjm-screen-body-inline`) and pads it back, so items stay on the gutter while the clip moves to the screen edges and
+ * a bleeding CollectionRail inside scrolls edge to edge (same name and shape as Native; spint home 2026-10-17).
+ * Outside a screen body the variable is unset and the room is 0; CSS resolves the distance, so no context is read.
+ */
+export declare function useScreenBodyScrollRoom(): Readonly<{
+    style: React.CSSProperties;
+}>;
 export type SettingsScreenSection = Readonly<{
     id: string;
     title: string;

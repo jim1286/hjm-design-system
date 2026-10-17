@@ -3,7 +3,7 @@
 - 단계: 컴포넌트
 - 상태: 배포
 - 지원: Web · Native
-- 적용: 1.12.1
+- 적용: 1.12.1 (`safeAreaBottom`·링크 `target`/`rel`/`accessibilityHint` 1.28.1)
 - 검토일: 2026-10-17
 - 근거: [로그인 화면 골격](../../auth-screen.md), [1.4 제품 채택 가이드](../../product-adoption-1.4.md), recipe `authScreenRecipe`(`src/auth-screen.ts`), 포트폴리오 상위 기준 루트 `docs/LOGIN_SCREEN_STANDARD.md`(LS)
 - 스토리북: `배포/컴포넌트/레이아웃/로그인 화면`
@@ -28,7 +28,7 @@
 | --- | --- | --- | --- |
 | `AuthScreenLayout` | 기본(배치) | `@hjmds/react`, `/auth-screen` | `@hjmds/react-native`, `/auth-screen` |
 | `AuthScreenHero` | `hero` 슬롯: 마크·eyebrow·태그라인·설명 | 같음 | 같음 |
-| `AuthScreenFooter` | `footer` 슬롯: 동의 고지·정책 링크(·구분) | 같음, 링크 `href` 또는 `onClick` | 같음, 링크 `onPress` |
+| `AuthScreenFooter` | `footer` 슬롯: 동의 고지·정책 링크(·구분) | 같음, 링크 `href`(+`target`·`rel`) 또는 `onClick` | 같음, 링크 `onPress` |
 
 ## 최소 사용 예
 
@@ -41,7 +41,11 @@ import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "@hjmds/react
   {...(pending ? { pendingLabel: t("auth.pending") } : {})}
   hero={<AuthScreenHero mark={<ProductMark />} title={t("auth.tagline")} description={t("auth.description")} />}
   main={<ProviderButtons />}        // pending이어도 같은 목록
-  footer={<AuthScreenFooter notice={t("auth.consent")} links={[{ label: t("legal.privacy"), href: privacyUrl }, { label: t("legal.terms"), href: termsUrl }]} />}
+  footer={<AuthScreenFooter notice={t("auth.consent")} links={[
+    // 새 탭에서 여는 문서: target만 주면 rel은 "noreferrer noopener"가 기본이다.
+    { label: t("legal.privacy"), href: privacyUrl, target: "_blank", accessibilityHint: t("legal.opensNewTab") },
+    { label: t("legal.terms"), href: termsUrl, target: "_blank", accessibilityHint: t("legal.opensNewTab") },
+  ]} />}
 />
 ```
 
@@ -54,7 +58,11 @@ import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "@hjmds/react
   {...(pending ? { pendingLabel: t("auth.pending") } : {})}
   hero={<AuthScreenHero mark={<ProductMark />} title={t("auth.tagline")} description={t("auth.description")} />}
   main={<ProviderButtons />}
-  footer={<AuthScreenFooter links={[{ label: t("legal.privacy"), onPress: openPrivacy }, { label: t("legal.terms"), onPress: openTerms }]} />}
+  footer={<AuthScreenFooter links={[
+    { label: t("legal.privacy"), onPress: openPrivacy, accessibilityHint: t("legal.opensInBrowser") },
+    { label: t("legal.terms"), onPress: openTerms, accessibilityHint: t("legal.opensInBrowser") },
+  ]} />}
+  safeAreaBottom={useSafeAreaInsets().bottom}   // 바깥 SafeAreaView bottom·paddingBottom 래퍼 대신
   testID="login-screen"
 />
 ```
@@ -72,8 +80,11 @@ import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "@hjmds/react
 | Web `as` | `main` · `section` | `main` | 최대 폭은 416이다 |
 | `layoutStyle` | margin·width·flex·`alignSelf` | — | 바깥 배치 전용(Web·Native 모두) |
 | Native `testID` | `string` | — | 뿌리 `ScrollView` 식별 |
+| Native `safeAreaBottom` | 0 이상의 유한수 | `0` | 화면이 닿는 창 아래 가장자리의 safe area(`useSafeAreaInsets().bottom`, 이미 아래를 들인 host 안이면 0). 아래 여백이 `max(paddingBlock, inset)` — `regular` max(40, inset), `compact` max(20, inset) — 으로 한 번만 들어간다(ScreenLayout과 같은 규칙, 합산 없음). 키보드가 열리면 paddingBlock만. 음수·무한대는 `RangeError` |
 | `AuthScreenHero` `title` · `eyebrow` · `description` · `mark` · `headingLevel` | 문자열 · `ReactNode` · `1`~`3` | `headingLevel` 1 | 제목은 필수이고 빈 문자열이면 `TypeError`. 밀도는 바깥 `AuthScreenLayout`을 따른다 |
 | `AuthScreenFooter` `links` · `notice` · `children` | 링크 배열(1개 이상) · `ReactNode` | — | 빈 링크 목록·빈 라벨은 `TypeError`(LS-04: 약관 링크는 로그인 전 같은 화면에 있어야 한다). `children`은 링크 아래 제품 내용 |
+| 링크 `accessibilityHint` | 문자열 | — | 라벨 뒤에 읽히는 보조 안내(예: 제품이 번역한 "브라우저에서 열림"). Native `accessibilityHint`, Web 숨긴 설명(`aria-describedby`). 보이는 라벨은 그대로 링크 이름이다. 공백만 있으면 `TypeError` |
+| Web 링크 `target` · `rel` | anchor 속성 | — | `href`가 있을 때만. `target="_blank"`이면 `rel` 기본값 `noreferrer noopener`(Link와 같음) |
 
 ## 배치
 
@@ -84,7 +95,7 @@ import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "@hjmds/react
 | 히어로 문구 | 마크 ↔ 문구 묶음은 hero 간격. eyebrow `label` 12/18·500·브랜드색, 아래 `spacing.xxs` 4 → 태그라인 `regular` `typography.heading` 24/32 · `compact` `titleLarge` 20/28, 굵기는 제목 단계 500, 기본 글자색, 실제 heading 요소(Native `header`) → 설명 `body` 14/20·400·보조색(`muted`), 위 `spacing.xs` 8 | `authScreenRecipe.hero`, `densities.*.titleVariant` |
 | 동의 고지·정책 링크 | 고지 `caption` 11/16 흐린 색, 링크 줄과 `spacing.xxs` 4. 링크 `caption`·브랜드색·밑줄, 링크 사이 `linkGap` 8 + `·` + 8(보이는 글자 간격 약 19). 각 링크 높이 44(배경 없음), 가로 터치 폭은 구분점 앞까지 보이지 않게 넓힘(Web 가상 요소, Native `hitSlop`) | `authScreenRecipe.footer`, `.hjm-auth-screen__link` |
 | 순서·정렬 | 위→아래 hero(가운데 정렬 문구) → main(폭 꽉 채움) → footer(동의 고지·정책 링크). 위 블록은 남는 세로 공간에서 가운데, footer는 바닥에 붙는다. 진행 중 로딩은 main 카드 가운데에 겹친다 | `.hjm-auth-screen__block`(`justify-content: center`), `.hjm-auth-screen__pending` |
-| 고정·스크롤 | 고정 영역이 없다. 넘치면 화면 전체가 스크롤한다. 안전 영역은 Native `contentInsetAdjustmentBehavior="automatic"`과 키보드 inset 자동 조정이 처리하고, Web은 safe-area inset을 더하지 않는다 | `react-native/src/auth-screen.tsx`, `.hjm-auth-screen` |
+| 고정·스크롤 | 고정 영역이 없다. 넘치면 화면 전체가 스크롤한다. 위 safe area는 host(TopBar·SafeAreaView top)가, 아래는 레이아웃이 `max(paddingBlock, 하단 inset)`으로 맡는다 — Web `env(safe-area-inset-bottom)`, Native `safeAreaBottom`. Native 키보드 inset은 자동 조정이 처리한다 | `react-native/src/auth-screen.tsx`, `.hjm-auth-screen` |
 | 좁은 폭·큰 글자 | 키 작은 화면·큰 글자에서는 `compact`를 고른다. 그래도 넘치면 스크롤되며 footer는 맨 아래로 밀린다 | `authScreenRecipe.densities` |
 
 ```text
@@ -128,9 +139,13 @@ import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "@hjmds/react
 | 배치·식별 | `layoutStyle`, `className`, HTML 속성 | `layoutStyle`, `testID` |
 | 진행 중 숨김 | `inert` + `aria-hidden` + `visibility: hidden`, 로딩은 `role="status"` | 터치·접근성 제외 + 불투명도 0, 로딩은 `progressbar` + live region |
 | 키보드 | 브라우저 기본 | 키보드 inset 자동 조정, 탭 유지(`handled`), iOS `interactive`·Android `on-drag` 내리기 |
+| 아래 안전 영역 | `env(safe-area-inset-bottom)` 자동 | `safeAreaBottom` prop(iOS 자동 content inset 조정은 쓰지 않는다) |
+| 정책 링크 보조 안내 | `aria-describedby` 숨긴 텍스트, `target`·`rel` | `accessibilityHint` |
 
 ## 함정
 
+- Native에서 아래 홈 인디케이터를 `SafeAreaView edges={['bottom']}`·`paddingBottom: insets.bottom` 래퍼로 들이지 말고 `safeAreaBottom`으로 넘긴다. 둘을 같이 주면 inset + paddingBlock이 다시 더해진다.
+- 1.28.0까지 Native는 iOS `contentInsetAdjustmentBehavior="automatic"`으로 위·아래 safe area를 iOS에서만 더했다. 1.28.1부터 위는 host, 아래는 `safeAreaBottom`이다. 위 safe area를 아무도 들이지 않던 화면은 host에서 TopBar `safeAreaTop`이나 SafeAreaView top으로 들인다.
 - Native는 자체로 키보드 스크롤 여백을 준다. 부모가 다시 keyboard avoidance를 하면 여백이 중복될 수 있으니
   심사자 폼처럼 입력칸이 있는 화면은 소비 화면에서 확인한다.
 - 앱 셸이 이미 `<main>`을 가진 Web 화면에서 기본값을 쓰면 main landmark가 중첩된다. `as="section"`을 쓴다.
@@ -143,6 +158,7 @@ import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "@hjmds/react
 
 ## 근거
 
+- `safeAreaBottom`·링크 `target`/`rel`/`accessibilityHint`(1.28.1): 2026-10-17 1.28 채택에서 다에리·utilverse·spint가 레이아웃을 각자 아래 inset 래퍼로 감쌌고(iOS는 자동 content inset이 이미 더해 합산, Android는 아무도 안 들여 spint가 Android만 덧붙임), 다에리 웹은 정책 문서 새 탭 열기(`target="_blank"`)를, spint는 "브라우저에서 열림" 접근성 안내를 링크 슬롯이 없어 잃었다. ScreenLayout의 max 규칙을 그대로 쓰고 링크에 같은 의미의 보조 안내·anchor 속성을 연다.
 - `AuthScreenHero`·`AuthScreenFooter`와 히어로·링크 수치: 2026-10-17 사용자 피드백("굵기랑 크기 줄여", "간격 줄여").
   예제가 히어로에 `Top large`(display 32/40·600)를 넣어 402 폭에서 태그라인이 두 줄이 됐고, 정책 링크는 ghost Button
   안쪽 여백 12+12에 Stack gap 16이 더해져 글자 사이가 Web 42·Native 40이었다. 슬롯 내용을 앱이 조립하면 같은 실수가

@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { authScreenRecipe, resolveAuthScreenDescriptor, validateAuthScreenHeroDescriptor, validateAuthScreenPolicyLinks, } from "@hjmds/design-contracts/components/auth-screen";
 import { typography } from "@hjmds/design-contracts/foundations";
-import { createContext, createElement, forwardRef, Fragment, useContext, useLayoutEffect, useRef } from "react";
+import { createContext, createElement, forwardRef, Fragment, useContext, useLayoutEffect, useRef, useId } from "react";
 import { classNames, useDesignProfileDefaults } from "./internal.js";
 // The hero follows the layout density without the product passing it twice.
 const AuthScreenDensityContext = createContext(undefined);
@@ -81,11 +81,12 @@ export function AuthScreenFooter({ notice, links, children }) {
     const recipe = authScreenRecipe.footer;
     const weight = useTypeWeight();
     const linkStyle = { fontWeight: weight(recipe.link.textVariant) };
+    const hintId = useId();
     return (_jsxs("div", { className: "hjm-auth-screen__footer-content", style: { gap: recipe.noticeGap }, children: [notice ? _jsx("p", { className: "hjm-text", "data-variant": recipe.notice.textVariant, "data-font-role": "ui", "data-tone": recipe.notice.tone, style: { fontWeight: weight(recipe.notice.textVariant) }, children: notice }) : null, _jsx("div", { className: "hjm-auth-screen__links", style: {
                     ["--hjm-auth-screen-link-gap"]: `${recipe.linkGap}px`,
                     ["--hjm-auth-screen-link-target"]: `${authScreenRecipe.footerMinTouchTarget}px`,
                 }, children: links.map((link, index) => (_jsxs(Fragment, { children: [index > 0 ? _jsx("span", { className: "hjm-text hjm-auth-screen__separator", "data-variant": recipe.link.textVariant, "data-tone": recipe.notice.tone, "aria-hidden": "true", children: recipe.separator }) : null, link.href !== undefined
-                            ? _jsx("a", { className: "hjm-text hjm-auth-screen__link", "data-variant": recipe.link.textVariant, "data-font-role": "ui", "data-tone": recipe.link.tone, style: linkStyle, href: link.href, onClick: link.onClick, children: link.label })
-                            : _jsx("button", { type: "button", className: "hjm-text hjm-auth-screen__link", "data-variant": recipe.link.textVariant, "data-font-role": "ui", "data-tone": recipe.link.tone, style: linkStyle, onClick: link.onClick, children: link.label })] }, `${index}:${link.label}`))) }), children] }));
+                            ? _jsx("a", { className: "hjm-text hjm-auth-screen__link", "data-variant": recipe.link.textVariant, "data-font-role": "ui", "data-tone": recipe.link.tone, style: linkStyle, href: link.href, target: link.target, rel: link.rel ?? (link.target === "_blank" ? "noreferrer noopener" : undefined), "aria-describedby": link.accessibilityHint === undefined ? undefined : `${hintId}-${index}`, onClick: link.onClick, children: link.label })
+                            : _jsx("button", { type: "button", className: "hjm-text hjm-auth-screen__link", "data-variant": recipe.link.textVariant, "data-font-role": "ui", "data-tone": recipe.link.tone, style: linkStyle, "aria-describedby": link.accessibilityHint === undefined ? undefined : `${hintId}-${index}`, onClick: link.onClick, children: link.label }), link.accessibilityHint === undefined ? null : _jsx("span", { id: `${hintId}-${index}`, className: "hjm-visually-hidden", children: link.accessibilityHint })] }, `${index}:${link.label}`))) }), children] }));
 }
 //# sourceMappingURL=auth-screen.js.map

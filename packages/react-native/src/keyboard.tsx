@@ -41,7 +41,7 @@ export const KeyboardAvoidanceContext = createContext(false);
  * Height of the keyboard overlapping `host`'s bottom edge. Padding only the real overlap keeps hosts above
  * a tab bar or toolbar from showing an empty band (2026-10-16).
  */
-export function useKeyboardOverlap(host: RefObject<View | null>, enabled = true): number {
+export function useKeyboardOverlap(host: RefObject<Pick<View, "measureInWindow"> | null>, enabled = true): number {
   const [overlap, setOverlap] = useState(0);
   useEffect(() => {
     if (!enabled) { setOverlap(0); return; }

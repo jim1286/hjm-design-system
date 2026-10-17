@@ -2,6 +2,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { emptyStateRecipe, noticeRecipe, progressRecipe, skeletonRecipe, } from "@hjmds/design-contracts/recipes";
 import { resolveResultDescriptor, resultRecipe, } from "@hjmds/design-contracts/components/result";
 import { forwardRef, useId, } from "react";
+import { buttonRecipe } from "@hjmds/design-contracts/recipes/base";
 import { classNames } from "./internal.js";
 import { Button } from "./actions.js";
 import { Text } from "./layout.js";
@@ -50,13 +51,13 @@ export const Progress = forwardRef(function Progress({ label, value, valueText, 
         } : layoutStyle, children: [label === undefined ? null : (_jsxs("span", { className: "hjm-progress__copy", children: [_jsx(Text, { id: labelId, variant: "label", children: label }), resolvedValueText ? _jsx(Text, { variant: "caption", tone: "muted", children: resolvedValueText }) : null] })), shape === "circular" ? (_jsx("span", { className: "hjm-progress__ring", "aria-hidden": "true", children: children ? _jsx("span", { className: "hjm-progress__ring-content", children: children }) : null })) : null, _jsx("progress", { ...props, ref: ref, className: "hjm-progress__native", max: max, ...(value === undefined ? {} : { value }), "aria-labelledby": props["aria-labelledby"] ?? (props["aria-label"] === undefined ? labelId : undefined), "aria-valuetext": resolvedValueText })] }));
 });
 export { Spinner } from "./internal/spinner.js";
-export const Skeleton = forwardRef(function Skeleton({ shape = skeletonRecipe.defaults.shape, animated = skeletonRecipe.defaults.animated, lines = skeletonRecipe.defaults.lines, width, height, className, style, layoutStyle, ...props }, ref) {
+export const Skeleton = forwardRef(function Skeleton({ shape = skeletonRecipe.defaults.shape, animated = skeletonRecipe.defaults.animated, lines = skeletonRecipe.defaults.lines, buttonShape = buttonRecipe.defaults.shape, width, height, className, style, layoutStyle, ...props }, ref) {
     const lineCount = shape === "text" ? Math.max(1, Math.floor(lines)) : 1;
     if (lineCount > 1) {
         // One pulse on the group keeps the lines in phase; the bars themselves do not animate.
         return (_jsx("span", { ...props, ref: ref, className: classNames("hjm-skeleton-lines", className), "data-animated": animated, "aria-hidden": "true", style: { width, ...style, ...layoutStyle }, children: Array.from({ length: lineCount }, (_, index) => (_jsx("span", { className: "hjm-skeleton", "data-shape": "text", "data-last": index === lineCount - 1 || undefined, style: { height } }, index))) }));
     }
-    return (_jsx("span", { ...props, ref: ref, className: classNames("hjm-skeleton", className), "data-shape": shape, "data-animated": animated, "aria-hidden": "true", style: { width, height, ...style, ...layoutStyle } }));
+    return (_jsx("span", { ...props, ref: ref, className: classNames("hjm-skeleton", className), "data-shape": shape, "data-button-shape": shape === "button" ? buttonShape : undefined, "data-animated": animated, "aria-hidden": "true", style: { width, height, ...style, ...layoutStyle } }));
 });
 // ActivityChip is a feedback-category status trigger (its panel is the Toast in this module). Also exported here so
 // apps can import it from an existing subpath: Next dev with HJM_LOCAL_SOURCE rejected the new ./activity-chip

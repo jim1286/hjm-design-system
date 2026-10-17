@@ -31,7 +31,8 @@ export type ListDetailScreenProps = Base & {
     refresh?: ScreenFlowIconAction;
     loadMore?: ScreenFlowAction;
 };
-/** Keep the list mounted so input and scroll survive a detail visit. Routers may instead restore host scroll state. */
+/** Keep the list mounted so input and scroll survive a detail visit. Routers may instead restore host scroll state.
+ * Both panes reach the same window bottom, so `safeAreaBottom` goes to each (yajalal detail content sat under the home indicator, 2026-10-17). */
 export declare function ListDetailScreen({ list, detail, back, refresh, loadMore, layoutStyle, ...screen }: ListDetailScreenProps): import("react").JSX.Element;
 export type EditorScreenProps = Omit<Base, "leading" | "exit"> & {
     children: ReactNode;
@@ -237,6 +238,8 @@ export type SearchScreenProps<F = unknown> = Base & SearchInputSlot & SearchComm
     filters?: ReactNode;
     recentSearches?: ReactNode;
     children: ReactNode;
+    /** ScreenLayout footer (bottom action or ad bar) under the results; it owns the bottom inset, as on every screen (unairplane rendered it outside the screen, 2026-10-17). */
+    footer?: ScreenLayoutProps["footer"];
     /** `scroll` keeps `filters` on one horizontally scrolling line that bleeds to the screen edges. */
     filtersOverflow?: "wrap" | "scroll";
     /** Gutter the host (Container `gutter`, Sheet = `regular`) already applies around this screen; the scroll rail bleeds over it too. */
@@ -278,8 +281,10 @@ export type OnboardingScreenProps = {
     skip?: ScreenFlowAction;
     progressLabel(index: number, total: number): string;
     layoutStyle?: ScreenLayoutProps["layoutStyle"];
+    /** Same as ScreenLayout: the footer pads max(16, inset) (yajalal/diairy wrapped the screen in their own inset, 2026-10-17). */
+    safeAreaBottom?: ScreenLayoutProps["safeAreaBottom"];
 };
-export declare function OnboardingScreen({ steps, index, onIndexChange, nextLabel, backLabel, complete, skip, progressLabel, layoutStyle }: OnboardingScreenProps): import("react").JSX.Element;
+export declare function OnboardingScreen({ steps, index, onIndexChange, nextLabel, backLabel, complete, skip, progressLabel, layoutStyle, safeAreaBottom }: OnboardingScreenProps): import("react").JSX.Element;
 export type CommentThreadItem = Readonly<{
     id: string;
     parentId: string | null;

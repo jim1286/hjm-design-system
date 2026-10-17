@@ -71,6 +71,7 @@ import {
 } from "react-native";
 
 import type { ToastPresentationAdapter } from "./internal/toast-presentation.js";
+import { buttonRecipe, type ButtonShape } from "@hjmds/design-contracts/recipes/base";
 export type { ToastPresentationAdapter } from "./internal/toast-presentation.js";
 
 import { Button, IconButton } from "./actions.js";
@@ -626,6 +627,11 @@ export type SkeletonProps = Readonly<{
    * placeholder is not rebuilt from loose bars in every product. `width` sizes the whole group.
    */
   lines?: number;
+  /**
+   * `button` only: the Button `shape` this placeholder stands in for (default: Button's default). Products that use
+   * `shape="pill"` buttons pass the same value so the placeholder matches (BurnTok, 2026-10-17).
+   */
+  buttonShape?: ButtonShape;
   width?: ViewStyle["width"];
   height?: number;
   radius?: number;
@@ -646,6 +652,7 @@ export function Skeleton({
   shape = skeletonRecipe.defaults.shape,
   animated = skeletonRecipe.defaults.animated,
   lines = skeletonRecipe.defaults.lines,
+  buttonShape = buttonRecipe.defaults.shape,
   width,
   height,
   radius: radiusValue,
@@ -694,7 +701,8 @@ export function Skeleton({
   // Filled placeholder, no outline: canvas + hairline was invisible on white (2026-10-17, skeleton.md rationale).
   const fill = {
     backgroundColor: resolveColorReference(skeletonRecipe.background, palette),
-    borderRadius: radiusValue ?? tokens.radius[shapeSpec.radius],
+    // A button placeholder takes the corner from the same Button shape axis and theme radius as Button itself.
+    borderRadius: radiusValue ?? tokens.radius[shape === "button" ? buttonRecipe.shapes[buttonShape] : shapeSpec.radius],
   } as const;
   // A labelled skeleton is the region's single busy announcement; an unlabelled one is hidden on both platforms.
   const accessibility = {

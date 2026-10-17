@@ -115,6 +115,7 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 - 새로고침 실패·저장 오류는 `state`를 바꾸지 말고 `ready` + `notice`로 알린다. `loading`으로 바꾸면 본문이
   unmount되어 입력 초안이 사라진다.
 - `state.title`·문구는 i18n 키로 넣는다. ready 외 상태의 빈 `title`은 `TypeError`다.
+- **`safeAreaBottom`을 받는 화면 구성(Native, 1.28.1 감사):** ScreenLayout을 그리는 공개 구성은 모두 같은 prop을 받아 자기 ScreenLayout에 넘긴다 — `SettingsScreen`·`NotificationInboxScreen`·`ChatScreen`·`OverviewScreen`·`EditorScreen`·`ProfileScreen`·`ModerationScreen`·`MediaSelectionScreen`·`PermissionScreen`·`CommentThreadScreen`·`SearchScreen`(+`footer`)·`SavedItemsScreen`(ListDetailScreen 경유)·`ListDetailScreen`(목록·상세 pane 둘 다)·`OnboardingScreen`. 로그인은 `AuthScreenLayout` `safeAreaBottom`(같은 max 규칙, 기준은 paddingBlock). 하단 막대를 직접 그리는 `BottomCTA`·`BottomNavigation`은 각자 `safeAreaBottom`, FAB는 `safeAreaBottomInset`을 받는다. `Layout`(primitives)의 `footer`는 배치 슬롯일 뿐 inset을 정하지 않는다.
 - Web host는 실제 남은 높이(`height:100%` 등)를, Native host는 위·옆 safe area와 탭바 inset을 먼저 처리한다. 아래 홈 인디케이터는 host가 SafeAreaView로 들이지 말고 `safeAreaBottom`으로 넘긴다(들인 뒤 footer 16을 더하면 버튼 아래가 50이 된다).
   HJM은 기종별 높이를 추측하지 않는다.
 - 배치는 Web·Native 모두 `layoutStyle`로 한다(Web은 `className`도 있다). 색·여백을 덮지 않는다.

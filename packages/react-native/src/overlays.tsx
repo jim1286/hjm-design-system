@@ -1,3 +1,4 @@
+import { ScreenBodyInsetContext } from "./internal/screen-body-inset.js";
 import { resolveOriginTransition, type TransitionRect } from "@hjmds/design-contracts/content-transition";
 import { focusAccessibleHost } from "./internal/accessible-focus.js";
 import {
@@ -549,7 +550,9 @@ export function Dialog({
   const contentBorder = resolveColorReference(dialogRecipe.content.border, palette);
   const stackActions = environment.textScale >= 1.6 || windowWidth < 480;
 
+  // Overlay content is not in the screen body: a bleeding rail inside must not reach for the screen gutter.
   return (
+    <ScreenBodyInsetContext.Provider value={0}>
     <Modal
       {...modalProps}
       animationType="none"
@@ -677,6 +680,7 @@ export function Dialog({
         </Animated.View>
       </ModalInteractionBoundary>
     </Modal>
+    </ScreenBodyInsetContext.Provider>
   );
 }
 
@@ -993,7 +997,9 @@ export function AlertDialog({
     </Pressable>
   );
 
+  // Overlay content is not in the screen body: a bleeding rail inside must not reach for the screen gutter.
   return (
+    <ScreenBodyInsetContext.Provider value={0}>
     <Modal
       {...modalProps}
       animationType="none"
@@ -1115,6 +1121,7 @@ export function AlertDialog({
         </Animated.View>
       </ModalInteractionBoundary>
     </Modal>
+    </ScreenBodyInsetContext.Provider>
   );
 }
 
@@ -1455,7 +1462,9 @@ export function Sheet({
     palette,
   );
 
+  // Overlay content is not in the screen body: a bleeding rail inside must not reach for the screen gutter.
   return (
+    <ScreenBodyInsetContext.Provider value={0}>
     <Modal
       {...modalProps}
       animationType="none"
@@ -1625,5 +1634,6 @@ export function Sheet({
         </Animated.View>
       </ModalInteractionBoundary>
     </Modal>
+    </ScreenBodyInsetContext.Provider>
   );
 }

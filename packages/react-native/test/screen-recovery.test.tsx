@@ -83,3 +83,17 @@ it("uses the shared centered state for empty saved items without replacing an ex
   act(()=>tree.update(<HjmNativeProvider><SavedItemsScreen {...props}/></HjmNativeProvider>));
   expect(tree.root.findByType(ScreenLayout).props.state).toEqual({kind:"ready"}); act(()=>tree.unmount());
 });
+// 2026-10-17 1.28 adoption: every composition that renders ScreenLayout forwards safeAreaBottom to each bottom it owns.
+it("forwards safeAreaBottom through onboarding, both list-detail panes and the search footer", async () => {
+  const { SearchScreen } = await import("../src/screen-flows.js");
+  const flat=(node:{props:{style?:unknown}})=>Object.assign({},...[node.props.style].flat(3).filter(Boolean));
+  const footerPad=(tree:ReactTestRenderer)=>flat(tree.root.findAllByType(View).find(node=>node.props.children?.props?.value!==undefined&&flat(node).borderTopWidth!==undefined)!).paddingBottom;
+  let tree=render(<OnboardingScreen safeAreaBottom={34} steps={[{id:"a",title:"하나",description:"설명",content:null}]} index={0} onIndexChange={vi.fn()} nextLabel="다음" backLabel="이전" complete={{label:"시작",onAction:vi.fn()}} progressLabel={(i,n)=>`${i}/${n}`}/>);
+  expect(footerPad(tree)).toBe(34); act(()=>tree.unmount());
+  tree=render(<ListDetailScreen title="목록" safeAreaBottom={34} scroll="content" list={<View testID="list"/>} back={{label:"뒤로",onAction:vi.fn()}} detail={{title:"상세",content:<View testID="detail"/>}}/>);
+  // The detail pane scrolls the screen body: its content container owns the last-region inset.
+  let host=tree.root.findByProps({testID:"detail"}).parent; while(host&&host.props.contentContainerStyle===undefined) host=host.parent;
+  expect(host!.props.contentContainerStyle.paddingBottom).toBe(34); act(()=>tree.unmount());
+  tree=render(<SearchScreen title="검색" safeAreaBottom={34} queryClearLabel="지우기" query="" queryLabel="검색어" onQueryChange={vi.fn()} onSearch={vi.fn()} footer={<View testID="ad"/>}>{null}</SearchScreen>);
+  expect(tree.root.findByProps({testID:"ad"})).toBeTruthy(); expect(footerPad(tree)).toBe(34); act(()=>tree.unmount());
+});

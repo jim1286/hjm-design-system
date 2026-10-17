@@ -106,8 +106,11 @@ export function validateAuthScreenPolicyLinks(links) {
     if (!Array.isArray(links) || links.length === 0) {
         throw new TypeError("AuthScreen footer needs at least one policy link");
     }
-    for (const link of links)
+    for (const link of links) {
         assertNonEmpty(link?.label, "policy link label");
+        if (link.accessibilityHint !== undefined)
+            assertNonEmpty(link.accessibilityHint, "policy link accessibilityHint");
+    }
 }
 export function resolveAuthScreenDescriptor(descriptor = {}) {
     validateAuthScreenDescriptor(descriptor);

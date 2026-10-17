@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { ScrollView, type View } from "react-native";
+import type { View } from "react-native";
 import { CollectionRail } from "@hjmds/react-native/collection-rail";
 import { HjmNativeProvider } from "@hjmds/react-native/provider";
 import { hjmDesignPresets } from "@hjmds/design-contracts/design-profile";
@@ -7,7 +7,8 @@ import { Button } from "@hjmds/react-native/actions";
 import { Card } from "@hjmds/react-native/data-display";
 import { Dialog } from "@hjmds/react-native/overlays";
 import { TextField } from "@hjmds/react-native/inputs";
-import { Container, Section, Stack, Text } from "@hjmds/react-native/primitives";
+import { Section, Stack, Text } from "@hjmds/react-native/primitives";
+import { ScreenLayout } from "@hjmds/react-native/screens";
 import { PreviewTools, PreviewToolButton } from "./preview-tools";
 import { profileCopy, profileOptions } from "../../shared/design-profile";
 import { collectionRecords, collectionCopy as copy, type CollectionDetailProps } from "../../shared/collection-detail";
@@ -30,14 +31,15 @@ export function CollectionDetailPreview({ empty = false }: CollectionDetailProps
   const [themeIndex, setThemeIndex] = useState(0);
   const profile = profileOptions[themeIndex]!;
   const nextTheme = () => setThemeIndex(current => (current + 1) % profileOptions.length);
-  return <HjmNativeProvider designProfile={hjmDesignPresets[profile.id]}><ScrollView keyboardShouldPersistTaps="handled"><Container gutter="compact"><Section title={copy.title} description={copy.description}>
+  return <HjmNativeProvider designProfile={hjmDesignPresets[profile.id]}>{/* ScreenLayout owns the gutter; the rail bleeds across it to the screen edges (1.28.1 bleed, spint home 2026-10-17). */}
+  <ScreenLayout title={copy.title} titleVisibility="hidden"><Section title={copy.title} description={copy.description}>
     <Stack gap="md">
-      <CollectionRail label={copy.list} items={empty ? [] : collectionRecords}
+      <CollectionRail bleed label={copy.list} items={empty ? [] : collectionRecords}
         labels={{ previous: copy.previous, next: copy.next, navigation: copy.navigation }} emptyContent={<Text>{copy.empty}</Text>}
         renderItem={item => <RecordCard {...collectionRecords.find(record => record.id === item.id)!} />} />
       <Text tone="muted">{copy.fixture}</Text>
       {/* Theme cycling is a demo tool, not part of the composition (2026-10-17 composition review). */}
       <PreviewTools><PreviewToolButton onPress={nextTheme}>{`${profileCopy.nextTheme} (${profile.label})`}</PreviewToolButton></PreviewTools>
     </Stack>
-  </Section></Container></ScrollView></HjmNativeProvider>;
+  </Section></ScreenLayout></HjmNativeProvider>;
 }

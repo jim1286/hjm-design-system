@@ -85,7 +85,7 @@ export function AuthScreenLayoutPreview({ loading = false }: { loading?: boolean
     {...(busyId !== null || loading ? { pendingLabel: auth.pendingLabel } : {})}
     hero={<AuthScreenHero title={auth.hero.title} description={auth.hero.description} />}
     main={<ProviderButtons busyId={null} onPress={start} />}
-    footer={<AuthScreenFooter links={auth.policyLinks.map(label => ({ label, onClick: () => undefined }))} />} />;
+    footer={<AuthScreenFooter links={auth.policyLinks.map(label => ({ label, href: "https://policies.jmstudioapps.com/", target: "_blank", accessibilityHint: "새 탭에서 열려요" }))} />} />;
 }
 
 

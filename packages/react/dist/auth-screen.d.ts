@@ -1,5 +1,5 @@
 import { type AuthScreenDensity, type AuthScreenDescriptor, type AuthScreenHeroDescriptor, type AuthScreenPolicyLinkDescriptor } from "@hjmds/design-contracts/components/auth-screen";
-import { type HTMLAttributes, type ReactNode } from "react";
+import { type HTMLAttributeAnchorTarget, type HTMLAttributes, type ReactNode } from "react";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type AuthScreenLayoutProps = Omit<HTMLAttributes<HTMLElement>, "children"> & AuthScreenDescriptor & Readonly<{
     /** Use section inside a product shell that already owns the main landmark. */
@@ -56,6 +56,12 @@ export declare function AuthScreenHero({ mark, title, eyebrow, description, head
 export type AuthScreenPolicyLink = AuthScreenPolicyLinkDescriptor & Readonly<{
     /** Document URL; renders an anchor. */
     href?: string;
+    /**
+     * Anchor target with `href`, e.g. `_blank` for policy documents that open beside the app (diairy web lost its
+     * new-tab links on adoption, 2026-10-17). `rel` defaults to "noreferrer noopener" for `_blank`, as on Link.
+     */
+    target?: HTMLAttributeAnchorTarget;
+    rel?: string;
     /** In-app handler; renders a button when there is no `href`. */
     onClick?: () => void;
 }>;

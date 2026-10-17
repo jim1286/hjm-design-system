@@ -7,13 +7,15 @@ import { MessageReactions, type MessageMenuAction } from "./internal/message-rea
 import type { ReactionPickerProps } from "./reaction-picker.js";
 import { Button, IconButton } from "./actions.js";
 import { TextArea } from "./inputs.js";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, type Ref, type ReactNode } from "react";
+import { useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type Ref, type ReactNode } from "react";
 import { Animated, PanResponder, Pressable, ScrollView, View, type AccessibilityActionEvent, type TextInput, type ScrollViewProps } from "react-native";
 import { Spinner } from "./internal/spinner.js";
 import { KeyboardAvoidanceContext, useInsideKeyboardAvoidance, useKeyboardOverlap, useScrollFocusedInputIntoView } from "./keyboard.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { ScreenExitButton, type ScreenExit } from "./internal/screen-exit.js";
 import { ScreenFooterContext, resolveScreenBottomPadding } from "./internal/screen-footer.js";
+import { ScreenBodyInsetContext } from "./internal/screen-body-inset.js";
+import { listRowScrollRoom } from "./internal/list-row-scroll-room.js";
 import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, screenHeaderRecipe, validateScreenExit, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState, type ScreenContentInset } from "@hjmds/design-contracts/screen-patterns";
 import { motion } from "@hjmds/design-contracts/foundations";
 import { Stack, Text } from "./primitives.js";
@@ -117,7 +119,8 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
   // The last region (footer, else body) owns the bottom inset once: max(gutter, safe area), never gutter + inset.
   const bottomPadding = resolveScreenBottomPadding(padding, safeAreaBottom, keyboardOverlap > 0);
   const bodyPaddingBottom = footer ? padding : bottomPadding;
-  const body = state.kind === "ready" ? (contentAlignment === "center" ? <View style={{ marginVertical: "auto", flexShrink: 0, width: "100%" }}>{children}</View> : children) : <View style={{ marginVertical: "auto", flexShrink: 0, alignItems: "center", gap: recipe.stateGap, paddingVertical: profileLayout?.gap ?? recipe.sectionGap }}>
+  const ready = contentAlignment === "center" ? <View style={{ marginVertical: "auto", flexShrink: 0, width: "100%" }}>{children}</View> : children;
+  const body = state.kind === "ready" ? <ScreenBodyInsetContext.Provider value={bodyInline}>{ready}</ScreenBodyInsetContext.Provider> : <View style={{ marginVertical: "auto", flexShrink: 0, alignItems: "center", gap: recipe.stateGap, paddingVertical: profileLayout?.gap ?? recipe.sectionGap }}>
     {/* Keep loading copy in Spinner's accessibility name rather than a visible
         second status, matching the shared spinner-only loading contract. */}
     {resolved.busy ? <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} /> : <View accessibilityLiveRegion={resolved.announcement} style={{ alignItems: "center", gap: recipe.itemGap }}>
@@ -162,6 +165,18 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
     {footer ? <View style={{ padding, paddingBottom: bottomPadding, borderTopWidth: contentInset === "none" ? 0 : 1, borderColor: colors.border }}><ScreenFooterContext.Provider value={contentInset === "none" ? null : { bottomPadding }}>{footer}</ScreenFooterContext.Provider></View> : null}
     </KeyboardAvoidanceContext.Provider>
   </View>;
+}
+
+/**
+ * Styles for a product scroller that owns the body with `scroll="content"` (FlatList, SectionList): `style` reaches
+ * across the ScreenLayout body gutter and `contentContainerStyle` pads it back, so items stay on the gutter while the
+ * clip moves to the screen edges. A bleeding CollectionRail inside then scrolls edge to edge instead of being cut by
+ * the list (spint home re-added a gutter per section under `body-edge` to get one edge-to-edge rail, 2026-10-17).
+ * Outside a ScreenLayout body it returns zero room.
+ */
+export function useScreenBodyScrollRoom() {
+  const room = listRowScrollRoom(useContext(ScreenBodyInsetContext));
+  return { style: room.viewport, contentContainerStyle: room.content };
 }
 
 export type SettingsScreenSection = Readonly<{ id: string; title: string; description?: string; children: ReactNode }>;

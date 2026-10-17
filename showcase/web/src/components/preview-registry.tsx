@@ -216,7 +216,7 @@ function SkeletonPreview() {
   return <HjmStack gap="lg" role="status" aria-label={skeletonExample.label} aria-busy="true">
     <HjmStack gap="sm"><HjmText as="p" variant="label" tone="muted">{sections.shapes}</HjmText>
       <HjmSkeleton shape="text" lines={textLines} />
-      <HjmStack axis="inline" gap="sm" align="center"><HjmSkeleton shape="circle" /><HjmSkeleton shape="button" width={buttonWidth} /></HjmStack>
+      <HjmStack axis="inline" gap="sm" align="center"><HjmSkeleton shape="circle" /><HjmSkeleton shape="button" width={buttonWidth} /><HjmSkeleton shape="button" buttonShape="pill" width={buttonWidth} /></HjmStack>
       <HjmSkeleton shape="media" />
     </HjmStack>
     <HjmStack gap="sm"><HjmText as="p" variant="label" tone="muted">{sections.listRow}</HjmText>

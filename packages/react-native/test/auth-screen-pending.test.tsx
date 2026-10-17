@@ -91,3 +91,23 @@ it("draws the hero tagline on the recipe title step and separates policy links b
     expect(title()).toMatchObject({ fontSize: 20, lineHeight: 28 });
   } finally { act(() => tree.unmount()); }
 });
+
+// 2026-10-17 1.28 adoption: products wrapped AuthScreenLayout in their own bottom inset and lost the policy link hint.
+it("pads max(paddingBlock, safeAreaBottom) once and passes per-link accessibility hints", () => {
+  let tree!: ReactTestRenderer;
+  const screen = (safeAreaBottom?: number) => <HjmNativeProvider><AuthScreenLayout density="compact" hero={null} main={<View />}
+    {...(safeAreaBottom === undefined ? {} : { safeAreaBottom })}
+    footer={<AuthScreenFooter links={[{ label: "개인정보 처리방침", accessibilityHint: "브라우저에서 열림", onPress: () => {} }, { label: "이용약관", onPress: () => {} }]} />} /></HjmNativeProvider>;
+  act(() => { tree = create(screen()); });
+  try {
+    const scroll = () => tree.root.find(node => node.props.contentContainerStyle?.flexGrow === 1);
+    const block = authScreenRecipe.densities.compact.paddingBlock;
+    expect(scroll().props.contentContainerStyle).toMatchObject({ paddingTop: block, paddingBottom: block });
+    expect(scroll().props.contentInsetAdjustmentBehavior).toBeUndefined();
+    act(() => tree.update(screen(34)));
+    expect(scroll().props.contentContainerStyle.paddingBottom).toBe(Math.max(block, 34));
+    const links = tree.root.findAllByType(Pressable).filter(node => node.props.accessibilityRole === "link");
+    expect(links.map(node => [node.props.accessibilityLabel, node.props.accessibilityHint])).toEqual([["개인정보 처리방침", "브라우저에서 열림"], ["이용약관", undefined]]);
+    expect(() => act(() => tree.update(screen(-1)))).toThrow(/safeAreaBottom must be non-negative/u);
+  } finally { act(() => tree.unmount()); }
+});

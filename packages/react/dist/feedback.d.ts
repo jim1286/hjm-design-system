@@ -1,6 +1,7 @@
 import { emptyStateRecipe, skeletonRecipe, type NoticeTone, type ProgressShape, type ProgressSize, type ProgressTone } from "@hjmds/design-contracts/recipes";
 import { type ResultDescriptor } from "@hjmds/design-contracts/components/result";
 import { type HTMLAttributes, type ProgressHTMLAttributes, type ReactNode } from "react";
+import { type ButtonShape } from "@hjmds/design-contracts/recipes/base";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type NoticeProps = Omit<HTMLAttributes<HTMLElement>, "title"> & Readonly<{
     title: ReactNode;
@@ -94,6 +95,11 @@ export type SkeletonProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> & 
      * placeholder is not rebuilt from loose bars in every product. `width` sizes the whole group.
      */
     lines?: number;
+    /**
+     * `button` only: the Button `shape` this placeholder stands in for (default: Button's default). Products that use
+     * `shape="pill"` buttons pass the same value so the placeholder matches (BurnTok, 2026-10-17).
+     */
+    buttonShape?: ButtonShape;
     width?: string | number;
     height?: string | number;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
@@ -107,6 +113,11 @@ export declare const Skeleton: import("react").ForwardRefExoticComponent<Omit<HT
      * placeholder is not rebuilt from loose bars in every product. `width` sizes the whole group.
      */
     lines?: number;
+    /**
+     * `button` only: the Button `shape` this placeholder stands in for (default: Button's default). Products that use
+     * `shape="pill"` buttons pass the same value so the placeholder matches (BurnTok, 2026-10-17).
+     */
+    buttonShape?: ButtonShape;
     width?: string | number;
     height?: string | number;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */

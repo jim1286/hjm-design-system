@@ -130,6 +130,16 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
   </Element>;
 }
 
+/**
+ * Style for a product scroller that owns the body with `scroll="content"`: it reaches across the body gutter
+ * (`--hjm-screen-body-inline`) and pads it back, so items stay on the gutter while the clip moves to the screen edges and
+ * a bleeding CollectionRail inside scrolls edge to edge (same name and shape as Native; spint home 2026-10-17).
+ * Outside a screen body the variable is unset and the room is 0; CSS resolves the distance, so no context is read.
+ */
+export function useScreenBodyScrollRoom(): Readonly<{ style: React.CSSProperties }> {
+  return { style: { marginInline: "calc(-1 * var(--hjm-screen-body-inline, 0px))", paddingInline: "var(--hjm-screen-body-inline, 0px)" } };
+}
+
 export type SettingsScreenSection = Readonly<{ id: string; title: string; description?: string; children: ReactNode }>;
 export type SettingsScreenProps = Omit<ScreenLayoutProps, "children" | "scroll"> & Readonly<{ profile?: ReactNode; sections: readonly SettingsScreenSection[] }>;
 export function SettingsScreen({ profile, sections, ...props }: SettingsScreenProps) {
