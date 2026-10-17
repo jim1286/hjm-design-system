@@ -110,6 +110,13 @@ async function captureNative(id, file) {
   return {stable: false};
 }
 
+// Start from a fresh JS runtime: after source edits, Fast Refresh can leave a duplicated provider module
+// whose LogBox error then covers every later story (2026-10-17: a whole component batch captured that
+// error screen). Relaunch Expo Go on the showcase and give Metro time to serve the bundle.
+execFileSync('xcrun', ['simctl', 'terminate', udid, 'host.exp.Exponent'], {stdio: 'ignore'});
+execFileSync('xcrun', ['simctl', 'openurl', udid, expoUrl]);
+await sleep(Number(process.env.HJM_COMPARE_BOOT_MS ?? 30000));
+
 await fs.mkdir(out, {recursive: true});
 const browser = await chromium.launch({headless: true});
 // iPhone 17 Pro: 402×874 pt at 3x, the same frame `simctl io screenshot` returns (1206×2622).

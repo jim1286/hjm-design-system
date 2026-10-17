@@ -137,22 +137,22 @@ describe("web showcase coverage", () => {
     expect(Object.keys(webRendererRegistry).sort()).toEqual(expected);
     expect(summarizeWebShowcaseCoverage()).toEqual({
       canonical: componentCatalog.length,
-      webReferences: 104,
+      webReferences: 105,
       contractOnly: 0,
       nativeOnly: 0,
     });
   });
 
-  it("renders the canonical 104/0/0 surface-evidence split in Home and Explorer", () => {
+  it("renders the canonical 105/0/0 surface-evidence split in Home and Explorer", () => {
     const homeHtml = renderToStaticMarkup(createElement(Introduction));
-    expect(homeHtml).toContain("<strong>104</strong><span>웹 예제</span>");
+    expect(homeHtml).toContain("<strong>105</strong><span>웹 예제</span>");
     expect(homeHtml).toContain("<strong>0</strong><span>계약만 등록</span>");
     expect(homeHtml).toContain("<strong>0</strong><span>앱 전용</span>");
     expect(homeHtml).toContain(componentCategoryExplorerHref("input"));
     expect(homeHtml).not.toContain("args=initialCategory");
 
     const explorerHtml = renderToStaticMarkup(createElement(ComponentExplorer));
-    expect(explorerHtml).toContain("<strong>104</strong> 웹 예제");
+    expect(explorerHtml).toContain("<strong>105</strong> 웹 예제");
     expect(explorerHtml).toContain("<strong>0</strong> 계약만 등록");
     expect(explorerHtml).toContain("<strong>0</strong> 앱 전용");
     expect(explorerHtml).not.toContain("앱 전용 계약 보기");
@@ -395,7 +395,7 @@ describe("web showcase coverage", () => {
     const activeNames = componentCatalog
       .filter((entry) => isMatureStatus(getComponentSurfaceStatus(entry, "web")))
       .map(({ name }) => name);
-    expect(activeNames).toHaveLength(104);
+    expect(activeNames).toHaveLength(105);
     for (const name of activeNames) {
       expect(webRendererComponentNames).toContain(name);
       if (!isWebRendererComponent(name)) throw new Error(`Missing Web renderer registry entry: ${name}`);

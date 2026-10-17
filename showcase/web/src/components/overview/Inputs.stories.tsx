@@ -4,7 +4,7 @@ import { componentStory } from "../story-factory";
 
 // Role overview page: canonical components of one role on one page (Web only). Moved under 개요 on 2026-10-06 with its
 // id kept so the old 배포/컴포넌트/<역할> URLs still open; each component also has its own item now (docs/STORYBOOK_NAVIGATION.md §1.2).
-const meta = { includeStories: ["Field","SearchField","TextArea","PasswordField","OtpField","Checkbox","Radio","CheckboxGroup","RadioGroup","Switch","Chip","SegmentedControl","Slider","NumberField","Select","Combobox","DatePicker","ColorPicker","FilePicker","Form","Agreement","ToggleGroup","TagsInput","DateRangePicker","Mentions","TransferList"], id: "components-inputs", title: "배포/컴포넌트/개요/입력 모아 보기", component: ContractStory, parameters: { controls: { disable: true } } } satisfies Meta<typeof ContractStory>;
+const meta = { includeStories: ["Field","SearchField","TextArea","PasswordField","OtpField","ImageChoiceGroup","Checkbox","Radio","CheckboxGroup","RadioGroup","Switch","Chip","SegmentedControl","Slider","NumberField","Select","Combobox","DatePicker","ColorPicker","FilePicker","Form","Agreement","ToggleGroup","TagsInput","DateRangePicker","Mentions","TransferList"], id: "components-inputs", title: "배포/컴포넌트/개요/입력 모아 보기", component: ContractStory, parameters: { controls: { disable: true } } } satisfies Meta<typeof ContractStory>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
@@ -13,6 +13,7 @@ export const SearchField: Story = { ...componentStory("SearchField"), name: "검
 export const TextArea: Story = { ...componentStory("TextArea"), name: "여러 줄 입력" };
 export const PasswordField: Story = { ...componentStory("PasswordField"), name: "비밀번호 입력" };
 export const OtpField: Story = { ...componentStory("OtpField"), name: "인증번호 입력" };
+export const ImageChoiceGroup: Story = { ...componentStory("ImageChoiceGroup"), name: "이미지 선택" };
 export const Checkbox: Story = { ...componentStory("Checkbox"), name: "체크박스" };
 export const Radio: Story = { ...componentStory("Radio"), name: "라디오 버튼" };
 export const CheckboxGroup: Story = { ...componentStory("CheckboxGroup"), name: "체크박스 그룹" };

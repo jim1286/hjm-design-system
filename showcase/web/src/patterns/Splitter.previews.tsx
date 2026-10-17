@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Splitter } from "@hjmds/react/splitter";
-import { Button } from "@hjmds/react/actions";
+import { Heading } from "@hjmds/react/heading";
 import { List, ListRow } from "@hjmds/react/display";
-import { Stack, Section } from "@hjmds/react/layout";
+import { Stack, Section, Text } from "@hjmds/react/layout";
 
 const records = [
   { id: "walk", title: "느리게 걸었던 오후", body: "골목을 한 바퀴 돌았어요. 담벼락의 고양이는 오늘도 자고 있었습니다." },
@@ -14,17 +14,18 @@ export function SplitterPreview() {
   const [selected, setSelected] = useState(records[0]!.id);
   // The product owns both the unit and the persisted value; here it is a
   // percentage of the workspace, saved as the drag or the arrow keys settle.
-  const [width, setWidth] = useState(35);
-  const [saved, setSaved] = useState(35);
+  // Half and half by default: at 35% a 402pt stage left the list ~120px, breaking titles every few characters.
+  const [width, setWidth] = useState(50);
+  const [saved, setSaved] = useState(50);
   const record = records.find((entry) => entry.id === selected)!;
   return (
     <Section title="기록 훑어보기" description="목록과 본문의 경계를 원하는 대로 옮겨 보세요.">
       <Stack gap="md">
-        <p role="status">저장된 목록 폭 {saved}%</p>
+        <Text as="p" role="status" tone="muted">저장된 목록 폭 {saved}%</Text>
         <Splitter
           label="목록 폭 조절"
-          min={20}
-          max={60}
+          min={30}
+          max={70}
           step={5}
           value={width}
           onValueChange={setWidth}
@@ -33,16 +34,16 @@ export function SplitterPreview() {
           className="hjm-showcase-splitter-stage"
           primaryPane={
             <List label="내 기록">
+              {/* The row itself is the choice; a trailing "보기" button per row imitated selection with button tones. */}
               {records.map((entry) => (
-                <ListRow key={entry.id} title={entry.title}
-                  trailing={<Button tone={entry.id === selected ? "primary" : "ghost"} onClick={() => setSelected(entry.id)}>보기</Button>} />
+                <ListRow key={entry.id} title={entry.title} selected={entry.id === selected} onClick={() => setSelected(entry.id)} />
               ))}
             </List>
           }
           secondaryPane={
             <Stack gap="sm" className="hjm-showcase-splitter-pane">
-              <h3>{record.title}</h3>
-              <p>{record.body}</p>
+              <Heading level="level4" semanticLevel={3}>{record.title}</Heading>
+              <Text as="p">{record.body}</Text>
             </Stack>
           }
         />

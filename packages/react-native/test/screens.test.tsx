@@ -124,10 +124,12 @@ it("native plus expands additional reactions and selecting collapses the catalog
   const {ReactionPicker} = await import("../src/reaction-picker.js");
   const change = vi.fn();
   const tree = render(<ReactionPicker label="반응" options={[{id:"heart",emoji:"❤️",label:"하트"}]} more={{label:"더 많은 이모지",options:[{id:"party",emoji:"🎉",label:"축하"}]}} value={null} onValueChange={change}/>);
-  act(() => tree.root.findAllByType(Button).find(node => node.props.accessibilityLabel === "더 많은 이모지")!.props.onPress());
-  act(() => tree.root.findAllByType(Button).find(node => node.props.accessibilityLabel === "축하")!.props.onPress());
+  // Wrap reactions are chip-framed Pressables (2026-10-17); find each toggle by its localized name.
+  const pressable = (label: string) => tree.root.findAll(node => node.props.accessibilityLabel === label && typeof node.props.onPress === "function");
+  act(() => pressable("더 많은 이모지")[0]!.props.onPress());
+  act(() => pressable("축하")[0]!.props.onPress());
   expect(change).toHaveBeenCalledWith("party");
-  expect(tree.root.findAllByType(Button).some(node => node.props.accessibilityLabel === "축하")).toBe(false);
+  expect(pressable("축하")).toHaveLength(0);
   act(() => tree.unmount());
 });
 

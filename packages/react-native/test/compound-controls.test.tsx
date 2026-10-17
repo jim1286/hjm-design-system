@@ -29,15 +29,17 @@ import { ReactionPicker } from '../src/reaction-picker.js';
 import { NotificationBell } from '../src/notification-bell.js';
 import { IconButton } from '../src/actions.js';
 import { AppState, startedAnimatedTimings } from './react-native.mock.js';
+// Wrap reactions are chip-framed Pressables (2026-10-17), so the test finds the toggle by its localized name.
+const reaction=(tree:ReactTestRenderer)=>tree.root.findAll(node=>node.props.accessibilityLabel==='Like'&&typeof node.props.onPress==='function')[0]!;
 it('shares controlled reaction semantics and suspends new-notification motion on Native',()=>{
  let tree!:ReactTestRenderer;const change=vi.fn();const press=vi.fn();const options=[{id:'like',emoji:'👍',label:'Like',count:4}];
  const render=(count:number,reducedMotion=false,value:string|null=null)=><HjmNativeProvider reducedMotion={reducedMotion}><ReactionPicker label="Reactions" options={options} value={value} onValueChange={change}/><NotificationBell label={`${count} unread`} count={count} icon={null} onPress={press}/></HjmNativeProvider>;
  try{
   AppState.currentState='active';startedAnimatedTimings.splice(0);act(()=>{tree=create(render(0));});expect(startedAnimatedTimings).toHaveLength(0);
   expect(tree.root.findAllByType(Text).some(node => node.props.children === '👍 4')).toBe(true);
-  act(()=>tree.root.findByType(Button).props.onPress());expect(change).toHaveBeenLastCalledWith('like');
+  act(()=>reaction(tree).props.onPress());expect(change).toHaveBeenLastCalledWith('like');
   act(()=>tree.update(render(1,false,'like')));expect(startedAnimatedTimings.length).toBeGreaterThan(0);
-  act(()=>tree.root.findByType(Button).props.onPress());expect(change).toHaveBeenLastCalledWith(null);
+  expect(reaction(tree).props.accessibilityState).toMatchObject({selected:true});act(()=>reaction(tree).props.onPress());expect(change).toHaveBeenLastCalledWith(null);
   startedAnimatedTimings.splice(0);act(()=>tree.update(render(2,true)));expect(startedAnimatedTimings).toHaveLength(0);
   AppState.currentState='background';act(()=>tree.update(render(3)));expect(startedAnimatedTimings).toHaveLength(0);
   act(()=>tree.root.findByType(IconButton).props.onPress());expect(press).toHaveBeenCalledTimes(1);

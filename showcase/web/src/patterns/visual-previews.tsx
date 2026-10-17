@@ -22,7 +22,7 @@ export function Effects() {
     </EffectSurface>)}
   </Stack></Container>;
 }
-export function Icons() { return <Container gutter="compact"><Stack gap="xl">{(['search','settings','notifications','back'] as const).map(name => <Stack key={name} axis="inline" gap="md" wrap align="center"><Icon name={name} size="lg" renderGlyph={glyph} /><Text>{name}</Text></Stack>)}</Stack></Container>; }
+export function Icons() { return <Container gutter="compact"><Stack gap="xl">{copy.icons.map(({ name, label }) => <Stack key={name} axis="inline" gap="md" wrap align="center"><Icon name={name} size="lg" renderGlyph={glyph} /><Stack gap="xxs"><Text>{label}</Text><Text variant="caption" tone="muted"><code>{name}</code></Text></Stack></Stack>)}</Stack></Container>; }
 export function Faces() { return <Container gutter="compact"><Stack gap="xl"><Heading level="level2">{copy.faces}</Heading><Text>{copy.faceHint}</Text>{profileFaces.map(face => <Stack key={face.seed} axis="inline" gap="md" wrap align="center"><Avatar name={face.label} size="xlarge" renderFallback={createBlobatarFallback({ seed: face.seed })}/><Avatar name={copy.happy(face.label)} size="xlarge" renderFallback={createBlobatarFallback({ seed: face.seed, expression: "happy" })}/><Text>{face.label}</Text></Stack>)}</Stack></Container>; }
 export function Transitions() {
   const [index, setIndex] = useState(0);

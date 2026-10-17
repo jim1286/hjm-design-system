@@ -1584,6 +1584,54 @@
       }
     },
     {
+      "id": "image-choice-group",
+      "storyId": "input/image-choice-group",
+      "name": "ImageChoiceGroup",
+      "category": "input",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
       "id": "segmented-control",
       "storyId": "input/segmented-control",
       "name": "SegmentedControl",

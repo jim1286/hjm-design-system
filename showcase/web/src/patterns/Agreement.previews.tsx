@@ -6,7 +6,10 @@ import { Top } from "@hjmds/react/top";
 import { Button } from "@hjmds/react/actions";
 import { TextField } from "@hjmds/react/forms";
 import { Notice } from "@hjmds/react/feedback";
-import { Stack } from "@hjmds/react/layout";
+import { Stack, Text } from "@hjmds/react/layout";
+import { SegmentedControl } from "@hjmds/react/selection";
+import { PreviewTools } from "./preview-tools";
+import { authExample as auth, authPreviewDelayMs, topExample as topCopy } from "../../../shared/component-examples";
 
 const items = [
   { id: "terms", label: "서비스 이용약관", required: true, detail: { label: "전문 보기", href: "#terms" } },
@@ -52,53 +55,44 @@ export function TopPreview() {
   const [size, setSize] = useState<"medium" | "large">("large");
   return (
     <Stack gap="md">
-      <Top
-        descriptor={{
-          eyebrow: "2026년 9월",
-          title: size === "large" ? "화면의 첫 제목입니다" : "시트 안의 첫 제목입니다",
-          description: "TopBar와 달리 본문이라 스크롤과 함께 올라가고, 큰 글자에서도 잘리지 않아요.",
-          size,
-        }}
-        trailing={<Button tone="ghost" onClick={() => setSize(size === "large" ? "medium" : "large")}>크기 바꾸기</Button>}
-      />
-      <p>본문이 여기서 이어집니다.</p>
+      <Top descriptor={{ eyebrow: topCopy.eyebrow, title: topCopy.titles[size], description: topCopy.description, size }} />
+      <Text as="p">{topCopy.body}</Text>
+      {/* The size switch is a preview control, not a product action, so it stays out of Top's trailing slot. */}
+      <PreviewTools>
+        <SegmentedControl label={topCopy.sizeLabel} items={topCopy.sizes.map(item => ({ value: item.value, label: item.label }))} value={size}
+          onValueChange={value => { if (value === "large" || value === "medium") setSize(value); }} />
+      </PreviewTools>
     </Stack>
   );
 }
 
-/*
-  로고는 제품 자산이라 예제에서도 슬롯으로 넘긴다 — 여기서는 글자 한 자로 대신한다.
-  실제 제품은 각 제공자가 배포하는 마크를 넣는다.
-*/
-const providers = [
-  { id: "google", label: "Google", mark: "G" },
-  { id: "kakao", label: "카카오", mark: "K" },
-  { id: "naver", label: "네이버", mark: "N" },
-  { id: "apple", label: "Apple", mark: "" },
-] as const;
+function ProviderButtons({ busyId, onPress }: { busyId: string | null; onPress(id: string): void }) {
+  return <Stack gap="xs">
+    {auth.providers.map((provider) => (
+      <AuthProviderButton key={provider.id} descriptor={{ provider: provider.id, label: provider.label, busy: busyId === provider.id }}
+        logo={<span aria-hidden="true">{provider.mark}</span>} onClick={() => onPress(provider.id)} />
+    ))}
+  </Stack>;
+}
 
+function useAuthPending() {
+  const [busyId, setBusyId] = useState<string | null>(null);
+  return { busyId, start: (id: string) => { setBusyId(id); window.setTimeout(() => setBusyId(null), authPreviewDelayMs); } };
+}
+
+/* The button story shows the buttons alone (pressing one shows its pending state); the full screen is AuthScreenLayout's story. */
 export function AuthProviderButtonPreview() {
-  return <AuthScreenLayoutPreview />;
+  const { busyId, start } = useAuthPending();
+  return <ProviderButtons busyId={busyId} onPress={start} />;
 }
 
 export function AuthScreenLayoutPreview({ loading = false }: { loading?: boolean } = {}) {
-  const [busy, setBusy] = useState(false);
+  const { busyId, start } = useAuthPending();
   return <AuthScreenLayout mainCard
-    {...(busy || loading ? { pendingLabel: "로그인 중" } : {})}
-    hero={<Top descriptor={{ title: "어떤 계정으로 시작할까요", description: "쓰던 계정으로 바로 시작할 수 있어요.", size: "medium" }} />}
-    main={
-      <Stack gap="sm">
-        {providers.map((provider) => (
-          <AuthProviderButton
-            key={provider.id}
-            descriptor={{ provider: provider.id, label: provider.label }}
-            logo={<span aria-hidden="true">{provider.mark}</span>}
-            // This is a demo completion delay; products clear pending on real success, cancellation or failure.
-            onClick={() => { setBusy(true); window.setTimeout(() => setBusy(false), 1200); }}
-          />
-        ))}
-      </Stack>}
-    footer={<span>개인정보 처리방침 · 이용약관</span>} />;
+    {...(busyId !== null || loading ? { pendingLabel: auth.pendingLabel } : {})}
+    hero={<Top descriptor={{ title: auth.hero.title, description: auth.hero.description, size: "medium" }} />}
+    main={<ProviderButtons busyId={null} onPress={start} />}
+    footer={<Text as="span">{auth.footer}</Text>} />;
 }
 
 

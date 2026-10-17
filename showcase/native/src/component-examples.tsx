@@ -84,6 +84,32 @@ import {
 } from "@hjmds/react-native/primitives";
 import { HjmNativeProvider } from "@hjmds/react-native/provider";
 import { FloatingActionButton } from "@hjmds/react-native/floating-action-button";
+import { ImageChoiceGroup } from "@hjmds/react-native/image-choice";
+import { PreviewTools } from "./preview-tools";
+import { PreviewPhoto } from "./reference-screen-parts";
+import { semanticGlyph } from "./semantic-glyphs";
+import {
+  aspectRatioExample,
+  authExample,
+  authPreviewDelayMs,
+  bottomCtaExample,
+  buttonExample,
+  containerExample,
+  dividerExample,
+  floatingActionExample,
+  gridExample,
+  headingExample,
+  iconButtonExample,
+  iconExample,
+  imageChoiceExample,
+  layoutExample,
+  linkExample,
+  sectionExample,
+  stackExample,
+  surfaceExample,
+  textExample,
+  topExample,
+} from "../../shared/component-examples";
 const noop = () => undefined;
 
 const previewCalendarGrid = {
@@ -111,8 +137,9 @@ function StoryHeading({ children }: { children: string }) {
   return <Text accessibilityRole="header" emphasis="strong" variant="heading">{children}</Text>;
 }
 
-function Glyph({ name }: { name: string }) {
-  return <Text tone="muted">{name.slice(0, 1).toUpperCase()}</Text>;
+// The result line matches Web's ObservablePreview: a Korean status that appears only after an action.
+function PreviewResult({ message }: { message: string }) {
+  return message ? <Text accessibilityLiveRegion="polite">{message}</Text> : null;
 }
 
 
@@ -140,147 +167,104 @@ return (<StoryFrame><HjmNativeProvider theme="dark"><Surface padding="md"><Text>
 }
 
 function TextExample({ variant }: { variant: PreviewVariant }) {
-
-return (<StoryFrame><Text tone="muted">Provider, type, semantic icon, surfaces and responsive layout.</Text></StoryFrame>);
+return (<StoryFrame><Stack gap="xs"><Text variant="title" emphasis="strong">{textExample.title}</Text><Text>{textExample.body}</Text><Text tone="muted" variant="label">{textExample.caption}</Text></Stack></StoryFrame>);
 }
 
 function SurfaceExample({ variant }: { variant: PreviewVariant }) {
-
-return (<StoryFrame><Surface bordered padding="md" tone="subtle">
-        <Text>Surface keeps shared padding and radius.</Text>
-      </Surface></StoryFrame>);
+return (<StoryFrame><Surface bordered padding="lg"><Stack gap="xs"><Text emphasis="strong">{surfaceExample.title}</Text><Text tone="muted">{surfaceExample.body}</Text></Stack></Surface></StoryFrame>);
 }
 
 function StackExample({ variant }: { variant: PreviewVariant }) {
-
-return (<StoryFrame><Stack axis="inline" align="center" gap="sm" wrap>
-        <Icon descriptor={{ name: "success", decorative: true }} renderGlyph={({ name }) => <Glyph name={name} />} />
-        <Text emphasis="strong">Semantic content</Text>
-      </Stack></StoryFrame>);
+return (<StoryFrame><Stack gap="sm">{stackExample.map(label => <Surface key={label} bordered padding="sm"><Text>{label}</Text></Surface>)}</Stack></StoryFrame>);
 }
 
 function ContainerExample({ variant }: { variant: PreviewVariant }) {
-
-return (<StoryFrame><Container gutter="compact" size="reading">
-        <Text tone="muted">Container centers readable content with shared logical gutters.</Text>
-      </Container></StoryFrame>);
+return (<StoryFrame><Container size="reading"><Surface bordered padding="md"><Text>{containerExample}</Text></Surface></Container></StoryFrame>);
 }
 
 function AspectRatioExample({ variant }: { variant: PreviewVariant }) {
-
-return (<StoryFrame><AspectRatio ratio="wide">
-          <View style={styles.mediaFrameContent}><Text tone="muted">16:9 media frame</Text></View>
-        </AspectRatio></StoryFrame>);
+// The subtle bordered surface makes the 16:9 box itself visible; a bare label floated in an invisible frame.
+return (<StoryFrame><Container size="reading"><AspectRatio ratio="wide"><Surface bordered tone="subtle" padding="md" layoutStyle={{ flex: 1 }}><Text tone="muted">{aspectRatioExample}</Text></Surface></AspectRatio></Container></StoryFrame>);
 }
 
 function GridExample({ variant }: { variant: PreviewVariant }) {
-
-return (<StoryFrame><Grid availableWidth={320} columns={{ compact: 2 }} gap={{ compact: "sm" }}>
-        <Surface key="one" bordered padding="sm"><Text>Grid one</Text></Surface>
-        <Surface key="two" bordered padding="sm"><Text>Grid two</Text></Surface>
-      </Grid></StoryFrame>);
+return (<StoryFrame><Grid columns={{ compact: 1, medium: 2, expanded: 3 }} gap={{ compact: "md" }}>{gridExample.map(item => <Card key={item.id} title={item.title}><Text>{item.body}</Text></Card>)}</Grid></StoryFrame>);
 }
 
 function LayoutExample({ variant }: { variant: PreviewVariant }) {
-
-return (<StoryFrame><Layout
-        style={styles.layout}
-        header={<Text emphasis="strong">Layout header</Text>}
-        footer={<Text tone="muted">Layout footer</Text>}
-      >
-        <Text>Layout main content</Text>
-      </Layout></StoryFrame>);
+return (<StoryFrame><Layout header={<Text emphasis="strong">{layoutExample.header}</Text>}><Surface bordered padding="md"><Text>{layoutExample.body}</Text></Surface></Layout></StoryFrame>);
 }
 
 function IconExample({ variant }: { variant: PreviewVariant }) {
-
-return (<StoryFrame><Icon descriptor={{ name: "success", decorative: true }} renderGlyph={({ name }) => <Glyph name={name} />} /></StoryFrame>);
+return (<StoryFrame><Stack axis="inline" gap="md" wrap accessibilityLabel={iconExample.label}>{iconExample.items.map(item => <Icon key={item.name} descriptor={{ name: item.name, decorative: false, accessibilityLabel: item.label, ...("tone" in item ? { tone: item.tone } : {}) }} renderGlyph={semanticGlyph} />)}</Stack></StoryFrame>);
 }
 
 function SectionExample({ variant }: { variant: PreviewVariant }) {
-
-return (<StoryFrame><Section title="Section" description="Header and body retain reading order.">
-        <Text>Section body</Text>
-      </Section></StoryFrame>);
+return (<StoryFrame><Section title={sectionExample.title} description={sectionExample.description}><Text>{sectionExample.body}</Text></Section></StoryFrame>);
 }
 
 function DividerExample({ variant }: { variant: PreviewVariant }) {
-
-return (<StoryFrame><Divider /></StoryFrame>);
+return (<StoryFrame><Stack gap="sm"><Text>{dividerExample.above}</Text><Divider /><Text>{dividerExample.below}</Text></Stack></StoryFrame>);
 }
 
 function TopExample({ variant }: { variant: PreviewVariant }) {
-
-return (<StoryFrame><Top
-        descriptor={{
-          eyebrow: "Getting started",
-          title: "Top opens the body, TopBar stays fixed",
-          description: "The screen's own first heading scrolls away with the content.",
-        }}
-      /></StoryFrame>);
+const [size, setSize] = useState<"medium" | "large">("large");
+return (<StoryFrame><Stack gap="md"><Top descriptor={{ eyebrow: topExample.eyebrow, title: topExample.titles[size], description: topExample.description, size }} /><Text>{topExample.body}</Text>
+  <PreviewTools><SegmentedControl label={topExample.sizeLabel} items={topExample.sizes.map(item => ({ value: item.value, label: item.label }))} value={size} onValueChange={value => { if (value === "large" || value === "medium") setSize(value); }} /></PreviewTools></Stack></StoryFrame>);
 }
 
 function HeadingExample({ variant }: { variant: PreviewVariant }) {
+return (<StoryFrame><Stack gap="md">{headingExample.map(item => <Heading key={item.id} level={item.level} {...("semanticLevel" in item ? { semanticLevel: item.semanticLevel } : {})}>{item.label}</Heading>)}</Stack></StoryFrame>);
+}
 
-return (<StoryFrame><Heading level="level2">Heading exposes the display scale</Heading></StoryFrame>);
+function ProviderButtons({ busyId, onPress }: { busyId: string | null; onPress(id: string): void }) {
+return <Stack gap="xs">{authExample.providers.map(item => <AuthProviderButton key={item.id}
+  descriptor={{ provider: item.id, label: item.label, busy: busyId === item.id }} logo={<Text>{item.mark}</Text>} onPress={() => onPress(item.id)} />)}</Stack>;
+}
+
+function useAuthPending() {
+const [busyId, setBusyId] = useState<string | null>(null);
+return { busyId, start: (id: string) => { setBusyId(id); setTimeout(() => setBusyId(null), authPreviewDelayMs); } };
 }
 
 function AuthScreenExample({ variant }: { variant: PreviewVariant }) {
-const [pending, setPending] = useState(false);
+const { busyId, start } = useAuthPending();
 return (<AuthScreenLayout mainCard
-        {...(pending || variant === "loading" ? { pendingLabel: "로그인 중" } : {})}
-        hero={<Text>Product mark, title and description</Text>}
-        main={
-          <Stack gap="sm">{([
-            { provider: "kakao", label: "카카오", mark: "K" },
-            { provider: "naver", label: "네이버", mark: "N" },
-            { provider: "google", label: "Google", mark: "G" },
-            { provider: "apple", label: "Apple", mark: "A" },
-          ] as const).map(item => <AuthProviderButton key={item.provider}
-            descriptor={{ provider: item.provider, label: item.label }} logo={<Text>{item.mark}</Text>}
-            // Preview delay only; real products clear pending from the authentication result.
-            onPress={() => { setPending(true); setTimeout(() => setPending(false), 1200); }} />)}</Stack>
-        }
-        footer={<Text tone="muted">Terms · Privacy</Text>}
+        {...(busyId !== null || variant === "loading" ? { pendingLabel: authExample.pendingLabel } : {})}
+        hero={<Top descriptor={{ title: authExample.hero.title, description: authExample.hero.description, size: "medium" }} />}
+        main={<ProviderButtons busyId={null} onPress={start} />}
+        footer={<Text tone="muted">{authExample.footer}</Text>}
       />);
 }
 
 function ButtonExample({ variant }: { variant: PreviewVariant }) {
-const [count, setCount] = useState(0);
-return (<StoryFrame><Button disabled={variant === "disabled"} loading={variant === "loading"} onPress={() => setCount((value) => value + 1)}>Primary</Button><Text accessibilityLiveRegion="polite">Pressed {count} times</Text></StoryFrame>);
+const [message, setMessage] = useState("");
+return (<StoryFrame><Stack axis="inline" gap="md" wrap><Button disabled={variant === "disabled"} loading={variant === "loading"} onPress={() => setMessage(buttonExample.primary.result)}>{buttonExample.primary.label}</Button><Button tone="secondary" onPress={() => setMessage(buttonExample.secondary.result)}>{buttonExample.secondary.label}</Button><Button disabled>{buttonExample.disabled}</Button></Stack><PreviewResult message={message} /></StoryFrame>);
 }
 
 function IconButtonExample({ variant }: { variant: PreviewVariant }) {
-const [count, setCount] = useState(0);
-return (<StoryFrame><IconButton disabled={variant === "disabled"} loading={variant === "loading"} label="Add one" onPress={() => setCount((value) => value + 1)}>
-          <Text>＋</Text>
-        </IconButton><Text accessibilityLiveRegion="polite">Pressed {count} times</Text></StoryFrame>);
+const [message, setMessage] = useState("");
+return (<StoryFrame><Stack axis="inline" gap="md">{iconButtonExample.map(item => <IconButton key={item.icon} disabled={variant === "disabled"} loading={variant === "loading"} label={item.label} tone={item.tone} onPress={() => setMessage(item.result)}>
+          <Icon descriptor={{ name: item.icon }} renderGlyph={semanticGlyph} />
+        </IconButton>)}</Stack><PreviewResult message={message} /></StoryFrame>);
 }
 
 function LinkExample({ variant }: { variant: PreviewVariant }) {
-const [action, setAction] = useState("None");
-return (<StoryFrame><Link
-        descriptor={{ label: "Open component docs", destination: { kind: "internal", href: "/components" } }}
-        onNavigate={() => setAction("Open component docs")}
-      /><Text accessibilityLiveRegion="polite">Last action: {action}</Text></StoryFrame>);
+return (<StoryFrame><Link descriptor={{ label: linkExample.label, destination: { kind: "internal", href: linkExample.href } }} onNavigate={noop} /></StoryFrame>);
 }
 
 function BottomCtaExample({ variant }: { variant: PreviewVariant }) {
-const [action, setAction] = useState("None");
+const [message, setMessage] = useState("");
 return (<StoryFrame><BottomCTA
-        primaryAction={{ label: "Continue", onPress: () => setAction("Continue") }}
-        secondaryAction={{ label: "Later", onPress: () => setAction("Later") }}
-        description="Actions wrap instead of clipping at large text sizes."
-      /></StoryFrame>);
+        primaryAction={{ label: bottomCtaExample.primary.label, onPress: () => setMessage(bottomCtaExample.primary.result) }}
+        secondaryAction={{ label: bottomCtaExample.secondary.label, onPress: () => setMessage(bottomCtaExample.secondary.result) }}
+        description={bottomCtaExample.description}
+      /><PreviewResult message={message} /></StoryFrame>);
 }
 
 function AuthProviderButtonExample({ variant }: { variant: PreviewVariant }) {
-const [action, setAction] = useState("None");
-return (<StoryFrame><AuthProviderButton
-        descriptor={{ label: "Google", provider: "google" }}
-        logo={<Text>G</Text>}
-        onPress={() => setAction("Provider login requested")}
-      /><Text accessibilityLiveRegion="polite">Last action: {action}</Text></StoryFrame>);
+const { busyId, start } = useAuthPending();
+return (<StoryFrame><ProviderButtons busyId={busyId} onPress={start} /></StoryFrame>);
 }
 
 function AgreementExample({ variant }: { variant: PreviewVariant }) {
@@ -594,7 +578,7 @@ return (<StoryFrame><BottomNavigation
           ],
         }}
         onActivate={({ key }) => setDestination(key)}
-        renderIcon={({ name }) => <Glyph name={name} />}
+        renderIcon={semanticGlyph}
       /></StoryFrame>);
 }
 
@@ -783,7 +767,19 @@ return (<StoryFrame><><Button tone="secondary" onPress={() => setSheetOpen(true)
       ><Text>Sheet content</Text></Sheet></></StoryFrame>);
 }
 
-function FloatingActionButtonExample() { const [count,setCount]=useState(0); return <View style={{flex:1}}><Text>Pressed {count} times</Text><FloatingActionButton descriptor={{label:"New note",icon:{name:"add"},layoutMode:"expanded"}} renderIcon={()=><Text>＋</Text>} onContentClearanceChange={noop} onPress={()=>setCount(v=>v+1)} /></View>; }
+function FloatingActionButtonExample() {
+const [count, setCount] = useState(0);
+return <View style={{ flex: 1 }}><Stack gap="sm"><Text>{floatingActionExample.body}</Text><PreviewResult message={count === 0 ? "" : floatingActionExample.result(count)} /></Stack>
+  <FloatingActionButton descriptor={{ label: floatingActionExample.label, icon: { name: "add" }, layoutMode: "expanded" }} renderIcon={() => <Icon descriptor={{ name: "add", tone: "inverse" }} renderGlyph={semanticGlyph} />} onContentClearanceChange={noop} onPress={() => setCount(value => value + 1)} /></View>;
+}
+
+function ImageChoiceGroupExample({ variant }: { variant: PreviewVariant }) {
+const [value, setValue] = useState<string>(imageChoiceExample.initial);
+const chosen = imageChoiceExample.items.find(item => item.id === value)!;
+return (<StoryFrame><ImageChoiceGroup label={imageChoiceExample.label} showLabel selectionMode="single" value={value} onValueChange={setValue} disabled={variant === "disabled"}
+  items={imageChoiceExample.items.map(item => ({ id: item.id, label: item.label, image: <PreviewPhoto index={item.photo} square rounded={false} label="" /> }))} />
+  <Text tone="muted" accessibilityLiveRegion="polite">{imageChoiceExample.result(chosen.label)}</Text></StoryFrame>);
+}
 
 const examples = {
 "design-system-provider": DesignSystemProviderExample,
@@ -811,6 +807,7 @@ const examples = {
 "text-area": TextAreaExample,
 "password-field": PasswordFieldExample,
 "otp-field": OtpFieldExample,
+"image-choice-group": ImageChoiceGroupExample,
 "number-field": NumberFieldExample,
 "slider": SliderExample,
 "form": FormExample,
@@ -868,6 +865,4 @@ export function NativeComponentPreview({ componentId, variant = "default" }: { c
 const styles = StyleSheet.create({
   customInput: { borderColor: "#667085", borderRadius: 12, borderWidth: 1, minHeight: 44, paddingHorizontal: 16 },
   frame: { gap: 16, paddingBottom: 48 },
-  layout: { minHeight: 144 },
-  mediaFrameContent: { alignItems: "center", flex: 1, justifyContent: "center" },
 });

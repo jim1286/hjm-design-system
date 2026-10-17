@@ -24,6 +24,7 @@ export const BottomCTA = forwardRef(function BottomCTA({ primaryAction, secondar
             "--hjm-bottom-cta-padding-top": `${bottomCtaRecipe.paddingTop}px`,
             "--hjm-bottom-cta-padding-bottom": `${bottomCtaRecipe.paddingBottom}px`,
             "--hjm-bottom-cta-gap": `${bottomCtaRecipe.gap}px`,
+            "--hjm-bottom-cta-content-max-width": `${bottomCtaRecipe.contentMaxWidth}px`,
             "--hjm-bottom-cta-safe-area": `${safeAreaBottom}px`, ...style, ...layoutStyle,
         }, children: [description ? _jsx("p", { className: "hjm-bottom-cta__description", children: description }) : null, _jsxs("div", { className: "hjm-bottom-cta__actions", children: [secondaryAction == null ? null : _jsx("div", { className: "hjm-bottom-cta__secondary", children: isAction(secondaryAction) ? _jsx(Action, { action: secondaryAction, tone: "secondary" }) : secondaryAction }), _jsx("div", { className: "hjm-bottom-cta__primary", children: _jsx(Action, { action: primaryAction, tone: "primary" }) })] })] });
 });

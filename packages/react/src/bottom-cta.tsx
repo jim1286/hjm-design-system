@@ -58,6 +58,7 @@ export const BottomCTA = forwardRef<HTMLDivElement, BottomCTAProps>(function Bot
       "--hjm-bottom-cta-padding-top": `${bottomCtaRecipe.paddingTop}px`,
       "--hjm-bottom-cta-padding-bottom": `${bottomCtaRecipe.paddingBottom}px`,
       "--hjm-bottom-cta-gap": `${bottomCtaRecipe.gap}px`,
+      "--hjm-bottom-cta-content-max-width": `${bottomCtaRecipe.contentMaxWidth}px`,
       "--hjm-bottom-cta-safe-area": `${safeAreaBottom}px`, ...style, ...layoutStyle,
     } as CSSProperties}>
     {description ? <p className="hjm-bottom-cta__description">{description}</p> : null}

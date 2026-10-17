@@ -1649,6 +1649,9 @@ export const bottomCtaRecipe = {
     paddingTop: spacing.sm,
     paddingBottom: spacing.sm,
     gap: spacing.sm,
+    // The footer surface spans the viewport, but its copy and actions stop at the reading width (ScreenLayout's body
+    // width): on a 1200px desktop or tablet stage each half-width button had stretched to ~440px (2026-10-17 review).
+    contentMaxWidth: layout.readingMaxWidth,
     // A footer painted in the canvas tone left only a 1pt hairline between it
     // and the content scrolling underneath — a product author found that the
     // line cut a glyph in half at whatever scroll position the reader stopped

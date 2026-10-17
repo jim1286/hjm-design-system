@@ -11,6 +11,11 @@ export function ReactionPicker({ label, options, value, onValueChange, disabled 
     const all = resolveReactionOptions(options, more);
     validateReactions(all, value);
     const showingAll = expanded && !!more;
+    // The wrap layout sits on the page background, where a ghost Button's selected treatment (content color on the
+    // canvas) cannot show: an emoji ignores text color. It uses the chip frame instead — hairline at rest, brand
+    // border and accent fill when chosen — with toggle-button semantics (aria-pressed), matching Native. The strip
+    // layout keeps ghost Buttons because the message bubble supplies its surface (2026-10-17 review).
+    const chips = layout === "wrap";
     const visible = showingAll ? all : options;
     const choose = (id) => { if (!disabled) {
         refocus.current = !!root.current?.contains(document.activeElement);
@@ -20,6 +25,14 @@ export function ReactionPicker({ label, options, value, onValueChange, disabled 
     // A catalog-only button unmounts on collapse: refocus the toggle, not <body>. Inert hosts restore their own trigger.
     useLayoutEffect(() => { const node = root.current; if (refocus.current && !showingAll && node && !node.closest("[inert]") && !node.contains(document.activeElement))
         toggle.current?.focus(); refocus.current = false; });
-    return _jsxs("div", { ref: root, role: "group", "aria-label": label, className: "hjm-reaction-picker", "data-layout": layout, "data-expanded": showingAll || undefined, style: layoutStyle, children: [_jsx("div", { className: "hjm-reaction-picker__options", children: visible.map(option => _jsx(Button, { tone: "ghost", shape: "pill", selected: value === option.id, disabled: disabled || option.disabled, "aria-label": option.label, onClick: () => choose(option.id), children: _jsxs("span", { "aria-hidden": "true", className: "hjm-reaction-picker__glyph", children: [option.emoji, option.count === undefined ? null : ` ${option.count}`] }) }, option.id)) }), _jsx("div", { children: more ? _jsx(Button, { ref: toggle, tone: "ghost", shape: "pill", "aria-label": more.label, "aria-expanded": showingAll, disabled: disabled, onClick: () => setExpanded(current => !current), children: _jsx("span", { "aria-hidden": "true", className: "hjm-reaction-picker__glyph", children: showingAll ? "−" : "+" }) }) : null })] });
+    return _jsxs("div", { ref: root, role: "group", "aria-label": label, className: "hjm-reaction-picker", "data-layout": layout, "data-expanded": showingAll || undefined, style: layoutStyle, children: [_jsx("div", { className: "hjm-reaction-picker__options", children: visible.map(option => {
+                    const glyph = _jsxs("span", { "aria-hidden": "true", className: "hjm-reaction-picker__glyph", children: [option.emoji, option.count === undefined ? null : ` ${option.count}`] });
+                    const selected = value === option.id;
+                    return chips
+                        ? _jsx("button", { type: "button", className: "hjm-chip hjm-reaction-picker__chip", "data-size": "small", "data-selected": selected || undefined, "aria-pressed": selected, disabled: disabled || option.disabled, "aria-label": option.label, onClick: () => choose(option.id), children: glyph }, option.id)
+                        : _jsx(Button, { tone: "ghost", shape: "pill", selected: selected, disabled: disabled || option.disabled, "aria-label": option.label, onClick: () => choose(option.id), children: glyph }, option.id);
+                }) }), _jsx("div", { children: more ? chips
+                    ? _jsx("button", { ref: toggle, type: "button", className: "hjm-chip hjm-reaction-picker__chip", "data-size": "small", "aria-label": more.label, "aria-expanded": showingAll, disabled: disabled, onClick: () => setExpanded(current => !current), children: _jsx("span", { "aria-hidden": "true", className: "hjm-reaction-picker__glyph", children: showingAll ? "−" : "+" }) })
+                    : _jsx(Button, { ref: toggle, tone: "ghost", shape: "pill", "aria-label": more.label, "aria-expanded": showingAll, disabled: disabled, onClick: () => setExpanded(current => !current), children: _jsx("span", { "aria-hidden": "true", className: "hjm-reaction-picker__glyph", children: showingAll ? "−" : "+" }) }) : null })] });
 }
 //# sourceMappingURL=reaction-picker.js.map

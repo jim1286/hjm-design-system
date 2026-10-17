@@ -2801,6 +2801,8 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-bottom-cta[data-position="sticky"] { position: sticky; inset-block-end: 0; z-index: var(--hjm-layer-sticky); }
 .hjm-bottom-cta__description { margin: 0; font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); color: var(--hjm-color-text-muted); overflow-wrap: anywhere; }
 .hjm-bottom-cta__actions { display: flex; flex-wrap: wrap; gap: var(--hjm-bottom-cta-gap); }
+/* bottomCtaRecipe.contentMaxWidth: the surface spans the viewport, its copy and actions stop at the reading width. */
+.hjm-bottom-cta__description, .hjm-bottom-cta__actions { box-sizing: border-box; inline-size: 100%; max-inline-size: var(--hjm-bottom-cta-content-max-width); margin-inline: auto; }
 .hjm-bottom-cta__actions > div { flex: 1 1 calc(var(--hjm-control-min-touch-target) * 3); min-inline-size: 0; }
 .hjm-bottom-cta__actions .hjm-button { inline-size: 100%; block-size: 100%; }
 .hjm-bottom-cta[data-large-text="true"] .hjm-bottom-cta__actions { flex-direction: column-reverse; }
@@ -3206,6 +3208,9 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 /* Only the chat strip enlarges glyphs, to the title type step Native's strip uses. The default
    wrap layout keeps the button's own size, as published before the strip existed. */
 .hjm-reaction-picker[data-layout="strip"] .hjm-reaction-picker__glyph { font-size: var(--hjm-type-title-size); line-height: var(--hjm-type-title-line-height); }
+/* Wrap reactions reuse the chip frame (chipRecipe). Emoji ignore the brand content color, so the chosen reaction
+   also takes the accent fill that Native's strip and wrap items use. */
+.hjm-reaction-picker__chip[data-selected] { background: var(--hjm-color-surface-accent); }
 
 /* The embedded circle uses the small 36px recipe; centre it in the field rather than on the text baseline.
    Reduce only its trailing inset to 8px, preserving the text's 16px leading padding. */

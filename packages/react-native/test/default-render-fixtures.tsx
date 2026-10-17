@@ -26,6 +26,7 @@ import { Agreement } from "../src/agreement.js";
 import { Top } from "../src/top.js";
 import { Heading } from "../src/heading.js";
 import { ToggleGroup } from "../src/toggle-group.js";
+import { ImageChoiceGroup } from "../src/image-choice.js";
 import { BottomInfo } from "../src/bottom-info.js";
 import { Collapsible } from "../src/collapsible.js";
 import { Asset } from "../src/asset.js";
@@ -212,6 +213,13 @@ export const defaultRenderCases = [
     componentId: "otp-field",
     renderLongCopy: (copy) => <OtpField label={copy} length={6} />,
     render: () => <OtpField label="인증번호" length={6} />,
+  },
+  {
+    componentId: "image-choice-group",
+    render: () => (
+      <ImageChoiceGroup label="프로필 사진" selectionMode="single" value="a" onValueChange={() => undefined}
+        items={[{ id: "a", label: "웃는 얼굴", image: <View /> }, { id: "b", label: "윙크", image: <View /> }]} />
+    ),
   },
   {
     componentId: "number-field",

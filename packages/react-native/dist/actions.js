@@ -155,10 +155,13 @@ export function BottomCTA({ primaryAction, secondaryAction, description, accessi
                 shadowRadius: surfaceShadow.radius,
             },
             layoutStyle,
-        ], children: [description ? _jsx(Text, { tone: "muted", variant: "caption", children: description }) : null, _jsxs(View, { style: {
+        ], children: [description ? _jsx(View, { style: { alignSelf: "center", maxWidth: bottomCtaRecipe.contentMaxWidth, width: "100%" }, children: _jsx(Text, { tone: "muted", variant: "caption", children: description }) }) : null, _jsxs(View, { style: {
+                    alignSelf: "center",
                     direction: environment.direction,
                     flexDirection: stackActions ? "column-reverse" : "row",
                     gap: bottomCtaRecipe.gap,
+                    maxWidth: bottomCtaRecipe.contentMaxWidth,
+                    width: "100%",
                 }, children: [renderedSecondary !== null ? (_jsx(View, { style: { flex: stackActions ? undefined : 1 }, children: renderedSecondary })) : null, _jsx(View, { style: { flex: stackActions ? undefined : 1 }, children: _jsx(BottomCTAButton, { action: primaryAction, fallbackTone: "primary" }) })] })] }));
 }
 //# sourceMappingURL=actions.js.map

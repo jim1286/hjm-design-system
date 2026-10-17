@@ -419,6 +419,19 @@
           "reducedMotion": true
         }
       ]
+    },
+    {
+      "proofFile": "test/image-choice.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "native-actions",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
     }
   ]
 }

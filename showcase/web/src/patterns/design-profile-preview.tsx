@@ -15,7 +15,7 @@ import { Collapsible } from "@hjmds/react/collapsible";
 import { Dialog, Sheet } from "@hjmds/react/overlays";
 import { Notice, Skeleton } from "@hjmds/react/feedback";
 import { Toast } from "@hjmds/react/toast";
-import { Card } from "@hjmds/react/display";
+import { Card, Icon } from "@hjmds/react/display";
 import { Heading } from "@hjmds/react/heading";
 import { Asset } from "@hjmds/react/asset";
 import { defineHjmDesignProfile, hjmDesignPresets } from "@hjmds/design-contracts/design-profile";
@@ -23,6 +23,7 @@ import { profileCopy as copy, profileOptions, profileHeadingSamples } from "../.
 import { productDesignOptions, createPreviewProductResolver, type PreviewProductDesign, type ReferenceDesignPreset } from "../../../shared/product-design";
 
 import { useDemoAction } from "./action-recovery-previews";
+import { PreviewTools } from "./preview-tools";
 
 // Resolve immutable app configurations once; profile changes never key or replace
 // the record, input, tab, overlay or pending-action owners.
@@ -46,11 +47,15 @@ export function RecordSample() {
     void session.run(() => request(submitted));
   }
   const items = [{ id: "walk", title: copy.walk, body: copy.walkBody }, { id: "read", title: copy.read, body: copy.readBody }, { id: "rest", title: copy.rest, body: copy.restBody }];
-  // The secondary action slot allows aria-disabled to retain keyboard focus during the request.
+  const unsaved = statusText === copy.unsaved;
+  const tone = status === "failed" ? "danger" : status === "pending" ? "info" : unsaved ? "warning" : "success";
+  // The failure trigger is a preview control, so it sits under "미리보기 도구" instead of next to the footer's primary
+  // action; aria-disabled keeps it focusable while the request it started is pending. The idle state shows no notice.
   return <OverviewScreen title={copy.screen} description={copy.description} toolbarLabel={copy.tools}
-    toolbar={<Stack gap="md"><TextField label={copy.name} value={name} onValueChange={setName} /><SegmentedControl label={copy.filter} items={[{ value: "day", label: copy.day }, { value: "week", label: copy.week }]} value={period} onValueChange={setPeriod} /></Stack>}
-    notice={<ContentTransition stateKey={status}><Text as="p" role="status">{statusText}</Text></ContentTransition>}
-    footer={<BottomCTA accessibilityLabel={copy.saveActions} primaryAction={{ label: status === "failed" ? copy.retry : copy.save, onClick: () => void save(), loading: status === "pending", loadingLabel: copy.pending }} secondaryAction={<Button tone="ghost" aria-disabled={status === "pending"} onClick={() => save(true)}>{copy.fail}</Button>} />}
+    toolbar={<Stack gap="md"><TextField label={copy.name} value={name} onValueChange={setName} /><SegmentedControl label={copy.filter} items={[{ value: "day", label: copy.day }, { value: "week", label: copy.week }]} value={period} onValueChange={setPeriod} />
+      <PreviewTools><Button size="small" tone="ghost" aria-disabled={status === "pending"} onClick={() => save(true)}>{copy.fail}</Button></PreviewTools></Stack>}
+    notice={<ContentTransition stateKey={status}>{status === "idle" ? null : <Notice tone={tone} title={statusText} />}</ContentTransition>}
+    footer={<BottomCTA accessibilityLabel={copy.saveActions} primaryAction={{ label: status === "failed" ? copy.retry : copy.save, onClick: () => void save(), loading: status === "pending", loadingLabel: copy.pending }} />}
     items={items.map(item => ({ id: item.id, children: <Stack gap="sm"><Text variant="heading">{item.title}</Text><Text>{item.body}</Text></Stack> }))} />;
 }
 // Same public overlay instances stay mounted while the parent profile changes;
@@ -156,7 +161,7 @@ export function DesignProfileFloatingActionComparison() {
     <Button onClick={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)}>{copy.nextTheme}</Button>
     <Text>{copy.limitation}</Text>
   </Stack></div>
-    <FloatingActionButton descriptor={{ label: copy.floatingCreate, icon: { name: "add" } }} renderIcon={() => <span>＋</span>}
+    <FloatingActionButton descriptor={{ label: copy.floatingCreate, icon: { name: "add" } }} renderIcon={() => <Icon name="add" />}
       onContentClearanceChange={setClearance} onClick={() => setCount(current => current + 1)} />
   </HjmProvider>;
 }

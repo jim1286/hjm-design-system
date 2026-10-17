@@ -48,6 +48,7 @@ import * as provider from "../src/provider.js";
 import * as slider from "../src/slider.js";
 import * as steps from "../src/steps.js";
 import * as uploadItem from "../src/upload-item.js";
+import * as imageChoice from "../src/image-choice.js";
 
 const publicModules: Readonly<Record<string, Readonly<Record<string, unknown>>>> = {
   "./thinking-orb": thinkingOrb,
@@ -87,6 +88,7 @@ const publicModules: Readonly<Record<string, Readonly<Record<string, unknown>>>>
   "./slider": slider,
   "./steps": steps,
   "./upload-item": uploadItem,
+  "./image-choice": imageChoice,
 };
 
 describe("@hjmds/react-native renderer evidence", () => {
@@ -104,7 +106,7 @@ describe("@hjmds/react-native renderer evidence", () => {
     const componentIds = reactNativeRendererEvidence.components.map(
       ({ componentId }) => componentId,
     );
-    expect(componentIds).toHaveLength(83);
+    expect(componentIds).toHaveLength(84);
     expect(componentIds).toContain("thinking-orb");
     expect(componentIds).toContain("combobox");
     expect(componentIds).toContain("load-more");

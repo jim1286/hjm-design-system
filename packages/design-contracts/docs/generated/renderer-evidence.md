@@ -4,8 +4,8 @@
 
 This projection joins the canonical surface maturity manifest with first-party renderer claims. Missing scenarios are explicit beta promotion debt; stable surfaces are blocked by CI until none remain.
 
-- web: 103/104 active implementations; 103/104 required scenario sets
-- native: 83/86 active implementations; 83/86 required scenario sets
+- web: 103/105 active implementations; 103/105 required scenario sets
+- native: 84/87 active implementations; 83/87 required scenario sets
 
 | Component | Surface | Maturity | Renderer package | Export | Claimed scenarios | Missing required scenarios | Executable proofs |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -42,6 +42,7 @@ This projection joins the canonical surface maturity manifest with first-party r
 | RadioGroup | web | stable | @hjmds/react | ./selection | default, accessibility, dark, large-text, rtl, reduced-motion, long-copy, keyboard | none | test/default-render.ssr.test.tsx#radio-group, test/scenario-matrix.browser.test.tsx#radio-group, test/stable-core.browser.test.tsx#radio-group |
 | Switch | web | stable | @hjmds/react | ./selection | default, accessibility, dark, large-text, rtl, reduced-motion, long-copy, keyboard | none | test/default-render.ssr.test.tsx#switch, test/scenario-matrix.browser.test.tsx#switch, test/stable-core.browser.test.tsx#switch |
 | Chip | web | stable | @hjmds/react | ./selection | default, accessibility, dark, large-text, rtl, reduced-motion, long-copy, keyboard | none | test/default-render.ssr.test.tsx#chip, test/scenario-matrix.browser.test.tsx#chip, test/stable-core.browser.test.tsx#chip |
+| ImageChoiceGroup | web | beta | @hjmds/react | unclaimed | none | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none |
 | SegmentedControl | web | stable | @hjmds/react | ./selection | default, accessibility, dark, large-text, rtl, reduced-motion, long-copy, keyboard | none | test/default-render.ssr.test.tsx#segmented-control, test/scenario-matrix.browser.test.tsx#segmented-control, test/stable-core.browser.test.tsx#segmented-control |
 | ToggleGroup | web | stable | @hjmds/react | ./toggle-group | default, accessibility, dark, large-text, rtl, reduced-motion, long-copy, keyboard | none | test/default-render.ssr.test.tsx#toggle-group, test/scenario-matrix.browser.test.tsx#toggle-group, test/stable-core.browser.test.tsx#toggle-group |
 | TagsInput | web | stable | @hjmds/react | ./tags-input | default, accessibility, dark, large-text, rtl, reduced-motion, long-copy, keyboard | none | test/default-render.ssr.test.tsx#tags-input, test/scenario-matrix.browser.test.tsx#tags-input, test/stable-core.browser.test.tsx#tags-input |
@@ -144,6 +145,7 @@ This projection joins the canonical surface maturity manifest with first-party r
 | RadioGroup | native | stable | @hjmds/react-native | ./inputs | default, accessibility, dark, large-text, rtl, reduced-motion, long-copy, native-actions | none | test/default-render.test.tsx#radio-group, test/scenario-matrix.test.tsx#radio-group, test/stable-core.test.tsx#radio-group |
 | Switch | native | stable | @hjmds/react-native | ./inputs | default, accessibility, dark, large-text, rtl, reduced-motion, long-copy, native-actions | none | test/default-render.test.tsx#switch, test/scenario-matrix.test.tsx#switch, test/stable-core.test.tsx#switch |
 | Chip | native | stable | @hjmds/react-native | ./inputs | default, accessibility, dark, large-text, rtl, reduced-motion, long-copy, native-actions | none | test/default-render.test.tsx#chip, test/scenario-matrix.test.tsx#chip, test/stable-core.test.tsx#chip |
+| ImageChoiceGroup | native | beta | @hjmds/react-native | ./image-choice | default, accessibility, dark, large-text, rtl, reduced-motion, native-actions | long-copy | test/default-render.test.tsx#image-choice-group, test/scenario-matrix.test.tsx#image-choice-group, test/image-choice.test.tsx#image-choice-group |
 | SegmentedControl | native | stable | @hjmds/react-native | ./inputs | default, accessibility, dark, large-text, rtl, reduced-motion, long-copy, native-actions | none | test/default-render.test.tsx#segmented-control, test/scenario-matrix.test.tsx#segmented-control, test/stable-core.test.tsx#segmented-control |
 | ToggleGroup | native | stable | @hjmds/react-native | ./toggle-group | default, accessibility, dark, large-text, rtl, reduced-motion, long-copy, native-actions | none | test/default-render.test.tsx#toggle-group, test/scenario-matrix.test.tsx#toggle-group, test/stable-core.test.tsx#toggle-group |
 | TagsInput | native | stable | @hjmds/react-native | ./tags-input | default, accessibility, dark, large-text, rtl, reduced-motion, long-copy, native-actions | none | test/default-render.test.tsx#tags-input, test/scenario-matrix.test.tsx#tags-input, test/stable-core.test.tsx#tags-input |

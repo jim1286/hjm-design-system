@@ -7,6 +7,7 @@ import { InlineConfirm } from "@hjmds/react/inline-confirm";
 import { Stack, Text } from "@hjmds/react/layout";
 import { Heading } from "@hjmds/react/heading";
 import { Button } from "@hjmds/react/actions";
+import { PreviewTools, PreviewToolButton } from "./preview-tools";
 import { Switch } from "@hjmds/react/selection";
 import { durationLabels, socialCopy, reactionOptions, runConfirmationPreview, compoundCopy as copy } from "../../../shared/compound-controls";
 export function Duration() {
@@ -17,10 +18,11 @@ export function Confirm() {
   const [key, setKey] = useState(0);
   const [fail, setFail] = useState(false);
   const failRef=useRef(fail);failRef.current=fail;
+  // Start-aligned so the trigger and the open confirmation keep their own width instead of spanning the stage.
   return <Stack gap="xl"><Heading level="level3">{copy.confirmTitle}</Heading><Text tone="muted">{copy.confirmDescription}</Text>
-    <Switch label={copy.fail} checked={fail} onCheckedChange={setFail}/>
-    <InlineConfirm key={key} {...copy.confirm} onConfirm={() => runConfirmationPreview(() => failRef.current)}/>
-    <Text tone="muted">{copy.saved}</Text><Button tone="ghost" onClick={()=>setKey(current=>current+1)}>{copy.reset}</Button>
+    <Stack align="start"><InlineConfirm key={key} {...copy.confirm} onConfirm={() => runConfirmationPreview(() => failRef.current)}/></Stack>
+    <PreviewTools><Switch presentation="inline" label={copy.fail} checked={fail} onCheckedChange={setFail}/><PreviewToolButton onClick={()=>setKey(current=>current+1)}>{copy.reset}</PreviewToolButton></PreviewTools>
+    <Text tone="muted" variant="caption">{copy.saved}</Text>
   </Stack>;
 }
 export function Reactions() { const [value,setValue]=useState<string|null>(null); return <Stack gap="xl"><Heading level="level3">{socialCopy.title}</Heading><ReactionPicker label={socialCopy.group} options={reactionOptions} value={value} onValueChange={setValue}/></Stack>; }

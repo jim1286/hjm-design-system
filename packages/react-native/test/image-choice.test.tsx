@@ -5,6 +5,8 @@ import { HjmNativeProvider } from "../src/provider.js";
 import { ImageChoiceGroup } from "../src/image-choice.js";
 
 // 2026-10-16: picking by picture is a real control, not ghost Buttons with `selected`.
+// This proof file is listed by test/executed-scenarios.json and registered by evidence.ts for native-actions.
+// componentId: "image-choice-group"
 const items = [{ id: "a", label: "웃는 얼굴", image: <Text>A</Text> }, { id: "b", label: "윙크", image: <Text>B</Text> }];
 const tiles = (tree: ReactTestRenderer) => {
   const seen = new Set<string>();

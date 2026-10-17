@@ -135,6 +135,25 @@ import {
 } from "@hjmds/design-contracts/showcase";
 
 import { useWebDesignSystemEnvironment } from "../runtime/WebDesignSystemProvider";
+import { ImageChoicePreview } from "../patterns/image-choice-preview.js";
+import { storyLabels } from "../../../shared/story-labels.js";
+import {
+  aspectRatioExample,
+  bottomCtaExample,
+  buttonExample,
+  containerExample,
+  dividerExample,
+  floatingActionExample,
+  gridExample,
+  iconButtonExample,
+  iconExample,
+  layoutExample,
+  linkExample,
+  sectionExample,
+  stackExample,
+  surfaceExample,
+  textExample,
+} from "../../../shared/component-examples.js";
 
 // The old empty-state button had no handler. Keep creation and search recovery observable
 // without adding a second data-state engine; this is a local, disposable fixture.
@@ -178,6 +197,7 @@ export const webRendererComponentNames = [
   "TextArea",
   "PasswordField",
   "OtpField",
+  "ImageChoiceGroup",
   "NumberField",
   "Slider",
   "Form",
@@ -397,22 +417,23 @@ const previewCalendarGrid = calendarExampleGrid("2027-02");
 /** Only mature, Web-supported contracts can reach this renderer. */
 function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) {
   switch (name) {
-    case "Text": return <HjmStack gap="xs"><HjmText as="p" variant="title" emphasis="strong">명확한 제목</HjmText><HjmText as="p">조용한 본문 위계</HjmText><HjmText as="p" tone="muted" variant="label">보조 정보는 한 단계 낮게 표시합니다.</HjmText></HjmStack>;
-    case "Icon": return <HjmStack axis="inline" gap="md" wrap role="group" aria-label="Semantic icons"><HjmIcon name="home" decorative={false} accessibilityLabel="홈" /><HjmIcon name="success" decorative={false} accessibilityLabel="성공" tone="success" /><HjmIcon name="warning" decorative={false} accessibilityLabel="경고" tone="warning" /><HjmIcon name="forward" decorative={false} accessibilityLabel="다음" /></HjmStack>;
-    case "Surface": return <HjmSurface as="article" bordered padding="lg"><HjmStack gap="xs"><HjmText as="strong">배경 영역 제목</HjmText><HjmText as="p" tone="muted">제품이 색·간격·모서리를 임의로 덮지 않는 의미 기반 컨테이너입니다.</HjmText></HjmStack></HjmSurface>;
+    case "Text": return <HjmStack gap="xs"><HjmText as="p" variant="title" emphasis="strong">{textExample.title}</HjmText><HjmText as="p">{textExample.body}</HjmText><HjmText as="p" tone="muted" variant="label">{textExample.caption}</HjmText></HjmStack>;
+    case "Icon": return <HjmStack axis="inline" gap="md" wrap role="group" aria-label={iconExample.label}>{iconExample.items.map((item) => <HjmIcon key={item.name} name={item.name} decorative={false} accessibilityLabel={item.label} {...("tone" in item ? { tone: item.tone } : {})} />)}</HjmStack>;
+    case "Surface": return <HjmSurface as="article" bordered padding="lg"><HjmStack gap="xs"><HjmText as="strong">{surfaceExample.title}</HjmText><HjmText as="p" tone="muted">{surfaceExample.body}</HjmText></HjmStack></HjmSurface>;
     case "Card": return <HjmCard leading={<span aria-hidden="true">✨</span>} title="Card 제목" description="계약이 보장하는 여백과 정렬로 긴 설명도 안정적으로 표시합니다." actions={<HjmButton size="small">자세히</HjmButton>} />;
-    case "Stack": return <HjmStack gap="sm"><HjmButton tone="secondary">첫 번째</HjmButton><HjmButton tone="secondary">두 번째</HjmButton><HjmButton tone="secondary">세 번째</HjmButton></HjmStack>;
-    case "Container": return <HjmContainer size="reading"><HjmSurface bordered padding="md"><HjmText>읽기 폭과 논리 gutter를 Web·Native에서 같은 계약으로 유지합니다.</HjmText></HjmSurface></HjmContainer>;
-    case "AspectRatio": return <HjmAspectRatio ratio="wide"><div style={{ alignItems: "center", background: "var(--hjm-color-bg)", display: "flex", justifyContent: "center" }}><HjmText tone="muted">16:9 media frame</HjmText></div></HjmAspectRatio>;
-    case "Grid": return <HjmGrid columns={{ compact: 1, medium: 2, expanded: 3 }} gap={{ compact: "md" }}><HjmCard title="첫 번째">공통 window class</HjmCard><HjmCard title="두 번째">responsive columns</HjmCard><HjmCard title="세 번째">row-major order</HjmCard></HjmGrid>;
-    case "Layout": return <HjmLayout header={<HjmText as="strong">제품 헤더</HjmText>} skipLinkLabel="본문으로 건너뛰기"><HjmSurface as="section" bordered>하나의 main landmark 안에 놓이는 제품 본문입니다.</HjmSurface></HjmLayout>;
-    case "Button": return <ObservablePreview>{({ message, setMessage, selected, setSelected }) => <HjmStack axis="inline" gap="sm" wrap><HjmButton onClick={() => setMessage("저장하기를 눌렀어요")}>저장하기</HjmButton><HjmButton tone="secondary" onClick={() => setMessage("취소를 눌렀어요")}>취소</HjmButton><HjmButton disabled>보내기</HjmButton></HjmStack>}</ObservablePreview>;
-    case "IconButton": return <ObservablePreview>{({ message, setMessage, selected, setSelected }) => <HjmStack axis="inline" gap="sm"><HjmIconButton label="좋아요" onClick={() => setMessage("좋아요 실행")}>♡</HjmIconButton><HjmIconButton label="닫기" onClick={() => setMessage("닫기 실행")} tone="ghost">×</HjmIconButton></HjmStack>}</ObservablePreview>;
-    case "Link": return <HjmLink href="#components">컴포넌트 문서로 이동</HjmLink>;
+    case "Stack": return <HjmStack gap="sm">{stackExample.map((label) => <HjmSurface key={label} bordered padding="sm"><HjmText>{label}</HjmText></HjmSurface>)}</HjmStack>;
+    case "Container": return <HjmContainer size="reading"><HjmSurface bordered padding="md"><HjmText>{containerExample}</HjmText></HjmSurface></HjmContainer>;
+    case "AspectRatio": return <HjmContainer size="reading"><HjmAspectRatio ratio="wide"><HjmSurface bordered tone="subtle" padding="md"><HjmText tone="muted">{aspectRatioExample}</HjmText></HjmSurface></HjmAspectRatio></HjmContainer>;
+    case "Grid": return <HjmGrid columns={{ compact: 1, medium: 2, expanded: 3 }} gap={{ compact: "md" }}>{gridExample.map((item) => <HjmCard key={item.id} title={item.title}>{item.body}</HjmCard>)}</HjmGrid>;
+    case "Layout": return <HjmLayout header={<HjmText as="strong">{layoutExample.header}</HjmText>} skipLinkLabel={layoutExample.skipLink}><HjmSurface as="section" bordered padding="md"><HjmText>{layoutExample.body}</HjmText></HjmSurface></HjmLayout>;
+    case "Button": return <ObservablePreview>{({ setMessage }) => <HjmStack axis="inline" gap="md" wrap><HjmButton onClick={() => setMessage(buttonExample.primary.result)}>{buttonExample.primary.label}</HjmButton><HjmButton tone="secondary" onClick={() => setMessage(buttonExample.secondary.result)}>{buttonExample.secondary.label}</HjmButton><HjmButton disabled>{buttonExample.disabled}</HjmButton></HjmStack>}</ObservablePreview>;
+    case "IconButton": return <ObservablePreview>{({ setMessage }) => <HjmStack axis="inline" gap="md">{iconButtonExample.map((item) => <HjmIconButton key={item.icon} label={item.label} tone={item.tone} onClick={() => setMessage(item.result)}><HjmIcon name={item.icon} /></HjmIconButton>)}</HjmStack>}</ObservablePreview>;
+    case "Link": return <HjmLink href={`#${linkExample.href.slice(1)}`}>{linkExample.label}</HjmLink>;
     case "Field": return <HjmField className="hjm-demo-field" controlId="showcase-player-name" label="이름" description="필수 정보는 입력 아래에서 설명합니다.">{(controlProps) => <input {...controlProps} defaultValue="홍길동" />}</HjmField>;
     case "SearchField": return <HjmSearchField label="선수 검색" clearLabel="검색어 지우기" defaultValue="야구" description="검색어 지우기 버튼도 키보드로 사용할 수 있습니다." />;
     case "TextArea": return <HjmTextArea label="설명" defaultValue="여러 줄 입력 예시" description="긴 설명도 레이아웃 안에서 줄바꿈됩니다." />;
     case "PasswordField": return <HjmPasswordField label="비밀번호" autofillHint="current" revealLabel="비밀번호 보기" concealLabel="비밀번호 숨기기" defaultValue="hjm-password" description="표시 전환은 값과 독립적으로 동작합니다." />;
+    case "ImageChoiceGroup": return <ImageChoicePreview />;
     case "OtpField": return <HjmOtpField label="인증번호" length={6} defaultValue="128" description="여섯 자리를 한 번에 입력하거나 붙여넣을 수 있습니다." />;
     case "NumberField": return <HjmNumberField label="수량" min={0} max={10} defaultValue={2} decrementLabel="수량 줄이기" incrementLabel="수량 늘리기" />;
     case "Slider": return <HjmSlider label="완성도" min={0} max={100} defaultValue={72} getValueText={(value) => `${value}%`} />;
@@ -469,14 +490,14 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "Avatar": return <HjmAvatar name="홍길동" />;
     case "CounterBadge": return <HjmStack axis="inline" align="center" gap="xs"><HjmIconButton label="알림 12개"><HjmIcon name="notifications" /></HjmIconButton><HjmCounterBadge count={12} /></HjmStack>;
     case "TopBar": return <HjmTopBar title="알림 설정" leading={<HjmIconButton label="뒤로" tone="ghost"><HjmIcon name="chevronStart" /></HjmIconButton>} actions={<HjmButton tone="ghost">완료</HjmButton>} />;
-    case "BottomCTA": return <ObservablePreview>{({ message, setMessage, selected, setSelected }) => <HjmBottomCTA description="설정은 나중에 바꿀 수 있어요." primaryAction={{ label: "계속하기", onClick: () => setMessage("행동 실행") }} secondaryAction={{ label: "나중에", onClick: () => setMessage("행동 실행") }} />}</ObservablePreview>;
+    case "BottomCTA": return <ObservablePreview>{({ setMessage }) => <HjmBottomCTA description={bottomCtaExample.description} primaryAction={{ label: bottomCtaExample.primary.label, onClick: () => setMessage(bottomCtaExample.primary.result) }} secondaryAction={{ label: bottomCtaExample.secondary.label, onClick: () => setMessage(bottomCtaExample.secondary.result) }} />}</ObservablePreview>;
     case "List": return <HjmList label="선수 목록"><HjmListRow title="홍길동" description="내야수" /><HjmListRow title="김하늘" description="외야수" /></HjmList>;
     case "ListRow": return <ObservablePreview>{({ message, setMessage, selected, setSelected }) => <HjmListRow title="홍길동" description="선수 상세 보기" leading={<span className="hjm-showcase-avatar">홍</span>} trailing={<span aria-hidden>›</span>} onClick={() => setMessage("선수 상세를 열었어요")} />}</ObservablePreview>;
     case "Tag": return <HjmStack axis="inline" gap="sm" wrap><HjmTag>내야수</HjmTag><HjmTag tone="success">등록 선수</HjmTag><HjmTag>2026 시즌</HjmTag></HjmStack>;
     case "Accordion": return <HjmAccordion aria-label="자주 묻는 질문" items={[{ id: "shipping", title: "언제 도착하나요?", panel: "내일 도착할 예정입니다." }]} />;
-    case "Divider": return <HjmStack gap="sm"><HjmText>위쪽 내용</HjmText><HjmDivider /><HjmText>아래쪽 내용</HjmText></HjmStack>;
+    case "Divider": return <HjmStack gap="sm"><HjmText>{dividerExample.above}</HjmText><HjmDivider /><HjmText>{dividerExample.below}</HjmText></HjmStack>;
     case "Statistic": return <HjmStatistic descriptor={{ id: "orders", label: "오늘 주문", value: "128", trend: { direction: "up", label: "어제보다 12% 증가" } }} />;
-    case "Section": return <HjmSection title="앱 정보" description="현재 앱의 핵심 기능을 간결하게 설명합니다."><HjmText>배고픔을 기록하고 흐름을 확인하세요.</HjmText></HjmSection>;
+    case "Section": return <HjmSection title={sectionExample.title} description={sectionExample.description}><HjmText>{sectionExample.body}</HjmText></HjmSection>;
     case "UploadItem": return <ObservablePreview>{({ message, setMessage, selected, setSelected }) => <HjmUploadItem descriptor={{ id: "photo", name: "profile-photo.png", sizeLabel: "1.2 MB", state: { status: "uploading", progress: 0.64, progressLabel: "1.2 MB 중 64% 업로드" } }} labels={{ pending: "대기 중", uploading: "업로드 중", success: "업로드 완료", cancel: "취소", retry: "다시 시도" }} onCancel={() => setMessage("업로드를 취소했어요")} />}</ObservablePreview>;
     case "Timeline": return <HjmTimeline composeAccessibleName={({ position, total, label }) => `${total}개 중 ${position}번째, ${label}`} items={[{ id: "created", label: "아이디어 생성", timestamp: "10:00", tone: "info" }, { id: "completed", label: "실행 완료", timestamp: "10:12", description: "결과를 저장했습니다.", tone: "success" }]} />;
     case "DescriptionList": return <HjmDescriptionList items={[{ id: "status", label: "상태", value: "준비됨" }, { id: "owner", label: "담당", value: "홍길동" }]} />;
@@ -827,6 +848,7 @@ export const webRendererRegistry = {
   TextArea: createWebRendererDefinition("TextArea", "fieldRecipe"),
   PasswordField: createWebRendererDefinition("PasswordField", "passwordFieldRecipe", "passwordField"),
   OtpField: createWebRendererDefinition("OtpField", "otpFieldRecipe", "otpField"),
+  ImageChoiceGroup: createWebRendererDefinition("ImageChoiceGroup", "imageChoiceRecipe"),
   NumberField: createWebRendererDefinition("NumberField", "numberFieldRecipe", "numberField"),
   Slider: createWebRendererDefinition("Slider", "sliderRecipe", "slider"),
   Form: createWebRendererDefinition("Form", "formRecipe", "form"),
@@ -975,7 +997,9 @@ function StoryHeader({ entry }: { entry: ShowcaseComponentEntry }) {
   return (
     <>
       <p className="hjm-eyebrow">{categoryLabels[component.category]} · {platformLabels[component.platform]}</p>
-      <h1 className="hjm-title">{component.name}</h1>
+      <h1 className="hjm-title">{storyLabels[component.name] ?? component.name}</h1>
+      {/* The code name stays visible and searchable under the Korean title. */}
+      <HjmText as="p" variant="label" tone="muted"><code>{component.name}</code></HjmText>
       <HjmStack className="hjm-meta-row" axis="inline" gap="xs" wrap>
         <StatusBadge surface={surfaceLabels.contract} status={component.status} />
         <StatusBadge surface={surfaceLabels.web} status={entry.surfaceMaturity.web} />
@@ -1067,8 +1091,8 @@ function FloatingActionPreview() {
   // A transformed preview owns the fixed-position containing block, so the
   // sample cannot cover unrelated Catalog entries or the Showcase navigation.
   return <div style={{ position: "relative", transform: "translateZ(0)", paddingBottom: clearance }}>
-    <HjmText>기록 목록에서 새로운 순간을 남겨요.</HjmText>
-    <HjmFloatingActionButton descriptor={{ label: "새 기록", icon: { name: "add" } }} renderIcon={() => <span>＋</span>}
+    <HjmText>{floatingActionExample.body}</HjmText>
+    <HjmFloatingActionButton descriptor={{ label: floatingActionExample.label, icon: { name: "add" } }} renderIcon={() => <HjmIcon name="add" />}
       onContentClearanceChange={setClearance} />
   </div>;
 }

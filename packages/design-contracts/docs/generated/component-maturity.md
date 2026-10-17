@@ -4,9 +4,9 @@
 
 This document is the human-readable projection of the same catalog and Showcase manifest consumed by product CI.
 
-- Contract: stable 103 · beta 1
-- Web renderer: stable 103 · beta 1
-- Native renderer: stable 83 · beta 3 · unsupported 18
+- Contract: stable 103 · beta 2
+- Web renderer: stable 103 · beta 2
+- Native renderer: stable 83 · beta 4 · unsupported 18
 
 | Component | Canonical story ID | Contract | Web | Native | Documentation | Required evidence |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -43,6 +43,7 @@ This document is the human-readable projection of the same catalog and Showcase 
 | RadioGroup | `input/radio-group` | stable | stable | stable | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |
 | Switch | `input/switch` | stable | stable | stable | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |
 | Chip | `input/chip` | stable | stable | stable | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |
+| ImageChoiceGroup | `input/image-choice-group` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | SegmentedControl | `input/segmented-control` | stable | stable | stable | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |
 | ToggleGroup | `input/toggle-group` | stable | stable | stable | [authored](../toggle-group.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |
 | TagsInput | `input/tags-input` | stable | stable | stable | [authored](../tags-input.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |

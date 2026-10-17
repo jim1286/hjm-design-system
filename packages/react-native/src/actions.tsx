@@ -428,12 +428,16 @@ export function BottomCTA({
         layoutStyle,
       ]}
     >
-      {description ? <Text tone="muted" variant="caption">{description}</Text> : null}
+      {/* bottomCtaRecipe.contentMaxWidth: copy and actions stop at the reading width on tablets, as on Web. */}
+      {description ? <View style={{ alignSelf: "center", maxWidth: bottomCtaRecipe.contentMaxWidth, width: "100%" }}><Text tone="muted" variant="caption">{description}</Text></View> : null}
       <View
         style={{
+          alignSelf: "center",
           direction: environment.direction,
           flexDirection: stackActions ? "column-reverse" : "row",
           gap: bottomCtaRecipe.gap,
+          maxWidth: bottomCtaRecipe.contentMaxWidth,
+          width: "100%",
         }}
       >
         {renderedSecondary !== null ? (

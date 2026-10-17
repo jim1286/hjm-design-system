@@ -3,18 +3,19 @@ import { ClipboardButton } from "@hjmds/react/clipboard";
 import { CounterBadge } from "@hjmds/react/display";
 import { Avatar, AvatarGroup } from "@hjmds/react/display";
 import { Card } from "@hjmds/react/display";
-import { Stack, Section } from "@hjmds/react/layout";
+import { Stack, Section, Text } from "@hjmds/react/layout";
 
 export function TextFormatPreview() {
   return (
     <Section title="의미 있는 글자 조각" description="크기가 아니라 요소입니다 — 보조기기가 다르게 읽어요.">
       <Stack gap="md">
-        <p>
+        {/* Text has no UA paragraph margin, so only the Stack gap spaces the three lines. */}
+        <Text as="p">
           저장은 <TextFormat kind="kbd">⌘</TextFormat> <TextFormat kind="kbd">S</TextFormat>로 할 수 있어요.
-        </p>
-        <p>
+        </Text>
+        <Text as="p">
           설치는 <TextFormat kind="code">pnpm add @hjmds/react</TextFormat> 한 줄이면 됩니다.
-        </p>
+        </Text>
         <TextFormat kind="quote">기록은 짧아도 좋아요. 남기는 것 자체가 의미예요.</TextFormat>
       </Stack>
     </Section>

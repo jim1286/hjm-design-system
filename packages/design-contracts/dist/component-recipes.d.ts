@@ -3843,6 +3843,7 @@ export declare const bottomCtaRecipe: {
     readonly paddingTop: 12;
     readonly paddingBottom: 12;
     readonly gap: 12;
+    readonly contentMaxWidth: 720;
     readonly background: Readonly<{
         source: "theme";
         key: "bg";

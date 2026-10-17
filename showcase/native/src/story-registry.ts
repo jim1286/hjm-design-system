@@ -7,7 +7,7 @@ export const nativeRendererStoryGroups = {
   calendar: ["calendar"],
   floatingActionButton: ["floating-action-button"],
   inputs: [
-    "field", "search-field", "text-area", "password-field", "otp-field", "number-field", "slider", "form", "date-picker", "file-picker", "checkbox", "radio", "checkbox-group", "radio-group", "switch",
+    "field", "search-field", "text-area", "password-field", "otp-field", "image-choice-group", "number-field", "slider", "form", "date-picker", "file-picker", "checkbox", "radio", "checkbox-group", "radio-group", "switch",
     "segmented-control", "select", "combobox", "chip", "toggle-group",
     "tags-input", "date-range-picker", "mentions", "transfer-list",
   ],

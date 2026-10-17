@@ -6,7 +6,7 @@
     "web": {
       "packageName": "@hjmds/react",
       "packageVersion": "1.26.1",
-      "activeComponents": 104,
+      "activeComponents": 105,
       "claimedComponents": 103,
       "completeScenarioComponents": 103,
       "components": [
@@ -1777,6 +1777,34 @@
             "keyboard"
           ],
           "missingScenarios": []
+        },
+        {
+          "componentId": "image-choice-group",
+          "name": "ImageChoiceGroup",
+          "status": "beta",
+          "claimed": false,
+          "subpath": null,
+          "exportNames": [],
+          "proofs": [],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [],
+          "missingScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
         },
         {
           "componentId": "segmented-control",
@@ -5673,8 +5701,8 @@
     "native": {
       "packageName": "@hjmds/react-native",
       "packageVersion": "1.26.1",
-      "activeComponents": 86,
-      "claimedComponents": 83,
+      "activeComponents": 87,
+      "claimedComponents": 84,
       "completeScenarioComponents": 83,
       "components": [
         {
@@ -7325,6 +7353,64 @@
             "native-actions"
           ],
           "missingScenarios": []
+        },
+        {
+          "componentId": "image-choice-group",
+          "name": "ImageChoiceGroup",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./image-choice",
+          "exportNames": [
+            "ImageChoiceGroup"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "image-choice-group"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion"
+              ],
+              "file": "test/scenario-matrix.test.tsx",
+              "caseId": "image-choice-group"
+            },
+            {
+              "scenarios": [
+                "native-actions"
+              ],
+              "file": "test/image-choice.test.tsx",
+              "caseId": "image-choice-group"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "native-actions"
+          ],
+          "missingScenarios": [
+            "long-copy"
+          ]
         },
         {
           "componentId": "segmented-control",

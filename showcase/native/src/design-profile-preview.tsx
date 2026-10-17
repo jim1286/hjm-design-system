@@ -8,7 +8,7 @@ import { assetRecipe } from "@hjmds/design-contracts/components/asset";
 import { requireOptionalNativeModule } from "expo";
 import { HjmNativeProvider, useHjmNativeTheme } from "@hjmds/react-native/provider";
 import { BottomCTA, Button } from "@hjmds/react-native/actions";
-import { Stack, Text } from "@hjmds/react-native/primitives";
+import { Icon, Stack, Text } from "@hjmds/react-native/primitives";
 import { TextField } from "@hjmds/react-native/inputs";
 import { SegmentedControl } from "@hjmds/react-native/inputs";
 import { OverviewScreen } from "@hjmds/react-native/design-profile";
@@ -25,6 +25,8 @@ import { productDesignOptions, createPreviewProductResolver, type PreviewProduct
 import { ToastPreview } from "./toast-preview";
 
 import { useDemoAction } from "./action-recovery-previews";
+import { PreviewTools, PreviewToolButton } from "./preview-tools";
+import { semanticGlyph } from "./semantic-glyphs";
 import { PatternStatus } from "./pattern-status";
 
 // Resolve immutable app configurations once; profile changes never key or replace
@@ -49,10 +51,15 @@ export function RecordSample() {
     void session.run(() => request(submitted));
   }
   const items = [{ id: "walk", title: copy.walk, body: copy.walkBody }, { id: "read", title: copy.read, body: copy.readBody }, { id: "rest", title: copy.rest, body: copy.restBody }];
+  const unsaved = statusText === copy.unsaved;
+  const tone = status === "failed" ? "danger" : status === "pending" ? "info" : unsaved ? "warning" : "success";
+  // The failure trigger is a preview control, so it sits under "미리보기 도구" instead of next to the footer's primary
+  // action. The idle state shows no notice; the Notice announces each later state once.
   return <OverviewScreen title={copy.screen} description={copy.description} toolbarLabel={copy.tools}
-    toolbar={<Stack gap="md"><TextField label={copy.name} value={name} onValueChange={setName} /><SegmentedControl label={copy.filter} items={[{ value: "day", label: copy.day }, { value: "week", label: copy.week }]} value={period} onValueChange={setPeriod} /></Stack>}
-    notice={<ContentTransition stateKey={status}><PatternStatus announceOnMount={status !== "idle"}>{statusText}</PatternStatus></ContentTransition>}
-    footer={<BottomCTA accessibilityLabel={copy.saveActions} primaryAction={{ label: status === "failed" ? copy.retry : copy.save, onPress: () => void save(), loading: status === "pending", loadingLabel: copy.pending }} secondaryAction={{ label: copy.fail, tone: "ghost", disabled: status === "pending", onPress: () => save(true) }} />}
+    toolbar={<Stack gap="md"><TextField label={copy.name} value={name} onValueChange={setName} /><SegmentedControl label={copy.filter} items={[{ value: "day", label: copy.day }, { value: "week", label: copy.week }]} value={period} onValueChange={setPeriod} />
+      <PreviewTools><PreviewToolButton disabled={status === "pending"} onPress={() => save(true)}>{copy.fail}</PreviewToolButton></PreviewTools></Stack>}
+    notice={<ContentTransition stateKey={status}>{status === "idle" ? null : <Notice tone={tone} title={statusText} announcement={status === "failed" ? "assertive" : "polite"} />}</ContentTransition>}
+    footer={<BottomCTA accessibilityLabel={copy.saveActions} primaryAction={{ label: status === "failed" ? copy.retry : copy.save, onPress: () => void save(), loading: status === "pending", loadingLabel: copy.pending }} />}
     items={items.map(item => ({ id: item.id, children: <Stack gap="sm"><Text variant="heading">{item.title}</Text><Text>{item.body}</Text></Stack> }))} />;
 }
 // Same public overlay instances stay mounted while the parent profile changes;
@@ -181,7 +188,7 @@ export function DesignProfileFloatingActionComparison() {
       <Text>{copy.limitation}</Text>
     </Stack></ScrollView>
     <FloatingActionButton descriptor={{ label: copy.floatingCreate, icon: { name: "add" }, layoutMode }}
-      renderIcon={({ color }) => <Text style={{ color }}>＋</Text>}
+      renderIcon={() => <Icon descriptor={{ name: "add", tone: "inverse" }} renderGlyph={semanticGlyph} />}
       onContentClearanceChange={setClearance} onPress={() => setCount(current => current + 1)} />
   </View></HjmNativeProvider>;
 }

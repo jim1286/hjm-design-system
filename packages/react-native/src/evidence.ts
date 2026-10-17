@@ -202,6 +202,7 @@ export const reactNativeRendererEvidence = {
     defaultClaim("text-area", ["TextArea"], "./inputs"),
     nativeActionClaim("password-field", ["PasswordField"], "./password-field"),
     nativeActionClaim("otp-field", ["OtpField"], "./otp-field"),
+    nativeActionClaim("image-choice-group", ["ImageChoiceGroup"], "./image-choice", "test/image-choice.test.tsx"),
     nativeActionClaim("number-field", ["NumberField"], "./number-field"),
     nativeActionClaim("slider", ["Slider"], "./slider"),
     nativeActionClaim("form", ["Form"], "./forms", "test/form.interaction.test.tsx"),

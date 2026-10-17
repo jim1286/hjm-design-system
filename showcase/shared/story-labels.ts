@@ -86,6 +86,7 @@ export const storyLabels: Readonly<Record<string, string>> = {
   "Icon": "아이콘",
   "IconButton": "아이콘 버튼",
   "Image": "이미지",
+  "ImageChoiceGroup": "이미지 선택",
   "ImperativeOverlays": "코드로 여는 팝업",
   "InlineConfirmation": "버튼 안에서 확인",
   "Inputs": "입력",
