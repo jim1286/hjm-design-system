@@ -314,6 +314,8 @@ type ModalFocusOptions = Readonly<{
   priority?: number;
   contentRef: React.RefObject<HTMLElement | null>;
   initialFocusRef?: React.RefObject<HTMLElement | null>;
+  /** Default target when no `initialFocusRef` is given (entry-focus field), before the first focusable element. */
+  resolveInitialFocus?: () => HTMLElement | null;
   returnFocusRef?: React.RefObject<HTMLElement | null>;
   fallbackReturnRef?: React.RefObject<HTMLElement | null>;
   onEscape(): void;
@@ -324,12 +326,15 @@ export function useModalFocus({
   priority = 0,
   contentRef,
   initialFocusRef,
+  resolveInitialFocus,
   returnFocusRef,
   fallbackReturnRef,
   onEscape,
 }: ModalFocusOptions): void {
   const escapeRef = useRef(onEscape);
   escapeRef.current = onEscape;
+  const resolveInitialFocusRef = useRef(resolveInitialFocus);
+  resolveInitialFocusRef.current = resolveInitialFocus;
 
   useEffect(() => {
     if (!active) return;
@@ -354,7 +359,7 @@ export function useModalFocus({
       };
       activeModalStack.push(modal);
       synchronizeModalBackgroundIsolation();
-      const initial = initialFocusRef?.current ?? getFocusable(content)[0] ?? content;
+      const initial = initialFocusRef?.current ?? resolveInitialFocusRef.current?.() ?? getFocusable(content)[0] ?? content;
       if (getTopModal() === modal) initial.focus();
 
       const handleKeyDown = (event: KeyboardEvent) => {

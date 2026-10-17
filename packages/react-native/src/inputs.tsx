@@ -1,3 +1,4 @@
+import { useInitialFocusTarget } from "./internal/initial-focus.js";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { SelectionMark } from "./internal/selection-mark.js";
@@ -155,6 +156,12 @@ type BaseFieldProps = Omit<
     shape?: FieldShape;
     /** Canonical layout-only placement for the complete field. Controlled keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * Screen entry focus: true makes this the field the enclosing screen or sheet focuses on entry, false keeps it
+     * from ever being chosen; omitted fields are eligible in tree order. The screen's `initialFocus` decides whether
+     * anything is focused (screen-patterns `resolveInitialFocusTarget`, 2026-10-18).
+     */
+    initialFocusTarget?: boolean;
   }>;
 
 type AccessibleFieldProps = BaseFieldProps & FieldAccessibleName;
@@ -225,6 +232,7 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
       trailing,
     leadingAction,
       hjmCompactMultiline = false,
+      initialFocusTarget,
       onBlur,
       onFocus,
       onContentSizeChange,
@@ -251,6 +259,9 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
       defaultValue,
       ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
     });
+    // Disabled and read-only fields are never focused on entry (busy plain fields are locked too).
+    useInitialFocusTarget(inputRef, initialFocusTarget,
+      () => !disabled && !props.readOnly && props.editable !== false && (search || !busy));
     const supportText = description;
     const hint = error ?? accessibilityHint ?? supportText;
     const { accessibleName, visibleLabel } = resolveFieldAccessibleName(

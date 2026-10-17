@@ -15,8 +15,9 @@ import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { ScreenExitButton, type ScreenExit } from "./internal/screen-exit.js";
 import { ScreenFooterContext, resolveScreenBottomPadding } from "./internal/screen-footer.js";
 import { ScreenBodyInsetContext } from "./internal/screen-body-inset.js";
+import { InitialFocusScope } from "./internal/initial-focus.js";
 import { listRowScrollRoom } from "./internal/list-row-scroll-room.js";
-import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, screenHeaderRecipe, validateScreenExit, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState, type ScreenContentInset } from "@hjmds/design-contracts/screen-patterns";
+import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, screenHeaderRecipe, validateScreenExit, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState, type ScreenContentInset, initialFocusDefaults, type ScreenInitialFocus } from "@hjmds/design-contracts/screen-patterns";
 import { motion } from "@hjmds/design-contracts/foundations";
 import { Stack, Text } from "./primitives.js";
 import { Heading } from "./heading.js";
@@ -79,10 +80,16 @@ export type ScreenLayoutProps = Readonly<{
    * Skipped inside KeyboardAvoiding or a keyboard-aware Sheet/Dialog, which already handle it.
    */
   keyboardAvoidance?: boolean;
+  /**
+   * Focus a text field once when the screen is entered, after the enter transition (`first-input`: the field marked
+   * `initialFocusTarget`, else the first enabled one). Off by default; SearchScreen and EditorScreen default it on,
+   * Chat/CommentThread keep it off so the keyboard does not cover the history (2026-10-18, screen-patterns rules).
+   */
+  initialFocus?: ScreenInitialFocus;
   scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator" | "onScroll" | "onScrollBeginDrag" | "onScrollEndDrag" | "scrollEventThrottle" | "alwaysBounceVertical" | "automaticallyAdjustKeyboardInsets">;
 }>;
 
-export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "center", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance = true, safeAreaBottom = 0, hjmBodyInlinePadding, hjmTitleLeading }: ScreenLayoutProps & ScreenLayoutPrivateProps) {
+export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "center", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance = true, safeAreaBottom = 0, initialFocus = initialFocusDefaults.screen, hjmBodyInlinePadding, hjmTitleLeading }: ScreenLayoutProps & ScreenLayoutPrivateProps) {
   if (exit) validateScreenExit(exit, false);
   if (!Number.isFinite(safeAreaBottom) || safeAreaBottom < 0) throw new RangeError("ScreenLayout safeAreaBottom must be non-negative");
   const leading = exit ? <ScreenExitButton {...exit} /> : null;
@@ -129,7 +136,7 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
     </View>}{stateAction}
   </View>;
   return <View ref={rootRef} testID={testID} style={[{ flex: 1, minHeight: 0, width: "100%", maxWidth: profileLayout?.maxWidth ?? recipe.maxWidth, alignSelf: "center", backgroundColor: surface === "transparent" || designProfile?.material.canvas ? "transparent" : colors.bg, ...(keyboardOverlap > 0 ? { paddingBottom: keyboardOverlap } : {}) }, layoutStyle]}>
-    <KeyboardAvoidanceContext.Provider value={insideAvoidance || avoidKeyboard}>
+    <KeyboardAvoidanceContext.Provider value={insideAvoidance || avoidKeyboard}><InitialFocusScope mode={initialFocus}>
     {/* Not TopBar: this is the page heading (titleLarge + description, actions wrap under the title at
         large text), while TopBar is a fixed-height app bar with a single-line title and safe-area top.
         Importing it would also pull navigation.js (tabs/gooey indicator) into every screens graph.
@@ -163,7 +170,7 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
     {/* The footer owns the bar (border, padding, surface) unless contentInset="none" hands every inset to the host;
         only then may BottomCTA render bare, otherwise it keeps its own bar (utilverse tool footers lost theirs, 2026-10-17). */}
     {footer ? <View style={{ padding, paddingBottom: bottomPadding, borderTopWidth: contentInset === "none" ? 0 : 1, borderColor: colors.border }}><ScreenFooterContext.Provider value={contentInset === "none" ? null : { bottomPadding }}>{footer}</ScreenFooterContext.Provider></View> : null}
-    </KeyboardAvoidanceContext.Provider>
+    </InitialFocusScope></KeyboardAvoidanceContext.Provider>
   </View>;
 }
 

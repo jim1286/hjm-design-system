@@ -46,7 +46,7 @@ export type EditorScreenProps = Omit<Base, "leading" | "exit"> & {
     };
     draftStatus?: ReactNode;
 };
-export declare function EditorScreen({ children, dirty, submitPlacement, submit, cancel, discard, draftStatus, ...screen }: EditorScreenProps): import("react").JSX.Element;
+export declare function EditorScreen({ children, dirty, submitPlacement, submit, cancel, discard, draftStatus, initialFocus, ...screen }: EditorScreenProps): import("react").JSX.Element;
 export type ProfileScreenProps = Base & {
     summary: ReactNode;
     edit: ScreenFlowAction;
@@ -276,7 +276,7 @@ export type SearchScreenProps<F = unknown> = Base & SearchInputSlot & SearchComm
     filterSheet?: SearchFilterSheet<F>;
 };
 /** Abort is supplied to the host request; the host must ignore aborted responses before committing results. */
-export declare function SearchScreen<F = unknown>({ query, queryLabel, queryField, queryClearLabel, onQueryChange, onSearch, debounceMs, filters, recentSearches, children, onSubmit, committedQuery, filtersOverflow, hostGutter, queryLabelVisibility, searching, searchingLabel, recentQueries, suggestedQueries, suggestions, resultSummary, appliedFilters, filterSheet, ...screen }: SearchScreenProps<F>): import("react").JSX.Element;
+export declare function SearchScreen<F = unknown>({ query, queryLabel, queryField, queryClearLabel, onQueryChange, onSearch, debounceMs, filters, recentSearches, children, onSubmit, committedQuery, filtersOverflow, hostGutter, queryLabelVisibility, searching, searchingLabel, recentQueries, suggestedQueries, suggestions, resultSummary, appliedFilters, filterSheet, initialFocus, ...screen }: SearchScreenProps<F>): import("react").JSX.Element;
 export type PermissionScreenProps = Base & {
     status: PermissionScreenStatus;
     illustration?: ReactNode;

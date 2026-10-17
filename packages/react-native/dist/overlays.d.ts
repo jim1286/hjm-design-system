@@ -1,3 +1,4 @@
+import { type InitialFocusMode } from "@hjmds/design-contracts/screen-patterns";
 import { type TransitionRect } from "@hjmds/design-contracts/content-transition";
 import { type AlertDialogOpenChangeReason, type AlertDialogRequest, type AlertDialogResult } from "@hjmds/design-contracts/components/alert-dialog";
 import { type HjmCompositionStyleProp } from "./composition-style.js";
@@ -68,9 +69,14 @@ export type DialogProps = NativeModalProps & ReasonedOpenProps<DialogOpenChangeR
     returnFocusRef?: RefObject<View | null>;
     /** Layout-only placement for the sheet content. Use `size` for height. */
     contentStyle?: HjmCompositionStyleProp;
+    /**
+     * Text field focused after the dialog opens: by default only a lone text entry (`single-input`); `first-input`
+     * prefers the field marked `initialFocusTarget`; `none` leaves focus alone (2026-10-18, screen-patterns rules).
+     */
+    initialFocus?: InitialFocusMode;
 }>;
 /** Native modal boundary with one reasoned close intent for each user attempt. */
-export declare function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, primaryAction, secondaryAction, dismissible, busy: externalBusy, onActionError, size, motionOrigin, closeLabel, returnFocusRef, contentStyle, onShow, ...modalProps }: DialogProps): import("react").JSX.Element;
+export declare function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, primaryAction, secondaryAction, dismissible, busy: externalBusy, onActionError, size, motionOrigin, closeLabel, returnFocusRef, contentStyle, onShow, initialFocus, ...modalProps }: DialogProps): import("react").JSX.Element;
 export type AlertDialogProps = NativeModalProps & ReasonedOpenProps<AlertDialogOpenChangeReason> & Readonly<{
     request: AlertDialogRequest;
     size?: DialogSize;
@@ -111,8 +117,10 @@ export type SheetProps = NativeModalProps & ReasonedOpenProps<SheetOpenChangeDet
     scrollable?: boolean;
     /** Visible × in the header. Off by default for bottom sheets, which close by dragging (2026-10-16). */
     showClose?: boolean;
+    /** Same as Dialog `initialFocus`: by default a lone text entry is focused once the sheet has entered. */
+    initialFocus?: InitialFocusMode;
 }>;
 /** Native Sheet applies policy before emitting a concrete dismissal reason. */
-export declare function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, footer, placement, size, busy, dismissPolicy, closeLabel, returnFocusRef, safeAreaInsets: suppliedSafeAreaInsets, onDismissComplete, contentStyle, keyboardAvoidance, scrollable, showClose, onShow, ...modalProps }: SheetProps): import("react").JSX.Element;
+export declare function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, footer, placement, size, busy, dismissPolicy, closeLabel, returnFocusRef, safeAreaInsets: suppliedSafeAreaInsets, onDismissComplete, contentStyle, keyboardAvoidance, scrollable, showClose, onShow, initialFocus, ...modalProps }: SheetProps): import("react").JSX.Element;
 export {};
 //# sourceMappingURL=overlays.d.ts.map

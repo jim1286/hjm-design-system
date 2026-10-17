@@ -162,6 +162,7 @@ import { SearchScreen } from "@hjmds/react-native/screen-flows";
 | `hostGutter` | `none` · `compact` · `regular` · `spacious` | `none` | 1.13.1 변경. 이 화면을 감싼 host가 이미 준 좌우 여백 이름(`containerRecipe.gutters`: 0 · `spacing.md` 16 · `spacing.lg` 20 · `spacing.xl` 24). Container 안이면 그 `gutter`, Sheet 본문 안이면 `regular`(`sheetRecipe.content.paddingHorizontal`과 같은 `spacing.lg`). `scroll` 줄만 이 값을 쓴다 |
 | `recentSearches` | `ReactNode` | 없음 | `query`가 공백일 때만 본문 맨 위에 보인다 |
 | `children` | `ReactNode` | 필수 | 결과 |
+| `initialFocus` | `first-input` · `none` | `first-input` | 1.28.1. 진입 후 검색어 입력에 한 번 포커스한다(검색 화면의 주 입력). 결과로 돌아온 화면(이미 mount)은 다시 포커스하지 않는다 |
 | `footer` | `ReactNode` | 없음 | ScreenLayout footer 그대로(1.28.1): 결과 아래 고정 영역(주 행동·광고 막대). 위 경계·여백·아래 inset을 footer가 맡으므로 화면 밖에 막대를 따로 두고 inset을 직접 주지 않는다(unairplane 항공편 조회, 2026-10-17) |
 | 나머지 | `ScreenLayout`과 같음(`children` 제외, Native `safeAreaBottom` 포함) | — | `notice`는 필터 아래에 붙는다 |
 

@@ -187,9 +187,11 @@ function lockBodyScroll() {
             document.body.style.overflow = previousBodyOverflow;
     };
 }
-export function useModalFocus({ active, priority = 0, contentRef, initialFocusRef, returnFocusRef, fallbackReturnRef, onEscape, }) {
+export function useModalFocus({ active, priority = 0, contentRef, initialFocusRef, resolveInitialFocus, returnFocusRef, fallbackReturnRef, onEscape, }) {
     const escapeRef = useRef(onEscape);
     escapeRef.current = onEscape;
+    const resolveInitialFocusRef = useRef(resolveInitialFocus);
+    resolveInitialFocusRef.current = resolveInitialFocus;
     useEffect(() => {
         if (!active)
             return;
@@ -213,7 +215,7 @@ export function useModalFocus({ active, priority = 0, contentRef, initialFocusRe
             };
             activeModalStack.push(modal);
             synchronizeModalBackgroundIsolation();
-            const initial = initialFocusRef?.current ?? getFocusable(content)[0] ?? content;
+            const initial = initialFocusRef?.current ?? resolveInitialFocusRef.current?.() ?? getFocusable(content)[0] ?? content;
             if (getTopModal() === modal)
                 initial.focus();
             const handleKeyDown = (event) => {

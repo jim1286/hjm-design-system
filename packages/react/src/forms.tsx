@@ -39,6 +39,7 @@ import {
   type TextareaHTMLAttributes,
 } from "react";
 import { composeRefs, classNames, useControllableState } from "./internal.js";
+import { useInitialFocusTarget } from "./internal/initial-focus.js";
 import { Icon } from "./supplemental-display.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
@@ -261,6 +262,11 @@ type SharedInputProps = FieldCopyProps &
      * the input element, where it always went, so existing callers do not move.
      */
     layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * Screen entry focus: true makes this the field the enclosing screen or sheet focuses on entry, false keeps it
+     * from ever being chosen; omitted fields are eligible in tree order (same as Native, 2026-10-18).
+     */
+    initialFocusTarget?: boolean;
   }>;
 
 export type TextFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, "size"> &
@@ -299,6 +305,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       "aria-invalid": ariaInvalid,
       "aria-label": ariaLabel,
       layoutStyle,
+      initialFocusTarget,
       ...props
     },
     ref,
@@ -306,6 +313,8 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
     const ids = useFieldIds(id);
     const [focused, setFocused] = useState(false);
     requireFieldAccessibleName(label, ariaLabel);
+    const control = useRef<HTMLInputElement>(null);
+    useInitialFocusTarget(control, initialFocusTarget);
     const handleFocus = (event: FocusEvent<HTMLInputElement>) => {
       setFocused(true);
       onFocus?.(event);
@@ -336,7 +345,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
           {leading ? <span className="hjm-field__affix">{leading}</span> : null}
           <input
             {...props}
-            ref={ref}
+            ref={composeRefs(control, ref)}
             id={ids.controlId}
             className={classNames("hjm-field__input", className)}
             required={required}
@@ -407,6 +416,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
       maxVisibleLines,
       style,
       layoutStyle,
+      initialFocusTarget,
       ...props
     },
     ref,
@@ -414,6 +424,8 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     const ids = useFieldIds(id);
     const [focused, setFocused] = useState(false);
     requireFieldAccessibleName(label, ariaLabel);
+    const control = useRef<HTMLTextAreaElement>(null);
+    useInitialFocusTarget(control, initialFocusTarget);
     // Bounds are expressed in lines so the recipe keeps line height and padding.
     const lineBounds = {
       ...(minVisibleLines === undefined
@@ -444,7 +456,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
           {leadingAction ? <span className="hjm-field__leading">{leadingAction}</span> : null}
           <textarea
             {...props}
-            ref={ref}
+            ref={composeRefs(control, ref)}
             id={ids.controlId}
             className={classNames("hjm-field__input", className)}
             style={{ ...style, ...lineBounds }}

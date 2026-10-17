@@ -1,4 +1,5 @@
-import { iconTileRecipe, notificationRowRecipe as notificationRecipe } from "@hjmds/design-contracts/screen-patterns";
+import { iconTileRecipe, notificationRowRecipe as notificationRecipe, initialFocusDefaults, type ScreenInitialFocus } from "@hjmds/design-contracts/screen-patterns";
+import { InitialFocusScope } from "./internal/initial-focus.js";
 import { iconButtonRecipe, listRowRecipe } from "@hjmds/design-contracts/recipes";
 import { resolveComposerLimit, type ComposerLengthFeedback } from "@hjmds/design-contracts/communication";
 import { Progress } from "./feedback.js";
@@ -58,10 +59,16 @@ export type ScreenLayoutProps = Readonly<{
    * view), matching Native ScreenLayout. Every screen built on ScreenLayout forwards it.
    */
   layoutStyle?: HjmCompositionStyleProp;
+  /**
+   * Focus a text field once when the screen mounts (`first-input`: the field marked `initialFocusTarget`, else the first
+   * enabled one; never over a field the user is in or under an open modal). Off by default; SearchScreen and EditorScreen
+   * default it on, Chat/CommentThread keep it off so the keyboard does not cover the history (2026-10-18, as Native).
+   */
+  initialFocus?: ScreenInitialFocus;
 }>;
 
 /** Shared screen shell. Routing, data, permission checks and mutation state remain product-owned. */
-export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "center", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", as: Element = "main", className, layoutStyle , hjmTitleLeading }: ScreenLayoutProps & Readonly<{ /** Internal: ChatScreen header photo. */ hjmTitleLeading?: ReactNode }>) {
+export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "center", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", as: Element = "main", className, layoutStyle, initialFocus = initialFocusDefaults.screen, hjmTitleLeading }: ScreenLayoutProps & Readonly<{ /** Internal: ChatScreen header photo. */ hjmTitleLeading?: ReactNode }>) {
   const id = useId();
   if (exit) validateScreenExit(exit, false);
   const leading = exit ? <ScreenExitButton {...exit} /> : null;
@@ -91,7 +98,7 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
   });
   const recipe = screenPatternRecipe;
   return <Element aria-labelledby={header || titleVisibility === "hidden" ? undefined : id} aria-label={header || titleVisibility === "hidden" ? title : undefined} data-content-inset={contentInset} data-presentation={presentation} className={classNames("hjm-screen", className)}
-    style={{ backgroundColor: surface === "transparent" || designProfile?.material.canvas ? "transparent" : undefined, "--hjm-screen-width": `${profileLayout?.maxWidth ?? recipe.maxWidth}px`, "--hjm-screen-padding": `${contentInset === "none" ? 0 : recipe.padding}px`, "--hjm-screen-gap": `${profileLayout?.gap ?? recipe.sectionGap}px`, "--hjm-screen-item-gap": `${recipe.itemGap}px`, "--hjm-screen-state-gap": `${recipe.stateGap}px`, "--hjm-screen-header-min": `${recipe.headerMinWidth}px`, ...layoutStyle } as React.CSSProperties}>
+    style={{ backgroundColor: surface === "transparent" || designProfile?.material.canvas ? "transparent" : undefined, "--hjm-screen-width": `${profileLayout?.maxWidth ?? recipe.maxWidth}px`, "--hjm-screen-padding": `${contentInset === "none" ? 0 : recipe.padding}px`, "--hjm-screen-gap": `${profileLayout?.gap ?? recipe.sectionGap}px`, "--hjm-screen-item-gap": `${recipe.itemGap}px`, "--hjm-screen-state-gap": `${recipe.stateGap}px`, "--hjm-screen-header-min": `${recipe.headerMinWidth}px`, ...layoutStyle } as React.CSSProperties}><InitialFocusScope mode={initialFocus}>
     {header ?? (showHeader ? headerAlignment === "center" ? <header className="hjm-screen__header" style={{ display: "grid", gridTemplateColumns: "1fr minmax(0, auto) 1fr", alignItems: "center", boxSizing: "border-box", minBlockSize: compactHeader ? screenHeaderRecipe.compactMinHeight : screenHeaderRecipe.minHeight, paddingBlock: compactHeader ? screenHeaderRecipe.compactPaddingVertical : screenHeaderRecipe.paddingVertical }}>
       {/* Equal side columns sized by their controls and a title-size (18) heading, matching Native's measured
           centered header (2026-10-17: the fixed 1:2:1 split with a level3 heading wrapped short titles). */}
@@ -127,6 +134,7 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
     </div>
     {/* Same rule as Native: with contentInset="none" the host owns the insets, so BottomCTA keeps its own bar. */}
     {footer ? <footer className="hjm-screen__footer"><ScreenFooterContext.Provider value={contentInset !== "none"}>{footer}</ScreenFooterContext.Provider></footer> : null}
+    </InitialFocusScope>
   </Element>;
 }
 

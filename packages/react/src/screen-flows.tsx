@@ -11,7 +11,7 @@ import { AlertDialog, Menu, Sheet, type SheetProps } from "./overlays.js";
 import { UploadItem } from "./upload-item.js";
 import { type UploadItemDescriptor, type UploadItemLabels } from "@hjmds/design-contracts/components/upload-item";
 import { type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
-import { validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchScreenPhase, resolveFocusAfterRemoval, screenPatternRecipe, commentThreadRecipe, profileSummaryRecipe, searchScreenRecipe, resolveCommentMenuItems, type CommentMenuItemDescriptor, type SearchEmptyCause, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
+import { initialFocusDefaults, validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchScreenPhase, resolveFocusAfterRemoval, screenPatternRecipe, commentThreadRecipe, profileSummaryRecipe, searchScreenRecipe, resolveCommentMenuItems, type CommentMenuItemDescriptor, type SearchEmptyCause, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
 import { resolveWindowClass } from "@hjmds/design-contracts/responsive";
 import { containerRecipe, type ContainerGutter } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./display.js";
@@ -58,7 +58,7 @@ export function ListDetailScreen({list,detail,back,refresh,loadMore,layoutStyle,
 }
 
 export type EditorScreenProps = Omit<Base,"leading"|"exit"> & {children:ReactNode;submitPlacement?:"header"|"footer";dirty:boolean;submit:ScreenFlowAction;cancel:ScreenFlowAction;discard:Omit<Extract<AlertDialogRequest,{mode:"confirm"}>,"onConfirm"|"fallbackErrorMessage"> & {fallbackErrorMessage:string};draftStatus?:ReactNode};
-export function EditorScreen({children,dirty,submitPlacement="footer",submit,cancel,discard,draftStatus,...screen}:EditorScreenProps){
+export function EditorScreen({children,dirty,submitPlacement="footer",submit,cancel,discard,draftStatus,initialFocus=initialFocusDefaults.editor,...screen}:EditorScreenProps){
  const [confirm,setConfirm]=useState(false);
  const cancelLocked=!!(cancel.disabled||cancel.pending||submit.pending);
  const submitAction={...submit,disabled:!!(submit.disabled||screen.state&&screen.state.kind!=="ready")};
@@ -67,7 +67,8 @@ export function EditorScreen({children,dirty,submitPlacement="footer",submit,can
  useEffect(()=>{if(cancelLocked)setConfirm(false);},[cancelLocked]);
  // Preserve an async host result so AlertDialog can retain failure and retry.
  const leave=()=>{if(!cancelLocked)return cancel.onAction();};
- return <><ScreenLayout {...screen}
+ // Writing is the screen's purpose: focus the first field on entry unless the host opts out (2026-10-18).
+ return <><ScreenLayout {...screen} initialFocus={initialFocus}
   exit={{kind:"close",label:cancel.label,disabled:cancelLocked,onClick:()=>{if(cancelLocked)return;if(dirty)setConfirm(true);else leave();}}}
   actions={submitPlacement==="header"?<Action action={submitAction}/>:screen.actions}
   footer={submitPlacement==="header"?draftStatus:<Stack gap="sm">{draftStatus}<Action action={submitAction}/></Stack>}
@@ -445,7 +446,7 @@ export type SearchScreenProps<F = unknown> = Base & SearchInputSlot & SearchComm
  recentQueries?:SearchRecentQueries;suggestedQueries?:SearchSuggestedQueries;suggestions?:SearchSuggestions;
  resultSummary?:SearchResultSummary;appliedFilters?:SearchAppliedFilters;filterSheet?:SearchFilterSheet<F>};
 /** Abort is supplied to the host request; the host must ignore aborted responses before committing results. */
-export function SearchScreen<F = unknown>({query,queryLabel,queryField,queryClearLabel,onQueryChange,onSearch,debounceMs,filters,recentSearches,children,onSubmit,committedQuery,filtersOverflow="wrap",hostGutter="none",queryLabelVisibility="visible",searching,searchingLabel,recentQueries,suggestedQueries,suggestions,resultSummary,appliedFilters,filterSheet,...screen}:SearchScreenProps<F>){
+export function SearchScreen<F = unknown>({query,queryLabel,queryField,queryClearLabel,onQueryChange,onSearch,debounceMs,filters,recentSearches,children,onSubmit,committedQuery,filtersOverflow="wrap",hostGutter="none",queryLabelVisibility="visible",searching,searchingLabel,recentQueries,suggestedQueries,suggestions,resultSummary,appliedFilters,filterSheet,initialFocus=initialFocusDefaults.search,...screen}:SearchScreenProps<F>){
  // The host owns localized copy. A custom queryField owns its own clear affordance.
  if (queryField == null && !queryClearLabel?.trim()) throw new TypeError("SearchScreen requires a localized queryClearLabel for its default search field");
  const searchDelay=resolveSearchDebounceMs(debounceMs);
@@ -505,7 +506,8 @@ export function SearchScreen<F = unknown>({query,queryLabel,queryField,queryClea
  const inlineNavigation=screen.titleVisibility==="hidden"&&screen.header==null&&!screen.description;
  const searchInput=queryField ?? <SearchField {...labelProps} clearLabel={queryClearLabel!} value={query} onValueChange={onQueryChange} loading={searching??false} {...submitProps}/>;
  const queryRow=inlineNavigation?<Stack axis="inline" align="center" gap="sm">{screen.exit?<ScreenExitButton {...screen.exit}/>:null}<div style={{flex:1,minWidth:0}}>{searchInput}</div>{screen.actions}</Stack>:searchInput;
- return <><ScreenLayout {...screen} {...(inlineNavigation?{header:<></>}: {})} notice={<Stack gap="sm" ref={fieldHost}>{queryRow}{filterSlot}{screen.notice}</Stack>}><Stack gap="lg" ref={bodyHost} className="hjm-search-screen__results" tabIndex={-1}>{suggestions||resultSummary||searchingLabel?<SearchAnnouncement text={announcement}/>:null}{body}</Stack></ScreenLayout>
+ // The query field is the search screen's primary input (2026-10-18 entry focus).
+ return <><ScreenLayout {...screen} initialFocus={initialFocus} {...(inlineNavigation?{header:<></>}: {})} notice={<Stack gap="sm" ref={fieldHost}>{queryRow}{filterSlot}{screen.notice}</Stack>}><Stack gap="lg" ref={bodyHost} className="hjm-search-screen__results" tabIndex={-1}>{suggestions||resultSummary||searchingLabel?<SearchAnnouncement text={announcement}/>:null}{body}</Stack></ScreenLayout>
   {filterSheet?<SearchFilterSheetView sheet={filterSheet}/>:null}</>;
 }
 

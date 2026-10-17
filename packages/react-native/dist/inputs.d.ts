@@ -45,6 +45,12 @@ type BaseFieldProps = Omit<TextInputProps, "accessibilityLabel" | "defaultValue"
     shape?: FieldShape;
     /** Canonical layout-only placement for the complete field. Controlled keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * Screen entry focus: true makes this the field the enclosing screen or sheet focuses on entry, false keeps it
+     * from ever being chosen; omitted fields are eligible in tree order. The screen's `initialFocus` decides whether
+     * anything is focused (screen-patterns `resolveInitialFocusTarget`, 2026-10-18).
+     */
+    initialFocusTarget?: boolean;
 }>;
 type AccessibleFieldProps = BaseFieldProps & FieldAccessibleName;
 export type TextFieldProps = AccessibleFieldProps;

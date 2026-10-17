@@ -58,11 +58,13 @@ type ModalFocusOptions = Readonly<{
     priority?: number;
     contentRef: React.RefObject<HTMLElement | null>;
     initialFocusRef?: React.RefObject<HTMLElement | null>;
+    /** Default target when no `initialFocusRef` is given (entry-focus field), before the first focusable element. */
+    resolveInitialFocus?: () => HTMLElement | null;
     returnFocusRef?: React.RefObject<HTMLElement | null>;
     fallbackReturnRef?: React.RefObject<HTMLElement | null>;
     onEscape(): void;
 }>;
-export declare function useModalFocus({ active, priority, contentRef, initialFocusRef, returnFocusRef, fallbackReturnRef, onEscape, }: ModalFocusOptions): void;
+export declare function useModalFocus({ active, priority, contentRef, initialFocusRef, resolveInitialFocus, returnFocusRef, fallbackReturnRef, onEscape, }: ModalFocusOptions): void;
 export declare function renderTrigger(trigger: OverlayTrigger, triggerRef: React.RefObject<HTMLElement | null>, open: boolean, contentId: string, popup: "dialog" | "menu", onOpen: () => void): ReactElement;
 export {};
 //# sourceMappingURL=modal.d.ts.map

@@ -1,4 +1,6 @@
 import { ScreenBodyInsetContext } from "./internal/screen-body-inset.js";
+import { InitialFocusScope } from "./internal/initial-focus.js";
+import { initialFocusDefaults, type InitialFocusMode } from "@hjmds/design-contracts/screen-patterns";
 import { resolveOriginTransition, type TransitionRect } from "@hjmds/design-contracts/content-transition";
 import { focusAccessibleHost } from "./internal/accessible-focus.js";
 import {
@@ -334,6 +336,11 @@ export type DialogProps = NativeModalProps &
     returnFocusRef?: RefObject<View | null>;
     /** Layout-only placement for the sheet content. Use `size` for height. */
     contentStyle?: HjmCompositionStyleProp;
+    /**
+     * Text field focused after the dialog opens: by default only a lone text entry (`single-input`); `first-input`
+     * prefers the field marked `initialFocusTarget`; `none` leaves focus alone (2026-10-18, screen-patterns rules).
+     */
+    initialFocus?: InitialFocusMode;
   }>;
 
 /** Native modal boundary with one reasoned close intent for each user attempt. */
@@ -356,6 +363,7 @@ export function Dialog({
   returnFocusRef,
   contentStyle,
   onShow,
+  initialFocus = initialFocusDefaults.overlay,
   ...modalProps
 }: DialogProps) {
   const [actionPending, setActionPending] = useState<OverlayAction | null>(null);
@@ -382,6 +390,9 @@ export function Dialog({
   const visibleRef = useRef(visible);
   visibleRef.current = visible;
   const [nativeVisible, setNativeVisible] = useState(visible);
+  // Entry focus waits for the native presentation (onShow) so it runs after the enter animation's interaction.
+  const [entered, setEntered] = useState(false);
+  useEffect(() => { if (!visible) setEntered(false); }, [visible]);
   const keyboardViewport = useModalKeyboardViewport(nativeVisible);
   const nativeVisibleRef = useRef(visible);
   nativeVisibleRef.current = nativeVisible;
@@ -552,7 +563,7 @@ export function Dialog({
 
   // Overlay content is not in the screen body: a bleeding rail inside must not reach for the screen gutter.
   return (
-    <ScreenBodyInsetContext.Provider value={0}>
+    <ScreenBodyInsetContext.Provider value={0}><InitialFocusScope mode={initialFocus} active={visible && entered}>
     <Modal
       {...modalProps}
       animationType="none"
@@ -565,6 +576,7 @@ export function Dialog({
       onShow={(event) => {
         nativeShownRef.current = true;
         startEnter();
+        setEntered(true);
         onShow?.(event);
       }}
       statusBarTranslucent
@@ -680,7 +692,7 @@ export function Dialog({
         </Animated.View>
       </ModalInteractionBoundary>
     </Modal>
-    </ScreenBodyInsetContext.Provider>
+    </InitialFocusScope></ScreenBodyInsetContext.Provider>
   );
 }
 
@@ -708,6 +720,8 @@ export function AlertDialog({
   onShow,
   ...modalProps
 }: AlertDialogProps) {
+  // Prompt-style content with one text entry is focused on open; confirm-only dialogs have no field to choose.
+  const initialFocus = initialFocusDefaults.overlay;
   validateAlertDialogRequest(request);
   const viewportPadding = useDialogViewportPadding();
   const { colors, environment, palette, tokens, designProfile } = useHjmNativeTheme();
@@ -734,6 +748,9 @@ export function AlertDialog({
   const visibleRef = useRef(visible);
   visibleRef.current = visible;
   const [nativeVisible, setNativeVisible] = useState(visible);
+  // Entry focus waits for the native presentation (onShow) so it runs after the enter animation's interaction.
+  const [entered, setEntered] = useState(false);
+  useEffect(() => { if (!visible) setEntered(false); }, [visible]);
   const keyboardViewport = useModalKeyboardViewport(nativeVisible);
   const nativeVisibleRef = useRef(visible);
   nativeVisibleRef.current = nativeVisible;
@@ -999,7 +1016,7 @@ export function AlertDialog({
 
   // Overlay content is not in the screen body: a bleeding rail inside must not reach for the screen gutter.
   return (
-    <ScreenBodyInsetContext.Provider value={0}>
+    <ScreenBodyInsetContext.Provider value={0}><InitialFocusScope mode={initialFocus} active={visible && entered}>
     <Modal
       {...modalProps}
       animationType="none"
@@ -1009,7 +1026,7 @@ export function AlertDialog({
         if (pending) completeExit(pending.session);
       }}
       onRequestClose={() => cancel("back")}
-      onShow={focusLeastDestructive}
+      onShow={(event) => { focusLeastDestructive(event); setEntered(true); }}
       statusBarTranslucent
       transparent
       visible={nativeVisible}
@@ -1121,7 +1138,7 @@ export function AlertDialog({
         </Animated.View>
       </ModalInteractionBoundary>
     </Modal>
-    </ScreenBodyInsetContext.Provider>
+    </InitialFocusScope></ScreenBodyInsetContext.Provider>
   );
 }
 
@@ -1157,6 +1174,8 @@ export type SheetProps = NativeModalProps &
     scrollable?: boolean;
     /** Visible × in the header. Off by default for bottom sheets, which close by dragging (2026-10-16). */
     showClose?: boolean;
+    /** Same as Dialog `initialFocus`: by default a lone text entry is focused once the sheet has entered. */
+    initialFocus?: InitialFocusMode;
   }>;
 
 /** Native Sheet applies policy before emitting a concrete dismissal reason. */
@@ -1183,6 +1202,7 @@ export function Sheet({
   scrollable = false,
   showClose,
   onShow,
+  initialFocus = initialFocusDefaults.overlay,
   ...modalProps
 }: SheetProps) {
   const { environment, palette, tokens, designProfile } = useHjmNativeTheme();
@@ -1213,6 +1233,9 @@ export function Sheet({
   const visibleRef = useRef(visible);
   visibleRef.current = visible;
   const [nativeVisible, setNativeVisible] = useState(visible);
+  // Entry focus waits for the native presentation (onShow) so it runs after the enter animation's interaction.
+  const [entered, setEntered] = useState(false);
+  useEffect(() => { if (!visible) setEntered(false); }, [visible]);
   const { viewportHeight, keyboardInset, dockedKeyboard, setModalHeight } = useModalKeyboardViewport(nativeVisible, keyboardAvoidance);
   const nativeVisibleRef = useRef(visible);
   nativeVisibleRef.current = nativeVisible;
@@ -1464,7 +1487,7 @@ export function Sheet({
 
   // Overlay content is not in the screen body: a bleeding rail inside must not reach for the screen gutter.
   return (
-    <ScreenBodyInsetContext.Provider value={0}>
+    <ScreenBodyInsetContext.Provider value={0}><InitialFocusScope mode={initialFocus} active={visible && entered}>
     <Modal
       {...modalProps}
       animationType="none"
@@ -1477,6 +1500,7 @@ export function Sheet({
       onShow={(event) => {
         nativeShownRef.current = true;
         startEnter();
+        setEntered(true);
         onShow?.(event);
       }}
       statusBarTranslucent
@@ -1634,6 +1658,6 @@ export function Sheet({
         </Animated.View>
       </ModalInteractionBoundary>
     </Modal>
-    </ScreenBodyInsetContext.Provider>
+    </InitialFocusScope></ScreenBodyInsetContext.Provider>
   );
 }

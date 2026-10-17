@@ -47,6 +47,26 @@ export function validateScreenExit(exit, hasLeading) {
         throw new TypeError("Screen exit owns the leading slot; do not also pass leading");
 }
 export const screenContentInsets = ["default", "none", "body-edge"];
+/** Defaults per composition; renderers read these instead of repeating literals. */
+export const initialFocusDefaults = {
+    screen: "none",
+    search: "first-input",
+    editor: "first-input",
+    chat: "none",
+    commentThread: "none",
+    overlay: "single-input",
+};
+export function resolveInitialFocusTarget(candidates, mode) {
+    if (mode === "none")
+        return null;
+    const ordered = [...candidates].sort((a, b) => a.order - b.order);
+    if (mode === "single-input") {
+        const only = ordered.length === 1 ? ordered[0] : null;
+        return only && only.focusable && only.preference !== false ? only : null;
+    }
+    const eligible = ordered.filter(candidate => candidate.focusable && candidate.preference !== false);
+    return eligible.find(candidate => candidate.preference === true) ?? eligible[0] ?? null;
+}
 // Reuse reading-width and spacing tokens; do not derive geometry from a product's device or artwork.
 export const screenPatternRecipe = {
     maxWidth: layout.readingMaxWidth,

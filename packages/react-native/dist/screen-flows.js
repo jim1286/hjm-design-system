@@ -10,7 +10,7 @@ import { AlertDialog, Sheet } from "./overlays.js";
 import { UploadItem } from "./upload-item.js";
 import {} from "@hjmds/design-contracts/components/upload-item";
 import {} from "@hjmds/design-contracts/components/alert-dialog";
-import { validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchScreenPhase, screenPatternRecipe, commentThreadRecipe, profileSummaryRecipe, searchScreenRecipe, resolveCommentMenuItems } from "@hjmds/design-contracts/screen-patterns";
+import { initialFocusDefaults, validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchScreenPhase, screenPatternRecipe, commentThreadRecipe, profileSummaryRecipe, searchScreenRecipe, resolveCommentMenuItems } from "@hjmds/design-contracts/screen-patterns";
 import { iconButtonRecipe, resolveIconButtonEdgeOverhang, resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
 import { visibleControlHeight } from "@hjmds/design-contracts/components/design-system-provider";
 import { DrawnMoreVertical } from "./internal/drawn-glyphs.js";
@@ -33,7 +33,7 @@ function Action({ action, secondary = false, edge }) { if (action.icon)
 // placement while list and detail swap. Passing it to the list ScreenLayout dropped it on detail.
 // "Load more" ends the list inside the scroll body, centered like LoadMore; the fixed footer is the bottom CTA slot (2026-10-17 review).
 export function ListDetailScreen({ list, detail, back, refresh, loadMore, layoutStyle, ...screen }) { return _jsxs(View, { style: [{ flex: 1 }, layoutStyle], children: [_jsx(Pane, { hidden: !!detail, children: _jsx(ScreenLayout, { ...screen, ...(refresh || screen.actions ? { actions: _jsxs(Stack, { axis: "inline", gap: "xs", align: "center", children: [screen.actions, refresh ? _jsx(Action, { action: refresh, secondary: true, edge: "end" }) : null] }) } : {}), children: loadMore ? _jsxs(View, { style: { flexGrow: 1, flexShrink: 1, minHeight: 0, gap: screenPatternRecipe.itemGap }, children: [list, _jsx(View, { style: { alignItems: "center" }, children: _jsx(Action, { action: loadMore, secondary: true }) })] }) : list }) }), detail ? _jsx(Pane, { children: _jsx(ScreenLayout, { title: detail.title, ...(detail.titleVisibility === undefined ? {} : { titleVisibility: detail.titleVisibility }), ...(detail.headerAlignment === undefined ? {} : { headerAlignment: detail.headerAlignment }), ...(detail.state === undefined ? {} : { state: detail.state }), stateAction: detail.stateAction, notice: detail.notice, ...(screen.safeAreaBottom === undefined ? {} : { safeAreaBottom: screen.safeAreaBottom }), exit: { kind: "back", label: back.label, onPress: back.onAction, disabled: !!(back.disabled || back.pending) }, children: detail.content }) }) : null] }); }
-export function EditorScreen({ children, dirty, submitPlacement = "footer", submit, cancel, discard, draftStatus, ...screen }) {
+export function EditorScreen({ children, dirty, submitPlacement = "footer", submit, cancel, discard, draftStatus, initialFocus = initialFocusDefaults.editor, ...screen }) {
     const [confirm, setConfirm] = useState(false);
     const cancelLocked = !!(cancel.disabled || cancel.pending || submit.pending);
     const submitAction = { ...submit, disabled: !!(submit.disabled || screen.state && screen.state.kind !== "ready") };
@@ -44,7 +44,8 @@ export function EditorScreen({ children, dirty, submitPlacement = "footer", subm
     // Preserve an async host result so AlertDialog can retain failure and retry.
     const leave = () => { if (!cancelLocked)
         return cancel.onAction(); };
-    return _jsxs(_Fragment, { children: [_jsx(ScreenLayout, { ...screen, exit: { kind: "close", label: cancel.label, disabled: cancelLocked, onPress: () => { if (cancelLocked)
+    // Writing is the screen's purpose: focus the first field on entry unless the host opts out (2026-10-18).
+    return _jsxs(_Fragment, { children: [_jsx(ScreenLayout, { ...screen, initialFocus: initialFocus, exit: { kind: "close", label: cancel.label, disabled: cancelLocked, onPress: () => { if (cancelLocked)
                         return; if (dirty)
                         setConfirm(true);
                     else
@@ -141,7 +142,7 @@ function SearchFilterSheetView({ sheet }) {
     return _jsx(Sheet, { open: sheet.open, onOpenChange: open => sheet.onOpenChange(open), title: sheet.title, closeLabel: sheet.labels.close, size: sheet.size ?? "large", scrollable: true, footer: footer, children: sheet.renderContent(draft, setDraft) });
 }
 /** Abort is supplied to the host request; the host must ignore aborted responses before committing results. */
-export function SearchScreen({ query, queryLabel, queryField, queryClearLabel, onQueryChange, onSearch, debounceMs, filters, recentSearches, children, onSubmit, committedQuery, filtersOverflow = "wrap", hostGutter = "none", queryLabelVisibility = "visible", searching, searchingLabel, recentQueries, suggestedQueries, suggestions, resultSummary, appliedFilters, filterSheet, ...screen }) {
+export function SearchScreen({ query, queryLabel, queryField, queryClearLabel, onQueryChange, onSearch, debounceMs, filters, recentSearches, children, onSubmit, committedQuery, filtersOverflow = "wrap", hostGutter = "none", queryLabelVisibility = "visible", searching, searchingLabel, recentQueries, suggestedQueries, suggestions, resultSummary, appliedFilters, filterSheet, initialFocus = initialFocusDefaults.search, ...screen }) {
     // The host owns localized copy. A custom queryField owns its own clear affordance.
     if (queryField == null && !queryClearLabel?.trim())
         throw new TypeError("SearchScreen requires a localized queryClearLabel for its default search field");
@@ -198,7 +199,8 @@ export function SearchScreen({ query, queryLabel, queryField, queryClearLabel, o
     const inlineNavigation = screen.titleVisibility === "hidden" && screen.header == null && !screen.description;
     const input = queryField ?? _jsx(SearchField, { ...labelProps, clearLabel: queryClearLabel, value: query, onValueChange: onQueryChange, busy: searching ?? false, busyLabel: searchingLabel ?? queryLabel, ...submitProps });
     const queryRow = inlineNavigation ? _jsxs(Stack, { axis: "inline", align: "center", gap: "sm", children: [screen.exit ? _jsx(ScreenExitButton, { ...screen.exit }) : null, _jsx(View, { style: { flex: 1, minWidth: 0 }, children: input }), screen.actions] }) : input;
-    return _jsxs(_Fragment, { children: [_jsx(ScreenLayout, { ...screen, ...(inlineNavigation ? { header: _jsx(_Fragment, {}) } : {}), scrollRef: scrollRef, notice: _jsxs(Stack, { gap: "sm", children: [queryRow, filterSlot, screen.notice] }), children: _jsx(Stack, { gap: "lg", children: body }) }), filterSheet ? _jsx(SearchFilterSheetView, { sheet: filterSheet }) : null] });
+    // The query field is the search screen's primary input (2026-10-18 entry focus).
+    return _jsxs(_Fragment, { children: [_jsx(ScreenLayout, { ...screen, initialFocus: initialFocus, ...(inlineNavigation ? { header: _jsx(_Fragment, {}) } : {}), scrollRef: scrollRef, notice: _jsxs(Stack, { gap: "sm", children: [queryRow, filterSlot, screen.notice] }), children: _jsx(Stack, { gap: "lg", children: body }) }), filterSheet ? _jsx(SearchFilterSheetView, { sheet: filterSheet }) : null] });
 }
 export function PermissionScreen({ status, illustration, explanation, request, settings, continueAction, skip, ...screen }) { const kind = resolvePermissionAction(status); const primary = kind === "request" ? request : kind === "settings" ? settings : kind === "continue" ? continueAction : null; return _jsx(ScreenLayout, { ...screen, footer: _jsxs(Stack, { gap: "xs", children: [primary ? _jsx(Action, { action: primary }) : null, skip ? _jsx(Action, { action: skip, secondary: true }) : null] }), children: _jsxs(Stack, { gap: "xl", align: "center", children: [illustration, explanation] }) }); }
 // Large headings and a software keyboard can consume the entire fixed header

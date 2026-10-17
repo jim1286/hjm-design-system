@@ -85,6 +85,7 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 | `contentInset` | `"default"` · `"none"` · `"body-edge"` | `"default"` | `none`은 헤더·notice·본문·footer padding을 0으로(Native는 footer 위 테두리도 뺀다). host가 모든 여백을 이미 줄 때 쓴다. `body-edge`는 헤더·notice·footer 여백(16)과 footer 테두리를 유지하고 **본문 좌우 padding만 0**으로 한다. 자기 좌우 여백을 가진 전체 폭 목록 행(ConversationRow·NotificationRow 등 행 padding 16)을 본문에 바로 둘 때 쓴다(미게시). ListRow·NotificationItem은 `default`에 둔다. 값 목록은 계약 `ScreenContentInset`·`screenContentInsets` |
 | `presentation` | `"dashboard"` · `"editorial"` · `"landscape"` | 가장 가까운 profile.screens.overview / 없으면 기존 골격 | [디자인 프로필](../../design-profile.md)의 제공 범위를 따른다. 명시값이 프로필을 이긴다. 헤더 배치·읽기 폭만 바꾸고 상태·입력·행동 슬롯은 유지한다 |
 | `as` (Web) | `"main"` · `"section"` | `"main"` | 제품 셸에 이미 `<main>`이 있으면 `section` |
+| `initialFocus` | `first-input` · `none` | `none` | 1.28.1. 진입 시 텍스트 입력 하나에 한 번 포커스한다. 아래 [진입 포커스](#진입-포커스) |
 | `safeAreaBottom` (Native) | 0 이상의 유한수 | `0`(미게시) | 화면이 닿는 창 아래 가장자리의 safe area(`useSafeAreaInsets().bottom`, 탭바 위·이미 아래를 들인 host 안이면 0). 마지막 영역(footer, 없으면 본문)이 아래 여백을 `max(16, inset)`으로 한 번만 준다. 넘길 때는 host의 아래 SafeAreaView edge를 빼고, 둘을 같이 쓰지 않는다. 음수·무한대는 `RangeError` |
 | `layoutStyle` | `HjmCompositionStyleProp` | 없음 | 화면 루트 배치 전용(예: 분할 화면의 `flex`·`width`). ScreenLayout 위에 만든 화면은 모두 이 prop을 루트까지 넘긴다 |
 | `className` (Web) | `string` | 없음 | 식별·배치 보조. 색·여백을 덮지 않는다 |
@@ -100,6 +101,25 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 | 순서·정렬 | 헤더(`exit` → 제목·설명 → `actions`) → notice → 본문 → footer; 상태 안내는 본문 세로 가운데 `exit`는 HJM이 `edge="start"`로 그려 아이콘 칸이 헤더 여백 선 16에 온다(Web·Native 31 → 16, 가운데 헤더의 같은 폭 양쪽 열·제목 중앙은 그대로). 끝 `actions`의 마지막 ghost IconButton은 제품이 `edge="end"`를 준다(2026-10-17 실측 감사, [IconButton `edge`](icon-button.md#배치)) | 렌더 순서 |
 | 고정·스크롤 | 헤더·notice·footer 고정, `scroll="screen"`은 본문이 스크롤, `"content"`는 자식이 스크롤; footer 위 테두리 1. 마지막 영역(footer, 없으면 본문)의 아래 여백은 `max(16, 하단 inset)`이다 — Web은 `env(safe-area-inset-bottom)`, Native는 `safeAreaBottom`. 16 + inset으로 더하지 않으며, 키보드가 열려 있으면 키보드가 홈 인디케이터를 덮으므로 16만 둔다 | Web `data-scroll`·`.hjm-screen__footer`, Native `ScrollView` |
 | 좁은 폭·큰 글자 | 제목 열 최소 폭 `headerMinWidth` 120 × 글자 배율, 모자라면 `actions`가 다음 줄로 내려간다; 제목은 줄바꿈(`overflow-wrap: anywhere`)되고 자르지 않는다; Native 위·옆 safe area·탭바 inset은 host, 아래 inset은 `safeAreaBottom` | `screenPatternRecipe.headerMinWidth`, Web `.hjm-screen__heading` |
+
+## 진입 포커스
+
+2026-10-18 사용자 요청("input이 있는 화면에 진입하면 포커스되도록, 웹앱 둘 다"). 앱마다 `autoFocus`·지연 `ref.focus()`를 붙이던 것을 화면 골격이 맡는다. 입력 칸(TextField·TextArea·SearchField·PasswordField, 작성창의 TextArea)은 가장 가까운 화면·시트 범위에 자신을 등록하고, 범위가 진입 뒤 한 칸을 고른다. 규칙의 정본은 contracts `resolveInitialFocusTarget`·`initialFocusDefaults`(`screen-patterns`)다.
+
+| 구성 | 기본값 | 이유 |
+| --- | --- | --- |
+| `ScreenLayout`(일반 화면) | `none` | 입력이 화면의 주 행동인지 화면이 알 수 없다. 주 입력 화면은 `initialFocus="first-input"` |
+| `SearchScreen` | `first-input`(검색어) | 검색이 화면의 목적 |
+| `EditorScreen` | `first-input` | 작성·편집이 화면의 목적 |
+| `ChatScreen`·`CommentThreadScreen` | `none` | 입력은 읽기의 보조. 키보드가 기록을 가린다. 같은 prop으로 켤 수 있다 |
+| `Sheet`·`Dialog`·`AlertDialog` | `single-input` | 텍스트 입력이 하나뿐일 때만(이름 바꾸기 등). 여럿이면 기존 포커스 규칙 |
+
+- 고르는 순서: `initialFocusTarget` 칸 → 등록(트리) 순서 첫 칸. 비활성·읽기 전용 칸, `initialFocusTarget={false}` 칸은 고르지 않는다.
+- 시점: Native는 화면·시트 진입 전환이 끝난 뒤(`InteractionManager`, 시트는 표시 뒤) — 키보드 애니메이션이 전환과 겹치지 않는다. Web은 mount 직후, `preventScroll`.
+- 빼앗지 않는다: 사용자가 이미 입력 칸에 있으면 그대로 둔다(Native 포커스된 입력, Web 편집 가능한 요소). Web은 열린 모달(`aria-modal`) 밑의 화면 칸을 고르지 않는다.
+- 다시 진입: 화면은 mount당 한 번이다. 스택에서 돌아온 화면(이미 mount)은 다시 포커스하지 않는다 — 돌아온 맥락을 키보드가 가리고, HJM은 내비게이션 포커스 신호를 모른다. 시트·대화상자는 열 때마다 다시 고른다.
+- 모션 감소는 애니메이션에만 적용하고 포커스는 그대로 한다.
+- 제품은 `autoFocus`·`setTimeout(() => ref.focus())`를 쓰지 않고 `initialFocus`·`initialFocusTarget`으로 표현한다.
 
 ## 꼭 지킬 것
 

@@ -11,7 +11,7 @@ export declare function resolveScreenContentState(state?: ScreenContentState): {
     readonly kind: "error" | "empty" | "loading" | "ready" | "restricted";
     readonly replacesContent: boolean;
     readonly busy: boolean;
-    readonly announcement: "polite" | "assertive";
+    readonly announcement: "assertive" | "polite";
 };
 /**
  * Native header band heights. Titled centered headers match the iOS navigation bar (44 control + 4 + 4);
@@ -56,6 +56,42 @@ export declare function validateScreenExit(exit: Readonly<{
  */
 export type ScreenContentInset = "default" | "none" | "body-edge";
 export declare const screenContentInsets: readonly ["default", "none", "body-edge"];
+/**
+ * 화면 진입 시 첫 입력 포커스(2026-10-18 사용자 요청: "input이 있는 화면에 진입하면 포커스되도록, 웹앱 둘 다").
+ * 앱마다 autoFocus를 따로 붙이던 일을 화면 골격이 맡는다. 입력 칸은 가장 가까운 화면·시트 범위에 자신을 등록하고,
+ * 범위가 진입이 끝난 뒤(Native: 전환·애니메이션 interaction 뒤, Web: mount 직후) 아래 규칙으로 한 번 고른다.
+ *
+ * - `first-input`: `initialFocusTarget`을 준 칸이 있으면 그 칸, 없으면 등록 순서상 첫 칸. 입력이 화면의 주 행동인 구성
+ *   (검색, 작성·편집)의 기본값이다.
+ * - `single-input`: 등록된 텍스트 입력이 정확히 하나일 때만 그 칸. 시트·대화상자의 기본값이다 — 칸이 여럿이면 어느
+ *   것이 주인지 알 수 없어 기존 포커스 규칙(첫 포커스 가능 요소·덜 파괴적인 행동)을 그대로 둔다.
+ * - `none`: 고르지 않는다. 일반 화면과, 입력이 읽기의 보조인 대화·댓글 화면의 기본값이다 — 키보드가 올라오면 읽던
+ *   기록을 가린다. 같은 prop으로 켤 수 있다.
+ *
+ * 비활성·읽기 전용 칸은 고르지 않고 `initialFocusTarget={false}` 칸은 제외한다. 화면 범위는 mount당 한 번만 포커스한다:
+ * 스택에서 돌아온 화면(이미 mount된 화면)을 다시 포커스하면 키보드가 돌아온 맥락을 가리고, HJM은 내비게이션 포커스
+ * 신호를 알지 못한다. 시트·대화상자는 열릴 때마다 다시 고른다. 모션 감소는 애니메이션에만 적용하고 포커스는 그대로 한다.
+ */
+export type InitialFocusMode = "first-input" | "single-input" | "none";
+export type ScreenInitialFocus = "first-input" | "none";
+export type InitialFocusCandidate = Readonly<{
+    /** Registration order inside the scope (tree order). */
+    order: number;
+    /** `initialFocusTarget` on the field: true prefers it, false excludes it, undefined keeps it eligible. */
+    preference: boolean | undefined;
+    /** False for disabled or read-only fields at resolve time. */
+    focusable: boolean;
+}>;
+/** Defaults per composition; renderers read these instead of repeating literals. */
+export declare const initialFocusDefaults: {
+    readonly screen: "none";
+    readonly search: "first-input";
+    readonly editor: "first-input";
+    readonly chat: "none";
+    readonly commentThread: "none";
+    readonly overlay: "single-input";
+};
+export declare function resolveInitialFocusTarget<T extends InitialFocusCandidate>(candidates: readonly T[], mode: InitialFocusMode): T | null;
 export declare const screenPatternRecipe: {
     readonly maxWidth: 720;
     readonly padding: 16;

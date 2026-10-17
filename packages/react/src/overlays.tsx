@@ -1,3 +1,5 @@
+import { InitialFocusContext, useInitialFocusRegistry } from "./internal/initial-focus.js";
+import { initialFocusDefaults, type InitialFocusMode } from "@hjmds/design-contracts/screen-patterns";
 import type { TransitionRect } from "@hjmds/design-contracts/content-transition";
 import { useOverlayOriginMotion } from "./internal/overlay-origin-motion.js";
 import { layer } from "@hjmds/design-contracts/foundations";
@@ -92,6 +94,12 @@ export type DialogProps = ModalOpenState<Readonly<{ reason: DialogOpenChangeReas
     /** Localized accessible name for the close action. */
     closeLabel: string;
     initialFocusRef?: React.RefObject<HTMLElement | null>;
+    /**
+     * Text field focused when it opens and no `initialFocusRef` is given: by default only a lone text entry
+     * (`single-input`); `first-input` prefers the field marked `initialFocusTarget`; `none` keeps the first focusable
+     * element (2026-10-18, screen-patterns rules shared with Native).
+     */
+    initialFocus?: InitialFocusMode;
     returnFocusRef?: React.RefObject<HTMLElement | null>;
     /**
      * Fires once per visible cycle, after the portal is gone and focus has been
@@ -119,6 +127,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
     busy = false,
     closeLabel,
     initialFocusRef,
+    initialFocus = initialFocusDefaults.overlay,
     returnFocusRef,
     onDismissComplete,
     modalPriority = 0,
@@ -185,11 +194,13 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
       });
     };
   }, []);
+  const focusRegistry = useInitialFocusRegistry();
   useModalFocus({
     active: visible,
     priority: modalPriority,
     contentRef,
     ...(initialFocusRef === undefined ? {} : { initialFocusRef }),
+    resolveInitialFocus: () => focusRegistry.resolve(initialFocus),
     ...(returnFocusRef === undefined ? {} : { returnFocusRef }),
     ...(trigger === undefined ? {} : { fallbackReturnRef: triggerRef }),
     onEscape: () => requestClose("escape"),
@@ -253,7 +264,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
                 ) : null}
               </header>
               {description ? <p id={descriptionId} className="hjm-dialog__description">{description}</p> : null}
-              {children ? <div className="hjm-dialog__body">{children}</div> : null}
+              {children ? <div className="hjm-dialog__body"><InitialFocusContext.Provider value={focusRegistry}>{children}</InitialFocusContext.Provider></div> : null}
               {footer ? <footer className="hjm-dialog__footer">{footer}</footer> : null}
             </div>
           </div>
@@ -481,6 +492,12 @@ export type SheetProps = ModalOpenState<SheetOpenChangeDetails> &
     /** Localized accessible name for the close action. */
     closeLabel: string;
     initialFocusRef?: React.RefObject<HTMLElement | null>;
+    /**
+     * Text field focused when it opens and no `initialFocusRef` is given: by default only a lone text entry
+     * (`single-input`); `first-input` prefers the field marked `initialFocusTarget`; `none` keeps the first focusable
+     * element (2026-10-18, screen-patterns rules shared with Native).
+     */
+    initialFocus?: InitialFocusMode;
     returnFocusRef?: React.RefObject<HTMLElement | null>;
     /** Fires once per visible cycle, after the Sheet portal has been removed. */
     onDismissComplete?: (detail: Readonly<{ reason: SheetDismissReason }>) => void;
@@ -509,6 +526,7 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
     dismissPolicy,
     closeLabel,
     initialFocusRef,
+    initialFocus = initialFocusDefaults.overlay,
     returnFocusRef,
     onDismissComplete,
     modalPriority = 0,
@@ -595,11 +613,13 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
       });
     };
   }, []);
+  const focusRegistry = useInitialFocusRegistry();
   useModalFocus({
     active: open,
     priority: modalPriority,
     contentRef,
     ...(initialFocusRef === undefined ? {} : { initialFocusRef }),
+    resolveInitialFocus: () => focusRegistry.resolve(initialFocus),
     ...(returnFocusRef === undefined ? {} : { returnFocusRef }),
     ...(trigger === undefined ? {} : { fallbackReturnRef: triggerRef }),
     onEscape: () => requestClose("escape"),
@@ -728,7 +748,7 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
                 ) : null}
               </header> : null}
               </div>
-              {children ? <div className="hjm-sheet__body">{children}</div> : null}
+              {children ? <div className="hjm-sheet__body"><InitialFocusContext.Provider value={focusRegistry}>{children}</InitialFocusContext.Provider></div> : null}
               {footer ? <footer className="hjm-sheet__footer">{footer}</footer> : null}
             </div>
           </div>

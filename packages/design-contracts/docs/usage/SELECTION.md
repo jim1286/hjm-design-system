@@ -46,6 +46,7 @@
 | 화면 나가기(뒤로·닫기·설정 나가기) | `ScreenLayout`(과 이를 쓰는 화면)의 `exit` — 헤더 시작 쪽 아이콘 버튼, 글자 없음 | 본문·하단의 "나가기" 글자 버튼, 화면마다 다른 화살표 |
 | 버튼 묶음 간격 | 세로로 쌓으면 `gap="xs"`(8), 가로로 나란하면 `gap="sm"`(12) — `actionGroupRecipe` | 세로 버튼 사이 12 이상 |
 | 간격 | `Stack`·`ScreenLayout`·recipe 간격 | 임의 `margin`·빈 `View` |
+| 화면 진입 시 입력 포커스 | `ScreenLayout`(과 이를 쓰는 화면)·`Sheet`·`Dialog`의 `initialFocus`, 주 입력 지정은 칸의 `initialFocusTarget`([진입 포커스](components/screen-layout.md#진입-포커스)) | 앱별 `autoFocus`·지연 `ref.focus()`, 대화·댓글 화면의 작성창 자동 포커스 |
 
 리뷰 기준: 위 "쓰지 않을 것" 패턴이 보이면 예제 조립 문제인지 컴포넌트 recipe 문제인지 먼저 가리고, 원인 쪽(예제 또는 HJM 컴포넌트)을 고친다.
 

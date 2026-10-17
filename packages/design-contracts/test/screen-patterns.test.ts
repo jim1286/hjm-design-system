@@ -109,3 +109,21 @@ describe("search debounce delay", () => {
     expect(() => resolveSearchDebounceMs(value)).toThrow(RangeError);
   });
 });
+
+describe("initial focus resolution", () => {
+  const field = (order: number, preference?: boolean, focusable = true) => ({ order, preference, focusable });
+  it("picks the preferred, else first focusable field for first-input", async () => {
+    const { resolveInitialFocusTarget } = await import("../src/screen-patterns.js");
+    expect(resolveInitialFocusTarget([field(1), field(0, undefined, false), field(2, true)], "first-input")?.order).toBe(2);
+    expect(resolveInitialFocusTarget([field(1), field(0, undefined, false)], "first-input")?.order).toBe(1);
+    expect(resolveInitialFocusTarget([field(0, false)], "first-input")).toBeNull();
+    expect(resolveInitialFocusTarget([field(0)], "none")).toBeNull();
+  });
+  it("focuses only a lone text entry for single-input", async () => {
+    const { resolveInitialFocusTarget, initialFocusDefaults } = await import("../src/screen-patterns.js");
+    expect(resolveInitialFocusTarget([field(0)], "single-input")?.order).toBe(0);
+    expect(resolveInitialFocusTarget([field(0), field(1)], "single-input")).toBeNull();
+    expect(resolveInitialFocusTarget([field(0, undefined, false)], "single-input")).toBeNull();
+    expect(initialFocusDefaults).toMatchObject({ screen: "none", search: "first-input", editor: "first-input", chat: "none", commentThread: "none", overlay: "single-input" });
+  });
+});

@@ -1,5 +1,6 @@
 import { createElement as _createElement } from "react";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
+import { useInitialFocusTarget } from "./internal/initial-focus.js";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { SelectionMark } from "./internal/selection-mark.js";
@@ -31,7 +32,7 @@ function resolveFieldAccessibleName(label, accessibilityLabel) {
         ...(visibleLabel ? { visibleLabel } : {}),
     };
 }
-const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultValue = "", onValueChange, description, error, invalid = false, accessibilityHint, required = false, disabled = false, busy = false, variant = fieldRecipe.defaults.variant, shape, accessibilityLabel, layoutStyle, allowFontScaling, multiline, maxVisibleLines, minVisibleLines, align = fieldRecipe.defaults.align, search, recipeMinHeight, recipeTextVariant, disabledOpacity, searchSize = searchFieldRecipe.defaults.size, leading, trailing, leadingAction, hjmCompactMultiline = false, onBlur, onFocus, onContentSizeChange, onSelectionChange, ...props }, ref) {
+const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultValue = "", onValueChange, description, error, invalid = false, accessibilityHint, required = false, disabled = false, busy = false, variant = fieldRecipe.defaults.variant, shape, accessibilityLabel, layoutStyle, allowFontScaling, multiline, maxVisibleLines, minVisibleLines, align = fieldRecipe.defaults.align, search, recipeMinHeight, recipeTextVariant, disabledOpacity, searchSize = searchFieldRecipe.defaults.size, leading, trailing, leadingAction, hjmCompactMultiline = false, initialFocusTarget, onBlur, onFocus, onContentSizeChange, onSelectionChange, ...props }, ref) {
     const resolvedDisabledOpacity = disabledOpacity ?? (search ? searchFieldRecipe.states.disabledOpacity : fieldRecipe.disabledOpacity);
     const theme = useHjmNativeTheme();
     const { colors, environment, textScaling } = theme;
@@ -50,6 +51,8 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
         defaultValue,
         ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
     });
+    // Disabled and read-only fields are never focused on entry (busy plain fields are locked too).
+    useInitialFocusTarget(inputRef, initialFocusTarget, () => !disabled && !props.readOnly && props.editable !== false && (search || !busy));
     const supportText = description;
     const hint = error ?? accessibilityHint ?? supportText;
     const { accessibleName, visibleLabel } = resolveFieldAccessibleName(label, accessibilityLabel);

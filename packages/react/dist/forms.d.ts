@@ -56,6 +56,11 @@ type SharedInputProps = FieldCopyProps & Readonly<{
      * the input element, where it always went, so existing callers do not move.
      */
     layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * Screen entry focus: true makes this the field the enclosing screen or sheet focuses on entry, false keeps it
+     * from ever being chosen; omitted fields are eligible in tree order (same as Native, 2026-10-18).
+     */
+    initialFocusTarget?: boolean;
 }>;
 export type TextFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, "size"> & SharedInputProps & Readonly<{
     /**
@@ -88,6 +93,11 @@ export declare const TextField: import("react").ForwardRefExoticComponent<Omit<I
      * the input element, where it always went, so existing callers do not move.
      */
     layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * Screen entry focus: true makes this the field the enclosing screen or sheet focuses on entry, false keeps it
+     * from ever being chosen; omitted fields are eligible in tree order (same as Native, 2026-10-18).
+     */
+    initialFocusTarget?: boolean;
 }> & Readonly<{
     /**
      * Receives the next string value, the same callback name and shape as the
@@ -170,6 +180,11 @@ export declare const SearchField: import("react").ForwardRefExoticComponent<Omit
      * the input element, where it always went, so existing callers do not move.
      */
     layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * Screen entry focus: true makes this the field the enclosing screen or sheet focuses on entry, false keeps it
+     * from ever being chosen; omitted fields are eligible in tree order (same as Native, 2026-10-18).
+     */
+    initialFocusTarget?: boolean;
 }> & Readonly<{
     value?: string;
     defaultValue?: string;

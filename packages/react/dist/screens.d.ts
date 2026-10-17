@@ -1,3 +1,4 @@
+import { type ScreenInitialFocus } from "@hjmds/design-contracts/screen-patterns";
 import { type ComposerLengthFeedback } from "@hjmds/design-contracts/communication";
 import { type DesignProfileScreenPresentation } from "@hjmds/design-contracts/design-profile-layout";
 import { type MessageMenuAction } from "./internal/message-reactions.js";
@@ -46,9 +47,15 @@ export type ScreenLayoutProps = Readonly<{
      * view), matching Native ScreenLayout. Every screen built on ScreenLayout forwards it.
      */
     layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * Focus a text field once when the screen mounts (`first-input`: the field marked `initialFocusTarget`, else the first
+     * enabled one; never over a field the user is in or under an open modal). Off by default; SearchScreen and EditorScreen
+     * default it on, Chat/CommentThread keep it off so the keyboard does not cover the history (2026-10-18, as Native).
+     */
+    initialFocus?: ScreenInitialFocus;
 }>;
 /** Shared screen shell. Routing, data, permission checks and mutation state remain product-owned. */
-export declare function ScreenLayout({ title, titleBadge, titleVisibility, headerAlignment, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, description, exit, actions, notice, footer, state, stateAction, children, scroll, as: Element, className, layoutStyle, hjmTitleLeading }: ScreenLayoutProps & Readonly<{
+export declare function ScreenLayout({ title, titleBadge, titleVisibility, headerAlignment, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, description, exit, actions, notice, footer, state, stateAction, children, scroll, as: Element, className, layoutStyle, initialFocus, hjmTitleLeading }: ScreenLayoutProps & Readonly<{
     hjmTitleLeading?: ReactNode;
 }>): import("react").JSX.Element;
 /**

@@ -1,3 +1,4 @@
+import { type InitialFocusMode } from "@hjmds/design-contracts/screen-patterns";
 import type { TransitionRect } from "@hjmds/design-contracts/content-transition";
 import { type AlertDialogOpenChangeReason, type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
 import { type SheetDetent, type SheetDismissPolicy, type SheetDismissReason, type SheetOpenChangeDetails } from "@hjmds/design-contracts/components/sheet";
@@ -24,6 +25,12 @@ export type DialogProps = ModalOpenState<Readonly<{
     /** Localized accessible name for the close action. */
     closeLabel: string;
     initialFocusRef?: React.RefObject<HTMLElement | null>;
+    /**
+     * Text field focused when it opens and no `initialFocusRef` is given: by default only a lone text entry
+     * (`single-input`); `first-input` prefers the field marked `initialFocusTarget`; `none` keeps the first focusable
+     * element (2026-10-18, screen-patterns rules shared with Native).
+     */
+    initialFocus?: InitialFocusMode;
     returnFocusRef?: React.RefObject<HTMLElement | null>;
     /**
      * Fires once per visible cycle, after the portal is gone and focus has been
@@ -86,6 +93,12 @@ export type SheetProps = ModalOpenState<SheetOpenChangeDetails> & Readonly<{
     /** Localized accessible name for the close action. */
     closeLabel: string;
     initialFocusRef?: React.RefObject<HTMLElement | null>;
+    /**
+     * Text field focused when it opens and no `initialFocusRef` is given: by default only a lone text entry
+     * (`single-input`); `first-input` prefers the field marked `initialFocusTarget`; `none` keeps the first focusable
+     * element (2026-10-18, screen-patterns rules shared with Native).
+     */
+    initialFocus?: InitialFocusMode;
     returnFocusRef?: React.RefObject<HTMLElement | null>;
     /** Fires once per visible cycle, after the Sheet portal has been removed. */
     onDismissComplete?: (detail: Readonly<{

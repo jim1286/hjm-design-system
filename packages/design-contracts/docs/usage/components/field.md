@@ -70,6 +70,7 @@ import { Field } from "@hjmds/react-native/forms";
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
+| `initialFocusTarget` | `boolean` | — | 1.28.1. 둘러싼 화면·시트가 진입 포커스를 켰을 때 `true`면 이 칸을 고르고, `false`면 절대 고르지 않는다. 생략하면 트리 순서대로 후보다. 비활성·읽기 전용 칸은 고르지 않는다. 앱별 `autoFocus`·지연 `ref.focus()` 대신 쓴다([진입 포커스](screen-layout.md#진입-포커스)). TextField·TextArea·SearchField·PasswordField 공통 |
 | `variant`(`TextField`) | `surface` · `inset` | `surface` | — |
 | `shape`(`TextField`) | `medium` · `large` · `full` | `medium` | — |
 | `align`(`TextField`) | `start` · `center` | `start` | `center`는 닉네임·코드처럼 짧은 한 값 |

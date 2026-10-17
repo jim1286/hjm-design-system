@@ -5,7 +5,7 @@ import type { ReactionPickerProps } from "./reaction-picker.js";
 import { type Ref, type ReactNode } from "react";
 import { ScrollView, type TextInput, type ScrollViewProps } from "react-native";
 import { type ScreenExit } from "./internal/screen-exit.js";
-import { type MessageAttachmentDescriptor, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState, type ScreenContentInset } from "@hjmds/design-contracts/screen-patterns";
+import { type MessageAttachmentDescriptor, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState, type ScreenContentInset, type ScreenInitialFocus } from "@hjmds/design-contracts/screen-patterns";
 import { type ListRowProps } from "./data-display.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 /** Internal: lets ChatScreen narrow only the timeline gutter without a public spacing escape hatch. */
@@ -64,9 +64,15 @@ export type ScreenLayoutProps = Readonly<{
      * Skipped inside KeyboardAvoiding or a keyboard-aware Sheet/Dialog, which already handle it.
      */
     keyboardAvoidance?: boolean;
+    /**
+     * Focus a text field once when the screen is entered, after the enter transition (`first-input`: the field marked
+     * `initialFocusTarget`, else the first enabled one). Off by default; SearchScreen and EditorScreen default it on,
+     * Chat/CommentThread keep it off so the keyboard does not cover the history (2026-10-18, screen-patterns rules).
+     */
+    initialFocus?: ScreenInitialFocus;
     scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator" | "onScroll" | "onScrollBeginDrag" | "onScrollEndDrag" | "scrollEventThrottle" | "alwaysBounceVertical" | "automaticallyAdjustKeyboardInsets">;
 }>;
-export declare function ScreenLayout({ title, titleBadge, titleVisibility, headerAlignment, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, description, exit, actions, notice, footer, state, stateAction, children, scroll, layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance, safeAreaBottom, hjmBodyInlinePadding, hjmTitleLeading }: ScreenLayoutProps & ScreenLayoutPrivateProps): import("react").JSX.Element;
+export declare function ScreenLayout({ title, titleBadge, titleVisibility, headerAlignment, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, description, exit, actions, notice, footer, state, stateAction, children, scroll, layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance, safeAreaBottom, initialFocus, hjmBodyInlinePadding, hjmTitleLeading }: ScreenLayoutProps & ScreenLayoutPrivateProps): import("react").JSX.Element;
 /**
  * Styles for a product scroller that owns the body with `scroll="content"` (FlatList, SectionList): `style` reaches
  * across the ScreenLayout body gutter and `contentContainerStyle` pads it back, so items stay on the gutter while the
