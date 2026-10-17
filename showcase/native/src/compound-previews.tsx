@@ -9,7 +9,6 @@ import { ScrollView } from "react-native";
 import { DurationField } from "@hjmds/react-native/duration-field";
 import { InlineConfirm } from "@hjmds/react-native/inline-confirm";
 import { Stack, Text } from "@hjmds/react-native/primitives";
-import { Button } from "@hjmds/react-native/actions";
 import { Switch } from "@hjmds/react-native/inputs";
 import { spacing } from "@hjmds/design-contracts/foundations";
 import { PreviewTools, PreviewToolButton } from "./preview-tools";
@@ -32,4 +31,4 @@ export function Confirm() {
 }
 const bellGlyph=createLucideGlyph({notifications:Bell});
 export function Reactions(){const [value,setValue]=useState<string|null>(null);return <PreviewScroll><Heading level="level3">{socialCopy.title}</Heading><ReactionPicker label={socialCopy.group} options={reactionOptions} value={value} onValueChange={setValue}/></PreviewScroll>;}
-export function Notifications(){const [count,setCount]=useState(3);return <PreviewScroll><NotificationBell count={count} label={socialCopy.notifications(count)} icon={<Icon descriptor={{name:'notifications'}} renderGlyph={bellGlyph}/>} onPress={()=>setCount(0)}/><Text tone="muted">{socialCopy.hint}</Text><Button onPress={()=>setCount(current=>current+1)}>{socialCopy.add}</Button></PreviewScroll>;}
+export function Notifications(){const [count,setCount]=useState(3);return <PreviewScroll><NotificationBell count={count} label={socialCopy.notifications(count)} icon={<Icon descriptor={{name:'notifications'}} renderGlyph={bellGlyph}/>} onPress={()=>setCount(0)}/><Text tone="muted">{socialCopy.hint}</Text><PreviewTools><PreviewToolButton onPress={()=>setCount(current=>current+1)}>{socialCopy.add}</PreviewToolButton></PreviewTools></PreviewScroll>;}

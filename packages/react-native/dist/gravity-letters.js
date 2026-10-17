@@ -2,11 +2,15 @@ import { jsx as _jsx } from "react/jsx-runtime";
 import { useEffect, useMemo } from "react";
 import { Animated, AppState, View } from "react-native";
 import { gravityLetterMotion, resolveGravityLetters } from "@hjmds/design-contracts/gravity-letters";
+import { headingRecipe } from "@hjmds/design-contracts/components/heading";
+import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { useHjmNativeTheme } from "./provider.js";
 import { Text } from "./primitives.js";
 /** Decorative only; keep a readable, static heading outside this hidden view. */
-export function GravityLetters({ glyphs, active = false, replayKey = 0 }) {
-    const { environment } = useHjmNativeTheme();
+export function GravityLetters({ glyphs, active = false, replayKey = 0, level }) {
+    const theme = useHjmNativeTheme();
+    const { environment } = theme;
+    const metrics = level === undefined ? null : theme.designProfile?.tokens.heading[level] ?? headingRecipe.levels[level];
     const units = resolveGravityLetters(glyphs);
     const signature = JSON.stringify(glyphs);
     const values = useMemo(() => JSON.parse(signature).map(() => new Animated.Value(1)), [signature]);
@@ -37,6 +41,6 @@ export function GravityLetters({ glyphs, active = false, replayKey = 0 }) {
     return _jsx(View, { pointerEvents: "none", accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { flexDirection: "row", flexWrap: "wrap", paddingTop: 36 }, children: units.map((unit, index) => _jsx(Animated.View, { style: { transform: [
                     { translateY: values[index].interpolate({ inputRange: [...gravityLetterMotion.input], outputRange: [...gravityLetterMotion.y] }) },
                     { rotate: values[index].interpolate({ inputRange: [0, 0.55, 1], outputRange: [`${unit.rotation}deg`, "0deg", "0deg"] }) },
-                ] }, children: _jsx(Text, { variant: "heading", children: unit.glyph }) }, index)) });
+                ] }, children: metrics ? _jsx(Text, { fontRole: "display", style: { color: resolveColorReference(headingRecipe.color, theme.palette), fontSize: metrics.fontSize, fontWeight: metrics.fontWeight, lineHeight: metrics.lineHeight }, children: unit.glyph }) : _jsx(Text, { variant: "heading", children: unit.glyph }) }, index)) });
 }
 //# sourceMappingURL=gravity-letters.js.map

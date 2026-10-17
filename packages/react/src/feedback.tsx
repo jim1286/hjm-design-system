@@ -10,6 +10,7 @@ import {
 } from "@hjmds/design-contracts/recipes";
 import {
   resolveResultDescriptor,
+  resultRecipe,
   type ResultDescriptor,
 } from "@hjmds/design-contracts/components/result";
 import {
@@ -165,7 +166,7 @@ export const Result = forwardRef<HTMLDivElement, ResultProps>(function Result(
       role={role ?? (result.status === "failure" ? "alert" : "status")}
     >
       <span className="hjm-result__icon" aria-hidden="true">
-        {icon}
+        {icon ?? resultRecipe.glyphs[result.status]}
       </span>
       <Heading className="hjm-result__title">{result.title}</Heading>
       {result.description ? (
@@ -248,6 +249,9 @@ export const Progress = forwardRef<HTMLProgressElement, ProgressProps>(
       throw new RangeError("Progress value must be between zero and max");
     }
     const labelId = useId();
+    // usage/components/progress.md: valueText defaults to the percentage. Only Native applied it, so the same
+    // StepPlayer/ScrollProgress inputs showed "0%" on Native and nothing on Web (2026-10-17 review F N4).
+    const resolvedValueText = valueText ?? (value === undefined ? undefined : `${Math.round((value / max) * 100)}%`);
     const diameter = progressRecipe.circular.sizes[size];
     const strokeWidth = progressRecipe.circular.strokeWidth[size];
     return (
@@ -270,7 +274,7 @@ export const Progress = forwardRef<HTMLProgressElement, ProgressProps>(
       >
         <span className="hjm-progress__copy">
           <span id={labelId}>{label}</span>
-          {valueText ? <span>{valueText}</span> : null}
+          {resolvedValueText ? <span>{resolvedValueText}</span> : null}
         </span>
         {shape === "circular" ? (
           <span className="hjm-progress__ring" aria-hidden="true">
@@ -284,7 +288,7 @@ export const Progress = forwardRef<HTMLProgressElement, ProgressProps>(
           max={max}
           {...(value === undefined ? {} : { value })}
           aria-labelledby={props["aria-labelledby"] ?? (props["aria-label"] === undefined ? labelId : undefined)}
-          aria-valuetext={typeof valueText === "string" ? valueText : undefined}
+          aria-valuetext={resolvedValueText}
         />
       </div>
     );

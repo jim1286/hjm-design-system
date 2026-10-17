@@ -33,6 +33,7 @@ import {
 import { WebDesignSystemProvider } from "./runtime/WebDesignSystemProvider";
 import { Introduction } from "./Introduction.stories";
 import { ComponentExplorer } from "./components/ComponentExplorer.stories";
+import { designSystemProviderExample } from "../../shared/component-examples";
 
 function isMatureStatus(status: ComponentStatus | "unsupported"): boolean {
   return status === "stable" || status === "beta";
@@ -372,7 +373,7 @@ describe("web showcase coverage", () => {
       createElement(ContractStory, { name: "DesignSystemProvider" }),
     );
     expect(html).toContain('data-hjm-recipe="none"');
-    expect(html).toContain("Resolved environment + palette");
+    expect(html).toContain(designSystemProviderExample.title);
     expect(html).toContain("<dd>light</dd>");
     expect(html).toContain(`info: ${light.palette.statusAccents.info}`);
   });

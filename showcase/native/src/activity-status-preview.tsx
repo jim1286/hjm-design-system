@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { PatternStatus } from "./pattern-status";
-import { ScrollView, Text as NativeText, View } from "react-native";
+import { ScrollView, View } from "react-native";
+import Svg, { Circle, Path } from "react-native-svg";
 import { ActivityChip } from "@hjmds/react-native/activity-chip";
 import { Button } from "@hjmds/react-native/actions";
 import { ToastRegion, useToastRegion } from "@hjmds/react-native/feedback";
@@ -17,9 +18,17 @@ import {
   type ActivityStatusProps,
 } from "../../shared/activity-status";
 
-// Placeholder mascot: an emoji so no product asset or SVG peer ships in HJM. Products pass their own media.
+// Placeholder mascot: the same inline face as the Web story (showcase-only artwork; HJM ships no product asset).
+// The emoji drew a different character on each platform (2026-10-17 review F N13).
 export function Mascot() {
-  return <NativeText accessible={false} allowFontScaling={false} style={{ fontSize: 20 }}>🐥</NativeText>;
+  return (
+    <Svg viewBox="0 0 32 32" width="100%" height="100%" accessible={false}>
+      <Circle cx="16" cy="16" r="16" fill="#FFD76A" />
+      <Circle cx="11" cy="14" r="2" fill="#3A2E1F" />
+      <Circle cx="21" cy="14" r="2" fill="#3A2E1F" />
+      <Path d="M11 20c2.5 2.5 7.5 2.5 10 0" stroke="#3A2E1F" strokeWidth="2" fill="none" strokeLinecap="round" />
+    </Svg>
+  );
 }
 
 function ActivityStatusScreen({ initial = "idle" }: ActivityStatusProps) {

@@ -6,7 +6,6 @@ import { DurationField } from "@hjmds/react/duration-field";
 import { InlineConfirm } from "@hjmds/react/inline-confirm";
 import { Stack, Text } from "@hjmds/react/layout";
 import { Heading } from "@hjmds/react/heading";
-import { Button } from "@hjmds/react/actions";
 import { PreviewTools, PreviewToolButton } from "./preview-tools";
 import { Switch } from "@hjmds/react/selection";
 import { durationLabels, socialCopy, reactionOptions, runConfirmationPreview, compoundCopy as copy } from "../../../shared/compound-controls";
@@ -26,4 +25,4 @@ export function Confirm() {
   </Stack>;
 }
 export function Reactions() { const [value,setValue]=useState<string|null>(null); return <Stack gap="xl"><Heading level="level3">{socialCopy.title}</Heading><ReactionPicker label={socialCopy.group} options={reactionOptions} value={value} onValueChange={setValue}/></Stack>; }
-export function Notifications(){const [count,setCount]=useState(3);return <Stack gap="xl"><NotificationBell count={count} label={socialCopy.notifications(count)} icon={<Icon name="notifications"/>} onPress={()=>setCount(0)}/><Text tone="muted">{socialCopy.hint}</Text><Button onClick={()=>setCount(current=>current+1)}>{socialCopy.add}</Button></Stack>;}
+export function Notifications(){const [count,setCount]=useState(3);return <Stack gap="xl"><NotificationBell count={count} label={socialCopy.notifications(count)} icon={<Icon name="notifications"/>} onPress={()=>setCount(0)}/><Text tone="muted">{socialCopy.hint}</Text><PreviewTools><PreviewToolButton onClick={()=>setCount(current=>current+1)}>{socialCopy.add}</PreviewToolButton></PreviewTools></Stack>;}

@@ -83,7 +83,7 @@ import {
   Surface,
   Text,
 } from "@hjmds/react-native/primitives";
-import { HjmNativeProvider } from "@hjmds/react-native/provider";
+import { useHjmNativeTheme } from "@hjmds/react-native/provider";
 import { FloatingActionButton } from "@hjmds/react-native/floating-action-button";
 import { ImageChoiceGroup } from "@hjmds/react-native/image-choice";
 import { PreviewTools } from "./preview-tools";
@@ -159,6 +159,13 @@ import {
   tagExample,
   timelineExample,
   uploadItemExample,
+  resultExample,
+  noticeExample,
+  progressExample,
+  skeletonExample,
+  spinnerExample,
+  bottomInfoExample,
+  designSystemProviderExample,
 } from "../../shared/component-examples";
 import { calendarExampleGrid } from "../../shared/calendar-example";
 import { listRowRecipe } from "@hjmds/design-contracts/recipes";
@@ -207,9 +214,16 @@ function ToastTrigger() {
 
 
 type PreviewVariant = "default" | "disabled" | "loading" | "error";
+// Shows the values the surrounding provider resolved, as the Web story does, instead of a nested provider and one sentence.
 function DesignSystemProviderExample({ variant }: { variant: PreviewVariant }) {
-
-return (<StoryFrame><HjmNativeProvider theme="dark"><Surface padding="md"><Text>Provider supplies theme, text scale and direction.</Text></Surface></HjmNativeProvider></StoryFrame>);
+  const { environment, palette, tokens } = useHjmNativeTheme();
+  const copy = designSystemProviderExample;
+  const rows = [[copy.theme, environment.theme], [copy.direction, environment.direction], [copy.textScale, String(environment.textScale)], [copy.reducedMotion, String(environment.reducedMotion)]] as const;
+  return (<StoryFrame><Surface padding="md" bordered><Stack gap="md">
+    <Heading level="level5">{copy.title}</Heading>
+    <Grid columns={{ compact: 1, medium: 2 }} gap={{ compact: "xs" }}>{rows.map(([label, value]) => <Surface key={label} padding="sm" bordered><Text tone="muted" variant="label">{label}</Text><Text fontRole="code" emphasis="strong">{value}</Text></Surface>)}</Grid>
+    <Stack gap="xs"><Text tone="muted" variant="label">{copy.palette}</Text><Stack axis="inline" gap="xs" wrap>{Object.entries(palette.statusAccents).map(([tone, color]) => <View key={tone} style={{ borderColor: color, borderWidth: 1, borderRadius: tokens.radius.full, paddingHorizontal: tokens.spacing.xs, paddingVertical: tokens.spacing.xxs }}><Text variant="caption">{tone}: {color}</Text></View>)}</Stack></Stack>
+  </Stack></Surface></StoryFrame>);
 }
 
 function TextExample({ variant }: { variant: PreviewVariant }) {
@@ -714,7 +728,6 @@ function EmptyStateExample({ variant }: { variant: PreviewVariant }) {
   const found = created && "예시 초안".includes(query.trim());
   const focusSearch = () => input.current?.focus();
   return <StoryFrame><Stack gap="md">
-    <Text>메모리에만 만드는 예시입니다. 새 항목 생성과 검색 결과 복구를 확인하세요.</Text>
     <SearchField ref={input} label="초안 검색" clearLabel="검색어 지우기" busyLabel="검색 중" value={query} onValueChange={setQuery} />
     {!created ? <EmptyState title="아직 초안이 없어요" description="첫 초안을 만들면 여기에 표시됩니다."
       density="compact" announcement="none" action={<Button onPress={() => { setCreated(true); setQuery(""); focusSearch(); }}>예시 초안 만들기</Button>} /> :
@@ -727,27 +740,28 @@ function EmptyStateExample({ variant }: { variant: PreviewVariant }) {
 
 function ResultExample({ variant }: { variant: PreviewVariant }) {
 
-return (<StoryFrame><Result status="success" title="Published" description="Your creation is live." /></StoryFrame>);
+const [message, setMessage] = useState("");
+return (<StoryFrame><Result status={resultExample.status} title={resultExample.title} description={resultExample.description} actions={[{ label: resultExample.action, onAction: () => setMessage(resultExample.actionResult) }]} />{message ? <Text accessibilityLiveRegion="polite">{message}</Text> : null}</StoryFrame>);
 }
 
 function NoticeExample({ variant }: { variant: PreviewVariant }) {
 
-return (<StoryFrame><Notice title="Ready to publish" description="All checks passed." tone="success" /></StoryFrame>);
+return (<StoryFrame><Notice title={noticeExample.title} description={noticeExample.description} /></StoryFrame>);
 }
 
 function ProgressExample({ variant }: { variant: PreviewVariant }) {
 
-return (<StoryFrame><Progress label="Upload progress" value={64} /></StoryFrame>);
+return (<StoryFrame><Progress label={progressExample.label} value={progressExample.value} valueText={progressExample.valueText} /></StoryFrame>);
 }
 
 function SkeletonExample({ variant }: { variant: PreviewVariant }) {
 
-return (<StoryFrame><Skeleton accessibilityLabel="Loading preview" width="100%" height={52} /></StoryFrame>);
+return (<StoryFrame><Skeleton accessibilityLabel={skeletonExample.label} width="100%" height={skeletonExample.height} /></StoryFrame>);
 }
 
 function SpinnerExample({ variant }: { variant: PreviewVariant }) {
 
-return (<StoryFrame><Spinner label="Loading content" /></StoryFrame>);
+return (<StoryFrame><Spinner label={spinnerExample.label} /></StoryFrame>);
 }
 
 function ToastExample({ variant }: { variant: PreviewVariant }) {
@@ -757,7 +771,11 @@ return (<StoryFrame><ToastRegion><ToastTrigger /></ToastRegion></StoryFrame>);
 
 function BottomInfoExample({ variant }: { variant: PreviewVariant }) {
 
-return (<StoryFrame><BottomInfo items={["Your draft stays private until published.", "You can change this later."]} /></StoryFrame>);
+return (<StoryFrame><Section title={bottomInfoExample.title} description={bottomInfoExample.description}><View>
+  <Button layoutStyle={{ alignSelf: "flex-start" }}>{bottomInfoExample.action}</Button>
+  <BottomInfo items={bottomInfoExample.consent} />
+  <BottomInfo tone="emphasis" items={bottomInfoExample.conditions} />
+</View></Section></StoryFrame>);
 }
 
 function SheetExample({ variant }: { variant: PreviewVariant }) {

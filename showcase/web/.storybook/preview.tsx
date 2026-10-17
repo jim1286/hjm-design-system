@@ -73,8 +73,9 @@ const preview: Preview = {
           // the same rule as Native (2026-10-17 comparison: both canvases doubled screen gutters).
           edgeToEdge={context.parameters.hjm?.edgeToEdge === true || context.title.split("/")[1] === "화면"}
           // Input and data-display stories render phone-first compositions directly; at 1280 they stretched charts,
-          // tables, players and controls across the canvas (2026-10-17 reviews C and E).
-          componentPreview={context.title.split("/")[1] === "컴포넌트" && ["입력", "데이터 표시"].includes(context.title.split("/")[2] ?? "")}
+          // tables, players and controls across the canvas (2026-10-17 reviews C and E). Feedback, visual-effect and
+          // infrastructure stories stretched demo buttons and reading text to 1280 the same way (review F).
+          componentPreview={context.title.split("/")[1] === "컴포넌트" && ["입력", "데이터 표시", "상태와 알림", "시각 효과", "기반 기능"].includes(context.title.split("/")[2] ?? "")}
           input={{ direction, reducedMotion, textScale, theme }}
           systemTheme="light"
         >

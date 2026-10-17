@@ -6,6 +6,7 @@ import { Top } from "@hjmds/react/top";
 import { Button } from "@hjmds/react/actions";
 import { Icon } from "@hjmds/react/display";
 import { Stack, Section } from "@hjmds/react/layout";
+import { bottomInfoExample } from "../../../shared/component-examples.js";
 
 /*
   데스크톱 셸 한 장: SkipNav(첫 tab stop) → Sidebar(그룹 있는 세로 내비) → 본문.
@@ -52,17 +53,11 @@ export function SidebarPreview() {
 
 export function BottomInfoPreview() {
   return (
-    <Section title="행동 아래의 조건" description="상태를 알리는 Notice와 다른 자리입니다.">
+    <Section title={bottomInfoExample.title} description={bottomInfoExample.description}>
       <div>
-        <Button>가입하고 시작하기</Button>
-        <BottomInfo items={["가입하면 이용약관과 개인정보 처리방침에 동의하는 것으로 봅니다."]} />
-        <BottomInfo
-          tone="emphasis"
-          items={[
-            "결제 수수료는 결제 시점에 확정됩니다.",
-            "환불은 결제일로부터 7일 이내에 가능합니다.",
-          ]}
-        />
+        <Button>{bottomInfoExample.action}</Button>
+        <BottomInfo items={bottomInfoExample.consent} />
+        <BottomInfo tone="emphasis" items={bottomInfoExample.conditions} />
       </div>
     </Section>
   );

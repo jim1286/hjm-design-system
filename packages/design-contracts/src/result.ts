@@ -140,6 +140,11 @@ export const resultRecipe = {
     },
   },
   iconSize: "xl",
+  /**
+   * Status mark drawn when the host passes no icon. Web painted these from CSS `::before` literals while Native drew
+   * an empty circle (2026-10-17 review F N1); the recipe owns them so both renderers draw the same mark.
+   */
+  glyphs: { success: "✓", failure: "!", info: "i" },
   paddingVertical: spacing.xxxl,
   paddingHorizontal: spacing.xl,
   gap: spacing.sm,

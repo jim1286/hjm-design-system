@@ -67,7 +67,7 @@ import { Text } from "@hjmds/react-native/primitives";
 | `align` | `TextStyle["textAlign"]` | 쓰기 방향의 시작 쪽 | Native만 |
 | `layoutStyle` | `HjmCompositionStyleProp` | — | 배치. Web·Native 모두 |
 | `GravityLetters` `glyphs` | `readonly string[]`(1~32개) | — (필수) | — |
-| `GravityLetters` `active`·`replayKey` | `boolean`·`string \| number` | `false`·`0` | `replayKey`가 바뀌면 다시 떨어진다. Web만 `layoutStyle`도 받는다 |
+| `GravityLetters` `active`·`replayKey` | `boolean`·`string \| number` | `false`·`0` | `replayKey`가 바뀌면 다시 떨어진다. Web만 `layoutStyle`도 받는다. Native만 `level`(Heading 단계)을 받는다 — Web은 바깥 Heading의 글자 모양을 물려받는다 |
 
 ## 배치
 
@@ -87,7 +87,7 @@ Native는 Text의 역할을 해당 stack에, 입력/조작 host는 제품 프로
 - 배치(여백·폭·flex)는 `layoutStyle`로만 한다. 색·크기·굵기는 `style`/`className`으로 덮지 않는다.
   (Native Text의 `style`은 layout primitive라 deprecated 경고 대상에서 빠져 있을 뿐 권장 경로가 아니다.)
 - 색으로 의미를 바꿀 때는 `tone`만 쓴다(오류 문구 `danger`, 어두운 배경 위 `inverse`).
-- `GravityLetters`는 장식이며 접근성 트리에서 숨는다. 같은 문구의 정적 Text·Heading을 바깥에 함께 둔다.
+- `GravityLetters`는 장식이며 접근성 트리에서 숨는다. 읽을 수 있는 같은 문구를 함께 두되 화면에 두 번 보이지 않게 한다: Web은 같은 Heading 안의 `VisuallyHidden`, Native는 `accessibilityRole="header"`·`accessibilityLabel`을 가진 감싸는 View.
   `glyphs`는 32개 이하, 빈 문자열·줄바꿈 없이 넘긴다(어기면 `RangeError`). `active` 기본은 `false`다.
 
 ## 플랫폼 차이

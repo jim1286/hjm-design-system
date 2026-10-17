@@ -193,7 +193,18 @@ import {
   tagExample,
   timelineExample,
   uploadItemExample,
+  resultExample,
+  noticeExample,
+  progressExample,
+  skeletonExample,
+  spinnerExample,
+  designSystemProviderExample,
+  skipNavExample,
+  visuallyHiddenExample,
+  toastExample,
 } from "../../../shared/component-examples.js";
+import { SkipNav as HjmSkipNav } from "@hjmds/react/skip-nav";
+import { PreviewTools, PreviewToolButton } from "../patterns/preview-tools.js";
 import mountainPhoto from "../../../shared/photos/mountain.jpg";
 
 // The old empty-state button had no handler. Keep creation and search recovery observable
@@ -205,7 +216,6 @@ function EmptyStateRecoveryPreview() {
   const found = created && "예시 초안".includes(query.trim());
   const focusSearch = () => input.current?.focus();
   return <HjmStack gap="md">
-    <HjmText>메모리에만 만드는 예시입니다. 새 항목 생성과 검색 결과 복구를 확인하세요.</HjmText>
     <HjmSearchField ref={input} label="초안 검색" clearLabel="검색어 지우기" value={query} onValueChange={setQuery} />
     {!created ? <HjmEmptyState title="아직 초안이 없어요" description="첫 초안을 만들면 여기에 표시됩니다."
       density="compact" aria-live="off" action={<HjmButton onClick={() => { setCreated(true); setQuery(""); focusSearch(); }}>예시 초안 만들기</HjmButton>} /> :
@@ -424,20 +434,20 @@ function ProviderValuePreview({
   const { environment, palette } = providerValue;
   return (
     <section
-      aria-label="Resolved DesignSystemProvider value"
+      aria-label={designSystemProviderExample.title}
       className="hjm-demo-surface"
       // Raw values ("success: #16a34a") have no break opportunity; at 2x text they widened the stage grid track
       // past a 390 viewport and made the stage a keyboard-unreachable scroll region (2026-10-06 render sweep).
       style={{ backgroundColor: palette.theme.bg, color: palette.theme.text, overflowWrap: "anywhere" }}
     >
-      <h3>Resolved environment + palette</h3>
+      <h3>{designSystemProviderExample.title}</h3>
       <dl className="hjm-config">
-        <div><dt>Theme</dt><dd>{environment.theme}</dd></div>
-        <div><dt>Direction</dt><dd>{environment.direction}</dd></div>
-        <div><dt>Text scale</dt><dd>{environment.textScale}</dd></div>
-        <div><dt>Reduced motion</dt><dd>{String(environment.reducedMotion)}</dd></div>
+        <div><dt>{designSystemProviderExample.theme}</dt><dd>{environment.theme}</dd></div>
+        <div><dt>{designSystemProviderExample.direction}</dt><dd>{environment.direction}</dd></div>
+        <div><dt>{designSystemProviderExample.textScale}</dt><dd>{environment.textScale}</dd></div>
+        <div><dt>{designSystemProviderExample.reducedMotion}</dt><dd>{String(environment.reducedMotion)}</dd></div>
       </dl>
-      <div className="hjm-preview-row" aria-label="Resolved status accent palette">
+      <div className="hjm-preview-row" aria-label={designSystemProviderExample.palette}>
         {Object.entries(palette.statusAccents).map(([tone, color]) => (
           <span className="hjm-pill" key={tone} style={{ borderColor: color }}>
             {tone}: {color}
@@ -518,7 +528,7 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "TagsInput": return <TagsInputPreview />;
     case "Sidebar": return <SidebarPreview />;
     case "BottomInfo": return <BottomInfoPreview />;
-    case "SkipNav": return <SidebarPreview />;
+    case "SkipNav": return <SkipNavPreview />;
     case "DateRangePicker": return <DateRangePreview />;
     case "TextFormat": return <TextFormatPreview />;
     case "Anchor": return <AnchorPreview />;
@@ -544,8 +554,8 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "DescriptionList": return <HjmDescriptionList aria-label={descriptionListExample.label} items={descriptionListExample.items} />;
     case "Image": return <HjmImage src={mountainPhoto} width={imageExample.width} height={imageExample.height} fit="cover" decorative={false} accessibilityLabel={imageExample.label} />;
     case "EmptyState": return <EmptyStateRecoveryPreview />;
-    case "Notice": return <HjmNotice title="저장 전 확인" description="입력한 내용을 다시 확인해 주세요." />;
-    case "Progress": return <HjmProgress label="업로드" value={64} valueText="64%" />;
+    case "Notice": return <HjmNotice title={noticeExample.title} description={noticeExample.description} />;
+    case "Progress": return <HjmProgress label={progressExample.label} value={progressExample.value} valueText={progressExample.valueText} />;
     case "ColorPicker": return <WebAdditionsPreview mode="color" />;
     case "Watermark": return <WebAdditionsPreview mode="watermark" />;
     case "Affix": return <WebAdditionsPreview mode="affix" />;
@@ -553,16 +563,16 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "VirtualList": return <DataLayoutPreview mode="virtual" />;
     case "QRCode": return <DataLayoutPreview mode="qr" />;
     case "ThinkingOrb": return <ThinkingOrb label="검색 중" state="searching" />;
-    case "Spinner": return <HjmSpinner label="불러오는 중" />;
-    case "Skeleton": return <HjmSkeleton width="100%" height={20} />;
-    case "Result": return <ObservablePreview>{({ message, setMessage, selected, setSelected }) => <HjmResult status="success" title="저장했어요" description="변경 사항이 모든 기기에 반영되었습니다." actions={[{ label: "확인", onAction: () => setMessage("확인했어요") }]} />}</ObservablePreview>;
-    case "Toast": return <ObservablePreview>{({ message, setMessage }) => message ? <HjmButton onClick={() => setMessage("")}>다시 띄우기</HjmButton> : <HjmToast descriptor={{ id: "showcase-saved", tone: "success", title: "저장했어요", description: "카드를 누르면 저장한 항목을 열어요.", closeLabel: "닫기", press: { accessibilityLabel: "저장한 항목 열기", onPress: () => setMessage("저장한 항목을 열었어요") } }} onDismissRequest={(reason) => { if (reason !== "press") setMessage("알림을 닫았어요"); }} />}</ObservablePreview>;
+    case "Spinner": return <HjmSpinner label={spinnerExample.label} />;
+    case "Skeleton": return <HjmSkeleton width="100%" height={skeletonExample.height} />;
+    case "Result": return <ObservablePreview>{({ setMessage }) => <HjmResult status={resultExample.status} title={resultExample.title} description={resultExample.description} actions={[{ label: resultExample.action, onAction: () => setMessage(resultExample.actionResult) }]} />}</ObservablePreview>;
+    case "Toast": return <ObservablePreview>{({ message, setMessage }) => message ? <PreviewTools><PreviewToolButton onClick={() => setMessage("")}>{toastExample.showAgain}</PreviewToolButton></PreviewTools> : <HjmToast descriptor={{ id: toastExample.saved.id, tone: "success", title: toastExample.saved.title, description: toastExample.saved.description, closeLabel: toastExample.saved.closeLabel, press: { accessibilityLabel: toastExample.saved.pressLabel, onPress: () => setMessage(toastExample.saved.pressResult) } }} onDismissRequest={(reason) => { if (reason !== "press") setMessage(toastExample.dismissed); }} />}</ObservablePreview>;
     case "Dialog": return <DialogPreview />;
     // Keep the information tone beside destructive confirmation for comparison.
     case "AlertDialog": return <AlertDialogPreview />;
     case "Sheet": return <HjmSheet trigger={<HjmButton tone="secondary">{sheetExample.trigger}</HjmButton>} title={sheetExample.title} closeLabel={sheetExample.closeLabel} description={sheetExample.description} footer={<HjmButton>{sheetExample.apply}</HjmButton>}><HjmText as="p">{sheetExample.body}</HjmText></HjmSheet>;
     case "Tooltip": return <HjmStack gap="xs" align="start"><HjmTooltip trigger={<HjmIconButton label={tooltipExample.label} tone="ghost"><HjmIcon name="help" /></HjmIconButton>} content={tooltipExample.content} /><HjmText as="p" variant="label" tone="muted">{tooltipExample.hint}</HjmText></HjmStack>;
-    case "VisuallyHidden": return <HjmStack axis="inline" align="center"><button type="button" className="hjm-demo-button"><span aria-hidden>🔔</span><HjmVisuallyHidden>읽지 않은 알림 3개</HjmVisuallyHidden></button><HjmText tone="muted">추가 맥락은 화면에는 보이지 않고 접근성 트리에 남습니다.</HjmText></HjmStack>;
+    case "VisuallyHidden": return <VisuallyHiddenPreview />;
     default: return assertNever(name);
   }
 }
@@ -1196,4 +1206,37 @@ function ChipPreview() {
   const [selected, setSelected] = useState<ReadonlySet<string>>(new Set(chipExample.initial));
   return <HjmStack axis="inline" gap="sm" wrap role="group" aria-label={chipExample.label}>{chipExample.items.map((item) => <HjmChip key={item.id} label={item.label} selectionMode="multiple" selected={selected.has(item.id)}
     onSelectedChange={(next) => setSelected((current) => { const updated = new Set(current); if (next) updated.add(item.id); else updated.delete(item.id); return updated; })} />)}</HjmStack>;
+}
+
+// The icon button's accessible name stays "알림"; the visually hidden count is its description, so a screen reader
+// hears both while the screen shows only the HJM icon button (the old raw <button> with an emoji, review F16).
+function VisuallyHiddenPreview() {
+  return <HjmStack axis="inline" gap="md" align="center" wrap>
+    <HjmIconButton label={visuallyHiddenExample.button} aria-describedby="visually-hidden-preview-context"><HjmIcon name="notifications" /></HjmIconButton>
+    <HjmVisuallyHidden id="visually-hidden-preview-context">{visuallyHiddenExample.context}</HjmVisuallyHidden>
+    <HjmText tone="muted">{visuallyHiddenExample.hint}</HjmText>
+  </HjmStack>;
+}
+
+// SkipNav is off-screen until focused; the frame is its positioned, clipping container so the focused link pins to
+// this example instead of the Storybook page (review F15: the story rendered the Sidebar demo instead).
+function SkipNavPreview() {
+  const link = useRef<HTMLAnchorElement>(null);
+  return <HjmStack gap="md">
+    <div style={{ position: "relative", overflow: "hidden", border: "var(--hjm-stroke-default) solid var(--hjm-color-border)", borderRadius: "var(--hjm-radius-lg)" }}>
+      <HjmSkipNav ref={link} targetId="skip-nav-preview-main" label={skipNavExample.label} />
+      <HjmStack gap="lg" style={{ padding: "var(--hjm-space-lg)" }}>
+        <header><HjmStack axis="inline" gap="lg" align="center" wrap>
+          <HjmText emphasis="strong">{skipNavExample.app}</HjmText>
+          <nav aria-label={skipNavExample.menuLabel}><HjmStack axis="inline" gap="md" wrap>{skipNavExample.menu.map(item => <HjmLink key={item.id} href={`#skip-nav-preview-${item.id}`}>{item.label}</HjmLink>)}</HjmStack></nav>
+        </HjmStack></header>
+        <section id="skip-nav-preview-main" aria-label={skipNavExample.mainLabel}><HjmStack gap="xs">
+          <HjmText variant="title">{skipNavExample.mainTitle}</HjmText>
+          <HjmText>{skipNavExample.mainBody}</HjmText>
+        </HjmStack></section>
+      </HjmStack>
+    </div>
+    <HjmText tone="muted" variant="caption">{skipNavExample.hint}</HjmText>
+    <PreviewTools><PreviewToolButton onClick={() => link.current?.focus()}>{skipNavExample.focusTool}</PreviewToolButton></PreviewTools>
+  </HjmStack>;
 }

@@ -567,3 +567,65 @@ export const animatedBlobatarExample = {
 export const animatedStatisticTools = { decrease: "줄이기", increase: "늘리기", reset: "0으로", step: 125 } as const;
 
 export const voiceNoteTools = { loading: "불러오는 중 상태", error: "오류 상태" } as const;
+
+// 상태와 알림 · 제공자 (2026-10-17 review F: Native showed English placeholders and different compositions).
+export const resultExample = {
+  status: "success",
+  title: "저장했어요",
+  description: "변경 사항이 모든 기기에 반영되었습니다.",
+  action: "확인",
+  actionResult: "확인했어요",
+} as const;
+
+export const noticeExample = { title: "저장 전 확인", description: "입력한 내용을 다시 확인해 주세요." } as const;
+
+export const progressExample = { label: "업로드", value: 64, valueText: "64%" } as const;
+
+export const skeletonExample = { label: "미리보기 불러오는 중", height: 20 } as const;
+
+export const spinnerExample = { label: "불러오는 중" } as const;
+
+export const bottomInfoExample = {
+  title: "행동 아래의 조건",
+  description: "상태를 알리는 Notice와 다른 자리입니다.",
+  action: "가입하고 시작하기",
+  consent: ["가입하면 이용약관과 개인정보 처리방침에 동의하는 것으로 봅니다."],
+  conditions: ["결제 수수료는 결제 시점에 확정됩니다.", "환불은 결제일로부터 7일 이내에 가능합니다."],
+} as const;
+
+export const designSystemProviderExample = {
+  title: "적용된 환경과 상태 색",
+  theme: "테마",
+  direction: "글자 방향",
+  textScale: "글자 배율",
+  reducedMotion: "동작 줄이기",
+  palette: "상태 색",
+} as const;
+
+// Web-only utilities (catalog: Native unsupported).
+export const skipNavExample = {
+  label: "본문으로 바로가기",
+  app: "기록 앱",
+  menuLabel: "주요 메뉴",
+  menu: [{ id: "records", label: "내 기록" }, { id: "archive", label: "보관함" }, { id: "settings", label: "설정" }],
+  mainLabel: "본문",
+  mainTitle: "오늘의 기록",
+  mainBody: "건너뛰기 링크를 누르면 메뉴를 지나 이 영역으로 초점이 옮겨집니다.",
+  hint: "Tab 키로 처음 초점을 옮기면 화면 위에 나타납니다.",
+  focusTool: "건너뛰기 링크에 초점 주기",
+} as const;
+
+export const visuallyHiddenExample = {
+  button: "알림",
+  context: "읽지 않은 알림 3개",
+  hint: "추가 맥락은 화면에는 보이지 않고 접근성 트리에 남습니다.",
+} as const;
+
+export const toastExample = {
+  saved: { id: "showcase-saved", title: "저장했어요", description: "카드를 누르면 저장한 항목을 열어요.", closeLabel: "닫기", pressLabel: "저장한 항목 열기", pressResult: "저장한 항목을 열었어요" },
+  reply: { id: "showcase-reply", title: "새 답장이 도착했어요", description: "카드를 누르면 답장을 열어요.", closeLabel: "답장 알림 닫기", pressLabel: "답장 열기", pressResult: "답장을 열었어요" },
+  dismissed: "알림을 닫았어요",
+  showSaved: "저장 알림 띄우기",
+  showReply: "답장 알림 띄우기",
+  showAgain: "다시 띄우기",
+} as const;

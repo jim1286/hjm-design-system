@@ -138,11 +138,11 @@ export function Result({ status, title, description, actions, renderIcon, layout
                     height: 56,
                     justifyContent: "center",
                     width: 56,
-                }, children: renderIcon?.({
+                }, children: renderIcon ? renderIcon({
                     status: result.status,
                     color: iconColor,
                     backgroundColor: iconBackgroundColor,
-                }) }), _jsx(Text, { accessibilityLiveRegion: result.status === "failure" ? "assertive" : "none", accessibilityRole: "header", align: "center", emphasis: "strong", style: {
+                }) : (_jsx(Text, { emphasis: "strong", style: { color: iconColor }, variant: "heading", children: resultRecipe.glyphs[result.status] })) }), _jsx(Text, { accessibilityLiveRegion: result.status === "failure" ? "assertive" : "none", accessibilityRole: "header", align: "center", emphasis: "strong", style: {
                     color: resolveColorReference(resultRecipe.title.color, theme.palette),
                     maxWidth: 520,
                 }, variant: resultRecipe.title.textVariant, children: result.title }), result.description ? (_jsx(Text, { align: "center", style: {

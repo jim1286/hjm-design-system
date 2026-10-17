@@ -5,5 +5,13 @@ export const visualCopy = {
   action: "이야기 시작하기", faces: "하나의 얼굴, 여러 가지 표정.", faceHint: "사진 없이도 나를 표현해요. 같은 얼굴은 이름을 바꿔도 유지돼요.",
   happy: (name: string) => `${name} 웃는 표정`,
   // Korean purpose first; the semantic code name stays as a secondary line for search and API lookup.
+  // Visible names for preset/layer ids; the raw ids stayed on screen in English (2026-10-17 review F10/F11).
+  transitions: [{ preset: "fade", label: "페이드" }, { preset: "rise", label: "떠오르기" }, { preset: "slide", label: "밀어내기" }, { preset: "scale", label: "확대" }] as const,
+  effectSamples: [
+    { layers: ["mesh"], label: "그물 그라데이션" },
+    { layers: ["glow"], label: "빛 번짐" },
+    { layers: ["grain"], label: "입자" },
+    { layers: ["mesh", "glow", "grain"], label: "그물 그라데이션 · 빛 번짐 · 입자" },
+  ] as const,
   icons: [{ name: "search", label: "검색" }, { name: "settings", label: "설정" }, { name: "notifications", label: "알림" }, { name: "back", label: "뒤로" }] as const,
 };

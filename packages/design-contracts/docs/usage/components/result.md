@@ -69,8 +69,8 @@ import { Result } from "@hjmds/react-native/feedback";
 | `title` | `string` | 필수 | 현지화 |
 | `description` | `string` | — | — |
 | `actions` | 0~2개 `readonly { label: string; onAction(): void; accessibilityLabel?: string }[]` | — | 첫째가 primary Button, 둘째가 secondary Button. `accessibilityLabel` 생략 시 `label`. 3개 이상이면 `RangeError` |
-| `icon`(Web) | `ReactNode` | — | 제품 glyph. 의미는 title·status가 이미 전한다 |
-| `renderIcon`(Native) | `(props: { status, color: string, backgroundColor: string }) => ReactNode` | — | 받은 `color`로 그린다 |
+| `icon`(Web) | `ReactNode` | `resultRecipe.glyphs[status]` | 제품 glyph. 생략하면 상태 표식(✓ · ! · i)을 그린다. 의미는 title·status가 이미 전한다 |
+| `renderIcon`(Native) | `(props: { status, color: string, backgroundColor: string }) => ReactNode` | `resultRecipe.glyphs[status]` | 받은 `color`로 그린다. 생략하면 Web과 같은 상태 표식을 그린다 |
 | `headingLevel`(Web) | `1` · `2` | `2` | 화면 전체가 Result면 `1` |
 | `layoutStyle` | 배치 전용 style 객체 | — | 바깥 여백·폭만 |
 
@@ -101,7 +101,7 @@ import { Result } from "@hjmds/react-native/feedback";
 
 - 행동이 3개 이상이면 `RangeError`를 던진다. 잘리지 않으니 흐름을 다시 설계한다.
 - 행동 버튼을 children으로 직접 조립하지 않는다(`children` prop이 없다). `actions`로 넘긴다.
-- 아이콘은 제품 소유 glyph다. Web은 `icon`, Native는 `renderIcon`이 주는 `color`를 그대로 쓴다.
+- 아이콘은 제품 소유 glyph다. Web은 `icon`, Native는 `renderIcon`이 주는 `color`를 그대로 쓴다. 넘기지 않으면 두 renderer 모두 `resultRecipe.glyphs`의 상태 표식을 그린다(2026-10-17: Native만 빈 원을 그리던 차이).
   아이콘 배경·tone 색은 HJM(`resultRecipe.tones`) 소유다.
 - `failure`는 Web `role="alert"`, Native live region·iOS 낭독으로 바로 알린다. 같은 실패를 Toast로
   한 번 더 알리지 않는다.

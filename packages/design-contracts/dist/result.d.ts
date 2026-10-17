@@ -86,6 +86,15 @@ export declare const resultRecipe: {
         };
     };
     readonly iconSize: "xl";
+    /**
+     * Status mark drawn when the host passes no icon. Web painted these from CSS `::before` literals while Native drew
+     * an empty circle (2026-10-17 review F N1); the recipe owns them so both renderers draw the same mark.
+     */
+    readonly glyphs: {
+        readonly success: "✓";
+        readonly failure: "!";
+        readonly info: "i";
+    };
     readonly paddingVertical: 40;
     readonly paddingHorizontal: 24;
     readonly gap: 12;

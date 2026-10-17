@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { emptyStateRecipe, noticeRecipe, progressRecipe, skeletonRecipe, } from "@hjmds/design-contracts/recipes";
-import { resolveResultDescriptor, } from "@hjmds/design-contracts/components/result";
+import { resolveResultDescriptor, resultRecipe, } from "@hjmds/design-contracts/components/result";
 import { forwardRef, useId, } from "react";
 import { classNames } from "./internal.js";
 import { Button } from "./actions.js";
@@ -20,7 +20,7 @@ export const Result = forwardRef(function Result({ status, title, description, a
         ...(actions === undefined ? {} : { actions }),
     });
     const Heading = headingLevel === 1 ? "h1" : "h2";
-    return (_jsxs("div", { ...props, style: { ...props.style, ...layoutStyle }, ref: ref, className: classNames("hjm-result", className), "data-status": result.status, role: role ?? (result.status === "failure" ? "alert" : "status"), children: [_jsx("span", { className: "hjm-result__icon", "aria-hidden": "true", children: icon }), _jsx(Heading, { className: "hjm-result__title", children: result.title }), result.description ? (_jsx("p", { className: "hjm-result__description", children: result.description })) : null, result.primaryAction || result.secondaryAction ? (_jsxs("div", { className: "hjm-result__actions", children: [result.secondaryAction ? (_jsx(Button, { "aria-label": result.secondaryAction.accessibilityLabel, onClick: result.secondaryAction.onAction, tone: "secondary", children: result.secondaryAction.label })) : null, result.primaryAction ? (_jsx(Button, { "aria-label": result.primaryAction.accessibilityLabel, onClick: result.primaryAction.onAction, children: result.primaryAction.label })) : null] })) : null] }));
+    return (_jsxs("div", { ...props, style: { ...props.style, ...layoutStyle }, ref: ref, className: classNames("hjm-result", className), "data-status": result.status, role: role ?? (result.status === "failure" ? "alert" : "status"), children: [_jsx("span", { className: "hjm-result__icon", "aria-hidden": "true", children: icon ?? resultRecipe.glyphs[result.status] }), _jsx(Heading, { className: "hjm-result__title", children: result.title }), result.description ? (_jsx("p", { className: "hjm-result__description", children: result.description })) : null, result.primaryAction || result.secondaryAction ? (_jsxs("div", { className: "hjm-result__actions", children: [result.secondaryAction ? (_jsx(Button, { "aria-label": result.secondaryAction.accessibilityLabel, onClick: result.secondaryAction.onAction, tone: "secondary", children: result.secondaryAction.label })) : null, result.primaryAction ? (_jsx(Button, { "aria-label": result.primaryAction.accessibilityLabel, onClick: result.primaryAction.onAction, children: result.primaryAction.label })) : null] })) : null] }));
 });
 export const Progress = forwardRef(function Progress({ label, value, valueText, max = progressRecipe.defaults.max, size = progressRecipe.defaults.size, tone = progressRecipe.defaults.tone, shape = progressRecipe.defaults.shape, children, className, layoutStyle, ...props }, ref) {
     if (typeof max !== "number" || !Number.isFinite(max) || max <= 0) {
@@ -31,6 +31,9 @@ export const Progress = forwardRef(function Progress({ label, value, valueText, 
         throw new RangeError("Progress value must be between zero and max");
     }
     const labelId = useId();
+    // usage/components/progress.md: valueText defaults to the percentage. Only Native applied it, so the same
+    // StepPlayer/ScrollProgress inputs showed "0%" on Native and nothing on Web (2026-10-17 review F N4).
+    const resolvedValueText = valueText ?? (value === undefined ? undefined : `${Math.round((value / max) * 100)}%`);
     const diameter = progressRecipe.circular.sizes[size];
     const strokeWidth = progressRecipe.circular.strokeWidth[size];
     return (_jsxs("div", { className: classNames("hjm-progress", className), "data-size": size, "data-tone": tone, "data-shape": shape, "data-state": value === undefined ? "indeterminate" : "determinate", 
@@ -43,7 +46,7 @@ export const Progress = forwardRef(function Progress({ label, value, valueText, 
             // Conic sweep instead of an SVG arc: the same token drives both
             // shapes and no second color pipeline appears.
             "--hjm-progress-sweep": value === undefined ? "25%" : `${(value / max) * 100}%`,
-        } : layoutStyle, children: [_jsxs("span", { className: "hjm-progress__copy", children: [_jsx("span", { id: labelId, children: label }), valueText ? _jsx("span", { children: valueText }) : null] }), shape === "circular" ? (_jsx("span", { className: "hjm-progress__ring", "aria-hidden": "true", children: children ? _jsx("span", { className: "hjm-progress__ring-content", children: children }) : null })) : null, _jsx("progress", { ...props, ref: ref, className: "hjm-progress__native", max: max, ...(value === undefined ? {} : { value }), "aria-labelledby": props["aria-labelledby"] ?? (props["aria-label"] === undefined ? labelId : undefined), "aria-valuetext": typeof valueText === "string" ? valueText : undefined })] }));
+        } : layoutStyle, children: [_jsxs("span", { className: "hjm-progress__copy", children: [_jsx("span", { id: labelId, children: label }), resolvedValueText ? _jsx("span", { children: resolvedValueText }) : null] }), shape === "circular" ? (_jsx("span", { className: "hjm-progress__ring", "aria-hidden": "true", children: children ? _jsx("span", { className: "hjm-progress__ring-content", children: children }) : null })) : null, _jsx("progress", { ...props, ref: ref, className: "hjm-progress__native", max: max, ...(value === undefined ? {} : { value }), "aria-labelledby": props["aria-labelledby"] ?? (props["aria-label"] === undefined ? labelId : undefined), "aria-valuetext": resolvedValueText })] }));
 });
 export { Spinner } from "./internal/spinner.js";
 export const Skeleton = forwardRef(function Skeleton({ shape = skeletonRecipe.defaults.shape, animated = skeletonRecipe.defaults.animated, width, height, className, style, layoutStyle, ...props }, ref) {

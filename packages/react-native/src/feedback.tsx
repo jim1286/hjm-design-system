@@ -396,11 +396,15 @@ export function Result({
           width: 56,
         }}
       >
-        {renderIcon?.({
+        {renderIcon ? renderIcon({
           status: result.status,
           color: iconColor,
           backgroundColor: iconBackgroundColor,
-        })}
+        }) : (
+          <Text emphasis="strong" style={{ color: iconColor }} variant="heading">
+            {resultRecipe.glyphs[result.status]}
+          </Text>
+        )}
       </View>
       <Text
         accessibilityLiveRegion={

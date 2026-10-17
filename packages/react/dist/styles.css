@@ -953,7 +953,9 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 /* ActivityChip (2026-10-10): one 44px status pill in a header slot. Colours are the theme roles that
    activityChipRecipe.emphasis references (surface/text/border, primary/onPrimary); the component sets the
    recipe-only sizes as custom properties so theme.ts does not pull this opt-in contract into every graph. */
-.hjm-activity-chip { display: inline-flex; align-items: center; gap: var(--hjm-space-xxs); min-block-size: var(--hjm-control-min-touch-target); max-inline-size: var(--hjm-activity-chip-max-width); min-inline-size: 0; padding-block: 0; padding-inline: var(--hjm-space-xxs) var(--hjm-space-sm); border: 1px solid var(--hjm-color-border); border-radius: 999px; color: var(--hjm-color-text); background: var(--hjm-color-surface); font: inherit; font-size: var(--hjm-type-label-size, 0.75rem); line-height: var(--hjm-type-label-line-height, 1.5); font-weight: var(--hjm-font-weight-bold); cursor: pointer; }
+/* fit-content: a column Stack stretched the pill to its max width with empty space after the label; Native sizes it
+   to its content (2026-10-17 review F N13). Unlike align-self it keeps vertical centering in a TopBar row. */
+.hjm-activity-chip { display: inline-flex; align-items: center; gap: var(--hjm-space-xxs); min-block-size: var(--hjm-control-min-touch-target); inline-size: fit-content; max-inline-size: var(--hjm-activity-chip-max-width); min-inline-size: 0; padding-block: 0; padding-inline: var(--hjm-space-xxs) var(--hjm-space-sm); border: 1px solid var(--hjm-color-border); border-radius: 999px; color: var(--hjm-color-text); background: var(--hjm-color-surface); font: inherit; font-size: var(--hjm-type-label-size, 0.75rem); line-height: var(--hjm-type-label-line-height, 1.5); font-weight: var(--hjm-font-weight-bold); cursor: pointer; }
 /* Without media the pill keeps the symmetric label inset; the media hugs the start edge like an avatar chip. */
 .hjm-activity-chip:not([data-media]) { padding-inline-start: var(--hjm-space-sm); }
 .hjm-activity-chip[data-emphasis="emphasis"] { border-color: var(--hjm-color-primary); color: var(--hjm-color-on-primary); background: var(--hjm-color-primary); }
@@ -1023,11 +1025,8 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-empty-state__title { color: var(--hjm-color-text); }
 .hjm-result { display: grid; justify-items: center; gap: var(--hjm-space-sm); padding: var(--hjm-space-xxxl) var(--hjm-space-xl); text-align: center; }
 .hjm-result__icon { inline-size: 3.5rem; block-size: 3.5rem; display: grid; place-items: center; border-radius: var(--hjm-radius-full); font-size: 1.5rem; font-weight: var(--hjm-font-weight-bold); }
-.hjm-result__icon:empty::before { content: "i"; }
 .hjm-result[data-status="success"] .hjm-result__icon { color: var(--hjm-accent-success); background: color-mix(in srgb, var(--hjm-accent-success) 12%, transparent); }
-.hjm-result[data-status="success"] .hjm-result__icon:empty::before { content: "✓"; }
 .hjm-result[data-status="failure"] .hjm-result__icon { color: var(--hjm-color-danger); background: color-mix(in srgb, var(--hjm-color-danger) 12%, transparent); }
-.hjm-result[data-status="failure"] .hjm-result__icon:empty::before { content: "!"; }
 .hjm-result[data-status="info"] .hjm-result__icon { color: var(--hjm-accent-info); background: var(--hjm-color-bg); }
 .hjm-result__title { margin: 0; color: var(--hjm-color-text); font-size: var(--hjm-type-title-large-size); line-height: var(--hjm-type-title-large-line-height); overflow-wrap: anywhere; }
 .hjm-result__description { max-inline-size: 40rem; margin: 0; color: var(--hjm-color-text-muted); overflow-wrap: anywhere; }

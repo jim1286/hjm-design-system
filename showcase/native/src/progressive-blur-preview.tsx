@@ -6,6 +6,8 @@ import { ProgressiveBlur, type ProgressiveBlurHostLayer } from '@hjmds/react-nat
 import type { ScrollMetrics } from '@hjmds/design-contracts/scroll-progress';
 import { useHjmNativeTheme } from '@hjmds/react-native/provider';
 import { Button } from '@hjmds/react-native/actions';
+import { Switch } from '@hjmds/react-native/inputs';
+import { PreviewTools, PreviewToolButton } from './preview-tools';
 import { Stack, Text, Surface } from '@hjmds/react-native/primitives';
 import { TextField } from '@hjmds/react-native/inputs';
 
@@ -41,8 +43,6 @@ export function ProgressiveBlurPreview() {
   const Target = blur?.BlurTargetView ?? View;
   return <Stack gap="lg">
     <Text>목록 끝에서는 효과가 사라져 마지막 항목까지 읽을 수 있어요. 메모에 입력하는 동안에도 가리지 않아요.</Text>
-    <Button tone="ghost" selected={enabled} onPress={() => setEnabled(v => !v)}>{enabled ? '효과 끄기' : '효과 켜기'}</Button>
-    <Button tone="secondary" onPress={() => setCount(v => v === 12 ? 1 : 12)}>{count === 12 ? '항목 하나만 보기' : '목록 늘리기'}</Button>
     {!available ? <Text>이 개발 앱에는 블러 또는 마스크 모듈이 없습니다. 목록은 효과 없이 사용할 수 있어요.</Text> : null}
     {Platform.OS === 'android' && Number(Platform.Version) < 31 ? <Text>Android 12 이전 블러 비용은 별도 검증이 필요합니다.</Text> : null}
     <View style={{ position: 'relative', overflow: 'hidden' }}>
@@ -53,12 +53,14 @@ export function ProgressiveBlurPreview() {
           onScroll={e => { const offset = e.nativeEvent.contentOffset.y; setMetrics(v => ({ ...v, offset })); }} scrollEventThrottle={16}>
           <Stack gap="md">{Array.from({ length: count }, (_, index) => <Surface key={index} padding="md" bordered><Stack gap="sm">
             <Text>{`기록 ${index + 1}`}</Text><TextField label={`메모 ${index + 1}`} defaultValue="읽거나 작성 중인 내용" onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}/>
-            <Button onPress={() => setSaved(`기록 ${index + 1} 선택됨`)}>선택 {index + 1}</Button>
+            <Button tone="secondary" size="small" layoutStyle={{ alignSelf: 'flex-start' }} onPress={() => setSaved(`기록 ${index + 1} 선택됨`)}>선택 {index + 1}</Button>
           </Stack></Surface>)}</Stack>
         </ScrollView>
       </Target>
       {enabled && available ? <>{(['top', 'bottom'] as const).map(edge => <ProgressiveBlur key={edge} descriptor={{ edge, extent: 64, strength: 0.5, content: { kind: 'scroll', metrics, focused } }} renderLayer={layer => <Layer layer={layer} target={target}/>} />)}</> : null}
     </View>
     <Text accessibilityLiveRegion="polite">{saved || '선택한 기록이 없어요.'}</Text>
+    {/* Demo-only toggles sit under PreviewTools; as product-styled buttons they read as list actions (2026-10-17 review F8). */}
+    <PreviewTools><Switch presentation="inline" label="가장자리 흐림" checked={enabled} onCheckedChange={setEnabled}/><PreviewToolButton onPress={() => setCount(v => v === 12 ? 1 : 12)}>{count === 12 ? '항목 하나만 보기' : '목록 늘리기'}</PreviewToolButton></PreviewTools>
   </Stack>;
 }

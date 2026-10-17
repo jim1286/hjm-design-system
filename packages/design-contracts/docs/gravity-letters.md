@@ -5,8 +5,13 @@ Reviewed: 2026-10-01
 Optional `@hjmds/react/gravity-letters` and `@hjmds/react-native/gravity-letters`
 provide an independently authored promotional drop/rebound accent. This is not a
 replacement for Text or ContentTransition: the whole effect is decorative and
-hidden from accessibility APIs. Keep the meaningful static heading outside it.
-The Web presentation inherits typography; Native uses canonical heading Text.
+hidden from accessibility APIs. Keep the meaningful heading text outside it; it
+need not be a second visible copy. Web puts `VisuallyHidden` text in the same
+Heading; Native wraps the letters in an accessible `header` view labelled with
+the text (Native has no VisuallyHidden). The Web presentation inherits
+typography; Native takes an optional `level` and draws the glyphs with that
+`headingRecipe` level, because RN text styles do not cross the per-glyph
+Animated views (without `level` it keeps canonical heading Text).
 
 Pass `glyphs` as host-segmented graphemes/words (at most 32 nonempty single-line
 strings). Never split emoji or complex scripts with UTF-16 `split("")`. Spaces

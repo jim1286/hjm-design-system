@@ -41,7 +41,8 @@ The iPhone showcase puts **컴포넌트** first: one entry for each of the 83 su
 Toast previews (2026-10-01): `컴포넌트 / 피드백 / Toast / Default`
 uses the standard card entrance without a fake capsule. `컴포넌트 / 피드백 / Liquid Toast` exercises
 the optional liquid surface independently of hardware; it is explicitly a surface
-fixture, not automatic iPhone 12 behavior. Each has an `알림 띄우기` trigger. Default,
+fixture, not automatic iPhone 12 behavior. Both open on the saved toast (2026-10-17) and keep
+`저장 알림 띄우기`·`답장 알림 띄우기` replay tools under 미리보기 도구 at the bottom. Default,
 Dark and LargeText now use a full-height region rather than the short ScrollView
 that clipped the card above the trigger. New integrations have individual role-based entries under `컴포넌트`;
 open the bottom-left navigation menu and search the component title. A dev-client
