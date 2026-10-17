@@ -1,6 +1,6 @@
 # Storybook 탐색 규격
 
-검토일: 2026-10-12 · 적용: Web 및 React Native showcase · 선택적 규약 감사: `pnpm storybook:check`([`scripts/check-storybook.mjs`](../scripts/check-storybook.mjs)), `pnpm usage:check`
+검토일: 2026-10-18 · 적용: Web 및 React Native showcase · 선택적 규약 감사: `pnpm storybook:check`([`scripts/check-storybook.mjs`](../scripts/check-storybook.mjs)), `pnpm usage:check`
 
 2026-10-06 사용자 요청("스토리북 규격도 잡아줘. 지금 좀 난잡해", 구조는 "너가 권장하는 구조로, 깔끔하고 직관적으로" 위임)으로
 메뉴 구조를 규격으로 고정한다. 그 전에는 같은 단계 안에서 제목 깊이가 3·4·5로 섞였고, 둘째 분류 19개 중 12개가 항목 1개짜리
@@ -48,7 +48,7 @@
 | 화면 | 소개 · 계정 · 설정 · 검색 · 콘텐츠 · 소통 · 화면 틀과 도구 | 화면의 목적 |
 
 - `컴포넌트/개요`는 탐색 문서 분류다(사용 안내 · 컴포넌트 찾기 · 구현·검증 현황 · `<역할> 모아 보기` 9개, Web만).
-  스토리 어휘·필수 변형·사용 지침 담당 대상이 아니다. `<역할> 모아 보기`는 canonical 컴포넌트 103개를 역할별 한 페이지에
+  스토리 어휘·필수 변형·사용 지침 담당 대상이 아니다. `<역할> 모아 보기`는 catalog에서 Web 지원이 선언된 canonical 컴포넌트를 역할별 한 페이지에
   모은 Web 참조 목록이며, 2026-10-06 전 `배포/컴포넌트/<역할>` 페이지의 Web URL(id)을 보존하려고 남긴다.
 - `구성/비교와 검증`은 표현·환경·플랫폼 구현을 나란히 비교하는 항목이다. 설계 본보기가 아니다.
 - 버린 어휘: 구성 `오버레이`(목적이 아니라 수단), `시작과 안내`(2개뿐이고 기준이 겹침), 출처 이름 전부(공통 화면·공통 동작·
@@ -73,7 +73,7 @@ Native 10.4.4에서는 meta의 `includeStories`를 사용하지 않는다. `prep
 3. 플랫폼 이름(웹·네이티브)은 `구성/비교와 검증` 항목에만 쓴다(그 차이 자체가 대상일 때).
 4. 항목 이름은 모든 단계를 통틀어 유일하고, 분류 이름과 같을 수 없다(`화면/검색/검색` 금지).
 5. 컴포넌트 항목 이름은 API 이름이 아니라 역할을 쓴다(Button → 버튼, ThinkingOrb → 생각 중 표시). 공개 API 이름은 사용 지침과
-   컴포넌트 찾기의 보조 정보에 둔다. 사전은 `showcase/shared/story-labels.ts`다(검사기는 대조하지 않는다).
+   컴포넌트 찾기의 보조 정보에 둔다. canonical 항목명은 `catalog.ts`의 `label`에서 파생한다. `showcase/shared/story-labels.ts`에는 조합·변형 등 catalog 밖 이름만 직접 적는다. S9는 지원 surface별 개별 항목을 이 이름과 대조한다.
 
 ### 1.4 스토리 이름과 순서
 
@@ -232,6 +232,22 @@ stories 파일 안 구현(§1.7 목표), 상태 arg 이름. 빌드 index 기준 
   계산한다. 좌표 탭이나 websocket 설정 변경은 쓰지 않는다.
 - Native 캡처에는 상태 막대·Storybook 하단 막대·Expo Go 도구 버튼이 함께 찍힌다. Web은 402pt 뷰포트(iPhone 17 Pro)·3배율이다.
 - 출력은 `.gitignore`의 `artifacts/`에 남는 임시 산출물이다. 필요한 결론만 기존 작업 기록에 옮기고 지운다.
+
+### 등록 입력과 생성 경로
+
+2026-10-18: 22종 화면·구성을 등록할 때 같은 이름·id·지원 상태를 여러 목록에 반복해 누락이 생겼다.
+등록 사실은 `packages/design-contracts/src/catalog.ts`의 행 한 곳에서 소유한다. `label`, `id`(기본 kebab과 다를 때만),
+`companions`, `extensions`, category와 surfaceStatus를 입력하고 실제 renderer·preview·proof를 구현한다.
+
+- `pnpm api-map:sync`: 실제 package exports를 분석해 공개 API 대응표와 renderer의 `public-exports.generated.ts`를 만든다.
+- `story-labels`, 웹 preview의 이름·recipe·behavior 등록, Native story id는 catalog에서 파생한다.
+  웹 preview switch와 Native 예제·독립 스토리는 실제 실행 코드로 남으며 타입 검사로 연결한다.
+- `pnpm storybook:sync`: catalog의 현재 build에서 역할별 개요를 생성하고 누락된 개별 CSF 파일을 스캐폴드한다.
+  기존 파일의 고유 예제와 Web id는 보존한다. 새 항목은 실험, 이미 있는 반대 플랫폼의 대응 항목은 같은 분류를 쓴다.
+  스캐폴드의 preview는 직접 구현한다. 새 최대 글자 스토리는 만들지 않는다.
+- `storybook:check`의 S9는 활성 canonical 행마다 지원 플랫폼의 실제 개별 CSF 제목을 확인한다.
+  `PLATFORM_ONLY`의 canonical 차이는 catalog surfaceStatus에서 파생하고 조합·선택형 확장 차이만 직접 기록한다.
+  이 검사는 선택적 정적 규약 감사이며 실행 증거나 게시 게이트가 아니다.
 
 ## 2. 승인 기록
 

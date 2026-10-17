@@ -2,7 +2,7 @@
 
 검토일: 2026-10-17
 
-HJM은 계약, Web renderer, React Native renderer, Showcase evidence를 같은 변경에서
+HJM은 변경에 영향받는 계약, Web renderer, React Native renderer, Showcase evidence를 같은 변경에서
 함께 관리합니다. 새 API는 한 플랫폼의 편의보다 공통 사용자 문제와 검증 가능한 의미를
 먼저 설명해야 합니다.
 
@@ -35,9 +35,38 @@ package build·후보 tarball·게시 검사는 별도로 유지한다. 여기�
 소비 앱의 게시 패키지 호환성·native binary·배포 검증을 완료한 것은 아니다.
 개발 어댑터는 포트폴리오 `scripts/hjm-local-source.cjs`에서 투영한다.
 
+## 변경 유형별 작업 범위
+
+2026-10-18 사용자 요청: 개발 흐름을 모든 수정에 적용하는 체크리스트로 쓰면 내부 수정에도 등록·문서·검사가
+불필요하게 늘어난다. 아래에서 실제 영향에 맞는 작업만 선택한다. 여러 유형에 걸치면 필요한 범위를 합친다.
+
+| 변경 유형 | 수행할 작업 | 함께 바꾸는 조건 |
+| --- | --- | --- |
+| 내부 버그 수정·리팩터링 | 원인 구현과 직접 소비 경로를 수정하고 관련 타입·동작을 확인 | 등록 정보가 그대로면 catalog를 수정하지 않는다. 공개 사용법·계약 설명·예제가 달라질 때만 해당 문서를 갱신한다. |
+| 공개 API·동작·지원 범위 추가 또는 변경 | 기존 API와 소유권 확인 → 계약·타입/recipe → 지원 renderer 구현 → 실제 예시·사용 지침 → 관련 동기화·검사 | catalog는 이름·분류·지원 상태 등 등록 사실이 달라질 때, migration은 소비자의 수정이 필요할 때 갱신한다. |
+| 문서·Showcase 예시 수정 | 해당 설명·예제와 참조하는 공개 API의 연결을 확인 | 실행 코드가 바뀌면 해당 예제의 타입·동작을 확인한다. 문서만 바뀌면 package 빌드·전체 테스트를 실행하지 않는다. |
+
+공통 계약 변경은 지원하는 Web/Native와 직접 소비 경로에 함께 반영한다. 플랫폼 고유 수정은 해당 renderer를
+대상으로 하며, 다른 플랫폼의 동일 계약에 영향이 없는지 확인한다. 검사 범위는 변경한 동작으로 정하고
+같은 소스·환경·범위에서 통과한 결과를 재사용한다. 최대 글자 크기 조건은 상위 지침대로 제외한다.
+
+### 등록과 실행 예제의 경계
+
+- canonical 이름·label·지원 surface·companion/extension 등 등록 사실은 `catalog.ts`가 소유한다.
+  같은 정보를 Showcase·evidence·문서 목록에 손으로 다시 등록하지 않는다. 타입·recipe·renderer exports는 각 원본을 유지한다.
+- 바뀐 원본의 파생물만 기존 생성 명령으로 동기화한다. 생성물은 직접 고치지 않는다.
+  명령의 입력·출력 관계는 [등록 입력과 실행 증거](packages/design-contracts/docs/architecture.md#등록-입력과-실행-증거)를 따른다.
+- 실행 가능한 예제·fixture·사용자 행동 proof는 작성자가 실제 공개 API로 구현한다. 생성된 CSF 골격이나
+  evidence claim은 등록 정보이며 렌더·입력·상태 전환이 작동한다는 증거가 아니다.
+- 수정할 곳이 늘어나면 같은 등록 사실의 반복 입력인지, 실제로 다른 동작·예제의 변경인지 먼저 구분한다.
+  반복 입력은 기존 원본과 생성 경로에서 해결하고, 고유 예제·검증을 없애거나 새 감사 게이트로 감싸지 않는다.
+
+구현 완료·stable 승격·npm 게시·제품 채택은 별도 상태다. 일반 개발에서 버전을 임의로 올리거나 게시하지 않는다.
+게시 소스의 버그 수정도 아래 Changeset 기준에 포함하며, 문서·예시만의 변경에는 package Changeset을 요구하지 않는다.
+
 ## 변경 규칙
 
-1. canonical 컴포넌트의 공개 API·지원 행동이 바뀌면 관련 `componentCatalog`와 renderer evidence를 갱신합니다. 내부 리팩터링에 내용이 같은 문서 갱신을 요구하지 않습니다.
+1. canonical 컴포넌트의 등록 사실이 바뀌면 관련 `componentCatalog` 행을 갱신합니다. 공개 API·지원 행동 변경은 영향받는 타입·recipe·구현과 실제 renderer evidence에 반영하며, 등록 정보가 같으면 catalog 수정은 요구하지 않습니다. 내부 리팩터링에 내용이 같은 문서 갱신을 요구하지 않습니다.
    companion·alternative·optional API를 포함한 모든 공개 컴포넌트 이름은
    [공개 API 대응표](docs/generated/public-component-map.md)에 분류합니다.
 2. 상태 축을 추가하기 전에 실제 제품 문제와 Web/RN 번역을 문서화합니다.
@@ -104,13 +133,17 @@ HJM이 제공한다. 제품은 데이터·문구·브랜드·권한·서버 요�
 
 ## 컴포넌트 완료 조건
 
+새 컴포넌트·공개 계약 추가 시 아래 제공 범위를 갖춘다. 기존 항목 수정은 위 변경 유형별 범위만 적용하며,
+매번 전체 목록을 재검사하거나 항목마다 새 테스트를 추가하지 않는다.
+
 - renderer-neutral descriptor·validator·resolver 또는 명시적인 presentation contract
-- Web/RN 지원 범위와 접근성 번역
-- public granular export와 package boundary test
-- default·dark·long copy·large text·RTL·reduced motion·accessibility evidence
-- 행동 컴포넌트의 keyboard/host-action evidence
-- Storybook 또는 Native gallery의 canonical preview
-- 소비자 migration과 Changeset
+- 선언한 Web/RN 지원 범위와 접근성 번역, public granular export
+- 실제 공개 API를 사용하는 Storybook 또는 Native gallery의 canonical preview
+- 변경한 동작에 필요한 환경·keyboard/host-action evidence와 import/package 경계 확인. 기존 관련 검사를 우선 사용한다.
+- 소비자 수정이 필요한 경우 migration, 게시 소스 변경을 마치는 경우 작업 단위 Changeset
+
+stable 승격의 증거 범위는 [승격 기준](packages/design-contracts/docs/stable-promotion.md)을 따르며,
+일반 버그 수정의 완료 조건에 승격 작업을 추가하지 않는다.
 
 계획된 컴포넌트의 자세한 저작 규칙은
 `packages/design-contracts/docs/authoring-brief.md`를 따릅니다.
@@ -136,7 +169,7 @@ HJM이 제공한다. 제품은 데이터·문구·브랜드·권한·서버 요�
 
 2026-10-01 사용자 피드백에서 새 optional 컴포넌트가 묶음 예제에만 있어 없는 것으로
 보였다. 공개 컴포넌트를 구현하는 같은 변경에서 지원하는 Web/Native Storybook에
-개별 항목을 등록한다. [분류 기준](docs/STORYBOOK_NAVIGATION.md)의 역할별 컴포넌트 아래에 두고 Default·Dark·LargeText를 제공한다. 신규 항목은 실험 아래 토큰·컴포넌트·구성·화면 중 실제 역할에 둔다.
+개별 항목을 등록한다. [분류 기준](docs/STORYBOOK_NAVIGATION.md)의 역할별 컴포넌트 아래에 기본 실행 예제를 두고, 테마·상태 예제는 해당 공개 계약을 설명하는 범위로 제공한다. 최대 글자 크기 전용 예제·검증은 추가하지 않는다. 신규 항목은 실험 아래 토큰·컴포넌트·구성·화면 중 실제 역할에 둔다.
 비교 예제는 구성, 페이지 전체는 화면, 색상·글꼴 편집은 토큰에 둔다. canonical catalog 밖 optional 항목도 등록 검사에
 포함한다. 스토리끼리 import하지 않고 별도 preview 모듈을 공유한다.
 
