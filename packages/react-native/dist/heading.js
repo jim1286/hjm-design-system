@@ -3,7 +3,7 @@ import { headingRecipe, resolveHeadingSemanticLevel, validateHeadingDescriptor, 
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
-export function Heading({ level, semanticLevel, children, layoutStyle }) {
+export function Heading({ level, semanticLevel, children, layoutStyle, align }) {
     const descriptor = {
         level,
         ...(semanticLevel === undefined ? {} : { semanticLevel }),
@@ -18,6 +18,6 @@ export function Heading({ level, semanticLevel, children, layoutStyle }) {
                 fontWeight: metrics.fontWeight,
                 lineHeight: metrics.lineHeight,
             },
-        ], ...(layoutStyle === undefined ? {} : { layoutStyle }), children: children }));
+        ], ...(layoutStyle === undefined ? {} : { layoutStyle }), ...(align === "center" ? { align: "center" } : {}), children: children }));
 }
 //# sourceMappingURL=heading.js.map

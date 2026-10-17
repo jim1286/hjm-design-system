@@ -687,9 +687,10 @@ export const switchRecipe = {
     rowLabelTextVariant: "body",
     slots: ["root", "track", "thumb", "label", "description"],
     defaults: { size: "medium" },
-    // Preserve existing inline Web and full-row Native layouts. Settings can opt in
-    // to one shared row without wrapping a switch in a second interactive target.
-    presentationDefaults: { web: "inline", native: "row" },
+    // One default on both renderers: label/description first, track at the trailing edge
+    // (2026-10-17 web/native comparison: Web defaulted to an inline track-first switch, so the
+    // same settings toggle rendered mirrored). Compact toolbars can still pass `inline`.
+    presentationDefaults: { web: "row", native: "row" },
     // Descriptions beside a fixed track become a narrow column at larger text sizes.
     // Reuse the provider's large-text boundary so Web CSS and Native reflow together.
     stackedTextScale: largeTextThreshold,

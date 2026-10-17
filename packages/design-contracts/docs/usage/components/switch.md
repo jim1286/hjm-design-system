@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-08
+- 검토일: 2026-10-17
 - 근거: [제품 채택 1.4 §설정 한 행](../../product-adoption-1.4.md), `src/component-recipes.ts`(`switchRecipe`)
 - 스토리북: `배포/컴포넌트/입력/스위치`
 
@@ -61,7 +61,7 @@ import { Switch } from "@hjmds/react-native/inputs";
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `presentation` | `inline` · `row` | Web `inline`, Native `row` | 기본값이 플랫폼마다 다르다. 같은 설정 화면을 두 표면에서 맞추려면 **항상 명시**한다 |
+| `presentation` | `inline` · `row` | `row`(Web·Native, 미게시) | 이름·설명이 앞, 트랙이 끝. `inline`은 툴바처럼 좁은 자리에서만 명시한다 |
 | `size` | `small`(44×26) · `medium`(52×32) | `medium` | — |
 | `checked`/`defaultChecked` | `boolean` | `defaultChecked` `false` | `checked`를 생략하면 비제어로 동작한다 |
 | `onCheckedChange` | `(checked: boolean) => void` | — | 다음 상태를 받는다 |
@@ -126,3 +126,7 @@ presentation="row"                    큰 글자(≥1.6)
 모두 `switchRecipe.rowLabelTextVariant`의 `body` 역할을 사용한다. 설명은 `caption`,
 최소 터치 영역과 두 줄 행 높이는 그대로 유지한다. inline의 기존 글자 처리는 유지한다.
 앱에서 Text로 이름을 다시 조립하거나 내부 글자 스타일을 덮지 않는다.
+
+## 근거
+
+- 기본 `row` 통일: 2026-10-17 웹·앱 비교 도구에서 같은 설정 스위치가 Web은 트랙 먼저(inline), Native는 이름 먼저(row)로 거울처럼 그려졌다.

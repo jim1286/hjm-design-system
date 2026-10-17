@@ -23,6 +23,12 @@ export declare const screenHeaderRecipe: {
     readonly compactMinHeight: 48;
     readonly compactPaddingVertical: 2;
     readonly compactBodyTop: 4;
+    /**
+     * Heading levels for the route title, shared by Web and Native (2026-10-17 comparison: Native drew the
+     * title as regular-weight Text — 20 start / 18 centered — while Web used bold Heading levels).
+     */
+    readonly titleLevel: "level3";
+    readonly centeredTitleLevel: "level5";
 };
 /**
  * Leaving a screen (back, close, "설정 나가기") is an icon-only button fixed at the header's leading edge

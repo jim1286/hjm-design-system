@@ -1945,7 +1945,7 @@ export declare const switchRecipe: {
         readonly size: "medium";
     };
     readonly presentationDefaults: {
-        readonly web: "inline";
+        readonly web: "row";
         readonly native: "row";
     };
     readonly stackedTextScale: 1.6;

@@ -5,6 +5,8 @@ export type HeadingProps = HeadingDescriptor & Readonly<{
     children: ReactNode;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
+    /** Text alignment inside the heading box; Web inherits it from the container's text-align. */
+    align?: "start" | "center";
 }>;
-export declare function Heading({ level, semanticLevel, children, layoutStyle }: HeadingProps): import("react").JSX.Element;
+export declare function Heading({ level, semanticLevel, children, layoutStyle, align }: HeadingProps): import("react").JSX.Element;
 //# sourceMappingURL=heading.d.ts.map

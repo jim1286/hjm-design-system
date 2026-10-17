@@ -16,6 +16,7 @@ import { ScreenExitButton, type ScreenExit } from "./internal/screen-exit.js";
 import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, screenHeaderRecipe, validateScreenExit, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
 import { motion } from "@hjmds/design-contracts/foundations";
 import { Stack, Text } from "./primitives.js";
+import { Heading } from "./heading.js";
 import { ListRow, type ListRowProps } from "./data-display.js";
 import type { ListRowPrivateProps } from "./internal/list-row-private.js";
 import type { FieldPrivateProps } from "./internal/field-private.js";
@@ -115,15 +116,15 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
       {/* Measure unconstrained control rows before reserving equal space on both sides. */}
       <View onLayout={event => setLeadingWidth(event.nativeEvent.layout.width)} style={{ position: "absolute", left: padding, top: headerVerticalPadding, bottom: headerVerticalPadding, justifyContent: "center", flexDirection: "row", alignItems: "center" }}>{leading}</View>
       <View style={{ minWidth: 0, alignItems: "center", gap: 4 }}>
-        {titleVisibility === "visible" && <Stack axis="inline" gap="xs" align="center" justify="center" layoutStyle={{flexWrap: "wrap"}}>{hjmTitleLeading}<Text variant="title" align="center" accessibilityRole="header">{title}</Text>{titleBadge}</Stack>}
+        {titleVisibility === "visible" && <Stack axis="inline" gap="xs" align="center" justify="center" layoutStyle={{flexWrap: "wrap"}}>{hjmTitleLeading}<Heading level={screenHeaderRecipe.centeredTitleLevel} semanticLevel={1} align="center">{title}</Heading>{titleBadge}</Stack>}
         {description && <Text align="center" tone="muted">{description}</Text>}
       </View>
       <View onLayout={event => setActionsWidth(event.nativeEvent.layout.width)} style={{ position: "absolute", right: padding, top: headerVerticalPadding, bottom: headerVerticalPadding, justifyContent: "center", flexDirection: "row", alignItems: "center" }}>{actions}</View>
     </View> : <View style={{ flexDirection: profileLayout?.headerAxis ?? "row", flexWrap: "wrap", alignItems: profileLayout ? (profileLayout.centered ? "center" : "flex-start") : "center", padding, gap: recipe.itemGap }}>
       {/* Reserve a readable title column; wrapping moves actions below it at large text. */}
       {leading}<View style={{ flexGrow: 1, flexShrink: 1, ...(profileLayout?.headerAxis === "column" ? { width: "100%" as const } : { flexBasis: recipe.headerMinWidth * environment.textScale }) }}>
-        {/* Profile headings share the Web heading role; preserve the legacy title role without a profile. */}
-        {titleVisibility === "visible" && <Stack axis="inline" gap="xs" align="center" justify={profileLayout?.centered ? "center" : "start"} wrap><Text variant={profileLayout ? "heading" : "titleLarge"} {...(profileLayout?.centered ? { align: "center" as const } : {})} accessibilityRole="header">{title}</Text>{titleBadge}</Stack>}
+        {/* Same Heading level as Web (screenHeaderRecipe.titleLevel), with or without a design profile. */}
+        {titleVisibility === "visible" && <Stack axis="inline" gap="xs" align="center" justify={profileLayout?.centered ? "center" : "start"} wrap><Heading level={screenHeaderRecipe.titleLevel} semanticLevel={1} {...(profileLayout?.centered ? { align: "center" as const } : {})}>{title}</Heading>{titleBadge}</Stack>}
         {description ? <Text tone="muted" {...(profileLayout?.centered ? { align: "center" as const } : {})}>{description}</Text> : null}
       </View>{actions}
     </View>)}

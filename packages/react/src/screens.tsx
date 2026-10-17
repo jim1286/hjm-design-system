@@ -9,7 +9,7 @@ import { Button, IconButton } from "./actions.js";
 import { useOptionalHjmTheme } from "./provider.js";
 import { TextArea } from "./forms.js";
 import { useId, useLayoutEffect, useRef, useState, type Ref, type ReactNode } from "react";
-import { isReplySwipe, timestampRevealOffset, shouldSubmitMessageKey, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, validateScreenExit, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
+import { isReplySwipe, timestampRevealOffset, shouldSubmitMessageKey, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, screenHeaderRecipe, validateScreenExit, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
 import { Heading } from "./heading.js";
 import { Spinner } from "./internal/spinner.js";
 import { ScreenExitButton, type ScreenExit } from "./internal/screen-exit.js";
@@ -90,10 +90,10 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
       {/* Equal side columns sized by their controls and a title-size (18) heading, matching Native's measured
           centered header (2026-10-17: the fixed 1:2:1 split with a level3 heading wrapped short titles). */}
       <div>{leading}</div><div className="hjm-screen__heading" style={{ textAlign: "center", minWidth: 0 }}>
-        {titleVisibility === "visible" && <Stack axis="inline" gap="xs" align="center" justify="center" wrap>{hjmTitleLeading}<Heading level="level5" semanticLevel={1} id={id}>{title}</Heading>{titleBadge}</Stack>}
+        {titleVisibility === "visible" && <Stack axis="inline" gap="xs" align="center" justify="center" wrap>{hjmTitleLeading}<Heading level={screenHeaderRecipe.centeredTitleLevel} semanticLevel={1} id={id}>{title}</Heading>{titleBadge}</Stack>}
         {description ? <Text as="p" tone="muted">{description}</Text> : null}</div><div style={{ justifySelf: "end" }}>{actions}</div>
     </header> : <header className="hjm-screen__header" style={profileLayout ? { flexDirection: profileLayout.headerAxis, alignItems: profileLayout.centered ? "center" : undefined, textAlign: profileLayout.centered ? "center" : undefined } : undefined}>
-      {leading}<div className="hjm-screen__heading">{titleVisibility === "visible" && <Stack axis="inline" gap="xs" align="center" justify={profileLayout?.centered ? "center" : "start"} wrap><Heading level="level3" semanticLevel={1} id={id}>{title}</Heading>{titleBadge}</Stack>}
+      {leading}<div className="hjm-screen__heading">{titleVisibility === "visible" && <Stack axis="inline" gap="xs" align="center" justify={profileLayout?.centered ? "center" : "start"} wrap><Heading level={screenHeaderRecipe.titleLevel} semanticLevel={1} id={id}>{title}</Heading>{titleBadge}</Stack>}
         {description ? <Text as="p" tone="muted">{description}</Text> : null}</div>{actions}
     </header> : null)}
     {notice ? <div className="hjm-screen__notice">{notice}</div> : null}

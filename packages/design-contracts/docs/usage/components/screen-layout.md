@@ -95,6 +95,7 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 | --- | --- | --- |
 | 크기 | 폭 100%, 최대 `screenPatternRecipe.maxWidth`(`layout.readingMaxWidth` 720), 가운데 정렬; 높이는 host가 준 남은 높이(Web `block-size: 100%`, Native `flex: 1`) | Web `.hjm-screen`, Native `ScreenLayout` |
 | 간격 | 바깥 padding `screenPatternRecipe.padding`(`spacing.md` 16)을 헤더 사방·notice 좌우·본문 사방·footer 사방에 준다(`contentInset="none"`이면 0); 헤더 안 `exit`·제목·`actions` 간격 `itemGap`(`spacing.sm`) 12(두 플랫폼, `contentInset="none"`이어도 유지); 상태 안내는 위아래 `sectionGap`(`spacing.xl`) 24, 안내–`stateAction` `stateGap`(`spacing.md`) 16 | Web `src/screens.tsx`(`--hjm-screen-item-gap`·`--hjm-screen-state-gap`)·`.hjm-screen__*`, Native `ScreenLayout` |
+| 제목 | 시작 정렬은 `Heading` `screenHeaderRecipe.titleLevel`(level3), 가운데 정렬은 `centeredTitleLevel`(level5). Web·Native 같은 단계 | `screenHeaderRecipe` |
 | 순서·정렬 | 헤더(`exit` → 제목·설명 → `actions`) → notice → 본문 → footer; 상태 안내는 본문 세로 가운데 | 렌더 순서 |
 | 고정·스크롤 | 헤더·notice·footer 고정, `scroll="screen"`은 본문이 스크롤, `"content"`는 자식이 스크롤; footer 위 테두리 1, Web은 하단 safe area만큼 padding을 늘린다 | Web `data-scroll`·`.hjm-screen__footer`, Native `ScrollView` |
 | 좁은 폭·큰 글자 | 제목 열 최소 폭 `headerMinWidth` 120 × 글자 배율, 모자라면 `actions`가 다음 줄로 내려간다; 제목은 줄바꿈(`overflow-wrap: anywhere`)되고 자르지 않는다; Native safe area·탭바 inset은 host | `screenPatternRecipe.headerMinWidth`, Web `.hjm-screen__heading` |

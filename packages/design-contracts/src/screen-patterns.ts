@@ -31,6 +31,12 @@ export const screenHeaderRecipe = {
   compactMinHeight: 48,
   compactPaddingVertical: 2,
   compactBodyTop: spacing.xxs,
+  /**
+   * Heading levels for the route title, shared by Web and Native (2026-10-17 comparison: Native drew the
+   * title as regular-weight Text — 20 start / 18 centered — while Web used bold Heading levels).
+   */
+  titleLevel: "level3",
+  centeredTitleLevel: "level5",
 } as const;
 
 /**
