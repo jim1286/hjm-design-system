@@ -4,6 +4,7 @@ import { page } from "vitest/browser";
 import { screenPatternRecipe } from "@hjmds/design-contracts/screen-patterns";
 import { listRecipe, menuRecipe, searchFieldRecipe, segmentedControlRecipe, sheetRecipe, statisticRecipe, tooltipRecipe } from "@hjmds/design-contracts/recipes";
 import { uploadItemRecipe } from "@hjmds/design-contracts/components/upload-item";
+import { transferListRecipe } from "@hjmds/design-contracts/components/transfer-list";
 import { control, spacing } from "@hjmds/design-contracts/foundations";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { Agreement } from "../src/agreement.js";
@@ -141,7 +142,7 @@ it("Statistic, TransferList, UploadItem, DataTable, EmptyState and List spacing 
   expect(css(statistic).rowGap).toBe(px(statisticRecipe.density.compact.gap));
   expect(css(statistic).paddingTop).toBe(px(statisticRecipe.density.compact.padding));
   expect(css(container.querySelector(".hjm-transfer-list__option")!).paddingInlineStart).toBe(px(spacing.sm));
-  expect(css(container.querySelector(".hjm-transfer-list__actions")!).rowGap).toBe(px(spacing.sm));
+  expect(css(container.querySelector(".hjm-transfer-list__actions")!).rowGap).toBe(px(transferListRecipe.moveControls.gap));
   const upload = container.querySelector(".hjm-upload-item")!;
   expect(css(upload).minHeight).toBe(px(uploadItemRecipe.row.minHeight));
   expect(css(upload).paddingTop).toBe(px(uploadItemRecipe.row.paddingVertical));

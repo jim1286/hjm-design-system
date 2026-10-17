@@ -83,7 +83,8 @@ describe("web showcase coverage", () => {
 
     expect(fieldHtml).toContain('class="hjm-field hjm-demo-field"');
     expect(demoFieldRule).toMatch(/\binline-size:\s*100%\s*;/);
-    expect(demoFieldRule).toMatch(/\bmax-width:\s*420px\s*;/);
+    // Width is capped by the story stage (600px preview cap, 2026-10-17), not a per-field 420px limit.
+    expect(demoFieldRule).not.toMatch(/\bmax-width:/);
   });
 
   it("has a documented definition for every required scenario", () => {
