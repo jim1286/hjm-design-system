@@ -1,6 +1,6 @@
 {
   "name": "@hjmds/react-native",
-  "version": "1.27.2",
+  "version": "1.28.0",
   "description": "Expo-independent React Native renderers for HJM design contracts.",
   "license": "MIT",
   "publishConfig": {
@@ -653,7 +653,7 @@
   },
   "peerDependencies": {
     "@gorhom/bottom-sheet": "5.2.14",
-    "@hjmds/design-contracts": ">=1.27.0 <1.28.0",
+    "@hjmds/design-contracts": ">=1.28.0 <1.29.0",
     "@react-native-menu/menu": "1.2.2",
     "@shopify/react-native-skia": "^2.6.2",
     "react": ">=19",
