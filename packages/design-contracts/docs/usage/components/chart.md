@@ -104,6 +104,7 @@ import { BarChart, Sparkline } from "@hjmds/react-native/chart";
 | `missingLabel` | `string` | — (필수) | 텍스트 대안에서 빈 값을 읽는 문구 |
 | `height` | `number` | `chartRecipe.heights.regular` 180 | 가로는 부모 폭을 채운다 |
 | `curve` | `linear` · `monotone` · `step` | `linear` | `monotone`은 데이터 밖으로 넘지 않는 곡선 |
+| `missingConnection` | `none` · `dotted` | `none` | 빈 구간 양쪽 관측값에서 각자의 시즌/기간 x 위치를 유지한 채 plot 하단까지 수직 점선을 내린다. 양쪽 점선은 서로 연결하지 않는다. 하단은 결측 표시이며 0이 아니다. 값·포커스·영역 채움은 만들지 않으며 앞/뒤 결측을 외삽하지 않는다. Web·Native 미게시 |
 | `area` | `boolean` | 계열이 하나면 `true` | 선 아래 그라데이션(0.32 → 0) |
 | `stacked` | `boolean` | `false` | 쌓은 영역. 0을 항상 포함 |
 | `invert` | `boolean` | `false` | 작을수록 위(순위·평균자책점) |

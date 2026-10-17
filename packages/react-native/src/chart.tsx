@@ -172,6 +172,8 @@ export type LineChartProps = Readonly<{
   missingLabel: string;
   height?: number;
   curve?: ChartCurve;
+  /** Separate dotted vertical drops at the observed edges of missing periods; no bridge or invented values. */
+  missingConnection?: "none" | "dotted";
   area?: boolean;
   stacked?: boolean;
   invert?: boolean;
@@ -191,7 +193,7 @@ export type LineChartProps = Readonly<{
   scrubEmphasis?: "before" | "after";
 } & FocusProps>;
 
-export function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height = chartRecipe.heights.regular, curve = "linear", area, stacked = false, invert = false, domain, includeZero, referenceValue, extremes, showAxis = false, valueAxis = false, ticks: tickOverride, cursorLabel, animateChanges = false, scrubEmphasis, ...focusProps }: LineChartProps) {
+export function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height = chartRecipe.heights.regular, curve = "linear", missingConnection = "none", area, stacked = false, invert = false, domain, includeZero, referenceValue, extremes, showAxis = false, valueAxis = false, ticks: tickOverride, cursorLabel, animateChanges = false, scrubEmphasis, ...focusProps }: LineChartProps) {
   const palette = useChartPalette(), id = useId().replace(/[^a-zA-Z0-9]/g, "");
   const [width, onLayout] = useWidth();
   const available = useMemo(() => observedIndices(series), [series]);
@@ -215,6 +217,12 @@ export function LineChart({ categories, series, accessibilityLabel, formatValue,
         const color = palette.seriesColor(item, s), segments = splitSegments(g.plots[s]!);
         const lowerSegments = g.lower ? splitSegments(g.lower[s]!) : null;
         return <G key={item.id}>
+          {/* Each observed edge drops at its own x-position. Leave the missing seasons
+              entirely disconnected; the floor is a visual absence marker, never zero. */}
+          {missingConnection === "dotted" && segments.slice(1).map((segment, index) => {
+            const before = segments[index]!.at(-1)!, after = segment[0]!;
+            return <G key={`gap${index}`}>{[before, after].map(point => <Line key={point.index} x1={point.x} y1={point.y} x2={point.x} y2={g.plot.bottom} stroke={color} strokeWidth={chartRecipe.line.strokeWidth} strokeDasharray={[...chartRecipe.line.missingDash]} strokeLinecap="round" opacity={chartRecipe.line.missingOpacity} />)}</G>;
+          })}
           {(showArea || stacked) && segments.map((segment, i) => <MotionLinePath animate={animateChanges} points={segment} floor={g.plot.bottom} curve={curve} lower={lowerSegments?.[i]} key={`a${i}`} fill={`url(#hjmArea${id}${s})`} />)}
           {segments.map((segment, i) => <G key={`l${i}`}>
             <MotionLinePath animate={animateChanges} points={segment} curve={curve} stroke={scrubEmphasis && focus !== null ? palette.label : color} strokeWidth={chartRecipe.line.strokeWidth} fill="none" strokeLinejoin="round" strokeLinecap="round" />
@@ -229,9 +237,9 @@ export function LineChart({ categories, series, accessibilityLabel, formatValue,
       </>}
       {marks && extremes && ([[marks.max, extremes.high], [marks.min, extremes.low]] as const).filter(([index], i) => i === 0 || index !== marks.max).map(([index, label]) => {
         const p = g.plots[0]![index];
-        // Place the label on the open side of the point: above when it sits in the upper half of the
-        // plot, below otherwise, so inverted (rank) series never draw text across their own line.
-        const above = p ? p.y < (g.plot.top + g.plot.bottom) / 2 : true;
+        // Opposite sides of the extrema keep labels apart even when a fixed rank domain packs
+        // both points into the top of the plot. Inversion swaps which numeric extreme is higher.
+        const above = index === (invert ? marks.min : marks.max);
         return p ? <SvgText key={label} x={Math.min(g.plot.right - 4, Math.max(g.plot.left + 4, p.x))} y={Math.max(10, Math.min(height - 2, p.y + (above ? -10 : 16)))} fontSize={11} fontWeight="600" fill={palette.label} textAnchor={p.x < width * 0.2 ? "start" : p.x > width * 0.8 ? "end" : "middle"}>{`${label} ${formatValue(p.value)}`}</SvgText> : null;
       })}
       {showAxis && categories.length > 0 && <>

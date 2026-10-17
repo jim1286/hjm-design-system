@@ -44,7 +44,7 @@ export const chartRecipe = {
     plot: { top: spacing.lg, right: spacing.xs, bottom: spacing.xs, left: spacing.xs },
     axis: { top: spacing.md, right: spacing.xs, bottom: spacing.lg, left: 36 },
   },
-  line: { strokeWidth: 2.4, pointRadius: 4.5, focusHaloRadius: 9, focusHaloOpacity: 0.25 },
+  line: { strokeWidth: 2.4, pointRadius: 4.5, focusHaloRadius: 9, focusHaloOpacity: 0.25, missingDash: [1, 5] as const, missingOpacity: 0.55 },
   area: { topOpacity: 0.32, bottomOpacity: 0 },
   bar: { radius: radius.sm / 2, maxWidth: 28, bandPadding: 0.36, groupGap: 2, restOpacity: 0.4 },
   pie: { donutRatio: 0.62, padAngle: 0.012, minLabelPercent: 4 },

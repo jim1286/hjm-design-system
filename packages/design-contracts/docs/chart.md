@@ -164,7 +164,7 @@
 
 `Chart`는 2026-09-29에 지운 이름을 같은 이름으로 되살린다(`data-display`, Web·Native). 공개 컴포넌트 `LineChart`·`BarChart`·`PieChart`·
 `RadarChart`·`ScatterChart`·`Sparkline`·`ChartLegend`는 이 한 계약의 동반 API다 — 같은 `ChartSeries` 모델·색 규칙·포커스·텍스트 대안을
-공유하므로 종류마다 계약을 따로 두지 않는다. 카탈로그 동결 예외는 `docs/catalog-freeze.json`에 기록한다.
+공유하므로 종류마다 계약을 따로 두지 않는다. 당시 동결 예외는 `docs/catalog-freeze.json`에 보존하며 현재 등록은 [공통 기준](stable-promotion.md#카탈로그-등록과-공개-api-분류)을 따른다.
 
 ## Renderer와 검증
 

@@ -1,6 +1,7 @@
 import { renderToString } from "react-dom/server";
 import { expect, it } from "vitest";
 import { BarChart, LineChart, PieChart } from "../src/chart.js";
+import { chartRecipe } from "@hjmds/design-contracts/components/chart";
 
 // Server markup uses the `width` fallback because ResizeObserver only runs in the browser.
 it("renders charts on the server with the fallback width and the text alternative", () => {
@@ -12,4 +13,33 @@ it("renders charts on the server with the fallback width and the text alternativ
   expect(bar).toContain('width="200"');
   const pie = renderToString(<PieChart data={[{ id: "a", label: "가", value: 1 }]} accessibilityLabel="비율" formatValue={String} />);
   expect(pie).toContain('role="img"');
+});
+
+it.each([false, true])("keeps nearby extreme labels apart in a fixed domain (invert=%s)", invert => {
+  const markup = renderToString(<LineChart categories={["첫날", "다음날"]} series={[{ id: "rank", label: "순위", values: invert ? [1, 1.1] : [9.9, 10] }]}
+    domain={[1, 10]} invert={invert} extremes={{ high: "max", low: "min" }} accessibilityLabel="순위" formatValue={String} missingLabel="—" />);
+  const labels = [...markup.matchAll(/<text[^>]*class="[^"]*hjm-chart__extreme"[^>]*y="([^"]+)"[^>]*>(max|min) [^<]+<\/text>/g)];
+  expect(labels).toHaveLength(2);
+  const y = new Map(labels.map(label => [label[2], Number(label[1])]));
+  expect(y.get(invert ? "max" : "min")! - y.get(invert ? "min" : "max")!).toBeGreaterThanOrEqual(26);
+});
+
+it.each(["none", "dotted"] as const)("renders disconnected vertical drops without changing missing values (%s)", missingConnection => {
+  const markup = renderToString(<LineChart categories={["앞", "2022", "2023", "2024", "2025", "뒤"]}
+    series={[{ id: "record", label: "기록", values: [null, 2, null, null, 4, null] }]} missingConnection={missingConnection}
+    accessibilityLabel="시즌 기록" formatValue={String} missingLabel="기록 없음" />);
+  expect([...markup.matchAll(/stroke-dasharray="1 5"/g)]).toHaveLength(missingConnection === "dotted" ? 2 : 0);
+  if (missingConnection === "dotted") {
+    const lines = [...markup.matchAll(/<line[^>]*stroke-dasharray="1 5"[^>]*>/g)].map(match => match[0]);
+    expect(lines).toHaveLength(2);
+    const floor = chartRecipe.heights.regular - chartRecipe.insets.plot.bottom;
+    const { left, right } = chartRecipe.insets.plot;
+    lines.forEach((line, index) => {
+      const attr = (name: string) => Number(line.match(new RegExp(`${name}="([^"]+)"`))![1]);
+      expect(attr("x1")).toBe(attr("x2"));
+      expect(attr("y2")).toBe(floor);
+      expect(attr("x1")).toBeCloseTo(left + (320 - left - right) * (index === 0 ? 1 : 4) / 5);
+    });
+  }
+  expect(markup).toContain("2023 기록 없음, 2024 기록 없음");
 });

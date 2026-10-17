@@ -271,6 +271,8 @@ function MotionBar({ bar, animate, vertical = true, rounded = true, ...rest }: R
 
 export type LineChartProps = CartesianCommon & FocusProps & Readonly<{
   curve?: ChartCurve;
+  /** Separate dotted vertical drops at the observed edges of missing periods; no bridge or invented values. */
+  missingConnection?: "none" | "dotted";
   /** Gradient area under each line. Defaults to on for a single series. */
   area?: boolean;
   stacked?: boolean;
@@ -295,7 +297,7 @@ export type LineChartProps = CartesianCommon & FocusProps & Readonly<{
 
 export function LineChart({
   categories, series, accessibilityLabel, formatValue, missingLabel, height = chartRecipe.heights.regular, width: fallbackWidth = 320,
-  curve = "linear", area, stacked = false, invert = false, domain, includeZero, referenceValue, extremes, showAxis = false,
+  curve = "linear", missingConnection = "none", area, stacked = false, invert = false, domain, includeZero, referenceValue, extremes, showAxis = false,
   valueAxis = false, ticks: tickOverride, cursorLabel, animateChanges = false, scrubEmphasis, className, layoutStyle, ...focusProps
 }: LineChartProps) {
   validateChartSeries(categories, series);
@@ -355,6 +357,11 @@ export function LineChart({
             const lower = g.lower?.[s];
             return (
               <g key={item.id} data-series={item.id}>
+                {/* Drop each observed edge vertically; never connect across the absent periods. */}
+                {missingConnection === "dotted" && segments.slice(1).map((segment, index) => {
+                  const before = segments[index]!.at(-1)!, after = segment[0]!;
+                  return <g key={`gap${index}`}>{[before, after].map(point => <line key={point.index} x1={point.x} y1={point.y} x2={point.x} y2={g.plot.bottom} stroke={color} strokeWidth={chartRecipe.line.strokeWidth} strokeDasharray={chartRecipe.line.missingDash.join(" ")} strokeLinecap="round" opacity={chartRecipe.line.missingOpacity} />)}</g>;
+                })}
                 {showArea || stacked ? segments.map((segment, i) => (
                   <MotionLinePath animate={animateChanges} points={segment} floor={g.plot.bottom} curve={curve} lower={lower ? segment.map((p) => lower[p.index]!) : undefined} key={`a${i}`} className="hjm-chart__area" fill={`url(#${id}-area-${s})`} />
                 )) : null}
@@ -385,11 +392,13 @@ export function LineChart({
               })}
             </g>
           ) : null}
-          {marks && extremes ? ([[marks.max, extremes.high, -10], [marks.min, extremes.low, 16]] as const)
+          {marks && extremes ? ([[marks.max, extremes.high], [marks.min, extremes.low]] as const)
             .filter(([index], i) => i === 0 || index !== marks.max)
-            .map(([index, label, dy]) => {
+            .map(([index, label]) => {
               const p = g.plots[0]![index];
               if (!p) return null;
+              // Place extrema on opposite sides even in a compressed, inverted rank domain.
+              const dy = index === (invert ? marks.min : marks.max) ? -10 : 16;
               return (
                 <text key={label} className="hjm-chart__label hjm-chart__extreme" x={Math.min(g.plot.right - 4, Math.max(g.plot.left + 4, p.x))} y={Math.max(10, Math.min(height - 2, p.y + dy))}
                   textAnchor={p.x < width * 0.2 ? "start" : p.x > width * 0.8 ? "end" : "middle"}>{`${label} ${formatValue(p.value)}`}</text>
