@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { CompositionLayout, ScreenLayout, type ScreenLayoutProps } from "./screens.js";
+import { ScreenExitButton } from "./internal/screen-exit.js";
 import { Button, IconButton } from "./actions.js";
 import { Stack, Text, Grid } from "./primitives.js";
 import { SearchField } from "./inputs.js";
@@ -349,7 +350,12 @@ export function SearchScreen<F = unknown>({query,queryLabel,queryField,queryClea
   :phase==="typing"?(suggestions?<SearchSuggestionList query={query} suggestions={suggestions} onCommit={commit}/>:null)
   :<><SearchResultsHeader summary={resultSummary} applied={appliedFilters} cause={cause} onSortChange={changeSort}/>
    <SearchResultsBody summary={resultSummary} applied={appliedFilters} suggested={suggestedQueries} cause={cause} onCommit={commit}>{children}</SearchResultsBody></>;
- return <><ScreenLayout {...screen} scrollRef={scrollRef} notice={<Stack gap="sm">{queryField??<SearchField {...labelProps} clearLabel={queryClearLabel!} value={query} onValueChange={onQueryChange} busy={searching??false} busyLabel={searchingLabel??queryLabel} {...submitProps}/>}{filterSlot}{screen.notice}</Stack>}><Stack gap="lg">{body}</Stack></ScreenLayout>
+ // Search-first routes have no visible heading: navigation and input share one row.
+ // Keep explicit host headers and described/titled screens in their existing layout.
+ const inlineNavigation=screen.titleVisibility==="hidden"&&screen.header==null&&!screen.description;
+ const input=queryField??<SearchField {...labelProps} clearLabel={queryClearLabel!} value={query} onValueChange={onQueryChange} busy={searching??false} busyLabel={searchingLabel??queryLabel} {...submitProps}/>;
+ const queryRow=inlineNavigation?<Stack axis="inline" align="center" gap="sm">{screen.exit?<ScreenExitButton {...screen.exit}/>:null}<View style={{flex:1,minWidth:0}}>{input}</View>{screen.actions}</Stack>:input;
+ return <><ScreenLayout {...screen} {...(inlineNavigation?{header:<></>}: {})} scrollRef={scrollRef} notice={<Stack gap="sm">{queryRow}{filterSlot}{screen.notice}</Stack>}><Stack gap="lg">{body}</Stack></ScreenLayout>
   {filterSheet?<SearchFilterSheetView sheet={filterSheet}/>:null}</>;
 }
 

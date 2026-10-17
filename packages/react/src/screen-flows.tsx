@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode, type Ref, type RefObject } from "react";
 import { CompositionLayout, ScreenLayout, type ScreenLayoutProps } from "./screens.js";
+import { ScreenExitButton } from "./internal/screen-exit.js";
 import { Button, IconButton } from "./actions.js";
 import { MessageReactions, type MessageMenuAction } from "./internal/message-reactions.js";
 import type { ReactionPickerProps } from "./reaction-picker.js";
@@ -494,7 +495,12 @@ export function SearchScreen<F = unknown>({query,queryLabel,queryField,queryClea
   :phase==="typing"?(suggestions?<SearchSuggestionList query={query} suggestions={suggestions} onCommit={pick}/>:null)
   :<><SearchResultsHeader summary={resultSummary} applied={appliedFilters} cause={cause} appliedHost={focus.appliedHost} onRemove={removeApplied} onClearAll={clearApplied} onSortChange={changeSort}/>
    <SearchResultsBody summary={resultSummary} applied={appliedFilters} suggested={suggestedQueries} cause={cause} onCommit={pick} onClearAll={clearApplied}>{children}</SearchResultsBody></>;
- return <><ScreenLayout {...screen} notice={<Stack gap="sm" ref={fieldHost}>{queryField ?? <SearchField {...labelProps} clearLabel={queryClearLabel!} value={query} onValueChange={onQueryChange} loading={searching??false} {...submitProps}/>}{filterSlot}{screen.notice}</Stack>}><Stack gap="lg" ref={bodyHost} className="hjm-search-screen__results" tabIndex={-1}>{suggestions||resultSummary||searchingLabel?<SearchAnnouncement text={announcement}/>:null}{body}</Stack></ScreenLayout>
+ // Search-first routes have no visible heading: navigation and input share one row.
+ // Keep explicit host headers and described/titled screens in their existing layout.
+ const inlineNavigation=screen.titleVisibility==="hidden"&&screen.header==null&&!screen.description;
+ const searchInput=queryField ?? <SearchField {...labelProps} clearLabel={queryClearLabel!} value={query} onValueChange={onQueryChange} loading={searching??false} {...submitProps}/>;
+ const queryRow=inlineNavigation?<Stack axis="inline" align="center" gap="sm">{screen.exit?<ScreenExitButton {...screen.exit}/>:null}<div style={{flex:1,minWidth:0}}>{searchInput}</div>{screen.actions}</Stack>:searchInput;
+ return <><ScreenLayout {...screen} {...(inlineNavigation?{header:<></>}: {})} notice={<Stack gap="sm" ref={fieldHost}>{queryRow}{filterSlot}{screen.notice}</Stack>}><Stack gap="lg" ref={bodyHost} className="hjm-search-screen__results" tabIndex={-1}>{suggestions||resultSummary||searchingLabel?<SearchAnnouncement text={announcement}/>:null}{body}</Stack></ScreenLayout>
   {filterSheet?<SearchFilterSheetView sheet={filterSheet}/>:null}</>;
 }
 

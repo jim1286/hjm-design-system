@@ -44,8 +44,11 @@ it("hides the route name and centers context between unequal navigation controls
  expect(measures).toHaveLength(2);
  act(()=>{measures[0]!.props.onLayout({nativeEvent:{layout:{width:44}}});measures[1]!.props.onLayout({nativeEvent:{layout:{width:96}}});});
  const centered=tree!.root.findAllByType(View).find(node=>StyleSheet.flatten(node.props.style)?.minHeight===screenHeaderRecipe.minHeight)!;
- expect(StyleSheet.flatten(centered.props.style).paddingHorizontal).toBeGreaterThanOrEqual(112);
- expect(measures.every(node=>StyleSheet.flatten(node.props.style).position==='absolute')).toBe(true);
+ // Equal side columns (the wider measured control, 96) keep the title centered; controls stay in flow
+ // so their height counts toward the header (centered header rework, 2026-10-17).
+ const sides=centered.props.children.filter((child: unknown)=>child&&typeof child==='object').map((child: {props:{style:unknown}})=>StyleSheet.flatten(child.props.style)).filter((style: {width?:unknown})=>typeof style?.width==='number');
+ expect(sides.map((style: {width:number})=>style.width)).toEqual([96,96]);
+ expect(measures.every(node=>StyleSheet.flatten(node.props.style).position!=='absolute')).toBe(true);
  expect(tree!.root.findAllByType(Text).find(node=>node.props.children==='2026.10.14')!.props.align).toBe('center');
  act(()=>tree!.root.findByType(IconButton).props.onPress());expect(back).toHaveBeenCalledOnce();
 });

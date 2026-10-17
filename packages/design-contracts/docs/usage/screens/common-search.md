@@ -12,16 +12,18 @@
 
 ## 목적
 
-입력 중 제안 → 확정 → 결과·필터의 두 단계 검색 화면을 SearchScreen 하나로 구성한다. 단계 전환·확정 경로·섹션 배치·필터 시트 초안·0건 복구·포커스·개수 낭독은 SearchScreen이 소유하고 제품은 데이터·요청·문구·아이콘만 공급한다(2026-10-06 전에는 이 모두가 Storybook 미리보기 코드에만 있었다). 스토리는 상태별 정지 화면(`입력 중`·`결과`·`필터 적용`·`필터 시트`·`불러오는 중`·`결과 없음`·`오류`·`로그인 필요`)과 `실패와 복구`(다음 검색 실패 → 다시 시도)를 보여 주고, `어두운 테마`·`큰 글자`는 필터 적용 화면으로 연다. `기본`(검색 전)에서 검색 전 → 입력 → 확정 → 필터 → 상세 → 돌아오기에서 검색어·조건·정렬·스크롤이 남는 흐름을 직접 조작한다. 2026-10-06 같은 예제를 그리던 `기본 흐름/검색과 필터`(복구 흐름)와 `구성/검색/여러 조건 적용과 초기화`(초안·적용 필터 시트)를 이 항목으로 합쳤다([옛 링크](../../../../../docs/STORYBOOK_NAVIGATION.md#실험-정리와-합친-항목-2026-10-06)). 데이터·제안·권한·문구는 제품이 공급하며 예제의 메모리 검색을 운영 검색으로 취급하지 않는다.
+입력 중 제안 → 확정 → 결과·필터의 두 단계 검색 화면을 SearchScreen 하나로 구성한다. 단계 전환·확정 경로·섹션 배치·필터 시트 초안·0건 복구·포커스·개수 낭독은 SearchScreen이 소유하고 제품은 데이터·요청·문구·아이콘만 공급한다. 스토리는 상태별 정지 화면(`입력 중`·`결과`·`필터 적용`·`필터 시트`·`불러오는 중`·`결과 없음`·`오류`·`로그인 필요`)과 `실패와 복구`(다음 검색 실패 → 다시 시도)를 보여 주고, `어두운 테마`·`큰 글자`는 필터 적용 화면으로 연다. `기본`(검색 전)에서 검색 전 → 입력 → 확정 → 필터 → 상세 → 돌아오기에서 검색어·조건·정렬·스크롤이 남는 흐름을 직접 조작한다. 데이터·제안·권한·문구는 제품이 공급하며 예제의 메모리 검색을 운영 검색으로 취급하지 않는다.
 배포의 옛 직접 조립 `내 기록 검색`(검색어를 칠 때마다 바로 거르는 SearchField + 카테고리 SegmentedControl + 결과 List + 상세 Sheet 한 세로 스크롤)도 이 항목으로 대체했다. 확정·제안·필터 시트가 필요 없는 수십 개짜리 내 목록을 그 자리에서 거르는 정도라면 화면 대신 [SearchField](../components/search-field.md)와 [SegmentedControl](../components/segmented-control.md)을 목록 위에 직접 두고, 결과 수는 상태 문구로 알린다.
 
 ## 영역 구조
+
+`titleVisibility="hidden"`이고 별도 `header`·`description`이 없으면 `exit` 아이콘 → 검색창(남은 너비) → `actions`를 `spacing.sm` 간격의 한 줄에 세로 중앙 정렬한다. 이 배치는 SearchScreen이 소유한다. 제목이 보이는 화면과 명시적 host header는 기존 구조를 유지한다. 2026-10-17 화면 나가기 계약 통합으로 자유 `leading` 슬롯 대신 `exit`에 종류·지역화 이름·이동 콜백을 전달한다. Native는 `onPress`, Web은 `onClick`이며 HJM이 아이콘 버튼을 그린다. 이 API는 현재 개발 소스 기준이며 설치 버전의 제공 여부를 확인한다.
 
 좁은 폭(Web < 600, Native) — 결과 + 필터 적용:
 
 ```text
 ┌ safe area(host) ─────────────────────────────┐
-│ [←]  검색                                     │ 머리: leading IconButton + 제목. description 없음
+│ [←]  검색                                     │ 머리: exit 아이콘 + 제목. description 없음
 │ [🔍 산책                           (×)]       │ ┐ 고정(notice): SearchField medium 44, label 숨김(placeholder)
 │               ↕ spacing.sm 12                 │ │
 │ [☰ 필터 2][✓사진 있음][저장함][기간: 올해 ▾][종류 ▾] →│ ┘ trigger(HJM) + filters(제품), 한 줄 스크롤
@@ -71,7 +73,7 @@ Native · Web < 960: 아래 시트(size large)        Web ≥ 960(expanded): 옆
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
 | 바깥 틀 | SearchScreen(ScreenLayout) | route 본문, host가 남은 높이·safe area·키보드 처리 | 폭 최대 `layout.readingMaxWidth` 720, 좌우 `spacing.md` 16. host가 여백을 주면 `contentInset="none"` + 그 여백 이름 `hostGutter`(Container `gutter`, Sheet 안은 `regular`). Native 본문 `scrollProps={{ keyboardDismissMode: "on-drag" }}` |
-| 머리 | `title` + `leading`(IconButton 뒤로) | 맨 위 | `description`은 비운다(고정 영역 한 줄 절약) |
+| 머리 | `title` + `exit`(공통 뒤로 아이콘) | 맨 위 | `description`은 비운다(고정 영역 한 줄 절약) |
 | 검색 입력 | 기본 SearchField(`queryLabel`·`queryLabelVisibility="hidden"`·`queryClearLabel`·`onSubmit`·`searching`) | 머리 아래, 고정 | `medium` 44 |
 | 필터 칩 줄 | HJM `filterSheet.trigger` Chip + 제품 `filters`(Stack inline gap `xs` > Chip `small`) | 검색 입력 아래, 고정, 결과 단계에만 | 입력과 `spacing.sm` 12, 칩 36(+Native hitSlop 4), 칩 사이 `spacing.xs` 8. `filtersOverflow="scroll"` |
 | 결과 머리 | `resultSummary`: 개수 Text(muted) + 정렬 Menu(Button ghost small) | 본문 첫 줄 | `justify="between"` wrap, 큰 글자에서 두 줄 |
@@ -302,5 +304,6 @@ Skeleton 두 개로 결과 행을 다시 만들지 않는다.
 
 - 제안·확정 결과·필터 개수의 요청 경계 상황 표: 2026-10-13 전수 점검 — 최초 조회와 변경 요청의 상태를 같은 골격으로 설명하던 부분을 구체화했다.
 - 단계 전환·필터 시트 초안·0건 복구 등을 SearchScreen이 소유: 2026-10-06 전에는 이 모두가 Storybook 미리보기 코드에만 있었다. 같은 날 같은 예제를 그리던 `기본 흐름/검색과 필터`(복구 흐름)와 `구성/검색/여러 조건 적용과 초기화`(초안·적용 필터 시트)를 이 항목으로 합쳤다([옛 링크](../../../../../docs/STORYBOOK_NAVIGATION.md#실험-정리와-합친-항목-2026-10-06)).
+- 제목 숨김 시 `leading`·검색창·`actions` 한 줄 배치: 2026-10-16 선수 검색 화면 검토 — 뒤로가기만 별도 줄에 남아 입력창과 분리됐다.
 - 최근 검색은 `onSubmit`에서만 저장: 2026-10-06 개편 전 예제가 `onSearch`에서 저장해 debounce된 부분 입력이 따로 쌓였다.
 - 시트 안 검색의 `size`·`contentInset` 조합: 2026-10-06 utilverse에서 1.13.0 이하 Native 화면이 0pt가 되고 칩 줄이 잘렸다.
