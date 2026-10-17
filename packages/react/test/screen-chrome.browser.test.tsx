@@ -169,6 +169,20 @@ describe("screen chrome layout", () => {
     expect(cta.querySelector<HTMLElement>(".hjm-button")!.getBoundingClientRect().width).toBeCloseTo(inner, 0);
   });
 
+  // max(footer padding, inset), not footer padding + inset (2026-10-17 "버튼 아래 여백이 많아").
+  it("keeps one bottom inset under a footer BottomCTA: max(16, safeAreaBottom)", async () => {
+    await page.viewport(402, 844);
+    const gap = async (safeAreaBottom: number) => {
+      await act(async () => root.render(<HjmProvider><div style={{ height: 600 }}>
+        <ScreenLayout title="설정" footer={<BottomCTA safeAreaBottom={safeAreaBottom} primaryAction={{ label: "저장", onClick: () => {} }} />}><p>본문</p></ScreenLayout>
+      </div></HjmProvider>));
+      const footer = host.querySelector<HTMLElement>(".hjm-screen__footer")!;
+      return footer.getBoundingClientRect().bottom - footer.querySelector<HTMLElement>(".hjm-button")!.getBoundingClientRect().bottom;
+    };
+    expect(await gap(0)).toBeCloseTo(16, 0);
+    expect(await gap(34)).toBeCloseTo(34, 0);
+  });
+
   it("leaves the last content reachable above a sticky footer", async () => {
     await page.viewport(320, 844);
     await act(async () => root.render(<HjmProvider>

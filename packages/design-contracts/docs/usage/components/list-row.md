@@ -86,7 +86,7 @@ Native 원형 leading의 `full`은 Provider token에서 읽지만 고정 원형 
 | --- | --- | --- |
 | 크기 | 행 표면(누름·hover·선택 배경, 포커스 링, 누를 수 있는 영역)은 부모 콘텐츠 폭보다 양쪽으로 `listRowRecipe.surfaceBleed`(= density `paddingHorizontal`, `spacing.xs` 8)씩 넓다(Web `inline-size: calc(100% + 16)` + `margin-inline: -8`, Native `marginHorizontal: -8`). 글자·leading·trailing은 부모 콘텐츠 가장자리에 놓인다. leading 프레임은 40×40(`leadingSize`), `circle`이면 `radius.full`. trailing 아이콘은 `glyph.sm` 20. 최소 높이는 아래 density 표 | `design-contracts/src/component-recipes.ts`(`listRowRecipe`), `design-contracts/src/foundations.ts`(`layout.rowHeight`) |
 | 간격 | leading·content·trailing 사이 `spacing.sm` 12(`listRowRecipe.gap`). 행 안 좌우 여백 8은 표면이 바깥으로 넓어진 만큼이라 글자는 부모 콘텐츠 가장자리(기본 화면이면 여백 선 16)에서 시작한다. 위아래 여백은 아래 density 표. Native의 투명 선택 테두리 1은 이 여백 안에 포함된다(테두리 + padding = 8). 제품은 행에 margin을 주지 않는다 | `design-contracts/src/component-recipes.ts`(`listRowRecipe`), `react/src/styles.css`(`.hjm-list-row`) |
-| 순서·정렬 | leading → content(제목·설명) → trailing. trailing 내용(아이콘·Switch·문구)은 행의 세로 가운데에 둔다(Web `.hjm-list-row__trailing` flex 가운데, Native 행 가운데 정렬 View). `trailingAction`(두 플랫폼)은 행 명령 바깥 끝에 `listRowRecipe.gap` 12 떨어져 놓이고, 명령과 함께 하나의 표면(선택 배경·테두리)을 쓴다. 행동 상자의 끝은 부모 콘텐츠 가장자리에 맞으므로 ghost IconButton에 `edge="end"`를 주면 glyph 칸 끝이 여백 선 16에 온다. 행 사이 구분선·바깥 둥근 배경은 [List](list.md)가 그린다 | `react-native/src/data-display.tsx`(ListRow), `react/src/styles.css`(`.hjm-list-row__trailing`) |
+| 순서·정렬 | leading → content(제목·설명) → trailing. trailing 내용(아이콘·Switch·문구)은 행의 세로 가운데에 둔다(Web `.hjm-list-row__trailing` flex 가운데, Native 행 가운데 정렬 View). `trailingAction`(두 플랫폼)은 행 명령 바깥 끝에 `listRowRecipe.gap` 12 떨어져 놓이고, 명령과 함께 하나의 표면(선택 배경·테두리)을 쓴다. 행동 상자의 끝은 부모 콘텐츠 가장자리에 맞으므로 ghost IconButton에 `edge="end"`를 주면 glyph 칸 끝이 여백 선 16에 온다. 행 사이 구분선·바깥 둥근 배경은 [List](list.md)가 그린다. 행은 leading 여부를 List에 알려(Web 루트 `data-leading`, Native List 항목 context) 자기 아래 `indented` 구분선이 글자 열(leading 있으면 52, 없으면 0)에서 시작하게 한다 | `react-native/src/data-display.tsx`(ListRow), `react/src/styles.css`(`.hjm-list-row__trailing`) |
 | 고정·스크롤 | — | — |
 | 좁은 폭·큰 글자 | 긴 제목·설명은 줄바꿈되고(`overflow-wrap: anywhere`) 행 높이가 늘어난다. 큰 글자에서도 자르지 않는다 | `react/src/styles.css`(`.hjm-list-row`) |
 
@@ -100,7 +100,7 @@ Native 원형 leading의 `full`은 Provider token에서 읽지만 고정 원형 
 ```text
 화면 끝 ↓   여백 선 16 ↓                                  ↓ 여백 선 16
         ┌─8─┬──────────────────────────────────────────┬─8─┐ ← 행 표면(누름·선택 배경), 8씩 바깥으로
-        │   │[40×40]│12│ 제목(bodyLarge bold)  │12│ 값 ›│   │
+        │   │[40×40]│12│ 제목(bodyLarge 500)   │12│ 값 ›│   │
         │   │leading│  │ 설명(body, secondary) │  │trail│   │
         └───┴──────────────────────────────────────────┴───┘
   섹션 제목·결과 개수(16)와 행 글자·leading(16)이 같은 선에서 시작한다
@@ -113,7 +113,7 @@ Native 원형 leading의 `full`은 Provider token에서 읽지만 고정 원형 
 
 - 제목·설명은 i18n 키로 넣는다. leading의 사진·아이콘은 장식으로 두고 의미는 제목이 말한다.
 - 행 안에 다른 버튼을 넣지 않는다. 별도 target은 `trailingAction`에 둔다(행 명령 옆에 따로 그린다).
-- 행은 부모가 좌우로 8 이상의 여백을 가진 곳에 둔다(화면 본문 16, Card·Sheet·SidePanel 본문, `grouped` List). 여백이 0인 상자(예: 여백 없는 분할 패널, 제품의 꽉 찬 div)에 바로 두면 표면이 잘리고 Web은 가로 스크롤이 생긴다. 그 상자에 콘텐츠 여백을 준다. `ScreenLayout contentInset="body-edge"` 본문은 자기 여백 16을 가진 전체 폭 행(ConversationRow·NotificationRow) 전용이다. ListRow·NotificationItem은 `default` 본문에 둔다(그래야 글자가 여백 선 16에 온다).
+- 행은 부모가 좌우로 8 이상의 여백을 가진 곳에 둔다(화면 본문 16, Card·Sheet·SidePanel 본문, `grouped` List). 여백이 0인 상자(예: 여백 없는 분할 패널, 제품의 꽉 찬 div)에 바로 두면 표면이 잘리고 Web은 가로 스크롤이 생긴다. 그 상자에 콘텐츠 여백을 준다. HJM의 스크롤 상자는 이 여유를 스스로 만든다: VirtualList는 바깥으로 8 넓히고 안쪽 8을 두며, 스크롤 Sheet 본문은 시트 여백 끝까지 넓고 여백을 안쪽에 둔다(내부 `listRowScrollRoom`). 콘텐츠 위치는 그대로다. 화면을 바깥 Container 여백 + `contentInset="none"`으로 감싸는 구성은 지원하지 않는다([ScreenLayout](screen-layout.md#꼭-지킬-것)). `ScreenLayout contentInset="body-edge"` 본문은 자기 여백 16을 가진 전체 폭 행(ConversationRow·NotificationRow) 전용이다. ListRow·NotificationItem은 `default` 본문에 둔다(그래야 글자가 여백 선 16에 온다).
 - 배치는 `layoutStyle`로 한다. 높이·여백·배경을 덮지 않는다. 밀도는 `density`로 바꾼다.
 - 아바타 프레임을 제품이 다시 그리지 않는다. `leadingShape`를 쓴다.
 
@@ -148,5 +148,9 @@ Web도 Native와 같이 `trailingAction`을 지원한다. 이 슬롯은 행의 l
 
 ## 근거
 
+2026-10-17 사용자 결정("굵기 좀더 줄여"): 모든 글자 굵기를 한 단계 낮췄다. 큰 숫자·선택 상태 600(큰 제목 단계는 같은 날 폐지), 제목·강조 500, label 500, 본문 400이며 정본은 [타이포그래피](../tokens/typography.md)다.
+
+- 스크롤 상자의 표면 여유: 2026-10-17 1.27.2 채택 점검. Native 스크롤 Sheet는 여백 20이 ScrollView 바깥에 있어 행 표면이 시트 콘텐츠 끝(21pt)에서 잘렸다(3x 측정: 선택 테두리 위 선 21–381, 옆 선 없음 → 수정 후 옆 선 13·끝 13, 제목 위치 그대로). VirtualList와 같은 규칙이라 내부 helper 하나로 묶었다.
 - trailing 세로 가운데: 2026-10-17 정렬 실측(Web 402). trailing span이 block이라 안의 inline svg가 글자 기준선에 놓여 행 가운데보다 2~2.5px 위였다(설정 334/331.5, 컬렉션 184/181.5). Native는 행 가운데(388/388)였다. trailing을 flex 가운데 상자로 바꾼 뒤 Web도 334/334, 184/184로 측정됐다.
 - 글자를 여백 선에, 표면은 바깥으로: 2026-10-17 사용자 결정. 행이 누름 배경용 좌우 여백 8을 콘텐츠 안에 두어 기본 화면에서 행 글자가 16 + 8 = 24에서 시작했고, 같은 화면의 섹션 제목·검색 결과 머리("결과 N개")·설정 묶음 제목은 16에서 시작했다(Web 402 실측: 검색 결과 행 24 / 머리 16, 설정 leading 24 / 묶음 제목 16, 알림 leading 24 / "오늘" 16. Native 3x 화면 잉크: 결과 행 제목 25 / 개수 16.7 — Native는 투명 선택 테두리 1까지 더해졌다). 표면을 바깥으로 8 넓히는 방식으로 바꾼 뒤 Web 402·1280, LTR·RTL 모두 행 글자·leading 시작과 trailing 끝이 16(1280은 화면 열 기준 296)으로, Native는 결과 행 제목 잉크 16, 설정 leading 아이콘 잉크 36 → 27, 알림 42.3 → 33(프레임 16 + 아이콘 안쪽 여백)으로 측정됐다. 구분선 시작도 글자 위치(52)로 옮겼다.
+- 구분선이 행의 글자 열을 따름: 2026-10-17 사용자 보고(leading 없는 행에서 구분선이 중간에서 잘림). 위 52는 leading 있는 행의 글자 위치일 뿐이라 leading 없는 행(글자 16)에서는 구분선이 68에서 시작했다. 행이 leading 여부를 List에 알리도록 바꿔 구분선 시작이 각 행의 글자 열과 같아졌다([List 근거](list.md#근거)).

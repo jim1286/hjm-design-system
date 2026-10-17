@@ -1,7 +1,9 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
-import { afterEach, expect, it } from "vitest";
+import { afterEach, expect, it, vi } from "vitest";
 import { HjmNativeProvider } from "@hjmds/react-native/provider";
-import { Button } from "@hjmds/react-native/actions";
+import { Button, IconButton } from "@hjmds/react-native/actions";
+// The card save glyph (lucide → react-native-svg) is not loadable in the node host.
+vi.mock("lucide-react-native", () => ({ Bookmark: () => null }));
 import { Chip, SegmentedControl, SearchField } from "@hjmds/react-native/inputs";
 import { Sheet } from "@hjmds/react-native/overlays";
 import { AnimatedStatistic } from "@hjmds/react-native/statistic-motion";
@@ -14,7 +16,8 @@ let tree: ReactTestRenderer;
 afterEach(() => act(() => tree?.unmount()));
 const render = (screen: "dashboard" | "gallery") => act(() => { tree = create(<HjmNativeProvider reducedMotion>{screen === "dashboard" ? <Dashboard/> : <Gallery/>}</HjmNativeProvider>, {createNodeMock: element => String(element.type) === "Pressable" ? { label: typeof element.props === "object" && element.props !== null && "accessibilityLabel" in element.props ? element.props.accessibilityLabel : undefined } : null}); });
 // The saved-only filter is a Chip (selection, not a pressed Button) since 2026-10-16.
-const button = (name: string) => tree.root.findAllByType(Button).find(node => (node.props.accessibilityLabel ?? node.props.children) === name) ?? tree.root.findAllByType(Chip).find(node => node.props.label === name)!;
+// Card save is a bookmark IconButton named "<title> 저장"; its state is `selected`, not a flipped label.
+const button = (name: string) => tree.root.findAllByType(Button).find(node => (node.props.accessibilityLabel ?? node.props.children) === name) ?? tree.root.findAllByType(IconButton).find(node => node.props.label === name) ?? tree.root.findAllByType(Chip).find(node => node.props.label === name)!;
 const press = (name: string) => act(() => button(name).props.onPress());
 const segmented = (label: string) => tree.root.findAllByType(SegmentedControl).find(node => node.props.label === label)!;
 const text = () => JSON.stringify(tree.toJSON());
@@ -32,7 +35,7 @@ it("combines filters, resets empty results and shares saving between detail and 
  expect(tree.root.findByType(SearchField).props.value).toBe(""); expect(text()).toContain("6개의 작품");
  press("초록을 기록하는 하루 보기"); const sheet = tree.root.findByType(Sheet);
  act(() => sheet.props.footer.props.onPress()); expect(button("저장한 작품만 1")).toBeDefined(); expect(tree.root.findByType(Sheet).props.footer.props.selected).toBe(true);
- act(() => sheet.props.onOpenChange(false)); press("저장한 작품만 1"); expect(text()).toContain("1개의 작품"); press("초록을 기록하는 하루 저장 취소"); expect(text()).toContain("찾는 작품이 없어요");
+ act(() => sheet.props.onOpenChange(false)); press("저장한 작품만 1"); expect(text()).toContain("1개의 작품"); press("초록을 기록하는 하루 저장"); expect(text()).toContain("찾는 작품이 없어요");
 });
 it("applies each rapid sort and saved-only host toggle rather than reusing an old captured value", () => {
  render("gallery"); act(() => { const callback = segmented("정렬").props.onValueChange; callback("latest"); callback("popular"); }); expect(segmented("정렬").props.value).toBe("popular");

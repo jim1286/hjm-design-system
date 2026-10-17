@@ -28,7 +28,7 @@ ScreenLayout: 제목(고정) → 본문(스크롤) → footer(고정)
 | --- | --- | --- | --- |
 | 바깥 틀 | ScreenLayout | host의 남은 높이 | 공통 화면 폭·padding·본문 스크롤 |
 | 설정 묶음 | CompositionLayout | 본문 | 공통 제목·설명·내용 간격 |
-| 설정 값 | Switch | 구성 본문 | 제품 데이터·변경 콜백 |
+| 설정 값 | List(`separator="none"`) > Switch `presentation="row"` | 구성 본문 | 행 사이 gap 없음 — 행 간격 56은 Switch 행 높이·여백이 맡는다. 제품 데이터·변경 콜백 |
 | 저장 | footer | 화면 하단 | HJM 고정 영역; 제품 저장 요청과 pending 연결 |
 
 ## 버튼과 행동 위치
@@ -74,7 +74,8 @@ ScreenLayout: 제목(고정) → 본문(스크롤) → footer(고정)
 | [Notice](../components/notice.md) | 저장 결과·오류 |
 | [Skeleton](../components/skeleton.md) | 첫 값 불러오기 |
 | [Button](../components/button.md) | ③ 하단 저장 |
-| [Stack](../components/stack.md) | 세 층 사이, 스위치 목록 |
+| [Stack](../components/stack.md) | 세 층 사이 |
+| [List](../components/list.md) | 스위치 목록(행 사이 여백 없이) |
 | [화면 여백과 너비](../tokens/layout.md) | `layout.readingMaxWidth`, `layout.pagePadding.compact`·`regular`, `resolveWindowClass` |
 | [간격](../tokens/spacing.md) | `spacing.xxs`·`xs`·`sm`·`md`·`lg` |
 
@@ -114,3 +115,4 @@ ScreenLayout이 화면 여백과 스크롤을, CompositionLayout이 묶음 간�
 ## 근거
 
 - 설정 초안의 저장 경계 상황 표: 2026-10-13 전수 점검 — 최초 조회와 변경 요청의 상태를 같은 골격으로 설명하던 부분을 구체화했다.
+- 스위치 목록 List·gap 없음: 2026-10-17 사용자 보고("간격이 커") — Stack `gap="md"` 16이 Switch 행 최소 높이 위에 더해져 행 간격이 84였다.

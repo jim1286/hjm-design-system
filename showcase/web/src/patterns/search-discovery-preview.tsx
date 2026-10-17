@@ -5,7 +5,7 @@ import { ScreenLayout } from "@hjmds/react/screens";
 import { Stack, Text } from "@hjmds/react/layout";
 import { Button, IconButton } from "@hjmds/react/actions";
 import { Chip, Switch } from "@hjmds/react/selection";
-import { ListRow } from "@hjmds/react/display";
+import { ListRow, List } from "@hjmds/react/display";
 import { Heading } from "@hjmds/react/heading";
 import { Notice } from "@hjmds/react/feedback";
 import { LoadMore } from "@hjmds/react/navigation";
@@ -109,8 +109,11 @@ export function SearchDiscoveryPreview({ view = "idle", tools = false }: SearchD
     </Stack> : null}
     {scope === "all" ? <Stack gap="sm">
       <Heading level="level5" semanticLevel={3}>{copy.conditionTitle}</Heading>
-      <Switch presentation="row" label={copy.photoOnlyRow} checked={draft.photoOnly} onCheckedChange={photoOnly => setDraft({ ...draft, photoOnly })} />
-      <Switch presentation="row" label={copy.savedOnlyRow} checked={draft.savedOnly} onCheckedChange={savedOnly => setDraft({ ...draft, savedOnly })} />
+      {/* Switch rows carry their own touch height; no gap between them (2026-10-17). */}
+      <List label={copy.conditionTitle} separator="none">
+        <Switch presentation="row" label={copy.photoOnlyRow} checked={draft.photoOnly} onCheckedChange={photoOnly => setDraft({ ...draft, photoOnly })} />
+        <Switch presentation="row" label={copy.savedOnlyRow} checked={draft.savedOnly} onCheckedChange={savedOnly => setDraft({ ...draft, savedOnly })} />
+      </List>
     </Stack> : null}
   </Stack>;
 

@@ -6,7 +6,6 @@ import { BackHandler, View } from "react-native";
 import { BottomSheetModal, BottomSheetModalProvider, BottomSheetScrollView, BottomSheetBackdrop, BottomSheetHandle, BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { ReduceMotion } from "react-native-reanimated";
 import { Button } from "./actions.js";
-import { Text } from "./primitives.js";
 import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "./provider.js";
 /**
  * The keyboard-aware input with the HJM field frame. The raw library input had no
@@ -109,6 +108,6 @@ export function GestureSheet({ open, onOpenChange, title, closeLabel, children, 
     // English default name wherever the container is still listed. topInset keeps the 90% snap below
     // the status bar, where the title used to sit (2026-09-30 audit).
     return _jsx(BottomSheetModal, { ref: modal, index: initialIndex, snapPoints: [...snapPoints], accessible: false, accessibilityLabel: title, accessibilityRole: "none", topInset: topInset, handleComponent: handle, backgroundComponent: background, enableDynamicSizing: false, enablePanDownToClose: !busy, backdropComponent: backdrop, overrideReduceMotion: theme.environment.reducedMotion ? ReduceMotion.Always : ReduceMotion.System, backgroundStyle: { backgroundColor: theme.colors.bg }, onDismiss: () => { presented.current = false; if (openRef.current)
-            onOpenChange(false); }, children: _jsx(BottomSheetScrollView, { keyboardShouldPersistTaps: "handled", children: _jsxs(View, { accessibilityViewIsModal: true, style: { gap: theme.tokens.spacing.sm, padding: theme.tokens.spacing.lg, paddingBottom: theme.tokens.spacing.lg + bottomInset }, children: [_jsx(Text, { accessibilityRole: "header", children: title }), children, _jsx(Button, { disabled: busy, onPress: () => onOpenChange(false), children: closeLabel })] }) }) });
+            onOpenChange(false); }, children: _jsx(BottomSheetScrollView, { keyboardShouldPersistTaps: "handled", children: _jsxs(View, { accessibilityViewIsModal: true, style: { gap: theme.tokens.spacing.sm, padding: theme.tokens.spacing.lg, paddingBottom: theme.tokens.spacing.lg + bottomInset }, children: [_jsx(View, { accessible: true, accessibilityRole: "header", accessibilityLabel: title, style: { position: "absolute", top: 0, start: 0, width: 1, height: 1, overflow: "hidden" } }), children, _jsx(Button, { disabled: busy, onPress: () => onOpenChange(false), children: closeLabel })] }) }) });
 }
 //# sourceMappingURL=sheet-gesture.js.map

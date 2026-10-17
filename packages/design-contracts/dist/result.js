@@ -1,5 +1,5 @@
 import { semanticColors } from "./semantic-colors.js";
-import { fontWeight, spacing } from "./foundations.js";
+import { spacing, typography } from "./foundations.js";
 export const resultDefaults = {
     status: "info",
 };
@@ -91,7 +91,7 @@ export const resultRecipe = {
     title: {
         textVariant: "titleLarge",
         color: semanticColors.content.primary,
-        fontWeight: fontWeight.bold,
+        fontWeight: typography.titleLarge.fontWeight,
     },
     description: {
         textVariant: "body",

@@ -171,7 +171,7 @@ export declare const calendarRecipe: {
         readonly gap: 8;
         readonly monthLabel: {
             readonly textVariant: "title";
-            readonly fontWeight: "700";
+            readonly fontWeight: "500";
             readonly color: Readonly<{
                 source: "theme";
                 key: "text";

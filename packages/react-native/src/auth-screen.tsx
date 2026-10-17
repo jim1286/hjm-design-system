@@ -1,13 +1,20 @@
 import {
   authScreenRecipe,
   resolveAuthScreenDescriptor,
+  validateAuthScreenHeroDescriptor,
+  validateAuthScreenPolicyLinks,
+  type AuthScreenDensity,
   type AuthScreenDescriptor,
+  type AuthScreenHeroDescriptor,
+  type AuthScreenPolicyLinkDescriptor,
 } from "@hjmds/design-contracts/components/auth-screen";
-import type { ReactNode } from "react";
+import { createContext, Fragment, useContext, type ReactNode } from "react";
 import { InheritedTextAlignContext } from "./internal/text-align.js";
+import { Text } from "./primitives.js";
 import {
   ActivityIndicator,
   Platform,
+  Pressable,
   ScrollView,
   View,
   type StyleProp,
@@ -31,6 +38,9 @@ export type AuthScreenLayoutProps = AuthScreenDescriptor &
     testID?: string;
     layoutStyle?: HjmCompositionStyleProp;
   }>;
+
+// The hero follows the layout density without the product passing it twice (same as Web).
+const AuthScreenDensityContext = createContext<AuthScreenDensity | undefined>(undefined);
 
 function AuthActionCard({ children, style }: { children?: ReactNode; style?: StyleProp<ViewStyle> }) {
   const theme = useHjmNativeTheme();
@@ -96,7 +106,7 @@ export function AuthScreenLayout({
         }}
       >
         {/* Web centers hero copy with inherited text-align; Native needs the explicit context. */}
-        <InheritedTextAlignContext.Provider value="center"><View style={{ width: "100%", alignItems: "center", gap: resolved.heroGap }}>{hero}</View></InheritedTextAlignContext.Provider>
+        <AuthScreenDensityContext.Provider value={resolved.density}><InheritedTextAlignContext.Provider value="center"><View style={{ width: "100%", alignItems: "center", gap: resolved.heroGap }}>{hero}</View></InheritedTextAlignContext.Provider></AuthScreenDensityContext.Provider>
         <MainContainer style={{ width: "100%" }}>
           {/* Keep layout and form state, while excluding hidden controls from touch and screen-reader navigation. */}
           <View pointerEvents={pending ? "none" : "auto"} accessibilityElementsHidden={pending}
@@ -123,6 +133,79 @@ export function AuthScreenLayout({
         </View>
       ) : null}
     </ScrollView>
+  );
+}
+
+export type AuthScreenHeroProps = AuthScreenHeroDescriptor &
+  Readonly<{
+    /** Product mark asset. HJM never ships product marks. */
+    mark?: ReactNode;
+  }>;
+
+/**
+ * The `hero` slot content: mark, eyebrow, tagline and one description line. Type
+ * steps, tones and gaps come from `authScreenRecipe.hero`, matching Web.
+ */
+export function AuthScreenHero({ mark, title, eyebrow, description, headingLevel = 1 }: AuthScreenHeroProps) {
+  validateAuthScreenHeroDescriptor({ title, ...(eyebrow === undefined ? {} : { eyebrow }), ...(description === undefined ? {} : { description }), headingLevel });
+  const theme = useHjmNativeTheme();
+  const density = useContext(AuthScreenDensityContext);
+  const variant = resolveAuthScreenDescriptor(density === undefined ? {} : { density }).titleVariant;
+  const recipe = authScreenRecipe.hero;
+  // Fragment: mark and copy are direct children of the hero so the recipe hero gap separates them.
+  return (
+    <Fragment>
+      {mark ? <View>{mark}</View> : null}
+      <View style={{ width: "100%", alignItems: "center" }}>
+        {eyebrow ? <Text variant={recipe.eyebrow.textVariant} tone={recipe.eyebrow.tone} style={{ marginBottom: recipe.eyebrow.gapBelow }}>{eyebrow}</Text> : null}
+        {/* The title step's own weight (500), not Text's regular default outside a profile. */}
+        <Text accessibilityRole="header" variant={variant} tone={recipe.title.tone}
+          style={{ fontWeight: theme.tokens.typography[variant].fontWeight }}>{title}</Text>
+        {description ? <Text variant={recipe.description.textVariant} tone={recipe.description.tone} style={{ marginTop: recipe.description.gapAbove }}>{description}</Text> : null}
+      </View>
+    </Fragment>
+  );
+}
+
+export type AuthScreenPolicyLink = AuthScreenPolicyLinkDescriptor &
+  Readonly<{ onPress: () => void }>;
+
+export type AuthScreenFooterProps = Readonly<{
+  /** Optional consent notice (LS-04). */
+  notice?: ReactNode;
+  /** Terms and privacy links; at least one is required (LS-04). */
+  links: readonly AuthScreenPolicyLink[];
+  /** Extra product content under the links. */
+  children?: ReactNode;
+}>;
+
+/**
+ * The `footer` slot content: consent notice plus dot-separated policy links. The
+ * visible gap between links is `linkGap` + separator + `linkGap`; the 44pt touch
+ * target comes from hitSlop, not visible padding (2026-10-17 user report: reduce the link gap).
+ */
+export function AuthScreenFooter({ notice, links, children }: AuthScreenFooterProps) {
+  validateAuthScreenPolicyLinks(links);
+  const recipe = authScreenRecipe.footer;
+  // Height comes from a background-less minHeight (Android ignores hitSlop outside the parent row);
+  // only the inline extension up to the separator uses hitSlop.
+  const hitSlop = { left: recipe.linkGap, right: recipe.linkGap };
+  return (
+    <View style={{ width: "100%", alignItems: "center", gap: recipe.noticeGap }}>
+      {notice ? <Text variant={recipe.notice.textVariant} tone={recipe.notice.tone}>{notice}</Text> : null}
+      <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "center", alignItems: "center", columnGap: recipe.linkGap }}>
+        {links.map((link, index) => (
+          <Fragment key={`${index}:${link.label}`}>
+            {index > 0 ? <Text variant={recipe.link.textVariant} tone={recipe.notice.tone} accessible={false} importantForAccessibility="no">{recipe.separator}</Text> : null}
+            <Pressable accessibilityRole="link" accessibilityLabel={link.label} hitSlop={hitSlop} onPress={link.onPress}
+              style={{ minHeight: authScreenRecipe.footerMinTouchTarget, justifyContent: "center" }}>
+              <Text variant={recipe.link.textVariant} tone={recipe.link.tone} style={{ textDecorationLine: recipe.link.underline ? "underline" : "none" }}>{link.label}</Text>
+            </Pressable>
+          </Fragment>
+        ))}
+      </View>
+      {children}
+    </View>
   );
 }
 

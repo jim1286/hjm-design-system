@@ -33,7 +33,7 @@
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
 | 바깥 틀 | Stack. Web은 제품 화면의 `Container size="reading"` 안 | 화면의 본문 흐름 | gap md=16px, 폭은 Container를 따른다(Web 최대 `layout.readingMaxWidth` 720) |
-| 패널 제목 | `Heading level="level5"` | 패널 Surface 맨 위 | `title` 글자 크기·semibold |
+| 패널 제목 | `Heading level="level5"` | 패널 Surface 맨 위 | `title` 글자 크기·medium(500) |
 | 내용 | 해당 공개 API | 입력과 행동 사이 | 자체 recipe 크기, 줄바꿈 허용 |
 | 행동 | Button/기존 컨트롤 | 관련 항목 바로 뒤 | inline일 때 wrap, md=16px |
 
@@ -82,3 +82,7 @@ Storybook의 기존 gutter 때문에 contentInset=none을 쓰고, 마지막 입�
 스크롤 경계에 걸리지 않도록 본문 끝에 spacing.md(16) 여백을 둔다.
 본문 조합 자체에 두 번째 scroll view를 만들지 말고 제품의 기존 화면 host를 재사용한다.
 KeyboardAvoiding은 아래 여백을 제공하며 포커스된 필드를 자동 탐색하는 API는 아니다.
+
+## 근거
+
+2026-10-17 사용자 결정("굵기 좀더 줄여"): 모든 글자 굵기를 한 단계 낮췄다. 큰 숫자·선택 상태 600(큰 제목 단계는 같은 날 폐지), 제목·강조 500, label 500, 본문 400이며 정본은 [타이포그래피](../tokens/typography.md)다.

@@ -1,6 +1,7 @@
 import { Icon } from "@hjmds/react/display";
 import { ReactionPicker } from "@hjmds/react/reaction-picker";
 import { NotificationBell } from "@hjmds/react/notification-bell";
+import { TopBar } from "@hjmds/react/top-bar";
 import { useRef, useState } from "react";
 import { DurationField } from "@hjmds/react/duration-field";
 import { InlineConfirm } from "@hjmds/react/inline-confirm";
@@ -25,4 +26,4 @@ export function Confirm() {
   </Stack>;
 }
 export function Reactions() { const [value,setValue]=useState<string|null>(null); return <Stack gap="xl"><Heading level="level3">{socialCopy.title}</Heading><ReactionPicker label={socialCopy.group} options={reactionOptions} value={value} onValueChange={setValue}/></Stack>; }
-export function Notifications(){const [count,setCount]=useState(3);return <Stack gap="xl"><NotificationBell count={count} label={socialCopy.notifications(count)} icon={<Icon name="notifications"/>} onPress={()=>setCount(0)}/><Text tone="muted">{socialCopy.hint}</Text><PreviewTools><PreviewToolButton onClick={()=>setCount(current=>current+1)}>{socialCopy.add}</PreviewToolButton></PreviewTools></Stack>;}
+export function Notifications(){const [count,setCount]=useState(3);return <Stack gap="xl">{/* The product placement: the bell ends a top bar with edge="end", glyph slot on the bar inset (2026-10-17). */}<TopBar title={socialCopy.bellTitle} trailing={<NotificationBell edge="end" count={count} label={socialCopy.notifications(count)} icon={<Icon name="notifications"/>} onPress={()=>setCount(0)}/>}/><Text tone="muted">{socialCopy.hint}</Text><PreviewTools><PreviewToolButton onClick={()=>setCount(current=>current+1)}>{socialCopy.add}</PreviewToolButton></PreviewTools></Stack>;}

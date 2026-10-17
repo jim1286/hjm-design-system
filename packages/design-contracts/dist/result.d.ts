@@ -105,7 +105,7 @@ export declare const resultRecipe: {
             key: "text";
             alpha?: number;
         }>;
-        readonly fontWeight: "700";
+        readonly fontWeight: "500";
     };
     readonly description: {
         readonly textVariant: "body";

@@ -12,9 +12,8 @@ import {
 describe("Heading", () => {
   it("exposes the existing scale without inventing sizes", () => {
     expect(headingRecipe.levels).toBe(heading);
-    // The largest exposed step is well above the Text scale, which is the gap
-    // this contract closes.
-    expect(headingRecipe.levels.level1.fontSize).toBeGreaterThan(typography.heading.fontSize);
+    // No step exceeds the Text scale since the display tier was removed (2026-10-17).
+    expect(Math.max(...Object.values(headingRecipe.levels).map(step => step.fontSize))).toBe(typography.heading.fontSize);
   });
 
   it("derives the document level from the visual level unless told otherwise", () => {

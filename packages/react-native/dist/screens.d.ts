@@ -50,6 +50,13 @@ export type ScreenLayoutProps = Readonly<{
     scroll?: "screen" | "content";
     /** Host owns safe areas and navigation bars, avoiding double insets inside nested routes. */
     layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * Bottom safe-area inset of the window edge this screen reaches (`useSafeAreaInsets().bottom`; 0 above a tab bar
+     * or inside a host that already insets the bottom). The footer — or the body when there is none — pads
+     * max(16, inset) instead of the host's inset plus 16, matching Web's `max(padding, env(safe-area-inset-bottom))`
+     * (2026-10-17 user report: too much space below buttons). Pass it instead of a bottom SafeAreaView edge, never both.
+     */
+    safeAreaBottom?: number;
     testID?: string;
     scrollRef?: Ref<ScrollView>;
     /**
@@ -59,7 +66,7 @@ export type ScreenLayoutProps = Readonly<{
     keyboardAvoidance?: boolean;
     scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator" | "onScroll" | "onScrollBeginDrag" | "onScrollEndDrag" | "scrollEventThrottle" | "alwaysBounceVertical" | "automaticallyAdjustKeyboardInsets">;
 }>;
-export declare function ScreenLayout({ title, titleBadge, titleVisibility, headerAlignment, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, description, exit, actions, notice, footer, state, stateAction, children, scroll, layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance, hjmBodyInlinePadding, hjmTitleLeading }: ScreenLayoutProps & ScreenLayoutPrivateProps): import("react").JSX.Element;
+export declare function ScreenLayout({ title, titleBadge, titleVisibility, headerAlignment, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, description, exit, actions, notice, footer, state, stateAction, children, scroll, layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance, safeAreaBottom, hjmBodyInlinePadding, hjmTitleLeading }: ScreenLayoutProps & ScreenLayoutPrivateProps): import("react").JSX.Element;
 export type SettingsScreenSection = Readonly<{
     id: string;
     title: string;
@@ -157,7 +164,7 @@ export type ChatMessageProps = ChatMessageDescriptor & Readonly<{
     replyLink?: Readonly<{
         label: string;
         onPress(): void;
-    }>; /** HJM-drawn quote ("X에게 답장" + one-line excerpt) heading the bubble; preferred over a custom `reply` node. */
+    }>; /** HJM-drawn quote ("Replying to X" + one-line excerpt) heading the bubble; preferred over a custom `reply` node. */
     replyQuote?: Readonly<{
         title: string;
         excerpt: string;

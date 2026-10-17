@@ -101,8 +101,8 @@ it("keeps card media clipping aligned with the themed surface across profiles, m
 
 it("sends all five themed heading metrics to the native text host without changing document level or double scaling", () => {
   const custom = defineHjmDesignProfile({ extends: "paper", tokens: { heading: {
-    level1: { fontSize: 56, lineHeight: 68 }, level2: { fontSize: 36, lineHeight: 46 },
-    level3: { fontSize: 27, lineHeight: 36 }, level4: { fontSize: 22, lineHeight: 30 },
+    level1: { fontSize: 24, lineHeight: 34 }, level2: { fontSize: 23, lineHeight: 31 },
+    level3: { fontSize: 22, lineHeight: 30 }, level4: { fontSize: 21, lineHeight: 29 },
     level5: { fontSize: 19, lineHeight: 28, fontWeight: "500" },
   } } });
   const levels = Object.keys(heading) as (keyof typeof heading)[];
@@ -124,6 +124,8 @@ it("sends all five themed heading metrics to the native text host without changi
           expect(host.props.allowFontScaling).toBe(false);
           expect(style.fontSize).toBe(expected.fontSize * 1.3); expect(style.lineHeight).toBe(expected.lineHeight * 1.3);
           expect(style.fontWeight).toBe(expected.fontWeight);
+          // 2026-10-17 display tier removed: no preset draws a heading above 24 before text scaling.
+          expect(expected.fontSize).toBeLessThanOrEqual(24);
         });
       }
     }

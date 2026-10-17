@@ -85,14 +85,14 @@ import { EffectSurface } from "@hjmds/react-native/effect-surface";
 | --- | --- | --- |
 | 크기 | 기본 여백은 없다(`padding="none"`). 크기는 children과 `padding`이 정하고 장식 레이어가 그 영역 전체(`absolute`, inset 0)를 덮는다. 넘치는 장식은 `radius` 모서리 안에서 잘린다(`overflow: hidden`). 안에 둔 Surface와 같은 기본 radius라 둥근 카드 모서리 밖으로 장식이 비치지 않는다. 배경은 테마 `bg`다. 높이를 늘리려면 children 높이, Web `layoutStyle`·Native `style`의 높이로 정한다. 장식 레이어는 배치에 참여하지 않는다 | `react/src/effect-surface.tsx`, `react-native/src/effect-surface.tsx` |
 | 간격 | 안쪽 여백은 `padding`(예: `lg` 20), 내용 사이 간격은 children 쪽 [Stack](stack.md)으로 준다. raw 요소에 padding을 직접 주지 않는다 | `react/src/effect-surface.tsx` |
-| 순서·정렬 | children은 일반 레이아웃이다. [Stack](stack.md)으로 eyebrow → [Heading](heading.md) → 소개 → [Button](button.md)을 쌓는다(Showcase 랜딩 예는 `gap="lg"` 20, Heading `level1`) | `showcase/web/src/patterns/Landing.stories.tsx` |
+| 순서·정렬 | children은 일반 레이아웃이다. [Stack](stack.md)으로 eyebrow → [Heading](heading.md) → 소개 → [Button](button.md)을 쌓는다(Showcase 랜딩 예는 `gap="lg"` 20, Heading `level3` 24·h1) | `showcase/web/src/patterns/Landing.stories.tsx` |
 | 고정·스크롤 | 화면 위쪽 히어로 하나에만 둔다. 같은 화면에 여러 개를 겹치거나 목록 행마다 두지 않는다 | — |
 | 좁은 폭·큰 글자 | — | — |
 
 ```text
 ┌────────────────────────────┐ ← EffectSurface(배경 bg + mesh/glow/grain, 터치 없음)
 │  eyebrow                   │
-│  큰 제목(Heading level1)    │ ← children: 일반 레이아웃(Stack gap lg 20)
+│  제목(Heading level3, 24)   │ ← children: 일반 레이아웃(Stack gap lg 20)
 │  소개 문장                  │
 │  [시작하기]  primary        │
 └────────────────────────────┘

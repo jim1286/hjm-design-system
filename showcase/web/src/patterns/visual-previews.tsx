@@ -19,12 +19,12 @@ export function Effects() {
   const [active, setActive] = useState(false);
   return <Container size="reading"><Stack gap="xl"><Switch presentation="row" label={copy.motion} checked={active} onCheckedChange={setActive} />
     {copy.effectSamples.map(({ layers, label }) => <EffectSurface key={label} descriptor={{ layers, active, seed: "morning", intensity: 0.4 }}>
-      <div style={{ padding: "var(--hjm-space-xxl)" }}><Stack gap="lg" align="start"><Text variant="label">{label}</Text><Heading level="level2">{copy.title}</Heading><Text>{copy.description}</Text><Button tone="secondary">{copy.action}</Button></Stack></div>
+      <div style={{ padding: "var(--hjm-space-xxl)" }}><Stack gap="lg" align="start"><Text variant="label">{label}</Text><Heading level="level3" semanticLevel={2}>{copy.title}</Heading><Text>{copy.description}</Text><Button tone="secondary">{copy.action}</Button></Stack></div>
     </EffectSurface>)}
   </Stack></Container>;
 }
 export function Icons() { return <Container size="reading"><Stack gap="xl">{copy.icons.map(({ name, label }) => <Stack key={name} axis="inline" gap="md" wrap align="center"><Icon name={name} size="lg" renderGlyph={glyph} /><Stack gap="xxs"><Text>{label}</Text><Text variant="caption" tone="muted"><code>{name}</code></Text></Stack></Stack>)}</Stack></Container>; }
-export function Faces() { return <Container size="reading"><Stack gap="xl"><Heading level="level2">{copy.faces}</Heading><Text>{copy.faceHint}</Text>{profileFaces.map(face => <Stack key={face.seed} axis="inline" gap="md" wrap align="center"><Avatar name={face.label} size="xlarge" renderFallback={createBlobatarFallback({ seed: face.seed })}/><Avatar name={copy.happy(face.label)} size="xlarge" renderFallback={createBlobatarFallback({ seed: face.seed, expression: "happy" })}/><Text>{face.label}</Text></Stack>)}</Stack></Container>; }
+export function Faces() { return <Container size="reading"><Stack gap="xl"><Heading level="level3" semanticLevel={2}>{copy.faces}</Heading><Text>{copy.faceHint}</Text>{profileFaces.map(face => <Stack key={face.seed} axis="inline" gap="md" wrap align="center"><Avatar name={face.label} size="xlarge" renderFallback={createBlobatarFallback({ seed: face.seed })}/><Avatar name={copy.happy(face.label)} size="xlarge" renderFallback={createBlobatarFallback({ seed: face.seed, expression: "happy" })}/><Text>{face.label}</Text></Stack>)}</Stack></Container>; }
 export function Transitions() {
   const [index, setIndex] = useState(0);
   return <Container size="reading"><Stack gap="xl">{copy.transitions.map(({ preset, label }) => <Stack key={preset} gap="md"><Text variant="label">{label}</Text><TextTransition preset={preset} text={copy.scenes[index]!} /></Stack>)}<PreviewTools><PreviewToolButton onClick={() => setIndex((index + 1) % copy.scenes.length)}>{copy.nextScene}</PreviewToolButton></PreviewTools></Stack></Container>;

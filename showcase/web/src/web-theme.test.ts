@@ -35,7 +35,7 @@ describe("Showcase Web theme adapter", () => {
     expect(style["--hjm-font-weight-bold"]).toBe(fontWeight.bold);
     expect(style["--hjm-letter-spacing-tight-base"]).toBe("-0.0125rem");
     expect(style["--hjm-numeric-tabular"]).toBe(numeric.tabular);
-    expect(style["--hjm-heading-level1-size-base"]).toBe("2.5rem");
+    expect(style["--hjm-heading-level1-size-base"]).toBe("1.5rem");
     expect(style["--hjm-control-min-touch-target"]).toBe(`${control.minTouchTarget}px`);
     expect(style["--hjm-motion-normal"]).toBe(`${motion.normal}ms`);
     expect(style["--hjm-motion-strategy-instant-duration"]).toBe(`${motion.fast}ms`);

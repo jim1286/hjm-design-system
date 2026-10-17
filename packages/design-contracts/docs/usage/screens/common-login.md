@@ -59,7 +59,8 @@ host: 남은 높이·safe area·키보드
 | --- | --- |
 | [AuthScreenLayout](../components/auth-screen-layout.md) | 필수 props·슬롯·플랫폼 차이 |
 | [AuthProviderButton](../components/auth-provider-button.md) | 제공자 버튼(이름만) |
-| [Top](../components/top.md) | 히어로 제목·설명(제목을 `Text`로 그리지 않는다) |
+| [AuthScreenLayout](../components/auth-screen-layout.md#공개-이름과-import)의 `AuthScreenHero` | 히어로 마크·eyebrow·태그라인·설명(`Top`·`Text`로 조립하지 않는다) |
+| [AuthScreenLayout](../components/auth-screen-layout.md#공개-이름과-import)의 `AuthScreenFooter` | 동의 고지·정책 링크(ghost `Button`으로 만들지 않는다) |
 | [Notice](../components/notice.md) | 로그인 실패 한 줄 |
 | [Button](../components/button.md) | 동작·로딩·보조 행동 |
 | [ScreenLayout](../components/screen-layout.md) | 화면 높이·본문 교체·스크롤 소유 |
@@ -68,27 +69,27 @@ host: 남은 높이·safe area·키보드
 
 ```tsx
 // Web
-import { AuthScreenLayout } from "@hjmds/react/auth-screen";
+import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "@hjmds/react/auth-screen";
 
 <AuthScreenLayout
   mainCard
   {...(pending ? { pendingLabel: t("auth.pending") } : {})}
-  hero={<ProductHero />}            // 제품 마크·제목·설명
+  hero={<AuthScreenHero mark={<ProductMark />} title={t("auth.tagline")} description={t("auth.description")} />}
   main={<ProviderButtons />}        // pending이어도 같은 목록
-  footer={<ConsentAndPolicyLinks />}
+  footer={<AuthScreenFooter notice={t("auth.consent")} links={policyLinks} />}  // { label, href | onClick }
 />
 ```
 
 ```tsx
 // Native
-import { AuthScreenLayout } from "@hjmds/react-native/auth-screen";
+import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "@hjmds/react-native/auth-screen";
 
 <AuthScreenLayout
   mainCard
   {...(pending ? { pendingLabel: t("auth.pending") } : {})}
-  hero={<ProductHero />}            // 제품 마크·제목·설명
+  hero={<AuthScreenHero mark={<ProductMark />} title={t("auth.tagline")} description={t("auth.description")} />}
   main={<ProviderButtons />}        // pending이어도 같은 목록
-  footer={<ConsentAndPolicyLinks />}
+  footer={<AuthScreenFooter notice={t("auth.consent")} links={policyLinks} />}  // { label, onPress }
 />
 ```
 
@@ -112,4 +113,5 @@ import { AuthScreenLayout } from "@hjmds/react-native/auth-screen";
 ## 근거
 
 - 제공자 목록과 로그인 요청 분리 상황 표: 2026-10-13 전수 점검 — 최초 조회와 변경 요청의 상태를 같은 골격으로 설명하던 부분을 구체화했다.
+- 히어로·하단 동의를 `AuthScreenHero`·`AuthScreenFooter`로 연결: 2026-10-17 사용자 피드백("굵기랑 크기 줄여", "간격 줄여") — `Top large` 히어로가 402 폭에서 두 줄 32/40이었고 ghost Button 링크 사이가 42였다. 수치는 [API 배치 규칙](../components/auth-screen-layout.md#배치).
 - 빈 화면·로그인 필요 스토리 없음: 2026-10-06 해당하지 않는 본문 상태 스토리를 뺐다.

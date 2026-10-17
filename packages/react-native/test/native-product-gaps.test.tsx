@@ -13,6 +13,7 @@ import {
   badgeRecipe,
   bottomCtaRecipe,
   listRecipe,
+  listRowRecipe,
   toastRecipe,
 } from "@hjmds/design-contracts/recipes";
 import {
@@ -219,6 +220,39 @@ describe("Native product renderer gaps", () => {
     });
     expect(() => render(<List label="   "><ListRow title="행" /></List>))
       .toThrow(/label must not be empty/u);
+  });
+
+  it("starts each indented separator at the text column of the row above it", () => {
+    // 2026-10-17 user report: a fixed 52 start cut the line off midway under rows without leading.
+    const dividers = (renderer: ReactTestRenderer) => renderer.root.findAllByType(View)
+      .filter((node) => flattenStyle(node.props.style).height === 1)
+      .map((node) => flattenStyle(node.props.style));
+    const indented = listRecipe.separators.indented!;
+    const leadingIcon = <View />;
+    const renderer = render(
+      <List label="혼합 목록">
+        <ListRow title="아이콘 행" leading={leadingIcon} trailingText="완료" />
+        <ListRow title="글자 행" />
+        <ListRow title="마지막" leading={leadingIcon} />
+      </List>,
+      { direction: "rtl" },
+    );
+    expect(indented.leadingInsetStart).toBe(listRowRecipe.leadingSize + listRowRecipe.gap);
+    expect(dividers(renderer)).toEqual([
+      expect.objectContaining({ marginStart: indented.leadingInsetStart, marginEnd: 0 }),
+      expect.objectContaining({ marginStart: 0, marginEnd: 0 }),
+    ]);
+    act(() => renderer.update(
+      <HjmNativeProvider direction="rtl" reducedMotion theme="light">
+        <List label="혼합 목록"><ListRow title="아이콘 행" /><ListRow title="글자 행" /></List>
+      </HjmNativeProvider>,
+    ));
+    expect(dividers(renderer)).toEqual([expect.objectContaining({ marginStart: 0, marginEnd: 0 })]);
+    const full = render(<List label="전체 목록" separator="full"><ListRow title="행" leading={leadingIcon} /><ListRow title="행 2" /></List>);
+    expect(dividers(full)).toEqual([expect.objectContaining({
+      marginStart: -listRowRecipe.surfaceBleed,
+      marginEnd: -listRowRecipe.surfaceBleed,
+    })]);
   });
 
   it("composes Statistic names with product context", () => {

@@ -59,7 +59,7 @@ export declare const breadcrumbRecipe: {
             alpha?: number;
         }>;
         readonly textVariant: "label";
-        readonly fontWeight: "600";
+        readonly fontWeight: "500";
     };
     readonly separator: {
         readonly color: Readonly<{

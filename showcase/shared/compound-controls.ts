@@ -22,7 +22,7 @@ export async function runConfirmationPreview(shouldFail: () => boolean) {
 
 export const socialCopy = {
   title: "작은 반응이 대화를 이어줘요.", group: "반응 고르기", like: "좋아요", love: "마음에 들어요", celebrate: "축하해요", inspired: "영감을 받았어요",
-  notifications: (count: number) => `알림, 읽지 않은 항목 ${count}개`, add: "새 알림 추가", hint: "종을 누르면 이 예제의 알림을 읽음으로 바꿉니다.",
+  notifications: (count: number) => `알림, 읽지 않은 항목 ${count}개`, add: "새 알림 추가", bellTitle: "홈", hint: "종을 누르면 이 예제의 알림을 읽음으로 바꿉니다.",
 };
 export const reactionOptions = [
   {id:'like',emoji:'👍',label:socialCopy.like}, {id:'love',emoji:'💜',label:socialCopy.love},

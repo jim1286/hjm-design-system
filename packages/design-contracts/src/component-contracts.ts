@@ -24,7 +24,7 @@ export const formSupportContract = {
   label: {
     color: semanticColors.content.body,
     textVariant: "body" as const,
-    fontWeight: fontWeight.semibold,
+    fontWeight: fontWeight.medium,
   },
   hint: { color: semanticColors.content.secondary, textVariant: "label" as const },
   error: { color: semanticColors.content.danger, textVariant: "label" as const },

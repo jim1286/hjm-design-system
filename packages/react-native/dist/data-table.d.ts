@@ -25,9 +25,9 @@ export type DataTableProps<ColumnKey extends string = string, RowKey extends str
     emptyLabel?: string;
     density?: DataTableDensity;
     footer?: ReactNode;
-    /** Header bands above leaf columns (타격 | 주루). */
+    /** Header bands above leaf columns (Batting | Running). */
     columnGroups?: readonly DataTableColumnGroup<ColumnKey>[];
-    /** Labeled row sections (선발 / 교체). */
+    /** Labeled row sections (Starters / Substitutes). */
     rowGroups?: readonly DataTableRowGroup<RowKey>[];
     /** Per-cell emphasis decided by the product (AG Grid cellClassRules / Savant percentile heat). */
     cellStyle?: (rowId: RowKey, columnId: ColumnKey) => Readonly<{

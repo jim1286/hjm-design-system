@@ -18,7 +18,7 @@
 | 상황 | 대신 쓸 것 |
 | --- | --- |
 | 짧은 상태·결과 문구를 변경 알림으로 전달 | [StatusText](#statustext) |
-| 문서 제목 단계(`h1`~)가 필요하거나 24px보다 큰 제목 | [Heading](heading.md) |
+| 문서 제목 단계(`h1`~)가 필요한 제목(크기는 Text와 같은 단계, 최대 24px) | [Heading](heading.md) |
 | 화면 첫 자리의 제목 블록(보조 문장·행동 포함) | [Top](top.md) |
 | 본문 묶음의 헤더 행 | [Section](section.md) |
 | 숫자 지표와 그 라벨 | [Statistic](statistic.md) |
@@ -61,7 +61,7 @@ import { Text } from "@hjmds/react-native/primitives";
 | --- | --- | --- | --- |
 | `variant` | `caption`(11) · `label`(12) · `body`(14) · `bodyLarge`(16) · `title`(18) · `titleLarge`(20) · `heading`(24) | `body` | 화면·섹션 제목은 모양이 아니라 [Heading](heading.md)으로 쓴다 |
 | `fontRole` | `ui` · `display` · `reading` · `code` | 제목 variant는 display, 본문은 reading, caption/label은 ui | 명시값이 기본을 덮는다. [역할 지침](../tokens/font-roles.md), 1.16.0 변경 |
-| `emphasis` | `regular` · `medium`(semibold) · `strong`(bold) | 프로필이 있으면 variant 굵기, 없으면 `regular`. `label`은 프로필과 무관하게 variant 굵기 500 | 명시값이 프로필과 variant보다 우선 |
+| `emphasis` | `regular` 400 · `medium` 500 · `strong` 500(제목 굵기) | 프로필이 있으면 variant 굵기, 없으면 `regular`. `label`은 프로필과 무관하게 variant 굵기 500 | 명시값이 프로필과 variant보다 우선 |
 | `tone` | `primary` · `body` · `muted` · `subtle` · `weak` · `brand` · `danger` · `inverse` | `primary` | — |
 | `as` | `span` · `p` · `div` · `strong` · `small` | `span` | Web만. 문단은 `as="p"` |
 | `align` | `TextStyle["textAlign"]` | 쓰기 방향의 시작 쪽 | Native만 |
@@ -103,13 +103,13 @@ Native는 Text의 역할을 해당 stack에, 입력/조작 host는 제품 프로
 ## 함정
 
 - `emphasis`를 명시하면 `variant`의 굵기를 덮는다. `designProfile`이 있으면 생략한 `emphasis`는 해당 프로필의 `tokens.typography[variant].fontWeight`를 따른다. 프로필이 없으면 기존 기본값 `regular`를 유지하므로 `variant="title"`도 보통 굵기로 그려진다. 그 경우 굵은 제목은 `emphasis="strong"`으로 지정한다(두 renderer 동일).
-- `variant="label"`은 예외로, 프로필이 없어도 생략한 `emphasis`가 `typography.label` 굵기 500(medium)으로 그려진다. 500은 `emphasis` 단계에 없으므로(`medium`은 600) label을 400으로 그리려면 `emphasis="regular"`를 명시한다.
+- `variant="label"`은 예외로, 프로필이 없어도 생략한 `emphasis`가 `typography.label` 굵기 500(medium)으로 그려진다. label을 400으로 그리려면 `emphasis="regular"`를 명시한다.
   Web은 이 기본 굵기를 inline `font-weight`로 주며 `data-emphasis`는 `regular`로 남는다. Native는 `fonts="pretendard"`일 때 `Pretendard-Medium` face로 그린다.
 
 
 ## 근거
 
-2026-10-17 사용자 결정: 폼 라벨·섹션 부제목이 본문 대비 약해 `label` 기본 굵기를 500으로 정했다(본문 400과 제목 600 사이). 이전에는 토큰이 600이었지만 프로필 없는 Text는 400으로 그렸다. 두 renderer는 `resolveTextDefaultWeight`(`src/component-recipes.ts`) 하나로 기본 굵기를 고른다.
+2026-10-17 사용자 결정: 폼 라벨·섹션 부제목이 본문 대비 약해 `label` 기본 굵기를 500으로 정했다(당시 본문 400과 제목 600 사이, 제목이 500으로 내려간 뒤에도 500 유지). 이전에는 토큰이 600이었지만 프로필 없는 Text는 400으로 그렸다. 두 renderer는 `resolveTextDefaultWeight`(`src/component-recipes.ts`) 하나로 기본 굵기를 고른다.
 
 ## StatusText
 
@@ -189,3 +189,5 @@ Native Android는 `accessibilityLiveRegion`만 사용한다. iOS는 앱이 activ
 동일 결과를 매 렌더 다시 알리기 위해 key를 바꾸지 않는다. Toast·Notice에서 이미 알리는 결과를 중복 알리지 않는다.
 Showcase의 `PatternStatus`는 이 공개 컴포넌트를 가리키는 내부 별칭일 뿐이며 제품에서 Showcase 파일을 import하지 않는다.
 DOM 속성·Native host 호출 검사는 실제 VoiceOver·TalkBack의 낭독 확인과 구분한다.
+- 2026-10-17 사용자 결정("왜 폰트가 진해"): 제목을 600으로 내린 뒤에도 `strong`이 700이라 읽지 않은 알림 제목·라벨 25곳이 제목보다 굵었다. 강조 단계를 400·500·600으로 낮췄다.
+- 같은 날 두 번째 결정("굵기 좀더 줄여"): 제목을 500, 큰 제목(level1·2)을 600으로 한 단계씩 더 낮췄다. `strong`은 제목 굵기를 따라 500이 되어 `medium`과 같다(`typography.title.fontWeight` 참조). 600은 큰 숫자·선택 상태에만 쓴다(큰 제목 600 단계는 같은 날 큰 글자 단계와 함께 폐지).

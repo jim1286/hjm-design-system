@@ -256,7 +256,7 @@ it("shows recent and suggested queries before typing, suggestions while typing a
  expect(texts()).not.toContain("결과 목록");expect(texts()).not.toContain("빠른 조건");expect(texts()).not.toContain("최근 검색");
  expect(host.querySelector('[role="status"]')?.textContent).toBe("제안 2개");
  // The match is bolded by weight, not color.
- expect(Array.from(host.querySelectorAll("strong, [data-emphasis='strong'], .hjm-text")).some(node=>node.textContent==="산"&&getComputedStyle(node).fontWeight>="600")).toBe(true);
+ expect(Array.from(host.querySelectorAll("strong, [data-emphasis='strong'], .hjm-text")).some(node=>node.textContent==="산"&&Number(getComputedStyle(node).fontWeight)>400)).toBe(true);
  await page.getByRole("button",{name:"산책길"}).click();
  expect(host.querySelector<HTMLInputElement>('input[type="search"]')!.value).toBe("산책길");
  expect(texts()).toContain("결과 목록");expect(texts()).toContain("결과 3개");expect(texts()).toContain("빠른 조건");

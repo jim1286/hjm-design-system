@@ -3,7 +3,7 @@ import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { page } from "vitest/browser";
 import { afterEach, beforeEach, expect, it } from "vitest";
-import { AuthScreenLayout } from "../src/auth-screen.js";
+import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "../src/auth-screen.js";
 import { HjmProvider } from "../src/provider.js";
 import { Button } from "../src/actions.js";
 import { Text } from "../src/layout.js";
@@ -33,4 +33,24 @@ it("keeps one main landmark and leaves consent reachable with long copy at norma
   expect(layout.scrollWidth).toBeLessThanOrEqual(layout.clientWidth);
   footer.scrollIntoView();
   expect(footer.getBoundingClientRect().bottom).toBeLessThanOrEqual(568);
+});
+
+it("draws the hero tagline on a title step and keeps policy links one recipe gap apart with an invisible 44px target", async () => {
+  await page.viewport(402, 874);
+  await act(async () => root.render(<HjmProvider textScale={1}><AuthScreenLayout
+    hero={<AuthScreenHero eyebrow="이야기" title="당신의 일상을 이야기로 남겨요" description="사진 한 장, 짧은 한 줄로 시작하세요." />}
+    main={<Button>Google</Button>}
+    footer={<AuthScreenFooter notice="계속하면 동의해요." links={[{ label: "이용약관", href: "#terms" }, { label: "개인정보처리방침", onClick: () => undefined }]} />} /></HjmProvider>));
+  const title = container.querySelector<HTMLElement>("h1")!;
+  // 2026-10-17 "굵기랑 크기 줄여": 24/32 at 500 fits one line at 402 instead of the 32/40 display heading's two.
+  expect(getComputedStyle(title)).toMatchObject({ fontSize: "24px", lineHeight: "32px", fontWeight: "500" });
+  expect(title.getBoundingClientRect().height).toBe(32);
+  const links = [...container.querySelectorAll<HTMLElement>(".hjm-auth-screen__link")];
+  const text = (element: HTMLElement) => { const range = document.createRange(); range.selectNodeContents(element); return range.getBoundingClientRect(); };
+  // "간격 줄여": gap + dot + gap (about 19px), not button padding + Stack gap (42px).
+  expect(text(links[1]!).left - text(links[0]!).right).toBeLessThan(24);
+  for (const link of links) {
+    expect(link.getBoundingClientRect().height).toBe(44);
+    expect(getComputedStyle(link).paddingInline).toBe("0px");
+  }
 });

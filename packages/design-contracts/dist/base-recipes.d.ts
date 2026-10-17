@@ -218,7 +218,7 @@ export declare const fieldRecipe: {
     readonly label: {
         readonly color: "textBody";
         readonly textVariant: "body";
-        readonly fontWeight: "600";
+        readonly fontWeight: "500";
         readonly gap: 8;
     };
     readonly support: {

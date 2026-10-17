@@ -43,7 +43,7 @@ function InlineEditBody(props: InlineEditProps) {
   };
   return <div ref={group} role="group" aria-label={props.label}>
     {/* Read state names the value with its label and edits through a pencil tool at the row end; a bare value beside a
-        text "제목 수정" button lost the label (2026-10-17 review). */}
+        text "Edit title" button lost the label (2026-10-17 review). */}
     {!editing ? <Stack axis="inline" gap="sm" align="center">
       <Stack gap="xxs" layoutStyle={{ flex: 1, minInlineSize: 0 }}><Text variant="caption" tone="muted">{props.label}</Text><Text emphasis="strong">{props.value}</Text></Stack>
       <IconButton ref={trigger} label={props.editLabel} tone="ghost" edge="end" disabled={props.disabled ?? false} onClick={() => { setDraft(props.value); action.session.reset(null); setEditing(true); }}><Icon name="edit" /></IconButton>

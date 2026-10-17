@@ -775,7 +775,7 @@ export declare const behaviorRegistry: {
             readonly states: readonly [];
             readonly actions: readonly [];
         };
-        readonly scenarios: readonly ["the-hero-and-the-main-action-stay-one-vertically-centred-block", "the-footer-sits-at-the-bottom-and-never-overlaps-the-main-action", "content-taller-than-the-viewport-scrolls-instead-of-pushing-the-footer-off-screen", "the-product-owns-every-string-and-the-mark-asset-while-the-layout-stays-here", "provider-button-height-comes-from-the-provider-contract-not-from-this-one", "compact-density-shrinks-gaps-without-changing-the-two-region-structure", "policy-links-in-the-footer-keep-the-minimum-touch-target"];
+        readonly scenarios: readonly ["the-hero-and-the-main-action-stay-one-vertically-centred-block", "the-footer-sits-at-the-bottom-and-never-overlaps-the-main-action", "content-taller-than-the-viewport-scrolls-instead-of-pushing-the-footer-off-screen", "the-product-owns-every-string-and-the-mark-asset-while-the-layout-stays-here", "provider-button-height-comes-from-the-provider-contract-not-from-this-one", "compact-density-shrinks-gaps-without-changing-the-two-region-structure", "policy-links-in-the-footer-keep-the-minimum-touch-target", "the-hero-title-uses-the-recipe-title-step-not-a-display-heading", "policy-links-are-separated-by-one-recipe-gap-and-a-dot-while-the-touch-area-stays-invisible"];
     };
     readonly heading: {
         readonly controlled: readonly [];

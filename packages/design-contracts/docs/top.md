@@ -18,8 +18,9 @@
 
 **크기는 둘뿐이다.** `large`(화면의 첫 제목)와 `medium`(시트·모달 안의 첫 제목).
 세 번째가 필요해지는 자리는 이미 `Section`이다 — 크기를 늘리는 대신 다른 컴포넌트를
-쓰라는 신호로 둔다. 두 크기 모두 기존 타입 스케일(`heading.level2`, `typography.titleLarge`)을
-그대로 쓰고 새 숫자를 만들지 않는다.
+쓰라는 신호로 둔다. 두 크기 모두 기존 타입 스케일(`heading.level3` 24px, `typography.titleLarge` 20px)을
+그대로 쓰고 새 숫자를 만들지 않는다. 2026-10-17 사용자 결정("글자 너무 커")으로 큰 글자 단계를 폐지하면서
+`large`가 읽던 `heading.level2`(32px)를 HJM 상한인 `heading.level3`(24px)으로 바꿨다.
 
 **잘리지 않는다.** `description`은 줄바꿈하며 말줄임하지 않는다. 큰 글자 설정에서 화면이
 묻는 내용이 사라지면 안 되기 때문이다. `trailing` 보조 행동은 제목 줄을 공유하다가
@@ -33,6 +34,6 @@
 
 ## 프로필 모서리·제목 소비
 
-2026-10-07 소비 감사에서 두 renderer의 제목 크기·행간·굵기가 foundation으로 확정된 recipe를 직접 읽어 프로필을 우회했다. `large`는 가까운 프로필의 `heading.level2`, `medium`은 `typography.titleLarge`를 읽고 프로필이 없으면 기존 recipe를 유지한다. 시각 역할은 `headingLevel`과 독립이며 display 서체·제목 의미·보조 행동·초점은 바꾸지 않는다.
+2026-10-07 소비 감사에서 두 renderer의 제목 크기·행간·굵기가 foundation으로 확정된 recipe를 직접 읽어 프로필을 우회했다. `large`는 가까운 프로필의 `heading.level3`, `medium`은 `typography.titleLarge`를 읽고 프로필이 없으면 기존 recipe를 유지한다. 시각 역할은 `headingLevel`과 독립이며 display 서체·제목 의미·보조 행동·초점은 바꾸지 않는다.
 
 프로필 연결은 1.15.0 이후 미게시 변경이며, 기본 배포 계약과 실제 Native 기기 검증은 구분한다.

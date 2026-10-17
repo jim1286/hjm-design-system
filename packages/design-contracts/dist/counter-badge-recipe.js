@@ -44,6 +44,6 @@ export const counterBadgeRecipe = {
         floating: { border: semanticColors.canvas, borderWidth: stroke.strong },
     },
     radius: "full",
-    fontWeight: fontWeight.bold,
+    fontWeight: fontWeight.medium,
 };
 //# sourceMappingURL=counter-badge-recipe.js.map

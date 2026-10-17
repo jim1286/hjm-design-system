@@ -235,7 +235,7 @@ export const fieldRecipe = {
   label: {
     color: "textBody",
     textVariant: "body",
-    fontWeight: fontWeight.semibold,
+    fontWeight: fontWeight.medium,
     gap: spacing.xs,
   },
   support: {

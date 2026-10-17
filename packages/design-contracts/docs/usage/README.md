@@ -97,7 +97,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [FollowProfileCard](components/follow-profile-card.md) | 구성/정보 표시 | 프로필 카드에서 팔로우·팔로잉 전환과 팔로워 수를 실제 mutation 결과와 함께 보여 줄 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Form](components/form.md) | 입력 | 여러 Field를 한 화면에 쌓고 한 번에 제출할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Grid](components/grid.md) | 레이아웃 | 카드·타일처럼 같은 모양의 자식을 창 크기에 따라 열 수를 바꿔 배치할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
-| [Heading](components/heading.md) | 글자와 아이콘 | 자리를 모르는 큰 제목 글자 하나가 필요할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [Heading](components/heading.md) | 글자와 아이콘 | 자리를 모르는 제목 글자 하나가 필요할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [HistogramExplorer](components/histogram-explorer.md) | 구성/정보 표시 | 실제 관측값 배열의 분포를 동폭 구간 막대로 보여 주고, 사용자가 구간 수를 바꿔 볼 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Icon](components/icon.md) | 글자와 아이콘 | HJM semantic 이름(`search`, `back`, `chevronEnd`, `notifications` 등 43개)으로 고르는 그림 기호에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [IconButton](components/icon-button.md) | 동작 | 보이는 글자 없이 아이콘만으로 표시하는 행동에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |

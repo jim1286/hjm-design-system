@@ -40,7 +40,7 @@ export function GroupChatPreview() {
     setMessages(current => [...current, { id: `sent-${current.length}`, authorId: "me", timestamp: "지금", text: value, ...(replyTarget ? { replyTo: { author: nameOf(replyTarget), text: replyTarget.text || "사진" } } : {}) }]);
     setDraft(""); setReplyTarget(null);
   };
-  return <KeyboardAvoiding style={{ height: 720 }}>
+  return <KeyboardAvoiding style={{ flex: 1 }}>
     <ChatScreen title="산책 모임" titleBadge={<Text tone="muted">4</Text>} exit={{ kind: "back", label: "뒤로", onPress: () => setStatus("목록으로 돌아가요.") }}
       avatar={<Avatar name="산책 모임" size={32} decorative source={members.seoyeon!.photo} />}
       notice={status ? <Text tone="muted">{status}</Text> : null}

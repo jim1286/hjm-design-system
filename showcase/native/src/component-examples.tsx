@@ -7,7 +7,7 @@ import { BottomInfo } from "@hjmds/react-native/bottom-info";
 import { Collapsible } from "@hjmds/react-native/collapsible";
 import { Asset, AssetGroup } from "@hjmds/react-native/asset";
 import { AuthProviderButton } from "@hjmds/react-native/provider-button";
-import { AuthScreenLayout } from "@hjmds/react-native/auth-screen";
+import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "@hjmds/react-native/auth-screen";
 import { Carousel } from "@hjmds/react-native/carousel";
 import { Top } from "@hjmds/react-native/top";
 import { useRef, useState, type ReactNode } from "react";
@@ -291,9 +291,9 @@ function AuthScreenExample({ variant }: { variant: PreviewVariant }) {
 const { busyId, start } = useAuthPending();
 return (<AuthScreenLayout mainCard
         {...(busyId !== null || variant === "loading" ? { pendingLabel: authExample.pendingLabel } : {})}
-        hero={<Top descriptor={{ title: authExample.hero.title, description: authExample.hero.description, size: "medium" }} />}
+        hero={<AuthScreenHero title={authExample.hero.title} description={authExample.hero.description} />}
         main={<ProviderButtons busyId={null} onPress={start} />}
-        footer={<Text tone="muted">{authExample.footer}</Text>}
+        footer={<AuthScreenFooter links={authExample.policyLinks.map(label => ({ label, onPress: () => undefined }))} />}
       />);
 }
 
@@ -756,7 +756,20 @@ return (<StoryFrame><Progress label={progressExample.label} value={progressExamp
 
 function SkeletonExample({ variant }: { variant: PreviewVariant }) {
 
-return (<StoryFrame><Skeleton accessibilityLabel={skeletonExample.label} width="100%" height={skeletonExample.height} /></StoryFrame>);
+const { sections, textLines, rowLines, rowCount, cardLines, buttonWidth } = skeletonExample;
+return (<StoryFrame><Stack gap="lg" accessible accessibilityLabel={skeletonExample.label} accessibilityState={{ busy: true }}>
+  <Stack gap="sm"><Text tone="muted" variant="label">{sections.shapes}</Text>
+    <Skeleton shape="text" lines={textLines} />
+    <Stack axis="inline" gap="sm" align="center"><Skeleton shape="circle" /><Skeleton shape="button" width={buttonWidth} /></Stack>
+    <Skeleton shape="media" />
+  </Stack>
+  <Stack gap="sm"><Text tone="muted" variant="label">{sections.listRow}</Text>
+    {Array.from({ length: rowCount }, (_, index) => <Stack key={index} axis="inline" gap="sm" align="center"><Skeleton shape="circle" /><Skeleton shape="text" lines={rowLines} layoutStyle={{ flex: 1 }} /></Stack>)}
+  </Stack>
+  <Stack gap="sm"><Text tone="muted" variant="label">{sections.card}</Text>
+    <Surface bordered padding="md"><Stack gap="sm"><Skeleton shape="media" /><Skeleton shape="text" lines={cardLines} /><Skeleton shape="button" /></Stack></Surface>
+  </Stack>
+</Stack></StoryFrame>);
 }
 
 function SpinnerExample({ variant }: { variant: PreviewVariant }) {

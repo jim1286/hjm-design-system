@@ -4,7 +4,7 @@ import { resolveColorReference } from "@hjmds/design-contracts/color-references"
 import { focusIndicatorContract } from "@hjmds/design-contracts/contracts";
 import { visibleControlHeight, } from "@hjmds/design-contracts/components/design-system-provider";
 import { buttonRecipe, fieldRecipe, resolveButtonEdgeOverhang } from "@hjmds/design-contracts/recipes/base";
-import { bottomNavigationRecipe, iconButtonRecipe, resolveIconButtonEdgeOverhang, comboboxRecipe, dialogRecipe, listRecipe, listRowRecipe, menuRecipe, searchFieldRecipe, selectRecipe, sheetRecipe, skeletonRecipe, tooltipRecipe, switchRecipe, toastRecipe, } from "@hjmds/design-contracts/recipes";
+import { bottomNavigationRecipe, iconButtonRecipe, resolveIconButtonEdgeOverhang, comboboxRecipe, dialogRecipe, listRecipe, listRowRecipe, menuRecipe, searchFieldRecipe, selectRecipe, sheetRecipe, skeletonRecipe, tooltipRecipe, switchRecipe, toastRecipe, textRecipe, } from "@hjmds/design-contracts/recipes";
 function kebab(value) {
     return value.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
 }
@@ -83,11 +83,14 @@ export function createHjmThemeStyle(value) {
         if (value === null)
             continue;
         style[`--hjm-list-separator-${kebab(name)}-start`] = rem(value.insetStart);
+        // Start when the row above has a leading element (its text column), as Native's List reads it per row.
+        style[`--hjm-list-separator-${kebab(name)}-leading-start`] = rem(value.leadingInsetStart);
         style[`--hjm-list-separator-${kebab(name)}-end`] = rem(value.insetEnd);
     }
-    // Native already pins a described switch to the two-line list-row height; Web
-    // let content decide (~48), so neighbouring settings rows differed by platform.
+    // A described switch row has the same padding and minimum height as Native (switchRecipe.rowPaddingVertical,
+    // rowTwoLineMinHeight); Web used to let content decide, so neighbouring settings rows differed by platform.
     style["--hjm-switch-row-min-height"] = rem(switchRecipe.rowMinHeight);
+    style["--hjm-switch-row-padding-vertical"] = rem(switchRecipe.rowPaddingVertical);
     style["--hjm-switch-row-two-line-min-height"] = rem(switchRecipe.rowTwoLineMinHeight);
     for (const [name, value] of Object.entries(switchRecipe.sizes)) {
         style[`--hjm-switch-${kebab(name)}-width`] = rem(value.width);
@@ -108,6 +111,11 @@ export function createHjmThemeStyle(value) {
     const skeletonCurve = easing[skeletonRecipe.animation.easing];
     style["--hjm-skeleton-circle-size"] =
         `${skeletonRecipe.shapes.circle.defaultHeight}px`;
+    style["--hjm-skeleton-background"] = resolveColorReference(skeletonRecipe.background, palette);
+    style["--hjm-skeleton-button-height"] = `${skeletonRecipe.shapes.button.defaultHeight}px`;
+    style["--hjm-skeleton-media-aspect"] = skeletonRecipe.shapes.media.aspectRatio;
+    style["--hjm-skeleton-lines-gap"] = `${skeletonRecipe.lines.gap}px`;
+    style["--hjm-skeleton-last-line-width"] = `${skeletonRecipe.lines.lastLineWidthPercent}%`;
     style["--hjm-skeleton-duration"] = `${skeletonRecipe.animation.duration}ms`;
     style["--hjm-skeleton-easing"] = `cubic-bezier(${skeletonCurve.join(", ")})`;
     style["--hjm-skeleton-from-opacity"] = skeletonRecipe.animation.fromOpacity;
@@ -163,6 +171,9 @@ export function createHjmThemeStyle(value) {
         style[`--hjm-toast-accent-${tone}`] = resolveColorReference(contract.accent, palette);
         style[`--hjm-toast-badge-${tone}`] = resolveColorReference(contract.badge, palette);
     }
+    // Text emphasis steps come from textRecipe so Web and Native share one scale (400/500/500 since the 2026-10-17 lighter scale).
+    for (const [step, weight] of Object.entries(textRecipe.emphasis))
+        style[`--hjm-text-emphasis-${step}`] = weight;
     style["--hjm-toast-badge-size"] = `${toastRecipe.icon.badgeDiameter}px`;
     // First-line anchor geometry (2026-10-17): the same padding, anchor and close overhang Native reads.
     style["--hjm-toast-padding-block"] = `${toastRecipe.surface.padding.block}px`;

@@ -1,1 +1,1 @@
-{"version":3,"file":"screen-footer.d.ts","sourceRoot":"","sources":["../../src/internal/screen-footer.ts"],"names":[],"mappings":"AAEA;;;;GAIG;AACH,eAAO,MAAM,mBAAmB,kCAAuB,CAAC"}
+{"version":3,"file":"screen-footer.d.ts","sourceRoot":"","sources":["../../src/internal/screen-footer.ts"],"names":[],"mappings":"AAEA;;;;;;GAMG;AACH,MAAM,MAAM,qBAAqB,GAAG,QAAQ,CAAC;IAAE,aAAa,EAAE,MAAM,CAAA;CAAE,CAAC,CAAC;AACxE,eAAO,MAAM,mBAAmB;mBAD8B,MAAM;UACgB,CAAC;AAErF;;;;GAIG;AACH,wBAAgB,0BAA0B,CAAC,OAAO,EAAE,MAAM,EAAE,cAAc,EAAE,MAAM,EAAE,YAAY,EAAE,OAAO,GAAG,MAAM,CAEjH"}

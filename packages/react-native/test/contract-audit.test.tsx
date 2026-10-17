@@ -1,6 +1,6 @@
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { resolveDesignSystemProviderValue } from "@hjmds/design-contracts/components/design-system-provider";
-import { glyph, radius, typography } from "@hjmds/design-contracts/foundations";
+import { control, glyph, radius, typography } from "@hjmds/design-contracts/foundations";
 import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
 import {
   searchFieldRecipe,
@@ -15,6 +15,7 @@ import {
   Modal,
   Platform,
   Pressable,
+  ScrollView,
   Switch as NativeSwitch,
   TextInput,
   View,
@@ -464,9 +465,19 @@ describe("Native input and navigation intent", () => {
         size="small"
       />,
     );
-    const container = byLabel(renderer, "보기");
-    // The connected row is a horizontal ScrollView: frame on style, row rhythm on contentContainerStyle.
-    expect(flattenStyle([container.props.style, container.props.contentContainerStyle])).toMatchObject({
+    const group = byLabel(renderer, "보기");
+    // The connected row scrolls inside the group; the drawn track is the View inside the ScrollView content, and the
+    // scroller reaches past the 36 track so the options' slop completes the 44 target (2026-10-17 "높이 맞춰").
+    const scroller = group.findByType(ScrollView);
+    const outerSlop = (control.minTouchTarget - segmentedControlRecipe.sizes.small.height) / 2;
+    expect(flattenStyle(scroller.props.style)).toMatchObject({ marginVertical: -outerSlop });
+    expect(flattenStyle(scroller.props.contentContainerStyle)).toMatchObject({ paddingVertical: outerSlop });
+    const track = scroller.findAllByType(View).find(node => flattenStyle(node.props.style)?.flexDirection === "row")!;
+    const trackStyle = flattenStyle(track.props.style);
+    // Outer height = option min height + padding + border on each side = the shared small control height.
+    expect(segmentedControlRecipe.sizes.small.minHeight + 2 * (Number(trackStyle.padding) + Number(trackStyle.borderWidth)))
+      .toBe(segmentedControlRecipe.sizes.small.height);
+    expect(trackStyle).toMatchObject({
       backgroundColor: resolveColorReference(
         segmentedControlRecipe.container.background,
         lightProviderValue.palette,
@@ -482,7 +493,7 @@ describe("Native input and navigation intent", () => {
       padding: segmentedControlRecipe.container.padding,
     });
     const selected = byLabel(renderer, "목록");
-    expect(selected.props.hitSlop).toBe(segmentedControlRecipe.sizes.small.hitSlop);
+    expect(selected.props.hitSlop).toEqual({ top: segmentedControlRecipe.sizes.small.hitSlop, bottom: segmentedControlRecipe.sizes.small.hitSlop });
     expect(flattenStyle(selected.props.style({ pressed: false }))).toMatchObject({
       backgroundColor: resolveColorReference(
         segmentedControlRecipe.item.selectedBackground,

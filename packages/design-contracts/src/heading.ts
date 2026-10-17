@@ -6,10 +6,10 @@ import { semanticColors } from "./semantic-colors.js";
 /**
  * 문서 제목 단계를 실제로 그리는 primitive다.
  *
- * `heading`(foundations)에는 이미 level1 40px부터 level5 18px까지 다섯 단계가 있었지만
- * **어떤 renderer도 노출하지 않았다** — `Text`는 `TextVariant`(최대 24px)만 받는다.
- * 그래서 랜딩 히어로나 큰 숫자가 필요한 화면은 매번 제품 CSS로 폰트 크기를 직접 썼다.
- * 이 계약은 새 크기를 만들지 않는다. 있던 스케일을 꺼내 쓸 수 있게 하는 것이 전부다.
+ * `heading`(foundations)의 단계를 문서 제목 단계(`h1`~`h6`)와 함께 꺼내 쓰게 한다.
+ * 이 계약은 새 크기를 만들지 않는다. 가장 큰 단계는 `typography.heading` 24px이며,
+ * level1 40px·level2 32px 큰 글자 단계는 2026-10-17 사용자 결정("큰 글자 정책은 없애")으로
+ * 폐지돼 두 이름은 level3과 같은 값이다(소비 코드 호환용, 새 코드는 level3~5).
  *
  * `Top`(화면 첫 제목)·`Section`(본문 묶음 제목)과 겹치지 않는다. 그 둘은 **자리**를
  * 아는 블록이고 자기 여백·보조 문장·보조 행동을 갖는다. `Heading`은 자리를 모르는

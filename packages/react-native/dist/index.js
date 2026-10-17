@@ -30,7 +30,7 @@ export { Mentions } from "./mentions.js";
 export { TransferList } from "./transfer-list.js";
 export { KeyboardAvoiding, resolveKeyboardAvoidanceBehavior } from "./keyboard.js";
 export { AuthProviderButton } from "./provider-button.js";
-export { AuthScreenLayout } from "./auth-screen.js";
+export { AuthScreenLayout, AuthScreenHero, AuthScreenFooter } from "./auth-screen.js";
 export { StatusText } from "./status-text.js";
 export { Pagination } from "./pagination.js";
 //# sourceMappingURL=index.js.map

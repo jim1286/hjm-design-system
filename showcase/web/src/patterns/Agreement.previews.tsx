@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Agreement } from "@hjmds/react/agreement";
 import { AuthProviderButton } from "@hjmds/react/provider-button";
-import { AuthScreenLayout } from "@hjmds/react/auth-screen";
+import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "@hjmds/react/auth-screen";
 import { Top } from "@hjmds/react/top";
 import { Button } from "@hjmds/react/actions";
 import { TextField } from "@hjmds/react/forms";
@@ -83,9 +83,9 @@ export function AuthScreenLayoutPreview({ loading = false }: { loading?: boolean
   const { busyId, start } = useAuthPending();
   return <AuthScreenLayout mainCard
     {...(busyId !== null || loading ? { pendingLabel: auth.pendingLabel } : {})}
-    hero={<Top descriptor={{ title: auth.hero.title, description: auth.hero.description, size: "medium" }} />}
+    hero={<AuthScreenHero title={auth.hero.title} description={auth.hero.description} />}
     main={<ProviderButtons busyId={null} onPress={start} />}
-    footer={<Text as="span">{auth.footer}</Text>} />;
+    footer={<AuthScreenFooter links={auth.policyLinks.map(label => ({ label, onClick: () => undefined }))} />} />;
 }
 
 

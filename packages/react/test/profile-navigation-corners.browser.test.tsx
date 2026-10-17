@@ -57,7 +57,7 @@ it("inherits nearest navigation corners while preserving focus, open menu and di
 
 it("resolves Top visual metrics separately from explicit semantic level and keeps action focus", async () => {
   const host = document.createElement("div"); document.body.append(host); const root = createRoot(host); const action = vi.fn();
-  const product = defineHjmDesignProfile({ id: "top-product", tokens: { heading: { level2: { fontSize: 35, lineHeight: 45, fontWeight: "500" } }, typography: { titleLarge: { fontSize: 23, lineHeight: 33, fontWeight: "600" } }, fontFamily: { display: ["Georgia"] } } });
+  const product = defineHjmDesignProfile({ id: "top-product", tokens: { heading: { level3: { fontSize: 23, lineHeight: 31, fontWeight: "500" } }, typography: { titleLarge: { fontSize: 21, lineHeight: 29, fontWeight: "600" } }, fontFamily: { display: ["Georgia"] } } });
   const content = <><Top descriptor={{ title: "Large title", size: "large", headingLevel: 3 }} trailing={<button onClick={action}>Title action</button>} /><Top descriptor={{ title: "Medium title", size: "medium", headingLevel: 2 }} /></>;
   try {
     let focused: HTMLButtonElement | undefined;
@@ -69,7 +69,7 @@ it("resolves Top visual metrics separately from explicit semantic level and keep
       const titles = Array.from(host.querySelectorAll<HTMLElement>(".hjm-top__title"));
       expect(titles.map(title => title.tagName)).toEqual(["H3", "H2"]);
       for (const [index, size] of ["large", "medium"].entries()) {
-        const metrics = profile ? size === "large" ? profile.tokens.heading.level2 : profile.tokens.typography.titleLarge : topRecipe.sizes[size as "large" | "medium"].title;
+        const metrics = profile ? size === "large" ? profile.tokens.heading.level3 : profile.tokens.typography.titleLarge : topRecipe.sizes[size as "large" | "medium"].title;
         const computed = getComputedStyle(titles[index]!);
         expect(computed.fontSize).toBe(`${metrics.fontSize}px`); expect(computed.lineHeight).toBe(`${metrics.lineHeight}px`); expect(computed.fontWeight).toBe(metrics.fontWeight);
         if (profile?.tokens.fontFamily.display) expect(computed.fontFamily).toContain("Georgia");

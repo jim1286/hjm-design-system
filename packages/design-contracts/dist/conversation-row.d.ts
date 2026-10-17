@@ -7,7 +7,7 @@ export declare const conversationRowRecipe: {
     readonly paddingBlock: 10;
     readonly contentGap: 2;
     readonly titleWeight: "500";
-    readonly unreadTitleWeight: "800";
-    readonly unreadPreviewWeight: "700";
+    readonly unreadTitleWeight: "600";
+    readonly unreadPreviewWeight: "600";
 };
 //# sourceMappingURL=conversation-row.d.ts.map

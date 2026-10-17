@@ -264,7 +264,7 @@ export const reactRendererEvidence = {
     keyboardClaim("sidebar", ["Sidebar"], "./sidebar", "test/sidebar.browser.test.tsx"),
     keyboardClaim("date-range-picker", ["DateRangePicker"], "./date-range", "test/date-range.keyboard.browser.test.tsx"),
     keyboardClaim("auth-provider-button", ["AuthProviderButton"], "./provider-button"),
-    defaultClaim("auth-screen", ["AuthScreenLayout"], "./auth-screen"),
+    defaultClaim("auth-screen", ["AuthScreenLayout", "AuthScreenHero", "AuthScreenFooter"], "./auth-screen"),
     keyboardClaim("data-table", ["DataTable"], "./data-table", "test/data-table.keyboard.browser.test.tsx"),
     keyboardClaim("collapsible", ["Collapsible"], "./collapsible", "test/collapsible.keyboard.browser.test.tsx"),
     keyboardAndLongCopyClaim("context-menu", ["ContextMenu"], "./context-menu", "test/context-menu.interactions.browser.test.tsx"),

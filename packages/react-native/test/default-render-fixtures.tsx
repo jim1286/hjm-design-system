@@ -35,7 +35,7 @@ import { DateRangePicker } from "../src/date-range.js";
 import { Mentions } from "../src/mentions.js";
 import { TransferList } from "../src/transfer-list.js";
 import { AuthProviderButton } from "../src/provider-button.js";
-import { AuthScreenLayout } from "../src/auth-screen.js";
+import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "../src/auth-screen.js";
 import { FloatingActionButton } from "../src/floating-action-button.js";
 import { Carousel } from "../src/carousel.js";
 import type { ReactNode } from "react";
@@ -408,12 +408,12 @@ export const defaultRenderCases = [
   },
   {
     componentId: "auth-screen",
-    renderLongCopy: (copy) => <AuthScreenLayout hero={<Text>{copy}</Text>} main={<Text>로그인</Text>} footer={<Text>약관</Text>} />,
+    renderLongCopy: (copy) => <AuthScreenLayout hero={<AuthScreenHero title={copy} description={copy} />} main={<Text>로그인</Text>} footer={<AuthScreenFooter notice={copy} links={[{ label: copy, onPress: noop }]} />} />,
     render: () => (
       <AuthScreenLayout
-        hero={<View />}
+        hero={<AuthScreenHero eyebrow="이야기" title="제목" description="설명" />}
         main={<View />}
-        footer={<View />}
+        footer={<AuthScreenFooter links={[{ label: "이용약관", onPress: noop }, { label: "개인정보처리방침", onPress: noop }]} />}
       />
     ),
   },

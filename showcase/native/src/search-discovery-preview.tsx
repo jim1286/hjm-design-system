@@ -6,7 +6,7 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 import { Stack, Text } from "@hjmds/react-native/primitives";
 import { Button } from "@hjmds/react-native/actions";
 import { Chip, Switch } from "@hjmds/react-native/inputs";
-import { ListRow } from "@hjmds/react-native/data-display";
+import { ListRow, List } from "@hjmds/react-native/data-display";
 import { Heading } from "@hjmds/react-native/heading";
 import { LoadMore } from "@hjmds/react-native/navigation";
 import { Notice } from "@hjmds/react-native/feedback";
@@ -91,14 +91,17 @@ export function SearchDiscoveryPreview({ view = "idle", tools = false }: SearchD
     </Stack> : null}
     {scope === "all" ? <Stack gap="sm">
       <Heading level="level5">{copy.conditionTitle}</Heading>
-      <Switch presentation="row" label={copy.photoOnlyRow} checked={draft.photoOnly} onCheckedChange={photoOnly => setDraft({ ...draft, photoOnly })} />
-      <Switch presentation="row" label={copy.savedOnlyRow} checked={draft.savedOnly} onCheckedChange={savedOnly => setDraft({ ...draft, savedOnly })} />
+      {/* Switch rows carry their own touch height; no gap between them (2026-10-17). */}
+      <List label={copy.conditionTitle} separator="none">
+        <Switch presentation="row" label={copy.photoOnlyRow} checked={draft.photoOnly} onCheckedChange={photoOnly => setDraft({ ...draft, photoOnly })} />
+        <Switch presentation="row" label={copy.savedOnlyRow} checked={draft.savedOnly} onCheckedChange={savedOnly => setDraft({ ...draft, savedOnly })} />
+      </List>
     </Stack> : null}
   </Stack>;
 
-  return <Stack gap="sm">
+  return <Stack gap="sm" layoutStyle={{ flex: 1 }}>
     {tools ? <Button tone="ghost" onPress={() => { failRef.current = !failNext; setFailNext(!failNext); }}>{failNext ? copy.failNextArmed : copy.failNext}</Button> : null}
-    <View style={{ height: 720 }}>
+    <View style={{ flex: 1 }}>
       {/* Keep the search mounted behind detail so query, conditions and sort survive the round trip. */}
       <View style={{ flex: 1, display: detail || home ? "none" : "flex" }}>
         <SearchScreen title={copy.screenTitle} queryLabel={copy.queryLabel} queryClearLabel={copy.clear}

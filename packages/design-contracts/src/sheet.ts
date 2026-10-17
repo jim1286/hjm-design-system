@@ -46,12 +46,15 @@ export const sheetBehaviorDefaults = {
 } as const satisfies SheetDismissPolicy;
 
 /**
- * Bottom sheets close by dragging only (2026-10-16 user decision): no backdrop tap and no visible ×
- * by default. Escape/system back and the handle's close action stay so keyboard, switch and
- * screen-reader users can still dismiss without a drag gesture. Other placements keep the old defaults.
+ * Every placement closes on a backdrop press (2026-10-17 user decision; bottom sheets had been drag-only
+ * since 2026-10-16). Bottom sheets still show no × by default: drag, backdrop, Escape/system back and the
+ * handle's close action cover pointer, keyboard, switch and screen-reader users. `outsideDismiss: false`
+ * (with `swipeDismiss: false`) is only for flows where an accidental close loses work, such as payment
+ * confirmation; unsaved-input confirmation belongs in the controlled owner's `onOpenChange`, which every
+ * reason, `outside` included, passes through. `placement` stays in the signature for published callers.
  */
-export function resolveSheetDismissPolicy(placement: string, override: Partial<SheetDismissPolicy> = {}): SheetDismissPolicy {
-  return { ...sheetBehaviorDefaults, ...(placement === "bottom" ? { outsideDismiss: false } : {}), ...override };
+export function resolveSheetDismissPolicy(_placement: string, override: Partial<SheetDismissPolicy> = {}): SheetDismissPolicy {
+  return { ...sheetBehaviorDefaults, ...override };
 }
 export function resolveSheetCloseButton(placement: string, showClose?: boolean): boolean {
   return showClose ?? placement !== "bottom";

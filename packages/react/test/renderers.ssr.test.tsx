@@ -245,6 +245,24 @@ describe("layout and display vertical slice", () => {
     expect(markup).toContain('aria-hidden="true"');
   });
 
+  it("renders filled skeleton shapes and a hidden multi-line text group", () => {
+    // 2026-10-17: the fill comes from the recipe placeholder token (not canvas + border), emitted by the provider.
+    const markup = renderToStaticMarkup(
+      <HjmProvider systemTheme="light">
+        <Skeleton shape="media" />
+        <Skeleton shape="button" />
+        <Skeleton shape="text" lines={3} />
+      </HjmProvider>,
+    );
+    expect(markup).toContain("--hjm-skeleton-background:rgba(");
+    expect(markup).toContain('data-shape="media"');
+    expect(markup).toContain('data-shape="button"');
+    expect(markup).toMatch(/class="hjm-skeleton-lines" data-animated="true" aria-hidden="true"/);
+    expect(markup.match(/data-shape="text"/g)).toHaveLength(3);
+    expect(markup.match(/data-last="true"/g)).toHaveLength(1);
+    expect(skeletonRecipe.lines.lastLineWidthPercent).toBeLessThan(100);
+  });
+
   it("ships opt-in CSS with logical properties and reduced-motion fallbacks", () => {
     const css = readFileSync(
       fileURLToPath(new URL("../src/styles.css", import.meta.url)),
@@ -256,7 +274,7 @@ describe("layout and display vertical slice", () => {
     expect(css).toContain("prefers-reduced-motion");
     expect(css).toContain('.hjm-badge[data-variant="outline"]');
     expect(css).toContain("font-size: var(--hjm-type-caption-size)");
-    expect(css).toContain("font-weight: var(--hjm-font-weight-bold)");
+    expect(css).toContain("font-weight: var(--hjm-text-emphasis-medium)");
   });
 });
 

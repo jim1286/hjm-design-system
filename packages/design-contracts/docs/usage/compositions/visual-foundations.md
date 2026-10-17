@@ -23,7 +23,7 @@
 | Icon + `createLucideGlyph` | 의미 이름(`search`·`settings`·`notifications`·`back`)을 Lucide 그림에 연결 | [Icon](../components/icon.md) |
 | Avatar + `createBlobatarFallback` | 사진이 없을 때 seed로 정해지는 얼굴, `expression: "happy"` | [Avatar](../components/avatar.md) |
 | TextTransition | 문장이 바뀔 때 `fade`·`rise`·`slide`·`scale` 전환 | [TextTransition](../components/text-transition.md) |
-| Heading | 효과 표면 안 제목, 얼굴 묶음 제목(`level2`) | [Heading](../components/heading.md) |
+| Heading | 효과 표면 안 제목, 얼굴 묶음 제목(`level3` + `semanticLevel={2}`, 24) | [Heading](../components/heading.md) |
 | Switch | 배경 움직임 켜고 끄기(`presentation="row"`) | [Switch](../components/switch.md) |
 | Button | 다음 장면 | [Button](../components/button.md) |
 | `ScrollView` + `Container`(Native) | 바깥 틀. 세로 스크롤·위아래 여백, 좌우 gutter | [Container](../components/container.md), [화면 여백과 너비](../tokens/layout.md) |
@@ -46,7 +46,7 @@ Native 화면(ScrollView, 위아래 spacing.lg 20) > Container gutter 16(폭 < 6
 ┌──── EffectSurface (mesh) ────────────────────┐
 │ 안쪽 여백 spacing.xl 24(두 플랫폼 같음)       │
 │ mesh                (label)                   │
-│ 작은 시작, 새로운 장면.  (Heading level2) ↕ lg 20 │
+│ 작은 시작, 새로운 장면.  (Heading level3) ↕ lg 20 │
 │ 설명 (body)                                   │
 │ [ 이야기 시작하기 ]  secondary                │
 └──────────────────────────────────────────────┘
@@ -106,7 +106,7 @@ const sceneKeys = ["intro.scene.welcome", "intro.scene.collect", "intro.scene.re
     {/* EffectSurface는 여백이 없다. 안쪽 틀: .hero-inner { padding: var(--hjm-space-xl) } */}
     <div className="hero-inner">
       <Stack gap="lg">
-        <Heading level="level2">{t("hero.title")}</Heading>
+        <Heading level="level3" semanticLevel={2}>{t("hero.title")}</Heading>
         <Text>{t("hero.body")}</Text>
         <Button tone="secondary" onClick={start}>{t("hero.start")}</Button>
       </Stack>
@@ -148,7 +148,7 @@ const gutter = resolveWindowClass(width) === "compact" ? "compact" : "regular";
         {/* EffectSurface는 여백이 없다. 안쪽 틀만 View padding으로 준다 */}
         <View style={{ padding: spacing.xl }}>
           <Stack gap="lg">
-            <Heading level="level2">{t("hero.title")}</Heading>
+            <Heading level="level3" semanticLevel={2}>{t("hero.title")}</Heading>
             <Text>{t("hero.body")}</Text>
             <Button tone="secondary" onPress={start}>{t("hero.start")}</Button>
           </Stack>
@@ -185,6 +185,7 @@ seed·문구·아이콘 세트·얼굴 목록은 제품 소유다. `createBlobat
 - Blobatar seed에 이름·이메일을 쓰지 않는다. 공개 제품 식별자를 쓴다.
 - EffectSurface는 화면 위쪽 히어로 하나에만 둔다. 스토리의 네 장 세로 쌓기는 비교용이다.
 - 2026-10-06 예제 검수에서 Container·Stack·Heading을 두 플랫폼에 맞췄다. 효과 안쪽 여백은 spacing.xxl(32), 얼굴은 64, 제목은 level2로 동일하다. 행은 큰 글자에서 줄바꿈한다.
+- 2026-10-17 사용자 결정("글자 너무 커", "큰 글자 정책은 없애"): 효과 표면·얼굴 묶음 제목 level2(32px)를 HJM 상한인 level3(24px)으로 바꿨다. 문서 단계는 `semanticLevel={2}`로 유지한다.
 - Native EffectSurface는 AppState·reducedMotion을 반영한다. 백그라운드 중단과 내비게이션으로 가려진 화면의 중단은 다르므로, 마운트된 채 가려지는 제품 화면·목록은 `visible`을 연결한다. Storybook 정지 화면만으로 이 제품 연결을 검증했다고 보고하지 않는다.
 
 ## 근거

@@ -41,7 +41,7 @@ import {
   type TimelineItemDescriptor,
 } from "@hjmds/design-contracts/components/timeline";
 import { surfaceDefaults, surfaceGeometry } from "@hjmds/design-contracts/recipes/base";
-import { avatarRecipe, resolveAvatarInitialsTextVariant } from "@hjmds/design-contracts/recipes";
+import { avatarRecipe, resolveAvatarInitialsTextVariant, skeletonRecipe } from "@hjmds/design-contracts/recipes";
 import {
   accordionRecipe,
   counterBadgeRecipe,
@@ -64,7 +64,9 @@ import {
 } from "@hjmds/design-contracts/recipes";
 import {
   Children,
+  createContext,
   isValidElement,
+  useContext,
   useEffect,
   useLayoutEffect,
   useMemo,
@@ -382,6 +384,14 @@ export function Card({
     }, layoutStyle]}>{frame}</Pressable>;
 }
 
+/**
+ * A List item hands its rows this reporter so the indented separator drawn after the item follows the row's text
+ * column: leading 40 + gap 12 when the row has a leading frame, the content edge when it has none (2026-10-17 user
+ * report: a fixed 52 cut the line off midway under rows without leading). Web reads the same fact from the ListRow
+ * root's `data-leading` attribute in CSS.
+ */
+const ListItemLeadingContext = createContext<((hasLeading: boolean) => void) | null>(null);
+
 export type ListRowProps = Omit<
   PressableProps,
   "accessibilityLabel" | "accessibilityRole" | "children" | "disabled" | "style"
@@ -457,6 +467,15 @@ export function ListRow({
   assertNoRemovedStyleProps("ListRow", forwarded, ["titleStyle","descriptionStyle"]);
   const { hjmTitleEmphasis, hjmMeta, ...props } = forwarded as typeof forwarded & ListRowPrivateProps;
   const theme = useHjmNativeTheme();
+  // Tell the enclosing List item whether this row has a leading frame, so the indented separator after it starts at
+  // this row's text column (listRecipe.separators). Runs before the loading early return to keep hook order.
+  const reportLeading = useContext(ListItemLeadingContext);
+  const hasLeading = Boolean(leading);
+  useLayoutEffect(() => {
+    if (!reportLeading) return undefined;
+    reportLeading(hasLeading);
+    return () => reportLeading(false);
+  }, [reportLeading, hasLeading]);
   const metrics = listRowRecipe.density[density];
   const interactive = onPress !== undefined;
   const selected = selectedProp ?? listRowRecipe.defaults.selected;
@@ -496,7 +515,8 @@ export function ListRow({
   if (loading) {
     // Search and other collections share ListRow geometry instead of approximating it with
     // loose Skeletons. Never mount placeholder actions or forward touch handlers while loading.
-    const placeholder = { backgroundColor: theme.colors.surfaceAlt, borderRadius: theme.tokens.radius.sm };
+    // Same placeholder fill as Skeleton so a loading screen mixing both reads as one state (2026-10-17).
+    const placeholder = { backgroundColor: resolveColorReference(skeletonRecipe.background, theme.palette), borderRadius: theme.tokens.radius.sm };
     return <View testID={props.testID} onLayout={props.onLayout}
       accessible={Boolean(loadingLabel)} accessibilityRole="progressbar"
       accessibilityLabel={loadingLabel} accessibilityState={{ busy: true }}
@@ -1416,7 +1436,7 @@ export function CounterBadge({
         layoutStyle,
       ]}
     >
-      <Text accessible={false} align="center" style={{ color: presentation[tone].content, fontWeight: "700" }} variant="caption">
+      <Text accessible={false} align="center" style={{ color: presentation[tone].content, fontWeight: counterBadgeRecipe.fontWeight }} variant="caption">
         {visibleLabel}
       </Text>
     </View>
@@ -1475,21 +1495,43 @@ export function List({
       ]}
     >
       {items.map((item, index) => (
-        <View key={isValidElement(item) && item.key !== null ? item.key : `hjm-list-${index}`}>
+        <ListItem
+          key={isValidElement(item) && item.key !== null ? item.key : `hjm-list-${index}`}
+          borderColor={colors.border}
+          separator={index < items.length - 1 ? separatorContract : null}
+        >
           {item}
-          {separatorContract && index < items.length - 1 ? (
-            <View
-              accessible={false}
-              style={{
-                backgroundColor: colors.border,
-                height: 1,
-                marginEnd: separatorContract.insetEnd,
-                marginStart: separatorContract.insetStart,
-              }}
-            />
-          ) : null}
-        </View>
+        </ListItem>
       ))}
+    </View>
+  );
+}
+
+/** One list item and the separator that belongs to it (drawn after it, as an iOS cell separator). */
+function ListItem({
+  borderColor,
+  children,
+  separator,
+}: Readonly<{
+  borderColor: string;
+  children: ReactNode;
+  separator: (typeof listRecipe.separators)[keyof typeof listRecipe.separators];
+}>) {
+  const [hasLeading, setHasLeading] = useState(false);
+  return (
+    <View>
+      <ListItemLeadingContext.Provider value={setHasLeading}>{children}</ListItemLeadingContext.Provider>
+      {separator ? (
+        <View
+          accessible={false}
+          style={{
+            backgroundColor: borderColor,
+            height: 1,
+            marginEnd: separator.insetEnd,
+            marginStart: hasLeading ? separator.leadingInsetStart : separator.insetStart,
+          }}
+        />
+      ) : null}
     </View>
   );
 }

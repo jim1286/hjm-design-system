@@ -65,7 +65,7 @@ export const counterBadgeRecipe = {
     floating: { border: semanticColors.canvas, borderWidth: stroke.strong },
   },
   radius: "full",
-  fontWeight: fontWeight.bold,
+  fontWeight: fontWeight.medium,
 } as const satisfies {
   slots: readonly ["root", "label"];
   dotSize: number;

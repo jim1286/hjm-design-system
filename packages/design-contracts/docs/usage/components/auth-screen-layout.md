@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-07
+- 검토일: 2026-10-17
 - 근거: [로그인 화면 골격](../../auth-screen.md), [1.4 제품 채택 가이드](../../product-adoption-1.4.md), recipe `authScreenRecipe`(`src/auth-screen.ts`), 포트폴리오 상위 기준 루트 `docs/LOGIN_SCREEN_STANDARD.md`(LS)
 - 스토리북: `배포/컴포넌트/레이아웃/로그인 화면`
 
@@ -12,7 +12,8 @@
 
 로그인·가입 진입 화면의 배치에 쓴다. 위 영역(`hero` + `main`)은 남는 세로 공간에서 가운데 정렬되고,
 `footer`(동의 고지·정책 링크)는 바닥에 붙는다. 내용이 화면보다 길면 스크롤로 바뀐다.
-이 컴포넌트는 배치만 소유하며 슬롯 안의 내용은 그리지 않는다.
+`AuthScreenLayout`은 배치를 소유하고, 히어로 문구와 동의 고지·정책 링크는 같은 모듈의 `AuthScreenHero`·`AuthScreenFooter`가
+글자 단계·색·간격을 소유한다. 제품은 문자열·마크·링크 목적지만 넘긴다.
 
 ## 쓰지 않을 때
 
@@ -25,33 +26,35 @@
 
 | 이름 | 역할 | Web | Native |
 | --- | --- | --- | --- |
-| `AuthScreenLayout` | 기본 | `@hjmds/react`, `/auth-screen` | `@hjmds/react-native`, `/auth-screen` |
+| `AuthScreenLayout` | 기본(배치) | `@hjmds/react`, `/auth-screen` | `@hjmds/react-native`, `/auth-screen` |
+| `AuthScreenHero` | `hero` 슬롯: 마크·eyebrow·태그라인·설명 | 같음 | 같음 |
+| `AuthScreenFooter` | `footer` 슬롯: 동의 고지·정책 링크(·구분) | 같음, 링크 `href` 또는 `onClick` | 같음, 링크 `onPress` |
 
 ## 최소 사용 예
 
 ```tsx
 // Web
-import { AuthScreenLayout } from "@hjmds/react/auth-screen";
+import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "@hjmds/react/auth-screen";
 
 <AuthScreenLayout
   mainCard
   {...(pending ? { pendingLabel: t("auth.pending") } : {})}
-  hero={<ProductHero />}            // 제품 마크·제목·설명
+  hero={<AuthScreenHero mark={<ProductMark />} title={t("auth.tagline")} description={t("auth.description")} />}
   main={<ProviderButtons />}        // pending이어도 같은 목록
-  footer={<ConsentAndPolicyLinks />}
+  footer={<AuthScreenFooter notice={t("auth.consent")} links={[{ label: t("legal.privacy"), href: privacyUrl }, { label: t("legal.terms"), href: termsUrl }]} />}
 />
 ```
 
 ```tsx
 // Native
-import { AuthScreenLayout } from "@hjmds/react-native/auth-screen";
+import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "@hjmds/react-native/auth-screen";
 
 <AuthScreenLayout
   mainCard
   {...(pending ? { pendingLabel: t("auth.pending") } : {})}
-  hero={<ProductHero />}
+  hero={<AuthScreenHero mark={<ProductMark />} title={t("auth.tagline")} description={t("auth.description")} />}
   main={<ProviderButtons />}
-  footer={<ConsentAndPolicyLinks />}
+  footer={<AuthScreenFooter links={[{ label: t("legal.privacy"), onPress: openPrivacy }, { label: t("legal.terms"), onPress: openTerms }]} />}
   testID="login-screen"
 />
 ```
@@ -69,6 +72,8 @@ import { AuthScreenLayout } from "@hjmds/react-native/auth-screen";
 | Web `as` | `main` · `section` | `main` | 최대 폭은 416이다 |
 | `layoutStyle` | margin·width·flex·`alignSelf` | — | 바깥 배치 전용(Web·Native 모두) |
 | Native `testID` | `string` | — | 뿌리 `ScrollView` 식별 |
+| `AuthScreenHero` `title` · `eyebrow` · `description` · `mark` · `headingLevel` | 문자열 · `ReactNode` · `1`~`3` | `headingLevel` 1 | 제목은 필수이고 빈 문자열이면 `TypeError`. 밀도는 바깥 `AuthScreenLayout`을 따른다 |
+| `AuthScreenFooter` `links` · `notice` · `children` | 링크 배열(1개 이상) · `ReactNode` | — | 빈 링크 목록·빈 라벨은 `TypeError`(LS-04: 약관 링크는 로그인 전 같은 화면에 있어야 한다). `children`은 링크 아래 제품 내용 |
 
 ## 배치
 
@@ -76,6 +81,8 @@ import { AuthScreenLayout } from "@hjmds/react-native/auth-screen";
 | --- | --- | --- |
 | 크기 | 화면 전체(Web `min-block-size: 100dvh`, Native `ScrollView flex: 1`). 위 블록과 footer는 최대 폭 416, 마크 72(`markSize`, `radius.lg`), 정책 링크 최소 44(`footerMinTouchTarget`), mainCard 모서리 profile의 `radius.lg`(neutral/미지정 16) | `authScreenRecipe`, `.hjm-auth-screen*` |
 | 간격 | `regular` / `compact`: 바깥 좌우 `layout.pagePadding.regular` 20 / `.compact` 16, 바깥 위아래 `spacing.xxxl` 40 / `spacing.lg` 20, hero 안 `spacing.md` 16 / `spacing.xs` 8, hero↔main `spacing.xl` 24 / `spacing.md` 16, 위 블록↔footer 최소 `spacing.xl` 24 / `spacing.md` 16. mainCard 안쪽 `spacing.md` 16 | `authScreenRecipe.densities`·`mainCard` |
+| 히어로 문구 | 마크 ↔ 문구 묶음은 hero 간격. eyebrow `label` 12/18·500·브랜드색, 아래 `spacing.xxs` 4 → 태그라인 `regular` `typography.heading` 24/32 · `compact` `titleLarge` 20/28, 굵기는 제목 단계 500, 기본 글자색, 실제 heading 요소(Native `header`) → 설명 `body` 14/20·400·보조색(`muted`), 위 `spacing.xs` 8 | `authScreenRecipe.hero`, `densities.*.titleVariant` |
+| 동의 고지·정책 링크 | 고지 `caption` 11/16 흐린 색, 링크 줄과 `spacing.xxs` 4. 링크 `caption`·브랜드색·밑줄, 링크 사이 `linkGap` 8 + `·` + 8(보이는 글자 간격 약 19). 각 링크 높이 44(배경 없음), 가로 터치 폭은 구분점 앞까지 보이지 않게 넓힘(Web 가상 요소, Native `hitSlop`) | `authScreenRecipe.footer`, `.hjm-auth-screen__link` |
 | 순서·정렬 | 위→아래 hero(가운데 정렬 문구) → main(폭 꽉 채움) → footer(동의 고지·정책 링크). 위 블록은 남는 세로 공간에서 가운데, footer는 바닥에 붙는다. 진행 중 로딩은 main 카드 가운데에 겹친다 | `.hjm-auth-screen__block`(`justify-content: center`), `.hjm-auth-screen__pending` |
 | 고정·스크롤 | 고정 영역이 없다. 넘치면 화면 전체가 스크롤한다. 안전 영역은 Native `contentInsetAdjustmentBehavior="automatic"`과 키보드 inset 자동 조정이 처리하고, Web은 safe-area inset을 더하지 않는다 | `react-native/src/auth-screen.tsx`, `.hjm-auth-screen` |
 | 좁은 폭·큰 글자 | 키 작은 화면·큰 글자에서는 `compact`를 고른다. 그래도 넘치면 스크롤되며 footer는 맨 아래로 밀린다 | `authScreenRecipe.densities` |
@@ -104,6 +111,8 @@ import { AuthScreenLayout } from "@hjmds/react-native/auth-screen";
 - `pendingLabel`은 스크린리더 안내로만 쓰인다. 로딩 아래에 보이는 문구를 따로 두지 않는다.
   완료·취소·실패 시 prop을 제거한다. 취소는 실패 문장 없이 버튼만 복구한다(LS-09).
 - `pendingLabel`은 기존 카드에서 전환하는 상태다. 제공자 목록 최초 조회의 로딩을 대신하지 않는다.
+- 히어로에 `Top`(화면 첫 제목, large = display 32/40)이나 직접 조립한 `Text`를 넣지 않는다. `AuthScreenHero`를 쓴다.
+  정책 링크를 ghost `Button` + Stack gap으로 만들지 않는다 — 버튼 안쪽 여백이 간격에 더해진다. `AuthScreenFooter`를 쓴다.
 - 슬롯 내용은 전부 제품 소유다: 마크 자산, 모든 문구(i18n 키), 제공자 목록과 순서, 정책 링크 목적지,
   심사자 폼 노출 조건. 제공자 로고를 HJM에 넣지 않는다([AuthProviderButton](auth-provider-button.md)).
 - iOS 앱의 제공자 목록에는 Apple이 있어야 한다(LS-02). 심사자 이메일 폼은 서버 env와 `review=1` 두 조건이
@@ -131,3 +140,11 @@ import { AuthScreenLayout } from "@hjmds/react-native/auth-screen";
 ### 테마 카드 모서리
 
 `mainCard`는 가장 가까운 Provider의 `designProfile.tokens.radius.lg`를 양 플랫폼에서 소비한다. 테마가 없으면 기존 recipe의 16을 유지한다. 제공자 버튼은 제공자 브랜드 규격을 유지하며, 처리 중에도 카드와 입력을 제거하지 않는다. 카드 표면과 제공자 브랜드를 같은 radius로 강제하면 제품 테마가 제공자 규격을 덮기 때문에 역할을 나눈다.
+
+## 근거
+
+- `AuthScreenHero`·`AuthScreenFooter`와 히어로·링크 수치: 2026-10-17 사용자 피드백("굵기랑 크기 줄여", "간격 줄여").
+  예제가 히어로에 `Top large`(display 32/40·600)를 넣어 402 폭에서 태그라인이 두 줄이 됐고, 정책 링크는 ghost Button
+  안쪽 여백 12+12에 Stack gap 16이 더해져 글자 사이가 Web 42·Native 40이었다. 슬롯 내용을 앱이 조립하면 같은 실수가
+  제품마다 반복되므로 HJM이 글자 단계·간격을 recipe로 소유한다. 변경 후 Web 402에서 태그라인 24/32·500 한 줄,
+  링크 글자 간격 약 19, 링크 높이 44를 측정했다. 루트 LS §3도 같은 값으로 갱신했다.

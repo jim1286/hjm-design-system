@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, expectTypeOf, it } from "vitest";
 import type { ComponentCatalogEntry } from "../src/catalog.js";
 import * as designSystem from "../src/index.js";
+import { resolveSheetDismissPolicy } from "../src/sheet.js";
 import {
   ACCENTS,
   THEMES,
@@ -430,13 +431,16 @@ describe("foundation and recipe contracts", () => {
     expect(heading.level3).toBe(typography.heading);
     expect(heading.level4).toBe(typography.titleLarge);
     expect(heading.level5).toBe(typography.title);
-    expect(heading.level1.fontSize).toBeGreaterThan(heading.level2.fontSize);
-    expect(heading.level2.fontSize).toBeGreaterThan(heading.level3.fontSize);
+    // 2026-10-17 display tier removed: deprecated level1/2 are level3, and nothing exceeds typography.heading.
+    expect(heading.level1).toBe(typography.heading);
+    expect(heading.level2).toBe(typography.heading);
+    expect(Math.max(...Object.values(typography).map(step => step.fontSize))).toBe(24);
   });
 
-  it("renders label at medium by default and bolds display headings (2026-10-17 decision)", () => {
+  it("keeps label and every title and heading step at medium (2026-10-17 lighter scale, display tier removed)", () => {
     expect(typography.label.fontWeight).toBe(fontWeight.medium);
-    expect([heading.level1.fontWeight, heading.level2.fontWeight]).toEqual([fontWeight.bold, fontWeight.bold]);
+    expect([typography.title.fontWeight, typography.titleLarge.fontWeight, typography.heading.fontWeight]).toEqual([fontWeight.medium, fontWeight.medium, fontWeight.medium]);
+    expect(Object.values(heading).map(step => step.fontWeight)).toEqual(Array(5).fill(fontWeight.medium));
     const { resolveTextDefaultWeight } = designSystem;
     expect(resolveTextDefaultWeight("label", typography, false)).toBe("500");
     expect(resolveTextDefaultWeight("title", typography, false)).toBeUndefined();
@@ -1260,6 +1264,9 @@ describe("expanded cross-platform component contracts", () => {
     expect(canDismissSheet("back", true)).toBe(false);
     expect(canDismissSheet("swipe", false)).toBe(true);
     expect(canDismissSheet("swipe", true)).toBe(false);
+    // 2026-10-17 user decision: a backdrop press closes bottom sheets too.
+    expect(resolveSheetDismissPolicy("bottom").outsideDismiss).toBe(true);
+    expect(resolveSheetDismissPolicy("bottom", { outsideDismiss: false }).outsideDismiss).toBe(false);
 
     const lockedPolicy: import("../src/index.js").SheetDismissPolicy = {
       ...sheetBehaviorDefaults,
@@ -1298,7 +1305,9 @@ describe("expanded cross-platform component contracts", () => {
     });
     expect(sheetRecipe.handle.visibleByDefault).toBe(true);
     expect(sheetRecipe.handle.showWhen).toBe("swipe-dismiss-enabled");
-    for (const region of [sheetRecipe.title, sheetRecipe.body, sheetRecipe.footer]) {
+    // 2026-10-17: sheets have no visible title, so the recipe carries no title text region.
+    expect(sheetRecipe).not.toHaveProperty("title");
+    for (const region of [sheetRecipe.body, sheetRecipe.footer]) {
       expect(typography).toHaveProperty(region.textVariant);
       expect(region.gap).toBeGreaterThan(0);
     }
@@ -1337,6 +1346,14 @@ describe("expanded cross-platform component contracts", () => {
       expect(size.minHeight + size.hitSlop * 2).toBeGreaterThanOrEqual(
         control.minTouchTarget,
       );
+    }
+    // One outer height per size step, so a segmented control and a chip/button in one row line up (2026-10-17).
+    for (const step of ["small", "medium"] as const) {
+      const segmented = segmentedControlRecipe.sizes[step];
+      const inset = segmentedControlRecipe.container.padding + segmentedControlRecipe.container.borderWidth;
+      expect(segmented.minHeight + 2 * inset).toBe(segmented.height);
+      expect(segmented.height).toBe(chipRecipe.sizes[step].height);
+      expect(segmented.height).toBe(control.buttonHeight[step]);
     }
     expect(segmentedControlRecipe.adaptive).toEqual({
       largeTextLayout: "stacked",

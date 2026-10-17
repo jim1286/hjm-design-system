@@ -20,9 +20,9 @@
 | 컴포넌트 | 역할 | 지침 |
 | --- | --- | --- |
 | `Container` · `ScrollView` | 시작 화면의 바깥 틀. HJM 화면 골격이 소유한다 | [Container](../components/container.md), [화면 여백](../tokens/layout.md) |
-| `Heading level="level3"`, `Text` | 시작 화면의 제목·설명. 화면 제목은 semibold `level3`이며 bold 표시 역할 `level1`·`level2`는 쓰지 않는다 | [Heading](../components/heading.md), [Text](../components/text.md) |
+| `Heading level="level3"`, `Text` | 시작 화면의 제목·설명. 화면 제목은 medium(500) `level3`(24, HJM 글자 상한)이다 | [Heading](../components/heading.md), [Text](../components/text.md) |
 | `Button` primary | 시트를 여는 트리거(시작 화면의 주 행동) | [Button](../components/button.md) |
-| `Sheet` | 하단 시트. 제목·닫기·`footer`, 안전 영역·스크롤·`busy` | [Sheet](../components/sheet.md) |
+| `Sheet` | 하단 시트. 접근성 이름(`title`, 보이지 않음)·닫기·`footer`, 안전 영역·스크롤·`busy` | [Sheet](../components/sheet.md) |
 | `Steps` | 현재 단계와 전체 단계 수, 실패하면 현재 단계 `error` | [Steps](../components/steps.md) |
 | `ContentTransition preset="slide"` | 단계 본문 교체 | [ContentTransition](../components/content-transition.md) |
 | `Heading level="level3"`, `Text` | 단계 본문 | [Heading](../components/heading.md), [Text](../components/text.md) |
@@ -57,7 +57,7 @@
 | 바깥 틀 | 시작 화면: Web 문서 스크롤 > `Container size="reading"`, Native `ScrollView` > `Container size="reading"`. 시트: `Sheet`가 Modal로 화면 위에 뜨며 스크롤·안전 영역·키보드를 소유 | 시작 화면은 제품 화면 본문. 상단 안전 영역은 헤더(또는 [TopBar](../components/top-bar.md))가 맡는다 | 좌우 `Container gutter`: 폭 600 미만 `compact` 16, 이상 `regular` 20([화면 여백](../tokens/layout.md)). Native 위아래 `contentContainerStyle` `paddingVertical: spacing.lg` 20. 시트 안 inset은 제품이 다시 더하지 않는다 |
 | 시작 화면 | `Stack gap="xl"` | 본문 흐름 안 | 자식 사이 `spacing.xl` 24 |
 | 시트 표면 | `Sheet placement="bottom" size="auto"`(기본값) | 화면 아래에서 올라옴, 내용 높이 | radius `xl` 24, 최대 높이 90%. 좌우 `spacing.lg` 20·위아래 `spacing.sm` 12(두 플랫폼, `sheetRecipe.content`), Web 최대 폭 640 |
-| 시트 머리 | Sheet `title`·`closeLabel` | 시트 맨 위 고정 | 최소 높이 `control.minTouchTarget` 44 |
+| 시트 머리 | Sheet 손잡이, `title`은 보이지 않는 접근성 이름 | 시트 맨 위 고정 | 보이는 제목 줄 없음(2026-10-17 사용자 결정: 시트는 보이는 제목 없이 `title`을 접근성 이름으로만 쓴다) |
 | 단계 표시 | `Steps` | 본문 맨 위 | 항상 가로 한 줄, 아래 `spacing.xl` 24 |
 | 단계 본문 | `ContentTransition` > `Stack gap="md"` | Steps 아래, 본문 스크롤 | 제목·설명 사이 `spacing.md` 16, `slide` 가로 16 이동 |
 | 행동 | Sheet `footer` + Button ×2 | 시트 아래 고정(스크롤 밖) | Web 오른쪽 정렬 가로 [이전 ghost][계속 primary], 사이 `spacing.sm` 12. Native 세로 열 꽉 찬 폭 [계속]→[이전], 사이 `spacing.sm` 12, 위 `spacing.sm` 12. 높이 44 |
@@ -208,5 +208,7 @@ import { Steps } from "@hjmds/react-native/steps";
 2026-10-13 Web·Native 스토리는 `createActionSession` 기반 데모 저장을 연결한다. 마지막 단계 저장 중에는 이동·닫기를 잠그고, 실패하면 `Steps.currentStepStatus="error"`와 Notice를 표시한 채 현재 단계를 유지한다. 같은 주 버튼이 다시 저장을 수행한다. 중간에 닫았다 열면 현재 단계로 이어지고, 성공 뒤 다시 시작할 때만 첫 단계로 초기화한다. footer는 기본 Sheet 배치를 따르는 직접 자식이다. Web은 이전 → 주 행동, Native는 주 행동 → 이전이며 Native에서 가로 Stack으로 재정의하지 않는다. 실제 서버 저장·영속 초안·제품별 단계 입력은 포함하지 않는다.
 
 ## 근거
+
+2026-10-17 사용자 결정("굵기 좀더 줄여"): 모든 글자 굵기를 한 단계 낮췄다. 큰 숫자·선택 상태 600(큰 제목 단계는 같은 날 폐지), 제목·강조 500, label 500, 본문 400이며 정본은 [타이포그래피](../tokens/typography.md)다.
 
 - 2026-10-17 구성 리뷰: 시작 화면 제목이 heavy 800 `level2`로 화면 제목 규칙(semibold)보다 무거웠고, 데스크톱에서 버튼과 문구가 1280 폭 전체로 늘어났다. 그래서 제목을 `level3`으로 낮추고 스토리에 읽기 폭 Container를 적용했다.

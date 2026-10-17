@@ -14,6 +14,7 @@ import { Button, IconButton } from "./actions.js";
 import { scheduleAfterNativeModalTeardown, shouldAwaitNativeModalDismiss, } from "./internal/modal-lifecycle.js";
 import { isDevelopment } from "./internal/diagnostics.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
+import { listRowScrollRoom } from "./internal/list-row-scroll-room.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "./provider.js";
@@ -949,6 +950,7 @@ keyboardAvoidance = true, scrollable = false, showClose, onShow, ...modalProps }
     // `auto` stays content-sized: growing there has no free space to take. The ScrollView body grows too, so the
     // footer sits at the bottom on both platforms; its content container does not, so scroll content keeps its height.
     const bodyFill = side || sizeRatio !== null ? { flexGrow: 1, minHeight: 0 } : {};
+    const sheetBodyRoom = listRowScrollRoom(sheetRecipe.content.paddingHorizontal);
     const contentBackground = resolveColorReference(sheetRecipe.content.background, palette);
     const contentBorder = resolveColorReference(sheetRecipe.content.border, palette);
     return (_jsx(Modal, { ...modalProps, animationType: "none", onDismiss: () => {
@@ -967,7 +969,10 @@ keyboardAvoidance = true, scrollable = false, showClose, onShow, ...modalProps }
                     opacity: motionProgress,
                     paddingTop: insets.top,
                     paddingBottom: keyboardInset,
-                }, children: [_jsx(Scrim, {}), policy.dismissible && policy.outsideDismiss ? (_jsx(Pressable, { accessible: false, importantForAccessibility: "no-hide-descendants", onPress: () => requestClose("outside"), style: { bottom: 0, left: 0, position: "absolute", right: 0, top: 0 } })) : null, _jsxs(Animated.View, { accessibilityLabel: [accessibleTitle, description].filter(Boolean).join(", "), accessibilityState: { busy }, accessibilityViewIsModal: true, importantForAccessibility: "yes", onAccessibilityEscape: () => requestClose("escape"), onLayout: (event) => { sheetHeight.current = event.nativeEvent.layout.height; }, role: "dialog", style: [
+                }, children: [_jsx(Scrim, {}), policy.dismissible && policy.outsideDismiss ? (
+                    // Backdrop press closes every sheet by default (2026-10-17 user decision) through the same
+                    // requestClose path as the handle, so busy and dismissPolicy guards apply. Named by closeLabel.
+                    _jsx(Pressable, { accessibilityLabel: closeLabel, accessibilityRole: "button", accessibilityState: { disabled: closeBlocked }, disabled: closeBlocked, onPress: () => requestClose("outside"), style: { bottom: 0, left: 0, position: "absolute", right: 0, top: 0 } })) : null, _jsxs(Animated.View, { accessibilityLabel: [accessibleTitle, description].filter(Boolean).join(", "), accessibilityState: { busy }, accessibilityViewIsModal: true, importantForAccessibility: "yes", onAccessibilityEscape: () => requestClose("escape"), onLayout: (event) => { sheetHeight.current = event.nativeEvent.layout.height; }, role: "dialog", style: [
                             {
                                 backgroundColor: contentBackground,
                                 borderColor: contentBorder,
@@ -1012,16 +1017,26 @@ keyboardAvoidance = true, scrollable = false, showClose, onShow, ...modalProps }
                                 width: side ? "88%" : "100%",
                             },
                             contentStyle,
-                        ], children: [_jsxs(View, { ...(canSwipe ? dragResponder.panHandlers : {}), style: { flexShrink: 0 }, children: [showHandle && sheetRecipe.handle.visibleByDefault ? (
+                        ], children: [_jsx(View, { accessible: true, accessibilityRole: "header", accessibilityLabel: accessibleTitle, style: { position: "absolute", top: 0, start: 0, width: 1, height: 1, overflow: "hidden" } }), _jsxs(View, { ...(canSwipe ? dragResponder.panHandlers : {}), style: { flexShrink: 0 }, children: [showHandle && sheetRecipe.handle.visibleByDefault ? (
                                     // The handle doubles as a close control so switch and screen-reader users need no drag.
-                                    _jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: closeLabel, accessibilityState: { disabled: closeBlocked }, disabled: closeBlocked, onPress: () => requestClose("close-action"), hitSlop: spacing.sm, style: { alignSelf: "center", paddingVertical: spacing.xs }, children: _jsx(View, { style: { width: sheetRecipe.handle.width, height: sheetRecipe.handle.height, borderRadius: tokens.radius[sheetRecipe.handle.radius], backgroundColor: resolveColorReference(sheetRecipe.handle.color, palette) } }) })) : null, _jsxs(View, { style: {
+                                    _jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: closeLabel, accessibilityState: { disabled: closeBlocked }, disabled: closeBlocked, onPress: () => requestClose("close-action"), hitSlop: spacing.sm, style: { alignSelf: "center", paddingVertical: spacing.xs }, children: _jsx(View, { style: { width: sheetRecipe.handle.width, height: sheetRecipe.handle.height, borderRadius: tokens.radius[sheetRecipe.handle.radius], backgroundColor: resolveColorReference(sheetRecipe.handle.color, palette) } }) })) : null, description || (policy.dismissible && closeVisible) ? (_jsxs(View, { style: {
                                             alignItems: "center",
                                             minHeight: sheetRecipe.header.minHeight,
                                             flexShrink: 0,
                                             direction: environment.direction,
                                             flexDirection: "row",
+                                            // Without a description the × keeps its inline-end place (2026-10-17: no visible title).
+                                            justifyContent: "flex-end",
                                             gap: spacing.sm,
-                                        }, children: [_jsxs(View, { style: { flex: 1, gap: spacing.xs }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: title }), description ? _jsx(Text, { tone: "muted", children: description }) : null] }), policy.dismissible && closeVisible ? (_jsx(IconButton, { disabled: busy && !policy.dismissWhileBusy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(CloseGlyph, {}) })) : null] })] }), scrollable ? (_jsx(ScrollView, { style: { flexShrink: 1, minHeight: 0, ...bodyFill }, contentContainerStyle: { gap: sheetRecipe.body.gap }, keyboardShouldPersistTaps: "handled", keyboardDismissMode: Platform.OS === "ios" ? "interactive" : "on-drag", automaticallyAdjustKeyboardInsets: false, children: _jsx(KeyboardAvoidanceContext.Provider, { value: keyboardAvoidance, children: children }) })) : _jsx(View, { style: { gap: sheetRecipe.body.gap, flexShrink: 1, ...bodyFill }, children: _jsx(KeyboardAvoidanceContext.Provider, { value: keyboardAvoidance, children: children }) }), footer ? (_jsx(View, { style: {
+                                        }, children: [description ? _jsx(View, { style: { flex: 1 }, children: _jsx(Text, { tone: "muted", children: description }) }) : null, policy.dismissible && closeVisible ? (_jsx(IconButton, { disabled: busy && !policy.dismissWhileBusy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(CloseGlyph, {}) })) : null] })) : null] }), scrollable ? (_jsx(ScrollView
+                            // The sheet's inline padding used to sit outside this clipping viewport, so ListRows cut their surface
+                            // bleed. The viewport now reaches the padding edge and carries the padding inside its content (Web's
+                            // body scroll box does the same); content keeps its position (2026-10-17 1.27.2 adoption).
+                            , { 
+                                // The sheet's inline padding used to sit outside this clipping viewport, so ListRows cut their surface
+                                // bleed. The viewport now reaches the padding edge and carries the padding inside its content (Web's
+                                // body scroll box does the same); content keeps its position (2026-10-17 1.27.2 adoption).
+                                style: { flexShrink: 1, minHeight: 0, ...bodyFill, ...sheetBodyRoom.viewport }, contentContainerStyle: { gap: sheetRecipe.body.gap, ...sheetBodyRoom.content }, keyboardShouldPersistTaps: "handled", keyboardDismissMode: Platform.OS === "ios" ? "interactive" : "on-drag", automaticallyAdjustKeyboardInsets: false, children: _jsx(KeyboardAvoidanceContext.Provider, { value: keyboardAvoidance, children: children }) })) : _jsx(View, { style: { gap: sheetRecipe.body.gap, flexShrink: 1, ...bodyFill }, children: _jsx(KeyboardAvoidanceContext.Provider, { value: keyboardAvoidance, children: children }) }), footer ? (_jsx(View, { style: {
                                     gap: sheetRecipe.footer.gap,
                                     flexShrink: 0,
                                     paddingTop: sheetRecipe.footer.paddingTop,

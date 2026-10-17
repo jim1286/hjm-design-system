@@ -14,6 +14,10 @@ export function selectGalleryEntries(query: string, category: GalleryCategory, s
   return galleryEntries.filter(item => (category === "전체" || item.category === category) && (!savedOnly || saved.includes(item.id)) && terms.every(term => `${item.title} ${item.category} ${item.author}`.normalize("NFKC").toLocaleLowerCase("ko-KR").includes(term)))
     .sort((a,b) => sort === "popular" ? b.likes - a.likes : b.created - a.created);
 }
+// Card save is a tool toggle: an IconButton whose bookmark glyph (outline/filled) and selected state carry the
+// saved state, so its accessible name stays fixed instead of flipping between 저장/저장 취소 (2026-10-17 rule
+// "도구 행동은 아이콘", icon-button.md).
+export const gallerySaveName = (title: string) => `${title} 저장`;
 /** Visible copy inside the decorative card artwork, shared so Web and Native draw the same Korean specimen. */
 export const galleryArtworkCopy = {
   editorialEyebrow: "독립 스튜디오",

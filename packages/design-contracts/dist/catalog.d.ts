@@ -1385,7 +1385,7 @@ export declare const recipeRegistry: {
                 alpha?: number;
             }>;
             readonly textVariant: "bodyLarge";
-            readonly fontWeight: "700";
+            readonly fontWeight: "500";
         };
         readonly indicator: {
             readonly color: Readonly<{
@@ -1580,7 +1580,7 @@ export declare const recipeRegistry: {
                 alpha?: number;
             }>;
             readonly textVariant: "title";
-            readonly fontWeight: "700";
+            readonly fontWeight: "500";
         };
         readonly description: {
             readonly color: Readonly<{
@@ -1863,7 +1863,7 @@ export declare const recipeRegistry: {
         };
         readonly radius: "full";
         readonly borderWidth: 1;
-        readonly fontWeight: "700";
+        readonly fontWeight: "500";
     };
     readonly bottomNavigationRecipe: {
         readonly slots: readonly ["root", "surface", "list", "item", "indicator", "icon", "label", "badge"];
@@ -2055,8 +2055,8 @@ export declare const recipeRegistry: {
             };
         };
         readonly label: {
-            readonly fontWeight: "600";
-            readonly selectedFontWeight: "700";
+            readonly fontWeight: "500";
+            readonly selectedFontWeight: "600";
             readonly textAlign: "center";
             readonly wrap: true;
             readonly fixedLines: null;
@@ -2303,16 +2303,16 @@ export declare const recipeRegistry: {
                 readonly title: {
                     readonly fontSize: 20;
                     readonly lineHeight: 28;
-                    readonly fontWeight: "600";
+                    readonly fontWeight: "500";
                 };
                 readonly paddingTop: 16;
                 readonly paddingBottom: 12;
             };
             readonly large: {
                 readonly title: {
-                    readonly fontSize: 32;
-                    readonly lineHeight: 40;
-                    readonly fontWeight: "700";
+                    readonly fontSize: 24;
+                    readonly lineHeight: 32;
+                    readonly fontWeight: "500";
                 };
                 readonly paddingTop: 24;
                 readonly paddingBottom: 16;
@@ -2365,7 +2365,7 @@ export declare const recipeRegistry: {
         readonly focusOutlineOffset: 2;
     };
     readonly authScreenRecipe: {
-        readonly slots: readonly ["root", "hero", "mark", "title", "description", "main", "footer"];
+        readonly slots: readonly ["root", "hero", "mark", "eyebrow", "title", "description", "main", "footer", "notice", "links"];
         readonly defaults: {
             readonly density: "regular";
             readonly hasFooter: true;
@@ -2374,20 +2374,49 @@ export declare const recipeRegistry: {
         readonly markSize: 72;
         readonly markRadius: 16;
         readonly title: {
-            readonly fontSize: 20;
-            readonly lineHeight: 28;
-            readonly fontWeight: "600";
+            readonly fontSize: 24;
+            readonly lineHeight: 32;
+            readonly fontWeight: "500";
         };
         readonly description: {
             readonly fontSize: 14;
             readonly lineHeight: 20;
             readonly fontWeight: "400";
         };
+        readonly hero: {
+            readonly eyebrow: {
+                readonly textVariant: "label";
+                readonly tone: "brand";
+                readonly gapBelow: 4;
+            };
+            readonly title: {
+                readonly tone: "primary";
+            };
+            readonly description: {
+                readonly textVariant: "body";
+                readonly tone: "muted";
+                readonly gapAbove: 8;
+            };
+        };
         readonly footerMinTouchTarget: 44;
         readonly footerText: {
             readonly fontSize: 11;
             readonly lineHeight: 16;
             readonly fontWeight: "400";
+        };
+        readonly footer: {
+            readonly notice: {
+                readonly textVariant: "caption";
+                readonly tone: "muted";
+            };
+            readonly noticeGap: 4;
+            readonly link: {
+                readonly textVariant: "caption";
+                readonly tone: "brand";
+                readonly underline: true;
+            };
+            readonly linkGap: 8;
+            readonly separator: "·";
         };
         readonly providerMinHeight: 44;
         readonly mainCard: {
@@ -2401,6 +2430,7 @@ export declare const recipeRegistry: {
                 readonly footerGap: 24;
                 readonly paddingInline: 20;
                 readonly paddingBlock: 40;
+                readonly titleVariant: "heading";
             };
             readonly compact: {
                 readonly heroGap: 8;
@@ -2408,6 +2438,7 @@ export declare const recipeRegistry: {
                 readonly footerGap: 16;
                 readonly paddingInline: 16;
                 readonly paddingBlock: 20;
+                readonly titleVariant: "titleLarge";
             };
         };
     };
@@ -2418,29 +2449,29 @@ export declare const recipeRegistry: {
         };
         readonly levels: {
             readonly level1: {
-                readonly fontSize: 40;
-                readonly lineHeight: 48;
-                readonly fontWeight: "700";
+                readonly fontSize: 24;
+                readonly lineHeight: 32;
+                readonly fontWeight: "500";
             };
             readonly level2: {
-                readonly fontSize: 32;
-                readonly lineHeight: 40;
-                readonly fontWeight: "700";
+                readonly fontSize: 24;
+                readonly lineHeight: 32;
+                readonly fontWeight: "500";
             };
             readonly level3: {
                 readonly fontSize: 24;
                 readonly lineHeight: 32;
-                readonly fontWeight: "600";
+                readonly fontWeight: "500";
             };
             readonly level4: {
                 readonly fontSize: 20;
                 readonly lineHeight: 28;
-                readonly fontWeight: "600";
+                readonly fontWeight: "500";
             };
             readonly level5: {
                 readonly fontSize: 18;
                 readonly lineHeight: 26;
-                readonly fontWeight: "600";
+                readonly fontWeight: "500";
             };
         };
         readonly color: Readonly<{
@@ -2945,7 +2976,7 @@ export declare const recipeRegistry: {
                 alpha?: number;
             }>;
             readonly textVariant: "label";
-            readonly fontWeight: "600";
+            readonly fontWeight: "500";
         };
         readonly separator: {
             readonly color: Readonly<{
@@ -3003,7 +3034,7 @@ export declare const recipeRegistry: {
             readonly gap: 8;
             readonly monthLabel: {
                 readonly textVariant: "title";
-                readonly fontWeight: "700";
+                readonly fontWeight: "500";
                 readonly color: Readonly<{
                     source: "theme";
                     key: "text";
@@ -3331,8 +3362,8 @@ export declare const recipeRegistry: {
         readonly radius: "full";
         readonly borderWidth: 1;
         readonly label: {
-            readonly fontWeight: "600";
-            readonly selectedFontWeight: "700";
+            readonly fontWeight: "500";
+            readonly selectedFontWeight: "600";
         };
         readonly selectionIndicator: {
             readonly color: Readonly<{
@@ -3410,7 +3441,7 @@ export declare const recipeRegistry: {
                     alpha?: number;
                 }>;
                 readonly textVariant: "body";
-                readonly fontWeight: "600";
+                readonly fontWeight: "500";
             };
             readonly hint: {
                 readonly color: Readonly<{
@@ -3624,8 +3655,8 @@ export declare const recipeRegistry: {
             readonly glyph: "sm";
         };
         readonly optionLabel: {
-            readonly fontWeight: "600";
-            readonly selectedFontWeight: "700";
+            readonly fontWeight: "500";
+            readonly selectedFontWeight: "600";
         };
         readonly selectionIndicator: {
             readonly color: Readonly<{
@@ -3807,7 +3838,7 @@ export declare const recipeRegistry: {
             };
         };
         readonly radius: "full";
-        readonly fontWeight: "700";
+        readonly fontWeight: "500";
     };
     readonly dialogRecipe: {
         readonly slots: readonly ["backdrop", "positioner", "content", "header", "title", "description", "body", "footer", "close"];
@@ -3894,7 +3925,7 @@ export declare const recipeRegistry: {
                 alpha?: number;
             }>;
             readonly textVariant: "label";
-            readonly fontWeight: "700";
+            readonly fontWeight: "500";
             readonly borderBottom: Readonly<{
                 source: "theme";
                 key: "border";
@@ -4137,7 +4168,7 @@ export declare const recipeRegistry: {
                     alpha?: number;
                 }>;
                 readonly textVariant: "body";
-                readonly fontWeight: "600";
+                readonly fontWeight: "500";
             };
             readonly hint: {
                 readonly color: Readonly<{
@@ -4320,7 +4351,7 @@ export declare const recipeRegistry: {
                 key: "text";
                 alpha?: number;
             }>;
-            readonly fontWeight: "600";
+            readonly fontWeight: "500";
         };
         readonly description: {
             readonly textVariant: "label";
@@ -4374,7 +4405,7 @@ export declare const recipeRegistry: {
         readonly label: {
             readonly color: "textBody";
             readonly textVariant: "body";
-            readonly fontWeight: "600";
+            readonly fontWeight: "500";
             readonly gap: 8;
         };
         readonly support: {
@@ -4407,7 +4438,7 @@ export declare const recipeRegistry: {
                 alpha?: number;
             }>;
             readonly textVariant: "label";
-            readonly fontWeight: "700";
+            readonly fontWeight: "500";
         };
         readonly dropzone: {
             readonly borderStyle: "dashed";
@@ -4683,14 +4714,14 @@ export declare const recipeRegistry: {
         readonly variants: {
             readonly inline: {
                 readonly textVariant: "body";
-                readonly fontWeight: "600";
+                readonly fontWeight: "500";
                 readonly underline: "always";
                 readonly minHeight: null;
                 readonly minWidth: null;
             };
             readonly standalone: {
                 readonly textVariant: "body";
-                readonly fontWeight: "700";
+                readonly fontWeight: "500";
                 readonly underline: "hover";
                 readonly minHeight: 44;
                 readonly minWidth: 44;
@@ -4723,11 +4754,13 @@ export declare const recipeRegistry: {
             readonly none: null;
             readonly full: {
                 readonly insetStart: number;
+                readonly leadingInsetStart: number;
                 readonly insetEnd: number;
             };
             readonly indented: {
-                readonly insetStart: number;
-                readonly insetEnd: number;
+                readonly insetStart: 0;
+                readonly leadingInsetStart: number;
+                readonly insetEnd: 0;
             };
         };
         readonly grouped: {
@@ -4803,7 +4836,7 @@ export declare const recipeRegistry: {
                 alpha?: number;
             }>;
             readonly textVariant: "bodyLarge";
-            readonly fontWeight: "700";
+            readonly fontWeight: "500";
         };
         readonly description: {
             readonly color: Readonly<{
@@ -4891,7 +4924,7 @@ export declare const recipeRegistry: {
                 alpha?: number;
             }>;
             readonly textVariant: "label";
-            readonly fontWeight: "700";
+            readonly fontWeight: "500";
         };
         readonly spinner: {
             readonly size: "small";
@@ -5248,7 +5281,7 @@ export declare const recipeRegistry: {
         readonly borderWidth: 1;
         readonly title: {
             readonly textVariant: "body";
-            readonly fontWeight: "700";
+            readonly fontWeight: "500";
         };
         readonly description: {
             readonly color: Readonly<{
@@ -5400,7 +5433,7 @@ export declare const recipeRegistry: {
                     alpha?: number;
                 }>;
                 readonly textVariant: "body";
-                readonly fontWeight: "600";
+                readonly fontWeight: "500";
             };
             readonly hint: {
                 readonly color: Readonly<{
@@ -5581,7 +5614,7 @@ export declare const recipeRegistry: {
                 key: "text";
                 alpha?: number;
             }>;
-            readonly fontWeight: "700";
+            readonly fontWeight: "500";
         };
         readonly description: {
             readonly textVariant: "body";
@@ -5732,7 +5765,7 @@ export declare const recipeRegistry: {
                     alpha?: number;
                 }>;
                 readonly textVariant: "body";
-                readonly fontWeight: "600";
+                readonly fontWeight: "500";
             };
             readonly hint: {
                 readonly color: Readonly<{
@@ -5936,8 +5969,8 @@ export declare const recipeRegistry: {
             readonly glyph: "sm";
         };
         readonly optionLabel: {
-            readonly fontWeight: "600";
-            readonly selectedFontWeight: "700";
+            readonly fontWeight: "500";
+            readonly selectedFontWeight: "600";
         };
         readonly selectionIndicator: {
             readonly color: Readonly<{
@@ -6043,7 +6076,7 @@ export declare const recipeRegistry: {
                 alpha?: number;
             }>;
             readonly textVariant: "body";
-            readonly fontWeight: "600";
+            readonly fontWeight: "500";
         };
         readonly requiredIndicator: {
             readonly color: Readonly<{
@@ -6085,7 +6118,7 @@ export declare const recipeRegistry: {
                 key: "textBody";
                 alpha?: number;
             }>;
-            readonly fontWeight: "700";
+            readonly fontWeight: "500";
         };
         readonly description: {
             readonly textVariant: "caption";
@@ -6156,14 +6189,16 @@ export declare const recipeRegistry: {
         };
         readonly sizes: {
             readonly small: {
-                readonly minHeight: 36;
-                readonly hitSlop: 4;
+                readonly height: 36;
+                readonly minHeight: number;
+                readonly hitSlop: number;
                 readonly paddingHorizontal: 12;
                 readonly textVariant: "label";
             };
             readonly medium: {
-                readonly minHeight: 44;
-                readonly hitSlop: 0;
+                readonly height: 44;
+                readonly minHeight: number;
+                readonly hitSlop: number;
                 readonly paddingHorizontal: 16;
                 readonly textVariant: "body";
             };
@@ -6176,7 +6211,7 @@ export declare const recipeRegistry: {
                 key: "textMuted";
                 alpha?: number;
             }>;
-            readonly fontWeight: "600";
+            readonly fontWeight: "500";
             readonly selectedBackground: Readonly<{
                 source: "theme";
                 key: "bg";
@@ -6193,7 +6228,7 @@ export declare const recipeRegistry: {
                 alpha?: number;
             }>;
             readonly selectedBorderWidth: 2;
-            readonly selectedFontWeight: "700";
+            readonly selectedFontWeight: "600";
             readonly focusRing: Readonly<{
                 source: "theme";
                 key: "contentBrand";
@@ -6283,8 +6318,8 @@ export declare const recipeRegistry: {
                 key: "textBody";
                 alpha?: number;
             }>;
-            readonly fontWeight: "600";
-            readonly checkedFontWeight: "700";
+            readonly fontWeight: "500";
+            readonly checkedFontWeight: "600";
         };
         readonly leading: {
             readonly size: "md";
@@ -6439,16 +6474,6 @@ export declare const recipeRegistry: {
             readonly minHeight: 44;
             readonly gap: 12;
         };
-        readonly title: {
-            readonly color: Readonly<{
-                source: "theme";
-                key: "text";
-                alpha?: number;
-            }>;
-            readonly textVariant: "title";
-            readonly fontWeight: "700";
-            readonly gap: 4;
-        };
         readonly body: {
             readonly color: Readonly<{
                 source: "theme";
@@ -6530,7 +6555,7 @@ export declare const recipeRegistry: {
                 alpha?: number;
             }>;
             readonly textVariant: "title";
-            readonly fontWeight: "700";
+            readonly fontWeight: "500";
         };
         readonly body: {
             readonly color: Readonly<{
@@ -6745,7 +6770,7 @@ export declare const recipeRegistry: {
                     alpha?: number;
                 }>;
                 readonly textVariant: "body";
-                readonly fontWeight: "600";
+                readonly fontWeight: "500";
             };
             readonly hint: {
                 readonly color: Readonly<{
@@ -6858,7 +6883,7 @@ export declare const recipeRegistry: {
                     alpha?: number;
                 }>;
                 readonly textVariant: "body";
-                readonly fontWeight: "600";
+                readonly fontWeight: "500";
             };
             readonly hint: {
                 readonly color: Readonly<{
@@ -7168,29 +7193,47 @@ export declare const recipeRegistry: {
         };
     };
     readonly skeletonRecipe: {
-        readonly slots: readonly ["root"];
+        readonly slots: readonly ["root", "line"];
         readonly defaults: {
             readonly shape: "block";
             readonly animated: true;
+            readonly lines: 1;
         };
         readonly background: Readonly<{
             source: "theme";
-            key: "bg";
+            key: "text";
             alpha?: number;
         }>;
         readonly shapes: {
             readonly block: {
                 readonly radius: "md";
                 readonly defaultHeight: 32;
+                readonly aspectRatio: null;
             };
             readonly text: {
                 readonly radius: "sm";
                 readonly defaultHeight: 16;
+                readonly aspectRatio: null;
             };
             readonly circle: {
                 readonly radius: "full";
                 readonly defaultHeight: 44;
+                readonly aspectRatio: null;
             };
+            readonly media: {
+                readonly radius: "md";
+                readonly defaultHeight: null;
+                readonly aspectRatio: number;
+            };
+            readonly button: {
+                readonly radius: "md";
+                readonly defaultHeight: 44;
+                readonly aspectRatio: null;
+            };
+        };
+        readonly lines: {
+            readonly gap: 8;
+            readonly lastLineWidthPercent: 60;
         };
         readonly animation: {
             readonly duration: number;
@@ -7385,7 +7428,7 @@ export declare const recipeRegistry: {
                 key: "textMuted";
                 alpha?: number;
             }>;
-            readonly fontWeight: "600";
+            readonly fontWeight: "500";
         };
         readonly value: {
             readonly color: Readonly<{
@@ -7393,7 +7436,7 @@ export declare const recipeRegistry: {
                 key: "text";
                 alpha?: number;
             }>;
-            readonly fontWeight: "800";
+            readonly fontWeight: "600";
             readonly numericVariant: "tabular";
             readonly maxLines: null;
         };
@@ -7404,7 +7447,7 @@ export declare const recipeRegistry: {
                 alpha?: number;
             }>;
             readonly textVariant: "body";
-            readonly fontWeight: "600";
+            readonly fontWeight: "500";
         };
         readonly hint: {
             readonly color: Readonly<{
@@ -7416,7 +7459,7 @@ export declare const recipeRegistry: {
         };
         readonly trend: {
             readonly textVariant: "caption";
-            readonly fontWeight: "700";
+            readonly fontWeight: "500";
             readonly gap: 4;
             readonly marks: {
                 readonly up: "trendUp";
@@ -7536,7 +7579,7 @@ export declare const recipeRegistry: {
         };
         readonly label: {
             readonly textVariant: "label";
-            readonly fontWeight: "600";
+            readonly fontWeight: "500";
             readonly color: {
                 readonly pending: Readonly<{
                     source: "theme";
@@ -7708,7 +7751,8 @@ export declare const recipeRegistry: {
             readonly pressedOpacity: 0.86;
         };
         readonly rowMinHeight: 44;
-        readonly rowTwoLineMinHeight: 68;
+        readonly rowPaddingVertical: 8;
+        readonly rowTwoLineMinHeight: number;
     };
     readonly tabsRecipe: {
         readonly slots: readonly ["root", "list", "tab", "label", "indicator", "panel"];
@@ -7756,8 +7800,8 @@ export declare const recipeRegistry: {
             readonly glyph: "xs";
         };
         readonly label: {
-            readonly fontWeight: "600";
-            readonly selectedFontWeight: "700";
+            readonly fontWeight: "500";
+            readonly selectedFontWeight: "600";
         };
         readonly layouts: {
             readonly content: {
@@ -7893,7 +7937,7 @@ export declare const recipeRegistry: {
             readonly paddingHorizontal: 4;
             readonly gap: 4;
             readonly textVariant: "caption";
-            readonly fontWeight: "600";
+            readonly fontWeight: "500";
         };
         readonly radius: "sm";
         readonly borderWidth: 1;
@@ -7949,8 +7993,8 @@ export declare const recipeRegistry: {
         };
         readonly emphasis: {
             readonly regular: "400";
-            readonly medium: "600";
-            readonly strong: "700";
+            readonly medium: "500";
+            readonly strong: "500";
         };
         readonly variantWeight: readonly ["label"];
     };
@@ -8025,7 +8069,7 @@ export declare const recipeRegistry: {
         };
         readonly label: {
             readonly textVariant: "body";
-            readonly fontWeight: "600";
+            readonly fontWeight: "500";
             readonly color: Readonly<{
                 source: "theme";
                 key: "text";
@@ -8235,7 +8279,7 @@ export declare const recipeRegistry: {
                 alpha?: number;
             }>;
             readonly textVariant: "body";
-            readonly fontWeight: "700";
+            readonly fontWeight: "500";
         };
         readonly description: {
             readonly color: Readonly<{
@@ -8285,7 +8329,7 @@ export declare const recipeRegistry: {
             readonly radius: "full";
             readonly align: "start";
             readonly textVariant: "body";
-            readonly fontWeight: "700";
+            readonly fontWeight: "500";
             readonly minHeight: 44;
             readonly paddingHorizontal: 16;
         };
@@ -8424,7 +8468,7 @@ export declare const recipeRegistry: {
                 key: "text";
                 alpha?: number;
             }>;
-            readonly fontWeight: "700";
+            readonly fontWeight: "500";
         };
         readonly titleAction: {
             readonly minHeight: 44;

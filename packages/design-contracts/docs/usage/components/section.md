@@ -78,7 +78,7 @@ import { Section } from "@hjmds/react-native/primitives";
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 자체 배경·테두리·여백이 없다. 폭은 부모를 따른다 | `.hjm-section` |
-| 글자 | 제목 `title` 18/26 bold, 설명 `caption` 11/16(두 플랫폼). 2026-10-06까지 Web은 둘 다 본문 14를 물려받았다(1.13.0 변경) | `sectionRecipe.title`·`description`, `.hjm-section__title`·`__description` |
+| 글자 | 제목 `title` 18/26 500(제목 굵기), 설명 `caption` 11/16(두 플랫폼). 2026-10-06까지 Web은 둘 다 본문 14를 물려받았다(1.13.0 변경) | `sectionRecipe.title`·`description`, `.hjm-section__title`·`__description` |
 | 간격 | 머리와 본문 사이 `spacing.xs` 8, 글자 묶음과 행동 사이 `spacing.sm` 12, 제목과 설명 사이 `spacing.xxs` 4. Section끼리의 간격은 Section이 주지 않는다. 감싸는 [Stack](stack.md)이나 `layoutStyle`로 `layout.sectionGap`(`spacing.xl` 24)을 둔다 | `sectionRecipe.gap`·`headerGap`·`copyGap`, `layout.sectionGap` |
 | 순서·정렬 | 머리 행동은 끝(LTR 오른쪽)에 하나, 글자 묶음과 세로 가운데 정렬. 보통 [Link](link.md) 또는 `tone="link"` [Button](button.md) | `.hjm-section__header`, Native `Section` |
 | 고정·스크롤 | 고정되지 않는다. 화면 본문 스크롤 안에 둔다 | — |
@@ -109,3 +109,7 @@ import { Section } from "@hjmds/react-native/primitives";
 | heading 수준 | `headingLevel` | 없음(header role 고정) |
 | 루트 | `<section>` | `View` |
 | 배치 | `className`, `layoutStyle`(HTML `style`도 받음) | `layoutStyle`, slot `*Style`(`style`은 제거된 속성) |
+
+## 근거
+
+2026-10-17 사용자 결정("굵기 좀더 줄여"): 모든 글자 굵기를 한 단계 낮췄다. 큰 숫자·선택 상태 600(큰 제목 단계는 같은 날 폐지), 제목·강조 500, label 500, 본문 400이며 정본은 [타이포그래피](../tokens/typography.md)다.

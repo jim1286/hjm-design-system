@@ -93,7 +93,7 @@ Native 프레임의 모서리는 `statisticRecipe.presentations`의 역할을 Pr
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | `presentation="surface"`의 안쪽 여백: `comfortable` `spacing.md` 16 · `compact` `spacing.sm` 12(두 플랫폼). 테두리 `stroke.default` 1, radius `md` 12 | `statisticRecipe.density`·`presentations`, `styles.css` `.hjm-statistic[data-presentation="surface"]` |
-| 글자 | 라벨 `label` 12 semibold(`compact` `caption` 11), 값 `heading` 24 heavy(`compact` `title` 18), prefix·suffix `body` 14 semibold 본문색, hint `caption`, 추세 `caption` bold(두 플랫폼). 2026-10-06까지 Web은 라벨 본문 14 medium, 값은 밀도와 관계없이 18, prefix·suffix는 흐린색이었다(1.13.0 변경) | `statisticRecipe.density`·`label`·`value`·`affix`·`hint`·`trend`, `.hjm-statistic__*` |
+| 글자 | 라벨 `label` 12 medium(`compact` `caption` 11), 값 `heading` 24 semibold(`fontWeight.semibold`, `compact` `title` 18. 2026-10-17 큰 글자 단계 폐지로 `heading.level2` 굵기 참조를 끊음), prefix·suffix `body` 14 medium 본문색, hint `caption`, 추세 `caption` medium(두 플랫폼). 2026-10-06까지 Web은 라벨 본문 14 medium, 값은 밀도와 관계없이 18, prefix·suffix는 흐린색이었다(1.13.0 변경) | `statisticRecipe.density`·`label`·`value`·`affix`·`hint`·`trend`, `.hjm-statistic__*` |
 | 간격 | 그룹 간격 `statisticRecipe.group.gap` = `spacing.xs` 8. 지표 안 줄 간격(라벨·값·추세) `comfortable` `spacing.xs` 8 · `compact` `spacing.xxs` 4(두 플랫폼) | `styles.css` `.hjm-statistic`·`.hjm-statistic-group`, `statisticRecipe` |
 | 순서·정렬 | 화면 위쪽 요약 영역이나 카드 안에 둔다. 지표 여러 개는 [Grid](grid.md)를 직접 짜지 말고 `StatisticGroup`으로 묶는다 | — |
 | 고정·스크롤 | — | — |
@@ -135,3 +135,7 @@ Native 프레임의 모서리는 `statisticRecipe.presentations`의 역할을 Pr
 양쪽 움직이는 수치 Storybook에 소수와 음수(de-DE), 비라틴 숫자(ar-EG), 지수 표기(en-US),
 동작 줄이기와 RTL 비교를 제공한다. 소수·음수 예제는 기록 개수가 아닌 측정값이다.
 Web은 자리 단위 전환, Native는 지표 전체 전환이며 같은 시각 효과를 보장하지 않는다.
+
+## 근거
+
+2026-10-17 사용자 결정("굵기 좀더 줄여"): 모든 글자 굵기를 한 단계 낮췄다. 큰 숫자·선택 상태 600(큰 제목 단계는 같은 날 폐지), 제목·강조 500, label 500, 본문 400이며 정본은 [타이포그래피](../tokens/typography.md)다.

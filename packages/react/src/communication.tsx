@@ -57,7 +57,7 @@ export function ExpandableSearch<T>(props:ExpandableSearchProps<T>){
  const commit=(query:string)=>{const normalized=resolveSearchCommit(query);if(normalized===null)return;setCommitted(normalized);props.onSubmit?.(normalized);};
  const current=snapshot?.query===props.query?snapshot.response:null;
  // Opening and closing are tool actions: a search icon at the area's end, and the search screen's own header-leading
- // close exit. A full-width primary "펼치기" button and a text "닫기" button read as product actions (2026-10-17 review).
+ // close exit. A full-width primary "Expand" button and a text "Close" button read as product actions (2026-10-17 review).
  return <Stack ref={host} gap="sm">{!props.expanded?<IconButton ref={opener} label={props.labels.open} tone="ghost" disabled={props.disabled===true} layoutStyle={{alignSelf:"flex-end"}} onClick={()=>props.onExpandedChange(true)}><Icon name="search" /></IconButton>:<>
  <SearchScreen title={props.labels.title} titleVisibility="hidden" exit={{kind:"close",label:props.labels.cancel,onClick:cancel}} queryLabel={props.labels.query} queryClearLabel={props.labels.clear} query={props.query} onQueryChange={props.onQueryChange} onSearch={search}
  {...(props.debounceMs===undefined?{}:{debounceMs:props.debounceMs})} {...(props.recentQueries?{recentQueries:props.recentQueries}:{})}

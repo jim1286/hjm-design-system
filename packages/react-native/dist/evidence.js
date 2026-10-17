@@ -169,7 +169,7 @@ export const reactNativeRendererEvidence = {
         nativeActionClaim("mentions", ["Mentions"], "./mentions", "test/mentions-actions.test.tsx"),
         nativeActionClaim("transfer-list", ["TransferList"], "./transfer-list", "test/transfer-list-actions.test.tsx"),
         nativeActionClaim("auth-provider-button", ["AuthProviderButton"], "./provider-button"),
-        defaultClaim("auth-screen", ["AuthScreenLayout"], "./auth-screen"),
+        defaultClaim("auth-screen", ["AuthScreenLayout", "AuthScreenHero", "AuthScreenFooter"], "./auth-screen"),
         nativeActionClaim("file-picker", ["FilePicker"], "./file-picker", "test/file-picker-host-action.test.tsx"),
         nativeActionClaim("checkbox", ["Checkbox"], "./inputs"),
         defaultClaim("radio", ["Radio"], "./inputs"),

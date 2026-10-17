@@ -17,7 +17,7 @@ export type ScreenFlowAction = Readonly<{
     icon?: ReactNode;
 }>;
 /** Header tool action (refresh, add): icon-only so it never pushes the centered title. A required text `add` made
- * products route exits ("취소") through it as a header text button (2026-10-17 screen review); exits use `exit`. */
+ * products route exits (a "Cancel" label) through it as a header text button (2026-10-17 screen review); exits use `exit`. */
 export type ScreenFlowIconAction = ScreenFlowAction & Readonly<{
     icon: ReactNode;
 }>;
@@ -348,7 +348,7 @@ export type CommentReactions = ReactionPickerProps & Readonly<{
  * only the localized button name, the items allowed for that comment and the action callback.
  */
 export type CommentMenu = Readonly<{
-    /** Localized accessible name of the button, e.g. "seoyeon 댓글 더 보기". */
+    /** Localized accessible name of the button, e.g. "More options for seoyeon's comment". */
     label(item: CommentThreadItem): string;
     /** Items allowed for this comment (permission is product-owned). An empty list omits the button for that row. */
     items(item: CommentThreadItem): readonly CommentMenuItemDescriptor[];

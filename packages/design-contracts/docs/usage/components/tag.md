@@ -55,7 +55,7 @@ import { Tag } from "@hjmds/react-native/data-display";
 | `accessibilityLabel`(Native) | `string` | 라벨 | — |
 | `style`·`labelStyle`(Native) | 지원하지 않음 | — | 제거된 속성 — `layoutStyle` 또는 `tone`. 현재 공개 props에서 제거되었다 |
 
-모양은 radius `sm` 사각형, 최소 높이 20(큰 글자에서 늘어남), caption 크기 semibold 글자다.
+모양은 radius `sm` 사각형, 최소 높이 20(큰 글자에서 늘어남), caption 크기 medium(500) 글자다.
 
 ## 배치
 
@@ -84,3 +84,7 @@ Native의 모서리는 Provider의 `tokens.radius.sm`이다. metadata 의미와 
 | 추가 style prop | `className`·`style`(HTML 속성) | `style`·`labelStyle`(제거된 속성) |
 | ref | `forwardRef`(`span`) | 없음 |
 | import 경로 | `/display` | `/data-display` |
+
+## 근거
+
+2026-10-17 사용자 결정("굵기 좀더 줄여"): 모든 글자 굵기를 한 단계 낮췄다. 큰 숫자·선택 상태 600(큰 제목 단계는 같은 날 폐지), 제목·강조 500, label 500, 본문 400이며 정본은 [타이포그래피](../tokens/typography.md)다.

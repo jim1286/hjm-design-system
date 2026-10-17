@@ -89,6 +89,11 @@ type SkeletonShape = keyof typeof skeletonRecipe.shapes;
 export type SkeletonProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> & Readonly<{
     shape?: SkeletonShape;
     animated?: boolean;
+    /**
+     * `text` only: draw this many lines with the last one shorter (`skeletonRecipe.lines`), so a paragraph
+     * placeholder is not rebuilt from loose bars in every product. `width` sizes the whole group.
+     */
+    lines?: number;
     width?: string | number;
     height?: string | number;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
@@ -97,6 +102,11 @@ export type SkeletonProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> & 
 export declare const Skeleton: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLSpanElement>, "children"> & Readonly<{
     shape?: SkeletonShape;
     animated?: boolean;
+    /**
+     * `text` only: draw this many lines with the last one shorter (`skeletonRecipe.lines`), so a paragraph
+     * placeholder is not rebuilt from loose bars in every product. `width` sizes the whole group.
+     */
+    lines?: number;
     width?: string | number;
     height?: string | number;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */

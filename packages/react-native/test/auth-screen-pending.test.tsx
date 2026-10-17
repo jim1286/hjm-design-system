@@ -1,7 +1,7 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { ActivityIndicator, Pressable, Text, TextInput, View } from "react-native";
 import { expect, it } from "vitest";
-import { AuthScreenLayout } from "../src/auth-screen.js";
+import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "../src/auth-screen.js";
 import { authScreenRecipe } from "@hjmds/design-contracts/components/auth-screen";
 import { defineHjmDesignProfile, hjmDesignPresets, type HjmDesignProfile } from "@hjmds/design-contracts/design-profile";
 import { TextField } from "../src/inputs.js";
@@ -65,4 +65,29 @@ it("inherits product login-card corners without replacing drafts or pending acti
       }
     }
   } finally { if (tree) act(() => tree.unmount()); }
+});
+
+it("draws the hero tagline on the recipe title step and separates policy links by one gap and a dot", () => {
+  let tree!: ReactTestRenderer;
+  const screen = (density: "regular" | "compact") => <HjmNativeProvider><AuthScreenLayout density={density}
+    hero={<AuthScreenHero eyebrow="이야기" title="당신의 일상을 이야기로 남겨요" description="설명" />} main={null}
+    footer={<AuthScreenFooter links={[{ label: "이용약관", onPress: () => undefined }, { label: "개인정보처리방침", onPress: () => undefined }]} />} /></HjmNativeProvider>;
+  act(() => { tree = create(screen("regular")); });
+  try {
+    const title = () => flattenStyle(tree.root.findAllByType(Text).find(node => node.props.accessibilityRole === "header")!.props.style);
+    // 2026-10-17 "굵기랑 크기 줄여": a title step (24/32, 500), not the display heading (32/40).
+    expect(title()).toMatchObject({ fontSize: 24, lineHeight: 32, fontWeight: "500" });
+    const links = tree.root.findAllByType(Pressable).filter(node => node.props.accessibilityRole === "link");
+    expect(links).toHaveLength(2);
+    for (const link of links) {
+      // The touch target is invisible: background-less height plus inline hitSlop, no visible padding.
+      expect(flattenStyle(link.props.style)).toEqual({ minHeight: authScreenRecipe.footerMinTouchTarget, justifyContent: "center" });
+      expect(link.props.hitSlop).toEqual({ left: authScreenRecipe.footer.linkGap, right: authScreenRecipe.footer.linkGap });
+    }
+    const row = tree.root.findAllByType(View).find(node => flattenStyle(node.props.style).columnGap !== undefined)!;
+    expect(flattenStyle(row.props.style).columnGap).toBe(authScreenRecipe.footer.linkGap);
+    expect(tree.root.findAllByType(Text).some(node => node.props.children === authScreenRecipe.footer.separator)).toBe(true);
+    act(() => tree.update(screen("compact")));
+    expect(title()).toMatchObject({ fontSize: 20, lineHeight: 28 });
+  } finally { act(() => tree.unmount()); }
 });

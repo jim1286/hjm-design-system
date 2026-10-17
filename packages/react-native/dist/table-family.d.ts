@@ -26,9 +26,14 @@ export type MatrixTableProps<Key extends string = string> = Readonly<{
         low: string;
     }>;
     accessibilityLabel: string;
+    /**
+     * Localized name of one cell for screen readers. Native has no table semantics to announce the row and
+     * column headers (Web reads them from <th>), so the default joins them language-neutrally: "row, column: value".
+     */
+    cellAccessibilityLabel?: (row: Key, column: Key, value: string) => string;
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function MatrixTable<Key extends string = string>({ ids, labelOf, getCell, highlightId, heatColors, accessibilityLabel, layoutStyle }: MatrixTableProps<Key>): import("react").JSX.Element;
+export declare function MatrixTable<Key extends string = string>({ ids, labelOf, getCell, highlightId, heatColors, accessibilityLabel, cellAccessibilityLabel, layoutStyle }: MatrixTableProps<Key>): import("react").JSX.Element;
 export type ComparisonTableProps = Readonly<{
     rows: readonly ComparisonRow[];
     /** Side names and accent colors (team colors). */

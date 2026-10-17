@@ -235,7 +235,7 @@ export const Text = forwardRef<NativeText, TextProps>(function Text(
   );
   return (
     <NativeText
-      // iOS otherwise breaks Korean inside words ("표 / 정."), unlike Web's word-break: keep-all (2026-10-17 review N10).
+      // iOS otherwise breaks Korean inside words (a word split across lines), unlike Web's word-break: keep-all (2026-10-17 review N10).
       lineBreakStrategyIOS="hangul-word"
       {...props}
       allowFontScaling={resolvedText.allowFontScaling}

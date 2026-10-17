@@ -95,4 +95,8 @@ import { NotificationItem } from "@hjmds/react-native/screens";
 | 상태·시각 줄 | 설명 아래 caption `Text` | `description`과 줄바꿈(`\n`)으로 합친 한 문자열 |
 | 이동 | `href`, `onClick` | `onPress` |
 | 추가 슬롯 | `className`, `layoutStyle` | `titleMetadata`, `trailingAction`, `trailingText`, `layoutStyle` |
-| 제목 굵기 조정 | `Text emphasis` | 렌더러 비공개 입력(`hjmTitleEmphasis`)으로 안 읽음 700(`fontWeight.bold`)·읽음 400(`fontWeight.regular`). 제거된 `ListRow.titleStyle`을 사용하지 않는다. `NotificationItemProps`에는 `titleStyle`이 없다(1.13.0 변경) |
+| 제목 굵기 조정 | `Text emphasis` | 렌더러 비공개 입력(`hjmTitleEmphasis`)으로 안 읽음 `strong` 500(제목 굵기)·읽음 `regular` 400. 제거된 `ListRow.titleStyle`을 사용하지 않는다. `NotificationItemProps`에는 `titleStyle`이 없다(1.13.0 변경) |
+
+## 근거
+
+2026-10-17 사용자 결정("굵기 좀더 줄여"): 모든 글자 굵기를 한 단계 낮췄다. 큰 숫자·선택 상태 600(큰 제목 단계는 같은 날 폐지), 제목·강조 500, label 500, 본문 400이며 정본은 [타이포그래피](../tokens/typography.md)다.

@@ -116,7 +116,7 @@ export const timelineRecipe = {
     },
     label: {
         textVariant: "body",
-        fontWeight: fontWeight.semibold,
+        fontWeight: fontWeight.medium,
         color: semanticColors.content.primary,
     },
     description: {

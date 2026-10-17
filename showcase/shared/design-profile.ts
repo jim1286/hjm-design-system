@@ -28,8 +28,9 @@ export const profileCopy = {
   assets: "자산 액자 비교", assetRounded: "테마의 둥근 모서리", assetSquare: "명시한 정사각", assetCircle: "명시한 원형",
   assetNote: "같은 기존 확인 그림으로 액자를 비교해요. 그림의 재질·각도는 바뀌지 않아요.",
 };
+// level1/2 are deprecated aliases of level3 since the display tier was removed (2026-10-17 user decision,
+// "큰 글자 정책은 없애"), so the comparison shows the three real steps, 24/20/18.
 export const profileHeadingSamples = [
-  { level: "level1", label: "큰 제목" }, { level: "level2", label: "주 제목" },
-  { level: "level3", label: "구역 제목" }, { level: "level4", label: "카드 제목" },
-  { level: "level5", label: "작은 제목" },
+  { level: "level3", label: "화면 제목" }, { level: "level4", label: "구역 제목" },
+  { level: "level5", label: "카드 제목" },
 ] as const;

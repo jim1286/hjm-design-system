@@ -248,7 +248,7 @@ export const stepsRecipe = {
   },
   label: {
     textVariant: "label",
-    fontWeight: fontWeight.semibold,
+    fontWeight: fontWeight.medium,
     color: {
       pending: semanticColors.content.secondary,
       current: semanticColors.content.primary,

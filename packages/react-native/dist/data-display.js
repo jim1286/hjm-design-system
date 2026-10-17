@@ -10,9 +10,9 @@ import { cardRecipe } from "@hjmds/design-contracts/components/card";
 import { imageRecipe, nativeResizeModes, resolveImageAspectRatio, resolveImageDescriptor, resolveImageFallbackAccessibilityLabel, } from "@hjmds/design-contracts/components/image";
 import { resolveTimelineDescriptor, timelineRecipe, } from "@hjmds/design-contracts/components/timeline";
 import { surfaceDefaults, surfaceGeometry } from "@hjmds/design-contracts/recipes/base";
-import { avatarRecipe, resolveAvatarInitialsTextVariant } from "@hjmds/design-contracts/recipes";
+import { avatarRecipe, resolveAvatarInitialsTextVariant, skeletonRecipe } from "@hjmds/design-contracts/recipes";
 import { accordionRecipe, counterBadgeRecipe, badgeRecipe, listRecipe, formatCounterBadgeCount, listRowRecipe, statisticRecipe, } from "@hjmds/design-contracts/recipes";
-import { Children, isValidElement, useEffect, useLayoutEffect, useMemo, useRef, useState, } from "react";
+import { Children, createContext, isValidElement, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, } from "react";
 import { Image as NativeImage, LayoutAnimation, Pressable, StyleSheet, View, useWindowDimensions, } from "react-native";
 import { useControllableState } from "./internal/state.js";
 import { minimumTargetStyle } from "./internal/styles.js";
@@ -118,10 +118,27 @@ export function Card({ children, title, description, leading, media, actions, se
                 opacity: disabled ? cardRecipe.interaction.disabledOpacity : pressed ? cardRecipe.interaction.pressedOpacity : 1,
             }, layoutStyle], children: frame });
 }
+/**
+ * A List item hands its rows this reporter so the indented separator drawn after the item follows the row's text
+ * column: leading 40 + gap 12 when the row has a leading frame, the content edge when it has none (2026-10-17 user
+ * report: a fixed 52 cut the line off midway under rows without leading). Web reads the same fact from the ListRow
+ * root's `data-leading` attribute in CSS.
+ */
+const ListItemLeadingContext = createContext(null);
 export function ListRow({ title, tone = listRowRecipe.defaults.tone, description, leading, trailing, titleMetadata, trailingAction, trailingText, metadataLabel, trailingLabel, onPress, accessibilityLabel, accessibilityHint, disabled = false, density = listRowRecipe.defaults.density, loading = false, loadingLabel, selected: selectedProp, leadingShape = "square", layoutStyle, leadingStyle, contentStyle, titleRowStyle, trailingStyle, trailingActionStyle, containerProps, accessibilityState, ...forwarded }) {
     assertNoRemovedStyleProps("ListRow", forwarded, ["titleStyle", "descriptionStyle"]);
     const { hjmTitleEmphasis, hjmMeta, ...props } = forwarded;
     const theme = useHjmNativeTheme();
+    // Tell the enclosing List item whether this row has a leading frame, so the indented separator after it starts at
+    // this row's text column (listRecipe.separators). Runs before the loading early return to keep hook order.
+    const reportLeading = useContext(ListItemLeadingContext);
+    const hasLeading = Boolean(leading);
+    useLayoutEffect(() => {
+        if (!reportLeading)
+            return undefined;
+        reportLeading(hasLeading);
+        return () => reportLeading(false);
+    }, [reportLeading, hasLeading]);
     const metrics = listRowRecipe.density[density];
     const interactive = onPress !== undefined;
     const selected = selectedProp ?? listRowRecipe.defaults.selected;
@@ -161,7 +178,8 @@ export function ListRow({ title, tone = listRowRecipe.defaults.tone, description
     if (loading) {
         // Search and other collections share ListRow geometry instead of approximating it with
         // loose Skeletons. Never mount placeholder actions or forward touch handlers while loading.
-        const placeholder = { backgroundColor: theme.colors.surfaceAlt, borderRadius: theme.tokens.radius.sm };
+        // Same placeholder fill as Skeleton so a loading screen mixing both reads as one state (2026-10-17).
+        const placeholder = { backgroundColor: resolveColorReference(skeletonRecipe.background, theme.palette), borderRadius: theme.tokens.radius.sm };
         return _jsxs(View, { testID: props.testID, onLayout: props.onLayout, accessible: Boolean(loadingLabel), accessibilityRole: "progressbar", accessibilityLabel: loadingLabel, accessibilityState: { busy: true }, importantForAccessibility: loadingLabel ? "yes" : "no-hide-descendants", style: [{ alignItems: "center", flexDirection: "row", direction: theme.environment.direction,
                     gap: listRowRecipe.gap, minHeight: visualState.minHeight, marginHorizontal: -metrics.paddingHorizontal,
                     paddingHorizontal: metrics.paddingHorizontal - rowBorder, paddingVertical: metrics.paddingVertical - rowBorder,
@@ -580,7 +598,7 @@ export function CounterBadge({ count, accessibilityLabel, max = counterBadgeReci
                 paddingHorizontal: metrics.paddingHorizontal,
             },
             layoutStyle,
-        ], children: _jsx(Text, { accessible: false, align: "center", style: { color: presentation[tone].content, fontWeight: "700" }, variant: "caption", children: visibleLabel }) }));
+        ], children: _jsx(Text, { accessible: false, align: "center", style: { color: presentation[tone].content, fontWeight: counterBadgeRecipe.fontWeight }, variant: "caption", children: visibleLabel }) }));
 }
 /** Semantic list container that owns separator rhythm around composed rows. */
 export function List({ label, children, separator = listRecipe.defaults.separator, appearance = "plain", layoutStyle, ...props }) {
@@ -605,12 +623,17 @@ export function List({ label, children, separator = listRecipe.defaults.separato
                     : {}),
             },
             layoutStyle,
-        ], children: items.map((item, index) => (_jsxs(View, { children: [item, separatorContract && index < items.length - 1 ? (_jsx(View, { accessible: false, style: {
-                        backgroundColor: colors.border,
-                        height: 1,
-                        marginEnd: separatorContract.insetEnd,
-                        marginStart: separatorContract.insetStart,
-                    } })) : null] }, isValidElement(item) && item.key !== null ? item.key : `hjm-list-${index}`))) }));
+        ], children: items.map((item, index) => (_jsx(ListItem, { borderColor: colors.border, separator: index < items.length - 1 ? separatorContract : null, children: item }, isValidElement(item) && item.key !== null ? item.key : `hjm-list-${index}`))) }));
+}
+/** One list item and the separator that belongs to it (drawn after it, as an iOS cell separator). */
+function ListItem({ borderColor, children, separator, }) {
+    const [hasLeading, setHasLeading] = useState(false);
+    return (_jsxs(View, { children: [_jsx(ListItemLeadingContext.Provider, { value: setHasLeading, children: children }), separator ? (_jsx(View, { accessible: false, style: {
+                    backgroundColor: borderColor,
+                    height: 1,
+                    marginEnd: separator.insetEnd,
+                    marginStart: hasLeading ? separator.leadingInsetStart : separator.insetStart,
+                } })) : null] }));
 }
 export function Statistic(props) {
     return renderStatistic(props);

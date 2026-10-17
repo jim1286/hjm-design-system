@@ -290,7 +290,8 @@ it("marks unread notifications through semantic selection without visual overrid
     act(() => tree.unmount());
     return flattened.fontWeight;
   };
-  expect(weight(false)).toBe("700");
+  // Unread uses the strong emphasis step, which equals the title weight (500) on the 2026-10-17 lighter scale.
+  expect(weight(false)).toBe("500");
   expect(weight(true)).toBe("400");
   expect(warn).not.toHaveBeenCalled();
   warn.mockRestore();

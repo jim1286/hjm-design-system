@@ -28,7 +28,7 @@ export const Top = forwardRef<HTMLElement, TopProps>(function Top(
   const profile = useDesignProfileDefaults();
   // Keep the visual role independent of the semantic heading level and preserve recipe defaults.
   const title = profile
-    ? size === "large" ? profile.tokens.heading.level2 : profile.tokens.typography.titleLarge
+    ? size === "large" ? profile.tokens.heading.level3 : profile.tokens.typography.titleLarge
     : metrics.title;
   return (
     <header

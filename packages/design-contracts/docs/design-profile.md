@@ -51,8 +51,8 @@ export const productDesign = defineHjmDesignProfile({
 
 | 프리셋 | 팔레트 | 서체·제목 | 깊이·모서리 | 구성 |
 | --- | --- | --- | --- | --- |
-| minimal | 흰 바탕·무채색 잉크, hairline `border` #e6e6e6, 짙은 회색 행동(#3d3d3d) | ui 유지, heading·level1/2 굵기 500, body 행간 26 | raised·floating 그림자 0(오버레이는 테두리와 scrim), 4/8/12/16 | cards(테두리·안쪽 24)/inline·dashboard |
-| editorial | 따뜻한 종이(#fdfbf7)·잉크(#1b1714), 와인 강조(#7a1f3d), 규칙선용 짙은 `border` #cfc5b8 | display·reading 시스템 serif stack, level1/2/3 56/42/30, body 행간 26 | raised 그림자 0, 0/2/2/4 | rows(규칙선)/collapsible·editorial |
+| minimal | 흰 바탕·무채색 잉크, hairline `border` #e6e6e6, 짙은 회색 행동(#3d3d3d) | ui 유지(제목 굵기는 공통 500), body 행간 26 | raised·floating 그림자 0(오버레이는 테두리와 scrim), 4/8/12/16 | cards(테두리·안쪽 24)/inline·dashboard |
+| editorial | 따뜻한 종이(#fdfbf7)·잉크(#1b1714), 와인 강조(#7a1f3d), 규칙선용 짙은 `border` #cfc5b8 | display·reading 시스템 serif stack(제목 크기는 공통 단계), body 행간 26 | raised 그림자 0, 0/2/2/4 | rows(규칙선)/collapsible·editorial |
 | terminal | 밝은 모드 녹회색(#c8d4c4)·짙은 녹색 잉크·호박갈색 강조, 어두운 모드 검정(#050a06)·녹색 형광 글자·호박색 강조 | ui=code이므로 display·reading도 monospace | 그림자 0, 모서리 0 | rows(규칙선)/collapsible·dashboard |
 
 serif stack은 `ui-serif, Iowan Old Style, Georgia, AppleMyungjo, Batang, Noto Serif KR, serif`이며 폰트를 내려받지 않는다.
@@ -101,24 +101,28 @@ SegmentedControl·Tabs, ScreenLayout 및 optional OverviewScreen에 연결한다
 유리의 실제 backdrop blur와 클레이 inset shadow는 아래 Surface 질감 계약으로 연결한다. Native의 선택형 host·OS·architecture 조건과 실제 기기 검증은 별도다.
 
 
-## 큰 제목까지 한 번에 지정하기
+## 제목 단계 지정하기
 
 `tokens.heading`은 `level1`~`level5`의 fontSize/lineHeight/fontWeight를 부분 지정한다.
 현재 Heading은 두 renderer 모두 이 값으로 그리고 문서 `semanticLevel`과 textScale을
-따로 유지한다. 중립은 foundation의 40/32/24/20/18px를 그대로 쓰며, 에디토리얼의
-level1/2/3은 56/42/30px·행간 66/52/40px·굵기 500(2026-10-17 44/34에서 상향), 브루탈리즘은 48/38px·행간 56/46px·굵기
-800이다. 이 두 큰 제목 선택은 원본 치수 복제가 아니라 편집형/강한 강조 프리셋의
-시각 계층을 구분한 HJM 실험값이며 좁은 폭·큰 글자 QA와 함께 판단한다.
+따로 유지한다. 모든 프리셋이 foundation의 24/24/24/20/18px를 쓴다. 브루탈리즘은 굵기만
+800으로 명시한다(두꺼운 테두리·딱딱한 그림자를 버티는 제목 무게, 2026-10-17 사용자 Storybook 비교).
+
+**글자 크기 상한(2026-10-17 사용자 결정, "글자 너무 커", "큰 글자 정책은 없애").** 프로필의
+`typography`와 `heading` 어느 단계도 `typography.heading`의 24px를 넘을 수 없고, 넘으면 `RangeError`다.
+그 전에는 에디토리얼 56/42/30px, 브루탈리즘 48/38/30px 같은 확대 제목이 허용됐지만 Native Storybook
+서비스 소개 화면에서 지나치게 커 보여 큰 글자 단계와 함께 없앴다. 프리셋 정체성은 팔레트·서체 역할·
+그림자·모서리·구성 축으로 구분한다.
 
 ```ts
 const productDesign = defineHjmDesignProfile({
   extends: "paper",
-  tokens: { heading: { level1: { fontSize: 52, lineHeight: 64, fontWeight: "500" } } },
+  tokens: { heading: { level3: { fontWeight: "600" } } },
 });
 ```
 
-미지정 값은 preset을 상속한다. `tokens.typography.heading/titleLarge/title`은 이전과
-같이 Heading level3/4/5의 변경 기본값이며, 같은 필드에 명시한 `tokens.heading`이
+미지정 값은 preset을 상속한다. `tokens.typography.heading`은 Heading level1~3,
+`titleLarge`/`title`은 level4/5의 변경 기본값이며, 같은 필드에 명시한 `tokens.heading`이
 우선한다. 나머지 프로필 축·본문 Text typography와 문서 순서는 바꾸지 않는다.
 지원하지 않는 persisted heading 단계는 조용히 무시하지 않고 거부한다.
 

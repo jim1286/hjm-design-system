@@ -46,7 +46,7 @@ function InlineEditBody(props: InlineEditProps) {
   };
   return <View accessible={false}>
     {/* Read state names the value with its label and edits through a pencil tool at the row end, as on Web; a bare value
-        beside a text "제목 수정" button lost the label (2026-10-17 review). */}
+        beside a text "Edit title" button lost the label (2026-10-17 review). */}
     {!editing ? <Stack axis="inline" gap="sm" align="center">
       <Stack gap="xxs" layoutStyle={{ flex: 1, minWidth: 0 }}><Text variant="caption" tone="muted">{props.label}</Text><Text emphasis="strong">{props.value}</Text></Stack>
       <IconButton ref={trigger} label={props.editLabel} tone="ghost" edge="end" disabled={props.disabled ?? false} onPress={() => { setDraft(props.value); action.session.reset(null); setEditing(true); }}><DrawnPencil size={glyph.sm} color={toolColor(props.disabled === true)} /></IconButton>

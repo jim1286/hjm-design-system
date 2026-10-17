@@ -44,7 +44,7 @@ export function SavedItemsPreview({stateKind="ready"}: Options){
   <ImageChoiceGroup label="컬렉션에 담을 게시물" selectionMode="multiple" value={chosen} onValueChange={setChosen}
    items={items.map(item=>({id:item.id,label:item.title,image:<PreviewPhoto index={item.photo} square label=""/>}))}/></Stack>
  </Sheet></>;
- return <View style={{height:720}}>{body}</View>;
+ return <View style={{flex:1}}>{body}</View>;
 }
 
 export function ProfileEditFields({name,bio,photo,onNameChange,onBioChange,onPhotoChange,disabled=false}:{name:string;bio:string;photo:number;onNameChange(value:string):void;onBioChange(value:string):void;onPhotoChange(value:number):void;disabled?:boolean}){

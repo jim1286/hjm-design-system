@@ -10,7 +10,7 @@ export const Top = forwardRef(function Top({ descriptor, trailing, className, la
     const profile = useDesignProfileDefaults();
     // Keep the visual role independent of the semantic heading level and preserve recipe defaults.
     const title = profile
-        ? size === "large" ? profile.tokens.heading.level2 : profile.tokens.typography.titleLarge
+        ? size === "large" ? profile.tokens.heading.level3 : profile.tokens.typography.titleLarge
         : metrics.title;
     return (_jsxs("header", { ref: forwardedRef, className: classNames("hjm-top", className), "data-size": size, style: { ...layoutStyle,
             "--hjm-top-title-size": `${title.fontSize}px`,

@@ -80,7 +80,7 @@ import { SegmentedControl } from "@hjmds/react-native/inputs";
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 항목 최소 높이 `medium` 44 · `small` 36 + hitSlop 4. 항목 좌우 여백 `medium` `spacing.md` 16 · `small` `spacing.sm` 12(두 플랫폼. Web `small`은 `::after`로 위아래 4를 넓힌다) | `segmentedControlRecipe.sizes`, `.hjm-segmented__item` |
+| 크기 | 바깥 높이(트랙 테두리·안쪽 여백 포함) `height`는 같은 크기의 Button·IconButton·Chip과 같다: `medium` 44 · `small` 36. 항목 최소 높이는 그보다 트랙 안쪽 여백 4와 테두리 1을 위아래로 뺀 `medium` 34 · `small` 26이고, 위아래로만 넓힌 터치 영역(`hitSlop` 5 · 9, Web `::after`)으로 44를 채운다. 작은 트랙은 바깥으로 4 더 넓어지되 레이아웃 높이는 늘지 않는다. 큰 글자에서 세로로 쌓이면 항목마다 44. 항목 좌우 여백 `medium` `spacing.md` 16 · `small` `spacing.sm` 12. 2026-10-17 사용자 요청("높이 맞춰")으로 같은 줄의 칩과 높이를 맞췄다(이전에는 항목 높이 기준이라 트랙이 46·54였다) | `segmentedControlRecipe.sizes`, `.hjm-segmented__scroller`, `.hjm-segmented__item` |
 | 간격 | 트랙 안쪽 여백·항목 간격 `container.padding`·`gap` `spacing.xxs` 4. 트랙 모서리 `radius.lg` 16(테두리 1). 선택 항목 모서리 `radius.md` 12, 선택 테두리 2(`stroke.strong`). 아래 내용과 `layout.contentGap` 16 | `segmentedControlRecipe.container`·`item`, `.hjm-segmented__items` |
 | 순서·정렬 | 항목은 같은 폭으로 나뉘고(Native `flex: 1`, Web `flex: 1 1 0`) 트랙은 부모 폭을 채운다. 전환할 내용 바로 위, 화면 좌우 여백(`layout.pagePadding`) 안 | Native `SegmentedControl`, `.hjm-segmented__item` |
 | 고정·스크롤 | 고정되지 않는다. Web 항목은 글자보다 좁아지지 않아(`min-inline-size: max-content`) 넘치면 트랙이 가로 스크롤된다. Native는 스크롤하지 않는다 | `.hjm-segmented__items`(overflow-x) |

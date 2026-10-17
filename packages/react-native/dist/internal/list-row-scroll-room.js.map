@@ -1,0 +1,1 @@
+{"version":3,"file":"list-row-scroll-room.js","sourceRoot":"","sources":["../../src/internal/list-row-scroll-room.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,aAAa,EAAE,MAAM,iCAAiC,CAAC;AAEhE;;;;;;;;;GASG;AACH,MAAM,UAAU,iBAAiB,CAAC,SAAiB,aAAa,CAAC,YAAY;IAC3E,OAAO;QACL,QAAQ,EAAE,EAAE,gBAAgB,EAAE,CAAC,MAAM,EAAE;QACvC,OAAO,EAAE,EAAE,iBAAiB,EAAE,MAAM,EAAE;KACvC,CAAC;AACJ,CAAC"}

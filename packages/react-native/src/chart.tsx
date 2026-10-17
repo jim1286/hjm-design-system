@@ -11,6 +11,8 @@ import {
   type ChartBar, type ChartBarLayout, type ChartCurve, type ChartOrientation, type ChartSeries, type ScatterDatum,
 } from "@hjmds/design-contracts/components/chart";
 import { spacing } from "@hjmds/design-contracts/foundations";
+// Chart labels and values use the text emphasis scale, the same weight the Web `.hjm-chart__*` rules read.
+import { textRecipe } from "@hjmds/design-contracts/recipes";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 
@@ -102,7 +104,7 @@ function CursorBubble({ x, width, text, surface, color }: { x: number; width: nu
   const box = 88, left = Math.min(width - box, Math.max(0, x - box / 2));
   return <View pointerEvents="none" importantForAccessibility="no-hide-descendants" accessibilityElementsHidden style={{ position: "absolute", top: 0, left, width: box, alignItems: "center" }}>
     <View style={{ paddingHorizontal: spacing.xs, paddingVertical: 2, borderRadius: 8, backgroundColor: surface }}>
-      <NativeText numberOfLines={1} style={{ color, fontSize: 11, fontWeight: "700" }}>{text}</NativeText>
+      <NativeText numberOfLines={1} style={{ color, fontSize: 11, fontWeight: textRecipe.emphasis.medium }}>{text}</NativeText>
     </View>
   </View>;
 }
@@ -182,7 +184,7 @@ export type LineChartProps = Readonly<{
   referenceValue?: number | "first";
   extremes?: Readonly<{ high: string; low: string }>;
   showAxis?: boolean;
-  /** Value labels only (no category labels), e.g. rank charts that must show "1위" at the top. */
+  /** Value labels only (no category labels), e.g. rank charts that must show "#1" at the top. */
   valueAxis?: boolean;
   /** Overrides grid/label ticks (rank charts: [1, 5, 10]). */
   ticks?: readonly number[];
@@ -240,7 +242,7 @@ export function LineChart({ categories, series, accessibilityLabel, formatValue,
         // Opposite sides of the extrema keep labels apart even when a fixed rank domain packs
         // both points into the top of the plot. Inversion swaps which numeric extreme is higher.
         const above = index === (invert ? marks.min : marks.max);
-        return p ? <SvgText key={label} x={Math.min(g.plot.right - 4, Math.max(g.plot.left + 4, p.x))} y={Math.max(10, Math.min(height - 2, p.y + (above ? -10 : 16)))} fontSize={11} fontWeight="600" fill={palette.label} textAnchor={p.x < width * 0.2 ? "start" : p.x > width * 0.8 ? "end" : "middle"}>{`${label} ${formatValue(p.value)}`}</SvgText> : null;
+        return p ? <SvgText key={label} x={Math.min(g.plot.right - 4, Math.max(g.plot.left + 4, p.x))} y={Math.max(10, Math.min(height - 2, p.y + (above ? -10 : 16)))} fontSize={11} fontWeight={textRecipe.emphasis.medium} fill={palette.label} textAnchor={p.x < width * 0.2 ? "start" : p.x > width * 0.8 ? "end" : "middle"}>{`${label} ${formatValue(p.value)}`}</SvgText> : null;
       })}
       {showAxis && categories.length > 0 && <>
         <SvgText x={g.xs[0]!} y={height - 4} fontSize={10} fill={palette.label} textAnchor="start">{categories[0]}</SvgText>
@@ -297,7 +299,7 @@ export function BarChart({ categories, series, accessibilityLabel, formatValue, 
         : <Line key={tick} y1={g.plot.top} y2={g.plot.bottom} x1={g.value(tick)} x2={g.value(tick)} stroke={palette.grid} strokeWidth={chartRecipe.chrome.gridWidth} />)}
       {showAxis && vertical && <AxisLabels ticks={g.ticks} y={g.value} x={g.plot.left - 6} color={palette.label} format={formatValue} />}
       {g.bars.map(bar => <MotionBar key={`${series[bar.seriesIndex]!.id}-${categoryKeys[bar.index]}`} bar={bar} animate={animateChanges && g.bars.length <= 200} rx={chartRecipe.bar.radius} fill={palette.seriesColor(series[bar.seriesIndex]!, bar.seriesIndex)} opacity={focus === null || focus === bar.index ? 1 : chartRecipe.bar.restOpacity} />)}
-      {showValues && layout === "grouped" && g.bars.map(bar => <SvgText key={`v${bar.seriesIndex}-${bar.index}`} x={vertical ? bar.x + bar.width / 2 : bar.x + bar.width + 4} y={vertical ? bar.y - 4 : bar.y + bar.height / 2 + 4} fontSize={10} fontWeight="600" fill={palette.legend} textAnchor={vertical ? "middle" : "start"}>{formatValue(bar.value)}</SvgText>)}
+      {showValues && layout === "grouped" && g.bars.map(bar => <SvgText key={`v${bar.seriesIndex}-${bar.index}`} x={vertical ? bar.x + bar.width / 2 : bar.x + bar.width + 4} y={vertical ? bar.y - 4 : bar.y + bar.height / 2 + 4} fontSize={10} fontWeight={textRecipe.emphasis.medium} fill={palette.legend} textAnchor={vertical ? "middle" : "start"}>{formatValue(bar.value)}</SvgText>)}
       {categories.map((category, i) => vertical
         ? (categories.length <= 12 || i % Math.ceil(categories.length / 12) === 0) && <SvgText key={category + i} x={g.centers[i]!} y={resolvedHeight - 4} fontSize={10} fill={focus === i ? palette.legend : palette.label} textAnchor="middle">{category}</SvgText>
         : <SvgText key={category + i} x={g.plot.left - 8} y={g.centers[i]! + 4} fontSize={11} fill={focus === i ? palette.legend : palette.label} textAnchor="end">{category}</SvgText>)}
@@ -317,7 +319,7 @@ export function ChartLegend({ items, selectedId, onSelect, exclusion }: Readonly
     const content = <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs, minHeight: 32, opacity: selectedId && selectedId !== item.id ? 0.5 : 1 }}>
       <View style={{ width: 10, height: 10, borderRadius: 3, backgroundColor: item.color }} />
       <Text variant="body" layoutStyle={{ flex: 1 }} numberOfLines={1}>{item.label}</Text>
-      {item.value !== undefined && <NativeText style={{ color: palette.legend, fontSize: 13, fontWeight: "700", fontVariant: ["tabular-nums"] }}>{item.value}</NativeText>}
+      {item.value !== undefined && <NativeText style={{ color: palette.legend, fontSize: 13, fontWeight: textRecipe.emphasis.medium, fontVariant: ["tabular-nums"] }}>{item.value}</NativeText>}
     </View>;
     const selection = onSelect ? <Pressable key={item.id} accessibilityRole="button" accessibilityState={{ selected: selectedId === item.id }} accessibilityLabel={`${item.label}${item.value ? ` ${item.value}` : ""}`} onPress={() => onSelect(selectedId === item.id ? null : item.id)}>{content}</Pressable>
       : <View key={item.id} accessible accessibilityLabel={`${item.label}${item.value ? ` ${item.value}` : ""}`}>{content}</View>;
@@ -359,7 +361,7 @@ export function PieChart({ data, accessibilityLabel, formatValue, donut = true, 
     <View accessible accessibilityRole="image" accessibilityLabel={`${accessibilityLabel}. ${summary}`} style={{ width: size, height: size, alignSelf: "center" }}>
       <Svg width={size} height={size} {...decorativeSvgAccessibility}>
         {slices.map(slice => <Path key={slice.index} d={slice.path} fill={colorOf(slice.index)} opacity={selected && data[slice.index]!.id !== selected ? 0.35 : 1} {...(onSelect || selectedId !== undefined ? { onPress: () => select(data[slice.index]!.id === selected ? null : data[slice.index]!.id) } : {})} />)}
-        {slices.filter(slice => !donut && slice.percent >= chartRecipe.pie.minLabelPercent * 2).map(slice => <SvgText key={`t${slice.index}`} x={slice.centroid.x} y={slice.centroid.y + 4} fontSize={11} fontWeight="700" fill="#FFFFFF" textAnchor="middle">{`${Math.round(slice.percent)}%`}</SvgText>)}
+        {slices.filter(slice => !donut && slice.percent >= chartRecipe.pie.minLabelPercent * 2).map(slice => <SvgText key={`t${slice.index}`} x={slice.centroid.x} y={slice.centroid.y + 4} fontSize={11} fontWeight={textRecipe.emphasis.medium} fill="#FFFFFF" textAnchor="middle">{`${Math.round(slice.percent)}%`}</SvgText>)}
       </Svg>
       {donut && center != null && <View pointerEvents="none" style={{ position: "absolute", inset: 0, alignItems: "center", justifyContent: "center" }}>{center}</View>}
     </View>
@@ -394,7 +396,7 @@ export function RadarChart({ categories, series, accessibilityLabel, formatValue
           {polygon.points.map(p => p.value !== null && <Circle key={p.index} cx={p.x} cy={p.y} r={3} fill={color} />)}
         </G>; })}
         {g.axes.map(axis => { const first = series[0]?.values[axis.index]; return <G key={`l${axis.index}`}>
-          <SvgText x={axis.labelAt.x} y={axis.labelAt.y} fontSize={11} fontWeight="600" fill={palette.legend} textAnchor={axis.anchor}>{axis.label}</SvgText>
+          <SvgText x={axis.labelAt.x} y={axis.labelAt.y} fontSize={11} fontWeight={textRecipe.emphasis.medium} fill={palette.legend} textAnchor={axis.anchor}>{axis.label}</SvgText>
           {series.length === 1 && <SvgText x={axis.labelAt.x} y={axis.labelAt.y + 14} fontSize={11} fill={palette.label} textAnchor={axis.anchor}>{isChartNumber(first) ? formatValue(first) : missingLabel}</SvgText>}
         </G>; })}
       </Svg>

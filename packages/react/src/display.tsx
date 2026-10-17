@@ -292,6 +292,7 @@ export const ListRow = forwardRef<HTMLElement, ListRowProps>(function ListRow(
         aria-label={loadingLabel}
         className={classNames("hjm-list-row", "hjm-list-row--loading", className)}
         data-density={density}
+        data-leading={leading ? "" : undefined}
         data-lines={description ? "two" : "one"}
         data-state="loading"
         style={{ ...style, ...layoutStyle }}
@@ -330,6 +331,9 @@ export const ListRow = forwardRef<HTMLElement, ListRowProps>(function ListRow(
       ref,
       className: classNames("hjm-list-row", className),
       "data-density": density,
+      // Exposes the text column to the enclosing List: its indented separator starts after the leading frame
+      // (listRecipe.separators.indented.leadingInsetStart) only when this row has one.
+      "data-leading": leading ? "" : undefined,
       "data-tone": tone,
       // One- and two-line rows have different minimum heights in the recipe;
       // the web renderer used a single hardcoded value until now.
@@ -354,7 +358,7 @@ export const ListRow = forwardRef<HTMLElement, ListRowProps>(function ListRow(
   // The frame owns the row surface and its bleed so the command and the separate action share one fill, as Native;
   // the action stays outside the link/button (styles.css `.hjm-list-row-frame`).
   return trailingAction ? (
-    <div className="hjm-list-row-frame" data-density={density}
+    <div className="hjm-list-row-frame" data-density={density} data-leading={leading ? "" : undefined}
       data-state={disabled ? "disabled" : selected ? "selected" : "idle"} style={layoutStyle}>
       {linked}
       <div className="hjm-list-row__action">{trailingAction}</div>

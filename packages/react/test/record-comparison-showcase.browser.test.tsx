@@ -19,7 +19,7 @@ it("keeps saved records and normalized search through all display modes, includi
  await click("책에서 만난 한 문장 저장"); await query("  책에서   문장  "); const input=search();
  expect(host.textContent).toContain("1개의 기록 · 1개 저장");
  for (const mode of ["읽기 중심","이미지 중심","목록 중심"]) {
-  await click(mode); expect(search()).toBe(input); expect(input.value).toBe("  책에서   문장  "); expect(named("책에서 만난 한 문장 저장 취소").getAttribute("aria-pressed")).toBe("true");
+  await click(mode); expect(search()).toBe(input); expect(input.value).toBe("  책에서   문장  "); expect(named("책에서 만난 한 문장 저장").getAttribute("aria-pressed")).toBe("true");
   expect(host.textContent!.includes(records[1].body)).toBe(mode !== "목록 중심");
  }
  await query(""); await click("이미지 중심"); expect(host.querySelectorAll('[role="img"]')).toHaveLength(2); expect(host.textContent).toContain(records[1].body);
@@ -32,7 +32,7 @@ it("returns from each detail close path to the origin without changing search or
  await query("바다"); await click("바다가 보이는 자리 저장");
  for (const exit of ["읽기 마치기", "닫기"]) {
   const trigger=named("바다가 보이는 자리 읽기"); await click("바다가 보이는 자리 읽기"); expect(document.querySelector('[role="dialog"]')!.textContent).toContain(records[2].body);
-  await close(exit); expect(document.activeElement).toBe(trigger); expect(search().value).toBe("바다"); expect(named("바다가 보이는 자리 저장 취소")).toBeDefined();
+  await close(exit); expect(document.activeElement).toBe(trigger); expect(search().value).toBe("바다"); expect(named("바다가 보이는 자리 저장").getAttribute("aria-pressed")).toBe("true");
  }
 });
 it("applies every same-render save activation", async () => {

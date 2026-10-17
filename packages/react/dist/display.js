@@ -41,7 +41,7 @@ export const ListRow = forwardRef(function ListRow({ title, description, leading
     const density = densityProp ?? densityDefault;
     if (loading) {
         // A loading row is never interactive: there is nothing to activate yet.
-        return (_jsxs("div", { ...props, ref: ref, role: loadingLabel ? "status" : undefined, "aria-busy": loadingLabel ? true : undefined, "aria-hidden": loadingLabel ? undefined : true, "aria-label": loadingLabel, className: classNames("hjm-list-row", "hjm-list-row--loading", className), "data-density": density, "data-lines": description ? "two" : "one", "data-state": "loading", style: { ...style, ...layoutStyle }, children: [leading ? _jsx("span", { className: "hjm-list-row__leading", "data-shape": leadingShape, "data-placeholder": "" }) : null, _jsxs("span", { className: "hjm-list-row__content", children: [_jsx("span", { className: "hjm-list-row__title", "data-placeholder": "", style: { width: `${listRowRecipe.loading.titleWidthPercent}%` } }), description ? _jsx("span", { className: "hjm-list-row__description", "data-placeholder": "", style: { width: `${listRowRecipe.loading.descriptionWidthPercent}%` } }) : null] }), trailing ? _jsx("span", { className: "hjm-list-row__trailing", "data-placeholder": "", style: { width: listRowRecipe.loading.trailingWidth } }) : null] }));
+        return (_jsxs("div", { ...props, ref: ref, role: loadingLabel ? "status" : undefined, "aria-busy": loadingLabel ? true : undefined, "aria-hidden": loadingLabel ? undefined : true, "aria-label": loadingLabel, className: classNames("hjm-list-row", "hjm-list-row--loading", className), "data-density": density, "data-leading": leading ? "" : undefined, "data-lines": description ? "two" : "one", "data-state": "loading", style: { ...style, ...layoutStyle }, children: [leading ? _jsx("span", { className: "hjm-list-row__leading", "data-shape": leadingShape, "data-placeholder": "" }) : null, _jsxs("span", { className: "hjm-list-row__content", children: [_jsx("span", { className: "hjm-list-row__title", "data-placeholder": "", style: { width: `${listRowRecipe.loading.titleWidthPercent}%` } }), description ? _jsx("span", { className: "hjm-list-row__description", "data-placeholder": "", style: { width: `${listRowRecipe.loading.descriptionWidthPercent}%` } }) : null] }), trailing ? _jsx("span", { className: "hjm-list-row__trailing", "data-placeholder": "", style: { width: listRowRecipe.loading.trailingWidth } }) : null] }));
     }
     const element = href ? "a" : onClick ? "button" : "div";
     const interactiveProps = href
@@ -65,6 +65,9 @@ export const ListRow = forwardRef(function ListRow({ title, description, leading
         ref,
         className: classNames("hjm-list-row", className),
         "data-density": density,
+        // Exposes the text column to the enclosing List: its indented separator starts after the leading frame
+        // (listRecipe.separators.indented.leadingInsetStart) only when this row has one.
+        "data-leading": leading ? "" : undefined,
         "data-tone": tone,
         // One- and two-line rows have different minimum heights in the recipe;
         // the web renderer used a single hardcoded value until now.
@@ -79,6 +82,6 @@ export const ListRow = forwardRef(function ListRow({ title, description, leading
     const linked = href && renderLink ? renderLink(row.props) : row;
     // The frame owns the row surface and its bleed so the command and the separate action share one fill, as Native;
     // the action stays outside the link/button (styles.css `.hjm-list-row-frame`).
-    return trailingAction ? (_jsxs("div", { className: "hjm-list-row-frame", "data-density": density, "data-state": disabled ? "disabled" : selected ? "selected" : "idle", style: layoutStyle, children: [linked, _jsx("div", { className: "hjm-list-row__action", children: trailingAction })] })) : linked;
+    return trailingAction ? (_jsxs("div", { className: "hjm-list-row-frame", "data-density": density, "data-leading": leading ? "" : undefined, "data-state": disabled ? "disabled" : selected ? "selected" : "idle", style: layoutStyle, children: [linked, _jsx("div", { className: "hjm-list-row__action", children: trailingAction })] })) : linked;
 });
 //# sourceMappingURL=display.js.map

@@ -80,6 +80,6 @@ export declare const counterBadgeRecipe: {
         };
     };
     readonly radius: "full";
-    readonly fontWeight: "700";
+    readonly fontWeight: "500";
 };
 //# sourceMappingURL=counter-badge-recipe.d.ts.map

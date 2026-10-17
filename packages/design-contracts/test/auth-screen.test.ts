@@ -6,7 +6,10 @@ import {
   authScreenRecipe,
   control,
   resolveAuthScreenDescriptor,
+  typography,
   validateAuthScreenDescriptor,
+  validateAuthScreenHeroDescriptor,
+  validateAuthScreenPolicyLinks,
   type AuthScreenDescriptor,
 } from "../src/index.js";
 
@@ -50,6 +53,20 @@ describe("AuthScreen descriptor", () => {
 
   it("keeps policy links reachable by touch", () => {
     expect(authScreenRecipe.footerMinTouchTarget).toBe(control.minTouchTarget);
+  });
+
+  it("keeps the hero tagline on a title step, smaller in compact", () => {
+    // 2026-10-17 "굵기랑 크기 줄여": the login slogan used the display heading (32/40).
+    expect(resolveAuthScreenDescriptor({ density: "regular" }).titleVariant).toBe("heading");
+    expect(resolveAuthScreenDescriptor({ density: "compact" }).titleVariant).toBe("titleLarge");
+    expect(authScreenRecipe.title).toBe(typography.heading);
+  });
+
+  it("rejects an empty hero title and a footer without policy links", () => {
+    expect(() => validateAuthScreenHeroDescriptor({ title: " " })).toThrow(TypeError);
+    // LS-04: terms and privacy links must be on the screen before sign-in.
+    expect(() => validateAuthScreenPolicyLinks([])).toThrow(TypeError);
+    expect(() => validateAuthScreenPolicyLinks([{ label: "" }])).toThrow(TypeError);
   });
 
   it("declares the two-region promise in its scenarios", () => {

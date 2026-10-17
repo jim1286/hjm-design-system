@@ -79,7 +79,7 @@ import { CheckboxGroup } from "@hjmds/react-native/inputs";
 | --- | --- | --- |
 | 크기 | 폭을 채우는 묶음. 각 행은 [Checkbox](checkbox.md) 규격(최소 높이 `medium` 56 · `small` 44, 표시 24 · 20) | `selectionControlRecipe.sizes`, `.hjm-choice` |
 | 간격 | 그룹 이름(legend)↔항목 `spacing.xs` 8. 항목 사이 세로 `card` `spacing.xs` 8 · `plain` `spacing.xxs` 4 · `grouped` 0, 가로 `card` `spacing.md` 16 · `plain` `spacing.sm` 12 · `grouped` 0. 설명·오류는 `formSupportContract.gap` `spacing.xs` 8 | `selectionGroupRecipe.orientations`, `.hjm-checkbox-group*` |
-| 순서·정렬 | 위→아래 [그룹 이름(semibold)] → [설명] → [항목들] → [오류]. 항목은 시작 쪽 정렬. `grouped`는 항목들을 테두리 1px·`radius.lg` 16 카드 하나에 붙여 담는다 | `selectionGroupRecipe.slots`, `.hjm-checkbox-group[data-presentation="grouped"]` |
+| 순서·정렬 | 위→아래 [그룹 이름(medium 500)] → [설명] → [항목들] → [오류]. 항목은 시작 쪽 정렬. `grouped`는 항목들을 테두리 1px·`radius.lg` 16 카드 하나에 붙여 담는다 | `selectionGroupRecipe.slots`, `.hjm-checkbox-group[data-presentation="grouped"]` |
 | 고정·스크롤 | 고정 영역이 없다. 목록이 길어도 그룹 안에서 스크롤 영역을 만들지 않는다 | `.hjm-checkbox-group__items` |
 | 좁은 폭·큰 글자 | `horizontal`은 줄바꿈된다(`flex-wrap: wrap`). 좁은 폭·큰 글자에서는 `vertical`을 쓴다 | `.hjm-checkbox-group[data-orientation="horizontal"]` |
 
@@ -102,3 +102,7 @@ import { CheckboxGroup } from "@hjmds/react-native/inputs";
 | 그룹 전체 비활성 | `disabled`(fieldset) | `disabled` |
 | 필수·읽기 전용 안내 | `aria-required`·`aria-readonly` | `requiredLabel`·`readOnlyLabel`을 행 hint로 읽음 |
 | 선택 표시 교체 | 없음 | `indicator="none"`, `renderIndicator(item, props)` |
+
+## 근거
+
+2026-10-17 사용자 결정("굵기 좀더 줄여"): 모든 글자 굵기를 한 단계 낮췄다. 큰 숫자·선택 상태 600(큰 제목 단계는 같은 날 폐지), 제목·강조 500, label 500, 본문 400이며 정본은 [타이포그래피](../tokens/typography.md)다.

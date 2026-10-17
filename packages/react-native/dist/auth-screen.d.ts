@@ -1,5 +1,5 @@
-import { authScreenRecipe, type AuthScreenDescriptor } from "@hjmds/design-contracts/components/auth-screen";
-import type { ReactNode } from "react";
+import { authScreenRecipe, type AuthScreenDescriptor, type AuthScreenHeroDescriptor, type AuthScreenPolicyLinkDescriptor } from "@hjmds/design-contracts/components/auth-screen";
+import { type ReactNode } from "react";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type AuthScreenLayoutProps = AuthScreenDescriptor & Readonly<{
     /** Product mark, title and description. The product owns every string here. */
@@ -24,5 +24,31 @@ export type AuthScreenLayoutProps = AuthScreenDescriptor & Readonly<{
  * so a product does not have to wrap this in another keyboard-avoiding view.
  */
 export declare function AuthScreenLayout({ hero, main, footer, density, hasFooter, pendingLabel, mainCard, layoutStyle, testID, }: AuthScreenLayoutProps): import("react").JSX.Element;
+export type AuthScreenHeroProps = AuthScreenHeroDescriptor & Readonly<{
+    /** Product mark asset. HJM never ships product marks. */
+    mark?: ReactNode;
+}>;
+/**
+ * The `hero` slot content: mark, eyebrow, tagline and one description line. Type
+ * steps, tones and gaps come from `authScreenRecipe.hero`, matching Web.
+ */
+export declare function AuthScreenHero({ mark, title, eyebrow, description, headingLevel }: AuthScreenHeroProps): import("react").JSX.Element;
+export type AuthScreenPolicyLink = AuthScreenPolicyLinkDescriptor & Readonly<{
+    onPress: () => void;
+}>;
+export type AuthScreenFooterProps = Readonly<{
+    /** Optional consent notice (LS-04). */
+    notice?: ReactNode;
+    /** Terms and privacy links; at least one is required (LS-04). */
+    links: readonly AuthScreenPolicyLink[];
+    /** Extra product content under the links. */
+    children?: ReactNode;
+}>;
+/**
+ * The `footer` slot content: consent notice plus dot-separated policy links. The
+ * visible gap between links is `linkGap` + separator + `linkGap`; the 44pt touch
+ * target comes from hitSlop, not visible padding (2026-10-17 user report: reduce the link gap).
+ */
+export declare function AuthScreenFooter({ notice, links, children }: AuthScreenFooterProps): import("react").JSX.Element;
 export { authScreenRecipe };
 //# sourceMappingURL=auth-screen.d.ts.map

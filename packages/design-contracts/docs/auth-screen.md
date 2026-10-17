@@ -75,6 +75,8 @@ hero와 footer는 진행 중에도 유지한다. 버튼별 busy spinner와 함�
 | footer 간격 | `xl`(compact `md`) | **최소값**이다. 화면이 길면 그 이상 벌어진다 |
 | 제공자 버튼 높이 | `authProviderButtonRecipe.minHeight` | 여기서 다시 정하지 않는다. 두 계약이 각자 값을 들면 한쪽만 바뀌어 버튼 줄기가 어긋난다 |
 | 정책 링크 터치 | `control.minTouchTarget` | 글자 높이만 누를 수 있으면 44pt에 못 미친다 |
+| 히어로 태그라인 | `typography.heading` 24/32·500(compact `titleLarge` 20/28) | 2026-10-17 "굵기랑 크기 줄여": 화면 첫 제목(display 32/40)을 빌리면 402 폭에서 두 줄이 된다. `AuthScreenHero`가 그린다 |
+| 정책 링크 간격 | `linkGap` 8 + `·` + 8 | 2026-10-17 "간격 줄여": 버튼 안쪽 여백이 더해지면 40~42가 된다. 터치 영역은 보이지 않게 넓힌다. `AuthScreenFooter`가 그린다 |
 
 ## 이 계약에 없는 것
 

@@ -26,12 +26,12 @@ export function AvatarFacePreview() {
   return <main className="hjm-profile-studio">
     <Stack gap="xxxl">
       <Stack gap="sm"><Text tone="brand" variant="label">{copy.eyebrow}</Text>
-        <Heading level="level1">{copy.title}</Heading><Text tone="muted">{copy.intro}</Text></Stack>
+        <Heading level="level3" semanticLevel={1}>{copy.title}</Heading><Text tone="muted">{copy.intro}</Text></Stack>
       <Grid columns={{ compact: 1, expanded: 2 }} gap={{ compact: "xxl" }}>
         <Surface as="section" aria-label={copy.preview} bordered padding="xxl" radius="xl"><Stack gap="md" align="center">
           <Text tone="brand" variant="label">{copy.badge}</Text>
           <Avatar name={draft.name.trim() || copy.profile} size="xlarge" renderFallback={face} />
-          <Heading level="level2">{draft.name.trim() || copy.profile}</Heading><Text tone="muted">{copy.member}</Text>
+          <Heading level="level4" semanticLevel={2}>{draft.name.trim() || copy.profile}</Heading><Text tone="muted">{copy.member}</Text>
           <Stack axis="inline" gap="xs" aria-hidden="true">{profileFaces.map(item => <Avatar key={item.seed} name={item.label} alt="" size="small" renderFallback={createBlobatarFallback({ seed: item.seed })} />)}</Stack>
         </Stack></Surface>
         <form onSubmit={event => { event.preventDefault(); if (draft.name.trim()) { setSaved(draft); setApplied(true); } }}><Stack gap="xl">

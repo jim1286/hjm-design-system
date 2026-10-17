@@ -19,7 +19,7 @@ Chip의 안정성을 상속하거나 독립적인 stable 승격을 뜻하지 않
 - `emphasis`: `default`(surface/text/border) · `emphasis`(brand action fill/content, 결과가 사용자를 기다릴 때).
   두 쌍 모두 light/dark에서 4.5:1을 contract test가 지킨다.
 - `activityChipRecipe`: 최소 높이 44(`control.minTouchTarget`), 최대 폭 180, 모서리 full, 미디어 28, 간격 `spacing.xxs`,
-  시작 inset `spacing.xxs`(미디어가 있을 때)·끝 inset `spacing.sm`, 라벨 `label` variant bold 한 줄.
+  시작 inset `spacing.xxs`(미디어가 있을 때)·끝 inset `spacing.sm`, 라벨 `label` variant medium(500) 한 줄.
 - 작업 상태·문구·미디어·패널 내용은 제품 소유다. HJM은 트리거 모양, 펼침 의미, 패널(Toast) 수명주기를 소유한다.
 
 ## Renderer
@@ -33,3 +33,7 @@ Chip의 안정성을 상속하거나 독립적인 stable 승격을 뜻하지 않
 
 검증: contracts `test/activity-chip.test.ts`, Web `test/activity-chip.browser.test.tsx`, Native `test/activity-chip.test.tsx`.
 기기 시각·VoiceOver/TalkBack 확인은 아직 하지 않았다.
+
+## 근거
+
+2026-10-17 사용자 결정("굵기 좀더 줄여"): 모든 글자 굵기를 한 단계 낮췄다. 큰 숫자·선택 상태 600(큰 제목 단계는 같은 날 폐지), 제목·강조 500, label 500, 본문 400이며 정본은 [타이포그래피](usage/tokens/typography.md)다.

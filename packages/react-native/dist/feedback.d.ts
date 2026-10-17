@@ -84,6 +84,11 @@ export type SkeletonShape = keyof typeof skeletonRecipe.shapes;
 export type SkeletonProps = Readonly<{
     shape?: SkeletonShape;
     animated?: boolean;
+    /**
+     * `text` only: draw this many lines with the last one shorter (`skeletonRecipe.lines`), so a paragraph
+     * placeholder is not rebuilt from loose bars in every product. `width` sizes the whole group.
+     */
+    lines?: number;
     width?: ViewStyle["width"];
     height?: number;
     radius?: number;
@@ -99,7 +104,7 @@ export type SkeletonProps = Readonly<{
  * width/height/radius stay for callers already on the 0.9 train and win over
  * `shape`. Migration: .changeset/skeleton-pulse-by-default.md
  */
-export declare function Skeleton({ shape, animated, width, height, radius: radiusValue, accessibilityLabel, layoutStyle, }: SkeletonProps): import("react").JSX.Element;
+export declare function Skeleton({ shape, animated, lines, width, height, radius: radiusValue, accessibilityLabel, layoutStyle, }: SkeletonProps): import("react").JSX.Element;
 export type ToastProps = Readonly<{
     descriptor: ToastDescriptor;
     onDismiss?: (reason: ToastDismissReason) => void;

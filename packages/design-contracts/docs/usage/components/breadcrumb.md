@@ -65,7 +65,7 @@ Native renderer는 없다.
 | --- | --- | --- |
 | 크기 | 내용 폭만 차지하는 한 줄 경로. 글자는 `label` 변형(12/18). 링크 높이가 44에 못 미치므로 터치 중심 화면의 주 탐색으로 쓰지 않는다 | `breadcrumbRecipe.link`·`current` |
 | 간격 | 항목·구분자 사이 `spacing.xxs` 4. 바깥 여백이 없으므로 아래 제목·본문과의 간격은 화면의 세로 [Stack](stack.md)이 정한다 | `breadcrumbRecipe.gap`, `.hjm-breadcrumb` |
-| 순서·정렬 | 페이지 제목 바로 위, 본문 시작 쪽 정렬. 상위 → 현재 순서이고 현재 위치(마지막)는 링크가 아니며 `semibold`로 표시한다 | `.hjm-breadcrumb__current` |
+| 순서·정렬 | 페이지 제목 바로 위, 본문 시작 쪽 정렬. 상위 → 현재 순서이고 현재 위치(마지막)는 링크가 아니며 medium(500)으로 표시한다 | `.hjm-breadcrumb__current` |
 | 고정·스크롤 | 고정되지 않고 본문과 함께 스크롤한다 | `.hjm-breadcrumb__list` |
 | 좁은 폭·큰 글자 | 줄바꿈된다(`flex-wrap: wrap`). 항목 label도 줄바꿈되고 구분자는 줄어들지 않는다 | `.hjm-breadcrumb__list`, `.hjm-breadcrumb__separator { flex-shrink: 0 }` |
 
@@ -79,3 +79,7 @@ Native renderer는 없다.
 
 - 조상 항목은 일반 `<a href>`로 그린다. 라우터 adapter prop(`renderLink` 등)이 없으므로
   Next.js `Link` 같은 클라이언트 전환을 기대하지 않는다.
+
+## 근거
+
+2026-10-17 사용자 결정("굵기 좀더 줄여"): 모든 글자 굵기를 한 단계 낮췄다. 큰 숫자·선택 상태 600(큰 제목 단계는 같은 날 폐지), 제목·강조 500, label 500, 본문 400이며 정본은 [타이포그래피](../tokens/typography.md)다.

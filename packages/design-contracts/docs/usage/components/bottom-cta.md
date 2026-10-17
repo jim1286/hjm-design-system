@@ -79,7 +79,7 @@ const insets = useSafeAreaInsets();
 | 간격 | 좌우 `layout.pagePadding.regular` 20, 위 `spacing.sm` 12, 아래 `spacing.sm` 12와 하단 inset 중 큰 값(Web은 `env(safe-area-inset-bottom)`·`safeAreaBottom`도 비교). 설명↔행동, 행동 사이 `spacing.sm` 12. 위 경계는 `border.default` 1px(`stroke.default`), Native는 위로 드리우는 그림자(opacity 0.08, radius 8) | `bottomCtaRecipe`, `.hjm-bottom-cta` |
 | 순서·정렬 | 위→아래 [설명 한 줄(caption, muted)] → 행동 줄. 행동 줄은 [보조][주] 순서로 같은 폭을 나눈다. 주 행동은 하나다 | `react/src/bottom-cta.tsx`, `react-native/src/actions.tsx` |
 | 고정·스크롤 | 본문 스크롤 영역 아래에 붙는다. Web은 `flow`(문서 흐름 끝) 또는 `sticky`(아래 0에 붙음, z-index `layer.sticky` 100). Native는 제품 화면 레이아웃이 스크롤 영역 밖 아래에 둔다. 키보드가 열리는 폼은 `KeyboardAvoiding` 또는 `KeyboardDock`으로 감싼다 | `.hjm-bottom-cta[data-position="sticky"]`, `react-native/src/keyboard-controller.tsx` |
-| `ScreenLayout` `footer` 안 | footer가 위 경계·`screenPatternRecipe.padding` 16·바탕·safe area를 맡으므로 BottomCTA는 바(경계·여백·바탕·그림자·최소 높이)를 그리지 않고 설명과 행동 줄만 그린다. 직접 넘긴 `safeAreaBottom`만 아래 여백으로 남긴다. 2026-10-17 화면 리뷰: footer 안의 BottomCTA가 경계를 두 겹 긋고 버튼을 한 번 더 들였으며 Native는 footer 안에 그림자 있는 흰 상자를 하나 더 그렸다 | 내부 `ScreenFooterContext`, Web `.hjm-bottom-cta[data-placement="screen-footer"]`, Native `BottomCTA` |
+| `ScreenLayout` `footer` 안 | footer가 위 경계·`screenPatternRecipe.padding` 16·바탕·safe area를 맡으므로 BottomCTA는 바(경계·여백·바탕·그림자·최소 높이)를 그리지 않고 설명과 행동 줄만 그린다. 버튼 아래 여백은 `max(footer 아래 여백, safeAreaBottom)`이다 — 직접 넘긴 `safeAreaBottom`은 footer가 이미 준 여백을 넘는 만큼만 더한다(16 + 34가 아니라 34). Native는 화면 inset을 ScreenLayout `safeAreaBottom`으로 넘기는 것이 기본이다. 2026-10-17 화면 리뷰: footer 안의 BottomCTA가 경계를 두 겹 긋고 버튼을 한 번 더 들였으며 Native는 footer 안에 그림자 있는 흰 상자를 하나 더 그렸다 | 내부 `ScreenFooterContext`, Web `.hjm-bottom-cta[data-placement="screen-footer"]`, Native `BottomCTA` |
 | 좁은 폭·큰 글자 | Web은 행동 칸 기준 폭 132(`control.minTouchTarget` × 3)보다 좁으면 줄바꿈한다. 큰 글자에서는 세로로 쌓고 주 행동이 위에 온다 | `.hjm-bottom-cta__actions > div`, `.hjm-bottom-cta[data-large-text="true"]` |
 
 ```text
@@ -103,7 +103,7 @@ const insets = useSafeAreaInsets();
   Native Form은 내장 제출 버튼(`submitLabel` 필수)을 항상 그리므로 Form 대신 필드 + contracts `createFormSubmitSession`
   (`@hjmds/design-contracts/components/form`)으로 제출 세션을 잡고 그 상태를 `primaryAction.loading`에 연결한다.
 - 배치는 `layoutStyle`로만 한다. Native `style`은 제거된 속성이다.
-- 하단 inset을 넘긴다. Native는 자동으로 읽지 않으므로 `safeAreaBottom`이 없으면 홈 인디케이터에 붙는다.
+- 하단 inset을 넘긴다. Native는 자동으로 읽지 않으므로 `safeAreaBottom`이 없으면 홈 인디케이터에 붙는다. ScreenLayout `footer` 안이면 ScreenLayout `safeAreaBottom`에 넘기고, host SafeAreaView의 아래 edge와 같이 쓰지 않는다(inset 위에 footer 16이 더해진다).
 - 키보드가 열리는 폼 화면(Native)은 `KeyboardAvoiding`(`/keyboard`) 또는 `KeyboardDock`(`/keyboard-controller`,
   optional peer `react-native-keyboard-controller` 설치 필요)로 감싼다.
 
@@ -126,3 +126,7 @@ const insets = useSafeAreaInsets();
 - Native는 하단 inset을 스스로 읽지 않는다. `safeAreaBottom`을 빠뜨려도 오류가 없고 홈 인디케이터에 붙어 보인다.
 
 1.15.0 변경: 프로필의 `shadow.floating` 색·강도·반경을 상속하되, 위 콘텐츠와 겹치는 footer 역할이라 offsetY는 `-abs(offsetY)`로 위쪽에 표시한다. Native의 0-opacity 프로필은 Android elevation도 0이다. 프로필 없는 Web은 기존 무그림자, Native는 기존 위쪽 recipe 그림자를 유지한다. safe area·큰 글자·로딩/실패와 제품 행동 소유권은 바뀌지 않는다.
+
+## 근거
+
+- footer 안 하단 inset은 합이 아니라 max: 2026-10-17 사용자 보고 "전체적으로 버튼 아래 여백이 많아". footer 16 위에 `safeAreaBottom`을 더해 홈 인디케이터 기기에서 버튼 아래가 50이 됐다. 마지막 컨트롤 아래 여백을 footer 위 여백 16과 같게 두고, 홈 인디케이터가 있으면 max(16, inset)만 둔다([ScreenLayout 근거](screen-layout.md#근거)).

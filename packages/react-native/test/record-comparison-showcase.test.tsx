@@ -1,20 +1,21 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, expect, it, vi } from "vitest";
 import { HjmNativeProvider } from "@hjmds/react-native/provider";
-import { Button } from "@hjmds/react-native/actions";
+import { Button, IconButton } from "@hjmds/react-native/actions";
 import { SearchField, SegmentedControl } from "@hjmds/react-native/inputs";
 import { Sheet } from "@hjmds/react-native/overlays";
 import { RecordComparison } from "../../../showcase/native/src/reference-flow-previews.js";
 // The example's product search glyph (lucide → react-native-svg) is not loadable in the node host.
-vi.mock("lucide-react-native", () => ({ Search: () => null }));
+vi.mock("lucide-react-native", () => ({ Search: () => null, Bookmark: () => null }));
 import { records } from "../../../showcase/shared/reference-flows.js";
 let tree: ReactTestRenderer; let hostId=0;
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 afterEach(() => act(() => tree?.unmount()));
 const render = () => act(() => { tree=create(<HjmNativeProvider reducedMotion><RecordComparison/></HjmNativeProvider>, // The return-focus host is the Button itself (its Pressable host), not a wrapping View.
   {createNodeMock: element => ["View", "Pressable"].includes(String(element.type)) ? { hostId: ++hostId } : null}); });
-// Card actions show short verbs; the record title lives in the accessible name.
-const button = (name: string) => tree.root.findAllByType(Button).find(node => (node.props.accessibilityLabel ?? node.props.children) === name)!;
+// Card actions show short verbs; the record title lives in the accessible name. Save is a bookmark IconButton whose
+// name stays "<title> 저장" and whose state is `selected`.
+const button = (name: string) => tree.root.findAllByType(Button).find(node => (node.props.accessibilityLabel ?? node.props.children) === name) ?? tree.root.findAllByType(IconButton).find(node => node.props.label === name)!;
 const press = (name: string) => act(() => button(name).props.onPress());
 const query = (value: string) => act(() => tree.root.findByType(SearchField).props.onValueChange(value));
 const mode = (value: string) => act(() => tree.root.findByType(SegmentedControl).props.onValueChange(value));
@@ -22,7 +23,7 @@ const text = () => JSON.stringify(tree.toJSON());
 it("preserves query and saves in every mode, including the record without an image", () => {
  render(); press("책에서 만난 한 문장 저장"); query("  책에서   문장  ");
  for (const display of ["reading","image","list"]) {
-  mode(display); expect(tree.root.findByType(SearchField).props.value).toBe("  책에서   문장  "); expect(button("책에서 만난 한 문장 저장 취소").props.selected).toBe(true);
+  mode(display); expect(tree.root.findByType(SearchField).props.value).toBe("  책에서   문장  "); expect(button("책에서 만난 한 문장 저장").props.selected).toBe(true);
   expect(text().includes(records[1].body)).toBe(display !== "list");
  }
  query("없는 기록"); expect(text()).toContain("찾는 기록이 없어요"); press("검색 초기화"); expect(tree.root.findByType(SearchField).props.value).toBe(""); expect(text()).toContain("목록 중심 · 3개의 기록 · 1개 저장");
@@ -31,7 +32,7 @@ it("freezes the detail return host across its footer action and keeps search and
  render(); query("바다"); press("바다가 보이는 자리 저장"); press("바다가 보이는 자리 읽기");
  const sheet=tree.root.findByType(Sheet), origin=sheet.props.returnFocusRef.current; expect(origin).not.toBeNull(); expect(text()).toContain(records[2].body);
  press("읽기 마치기"); expect(tree.root.findByType(Sheet).props.open).toBe(false); expect(tree.root.findByType(Sheet).props.returnFocusRef.current).toBe(origin);
- expect(tree.root.findByType(SearchField).props.value).toBe("바다"); expect(button("바다가 보이는 자리 저장 취소").props.selected).toBe(true);
+ expect(tree.root.findByType(SearchField).props.value).toBe("바다"); expect(button("바다가 보이는 자리 저장").props.selected).toBe(true);
  press("바다가 보이는 자리 읽기"); act(() => tree.root.findByType(Sheet).props.onOpenChange(false)); expect(tree.root.findByType(Sheet).props.open).toBe(false);
 });
 it("applies every same-render saved toggle", () => {

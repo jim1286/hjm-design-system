@@ -57,7 +57,7 @@ const presetInputs = {
     },
     // minimal, editorial and terminal looked alike in light mode (near-white, only terminal's font differed) at the
     // 2026-10-17 user review. Each now carries its identity through palette, type, elevation and arrangement together.
-    // minimal: achromatic hairlines on white, no shadow anywhere (overlays rely on their border and scrim), quiet
+    // minimal: achromatic hairlines on white, no shadow anywhere (overlays rely on their border and scrim), the shared
     // medium-weight headings, airy body leading and framed cards for the generous card padding.
     minimal: {
         id: "minimal",
@@ -66,13 +66,13 @@ const presetInputs = {
             dark: { bg: "#101010", surface: "#151515", surfaceAlt: "#1c1c1c", surfaceAccent: "#2a2a2a", border: "#333333", borderControl: "#8f8f8f", primary: "#6e6e6e", contentBrand: "#e2e2e2", text: "#f2f2f2", textBody: "#dedede", textMuted: "#c6c6c6", textSub: "#a3a3a3", textWeak: "#8a8a8a" },
         },
         tokens: { radius: { sm: 4, md: 8, lg: 12, xl: 16 }, shadow: { raised: { opacity: 0 }, floating: { opacity: 0 } },
-            typography: { heading: { fontWeight: fontWeight.medium }, body: { lineHeight: 26 } },
-            heading: { level1: { fontWeight: fontWeight.medium }, level2: { fontWeight: fontWeight.medium } } },
+            typography: { body: { lineHeight: 26 } } },
         interactions: { contentTransition: "fade", selectionMotion: "none" },
         compositions: { collection: "cards", toolbar: "inline" }, screens: { overview: "dashboard" },
     },
-    // editorial: serif display and reading roles over a warm ink-on-paper palette with a deep wine accent, the largest
-    // display scale of the presets, flat print corners, and rows, which the shared layout divides with rule lines.
+    // editorial: serif display and reading roles over a warm ink-on-paper palette with a deep wine accent, airy body
+    // leading, flat print corners, and rows, which the shared layout divides with rule lines. Its enlarged 56/42/30
+    // headings were removed with the display tier (2026-10-17 user decision, "큰 글자 정책은 없애").
     editorial: {
         id: "editorial",
         palette: {
@@ -80,19 +80,20 @@ const presetInputs = {
             dark: { bg: "#14110e", surface: "#1c1814", surfaceAlt: "#26211b", surfaceAccent: "#3f2430", border: "#5e554b", borderControl: "#a3988b", primary: "#ad4566", contentBrand: "#f2b8c9", text: "#f6f0e7", textBody: "#e6ddd1", textMuted: "#cfc4b6", textSub: "#b0a596", textWeak: "#958a7c" },
         },
         tokens: { radius: { sm: 0, md: 2, lg: 2, xl: 4 }, fontFamily: { display: serifStack, reading: serifStack }, shadow: { raised: { opacity: 0 } },
-            typography: { heading: { fontSize: 30, lineHeight: 40, fontWeight: fontWeight.medium }, body: { lineHeight: 26 } },
-            heading: { level1: { fontSize: 56, lineHeight: 66, fontWeight: fontWeight.medium }, level2: { fontSize: 42, lineHeight: 52, fontWeight: fontWeight.medium } } },
+            typography: { body: { lineHeight: 26 } } },
         interactions: { contentTransition: "rise", selectionMotion: "none" },
         compositions: { collection: "rows", toolbar: "collapsible" }, screens: { overview: "editorial" },
     },
     brutalist: {
         id: "brutalist",
-        // level1/2 stay heavy (800) on purpose: the foundation display headings became bold (700) on 2026-10-17,
-        // but the user kept brutalist at 800 after comparing it in Storybook, because thick borders and hard
-        // shadows need the heaviest headings to hold their weight. Do not align this with the 700 default.
+        // Headings stay heavy (800) on purpose: the foundation headings became lighter on 2026-10-17, but the user
+        // kept brutalist at 800 after comparing it in Storybook, because thick borders and hard shadows need the
+        // heaviest headings to hold their weight. Do not align this with the 500 default. Only the weight differs:
+        // the enlarged 48/38/30 sizes were removed with the display tier the same day ("큰 글자 정책은 없애"), so
+        // sizes follow the shared scale. `typography.heading` carries Heading level1–3 through the profile alias.
         // docs/design-profile.md documents the same exception.
         palette: { light: { primary: "#171717", contentBrand: "#171717", surfaceAccent: "#e8ed91", border: "#171717" }, dark: { primary: "#727272", contentBrand: "#f0f3a3", surfaceAccent: "#393a1c", border: "#cccccc" } },
-        tokens: { radius: { sm: 0, md: 0, lg: 0, xl: 0 }, shadow: { raised: { radius: 0, offsetY: 4, opacity: 0.25 }, floating: { radius: 0, offsetY: 6, opacity: 0.3 } }, typography: { heading: { fontSize: 30, lineHeight: 38, fontWeight: fontWeight.heavy } }, heading: { level1: { fontSize: 48, lineHeight: 56, fontWeight: fontWeight.heavy }, level2: { fontSize: 38, lineHeight: 46, fontWeight: fontWeight.heavy } } },
+        tokens: { radius: { sm: 0, md: 0, lg: 0, xl: 0 }, shadow: { raised: { radius: 0, offsetY: 4, opacity: 0.25 }, floating: { radius: 0, offsetY: 6, opacity: 0.3 } }, typography: { heading: { fontWeight: fontWeight.heavy } } },
         interactions: { contentTransition: "slide", selectionMotion: "none" },
         compositions: { collection: "cards", toolbar: "inline" }, screens: { overview: "editorial" },
     },
@@ -172,10 +173,10 @@ function merge(base, input) {
     };
     // fromEntries loses fixed keys; iteration over the complete base preserves every role.
     const type = Object.fromEntries(Object.entries(base.tokens.typography).map(([key, value]) => [key, { ...value, ...input.tokens?.typography?.[key] }]));
-    // Display levels need their own roles: deriving them from body text would erase
-    // the hierarchy. Keep the original level3–5 typography aliases, with explicit
-    // heading overrides last, and preserve inherited heading values on empty input.
-    const aliases = { level3: "heading", level4: "titleLarge", level5: "title" };
+    // Every heading level follows a typography role, with explicit heading overrides last, and preserves
+    // inherited heading values on empty input. Deprecated level1/2 follow `heading` like level3 since the
+    // display tier was removed (2026-10-17 user decision, "큰 글자 정책은 없애").
+    const aliases = { level1: "heading", level2: "heading", level3: "heading", level4: "titleLarge", level5: "title" };
     for (const key of Object.keys(input.tokens?.heading ?? {})) {
         if (!Object.prototype.hasOwnProperty.call(heading, key))
             throw new TypeError("Unsupported design profile heading level");
@@ -230,8 +231,10 @@ function merge(base, input) {
     // Circles/pills retain their semantic geometry; product corners apply to other roles.
     if (profile.tokens.radius.full !== radius.full)
         throw new RangeError("Design profile must preserve full radius");
+    // No profile may enlarge text past the HJM ceiling, `typography.heading` (2026-10-17 user decision, "글자 너무 커",
+    // "큰 글자 정책은 없애"). Before, up to 96 was allowed and presets drew 30–56px headings.
     for (const value of [...Object.values(type), ...Object.values(headings)]) {
-        if (!Number.isFinite(value.fontSize) || value.fontSize < 11 || value.fontSize > 96 || !Number.isFinite(value.lineHeight) || value.lineHeight < value.fontSize || value.lineHeight > 144)
+        if (!Number.isFinite(value.fontSize) || value.fontSize < 11 || value.fontSize > typography.heading.fontSize || !Number.isFinite(value.lineHeight) || value.lineHeight < value.fontSize || value.lineHeight > 144)
             throw new RangeError("Invalid design profile typography");
         choose(value.fontWeight, ["400", "500", "600", "700", "800"], "fontWeight");
     }

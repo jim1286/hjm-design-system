@@ -1,10 +1,10 @@
 import { Heading } from "@hjmds/react-native/heading";
 // Platform views share data/validation and the existing action-session demo; no new public engine.
 import { useEffect, useRef, useState } from "react";
-import { Search } from "lucide-react-native";
+import { Bookmark, Search } from "lucide-react-native";
 import { AccessibilityInfo, BackHandler, findNodeHandle, View, type TextInput } from "react-native";
 import { spacing, radius } from "@hjmds/design-contracts/foundations";
-import { Button } from "@hjmds/react-native/actions";
+import { Button, IconButton } from "@hjmds/react-native/actions";
 import { Chip, SearchField, SegmentedControl, Switch, TextField } from "@hjmds/react-native/inputs";
 import { Grid, Stack, Surface, Text } from "@hjmds/react-native/primitives";
 import { ScreenLayout } from "@hjmds/react-native/screens";
@@ -18,7 +18,7 @@ import { PreviewTools, PreviewToolButton } from "./preview-tools";
 import { useDemoAction } from "./action-recovery-previews";
 import { categories, records, emptyFilters, filterRecords, initialDraft, sameDraft, draftError, editorCopy, scopeCopy, flowSteps, stepLabels, stepName, introFeatures, comparisonModeCopy, comparisonActionCopy, type ComparisonMode, type EditorKind, type Draft } from "../../shared/reference-flows";
 
-// Screens render ScreenLayout inside a 720-high host View like the other screen previews.
+// Screens render ScreenLayout inside a flex:1 route host like the other screen previews.
 // 2026-10-06: they used the composition Frame (ScrollView + Container) and a width/fontScale column
 // switch; ScreenLayout owns scroll and padding and Grid folds the columns.
 // 2026-10-17: file-local Action/Row/Title/Status/Modal/ScreenHost wrappers were removed so the example
@@ -123,7 +123,7 @@ export function ServiceIntroduction({ editorial = false }: { editorial?: boolean
   const intro = <Stack gap="lg"><Text tone="brand" variant="label">오늘의 한 장면</Text><Text>대단한 이야기일 필요 없어요. 지금 기억하고 싶은 순간부터 시작해요.</Text><Button ref={introCta} onPress={() => start(introCta.current)}>첫 장면 남기기</Button></Stack>;
   const preview = <Surface padding="lg"><Stack gap="lg"><Text variant="label">{note ? "방금 남긴 장면" : "직접 만든 기록 예시"}</Text><Art label="산책의 빛" /><Heading level="level5">{note || records[0].title}</Heading><Text>{note ? "이 미리보기에 저장했어요." : records[0].body}</Text></Stack></Surface>;
   const story = <Stack gap="lg"><Heading level="level4">매일 쓰지 않아도 괜찮아요</Heading><Text>다시 시작한 날부터 이어지는 기록. 빈칸을 채우는 대신 남기고 싶은 것을 골라요.</Text><Text>한 줄을 적고, 주제를 고르고, 나중에 다시 읽어요.</Text></Stack>;
-  return <View style={{ height: 720 }}><ScreenLayout title={editorial ? "오래 남는 건, 작은 장면이에요" : "지나간 하루를 한 줄로 붙잡아요"} scrollProps={{ keyboardDismissMode: "on-drag" }}><Stack gap="xl">
+  return <View style={{ flex: 1 }}><ScreenLayout title={editorial ? "오래 남는 건, 작은 장면이에요" : "지나간 하루를 한 줄로 붙잡아요"} scrollProps={{ keyboardDismissMode: "on-drag" }}><Stack gap="xl">
     {editorial ? intro : null}
     <Grid columns={{ compact: 2 }} gap={{ compact: "xl" }} minColumnWidth={twoColumnMin}>{editorial ? story : intro}{preview}</Grid>
     <Grid columns={{ compact: 3 }} gap={{ compact: "xl" }} minColumnWidth={twoColumnMin}>{introFeatures.map(feature => <Stack key={feature.id} gap="sm"><Text tone="brand" variant="label">{feature.order}</Text><Heading level="level5">{feature.title}</Heading><Text>{feature.body}</Text></Stack>)}</Grid>
@@ -137,6 +137,7 @@ export function ServiceIntroduction({ editorial = false }: { editorial?: boolean
 }
 
 export function RecordComparison() {
+  const { colors } = useHjmNativeTheme();
   const [mode, setMode] = useState<ComparisonMode>("list");
   const [query, setQuery] = useState("");
   const [saved, setSaved] = useState<string[]>([]);
@@ -144,8 +145,8 @@ export function RecordComparison() {
   // Each record's read button is the sheet's return-focus target for that record.
   const readButtons = useRef(new Map<string, View>()); const returnFocusRef = useRef<View>(null);
   const results = filterRecords(query, emptyFilters());
-  const cards = results.map(record => <Surface key={record.id} padding="lg"><Stack gap={mode === "list" ? "sm" : "lg"}>{mode === "image" && record.image && <Art label={record.category} />}<Text tone="muted" variant="caption">{record.category}</Text><Heading level={mode === "reading" ? "level4" : "level5"}>{record.title}</Heading>{mode !== "list" && <Text>{record.body}</Text>}<Stack axis="inline" wrap gap="sm"><Button tone="secondary" ref={node => { if (node) readButtons.current.set(record.id, node); else readButtons.current.delete(record.id); }} onPress={() => { returnFocusRef.current = readButtons.current.get(record.id) ?? null; setSelected(record); }} accessibilityLabel={comparisonActionCopy.readName(record.title)}>{comparisonActionCopy.read}</Button><Button tone="secondary" selected={saved.includes(record.id)} accessibilityLabel={comparisonActionCopy.saveName(record.title, saved.includes(record.id))} onPress={() => setSaved(current => current.includes(record.id) ? current.filter(id => id !== record.id) : [...current, record.id])}>{saved.includes(record.id) ? comparisonActionCopy.unsave : comparisonActionCopy.save}</Button></Stack></Stack></Surface>);
-  return <View style={{ height: 720 }}><ScreenLayout title="무엇을 먼저 보고 싶나요?" description="데이터와 행동은 유지하고 정보의 밀도와 순서를 비교해 보세요." scrollProps={{ keyboardDismissMode: "on-drag" }}><Stack gap="xl">
+  const cards = results.map(record => <Surface key={record.id} padding="lg"><Stack gap={mode === "list" ? "sm" : "lg"}>{mode === "image" && record.image && <Art label={record.category} />}<Text tone="muted" variant="caption">{record.category}</Text><Heading level={mode === "reading" ? "level4" : "level5"}>{record.title}</Heading>{mode !== "list" && <Text>{record.body}</Text>}<Stack axis="inline" wrap gap="sm" align="center"><Button tone="secondary" ref={node => { if (node) readButtons.current.set(record.id, node); else readButtons.current.delete(record.id); }} onPress={() => { returnFocusRef.current = readButtons.current.get(record.id) ?? null; setSelected(record); }} accessibilityLabel={comparisonActionCopy.readName(record.title)}>{comparisonActionCopy.read}</Button><IconButton tone="secondary" selected={saved.includes(record.id)} label={comparisonActionCopy.saveName(record.title)} onPress={() => setSaved(current => current.includes(record.id) ? current.filter(id => id !== record.id) : [...current, record.id])}><Bookmark size={20} color={saved.includes(record.id) ? colors.contentBrand : colors.text} fill={saved.includes(record.id) ? colors.contentBrand : "none"} /></IconButton></Stack></Stack></Surface>);
+  return <View style={{ flex: 1 }}><ScreenLayout title="무엇을 먼저 보고 싶나요?" description="데이터와 행동은 유지하고 정보의 밀도와 순서를 비교해 보세요." scrollProps={{ keyboardDismissMode: "on-drag" }}><Stack gap="xl">
     <SegmentedControl label="보기 방식" items={(Object.keys(comparisonModeCopy) as ComparisonMode[]).map(value => ({ value, label: comparisonModeCopy[value] }))} value={mode} onValueChange={setMode} />
     <SearchField label="같은 기록 검색" clearLabel="검색어 지우기" placeholder={comparisonActionCopy.searchPlaceholder} renderLeading={({ color, size }) => <Search color={color} size={size} />} value={query} onValueChange={setQuery} busyLabel="검색 중" /><StatusText>{`${comparisonModeCopy[mode]} · ${results.length}개의 기록 · ${saved.length}개 저장`}</StatusText>
     {!results.length ? <EmptyState density="compact" announcement="polite" title="찾는 기록이 없어요" description="다른 검색어로 찾아보세요." action={<Button tone="secondary" onPress={() => setQuery("")}>검색 초기화</Button>} />

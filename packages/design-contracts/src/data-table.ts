@@ -267,7 +267,7 @@ export const dataTableRecipe = {
     background: semanticColors.canvas,
     color: semanticColors.content.secondary,
     textVariant: "label",
-    fontWeight: fontWeight.bold,
+    fontWeight: fontWeight.medium,
     borderBottom: semanticColors.border.default,
   },
   row: {
@@ -510,9 +510,9 @@ export const dataTableFamilyRecipe = {
   heatAlpha: { 1: 0.14, 2: 0.26, 3: 0.42 },
   heat: { high: themeColor("danger"), low: accentColor("info") },
   tone: {
-    leader: { color: semanticColors.content.primary, fontWeight: fontWeight.bold },
-    positive: { color: themeColor("danger"), fontWeight: fontWeight.bold },
-    negative: { color: accentColor("info"), fontWeight: fontWeight.bold },
+    leader: { color: semanticColors.content.primary, fontWeight: fontWeight.medium },
+    positive: { color: themeColor("danger"), fontWeight: fontWeight.medium },
+    negative: { color: accentColor("info"), fontWeight: fontWeight.medium },
     muted: { color: semanticColors.content.tertiary, fontWeight: fontWeight.regular },
   },
   groupRow: { background: semanticColors.surface.sunken, color: semanticColors.content.secondary, textVariant: "label" as TextVariant },

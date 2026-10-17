@@ -160,7 +160,7 @@ export declare const stepsRecipe: {
     };
     readonly label: {
         readonly textVariant: "label";
-        readonly fontWeight: "600";
+        readonly fontWeight: "500";
         readonly color: {
             readonly pending: Readonly<{
                 source: "theme";

@@ -5,6 +5,7 @@ import { FieldMessage, NativeFieldFrame } from "./internal/field-frame.js";
 import type { FieldPrivateProps } from "./internal/field-private.js";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import {
+  control,
   glyph,
   spacing,
   typography,
@@ -1702,6 +1703,7 @@ export function Switch({
   // `*Border` slots stay web-only. The fills themselves are read from the recipe
   // rather than re-picked here; hardcoding them is how `trackOn` drifted from the
   // contract in the first place.
+  const twoLine = Boolean(description) && labelVisibility === "visible";
   const switchColors = switchRecipe.colors;
   const palette = nativeTheme.palette;
   const trackOff = resolveColorReference(
@@ -1740,9 +1742,12 @@ export function Switch({
           direction: environment.direction,
           flexDirection: stacked ? "column" : "row",
           gap: spacing.sm,
-          minHeight: description
+          // A described row pads its copy (switchRecipe.rowPaddingVertical) so stacked rows need no gap;
+          // a hidden label (ListRow trailing) keeps the single control height, as on Web.
+          minHeight: twoLine
             ? switchRecipe.rowTwoLineMinHeight
             : switchRecipe.rowMinHeight,
+          paddingVertical: twoLine ? switchRecipe.rowPaddingVertical : 0,
           opacity: pressed ? switchRecipe.states.pressedOpacity : 1,
         },
         layoutStyle,
@@ -1871,6 +1876,15 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
   // block and stay one line in a rail. Stacking them made a filter rail a ~440pt column (utilverse, 2026-10-06).
   const stacked = !pills && !textOnly && segmentedControlRecipe.adaptive.largeTextLayout === "stacked"
     && environment.textScale >= segmentedControlRecipe.adaptive.stackAtFontScale;
+  // Connected options sit inside the track, so the option height is the shared control height minus the track
+  // inset; the outer box then matches Button/Chip of the same size (segmentedControlRecipe.sizes, 2026-10-17).
+  // Vertical-only slop restores the 44 target; options are 4 apart, so horizontal slop would overlap a neighbour.
+  const outerHeight = visibleControlHeight(sizeContract.height, environment.minimumVisualTarget);
+  // Stacked rows (large text) sit 4 apart vertically, so each option keeps a full 44 box and no slop instead.
+  const itemMinHeight = stacked ? control.minTouchTarget
+    : outerHeight - 2 * (segmentedControlRecipe.container.padding + segmentedControlRecipe.container.borderWidth);
+  const outerSlop = Math.max(0, (control.minTouchTarget - outerHeight) / 2);
+  const itemHitSlop = Math.max(0, (control.minTouchTarget - itemMinHeight) / 2);
   const descriptors = resolvedItems.map((item) => ({
       id: item.value,
       label: item.label,
@@ -1960,7 +1974,7 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
             accessibilityRole="radio"
             accessibilityState={{ checked: isSelected, disabled: optionDisabled }}
             disabled={optionDisabled}
-            hitSlop={sizeContract.hitSlop}
+            hitSlop={pills || textOnly ? undefined : { top: itemHitSlop, bottom: itemHitSlop }}
             onPress={() => setSelected(item.value)}
             style={({ pressed }) => [
               {
@@ -1989,7 +2003,7 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
                 flexDirection: textOnly ? "column" : "row",
                 gap: segmentedControlRecipe.item.gap,
                 justifyContent: "center",
-                minHeight: pills ? segmentedControlRecipe.pills.minHeight : sizeContract.minHeight,
+                minHeight: pills ? segmentedControlRecipe.pills.minHeight : textOnly ? segmentedControlRecipe.text.minHeight : itemMinHeight,
                 opacity: optionDisabled
                   ? segmentedControlRecipe.item.disabledOpacity
                   : pressed
@@ -2030,18 +2044,20 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
         );
       })}
   </>);
+  // The scroller clips its content, so it reaches `outerSlop` past the 36 track on each block side (negative
+  // margin, no layout growth) and the options' vertical slop can complete the 44 target like Chip's hitSlop.
   return scrollRow ? (
-    <ScrollView
-      accessibilityLabel={label}
-      accessibilityRole="radiogroup"
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      onLayout={event => setTrackWidth(event.nativeEvent.layout.width)}
-      style={[containerStyle, { flexGrow: 0 }, layoutStyle]}
-      contentContainerStyle={[rowStyle, { minWidth: Math.max(0, trackWidth - 2 * borderWidth) }]}
-    >
-      {content}
-    </ScrollView>
+    <View accessibilityLabel={label} accessibilityRole="radiogroup" style={[{ flexGrow: 0 }, layoutStyle]}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        onLayout={event => setTrackWidth(event.nativeEvent.layout.width)}
+        style={{ flexGrow: 0, marginVertical: -outerSlop }}
+        contentContainerStyle={{ minWidth: trackWidth, paddingVertical: outerSlop }}
+      >
+        <View style={[containerStyle, rowStyle, { flexGrow: 1 }]}>{content}</View>
+      </ScrollView>
+    </View>
   ) : (
     <View accessibilityLabel={label} accessibilityRole="radiogroup" style={[containerStyle, rowStyle, layoutStyle]}>
       {content}

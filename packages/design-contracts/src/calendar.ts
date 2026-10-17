@@ -2,7 +2,7 @@ import type { ColorReference } from "./color-references.js";
 import type { BehaviorContract, WebKeyboardKey } from "./behaviors.js";
 import type { DesignSystemDirection } from "./design-system-provider.js";
 import type { SemanticIconName } from "./icon.js";
-import { control, fontWeight, glyph, layout, opacity, spacing, stroke, type FontWeightValue, type GlyphSize, type TextVariant } from "./foundations.js";
+import { control, glyph, layout, opacity, spacing, stroke, typography, type FontWeightValue, type GlyphSize, type TextVariant } from "./foundations.js";
 import { focusIndicatorContract } from "./component-contracts.js";
 import { semanticColors } from "./semantic-colors.js";
 
@@ -385,7 +385,7 @@ export const calendarRecipe = {
     gap: spacing.xs,
     monthLabel: {
       textVariant: "title",
-      fontWeight: fontWeight.bold,
+      fontWeight: typography.title.fontWeight,
       color: semanticColors.content.primary,
     },
     navButton: { diameter: control.buttonHeight.medium, color: semanticColors.content.secondary },

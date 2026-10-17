@@ -85,8 +85,8 @@ it("applies every heading level at the browser boundary while preserving semanti
   await page.viewport(390, 844);
   const host = document.createElement("div"); document.body.append(host); const root = createRoot(host);
   const custom = defineHjmDesignProfile({ extends: "paper", tokens: { heading: {
-    level1: { fontSize: 56, lineHeight: 68 }, level2: { fontSize: 36, lineHeight: 46 },
-    level3: { fontSize: 27, lineHeight: 36 }, level4: { fontSize: 22, lineHeight: 30 },
+    level1: { fontSize: 24, lineHeight: 34 }, level2: { fontSize: 23, lineHeight: 31 },
+    level3: { fontSize: 22, lineHeight: 30 }, level4: { fontSize: 21, lineHeight: 29 },
     level5: { fontSize: 19, lineHeight: 28, fontWeight: "500" },
   } } });
   const levels = Object.keys(heading) as (keyof typeof heading)[];

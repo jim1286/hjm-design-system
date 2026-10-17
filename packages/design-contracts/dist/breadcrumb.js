@@ -62,7 +62,7 @@ export const breadcrumbRecipe = {
     current: {
         color: semanticColors.content.primary,
         textVariant: "label",
-        fontWeight: fontWeight.semibold,
+        fontWeight: fontWeight.medium,
     },
     separator: {
         color: semanticColors.content.decorative,

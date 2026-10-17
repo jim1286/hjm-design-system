@@ -24,7 +24,7 @@ describe("Top descriptor", () => {
 
 describe("Top recipe", () => {
   it("reuses the shared type scale instead of new sizes", () => {
-    expect(topRecipe.sizes.large.title).toBe(heading.level2);
+    expect(topRecipe.sizes.large.title).toBe(heading.level3);
     expect(topRecipe.sizes.medium.title).toBe(typography.titleLarge);
   });
 

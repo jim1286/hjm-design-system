@@ -29,6 +29,16 @@ export declare const semanticColors: {
             key: "surfaceAccent";
             alpha?: number;
         }>;
+        /**
+         * Loading placeholder fill (Skeleton, ListRow `loading`). A translucent text tint instead of an opaque
+         * neutral: it darkens/lightens whatever it sits on, so it stays visible on canvas, Card surfaces and
+         * profile palettes whose `surfaceAlt` is as light as `bg` (2026-10-17 Skeleton review, skeleton.md 근거).
+         */
+        readonly placeholder: Readonly<{
+            source: "theme";
+            key: "text";
+            alpha?: number;
+        }>;
     };
     readonly content: {
         readonly primary: Readonly<{

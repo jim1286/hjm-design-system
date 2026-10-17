@@ -6,7 +6,7 @@ export type MessageMenuAction = Readonly<{
     label: string;
     icon?: ReactNode;
     onPress(): void;
-    disabled?: boolean; /** Shows › for rows that open a further list (e.g. "더 보기"). */
+    disabled?: boolean; /** Shows › for rows that open a further list (e.g. "Load more"). */
     submenu?: boolean;
 }>;
 type Props = ReactionPickerProps & Readonly<{

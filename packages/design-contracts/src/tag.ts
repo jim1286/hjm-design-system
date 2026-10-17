@@ -105,7 +105,7 @@ export const tagRecipe = {
     paddingHorizontal: spacing.xxs,
     gap: spacing.xxs,
     textVariant: "caption",
-    fontWeight: fontWeight.semibold,
+    fontWeight: fontWeight.medium,
   },
   radius: "sm",
   borderWidth: stroke.default,

@@ -23,13 +23,12 @@ export const introFeatures = [
 export const comparisonModeCopy = { list: "목록 중심", reading: "읽기 중심", image: "이미지 중심" } as const;
 export type ComparisonMode = keyof typeof comparisonModeCopy;
 // Card actions show short verbs so both buttons stay on one line in every card; the record title moves to the
-// accessible name, where it still tells the actions apart (2026-10-17 screen review).
+// accessible name, where it still tells the actions apart (2026-10-17 screen review). Save is a tool toggle drawn
+// as a bookmark IconButton: the glyph and selected state carry saved/unsaved, so its name stays fixed (icon-button.md).
 export const comparisonActionCopy = {
   read: "읽기",
-  save: "저장",
-  unsave: "저장 취소",
   readName: (title: string) => `${title} 읽기`,
-  saveName: (title: string, saved: boolean) => `${title} ${saved ? "저장 취소" : "저장"}`,
+  saveName: (title: string) => `${title} 저장`,
   searchPlaceholder: "제목이나 내용으로 찾기",
 } as const;
 export type EditorKind = "first" | "settings" | "review";

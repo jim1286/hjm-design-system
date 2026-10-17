@@ -10,7 +10,6 @@ import {
   bottomCtaRecipe,
   linkRecipe,
   iconButtonRecipe,
-  resolveIconButtonEdgeOverhang,
   resolveIconButtonPresentation,
   type IconButtonEdge,
   type IconButtonTone as ContractIconButtonTone,
@@ -33,6 +32,7 @@ import {
   type PressableProps,
 } from "react-native";
 import { RecipeButton } from "./internal/recipe-button.js";
+import { iconButtonEdgeMargins } from "./internal/icon-button-edge.js";
 import { ScreenFooterContext } from "./internal/screen-footer.js";
 
 import type { HjmCompositionStyleProp } from "./composition-style.js";
@@ -180,7 +180,7 @@ export const IconButton = forwardRef<NativeView, IconButtonProps>(function IconB
   );
   const glyphSize = glyph[sizeContract.glyph];
   // Edge alignment from the same contract helper Web reads, on the visible diameter actually drawn.
-  const edgeOverhang = edge === undefined ? 0 : resolveIconButtonEdgeOverhang(resolvedTone, size, visibleDiameter);
+  const edgeMargins = iconButtonEdgeMargins(edge, resolvedTone, size, theme.environment.minimumVisualTarget);
   const unavailable = disabled || (loading && disableWhileLoading);
   return (
     <Pressable
@@ -217,8 +217,7 @@ export const IconButton = forwardRef<NativeView, IconButtonProps>(function IconB
               ? iconButtonRecipe.states.pressedOpacity
               : 1,
           width: visibleDiameter,
-          ...(edgeOverhang > 0 && edge !== "end" ? { marginStart: -edgeOverhang } : {}),
-          ...(edgeOverhang > 0 && edge !== "start" ? { marginEnd: -edgeOverhang } : {}),
+          ...edgeMargins,
         },
         layoutStyle,
       ]}
@@ -414,7 +413,7 @@ export function BottomCTA({
     throw new RangeError("BottomCTA safeAreaBottom must be non-negative");
   }
   const { colors, environment, designProfile } = useHjmNativeTheme();
-  const inScreenFooter = useContext(ScreenFooterContext);
+  const screenFooter = useContext(ScreenFooterContext);
   // Footer elevation separates the content above it (bottomCtaRecipe rationale).
   // Reuse profile strength but retain the upward direction; a flat profile must
   // also disable Android elevation rather than only its iOS shadow properties.
@@ -433,9 +432,10 @@ export function BottomCTA({
       accessibilityRole="toolbar"
       testID={testID}
       style={[
-        // Inside ScreenLayout's footer the footer owns border, padding and surface; only copy, actions and an
-        // explicit safeAreaBottom remain (ScreenFooterContext, same rule as Web data-placement="screen-footer").
-        inScreenFooter ? { gap: bottomCtaRecipe.gap, paddingBottom: safeAreaBottom } : {
+        // Inside ScreenLayout's footer the footer owns border, padding, surface and the bottom inset; an explicit
+        // safeAreaBottom adds only what the footer padding does not already cover, so the gap is max(footer, inset)
+        // rather than their sum (2026-10-17 user report: too much space below buttons; Web data-placement="screen-footer").
+        screenFooter ? { gap: bottomCtaRecipe.gap, paddingBottom: Math.max(0, safeAreaBottom - screenFooter.bottomPadding) } : {
           backgroundColor: colors.bg,
           borderColor: colors.border,
           borderTopWidth: bottomCtaRecipe.borderWidth,

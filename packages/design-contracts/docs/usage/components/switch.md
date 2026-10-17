@@ -77,8 +77,8 @@ import { Switch } from "@hjmds/react-native/inputs";
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 트랙 `small` 44×26(thumb 22) · `medium` 52×32(thumb 28), 안쪽 여백 2. iOS Native는 `UISwitch` 고유 크기. 루트 최소 높이 44(`control.minTouchTarget`). 행 높이는 설명이 없으면 44, Native는 설명이 있으면 68(`rowTwoLineMinHeight`, ListRow 두 줄 행과 같다). Web은 68을 고정하지 않고 내용 높이를 따른다 | `switchRecipe.sizes`·`rowMinHeight`·`rowTwoLineMinHeight`, `styles.css` `.hjm-switch`, `react-native/src/inputs.tsx` |
-| 간격 | 이름과 트랙 사이 `spacing.sm` 12, 이름과 설명 사이 `spacing.xxs` 4. 여러 개를 쌓을 때는 [List](list.md)·[ListRow](list-row.md) 행 구분을 따르고 Switch 사이에 여백을 더하지 않는다 | `styles.css` `.hjm-switch`·`.hjm-switch__copy`, `react-native/src/inputs.tsx` |
+| 크기 | 트랙 `small` 44×26(thumb 22) · `medium` 52×32(thumb 28), 안쪽 여백 2. iOS Native는 `UISwitch` 고유 크기. 루트 최소 높이 44(`control.minTouchTarget`). 행 높이는 설명이 없으면 44. 설명이 보이는 행은 위아래 안쪽 여백 8(`rowPaddingVertical`, ListRow comfortable과 같다)에 최소 56(`rowTwoLineMinHeight` = 이름 20 + 4 + 설명 16 + 8×2). Web·Native 같다. `labelVisibility="hidden"`이면 설명이 있어도 44 | `switchRecipe.sizes`·`rowMinHeight`·`rowPaddingVertical`·`rowTwoLineMinHeight`, `styles.css` `.hjm-switch[data-two-line]`, `react-native/src/inputs.tsx` |
+| 간격 | 이름과 트랙 사이 `spacing.sm` 12, 이름과 설명 사이 `spacing.xxs` 4. 여러 개를 쌓을 때는 [List](list.md)(`separator`로 구분선 선택)에 넣고 Switch 사이에 Stack gap 같은 여백을 더하지 않는다. 행 간격은 행의 최소 높이·안쪽 여백이 맡는다(설명 있는 행 간격 56) | `styles.css` `.hjm-switch`·`.hjm-switch__copy`, `react-native/src/inputs.tsx` |
 | 순서·정렬 | 설정 목록에서는 `presentation="row"`로 행 전체 폭을 쓰고 이름·설명이 앞(왼쪽), 트랙이 끝(오른쪽) | `styles.css` `.hjm-switch[data-presentation="row"]` |
 | 고정·스크롤 | — | — |
 | 좁은 폭·큰 글자 | 글자 배율 ≥ 1.6(`largeTextThreshold`)이면 `row`는 이름·설명 아래로 트랙을 내린다 | `switchRecipe.stackedTextScale`, `styles.css` `.hjm-root[data-large-text="true"]` |
@@ -130,3 +130,4 @@ presentation="row"                    큰 글자(≥1.6)
 ## 근거
 
 - 기본 `row` 통일: 2026-10-17 웹·앱 비교 도구에서 같은 설정 스위치가 Web은 트랙 먼저(inline), Native는 이름 먼저(row)로 거울처럼 그려졌다.
+- 설명 있는 행 56·여백 8, 쌓을 때 gap 없음: 2026-10-17 사용자 보고(알림 설정 "간격이 커") — 글자 40에 ListRow 두 줄 68을 빌린 최소 높이와 미리보기의 Stack gap 16이 겹쳐 행 간격이 84였다.

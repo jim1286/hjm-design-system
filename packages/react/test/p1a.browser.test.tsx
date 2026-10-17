@@ -15,20 +15,20 @@ afterEach(async () => { await act(async () => root.unmount()); host.remove(); aw
 it("renders every heading level as a real element at the declared document level", async () => {
   await act(async () => root.render(
     <HjmProvider reducedMotion>
-      <Heading level="level1">랜딩 히어로</Heading>
-      <Heading level="level2" semanticLevel={4}>큰 카드 제목</Heading>
+      <Heading level="level3" semanticLevel={1}>랜딩 대표 제목</Heading>
+      <Heading level="level4" semanticLevel={4}>구획 크기 카드 제목</Heading>
       <Heading level="level5">작은 제목</Heading>
     </HjmProvider>,
   ));
   const headings = [...document.querySelectorAll<HTMLElement>(".hjm-heading")];
   expect(headings.map((node) => node.tagName)).toEqual(["H1", "H4", "H5"]);
   const size = (node: HTMLElement) => Number.parseFloat(getComputedStyle(node).fontSize);
-  // The exposed scale goes above the Text scale's 24px ceiling.
-  expect(size(headings[0]!)).toBe(40);
-  expect(size(headings[1]!)).toBe(32);
+  // The largest step is the 24px ceiling since the display tier was removed (2026-10-17).
+  expect(size(headings[0]!)).toBe(24);
+  expect(size(headings[1]!)).toBe(20);
   expect(size(headings[2]!)).toBe(18);
   // Visual size and document level disagree on purpose in the middle one.
-  expect(headings[1]!.dataset.level).toBe("level2");
+  expect(headings[1]!.dataset.level).toBe("level4");
 });
 
 it("draws a circular progress from the same value and keeps one accessibility contract", async () => {

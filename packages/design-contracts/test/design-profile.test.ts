@@ -54,25 +54,36 @@ it("rejects configurations that weaken readability or specify unimplemented vari
   expect(() => defineHjmDesignProfile(JSON.parse('{"extends":"missing"}'))).toThrow(/preset/);
 });
 
-it("inherits display headings independently and lets explicit visual levels override typography aliases", () => {
+it("inherits headings independently and lets explicit visual levels override typography aliases", () => {
   const custom = defineHjmDesignProfile({ extends: "editorial", tokens: {
-    typography: { heading: { fontSize: 26, lineHeight: 36 }, title: { fontWeight: "500" } },
-    heading: { level1: { fontSize: 52, lineHeight: 64 }, level3: { fontSize: 29 } },
+    typography: { heading: { fontSize: 22, lineHeight: 30 }, title: { fontWeight: "600" } },
+    heading: { level1: { lineHeight: 34 }, level3: { fontSize: 23 } },
   } });
   expect(hjmDesignPresets.neutral.tokens.heading).toEqual(heading);
-  expect(custom.tokens.heading.level1).toEqual({ fontSize: 52, lineHeight: 64, fontWeight: "500" });
-  expect(custom.tokens.heading.level2).toEqual(hjmDesignPresets.editorial.tokens.heading.level2);
-  expect(custom.tokens.heading.level3).toEqual({ fontSize: 29, lineHeight: 36, fontWeight: "500" });
-  expect(custom.tokens.heading.level5.fontWeight).toBe("500");
-  expect(custom.tokens.typography.heading.fontSize).toBe(26);
+  // Deprecated level1/2 follow the typography heading alias like level3; explicit heading values win.
+  expect(custom.tokens.heading.level1).toEqual({ fontSize: 22, lineHeight: 34, fontWeight: "500" });
+  expect(custom.tokens.heading.level2).toEqual({ fontSize: 22, lineHeight: 30, fontWeight: "500" });
+  expect(custom.tokens.heading.level3).toEqual({ fontSize: 23, lineHeight: 30, fontWeight: "500" });
+  expect(custom.tokens.heading.level5.fontWeight).toBe("600");
   expect(defineHjmDesignProfile({ extends: "editorial" }).tokens.heading).toEqual(hjmDesignPresets.editorial.tokens.heading);
   expect(Object.isFrozen(custom.tokens.heading.level1)).toBe(true);
-  expect(hjmDesignPresets.editorial.tokens.heading.level1.fontSize).toBe(56);
 });
 
-it("rejects invalid display-heading metrics and unknown persisted heading levels", () => {
+it("caps every preset and custom type step at typography.heading (2026-10-17 display tier removed)", () => {
+  for (const preset of Object.values(hjmDesignPresets)) {
+    for (const step of [...Object.values(preset.tokens.typography), ...Object.values(preset.tokens.heading)]) expect(step.fontSize).toBeLessThanOrEqual(24);
+  }
+  expect(hjmDesignPresets.editorial.tokens.heading.level1.fontSize).toBe(24);
+  // Brutalist keeps only its heavy heading weight; sizes follow the shared scale.
+  expect(hjmDesignPresets.brutalist.tokens.heading.level1).toEqual({ fontSize: 24, lineHeight: 32, fontWeight: "800" });
+  expect(hjmDesignPresets.brutalist.tokens.heading.level4.fontWeight).toBe("500");
+  expect(() => defineHjmDesignProfile({ tokens: { heading: { level1: { fontSize: 25, lineHeight: 32 } } } })).toThrow(/typography/);
+  expect(() => defineHjmDesignProfile({ tokens: { typography: { heading: { fontSize: 30, lineHeight: 40 } } } })).toThrow(/typography/);
+});
+
+it("rejects invalid heading metrics and unknown persisted heading levels", () => {
   expect(() => defineHjmDesignProfile({ tokens: { heading: { level1: { fontSize: 8 } } } })).toThrow(/typography/);
-  expect(() => defineHjmDesignProfile({ tokens: { heading: { level2: { fontSize: 54, lineHeight: 40 } } } })).toThrow(/typography/);
+  expect(() => defineHjmDesignProfile({ tokens: { heading: { level2: { fontSize: 20, lineHeight: 16 } } } })).toThrow(/typography/);
   expect(() => defineHjmDesignProfile(JSON.parse('{"tokens":{"heading":{"level1":{"fontWeight":"900"}}}}'))).toThrow(/fontWeight/);
   expect(() => defineHjmDesignProfile(JSON.parse('{"tokens":{"heading":{"level6":{"fontSize":20}}}}'))).toThrow(/heading level/);
 });

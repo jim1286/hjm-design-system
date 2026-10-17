@@ -7,6 +7,7 @@ import {
 import { control, glyph, radius, shadow, spacing } from "@hjmds/design-contracts/foundations";
 import { buttonRecipe } from "@hjmds/design-contracts/recipes/base";
 import { iconButtonRecipe } from "@hjmds/design-contracts/recipes";
+import { semanticColors } from "@hjmds/design-contracts";
 import {
   accordionRecipe,
   badgeRecipe,
@@ -1143,6 +1144,46 @@ describe("Skeleton pulse", () => {
     const renderer = render(<Skeleton accessibilityLabel="불러오는 중" />);
     expect(surfaceStyle(renderer).opacity)
       .toBe(skeletonRecipe.animation.toOpacity);
+  });
+
+  it("fills with the placeholder token instead of a canvas outline in light and dark", () => {
+    // 2026-10-17: canvas 채움 + 1px 테두리는 흰 배경에서 보이지 않았다. 채움은 canvas와 달라야 하고 테두리는 없다.
+    const darkMotion = resolveDesignSystemProviderValue(
+      { direction: "ltr", reducedMotion: false, textScale: 1, theme: "dark" },
+      { systemTheme: "dark" },
+    );
+    for (const value of [motionValue, darkMotion]) {
+      const style = surfaceStyle(render(<Skeleton accessibilityLabel="불러오는 중" shape="text" />, value));
+      expect(style.backgroundColor).toBe(resolveColorReference(semanticColors.surface.placeholder, value.palette));
+      expect(style.backgroundColor).not.toBe(resolveColorReference(semanticColors.canvas, value.palette));
+      expect(style.borderWidth).toBeUndefined();
+    }
+  });
+
+  it("sizes media by aspect ratio and button by the medium control height", () => {
+    const media = surfaceStyle(render(<Skeleton accessibilityLabel="불러오는 중" shape="media" />, motionValue));
+    expect(media).toMatchObject({ aspectRatio: 16 / 9, width: "100%", borderRadius: radius.md });
+    expect(media.height).toBeUndefined();
+    const button = surfaceStyle(render(<Skeleton accessibilityLabel="불러오는 중" shape="button" />, motionValue));
+    expect(button).toMatchObject({ height: control.buttonHeight.medium, borderRadius: radius.md });
+  });
+
+  it("draws text lines with a shorter last line under one labelled, pulsing group", () => {
+    const renderer = render(<Skeleton accessibilityLabel="불러오는 중" shape="text" lines={3} />, motionValue);
+    const group = surfaceStyle(renderer);
+    expect(group.gap).toBe(skeletonRecipe.lines.gap);
+    expect(group.opacity).toMatchObject({ configuration: { outputRange: [skeletonRecipe.animation.fromOpacity, skeletonRecipe.animation.toOpacity] } });
+    const host = renderer.root.findAll((node) => node.props.accessibilityLabel === "불러오는 중" && node.props.style !== undefined, { deep: true });
+    const bars = host[host.length - 1]!.findAllByType(View).filter((node) => flattenStyle(node.props.style).height === skeletonRecipe.shapes.text.defaultHeight);
+    expect(bars.map((bar) => flattenStyle(bar.props.style).width)).toEqual(["100%", "100%", `${skeletonRecipe.lines.lastLineWidthPercent}%`]);
+    // Reduced motion pins the group static.
+    expect(surfaceStyle(render(<Skeleton accessibilityLabel="불러오는 중" shape="text" lines={3} />)).opacity).toBe(skeletonRecipe.animation.toOpacity);
+  });
+
+  it("hides an unlabelled skeleton from assistive tech", () => {
+    const renderer = render(<Skeleton shape="circle" />, motionValue);
+    const host = renderer.root.findAll((node) => node.props.importantForAccessibility !== undefined && node.props.style !== undefined);
+    expect(host[host.length - 1]!.props).toMatchObject({ accessible: false, importantForAccessibility: "no-hide-descendants" });
   });
 
   it("keeps explicit dimensions winning over the shape default", () => {

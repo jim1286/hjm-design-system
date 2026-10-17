@@ -26,7 +26,7 @@ export function Top({ descriptor, trailing, layoutStyle }: TopProps) {
   const metrics = topRecipe.sizes[size];
   // Match the Web visual role without coupling it to the document heading level.
   const title = theme.designProfile
-    ? size === "large" ? theme.designProfile.tokens.heading.level2 : theme.tokens.typography.titleLarge
+    ? size === "large" ? theme.designProfile.tokens.heading.level3 : theme.tokens.typography.titleLarge
     : metrics.title;
   // Large text stacks the trailing action instead of squeezing the title, the
   // same rule Section already applies to its own header row.

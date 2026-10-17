@@ -151,7 +151,7 @@ export type ChatMessageProps = ChatMessageDescriptor & Readonly<{
     replyLink?: Readonly<{
         label: string;
         onPress(): void;
-    }>; /** HJM-drawn quote ("X에게 답장" + one-line excerpt) heading the bubble; preferred over a custom `reply` node. */
+    }>; /** HJM-drawn quote ("Replying to X" + one-line excerpt) heading the bubble; preferred over a custom `reply` node. */
     replyQuote?: Readonly<{
         title: string;
         excerpt: string;

@@ -113,7 +113,7 @@ export declare const sidePanelRecipe: {
             alpha?: number;
         }>;
         readonly textVariant: "title";
-        readonly fontWeight: "700";
+        readonly fontWeight: "500";
     };
     readonly body: {
         readonly color: Readonly<{

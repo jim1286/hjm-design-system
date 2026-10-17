@@ -653,6 +653,9 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
               data-dragging={dragY > 0 || undefined}
               style={dragY > 0 ? { transform: `translateY(${dragY}px)` } : undefined}
             >
+              {/* 2026-10-17 user decision: sheets show no visible title line. The title stays the dialog's
+                  accessible name (aria-labelledby) and a screen-reader heading. */}
+              <h2 id={titleId} className="hjm-visually-hidden">{title}</h2>
               {/*
                 The handle is a real control, not a drag-only affordance: a
                 keyboard or switch user must be able to change the height too.
@@ -710,11 +713,8 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
                   </button>
                 </div>
               ) : null}
-              <header className="hjm-sheet__header">
-                <div>
-                  <h2 id={titleId} className="hjm-sheet__title">{title}</h2>
-                  {description ? <p id={descriptionId} className="hjm-sheet__description">{description}</p> : null}
-                </div>
+              {description || (policy.dismissible && closeVisible) ? <header className="hjm-sheet__header">
+                {description ? <div><p id={descriptionId} className="hjm-sheet__description">{description}</p></div> : null}
                 {policy.dismissible && closeVisible ? (
                   <button
                     type="button"
@@ -726,7 +726,7 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
                     ×
                   </button>
                 ) : null}
-              </header>
+              </header> : null}
               </div>
               {children ? <div className="hjm-sheet__body">{children}</div> : null}
               {footer ? <footer className="hjm-sheet__footer">{footer}</footer> : null}

@@ -313,6 +313,11 @@ export type SkeletonProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> &
   Readonly<{
     shape?: SkeletonShape;
     animated?: boolean;
+    /**
+     * `text` only: draw this many lines with the last one shorter (`skeletonRecipe.lines`), so a paragraph
+     * placeholder is not rebuilt from loose bars in every product. `width` sizes the whole group.
+     */
+    lines?: number;
     width?: string | number;
     height?: string | number;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
@@ -324,6 +329,7 @@ export const Skeleton = forwardRef<HTMLSpanElement, SkeletonProps>(
     {
       shape = skeletonRecipe.defaults.shape,
       animated = skeletonRecipe.defaults.animated,
+      lines = skeletonRecipe.defaults.lines,
       width,
       height,
       className,
@@ -333,6 +339,24 @@ export const Skeleton = forwardRef<HTMLSpanElement, SkeletonProps>(
     },
     ref,
   ) {
+    const lineCount = shape === "text" ? Math.max(1, Math.floor(lines)) : 1;
+    if (lineCount > 1) {
+      // One pulse on the group keeps the lines in phase; the bars themselves do not animate.
+      return (
+        <span
+          {...props}
+          ref={ref}
+          className={classNames("hjm-skeleton-lines", className)}
+          data-animated={animated}
+          aria-hidden="true"
+          style={{ width, ...style, ...layoutStyle }}
+        >
+          {Array.from({ length: lineCount }, (_, index) => (
+            <span key={index} className="hjm-skeleton" data-shape="text" data-last={index === lineCount - 1 || undefined} style={{ height }} />
+          ))}
+        </span>
+      );
+    }
     return (
       <span
         {...props}

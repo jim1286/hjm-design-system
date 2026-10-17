@@ -126,7 +126,9 @@ export function Form({ label, values, onSubmit, children, submitLabel, actions, 
 /** Shared collection sheets keep dismissal in the header so it does not compete with choices. */
 function CollectionSheetHeader({ title, dismissLabel, onDismiss }) {
     const { colors, environment, tokens } = useHjmNativeTheme();
-    return _jsxs(View, { style: { flexDirection: "row", direction: environment.direction, alignItems: "center", gap: spacing.sm }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", emphasis: "strong", style: { flex: 1 }, children: title }), _jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: dismissLabel, onPress: onDismiss, style: ({ pressed }) => [minimumTargetStyle, { alignItems: "center", justifyContent: "center", borderRadius: tokens.radius.full, backgroundColor: pressed ? colors.bg : "transparent" }], children: _jsx(Text, { accessible: false, tone: "muted", variant: "title", children: "\u00D7" }) })] });
+    // 2026-10-17 user decision: sheets show no visible title. The title stays a screen-reader header in an
+    // off-layout 1pt view (as the canonical Sheet), and the × keeps its inline-end place.
+    return _jsxs(View, { style: { flexDirection: "row", direction: environment.direction, alignItems: "center", justifyContent: "flex-end", gap: spacing.sm }, children: [_jsx(View, { accessible: true, accessibilityRole: "header", accessibilityLabel: title, style: { position: "absolute", top: 0, start: 0, width: 1, height: 1, overflow: "hidden" } }), _jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: dismissLabel, onPress: onDismiss, style: ({ pressed }) => [minimumTargetStyle, { alignItems: "center", justifyContent: "center", borderRadius: tokens.radius.full, backgroundColor: pressed ? colors.bg : "transparent" }], children: _jsx(Text, { accessible: false, tone: "muted", variant: "title", children: "\u00D7" }) })] });
 }
 /** Native adaptive Select with shared sections, async states, and teardown-safe commits. */
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.

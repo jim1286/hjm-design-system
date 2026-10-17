@@ -47,16 +47,16 @@ export declare const topRecipe: {
             readonly title: {
                 readonly fontSize: 20;
                 readonly lineHeight: 28;
-                readonly fontWeight: "600";
+                readonly fontWeight: "500";
             };
             readonly paddingTop: 16;
             readonly paddingBottom: 12;
         };
         readonly large: {
             readonly title: {
-                readonly fontSize: 32;
-                readonly lineHeight: 40;
-                readonly fontWeight: "700";
+                readonly fontSize: 24;
+                readonly lineHeight: 32;
+                readonly fontWeight: "500";
             };
             readonly paddingTop: 24;
             readonly paddingBottom: 16;

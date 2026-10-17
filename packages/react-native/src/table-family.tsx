@@ -5,7 +5,8 @@ import {
   dataTableFamilyRecipe, dataTableRecipe, formatLineScoreCell, resolveComparisonRow, resolveLineScore, resolveMatrix,
   type ComparisonRow, type LineScoreTeam, type MatrixCell,
 } from "@hjmds/design-contracts/components/data-table";
-import { spacing } from "@hjmds/design-contracts/foundations";
+import { fontWeight, spacing } from "@hjmds/design-contracts/foundations";
+import { textRecipe } from "@hjmds/design-contracts/recipes";
 import { useHjmNativeTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
@@ -57,7 +58,7 @@ export function LineScore({ teams, totals, currentPeriod = null, minPeriods, ren
     <View>
       <View style={{ height: 26 }} />
       {teams.map(team => <View key={team.id} accessible accessibilityLabel={rowLabel(team)} style={{ height: ROW, width: NAME, flexDirection: "row", alignItems: "center", gap: 6, paddingLeft: spacing.sm }}>
-        {renderTeam ? renderTeam(team) : <NativeText numberOfLines={1} style={{ flex: 1, color: score.leaderId === team.id ? colors.text : colors.textBody, fontSize: 14, fontWeight: score.leaderId === team.id ? "800" : "600" }}>{team.name}</NativeText>}
+        {renderTeam ? renderTeam(team) : <NativeText numberOfLines={1} style={{ flex: 1, color: score.leaderId === team.id ? colors.text : colors.textBody, fontSize: 14, fontWeight: score.leaderId === team.id ? fontWeight.semibold : textRecipe.emphasis.medium }}>{team.name}</NativeText>}
       </View>)}
     </View>
     <ScrollView ref={strip} horizontal style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1, justifyContent: "flex-end" }}
@@ -65,15 +66,15 @@ export function LineScore({ teams, totals, currentPeriod = null, minPeriods, ren
       {periods.map((column, index) => {
         const isLive = score.currentPeriod === index + 1;
         return <View key={column.id} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden style={{ width: CELL, alignItems: "center", borderRadius: 8, backgroundColor: isLive ? color(dataTableFamilyRecipe.highlight.background) : "transparent" }}>
-          <NativeText style={{ height: 26, lineHeight: 26, color: isLive ? live : header, fontSize: 11, fontWeight: "700" }}>{column.header}</NativeText>
-          {teams.map(team => <NativeText key={team.id} style={{ height: ROW, lineHeight: ROW, color: team.periods[index] ? colors.text : colors.textMuted, fontSize: 14, fontWeight: team.periods[index] ? "700" : "500", ...num }}>{formatLineScoreCell(team.periods[index])}</NativeText>)}
+          <NativeText style={{ height: 26, lineHeight: 26, color: isLive ? live : header, fontSize: 11, fontWeight: textRecipe.emphasis.medium }}>{column.header}</NativeText>
+          {teams.map(team => <NativeText key={team.id} style={{ height: ROW, lineHeight: ROW, color: team.periods[index] ? colors.text : colors.textMuted, fontSize: 14, fontWeight: team.periods[index] ? textRecipe.emphasis.medium : textRecipe.emphasis.regular, ...num }}>{formatLineScoreCell(team.periods[index])}</NativeText>)}
         </View>;
       })}
     </ScrollView>
     <View importantForAccessibility="no-hide-descendants" accessibilityElementsHidden style={{ flexDirection: "row", borderLeftWidth: 1, borderColor: color(dataTableRecipe.row.borderBottom), paddingHorizontal: 4 }}>
       {totalColumns.map((column, index) => <View key={column.id} style={{ width: TOTAL, alignItems: "center" }}>
-        <NativeText style={{ height: 26, lineHeight: 26, color: header, fontSize: 11, fontWeight: "700" }}>{column.header}</NativeText>
-        {teams.map(team => <NativeText key={team.id} style={{ height: ROW, lineHeight: ROW, color: index === 0 ? colors.text : colors.textBody, fontSize: index === 0 ? 16 : 14, fontWeight: index === 0 ? "800" : "600", ...num }}>{team.totals[column.header] ?? "—"}</NativeText>)}
+        <NativeText style={{ height: 26, lineHeight: 26, color: header, fontSize: 11, fontWeight: textRecipe.emphasis.medium }}>{column.header}</NativeText>
+        {teams.map(team => <NativeText key={team.id} style={{ height: ROW, lineHeight: ROW, color: index === 0 ? colors.text : colors.textBody, fontSize: index === 0 ? 16 : 14, fontWeight: index === 0 ? fontWeight.semibold : textRecipe.emphasis.medium, ...num }}>{team.totals[column.header] ?? "—"}</NativeText>)}
       </View>)}
     </View>
   </View>;
@@ -88,10 +89,15 @@ export type MatrixTableProps<Key extends string = string> = Readonly<{
   highlightId?: Key | null;
   heatColors?: Readonly<{ high: string; low: string }>;
   accessibilityLabel: string;
+  /**
+   * Localized name of one cell for screen readers. Native has no table semantics to announce the row and
+   * column headers (Web reads them from <th>), so the default joins them language-neutrally: "row, column: value".
+   */
+  cellAccessibilityLabel?: (row: Key, column: Key, value: string) => string;
   layoutStyle?: HjmCompositionStyleProp;
 }>;
 
-export function MatrixTable<Key extends string = string>({ ids, labelOf, getCell, highlightId = null, heatColors, accessibilityLabel, layoutStyle }: MatrixTableProps<Key>) {
+export function MatrixTable<Key extends string = string>({ ids, labelOf, getCell, highlightId = null, heatColors, accessibilityLabel, cellAccessibilityLabel, layoutStyle }: MatrixTableProps<Key>) {
   const { colors, color } = usePalette();
   const matrix = resolveMatrix(ids, getCell);
   const heat = { high: heatColors?.high ?? color(dataTableFamilyRecipe.heat.high), low: heatColors?.low ?? color(dataTableFamilyRecipe.heat.low) };
@@ -101,21 +107,20 @@ export function MatrixTable<Key extends string = string>({ ids, labelOf, getCell
     <View style={{ borderRightWidth: 1, borderColor: border }}>
       <View style={{ height: 32 }} />
       {ids.map(id => <View key={id} style={{ width: NAME, height: ROW, justifyContent: "center", paddingHorizontal: spacing.sm, borderTopWidth: 1, borderColor: border, backgroundColor: id === highlightId ? color(dataTableFamilyRecipe.highlight.background) : "transparent" }}>
-        <NativeText numberOfLines={1} style={{ color: colors.text, fontSize: 13, fontWeight: "700" }}>{labelOf(id)}</NativeText>
+        <NativeText numberOfLines={1} style={{ color: colors.text, fontSize: 13, fontWeight: textRecipe.emphasis.medium }}>{labelOf(id)}</NativeText>
       </View>)}
     </View>
     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
       <View>
-        <View style={{ flexDirection: "row", height: 32 }}>{ids.map(id => <NativeText key={id} accessibilityRole="header" numberOfLines={1} style={{ width: CELL, lineHeight: 32, textAlign: "center", color: color(dataTableRecipe.header.color), fontSize: 12, fontWeight: "700" }}>{labelOf(id)}</NativeText>)}</View>
+        <View style={{ flexDirection: "row", height: 32 }}>{ids.map(id => <NativeText key={id} accessibilityRole="header" numberOfLines={1} style={{ width: CELL, lineHeight: 32, textAlign: "center", color: color(dataTableRecipe.header.color), fontSize: 12, fontWeight: textRecipe.emphasis.medium }}>{labelOf(id)}</NativeText>)}</View>
         {matrix.map((cells, rowIndex) => <View key={ids[rowIndex]} style={{ flexDirection: "row", height: ROW, borderTopWidth: 1, borderColor: border, backgroundColor: ids[rowIndex] === highlightId ? color(dataTableFamilyRecipe.highlight.background) : "transparent" }}>
           {cells.map((cell, columnIndex) => {
-            const name = `${labelOf(ids[rowIndex]!)} 대 ${labelOf(ids[columnIndex]!)}`;
             if (cell === "self") return <View key={columnIndex} accessibilityElementsHidden importantForAccessibility="no" style={{ width: CELL, backgroundColor: color(dataTableFamilyRecipe.groupRow.background) }} />;
             const tone = cell?.tone ? dataTableFamilyRecipe.tone[cell.tone] : null;
-            return <View key={columnIndex} accessible accessibilityLabel={`${name} ${cell?.label ?? "—"}`} style={{ width: CELL, alignItems: "center", justifyContent: "center" }}>
+            return <View key={columnIndex} accessible accessibilityLabel={cellAccessibilityLabel ? cellAccessibilityLabel(ids[rowIndex]!, ids[columnIndex]!, cell?.label ?? "—") : `${labelOf(ids[rowIndex]!)}, ${labelOf(ids[columnIndex]!)}: ${cell?.label ?? "—"}`} style={{ width: CELL, alignItems: "center", justifyContent: "center" }}>
               {/* Heat fills the whole cell, as Web's cell background; an inset pill made the same table look different (2026-10-17 N5). */}
               {cell?.heat && <View pointerEvents="none" style={{ position: "absolute", left: 0, right: 0, top: 0, bottom: 0, backgroundColor: heat[cell.heat.side], opacity: dataTableFamilyRecipe.heatAlpha[cell.heat.strength] }} />}
-              <NativeText numberOfLines={1} style={{ color: tone ? color(tone.color) : colors.textBody, fontSize: 12, fontWeight: tone ? tone.fontWeight : "600", ...num }}>{cell?.label ?? "—"}</NativeText>
+              <NativeText numberOfLines={1} style={{ color: tone ? color(tone.color) : colors.textBody, fontSize: 12, fontWeight: tone ? tone.fontWeight : textRecipe.emphasis.medium, ...num }}>{cell?.label ?? "—"}</NativeText>
             </View>;
           })}
         </View>)}
@@ -139,7 +144,7 @@ export function ComparisonTable({ rows, sides, showSideNames = true, accessibili
   const [width, setWidth] = useState(0);
   return <View accessibilityLabel={accessibilityLabel} onLayout={event => setWidth(event.nativeEvent.layout.width)} style={[{ borderRadius: 12, backgroundColor: colors.surface, paddingVertical: spacing.xs }, layoutStyle]}>
     {showSideNames && <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: spacing.md, paddingVertical: spacing.xs }}>
-      {sides.map((side, index) => <NativeText key={index} numberOfLines={1} style={{ color: side.color, fontSize: 13, fontWeight: "800" }}>{side.name}</NativeText>)}
+      {sides.map((side, index) => <NativeText key={index} numberOfLines={1} style={{ color: side.color, fontSize: 13, fontWeight: textRecipe.emphasis.medium }}>{side.name}</NativeText>)}
     </View>}
     {rows.map((row, rowIndex) => {
       const { winner, shares } = resolveComparisonRow(row);
@@ -147,9 +152,9 @@ export function ComparisonTable({ rows, sides, showSideNames = true, accessibili
       const half = Math.max(0, width / 2 - spacing.md - spacing.sm / 2);
       return <View key={row.id} accessible accessibilityLabel={`${row.label} ${sides[0].name} ${shown[0]}, ${sides[1].name} ${shown[1]}`} style={{ paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderTopWidth: rowIndex === 0 && !showSideNames ? 0 : 1, borderColor: color(dataTableRecipe.row.borderBottom), gap: spacing.xs }}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <NativeText style={{ flex: 1, color: winner === 0 ? colors.text : colors.textSub, fontSize: 16, fontWeight: winner === 0 ? "800" : "500", ...num }}>{shown[0]}</NativeText>
-          <NativeText style={{ color: colors.text, fontSize: 13, fontWeight: "600" }}>{row.label}</NativeText>
-          <NativeText style={{ flex: 1, textAlign: "right", color: winner === 1 ? colors.text : colors.textSub, fontSize: 16, fontWeight: winner === 1 ? "800" : "500", ...num }}>{shown[1]}</NativeText>
+          <NativeText style={{ flex: 1, color: winner === 0 ? colors.text : colors.textSub, fontSize: 16, fontWeight: winner === 0 ? textRecipe.emphasis.medium : textRecipe.emphasis.regular, ...num }}>{shown[0]}</NativeText>
+          <NativeText style={{ color: colors.text, fontSize: 13, fontWeight: textRecipe.emphasis.medium }}>{row.label}</NativeText>
+          <NativeText style={{ flex: 1, textAlign: "right", color: winner === 1 ? colors.text : colors.textSub, fontSize: 16, fontWeight: winner === 1 ? textRecipe.emphasis.medium : textRecipe.emphasis.regular, ...num }}>{shown[1]}</NativeText>
         </View>
         <View style={{ flexDirection: "row", gap: spacing.sm, height: 5 }}>
           {[0, 1].map(index => <View key={index} style={{ flex: 1, flexDirection: index === 0 ? "row-reverse" : "row", backgroundColor: colors.surfaceAlt, borderRadius: 2 }}>

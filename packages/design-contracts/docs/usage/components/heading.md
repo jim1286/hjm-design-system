@@ -10,9 +10,9 @@
 
 ## 언제 쓰나
 
-자리를 모르는 큰 제목 글자 하나가 필요할 때 쓴다. 랜딩 히어로, 결과 화면의 큰 제목,
-카드·표·빈 상태 안의 제목처럼 `Text`의 최대 크기(24px)로는 모자라거나 문서 제목 단계를
-실제로 내야 하는 자리다. 주변 여백은 갖지 않는다. 담는 블록이 정한다.
+자리를 모르는 제목 글자 하나가 필요할 때 쓴다. 랜딩 대표 제목, 결과 화면의 제목,
+카드·표·빈 상태 안의 제목처럼 문서 제목 단계를 실제로 내야 하는 자리다. 크기는 `Text`와 같은
+단계(최대 24px)를 쓴다. 주변 여백은 갖지 않는다. 담는 블록이 정한다.
 
 ## 쓰지 않을 때
 
@@ -34,7 +34,7 @@
 // Web
 import { Heading } from "@hjmds/react/heading";
 
-<Heading level="level2">{t("result.title")}</Heading>
+<Heading level="level3" semanticLevel={2}>{t("result.title")}</Heading>
 ```
 
 ```tsx
@@ -48,23 +48,23 @@ import { Heading } from "@hjmds/react-native/heading";
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `level`(필수) | `level1` 40px/700 · `level2` 32px/700 · `level3` 24px/600 · `level4` 20px/600 · `level5` 18px/600 | — | recipe 기본은 `level3`이지만 두 renderer 모두 prop을 필수로 받는다 |
+| `level`(필수) | `level3` 24px/500 · `level4` 20px/500 · `level5` 18px/500. `level1`·`level2`는 사용 중단된 이름으로 `level3`과 같은 24px/500이다 | — | recipe 기본은 `level3`이지만 두 renderer 모두 prop을 필수로 받는다. 가장 큰 단계는 24px다 |
 | `semanticLevel` | 1~6 | `level`의 숫자 | 크게 보이지만 구조상 h4인 카드 제목처럼 시각 크기와 문서 단계가 다르면 둘을 따로 적는다 |
 | `layoutStyle` | 배치 key(margin·폭·정렬 등) | — | 바깥 배치만. 크기·줄 높이·굵기·색은 받지 않는다 |
 
 - 범위 밖 값은 `TypeError`로 거부된다.
 - 위 크기는 프로필 없는 기본값이다. [디자인 프로필](../../design-profile.md)의
-  `tokens.heading.level1`~`level5`로 다섯 시각 단계를 지정하면 양 renderer가 따르며,
-  `semanticLevel`은 그대로다. 크기를 맞추려고 문서 단계를 바꾸지 않는다.
-- `defineHjmDesignProfile`에서 `tokens.typography.heading/titleLarge/title`을 바꾸면 기존
-  level3/4/5 연결을 유지한다. 같은 단계에 `tokens.heading`도 지정하면 명시한 heading
-  값이 우선한다. 큰 제목 level1/2는 본문 크기에서 자동 추정하지 않는다.
+  `tokens.heading`으로 시각 단계를 지정하면 양 renderer가 따르며, `semanticLevel`은 그대로다.
+  어느 단계도 `typography.heading` 24px를 넘으면 `RangeError`로 거부된다. 크기를 맞추려고 문서 단계를 바꾸지 않는다.
+- `defineHjmDesignProfile`에서 `tokens.typography.heading/titleLarge/title`을 바꾸면
+  level1~3/4/5가 그 값을 따른다. 같은 단계에 `tokens.heading`도 지정하면 명시한 heading
+  값이 우선한다.
 
 ## 배치
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 줄 높이: `level1` 48 · `level2` 40 · `level3` 32 · `level4` 28 · `level5` 26 | `foundations.ts` `heading`, `typography` |
+| 크기 | 줄 높이: `level3` 32 · `level4` 28 · `level5` 26 (`level1`·`level2`는 32) | `foundations.ts` `heading`, `typography` |
 | 간격 | Heading은 margin이 0이다(Web `.hjm-heading`). 위아래 간격은 감싸는 Stack·Section의 `gap`이 정한다 | `styles.css` `.hjm-heading` |
 | 순서·정렬 | 한 블록에 Heading은 하나를 맨 위에 둔다 | — |
 | 고정·스크롤 | — | — |
@@ -88,7 +88,9 @@ import { Heading } from "@hjmds/react-native/heading";
 
 ## 근거
 
-2026-10-17 사용자 결정: `level1`·`level2`는 Pretendard 800이 큰 크기에서 무겁고 거칠어 700(bold)으로 낮췄다. 같은 날 600으로 낮춘 `level3`~`level5`보다 한 단계 굵게 유지한다. Native는 `fonts="pretendard"`일 때 `Pretendard-Bold` face로 그린다. `Top size="large"` 제목도 `heading.level2`라 함께 700이 된다. 브루탈리즘 프리셋은 level1·2를 800으로 명시한다.
+2026-10-17 사용자 결정("글자 너무 커", "큰 글자 정책은 없애"): 큰 글자 단계를 폐지했다. Native Storybook 서비스 소개 화면의 히어로 제목(level1 40px)과 구획 제목(level2 32px)이 지나치게 컸던 것이 계기다. `level1`·`level2`는 기존 소비 코드가 깨지지 않도록 이름만 남기고 `level3`과 같은 24/32/500으로 고정했으며 새 코드에서 쓰지 않는다. 위계는 `level3`(24) → `level4`(20) → `level5`(18)로 만들고, 문서 구조는 `semanticLevel`로 적는다. `Top size="large"` 제목도 `heading.level3` 24px다. 브루탈리즘 프리셋은 굵기만 800으로 명시하고 크기는 공통 단계를 따른다.
+
+같은 날 앞선 굵기 결정: 제목 단계(`level3`~`level5`)는 500(medium)이며 Native는 `fonts="pretendard"`일 때 `Pretendard-Medium` face로 그린다. 이전의 큰 제목 600(semibold) 단계는 큰 글자 단계와 함께 없어졌다.
 
 ## 함정
 

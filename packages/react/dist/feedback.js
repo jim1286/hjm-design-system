@@ -50,7 +50,12 @@ export const Progress = forwardRef(function Progress({ label, value, valueText, 
         } : layoutStyle, children: [label === undefined ? null : (_jsxs("span", { className: "hjm-progress__copy", children: [_jsx(Text, { id: labelId, variant: "label", children: label }), resolvedValueText ? _jsx(Text, { variant: "caption", tone: "muted", children: resolvedValueText }) : null] })), shape === "circular" ? (_jsx("span", { className: "hjm-progress__ring", "aria-hidden": "true", children: children ? _jsx("span", { className: "hjm-progress__ring-content", children: children }) : null })) : null, _jsx("progress", { ...props, ref: ref, className: "hjm-progress__native", max: max, ...(value === undefined ? {} : { value }), "aria-labelledby": props["aria-labelledby"] ?? (props["aria-label"] === undefined ? labelId : undefined), "aria-valuetext": resolvedValueText })] }));
 });
 export { Spinner } from "./internal/spinner.js";
-export const Skeleton = forwardRef(function Skeleton({ shape = skeletonRecipe.defaults.shape, animated = skeletonRecipe.defaults.animated, width, height, className, style, layoutStyle, ...props }, ref) {
+export const Skeleton = forwardRef(function Skeleton({ shape = skeletonRecipe.defaults.shape, animated = skeletonRecipe.defaults.animated, lines = skeletonRecipe.defaults.lines, width, height, className, style, layoutStyle, ...props }, ref) {
+    const lineCount = shape === "text" ? Math.max(1, Math.floor(lines)) : 1;
+    if (lineCount > 1) {
+        // One pulse on the group keeps the lines in phase; the bars themselves do not animate.
+        return (_jsx("span", { ...props, ref: ref, className: classNames("hjm-skeleton-lines", className), "data-animated": animated, "aria-hidden": "true", style: { width, ...style, ...layoutStyle }, children: Array.from({ length: lineCount }, (_, index) => (_jsx("span", { className: "hjm-skeleton", "data-shape": "text", "data-last": index === lineCount - 1 || undefined, style: { height } }, index))) }));
+    }
     return (_jsx("span", { ...props, ref: ref, className: classNames("hjm-skeleton", className), "data-shape": shape, "data-animated": animated, "aria-hidden": "true", style: { width, height, ...style, ...layoutStyle } }));
 });
 // ActivityChip is a feedback-category status trigger (its panel is the Toast in this module). Also exported here so

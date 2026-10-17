@@ -4,6 +4,7 @@ import { createLucideGlyph } from "@hjmds/react-native/icon-lucide";
 import { Icon } from "@hjmds/react-native/primitives";
 import { ReactionPicker } from "@hjmds/react-native/reaction-picker";
 import { NotificationBell } from "@hjmds/react-native/notification-bell";
+import { TopBar } from "@hjmds/react-native/navigation";
 import { useRef, useState, type ReactNode } from "react";
 import { ScrollView } from "react-native";
 import { DurationField } from "@hjmds/react-native/duration-field";
@@ -31,4 +32,4 @@ export function Confirm() {
 }
 const bellGlyph=createLucideGlyph({notifications:Bell});
 export function Reactions(){const [value,setValue]=useState<string|null>(null);return <PreviewScroll><Heading level="level3">{socialCopy.title}</Heading><ReactionPicker label={socialCopy.group} options={reactionOptions} value={value} onValueChange={setValue}/></PreviewScroll>;}
-export function Notifications(){const [count,setCount]=useState(3);return <PreviewScroll><NotificationBell count={count} label={socialCopy.notifications(count)} icon={<Icon descriptor={{name:'notifications'}} renderGlyph={bellGlyph}/>} onPress={()=>setCount(0)}/><Text tone="muted">{socialCopy.hint}</Text><PreviewTools><PreviewToolButton onPress={()=>setCount(current=>current+1)}>{socialCopy.add}</PreviewToolButton></PreviewTools></PreviewScroll>;}
+export function Notifications(){const [count,setCount]=useState(3);return <PreviewScroll>{/* The product placement: the bell ends a top bar with edge="end", glyph slot on the bar inset (2026-10-17). */}<TopBar title={socialCopy.bellTitle} trailing={<NotificationBell edge="end" count={count} label={socialCopy.notifications(count)} icon={<Icon descriptor={{name:'notifications'}} renderGlyph={bellGlyph}/>} onPress={()=>setCount(0)}/>}/><Text tone="muted">{socialCopy.hint}</Text><PreviewTools><PreviewToolButton onPress={()=>setCount(current=>current+1)}>{socialCopy.add}</PreviewToolButton></PreviewTools></PreviewScroll>;}

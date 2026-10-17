@@ -51,7 +51,7 @@ Native(하단 시트, 키보드 올라옴)              Web(하단 시트)
 | --- | --- | --- | --- |
 | 바깥 틀 | 시트 안: `Sheet`(Modal)가 backdrop·본문 스크롤(Native `scrollable`)·키보드(Native `keyboardAvoidance`)·안전 영역을 소유. 트리거: 제품 화면의 바깥 틀(Web 문서 스크롤 > `Container`, Native `ScrollView` > `Container`) | 시트는 화면 위 오버레이, 트리거는 화면 본문 | 시트 안 여백은 아래 행들(Sheet 소유, 제품이 inset·키보드 여백을 다시 더하지 않는다). 트리거 화면 좌우는 `Container gutter` 폭 600 미만 `compact` 16 · 이상 `regular` 20([화면 여백](../tokens/layout.md)) |
 | 시트 틀 | `Sheet` placement `bottom` | 화면 하단에 붙고 위 모서리만 둥글다 | radius `xl` 24, 최대 높이 `maxHeightRatio` 0.9(뷰포트의 90%), Web 최대 폭 640 |
-| 머리 | 제목 + 닫기 IconButton | 시트 맨 위, 고정 | Native 최소 높이 `control.minTouchTarget` 44·좌우 `spacing.lg` 20(+좌우 inset)·위 `spacing.sm` 12. Web padding `spacing.lg` 20(아래 0), 제목–닫기 `spacing.md` 16 |
+| 머리 | 손잡이(+ `showClose`일 때 끝 × IconButton). 보이는 제목 없음, `title`은 접근성 이름(2026-10-17 사용자 결정: 시트는 보이는 제목 없이 `title`을 접근성 이름으로만 쓴다) | 시트 맨 위, 고정 | × 머리 최소 높이 `control.minTouchTarget` 44·좌우 `spacing.lg` 20(+좌우 inset)·위 `spacing.sm` 12(두 플랫폼 같음) |
 | 실패 알림 | `Notice tone="danger"` | 본문 맨 위(입력 위), 실패했을 때만, 스크롤 | 본문 항목 사이 `spacing.md` 16 |
 | 본문 | `TextField` + 설명 | 머리 아래, **스크롤** | 항목 사이 `sheetRecipe.body.gap` `spacing.md` 16. Web body padding `spacing.lg` 20 |
 | 완료 | footer `Button`(primary) | 본문 아래, **고정**(스크롤 밖) | 높이 `medium` 44. Native 위 `spacing.sm` 12, footer 세로 열이라 꽉 찬 폭(`fullWidth` 불필요). Web 오른쪽 정렬, 버튼 사이 `spacing.sm` 12, padding 0 `spacing.lg` 20 `spacing.lg` 20 |

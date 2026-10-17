@@ -60,7 +60,7 @@ it("follows nearest corners across theme changes without resetting upload action
 it("resolves Top visual metrics and display family from the closest profile without replacing its action host", () => {
   let tree!: ReactTestRenderer; const actionPress = vi.fn();
   let actionHost: ReturnType<ReactTestRenderer["root"]["find"]> | undefined;
-  const product = defineHjmDesignProfile({ id: "top-product", tokens: { heading: { level2: { fontSize: 35, lineHeight: 45, fontWeight: "500" } }, typography: { titleLarge: { fontSize: 23, lineHeight: 33, fontWeight: "600" } }, fontFamily: { display: ["Georgia"] } } });
+  const product = defineHjmDesignProfile({ id: "top-product", tokens: { heading: { level3: { fontSize: 23, lineHeight: 31, fontWeight: "500" } }, typography: { titleLarge: { fontSize: 21, lineHeight: 29, fontWeight: "600" } }, fontFamily: { display: ["Georgia"] } } });
   const content = <><Top descriptor={{ title: "Large title", size: "large", headingLevel: 3 }} trailing={<Pressable accessibilityLabel="Title action" onPress={actionPress}><Text>Action</Text></Pressable>} /><Top descriptor={{ title: "Medium title", size: "medium", headingLevel: 2 }} /></>;
   try {
     for (const profile of [product, hjmDesignPresets.editorial, hjmDesignPresets.neutral, undefined]) {
@@ -71,7 +71,7 @@ it("resolves Top visual metrics and display family from the closest profile with
       expect(currentAction).toBe(actionHost);
       const titles = tree.root.findAllByType(Text).filter(node => node.props.accessibilityRole === "header");
       for (const [index, size] of ["large", "medium"].entries()) {
-        const metrics = profile ? size === "large" ? profile.tokens.heading.level2 : profile.tokens.typography.titleLarge : topRecipe.sizes[size as "large" | "medium"].title;
+        const metrics = profile ? size === "large" ? profile.tokens.heading.level3 : profile.tokens.typography.titleLarge : topRecipe.sizes[size as "large" | "medium"].title;
         expect(flatten(titles[index]!.props.style)).toMatchObject(metrics);
       }
       expect(tree.root.findAll(node => typeof node.type === "string" && node.props.accessibilityRole === "header").map(node => flatten(node.props.style).fontFamily)).toEqual(profile === hjmDesignPresets.editorial ? Array(2).fill(Platform.OS === "ios" ? "Georgia" : "serif") : profile?.tokens.fontFamily.display ? ["Georgia", "Georgia"] : [undefined, undefined]);

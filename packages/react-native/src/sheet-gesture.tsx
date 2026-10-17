@@ -5,7 +5,6 @@ import { BackHandler, View } from "react-native";
 import { BottomSheetModal, BottomSheetModalProvider, BottomSheetScrollView, BottomSheetBackdrop, BottomSheetHandle, BottomSheetTextInput, type BottomSheetBackdropProps, type BottomSheetBackgroundProps, type BottomSheetHandleProps } from "@gorhom/bottom-sheet";
 import { ReduceMotion } from "react-native-reanimated";
 import { Button } from "./actions.js";
-import { Text } from "./primitives.js";
 import { useHjmNativeSafeAreaInsets, useHjmNativeTheme, type HjmNativeSafeAreaInsets } from "./provider.js";
 
 type GestureSheetInputProps = ComponentProps<typeof BottomSheetTextInput>;
@@ -133,7 +132,9 @@ export function GestureSheet({ open, onOpenChange, title, closeLabel, children,
     onDismiss={() => { presented.current = false; if (openRef.current) onOpenChange(false); }}>
     <BottomSheetScrollView keyboardShouldPersistTaps="handled">
       <View accessibilityViewIsModal style={{ gap: theme.tokens.spacing.sm, padding: theme.tokens.spacing.lg, paddingBottom: theme.tokens.spacing.lg + bottomInset }}>
-        <Text accessibilityRole="header">{title}</Text>
+        {/* 2026-10-17 user decision: no visible sheet title. The header stays for screen readers, off layout. */}
+        <View accessible accessibilityRole="header" accessibilityLabel={title}
+          style={{ position: "absolute", top: 0, start: 0, width: 1, height: 1, overflow: "hidden" }} />
         {children}
         <Button disabled={busy} onPress={() => onOpenChange(false)}>{closeLabel}</Button>
       </View>

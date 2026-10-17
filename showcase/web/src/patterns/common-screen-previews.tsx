@@ -5,12 +5,11 @@ import { PreviewTools, PreviewToolButton } from "./preview-tools";
 import { Chip } from "@hjmds/react/selection";
 import { useEffect, useRef, useState } from "react";
 import { NotificationInboxScreen, NotificationItem, ChatScreen, ChatMessage, MessageComposer, ScreenLayout } from "@hjmds/react/screens";
-import { AuthScreenLayout } from "@hjmds/react/auth-screen";
+import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "@hjmds/react/auth-screen";
 import { AuthProviderButton } from "@hjmds/react/provider-button";
 import { Button, IconButton } from "@hjmds/react/actions";
 import { Stack, Text } from "@hjmds/react/layout";
 import { Heading } from "@hjmds/react/heading";
-import { Top } from "@hjmds/react/top";
 import { Notice } from "@hjmds/react/feedback";
 import { Avatar } from "@hjmds/react/display";
 import { Bell, ChevronLeft, ChevronRight, Globe2, HelpCircle, ShieldCheck, Volume2, Sparkles, MoreHorizontal, CheckCheck, MessageCircle, Heart, Palette, Settings2, Image as ImageIcon, ArrowUp, Reply, MessageSquareWarning, Trash2 } from "lucide-react";
@@ -174,10 +173,10 @@ function ScreenPreview({ kind: initialKind, stateKind = "ready", tools = false }
 
     </div>
   </ChatScreen>;
-  else if (kind === "login") screen = <AuthScreenLayout hero={<Stack gap="lg" align="center"><Glyph name="chat"/><Top descriptor={{ eyebrow: "이야기", title: "당신의 일상을 이야기로 남겨요", description: "사진 한 장, 짧은 한 줄로 시작하세요." }} /></Stack>} mainCard
+  else if (kind === "login") screen = <AuthScreenLayout hero={<AuthScreenHero mark={<Glyph name="chat"/>} eyebrow="이야기" title="당신의 일상을 이야기로 남겨요" description="사진 한 장, 짧은 한 줄로 시작하세요." />} mainCard
     {...(loginBusy ? { pendingLabel: "로그인 중" } : {})}
     main={<Stack gap="sm">{loginError ? <Notice tone="danger" title="로그인하지 못했어요" description="잠시 후 다시 시도해 주세요." /> : null}<AuthProviderButton descriptor={{ provider: "google", label: "Google" }} logo={<ProviderLogo provider="google" />} onClick={startLogin} /><AuthProviderButton descriptor={{ provider: "apple", label: "Apple" }} logo={<ProviderLogo provider="apple" />} onClick={startLogin} /></Stack>}
-    footer={<Stack gap="xs" align="center"><Text variant="caption" tone="muted">계속하면 이용약관과 개인정보처리방침에 동의해요.</Text><Stack axis="inline" gap="md"><Button size="small" tone="ghost" onClick={() => setDetail("이용약관 예제 · 실제 서비스의 약관을 연결하는 영역이에요.")}>이용약관</Button><Button size="small" tone="ghost" onClick={() => setDetail("개인정보처리방침 예제 · 수집 항목과 보관 기간을 안내하는 영역이에요.")}>개인정보처리방침</Button></Stack>{detail ? <Text variant="caption">{detail}</Text> : null}{loginBusy ? <Button tone="ghost" onClick={cancelLogin}>예제 로그인 취소</Button> : null}</Stack>} />;
+    footer={<AuthScreenFooter notice="계속하면 이용약관과 개인정보처리방침에 동의해요." links={[{ label: "이용약관", onClick: () => setDetail("이용약관 예제 · 실제 서비스의 약관을 연결하는 영역이에요.") }, { label: "개인정보처리방침", onClick: () => setDetail("개인정보처리방침 예제 · 수집 항목과 보관 기간을 안내하는 영역이에요.") }]}>{detail ? <Text variant="caption">{detail}</Text> : null}{loginBusy ? <Button tone="ghost" onClick={cancelLogin}>예제 로그인 취소</Button> : null}</AuthScreenFooter>} />;
   // The shell story shows every ScreenLayout slot: exit, one screen tool in actions, body, and the primary action in footer.
   else screen = <ScreenLayout title={screenShellExample.title} exit={back} state={state} stateAction={retry}
     actions={<IconButton edge="end" label={screenShellExample.settingsLabel} tone="ghost" onClick={() => setDetail(screenShellExample.settingsDetail)}><Glyph name="settings" /></IconButton>}

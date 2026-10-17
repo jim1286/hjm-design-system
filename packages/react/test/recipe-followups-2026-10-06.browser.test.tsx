@@ -51,13 +51,14 @@ function rect(left: number, top: number, width: number, height: number): DOMRect
 }
 
 it("Sheet size=full fills the viewport and the body uses sheetRecipe spacing", async () => {
-  await render(<Sheet open onOpenChange={() => undefined} size="full" title="필터" closeLabel="닫기" footer={<button type="button">적용</button>}><p>본문</p></Sheet>);
+  await render(<Sheet open onOpenChange={() => undefined} size="full" showClose title="필터" closeLabel="닫기" footer={<button type="button">적용</button>}><p>본문</p></Sheet>);
   const sheet = document.body.querySelector<HTMLElement>(".hjm-sheet")!;
   // Before: max-block-size 90dvh capped `full`.
   expect(sheet.getBoundingClientRect().height).toBeGreaterThan(window.innerHeight * 0.95);
   expect(css(sheet).paddingTop).toBe(px(sheetRecipe.content.paddingTop));
   expect(css(sheet).rowGap).toBe(px(sheetRecipe.body.gap));
   expect(css(sheet.querySelector(".hjm-sheet__header")!).paddingInlineStart).toBe(px(sheetRecipe.content.paddingHorizontal));
+  expect(css(sheet.querySelector(".hjm-sheet__header")!).paddingTop).toBe("0px");
   expect(css(sheet.querySelector(".hjm-sheet__footer")!).paddingTop).toBe(px(sheetRecipe.footer.paddingTop));
   // Visible body inset stays the recipe's: 4px focus room is cancelled by the negative margin.
   const body = sheet.querySelector(".hjm-sheet__body")!;
@@ -117,6 +118,9 @@ it("SegmentedControl, Chip and Badge sizes follow their recipes", async () => {
   expect(css(track).columnGap).toBe(px(segmentedControlRecipe.container.gap));
   expect(css(track).borderTopLeftRadius).toBe("16px");
   expect(container.querySelector(".hjm-segmented__item")!.getBoundingClientRect().height).toBe(segmentedControlRecipe.sizes.small.minHeight);
+  // The drawn track is the small Chip's height, centred with it (2026-10-17 "높이 맞춰").
+  expect(track.getBoundingClientRect().height).toBe(segmentedControlRecipe.sizes.small.height);
+  expect(track.getBoundingClientRect().height).toBe(container.querySelector(".hjm-chip")!.getBoundingClientRect().height);
   const [small, medium] = [...container.querySelectorAll(".hjm-chip")];
   expect(css(small!).paddingInlineStart).toBe(px(spacing.sm));
   expect(css(medium!).paddingInlineStart).toBe(px(spacing.md));
@@ -139,6 +143,7 @@ it("Statistic, TransferList, UploadItem, DataTable, EmptyState and List spacing 
     <DataTable columns={[{ id: "title", header: "제목" }]} rows={[{ id: "r" }]} labels={{ table: "표", selectAll: "모두", selectRow: (id) => id, sortColumn: (h) => h }} renderCell={() => "값"} />
     <EmptyState title="없어요" />
     <List label="목록" separator="indented"><ListRow title="하나" /><ListRow title="둘" /></List>
+    <List label="혼합 목록" separator="indented"><ListRow title="아이콘" leading={<span>•</span>} /><ListRow title="글자" /><ListRow title="끝" /></List>
   </>);
   const statistic = container.querySelector(".hjm-statistic")!;
   expect(css(statistic).rowGap).toBe(px(statisticRecipe.density.compact.gap));
@@ -152,6 +157,12 @@ it("Statistic, TransferList, UploadItem, DataTable, EmptyState and List spacing 
   expect(css(container.querySelector(".hjm-empty-state")!).paddingTop).toBe(px(spacing.xxxl));
   const second = container.querySelectorAll(".hjm-list__item")[1]!;
   expect(getComputedStyle(second, "::before").insetInlineStart).toBe(px(listRecipe.separators.indented.insetStart));
+  expect(getComputedStyle(second, "::before").insetInlineEnd).toBe(px(listRecipe.separators.indented.insetEnd));
+  // Each indented separator follows the text column of the row above it (2026-10-17: a fixed 52 cut the line off
+  // midway under rows without leading).
+  const [, afterLeading, afterText] = container.querySelectorAll("[aria-label='혼합 목록'] > .hjm-list__item");
+  expect(getComputedStyle(afterLeading!, "::before").insetInlineStart).toBe(px(listRecipe.separators.indented.leadingInsetStart));
+  expect(getComputedStyle(afterText!, "::before").insetInlineStart).toBe(px(listRecipe.separators.indented.insetStart));
 });
 
 it("circular Progress keeps the copy row above the ring", async () => {

@@ -4,12 +4,11 @@ import { PreviewTools, PreviewToolButton } from "./preview-tools";
 import { Chip } from "@hjmds/react-native/inputs";
 import { useEffect, useRef, useState } from "react";
 import { NotificationInboxScreen, NotificationItem, ChatScreen, ChatMessage, MessageComposer, ScreenLayout } from "@hjmds/react-native/screens";
-import { AuthScreenLayout } from "@hjmds/react-native/auth-screen";
+import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "@hjmds/react-native/auth-screen";
 import { AuthProviderButton } from "@hjmds/react-native/provider-button";
 import { Button, IconButton } from "@hjmds/react-native/actions";
 import { Stack, Text } from "@hjmds/react-native/primitives";
 import { Heading } from "@hjmds/react-native/heading";
-import { Top } from "@hjmds/react-native/top";
 import { Notice } from "@hjmds/react-native/feedback";
 import { Avatar, ListRow } from "@hjmds/react-native/data-display";
 import { Bell, ChevronLeft, ChevronRight, Globe2, HelpCircle, ShieldCheck, Volume2, Sparkles, MoreHorizontal, CheckCheck, MessageCircle, Heart, Palette, Settings2, Image as ImageIcon, ArrowUp, Reply, MessageSquareWarning, Trash2 } from "lucide-react-native";
@@ -165,10 +164,10 @@ function ScreenPreview({ kind: initialKind, stateKind = "ready", tools = false }
           {message.text ? <Text>{message.text}</Text> : null}
         </ChatMessage></View>} />
   </ChatScreen>;
-  else if (kind === "login") screen = <AuthScreenLayout hero={<Stack gap="lg" align="center"><Glyph name="chat"/><Top descriptor={{ eyebrow: "이야기", title: "당신의 일상을 이야기로 남겨요", description: "사진 한 장, 짧은 한 줄로 시작하세요." }} /></Stack>} mainCard
+  else if (kind === "login") screen = <AuthScreenLayout hero={<AuthScreenHero mark={<Glyph name="chat"/>} eyebrow="이야기" title="당신의 일상을 이야기로 남겨요" description="사진 한 장, 짧은 한 줄로 시작하세요." />} mainCard
     {...(loginBusy ? { pendingLabel: "로그인 중" } : {})}
     main={<Stack gap="sm">{loginError ? <Notice tone="danger" title="로그인하지 못했어요" description="잠시 후 다시 시도해 주세요." /> : null}<AuthProviderButton descriptor={{ provider: "google", label: "Google" }} logo={<ProviderLogo provider="google" />} onPress={startLogin} /><AuthProviderButton descriptor={{ provider: "apple", label: "Apple" }} logo={<ProviderLogo provider="apple" />} onPress={startLogin} /></Stack>}
-    footer={<Stack gap="xs" align="center"><Text variant="caption" tone="muted">계속하면 이용약관과 개인정보처리방침에 동의해요.</Text><Stack axis="inline" gap="md"><Button size="small" tone="ghost" onPress={() => setDetail("이용약관 예제 · 실제 서비스의 약관을 연결하는 영역이에요.")}>이용약관</Button><Button size="small" tone="ghost" onPress={() => setDetail("개인정보처리방침 예제 · 수집 항목과 보관 기간을 안내하는 영역이에요.")}>개인정보처리방침</Button></Stack>{detail ? <Text variant="caption">{detail}</Text> : null}{loginBusy ? <Button tone="ghost" onPress={cancelLogin}>예제 로그인 취소</Button> : null}</Stack>} />;
+    footer={<AuthScreenFooter notice="계속하면 이용약관과 개인정보처리방침에 동의해요." links={[{ label: "이용약관", onPress: () => setDetail("이용약관 예제 · 실제 서비스의 약관을 연결하는 영역이에요.") }, { label: "개인정보처리방침", onPress: () => setDetail("개인정보처리방침 예제 · 수집 항목과 보관 기간을 안내하는 영역이에요.") }]}>{detail ? <Text variant="caption">{detail}</Text> : null}{loginBusy ? <Button tone="ghost" onPress={cancelLogin}>예제 로그인 취소</Button> : null}</AuthScreenFooter>} />;
   // The shell story shows every ScreenLayout slot: exit, one screen tool in actions, body, and the primary action in footer.
   else screen = <ScreenLayout title={screenShellExample.title} exit={back} state={state} stateAction={retry}
     actions={<IconButton edge="end" label={screenShellExample.settingsLabel} tone="ghost" onPress={() => setDetail(screenShellExample.settingsDetail)}><Glyph name="settings" /></IconButton>}
@@ -180,7 +179,7 @@ function ScreenPreview({ kind: initialKind, stateKind = "ready", tools = false }
   if (atHome) screen = <ScreenLayout title="나의 공간" description="오늘의 이야기와 소식을 만나 보세요."><Stack gap="sm">{([['settings', '설정'], ['notifications', '알림'], ['chat', '서연과의 대화']] as const).map(([target, label]) => <ListRow key={target} title={label} trailing={<Glyph name="next" />} onPress={() => { setKind(target); setAtHome(false); }} />)}</Stack></ScreenLayout>;
   else if (detail && kind !== "login") screen = <ScreenLayout title={kind === "notifications" ? "도착한 이야기" : kind === "chat" ? "대화 정보" : "상세 정보"} exit={{ kind: "back", label: "뒤로", onPress: () => setDetail(null) }}><Stack gap="lg"><Text>{detail}</Text>{kind === "notifications" && notificationDetailId === 1 ? <Button onPress={() => { setDetail(null); setKind("chat"); }}>대화 이어가기</Button> : null}</Stack></ScreenLayout>;
   const toggleCopy = kind === "chat" || kind === "notifications" ? failToggleCopy[kind] : null;
-  return <Stack gap="sm">{tools && toggleCopy ? <PreviewTools><PreviewToolButton selected={failNext === kind} onPress={() => setFailNext(v => v === kind ? null : kind === "chat" || kind === "notifications" ? kind : null)}>{toggleCopy[failNext === kind ? 1 : 0]}</PreviewToolButton></PreviewTools> : null}{/* Host height stands in for the product route. */}<View style={{ height: kind === "login" ? 740 : 720, width: "100%" }}>{screen}</View></Stack>;
+  return <Stack gap="sm" layoutStyle={{ flex: 1 }}>{tools && toggleCopy ? <PreviewTools><PreviewToolButton selected={failNext === kind} onPress={() => setFailNext(v => v === kind ? null : kind === "chat" || kind === "notifications" ? kind : null)}>{toggleCopy[failNext === kind ? 1 : 0]}</PreviewToolButton></PreviewTools> : null}{/* The route host fills the story area like a product route; a fixed 720/740 left blank space under footers (2026-10-17). */}<View style={{ flex: 1, width: "100%" }}>{screen}</View></Stack>;
 }
 
 export function LoginScreenPreview(props: ScreenPreviewOptions) { return <ScreenPreview kind="login" {...props} />; }

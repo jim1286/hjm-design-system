@@ -54,7 +54,7 @@ export type LineChartProps = CartesianCommon & FocusProps & Readonly<{
     animateChanges?: boolean;
     /** Keep the chosen side in series color; mute the other side. */
     scrubEmphasis?: "before" | "after";
-    /** Value labels only (rank charts: "1위" at the top). */
+    /** Value labels only (rank charts: "#1" at the top). */
     valueAxis?: boolean;
     /** Overrides grid/label ticks. */
     ticks?: readonly number[];

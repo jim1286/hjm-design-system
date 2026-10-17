@@ -75,7 +75,7 @@ it("paints percentile heat and leader tone from cellStyle", async () => {
   expect(cell("38").dataset.heat).toBe("high-3");
   expect(cell("38").dataset.tone).toBe("leader");
   expect(getComputedStyle(cell("38")).backgroundImage).toContain("linear-gradient");
-  expect(getComputedStyle(cell("38")).fontWeight).toBe("700");
+  expect(getComputedStyle(cell("38")).fontWeight).toBe("500");
   expect(cell("6").dataset.heat).toBe("low-3");
   // The middle of the sample stays neutral.
   expect(cell("10").dataset.heat).toBeUndefined();

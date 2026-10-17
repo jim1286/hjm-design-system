@@ -4,10 +4,10 @@ import { floatingSurfaceContract, focusIndicatorContract } from "./component-con
 import {
   backdrop,
   control,
-  fontWeight,
   motionPreset,
   shadow,
   spacing,
+  typography,
   type FontWeightValue,
   type TextVariant,
 } from "./foundations.js";
@@ -121,7 +121,7 @@ export const sidePanelRecipe = {
   title: {
     color: semanticColors.content.primary,
     textVariant: "title",
-    fontWeight: fontWeight.bold,
+    fontWeight: typography.title.fontWeight,
   },
   body: {
     color: semanticColors.content.body,

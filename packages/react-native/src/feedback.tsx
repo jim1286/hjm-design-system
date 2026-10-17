@@ -1,6 +1,6 @@
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { easing, fontWeight, glyph, spacing } from "@hjmds/design-contracts/foundations";
+import { easing, glyph, spacing } from "@hjmds/design-contracts/foundations";
 import {
   resolveControlAccessibleName,
 } from "@hjmds/design-contracts/behaviors";
@@ -9,6 +9,7 @@ import {
   noticeRecipe,
   progressRecipe,
   skeletonRecipe,
+  textRecipe,
   toastRecipe,
   type NoticeTone as ContractNoticeTone,
   type ProgressShape,
@@ -620,6 +621,11 @@ export type SkeletonShape = keyof typeof skeletonRecipe.shapes;
 export type SkeletonProps = Readonly<{
   shape?: SkeletonShape;
   animated?: boolean;
+  /**
+   * `text` only: draw this many lines with the last one shorter (`skeletonRecipe.lines`), so a paragraph
+   * placeholder is not rebuilt from loose bars in every product. `width` sizes the whole group.
+   */
+  lines?: number;
   width?: ViewStyle["width"];
   height?: number;
   radius?: number;
@@ -639,6 +645,7 @@ export type SkeletonProps = Readonly<{
 export function Skeleton({
   shape = skeletonRecipe.defaults.shape,
   animated = skeletonRecipe.defaults.animated,
+  lines = skeletonRecipe.defaults.lines,
   width,
   height,
   radius: radiusValue,
@@ -681,31 +688,60 @@ export function Skeleton({
     return () => loop.stop();
   }, [duration, easingName, pulse, shouldAnimate]);
 
+  const opacity = shouldAnimate
+    ? pulse.interpolate({ inputRange: [0, 1], outputRange: [fromOpacity, toOpacity] })
+    : toOpacity;
+  // Filled placeholder, no outline: canvas + hairline was invisible on white (2026-10-17, skeleton.md rationale).
+  const fill = {
+    backgroundColor: resolveColorReference(skeletonRecipe.background, palette),
+    borderRadius: radiusValue ?? tokens.radius[shapeSpec.radius],
+  } as const;
+  // A labelled skeleton is the region's single busy announcement; an unlabelled one is hidden on both platforms.
+  const accessibility = {
+    accessibilityLabel,
+    accessibilityState: accessibilityLabel ? { busy: true } : undefined,
+    accessible: accessibilityLabel !== undefined,
+    importantForAccessibility: accessibilityLabel ? "yes" : "no-hide-descendants",
+  } as const;
+
+  const lineCount = shape === "text" ? Math.max(1, Math.floor(lines)) : 1;
+  if (lineCount > 1) {
+    const lineHeight = height ?? shapeSpec.defaultHeight;
+    // One pulse on the group keeps the lines in phase.
+    return (
+      <Animated.View
+        {...accessibility}
+        style={[{ gap: skeletonRecipe.lines.gap, opacity, width: width ?? "100%" }, layoutStyle]}
+      >
+        {Array.from({ length: lineCount }, (_, index) => (
+          <View
+            key={index}
+            style={[fill, {
+              height: lineHeight,
+              width: index === lineCount - 1 ? `${skeletonRecipe.lines.lastLineWidthPercent}%` : "100%",
+            }]}
+          />
+        ))}
+      </Animated.View>
+    );
+  }
+
   const resolvedWidth =
-    width ?? (shape === "circle" ? shapeSpec.defaultHeight : "100%");
+    width ?? (shape === "circle" ? shapeSpec.defaultHeight ?? undefined : "100%");
+  const resolvedHeight = height ?? shapeSpec.defaultHeight ?? undefined;
 
   return (
     <Animated.View
-      accessibilityLabel={accessibilityLabel}
-      accessibilityState={accessibilityLabel ? { busy: true } : undefined}
-      accessible={accessibilityLabel !== undefined}
+      {...accessibility}
       style={[
         {
-          backgroundColor: resolveColorReference(
-            skeletonRecipe.background,
-            palette,
-          ),
-          // A white loading placeholder needs an outline after removing grey fills.
-          borderColor: palette.theme.border,
-          borderWidth: 1,
-          borderRadius: radiusValue ?? tokens.radius[shapeSpec.radius],
-          height: height ?? shapeSpec.defaultHeight,
-          opacity: shouldAnimate
-            ? pulse.interpolate({
-                inputRange: [0, 1],
-                outputRange: [fromOpacity, toOpacity],
-              })
-            : toOpacity,
+          ...fill,
+          ...(resolvedHeight === undefined && shapeSpec.aspectRatio !== null
+            ? { aspectRatio: shapeSpec.aspectRatio }
+            : { height: resolvedHeight }),
+          // An avatar beside text lines keeps its diameter in a row (Web: flex: none).
+          ...(shape === "circle" ? { flexShrink: 0 } : {}),
+          opacity,
           width: resolvedWidth,
         },
         layoutStyle,
@@ -775,7 +811,7 @@ function ToastProgressRow({ progress }: { progress: ToastProgressDescriptor }) {
             <Text
               style={{
                 color: resolveColorReference(state === "current" ? contract.currentLabelColor : contract.labelColor, theme.palette),
-                ...(state === "current" ? { fontWeight: fontWeight.bold } : {}),
+                ...(state === "current" ? { fontWeight: textRecipe.emphasis.strong } : {}),
               }}
               variant={contract.textVariant}
             >

@@ -29,7 +29,7 @@ function Pane({hidden=false,children}:{hidden?:boolean;children:ReactNode}){retu
 /** `icon` renders an icon-only button named by `label`; header actions (top-right) use it so a centered title keeps its width (2026-10-17). */
 export type ScreenFlowAction = Readonly<{label:string; onAction():void; disabled?:boolean; pending?:boolean; icon?:ReactNode}>;
 /** Header tool action (refresh, add): icon-only so it never pushes the centered title. A required text `add` made
- * products route exits ("취소") through it as a header text button (2026-10-17 screen review); exits use `exit`. */
+ * products route exits (a "Cancel" label) through it as a header text button (2026-10-17 screen review); exits use `exit`. */
 export type ScreenFlowIconAction = ScreenFlowAction & Readonly<{icon:ReactNode}>;
 // `edge`: the action ends a header/row edge (IconButton/Button edge rule, 2026-10-17 audit); framed tones ignore it.
 function Action({action,secondary=false,edge}:{action:ScreenFlowAction;secondary?:boolean;edge?:"start"|"end"}){if(action.icon)return <IconButton label={action.label} tone="ghost" {...(edge?{edge}:{})} disabled={!!(action.disabled||action.pending)} onPress={action.onAction}>{action.icon}</IconButton>;return <Button tone={secondary?"ghost":"primary"} {...(edge?{edge}:{})} disabled={!!(action.disabled||action.pending)} loading={action.pending??false} onPress={action.onAction}>{action.label}</Button>;}
@@ -40,7 +40,7 @@ export type ListDetailScreenProps = Base & { list:ReactNode; detail?:Pick<Screen
 /** Keep the list mounted so input and scroll survive a detail visit. Routers may instead restore host scroll state. */
 // layoutStyle places the outer host that owns both panes, as on Web, so the screen keeps the same
 // placement while list and detail swap. Passing it to the list ScreenLayout dropped it on detail.
-// "더 보기" ends the list inside the scroll body, centered like LoadMore; the fixed footer is the bottom CTA slot (2026-10-17 review).
+// "Load more" ends the list inside the scroll body, centered like LoadMore; the fixed footer is the bottom CTA slot (2026-10-17 review).
 export function ListDetailScreen({list,detail,back,refresh,loadMore,layoutStyle,...screen}:ListDetailScreenProps){return <View style={[{flex:1},layoutStyle]}><Pane hidden={!!detail}><ScreenLayout {...screen} {...(refresh||screen.actions?{actions:<Stack axis="inline" gap="xs" align="center">{/* Refresh no longer replaces the screen's own actions (2026-10-16 composition review). */}{screen.actions}{refresh?<Action action={refresh} secondary edge="end"/>:null}</Stack>}:{})}>{loadMore?<View style={{flexGrow:1,flexShrink:1,minHeight:0,gap:screenPatternRecipe.itemGap}}>{list}<View style={{alignItems:"center"}}><Action action={loadMore} secondary/></View></View>:list}</ScreenLayout></Pane>{detail?<Pane><ScreenLayout title={detail.title} {...(detail.titleVisibility === undefined ? {} : { titleVisibility: detail.titleVisibility })} {...(detail.headerAlignment === undefined ? {} : { headerAlignment: detail.headerAlignment })} {...(detail.state === undefined ? {} : {state:detail.state})} stateAction={detail.stateAction} notice={detail.notice} exit={{kind:"back",label:back.label,onPress:back.onAction,disabled:!!(back.disabled||back.pending)}}>{detail.content}</ScreenLayout></Pane>:null}</View>;}
 
 export type EditorScreenProps = Omit<Base,"leading"|"exit"> & {children:ReactNode;submitPlacement?:"header"|"footer";dirty:boolean;submit:ScreenFlowAction;cancel:ScreenFlowAction;discard:Omit<Extract<AlertDialogRequest,{mode:"confirm"}>,"onConfirm"|"fallbackErrorMessage"> & {fallbackErrorMessage:string};draftStatus?:ReactNode};
@@ -389,7 +389,7 @@ export type CommentReactions = ReactionPickerProps & Readonly<{closeLabel:string
  * supplies only the localized names, the items allowed for that comment and the action callback.
  */
 export type CommentMenu = Readonly<{
-  /** Localized accessible name of the button and menu title, e.g. "seoyeon 댓글 더 보기". */
+  /** Localized accessible name of the button and menu title, e.g. "More options for seoyeon's comment". */
   label(item: CommentThreadItem): string;
   /** Localized name of the Menu sheet's dismiss action (Native Menu requires one). */
   dismissLabel: string;

@@ -73,7 +73,7 @@ import { Text } from "@hjmds/react-native/primitives";
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `label` | 현지화 문자열(필수) | — | 목록의 접근성 이름. 비면 `TypeError` |
-| `separator` | `indented` · `full` · `none` | `indented` | `indented`는 leading 슬롯 폭만큼 들여씀 |
+| `separator` | `indented` · `full` · `none` | `indented` | `indented`는 위 행의 글자 열에서 시작(leading이 있으면 52, 없으면 0) |
 | `appearance` | `plain` · `grouped` | `plain` | `grouped`는 배경과 둥근 모서리로 한 덩어리 |
 | `layoutStyle` | 배치 key만 | — | 목록 루트 배치. Native `style`은 제거된 속성 — `layoutStyle`, 모양은 `appearance`·`separator` |
 | TaskList `items` | `readonly TaskItem[]` — `{ id, label, completed, description?, disabled? }` | — | `id`·`label`이 비거나 `id`가 중복되거나 `completed`가 boolean이 아니면 `TypeError` |
@@ -93,7 +93,7 @@ Native `grouped` 프레임은 Provider의 `tokens.radius.lg`를 읽는다. plain
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 화면 본문 폭을 채우는 세로 묶음이다. `plain`은 자르지 않으므로 행 표면이 부모 여백 쪽으로 8씩 넓어진다(행 글자는 목록 콘텐츠 가장자리). `grouped`는 배경 `--hjm-color-bg`와 모서리 `radius.lg` 16으로 한 덩어리가 되고 그 모양으로 자르므로, 좌우 안쪽 여백 `listRecipe.grouped.paddingInline`(= `listRowRecipe.surfaceBleed` 8)을 두어 행 표면이 잘리지 않고 행 글자는 이전처럼 덩어리 끝에서 8 안쪽에 온다 | `design-contracts/src/component-recipes.ts`(`listRecipe`), `react/src/styles.css`(`.hjm-list`), `react-native/src/data-display.tsx`(List) |
-| 간격 | 행 사이 간격은 없고 구분선 1px(`--hjm-color-border`)만 들어간다. 구분선 위치는 목록 콘텐츠 가장자리(= 행 글자 시작) 기준이다: `indented`는 시작 52(leading 40 + `spacing.sm` 12, 글자 시작과 같은 위치), 끝 −8(행 표면 끝까지). `full`은 시작·끝 모두 −8로 행 표면 폭과 같다(`listRecipe.separators`, 두 플랫폼, Web `--hjm-list-separator-*`). 덩어리 바깥 여백·섹션 사이 간격은 감싸는 Stack이 준다(페이지 좌우 여백은 `layout.pagePadding`, 섹션 간격은 `layout.sectionGap` = `spacing.xl` 24) | `design-contracts/src/component-recipes.ts`(`listRecipe`), `design-contracts/src/foundations.ts`(`layout`), `react/src/styles.css`(`.hjm-list`), `react-native/src/data-display.tsx`(List) |
+| 간격 | 행 사이 간격은 없고 구분선 1px(`--hjm-color-border`)만 들어간다. 구분선 위치는 목록 콘텐츠 가장자리(= leading 없는 행의 글자 시작) 기준이고, 각 구분선은 바로 위 행에 속한다(iOS 셀 구분선과 같다). `indented`는 위 행의 글자 열에서 시작한다: leading이 있으면 `leadingInsetStart` 52(leading 40 + `spacing.sm` 12), 없으면 `insetStart` 0. 끝은 행의 trailing 끝과 같은 콘텐츠 가장자리 0이다. `full`은 위 행과 무관하게 시작·끝 모두 −8로 행 표면 폭과 같다(`listRecipe.separators`, 두 플랫폼, Web `--hjm-list-separator-*`). 위 행의 leading 여부는 ListRow가 알린다: Web은 행 루트의 `data-leading`, Native는 List 항목 context. 덩어리 바깥 여백·섹션 사이 간격은 감싸는 Stack이 준다(페이지 좌우 여백은 `layout.pagePadding`, 섹션 간격은 `layout.sectionGap` = `spacing.xl` 24) | `design-contracts/src/component-recipes.ts`(`listRecipe`), `design-contracts/src/foundations.ts`(`layout`), `react/src/styles.css`(`.hjm-list`), `react-native/src/data-display.tsx`(List) |
 | 순서·정렬 | 다음 페이지 요청은 목록 바로 아래에 [LoadMore](load-more.md)를 둔다 | — |
 | 고정·스크롤 | List 자체는 스크롤하지 않는다. 화면 스크롤 안에 둔다 | `react-native/src/data-display.tsx`(List) |
 | 좁은 폭·큰 글자 | — | — |
@@ -101,7 +101,7 @@ Native `grouped` 프레임은 Provider의 `tokens.radius.lg`를 읽는다. plain
 ```text
 ┌─ List grouped (radius.lg 16, --hjm-color-bg) ─────────┐
 │ ListRow                                          │
-│      ──────────────────────────────────────────  │ ← indented 구분선(시작 들여씀)
+│      ──────────────────────────────────────────  │ ← indented 구분선(위 행에 leading이 있으면 글자 열 52, 없으면 0)
 │ ListRow                                          │
 │      ──────────────────────────────────────────  │
 │ ListRow                                          │
@@ -197,7 +197,7 @@ import { CollectionRail } from "@hjmds/react/collection-rail";
 | 항목 | Web | Native |
 | --- | --- | --- |
 | 구조 | `role="list"` + 자식마다 `role="listitem"` | `accessibilityRole="list"` |
-| 구분선 | CSS(`data-separator`) | 행 사이 1px `View` |
+| 구분선 | CSS(`data-separator`, 다음 항목 `::before`, 위 행 `data-leading`은 `:has()`로 읽음) | 행 사이 1px `View`(위 행 ListRow가 context로 leading 여부를 알림) |
 | 배치 | `layoutStyle`(+ `className`) | `layoutStyle`(`style`은 제거된 속성) |
 
 2026-10-07 Utilverse 항목 삭제 채택을 위해 `renderItemAction`을 추가했다. 체크와 삭제의 초점·누름을 분리하고 큰 글자 라벨 폭을 보존하도록 행동을 다음 줄에 둔다. `renderCollection`의 `renderItem`에도 포함된다. 삭제 저장·실패·되돌리기는 제품이 처리한다.
@@ -205,4 +205,5 @@ import { CollectionRail } from "@hjmds/react/collection-rail";
 항목 삭제 뒤에는 제품이 다음 항목의 독립 행동(없으면 이전 항목, 목록이 비면 후속 행동)으로 초점을 복구한다. Web Showcase는 ref와 커밋 후 focus 예시를 제공한다. Native 접근성 초점 검증은 아직 남아 있다.
 
 ## 근거
+- 구분선 시작은 위 행의 글자 열: 2026-10-17 사용자 보고(leading 없는 행에서 구분선이 중간에서 잘린 것처럼 보임). 고정 시작 52가 leading 없는 행에도 적용돼 Web 402 대시보드 기록 목록에서 행 글자 16 / 구분선 68~394(콘텐츠 끝 386보다 8 더 나감)였다. 위 행의 leading 여부로 시작을 정하고 끝을 콘텐츠 가장자리로 맞춘 뒤 글자 16 / 구분선 16~386, leading 있는 목록은 글자 85 / 구분선 85~369(콘텐츠 끝 369), RTL도 대칭으로 측정됐다.
 - 구분선·grouped 여백: 2026-10-17 사용자 결정(행 글자는 여백 선 16, 표면만 바깥으로 8). 행 콘텐츠 상자가 목록 콘텐츠 가장자리로 옮겨져 `indented` 시작이 60 → 52가 되어도 화면에서 보이는 위치(글자 시작)는 같다. 기본 화면에서 행 글자가 24, 섹션 제목이 16이던 실측은 [ListRow 근거](list-row.md#근거)에 있다. 이전 plain 목록의 `overflow: hidden`은 grouped 모서리만을 위한 것이라 grouped로 옮겼다.

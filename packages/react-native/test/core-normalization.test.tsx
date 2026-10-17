@@ -195,7 +195,7 @@ describe("Native core normalization", () => {
     const nativeTexts = renderer.root.findAllByType(NativeText);
     expect(flattenStyle(nativeTexts[0]!.props.style)).toMatchObject({
       color: "#65707d",
-      fontWeight: "700",
+      fontWeight: "500",
     });
     const stacks = renderer.root.findAllByType(View).filter((node) => {
       const style = flattenStyle(node.props.style);

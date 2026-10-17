@@ -2,11 +2,12 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { visibleControlHeight } from "@hjmds/design-contracts/components/design-system-provider";
 import { resolveLinkDescriptor, } from "@hjmds/design-contracts/components/link";
 import { glyph, spacing } from "@hjmds/design-contracts/foundations";
-import { bottomCtaRecipe, linkRecipe, iconButtonRecipe, resolveIconButtonEdgeOverhang, resolveIconButtonPresentation, } from "@hjmds/design-contracts/recipes";
+import { bottomCtaRecipe, linkRecipe, iconButtonRecipe, resolveIconButtonPresentation, } from "@hjmds/design-contracts/recipes";
 import {} from "@hjmds/design-contracts/recipes/base";
 import { forwardRef, useContext } from "react";
 import { ActivityIndicator, Pressable, View, } from "react-native";
 import { RecipeButton } from "./internal/recipe-button.js";
+import { iconButtonEdgeMargins } from "./internal/icon-button-edge.js";
 import { ScreenFooterContext } from "./internal/screen-footer.js";
 import { assertNoRemovedStyleProps, warnOnce } from "./internal/diagnostics.js";
 import { minimumTargetStyle, resolveNativeShadowElevation } from "./internal/styles.js";
@@ -41,7 +42,7 @@ export const IconButton = forwardRef(function IconButton({ label, children, tone
     const visibleDiameter = visibleControlHeight(sizeContract.diameter, theme.environment.minimumVisualTarget);
     const glyphSize = glyph[sizeContract.glyph];
     // Edge alignment from the same contract helper Web reads, on the visible diameter actually drawn.
-    const edgeOverhang = edge === undefined ? 0 : resolveIconButtonEdgeOverhang(resolvedTone, size, visibleDiameter);
+    const edgeMargins = iconButtonEdgeMargins(edge, resolvedTone, size, theme.environment.minimumVisualTarget);
     const unavailable = disabled || (loading && disableWhileLoading);
     return (_jsx(Pressable, { ...props, ref: ref, accessibilityLabel: resolvedLabel, accessibilityRole: "button", accessibilityState: {
             ...accessibilityState,
@@ -67,8 +68,7 @@ export const IconButton = forwardRef(function IconButton({ label, children, tone
                             ? iconButtonRecipe.states.pressedOpacity
                             : 1,
                 width: visibleDiameter,
-                ...(edgeOverhang > 0 && edge !== "end" ? { marginStart: -edgeOverhang } : {}),
-                ...(edgeOverhang > 0 && edge !== "start" ? { marginEnd: -edgeOverhang } : {}),
+                ...edgeMargins,
             },
             layoutStyle,
         ], children: loading ? (renderLoadingIndicator?.({ color: presentation.content, size: "small" }) ?? (_jsx(ActivityIndicator, { color: presentation.content, size: "small" }))) : (_jsx(View, { accessible: false, style: {
@@ -131,7 +131,7 @@ export function BottomCTA({ primaryAction, secondaryAction, description, accessi
         throw new RangeError("BottomCTA safeAreaBottom must be non-negative");
     }
     const { colors, environment, designProfile } = useHjmNativeTheme();
-    const inScreenFooter = useContext(ScreenFooterContext);
+    const screenFooter = useContext(ScreenFooterContext);
     // Footer elevation separates the content above it (bottomCtaRecipe rationale).
     // Reuse profile strength but retain the upward direction; a flat profile must
     // also disable Android elevation rather than only its iOS shadow properties.
@@ -145,9 +145,10 @@ export function BottomCTA({ primaryAction, secondaryAction, description, accessi
             ? _jsx(BottomCTAButton, { action: secondaryAction, fallbackTone: "secondary" })
             : secondaryAction;
     return (_jsxs(View, { accessibilityLabel: accessibilityLabel, accessibilityRole: "toolbar", testID: testID, style: [
-            // Inside ScreenLayout's footer the footer owns border, padding and surface; only copy, actions and an
-            // explicit safeAreaBottom remain (ScreenFooterContext, same rule as Web data-placement="screen-footer").
-            inScreenFooter ? { gap: bottomCtaRecipe.gap, paddingBottom: safeAreaBottom } : {
+            // Inside ScreenLayout's footer the footer owns border, padding, surface and the bottom inset; an explicit
+            // safeAreaBottom adds only what the footer padding does not already cover, so the gap is max(footer, inset)
+            // rather than their sum (2026-10-17 user report: too much space below buttons; Web data-placement="screen-footer").
+            screenFooter ? { gap: bottomCtaRecipe.gap, paddingBottom: Math.max(0, safeAreaBottom - screenFooter.bottomPadding) } : {
                 backgroundColor: colors.bg,
                 borderColor: colors.border,
                 borderTopWidth: bottomCtaRecipe.borderWidth,

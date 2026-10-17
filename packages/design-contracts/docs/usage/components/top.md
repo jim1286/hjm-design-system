@@ -90,6 +90,6 @@ import { Top } from "@hjmds/react-native/top";
 
 ### 프로필 모서리·제목 소비
 
-2026-10-07 소비 감사에서 두 renderer의 제목 크기·행간·굵기가 foundation으로 확정된 recipe를 직접 읽어 프로필을 우회했다. `large`는 가까운 프로필의 `heading.level2`, `medium`은 `typography.titleLarge`를 읽고 프로필이 없으면 기존 recipe를 유지한다. 시각 역할은 `headingLevel`과 독립이며 display 서체·제목 의미·보조 행동·초점은 바꾸지 않는다.
+2026-10-07 소비 감사에서 두 renderer의 제목 크기·행간·굵기가 foundation으로 확정된 recipe를 직접 읽어 프로필을 우회했다. `large`는 가까운 프로필의 `heading.level3`(24, 2026-10-17 큰 글자 단계 폐지 전에는 `level2` 32), `medium`은 `typography.titleLarge`를 읽고 프로필이 없으면 기존 recipe를 유지한다. 시각 역할은 `headingLevel`과 독립이며 display 서체·제목 의미·보조 행동·초점은 바꾸지 않는다.
 
 프로필 연결은 1.16.0 변경이며, 기본 배포 계약과 실제 Native 기기 검증은 구분한다.

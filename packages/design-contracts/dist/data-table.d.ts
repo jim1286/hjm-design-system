@@ -132,7 +132,7 @@ export declare const dataTableRecipe: {
             alpha?: number;
         }>;
         readonly textVariant: "label";
-        readonly fontWeight: "700";
+        readonly fontWeight: "500";
         readonly borderBottom: Readonly<{
             source: "theme";
             key: "border";
@@ -319,7 +319,7 @@ export declare const dataTableFamilyRecipe: {
                 key: "text";
                 alpha?: number;
             }>;
-            readonly fontWeight: "700";
+            readonly fontWeight: "500";
         };
         readonly positive: {
             readonly color: Readonly<{
@@ -327,7 +327,7 @@ export declare const dataTableFamilyRecipe: {
                 key: "danger";
                 alpha?: number;
             }>;
-            readonly fontWeight: "700";
+            readonly fontWeight: "500";
         };
         readonly negative: {
             readonly color: Readonly<{
@@ -335,7 +335,7 @@ export declare const dataTableFamilyRecipe: {
                 key: "info";
                 alpha?: number;
             }>;
-            readonly fontWeight: "700";
+            readonly fontWeight: "500";
         };
         readonly muted: {
             readonly color: Readonly<{

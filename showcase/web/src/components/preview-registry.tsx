@@ -209,6 +209,25 @@ import mountainPhoto from "../../../shared/photos/mountain.jpg";
 
 // The old empty-state button had no handler. Keep creation and search recovery observable
 // without adding a second data-state engine; this is a local, disposable fixture.
+
+// Same cases as the Native preview (shared skeletonExample): shapes, list-row and card placeholders under one busy label.
+function SkeletonPreview() {
+  const { sections, textLines, rowLines, rowCount, cardLines, buttonWidth } = skeletonExample;
+  return <HjmStack gap="lg" role="status" aria-label={skeletonExample.label} aria-busy="true">
+    <HjmStack gap="sm"><HjmText as="p" variant="label" tone="muted">{sections.shapes}</HjmText>
+      <HjmSkeleton shape="text" lines={textLines} />
+      <HjmStack axis="inline" gap="sm" align="center"><HjmSkeleton shape="circle" /><HjmSkeleton shape="button" width={buttonWidth} /></HjmStack>
+      <HjmSkeleton shape="media" />
+    </HjmStack>
+    <HjmStack gap="sm"><HjmText as="p" variant="label" tone="muted">{sections.listRow}</HjmText>
+      {Array.from({ length: rowCount }, (_, index) => <HjmStack key={index} axis="inline" gap="sm" align="center"><HjmSkeleton shape="circle" /><HjmSkeleton shape="text" lines={rowLines} layoutStyle={{ flex: 1 }} /></HjmStack>)}
+    </HjmStack>
+    <HjmStack gap="sm"><HjmText as="p" variant="label" tone="muted">{sections.card}</HjmText>
+      <HjmSurface bordered padding="md"><HjmStack gap="sm"><HjmSkeleton shape="media" /><HjmSkeleton shape="text" lines={cardLines} /><HjmSkeleton shape="button" /></HjmStack></HjmSurface>
+    </HjmStack>
+  </HjmStack>;
+}
+
 function EmptyStateRecoveryPreview() {
   const [created, setCreated] = useState(false);
   const [query, setQuery] = useState("");
@@ -564,7 +583,7 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "QRCode": return <DataLayoutPreview mode="qr" />;
     case "ThinkingOrb": return <ThinkingOrb label="검색 중" state="searching" />;
     case "Spinner": return <HjmSpinner label={spinnerExample.label} />;
-    case "Skeleton": return <HjmSkeleton width="100%" height={skeletonExample.height} />;
+    case "Skeleton": return <SkeletonPreview />;
     case "Result": return <ObservablePreview>{({ setMessage }) => <HjmResult status={resultExample.status} title={resultExample.title} description={resultExample.description} actions={[{ label: resultExample.action, onAction: () => setMessage(resultExample.actionResult) }]} />}</ObservablePreview>;
     case "Toast": return <ObservablePreview>{({ message, setMessage }) => message ? <PreviewTools><PreviewToolButton onClick={() => setMessage("")}>{toastExample.showAgain}</PreviewToolButton></PreviewTools> : <HjmToast descriptor={{ id: toastExample.saved.id, tone: "success", title: toastExample.saved.title, description: toastExample.saved.description, closeLabel: toastExample.saved.closeLabel, press: { accessibilityLabel: toastExample.saved.pressLabel, onPress: () => setMessage(toastExample.saved.pressResult) } }} onDismissRequest={(reason) => { if (reason !== "press") setMessage(toastExample.dismissed); }} />}</ObservablePreview>;
     case "Dialog": return <DialogPreview />;

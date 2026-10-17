@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import { IconButton } from "./actions.js";
 import { CounterBadge } from "./supplemental-display.js";
 import { useHjmTheme } from "./provider.js";
-export function NotificationBell({ label, count, icon, onPress, disabled = false, active = true, layoutStyle }) {
+export function NotificationBell({ label, count, icon, onPress, disabled = false, active = true, edge, layoutStyle }) {
     if (!Number.isSafeInteger(count) || count < 0)
         throw new RangeError("Unread count must be a nonnegative integer");
     const { environment } = useHjmTheme();
@@ -24,6 +24,9 @@ export function NotificationBell({ label, count, icon, onPress, disabled = false
     // Keep the badge anchored to the icon even in a stretching Stack or grid. layoutStyle comes
     // after the defaults (alignSelf included) except `width`: the floating badge sits on the root's
     // inline-end edge, so a wider root would detach it from the icon. Use margins or alignSelf to place.
-    return _jsxs("span", { style: { alignSelf: 'flex-start', position: 'relative', display: 'inline-flex', ...layoutStyle, width: 'max-content' }, children: [_jsx(IconButton, { label: label, disabled: disabled, onClick: onPress, children: _jsx("span", { ref: art, "aria-hidden": "true", style: { display: 'inline-flex', transformOrigin: 'top center' }, children: icon }) }), _jsx("span", { "aria-hidden": "true", style: { position: 'absolute', insetInlineEnd: 0, top: 0, pointerEvents: 'none' }, children: _jsx(CounterBadge, { count: count, variant: "floating" }) })] });
+    // `edge` puts the IconButton edge overhang on this root (.hjm-notification-bell[data-edge]), not on the button: the
+    // badge is anchored to the root's end, and a margin on the inner button would shrink the root and pull the badge in
+    // by the overhang (2026-10-17 1.27.2 adoption, as Native).
+    return _jsxs("span", { className: "hjm-notification-bell", "data-edge": edge, style: { alignSelf: 'flex-start', position: 'relative', display: 'inline-flex', ...layoutStyle, width: 'max-content' }, children: [_jsx(IconButton, { label: label, disabled: disabled, onClick: onPress, children: _jsx("span", { ref: art, "aria-hidden": "true", style: { display: 'inline-flex', transformOrigin: 'top center' }, children: icon }) }), _jsx("span", { "aria-hidden": "true", style: { position: 'absolute', insetInlineEnd: 0, top: 0, pointerEvents: 'none' }, children: _jsx(CounterBadge, { count: count, variant: "floating" }) })] });
 }
 //# sourceMappingURL=notification-bell.js.map

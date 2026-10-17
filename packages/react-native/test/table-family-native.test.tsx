@@ -42,8 +42,16 @@ it("pads the line score to nine innings, extends for extra innings and announces
 it("blanks the matrix diagonal and names each cell by both teams", () => {
   const tree = render(<MatrixTable accessibilityLabel="상대 전적" ids={["LG", "KIA"]} labelOf={id => id} getCell={(row) => ({ label: row === "LG" ? "9-7" : "7-9", tone: row === "LG" ? "positive" : "negative" })} />);
   try {
+    // Language-neutral default; products pass cellAccessibilityLabel for their own phrasing (below).
+    expect(hosts(tree, props => props.accessibilityLabel === "LG, KIA: 9-7")).toHaveLength(1);
+    expect(hosts(tree, props => typeof props.accessibilityLabel === "string" && (props.accessibilityLabel as string).startsWith("LG, LG"))).toHaveLength(0);
+  } finally { act(() => tree.unmount()); }
+});
+
+it("lets the product phrase each matrix cell name", () => {
+  const tree = render(<MatrixTable accessibilityLabel="상대 전적" ids={["LG", "KIA"]} labelOf={id => id} cellAccessibilityLabel={(row, column, value) => `${row} 대 ${column} ${value}`} getCell={(row) => ({ label: row === "LG" ? "9-7" : "7-9" })} />);
+  try {
     expect(hosts(tree, props => props.accessibilityLabel === "LG 대 KIA 9-7")).toHaveLength(1);
-    expect(hosts(tree, props => typeof props.accessibilityLabel === "string" && (props.accessibilityLabel as string).startsWith("LG 대 LG"))).toHaveLength(0);
   } finally { act(() => tree.unmount()); }
 });
 

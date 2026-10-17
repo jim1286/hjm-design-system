@@ -84,3 +84,5 @@ Diairy QA W16 reproduced Chrome default backdrop blur undoing Dialog focus retur
 0pt가 되고 검색 입력만 그려졌다(iPhone 17 Pro · iOS 26.5, 이전 코드로도 재현). 제품은 창 높이 `flexBasis`로 우회했다.
 `auto`는 내용 높이 그대로다(늘 남는 공간이 없다). 바뀌는 모습: 고정 높이 시트의 `footer`가 본문 바로 아래가 아니라 시트 아래에 붙는다(Web과 같다).
 버린 대안: 새 `bodyLayout` prop(기본값을 그대로 두면 Web과 다른 동작이 남고 제품마다 켜야 한다).
+
+2026-10-17 사용자 결정 두 가지. 첫째, 시트는 위쪽에 보이는 제목 줄을 그리지 않는다(예: SearchScreen 필터 시트의 "필터"). 위 1.4·1.7의 제목 정렬·element 제목 설명은 기록으로 남긴다. 지금 `title`은 접근성 이름일 뿐이다. Web은 `aria-labelledby`가 가리키는 시각 숨김 `h2`, Native는 대화상자 `accessibilityLabel`과 배치 밖 1pt 머리글이다. Native element 제목은 그리지 않으므로 `accessibilityTitle`이 이름이 된다. 머리 행은 설명이나 ×가 있을 때만 그리고 ×는 끝 쪽 자리를 지킨다. Native Select·Combobox 선택 시트와 GestureSheet도 같은 규칙을 따르며 `sheetRecipe.title` 시각 값은 삭제했다. 둘째, 가림막을 누르면 모든 위치의 시트가 닫힌다(2026-10-16의 하단 드래그 전용 기본을 대체). 닫기 경로는 손잡이·드래그와 같은 `requestClose("outside")`이므로 `busy`·`dismissPolicy`·제어형 owner의 버리기 확인을 건너뛰지 않는다. 검사: `sheet-layout.browser.test.tsx`(접근성 이름, 머리 없음, 손잡이–본문 간격, 가림막 닫기·busy·owner 유지), `sheet-viewport.test.tsx`(Native 접근성 이름·보이는 제목 없음·× 위치·가림막 닫기·busy·`outsideDismiss: false`).

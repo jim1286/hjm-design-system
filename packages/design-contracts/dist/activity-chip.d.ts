@@ -84,7 +84,7 @@ export declare const activityChipRecipe: {
     };
     readonly label: {
         readonly textVariant: "label";
-        readonly fontWeight: "700";
+        readonly fontWeight: "500";
         readonly maxLines: 1;
     };
     readonly emphasis: {

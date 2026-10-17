@@ -1,5 +1,5 @@
 import { floatingSurfaceContract, focusIndicatorContract } from "./component-contracts.js";
-import { backdrop, control, fontWeight, motionPreset, shadow, spacing, } from "./foundations.js";
+import { backdrop, control, motionPreset, shadow, spacing, typography, } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
 export const sidePanelBehaviorDefaults = {
     modal: true,
@@ -55,7 +55,7 @@ export const sidePanelRecipe = {
     title: {
         color: semanticColors.content.primary,
         textVariant: "title",
-        fontWeight: fontWeight.bold,
+        fontWeight: typography.title.fontWeight,
     },
     body: {
         color: semanticColors.content.body,

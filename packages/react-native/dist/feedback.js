@@ -1,9 +1,9 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { easing, fontWeight, glyph, spacing } from "@hjmds/design-contracts/foundations";
+import { easing, glyph, spacing } from "@hjmds/design-contracts/foundations";
 import { resolveControlAccessibleName, } from "@hjmds/design-contracts/behaviors";
-import { emptyStateRecipe, noticeRecipe, progressRecipe, skeletonRecipe, toastRecipe, } from "@hjmds/design-contracts/recipes";
+import { emptyStateRecipe, noticeRecipe, progressRecipe, skeletonRecipe, textRecipe, toastRecipe, } from "@hjmds/design-contracts/recipes";
 import { resolveResultDescriptor, resultRecipe, } from "@hjmds/design-contracts/components/result";
 import { liquidToastRecipe, createToastSession, createToastStore, resolveToastDescriptor, toastBehaviorDefaults, } from "@hjmds/design-contracts/components/toast";
 import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, } from "react";
@@ -222,7 +222,7 @@ export { Spinner } from "./internal/spinner.js";
  * width/height/radius stay for callers already on the 0.9 train and win over
  * `shape`. Migration: .changeset/skeleton-pulse-by-default.md
  */
-export function Skeleton({ shape = skeletonRecipe.defaults.shape, animated = skeletonRecipe.defaults.animated, width, height, radius: radiusValue, accessibilityLabel, layoutStyle, }) {
+export function Skeleton({ shape = skeletonRecipe.defaults.shape, animated = skeletonRecipe.defaults.animated, lines = skeletonRecipe.defaults.lines, width, height, radius: radiusValue, accessibilityLabel, layoutStyle, }) {
     const { environment, palette, tokens } = useHjmNativeTheme();
     const shapeSpec = skeletonRecipe.shapes[shape];
     const { duration, easing: easingName, fromOpacity, toOpacity } = skeletonRecipe.animation;
@@ -254,21 +254,41 @@ export function Skeleton({ shape = skeletonRecipe.defaults.shape, animated = ske
         loop.start();
         return () => loop.stop();
     }, [duration, easingName, pulse, shouldAnimate]);
-    const resolvedWidth = width ?? (shape === "circle" ? shapeSpec.defaultHeight : "100%");
-    return (_jsx(Animated.View, { accessibilityLabel: accessibilityLabel, accessibilityState: accessibilityLabel ? { busy: true } : undefined, accessible: accessibilityLabel !== undefined, style: [
+    const opacity = shouldAnimate
+        ? pulse.interpolate({ inputRange: [0, 1], outputRange: [fromOpacity, toOpacity] })
+        : toOpacity;
+    // Filled placeholder, no outline: canvas + hairline was invisible on white (2026-10-17, skeleton.md rationale).
+    const fill = {
+        backgroundColor: resolveColorReference(skeletonRecipe.background, palette),
+        borderRadius: radiusValue ?? tokens.radius[shapeSpec.radius],
+    };
+    // A labelled skeleton is the region's single busy announcement; an unlabelled one is hidden on both platforms.
+    const accessibility = {
+        accessibilityLabel,
+        accessibilityState: accessibilityLabel ? { busy: true } : undefined,
+        accessible: accessibilityLabel !== undefined,
+        importantForAccessibility: accessibilityLabel ? "yes" : "no-hide-descendants",
+    };
+    const lineCount = shape === "text" ? Math.max(1, Math.floor(lines)) : 1;
+    if (lineCount > 1) {
+        const lineHeight = height ?? shapeSpec.defaultHeight;
+        // One pulse on the group keeps the lines in phase.
+        return (_jsx(Animated.View, { ...accessibility, style: [{ gap: skeletonRecipe.lines.gap, opacity, width: width ?? "100%" }, layoutStyle], children: Array.from({ length: lineCount }, (_, index) => (_jsx(View, { style: [fill, {
+                        height: lineHeight,
+                        width: index === lineCount - 1 ? `${skeletonRecipe.lines.lastLineWidthPercent}%` : "100%",
+                    }] }, index))) }));
+    }
+    const resolvedWidth = width ?? (shape === "circle" ? shapeSpec.defaultHeight ?? undefined : "100%");
+    const resolvedHeight = height ?? shapeSpec.defaultHeight ?? undefined;
+    return (_jsx(Animated.View, { ...accessibility, style: [
             {
-                backgroundColor: resolveColorReference(skeletonRecipe.background, palette),
-                // A white loading placeholder needs an outline after removing grey fills.
-                borderColor: palette.theme.border,
-                borderWidth: 1,
-                borderRadius: radiusValue ?? tokens.radius[shapeSpec.radius],
-                height: height ?? shapeSpec.defaultHeight,
-                opacity: shouldAnimate
-                    ? pulse.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [fromOpacity, toOpacity],
-                    })
-                    : toOpacity,
+                ...fill,
+                ...(resolvedHeight === undefined && shapeSpec.aspectRatio !== null
+                    ? { aspectRatio: shapeSpec.aspectRatio }
+                    : { height: resolvedHeight }),
+                // An avatar beside text lines keeps its diameter in a row (Web: flex: none).
+                ...(shape === "circle" ? { flexShrink: 0 } : {}),
+                opacity,
                 width: resolvedWidth,
             },
             layoutStyle,
@@ -290,7 +310,7 @@ function ToastProgressRow({ progress }) {
                             width: contract.dotSize,
                         } }), _jsx(Text, { style: {
                             color: resolveColorReference(state === "current" ? contract.currentLabelColor : contract.labelColor, theme.palette),
-                            ...(state === "current" ? { fontWeight: fontWeight.bold } : {}),
+                            ...(state === "current" ? { fontWeight: textRecipe.emphasis.strong } : {}),
                         }, variant: contract.textVariant, children: step })] }, `${index}-${step}`));
         }) }));
 }

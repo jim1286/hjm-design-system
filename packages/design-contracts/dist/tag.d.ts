@@ -121,7 +121,7 @@ export declare const tagRecipe: {
         readonly paddingHorizontal: 4;
         readonly gap: 4;
         readonly textVariant: "caption";
-        readonly fontWeight: "600";
+        readonly fontWeight: "500";
     };
     readonly radius: "sm";
     readonly borderWidth: 1;

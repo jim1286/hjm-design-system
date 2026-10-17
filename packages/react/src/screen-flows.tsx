@@ -22,7 +22,7 @@ import { EmptyState, Skeleton } from "./feedback.js";
 /** `icon` renders an icon-only button named by `label`; header actions (top-right) use it so a centered title keeps its width (2026-10-17). */
 export type ScreenFlowAction = Readonly<{label:string; onAction():void; disabled?:boolean; pending?:boolean; icon?:ReactNode}>;
 /** Header tool action (refresh, add): icon-only so it never pushes the centered title. A required text `add` made
- * products route exits ("취소") through it as a header text button (2026-10-17 screen review); exits use `exit`. */
+ * products route exits (a "Cancel" label) through it as a header text button (2026-10-17 screen review); exits use `exit`. */
 export type ScreenFlowIconAction = ScreenFlowAction & Readonly<{icon:ReactNode}>;
 // `edge`: the action ends a header/row edge (IconButton/Button edge rule, 2026-10-17 audit); framed tones ignore it.
 function Action({action,secondary=false,buttonRef,edge}:{action:ScreenFlowAction;secondary?:boolean;buttonRef?:Ref<HTMLButtonElement>;edge?:"start"|"end"}){if(action.icon)return <IconButton ref={buttonRef} label={action.label} tone="ghost" {...(edge?{edge}:{})} disabled={!!(action.disabled||action.pending)} onClick={action.onAction}>{action.icon}</IconButton>;return <Button ref={buttonRef} tone={secondary?"ghost":"primary"} {...(edge?{edge}:{})} disabled={!!(action.disabled||action.pending)} loading={action.pending??false} onClick={action.onAction}>{action.label}</Button>;}
@@ -50,7 +50,7 @@ export function ListDetailScreen({list,detail,back,refresh,loadMore,layoutStyle,
   wasOpen.current=open;
  },[open]);
  // layoutStyle places the outer host that owns both panes, not the inner list ScreenLayout.
- // "더 보기" ends the list inside the scroll body, centered like LoadMore; the fixed footer is the bottom CTA slot (2026-10-17 review).
+ // "Load more" ends the list inside the scroll body, centered like LoadMore; the fixed footer is the bottom CTA slot (2026-10-17 review).
  return <div style={{height:"100%",...layoutStyle}}>
   <div ref={listHost} tabIndex={-1} hidden={open} style={{height:"100%"}} onFocusCapture={event=>{returnFocus.current=event.target as HTMLElement;}}><ScreenLayout {...screen} {...(refresh||screen.actions?{actions:<Stack axis="inline" gap="xs" align="center">{/* Refresh no longer replaces the screen's own actions (2026-10-16 composition review). */}{screen.actions}{refresh?<Action action={refresh} secondary edge="end"/>:null}</Stack>}:{})}>{loadMore?<div style={{display:"flex",flexDirection:"column",flex:"1 1 auto",minHeight:0,gap:screenPatternRecipe.itemGap}}>{list}<div style={{display:"flex",justifyContent:"center"}}><Action action={loadMore} secondary/></div></div>:list}</ScreenLayout></div>
   {detail?<div ref={detailHost} style={{height:"100%"}}><ScreenLayout title={detail.title} {...(detail.titleVisibility === undefined ? {} : { titleVisibility: detail.titleVisibility })} {...(detail.headerAlignment === undefined ? {} : { headerAlignment: detail.headerAlignment })} {...(detail.state === undefined ? {} : {state:detail.state})} stateAction={detail.stateAction} notice={detail.notice} exit={{kind:"back",label:back.label,onClick:back.onAction,disabled:!!(back.disabled||back.pending)}}>{detail.content}</ScreenLayout></div>:null}
@@ -532,7 +532,7 @@ export type CommentReactions = ReactionPickerProps & Readonly<{closeLabel:string
  * only the localized button name, the items allowed for that comment and the action callback.
  */
 export type CommentMenu = Readonly<{
-  /** Localized accessible name of the button, e.g. "seoyeon 댓글 더 보기". */
+  /** Localized accessible name of the button, e.g. "More options for seoyeon's comment". */
   label(item: CommentThreadItem): string;
   /** Items allowed for this comment (permission is product-owned). An empty list omits the button for that row. */
   items(item: CommentThreadItem): readonly CommentMenuItemDescriptor[];

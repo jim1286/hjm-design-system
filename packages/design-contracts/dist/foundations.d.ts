@@ -95,17 +95,17 @@ export declare const typography: {
     readonly title: {
         readonly fontSize: 18;
         readonly lineHeight: 26;
-        readonly fontWeight: "600";
+        readonly fontWeight: "500";
     };
     readonly titleLarge: {
         readonly fontSize: 20;
         readonly lineHeight: 28;
-        readonly fontWeight: "600";
+        readonly fontWeight: "500";
     };
     readonly heading: {
         readonly fontSize: 24;
         readonly lineHeight: 32;
-        readonly fontWeight: "600";
+        readonly fontWeight: "500";
     };
 };
 export type TextVariant = keyof typeof typography;
@@ -113,34 +113,38 @@ export type TextVariant = keyof typeof typography;
 export declare function resolveTextFontRole(variant: TextVariant, role?: FontRole): FontRole;
 /**
  * Document heading hierarchy without widening the established `TextVariant`
- * union. Levels 3–5 reuse the existing semantic styles; larger levels are
- * additive display roles for dense product pages and documentation.
+ * union. Every level reuses a semantic text style, so no heading exceeds `typography.heading`.
  */
 export declare const heading: {
+    /**
+     * @deprecated Same as `level3` since the display tier was removed (2026-10-17 user decision, "큰 글자
+     * 정책은 없애"; it was 40/48/600). Kept so existing consumers keep compiling; use `level3`.
+     */
     readonly level1: {
-        readonly fontSize: 40;
-        readonly lineHeight: 48;
-        readonly fontWeight: "700";
+        readonly fontSize: 24;
+        readonly lineHeight: 32;
+        readonly fontWeight: "500";
     };
+    /** @deprecated Same as `level3` since the display tier was removed (was 32/40/600); use `level3`. */
     readonly level2: {
-        readonly fontSize: 32;
-        readonly lineHeight: 40;
-        readonly fontWeight: "700";
+        readonly fontSize: 24;
+        readonly lineHeight: 32;
+        readonly fontWeight: "500";
     };
     readonly level3: {
         readonly fontSize: 24;
         readonly lineHeight: 32;
-        readonly fontWeight: "600";
+        readonly fontWeight: "500";
     };
     readonly level4: {
         readonly fontSize: 20;
         readonly lineHeight: 28;
-        readonly fontWeight: "600";
+        readonly fontWeight: "500";
     };
     readonly level5: {
         readonly fontSize: 18;
         readonly lineHeight: 26;
-        readonly fontWeight: "600";
+        readonly fontWeight: "500";
     };
 };
 export type HeadingLevel = keyof typeof heading;

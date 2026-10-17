@@ -27,7 +27,7 @@ export function FontRolePreview({ initialMode = "separated" }: FontRolePreviewPr
     <Heading level="level3">{copy.title}</Heading><Text>{copy.intro}</Text>
     <SegmentedControl label={copy.choose} items={fontRoleModes} value={mode} onValueChange={value => { if (value === "inherited" || value === "separated") setMode(value); }} />
     <Text variant="caption">{profileOptions[index]!.label}</Text><Button tone="secondary" onPress={nextTheme}>{copy.nextTheme}</Button>
-    <Heading level="level2" semanticLevel={3}>{copy.heading}</Heading><Text variant="bodyLarge">{copy.body}</Text>
+    <Heading level="level3" semanticLevel={3}>{copy.heading}</Heading><Text variant="bodyLarge">{copy.body}</Text>
     <Text variant="caption">{copy.caption}</Text><Text fontRole="ui">{copy.ui}</Text><Text fontRole="code">{copy.code}</Text>
     <Card title={copy.card} description={copy.body} actions={<Button ref={trigger} onPress={() => setOpen(true)}>{copy.detail}</Button>}>
       <TextField label={copy.draft} value={draft} onValueChange={setDraft} />

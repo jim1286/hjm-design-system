@@ -64,7 +64,7 @@
 | 소요 시간 | DurationField | 설명 아래 | NumberField 세 칸, 칸 사이 `spacing.md` 16. 세 칸이 모두 들어가면 한 줄(칸 최대 `fieldGroupRecipe.inline.maxWidth`), 아니면 세 칸 모두 세로([FieldGroup](field-group.md)) |
 | 확인 | InlineConfirm | 트리거 자리 그대로 | 트리거와 확인 행동이 같은 자리, Button 높이 44, 질문·버튼 줄 사이와 두 버튼 사이 `spacing.sm` 12 |
 | 반응 | ReactionPicker | 제목 아래 | `ghost` `pill` Button 묶음, 사이 `spacing.xs` 8, 넘치면 줄바꿈 |
-| 알림 종 | NotificationBell | 블록 맨 위, 시작 쪽 정렬 | IconButton(기본 `medium` 44) + CounterBadge `floating`(끝·위 모서리) |
+| 알림 종 | NotificationBell | 블록 맨 위, 시작 쪽 정렬. TopBar·헤더 끝에 둘 때는 `edge="end"` | IconButton(기본 `medium` 44) + CounterBadge `floating`(끝·위 모서리). `edge`(`start`·`end`·`both`)는 IconButton `edge`와 같은 값(`resolveIconButtonEdgeOverhang`, 44−24)/2 = 10을 벨 루트에 적용해 glyph 칸이 여백 선(TopBar 16)에 오고 배지는 아이콘 모서리를 지킨다 |
 
 ## 흐름과 상태
 
@@ -197,4 +197,5 @@ function CompoundBlocks() {
 
 ## 근거
 
+- NotificationBell `edge`: 2026-10-17 1.27.2 채택 점검. Spint 홈·탐색 TopBar 끝의 벨은 IconButton을 감싸지만 `edge`가 없어 glyph 칸이 바 끝에서 26에 놓였다(Web 402·1280, LTR·RTL 측정 26 → 16, Native 3x 프레임: 버튼 끝 386 기준 15.7). 넘침은 안쪽 버튼이 아니라 벨 루트에 준다. 버튼에 주면 루트가 10 줄어 끝에 붙은 배지가 아이콘에서 10 안쪽으로 밀린다(측정: 배지 끝 − 버튼 끝 0 유지).
 - 2026-10-17 구성 리뷰: 소요 시간 칸이 데스크톱에서 늘어나고 좁은 폭에서 한 칸만 다음 줄로 끊겨 FieldGroup recipe의 inline 규칙을 바꿨다.

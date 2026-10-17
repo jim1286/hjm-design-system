@@ -56,7 +56,7 @@ export declare const otpFieldRecipe: {
                 alpha?: number;
             }>;
             readonly textVariant: "body";
-            readonly fontWeight: "600";
+            readonly fontWeight: "500";
         };
         readonly hint: {
             readonly color: Readonly<{

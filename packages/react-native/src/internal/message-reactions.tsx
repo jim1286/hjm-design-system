@@ -9,7 +9,7 @@ import { Text } from "../primitives.js";
 import { ReactionPicker, type ReactionPickerProps } from "../reaction-picker.js";
 
 /** One row of the hold menu. Products supply copy and icons; HJM owns order, size and tone. */
-export type MessageMenuAction = Readonly<{ id: string; label: string; icon?: ReactNode; onPress(): void; disabled?: boolean; /** Shows › for rows that open a further list (e.g. "더 보기"). */ submenu?: boolean }>;
+export type MessageMenuAction = Readonly<{ id: string; label: string; icon?: ReactNode; onPress(): void; disabled?: boolean; /** Shows › for rows that open a further list (e.g. "Load more"). */ submenu?: boolean }>;
 type Props = ReactionPickerProps & Readonly<{ closeLabel: string; menuAction?: Readonly<{label:string;onPress():void;disabled?:boolean}>; children: ReactNode; interactiveContent?:boolean; replyAction?: Readonly<{label:string;onPress():void;disabled?:boolean;icon?:ReactNode}>;
   /** Shown above the actions, e.g. the exact send time that a run only shows once. */
   menuTitle?: string;

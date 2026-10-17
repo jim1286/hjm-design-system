@@ -128,7 +128,7 @@ export declare const timelineRecipe: {
     };
     readonly label: {
         readonly textVariant: "body";
-        readonly fontWeight: "600";
+        readonly fontWeight: "500";
         readonly color: Readonly<{
             source: "theme";
             key: "text";

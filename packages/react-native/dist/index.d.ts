@@ -30,7 +30,7 @@ export { Mentions, type MentionsProps, type MentionCandidate } from "./mentions.
 export { TransferList, type TransferListProps, type TransferListLabels } from "./transfer-list.js";
 export { KeyboardAvoiding, resolveKeyboardAvoidanceBehavior, type KeyboardAvoidingProps } from "./keyboard.js";
 export { AuthProviderButton, type AuthProviderButtonProps } from "./provider-button.js";
-export { AuthScreenLayout, type AuthScreenLayoutProps } from "./auth-screen.js";
+export { AuthScreenLayout, AuthScreenHero, AuthScreenFooter, type AuthScreenLayoutProps, type AuthScreenHeroProps, type AuthScreenFooterProps, type AuthScreenPolicyLink } from "./auth-screen.js";
 export { StatusText, type StatusTextProps } from "./status-text.js";
 export { Pagination, type PaginationProps } from "./pagination.js";
 //# sourceMappingURL=index.d.ts.map

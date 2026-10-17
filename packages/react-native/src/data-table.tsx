@@ -8,6 +8,7 @@ import {
   type DataTableRowDescriptor, type DataTableRowGroup, type DataTableSortCycle, type DataTableSortState,
 } from "@hjmds/design-contracts/components/data-table";
 import { spacing } from "@hjmds/design-contracts/foundations";
+import { textRecipe } from "@hjmds/design-contracts/recipes";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
@@ -45,9 +46,9 @@ export type DataTableProps<ColumnKey extends string = string, RowKey extends str
   emptyLabel?: string;
   density?: DataTableDensity;
   footer?: ReactNode;
-  /** Header bands above leaf columns (타격 | 주루). */
+  /** Header bands above leaf columns (Batting | Running). */
   columnGroups?: readonly DataTableColumnGroup<ColumnKey>[];
-  /** Labeled row sections (선발 / 교체). */
+  /** Labeled row sections (Starters / Substitutes). */
   rowGroups?: readonly DataTableRowGroup<RowKey>[];
   /** Per-cell emphasis decided by the product (AG Grid cellClassRules / Savant percentile heat). */
   cellStyle?: (rowId: RowKey, columnId: ColumnKey) => Readonly<{ tone?: DataTableCellTone | null; heat?: DataTableCellHeat | null }> | null;
@@ -95,7 +96,7 @@ export function DataTable<ColumnKey extends string = string, RowKey extends stri
     const sortable = column.sortable ?? dataTableColumnDefaults.sortable;
     const active = sortState?.columnId === column.id ? sortState.direction : null;
     const textColor = active ? color(dataTableRecipe.sortButton.activeColor) : color(dataTableRecipe.header.color);
-    const content = <NativeText numberOfLines={1} style={{ color: textColor, fontSize: 12, fontWeight: "700", textAlign: alignOf(column.align ?? dataTableColumnDefaults.align) }}>
+    const content = <NativeText numberOfLines={1} style={{ color: textColor, fontSize: 12, fontWeight: dataTableRecipe.header.fontWeight, textAlign: alignOf(column.align ?? dataTableColumnDefaults.align) }}>
       {column.header}{active ? (active === "ascending" ? " ▲" : " ▼") : ""}
     </NativeText>;
     const style = { width: widthOf(column, pinnedColumn), flexShrink: 0, height: headerHeight, paddingHorizontal: pad.paddingHorizontal / 2, justifyContent: "center" as const };
@@ -111,7 +112,7 @@ export function DataTable<ColumnKey extends string = string, RowKey extends stri
     return <View key={key} style={{ width: widthOf(column, pinnedColumn), flexShrink: 0, height: rowHeight - 1, paddingHorizontal: pad.paddingHorizontal / 2, paddingLeft: pad.paddingHorizontal / 2 + indent, justifyContent: "center", alignItems: align === "right" ? "flex-end" : align === "center" ? "center" : "flex-start" }}>
       {heat && <View pointerEvents="none" style={{ position: "absolute", left: 2, right: 2, top: 4, bottom: 4, borderRadius: 6, backgroundColor: heatBase[heat.side], opacity: dataTableFamilyRecipe.heatAlpha[heat.strength] }} />}
       {typeof node === "string" || typeof node === "number"
-        ? <NativeText numberOfLines={1} style={{ color: tone ? color(tone.color) : emphasis ? colors.text : color(dataTableRecipe.cell.color), fontSize: 14, fontWeight: tone ? tone.fontWeight : emphasis ? "700" : "500", textAlign: align, fontVariant: ["tabular-nums"] }}>{String(node)}</NativeText>
+        ? <NativeText numberOfLines={1} style={{ color: tone ? color(tone.color) : emphasis ? colors.text : color(dataTableRecipe.cell.color), fontSize: 14, fontWeight: tone ? tone.fontWeight : emphasis ? textRecipe.emphasis.medium : textRecipe.emphasis.regular, textAlign: align, fontVariant: ["tabular-nums"] }}>{String(node)}</NativeText>
         : node}
     </View>;
   }
@@ -147,7 +148,7 @@ export function DataTable<ColumnKey extends string = string, RowKey extends stri
       const width = band.columnIds.reduce((sum, id) => sum + widthOf(list.find(column => column.id === id)!, part === "pinned"), 0);
       return <View key={band.id} accessibilityRole={band.header ? "header" : undefined} style={{ width, justifyContent: "flex-end", paddingHorizontal: pad.paddingHorizontal / 2, paddingBottom: 2 }}>
         {band.header && <View style={{ borderBottomWidth: 1, borderColor: color(dataTableFamilyRecipe.headerBand.borderBottom), paddingBottom: 2 }}>
-          <NativeText numberOfLines={1} style={{ color: color(dataTableFamilyRecipe.headerBand.color), fontSize: 11, fontWeight: "700", textAlign: "center" }}>{band.header}</NativeText>
+          <NativeText numberOfLines={1} style={{ color: color(dataTableFamilyRecipe.headerBand.color), fontSize: 11, fontWeight: textRecipe.emphasis.medium, textAlign: "center" }}>{band.header}</NativeText>
         </View>}
       </View>;
     })}</View>;
@@ -155,7 +156,7 @@ export function DataTable<ColumnKey extends string = string, RowKey extends stri
   function groupRow(id: string, label: string, part: "pinned" | "scrolling") {
     const showLabel = part === "pinned" || pinned.length === 0;
     return <View key={`group-${id}`} accessibilityRole={showLabel ? "header" : undefined} style={{ height: 30, justifyContent: "center", paddingHorizontal: pad.paddingHorizontal / 2, borderTopWidth: 1, borderColor: color(dataTableRecipe.row.borderBottom), backgroundColor: color(dataTableFamilyRecipe.groupRow.background) }}>
-      {showLabel && <NativeText numberOfLines={1} style={{ color: color(dataTableFamilyRecipe.groupRow.color), fontSize: 12, fontWeight: "700" }}>{label}</NativeText>}
+      {showLabel && <NativeText numberOfLines={1} style={{ color: color(dataTableFamilyRecipe.groupRow.color), fontSize: 12, fontWeight: textRecipe.emphasis.medium }}>{label}</NativeText>}
     </View>;
   }
   const bodyRows = (part: "pinned" | "scrolling") => body.map(item => item.kind === "group" ? groupRow(item.id, item.label, part) : row(rowById.get(item.id)!, part));
@@ -179,8 +180,8 @@ export function DataTable<ColumnKey extends string = string, RowKey extends stri
         const values = [...rows.map(row => renderCell(row.id, column.id)), summaryRow?.(column.id)]
           .filter((value): value is string | number => typeof value === "string" || typeof value === "number");
         return <View key={column.id} style={{ flexShrink: 0 }}>
-          <NativeText onLayout={event => measure(`${column.id}:header`, event.nativeEvent.layout.width)} style={{ fontSize: 12, fontWeight: "700", flexShrink: 0 }}>{`${column.header}${column.sortable ? ` ▲\n${column.header} ▼` : ""}`}</NativeText>
-          <NativeText onLayout={event => measure(`${column.id}:body`, event.nativeEvent.layout.width)} style={{ fontSize: 14, fontWeight: "700", fontVariant: ["tabular-nums"], flexShrink: 0 }}>{values.join("\n")}</NativeText>
+          <NativeText onLayout={event => measure(`${column.id}:header`, event.nativeEvent.layout.width)} style={{ fontSize: 12, fontWeight: dataTableRecipe.header.fontWeight, flexShrink: 0 }}>{`${column.header}${column.sortable ? ` ▲\n${column.header} ▼` : ""}`}</NativeText>
+          <NativeText onLayout={event => measure(`${column.id}:body`, event.nativeEvent.layout.width)} style={{ fontSize: 14, fontWeight: dataTableFamilyRecipe.tone.leader.fontWeight, fontVariant: ["tabular-nums"], flexShrink: 0 }}>{values.join("\n")}</NativeText>
         </View>;
       })}</View>
     </ScrollView>

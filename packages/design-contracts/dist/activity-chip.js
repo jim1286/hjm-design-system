@@ -46,7 +46,7 @@ export const activityChipRecipe = {
     // 28 keeps a mascot legible inside the 44 row with 8pt of air; it is decorative (hidden from AT).
     media: { size: 28, radius: "full" },
     // One line: the chip is a glance status, the panel carries the long copy.
-    label: { textVariant: "label", fontWeight: fontWeight.bold, maxLines: 1 },
+    label: { textVariant: "label", fontWeight: fontWeight.medium, maxLines: 1 },
     emphasis: {
         // A resting status sits on the header like a quiet surface; the border keeps its edge on canvas.
         default: {

@@ -64,8 +64,8 @@
 | 제목 | `Heading level="level3"` | 묶음 맨 위 | 24/32(`heading.level3`), 묶음 안 간격 `layout.contentGap` 16(`Stack gap="md"`) |
 | 현재 값 | `Text` | 제목 아래, 트리거 위 | `spacing.md` 16 |
 | 트리거 | `Button`(primary) | 현재 값 아래 | `medium` 44(`control.buttonHeight`) |
-| 시트 머리 | `Sheet` header | 시트 위 고정 | Native 최소 높이 `control.minTouchTarget` 44, 제목–닫기 `spacing.sm` 12; Web 여백 `spacing.lg` 20, 제목–닫기 `spacing.md` 16 |
-| 선택지 | `RadioGroup`(`presentation="card"`, `accessibilityLabel` = 시트 제목) | 시트 body, 스크롤 | 행 최소 높이 56(`layout.rowHeight.singleLine`), 항목 사이 `spacing.xs` 8(`selectionGroupRecipe`). 안내 문구와는 `Stack gap="md"` 16. 설치한 버전의 Sheet body gap과 중첩 여부를 확인하며 checkout 상태를 npm 게시 증거로 삼지 않는다 |
+| 시트 머리 | `Sheet` 손잡이(+ `showClose`일 때 끝 ×) | 시트 위 고정 | 보이는 제목 없음, `title`은 접근성 이름(2026-10-17 사용자 결정: 시트는 보이는 제목 없이 `title`을 접근성 이름으로만 쓴다). × 머리 최소 높이 `control.minTouchTarget` 44 |
+| 선택지 | `RadioGroup`(`presentation="card"`, `accessibilityLabel` = 시트 `title`) | 시트 body, 스크롤 | 행 최소 높이 56(`layout.rowHeight.singleLine`), 항목 사이 `spacing.xs` 8(`selectionGroupRecipe`). 안내 문구와는 `Stack gap="md"` 16. 설치한 버전의 Sheet body gap과 중첩 여부를 확인하며 checkout 상태를 npm 게시 증거로 삼지 않는다 |
 | 행동 | `Button` 적용·취소 | 시트 footer, 스크롤 밖 고정 | 간격 `spacing.sm` 12(`sheetRecipe.footer.gap`), Native 위 여백 `spacing.sm` 12 |
 | 시트 틀 | `Sheet` | 하단, 모달 | Web 최대 폭 640(`sheetRecipe.web.maxWidth`)·최대 높이 90%, Native 가로 여백 `spacing.lg` 20·최대 높이 90%(`maxHeightRatio` 0.9), 하단 안전 영역 추가 |
 
@@ -199,7 +199,7 @@ Web `gutter`는 [화면 여백과 너비](../tokens/layout.md)처럼 폭 구간�
 | 항목 | Web | Native |
 | --- | --- | --- |
 | 트리거 ref | `Button ref` | `View ref collapsable={false}`로 감쌈 |
-| 시트 머리 | 여백 `spacing.lg` 20, 제목–닫기 `spacing.md` 16 | 최소 높이 44, 제목–닫기 `spacing.sm` 12 |
+| 시트 머리 | 보이는 제목 없음(시각 숨김 `h2`) | 보이는 제목 없음(접근성 머리글) |
 | footer | 가로 flex(wrap, 끝 정렬), [취소][적용] | 세로 View, 위 여백 `spacing.sm` 12, [적용] 위 [취소] 아래 |
 | 초점 | focus trap + `returnFocusRef` | `returnFocusRef` |
 | 상태 알림 | `role="status"` | live region(Android) + iOS 알림 호출 |

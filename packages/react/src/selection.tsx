@@ -763,7 +763,8 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch
       data-size={size}
       data-presentation={presentation}
       data-label-visibility={labelVisibility}
-      data-two-line={hasDescription || undefined}
+      // Two-line row geometry only applies when the copy is on screen; a hidden label (ListRow trailing) keeps 44.
+      data-two-line={(hasDescription && labelVisibility === "visible") || undefined}
       aria-labelledby={props["aria-labelledby"] ?? (props["aria-label"] ? undefined : labelId)}
       aria-describedby={[props["aria-describedby"], hasDescription ? descriptionId : undefined].filter(Boolean).join(" ") || undefined}
       data-state={checked ? "checked" : "unchecked"}
@@ -915,6 +916,9 @@ export const SegmentedControl = forwardRef<
       role={presentation === "text" ? "radiogroup" : undefined}
     >
       <legend className="hjm-visually-hidden">{label}</legend>
+      {/* The scroller is separate from the drawn track so a small track's options can extend their hit area past
+          the track edge; a scrolling track would clip it (segmentedControlRecipe.sizes, 2026-10-17). */}
+      <div className="hjm-segmented__scroller">
       <div className="hjm-segmented__items" ref={trackRef}>
         {selectionMotion === "slide" ? <span ref={highlightRef} className="hjm-segmented__highlight" aria-hidden="true" /> : null}
         {items.map((item) => (
@@ -938,6 +942,7 @@ export const SegmentedControl = forwardRef<
             <span>{item.label}</span>
           </label>
         ))}
+      </div>
       </div>
     </fieldset>
   );

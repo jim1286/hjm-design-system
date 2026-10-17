@@ -85,6 +85,7 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 | `contentInset` | `"default"` · `"none"` · `"body-edge"` | `"default"` | `none`은 헤더·notice·본문·footer padding을 0으로(Native는 footer 위 테두리도 뺀다). host가 모든 여백을 이미 줄 때 쓴다. `body-edge`는 헤더·notice·footer 여백(16)과 footer 테두리를 유지하고 **본문 좌우 padding만 0**으로 한다. 자기 좌우 여백을 가진 전체 폭 목록 행(ConversationRow·NotificationRow 등 행 padding 16)을 본문에 바로 둘 때 쓴다(미게시). ListRow·NotificationItem은 `default`에 둔다. 값 목록은 계약 `ScreenContentInset`·`screenContentInsets` |
 | `presentation` | `"dashboard"` · `"editorial"` · `"landscape"` | 가장 가까운 profile.screens.overview / 없으면 기존 골격 | [디자인 프로필](../../design-profile.md)의 제공 범위를 따른다. 명시값이 프로필을 이긴다. 헤더 배치·읽기 폭만 바꾸고 상태·입력·행동 슬롯은 유지한다 |
 | `as` (Web) | `"main"` · `"section"` | `"main"` | 제품 셸에 이미 `<main>`이 있으면 `section` |
+| `safeAreaBottom` (Native) | 0 이상의 유한수 | `0`(미게시) | 화면이 닿는 창 아래 가장자리의 safe area(`useSafeAreaInsets().bottom`, 탭바 위·이미 아래를 들인 host 안이면 0). 마지막 영역(footer, 없으면 본문)이 아래 여백을 `max(16, inset)`으로 한 번만 준다. 넘길 때는 host의 아래 SafeAreaView edge를 빼고, 둘을 같이 쓰지 않는다. 음수·무한대는 `RangeError` |
 | `layoutStyle` | `HjmCompositionStyleProp` | 없음 | 화면 루트 배치 전용(예: 분할 화면의 `flex`·`width`). ScreenLayout 위에 만든 화면은 모두 이 prop을 루트까지 넘긴다 |
 | `className` (Web) | `string` | 없음 | 식별·배치 보조. 색·여백을 덮지 않는다 |
 | `testID` · `scrollRef` · `scrollProps` (Native) | `string` · `Ref<ScrollView>` · `refreshControl`·`keyboardDismissMode`·스크롤 막대 표시·`onScroll`·`onScrollBeginDrag`·`onScrollEndDrag`·`scrollEventThrottle`·`alwaysBounceVertical`·`automaticallyAdjustKeyboardInsets` | 없음 | ScrollView가 있을 때(`scroll="screen"` 또는 상태 교체 중)만 `scrollRef`·`scrollProps`가 연결된다 |
@@ -97,8 +98,8 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 | 간격 | 바깥 padding `screenPatternRecipe.padding`(`spacing.md` 16)을 헤더 사방·notice 좌우·본문 사방·footer 사방에 준다(`contentInset="none"`이면 0, `"body-edge"`면 본문 좌우만 0); 헤더 안 `exit`·제목·`actions` 간격 `itemGap`(`spacing.sm`) 12(두 플랫폼, `contentInset="none"`이어도 유지); 상태 안내는 위아래 `sectionGap`(`spacing.xl`) 24, 안내–`stateAction` `stateGap`(`spacing.md`) 16 | Web `src/screens.tsx`(`--hjm-screen-item-gap`·`--hjm-screen-state-gap`)·`.hjm-screen__*`, Native `ScreenLayout` |
 | 제목 | 기본 가운데 `Heading` `screenHeaderRecipe.centeredTitleLevel`(level5), `headerAlignment="start"`면 `titleLevel`(level3). 추가 기능 버튼(`actions`)은 끝(오른쪽) 위, 나가기(`exit`)는 시작(왼쪽) 위. 헤더 높이는 두 플랫폼 모두 `screenHeaderRecipe`의 고정 띠 | `screenHeaderRecipe` |
 | 순서·정렬 | 헤더(`exit` → 제목·설명 → `actions`) → notice → 본문 → footer; 상태 안내는 본문 세로 가운데 `exit`는 HJM이 `edge="start"`로 그려 아이콘 칸이 헤더 여백 선 16에 온다(Web·Native 31 → 16, 가운데 헤더의 같은 폭 양쪽 열·제목 중앙은 그대로). 끝 `actions`의 마지막 ghost IconButton은 제품이 `edge="end"`를 준다(2026-10-17 실측 감사, [IconButton `edge`](icon-button.md#배치)) | 렌더 순서 |
-| 고정·스크롤 | 헤더·notice·footer 고정, `scroll="screen"`은 본문이 스크롤, `"content"`는 자식이 스크롤; footer 위 테두리 1, Web은 하단 safe area만큼 padding을 늘린다 | Web `data-scroll`·`.hjm-screen__footer`, Native `ScrollView` |
-| 좁은 폭·큰 글자 | 제목 열 최소 폭 `headerMinWidth` 120 × 글자 배율, 모자라면 `actions`가 다음 줄로 내려간다; 제목은 줄바꿈(`overflow-wrap: anywhere`)되고 자르지 않는다; Native safe area·탭바 inset은 host | `screenPatternRecipe.headerMinWidth`, Web `.hjm-screen__heading` |
+| 고정·스크롤 | 헤더·notice·footer 고정, `scroll="screen"`은 본문이 스크롤, `"content"`는 자식이 스크롤; footer 위 테두리 1. 마지막 영역(footer, 없으면 본문)의 아래 여백은 `max(16, 하단 inset)`이다 — Web은 `env(safe-area-inset-bottom)`, Native는 `safeAreaBottom`. 16 + inset으로 더하지 않으며, 키보드가 열려 있으면 키보드가 홈 인디케이터를 덮으므로 16만 둔다 | Web `data-scroll`·`.hjm-screen__footer`, Native `ScrollView` |
+| 좁은 폭·큰 글자 | 제목 열 최소 폭 `headerMinWidth` 120 × 글자 배율, 모자라면 `actions`가 다음 줄로 내려간다; 제목은 줄바꿈(`overflow-wrap: anywhere`)되고 자르지 않는다; Native 위·옆 safe area·탭바 inset은 host, 아래 inset은 `safeAreaBottom` | `screenPatternRecipe.headerMinWidth`, Web `.hjm-screen__heading` |
 
 ## 꼭 지킬 것
 
@@ -109,11 +110,12 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 
 - Web의 화면 스크롤 본문은 Tab으로 진입할 수 있다. `scroll="content"`의 정상 본문은 자식이 키보드 스크롤을 소유하지만, 오류·빈 상태 등 대체 안내는 화면 스크롤로 바뀌며 Tab 진입도 함께 복원된다.
 - Web에서 본문에 초점을 가진 입력·재시도 버튼이 상태 전환으로 제거되면 같은 본문으로 초점을 복구한다. `scroll="content"`의 본문은 이 복구만을 위한 `tabIndex=-1`을 가지며 일반 Tab 순서에는 추가되지 않는다. 사용자가 다른 컨트롤이나 바깥 영역으로 초점을 옮긴 경우에는 이동시키지 않는다. 2026-10-13 재시도·권한 제한 전환에서 초점이 body로 유실된 경로를 수정했다.
+- **화면 여백은 ScreenLayout이 소유한다(기본 `contentInset`).** 화면을 바깥 `Container gutter`로 감싸고 `contentInset="none"`을 주는 구성은 지원하지 않는다. 행의 표면 bleed, footer·BottomCTA 바, 끝 컨트롤의 `edge`는 모두 ScreenLayout이 여백을 가진다는 전제로 맞춰져 있어, 그 구성에서는 행 표면이 본문 끝에서 잘리고 footer가 여백 안에 떠 있는 상자가 된다. `none`은 host가 모든 inset을 소유하는 기존 의미 그대로다(새 동작 없음).
 - 가상화 목록(FlatList, VirtualList)을 넣으면 `scroll="content"`로 둔다. 스크롤을 이중으로 중첩하지 않는다.
 - 새로고침 실패·저장 오류는 `state`를 바꾸지 말고 `ready` + `notice`로 알린다. `loading`으로 바꾸면 본문이
   unmount되어 입력 초안이 사라진다.
 - `state.title`·문구는 i18n 키로 넣는다. ready 외 상태의 빈 `title`은 `TypeError`다.
-- Web host는 실제 남은 높이(`height:100%` 등)를, Native host는 safe area·탭바 inset을 먼저 처리한다.
+- Web host는 실제 남은 높이(`height:100%` 등)를, Native host는 위·옆 safe area와 탭바 inset을 먼저 처리한다. 아래 홈 인디케이터는 host가 SafeAreaView로 들이지 말고 `safeAreaBottom`으로 넘긴다(들인 뒤 footer 16을 더하면 버튼 아래가 50이 된다).
   HJM은 기종별 높이를 추측하지 않는다.
 - 배치는 Web·Native 모두 `layoutStyle`로 한다(Web은 `className`도 있다). 색·여백을 덮지 않는다.
 
@@ -141,4 +143,6 @@ dashboard는 가로 헤더/1200 목록 폭, editorial은 세로 헤더/720 읽�
 
 ## 근거
 
+- 하단 여백 `max(16, inset)`(Native `safeAreaBottom`): 2026-10-17 사용자 보고 "전체적으로 버튼 아래 여백이 많아". Native Storybook의 사진 선택과 업로드 화면에서 버튼 아래가 약 33pt였다. 원인은 둘이었다. 화면 스토리의 route host가 고정 높이 720이라 iPhone 17 Pro 스토리 영역 737보다 17 짧았고(footer 16 + 빈 칸 17), 컴포넌트는 Native footer가 safe area를 다루지 않아 host의 아래 inset 위에 16을, footer 안 BottomCTA의 `safeAreaBottom`도 16 위에 더했다(16 + 34 = 50). Web footer는 이미 `max(16, env())`였지만 footer 안 BottomCTA의 `safeAreaBottom`은 그 위에 더했다. 표준을 "마지막 컨트롤 아래 = footer 위 여백 16, 홈 인디케이터 기기에서는 max(16, inset)"으로 정하고 footer가 한 번만 소유하게 했다.
+- 화면 여백은 ScreenLayout 소유, 바깥 여백 + `none` 미지원: 2026-10-17 바깥 여백 호스트 예제 사용자 검토. utilverse식(`Container gutter="regular"` 20 + `contentInset="none"`)을 HJM에서 지원하려고 본문 확장·footer 바 소유를 붙인 예제가 어색하다는 판단으로 지원을 접었다(2026-10-15 공통 구조는 HJM 소유 원칙). 측정상 그 구성에서는 Web 402·1280에서 행 표면이 양쪽 8 잘리고 본문이 옆으로 8 스크롤되며, Native 3x에서 선택 테두리 옆 선이 그려지지 않았다. 제품은 바깥 여백을 걷고 기본 inset을 쓴다.
 - `contentInset="body-edge"`: 2026-10-17 사용자 결정. 화면 검토 S5#9에서 대화 목록 아바타가 화면 끝에서 약 32pt 안쪽에서 시작했다. 본문 padding 16과 ConversationRow 자체 padding 16이 겹쳤다(인스타그램 DM은 약 16). 앱 약 45곳이 "host가 모든 여백을 소유한다"는 뜻으로 `none`을 쓰고 있어 `none`의 의미를 바꿀 수 없었으므로 값을 새로 추가했다. ChatScreen의 10 타임라인 여백은 `default`일 때만 공통 여백을 대신한다.

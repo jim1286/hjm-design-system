@@ -2,21 +2,17 @@ import { Heading } from "@hjmds/react/heading";
 import { Progress } from "@hjmds/react/feedback";
 import { ListRow, List } from "@hjmds/react/display";
 import { Stack, Section } from "@hjmds/react/layout";
+import { headingExample } from "../../../shared/component-examples";
 
 /*
   Heading은 새 크기를 만들지 않는다 — foundations의 heading 스케일을 실제 heading
   요소로 꺼낼 뿐이다. 시각 크기(level)와 문서 단계(semanticLevel)를 나눠 지정할 수 있다.
+  가장 큰 단계는 level3 24px다(2026-10-17 큰 글자 단계 폐지). Native와 같은 headingExample을 쓴다.
 */
 export function HeadingPreview() {
   return (
     <Stack gap="md">
-      <Heading level="level1">랜딩 히어로 제목</Heading>
-      <Heading level="level2">섹션을 여는 큰 제목</Heading>
-      <Heading level="level3">본문 안의 제목</Heading>
-      <Heading level="level2" semanticLevel={4}>
-        크게 보이지만 문서상 h4인 카드 제목
-      </Heading>
-      <Heading level="level5">가장 작은 단계</Heading>
+      {headingExample.map(item => <Heading key={item.id} level={item.level} semanticLevel={item.semanticLevel}>{item.label}</Heading>)}
     </Stack>
   );
 }

@@ -33,7 +33,7 @@ export type LineChartProps = Readonly<{
         low: string;
     }>;
     showAxis?: boolean;
-    /** Value labels only (no category labels), e.g. rank charts that must show "1위" at the top. */
+    /** Value labels only (no category labels), e.g. rank charts that must show "#1" at the top. */
     valueAxis?: boolean;
     /** Overrides grid/label ticks (rank charts: [1, 5, 10]). */
     ticks?: readonly number[];

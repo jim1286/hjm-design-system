@@ -30,7 +30,7 @@ import { BottomInfo } from "../src/bottom-info.js";
 import { Sidebar } from "../src/sidebar.js";
 import { DateRangePicker } from "../src/date-range.js";
 import { AuthProviderButton } from "../src/provider-button.js";
-import { AuthScreenLayout } from "../src/auth-screen.js";
+import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "../src/auth-screen.js";
 import { DataTable } from "../src/data-table.js";
 import { Collapsible } from "../src/collapsible.js";
 import { ContextMenu } from "../src/context-menu.js";
@@ -651,9 +651,9 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "auth-screen",
     marker: "hjm-auth-screen",
-    renderLongCopy: (copy) => <AuthScreenLayout hero={<Text>{copy}</Text>} main={<Text>Sign in</Text>} footer={<Text>Terms</Text>} />,
+    renderLongCopy: (copy) => <AuthScreenLayout hero={<AuthScreenHero title={copy} description={copy} />} main={<Text>Sign in</Text>} footer={<AuthScreenFooter notice={copy} links={[{ label: copy, href: "/terms" }]} />} />,
     render: () => (
-      <AuthScreenLayout hero={<span>hero</span>} main={<span>main</span>} footer={<span>footer</span>} />
+      <AuthScreenLayout hero={<AuthScreenHero eyebrow="eyebrow" title="hero" description="description" />} main={<span>main</span>} footer={<AuthScreenFooter links={[{ label: "Terms", href: "/terms" }, { label: "Privacy", onClick: () => undefined }]} />} />
     ),
   },
   {

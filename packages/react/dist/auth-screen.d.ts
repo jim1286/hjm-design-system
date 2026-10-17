@@ -1,4 +1,4 @@
-import { type AuthScreenDescriptor } from "@hjmds/design-contracts/components/auth-screen";
+import { type AuthScreenDensity, type AuthScreenDescriptor, type AuthScreenHeroDescriptor, type AuthScreenPolicyLinkDescriptor } from "@hjmds/design-contracts/components/auth-screen";
 import { type HTMLAttributes, type ReactNode } from "react";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type AuthScreenLayoutProps = Omit<HTMLAttributes<HTMLElement>, "children"> & AuthScreenDescriptor & Readonly<{
@@ -24,7 +24,7 @@ export type AuthScreenLayoutProps = Omit<HTMLAttributes<HTMLElement>, "children"
  * properties so the stylesheet keeps one source of truth with the contract.
  */
 export declare const AuthScreenLayout: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLElement>, "children"> & Readonly<{
-    density?: import("@hjmds/design-contracts/components/auth-screen").AuthScreenDensity;
+    density?: AuthScreenDensity;
     hasFooter?: boolean;
 }> & Readonly<{
     /** Use section inside a product shell that already owns the main landmark. */
@@ -43,4 +43,34 @@ export declare const AuthScreenLayout: import("react").ForwardRefExoticComponent
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLElement>>;
+export type AuthScreenHeroProps = AuthScreenHeroDescriptor & Readonly<{
+    /** Product mark asset. HJM never ships product marks. */
+    mark?: ReactNode;
+}>;
+/**
+ * The `hero` slot content: mark, eyebrow, tagline and one description line. The
+ * product supplies the strings and mark; the type steps, tones and gaps come from
+ * `authScreenRecipe.hero` so a login slogan never borrows the page-heading size.
+ */
+export declare function AuthScreenHero({ mark, title, eyebrow, description, headingLevel }: AuthScreenHeroProps): import("react").JSX.Element;
+export type AuthScreenPolicyLink = AuthScreenPolicyLinkDescriptor & Readonly<{
+    /** Document URL; renders an anchor. */
+    href?: string;
+    /** In-app handler; renders a button when there is no `href`. */
+    onClick?: () => void;
+}>;
+export type AuthScreenFooterProps = Readonly<{
+    /** Optional consent notice (LS-04). */
+    notice?: ReactNode;
+    /** Terms and privacy links; at least one is required (LS-04). */
+    links: readonly AuthScreenPolicyLink[];
+    /** Extra product content under the links. */
+    children?: ReactNode;
+}>;
+/**
+ * The `footer` slot content: consent notice plus dot-separated policy links. The
+ * visible gap between two links is `linkGap` + separator + `linkGap`; the 44px
+ * touch target is an invisible hit area, not visible padding.
+ */
+export declare function AuthScreenFooter({ notice, links, children }: AuthScreenFooterProps): import("react").JSX.Element;
 //# sourceMappingURL=auth-screen.d.ts.map

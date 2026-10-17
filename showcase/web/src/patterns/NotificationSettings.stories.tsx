@@ -5,6 +5,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ScreenLayout, CompositionLayout } from "@hjmds/react/screens";
 import { Button } from "@hjmds/react/actions";
 import { Stack } from "@hjmds/react/layout";
+import { List } from "@hjmds/react/display";
 import { Switch } from "@hjmds/react/selection";
 import { Notice } from "@hjmds/react/feedback";
 import { PreviewToolButton, PreviewTools } from "./preview-tools.js";
@@ -32,12 +33,13 @@ function NotificationSettings({ tools = false }: { tools?: boolean }) {
       footer={<Button onClick={save} loading={pending} disabled={!feedback.canSubmit}>{pending ? copy.action.pending : saved ? copy.action.saved : !dirty ? copy.action.clean : feedback.feedback === "error" ? copy.action.retry : copy.action.submit}</Button>} />
   }><Stack gap="xl">
       <CompositionLayout title={copy.sectionTitle} description={copy.sectionDescription}>
-        <Stack gap="md">
+        {/* Switch rows carry their own padding and touch height; a gap between them doubled the spacing (2026-10-17). */}
+        <List label={copy.sectionTitle} separator="none">
           <Switch presentation="row" label={copy.activity.label} description={copy.activity.description}
             checked={draft.activity} onCheckedChange={(activity) => setDraft(current => ({ ...current, activity }))} />
           <Switch presentation="row" label={copy.digest.label} description={copy.digest.description}
             checked={draft.digest} onCheckedChange={(digest) => setDraft(current => ({ ...current, digest }))} />
-        </Stack>
+        </List>
         {feedback.feedback === "error" ? <Notice tone="danger" title={copy.error.title} description={copy.error.description} /> : null}
         {(saved || feedback.feedback === "saved-with-changes") ? <Notice tone={saved ? "success" : "info"} title={saved ? copy.savedTitle : copy.savedWithChanges.title} description={saved ? notificationSettingsSummary(state.value) : copy.savedWithChanges.description} /> : null}
       </CompositionLayout>

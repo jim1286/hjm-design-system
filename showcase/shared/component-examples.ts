@@ -62,12 +62,13 @@ export const topExample = {
   ],
 } as const;
 
+// The largest step is level3 (24); level1/2 were removed as display sizes (2026-10-17 user decision, "글자 너무 커").
 export const headingExample = [
-  { id: "hero", level: "level1", label: "랜딩 히어로 제목" },
-  { id: "section", level: "level2", label: "섹션을 여는 큰 제목" },
-  { id: "body", level: "level3", label: "본문 안의 제목" },
-  { id: "card", level: "level2", semanticLevel: 4, label: "크게 보이지만 문서상 4단계인 카드 제목" },
-  { id: "smallest", level: "level5", label: "가장 작은 단계" },
+  { id: "hero", level: "level3", semanticLevel: 1, label: "랜딩 대표 제목" },
+  { id: "section", level: "level4", semanticLevel: 2, label: "섹션을 여는 제목" },
+  { id: "body", level: "level5", semanticLevel: 3, label: "본문 안의 제목" },
+  { id: "card", level: "level4", semanticLevel: 4, label: "구획 크기지만 문서상 4단계인 카드 제목" },
+  { id: "smallest", level: "level5", semanticLevel: 5, label: "가장 작은 단계" },
 ] as const;
 
 export const buttonExample = {
@@ -96,7 +97,7 @@ export const bottomCtaExample = {
 export const authExample = {
   hero: { title: "어떤 계정으로 시작할까요", description: "쓰던 계정으로 바로 시작할 수 있어요." },
   pendingLabel: "로그인 중",
-  footer: "개인정보 처리방침 · 이용약관",
+  policyLinks: ["개인정보 처리방침", "이용약관"],
   providers: [
     { id: "google", label: "Google", mark: "G" },
     { id: "kakao", label: "카카오", mark: "K" },
@@ -581,7 +582,17 @@ export const noticeExample = { title: "저장 전 확인", description: "입력�
 
 export const progressExample = { label: "업로드", value: 64, valueText: "64%" } as const;
 
-export const skeletonExample = { label: "미리보기 불러오는 중", height: 20 } as const;
+// Skeleton preview (2026-10-17): single shapes, then the list-row and card placeholders screens use while loading.
+// One busy label per preview; the bars themselves are hidden from assistive tech.
+export const skeletonExample = {
+  label: "미리보기 불러오는 중",
+  sections: { shapes: "모양", listRow: "목록 행", card: "카드" },
+  textLines: 3,
+  rowLines: 2,
+  rowCount: 3,
+  cardLines: 2,
+  buttonWidth: "40%",
+} as const;
 
 export const spinnerExample = { label: "불러오는 중" } as const;
 

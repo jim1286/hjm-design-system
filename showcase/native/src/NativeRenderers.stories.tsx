@@ -112,7 +112,7 @@ function StoryFrame({ children }: { children: ReactNode }) {
 }
 
 function StoryHeading({ children }: { children: string }) {
-  return <Heading level="level2">{children}</Heading>;
+  return <Heading level="level3" semanticLevel={2}>{children}</Heading>;
 }
 
 function Glyph({ name }: { name: string }) {
@@ -124,7 +124,7 @@ function FoundationsPreview() {
     <StoryFrame>
       <StoryHeading>Foundations and layout</StoryHeading>
       <Text tone="muted">Provider, type, semantic icon, surfaces and responsive layout.</Text>
-      <Heading level="level2">Heading exposes the display scale</Heading>
+      <Heading level="level3" semanticLevel={2}>Heading exposes the heading scale</Heading>
       <Top
         descriptor={{
           eyebrow: "Getting started",

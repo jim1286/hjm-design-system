@@ -19,6 +19,25 @@ it("draws BottomCTA bare inside ScreenLayout footer", () => {
   for (const key of ["borderTopWidth","backgroundColor","paddingHorizontal","shadowOpacity","minHeight"]) expect(style[key]).toBeUndefined();
   act(()=>tree.unmount());
 });
+// The bottom inset is max(footer padding 16, safe area), never 16 + inset (2026-10-17 "버튼 아래 여백이 많아").
+it("pads the screen bottom with max(16, safeAreaBottom) once", () => {
+  const flat=(node:{props:{style?:unknown}})=>Object.assign({},...[node.props.style].flat(3).filter(Boolean));
+  const footerOf=(tree:ReactTestRenderer)=>tree.root.findAllByType(View).find(node=>node.props.children?.props?.value!==undefined&&flat(node).borderTopWidth!==undefined)!;
+  const ctaOf=(tree:ReactTestRenderer)=>flat(tree.root.findAllByType(View).find(node=>node.props.testID==="footer-cta")!);
+  // No home indicator: 16 under the button, same as the footer's top padding.
+  let tree=render(<ScreenLayout title="설정" footer={<BottomCTA testID="footer-cta" primaryAction={{label:"저장",onPress:vi.fn()}}/>}>본문</ScreenLayout>);
+  expect(flat(footerOf(tree))).toMatchObject({padding:16,paddingBottom:16}); act(()=>tree.unmount());
+  // Home indicator 34: the footer pads 34, not 16 + 34, and BottomCTA's own safeAreaBottom adds nothing on top.
+  tree=render(<ScreenLayout title="설정" safeAreaBottom={34} footer={<BottomCTA testID="footer-cta" safeAreaBottom={34} primaryAction={{label:"저장",onPress:vi.fn()}}/>}>본문</ScreenLayout>);
+  expect(flat(footerOf(tree)).paddingBottom).toBe(34); expect(ctaOf(tree).paddingBottom).toBe(0); act(()=>tree.unmount());
+  // A BottomCTA-only inset still totals max(16, 34) = 34.
+  tree=render(<ScreenLayout title="설정" footer={<BottomCTA testID="footer-cta" safeAreaBottom={34} primaryAction={{label:"저장",onPress:vi.fn()}}/>}>본문</ScreenLayout>);
+  expect(flat(footerOf(tree)).paddingBottom+ctaOf(tree).paddingBottom).toBe(34); act(()=>tree.unmount());
+  // Without a footer the body is the last region and owns the same inset.
+  tree=render(<ScreenLayout title="설정" scroll="content" safeAreaBottom={34}><View testID="content"/></ScreenLayout>);
+  expect(flat(tree.root.findByProps({testID:"content"}).parent!)).toMatchObject({paddingTop:16,paddingBottom:34}); act(()=>tree.unmount());
+  expect(()=>render(<ScreenLayout title="설정" safeAreaBottom={-1}>본문</ScreenLayout>)).toThrow(/safeAreaBottom must be non-negative/u);
+});
 // contentInset="none" hands every inset to the host, so the footer draws no bar and BottomCTA keeps its own.
 it("keeps BottomCTA's own bar when contentInset is none", () => {
   const tree=render(<ScreenLayout title="도구" contentInset="none" footer={<BottomCTA testID="footer-cta" primaryAction={{label:"저장",onPress:vi.fn()}}/>}>본문</ScreenLayout>);

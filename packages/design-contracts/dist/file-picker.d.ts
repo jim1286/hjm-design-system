@@ -98,7 +98,7 @@ export declare const filePickerRecipe: {
             alpha?: number;
         }>;
         readonly textVariant: "label";
-        readonly fontWeight: "700";
+        readonly fontWeight: "500";
     };
     readonly dropzone: {
         readonly borderStyle: "dashed";

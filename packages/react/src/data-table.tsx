@@ -59,9 +59,9 @@ export type DataTableProps<ColumnKey extends string = string, RowKey extends str
    * each column; HJM never computes the aggregate (2026-10-14, stat tables).
    */
   summaryRow?: (columnId: ColumnKey) => ReactNode;
-  /** Header bands above leaf columns (타격 | 주루). */
+  /** Header bands above leaf columns (Batting | Running). */
   columnGroups?: readonly DataTableColumnGroup<ColumnKey>[];
-  /** Labeled row sections (선발 / 교체); each renders as its own `tbody`. */
+  /** Labeled row sections (Starters / Substitutes); each renders as its own `tbody`. */
   rowGroups?: readonly DataTableRowGroup<RowKey>[];
   /** Per-cell emphasis decided by the product (AG Grid cellClassRules / Savant percentile heat). */
   cellStyle?: (rowId: RowKey, columnId: ColumnKey) => Readonly<{ tone?: DataTableCellTone | null; heat?: DataTableCellHeat | null }> | null;

@@ -21,6 +21,7 @@ import {
   radius,
   spacing,
   stroke,
+  typography,
   type FontWeightValue,
   type GlyphSize,
   type TextVariant,
@@ -84,14 +85,18 @@ export const textRecipe = {
     danger: semanticColors.content.danger,
     inverse: semanticColors.content.inverse,
   },
+  // 2026-10-17 user decisions: the strongest inline emphasis matches the title weight. strong=700 made unread
+  // notification titles and labels heavier than every title after titles moved to 600 ("왜 폰트가 진해"), so
+  // strong became 600; the second round ("굵기 좀더 줄여") moved titles 600→500 and display headings 700→600,
+  // so strong follows the title role (500) and equals `medium`. Semibold 600 is the key-number/selected step.
   emphasis: {
     regular: fontWeight.regular,
-    medium: fontWeight.semibold,
-    strong: fontWeight.bold,
+    medium: fontWeight.medium,
+    strong: typography.title.fontWeight,
   },
   /**
    * Variants whose omitted `emphasis` renders the variant's typography weight even without a design profile.
-   * Label's 500 has no emphasis step (`medium` is 600), and the shared `regular` default drew form labels at
+   * Label's 500 equals the `medium` emphasis step, but the shared `regular` default drew form labels at
    * body weight (2026-10-17 user decision: label 500 on Web and Native). Other variants keep `regular`.
    */
   variantWeight: ["label"],
@@ -218,7 +223,7 @@ export const linkRecipe = {
   variants: {
     inline: {
       textVariant: "body",
-      fontWeight: fontWeight.semibold,
+      fontWeight: fontWeight.medium,
       underline: "always",
       minHeight: null,
       minWidth: null,
@@ -226,7 +231,7 @@ export const linkRecipe = {
     /** 그 자체가 동작이므로 두 축 모두 최소 터치 타깃. 높이만 잡으면 짧은 라벨이 좁아진다. */
     standalone: {
       textVariant: "body",
-      fontWeight: fontWeight.bold,
+      fontWeight: fontWeight.medium,
       underline: "hover",
       minHeight: control.minTouchTarget,
       minWidth: control.minTouchTarget,
@@ -396,7 +401,7 @@ export const badgeRecipe = {
   },
   radius: "full",
   borderWidth: stroke.default,
-  fontWeight: fontWeight.bold,
+  fontWeight: fontWeight.medium,
 } as const;
 
 export type SearchFieldSize = "medium" | "large";
@@ -528,7 +533,8 @@ export const chipRecipe = {
   },
   radius: "full",
   borderWidth: stroke.default,
-  label: { fontWeight: fontWeight.semibold, selectedFontWeight: fontWeight.bold },
+  // Selected keeps one step above idle (500 → 600) so the state still carries a weight cue on the lighter scale.
+  label: { fontWeight: fontWeight.medium, selectedFontWeight: fontWeight.semibold },
   selectionIndicator: {
     color: semanticColors.content.brand,
     glyph: "xs",
@@ -556,16 +562,25 @@ export const dividerRecipe = {
  * VirtualList) keep exactly this much inline room so the bleed is never cut.
  */
 const listRowSurfaceBleed = spacing.xs;
+/** ListRow leading frame and the gap before its text column; the indented separator reuses both. */
+const listRowLeadingSize = 40;
+const listRowGap = spacing.sm;
 
 export const listRecipe = {
   slots: ["root", "item", "separator"] as const,
   defaults: { separator: "indented" },
+  /**
+   * Separators are measured from the list's content edge, where the row text sits, and each one belongs to the row
+   * above it (iOS cell separator). "full" spans the row surface (content edge ± bleed). "indented" follows that row's
+   * text column: it starts at the text — `leadingInsetStart` (leading 40 + gap 12) when the row has a leading
+   * element, `insetStart` 0 when it has none — and ends on the row's trailing content edge (0).
+   * 2026-10-17 user report: a fixed 52 start cut the line off midway under rows without leading (text at 16, line
+   * from 68), and the −8 end ran past the trailing content.
+   */
   separators: {
     none: null,
-    // Separators are measured from the list's content edge, where the row text now sits. "full" spans the row
-    // surface (content edge ± bleed); "indented" starts at the text after leading 40 + gap sm and ends with the surface.
-    full: { insetStart: -listRowSurfaceBleed, insetEnd: -listRowSurfaceBleed },
-    indented: { insetStart: 40 + spacing.sm, insetEnd: -listRowSurfaceBleed },
+    full: { insetStart: -listRowSurfaceBleed, leadingInsetStart: -listRowSurfaceBleed, insetEnd: -listRowSurfaceBleed },
+    indented: { insetStart: 0, leadingInsetStart: listRowLeadingSize + listRowGap, insetEnd: 0 },
   },
   // A grouped list paints its own rounded surface and clips to it, so it leaves the row bleed as inline padding:
   // rows keep their full surface inside the radius and the text stays 8 inside the group edge as before.
@@ -622,15 +637,15 @@ export const listRowRecipe = {
    * the same negative inline margin, so pressed/selected fills keep 8 of room beyond the text.
    */
   surfaceBleed: listRowSurfaceBleed,
-  gap: spacing.sm,
-  leadingSize: 40,
+  gap: listRowGap,
+  leadingSize: listRowLeadingSize,
   /**
    * Frame geometry for the leading slot. The size was already declared here but
    * no renderer bound it, so every consumer re-derived the avatar box (radius,
    * clipping, centering) in product styles.
    */
   leadingShapes: { square: null, circle: "full" },
-  title: { color: semanticColors.content.body, textVariant: "bodyLarge", fontWeight: fontWeight.bold },
+  title: { color: semanticColors.content.body, textVariant: "bodyLarge", fontWeight: typography.title.fontWeight },
   description: { color: semanticColors.content.secondary, textVariant: "body" },
   trailing: {
     textColor: semanticColors.content.secondary,
@@ -675,7 +690,7 @@ export const accordionRecipe = {
   },
   paddingHorizontal: spacing.xs,
   gap: spacing.sm,
-  title: { color: semanticColors.content.body, textVariant: "bodyLarge", fontWeight: fontWeight.bold },
+  title: { color: semanticColors.content.body, textVariant: "bodyLarge", fontWeight: typography.title.fontWeight },
   indicator: { color: semanticColors.content.secondary, glyph: "sm" },
   panel: {
     color: semanticColors.content.body,
@@ -855,7 +870,7 @@ export const selectRecipe = {
     paddingVertical: spacing.xs,
   },
   optionLeading: { color: semanticColors.content.secondary, glyph: "sm" },
-  optionLabel: { fontWeight: fontWeight.semibold, selectedFontWeight: fontWeight.bold },
+  optionLabel: { fontWeight: fontWeight.medium, selectedFontWeight: fontWeight.semibold },
   selectionIndicator: { color: semanticColors.border.focus, glyph: "sm" },
   stateMessage: {
     color: semanticColors.content.secondary,
@@ -1006,6 +1021,9 @@ export const comboboxRecipe = {
   transition: typeof selectRecipe.transition;
 };
 
+/** Block-side inset of the connected track: `container.padding` + `container.borderWidth`. */
+const segmentedTrackInset = spacing.xxs + stroke.subtle;
+
 export const segmentedControlRecipe = {
   // Text navigation reuses radio selection, without cloning a product-only tab engine.
   text: { gap: spacing.md, indicatorWidth: 16, indicatorHeight: 2, indicatorRadius: radius.full,
@@ -1042,16 +1060,25 @@ export const segmentedControlRecipe = {
     padding: spacing.xxs,
     gap: spacing.xxs,
   },
+  /**
+   * `height` is the connected control's outer height (track border + padding included) and matches the Button /
+   * IconButton / Chip height of the same size step, so a segmented control and a chip in one row line up.
+   * `minHeight` is the option inside the track (height − 2 × (`container.padding` + `container.borderWidth`)) and `hitSlop` extends each
+   * option vertically to the 44 touch target. Before 2026-10-17 `minHeight` was the option itself, so the track
+   * drew 46/54 next to 36/44 chips and buttons (DiscoveryGallery sort row, user request "높이 맞춰").
+   */
   sizes: {
     small: {
-      minHeight: 36,
-      hitSlop: 4,
+      height: control.buttonHeight.small,
+      minHeight: control.buttonHeight.small - 2 * segmentedTrackInset,
+      hitSlop: (control.minTouchTarget - (control.buttonHeight.small - 2 * segmentedTrackInset)) / 2,
       paddingHorizontal: spacing.sm,
       textVariant: "label",
     },
     medium: {
-      minHeight: control.minTouchTarget,
-      hitSlop: 0,
+      height: control.buttonHeight.medium,
+      minHeight: control.buttonHeight.medium - 2 * segmentedTrackInset,
+      hitSlop: (control.minTouchTarget - (control.buttonHeight.medium - 2 * segmentedTrackInset)) / 2,
       paddingHorizontal: spacing.md,
       textVariant: "body",
     },
@@ -1060,7 +1087,7 @@ export const segmentedControlRecipe = {
     radius: "md",
     gap: spacing.xxs,
     idleContent: semanticColors.content.secondary,
-    fontWeight: fontWeight.semibold,
+    fontWeight: fontWeight.medium,
     selectedBackground: semanticColors.canvas,
     selectedContent: semanticColors.content.brand,
     /**
@@ -1070,7 +1097,7 @@ export const segmentedControlRecipe = {
      */
     selectedBorder: semanticColors.border.focus,
     selectedBorderWidth: stroke.strong,
-    selectedFontWeight: fontWeight.bold,
+    selectedFontWeight: fontWeight.semibold,
     focusRing: semanticColors.border.focus,
     pressedOpacity: opacity.pressed,
     disabledOpacity: opacity.disabled,
@@ -1132,11 +1159,17 @@ export const switchRecipe = {
     pressedOpacity: opacity.pressed,
   },
   rowMinHeight: control.minTouchTarget,
-  // A switch with a description is a two-line row like any other list row,
-  // and a product author found that letting content decide the height gave
-  // neighbouring rows different heights — this pins it to the same value as
-  // `listRowRecipe.density.comfortable.twoLineMinHeight`.
-  rowTwoLineMinHeight: 68,
+  // A described switch is a two-line row: the copy (body 20 + gap 4 + caption 16 = 40) with the
+  // comfortable list-row vertical padding (8) on both sides. The padding is drawn by the row itself
+  // so it survives larger text, and the minimum keeps neighbouring rows equal (a product author found
+  // content-only height gave them different heights). It used to borrow ListRow's 68, which is sized
+  // for a bodyLarge title + body description; on the smaller switch copy that left 14 above and below,
+  // and stacked rows read as widely spaced (2026-10-17 user report, notification settings: 84 pitch
+  // for 40 of copy, together with a Stack gap the rows must not have).
+  rowPaddingVertical: listRowRecipe.density.comfortable.paddingVertical,
+  rowTwoLineMinHeight:
+    typography.body.lineHeight + spacing.xxs + typography.caption.lineHeight
+    + 2 * listRowRecipe.density.comfortable.paddingVertical,
 } as const;
 
 export type SelectionControlKind = "checkbox" | "radio";
@@ -1215,8 +1248,8 @@ export const selectionControlRecipe = {
   },
   label: {
     color: semanticColors.content.body,
-    fontWeight: fontWeight.semibold,
-    checkedFontWeight: fontWeight.bold,
+    fontWeight: fontWeight.medium,
+    checkedFontWeight: fontWeight.semibold,
   },
   leading: { size: "md", color: semanticColors.content.secondary },
   description: { color: semanticColors.content.secondary },
@@ -1381,8 +1414,8 @@ export const bottomNavigationRecipe = {
     },
   },
   label: {
-    fontWeight: fontWeight.semibold,
-    selectedFontWeight: fontWeight.bold,
+    fontWeight: fontWeight.medium,
+    selectedFontWeight: fontWeight.semibold,
     textAlign: "center",
     wrap: true,
     fixedLines: null,
@@ -1454,7 +1487,7 @@ export const tabsRecipe = {
   },
   gap: spacing.xs,
   icon: { glyph: "xs" },
-  label: { fontWeight: fontWeight.semibold, selectedFontWeight: fontWeight.bold },
+  label: { fontWeight: fontWeight.medium, selectedFontWeight: fontWeight.semibold },
   layouts: {
     content: { fitted: false },
     fitted: { fitted: true },
@@ -1496,22 +1529,29 @@ export const noticeRecipe = {
   contentGap: spacing.xxs,
   iconSize: "sm",
   borderWidth: stroke.default,
-  title: { textVariant: "body", fontWeight: fontWeight.bold },
+  title: { textVariant: "body", fontWeight: typography.title.fontWeight },
   description: { color: semanticColors.content.body, textVariant: "body" },
 } as const;
 
 export const skeletonRecipe = {
-  slots: ["root"] as const,
+  slots: ["root", "line"] as const,
   // animated는 0.9.12까지 false였다. 정지한 블록은 로딩이 아니라 깨진 화면으로
   // 읽힌다. 전환 근거와 소비 측 migration은
   // .changeset/skeleton-pulse-by-default.md에 있다.
-  defaults: { shape: "block", animated: true },
-  background: semanticColors.canvas,
+  defaults: { shape: "block", animated: true, lines: 1 },
+  // 2026-10-17 사용자 요청: canvas 채움 + 1px 테두리는 흰 배경에서 거의 보이지 않아 로딩 모양을 알 수 없었다.
+  // 2026-09-29 "넓은 회색 면은 canvas" 방향의 예외로, 자리표시는 채운 면이어야 모양이 읽힌다(skeleton.md 근거).
+  background: semanticColors.surface.placeholder,
+  // `aspectRatio`가 있으면 높이 대신 폭에 비례한다(media). `button`은 medium 버튼 높이·모서리와 같다.
   shapes: {
-    block: { radius: "md", defaultHeight: spacing.xxl },
-    text: { radius: "sm", defaultHeight: spacing.md },
-    circle: { radius: "full", defaultHeight: glyph.xxl },
+    block: { radius: "md", defaultHeight: spacing.xxl, aspectRatio: null },
+    text: { radius: "sm", defaultHeight: spacing.md, aspectRatio: null },
+    circle: { radius: "full", defaultHeight: glyph.xxl, aspectRatio: null },
+    media: { radius: "md", defaultHeight: null, aspectRatio: 16 / 9 },
+    button: { radius: "md", defaultHeight: control.buttonHeight.medium, aspectRatio: null },
   },
+  // `lines` > 1 (text 전용): 줄 사이 간격과 짧게 끝나는 마지막 줄. 16 막대 + 8 간격 = 본문 큰 글자 줄 높이 24.
+  lines: { gap: spacing.xs, lastLineWidthPercent: 60 },
   animation: {
     duration: motion.slow * 4,
     easing: "standard",
@@ -1531,7 +1571,7 @@ export const emptyStateRecipe = {
   paddingHorizontal: spacing.xl,
   gap: spacing.xs,
   icon: { size: "lg", color: semanticColors.content.decorative },
-  title: { textVariant: "body", color: semanticColors.content.primary, fontWeight: fontWeight.semibold },
+  title: { textVariant: "body", color: semanticColors.content.primary, fontWeight: typography.title.fontWeight },
   description: { textVariant: "label", color: semanticColors.content.secondary },
 } as const;
 
@@ -1587,7 +1627,7 @@ export const loadMoreRecipe = {
     radius: "md",
     color: semanticColors.content.brand,
     textVariant: "label",
-    fontWeight: fontWeight.bold,
+    fontWeight: fontWeight.medium,
   },
   spinner: { size: "small", tone: "brand" },
   states: {
@@ -1631,7 +1671,7 @@ export const avatarRecipe = {
   background: semanticColors.canvas,
   content: semanticColors.content.secondary,
   border: semanticColors.border.default,
-  /** Initials are bold; their size follows the avatar (Web `.hjm-avatar[data-size]` steps). */
+  /** Initials use the strong emphasis step; their size follows the avatar (Web `.hjm-avatar[data-size]` steps). */
   initialsWeight: "strong",
 } as const;
 
@@ -1692,18 +1732,20 @@ export const statisticRecipe = {
   },
   label: {
     color: semanticColors.content.secondary,
-    fontWeight: fontWeight.semibold,
+    fontWeight: fontWeight.medium,
   },
   value: {
     color: semanticColors.content.primary,
-    fontWeight: fontWeight.heavy,
+    // The key number keeps the semibold emphasis step (600, 2026-10-17 lighter scale) at the `heading` size.
+    // It used to borrow the display heading weight, which was removed with the display tier the same day.
+    fontWeight: fontWeight.semibold,
     numericVariant: "tabular",
     maxLines: null,
   },
   affix: {
     color: semanticColors.content.body,
     textVariant: "body",
-    fontWeight: fontWeight.semibold,
+    fontWeight: fontWeight.medium,
   },
   hint: {
     color: semanticColors.content.secondary,
@@ -1711,7 +1753,7 @@ export const statisticRecipe = {
   },
   trend: {
     textVariant: "caption",
-    fontWeight: fontWeight.bold,
+    fontWeight: fontWeight.medium,
     gap: spacing.xxs,
     marks: {
       up: "trendUp",
@@ -1824,12 +1866,8 @@ export const sheetRecipe = {
     showWhen: "swipe-dismiss-enabled",
   },
   header: { minHeight: control.minTouchTarget, gap: spacing.sm },
-  title: {
-    color: semanticColors.content.primary,
-    textVariant: "title",
-    fontWeight: fontWeight.bold,
-    gap: spacing.xxs,
-  },
+  // No visual `title` region: sheets render the title only as the accessible name (2026-10-17 user decision).
+  // The "title" slot stays because the title is still the dialog's name.
   body: {
     color: semanticColors.content.body,
     textVariant: "body",
@@ -1928,7 +1966,7 @@ export const alertDialogRecipe = {
   title: {
     color: semanticColors.content.primary,
     textVariant: "title",
-    fontWeight: fontWeight.bold,
+    fontWeight: typography.title.fontWeight,
   },
   description: {
     color: semanticColors.content.secondary,
@@ -2091,7 +2129,7 @@ export const toastRecipe = {
   title: {
     color: semanticColors.content.primary,
     textVariant: "body",
-    fontWeight: fontWeight.bold,
+    fontWeight: typography.title.fontWeight,
   },
   // Secondary copy so the title leads; body-on-body read as one grey block.
   description: {
@@ -2099,7 +2137,7 @@ export const toastRecipe = {
     textVariant: "body",
   },
   // Step dots of a running task: done and current are brand, upcoming is the divider colour; the current
-  // label is bold. Labels sit beside each dot so the row reads without colour alone (WCAG 1.4.1).
+  // label is emphasized. Labels sit beside each dot so the row reads without colour alone (WCAG 1.4.1).
   progress: {
     gap: spacing.sm,
     dotSize: 6,
@@ -2119,7 +2157,7 @@ export const toastRecipe = {
     radius: "full",
     align: "start",
     textVariant: "body",
-    fontWeight: fontWeight.bold,
+    fontWeight: fontWeight.medium,
     minHeight: control.minTouchTarget,
     paddingHorizontal: spacing.md,
   },
@@ -2268,7 +2306,7 @@ export const topBarRecipe = {
   paddingHorizontal: spacing.md,
   gap: spacing.xs,
   largeTextThreshold,
-  title: { textVariant: "bodyLarge", color: semanticColors.content.primary, fontWeight: fontWeight.bold },
+  title: { textVariant: "bodyLarge", color: semanticColors.content.primary, fontWeight: typography.title.fontWeight },
   titleAction: {
     minHeight: control.minTouchTarget,
     minWidth: control.minTouchTarget,
@@ -2331,7 +2369,7 @@ export const sectionRecipe = {
   gap: spacing.xs,
   headerGap: spacing.sm,
   copyGap: spacing.xxs,
-  title: { textVariant: "title", color: semanticColors.content.body, fontWeight: fontWeight.bold },
+  title: { textVariant: "title", color: semanticColors.content.body, fontWeight: typography.title.fontWeight },
   description: { textVariant: "caption", color: semanticColors.content.secondary },
 } as const;
 

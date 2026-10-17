@@ -93,16 +93,19 @@ export const numeric = {
 };
 export const typography = {
     caption: { fontSize: 11, lineHeight: 16, fontWeight: fontWeight.regular },
-    // Label (form labels, section subtitles) sits between body 400 and titles 600: at 600 it competed with
-    // titles, and Text rendered it 400 outside a profile, too weak against body (2026-10-17 user decision).
+    // Label (form labels, section subtitles) stays 500 between body 400 and the titles: at 600 it competed
+    // with titles, and Text rendered it 400 outside a profile, too weak against body (2026-10-17 user decision).
     label: { fontSize: 12, lineHeight: 18, fontWeight: fontWeight.medium },
     body: { fontSize: 14, lineHeight: 20, fontWeight: fontWeight.regular },
     bodyLarge: { fontSize: 16, lineHeight: 24, fontWeight: fontWeight.regular },
-    // Title steps are semibold (2026-10-17 user review: 800, then 700, still read too heavy on route
-    // titles). Display levels 1–2 are bold, see `heading`.
-    title: { fontSize: 18, lineHeight: 26, fontWeight: fontWeight.semibold },
-    titleLarge: { fontSize: 20, lineHeight: 28, fontWeight: fontWeight.semibold },
-    heading: { fontSize: 24, lineHeight: 32, fontWeight: fontWeight.semibold },
+    // Title steps are medium (2026-10-17 user review: 800, then 700, then 600 still read too heavy —
+    // "굵기 좀더 줄여").
+    title: { fontSize: 18, lineHeight: 26, fontWeight: fontWeight.medium },
+    titleLarge: { fontSize: 20, lineHeight: 28, fontWeight: fontWeight.medium },
+    // `heading` is the largest text HJM draws. 2026-10-17 user decision ("글자 너무 커", "큰 글자 정책은 없애"):
+    // the 40/32 display tier looked far too big on the service-intro screen and was removed; design profiles
+    // reject any type step above this size (design-profile.ts `merge`).
+    heading: { fontSize: 24, lineHeight: 32, fontWeight: fontWeight.medium },
 };
 /** Visual variants choose a default family role; semantics and sizes remain independent. */
 export function resolveTextFontRole(variant, role) {
@@ -119,14 +122,16 @@ export function resolveTextFontRole(variant, role) {
 }
 /**
  * Document heading hierarchy without widening the established `TextVariant`
- * union. Levels 3–5 reuse the existing semantic styles; larger levels are
- * additive display roles for dense product pages and documentation.
+ * union. Every level reuses a semantic text style, so no heading exceeds `typography.heading`.
  */
 export const heading = {
-    // Bold, not heavy: Pretendard 800 read heavy and rough at 32–40px (2026-10-17 user decision), while
-    // staying one step above the semibold title levels 3–5.
-    level1: { fontSize: 40, lineHeight: 48, fontWeight: fontWeight.bold },
-    level2: { fontSize: 32, lineHeight: 40, fontWeight: fontWeight.bold },
+    /**
+     * @deprecated Same as `level3` since the display tier was removed (2026-10-17 user decision, "큰 글자
+     * 정책은 없애"; it was 40/48/600). Kept so existing consumers keep compiling; use `level3`.
+     */
+    level1: typography.heading,
+    /** @deprecated Same as `level3` since the display tier was removed (was 32/40/600); use `level3`. */
+    level2: typography.heading,
     level3: typography.heading,
     level4: typography.titleLarge,
     level5: typography.title,

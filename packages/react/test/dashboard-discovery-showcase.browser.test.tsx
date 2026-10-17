@@ -27,10 +27,10 @@ it("combines category and search, resets empty filters and keeps detail and card
  await act(async () => { Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")!.set!.call(input, "없는 작품"); input.dispatchEvent(new Event("input", {bubbles:true})); });
  expect(host.textContent).toContain("찾는 작품이 없어요"); await click("필터 초기화"); expect(document.activeElement).toBe(input); expect(input.value).toBe(""); expect((named("최신순") as HTMLInputElement).checked).toBe(true); expect(host.querySelectorAll("article")).toHaveLength(6);
  await click("초록을 기록하는 하루 보기"); await click("초록을 기록하는 하루 저장"); await close(); expect(document.activeElement).toBe(named("초록을 기록하는 하루 보기"));
- expect(named("초록을 기록하는 하루 저장 취소").getAttribute("aria-pressed")).toBe("true"); expect(named("저장한 작품만 1").getAttribute("role")).toBe("checkbox");
+ expect(named("초록을 기록하는 하루 저장").getAttribute("aria-pressed")).toBe("true"); expect(named("저장한 작품만 1").getAttribute("role")).toBe("checkbox");
 });
 it("recovers focus when unsaving removes the focused card or the detail return target", async () => {
- await render("gallery"); await click("초록을 기록하는 하루 저장"); await click("저장한 작품만 1"); await click("초록을 기록하는 하루 저장 취소");
+ await render("gallery"); await click("초록을 기록하는 하루 저장"); await click("저장한 작품만 1"); await click("초록을 기록하는 하루 저장");
  expect(document.activeElement).toBe(named("저장한 작품만 0"));
  await click("필터 초기화"); await click("초록을 기록하는 하루 저장"); await click("저장한 작품만 1"); await click("초록을 기록하는 하루 보기");
  const dialog = document.querySelector('[role="dialog"]')!;

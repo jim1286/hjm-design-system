@@ -1,7 +1,7 @@
 import { Heading } from "@hjmds/react/heading";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
-import { Search } from "lucide-react";
-import { Button } from "@hjmds/react/actions";
+import { Bookmark, Search } from "lucide-react";
+import { Button, IconButton } from "@hjmds/react/actions";
 import { SearchField, TextField } from "@hjmds/react/forms";
 import { Grid, Stack, Surface, Text } from "@hjmds/react/layout";
 import { Chip, SegmentedControl, Switch } from "@hjmds/react/selection";
@@ -121,7 +121,7 @@ export function RecordComparison() {
   const [saved, setSaved] = useState<string[]>([]);
   const [selected, setSelected] = useState<typeof records[number] | null>(null);
   const results = filterRecords(query, emptyFilters());
-  const cards = results.map(record => <Surface key={record.id} padding="lg"><Stack gap={mode === "list" ? "sm" : "lg"}>{mode === "image" && record.image && <Art label={record.category} />}<Text tone="muted" variant="caption">{record.category}</Text><Heading level={mode === "reading" ? "level4" : "level5"} semanticLevel={2}>{record.title}</Heading>{mode !== "list" && <Text>{record.body}</Text>}<Stack axis="inline" wrap gap="sm"><Button tone="secondary" onClick={event => { returnFocusRef.current = event.currentTarget; setSelected(record); }} aria-label={comparisonActionCopy.readName(record.title)}>{comparisonActionCopy.read}</Button><Button tone="secondary" selected={saved.includes(record.id)} aria-label={comparisonActionCopy.saveName(record.title, saved.includes(record.id))} onClick={() => setSaved(current => current.includes(record.id) ? current.filter(id => id !== record.id) : [...current, record.id])}>{saved.includes(record.id) ? comparisonActionCopy.unsave : comparisonActionCopy.save}</Button></Stack></Stack></Surface>);
+  const cards = results.map(record => <Surface key={record.id} padding="lg"><Stack gap={mode === "list" ? "sm" : "lg"}>{mode === "image" && record.image && <Art label={record.category} />}<Text tone="muted" variant="caption">{record.category}</Text><Heading level={mode === "reading" ? "level4" : "level5"} semanticLevel={2}>{record.title}</Heading>{mode !== "list" && <Text>{record.body}</Text>}<Stack axis="inline" wrap gap="sm" align="center"><Button tone="secondary" onClick={event => { returnFocusRef.current = event.currentTarget; setSelected(record); }} aria-label={comparisonActionCopy.readName(record.title)}>{comparisonActionCopy.read}</Button><IconButton tone="secondary" selected={saved.includes(record.id)} label={comparisonActionCopy.saveName(record.title)} onClick={() => setSaved(current => current.includes(record.id) ? current.filter(id => id !== record.id) : [...current, record.id])}><Bookmark size={20} aria-hidden fill={saved.includes(record.id) ? "currentColor" : "none"} /></IconButton></Stack></Stack></Surface>);
   return <PreviewRoute><ScreenLayout title="무엇을 먼저 보고 싶나요?" description="데이터와 행동은 유지하고 정보의 밀도와 순서를 비교해 보세요."><Stack gap="xl">
     <SegmentedControl label="보기 방식" items={(Object.keys(comparisonModeCopy) as ComparisonMode[]).map(value => ({ value, label: comparisonModeCopy[value] }))} value={mode} onValueChange={value => setMode(value as ComparisonMode)} />
     <SearchField ref={searchRef} label="같은 기록 검색" clearLabel="검색어 지우기" placeholder={comparisonActionCopy.searchPlaceholder} renderSearchIcon={({ color, size }) => <Search aria-hidden color={color} size={size} />} value={query} onValueChange={setQuery} /><StatusText>{`${comparisonModeCopy[mode]} · ${results.length}개의 기록 · ${saved.length}개 저장`}</StatusText>

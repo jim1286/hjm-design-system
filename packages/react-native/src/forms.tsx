@@ -367,8 +367,11 @@ export type SelectProps<
 /** Shared collection sheets keep dismissal in the header so it does not compete with choices. */
 function CollectionSheetHeader({ title, dismissLabel, onDismiss }: { title: string; dismissLabel: string; onDismiss: () => void }) {
   const { colors, environment, tokens } = useHjmNativeTheme();
-  return <View style={{ flexDirection: "row", direction: environment.direction, alignItems: "center", gap: spacing.sm }}>
-    <Text accessibilityRole="header" tone="primary" variant="title" emphasis="strong" style={{ flex: 1 }}>{title}</Text>
+  // 2026-10-17 user decision: sheets show no visible title. The title stays a screen-reader header in an
+  // off-layout 1pt view (as the canonical Sheet), and the × keeps its inline-end place.
+  return <View style={{ flexDirection: "row", direction: environment.direction, alignItems: "center", justifyContent: "flex-end", gap: spacing.sm }}>
+    <View accessible accessibilityRole="header" accessibilityLabel={title}
+      style={{ position: "absolute", top: 0, start: 0, width: 1, height: 1, overflow: "hidden" }} />
     <Pressable accessibilityRole="button" accessibilityLabel={dismissLabel} onPress={onDismiss}
       style={({ pressed }) => [minimumTargetStyle, { alignItems: "center", justifyContent: "center", borderRadius: tokens.radius.full, backgroundColor: pressed ? colors.bg : "transparent" }]}>
       <Text accessible={false} tone="muted" variant="title">×</Text>

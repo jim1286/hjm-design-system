@@ -56,12 +56,12 @@ export declare const textRecipe: {
     };
     readonly emphasis: {
         readonly regular: "400";
-        readonly medium: "600";
-        readonly strong: "700";
+        readonly medium: "500";
+        readonly strong: "500";
     };
     /**
      * Variants whose omitted `emphasis` renders the variant's typography weight even without a design profile.
-     * Label's 500 has no emphasis step (`medium` is 600), and the shared `regular` default drew form labels at
+     * Label's 500 equals the `medium` emphasis step, but the shared `regular` default drew form labels at
      * body weight (2026-10-17 user decision: label 500 on Web and Native). Other variants keep `regular`.
      */
     readonly variantWeight: readonly ["label"];
@@ -203,7 +203,7 @@ export declare const linkRecipe: {
     readonly variants: {
         readonly inline: {
             readonly textVariant: "body";
-            readonly fontWeight: "600";
+            readonly fontWeight: "500";
             readonly underline: "always";
             readonly minHeight: null;
             readonly minWidth: null;
@@ -211,7 +211,7 @@ export declare const linkRecipe: {
         /** 그 자체가 동작이므로 두 축 모두 최소 터치 타깃. 높이만 잡으면 짧은 라벨이 좁아진다. */
         readonly standalone: {
             readonly textVariant: "body";
-            readonly fontWeight: "700";
+            readonly fontWeight: "500";
             readonly underline: "hover";
             readonly minHeight: 44;
             readonly minWidth: 44;
@@ -266,7 +266,7 @@ export declare const selectionGroupRecipe: {
             alpha?: number;
         }>;
         readonly textVariant: "body";
-        readonly fontWeight: "600";
+        readonly fontWeight: "500";
     };
     readonly requiredIndicator: {
         readonly color: Readonly<{
@@ -522,7 +522,7 @@ export declare const badgeRecipe: {
     };
     readonly radius: "full";
     readonly borderWidth: 1;
-    readonly fontWeight: "700";
+    readonly fontWeight: "500";
 };
 export type SearchFieldSize = "medium" | "large";
 /** Search is a field specialization with stable affordance and clear targets. */
@@ -689,8 +689,8 @@ export declare const chipRecipe: {
     readonly radius: "full";
     readonly borderWidth: 1;
     readonly label: {
-        readonly fontWeight: "600";
-        readonly selectedFontWeight: "700";
+        readonly fontWeight: "500";
+        readonly selectedFontWeight: "600";
     };
     readonly selectionIndicator: {
         readonly color: Readonly<{
@@ -733,15 +733,25 @@ export declare const listRecipe: {
     readonly defaults: {
         readonly separator: "indented";
     };
+    /**
+     * Separators are measured from the list's content edge, where the row text sits, and each one belongs to the row
+     * above it (iOS cell separator). "full" spans the row surface (content edge ± bleed). "indented" follows that row's
+     * text column: it starts at the text — `leadingInsetStart` (leading 40 + gap 12) when the row has a leading
+     * element, `insetStart` 0 when it has none — and ends on the row's trailing content edge (0).
+     * 2026-10-17 user report: a fixed 52 start cut the line off midway under rows without leading (text at 16, line
+     * from 68), and the −8 end ran past the trailing content.
+     */
     readonly separators: {
         readonly none: null;
         readonly full: {
             readonly insetStart: number;
+            readonly leadingInsetStart: number;
             readonly insetEnd: number;
         };
         readonly indented: {
-            readonly insetStart: number;
-            readonly insetEnd: number;
+            readonly insetStart: 0;
+            readonly leadingInsetStart: number;
+            readonly insetEnd: 0;
         };
     };
     readonly grouped: {
@@ -830,7 +840,7 @@ export declare const listRowRecipe: {
             alpha?: number;
         }>;
         readonly textVariant: "bodyLarge";
-        readonly fontWeight: "700";
+        readonly fontWeight: "500";
     };
     readonly description: {
         readonly color: Readonly<{
@@ -894,7 +904,7 @@ export declare const accordionRecipe: {
             alpha?: number;
         }>;
         readonly textVariant: "bodyLarge";
-        readonly fontWeight: "700";
+        readonly fontWeight: "500";
     };
     readonly indicator: {
         readonly color: Readonly<{
@@ -1220,7 +1230,7 @@ export declare const selectRecipe: {
                 alpha?: number;
             }>;
             readonly textVariant: "body";
-            readonly fontWeight: "600";
+            readonly fontWeight: "500";
         };
         readonly hint: {
             readonly color: Readonly<{
@@ -1424,8 +1434,8 @@ export declare const selectRecipe: {
         readonly glyph: "sm";
     };
     readonly optionLabel: {
-        readonly fontWeight: "600";
-        readonly selectedFontWeight: "700";
+        readonly fontWeight: "500";
+        readonly selectedFontWeight: "600";
     };
     readonly selectionIndicator: {
         readonly color: Readonly<{
@@ -1559,7 +1569,7 @@ export declare const comboboxRecipe: {
                 alpha?: number;
             }>;
             readonly textVariant: "body";
-            readonly fontWeight: "600";
+            readonly fontWeight: "500";
         };
         readonly hint: {
             readonly color: Readonly<{
@@ -1773,8 +1783,8 @@ export declare const comboboxRecipe: {
         readonly glyph: "sm";
     };
     readonly optionLabel: {
-        readonly fontWeight: "600";
-        readonly selectedFontWeight: "700";
+        readonly fontWeight: "500";
+        readonly selectedFontWeight: "600";
     };
     readonly selectionIndicator: {
         readonly color: Readonly<{
@@ -1915,16 +1925,25 @@ export declare const segmentedControlRecipe: {
         readonly padding: 4;
         readonly gap: 4;
     };
+    /**
+     * `height` is the connected control's outer height (track border + padding included) and matches the Button /
+     * IconButton / Chip height of the same size step, so a segmented control and a chip in one row line up.
+     * `minHeight` is the option inside the track (height − 2 × (`container.padding` + `container.borderWidth`)) and `hitSlop` extends each
+     * option vertically to the 44 touch target. Before 2026-10-17 `minHeight` was the option itself, so the track
+     * drew 46/54 next to 36/44 chips and buttons (DiscoveryGallery sort row, user request "높이 맞춰").
+     */
     readonly sizes: {
         readonly small: {
-            readonly minHeight: 36;
-            readonly hitSlop: 4;
+            readonly height: 36;
+            readonly minHeight: number;
+            readonly hitSlop: number;
             readonly paddingHorizontal: 12;
             readonly textVariant: "label";
         };
         readonly medium: {
-            readonly minHeight: 44;
-            readonly hitSlop: 0;
+            readonly height: 44;
+            readonly minHeight: number;
+            readonly hitSlop: number;
             readonly paddingHorizontal: 16;
             readonly textVariant: "body";
         };
@@ -1937,7 +1956,7 @@ export declare const segmentedControlRecipe: {
             key: "textMuted";
             alpha?: number;
         }>;
-        readonly fontWeight: "600";
+        readonly fontWeight: "500";
         readonly selectedBackground: Readonly<{
             source: "theme";
             key: "bg";
@@ -1959,7 +1978,7 @@ export declare const segmentedControlRecipe: {
             alpha?: number;
         }>;
         readonly selectedBorderWidth: 2;
-        readonly selectedFontWeight: "700";
+        readonly selectedFontWeight: "600";
         readonly focusRing: Readonly<{
             source: "theme";
             key: "contentBrand";
@@ -2066,7 +2085,8 @@ export declare const switchRecipe: {
         readonly pressedOpacity: 0.86;
     };
     readonly rowMinHeight: 44;
-    readonly rowTwoLineMinHeight: 68;
+    readonly rowPaddingVertical: 8;
+    readonly rowTwoLineMinHeight: number;
 };
 export type SelectionControlKind = "checkbox" | "radio";
 export declare const selectionControlRecipe: {
@@ -2149,8 +2169,8 @@ export declare const selectionControlRecipe: {
             key: "textBody";
             alpha?: number;
         }>;
-        readonly fontWeight: "600";
-        readonly checkedFontWeight: "700";
+        readonly fontWeight: "500";
+        readonly checkedFontWeight: "600";
     };
     readonly leading: {
         readonly size: "md";
@@ -2453,8 +2473,8 @@ export declare const bottomNavigationRecipe: {
         };
     };
     readonly label: {
-        readonly fontWeight: "600";
-        readonly selectedFontWeight: "700";
+        readonly fontWeight: "500";
+        readonly selectedFontWeight: "600";
         readonly textAlign: "center";
         readonly wrap: true;
         readonly fixedLines: null;
@@ -2570,8 +2590,8 @@ export declare const tabsRecipe: {
         readonly glyph: "xs";
     };
     readonly label: {
-        readonly fontWeight: "600";
-        readonly selectedFontWeight: "700";
+        readonly fontWeight: "500";
+        readonly selectedFontWeight: "600";
     };
     readonly layouts: {
         readonly content: {
@@ -2736,7 +2756,7 @@ export declare const noticeRecipe: {
     readonly borderWidth: 1;
     readonly title: {
         readonly textVariant: "body";
-        readonly fontWeight: "700";
+        readonly fontWeight: "500";
     };
     readonly description: {
         readonly color: Readonly<{
@@ -2748,29 +2768,47 @@ export declare const noticeRecipe: {
     };
 };
 export declare const skeletonRecipe: {
-    readonly slots: readonly ["root"];
+    readonly slots: readonly ["root", "line"];
     readonly defaults: {
         readonly shape: "block";
         readonly animated: true;
+        readonly lines: 1;
     };
     readonly background: Readonly<{
         source: "theme";
-        key: "bg";
+        key: "text";
         alpha?: number;
     }>;
     readonly shapes: {
         readonly block: {
             readonly radius: "md";
             readonly defaultHeight: 32;
+            readonly aspectRatio: null;
         };
         readonly text: {
             readonly radius: "sm";
             readonly defaultHeight: 16;
+            readonly aspectRatio: null;
         };
         readonly circle: {
             readonly radius: "full";
             readonly defaultHeight: 44;
+            readonly aspectRatio: null;
         };
+        readonly media: {
+            readonly radius: "md";
+            readonly defaultHeight: null;
+            readonly aspectRatio: number;
+        };
+        readonly button: {
+            readonly radius: "md";
+            readonly defaultHeight: 44;
+            readonly aspectRatio: null;
+        };
+    };
+    readonly lines: {
+        readonly gap: 8;
+        readonly lastLineWidthPercent: 60;
     };
     readonly animation: {
         readonly duration: number;
@@ -2810,7 +2848,7 @@ export declare const emptyStateRecipe: {
             key: "text";
             alpha?: number;
         }>;
-        readonly fontWeight: "600";
+        readonly fontWeight: "500";
     };
     readonly description: {
         readonly textVariant: "label";
@@ -2907,7 +2945,7 @@ export declare const loadMoreRecipe: {
             alpha?: number;
         }>;
         readonly textVariant: "label";
-        readonly fontWeight: "700";
+        readonly fontWeight: "500";
     };
     readonly spinner: {
         readonly size: "small";
@@ -2963,7 +3001,7 @@ export declare const avatarRecipe: {
         key: "border";
         alpha?: number;
     }>;
-    /** Initials are bold; their size follows the avatar (Web `.hjm-avatar[data-size]` steps). */
+    /** Initials use the strong emphasis step; their size follows the avatar (Web `.hjm-avatar[data-size]` steps). */
     readonly initialsWeight: "strong";
 };
 /**
@@ -3027,7 +3065,7 @@ export declare const statisticRecipe: {
             key: "textMuted";
             alpha?: number;
         }>;
-        readonly fontWeight: "600";
+        readonly fontWeight: "500";
     };
     readonly value: {
         readonly color: Readonly<{
@@ -3035,7 +3073,7 @@ export declare const statisticRecipe: {
             key: "text";
             alpha?: number;
         }>;
-        readonly fontWeight: "800";
+        readonly fontWeight: "600";
         readonly numericVariant: "tabular";
         readonly maxLines: null;
     };
@@ -3046,7 +3084,7 @@ export declare const statisticRecipe: {
             alpha?: number;
         }>;
         readonly textVariant: "body";
-        readonly fontWeight: "600";
+        readonly fontWeight: "500";
     };
     readonly hint: {
         readonly color: Readonly<{
@@ -3058,7 +3096,7 @@ export declare const statisticRecipe: {
     };
     readonly trend: {
         readonly textVariant: "caption";
-        readonly fontWeight: "700";
+        readonly fontWeight: "500";
         readonly gap: 4;
         readonly marks: {
             readonly up: "trendUp";
@@ -3168,16 +3206,6 @@ export declare const sheetRecipe: {
     readonly header: {
         readonly minHeight: 44;
         readonly gap: 12;
-    };
-    readonly title: {
-        readonly color: Readonly<{
-            source: "theme";
-            key: "text";
-            alpha?: number;
-        }>;
-        readonly textVariant: "title";
-        readonly fontWeight: "700";
-        readonly gap: 4;
     };
     readonly body: {
         readonly color: Readonly<{
@@ -3428,7 +3456,7 @@ export declare const alertDialogRecipe: {
             alpha?: number;
         }>;
         readonly textVariant: "title";
-        readonly fontWeight: "700";
+        readonly fontWeight: "500";
     };
     readonly description: {
         readonly color: Readonly<{
@@ -3663,7 +3691,7 @@ export declare const toastRecipe: {
             alpha?: number;
         }>;
         readonly textVariant: "body";
-        readonly fontWeight: "700";
+        readonly fontWeight: "500";
     };
     readonly description: {
         readonly color: Readonly<{
@@ -3713,7 +3741,7 @@ export declare const toastRecipe: {
         readonly radius: "full";
         readonly align: "start";
         readonly textVariant: "body";
-        readonly fontWeight: "700";
+        readonly fontWeight: "500";
         readonly minHeight: 44;
         readonly paddingHorizontal: 16;
     };
@@ -3852,7 +3880,7 @@ export declare const topBarRecipe: {
             key: "text";
             alpha?: number;
         }>;
-        readonly fontWeight: "700";
+        readonly fontWeight: "500";
     };
     readonly titleAction: {
         readonly minHeight: 44;
@@ -3922,7 +3950,7 @@ export declare const sectionRecipe: {
             key: "textBody";
             alpha?: number;
         }>;
-        readonly fontWeight: "700";
+        readonly fontWeight: "500";
     };
     readonly description: {
         readonly textVariant: "caption";

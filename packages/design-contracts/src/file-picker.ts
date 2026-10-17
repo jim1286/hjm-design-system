@@ -253,7 +253,7 @@ export const filePickerRecipe = {
     radius: "md",
     color: semanticColors.content.brand,
     textVariant: "label",
-    fontWeight: fontWeight.bold,
+    fontWeight: fontWeight.medium,
   },
   dropzone: {
     borderStyle: "dashed",

@@ -37,7 +37,9 @@ export const topRecipe = {
     defaults: { size: topDefaults.size },
     sizes: {
         medium: { title: typography.titleLarge, paddingTop: spacing.md, paddingBottom: spacing.sm },
-        large: { title: heading.level2, paddingTop: spacing.xl, paddingBottom: spacing.md },
+        // The screen's first title uses the HJM ceiling, `heading.level3` (24). It was `heading.level2` (32) until the
+        // display tier was removed (2026-10-17 user decision, "글자 너무 커").
+        large: { title: heading.level3, paddingTop: spacing.xl, paddingBottom: spacing.md },
     },
     eyebrow: {
         color: semanticColors.content.brand,

@@ -20,7 +20,7 @@ it("custom and built-in fields share label/error presentation while preserving h
     expect(tree.root.findAllByType(Text).some(node => node.props.children === "Help")).toBe(false);
     const label = tree.root.findAllByType(Text).find(node => Array.isArray(node.props.children) && node.props.children[0] === "Name")!;
     expect(label.props.variant).toBe("body");
-    expect(flatten(label.props.style).fontWeight).toBe("600");
+    expect(flatten(label.props.style).fontWeight).toBe("500");
     expect(tree.root.findByType(TextInput).props.accessibilityLabel).toBe(builtIn ? "Name" : "Name *");
     expect(tree.root.findByType(TextInput).props.accessibilityHint).toBe("Required");
   }

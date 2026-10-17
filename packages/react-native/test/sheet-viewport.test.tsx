@@ -7,6 +7,7 @@ import { sheetRecipe } from "@hjmds/design-contracts/recipes";
 import { Dialog, Sheet, type DialogProps, type SheetProps } from "../src/overlays.js";
 import { HjmNativeProvider } from "../src/provider.js";
 import { Text } from "../src/primitives.js";
+import { Select } from "../src/forms.js";
 
 // The evidence registry points to this test because it exercises Sheet viewport and dismissal actions directly.
 // componentId: "sheet"
@@ -50,9 +51,9 @@ describe("Sheet input viewport", () => {
     expect(positioner().props.style.paddingTop).toBe(40);
     expect(style().paddingTop).toBe(sheetRecipe.content.paddingTop);
     expect(dialog().props.accessibilityLabel).toBe("설정");
-    const header = renderer!.root.findAllByType(View).find((view) =>
-      view.props.style?.minHeight === sheetRecipe.header.minHeight);
-    expect(header?.props.style).toMatchObject({ alignItems: "center", flexShrink: 0 });
+    // A default bottom sheet has no description and no ×, so no header row is drawn (2026-10-17).
+    expect(renderer!.root.findAllByType(View).find((view) =>
+      view.props.style?.minHeight === sheetRecipe.header.minHeight)).toBeUndefined();
   });
 
   it("moves the sheet above a docked keyboard without adding the home inset twice", () => {
@@ -128,7 +129,8 @@ describe("Sheet input viewport", () => {
   it("exposes the close action and blocks it while busy", () => {
     const onOpenChange = vi.fn();
     render(tree({ onOpenChange }));
-    const close = renderer!.root.findAllByType(Pressable).find((node) =>
+    // The handle's close action, inside the dialog (the backdrop shares closeLabel since 2026-10-17).
+    const close = dialog().findAllByType(Pressable).find((node) =>
       node.props.accessibilityLabel === "닫기");
     expect(close?.props.accessibilityRole).toBe("button");
     expect(close?.props.disabled).toBe(false);
@@ -137,25 +139,27 @@ describe("Sheet input viewport", () => {
 
     onOpenChange.mockClear();
     act(() => renderer!.update(tree({ busy: true, onOpenChange })));
-    const busyClose = renderer!.root.findAllByType(Pressable).find((node) =>
+    const busyClose = dialog().findAllByType(Pressable).find((node) =>
       node.props.accessibilityLabel === "닫기");
     expect(busyClose?.props.disabled).toBe(true);
     expect(busyClose?.props.accessibilityState.disabled).toBe(true);
     expect(onOpenChange).not.toHaveBeenCalled();
   });
 
-  it("preserves long title and description without truncation", () => {
+  it("names the sheet by a long title and shows a long description without truncation", () => {
     const longCopy = "계정 설정을 확인하고 저장하기 전에 모든 변경 사항을 검토해 주세요. 이 문장은 큰 글자에서도 잘리면 안 됩니다.";
     render(tree({ title: longCopy, description: longCopy }));
     const visibleText = dialog().findAllByType(Text).map((node) => node.props.children);
     expect(visibleText).toContain(longCopy);
-    expect(visibleText.filter((value) => value === longCopy)).toHaveLength(2);
+    // The title is the accessible name only (2026-10-17); the description is the one visible copy.
+    expect(visibleText.filter((value) => value === longCopy)).toHaveLength(1);
+    expect(dialog().props.accessibilityLabel).toBe(`${longCopy}, ${longCopy}`);
     expect(dialog().findAllByType(Text).every((node) => node.props.numberOfLines === undefined)).toBe(true);
   });
 });
 
 describe("Overlay element titles", () => {
-  it("renders an element title in the Sheet header and names the modal from accessibilityTitle", () => {
+  it("names the Sheet from accessibilityTitle and does not draw an element title (2026-10-17)", () => {
     render(
       <HjmNativeProvider reducedMotion>
         <Sheet open closeLabel="닫기" title={<Text variant="title">필터 <Text tone="muted">3</Text></Text>}
@@ -166,7 +170,8 @@ describe("Overlay element titles", () => {
     );
     expect(dialog().props.accessibilityLabel).toBe("필터 3개 적용, 현재 조건");
     const header = renderer!.root.findAll((node) => node.props.accessibilityRole === "header")[0]!;
-    expect(header.findAllByType(Text).some((text) => text.props.tone === "muted")).toBe(true);
+    expect(header.props.accessibilityLabel).toBe("필터 3개 적용");
+    expect(dialog().findAllByType(Text).some((text) => text.props.tone === "muted" && text.props.children === "3")).toBe(false);
   });
 
   it("lets accessibilityTitle override a string title and keeps the string title as the default name", () => {
@@ -210,4 +215,71 @@ it.skip.each(["sheet", "dialog"] as const)("keeps the %s close icon fixed while 
   expect(close.props.accessibilityRole).toBe("button");
   act(() => close.props.onPress());
   expect(onOpenChange).toHaveBeenCalledWith(false, { reason: "close-action" });
+});
+
+// 2026-10-17 user decisions: sheets show no visible title, and a backdrop press closes them.
+describe("Sheet title and backdrop", () => {
+  const visibleTexts = () => renderer!.root.findAllByType(NativeText).map((node) => node.props.children).flat();
+  it("keeps the title as the accessible name and an off-layout header, never as visible text", () => {
+    render(tree({ title: "필터" }));
+    expect(dialog().props.accessibilityLabel).toBe("필터");
+    expect(visibleTexts()).not.toContain("필터");
+    const heading = renderer!.root.findAll((node) => node.props.accessibilityRole === "header" && node.props.accessibilityLabel === "필터");
+    expect(heading.length).toBeGreaterThan(0);
+    expect(StyleSheet.flatten(heading[0]!.props.style)).toMatchObject({ position: "absolute", width: 1, height: 1 });
+  });
+
+  it("keeps the × at the header end without a title when showClose is on", () => {
+    render(tree({ title: "필터", showClose: true }));
+    const header = renderer!.root.findAllByType(View).find((view) =>
+      view.props.style?.minHeight === sheetRecipe.header.minHeight)!;
+    expect(header.props.style).toMatchObject({ alignItems: "center", flexShrink: 0, justifyContent: "flex-end" });
+    expect(visibleTexts()).not.toContain("필터");
+    expect(header.findAll((node) => node.props.accessibilityLabel === "닫기" && node.props.accessibilityRole === "button").length).toBeGreaterThan(0);
+  });
+
+  function backdrop() {
+    return renderer!.root.findAllByType(Pressable).find((node) => node.props.accessibilityLabel === "닫기"
+      && node.props.style?.position === "absolute");
+  }
+  it("closes a bottom sheet on a backdrop press with reason outside, named by closeLabel", () => {
+    const onOpenChange = vi.fn();
+    render(tree({ onOpenChange }));
+    const press = backdrop()!;
+    expect(press.props.accessibilityRole).toBe("button");
+    act(() => press.props.onPress());
+    expect(onOpenChange).toHaveBeenCalledWith(false, { reason: "outside" });
+  });
+
+  it("does not close from the backdrop while busy, and leaves confirmation to the controlled owner", () => {
+    const onOpenChange = vi.fn();
+    render(tree({ onOpenChange, busy: true }));
+    const press = backdrop()!;
+    expect(press.props.disabled).toBe(true);
+    act(() => press.props.onPress());
+    expect(onOpenChange).not.toHaveBeenCalled();
+    act(() => { renderer!.update(tree({ onOpenChange })); });
+    act(() => backdrop()!.props.onPress());
+    // The controlled owner kept `open` (a discard confirmation): the sheet is still rendered.
+    expect(onOpenChange).toHaveBeenCalledWith(false, { reason: "outside" });
+    expect(dialog()).toBeDefined();
+  });
+
+  it("omits the backdrop dismiss target only for an explicit outsideDismiss: false policy", () => {
+    render(tree({ dismissPolicy: { outsideDismiss: false, swipeDismiss: false } }));
+    expect(backdrop()).toBeUndefined();
+  });
+});
+
+describe("Native Select sheet title", () => {
+  it("names the selection sheet without a visible title and keeps the × (2026-10-17)", () => {
+    render(<HjmNativeProvider reducedMotion>
+      <Select label="기간" placeholder="선택" open dismissLabel="닫기" optionsAccessibilityLabel="기간 선택"
+        items={[{ id: "a", label: "오늘", textValue: "오늘" }]} />
+    </HjmNativeProvider>);
+    const sheet = renderer!.root.findAll((node) => node.props.accessibilityViewIsModal === true && node.props.accessibilityRole === "radiogroup")[0]!;
+    expect(sheet.findAll((node) => node.props.accessibilityRole === "header" && node.props.accessibilityLabel === "기간").length).toBeGreaterThan(0);
+    expect(sheet.findAllByType(NativeText).some((node) => node.props.children === "기간")).toBe(false);
+    expect(sheet.findAll((node) => node.props.accessibilityRole === "button" && node.props.accessibilityLabel === "닫기").length).toBeGreaterThan(0);
+  });
 });

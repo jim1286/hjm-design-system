@@ -29,20 +29,20 @@
 │ ┌ ① 히어로 EffectSurface(mesh+grain) ──┐ │
 │ │ (안쪽 여백 spacing.xl 24 — HJM 구성 소유) │ │
 │ │ eyebrow  Text tone=muted             │ │  Stack gap lg 20
-│ │ 제목     Heading level1 (h1)         │ │
+│ │ 제목     Heading level3 (h1) 24      │ │
 │ │ 소개     Text as=p                   │ │
 │ │ [ 첫 기록 써보기 ]  ← 주 행동(primary) │ │
 │ └──────────────────────────────────────┘ │
 │              ↕ spacing.xl 24             │
 │ ┌ ② 미리보기 Surface padding lg 20 ────┐ │
-│ │ Heading level2                       │ │  Stack gap md 16
+│ │ Heading level4 (h2) 20               │ │  Stack gap md 16
 │ │ (저장 직후) "추가했어요" status        │ │
 │ │ List > ListRow 한 줄씩(최신이 위)     │ │
 │ └──────────────────────────────────────┘ │
-│ ③ 기능 Heading level2                    │
-│ ┌ Surface padding lg ─┐ Heading level3 + Text (Stack gap sm 12)
+│ ③ 기능 Heading level4 (h2)               │
+│ ┌ Surface padding lg ─┐ Heading level5 (h3) + Text (Stack gap sm 12)
 │ └─────────────────────┘ × 3, 사이 24     │
-│ ④ FAQ Heading level2                     │
+│ ④ FAQ Heading level4 (h2)                │
 │   ▸ 질문 1   Collapsible (트리거 최소 44) │
 │   ▸ 질문 2                               │
 │ ⑤ [ 첫 기록 써보기 ]  ← 같은 행동 반복     │  secondary
@@ -67,8 +67,8 @@
 | 바깥 틀 | Web `main` > `Container size="content" gutter={gutter}` > `Stack gap="xl"`(문서 스크롤) · Native `ScrollView`(`contentContainerStyle={{ paddingVertical: spacing.lg }}`) > `Container size="content" gutter={gutter}` > `Stack gap="xl"` | 화면 전체, 스크롤. 위 안전 영역은 내비게이션 헤더(또는 [TopBar](../components/top-bar.md) `safeAreaTop`)가 맡고 헤더 없이 띄울 때만 제품이 감싼다. 아래 고정 영역은 없다. 바깥에는 입력이 없어 키보드 처리는 ⑥ 시트가 맡는다 | 좌우 gutter: 폭 600 미만 `compact` 16(`layout.pagePadding.compact`), 이상 `regular` 20([화면 여백](../tokens/layout.md)). Native 위아래 `spacing.lg` 20. 직계 요소 사이 `spacing.xl` 24(`layout.sectionGap`) |
 | ① 히어로 | EffectSurface `descriptor={{ layers: ["mesh","grain"], active: false }}` > Surface `padding="xl"` > Stack `gap="lg"` > Text·Heading·Text·Button | 맨 위 | 요소 사이 `spacing.lg` 20. EffectSurface 안에 Surface `padding="xl"`을 두어 spacing.xl 24를 준다. 실제 양 플랫폼 예제와 같은 공개 구성이다 |
 | ② 미리보기 | Surface `padding="lg"` > Stack `gap="md"` > Heading·상태 Text·List | 히어로 아래 | 안쪽 20, 요소 사이 `spacing.md` 16, 한 줄 행 최소 56(`layout.rowHeight.singleLine`). 새 기록이 맨 위 |
-| ③ 기능 | Heading level2 + Surface `padding="lg"` ×3 > Stack `gap="sm"` | 미리보기 아래 | 카드 안 `spacing.sm` 12, 카드 사이 24 |
-| ④ FAQ | Heading level2 + Collapsible × n | 기능 아래 | 트리거 최소 44(`control.minTouchTarget`), 트리거 위아래 `spacing.xs` 8(Web) |
+| ③ 기능 | Heading level4(h2) + Surface `padding="lg"` ×3 > Stack `gap="sm"` | 미리보기 아래 | 카드 안 `spacing.sm` 12, 카드 사이 24 |
+| ④ FAQ | Heading level4(h2) + Collapsible × n | 기능 아래 | 트리거 최소 44(`control.minTouchTarget`), 트리거 위아래 `spacing.xs` 8(Web) |
 | ⑤ 마지막 행동 | Button `secondary` + Text `tone="muted"` | 맨 아래 | 사이 24 |
 | ⑥ 입력 | Sheet(Native `keyboardAvoidance` `scrollable`) > Stack `gap="lg"` > Notice(실패 때)·TextField, 제출은 `footer` | 오버레이, 화면 아래 | 시트 좌우 `spacing.lg` 20, TextField 높이 44(`control.fieldHeight`). 아래 안전 영역·키보드는 시트가 맡는다 |
 
@@ -134,7 +134,7 @@ footer의 저장과 같은 동작을 실행한다. Web에서 IME 조합 확정 �
 | [Container](../components/container.md) | 바깥 틀 폭·좌우 여백 |
 | [화면 여백과 너비](../tokens/layout.md) | gutter 선택(`resolveWindowClass`) |
 | [EffectSurface](../components/effect-surface.md) | ① 히어로 배경 장식 |
-| [Heading](../components/heading.md) | 히어로 level1, 영역 제목 level2, 기능 카드 level3 |
+| [Heading](../components/heading.md) | 히어로 level3(h1, 24), 영역 제목 level4(h2, 20), 기능 카드 level5(h3, 18) |
 | [Text](../components/text.md) | eyebrow·소개·범위 안내·상태 문구 |
 | [Button](../components/button.md) | 주 행동, 반복 행동, 시트 제출 |
 | [Surface](../components/surface.md) | ② 미리보기, ③ 기능 카드 |
@@ -179,20 +179,20 @@ const gutter = resolveWindowClass(window.innerWidth) === "compact" ? "compact" :
   <EffectSurface descriptor={{ layers: ["mesh", "grain"], seed: "landing", active: false }}><Surface padding="xl">
     <Stack gap="lg" align="start">
       <Text tone="muted">{t("landing.eyebrow")}</Text>
-      <Heading level="level1">{t("landing.title")}</Heading>
+      <Heading level="level3" semanticLevel={1}>{t("landing.title")}</Heading>
       <Text as="p">{t("landing.intro")}</Text>
       <Button onClick={start}>{t("landing.cta")}</Button>
     </Stack>
   </Surface></EffectSurface>
   <Surface padding="lg"><Stack gap="md">
-    <Heading level="level2">{t("landing.preview")}</Heading>
+    <Heading level="level4" semanticLevel={2}>{t("landing.preview")}</Heading>
     {saved ? <Text role="status">{t("landing.saved")}</Text> : null}
     <List label={t("landing.preview")}>{notes.map(n => <ListRow key={n.id} title={n.text} />)}</List>
   </Stack></Surface>
-  <Heading level="level2">{t("landing.features")}</Heading>
+  <Heading level="level4" semanticLevel={2}>{t("landing.features")}</Heading>
   {features.map(f => <Surface key={f.id} padding="lg"><Stack gap="sm">
-    <Heading level="level3">{t(f.titleKey)}</Heading><Text>{t(f.bodyKey)}</Text></Stack></Surface>)}
-  <Heading level="level2">{t("landing.faq")}</Heading>
+    <Heading level="level5" semanticLevel={3}>{t(f.titleKey)}</Heading><Text>{t(f.bodyKey)}</Text></Stack></Surface>)}
+  <Heading level="level4" semanticLevel={2}>{t("landing.faq")}</Heading>
   {faqs.map(q => <Collapsible key={q.id} trigger={t(q.questionKey)}><Text>{t(q.answerKey)}</Text></Collapsible>)}
   <Stack gap="xl" align="start"><Button tone="secondary" onClick={start}>{t("landing.cta")}</Button>
   <Text tone="muted">{t("landing.scope")}</Text></Stack>
@@ -229,7 +229,7 @@ const gutter = resolveWindowClass(width) === "compact" ? "compact" : "regular";
   <Container size="content" gutter={gutter}><Stack gap="xl">
     <EffectSurface descriptor={{ layers: ["mesh", "grain"], seed: "landing", active: false }}><Surface padding="xl">
       <Stack gap="lg">
-        <Heading level="level1">{t("landing.title")}</Heading>
+        <Heading level="level3" semanticLevel={1}>{t("landing.title")}</Heading>
         <Text>{t("landing.intro")}</Text>
         <Button onPress={start}>{t("landing.cta")}</Button>
       </Stack>
@@ -366,6 +366,7 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 
 ## 근거
 
+- 2026-10-17 사용자 결정("글자 너무 커", "큰 글자 정책은 없애"): 히어로 제목 level1 40px·영역 제목 level2 32px가 지나치게 커서 큰 글자 단계를 폐지했다. 히어로는 HJM 상한인 level3 24px(h1), 영역 제목은 level4 20px(h2), 기능 카드는 level5 18px(h3)로 위계를 만든다.
 - FAQ는 Collapsible(기본·변형): 2026-10-16 사용자 지적 — 변형 스토리가 `selected` 토글 Button 하나로 펼침을 흉내 내 눌림 토글로 읽혔다.
 - 닫을 때 초안 보존·성공 제출만 한 번 추가: 2026-10-13 실제 예제 검수에서 닫은 뒤 초안 소실과 연속 제출 시 중복 행을 재현했다.
 - 히어로 padding·시트 저장 footer: 2026-10-06 지침과 예제 정합성 수정.

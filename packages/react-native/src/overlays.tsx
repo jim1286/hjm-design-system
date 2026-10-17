@@ -64,6 +64,7 @@ import {
 } from "./internal/modal-lifecycle.js";
 import { isDevelopment } from "./internal/diagnostics.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
+import { listRowScrollRoom } from "./internal/list-row-scroll-room.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "./provider.js";
@@ -1444,6 +1445,7 @@ export function Sheet({
   // `auto` stays content-sized: growing there has no free space to take. The ScrollView body grows too, so the
   // footer sits at the bottom on both platforms; its content container does not, so scroll content keeps its height.
   const bodyFill = side || sizeRatio !== null ? { flexGrow: 1, minHeight: 0 } : {};
+  const sheetBodyRoom = listRowScrollRoom(sheetRecipe.content.paddingHorizontal);
   const contentBackground = resolveColorReference(
     sheetRecipe.content.background,
     palette,
@@ -1486,9 +1488,13 @@ export function Sheet({
         >
           <Scrim />
           {policy.dismissible && policy.outsideDismiss ? (
+            // Backdrop press closes every sheet by default (2026-10-17 user decision) through the same
+            // requestClose path as the handle, so busy and dismissPolicy guards apply. Named by closeLabel.
             <Pressable
-              accessible={false}
-              importantForAccessibility="no-hide-descendants"
+              accessibilityLabel={closeLabel}
+              accessibilityRole="button"
+              accessibilityState={{ disabled: closeBlocked }}
+              disabled={closeBlocked}
               onPress={() => requestClose("outside")}
               style={{ bottom: 0, left: 0, position: "absolute", right: 0, top: 0 }}
             />
@@ -1550,6 +1556,11 @@ export function Sheet({
               contentStyle,
             ]}
           >
+            {/* 2026-10-17 user decision: sheets show no visible title line. The title remains the dialog's
+                accessible name (accessibilityLabel above) and this off-layout header is the screen reader's first
+                stop, as Web's visually hidden h2. Absolute, so it adds no height or gap. */}
+            <View accessible accessibilityRole="header" accessibilityLabel={accessibleTitle}
+              style={{ position: "absolute", top: 0, start: 0, width: 1, height: 1, overflow: "hidden" }} />
             <View {...(canSwipe ? dragResponder.panHandlers : {})} style={{ flexShrink: 0 }}>
             {showHandle && sheetRecipe.handle.visibleByDefault ? (
               // The handle doubles as a close control so switch and screen-reader users need no drag.
@@ -1558,6 +1569,7 @@ export function Sheet({
                 <View style={{ width: sheetRecipe.handle.width, height: sheetRecipe.handle.height, borderRadius: tokens.radius[sheetRecipe.handle.radius], backgroundColor: resolveColorReference(sheetRecipe.handle.color, palette) }} />
               </Pressable>
             ) : null}
+            {description || (policy.dismissible && closeVisible) ? (
             <View
               style={{
                 alignItems: "center",
@@ -1565,13 +1577,12 @@ export function Sheet({
                 flexShrink: 0,
                 direction: environment.direction,
                 flexDirection: "row",
+                // Without a description the × keeps its inline-end place (2026-10-17: no visible title).
+                justifyContent: "flex-end",
                 gap: spacing.sm,
               }}
             >
-              <View style={{ flex: 1, gap: spacing.xs }}>
-                <Text accessibilityRole="header" tone="primary" variant="title">{title}</Text>
-                {description ? <Text tone="muted">{description}</Text> : null}
-              </View>
+              {description ? <View style={{ flex: 1 }}><Text tone="muted">{description}</Text></View> : null}
               {policy.dismissible && closeVisible ? (
                 <IconButton
                   disabled={busy && !policy.dismissWhileBusy}
@@ -1582,12 +1593,16 @@ export function Sheet({
                 </IconButton>
               ) : null}
             </View>
+            ) : null}
             </View>
             {/* Keyboard clearance belongs to the enclosing modal; UIKit must not add it again. */}
             {scrollable ? (
               <ScrollView
-                style={{ flexShrink: 1, minHeight: 0, ...bodyFill }}
-                contentContainerStyle={{ gap: sheetRecipe.body.gap }}
+                // The sheet's inline padding used to sit outside this clipping viewport, so ListRows cut their surface
+                // bleed. The viewport now reaches the padding edge and carries the padding inside its content (Web's
+                // body scroll box does the same); content keeps its position (2026-10-17 1.27.2 adoption).
+                style={{ flexShrink: 1, minHeight: 0, ...bodyFill, ...sheetBodyRoom.viewport }}
+                contentContainerStyle={{ gap: sheetRecipe.body.gap, ...sheetBodyRoom.content }}
                 keyboardShouldPersistTaps="handled"
                 keyboardDismissMode={Platform.OS === "ios" ? "interactive" : "on-drag"}
                 automaticallyAdjustKeyboardInsets={false}
