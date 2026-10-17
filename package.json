@@ -27,6 +27,7 @@
     "showcase:web:build": "pnpm --filter @hjmds/design-contracts build && pnpm --filter @hjmds/react build && pnpm --filter @hjm/showcase-web build && pnpm --filter @hjm/showcase-web verify:static",
     "showcase:native": "pnpm --filter @hjm/showcase-native storybook",
     "showcase:native:ios": "pnpm --filter @hjm/showcase-native storybook:ios",
+    "compare:screens": "node scripts/compare-reference-screens.mjs",
     "showcase:native:check": "pnpm --filter @hjmds/design-contracts build && pnpm --filter @hjmds/react-native build && pnpm --filter @hjm/showcase-native check",
     "ci:check": "pnpm check && pnpm showcase:native:check:built && pnpm showcase:web:check:built && pnpm showcase:web:build:built",
     "reference:antd:verify": "pnpm --filter @hjmds/design-contracts reference:antd:verify",

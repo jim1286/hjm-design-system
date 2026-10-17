@@ -13,3 +13,6 @@ showcase/native/ios/
 
 # Provider trademarks are injected locally from the private portfolio asset registry.
 showcase/*/.env.local
+
+# On-demand web/native screen comparison output (scripts/compare-reference-screens.mjs).
+artifacts/

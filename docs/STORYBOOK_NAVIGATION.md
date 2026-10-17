@@ -214,6 +214,24 @@ stories 파일 안 구현(§1.7 목표), 상태 arg 이름. 빌드 index 기준 
 - 표시 이름은 단계·분류·항목·상태·툴바까지 용도를 알 수 있는 한글로 쓴다. 공개 API·export 이름·import 경로·키보드 Home/End는
   번역하지 않는다.
 
+### 1.12 Web·Native 기준 화면 나란히 보기(수동 도구)
+
+2026-10-17 사용자 요청: 공통 화면의 Web·앱 차이를 사용자가 눈으로 찾지 않도록 도구로 모아 본다.
+`pnpm compare:screens`([`scripts/compare-reference-screens.mjs`](../scripts/compare-reference-screens.mjs))는 기준 화면 12개
+(채팅·댓글·대화 목록·알림함·설정 두 종·목록과 상세·작성과 수정·로그인·검색·화면 골격의 빈 상태/오류)를 Web Storybook과
+시뮬레이터의 Native Storybook에서 캡처하고 `artifacts/screen-compare/<시각>/<web id>/compare.png`(왼쪽 Web | 오른쪽 Native)와
+`summary.json`을 만든다. `--only <id,id>`로 일부만 찍는다.
+
+- **언제:** 공통 화면·구성의 레이아웃·간격·배치를 바꾼 뒤, 두 플랫폼 결과를 같이 보고 싶을 때 직접 실행한다.
+- **게이트가 아니다.** CI·`pnpm check`·테스트에 연결하지 않고 합격 판정도 하지 않는다. 캡처 성공 여부만 보고하며 차이 판단은 사람이 한다.
+- **전제:** Web Storybook 6006(`pnpm showcase:web`), Native Storybook Metro 8084와 Expo Go로 열린 기존 부팅 시뮬레이터
+  (`pnpm showcase:native:ios`). 도구는 서버를 띄우거나 시뮬레이터를 만들거나 부팅하지 않는다. 기기는 `HJM_COMPARE_UDID`로 바꾼다.
+- **Native 스토리 선택:** `@storybook/react-native`가 제공하는 Linking 처리(`?STORYBOOK_STORY_ID=<id>` URL을 받으면
+  `SET_CURRENT_STORY`)를 `xcrun simctl openurl`로 호출한다. Native id는 §3.1대로 제목 기반이므로 Web index의 제목·export 이름으로
+  계산한다. 좌표 탭이나 websocket 설정 변경은 쓰지 않는다.
+- Native 캡처에는 상태 막대·Storybook 하단 막대·Expo Go 도구 버튼이 함께 찍힌다. Web은 402pt 뷰포트(iPhone 17 Pro)·3배율이다.
+- 출력은 `.gitignore`의 `artifacts/`에 남는 임시 산출물이다. 필요한 결론만 기존 작업 기록에 옮기고 지운다.
+
 ## 2. 승인 기록
 
 ### 2026-10-14 현재 실험 전체 스토리북 배포
