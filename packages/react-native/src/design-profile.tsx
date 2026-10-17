@@ -34,7 +34,9 @@ export function OverviewScreen({ items, toolbar, toolbarLabel, collection: suppl
       <Stack gap="xl">
         {toolbar ? <Collapsible trigger={toolbarLabel} open={toolsOpen} onOpenChange={setToolsOpen} presentation={toolbarPresentation === "inline" ? "inline" : "disclosure"} keepMounted layoutStyle={overviewToolbarLayout}>{toolbar}</Collapsible> : null}
         <Grid {...resolveDesignProfileCollection(collection)}>
-          {items.map(item => <Surface key={item.id} padding={collection === "rows" ? "md" : "xl"} tone={collection === "rows" ? "default" : "raised"} bordered radius="lg"><EffectSurface descriptor={designProfile?.material.card ?? { layers: ["mesh"], intensity: 0, active: false }} style={{ backgroundColor: "transparent" }}>{item.children}</EffectSurface></Surface>)}
+          {/* The card Surface owns the rounded frame; the material layer sits in its padded content box, so a rounded
+              effect clipped the first glyph of edge-aligned text (clay/glass, 2026-10-17 after EffectSurface radius default lg). */}
+          {items.map(item => <Surface key={item.id} padding={collection === "rows" ? "md" : "xl"} tone={collection === "rows" ? "default" : "raised"} bordered radius="lg"><EffectSurface radius="none" descriptor={designProfile?.material.card ?? { layers: ["mesh"], intensity: 0, active: false }} style={{ backgroundColor: "transparent" }}>{item.children}</EffectSurface></Surface>)}
         </Grid>
       </Stack>
     </ScreenLayout>
