@@ -10,6 +10,7 @@ import { Heading } from "@hjmds/react/heading";
 import { Notice } from "@hjmds/react/feedback";
 import { LoadMore } from "@hjmds/react/navigation";
 import { PreviewPhoto } from "./reference-screen-parts";
+import { PreviewRoute } from "./preview-tools";
 import {
   appliedFilterChips, commitRecentSearch, countDiscovery, discoveryCopy as copy, discoveryKinds,
   discoveryPageSize, discoveryPeriods, discoverySeed, discoverySorts, discoveryTopics, entryDescription, highlightRange,
@@ -113,9 +114,7 @@ export function SearchDiscoveryPreview({ view = "idle", tools = false }: SearchD
     </Stack> : null}
   </Stack>;
 
-  return <Stack gap="sm">
-    {tools ? <Button tone="ghost" onClick={() => { failRef.current = !failNext; setFailNext(!failNext); }}>{failNext ? copy.failNextArmed : copy.failNext}</Button> : null}
-    <div style={{ height: "90dvh" }}>
+  return <PreviewRoute before={tools ? <Button tone="ghost" onClick={() => { failRef.current = !failNext; setFailNext(!failNext); }}>{failNext ? copy.failNextArmed : copy.failNext}</Button> : null}>
       {/* Keep the search mounted behind detail so query, conditions, sort and scroll survive the round trip. */}
       <div ref={searchHost} hidden={!!detail || home} style={{ height: "100%" }}>
         <SearchScreen title={copy.screenTitle} queryLabel={copy.queryLabel} queryClearLabel={copy.clear}
@@ -157,8 +156,7 @@ export function SearchDiscoveryPreview({ view = "idle", tools = false }: SearchD
         <Stack gap="lg">{detail.hasPhoto ? <PreviewPhoto index={Number(detail.id) % 3} label={detail.title} /> : null}<Heading level="level4" semanticLevel={2}>{detail.title}</Heading><Text tone="muted">{entryDescription(detail)}</Text><Text>{detail.excerpt}</Text></Stack>
       </ScreenLayout></div> : null}
       {home ? <ScreenLayout title={copy.home}><Button onClick={() => setHome(false)}>{copy.reopen}</Button></ScreenLayout> : null}
-    </div>
-  </Stack>;
+  </PreviewRoute>;
 }
 
 /** Result titles still bold the match; the suggestion rows get the same from SearchScreen via `match`. */

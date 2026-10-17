@@ -6,6 +6,7 @@ import { HjmProvider } from "../src/provider.js";
 import { Button, IconButton, Link } from "../src/actions.js";
 import { TopBar } from "../src/top-bar.js";
 import { BottomCTA } from "../src/bottom-cta.js";
+import { ScreenLayout } from "../src/screens.js";
 import { bottomCtaRecipe } from "@hjmds/design-contracts/recipes";
 import { List } from "../src/advanced-display.js";
 import { ListRow } from "../src/display.js";
@@ -130,6 +131,22 @@ describe("screen chrome layout", () => {
     expect(submit).toHaveBeenCalledTimes(1);
     expect(document.activeElement).toBe(save);
     expect(save.getBoundingClientRect().width).toBe(before);
+  });
+
+  it("draws BottomCTA bare inside ScreenLayout footer, which owns the bar border and padding", async () => {
+    await page.viewport(402, 844);
+    await act(async () => root.render(<HjmProvider><div style={{ height: 600 }}>
+      <ScreenLayout title="설정" footer={<BottomCTA primaryAction={{ label: "저장", onClick: () => {} }} />}><p>본문</p></ScreenLayout>
+    </div></HjmProvider>));
+    const footer = host.querySelector<HTMLElement>(".hjm-screen__footer")!;
+    const cta = host.querySelector<HTMLElement>(".hjm-bottom-cta")!;
+    const style = getComputedStyle(cta);
+    expect(style.borderTopWidth).toBe("0px");
+    expect(style.paddingLeft).toBe("0px");
+    expect(style.boxShadow).toBe("none");
+    // The primary button spans the footer content box: one inset (the footer's), not two.
+    const inner = footer.getBoundingClientRect().width - 2 * parseFloat(getComputedStyle(footer).paddingLeft);
+    expect(cta.querySelector<HTMLElement>(".hjm-button")!.getBoundingClientRect().width).toBeCloseTo(inner, 0);
   });
 
   it("leaves the last content reachable above a sticky footer", async () => {

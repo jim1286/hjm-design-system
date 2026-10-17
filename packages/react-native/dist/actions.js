@@ -4,9 +4,10 @@ import { resolveLinkDescriptor, } from "@hjmds/design-contracts/components/link"
 import { glyph, spacing } from "@hjmds/design-contracts/foundations";
 import { bottomCtaRecipe, linkRecipe, iconButtonRecipe, resolveIconButtonPresentation, } from "@hjmds/design-contracts/recipes";
 import {} from "@hjmds/design-contracts/recipes/base";
-import { forwardRef } from "react";
+import { forwardRef, useContext } from "react";
 import { ActivityIndicator, Pressable, View, } from "react-native";
 import { RecipeButton } from "./internal/recipe-button.js";
+import { ScreenFooterContext } from "./internal/screen-footer.js";
 import { assertNoRemovedStyleProps, warnOnce } from "./internal/diagnostics.js";
 import { minimumTargetStyle, resolveNativeShadowElevation } from "./internal/styles.js";
 import { Icon, Text } from "./primitives.js";
@@ -126,6 +127,7 @@ export function BottomCTA({ primaryAction, secondaryAction, description, accessi
         throw new RangeError("BottomCTA safeAreaBottom must be non-negative");
     }
     const { colors, environment, designProfile } = useHjmNativeTheme();
+    const inScreenFooter = useContext(ScreenFooterContext);
     // Footer elevation separates the content above it (bottomCtaRecipe rationale).
     // Reuse profile strength but retain the upward direction; a flat profile must
     // also disable Android elevation rather than only its iOS shadow properties.
@@ -139,7 +141,9 @@ export function BottomCTA({ primaryAction, secondaryAction, description, accessi
             ? _jsx(BottomCTAButton, { action: secondaryAction, fallbackTone: "secondary" })
             : secondaryAction;
     return (_jsxs(View, { accessibilityLabel: accessibilityLabel, accessibilityRole: "toolbar", testID: testID, style: [
-            {
+            // Inside ScreenLayout's footer the footer owns border, padding and surface; only copy, actions and an
+            // explicit safeAreaBottom remain (ScreenFooterContext, same rule as Web data-placement="screen-footer").
+            inScreenFooter ? { gap: bottomCtaRecipe.gap, paddingBottom: safeAreaBottom } : {
                 backgroundColor: colors.bg,
                 borderColor: colors.border,
                 borderTopWidth: bottomCtaRecipe.borderWidth,

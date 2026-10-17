@@ -19,6 +19,7 @@ export const conversationListCopy = {
   title: "메시지",
   compose: "새 메시지",
   search: "대화 검색",
+  searchPlaceholder: "이름이나 메시지 검색",
   clearSearch: "검색어 지우기",
   searching: "검색 중",
   noMatch: "찾는 대화가 없어요",

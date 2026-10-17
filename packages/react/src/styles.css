@@ -949,10 +949,10 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-section__description { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); overflow-wrap: anywhere; }
 .hjm-section__action { flex: 0 0 auto; }
 .hjm-section__content { min-inline-size: 0; }
-/* Stack below breakpoint.medium (600), the shared compact/medium edge; 640 had been a Web-only number. */
-@media (max-width: 599.98px) {
-  .hjm-section__header { align-items: stretch; flex-direction: column; }
-}
+/* The header stacks only at large text (provider data-large-text = largeTextThreshold 1.6), the same trigger as Native
+   Section (textScale >= 1.6). Until 2026-10-17 Web stacked below 600px, so every phone-width Web Section dropped and
+   stretched its action under the title while Native kept one row (screen review S5#3). */
+.hjm-root[data-large-text="true"] .hjm-section__header { align-items: stretch; flex-direction: column; }
 
 /* chipRecipe.sizes (2026-10-06 follow-up): medium 44 · padding md 16 · gap xs 8, small 36 · padding sm 12 · gap xxs 4 with a
    4px vertical hit slop. Web had drawn padding 12/8 and gap 8 for both sizes. */
@@ -2773,6 +2773,9 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-top-bar[data-large-text="true"] .hjm-top-bar__trailing { grid-column: 2; grid-row: 1; }
 .hjm-bottom-cta { display: grid; gap: var(--hjm-bottom-cta-gap); min-block-size: var(--hjm-bottom-cta-min-height); padding: var(--hjm-bottom-cta-padding-top) var(--hjm-bottom-cta-padding-inline) max(var(--hjm-bottom-cta-padding-bottom), env(safe-area-inset-bottom, 0px), var(--hjm-bottom-cta-safe-area)); border-block-start: 1px solid var(--hjm-color-border); background: var(--hjm-color-bg); box-shadow: var(--hjm-bottom-cta-shadow, none); }
 .hjm-bottom-cta[data-position="sticky"] { position: sticky; inset-block-end: 0; z-index: var(--hjm-layer-sticky); }
+/* Inside ScreenLayout's footer the footer owns border, padding, surface and safe area; BottomCTA keeps only its copy,
+   actions and an explicit safeAreaBottom (2026-10-17: the doubled bar inset the buttons twice). */
+.hjm-bottom-cta[data-placement="screen-footer"] { position: static; min-block-size: 0; padding: 0 0 var(--hjm-bottom-cta-safe-area); border: 0; background: none; box-shadow: none; }
 .hjm-bottom-cta__description { margin: 0; font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); color: var(--hjm-color-text-muted); overflow-wrap: anywhere; }
 .hjm-bottom-cta__actions { display: flex; flex-wrap: wrap; gap: var(--hjm-bottom-cta-gap); }
 /* bottomCtaRecipe.contentMaxWidth: the surface spans the viewport, its copy and actions stop at the reading width. */

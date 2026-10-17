@@ -76,7 +76,7 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 | `exit` | `{ kind: "back" \| "close"; label; onClick(Web) \| onPress(Native); disabled? }` | 없음 | 화면 나가기(뒤로·닫기·"설정 나가기")를 헤더 시작 쪽 아이콘 버튼으로 고정한다. 글자는 보이지 않고 `label`은 보조기술 이름이다. `back`은 ‹(RTL 반전), `close`는 ×. 헤더 시작 쪽에는 이 버튼 외의 자유 슬롯이 없다. 미게시(1.26.1 이후) |
 | `actions` | `ReactNode` | 없음 | 제목 뒤(도구) 슬롯. 시작 쪽 `leading` 슬롯은 2026-10-17 제거됐다 — 제품 사용처가 모두 직접 만든 뒤로 버튼이었다 |
 | `notice` | `ReactNode` | 없음 | 헤더 아래 비차단 안내. 상태 교체 중에도 남는다 |
-| `footer` | `ReactNode` | 없음 | 하단 고정 행동 |
+| `footer` | `ReactNode` | 없음 | 하단 고정 행동. footer가 위 경계·여백·safe area를 맡고, 안에 둔 [BottomCTA](bottom-cta.md)는 자기 바를 그리지 않고 설명·행동 줄만 그린다(2026-10-17, 경계 두 겹·버튼 이중 들여쓰기 수정) |
 | `state` | `{ kind: "ready" }` · `{ kind: "loading" \| "empty" \| "error" \| "restricted"; title; description? }` | `{ kind: "ready" }` | ready가 아니면 children을 그리지 않고 상태와 `stateAction`을 가운데에 놓는다. 로딩은 Spinner 하나만 보이고 `title`·`description`은 Spinner의 접근성 이름이 된다 |
 | `stateAction` | `ReactNode` | 없음 | 상태 안내 아래 행동(재시도 등) |
 | `scroll` | `"screen"` · `"content"` | `"screen"` | `content`는 본문 자식(가상화 목록)이 스크롤을 소유한다. 상태 교체 중에는 `screen`으로 돌아간다 |

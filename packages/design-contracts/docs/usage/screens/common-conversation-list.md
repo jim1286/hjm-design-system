@@ -24,7 +24,7 @@ host: 남은 높이·safe area
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
 | 바깥 틀 | ScreenLayout(`scroll="content"`) | route 본문 | 화면 recipe padding 16 |
-| 검색 | SearchField(라벨 "대화 검색") | `notice` | 화면 recipe itemGap 12. 결과가 없으면 `state.empty` |
+| 검색 | SearchField(라벨 "대화 검색", 검색 아이콘, placeholder "이름이나 메시지 검색") | `notice` | 화면 recipe itemGap 12. 결과가 없으면 `state.empty` |
 | 행 | 라우팅 host(Pressable·링크) + ConversationRow | 본문 목록 | 아바타 56, 가로 sm·세로 10, 행 padding은 recipe 소유 |
 | 행 메뉴 | ContextMenu | 행 host를 감싼다 | Native 카드 폭 최대 280, 행 48, 아이콘 24 |
 
@@ -105,3 +105,4 @@ import { ContextMenu } from "@hjmds/react/context-menu";
 ## 근거
 
 - 헤더 새 대화 IconButton·`notice` 검색·Web 메뉴 아이콘: 2026-10-17 화면 검토(S5)에서 예제가 새 대화 행동 없이, `notice`에 데모 안내 문구를 두고, Web과 Native 문구·메뉴 모양이 갈라진 것을 확인했다. 예제 데이터·문구는 `showcase/shared/conversation-list.ts` 하나를 두 플랫폼이 읽는다.
+- 검색 아이콘·placeholder, 행동 결과 줄의 위치: 같은 날 재검증에서 notice로 옮긴 SearchField가 아이콘도 placeholder도 없는 빈 상자였고, 데모 행동 결과("미리보기 도구")가 기본 스토리 화면 위에 여백 없이 붙어 있었다. 아이콘은 Web `renderSearchIcon`·Native `renderLeading`(lucide `Search`)이고, 결과 줄은 다른 화면처럼 도구 스토리("행동 결과 확인")에서만 보인다.

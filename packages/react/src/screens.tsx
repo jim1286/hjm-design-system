@@ -13,6 +13,7 @@ import { isReplySwipe, timestampRevealOffset, shouldSubmitMessageKey, canSubmitM
 import { Heading } from "./heading.js";
 import { Spinner } from "./internal/spinner.js";
 import { ScreenExitButton, type ScreenExit } from "./internal/screen-exit.js";
+import { ScreenFooterContext } from "./internal/screen-footer.js";
 import { Section, Stack, Text } from "./layout.js";
 import { ListRow, type ListRowProps } from "./display.js";
 import { classNames, useDesignProfileDefaults } from "./internal.js";
@@ -122,7 +123,7 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
         {stateAction}
       </div>}
     </div>
-    {footer ? <footer className="hjm-screen__footer">{footer}</footer> : null}
+    {footer ? <footer className="hjm-screen__footer"><ScreenFooterContext.Provider value>{footer}</ScreenFooterContext.Provider></footer> : null}
   </Element>;
 }
 

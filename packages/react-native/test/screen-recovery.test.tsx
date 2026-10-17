@@ -2,13 +2,23 @@ import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { expect, it, vi } from "vitest";
 import { TextInput } from "react-native";
 import { HjmNativeProvider } from "../src/provider.js";
-import { Button, IconButton } from "../src/actions.js";
+import { BottomCTA, Button, IconButton } from "../src/actions.js";
+import { View } from "react-native";
+import { bottomCtaRecipe } from "@hjmds/design-contracts/recipes";
 import { ChatScreen, ScreenLayout } from "../src/screens.js";
 import { CommentThreadScreen, ListDetailScreen, OnboardingScreen, type CommentThreadItem } from "../src/screen-flows.js";
 import type { ReactNode } from "react";
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 function render(child: ReactNode) { let tree: ReactTestRenderer; act(() => {tree=create(<HjmNativeProvider>{child}</HjmNativeProvider>);}); return tree!; }
+// The footer owns the bar border and padding; a BottomCTA there drew a second border, inset and shadowed surface (2026-10-17).
+it("draws BottomCTA bare inside ScreenLayout footer", () => {
+  const tree=render(<ScreenLayout title="설정" footer={<BottomCTA testID="footer-cta" primaryAction={{label:"저장",onPress:vi.fn()}}/>}>본문</ScreenLayout>);
+  const style=Object.assign({},...[tree.root.findAllByType(View).find(node=>node.props.testID==="footer-cta")!.props.style].flat(3).filter(Boolean));
+  expect(style).toMatchObject({gap:bottomCtaRecipe.gap,paddingBottom:0});
+  for (const key of ["borderTopWidth","backgroundColor","paddingHorizontal","shadowOpacity","minHeight"]) expect(style[key]).toBeUndefined();
+  act(()=>tree.unmount());
+});
 it("allows a first message in empty state but hides input in unavailable states", () => {
   for (const kind of ["empty","ready","loading","error","restricted"] as const) {
     const tree=render(<ChatScreen title="Conversation" state={kind==="ready"?{kind}:{kind,title:kind}} composer={<TextInput accessibilityLabel="Message"/>}>Messages</ChatScreen>);

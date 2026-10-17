@@ -32,6 +32,7 @@
     "common-screen-comments--loading",
     "common-screen-comments--recovery",
     "common-screen-comments--restricted",
+    "common-screen-conversation-list--action-results",
     "common-screen-conversation-list--dark",
     "common-screen-conversation-list--default",
     "common-screen-login--dark",

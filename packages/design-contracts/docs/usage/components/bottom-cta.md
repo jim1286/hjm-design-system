@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-07
+- 검토일: 2026-10-17
 - 근거: [화면 제목과 마지막 행동](../../screen-chrome.md), recipe `bottomCtaRecipe`(`src/component-recipes.ts`)
 - 스토리북: `배포/컴포넌트/동작/하단 실행 버튼`
 
@@ -79,6 +79,7 @@ const insets = useSafeAreaInsets();
 | 간격 | 좌우 `layout.pagePadding.regular` 20, 위 `spacing.sm` 12, 아래 `spacing.sm` 12와 하단 inset 중 큰 값(Web은 `env(safe-area-inset-bottom)`·`safeAreaBottom`도 비교). 설명↔행동, 행동 사이 `spacing.sm` 12. 위 경계는 `border.default` 1px(`stroke.default`), Native는 위로 드리우는 그림자(opacity 0.08, radius 8) | `bottomCtaRecipe`, `.hjm-bottom-cta` |
 | 순서·정렬 | 위→아래 [설명 한 줄(caption, muted)] → 행동 줄. 행동 줄은 [보조][주] 순서로 같은 폭을 나눈다. 주 행동은 하나다 | `react/src/bottom-cta.tsx`, `react-native/src/actions.tsx` |
 | 고정·스크롤 | 본문 스크롤 영역 아래에 붙는다. Web은 `flow`(문서 흐름 끝) 또는 `sticky`(아래 0에 붙음, z-index `layer.sticky` 100). Native는 제품 화면 레이아웃이 스크롤 영역 밖 아래에 둔다. 키보드가 열리는 폼은 `KeyboardAvoiding` 또는 `KeyboardDock`으로 감싼다 | `.hjm-bottom-cta[data-position="sticky"]`, `react-native/src/keyboard-controller.tsx` |
+| `ScreenLayout` `footer` 안 | footer가 위 경계·`screenPatternRecipe.padding` 16·바탕·safe area를 맡으므로 BottomCTA는 바(경계·여백·바탕·그림자·최소 높이)를 그리지 않고 설명과 행동 줄만 그린다. 직접 넘긴 `safeAreaBottom`만 아래 여백으로 남긴다. 2026-10-17 화면 리뷰: footer 안의 BottomCTA가 경계를 두 겹 긋고 버튼을 한 번 더 들였으며 Native는 footer 안에 그림자 있는 흰 상자를 하나 더 그렸다 | 내부 `ScreenFooterContext`, Web `.hjm-bottom-cta[data-placement="screen-footer"]`, Native `BottomCTA` |
 | 좁은 폭·큰 글자 | Web은 행동 칸 기준 폭 132(`control.minTouchTarget` × 3)보다 좁으면 줄바꿈한다. 큰 글자에서는 세로로 쌓고 주 행동이 위에 온다 | `.hjm-bottom-cta__actions > div`, `.hjm-bottom-cta[data-large-text="true"]` |
 
 ```text

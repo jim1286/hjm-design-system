@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Pressable, View } from "react-native";
-import { Ban, BellOff, MailOpen, SquarePen, Trash2 } from "lucide-react-native";
+import { Ban, BellOff, MailOpen, Search, SquarePen, Trash2 } from "lucide-react-native";
 import { useHjmNativeTheme } from "@hjmds/react-native/provider";
 import { Stack } from "@hjmds/react-native/primitives";
 import { IconButton } from "@hjmds/react-native/actions";
@@ -17,19 +17,20 @@ import { conversationActionResult, conversationListActions, conversationListCopy
 // (mark unread, mute, then block/delete in the danger tone). Tap still opens the conversation.
 const icons: Record<ConversationListAction, typeof MailOpen> = { unread: MailOpen, mute: BellOff, block: Ban, delete: Trash2 };
 
-export function ConversationListPreview() {
+export function ConversationListPreview({ tools = false }: { tools?: boolean }) {
   const { colors } = useHjmNativeTheme();
   const [status, setStatus] = useState<string>(copy.hint);
   const [query, setQuery] = useState("");
   const rows = filterConversations(query);
-  // The demo result line is a preview tool, not screen content; the product's notice slot holds search.
+  // The demo result line is a preview tool, not screen content: only the tools story shows it, as other screen stories
+  // keep demo controls out of the default canvas (2026-10-17 review). The product's notice slot holds search.
   // Host height stands in for the product route.
-  return <View style={{ height: 720 }}><Stack gap="sm" layoutStyle={{ flex: 1 }}>
-    <PreviewTools><PatternStatus tone="muted">{status}</PatternStatus></PreviewTools>
-    <View style={{ flex: 1, minHeight: 0 }}>
+  return <Stack gap="sm">
+    {tools ? <PreviewTools><PatternStatus tone="muted">{status}</PatternStatus></PreviewTools> : null}
+    <View style={{ height: 720, width: "100%" }}>
       <ScreenLayout title={copy.title} scroll="content"
         actions={<IconButton label={copy.compose} tone="ghost" onPress={() => setStatus(`${copy.compose}를 시작해요.`)}><SquarePen size={20} color={colors.text} /></IconButton>}
-        notice={<SearchField label={copy.search} clearLabel={copy.clearSearch} busyLabel={copy.searching} value={query} onValueChange={setQuery} />}
+        notice={<SearchField label={copy.search} clearLabel={copy.clearSearch} busyLabel={copy.searching} placeholder={copy.searchPlaceholder} renderLeading={({ color, size }) => <Search color={color} size={size} />} value={query} onValueChange={setQuery} />}
         state={rows.length ? { kind: "ready" } : { kind: "empty", title: copy.noMatch }}>
         <View>{rows.map(row => <ContextMenu key={row.id} accessibilityLabel={conversationRowMenuLabel(row)}
           items={conversationListActions.map(action => { const Icon = icons[action.id]; return { id: action.id, label: action.label, icon: <Icon size={20} color={action.danger ? colors.danger : colors.text} />, ...(action.danger ? { tone: "danger" as const } : {}) }; })}
@@ -40,5 +41,5 @@ export function ConversationListPreview() {
         </ContextMenu>)}</View>
       </ScreenLayout>
     </View>
-  </Stack></View>;
+  </Stack>;
 }

@@ -13,6 +13,7 @@ import { Spinner } from "./internal/spinner.js";
 import { KeyboardAvoidanceContext, useInsideKeyboardAvoidance, useKeyboardOverlap, useScrollFocusedInputIntoView } from "./keyboard.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { ScreenExitButton, type ScreenExit } from "./internal/screen-exit.js";
+import { ScreenFooterContext } from "./internal/screen-footer.js";
 import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, screenHeaderRecipe, validateScreenExit, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
 import { motion } from "@hjmds/design-contracts/foundations";
 import { Stack, Text } from "./primitives.js";
@@ -133,7 +134,7 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
     {scroll === "screen" || resolved.replacesContent ? <ScrollView {...scrollProps} ref={bodyScroll} style={{ flex: 1 }} keyboardShouldPersistTaps="handled" scrollEventThrottle={scrollProps?.scrollEventThrottle ?? 16} onScroll={event => { trackScroll(event); scrollProps?.onScroll?.(event); }}
       contentContainerStyle={{ flexGrow: 1, padding, paddingTop: bodyPaddingTop, ...(hjmBodyInlinePadding === undefined || contentInset === "none" ? {} : { paddingHorizontal: hjmBodyInlinePadding }) }} accessibilityState={{ busy: resolved.busy }}>{body}</ScrollView>
       : <View style={{ flex: 1, minHeight: 0, padding, paddingTop: bodyPaddingTop, ...(hjmBodyInlinePadding === undefined || contentInset === "none" ? {} : { paddingHorizontal: hjmBodyInlinePadding }) }}>{body}</View>}
-    {footer ? <View style={{ padding, borderTopWidth: contentInset === "none" ? 0 : 1, borderColor: colors.border }}>{footer}</View> : null}
+    {footer ? <View style={{ padding, borderTopWidth: contentInset === "none" ? 0 : 1, borderColor: colors.border }}><ScreenFooterContext.Provider value>{footer}</ScreenFooterContext.Provider></View> : null}
     </KeyboardAvoidanceContext.Provider>
   </View>;
 }

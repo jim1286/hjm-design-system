@@ -20,14 +20,14 @@ import { EmptyState, Skeleton } from "./feedback.js";
 /** Copy, pending state and mutations are controlled by the consuming product. */
 /** `icon` renders an icon-only button named by `label`; header actions (top-right) use it so a centered title keeps its width (2026-10-17). */
 export type ScreenFlowAction = Readonly<{label:string; onAction():void; disabled?:boolean; pending?:boolean; icon?:ReactNode}>;
-function Action({action,secondary=false,buttonRef}:{action:ScreenFlowAction;secondary?:boolean;buttonRef?:Ref<HTMLButtonElement>}){if(action.icon)return <IconButton ref={buttonRef} label={action.label} tone="ghost" disabled={!!(action.disabled||action.pending)} onClick={action.onAction}>{action.icon}</IconButton>;return <Button ref={buttonRef} tone={secondary?"ghost":"primary"} disabled={!!(action.disabled||action.pending)} loading={action.pending??false} onClick={action.onAction}>{action.label}</Button>;}
 /** Header tool action (refresh, add): icon-only so it never pushes the centered title. A required text `add` made
  * products route exits ("취소") through it as a header text button (2026-10-17 screen review); exits use `exit`. */
 export type ScreenFlowIconAction = ScreenFlowAction & Readonly<{icon:ReactNode}>;
 type Base = Omit<ScreenLayoutProps,"children"|"footer">;
-
+function Action({action,secondary=false,buttonRef}:{action:ScreenFlowAction;secondary?:boolean;buttonRef?:Ref<HTMLButtonElement>}){if(action.icon)return <IconButton ref={buttonRef} label={action.label} tone="ghost" disabled={!!(action.disabled||action.pending)} onClick={action.onAction}>{action.icon}</IconButton>;return <Button ref={buttonRef} tone={secondary?"ghost":"primary"} disabled={!!(action.disabled||action.pending)} loading={action.pending??false} onClick={action.onAction}>{action.label}</Button>;}
 // Stacked footer/sheet buttons use Stack gap "xs" (actionGroupRecipe.stackedGap 8); 12 read as split groups (button.md, 2026-10-17).
 export type ListDetailScreenProps = Base & { list:ReactNode; detail?:Pick<ScreenLayoutProps,"title"|"state"|"stateAction"|"notice"|"titleVisibility"|"headerAlignment"> & {content:ReactNode}; back:ScreenFlowAction; refresh?:ScreenFlowIconAction; loadMore?:ScreenFlowAction };
+
 /** Keep the list mounted so input and scroll survive a detail visit. Routers may instead restore host scroll state. */
 export function ListDetailScreen({list,detail,back,refresh,loadMore,layoutStyle,...screen}:ListDetailScreenProps){
  const open=!!detail;
@@ -48,9 +48,9 @@ export function ListDetailScreen({list,detail,back,refresh,loadMore,layoutStyle,
   wasOpen.current=open;
  },[open]);
  // layoutStyle places the outer host that owns both panes, not the inner list ScreenLayout.
- return <div style={{height:"100%",...layoutStyle}}>
  // "더 보기" ends the list inside the scroll body, centered like LoadMore; the fixed footer is the bottom CTA slot (2026-10-17 review).
   <div ref={listHost} tabIndex={-1} hidden={open} style={{height:"100%"}} onFocusCapture={event=>{returnFocus.current=event.target as HTMLElement;}}><ScreenLayout {...screen} {...(refresh||screen.actions?{actions:<Stack axis="inline" gap="xs" align="center">{/* Refresh no longer replaces the screen's own actions (2026-10-16 composition review). */}{screen.actions}{refresh?<Action action={refresh} secondary/>:null}</Stack>}:{})}>{loadMore?<div style={{display:"flex",flexDirection:"column",flex:"1 1 auto",minHeight:0,gap:screenPatternRecipe.itemGap}}>{list}<div style={{display:"flex",justifyContent:"center"}}><Action action={loadMore} secondary/></div></div>:list}</ScreenLayout></div>
+ return <div style={{height:"100%",...layoutStyle}}>
   {detail?<div ref={detailHost} style={{height:"100%"}}><ScreenLayout title={detail.title} {...(detail.titleVisibility === undefined ? {} : { titleVisibility: detail.titleVisibility })} {...(detail.headerAlignment === undefined ? {} : { headerAlignment: detail.headerAlignment })} {...(detail.state === undefined ? {} : {state:detail.state})} stateAction={detail.stateAction} notice={detail.notice} exit={{kind:"back",label:back.label,onClick:back.onAction,disabled:!!(back.disabled||back.pending)}}>{detail.content}</ScreenLayout></div>:null}
  </div>;
 }

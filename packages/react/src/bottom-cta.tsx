@@ -1,9 +1,10 @@
 import { bottomCtaRecipe } from "@hjmds/design-contracts/recipes";
 import { isLargeTextScale } from "@hjmds/design-contracts/components/design-system-provider";
-import { forwardRef, type CSSProperties, type HTMLAttributes, type MouseEventHandler, type ReactNode } from "react";
+import { forwardRef, useContext, type CSSProperties, type HTMLAttributes, type MouseEventHandler, type ReactNode } from "react";
 import { Button, type ButtonSize, type ButtonTone } from "./actions.js";
 import { classNames } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
+import { ScreenFooterContext } from "./internal/screen-footer.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type BottomCTAAction = Readonly<{
@@ -48,9 +49,11 @@ export const BottomCTA = forwardRef<HTMLDivElement, BottomCTAProps>(function Bot
   position = "flow", className, style, layoutStyle, ...props
 }, ref) {
   const theme = useOptionalHjmTheme();
+  const inScreenFooter = useContext(ScreenFooterContext);
   if (!Number.isFinite(safeAreaBottom) || safeAreaBottom < 0) throw new RangeError("BottomCTA safeAreaBottom must be non-negative");
   return <div {...props} ref={ref} role="group" aria-label={accessibilityLabel}
     className={classNames("hjm-bottom-cta", className)} data-position={position}
+    data-placement={inScreenFooter ? "screen-footer" : undefined}
     data-large-text={isLargeTextScale(theme?.environment.textScale ?? 1)}
     style={{
       "--hjm-bottom-cta-min-height": `${bottomCtaRecipe.minHeight}px`,

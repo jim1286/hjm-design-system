@@ -13,6 +13,7 @@ import { isReplySwipe, timestampRevealOffset, shouldSubmitMessageKey, canSubmitM
 import { Heading } from "./heading.js";
 import { Spinner } from "./internal/spinner.js";
 import { ScreenExitButton } from "./internal/screen-exit.js";
+import { ScreenFooterContext } from "./internal/screen-footer.js";
 import { Section, Stack, Text } from "./layout.js";
 import { ListRow } from "./display.js";
 import { classNames, useDesignProfileDefaults } from "./internal.js";
@@ -54,7 +55,7 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
                     if (event.relatedTarget ? !event.currentTarget.contains(event.relatedTarget) : event.target.isConnected) {
                         lastBodyFocus.current = null;
                     }
-                }, className: "hjm-screen__body", "data-content-alignment": contentAlignment, "data-scroll": bodyScroll, "data-replacement": resolved.replacesContent || undefined, "aria-busy": resolved.busy || undefined, children: state.kind === "ready" ? (contentAlignment === "center" ? _jsx("div", { className: "hjm-screen__centered-content", children: children }) : children) : _jsxs("div", { className: "hjm-screen__state", role: resolved.busy ? undefined : state.kind === "error" ? "alert" : "status", children: [resolved.busy ? _jsx(Spinner, { label: [state.title, state.description].filter(Boolean).join(". ") }) : _jsx("div", { children: _jsxs(Stack, { gap: "sm", align: "center", children: [_jsx(Text, { variant: "title", children: state.title }), state.description ? _jsx(Text, { tone: "muted", children: state.description }) : null] }) }), stateAction] }) }), footer ? _jsx("footer", { className: "hjm-screen__footer", children: footer }) : null] });
+                }, className: "hjm-screen__body", "data-content-alignment": contentAlignment, "data-scroll": bodyScroll, "data-replacement": resolved.replacesContent || undefined, "aria-busy": resolved.busy || undefined, children: state.kind === "ready" ? (contentAlignment === "center" ? _jsx("div", { className: "hjm-screen__centered-content", children: children }) : children) : _jsxs("div", { className: "hjm-screen__state", role: resolved.busy ? undefined : state.kind === "error" ? "alert" : "status", children: [resolved.busy ? _jsx(Spinner, { label: [state.title, state.description].filter(Boolean).join(". ") }) : _jsx("div", { children: _jsxs(Stack, { gap: "sm", align: "center", children: [_jsx(Text, { variant: "title", children: state.title }), state.description ? _jsx(Text, { tone: "muted", children: state.description }) : null] }) }), stateAction] }) }), footer ? _jsx("footer", { className: "hjm-screen__footer", children: _jsx(ScreenFooterContext.Provider, { value: true, children: footer }) }) : null] });
 }
 export function SettingsScreen({ profile, sections, ...props }) {
     // Keep semantic section headings while using the smaller settings label role.

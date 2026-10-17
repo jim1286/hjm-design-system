@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-17
 - 근거: `src/component-recipes.ts`(`sectionRecipe`, Native renderer가 바인딩). 별도 계약 문서는 없다
 - 스토리북: `배포/컴포넌트/레이아웃/섹션`
 
@@ -82,7 +82,7 @@ import { Section } from "@hjmds/react-native/primitives";
 | 간격 | 머리와 본문 사이 `spacing.xs` 8, 글자 묶음과 행동 사이 `spacing.sm` 12, 제목과 설명 사이 `spacing.xxs` 4. Section끼리의 간격은 Section이 주지 않는다. 감싸는 [Stack](stack.md)이나 `layoutStyle`로 `layout.sectionGap`(`spacing.xl` 24)을 둔다 | `sectionRecipe.gap`·`headerGap`·`copyGap`, `layout.sectionGap` |
 | 순서·정렬 | 머리 행동은 끝(LTR 오른쪽)에 하나, 글자 묶음과 세로 가운데 정렬. 보통 [Link](link.md) 또는 `tone="link"` [Button](button.md) | `.hjm-section__header`, Native `Section` |
 | 고정·스크롤 | 고정되지 않는다. 화면 본문 스크롤 안에 둔다 | — |
-| 좁은 폭·큰 글자 | 머리 행이 세로로 쌓이고 행동이 글자 아래로 간다. Web은 폭 600 미만(`breakpoint.medium`, media query), Native는 글자 크기 160% 이상 | `.hjm-section__header` @media, `largeTextThreshold` 1.6 |
+| 좁은 폭·큰 글자 | 폭과 관계없이 한 행을 유지한다. 글자 크기 160% 이상(`largeTextThreshold`)에서만 머리 행이 세로로 쌓이고 행동이 글자 아래로 간다(두 플랫폼 같은 조건). 2026-10-17까지 Web은 폭 600 미만에서도 쌓여, 같은 휴대폰 폭에서 Native는 한 행인데 Web만 행동이 아래 줄로 늘어났다(화면 리뷰 S5#3) | Web `.hjm-root[data-large-text]`, Native `textScale >= 1.6` |
 
 ```text
 최근 본 장소                  [전체 보기]   ← 머리: 제목 title 18, gap spacing.sm 12

@@ -123,10 +123,12 @@ it("SegmentedControl, Chip and Badge sizes follow their recipes", async () => {
   expect(css(container.querySelector(".hjm-badge")!).paddingInlineStart).toBe(px(spacing.xxs));
 });
 
-it("Section stacks below breakpoint.medium (600), not 640", async () => {
-  await page.viewport(620, 800);
+it("Section keeps one header row at phone width and stacks only at large text, like Native", async () => {
+  await page.viewport(402, 800);
   await render(<Section title="최근 기록" action={<button type="button">모두 보기</button>}>내용</Section>);
   expect(css(container.querySelector(".hjm-section__header")!).flexDirection).toBe("row");
+  await act(async () => root.render(<HjmProvider textScale={2}><Section title="최근 기록" action={<button type="button">모두 보기</button>}>내용</Section></HjmProvider>));
+  expect(css(container.querySelector(".hjm-section__header")!).flexDirection).toBe("column");
 });
 
 it("Statistic, TransferList, UploadItem, DataTable, EmptyState and List spacing follow the recipes", async () => {

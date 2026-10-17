@@ -21,7 +21,7 @@ import {
   type ButtonSize as ContractButtonSize,
   type ButtonTone as ContractButtonTone,
 } from "@hjmds/design-contracts/recipes/base";
-import { forwardRef, type ReactNode } from "react";
+import { forwardRef, useContext, type ReactNode } from "react";
 import {
   ActivityIndicator,
   Pressable,
@@ -30,6 +30,7 @@ import {
   type PressableProps,
 } from "react-native";
 import { RecipeButton } from "./internal/recipe-button.js";
+import { ScreenFooterContext } from "./internal/screen-footer.js";
 
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { assertNoRemovedStyleProps, warnOnce } from "./internal/diagnostics.js";
@@ -392,6 +393,7 @@ export function BottomCTA({
     throw new RangeError("BottomCTA safeAreaBottom must be non-negative");
   }
   const { colors, environment, designProfile } = useHjmNativeTheme();
+  const inScreenFooter = useContext(ScreenFooterContext);
   // Footer elevation separates the content above it (bottomCtaRecipe rationale).
   // Reuse profile strength but retain the upward direction; a flat profile must
   // also disable Android elevation rather than only its iOS shadow properties.
@@ -410,7 +412,9 @@ export function BottomCTA({
       accessibilityRole="toolbar"
       testID={testID}
       style={[
-        {
+        // Inside ScreenLayout's footer the footer owns border, padding and surface; only copy, actions and an
+        // explicit safeAreaBottom remain (ScreenFooterContext, same rule as Web data-placement="screen-footer").
+        inScreenFooter ? { gap: bottomCtaRecipe.gap, paddingBottom: safeAreaBottom } : {
           backgroundColor: colors.bg,
           borderColor: colors.border,
           borderTopWidth: bottomCtaRecipe.borderWidth,

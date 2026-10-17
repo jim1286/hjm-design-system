@@ -13,11 +13,11 @@ import { Steps } from "@hjmds/react/steps";
 import { EmptyState, Notice } from "@hjmds/react/feedback";
 import { spacing } from "@hjmds/design-contracts/foundations";
 import { useDemoAction } from "./action-recovery-previews.js";
-import { PreviewTools, PreviewToolButton } from "./preview-tools.js";
+import { PreviewRoute, PreviewTools, PreviewToolButton } from "./preview-tools.js";
 import { categories, records, emptyFilters, filterRecords, initialDraft, sameDraft, draftError, editorCopy, scopeCopy, flowSteps, stepLabels, stepName, introFeatures, comparisonModeCopy, comparisonActionCopy, type ComparisonMode, type EditorKind, type Draft } from "../../../shared/reference-flows.js";
 import "./reference-flows.css";
 
-// Screens use ScreenLayout inside a 90dvh host div; Grid folds the columns.
+// Screens use ScreenLayout inside the shared PreviewRoute host (the story canvas is the route); Grid folds the columns.
 // 2026-10-06: the earlier `.hjm-reference` CSS padding/max-width re-implemented Container's gutter and
 // width, and the screens bypassed ScreenLayout, so the usage guide had to describe a different frame.
 // 2026-10-17: file-local Action/Row/Title/Status/Modal/ScreenHost wrappers were removed so the example
@@ -62,7 +62,7 @@ function Editor({ kind }: { kind: EditorKind }) {
   const summary = <Stack gap="md"><Text variant="title">{draft.title || "아직 입력하지 않았어요"}</Text><Text>{draft.category} · 알림 {draft.enabled ? "켜짐" : "꺼짐"}</Text></Stack>;
   // 2026-10-17 user rule: leaving ("설정 나가기", "초안 남기고 쉬기") is the header's leading icon button, not a body text button.
   const exit = paused || done ? {} : { exit: { kind: kind === "settings" ? "back" as const : "close" as const, label: kind === "settings" ? "설정 나가기" : "초안 남기고 쉬기", disabled: busy, onClick: () => { returnFocusRef.current = document.activeElement as HTMLElement | null; leave(); } } };
-  return <div style={{ blockSize: "90dvh" }}><ScreenLayout title={copy.title} {...exit}><Stack gap="xl"><div ref={stageRef} tabIndex={-1} aria-label={copy.title}><Text tone="muted">{copy.intro}</Text></div>
+  return <PreviewRoute><ScreenLayout title={copy.title} {...exit}><Stack gap="xl"><div ref={stageRef} tabIndex={-1} aria-label={copy.title}><Text tone="muted">{copy.intro}</Text></div>
     {paused ? <Surface padding="lg"><Stack gap="lg"><Heading level="level3" semanticLevel={1}>{kind === "settings" ? "설정에서 나왔어요" : "초안이 남아 있어요"}</Heading>{summary}<Stack axis="inline" wrap gap="sm" justify="end"><Button tone="secondary" onClick={reset}>처음부터</Button><Button onClick={() => setPaused(false)}>이어하기</Button></Stack></Stack></Surface>
     : done ? <Surface padding="lg"><Stack gap="lg"><Notice tone="success" title={copy.complete} />{summary}<Text>{viewResult ? "저장한 기록의 상세 내용이에요." : "확인된 결과를 바로 열어 볼 수 있어요."}</Text><Stack axis="inline" wrap gap="sm" justify="end"><Button tone="secondary" onClick={reset}>다시 해보기</Button><Button onClick={() => { if (kind === "settings") session.reset(state.value); else setViewResult(value => !value); }}>{kind === "settings" ? "계속 수정하기" : viewResult ? "완료 화면으로" : "저장한 기록 보기"}</Button></Stack></Stack></Surface>
     : <Stack gap="lg">
@@ -81,7 +81,7 @@ function Editor({ kind }: { kind: EditorKind }) {
     </Stack>}
     <Text tone="muted" variant="caption">{scopeCopy}</Text>
     <Sheet returnFocusRef={returnFocusRef} open={confirmLeave} onOpenChange={value => { if (!value) setConfirmLeave(false); }} closeLabel="닫기" title="저장하지 않은 변경이 있어요" footer={<Stack axis="inline" wrap gap="sm" justify="end"><Button tone="danger" onClick={() => { if (locked()) return; revert(); setConfirmLeave(false); setPaused(true); returnFocusRef.current = stageRef.current; }}>변경 버리고 나가기</Button><Button onClick={() => setConfirmLeave(false)}>계속 수정</Button></Stack>}><Text>변경을 버리면 마지막으로 저장한 설정으로 돌아가요.</Text></Sheet>
-  </Stack></ScreenLayout></div>;
+  </Stack></ScreenLayout></PreviewRoute>;
 }
 export function FirstTask() { return <Editor kind="first" />; }
 export function RecoverableSettings() { return <Editor kind="settings" />; }
@@ -98,7 +98,7 @@ export function ServiceIntroduction({ editorial = false }: { editorial?: boolean
   const intro = <Stack gap="lg"><Text tone="brand" variant="label">오늘의 한 장면</Text><Text>대단한 이야기일 필요 없어요. 지금 기억하고 싶은 순간부터 시작해요.</Text><Button onClick={start}>첫 장면 남기기</Button></Stack>;
   const preview = <Surface padding="lg"><Stack gap="lg"><Text variant="label">{note ? "방금 남긴 장면" : "직접 만든 기록 예시"}</Text><Art label="산책의 빛" /><Heading level="level5" semanticLevel={2}>{note || records[0].title}</Heading><Text>{note ? "이 미리보기에 저장했어요." : records[0].body}</Text></Stack></Surface>;
   const story = <Stack gap="lg"><Heading level="level4" semanticLevel={2}>매일 쓰지 않아도 괜찮아요</Heading><Text>다시 시작한 날부터 이어지는 기록. 빈칸을 채우는 대신 남기고 싶은 것을 골라요.</Text><Text>한 줄을 적고, 주제를 고르고, 나중에 다시 읽어요.</Text></Stack>;
-  return <div style={{ blockSize: "90dvh" }}><ScreenLayout title={editorial ? "오래 남는 건, 작은 장면이에요" : "지나간 하루를 한 줄로 붙잡아요"}><Stack gap="xl">
+  return <PreviewRoute><ScreenLayout title={editorial ? "오래 남는 건, 작은 장면이에요" : "지나간 하루를 한 줄로 붙잡아요"}><Stack gap="xl">
     {editorial ? intro : null}
     <Grid columns={{ compact: 2 }} gap={{ compact: "xl" }} minColumnWidth={twoColumnMin}>{editorial ? story : intro}{preview}</Grid>
     <Grid columns={{ compact: 3 }} gap={{ compact: "xl" }} minColumnWidth={twoColumnMin}>{introFeatures.map(feature => <Stack key={feature.id} gap="sm"><Text tone="brand" variant="label">{feature.order}</Text><Heading level="level5" semanticLevel={2}>{feature.title}</Heading><Text>{feature.body}</Text></Stack>)}</Grid>
@@ -108,7 +108,7 @@ export function ServiceIntroduction({ editorial = false }: { editorial?: boolean
     {note && <StatusText>{`저장한 장면: ${note}`}</StatusText>}<Text tone="muted" variant="caption">{scopeCopy}</Text>
   </Stack></ScreenLayout>
     <Sheet returnFocusRef={returnFocusRef} open={open} onOpenChange={value => { if (!value) setOpen(false); }} closeLabel="닫기" title="첫 장면 남기기" footer={<Button disabled={!draft.trim()} onClick={() => { setNote(draft.trim()); setOpen(false); }}>미리보기에 저장</Button>}><TextField label="기억하고 싶은 장면" value={draft} onValueChange={setDraft} /></Sheet>
-  </div>;
+  </PreviewRoute>;
 }
 
 export function RecordComparison() {
@@ -122,7 +122,7 @@ export function RecordComparison() {
   const [selected, setSelected] = useState<typeof records[number] | null>(null);
   const results = filterRecords(query, emptyFilters());
   const cards = results.map(record => <Surface key={record.id} padding="lg"><Stack gap={mode === "list" ? "sm" : "lg"}>{mode === "image" && record.image && <Art label={record.category} />}<Text tone="muted" variant="caption">{record.category}</Text><Heading level={mode === "reading" ? "level4" : "level5"} semanticLevel={2}>{record.title}</Heading>{mode !== "list" && <Text>{record.body}</Text>}<Stack axis="inline" wrap gap="sm"><Button tone="secondary" onClick={event => { returnFocusRef.current = event.currentTarget; setSelected(record); }} aria-label={comparisonActionCopy.readName(record.title)}>{comparisonActionCopy.read}</Button><Button tone="secondary" selected={saved.includes(record.id)} aria-label={comparisonActionCopy.saveName(record.title, saved.includes(record.id))} onClick={() => setSaved(current => current.includes(record.id) ? current.filter(id => id !== record.id) : [...current, record.id])}>{saved.includes(record.id) ? comparisonActionCopy.unsave : comparisonActionCopy.save}</Button></Stack></Stack></Surface>);
-  return <div style={{ blockSize: "90dvh" }}><ScreenLayout title="무엇을 먼저 보고 싶나요?" description="데이터와 행동은 유지하고 정보의 밀도와 순서를 비교해 보세요."><Stack gap="xl">
+  return <PreviewRoute><ScreenLayout title="무엇을 먼저 보고 싶나요?" description="데이터와 행동은 유지하고 정보의 밀도와 순서를 비교해 보세요."><Stack gap="xl">
     <SegmentedControl label="보기 방식" items={(Object.keys(comparisonModeCopy) as ComparisonMode[]).map(value => ({ value, label: comparisonModeCopy[value] }))} value={mode} onValueChange={value => setMode(value as ComparisonMode)} />
     <SearchField ref={searchRef} label="같은 기록 검색" clearLabel="검색어 지우기" placeholder={comparisonActionCopy.searchPlaceholder} renderSearchIcon={({ color, size }) => <Search aria-hidden color={color} size={size} />} value={query} onValueChange={setQuery} /><StatusText>{`${comparisonModeCopy[mode]} · ${results.length}개의 기록 · ${saved.length}개 저장`}</StatusText>
     {!results.length ? <EmptyState density="compact" title="찾는 기록이 없어요" description="다른 검색어로 찾아보세요." action={<Button tone="secondary" onClick={resetSearch}>검색 초기화</Button>} />
@@ -130,5 +130,5 @@ export function RecordComparison() {
     <Text tone="muted" variant="caption">직접 만든 기록과 추상 일러스트입니다. 사진이 없는 기록도 본문을 온전히 보여 줍니다.</Text>
   </Stack></ScreenLayout>
     <Sheet returnFocusRef={returnFocusRef} open={selected !== null} onOpenChange={value => { if (!value) setSelected(null); }} closeLabel="닫기" title={selected?.title ?? "기록"} footer={<Button tone="secondary" onClick={() => setSelected(null)}>읽기 마치기</Button>}><Text>{selected?.body}</Text></Sheet>
-  </div>;
+  </PreviewRoute>;
 }

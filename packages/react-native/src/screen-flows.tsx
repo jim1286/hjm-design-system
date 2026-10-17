@@ -23,14 +23,14 @@ function Pane({hidden=false,children}:{hidden?:boolean;children:ReactNode}){retu
 /** Copy, pending state and mutations are controlled by the consuming product. */
 /** `icon` renders an icon-only button named by `label`; header actions (top-right) use it so a centered title keeps its width (2026-10-17). */
 export type ScreenFlowAction = Readonly<{label:string; onAction():void; disabled?:boolean; pending?:boolean; icon?:ReactNode}>;
-function Action({action,secondary=false}:{action:ScreenFlowAction;secondary?:boolean}){if(action.icon)return <IconButton label={action.label} tone="ghost" disabled={!!(action.disabled||action.pending)} onPress={action.onAction}>{action.icon}</IconButton>;return <Button tone={secondary?"ghost":"primary"} disabled={!!(action.disabled||action.pending)} loading={action.pending??false} onPress={action.onAction}>{action.label}</Button>;}
 /** Header tool action (refresh, add): icon-only so it never pushes the centered title. A required text `add` made
  * products route exits ("취소") through it as a header text button (2026-10-17 screen review); exits use `exit`. */
 export type ScreenFlowIconAction = ScreenFlowAction & Readonly<{icon:ReactNode}>;
 type Base = Omit<ScreenLayoutProps,"children"|"footer">;
-
+function Action({action,secondary=false}:{action:ScreenFlowAction;secondary?:boolean}){if(action.icon)return <IconButton label={action.label} tone="ghost" disabled={!!(action.disabled||action.pending)} onPress={action.onAction}>{action.icon}</IconButton>;return <Button tone={secondary?"ghost":"primary"} disabled={!!(action.disabled||action.pending)} loading={action.pending??false} onPress={action.onAction}>{action.label}</Button>;}
 // Stacked footer/sheet buttons use Stack gap "xs" (actionGroupRecipe.stackedGap 8); 12 read as split groups (button.md, 2026-10-17).
 export type ListDetailScreenProps = Base & { list:ReactNode; detail?:Pick<ScreenLayoutProps,"title"|"state"|"stateAction"|"notice"|"titleVisibility"|"headerAlignment"> & {content:ReactNode}; back:ScreenFlowAction; refresh?:ScreenFlowIconAction; loadMore?:ScreenFlowAction };
+
 /** Keep the list mounted so input and scroll survive a detail visit. Routers may instead restore host scroll state. */
 // layoutStyle places the outer host that owns both panes, as on Web, so the screen keeps the same
 // placement while list and detail swap. Passing it to the list ScreenLayout dropped it on detail.
