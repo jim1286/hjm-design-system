@@ -11,7 +11,7 @@ export declare function resolveScreenContentState(state?: ScreenContentState): {
     readonly kind: "error" | "empty" | "loading" | "ready" | "restricted";
     readonly replacesContent: boolean;
     readonly busy: boolean;
-    readonly announcement: "assertive" | "polite";
+    readonly announcement: "polite" | "assertive";
 };
 /**
  * Native header band heights. Titled centered headers match the iOS navigation bar (44 control + 4 + 4);
