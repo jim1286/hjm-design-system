@@ -995,7 +995,8 @@ export function DescriptionList<Id extends string = string>({
   assertNoRemovedStyleProps("DescriptionList", props, ["style","itemStyle"]);
   const resolved = resolveDescriptionListDescriptor(descriptor);
   const { width: windowWidth } = useWindowDimensions();
-  const { environment } = useHjmNativeTheme();
+  const { environment, colors } = useHjmNativeTheme();
+  const inline = resolved.layout === "inline";
   const [measuredWidth, setMeasuredWidth] = useState<number | null>(null);
   const innerWidth = availableWidth ?? measuredWidth ?? windowWidth;
   if (!Number.isFinite(innerWidth) || innerWidth <= 0) {
@@ -1026,20 +1027,23 @@ export function DescriptionList<Id extends string = string>({
           direction: environment.direction,
           flexDirection: "row",
           flexWrap: "wrap",
-          gap: spacing.sm,
+          gap: inline ? 0 : spacing.sm,
         },
         layoutStyle,
       ]}
     >
-      {resolved.items.map((item) => (
+      {resolved.items.map((item, index) => (
         <View
           key={item.id}
           accessibilityLabel={`${item.label}, ${item.value}`}
           accessible
-          style={[{ gap: spacing.xxs, width: itemWidth }]}
+          style={[{ gap: spacing.xxs, width: itemWidth }, inline && {
+            flexDirection: "row", alignItems: "flex-start", gap: spacing.sm,
+            paddingVertical: spacing.sm, borderTopWidth: index === 0 ? 0 : 1, borderColor: colors.border,
+          }]}
         >
-          <Text accessible={false} tone="muted" variant="label">{item.label}</Text>
-          <Text accessible={false} tone="primary">{item.value}</Text>
+          <Text accessible={false} tone="muted" variant="label" layoutStyle={inline ? { width: "24%" } : undefined}>{item.label}</Text>
+          <Text accessible={false} tone="primary" layoutStyle={inline ? { flex: 1, minWidth: 0 } : undefined}>{item.value}</Text>
         </View>
       ))}
     </View>

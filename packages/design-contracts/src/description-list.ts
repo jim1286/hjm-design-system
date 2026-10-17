@@ -19,6 +19,8 @@ export type DescriptionListDescriptor<Id extends string = string> = Readonly<{
   items: readonly DescriptionItemDescriptor<Id>[];
   /** Renderer preference; the resolver may still collapse this to 1. */
   columns?: DescriptionListColumns;
+  /** Inline pairs share a label column and separators for long records. */
+  layout?: "stacked" | "inline";
 }>;
 
 export const descriptionListDefaults = {
@@ -29,6 +31,7 @@ export type ResolvedDescriptionListDescriptor<Id extends string = string> =
   Readonly<{
     items: readonly DescriptionItemDescriptor<Id>[];
     columns: DescriptionListColumns;
+    layout: "stacked" | "inline";
   }>;
 
 function assertCopy(value: string, field: string): void {
@@ -63,6 +66,9 @@ export function validateDescriptionList<Id extends string>(
   ) {
     throw new RangeError("DescriptionList columns must be 1 or 2");
   }
+  if (descriptor.layout !== undefined && descriptor.layout !== "stacked" && descriptor.layout !== "inline") {
+    throw new RangeError("DescriptionList layout must be stacked or inline");
+  }
   const ids = new Set<Id>();
   for (const item of descriptor.items) {
     validateDescriptionItem(item);
@@ -79,7 +85,8 @@ export function resolveDescriptionListDescriptor<Id extends string>(
   validateDescriptionList(descriptor);
   return {
     items: descriptor.items,
-    columns: descriptor.columns ?? descriptionListDefaults.columns,
+    columns: descriptor.layout === "inline" ? 1 : descriptor.columns ?? descriptionListDefaults.columns,
+    layout: descriptor.layout ?? "stacked",
   };
 }
 

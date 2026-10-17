@@ -587,17 +587,19 @@ export type DescriptionListProps<Id extends string = string> = Omit<
   Readonly<{
     items: readonly DescriptionItemDescriptor<Id>[];
     columns?: DescriptionListColumns;
+    layout?: "stacked" | "inline";
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 function DescriptionListInner<Id extends string>(
-  { items, columns, className, layoutStyle, style, ...props }: DescriptionListProps<Id>,
+  { items, columns, layout, className, layoutStyle, style, ...props }: DescriptionListProps<Id>,
   forwardedRef: ForwardedRef<HTMLDListElement>,
 ) {
   const descriptor = resolveDescriptionListDescriptor({
     items,
     ...(columns === undefined ? {} : { columns }),
+    ...(layout === undefined ? {} : { layout }),
   });
   const [width, ref] = useElementWidth(forwardedRef);
   const theme = useOptionalHjmTheme();
@@ -616,6 +618,7 @@ function DescriptionListInner<Id extends string>(
       {...props}
       ref={ref}
       className={classNames("hjm-description-list", className)}
+      data-layout={descriptor.layout}
       data-columns={resolvedColumns}
       data-state={resolvedColumns < descriptor.columns ? "collapsed" : "ready"}
       style={responsiveStyle}

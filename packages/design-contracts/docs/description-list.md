@@ -72,3 +72,7 @@ Native의 라벨-값 접근성 노드와 text-scale 기반 열 전환은 rendere
 과거 후보로 든 야잘알 화면은 단일 열 List/ListRow 조합이므로 DescriptionList 채택으로
 세지 않는다. 제품의 1/2열 화면과 실제 기기 QA는 해당 앱 릴리스에서 확인하며,
 [승격 기준](stable-promotion.md)에 따라 제품 채택 부재를 성숙도 관문으로 쓰지 않는다.
+
+## 긴 기록의 가로 배치
+
+2026-10-15 오늘야구 경기 요약에서 긴 기록의 항목 구분이 약했던 문제에 대응해 `layout="inline"`을 추가했다. Native는 descriptor, Web은 prop으로 전달한다. 기본 `stacked`는 유지한다. Inline은 요청 열 수와 무관하게 한 열로 배치하며 라벨 24%, 간격 `spacing.sm`, 나머지 폭은 줄바꿈 가능한 값으로 사용한다. 행마다 `spacing.sm` 세로 여백과 첫 행을 제외한 구분선을 제공한다. 제품에서 이름-값 배치를 복제하지 않도록 두 renderer가 같은 구조를 소유한다.

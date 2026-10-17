@@ -63,6 +63,7 @@ import { DescriptionList } from "@hjmds/react-native/data-display";
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `columns` | `1` · `2` | `2` | 요청값일 뿐이며 resolver가 폭·`textScale`을 보고 1열로 접을 수 있다 |
+| `layout` | `stacked` · `inline` | `stacked` | Native는 descriptor, Web은 prop. `inline`은 1열 목록, 라벨 24%, 나머지는 줄바꿈 가능한 값, 행 구분선 |
 | 항목 | `{ id, label: string, value: string }` | — (필수) | 셋 다 빈 문자열이면 안 된다. 항목이 없거나 `id`가 겹치면 예외가 난다 |
 | Native `label` | `string` | — (필수) | 목록 전체의 접근성 이름 |
 | Native `availableWidth` | 양수 | 측정값 | 주면 측정보다 우선 |
@@ -76,7 +77,7 @@ import { DescriptionList } from "@hjmds/react-native/data-display";
 | --- | --- | --- |
 | 크기 | 항목 최소 폭 160 × `textScale` | `src/description-list.ts`(`descriptionListRecipe.group.minItemWidth`) |
 | 간격 | 항목 사이 가로·세로 `spacing.sm` 12. 각 항목의 라벨–값 `spacing.xxs` 4 | `src/description-list.ts`, `packages/react/src/styles.css` `.hjm-description-list*`, `packages/react-native/src/data-display.tsx` |
-| 순서·정렬 | [Card](card.md)·[Section](section.md) 본문 안에 둔다. 각 항목은 라벨 위·값 아래. 항목은 `items` 순서대로 행 우선으로 채운다(왼쪽 → 오른쪽, 위 → 아래) | 같은 파일 |
+| 순서·정렬 | [Card](card.md)·[Section](section.md) 본문 안에 둔다. 기본은 라벨 위·값 아래. `inline`은 라벨 왼쪽·값 오른쪽이며 행 세로 여백은 `spacing.sm`이다. 항목은 `items` 순서대로 행 우선으로 채운다(왼쪽 → 오른쪽, 위 → 아래) | 같은 파일 |
 | 고정·스크롤 | — | — |
 | 좁은 폭·큰 글자 | 폭이 `2 × 160 × textScale + 12` 미만이면 1열로 접는다(배율 1이면 332, 배율 1.6이면 524). 값이 길면 줄바꿈한다(Web `overflow-wrap: anywhere`) | `src/description-list.ts`(열 판정 함수), `packages/react/src/styles.css` |
 
