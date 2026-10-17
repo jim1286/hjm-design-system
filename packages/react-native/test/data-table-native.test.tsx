@@ -3,6 +3,8 @@ import { expect, it } from "vitest";
 import { sortDataTableRows, toDataTableSortValue, type DataTableSortState } from "@hjmds/design-contracts/components/data-table";
 import { DataTable } from "../src/data-table.js";
 import { HjmNativeProvider } from "../src/provider.js";
+import { View } from "react-native";
+import { useState } from "react";
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 const data: Record<string, Record<string, string>> = { a: { name: "구자욱", avg: ".361" }, b: { name: "레이예스", avg: ".351" }, c: { name: "신인", avg: "—" } };
@@ -22,5 +24,35 @@ it("starts descending for sortDescFirst, pins the name column and pages rows by 
     act(() => rowButtons[1]!.props.onPress());
     expect(pressed).toEqual(["b"]);
     expect(tree.root.findAll(n => n.props.children === "평균").length).toBeGreaterThan(0);
+  } finally { act(() => tree.unmount()); }
+});
+
+it("fits full sortable headers and innings values in both header and body columns", () => {
+  let tree!: ReactTestRenderer;
+  function Table() {
+    const [sort, setSort] = useState<DataTableSortState<string>>(null);
+    return <DataTable
+    columns={[{ id: "season", header: "시즌", width: 80, pinned: "start" }, { id: "ip", header: "이닝", width: 54 }, { id: "era", header: "평균자책점", width: 54, sortable: true }]}
+    rows={[{ id: "total" }]} labels={{ table: "투수 통산", sortColumn: header => `${header} 정렬` }}
+    renderCell={(_, column) => ({ season: "통산", ip: "150 ⅓", era: "4.54" })[column]}
+    sortState={sort} onSortChange={setSort} />;
+  }
+  act(() => { tree = create(<HjmNativeProvider><Table /></HjmNativeProvider>); });
+  try {
+    const measurement = (text: string, width: number) => act(() => tree.root.findAll(n => typeof n.props.onLayout === "function" && n.props.children === text)[0]!.props.onLayout({ nativeEvent: { layout: { width } } }));
+    act(() => tree.root.findAllByType(View).find(n => n.props.accessibilityLabel === "투수 통산")!.props.onLayout({ nativeEvent: { layout: { width: 240 } } }));
+    measurement("평균자책점 ▲\n평균자책점 ▼", 96);
+    measurement("150 ⅓", 64);
+    const header = tree.root.find(n => typeof n.type === "string" && n.props.accessibilityLabel === "평균자책점 정렬");
+    expect(header.props.style.width).toBe(112);
+    const cell = tree.root.findAll(n => typeof n.type === "string" && n.props.children === "150 ⅓" && n.props.numberOfLines === 1)[0]!;
+    let cellBox = cell.parent;
+    while (cellBox && typeof cellBox.props.style?.width !== "number") cellBox = cellBox.parent;
+    expect(cellBox!.props.style.width).toBe(80);
+    expect(cellBox!.props.style.flexShrink).toBe(0);
+    // Sorting can add an arrow without changing the space reserved for the header.
+    act(() => header.props.onPress());
+    expect(header.props.style.width).toBe(112);
+    expect(tree.root.findAll(n => typeof n.type === "string" && Array.isArray(n.props.children) && n.props.children.join("") === "평균자책점 ▲").length).toBeGreaterThan(0);
   } finally { act(() => tree.unmount()); }
 });

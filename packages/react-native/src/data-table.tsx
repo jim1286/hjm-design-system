@@ -72,14 +72,23 @@ export function DataTable<ColumnKey extends string = string, RowKey extends stri
   const theme = useHjmNativeTheme(), { colors } = theme;
   const color = (reference: Parameters<typeof resolveColorReference>[0]) => resolveColorReference(reference, theme.palette);
   const [width, setWidth] = useState(0), [atEnd, setAtEnd] = useState(false), [pressed, setPressed] = useState<RowKey | null>(null);
+  const [textWidths, setTextWidths] = useState<Record<string, number>>({});
   const { pinned, scrolling } = useMemo(() => splitPinnedDataTableColumns(columns), [columns]);
   const pad = dataTableRecipe.density[density];
   const rowHeight = density === "compact" ? 40 : 48, headerHeight = density === "compact" ? 34 : 40;
-  const pinnedWidth = pinned.reduce((sum, column) => sum + (column.width ?? PINNED_WIDTH), 0);
+  // A declared width is a minimum: exact records and complete headers must remain readable.
+  // Measure with the native font in an unconstrained horizontal rail, independent of the
+  // visible column width, so truncation cannot feed a smaller width back into sizing.
+  const measure = (key: string, measured: number) => setTextWidths(previous => previous[key] === measured ? previous : { ...previous, [key]: measured });
+  const naturalWidth = (column: DataTableColumnDescriptor<ColumnKey>, pinnedColumn: boolean) => Math.max(
+    column.width ?? (pinnedColumn ? PINNED_WIDTH : DEFAULT_WIDTH),
+    Math.ceil(Math.max(textWidths[`${column.id}:header`] ?? 0, textWidths[`${column.id}:body`] ?? 0)) + pad.paddingHorizontal,
+  );
+  const pinnedWidth = pinned.reduce((sum, column) => sum + naturalWidth(column, true), 0);
   // Short tables stretch scrolling columns to fill the card; wide ones keep their widths and scroll.
-  const natural = scrolling.reduce((sum, column) => sum + (column.width ?? DEFAULT_WIDTH), 0);
+  const natural = scrolling.reduce((sum, column) => sum + naturalWidth(column, false), 0);
   const stretch = width > 0 && natural > 0 && natural < width - pinnedWidth ? (width - pinnedWidth) / natural : 1;
-  const widthOf = (column: DataTableColumnDescriptor<ColumnKey>, pinnedColumn: boolean) => pinnedColumn ? column.width ?? PINNED_WIDTH : (column.width ?? DEFAULT_WIDTH) * stretch;
+  const widthOf = (column: DataTableColumnDescriptor<ColumnKey>, pinnedColumn: boolean) => naturalWidth(column, pinnedColumn) * (pinnedColumn ? 1 : stretch);
   const overflow = width > 0 && pinnedWidth + natural > width + 1;
 
   function header(column: DataTableColumnDescriptor<ColumnKey>, pinnedColumn: boolean) {
@@ -89,7 +98,7 @@ export function DataTable<ColumnKey extends string = string, RowKey extends stri
     const content = <NativeText numberOfLines={1} style={{ color: textColor, fontSize: 12, fontWeight: "700", textAlign: alignOf(column.align ?? dataTableColumnDefaults.align) }}>
       {column.header}{active ? (active === "ascending" ? " ▲" : " ▼") : ""}
     </NativeText>;
-    const style = { width: widthOf(column, pinnedColumn), height: headerHeight, paddingHorizontal: pad.paddingHorizontal / 2, justifyContent: "center" as const };
+    const style = { width: widthOf(column, pinnedColumn), flexShrink: 0, height: headerHeight, paddingHorizontal: pad.paddingHorizontal / 2, justifyContent: "center" as const };
     return sortable && onSortChange
       ? <Pressable key={column.id} accessibilityRole="button" accessibilityLabel={labels.sortColumn(column.header, sortState?.columnId === column.id ? sortState : null)}
           hitSlop={4} onPress={() => onSortChange(getNextDataTableSortState(sortState, column.id, sortCycle, dataTableFirstSortDirection(column)))} style={style}>{content}</Pressable>
@@ -99,7 +108,7 @@ export function DataTable<ColumnKey extends string = string, RowKey extends stri
   function cell(node: ReactNode, column: DataTableColumnDescriptor<ColumnKey>, pinnedColumn: boolean, emphasis: boolean, key: string, decoration: Readonly<{ tone?: DataTableCellTone | null; heat?: DataTableCellHeat | null }> | null = null, indent = 0) {
     const align = alignOf(column.align ?? dataTableColumnDefaults.align);
     const tone = decoration?.tone ? dataTableFamilyRecipe.tone[decoration.tone] : null, heat = decoration?.heat ?? null;
-    return <View key={key} style={{ width: widthOf(column, pinnedColumn), height: rowHeight - 1, paddingHorizontal: pad.paddingHorizontal / 2, paddingLeft: pad.paddingHorizontal / 2 + indent, justifyContent: "center", alignItems: align === "right" ? "flex-end" : align === "center" ? "center" : "flex-start" }}>
+    return <View key={key} style={{ width: widthOf(column, pinnedColumn), flexShrink: 0, height: rowHeight - 1, paddingHorizontal: pad.paddingHorizontal / 2, paddingLeft: pad.paddingHorizontal / 2 + indent, justifyContent: "center", alignItems: align === "right" ? "flex-end" : align === "center" ? "center" : "flex-start" }}>
       {heat && <View pointerEvents="none" style={{ position: "absolute", left: 2, right: 2, top: 4, bottom: 4, borderRadius: 6, backgroundColor: heatBase[heat.side], opacity: dataTableFamilyRecipe.heatAlpha[heat.strength] }} />}
       {typeof node === "string" || typeof node === "number"
         ? <NativeText numberOfLines={1} style={{ color: tone ? color(tone.color) : emphasis ? colors.text : color(dataTableRecipe.cell.color), fontSize: 14, fontWeight: tone ? tone.fontWeight : emphasis ? "700" : "500", textAlign: align, fontVariant: ["tabular-nums"] }}>{String(node)}</NativeText>
@@ -165,6 +174,16 @@ export function DataTable<ColumnKey extends string = string, RowKey extends stri
     </View>
   </View>;
   return <View style={[{ gap: spacing.sm }, layoutStyle]}>
+    <ScrollView horizontal scrollEnabled={false} pointerEvents="none" aria-hidden accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ position: "absolute", left: 0, right: 0, top: 0, height: 0, opacity: 0 }}>
+      <View style={{ flexDirection: "row" }}>{columns.map(column => {
+        const values = [...rows.map(row => renderCell(row.id, column.id)), summaryRow?.(column.id)]
+          .filter((value): value is string | number => typeof value === "string" || typeof value === "number");
+        return <View key={column.id} style={{ flexShrink: 0 }}>
+          <NativeText onLayout={event => measure(`${column.id}:header`, event.nativeEvent.layout.width)} style={{ fontSize: 12, fontWeight: "700", flexShrink: 0 }}>{`${column.header}${column.sortable ? ` ▲\n${column.header} ▼` : ""}`}</NativeText>
+          <NativeText onLayout={event => measure(`${column.id}:body`, event.nativeEvent.layout.width)} style={{ fontSize: 14, fontWeight: "700", fontVariant: ["tabular-nums"], flexShrink: 0 }}>{values.join("\n")}</NativeText>
+        </View>;
+      })}</View>
+    </ScrollView>
     <View accessibilityLabel={labels.table} onLayout={event => setWidth(event.nativeEvent.layout.width)} style={{ borderRadius: 12, overflow: "hidden", backgroundColor: colors.surface }}>
       {bodyMessage
         ? <View style={{ minHeight: 120, alignItems: "center", justifyContent: "center", padding: spacing.md }}><Text tone={status === "error" ? "danger" : "muted"} align="center">{bodyMessage}</Text></View>
