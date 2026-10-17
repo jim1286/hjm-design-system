@@ -65,8 +65,9 @@ export function NotificationInboxScreen({ filters, children, notice, ...props })
     return _jsx(ScreenLayout, { ...props, notice: _jsxs(Stack, { gap: "sm", children: [notice, filters] }), children: children });
 }
 export function NotificationItem({ read, statusLabel, timestamp, description, ...props }) {
-    const emphasis = { hjmTitleEmphasis: read ? "regular" : "strong" };
-    return _jsx(ListRow, { ...props, ...emphasis, description: [description, `${statusLabel} · ${timestamp}`].filter(Boolean).join("\n") });
+    // Status·time is a separate muted caption, as on Web, not a second description line.
+    const privateProps = { hjmTitleEmphasis: read ? "regular" : "strong", hjmMeta: `${statusLabel} · ${timestamp}` };
+    return _jsx(ListRow, { ...props, ...privateProps, ...(description === undefined ? {} : { description }) });
 }
 /** Wrap with existing KeyboardAvoiding (or the host's keyboard adapter), never both. */
 export function ChatScreen({ composer, jumpToLatest, avatar, scroll = "content", headerAlignment = "center", ...props }) {

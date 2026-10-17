@@ -61,7 +61,9 @@ export function Top({ descriptor, trailing, layoutStyle }: TopProps) {
           accessibilityRole="header"
           style={{
             color: resolveColorReference(topRecipe.title.color, theme.palette),
-            flex: stack ? undefined : 1,
+            // Web `flex: 1 1 auto`; RN `flex: 1` has a 0 basis, which collapsed the title inside a centred
+            // hero and wrapped it early (2026-10-17 comparison).
+            ...(stack ? {} : { flexGrow: 1, flexShrink: 1 }),
             fontSize: title.fontSize,
             fontWeight: title.fontWeight,
             lineHeight: title.lineHeight,

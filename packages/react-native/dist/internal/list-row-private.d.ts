@@ -6,5 +6,7 @@
  */
 export type ListRowPrivateProps = Readonly<{
     hjmTitleEmphasis?: "regular" | "strong";
+    /** NotificationItem status·time line, drawn as a muted caption under the description like Web (2026-10-17). */
+    hjmMeta?: string;
 }>;
 //# sourceMappingURL=list-row-private.d.ts.map

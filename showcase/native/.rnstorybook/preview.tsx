@@ -6,7 +6,7 @@ import { HjmNativeProvider, useHjmNativeTheme } from "@hjmds/react-native/provid
 
 // Screens own their gutter (ScreenLayout padding, header exit). Wrapping them in the 16pt canvas doubled
 // the top and side spacing on Native only, since Web Storybook is fullscreen (2026-10-17 "상단 여백 줄여").
-// 화면 stories and stories marked `layout: "fullscreen"` render edge to edge; component demos keep the canvas.
+// 화면 stories and stories marked `hjm.edgeToEdge` (same parameter as Web) render edge to edge; component demos keep the canvas.
 function Canvas({ children, fullscreen }: { children: ReactNode; fullscreen: boolean }) {
   const { colors } = useHjmNativeTheme();
   return <View style={[fullscreen ? styles.fullscreen : styles.canvas, { backgroundColor: colors.bg }]}>{children}</View>;
@@ -104,7 +104,7 @@ const preview: Preview = {
         textScale={context.globals.textScale === "2" ? 2 : context.globals.textScale === "1.5" ? 1.5 : 1}
         reducedMotion={context.globals.motion === "reduced"}
       >
-        <Canvas fullscreen={context.parameters.layout === "fullscreen" || context.title.split("/")[1] === "화면"}><Story /></Canvas>
+        <Canvas fullscreen={context.parameters.hjm?.edgeToEdge === true || context.title.split("/")[1] === "화면"}><Story /></Canvas>
       </Insets>
     ),
   ],

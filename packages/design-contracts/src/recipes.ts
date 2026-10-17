@@ -17,6 +17,7 @@ export {
   accordionRecipe,
   alertDialogRecipe,
   avatarRecipe,
+  resolveAvatarInitialsTextVariant,
   badgeRecipe,
   bottomNavigationRecipe,
   bottomCtaRecipe,

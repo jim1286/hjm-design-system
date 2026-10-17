@@ -12,6 +12,7 @@ import { sectionRecipe, stackRecipe, textRecipe, } from "@hjmds/design-contracts
 import { Children, Component, Fragment, forwardRef, isValidElement, useEffect, useMemo, useState, } from "react";
 import { PixelRatio, Text as NativeText, View, useWindowDimensions, } from "react-native";
 import { useHjmNativeTheme } from "./provider.js";
+import { useInheritedTextAlign } from "./internal/text-align.js";
 import { logicalTextAlign, resolveNativeFontStyle, resolveNativeShadowElevation, resolveNativeTextScaleProps, } from "./internal/styles.js";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 /** Native shell translation: ordered regions without inventing Web landmark roles. */
@@ -38,6 +39,7 @@ export const Layout = forwardRef(function Layout({ children, header, footer, sid
 });
 export const Text = forwardRef(function Text({ children, variant = textRecipe.defaults.variant, fontRole, tone = textRecipe.defaults.tone, emphasis: suppliedEmphasis, align, allowFontScaling, layoutStyle, style, ...props }, ref) {
     const { colors, environment, textScaling, tokens, designProfile } = useHjmNativeTheme();
+    const inheritedAlign = useInheritedTextAlign();
     const emphasis = suppliedEmphasis ?? textRecipe.defaults.emphasis;
     const familyRole = resolveTextFontRole(variant, fontRole ?? (props.accessibilityRole === "header" || props.role === "heading" ? "display" : undefined));
     const toneColors = {
@@ -56,7 +58,7 @@ export const Text = forwardRef(function Text({ children, variant = textRecipe.de
             color: toneColors[tone],
             fontWeight: designProfile && suppliedEmphasis === undefined ? tokens.typography[variant].fontWeight : textRecipe.emphasis[emphasis],
             ...resolveNativeFontStyle(resolveFontFamilyStack(tokens.fontFamily, familyRole), familyRole === "code" ? "code" : "ui"),
-            textAlign: align ?? logicalTextAlign(environment.direction),
+            textAlign: align ?? inheritedAlign ?? logicalTextAlign(environment.direction),
         },
         style,
         layoutStyle,

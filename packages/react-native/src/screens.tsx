@@ -162,9 +162,10 @@ export type NotificationItemProps = Omit<ListRowProps, "description" | "selected
   description?: string;
 }>;
 export function NotificationItem({ read, statusLabel, timestamp, description, ...props }: NotificationItemProps) {
-  const emphasis: ListRowPrivateProps = { hjmTitleEmphasis: read ? "regular" : "strong" };
-  return <ListRow {...props} /* Unread weight: renderer-private input, not deprecated titleStyle (list-row-private.ts). */ {...emphasis}
-    description={[description, `${statusLabel} · ${timestamp}`].filter(Boolean).join("\n")} />;
+  // Status·time is a separate muted caption, as on Web, not a second description line.
+  const privateProps: ListRowPrivateProps = { hjmTitleEmphasis: read ? "regular" : "strong", hjmMeta: `${statusLabel} · ${timestamp}` };
+  return <ListRow {...props} /* Unread weight and meta: renderer-private inputs, not deprecated titleStyle (list-row-private.ts). */ {...privateProps}
+    {...(description === undefined ? {} : { description })} />;
 }
 
 export type ChatScreenProps = Omit<ScreenLayoutProps, "footer"> & Readonly<{

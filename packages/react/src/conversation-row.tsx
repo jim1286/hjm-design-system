@@ -15,7 +15,7 @@ export function ConversationRow({ title, preview, metadata, avatar, unread = fal
       <Text style={{overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontWeight:unread?recipe.unreadTitleWeight:recipe.titleWeight}}>{title}</Text>
       <span style={{display:"flex",minWidth:0}}>
         <Text variant="label" tone={unread?"primary":"subtle"} style={{overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontWeight:unread?recipe.unreadPreviewWeight:recipe.titleWeight}}>{preview}</Text>
-        <Text variant="label" tone={unread?"primary":"subtle"} style={{flexShrink:0,whiteSpace:"nowrap",fontWeight:unread?recipe.unreadPreviewWeight:recipe.titleWeight}}>{` · ${metadata}`}</Text>
+        <Text variant="label" tone={unread?"primary":"subtle"} style={{flexShrink:0,/* "pre": flex items drop the leading space of " · " (2026-10-17 comparison); still no wrap. */whiteSpace:"pre",fontWeight:unread?recipe.unreadPreviewWeight:recipe.titleWeight}}>{` · ${metadata}`}</Text>
       </span>
     </span>
     {unread?<span data-hjm-unread-dot="true" style={{width:recipe.unreadSize,height:recipe.unreadSize,flexShrink:0,borderRadius:"50%",background:"var(--hjm-color-content-brand)"}}/>:null}

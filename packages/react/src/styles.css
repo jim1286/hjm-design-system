@@ -944,9 +944,11 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-list-row__leading { display: flex; align-items: center; justify-content: center; inline-size: var(--hjm-list-row-leading-size); block-size: var(--hjm-list-row-leading-size); overflow: hidden; }
 .hjm-list-row__leading[data-shape="circle"] { border-radius: var(--hjm-radius-full); }
 .hjm-list-row__content { flex: 1 1 auto; min-inline-size: 0; display: grid; gap: var(--hjm-space-xxs); }
-.hjm-list-row__title { color: var(--hjm-color-text-body); font-weight: var(--hjm-font-weight-bold); overflow-wrap: anywhere; }
+/* listRowRecipe title bodyLarge / description body (2026-10-17: Web inherited 14 for both while Native used the recipe). */
+.hjm-list-row__title { color: var(--hjm-color-text-body); font-size: var(--hjm-type-body-large-size); line-height: var(--hjm-type-body-large-line-height); font-weight: var(--hjm-font-weight-bold); overflow-wrap: anywhere; }
 .hjm-list-row[data-tone="danger"] .hjm-list-row__title { color: var(--hjm-color-danger); }
 .hjm-list-row__description, .hjm-list-row__trailing { color: var(--hjm-color-text-muted); overflow-wrap: anywhere; }
+.hjm-list-row__description { font-size: var(--hjm-type-body-size); line-height: var(--hjm-type-body-line-height); }
 
 .hjm-section { display: grid; gap: var(--hjm-space-xs); min-inline-size: 0; overflow-wrap: anywhere; }
 .hjm-section__header { display: flex; align-items: center; justify-content: space-between; gap: var(--hjm-space-sm); min-inline-size: 0; }

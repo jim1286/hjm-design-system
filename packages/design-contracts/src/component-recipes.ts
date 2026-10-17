@@ -1574,7 +1574,19 @@ export const avatarRecipe = {
   background: semanticColors.canvas,
   content: semanticColors.content.secondary,
   border: semanticColors.border.default,
+  /** Initials are bold; their size follows the avatar (Web `.hjm-avatar[data-size]` steps). */
+  initialsWeight: "strong",
 } as const;
+
+/**
+ * Initials text step for an avatar diameter, shared by Web size tokens and Native numeric sizes
+ * (2026-10-17 comparison: Native drew 12pt brand-colored initials at every size).
+ */
+export function resolveAvatarInitialsTextVariant(size: number): "label" | "body" | "title" {
+  if (size < avatarRecipe.sizes.medium) return "label";
+  if (size < avatarRecipe.sizes.xlarge) return "body";
+  return "title";
+}
 
 export type StatisticDensity = "compact" | "comfortable";
 export type StatisticPresentation = "plain" | "surface";

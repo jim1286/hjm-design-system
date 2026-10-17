@@ -67,7 +67,9 @@ const preview: Preview = {
 
       return (
         <WebDesignSystemProvider
-          edgeToEdge={context.parameters.hjm?.edgeToEdge === true}
+          // Screens own their gutter; 화면 stories and `hjm.edgeToEdge` render without the demo padding,
+          // the same rule as Native (2026-10-17 comparison: both canvases doubled screen gutters).
+          edgeToEdge={context.parameters.hjm?.edgeToEdge === true || context.title.split("/")[1] === "화면"}
           input={{ direction, reducedMotion, textScale, theme }}
           systemTheme="light"
         >

@@ -4,6 +4,7 @@ import {
   type AuthScreenDescriptor,
 } from "@hjmds/design-contracts/components/auth-screen";
 import type { ReactNode } from "react";
+import { InheritedTextAlignContext } from "./internal/text-align.js";
 import {
   ActivityIndicator,
   Platform,
@@ -94,7 +95,8 @@ export function AuthScreenLayout({
           gap: resolved.mainGap,
         }}
       >
-        <View style={{ width: "100%", alignItems: "center", gap: resolved.heroGap }}>{hero}</View>
+        {/* Web centers hero copy with inherited text-align; Native needs the explicit context. */}
+        <InheritedTextAlignContext.Provider value="center"><View style={{ width: "100%", alignItems: "center", gap: resolved.heroGap }}>{hero}</View></InheritedTextAlignContext.Provider>
         <MainContainer style={{ width: "100%" }}>
           {/* Keep layout and form state, while excluding hidden controls from touch and screen-reader navigation. */}
           <View pointerEvents={pending ? "none" : "auto"} accessibilityElementsHidden={pending}

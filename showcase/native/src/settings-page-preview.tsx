@@ -7,6 +7,7 @@ import { Avatar, ListRow } from "@hjmds/react-native/data-display";
 import { Sheet } from "@hjmds/react-native/overlays";
 import { Bell, ChevronRight, Globe2, HelpCircle, ShieldCheck, Volume2, Palette, UserRound } from "lucide-react-native";
 import type { ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
+import { avatarRecipe } from "@hjmds/design-contracts/recipes";
 import { HjmNativeProvider, useHjmNativeTheme } from "@hjmds/react-native/provider";
 import { RadioGroup, Switch, TextField } from "@hjmds/react-native/inputs";
 
@@ -39,7 +40,7 @@ export function SettingsPagePreview({ exit, state, stateAction }: Props) {
     : state.kind === "error" ? { kind: "error", title: "설정을 불러오지 못했어요", description: "연결을 확인하고 다시 시도해 주세요." }
     : state.kind === "restricted" ? { kind: "restricted", title: "내 설정을 이어서 사용하세요", description: "로그인하면 계정에 저장한 설정을 가져올 수 있어요." } : state;
   return <HjmNativeProvider {...themeOverride}><SettingsScreen title="설정" exit={exit} state={settingsState} stateAction={stateAction}
-    profile={<Stack gap="md" align="center"><Avatar decorative name={name} size={64}/><Stack gap="xs" align="center"><Text variant="title" emphasis="strong">{name}</Text><Text variant="caption" tone="muted">@jimin</Text></Stack><Button size="small" tone="ghost" onPress={()=>{setDraftName(name);setPanel("profile");}}>프로필 수정</Button></Stack>}
+    profile={<Stack gap="md" align="center"><Avatar decorative name={name} size={avatarRecipe.sizes.xlarge}/><Stack gap="xs" align="center"><Text variant="title" emphasis="strong">{name}</Text><Text variant="caption" tone="muted">@jimin</Text></Stack><Button size="small" tone="ghost" onPress={()=>{setDraftName(name);setPanel("profile");}}>프로필 수정</Button></Stack>}
 
     sections={[
       { id: "appearance", title: "화면과 언어", children: <Stack gap="xxs">{row("화면 테마", "palette", themes.find(item => item.value === theme)!.label, "theme")}{row("언어", "language", languages.find(item => item.value === language)!.label, "language")}</Stack> },

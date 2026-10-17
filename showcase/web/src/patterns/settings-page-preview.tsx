@@ -40,7 +40,7 @@ export function SettingsPagePreview({ exit, state, stateAction }: Props) {
     : state.kind === "error" ? { kind: "error", title: "설정을 불러오지 못했어요", description: "연결을 확인하고 다시 시도해 주세요." }
     : state.kind === "restricted" ? { kind: "restricted", title: "내 설정을 이어서 사용하세요", description: "로그인하면 계정에 저장한 설정을 가져올 수 있어요." } : state;
   return <HjmProvider {...themeOverride}><SettingsScreen title="설정" exit={exit} state={settingsState} stateAction={stateAction}
-    profile={<Stack gap="md" align="center"><Avatar name={name} size="large"/><Stack gap="xs" align="center"><Text variant="title" emphasis="strong">{name}</Text><Text variant="caption" tone="muted">@jimin</Text></Stack><Button size="small" tone="ghost" onClick={()=>{setDraftName(name);setPanel("profile");}}>프로필 수정</Button></Stack>}
+    profile={<Stack gap="md" align="center"><Avatar name={name} size="xlarge"/><Stack gap="xs" align="center"><Text variant="title" emphasis="strong">{name}</Text><Text variant="caption" tone="muted">@jimin</Text></Stack><Button size="small" tone="ghost" onClick={()=>{setDraftName(name);setPanel("profile");}}>프로필 수정</Button></Stack>}
 
     sections={[
       { id: "appearance", title: "화면과 언어", children: <Stack gap="xxs">{row("화면 테마", "palette", themes.find(item => item.value === theme)!.label, "theme")}{row("언어", "language", languages.find(item => item.value === language)!.label, "language")}</Stack> },

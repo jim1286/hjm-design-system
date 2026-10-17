@@ -1,5 +1,5 @@
 import { iconTileRecipe, notificationRowRecipe as notificationRecipe } from "@hjmds/design-contracts/screen-patterns";
-import { iconButtonRecipe } from "@hjmds/design-contracts/recipes";
+import { iconButtonRecipe, listRowRecipe } from "@hjmds/design-contracts/recipes";
 import { resolveComposerLimit, type ComposerLengthFeedback } from "@hjmds/design-contracts/communication";
 import { Progress } from "./feedback.js";
 import { resolveDesignProfileScreen, type DesignProfileScreenPresentation } from "@hjmds/design-contracts/design-profile-layout";
@@ -146,7 +146,7 @@ export type NotificationItemProps = Omit<ListRowProps, "description" | "selected
   description?: ReactNode;
 }>;
 export function NotificationItem({ read, statusLabel, timestamp, description, title, className, ...props }: NotificationItemProps) {
-  return <ListRow {...props} className={classNames("hjm-notification-item", className)} data-unread={!read || undefined} title={<Text emphasis={read ? "regular" : "strong"}>{title}</Text>}
+  return <ListRow {...props} className={classNames("hjm-notification-item", className)} data-unread={!read || undefined} title={<Text variant={listRowRecipe.title.textVariant} emphasis={read ? "regular" : "strong"}>{title}</Text>}
     description={<Stack gap="xxs">{description}<Text variant="caption" tone="muted">{statusLabel} · {timestamp}</Text></Stack>} />;
 }
 

@@ -2924,7 +2924,14 @@ export declare const avatarRecipe: {
         key: "border";
         alpha?: number;
     }>;
+    /** Initials are bold; their size follows the avatar (Web `.hjm-avatar[data-size]` steps). */
+    readonly initialsWeight: "strong";
 };
+/**
+ * Initials text step for an avatar diameter, shared by Web size tokens and Native numeric sizes
+ * (2026-10-17 comparison: Native drew 12pt brand-colored initials at every size).
+ */
+export declare function resolveAvatarInitialsTextVariant(size: number): "label" | "body" | "title";
 export type StatisticDensity = "compact" | "comfortable";
 export type StatisticPresentation = "plain" | "surface";
 export declare const statisticRecipe: {

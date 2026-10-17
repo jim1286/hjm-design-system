@@ -41,6 +41,7 @@ import {
   type TimelineItemDescriptor,
 } from "@hjmds/design-contracts/components/timeline";
 import { surfaceDefaults, surfaceGeometry } from "@hjmds/design-contracts/recipes/base";
+import { avatarRecipe, resolveAvatarInitialsTextVariant } from "@hjmds/design-contracts/recipes";
 import {
   accordionRecipe,
   counterBadgeRecipe,
@@ -454,7 +455,7 @@ export function ListRow({
   ...forwarded
 }: ListRowProps) {
   assertNoRemovedStyleProps("ListRow", forwarded, ["titleStyle","descriptionStyle"]);
-  const { hjmTitleEmphasis, ...props } = forwarded as typeof forwarded & ListRowPrivateProps;
+  const { hjmTitleEmphasis, hjmMeta, ...props } = forwarded as typeof forwarded & ListRowPrivateProps;
   const theme = useHjmNativeTheme();
   const metrics = listRowRecipe.density[density];
   const interactive = onPress !== undefined;
@@ -472,7 +473,7 @@ export function ListRow({
       ? resolveColorReference(listRowRecipe.states.selectedBackground, theme.palette)
       : "transparent",
     direction: theme.environment.direction,
-    minHeight: description ? metrics.twoLineMinHeight : metrics.oneLineMinHeight,
+    minHeight: description || hjmMeta ? metrics.twoLineMinHeight : metrics.oneLineMinHeight,
     opacity: disabled ? listRowRecipe.states.disabledOpacity : 1,
   } as const;
   // `leadingSize` was declared by the recipe but unbound, so consumers rebuilt
@@ -562,6 +563,7 @@ export function ListRow({
             {description}
           </Text>
         ) : null}
+        {hjmMeta ? <Text variant="caption" tone="muted">{hjmMeta}</Text> : null}
       </View>
       {trailingText || trailing ? (
         <View
@@ -704,7 +706,10 @@ export function Avatar({
   layoutStyle,
 }: AvatarProps) {
   if (!Number.isFinite(size) || size < 24) throw new RangeError("Avatar size must be at least 24");
-  const { colors } = useHjmNativeTheme();
+  const { palette } = useHjmNativeTheme();
+  // Same colors and initials step as Web (avatarRecipe); Native previously used brand 12pt initials.
+  const initialsColor = resolveColorReference(avatarRecipe.content, palette);
+  const initialsVariant = resolveAvatarInitialsTextVariant(size);
   const sourceKey = source === undefined ? "none" : resolveImageSourceKey(source);
   const [failedSource, setFailedSource] = useState<string | null>(null);
   // URI equality alone cannot reject an old A callback after A→B→A. A source
@@ -729,8 +734,8 @@ export function Avatar({
       style={[
         {
           alignItems: "center",
-          backgroundColor: colors.bg,
-          borderColor: colors.borderControl,
+          backgroundColor: resolveColorReference(avatarRecipe.background, palette),
+          borderColor: resolveColorReference(avatarRecipe.border, palette),
           borderWidth: 1,
           borderRadius: radius.full,
           height: size,
@@ -745,7 +750,7 @@ export function Avatar({
         renderImage ? (
           <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ height: size, width: size }}>
             {renderImage({ source, size, onError: failImage,
-              fallback: renderFallback?.({ size, decorative: true }) ?? <Text align="center" style={{ color: colors.contentBrand }} variant="label">{fallback}</Text> })}
+              fallback: renderFallback?.({ size, decorative: true }) ?? <Text align="center" style={{ color: initialsColor }} variant={initialsVariant} emphasis={avatarRecipe.initialsWeight}>{fallback}</Text> })}
           </View>
         ) : (
           <NativeImage accessible={false} onError={failImage} source={source}
@@ -753,7 +758,7 @@ export function Avatar({
         )
       ) : (
         <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
-          {renderFallback?.({ size, decorative: true }) ?? <Text align="center" style={{ color: colors.contentBrand }} variant="label">{fallback}</Text>}
+          {renderFallback?.({ size, decorative: true }) ?? <Text align="center" style={{ color: initialsColor }} variant={initialsVariant} emphasis={avatarRecipe.initialsWeight}>{fallback}</Text>}
         </View>
       )}
     </View>

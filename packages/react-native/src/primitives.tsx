@@ -76,6 +76,7 @@ import {
 } from "react-native";
 
 import { useHjmNativeTheme, type HjmNativeTheme } from "./provider.js";
+import { useInheritedTextAlign } from "./internal/text-align.js";
 import {
   logicalTextAlign,
   resolveNativeFontStyle,
@@ -201,6 +202,7 @@ export const Text = forwardRef<NativeText, TextProps>(function Text(
   ref,
 ) {
   const { colors, environment, textScaling, tokens, designProfile } = useHjmNativeTheme();
+  const inheritedAlign = useInheritedTextAlign();
   const emphasis = suppliedEmphasis ?? textRecipe.defaults.emphasis;
   const familyRole = resolveTextFontRole(variant, fontRole ?? (props.accessibilityRole === "header" || props.role === "heading" ? "display" : undefined));
   const toneColors: Readonly<Record<TextTone, string>> = {
@@ -221,7 +223,7 @@ export const Text = forwardRef<NativeText, TextProps>(function Text(
         color: toneColors[tone],
         fontWeight: designProfile && suppliedEmphasis === undefined ? tokens.typography[variant].fontWeight : textRecipe.emphasis[emphasis],
         ...resolveNativeFontStyle(resolveFontFamilyStack(tokens.fontFamily, familyRole), familyRole === "code" ? "code" : "ui"),
-        textAlign: align ?? logicalTextAlign(environment.direction),
+        textAlign: align ?? inheritedAlign ?? logicalTextAlign(environment.direction),
       },
       style,
       layoutStyle,

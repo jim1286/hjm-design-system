@@ -1,5 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { authScreenRecipe, resolveAuthScreenDescriptor, } from "@hjmds/design-contracts/components/auth-screen";
+import { InheritedTextAlignContext } from "./internal/text-align.js";
 import { ActivityIndicator, Platform, ScrollView, View, } from "react-native";
 import { useHjmNativeTheme } from "./provider.js";
 function AuthActionCard({ children, style }) {
@@ -41,7 +42,7 @@ export function AuthScreenLayout({ hero, main, footer, density, hasFooter, pendi
                     alignItems: "center",
                     justifyContent: "center",
                     gap: resolved.mainGap,
-                }, children: [_jsx(View, { style: { width: "100%", alignItems: "center", gap: resolved.heroGap }, children: hero }), _jsxs(MainContainer, { style: { width: "100%" }, children: [_jsx(View, { pointerEvents: pending ? "none" : "auto", accessibilityElementsHidden: pending, importantForAccessibility: pending ? "no-hide-descendants" : "auto", style: pending ? { opacity: 0 } : undefined, children: main }), pending ? _jsx(View, { accessible: true, accessibilityLabel: pendingLabel, accessibilityRole: "progressbar", accessibilityLiveRegion: "polite", accessibilityState: { busy: true }, style: { position: "absolute", top: 0, right: 0, bottom: 0, left: 0, alignItems: "center", justifyContent: "center" }, children: _jsx(ActivityIndicator, { accessible: false }) }) : null] })] }), showFooter ? (_jsx(View, { style: {
+                }, children: [_jsx(InheritedTextAlignContext.Provider, { value: "center", children: _jsx(View, { style: { width: "100%", alignItems: "center", gap: resolved.heroGap }, children: hero }) }), _jsxs(MainContainer, { style: { width: "100%" }, children: [_jsx(View, { pointerEvents: pending ? "none" : "auto", accessibilityElementsHidden: pending, importantForAccessibility: pending ? "no-hide-descendants" : "auto", style: pending ? { opacity: 0 } : undefined, children: main }), pending ? _jsx(View, { accessible: true, accessibilityLabel: pendingLabel, accessibilityRole: "progressbar", accessibilityLiveRegion: "polite", accessibilityState: { busy: true }, style: { position: "absolute", top: 0, right: 0, bottom: 0, left: 0, alignItems: "center", justifyContent: "center" }, children: _jsx(ActivityIndicator, { accessible: false }) }) : null] })] }), showFooter ? (_jsx(View, { style: {
                     width: "100%",
                     maxWidth: resolved.maxWidth,
                     alignSelf: "center",

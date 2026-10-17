@@ -4,4 +4,8 @@
  * weight; routing it through the deprecated public `titleStyle` warned in every consuming app
  * (2026-10-06 review), and a new public prop was rejected because no other caller needs the axis.
  */
-export type ListRowPrivateProps = Readonly<{ hjmTitleEmphasis?: "regular" | "strong" }>;
+export type ListRowPrivateProps = Readonly<{
+  hjmTitleEmphasis?: "regular" | "strong";
+  /** NotificationItem status·time line, drawn as a muted caption under the description like Web (2026-10-17). */
+  hjmMeta?: string;
+}>;

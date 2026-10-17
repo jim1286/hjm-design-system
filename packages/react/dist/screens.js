@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { iconTileRecipe, notificationRowRecipe as notificationRecipe } from "@hjmds/design-contracts/screen-patterns";
-import { iconButtonRecipe } from "@hjmds/design-contracts/recipes";
+import { iconButtonRecipe, listRowRecipe } from "@hjmds/design-contracts/recipes";
 import { resolveComposerLimit } from "@hjmds/design-contracts/communication";
 import { Progress } from "./feedback.js";
 import { resolveDesignProfileScreen } from "@hjmds/design-contracts/design-profile-layout";
@@ -61,7 +61,7 @@ export function NotificationInboxScreen({ filters, children, notice, ...props })
     return _jsx(ScreenLayout, { ...props, notice: _jsxs(Stack, { gap: "sm", children: [notice, filters] }), children: children });
 }
 export function NotificationItem({ read, statusLabel, timestamp, description, title, className, ...props }) {
-    return _jsx(ListRow, { ...props, className: classNames("hjm-notification-item", className), "data-unread": !read || undefined, title: _jsx(Text, { emphasis: read ? "regular" : "strong", children: title }), description: _jsxs(Stack, { gap: "xxs", children: [description, _jsxs(Text, { variant: "caption", tone: "muted", children: [statusLabel, " \u00B7 ", timestamp] })] }) });
+    return _jsx(ListRow, { ...props, className: classNames("hjm-notification-item", className), "data-unread": !read || undefined, title: _jsx(Text, { variant: listRowRecipe.title.textVariant, emphasis: read ? "regular" : "strong", children: title }), description: _jsxs(Stack, { gap: "xxs", children: [description, _jsxs(Text, { variant: "caption", tone: "muted", children: [statusLabel, " \u00B7 ", timestamp] })] }) });
 }
 /** Caller supplies a virtualized timeline and keyboard-aware composer; no implicit auto-scroll or send. */
 export function ChatScreen({ composer, jumpToLatest, avatar, scroll = "content", headerAlignment = "center", ...props }) {

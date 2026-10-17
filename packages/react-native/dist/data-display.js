@@ -10,6 +10,7 @@ import { cardRecipe } from "@hjmds/design-contracts/components/card";
 import { imageRecipe, nativeResizeModes, resolveImageAspectRatio, resolveImageDescriptor, resolveImageFallbackAccessibilityLabel, } from "@hjmds/design-contracts/components/image";
 import { resolveTimelineDescriptor, timelineRecipe, } from "@hjmds/design-contracts/components/timeline";
 import { surfaceDefaults, surfaceGeometry } from "@hjmds/design-contracts/recipes/base";
+import { avatarRecipe, resolveAvatarInitialsTextVariant } from "@hjmds/design-contracts/recipes";
 import { accordionRecipe, counterBadgeRecipe, badgeRecipe, listRecipe, formatCounterBadgeCount, listRowRecipe, statisticRecipe, } from "@hjmds/design-contracts/recipes";
 import { Children, isValidElement, useEffect, useLayoutEffect, useMemo, useRef, useState, } from "react";
 import { Image as NativeImage, LayoutAnimation, Pressable, StyleSheet, View, useWindowDimensions, } from "react-native";
@@ -119,7 +120,7 @@ export function Card({ children, title, description, leading, media, actions, se
 }
 export function ListRow({ title, tone = listRowRecipe.defaults.tone, description, leading, trailing, titleMetadata, trailingAction, trailingText, metadataLabel, trailingLabel, onPress, accessibilityLabel, accessibilityHint, disabled = false, density = listRowRecipe.defaults.density, loading = false, loadingLabel, selected: selectedProp, leadingShape = "square", layoutStyle, leadingStyle, contentStyle, titleRowStyle, trailingStyle, trailingActionStyle, containerProps, accessibilityState, ...forwarded }) {
     assertNoRemovedStyleProps("ListRow", forwarded, ["titleStyle", "descriptionStyle"]);
-    const { hjmTitleEmphasis, ...props } = forwarded;
+    const { hjmTitleEmphasis, hjmMeta, ...props } = forwarded;
     const theme = useHjmNativeTheme();
     const metrics = listRowRecipe.density[density];
     const interactive = onPress !== undefined;
@@ -137,7 +138,7 @@ export function ListRow({ title, tone = listRowRecipe.defaults.tone, description
             ? resolveColorReference(listRowRecipe.states.selectedBackground, theme.palette)
             : "transparent",
         direction: theme.environment.direction,
-        minHeight: description ? metrics.twoLineMinHeight : metrics.oneLineMinHeight,
+        minHeight: description || hjmMeta ? metrics.twoLineMinHeight : metrics.oneLineMinHeight,
         opacity: disabled ? listRowRecipe.states.disabledOpacity : 1,
     };
     // `leadingSize` was declared by the recipe but unbound, so consumers rebuilt
@@ -178,7 +179,7 @@ export function ListRow({ title, tone = listRowRecipe.defaults.tone, description
                                     },
                                 ], variant: listRowRecipe.title.textVariant, children: title }), resolvedMetadata === undefined ? null : (_jsx(View, { accessible: interactive ? false : undefined, importantForAccessibility: interactive ? "no-hide-descendants" : "auto", children: resolvedMetadata }))] }), description ? (_jsx(Text, { style: [
                             { color: resolveColorReference(listRowRecipe.description.color, theme.palette) },
-                        ], variant: listRowRecipe.description.textVariant, children: description })) : null] }), trailingText || trailing ? (_jsx(View, { accessible: interactive ? false : undefined, importantForAccessibility: interactive ? "no-hide-descendants" : "auto", style: [{ flexShrink: 0 }, trailingStyle], children: trailingText ? (_jsx(Text, { style: { color: resolveColorReference(listRowRecipe.trailing.textColor, theme.palette) }, variant: listRowRecipe.trailing.textVariant, children: trailingText })) : trailing })) : null] }));
+                        ], variant: listRowRecipe.description.textVariant, children: description })) : null, hjmMeta ? _jsx(Text, { variant: "caption", tone: "muted", children: hjmMeta }) : null] }), trailingText || trailing ? (_jsx(View, { accessible: interactive ? false : undefined, importantForAccessibility: interactive ? "no-hide-descendants" : "auto", style: [{ flexShrink: 0 }, trailingStyle], children: trailingText ? (_jsx(Text, { style: { color: resolveColorReference(listRowRecipe.trailing.textColor, theme.palette) }, variant: listRowRecipe.trailing.textVariant, children: trailingText })) : trailing })) : null] }));
     const contentStyleFor = (pressed) => [
         minimumTargetStyle,
         {
@@ -230,7 +231,10 @@ export function ListRow({ title, tone = listRowRecipe.defaults.tone, description
 export function Avatar({ source, renderImage, name, initials, renderFallback, size = 44, decorative = false, accessibilityLabel, layoutStyle, }) {
     if (!Number.isFinite(size) || size < 24)
         throw new RangeError("Avatar size must be at least 24");
-    const { colors } = useHjmNativeTheme();
+    const { palette } = useHjmNativeTheme();
+    // Same colors and initials step as Web (avatarRecipe); Native previously used brand 12pt initials.
+    const initialsColor = resolveColorReference(avatarRecipe.content, palette);
+    const initialsVariant = resolveAvatarInitialsTextVariant(size);
     const sourceKey = source === undefined ? "none" : resolveImageSourceKey(source);
     const [failedSource, setFailedSource] = useState(null);
     // URI equality alone cannot reject an old A callback after A→B→A. A source
@@ -253,8 +257,8 @@ export function Avatar({ source, renderImage, name, initials, renderFallback, si
     return (_jsx(View, { ...mediaAccessibility, style: [
             {
                 alignItems: "center",
-                backgroundColor: colors.bg,
-                borderColor: colors.borderControl,
+                backgroundColor: resolveColorReference(avatarRecipe.background, palette),
+                borderColor: resolveColorReference(avatarRecipe.border, palette),
                 borderWidth: 1,
                 borderRadius: radius.full,
                 height: size,
@@ -264,7 +268,7 @@ export function Avatar({ source, renderImage, name, initials, renderFallback, si
             },
             layoutStyle,
         ], children: source !== undefined && !failed ? (renderImage ? (_jsx(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { height: size, width: size }, children: renderImage({ source, size, onError: failImage,
-                fallback: renderFallback?.({ size, decorative: true }) ?? _jsx(Text, { align: "center", style: { color: colors.contentBrand }, variant: "label", children: fallback }) }) })) : (_jsx(NativeImage, { accessible: false, onError: failImage, source: source, style: [{ height: size, width: size }] }))) : (_jsx(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", children: renderFallback?.({ size, decorative: true }) ?? _jsx(Text, { align: "center", style: { color: colors.contentBrand }, variant: "label", children: fallback }) })) }));
+                fallback: renderFallback?.({ size, decorative: true }) ?? _jsx(Text, { align: "center", style: { color: initialsColor }, variant: initialsVariant, emphasis: avatarRecipe.initialsWeight, children: fallback }) }) })) : (_jsx(NativeImage, { accessible: false, onError: failImage, source: source, style: [{ height: size, width: size }] }))) : (_jsx(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", children: renderFallback?.({ size, decorative: true }) ?? _jsx(Text, { align: "center", style: { color: initialsColor }, variant: initialsVariant, emphasis: avatarRecipe.initialsWeight, children: fallback }) })) }));
 }
 export function Divider({ orientation = "horizontal", inset = 0, layoutStyle }) {
     if (!Number.isFinite(inset) || inset < 0)

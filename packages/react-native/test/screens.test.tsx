@@ -46,7 +46,8 @@ describe("native screen composition", () => {
     const read = vi.fn();
     const tree = render(<NotificationInboxScreen title="알림" filters={<Text>모두</Text>}><NotificationItem title="답글" read={false} statusLabel="읽지 않음" timestamp="방금" onPress={read} /></NotificationInboxScreen>);
     expect(read).not.toHaveBeenCalled();
-    expect(tree.root.findByType(ListRow).props.description).toContain("읽지 않음 · 방금");
+    // Status·time renders as its own muted caption line (Web parity), not inside the description.
+    expect(tree.root.findAllByType(Text).some(node => node.props.children === "읽지 않음 · 방금" && node.props.variant === "caption")).toBe(true);
     act(() => tree.root.findByType(ListRow).props.onPress());
     expect(read).toHaveBeenCalledTimes(1);
     act(() => tree.update(<HjmNativeProvider><NotificationInboxScreen title="알림" filters={<Text>모두</Text>} state={{ kind: "empty", title: "소식 없음" }}>{null}</NotificationInboxScreen></HjmNativeProvider>));
