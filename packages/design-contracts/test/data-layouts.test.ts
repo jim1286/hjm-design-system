@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { createRequire } from "node:module";
 // jsQR is CommonJS; explicit require keeps NodeNext types and runtime aligned.
 const jsQR = createRequire(import.meta.url)("jsqr") as typeof import("jsqr").default;
-import { resolveMasonryLayout } from "../src/masonry.js";
+import { resolveMasonryColumns, resolveMasonryLayout } from "../src/masonry.js";
 import { resolveVirtualWindow, validateListKeys } from "../src/virtual-list.js";
 import { createQRMatrix } from "../src/qr-code.js";
 
@@ -13,6 +13,8 @@ describe("data layout contracts", () => {
     expect(layout.items.map(({ left, top }) => [left, top])).toEqual([[0,0],[110,0],[110,60],[0,110]]);
     expect(layout.height).toBe(150);
     expect(resolveMasonryLayout([], 100).height).toBe(0);
+    // Default columns follow the slot: two on a phone body (343), more on a desktop slot, never zero or above 12.
+    expect([resolveMasonryColumns(343), resolveMasonryColumns(1168), resolveMasonryColumns(80), resolveMasonryColumns(5000)]).toEqual([2, 6, 1, 12]);
     expect(() => resolveMasonryLayout([Number.NaN], 100)).toThrow();
     expect(() => resolveMasonryLayout([30], 10, 2, 20)).toThrow();
   });

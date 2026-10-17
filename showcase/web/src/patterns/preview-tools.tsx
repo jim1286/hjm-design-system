@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { MouseEvent, ReactNode } from "react";
 import { Button } from "@hjmds/react/actions";
 import { Stack, Text } from "@hjmds/react/layout";
 import { Chip } from "@hjmds/react/selection";
@@ -8,8 +8,9 @@ import { Chip } from "@hjmds/react/selection";
 export function PreviewTools({ children }: { children: ReactNode }) {
   return <Stack gap="xs" role="group" aria-label="미리보기 도구"><Text tone="muted" variant="caption">미리보기 도구</Text><Stack axis="inline" gap="sm" wrap>{children}</Stack></Stack>;
 }
-/** A one-shot action renders as a small ghost button; an on/off tool (`selected`) is a selection chip, not a pressed button. */
-export function PreviewToolButton({ children, onClick, selected, disabled = false }: { children: string; onClick(): void; selected?: boolean; disabled?: boolean }) {
+/** A one-shot action renders as a small ghost button; an on/off tool (`selected`) is a selection chip, not a pressed button.
+ * Keep a toggle's label fixed: the chip's checked state already says on/off, and a label that flips renames the control mid-use. */
+export function PreviewToolButton({ children, onClick, selected, disabled = false }: { children: string; onClick(event?: MouseEvent<HTMLButtonElement>): void; selected?: boolean; disabled?: boolean }) {
   if (selected !== undefined) return <Chip size="small" label={children} selectionMode="multiple" selected={selected} disabled={disabled} onSelectedChange={() => onClick()} />;
-  return <Button size="small" tone="ghost" disabled={disabled} onClick={onClick}>{children}</Button>;
+  return <Button size="small" tone="ghost" disabled={disabled} onClick={event => onClick(event)}>{children}</Button>;
 }

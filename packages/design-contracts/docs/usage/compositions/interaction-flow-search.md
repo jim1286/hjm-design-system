@@ -31,8 +31,8 @@
 | `Button` 검색 / `Button` 다시 검색(secondary) | 검색 실행(primary 하나), 실패했을 때만 보이는 재시도 | [Button](../components/button.md) |
 | `Text` | 진행·결과·실패 문구 | [Text](../components/text.md) |
 
-스토리의 "느린 응답으로 검색"(900ms)·"빠른 응답으로 검색"(150ms) 두 버튼은 역순 응답을 재현하는 데모다. 제품은 검색 버튼 하나(또는 입력 중 검색)로 둔다.
-`다음 검색 실패시키기`는 실패 경로를 여는 데모 도구다. 스토리는 기본·어두운 테마, `검색 중`, `실패와 다시 검색`, 제품 팔레트 두 가지(`보라 테마`, `초록 테마 · 어둡게`)다.
+스토리는 검색 버튼 하나(기본 150ms)를 두고, 역순 응답은 미리보기 도구 `다음 검색 느리게`(900ms)로 재현한다. 제품은 검색 버튼 하나(또는 입력 중 검색)로 둔다.
+`다음 검색 실패시키기`도 실패 경로를 여는 미리보기 도구다. 스토리는 기본·어두운 테마, `검색 중`, `실패와 다시 검색`, 제품 팔레트 두 가지(`보라 테마`, `초록 테마 · 어둡게`)다.
 2026-10-06 같은 SearchField 진행 상태와 팔레트를 보이던 `입력과 작성/검색 입력`을 이 항목으로 합쳤다([옛 링크](../../../../../docs/STORYBOOK_NAVIGATION.md#실험-정리와-합친-항목-2026-10-06)).
 검색 입력 칸·결과 목록이 필요한 화면이면 [SearchField](../components/search-field.md)·[List](../components/list.md)에 같은 세대 규칙을 연결한다.
 
@@ -42,7 +42,7 @@
 ┌ 화면 ────────────────────────────────┐
 │ Native ScrollView 위아래 16          │
 │ (keyboardShouldPersistTaps=handled)  │
-│ └ Container gutter 16/20             │
+│ └ Container reading, gutter 16/20    │
 │   Heading 제목                       │
 │          ↕ spacing.md 16             │
 │   검색어                             │
@@ -57,7 +57,7 @@
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
-| 바깥 틀 | Native: `ScrollView keyboardShouldPersistTaps="handled"` → `Container` → `Stack gap="xl"`. Web: `Container` → `Stack gap="xl"` | 화면 본문. 안전 영역은 화면 셸이 준다. 키보드가 열린 채 검색 버튼을 누를 수 있게 Native 스크롤은 탭을 통과시킨다. 입력이 화면 아래쪽에 있으면 [KeyboardFormScrollView](../components/keyboard-form-scroll-view.md)를 쓴다 | Native `ScrollView` 위아래 `spacing.md` 16, 좌우 `Container` `gutter`(폭 600 미만 `compact` 16, 이상 `regular` 20). 구획 사이 `layout.sectionGap` 24 |
+| 바깥 틀 | Native: `ScrollView keyboardShouldPersistTaps="handled"` → `Container size="reading"` → `Stack gap="xl"`. Web: `Container size="reading"` → `Stack gap="xl"` | 화면 본문. 안전 영역은 화면 셸이 준다. 키보드가 열린 채 검색 버튼을 누를 수 있게 Native 스크롤은 탭을 통과시킨다. 입력이 화면 아래쪽에 있으면 [KeyboardFormScrollView](../components/keyboard-form-scroll-view.md)를 쓴다 | Native `ScrollView` 위아래 `spacing.md` 16, 좌우 `Container` `gutter`(폭 600 미만 `compact` 16, 이상 `regular` 20). 구획 사이 `layout.sectionGap` 24 |
 | 제목 | `Heading level="level3"` | 묶음 맨 위 | 24/32(`heading.level3`) |
 | 입력 | `SearchField` | 제목 아래 | 높이 `control.fieldHeight` 44, `layout.contentGap` 16 |
 | 주 행동 | `Button` 검색 | 입력 아래 | `medium` 44(`control.buttonHeight`), `spacing.md` 16 |
@@ -109,7 +109,7 @@ const search = () => {
 const message = state.status === "pending" || state.status === "error" ? t(searchStatusKey[state.status])
   : state.value ? renderResult(state.value) : t(searchStatusKey.idle);
 
-<Container gutter={gutter}>
+<Container size="reading" gutter={gutter}>
   <Stack gap="xl">
     <Stack gap="md">
       <Heading level="level3" semanticLevel={2}>{t("search.title")}</Heading>
@@ -138,7 +138,7 @@ const { spacing } = useHjmNativeTheme().tokens;
 const gutter = resolveWindowClass(useWindowDimensions().width) === "compact" ? "compact" : "regular";
 
 <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingVertical: spacing.md }}>
-  <Container gutter={gutter}>
+  <Container size="reading" gutter={gutter}>
     <Stack gap="xl">
       <Stack gap="md">
         <Heading level="level3" semanticLevel={2}>{t("search.title")}</Heading>
@@ -162,7 +162,7 @@ const gutter = resolveWindowClass(useWindowDimensions().width) === "compact" ? "
 | --- | --- | --- |
 | 입력 이벤트 | `onValueChange`(문자열 값). DOM 이벤트가 필요할 때만 `onChange`(둘 다 호출된다) | `onValueChange` |
 | 상태 알림 | `role="status"` | live region(Android) + iOS 알림 호출 |
-| 바깥 틀 | `Container` | `ScrollView`(세로 여백, `keyboardShouldPersistTaps="handled"`) 안 `Container` |
+| 바깥 틀 | `Container size="reading"` | `ScrollView`(세로 여백, `keyboardShouldPersistTaps="handled"`) 안 `Container size="reading"` |
 | 검색 중 표시 | SearchField `loading` | SearchField `busy` + `busyLabel`(필수) |
 
 ## 함정
@@ -174,3 +174,7 @@ const gutter = resolveWindowClass(useWindowDimensions().width) === "compact" ? "
 - 실패와 결과 없음은 다른 상태다. 실패는 `다시 검색`(`session.retry()`), 결과 없음은 검색어를 바꾸는 경로를 준다.
 
 2026-10-13 실패 예약은 다음 요청이 **시작할 때** 그 요청에 귀속한다. 이미 진행 중인 응답이 이후에 켠 예약을 소비하지 않으며, 오래된 실패도 최신 성공을 덮지 않는다. 재시도는 기존 계약대로 실패한 제출 검색어를 다시 요청하고 작성 중인 검색어는 보존한다. 재시도 버튼이 사라질 때 입력 ref로 초점을 돌린다. unmount에서는 로컬 데모 지연 타이머를 정리하고 분리된 작업을 종료하지만 실제 네트워크 취소를 구현한 것은 아니다.
+
+## 근거
+
+- 2026-10-17 구성 리뷰: 데모 지연 버튼 두 개("느린/빠른 응답으로 검색")가 secondary 제품 행동처럼 보였고 primary 검색이 없었으며, 데스크톱에서 입력과 버튼이 1280 폭 전체로 늘어났다. 그래서 primary 검색 하나와 미리보기 도구 토글로 바꾸고 읽기 폭 Container를 적용했다.

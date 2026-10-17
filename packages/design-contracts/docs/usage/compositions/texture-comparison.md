@@ -24,6 +24,7 @@
 | --- | --- | --- |
 | EffectSurface | 질감·테마·장식 수명주기 | [배경 효과](../components/effect-surface.md) |
 | SegmentedControl | 두 영역의 강도를 함께 선택 | [단일 선택](../components/segmented-control.md) |
+| Heading | 각 비교 영역 제목 | [제목](../components/heading.md) |
 | TextField·Button·Text | 읽기·입력·행동·결과 확인 | [입력](../components/field.md) |
 
 noise는 생성된64×64 PNG alpha mask이며 자체 런타임 픽셀 생성·외부 요청이 없다.
@@ -41,11 +42,10 @@ seed는 고정 타일의 위상만 이동한다. 새 타일 픽셀을 생성하�
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
-| 바깥 틀 | Stack | 화면 본문 세로 | gap lg20 |
-| 비교 영역 | EffectSurface | grain 다음 noise | 내부 padding spacing.lg20, Stack gap md16 |
+| 바깥 틀 | Web `Container size="reading"` → Stack, Native KeyboardAvoiding → ScrollView → `Container gutter="compact"` → Stack | 본문 세로 흐름. 화면 머리(ScreenLayout 제목)는 두지 않는다 | gap lg20, Native ScrollView 위아래 spacing.lg20 |
+| 비교 영역 | EffectSurface `padding="lg"` | grain 다음 noise | 내부 여백 20, Stack gap md16, 제목 `Heading level="level5"` |
 | 질감 | SVG mask | absolute 배경 | viewBox 밖64×64 CSS pixel/Native logical point 타일 반복 |
 | 본문 | TextField·Button | 장식 앞 일반 레이아웃 | 기존 recipe |
-| Native 화면 | ScreenLayout·KeyboardAvoiding | 본문 스크롤과 바깥 키보드 여백 | 긴 내용·큰 글자 접근용 |
 
 ## 흐름과 상태
 
@@ -63,13 +63,13 @@ seed는 고정 타일의 위상만 이동한다. 새 타일 픽셀을 생성하�
 ```tsx
 // Web
 import { EffectSurface } from "@hjmds/react/effect-surface";
-<EffectSurface descriptor={{ layers: ["noise"], active: false }}><Content /></EffectSurface>
+<EffectSurface descriptor={{ layers: ["noise"], active: false }} padding="lg"><Content /></EffectSurface>
 ```
 
 ```tsx
 // Native
 import { EffectSurface } from "@hjmds/react-native/effect-surface";
-<EffectSurface descriptor={{ layers: ["noise"], active: false }}><Content /></EffectSurface>
+<EffectSurface descriptor={{ layers: ["noise"], active: false }} padding="lg"><Content /></EffectSurface>
 ```
 
 ## 플랫폼 차이

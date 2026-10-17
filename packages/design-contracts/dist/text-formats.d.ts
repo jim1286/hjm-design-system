@@ -11,7 +11,7 @@ export type TextFormatKind = "kbd" | "code" | "quote";
 export declare const textFormatRecipe: {
     readonly slots: readonly ["root"];
     readonly kbd: {
-        readonly fontFamily: readonly ["ui-monospace", "SFMono-Regular", "Consolas", "Liberation Mono", "monospace"];
+        readonly fontFamily: readonly ["ui-monospace", "SFMono-Regular", "SF Mono", "Menlo", "Monaco", "Cascadia Mono", "Consolas", "Liberation Mono", "monospace"];
         readonly textVariant: "label";
         readonly paddingHorizontal: 4;
         readonly radius: 8;
@@ -32,7 +32,7 @@ export declare const textFormatRecipe: {
         }>;
     };
     readonly code: {
-        readonly fontFamily: readonly ["ui-monospace", "SFMono-Regular", "Consolas", "Liberation Mono", "monospace"];
+        readonly fontFamily: readonly ["ui-monospace", "SFMono-Regular", "SF Mono", "Menlo", "Monaco", "Cascadia Mono", "Consolas", "Liberation Mono", "monospace"];
         readonly textVariant: "body";
         readonly paddingHorizontal: 4;
         readonly radius: 8;

@@ -5,6 +5,7 @@ import {
 } from "@hjmds/design-contracts/components/collapsible";
 import { forwardRef, useId, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { assignRef, classNames } from "./internal.js";
+import { Icon } from "./supplemental-display.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type CollapsibleProps = CollapsibleOpenState &
@@ -92,5 +93,7 @@ export const Collapsible = forwardRef<HTMLDivElement, CollapsibleProps>(function
 
 /** The decorative open/closed mark; the expanded state itself travels through the trigger's aria-expanded. */
 export function CollapsibleMarker({ open }: Readonly<{ open: boolean }>) {
-  return <span aria-hidden="true" className="hjm-collapsible__marker" data-state={open ? "open" : "closed"}>{open ? "▾" : "▸"}</span>;
+  // The shared chevron at glyph.sm: the text "▸" rendered about 8px and read as static text (2026-10-17 review).
+  // `chevronEnd` is a logical icon, so Icon mirrors it in RTL.
+  return <span aria-hidden="true" className="hjm-collapsible__marker" data-state={open ? "open" : "closed"}><Icon name={open ? "chevronDown" : "chevronEnd"} size="sm" tone="secondary" decorative /></span>;
 }

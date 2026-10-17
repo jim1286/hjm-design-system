@@ -46,7 +46,7 @@
 │ │ 제목 Heading level3 (선택)           │ │
 │ │          ↕ spacing.md 16             │ │
 │ │ [ 북마크 추가 / 해제 (selected) ]    │ │ ← 토글, 높이 44
-│ │          ↕ spacing.md 16             │ │
+│ │          ↕ spacing.xs 8 (행동 묶음)  │ │
 │ │ [ 북마크 다시 반영 (secondary) ]     │ │ ← error일 때만
 │ │          ↕ spacing.md 16             │ │
 │ │ 상태 문구 (role=status)              │ │
@@ -56,10 +56,10 @@
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
-| 바깥 틀 | Web 문서 스크롤 > `Container`. Native `ScrollView` > `Container` | 이 구성을 감싸는 제품 화면(대상 콘텐츠 상세 등). 상단 안전 영역은 내비게이션 헤더(또는 [TopBar](../components/top-bar.md))가 맡는다 | 좌우 `Container gutter`: 폭 600 미만 `compact` 16, 이상 `regular` 20([화면 여백](../tokens/layout.md)). Native 위아래는 `contentContainerStyle` `paddingVertical: spacing.lg` 20 |
+| 바깥 틀 | Web 문서 스크롤 > `Container size="reading"`. Native `ScrollView` > `Container size="reading"` | 이 구성을 감싸는 제품 화면(대상 콘텐츠 상세 등). 넓은 화면에서도 버튼이 읽기 폭을 넘지 않는다. 상단 안전 영역은 내비게이션 헤더(또는 [TopBar](../components/top-bar.md))가 맡는다 | 좌우 `Container gutter`: 폭 600 미만 `compact` 16, 이상 `regular` 20([화면 여백](../tokens/layout.md)). Native 위아래는 `contentContainerStyle` `paddingVertical: spacing.lg` 20 |
 | 제목(선택) | `Heading level="level3"` | Stack 맨 위 | 아래 `spacing.md` 16 |
-| 토글 | `Button selected` | 대상 콘텐츠 아래, 스크롤 | `medium` 44(`control.buttonHeight`), 이웃 `spacing.md` 16. Stack 기본 `align="stretch"`로 꽉 찬 폭 |
-| 재시도 | `Button tone="secondary"` | 토글 아래, error일 때만 | `medium` 44, `spacing.md` 16. 라벨은 무엇을 다시 하는지 적는다(`t("bookmark.retry")`) |
+| 토글 | `Button selected` | 대상 콘텐츠 아래, 스크롤 | `medium` 44(`control.buttonHeight`), 위 블록과 `spacing.md` 16. 재시도와 함께 `Stack gap="xs"` 행동 묶음에 둔다. Stack 기본 `align="stretch"`로 꽉 찬 폭 |
+| 재시도 | `Button tone="secondary"` | 토글 아래, error일 때만 | `medium` 44, 토글과 `spacing.xs` 8(`actionGroupRecipe`). 라벨은 무엇을 다시 하는지 적는다(`t("bookmark.retry")`) |
 | 상태 | `Text` | 행동 아래 | `spacing.md` 16 |
 
 - 토글이 목록 행 끝에 들어가면 Button 지침대로 `size="small"`(36, `control.buttonHitSlop.small` 4로 터치 44)과 `secondary`·`ghost`를 쓴다.
@@ -116,12 +116,14 @@ function BookmarkToggle({ initial, setBookmark }: { initial: boolean; setBookmar
   };
   const gutter = resolveWindowClass(window.innerWidth) === "compact" ? "compact" : "regular";
   return (
-    <Container gutter={gutter}>
+    <Container size="reading" gutter={gutter}>
       <Stack gap="md">
-        <Button selected={state.value} disabled={state.status === "pending"} onClick={toggle}>
-          {state.value ? t("bookmark.remove") : t("bookmark.add")}
-        </Button>
-        {state.status === "error" && <Button tone="secondary" onClick={() => void session.retry()}>{t("bookmark.retry")}</Button>}
+        <Stack gap="xs">
+          <Button selected={state.value} disabled={state.status === "pending"} onClick={toggle}>
+            {state.value ? t("bookmark.remove") : t("bookmark.add")}
+          </Button>
+          {state.status === "error" && <Button tone="secondary" onClick={() => void session.retry()}>{t("bookmark.retry")}</Button>}
+        </Stack>
         <Text as="p" role="status">{t(bookmarkStatusKey[state.status])}</Text>
       </Stack>
     </Container>
@@ -152,12 +154,14 @@ function BookmarkToggle({ initial, setBookmark }: { initial: boolean; setBookmar
   };
   return (
     <ScrollView contentContainerStyle={{ paddingVertical: spacing.lg }}>
-      <Container gutter={resolveWindowClass(width) === "compact" ? "compact" : "regular"}>
+      <Container size="reading" gutter={resolveWindowClass(width) === "compact" ? "compact" : "regular"}>
         <Stack gap="md">
-          <Button selected={state.value} disabled={state.status === "pending"} onPress={toggle}>
-            {state.value ? t("bookmark.remove") : t("bookmark.add")}
-          </Button>
-          {state.status === "error" && <Button tone="secondary" onPress={() => void session.retry()}>{t("bookmark.retry")}</Button>}
+          <Stack gap="xs">
+            <Button selected={state.value} disabled={state.status === "pending"} onPress={toggle}>
+              {state.value ? t("bookmark.remove") : t("bookmark.add")}
+            </Button>
+            {state.status === "error" && <Button tone="secondary" onPress={() => void session.retry()}>{t("bookmark.retry")}</Button>}
+          </Stack>
           <StatusText>{t(bookmarkStatusKey[state.status])}</StatusText>
         </Stack>
       </Container>

@@ -2,10 +2,10 @@
 
 - 단계: 구성
 - 상태: 배포
-- 지원: Web
+- 지원: Web · Native
 - 적용: 1.12.1
 - 검토일: 2026-10-15
-- 근거: [Toast](../../toast.md), `showcase/web/src/components/ToastLayout.stories.tsx`, `src/component-recipes.ts`(`toastRecipe`), `src/toast.ts`, `packages/react/src/styles.css`(`.hjm-toast-viewport`, `.hjm-toast`), `packages/react/src/toast.tsx`
+- 근거: [Toast](../../toast.md), `showcase/web/src/components/ToastLayout.stories.tsx`, `showcase/native/src/ToastLayout.stories.tsx`, `showcase/shared/toast-layout.ts`, `src/component-recipes.ts`(`toastRecipe`), `src/toast.ts`, `packages/react/src/styles.css`(`.hjm-toast-viewport`, `.hjm-toast`), `packages/react/src/toast.tsx`
 - 스토리북: `배포/구성/비교와 검증/토스트 배치 비교`
 
 공통 구조·배치·상태·배지의 소유권은 [화면과 구성 선택](../SELECTION.md#소유권)을 따른다. 앱은 데이터·문구·브랜드·추가 기능을 공개 슬롯과 콜백으로 연결한다. 아래 코드 골격을 앱별 기본 구조 복제의 근거로 사용하지 않는다. 전용 구성 API가 없는 콘텐츠 묶음은 [CompositionLayout](../components/composition-layout.md)의 제목·배지·행동·본문·상태·footer 슬롯을 사용한다.
@@ -51,7 +51,7 @@ Toast 카드 한 장의 내부 배치(톤 배지·제목·설명·닫기·실행
 | --- | --- | --- | --- |
 | 바깥 틀 | `ToastProvider` viewport(앱 루트 하나) | 화면 콘텐츠·스크롤 위에 `position: fixed`로 떠 있다. 콘텐츠 스크롤과 무관하고 콘텐츠 여백을 바꾸지 않는다. 안전 영역은 viewport가 `env(safe-area-inset-*)`로 직접 피한다. 하단 고정 바는 `bottomOffset`으로 피한다. 모바일 Web 화면 키보드는 따로 피하지 않는다 | 가장자리 `max(spacing.md 16, safe-area)`, `layer.toast` 1000, viewport는 포인터를 통과시킨다(`pointer-events: none`, 카드만 받음) |
 | viewport | `ToastProvider` | 화면 고정(`position: fixed`), 기본 하단 가운데. `top`·`top-start`·`top-end`·`bottom-start`·`bottom-end` 선택 | 가장자리 `max(spacing.md 16, safe-area)`, 최대 폭 `min(420, 100vw - 32)`, 카드 사이 `spacing.sm` 12. 하단이면 새 카드가 아래부터 쌓인다 |
-| 카드 | `Toast` | viewport 안 | 최소 높이 3.5rem, padding 위아래 `spacing.sm` 12·시작 `spacing.md` 16·끝 `spacing.xs` 8, 열 간격 `spacing.sm` 12, radius `lg` 16 |
+| 카드 | `Toast` | viewport 안. 단독 controlled 사용에서도 카드가 최대 폭 `min(420, 100%)`(Native `toastRecipe.surface.maxWidth` 420)을 지킨다 | 최소 높이 3.5rem, padding 위아래 `spacing.sm` 12·시작 `spacing.md` 16·끝 `spacing.xs` 8, 열 간격 `spacing.sm` 12, radius `lg` 16 |
 | 배지 | tone 아이콘 | 첫 줄 시작 | 지름 `toastRecipe.icon.badgeDiameter` 32 |
 | 문구 | 제목 + 설명 | 첫 줄 가운데, 남은 폭 전부 | 제목–설명 `spacing.xxs` 4, `word-break: keep-all`, 잘림 없음 |
 | 닫기 | IconButton | 첫 줄 끝 | `control.minTouchTarget` 44 × 44 |
@@ -128,3 +128,7 @@ toast.publish({
 - 카드 색·배지·radius를 `className`으로 덮지 않는다. 톤 색은 `toastRecipe.tones`가 정한다.
 - 화면마다 Provider를 새로 만들지 않는다. 같은 진행을 갱신할 때는 같은 `id`로 다시 `publish`한다.
 - 현재 스토리는 `Toast` 카드만 직접 그리고 viewport(`ToastProvider`)를 띄우지 않는다. 화면 위 위치·안전 영역·`bottomOffset`은 스토리로 확인되지 않고 위 표의 값은 `.hjm-toast-viewport` CSS에서 확인했다.
+
+## 근거
+
+- 2026-10-17 구성 리뷰: 최대 폭이 viewport에만 있어 단독 Toast가 데스크톱에서 1200px로 늘어났고, Native stable인데 배치 비교가 Web에만 있었다. 그래서 카드가 폭을 소유하게 하고 같은 descriptor로 Native 스토리를 추가했다.

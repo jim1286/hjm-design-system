@@ -3,7 +3,11 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AccessibilityInfo, Platform, View } from "react-native";
 import { useCompositionAction } from "./internal/use-composition-action.js";
 import { assertDistinctIds, changeColumnSettings, collectionEditingRecipe, focusAfterRemoval, recoverableFilters, snapshotSelection } from "@hjmds/design-contracts/collection-editing";
-import { Button } from "./actions.js";
+import { Button, IconButton } from "./actions.js";
+import { glyph } from "@hjmds/design-contracts/foundations";
+import { resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
+import { DrawnChevron, DrawnPencil, DrawnTrash } from "./internal/drawn-glyphs.js";
+import { useHjmNativeTheme } from "./provider.js";
 import { TextField, Checkbox } from "./inputs.js";
 import { Stack, Text } from "./primitives.js";
 import { FieldGroup } from "./field-group.js";
@@ -20,6 +24,8 @@ function InlineEditBody(props) {
     const [editing, setEditing] = useState(false), [draft, setDraft] = useState(props.value);
     const action = useCompositionAction(props.disabled);
     const input = useRef(null), trigger = useRef(null), restore = useRef(false);
+    const { palette } = useHjmNativeTheme();
+    const toolColor = (disabled) => resolveIconButtonPresentation("ghost", palette, disabled).content;
     useLayoutEffect(() => {
         if (editing)
             input.current?.focus();
@@ -38,11 +44,12 @@ function InlineEditBody(props) {
         if (result.status === "success")
             close(input.current?.isFocused() ?? false);
     };
-    return _jsx(View, { accessible: false, children: !editing ? _jsxs(Stack, { axis: "inline", gap: "sm", align: "center", wrap: true, children: [_jsx(Text, { children: props.value }), _jsx(Button, { ref: trigger, disabled: props.disabled ?? false, tone: "ghost", onPress: () => { setDraft(props.value); action.session.reset(null); setEditing(true); }, children: props.editLabel })] })
+    return _jsx(View, { accessible: false, children: !editing ? _jsxs(Stack, { axis: "inline", gap: "sm", align: "center", children: [_jsxs(Stack, { gap: "xxs", layoutStyle: { flex: 1, minWidth: 0 }, children: [_jsx(Text, { variant: "caption", tone: "muted", children: props.label }), _jsx(Text, { emphasis: "strong", children: props.value })] }), _jsx(IconButton, { ref: trigger, label: props.editLabel, tone: "ghost", disabled: props.disabled ?? false, onPress: () => { setDraft(props.value); action.session.reset(null); setEditing(true); }, children: _jsx(DrawnPencil, { size: glyph.sm, color: toolColor(props.disabled === true) }) })] })
             : _jsxs(Stack, { gap: collectionEditingRecipe.actionGap, children: [_jsx(TextField, { ref: input, label: props.label, value: draft, disabled: props.disabled === true || action.pending, ...(error ? { error, invalid: true } : {}), onValueChange: setDraft, onSubmitEditing: () => void save() }), _jsxs(Stack, { axis: "inline", gap: "sm", wrap: true, children: [_jsx(Button, { tone: "ghost", disabled: action.pending, onPress: () => close(), children: props.cancelLabel }), _jsx(Button, { loading: action.pending, disabled: props.disabled === true || !!error, onPress: () => void save(), children: props.saveLabel })] }), action.failed ? _jsx(ErrorMessage, { children: props.errorLabel }) : null] }) });
 }
 export function RepeatableFieldGroup({ renderField, addLabel, removeLabel, minFields = 0, maxFields = Infinity, onAdd, onRemove, ...props }) {
     const targets = useRef(new Map()), add = useRef(null);
+    const { palette } = useHjmNativeTheme();
     const focus = useRef(undefined);
     useLayoutEffect(() => {
         if (focus.current === undefined)
@@ -60,16 +67,16 @@ export function RepeatableFieldGroup({ renderField, addLabel, removeLabel, minFi
     const live = useRef(true), policy = useRef({ fields, minFields, maxFields, onAdd, onRemove, disabled: props.descriptor.disabled });
     policy.current = { fields, minFields, maxFields, onAdd, onRemove, disabled: props.descriptor.disabled };
     useEffect(() => { live.current = true; return () => { live.current = false; }; }, []);
-    return _jsxs(Stack, { gap: collectionEditingRecipe.gap, children: [_jsx(FieldGroup, { ...props, renderField: binding => _jsxs(Stack, { gap: "sm", children: [renderField({ ...binding, focusRef: target => { if (target)
-                                targets.current.set(binding.id, target);
-                            else
-                                targets.current.delete(binding.id); } }), _jsx(Button, { tone: "ghost", disabled: binding.controlProps.disabled || fields.length <= minFields, onPress: binding.guardChange(() => {
+    return _jsxs(Stack, { gap: collectionEditingRecipe.gap, children: [_jsx(FieldGroup, { ...props, renderField: binding => _jsxs(Stack, { axis: "inline", gap: "xs", align: "end", children: [_jsx(View, { style: { flex: 1, minWidth: 0 }, children: renderField({ ...binding, focusRef: target => { if (target)
+                                    targets.current.set(binding.id, target);
+                                else
+                                    targets.current.delete(binding.id); } }) }), _jsx(IconButton, { label: removeLabel(binding.id), tone: "ghost", disabled: binding.controlProps.disabled || fields.length <= minFields, onPress: binding.guardChange(() => {
                                 const current = policy.current;
                                 if (!live.current || current.disabled || current.fields.length <= current.minFields)
                                     return;
                                 focus.current = focusAfterRemoval(current.fields.map(field => field.id), binding.id, current.fields.filter(field => field.disabled).map(field => field.id)) ?? null;
                                 current.onRemove(binding.id);
-                            }), children: removeLabel(binding.id) })] }) }), _jsx(Button, { ref: add, tone: "secondary", disabled: props.descriptor.disabled === true || fields.length >= maxFields, onPress: () => {
+                            }), children: _jsx(DrawnTrash, { size: glyph.sm, color: resolveIconButtonPresentation("ghost", palette, binding.controlProps.disabled || fields.length <= minFields).content }) })] }) }), _jsx(Button, { ref: add, tone: "secondary", disabled: props.descriptor.disabled === true || fields.length >= maxFields, onPress: () => {
                     const current = policy.current;
                     if (!live.current || current.disabled || current.fields.length >= current.maxFields)
                         return;
@@ -97,7 +104,8 @@ export function SelectionActionBar(props) {
 }
 export function FilterRecovery(props) {
     const action = useCompositionAction(props.disabled), options = recoverableFilters(props.options);
-    return _jsx(View, { style: { alignItems: "center", justifyContent: "center" }, children: _jsxs(Stack, { gap: "sm", align: "center", children: [_jsx(Text, { emphasis: "strong", align: "center", children: props.title }), props.description ? _jsx(Text, { tone: "muted", align: "center", children: props.description }) : null, options.map(option => _jsx(Button, { tone: "secondary", loading: action.active === option.id, disabled: props.disabled === true || (action.pending && action.active !== option.id), onPress: () => { if (!props.disabled)
+    // Fills the result area its host gives it and centers there; a content-high host keeps it content-high.
+    return _jsx(View, { style: { flexGrow: 1, alignItems: "center", justifyContent: "center" }, children: _jsxs(Stack, { gap: "sm", align: "center", children: [_jsx(Text, { emphasis: "strong", align: "center", children: props.title }), props.description ? _jsx(Text, { tone: "muted", align: "center", children: props.description }) : null, options.map(option => _jsx(Button, { tone: "secondary", loading: action.active === option.id, disabled: props.disabled === true || (action.pending && action.active !== option.id), onPress: () => { if (!props.disabled)
                         void action.run(option.id, () => props.onApply(option.id)); }, children: props.optionLabel(option) }, option.id)), action.failed ? _jsx(ErrorMessage, { children: props.errorLabel }) : null] }) });
 }
 export function TableColumnSettings(props) {
@@ -109,6 +117,8 @@ export function TableColumnSettings(props) {
         if (next !== props.columns)
             props.onColumnsChange(next);
     };
-    return _jsxs(Stack, { gap: "sm", children: [_jsx(Text, { emphasis: "strong", children: props.label }), props.columns.map(column => _jsxs(Stack, { gap: "sm", children: [_jsx(Checkbox, { label: column.label, checked: column.visible, disabled: props.disabled === true || column.locked === true || (column.visible && props.columns.filter(item => item.visible).length === 1), onCheckedChange: () => change(column.id, "toggle") }), _jsxs(Stack, { axis: "inline", gap: "sm", wrap: true, children: [_jsx(Button, { tone: "ghost", disabled: props.disabled === true || changeColumnSettings(props.columns, column.id, "earlier") === props.columns, onPress: () => change(column.id, "earlier"), children: props.earlierLabel(column) }), _jsx(Button, { tone: "ghost", disabled: props.disabled === true || changeColumnSettings(props.columns, column.id, "later") === props.columns, onPress: () => change(column.id, "later"), children: props.laterLabel(column) })] })] }, column.id))] });
+    const chevronColor = resolveIconButtonPresentation("ghost", useHjmNativeTheme().palette, false).content;
+    // One row per column: visibility checkbox, then reorder as icon tools (labels stay the accessible names), as on Web.
+    return _jsxs(Stack, { gap: "sm", children: [_jsx(Text, { emphasis: "strong", children: props.label }), props.columns.map(column => _jsxs(Stack, { axis: "inline", gap: "xs", align: "center", children: [_jsx(Checkbox, { label: column.label, checked: column.visible, layoutStyle: { flex: 1, minWidth: 0 }, disabled: props.disabled === true || column.locked === true || (column.visible && props.columns.filter(item => item.visible).length === 1), onCheckedChange: () => change(column.id, "toggle") }), _jsx(IconButton, { label: props.earlierLabel(column), tone: "ghost", disabled: props.disabled === true || changeColumnSettings(props.columns, column.id, "earlier") === props.columns, onPress: () => change(column.id, "earlier"), children: _jsx(DrawnChevron, { direction: "up", size: glyph.sm, color: chevronColor }) }), _jsx(IconButton, { label: props.laterLabel(column), tone: "ghost", disabled: props.disabled === true || changeColumnSettings(props.columns, column.id, "later") === props.columns, onPress: () => change(column.id, "later"), children: _jsx(DrawnChevron, { direction: "down", size: glyph.sm, color: chevronColor }) })] }, column.id))] });
 }
 //# sourceMappingURL=collection-editing.js.map

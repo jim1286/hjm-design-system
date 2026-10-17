@@ -83,4 +83,4 @@ import { ToggleFeedbackButton } from "@hjmds/react-native/toggle-feedback";
 
 북마크는 같은 API에 `effect="ribbon"`을 준다. 실제 실행 예제는
 Web `showcase/web/src/patterns/toggle-feedback-preview.tsx`, Native `showcase/native/src/toggle-feedback-preview.tsx`다.
-예시 callback은 명시적 fixture이며 제품 서버나 기기 성능 검증이 아니다.
+예시 callback은 명시적 fixture이며 제품 서버나 기기 성능 검증이 아니다. 예제의 "다음 요청 실패시키기"는 구성 아래 "미리보기 도구" 묶음의 예제 전용 도구이며 제품 화면 요소가 아니다.

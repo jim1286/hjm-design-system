@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Container } from "@hjmds/react/layout";
 import { PaperSurfacePreview } from "./paper-surface-preview";
-const meta = { id: "paper-surface", title: "배포/구성/비교와 검증/종이 줄무늬 비교", component: PaperSurfacePreview, parameters: { hjm: { optionalEntry: "design-profile" } } } satisfies Meta<typeof PaperSurfacePreview>;
+const meta = { id: "paper-surface", title: "배포/구성/비교와 검증/종이 줄무늬 비교", component: PaperSurfacePreview, decorators: [(Story) => <Container size="reading"><Story /></Container>], parameters: { hjm: { optionalEntry: "design-profile" } } } satisfies Meta<typeof PaperSurfacePreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

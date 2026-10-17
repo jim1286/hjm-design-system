@@ -2,7 +2,11 @@ import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "re
 import { AccessibilityInfo, Platform, View, type TextInput } from "react-native";
 import { useCompositionAction } from "./internal/use-composition-action.js";
 import { assertDistinctIds, changeColumnSettings, collectionEditingRecipe, focusAfterRemoval, recoverableFilters, snapshotSelection, type ColumnSetting, type FilterRecoveryOption, type FocusTarget, type SelectionAction } from "@hjmds/design-contracts/collection-editing";
-import { Button } from "./actions.js";
+import { Button, IconButton } from "./actions.js";
+import { glyph } from "@hjmds/design-contracts/foundations";
+import { resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
+import { DrawnChevron, DrawnPencil, DrawnTrash } from "./internal/drawn-glyphs.js";
+import { useHjmNativeTheme } from "./provider.js";
 import { TextField, Checkbox } from "./inputs.js";
 import { Stack, Text } from "./primitives.js";
 import { FieldGroup, type FieldGroupBinding, type FieldGroupProps } from "./field-group.js";
@@ -26,6 +30,8 @@ function InlineEditBody(props: InlineEditProps) {
   const [editing, setEditing] = useState(false), [draft, setDraft] = useState(props.value);
   const action = useCompositionAction(props.disabled);
   const input = useRef<TextInput>(null), trigger = useRef<View>(null), restore = useRef(false);
+  const { palette } = useHjmNativeTheme();
+  const toolColor = (disabled: boolean) => resolveIconButtonPresentation("ghost", palette, disabled).content;
   useLayoutEffect(() => {
     if (editing) input.current?.focus();
     else if (restore.current) { restore.current = false; trigger.current?.focus(); }
@@ -39,7 +45,12 @@ function InlineEditBody(props: InlineEditProps) {
     if (result.status === "success") close(input.current?.isFocused() ?? false);
   };
   return <View accessible={false}>
-    {!editing ? <Stack axis="inline" gap="sm" align="center" wrap><Text>{props.value}</Text><Button ref={trigger} disabled={props.disabled ?? false} tone="ghost" onPress={() => { setDraft(props.value); action.session.reset(null); setEditing(true); }}>{props.editLabel}</Button></Stack>
+    {/* Read state names the value with its label and edits through a pencil tool at the row end, as on Web; a bare value
+        beside a text "제목 수정" button lost the label (2026-10-17 review). */}
+    {!editing ? <Stack axis="inline" gap="sm" align="center">
+      <Stack gap="xxs" layoutStyle={{ flex: 1, minWidth: 0 }}><Text variant="caption" tone="muted">{props.label}</Text><Text emphasis="strong">{props.value}</Text></Stack>
+      <IconButton ref={trigger} label={props.editLabel} tone="ghost" disabled={props.disabled ?? false} onPress={() => { setDraft(props.value); action.session.reset(null); setEditing(true); }}><DrawnPencil size={glyph.sm} color={toolColor(props.disabled === true)} /></IconButton>
+    </Stack>
       : <Stack gap={collectionEditingRecipe.actionGap}>
         <TextField ref={input} label={props.label} value={draft} disabled={props.disabled === true || action.pending}
           {...(error ? { error, invalid: true } : {})} onValueChange={setDraft} onSubmitEditing={() => void save()} />
@@ -57,6 +68,7 @@ export type RepeatableFieldGroupProps = Omit<FieldGroupProps, "renderField"> & R
 }>;
 export function RepeatableFieldGroup({ renderField, addLabel, removeLabel, minFields = 0, maxFields = Infinity, onAdd, onRemove, ...props }: RepeatableFieldGroupProps) {
   const targets = useRef(new Map<string, FocusTarget>()), add = useRef<View>(null);
+  const { palette } = useHjmNativeTheme();
   const focus = useRef<string | null | undefined>(undefined);
   useLayoutEffect(() => {
     if (focus.current === undefined) return;
@@ -68,14 +80,16 @@ export function RepeatableFieldGroup({ renderField, addLabel, removeLabel, minFi
   policy.current = { fields, minFields, maxFields, onAdd, onRemove, disabled: props.descriptor.disabled };
   useEffect(() => { live.current = true; return () => { live.current = false; }; }, []);
   return <Stack gap={collectionEditingRecipe.gap}>
-    <FieldGroup {...props} renderField={binding => <Stack gap="sm">
-      {renderField({ ...binding, focusRef: target => { if (target) targets.current.set(binding.id, target); else targets.current.delete(binding.id); } })}
-      <Button tone="ghost" disabled={binding.controlProps.disabled || fields.length <= minFields} onPress={binding.guardChange(() => {
+    {/* Remove is a row tool: a trash IconButton at the field's end whose label names the row (icon-button.md), not a
+        full-width ghost text button under the field (2026-10-17 review). End-aligned so it sits beside the input. */}
+    <FieldGroup {...props} renderField={binding => <Stack axis="inline" gap="xs" align="end">
+      <View style={{ flex: 1, minWidth: 0 }}>{renderField({ ...binding, focusRef: target => { if (target) targets.current.set(binding.id, target); else targets.current.delete(binding.id); } })}</View>
+      <IconButton label={removeLabel(binding.id)} tone="ghost" disabled={binding.controlProps.disabled || fields.length <= minFields} onPress={binding.guardChange(() => {
         const current = policy.current;
         if (!live.current || current.disabled || current.fields.length <= current.minFields) return;
         focus.current = focusAfterRemoval(current.fields.map(field => field.id), binding.id, current.fields.filter(field => field.disabled).map(field => field.id)) ?? null;
         current.onRemove(binding.id);
-      })}>{removeLabel(binding.id)}</Button>
+      })}><DrawnTrash size={glyph.sm} color={resolveIconButtonPresentation("ghost", palette, binding.controlProps.disabled || fields.length <= minFields).content} /></IconButton>
     </Stack>} />
     <Button ref={add} tone="secondary" disabled={props.descriptor.disabled === true || fields.length >= maxFields} onPress={() => {
       const current = policy.current;
@@ -119,7 +133,8 @@ export type FilterRecoveryProps = Readonly<{
 }>;
 export function FilterRecovery(props: FilterRecoveryProps) {
   const action = useCompositionAction(props.disabled), options = recoverableFilters(props.options);
-  return <View style={{ alignItems: "center", justifyContent: "center" }}><Stack gap="sm" align="center">
+  // Fills the result area its host gives it and centers there; a content-high host keeps it content-high.
+  return <View style={{ flexGrow: 1, alignItems: "center", justifyContent: "center" }}><Stack gap="sm" align="center">
     <Text emphasis="strong" align="center">{props.title}</Text>{props.description ? <Text tone="muted" align="center">{props.description}</Text> : null}
     {options.map(option => <Button key={option.id} tone="secondary" loading={action.active === option.id} disabled={props.disabled === true || (action.pending && action.active !== option.id)}
       onPress={() => { if (!props.disabled) void action.run(option.id, () => props.onApply(option.id)); }}>{props.optionLabel(option)}</Button>)}
@@ -138,11 +153,13 @@ export function TableColumnSettings(props: TableColumnSettingsProps) {
     if (props.disabled) return;
     const next = changeColumnSettings(props.columns, id, kind); if (next !== props.columns) props.onColumnsChange(next);
   };
+  const chevronColor = resolveIconButtonPresentation("ghost", useHjmNativeTheme().palette, false).content;
+  // One row per column: visibility checkbox, then reorder as icon tools (labels stay the accessible names), as on Web.
   return <Stack gap="sm"><Text emphasis="strong">{props.label}</Text>
-    {props.columns.map(column => <Stack key={column.id} gap="sm">
-      <Checkbox label={column.label} checked={column.visible} disabled={props.disabled === true || column.locked === true || (column.visible && props.columns.filter(item => item.visible).length === 1)} onCheckedChange={() => change(column.id, "toggle")} />
-      <Stack axis="inline" gap="sm" wrap><Button tone="ghost" disabled={props.disabled === true || changeColumnSettings(props.columns, column.id, "earlier") === props.columns} onPress={() => change(column.id, "earlier")}>{props.earlierLabel(column)}</Button>
-        <Button tone="ghost" disabled={props.disabled === true || changeColumnSettings(props.columns, column.id, "later") === props.columns} onPress={() => change(column.id, "later")}>{props.laterLabel(column)}</Button></Stack>
+    {props.columns.map(column => <Stack key={column.id} axis="inline" gap="xs" align="center">
+      <Checkbox label={column.label} checked={column.visible} layoutStyle={{ flex: 1, minWidth: 0 }} disabled={props.disabled === true || column.locked === true || (column.visible && props.columns.filter(item => item.visible).length === 1)} onCheckedChange={() => change(column.id, "toggle")} />
+      <IconButton label={props.earlierLabel(column)} tone="ghost" disabled={props.disabled === true || changeColumnSettings(props.columns, column.id, "earlier") === props.columns} onPress={() => change(column.id, "earlier")}><DrawnChevron direction="up" size={glyph.sm} color={chevronColor} /></IconButton>
+      <IconButton label={props.laterLabel(column)} tone="ghost" disabled={props.disabled === true || changeColumnSettings(props.columns, column.id, "later") === props.columns} onPress={() => change(column.id, "later")}><DrawnChevron direction="down" size={glyph.sm} color={chevronColor} /></IconButton>
     </Stack>)}
   </Stack>;
 }

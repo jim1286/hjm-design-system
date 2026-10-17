@@ -11,7 +11,7 @@ import { PatternStatus } from "./pattern-status";
 import { Button } from "@hjmds/react-native/actions";
 import { Container, Section, Stack, Text } from "@hjmds/react-native/primitives";
 import { Notice } from "@hjmds/react-native/feedback";
-import { Collapsible } from "@hjmds/react-native/collapsible";
+import { PreviewToolButton, PreviewTools } from "./preview-tools";
 import { commandRecords, commandCopy as copy, type CommandRecordsProps } from "../../shared/command-records";
 
 export function CommandRecordsPreview(props: CommandRecordsProps) {
@@ -25,7 +25,6 @@ export function CommandRecordsPreview(props: CommandRecordsProps) {
   const profile = profileOptions[themeIndex]!, current = commandRecords.find(item => item.id === selected)!;
   const busy = phase === "pending";
   return <HjmNativeProvider designProfile={hjmDesignPresets[profile.id]}><ScrollView contentContainerStyle={{ paddingVertical: spacing.lg }}><Container gutter="compact"><Section title={copy.title} description={copy.description}><Stack gap="md">
-    <Text>{profileCopy.choose}: {profile.label}</Text><Button tone="secondary" onPress={() => setThemeIndex(value => (value + 1) % profileOptions.length)}>{profileCopy.nextTheme}</Button>
     <SegmentedControl label={copy.display} presentation="pills" value={display} onValueChange={setDisplay} items={[{ value: "wrap", label: copy.wrap }, { value: "scroll", label: copy.scroll }]} />
     <Tabs id={id} label={copy.panels} items={commandRecords} value={selected} onValueChange={value => { setSelected(value); setCopyError(false); }} renderPanels={false} panelMode="dynamic" activationMode="manual" />
     <Text tone="muted">{copy.select}</Text>
@@ -35,9 +34,11 @@ export function CommandRecordsPreview(props: CommandRecordsProps) {
     {phase === "failed" ? <Notice tone="danger" announcement="assertive" title={copy.failed} /> : null}
     <Button loading={busy} disabled={busy} onPress={() => setPhase("pending")}>{phase === "failed" ? copy.retry : copy.refresh}</Button>
     <Text tone="muted">{copy.fixture}</Text>
-    <Collapsible trigger={copy.tools} defaultOpen><Stack gap="sm">
-      <Button tone="secondary" disabled={!busy} onPress={() => { setPhase(failNext ? "failed" : "idle"); setFailNext(false); }}>{copy.respond}</Button>
-      <Button tone="ghost" disabled={busy} onPress={() => setFailNext(true)}>{failNext ? copy.armed : copy.fail}</Button>
-    </Stack></Collapsible>
+    <PreviewTools>
+      <SegmentedControl label={profileCopy.choose} presentation="pills" size="small" value={profile.id} onValueChange={value => setThemeIndex(profileOptions.findIndex(option => option.id === value))}
+        items={profileOptions.map(option => ({ value: option.id, label: option.label }))} />
+      <PreviewToolButton disabled={!busy} onPress={() => { setPhase(failNext ? "failed" : "idle"); setFailNext(false); }}>{copy.respond}</PreviewToolButton>
+      <PreviewToolButton disabled={busy} onPress={() => setFailNext(true)}>{failNext ? copy.armed : copy.fail}</PreviewToolButton>
+    </PreviewTools>
   </Stack></Section></Container></ScrollView></HjmNativeProvider>;
 }

@@ -25,7 +25,7 @@
 | Card | 무늬 위의 표면 질감과 초안 | [카드](../components/card.md) |
 | Asset | 같은 그림의 프로필 둥근 액자와 명시한 정사각·원형 비교 | [자산](../components/asset.md) |
 | Heading | 선택 테마의 5단계 제목 크기 | [제목](../components/heading.md) |
-| BottomCTA | 저장·실패 재현과 위쪽 그림자 | [하단 행동](../components/bottom-cta.md) |
+| BottomCTA | 저장과 위쪽 그림자 | [하단 행동](../components/bottom-cta.md) |
 | Popover(Web) | 비모달 초안과 같은 프로필 순회 | [팝오버](../components/popover.md) |
 | Dialog·Sheet | 열린 초안과 같은 프로필 순회 | [대화상자](../components/dialog.md) · [패널](../components/sheet.md) |
 | Notice·Skeleton·Toast | 알림·로딩·확정 후 피드백의 모서리/그림자 | [알림](../components/notice.md) · [로딩](../components/skeleton.md) · [토스트](../components/toast.md) |
@@ -36,7 +36,9 @@
 
 ```text
 설명 → 앱 테마 적용(참고 테마/산책 노트/문장 모음) → 표현 선택(기존 10종)
-선택한 프로필: 헤더 → 저장 상태 → 이름/기간 → 같은 기록 3개 → 저장/실패 재현
+[앱 테마 적용] 보이는 이름 + pills → [표현 선택] 보이는 이름 + pills
+선택한 프로필: 헤더 → 저장 상태 → 이름/기간(읽기 폭, 가운데) → 같은 기록 3개 → 저장
+화면 밖 미리보기 도구: 저장 실패 재현
 선택한 프로필: 제목 크기 비교(5단계, 문서 단계 h3 유지)
 표면 질감 비교: 장식 무늬 → Card 제목/설명 → 같은 초안 → 다음 테마
 탭 선택 표시 비교: 테마 따르기/밑줄/이동/늘어남 → 기록/보관함 → 같은 초안 → 다음 테마
@@ -50,9 +52,10 @@
 | --- | --- | --- | --- |
 | 바깥 틀 | Stack | 세로 | `spacing.xl` 24 |
 | 앱/참고 테마 | SegmentedControl | 선택 화면 위 | 앱 설정 3개 후 참고 테마 10개; `presentation="pills"`, 큰 선택 목록의 좁은 폭 배치는 공개 선택 계약을 따른다 |
-| 이름/기간 | TextField·SegmentedControl | 도구 | `spacing.md` 16 |
+| 이름/기간 | TextField·SegmentedControl | 도구(최대 폭 `layout.readingMaxWidth`, 가운데) | `spacing.md` 16 |
 | 목록 | OverviewScreen | 본문 | [목록 배치](../components/overview-screen.md#배치) |
-| 저장/실패 | BottomCTA | footer | `spacing.sm` 12; 주 행동 후 ghost 실패 재현 |
+| 저장 | BottomCTA | footer | 주 행동만 |
+| 실패 재현 | PreviewTools 안 ghost 버튼 | OverviewScreen 밖 아래 | `spacing.md` 16 |
 | 자산 비교 | Asset·Stack | 탭 비교 아래 | `xlarge` 120px, `spacing.md` 16, 좁으면 줄바꿈. rounded는 프로필 radius.md, square 0, circle foundation full 유지 |
 
 ## 흐름과 상태
@@ -127,3 +130,7 @@ absolute 배치를 사용한다. 전체 비교 tile마다 FAB를 붙이면 행�
 두 플랫폼 모두 공개 FloatingActionButton의 `onContentClearanceChange` 값을 본문 하단
 padding으로 예약한다. 프로필 전환은 같은 버튼과 실행 횟수를 유지하며 실제 저장/서버 호출은 없다.
 [플로팅 실행 버튼](../components/floating-action-button.md)의 원/pill과 행동·여백 계약을 따른다.
+
+## 근거
+
+- 2026-10-17 구성 리뷰: 예제 전용 실패 재현이 제품 화면 도구 안에 있었고, 두 pills 선택에 보이는 이름이 없었으며, 제목과 테마 이름이 regular Text였다. dashboard 도구만 왼쪽 반폭이라 가운데 정렬된 header·footer와 축이 섞였다. 그래서 실패 재현을 화면 밖 미리보기 도구로 옮기고, 보이는 이름과 Heading을 두고, `overviewToolbarLayout`으로 도구를 가운데 읽기 폭에 맞췄다.

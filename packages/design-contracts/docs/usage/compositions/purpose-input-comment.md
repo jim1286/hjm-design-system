@@ -31,7 +31,7 @@
 
 ```text
 ┌ 바깥 틀: Web 문서 스크롤 · Native ScrollView(위아래 spacing.md 16) ┐
-│ ← Container gutter 16(폭 600 미만)/20 →                             │
+│ ← Container reading, gutter 16(폭 600 미만)/20 →                    │
 │ ┌ Surface padding lg ────────────────────────────────┐              │
 │ │ 댓글 작성                       Heading level5     │              │
 │ │ ┌ MessageComposer ───────────────────────────────┐ │              │
@@ -41,17 +41,19 @@
 │ │ └────────────────────────────────────────────────┘ │              │
 │ │ 등록한 댓글 목록(예제)                             │              │
 │ └────────────────────────────────────────────────────┘              │
-│ [답글 대상 선택] [다음 전송 실패시키기]  ← 데모 보조 행동             │
+│ 전송 상태 문구 (status, Surface 밖)                                   │
+│ 미리보기 도구: [답글 대상 선택] [다음 전송 실패시키기]                │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
-| 바깥 틀 | 화면의 composer 슬롯(ChatScreen·CommentThreadScreen `composer`). 단독 예제는 Web 문서 스크롤 > `Container`, Native `ScrollView` > `Container` | 화면 하단(footer). 키보드 adapter는 화면 host 하나만 | 좌우 `Container gutter`: 폭 600 미만 `compact` 16, 이상 `regular` 20. Native 위아래 `spacing.md` 16 |
+| 바깥 틀 | 화면의 composer 슬롯(ChatScreen·CommentThreadScreen `composer`). 단독 예제는 Web 문서 스크롤 > `Container size="reading"`, Native `ScrollView` > `Container size="reading"` | 화면 하단(footer). 키보드 adapter는 화면 host 하나만 | 좌우 `Container gutter`: 폭 600 미만 `compact` 16, 이상 `regular` 20. Native 위아래 `spacing.md` 16 |
 | 제목(선택) | `Heading level5` | Surface 맨 위 | 아래 `spacing.md` 16 |
 | composer | `MessageComposer` | 제목 아래 | 입력 1~5줄(`composerMaxLines`), 세로 묶음 `screenPatternRecipe.itemGap` 12(두 플랫폼, 1.12.1 이하 Web은 8)([배치](../components/message-composer.md#배치)) |
 | 실패 문구 | `context` | composer 맨 위 | composer 세로 간격 |
-| 데모 보조 행동 | `Button` secondary·ghost | Surface 아래 가로 줄 | `spacing.sm` 12. 제품에는 넣지 않는다 |
+| 전송 상태 | `Text role="status"`(Native `StatusText`) | Surface 아래. 항상 마운트해 알림 영역을 유지하되 카드 안에 빈 줄을 만들지 않는다 | 바깥 `Stack` 간격 |
+| 데모 행동 | `PreviewTools` 안 `PreviewToolButton`([미리보기 도구](../SELECTION.md)) | 구성 뒤 | 제품에는 넣지 않는다 |
 
 ## 흐름과 상태
 
@@ -116,3 +118,7 @@ import { Text } from "@hjmds/react-native/primitives";
 - 스토리의 "다음 전송 실패시키기"·350ms 지연·예제 사진은 로컬 시연이다. 업로드·서버 저장·권한은 제품이 연결한다.
 
 2026-10-13 예제 검수: Web의 원형 전송 버튼이 잠기거나 없어질 때 초점이 body로 빠져나가던 경로를 `inputRef`로 보완했다. 전송 시작 때만 입력에 초점을 두므로 대기 중 사용자가 다른 곳으로 옮긴 초점을 완료 시 다시 가져오지 않는다. 실패 후 수정한 초안으로 재시도하며, 사진·답장 대상은 성공을 확인한 뒤에만 정리한다.
+
+## 근거
+
+- 2026-10-17 구성 리뷰: 답글 대상 선택·대기 예제 종료가 secondary·ghost 제품 버튼처럼 보였고, 항상 마운트된 빈 상태 문구가 Surface 아래에 빈 띠를 만들었으며, 데스크톱에서 카드가 1280 폭 전체로 늘어났다. 그래서 데모 행동을 미리보기 도구로 옮기고 상태 문구를 Surface 밖에 두고 읽기 폭 Container를 적용했다.

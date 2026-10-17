@@ -1,6 +1,7 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, expect, it, vi } from "vitest";
 import { HjmNativeProvider } from "@hjmds/react-native/provider";
+import { Chip } from "@hjmds/react-native/inputs";
 import { Button } from "@hjmds/react-native/actions";
 import { TextField } from "@hjmds/react-native/inputs";
 import { Sheet } from "@hjmds/react-native/overlays";
@@ -11,7 +12,8 @@ const InputSheet = inputSheet.component, FamilyDrawer = familyDrawer.component;
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 let tree: ReactTestRenderer;
 afterEach(() => { if (tree) act(() => tree.unmount()); vi.useRealTimers(); });
-const button = (label: string) => tree.root.findAllByType(Button).find(node => node.props.children === label)!;
+// 미리보기 도구 on/off tools are selection chips named by `label`; product actions are Buttons.
+const button = (label: string) => tree.root.findAll(node => (node.type === Button && node.props.children === label) || (node.type === Chip && node.props.label === label))[0]!;
 const press = (label: string) => act(() => button(label).props.onPress());
 const close = () => act(() => tree.root.findByType(Sheet).props.onOpenChange(false));
 const settle = () => act(async () => { await vi.advanceTimersByTimeAsync(420); });
@@ -21,13 +23,13 @@ it("keeps the native input sheet pending and retains its draft for failure recov
   act(() => { tree = create(<HjmNativeProvider><InputSheet /></HjmNativeProvider>); });
   // The failure tool sits outside the sheet body (SELECTION.md 조립 규칙), so it is armed before opening.
   press("다음 저장 실패시키기"); expect(button("다음 저장 실패시키기").props.selected).toBe(true);
-  press("입력 시트 열기"); expect(button("저장").props.disabled).toBe(true);
+  press("기록 이름 입력"); expect(button("저장").props.disabled).toBe(true);
   act(() => tree.root.findByType(TextField).props.onValueChange("남길 이름"));
   press("저장");
   expect(tree.root.findByType(TextField).props.disabled).toBe(true);
   close(); expect(tree.root.findByType(Sheet).props.open).toBe(true);
   await settle(); expect(JSON.stringify(tree.toJSON())).toContain("저장하지 못했어요.");
-  close(); await settle(); press("입력 시트 열기"); await settle();
+  close(); await settle(); press("기록 이름 입력"); await settle();
   expect(tree.root.findByType(TextField).props.value).toBe("남길 이름");
   press("다시 저장"); await settle();
   expect(tree.root.findByType(Sheet).props.open).toBe(false);

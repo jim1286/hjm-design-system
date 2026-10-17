@@ -9,7 +9,7 @@ import { ClipboardButton } from "@hjmds/react/clipboard";
 import { Button } from "@hjmds/react/actions";
 import { Container, Section, Stack, Text } from "@hjmds/react/layout";
 import { Notice } from "@hjmds/react/feedback";
-import { Collapsible } from "@hjmds/react/collapsible";
+import { PreviewToolButton, PreviewTools } from "./preview-tools";
 import { commandRecords, commandCopy as copy, type CommandRecordsProps } from "../../../shared/command-records";
 
 export function CommandRecordsPreview(props: CommandRecordsProps) {
@@ -24,8 +24,7 @@ export function CommandRecordsPreview(props: CommandRecordsProps) {
   const busy = phase === "pending";
   const refreshRef = useRef<HTMLButtonElement>(null);
   const copyRef = useRef<HTMLButtonElement>(null);
-  return <HjmProvider designProfile={hjmDesignPresets[profile.id]}><Container gutter="compact"><Section title={copy.title} description={copy.description}><Stack gap="md">
-    <Text>{profileCopy.choose}: {profile.label}</Text><Button tone="secondary" onClick={() => setThemeIndex(value => (value + 1) % profileOptions.length)}>{profileCopy.nextTheme}</Button>
+  return <HjmProvider designProfile={hjmDesignPresets[profile.id]}><Container size="reading" gutter="compact"><Section title={copy.title} description={copy.description}><Stack gap="md">
     <SegmentedControl label={copy.display} presentation="pills" value={display} onValueChange={setDisplay} items={[{ value: "wrap", label: copy.wrap }, { value: "scroll", label: copy.scroll }]} />
     <Tabs id={id} label={copy.panels} items={commandRecords} value={selected} onValueChange={value => { setSelected(value); setCopyError(false); }} renderPanels={false} panelMode="dynamic" activationMode="manual" />
     {/* Keep the source/copy action mounted across tab changes: a transition key
@@ -37,14 +36,16 @@ export function CommandRecordsPreview(props: CommandRecordsProps) {
     {phase === "failed" ? <Notice tone="danger" title={copy.failed} /> : null}
     <Button ref={refreshRef} loading={busy} onClick={() => setPhase("pending")}>{phase === "failed" ? copy.retry : copy.refresh}</Button>
     <Text tone="muted">{copy.fixture}</Text>
-    <Collapsible trigger={copy.tools} defaultOpen><Stack gap="sm">
-      <Button tone="secondary" disabled={!busy} onClick={event => {
+    <PreviewTools>
+      <SegmentedControl label={profileCopy.choose} presentation="pills" size="small" value={profile.id} onValueChange={value => setThemeIndex(profileOptions.findIndex(option => option.id === value))}
+        items={profileOptions.map(option => ({ value: option.id, label: option.label }))} />
+      <PreviewToolButton disabled={!busy} onClick={event => {
         // Move only focus owned by the response button, before disabling it.
         // loading already guards refresh activation while keeping that target focusable.
-        if (document.activeElement === event.currentTarget) refreshRef.current?.focus();
+        if (event && document.activeElement === event.currentTarget) refreshRef.current?.focus();
         setPhase(failNext ? "failed" : "idle"); setFailNext(false);
-      }}>{copy.respond}</Button>
-      <Button tone="ghost" disabled={busy} onClick={() => setFailNext(true)}>{failNext ? copy.armed : copy.fail}</Button>
-    </Stack></Collapsible>
+      }}>{copy.respond}</PreviewToolButton>
+      <PreviewToolButton disabled={busy} onClick={() => setFailNext(true)}>{failNext ? copy.armed : copy.fail}</PreviewToolButton>
+    </PreviewTools>
   </Stack></Section></Container></HjmProvider>;
 }

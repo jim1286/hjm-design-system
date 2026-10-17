@@ -81,7 +81,7 @@ it("motion carousel shares localized names, selected inert state and finite navi
   const slides = [...host.querySelectorAll<HTMLElement>('[aria-roledescription="slide"]')];
   expect(slides.map(slide => slide.getAttribute("aria-label"))).toEqual(["1/2: One", "2/2: Two"]);
   expect(slides.map(slide => slide.inert)).toEqual([false, true]);
-  expect([...host.querySelectorAll("button")].find(button => button.textContent === "Previous")!.disabled).toBe(true);
-  await act(() => [...host.querySelectorAll("button")].find(button => button.textContent === "Next")!.click());
+  expect(host.querySelector<HTMLButtonElement>('button[aria-label="Previous"]')!.disabled).toBe(true);
+  await act(() => host.querySelector<HTMLButtonElement>('button[aria-label="Next"]')!.click());
   expect(change).toHaveBeenCalledExactlyOnceWith("b");
 });

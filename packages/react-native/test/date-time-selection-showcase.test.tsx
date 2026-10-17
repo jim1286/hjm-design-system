@@ -4,6 +4,7 @@ import { Button } from "@hjmds/react-native/actions";
 import { DatePicker } from "@hjmds/react-native/date-picker";
 import { Select } from "@hjmds/react-native/forms";
 import { Notice } from "@hjmds/react-native/feedback";
+import { Chip } from "@hjmds/react-native/inputs";
 import { DateTimeSelectionPreview } from "../../../showcase/native/src/date-time-selection-preview";
 import { dateTimeCopy as copy } from "../../../showcase/shared/date-time-selection";
 vi.mock("react-native-safe-area-context", () => ({ useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }) }));
@@ -13,9 +14,10 @@ afterEach(() => { if (tree) act(() => tree!.unmount()); tree = undefined; });
 const render = (initialStatus: "failed" | "pending" = "failed") => act(() => { tree = create(<DateTimeSelectionPreview initialStatus={initialStatus} />, { createNodeMock: () => ({}) }); });
 const button = (label: string) => tree!.root.findAllByType(Button).find(node => node.props.children === label)!;
 const press = (label: string) => act(() => button(label).props.onPress());
+const toggle = (label: string) => act(() => tree!.root.findAllByType(Chip).find(node => node.props.label === label)!.props.onPress());
 
 it("retains the chosen civil values through failure, retry and reset in the actual Native preview", () => {
-  render(); press(copy.fail); press(copy.retry);
+  render(); toggle(copy.fail); press(copy.retry);
   expect(button(copy.pending).props.loading).toBe(true);
   expect(tree!.root.findByType(DatePicker).props.descriptor.disabled).toBe(true);
   press(copy.respond);

@@ -2,18 +2,19 @@
 
 - 단계: 구성
 - 상태: 배포
-- 지원: Web
+- 지원: Web · Native
 - 적용: 1.12.1
 - 검토일: 2026-10-15
-- 근거: [Collapsible](../../collapsible.md), [ContextMenu](../../context-menu.md), [Menubar](../../menubar.md), `showcase/web/src/patterns/Disclosure.stories.tsx`, `src/collapsible.ts`, `src/menubar.ts`, `packages/react/src/styles.css`(`.hjm-collapsible`, `.hjm-context-menu`, `.hjm-menubar`)
+- 근거: [Collapsible](../../collapsible.md), [ContextMenu](../../context-menu.md), [Menubar](../../menubar.md), `showcase/web/src/patterns/Disclosure.stories.tsx`, `showcase/native/src/Disclosure.stories.tsx`, `src/collapsible.ts`, `src/menubar.ts`, `packages/react/src/styles.css`(`.hjm-collapsible`, `.hjm-context-menu`, `.hjm-menubar`)
 - 스토리북: `배포/구성/탐색과 이동/펼침과 메뉴`
 
 공통 구조·배치·상태·배지의 소유권은 [화면과 구성 선택](../SELECTION.md#소유권)을 따른다. 앱은 데이터·문구·브랜드·추가 기능을 공개 슬롯과 콜백으로 연결한다. 아래 코드 골격을 앱별 기본 구조 복제의 근거로 사용하지 않는다. 전용 구성 API가 없는 콘텐츠 묶음은 [CompositionLayout](../components/composition-layout.md)의 제목·배지·행동·본문·상태·footer 슬롯을 사용한다.
 
 ## 언제 쓰나
 
-Web에서 내용을 숨겼다 펼치거나(Collapsible), 대상에 붙은 작업 메뉴를 우클릭·키보드로 열거나(ContextMenu),
+내용을 숨겼다 펼치거나(Collapsible), Web에서 대상에 붙은 작업 메뉴를 우클릭·키보드로 열거나(ContextMenu),
 데스크톱 앱처럼 상단 메뉴 막대를 두는(Menubar) 세 방식을 각각 보여 주는 모음이다. 스토리 셋은 이어진 흐름이 아니다.
+Native 스토리는 단일 펼침(기본·어두운 테마·큰 글자)만 둔다. ContextMenu·Menubar는 Native에서 지원하지 않는다.
 
 | 필요 | 고를 것 | 스토리 |
 | --- | --- | --- |
@@ -35,7 +36,7 @@ ContextMenu로만 닿는 작업을 두지 않는다. 같은 작업을 보이는 
 | `Notice` · `Toast` | 작업 결과·실패 알림(스토리의 Notice는 데모) | [Notice](../components/notice.md), [Toast](../components/toast.md) |
 | `Text` | 키보드 사용 안내 | [Text](../components/text.md) |
 | `Stack gap="md"` | 세로 흐름 | [Stack](../components/stack.md) |
-| `Container` | 바깥 틀. HJM 화면 골격이 소유한다 | [Container](../components/container.md) |
+| `Container` | 바깥 틀. HJM 화면 골격이 소유한다. 넓은 화면에서도 `size="reading"` 폭으로 제한한다 | [Container](../components/container.md) |
 
 ## 배치
 
@@ -62,7 +63,7 @@ ContextMenu로만 닿는 작업을 두지 않는다. 같은 작업을 보이는 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
 | 바깥 틀 | 문서 스크롤 > `Container` | HJM 화면 골격이 소유. 메뉴 표면은 `position: fixed`라 스크롤 컨테이너에 잘리지 않는다 | 좌우 `Container gutter`: 폭 600 미만 `compact` 16, 이상 `regular` 20([화면 여백](../tokens/layout.md)). Menubar는 편집 영역 맨 위 |
-| 펼침 트리거 | `Collapsible` trigger | 펼침 내용 위, 꽉 찬 폭, 표시(▸/▾)는 끝 | 최소 높이 `control.minTouchTarget` 44, 위아래 `spacing.xs` 8, 글자–표시 `spacing.sm` 12 |
+| 펼침 트리거 | `Collapsible` trigger | 펼침 내용 위, 꽉 찬 폭, 표시(`chevronEnd`/`chevronDown` 아이콘, glyph.sm 20)는 끝 | 최소 높이 `control.minTouchTarget` 44, 위아래 `spacing.xs` 8, 글자–표시 `spacing.sm` 12 |
 | 펼침 내용 | `Collapsible` content | 트리거 바로 아래 | 트리거와 `collapsibleRecipe.gap` `spacing.xs` 8 |
 | 메뉴 대상 | `ContextMenu` 자식 | HJM 구성 레이아웃 소유(스토리의 대상 상자는 showcase CSS) | 포커스 링 2px |
 | 메뉴 표면 | ContextMenu 메뉴 | 포인터 위치에 `position: fixed`, 뷰포트 안 | 최대 폭 `min(24rem, 90vw)`, 최대 높이 뷰포트 − 2×`spacing.md`, padding `spacing.xxs` 4, radius `md` 12. 항목 높이 44, padding `spacing.xs` 8 · `spacing.sm` 12 |
@@ -122,9 +123,14 @@ import { Container, Stack, Text } from "@hjmds/react/layout";
 ```
 
 ```tsx
-// Native
-// 없음. ContextMenu·Menubar는 Web 전용이다. Native의 단독 펼침은 `@hjmds/react-native/collapsible`의 Collapsible,
-// 길게 누르기 메뉴는 실험적 `NativeContextMenu`(`/context-menu-native`)가 있다.
+// Native: 단일 펼침만. ContextMenu·Menubar는 Web 전용이고, 길게 누르기 메뉴는 실험적
+// `NativeContextMenu`(`/context-menu-native`)가 있다.
+import { Collapsible } from "@hjmds/react-native/collapsible";
+import { Text } from "@hjmds/react-native/primitives";
+
+<Collapsible trigger={t("order.shipping.more")} defaultOpen>
+  <Text>{t("order.shipping.body")}</Text>
+</Collapsible>
 ```
 
 스토리의 항목(파일·편집·도움말, 기록 작업)과 실행 결과 Notice는 데모다. 항목 구성과 실행은 제품 소유다.
@@ -142,5 +148,4 @@ import { Container, Stack, Text } from "@hjmds/react/layout";
 - `Collapsible`에 `open`과 `defaultOpen`을 함께 주거나 `open`만 주고 `onOpenChange`를 빼면 `TypeError`다.
 - 펼침 여러 개를 Collapsible로 나열하면 구분선·그룹 키보드 이동·"하나만 열림"이 없다. 그런 묶음은 Accordion이다.
 - `ContextMenu` `accessibilityLabel`은 필수다.
-- 현재 단일 펼침 스토리는 Collapsible 두 개(배송·환불)를 `Stack gap="md"`로 이어 둔다. 이웃이 있는 펼침 묶음은 Accordion 기준이므로 따라 하지 않는다.
 - 현재 스토리는 실행 결과 Notice 설명을 `` `${last} 작업을 실행했습니다.` ``처럼 템플릿 문자열로 만들고 문구가 한국어 리터럴이다. 제품은 작업 id→i18n 키 상수 표를 둔다.

@@ -1,4 +1,6 @@
 import { useRef, useState } from "react";
+import { failureToolCopy } from "../../../shared/failure-tools";
+import { PreviewToolButton, PreviewTools } from "./preview-tools";
 import { InlineEdit, RepeatableFieldGroup, SelectionActionBar, FilterRecovery, TableColumnSettings } from "@hjmds/react/collection-editing";
 import { TextField } from "@hjmds/react/forms";
 import { Checkbox } from "@hjmds/react/selection";
@@ -11,7 +13,7 @@ export function InlineEditingPreview() {
   const [value, setValue] = useState("봄날의 기록"), [fail, setFail] = useState(false);
   return <Stack gap="md"><InlineEdit id="note-title" label="기록 제목" value={value} editLabel="제목 수정" saveLabel="저장" cancelLabel="취소" errorLabel="저장하지 못했어요. 입력은 유지됩니다."
     validate={draft => draft.trim() ? undefined : "제목을 입력하세요."} onSave={async next => { if (fail) throw new Error("fixture failure"); setValue(next); }} />
-    <Checkbox label="저장 실패 상황" checked={fail} onCheckedChange={setFail} /></Stack>;
+    <PreviewTools><PreviewToolButton selected={fail} onClick={() => setFail(value => !value)}>{failureToolCopy.save}</PreviewToolButton></PreviewTools></Stack>;
 }
 
 export function RepeatableInputsPreview() {
@@ -33,7 +35,7 @@ export function BulkSelectionPreview() {
     <SelectionActionBar selectedIds={selected} selectionLabel={count => `${count}개 선택`} clearLabel="선택 해제" onClear={() => setSelected([])} actions={[{ id: "archive", label: "선택 기록 보관" }]} errorLabel="보관하거나 복구하지 못했어요. 다시 시도하세요."
       onAction={async (_action, ids) => { if (fail) throw new Error("fixture failure"); setRows(previous => previous.filter(row => !ids.includes(row.id))); setUndo(ids); setSelected([]); }}
       {...(undo ? { recovery: { label: `방금 보관한 ${undo.length}개 복구`, onUndo: async () => { if (fail) throw new Error("fixture failure"); const scope = undo; setRows(previous => initialRecords.filter(row => scope.includes(row.id) || previous.some(item => item.id === row.id))); setUndo(null); } } } : {})} />
-    <Checkbox label="보관·복구 실패 상황" checked={fail} onCheckedChange={setFail} />
+    <PreviewTools><PreviewToolButton selected={fail} onClick={() => setFail(value => !value)}>{failureToolCopy.archive}</PreviewToolButton></PreviewTools>
   </Stack>;
 }
 
@@ -41,10 +43,11 @@ export function SearchRecoveryPreview() {
   const records = [{ title: "산책", topic: "일상" }, { title: "전시", topic: "문화" }, { title: "독서", topic: "일상" }];
   const [topic, setTopic] = useState<string | null>("여행"), [fail, setFail] = useState(false);
   const shown = records.filter(row => topic === null || row.topic === topic);
-  return <Stack gap="md">{shown.length ? shown.map(row => <Text key={row.title}>{row.title}</Text>) : <FilterRecovery title="맞는 기록이 없어요" description="선택한 주제를 해제하면 다른 기록을 볼 수 있어요."
-    options={[{ id: "topic", label: "주제 필터 해제", resultCount: records.length }]} optionLabel={option => `${option.label} · ${option.resultCount}개 보기`} errorLabel="검색하지 못했어요. 필터는 유지됩니다."
-    onApply={async () => { if (fail) throw new Error("fixture failure"); setTopic(null); }} />}
-    <Checkbox label="검색 실패 상황" checked={fail} onCheckedChange={setFail} />
+  // The result area is the flexible region, so FilterRecovery centers in it as it would in a product's list body.
+  return <Stack gap="md" layoutStyle={{ flexGrow: 1 }}><Stack gap="md" layoutStyle={{ flex: 1 }}>{shown.length ? shown.map(row => <Text key={row.title}>{row.title}</Text>) : <FilterRecovery title="맞는 기록이 없어요" description="선택한 주제를 해제하면 다른 기록을 볼 수 있어요."
+    options={[{ id: "topic", label: "주제 필터 해제", resultCount: records.length }]} optionLabel={option => `${option.label} · ${option.resultCount}개 보기`} errorLabel="검색하지 못했어요. 필터는 그대로 있어요."
+    onApply={async () => { if (fail) throw new Error("fixture failure"); setTopic(null); }} />}</Stack>
+    <PreviewTools><PreviewToolButton selected={fail} onClick={() => setFail(value => !value)}>{failureToolCopy.search}</PreviewToolButton></PreviewTools>
   </Stack>;
 }
 

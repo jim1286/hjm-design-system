@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, type ComponentType } from "react";
 import type { Meta, StoryObj } from "@storybook/react-native";
 import { Sheet } from "@hjmds/react-native/overlays";
 import { Steps } from "@hjmds/react-native/steps";
 import { Button } from "@hjmds/react-native/actions";
 import { Notice } from "@hjmds/react-native/feedback";
-import { Stack, Text } from "@hjmds/react-native/primitives";
+import { Container, Stack, Text } from "@hjmds/react-native/primitives";
 import { Heading } from "@hjmds/react-native/heading";
 import { ContentTransition } from "@hjmds/react-native/content-transition";
 import { familyCopy as copy, familyStepName } from "../../shared/family-drawer";
@@ -24,7 +24,7 @@ function FamilyDrawer() {
     if (result.status === "success") setOpen(false);
   };
   return <Stack gap="xl">
-    <Heading level="level2">{copy.title}</Heading>
+    <Heading level="level3">{copy.title}</Heading>
     <Text>{copy.description}</Text>
     <Button onPress={() => {
       // Reopen an unfinished flow at its current step; reset only after success.
@@ -50,7 +50,7 @@ function FamilyDrawer() {
     <PreviewTools><PreviewToolButton selected={failureArmed} disabled={busy} onPress={toggleFailure}>다음 저장 실패시키기</PreviewToolButton></PreviewTools>
   </Stack>;
 }
-export default { title: "배포/구성/입력과 작성/단계별 드로어", component: FamilyDrawer } satisfies Meta<typeof FamilyDrawer>;
+export default { title: "배포/구성/입력과 작성/단계별 드로어", component: FamilyDrawer, decorators: [(Story: ComponentType) => <Container size="reading"><Story /></Container>] } satisfies Meta<typeof FamilyDrawer>;
 export const Default: StoryObj<typeof FamilyDrawer> = { name: "기본" };
 export const Dark: StoryObj = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: StoryObj = { name: "큰 글자", globals: { textScale: "2" } };

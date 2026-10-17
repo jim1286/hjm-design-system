@@ -4,7 +4,7 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { CommandRecordsPreview } from './command-records-preview';
 import { commandCopy as copy, commandRecords } from '../../../shared/command-records';
-import { profileCopy } from '../../../shared/design-profile';
+import { profileOptions } from '../../../shared/design-profile';
 import '../../../../packages/react/src/styles.css';
 let root: Root, host: HTMLDivElement;
 const clipboard = Object.getOwnPropertyDescriptor(navigator, 'clipboard');
@@ -30,14 +30,14 @@ it('keeps manual tab focus separate from selection and preserves readable source
   await act(async () => userEvent.keyboard('{Enter}')); expect(source().textContent).toBe(commandRecords[1].code);
   expect(source()).toBe(original); expect(button(copy.copy)).toBe(copyButton);
   await act(async () => page.getByText(copy.scroll, { exact: true }).click());
-  await click(profileCopy.nextTheme); expect(source().style.whiteSpace).toBe('pre'); expect(source().textContent).toBe(commandRecords[1].code);
+  await act(async () => page.getByText(profileOptions[1].label, { exact: true }).click()); expect(source().style.whiteSpace).toBe('pre'); expect(source().textContent).toBe(commandRecords[1].code);
   await act(async () => page.getByText(copy.wrap, { exact: true }).click()); expect(source().style.whiteSpace).toBe('pre-wrap');
 });
 
 it.each(['resolve', 'reject'] as const)('ignores an old clipboard %s after changing the actual record and serializes the new write', async outcome => {
   const pending = deferred(); write.mockImplementationOnce(() => pending.promise);
   const action = button(copy.copy); await click(copy.copy); expect(write).toHaveBeenCalledExactlyOnceWith(commandRecords[0].code);
-  await tab('출력'); await click(profileCopy.nextTheme); expect(button(copy.copy)).toBe(action);
+  await tab('출력'); await act(async () => page.getByText(profileOptions[1].label, { exact: true }).click()); expect(button(copy.copy)).toBe(action);
   await act(async () => action.click()); expect(write).toHaveBeenCalledTimes(1);
   await act(async () => { if (outcome === 'resolve') pending.resolve(); else pending.reject(new Error('old write denied')); await pending.promise.catch(() => {}); });
   expect(host.textContent).not.toContain(copy.copyError); expect(button(copy.copied)).toBeUndefined(); expect(source().textContent).toBe(commandRecords[1].code);

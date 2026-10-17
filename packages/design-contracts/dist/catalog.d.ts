@@ -1346,6 +1346,7 @@ export declare const recipeRegistry: {
         readonly layout: "shortest-column";
         readonly readingOrder: "source";
         readonly maxColumns: 12;
+        readonly minItemWidth: 160;
     };
     readonly virtualListRecipe: {
         readonly layout: "fixed-row-window";
@@ -5556,6 +5557,11 @@ export declare const recipeRegistry: {
             };
         };
         readonly iconSize: "xl";
+        readonly glyphs: {
+            readonly success: "✓";
+            readonly failure: "!";
+            readonly info: "i";
+        };
         readonly paddingVertical: 40;
         readonly paddingHorizontal: 24;
         readonly gap: 12;

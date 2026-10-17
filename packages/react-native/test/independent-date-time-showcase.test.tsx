@@ -4,6 +4,7 @@ import { afterEach, expect, it, vi } from 'vitest';
 import { HjmNativeProvider } from '@hjmds/react-native/provider';
 import { DateEntry } from '@hjmds/react-native/date-entry';
 import { Select } from '@hjmds/react-native/forms';
+import { Chip } from '@hjmds/react-native/inputs';
 import { Button } from '@hjmds/react-native/actions';
 import { Notice } from '@hjmds/react-native/feedback';
 import DateMeta from '../../../showcase/native/src/DateEntry.stories';
@@ -16,13 +17,15 @@ afterEach(() => { act(() => tree?.unmount()); tree = undefined; vi.restoreAllMoc
 const render = (kind: 'date' | 'time') => act(() => { tree = create(<HjmNativeProvider>{kind === 'date' ? <DateDemo /> : <TimeDemo />}</HjmNativeProvider>); });
 const button = (label: string) => tree!.root.findAllByType(Button).find(node => node.props.children === label)!;
 const press = (label: string) => act(() => button(label).props.onPress());
+// 입력 순서 바꾸기 is a 미리보기 도구 selection chip, not a product button.
+const tool = (label: string) => act(() => tree!.root.findAllByType(Chip).find(node => node.props.label === label)!.props.onPress());
 const date = () => tree!.root.findByType(DateEntry);
 
 it('keeps a confirmed date through reordering and invalidates it on a new draft', () => {
   render('date');
   act(() => date().props.onValueChange({ year: '2024', month: 'Feb', day: '29' })); press('날짜 확인');
   expect(JSON.stringify(tree!.toJSON())).toContain('확인한 날짜: 2024-02-29');
-  press('입력 순서 바꾸기'); expect(date().props.order).toEqual(['day', 'month', 'year']);
+  tool('입력 순서 바꾸기'); expect(date().props.order).toEqual(['day', 'month', 'year']);
   expect(date().props.value).toEqual({ year: '2024', month: 'Feb', day: '29' });
   expect(JSON.stringify(tree!.toJSON())).toContain('확인한 날짜: 2024-02-29');
   act(() => date().props.onValueChange({ year: '2023', month: 'Feb', day: '29' })); press('날짜 확인');
@@ -35,7 +38,7 @@ it('announces the newly confirmed date once on active iOS', () => {
   const announce = vi.spyOn(AccessibilityInfo, 'announceForAccessibilityWithOptions'); render('date');
   act(() => date().props.onValueChange({ year: '2024', month: 'Feb', day: '29' })); press('날짜 확인');
   expect(announce).toHaveBeenCalledWith('확인한 날짜: 2024-02-29', { queue: true });
-  announce.mockClear(); press('입력 순서 바꾸기'); expect(announce).not.toHaveBeenCalled();
+  announce.mockClear(); tool('입력 순서 바꾸기'); expect(announce).not.toHaveBeenCalled();
 });
 
 it('requires both time parts, invalidates confirmation when cleared and resets both fields', () => {

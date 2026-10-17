@@ -7,12 +7,21 @@ export const fieldGroupRecipe = {
   gap: "md",
   headingGap: "sm",
   supportGap: "xs",
+  /** The group name outranks its members' semibold body labels; a plain legend read weaker than "시/분/초" (2026-10-17 review). */
+  heading: { textVariant: "bodyLarge", emphasis: "medium" },
   inline: {
     /** @deprecated Renderers read `minWidth` (scaled by text size) so Web and Native wrap at the same width. */
     minCharacters: 10,
     // Two 44pt steppers and a two-digit value: 120 (and Web's 10ch, about 96px) left a DurationField NumberField no
     // room to draw its value at 402pt (2026-10-17 review).
     minWidth: control.minTouchTarget * 2 + spacing.xxxl,
+    /** Parts stop growing here so short values do not float in ~400px fields on desktop (2026-10-17 review). */
+    maxWidth: (control.minTouchTarget * 2 + spacing.xxxl) * 1.5,
+    /**
+     * Parts of one value (hours/minutes/seconds, year/month/day) share a row only when all of them fit;
+     * otherwise every part stacks. Partial wrapping left seconds alone on a second row at 402pt.
+     */
+    wrap: "all-or-none",
   },
 } as const;
 

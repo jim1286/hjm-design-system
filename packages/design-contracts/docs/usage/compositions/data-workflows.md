@@ -21,10 +21,10 @@ CSV 열 연결, 순차 퍼널, 가입 시점별 잔존율, 지표 상관, 목표
 | 컴포넌트 | 역할 | 지침 |
 | --- | --- | --- |
 | ImportFieldMapping | Select, DataTable, Button | 제품 parser·실제 importer와 controlled mapping |
-| ConversionFunnel | BarChart, Button, Text | 제품 순차 count·이탈 사유 |
+| ConversionFunnel | BarChart, SegmentedControl, Text | 제품 순차 count·이탈 사유 |
 | CohortRetentionTable / CorrelationMatrix | DataTable | 실제 분모/관측값·상관값 |
 | TargetSummary | Statistic, Progress | 실제값·목표 |
-| HistogramExplorer | BarChart, Button | 원본 samples·범위·선택 구간 수 |
+| HistogramExplorer | BarChart, SegmentedControl | 원본 samples·범위·선택 구간 수 |
 
 ## 배치
 
@@ -32,14 +32,16 @@ CSV 열 연결, 순차 퍼널, 가입 시점별 잔존율, 지표 상관, 목표
 가져오기: 원본별 선택 → 검증 → 변환 미리보기 → 실제 가져오기
 퍼널: 실제 단계 막대 → 단계 선택 → 선택한 단계 설명
 표: 고정 행 제목 | 기간/변수 열 (가로 스크롤)
-목표: 실제 수치·설명 → 목표가 있을 때 진행 막대
+목표: 실제 수치·설명(Statistic) → 목표가 있을 때 진행 막대(보이는 글자 없음)
 분포: 구간 수 선택 → 동일 y축 분포 → 관측/누락/범위 밖 요약
 ```
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
 | 바깥 틀 | Stack | 기존 본문·카드 안 | md, 목표는 sm |
-| 선택/행동 | Button/Select | 데이터 위 또는 연결 마지막 | Stack inline sm wrap |
+| 선택 | SegmentedControl(퍼널 단계·분포 구간 수), Select(가져오기 연결) | 퍼널은 막대 아래, 분포는 막대 위 | SegmentedControl 기본 크기, 그룹 이름은 구성 `label` |
+| 행동 | Button | 가져오기 연결 마지막 | 꽉 찬 폭 primary 하나 |
+| 목표 진행 | Progress(`aria-label`/`accessibilityLabel`만) | Statistic 아래 | 라벨·값 글자는 Statistic이 한 번만 보인다 |
 | 상태 | Text | 해당 구성 중앙 | 중앙 정렬, 임의 상단 margin 없음 |
 | 표 | DataTable | 본문 폭 안 스크롤 | 첫 열 pinned start; 대각선도 실제 셀 |
 
@@ -88,6 +90,7 @@ Native 차트는 기존 react-native-svg optional peer를 사용한다. 새 제�
 
 - null 미래 관측을 0%로 채우거나 목표 0을 100%로 만들지 않는다.
 - 순차가 아닌 지표를 퍼널에 넣지 않는다. 실제 원인 데이터 없이 이탈 사유를 생성하지 않는다.
+- 단계·구간 수 선택을 `Button selected` 나열로 만들지 않는다. 선택 항목이 테두리 없는 글자로 보여 상태가 거꾸로 읽힌다(SegmentedControl이 맡는다).
 - 히스토그램 전체 선택에서 같은 domain을 유지한다. 누락값·범위 밖 count를 제품 summaryLabel에 표현한다.
 - mapping 변경만으로 저장을 실행하지 않는다. 서버 확정·권한·멱등성은 실제 importer 책임이다.
 - npm 1.21.0에서 제공하며 소비 앱의 실제 설치 버전을 확인한다.

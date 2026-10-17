@@ -1,7 +1,9 @@
 import { resolveMenuTypeahead } from "./menu-typeahead.js";
 import { Menu as Bloom } from "bloom-menu";
-import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent } from "react";
+import { radius } from "@hjmds/design-contracts/foundations";
 import { Button } from "./actions.js";
+import { Icon } from "./supplemental-display.js";
 import { Menu, type MenuItem } from "./overlays.js";
 import { useHjmTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
@@ -30,6 +32,24 @@ export function MorphingMenu({ label, items, onAction, disabled = false, open: c
   const previousOpen = useRef(false);
   const restoreFocus = useRef(true);
   const search = useRef({ value: "", time: 0 });
+  // Bloom needs numeric closed geometry. A hidden HJM secondary Button with the same label measures it, so the
+  // morph trigger and the canonical fallback trigger keep one size (2026-10-17 composition review).
+  const measure = useRef<HTMLButtonElement>(null);
+  const [buttonSize, setButtonSize] = useState({ width: 160, height: 44 });
+  const motionPath = !(theme.environment.reducedMotion || theme.environment.direction === "rtl");
+  useLayoutEffect(() => {
+    const node = measure.current;
+    if (!node) return;
+    const read = () => setButtonSize(current => {
+      const width = Math.ceil(node.offsetWidth), height = Math.ceil(node.offsetHeight);
+      return width > 0 && height > 0 && (width !== current.width || height !== current.height) ? { width, height } : current;
+    });
+    read();
+    if (typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(read);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [motionPath, label]);
   const change = (value: boolean) => { if (value) restoreFocus.current = true; setLocalOpen(value); onOpenChange?.(value); };
   if (!label.trim() || !items.length || new Set(items.map(item => item.id)).size !== items.length ||
     items.some(item => !item.id.trim() || !(item.textValue ?? (typeof item.label === "string" ? item.label : "")).trim())) {
@@ -45,8 +65,9 @@ export function MorphingMenu({ label, items, onAction, disabled = false, open: c
     previousOpen.current = open;
   }, [open, label]);
   // The canonical Menu owns static/RTL behavior; Bloom's left/right geometry is physical.
-  if (theme.environment.reducedMotion || theme.environment.direction === "rtl") {
-    return <Menu label={label} trigger={<Button tone="secondary">{label}</Button>} items={items} disabled={disabled} open={open}
+  const chevron = <Icon name="chevronDown" />;
+  if (!motionPath) {
+    return <Menu label={label} trigger={<Button tone="secondary" trailing={chevron}>{label}</Button>} items={items} disabled={disabled} open={open}
       {...(layoutStyle === undefined ? {} : { layoutStyle })} onOpenChange={change} {...(onAction ? { onAction } : {})} />;
   }
   const keyDown = (event: KeyboardEvent<HTMLDivElement>) => {
@@ -73,12 +94,12 @@ export function MorphingMenu({ label, items, onAction, disabled = false, open: c
     }
     if (next !== undefined && next >= 0) { event.preventDefault(); event.stopPropagation(); nodes[next]?.focus(); }
   };
-  return <div ref={root} className="hjm-menu-morph" style={layoutStyle} onKeyDownCapture={keyDown}>
+  return <div ref={root} className="hjm-menu-morph" data-open={open} style={layoutStyle} onKeyDownCapture={keyDown}>
+    <Button ref={measure} tone="secondary" trailing={chevron} className="hjm-menu-morph__measure" aria-hidden="true" tabIndex={-1} inert>{label}</Button>
     {/* Open toward following content; upstream defaults upward and can cover preceding values. */}
     <Bloom.Root direction="bottom" open={open} onOpenChange={change} modal={false}>
-      <Bloom.Container buttonSize={{ width: 160, height: 44 }} menuWidth={240}
-        style={{ background: theme.palette.theme.bg, color: theme.palette.theme.text }}>
-        <Bloom.Trigger disabled={disabled}>{label}</Bloom.Trigger>
+      <Bloom.Container buttonSize={buttonSize} buttonRadius={radius.md} menuWidth={240} className="hjm-menu-morph__surface">
+        <Bloom.Trigger disabled={disabled} className="hjm-menu-morph__trigger"><span className="hjm-button__label">{label}</span>{chevron}</Bloom.Trigger>
         <Bloom.Content>
           {items.map(item => <button type="button" role="menuitem" tabIndex={-1} className="hjm-menu-morph__item" key={item.id} disabled={!open || disabled || (item.disabled ?? false)}
             data-tone={item.tone} aria-label={item.textValue}

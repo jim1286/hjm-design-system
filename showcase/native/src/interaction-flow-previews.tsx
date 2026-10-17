@@ -54,7 +54,7 @@ export function ApplyOrDiscardSelection() {
 export function ReopenDraft() {
  const { open, start, close, isCurrent, onOpenChange } = usePreviewSheet(); const [draft, setDraft] = useState(""); const [saved, setSaved] = useState("");
  const trigger = useRef<View>(null);
- return <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingVertical: spacing.md }}><Container gutter="compact"><Stack gap="md"><Heading level="level3">작성 중 닫고 초안 이어쓰기</Heading>
+ return <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingVertical: spacing.md }}><Container gutter="compact" size="reading"><Stack gap="md"><Heading level="level3">작성 중 닫고 초안 이어쓰기</Heading>
   <View ref={trigger} collapsable={false}><Button onPress={start}>메모 작성</Button></View>
   <StatusText>{draft ? "작성 중인 초안이 있어요." : "작성 중인 초안이 없어요."}</StatusText>
   <Text>저장된 메모: {saved || "아직 없어요"}</Text>
@@ -81,6 +81,9 @@ function LatestSearchContents({ initialState = "idle" }: Pick<LatestSearchProps,
  const timers = useRef(new Map<ReturnType<typeof setTimeout>, () => void>());
  const failNext = useRef(false);
  const [failureArmed, setFailureArmed] = useState(false);
+ // One product 검색 action; the slow response is armed per attempt like the failure tool.
+ const slowNext = useRef(false);
+ const [slowArmed, setSlowArmed] = useState(false);
  const search = (delay: number) => {
   const submitted = query.trim(); if (!submitted) return;
   // Search is read-only, so a new intent can detach the old result. This is not
@@ -96,6 +99,7 @@ function LatestSearchContents({ initialState = "idle" }: Pick<LatestSearchProps,
    return submitted;
   }, { retryable: true });
  };
+ const searchNow = () => { const delay = slowNext.current ? searchDelay.slow : searchDelay.fast; slowNext.current = false; setSlowArmed(false); search(delay); };
  // The pending/error stories open in that state; the absorbed 검색 입력 example showed the same field states.
  useEffect(() => {
   if (initialState === "pending") search(searchDelay.held);
@@ -109,15 +113,14 @@ function LatestSearchContents({ initialState = "idle" }: Pick<LatestSearchProps,
  }, []);
  const pending = state.status === "pending";
  const message = state.status === "pending" || state.status === "error" ? latestSearchCopy[state.status] : state.value ? `검색 결과: ${state.value}` : latestSearchCopy.idle;
- return <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingVertical: spacing.md }}><Container gutter="compact"><Stack gap="md"><Heading level="level3">최신 검색 결과 유지</Heading>
+ return <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingVertical: spacing.md }}><Container gutter="compact" size="reading"><Stack gap="md"><Heading level="level3">최신 검색 결과 유지</Heading>
   <SearchField ref={searchRef} label="검색어" clearLabel="검색어 지우기" value={query} onValueChange={setQuery} busy={pending} busyLabel="검색 중" />
-  <Stack gap="xs"><Button tone="secondary" disabled={!query.trim()} onPress={() => search(searchDelay.slow)}>느린 응답으로 검색</Button>
-  <Button tone="secondary" disabled={!query.trim()} onPress={() => search(searchDelay.fast)}>빠른 응답으로 검색</Button></Stack>
+  <Button disabled={!query.trim()} onPress={searchNow}>검색</Button>
   <StatusText>{message}</StatusText>
   {state.status === "error" ? <Button tone="secondary" onPress={() => { searchRef.current?.focus(); void session.retry(); }}>다시 검색</Button> : null}
-  <Text>느린 검색을 시작한 뒤 검색어를 바꿔 빠른 검색을 해보세요. 늦게 도착한 이전 결과가 최신 결과를 덮지 않아요. 실제 서버 요청은 없는 예제예요.</Text>
-  {/* Failure arming is a demo-only tool, kept after the composition. */}
-  <PreviewTools><PreviewToolButton selected={failureArmed} onPress={() => { failNext.current = !failNext.current; setFailureArmed(failNext.current); }}>다음 검색 실패시키기</PreviewToolButton></PreviewTools>
+  {/* Latency and failure arming are demo-only tools, kept after the composition. */}
+  <PreviewTools><PreviewToolButton selected={slowArmed} onPress={() => { slowNext.current = !slowNext.current; setSlowArmed(slowNext.current); }}>다음 검색 느리게</PreviewToolButton><PreviewToolButton selected={failureArmed} onPress={() => { failNext.current = !failNext.current; setFailureArmed(failNext.current); }}>다음 검색 실패시키기</PreviewToolButton></PreviewTools>
+  <Text variant="caption" tone="muted">느린 검색 중에 검색어를 바꿔 다시 검색해도 늦게 온 결과가 최신 결과를 덮지 않아요.</Text>
  </Stack></Container></ScrollView>;
 }
 

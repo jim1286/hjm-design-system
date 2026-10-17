@@ -2,7 +2,7 @@ import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { AccessibilityInfo } from "react-native";
 import { HjmNativeProvider } from "@hjmds/react-native/provider";
-import { Switch, TextField } from "@hjmds/react-native/inputs";
+import { Chip, Switch, TextField } from "@hjmds/react-native/inputs";
 import { Button, IconButton } from "@hjmds/react-native/actions";
 import { FirstTask, RecoverableSettings, SelectionReview } from "../../../showcase/native/src/reference-flow-previews.js";
 let tree: ReactTestRenderer;
@@ -12,7 +12,7 @@ beforeEach(()=>{focus.mockClear();vi.stubGlobal("requestAnimationFrame",(callbac
 afterEach(()=>{if(tree)act(()=>tree.unmount());vi.unstubAllGlobals();vi.restoreAllMocks();});
 const render=(Component:typeof FirstTask)=>act(()=>{tree=create(<HjmNativeProvider reducedMotion><Component/></HjmNativeProvider>,{createNodeMock:()=>({focus})});});
 // Leaving is the header exit icon (2026-10-17); find it by its accessible label.
-const button=(label:string)=>tree.root.findAllByType(Button).find(node=>node.props.children===label)??tree.root.findAllByType(IconButton).find(node=>node.props.label===label)!;
+const button=(label:string)=>tree.root.findAllByType(Button).find(node=>node.props.children===label)??tree.root.findAllByType(IconButton).find(node=>node.props.label===label)??tree.root.findAllByType(Chip).find(node=>node.props.label===label)!;
 const press=(label:string)=>act(()=>{const target=button(label);if(!target)throw new Error(`Missing ${label}: ${tree.root.findAllByType(Button).map(node=>node.props.children).join(",")}`);target.props.onPress();});
 const field=()=>tree.root.findByType(TextField);
 const input=(value:string)=>act(()=>field().props.onValueChange(value));
@@ -29,7 +29,7 @@ it("settings protects submitted data from queued editing, revert and leave callb
  input("폐기 제목");press("설정 나가기");press("계속 수정");await settle();expect(field().props.value).toBe("폐기 제목");press("설정 나가기");press("변경 버리고 나가기");press("이어하기");expect(field().props.value).toBe("제출 제목");
 });
 it("review retains draft across pause, failed submission and edited retry",async()=>{
- render(SelectionReview);press("기록 확인");expect(field().props.error).toBe("이름이나 내용을 입력해 주세요.");expect(focus).toHaveBeenCalledOnce();input("첫 제목");press("초안 남기고 쉬기");press("이어하기");expect(field().props.value).toBe("첫 제목");press("기록 확인");press("다음 저장 실패시키기");press("이 내용으로 확정");await settle();expect(text()).toContain("저장하지 못했어요");press("내용 수정");input("새 제목");press("기록 확인");press("이 내용으로 확정");await settle();expect(text()).toContain("선택한 내용을 확정했어요");expect(text()).toContain("새 제목");press("저장한 기록 보기");expect(text()).toContain("저장한 기록의 상세 내용입니다");
+ render(SelectionReview);press("기록 확인");expect(field().props.error).toBe("이름이나 내용을 입력해 주세요.");expect(focus).toHaveBeenCalledOnce();input("첫 제목");press("초안 남기고 쉬기");press("이어하기");expect(field().props.value).toBe("첫 제목");press("기록 확인");press("다음 저장 실패시키기");press("이 내용으로 확정");await settle();expect(text()).toContain("저장하지 못했어요");press("내용 수정");input("새 제목");press("기록 확인");press("이 내용으로 확정");await settle();expect(text()).toContain("선택한 내용을 확정했어요");expect(text()).toContain("새 제목");press("저장한 기록 보기");expect(text()).toContain("저장한 기록의 상세 내용이에요");
 });
 
 it("moves native accessibility focus after navigation and cancels the frame on unmount",async()=>{

@@ -7,7 +7,7 @@ import { BottomCTA } from "@hjmds/react-native/bottom-cta";
 import { BottomInfo } from "@hjmds/react-native/bottom-info";
 import { useRef, useState } from "react";
 import { Button } from "@hjmds/react-native/actions";
-import { Stack, Surface, Text } from "@hjmds/react-native/primitives";
+import { Container, Stack, Surface, Text } from "@hjmds/react-native/primitives";
 import { TextField } from "@hjmds/react-native/inputs";
 import { SegmentedControl } from "@hjmds/react-native/inputs";
 import { ContentTransition } from "@hjmds/react-native/content-transition";
@@ -21,7 +21,7 @@ import type { UploadItemDescriptor } from "@hjmds/design-contracts/components/up
 import { useDemoAction } from "./action-recovery-previews";
 import { PatternStatus } from "./pattern-status";
 import { PreviewTools, PreviewToolButton } from "./preview-tools";
-import { beforeImage, afterImage, scoreLabel, sampleFile, uploadLabels, mergeUploadSelection, changeUploadState } from "../../shared/reference-adoption";
+import { beforeImage, afterImage, scoreLabel, sampleFile, uploadLabels, mergeUploadSelection, changeUploadState, uploadExampleNote } from "../../shared/reference-adoption";
 
 export function RatingPreview() {
   const [score, setScore] = useState<number | null>(null);
@@ -37,7 +37,7 @@ export function AdaptiveContentPreview() {
   // The canvas needs a scroll host; end spacing keeps the final field border off
   // its clipping edge when the keyboard reduces the available viewport.
   return <KeyboardAvoiding style={{ flex: 1 }}><ScreenLayout title="기록 정보" header={<></>} contentInset="none"><Stack gap="md" layoutStyle={{ marginBottom: spacing.md }}><SegmentedControl label="기록 정보" items={[{value:"summary",label:"요약"},{value:"details",label:"상세"}]} value={panel} onValueChange={setPanel} />
-    <ContentTransition stateKey={panel} animateHeight preset="rise"><Surface padding="lg"><Stack gap="md"><Text variant="title">오늘의 기록</Text><Text>{panel==="summary"?"산책하며 만난 장면을 한 줄로 남겼어요.":"사진과 메모를 함께 보며 그날의 분위기를 떠올려요. 골목의 작은 가게, 걷다가 만난 고양이, 잠시 쉬어 간 공원까지 오늘의 장면을 모았어요."}</Text>{panel==="details"?<Text>나중에 다시 걷고 싶은 길이나 함께 나누고 싶은 생각을 메모로 남겨 보세요.</Text>:null}</Stack></Surface></ContentTransition>
+    <ContentTransition stateKey={panel} animateHeight preset="rise"><Surface padding="lg"><Stack gap="md"><Heading level="level5">오늘의 기록</Heading><Text>{panel==="summary"?"산책하며 만난 장면을 한 줄로 남겼어요.":"사진과 메모를 함께 보며 그날의 분위기를 떠올려요. 골목의 작은 가게, 걷다가 만난 고양이, 잠시 쉬어 간 공원까지 오늘의 장면을 모았어요."}</Text>{panel==="details"?<Text>나중에 다시 걷고 싶은 길이나 함께 나누고 싶은 생각을 메모로 남겨 보세요.</Text>:null}</Stack></Surface></ContentTransition>
     <TextField label="전환해도 남는 메모" placeholder="메모를 입력한 뒤 전환해 보세요" /></Stack></ScreenLayout></KeyboardAvoiding>;
 }
 export function ActionFeedbackPreview() {
@@ -48,12 +48,12 @@ export function ActionFeedbackPreview() {
   const feedback = resolveSaveFeedback({ phase: state.status, dirty: draft.trim() !== state.value, valid: !!draft.trim(), hasSaved: state.value !== "" });
   const { currentSaved } = feedback;
   const save=()=>{const submitted=draft.trim();if(submitted)void session.run(()=>request(submitted),{retryable:true});};
-  return <Stack gap="md"><Text variant="heading">입력은 남기고, 결과는 분명하게</Text><TextField label="기록 제목" value={draft} onValueChange={setDraft} />
+  return <Container gutter="compact" size="reading"><Stack gap="md"><Heading level="level3">입력은 남기고, 결과는 분명하게</Heading><TextField label="기록 제목" value={draft} onValueChange={setDraft} />
     <Button loading={busy} disabled={!feedback.canSubmit} completion={{ confirmed: currentSaved, label: "✓ 기록을 저장했어요" }} onPress={save}>기록 저장</Button>
     <ContentTransition stateKey={status} animateHeight><PatternStatus>{busy?"저장을 확인하고 있어요":status==="error"?"저장하지 못했어요. 제목은 남아 있으니 다시 시도해 주세요.":state.value&&!currentSaved?"현재 제목은 아직 저장하지 않았어요.":currentSaved?"현재 제목을 저장했어요.":"제목을 입력한 뒤 저장해 주세요."}</PatternStatus></ContentTransition>
     {state.value?<Text>저장한 제목: {state.value}</Text>:null}
     <Text>실제 서버 요청 없는 예제예요. 다시 저장하면 현재 입력한 제목을 사용해요.</Text>
-    <PreviewTools><PreviewToolButton selected={failureArmed} disabled={busy} onPress={toggleFailure}>{failureArmed ? "다음 저장 실패 예약됨" : "다음 저장 실패시키기"}</PreviewToolButton></PreviewTools></Stack>;
+    <PreviewTools><PreviewToolButton selected={failureArmed} disabled={busy} onPress={toggleFailure}>다음 저장 실패시키기</PreviewToolButton></PreviewTools></Stack></Container>;
 }
 export function UploadRecoveryPreview() {
   const [items,setItems]=useState<UploadItemDescriptor[]>([]); const [notice,setNotice]=useState("");
@@ -63,17 +63,16 @@ export function UploadRecoveryPreview() {
   const select=(selection:FilePickerSelectionResult)=>{const next=mergeUploadSelection(itemsRef.current,selection);update(next.items);setNotice(next.rejected.length?"추가하지 못한 파일이 있어요. 이미지 3개, 파일당 5MB까지 선택할 수 있어요.":"같은 파일은 한 번만 추가해요.");};
 
   const change=(item:UploadItemDescriptor,state:UploadItemDescriptor["state"])=>{if(itemsRef.current.find(current=>current.id===item.id)===item)update(changeUploadState(itemsRef.current,item.id,state));};
-  return <Stack gap="md"><Text variant="heading">파일 선택부터 다시 전송까지</Text>
-    <FilePicker descriptor={{mode:"multiple",accept:["image/*"],maxCount:3,maxSizeBytes:5*1024*1024}} label="기록 사진" buttonLabel="예제 사진 선택" existingCount={items.length} onPick={async()=>[sampleFile]} onPickError={()=>setNotice("사진을 선택하지 못했어요.")} onSelect={select} />
-    <Button tone="secondary" onPress={()=>select({accepted:[sampleFile],rejected:[]})}>예제 사진 추가</Button>
-    {/* Keep the demo boundary visible when a rejection replaces the status notice. */}
-    <Text>파일은 서버로 전송하지 않습니다. 아래 예제 응답으로 상태를 확인하세요.</Text>
+  return <Container gutter="compact" size="reading"><Stack gap="md"><Heading level="level3">파일 선택부터 다시 전송까지</Heading>
+    <FilePicker descriptor={{mode:"multiple",accept:["image/*"],maxCount:3,maxSizeBytes:5*1024*1024}} label="기록 사진" buttonLabel="사진 선택" existingCount={items.length} onPick={async()=>[sampleFile]} onPickError={()=>setNotice("사진을 선택하지 못했어요.")} onSelect={select} />
+    <Text>{uploadExampleNote}</Text>
+    <PreviewTools><PreviewToolButton onPress={()=>select({accepted:[sampleFile],rejected:[]})}>예제 사진 추가</PreviewToolButton></PreviewTools>
     {notice ? <PatternStatus>{notice}</PatternStatus> : null}
     {items.map(item=><Surface key={item.id} padding="md"><Stack gap="sm"><UploadItem descriptor={item} labels={uploadLabels} onCancel={()=>change(item,{status:"pending"})} onRetry={()=>change(item,{status:"uploading",progress:null})} />
       <Stack axis="inline" wrap>{item.state.status==="pending"?<Button onPress={()=>change(item,{status:"uploading",progress:null})}>전송 시작</Button>:null}<Button tone="ghost" disabled={item.state.status==="uploading"} onPress={()=>{if(itemsRef.current.find(current=>current.id===item.id)===item&&item.state.status!=="uploading")update(itemsRef.current.filter(file=>file.id!==item.id));}}>선택에서 제거</Button></Stack>
       {/* Simulated server responses are demo-only tools, not file actions (2026-10-16 review). */}
       {item.state.status==="uploading"?<PreviewTools><PreviewToolButton onPress={()=>change(item,{status:"success"})}>성공 응답 보내기</PreviewToolButton><PreviewToolButton onPress={()=>change(item,{status:"error",message:"연결이 끊겼어요. 다시 전송해 주세요."})}>실패 응답 보내기</PreviewToolButton></PreviewTools>:null}</Stack></Surface>)}
-  </Stack>;
+  </Stack></Container>;
 }
 export function ProductBentoPreview() {
   const [started,setStarted]=useState(false);
@@ -104,7 +103,7 @@ export function ProductBentoPreview() {
     <PatternStatus>{status}</PatternStatus>
     {state.value ? <Text>저장된 제목: {state.value}</Text> : null}
     {/* Demo tools stay above the CTA so the CTA remains the surface's closing action (2026-10-16 review). */}
-    {started ? <PreviewTools><PreviewToolButton selected={failureArmed} disabled={busy} onPress={toggleFailure}>{failureArmed ? "다음 저장 실패 예약됨" : "다음 저장 실패시키기"}</PreviewToolButton></PreviewTools> : null}
+    {started ? <PreviewTools><PreviewToolButton selected={failureArmed} disabled={busy} onPress={toggleFailure}>다음 저장 실패시키기</PreviewToolButton></PreviewTools> : null}
     <BottomCTA description={started ? "입력한 제목으로 미리보기를 만들어요." : "먼저 사진을 비교하거나 첫 기록을 작성해 보세요."}
       primaryAction={{ label: started ? currentSaved ? "저장했어요" : "미리보기에 저장" : "첫 기록 시작하기", onPress: started ? save : () => setStarted(true), loading: busy, loadingLabel: "미리보기 저장 중", disabled: started && !feedback.canSubmit }}
       secondaryAction={{ label: started ? "소개로 돌아가기" : details ? "사용 방법 접기" : "사용 방법 보기", onPress: started ? back : () => setDetails(value => !value), disabled: busy }}/>
@@ -118,7 +117,7 @@ export function ContextToolbarPreview() {
   // unrelated toggles and omit the shared single-selection keyboard contract.
   return <Stack gap="md">
     <TextField label="작성 중인 기록" placeholder="도구를 열어도 입력은 유지돼요" />
-    <Collapsible open={open} onOpenChange={setOpen} trigger={<Text>표현 도구 · {choice}</Text>}>
+    <Collapsible open={open} onOpenChange={setOpen} trigger={`표현 도구 · ${choice}`}>
       <SegmentedControl label="기록 표현" presentation="pills" items={["기본", "인용", "강조"].map(label => ({ value: label, label }))} value={choice} onValueChange={setChoice} />
     </Collapsible>
     <PatternStatus>{`선택한 표현: ${choice}`}</PatternStatus>
@@ -130,5 +129,5 @@ export function SelectionMotionPreview() {
   const options = [{ value: "day", label: "하루" }, { value: "week", label: "일주일" }, { value: "month", label: "한 달" }];
   // At 2x text the stacked selector pushes the memo behind the keyboard.
   // A scrolling screen host preserves access without shrinking the control or text.
-  return <KeyboardAvoiding style={{ flex: 1 }}><ScreenLayout title="기간 선택" header={<></>} contentInset="none"><Stack gap="lg" layoutStyle={{ marginBottom: spacing.md }}><Text variant="heading">기간 선택</Text><SegmentedControl label="연결형 기간 선택" items={options} value={period} onValueChange={setPeriod} selectionMotion="slide" /><SegmentedControl label="필터형 기간 선택" items={options} value={period} onValueChange={setPeriod} presentation="pills" selectionMotion="slide" /><Text>{period === "day" ? "오늘의 기록" : period === "week" ? "이번 주 기록" : "이번 달 기록"}</Text><TextField label="선택을 바꿔도 유지되는 메모" placeholder="선택 전후로 내용을 확인하세요" /></Stack></ScreenLayout></KeyboardAvoiding>;
+  return <KeyboardAvoiding style={{ flex: 1 }}><ScreenLayout title="기간 선택" header={<></>} contentInset="none"><Stack gap="lg" layoutStyle={{ marginBottom: spacing.md }}><Heading level="level3">기간 선택</Heading><SegmentedControl label="연결형 기간 선택" items={options} value={period} onValueChange={setPeriod} selectionMotion="slide" /><SegmentedControl label="필터형 기간 선택" items={options} value={period} onValueChange={setPeriod} presentation="pills" selectionMotion="slide" /><Text>{period === "day" ? "오늘의 기록" : period === "week" ? "이번 주 기록" : "이번 달 기록"}</Text><TextField label="선택을 바꿔도 유지되는 메모" placeholder="선택 전후로 내용을 확인하세요" /></Stack></ScreenLayout></KeyboardAvoiding>;
 }

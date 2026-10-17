@@ -7,7 +7,7 @@ export const dateTimeCopy = {
   hourClear: "시 선택 해제", minuteClear: "분 선택 해제", hourClose: "시 선택 닫기", minuteClose: "분 선택 닫기",
   previousMonth: "이전 달", nextMonth: "다음 달", confirm: "선택 확인", retry: "다시 확인", pending: "확인 중",
   missing: "날짜·시·분을 모두 골라주세요.", reset: "다시 고르기", failed: "확인하지 못했어요. 고른 값은 남아 있어요.",
-  saved: "선택한 값을 확인했어요", tools: "검증 도구", respond: "미리보기 응답 받기", fail: "다음 확인 실패", armed: "다음 확인은 실패해요",
+  saved: "선택한 값을 확인했어요", respond: "미리보기 응답 받기", fail: "다음 확인 실패",
   timezone: "날짜와 시각은 별도 선택값이에요. 시간대·실제 예약·서버 저장은 제품에서 정해요.",
 } as const;
 
@@ -15,7 +15,7 @@ export type DateTimeSelectionState = { date: string | null; hour: string | null;
   status: "idle" | "pending" | "failed" | "saved"; saved: string | null; failNext: boolean;
   request: { value: string; failed: boolean } | null };
 export type DateTimeSelectionAction = { type: "date" | "hour" | "minute"; value: string | null }
-  | { type: "month"; value: string } | { type: "confirm" | "respond" | "reset" | "armFailure" };
+  | { type: "month"; value: string } | { type: "confirm" | "respond" | "reset" | "toggleFailure" };
 export function initialDateTimeSelection(initialStatus: DateTimeSelectionProps["initialStatus"] = "idle"): DateTimeSelectionState {
   const prepared = initialStatus !== "idle";
   return { date: prepared ? "2026-09-16" : null, hour: prepared ? "09" : null, minute: prepared ? "30" : null,
@@ -47,6 +47,6 @@ export function dateTimeSelectionReducer(model: DateTimeSelectionState, action: 
       return { ...model, status: "pending", saved: null, failNext: false, request: { value, failed: model.failNext } };
     }
     case "reset": return initialDateTimeSelection();
-    case "armFailure": return { ...model, failNext: true };
+    case "toggleFailure": return { ...model, failNext: !model.failNext };
   }
 }

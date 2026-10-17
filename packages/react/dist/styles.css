@@ -1020,8 +1020,9 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-notice__title, .hjm-notice__description { overflow-wrap: anywhere; }
 
 /* emptyStateRecipe.density.regular paddingVertical xxxl 40 (2026-10-06; Web had xxl 32, Native read the recipe). */
-.hjm-empty-state { display: grid; justify-items: center; gap: var(--hjm-space-xs); padding: var(--hjm-space-xxxl) var(--hjm-space-xl); color: var(--hjm-color-text-muted); text-align: center; }
-.hjm-empty-state[data-density="compact"] { padding-block: var(--hjm-space-xl); }
+/* Like Native, a regular empty state fills the rest of a flex host and centers in it; compact (cards, sheets) stays content-high. */
+.hjm-empty-state { display: grid; flex-grow: 1; align-content: center; justify-items: center; gap: var(--hjm-space-xs); padding: var(--hjm-space-xxxl) var(--hjm-space-xl); color: var(--hjm-color-text-muted); text-align: center; }
+.hjm-empty-state[data-density="compact"] { flex-grow: 0; padding-block: var(--hjm-space-xl); }
 .hjm-empty-state__title { color: var(--hjm-color-text); }
 .hjm-result { display: grid; justify-items: center; gap: var(--hjm-space-sm); padding: var(--hjm-space-xxxl) var(--hjm-space-xl); text-align: center; }
 .hjm-result__icon { inline-size: 3.5rem; block-size: 3.5rem; display: grid; place-items: center; border-radius: var(--hjm-radius-full); font-size: 1.5rem; font-weight: var(--hjm-font-weight-bold); }
@@ -2598,7 +2599,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 
 /* Expansion renderers --------------------------------------------------- */
 .hjm-steps { display: grid; grid-template-columns: repeat(var(--hjm-steps-count, auto-fit), minmax(0, 1fr)); gap: var(--hjm-space-xs); margin: 0; padding: 0; list-style: none; }
-.hjm-steps__step { min-inline-size: 0; display: grid; gap: var(--hjm-space-xs); }
+.hjm-steps__step { min-inline-size: 0; display: grid; align-content: start; gap: var(--hjm-space-xs); }
 .hjm-steps__rail { display: flex; align-items: center; min-inline-size: 0; }
 .hjm-steps__indicator { flex: 0 0 auto; inline-size: 1.5rem; block-size: 1.5rem; display: grid; place-items: center; border: 1px solid var(--hjm-color-border); border-radius: 50%; color: var(--hjm-color-text-muted); background: var(--hjm-color-bg); font-size: var(--hjm-type-label-size); font-weight: var(--hjm-font-weight-bold); }
 .hjm-steps__connector { flex: 1 1 auto; block-size: 1px; background: var(--hjm-color-border); }
@@ -2607,7 +2608,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-steps__step[data-status="complete"] .hjm-steps__connector { background: var(--hjm-color-content-brand); }
 .hjm-steps__step[data-status="error"] .hjm-steps__indicator { border: 2px solid var(--hjm-color-danger); color: var(--hjm-color-danger); background: var(--hjm-color-danger-fill); }
 .hjm-steps__copy { min-inline-size: 0; display: grid; gap: var(--hjm-space-xxs); padding-inline-end: var(--hjm-space-sm); }
-.hjm-steps__label { color: var(--hjm-color-text); font-weight: var(--hjm-font-weight-semibold); overflow-wrap: anywhere; }
+.hjm-steps__label { color: var(--hjm-color-text); font-size: var(--hjm-type-label-size); line-height: var(--hjm-type-label-line-height); font-weight: var(--hjm-font-weight-semibold); overflow-wrap: anywhere; }
 .hjm-steps__step[data-status="pending"] .hjm-steps__label { color: var(--hjm-color-text-muted); }
 .hjm-steps__step[data-status="error"] .hjm-steps__label { color: var(--hjm-color-danger); }
 .hjm-steps__description { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-caption-size); overflow-wrap: anywhere; }
@@ -2656,10 +2657,11 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-toast-viewport[data-placement^="bottom"] { inset-block-end: calc(max(var(--hjm-space-md), env(safe-area-inset-bottom)) + var(--hjm-toast-bottom-offset, 0px)); flex-direction: column-reverse; }
 .hjm-toast-viewport[data-placement$="-start"] { margin-inline-start: 0; }
 .hjm-toast-viewport[data-placement$="-end"] { margin-inline-end: 0; }
-/* Cards stay narrow on desktop too; keep close/action rows explicit (docs/toast.md).
+/* Cards stay narrow on desktop too; keep close/action rows explicit (docs/toast.md). The card owns its width cap so a
+   controlled Toast outside the viewport keeps it too (it stretched to 1200px in the layout story, 2026-10-17 review).
    1.10.0 layout: [tone badge][title + description][close] / action pill on its own row, end-aligned.
    The 2px tone strip is retired — the tinted badge carries tone (toastRecipe.toneMark width 0). */
-.hjm-toast { position: relative; min-inline-size: 0; min-block-size: 3.5rem; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; column-gap: var(--hjm-space-sm); row-gap: var(--hjm-space-xs); padding: var(--hjm-space-sm) var(--hjm-space-xs) var(--hjm-space-sm) var(--hjm-space-md); overflow: hidden; border: var(--hjm-toast-border-width) solid var(--hjm-toast-border); border-radius: var(--hjm-toast-radius); color: var(--hjm-color-text); background: var(--hjm-toast-background); box-shadow: var(--hjm-toast-shadow); pointer-events: auto; }
+.hjm-toast { position: relative; min-inline-size: 0; max-inline-size: min(26.25rem, 100%); min-block-size: 3.5rem; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; column-gap: var(--hjm-space-sm); row-gap: var(--hjm-space-xs); padding: var(--hjm-space-sm) var(--hjm-space-xs) var(--hjm-space-sm) var(--hjm-space-md); overflow: hidden; border: var(--hjm-toast-border-width) solid var(--hjm-toast-border); border-radius: var(--hjm-toast-radius); color: var(--hjm-color-text); background: var(--hjm-toast-background); box-shadow: var(--hjm-toast-shadow); pointer-events: auto; }
 /* Whole-card activation is a sibling surface; explicit controls stay above it. */
 .hjm-toast__press { position: absolute; inset: 0; z-index: 1; border: 0; border-radius: inherit; padding: 0; background: transparent; cursor: pointer; }
 .hjm-toast__press:focus-visible { outline: 2px solid var(--hjm-color-content-brand); outline-offset: -2px; }
@@ -2856,8 +2858,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-collapsible__trigger:focus-visible { outline: 2px solid var(--hjm-color-focus); outline-offset: 2px; }
 /* The marker is decoration: aria-expanded carries the state, so it only needs
    to keep one box while the glyph changes. */
-.hjm-collapsible__marker { flex: 0 0 auto; inline-size: 1em; color: var(--hjm-color-text-muted); text-align: center; }
-[dir="rtl"] .hjm-collapsible__marker[data-state="closed"] { transform: scaleX(-1); } /* the closed mark points toward the reading end */
+.hjm-collapsible__marker { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; color: var(--hjm-color-text-muted); }
 .hjm-collapsible__content { min-inline-size: 0; overflow-wrap: anywhere; }
 
 /* Both surfaces reuse the menu's floating look; only the anchor differs. */
@@ -2898,6 +2899,12 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 
 /* Bloom owns geometry only; HJM owns target size, theme and keyboard focus. */
 .hjm-menu-morph { position: relative; z-index: 1; }
+/* Closed, the morph surface is the HJM secondary button (same frame as the reduced-motion/RTL Menu trigger).
+   Bloom animates box-shadow inline for both states, so the closed state needs !important to drop it. */
+.hjm-menu-morph__measure { position: absolute; visibility: hidden; pointer-events: none; inset-block-start: 0; inset-inline-start: 0; }
+.hjm-menu-morph__surface { color: var(--hjm-color-text); background: var(--hjm-color-bg); border: 1px solid var(--hjm-color-border-control); }
+.hjm-menu-morph[data-open="false"] .hjm-menu-morph__surface { box-shadow: none !important; }
+.hjm-menu-morph__trigger { gap: var(--hjm-space-xs); padding-inline: var(--hjm-space-md); font-family: var(--hjm-font-family-ui, inherit); font-size: var(--hjm-type-body-size); font-weight: var(--hjm-font-weight-semibold); line-height: var(--hjm-type-body-line-height); }
 .hjm-menu-morph [role="button"]:focus-visible, .hjm-menu-morph__item:focus-visible { outline: 2px solid var(--hjm-color-focus); outline-offset: -2px; }
 .hjm-menu-morph__item { display: flex; width: 100%; align-items: center; gap: var(--hjm-space-sm); min-height: var(--hjm-control-min-touch-target); padding: var(--hjm-space-sm); border: 0; background: transparent; color: inherit; font: inherit; text-align: start; cursor: pointer; }
 .hjm-menu-morph__item:hover, .hjm-menu-morph__item:focus { background: var(--hjm-color-bg); }

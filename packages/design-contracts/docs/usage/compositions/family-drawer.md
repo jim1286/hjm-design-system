@@ -20,7 +20,7 @@
 | 컴포넌트 | 역할 | 지침 |
 | --- | --- | --- |
 | `Container` · `ScrollView` | 시작 화면의 바깥 틀. HJM 화면 골격이 소유한다 | [Container](../components/container.md), [화면 여백](../tokens/layout.md) |
-| `Heading level="level2"`, `Text` | 시작 화면의 제목·설명 | [Heading](../components/heading.md), [Text](../components/text.md) |
+| `Heading level="level3"`, `Text` | 시작 화면의 제목·설명. 화면 제목은 semibold `level3`이며 heavy 표시 역할 `level1`·`level2`는 쓰지 않는다 | [Heading](../components/heading.md), [Text](../components/text.md) |
 | `Button` primary | 시트를 여는 트리거(시작 화면의 주 행동) | [Button](../components/button.md) |
 | `Sheet` | 하단 시트. 제목·닫기·`footer`, 안전 영역·스크롤·`busy` | [Sheet](../components/sheet.md) |
 | `Steps` | 현재 단계와 전체 단계 수, 실패하면 현재 단계 `error` | [Steps](../components/steps.md) |
@@ -37,7 +37,7 @@
 ┌ Web 문서 스크롤 · Native ScrollView ┐    ┌──────────── backdrop ─────────────┐
 │ ←gutter 16|20→ Container            │    │╭──────────────────────────────────╮│
 │ ┌ Stack gap="xl" 24 ──────────────┐ │    ││ 함께하는 공간              [닫기] ││ ← 머리 고정, 최소 44
-│ │ 공간 제목 (Heading level2)      │ │    ││──────────────────────────────────││
+│ │ 공간 제목 (Heading level3)      │ │    ││──────────────────────────────────││
 │ │ 설명 (Text)                     │ │    ││ ① 초대 ─ ② 설정 ─ ③ 확인         ││ ← Steps
 │ │ [ 공간 설정하기 ] primary       │ │    ││          ↕ spacing.xl 24         ││   본문(스크롤)
 │ │ 설정을 마쳤어요. (상태 문구)    │ │    ││ (실패 시 Notice danger)          ││
@@ -111,7 +111,7 @@ const isLast = step === stepIds.length - 1;
 
 <Container size="reading" gutter={gutter}>
   <Stack gap="xl">
-    <Heading level="level2">{t("space.title")}</Heading>
+    <Heading level="level3">{t("space.title")}</Heading>
     <Text as="p">{t("space.description")}</Text>
     <Button onClick={openSetup}>{t("space.setup.open")}</Button>
     {saved ? <Text as="p" role="status">{t("space.setup.saved")}</Text> : null}
@@ -155,7 +155,7 @@ import { Steps } from "@hjmds/react-native/steps";
 <ScrollView contentContainerStyle={{ paddingVertical: spacing.lg }}>
   <Container size="reading" gutter={gutter}>
     <Stack gap="xl">
-      <Heading level="level2">{t("space.title")}</Heading>
+      <Heading level="level3">{t("space.title")}</Heading>
       <Text>{t("space.description")}</Text>
       <Button onPress={openSetup}>{t("space.setup.open")}</Button>
       {saved ? <StatusText announceOnMount>{t("space.setup.saved")}</StatusText> : null}
@@ -200,9 +200,13 @@ import { Steps } from "@hjmds/react-native/steps";
 - 저장을 시트 닫힘 사유와 묶지 않는다. 닫기·바깥·back 닫힘은 취소다.
 - 중단 후 다시 열면 진행 중이던 단계로 이어간다. 성공 뒤 새 작업을 시작할 때만 0으로 되돌린다. 영속 초안이 필요한 제품은 별도 저장소 정책을 연결한다.
 - 저장 중 `busy`를 빼면 사용자가 시트를 닫아 저장 결과를 볼 곳이 사라진다.
-- 현재 스토리는 시작 화면에 바깥 틀(Container·ScrollView)이 없고 Storybook 프레임이 감싼다. 제품은 위 바깥 틀 행을 따른다.
+- 스토리는 시작 화면을 `Container size="reading"`으로 감싼다. Native 제품은 그 바깥에 위 바깥 틀 행의 `ScrollView`를 둔다.
 - 스토리는 데모 비동기 저장의 진행 중·실패·재시도를 포함한다. 실제 서버 저장은 제품이 연결한다.
 
 ## 실행 예제의 복구 경계
 
 2026-10-13 Web·Native 스토리는 `createActionSession` 기반 데모 저장을 연결한다. 마지막 단계 저장 중에는 이동·닫기를 잠그고, 실패하면 `Steps.currentStepStatus="error"`와 Notice를 표시한 채 현재 단계를 유지한다. 같은 주 버튼이 다시 저장을 수행한다. 중간에 닫았다 열면 현재 단계로 이어지고, 성공 뒤 다시 시작할 때만 첫 단계로 초기화한다. footer는 기본 Sheet 배치를 따르는 직접 자식이다. Web은 이전 → 주 행동, Native는 주 행동 → 이전이며 Native에서 가로 Stack으로 재정의하지 않는다. 실제 서버 저장·영속 초안·제품별 단계 입력은 포함하지 않는다.
+
+## 근거
+
+- 2026-10-17 구성 리뷰: 시작 화면 제목이 heavy 800 `level2`로 화면 제목 규칙(semibold)보다 무거웠고, 데스크톱에서 버튼과 문구가 1280 폭 전체로 늘어났다. 그래서 제목을 `level3`으로 낮추고 스토리에 읽기 폭 Container를 적용했다.

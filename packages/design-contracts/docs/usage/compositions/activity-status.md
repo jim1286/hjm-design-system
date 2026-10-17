@@ -163,7 +163,7 @@ function ReviewHeader({ task }: { task: ReviewTask | null }) {
 - `media`는 장식이다. 마스코트에 의미가 있으면 그 뜻을 `title`·`description`에 쓴다.
 - Native effect는 `useToastRegion()`의 안정적인 `publish` 함수에 의존한다. controller 객체 전체를 의존성에 넣으면
   publish로 controller가 갱신될 때마다 effect가 다시 발행하는 반복 렌더가 생긴다(실제 예제 host에서 재현).
-- 결과 보기의 예제 안내는 Web `role="status"`, 공개 `StatusText`로 전달한다.
+- 결과 보기의 예제 안내는 Web·Native 모두 공개 `StatusText`로 전달한다(Web은 비어 있는 동안 레이아웃에서 빠져 간격을 만들지 않는다).
   Web은 패널이 실제 소유하던 초점 요소가 닫힘으로 제거됐을 때만 칩으로 돌아가고, 완료 칩 자체에 초점이 있을 때 자동 숨김이 일어나면 작업 시작 버튼으로 옮긴다.
   Enter로 결과를 선택해 초점 요소가 제거되면 복구하지만, 포인터 클릭이 버튼에 초점을 두지 않은 경우에는 새 초점을 강제하지 않는다.
   사용자가 외부 컨트롤로 이동하거나 명시적으로 해제한 초점은 유지한다. body 자체를 패널 초점 소유의 근거로 삼지 않는다. 이는 예제의 결과 안내이며 실제 결과 화면 이동은 제품 소유다.

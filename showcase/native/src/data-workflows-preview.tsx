@@ -1,5 +1,5 @@
-import { Button } from "@hjmds/react-native/actions";
 import { useState } from "react";
+import { PreviewToolButton, PreviewTools } from "./preview-tools";
 import { ImportFieldMapping, ConversionFunnel, CohortRetentionTable, CorrelationMatrix, TargetSummary, HistogramExplorer } from "@hjmds/react-native/data-workflows";
 import type { ImportMapping } from "@hjmds/design-contracts/data-workflows";
 import { Stack, Text } from "@hjmds/react-native/primitives";
@@ -17,7 +17,7 @@ export function CohortPreview() { return <CohortRetentionTable label="주별 잔
   formatRate={rate => `${Math.round(rate * 100)}%`} missingLabel="미관측" />; }
 export function CorrelationPreview() { return <CorrelationMatrix label="사용 지표 상관" variableColumnLabel="변수" data={{ variables: [{ id: "visits", label: "방문" }, { id: "writes", label: "작성" }, { id: "gap", label: "방문 간격" }], values: [[1, .8, -.6], [.8, 1, -.4], [-.6, -.4, 1]] }} formatValue={value => value.toFixed(2)} missingLabel="미관측" />; }
 export function TargetPreview() { const [target, setTarget] = useState(20); return <Stack gap="lg"><TargetSummary label="이번 달 기록" actual={24} target={target} formatActual={value => `${value}개`}
-  summaryLabel={summary => summary.ratio === null ? "목표 미설정" : `목표 ${summary.target}개 · ${Math.round(summary.ratio * 100)}% 달성`} /><Button tone="secondary" onPress={() => setTarget(target ? 0 : 20)}>목표 설정 전환</Button></Stack>; }
+  summaryLabel={summary => summary.ratio === null ? "목표 미설정" : `목표 ${summary.target}개 · ${Math.round(summary.ratio * 100)}% 달성`} /><PreviewTools><PreviewToolButton selected={target === 0} onPress={() => setTarget(target ? 0 : 20)}>목표 없이 보기</PreviewToolButton></PreviewTools></Stack>; }
 const samples = [1, 2, 2, 3, 3, 3, 4, 5, 7, 9, null];
 export function HistogramPreview() { const [count, setCount] = useState(4); return <HistogramExplorer label="작성 소요 시간" samples={samples} domain={[0, 10]} binCount={count} binCounts={[2, 4, 8]} onBinCountChange={setCount}
   binLabel={bin => `${bin.lower.toFixed(1)}–${bin.upper.toFixed(1)}`} binCountLabel={value => `${value}구간`} formatCount={String} missingLabel="미관측"

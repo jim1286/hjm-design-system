@@ -55,6 +55,8 @@ export function SortableCollection(props: SortableCollectionProps) {
         if (!dragging.current || snapshot.current !== signature) return;
         dragging.current = false; commit(key, toIndex, "drag");
       }}
+      // Yoga `direction` mirrors the rows under HJM RTL even when the OS is LTR;
+      // without it the grip and the move buttons stayed left-to-right (2026-09-30 audit).
       renderItem={({ item, index }) => <View style={{ alignItems: "center", direction: environment.direction, flexDirection: "row", gap: tokens.spacing.sm, paddingVertical: tokens.spacing.xs }}>
         <Sortable.Handle mode={props.disabled || item.disabled ? "non-draggable" : "draggable"}>
           {/* Localized text avoids iOS treating ordinal positions as percentages. */}
@@ -66,8 +68,6 @@ export function SortableCollection(props: SortableCollectionProps) {
                 commit(item.id, index + (nativeEvent.actionName === "increment" ? 1 : -1), "accessibility-action");
               }
             }}
-            // Yoga `direction` mirrors the rows under HJM RTL even when the OS is LTR;
-            // without it the grip and the move buttons stayed left-to-right (2026-09-30 audit).
             // The handle names the item only to assistive tech; a visible label repeated the row's own title (2026-10-17).
             style={{ alignItems: "center", justifyContent: "center", minHeight: control.minTouchTarget, minWidth: control.minTouchTarget }}><Text accessible={false}>⠿</Text></View>
         </Sortable.Handle>

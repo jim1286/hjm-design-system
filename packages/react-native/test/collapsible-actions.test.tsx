@@ -7,6 +7,7 @@ import { Collapsible } from "../src/collapsible.js";
 import { HjmNativeProvider } from "../src/provider.js";
 import { Text } from "../src/primitives.js";
 import executedScenarioRegistry from "./executed-scenarios.json" with { type: "json" };
+import { DrawnChevron } from "../src/internal/drawn-glyphs.js";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -33,20 +34,22 @@ it("exposes expanded accessibility state and toggles content through the native 
   const trigger = () => renderer.root.findByType(Pressable);
   expect(trigger().props.accessibilityRole).toBe("button");
   expect(trigger().props.accessibilityState).toEqual({ expanded: false, disabled: false });
-  expect(renderer.root.findAllByType(Text).map((node) => node.props.children)).toEqual(["배송 안내", "▸"]);
+  // The open/closed mark is a drawn chevron (no text glyph), hidden from assistive technology.
+  expect(renderer.root.findAllByType(DrawnChevron).map((node) => node.props.direction)).toEqual(["end"]);
+  expect(renderer.root.findAllByType(Text).map((node) => node.props.children)).toEqual(["배송 안내"]);
 
   // The renderer test invokes the native Pressable host action; it makes no claim about physical keyboard input.
   act(() => trigger().props.onPress());
   expect(trigger().props.accessibilityState.expanded).toBe(true);
+  expect(renderer.root.findAllByType(DrawnChevron).map((node) => node.props.direction)).toEqual(["down"]);
   expect(renderer.root.findAllByType(Text).map((node) => node.props.children)).toEqual([
     "배송 안내",
-    "▾",
     "영업일 기준 이틀 안에 도착합니다.",
   ]);
 
   act(() => trigger().props.onPress());
   expect(trigger().props.accessibilityState.expanded).toBe(false);
-  expect(renderer.root.findAllByType(Text).map((node) => node.props.children)).toEqual(["배송 안내", "▸"]);
+  expect(renderer.root.findAllByType(Text).map((node) => node.props.children)).toEqual(["배송 안내"]);
 });
 
 it("retains local content on collapse and expands inline tools without an accessible trigger", () => {

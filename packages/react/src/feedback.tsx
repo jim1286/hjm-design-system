@@ -23,6 +23,7 @@ import {
 } from "react";
 import { classNames } from "./internal.js";
 import { Button } from "./actions.js";
+import { Text } from "./layout.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 // The HTML `title` attribute (tooltip string) shares its name with the heading slot.
@@ -199,12 +200,18 @@ export const Result = forwardRef<HTMLDivElement, ResultProps>(function Result(
   );
 });
 
+// Same naming contract as Native: a composition that already shows the label and value elsewhere (TargetSummary's
+// Statistic) names the bar with `aria-label` alone instead of printing the copy twice (2026-10-17 composition review).
+type ProgressName =
+  | Readonly<{ label: ReactNode; "aria-label"?: string }>
+  | Readonly<{ label?: never; "aria-label": string }>;
+
 export type ProgressProps = Omit<
   ProgressHTMLAttributes<HTMLProgressElement>,
-  "children" | "max" | "size" | "value"
+  "children" | "max" | "size" | "value" | "aria-label"
 > &
+  ProgressName &
   Readonly<{
-    label: ReactNode;
     value?: number;
     max?: number;
     valueText?: string;
@@ -272,10 +279,13 @@ export const Progress = forwardRef<HTMLProgressElement, ProgressProps>(
           "--hjm-progress-sweep": value === undefined ? "25%" : `${(value / max) * 100}%`,
         } as CSSProperties) : layoutStyle}
       >
-        <span className="hjm-progress__copy">
-          <span id={labelId}>{label}</span>
-          {resolvedValueText ? <span>{resolvedValueText}</span> : null}
-        </span>
+        {label === undefined ? null : (
+          <span className="hjm-progress__copy">
+            {/* Label and value use the label/caption roles, as Native Progress does; both inherited body 16 before (2026-10-17 review). */}
+            <Text id={labelId} variant="label">{label}</Text>
+            {resolvedValueText ? <Text variant="caption" tone="muted">{resolvedValueText}</Text> : null}
+          </span>
+        )}
         {shape === "circular" ? (
           <span className="hjm-progress__ring" aria-hidden="true">
             {children ? <span className="hjm-progress__ring-content">{children}</span> : null}

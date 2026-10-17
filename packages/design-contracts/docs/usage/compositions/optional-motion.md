@@ -44,10 +44,10 @@
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
-| 바깥 틀 | 제품 화면의 `Container`(좌우 여백·최대 폭) 안에 `Stack gap="md"` | 본문 흐름 안. 스크롤·안전 영역은 화면(문서 스크롤)이 소유하고, 텍스트 입력이 없어 키보드 처리는 없다 | 좌우 `Container` `gutter`(폭 600 미만 `compact` 16, 이상 `regular` 20). 요소 사이 `layout.contentGap` 16. 다른 구획과는 `layout.sectionGap` 24 |
+| 바깥 틀 | 제품 화면의 `Container size="reading"`(좌우 여백·Web 최대 폭 720) 안에 `Stack gap="md"` | 본문 흐름 안. 스크롤·안전 영역은 화면(문서 스크롤)이 소유하고, 텍스트 입력이 없어 키보드 처리는 없다 | 좌우 `Container` `gutter`(폭 600 미만 `compact` 16, 이상 `regular` 20). 요소 사이 `layout.contentGap` 16. 다른 구획과는 `layout.sectionGap` 24 |
 | 지표 | AnimatedStatistic | 맨 위 | 값은 Statistic `comfortable`(`heading` 크기) |
 | 값 갱신 | Button `secondary` | 지표 아래 | 높이 `medium` 44. 화면의 primary는 제품 주 행동에 남긴다 |
-| 작업 메뉴 | MorphingMenu | 값 갱신 아래 | 트리거에서 펼쳐짐 |
+| 작업 메뉴 | MorphingMenu | 값 갱신 아래 | 닫힌 트리거는 secondary Button과 같은 틀(라벨 + 끝의 `chevronDown`, 높이 44, 폭은 라벨 기준)이고 동작 줄이기·RTL의 `Menu` 트리거와 같은 모양이다. 트리거에서 펼쳐짐(열린 폭 240) |
 | 결과 문구 | `Text as="p" role="status"` | 맨 아래 | — |
 
 ## 흐름과 상태

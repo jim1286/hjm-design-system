@@ -26,4 +26,20 @@ export function DrawnCalendar({ size, color, strokeWidth = 2 }) {
     const body = size * 0.75;
     return _jsxs(View, { ...hidden, style: { width: size, height: size, alignItems: "center", justifyContent: "center" }, children: [_jsx(View, { style: { width: body, height: body * 0.92, borderWidth: strokeWidth, borderColor: color, borderRadius: strokeWidth * 1.5, marginTop: size * 0.08 }, children: _jsx(View, { style: { height: strokeWidth, backgroundColor: color, marginTop: body * 0.22 } }) }), [0.32, 0.68].map(x => _jsx(View, { style: { position: "absolute", top: size * 0.06, start: size * x - strokeWidth / 2, width: strokeWidth, height: size * 0.2, borderRadius: strokeWidth, backgroundColor: color } }, x))] });
 }
+/** Web's built-in `search` mark: a ring with the handle toward the lower end. The handle mirrors in RTL with the reading direction. */
+export function DrawnSearch({ size, color, strokeWidth = 2 }) {
+    const ring = size * 0.62, handle = size * 0.3;
+    const rtl = useHjmNativeTheme().environment.direction === "rtl";
+    return _jsxs(View, { ...hidden, style: { width: size, height: size }, children: [_jsx(View, { style: { position: "absolute", top: size * 0.08, ...(rtl ? { right: size * 0.08 } : { left: size * 0.08 }), width: ring, height: ring, borderRadius: ring / 2, borderWidth: strokeWidth, borderColor: color } }), _jsx(View, { style: { position: "absolute", top: size * 0.76, ...(rtl ? { right: size * 0.62 } : { left: size * 0.62 }), width: handle, height: strokeWidth, borderRadius: strokeWidth, backgroundColor: color,
+                    transform: [{ translateY: -strokeWidth / 2 }, { rotate: rtl ? "-45deg" : "45deg" }] } })] });
+}
+/** Web's built-in `delete` mark: lid, handle and a can narrowing toward the bottom. Symmetric, so it does not mirror. */
+export function DrawnTrash({ size, color, strokeWidth = 2 }) {
+    return _jsxs(View, { ...hidden, style: { width: size, height: size, alignItems: "center" }, children: [_jsx(View, { style: { marginTop: size * 0.12, width: size * 0.28, height: size * 0.12, borderWidth: strokeWidth, borderBottomWidth: 0, borderColor: color, borderTopLeftRadius: strokeWidth, borderTopRightRadius: strokeWidth } }), _jsx(View, { style: { width: size * 0.7, height: strokeWidth, borderRadius: strokeWidth, backgroundColor: color } }), _jsx(View, { style: { width: size * 0.5, height: size * 0.56, borderWidth: strokeWidth, borderTopWidth: 0, borderColor: color, borderBottomLeftRadius: strokeWidth * 1.5, borderBottomRightRadius: strokeWidth * 1.5 } })] });
+}
+/** Web's built-in `edit` mark: a pencil leaning toward the lower start corner, as drawn on the 24-unit grid. */
+export function DrawnPencil({ size, color, strokeWidth = 2 }) {
+    const body = size * 0.24, length = size * 0.62, tip = body / 2;
+    return _jsx(View, { ...hidden, style: { width: size, height: size, alignItems: "center", justifyContent: "center" }, children: _jsxs(View, { style: { alignItems: "center", transform: [{ rotate: "45deg" }] }, children: [_jsx(View, { style: { width: body, height: length, borderWidth: strokeWidth, borderColor: color, borderTopLeftRadius: strokeWidth, borderTopRightRadius: strokeWidth } }), _jsx(View, { style: { width: 0, height: 0, borderLeftWidth: tip, borderRightWidth: tip, borderTopWidth: tip * 1.2, borderLeftColor: "transparent", borderRightColor: "transparent", borderTopColor: color } })] }) });
+}
 //# sourceMappingURL=drawn-glyphs.js.map

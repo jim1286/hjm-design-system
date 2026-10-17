@@ -1,7 +1,8 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { resolveTaskChoice, resolvePasswordRules, resolvePriceOption } from "@hjmds/design-contracts/task-controls";
-import { Button } from "./actions.js";
+import { Button, IconButton } from "./actions.js";
+import { Icon } from "./supplemental-display.js";
 import { Menu } from "./overlays.js";
 import { PasswordField } from "./forms.js";
 import { RadioGroup } from "./selection.js";
@@ -11,9 +12,12 @@ import { Stack, Text } from "./layout.js";
 import { useCompositionAction } from "./internal/use-composition-action.js";
 function ChoiceMenu(props) {
     const available = props.choices.some(choice => !choice.disabled);
+    if (props.trigger === "icon" && !available)
+        return _jsx(IconButton, { label: props.label, tone: "secondary", disabled: true, children: _jsx(Icon, { name: "chevronDown" }) });
     if (!available)
         return _jsx(Button, { disabled: true, children: props.label });
-    return _jsx(Menu, { label: props.label, trigger: _jsx(Button, { tone: "secondary", loading: props.pending === true, children: props.label }), disabled: props.disabled, items: props.choices, selectionMode: "single", value: props.selectedId, onValueChange: () => undefined, onActionAfterDismiss: props.onChoose });
+    const trigger = props.trigger === "icon" ? _jsx(IconButton, { label: props.label, tone: "secondary", children: _jsx(Icon, { name: "chevronDown" }) }) : _jsx(Button, { tone: "secondary", loading: props.pending === true, children: props.label });
+    return _jsx(Menu, { label: props.label, trigger: trigger, disabled: props.disabled, items: props.choices, selectionMode: "single", value: props.selectedId, onValueChange: () => undefined, onActionAfterDismiss: props.onChoose });
 }
 function Failure({ failed, label }) {
     return failed ? _jsx(Text, { role: "alert", tone: "danger", style: { textAlign: "center" }, children: label }) : null;
@@ -21,8 +25,9 @@ function Failure({ failed, label }) {
 export function SplitAction(props) {
     const mode = resolveTaskChoice(props.modes, props.modeId), action = useCompositionAction(props.disabled);
     const locked = props.disabled === true || action.pending;
-    return _jsxs(Stack, { gap: "sm", children: [_jsxs(Stack, { axis: "inline", gap: "xs", wrap: true, children: [_jsx(Button, { loading: action.pending, disabled: props.disabled === true || mode.disabled === true, onClick: () => { if (!mode.disabled)
-                            void action.run(mode.id, () => props.onExecute(mode.id)); }, children: props.executeLabel(mode) }), _jsx(ChoiceMenu, { choices: props.modes, selectedId: mode.id, label: props.menuLabel, dismissLabel: props.dismissLabel, disabled: locked, onChoose: id => { if (!locked && !resolveTaskChoice(props.modes, id).disabled)
+    // The mode menu is a chevron tool at the action's end, inline gap 12 (button.md); a second text button read as an unrelated action (2026-10-17 review).
+    return _jsxs(Stack, { gap: "sm", children: [_jsxs(Stack, { axis: "inline", gap: "sm", align: "center", children: [_jsx(Button, { loading: action.pending, disabled: props.disabled === true || mode.disabled === true, onClick: () => { if (!mode.disabled)
+                            void action.run(mode.id, () => props.onExecute(mode.id)); }, children: props.executeLabel(mode) }), _jsx(ChoiceMenu, { trigger: "icon", choices: props.modes, selectedId: mode.id, label: props.menuLabel, dismissLabel: props.dismissLabel, disabled: locked, onChoose: id => { if (!locked && !resolveTaskChoice(props.modes, id).disabled)
                             props.onModeChange(id); } })] }), _jsx(Failure, { failed: action.failed, label: props.errorLabel })] });
 }
 export function AccountSwitcher(props) {

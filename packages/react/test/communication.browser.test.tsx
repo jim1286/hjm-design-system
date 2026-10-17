@@ -11,7 +11,8 @@ let host:HTMLDivElement,root:Root;
 beforeEach(()=>{(globalThis as {IS_REACT_ACT_ENVIRONMENT?:boolean}).IS_REACT_ACT_ENVIRONMENT=true;host=document.createElement("div");host.style.width="375px";document.body.append(host);root=createRoot(host);});
 afterEach(async()=>{await act(async()=>root.unmount());host.remove();});
 const labels={title:"검색",open:"펼치기",cancel:"검색 취소",query:"검색어",clear:"지우기",searching:"검색 중",error:"검색 실패",commit:(q:string)=>`${q} 검색`,suggestionCount:(n:number)=>`${n}개`};
-function button(label:string){return [...host.querySelectorAll("button")].find(n=>n.textContent===label)!;}
+// Search open/close are icon buttons named by aria-label.
+function button(label:string){return [...host.querySelectorAll("button")].find(n=>n.textContent===label||n.getAttribute("aria-label")===label)!;}
 it("expands the existing SearchScreen, ignores late results and aborts on collapse with focus restored",async()=>{
  const requests:{q:string;signal:AbortSignal;resolve:(value:SearchResponse<string>)=>void}[]=[];
  function Demo(){const [expanded,setExpanded]=useState(false),[query,setQuery]=useState("");return <ExpandableSearch<string> expanded={expanded} onExpandedChange={setExpanded} query={query} onQueryChange={setQuery} debounceMs={0} labels={labels} renderResult={result=><p>{result}</p>} onSearch={(q,{signal})=>new Promise(resolve=>requests.push({q,signal,resolve}))}/>;}

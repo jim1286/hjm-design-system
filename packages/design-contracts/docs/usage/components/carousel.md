@@ -82,7 +82,7 @@ import { Carousel } from "@hjmds/react-native/carousel";
 | `currentKey` + `onCurrentKeyChange` · `defaultCurrentKey` | 슬라이드 `id`, `(key: string) => void` | 첫 슬라이드 | 제어(둘 다 필수)·비제어 중 하나만 타입이 허용한다. 값은 인덱스가 아니라 `id`다 |
 | `autoplay` | `{ intervalMs: number }`(0보다 큼) | 없음 | 주면 일시정지/재개 버튼이 생긴다. 마지막 슬라이드, reduced motion, 사용자 조작 뒤에는 멈추고 명시적인 재개 전까지 다시 돌지 않는다 |
 | `layoutStyle` | margin·width·flex·`alignSelf` | — | 배치 전용. Native `style`은 제거된 속성 — `layoutStyle`로 배치하고 내부 표현은 recipe를 따른다 |
-| `CarouselMotion` 탐색 | `navigation?: "buttons" \| "counter"` | `buttons` | `counter`는 이전 아이콘·현재/전체·다음 아이콘을 한 줄에 둔다. 끝에서는 해당 버튼을 비활성화한다. Web/Native 동일, 미게시 |
+| `CarouselMotion` 탐색 | `navigation?: "buttons" \| "counter"` | `buttons` | `buttons`는 이전·다음 아이콘 버튼(`previousLabel`·`nextLabel`이 이름)을 슬라이드 아래 끝 정렬 한 줄에 `spacing.sm` 간격으로 둔다. `counter`는 이전 아이콘·현재/전체·다음 아이콘을 한 줄에 둔다. 아이콘은 읽기 방향을 따라 좌우가 바뀐다. 끝에서는 해당 버튼을 비활성화한다. Web/Native 동일, 미게시 |
 | `CarouselMotion` 선택 | `currentKey: string`, `onCurrentKeyChange(key: string): void` | 필수(항상 제어) | autoplay가 없다. `slides`는 `{ id, label, disabled? }` |
 | `CarouselMotion` 라벨 | `label`·`previousLabel`·`nextLabel`, 선택 `composeAccessibleName` | — | `composeAccessibleName`이 없으면 슬라이드 `label`을 쓴다 |
 | `CarouselMotion` 크기(Native) | `width`·`height` 측정값 | 필수 | 양수가 아니면 `TypeError`. Web `CarouselMotion`은 `layoutStyle`을 받고 Native는 받지 않는다 |

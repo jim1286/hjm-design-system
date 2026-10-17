@@ -34,8 +34,7 @@ export const pixelCopy = {
   description: "말랑이가 첫 기록을 기다리고 있어요.",
   start: "첫 기록 남기기",
   started: "기록 작성 화면으로 이동하는 예제예요.",
-  pause: "움직임 멈추기",
-  resume: "다시 움직이기",
+  motion: "캐릭터 움직임",
 } as const;
 
 /** 팔레트 키. 색 값은 renderer가 테마에서 고른다(어두운 테마에서도 대비 유지). */

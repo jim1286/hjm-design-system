@@ -8,10 +8,11 @@ import { Card } from "@hjmds/react-native/data-display";
 import { Dialog } from "@hjmds/react-native/overlays";
 import { TextField } from "@hjmds/react-native/inputs";
 import { Container, Section, Stack, Text } from "@hjmds/react-native/primitives";
+import { PreviewTools, PreviewToolButton } from "./preview-tools";
 import { profileCopy, profileOptions } from "../../shared/design-profile";
 import { collectionRecords, collectionCopy as copy, type CollectionDetailProps } from "../../shared/collection-detail";
 
-function RecordCard({ label, description, onNextTheme }: { label: string; description: string; onNextTheme: () => void }) {
+function RecordCard({ label, description }: { label: string; description: string }) {
   const [draft, setDraft] = useState<string>(copy.initial), [detailDraft, setDetailDraft] = useState<string>(copy.initial);
   const [open, setOpen] = useState(false);
   const trigger = useRef<View>(null);
@@ -20,8 +21,7 @@ function RecordCard({ label, description, onNextTheme }: { label: string; descri
   return <Card title={label} description={description} actions={<Button ref={trigger} tone="secondary" onPress={() => setOpen(true)}>{label} {copy.open}</Button>}>
     <TextField label={`${label} ${copy.note}`} value={draft} onValueChange={setDraft} />
     <Dialog open={open} onOpenChange={setOpen} title={label} closeLabel={copy.close} returnFocusRef={trigger}>
-      <Stack gap="md"><TextField label={`${label} ${copy.detailNote}`} value={detailDraft} onValueChange={setDetailDraft} />
-        <Button tone="secondary" onPress={onNextTheme}>{profileCopy.nextTheme}</Button></Stack>
+      <TextField label={`${label} ${copy.detailNote}`} value={detailDraft} onValueChange={setDetailDraft} />
     </Dialog>
   </Card>;
 }
@@ -31,11 +31,13 @@ export function CollectionDetailPreview({ empty = false }: CollectionDetailProps
   const profile = profileOptions[themeIndex]!;
   const nextTheme = () => setThemeIndex(current => (current + 1) % profileOptions.length);
   return <HjmNativeProvider designProfile={hjmDesignPresets[profile.id]}><ScrollView keyboardShouldPersistTaps="handled"><Container gutter="compact"><Section title={copy.title} description={copy.description}>
-    <Stack gap="md"><Text>{profileCopy.choose}: {profile.label}</Text><Button tone="secondary" onPress={nextTheme}>{profileCopy.nextTheme}</Button>
+    <Stack gap="md">
       <CollectionRail label={copy.list} items={empty ? [] : collectionRecords}
         labels={{ previous: copy.previous, next: copy.next, navigation: copy.navigation }} emptyContent={<Text>{copy.empty}</Text>}
-        renderItem={item => <RecordCard {...collectionRecords.find(record => record.id === item.id)!} onNextTheme={nextTheme} />} />
+        renderItem={item => <RecordCard {...collectionRecords.find(record => record.id === item.id)!} />} />
       <Text tone="muted">{copy.fixture}</Text>
+      {/* Theme cycling is a demo tool, not part of the composition (2026-10-17 composition review). */}
+      <PreviewTools><PreviewToolButton onPress={nextTheme}>{`${profileCopy.nextTheme} (${profile.label})`}</PreviewToolButton></PreviewTools>
     </Stack>
   </Section></Container></ScrollView></HjmNativeProvider>;
 }

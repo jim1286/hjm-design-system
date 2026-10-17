@@ -20,35 +20,35 @@ export type ShowcaseEnvironment = Readonly<{
  */
 export declare const showcaseEnvironmentMatrix: readonly [{
     readonly id: "default";
-    readonly label: "Light · LTR · 100%";
+    readonly label: "밝게 · 왼쪽→오른쪽 · 100%";
     readonly theme: "light";
     readonly direction: "ltr";
     readonly textScale: 1;
     readonly motion: "full";
 }, {
     readonly id: "dark";
-    readonly label: "Dark · LTR · 100%";
+    readonly label: "어둡게 · 왼쪽→오른쪽 · 100%";
     readonly theme: "dark";
     readonly direction: "ltr";
     readonly textScale: 1;
     readonly motion: "full";
 }, {
     readonly id: "large-text";
-    readonly label: "Light · LTR · 200%";
+    readonly label: "밝게 · 왼쪽→오른쪽 · 200%";
     readonly theme: "light";
     readonly direction: "ltr";
     readonly textScale: 2;
     readonly motion: "full";
 }, {
     readonly id: "rtl";
-    readonly label: "Light · RTL · 100%";
+    readonly label: "밝게 · 오른쪽→왼쪽 · 100%";
     readonly theme: "light";
     readonly direction: "rtl";
     readonly textScale: 1;
     readonly motion: "full";
 }, {
     readonly id: "reduced-motion";
-    readonly label: "Light · LTR · Reduced motion";
+    readonly label: "밝게 · 왼쪽→오른쪽 · 동작 줄이기";
     readonly theme: "light";
     readonly direction: "ltr";
     readonly textScale: 1;
@@ -66,47 +66,47 @@ export type ShowcaseScenario = Readonly<{
 export declare const showcaseScenarios: readonly [{
     readonly id: "contract";
     readonly label: "계약";
-    readonly description: "Anatomy, defaults, supported axes, platform and maturity are visible.";
+    readonly description: "구조·기본값·지원 축·플랫폼과 성숙도가 보인다.";
 }, {
     readonly id: "default";
     readonly label: "기본";
-    readonly description: "The normal state renders using recipe defaults without product overrides.";
+    readonly description: "제품 설정을 덮어쓰지 않고 recipe 기본값으로 보통 상태를 그린다.";
 }, {
     readonly id: "dark";
     readonly label: "어두운 테마";
-    readonly description: "Semantic colors remain legible on the dark theme.";
+    readonly description: "어두운 테마에서도 의미 색이 읽힌다.";
 }, {
     readonly id: "long-copy";
     readonly label: "긴 문구";
-    readonly description: "Long Korean and English copy wraps without clipping or hiding meaning.";
+    readonly description: "긴 한국어·영어 문구가 잘리거나 의미를 숨기지 않고 줄바꿈된다.";
 }, {
     readonly id: "large-text";
     readonly label: "200% 글자";
-    readonly description: "Text can grow to 200% without truncating required information.";
+    readonly description: "글자를 200%까지 키워도 필요한 정보가 잘리지 않는다.";
 }, {
     readonly id: "rtl";
     readonly label: "오른쪽→왼쪽";
-    readonly description: "Logical start/end layout and directional icons mirror correctly.";
+    readonly description: "논리적 시작·끝 배치와 방향 아이콘이 올바르게 뒤집힌다.";
 }, {
     readonly id: "reduced-motion";
     readonly label: "동작 줄이기";
-    readonly description: "Motion follows the recipe reduced-motion fallback.";
+    readonly description: "움직임이 recipe의 동작 줄이기 대체 표현을 따른다.";
 }, {
     readonly id: "accessibility";
     readonly label: "접근성";
-    readonly description: "Names, states, relationships, contrast and touch targets are inspectable.";
+    readonly description: "이름·상태·관계·대비·터치 영역을 확인할 수 있다.";
 }, {
     readonly id: "keyboard";
     readonly label: "키보드";
-    readonly description: "Focus order and documented keyboard behavior run as interaction tests.";
+    readonly description: "포커스 순서와 문서화한 키보드 동작을 상호작용 테스트로 실행한다.";
 }, {
     readonly id: "native-actions";
     readonly label: "앱 동작";
-    readonly description: "Accessible host actions and their state transitions run against the Native renderer.";
+    readonly description: "접근성 동작과 그 상태 변화를 Native renderer에서 실행한다.";
 }, {
     readonly id: "platform-parity";
     readonly label: "웹·앱 동등성";
-    readonly description: "Adaptive renderers preserve intent while using platform-native behavior.";
+    readonly description: "각 renderer가 플랫폼 고유 동작을 쓰면서 같은 의도를 유지한다.";
 }];
 export type ShowcaseComponentEntry = Readonly<{
     storyId: string;

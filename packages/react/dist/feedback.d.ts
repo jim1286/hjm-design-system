@@ -59,8 +59,14 @@ export declare const Result: import("react").ForwardRefExoticComponent<Omit<HTML
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLDivElement>>;
-export type ProgressProps = Omit<ProgressHTMLAttributes<HTMLProgressElement>, "children" | "max" | "size" | "value"> & Readonly<{
+type ProgressName = Readonly<{
     label: ReactNode;
+    "aria-label"?: string;
+}> | Readonly<{
+    label?: never;
+    "aria-label": string;
+}>;
+export type ProgressProps = Omit<ProgressHTMLAttributes<HTMLProgressElement>, "children" | "max" | "size" | "value" | "aria-label"> & ProgressName & Readonly<{
     value?: number;
     max?: number;
     valueText?: string;
@@ -77,24 +83,7 @@ export type ProgressProps = Omit<ProgressHTMLAttributes<HTMLProgressElement>, "c
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare const Progress: import("react").ForwardRefExoticComponent<Omit<ProgressHTMLAttributes<HTMLProgressElement>, "value" | "size" | "children" | "max"> & Readonly<{
-    label: ReactNode;
-    value?: number;
-    max?: number;
-    valueText?: string;
-    size?: ProgressSize;
-    tone?: ProgressTone;
-    /**
-     * `circular` draws the same value as a ring. It is a shape, not a second
-     * component: min/max/now, the indeterminate case and the announcement are
-     * identical, so the accessibility contract stays in one place.
-     */
-    shape?: ProgressShape;
-    /** Content inside the ring — a percentage, a count, an icon. Ignored when linear. */
-    children?: ReactNode;
-    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
-    layoutStyle?: HjmCompositionStyleProp;
-}> & import("react").RefAttributes<HTMLProgressElement>>;
+export declare const Progress: import("react").ForwardRefExoticComponent<ProgressProps & import("react").RefAttributes<HTMLProgressElement>>;
 export { Spinner, type SpinnerProps } from "./internal/spinner.js";
 type SkeletonShape = keyof typeof skeletonRecipe.shapes;
 export type SkeletonProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> & Readonly<{

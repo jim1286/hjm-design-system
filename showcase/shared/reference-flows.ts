@@ -32,7 +32,7 @@ export const editorCopy = {
   settings: { title: "나에게 맞는 기록", intro: "이름과 알림을 바꾸고, 변경한 내용만 저장해요.", field: "기록장 이름", submit: "변경 내용 저장", complete: "변경 내용을 저장했어요" },
   review: { title: "선택한 내용을 확인해요", intro: "기록의 이름과 분류를 확인하고 확정해요. 각 항목은 다시 수정할 수 있어요.", field: "기록 이름", submit: "이 내용으로 확정", complete: "선택한 내용을 확정했어요" },
 } as const;
-export const scopeCopy = "미리보기 전용 · 저장과 초안은 이 화면이 열려 있는 동안만 유지됩니다. 서버 요청은 없어요.";
+export const scopeCopy = "미리보기 전용 · 저장과 초안은 이 화면이 열려 있는 동안만 남아 있어요. 서버 요청은 없어요.";
 export const flowSteps = [{ id: "purpose", label: "주제" }, { id: "write", label: "기록" }, { id: "review", label: "확인" }];
 export const stepLabels = { pending: "대기", current: "현재", complete: "완료", error: "확인 필요" };
 export const stepName = ({ position, total, label }: { position: number; total: number; label: string }) => `${total}단계 중 ${position}, ${label}`;

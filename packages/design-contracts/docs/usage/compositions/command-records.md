@@ -28,27 +28,28 @@
 | CodeBlock | 선택 가능한 LTR 원문 | [코드 블록](../components/code-block.md) |
 | ClipboardButton | Web 원문 복사와 성공/오류 callback | [코드 블록의 복사 슬롯](../components/code-block.md#최소-사용-예) |
 | Button·Notice·Text | 갱신·진행·실패·원문 선택 안내 | [버튼](../components/button.md) · [알림](../components/notice.md) |
-| Collapsible | 결정적인 Storybook 응답 도구 | [접기](../components/collapsible.md) |
+| 미리보기 도구(Showcase `PreviewTools`) | 테마 고르기와 결정적인 응답 도구. 제품 행동과 분리한 캡션·`small` 조작([선택 조립 규칙](../SELECTION.md#조립-규칙필수)) | — |
 
 ## 배치
 
 ```text
-Section 제목/설명 → 현재 테마/다음 테마
+Section 제목/설명
 긴 줄 표시: 줄바꿈 / 가로 스크롤
 명령 / 출력 탭 → 언어·복사 보조 행동 → 선택 가능한 원문
 복사 실패 안내 / 닫기
 갱신 진행 또는 원문을 유지한 실패 알림
 표시 새로고침(주 행동) → 예제 응답 안내
-검증 도구: 미리보기 응답 받기 / 다음 갱신 실패
+미리보기 도구: 테마(SegmentedControl pills small) / 미리보기 응답 받기 / 다음 갱신 실패
 ```
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
-| 바깥 틀 | Container·Section·Stack | 세로 문서 흐름 | Container `gutter="compact"` 16, Stack `spacing.md` 16. Native ScrollView 위아래 `spacing.lg` 20 |
+| 바깥 틀 | Container·Section·Stack | 세로 문서 흐름 | Web Container `size="reading"`, Container `gutter="compact"` 16, Stack `spacing.md` 16. Native ScrollView 위아래 `spacing.lg` 20 |
 | 보기 선택 | SegmentedControl | 탭 목록 위 | `presentation="pills"`, 큰 글자에서 줄바꿈 |
 | 패널 | TabPanel·CodeBlock | 탭 목록 아래 | dynamic 단일 패널. CodeBlock의 `radius.lg`·`spacing.md`·프로필 code font, 원문 LTR |
 | 복사 | ClipboardButton | Web CodeBlock 머리 줄 끝 | `tone="secondary" size="small"`. Native는 원문 시스템 선택; 제품 host action이 있으면 같은 슬롯 |
 | 갱신·복구 | Button·Notice | 원문 아래 | 기본 Button 높이 `control.buttonHeight.medium` 44; 진행 중 잠금, 이전 원문 유지 |
+| 미리보기 도구 | 캡션 + SegmentedControl(`presentation="pills" size="small"`) + `small` ghost Button | 예제 안내 아래, 맨 끝 | 캡션과 조작 사이 `spacing.xs` 8, 조작 사이 `spacing.sm` 12. 제품에는 복사하지 않는다 |
 
 ## 흐름과 상태
 

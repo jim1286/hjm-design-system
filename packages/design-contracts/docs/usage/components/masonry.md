@@ -38,7 +38,6 @@ import { Masonry } from "@hjmds/react/masonry";
 import { EmptyState } from "@hjmds/react/feedback";
 
 <Masonry label={t("gallery.title")} items={photos} keyExtractor={(p) => p.id}
-  width={containerWidth} columns={3}
   getItemHeight={(p, itemWidth) => itemWidth * (p.height / p.width)}
   renderItem={(p) => <PhotoCard photo={p} />}
   empty={<EmptyState title={t("gallery.empty.title")} />} />
@@ -49,7 +48,7 @@ import { EmptyState } from "@hjmds/react/feedback";
 import { Masonry } from "@hjmds/react-native/masonry";
 
 <Masonry label={t("gallery.title")} items={photos} keyExtractor={(p) => p.id}
-  width={layoutWidth} getItemHeight={(p, itemWidth) => itemWidth * (p.height / p.width)}
+  getItemHeight={(p, itemWidth) => itemWidth * (p.height / p.width)}
   renderItem={(p) => <PhotoCard photo={p} />} />
 ```
 
@@ -61,10 +60,10 @@ import { Masonry } from "@hjmds/react-native/masonry";
 | --- | --- | --- | --- |
 | `items` | `readonly T[]` | 필수 | 입력 순서가 읽기·포커스 순서다 |
 | `keyExtractor` | `(item: T) => string` | 필수 | 유일한 키. 중복이면 `TypeError` |
-| `renderItem` | `(item: T, index: number) => ReactNode` | 필수 | 열 폭은 넘기지 않는다. 항목 래퍼가 `getItemHeight` 높이·열 폭으로 고정돼 있어 Web은 일반 레이아웃 div에 `height: "100%", display: "flex"`를 주고 그 안의 Surface에는 `layoutStyle={{ flex: 1 }}`을 준다. Native Surface는 `layoutStyle={{ flex: 1 }}`로 채운다. HJM layoutStyle에 height를 넣지 않는다 |
+| `renderItem` | `(item: T, index: number) => ReactNode` | 필수 | 열 폭은 넘기지 않는다. 항목 틀은 `getItemHeight` 높이·열 폭으로 고정된 세로 flex 상자(두 플랫폼 같음)라, 카드가 틀을 채우려면 Surface 등에 `layoutStyle={{ flex: 1 }}`만 준다. 감싸는 div를 만들거나 layoutStyle에 height를 넣지 않는다 |
 | `getItemHeight` | `(item: T, itemWidth: number) => number` | 필수 | 그 열 폭에서 항목의 확정 높이(양의 유한수). 루트 높이는 가장 긴 열로 정해진다 |
-| `width` | 숫자(> 0) | 필수 | 컨테이너 폭. 측정은 소비 화면이 한다(Web ResizeObserver, Native `onLayout` 등) |
-| `columns` | 1~12 정수 | 2 | 열 수 |
+| `width` | 숫자(> 0) | — | 생략하면 Masonry가 자기 자리 폭을 측정한다(Web ResizeObserver, Native `onLayout`). 측정 전에는 아무것도 그리지 않는다. 화면이 이미 폭을 알면 넘긴다 |
+| `columns` | 1~12 정수 | 폭에서 계산 | 생략하면 `resolveMasonryColumns(width, gap)` = 열 폭이 `masonryRecipe.minItemWidth` 160 이상인 최대 열 수(1~12). 375 폰 본문 2열, 데스크톱 1168 슬롯 6열 |
 | `gap` | 0 이상 숫자 | 12 | 가로·세로 간격 |
 | `label` | 문자열 | 필수 | 현지화 |
 | `empty` | 노드 | — | 항목이 없을 때 보일 내용 |
@@ -78,7 +77,7 @@ import { Masonry } from "@hjmds/react-native/masonry";
 | 간격 | `gap` 기본 12(`spacing.sm`과 같은 값), 가로·세로 같은 값. `width`는 화면 좌우 여백(`layout.pagePadding` compact 16 · regular 20 · spacious 24)을 뺀 본문 폭 | `src/masonry.ts`, `layout.pagePadding` |
 | 순서·정렬 | 원본 순서대로 가장 짧은 열에 채운다. 읽기·포커스 순서는 열이 아니라 원본 순서. RTL은 오른쪽 열부터 | `masonryRecipe.readingOrder`, `insetInlineStart`(Web)·`right`(Native) |
 | 고정·스크롤 | 본문 스크롤 영역 안에 놓는다. Masonry는 스크롤을 갖지 않는다 | `src/masonry.tsx`(Web·Native) |
-| 좁은 폭·큰 글자 | 열 수는 제품이 폭으로 정한다(좁은 폭 2열, `breakpoint.medium` 600 이상에서 늘림). 큰 글자로 카드 높이가 바뀌면 `getItemHeight`를 다시 계산하고, 폭이 바뀌면 `width`를 다시 넘긴다 | `breakpoint` |
+| 좁은 폭·큰 글자 | 열 수는 기본으로 폭에서 계산한다(최소 열 폭 160, 폰 2열·넓은 슬롯에서 늘어남). 큰 글자로 카드 높이가 바뀌면 `getItemHeight`를 다시 계산한다. `width`를 생략하면 폭 변화도 Masonry가 따라간다 | `masonryRecipe.minItemWidth`, `resolveMasonryColumns` |
 
 ## 꼭 지킬 것
 
@@ -87,7 +86,7 @@ import { Masonry } from "@hjmds/react-native/masonry";
 - `keyExtractor`는 유일한 키를 돌려준다. 중복 키는 `TypeError`다.
 - `width`가 0 이하이거나 열 폭이 0 이하, `getItemHeight`가 양의 유한수가 아니면 `TypeError`가 난다. 항목이 비어
   `empty`만 그릴 때도 기하 검사를 먼저 하므로 같다. 측정 전(폭 0)에는 Masonry를 렌더하지 않는다.
-- 화면 폭이 바뀌면 `width`를 다시 넘긴다.
+- `width`를 직접 넘기는 경우 화면 폭이 바뀌면 다시 넘긴다. 생략하면 Masonry가 측정한다.
 - 빈 목록도 `width`를 유지하며, `layoutStyle`로 할당한 영역 안에서 안내를 가로·세로 중앙에 놓는다. 높이를 지정하지 않은 본문에서는 안내의 내용 높이를 사용한다.
 
 ## 플랫폼 차이

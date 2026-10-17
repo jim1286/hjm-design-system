@@ -57,7 +57,7 @@
 | 바깥 틀 | Web: `Container size="reading"`. Native: `ScrollView` → `Container` | 화면 본문, 카드는 스크롤과 함께 움직인다. 안전 영역은 화면 host(SafeArea·navigation header)가 준다. 입력이 없어 키보드 처리는 없다 | Native `ScrollView` 위아래 `spacing.md` 16, 좌우는 `Container` `gutter`(폭 600 미만 `compact` 16, 이상 `regular` 20). 최대 폭 `layout.readingMaxWidth` 720 |
 | 틀 | `Card` | 바깥 틀 안 | body padding `spacing.md` 16(`cardRecipe`) |
 | 정보 | `DescriptionList` | Card 머리 아래 | 정보–식별 묶음 `Stack gap="lg"` 20 |
-| 식별 묶음 | `QRCode`(+fallback) → 라벨 → 번호 | 정보 아래, 시작 정렬 | 묶음 안 `Stack gap="sm"` 12, QR `size` 기본 192(모듈 수의 정수배로 내림), quiet zone 4모듈. QR–fallback 사이 간격은 컴포넌트가 주지 않는다 |
+| 식별 묶음 | `QRCode`(+fallback) → 라벨 → 번호 | 정보 아래, 시작 정렬 | 묶음 안 `Stack gap="sm"` 12, QR `size` 기본 192(모듈 수의 정수배로 내림), quiet zone 4모듈. QR 아래에 fallback을 세로로 쌓고 가운데 정렬하며 둘 사이 간격 12(`qrCodeRecipe.fallbackGap`)는 컴포넌트가 준다. fallback을 Stack으로 다시 감싸지 않는다 |
 | 로딩·실패 | `Skeleton`·`Result` | 카드 자리 | Skeleton `block` 기본 높이 `spacing.xxl` 32. Result는 자체 여백(`resultRecipe`) |
 
 - QR은 번호 **위**에 두고, 번호는 QR이 읽히지 않을 때 직원이 입력할 수 있도록 항상 같이 보인다.
@@ -99,9 +99,8 @@ import { QRCode } from "@hjmds/react/qr-code";
       <Stack gap="lg">
         <DescriptionList aria-label={t("ticket.details")} items={ticketState.ticket.details} />
         <Stack gap="sm">
-          {/* QRCode의 svg가 inline이라 fallback을 블록으로 감싸 아래 줄에 둔다. */}
           <QRCode value={ticketState.ticket.booking} label={t("ticket.qrLabel", { booking: ticketState.ticket.booking })}
-            fallback={<Stack gap="xs"><Text tone="muted">{t("ticket.qrFallback")}</Text></Stack>} />
+            fallback={<Text tone="muted">{t("ticket.qrFallback")}</Text>} />
           <Text variant="label" tone="muted">{t("ticket.bookingLabel")}</Text>
           <Text variant="title" emphasis="strong">{ticketState.ticket.booking}</Text>
         </Stack>
@@ -155,7 +154,6 @@ const gutter = resolveWindowClass(useWindowDimensions().width) === "compact" ? "
 | --- | --- | --- |
 | 바깥 틀 | 문서 스크롤 + `Container` | `ScrollView`(위아래 `spacing.md`) + `Container` |
 | `DescriptionList` 이름·항목 | `aria-label` + `items` | `label` + `descriptor={{ items }}` |
-| fallback 감싸기 | inline svg 옆으로 흐르지 않게 `Stack`으로 감싼다 | `Text` 그대로 |
 | 번호 선택 | 브라우저 기본 텍스트 선택 | `Text selectable` |
 | QR 배치 prop | 배치 전용 `layoutStyle`만 | 없음(감싸는 레이아웃에서 정한다) |
 | QR peer | `qrcode-generator` 2.0.4 | `qrcode-generator` 2.0.4 + `react-native-svg` 15.15.5(dev client 재빌드) |

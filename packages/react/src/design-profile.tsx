@@ -4,8 +4,7 @@ import { Collapsible } from "./collapsible.js";
 import { EffectSurface } from "./effect-surface.js";
 import { Grid, Stack, Surface } from "./layout.js";
 import { useHjmTheme } from "./provider.js";
-import { resolveDesignProfileCollection } from "@hjmds/design-contracts/design-profile-layout";
-import { layout } from "@hjmds/design-contracts/foundations";
+import { resolveDesignProfileCollection, overviewToolbarLayout } from "@hjmds/design-contracts/design-profile-layout";
 import type { HjmDesignProfile } from "@hjmds/design-contracts/design-profile";
 
 export type OverviewScreenProps = Omit<ScreenLayoutProps, "children"> & Readonly<{
@@ -30,12 +29,10 @@ export function OverviewScreen({ items, toolbar, toolbarLabel, collection: suppl
   // Retain the same effect/grid/surface subtree when the profile changes: optional
   // decoration can disappear without remounting fields, focus or local state.
   const canvas = designProfile?.material.canvas ?? { layers: ["mesh"] as const, intensity: 0, active: false };
-  // Tools are form controls: they stop at the reading width while the collection below uses the full screen width
-  // (fields and segmented controls had stretched to ~1200px on desktop, 2026-10-17 review).
   return <EffectSurface descriptor={canvas} layoutStyle={{ width: "100%" }}>
     <ScreenLayout {...screen}>
       <Stack gap="xl">
-        {toolbar ? <Collapsible trigger={toolbarLabel} open={toolsOpen} onOpenChange={setToolsOpen} presentation={toolbarPresentation === "inline" ? "inline" : "disclosure"} keepMounted layoutStyle={{ maxWidth: layout.readingMaxWidth }}>{toolbar}</Collapsible> : null}
+        {toolbar ? <Collapsible trigger={toolbarLabel} open={toolsOpen} onOpenChange={setToolsOpen} presentation={toolbarPresentation === "inline" ? "inline" : "disclosure"} keepMounted layoutStyle={overviewToolbarLayout}>{toolbar}</Collapsible> : null}
         <Grid {...resolveDesignProfileCollection(collection)}>
           {items.map(item => <Surface key={item.id} padding={collection === "rows" ? "md" : "xl"} tone={collection === "rows" ? "default" : "raised"} bordered radius="lg"><EffectSurface descriptor={designProfile?.material.card ?? { layers: ["mesh"], intensity: 0, active: false }} className="hjm-profile-card-effect">{item.children}</EffectSurface></Surface>)}
         </Grid>

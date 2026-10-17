@@ -1,11 +1,15 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { resolveEffectSurface, type EffectSurfaceDescriptor } from "@hjmds/design-contracts/effect-surface";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
+import { surfaceGeometry, type SurfacePadding } from "@hjmds/design-contracts/recipes/base";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { useHjmTheme } from "./provider.js";
-export type EffectSurfaceProps = Readonly<{ descriptor?: EffectSurfaceDescriptor; children: ReactNode; className?: string; /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */ layoutStyle?: HjmCompositionStyleProp; }>;
+export type EffectSurfaceProps = Readonly<{ descriptor?: EffectSurfaceDescriptor; children: ReactNode; className?: string;
+  /** Content inset inside the decorated area (Surface padding scale). Consumers otherwise wrapped children in raw padded elements. */
+  padding?: SurfacePadding;
+  /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */ layoutStyle?: HjmCompositionStyleProp; }>;
 /** Decorative layers never receive pointer events or own the content's name. */
-export function EffectSurface({ descriptor = {}, children, className, layoutStyle }: EffectSurfaceProps) {
+export function EffectSurface({ descriptor = {}, children, className, padding = "none", layoutStyle }: EffectSurfaceProps) {
   const { palette, environment } = useHjmTheme();
   const effect = resolveEffectSurface(descriptor);
   const id = useId().replace(/:/g, "");
@@ -57,6 +61,6 @@ export function EffectSurface({ descriptor = {}, children, className, layoutStyl
       <defs><pattern id={`${id}-ruled`} width={1} height={effect.ruled.spacing} patternUnits="userSpaceOnUse"><rect y={effect.ruled.spacing - effect.ruled.thickness} width="100%" height={effect.ruled.thickness} fill={palette.theme.text} /></pattern></defs>
       <rect width="100%" height="100%" fill={`url(#${id}-ruled)`} />
     </svg>}
-    <div style={{ position: "relative" }}>{children}</div>
+    <div style={{ position: "relative", padding: surfaceGeometry.paddings[padding] }}>{children}</div>
   </div>;
 }

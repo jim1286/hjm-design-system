@@ -22,12 +22,12 @@
 | --- | --- | --- |
 | `Card` | 제목("주문 처리 단계")·설명 틀 | [Card](../components/card.md) |
 | `Steps` | 가로 단계 표시. `currentStepStatus`: `current` · `error` · `complete` | [Steps](../components/steps.md) |
-| 진행 문구 `Text` | "서버 확인을 기다리는 중이에요." / "모든 단계가 확정됐어요." | [Text](../components/text.md) |
+| 진행 문구 `StatusText` | "서버 확인을 기다리는 중이에요." / "모든 단계가 확정됐어요." | [Text](../components/text.md#statustext) |
 | `Notice` `tone="danger"` | 실패 안내(상태는 그대로이니 다시 요청) | [Notice](../components/notice.md) |
 | `Button` primary | 다음 단계 요청 / 다시 요청. 요청 중 `loading` | [Button](../components/button.md) |
 | `Button` secondary | 전체 완료 후 "처음부터 다시" | [Button](../components/button.md) |
 | `Text` label muted + `Timeline` | "처리 기록" 제목과 확정·실패 사건 목록 | [Timeline](../components/timeline.md) |
-| `Switch` | 스토리 전용 "다음 요청을 실패로 응답". 제품에 넣지 않는다 | [Switch](../components/switch.md) |
+| 미리보기 도구 | 스토리 전용 "다음 요청 실패시키기" 선택 칩. Card 밖 아래에 두며 제품에 넣지 않는다 | — |
 | `ScrollView` + `Container`(Native) | 바깥 틀. 세로 스크롤·위아래 여백, 좌우 gutter | [Container](../components/container.md), [화면 여백과 너비](../tokens/layout.md) |
 
 ## 배치
@@ -62,7 +62,7 @@ Native 화면(ScrollView, 위아래 spacing.lg 20) > Container gutter 16(폭 < 6
 | 단계 | `Steps` | Card 머리 아래 맨 위 | 단계 사이 `stepsRecipe.gap` `spacing.xs` 8, 표시 원 `glyph.md` |
 | 진행 | 진행 문구 | 단계 아래 | `spacing.lg` 20 |
 | 실패 | `Notice` danger | 진행 문구 아래, 실패 때만 | `spacing.lg` 20 |
-| 행동 | `Button` primary(또는 완료 후 secondary) | Notice 아래, 꽉 찬 폭(`Stack` 기본 `align="stretch"`가 채우므로 Web `layoutStyle`·Native `fullWidth`를 따로 주지 않는다) | 높이 44, 행동 묶음 안 `Stack gap="sm"` 12 |
+| 행동 | `Button` primary(또는 완료 후 secondary) | Notice 아래, 꽉 찬 폭(`Stack` 기본 `align="stretch"`가 채우므로 Web `layoutStyle`·Native `fullWidth`를 따로 주지 않는다) | 높이 44, 버튼 하나만 둔다 |
 | 기록 | label + `Timeline` | 맨 아래, 스크롤 | `spacing.lg` 20, 기록은 아래로 쌓인다 |
 
 - 실패 Notice는 버튼 **위**에 둔다. 사용자가 이유를 읽은 다음 "다시 요청"에 닿는다.
@@ -86,7 +86,7 @@ Native 화면(ScrollView, 위아래 spacing.lg 20) > Container gutter 16(폭 < 6
 | 완료 | 모든 단계 complete, 진행 문구 "모든 단계가 확정됐어요.", secondary 버튼 | 진행 문구가 읽힌다 |
 
 - 요청 중 중복 요청은 상태 로직에서 무시한다. 버튼 `loading`만으로는 키보드 반복 입력을 막지 못한다.
-- 예제 실패 스위치도 요청 중에는 잠그고 늦은 toggle callback을 reducer에서 무시한다. 응답을 기다리는 동안 스위치가 진행 중 요청의 결과를 뒤집던 실제 예제 검수에 따른 보완이다.
+- 예제 실패 도구도 요청 중에는 잠그고 늦은 toggle callback을 reducer에서 무시한다. 응답을 기다리는 동안 도구가 진행 중 요청의 결과를 뒤집던 실제 예제 검수에 따른 보완이다.
 - 문구 키는 상태별 상수로 둔다. 상태 이름으로 키를 조립하지 않는다.
 
 | 상태 | 진행 문구 키 | Notice 키 | 버튼 키 |
@@ -106,6 +106,7 @@ import { Card, Timeline } from "@hjmds/react/display";
 import { Notice } from "@hjmds/react/feedback";
 import { Stack, Text } from "@hjmds/react/layout";
 import { Steps } from "@hjmds/react/steps";
+import { StatusText } from "@hjmds/react/status-text";
 
 // 상태 → 문구 키
 const noticeKey = { rejected: "order.failed", requestFailed: "order.requestFailed" } as const;
@@ -115,14 +116,12 @@ const progressKey = { requesting: "order.requesting", done: "order.done" } as co
   <Stack gap="lg">
     <Steps descriptor={{ steps, currentStepId, currentStepStatus }} statusLabels={statusLabels}
       composeAccessibleName={({ position, total, label }) => t("order.stepName", { position, total, label })} />
-    {/* 알림 자리를 위해 status 영역은 늘 마운트한다 */}
-    <Text role="status">{requesting ? t(progressKey.requesting) : done ? t(progressKey.done) : ""}</Text>
+    {/* 알림 자리를 위해 live node는 늘 마운트한다. 비어 있으면 레이아웃에서 빠진다 */}
+    <StatusText>{requesting ? t(progressKey.requesting) : done ? t(progressKey.done) : ""}</StatusText>
     {failure ? <Notice tone="danger" title={t(noticeKey[failure])} /> : null}
-    <Stack gap="sm">
-      {done
-        ? <Button tone="secondary" onClick={restart}>{t("order.restart")}</Button>
-        : <Button loading={requesting} onClick={request}>{failure ? t("order.retry") : t("order.request")}</Button>}
-    </Stack>
+    {done
+      ? <Button tone="secondary" onClick={restart}>{t("order.restart")}</Button>
+      : <Button loading={requesting} onClick={request}>{failure ? t("order.retry") : t("order.request")}</Button>}
     <Text variant="label" tone="muted">{t("order.log")}</Text>
     <Timeline items={log} composeAccessibleName={({ position, total, label }) => t("order.logName", { position, total, label })} />
   </Stack>
@@ -139,6 +138,7 @@ import { Card, Timeline } from "@hjmds/react-native/data-display";
 import { Notice } from "@hjmds/react-native/feedback";
 import { Container, Stack, Text } from "@hjmds/react-native/primitives";
 import { Steps } from "@hjmds/react-native/steps";
+import { StatusText } from "@hjmds/react-native/status-text";
 
 const noticeKey = { rejected: "order.failed", requestFailed: "order.requestFailed" } as const;
 const { width } = useWindowDimensions();
@@ -151,13 +151,11 @@ const gutter = resolveWindowClass(width) === "compact" ? "compact" : "regular";
         <Steps descriptor={{ steps, currentStepId, currentStepStatus }} statusLabels={statusLabels}
           composeAccessibleName={({ position, total, label }) => t("order.stepName", { position, total, label })} />
         {/* 빈 Text가 gap 하나만큼 틈을 남기므로 문구가 있을 때만 그린다. */}
-        {requesting || done ? <Text accessibilityLiveRegion="polite">{done ? t("order.done") : t("order.requesting")}</Text> : null}
+        {requesting || done ? <StatusText announceOnMount>{done ? t("order.done") : t("order.requesting")}</StatusText> : null}
         {failure ? <Notice tone="danger" announcement="assertive" title={t(noticeKey[failure])} /> : null}
-        <Stack gap="sm">
-          {done
-            ? <Button tone="secondary" onPress={restart}>{t("order.restart")}</Button>
-            : <Button loading={requesting} onPress={request}>{failure ? t("order.retry") : t("order.request")}</Button>}
-        </Stack>
+        {done
+          ? <Button tone="secondary" onPress={restart}>{t("order.restart")}</Button>
+          : <Button loading={requesting} onPress={request}>{failure ? t("order.retry") : t("order.request")}</Button>}
         <Text variant="label" tone="muted">{t("order.log")}</Text>
         <Timeline items={log} composeAccessibleName={({ position, total, label }) => t("order.logName", { position, total, label })} />
       </Stack>
@@ -166,14 +164,14 @@ const gutter = resolveWindowClass(width) === "compact" ? "compact" : "regular";
 </ScrollView>;
 ```
 
-단계 이름·문구, 실패 스위치, 900ms 지연은 예시다. 단계 정의와 확정·거절 판단은 서버와 제품 소유다.
+단계 이름·문구, 실패 미리보기 도구, 900ms 지연은 예시다. 단계 정의와 확정·거절 판단은 서버와 제품 소유다.
 상태 전이는 스토리의 `orderReducer`·`orderStepsDescriptor`를 참고한다.
 
 ## 플랫폼 차이
 
 | 항목 | Web | Native |
 | --- | --- | --- |
-| 진행 문구 자리 | 빈 `role="status"`를 항상 마운트(알림 자리 유지) | 문구가 있을 때만 마운트(iOS는 live region을 무시하고 빈 Text가 틈을 남김, 2026-10-02 시뮬레이터 확인) |
+| 진행 문구 자리 | `StatusText`를 항상 마운트(알림 자리 유지). 비어 있으면 레이아웃에서 빠져 gap을 만들지 않는다 | 문구가 있을 때만 마운트(iOS는 live region을 무시하고 빈 Text가 틈을 남김, 2026-10-02 시뮬레이터 확인) |
 | 이벤트 | `onClick` | `onPress` |
 | 바깥 틀 | HJM ScreenLayout의 본문 | `ScrollView` > `Container` |
 | 실패 Notice 발표 | `danger`는 늘 `role="alert"` | `announcement="assertive"`를 지정해야 발표(기본 `none`) |
@@ -183,5 +181,5 @@ const gutter = resolveWindowClass(width) === "compact" ? "compact" : "regular";
 - 실패할 때 커서를 옮기거나 완료 표시를 먼저 그리지 않는다. 서버가 거절한 단계를 사용자가 끝난 것으로 오해한다.
 - `Timeline` 이름은 단계 이름과 다르게 짓는다("기록 N개 중 M번째"). "5단계 중"으로 읽히면 단계 수와 섞인다.
 - Steps는 세로 방향·클릭 이동을 지원하지 않는다(`src/steps.ts`). 단계 사이를 눌러 이동하는 UI를 기대하지 않는다.
-- 현재 스토리에는 네트워크·서버 오류로 요청 자체가 실패하는 경로가 없다(실패는 스위치로 만든 거절뿐이다).
-- Web은 빈 `role="status"` Text도 Stack 자식이라 gap 한 칸(`spacing.lg` 20)이 Steps 아래에 남는다.
+- 현재 스토리에는 네트워크·서버 오류로 요청 자체가 실패하는 경로가 없다(실패는 미리보기 도구로 만든 거절뿐이다).
+- Web에서 빈 `role="status"` Text를 직접 두면 Stack 자식이라 gap 한 칸(`spacing.lg` 20)이 Steps 아래에 남는다. `StatusText`를 쓴다.

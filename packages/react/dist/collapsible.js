@@ -2,6 +2,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { collapsibleRecipe, validateCollapsibleOpenState, } from "@hjmds/design-contracts/components/collapsible";
 import { forwardRef, useId, useLayoutEffect, useRef, useState } from "react";
 import { assignRef, classNames } from "./internal.js";
+import { Icon } from "./supplemental-display.js";
 export const Collapsible = forwardRef(function Collapsible({ trigger, children, disabled = false, presentation = "disclosure", keepMounted = false, marker = "end", className, layoutStyle, ...openState }, forwardedRef) {
     validateCollapsibleOpenState(openState);
     const controlled = openState.open !== undefined;
@@ -41,6 +42,8 @@ export const Collapsible = forwardRef(function Collapsible({ trigger, children, 
 });
 /** The decorative open/closed mark; the expanded state itself travels through the trigger's aria-expanded. */
 export function CollapsibleMarker({ open }) {
-    return _jsx("span", { "aria-hidden": "true", className: "hjm-collapsible__marker", "data-state": open ? "open" : "closed", children: open ? "▾" : "▸" });
+    // The shared chevron at glyph.sm: the text "▸" rendered about 8px and read as static text (2026-10-17 review).
+    // `chevronEnd` is a logical icon, so Icon mirrors it in RTL.
+    return _jsx("span", { "aria-hidden": "true", className: "hjm-collapsible__marker", "data-state": open ? "open" : "closed", children: _jsx(Icon, { name: open ? "chevronDown" : "chevronEnd", size: "sm", tone: "secondary", decorative: true }) });
 }
 //# sourceMappingURL=collapsible.js.map

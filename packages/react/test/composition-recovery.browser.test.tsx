@@ -19,7 +19,7 @@ const settle = () => act(async () => { await new Promise(resolve => setTimeout(r
 
 it("retains the sheet draft through failure, dismissal and retry, closing only after success", async () => {
   await act(async () => root.render(<HjmProvider><InputSheet /></HjmProvider>));
-  await click("입력 시트 열기");
+  await click("기록 이름 입력");
   expect(button("저장").disabled).toBe(true);
   const input = document.querySelector<HTMLInputElement>("input")!;
   await act(async () => {
@@ -33,7 +33,7 @@ it("retains the sheet draft through failure, dismissal and retry, closing only a
   await settle();
   expect(document.body.textContent).toContain("저장하지 못했어요.");
   expect(input.value).toBe("남길 이름");
-  await click("닫기"); await settle(); await click("입력 시트 열기");
+  await click("닫기"); await settle(); await click("기록 이름 입력");
   expect(document.querySelector<HTMLInputElement>("input")!.value).toBe("남길 이름");
   await click("다시 저장"); await settle();
   expect(document.querySelector('[role="dialog"]')).toBeNull();

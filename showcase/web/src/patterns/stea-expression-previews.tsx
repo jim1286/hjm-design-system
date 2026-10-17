@@ -6,6 +6,8 @@ import { ContentTransition } from "@hjmds/react/content-transition";
 import { Card, DescriptionList } from "@hjmds/react/display";
 import { EmptyState } from "@hjmds/react/feedback";
 import { Stack, Text } from "@hjmds/react/layout";
+import { Switch } from "@hjmds/react/selection";
+import { StatusText } from "@hjmds/react/status-text";
 import { useHjmTheme } from "@hjmds/react/provider";
 import { QRCode } from "@hjmds/react/qr-code";
 import {
@@ -66,12 +68,13 @@ function PixelSprite({ paused }: { paused: boolean }) {
 export function PixelEmptyState() {
   const [paused, setPaused] = useState(false);
   const [started, setStarted] = useState(false);
-  return <Stack gap="md">
+  // The story fills the canvas (hjm.fillCanvas); EmptyState takes the free height and centers in the body.
+  return <Stack gap="md" layoutStyle={{ flexGrow: 1 }}>
     <EmptyState icon={<PixelSprite paused={paused} />} title={pixelCopy.title} description={pixelCopy.description}
       action={<Button onClick={() => setStarted(true)}>{pixelCopy.start}</Button>} />
-    {/* 5초 넘게 반복되는 움직임은 멈출 수 있어야 한다(WCAG 2.2.2). */}
-    <Button tone="ghost" onClick={() => setPaused(value => !value)}>{paused ? pixelCopy.resume : pixelCopy.pause}</Button>
-    <Text role="status" tone="muted">{started ? pixelCopy.started : ""}</Text>
+    {/* 5초 넘게 반복되는 움직임은 멈출 수 있어야 한다(WCAG 2.2.2). 켜고 끄는 제어라 Switch다. */}
+    <Switch label={pixelCopy.motion} checked={!paused} onCheckedChange={on => setPaused(!on)} />
+    <StatusText tone="muted">{started ? pixelCopy.started : ""}</StatusText>
   </Stack>;
 }
 
@@ -80,8 +83,7 @@ export function EventTicket() {
     <Stack gap="lg">
       <DescriptionList aria-label={ticketCopy.detailsLabel} items={ticketCopy.details} />
       <Stack gap="sm">
-        {/* QRCode의 svg가 inline이라 글자 fallback이 옆으로 흐른다. 블록으로 감싸 아래 줄에 둔다. */}
-        <QRCode value={ticketCopy.booking} label={ticketCopy.qrLabel} fallback={<Stack gap="xs"><Text tone="muted">{ticketCopy.qrFallback}</Text></Stack>} />
+        <QRCode value={ticketCopy.booking} label={ticketCopy.qrLabel} fallback={<Text tone="muted">{ticketCopy.qrFallback}</Text>} />
         <Text variant="label" tone="muted">{ticketCopy.bookingLabel}</Text>
         <Text variant="title" emphasis="strong">{ticketCopy.booking}</Text>
       </Stack>

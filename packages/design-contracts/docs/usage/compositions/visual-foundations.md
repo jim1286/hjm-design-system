@@ -61,7 +61,7 @@ Native 화면(ScrollView, 위아래 spacing.lg 20) > Container gutter 16(폭 < 6
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
-| 바깥 틀 | Web: HJM ScreenLayout의 본문 > Stack. Native: `ScrollView` > `Container` > Stack | 이 구성은 바깥 폭·여백을 정하지 않는다. Native는 `ScrollView` 안 [Container](../components/container.md)에 둔다. 입력이 없어 키보드 처리는 없다. 안전 영역은 화면 골격(내비게이션 헤더·탭 바)이 맡는다 | Native ScrollView 위아래 `spacing.lg` 20, Container gutter 폭 600 미만 `compact` 16 · 이상 `regular` 20. 묶음 사이 Stack `gap="xl"` 24 |
+| 바깥 틀 | Web: `Container size="reading"` > Stack. Native: `ScrollView` > `Container size="reading"` > Stack | 이 구성은 바깥 폭·여백을 정하지 않는다. Native는 `ScrollView` 안 [Container](../components/container.md)에 둔다. 입력이 없어 키보드 처리는 없다. 안전 영역은 화면 골격(내비게이션 헤더·탭 바)이 맡는다 | Native ScrollView 위아래 `spacing.lg` 20, Container gutter 폭 600 미만 `compact` 16 · 이상 `regular` 20. 묶음 사이 Stack `gap="xl"` 24 |
 | 효과 표면 | EffectSurface > 안쪽 틀 > Stack `gap="lg"` | 세로로 쌓음(비교용. 실제 화면은 히어로 하나) | EffectSurface는 여백이 없다. 안쪽 틀 여백 `spacing.xl` 24(두 플랫폼 같음, [랜딩](../screens/landing.md) 히어로와 같다), 내용 사이 `spacing.lg` 20, `intensity` 0.4(예) |
 | 아이콘 행 | Icon `size="lg"` + Text | 가로(Stack `axis="inline"`) | 아이콘 `lg` 28, 사이 `spacing.md` 16 |
 | 얼굴 행 | Avatar ×2 + Text | 가로(Stack `axis="inline"`) | 두 플랫폼 48(Web `size="large"`, Native `size={48}`), 사이 `spacing.md` 16 |
@@ -186,3 +186,7 @@ seed·문구·아이콘 세트·얼굴 목록은 제품 소유다. `createBlobat
 - EffectSurface는 화면 위쪽 히어로 하나에만 둔다. 스토리의 네 장 세로 쌓기는 비교용이다.
 - 2026-10-06 예제 검수에서 Container·Stack·Heading을 두 플랫폼에 맞췄다. 효과 안쪽 여백은 spacing.xxl(32), 얼굴은 64, 제목은 level2로 동일하다. 행은 큰 글자에서 줄바꿈한다.
 - Native EffectSurface는 AppState·reducedMotion을 반영한다. 백그라운드 중단과 내비게이션으로 가려진 화면의 중단은 다르므로, 마운트된 채 가려지는 제품 화면·목록은 `visible`을 연결한다. Storybook 정지 화면만으로 이 제품 연결을 검증했다고 보고하지 않는다.
+
+## 근거
+
+- 2026-10-17 구성 리뷰: Web Container가 content 폭(1200)과 compact gutter로 고정돼 데스크톱에서 Switch 이름과 토글이 양 끝으로 멀어졌다. 그래서 읽기 폭과 창 크기별 gutter로 맞췄다.

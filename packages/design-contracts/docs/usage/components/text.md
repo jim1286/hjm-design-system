@@ -147,7 +147,7 @@ StatusText: 결과 문자열
 
 | prop | 기본값 | 의미 |
 | --- | --- | --- |
-| `children: string` | 필수 | 제품의 지역화된 상태 문구. 빈 문자열도 허용 |
+| `children: string` | 필수 | 제품의 지역화된 상태 문구. 빈 문자열도 허용. Web은 빈 동안 live node를 유지한 채 레이아웃에서 빠져 부모 Stack gap을 만들지 않는다. Native는 비어 있으면 렌더하지 않는 조건부 결과로 둔다 |
 | `announcement` | `polite` | `none`·`polite`·`assertive`. 시각적 tone과 알림 우선순위는 독립 |
 | `announceOnMount` | `false` | Native iOS 옵션. 조건부로 새로 나타난 행동 결과를 처음에도 알림 |
 | 나머지 Text props·ref | Text와 같음 | Web role/live/atomic, Native live region은 StatusText가 소유 |

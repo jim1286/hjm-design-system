@@ -30,7 +30,7 @@ it('enforces the latest three-file capacity across same-render selections and re
 });
 it('keeps cancellation authoritative over a same-render late response and preserves keyboard recovery',async()=>{
  await render(<UploadRecoveryPreview/>);await click('예제 사진 추가');await click('전송 시작');const cancel=button('취소'),success=button('성공 응답 보내기');cancel.focus();await act(async()=>{cancel.click();success.click();});expect(host.textContent).toContain('전송 대기');expect(host.textContent).not.toContain('전송 완료');expect(document.activeElement).toBe(rows()[0]);
- await click('전송 시작');await click('실패 응답 보내기');await click('다시 전송');await click('성공 응답 보내기');await click('선택에서 제거');expect(rows()).toHaveLength(0);expect(document.activeElement).toBe(button('예제 사진 추가'));
+ await click('전송 시작');await click('실패 응답 보내기');await click('다시 전송');await click('성공 응답 보내기');await click('선택에서 제거');expect(rows()).toHaveLength(0);expect(document.activeElement).toBe(button('사진 선택'));
 });
 it('retains valid selection while rejecting unsupported and oversized files without reviving them as count overflow',async()=>{
  await render(<UploadRecoveryPreview/>);await act(async()=>select([file('valid.jpg'),new File(['text'],'notes.txt',{type:'text/plain'}),new File([new Uint8Array(5*1024*1024+1)],'large.jpg',{type:'image/jpeg'})]));expect(rows()).toHaveLength(1);expect(host.textContent).toContain('valid.jpg');expect(host.textContent).not.toContain('large.jpg');expect(host.textContent).toContain('추가하지 못한 파일');

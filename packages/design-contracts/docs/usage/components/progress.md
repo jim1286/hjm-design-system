@@ -70,7 +70,7 @@ Native `ScrollProgress`는 제품 ScrollView의 `onScroll`(contentOffset.y)·`on
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `label` | Web `ReactNode`(필수) · Native `string` | — | Native는 `label` 또는 `accessibilityLabel` 중 하나가 필수 |
+| `label` | Web `ReactNode` · Native `string` | — | `label` 또는 이름 prop(Web `aria-label`, Native `accessibilityLabel`) 중 하나가 필수. 이름 prop만 주면 문구 줄(label·값)을 그리지 않는다 |
 | `max` | 양수 | `100` | 두 renderer 동일. 0–1 비율이면 `max={1}`을 함께 준다 |
 | `value` | `0`~`max` | — | 생략하면 불확정 진행 |
 | `size` | `small` · `medium` · `large` | `medium` | 두께 4 · 8 · 12, circular 지름 24 · 40 · 64 |
@@ -102,7 +102,7 @@ linear                               circular (Web)          circular (Native)
 
 - `value`와 `max`는 같은 단위로 넘긴다. `value={0.64}`만 넘기면 0.64%다([단위 표](../../progress.md)).
   `max ≤ 0`, 범위 밖 `value`는 던진다.
-- 이름은 지역화한 `label`로 준다. Native는 보이는 label 없이 `accessibilityLabel`만 줄 수도 있다(`ScrollProgress`는 `label` 필수).
+- 이름은 지역화한 `label`로 준다. 같은 문구를 옆 컴포넌트(예: TargetSummary의 Statistic)가 이미 보이면 보이는 label 없이 Web `aria-label`, Native `accessibilityLabel`만 준다(`ScrollProgress`는 `label` 필수).
 - 색은 `tone`, 두께는 `size`로만 바꾸고 배치는 `layoutStyle`로 한다. Native의 `style`·`labelStyle`·`valueStyle`·`trackStyle`·`indicatorStyle`은
   제거된 속성이다.
 - `ScrollProgress`는 window에 자동으로 붙지 않는다. Web은 스크롤 host를, Native는 측정값을 반드시 넘긴다.
@@ -112,7 +112,7 @@ linear                               circular (Web)          circular (Native)
 
 | 항목 | Web | Native |
 | --- | --- | --- |
-| `label` 타입 | `ReactNode`, 필수 | `string`, 또는 `accessibilityLabel`만 |
+| `label` 타입 | `ReactNode`, 또는 `aria-label`만 | `string`, 또는 `accessibilityLabel`만 |
 | 요소 | `<progress>` (ref 전달) | `accessibilityRole="progressbar"` View |
 | 보조 문구 | 없음 | `accessibilityHint` |
 | 스크롤 측정 | `useScrollMetrics(host)` | 제품이 ScrollView 이벤트로 계산 |

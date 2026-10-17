@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Container } from "@hjmds/react/layout";
 import { CollapsiblePreview, ContextMenuPreview, MenubarPreview } from "./Disclosure.previews.js";
 
-const meta = { includeStories: ["Default","PointerMenu","DesktopMenubar","Dark","LargeText"], id: "patterns-disclosure", title: "배포/구성/탐색과 이동/펼침과 메뉴", component: CollapsiblePreview } satisfies Meta<typeof CollapsiblePreview>;
+const meta = { includeStories: ["Default","PointerMenu","DesktopMenubar","Dark","LargeText"], id: "patterns-disclosure", title: "배포/구성/탐색과 이동/펼침과 메뉴", component: CollapsiblePreview, decorators: [(Story) => <Container size="reading"><Story /></Container>] } satisfies Meta<typeof CollapsiblePreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본",};

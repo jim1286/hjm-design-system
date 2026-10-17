@@ -3,10 +3,12 @@ import { ScrollView } from "react-native";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import type { Meta, StoryObj } from "@storybook/react-native";
 import { DocumentResource } from "@hjmds/react-native/document-resource";
-import { Button } from "@hjmds/react-native/actions";
-import { Stack, Text } from "@hjmds/react-native/primitives";
+import { IconButton } from "@hjmds/react-native/actions";
+import { Icon, Stack, Text } from "@hjmds/react-native/primitives";
 import type { DocumentPreviewState, DocumentSaveState } from "@hjmds/design-contracts/document-resource";
 import { createDocumentResourceExample, documentResourceLabels, exampleDocumentText } from "../../shared/document-resource-example";
+import { PreviewToolButton, PreviewTools } from "./preview-tools";
+import { semanticGlyph } from "./semantic-glyphs";
 import { documentFileHostAvailable, exportExampleDocument } from "./document-resource-file-host";
 function Demo() {
   const [example] = useState(() => createDocumentResourceExample(createActionSession, exportExampleDocument));
@@ -30,15 +32,17 @@ function Demo() {
       labels={{ ...documentResourceLabels, preview: expanded ? "본문 접기" : "본문 보기", started: "공유창을 열었습니다. 저장 여부는 선택한 앱에서 확인하세요." }} preview={expanded ? <Text>{exampleDocumentText}</Text> : <Text>HJM 문서 예제</Text>}
       onPreview={() => setExpanded(!expanded)} onRetryPreview={() => setPreview({ status: "ready" })}
       onSave={() => { void example.save(name); }} onRetrySave={() => { void example.retry(); }}
-      moreAction={<Button tone="ghost" onPress={() => setDetails(!details)}>{details ? "문서 정보 닫기" : "문서 정보"}</Button>} />
-    <Button tone="secondary" onPress={() => setSaveLocked(!saveLocked)}>{saveLocked ? "저장 잠금 해제" : "저장만 잠그기"}</Button>
+      moreAction={<IconButton label="문서 정보" tone="ghost" selected={details} onPress={() => setDetails(!details)}><Icon descriptor={{ name: "info" }} renderGlyph={semanticGlyph} /></IconButton>} />
     {details ? <Text>현재 파일: {name}. 실제 개인 자료나 서버 요청은 없습니다.</Text> : null}
-    <Button tone="secondary" onPress={() => { example.reset(); setFile(value => value + 1); setPreview({ status: "ready" }); setExpanded(false); setDetails(false); }}>다른 문서로 바꾸기</Button>
-    <Button tone="secondary" onPress={() => setPreview({ status: "error", message: "미리보기 오류 예제입니다.", retryable: true })}>미리보기 실패 확인</Button>
-    <Button tone="secondary" onPress={() => { example.reset(); setLongName(!longName); }}>{longName ? "짧은 파일명으로 복원" : "긴 파일명 확인"}</Button>
-    <Button tone="secondary" onPress={() => setPreview({ status: "loading" })}>미리보기 준비 중 확인</Button>
-    <Button tone="secondary" onPress={() => setPreview({ status: "none" })}>미리보기 없는 문서</Button>
-    <Button tone="secondary" onPress={() => { example.reset(); example.failNext(); }}>내보내기 실패 다시 설정</Button>
+    <PreviewTools>
+      <PreviewToolButton selected={saveLocked} onPress={() => setSaveLocked(!saveLocked)}>저장만 잠그기</PreviewToolButton>
+      <PreviewToolButton onPress={() => { example.reset(); setFile(value => value + 1); setPreview({ status: "ready" }); setExpanded(false); setDetails(false); }}>다른 문서로 바꾸기</PreviewToolButton>
+      <PreviewToolButton onPress={() => setPreview({ status: "error", message: "미리보기 오류 예제입니다.", retryable: true })}>미리보기 실패 확인</PreviewToolButton>
+      <PreviewToolButton selected={longName} onPress={() => { example.reset(); setLongName(!longName); }}>긴 파일명 확인</PreviewToolButton>
+      <PreviewToolButton onPress={() => setPreview({ status: "loading" })}>미리보기 준비 중 확인</PreviewToolButton>
+      <PreviewToolButton onPress={() => setPreview({ status: "none" })}>미리보기 없는 문서</PreviewToolButton>
+      <PreviewToolButton onPress={() => { example.reset(); example.failNext(); }}>내보내기 실패 다시 설정</PreviewToolButton>
+    </PreviewTools>
   </Stack></ScrollView>;
 }
 const meta = { title: "배포/구성/정보 표시/문서와 파일", component: Demo } satisfies Meta<typeof Demo>;

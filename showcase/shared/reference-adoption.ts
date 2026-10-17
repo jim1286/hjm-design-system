@@ -1,6 +1,8 @@
 import type { FilePickerCandidate, FilePickerSelectionResult } from "../../packages/design-contracts/src/file-picker.js";
 import type { UploadItemDescriptor, UploadItemState } from "../../packages/design-contracts/src/upload-item.js";
 export const uploadLabels = { pending: "전송 대기", uploading: "전송 확인 중", success: "전송 완료", cancel: "취소", retry: "다시 전송" };
+/** Keeps the demo boundary visible on both platforms, even when a rejection notice replaces the status. */
+export const uploadExampleNote = "파일은 서버로 보내지 않아요. 아래 예제 응답으로 상태를 확인해 보세요.";
 export const sampleFile: FilePickerCandidate = { id: "sample", name: "여행 기록.jpg", mimeType: "image/jpeg", sizeBytes: 2048 };
 /** Owner capacity is evaluated after dedupe, including batches delivered before React renders. */
 export function mergeUploadSelection(items: readonly UploadItemDescriptor[], selection: FilePickerSelectionResult, maxCount = 3) {

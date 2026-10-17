@@ -27,7 +27,7 @@
 | `getShowcaseEnvironmentInput` | 프리셋을 Provider 입력(`theme`·`direction`·`textScale`·`reducedMotion`)으로 변환 | [DesignSystemProvider](../components/design-system-provider.md) |
 | `HjmProvider`(Web)·`HjmNativeProvider`(Native) | 제품에서 환경 축을 실제로 바꾸는 곳 | [DesignSystemProvider](../components/design-system-provider.md) |
 
-모두 `@hjmds/design-contracts/showcase`에서 import한다. 스토리의 `hjm-page`·`hjm-showcase-grid`·`hjm-showcase-card` 클래스는 showcase 전용 스타일이다.
+모두 `@hjmds/design-contracts/showcase`에서 import한다. 스토리 페이지는 `Container size="content"` > Heading·Text > `Grid`(1·2·3열) > `Card`·`Badge`로 조립한다. 프리셋 이름 Badge는 같은 id의 `showcaseScenarios` 이름을 쓴다.
 
 ## 배치
 
@@ -39,13 +39,13 @@
 │ └───────────────────────────────────────────────────────┘ │
 └───────────────────────────────────────────────────────────┘
 
-스토리 페이지(참고, showcase 전용 스타일)
+스토리 페이지(참고)
 ┌──────────────────────────────────────────────────────────┐
-│ Patterns / Evidence matrix / 안내                        │
-│ ┌ Environment presets (카드 격자) ─────────────────────┐ │
-│ │ [default] [dark] [large-text] [rtl] [reduced-motion] │ │
+│ 환경 조합 검증 / 안내                                     │
+│ ┌ 환경 조합 (Card 격자) ───────────────────────────────┐ │
+│ │ [기본] [어두운 테마] [200% 글자] [오른쪽→왼쪽] [동작 줄이기] │ │
 │ └──────────────────────────────────────────────────────┘ │
-│ ┌ Story requirements (카드 격자) ──────────────────────┐ │
+│ ┌ 스토리 확인 항목 (Card 격자) ────────────────────────┐ │
 │ │ [계약] [기본] [어두운 테마] [긴 문구] [200% 글자]    │ │
 │ │ [오른쪽→왼쪽] [동작 줄이기] [접근성] [키보드]        │ │
 │ │ [앱 동작] [웹·앱 동등성]                             │ │
@@ -57,8 +57,8 @@
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
 | 바깥 틀 | `HjmProvider`(Web)·`HjmNativeProvider`(Native) | 검증할 제품 화면의 맨 바깥. 화면의 스크롤·`Container`·안전 영역은 바꾸지 않는다 | 환경 입력만 바꾼다. 여백·크기는 제품 화면 값 그대로. Native는 `safeAreaInsets`도 실제 기기 값으로 넘긴다 |
-| 환경 프리셋 | `showcaseEnvironmentMatrix` 카드 5개 | 스토리 첫 섹션 | showcase 전용 격자(제품 기준 아님) |
-| 검증 항목 | `showcaseScenarios` 카드 11개 | 스토리 둘째 섹션 | showcase 전용 격자 |
+| 환경 프리셋 | `showcaseEnvironmentMatrix` Card 5개(Badge 이름·조합·동작) | 스토리 첫 섹션 | Grid compact 1·medium 2·expanded 3열, gap `spacing.md` 16 |
+| 검증 항목 | `showcaseScenarios` Card 11개 | 스토리 둘째 섹션 | 같은 Grid |
 | 환경 전환 | Storybook toolbar | 페이지 밖 상단 | — |
 
 ### 비교하는 다섯 환경
@@ -135,7 +135,11 @@ const preset = showcaseEnvironmentMatrix.find((env) => env.id === "rtl")!;
 
 ## 함정
 
-- 현재 스토리는 HJM 컴포넌트 대신 `hjm-page`·`hjm-showcase-card` 같은 showcase 전용 클래스의 HTML(`h1`·`article`)과 영어 제목을 쓴다. 제품 검증 화면을 만들 때 이 마크업을 따라 하지 않는다(제목은 [Heading](../components/heading.md), 문구는 i18n 키).
+- 제품 검증 화면의 제목은 [Heading](../components/heading.md), 문구는 i18n 키로 둔다. showcase 계약의 한국어 이름·설명을 제품 문구로 가져오지 않는다.
 - `getShowcaseEnvironmentInput`의 결과는 펼쳐서(`{...input}`) 넘긴다. 필드를 하나씩 꺼내 넘기면 optional 타입 때문에
   `exactOptionalPropertyTypes`에서 TS2375가 난다(Web·Native 같다).
 - 검증용 Provider로 화면을 감쌀 때 바깥 틀(스크롤·Container·안전 영역)을 따로 바꾸면 실제 화면과 다른 것을 검증하게 된다.
+
+## 근거
+
+- 2026-10-17 구성 리뷰: 스토리 문구 대부분이 영어였고 raw HTML과 showcase 전용 클래스로 조립돼 있어 계약 문구를 한국어로 바꾸고 HJM 공개 컴포넌트로 다시 조립했다.

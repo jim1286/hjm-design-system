@@ -7,10 +7,22 @@ export declare const fieldGroupRecipe: {
     readonly gap: "md";
     readonly headingGap: "sm";
     readonly supportGap: "xs";
+    /** The group name outranks its members' semibold body labels; a plain legend read weaker than "시/분/초" (2026-10-17 review). */
+    readonly heading: {
+        readonly textVariant: "bodyLarge";
+        readonly emphasis: "medium";
+    };
     readonly inline: {
         /** @deprecated Renderers read `minWidth` (scaled by text size) so Web and Native wrap at the same width. */
         readonly minCharacters: 10;
         readonly minWidth: number;
+        /** Parts stop growing here so short values do not float in ~400px fields on desktop (2026-10-17 review). */
+        readonly maxWidth: number;
+        /**
+         * Parts of one value (hours/minutes/seconds, year/month/day) share a row only when all of them fit;
+         * otherwise every part stacks. Partial wrapping left seconds alone on a second row at 402pt.
+         */
+        readonly wrap: "all-or-none";
     };
 };
 /** Related-input grouping contract. Values and submit/validation timing remain product-owned. */

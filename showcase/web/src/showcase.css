@@ -40,6 +40,12 @@ textarea {
    around 100dvh produced a second scrollbar and displaced the fixed FAB. */
 .hjm-story-root.hjm-showcase-edge-to-edge { padding: 0; }
 
+/* A fill-canvas story's top element fills the canvas like a product body: the 1fr row resolves against the
+   root's min-height, and the stretched top element hosts a column so the preview's Stack can flex-grow in it.
+   Width and padding of that element (e.g. a reading Container) are untouched. */
+.hjm-story-root.hjm-showcase-fill-canvas { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); }
+.hjm-story-root.hjm-showcase-fill-canvas > * { display: flex; flex-direction: column; }
+
 .hjm-story-root[data-motion="reduced"] [data-reduced-strategy="instant"] > span {
   animation-name: none;
   animation-duration: var(--hjm-motion-strategy-instant-duration);

@@ -1,7 +1,8 @@
-import type { DateEntryDraft, DateEntryParseResult, DateEntryIssue } from "../../packages/design-contracts/src/date-entry.js";
+import type { DateEntryDraft, DateEntryParseResult, DateEntryIssue, DateEntryOrder } from "../../packages/design-contracts/src/date-entry.js";
 export const dateEntryLabels = { label: "기록 날짜", year: "연도", month: "월", day: "일" };
 // Showcase fixture, not an HJM calendar default: demonstrate Gregorian dates and
-// an explicit product policy for ASCII/full-width digits and English month names.
+// an explicit product policy for ASCII/full-width digits. English month names stay accepted as a
+// silent input policy, but Korean copy only asks for numbers (2026-10-17 composition review).
 export function parseExampleDate(draft: DateEntryDraft): DateEntryParseResult {
   const year = draft.year.normalize("NFKC").trim();
   const day = draft.day.normalize("NFKC").trim();
@@ -19,6 +20,9 @@ export function parseExampleDate(draft: DateEntryDraft): DateEntryParseResult {
 }
 export function dateEntryIssueText(issue: DateEntryIssue): string {
   if (issue.kind === "missing") return `${issue.fields.map(part => dateEntryLabels[part]).join("·")}을 입력해 주세요.`;
-  const messages: Record<string, string> = { year: "연도는 네 자리로 입력해 주세요.", month: "1~12 또는 영어 월 이름을 입력해 주세요.", day: "1~31 사이의 일을 입력해 주세요.", calendar: "실제로 존재하는 날짜를 입력해 주세요." };
+  const messages: Record<string, string> = { year: "연도는 네 자리로 입력해 주세요.", month: "1~12 사이의 월을 입력해 주세요.", day: "1~31 사이의 일을 입력해 주세요.", calendar: "실제로 존재하는 날짜를 입력해 주세요." };
   return messages[issue.code] ?? "날짜를 확인해 주세요.";
+}
+export function dateEntryExampleDescription(order: DateEntryOrder): string {
+  return `예: ${order.map(part => ({ year: "2024", month: "2", day: "29" })[part]).join(" / ")}`;
 }

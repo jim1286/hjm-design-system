@@ -8,6 +8,12 @@ export function resolveDesignProfileScreen(presentation = "dashboard") {
         headerAxis: presentation === "dashboard" ? "row" : "column",
         centered: presentation === "landscape", gap: presentation === "landscape" ? spacing.xxl : spacing.xl };
 }
+/**
+ * Overview tools are form controls: they stop at the reading width while the collection uses the
+ * screen width, and the bounded column is centered like the header title and BottomCTA content.
+ * Start-aligned tools left one half-width column against centered header/footer (2026-10-17 review).
+ */
+export const overviewToolbarLayout = { maxWidth: layout.readingMaxWidth, alignSelf: "center", width: "100%" };
 export function resolveDesignProfileCollection(collection = "rows") {
     if (!["rows", "cards", "grid"].includes(collection))
         throw new TypeError("Unsupported profile collection");

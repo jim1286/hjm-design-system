@@ -53,14 +53,15 @@ export function RecordSample() {
   const items = [{ id: "walk", title: copy.walk, body: copy.walkBody }, { id: "read", title: copy.read, body: copy.readBody }, { id: "rest", title: copy.rest, body: copy.restBody }];
   const unsaved = statusText === copy.unsaved;
   const tone = status === "failed" ? "danger" : status === "pending" ? "info" : unsaved ? "warning" : "success";
-  // The failure trigger is a preview control, so it sits under "미리보기 도구" instead of next to the footer's primary
-  // action. The idle state shows no notice; the Notice announces each later state once.
-  return <OverviewScreen title={copy.screen} description={copy.description} toolbarLabel={copy.tools}
-    toolbar={<Stack gap="md"><TextField label={copy.name} value={name} onValueChange={setName} /><SegmentedControl label={copy.filter} items={[{ value: "day", label: copy.day }, { value: "week", label: copy.week }]} value={period} onValueChange={setPeriod} />
-      <PreviewTools><PreviewToolButton disabled={status === "pending"} onPress={() => save(true)}>{copy.fail}</PreviewToolButton></PreviewTools></Stack>}
+  // The failure trigger is a preview control, so it sits under "미리보기 도구" outside the product screen, not among
+  // its inputs or next to the footer's primary action (2026-10-17 review). The idle state shows no notice; the
+  // Notice announces each later state once. flex keeps the screen filling the bounded comparison viewport.
+  return <Stack gap="md" layoutStyle={{ flex: 1 }}><OverviewScreen title={copy.screen} description={copy.description} toolbarLabel={copy.tools}
+    toolbar={<Stack gap="md"><TextField label={copy.name} value={name} onValueChange={setName} /><SegmentedControl label={copy.filter} items={[{ value: "day", label: copy.day }, { value: "week", label: copy.week }]} value={period} onValueChange={setPeriod} /></Stack>}
     notice={<ContentTransition stateKey={status}>{status === "idle" ? null : <Notice tone={tone} title={statusText} announcement={status === "failed" ? "assertive" : "polite"} />}</ContentTransition>}
     footer={<BottomCTA accessibilityLabel={copy.saveActions} primaryAction={{ label: status === "failed" ? copy.retry : copy.save, onPress: () => void save(), loading: status === "pending", loadingLabel: copy.pending }} />}
-    items={items.map(item => ({ id: item.id, children: <Stack gap="sm"><Text variant="heading">{item.title}</Text><Text>{item.body}</Text></Stack> }))} />;
+    items={items.map(item => ({ id: item.id, children: <Stack gap="sm"><Text variant="heading">{item.title}</Text><Text>{item.body}</Text></Stack> }))} />
+    <PreviewTools><PreviewToolButton disabled={status === "pending"} onPress={() => save(true)}>{copy.fail}</PreviewToolButton></PreviewTools></Stack>;
 }
 // Same public overlay instances stay mounted while the parent profile changes;
 // the shared controlled draft is fixture data, with no storage/network mutation.
@@ -149,10 +150,13 @@ export function DesignProfileComparison({ initialProduct = "reference" }: { init
   const [preset, setPreset] = useState<ReferenceDesignPreset>("retro");
   const [product, setProduct] = useState<PreviewProductDesign>(initialProduct);
   const design = resolvePreviewProductDesign(preset, product);
-  return <ScrollView keyboardShouldPersistTaps="handled"><Stack gap="xl"><Text variant="heading">{copy.title}</Text><Text>{copy.intro}</Text>
-    <SegmentedControl label={copy.product} presentation="pills" items={productDesignOptions.map(option => ({ value: option.id, label: option.label }))} value={product} onValueChange={value => { const option = productDesignOptions.find(option => option.id === value); if (option) setProduct(option.id); }} />
-    <Text tone="muted">{copy.productNote}</Text>
-    <SegmentedControl label={copy.choose} presentation="pills" items={profileOptions.map(option => ({ value: option.id, label: option.label }))} value={preset} onValueChange={value => { const option = profileOptions.find(option => option.id === value); if (option) setPreset(option.id); }} />
+  return <ScrollView keyboardShouldPersistTaps="handled"><Stack gap="xl"><Heading level="level3">{copy.title}</Heading><Text>{copy.intro}</Text>
+    {/* SegmentedControl's label is the accessibility name only; each choice gets a visible name above it. */}
+    <Stack gap="xs"><Text variant="label">{copy.product}</Text>
+      <SegmentedControl label={copy.product} presentation="pills" items={productDesignOptions.map(option => ({ value: option.id, label: option.label }))} value={product} onValueChange={value => { const option = productDesignOptions.find(option => option.id === value); if (option) setProduct(option.id); }} />
+      <Text tone="muted">{copy.productNote}</Text></Stack>
+    <Stack gap="xs"><Text variant="label">{copy.choose}</Text>
+      <SegmentedControl label={copy.choose} presentation="pills" items={profileOptions.map(option => ({ value: option.id, label: option.label }))} value={preset} onValueChange={value => { const option = profileOptions.find(option => option.id === value); if (option) setPreset(option.id); }} /></Stack>
     <View style={{ height: 640 }}>{/* A comparison tile supplies a bounded route viewport; ScreenLayout owns its inner scrolling. */}<HjmNativeProvider designProfile={design}><RecordSample /></HjmNativeProvider></View>
     <HjmNativeProvider designProfile={design}><Collapsible trigger={copy.headingScale} defaultOpen><Stack gap="sm">{profileHeadingSamples.map(sample => <Heading key={sample.level} level={sample.level} semanticLevel={3}>{sample.label}</Heading>)}</Stack></Collapsible></HjmNativeProvider>
     <HjmNativeProvider designProfile={design}><ProfileMaterialSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmNativeProvider>
@@ -162,7 +166,7 @@ export function DesignProfileComparison({ initialProduct = "reference" }: { init
     <HjmNativeProvider designProfile={design}><ProfileChromeSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmNativeProvider>
     <HjmNativeProvider designProfile={design}><Collapsible trigger={copy.liquidToast}><View style={{ height: 520 }}>{/* A bounded region keeps the optional canvas out of other comparison sections. */}<ToastPreview enhanced onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></View></Collapsible></HjmNativeProvider>
     <Text tone="muted">{copy.limitation}</Text>
-    <Collapsible trigger={copy.compare} defaultOpen>{profileOptions.map(option => <HjmNativeProvider key={option.id} designProfile={resolvePreviewProductDesign(option.id, product)}><Stack gap="md"><Text variant="title">{option.label}</Text><View style={{ height: 640 }}><RecordSample /></View></Stack></HjmNativeProvider>)}</Collapsible>
+    <Collapsible trigger={copy.compare} defaultOpen>{profileOptions.map(option => <HjmNativeProvider key={option.id} designProfile={resolvePreviewProductDesign(option.id, product)}><Stack gap="md"><Heading level="level4">{option.label}</Heading><View style={{ height: 640 }}><RecordSample /></View></Stack></HjmNativeProvider>)}</Collapsible>
   </Stack></ScrollView>;
 }
 

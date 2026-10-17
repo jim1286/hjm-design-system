@@ -23,13 +23,15 @@ export function FieldGroup({ descriptor, renderField, layout = fieldGroupRecipe.
   const recipe = fieldGroupRecipe;
   const { environment } = useHjmNativeTheme();
   const session = useRef(createFieldGroupEditSession(resolved.fields));
-  // Inline parts split each row evenly like Web's auto-fit grid: flexGrow let a wrapped last part (seconds) take the
-  // whole next row while hours and minutes shared one (2026-10-17 review).
+  // fieldGroupRecipe.inline.wrap "all-or-none": parts share one row (each up to maxWidth) only when all fit,
+  // otherwise each takes the full row — the same breakpoint as Web's flex-basis rule.
   const [rowWidth, setRowWidth] = useState<number | null>(null);
   const gap = spacing[recipe.gap];
+  const count = resolved.fields.length;
   const minWidth = recipe.inline.minWidth * environment.textScale;
-  const columns = rowWidth === null ? null : Math.max(1, Math.min(resolved.fields.length, Math.floor((rowWidth + gap) / (minWidth + gap))));
-  const partWidth = rowWidth === null || columns === null ? null : (rowWidth - gap * (columns - 1)) / columns;
+  const maxWidth = recipe.inline.maxWidth * environment.textScale;
+  const partWidth = rowWidth === null ? null
+    : rowWidth >= count * minWidth + (count - 1) * gap ? Math.min(maxWidth, (rowWidth - gap * (count - 1)) / count) : rowWidth;
   useLayoutEffect(() => { session.current.update(resolved.fields); return () => session.current.suspend(); }, [resolved.fields]);
   useEffect(() => {
     // iOS does not announce live regions; one group announcement avoids repeating errors per input.
@@ -37,7 +39,7 @@ export function FieldGroup({ descriptor, renderField, layout = fieldGroupRecipe.
   }, [resolved.error]);
   // accessible=true on this container would combine and hide independently editable children.
   return <View accessible={false} style={[layoutStyle, { gap: spacing[recipe.headingGap] }]}>
-    <Text variant="label">{resolved.label}</Text>
+    <Text variant={recipe.heading.textVariant} emphasis={recipe.heading.emphasis}>{resolved.label}</Text>
     {resolved.description ? <Text>{resolved.description}</Text> : null}
     {resolved.error ? <Text tone="danger" accessibilityLiveRegion="assertive">{resolved.error}</Text> : null}
     <View onLayout={layout === "inline" ? event => setRowWidth(event.nativeEvent.layout.width) : undefined}

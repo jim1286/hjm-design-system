@@ -64,7 +64,7 @@ export declare const authScreenRecipe: {
     readonly title: {
         readonly fontSize: 20;
         readonly lineHeight: 28;
-        readonly fontWeight: "800";
+        readonly fontWeight: "600";
     };
     readonly description: {
         readonly fontSize: 14;

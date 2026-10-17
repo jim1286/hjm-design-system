@@ -23,25 +23,26 @@
 | HjmProvider/HjmNativeProvider | 앱 소유 profile 한 번 주입 | [테마](../../theming.md) |
 | OverviewScreen | canvas·카드·도구·footer의 기존 틀 | [개요 화면](../components/overview-screen.md) |
 | EffectSurface | 화면 내부 canvas의 grain/ruled | [배경 효과](../components/effect-surface.md) |
-| SegmentedControl | 상속/명시 표현과 간격 선택 | [단일 선택](../components/segmented-control.md) |
+| SegmentedControl + 보이는 이름 Text(`label`) | 상속/명시 표현과 간격 선택. SegmentedControl `label`은 접근성 이름이라 보이는 이름을 위에 둔다 | [단일 선택](../components/segmented-control.md) |
 | TextField/Button/Dialog | 초안·확인·상세와 복귀 | [입력](../components/field.md), [Dialog](../components/dialog.md) |
 
 ## 배치
 
 ```text
-[종이 표현: 테마 따르기 / 줄무늬 없는 면 / 줄무늬 추가]
-[줄무늬 간격: 24 / 40]  [다음 테마]
+설명 + 표현 한계(caption)
+종이 표현 [테마 따르기 / 줄무늬 없는 면 / 줄무늬 추가]
+줄무늬 간격 [좁게 24 / 넓게 40]  (줄무늬 추가일 때만 사용 가능, 그 외 흐리게)
+미리보기 도구: 테마 pills 10개
 ┌ OverviewScreen: 테마의 기존 화면/구성 기본값 ┐
-│ 제목 → 설명 → 산책 메모                    │
+│ 제목 → 설명 → 기록 도구(산책 메모 입력)     │
 │ 기록 2개: 제목 → 본문                       │
 │ 확인 결과 → [기록 확인] [자세히 읽기]        │
 └ 정적 canvas: 내용 뒤, 입력/읽기 순서 없음 ──┘
-[표현 한계]
 ```
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
-| 바깥 틀 | Stack | 화면 앞쪽 비교 도구부터 세로 | gap lg20; Native는 바깥 ScrollView와 기존 테마 비교와 같은 640host-unit 화면 viewport |
+| 바깥 틀 | Stack, 스토리 `Container size="reading"` | 화면 앞쪽 비교 도구부터 세로 | gap lg20, 최대 폭 720; Native는 바깥 ScrollView와 기존 테마 비교와 같은 640host-unit 화면 viewport |
 | 기록 항목 | OverviewScreen·Stack | items 본문 | gap sm12; rows/grid/cards와 화면은 profile 기본값 |
 | 줄무늬 | EffectSurface | 화면 canvas 뒤 SVG | 한 선 1host unit, spacing 기본24, 명시 비교40; userSpaceOnUse |
 | footer | Stack·Button | 기존 OverviewScreen footer | gap sm12, primary 확인 다음 secondary 상세 |
@@ -101,3 +102,7 @@ Native 비교 도구를 높이 없는 Stack에 넣으면 flex 화면이 접혔�
 밀어냈다. 그래서 기존 테마 비교의 640unit viewport를 사용하고 바깥도 스크롤한다. 제품은 이 예제 높이를
 복사하지 않고 실제 route 영역을 제공한다. iOS 줄무늬는 1unit 폭/백분율 Rect 조합에서 보이지 않아
 spacing×spacing 타일과 명시적 물리 폭을 사용한다. [수정 전후 기기 결과](../../../../../docs/qa/2026-10-07-native-reference-validation.md)를 참고한다.
+
+## 근거
+
+- 2026-10-17 구성 리뷰: 예제 전용 "다음 테마"가 primary라 화면의 primary "기록 확인"과 경쟁했고, 도구 접기 제목과 입력 label이 같은 "산책 메모"였으며, 두 선택에 보이는 이름이 없었다. Web은 그룹 `disabled`를 보이지 않게 그렸다(SegmentedControl이 항목에 전달하도록 수정).

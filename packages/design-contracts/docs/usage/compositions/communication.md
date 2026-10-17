@@ -12,7 +12,7 @@
 
 ## 언제 쓰나
 
-상단 검색 버튼에서 검색 영역을 펼치거나 채팅의 실제 메시지를 선택해 답장을 전송할 때 쓴다. 이미 전체 화면으로 제공하는 검색에는 SearchScreen을 바로 쓴다. 입력 자동 높이·채팅 swipe 엔진·최근 검색 저장을 새로 만들지 않는다.
+검색 아이콘 버튼에서 검색 영역을 펼치거나 채팅의 실제 메시지를 선택해 답장을 전송할 때 쓴다. 이미 전체 화면으로 제공하는 검색에는 SearchScreen을 바로 쓴다. 입력 자동 높이·채팅 swipe 엔진·최근 검색 저장을 새로 만들지 않는다.
 
 ## 구성 요소
 
@@ -27,8 +27,9 @@
 ## 배치
 
 ```text
-[검색 펼치기] → [검색 닫기]
-                [기존 SearchScreen 검색어·제안·결과]
+                         [🔍]   ← 접힘: 영역 끝의 검색 IconButton
+[✕] (SearchScreen 헤더 앞쪽 닫기 exit)
+[기존 SearchScreen 검색어·제안·결과]
                 [오류: 검색 영역 중앙]
 
 [실제 메시지·답장 동작]
@@ -40,7 +41,8 @@
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
 | 바깥 틀 | Stack | 검색·입력 영역 | sm/md |
-| 펼침·닫기 | Button | 상단 | 기존 버튼 계약 |
+| 펼침 | IconButton(ghost, 검색 아이콘) | 접힌 영역의 끝(오른쪽, RTL에서 왼쪽) | IconButton 기본 크기, label = `labels.open` |
+| 닫기 | SearchScreen `exit`(close) | 펼친 검색 헤더 앞쪽 | 화면 exit 규격, label = `labels.cancel` |
 | 검색 | SearchScreen | 펼친 본문 | 기존 검색 영역 구조 |
 | 메시지 | ChatMessage | 기존 timeline | 기존 메시지 구조 |
 | 입력 | MessageComposer | timeline 아래 | 기존 자동 높이 유지 |
@@ -93,7 +95,7 @@ import { ExpandableSearch, ReplyMessage, ReplyComposer } from "@hjmds/react-nati
 
 | 항목 | Web | Native |
 | --- | --- | --- |
-| 검색 포커스 | 펼침 입력·닫기 버튼으로 복원 | 입력 focus·닫기 키보드 해제 |
+| 검색 포커스 | 펼치면 입력, 닫으면 검색 아이콘 버튼으로 복원 | 입력 focus·닫기 키보드 해제 |
 | 답장 대안 | Alt+방향키 | 접근성 reply action |
 | 시간 swipe | reply drag 대신 시간 표시 | 동일 |
 

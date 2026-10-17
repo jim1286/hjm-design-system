@@ -1,13 +1,14 @@
-import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useRef } from "react";
 import { View } from "react-native";
 import { Carousel } from "react-native-reanimated-carousel";
 import { scheduleOnRN } from "react-native-worklets";
 import { resolveCarouselDescriptor, getCarouselNavigationTarget } from "@hjmds/design-contracts/components/carousel";
-import { motion as timing } from "@hjmds/design-contracts/foundations";
-import { Button, IconButton } from "./actions.js";
+import { glyph, motion as timing } from "@hjmds/design-contracts/foundations";
+import { resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
+import { IconButton } from "./actions.js";
 import { Text } from "./primitives.js";
-import { FixedGlyph } from "./internal/fixed-glyph.js";
+import { DrawnChevron } from "./internal/drawn-glyphs.js";
 import { useHjmNativeTheme } from "./provider.js";
 /** Fraction of a slide past which a slow release still pages (platform paging uses half). */
 const carouselReleasePageFraction = 0.5;
@@ -26,7 +27,8 @@ export function CarouselMotion(props) {
     }
     if (![props.width, props.height].every(value => Number.isFinite(value) && value > 0))
         throw new TypeError("Carousel needs positive measured dimensions");
-    const { environment } = useHjmNativeTheme();
+    const { environment, palette, tokens } = useHjmNativeTheme();
+    const chevronColor = resolveIconButtonPresentation("ghost", palette, false).content;
     const ref = useRef(null);
     const latest = useRef({ index, props });
     latest.current = { index, props };
@@ -63,6 +65,6 @@ export function CarouselMotion(props) {
                     const forward = dx < 0 ? 1 : -1;
                     scheduleOnRN(pageBy, (rtl ? -forward : forward));
                 }), onSnapToItem: next => { const slide = props.slides[next]; if (slide && slide.id !== props.currentKey)
-                    props.onCurrentKeyChange(slide.id); }, renderItem: ({ item, index: i }) => _jsx(View, { accessibilityLabel: resolved[i].accessibleName, accessibilityElementsHidden: resolved[i].inert, importantForAccessibility: i === index ? "auto" : "no-hide-descendants", pointerEvents: i === index ? "auto" : "none", children: props.renderSlide(item) }) }), props.navigation === "counter" ? _jsxs(View, { style: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" }, children: [_jsx(IconButton, { label: props.previousLabel, tone: "ghost", disabled: index === 0, onPress: () => pageBy(-1), children: _jsx(FixedGlyph, { children: rtl ? "›" : "‹" }) }), _jsxs(Text, { align: "center", variant: "caption", accessibilityLiveRegion: "polite", children: [index + 1, "/", props.slides.length] }), _jsx(IconButton, { label: props.nextLabel, tone: "ghost", disabled: index === props.slides.length - 1, onPress: () => pageBy(1), children: _jsx(FixedGlyph, { children: rtl ? "‹" : "›" }) })] }) : _jsxs(_Fragment, { children: [_jsx(Button, { tone: "ghost", disabled: index === 0, onPress: () => pageBy(-1), children: props.previousLabel }), _jsx(Button, { tone: "ghost", disabled: index === props.slides.length - 1, onPress: () => pageBy(1), children: props.nextLabel })] })] });
+                    props.onCurrentKeyChange(slide.id); }, renderItem: ({ item, index: i }) => _jsx(View, { accessibilityLabel: resolved[i].accessibleName, accessibilityElementsHidden: resolved[i].inert, importantForAccessibility: i === index ? "auto" : "no-hide-descendants", pointerEvents: i === index ? "auto" : "none", children: props.renderSlide(item) }) }), props.navigation === "counter" ? _jsxs(View, { style: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" }, children: [_jsx(IconButton, { label: props.previousLabel, tone: "ghost", disabled: index === 0, onPress: () => pageBy(-1), children: _jsx(DrawnChevron, { direction: "start", size: glyph.sm, color: chevronColor }) }), _jsxs(Text, { align: "center", variant: "caption", accessibilityLiveRegion: "polite", children: [index + 1, "/", props.slides.length] }), _jsx(IconButton, { label: props.nextLabel, tone: "ghost", disabled: index === props.slides.length - 1, onPress: () => pageBy(1), children: _jsx(DrawnChevron, { direction: "end", size: glyph.sm, color: chevronColor }) })] }) : _jsxs(View, { style: { flexDirection: "row", justifyContent: "flex-end", gap: tokens.spacing.sm, marginTop: tokens.spacing.sm }, children: [_jsx(IconButton, { label: props.previousLabel, tone: "ghost", disabled: index === 0, onPress: () => pageBy(-1), children: _jsx(DrawnChevron, { direction: "start", size: glyph.sm, color: chevronColor }) }), _jsx(IconButton, { label: props.nextLabel, tone: "ghost", disabled: index === props.slides.length - 1, onPress: () => pageBy(1), children: _jsx(DrawnChevron, { direction: "end", size: glyph.sm, color: chevronColor }) })] })] });
 }
 //# sourceMappingURL=carousel-motion.js.map

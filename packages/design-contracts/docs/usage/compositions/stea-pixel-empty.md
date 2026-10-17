@@ -22,8 +22,8 @@
 | EmptyState | 그림·제목·설명·행동 한 묶음 | [EmptyState](../components/empty-state.md) |
 | 제품 캐릭터(스토리: 12×12 픽셀 스프라이트) | 장식 그림, 4프레임 220ms 반복 | 제품 소유 |
 | Button `primary` | 첫 기록 남기기(시작 행동) | [Button](../components/button.md) |
-| Button `ghost` | 움직임 멈추기/다시 움직이기 | [Button](../components/button.md) |
-| Text `tone="muted"` 상태 문구 | 시작 행동 결과 | [Text](../components/text.md) |
+| Switch | 캐릭터 움직임 켜기·끄기(멈춤 제어) | [Switch](../components/switch.md) |
+| StatusText `tone="muted"` 상태 문구 | 시작 행동 결과 | [Text](../components/text.md#statustext) |
 | `ScrollView` + `Container`(Native) | 바깥 틀. 세로 스크롤·위아래 여백, 좌우 gutter | [Container](../components/container.md), [화면 여백과 너비](../tokens/layout.md) |
 
 ## 배치
@@ -31,7 +31,7 @@
 ```text
 Native 화면(ScrollView, 위아래 spacing.lg 20) > Container gutter 16(폭 < 600) · 20(폭 ≥ 600)
 ┌──────── Stack gap spacing.md 16 ─────────┐
-│ ┌──── EmptyState (가운데 정렬) ────────┐ │
+│ ┌──── EmptyState (남은 높이, 가운데) ──┐ │
 │ │            ┌────────┐                │ │
 │ │            │ 캐릭터 │ 96×96          │ │
 │ │            └────────┘   ↕ spacing.xs 8│ │
@@ -39,7 +39,7 @@ Native 화면(ScrollView, 위아래 spacing.lg 20) > Container gutter 16(폭 < 6
 │ │   말랑이가 첫 기록을 기다리고 있어요.  │ │
 │ │        [ 첫 기록 남기기 ]  primary     │ │ ← 주 행동
 │ └────────────────────────────────────────┘ │
-│ [ 움직임 멈추기 ]  ghost                   │ ← 보조(멈춤 제어)
+│ 캐릭터 움직임                   (●──) │ ← Switch(멈춤 제어)
 │ 상태 문구 (muted, live)                    │
 └───────────────────────────────────────────┘
   고정 영역 없음. 안전 영역은 화면 골격이 맡는다
@@ -47,25 +47,25 @@ Native 화면(ScrollView, 위아래 spacing.lg 20) > Container gutter 16(폭 < 6
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
-| 바깥 틀 | Web: HJM ScreenLayout의 본문. Native: `ScrollView` > `Container` | 이 구성은 바깥 폭·여백을 정하지 않는다(Web 스토리는 Stack만 그린다). Native는 `ScrollView` 안 [Container](../components/container.md)에 둔다. 입력이 없어 키보드 처리는 없다. 안전 영역은 화면 골격(내비게이션 헤더·탭 바)이 맡는다 | Native ScrollView 위아래 `spacing.lg` 20, Container gutter 폭 600 미만 `compact` 16 · 이상 `regular` 20(`layout.pagePadding`) |
-| 빈 상태 | EmptyState `density="regular"` | 본문 가운데 | 위아래 Web `spacing.xxl` 32 / Native `spacing.xxxl` 40, 좌우 `spacing.xl` 24, 슬롯 사이 `spacing.xs` 8 |
+| 바깥 틀 | Web: HJM ScreenLayout의 본문. Native: `ScrollView`(`contentContainerStyle` `flexGrow: 1`) > `Container` | 이 구성은 바깥 폭·여백을 정하지 않는다(Web 스토리는 캔버스 높이를 채운 Stack만 그린다). 본문 높이를 받은 Stack 안에서 EmptyState가 남은 높이를 채운다. Native는 `ScrollView` 안 [Container](../components/container.md)에 두고 Container·Stack도 `flexGrow: 1`로 높이를 잇는다. 입력이 없어 키보드 처리는 없다. 안전 영역은 화면 골격(내비게이션 헤더·탭 바)이 맡는다 | Native ScrollView 위아래 `spacing.lg` 20, Container gutter 폭 600 미만 `compact` 16 · 이상 `regular` 20(`layout.pagePadding`) |
+| 빈 상태 | EmptyState `density="regular"` | 본문의 남은 높이를 채우고 가로·세로 가운데 | 위아래 Web `spacing.xxl` 32 / Native `spacing.xxxl` 40, 좌우 `spacing.xl` 24, 슬롯 사이 `spacing.xs` 8 |
 | 캐릭터 | Web `icon` / Native `illustration` | EmptyState 맨 위 | 96×96(12칸 × `spacing.xs` 8). Native도 그림 노드 자체의 96×96 크기를 사용한다 |
 | 시작 행동 | Button `primary` | EmptyState `action` | 높이 44, 하나만 |
-| 멈춤 제어 | Button `ghost` | EmptyState 아래, 꽉 찬 폭(`Stack` 기본 `align="stretch"`) | 묶음 사이 `spacing.md` 16 |
-| 상태 문구 | Text muted | 맨 아래. Web은 빈 `role="status"`를 늘 마운트, Native는 문구가 있을 때만 | `spacing.md` 16 |
+| 멈춤 제어 | Switch "캐릭터 움직임" | EmptyState 바로 아래, 꽉 찬 폭(`Stack` 기본 `align="stretch"`) | 묶음 사이 `spacing.md` 16 |
+| 상태 문구 | StatusText muted | 맨 아래. Web은 늘 마운트하고 비어 있으면 레이아웃에서 빠진다, Native는 문구가 있을 때만 | `spacing.md` 16 |
 
 ## 흐름과 상태
 
 1. 화면이 열리면 캐릭터가 220ms 간격 4프레임으로 반복한다.
 2. "첫 기록 남기기"를 누르면 제품의 작성 화면으로 간다(스토리는 상태 문구만 보인다).
-3. "움직임 멈추기"를 누르면 첫 프레임에서 멈추고 라벨이 "다시 움직이기"로 바뀐다.
+3. "캐릭터 움직임" Switch를 끄면 첫 프레임에서 멈추고, 다시 켜면 움직인다.
 
 | 상태 | 모습 | 포커스·알림 |
 | --- | --- | --- |
 | 기본 | 캐릭터가 움직인다 | 캐릭터는 숨김, 제목·설명이 의미를 전한다 |
 | 진행 중 | 시작 행동이 화면 이동이면 없다. 서버 요청(예: 첫 항목 생성)이면 primary `loading` | 포커스는 버튼 유지 |
 | 실패 | 시작 행동이 서버 요청일 때 실패하면 상태 문구 자리에 실패 문구, primary는 다시 누를 수 있다. 빈 상태 자체를 불러오지 못한 경우는 이 구성이 아니라 오류 화면([Result](../components/result.md) failure)이다 | 상태 문구가 Web `role="status"`, Native live region으로 읽힌다 |
-| 멈춤 | 첫 프레임 정지 | 멈춤 버튼 라벨이 바뀐다 |
+| 멈춤 | 첫 프레임 정지 | Switch 상태(켬·끔)가 읽힌다 |
 | reduced motion | 타이머 없이 첫 프레임 | — |
 | 탭 숨김(Web)·앱 배경(Native) | 타이머를 걸지 않는다 | — |
 | 시작 행동 후 | 상태 문구 표시 | Web `role="status"`, Native `accessibilityLiveRegion` |
@@ -77,20 +77,20 @@ Native 화면(ScrollView, 위아래 spacing.lg 20) > Container gutter 16(폭 < 6
 // Web
 import { EmptyState } from "@hjmds/react/feedback";
 import { Button } from "@hjmds/react/actions";
-import { Stack, Text } from "@hjmds/react/layout";
+import { Stack } from "@hjmds/react/layout";
+import { Switch } from "@hjmds/react/selection";
+import { StatusText } from "@hjmds/react/status-text";
 
 // 상태 → 문구 키
 const statusKey = { idle: undefined, started: "records.empty.started", failed: "records.empty.startFailed" } as const;
 const statusText = statusKey[startState];
 
-<Stack gap="md">
+<Stack gap="md" layoutStyle={{ flexGrow: 1 }}>{/* 본문 높이를 가진 flex 부모 안에서 채운다 */}
   <EmptyState icon={<ProductMascot paused={paused} />} title={t("records.empty.title")}
     description={t("records.empty.description")}
     action={<Button loading={starting} onClick={startRecord}>{t("records.empty.start")}</Button>} />
-  <Button tone="ghost" onClick={() => setPaused((v) => !v)}>
-    {paused ? t("mascot.resume") : t("mascot.pause")}
-  </Button>
-  <Text role="status" tone="muted">{statusText ? t(statusText) : ""}</Text>
+  <Switch label={t("mascot.motion")} checked={!paused} onCheckedChange={(on) => setPaused(!on)} />
+  <StatusText tone="muted">{statusText ? t(statusText) : ""}</StatusText>
 </Stack>;
 ```
 
@@ -101,23 +101,23 @@ import { spacing } from "@hjmds/design-contracts/foundations";
 import { resolveWindowClass } from "@hjmds/design-contracts/responsive";
 import { EmptyState } from "@hjmds/react-native/feedback";
 import { Button } from "@hjmds/react-native/actions";
-import { Container, Stack, Text } from "@hjmds/react-native/primitives";
+import { Switch } from "@hjmds/react-native/inputs";
+import { Container, Stack } from "@hjmds/react-native/primitives";
+import { StatusText } from "@hjmds/react-native/status-text";
 
 const statusKey = { idle: undefined, started: "records.empty.started", failed: "records.empty.startFailed" } as const;
 const statusText = statusKey[startState];
 const { width } = useWindowDimensions();
 const gutter = resolveWindowClass(width) === "compact" ? "compact" : "regular";
 
-<ScrollView contentContainerStyle={{ paddingVertical: spacing.lg }}>
-  <Container gutter={gutter}>
-    <Stack gap="md">
+<ScrollView contentContainerStyle={{ flexGrow: 1, paddingVertical: spacing.lg }}>
+  <Container gutter={gutter} layoutStyle={{ flexGrow: 1 }}>
+    <Stack gap="md" layoutStyle={{ flexGrow: 1 }}>
       <EmptyState illustration={<ProductMascot paused={paused} />}
         title={t("records.empty.title")} description={t("records.empty.description")}
         action={<Button loading={starting} onPress={startRecord}>{t("records.empty.start")}</Button>} />
-      <Button tone="ghost" onPress={() => setPaused((v) => !v)}>
-        {paused ? t("mascot.resume") : t("mascot.pause")}
-      </Button>
-      {statusText ? <Text accessibilityLiveRegion="polite" tone="muted">{t(statusText)}</Text> : null}
+      <Switch label={t("mascot.motion")} checked={!paused} onCheckedChange={(on) => setPaused(!on)} />
+      {statusText ? <StatusText announceOnMount tone="muted">{t(statusText)}</StatusText> : null}
     </Stack>
   </Container>
 </ScrollView>;
@@ -132,11 +132,11 @@ const gutter = resolveWindowClass(width) === "compact" ? "compact" : "regular";
 | 그림 슬롯 | `icon` | `illustration`(최소 `glyph.lg` 크기만 보장하고 캐릭터 자체 크기를 존중한다) |
 | 세로 여백 | `.hjm-empty-state` `spacing.xxl` 32 | recipe `spacing.xxxl` 40 |
 | 일시정지 감지 | `document.hidden` | `AppState` |
-| 상태 문구 자리 | 빈 `role="status"`를 늘 마운트 | 문구가 있을 때만 마운트 |
+| 상태 문구 자리 | `StatusText`를 늘 마운트(비면 레이아웃에서 빠짐) | 문구가 있을 때만 마운트 |
 | 바깥 틀 | HJM ScreenLayout의 본문 | `ScrollView` > `Container` |
 
 ## 함정
 
-- 5초 넘게 반복되는 움직임에는 멈춤 제어를 둔다(WCAG 2.2.2). 스토리의 ghost 버튼이 그 자리다.
+- 5초 넘게 반복되는 움직임에는 멈춤 제어를 둔다(WCAG 2.2.2). 켜고 끄는 제어이므로 라벨이 바뀌는 텍스트 버튼이 아니라 Switch로 둔다([켜고 끄기](../SELECTION.md)).
 - 캐릭터에 접근성 이름을 붙이지 않는다. EmptyState가 그림을 장식으로 숨긴다.
 - 현재 스토리의 시작 행동은 상태 문구만 바꾼다. 진행 중·실패 경로는 없다.

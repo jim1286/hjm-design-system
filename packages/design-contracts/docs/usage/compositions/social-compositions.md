@@ -21,7 +21,7 @@ Web은 기존 AnimatedStatistic과 같은 `@number-flow/react` peer가 필요하
 | 컴포넌트 | 역할 | 지침 |
 | --- | --- | --- |
 | FollowProfileCard | Card · Avatar · AnimatedStatistic · Button으로 프로필·팔로워·controlled follow 요청 | [Card](../components/card.md) |
-| EventAttendanceCard | Card · Avatar · AnimatedStatistic · Button으로 행사·참석·캘린더 연결 | [Avatar](../components/avatar.md) |
+| EventAttendanceCard | Card · Avatar · AnimatedStatistic · RadioGroup(응답) · Button(캘린더)으로 행사·참석·캘린더 연결 | [Avatar](../components/avatar.md) · [RadioGroup](../components/radio-group.md) |
 
 ## 배치
 
@@ -30,7 +30,7 @@ Web은 기존 AnimatedStatistic과 같은 `@number-flow/react` peer가 필요하
 [Avatar] 이름 · 소개               제목 · 소개
 팔로워 수                         날짜/시간
 [팔로우 / 팔로잉]                  참석 인원 → 확인된 참가자 Avatar + 이름
-                                  응답 제목 → [참석] [미정] [불참]
+                                  응답 RadioGroup: (○참석) (○미정) (○불참)
                                   [캘린더 연결]
 오류: 해당 카드 내부 중앙          오류: 해당 카드 내부 중앙
 ```
@@ -40,8 +40,9 @@ Web은 기존 AnimatedStatistic과 같은 `@number-flow/react` peer가 필요하
 | 바깥 틀 | Card | 본문·목록·ProfileScreen 안 | 기존 Card recipe |
 | 프로필 header | Avatar · Card title/description | 상단 leading → 이름·소개 | 기존 Card와 Avatar 기본 크기 |
 | 본문 | AnimatedStatistic · Button · Text | 수치 → 주요 행동 → 오류 | Stack gap=md (`spacing.md`, 16px) |
-| 행사 | Text · AnimatedStatistic · Avatar · Button | 날짜 → 인원 → 참가자 → 응답 → 캘린더 → 오류 | Stack gap=md (`spacing.md`, 16px) |
-| 참가자·응답 행 | Stack | inline, 폭이 모자라면 wrap | gap=xs (`spacing.xs`, 8px) |
+| 행사 | Text · AnimatedStatistic · Avatar · RadioGroup · Button | 날짜 → 인원 → 참가자 → 응답 → 캘린더(secondary) → 오류 | Stack gap=md (`spacing.md`, 16px) |
+| 참가자 행 | Stack | inline, 폭이 모자라면 wrap. Avatar와 이름은 세로 가운데 정렬 | gap=xs (`spacing.xs`, 8px) |
+| 응답 | RadioGroup | 가로 plain, 그룹 라벨 = 응답 제목. 아직 응답하지 않았으면 선택 없음 | `selectionGroupRecipe` horizontal plain gap `spacing.sm` 12 |
 | 오류 | Text | 자신의 안내 영역 가로·세로 중앙 | 임의 상단 margin 없음 |
 
 ## 흐름과 상태
@@ -53,8 +54,8 @@ Web은 기존 AnimatedStatistic과 같은 `@number-flow/react` peer가 필요하
 
 | 상태 | 모습 | 포커스·알림 |
 | --- | --- | --- |
-| 기본 | 확인된 선택·수치·참가자 | Button의 기존 선택·키보드 계약 |
-| 진행 중 | 캡처한 제안 선택·수치, 행동 잠금 | 로딩은 버튼 안, 수치 전환은 AnimatedStatistic |
+| 기본 | 확인된 선택·수치·참가자 | 팔로우는 Button 선택 계약, 응답은 RadioGroup 키보드 계약 |
+| 진행 중 | 캡처한 제안 선택·수치, 행동 잠금 | 팔로우·캘린더 로딩은 버튼 안, 응답은 그룹 비활성 + 설명에 진행 문구, 수치 전환은 AnimatedStatistic |
 | 실패 | 현재 confirmed state로 복구, 중앙 오류 | Web alert / Native assertive, 같은 행동 재시도 |
 | 캘린더 완료 | 실제 callback fulfilled 후 완료 label | 같은 mount에서 중복 추가 차단 |
 | 엔티티 변경 | 새 profileId/eventId의 상태 | 이전 응답은 새 카드에 반영하지 않음 |

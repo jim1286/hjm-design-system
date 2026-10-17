@@ -59,7 +59,7 @@ import { EmptyState } from "@hjmds/react-native/feedback";
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `density` | `compact` · `regular` | `regular` | `compact`는 세로 여백이 작고 Native에서 남은 공간을 채우지 않는다 |
+| `density` | `compact` · `regular` | `regular` | `compact`는 세로 여백이 작고 남은 공간을 채우지 않는다 |
 | `align`(Native) | `center` · `upper` | `center` | `upper`는 `regular`일 때 내용을 위쪽(1:3 여백)에 둔다 |
 | `announcement`(Native) | `none` · `polite` · `assertive` | `none` | 상태가 바뀌어 빈 화면이 새로 나타날 때만 켠다 |
 | `titleRole`(Native) | 접근성 role | `"header"` | Web은 항상 `role="status"`로 그린다 |
@@ -80,7 +80,7 @@ EmptyState 자체에는 콜백 prop이 없다. 2026-10-07 기존 예제의 생�
 | 크기 | Native 그림 슬롯은 최소 `glyph.lg`(28) 폭·높이를 확보하고 큰 일러스트의 자체 크기를 존중한다. Web 그림 슬롯에는 고정 크기가 없다. 세로 여백: `compact` `spacing.xl`(24). `regular` `spacing.xxxl`(40, 두 플랫폼) | `component-recipes.ts` `emptyStateRecipe`, `styles.css` `.hjm-empty-state` |
 | 간격 | 항목 사이 간격 `spacing.xs`(8), 좌우 여백 `spacing.xl`(24) | `component-recipes.ts` `emptyStateRecipe` |
 | 순서·정렬 | 위→아래 순서는 그림 → 제목 → 설명 → 행동이고 가운데 정렬이다. 행동은 Button 하나(`tone="secondary"` 또는 `primary`)를 내용 폭만큼 둔다 | `react-native/src/feedback.tsx` `EmptyState` |
-| 고정·스크롤 | 비어 있는 목록·검색 결과 영역 **안**에 둔다. 위 TopBar·검색칸·필터는 그대로 남기고 그 아래 내용 영역만 EmptyState로 바꾼다. Native `regular`는 남은 높이를 채우고(`flexGrow: 1`) 세로 가운데에 놓는다. `align="upper"`는 위:아래 빈 공간을 1:3으로 나눠 내용이 위쪽에 온다. 화면 하단 고정 행동이 필요하면 [BottomCTA](bottom-cta.md)로 따로 둔다 | `react-native/src/feedback.tsx` `EmptyState` |
+| 고정·스크롤 | 비어 있는 목록·검색 결과 영역 **안**에 둔다. 위 TopBar·검색칸·필터는 그대로 남기고 그 아래 내용 영역만 EmptyState로 바꾼다. `regular`는 flex 부모의 남은 높이를 채우고(Web `flex-grow: 1`, Native `flexGrow: 1`) 세로 가운데에 놓는다. 높이가 내용만큼인 부모에서는 늘어나지 않는다. `align="upper"`는 위:아래 빈 공간을 1:3으로 나눠 내용이 위쪽에 온다. 화면 하단 고정 행동이 필요하면 [BottomCTA](bottom-cta.md)로 따로 둔다 | `react/src/styles.css` `.hjm-empty-state`, `react-native/src/feedback.tsx` `EmptyState` |
 | 좁은 폭·큰 글자 | 카드·시트 안처럼 높이가 작은 자리는 `compact`(채우지 않음)를 쓴다 | `react-native/src/feedback.tsx` `EmptyState` |
 
 ```text

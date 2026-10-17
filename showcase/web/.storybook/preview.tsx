@@ -76,6 +76,9 @@ const preview: Preview = {
           // tables, players and controls across the canvas (2026-10-17 reviews C and E). Feedback, visual-effect and
           // infrastructure stories stretched demo buttons and reading text to 1280 the same way (review F).
           componentPreview={context.title.split("/")[1] === "컴포넌트" && ["입력", "데이터 표시", "상태와 알림", "시각 효과", "기반 기능"].includes(context.title.split("/")[2] ?? "")}
+          // Empty/recovery compositions center their state in the body; Native's canvas is bounded, so Web
+          // gives the same story the canvas height instead of a content-high box (2026-10-17 review G4).
+          fillCanvas={context.parameters.hjm?.fillCanvas === true}
           input={{ direction, reducedMotion, textScale, theme }}
           systemTheme="light"
         >

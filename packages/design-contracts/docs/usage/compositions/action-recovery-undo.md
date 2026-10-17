@@ -50,7 +50,7 @@ Toast의 `action`을 진입점으로 쓰면 토스트는 진입점만, 세션은
 │ │ 대상: 목록 / 보관함 + 항목 이름      │ │
 │ │          ↕ spacing.md 16             │ │
 │ │ [ 보관 ]  →  [ 실행 취소 ]           │ │ ← 같은 자리, loading 중 스피너
-│ │          ↕ spacing.md 16             │ │
+│ │          ↕ spacing.xs 8 (행동 묶음)  │ │
 │ │ [ 실패한 작업 다시 시도 (secondary)] │ │ ← error일 때만
 │ │          ↕ spacing.md 16             │ │
 │ │ 상태 문구 (role=status)              │ │
@@ -61,11 +61,11 @@ Toast의 `action`을 진입점으로 쓰면 토스트는 진입점만, 세션은
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
-| 바깥 틀 | Web 문서 스크롤 > `Container`. Native `ScrollView` > `Container` | 이 구성을 감싸는 제품 화면. 상단 안전 영역은 내비게이션 헤더(또는 [TopBar](../components/top-bar.md))가 맡는다 | 좌우 `Container gutter`: 폭 600 미만 `compact` 16, 이상 `regular` 20([화면 여백](../tokens/layout.md)). Native 위아래는 `contentContainerStyle` `paddingVertical: spacing.lg` 20 |
+| 바깥 틀 | Web 문서 스크롤 > `Container size="reading"`. Native `ScrollView` > `Container size="reading"` | 이 구성을 감싸는 제품 화면. 넓은 화면에서도 버튼이 읽기 폭을 넘지 않는다. 상단 안전 영역은 내비게이션 헤더(또는 [TopBar](../components/top-bar.md))가 맡는다 | 좌우 `Container gutter`: 폭 600 미만 `compact` 16, 이상 `regular` 20([화면 여백](../tokens/layout.md)). Native 위아래는 `contentContainerStyle` `paddingVertical: spacing.lg` 20 |
 | 제목(선택) | `Heading level="level3"` | Stack 맨 위 | 아래 `spacing.md` 16 |
 | 대상 표시 | `Text` | 행동 위, 스크롤 | 아래 `spacing.md` 16 |
-| 행동 | `Button` 보관/실행 취소(primary) | 대상 아래, 스크롤 | `medium` 44(`control.buttonHeight`). Stack 기본 `align="stretch"`로 꽉 찬 폭 |
-| 재시도 | `Button tone="secondary"` | 행동 아래, error일 때만 | `medium` 44, `spacing.md` 16. 라벨은 무엇을 다시 하는지 적는다(스토리 "실패한 작업 다시 시도") |
+| 행동 | `Button` 보관/실행 취소(primary) | 대상 아래, 스크롤 | `medium` 44(`control.buttonHeight`). 재시도와 함께 `Stack gap="xs"` 행동 묶음에 둔다. Stack 기본 `align="stretch"`로 꽉 찬 폭 |
+| 재시도 | `Button tone="secondary"` | 행동 아래, error일 때만 | `medium` 44, 행동과 `spacing.xs` 8(`actionGroupRecipe`). 라벨은 무엇을 다시 하는지 적는다(스토리 "실패한 작업 다시 시도") |
 | 상태 | `Text` | 맨 아래 | `spacing.md` 16 |
 | 토스트(선택) | `Toast` `action` | 화면 단위 오버레이 | action 높이 `control.minTouchTarget` 44 |
 
@@ -124,13 +124,15 @@ function ArchiveItem({ id, name, api }: { id: string; name: string; api: Archive
   };
   const gutter = resolveWindowClass(window.innerWidth) === "compact" ? "compact" : "regular";
   return (
-    <Container gutter={gutter}>
+    <Container size="reading" gutter={gutter}>
       <Stack gap="md">
         <Text as="p">{state.value ? t("archive.inArchive", { name }) : t("archive.inList", { name })}</Text>
-        <Button loading={state.status === "pending"} onClick={toggle}>
-          {state.value ? t("archive.undo") : t("archive.action")}
-        </Button>
-        {state.status === "error" && <Button tone="secondary" onClick={() => void session.retry()}>{t("archive.retry")}</Button>}
+        <Stack gap="xs">
+          <Button loading={state.status === "pending"} onClick={toggle}>
+            {state.value ? t("archive.undo") : t("archive.action")}
+          </Button>
+          {state.status === "error" && <Button tone="secondary" onClick={() => void session.retry()}>{t("archive.retry")}</Button>}
+        </Stack>
         <Text as="p" role="status">{t(statusKeyOf(state))}</Text>
       </Stack>
     </Container>
@@ -165,13 +167,15 @@ function ArchiveItem({ id, name, api }: { id: string; name: string; api: Archive
   };
   return (
     <ScrollView contentContainerStyle={{ paddingVertical: spacing.lg }}>
-      <Container gutter={resolveWindowClass(width) === "compact" ? "compact" : "regular"}>
+      <Container size="reading" gutter={resolveWindowClass(width) === "compact" ? "compact" : "regular"}>
         <Stack gap="md">
           <Text>{state.value ? t("archive.inArchive", { name }) : t("archive.inList", { name })}</Text>
-          <Button loading={state.status === "pending"} onPress={toggle}>
-            {state.value ? t("archive.undo") : t("archive.action")}
-          </Button>
-          {state.status === "error" && <Button tone="secondary" onPress={() => void session.retry()}>{t("archive.retry")}</Button>}
+          <Stack gap="xs">
+            <Button loading={state.status === "pending"} onPress={toggle}>
+              {state.value ? t("archive.undo") : t("archive.action")}
+            </Button>
+            {state.status === "error" && <Button tone="secondary" onPress={() => void session.retry()}>{t("archive.retry")}</Button>}
+          </Stack>
           <StatusText>{t(statusKeyOf(state))}</StatusText>
         </Stack>
       </Container>

@@ -25,7 +25,7 @@ const cooldown = async () => { for (let i = 0; i < 10; i++) await tick(1000); };
 
 it("freezes the requested order outcome, retries its failed step and preserves the action through completion", async () => {
   await render("order");
-  const fail = host.querySelector<HTMLButtonElement>('[role="switch"]')!;
+  const fail = host.querySelector<HTMLButtonElement>('[role="checkbox"]')!;
   await click(orderCopy.request);
   expect(fail.disabled).toBe(true);
   await act(async () => fail.click()); await tick();

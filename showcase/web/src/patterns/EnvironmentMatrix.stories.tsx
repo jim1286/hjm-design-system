@@ -1,39 +1,41 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-
+import { Container, Grid, Stack, Text } from "@hjmds/react/layout";
+import { Heading } from "@hjmds/react/heading";
+import { Badge, Card } from "@hjmds/react/display";
 import { showcaseEnvironmentMatrix, showcaseScenarios } from "@hjmds/design-contracts/showcase";
+
+// Environment ids match scenario ids, so the scenario label doubles as the preset's visible Korean name.
+const scenarioLabels = new Map<string, string>(showcaseScenarios.map(({ id, label }) => [id, label]));
+const motionLabels = { full: "전체", reduced: "줄임" } as const;
+const columns = { compact: 1, medium: 2, expanded: 3 } as const;
 
 function EnvironmentMatrix() {
   return (
-    <main className="hjm-page">
-      <p className="hjm-eyebrow">Patterns</p>
-      <h1 className="hjm-title">Evidence matrix</h1>
-      <p className="hjm-lead">
-        위 toolbar를 바꾸면서 같은 story가 환경 변화에도 의미를 보존하는지 확인합니다.
-      </p>
-      <section className="hjm-showcase-section" aria-labelledby="matrix-title">
-        <h2 className="hjm-section-title" id="matrix-title">Environment presets</h2>
-        <div className="hjm-showcase-grid">
-          {showcaseEnvironmentMatrix.map((environment) => (
-            <article className="hjm-showcase-card" key={environment.id}>
-              <span className="hjm-pill">{environment.id}</span>
-              <h3>{environment.label}</h3>
-              <p className="hjm-muted">Motion: {environment.motion}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-      <section className="hjm-showcase-section" aria-labelledby="scenario-title">
-        <h2 className="hjm-section-title" id="scenario-title">Story requirements</h2>
-        <div className="hjm-showcase-grid">
-          {showcaseScenarios.map((scenario) => (
-            <article className="hjm-showcase-card" key={scenario.id}>
-              <h3>{scenario.label}</h3>
-              <p className="hjm-muted">{scenario.description}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-    </main>
+    <Container size="content">
+      <Stack gap="xl">
+        <Stack gap="sm">
+          <Heading level="level3" semanticLevel={1}>환경 조합 검증</Heading>
+          <Text>위 도구 막대를 바꾸면서 같은 스토리가 환경 변화에도 의미를 보존하는지 확인합니다.</Text>
+        </Stack>
+        <Stack gap="md">
+          <Heading level="level4" semanticLevel={2}>환경 조합</Heading>
+          <Grid columns={columns} gap={{ compact: "md" }}>
+            {showcaseEnvironmentMatrix.map((environment) => (
+              <Card key={environment.id} headingLevel={3} title={environment.label} description={`동작: ${motionLabels[environment.motion]}`}
+                leading={<Badge>{scenarioLabels.get(environment.id) ?? environment.id}</Badge>} />
+            ))}
+          </Grid>
+        </Stack>
+        <Stack gap="md">
+          <Heading level="level4" semanticLevel={2}>스토리 확인 항목</Heading>
+          <Grid columns={columns} gap={{ compact: "md" }}>
+            {showcaseScenarios.map((scenario) => (
+              <Card key={scenario.id} headingLevel={3} title={scenario.label} description={scenario.description} />
+            ))}
+          </Grid>
+        </Stack>
+      </Stack>
+    </Container>
   );
 }
 

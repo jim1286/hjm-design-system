@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 구성 API 지침 참조
-- 검토일: 2026-10-15
+- 검토일: 2026-10-17
 - 근거: [반복 화면 조합](../../screen-patterns.md); 공통 API와 실제 Web·Native 예제의 슬롯·상태를 대조해 중복 조립 방지. 2026-10-06 사용자 승인으로 스토리북 배포(이전 `실험/구성/설정/변경 저장과 이탈 확인`, [승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정))
 - 스토리북: `배포/구성/피드백과 복구/변경 저장과 이탈 확인`
 
@@ -53,9 +53,9 @@
 
 이 이름의 독립 공개 컴포넌트는 없다. 아래는 공개 `createActionSession`과 입력·Steps·Sheet를 조합하는 예제다. Storybook 예제 파일을 제품에서 import하지 않는다.
 
-- [Web 실행 예제](../../../../../showcase/web/src/patterns/reference-flow-previews.tsx)의 `Editor(kind="settings")`
-- [Native 실행 예제](../../../../../showcase/native/src/reference-flow-previews.tsx)의 `Editor(kind="settings")`
-- [공통 검증·초안 비교](../../../../../showcase/shared/reference-flows.ts)의 `draftError`, `sameDraft`는 예제 데이터 규칙이며 제품 규칙으로 교체한다.
+- [Web 실행 예제](https://github.com/jim1286/hjm-design-system/blob/9fccb921216a06bac2568ca8252bd0b4d7c48d95/showcase/web/src/patterns/reference-flow-previews.tsx)의 `Editor(kind="settings")`
+- [Native 실행 예제](https://github.com/jim1286/hjm-design-system/blob/9fccb921216a06bac2568ca8252bd0b4d7c48d95/showcase/native/src/reference-flow-previews.tsx)의 `Editor(kind="settings")`
+- [공통 검증·초안 비교](https://github.com/jim1286/hjm-design-system/blob/9fccb921216a06bac2568ca8252bd0b4d7c48d95/showcase/shared/reference-flows.ts)의 `draftError`, `sameDraft`는 예제 데이터 규칙이며 제품 규칙으로 교체한다.
 
 저장값 session.value와 편집 draft를 비교한다. dirty일 때만 저장·되돌리기를 켜고, 이탈은 확인 Sheet를 연다. 계속 수정은 Sheet만 닫고, 버리기는 마지막 저장값으로 draft를 복원한다.
 

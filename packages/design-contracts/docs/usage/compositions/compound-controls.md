@@ -61,7 +61,7 @@
 | --- | --- | --- | --- |
 | 바깥 틀 | Web 문서 스크롤 > `Container`. Native `ScrollView` > `Container` | 블록을 감싸는 제품 화면. 상단 안전 영역은 내비게이션 헤더(또는 [TopBar](../components/top-bar.md))가 맡는다 | 좌우 `Container gutter`: 폭 600 미만 `compact` 16, 이상 `regular` 20([화면 여백](../tokens/layout.md)). Native 위아래는 `contentContainerStyle` `paddingVertical: spacing.lg` 20 |
 | 블록 | `Stack gap="xl"` | 바깥 틀 안, 본문 흐름 | 자식 사이 `spacing.xl` 24 |
-| 소요 시간 | DurationField | 설명 아래 | NumberField 세 칸, 칸 사이 `spacing.md` 16. Web은 칸 최소 10ch로 자동 줄바꿈, Native는 글자 배율에 비례한 칸 폭으로 줄바꿈 |
+| 소요 시간 | DurationField | 설명 아래 | NumberField 세 칸, 칸 사이 `spacing.md` 16. 세 칸이 모두 들어가면 한 줄(칸 최대 `fieldGroupRecipe.inline.maxWidth`), 아니면 세 칸 모두 세로([FieldGroup](field-group.md)) |
 | 확인 | InlineConfirm | 트리거 자리 그대로 | 트리거와 확인 행동이 같은 자리, Button 높이 44, 질문·버튼 줄 사이와 두 버튼 사이 `spacing.sm` 12 |
 | 반응 | ReactionPicker | 제목 아래 | `ghost` `pill` Button 묶음, 사이 `spacing.xs` 8, 넘치면 줄바꿈 |
 | 알림 종 | NotificationBell | 블록 맨 위, 시작 쪽 정렬 | IconButton(기본 `medium` 44) + CounterBadge `floating`(끝·위 모서리) |
@@ -172,7 +172,7 @@ function CompoundBlocks() {
 | 바깥 스크롤 | 문서 스크롤 | `ScrollView`(위아래 `spacing.lg`) |
 | 종 아이콘 | `<Icon name>` | `<Icon descriptor renderGlyph>` |
 | 확인 알림 | 포커스 이동 + Escape, 오류 `role="alert"` | iOS 명시 알림, Android live region, 오류 `accessibilityRole="alert"` |
-| 소요 시간 칸 줄바꿈 | CSS grid `auto-fit`(칸 최소 10ch) | 글자 배율에 비례한 칸 폭 + `flexWrap` |
+| 소요 시간 칸 줄바꿈 | flex-basis 계산으로 측정 없이 전부-또는-세로 | 잰 행 폭으로 같은 기준 계산 |
 
 ## 함정
 
@@ -191,6 +191,10 @@ function CompoundBlocks() {
 
 ### 소요 시간의 하위 입력 그룹
 
-`DurationField`는 `FieldGroup layout="inline"`으로 그룹 이름과 단위별 잠금을 연결하고, 각 값은 기존 NumberField로 편집한다. 좁은 영역에서는 시간·분·초 순서를 유지하며 줄바꿈한다. Native의 보이는 라벨은 각 단위만, 접근성 이름은 그룹 이름과 단위를 함께 전달한다. 그룹이 잠기거나 사라진 뒤 도착한 이전 단위 callback은 값을 바꾸지 않는다. 총 초 단위 값·상한 보정은 기존 duration-field 계약이 소유한다.
+`DurationField`는 `FieldGroup layout="inline"`으로 그룹 이름과 단위별 잠금을 연결하고, 각 값은 기존 NumberField로 편집한다. 좁은 영역에서는 시간·분·초 순서를 유지한 채 세 칸 모두 세로로 쌓는다. Native의 보이는 라벨은 각 단위만, 접근성 이름은 그룹 이름과 단위를 함께 전달한다. 그룹이 잠기거나 사라진 뒤 도착한 이전 단위 callback은 값을 바꾸지 않는다. 총 초 단위 값·상한 보정은 기존 duration-field 계약이 소유한다.
 
 2026-10-13 날짜 직접 입력과 반복되던 그룹 제목·입력 행을 FieldGroup과 공통 `fieldGroupRecipe`로 옮겼다. 자세한 배치 축은 [관련 입력 묶음](field-group.md)을 따른다.
+
+## 근거
+
+- 2026-10-17 구성 리뷰: 소요 시간 칸이 데스크톱에서 늘어나고 좁은 폭에서 한 칸만 다음 줄로 끊겨 FieldGroup recipe의 inline 규칙을 바꿨다.

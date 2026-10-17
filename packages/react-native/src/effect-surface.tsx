@@ -3,13 +3,17 @@ import { Animated, AppState, View, StyleSheet, type StyleProp, type ViewStyle } 
 import Svg, { Circle, Defs, Ellipse, RadialGradient, Stop, Pattern, Rect, Mask, Image as SvgImage } from "react-native-svg";
 import { resolveEffectSurface, type EffectSurfaceDescriptor } from "@hjmds/design-contracts/effect-surface";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
+import { surfaceGeometry, type SurfacePadding } from "@hjmds/design-contracts/recipes/base";
 import { useHjmNativeTheme } from "./provider.js";
-export type EffectSurfaceProps = Readonly<{ descriptor?: EffectSurfaceDescriptor; children: ReactNode; style?: StyleProp<ViewStyle>; /** Host screen/list visibility; false freezes decoration. */ visible?: boolean }>;
-export function EffectSurface({ descriptor = {}, children, style, visible = true }: EffectSurfaceProps) {
+export type EffectSurfaceProps = Readonly<{ descriptor?: EffectSurfaceDescriptor; children: ReactNode; style?: StyleProp<ViewStyle>;
+  /** Content inset inside the decorated area (Surface padding scale). Decoration stays absolute-fill, so it still covers the inset. */
+  padding?: SurfacePadding;
+  /** Host screen/list visibility; false freezes decoration. */ visible?: boolean }>;
+export function EffectSurface({ descriptor = {}, children, style, padding = "none", visible = true }: EffectSurfaceProps) {
   const { palette } = useHjmNativeTheme();
   // Validate caller input outside the fallback; a broken descriptor is not a host failure.
   const effect = resolveEffectSurface(descriptor);
-  return <View style={[{ overflow: "hidden", backgroundColor: palette.theme.bg }, style]}>
+  return <View style={[{ overflow: "hidden", backgroundColor: palette.theme.bg, padding: surfaceGeometry.paddings[padding] }, style]}>
     <DecorationBoundary><EffectDecoration effect={effect} visible={visible} /></DecorationBoundary>
     {children}
   </View>;

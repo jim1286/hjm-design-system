@@ -23,7 +23,8 @@ it("reorders via visible buttons and keeps ID order controlled", async () => {
       onCommit={e => setData(e.orderedIds.map(id => items.find(i => i.id === id)!))} />;
   }
   await render(<Demo />);
-  await act(() => [...host.querySelectorAll("button")].find(b => b.textContent === "Next")!.click());
+  await act(() => // Move buttons are icon-only; the accessible name carries the label.
+    [...host.querySelectorAll("button")].find(b => b.getAttribute("aria-label") === "Next")!.click());
   expect([...host.querySelectorAll("li")].map(li => li.dataset.itemId)).toEqual(["b", "a"]);
   expect(host.querySelector('[role="status"]')?.textContent).toBe("Alpha 2");
 });
@@ -59,9 +60,9 @@ it("keeps carousel navigation explicit and inactive slides inert", async () => {
   }
   await render(<Demo />);
   expect(host.querySelector('[aria-label="Beta"]')?.hasAttribute("inert")).toBe(true);
-  await act(() => [...host.querySelectorAll("button")].find(b => b.textContent === "Next")!.click());
+  await act(() => host.querySelector<HTMLButtonElement>('button[aria-label="Next"]')!.click());
   expect(host.querySelector('[aria-label="Alpha"]')?.hasAttribute("inert")).toBe(true);
-  expect([...host.querySelectorAll("button")].find(b => b.textContent === "Next")!.disabled).toBe(true);
+  expect(host.querySelector<HTMLButtonElement>('button[aria-label="Next"]')!.disabled).toBe(true);
 });
 it("consumes reduced-motion events once even under Strict Mode and rerenders", async () => {
   const complete = vi.fn();

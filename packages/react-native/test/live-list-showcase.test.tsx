@@ -3,6 +3,7 @@ import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { HjmNativeProvider } from "@hjmds/react-native/provider";
 import { Button } from "@hjmds/react-native/actions";
+import { Chip } from "@hjmds/react-native/inputs";
 import { LiveListPreview } from "../../../showcase/native/src/live-list-preview";
 let tree: ReactTestRenderer;
 const originalPlatform = Platform.OS, originalState = AppState.currentState;
@@ -12,13 +13,15 @@ afterEach(() => { act(() => tree?.unmount()); Object.defineProperty(Platform, 'O
 const button = (label: string) => tree.root.findAllByType(Button).find(node => node.props.children === label)!;
 const press = (label: string) => act(() => button(label).props.onPress());
 const fields = () => tree.root.findAllByType(TextInput);
+// The motion tool is an on/off PreviewTools chip with one constant label.
+const toggleMotion = () => act(() => tree.root.findAllByType(Chip).find(node => node.props.label === '움직임 멈추기')!.props.onPress());
 
 it('preserves native drafts and input hosts across queued additions, reversal and motion changes', () => {
   const original = fields()[0]!; act(() => original.props.onChangeText('계속 쓰는 메모'));
   act(() => { button('기록 추가').props.onPress(); button('3개 함께 추가').props.onPress(); });
   expect(fields()).toHaveLength(5); expect(fields().at(-1)).toBe(original);
   press('순서 뒤집기'); expect(fields()[0]).toBe(original);
-  press('움직임 멈추기'); press('기록 추가'); press('움직임 다시 켜기');
+  toggleMotion(); press('기록 추가'); toggleMotion();
   expect(fields()).toHaveLength(6); expect(fields()[1]).toBe(original); expect(original.props.value).toBe('계속 쓰는 메모');
   const lateEdit = fields()[0]!.props.onChangeText; press('첫 기록 삭제'); act(() => lateEdit('삭제된 기록의 늦은 변경'));
   expect(fields()).toHaveLength(5); expect(fields().some(node => node.props.value === '삭제된 기록의 늦은 변경')).toBe(false);

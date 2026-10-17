@@ -307,7 +307,9 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
   </View> : null;
   // A photo-only message drops the bubble surface so the photo itself is the message.
   const photoOnly = media.length > 0 && !reply && !replyQuote && (children === null || children === undefined || children === false || children === "");
-  const bubbleContent = <>{tail}{quote ? <View style={{ borderBottomWidth: 1, borderColor: colors.border, paddingBottom: tokens.spacing.xs }}>{replyLink ? <Pressable accessibilityRole="link" accessibilityLabel={replyLink.label} onPress={replyLink.onPress}>{quote}</Pressable> : quote}</View> : null}{mediaBlock}{photoOnly ? null : children}</>;
+  // Web bubbles accept plain text children; RN needs a Text host, so the public children contract matches.
+  const body = typeof children === "string" || typeof children === "number" ? <Text>{children}</Text> : children;
+  const bubbleContent = <>{tail}{quote ? <View style={{ borderBottomWidth: 1, borderColor: colors.border, paddingBottom: tokens.spacing.xs }}>{replyLink ? <Pressable accessibilityRole="link" accessibilityLabel={replyLink.label} onPress={replyLink.onPress}>{quote}</Pressable> : quote}</View> : null}{mediaBlock}{photoOnly ? null : body}</>;
   // Later bubbles of a run keep the avatar column so their edges line up under the first bubble.
   const avatarSlot = !avatar ? null : display.showAvatar ? <View style={{ width: chatMessageRecipe.avatarSize, alignItems: "center" }}>{avatar}</View> : <View accessible={false} style={{ width: chatMessageRecipe.avatarSize }} />;
   return <View {...gesture.panHandlers} style={{ position: "relative", overflow: "hidden", marginTop: display.spacingBefore,

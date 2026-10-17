@@ -1,2 +1,0 @@
-/* Gallery framing only; selection shape and navigation spacing belong to the public renderer. */
-.hjm-nav-study { padding: var(--hjm-space-xs); border-radius: var(--hjm-radius-xl); border: var(--hjm-field-border-width) solid var(--hjm-color-border); }

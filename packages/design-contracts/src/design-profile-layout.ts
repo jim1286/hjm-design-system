@@ -11,6 +11,12 @@ export function resolveDesignProfileScreen(presentation: DesignProfileScreenPres
     headerAxis: presentation === "dashboard" ? "row" as const : "column" as const,
     centered: presentation === "landscape", gap: presentation === "landscape" ? spacing.xxl : spacing.xl };
 }
+/**
+ * Overview tools are form controls: they stop at the reading width while the collection uses the
+ * screen width, and the bounded column is centered like the header title and BottomCTA content.
+ * Start-aligned tools left one half-width column against centered header/footer (2026-10-17 review).
+ */
+export const overviewToolbarLayout = { maxWidth: layout.readingMaxWidth, alignSelf: "center", width: "100%" } as const;
 export function resolveDesignProfileCollection(collection: HjmDesignProfile["compositions"]["collection"] = "rows"): GridDescriptor {
   if (!["rows", "cards", "grid"].includes(collection)) throw new TypeError("Unsupported profile collection");
   // Three-column editorial cards stay readable at 240; Grid reduces columns to

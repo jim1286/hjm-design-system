@@ -28,27 +28,28 @@
 ## 배치
 
 ```text
-제목/설명 → 현재 테마 → 다음 테마
+제목/설명
 가로 목록: [제목/설명 → 기록 메모 → 상세 보기] × 안정 ID
 목록 밖 끝쪽: 이전 기록 / 다음 기록
-상세: 제목/닫기 → 상세 메모 → 다음 테마
+상세: 제목/닫기 → 상세 메모
 합성 예제 안내
+(미리보기 도구: 다음 테마 — 예제 전용, 구성 밖)
 ```
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
 | 바깥 틀 | Container·Section·Stack | 세로 | gutter compact16, Stack spacing.md16 |
-| 목록 | CollectionRail | 테마 아래 | comfortable 최대360, 간격16·edgeHint24, 실제 viewport 측정 |
+| 목록 | CollectionRail | 제목/설명 아래 | comfortable 최대360, 간격16·edgeHint24, 실제 viewport 측정 |
 | 카드 | Card·TextField | 각각 listitem | Card recipe padding/표면과 Provider 테마 상속 |
 | 상세 열기 | Button in Card.actions | 카드 본문 아래 | tone secondary, 카드 전체를 button으로 감싸지 않음 |
-| 상세 | Dialog·Stack | 기존 modal portal/Native Modal | Dialog size/keyboard/safe-area contract, Stack gap16 |
+| 상세 | Dialog·TextField | 기존 modal portal/Native Modal | Dialog size/keyboard/safe-area contract |
 
 ## 흐름과 상태
 
 1. 카드 메모를 작성하고 이전/다음·touch·Web 키보드로 탐색한다. 모든 카드의 ID/초안은 남는다.
 2. 일부 보이는 카드의 입력에 초점을 주면 필요한 만큼 노출한다. 입력의 방향/Home/End 키를 목록이 가로채지 않는다.
 3. 상세 보기를 열어 별도 메모를 작성한다. Dialog가 배경 잠금/닫기/초점 복귀를 소유한다.
-4. 본문 또는 상세 안에서 다음 테마를 누른다. 원문·초안·열린 대상이 유지된다. 닫고 다시 열어도 상세 초안이 남는다.
+4. 닫고 다시 열어도 상세 초안이 남는다. 예제의 "다음 테마"는 구성 아래 "미리보기 도구" 묶음의 예제 전용 도구다. 눌러도 원문·초안이 유지되며, 테마 선택은 제품 화면 요소가 아니다.
 
 | 상태 | 모습 | 포커스·알림 |
 | --- | --- | --- |

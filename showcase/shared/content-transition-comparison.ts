@@ -12,7 +12,7 @@ export const transitionSections = [
 ] as const;
 export const transitionCopy = {
   title: "내용 전환 비교", intro: "같은 내용과 초안을 테마·전환 표현별로 비교해요.",
-  draft: "기록 초안", initial: "저녁 산책", theme: "현재 테마", nextTheme: "다음 테마",
+  draft: "기록 초안", initial: "저녁 산책", theme: "테마",
   appearance: "전환 표현", tabs: "기록 단계", next: "다음", back: "이전",
   complete: "기록 확인", fail: "완료 실패 재현", failArmed: "다음 완료에서 실패 재현",
   failed: "확인하지 못했어요. 초안은 남아 있어요.", done: "기록을 확인했어요", restart: "다시 비교",

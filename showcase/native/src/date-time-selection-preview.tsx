@@ -7,13 +7,13 @@ import { Select } from "@hjmds/react-native/forms";
 import { Button } from "@hjmds/react-native/actions";
 import { Container, Section, Stack, Text } from "@hjmds/react-native/primitives";
 import { Notice } from "@hjmds/react-native/feedback";
-import { Collapsible } from "@hjmds/react-native/collapsible";
 import { calendarExampleGrid, calendarExampleName, shiftCalendarMonth } from "../../shared/calendar-example";
 import { hourOptions, minuteOptions } from "../../shared/time-example";
 import { dateTimeCopy as copy, dateTimeSelectionReducer, dateTimeSelectionDisplay, dateTimeSelectionValue, initialDateTimeSelection, type DateTimeSelectionAction, type DateTimeSelectionProps } from "../../shared/date-time-selection";
 import { ScrollView } from "react-native";
 import { spacing } from "@hjmds/design-contracts/foundations";
 import { PatternStatus } from "./pattern-status";
+import { PreviewToolButton, PreviewTools } from "./preview-tools";
 
 export function DateTimeSelectionPreview(props: DateTimeSelectionProps) {
   const [themeIndex, setThemeIndex] = useState(0);
@@ -22,9 +22,7 @@ export function DateTimeSelectionPreview(props: DateTimeSelectionProps) {
   const send = (action: DateTimeSelectionAction) => setModel(current => dateTimeSelectionReducer(current, action, props.disabled));
   const busy = model.status === "pending", locked = !!props.disabled || busy;
   const value = dateTimeSelectionValue(model);
-  const contents = <Container gutter="compact"><Section title={copy.title} description={copy.description}><Stack gap="md">
-    <Text>{profileCopy.choose}: {profile.label}</Text>
-    <Button tone="secondary" onPress={() => setThemeIndex(current => (current + 1) % profileOptions.length)}>{profileCopy.nextTheme}</Button>
+  const contents = <Container gutter="compact" size="reading"><Section title={copy.title} description={copy.description}><Stack gap="md">
     <DatePicker descriptor={{ grid: calendarExampleGrid(model.month), label: copy.date,
       displayValue: model.date, placeholder: copy.placeholder, selectedDate: model.date,
       onSelectionChange: next => send({ type: "date", value: next }), focusedMonth: model.month, onFocusedMonthChange: next => send({ type: "month", value: next }),
@@ -41,11 +39,12 @@ export function DateTimeSelectionPreview(props: DateTimeSelectionProps) {
     <Button tone="ghost" disabled={locked} onPress={() => send({ type: "reset" })}>{copy.reset}</Button>
     {model.status === "failed" ? <Notice tone="danger" announcement="assertive" title={copy.failed} /> : null}
     {model.status === "saved" ? <Notice tone="success" announcement="polite" title={copy.saved} description={dateTimeSelectionDisplay(model.saved!)} /> : null}
-    <Collapsible trigger={copy.tools} defaultOpen>
-      <Stack gap="xs"><Button tone="secondary" disabled={!busy} onPress={() => send({ type: "respond" })}>{copy.respond}</Button>
-        <Button tone="ghost" disabled={locked} onPress={() => send({ type: "armFailure" })}>{model.failNext ? copy.armed : copy.fail}</Button>
-      </Stack>
-    </Collapsible>
+    {/* Theme cycling and the deterministic service response are demo-only; they stay after the composition (SELECTION.md 조립 규칙). */}
+    <PreviewTools>
+      <PreviewToolButton onPress={() => setThemeIndex(current => (current + 1) % profileOptions.length)}>{profileCopy.nextTheme}</PreviewToolButton>
+      <PreviewToolButton disabled={!busy} onPress={() => send({ type: "respond" })}>{copy.respond}</PreviewToolButton>
+      <PreviewToolButton selected={model.failNext} disabled={locked} onPress={() => send({ type: "toggleFailure" })}>{copy.fail}</PreviewToolButton>
+    </PreviewTools>
   </Stack></Section></Container>;
   // Match the deployed time-selection host; product navigation owns safe-area padding.
   return <HjmNativeProvider designProfile={hjmDesignPresets[profile.id]}><ScrollView contentContainerStyle={{ paddingVertical: spacing.lg }}>{contents}</ScrollView></HjmNativeProvider>;

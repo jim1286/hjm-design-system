@@ -35,7 +35,7 @@ VirtualList, 다른 기기로 넘길 링크는 QRCode다. 세 스토리(카드 �
 ## 배치
 
 ```text
-카드 묶음 (Masonry, 2열)               가상 목록 (VirtualList)            공유 코드 (QRCode)
+카드 묶음 (Masonry, 폰 2열)               가상 목록 (VirtualList)            공유 코드 (QRCode)
 ┌ 바깥 틀: 페이지 스크롤 ──────────┐   ┌ 바깥 틀: 스크롤 없음 ───────┐   ┌ 카드·시트 본문 ─┐
 │←gutter→ Container ←gutter→      │   │←gutter→ Container           │   │  ▓▓ ▓ ▓▓▓       │
 │ ┌──── width = Container 안쪽 ─┐  │   │ ┌──── height = 남은 높이 ─┐ │   │  ▓ ▓▓▓ ▓  192   │
@@ -54,8 +54,8 @@ VirtualList, 다른 기기로 넘길 링크는 QRCode다. 세 스토리(카드 �
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
 | 바깥 틀 | 카드 묶음: Web 문서 스크롤 > `Container`, Native `ScrollView` > `Container`. 가상 목록: `Container`만(바깥 세로 스크롤 없음). QR: 카드·시트 본문 | HJM 화면 골격이 소유. 상단 안전 영역은 내비게이션 헤더가 맡는다 | 좌우 `Container gutter`: 폭 600 미만 `compact` 16, 이상 `regular` 20([화면 여백](../tokens/layout.md)). Native ScrollView 위아래 `paddingVertical: spacing.lg` 20 |
-| 카드 묶음 | Masonry | 본문 흐름 안, 페이지와 함께 스크롤 | `columns` 기본 2(600 이상에서 늘린다), `gap`은 숫자(기본 12 = `spacing.sm`), `width`는 Container 안쪽에 놓인 실제 호스트의 측정 폭 |
-| 카드 | 제품 `renderItem` | 가장 짧은 열 아래 | 높이는 `getItemHeight`가 확정, 안쪽 여백 `spacing.sm` 12 |
+| 카드 묶음 | Masonry | 본문 흐름 안, 페이지와 함께 스크롤 | `width`·`columns` 생략: Masonry가 Container 안쪽 자리 폭을 재고 최소 열 폭 160으로 열 수를 정한다(402 폰 2열, 1200 데스크톱 6열). `gap`은 숫자(기본 12 = `spacing.sm`) |
+| 카드 | 제품 `renderItem`(`Surface bordered padding="sm" layoutStyle={{ flex: 1 }}`) | 가장 짧은 열 아래 | 높이는 `getItemHeight`가 확정하고 카드가 항목 틀을 채운다, 안쪽 여백 `spacing.sm` 12 |
 | 다음 페이지 | [LoadMore](../components/load-more.md) | Masonry 다음 형제, 같은 스크롤 | LoadMore 기본 |
 | 가상 목록 | VirtualList | 고정 높이 상자, 목록 안 스크롤 | `height`는 고정 머리·하단 바를 뺀 남은 높이(스토리 400), `rowHeight` 64(예), `overscan` 기본 3 |
 | QR | QRCode | 감싸는 레이아웃이 배치 | `size` 기본 192(모듈 수 정수배로 내림), quiet zone 4모듈 |
@@ -66,7 +66,7 @@ VirtualList, 다른 기기로 넘길 링크는 QRCode다. 세 스토리(카드 �
 
 ## 흐름과 상태
 
-1. 카드 묶음: 화면이 폭을 측정해 `width`로 넘기고, 각 항목 높이를 계산해 넘긴다. 읽기 순서는 열이 아니라 원래 순서다.
+1. 카드 묶음: Masonry가 자리 폭을 재고 열 수를 정한다. 화면은 각 항목 높이를 계산해 넘긴다. 읽기 순서는 열이 아니라 원래 순서다.
 2. 가상 목록: 사용자가 목록 안에서 스크롤하면 보이는 범위와 앞뒤 `overscan` 행만 그린다.
 3. 공유 코드: 카메라로 읽거나, 읽을 수 없으면 아래 대체 행동으로 같은 링크를 연다.
 4. 데이터를 서버에서 받으면 첫 로드·다음 페이지의 진행·실패는 이 구성 바깥(제품 흐름·LoadMore)이 그린다.
@@ -91,7 +91,7 @@ import { Container, Text } from "@hjmds/react/layout";
 import { spacing } from "@hjmds/design-contracts/foundations";
 
 <Container size="content" gutter={gutter}>
-  <Masonry items={cards} keyExtractor={(c) => c.id} width={measuredWidth} gap={spacing.sm} label={t("cards.label")}
+  <Masonry items={cards} keyExtractor={(c) => c.id} gap={spacing.sm} label={t("cards.label")}
     getItemHeight={(c, itemWidth) => measureCard(c, itemWidth)}
     renderItem={(c) => <Card title={c.title}>{c.body}</Card>} />
 </Container>
@@ -106,8 +106,7 @@ import { spacing } from "@hjmds/design-contracts/foundations";
 
 ```tsx
 // Native
-import { useState } from "react";
-import { Linking, ScrollView, View, useWindowDimensions } from "react-native";
+import { Linking, ScrollView, useWindowDimensions } from "react-native";
 import { Masonry } from "@hjmds/react-native/masonry";
 import { VirtualList } from "@hjmds/react-native/virtual-list";
 import { QRCode } from "@hjmds/react-native/qr-code";
@@ -118,16 +117,13 @@ import { spacing } from "@hjmds/design-contracts/foundations";
 import { resolveWindowClass } from "@hjmds/design-contracts/responsive";
 
 const { width } = useWindowDimensions();
-const [measuredWidth, setMeasuredWidth] = useState(0);
 const gutter = resolveWindowClass(width) === "compact" ? "compact" : "regular";
 
 <ScrollView contentContainerStyle={{ paddingVertical: spacing.lg }}>
   <Container size="content" gutter={gutter}>
-    <View onLayout={(event) => setMeasuredWidth(event.nativeEvent.layout.width)}>
-      {measuredWidth > spacing.sm ? <Masonry items={cards} keyExtractor={(c) => c.id} width={measuredWidth} gap={spacing.sm}
-        label={t("cards.label")} getItemHeight={(c, itemWidth) => measureCard(c, itemWidth)}
-        renderItem={(c) => <Card title={c.title}>{c.body}</Card>} /> : null}
-    </View>
+    <Masonry items={cards} keyExtractor={(c) => c.id} gap={spacing.sm}
+      label={t("cards.label")} getItemHeight={(c, itemWidth) => measureCard(c, itemWidth)}
+      renderItem={(c) => <Card title={c.title}>{c.body}</Card>} />
   </Container>
 </ScrollView>
 
@@ -140,20 +136,20 @@ const gutter = resolveWindowClass(width) === "compact" ? "compact" : "regular";
   fallback={<Button onPress={() => void Linking.openURL(shareUrl)}>{t("share.open")}</Button>} />
 ```
 
-스토리의 1000개 예시 행, 카드 높이 공식(`80 + id % 3 × 40`), 예시 URL은 제품 데이터로 바꾼다. 2026-10-06 검수에서 고정 320(Web)·창 폭 − 32(Native)가 좁은 슬롯과 넓은 창의 Container 제한을 무시하는 것을 확인했다. 예제도 ResizeObserver/onLayout으로 실제 호스트 폭을 측정하고 측정 전에는 Masonry를 그리지 않는다.
+스토리의 1000개 예시 행, 카드 높이 공식(`80 + id % 3 × 40`), 예시 URL은 제품 데이터로 바꾼다. 2026-10-06 검수에서 고정 320(Web)·창 폭 − 32(Native)가 좁은 슬롯과 넓은 창의 Container 제한을 무시하는 것을 확인했다. 2026-10-17 구성 리뷰 뒤로는 Masonry가 직접 ResizeObserver/onLayout으로 자리 폭을 재고 측정 전에는 그리지 않는다. 예제에 측정용 div·View나 셀 감싸기 div를 두지 않는다.
 
 ## 플랫폼 차이
 
 | 항목 | Web | Native |
 | --- | --- | --- |
-| 폭 측정 | ResizeObserver 등 | 실제 호스트의 `onLayout` |
+| 폭 측정 | Masonry 내부 ResizeObserver | Masonry 내부 `onLayout` |
 | 바깥 스크롤 | 문서 스크롤 | Masonry는 `ScrollView` 안, VirtualList(`FlatList`)는 바깥 없이 |
 | QR 대체 행동 | `<a href>` | Button + `Linking.openURL` |
 | 카드 여백 | `var(--hjm-space-sm)` | `spacing.sm` |
 
 ## 함정
 
-- Masonry `width`를 측정 전 0으로 넘기면 `TypeError`다. 측정이 끝난 뒤 그린다.
+- Masonry `width`를 직접 넘길 때 0을 넘기면 `TypeError`다. 측정을 화면이 따로 하지 않는다면 `width`를 생략한다.
 - Masonry `gap`은 토큰 이름이 아니라 숫자다(`gap={spacing.sm}`). `gap="sm"`은 타입 오류다.
 - QR 색은 recipe가 검정/흰색으로 고정한다. 다크 테마에서도 브랜드 색으로 바꾸지 않는다.
 - 카드 표면은 `Surface bordered padding="sm"`, 행 텍스트는 `Text`를 재사용한다. 가상 목록 바깥에 세로 ScrollView를 추가하지 않는다.

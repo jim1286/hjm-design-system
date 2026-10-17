@@ -73,7 +73,7 @@ import { FolderPreview } from "@hjmds/react-native/folder-preview";
 | `open` + `onOpenChange` | `boolean` + `(open: boolean) => void` | — | 제어. `open`만 주고 `onOpenChange`를 빼면 `TypeError`를 던진다 |
 | `defaultOpen` · `onOpenChange` | `boolean` · `(open: boolean) => void` | `defaultOpen` `false` | 비제어. `open`과 `defaultOpen`을 함께 주면 `TypeError`를 던진다 |
 | `trigger` | `ReactNode` | 필수 | 버튼 문구. Native는 문자열이면 HJM `Text`로 감싼다 |
-| `disabled` | `boolean` | `false` | trigger 옆의 ▸/▾ 표시는 HJM이 그리며 장식으로 숨겨진다. 닫힘 표시는 RTL에서 ◂로 뒤집힌다 |
+| `disabled` | `boolean` | `false` | trigger 옆의 펼침 표시(닫힘 `chevronEnd`·열림 `chevronDown`, glyph.sm 20)는 HJM이 그리며 장식으로 숨겨진다. 닫힘 표시는 RTL에서 읽기 끝 쪽으로 뒤집힌다 |
 | `marker` | `end` · `none` | `end` | `none`이면 표시를 그리지 않고, 한 줄이 아닌 trigger가 `CollapsibleMarker`(`open`)를 직접 둔다(FolderPreview가 사용) |
 | `layoutStyle` | margin·width·flex·`alignSelf` | — | 바깥 배치 |
 | `FolderPreview` `open` · `onOpenChange` | `boolean` · `(open: boolean) => void` | 필수(항상 controlled) | — |
@@ -88,7 +88,7 @@ FolderPreview의 Native preview `md`와 앞면 `lg`는 Provider radius를 읽는
 | --- | --- | --- |
 | 크기 | 트리거는 폭을 꽉 채운다. 트리거 최소 높이 44(`control.minTouchTarget`, 두 플랫폼. Native는 1.13.0 변경), Web 위아래 `spacing.xs` 8. `FolderPreview` 표지는 최대 260×160 고정 그림 | `.hjm-collapsible__trigger`, `react-native/src/collapsible.tsx`, `react/src/folder-preview.tsx` |
 | 간격 | 트리거↔내용, 트리거 안 문구↔표시 `spacing.xs` 8(Web 트리거 안은 `spacing.sm` 12) | `collapsibleRecipe.gap`, `.hjm-collapsible__trigger` |
-| 순서·정렬 | 위→아래 [트리거: 문구 시작 쪽 · ▸/▾ 끝 쪽] → [내용(열렸을 때만)]. `FolderPreview`는 트리거 안에 [표지 그림] → [label ▸/▾ 한 줄]이 가운데 정렬로 쌓이고, 그림과 label 사이는 `spacing.sm` 12다(2026-10-17, label이 시작 쪽·표시가 끝 쪽에 떨어져 있던 것을 고침) | `react/src/collapsible.tsx`, `react/src/folder-preview.tsx` |
+| 순서·정렬 | 위→아래 [트리거: 문구 시작 쪽 · 펼침 표시 끝 쪽] → [내용(열렸을 때만)]. `FolderPreview`는 트리거 안에 [표지 그림] → [label · 펼침 표시 한 줄]이 가운데 정렬로 쌓이고, 그림과 label 사이는 `spacing.sm` 12다(2026-10-17, label이 시작 쪽·표시가 끝 쪽에 떨어져 있던 것을 고침) | `react/src/collapsible.tsx`, `react/src/folder-preview.tsx` |
 | 고정·스크롤 | 고정 영역이 없다. 닫히면 내용이 트리에서 빠져 아래 내용이 올라온다 | `react-native/src/collapsible.tsx` 주석 |
 | 좁은 폭·큰 글자 | 트리거 문구·내용이 줄바꿈된다(`overflow-wrap: anywhere`). `FolderPreview` 표지는 폭이 260보다 좁으면 줄어든다(`maxWidth: 260`) | `.hjm-collapsible__content`, `folder-preview.tsx` |
 
@@ -121,3 +121,7 @@ inline은 트리거를 숨기고 항상 내용을 펼친다. 기본 disclosure�
 keepMounted가 있어도 닫힌 내용은 포커스·스크린리더·터치 대상에서 제외한다. 단순 read-only 내용은 기존 기본값을 쓴다.
 
 Web에서 외부 상태 변경으로 닫힐 때 내부에 있던 초점은 trigger로 돌아간다. 동시에 disabled면 disclosure host로 복구하고, 이미 외부로 이동한 초점은 유지한다. 열린 도구를 trigger로 직접 닫으면 해당 버튼에 초점을 유지하므로 Enter로 다시 열 수 있다.
+
+## 근거
+
+- 2026-10-17 구성 리뷰: 텍스트 표시 ▸가 약 8px로 그려져 트리거가 정적 문구처럼 보였다. 그래서 두 플랫폼 모두 glyph.sm 20 chevron 아이콘으로 바꿨다.

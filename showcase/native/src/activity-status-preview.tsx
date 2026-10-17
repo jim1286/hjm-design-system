@@ -91,7 +91,7 @@ function ActivityStatusScreen({ initial = "idle" }: ActivityStatusProps) {
         })}
       />
       <ScrollView>
-        <Container gutter="compact">
+        <Container gutter="compact" size="reading">
           <Stack gap="md">
             <Text>{copy.body}</Text>
             <Button tone="secondary" onPress={start} disabled={phase === "running"}>

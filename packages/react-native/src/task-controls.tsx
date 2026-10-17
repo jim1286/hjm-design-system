@@ -1,6 +1,10 @@
 "use client";
 import { resolveTaskChoice, resolvePasswordRules, resolvePriceOption, type TaskChoice, type PasswordRule, type PriceOption } from "@hjmds/design-contracts/task-controls";
-import { Button } from "./actions.js";
+import { Button, IconButton } from "./actions.js";
+import { glyph } from "@hjmds/design-contracts/foundations";
+import { resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
+import { DrawnChevron } from "./internal/drawn-glyphs.js";
+import { useHjmNativeTheme } from "./provider.js";
 import { Menu } from "./navigation.js";
 import { PasswordField, type PasswordFieldProps } from "./inputs.js";
 import { RadioGroup } from "./inputs.js";
@@ -9,12 +13,19 @@ import { Progress } from "./feedback.js";
 import { Stack, Text } from "./primitives.js";
 import { useCompositionAction } from "./internal/use-composition-action.js";
 
-type ChoiceMenuProps = Readonly<{ choices: readonly TaskChoice[]; selectedId: string; label: string; dismissLabel: string; disabled: boolean; pending?: boolean; onChoose: (id: string) => void }>;
+type ChoiceMenuProps = Readonly<{ choices: readonly TaskChoice[]; selectedId: string; label: string; dismissLabel: string; disabled: boolean; pending?: boolean; onChoose: (id: string) => void;
+  /** `icon`: a chevron tool beside the action it modifies (SplitAction); the label stays the accessible name. */
+  trigger?: "text" | "icon" }>;
 function ChoiceMenu(props: ChoiceMenuProps) {
   const available = props.choices.some(choice => !choice.disabled);
-  if (!available) return <Button disabled>{props.label}</Button>;
+  const { palette } = useHjmNativeTheme();
+  const chevron = (disabled: boolean) => <DrawnChevron direction="down" size={glyph.sm} color={resolveIconButtonPresentation("secondary", palette, disabled).content} />;
+  if (props.trigger === "icon" && !available) return <IconButton label={props.label} tone="secondary" disabled>{chevron(true)}</IconButton>;
+  // The menu trigger is content-width like the Web Menu trigger; a column Stack would otherwise stretch it full width.
+  if (!available) return <Button disabled layoutStyle={{ alignSelf: "flex-start" }}>{props.label}</Button>;
   return <Menu triggerLabel={props.label} dismissLabel={props.dismissLabel} disabled={props.disabled} busy={props.pending === true}
-    renderTrigger={trigger => <Button tone="secondary" onPress={trigger.onPress} disabled={props.disabled} loading={props.pending === true}>{props.label}</Button>}
+    renderTrigger={trigger => props.trigger === "icon" ? <IconButton label={props.label} tone="secondary" onPress={trigger.onPress} disabled={props.disabled}>{chevron(props.disabled)}</IconButton>
+      : <Button tone="secondary" onPress={trigger.onPress} disabled={props.disabled} loading={props.pending === true} layoutStyle={{ alignSelf: "flex-start" }}>{props.label}</Button>}
     items={props.choices} selection={{ mode: "single", selectedKey: props.selectedId, onSelectionChange: () => undefined }} onSelectionAfterDismiss={id => props.onChoose(id)} />;
 }
 function Failure({ failed, label }: Readonly<{ failed: boolean; label: string }>) {
@@ -29,9 +40,10 @@ export type SplitActionProps = Readonly<{
 export function SplitAction(props: SplitActionProps) {
   const mode = resolveTaskChoice(props.modes, props.modeId), action = useCompositionAction(props.disabled);
   const locked = props.disabled === true || action.pending;
-  return <Stack gap="sm"><Stack axis="inline" gap="xs" wrap>
+  // The mode menu is a chevron tool at the action's end, inline gap 12 (button.md); a second text button read as an unrelated action (2026-10-17 review).
+  return <Stack gap="sm"><Stack axis="inline" gap="sm" align="center">
     <Button loading={action.pending} disabled={props.disabled === true || mode.disabled === true} onPress={() => { if (!mode.disabled) void action.run(mode.id, () => props.onExecute(mode.id)); }}>{props.executeLabel(mode)}</Button>
-    <ChoiceMenu choices={props.modes} selectedId={mode.id} label={props.menuLabel} dismissLabel={props.dismissLabel} disabled={locked} onChoose={id => { if (!locked && !resolveTaskChoice(props.modes, id).disabled) props.onModeChange(id); }} />
+    <ChoiceMenu trigger="icon" choices={props.modes} selectedId={mode.id} label={props.menuLabel} dismissLabel={props.dismissLabel} disabled={locked} onChoose={id => { if (!locked && !resolveTaskChoice(props.modes, id).disabled) props.onModeChange(id); }} />
   </Stack><Failure failed={action.failed} label={props.errorLabel} /></Stack>;
 }
 

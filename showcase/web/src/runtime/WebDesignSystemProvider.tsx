@@ -20,6 +20,8 @@ type WebDesignSystemProviderProps = Readonly<{
   edgeToEdge?: boolean;
   /** Phone-first component previews rendered directly (not through a contract page) get the stage's width cap. */
   componentPreview?: boolean;
+  /** Compositions whose state area centers in the body (Native canvas height) get the canvas height. */
+  fillCanvas?: boolean;
 }>;
 
 /** Showcase's thin React adapter over the renderer-neutral provider contract. */
@@ -29,6 +31,7 @@ export function WebDesignSystemProvider({
   systemTheme = "light",
   edgeToEdge = false,
   componentPreview = false,
+  fillCanvas = false,
 }: WebDesignSystemProviderProps) {
   const parent = useContext(WebDesignSystemEnvironmentContext);
   const providerValue = resolveDesignSystemProviderValue(
@@ -41,7 +44,7 @@ export function WebDesignSystemProvider({
   return (
     <WebDesignSystemEnvironmentContext.Provider value={environment}>
       <HjmProvider
-        className={["hjm-story-root", edgeToEdge ? "hjm-showcase-edge-to-edge" : null, componentPreview ? "hjm-showcase-component-preview" : null].filter(Boolean).join(" ")}
+        className={["hjm-story-root", edgeToEdge ? "hjm-showcase-edge-to-edge" : null, componentPreview ? "hjm-showcase-component-preview" : null, fillCanvas ? "hjm-showcase-fill-canvas" : null].filter(Boolean).join(" ")}
         direction={environment.direction}
         reducedMotion={environment.reducedMotion}
         systemTheme={environment.theme}

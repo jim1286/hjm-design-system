@@ -2,9 +2,11 @@ import { createActionSession } from "@hjmds/design-contracts/action-session";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { DocumentResource } from "@hjmds/react/document-resource";
-import { Button } from "@hjmds/react/actions";
-import { Stack, Text } from "@hjmds/react/layout";
+import { IconButton } from "@hjmds/react/actions";
+import { Icon } from "@hjmds/react/display";
+import { Container, Stack, Text } from "@hjmds/react/layout";
 import type { DocumentPreviewState, DocumentSaveState } from "@hjmds/design-contracts/document-resource";
+import { PreviewToolButton, PreviewTools } from "./preview-tools";
 import { createDocumentResourceExample, documentResourceLabels, exampleDocumentText } from "../../../shared/document-resource-example";
 async function exportDocument(name: string, body: string): Promise<DocumentSaveState> {
   const url = URL.createObjectURL(new Blob([body], { type: "text/plain;charset=utf-8" }));
@@ -34,18 +36,20 @@ function Demo() {
       labels={{ ...documentResourceLabels, preview: expanded ? "본문 접기" : "본문 보기" }} preview={expanded ? <Text>{exampleDocumentText}</Text> : <Text>HJM 문서 예제</Text>}
       onPreview={() => setExpanded(!expanded)} onRetryPreview={() => setPreview({ status: "ready" })}
       onSave={() => { void example.save(name); }} onRetrySave={() => { void example.retry(); }}
-      moreAction={<Button tone="ghost" onClick={() => setDetails(!details)}>{details ? "문서 정보 닫기" : "문서 정보"}</Button>} />
-    <Button tone="secondary" onClick={() => setSaveLocked(!saveLocked)}>{saveLocked ? "저장 잠금 해제" : "저장만 잠그기"}</Button>
+      moreAction={<IconButton label="문서 정보" tone="ghost" selected={details} onClick={() => setDetails(!details)}><Icon name="info" /></IconButton>} />
     {details ? <Text>현재 파일: {name}. 실제 개인 자료나 서버 요청은 없습니다.</Text> : null}
-    <Button tone="secondary" onClick={() => { example.reset(); setFile(value => value + 1); setPreview({ status: "ready" }); setExpanded(false); setDetails(false); }}>다른 문서로 바꾸기</Button>
-    <Button tone="secondary" onClick={() => setPreview({ status: "error", message: "미리보기 오류 예제입니다.", retryable: true })}>미리보기 실패 확인</Button>
-    <Button tone="secondary" onClick={() => { example.reset(); setLongName(!longName); }}>{longName ? "짧은 파일명으로 복원" : "긴 파일명 확인"}</Button>
-    <Button tone="secondary" onClick={() => setPreview({ status: "loading" })}>미리보기 준비 중 확인</Button>
-    <Button tone="secondary" onClick={() => setPreview({ status: "none" })}>미리보기 없는 문서</Button>
-    <Button tone="secondary" onClick={() => { example.reset(); example.failNext(); }}>내보내기 실패 다시 설정</Button>
+    <PreviewTools>
+      <PreviewToolButton selected={saveLocked} onClick={() => setSaveLocked(!saveLocked)}>저장만 잠그기</PreviewToolButton>
+      <PreviewToolButton onClick={() => { example.reset(); setFile(value => value + 1); setPreview({ status: "ready" }); setExpanded(false); setDetails(false); }}>다른 문서로 바꾸기</PreviewToolButton>
+      <PreviewToolButton onClick={() => setPreview({ status: "error", message: "미리보기 오류 예제입니다.", retryable: true })}>미리보기 실패 확인</PreviewToolButton>
+      <PreviewToolButton selected={longName} onClick={() => { example.reset(); setLongName(!longName); }}>긴 파일명 확인</PreviewToolButton>
+      <PreviewToolButton onClick={() => setPreview({ status: "loading" })}>미리보기 준비 중 확인</PreviewToolButton>
+      <PreviewToolButton onClick={() => setPreview({ status: "none" })}>미리보기 없는 문서</PreviewToolButton>
+      <PreviewToolButton onClick={() => { example.reset(); example.failNext(); }}>내보내기 실패 다시 설정</PreviewToolButton>
+    </PreviewTools>
   </Stack>;
 }
-const meta = { id: "compositions-information-document-resource", includeStories: ["Default", "Dark", "LargeText", "Rtl"], title: "배포/구성/정보 표시/문서와 파일", component: Demo } satisfies Meta<typeof Demo>;
+const meta = { id: "compositions-information-document-resource", includeStories: ["Default", "Dark", "LargeText", "Rtl"], title: "배포/구성/정보 표시/문서와 파일", component: Demo, decorators: [(Story) => <Container size="reading"><Story /></Container>] } satisfies Meta<typeof Demo>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

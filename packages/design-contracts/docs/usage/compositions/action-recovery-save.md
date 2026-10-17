@@ -50,7 +50,7 @@
 │ │ [ 입력                             ] │ │ TextField, 높이 44
 │ │          ↕ spacing.md 16             │ │
 │ │ [        저장 (primary)            ] │ │ ← 주 행동, 높이 44
-│ │          ↕ spacing.md 16             │ │
+│ │          ↕ spacing.xs 8 (행동 묶음)  │ │
 │ │ [ 실패한 내용 다시 저장 (secondary)] │ │ ← error일 때만
 │ │          ↕ spacing.md 16             │ │
 │ │ 상태 문구 (role=status)              │ │
@@ -66,12 +66,12 @@
 | 바깥 틀 | Web 문서 스크롤 > `Container size="reading"`. Native `ScrollView`(`keyboardShouldPersistTaps="handled"`) > `Container size="reading"` | 이 구성을 감싸는 제품 화면. 상단 안전 영역은 내비게이션 헤더(또는 [TopBar](../components/top-bar.md))가 맡는다 | 좌우 `Container gutter`: 폭 600 미만 `compact` 16, 이상 `regular` 20([화면 여백](../tokens/layout.md)). Native 위아래는 `contentContainerStyle` `paddingVertical: spacing.lg` 20 |
 | 제목 | `Heading level="level3"` | Stack 맨 위, 스크롤 | 아래 `spacing.md` 16 |
 | 입력 | `TextField` | 제목 아래, 스크롤 | 높이 `control.fieldHeight` 44 |
-| 주 행동 | `Button` 저장(primary) | 입력 바로 아래, 스크롤 | `medium` 44(`control.buttonHeight`), 이웃 `spacing.md` 16. Stack 기본 `align="stretch"`로 꽉 찬 폭이 되므로 `fullWidth`·`layoutStyle`은 필요 없다 |
-| 재시도 | `Button tone="secondary"` 다시 저장 | 주 행동 아래, error일 때만 | `medium` 44, `spacing.md` 16. 라벨은 무엇을 다시 하는지 적는다(스토리 "실패한 내용 다시 저장"). 일반 "다시 시도"만 쓰지 않는다 |
+| 주 행동 | `Button` 저장(primary) | 입력 바로 아래, 스크롤 | `medium` 44(`control.buttonHeight`), 입력과 `spacing.md` 16. 재시도와 함께 `Stack gap="xs"` 행동 묶음에 둔다. Stack 기본 `align="stretch"`로 꽉 찬 폭이 되므로 `fullWidth`·`layoutStyle`은 필요 없다 |
+| 재시도 | `Button tone="secondary"` 다시 저장 | 주 행동 아래, error일 때만 | `medium` 44, 주 행동과 `spacing.xs` 8(`actionGroupRecipe`). 라벨은 무엇을 다시 하는지 적는다(스토리 "실패한 내용 다시 저장"). 일반 "다시 시도"만 쓰지 않는다 |
 | 상태 | `Text` | 행동 아래 | `spacing.md` 16 |
 | 확정 값(선택) | `Text` — `state.value` | 상태 문구 아래 | `spacing.md` 16 |
 
-- 모든 간격은 `Stack gap="md"`(`spacing.md` 16) 하나로 맞춘다. `stackRecipe.defaults.gap`도 `md`다.
+- 블록 사이 간격은 `Stack gap="md"`(`spacing.md` 16)로 맞춘다. `stackRecipe.defaults.gap`도 `md`다. 세로로 쌓인 저장·재시도 버튼만 `Stack gap="xs"`(`spacing.xs` 8) 행동 묶음으로 둔다([버튼 묶음 간격](../SELECTION.md)).
 - 스토리는 좁은 폭 기준 바깥 틀(Web `Container gutter="compact" size="reading"`, Native `ScrollView` > 같은 Container)을 그린다. 넓은 폭에서는 위 표의 첫 행대로 `regular`를 고른다.
   키보드가 입력·저장 버튼을 가리는 Native 폼은 입력이 여러 개면 [KeyboardFormScrollView](../components/keyboard-form-scroll-view.md)
   (peer 필요), peer가 없으면 [KeyboardAvoiding](../components/keyboard-avoiding.md) 기준을 따른다.
@@ -132,11 +132,13 @@ function SaveNote({ save }: { save(value: string): Promise<string> }) {
       <Stack gap="md">
         <Heading level="level3" semanticLevel={2}>{t("note.title")}</Heading>
         <TextField label={t("note.body")} value={draft} onValueChange={setDraft} />
-        <Button loading={state.status === "pending"} disabled={!draft.trim()}
-          onClick={() => { const submitted = draft; void session.run(() => save(submitted), { retryable: true }); }}>
-          {t("common.save")}
-        </Button>
-        {state.status === "error" && <Button tone="secondary" onClick={() => void session.retry()}>{t("save.retry")}</Button>}
+        <Stack gap="xs">
+          <Button loading={state.status === "pending"} disabled={!draft.trim()}
+            onClick={() => { const submitted = draft; void session.run(() => save(submitted), { retryable: true }); }}>
+            {t("common.save")}
+          </Button>
+          {state.status === "error" && <Button tone="secondary" onClick={() => void session.retry()}>{t("save.retry")}</Button>}
+        </Stack>
         <Text as="p" role="status">{t(saveStatusKey[state.status])}</Text>
         {state.value && <Text as="p">{t("save.savedValue", { value: state.value })}</Text>}
       </Stack>
@@ -171,11 +173,13 @@ function SaveNote({ save }: { save(value: string): Promise<string> }) {
         <Stack gap="md">
           <Heading level="level3" semanticLevel={2}>{t("note.title")}</Heading>
           <TextField label={t("note.body")} value={draft} onValueChange={setDraft} />
-          <Button loading={state.status === "pending"} disabled={!draft.trim()}
-            onPress={() => { const submitted = draft; void session.run(() => save(submitted), { retryable: true }); }}>
-            {t("common.save")}
-          </Button>
-          {state.status === "error" && <Button tone="secondary" onPress={() => void session.retry()}>{t("save.retry")}</Button>}
+          <Stack gap="xs">
+            <Button loading={state.status === "pending"} disabled={!draft.trim()}
+              onPress={() => { const submitted = draft; void session.run(() => save(submitted), { retryable: true }); }}>
+              {t("common.save")}
+            </Button>
+            {state.status === "error" && <Button tone="secondary" onPress={() => void session.retry()}>{t("save.retry")}</Button>}
+          </Stack>
           <StatusText>{t(saveStatusKey[state.status])}</StatusText>{/* 공개 Text companion */}
           {state.value ? <Text>{t("save.savedValue", { value: state.value })}</Text> : null}
         </Stack>

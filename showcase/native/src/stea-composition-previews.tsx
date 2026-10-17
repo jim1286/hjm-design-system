@@ -9,10 +9,11 @@ import { Button } from "@hjmds/react-native/actions";
 import { ContentTransition } from "@hjmds/react-native/content-transition";
 import { Card, List, ListRow, Statistic, Timeline } from "@hjmds/react-native/data-display";
 import { Notice, Progress, Result } from "@hjmds/react-native/feedback";
-import { OtpField, SegmentedControl, Switch } from "@hjmds/react-native/inputs";
+import { OtpField, SegmentedControl } from "@hjmds/react-native/inputs";
 import { Stack, Text } from "@hjmds/react-native/primitives";
 import { Steps } from "@hjmds/react-native/steps";
 import { StatusText } from "@hjmds/react-native/status-text";
+import { PreviewToolButton, PreviewTools } from "./preview-tools";
 // Metro resolves the shared TypeScript source by extension; a literal .js path has no file.
 import {
   canSubmitOtp, initialOrderState, initialOtpState, isOrderDone, orderCopy, orderReducer, orderStepsDescriptor,
@@ -28,24 +29,23 @@ export function OrderProgressRetry() {
     return () => clearTimeout(timer);
   }, [state.phase]);
   const done = isOrderDone(state);
-  return <ScrollView contentContainerStyle={{ paddingVertical: spacing.lg }} keyboardShouldPersistTaps="handled"><Container><Card title={orderCopy.title} description={orderCopy.description}>
+  return <ScrollView contentContainerStyle={{ paddingVertical: spacing.lg }} keyboardShouldPersistTaps="handled"><Container><Stack gap="lg"><Card title={orderCopy.title} description={orderCopy.description}>
     <Stack gap="lg">
       <Steps descriptor={orderStepsDescriptor(state)} statusLabels={orderCopy.statusLabels} composeAccessibleName={steaStepName} />
       {/* iOS는 accessibilityLiveRegion을 무시하므로 빈 문구로 자리를 잡아 둘 이유가 없다. 빈 Text가 큰 틈을 남겼다(2026-10-02 시뮬레이터 확인). */}
       {state.phase === "requesting" || done ? <StatusText announceOnMount>{done ? orderCopy.done : orderCopy.requesting}</StatusText> : null}
       {state.phase === "failed" ? <Notice tone="danger" announcement="assertive" title={orderCopy.failed} /> : null}
-      <Stack gap="sm">
-        {done
-          ? <Button tone="secondary" onPress={() => dispatch({ type: "restart" })}>{orderCopy.restart}</Button>
-          : <Button loading={state.phase === "requesting"} onPress={() => dispatch({ type: "request" })}>
-              {state.phase === "failed" ? orderCopy.retry : orderCopy.request}
-            </Button>}
-        {done ? null : <Switch label={orderCopy.failNext} disabled={state.phase === "requesting"} checked={state.failNext} onCheckedChange={() => dispatch({ type: "toggleFailNext" })} />}
-      </Stack>
+      {done
+        ? <Button tone="secondary" onPress={() => dispatch({ type: "restart" })}>{orderCopy.restart}</Button>
+        : <Button loading={state.phase === "requesting"} onPress={() => dispatch({ type: "request" })}>
+            {state.phase === "failed" ? orderCopy.retry : orderCopy.request}
+          </Button>}
       <Text variant="label" tone="muted">{orderCopy.logLabel}</Text>
       <Timeline items={state.log} composeAccessibleName={steaTimelineName} />
     </Stack>
-  </Card></Container></ScrollView>;
+  </Card>
+  {done ? null : <PreviewTools><PreviewToolButton selected={state.failNext} disabled={state.phase === "requesting"} onPress={() => dispatch({ type: "toggleFailNext" })}>{orderCopy.failNext}</PreviewToolButton></PreviewTools>}
+  </Stack></Container></ScrollView>;
 }
 
 export function OtpVerifyRecover() {
@@ -78,7 +78,7 @@ export function OtpVerifyRecover() {
     return () => clearTimeout(timer);
   }, [state.resendIn, verified]);
   const error = otpErrorMessage(state);
-  return <ScrollView contentContainerStyle={{ paddingVertical: spacing.lg }} keyboardShouldPersistTaps="handled"><Container><Card title={otpCopy.title} description={otpCopy.description}>
+  return <ScrollView contentContainerStyle={{ paddingVertical: spacing.lg }} keyboardShouldPersistTaps="handled"><Container size="reading"><Stack gap="md"><Card title={otpCopy.title} description={otpCopy.description}>
     <ContentTransition stateKey={state.phase === "verified" ? "verified" : "form"}>
       {state.phase === "verified"
         ? <Result accessibilityLiveRegion="polite" status="success" renderIcon={({ color }) => <Check color={color} accessible={false} />} title={otpCopy.successTitle} description={otpCopy.successBody}
@@ -88,15 +88,17 @@ export function OtpVerifyRecover() {
               onValueChange={value => dispatch({ type: "change", value })}
               onComplete={() => dispatch({ type: "submit" })}
               busy={state.phase === "verifying"} disabled={state.phase === "locked"}
-              description={otpCopy.hint} {...(error ? { error } : {})} />
+              {...(error ? { error } : {})} />
             {state.resent ? <StatusText announceOnMount tone="muted">{otpCopy.resent}</StatusText> : null}
-            <Button loading={state.phase === "verifying"} disabled={!canSubmitOtp(state) && state.phase !== "verifying"} onPress={() => dispatch({ type: "submit" })}>{otpCopy.submit}</Button>
-            <Button tone="ghost" disabled={state.resendIn > 0 || state.phase === "verifying"} onPress={() => dispatch({ type: "resend" })}>
-              {state.resendIn > 0 ? otpCopy.resendWait(state.resendIn) : otpCopy.resend}
-            </Button>
+            <Stack gap="xs">
+              <Button loading={state.phase === "verifying"} disabled={!canSubmitOtp(state) && state.phase !== "verifying"} onPress={() => dispatch({ type: "submit" })}>{otpCopy.submit}</Button>
+              <Button tone="ghost" disabled={state.resendIn > 0 || state.phase === "verifying"} onPress={() => dispatch({ type: "resend" })}>
+                {state.resendIn > 0 ? otpCopy.resendWait(state.resendIn) : otpCopy.resend}
+              </Button>
+            </Stack>
           </Stack>}
     </ContentTransition>
-  </Card></Container></ScrollView>;
+  </Card><Text variant="caption" tone="muted">{otpCopy.fixtureHint}</Text></Stack></Container></ScrollView>;
 }
 
 export function ScheduleDayList() {

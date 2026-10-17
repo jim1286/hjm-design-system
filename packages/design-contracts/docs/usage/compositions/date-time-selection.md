@@ -21,29 +21,29 @@
 
 | 컴포넌트 | 역할 | 지침 |
 | --- | --- | --- |
-| Provider | 10개 테마 순회와 필드 표현 상속 | [프로필 계약](../../design-profile.md) |
+| Provider | 필드 표현 상속. Storybook은 미리보기 도구로 10개 테마를 순회 | [프로필 계약](../../design-profile.md) |
 | DatePicker | ISO 날짜 하나와 표시 달, 접근 가능한 달력 표면 | [날짜 선택](../components/date-picker.md) |
 | Select ×2 | 시·분 선택 | [선택 목록](../components/select.md) |
 | Section·Container·Stack | 제목·전체 흐름·폭 | [구역](../components/section.md) · [컨테이너](../components/container.md) · [스택](../components/stack.md) |
 | Button | 확인·다시 선택 | [버튼](../components/button.md) |
 | Text·Notice | 선택값·진행·실패·확인 결과 | [텍스트](../components/text.md) · [알림](../components/notice.md) |
-| Collapsible | Storybook의 결정적 응답/실패 검증 도구 | [접기](../components/collapsible.md) |
+| 미리보기 도구(Showcase 전용) | 다음 테마·미리보기 응답 받기·다음 확인 실패를 본문 끝에 작은 도구로 둔다. 제품에는 없다 | [버튼](../components/button.md) · [칩](../components/chip.md) |
 
 ## 배치
 
 ```text
-Section 제목/설명 → 선택 테마/다음 테마
+Section 제목/설명
 날짜 트리거 → 달력(선택/지우기/이전·다음 달/닫기)
 시 Select → 분 Select
 같은 선택값 → 시간대/서버는 제품 소유 안내
 확인(주 행동) → 다시 고르기(보조)
 실패/확인 결과
-검증 도구: 미리보기 응답 받기 → 다음 확인 실패
+미리보기 도구(본문 끝): 다음 테마 · 미리보기 응답 받기 · 다음 확인 실패(켜고 끄기)
 ```
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
-| 바깥 틀 | Container·Section·Stack | 세로 문서 흐름; Native ScrollView | `gutter="compact"` 16, `spacing.md` 16. Native 위아래 `spacing.lg` 20 |
+| 바깥 틀 | Container·Section·Stack | 세로 문서 흐름; Native ScrollView | `gutter="compact"` 16, `size="reading"`(넓은 화면에서 폭 제한), `spacing.md` 16. 위아래 `spacing.lg` 20 |
 | 날짜 | DatePicker | 제목 아래 | 기존 [날짜 필드 배치](../components/date-picker.md#배치); Web popover/Native Sheet |
 | 시각 | Select | 날짜 아래, 시→분 | `control.fieldHeight` 44, 사이 `spacing.md` 16 |
 | 주·보조 행동 | Button | 선택 상태 아래 | 확인→다시 고르기, `control.buttonHeight.medium` 44 기본. 고정하지 않음 |

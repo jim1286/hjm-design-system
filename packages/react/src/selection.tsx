@@ -829,6 +829,7 @@ export const SegmentedControl = forwardRef<
     textEmphasis = "strong",
     selectionMotion: suppliedSelectionMotion,
     name,
+    disabled = false,
     className,
     layoutStyle,
     style,
@@ -899,10 +900,11 @@ export const SegmentedControl = forwardRef<
     const visibility = () => place(false);
     document.addEventListener("visibilitychange", visibility);
     return () => { observer?.disconnect(); document.removeEventListener("visibilitychange", visibility); };
-  }, [value, items, presentation, selectionMotion]);
+  }, [value, items, presentation, selectionMotion, disabled]);
   return (
     <fieldset
       {...props}
+      disabled={disabled}
       ref={ref}
       style={{ ...style, ...layoutStyle }}
       className={classNames("hjm-segmented", className)}
@@ -919,14 +921,16 @@ export const SegmentedControl = forwardRef<
             key={item.value}
             className="hjm-segmented__item"
             data-state={item.value === value ? "checked" : "unchecked"}
-            data-disabled={item.disabled || undefined}
+            // A disabled group must look disabled like Native; fieldset[disabled] alone only
+            // blocked input and the per-item styling never saw it (2026-10-17 review).
+            data-disabled={item.disabled || disabled || undefined}
           >
             <input
               type="radio"
               name={name ?? generatedName}
               value={item.value}
               checked={item.value === value}
-              disabled={item.disabled}
+              disabled={item.disabled || disabled}
               required
               onChange={() => setValue(item.value)}
             />

@@ -35,7 +35,7 @@ it("renders observed zero, future absence and self-correlation without hiding th
 it("changes funnel detail from selected real stages and never divides by a zero target", async () => {
   await act(async () => root.render(<HjmProvider><ConversionFunnel label="구매 흐름" stages={[{ id: "visit", label: "방문", count: 100 }, { id: "buy", label: "구매", count: 20, reason: "사용자 응답" }]} formatCount={String} missingLabel="없음" detailLabel={stage => `${stage.label} ${stage.lost ?? 0}명 이탈 ${stage.reason ?? ""}`} />
     <TargetSummary label="목표" actual={12} target={0} formatActual={String} summaryLabel={summary => summary.ratio === null ? "목표 미설정" : String(summary.ratio)} /></HjmProvider>));
-  await act(async () => page.getByRole("button", { name: "구매", exact: true }).click());
+  await act(async () => page.getByRole("radio", { name: "구매", exact: true }).click());
   expect(host.textContent).toContain("80명 이탈 사용자 응답");
   expect(host.textContent).toContain("목표 미설정"); expect(host.querySelector("progress")).toBeNull();
 });
@@ -45,7 +45,7 @@ it("rebuilds histogram labels and counts from the same supplied samples", async 
     binLabel={bin => `${bin.lower}–${bin.upper}`} binCountLabel={n => `${n}구간`} formatCount={String} missingLabel="미관측" summaryLabel={h => `${h.bins.length}구간 / ${h.observed}관측 / ${h.missing}누락`} />; }
   await act(async () => root.render(<HjmProvider><Demo /></HjmProvider>));
   expect(host.textContent).toContain("2구간 / 4관측 / 1누락");
-  await act(async () => page.getByRole("button", { name: "4구간", exact: true }).click());
+  await act(async () => page.getByRole("radio", { name: "4구간", exact: true }).click());
   expect(host.textContent).toContain("4구간 / 4관측 / 1누락");
   expect(host.scrollWidth).toBeLessThanOrEqual(host.clientWidth);
 });

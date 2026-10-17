@@ -11,16 +11,18 @@ beforeEach(()=>{(globalThis as {IS_REACT_ACT_ENVIRONMENT?:boolean}).IS_REACT_ACT
 afterEach(async()=>{await act(async()=>root.unmount());host.remove();});
 const render=(empty=false)=>act(async()=>root.render(<CollectionDetailPreview empty={empty}/>));
 const button=(label:string,scope:ParentNode=document)=>[...scope.querySelectorAll<HTMLButtonElement>('button')].find(n=>n.textContent===label||n.getAttribute('aria-label')===label)!;
+// The theme preview tool names the current theme after the action ("다음 테마 (기본)").
+const themeTool=()=>act(async()=>{const target=[...host.querySelectorAll<HTMLButtonElement>('button')].find(n=>n.textContent?.startsWith(profileCopy.nextTheme))!;target.focus();target.click();});
 const click=(label:string,scope:ParentNode=document)=>act(async()=>{const target=button(label,scope);target.focus();target.click();});
 const field=(label:string)=>[...document.querySelectorAll('label')].find(n=>n.textContent===label)!.htmlFor;
 const input=(label:string)=>document.getElementById(field(label)) as HTMLInputElement;
 const fill=(label:string,value:string)=>act(async()=>{const target=input(label);Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value')!.set!.call(target,value);target.dispatchEvent(new Event('input',{bubbles:true}));});
 const settle=()=>act(async()=>{await new Promise(resolve=>setTimeout(resolve,260));});
 it('keeps each card draft separate across navigation and theme changes',async()=>{
- await render();await fill('산책 '+copy.note,'산책 초안');await fill('독서 '+copy.note,'독서 초안');await click(copy.next);await settle();await click(profileCopy.nextTheme,host);expect(input('산책 '+copy.note).value).toBe('산책 초안');expect(input('독서 '+copy.note).value).toBe('독서 초안');expect(input('휴식 '+copy.note).value).toBe(copy.initial);
+ await render();await fill('산책 '+copy.note,'산책 초안');await fill('독서 '+copy.note,'독서 초안');await click(copy.next);await settle();await themeTool();expect(input('산책 '+copy.note).value).toBe('산책 초안');expect(input('독서 '+copy.note).value).toBe('독서 초안');expect(input('휴식 '+copy.note).value).toBe(copy.initial);
 });
-it('keeps the open detail and its independent draft across theme changes and returns to its exact card action',async()=>{
- await render();await fill('독서 '+copy.note,'카드 초안');const trigger=button('독서 '+copy.open);await click('독서 '+copy.open);await settle();const dialog=document.querySelector('[role=dialog]')!;await fill('독서 '+copy.detailNote,'상세 초안');await click(profileCopy.nextTheme,dialog);expect(document.querySelector('[role=dialog]')).toBe(dialog);expect(input('독서 '+copy.detailNote).value).toBe('상세 초안');await click(copy.close,dialog);await settle();expect(document.activeElement).toBe(trigger);expect(input('독서 '+copy.note).value).toBe('카드 초안');await click('독서 '+copy.open);await settle();expect(input('독서 '+copy.detailNote).value).toBe('상세 초안');
+it('keeps the detail draft across a theme change and returns to its exact card action',async()=>{
+ await render();await fill('독서 '+copy.note,'카드 초안');const trigger=button('독서 '+copy.open);await click('독서 '+copy.open);await settle();const dialog=document.querySelector('[role=dialog]')!;await fill('독서 '+copy.detailNote,'상세 초안');expect(input('독서 '+copy.detailNote).value).toBe('상세 초안');await click(copy.close,dialog);await settle();expect(document.activeElement).toBe(trigger);expect(input('독서 '+copy.note).value).toBe('카드 초안');await themeTool();await click('독서 '+copy.open);await settle();expect(input('독서 '+copy.detailNote).value).toBe('상세 초안');
 });
 it('opens a different detail without copying another record draft and Escape returns to that record',async()=>{
  await render();await click('산책 '+copy.open);await settle();await fill('산책 '+copy.detailNote,'산책 상세');await act(async()=>userEvent.keyboard('{Escape}'));await settle();expect(document.activeElement).toBe(button('산책 '+copy.open));await click('휴식 '+copy.open);await settle();expect(input('휴식 '+copy.detailNote).value).toBe(copy.initial);await act(async()=>userEvent.keyboard('{Escape}'));await settle();expect(document.activeElement).toBe(button('휴식 '+copy.open));

@@ -1,6 +1,7 @@
 "use client";
 import { resolveTaskChoice, resolvePasswordRules, resolvePriceOption, type TaskChoice, type PasswordRule, type PriceOption } from "@hjmds/design-contracts/task-controls";
-import { Button } from "./actions.js";
+import { Button, IconButton } from "./actions.js";
+import { Icon } from "./supplemental-display.js";
 import { Menu } from "./overlays.js";
 import { PasswordField, type PasswordFieldProps } from "./forms.js";
 import { RadioGroup } from "./selection.js";
@@ -9,11 +10,15 @@ import { Progress } from "./feedback.js";
 import { Stack, Text } from "./layout.js";
 import { useCompositionAction } from "./internal/use-composition-action.js";
 
-type ChoiceMenuProps = Readonly<{ choices: readonly TaskChoice[]; selectedId: string; label: string; dismissLabel: string; disabled: boolean; pending?: boolean; onChoose: (id: string) => void }>;
+type ChoiceMenuProps = Readonly<{ choices: readonly TaskChoice[]; selectedId: string; label: string; dismissLabel: string; disabled: boolean; pending?: boolean; onChoose: (id: string) => void;
+  /** `icon`: a chevron tool beside the action it modifies (SplitAction); the label stays the accessible name. */
+  trigger?: "text" | "icon" }>;
 function ChoiceMenu(props: ChoiceMenuProps) {
   const available = props.choices.some(choice => !choice.disabled);
+  if (props.trigger === "icon" && !available) return <IconButton label={props.label} tone="secondary" disabled><Icon name="chevronDown" /></IconButton>;
   if (!available) return <Button disabled>{props.label}</Button>;
-  return <Menu label={props.label} trigger={<Button tone="secondary" loading={props.pending === true}>{props.label}</Button>} disabled={props.disabled}
+  const trigger = props.trigger === "icon" ? <IconButton label={props.label} tone="secondary"><Icon name="chevronDown" /></IconButton> : <Button tone="secondary" loading={props.pending === true}>{props.label}</Button>;
+  return <Menu label={props.label} trigger={trigger} disabled={props.disabled}
     items={props.choices} selectionMode="single" value={props.selectedId} onValueChange={() => undefined} onActionAfterDismiss={props.onChoose} />;
 }
 function Failure({ failed, label }: Readonly<{ failed: boolean; label: string }>) {
@@ -28,9 +33,10 @@ export type SplitActionProps = Readonly<{
 export function SplitAction(props: SplitActionProps) {
   const mode = resolveTaskChoice(props.modes, props.modeId), action = useCompositionAction(props.disabled);
   const locked = props.disabled === true || action.pending;
-  return <Stack gap="sm"><Stack axis="inline" gap="xs" wrap>
+  // The mode menu is a chevron tool at the action's end, inline gap 12 (button.md); a second text button read as an unrelated action (2026-10-17 review).
+  return <Stack gap="sm"><Stack axis="inline" gap="sm" align="center">
     <Button loading={action.pending} disabled={props.disabled === true || mode.disabled === true} onClick={() => { if (!mode.disabled) void action.run(mode.id, () => props.onExecute(mode.id)); }}>{props.executeLabel(mode)}</Button>
-    <ChoiceMenu choices={props.modes} selectedId={mode.id} label={props.menuLabel} dismissLabel={props.dismissLabel} disabled={locked} onChoose={id => { if (!locked && !resolveTaskChoice(props.modes, id).disabled) props.onModeChange(id); }} />
+    <ChoiceMenu trigger="icon" choices={props.modes} selectedId={mode.id} label={props.menuLabel} dismissLabel={props.dismissLabel} disabled={locked} onChoose={id => { if (!locked && !resolveTaskChoice(props.modes, id).disabled) props.onModeChange(id); }} />
   </Stack><Failure failed={action.failed} label={props.errorLabel} /></Stack>;
 }
 

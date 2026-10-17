@@ -32,7 +32,8 @@
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
-| 바깥 틀 | Stack | 화면의 본문 흐름 | gap md=16px, 전체 폭 |
+| 바깥 틀 | Stack. Web은 제품 화면의 `Container size="reading"` 안 | 화면의 본문 흐름 | gap md=16px, 폭은 Container를 따른다(Web 최대 `layout.readingMaxWidth` 720) |
+| 패널 제목 | `Heading level="level5"` | 패널 Surface 맨 위 | `title` 글자 크기·semibold |
 | 내용 | 해당 공개 API | 입력과 행동 사이 | 자체 recipe 크기, 줄바꿈 허용 |
 | 행동 | Button/기존 컨트롤 | 관련 항목 바로 뒤 | inline일 때 wrap, md=16px |
 

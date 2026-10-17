@@ -4,6 +4,7 @@ import { binHistogram, resolveCohorts, resolveFunnel, resolveImportMapping, reso
 import { assertDistinctIds } from "@hjmds/design-contracts/collection-editing";
 import { resolveDatavizSeriesColor } from "@hjmds/design-contracts/dataviz";
 import { Button } from "./actions.js";
+import { SegmentedControl } from "./selection.js";
 import { Select } from "./select.js";
 import { Stack, Text } from "./layout.js";
 import { DataTable } from "./data-table.js";
@@ -51,7 +52,7 @@ export function ConversionFunnel(props: ConversionFunnelProps) {
     {stages.length ? <><BarChart categories={stages.map(stage => stage.label)} series={[{ id: "count", label: props.label, values: stages.map(stage => stage.count) }]}
       accessibilityLabel={props.label} formatValue={props.formatCount} missingLabel={props.missingLabel} orientation="horizontal" focusIndex={selected}
       onFocusChange={index => { if (index !== null && stages[index]) setChosen(stages[index]!.id); }} />
-      <Stack axis="inline" gap="sm" wrap>{stages.map(stage => <Button key={stage.id} tone="ghost" selected={stages[selected]!.id === stage.id} onClick={() => setChosen(stage.id)}>{stage.label}</Button>)}</Stack>
+      <SegmentedControl label={props.label} items={stages.map(stage => ({ value: stage.id, label: stage.label }))} value={stages[selected]!.id} onValueChange={setChosen} />
       <Text role="status">{props.detailLabel(stages[selected]!)}</Text></> : <Text style={{ textAlign: "center" }}>{props.missingLabel}</Text>}
   </Stack>;
 }
@@ -87,7 +88,8 @@ export type TargetSummaryProps = Readonly<{ label: string; actual: number; targe
 export function TargetSummary(props: TargetSummaryProps) {
   const summary = resolveTarget(props.actual, props.target), label = props.summaryLabel(summary);
   return <Stack gap="sm"><Statistic descriptor={{ id: "target-summary", label: props.label, value: props.formatActual(summary.actual), hint: label }} />
-    {summary.progress === null ? null : <Progress label={props.label} value={summary.progress} max={1} valueText={label} />}
+    {/* Statistic already prints the label and summary; the bar carries them only as its accessible name and value. */}
+    {summary.progress === null ? null : <Progress aria-label={props.label} value={summary.progress} max={1} valueText={label} />}
   </Stack>;
 }
 
@@ -101,7 +103,8 @@ export function HistogramExplorer(props: HistogramExplorerProps) {
   const variants = props.binCounts.map(count => binHistogram(props.samples, count, props.domain)), histogram = variants[props.binCounts.indexOf(props.binCount)]!;
   // Hold the y domain across rebinning. Normalizing each set to its tallest bar changes the meaning.
   const maximum = Math.max(...variants.map(variant => variant.maxCount));
-  return <Stack gap="md"><Text emphasis="strong">{props.label}</Text><Stack axis="inline" gap="sm" wrap>{props.binCounts.map(count => <Button key={count} tone="secondary" selected={count === props.binCount} onClick={() => props.onBinCountChange(count)}>{props.binCountLabel(count)}</Button>)}</Stack>
+  return <Stack gap="md"><Text emphasis="strong">{props.label}</Text>
+    <SegmentedControl label={props.label} items={props.binCounts.map(count => ({ value: String(count), label: props.binCountLabel(count) }))} value={String(props.binCount)} onValueChange={value => props.onBinCountChange(Number(value))} />
     {histogram.observed ? <BarChart categories={histogram.bins.map(props.binLabel)} series={[{ id: "frequency", label: props.label, values: histogram.bins.map(bin => bin.count) }]}
       accessibilityLabel={props.label} formatValue={props.formatCount} missingLabel={props.missingLabel} domain={[0, maximum]} showValues /> : <Text style={{ textAlign: "center" }}>{props.missingLabel}</Text>}
     <Text role="status">{props.summaryLabel(histogram)}</Text>

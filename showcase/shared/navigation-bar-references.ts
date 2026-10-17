@@ -10,12 +10,15 @@ export const navigationBarReferences = [
  { id: "car", title: "민트 포인트 캡슐", source: "전기차", presentation: "capsule", accent: "#65dbb4", soft: "#20282c", items: ["홈", "차량", "충전", "연결", "설정"], icons: ["home", "car", "battery", "link", "settings"] },
  { id: "energy", title: "끝쪽 에너지 버튼", source: "가정 에너지", presentation: "capsule", accent: "#8c6200", soft: "#fff0b5", items: ["홈", "전원", "연결"], icons: ["home", "power", "link"], action: "에너지 절약 전환", actionIcon: "power" },
  { id: "video", title: "어두운 영상 탐색 바", source: "짧은 영상", presentation: "floating", accent: "#543078", soft: "#eee1ff", items: ["홈", "탐색", "메시지", "내 정보"], icons: ["home", "search", "message", "user"], action: "영상 만들기", actionIcon: "plus" },
- { id: "project", title: "둥근 사각형 선택 바", source: "프로젝트 관리", presentation: "floating", accent: "#ffffff", soft: "#252b33", items: ["홈", "프로젝트", "검색", "내 정보"], icons: ["home", "file", "search", "user"] },
+ { id: "project", title: "둥근 사각형 선택 바", source: "프로젝트 관리", presentation: "floating", accent: "#252b33", soft: "#e5e7eb", items: ["홈", "프로젝트", "검색", "내 정보"], icons: ["home", "file", "search", "user"] },
  { id: "plank", title: "두께 있는 팻말 바", source: "들판 꾸미기 게임", presentation: "floating", accent: "#2f732c", soft: "#eadfc2", items: ["들판", "탐험", "설정"], icons: ["home", "search", "settings"] },
 ] as const;
 export type NavigationBarReference = (typeof navigationBarReferences)[number];
 
 export function referenceNavigationPalette(reference: NavigationBarReference) {
+ // `accent` is the action fill that carries white content and `soft` the tinted surface
+ // (tile bars paint surfaceAccent behind idle muted labels). The project study once
+ // inverted the pair and its selected tile rendered white on white (2026-10-17 review).
  const light = { primary: reference.accent, onPrimary: "#ffffff", contentBrand: reference.accent, surfaceAccent: reference.soft };
  const dark = { primary: reference.soft, onPrimary: reference.accent, contentBrand: reference.soft, surfaceAccent: reference.accent };
  // The finance/video studies intentionally have a dark surface in either theme,

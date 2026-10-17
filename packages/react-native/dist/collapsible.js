@@ -1,10 +1,11 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { collapsibleRecipe, validateCollapsibleOpenState, } from "@hjmds/design-contracts/components/collapsible";
 import { useState } from "react";
-import { control } from "@hjmds/design-contracts/foundations";
+import { control, glyph } from "@hjmds/design-contracts/foundations";
 import { Pressable, View } from "react-native";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
+import { DrawnChevron } from "./internal/drawn-glyphs.js";
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export function Collapsible({ trigger, children, disabled = false, presentation = "disclosure", keepMounted = false, marker = "end", layoutStyle, ...openState }) {
     validateCollapsibleOpenState(openState);
@@ -25,8 +26,9 @@ export function Collapsible({ trigger, children, disabled = false, presentation 
 }
 /** Decoration only: the expanded state travels through the trigger's accessibilityState. */
 export function CollapsibleMarker({ open }) {
-    const { environment } = useHjmNativeTheme();
-    // The closed mark points toward the reading end, so it mirrors in RTL like Web's scaleX(-1).
-    return _jsx(Text, { accessibilityElementsHidden: true, importantForAccessibility: "no", children: open ? "▾" : environment.direction === "rtl" ? "◂" : "▸" });
+    const { colors } = useHjmNativeTheme();
+    // Web's chevron at glyph.sm replaced a text "▸" that rendered about 8pt (2026-10-17 review). DrawnChevron's
+    // `end` points toward the reading end, so the closed mark mirrors in RTL.
+    return _jsx(DrawnChevron, { direction: open ? "down" : "end", size: glyph.sm, color: colors.textMuted });
 }
 //# sourceMappingURL=collapsible.js.map

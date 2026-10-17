@@ -103,7 +103,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [IconButton](components/icon-button.md) | 동작 | 보이는 글자 없이 아이콘만으로 표시하는 행동에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [IconTile](components/icon-tile.md) | — | 프로필·런처 격자의 아이콘 위/제목 아래 항목에 쓴다. | 1.26.0 | Web · Native | 개별 API 계약 참조 | 실험 |
 | [Image](components/image.md) | 데이터 표시 | 원본 크기를 아는 사진·차트 이미지를 로드 전에 자리를 잡아 두고, 실패해도 의미를 잃지 않게 보여 줄 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
-| [ImageChoiceGroup](components/image-choice-group.md) | 화면/계정 | 아바타 얼굴, 프로필 사진, 모음에 넣을 사진처럼 **그림을 보고 고르는** 단일·다중 선택에 쓴다. | 미게시(1.26.1 이후) | Web · Native | 개별 API 계약 참조 | 배포 |
+| [ImageChoiceGroup](components/image-choice-group.md) | 화면/계정 | 아바타 얼굴, 프로필 사진, 모음에 넣을 사진처럼 **그림을 보고 고르는** 단일·다중 선택에 쓴다. | 미게시(1.26.1 이후) | Web · Native | Web beta / Native beta | 배포 |
 | [ImageComparison](components/image-comparison.md) | 데이터 표시 | 같은 좌표와 비율의 두 이미지를 겹쳐 변화량을 비교할 때 쓴다. | 1.14.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [ImportFieldMapping](components/import-field-mapping.md) | 구성/입력과 작성 | CSV 등 원본 열을 제품의 대상 필드에 연결하고, 검증을 통과한 연결만 가져오기로 넘길 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [InlineEdit](components/inline-edit.md) | 구성/입력과 작성 | 목록·상세의 제목처럼 이미 확정된 짧은 값 하나를 그 자리에서 명시적으로 편집·저장·취소할 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
@@ -235,9 +235,9 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [사진 촬영과 앨범 선택](compositions/photo-source.md) | 선택과 필터 | 명시적으로 선택 후 플랫폼 picker 실행 흐름이 필요할 때 쓴다. | 구성 API 지침 참조 | Web · Native | 구성 API별 | 배포 |
 | [선택 후 적용·취소](compositions/interaction-flow-apply.md) | 선택과 필터 | 표시 방식·정렬·필터처럼 시트에서 여러 번 바꿔 본 뒤 적용을 눌러야 화면에 반영되고, 취소하거나 닫으면 기존 선택을 유지해야 할 때 쓴다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
 | [시간 선택](compositions/time-selection.md) | 선택과 필터 | 알림 시각·마감 시각처럼 하루 안의 시각 하나를 시·분 두 Select로 나눠 고르게 할 때 쓴다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
-| [펼치는 검색과 실제 메시지 답장](compositions/communication.md) | 선택과 필터 | 상단 검색 버튼에서 검색 영역을 펼치거나 채팅의 실제 메시지를 선택해 답장을 전송할 때 쓴다. | 1.21.0 | Web · Native | 구성 API별 | 배포 |
+| [펼치는 검색과 실제 메시지 답장](compositions/communication.md) | 선택과 필터 | 검색 아이콘 버튼에서 검색 영역을 펼치거나 채팅의 실제 메시지를 선택해 답장을 전송할 때 쓴다. | 1.21.0 | Web · Native | 구성 API별 | 배포 |
 | [보관함과 페이지 이동](compositions/web-navigation.md) | 탐색과 이동 | Web에서 상위 보관함 → 하위 모음으로 들어가고, 그 모음의 긴 목록을 페이지 단위로 넘겨 보는 탐색에 쓴다. | 1.12.1 | Web | 구성 API별 | 배포 |
-| [펼침과 메뉴](compositions/disclosure.md) | 탐색과 이동 | Web에서 내용을 숨겼다 펼치거나(Collapsible), 대상에 붙은 작업 메뉴를 우클릭·키보드로 열거나(ContextMenu), 데스크톱 앱처럼 상단 메뉴 막대를 두는(Menubar) 세 방식을 각각 보여 주는 모음이다. | 1.12.1 | Web | 구성 API별 | 배포 |
+| [펼침과 메뉴](compositions/disclosure.md) | 탐색과 이동 | 내용을 숨겼다 펼치거나(Collapsible), Web에서 대상에 붙은 작업 메뉴를 우클릭·키보드로 열거나(ContextMenu), 데스크톱 앱처럼 상단 메뉴 막대를 두는(Menubar) 세 방식을 각각 보여 주는 모음이다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
 | [대화 메시지](compositions/common-message.md) | 정보 표시 | 말풍선 하나하나에 반응·답장·원문 이동·전송 실패 후 다시 보내기를 붙일 때 쓴다. | 구성 API 지침 참조 | Web · Native | 구성 API별 | 배포 |
 | [명령 기록 표시](compositions/command-records.md) | 정보 표시 | 명령 원문과 출력 기록을 선택·읽기·복사할 때 쓴다. | 1.16.0 | Web · Native | 구성 API별 | 배포 |
 | [문서와 파일](compositions/document-resource.md) | 정보 표시 | 이름·형식·크기와 미리보기·내보내기·별도 메뉴를 함께 제공하는 문서에 쓴다. | 1.14.0 | Web · Native | 구성 API별 | 배포 |
@@ -280,7 +280,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [웹 전용 보조 컴포넌트](compositions/web-additions.md) | 비교와 검증 | Web에만 있는 보조 컴포넌트 세 개(색 고르기, 문서 워터마크, 스크롤 중 고정되는 실행 영역)를 실제 쓰임 하나씩과 함께 보여 주는 모음이다. | 1.12.1 | Web | 구성 API별 | 배포 |
 | [종이 줄무늬 비교](compositions/paper-surface.md) | 비교와 검증 | 같은 입력·기록에서 종이 preset의 grain+ruled 상속과 앱이 지정한 평면/줄무늬 표현을 비교한다. | 1.16.0 | Web · Native | 구성 API별 | 배포 |
 | [테마 조합](compositions/design-profile-comparison.md) | 비교와 검증 | 같은 기능에 10가지 표현을 적용하고, 앱 소유 테마 설정을 넣었을 때 네 단계의 전파와 상태 유지를 검토할 때 쓴다. | 1.16.0 | Web · Native | 구성 API별 | 배포 |
-| [토스트 배치 비교](compositions/toast-layout.md) | 비교와 검증 | Toast 카드 한 장의 내부 배치(톤 배지·제목·설명·닫기·실행 버튼)와 화면 위 위치를 좁은 폭·큰 글자·긴 문구·톤별로 확인하는 비교 스토리다. | 1.12.1 | Web | 구성 API별 | 배포 |
+| [토스트 배치 비교](compositions/toast-layout.md) | 비교와 검증 | Toast 카드 한 장의 내부 배치(톤 배지·제목·설명·닫기·실행 버튼)와 화면 위 위치를 좁은 폭·큰 글자·긴 문구·톤별로 확인하는 비교 스토리다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
 | [환경 조합 검증](compositions/environment-matrix.md) | 비교와 검증 | 제품 화면이 테마·쓰기 방향·글자 크기·모션 설정이 달라져도 같은 의미를 유지하는지 확인할 때, 어떤 환경 조합과 검증 항목을 골라 볼지 정하는 기준표로 쓴다. | 1.12.1 | Web | 구성 API별 | 배포 |
 
 ## 화면

@@ -17,15 +17,12 @@ import { useDemoAction } from "./action-recovery-previews";
 import { StatusText } from "@hjmds/react-native/status-text";
 import { PreviewPhoto } from "./reference-screen-parts";
 import { PreviewToolButton, PreviewTools } from "./preview-tools";
+import { composerCopy, composerEndPendingLabel, composerPreviewNote, type ComposerPurpose } from "../../shared/composer-copy";
 
 // Failure arming is a demo-only tool: it sits in PreviewTools after each composition (SELECTION.md 조립 규칙).
 // The product screen owns the outer frame; the preview shows it so the example matches the usage guide.
-// Purpose copy is a table like the product's purpose→i18n-key table; comment and message differ only here and in slots.
-const composerCopy = {
-  comment: { title: "댓글 작성", label: "댓글을 남겨 주세요", send: "등록", reply: "답글 대상 선택", replyCancel: "답글 취소" },
-  message: { title: "메시지 작성", label: "메시지 입력", send: "전송", reply: "답장할 메시지 선택", replyCancel: "답장 취소" },
-} as const;
-export type ComposerPurpose = keyof typeof composerCopy;
+// The live status sits after the card: an always-mounted empty line inside it padded the Surface.
+export type { ComposerPurpose };
 type ComposerOptions = { purpose?: ComposerPurpose; initialState?: "idle" | "pending" | "error"; initialPhotos?: number };
 
 function ComposerContents({ purpose = "comment", initialState = "idle", initialPhotos = 0 }: ComposerOptions) {
@@ -49,7 +46,7 @@ function ComposerContents({ purpose = "comment", initialState = "idle", initialP
     // The draft, photos and reply target are cleared only after the server confirms.
     if (outcome.status === "success") { setSent(items => [...items, text || `사진 ${photos.length}장`]); setValue(""); setReply(false); setPhotos([]); }
   };
-  return <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingVertical: spacing.md }}><Container gutter="compact"><Stack gap="lg">
+  return <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingVertical: spacing.md }}><Container gutter="compact" size="reading"><Stack gap="lg">
     <Surface padding="lg"><Stack gap="md">
       <Heading level="level5">{copy.title}</Heading>
       <MessageComposer label={copy.label} sendLabel={copy.send} value={value} onValueChange={setValue} pending={pending} onSend={send}
@@ -62,14 +59,15 @@ function ComposerContents({ purpose = "comment", initialState = "idle", initialP
           onRemoveAttachment: (id: string) => setPhotos(current => current.filter(photo => String(photo) !== id)),
         } : {})} />
       {sent.map((text, index) => <Text key={index}>{text}</Text>)}
-      <StatusText>{sent.length ? `전송한 항목 ${sent.length}개` : ""}</StatusText>
     </Stack></Surface>
-    <Stack axis="inline" wrap gap="sm">
-      <Button tone="secondary" disabled={pending} onPress={() => setReply(true)}>{copy.reply}</Button>
-      {demoPending ? <Button tone="ghost" onPress={() => setDemoPending(false)}>대기 예제 종료</Button> : null}
-    </Stack>
-    <Text variant="caption" tone="muted">예제 전송은 서버에 저장하지 않습니다. 줄바꿈은 입력에 남고, 성공한 뒤에만 초안을 지웁니다.</Text>
-    <PreviewTools><PreviewToolButton disabled={pending} selected={failureArmed} onPress={toggleFailure}>다음 전송 실패시키기</PreviewToolButton></PreviewTools>
+    <StatusText>{sent.length ? `전송한 항목 ${sent.length}개` : ""}</StatusText>
+    {/* Reply targeting and leaving the held pending state are demo-only tools, kept after the composition. */}
+    <PreviewTools>
+      <PreviewToolButton disabled={pending} onPress={() => setReply(true)}>{copy.reply}</PreviewToolButton>
+      {demoPending ? <PreviewToolButton onPress={() => setDemoPending(false)}>{composerEndPendingLabel}</PreviewToolButton> : null}
+      <PreviewToolButton disabled={pending} selected={failureArmed} onPress={toggleFailure}>다음 전송 실패시키기</PreviewToolButton>
+    </PreviewTools>
+    <Text variant="caption" tone="muted">{composerPreviewNote}</Text>
   </Stack></Container></ScrollView>;
 }
 

@@ -26,6 +26,9 @@ it("keeps one polite atomic live node while result text changes and forwards Tex
   render("저장했어요"); expect(host.querySelector('[role="status"]')).toBe(node);
   expect(node.textContent).toBe("저장했어요");
   render(""); expect(node.textContent).toBe("");
+  expect(node.classList.contains("hjm-visually-hidden")).toBe(true);
+  render("다시 안내"); expect(host.querySelector('[role="status"]')).toBe(node);
+  expect(node.classList.contains("hjm-visually-hidden")).toBe(false);
 });
 
 it("switches assertive and silent semantics without remounting or hiding visible copy", () => {

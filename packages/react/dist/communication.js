@@ -5,7 +5,8 @@ import { resolveSearchCommit } from "@hjmds/design-contracts/screen-patterns";
 import { validateReplyTarget } from "@hjmds/design-contracts/communication";
 import { ChatMessage, MessageComposer } from "./screens.js";
 import { SearchScreen } from "./screen-flows.js";
-import { Button } from "./actions.js";
+import { IconButton } from "./actions.js";
+import { Icon } from "./supplemental-display.js";
 import { Stack, Text } from "./layout.js";
 import { useCompositionAction } from "./internal/use-composition-action.js";
 export function ReplyMessage({ messageId, onReply, replyLabel, replyDisabled = false, swipeAction = "reply", ...message }) {
@@ -66,6 +67,8 @@ export function ExpandableSearch(props) {
     const commit = (query) => { const normalized = resolveSearchCommit(query); if (normalized === null)
         return; setCommitted(normalized); props.onSubmit?.(normalized); };
     const current = snapshot?.query === props.query ? snapshot.response : null;
-    return _jsx("div", { ref: host, children: _jsx(Stack, { gap: "sm", children: !props.expanded ? _jsx(Button, { ref: opener, disabled: props.disabled === true, onClick: () => props.onExpandedChange(true), children: props.labels.open }) : _jsxs(_Fragment, { children: [_jsx(Button, { tone: "ghost", onClick: cancel, children: props.labels.cancel }), _jsx(SearchScreen, { title: props.labels.title, titleVisibility: "hidden", queryLabel: props.labels.query, queryClearLabel: props.labels.clear, query: props.query, onQueryChange: props.onQueryChange, onSearch: search, ...(props.debounceMs === undefined ? {} : { debounceMs: props.debounceMs }), ...(props.recentQueries ? { recentQueries: props.recentQueries } : {}), committedQuery: committed, onSubmit: commit, searching: pending, searchingLabel: props.labels.searching, suggestions: { items: current?.suggestions ?? [], commitLabel: props.labels.commit, countLabel: props.labels.suggestionCount }, children: current ? props.renderResult(current.result) : null }), failed ? _jsx(Text, { role: "alert", tone: "danger", style: { textAlign: "center" }, children: props.labels.error }) : null] }) }) });
+    // Opening and closing are tool actions: a search icon at the area's end, and the search screen's own header-leading
+    // close exit. A full-width primary "펼치기" button and a text "닫기" button read as product actions (2026-10-17 review).
+    return _jsx(Stack, { ref: host, gap: "sm", children: !props.expanded ? _jsx(IconButton, { ref: opener, label: props.labels.open, tone: "ghost", disabled: props.disabled === true, layoutStyle: { alignSelf: "flex-end" }, onClick: () => props.onExpandedChange(true), children: _jsx(Icon, { name: "search" }) }) : _jsxs(_Fragment, { children: [_jsx(SearchScreen, { title: props.labels.title, titleVisibility: "hidden", exit: { kind: "close", label: props.labels.cancel, onClick: cancel }, queryLabel: props.labels.query, queryClearLabel: props.labels.clear, query: props.query, onQueryChange: props.onQueryChange, onSearch: search, ...(props.debounceMs === undefined ? {} : { debounceMs: props.debounceMs }), ...(props.recentQueries ? { recentQueries: props.recentQueries } : {}), committedQuery: committed, onSubmit: commit, searching: pending, searchingLabel: props.labels.searching, suggestions: { items: current?.suggestions ?? [], commitLabel: props.labels.commit, countLabel: props.labels.suggestionCount }, children: current ? props.renderResult(current.result) : null }), failed ? _jsx(Text, { role: "alert", tone: "danger", style: { textAlign: "center" }, children: props.labels.error }) : null] }) });
 }
 //# sourceMappingURL=communication.js.map

@@ -4,7 +4,8 @@ import { Button } from "@hjmds/react/actions";
 import { TextField } from "@hjmds/react/forms";
 import { Sheet } from "@hjmds/react/overlays";
 import { Notice } from "@hjmds/react/feedback";
-import { Stack, Text } from "@hjmds/react/layout";
+import { Container, Stack, Text } from "@hjmds/react/layout";
+import { inputSheetCopy } from "../../../shared/input-sheet-example.js";
 import { useDemoAction } from "./action-recovery-previews.js";
 import { PreviewToolButton, PreviewTools } from "./preview-tools.js";
 
@@ -21,16 +22,16 @@ function InputSheet() {
     if (result.status === "success") setOpen(false);
   };
   return <Stack gap="md">
-    <Button onClick={() => setOpen(true)}>입력 시트 열기</Button>
+    <Button onClick={() => setOpen(true)}>{inputSheetCopy.open}</Button>
     {state.status === "success" && !open ? <Text role="status">저장했어요.</Text> : null}
     <Text>저장된 이름: {state.value || "아직 없어요"}</Text>
     <Sheet open={open} onOpenChange={next => {
       if (session.getSnapshot().status !== "pending") setOpen(next);
-    }} busy={busy} title="기록 이름" closeLabel="닫기"
+    }} busy={busy} title={inputSheetCopy.title} closeLabel="닫기"
 
       footer={<Button loading={busy} disabled={!name.trim()} onClick={() => { void save(); }}>{state.status === "error" ? "다시 저장" : "저장"}</Button>}>
       <Stack gap="md">
-        <TextField label="이름" value={name} disabled={busy} onValueChange={value => {
+        <TextField label={inputSheetCopy.field} value={name} disabled={busy} onValueChange={value => {
           setName(value);
           if (state.status !== "idle") session.reset(state.value);
         }} />
@@ -44,7 +45,7 @@ function InputSheet() {
     <PreviewTools><PreviewToolButton selected={failureArmed} disabled={busy} onClick={toggleFailure}>다음 저장 실패시키기</PreviewToolButton></PreviewTools>
   </Stack>;
 }
-const meta = { includeStories: ["Default", "Dark", "LargeText"], id: "patterns-input-sheet", title: "배포/구성/입력과 작성/입력 시트", component: InputSheet } satisfies Meta<typeof InputSheet>;
+const meta = { includeStories: ["Default", "Dark", "LargeText"], id: "patterns-input-sheet", title: "배포/구성/입력과 작성/입력 시트", component: InputSheet, decorators: [(Story) => <Container size="reading"><Story /></Container>] } satisfies Meta<typeof InputSheet>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

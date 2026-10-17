@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type RefObject } from "react";
 import { ActivityChip } from "@hjmds/react/activity-chip";
 import { Button, IconButton } from "@hjmds/react/actions";
 import { Container, Stack, Text } from "@hjmds/react/layout";
+import { StatusText } from "@hjmds/react/status-text";
 import { ToastProvider, useToast } from "@hjmds/react/toast";
 import { TopBar } from "@hjmds/react/top-bar";
 import {
@@ -101,13 +102,13 @@ function ActivityStatusScreen({ initial = "idle", panelFocus }: ActivityStatusPr
           />
         )}
       />
-      <Container gutter="compact">
+      <Container gutter="compact" size="reading">
         <Stack gap="md">
           <Text>{copy.body}</Text>
           <Button ref={startRef} tone="secondary" onClick={start} disabled={phase === "running"}>
             {phase === "idle" ? copy.start : copy.restart}
           </Button>
-          <Text role="status">{notice ?? ""}</Text>
+          <StatusText>{notice ?? ""}</StatusText>
           <Text tone="muted">{copy.fixture}</Text>
         </Stack>
       </Container>

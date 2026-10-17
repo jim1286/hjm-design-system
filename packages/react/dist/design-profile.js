@@ -5,8 +5,7 @@ import { Collapsible } from "./collapsible.js";
 import { EffectSurface } from "./effect-surface.js";
 import { Grid, Stack, Surface } from "./layout.js";
 import { useHjmTheme } from "./provider.js";
-import { resolveDesignProfileCollection } from "@hjmds/design-contracts/design-profile-layout";
-import { layout } from "@hjmds/design-contracts/foundations";
+import { resolveDesignProfileCollection, overviewToolbarLayout } from "@hjmds/design-contracts/design-profile-layout";
 /** Optional collection screen; ScreenLayout still owns loading/error/scrolling.
  * Unlike settings/inbox it owns a profile-selected collection and persistent tools.
  * It never owns product mutations or chooses a different component for each theme. */
@@ -23,8 +22,6 @@ export function OverviewScreen({ items, toolbar, toolbarLabel, collection: suppl
     // Retain the same effect/grid/surface subtree when the profile changes: optional
     // decoration can disappear without remounting fields, focus or local state.
     const canvas = designProfile?.material.canvas ?? { layers: ["mesh"], intensity: 0, active: false };
-    // Tools are form controls: they stop at the reading width while the collection below uses the full screen width
-    // (fields and segmented controls had stretched to ~1200px on desktop, 2026-10-17 review).
-    return _jsx(EffectSurface, { descriptor: canvas, layoutStyle: { width: "100%" }, children: _jsx(ScreenLayout, { ...screen, children: _jsxs(Stack, { gap: "xl", children: [toolbar ? _jsx(Collapsible, { trigger: toolbarLabel, open: toolsOpen, onOpenChange: setToolsOpen, presentation: toolbarPresentation === "inline" ? "inline" : "disclosure", keepMounted: true, layoutStyle: { maxWidth: layout.readingMaxWidth }, children: toolbar }) : null, _jsx(Grid, { ...resolveDesignProfileCollection(collection), children: items.map(item => _jsx(Surface, { padding: collection === "rows" ? "md" : "xl", tone: collection === "rows" ? "default" : "raised", bordered: true, radius: "lg", children: _jsx(EffectSurface, { descriptor: designProfile?.material.card ?? { layers: ["mesh"], intensity: 0, active: false }, className: "hjm-profile-card-effect", children: item.children }) }, item.id)) })] }) }) });
+    return _jsx(EffectSurface, { descriptor: canvas, layoutStyle: { width: "100%" }, children: _jsx(ScreenLayout, { ...screen, children: _jsxs(Stack, { gap: "xl", children: [toolbar ? _jsx(Collapsible, { trigger: toolbarLabel, open: toolsOpen, onOpenChange: setToolsOpen, presentation: toolbarPresentation === "inline" ? "inline" : "disclosure", keepMounted: true, layoutStyle: overviewToolbarLayout, children: toolbar }) : null, _jsx(Grid, { ...resolveDesignProfileCollection(collection), children: items.map(item => _jsx(Surface, { padding: collection === "rows" ? "md" : "xl", tone: collection === "rows" ? "default" : "raised", bordered: true, radius: "lg", children: _jsx(EffectSurface, { descriptor: designProfile?.material.card ?? { layers: ["mesh"], intensity: 0, active: false }, className: "hjm-profile-card-effect", children: item.children }) }, item.id)) })] }) }) });
 }
 //# sourceMappingURL=design-profile.js.map

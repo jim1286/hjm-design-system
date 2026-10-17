@@ -22,7 +22,8 @@
 | --- | --- | --- |
 | BottomNavigation | 목적지 2~6개, 선택 상태, 배지 | [BottomNavigation](../components/bottom-navigation.md) |
 | IconButton `tone="primary" size="large" shape="circle"` | `primaryAction`: 목적지가 아닌 행동 | [IconButton](../components/icon-button.md) |
-| HjmProvider / HjmNativeProvider `brandPalette` | 막대 범위의 제품 색(스토리 색은 예시) | [DesignSystemProvider](../components/design-system-provider.md) |
+| HjmProvider / HjmNativeProvider `brandPalette` | 막대 범위의 제품 색(스토리 색은 예시). `accent`는 흰 글자를 올리는 채움색, `soft`는 옅은 표면색이다. Web 갤러리는 `host="contents"`로 Provider 자체는 칠하지 않고 Card가 표면을 칠한다 | [DesignSystemProvider](../components/design-system-provider.md) |
+| Card `title`·`description` | 스토리에서 참고 막대 하나를 묶는 갤러리 틀(제품에는 필요 없음). 제목 단계는 페이지 Heading `level3` → 동작 묶음 Heading `level4` → Card 제목 순서로 내려간다 | [Card](../components/card.md) |
 | SegmentedControl | 스토리에서 참고 표현을 고르는 단일 선택기(제품에는 필요 없음). `selected` Button 나열로 만들지 않는다([선택 조립 규칙](../SELECTION.md#조립-규칙필수)) | [SegmentedControl](../components/segmented-control.md) |
 
 ## 배치
@@ -142,7 +143,7 @@ const gutter = resolveWindowClass(useWindowDimensions().width) === "compact" ? "
 `route`·`items`·`routes`·`Link`·`renderGlyph`·`PlusGlyph`·`barRef`/`barHeight`(막대 높이 측정)·`navigation`은 제품 소유다.
 탭 navigator를 쓰면 `View` 대신 navigator의 `tabBar`에 `BottomNavigation`을 넘기고 본문은 각 탭 화면이 그린다.
 
-스토리의 참고 색(`accent`·`soft`), 아이콘 세트, 막대를 감싼 테두리 카드와 `padding-inline: 0`(320 폭 갤러리용) 덮어쓰기는
+스토리의 참고 색(`accent`·`soft`), 아이콘 세트, 막대를 감싼 갤러리 Card와 읽기 폭(`Container size="reading"`) 틀은
 제품에 가져오지 않는다. 제품 색은 앱 루트 Provider의 `brandPalette`로 준다.
 
 ## 플랫폼 차이
@@ -165,3 +166,7 @@ const gutter = resolveWindowClass(useWindowDimensions().width) === "compact" ? "
 2026-10-13 예제는 사각 선택 표현을 공개 tile 축으로 이관하고 내부 radius·padding CSS와 Native deprecated 스타일을 제거했다. Web 갤러리의 `style.position="relative"`는 fixed 막대를 문서 흐름에서 비교하기 위한 showcase 전용 배치다. 제품 하단 탐색에는 복사하지 않으며 `layoutStyle`은 position을 지원하지 않는다.
 
 비교 예제는 목적지 이름과 현재 선택만 바꾸는 메모리 데모다. 주 행동은 작성 화면을 열지 않고 실행 횟수를 올린다. Web 링크는 인스턴스별 fragment를 사용해 현재 선택과 브라우저 뒤로·앞으로 이동을 동기화하고 다른 막대의 주소는 무시한다. 표현 preset을 바꾸면 해당 막대의 초기 선택과 실행 횟수로 새로 시작한다. 실제 router·작성 화면·저장 API는 제품이 연결한다.
+
+## 근거
+
+- 2026-10-17 구성 리뷰: 프로젝트 참고 색이 `accent`/`soft`를 뒤집어 선택 타일이 흰 바탕에 흰 글자로 보였다. Web만 파일 내 CSS 테두리 틀을 써서 플랫폼 구조가 달랐고, 세 단계 제목이 같은 크기였으며, 데스크톱에서 선택 컨트롤이 1280 폭 전체로 늘어났다. 그래서 공개 Card와 읽기 폭 Container로 바꾸고 제목 단계를 나눴다.

@@ -12,11 +12,13 @@ beforeEach(() => { (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REA
 afterEach(async () => { await act(async () => root.unmount()); host.remove(); });
 const render = (kind: 'date' | 'time') => act(async () => { root.render(<HjmProvider>{kind === 'date' ? <DateDemo /> : <TimeDemo />}</HjmProvider>); });
 const click = (label: string) => act(async () => page.getByRole('button', { name: label, exact: true }).click());
+// 입력 순서 바꾸기 is a 미리보기 도구 selection chip (checkbox role), not a product button.
+const tool = (label: string) => act(async () => page.getByRole('checkbox', { name: label, exact: true }).click());
 const fill = (label: string, value: string) => act(async () => page.getByRole('textbox', { name: label, exact: true }).fill(value));
 
 it('confirms a date, preserves it through reordering, then recovers an invalid edited date', async () => {
   await render('date'); await fill('연도', '2024'); await fill('월', 'Feb'); await fill('일', '29'); await click('날짜 확인');
-  expect(host.textContent).toContain('확인한 날짜: 2024-02-29'); await click('입력 순서 바꾸기');
+  expect(host.textContent).toContain('확인한 날짜: 2024-02-29'); await tool('입력 순서 바꾸기');
   expect([...host.querySelectorAll('input')].map(node => node.value)).toEqual(['29', 'Feb', '2024']);
   expect(host.textContent).toContain('확인한 날짜: 2024-02-29');
   await fill('연도', '2023'); expect(host.textContent).not.toContain('확인한 날짜:'); await click('날짜 확인');

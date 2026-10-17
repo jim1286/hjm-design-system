@@ -7,8 +7,10 @@ import { Card, List, ListRow, Statistic, Timeline } from "@hjmds/react/display";
 import { Notice, Progress, Result } from "@hjmds/react/feedback";
 import { OtpField } from "@hjmds/react/forms";
 import { Stack, Text } from "@hjmds/react/layout";
-import { SegmentedControl, Switch } from "@hjmds/react/selection";
+import { SegmentedControl } from "@hjmds/react/selection";
 import { Steps } from "@hjmds/react/steps";
+import { StatusText } from "@hjmds/react/status-text";
+import { PreviewToolButton, PreviewTools } from "./preview-tools";
 import {
   canSubmitOtp, initialOrderState, initialOtpState, isOrderDone, orderCopy, orderReducer, orderStepsDescriptor,
   otpCopy, otpErrorMessage, otpLength, otpReducer, scheduleCopy, scheduleDayLabel, scheduleDays, scheduleForDay,
@@ -24,23 +26,22 @@ export function OrderProgressRetry() {
     return () => clearTimeout(timer);
   }, [state.phase]);
   const done = isOrderDone(state);
-  return <Card title={orderCopy.title} description={orderCopy.description}>
+  return <Stack gap="lg"><Card title={orderCopy.title} description={orderCopy.description}>
     <Stack gap="lg">
       <Steps descriptor={orderStepsDescriptor(state)} statusLabels={orderCopy.statusLabels} composeAccessibleName={steaStepName} />
-      <Text role="status">{state.phase === "requesting" ? orderCopy.requesting : done ? orderCopy.done : ""}</Text>
+      <StatusText>{state.phase === "requesting" ? orderCopy.requesting : done ? orderCopy.done : ""}</StatusText>
       {state.phase === "failed" ? <Notice tone="danger" title={orderCopy.failed} /> : null}
-      <Stack gap="sm">
-        {done
-          ? <Button tone="secondary" onClick={() => dispatch({ type: "restart" })}>{orderCopy.restart}</Button>
-          : <Button loading={state.phase === "requesting"} onClick={() => dispatch({ type: "request" })}>
-              {state.phase === "failed" ? orderCopy.retry : orderCopy.request}
-            </Button>}
-        {done ? null : <Switch label={orderCopy.failNext} disabled={state.phase === "requesting"} checked={state.failNext} onCheckedChange={() => dispatch({ type: "toggleFailNext" })} />}
-      </Stack>
+      {done
+        ? <Button tone="secondary" onClick={() => dispatch({ type: "restart" })}>{orderCopy.restart}</Button>
+        : <Button loading={state.phase === "requesting"} onClick={() => dispatch({ type: "request" })}>
+            {state.phase === "failed" ? orderCopy.retry : orderCopy.request}
+          </Button>}
       <Text variant="label" tone="muted">{orderCopy.logLabel}</Text>
       <Timeline items={state.log} composeAccessibleName={steaTimelineName} />
     </Stack>
-  </Card>;
+  </Card>
+  {done ? null : <PreviewTools><PreviewToolButton selected={state.failNext} disabled={state.phase === "requesting"} onClick={() => dispatch({ type: "toggleFailNext" })}>{orderCopy.failNext}</PreviewToolButton></PreviewTools>}
+  </Stack>;
 }
 
 export function OtpVerifyRecover() {
@@ -70,7 +71,7 @@ export function OtpVerifyRecover() {
     previousVerified.current = verified;
   }, [state.phase, state.resendCount]);
   // 성공 화면 전환은 서버 확인(respond) 뒤에만 일어난다. 입력 중에는 같은 subtree를 유지해 슬롯이 움직이지 않는다.
-  return <Card title={otpCopy.title} description={otpCopy.description}>
+  return <Stack gap="md"><Card title={otpCopy.title} description={otpCopy.description}>
     <ContentTransition stateKey={state.phase === "verified" ? "verified" : "form"}>
       {state.phase === "verified"
         ? <Result ref={result} tabIndex={-1} status="success" title={otpCopy.successTitle} description={otpCopy.successBody}
@@ -82,16 +83,18 @@ export function OtpVerifyRecover() {
               <OtpField ref={input} label={otpCopy.field} length={otpLength} value={state.value}
                 onValueChange={value => dispatch({ type: "change", value })}
                 busy={state.phase === "verifying"} disabled={state.phase === "locked"}
-                description={otpCopy.hint} {...(error ? { error } : {})} />
+                {...(error ? { error } : {})} />
               {state.resent ? <Text role="status" tone="muted">{otpCopy.resent}</Text> : null}
-              <Button type="submit" loading={state.phase === "verifying"} disabled={!canSubmitOtp(state) && state.phase !== "verifying"}>{otpCopy.submit}</Button>
-              <Button type="button" tone="ghost" disabled={state.resendIn > 0 || state.phase === "verifying"} onClick={() => dispatch({ type: "resend" })}>
-                {state.resendIn > 0 ? otpCopy.resendWait(state.resendIn) : otpCopy.resend}
-              </Button>
+              <Stack gap="xs">
+                <Button type="submit" loading={state.phase === "verifying"} disabled={!canSubmitOtp(state) && state.phase !== "verifying"}>{otpCopy.submit}</Button>
+                <Button type="button" tone="ghost" disabled={state.resendIn > 0 || state.phase === "verifying"} onClick={() => dispatch({ type: "resend" })}>
+                  {state.resendIn > 0 ? otpCopy.resendWait(state.resendIn) : otpCopy.resend}
+                </Button>
+              </Stack>
             </Stack>
           </form>}
     </ContentTransition>
-  </Card>;
+  </Card><Text variant="caption" tone="muted">{otpCopy.fixtureHint}</Text></Stack>;
 }
 
 export function ScheduleDayList() {

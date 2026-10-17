@@ -8,7 +8,7 @@ import { hourOptions, minuteOptions, selectedTime } from "../../../shared/time-e
 export function TimeSelectionPreview() {
   const [hour, setHour] = useState<string | null>(null); const [minute, setMinute] = useState<string | null>(null);
   const [saved, setSaved] = useState<string | null>(null); const value = selectedTime(hour, minute);
-  return <Container gutter="compact"><Section title="하루를 마무리할 시간" description="편한 시각을 골라주세요. 24시간 기준이에요."><Stack gap="md">
+  return <Container gutter="compact" size="reading"><Section title="하루를 마무리할 시간" description="편한 시각을 골라주세요. 24시간 기준이에요."><Stack gap="md">
     <Select label="시" placeholder="시 선택" emptySelectionLabel="시 선택 해제" items={hourOptions} selectedKey={hour} onSelectionChange={(next) => { setHour(next); setSaved(null); }} />
     <Select label="분" placeholder="분 선택" emptySelectionLabel="분 선택 해제" items={minuteOptions} selectedKey={minute} onSelectionChange={(next) => { setMinute(next); setSaved(null); }} />
     <Text role="status">{value ? `선택한 시각 ${value}` : "시와 분을 모두 선택해 주세요."}</Text>

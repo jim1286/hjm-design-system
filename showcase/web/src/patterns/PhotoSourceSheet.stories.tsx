@@ -10,7 +10,7 @@ type Result = keyof typeof resultCopy;
 function Preview({cameraAvailable=true}:{cameraAvailable?:boolean}){
  const [open,setOpen]=useState(false),[result,setResult]=useState<Result>("none");
  // Cancel or dismiss only closes the sheet: the previous selection and its status stay unchanged.
- return <Container gutter="compact"><Stack gap="md"><Heading level="level3">게시물 사진</Heading><Button onClick={()=>setOpen(true)}>사진 추가</Button><Text role="status">{resultCopy[result]}</Text><PhotoSourceSheet open={open} onOpenChange={setOpen} cameraAvailable={cameraAvailable} onSelect={value=>setResult(value)} labels={{title:"사진 추가",library:"앨범에서 선택",camera:"사진 촬영",cancel:"취소"}}/></Stack></Container>;
+ return <Container gutter="compact" size="reading"><Stack gap="md"><Heading level="level3">게시물 사진</Heading><Button onClick={()=>setOpen(true)}>사진 추가</Button><Text role="status">{resultCopy[result]}</Text><PhotoSourceSheet open={open} onOpenChange={setOpen} cameraAvailable={cameraAvailable} onSelect={value=>setResult(value)} labels={{title:"사진 추가",library:"앨범에서 선택",camera:"사진 촬영",cancel:"취소"}}/></Stack></Container>;
 }
 const meta={id: "compositions-selection-photo-source", title:"배포/구성/선택과 필터/사진 촬영과 앨범 선택",component:Preview} satisfies Meta<typeof Preview>;
 export default meta;

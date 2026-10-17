@@ -2,6 +2,7 @@ import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import type { ReactNode } from 'react';
 import { afterEach, expect, it, vi } from 'vitest';
 import { HjmNativeProvider } from '@hjmds/react-native/provider';
+import { Chip } from "@hjmds/react-native/inputs";
 import { Button } from '@hjmds/react-native/actions';
 import { ChatMessage, MessageComposer, NotificationItem } from '@hjmds/react-native/screens';
 import { ChatMessagePreview, ComposerPreview, NotificationItemPreview } from '../../../showcase/native/src/conversation-previews';
@@ -12,7 +13,8 @@ vi.mock('react-native-safe-area-context',()=>({useSafeAreaInsets:()=>({top:0,bot
 (globalThis as {IS_REACT_ACT_ENVIRONMENT?:boolean}).IS_REACT_ACT_ENVIRONMENT=true;
 let tree:ReactTestRenderer;afterEach(()=>{if(tree)act(()=>tree.unmount());});
 const render=(ui:ReactNode)=>act(()=>{tree=create(<HjmNativeProvider reducedMotion>{ui}</HjmNativeProvider>);});
-const button=(label:string)=>tree.root.findAllByType(Button).find(n=>n.props.children===label)!;
+// 미리보기 도구 on/off tools are selection chips named by `label`; product actions are Buttons.
+const button = (label: string) => tree.root.findAll(node => (node.type === Button && node.props.children === label) || (node.type === Chip && node.props.label === label))[0]!;
 const press=(label:string)=>act(()=>button(label).props.onPress());
 const settle=()=>act(async()=>{await new Promise(r=>setTimeout(r,400));});
 const composer=()=>tree.root.findByType(MessageComposer);

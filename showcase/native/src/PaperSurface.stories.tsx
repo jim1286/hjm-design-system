@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-native";
+import { Container } from "@hjmds/react-native/primitives";
 import { PaperSurfacePreview } from "./paper-surface-preview";
-const meta = { title: "배포/구성/비교와 검증/종이 줄무늬 비교", component: PaperSurfacePreview, parameters: { hjm: { optionalEntry: "design-profile" } } } satisfies Meta<typeof PaperSurfacePreview>;
+const meta = { title: "배포/구성/비교와 검증/종이 줄무늬 비교", component: PaperSurfacePreview, decorators: [(Story) => <Container size="reading"><Story /></Container>], parameters: { hjm: { optionalEntry: "design-profile" } } } satisfies Meta<typeof PaperSurfacePreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

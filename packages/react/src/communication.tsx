@@ -4,7 +4,8 @@ import { resolveSearchCommit } from "@hjmds/design-contracts/screen-patterns";
 import { validateReplyTarget,type ReplyTarget,type SearchResponse } from "@hjmds/design-contracts/communication";
 import { ChatMessage,MessageComposer,type ChatMessageProps,type MessageComposerProps } from "./screens.js";
 import { SearchScreen,type SearchRecentQueries } from "./screen-flows.js";
-import { Button } from "./actions.js";
+import { IconButton } from "./actions.js";
+import { Icon } from "./supplemental-display.js";
 import { Stack,Text } from "./layout.js";
 import { useCompositionAction } from "./internal/use-composition-action.js";
 
@@ -55,12 +56,13 @@ export function ExpandableSearch<T>(props:ExpandableSearchProps<T>){
  const cancel=()=>{controller.current?.abort();generation.current++;setPending(false);restore.current=true;props.onExpandedChange(false);};
  const commit=(query:string)=>{const normalized=resolveSearchCommit(query);if(normalized===null)return;setCommitted(normalized);props.onSubmit?.(normalized);};
  const current=snapshot?.query===props.query?snapshot.response:null;
- return <div ref={host}><Stack gap="sm">{!props.expanded?<Button ref={opener} disabled={props.disabled===true} onClick={()=>props.onExpandedChange(true)}>{props.labels.open}</Button>:<>
- <Button tone="ghost" onClick={cancel}>{props.labels.cancel}</Button>
- <SearchScreen title={props.labels.title} titleVisibility="hidden" queryLabel={props.labels.query} queryClearLabel={props.labels.clear} query={props.query} onQueryChange={props.onQueryChange} onSearch={search}
+ // Opening and closing are tool actions: a search icon at the area's end, and the search screen's own header-leading
+ // close exit. A full-width primary "펼치기" button and a text "닫기" button read as product actions (2026-10-17 review).
+ return <Stack ref={host} gap="sm">{!props.expanded?<IconButton ref={opener} label={props.labels.open} tone="ghost" disabled={props.disabled===true} layoutStyle={{alignSelf:"flex-end"}} onClick={()=>props.onExpandedChange(true)}><Icon name="search" /></IconButton>:<>
+ <SearchScreen title={props.labels.title} titleVisibility="hidden" exit={{kind:"close",label:props.labels.cancel,onClick:cancel}} queryLabel={props.labels.query} queryClearLabel={props.labels.clear} query={props.query} onQueryChange={props.onQueryChange} onSearch={search}
  {...(props.debounceMs===undefined?{}:{debounceMs:props.debounceMs})} {...(props.recentQueries?{recentQueries:props.recentQueries}:{})}
  committedQuery={committed} onSubmit={commit} searching={pending} searchingLabel={props.labels.searching}
  suggestions={{items:current?.suggestions??[],commitLabel:props.labels.commit,countLabel:props.labels.suggestionCount}}>
  {current?props.renderResult(current.result):null}
- </SearchScreen>{failed?<Text role="alert" tone="danger" style={{textAlign:"center"}}>{props.labels.error}</Text>:null}</>}</Stack></div>;
+ </SearchScreen>{failed?<Text role="alert" tone="danger" style={{textAlign:"center"}}>{props.labels.error}</Text>:null}</>}</Stack>;
 }

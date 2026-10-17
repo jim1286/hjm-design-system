@@ -3,7 +3,7 @@ import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { AccessibilityInfo, Platform } from "react-native";
 import { HjmNativeProvider } from "@hjmds/react-native/provider";
 import { Button } from "@hjmds/react-native/actions";
-import { OtpField, Switch } from "@hjmds/react-native/inputs";
+import { Chip, OtpField } from "@hjmds/react-native/inputs";
 import { Notice, Result } from "@hjmds/react-native/feedback";
 import { Steps } from "@hjmds/react-native/steps";
 import { OrderProgressRetry, OtpVerifyRecover } from "../../../showcase/native/src/stea-composition-previews";
@@ -23,10 +23,10 @@ const tick = (ms = steaSimulatedLatencyMs) => act(async () => { await vi.advance
 const cooldown = async () => { for (let i = 0; i < 10; i++) await tick(1000); };
 
 it("locks the order failure setting and ignores queued changes until the request settles", async () => {
-  render("order"); const toggle = tree!.root.findByType(Switch).props.onCheckedChange;
+  render("order"); const failTool = () => tree!.root.findAllByType(Chip).find(node => node.props.label === orderCopy.failNext)!; const toggle = failTool().props.onPress;
   const request = button(orderCopy.request).props.onPress;
   act(() => { request(); toggle(); request(); });
-  expect(tree!.root.findByType(Switch).props.disabled).toBe(true);
+  expect(failTool().props.disabled).toBe(true);
   await tick();
   expect(tree!.root.findAllByType(Notice)).toHaveLength(0);
   expect(tree!.root.findByType(Steps).props.descriptor.currentStepId).toBe("packed");

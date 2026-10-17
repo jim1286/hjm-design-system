@@ -4,7 +4,7 @@ import { AccessibilityInfo, Platform } from 'react-native';
 import { HjmNativeProvider } from '@hjmds/react-native/provider';
 import { Button } from '@hjmds/react-native/actions';
 import { Dialog } from '@hjmds/react-native/overlays';
-import { TextField } from '@hjmds/react-native/inputs';
+import { Chip, TextField } from '@hjmds/react-native/inputs';
 import { Text } from '@hjmds/react-native/primitives';
 import { OriginDialogPreview } from '../../../showcase/native/src/origin-dialog-preview';
 vi.mock('react-native-safe-area-context',()=>({useSafeAreaInsets:()=>({top:0,bottom:0,left:0,right:0})}));
@@ -15,12 +15,14 @@ const render=(measureInWindow?: (callback:Measure)=>void)=>act(()=>{tree=create(
 const dialog=()=>tree.root.findByType(Dialog);
 const button=(label:string)=>tree.root.findAllByType(Button).find(n=>n.props.children===label)!;
 const press=(label:string)=>act(async()=>{button(label).props.onPress();});
+// 미리보기 도구 on/off tools are selection chips, not buttons.
+const tool=(label:string)=>act(async()=>{tree.root.findAllByType(Chip).find(n=>n.props.label===label)!.props.onPress();});
 const fill=(value:string)=>act(()=>tree.root.findByType(TextField).props.onValueChange(value));
 const text=()=>tree.root.findAllByType(Text).map(n=>n.props.children).join(' ');
 const close=()=>act(()=>dialog().props.onOpenChange(false));
 const settle=()=>act(async()=>{await new Promise(r=>setTimeout(r,90));});
 it('retains native failed draft across close and reopen, then saves it through the real dialog action',async()=>{
- const focus=vi.spyOn(AccessibilityInfo,'setAccessibilityFocus');render(callback=>callback(10,20,100,40));await press('저장 실패 체험');await press('메모 편집');fill('수정한 여행 메모');await press('저장');expect(dialog().props.open).toBe(true);expect(text()).toContain('저장하지 못했어요.');close();await settle();expect(focus).toHaveBeenCalled();await press('메모 편집');expect(tree.root.findByType(TextField).props.value).toBe('수정한 여행 메모');await press('저장');await settle();expect(dialog().props.open).toBe(false);expect(text()).toContain('수정한 여행 메모');
+ const focus=vi.spyOn(AccessibilityInfo,'setAccessibilityFocus');render(callback=>callback(10,20,100,40));await tool('다음 저장 실패시키기');await press('메모 편집');fill('수정한 여행 메모');await press('저장');expect(dialog().props.open).toBe(true);expect(text()).toContain('저장하지 못했어요.');close();await settle();expect(focus).toHaveBeenCalled();await press('메모 편집');expect(tree.root.findByType(TextField).props.value).toBe('수정한 여행 메모');await press('저장');await settle();expect(dialog().props.open).toBe(false);expect(text()).toContain('수정한 여행 메모');
 });
 it('ignores an older native measurement after a newer opening was already closed',async()=>{
  const callbacks:Measure[]=[];render(callback=>callbacks.push(callback));await press('메모 편집');await press('메모 편집');act(()=>callbacks[1]!(20,30,100,40));expect(dialog().props.open).toBe(true);close();act(()=>callbacks[0]!(1,2,80,30));expect(dialog().props.open).toBe(false);

@@ -12,7 +12,7 @@ it("blocks incomplete and duplicate confirmation and retains the pending snapsho
   const empty = initialDateTimeSelection();
   expect(reduce(empty, { type: "confirm" })).toBe(empty);
   const pending = reduce(initialDateTimeSelection("failed"), { type: "confirm" });
-  for (const action of [{ type: "date", value: "2026-10-10" }, { type: "hour", value: "18" }, { type: "minute", value: "40" }, { type: "month", value: "2026-11" }, { type: "reset" }, { type: "confirm" }, { type: "armFailure" }] as const) {
+  for (const action of [{ type: "date", value: "2026-10-10" }, { type: "hour", value: "18" }, { type: "minute", value: "40" }, { type: "month", value: "2026-11" }, { type: "reset" }, { type: "confirm" }, { type: "toggleFailure" }] as const) {
     expect(reduce(pending, action)).toBe(pending);
   }
   const resolved = reduce(pending, { type: "respond" });
@@ -21,7 +21,7 @@ it("blocks incomplete and duplicate confirmation and retains the pending snapsho
 });
 it("preserves all picked values through failure and retry, and invalidates an old success on editing", () => {
   const selected = initialDateTimeSelection("failed");
-  const failure = reduce(reduce(reduce(selected, { type: "armFailure" }), { type: "confirm" }), { type: "respond" });
+  const failure = reduce(reduce(reduce(selected, { type: "toggleFailure" }), { type: "confirm" }), { type: "respond" });
   expect(failure.status).toBe("failed");
   expect(dateTimeSelectionValue(failure)).toBe("2026-09-16 09:30");
   const saved = reduce(reduce(failure, { type: "confirm" }), { type: "respond" });

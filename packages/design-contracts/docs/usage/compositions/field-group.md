@@ -41,13 +41,13 @@ CheckboxGroup/RadioGroup, 날짜 조각이면 DateEntry를 먼저 사용한다. 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
 | 바깥 틀 | Web fieldset / Native View | 기존 폼 안 | 테두리 없음, Web 최소 폭 0 |
-| 그룹 이름 | Web legend / Native Text label | 맨 위 | Web 아래 spacing.sm 12, Native 그룹 간격 spacing.sm 12 |
-| 입력 묶음 | renderField | descriptor.fields 순서 | `layout="stack"`은 세로, `layout="inline"`은 줄바꿈 가능한 행. 간격 spacing.md 16 |
+| 그룹 이름 | Web legend / Native Text, `fieldGroupRecipe.heading`(bodyLarge·semibold, 각 칸 label보다 크게) | 맨 위 | Web 아래 spacing.sm 12, Native 그룹 간격 spacing.sm 12 |
+| 입력 묶음 | renderField | descriptor.fields 순서 | `layout="stack"`은 세로, `layout="inline"`은 모든 칸이 한 줄에 들어갈 때만 한 행, 아니면 모두 세로. 간격 spacing.md 16 |
 | 개별 도움말 | FieldGroup | 해당 입력 바로 아래 | Native 간격 spacing.xs 8, 글자 크기는 Text 기본 |
 
 ### 배치 축
 
-`layout`은 `stack`(기본) 또는 `inline`이다. `inline`은 날짜·소요 시간처럼 짧은 값들이 하나의 질문을 이루는 입력에 쓴다. Web은 최소 10ch의 자동 줄바꿈 grid, Native는 공통 recipe의 최소 너비를 가진 wrapping row다. 좁은 영역에서는 순서를 유지하며 다음 줄로 이동한다. `layoutStyle`은 바깥 배치만, Web `className`은 그룹 host에 적용된다.
+`layout`은 `stack`(기본) 또는 `inline`이다. `inline`은 날짜·소요 시간처럼 짧은 값들이 하나의 질문을 이루는 입력에 쓴다. 두 renderer 모두 `fieldGroupRecipe.inline`의 `minWidth`(글자 배율 비례)로 모든 칸이 들어가는지 보고, 들어가면 한 행에 칸마다 최대 `maxWidth`까지, 아니면 모든 칸을 세로로 쌓는다(`wrap: "all-or-none"`). 2+1처럼 일부만 줄바꿈하지 않는다. `layoutStyle`은 바깥 배치만, Web `className`은 그룹 host에 적용된다.
 
 2026-10-13 DateEntry와 DurationField가 같은 그룹 제목·입력 행을 직접 만들고 있어 `fieldGroupRecipe`를 `@hjmds/design-contracts/field-group`에 모았다. 두 컴포넌트는 FieldGroup의 descriptor·renderField·guardChange를 재사용한다. 날짜 파싱과 시간 단위 변환은 각각의 기존 계약에 남는다.
 
@@ -110,3 +110,7 @@ controlProps는 TextField에 바로 연결되는 형태이며 Checkbox/Select �
 
 - 실제 스크린리더·Native 기기·제품 팔레트 검증은 아직 남았다. 자동 검사 통과를 승격 근거로 단독 사용하지 않는다.
 - 국가·주소·연락처의 필드 순서와 autocomplete는 제품별로 정한다. 예제의 한국 주소 순서를 공통 규칙으로 복사하지 않는다.
+
+## 근거
+
+- 2026-10-17 구성 리뷰: DurationField 칸이 데스크톱에서 약 400px로 늘어나 짧은 값이 넓은 칸 가운데 떠 있었고, 402pt에서는 시·분 / 초로 끊겼다. 그룹 이름은 regular라 굵은 칸 이름보다 약했다. 그래서 칸 최대 폭, 전부-또는-세로 줄바꿈, 그룹 제목 typography를 recipe에 두었다.

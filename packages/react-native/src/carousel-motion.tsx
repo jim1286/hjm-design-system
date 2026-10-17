@@ -4,10 +4,11 @@ import { Carousel, type CarouselRef } from "react-native-reanimated-carousel";
 import { scheduleOnRN } from "react-native-worklets";
 import type { SortableItem } from "@hjmds/design-contracts/components/interaction-adapters";
 import { resolveCarouselDescriptor, getCarouselNavigationTarget, type ComposeCarouselAccessibleName } from "@hjmds/design-contracts/components/carousel";
-import { motion as timing } from "@hjmds/design-contracts/foundations";
-import { Button, IconButton } from "./actions.js";
+import { glyph, motion as timing } from "@hjmds/design-contracts/foundations";
+import { resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
+import { IconButton } from "./actions.js";
 import { Text } from "./primitives.js";
-import { FixedGlyph } from "./internal/fixed-glyph.js";
+import { DrawnChevron } from "./internal/drawn-glyphs.js";
 import { useHjmNativeTheme } from "./provider.js";
 
 /** Fraction of a slide past which a slow release still pages (platform paging uses half). */
@@ -36,7 +37,8 @@ export function CarouselMotion(props: CarouselMotionProps) {
     throw new TypeError("CarouselMotion labels must not be empty");
   }
   if (![props.width, props.height].every(value => Number.isFinite(value) && value > 0)) throw new TypeError("Carousel needs positive measured dimensions");
-  const { environment } = useHjmNativeTheme();
+  const { environment, palette, tokens } = useHjmNativeTheme();
+  const chevronColor = resolveIconButtonPresentation("ghost", palette, false).content;
   const ref = useRef<CarouselRef>(null);
   const latest = useRef({ index, props }); latest.current = { index, props };
   const rtl = environment.direction === "rtl";
@@ -73,13 +75,15 @@ export function CarouselMotion(props: CarouselMotionProps) {
       onSnapToItem={next => { const slide = props.slides[next]; if (slide && slide.id !== props.currentKey) props.onCurrentKeyChange(slide.id); }}
       renderItem={({ item, index: i }) => <View accessibilityLabel={resolved[i]!.accessibleName} accessibilityElementsHidden={resolved[i]!.inert} importantForAccessibility={i === index ? "auto" : "no-hide-descendants"}
         pointerEvents={i === index ? "auto" : "none"}>{props.renderSlide(item)}</View>} />
+    {/* Tool actions: icon buttons named by the localized labels, matching Carousel and CollectionRail. Drawn
+        chevrons mirror with the reading direction (2026-10-17 composition review). */}
     {props.navigation === "counter" ? <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-      <IconButton label={props.previousLabel} tone="ghost" disabled={index === 0} onPress={() => pageBy(-1)}><FixedGlyph>{rtl ? "›" : "‹"}</FixedGlyph></IconButton>
+      <IconButton label={props.previousLabel} tone="ghost" disabled={index === 0} onPress={() => pageBy(-1)}><DrawnChevron direction="start" size={glyph.sm} color={chevronColor} /></IconButton>
       <Text align="center" variant="caption" accessibilityLiveRegion="polite">{index + 1}/{props.slides.length}</Text>
-      <IconButton label={props.nextLabel} tone="ghost" disabled={index === props.slides.length - 1} onPress={() => pageBy(1)}><FixedGlyph>{rtl ? "‹" : "›"}</FixedGlyph></IconButton>
-    </View> : <>
-      <Button tone="ghost" disabled={index === 0} onPress={() => pageBy(-1)}>{props.previousLabel}</Button>
-      <Button tone="ghost" disabled={index === props.slides.length - 1} onPress={() => pageBy(1)}>{props.nextLabel}</Button>
-    </>}
+      <IconButton label={props.nextLabel} tone="ghost" disabled={index === props.slides.length - 1} onPress={() => pageBy(1)}><DrawnChevron direction="end" size={glyph.sm} color={chevronColor} /></IconButton>
+    </View> : <View style={{ flexDirection: "row", justifyContent: "flex-end", gap: tokens.spacing.sm, marginTop: tokens.spacing.sm }}>
+      <IconButton label={props.previousLabel} tone="ghost" disabled={index === 0} onPress={() => pageBy(-1)}><DrawnChevron direction="start" size={glyph.sm} color={chevronColor} /></IconButton>
+      <IconButton label={props.nextLabel} tone="ghost" disabled={index === props.slides.length - 1} onPress={() => pageBy(1)}><DrawnChevron direction="end" size={glyph.sm} color={chevronColor} /></IconButton>
+    </View>}
   </View>;
 }

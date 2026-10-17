@@ -30,15 +30,15 @@ Lucian 예제 전수 검토에서 재사용할 실익이 있는 다섯 작업을
 
 ```text
 제목 편집             반복 입력              묶음 행동
-값                    이름 [입력]            N개 선택
-[수정]                [이 행 삭제]           [보관] [해제]
+라벨(caption)         이름                   N개 선택
+값(strong)     [✎]    [입력        ] [🗑]    [보관] [해제]
 ↓                     [사람 추가]           [방금 작업 복구]
 [입력]
 [취소] [저장]
 
-필터 완화: 자기 본문 영역 중앙        열 설정: 각 열의 선택 아래 앞/뒤 이동
-제목·설명                            [✓ 이름] (고정)
-[주제 해제 · 실제 N개 보기]           [✓ 점수] [앞으로] [뒤로]
+필터 완화: 자기 본문 영역 중앙        열 설정: 그룹 라벨(Text strong) + 열마다 한 행
+제목·설명                            [✓ 이름 (고정)]        [↑] [↓]
+[주제 해제 · 실제 N개 보기]           [✓ 점수]               [↑] [↓]
 실패 안내                            제어된 실제 DataTable
 ```
 
@@ -46,8 +46,11 @@ Lucian 예제 전수 검토에서 재사용할 실익이 있는 다섯 작업을
 | --- | --- | --- | --- |
 | 바깥 틀 | 제품 화면 host | 기존 본문·시트·패널 안; host가 스크롤·safe area·키보드를 소유 | 기존 Container/ScreenLayout 규격 |
 | 입력/행 | TextField, FieldGroup | 값과 같은 자리; 반복 행은 위→아래 | `collectionEditingRecipe.gap` = `md` |
-| 행동 | Button | 입력 아래 취소→저장, 행 아래 삭제, 행 묶음 마지막 추가 | `collectionEditingRecipe.actionGap` = `sm`, 좁으면 줄바꿈 |
+| 제목 읽기 | Text caption muted(라벨) · Text strong(값) · IconButton(ghost, `edit`) | 라벨 위·값 아래, 수정 도구는 행 끝. IconButton label = `editLabel`, 저장·취소 뒤 포커스는 이 도구로 돌아온다 | 라벨–값 `spacing.xxs`, 값–도구 `spacing.sm` 12 |
+| 행 삭제 | IconButton(ghost, `delete`) | 각 반복 입력 행 끝, 입력과 아래 끝 정렬. label = `removeLabel(id)`로 행 대상을 말한다([IconButton](../components/icon-button.md)) | 입력–도구 `spacing.xs` 8 |
+| 행동 | Button | 입력 아래 취소→저장, 행 묶음 마지막 추가 | `collectionEditingRecipe.actionGap` = `sm`, 좁으면 줄바꿈 |
 | 선택 바 | SelectionActionBar | 대상 목록 바로 아래 또는 제품 footer 슬롯 | 제품이 고정 위치 결정; 화면 전체 좌표를 새로 소유하지 않음 |
+| 열 설정 행 | Checkbox · IconButton ×2 | 열마다 한 행: 보이기 Checkbox(남은 폭) → 앞으로·뒤로 IconButton(ghost, 위·아래 화살표). IconButton label = `earlierLabel`·`laterLabel` | 행 안 `spacing.xs` 8, 행 사이 `spacing.sm` 12. 그룹 라벨은 Web·Native 모두 HJM Text strong |
 | 상태 | Text·Button | 해당 구성 영역 중앙 | 임의 상단 margin 없이 가로·세로 중앙 정렬 |
 
 ## 흐름과 상태
@@ -110,3 +113,7 @@ import { InlineEdit } from "@hjmds/react-native/collection-editing";
 - `onAdd`가 반환한 ID와 새 field ID가 같아야 한다. 입력 값을 배열 index에 저장하지 않는다.
 - 표 원본 descriptor의 pinned·width·sort를 보존한다. 설정 화면의 잠금은 서버 권한 검증을 대체하지 않는다.
 - npm 1.21.0 API다. 소비 제품의 실제 설치 버전을 확인한다.
+
+## 근거
+
+- 2026-10-17 구성 리뷰: 반복 입력의 삭제가 행과 떨어진 전체 폭 ghost 텍스트 버튼이었고, 제목 편집은 라벨 없이 값 옆에 "제목 수정" 텍스트 버튼을 두었다. 그래서 두 행동을 행 끝 IconButton 도구로 바꾸고 읽기 상태에 라벨을 표시했다.

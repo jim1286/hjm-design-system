@@ -18,7 +18,7 @@ it("passes fixed-row geometry and keys to native virtualization", async () => {
 });
 it("mirrors masonry placement under RTL while preserving source order", async () => {
   let tree!: ReturnType<typeof create>;
-  await act(async()=>{ tree=create(<HjmNativeProvider direction="rtl"><Masonry items={[100,50,80]} keyExtractor={String} label="Cards" width={210} gap={10} getItemHeight={item=>item} renderItem={item=><Text>{item}</Text>} /></HjmNativeProvider>); });
+  await act(async()=>{ tree=create(<HjmNativeProvider direction="rtl"><Masonry items={[100,50,80]} keyExtractor={String} label="Cards" width={210} columns={2} gap={10} getItemHeight={item=>item} renderItem={item=><Text>{item}</Text>} /></HjmNativeProvider>); });
   const cells=tree.root.findAllByType(View).filter(node=>node.props.style?.position==="absolute");
   expect(cells.map(node=>node.props.style.right)).toEqual([0,110,110]);
   expect(cells.map(node=>node.props.style.top)).toEqual([0,0,60]);

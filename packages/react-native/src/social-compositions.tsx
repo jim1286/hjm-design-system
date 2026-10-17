@@ -5,6 +5,7 @@ import { Button } from "./actions.js";
 import { AnimatedStatistic } from "./statistic-motion.js";
 import { Avatar, Card } from "./data-display.js";
 import { Stack, Text } from "./primitives.js";
+import { RadioGroup } from "./inputs.js";
 import { useCompositionAction } from "./internal/use-composition-action.js";
 
 type Person = Readonly<{ id: string; name: string; avatar?: ReactNode }>;
@@ -58,11 +59,14 @@ function EventAttendanceBody(props: EventAttendanceCardProps) {
   return <Card title={props.title} description={props.description}><Stack gap="md">
     <Text>{props.dateLabel}</Text>
     <AnimatedStatistic descriptor={{ id: "social-count", label: props.labels.count }} value={displayed.count} locale={props.locale} />
-    <Stack axis="inline" gap="xs" wrap>{props.participants.map(person => <Stack key={person.id} axis="inline" gap="xs">{person.avatar ?? <Avatar name={person.name} decorative />}<Text>{person.name}</Text></Stack>)}</Stack>
-    <Text emphasis="strong">{props.labels.response}</Text>
-    <Stack axis="inline" gap="xs" wrap>{props.choices.map(choice => <Button key={choice.id} selected={displayed.responseId === choice.id}
-      disabled={locked || choice.disabled === true} loading={action.pending && action.active !== "calendar" && displayed.responseId === choice.id} loadingLabel={props.labels.pending}
-      onPress={() => { if (choice.disabled || choice.id === props.state.responseId) return; const proposal = resolveAttendanceProposal(props.state, props.choices, choice.id); void action.run(proposal, () => props.onResponseChange(choice.id)); }}>{choice.label}</Button>)}</Stack>
+    <Stack axis="inline" gap="xs" wrap>{props.participants.map(person => <Stack key={person.id} axis="inline" gap="xs" align="center">{person.avatar ?? <Avatar name={person.name} decorative />}<Text>{person.name}</Text></Stack>)}</Stack>
+    {/* One answer out of several is a radio choice; selected primary Buttons gave the card three primaries.
+        RadioGroup (not SegmentedControl) keeps the "no answer yet" state that responseId=null needs; plain keeps
+        three short answers on one line inside the card. */}
+    <RadioGroup label={props.labels.response} orientation="horizontal" presentation="plain" value={displayed.responseId}
+      items={props.choices.map(choice => ({ value: choice.id, label: choice.label, ...(choice.disabled ? { disabled: true } : {}) }))}
+      disabled={locked} {...(action.pending && action.active !== "calendar" ? { description: props.labels.pending } : {})}
+      onValueChange={id => { const choice = props.choices.find(item => item.id === id); if (!choice || choice.disabled || choice.id === props.state.responseId || locked) return; const proposal = resolveAttendanceProposal(props.state, props.choices, choice.id); void action.run(proposal, () => props.onResponseChange(choice.id)); }} />
     <Button tone="secondary" disabled={locked || calendarAdded} loading={action.active === "calendar"} loadingLabel={props.labels.pending}
       onPress={() => { if (calendarAdded) return; void action.run("calendar", props.onAddToCalendar).then(outcome => { if (outcome.status === "success") setCalendarAdded(true); }); }}>{calendarAdded ? props.labels.calendarAdded : props.labels.calendar}</Button>
     <Failure failed={action.failed} label={props.labels.error} />

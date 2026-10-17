@@ -32,7 +32,8 @@
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
-| 바깥 틀 | Stack | 화면의 본문 흐름 | gap lg=20px, 전체 폭 |
+| 바깥 틀 | Stack. Web은 제품 화면의 `Container size="reading"` 안 | 화면의 본문 흐름 | gap lg=20px, 폭은 Container를 따른다(Web 최대 `layout.readingMaxWidth` 720) |
+| 제목 | `Heading level="level3"` | 선택 위 | `heading` 글자 크기·semibold |
 | 선택 | SegmentedControl 2개 | 제목 아래, 연결형 다음 필터형 | 기본 44px 터치 영역, 실제 글자에 따른 높이 |
 | 결과·메모 | Text · TextField | 선택 컨트롤 아래 | 선택 변경 시 필드 재생성 없음 |
 | Native 화면 host | ScreenLayout · KeyboardAvoiding | 본문 스크롤과 바깥 키보드 여백 | flex 1, 끝 여백 spacing.md=16 |

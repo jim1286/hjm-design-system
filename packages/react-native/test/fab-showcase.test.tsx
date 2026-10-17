@@ -1,11 +1,14 @@
-import { AccessibilityInfo, Pressable, ScrollView, StyleSheet, TextInput } from "react-native";
+import { AccessibilityInfo, Pressable, ScrollView, TextInput } from "react-native";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { HjmNativeProvider } from "@hjmds/react-native/provider";
 import { Dialog } from "@hjmds/react-native/overlays";
 import { FloatingActionButton } from "@hjmds/react-native/floating-action-button";
 import { ListRow } from "@hjmds/react-native/data-display";
+import { Container } from "@hjmds/react-native/primitives";
 import meta from "../../../showcase/native/src/FloatingActionButton.stories.js";
+// The FAB glyph comes from the Showcase Lucide map; its SVG pixels are outside these behavior tests.
+vi.mock("react-native-svg", async () => { const { View } = await import("react-native"); return { default: View, Svg: View, Circle: View, Path: View, G: View, Rect: View, Line: View, Polyline: View, Polygon: View, Ellipse: View }; });
 const Preview = meta.component;
 let tree: ReactTestRenderer;
 const scrollTo = vi.fn();
@@ -40,7 +43,8 @@ it("connects scroll direction and measured clearance without replacing the FAB",
   const scroll = tree.root.findByType(ScrollView);
   expect(scroll.props.scrollEventThrottle).toBe(16);
   act(() => opener.props.onLayout({ nativeEvent: { layout: { height: 52 } } }));
-  expect(StyleSheet.flatten(scroll.props.contentContainerStyle).paddingBottom).toBe(84);
+  // The list Container inside ScreenLayout reserves the measured FAB clearance.
+  expect(tree.root.findByType(Container).props.layoutStyle.marginBottom).toBe(84);
   act(() => scroll.props.onScroll({ nativeEvent: { contentOffset: { y: 60 } } }));
   expect(fab.props.descriptor.layoutMode).toBe("collapsed"); expect(button("새 기록")).toBe(opener);
   act(() => scroll.props.onScroll({ nativeEvent: { contentOffset: { y: 40 } } }));

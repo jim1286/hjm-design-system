@@ -36,7 +36,7 @@ export type ShowcaseEnvironment = Readonly<{
 export const showcaseEnvironmentMatrix = [
   {
     id: "default",
-    label: "Light · LTR · 100%",
+    label: "밝게 · 왼쪽→오른쪽 · 100%",
     theme: "light",
     direction: "ltr",
     textScale: 1,
@@ -44,7 +44,7 @@ export const showcaseEnvironmentMatrix = [
   },
   {
     id: "dark",
-    label: "Dark · LTR · 100%",
+    label: "어둡게 · 왼쪽→오른쪽 · 100%",
     theme: "dark",
     direction: "ltr",
     textScale: 1,
@@ -52,7 +52,7 @@ export const showcaseEnvironmentMatrix = [
   },
   {
     id: "large-text",
-    label: "Light · LTR · 200%",
+    label: "밝게 · 왼쪽→오른쪽 · 200%",
     theme: "light",
     direction: "ltr",
     textScale: 2,
@@ -60,7 +60,7 @@ export const showcaseEnvironmentMatrix = [
   },
   {
     id: "rtl",
-    label: "Light · RTL · 100%",
+    label: "밝게 · 오른쪽→왼쪽 · 100%",
     theme: "light",
     direction: "rtl",
     textScale: 1,
@@ -68,7 +68,7 @@ export const showcaseEnvironmentMatrix = [
   },
   {
     id: "reduced-motion",
-    label: "Light · LTR · Reduced motion",
+    label: "밝게 · 왼쪽→오른쪽 · 동작 줄이기",
     theme: "light",
     direction: "ltr",
     textScale: 1,
@@ -114,57 +114,57 @@ export const showcaseScenarios = [
   {
     id: "contract",
     label: "계약",
-    description: "Anatomy, defaults, supported axes, platform and maturity are visible.",
+    description: "구조·기본값·지원 축·플랫폼과 성숙도가 보인다.",
   },
   {
     id: "default",
     label: "기본",
-    description: "The normal state renders using recipe defaults without product overrides.",
+    description: "제품 설정을 덮어쓰지 않고 recipe 기본값으로 보통 상태를 그린다.",
   },
   {
     id: "dark",
     label: "어두운 테마",
-    description: "Semantic colors remain legible on the dark theme.",
+    description: "어두운 테마에서도 의미 색이 읽힌다.",
   },
   {
     id: "long-copy",
     label: "긴 문구",
-    description: "Long Korean and English copy wraps without clipping or hiding meaning.",
+    description: "긴 한국어·영어 문구가 잘리거나 의미를 숨기지 않고 줄바꿈된다.",
   },
   {
     id: "large-text",
     label: "200% 글자",
-    description: "Text can grow to 200% without truncating required information.",
+    description: "글자를 200%까지 키워도 필요한 정보가 잘리지 않는다.",
   },
   {
     id: "rtl",
     label: "오른쪽→왼쪽",
-    description: "Logical start/end layout and directional icons mirror correctly.",
+    description: "논리적 시작·끝 배치와 방향 아이콘이 올바르게 뒤집힌다.",
   },
   {
     id: "reduced-motion",
     label: "동작 줄이기",
-    description: "Motion follows the recipe reduced-motion fallback.",
+    description: "움직임이 recipe의 동작 줄이기 대체 표현을 따른다.",
   },
   {
     id: "accessibility",
     label: "접근성",
-    description: "Names, states, relationships, contrast and touch targets are inspectable.",
+    description: "이름·상태·관계·대비·터치 영역을 확인할 수 있다.",
   },
   {
     id: "keyboard",
     label: "키보드",
-    description: "Focus order and documented keyboard behavior run as interaction tests.",
+    description: "포커스 순서와 문서화한 키보드 동작을 상호작용 테스트로 실행한다.",
   },
   {
     id: "native-actions",
     label: "앱 동작",
-    description: "Accessible host actions and their state transitions run against the Native renderer.",
+    description: "접근성 동작과 그 상태 변화를 Native renderer에서 실행한다.",
   },
   {
     id: "platform-parity",
     label: "웹·앱 동등성",
-    description: "Adaptive renderers preserve intent while using platform-native behavior.",
+    description: "각 renderer가 플랫폼 고유 동작을 쓰면서 같은 의도를 유지한다.",
   },
 ] as const satisfies readonly ShowcaseScenario[];
 

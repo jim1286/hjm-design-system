@@ -63,6 +63,7 @@ import { OverviewScreen } from "@hjmds/react-native/design-profile";
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | editorial은 `layout.readingMaxWidth` 720, dashboard·landscape는 `layout.contentMaxWidth` 1200, host가 높이를 제공한다 | `resolveDesignProfileScreen`, ScreenLayout |
+| 도구 폭 | 최대 `layout.readingMaxWidth`, header 제목·BottomCTA 내용과 같은 가운데 축(`overviewToolbarLayout`). 목록은 화면 폭 | `@hjmds/design-contracts/design-profile-layout` |
 | 간격 | 도구–목록 `spacing.xl` 24, rows `spacing.sm` 12, cards/grid `spacing.lg` 20, 카드 내부 rows `spacing.md` 16 / 나머지 `spacing.xl` 24 | OverviewScreen·공유 collection resolver |
 | 순서·정렬 | 헤더 → notice → 도구 → 목록 → footer. leading은 뒤로, actions는 화면 도구, footer는 주 행동 | ScreenLayout 슬롯 |
 | 고정·스크롤 | 헤더·notice·footer 고정, 본문 스크롤. 가상 목록은 별도 ScreenLayout + `scroll="content"` | ScreenLayout 상태·스크롤 엔진 |
@@ -73,3 +74,7 @@ import { OverviewScreen } from "@hjmds/react-native/design-profile";
 ## 꼭 지킬 것
 
 ScreenLayout의 ready/loading/empty/error와 stateAction을 그대로 사용한다. 초기 조회 오류만 본문을 교체하고 저장 실패는 notice로 알린다. stable id가 중복되거나 비어 있으면 거부한다. 도구를 닫으면 입력 상태는 유지하되 접근성·포커스 대상에서 제외한다. 제품이 서버 확정·재시도·동시 저장 방지를 소유한다. 프로필은 같은 아이템의 입력 subtree를 갈아 끼우지 않는다.
+
+## 근거
+
+- 2026-10-17 구성 리뷰: dashboard 표현에서 도구만 왼쪽 반폭에 붙어 가운데 header·footer와 정렬 축이 섞였다.

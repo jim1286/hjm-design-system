@@ -1,8 +1,10 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { resolveMenuTypeahead } from "./menu-typeahead.js";
 import { Menu as Bloom } from "bloom-menu";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { radius } from "@hjmds/design-contracts/foundations";
 import { Button } from "./actions.js";
+import { Icon } from "./supplemental-display.js";
 import { Menu } from "./overlays.js";
 import { useHjmTheme } from "./provider.js";
 /** Action-only morph presentation. Selection/async menus retain the full Menu. */
@@ -14,6 +16,26 @@ export function MorphingMenu({ label, items, onAction, disabled = false, open: c
     const previousOpen = useRef(false);
     const restoreFocus = useRef(true);
     const search = useRef({ value: "", time: 0 });
+    // Bloom needs numeric closed geometry. A hidden HJM secondary Button with the same label measures it, so the
+    // morph trigger and the canonical fallback trigger keep one size (2026-10-17 composition review).
+    const measure = useRef(null);
+    const [buttonSize, setButtonSize] = useState({ width: 160, height: 44 });
+    const motionPath = !(theme.environment.reducedMotion || theme.environment.direction === "rtl");
+    useLayoutEffect(() => {
+        const node = measure.current;
+        if (!node)
+            return;
+        const read = () => setButtonSize(current => {
+            const width = Math.ceil(node.offsetWidth), height = Math.ceil(node.offsetHeight);
+            return width > 0 && height > 0 && (width !== current.width || height !== current.height) ? { width, height } : current;
+        });
+        read();
+        if (typeof ResizeObserver === "undefined")
+            return;
+        const observer = new ResizeObserver(read);
+        observer.observe(node);
+        return () => observer.disconnect();
+    }, [motionPath, label]);
     const change = (value) => { if (value)
         restoreFocus.current = true; setLocalOpen(value); onOpenChange?.(value); };
     if (!label.trim() || !items.length || new Set(items.map(item => item.id)).size !== items.length ||
@@ -32,8 +54,9 @@ export function MorphingMenu({ label, items, onAction, disabled = false, open: c
         previousOpen.current = open;
     }, [open, label]);
     // The canonical Menu owns static/RTL behavior; Bloom's left/right geometry is physical.
-    if (theme.environment.reducedMotion || theme.environment.direction === "rtl") {
-        return _jsx(Menu, { label: label, trigger: _jsx(Button, { tone: "secondary", children: label }), items: items, disabled: disabled, open: open, ...(layoutStyle === undefined ? {} : { layoutStyle }), onOpenChange: change, ...(onAction ? { onAction } : {}) });
+    const chevron = _jsx(Icon, { name: "chevronDown" });
+    if (!motionPath) {
+        return _jsx(Menu, { label: label, trigger: _jsx(Button, { tone: "secondary", trailing: chevron, children: label }), items: items, disabled: disabled, open: open, ...(layoutStyle === undefined ? {} : { layoutStyle }), onOpenChange: change, ...(onAction ? { onAction } : {}) });
     }
     const keyDown = (event) => {
         if (!open) {
@@ -75,9 +98,9 @@ export function MorphingMenu({ label, items, onAction, disabled = false, open: c
             nodes[next]?.focus();
         }
     };
-    return _jsx("div", { ref: root, className: "hjm-menu-morph", style: layoutStyle, onKeyDownCapture: keyDown, children: _jsx(Bloom.Root, { direction: "bottom", open: open, onOpenChange: change, modal: false, children: _jsxs(Bloom.Container, { buttonSize: { width: 160, height: 44 }, menuWidth: 240, style: { background: theme.palette.theme.bg, color: theme.palette.theme.text }, children: [_jsx(Bloom.Trigger, { disabled: disabled, children: label }), _jsx(Bloom.Content, { children: items.map(item => _jsxs("button", { type: "button", role: "menuitem", tabIndex: -1, className: "hjm-menu-morph__item", disabled: !open || disabled || (item.disabled ?? false), "data-tone": item.tone, "aria-label": item.textValue, onClick: () => { if (!disabled && !item.disabled) {
-                                change(false);
-                                onAction?.(item.id);
-                            } }, children: [item.leading, item.label, item.trailing] }, item.id)) })] }) }) });
+    return _jsxs("div", { ref: root, className: "hjm-menu-morph", "data-open": open, style: layoutStyle, onKeyDownCapture: keyDown, children: [_jsx(Button, { ref: measure, tone: "secondary", trailing: chevron, className: "hjm-menu-morph__measure", "aria-hidden": "true", tabIndex: -1, inert: true, children: label }), _jsx(Bloom.Root, { direction: "bottom", open: open, onOpenChange: change, modal: false, children: _jsxs(Bloom.Container, { buttonSize: buttonSize, buttonRadius: radius.md, menuWidth: 240, className: "hjm-menu-morph__surface", children: [_jsxs(Bloom.Trigger, { disabled: disabled, className: "hjm-menu-morph__trigger", children: [_jsx("span", { className: "hjm-button__label", children: label }), chevron] }), _jsx(Bloom.Content, { children: items.map(item => _jsxs("button", { type: "button", role: "menuitem", tabIndex: -1, className: "hjm-menu-morph__item", disabled: !open || disabled || (item.disabled ?? false), "data-tone": item.tone, "aria-label": item.textValue, onClick: () => { if (!disabled && !item.disabled) {
+                                    change(false);
+                                    onAction?.(item.id);
+                                } }, children: [item.leading, item.label, item.trailing] }, item.id)) })] }) })] });
 }
 //# sourceMappingURL=menu-morph.js.map

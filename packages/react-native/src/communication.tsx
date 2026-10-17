@@ -4,10 +4,14 @@ import { resolveSearchCommit } from "@hjmds/design-contracts/screen-patterns";
 import { validateReplyTarget,type ReplyTarget,type SearchResponse } from "@hjmds/design-contracts/communication";
 import { ChatMessage,MessageComposer,type ChatMessageProps,type MessageComposerProps } from "./screens.js";
 import { SearchScreen,type SearchRecentQueries } from "./screen-flows.js";
-import { Button } from "./actions.js";
+import { IconButton } from "./actions.js";
+import { glyph } from "@hjmds/design-contracts/foundations";
+import { resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
+import { DrawnSearch } from "./internal/drawn-glyphs.js";
+import { useHjmNativeTheme } from "./provider.js";
 import { Stack,Text } from "./primitives.js";
 import { useCompositionAction } from "./internal/use-composition-action.js";
-import { View,Keyboard,type TextInput } from "react-native";
+import { Keyboard,type TextInput } from "react-native";
 import { SearchField } from "./inputs.js";
 export type ReplyMessageProps = Omit<ChatMessageProps,"replyAction"|"timestampPresentation"> & Readonly<{
  messageId: string; onReply: (messageId:string)=>void; replyLabel: string; replyDisabled?: boolean;
@@ -57,12 +61,14 @@ export function ExpandableSearch<T>(props:ExpandableSearchProps<T>){
  const cancel=()=>{controller.current?.abort();generation.current++;setPending(false);Keyboard.dismiss();props.onExpandedChange(false);};
  const commit=(query:string)=>{const normalized=resolveSearchCommit(query);if(normalized===null)return;setCommitted(normalized);props.onSubmit?.(normalized);};
  const current=snapshot?.query===props.query?snapshot.response:null;
- return <View ><Stack gap="sm">{!props.expanded?<Button  disabled={props.disabled===true} onPress={()=>props.onExpandedChange(true)}>{props.labels.open}</Button>:<>
- <Button tone="ghost" onPress={cancel}>{props.labels.cancel}</Button>
- <SearchScreen title={props.labels.title} titleVisibility="hidden" queryLabel={props.labels.query} queryField={<SearchField ref={input} label={props.labels.query} clearLabel={props.labels.clear} busyLabel={props.labels.searching} value={props.query} onValueChange={props.onQueryChange} busy={pending} onSubmitEditing={()=>commit(props.query)} returnKeyType="search"/>} query={props.query} onQueryChange={props.onQueryChange} onSearch={search}
+ const glyphColor=resolveIconButtonPresentation("ghost",useHjmNativeTheme().palette,false).content;
+ // Opening and closing are tool actions, as on Web: a search icon at the area's end, and the search screen's own
+ // header-leading close exit instead of a full-width primary button and a text close button (2026-10-17 review).
+ return <Stack gap="sm">{!props.expanded?<IconButton label={props.labels.open} tone="ghost" disabled={props.disabled===true} layoutStyle={{alignSelf:"flex-end"}} onPress={()=>props.onExpandedChange(true)}><DrawnSearch size={glyph.sm} color={glyphColor} /></IconButton>:<>
+ <SearchScreen title={props.labels.title} titleVisibility="hidden" exit={{kind:"close",label:props.labels.cancel,onPress:cancel}} queryLabel={props.labels.query} queryField={<SearchField ref={input} label={props.labels.query} clearLabel={props.labels.clear} busyLabel={props.labels.searching} value={props.query} onValueChange={props.onQueryChange} busy={pending} onSubmitEditing={()=>commit(props.query)} returnKeyType="search"/>} query={props.query} onQueryChange={props.onQueryChange} onSearch={search}
  {...(props.debounceMs===undefined?{}:{debounceMs:props.debounceMs})} {...(props.recentQueries?{recentQueries:props.recentQueries}:{})}
  committedQuery={committed} onSubmit={commit} searching={pending} searchingLabel={props.labels.searching}
  suggestions={{items:current?.suggestions??[],commitLabel:props.labels.commit,countLabel:props.labels.suggestionCount}}>
  {current?props.renderResult(current.result):null}
- </SearchScreen>{failed?<Text accessibilityRole="alert" accessibilityLiveRegion="assertive" tone="danger" align="center">{props.labels.error}</Text>:null}</>}</Stack></View>;
+ </SearchScreen>{failed?<Text accessibilityRole="alert" accessibilityLiveRegion="assertive" tone="danger" align="center">{props.labels.error}</Text>:null}</>}</Stack>;
 }

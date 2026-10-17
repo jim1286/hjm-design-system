@@ -9,6 +9,8 @@ import { ContentTransition } from "@hjmds/react-native/content-transition";
 import { Card, DescriptionList } from "@hjmds/react-native/data-display";
 import { EmptyState } from "@hjmds/react-native/feedback";
 import { Stack, Text } from "@hjmds/react-native/primitives";
+import { Switch } from "@hjmds/react-native/inputs";
+import { StatusText } from "@hjmds/react-native/status-text";
 import { useHjmNativeTheme } from "@hjmds/react-native/provider";
 import { QRCode } from "@hjmds/react-native/qr-code";
 // Metro resolves the shared TypeScript source by extension; a literal .js path has no file.
@@ -72,12 +74,13 @@ function PixelSprite({ paused }: { paused: boolean }) {
 export function PixelEmptyState() {
   const [paused, setPaused] = useState(false);
   const [started, setStarted] = useState(false);
-  return <ScrollView contentContainerStyle={{ paddingVertical: spacing.lg }}><Container><Stack gap="md">
+  // flexGrow down the chain lets EmptyState take the free height and center in the body; long content still scrolls.
+  return <ScrollView contentContainerStyle={{ flexGrow: 1, paddingVertical: spacing.lg }}><Container layoutStyle={{ flexGrow: 1 }}><Stack gap="md" layoutStyle={{ flexGrow: 1 }}>
     <EmptyState illustration={<PixelSprite paused={paused} />} title={pixelCopy.title} description={pixelCopy.description}
       action={<Button onPress={() => setStarted(true)}>{pixelCopy.start}</Button>} />
-    {/* 5초 넘게 반복되는 움직임은 멈출 수 있어야 한다(WCAG 2.2.2). */}
-    <Button tone="ghost" onPress={() => setPaused(value => !value)}>{paused ? pixelCopy.resume : pixelCopy.pause}</Button>
-    {started ? <Text accessibilityLiveRegion="polite" tone="muted">{pixelCopy.started}</Text> : null}
+    {/* 5초 넘게 반복되는 움직임은 멈출 수 있어야 한다(WCAG 2.2.2). 켜고 끄는 제어라 Switch다. */}
+    <Switch label={pixelCopy.motion} checked={!paused} onCheckedChange={on => setPaused(!on)} />
+    {started ? <StatusText announceOnMount tone="muted">{pixelCopy.started}</StatusText> : null}
   </Stack></Container></ScrollView>;
 }
 

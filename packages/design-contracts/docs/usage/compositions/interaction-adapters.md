@@ -27,7 +27,7 @@ Web·Native stable, Native `screen-transition`은 experimental이다. 각 어댑
 | `CarouselMotion` | 카드 넘기기. 이전/다음 버튼, 반복·자동 재생 없음 | [Carousel](../components/carousel.md) |
 | `Celebration` | 제품이 확인한 성공 뒤 입자 효과(장식) | [Celebration](../components/celebration.md) |
 | `createHjmTransitionStack`·`SharedTransitionElement`·`SharedTransitionScreen`·`useSharedTransitionOptions` | Native 전용: 목록 카드 → 상세 화면 확대 전환 | [SharedTransitionScreen](../components/shared-transition-screen.md), [SharedTransitionElement](../components/shared-transition-element.md) |
-| `Button`·`Text` | 상태 변경 트리거, 결과 문구 | [Button](../components/button.md), [Text](../components/text.md) |
+| `Button`·`StatusText`·`Section`·`Surface` | 상태 변경 트리거, 결과 문구, 구획 제목, 카드 틀 | [Button](../components/button.md), [StatusText](../components/text.md), [Section](../components/section.md), [Surface](../components/surface.md) |
 
 ## 배치
 
@@ -59,14 +59,14 @@ Native(전체 화면 host)                    Web(문서 흐름)
 | 구획 제목 | [Section](../components/section.md) `title` | 각 어댑터 묶음 위 | 제목과 본문 사이 `spacing.xs` 8(`sectionRecipe`) |
 | 순서 목록 | `SortableCollection` | 본문, 스크롤 | Native 행 padding·간격 `spacing.xs` 8, 손잡이 줄 최소 높이 44. Web 손잡이 44×44, 행 위아래 `spacing.xs` 8 |
 | 행 작업 | `SwipeActions` + [ListRow](../components/list-row.md) | 목록 행 | 행 높이·여백은 `ListRow`(한 줄 56), 작업 버튼 높이 44·간격 `spacing.xs` 8 |
-| 결과 문구 | `Text`(Web `role="status"`, Native `accessibilityLiveRegion`) | 작업·축하 바로 아래 | 구획 안 간격은 Section이 정한다 |
+| 결과 문구 | `StatusText`(Web `role="status"`, Native live region + iOS 알림) | 작업·축하 바로 아래 | 구획 안 간격은 Section이 정한다 |
 | 내용 전환 | `ContentTransition`·`TextTransition` | 바뀌는 내용 자리 | 크기 변화 없음(전환은 투명도·짧은 이동만) |
-| 카드 | `CarouselMotion` | 본문 | Native는 `onLayout`으로 잰 폭 × 제품이 정한 높이, Web은 부모 폭 |
+| 카드 | `CarouselMotion` | 본문 | Native는 `onLayout`으로 잰 폭 × 제품이 정한 높이, Web은 부모 폭. 이전·다음은 슬라이드 아래 끝 정렬 아이콘 버튼(`spacing.sm` 간격) |
 | 축하 | `Celebration` | Native: 스크롤 **밖** 화면 오버레이(host의 형제), Web: 자체 canvas | 입자 32/64개, 1.6/2.4초(`celebrationRecipe`) |
 
 - Native `Celebration`을 스크롤 내용 안에 두면 화면 밖에서 시작해 보이지 않는다(기기 QA 확인). 항상 화면 host의 형제로 둔다.
 - `SwipeActions`는 Web에서 버튼을 바로 보이고, Native에서 스와이프·상시 "작업 보기" 버튼·동작 줄이기 모두 같은 버튼을 드러낸다. 목록 전체가 `openRowId` 하나를 공유한다.
-- 카드 높이·색·이미지는 제품 소유다. 카드 안 제목은 [Heading](../components/heading.md)으로 둔다.
+- 카드 높이·색·이미지는 제품 소유다. 예제 카드는 `Surface padding="lg"` 안 가운데 정렬 `Stack`의 [Heading](../components/heading.md) `level4`이고, Native 높이는 첫 카드의 실제 높이를 잰 값이다.
 
 근거: `packages/react-native/src/sortable.tsx`, `packages/react/src/sortable.tsx`, `packages/react-native/src/swipe-actions.tsx`, `src/interaction-adapters.ts`(`celebrationRecipe`), `src/foundations.ts`(`layout`)
 
@@ -94,6 +94,7 @@ Native(전체 화면 host)                    Web(문서 흐름)
 ```tsx
 // Web
 import { Container, Section, Stack, Text } from "@hjmds/react/layout";
+import { StatusText } from "@hjmds/react/status-text";
 import { ListRow } from "@hjmds/react/display";
 import { Heading } from "@hjmds/react/heading";
 import { SortableCollection } from "@hjmds/react/sortable";
@@ -108,14 +109,14 @@ const recordKey = { start: "record.start", ready: "record.ready" } as const;
   <Stack gap="xl">
     <Section title={t("fav.title")}>
       <SortableCollection items={items} label={t("fav.label")} labels={sortLabels} disabled={savingOrder}
-        renderItem={(item) => <strong>{item.label}</strong>} onCommit={(intent) => void commitOrder(intent.orderedIds)} />
+        renderItem={(item) => <Text emphasis="medium">{item.label}</Text>} onCommit={(intent) => void commitOrder(intent.orderedIds)} />
     </Section>
     <Section title={t("note.title")}>
       <SwipeActions label={t("note.actions")} actions={[{ id: "archive", label: t("note.archive") }]} busy={busy}
         onAction={runAction} onError={() => setNoteStatus("failed")}>
         <ListRow title={note.title} />
       </SwipeActions>
-      <Text as="p" role="status">{t(noteStatusKey[noteStatus])}</Text>
+      <StatusText>{t(noteStatusKey[noteStatus])}</StatusText>
     </Section>
     <ContentTransition stateKey={record}>
       <Heading level="level4" semanticLevel={3}>{t(recordKey[record])}</Heading>
@@ -131,6 +132,7 @@ import { ScrollView, View, useWindowDimensions } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Container, Section, Stack, Text } from "@hjmds/react-native/primitives";
+import { StatusText } from "@hjmds/react-native/status-text";
 import { ListRow } from "@hjmds/react-native/data-display";
 import { useHjmNativeTheme } from "@hjmds/react-native/provider";
 import { SortableCollection } from "@hjmds/react-native/sortable";
@@ -149,7 +151,7 @@ const gutter = resolveWindowClass(useWindowDimensions().width) === "compact" ? "
       <Stack gap="xl">
         <Section title={t("fav.title")}>
           <SortableCollection items={items} label={t("fav.label")} labels={sortLabels} disabled={savingOrder}
-            renderItem={() => null} onCommit={(intent) => void commitOrder(intent.orderedIds)} />
+            renderItem={(item) => <Text emphasis="medium">{item.label}</Text>} onCommit={(intent) => void commitOrder(intent.orderedIds)} />
         </Section>
         <Section title={t("note.title")}>
           <SwipeActions rowId={note.id} label={note.title} actionsLabel={t("note.showActions")}
@@ -157,7 +159,7 @@ const gutter = resolveWindowClass(useWindowDimensions().width) === "compact" ? "
             actions={[{ id: "archive", label: t("note.archive") }]} onAction={runAction} onError={() => setNoteStatus("failed")}>
             <ListRow title={note.title} />
           </SwipeActions>
-          <Text accessibilityLiveRegion="polite">{t(noteStatusKey[noteStatus])}</Text>
+          <StatusText>{t(noteStatusKey[noteStatus])}</StatusText>
         </Section>
         <View onLayout={(e) => setCardWidth(e.nativeEvent.layout.width)}>
           <CarouselMotion width={cardWidth} height={cardHeight} slides={slides} currentKey={slideKey} onCurrentKeyChange={setSlideKey}
@@ -185,7 +187,7 @@ const gutter = resolveWindowClass(useWindowDimensions().width) === "compact" ? "
 
 ## 함정
 
-- Native `SortableCollection`은 손잡이 줄에 `item.label`을 이미 그린다. `renderItem`은 `() => null`로 두거나 보조 정보만 그린다.
+- `SortableCollection` 손잡이는 항목 이름을 보조 기술에만 알린다. 보이는 이름은 두 플랫폼 모두 `renderItem`이 그린다.
 - Native 화면 전환은 현재 포트폴리오 Expo 앱(expo-router, React Navigation 미사용)에서 바로 쓸 수 없다. exports patch를 제품 패키지 관리자에 등록해야 한다.
 - 어댑터 peer 없이 subpath를 import하면 자동 대체 없이 기기 Metro 번들이 실패한다.
 - 예제는 Heading·Container·Stack·ListRow를 사용한다. 플랫폼별 드래그/스와이프 host는 유지하고 동일한 배치 역할을 재사용한다.

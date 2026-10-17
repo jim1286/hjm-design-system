@@ -233,34 +233,29 @@ export const SearchField = forwardRef(function SearchField({ clearLabel, busyLab
         }, search: true, searchSize: size, trailing: trailing, value: searchValue }));
 });
 function DefaultPasswordToggleIcon({ color, revealed, size, }) {
-    const eyeWidth = size * 1.08;
-    const eyeHeight = size * 0.68;
+    // Web's `visibility`/`visibilityOff` paths: an almond eye pointed at both sides, a ring pupil and a top-start to
+    // bottom-end slash. The eye is a square with two rounded opposite corners turned 45deg; the earlier full pill read
+    // as a capsule, not an eye (2026-10-17 review). Views keep react-native-svg optional for this core input.
     const strokeWidth = Math.max(1.5, size * 0.1);
-    return (_jsxs(View, { accessible: false, style: {
-            alignItems: "center",
-            height: size,
-            justifyContent: "center",
-            width: eyeWidth,
-        }, children: [_jsx(View, { style: {
-                    alignItems: "center",
+    const side = size * 0.62;
+    const pupil = size * 0.34;
+    // RTL swaps the rounded corners and the turn together (scenario matrix), which draws the same symmetric eye.
+    const rtl = useHjmNativeTheme().environment.direction === "rtl";
+    return (_jsxs(View, { accessible: false, style: { alignItems: "center", height: size, justifyContent: "center", width: size }, children: [_jsx(View, { style: {
                     borderColor: color,
-                    borderRadius: eyeHeight / 2,
+                    ...(rtl ? { borderTopRightRadius: side * 0.85, borderBottomLeftRadius: side * 0.85 } : { borderTopLeftRadius: side * 0.85, borderBottomRightRadius: side * 0.85 }),
                     borderWidth: strokeWidth,
-                    height: eyeHeight,
-                    justifyContent: "center",
-                    width: eyeWidth,
-                }, children: _jsx(View, { style: {
-                        backgroundColor: color,
-                        borderRadius: size * 0.15,
-                        height: size * 0.3,
-                        width: size * 0.3,
-                    } }) }), revealed ? (_jsx(View, { style: {
+                    height: side,
+                    position: "absolute",
+                    transform: [{ rotate: rtl ? "-45deg" : "45deg" }],
+                    width: side,
+                } }), _jsx(View, { style: { borderColor: color, borderRadius: pupil / 2, borderWidth: strokeWidth, height: pupil, width: pupil } }), revealed ? (_jsx(View, { style: {
                     backgroundColor: color,
                     borderRadius: strokeWidth,
                     height: strokeWidth,
                     position: "absolute",
-                    transform: [{ rotate: "-42deg" }],
-                    width: eyeWidth * 1.18,
+                    transform: [{ rotate: "45deg" }],
+                    width: size * 1.06,
                 } })) : null] }));
 }
 /** Password input with independent reveal state and native autofill translation. */
@@ -470,7 +465,7 @@ function ChoiceRow({ kind, label, description, checked, disabled, readOnly, requ
                 paddingVertical: plate.useSizePadding ? metrics.paddingVertical : 0,
             },
             layoutStyle,
-        ], children: [indicator === "default" ? (_jsx(SelectionMark, { kind: kind, checked: checked, size: size, invalid: invalid ?? false, children: renderIndicator?.(appearance) })) : null, resolvedLeading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", children: resolvedLeading })) : null, _jsxs(View, { style: [{ flex: 1, gap: spacing.xxs, minWidth: 0 }], children: [_jsx(Text, { fontRole: "ui", style: [
+        ], children: [indicator === "default" ? (_jsx(SelectionMark, { kind: kind, checked: checked, size: size, invalid: invalid ?? false, children: renderIndicator?.(appearance) })) : null, resolvedLeading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", children: resolvedLeading })) : null, _jsxs(View, { style: [{ flexGrow: 1, flexShrink: 1, gap: spacing.xxs, minWidth: 0 }], children: [_jsx(Text, { fontRole: "ui", style: [
                             {
                                 color: resolveColorReference(selectionControlRecipe.label.color, theme.palette),
                                 fontWeight: selected

@@ -16,6 +16,7 @@ afterEach(async () => { await act(async () => root.unmount()); host.remove(); })
 const render = (initialStatus: "failed" | "pending" = "failed") => act(async () => { root.render(<DateTimeSelectionPreview initialStatus={initialStatus} />); });
 const button = (label: string) => [...host.querySelectorAll<HTMLButtonElement>("button")].find(node => node.textContent === label)!;
 const click = (label: string) => act(async () => page.getByRole("button", { name: label, exact: true }).click());
+const toggle = (label: string) => act(async () => page.getByRole("checkbox", { name: label, exact: true }).click());
 
 it("preserves an intentionally moved focus when the pending response settles", async () => {
   await render("pending");
@@ -27,7 +28,7 @@ it("preserves an intentionally moved focus when the pending response settles", a
 });
 
 it("restores focus from the response action and preserves the selection through failure and retry", async () => {
-  await render(); await click(copy.fail); await click(copy.retry);
+  await render(); await toggle(copy.fail); await click(copy.retry);
   expect(button(copy.pending).getAttribute("aria-disabled")).toBe("true");
   expect(button(copy.reset).disabled).toBe(true);
   const response = button(copy.respond);

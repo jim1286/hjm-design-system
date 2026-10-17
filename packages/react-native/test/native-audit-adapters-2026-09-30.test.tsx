@@ -47,10 +47,12 @@ const rowOf = (node: ReactTestInstance) => {
 it("Sortable and SwipeActions rows mirror under HJM RTL", async () => {
   const labels = { instructions: "Move", dragStart: () => "Start", dragCancel: "Cancel", handle: (i: { label: string }) => i.label, previous: (i: { label: string }) => `${i.label} earlier`, next: (i: { label: string }) => `${i.label} later`, position: (i: { label: string }) => i.label };
   await render(<SortableCollection items={[{ id: "a", label: "Alpha" }, { id: "b", label: "Beta" }]} label="Items" labels={labels} renderItem={(i) => i.label} onCommit={() => {}} />, "rtl");
-  const buttons = tree!.root.findAll((n) => n.props.children === "Alpha earlier" && typeof n.type === "string");
+  // Move buttons are icon-only since component review C, so they are found by accessible name rather than text.
+  const buttons = tree!.root.findAll((n) => n.props.accessibilityLabel === "Alpha earlier" && typeof n.type === "string");
   expect(flat(rowOf(buttons[0]!).props.style).direction).toBe("rtl");
   const handle = tree!.root.find((n) => n.props.accessibilityRole === "adjustable" && n.props.accessibilityLabel === "Alpha");
-  expect(flat(handle.props.style)).toMatchObject({ direction: "rtl", flexDirection: "row" });
+  // The handle holds only the grip since 2026-10-17; the row around it carries the mirrored direction.
+  expect(flat(rowOf(handle).props.style)).toMatchObject({ direction: "rtl", flexDirection: "row" });
   act(() => tree!.unmount()); tree = undefined;
 
   await render(<SwipeActions rowId="row" label="Row" actionsLabel="Actions" openRowId={null} onOpenRowChange={() => {}}

@@ -5,6 +5,7 @@ import { binHistogram, resolveCohorts, resolveFunnel, resolveImportMapping, reso
 import { assertDistinctIds } from "@hjmds/design-contracts/collection-editing";
 import { resolveDatavizSeriesColor } from "@hjmds/design-contracts/dataviz";
 import { Button } from "./actions.js";
+import { SegmentedControl } from "./inputs.js";
 import { Select } from "./forms.js";
 import { Stack, Text } from "./primitives.js";
 import { DataTable } from "./data-table.js";
@@ -28,7 +29,7 @@ export function ConversionFunnel(props) {
     const stages = resolveFunnel(props.stages), [chosen, setChosen] = useState(null);
     const selected = Math.max(0, stages.findIndex(stage => stage.id === chosen));
     return _jsxs(Stack, { gap: "md", children: [_jsx(Text, { emphasis: "strong", children: props.label }), stages.length ? _jsxs(_Fragment, { children: [_jsx(BarChart, { categories: stages.map(stage => stage.label), series: [{ id: "count", label: props.label, values: stages.map(stage => stage.count) }], accessibilityLabel: props.label, formatValue: props.formatCount, missingLabel: props.missingLabel, orientation: "horizontal", focusIndex: selected, onFocusChange: index => { if (index !== null && stages[index])
-                            setChosen(stages[index].id); } }), _jsx(Stack, { axis: "inline", gap: "sm", wrap: true, children: stages.map(stage => _jsx(Button, { tone: "ghost", selected: stages[selected].id === stage.id, onPress: () => setChosen(stage.id), children: stage.label }, stage.id)) }), _jsx(Text, { accessibilityLiveRegion: "polite", children: props.detailLabel(stages[selected]) })] }) : _jsx(Text, { align: "center", children: props.missingLabel })] });
+                            setChosen(stages[index].id); } }), _jsx(SegmentedControl, { label: props.label, items: stages.map(stage => ({ value: stage.id, label: stage.label })), value: stages[selected].id, onValueChange: setChosen }), _jsx(Text, { accessibilityLiveRegion: "polite", children: props.detailLabel(stages[selected]) })] }) : _jsx(Text, { align: "center", children: props.missingLabel })] });
 }
 export function CohortRetentionTable(props) {
     const rows = resolveCohorts(props.cohorts, props.periods.length);
@@ -47,7 +48,7 @@ export function CorrelationMatrix(props) {
 }
 export function TargetSummary(props) {
     const summary = resolveTarget(props.actual, props.target), label = props.summaryLabel(summary);
-    return _jsxs(Stack, { gap: "sm", children: [_jsx(Statistic, { descriptor: { id: "target-summary", label: props.label, value: props.formatActual(summary.actual), hint: label } }), summary.progress === null ? null : _jsx(Progress, { label: props.label, value: summary.progress, max: 1, valueText: label })] });
+    return _jsxs(Stack, { gap: "sm", children: [_jsx(Statistic, { descriptor: { id: "target-summary", label: props.label, value: props.formatActual(summary.actual), hint: label } }), summary.progress === null ? null : _jsx(Progress, { accessibilityLabel: props.label, value: summary.progress, max: 1, valueText: label })] });
 }
 export function HistogramExplorer(props) {
     if (!props.binCounts.length || !props.binCounts.includes(props.binCount) || new Set(props.binCounts).size !== props.binCounts.length)
@@ -55,6 +56,6 @@ export function HistogramExplorer(props) {
     const variants = props.binCounts.map(count => binHistogram(props.samples, count, props.domain)), histogram = variants[props.binCounts.indexOf(props.binCount)];
     // Hold the y domain across rebinning. Normalizing each set to its tallest bar changes the meaning.
     const maximum = Math.max(...variants.map(variant => variant.maxCount));
-    return _jsxs(Stack, { gap: "md", children: [_jsx(Text, { emphasis: "strong", children: props.label }), _jsx(Stack, { axis: "inline", gap: "sm", wrap: true, children: props.binCounts.map(count => _jsx(Button, { tone: "secondary", selected: count === props.binCount, onPress: () => props.onBinCountChange(count), children: props.binCountLabel(count) }, count)) }), histogram.observed ? _jsx(BarChart, { categories: histogram.bins.map(props.binLabel), series: [{ id: "frequency", label: props.label, values: histogram.bins.map(bin => bin.count) }], accessibilityLabel: props.label, formatValue: props.formatCount, missingLabel: props.missingLabel, domain: [0, maximum], showValues: true }) : _jsx(Text, { align: "center", children: props.missingLabel }), _jsx(Text, { accessibilityLiveRegion: "polite", children: props.summaryLabel(histogram) })] });
+    return _jsxs(Stack, { gap: "md", children: [_jsx(Text, { emphasis: "strong", children: props.label }), _jsx(SegmentedControl, { label: props.label, items: props.binCounts.map(count => ({ value: String(count), label: props.binCountLabel(count) })), value: String(props.binCount), onValueChange: value => props.onBinCountChange(Number(value)) }), histogram.observed ? _jsx(BarChart, { categories: histogram.bins.map(props.binLabel), series: [{ id: "frequency", label: props.label, values: histogram.bins.map(bin => bin.count) }], accessibilityLabel: props.label, formatValue: props.formatCount, missingLabel: props.missingLabel, domain: [0, maximum], showValues: true }) : _jsx(Text, { align: "center", children: props.missingLabel }), _jsx(Text, { accessibilityLiveRegion: "polite", children: props.summaryLabel(histogram) })] });
 }
 //# sourceMappingURL=data-workflows.js.map

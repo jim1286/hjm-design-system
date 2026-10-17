@@ -1,6 +1,8 @@
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { AccessibilityInfo, AppState, Platform, Pressable } from 'react-native';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+// The preview's decorative face is drawn with react-native-svg, whose package loads the real react-native outside the alias.
+vi.mock('react-native-svg', async () => { const { View } = await import('react-native'); return { default: View, Circle: View, Path: View }; });
 import { HjmNativeProvider } from '@hjmds/react-native/provider';
 import { Button } from '@hjmds/react-native/actions';
 import { ActivityChip } from '@hjmds/react-native/activity-chip';

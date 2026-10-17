@@ -243,7 +243,7 @@ describe("web showcase coverage", () => {
       // Their real DOM layout/decoding proofs live in data-layouts.browser.test and data-layouts.test.
       const algorithmRecipes: Record<string, readonly unknown[]> = {
         Affix: ["top", 0, "sticky", "flow"],
-        Masonry: ["shortest-column", "source", 12],
+        Masonry: [160, "shortest-column", "source", 12],
         VirtualList: ["fixed-row-window", 3, "source"],
         QRCode: [2, 4, "#000000", "#ffffff", 12],
       };

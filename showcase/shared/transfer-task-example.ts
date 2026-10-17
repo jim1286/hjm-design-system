@@ -1,5 +1,7 @@
 import type { TransferContext } from "../../packages/design-contracts/src/transfer-task.js";
 export const transferLabels = { start: "예제 영상 전송", queued: "응답 대기", transferring: "실제 전송 중", cancel: "취소", cancelling: "취소 확인 중", cancelled: "전송이 취소됐어요", success: "전송을 완료했어요", error: "전송하지 못했어요. 다시 시도하세요." };
+/** One caption for both platforms; the asset source differs per platform but the user-facing meaning does not. */
+export const transferCaption = "예제 영상을 실제로 받아 오며 진행을 보여 줘요. 파일 저장·공유는 제품에서 연결해요.";
 export const formatTransfer = (p: { completed: number; total: number | null }) => `${p.completed.toLocaleString("ko-KR")} B / ${p.total === null ? "전체 크기 미정" : `${p.total.toLocaleString("ko-KR")} B`}`;
 /** Consume real response chunks. Disk save/delivery confirmation is a separate product operation. */
 export async function receiveTransfer(response: Pick<Response, "ok" | "body" | "headers">, { signal, report }: TransferContext) {

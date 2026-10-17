@@ -62,7 +62,7 @@ Native 화면에서 같은 일이 필요하면 이 구성을 옮기지 않는다
 | 바깥 틀 | HJM ScreenLayout의 본문 | 세 스토리 모두 바깥 폭·여백을 정하지 않는다. 페이지 본문은 [Container](../components/container.md)가 정한다. Affix만 가장 가까운 스크롤 조상(문서 또는 제품의 `overflow: auto` 영역)에 붙는다. Web 전용이라 안전 영역·화면 키보드 처리는 없다 | Container gutter 폭 600 미만 `compact` 16 · 이상 `regular` 20 |
 | 색 입력 줄 | `ColorPicker` 색 견본 + HEX | fieldset 첫 줄, 좁으면 줄바꿈(`flex-wrap`) | 입력 최소 높이 `colorPickerRecipe.minTargetSize` 44, 색 견본 폭 3rem, 줄 간격 0.75rem |
 | 불투명도·미리보기·프리셋 | `ColorPicker` 내부 | 색 입력 아래 순서대로 | 각 위 여백 0.75rem, 프리셋 사이 0.5rem, 프리셋 최소 높이 44 |
-| 선택값 | live 문구 | ColorPicker 바로 아래 | HJM 구성 레이아웃 소유 |
+| 선택값 | live 문구 | ColorPicker 바로 아래, 같은 Stack | `spacing.md` 16. 스토리는 `Container size="reading"`(최대 720) |
 | 워터마크 | `Watermark` | 감싼 본문 전체를 덮는 오버레이(`inset: 0`) | `tileWidth` 240 · `tileHeight` 160 · `rotate` -22 · `opacity` 0.12(기본값), 색 `--hjm-color-text-sub` |
 | 고정 행동 | `Affix` | 스크롤 조상 상단 + `offset` | `offset` 기본 0, 띄울 때는 spacing 토큰 값(스토리 `spacing.xs` 8). 스크롤 조상보다 높으면 고정하지 않고 흐름에 남는다 |
 | 저장 실패 | `Notice` danger | 저장 버튼 위(Watermark 본문 안, Affix 아래 본문 첫머리) | 버튼과 `spacing.md` 16 |
@@ -146,3 +146,7 @@ import { Stack, Text } from "@hjmds/react/layout";
 - Affix `offset`이 음수이거나 유한하지 않으면 `TypeError`를 던진다.
 - Watermark 범위(`tileWidth` ≥ 80, `tileHeight` ≥ 60, `rotate` -90~90, `opacity` 0~1, 줄 1~3개·각 120자 이하)를 벗어나면 `TypeError`다.
 - 현재 스토리의 저장은 메모리 상태만 확정하며 실제 파일·서버 저장이나 진행 중·실패 경로는 없다. 성공 뒤 `aria-disabled`로 중복 실행을 막아 키보드 초점과 sticky 안의 버튼 노드를 유지한다. 제품의 저장·실패 경로는 위 코드 골격처럼 제품이 공급한다.
+
+## 근거
+
+- 2026-10-17 구성 리뷰: ColorPicker가 데스크톱 폭 전체로 늘어나고 결과 문구가 Fragment로 붙어 간격이 정해져 있지 않았다. 고정 실행 영역의 스크롤 host는 HJM에 높이를 받는 공개 스크롤 영역이 없어 스토리 fixture로 남긴다.

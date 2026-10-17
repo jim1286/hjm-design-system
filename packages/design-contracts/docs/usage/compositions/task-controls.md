@@ -28,7 +28,7 @@
 ## 배치
 
 ```text
-분할 실행: [현재 방식 실행] [방식 메뉴]
+분할 실행: [현재 방식 실행] [⌄ 방식 메뉴 IconButton]
 계정 전환: 확인된 현재 계정 → [계정 메뉴]
 비밀번호: 기존 비밀번호 입력 → 규칙 충족 막대 → 규칙별 상태
 요금: 주기별 라디오 카드 → 선택한 실제 가격·혜택 → [계속]
@@ -38,7 +38,8 @@
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
 | 바깥 틀 | Stack/Card | 기존 본문·패널 안 | sm 또는 md |
-| 분할 행동 | Button/Menu | 같은 inline 행 | xs wrap |
+| 분할 행동 | Button + Menu(IconButton chevronDown 트리거, label=`menuLabel`) | 같은 inline 행, 메뉴는 실행 버튼 끝 | 인라인 간격 `spacing.sm` 12(button.md) |
+| 메뉴 트리거 | 분할 행: IconButton(secondary). 계정 전환: Button(secondary) | 분할 행 끝·계정 이름 아래 | 내용 폭. Web·Native 모두 전체 폭으로 늘이지 않음 |
 | 비밀번호 | PasswordField/Progress/Text | 위→아래 | sm |
 | 요금 선택 | RadioGroup | 카드 상단 | card presentation |
 | 실패 | Text | 구성 내부 중앙 | 임의 상단 여백 없음 |
@@ -93,3 +94,7 @@ import { AccountSwitcher } from "@hjmds/react-native/task-controls";
 - 옵션 선택으로 결제를 시작하지 않는다. 실제 결제·약관·상품 검증은 onContinue 뒤 제품 흐름 책임이다.
 - 다른 엔티티/세션으로 전환할 때 host key를 바꾸고 늦은 제품 API 응답도 제품 상태 계층에서 검증한다.
 - npm 1.21.0 API다. 기기·실제 로그인·결제 검증과 npm 게시를 구분한다.
+
+## 근거
+
+- 2026-10-17 구성 리뷰: 분할 실행의 방식 메뉴가 두 번째 텍스트 버튼("실행 방식 선택")으로 보여 별개 행동처럼 읽혔고 인라인 간격이 8이었다. 그래서 메뉴를 chevron IconButton 도구로 바꾸고 간격을 12로 맞췄다.

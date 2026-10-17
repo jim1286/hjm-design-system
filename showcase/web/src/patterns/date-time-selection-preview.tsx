@@ -2,12 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { HjmProvider } from "@hjmds/react/provider";
 import { hjmDesignPresets } from "@hjmds/design-contracts/design-profile";
 import { profileOptions, profileCopy } from "../../../shared/design-profile";
+import { PreviewToolButton, PreviewTools } from "./preview-tools";
 import { DatePicker } from "@hjmds/react/date-picker";
 import { Select } from "@hjmds/react/forms";
 import { Button } from "@hjmds/react/actions";
 import { Container, Section, Stack, Text } from "@hjmds/react/layout";
 import { Notice } from "@hjmds/react/feedback";
-import { Collapsible } from "@hjmds/react/collapsible";
 import { calendarExampleGrid, calendarExampleName, shiftCalendarMonth } from "../../../shared/calendar-example";
 import { hourOptions, minuteOptions } from "../../../shared/time-example";
 import { dateTimeCopy as copy, dateTimeSelectionReducer, dateTimeSelectionDisplay, dateTimeSelectionValue, initialDateTimeSelection, type DateTimeSelectionAction, type DateTimeSelectionProps } from "../../../shared/date-time-selection";
@@ -29,9 +29,7 @@ export function DateTimeSelectionPreview(props: DateTimeSelectionProps) {
     restoreResponseFocus.current = false;
     previousBusy.current = busy;
   }, [busy]);
-  const contents = <Container gutter="compact"><Section title={copy.title} description={copy.description}><Stack gap="md">
-    <Text>{profileCopy.choose}: {profile.label}</Text>
-    <Button tone="secondary" onClick={() => setThemeIndex(current => (current + 1) % profileOptions.length)}>{profileCopy.nextTheme}</Button>
+  const contents = <Container gutter="compact" size="reading"><Section title={copy.title} description={copy.description}><Stack gap="md">
     <DatePicker descriptor={{ grid: calendarExampleGrid(model.month), label: copy.date,
       displayValue: model.date, placeholder: copy.placeholder, selectedDate: model.date,
       onSelectionChange: next => send({ type: "date", value: next }), focusedMonth: model.month, onFocusedMonthChange: next => send({ type: "month", value: next }),
@@ -48,15 +46,17 @@ export function DateTimeSelectionPreview(props: DateTimeSelectionProps) {
     <Button tone="ghost" disabled={locked} onClick={() => send({ type: "reset" })}>{copy.reset}</Button>
     {model.status === "failed" ? <Notice tone="danger" title={copy.failed} /> : null}
     {model.status === "saved" ? <Notice tone="success" title={copy.saved} description={dateTimeSelectionDisplay(model.saved!)} /> : null}
-    <Collapsible trigger={copy.tools} defaultOpen>
-      <Stack gap="xs"><Button tone="secondary" disabled={!busy} onClick={event => {
+    {/* Theme cycling and the deterministic service response are demo-only; they stay after the composition (SELECTION.md 조립 규칙). */}
+    <PreviewTools>
+      <PreviewToolButton onClick={() => setThemeIndex(current => (current + 1) % profileOptions.length)}>{profileCopy.nextTheme}</PreviewToolButton>
+      <PreviewToolButton disabled={!busy} onClick={event => {
         // Safari pointer activation need not focus the clicked button.
-        restoreResponseFocus.current = document.activeElement === event.currentTarget || event.detail > 0;
+        restoreResponseFocus.current = !!event && (document.activeElement === event.currentTarget || event.detail > 0);
         send({ type: "respond" });
-      }}>{copy.respond}</Button>
-        <Button tone="ghost" disabled={locked} onClick={() => send({ type: "armFailure" })}>{model.failNext ? copy.armed : copy.fail}</Button>
-      </Stack>
-    </Collapsible>
+      }}>{copy.respond}</PreviewToolButton>
+      <PreviewToolButton selected={model.failNext} disabled={locked} onClick={() => send({ type: "toggleFailure" })}>{copy.fail}</PreviewToolButton>
+    </PreviewTools>
   </Stack></Section></Container>;
-  return <HjmProvider designProfile={hjmDesignPresets[profile.id]}>{contents}</HjmProvider>;
+  // The selected profile paints the whole story canvas (edge-to-edge story); block padding matches the Native host's spacing.lg.
+  return <HjmProvider designProfile={hjmDesignPresets[profile.id]} style={{ minBlockSize: "100vh", paddingBlock: "var(--hjm-space-lg)" }}>{contents}</HjmProvider>;
 }

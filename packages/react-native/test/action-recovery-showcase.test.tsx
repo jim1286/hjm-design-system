@@ -1,14 +1,16 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, expect, it } from "vitest";
 import { HjmNativeProvider } from "@hjmds/react-native/provider";
-import { Button } from "@hjmds/react-native/actions";
+import { Button, IconButton } from "@hjmds/react-native/actions";
 import { TextField } from "@hjmds/react-native/inputs";
 import { SaveRecoveryPreview, OptimisticRecoveryPreview, UndoRecoveryPreview } from "../../../showcase/native/src/action-recovery-previews.js";
+import { Chip } from "@hjmds/react-native/inputs";
 let tree: ReactTestRenderer;
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT=true;
 afterEach(()=>act(()=>tree?.unmount()));
 const render=(kind:"save"|"optimistic"|"undo")=>act(()=>{tree=create(<HjmNativeProvider reducedMotion>{kind==="save"?<SaveRecoveryPreview/>:kind==="optimistic"?<OptimisticRecoveryPreview/>:<UndoRecoveryPreview/>}</HjmNativeProvider>);});
-const button=(label:string)=>tree.root.findAllByType(Button).find(node=>node.props.children===label)!;
+// Demo controls live in PreviewTools now: one-shot tools stay Buttons, toggles are Chips and tool actions are IconButtons.
+const button=(label:string)=>tree.root.findAllByType(Button).find(node=>node.props.children===label)??tree.root.findAllByType(Chip).find(node=>node.props.label===label)??tree.root.findAllByType(IconButton).find(node=>node.props.label===label)!;
 const press=(label:string)=>act(()=>button(label).props.onPress());
 const fill=(value:string)=>act(()=>tree.root.findByType(TextField).props.onValueChange(value));
 const settle=()=>act(async()=>{await new Promise(resolve=>setTimeout(resolve,400));});

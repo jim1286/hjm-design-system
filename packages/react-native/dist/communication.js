@@ -5,10 +5,14 @@ import { resolveSearchCommit } from "@hjmds/design-contracts/screen-patterns";
 import { validateReplyTarget } from "@hjmds/design-contracts/communication";
 import { ChatMessage, MessageComposer } from "./screens.js";
 import { SearchScreen } from "./screen-flows.js";
-import { Button } from "./actions.js";
+import { IconButton } from "./actions.js";
+import { glyph } from "@hjmds/design-contracts/foundations";
+import { resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
+import { DrawnSearch } from "./internal/drawn-glyphs.js";
+import { useHjmNativeTheme } from "./provider.js";
 import { Stack, Text } from "./primitives.js";
 import { useCompositionAction } from "./internal/use-composition-action.js";
-import { View, Keyboard } from "react-native";
+import { Keyboard } from "react-native";
 import { SearchField } from "./inputs.js";
 export function ReplyMessage({ messageId, onReply, replyLabel, replyDisabled = false, swipeAction = "reply", ...message }) {
     if (!messageId.trim())
@@ -63,6 +67,9 @@ export function ExpandableSearch(props) {
     const commit = (query) => { const normalized = resolveSearchCommit(query); if (normalized === null)
         return; setCommitted(normalized); props.onSubmit?.(normalized); };
     const current = snapshot?.query === props.query ? snapshot.response : null;
-    return _jsx(View, { children: _jsx(Stack, { gap: "sm", children: !props.expanded ? _jsx(Button, { disabled: props.disabled === true, onPress: () => props.onExpandedChange(true), children: props.labels.open }) : _jsxs(_Fragment, { children: [_jsx(Button, { tone: "ghost", onPress: cancel, children: props.labels.cancel }), _jsx(SearchScreen, { title: props.labels.title, titleVisibility: "hidden", queryLabel: props.labels.query, queryField: _jsx(SearchField, { ref: input, label: props.labels.query, clearLabel: props.labels.clear, busyLabel: props.labels.searching, value: props.query, onValueChange: props.onQueryChange, busy: pending, onSubmitEditing: () => commit(props.query), returnKeyType: "search" }), query: props.query, onQueryChange: props.onQueryChange, onSearch: search, ...(props.debounceMs === undefined ? {} : { debounceMs: props.debounceMs }), ...(props.recentQueries ? { recentQueries: props.recentQueries } : {}), committedQuery: committed, onSubmit: commit, searching: pending, searchingLabel: props.labels.searching, suggestions: { items: current?.suggestions ?? [], commitLabel: props.labels.commit, countLabel: props.labels.suggestionCount }, children: current ? props.renderResult(current.result) : null }), failed ? _jsx(Text, { accessibilityRole: "alert", accessibilityLiveRegion: "assertive", tone: "danger", align: "center", children: props.labels.error }) : null] }) }) });
+    const glyphColor = resolveIconButtonPresentation("ghost", useHjmNativeTheme().palette, false).content;
+    // Opening and closing are tool actions, as on Web: a search icon at the area's end, and the search screen's own
+    // header-leading close exit instead of a full-width primary button and a text close button (2026-10-17 review).
+    return _jsx(Stack, { gap: "sm", children: !props.expanded ? _jsx(IconButton, { label: props.labels.open, tone: "ghost", disabled: props.disabled === true, layoutStyle: { alignSelf: "flex-end" }, onPress: () => props.onExpandedChange(true), children: _jsx(DrawnSearch, { size: glyph.sm, color: glyphColor }) }) : _jsxs(_Fragment, { children: [_jsx(SearchScreen, { title: props.labels.title, titleVisibility: "hidden", exit: { kind: "close", label: props.labels.cancel, onPress: cancel }, queryLabel: props.labels.query, queryField: _jsx(SearchField, { ref: input, label: props.labels.query, clearLabel: props.labels.clear, busyLabel: props.labels.searching, value: props.query, onValueChange: props.onQueryChange, busy: pending, onSubmitEditing: () => commit(props.query), returnKeyType: "search" }), query: props.query, onQueryChange: props.onQueryChange, onSearch: search, ...(props.debounceMs === undefined ? {} : { debounceMs: props.debounceMs }), ...(props.recentQueries ? { recentQueries: props.recentQueries } : {}), committedQuery: committed, onSubmit: commit, searching: pending, searchingLabel: props.labels.searching, suggestions: { items: current?.suggestions ?? [], commitLabel: props.labels.commit, countLabel: props.labels.suggestionCount }, children: current ? props.renderResult(current.result) : null }), failed ? _jsx(Text, { accessibilityRole: "alert", accessibilityLiveRegion: "assertive", tone: "danger", align: "center", children: props.labels.error }) : null] }) });
 }
 //# sourceMappingURL=communication.js.map

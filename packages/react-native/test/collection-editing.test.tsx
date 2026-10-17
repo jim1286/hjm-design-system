@@ -2,13 +2,14 @@ import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { TextInput } from "react-native";
 import { afterEach, expect, it, vi } from "vitest";
 import { InlineEdit, RepeatableFieldGroup, SelectionActionBar, FilterRecovery, TableColumnSettings } from "../src/collection-editing.js";
-import { Button } from "../src/actions.js";
+import { Button, IconButton } from "../src/actions.js";
 import { TextField, Checkbox } from "../src/inputs.js";
 import { HjmNativeProvider } from "../src/provider.js";
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 let tree: ReactTestRenderer | undefined;
 afterEach(() => { if (tree) act(() => tree!.unmount()); tree = undefined; });
-const button = (label: string) => tree!.root.findAllByType(Button).find(node => node.props.children === label)!;
+// Row tools (edit, remove) are IconButtons named by their label.
+const button = (label: string) => tree!.root.findAll(node => (node.type === Button && node.props.children === label) || (node.type === IconButton && node.props.label === label))[0]!;
 const copy = { label: "제목", editLabel: "수정", saveLabel: "저장", cancelLabel: "취소", errorLabel: "저장 실패" };
 
 it("keeps a failed native draft and blocks duplicate save events", async () => {
@@ -58,7 +59,7 @@ it("uses real positive recovery counts and respects locked column boundaries", a
   expect(button("기간 0건")).toBeUndefined();
   expect(apply).not.toHaveBeenCalled();
   await act(async () => button("주제 2건").props.onPress()); expect(apply).toHaveBeenCalledWith("topic");
-  expect(button("점수 앞으로").props.disabled).toBe(true);
+  expect(tree!.root.findAllByType(IconButton).find(node => node.props.label === "점수 앞으로")!.props.disabled).toBe(true);
   act(() => tree!.root.findAllByType(Checkbox)[0]!.props.onCheckedChange(false));
   expect(change).not.toHaveBeenCalled();
 });

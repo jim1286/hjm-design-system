@@ -12,4 +12,15 @@ export function resolveMasonryLayout(heights: readonly number[], width: number, 
   });
   return { items, height: heights.length ? Math.max(...ends) - gap : 0, itemWidth };
 }
-export const masonryRecipe = { layout: "shortest-column", readingOrder: "source", maxColumns: 12 } as const;
+/**
+ * `minItemWidth` derives the default column count from the measured width. A fixed default of two left phone layouts
+ * fine but stretched each card to ~580px on a 1200px desktop slot (2026-10-17 composition review). 160 keeps two
+ * columns on a 375pt phone after its 16pt gutters and adds columns as the slot widens.
+ */
+export const masonryRecipe = { layout: "shortest-column", readingOrder: "source", maxColumns: 12, minItemWidth: 160 } as const;
+
+/** Default column count for a measured width: as many `minItemWidth` columns as fit, clamped to 1...maxColumns. */
+export function resolveMasonryColumns(width: number, gap = 12, minItemWidth: number = masonryRecipe.minItemWidth) {
+  if (!Number.isFinite(width) || width <= 0 || !Number.isFinite(gap) || gap < 0 || !Number.isFinite(minItemWidth) || minItemWidth <= 0) throw new TypeError("Invalid Masonry geometry");
+  return Math.max(1, Math.min(masonryRecipe.maxColumns, Math.floor((width + gap) / (minItemWidth + gap))));
+}

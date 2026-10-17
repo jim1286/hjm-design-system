@@ -49,7 +49,7 @@ export function SaveRecoveryPreview() {
 }
 export function OptimisticRecoveryPreview() {
  const { session, state, request, failureArmed, toggleFailure, busy } = useDemoAction(false);
- return <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingVertical: spacing.lg }}><Container gutter="compact"><Stack gap="md"><Heading level="level3">즉시 반영하고 실패하면 복구</Heading>
+ return <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingVertical: spacing.lg }}><Container gutter="compact" size="reading"><Stack gap="md"><Heading level="level3">즉시 반영하고 실패하면 복구</Heading>
   <Stack gap="xs"><Button selected={state.value} disabled={busy} onPress={() => { const next = !state.value; void session.run(() => request(next), { optimisticValue: next, retryable: true }); }}>{state.value ? "북마크 해제" : "북마크 추가"}</Button>
   {state.status === "error" && <Button tone="secondary" onPress={() => { void session.retry(); }}>북마크 다시 반영</Button>}</Stack>
   <StatusText>{bookmarkStatusCopy[state.status]}</StatusText>
@@ -60,7 +60,7 @@ export function OptimisticRecoveryPreview() {
 export function UndoRecoveryPreview() {
  const { session, state, request, failureArmed, toggleFailure, busy } = useDemoAction(false);
  const statusKey = state.status === "error" || state.status === "pending" ? state.status : state.value ? "archived" : "listed";
- return <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingVertical: spacing.lg }}><Container gutter="compact"><Stack gap="md"><Heading level="level3">보관 후 실행 취소</Heading>
+ return <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingVertical: spacing.lg }}><Container gutter="compact" size="reading"><Stack gap="md"><Heading level="level3">보관 후 실행 취소</Heading>
   <Text>{state.value ? "보관함: 리서치 메모" : "목록: 리서치 메모"}</Text>
   <Stack gap="xs"><Button loading={busy} onPress={() => { const next = !state.value; void session.run(() => request(next), { retryable: true }); }}>{state.value ? "실행 취소" : "보관"}</Button>
   {state.status === "error" && <Button tone="secondary" onPress={() => { void session.retry(); }}>실패한 작업 다시 시도</Button>}</Stack>

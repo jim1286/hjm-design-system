@@ -18,7 +18,8 @@ it("preserves row identity, drafts and focused input through queued additions, r
   await act(async () => { button('기록 추가').click(); button('3개 함께 추가').click(); });
   expect(fields()).toHaveLength(5); expect(fields().at(-1)).toBe(original); expect(original.value).toBe('계속 쓰는 메모'); expect(document.activeElement).toBe(original);
   await action('순서 뒤집기'); expect(fields()[0]).toBe(original); expect(document.activeElement).toBe(original);
-  await action('움직임 멈추기'); await action('기록 추가'); await action('움직임 다시 켜기');
+  const motion = () => act(async () => page.getByRole('checkbox', { name: '움직임 멈추기', exact: true }).click());
+  await motion(); await action('기록 추가'); await motion();
   expect(fields()).toHaveLength(6); expect(fields()[1]).toBe(original); expect(original.value).toBe('계속 쓰는 메모');
   expect(new Set(fields().map(node => node.id)).size).toBe(6);
 });
