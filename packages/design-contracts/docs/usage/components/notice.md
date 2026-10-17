@@ -88,7 +88,7 @@ import { Notice } from "@hjmds/react-native/feedback";
 | --- | --- | --- |
 | 크기 | 본문 폭을 꽉 채운다. 아이콘 20(`glyph.sm`), 테두리 1(`stroke.default`), radius `radius.md` 12 | `noticeRecipe` |
 | 간격 | 안쪽 `spacing.md` 16, 아이콘·문구·행동 사이 `spacing.sm` 12, 제목·설명 사이 `spacing.xxs` 4. 이웃 블록과는 `layout.contentGap` 16 | `noticeRecipe`, `.hjm-notice*` |
-| 순서·정렬 | 아이콘 — 제목·설명 — 행동. 행동은 하나, `Button` `size="small"` `tone="secondary"`(또는 `ghost`), `primary` 금지. Web은 행동이 같은 줄 끝, Native는 행동이 문구 줄 **아래** | `.hjm-notice__action`, `react-native/src/feedback.tsx` |
+| 순서·정렬 | 아이콘 — 제목·설명 — 행동. 행동은 하나, `Button` `size="small"` `tone="secondary"`(또는 `ghost`), `primary` 금지. Web은 행동이 같은 줄 끝, Native는 행동이 문구 줄 **아래**. 아이콘·제목 첫 줄·(Web) 행동은 한 첫 줄 기준에 가운데를 맞춘다. 기준 높이는 행동이 없으면 제목 줄 높이(`1lh`), Web 행동이 있으면 small 버튼 높이 36(`control.buttonHeight.small`)이고 추가 줄은 아래로 늘어난다. Native 아이콘 칸은 제목 첫 줄 높이(토큰×글자 배율) | `.hjm-notice`·`.hjm-notice__icon`·`.hjm-notice__action`, `react-native/src/feedback.tsx` |
 | 고정·스크롤 | 본문 흐름 안. 먼저 읽어야 하는 경고·입력 오류는 영향을 받는 내용 바로 위(화면 상태는 제목 아래, 폼 검증은 제출 버튼 위). 제출 후 성공·실패 결과는 구성 지침이 지정한 행동 인접 위치에 둔다. 떠 있거나 고정되지 않고 함께 스크롤되며 여러 개 쌓지 않는다 | — |
 | 좁은 폭·큰 글자 | Web은 문구 칸이 60% 아래로 줄면 행동이 다음 줄로 감긴다. 제목·설명은 줄바꿈된다 | `.hjm-notice__content`(`flex: 1 1 60%`) |
 
@@ -113,3 +113,7 @@ import { Notice } from "@hjmds/react-native/feedback";
 - Web은 반대로 항상 발표되므로, 화면 진입 때부터 늘 있는 안내를 Notice로 두면 매번 읽힌다. 그런 조건 안내는 BottomInfo다.
 
 - 2026-10-06 독립 재구현에서 입력 전 경고 위치와 시간 선택의 확정 후 결과 위치가 충돌했다. 시간 선택의 결과는 행동 아래, 입력 시트의 저장 실패는 본문 입력 위로 각 구성에 명시한다. Notice 자체가 결과 위치를 강제하지 않는다.
+
+## 근거
+
+- 첫 줄 기준: 2026-10-17 정렬 실측(Web 402·1280, 검색 오류 Notice). 행 끝 행동 버튼 가운데 195, 제목 첫 줄 가운데 187로 8px 어긋났고 Web 아이콘 칸에는 규칙이 없었다. Toast의 첫 줄 기준(c053d956)과 같은 방식으로 맞춘 뒤 아이콘·제목 첫 줄·행동 모두 195로 측정됐다.

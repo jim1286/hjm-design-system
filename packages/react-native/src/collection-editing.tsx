@@ -49,7 +49,7 @@ function InlineEditBody(props: InlineEditProps) {
         beside a text "제목 수정" button lost the label (2026-10-17 review). */}
     {!editing ? <Stack axis="inline" gap="sm" align="center">
       <Stack gap="xxs" layoutStyle={{ flex: 1, minWidth: 0 }}><Text variant="caption" tone="muted">{props.label}</Text><Text emphasis="strong">{props.value}</Text></Stack>
-      <IconButton ref={trigger} label={props.editLabel} tone="ghost" disabled={props.disabled ?? false} onPress={() => { setDraft(props.value); action.session.reset(null); setEditing(true); }}><DrawnPencil size={glyph.sm} color={toolColor(props.disabled === true)} /></IconButton>
+      <IconButton ref={trigger} label={props.editLabel} tone="ghost" edge="end" disabled={props.disabled ?? false} onPress={() => { setDraft(props.value); action.session.reset(null); setEditing(true); }}><DrawnPencil size={glyph.sm} color={toolColor(props.disabled === true)} /></IconButton>
     </Stack>
       : <Stack gap={collectionEditingRecipe.actionGap}>
         <TextField ref={input} label={props.label} value={draft} disabled={props.disabled === true || action.pending}
@@ -84,7 +84,7 @@ export function RepeatableFieldGroup({ renderField, addLabel, removeLabel, minFi
         full-width ghost text button under the field (2026-10-17 review). End-aligned so it sits beside the input. */}
     <FieldGroup {...props} renderField={binding => <Stack axis="inline" gap="xs" align="end">
       <View style={{ flex: 1, minWidth: 0 }}>{renderField({ ...binding, focusRef: target => { if (target) targets.current.set(binding.id, target); else targets.current.delete(binding.id); } })}</View>
-      <IconButton label={removeLabel(binding.id)} tone="ghost" disabled={binding.controlProps.disabled || fields.length <= minFields} onPress={binding.guardChange(() => {
+      <IconButton label={removeLabel(binding.id)} tone="ghost" edge="end" disabled={binding.controlProps.disabled || fields.length <= minFields} onPress={binding.guardChange(() => {
         const current = policy.current;
         if (!live.current || current.disabled || current.fields.length <= current.minFields) return;
         focus.current = focusAfterRemoval(current.fields.map(field => field.id), binding.id, current.fields.filter(field => field.disabled).map(field => field.id)) ?? null;
@@ -154,12 +154,13 @@ export function TableColumnSettings(props: TableColumnSettingsProps) {
     const next = changeColumnSettings(props.columns, id, kind); if (next !== props.columns) props.onColumnsChange(next);
   };
   const chevronColor = resolveIconButtonPresentation("ghost", useHjmNativeTheme().palette, false).content;
-  // One row per column: visibility checkbox, then reorder as icon tools (labels stay the accessible names), as on Web.
+  // One row per column: visibility checkbox, then reorder as icon tools (labels stay the accessible names); the last
+  // tool takes edge="end" so its glyph slot ends on the group's edge like the checkbox starts on it (2026-10-17 audit), as on Web.
   return <Stack gap="sm"><Text emphasis="strong">{props.label}</Text>
     {props.columns.map(column => <Stack key={column.id} axis="inline" gap="xs" align="center">
       <Checkbox label={column.label} checked={column.visible} layoutStyle={{ flex: 1, minWidth: 0 }} disabled={props.disabled === true || column.locked === true || (column.visible && props.columns.filter(item => item.visible).length === 1)} onCheckedChange={() => change(column.id, "toggle")} />
       <IconButton label={props.earlierLabel(column)} tone="ghost" disabled={props.disabled === true || changeColumnSettings(props.columns, column.id, "earlier") === props.columns} onPress={() => change(column.id, "earlier")}><DrawnChevron direction="up" size={glyph.sm} color={chevronColor} /></IconButton>
-      <IconButton label={props.laterLabel(column)} tone="ghost" disabled={props.disabled === true || changeColumnSettings(props.columns, column.id, "later") === props.columns} onPress={() => change(column.id, "later")}><DrawnChevron direction="down" size={glyph.sm} color={chevronColor} /></IconButton>
+      <IconButton label={props.laterLabel(column)} tone="ghost" edge="end" disabled={props.disabled === true || changeColumnSettings(props.columns, column.id, "later") === props.columns} onPress={() => change(column.id, "later")}><DrawnChevron direction="down" size={glyph.sm} color={chevronColor} /></IconButton>
     </Stack>)}
   </Stack>;
 }

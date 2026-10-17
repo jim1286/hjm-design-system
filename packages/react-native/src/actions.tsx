@@ -10,13 +10,16 @@ import {
   bottomCtaRecipe,
   linkRecipe,
   iconButtonRecipe,
+  resolveIconButtonEdgeOverhang,
   resolveIconButtonPresentation,
+  type IconButtonEdge,
   type IconButtonTone as ContractIconButtonTone,
   type IconButtonShape,
   type IconButtonSize,
 } from "@hjmds/design-contracts/recipes";
 import {
   type ButtonAlign as ContractButtonAlign,
+  type ButtonEdge as ContractButtonEdge,
   type ButtonShape as ContractButtonShape,
   type ButtonSize as ContractButtonSize,
   type ButtonTone as ContractButtonTone,
@@ -42,7 +45,9 @@ export type ButtonTone = ContractButtonTone;
 export type ButtonSize = ContractButtonSize;
 export type ButtonShape = ContractButtonShape;
 export type ButtonAlign = ContractButtonAlign;
+export type ButtonEdge = ContractButtonEdge;
 export type {
+IconButtonEdge,
 IconButtonShape,
 IconButtonSize
 } from "@hjmds/design-contracts/recipes";
@@ -72,6 +77,11 @@ export type ButtonProps = Omit<
     loadingLabel?: ReactNode;
     leading?: ReactNode;
     trailing?: ReactNode;
+    /**
+     * Container edge(s) this button sits on (start/end follow the reading direction). A ghost button overhangs that
+     * edge by its inline padding so the label or trailing glyph lines up with the inset (`resolveButtonEdgeOverhang`).
+     */
+    edge?: ButtonEdge;
     fullWidth?: boolean;
     hitSlop?: PressableProps["hitSlop"];
     accessibilityState?: PressableProps["accessibilityState"];
@@ -113,6 +123,12 @@ export type IconButtonProps = Omit<
     selected?: boolean;
     disabled?: boolean;
     loading?: boolean;
+    /**
+     * Container edge(s) this button sits on (start/end follow the reading direction). A ghost button keeps its touch
+     * target but overhangs the edge by (diameter − glyph slot) / 2 so the glyph slot lines up with the container inset
+     * (`resolveIconButtonEdgeOverhang`, 2026-10-17 measured audit). Framed tones align their frame and do not move.
+     */
+    edge?: IconButtonEdge;
     /** Keep the busy control discoverable by default; opt in only for legacy disabled semantics. */
     disableWhileLoading?: boolean;
     hitSlop?: PressableProps["hitSlop"];
@@ -131,6 +147,7 @@ export const IconButton = forwardRef<NativeView, IconButtonProps>(function IconB
   selected,
   disabled = false,
   loading = false,
+  edge,
   disableWhileLoading = false,
   hitSlop,
   layoutStyle,
@@ -162,6 +179,8 @@ export const IconButton = forwardRef<NativeView, IconButtonProps>(function IconB
     theme.environment.minimumVisualTarget,
   );
   const glyphSize = glyph[sizeContract.glyph];
+  // Edge alignment from the same contract helper Web reads, on the visible diameter actually drawn.
+  const edgeOverhang = edge === undefined ? 0 : resolveIconButtonEdgeOverhang(resolvedTone, size, visibleDiameter);
   const unavailable = disabled || (loading && disableWhileLoading);
   return (
     <Pressable
@@ -198,6 +217,8 @@ export const IconButton = forwardRef<NativeView, IconButtonProps>(function IconB
               ? iconButtonRecipe.states.pressedOpacity
               : 1,
           width: visibleDiameter,
+          ...(edgeOverhang > 0 && edge !== "end" ? { marginStart: -edgeOverhang } : {}),
+          ...(edgeOverhang > 0 && edge !== "start" ? { marginEnd: -edgeOverhang } : {}),
         },
         layoutStyle,
       ]}

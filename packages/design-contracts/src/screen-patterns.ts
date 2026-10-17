@@ -1,4 +1,5 @@
 import { glyph, layout, radius, spacing } from "./foundations.js";
+import { avatarRecipe } from "./component-recipes.js";
 import type { MenuItemDescriptor } from "./behaviors.js";
 
 /** Initial load replaces the body; refresh/save errors belong beside retained content. */
@@ -121,7 +122,9 @@ export function canSubmitMessage({ value, disabled = false, pending = false, att
  * avatar ~34, avatar gap 8). Brand colors and artwork are not copied; surfaces stay semantic tokens.
  */
 export const chatMessageRecipe = {
-  avatarSize: 36,
+  // Must be a size the Avatar renders on both platforms: 36 was no Web Avatar step (32/40/48/64), so Web drew a 32
+  // avatar in a 36 slot while Native drew 36 (2026-10-17 measured audit). `small` is the step nearest the ~34 reference.
+  avatarSize: avatarRecipe.sizes.small,
   avatarGap: spacing.xs,
   authorGap: spacing.xxs,
   metaGap: spacing.xxs,
@@ -240,6 +243,14 @@ export const commentThreadRecipe = {
   mediaRadius: radius.md,
   // The trailing vertical-dots menu glyph; the button keeps the shared 44pt IconButton target.
   menuGlyphSize: glyph.sm,
+  /**
+   * Trailing actions (like, product actions, more) centre their 44 targets on the identity's first line instead of
+   * top-aligning the target box (2026-10-17 measured audit: avatar 168 / author line 162 / glyphs 174). The cluster
+   * shifts by (first-line height − visible target) / 2 — negative while the line is shorter than the target — and the
+   * last control takes IconButton `edge="end"` so its glyph slot ends on the row inset like the avatar starts on it.
+   * The first line is the author caption, or the body line when the author runs inline with `bodyText`.
+   */
+  actionAnchor: { authorTextVariant: "caption", inlineTextVariant: "body" },
 } as const;
 
 /**

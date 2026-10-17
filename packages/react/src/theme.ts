@@ -20,9 +20,11 @@ import {
   visibleControlHeight,
   type DesignSystemProviderValue,
 } from "@hjmds/design-contracts/components/design-system-provider";
-import { buttonRecipe, fieldRecipe } from "@hjmds/design-contracts/recipes/base";
+import { buttonRecipe, fieldRecipe, resolveButtonEdgeOverhang } from "@hjmds/design-contracts/recipes/base";
 import {
   bottomNavigationRecipe,
+  iconButtonRecipe,
+  resolveIconButtonEdgeOverhang,
   comboboxRecipe,
   dialogRecipe,
   listRowRecipe,
@@ -257,6 +259,15 @@ export function createHjmThemeStyle(
     // that every stylesheet consumer of a control height honours it at once.
     style[`--hjm-control-button-${kebab(name)}`] =
       `${visibleControlHeight(value, environment.minimumVisualTarget)}px`;
+  }
+  // Edge alignment (2026-10-17 measured audit): how far a ghost IconButton / Button with `edge` overhangs the
+  // container edge, from the same contract helpers Native reads (glyph slot or label on the inset, hit area kept).
+  for (const size of Object.keys(iconButtonRecipe.sizes) as (keyof typeof iconButtonRecipe.sizes)[]) {
+    const visible = visibleControlHeight(iconButtonRecipe.sizes[size].diameter, environment.minimumVisualTarget);
+    style[`--hjm-icon-button-edge-${size}`] = `${resolveIconButtonEdgeOverhang("ghost", size, visible)}px`;
+  }
+  for (const size of Object.keys(buttonRecipe.sizes) as (keyof typeof buttonRecipe.sizes)[]) {
+    style[`--hjm-button-edge-${size}`] = `${resolveButtonEdgeOverhang("ghost", size)}px`;
   }
 
   return style;

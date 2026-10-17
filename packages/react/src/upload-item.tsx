@@ -76,11 +76,12 @@ export const UploadItem = forwardRef<HTMLDivElement, UploadItemProps>(function U
         )}
       </div>
       {/* Row tool actions are icon buttons named by the localized label. Cancelling an upload is not destructive, so
-          it stays neutral instead of the danger text it used to be (2026-10-17 review). */}
+          it stays neutral instead of the danger text it used to be (2026-10-17 review). edge="end" ends the glyph slot on
+          the row's md inset, mirroring the file text's start inset (2026-10-17 measured audit: 26 vs 16). */}
       {action === "cancel" ? (
-        <IconButton className="hjm-upload-item__action" data-action="cancel" label={labels.cancel} onClick={() => onCancel?.(descriptor.id)} tone="ghost"><Icon name="close" /></IconButton>
+        <IconButton className="hjm-upload-item__action" edge="end" data-action="cancel" label={labels.cancel} onClick={() => onCancel?.(descriptor.id)} tone="ghost"><Icon name="close" /></IconButton>
       ) : action === "retry" ? (
-        <IconButton className="hjm-upload-item__action" data-action="retry" label={labels.retry} onClick={() => onRetry?.(descriptor.id)} tone="ghost"><Icon name="refresh" /></IconButton>
+        <IconButton className="hjm-upload-item__action" edge="end" data-action="retry" label={labels.retry} onClick={() => onRetry?.(descriptor.id)} tone="ghost"><Icon name="refresh" /></IconButton>
       ) : null}
     </div>
   );

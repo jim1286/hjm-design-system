@@ -114,10 +114,11 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
         }
       }}
       className="hjm-screen__body" data-content-alignment={contentAlignment} data-scroll={bodyScroll} data-replacement={resolved.replacesContent || undefined} aria-busy={resolved.busy || undefined}>
-      {state.kind === "ready" ? (contentAlignment === "center" ? <div className="hjm-screen__centered-content">{children}</div> : children) : <div className="hjm-screen__state" role={resolved.busy ? undefined : state.kind === "error" ? "alert" : "status"}>
+      {state.kind === "ready" ? (contentAlignment === "center" ? <div className="hjm-screen__centered-content">{children}</div> : children) : <div className="hjm-screen__state">
         {/* Loading copy is an accessible name; visible copy beside the spinner
             contradicts the shared spinner-only loading contract. */}
-        {resolved.busy ? <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} /> : <div>
+        {/* The live role wraps only the copy: an alert around the retry action announced the button too (2026-10-17). */}
+        {resolved.busy ? <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} /> : <div role={state.kind === "error" ? "alert" : "status"}>
           <Stack gap="sm" align="center"><Text variant="title">{state.title}</Text>
             {state.description ? <Text tone="muted">{state.description}</Text> : null}</Stack>
         </div>}
@@ -303,8 +304,8 @@ export function CompositionLayout({title, headingLevel = 3, description, badge, 
       </Stack>{actions}
     </Stack> : null}
     {notice}
-    {state.kind === "ready" ? children : <Stack gap="sm" align="center" justify="center" role={resolved.busy ? undefined : state.kind === "error" ? "alert" : "status"} layoutStyle={{flex: 1}}>
-      {resolved.busy ? (loadingIndicator ? <div role="status" aria-busy="true" aria-label={[state.title, state.description].filter(Boolean).join(". ")}><div aria-hidden="true">{loadingIndicator}</div></div> : <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} />) : <div style={{ textAlign: "center" }}>{/* Block, centered lines as Native; inline spans ran title and description together. */}<Text as="p" variant="title">{state.title}</Text>{state.description ? <Text as="p" tone="muted">{state.description}</Text> : null}</div>}
+    {state.kind === "ready" ? children : <Stack gap="sm" align="center" justify="center" layoutStyle={{flex: 1}}>
+      {resolved.busy ? (loadingIndicator ? <div role="status" aria-busy="true" aria-label={[state.title, state.description].filter(Boolean).join(". ")}><div aria-hidden="true">{loadingIndicator}</div></div> : <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} />) : <div role={state.kind === "error" ? "alert" : "status"} style={{ textAlign: "center" }}>{/* Block, centered lines as Native; the live role covers the copy only, not stateAction. */}<Text as="p" variant="title">{state.title}</Text>{state.description ? <Text as="p" tone="muted">{state.description}</Text> : null}</div>}
       {stateAction}
     </Stack>}
     {footer}

@@ -1806,6 +1806,10 @@ export function Timeline<Id extends string = string>({
     { items },
     { composeAccessibleName },
   );
+  // Dot, label first line and timestamp share the label's rendered first line box (token × text scale), matching
+  // Web's 1lh anchor (2026-10-17 measured audit: the dot sat at the top and the caption rode the baseline).
+  const labelLineHeight = theme.tokens.typography[timelineRecipe.label.textVariant].lineHeight * theme.textScaling.scale;
+  const timestampLineHeight = theme.tokens.typography[timelineRecipe.timestamp.textVariant].lineHeight * theme.textScaling.scale;
   return (
     <View {...props} style={[{ gap: timelineRecipe.gap }, layoutStyle]}>
       {resolved.map((item, index) => {
@@ -1842,6 +1846,7 @@ export function Timeline<Id extends string = string>({
                     ? timelineRecipe.dot.borderWidth
                     : 0,
                   height: timelineRecipe.dot.diameter,
+                  marginTop: (labelLineHeight - timelineRecipe.dot.diameter) / 2,
                   width: timelineRecipe.dot.diameter,
                 }}
               />
@@ -1864,7 +1869,7 @@ export function Timeline<Id extends string = string>({
             >
               <View
                 style={{
-                  alignItems: "baseline",
+                  alignItems: "flex-start",
                   flexDirection: "row",
                   flexWrap: "wrap",
                   gap: spacing.xs,
@@ -1890,6 +1895,7 @@ export function Timeline<Id extends string = string>({
                         timelineRecipe.timestamp.color,
                         theme.palette,
                       ),
+                      marginTop: (labelLineHeight - timestampLineHeight) / 2,
                     }}
                     variant={timelineRecipe.timestamp.textVariant}
                   >

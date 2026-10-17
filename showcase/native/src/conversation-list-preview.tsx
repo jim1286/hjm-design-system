@@ -31,7 +31,7 @@ export function ConversationListPreview({ tools = false }: { tools?: boolean }) 
     {tools ? <PreviewTools><PatternStatus tone="muted">{status}</PatternStatus></PreviewTools> : null}
     <View style={{ height: 720, width: "100%" }}>
       <ScreenLayout title={copy.title} scroll="content" contentInset="body-edge"
-        actions={<IconButton label={copy.compose} tone="ghost" onPress={() => setStatus(`${copy.compose}를 시작해요.`)}><SquarePen size={20} color={colors.text} /></IconButton>}
+        actions={<IconButton edge="end" label={copy.compose} tone="ghost" onPress={() => setStatus(`${copy.compose}를 시작해요.`)}><SquarePen size={20} color={colors.text} /></IconButton>}
         notice={<SearchField label={copy.search} clearLabel={copy.clearSearch} busyLabel={copy.searching} placeholder={copy.searchPlaceholder} renderLeading={({ color, size }) => <Search color={color} size={size} />} value={query} onValueChange={setQuery} />}
         state={rows.length ? { kind: "ready" } : { kind: "empty", title: copy.noMatch }}>
         <View>{rows.map(row => <ContextMenu key={row.id} accessibilityLabel={conversationRowMenuLabel(row)}

@@ -84,7 +84,7 @@ import { Timeline } from "@hjmds/react-native/data-display";
 | --- | --- | --- |
 | 크기 | 각 항목은 [레일 16][본문] 두 열. 레일은 지름 10의 dot과 다음 항목까지 이어지는 1px connector. 항목은 누를 수 없어 터치 영역 요구가 없고 행 안에 버튼을 넣지 않는다 | `timelineRecipe`, `.hjm-timeline__item`·`__dot`·`__connector` |
 | 간격 | 항목 사이 `spacing.md` 16, 레일과 본문 열 간격 `spacing.sm` 12, 본문 줄 간격 `spacing.xxs` 4 | `timelineRecipe.gap`, `.hjm-timeline*` |
-| 순서·정렬 | 본문은 label·timestamp 줄 → description. Web은 label과 timestamp를 한 줄 양 끝에 둔다 | `.hjm-timeline__heading` |
+| 순서·정렬 | 본문은 label·timestamp 줄 → description. Web은 label과 timestamp를 한 줄 양 끝에 둔다. dot·label 첫 줄·timestamp는 label 첫 줄(`body` 줄 높이)의 가운데에 맞춘다(Web `1lh`, Native 토큰×글자 배율). label이 여러 줄이면 dot·timestamp는 첫 줄 옆에 남는다 | `.hjm-timeline__heading`·`__dot`·`__timestamp`, Native `Timeline` |
 | 고정·스크롤 | 본문 스크롤 영역 안의 한 섹션으로 폭을 꽉 채운다. 더 불러오기는 Timeline 아래에 [LoadMore](load-more.md) | — |
 | 좁은 폭·큰 글자 | Web은 좁으면 timestamp가 다음 줄로 내려간다(`flex-wrap`). 큰 글자에서도 글을 자르지 않는다 | `.hjm-timeline__heading`·`__label` |
 
@@ -103,3 +103,7 @@ import { Timeline } from "@hjmds/react-native/data-display";
 | 구조 | `<ol>` / `<li>`, dot·connector `aria-hidden` | `View` 행, rail·본문은 접근성 트리에서 숨김 |
 | 항목 접근 이름 | `<li aria-label={accessibleName}>` | `accessibleName, timestamp, description`을 이어 붙인 `accessibilityLabel` |
 | ref | `HTMLOListElement`로 전달 | 없음(함수 컴포넌트) |
+
+## 근거
+
+- 첫 줄 가운데: 2026-10-17 정렬 실측(Web 402). dot 396 · label 397 · timestamp 398.5로 어긋났다(dot은 4px 고정 여백, timestamp는 작은 글자가 기준선을 공유). Native는 dot이 맨 위에 붙었다. 수정 후 Web 402·1280에서 세 요소가 397/397/397, 377/377/377로 측정됐다.

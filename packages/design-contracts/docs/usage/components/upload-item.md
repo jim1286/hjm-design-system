@@ -78,7 +78,7 @@ import { UploadItem } from "@hjmds/react-native/upload-item";
 | --- | --- | --- |
 | 크기 | 최소 높이 `layout.rowHeight.twoLine` 68, 위아래 여백 `row.paddingVertical` `spacing.xs` 8(두 플랫폼). 행동 버튼 최소 44×44. 테두리 1px, `radius.md` 12인 카드 모양 | `uploadItemRecipe.row`, `.hjm-upload-item`, `react-native/src/upload-item.tsx` |
 | 간격 | 요소 사이 `spacing.sm` 12, 좌우 여백 `spacing.md` 16. 행 사이 간격·목록 틀은 제품이 정한다(HJM 목록 레이아웃 없음) | `uploadItemRecipe.row` |
-| 순서·정렬 | `leading`(아이콘·썸네일) → 이름·메타·진행/상태 → 끝의 행동 버튼(취소·재시도). 여러 개면 고른 순서대로 세로로 쌓는다 | `react/src/upload-item.tsx`, `.hjm-upload-item__action`(margin-inline-start: auto) |
+| 순서·정렬 | `leading`(아이콘·썸네일) → 이름·메타·진행/상태 → 끝의 행동 버튼(취소·재시도). 여러 개면 고른 순서대로 세로로 쌓는다 끝 행동 버튼은 `edge="end"`라 아이콘 칸이 끝 여백 16에 와서 시작 쪽 이름 여백과 같다(Web 26 → 16, Native 약 33 → 16). Native 아이콘은 글꼴 "×"·"↻" 대신 그린 close·refresh로 버튼 가운데에 온다(전에는 카드 가운데보다 약 5 아래, 2026-10-17 실측 감사, [IconButton `edge`](icon-button.md#배치)) | `react/src/upload-item.tsx`, `.hjm-upload-item__action`(margin-inline-start: auto) |
 | 고정·스크롤 | 파일을 고르는 [FilePicker](file-picker.md) 바로 아래, 본문과 함께 스크롤 | — |
 | 좁은 폭·큰 글자 | Web은 본문 블록이 14rem 아래로 줄면 행동 버튼이 다음 줄 끝으로 내려간다. Native는 한 줄을 유지하고 이름이 줄바꿈된다 | `.hjm-upload-item__body`(flex: 1 1 14rem), `.hjm-upload-item`(flex-wrap) |
 

@@ -4541,6 +4541,9 @@ export declare const recipeRegistry: {
             readonly rounded: "md";
             readonly circle: "full";
         };
+        readonly edge: {
+            readonly tones: readonly ["ghost"];
+        };
         readonly states: {
             readonly selected: {
                 readonly background: Readonly<{

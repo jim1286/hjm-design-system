@@ -86,7 +86,7 @@ Native 원형 leading의 `full`은 Provider token에서 읽지만 고정 원형 
 | --- | --- | --- |
 | 크기 | 폭은 부모를 가득 채운다(Web `inline-size: 100%`). leading 프레임은 40×40(`leadingSize`), `circle`이면 `radius.full`. trailing 아이콘은 `glyph.sm` 20. 최소 높이는 아래 density 표 | `design-contracts/src/component-recipes.ts`(`listRowRecipe`), `design-contracts/src/foundations.ts`(`layout.rowHeight`) |
 | 간격 | leading·content·trailing 사이 `spacing.sm` 12(`listRowRecipe.gap`). 좌우 여백은 모두 `spacing.xs` 8, 위아래 여백은 아래 density 표. 행에 margin을 주지 않는다 | `design-contracts/src/component-recipes.ts`(`listRowRecipe`), `react/src/styles.css`(`.hjm-list-row`) |
-| 순서·정렬 | leading → content(제목·설명) → trailing. Native `trailingAction`은 행 명령 바깥 오른쪽(끝)에 따로 놓이고 끝 여백 `spacing.xs` 8을 갖는다. 행 사이 구분선·바깥 둥근 배경은 [List](list.md)가 그린다 | `react-native/src/data-display.tsx`(ListRow) |
+| 순서·정렬 | leading → content(제목·설명) → trailing. trailing 내용(아이콘·Switch·문구)은 행의 세로 가운데에 둔다(Web `.hjm-list-row__trailing` flex 가운데, Native 행 가운데 정렬 View). Native `trailingAction`은 행 명령 바깥 오른쪽(끝)에 따로 놓이고 끝 여백 `spacing.xs` 8을 갖는다. 행 사이 구분선·바깥 둥근 배경은 [List](list.md)가 그린다 | `react-native/src/data-display.tsx`(ListRow), `react/src/styles.css`(`.hjm-list-row__trailing`) |
 | 고정·스크롤 | — | — |
 | 좁은 폭·큰 글자 | 긴 제목·설명은 줄바꿈되고(`overflow-wrap: anywhere`) 행 높이가 늘어난다. 큰 글자에서도 자르지 않는다 | `react/src/styles.css`(`.hjm-list-row`) |
 
@@ -142,3 +142,7 @@ Web도 Native와 같이 `trailingAction`을 지원한다. 이 슬롯은 행의 l
 팔로우·삭제 같은 행동을 링크에 중첩하지 않는다. `renderLink`는 HJM이 만든 anchor props를
 프레임워크 Link에 전달하는 연결점이다. 배치·제목·앞/뒤 슬롯은 HJM이 계속 만든다.
 예: `renderLink={props => <Link {...props} href={props.href!} />}`.
+
+## 근거
+
+- trailing 세로 가운데: 2026-10-17 정렬 실측(Web 402). trailing span이 block이라 안의 inline svg가 글자 기준선에 놓여 행 가운데보다 2~2.5px 위였다(설정 334/331.5, 컬렉션 184/181.5). Native는 행 가운데(388/388)였다. trailing을 flex 가운데 상자로 바꾼 뒤 Web도 334/334, 184/184로 측정됐다.

@@ -304,6 +304,19 @@
 .hjm-icon-button[data-size="small"] { inline-size: var(--hjm-control-button-small); block-size: var(--hjm-control-button-small); min-inline-size: 0; min-block-size: 0; }
 .hjm-icon-button[data-size="small"]::after { content: ""; position: absolute; inset: calc(-1 * var(--hjm-space-xxs)); }
 .hjm-icon-button[data-size="large"] { inline-size: var(--hjm-control-button-large); block-size: var(--hjm-control-button-large); }
+/* Edge alignment (iconButtonRecipe.edge / resolveButtonEdgeOverhang, 2026-10-17 measured audit): a ghost control on a
+   container edge keeps its hit area but overhangs that edge, so its glyph slot or label sits on the inset like text.
+   Framed tones never get an overhang variable and stay put. Logical margins mirror in RTL. */
+.hjm-icon-button[data-tone="ghost"] { --hjm-edge-overhang: var(--hjm-icon-button-edge-medium); }
+.hjm-icon-button[data-tone="ghost"][data-size="small"] { --hjm-edge-overhang: var(--hjm-icon-button-edge-small); }
+.hjm-icon-button[data-tone="ghost"][data-size="large"] { --hjm-edge-overhang: var(--hjm-icon-button-edge-large); }
+/* + 1px: every Web button keeps a 1px transparent frame border (.hjm-button above) inside which the padding starts;
+   Native ghost buttons have no border, so their overhang is the padding alone. */
+.hjm-button[data-tone="ghost"] { --hjm-edge-overhang: calc(var(--hjm-button-edge-medium) + 1px); }
+.hjm-button[data-tone="ghost"][data-size="small"] { --hjm-edge-overhang: calc(var(--hjm-button-edge-small) + 1px); }
+.hjm-button[data-tone="ghost"][data-size="large"] { --hjm-edge-overhang: calc(var(--hjm-button-edge-large) + 1px); }
+:is(.hjm-icon-button, .hjm-button):is([data-edge="start"], [data-edge="both"]) { margin-inline-start: calc(-1 * var(--hjm-edge-overhang, 0px)); }
+:is(.hjm-icon-button, .hjm-button):is([data-edge="end"], [data-edge="both"]) { margin-inline-end: calc(-1 * var(--hjm-edge-overhang, 0px)); }
 .hjm-link { display: inline-flex; align-items: center; gap: var(--hjm-space-xxs); max-inline-size: 100%; min-inline-size: 0; overflow-wrap: anywhere; color: var(--hjm-color-content-brand); text-underline-offset: 0.18em; }
 .hjm-link[data-tone="neutral"] { color: var(--hjm-color-text-body); }
 .hjm-link[data-variant="standalone"] { min-block-size: var(--hjm-control-min-touch-target); min-inline-size: var(--hjm-control-min-touch-target); justify-content: center; text-decoration: none; }
@@ -323,6 +336,9 @@
   outline: var(--hjm-focus-width) solid var(--hjm-color-focus);
   outline-offset: var(--hjm-focus-offset);
 }
+/* An edge-aligned control overhangs into the container padding, where an outer ring can be clipped by the container's
+   overflow (lists, cards); draw the ring inside its own box instead, as the Toast close does. */
+:is(.hjm-icon-button, .hjm-button)[data-edge]:focus-visible { outline-offset: calc(-1 * var(--hjm-focus-width)); }
 
 /* Input interiors use the theme canvas (white in light mode), not tinted
    surfaces. Focus and selection still use blue borders and compact indicators. */
@@ -930,6 +946,10 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-list-row[data-state="selected"] { background: var(--hjm-color-bg);  box-shadow: inset 0 0 0 1px var(--hjm-color-content-brand); }
 .hjm-list-row[data-state="disabled"] { opacity: 0.5; cursor: not-allowed; }
 .hjm-list-row__leading, .hjm-list-row__trailing { flex: 0 0 auto; }
+/* Trailing was a blockified span, so an inline svg/switch sat on the text
+   baseline 2–2.5px above the row center (2026-10-17 measured audit); a flex
+   box centers any trailing node like Native's row-centered View. */
+.hjm-list-row__trailing { display: flex; align-items: center; }
 /* `leadingSize` was declared by the recipe but unbound, so consumers rebuilt
    the avatar box in product styles. */
 .hjm-list-row__leading { display: flex; align-items: center; justify-content: center; inline-size: var(--hjm-list-row-leading-size); block-size: var(--hjm-list-row-leading-size); overflow: hidden; }
@@ -1023,6 +1043,14 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-notice[data-tone="danger"] { border-color: var(--hjm-color-danger); background: color-mix(in srgb, var(--hjm-color-danger) 10%, var(--hjm-color-bg)); }
 /* Reserve readable copy; wrap the action instead of crushing its label. */
 .hjm-notice__content { flex: 1 1 60%; min-inline-size: 0; display: grid; gap: var(--hjm-space-xxs); }
+/* First-line anchor (2026-10-17 measured audit): the inline action (contract: Button size="small") centered 8px
+   below the title's first line and the icon box had no rule at all. Icon, first line and action now share one
+   anchor — the line box (1lh) alone, or the small-button height when an action sits on the row. Extra lines
+   grow downward; Native keeps the action under the copy (docs/usage/components/notice.md). */
+.hjm-notice { --hjm-notice-anchor: 1lh; }
+.hjm-notice:has(> .hjm-notice__action) { --hjm-notice-anchor: var(--hjm-control-button-small); }
+.hjm-notice__icon { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; min-inline-size: 1.25rem; block-size: var(--hjm-notice-anchor); }
+.hjm-notice__content > :first-child { margin-block-start: calc((var(--hjm-notice-anchor) - 1lh) / 2); }
 .hjm-notice__action { flex: 0 0 auto; max-inline-size: 100%; }
 .hjm-notice__title, .hjm-notice__description { overflow-wrap: anywhere; }
 
@@ -2493,18 +2521,22 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-form__actions { display: flex; flex-wrap: wrap; gap: var(--hjm-space-sm); margin-block-start: var(--hjm-space-sm); }
 
 /* Advanced display ------------------------------------------------------- */
-.hjm-timeline { display: grid; gap: var(--hjm-space-md); margin: 0; padding: 0; list-style: none; }
+/* timelineRecipe label/description are `body`; binding it here lets the rail and timestamp derive from the same line box. */
+.hjm-timeline { display: grid; gap: var(--hjm-space-md); margin: 0; padding: 0; list-style: none; font-size: var(--hjm-type-body-size); line-height: var(--hjm-type-body-line-height); }
 .hjm-timeline__item { min-inline-size: 0; display: grid; grid-template-columns: 1rem minmax(0, 1fr); gap: var(--hjm-space-sm); }
 .hjm-timeline__rail { position: relative; display: flex; justify-content: center; }
-.hjm-timeline__dot { position: relative; z-index: 1; inline-size: 0.625rem; block-size: 0.625rem; margin-block-start: 0.25rem; border: 1px solid transparent; border-radius: var(--hjm-radius-full); background: var(--hjm-color-text-muted); }
+/* Dot, label first line and timestamp share the label's first line box (2026-10-17 measured audit: centers 396/397/398.5).
+   The rail inherits the label's line height, so 1lh is that line box. */
+.hjm-timeline__dot { position: relative; z-index: 1; inline-size: 0.625rem; block-size: 0.625rem; margin-block-start: calc((1lh - 0.625rem) / 2); border: 1px solid transparent; border-radius: var(--hjm-radius-full); background: var(--hjm-color-text-muted); }
 .hjm-timeline__item[data-tone="info"] .hjm-timeline__dot { border-color: var(--hjm-accent-info); background: var(--hjm-accent-info); }
 .hjm-timeline__item[data-tone="success"] .hjm-timeline__dot { border-color: var(--hjm-accent-success); background: var(--hjm-accent-success); }
 .hjm-timeline__item[data-tone="attention"] .hjm-timeline__dot { border-color: var(--hjm-accent-attention); background: var(--hjm-accent-attention); }
-.hjm-timeline__connector { position: absolute; inset-block: 0.875rem calc(-1 * var(--hjm-space-md)); inline-size: 1px; background: var(--hjm-color-border); }
+.hjm-timeline__connector { position: absolute; inset-block: calc((1lh + 0.625rem) / 2) calc(-1 * var(--hjm-space-md)); inline-size: 1px; background: var(--hjm-color-border); }
 .hjm-timeline__content { min-inline-size: 0; display: grid; gap: var(--hjm-space-xxs); padding-block-end: var(--hjm-space-xxs); }
-.hjm-timeline__heading { min-inline-size: 0; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--hjm-space-xxs) var(--hjm-space-sm); }
+.hjm-timeline__heading { min-inline-size: 0; display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: var(--hjm-space-xxs) var(--hjm-space-sm); }
 .hjm-timeline__label { color: var(--hjm-color-text); font-weight: var(--hjm-font-weight-semibold); overflow-wrap: anywhere; }
-.hjm-timeline__timestamp { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); }
+/* Baseline sharing put the smaller caption 1.5px under the label's center; center it on the label's first line instead. */
+.hjm-timeline__timestamp { margin-block-start: calc((var(--hjm-type-body-line-height) - var(--hjm-type-caption-line-height)) / 2); color: var(--hjm-color-text-muted); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); }
 .hjm-timeline__description { color: var(--hjm-color-text-body); white-space: pre-wrap; overflow-wrap: anywhere; }
 .hjm-accordion { border-block-start: 1px solid var(--hjm-color-border); }
 .hjm-accordion__item { border-block-end: 1px solid var(--hjm-color-border); }
@@ -3015,7 +3047,9 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 @supports (backdrop-filter: blur(20px)) {
   .hjm-navigation-bar { background: color-mix(in srgb, var(--hjm-color-surface) 92%, transparent); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
 }
-.hjm-navigation-bar__brand { flex-shrink: 0; padding-inline: var(--hjm-space-xs); }
+/* The brand added spacing.xs on top of the bar's spacing.sm padding, so it started 21px in against 13px for the
+   end controls (2026-10-17 measured audit). Native has no extra brand inset; both edges now use the bar padding. */
+.hjm-navigation-bar__brand { flex-shrink: 0; }
 .hjm-navigation-bar__destinations, .hjm-navigation-bar__actions { display: flex; align-items: center; flex-wrap: wrap; gap: var(--hjm-space-xs); min-inline-size: 0; }
 .hjm-navigation-bar__destinations { flex: 1; }
 .hjm-navigation-bar__actions > * { max-inline-size: 100%; }
@@ -3154,11 +3188,19 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-comment-thread { display: flex; flex-direction: column; }
 .hjm-comment-row__avatar { flex: 0 0 auto; display: flex; justify-content: center; }
 .hjm-comment-row__text { flex: 1; min-inline-size: 0; display: flex; flex-direction: column; }
+/* The <time> wrapper is a flex box so its caption is the line: as an inline box it added the body line-height strut,
+   making the identity line 19 tall and moving the author 1.5px off the action anchor (2026-10-17 measurement). */
+.hjm-comment-row__time { display: flex; }
 .hjm-comment-row__reactions { display: flex; flex-direction: column; gap: 2px; border-radius: var(--hjm-radius-sm); -webkit-touch-callout: none; }
 .hjm-comment-row__reactions:focus-visible { outline: 2px solid var(--hjm-color-focus, currentColor); outline-offset: 2px; }
 .hjm-comment-row__media { align-self: flex-start; overflow: hidden; margin-block-start: 4px; }
 .hjm-comment-row__media > img { display: block; inline-size: 100%; block-size: auto; }
-.hjm-comment-row__like { flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-start; }
+/* commentThreadRecipe.actionAnchor (2026-10-17 measured audit): the 44 targets centre on the identity's first line
+   (--hjm-comment-anchor-line, set per row), so like/more glyphs share the author line's centre instead of sitting
+   12px below it. When HJM's own like/more is the last control (data-edge), the whole column takes the IconButton edge
+   overhang: the 44-wide like count under the heart shares the column, so a margin on the button alone was absorbed. */
+.hjm-comment-row__like { flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-start; margin-block-start: calc((var(--hjm-comment-anchor-line) - var(--hjm-control-button-medium)) / 2); }
+.hjm-comment-row__like[data-edge="end"] { margin-inline-end: calc(-1 * var(--hjm-icon-button-edge-medium)); }
 .hjm-comment-row__like-count { text-align: center; }
 .hjm-comment-row__action { align-self: flex-start; padding: 0; border: 0; background: none; color: var(--hjm-color-text-muted); font: inherit; font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); font-weight: 600; cursor: pointer; }
 .hjm-comment-row__action:disabled { opacity: 0.5; cursor: default; }

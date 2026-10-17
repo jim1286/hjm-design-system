@@ -86,7 +86,7 @@ NavigationBar의 Native 프레임 모서리는 Provider의 `tokens.radius.xl`을
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 최소 높이 `control.buttonHeight.large` 52 + 위쪽 안전 영역. Web은 `max(env(safe-area-inset-top), safeAreaTop)`을 위 여백으로, Native는 `safeAreaTop`을 `paddingTop`과 `minHeight`(52 + `safeAreaTop`)에 더한다. 좌우 열 최소 폭 `control.minTouchTarget` 44, Native `TopBarAction` 최소 44×44 | `topBarRecipe.minHeight`·`sideMinWidth`·`action`, `.hjm-top-bar` |
-| 간격 | 좌우 여백 `spacing.md` 16, 슬롯 사이·슬롯 안 행동 사이 `spacing.xs` 8. `TopBarAction` 아이콘–라벨 `spacing.xxs` 4, 좌우 여백 4. 배경 `canvas` | `topBarRecipe.paddingHorizontal`·`gap`·`action` |
+| 간격 | 좌우 여백 `spacing.md` 16, 슬롯 사이·슬롯 안 행동 사이 `spacing.xs` 8. `NavigationBar`는 바 안쪽 여백 `spacing.sm` 12를 브랜드 시작과 끝 행동에 똑같이 쓰고 브랜드에 별도 inset을 두지 않는다(Web·Native). `TopBarAction` 아이콘–라벨 `spacing.xxs` 4, 좌우 여백 4. 배경 `canvas` | `topBarRecipe.paddingHorizontal`·`gap`·`action` |
 | 순서·정렬 | 세 열: `leading`(뒤로·닫기) · 제목 · `actions`(끝 정렬). `centered`(기본 `true`)는 남은 제목 영역 안에서 가운데 정렬. 왼쪽 정렬은 `centered={false}`로 고른다. 행동은 1~2개만 끝 열에, 넘치면 하나만 남기고 [Menu](menu.md)로 묶는다. 주 행동(저장·완료)은 끝 열의 마지막 | `.hjm-top-bar` grid, Native `TopBar` |
 | 고정·스크롤 | 화면 맨 위, 스크롤 영역 **밖**에 둔다. TopBar 자체는 `position: sticky`/고정을 걸지 않으므로 화면 골격이 그 아래에 스크롤 영역을 둬야 고정된다. 바로 아래 본문 첫 블록은 [Top](top.md) | `.hjm-top-bar`(position 없음) |
 | 좁은 폭·큰 글자 | 글자 배율 ≥ `largeTextThreshold` 1.6: Web은 첫 행 leading·행동, 둘째 행 제목(시작 정렬, 위아래 `spacing.xs` 8). Native는 첫 행 leading+제목, 둘째 행 행동(끝 정렬, 줄바꿈 허용) | `.hjm-top-bar[data-large-text]`, `react-native/src/navigation.tsx` `TopBar` |
@@ -130,3 +130,7 @@ NavigationBar의 Native 프레임 모서리는 Provider의 `tokens.radius.xl`을
 `title`, `subtitle`, `titleLeading`, 제목 클릭/접근성 props와 함께 쓰지 않는다.
 실행 미리보기의 펼침 칩을 앱이 자체 헤더로 다시 조립하던 문제를 없애기 위해 추가했다.
 색은 기존 provider의 브랜드/semantic palette 범위로 연결한다.
+
+## 근거
+
+- NavigationBar 양끝 여백: 2026-10-17 정렬 실측(Web 1280). 브랜드에 `spacing.xs` 8이 더해져 시작 21, 끝 행동 13으로 비대칭이었다. Native 브랜드에는 추가 inset이 없었다. Web 브랜드 inset을 없앤 뒤 양끝 13/13으로 측정됐다.

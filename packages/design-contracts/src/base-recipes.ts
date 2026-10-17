@@ -112,6 +112,19 @@ export const buttonRecipe = {
   label: { overflow: "wrap"; maxLines: number; liftCapOnLargeText: boolean };
 };
 
+/**
+ * Edge alignment for a ghost text Button at a row/header edge (2026-10-17 measured audit: a sort trigger's chevron
+ * sat 29px from the edge against a 16px inset). Same rule as `resolveIconButtonEdgeOverhang`: a frameless control
+ * overhangs the edge by its own inline padding so its label/glyph, not the transparent box, sets the inset.
+ * Framed tones (primary, secondary, danger) align their frame instead, and `link` already has no padding: 0.
+ */
+export type ButtonEdge = "start" | "end" | "both";
+export function resolveButtonEdgeOverhang(tone: ButtonTone, size: ButtonSize): number {
+  const toneContract = buttonRecipe.tones[tone];
+  if (toneContract.background !== null || toneContract.border !== null) return 0;
+  return toneContract.paddingHorizontal ?? buttonRecipe.sizes[size].paddingHorizontal;
+}
+
 /** Resolves the label's line cap for one resolved environment. `null` means uncapped. */
 export function resolveButtonLabelLines(largeText: boolean): number | null {
   return largeText && buttonRecipe.label.liftCapOnLargeText ? null : buttonRecipe.label.maxLines;

@@ -4,6 +4,7 @@ import {
   type ColorReferencePalette,
 } from "./color-references.js";
 import {
+  glyph,
   opacity,
   radius,
   type GlyphSize,
@@ -13,6 +14,13 @@ import { semanticColors } from "./semantic-colors.js";
 export type IconButtonSize = "small" | "medium" | "large";
 export type IconButtonShape = "rounded" | "circle";
 export type IconButtonTone = "primary" | "secondary" | "ghost" | "danger";
+/**
+ * Which container edge a ghost IconButton sits on (logical: `start`/`end` follow the reading direction). The
+ * button keeps its full touch target but overhangs that edge so its glyph slot, not the transparent hit area,
+ * sets the visible inset (2026-10-17 measured audit: glyphs sat 10–15px inside the row/header inset).
+ */
+export type IconButtonEdge = "start" | "end" | "both";
+export const iconButtonEdges = ["start", "end", "both"] as const satisfies readonly IconButtonEdge[];
 
 export const iconButtonRecipe = {
   slots: ["root", "icon", "spinner"] as const,
@@ -45,6 +53,14 @@ export const iconButtonRecipe = {
     large: { diameter: 52, hitSlop: 0, glyph: "lg" },
   },
   shapes: { rounded: "md", circle: "full" },
+  /**
+   * Edge alignment (2026-10-17 measured audit): a ghost IconButton at a row/header edge overhangs that edge by
+   * (visible diameter − glyph slot) / 2, so the glyph slot lines up with the container inset like text does while
+   * the hit area stays whole. Only `ghost` overhangs — filled and outlined tones show their frame, and the frame is
+   * what aligns. Renderers read `resolveIconButtonEdgeOverhang` so a raised visible diameter (minimumVisualTarget)
+   * moves the glyph slot by the same amount on Web and Native.
+   */
+  edge: { tones: ["ghost"] as const },
   states: {
     // `aria-pressed` / `accessibilityState.selected` already carried the toggle
     // state; without a paired visual every consumer painted the pressed icon
@@ -71,6 +87,7 @@ export const iconButtonRecipe = {
   >;
   sizes: Record<IconButtonSize, { diameter: number; hitSlop: number; glyph: GlyphSize }>;
   shapes: Record<IconButtonShape, keyof typeof radius>;
+  edge: { tones: readonly IconButtonTone[] };
   states: {
     selected: { background: ColorReference; content: ColorReference; border: ColorReference | null };
     pressedOpacity: number;
@@ -106,4 +123,18 @@ export function resolveIconButtonPresentation(
         ? null
         : resolveColorReference(contract.border, palette),
   };
+}
+
+/**
+ * Negative margin a ghost IconButton applies on its `edge` side(s): (visible diameter − glyph slot) / 2, e.g. 10 for
+ * medium (44 − 24). 0 for tones that draw a frame. `visibleDiameter` is the rendered size after the Provider's
+ * minimumVisualTarget axis (`visibleControlHeight`), so the overhang tracks what is actually drawn.
+ */
+export function resolveIconButtonEdgeOverhang(
+  tone: IconButtonTone,
+  size: IconButtonSize,
+  visibleDiameter: number = iconButtonRecipe.sizes[size].diameter,
+): number {
+  if (!(iconButtonRecipe.edge.tones as readonly IconButtonTone[]).includes(tone)) return 0;
+  return Math.max(0, (visibleDiameter - glyph[iconButtonRecipe.sizes[size].glyph]) / 2);
 }

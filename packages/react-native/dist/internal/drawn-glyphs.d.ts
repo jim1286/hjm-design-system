@@ -33,4 +33,22 @@ export declare function DrawnMoreVertical({ size, color }: Readonly<{
     size: number;
     color: string;
 }>): import("react").JSX.Element;
+/**
+ * Web's built-in `close` mark (two diagonals on the 24-unit grid, 6→18). Row tools drew a font "×" before, whose ink
+ * sat ~5pt below the button centre and varied by font (2026-10-17 UploadItem measurement). Symmetric, no mirroring.
+ */
+export declare function DrawnClose({ size, color, strokeWidth }: Readonly<{
+    size: number;
+    color: string;
+    strokeWidth?: number;
+}>): import("react").JSX.Element;
+/**
+ * Web's built-in `refresh` mark: two arcs of the r=8 circle (top→end, bottom→start) with arrow corners at the end and
+ * start of the horizontal axis, replacing the font "↻" that rendered off-centre (2026-10-17 UploadItem measurement).
+ */
+export declare function DrawnRefresh({ size, color, strokeWidth }: Readonly<{
+    size: number;
+    color: string;
+    strokeWidth?: number;
+}>): import("react").JSX.Element;
 //# sourceMappingURL=drawn-glyphs.d.ts.map

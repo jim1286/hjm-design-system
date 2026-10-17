@@ -80,7 +80,7 @@ import { Text } from "@hjmds/react-native/primitives";
 | `timestampPresentation` | `"always"` · `"swipe"` | `"always"` | `swipe`는 수신은 오른쪽·발신은 왼쪽으로 끄는 동안 반대편 여백에 시각을 보여 주고 놓으면 숨긴다. 이 모드에서는 같은 제스처로 답장을 실행하지 않는다. 시각은 보조기술에서도 읽을 수 있다. |
 | `bubbleTail` | `boolean` | `true`(미게시 변경, 이전 `false`) | 묶음 첫 말풍선의 위쪽 모서리(수신 시작 쪽·발신 끝 쪽)에 윗변이 이어지는 삼각 꼬리(`tailWidth` 7 × `tailHeight` 10)를 같은 표면으로 그리고, 그 모서리 radius를 `tailCornerRadius` 4로 줄인다. 행 양쪽 `spacing.xs` 8 여백으로 잘림을 막는다 |
 | `deliveryLabel` | `string` | 없음 | 시각 뒤에 ` · `로 붙는 전송 상태 |
-| `avatar` | `ReactNode` | 없음 | 버블 옆 아바타. `chatMessageRecipe.avatarSize` 36 크기로 넘긴다. 묶음 뒤 말풍선에서는 같은 폭을 비워 정렬을 유지한다 |
+| `avatar` | `ReactNode` | 없음 | 버블 옆 아바타. `chatMessageRecipe.avatarSize` 32(`avatarRecipe.sizes.small`) 크기로 넘긴다(Web `size="small"`, Native `size={chatMessageRecipe.avatarSize}`). 묶음 뒤 말풍선에서는 같은 폭을 비워 정렬을 유지한다 |
 | `reply` | `ReactNode` | 없음 | 인용 노드. `replyLink`가 없으면 버블 맨 위에 그리고 아래 구분선(1)으로 답장 본문과 나눈다 |
 | `replyQuote` | `{ title, excerpt }` | 없음 | 미게시. 말풍선 맨 위에 HJM이 인용을 그린다: 제목(예: "서연에게 답장", 본문 글자) → 원문 한 줄(흐린 글자, 넘치면 말줄임) → 구분선 1 → 답장 본문. 자유 노드 `reply`보다 우선 사용한다 |
 | `replyLink` | `{ label, onPress() }` | 없음 | 인용과 같이 주면 말풍선 안 인용을 눌러 원문으로 이동한다(Native는 말풍선의 "원문으로 이동" 접근성 동작도 제공). 이전에는 버블 밖 ghost 버튼이었다 |
@@ -96,7 +96,7 @@ import { Text } from "@hjmds/react-native/primitives";
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 말풍선 열 최대 폭 `screenPatternRecipe.messageMaxWidth` 84%; 말풍선 radius `chatMessageRecipe.bubbleRadius` 14, 안쪽 padding 세로 6·가로 10, 테두리 없음(수신 `surface`, 발신 `surfaceAccent`); 아바타 36; 꼬리 10 | `chatMessageRecipe`, Web `.hjm-chat-message*`, Native `ChatMessage` |
+| 크기 | 말풍선 열 최대 폭 `screenPatternRecipe.messageMaxWidth` 84%; 말풍선 radius `chatMessageRecipe.bubbleRadius` 14, 안쪽 padding 세로 6·가로 10, 테두리 없음(수신 `surface`, 발신 `surfaceAccent`); 아바타 32(`avatarRecipe.sizes.small`); 꼬리 10 | `chatMessageRecipe`, Web `.hjm-chat-message*`, Native `ChatMessage` |
 | 간격 | 묶음 사이 `groupGap` 12, 같은 묶음 말풍선 사이 `runGap` 6(메시지 행이 위쪽 여백으로 소유하므로 타임라인 목록에는 gap을 주지 않는다); 아바타–버블 `avatarGap` 8; 작성자–버블 `authorGap` 4; 버블–시각 `metaGap` 4; 인용 아래 `spacing.xs` 8 | `chatMessageRecipe`, `resolveChatMessageGroupDisplay` |
 | 순서·정렬 | incoming 시작 쪽, outgoing 끝 쪽; (첫 말풍선) 작성자 → (replyLink 인용) → 버블 + 아래 끝 옆 시각·전송 상태·actions | 렌더 순서 |
 | 고정·스크롤 | 자체 고정 없음, 타임라인(ChatScreen 본문)이 스크롤; 반응 메뉴는 Web Popover · Native 전체 화면 `Modal`; 답장 스와이프 중 가로 이동은 ±72로 제한 | Web·Native `ChatMessage` |
@@ -144,3 +144,7 @@ import { Text } from "@hjmds/react-native/primitives";
 ## 대화 스와이프 복귀 (2026-10-12)
 
 번뚝의 좌우 넘김 개선 요청으로 Native의 이동값은 Animated.Value에 전달하고 놓으면 공통 motion.normal(200ms)로 복귀한다. 매 이동마다 메시지 트리를 다시 렌더링하지 않는다. Web도 드래그 중에는 손가락을 따라가고 놓을 때만 200ms 복귀한다. 동작 줄이기는 즉시 복귀한다. 사진 캐러셀처럼 가로 제스처가 있는 메시지는 제품에서 timestampPresentation="always"를 선택해 사진 넘김과 시간 표시가 경쟁하지 않게 한다.
+
+## 근거
+
+- 아바타 32: 2026-10-17 정렬 실측. recipe·문서는 36이었지만 Web Avatar 단계(32/40/48/64)에 36이 없어 Web은 36 칸에 32 아바타를, Native는 36 아바타를 그렸다. 카카오톡 참고값 약 34에 가장 가까운 Avatar 단계 `small` 32를 recipe가 직접 읽게 해 두 플랫폼이 같은 값을 쓴다. 작성자 첫 줄과의 위쪽 맞춤(카카오톡 방식)은 유지한다.

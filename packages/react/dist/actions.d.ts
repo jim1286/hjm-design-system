@@ -1,9 +1,9 @@
-import { type ButtonAlign, type ButtonShape, type ButtonSize, type ButtonTone } from "@hjmds/design-contracts/recipes/base";
-export type { ButtonAlign, ButtonShape };
-import { type IconButtonShape, type IconButtonSize, type IconButtonTone, type LinkTone, type LinkVariant } from "@hjmds/design-contracts/recipes";
+import { type ButtonAlign, type ButtonEdge, type ButtonShape, type ButtonSize, type ButtonTone } from "@hjmds/design-contracts/recipes/base";
+export type { ButtonAlign, ButtonEdge, ButtonShape };
+import { type IconButtonEdge, type IconButtonShape, type IconButtonSize, type IconButtonTone, type LinkTone, type LinkVariant } from "@hjmds/design-contracts/recipes";
 import { type AnchorHTMLAttributes, type ButtonHTMLAttributes, type ForwardedRef, type ReactElement, type ReactNode } from "react";
 export type { ButtonSize, ButtonTone } from "@hjmds/design-contracts/recipes/base";
-export type { IconButtonShape, IconButtonSize, IconButtonTone, } from "@hjmds/design-contracts/recipes";
+export type { IconButtonEdge, IconButtonShape, IconButtonSize, IconButtonTone, } from "@hjmds/design-contracts/recipes";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & Readonly<{
     tone?: ButtonTone;
@@ -22,6 +22,11 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & Readonly<{
     }>;
     leading?: ReactNode;
     trailing?: ReactNode;
+    /**
+     * Container edge(s) this button sits on. A ghost button overhangs that edge by its inline padding so the label
+     * or trailing glyph lines up with the container inset (`resolveButtonEdgeOverhang`); framed tones keep their frame.
+     */
+    edge?: ButtonEdge;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -42,6 +47,11 @@ export declare const Button: import("react").ForwardRefExoticComponent<ButtonHTM
     }>;
     leading?: ReactNode;
     trailing?: ReactNode;
+    /**
+     * Container edge(s) this button sits on. A ghost button overhangs that edge by its inline padding so the label
+     * or trailing glyph lines up with the container inset (`resolveButtonEdgeOverhang`); framed tones keep their frame.
+     */
+    edge?: ButtonEdge;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLButtonElement>>;
@@ -53,6 +63,12 @@ export type IconButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "ari
     /** Toggle state. Paints the selected treatment and sets `aria-pressed`. */
     selected?: boolean;
     loading?: boolean;
+    /**
+     * Container edge(s) this button sits on (logical, RTL-aware). A ghost button keeps its touch target but overhangs
+     * the edge by (diameter − glyph slot) / 2 so the glyph slot lines up with the container inset
+     * (`resolveIconButtonEdgeOverhang`, 2026-10-17 measured audit). Framed tones align their frame and do not move.
+     */
+    edge?: IconButtonEdge;
     children: ReactNode;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
@@ -65,6 +81,12 @@ export declare const IconButton: import("react").ForwardRefExoticComponent<Omit<
     /** Toggle state. Paints the selected treatment and sets `aria-pressed`. */
     selected?: boolean;
     loading?: boolean;
+    /**
+     * Container edge(s) this button sits on (logical, RTL-aware). A ghost button keeps its touch target but overhangs
+     * the edge by (diameter − glyph slot) / 2 so the glyph slot lines up with the container inset
+     * (`resolveIconButtonEdgeOverhang`, 2026-10-17 measured audit). Framed tones align their frame and do not move.
+     */
+    edge?: IconButtonEdge;
     children: ReactNode;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;

@@ -7,7 +7,9 @@ import {
 } from "@hjmds/design-contracts/components/upload-item";
 import type { ReactNode } from "react";
 import { glyph } from "@hjmds/design-contracts/foundations";
-import { Text as NativeText, View } from "react-native";
+import { View } from "react-native";
+import { iconButtonRecipe } from "@hjmds/design-contracts/recipes";
+import { DrawnClose, DrawnRefresh } from "./internal/drawn-glyphs.js";
 
 import { IconButton } from "./actions.js";
 
@@ -62,12 +64,16 @@ export function UploadItem({ descriptor, labels, onCancel, onRetry, leading, lay
       {/* Row tool actions are icon buttons named by the localized label, matching Web. Cancelling an upload is not
           destructive, so the glyph stays muted instead of the danger text it used to be (2026-10-17 review). */}
       {action === null ? null : (
+        // edge="end": the glyph slot ends on the row's md inset, mirroring the file text's start inset (2026-10-17 audit).
         <IconButton
+          edge="end"
           label={action === "cancel" ? labels.cancel : labels.retry}
           onPress={() => action === "cancel" ? onCancel?.(descriptor.id) : onRetry?.(descriptor.id)}
           tone="ghost"
         >
-          <NativeText accessible={false} allowFontScaling={false} style={{ color: colors.textMuted, fontSize: glyph.md }}>{action === "cancel" ? "×" : "↻"}</NativeText>
+          {action === "cancel"
+            ? <DrawnClose size={glyph[iconButtonRecipe.sizes.medium.glyph]} color={colors.textMuted} />
+            : <DrawnRefresh size={glyph[iconButtonRecipe.sizes.medium.glyph]} color={colors.textMuted} />}
         </IconButton>
       )}
     </View>

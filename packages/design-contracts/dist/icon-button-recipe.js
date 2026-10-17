@@ -1,6 +1,7 @@
 import { resolveColorReference, } from "./color-references.js";
-import { opacity, radius, } from "./foundations.js";
+import { glyph, opacity, radius, } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
+export const iconButtonEdges = ["start", "end", "both"];
 export const iconButtonRecipe = {
     slots: ["root", "icon", "spinner"],
     defaults: { tone: "ghost", size: "medium", shape: "rounded" },
@@ -32,6 +33,14 @@ export const iconButtonRecipe = {
         large: { diameter: 52, hitSlop: 0, glyph: "lg" },
     },
     shapes: { rounded: "md", circle: "full" },
+    /**
+     * Edge alignment (2026-10-17 measured audit): a ghost IconButton at a row/header edge overhangs that edge by
+     * (visible diameter − glyph slot) / 2, so the glyph slot lines up with the container inset like text does while
+     * the hit area stays whole. Only `ghost` overhangs — filled and outlined tones show their frame, and the frame is
+     * what aligns. Renderers read `resolveIconButtonEdgeOverhang` so a raised visible diameter (minimumVisualTarget)
+     * moves the glyph slot by the same amount on Web and Native.
+     */
+    edge: { tones: ["ghost"] },
     states: {
         // `aria-pressed` / `accessibilityState.selected` already carried the toggle
         // state; without a paired visual every consumer painted the pressed icon
@@ -58,5 +67,15 @@ export function resolveIconButtonPresentation(tone, palette, selected = false) {
             ? null
             : resolveColorReference(contract.border, palette),
     };
+}
+/**
+ * Negative margin a ghost IconButton applies on its `edge` side(s): (visible diameter − glyph slot) / 2, e.g. 10 for
+ * medium (44 − 24). 0 for tones that draw a frame. `visibleDiameter` is the rendered size after the Provider's
+ * minimumVisualTarget axis (`visibleControlHeight`), so the overhang tracks what is actually drawn.
+ */
+export function resolveIconButtonEdgeOverhang(tone, size, visibleDiameter = iconButtonRecipe.sizes[size].diameter) {
+    if (!iconButtonRecipe.edge.tones.includes(tone))
+        return 0;
+    return Math.max(0, (visibleDiameter - glyph[iconButtonRecipe.sizes[size].glyph]) / 2);
 }
 //# sourceMappingURL=icon-button-recipe.js.map

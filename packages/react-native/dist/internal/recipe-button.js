@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { isLargeTextScale, visibleControlHeight, } from "@hjmds/design-contracts/components/design-system-provider";
 import { control, spacing } from "@hjmds/design-contracts/foundations";
-import { buttonRecipe, resolveButtonLabelLines, } from "@hjmds/design-contracts/recipes/base";
+import { buttonRecipe, resolveButtonEdgeOverhang, resolveButtonLabelLines, } from "@hjmds/design-contracts/recipes/base";
 import { Children, forwardRef, useState } from "react";
 import { ActivityIndicator, Pressable, View, } from "react-native";
 import { Text } from "../primitives.js";
@@ -21,7 +21,7 @@ function joinTextChildren(children) {
         : children;
 }
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
-export const RecipeButton = forwardRef(function RecipeButton({ children, tone = buttonRecipe.defaults.tone, size = buttonRecipe.defaults.size, shape = buttonRecipe.defaults.shape, align = buttonRecipe.defaults.align, selected, disabled = false, loading = false, completion, disableWhileLoading = false, growWithContent = false, loadingLabel, leading, trailing, fullWidth = false, hitSlop, layoutStyle, style, labelStyle, renderLoadingIndicator, accessibilityLabel, accessibilityState, onPress, onLongPress, ...props }, ref) {
+export const RecipeButton = forwardRef(function RecipeButton({ children, tone = buttonRecipe.defaults.tone, size = buttonRecipe.defaults.size, shape = buttonRecipe.defaults.shape, align = buttonRecipe.defaults.align, selected, disabled = false, loading = false, completion, disableWhileLoading = false, growWithContent = false, loadingLabel, leading, trailing, edge, fullWidth = false, hitSlop, layoutStyle, style, labelStyle, renderLoadingIndicator, accessibilityLabel, accessibilityState, onPress, onLongPress, ...props }, ref) {
     const { colors, environment, tokens, textScaling } = useHjmNativeTheme();
     const labelLines = resolveButtonLabelLines(isLargeTextScale(environment.textScale));
     const inactive = disabled && !loading;
@@ -39,6 +39,7 @@ export const RecipeButton = forwardRef(function RecipeButton({ children, tone = 
         throw new TypeError("Button requires children");
     }
     const toneContract = buttonRecipe.tones[tone];
+    const edgeOverhang = edge === undefined ? 0 : resolveButtonEdgeOverhang(tone, size);
     const sizeContract = buttonRecipe.sizes[size];
     const selectedContract = selected === true ? buttonRecipe.states.selected : null;
     const resolveColor = (key) => key === null ? "transparent" : colors[key];
@@ -87,6 +88,9 @@ export const RecipeButton = forwardRef(function RecipeButton({ children, tone = 
                         ? buttonRecipe.opacity.pressed
                         : 1,
                 paddingHorizontal: toneContract.paddingHorizontal ?? sizeContract.paddingHorizontal,
+                // Edge alignment (resolveButtonEdgeOverhang): a frameless button overhangs by its own padding.
+                ...(edgeOverhang > 0 && edge !== "end" ? { marginStart: -edgeOverhang } : {}),
+                ...(edgeOverhang > 0 && edge !== "start" ? { marginEnd: -edgeOverhang } : {}),
                 ...(fullWidth ? { alignSelf: "stretch" } : {}),
             },
             style,

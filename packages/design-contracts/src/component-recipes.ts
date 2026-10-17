@@ -30,8 +30,11 @@ import { tooltipDescriptorDefaults } from "./tooltip.js";
 import { bottomNavigationRecipeDefaults } from "./bottom-navigation-defaults.js";
 
 export {
+  iconButtonEdges,
   iconButtonRecipe,
+  resolveIconButtonEdgeOverhang,
   resolveIconButtonPresentation,
+  type IconButtonEdge,
   type IconButtonShape,
   type IconButtonSize,
   type IconButtonTone,

@@ -57,7 +57,10 @@ it("Agreement: on-brand fixed check artwork, stable all-row name and a rebuildab
   // original contrast and accessibility assertions on the visible mark, not removed text.
   const mark = hosts((node) => String(node.type) === "View" && flat(node.props.style).borderLeftWidth === 2)[0]!;
   expect(flat(mark.props.style).borderColor).toBe(resolveColorReference(selectionControlRecipe.states.indicator, palette!));
-  expect(mark.props.accessible).toBe(false);
+  // Since component review C the shared SelectionMark hides the whole mark from assistive tech on its frame;
+  // the stroke found above is a child of that frame.
+  let frame: typeof mark | null = mark; while (frame && frame.props.accessible === undefined) frame = frame.parent;
+  expect(frame?.props.accessible).toBe(false);
 
   act(() => rows()[1]!.props.onPress());
   expect(rows()[0]!.props.accessibilityLabel).toBe("Agree to everything");

@@ -1,5 +1,5 @@
 import { control, spacing, type FontWeightValue, type TextVariant } from "./foundations.js";
-export { iconButtonRecipe, resolveIconButtonPresentation, type IconButtonShape, type IconButtonSize, type IconButtonTone, type ResolvedIconButtonPresentation, } from "./icon-button-recipe.js";
+export { iconButtonEdges, iconButtonRecipe, resolveIconButtonEdgeOverhang, resolveIconButtonPresentation, type IconButtonEdge, type IconButtonShape, type IconButtonSize, type IconButtonTone, type ResolvedIconButtonPresentation, } from "./icon-button-recipe.js";
 export { counterBadgeDefaults, counterBadgeRecipe, formatCounterBadgeCount, type CounterBadgeSize, type CounterBadgeTone, type CounterBadgeVariant, } from "./counter-badge-recipe.js";
 export { progressRecipe, type ProgressShape, type ProgressSize, type ProgressTone, } from "./progress-recipe.js";
 export type { BottomNavigationDensity, BottomNavigationDistribution, BottomNavigationPresentation, } from "./bottom-navigation-defaults.js";

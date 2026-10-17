@@ -77,7 +77,7 @@ import { ListDetailScreen } from "@hjmds/react-native/screen-flows";
 | --- | --- | --- |
 | 크기 | 목록 또는 상세 pane 하나만 표시하고 각 pane이 host 높이 100%(Native `flex: 1`)를 채운다; 각 pane은 ScreenLayout 폭(최대 720) | Web `height: 100%`, Native `Pane` |
 | 간격 | 각 pane의 ScreenLayout padding `spacing.md` 16; 추가 간격 없음, 목록 행 간격은 `list`(제품·List) 소유 | `ScreenLayout`, `screen-flows.tsx` |
-| 순서·정렬 | 목록 pane: 헤더(제목 → 새로고침) → 목록 → footer(더 보기); 상세 pane: 헤더(뒤로 → 제목) → `detail.content` | `ListDetailScreen` 렌더 순서 |
+| 순서·정렬 | 목록 pane: 헤더(제목 → 새로고침) → 목록 → footer(더 보기); 상세 pane: 헤더(뒤로 → 제목) → `detail.content` 아이콘이 있는 새로고침은 헤더 끝에서 `edge="end"`로 그린다. 제품 `actions`는 그 앞에 오므로 `edge`를 주지 않는다(2026-10-17 실측 감사, [IconButton `edge`](icon-button.md#배치)) | `ListDetailScreen` 렌더 순서 |
 | 고정·스크롤 | 두 pane 모두 헤더 고정·본문 스크롤; 숨긴 목록 pane은 mount를 유지해 스크롤·입력이 남는다(Web `hidden`, Native `display: "none"`) | Web·Native `ListDetailScreen` |
 | 좁은 폭·큰 글자 | 제목 열 최소 폭 120 × 글자 배율, 모자라면 새로고침 버튼이 다음 줄로 내려간다; 넓은 폭에서도 두 pane을 나란히 두지 않는다 | `screenPatternRecipe.headerMinWidth` |
 

@@ -24,7 +24,8 @@ export type ScreenFlowAction = Readonly<{label:string; onAction():void; disabled
 /** Header tool action (refresh, add): icon-only so it never pushes the centered title. A required text `add` made
  * products route exits ("취소") through it as a header text button (2026-10-17 screen review); exits use `exit`. */
 export type ScreenFlowIconAction = ScreenFlowAction & Readonly<{icon:ReactNode}>;
-function Action({action,secondary=false,buttonRef}:{action:ScreenFlowAction;secondary?:boolean;buttonRef?:Ref<HTMLButtonElement>}){if(action.icon)return <IconButton ref={buttonRef} label={action.label} tone="ghost" disabled={!!(action.disabled||action.pending)} onClick={action.onAction}>{action.icon}</IconButton>;return <Button ref={buttonRef} tone={secondary?"ghost":"primary"} disabled={!!(action.disabled||action.pending)} loading={action.pending??false} onClick={action.onAction}>{action.label}</Button>;}
+// `edge`: the action ends a header/row edge (IconButton/Button edge rule, 2026-10-17 audit); framed tones ignore it.
+function Action({action,secondary=false,buttonRef,edge}:{action:ScreenFlowAction;secondary?:boolean;buttonRef?:Ref<HTMLButtonElement>;edge?:"start"|"end"}){if(action.icon)return <IconButton ref={buttonRef} label={action.label} tone="ghost" {...(edge?{edge}:{})} disabled={!!(action.disabled||action.pending)} onClick={action.onAction}>{action.icon}</IconButton>;return <Button ref={buttonRef} tone={secondary?"ghost":"primary"} {...(edge?{edge}:{})} disabled={!!(action.disabled||action.pending)} loading={action.pending??false} onClick={action.onAction}>{action.label}</Button>;}
 type Base = Omit<ScreenLayoutProps,"children"|"footer">;
 // Stacked footer/sheet buttons use Stack gap "xs" (actionGroupRecipe.stackedGap 8); 12 read as split groups (button.md, 2026-10-17).
 
@@ -51,7 +52,7 @@ export function ListDetailScreen({list,detail,back,refresh,loadMore,layoutStyle,
  // layoutStyle places the outer host that owns both panes, not the inner list ScreenLayout.
  // "더 보기" ends the list inside the scroll body, centered like LoadMore; the fixed footer is the bottom CTA slot (2026-10-17 review).
  return <div style={{height:"100%",...layoutStyle}}>
-  <div ref={listHost} tabIndex={-1} hidden={open} style={{height:"100%"}} onFocusCapture={event=>{returnFocus.current=event.target as HTMLElement;}}><ScreenLayout {...screen} {...(refresh||screen.actions?{actions:<Stack axis="inline" gap="xs" align="center">{/* Refresh no longer replaces the screen's own actions (2026-10-16 composition review). */}{screen.actions}{refresh?<Action action={refresh} secondary/>:null}</Stack>}:{})}>{loadMore?<div style={{display:"flex",flexDirection:"column",flex:"1 1 auto",minHeight:0,gap:screenPatternRecipe.itemGap}}>{list}<div style={{display:"flex",justifyContent:"center"}}><Action action={loadMore} secondary/></div></div>:list}</ScreenLayout></div>
+  <div ref={listHost} tabIndex={-1} hidden={open} style={{height:"100%"}} onFocusCapture={event=>{returnFocus.current=event.target as HTMLElement;}}><ScreenLayout {...screen} {...(refresh||screen.actions?{actions:<Stack axis="inline" gap="xs" align="center">{/* Refresh no longer replaces the screen's own actions (2026-10-16 composition review). */}{screen.actions}{refresh?<Action action={refresh} secondary edge="end"/>:null}</Stack>}:{})}>{loadMore?<div style={{display:"flex",flexDirection:"column",flex:"1 1 auto",minHeight:0,gap:screenPatternRecipe.itemGap}}>{list}<div style={{display:"flex",justifyContent:"center"}}><Action action={loadMore} secondary/></div></div>:list}</ScreenLayout></div>
   {detail?<div ref={detailHost} style={{height:"100%"}}><ScreenLayout title={detail.title} {...(detail.titleVisibility === undefined ? {} : { titleVisibility: detail.titleVisibility })} {...(detail.headerAlignment === undefined ? {} : { headerAlignment: detail.headerAlignment })} {...(detail.state === undefined ? {} : {state:detail.state})} stateAction={detail.stateAction} notice={detail.notice} exit={{kind:"back",label:back.label,onClick:back.onAction,disabled:!!(back.disabled||back.pending)}}>{detail.content}</ScreenLayout></div>:null}
  </div>;
 }
@@ -144,7 +145,7 @@ export function MediaSelectionScreen({library,selectionSummary,items,add,done,la
   focusedItem.current = null;
   if (target) { target.focus({preventScroll:true}); reveal(target); }
  });
- return <ScreenLayout {...screen} {...(add||screen.actions?{actions:<Stack axis="inline" gap="xs" align="center">{screen.actions}{add?<Action action={add} buttonRef={addButton}/>:null}</Stack>}:{})} footer={<Stack gap="sm">{selectionSummary}<Action action={done}/></Stack>}>
+ return <ScreenLayout {...screen} {...(add||screen.actions?{actions:<Stack axis="inline" gap="xs" align="center">{screen.actions}{add?<Action action={add} buttonRef={addButton} edge="end"/>:null}</Stack>}:{})} footer={<Stack gap="sm">{selectionSummary}<Action action={done}/></Stack>}>
   {library??<Grid ref={grid} columns={{compact:2,expanded:3}} gap={{compact:"md"}}
    onFocusCapture={event => {
     const node = event.target as HTMLElement, row = node.closest<HTMLElement>("[data-hjm-media-item]");
@@ -325,7 +326,7 @@ function SearchIdleSections({ recent, suggested, legacy, onCommit, hostRef, onRe
     {recent && visible.length ? <Stack gap="sm" ref={hostRef}>
       <Stack axis="inline" justify="between" align="center" gap="sm">
         <Heading level="level5" semanticLevel={2}>{recent.title}</Heading>
-        <Button tone="ghost" size="small" onClick={onClearAll}>{recent.clearAllLabel}</Button>
+        <Button tone="ghost" size="small" edge="end" onClick={onClearAll}>{recent.clearAllLabel}</Button>
       </Stack>
       <Stack gap="xxs">{visible.map((item, index) => <Stack key={item} axis="inline" align="center" gap="xxs">
         <ListRow density="compact" leading={recent.icon} title={item} onClick={() => onCommit(item)} layoutStyle={{ flex: 1, minWidth: 0 }} />
@@ -361,13 +362,15 @@ function SearchResultsHeader({ summary, applied, cause, appliedHost, onRemove, o
   // A count-free search still owns its sorting action; do not hide it with the total.
   const showSort = summary && cause === "none" && sort;
   if (!summary?.notice && !showCount && !showSort && !applied?.items.length) return null;
+  // The sort trigger ends the count row: edge="end" puts its chevron on the gutter like the count text starts on it
+  // (2026-10-17 measured audit: chevron 29 from the edge against 16).
   return <Stack gap="sm">
     {summary?.notice}
     {showCount || showSort ? <Stack axis="inline" justify={showCount ? "between" : "end"} align="center" gap="sm" wrap>
       {showCount ? (summary!.count === null ? <Skeleton shape="text" width="30%" /> : <Text tone="muted">{summary!.countLabel(summary!.count)}</Text>) : null}
       {sort ? <Menu label={sort.label} align="end" selectionMode="single" value={sort.value} onValueChange={onSortChange}
         items={sort.options.map(option => ({ id: option.id, label: option.label }))}
-        trigger={<Button size="small" tone="ghost" {...(sort.icon === undefined ? {} : { trailing: sort.icon })}>{sort.triggerLabel}</Button>} /> : null}
+        trigger={<Button size="small" tone="ghost" edge="end" {...(sort.icon === undefined ? {} : { trailing: sort.icon })}>{sort.triggerLabel}</Button>} /> : null}
     </Stack> : null}
     {applied?.items.length ? <Stack ref={appliedHost} axis="inline" wrap gap="xs" align="center">
       {applied.items.map((item, index) => <Chip key={item.key} data-search-applied-filter="" label={item.label} aria-label={applied.removeLabel(item.label)}
@@ -545,9 +548,7 @@ function CommentTextAction({label,onPress,disabled=false,expanded}:Readonly<{lab
 
 /** Vertical dots drawn in the icon grid, matching Native's drawn glyph (the semantic `more` icon is horizontal). */
 function CommentMenuGlyph(){const size=commentThreadRecipe.menuGlyphSize;return <svg aria-hidden="true" focusable="false" width={size} height={size} viewBox="0 0 24 24" fill="currentColor">{[5,12,19].map(y=><circle key={y} cx="12" cy={y} r="1.75"/>)}</svg>;}
-function CommentMenuButton({item,menu}:Readonly<{item:CommentThreadItem;menu:CommentMenu}>){
- const items=resolveCommentMenuItems(menu.items(item));
- if(!items.length)return null;
+function CommentMenuButton({item,menu,items}:Readonly<{item:CommentThreadItem;menu:CommentMenu;items:readonly CommentMenuItemDescriptor[]}>){
  const label=menu.label(item);
  return <Menu label={label} align="end" trigger={<IconButton label={label} tone="ghost"><CommentMenuGlyph/></IconButton>} items={items.map(entry=>({id:entry.id,label:entry.label,textValue:entry.label,...(entry.tone===undefined?{}:{tone:entry.tone}),...(entry.disabled===undefined?{}:{disabled:entry.disabled})}))} onActionAfterDismiss={id=>menu.onAction(item,id)}/>;
 }
@@ -556,14 +557,15 @@ function CommentMenuButton({item,menu}:Readonly<{item:CommentThreadItem;menu:Com
 export function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyle, commentMenu }: CommentThreadRowProps) {
  const avatarSize=item.parentId===null?commentThreadRecipe.avatarSize:commentThreadRecipe.replyAvatarSize;
  const canReply=item.canReply??item.parentId===null;
- const time=item.timeLabel?<time dateTime={item.timeDateTime}><Text variant="caption" tone="muted">{item.timeLabel}</Text></time>:null;
+ const menuItems=commentMenu?resolveCommentMenuItems(commentMenu.items(item)):[];
+ const time=item.timeLabel?<time className="hjm-comment-row__time" dateTime={item.timeDateTime}><Text variant="caption" tone="muted">{item.timeLabel}</Text></time>:null;
  // The like count sits under the heart so the text column carries only identity, body and reply.
  return <Stack key={item.id} axis="inline" align="start" gap="xs" {...(layoutStyle === undefined ? {} : {layoutStyle})}>{item.avatar?<div className="hjm-comment-row__avatar" style={{inlineSize:avatarSize}}>{item.avatar}</div>:null}<div className="hjm-comment-row__text" style={{gap:commentThreadRecipe.lineGap}}>
  {/* Only identity and body are the hold target, so the reply action keeps its own button semantics. */}
  {(()=>{const identity=<>{item.bodyText!==undefined?<Text><Text emphasis="strong">{item.author}</Text>{" "}{item.bodyText}</Text>:(item.author||item.timeLabel)?<Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexWrap:"wrap"}}>{item.author?<Text variant="caption" emphasis="strong">{item.author}</Text>:null}{time}</Stack>:null}
  {item.body}{item.media?<div className="hjm-comment-row__media" style={{maxInlineSize:commentThreadRecipe.mediaMaxWidth,borderRadius:commentThreadRecipe.mediaRadius}}>{item.media}</div>:null}</>;return item.reactions?<MessageReactions {...item.reactions} {...((item.canReply??item.parentId===null)&&!item.replyDisabled ? {replyAction:{label:replyLabel,onPress:()=>onReply(item.id),...(item.reactions.replyIcon===undefined?{}:{icon:item.reactions.replyIcon})}} : {})} triggerClassName="hjm-comment-row__reactions">{identity}</MessageReactions>:identity;})()}
  {(item.bodyText!==undefined&&time)||canReply||item.reactionSummary?<Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap:"wrap"}}>{item.bodyText!==undefined?time:null}{item.reactionSummary}{canReply?<CommentTextAction label={replyLabel} disabled={item.replyDisabled??false} onPress={()=>onReply(item.id)}/>:null}</Stack>:null}</div>
- <div className="hjm-comment-row__like"><Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexShrink:0}}>{item.likeAction!==undefined?item.likeAction:<IconButton label={item.likeLabel} tone="ghost" onClick={()=>onLike(item.id)}>{item.likeIcon}</IconButton>}{item.actions}{commentMenu?<CommentMenuButton item={item} menu={commentMenu}/>:null}</Stack>{item.likeCountLabel?<div className="hjm-comment-row__like-count" style={{inlineSize:commentThreadRecipe.likeColumnWidth}}><Text variant="caption" tone="muted">{item.likeCountLabel}</Text></div>:null}</div></Stack>;
+ <div className="hjm-comment-row__like" {...(menuItems.length||item.actions==null&&item.likeAction===undefined?{"data-edge":"end"}:{})} style={{"--hjm-comment-anchor-line":`var(--hjm-type-${item.bodyText!==undefined?commentThreadRecipe.actionAnchor.inlineTextVariant:commentThreadRecipe.actionAnchor.authorTextVariant}-line-height)`} as CSSProperties}><Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexShrink:0}}>{item.likeAction!==undefined?item.likeAction:<IconButton label={item.likeLabel} tone="ghost" onClick={()=>onLike(item.id)}>{item.likeIcon}</IconButton>}{item.actions}{commentMenu&&menuItems.length?<CommentMenuButton item={item} menu={commentMenu} items={menuItems}/>:null}</Stack>{item.likeCountLabel?<div className="hjm-comment-row__like-count" style={{inlineSize:commentThreadRecipe.likeColumnWidth}}><Text variant="caption" tone="muted">{item.likeCountLabel}</Text></div>:null}</div></Stack>;
 }
 
 /** Controlled thread: server ordering, permission checks and receipt-based draft clearing belong to the product. */

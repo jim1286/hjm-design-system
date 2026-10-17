@@ -1,7 +1,7 @@
 import { type LinkDescriptor, type LinkDestination } from "@hjmds/design-contracts/components/link";
 import type { SemanticIconName } from "@hjmds/design-contracts/components/icon";
-import { type IconButtonTone as ContractIconButtonTone, type IconButtonShape, type IconButtonSize } from "@hjmds/design-contracts/recipes";
-import { type ButtonAlign as ContractButtonAlign, type ButtonShape as ContractButtonShape, type ButtonSize as ContractButtonSize, type ButtonTone as ContractButtonTone } from "@hjmds/design-contracts/recipes/base";
+import { type IconButtonEdge, type IconButtonTone as ContractIconButtonTone, type IconButtonShape, type IconButtonSize } from "@hjmds/design-contracts/recipes";
+import { type ButtonAlign as ContractButtonAlign, type ButtonEdge as ContractButtonEdge, type ButtonShape as ContractButtonShape, type ButtonSize as ContractButtonSize, type ButtonTone as ContractButtonTone } from "@hjmds/design-contracts/recipes/base";
 import { type ReactNode } from "react";
 import { View, type PressableProps } from "react-native";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
@@ -10,7 +10,8 @@ export type ButtonTone = ContractButtonTone;
 export type ButtonSize = ContractButtonSize;
 export type ButtonShape = ContractButtonShape;
 export type ButtonAlign = ContractButtonAlign;
-export type { IconButtonShape, IconButtonSize } from "@hjmds/design-contracts/recipes";
+export type ButtonEdge = ContractButtonEdge;
+export type { IconButtonEdge, IconButtonShape, IconButtonSize } from "@hjmds/design-contracts/recipes";
 export type ButtonProps = Omit<PressableProps, "accessibilityRole" | "accessibilityState" | "children" | "disabled" | "hitSlop" | "style"> & Readonly<{
     children?: ReactNode;
     tone?: ButtonTone;
@@ -35,6 +36,11 @@ export type ButtonProps = Omit<PressableProps, "accessibilityRole" | "accessibil
     loadingLabel?: ReactNode;
     leading?: ReactNode;
     trailing?: ReactNode;
+    /**
+     * Container edge(s) this button sits on (start/end follow the reading direction). A ghost button overhangs that
+     * edge by its inline padding so the label or trailing glyph lines up with the inset (`resolveButtonEdgeOverhang`).
+     */
+    edge?: ButtonEdge;
     fullWidth?: boolean;
     hitSlop?: PressableProps["hitSlop"];
     accessibilityState?: PressableProps["accessibilityState"];
@@ -69,6 +75,11 @@ export declare const Button: import("react").ForwardRefExoticComponent<Omit<Pres
     loadingLabel?: ReactNode;
     leading?: ReactNode;
     trailing?: ReactNode;
+    /**
+     * Container edge(s) this button sits on (start/end follow the reading direction). A ghost button overhangs that
+     * edge by its inline padding so the label or trailing glyph lines up with the inset (`resolveButtonEdgeOverhang`).
+     */
+    edge?: ButtonEdge;
     fullWidth?: boolean;
     hitSlop?: PressableProps["hitSlop"];
     accessibilityState?: PressableProps["accessibilityState"];
@@ -94,6 +105,12 @@ export type IconButtonProps = Omit<PressableProps, "accessibilityLabel" | "acces
     selected?: boolean;
     disabled?: boolean;
     loading?: boolean;
+    /**
+     * Container edge(s) this button sits on (start/end follow the reading direction). A ghost button keeps its touch
+     * target but overhangs the edge by (diameter − glyph slot) / 2 so the glyph slot lines up with the container inset
+     * (`resolveIconButtonEdgeOverhang`, 2026-10-17 measured audit). Framed tones align their frame and do not move.
+     */
+    edge?: IconButtonEdge;
     /** Keep the busy control discoverable by default; opt in only for legacy disabled semantics. */
     disableWhileLoading?: boolean;
     hitSlop?: PressableProps["hitSlop"];
@@ -117,6 +134,12 @@ export declare const IconButton: import("react").ForwardRefExoticComponent<Omit<
     selected?: boolean;
     disabled?: boolean;
     loading?: boolean;
+    /**
+     * Container edge(s) this button sits on (start/end follow the reading direction). A ghost button keeps its touch
+     * target but overhangs the edge by (diameter − glyph slot) / 2 so the glyph slot lines up with the container inset
+     * (`resolveIconButtonEdgeOverhang`, 2026-10-17 measured audit). Framed tones align their frame and do not move.
+     */
+    edge?: IconButtonEdge;
     /** Keep the busy control discoverable by default; opt in only for legacy disabled semantics. */
     disableWhileLoading?: boolean;
     hitSlop?: PressableProps["hitSlop"];

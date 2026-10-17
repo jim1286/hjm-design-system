@@ -66,7 +66,7 @@ import { TableColumnSettings } from "@hjmds/react-native/collection-editing";
 | --- | --- | --- |
 | 크기 | 체크박스는 [Checkbox](checkbox.md) 기본 `medium`, 이동 버튼은 `ghost` [Button](button.md) 기본 `medium`(높이 44) | `collection-editing.tsx` |
 | 간격 | 열 사이·체크박스와 버튼 줄 사이·버튼 사이 모두 `spacing.sm` 12 | `Stack gap="sm"` |
-| 순서·정렬 | 제목 → 열마다 [체크박스] 다음 줄 [앞으로] [뒤로], `columns` 순서대로 | 양 renderer |
+| 순서·정렬 | 제목 → 열마다 [체크박스] 다음 줄 [앞으로] [뒤로], `columns` 순서대로 마지막 [뒤로]는 `edge="end"`로 아이콘 칸이 묶음 끝에 온다(전에는 10 안쪽, 2026-10-17 실측 감사, [IconButton `edge`](icon-button.md#배치)) | 양 renderer |
 | 고정·스크롤 | 자체 스크롤 없음. 시트·팝오버 등 놓는 영역이 소유한다 | — |
 | 좁은 폭·큰 글자 | 이동 버튼 줄이 `wrap`으로 줄바꿈 | `Stack axis="inline" wrap` |
 

@@ -3,8 +3,8 @@ import { backdrop, control, easing, fontFamily, resolveFontFamilyStack, fontWeig
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { focusIndicatorContract } from "@hjmds/design-contracts/contracts";
 import { visibleControlHeight, } from "@hjmds/design-contracts/components/design-system-provider";
-import { buttonRecipe, fieldRecipe } from "@hjmds/design-contracts/recipes/base";
-import { bottomNavigationRecipe, comboboxRecipe, dialogRecipe, listRowRecipe, menuRecipe, searchFieldRecipe, selectRecipe, sheetRecipe, skeletonRecipe, tooltipRecipe, switchRecipe, toastRecipe, } from "@hjmds/design-contracts/recipes";
+import { buttonRecipe, fieldRecipe, resolveButtonEdgeOverhang } from "@hjmds/design-contracts/recipes/base";
+import { bottomNavigationRecipe, iconButtonRecipe, resolveIconButtonEdgeOverhang, comboboxRecipe, dialogRecipe, listRowRecipe, menuRecipe, searchFieldRecipe, selectRecipe, sheetRecipe, skeletonRecipe, tooltipRecipe, switchRecipe, toastRecipe, } from "@hjmds/design-contracts/recipes";
 function kebab(value) {
     return value.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
 }
@@ -209,6 +209,15 @@ export function createHjmThemeStyle(value) {
         // that every stylesheet consumer of a control height honours it at once.
         style[`--hjm-control-button-${kebab(name)}`] =
             `${visibleControlHeight(value, environment.minimumVisualTarget)}px`;
+    }
+    // Edge alignment (2026-10-17 measured audit): how far a ghost IconButton / Button with `edge` overhangs the
+    // container edge, from the same contract helpers Native reads (glyph slot or label on the inset, hit area kept).
+    for (const size of Object.keys(iconButtonRecipe.sizes)) {
+        const visible = visibleControlHeight(iconButtonRecipe.sizes[size].diameter, environment.minimumVisualTarget);
+        style[`--hjm-icon-button-edge-${size}`] = `${resolveIconButtonEdgeOverhang("ghost", size, visible)}px`;
+    }
+    for (const size of Object.keys(buttonRecipe.sizes)) {
+        style[`--hjm-button-edge-${size}`] = `${resolveButtonEdgeOverhang("ghost", size)}px`;
     }
     return style;
 }

@@ -32,7 +32,7 @@ export function SavedItemsScreen<T extends SavedItem>({items,collections,collect
   const covers=new Map(groups.map(group=>{const ids=new Set(group.itemIds);return [group.id,items.filter(item=>ids.has(item.id)).slice(0,4)] as const;}));
   return <ListDetailScreen {...screen} state={state} title={home?screen.title:collection?.title??labels.allItems}
     {...(home?(screen.exit?{exit:screen.exit}:{}):{exit:{kind:"back" as const,label:labels.back,onPress:onBack}})}
-    actions={home?<IconButton label={labels.createCollection} tone="ghost" onPress={onCreateCollection}>{createCollectionIcon}</IconButton>:screen.actions}
+    actions={home?<IconButton label={labels.createCollection} tone="ghost" edge="end" onPress={onCreateCollection}>{createCollectionIcon}</IconButton>:screen.actions}
     back={{label:labels.back,onAction:onBack}}
     {...(selected?{detail:{title:selected.title,content:renderDetail(selected)}}:{})}
     list={<Stack gap="md">

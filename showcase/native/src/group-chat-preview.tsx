@@ -6,7 +6,7 @@ import { Text } from "@hjmds/react-native/primitives";
 import { Avatar } from "@hjmds/react-native/data-display";
 import { KeyboardAvoiding } from "@hjmds/react-native/keyboard";
 import { ChatMessage, ChatScreen, MessageComposer } from "@hjmds/react-native/screens";
-import { resolveChatMessageGroups } from "@hjmds/design-contracts/screen-patterns";
+import { chatMessageRecipe, resolveChatMessageGroups } from "@hjmds/design-contracts/screen-patterns";
 
 // 2026-10-16 group-room example: several members, one avatar/name per run, quote, photo and hold menu.
 // Neutral landscape crops stand in for member photos so no real person is depicted.
@@ -50,7 +50,7 @@ export function GroupChatPreview() {
         renderItem={({ item: message }) => {
           const member = members[message.authorId];
           return <ChatMessage direction={member ? "incoming" : "outgoing"} author={member?.name ?? ""} timestamp={message.timestamp} groupPosition={positions.get(message.id) ?? "single"}
-            {...(member ? { avatar: <Avatar name={member.name} size={36} decorative source={member.photo} /> } : {})}
+            {...(member ? { avatar: <Avatar name={member.name} size={chatMessageRecipe.avatarSize} decorative source={member.photo} /> } : {})}
             replyAction={{ label: "답장", onPress: () => setReplyTarget(message) }}
             {...(message.replyTo ? { replyQuote: { title: `${message.replyTo.author}에게 답장`, excerpt: message.replyTo.text } } : {})}
             {...(message.photos ? { media: Array.from({ length: message.photos }, (_, index) => ({ id: `${message.id}-${index}`, label: "산책길 사진", aspectRatio: 4 / 3, preview: <Image source={require("../../shared/photos/river.jpg")} style={{ width: "100%", height: "100%" }} /> })) } : {})}

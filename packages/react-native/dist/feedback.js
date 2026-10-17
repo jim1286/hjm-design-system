@@ -29,6 +29,9 @@ export function Notice({ title, description, tone = noticeRecipe.defaults.tone, 
         color: foreground,
         size: glyph[noticeRecipe.iconSize],
     });
+    // The icon box spans the title's rendered first line (token × text scale) so the glyph centers on it at any text
+    // scale, like Web's 1lh anchor (2026-10-17 measured audit). The action stays under the copy on Native.
+    const titleLineHeight = theme.tokens.typography[noticeRecipe.title.textVariant].lineHeight * theme.textScaling.scale;
     return (_jsxs(View, { ...props, accessibilityLiveRegion: announcement, accessibilityRole: announcement === "assertive" ? "alert" : undefined, style: [
             {
                 backgroundColor: resolveColorReference(toneContract.background, theme.palette),
@@ -46,7 +49,7 @@ export function Notice({ title, description, tone = noticeRecipe.defaults.tone, 
                     gap: noticeRecipe.gap,
                 }, children: [resolvedIcon === undefined ? null : (_jsx(View, { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
                             alignItems: "center",
-                            height: glyph[noticeRecipe.iconSize],
+                            height: Math.max(glyph[noticeRecipe.iconSize], titleLineHeight),
                             justifyContent: "center",
                             width: glyph[noticeRecipe.iconSize],
                         }, children: resolvedIcon })), _jsxs(View, { style: { flex: 1, gap: noticeRecipe.contentGap, minWidth: 0 }, children: [_jsx(Text, { style: { color: foreground, fontWeight: noticeRecipe.title.fontWeight }, variant: noticeRecipe.title.textVariant, children: title }), description ? (_jsx(Text, { style: { color: resolveColorReference(noticeRecipe.description.color, theme.palette) }, variant: noticeRecipe.description.textVariant, children: description })) : null] })] }), action] }));

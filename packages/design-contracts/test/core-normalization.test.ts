@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { ACCENTS, THEMES, accentFill } from "../src/colors.js";
+import { resolveColorReference } from "../src/color-references.js";
+import { semanticColors } from "../src/semantic-colors.js";
 import {
   surfaceDefaults,
   surfaceGeometry,
@@ -85,7 +87,8 @@ describe("cross-platform core normalization", () => {
       content: ACCENTS.light.success,
       border: "rgba(6, 95, 70, 0.3)",
     });
-    expect(resolveTagPresentation("neutral", palette).border).toBeNull();
+    // Review E3 (2026-10-17): a borderless canvas plate vanished on the canvas, so neutral Tags draw the default border.
+    expect(resolveTagPresentation("neutral", palette).border).toBe(resolveColorReference(semanticColors.border.default, palette));
     expect(tagRecipe.radius).toBe("sm");
   });
 

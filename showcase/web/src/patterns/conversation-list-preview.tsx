@@ -24,7 +24,7 @@ export function ConversationListPreview({ tools = false }: { tools?: boolean }) 
   // the screen gutter: rows start 16 from the edge like Instagram DM instead of 32 (review S5#9).
   return <PreviewRoute before={tools ? <PreviewTools><Text tone="muted" role="status">{status}</Text></PreviewTools> : null}>
       <ScreenLayout title={copy.title} as="section" scroll="content" contentInset="body-edge"
-        actions={<IconButton label={copy.compose} tone="ghost" onClick={() => setStatus(`${copy.compose}를 시작해요.`)}><SquarePen size={20} /></IconButton>}
+        actions={<IconButton edge="end" label={copy.compose} tone="ghost" onClick={() => setStatus(`${copy.compose}를 시작해요.`)}><SquarePen size={20} /></IconButton>}
         notice={<SearchField label={copy.search} clearLabel={copy.clearSearch} placeholder={copy.searchPlaceholder} renderSearchIcon={({ color, size }) => <Search aria-hidden color={color} size={size} />} value={query} onValueChange={setQuery} />}
         state={rows.length ? { kind: "ready" } : { kind: "empty", title: copy.noMatch }}>
         <div>{rows.map(row => <ContextMenu key={row.id} accessibilityLabel={conversationRowMenuLabel(row)}

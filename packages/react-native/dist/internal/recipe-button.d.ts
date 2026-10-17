@@ -18,6 +18,7 @@ export declare const RecipeButton: import("react").ForwardRefExoticComponent<Omi
     loadingLabel?: ReactNode;
     leading?: ReactNode;
     trailing?: ReactNode;
+    edge?: import("../actions.js").ButtonEdge;
     fullWidth?: boolean;
     hitSlop?: import("react-native").PressableProps["hitSlop"];
     accessibilityState?: import("react-native").PressableProps["accessibilityState"];

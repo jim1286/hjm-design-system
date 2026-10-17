@@ -1,15 +1,17 @@
 import {
   buttonRecipe,
   type ButtonAlign,
+  type ButtonEdge,
   type ButtonShape,
   type ButtonSize,
   type ButtonTone,
 } from "@hjmds/design-contracts/recipes/base";
 
-export type { ButtonAlign, ButtonShape };
+export type { ButtonAlign, ButtonEdge, ButtonShape };
 import {
   iconButtonRecipe,
   linkRecipe,
+  type IconButtonEdge,
   type IconButtonShape,
   type IconButtonSize,
   type IconButtonTone,
@@ -31,6 +33,7 @@ import { classNames } from "./internal.js";
 
 export type { ButtonSize, ButtonTone } from "@hjmds/design-contracts/recipes/base";
 export type {
+  IconButtonEdge,
   IconButtonShape,
   IconButtonSize,
   IconButtonTone,
@@ -52,6 +55,11 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> &
     completion?: Readonly<{ confirmed: boolean; label: string }>;
     leading?: ReactNode;
     trailing?: ReactNode;
+    /**
+     * Container edge(s) this button sits on. A ghost button overhangs that edge by its inline padding so the label
+     * or trailing glyph lines up with the container inset (`resolveButtonEdgeOverhang`); framed tones keep their frame.
+     */
+    edge?: ButtonEdge;
       /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -67,6 +75,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     completion,
     leading,
     trailing,
+    edge,
     disabled,
     onClick,
     type = "button",
@@ -107,6 +116,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       data-size={size}
       data-shape={shape}
       data-align={align}
+      data-edge={edge}
       {...(selected === undefined ? {} : { "data-selected": selected, "aria-pressed": selected })}
       data-state={loading ? "loading" : unavailable ? "disabled" : "idle"}
       aria-busy={loading || undefined}
@@ -139,6 +149,12 @@ export type IconButtonProps = Omit<
     /** Toggle state. Paints the selected treatment and sets `aria-pressed`. */
     selected?: boolean;
     loading?: boolean;
+    /**
+     * Container edge(s) this button sits on (logical, RTL-aware). A ghost button keeps its touch target but overhangs
+     * the edge by (diameter − glyph slot) / 2 so the glyph slot lines up with the container inset
+     * (`resolveIconButtonEdgeOverhang`, 2026-10-17 measured audit). Framed tones align their frame and do not move.
+     */
+    edge?: IconButtonEdge;
     children: ReactNode;
       /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
@@ -153,6 +169,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       shape = iconButtonRecipe.defaults.shape,
       selected,
       loading = false,
+      edge,
       disabled,
       onClick,
       type = "button",
@@ -185,6 +202,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
         data-tone={tone}
         data-size={size}
         data-shape={shape}
+        data-edge={edge}
         {...(selected === undefined ? {} : { "data-selected": selected, "aria-pressed": selected })}
         data-state={loading ? "loading" : unavailable ? "disabled" : "idle"}
         aria-label={label}

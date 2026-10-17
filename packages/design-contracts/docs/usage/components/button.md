@@ -66,6 +66,7 @@ import { Button } from "@hjmds/react-native/actions";
 | `size` | `small` · `medium` · `large` | `medium` | 높이 36 · 44 · 52 |
 | `shape` | `rounded` · `pill` | `rounded` | `radius.md` · `full` |
 | `align` | `center` · `leading` | `center` | `leading`은 꽉 찬 폭의 행 행동 |
+| `edge` | `start` · `end` · `both` | — | 버튼이 놓인 컨테이너 가장자리(논리 방향). `ghost`면 자기 좌우 여백만큼 그 쪽으로 내밀어 라벨·trailing 아이콘이 여백 선에 온다(`small` 12, `medium` 16, `large` 24, `resolveButtonEdgeOverhang`; Web은 투명 테두리 1을 더한다). 틀이 보이는 tone과 `link`는 움직이지 않는다. 규칙과 근거는 [IconButton](icon-button.md#근거) |
 | `selected` | `boolean` | — | 눌림 상태를 갖는 행동 토글(저장·북마크, 켜 둔 도구). Web `aria-pressed`, Native 접근성 state. 선택지 고르기·설정 켜고 끄기에는 쓰지 않는다 |
 | `loading` | `boolean` | `false` | 기존 문구·아이콘을 시각적으로 숨기고 중앙 스피너 하나만 표시한다. 같은 children을 유지해 크기를 보존하고 누름을 막는다. 접근성 이름·포커스는 유지한다(Web `aria-disabled`, Native는 `disableWhileLoading`으로만 옛 disabled 동작) |
 | Web `onClick` | `(event: MouseEvent<HTMLButtonElement>) => void` | — | `disabled`·`loading`·`aria-disabled`이면 부르지 않는다 |
@@ -86,6 +87,7 @@ import { Button } from "@hjmds/react-native/actions";
 | 크기 | 높이 `small` 36 · `medium` 44 · `large` 52. `small`만 hitSlop 4로 터치 영역 44 | `control.buttonHeight`, `control.buttonHitSlop` |
 | 간격 | 한 묶음의 버튼 사이: **세로로 쌓으면 `spacing.xs` 8, 가로로 나란하면 `spacing.sm` 12**. 예제·제품의 `Stack`도 같은 값을 쓴다. Dialog·Sheet 행동 영역 좌우·아래 여백 `spacing.lg` 20 | `actionGroupRecipe`, `.hjm-dialog__footer`, Native Sheet footer |
 | 순서·정렬 | 가로 행동 줄은 **보조 → 주**, 끝 정렬. 세로 순서는 배치 소유자의 계약을 따른다: Dialog는 보조 → 주, Native Sheet는 주 → 보조, 좁은 AlertDialog는 주 → 보조. 본문의 짧은 선택·확정 구성은 해당 구성의 순서다. 목록 행 끝은 `small` + `ghost`/`secondary`, `primary` 금지 | `renderAction` 순서(Native overlays), `.hjm-dialog__footer` |
+| 가장자리 정렬 | 행·섹션 머리 끝의 ghost 글자 버튼(정렬 트리거, 전체 삭제)은 `edge="end"`로 라벨·화살표를 옆 글자와 같은 여백 선(16)에 맞춘다. 2026-10-17 실측: SearchScreen 정렬 화살표 29 → 16 | `base-recipes.ts` `resolveButtonEdgeOverhang`, `styles.css` `[data-edge]` |
 | 고정·스크롤 | 화면 맨 아래 고정 주 행동은 Button 대신 [BottomCTA](bottom-cta.md)(안전 영역·키보드 처리) | — |
 | 좁은 폭·큰 글자 | 폭 < 600(`breakpoint.medium`)이면 AlertDialog 행동을 세로로 쌓고 주 행동이 위(DOM은 [취소][확인] 유지). 라벨은 두 줄까지, 큰 글자에서는 상한 해제 | `.hjm-alert-dialog__actions`, [버튼 라벨](../../button-label.md) |
 

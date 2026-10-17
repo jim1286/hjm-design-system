@@ -11,7 +11,7 @@ import { Heading } from "@hjmds/react-native/heading";
 import { Container, Stack, Surface, Text } from "@hjmds/react-native/primitives";
 import { Avatar } from "@hjmds/react-native/data-display";
 import { ChatMessage, MessageComposer, NotificationItem } from "@hjmds/react-native/screens";
-import { resolveChatMessageGroups } from "@hjmds/design-contracts/screen-patterns";
+import { chatMessageRecipe, resolveChatMessageGroups } from "@hjmds/design-contracts/screen-patterns";
 import { compositionBrandFixtures } from "../../shared/composition-brand-fixtures";
 import { useDemoAction } from "./action-recovery-previews";
 import { StatusText } from "@hjmds/react-native/status-text";
@@ -133,7 +133,7 @@ export function ChatMessagePreview() {
     </Stack>
     <Heading level="level3">묶음 표시</Heading>
     {/* Timeline lists add no gap: each message's group position owns the spacing above it. */}
-    <View>{groupedMessages.map(message => <ChatMessage key={message.id} direction={message.authorId === "me" ? "outgoing" : "incoming"} author={message.authorId === "me" ? "" : "서연"} timestamp={message.timestamp} groupPosition={groupPositions.get(message.id) ?? "single"} {...(message.authorId === "me" ? {} : { avatar: <Avatar name="서연" size={36} decorative source={{ uri: SEOYEON_PHOTO }} /> })}><Text>{message.text}</Text></ChatMessage>)}</View>
+    <View>{groupedMessages.map(message => <ChatMessage key={message.id} direction={message.authorId === "me" ? "outgoing" : "incoming"} author={message.authorId === "me" ? "" : "서연"} timestamp={message.timestamp} groupPosition={groupPositions.get(message.id) ?? "single"} {...(message.authorId === "me" ? {} : { avatar: <Avatar name="서연" size={chatMessageRecipe.avatarSize} decorative source={{ uri: SEOYEON_PHOTO }} /> })}><Text>{message.text}</Text></ChatMessage>)}</View>
     <StatusText>{state.status === "error" ? "다시 보내지 못했어요. 메시지는 그대로 남아 있어요." : status}</StatusText>
     <PreviewTools><PreviewToolButton selected={failureArmed} disabled={busy || delivered} onPress={toggleFailure}>다음 전송 실패시키기</PreviewToolButton></PreviewTools>
   </Stack></Container></ScrollView>;

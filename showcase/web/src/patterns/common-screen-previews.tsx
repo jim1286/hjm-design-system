@@ -151,13 +151,13 @@ function ScreenPreview({ kind: initialKind, stateKind = "ready", tools = false }
   if (kind === "settings") screen = <SettingsPagePreview exit={back} state={state} stateAction={retry} />;
   else if (kind === "notifications") screen = <NotificationInboxScreen title="알림" exit={back} state={notificationState} stateAction={retry} notice={readError ? notice : null}
     filters={<Stack axis="inline" gap="xs" wrap role="radiogroup" aria-label="알림 필터">{["전체","답글","읽지 않음"].map(value=><Chip ref={notificationTab === value ? notificationFilter : undefined} key={value} label={value} selectionMode="single" selected={notificationTab===value} onSelectedChange={()=>setNotificationTab(value)} />)}</Stack>}
-    actions={<Stack axis="inline" gap="xs"><IconButton label="모두 읽음" tone="ghost" loading={markingAll} disabled={!markingAll && unreadIds.length === 0} onClick={markAllRead}><Glyph name="check" /></IconButton><IconButton label="알림 설정" tone="ghost" onClick={() => setKind("settings")}><Glyph name="settings" /></IconButton></Stack>}>
+    actions={<Stack axis="inline" gap="xs"><IconButton label="모두 읽음" tone="ghost" loading={markingAll} disabled={!markingAll && unreadIds.length === 0} onClick={markAllRead}><Glyph name="check" /></IconButton><IconButton label="알림 설정" tone="ghost" edge="end" onClick={() => setKind("settings")}><Glyph name="settings" /></IconButton></Stack>}>
     <Stack gap="xl">{groups.map(group => <Stack key={group.title} gap="sm"><Heading level="level5" semanticLevel={2}>{group.title}</Heading>{group.items.map(entry => <NotificationItem data-notification-id={entry.id} key={entry.id} title={entry.title} description={entry.description}
       leading={<Person name={entry.name} />} trailing={<Glyph name={entry.icon} />} read={readIds.includes(entry.id) || entry.id === 4} statusLabel={readIds.includes(entry.id) || entry.id === 4 ? "확인함" : "새 알림"} timestamp={entry.time}
       onClick={() => { if (failNext === "notifications") { setFailNext(null); setReadError("item"); return; } setReadError(null); setReadIds(ids => ids.includes(entry.id) ? ids : [...ids, entry.id]); setNotificationDetailId(entry.id); setDetail(entry.description); }} />)}</Stack>)}</Stack>
   </NotificationInboxScreen>;
   else if (kind === "chat") screen = <ChatScreen title="서연" exit={back} avatar={<Person name="서연"/>} state={state} stateAction={retry} scroll="screen" composer={composer}
-    actions={<IconButton label="대화 정보" tone="ghost" onClick={() => setDetail("서연님과 나누는 대화예요.")}><Glyph name="more" /></IconButton>}>
+    actions={<IconButton edge="end" label="대화 정보" tone="ghost" onClick={() => setDetail("서연님과 나누는 대화예요.")}><Glyph name="more" /></IconButton>}>
     {/* The first message group already carries its own top gap. */}
     <div><Stack align="center"><Text variant="caption" tone="muted">10월 5일 월요일</Text></Stack>
       {/* Group positions own the gaps between messages, so this wrapper adds none. */}
@@ -180,7 +180,7 @@ function ScreenPreview({ kind: initialKind, stateKind = "ready", tools = false }
     footer={<Stack gap="xs" align="center"><Text variant="caption" tone="muted">계속하면 이용약관과 개인정보처리방침에 동의해요.</Text><Stack axis="inline" gap="md"><Button size="small" tone="ghost" onClick={() => setDetail("이용약관 예제 · 실제 서비스의 약관을 연결하는 영역이에요.")}>이용약관</Button><Button size="small" tone="ghost" onClick={() => setDetail("개인정보처리방침 예제 · 수집 항목과 보관 기간을 안내하는 영역이에요.")}>개인정보처리방침</Button></Stack>{detail ? <Text variant="caption">{detail}</Text> : null}{loginBusy ? <Button tone="ghost" onClick={cancelLogin}>예제 로그인 취소</Button> : null}</Stack>} />;
   // The shell story shows every ScreenLayout slot: exit, one screen tool in actions, body, and the primary action in footer.
   else screen = <ScreenLayout title={screenShellExample.title} exit={back} state={state} stateAction={retry}
-    actions={<IconButton label={screenShellExample.settingsLabel} tone="ghost" onClick={() => setDetail(screenShellExample.settingsDetail)}><Glyph name="settings" /></IconButton>}
+    actions={<IconButton edge="end" label={screenShellExample.settingsLabel} tone="ghost" onClick={() => setDetail(screenShellExample.settingsDetail)}><Glyph name="settings" /></IconButton>}
     footer={<BottomCTA primaryAction={{ label: screenShellExample.primaryLabel, onClick: () => setDetail(screenShellExample.primaryDetail) }} />}>
     <Stack gap="md"><Text>{screenShellExample.intro}</Text><Stack gap="sm">{screenShellExample.items.map(item => <ListRow key={item.id} title={item.title} description={item.description} />)}</Stack></Stack>
   </ScreenLayout>;

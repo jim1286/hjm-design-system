@@ -170,7 +170,7 @@ import { SearchScreen } from "@hjmds/react-native/screen-flows";
 | --- | --- | --- |
 | 크기 | ScreenLayout 폭(최대 720); 검색 입력은 padding 안 전체 폭 | `ScreenLayout`, `SearchField` |
 | 간격 | 화면 padding `spacing.md` 16(notice 영역은 좌우만); 검색 입력·`filters`·`notice` 사이 `spacing.sm` 12; 본문 최근 검색–결과 `spacing.lg` 20 | Web·Native `SearchScreen` `Stack gap="sm"`·`gap="lg"` |
-| 순서·정렬 | 헤더(제목) → 검색 입력 → [`filterSheet.trigger`, `filters`] → `notice` → 본문. 본문은 검색 전: `recentSearches` → `recentQueries` → `suggestedQueries`(사이 `spacing.xl` 24) / 입력 중: 확정 행 → 제안 / 결과: `resultSummary.notice` → 개수·정렬 → 적용 필터(사이 `spacing.sm` 12) → `children`(위 `spacing.lg` 20) | 렌더 순서, `searchScreenRecipe` |
+| 순서·정렬 | 헤더(제목) → 검색 입력 → [`filterSheet.trigger`, `filters`] → `notice` → 본문. 본문은 검색 전: `recentSearches` → `recentQueries` → `suggestedQueries`(사이 `spacing.xl` 24) / 입력 중: 확정 행 → 제안 / 결과: `resultSummary.notice` → 개수·정렬 → 적용 필터(사이 `spacing.sm` 12) → `children`(위 `spacing.lg` 20) 결과 머리 끝 정렬 트리거와 최근 검색 머리 끝 `전체 삭제`는 ghost Button `edge="end"`로 화살표·라벨 끝이 개수·제목 시작과 같은 여백 선 16에 온다(Web 29 → 16, Native 31.3 → 19.3: 화살표 잉크의 자체 여백 포함, 2026-10-17 실측 감사, [IconButton `edge`](icon-button.md#배치)) | 렌더 순서, `searchScreenRecipe` |
 | 고정·스크롤 | 검색 입력·필터는 notice 자리에 고정, 본문만 스크롤; `state`가 바뀌어도 입력·필터는 남는다 | `ScreenLayout` `notice` |
 | 좁은 폭·큰 글자 | 입력은 폭을 줄여 맞춘다. `filtersOverflow="wrap"`은 필터가 줄바꿈되어 고정 영역이 줄 수만큼 커진다. `scroll`은 큰 글자에서도 한 줄(Web 2배 글자 실측: 칩 줄 52, 1배 44)로 고정 영역을 묶는다 | `SearchScreen`, `.hjm-search-screen__filters` |
 

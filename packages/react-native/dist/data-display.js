@@ -741,6 +741,10 @@ export function Timeline({ items, composeAccessibleName, layoutStyle, ...props }
     assertNoRemovedStyleProps("Timeline", props, ["style"]);
     const theme = useHjmNativeTheme();
     const resolved = resolveTimelineDescriptor({ items }, { composeAccessibleName });
+    // Dot, label first line and timestamp share the label's rendered first line box (token × text scale), matching
+    // Web's 1lh anchor (2026-10-17 measured audit: the dot sat at the top and the caption rode the baseline).
+    const labelLineHeight = theme.tokens.typography[timelineRecipe.label.textVariant].lineHeight * theme.textScaling.scale;
+    const timestampLineHeight = theme.tokens.typography[timelineRecipe.timestamp.textVariant].lineHeight * theme.textScaling.scale;
     return (_jsx(View, { ...props, style: [{ gap: timelineRecipe.gap }, layoutStyle], children: resolved.map((item, index) => {
             const tone = timelineRecipe.dot.tones[item.tone];
             const accessibilityLabel = [
@@ -760,13 +764,14 @@ export function Timeline({ items, composeAccessibleName, layoutStyle, ...props }
                                         ? timelineRecipe.dot.borderWidth
                                         : 0,
                                     height: timelineRecipe.dot.diameter,
+                                    marginTop: (labelLineHeight - timelineRecipe.dot.diameter) / 2,
                                     width: timelineRecipe.dot.diameter,
                                 } }), index < resolved.length - 1 ? (_jsx(View, { style: {
                                     backgroundColor: resolveColorReference(timelineRecipe.connector.tone, theme.palette),
                                     flex: 1,
                                     width: timelineRecipe.connector.width,
                                 } })) : null] }), _jsxs(View, { importantForAccessibility: "no-hide-descendants", style: { flex: 1, gap: spacing.xxs, minWidth: 0, paddingBottom: spacing.xxs }, children: [_jsxs(View, { style: {
-                                    alignItems: "baseline",
+                                    alignItems: "flex-start",
                                     flexDirection: "row",
                                     flexWrap: "wrap",
                                     gap: spacing.xs,
@@ -775,6 +780,7 @@ export function Timeline({ items, composeAccessibleName, layoutStyle, ...props }
                                             color: resolveColorReference(timelineRecipe.label.color, theme.palette),
                                         }, variant: timelineRecipe.label.textVariant, children: item.label }), item.timestamp ? (_jsx(Text, { style: {
                                             color: resolveColorReference(timelineRecipe.timestamp.color, theme.palette),
+                                            marginTop: (labelLineHeight - timestampLineHeight) / 2,
                                         }, variant: timelineRecipe.timestamp.textVariant, children: item.timestamp })) : null] }), item.description ? (_jsx(Text, { style: {
                                     color: resolveColorReference(timelineRecipe.description.color, theme.palette),
                                 }, variant: timelineRecipe.description.textVariant, children: item.description })) : null] })] }, item.id));

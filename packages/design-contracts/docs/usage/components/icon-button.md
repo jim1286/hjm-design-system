@@ -82,6 +82,7 @@ import { NotificationBell } from "@hjmds/react-native/notification-bell";
 | `size` | `small` 36 · `medium` 44 · `large` 52 | `medium` | `small`은 터치 여백 4 추가. 아이콘 크기는 각각 `sm`·`md`·`lg` |
 | `shape` | `rounded` · `circle` | `rounded` | — |
 | `selected` | `true` · `false` | — | 주면 토글이 된다(Web `aria-pressed`, Native 접근성 state) |
+| `edge` | `start` · `end` · `both` | — | 버튼이 놓인 컨테이너 가장자리(논리 방향, RTL에서 뒤집힘). `ghost`면 터치 영역은 그대로 두고 그 쪽으로 (보이는 지름 − 아이콘 칸) / 2만큼 내민다(`medium` 10, `small` 8, `large` 12, `resolveIconButtonEdgeOverhang`). 테두리·배경이 있는 tone은 틀이 정렬 기준이라 움직이지 않는다 |
 | `loading` | `true` · `false` | — | 누름을 막고 스피너로 바꾼다. Native는 기본으로 포커스를 유지한다(`disableWhileLoading`으로만 옛 동작) |
 | `loading` 중 `renderLoadingIndicator`(Native) | `(props: { color: string; size: "small" }) => ReactNode` | 기본 스피너 | 스피너를 바꿀 때만 |
 | Web `onClick` · Native `onPress` | Web `(event: MouseEvent<HTMLButtonElement>) => void` · Native `(event: GestureResponderEvent) => void` | — | Native는 `onLongPress`도 받는다 |
@@ -97,6 +98,7 @@ import { NotificationBell } from "@hjmds/react-native/notification-bell";
 | --- | --- | --- |
 | 크기 | 지름: `small` 36 · `medium` 44 · `large` 52. `small`은 hitSlop 4를 더해 터치 영역을 44(`control.minTouchTarget`)에 맞춘다. 아이콘 크기는 `glyph.sm` 20 · `glyph.md` 24 · `glyph.lg` 28이다 | `icon-button-recipe.ts` `iconButtonRecipe` |
 | 간격 | [TopBar](top-bar.md)가 슬롯 최소 폭 44, 슬롯 안 간격 `spacing.xs`(8), 좌우 여백 `spacing.md`(16)를 준다. NotificationBell 배지가 버튼 밖으로 넘칠 수 있으니 옆 요소와 간격을 둔다 | `component-recipes.ts` `topBarRecipe`, `styles.css` `.hjm-top-bar` |
+| 가장자리 정렬 | 행·헤더·카드의 시작/끝 가장자리에 놓인 ghost IconButton은 `edge`를 준다. 아이콘 칸(`medium` 24)이 컨테이너 안쪽 여백 선(보통 16)에 오고 44 터치 영역은 여백 쪽으로 10 넘어간다. 같은 줄에 여러 버튼이 있으면 가장자리에 닿은 마지막(또는 첫) 버튼에만 준다. HJM이 그리는 화면 나가기(`exit`)와 SavedItemsScreen 새 컬렉션, ListDetailScreen 새로고침, MediaSelectionScreen 추가, UploadItem 취소·다시 시도, InlineEdit·RepeatableFieldGroup·TableColumnSettings 행 끝 도구, SearchScreen 정렬·전체 삭제는 이미 적용돼 있다. 제품이 헤더 `actions`·ListRow `trailing`·Native `trailingAction`에 넣는 끝 버튼은 제품이 `edge="end"`를 준다. Web 포커스 링은 잘리지 않게 버튼 안쪽에 그린다 | `icon-button-recipe.ts` `iconButtonRecipe.edge`·`resolveIconButtonEdgeOverhang`, `react/src/theme.ts`(`--hjm-icon-button-edge-*`), `styles.css` `[data-edge]`, `react-native/src/actions.tsx` |
 | 순서·정렬 | 화면 맨 위에서는 TopBar의 `leading`(뒤로·닫기)과 `actions`/`trailing`(더보기·공유·알림)에 둔다. 행 끝(목록·카드)에는 `size="small"` 또는 `medium`, `tone="ghost"`를 쓴다. NotificationBell은 IconButton 오른쪽 위 모서리(`end: 0`, `top: 0`)에 [CounterBadge](counter-badge.md) `floating`을 겹친다 | `react-native/src/notification-bell.tsx` |
 | 고정·스크롤 | — | — |
 | 좁은 폭·큰 글자 | — | — |
@@ -141,5 +143,8 @@ TopBar
 
 ## 근거
 
+- 가장자리 정렬(`edge`): 2026-10-17 화면 정렬 실측 감사(Web Storybook 402·1280, Native iPhone 17 Pro 3x 캡처). 행·헤더 끝의 44 버튼이
+  아이콘을 여백 선보다 10~15 안쪽에 두었다(댓글 더보기 28 vs 아바타 16, 화면 머리 뒤로 31 vs 16, 업로드 취소 26 vs 16, 정렬 화살표 29 vs 16).
+  컴포넌트마다 오프셋을 따로 두지 않고 이 한 규칙과 계약 값으로 맞췄다. Toast 닫기(같은 날 `toastRecipe.close.inlineOverhang`)와 같은 식이다.
 - 도구성 행동은 IconButton: 2026-10-17 사용자 지시 — '나의 기록' 헤더의 새로고침·새 기록 글자 버튼.
 - 선택 표현: 2026-10-10 사용자 요청 — Button과 같은 선택 표현을 쓴다.

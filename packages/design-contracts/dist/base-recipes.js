@@ -60,6 +60,12 @@ export const buttonRecipe = {
      */
     label: { overflow: "wrap", maxLines: 2, liftCapOnLargeText: true },
 };
+export function resolveButtonEdgeOverhang(tone, size) {
+    const toneContract = buttonRecipe.tones[tone];
+    if (toneContract.background !== null || toneContract.border !== null)
+        return 0;
+    return toneContract.paddingHorizontal ?? buttonRecipe.sizes[size].paddingHorizontal;
+}
 /** Resolves the label's line cap for one resolved environment. `null` means uncapped. */
 export function resolveButtonLabelLines(largeText) {
     return largeText && buttonRecipe.label.liftCapOnLargeText ? null : buttonRecipe.label.maxLines;

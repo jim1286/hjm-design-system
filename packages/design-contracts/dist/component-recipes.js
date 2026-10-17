@@ -3,7 +3,7 @@ import { backdrop, breakpoint, control, glyph, layer, largeTextThreshold, layout
 import { semanticColors } from "./semantic-colors.js";
 import { tooltipDescriptorDefaults } from "./tooltip.js";
 import { bottomNavigationRecipeDefaults } from "./bottom-navigation-defaults.js";
-export { iconButtonRecipe, resolveIconButtonPresentation, } from "./icon-button-recipe.js";
+export { iconButtonEdges, iconButtonRecipe, resolveIconButtonEdgeOverhang, resolveIconButtonPresentation, } from "./icon-button-recipe.js";
 export { counterBadgeDefaults, counterBadgeRecipe, formatCounterBadgeCount, } from "./counter-badge-recipe.js";
 export { progressRecipe, } from "./progress-recipe.js";
 export const textRecipe = {

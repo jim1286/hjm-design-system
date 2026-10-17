@@ -47,4 +47,20 @@ export function DrawnMoreVertical({ size, color }) {
     const dot = size * 0.15;
     return _jsx(View, { ...hidden, style: { width: size, height: size, alignItems: "center", justifyContent: "space-between", paddingVertical: size * 0.135 }, children: [0, 1, 2].map(index => _jsx(View, { style: { width: dot, height: dot, borderRadius: dot / 2, backgroundColor: color } }, index)) });
 }
+/**
+ * Web's built-in `close` mark (two diagonals on the 24-unit grid, 6→18). Row tools drew a font "×" before, whose ink
+ * sat ~5pt below the button centre and varied by font (2026-10-17 UploadItem measurement). Symmetric, no mirroring.
+ */
+export function DrawnClose({ size, color, strokeWidth = 2 }) {
+    const arm = size * (12 / 24) * Math.SQRT2;
+    return _jsx(View, { ...hidden, style: { width: size, height: size, alignItems: "center", justifyContent: "center" }, children: ["45deg", "-45deg"].map(rotate => _jsx(View, { style: { position: "absolute", width: arm, height: strokeWidth, borderRadius: strokeWidth / 2, backgroundColor: color, transform: [{ rotate }] } }, rotate)) });
+}
+/**
+ * Web's built-in `refresh` mark: two arcs of the r=8 circle (top→end, bottom→start) with arrow corners at the end and
+ * start of the horizontal axis, replacing the font "↻" that rendered off-centre (2026-10-17 UploadItem measurement).
+ */
+export function DrawnRefresh({ size, color, strokeWidth = 2 }) {
+    const unit = size / 24, ring = 16 * unit, head = 5 * unit;
+    return _jsxs(View, { ...hidden, style: { width: size, height: size }, children: [_jsx(View, { style: { position: "absolute", left: 4 * unit, top: 4 * unit, width: ring, height: ring, borderRadius: ring / 2, borderWidth: strokeWidth, borderColor: color, borderLeftColor: "transparent", borderRightColor: "transparent", transform: [{ rotate: "45deg" }] } }), _jsx(View, { style: { position: "absolute", left: 20 * unit - head, top: 12 * unit - head, width: head, height: head, borderRightWidth: strokeWidth, borderBottomWidth: strokeWidth, borderColor: color } }), _jsx(View, { style: { position: "absolute", left: 4 * unit, top: 12 * unit, width: head, height: head, borderLeftWidth: strokeWidth, borderTopWidth: strokeWidth, borderColor: color } })] });
+}
 //# sourceMappingURL=drawn-glyphs.js.map

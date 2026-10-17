@@ -127,6 +127,9 @@ export function Notice({
     color: foreground,
     size: glyph[noticeRecipe.iconSize],
   });
+  // The icon box spans the title's rendered first line (token × text scale) so the glyph centers on it at any text
+  // scale, like Web's 1lh anchor (2026-10-17 measured audit). The action stays under the copy on Native.
+  const titleLineHeight = theme.tokens.typography[noticeRecipe.title.textVariant].lineHeight * theme.textScaling.scale;
   return (
     <View
       {...props}
@@ -158,7 +161,7 @@ export function Notice({
             importantForAccessibility="no-hide-descendants"
             style={{
               alignItems: "center",
-              height: glyph[noticeRecipe.iconSize],
+              height: Math.max(glyph[noticeRecipe.iconSize], titleLineHeight),
               justifyContent: "center",
               width: glyph[noticeRecipe.iconSize],
             }}

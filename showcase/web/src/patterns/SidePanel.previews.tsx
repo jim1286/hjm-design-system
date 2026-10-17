@@ -28,7 +28,7 @@ export function SidePanelPreview() {
         <List label="내 기록">
           {records.map((record) => (
             <ListRow key={record.id} title={record.title} description={notes.get(record.id)}
-              trailing={<IconButton label={`${record.title} 고치기`} tone="ghost" onClick={() => { setDraft(notes.get(record.id) ?? ""); setEditing(record.id); }}><Pencil size={20} /></IconButton>} />
+              trailing={<IconButton label={`${record.title} 고치기`} tone="ghost" edge="end" onClick={() => { setDraft(notes.get(record.id) ?? ""); setEditing(record.id); }}><Pencil size={20} /></IconButton>} />
           ))}
         </List>
         <SidePanel

@@ -98,7 +98,7 @@ Native floating 프레임·선택 표시·항목 모서리는 각 recipe radius 
 | --- | --- | --- |
 | 크기 | 항목 최소 `regular` 56×64 · `compact` 52×52. 표면 최대 폭 `bar` 제한 없음(화면 폭) · `floating` 384 · `capsule` 480. 모서리 `floating` `radius.xl` 24 · `capsule` `radius.full`. 아이콘·배지 자리 40×28 | `bottomNavigationRecipe.density`·`presentations`·`indicator` |
 | 간격 | 항목 안쪽 `regular` `spacing.xs` 8 · `compact` `spacing.xxs` 4, 아이콘↔라벨 `regular` `spacing.xxs` 4 · `compact` 2. `floating`·`capsule`은 바깥 좌우 `spacing.md` 16 · 위 `spacing.xs` 8. 하단은 안전 영역 + `spacing.xs` 8(Native는 `safeAreaBottom`을 최소 padding에 더함). `center-gap` 가운데 빈칸 `control.buttonHeight.large` + `spacing.md` = 68 | `presentations`, `distributions`, `safeArea`, `.hjm-bottom-navigation` |
-| 순서·정렬 | 항목은 논리 순서(RTL이면 뒤집힘)로 같은 폭을 나눈다. 라벨은 아이콘 아래 가운데. `primaryAction`은 막대 정가운데에 겹친다(`center-gap` 빈칸 또는 `capsule`). 배지는 아이콘 끝·위 모서리(`blockStart` −4, `inlineEnd` −8) | `.hjm-bottom-navigation__list`·`__primary-action`, `bottomNavigationRecipe.badge`·`direction` |
+| 순서·정렬 | 항목은 논리 순서(RTL이면 뒤집힘)로 같은 폭을 나눈다. 예외로 `capsule`에서 라벨을 펼치지 않는 상태(항목 4개 이하·글자 배율 1.5 미만)는 선택 항목이 2칸 폭 알약에 아이콘+라벨을 가로로 두고 나머지 항목은 아이콘만 남긴다(Web·Native 같은 규칙). 그래서 첫·끝 아이콘의 막대 끝 거리는 다르지만 항목 상자의 양끝 여백은 같다. `selection: "tile"` 선택 카드의 아이콘·라벨 줄은 다른 항목과 같다. 라벨은 아이콘 아래 가운데. `primaryAction`은 막대 정가운데에 겹친다(`center-gap` 빈칸 또는 `capsule`). 배지는 아이콘 끝·위 모서리(`blockStart` −4, `inlineEnd` −8) | `.hjm-bottom-navigation__list`·`__primary-action`, `bottomNavigationRecipe.badge`·`direction` |
 | 고정·스크롤 | Web은 화면 아래 `position: fixed`(z-index `layer.sticky` 100). 본문 마지막 내용이 막대 아래로 들어가므로 제품 레이아웃이 하단 여백을 둔다. Native는 navigator 탭 막대 자리에 제품 레이아웃이 둔다. 키보드가 열리면 기본으로 숨는다 | `.hjm-bottom-navigation`, `bottomNavigationRecipe.adaptive`·`keyboard` |
 | 좁은 폭·큰 글자 | 라벨은 줄바꿈되고 항목 높이가 늘어난다(고정 높이 없음). 글자 배율은 최대 1.4배까지만 커진다 | `bottomNavigationRecipe.largeText`·`label.wrap` |
 
@@ -165,3 +165,7 @@ floating 그림자는 그리지 않는다. 옆면이 높이를 표현하므로 �
 팔레트에 "눌린 브랜드" 역할이 없어서 새 역할을 추가하지 않고 기존 역할을 겹쳐 쓴다.
 선택하지 않은 카드도 같은 두께의 투명 테두리를 둔다. 그래서 선택이 바뀌어도 아이콘·라벨 줄이 움직이지 않는다.
 제품은 나무 같은 색을 surfaceAlt·borderControl 팔레트 역할로 공급한다. deprecated 시각 style로 덮지 않는다.
+
+## 근거
+
+- capsule 선택 알약·tile 선택 카드: 2026-10-17 정렬 실측(Web 402·1280, 실험 내비게이션 바 비교). 첫·끝 아이콘의 막대 끝 거리 차이 17~23px은 선택 항목의 `flex: 2` 알약 때문이며 항목 상자 양끝 여백은 5/5로 같았다. 가운데 항목이 14.5px 솟아 보인 값은 tile 선택 카드 상자를 다른 항목의 라벨과 비교한 측정 오차였고 아이콘 244·라벨 268이 모든 항목에서 같았다. 두 renderer에 이미 같은 규칙이 있어 코드는 바꾸지 않고 배치 표에 의도를 적었다.

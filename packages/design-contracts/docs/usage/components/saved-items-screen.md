@@ -100,7 +100,7 @@ Native collection cover의 모서리는 Provider의 `tokens.radius.md`다. 저�
 | --- | --- | --- |
 | 크기 | host의 남은 높이 100%, ScreenLayout 폭(최대 720); 컬렉션 표지·게시물 썸네일 1:1, 표지 radius `radius.md` | `ListDetailScreen`, Web `.hjm-saved-*`, Native `saved-items.tsx` |
 | 간격 | 화면 padding `spacing.md` 16; 개인 저장 안내–격자 `spacing.md` 16; 컬렉션 2열 간격 `spacing.md` 16; 표지 4장 사이·게시물 3열 간격 `spacing.xxs` 4; 표지–컬렉션 제목 `spacing.sm` 12 | `Stack gap="md"`, `Grid gap`, Web `.hjm-saved-collection`, Native `gap: spacing.sm` |
-| 순서·정렬 | 홈: 헤더(제목 → 새 컬렉션) → 개인 저장 안내 → 모든 게시물 → 사용자 컬렉션; 컬렉션: 헤더(뒤로 → 컬렉션 제목) → 사진 격자 또는 빈 안내; 상세: 헤더(뒤로 → 항목 제목) → `renderDetail` | `SavedItemsScreen` 렌더 순서 |
+| 순서·정렬 | 홈: 헤더(제목 → 새 컬렉션) → 개인 저장 안내 → 모든 게시물 → 사용자 컬렉션; 컬렉션: 헤더(뒤로 → 컬렉션 제목) → 사진 격자 또는 빈 안내; 상세: 헤더(뒤로 → 항목 제목) → `renderDetail` 새 컬렉션 버튼은 `edge="end"`로 아이콘 칸이 헤더 끝 여백 16에 온다(26 → 16, 2026-10-17 실측 감사, [IconButton `edge`](icon-button.md#배치)) | `SavedItemsScreen` 렌더 순서 |
 | 고정·스크롤 | 헤더 고정, 본문 스크롤; 상세 동안 격자 mount 유지 | ListDetailScreen·ScreenLayout |
 | 좁은 폭·큰 글자 | 좁은 폭(320 창, 본문 288)에서도 컬렉션 2열·사진 3열을 유지한다. 열 수는 사용 가능 폭이 컬렉션 176 미만(최소 열 폭 80), 사진 140 미만(최소 열 폭 44)일 때만 줄어든다; 컬렉션 제목은 줄바꿈; 사진 속 글자를 유일한 이름으로 쓰지 않는다(버튼 접근성 이름은 `title`) | `Grid minColumnWidth`, `grid.ts` 열 계산 |
 

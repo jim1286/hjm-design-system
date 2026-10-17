@@ -104,6 +104,10 @@ it("reorders existing columns and keeps the final visible column available", asy
 });
 
 it("keeps all five compositions within a narrow host and inherits two brands in light and dark", async () => {
+  // A real host insets its content (screen gutter 16). Row-end tools overhang into that inset by design (IconButton
+  // edge="end", 2026-10-17 audit), so the narrow-host check models the gutter instead of a zero-padding box.
+  host.style.boxSizing = "border-box";
+  host.style.paddingInline = "16px";
   for (const [brand, palette] of Object.entries(compositionBrandFixtures)) for (const theme of ["light", "dark"] as const) {
     await act(async () => root.render(<HjmProvider theme={theme} brandPalette={palette}>
       <InlineEdit id={`${brand}-${theme}`} value="제목" {...copy} onSave={() => undefined} />

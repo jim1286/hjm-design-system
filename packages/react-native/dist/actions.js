@@ -2,7 +2,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { visibleControlHeight } from "@hjmds/design-contracts/components/design-system-provider";
 import { resolveLinkDescriptor, } from "@hjmds/design-contracts/components/link";
 import { glyph, spacing } from "@hjmds/design-contracts/foundations";
-import { bottomCtaRecipe, linkRecipe, iconButtonRecipe, resolveIconButtonPresentation, } from "@hjmds/design-contracts/recipes";
+import { bottomCtaRecipe, linkRecipe, iconButtonRecipe, resolveIconButtonEdgeOverhang, resolveIconButtonPresentation, } from "@hjmds/design-contracts/recipes";
 import {} from "@hjmds/design-contracts/recipes/base";
 import { forwardRef, useContext } from "react";
 import { ActivityIndicator, Pressable, View, } from "react-native";
@@ -20,7 +20,7 @@ export const Button = forwardRef(function Button(props, ref) {
     }
     return _jsx(RecipeButton, { ...props, ref: ref });
 });
-export const IconButton = forwardRef(function IconButton({ label, children, tone = iconButtonRecipe.defaults.tone, size = iconButtonRecipe.defaults.size, shape = iconButtonRecipe.defaults.shape, selected, disabled = false, loading = false, disableWhileLoading = false, hitSlop, layoutStyle, renderLoadingIndicator, onPress, onLongPress, accessibilityState, ...props }, ref) {
+export const IconButton = forwardRef(function IconButton({ label, children, tone = iconButtonRecipe.defaults.tone, size = iconButtonRecipe.defaults.size, shape = iconButtonRecipe.defaults.shape, selected, disabled = false, loading = false, edge, disableWhileLoading = false, hitSlop, layoutStyle, renderLoadingIndicator, onPress, onLongPress, accessibilityState, ...props }, ref) {
     const theme = useHjmNativeTheme();
     assertNoRemovedStyleProps("IconButton", props, ["style"]);
     const resolvedLabel = label;
@@ -40,6 +40,8 @@ export const IconButton = forwardRef(function IconButton({ label, children, tone
     // icon buttons — the two renderers disagreed.
     const visibleDiameter = visibleControlHeight(sizeContract.diameter, theme.environment.minimumVisualTarget);
     const glyphSize = glyph[sizeContract.glyph];
+    // Edge alignment from the same contract helper Web reads, on the visible diameter actually drawn.
+    const edgeOverhang = edge === undefined ? 0 : resolveIconButtonEdgeOverhang(resolvedTone, size, visibleDiameter);
     const unavailable = disabled || (loading && disableWhileLoading);
     return (_jsx(Pressable, { ...props, ref: ref, accessibilityLabel: resolvedLabel, accessibilityRole: "button", accessibilityState: {
             ...accessibilityState,
@@ -65,6 +67,8 @@ export const IconButton = forwardRef(function IconButton({ label, children, tone
                             ? iconButtonRecipe.states.pressedOpacity
                             : 1,
                 width: visibleDiameter,
+                ...(edgeOverhang > 0 && edge !== "end" ? { marginStart: -edgeOverhang } : {}),
+                ...(edgeOverhang > 0 && edge !== "start" ? { marginEnd: -edgeOverhang } : {}),
             },
             layoutStyle,
         ], children: loading ? (renderLoadingIndicator?.({ color: presentation.content, size: "small" }) ?? (_jsx(ActivityIndicator, { color: presentation.content, size: "small" }))) : (_jsx(View, { accessible: false, style: {

@@ -103,7 +103,7 @@ export declare function canSubmitMessage({ value, disabled, pending, attachmentC
  * avatar ~34, avatar gap 8). Brand colors and artwork are not copied; surfaces stay semantic tokens.
  */
 export declare const chatMessageRecipe: {
-    readonly avatarSize: 36;
+    readonly avatarSize: 32;
     readonly avatarGap: 8;
     readonly authorGap: 4;
     readonly metaGap: 4;
@@ -200,6 +200,17 @@ export declare const commentThreadRecipe: {
     readonly mediaMaxWidth: 160;
     readonly mediaRadius: 12;
     readonly menuGlyphSize: 20;
+    /**
+     * Trailing actions (like, product actions, more) centre their 44 targets on the identity's first line instead of
+     * top-aligning the target box (2026-10-17 measured audit: avatar 168 / author line 162 / glyphs 174). The cluster
+     * shifts by (first-line height − visible target) / 2 — negative while the line is shorter than the target — and the
+     * last control takes IconButton `edge="end"` so its glyph slot ends on the row inset like the avatar starts on it.
+     * The first line is the author caption, or the body line when the author runs inline with `bodyText`.
+     */
+    readonly actionAnchor: {
+        readonly authorTextVariant: "caption";
+        readonly inlineTextVariant: "body";
+    };
 };
 /**
  * Items of the HJM-owned per-comment "more" menu (2026-10-17: message/comment structure belongs to HJM, review S4#7).

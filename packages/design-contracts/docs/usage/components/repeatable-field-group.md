@@ -76,7 +76,7 @@ import { TextField } from "@hjmds/react-native/inputs";
 | --- | --- | --- |
 | 크기 | 입력은 제품이 넣은 컨트롤, 버튼은 Button 기본 | 양 renderer |
 | 간격 | 묶음과 추가 버튼 사이 `collectionEditingRecipe.gap`=`md`(16), 행 안 입력–삭제 `sm`(12) | `collectionEditingRecipe`, 양 renderer |
-| 순서·정렬 | FieldGroup 제목 → 행마다 입력 → [삭제](ghost) → … → 마지막 [추가](secondary) | 렌더 순서 |
+| 순서·정렬 | FieldGroup 제목 → 행마다 입력 → 삭제 IconButton(ghost, 행 이름을 담은 `label`) → … → 마지막 추가 Button(secondary). 행 끝 삭제는 `edge="end"`로 아이콘 칸이 묶음 끝에 온다(전에는 10 안쪽, 2026-10-17 실측 감사, [IconButton `edge`](icon-button.md#배치)) | 렌더 순서 |
 | 고정·스크롤 | 자체 고정·스크롤 없음, 바깥 폼·화면 host 소유 | 별도 scroller 없음 |
 | 좁은 폭·큰 글자 | 행은 세로로 쌓여 폭이 좁아도 입력과 삭제가 겹치지 않는다 | 세로 Stack |
 

@@ -6,6 +6,7 @@ import {
 import { control, spacing } from "@hjmds/design-contracts/foundations";
 import {
   buttonRecipe,
+  resolveButtonEdgeOverhang,
   resolveButtonLabelLines,
 } from "@hjmds/design-contracts/recipes/base";
 import { Children, forwardRef, useState, type ReactNode } from "react";
@@ -58,6 +59,7 @@ export const RecipeButton = forwardRef<NativeView, RecipeButtonProps>(
       loadingLabel,
       leading,
       trailing,
+      edge,
       fullWidth = false,
       hitSlop,
       layoutStyle,
@@ -92,6 +94,7 @@ export const RecipeButton = forwardRef<NativeView, RecipeButtonProps>(
       throw new TypeError("Button requires children");
     }
     const toneContract = buttonRecipe.tones[tone];
+    const edgeOverhang = edge === undefined ? 0 : resolveButtonEdgeOverhang(tone, size);
     const sizeContract = buttonRecipe.sizes[size];
     const selectedContract =
       selected === true ? buttonRecipe.states.selected : null;
@@ -167,6 +170,9 @@ export const RecipeButton = forwardRef<NativeView, RecipeButtonProps>(
               : 1,
             paddingHorizontal:
               toneContract.paddingHorizontal ?? sizeContract.paddingHorizontal,
+            // Edge alignment (resolveButtonEdgeOverhang): a frameless button overhangs by its own padding.
+            ...(edgeOverhang > 0 && edge !== "end" ? { marginStart: -edgeOverhang } : {}),
+            ...(edgeOverhang > 0 && edge !== "start" ? { marginEnd: -edgeOverhang } : {}),
             ...(fullWidth ? { alignSelf: "stretch" } : {}),
           },
           style,

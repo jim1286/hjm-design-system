@@ -73,7 +73,7 @@ import { InlineEdit } from "@hjmds/react-native/collection-editing";
 | --- | --- | --- |
 | 크기 | 기존 TextField·Button 규격 그대로 | 양 renderer |
 | 간격 | 보기 행·버튼 행 sm, 편집 묶음 `actionGap` sm | collectionEditingRecipe |
-| 순서·정렬 | 보기: 값 → 편집(ghost), 세로 중앙. 편집: 입력 → [취소(ghost) · 저장(primary)] → 오류 | 양 renderer |
+| 순서·정렬 | 보기: 값 → 편집(ghost), 세로 중앙. 편집: 입력 → [취소(ghost) · 저장(primary)] → 오류 보기 행 끝 편집 버튼은 `edge="end"`로 아이콘 칸이 묶음 끝에 온다(전에는 10 안쪽, 2026-10-17 실측 감사, [IconButton `edge`](icon-button.md#배치)) | 양 renderer |
 | 고정·스크롤 | 바깥 목록·화면 host 소유 | 별도 scroller 없음 |
 | 좁은 폭·큰 글자 | 보기 행과 버튼 행은 `wrap`으로 줄바꿈 | 양 renderer |
 

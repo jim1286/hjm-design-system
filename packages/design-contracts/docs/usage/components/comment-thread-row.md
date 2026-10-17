@@ -77,7 +77,7 @@ import { CommentThreadRow } from "@hjmds/react-native/screen-flows";
 | --- | --- | --- |
 | 크기 | 아바타 칸 최상위 32·답글 24, 좋아요 수 칸 폭 44, `media` 최대 폭 160·radius `radius.md` | `commentThreadRecipe` |
 | 간격 | 아바타·본문·좋아요 열 사이 `spacing.xs` 8, 본문 줄 사이 2, 행동 줄 항목 사이 `spacing.sm` 12, 작성자–시각 `spacing.xxs` 4, `media` 위 4 | `commentThreadRecipe.lineGap`, `Stack gap` |
-| 순서·정렬 | 아바타 → (작성자·시각 → 본문 → media → 시각/반응 요약/답글 행동) → 좋아요 버튼·`actions` 아래 좋아요 수. 위 정렬 | 양 renderer |
+| 순서·정렬 | 아바타 → (작성자·시각 → 본문 → media → 시각/반응 요약/답글 행동) → 좋아요 버튼·`actions` 아래 좋아요 수. 위 정렬 단, 오른쪽 좋아요·`actions`·더보기 열은 44 터치 영역을 첫 줄(작성자 caption, `bodyText`면 본문 줄)의 가운데에 맞춘다: 열을 (첫 줄 높이 − 44) / 2만큼 올린다(`commentThreadRecipe.actionAnchor`). HJM의 좋아요·더보기가 마지막이면 열 전체가 IconButton 가장자리 오버행(10)만큼 끝으로 나가 아이콘 칸이 행 끝 여백 선(아바타 시작과 같은 선)에 온다. 제품 `actions`가 마지막이면 그 버튼에 `edge="end"`를 준다. 측정 전후(Web 402): 아바타 168 / 작성자 줄 162 / 아이콘 174 → 아이콘 160 = 작성자 줄, 더보기 칸 끝 28 → 16(2026-10-17 실측 감사, [IconButton `edge`](icon-button.md#배치)) | 양 renderer |
 | 고정·스크롤 | 행은 스크롤하지 않는다. 목록 스크롤·행 간격(`rowGap` 12)·답글 들여쓰기(`replyIndent` 40)는 host가 준다 | `CommentThreadScreen` |
 | 좁은 폭·큰 글자 | 본문 열이 `min-width: 0`으로 줄며 줄바꿈되고 작성자·행동 줄은 `flexWrap`. 좋아요 열은 줄지 않는다 | `.hjm-comment-row__text`, `flexShrink: 0` |
 
