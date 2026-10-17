@@ -10,9 +10,10 @@ import { glyph, resolveTextFontRole, resolveFontFamilyStack, } from "@hjmds/desi
 import { surfaceDefaults, surfaceGeometry, surfaceRecipe, } from "@hjmds/design-contracts/recipes/base";
 import { sectionRecipe, stackRecipe, textRecipe, } from "@hjmds/design-contracts/recipes";
 import { Children, Component, Fragment, forwardRef, isValidElement, useEffect, useMemo, useState, } from "react";
-import { PixelRatio, Text as NativeText, View, useWindowDimensions, } from "react-native";
+import { PixelRatio, StyleSheet, Text as NativeText, View, useWindowDimensions, } from "react-native";
 import { useHjmNativeTheme } from "./provider.js";
 import { useInheritedTextAlign } from "./internal/text-align.js";
+import { pretendardNativeFaces, resolvePretendardNativeFace } from "@hjmds/design-contracts/foundations";
 import { logicalTextAlign, resolveNativeFontStyle, resolveNativeShadowElevation, resolveNativeTextScaleProps, } from "./internal/styles.js";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 /** Native shell translation: ordered regions without inventing Web landmark roles. */
@@ -63,8 +64,19 @@ export const Text = forwardRef(function Text({ children, variant = textRecipe.de
         style,
         layoutStyle,
     ], allowFontScaling);
-    return (_jsx(NativeText, { ...props, allowFontScaling: resolvedText.allowFontScaling, ref: ref, style: resolvedText.style, children: children }));
+    return (_jsx(NativeText, { ...props, allowFontScaling: resolvedText.allowFontScaling, ref: ref, style: resolveBundledFace(resolvedText.style), children: children }));
 });
+/**
+ * Bundled Pretendard registers one face per weight; RN cannot pick a weight inside a custom family on every
+ * platform (Android fakes bold). Swap the family for the face of the final weight and drop fontWeight.
+ */
+function resolveBundledFace(style) {
+    const flat = StyleSheet.flatten(style);
+    if (flat?.fontFamily !== pretendardNativeFaces["400"])
+        return style;
+    const { fontWeight, ...rest } = flat;
+    return { ...rest, fontFamily: resolvePretendardNativeFace(fontWeight) };
+}
 function resolveThemeColor(colors, key) {
     return colors[key];
 }

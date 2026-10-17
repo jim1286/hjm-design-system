@@ -64,6 +64,7 @@ import {
 } from "react";
 import {
   PixelRatio,
+  StyleSheet,
   Text as NativeText,
   View,
   useWindowDimensions,
@@ -77,6 +78,7 @@ import {
 
 import { useHjmNativeTheme, type HjmNativeTheme } from "./provider.js";
 import { useInheritedTextAlign } from "./internal/text-align.js";
+import { pretendardNativeFaces, resolvePretendardNativeFace } from "@hjmds/design-contracts/foundations";
 import {
   logicalTextAlign,
   resolveNativeFontStyle,
@@ -235,12 +237,23 @@ export const Text = forwardRef<NativeText, TextProps>(function Text(
       {...props}
       allowFontScaling={resolvedText.allowFontScaling}
       ref={ref}
-      style={resolvedText.style}
+      style={resolveBundledFace(resolvedText.style)}
     >
       {children}
     </NativeText>
   );
 });
+
+/**
+ * Bundled Pretendard registers one face per weight; RN cannot pick a weight inside a custom family on every
+ * platform (Android fakes bold). Swap the family for the face of the final weight and drop fontWeight.
+ */
+function resolveBundledFace(style: StyleProp<TextStyle>): StyleProp<TextStyle> {
+  const flat = StyleSheet.flatten(style);
+  if (flat?.fontFamily !== pretendardNativeFaces["400"]) return style;
+  const { fontWeight, ...rest } = flat;
+  return { ...rest, fontFamily: resolvePretendardNativeFace(fontWeight) };
+}
 
 export type SurfaceTone = ContractSurfaceTone;
 export type SurfacePadding = ContractSurfacePadding;

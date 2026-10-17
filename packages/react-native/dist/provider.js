@@ -1,7 +1,7 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import { resolveSurfaceFillOpacity } from "@hjmds/design-contracts/palette-contrast";
 import { resolveDesignSystemProviderValue, validateDesignSystemProviderValue, } from "@hjmds/design-contracts/components/design-system-provider";
-import { spacing, radius, typography, shadow, fontFamily } from "@hjmds/design-contracts/foundations";
+import { spacing, radius, typography, shadow, fontFamily, pretendardNativeFaces } from "@hjmds/design-contracts/foundations";
 import { createContext, useContext, useEffect, useMemo, useState, useSyncExternalStore, } from "react";
 import { AccessibilityInfo, I18nManager, Platform, useColorScheme, useWindowDimensions, } from "react-native";
 const HjmNativeThemeContext = createContext(null);
@@ -78,8 +78,9 @@ function toEnvironmentInput(props) {
             : { minimumVisualTarget: props.minimumVisualTarget }),
     };
 }
-export function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, brandPalette: suppliedBrandPalette, designProfile: suppliedDesignProfile, value: suppliedValue, safeAreaInsets: suppliedInsets, surfaceEffects: suppliedSurfaceEffects, }) {
+export function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, brandPalette: suppliedBrandPalette, designProfile: suppliedDesignProfile, value: suppliedValue, safeAreaInsets: suppliedInsets, surfaceEffects: suppliedSurfaceEffects, fonts: suppliedFonts, }) {
     const parent = useContext(HjmNativeThemeContext);
+    const fonts = suppliedFonts ?? parent?.fonts ?? "system";
     const designProfile = suppliedDesignProfile ?? parent?.designProfile;
     const surfaceEffects = suppliedSurfaceEffects ?? parent?.surfaceEffects;
     const observeTransparency = Boolean(surfaceEffects?.renderBackdrop) && (parent === null || surfaceEffects !== parent.surfaceEffects);
@@ -135,9 +136,11 @@ export function HjmNativeProvider({ children, theme, direction, textScale, reduc
                 mode: textScalingMode,
                 scale: resolved.environment.textScale,
             },
-            tokens: { spacing, radius, typography, shadow, fontFamily, ...resolved.designProfile?.tokens },
+            fonts,
+            // A design profile's own fontFamily still wins; Pretendard replaces only the neutral system stack.
+            tokens: { spacing, radius, typography, shadow, fontFamily: fonts === "pretendard" ? { ...fontFamily, ui: [pretendardNativeFaces["400"]] } : fontFamily, ...resolved.designProfile?.tokens },
         };
-    }, [brandPalette, designProfile, environment, parent, suppliedValue, systemReducedMotion, systemTextScale, systemTheme, surfaceEffects, reducedTransparency]);
+    }, [brandPalette, designProfile, environment, parent, suppliedValue, systemReducedMotion, systemTextScale, systemTheme, surfaceEffects, reducedTransparency, fonts]);
     return (_jsx(HjmNativeThemeContext.Provider, { value: contextValue, children: _jsx(HjmNativeBrandPaletteContext.Provider, { value: brandPalette, children: _jsx(HjmNativeSafeAreaContext.Provider, { value: safeAreaInsets, children: children }) }) }));
 }
 export function useHjmNativeTheme() {

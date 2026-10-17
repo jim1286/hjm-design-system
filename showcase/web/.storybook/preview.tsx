@@ -2,6 +2,8 @@ import type { Preview } from "@storybook/react-vite";
 
 import { WebDesignSystemProvider } from "../src/runtime/WebDesignSystemProvider";
 import "@hjmds/react/styles.css";
+// Products load the bundled face the same way; without it the stack falls back to system fonts.
+import "@hjmds/react/fonts/pretendard.css";
 import "../src/showcase.css";
 
 const preview: Preview = {

@@ -24,6 +24,8 @@ export type HjmNativeTheme = DesignSystemProviderValue & Readonly<{
      * by the OS a second time.
      */
     textScaling: NativeTextScaling;
+    /** Which UI face renders text: the OS font, or the bundled Pretendard faces once the host has loaded them. */
+    fonts: HjmNativeFonts;
     tokens: Readonly<{
         spacing: typeof spacing;
         radius: HjmDesignProfile["tokens"]["radius"];
@@ -68,8 +70,14 @@ export type HjmNativeSafeAreaInsets = Readonly<{
     bottom?: number;
     left?: number;
 }>;
+/**
+ * `pretendard` after the host registered `hjmPretendardFonts` (e.g. expo-font `useFonts`); until then
+ * `system`, because naming an unregistered family errors on iOS. Nested providers inherit it.
+ */
+export type HjmNativeFonts = "system" | "pretendard";
 export type HjmNativeProviderProps = Readonly<{
     children: ReactNode;
+    fonts?: HjmNativeFonts;
     /**
      * Window safe-area insets that full-screen overlays (Sheet, DatePicker, Select,
      * Combobox) apply when the call site passes none. Added after the 2026-09-30
@@ -83,7 +91,7 @@ export type HjmNativeProviderProps = Readonly<{
      * No Expo/Skia peer enters the core graph. `{}` opts this subtree out. */
     surfaceEffects?: NativeSurfaceEffects;
 }> & (HjmNativeProviderEnvironmentProps | HjmNativeProviderValueProps);
-export declare function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, brandPalette: suppliedBrandPalette, designProfile: suppliedDesignProfile, value: suppliedValue, safeAreaInsets: suppliedInsets, surfaceEffects: suppliedSurfaceEffects, }: HjmNativeProviderProps): import("react").JSX.Element;
+export declare function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, brandPalette: suppliedBrandPalette, designProfile: suppliedDesignProfile, value: suppliedValue, safeAreaInsets: suppliedInsets, surfaceEffects: suppliedSurfaceEffects, fonts: suppliedFonts, }: HjmNativeProviderProps): import("react").JSX.Element;
 export declare function useHjmNativeTheme(): HjmNativeTheme;
 /** Insets supplied to the nearest HjmNativeProvider; `{}` when the host supplied none. */
 export declare function useHjmNativeSafeAreaInsets(): HjmNativeSafeAreaInsets;

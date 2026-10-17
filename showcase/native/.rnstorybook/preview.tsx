@@ -3,6 +3,8 @@ import type { Preview } from "@storybook/react-native";
 import { StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { HjmNativeProvider, useHjmNativeTheme } from "@hjmds/react-native/provider";
+import { hjmPretendardFonts } from "@hjmds/react-native/fonts";
+import { useFonts } from "expo-font";
 
 // Screens own their gutter (ScreenLayout padding, header exit). Wrapping them in the 16pt canvas doubled
 // the top and side spacing on Native only, since Web Storybook is fullscreen (2026-10-17 "상단 여백 줄여").
@@ -19,7 +21,9 @@ function Insets({ children, theme, direction, textScale, reducedMotion }: {
   children: ReactNode; theme: "light" | "dark"; direction: "ltr" | "rtl"; textScale: 1 | 1.5 | 2; reducedMotion: boolean;
 }) {
   const insets = useSafeAreaInsets();
-  return <HjmNativeProvider theme={theme} direction={direction} textScale={textScale} reducedMotion={reducedMotion} safeAreaInsets={insets}>{children}</HjmNativeProvider>;
+  // Register the bundled Pretendard faces the way products do; system fonts render until they load.
+  const [fontsLoaded] = useFonts(hjmPretendardFonts);
+  return <HjmNativeProvider theme={theme} direction={direction} textScale={textScale} reducedMotion={reducedMotion} safeAreaInsets={insets} fonts={fontsLoaded ? "pretendard" : "system"}>{children}</HjmNativeProvider>;
 }
 
 const preview: Preview = {

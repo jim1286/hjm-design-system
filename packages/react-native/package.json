@@ -142,6 +142,12 @@
       "import": "./dist/image-choice.js",
       "default": "./dist/image-choice.js"
     },
+    "./fonts": {
+      "types": "./dist/fonts.d.ts",
+      "react-native": "./dist/fonts.js",
+      "import": "./dist/fonts.js",
+      "default": "./dist/fonts.js"
+    },
     "./toggle-group": {
       "types": "./dist/toggle-group.d.ts",
       "react-native": "./dist/toggle-group.js",
@@ -633,7 +639,8 @@
     "README.md",
     "LICENSE",
     "THIRD_PARTY_NOTICES.md",
-    "docs"
+    "docs",
+    "assets"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",

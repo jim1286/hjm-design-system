@@ -22,8 +22,11 @@ export const radius = {
  * family (or their OS default mapping), rather than receiving a CSS stack.
  */
 export const fontFamily = {
+    // Pretendard is bundled by HJM (Web `@hjmds/react/fonts/pretendard.css`, Native `@hjmds/react-native/fonts`)
+    // so every device renders the same face (2026-10-17: Inter/Pretendard were listed but never loaded, so the
+    // result depended on what each device had installed). System fonts remain the fallback until it loads.
     ui: [
-        "Inter",
+        "Pretendard Variable",
         "Pretendard",
         "-apple-system",
         "BlinkMacSystemFont",
@@ -38,6 +41,24 @@ export const fontFamily = {
         "monospace",
     ],
 };
+/**
+ * Native has no variable-weight selection on every platform, so each weight is its own registered face.
+ * Keys match the asset map exported by `@hjmds/react-native/fonts`; 400 doubles as the family name inputs use.
+ */
+export const pretendardNativeFaces = {
+    "400": "Pretendard",
+    "500": "Pretendard-Medium",
+    "600": "Pretendard-SemiBold",
+    "700": "Pretendard-Bold",
+    "800": "Pretendard-ExtraBold",
+};
+/** Nearest bundled face for a CSS/RN font weight ("normal", "bold", 100–900). */
+export function resolvePretendardNativeFace(weight) {
+    const numeric = weight === undefined || weight === "normal" ? 400 : weight === "bold" ? 700 : Number(weight);
+    const steps = [400, 500, 600, 700, 800];
+    const nearest = Number.isFinite(numeric) ? steps.reduce((best, step) => Math.abs(step - numeric) < Math.abs(best - numeric) ? step : best, 400) : 400;
+    return pretendardNativeFaces[String(nearest)];
+}
 export function resolveFontFamilyStack(families, role) {
     if (!["ui", "display", "reading", "code"].includes(role))
         throw new TypeError("Unsupported font role");
@@ -70,8 +91,10 @@ export const typography = {
     body: { fontSize: 14, lineHeight: 20, fontWeight: fontWeight.regular },
     bodyLarge: { fontSize: 16, lineHeight: 24, fontWeight: fontWeight.regular },
     title: { fontSize: 18, lineHeight: 26, fontWeight: fontWeight.bold },
-    titleLarge: { fontSize: 20, lineHeight: 28, fontWeight: fontWeight.heavy },
-    heading: { fontSize: 24, lineHeight: 32, fontWeight: fontWeight.heavy },
+    // Route titles and section headings are bold, not heavy (2026-10-17 user review: the 800 screen
+    // title read too heavy). Display levels 1–2 keep heavy.
+    titleLarge: { fontSize: 20, lineHeight: 28, fontWeight: fontWeight.bold },
+    heading: { fontSize: 24, lineHeight: 32, fontWeight: fontWeight.bold },
 };
 /** Visual variants choose a default family role; semantics and sizes remain independent. */
 export function resolveTextFontRole(variant, role) {

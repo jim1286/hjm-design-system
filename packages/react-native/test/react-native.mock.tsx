@@ -101,7 +101,14 @@ export const Easing = {
 };
 export const StyleSheet = {
   create: <Styles extends Readonly<Record<string, unknown>>>(styles: Styles) => styles,
-  flatten: (style: unknown) => style,
+  // Merge nested arrays like RN; the identity stub hid style-composition logic from tests (2026-10-17).
+  flatten: function flatten(style: unknown): unknown {
+    if (!Array.isArray(style)) return style;
+    return style.reduce<Record<string, unknown>>((merged, part) => {
+      const flat = flatten(part);
+      return flat && typeof flat === "object" ? { ...merged, ...(flat as Record<string, unknown>) } : merged;
+    }, {});
+  },
 };
 
 export const PanResponder = {

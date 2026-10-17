@@ -10,7 +10,7 @@ import {
   type ResolveDesignSystemEnvironmentOptions,
 } from "@hjmds/design-contracts/components/design-system-provider";
 import type { ThemePreference } from "@hjmds/design-contracts/colors";
-import { spacing, radius, typography, shadow, fontFamily } from "@hjmds/design-contracts/foundations";
+import { spacing, radius, typography, shadow, fontFamily, pretendardNativeFaces } from "@hjmds/design-contracts/foundations";
 import {
   createContext,
   useContext,
@@ -49,6 +49,8 @@ export type HjmNativeTheme = DesignSystemProviderValue &
      * by the OS a second time.
      */
     textScaling: NativeTextScaling;
+    /** Which UI face renders text: the OS font, or the bundled Pretendard faces once the host has loaded them. */
+    fonts: HjmNativeFonts;
     tokens: Readonly<{
       spacing: typeof spacing;
       radius: HjmDesignProfile["tokens"]["radius"];
@@ -98,8 +100,15 @@ export type HjmNativeSafeAreaInsets = Readonly<{
   left?: number;
 }>;
 
+/**
+ * `pretendard` after the host registered `hjmPretendardFonts` (e.g. expo-font `useFonts`); until then
+ * `system`, because naming an unregistered family errors on iOS. Nested providers inherit it.
+ */
+export type HjmNativeFonts = "system" | "pretendard";
+
 export type HjmNativeProviderProps = Readonly<{
   children: ReactNode;
+  fonts?: HjmNativeFonts;
   /**
    * Window safe-area insets that full-screen overlays (Sheet, DatePicker, Select,
    * Combobox) apply when the call site passes none. Added after the 2026-09-30
@@ -206,8 +215,10 @@ export function HjmNativeProvider({
   value: suppliedValue,
   safeAreaInsets: suppliedInsets,
   surfaceEffects: suppliedSurfaceEffects,
+  fonts: suppliedFonts,
 }: HjmNativeProviderProps) {
   const parent = useContext(HjmNativeThemeContext);
+  const fonts = suppliedFonts ?? parent?.fonts ?? "system";
   const designProfile = suppliedDesignProfile ?? parent?.designProfile;
   const surfaceEffects = suppliedSurfaceEffects ?? parent?.surfaceEffects;
   const observeTransparency = Boolean(surfaceEffects?.renderBackdrop) && (parent === null || surfaceEffects !== parent.surfaceEffects);
@@ -273,9 +284,11 @@ export function HjmNativeProvider({
         mode: textScalingMode,
         scale: resolved.environment.textScale,
       },
-      tokens: { spacing, radius, typography, shadow, fontFamily, ...resolved.designProfile?.tokens },
+      fonts,
+      // A design profile's own fontFamily still wins; Pretendard replaces only the neutral system stack.
+      tokens: { spacing, radius, typography, shadow, fontFamily: fonts === "pretendard" ? { ...fontFamily, ui: [pretendardNativeFaces["400"]] } : fontFamily, ...resolved.designProfile?.tokens },
     };
-  }, [brandPalette, designProfile, environment, parent, suppliedValue, systemReducedMotion, systemTextScale, systemTheme, surfaceEffects, reducedTransparency]);
+  }, [brandPalette, designProfile, environment, parent, suppliedValue, systemReducedMotion, systemTextScale, systemTheme, surfaceEffects, reducedTransparency, fonts]);
 
   return (
     <HjmNativeThemeContext.Provider value={contextValue}>

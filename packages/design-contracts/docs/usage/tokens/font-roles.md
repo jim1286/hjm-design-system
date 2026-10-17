@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.16.0
-- 검토일: 2026-10-13
+- 검토일: 2026-10-17
 - 근거: [서체 역할 계약](../../font-roles.md), `src/foundations.ts`, `src/design-profile.ts`, 양 renderer Text/Heading/Provider
 - 스토리북: `배포/토큰/색과 글자/표시·읽기·기술 글자`
 
@@ -19,11 +19,23 @@
 
 | 토큰 | 값 | Web CSS 변수 | Native 경로 | 용도 |
 | --- | --- | --- | --- | --- |
-| `tokens.fontFamily.ui` | 기존 Inter/Pretendard 등 stack, Native OS 기본 | `--hjm-font-family-ui` | `theme.tokens.fontFamily.ui` | 입력·버튼·caption·label |
+| `tokens.fontFamily.ui` | Pretendard Variable → Pretendard → OS 서체. Native는 `fonts="pretendard"`일 때 굵기별 Pretendard face, 그 전에는 OS 서체 | `--hjm-font-family-ui` | `theme.tokens.fontFamily.ui` | 입력·버튼·caption·label |
 | `tokens.fontFamily.display` | optional stack, 생략하면 현재 ui | `--hjm-font-family-display` | `resolveFontFamilyStack(theme.tokens.fontFamily, "display")` | Heading·Text title/titleLarge/heading |
 | `tokens.fontFamily.reading` | optional stack, 생략하면 현재 ui | `--hjm-font-family-reading` | `resolveFontFamilyStack(theme.tokens.fontFamily, "reading")` | Text body/bodyLarge |
 | `tokens.fontFamily.code` | 기존 ui-monospace 등 stack | `--hjm-font-family-code` | `theme.tokens.fontFamily.code` | CodeBlock·Text fontRole=code |
 | Text `fontRole` | ui/display/reading/code, 생략하면 위 variant 역할 | 같은 역할 변수 | 같은 역할의 첫 named font | 문구 역할만 변경. 제목 level·variant 크기/굵기는 유지 |
+
+### 기본 서체 Pretendard 불러오기(필수)
+
+HJM은 Pretendard(SIL OFL 1.1)를 함께 배포한다. 불러오지 않으면 OS 서체로 대체돼 기기마다 글꼴이 달라진다.
+
+| 플랫폼 | 할 일 | 배포 범위 |
+| --- | --- | --- |
+| Web | 앱 진입점에서 `import "@hjmds/react/fonts/pretendard.css";` | 가변 굵기 동적 서브셋. 화면에 쓰인 글자 묶음만 내려받는다 |
+| Native | `const [loaded] = useFonts(hjmPretendardFonts)`(expo-font, `@hjmds/react-native/fonts`) 후 `<HjmNativeProvider fonts={loaded ? "pretendard" : "system"}>` | 400·500·600·700·800 정적 face 5개. 토큰이 쓰는 굵기만 담는다 |
+
+Native는 굵기마다 별도 face를 등록하므로 Text가 최종 굵기에 맞는 face(`pretendardNativeFaces`)로 바꾸고 `fontWeight`를 지운다.
+등록 전에 family를 지정하면 iOS가 오류를 내므로 로드가 끝난 뒤에만 `fonts="pretendard"`를 준다. 제품 프로필이 자체 `fontFamily`를 정하면 그 값이 우선한다.
 
 순수 helper `resolveFontFamilyStack`·`resolveTextFontRole`는 `@hjmds/design-contracts/foundations`에 있다.
 Web은 전체 stack, Native는 기존 host helper로 단일 font name을 해석한다. Native의 기본 code는 iOS Menlo/그 외 monospace다.
@@ -85,3 +97,7 @@ Text의 `fontRole="ui"`를 명시한다. 크기 variant는 그대로 유지하�
 추가 1곳인 TopBar 제목은 Web과 같은 경계를 유지한다. 클릭형 제목은 일반 버튼 라벨이므로 ui,
 비클릭형 제목은 의미 heading이므로 display다. 제목 행동·접근성 이름·정적 heading 역할은 유지한다.
 서체 선택 검사는 Native host 모사에서 수행했으며 폰트 자산 설치·실제 기기 표시 검증을 뜻하지 않는다.
+
+## 근거
+
+- Pretendard 함께 배포: 2026-10-17 사용자 결정 — 계약에 Inter·Pretendard가 있었지만 어디서도 불러오지 않아 기기마다 서체가 달랐다.

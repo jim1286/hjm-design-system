@@ -133,3 +133,10 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+## Pretendard 1.3.9
+
+- Source: https://github.com/orioncactus/pretendard (npm `pretendard@1.3.9`)
+- License: SIL Open Font License 1.1 — full text in `fonts/pretendard/LICENSE.txt`
+- Copyright (c) 2021 Kil Hyung-jin, with Reserved Font Name Pretendard.
+- Bundled unmodified: the variable dynamic-subset CSS and its 92 woff2 files

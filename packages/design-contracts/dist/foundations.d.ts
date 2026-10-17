@@ -22,10 +22,23 @@ export declare const radius: {
  * family (or their OS default mapping), rather than receiving a CSS stack.
  */
 export declare const fontFamily: {
-    readonly ui: readonly ["Inter", "Pretendard", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"];
+    readonly ui: readonly ["Pretendard Variable", "Pretendard", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"];
     readonly code: readonly ["ui-monospace", "SFMono-Regular", "Consolas", "Liberation Mono", "monospace"];
 };
 export type FontFamily = keyof typeof fontFamily;
+/**
+ * Native has no variable-weight selection on every platform, so each weight is its own registered face.
+ * Keys match the asset map exported by `@hjmds/react-native/fonts`; 400 doubles as the family name inputs use.
+ */
+export declare const pretendardNativeFaces: {
+    readonly "400": "Pretendard";
+    readonly "500": "Pretendard-Medium";
+    readonly "600": "Pretendard-SemiBold";
+    readonly "700": "Pretendard-Bold";
+    readonly "800": "Pretendard-ExtraBold";
+};
+/** Nearest bundled face for a CSS/RN font weight ("normal", "bold", 100–900). */
+export declare function resolvePretendardNativeFace(weight: string | number | undefined): (typeof pretendardNativeFaces)[keyof typeof pretendardNativeFaces];
 /** Display/reading roles are optional so existing ui/code product profiles retain their fonts. */
 export type FontRole = "ui" | "display" | "reading" | "code";
 export type FontFamilyRoles = Readonly<{
@@ -87,12 +100,12 @@ export declare const typography: {
     readonly titleLarge: {
         readonly fontSize: 20;
         readonly lineHeight: 28;
-        readonly fontWeight: "800";
+        readonly fontWeight: "700";
     };
     readonly heading: {
         readonly fontSize: 24;
         readonly lineHeight: 32;
-        readonly fontWeight: "800";
+        readonly fontWeight: "700";
     };
 };
 export type TextVariant = keyof typeof typography;
@@ -117,12 +130,12 @@ export declare const heading: {
     readonly level3: {
         readonly fontSize: 24;
         readonly lineHeight: 32;
-        readonly fontWeight: "800";
+        readonly fontWeight: "700";
     };
     readonly level4: {
         readonly fontSize: 20;
         readonly lineHeight: 28;
-        readonly fontWeight: "800";
+        readonly fontWeight: "700";
     };
     readonly level5: {
         readonly fontSize: 18;

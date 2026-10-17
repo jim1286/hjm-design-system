@@ -388,6 +388,7 @@
     },
     "./styles.css": "./dist/styles.css",
     "./styles.layered.css": "./dist/styles.layered.css",
+    "./fonts/pretendard.css": "./fonts/pretendard/pretendard.css",
     "./avatar-blobatar": {
       "types": "./dist/avatar-blobatar.d.ts",
       "import": "./dist/avatar-blobatar.js",
@@ -591,6 +592,7 @@
   },
   "files": [
     "dist",
+    "fonts",
     "README.md",
     "LICENSE",
     "THIRD_PARTY_NOTICES.md"
