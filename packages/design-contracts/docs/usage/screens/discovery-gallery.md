@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-15
+- 검토일: 2026-10-17
 - 근거: `showcase/web/src/patterns/DiscoveryGallery.stories.tsx`, `showcase/native/src/DiscoveryGallery.stories.tsx`, `showcase/shared/discovery-gallery.ts`, `src/base-recipes.ts`(`buttonRecipe.states.selected`), `src/grid.ts`
 - 스토리북: `배포/화면/검색/작품 탐색`
 
@@ -88,7 +88,7 @@
 | 다시 시도 | [Notice](../components/notice.md) `action` > Button `tone="secondary" size="small"` | ④ 아래 Notice 끝 | 1. 오류일 때만 |
 | 파괴 행동 | — | — | 없음(저장 취소는 같은 버튼의 토글) |
 
-정렬·저장만 보기는 선택이므로 [선택 조립 규칙](../SELECTION.md#조립-규칙필수)대로 SegmentedControl·Chip을 쓴다. 2026-10-16 사용자 지적으로 `selected` 버튼 줄이 테두리 없는 글자처럼 보여 바꿨다. 카드·시트 저장은 항목에 대한 행동이 눌림 상태를 갖는 토글이라 Button `selected`를 유지한다.
+정렬·저장만 보기는 선택이므로 [선택 조립 규칙](../SELECTION.md#조립-규칙필수)대로 SegmentedControl·Chip을 쓴다. 카드·시트 저장은 항목에 대한 행동이 눌림 상태를 갖는 토글이라 Button `selected`를 유지한다.
 
 primary는 화면에서 빈 결과 복구 하나, 시트 안에서 저장 하나다. 시트 안 행동은 그 표면 안에서 세고, `selected`를 준 버튼은
 tone과 관계없이 선택 모양(배경 `bg`, 글자 `contentBrand`, 별도 선택 테두리 없음)으로 칠해져 세지 않는다([Button](../components/button.md) "꼭 지킬 것").
@@ -207,7 +207,7 @@ ScreenLayout host는 남은 본문 높이를 확보하고 로딩·오류·빈 �
 
 - 카드 그림은 장식으로 숨기므로 그림에만 있는 정보(점수·제목)가 없어야 한다.
 - Grid `gap`은 단일 token 문자열을 받지 않는다. `gap={{ compact: "xl" }}`처럼 class별 값으로 준다(`ResponsiveValue<GridGap>`).
-- 구획 제목은 Heading으로 표시한다. 이전 Text heading 예제는 2026-10-06 제목 의미 구조를 맞추면서 수정했다.
+- 구획 제목은 Heading으로 표시한다.
   새 제품은 Heading `level3`·`semanticLevel={1}`을 쓴다.
 - 예제의 바깥 틀은 양 플랫폼 모두 `Container gutter="compact"`다. 제품의 넓은 화면에서는 위 배치 표의 반응형 gutter를 선택한다.
 - 양 플랫폼 격자는 Grid를 사용한다. 창 폭의 열 수가 본문보다 넓으면 `minColumnWidth`가 실제 열 수를 줄인다.
@@ -217,4 +217,10 @@ ScreenLayout host는 남은 본문 높이를 확보하고 로딩·오류·빈 �
   보간 키 하나로 둔다. 좋아요 수가 필요하면 같은 키에 값을 더한다.
 
 
-2026-10-13 행동 검수에서 제거/복구 뒤 키보드 문맥 유실을 확인해 보강했다. Web 저장만 보기에서 저장 취소로 카드가 사라지면 저장 필터로 초점을 돌린다. 상세를 닫을 때는 원래 상세 버튼, 해당 카드가 제거됐으면 저장 필터를 양 플랫폼 Sheet returnFocusRef로 지정한다. Web 빈 결과 초기화는 검색 필드로 이어진다. Native ref 연결과 실제 OS 접근성 초점 이동 검증은 구분한다.
+제거/복구 뒤 초점: Web 저장만 보기에서 저장 취소로 카드가 사라지면 저장 필터로 초점을 돌린다. 상세를 닫을 때는 원래 상세 버튼, 해당 카드가 제거됐으면 저장 필터를 양 플랫폼 Sheet returnFocusRef로 지정한다. Web 빈 결과 초기화는 검색 필드로 이어진다. Native ref 연결과 실제 OS 접근성 초점 이동 검증은 구분한다.
+
+## 근거
+
+- 정렬·저장만 보기에 SegmentedControl·Chip: 2026-10-16 사용자 지적 — `selected` 버튼 줄이 테두리 없는 글자처럼 보였다.
+- 구획 제목 Heading: 2026-10-06 제목 의미 구조를 맞추면서 이전 Text heading 예제를 수정했다.
+- 제거/복구 뒤 초점 규칙: 2026-10-13 행동 검수에서 제거/복구 뒤 키보드 문맥 유실을 확인했다.

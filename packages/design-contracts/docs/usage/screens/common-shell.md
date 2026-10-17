@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 구성 API 지침 참조
-- 검토일: 2026-10-15
+- 검토일: 2026-10-17
 - 근거: [반복 화면 조합](../../screen-patterns.md); 공통 API와 실제 Web·Native 예제의 슬롯·상태를 대조해 중복 조립 방지. 2026-10-06 사용자 승인으로 스토리북 배포(이전 `실험/화면/공통 화면/화면 골격`, [승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정))
 - 스토리북: `배포/화면/화면 틀과 도구/화면 골격과 상태`
 
@@ -31,7 +31,7 @@ host: 남은 높이·safe area·키보드
 
 | 행동 | 컴포넌트·tone | 위치 | 개수·순서 |
 | --- | --- | --- | --- |
-| 작업 | ScreenLayout 공개 행동 슬롯 | 뒤로는 leading, 화면 도구는 actions, 주 행동은 footer | 같은 표면에 경쟁하는 primary 하나만 |
+| 작업 | ScreenLayout 공개 행동 슬롯 | 뒤로는 `exit`(헤더 시작 쪽 아이콘), 화면 도구는 actions, 주 행동은 footer | 같은 표면에 경쟁하는 primary 하나만 |
 | 복구 | Button·secondary | 오류 근처 | 재시도할 대상과 범위를 표시 |
 
 ## 상태
@@ -45,8 +45,6 @@ host: 남은 높이·safe area·키보드
 
 
 ### 상태를 바꾸는 기준
-
-2026-10-13 전수 점검에서 최초 조회와 변경 요청의 상태를 같은 골격으로 설명하던 부분을 구체화했다.
 
 | 상황 | 연결 | 유지·복구 |
 | --- | --- | --- |
@@ -67,13 +65,12 @@ host: 남은 높이·safe area·키보드
 
 ```tsx
 // Web
-import { IconButton } from "@hjmds/react/actions";
 import { BottomCTA } from "@hjmds/react/bottom-cta";
 import { ScreenLayout } from "@hjmds/react/screens";
 
 <ScreenLayout
   title={t("saved.title")}
-  leading={<IconButton label={t("common.back")} onClick={goBack}><BackGlyph /></IconButton>}
+  exit={{ kind: "back", label: t("common.back"), onClick: goBack }}
   state={isLoading ? { kind: "loading", title: t("saved.loading") } : { kind: "ready" }}
   footer={<BottomCTA primaryAction={{ label: t("saved.add"), onClick: add }} />}
 >
@@ -83,13 +80,12 @@ import { ScreenLayout } from "@hjmds/react/screens";
 
 ```tsx
 // Native — host가 safe area를 한 번 처리한다
-import { IconButton } from "@hjmds/react-native/actions";
 import { BottomCTA } from "@hjmds/react-native/bottom-cta";
 import { ScreenLayout } from "@hjmds/react-native/screens";
 
 <ScreenLayout
   title={t("saved.title")}
-  leading={<IconButton label={t("common.back")} onPress={goBack}><BackGlyph /></IconButton>}
+  exit={{ kind: "back", label: t("common.back"), onPress: goBack }}
   state={isLoading ? { kind: "loading", title: t("saved.loading") } : { kind: "ready" }}
   footer={<BottomCTA primaryAction={{ label: t("saved.add"), onPress: add }} />}
 >
@@ -118,9 +114,15 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 ## 함정
 
 - 초기 로딩만 본문 교체; 갱신 실패는 notice로 본문 유지.
-- 이 화면에는 전송 행동이 없어 `실패와 초안 복구` 스토리를 2026-10-06 뺐다. 갱신 실패 복구는 `연결 복구`로 확인한다.
+- 이 화면에는 전송 행동이 없어 `실패와 초안 복구` 스토리를 두지 않는다. 갱신 실패 복구는 `연결 복구`로 확인한다.
 - Storybook은 실제 서버·OS 권한·라우터 연동 증거가 아니다. 기본·다크·큰 글자와 실패/복구를 각각 확인한다.
 
 ### 숨긴 페이지 이름과 가운데 문맥
 
-2026-10-14 야잘알에서 페이지 이름이 탭·필터와 중복되고 날짜가 왼쪽으로 밀린 사용자 피드백으로 `ScreenLayout`의 `titleVisibility="hidden"`과 `headerAlignment="center"`를 추가했다. 페이지 이름은 화면 식별값으로 유지하고 날짜·선수명 같은 실제 문맥만 표시할 수 있다. Native는 좌우 행동 영역의 큰 폭을 양쪽에 동일하게 확보해 중앙을 고정한다. `ListDetailScreen.detail`도 두 옵션을 전달한다. 기본값 visible/start는 기존 배치를 유지한다.
+`ScreenLayout`의 `titleVisibility="hidden"`과 `headerAlignment="center"`로 페이지 이름을 숨기고 문맥을 가운데 둔다. 페이지 이름은 화면 식별값으로 유지하고 날짜·선수명 같은 실제 문맥만 표시할 수 있다. Native는 좌우 행동 영역의 큰 폭을 양쪽에 동일하게 확보해 중앙을 고정한다. `ListDetailScreen.detail`도 두 옵션을 전달한다. 기본값 visible/start는 기존 배치를 유지한다.
+
+## 근거
+
+- 상태를 바꾸는 기준 상황 표: 2026-10-13 전수 점검 — 최초 조회와 변경 요청의 상태를 같은 골격으로 설명하던 부분을 구체화했다.
+- `실패와 초안 복구` 스토리 없음: 2026-10-06 전송 행동이 없는 화면이라 뺐다.
+- `titleVisibility="hidden"`·`headerAlignment="center"`: 2026-10-14 야잘알 사용자 피드백 — 페이지 이름이 탭·필터와 중복되고 날짜가 왼쪽으로 밀렸다.

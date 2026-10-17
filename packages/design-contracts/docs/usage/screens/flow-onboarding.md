@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 구성 API 지침 참조
-- 검토일: 2026-10-15
+- 검토일: 2026-10-17
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screen-flows.tsx`(`OnboardingScreen`), 예제 `showcase/*/screen-flow-previews.tsx`(`OnboardingFlowPreview`)·`showcase/shared/onboarding-pattern.ts`(주제·요약). 2026-10-06 사용자 승인으로 실험 `기본 흐름/온보딩`(OnboardingScreen)을 배포하면서 같은 일을 직접 조립하던 배포 `화면/온보딩`을 대체했다(Web id `patterns-onboarding` 보존, [승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정))
 - 스토리북: `배포/화면/소개/온보딩`
 
@@ -16,8 +16,7 @@
 단계 제목·설명은 화면 맨 위, 진행 문구는 그 아래에 둔다. Web은 머리를 고정하고 Native는 제목·설명·진행을 본문과 함께 스크롤한다. 이동 버튼은 footer에 고정한다. 권한 요청·로그인·가입은
 이 화면에 없다([권한 안내](flow-permission.md), [로그인](common-login.md)).
 스토리는 `기본`(1단계부터 직접 넘기기), `관심 주제 고르기`(2단계를 바로 연 상태), `실패와 복구`(다음 완료 저장 실패 → 다시 시작하기)다.
-2026-10-06 배포 직접 조립 온보딩(Steps·ContentTransition·여러 개 고르는 주제 버튼)을 이 항목으로 합쳤고, 그 고유 상태인
-관심 주제 여러 개 고르기는 OnboardingScreen 2단계의 Chip 다중 선택으로 옮겼다(두 플랫폼 `관심 주제 고르기` 스토리가 같은 화면을 연다).
+관심 주제 여러 개 고르기는 OnboardingScreen 2단계의 Chip 다중 선택이다(두 플랫폼 `관심 주제 고르기` 스토리가 같은 화면을 연다).
 단계·주제·문구·저장은 제품이 공급한다.
 
 ## 영역 구조
@@ -67,8 +66,7 @@
 
 한 단계에 primary는 footer의 다음·완료 하나다. 진행·이동이 footer에 고정돼 단계 본문이 바뀌어도 버튼 자리가 흔들리지 않는다.
 
-2026-10-06 관심 주제를 ghost+`selected` Button에서 Chip `multiple`로 바꿨다. 여러 개 고르는 선택은 checkbox 역할로 읽혀야 하는데
-Button `selected`는 눌림 토글(`aria-pressed`)로 읽히고, 한 줄짜리 주제 선택에 CheckboxGroup은 세로 목록이라 화면을 많이 차지한다.
+관심 주제는 Chip `multiple`로 고른다. ghost+`selected` Button이나 세로 CheckboxGroup으로 조립하지 않는다.
 
 ## 상태
 
@@ -194,4 +192,10 @@ const topicPicker = <Stack axis="inline" wrap gap="xs">
 - 현재 스토리의 진행 문구는 `` `${index} / ${total}` `` 고정 문자열이다. 제품은 보간 키 하나(`onboarding.progress`)를 쓴다.
 - Storybook은 실제 서버·라우터 연동 증거가 아니다. 기본·어두운 테마·큰 글자와 실패와 복구를 각각 확인한다.
 
-2026-10-07 iOS 26.5 / 200% 글자에서 키보드가 열린 시작 안내의 고정 머리가 본문 높이를 모두 소비했다. Native는 기존 ScreenLayout의 본문 스크롤 안으로 단계 안내를 옮겨 입력에 도달하게 하고 footer의 완료·이전 버튼은 유지한다. [검토 결과](../../../../../docs/qa/2026-10-07-experiment-promotion-release.md).
+Native는 기존 ScreenLayout의 본문 스크롤 안으로 단계 안내를 옮겨 입력에 도달하게 하고 footer의 완료·이전 버튼은 유지한다.
+
+## 근거
+
+- 한 항목 구성: 2026-10-06 배포 직접 조립 온보딩(Steps·ContentTransition·여러 개 고르는 주제 버튼)을 이 항목으로 합치고 그 고유 상태인 관심 주제 고르기를 2단계로 옮겼다.
+- 관심 주제 Chip `multiple`: 2026-10-06 ghost+`selected` Button에서 바꿨다. 여러 개 고르기는 checkbox 역할로 읽혀야 하는데 Button `selected`는 눌림 토글(`aria-pressed`)로 읽히고, 한 줄짜리 주제 선택에 CheckboxGroup은 세로 목록이라 화면을 많이 차지한다.
+- Native 단계 안내를 본문 스크롤 안에 둠: 2026-10-07 iOS 26.5 / 200% 글자에서 키보드가 열린 시작 안내의 고정 머리가 본문 높이를 모두 소비했다([검토 결과](../../../../../docs/qa/2026-10-07-experiment-promotion-release.md)).

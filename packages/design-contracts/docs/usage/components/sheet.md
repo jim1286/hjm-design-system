@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-16
+- 검토일: 2026-10-17
 - 근거: [Sheet 입력 화면과 가용 영역](../../sheet.md), [optional adapters](../../optional-adapters.md)(Native 제스처 확장), `src/component-recipes.ts`(`sheetRecipe`), `src/sheet.ts`(`sheetBehaviorDefaults`)
 - 스토리북: `배포/컴포넌트/오버레이/시트`
 
@@ -13,8 +13,7 @@
 현재 화면 위에 모달로 띄우는 보조 작업 패널에 쓴다. 설정 한 항목 편집, 선택 목록(테마·언어),
 짧은 입력 폼, 공유·사진 출처 선택처럼 끝나면 원래 화면으로 돌아오는 작업이다. 기본은 하단에서 올라온다.
 
-2026-09-23 소비 감사에서 제품마다 Sheet를 직접 조립하며 제목 정렬, 키보드 높이, top inset, 본문 maxHeight를
-따로 보정하고 있었다. 이 보정은 Sheet가 소유한다. 제품 wrapper에서 Modal·키보드 listener·강제 maxHeight를
+제목 정렬, 키보드 높이, top inset, 본문 maxHeight 보정은 Sheet가 소유한다. 제품 wrapper에서 Modal·키보드 listener·강제 maxHeight를
 다시 만들지 않는다.
 
 ## 쓰지 않을 때
@@ -85,7 +84,7 @@ import { Sheet } from "@hjmds/react-native/overlays";
 | `onOpenChange` | `(open: boolean, detail: { reason }) => void` | — | reason: `trigger` · `close-action` · `escape` · `back` · `outside` · `swipe` · `programmatic`. Android 하드웨어 back은 Native에서만 `back` |
 | `onDismissComplete` | `(detail: { reason }) => void` | — | 표면이 실제로 사라진 뒤 한 번. 다음 modal·화면 이동은 여기서 |
 | `dismissPolicy` | `{ dismissible?, dismissWhileBusy?, outsideDismiss?, escapeOrBackDismiss?, swipeDismiss? }` | `dismissible` true · `dismissWhileBusy` false · `outsideDismiss` 하단 false / 옆 true · `escapeOrBackDismiss` true · `swipeDismiss` true(미게시 변경, 이전 false) | 닫기 허용 범위. `resolveSheetDismissPolicy(placement, override)` |
-| `keyboardAvoidance` (Native) | `boolean` | `true`(미게시 변경, 이전 `false`) | 모달이 키보드 높이만큼 비킨다. 입력 시트가 옵션을 빠뜨려 가려지던 문제(2026-10-16 키보드 전수 조사)로 기본을 켰다. 안쪽 `ScreenLayout`은 중복 처리하지 않는다 |
+| `keyboardAvoidance` (Native) | `boolean` | `true`(미게시 변경, 이전 `false`) | 모달이 키보드 높이만큼 비킨다. 안쪽 `ScreenLayout`은 중복 처리하지 않는다 |
 | `showClose` | `boolean` | 하단 `false` · 옆 `true`(미게시) | 머리의 × 표시. 하단 시트는 드래그로 닫는 것이 기본이라 끈다 |
 | `busy` | `boolean` | `false` | 사용자 닫기를 막는다 |
 | `title` · `closeLabel` | 문구 | 필수 | Native `title`이 element면 `accessibilityTitle`(string) 필수 |
@@ -97,7 +96,6 @@ import { Sheet } from "@hjmds/react-native/overlays";
 
 ### 디자인 프로필 상속
 
-2026-10-07 테마 소비 경로 점검에서 고정 foundation/recipe 값이 남은 곳을 보완했다.
 모서리의 recipe 역할은 유지하고 값은 가장 가까운 Provider의 `designProfile.tokens.radius`를
 읽는다. Dialog/AlertDialog/Sheet/일반 Toast의 그림자는 `tokens.shadow.floating`을 읽으며
 프로필 없는 소비자의 기본값은 유지한다. 상태·초안·선택·Modal teardown은 이 축의 소유가 아니다.
@@ -137,7 +135,7 @@ import { Sheet } from "@hjmds/react-native/overlays";
 
 ## 꼭 지킬 것
 
-- 하단 시트는 드래그로 내려 닫을 수 있어야 한다(2026-10-16 사용자 결정, 필수). 배경 탭 닫기와 ×는 기본으로 끈다. 드래그를 쓸 수 없는 사용자를 위해 손잡이 닫기 버튼, Escape·Android back, VoiceOver 닫기 제스처는 유지한다. `swipeDismiss: false`는 결제 확인처럼 실수로 닫히면 안 되는 흐름에만 쓰고 이유를 제품 코드에 남긴다.
+- 하단 시트는 드래그로 내려 닫을 수 있어야 한다(필수). 배경 탭 닫기와 ×는 기본으로 끈다. 드래그를 쓸 수 없는 사용자를 위해 손잡이 닫기 버튼, Escape·Android back, VoiceOver 닫기 제스처는 유지한다. `swipeDismiss: false`는 결제 확인처럼 실수로 닫히면 안 되는 흐름에만 쓰고 이유를 제품 코드에 남긴다.
 
 - 입력 폼 Native Sheet는 `keyboardAvoidance`와 `scrollable`을 함께 켜고, 제품의 키보드 listener·maxHeight·
   중첩 ScrollView를 지운다. 본문이 FlatList 등 가상화 목록이면 `scrollable={false}`로 둔다.
@@ -175,7 +173,15 @@ Flutter 제품은 `showModalBottomSheet` 대신 `showHjmBottomSheet`(`hjm_flutte
 
 - `size="full"`(Web `detents`의 `full` 포함)은 위 안전 영역을 뺀 전체 높이를 사용한다. 0.9 상한은 `auto`에만 적용된다(1.13.0 변경).
 - 1.13.0 이하 Native 고정 높이 Sheet는 본문이 내용 높이라서 `flex: 1` 자식이 0pt가 됐다. 시트 안 SearchScreen이 검색 입력만 그리고
-  필터 줄·목록이 사라졌다(2026-10-06 utilverse 채팅 도구 선택, iPhone 17 Pro · iOS 26.5). 제품은 창 높이 `flexBasis`로 우회했다.
+  필터 줄·목록이 사라졌다. 제품은 창 높이 `flexBasis`로 우회했다.
   1.13.1부터는 그 우회 없이 채워진다. 1.13.0 이하에서도 footer는 본문 바로 아래에 있었고, 1.13.1부터 고정 높이 시트에서는 시트 아래에 붙는다.
 - `scrollable` 본문 안에서는 자식이 `flex: 1`로 높이를 채울 수 없다(ScrollView 내용은 내용 높이다). 자기 스크롤을 가진 화면(SearchScreen 등)은
   `scrollable` 없이 넣는다.
+
+## 근거
+
+- Sheet가 제목 정렬·키보드·top inset·maxHeight 보정 소유: 2026-09-23 소비 감사에서 제품마다 Sheet를 직접 조립하며 이 값을 따로 보정하고 있었다.
+- Native `keyboardAvoidance` 기본 true: 2026-10-16 키보드 전수 조사 — 입력 시트가 옵션을 빠뜨려 키보드에 가려졌다.
+- 디자인 프로필 상속(radius·floating shadow): 2026-10-07 테마 소비 경로 점검에서 고정 foundation/recipe 값이 남은 곳을 보완했다.
+- 하단 시트 드래그 닫기(필수): 2026-10-16 사용자 결정.
+- 1.13.0 이하 고정 높이 Sheet 함정: 2026-10-06 utilverse 채팅 도구 선택, iPhone 17 Pro · iOS 26.5에서 확인했다.

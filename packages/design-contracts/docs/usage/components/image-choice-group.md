@@ -4,14 +4,13 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 미게시(1.26.1 이후)
-- 검토일: 2026-10-16
+- 검토일: 2026-10-17
 - 근거: `src/image-choice.ts`의 `imageChoiceRecipe`·`resolveImageChoiceToggle`; Web `src/image-choice.tsx`, Native `src/image-choice.tsx`
 - 스토리북: `배포/화면/계정/프로필`
 
 ## 언제 쓰나
 
-아바타 얼굴, 프로필 사진, 모음에 넣을 사진처럼 **그림을 보고 고르는** 단일·다중 선택에 쓴다. 2026-10-16 구성 예제 점검에서
-제품들이 `selected`를 준 ghost 버튼으로 이 선택을 흉내 내 선택 상태가 일관되지 않았던 것이 계기다([조립 규칙](../SELECTION.md#조립-규칙필수)).
+아바타 얼굴, 프로필 사진, 모음에 넣을 사진처럼 **그림을 보고 고르는** 단일·다중 선택에 쓴다. `selected`를 준 ghost 버튼으로 흉내 내지 않는다([조립 규칙](../SELECTION.md#조립-규칙필수)).
 
 ## 쓰지 않을 때
 
@@ -76,3 +75,7 @@ import { ImageChoiceGroup } from "@hjmds/react-native/image-choice";
 ## 상태와 상호작용
 
 선택된 타일은 브랜드 색 고리와 체크 원으로 구분하고, 비활성 타일은 투명도 0.5다. Web은 버튼마다 Tab으로 이동하고 Space·Enter로 고른다.
+
+## 근거
+
+- 도입 계기: 2026-10-16 구성 예제 점검 — 제품들이 `selected`를 준 ghost 버튼으로 그림 선택을 흉내 내 선택 상태가 일관되지 않았다.

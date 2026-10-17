@@ -115,7 +115,7 @@ import { TextField } from "@hjmds/react-native/inputs";
 - 모든 문구(`label`, `discard`의 제목·설명·버튼)는 i18n 키로 넣는다. 컴포넌트는 기본 문구를 갖지 않는다.
 - `discard`는 `fallbackErrorMessage`까지 필수 타입이다. `onConfirm`은 EditorScreen이 채우므로 넘기지 않는다.
 - 확인 후 초안을 되돌리는 일은 `cancel.onAction` 안에서 제품이 한다.
-- 저장 시작 또는 `cancel.disabled`/`cancel.pending` 전환은 이미 열린 초안 버리기 확인도 종료한다. 잠금이 풀렸다고 확인창이 다시 열리지는 않는다. 2026-10-13 이전 확인창으로 저장 중 이탈 잠금을 우회할 수 있던 경로를 수정했다.
+- 저장 시작 또는 `cancel.disabled`/`cancel.pending` 전환은 이미 열린 초안 버리기 확인도 종료한다. 잠금이 풀렸다고 확인창이 다시 열리지는 않는다.
 - 최초 조회·오류·권한 제한 등 본문 대체 상태에서는 저장을 잠근다. 새 문서의 빈 초안은 `state="empty"`가 아니라 `ready`와 빈 입력으로 표현하고 제품 validation은 `submit.disabled`에 연결한다.
 - 라우터 뒤로가기·Android back·브라우저 이탈은 이 컴포넌트가 막지 않는다. 제품이 `dirty`로 guard를 건다.
 - 저장 성공 판정·오류 표시는 제품 상태(`notice`, Toast 등)로 한다.
@@ -126,3 +126,7 @@ import { TextField } from "@hjmds/react-native/inputs";
 | --- | --- | --- |
 | 화면 셸 전용 props | `as`, `className` | `testID`, `scrollRef`, `scrollProps` (`layoutStyle`은 양쪽 모두 받는다) |
 | 버튼 이벤트 | 내부에서 `onClick` → `onAction` | 내부에서 `onPress` → `onAction` |
+
+## 근거
+
+- 저장 시작 시 열린 버리기 확인 종료: 2026-10-13 이전 확인창으로 저장 중 이탈 잠금을 우회할 수 있던 경로를 수정했다.

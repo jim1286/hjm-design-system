@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 구성 API 지침 참조
-- 검토일: 2026-10-15
+- 검토일: 2026-10-17
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screen-flows.tsx`(`SearchScreen` 두 단계 검색 prop, 2026-10-06 사용자 위임 결정으로 미리보기 로직을 공개 API로 올림), 예제 `showcase/*/search-discovery-preview.tsx`·`showcase/shared/search-discovery.ts`. 2026-10-06 사용자 요청("실험에 있는 검색화면 UI도 개편해. 검색과 필터 있는 앱 서비스 따라해.")에 따라 Material 3 Search·Apple HIG search fields·Baymard·NN/g·eBay Playbook 필터 패턴과 국내 커머스·생활 서비스 모바일 웹의 **구조·상호작용만** 조사해 다시 설계했다(브랜드 색·로고·문구·자산은 가져오지 않았다). 2026-10-06 사용자 승인으로 실험 `공통 화면/검색`을 배포하면서 같은 일을 직접 조립하던 배포 `화면/검색`(내 기록 검색)을 대체했다(Web id `patterns-search` 보존, [승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정))
 - 스토리북: `배포/화면/검색/검색 결과와 필터`
 
@@ -115,8 +115,6 @@ Native · Web < 960: 아래 시트(size large)        Web ≥ 960(expanded): 옆
 
 
 ### 제안·확정 결과·필터 개수의 요청 경계
-
-2026-10-13 전수 점검에서 최초 조회와 변경 요청의 상태를 같은 골격으로 설명하던 부분을 구체화했다.
 
 | 상황 | 연결 | 유지·복구 |
 | --- | --- | --- |
@@ -281,7 +279,7 @@ import { SearchScreen } from "@hjmds/react-native/screen-flows";
 
 ## 함정
 
-- 최근 검색을 `onSearch`에서 저장하면 debounce된 부분 입력("산", "산책")이 따로 쌓인다. 2026-10-06 개편 전 예제의 결함이다.
+- 최근 검색을 `onSearch`에서 저장하면 debounce된 부분 입력("산", "산책")이 따로 쌓인다.
 - 0건 원인 판정(`resolveSearchEmptyCause`)은 `appliedFilters.items` 개수로 한다. 적용 조건을 `appliedFilters`로 넘기지 않으면 필터 때문인 0건도 검색어 때문으로 보고 칩 줄을 숨긴다.
 - 정렬을 필터 시트 안에 넣으면 정렬 하나 바꾸는 데 시트를 열고 적용해야 한다. 결과 머리의 Menu로 즉시 적용한다(개편 전 `검색과 필터` 예제의 문제).
 - Web Chip은 `onClick`을 자기 핸들러로 덮어써서 Menu `trigger`로 쓰면 메뉴가 열리지 않는다. 정렬 트리거는 Button을 쓴다.
@@ -290,7 +288,7 @@ import { SearchScreen } from "@hjmds/react-native/screen-flows";
 - 최근 검색 저장소를 `onSearch`에 연결하지 않는다. SearchScreen은 확정만 `onSubmit`으로 보내므로 거기서만 저장한다.
 - Storybook은 실제 검색 서버·라우터 연동 증거가 아니다. Native 화면은 2026-10-06 개편에서 시뮬레이터로 확인하지 않았다(구조는 렌더 테스트로만 확인).
 - 시트 안 검색(채팅 도구 고르기 등)은 Sheet `size`를 `medium`·`large`로 주고 `scrollable` 없이 SearchScreen을 넣는다. SearchScreen은 `contentInset="none"`·`hostGutter="regular"`.
-  1.13.0 이하 Native는 이 조합에서 화면이 0pt가 되고 칩 줄이 시트 여백에서 잘렸다(2026-10-06 utilverse, [Sheet 함정](../components/sheet.md#함정)).
+  1.13.0 이하 Native는 이 조합에서 화면이 0pt가 되고 칩 줄이 시트 여백에서 잘렸다([Sheet 함정](../components/sheet.md#함정)).
 
 
 ### 하위 목록 로딩 계약
@@ -299,3 +297,10 @@ import { SearchScreen } from "@hjmds/react-native/screen-flows";
 사용한다. 위쪽 개수 Skeleton과 실제 결과 행은 화면이 배치하지만, 행의 density·두 줄 높이·슬롯은
 ListRow가 소유한다. 상태 이름은 첫 로딩 행 한 곳에만 제공한다. 검색 화면 안에서 임의 폭/간격의
 Skeleton 두 개로 결과 행을 다시 만들지 않는다.
+
+## 근거
+
+- 제안·확정 결과·필터 개수의 요청 경계 상황 표: 2026-10-13 전수 점검 — 최초 조회와 변경 요청의 상태를 같은 골격으로 설명하던 부분을 구체화했다.
+- 단계 전환·필터 시트 초안·0건 복구 등을 SearchScreen이 소유: 2026-10-06 전에는 이 모두가 Storybook 미리보기 코드에만 있었다. 같은 날 같은 예제를 그리던 `기본 흐름/검색과 필터`(복구 흐름)와 `구성/검색/여러 조건 적용과 초기화`(초안·적용 필터 시트)를 이 항목으로 합쳤다([옛 링크](../../../../../docs/STORYBOOK_NAVIGATION.md#실험-정리와-합친-항목-2026-10-06)).
+- 최근 검색은 `onSubmit`에서만 저장: 2026-10-06 개편 전 예제가 `onSearch`에서 저장해 debounce된 부분 입력이 따로 쌓였다.
+- 시트 안 검색의 `size`·`contentInset` 조합: 2026-10-06 utilverse에서 1.13.0 이하 Native 화면이 0pt가 되고 칩 줄이 잘렸다.

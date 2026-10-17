@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-15
+- 검토일: 2026-10-17
 - 근거: `showcase/web/src/patterns/Dashboard.stories.tsx`, `showcase/native/src/Dashboard.stories.tsx`, `showcase/shared/dashboard-pattern.ts`, `showcase/native/src/pattern-status.tsx`, `packages/react/src/styles.css`(`.hjm-statistic`, `.hjm-text`)
 - 스토리북: `배포/화면/콘텐츠/대시보드`
 
@@ -181,10 +181,15 @@ ScreenLayout을 감싸지 않는다. 재조회는 기존 데이터와 기간 설
 
 - ActivityHeatmap은 1~366일만 받는다(범위 밖이면 `RangeError`). 1년 넘는 기록은 제품이 기간을 나눈다.
 - 기간·결과 문구는 공개 [StatusText](../components/text.md#statustext)를 쓴다. iOS에서는 active 중 바뀐 비어 있지 않은 문구만 알리고, 최초 안내·동일 문구·배경 변경은 재생하지 않는다.
-- 구획 제목은 Heading으로 표시한다. 이전 Text heading 예제는 2026-10-06 제목 의미 구조를 맞추면서 수정했다.
+- 구획 제목은 Heading으로 표시한다.
   Text의 기본 `emphasis="regular"`가 굵기를 덮어 24px 보통 굵기로 나오고(`.hjm-text[data-emphasis="regular"]`), Native는 제목 단계가 없다.
   [Text](../components/text.md) 규칙대로 새 제품은 Heading `level3`·`semanticLevel={1}`(24/32 heavy)을 쓴다.
 - 예제는 양 플랫폼 모두 Container로 감싼다. 예제의 compact gutter 16과 제품이 폭에 따라 선택하는 regular gutter 20을 구분한다.
 
 
-2026-10-13 행동 검수에서 제거/복구 뒤 키보드 문맥 유실을 확인해 보강했다. Web 빈 기간 복구는 선택된 기간 컨트롤로 초점을 돌린다. 기간을 바꿔도 목록/격자 보기 선택은 유지한다.
+제거/복구 뒤 초점: Web 빈 기간 복구는 선택된 기간 컨트롤로 초점을 돌린다. 기간을 바꿔도 목록/격자 보기 선택은 유지한다.
+
+## 근거
+
+- 구획 제목 Heading: 2026-10-06 제목 의미 구조를 맞추면서 이전 Text heading 예제를 수정했다.
+- 제거/복구 뒤 초점 규칙: 2026-10-13 행동 검수에서 제거/복구 뒤 키보드 문맥 유실을 확인했다.

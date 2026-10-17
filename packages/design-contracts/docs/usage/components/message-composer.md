@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.17.1
-- 검토일: 2026-10-16
+- 검토일: 2026-10-17
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screens.tsx`·`src/screen-flows.tsx`; 기존 개별 지침을 새 규격으로 통합. 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
 - 스토리북: `배포/구성/입력과 작성/메시지 작성`, `배포/구성/입력과 작성/댓글 작성`, `배포/화면/소통/채팅`
 
@@ -109,7 +109,7 @@ import { Image } from "react-native";
 | 작성자 아바타 | 미게시: `leading`은 입력칸 밖, 입력 줄 시작 쪽에 놓는다(세로 가운데). 이모지 빠른 입력 줄은 그 위에서 작성창 전체 폭을 쓴다. 아바타를 작성창 바깥 Stack으로 감싸지 않는다 | Web `.hjm-message-composer__leading`, Native `MessageComposer` |
 | 이모지 빠른 입력 | 미게시: `quickInserts={ label, items: [{ id, emoji, label }] }`를 주면 입력 줄 위에 44 원형 칸(이모지 26)을 고르게 펼친다. 누르면 초안 끝에 이모지를 붙인다(인스타그램 댓글 시트 실측). 댓글처럼 길게 누르기 반응이 없는 화면에서 쓴다 | `composerQuickInsertRecipe` |
 | 높이 고정 | 미게시: 아이콘 전송 모드에서 전송 버튼 자리를 항상 확보(보이지 않고 보조기술에서도 숨김)해 첫 글자를 입력할 때 입력칸 높이가 바뀌지 않는다 | Web `.hjm-message-composer__trailing`, Native `MessageComposer` |
-| 답장 중 | 미게시(2026-10-16 카카오톡 실측): `replyTo`가 있으면 답장 대상(제목 굵게 + 원문 한 줄 말줄임 + 원형 × `IconButton size="small"` secondary)·첨부·입력 줄을 `surface` 배경, radius `radius.xl` 24, 안쪽 `spacing.sm` 12 카드 하나로 감싼다. `replyTo.author`에는 "소희에게 답장"처럼 완성된 문구를 넘긴다 | Web·Native `MessageComposer` |
+| 답장 중 | 미게시: `replyTo`가 있으면 답장 대상(제목 굵게 + 원문 한 줄 말줄임 + 원형 × `IconButton size="small"` secondary)·첨부·입력 줄을 `surface` 배경, radius `radius.xl` 24, 안쪽 `spacing.sm` 12 카드 하나로 감싼다. `replyTo.author`에는 "소희에게 답장"처럼 완성된 문구를 넘긴다 | Web·Native `MessageComposer` |
 | 고정·스크롤 | 자체 고정 없음: 화면 composer 슬롯(footer)에 넣는다; 첨부는 가로 스크롤; 키보드 adapter는 host 하나만 | ChatScreen·CommentThreadScreen `composer` |
 | 좁은 폭·큰 글자 | 입력이 남은 폭을 채우고(`flex: 1`, 최소 폭 0) 전송 버튼은 줄지 않는다; 큰 글자에서도 5줄 상한 뒤 입력 안 스크롤로 기록을 가리지 않는다 | Web `.hjm-message-composer__row`, Native `layoutStyle={{ flex: 1 }}` |
 
@@ -120,7 +120,7 @@ import { Image } from "react-native";
 - 첨부 `id`는 비어 있지 않고 유일해야 하며 `removeLabel`이 필요하다. 첨부가 있으면 `onRemoveAttachment`가 필수다. 어기면 던진다.
 - 사진 권한·선택기·업로드·개수 제한은 제품 소유다. 출처 선택 UI는 [PhotoSourceSheet](photo-source-sheet.md)를 쓴다.
 - Enter는 기본 줄바꿈이다. 데스크톱 채팅만 `submitMode="send"`로 선택할 수 있고 Shift+Enter·IME 조합·Safari keyCode 229는 전송하지 않는다. Native는 별도로 선택하지 않으면 줄바꿈을 유지한다.
-- 2026-10-07 번뚝 채택에서 기존 blur/IME/검증 연결이 누락되어 이 공개 축을 추가했다. 제품이 내부 TextArea를 따로 조립하는 대안 대신 기존 MessageComposer 엔진을 확장한다.
+- 입력 연결(blur/IME/검증)이 더 필요하면 제품이 내부 TextArea를 따로 조립하지 않고 기존 MessageComposer 엔진의 공개 축을 확장한다.
 - 로컬 준비 사진은 `attachments`로 표시하며 UploadItem의 서버 업로드 완료로 가장하지 않는다. 준비 중 해당 항목의 `disabled`와 attachmentAction.disabled를 연결해 편집 가능한 본문과 사진 제거를 분리한다. 서버 성공 전 초안을 지우지 않는다.
 - Web 배치는 `layoutStyle`로 한다. Native는 스타일 통로가 없어 감싸는 레이아웃에서 배치한다.
 
@@ -136,4 +136,10 @@ import { Image } from "react-native";
 
 ### 고정 아이콘과 큰 글자
 
-2026-10-06 최근 검색 삭제 기호가 큰 글자에서 잘린 재현에 따라 Native 내장 삭제·메뉴 기호는 고정 아이콘 틀의 크기를 유지한다. 주변 제목·라벨은 계속 확대한다. Chip의 체크와 Toast 닫기는 기존 비확대 경로를 유지하며 회귀 검사에 포함한다. 제품이 전달한 아이콘 슬롯은 제품이 같은 조건을 검증한다.
+Native 내장 삭제·메뉴 기호는 고정 아이콘 틀의 크기를 유지한다. 주변 제목·라벨은 계속 확대한다. Chip의 체크와 Toast 닫기는 기존 비확대 경로를 유지하며 회귀 검사에 포함한다. 제품이 전달한 아이콘 슬롯은 제품이 같은 조건을 검증한다.
+
+## 근거
+
+- 답장 중 카드 배치: 2026-10-16 카카오톡 실측.
+- `submitMode` 등 입력 공개 축: 2026-10-07 번뚝 채택에서 기존 blur/IME/검증 연결이 누락됐다.
+- Native 내장 기호 고정 크기: 2026-10-06 최근 검색 삭제 기호가 큰 글자에서 잘리는 것을 재현했다.

@@ -84,7 +84,7 @@ import { Button } from "@hjmds/react-native/actions";
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 높이 `small` 36 · `medium` 44 · `large` 52. `small`만 hitSlop 4로 터치 영역 44 | `control.buttonHeight`, `control.buttonHitSlop` |
-| 간격 | 한 묶음의 버튼 사이: **세로로 쌓으면 `spacing.xs` 8, 가로로 나란하면 `spacing.sm` 12**(2026-10-17 사용자 지시: 세로로 쌓은 하단 버튼 12 간격이 벌어져 보였다). 예제·제품의 `Stack`도 같은 값을 쓴다. Dialog·Sheet 행동 영역 좌우·아래 여백 `spacing.lg` 20 | `actionGroupRecipe`, `.hjm-dialog__footer`, Native Sheet footer |
+| 간격 | 한 묶음의 버튼 사이: **세로로 쌓으면 `spacing.xs` 8, 가로로 나란하면 `spacing.sm` 12**. 예제·제품의 `Stack`도 같은 값을 쓴다. Dialog·Sheet 행동 영역 좌우·아래 여백 `spacing.lg` 20 | `actionGroupRecipe`, `.hjm-dialog__footer`, Native Sheet footer |
 | 순서·정렬 | 가로 행동 줄은 **보조 → 주**, 끝 정렬. 세로 순서는 배치 소유자의 계약을 따른다: Dialog는 보조 → 주, Native Sheet는 주 → 보조, 좁은 AlertDialog는 주 → 보조. 본문의 짧은 선택·확정 구성은 해당 구성의 순서다. 목록 행 끝은 `small` + `ghost`/`secondary`, `primary` 금지 | `renderAction` 순서(Native overlays), `.hjm-dialog__footer` |
 | 고정·스크롤 | 화면 맨 아래 고정 주 행동은 Button 대신 [BottomCTA](bottom-cta.md)(안전 영역·키보드 처리) | — |
 | 좁은 폭·큰 글자 | 폭 < 600(`breakpoint.medium`)이면 AlertDialog 행동을 세로로 쌓고 주 행동이 위(DOM은 [취소][확인] 유지). 라벨은 두 줄까지, 큰 글자에서는 상한 해제 | `.hjm-alert-dialog__actions`, [버튼 라벨](../../button-label.md) |
@@ -99,8 +99,7 @@ import { Button } from "@hjmds/react-native/actions";
 
 ## 꼭 지킬 것
 
-- 2026-10-07 [Stateful Button 대조](../../../../../docs/plans/aceternity-interaction-adoption-2026-10-07.md)를
-  기존 [실행과 복구](../../action-session.md)와 비교했다. Button은 callback의 Promise를 자동으로
+- Button은 callback의 Promise를 자동으로
   기다려 성공을 판정하는 엔진이 아니다. 제품 mutation 또는 기존 action-session의 pending을
   `loading`에 연결하고 실제 확정 뒤 성공 문구를 보여 준다. 실패하면 초안을 보존하고 재시도를
   제공한다. Promise가 resolve됐다는 이유만으로 도메인 응답의 실패를 성공으로 표시하지 않는다.
@@ -109,10 +108,10 @@ import { Button } from "@hjmds/react-native/actions";
 - 배치는 `layoutStyle`로만 한다. 색·radius·높이를 `style`/`className`으로 덮지 않는다.
   Native에서 `style`·`labelStyle`을 넘기면 실행 중 `TypeError`가 난다.
 - 색은 tone과 제품 테마 토큰으로 바꾼다. 버튼마다 브랜드 색을 하드코딩하지 않는다.
-- 진행 중 상태는 `loading`으로 표시하고 같은 자리에 별도 Spinner를 겹치지 않는다. children을 빈 문자열이나 다른 길이의 진행 문구로 바꾸지 않는다. 렌더러가 문구·아이콘을 숨긴 자리에 중앙 스피너만 표시하고 기존 크기·접근성 이름을 유지한다. 2026-10-06 독립 검증에서 이 사용자 요구가 사용 지침에는 빠져 있음을 확인해 명시했다.
+- 진행 중 상태는 `loading`으로 표시하고 같은 자리에 별도 Spinner를 겹치지 않는다. children을 빈 문자열이나 다른 길이의 진행 문구로 바꾸지 않는다. 렌더러가 문구·아이콘을 숨긴 자리에 중앙 스피너만 표시하고 기존 크기·접근성 이름을 유지한다.
 - "한 화면 `primary` 하나"의 예외는 다음과 같다. `selected`를 준 버튼은 tone과 관계없이 `buttonRecipe.states.selected`(배경 `bg`, 글자 `contentBrand`, 선택 테두리 없음)로 칠해져 primary 채움이 아니므로 세지 않고(Web `.hjm-button[data-selected="true"]`, Native `internal/recipe-button.tsx`, 작품 카드의 저장 토글), Sheet·Dialog 안의 행동은 그 표면 안에서 primary 하나를 센다([Sheet](sheet.md) `footer`, 작품 탐색·랜딩 스토리의 시트).
 
-- `selected` 버튼 여러 개를 나란히 두어 하나 고르기·여러 개 고르기·켜고 끄기를 흉내 내지 않는다. 2026-10-16 사용자 지적으로 예제의 선택 버튼 줄이 테두리 없는 글자처럼 보이고 폭이 제각각이었다. 그 의도는 [선택 조립 규칙](../SELECTION.md#조립-규칙필수)의 SegmentedControl·RadioGroup·Chip·Switch를 쓴다.
+- `selected` 버튼 여러 개를 나란히 두어 하나 고르기·여러 개 고르기·켜고 끄기를 흉내 내지 않는다. 그 의도는 [선택 조립 규칙](../SELECTION.md#조립-규칙필수)의 SegmentedControl·RadioGroup·Chip·Switch를 쓴다.
 
 - 긴 소개 화면에서 위·아래 CTA가 **동일한 행동**으로 이어지고 서로 다른 스크롤 구간에 있으면 둘 다 primary를 허용한다. 큰 글자에서 첫 CTA가 멀어지는 문제를 보완하기 위한 예외이며, 서로 다른 가입·구매 행동을 동시에 강조하는 근거로 쓰지 않는다.
 
@@ -127,9 +126,9 @@ import { Button } from "@hjmds/react-native/actions";
 | 기본 `type` | `"button"`(폼 submit은 `type="submit"`을 명시) | 해당 없음 |
 
 
-- 2026-10-06 독립 지침 재구현에서 footer 순서를 모든 본문 행동에 강제하는 것으로 읽혔다. 시간 선택처럼 주 행동 다음에 초기화가 오는 구성과 AlertDialog의 좁은 폭 순서는 각각 명시된 구성 계약을 따른다.
+- footer 순서를 모든 본문 행동에 강제하지 않는다. 시간 선택처럼 주 행동 다음에 초기화가 오는 구성과 AlertDialog의 좁은 폭 순서는 각각 명시된 구성 계약을 따른다.
 
-2026-10-10 사용자 요청으로 선택 시 추가되는 테두리를 제거했다. `selected` 접근성 상태와
+`selected`에는 선택 테두리를 추가하지 않는다. `selected` 접근성 상태와
 contentBrand 글자·아이콘 색은 유지하며 키보드 focus outline은 선택과 별도로 유지한다.
 
 ## 저장 확정 라벨과 프레임 예약 (npm 1.21.0 · 2026-10-15)
@@ -170,3 +169,12 @@ Button의 loading은 표시와 UI 재실행을 막는 기능이다. 같은 프�
 무효화는 기존 action-session 또는 제품 mutation이 맡는다. 저장 실패 뒤에는 입력과
 마지막 확정 값을 유지한다. [버튼 완료 피드백](../compositions/action-feedback.md)의
 `resolveSaveFeedback` 조합을 사용한다.
+
+## 근거
+
+- 버튼 묶음 간격(세로 8·가로 12): 2026-10-17 사용자 지시 — 세로로 쌓은 하단 버튼의 12 간격이 벌어져 보였다.
+- Button은 Promise로 성공을 판정하지 않음: 2026-10-07 [Stateful Button 대조](../../../../../docs/plans/aceternity-interaction-adoption-2026-10-07.md)를 기존 [실행과 복구](../../action-session.md)와 비교했다.
+- `loading` 중앙 스피너·크기 유지: 2026-10-06 독립 검증에서 이 사용자 요구가 사용 지침에 빠져 있음을 확인해 명시했다.
+- `selected` 버튼 나열 금지: 2026-10-16 사용자 지적 — 예제의 선택 버튼 줄이 테두리 없는 글자처럼 보이고 폭이 제각각이었다.
+- footer 순서 범위: 2026-10-06 독립 지침 재구현에서 footer 순서를 모든 본문 행동에 강제하는 것으로 읽혔다.
+- 선택 테두리 없음: 2026-10-10 사용자 요청으로 선택 시 추가되는 테두리를 제거했다.

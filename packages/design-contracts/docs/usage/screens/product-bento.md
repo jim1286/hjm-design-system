@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.14.0
-- 검토일: 2026-10-15
+- 검토일: 2026-10-17
 - 근거: `reference-adoption-previews.tsx`, `reference-adoption.css`
 - 스토리북: `배포/화면/소개/기능 카드와 주 행동`
 
@@ -116,8 +116,7 @@ Native ImageComparison에는 증감 행동 label을 추가한다. 제품의 계�
 
 ### CTA 레퍼런스 흡수와 저장 소유권
 
-2026-10-07 CTA Gallery의 Webflow 데스크톱·모바일 캡처에서 주/보조 행동의 위계를,
-Ente 캡처에서 플랫폼 조건에 맞춘 행동 묶음을 확인했다. HJM에는 기존 BottomCTA/BottomInfo로
+주/보조 행동 위계와 플랫폼 조건별 행동 묶음은 기존 BottomCTA/BottomInfo로
 역할을 분리하며 외부 브랜드 색·스토어 배지·가격을 복제하지 않는다. 별도 CTA 엔진은 추가하지 않는다.
 
 제목은 화면의 controlled state에 둔다. 소개로 돌아가 입력을 숨겨도 제목은 남고 다시 시작하면
@@ -125,4 +124,9 @@ Ente 캡처에서 플랫폼 조건에 맞춘 행동 묶음을 확인했다. HJM�
 중복 요청·pending·실패 후 재시도를 검증하며 350ms 지연은 데모 전용이다. 실패 시 현재 제목은
 유지하고 다시 저장은 현재 입력 snapshot을 제출한다. 저장된 제목은 마지막으로 확정한 값이다.
 
-화면 host가 스크롤·키보드·safe area를 제공한다. Native 예제에는 기존 ScreenLayout과 KeyboardAvoiding을 연결한다. 스크롤 없는 Canvas에서 CTA가 화면 밖으로 잘렸던 2026-10-07 실제 확인에 따른 수정이다. 제품은 host safe area/keyboard offset을 실제 내비게이션에 맞춘다.
+화면 host가 스크롤·키보드·safe area를 제공한다. Native 예제에는 기존 ScreenLayout과 KeyboardAvoiding을 연결한다. 제품은 host safe area/keyboard offset을 실제 내비게이션에 맞춘다.
+
+## 근거
+
+- BottomCTA/BottomInfo 역할 분리: 2026-10-07 CTA Gallery의 Webflow 데스크톱·모바일 캡처에서 주/보조 행동의 위계를, Ente 캡처에서 플랫폼 조건에 맞춘 행동 묶음을 확인했다.
+- Native 예제의 ScreenLayout·KeyboardAvoiding: 2026-10-07 스크롤 없는 Canvas에서 CTA가 화면 밖으로 잘리는 것을 실제로 확인했다.

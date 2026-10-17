@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-15
+- 검토일: 2026-10-17
 - 근거: `showcase/web/src/patterns/NotificationSettings.stories.tsx`, `showcase/native/src/NotificationSettings.stories.tsx`, `src/component-recipes.ts`(`topBarRecipe`·`bottomCtaRecipe`·`sectionRecipe`·`switchRecipe`), `src/container.ts`, `src/responsive.ts`(`resolveWindowClass`), `packages/react/src/styles.css`(`.hjm-top-bar`·`.hjm-bottom-cta`)
 - 스토리북: `배포/화면/설정/알림 설정`
 
@@ -56,8 +56,6 @@ ScreenLayout: 제목(고정) → 본문(스크롤) → footer(고정)
 ### 설정 초안의 저장 경계
 
 두 스토리는 `showcase/shared/notification-settings.ts`에서 기존 `createActionSession`을 사용한다. 마지막 저장값과 현재 초안을 따로 표시하며, 저장 중에도 스위치를 수정할 수 있다. 성공은 제출 snapshot만 확정하고 새 초안은 남긴다. 저장 실패 후 하단의 같은 버튼으로 **현재 초안**을 다시 제출한다. 중복 저장은 잠그며 값을 저장값으로 되돌리면 불필요한 저장을 막는다. `예제 실행`의 실패 스위치는 다음 저장 한 번에만 적용한다. 실제 조회·권한·푸시·계정 API 없이 화면이 열려 있는 동안만 유지되는 메모리 데모다.
-
-2026-10-13 전수 점검에서 최초 조회와 변경 요청의 상태를 같은 골격으로 설명하던 부분을 구체화했다.
 
 | 상황 | 연결 | 유지·복구 |
 | --- | --- | --- |
@@ -112,3 +110,7 @@ ScreenLayout이 화면 여백과 스크롤을, CompositionLayout이 묶음 간�
 
 - Native에서 `safeAreaBottom`을 넘기지 않으면 홈 인디케이터가 저장 버튼 위에 겹친다. 기본값은 0이다.
 - 현재 스토리는 저장 요약 문구를 템플릿 문자열(`내 활동 ${…}`)로 조립한다. 제품은 위 코드처럼 켜짐/꺼짐 키 표와 보간 값을 쓴다.
+
+## 근거
+
+- 설정 초안의 저장 경계 상황 표: 2026-10-13 전수 점검 — 최초 조회와 변경 요청의 상태를 같은 골격으로 설명하던 부분을 구체화했다.

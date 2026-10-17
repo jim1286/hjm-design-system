@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web
 - 적용: 1.12.1
-- 검토일: 2026-10-15
+- 검토일: 2026-10-17
 - 근거: `showcase/web/src/foundations/MockupStudio.stories.tsx`, `src/responsive.ts`(`resolveWindowClass`), `showcase/web/src/studio/MockupStudio.tsx`, `showcase/web/src/studio/SceneTimeline.tsx`, `showcase/shared/mockup-scene.ts`, `showcase/shared/scene-timeline.ts`
 - 스토리북: `배포/화면/화면 틀과 도구/목업 편집`
 
@@ -82,7 +82,7 @@ Native 스토리는 없다(장면 작성은 Web showcase에 둔다는 통합 계
 | 파일 고르기 | `<input type="file">`(PNG·JPEG·WebP / JSON) | ④ | 2 |
 
 주 행동은 PNG 내보내기 하나다. 재생·영상 내보내기는 `secondary`로 둔다. 설정은 하나 고르기·켜고 끄기라 [선택 조립 규칙](../SELECTION.md#조립-규칙필수)대로
-SegmentedControl·Switch를 쓴다. 2026-10-16 사용자 지적 전에는 `selected` Button 줄이었고 선택 상태가 테두리 없는 글자로만 보이고 폭이 제각각이었다. 내보내기 줄은 맨 아래 흐름 배치라 긴 설정을 지나야 닿는다.
+SegmentedControl·Switch를 쓴다. 내보내기 줄은 맨 아래 흐름 배치라 긴 설정을 지나야 닿는다.
 제품 편집기에서 주 행동을 늘 보이게 하려면 [BottomCTA](../components/bottom-cta.md) `position="sticky"`로 옮긴다.
 
 ## 상태
@@ -197,14 +197,20 @@ const gutter = resolveWindowClass(window.innerWidth) === "compact" ? "compact" :
 - 화면 캡처는 브라우저 밖으로 나가지 않는다. 장면 JSON에는 파일 이름·출처·사용 범위만 저장되므로 다른 사람에게 JSON만 주면 이미지를 다시 골라야 한다.
 - PNG는 화면에 보이는 canvas가 아니라 내보낼 때 새로 그린 canvas에서 만든다. 인코딩 중 설정을 바꿔도 결과가 바뀌지 않는다.
 - 초기화는 확인 없이 지운다. 제품 편집기에서 되돌리기 어려운 초기화에는 [InlineConfirm](../components/button.md)이나 [AlertDialog](../components/alert-dialog.md)를 둔다.
-- 구획 제목은 Heading으로 표시한다. 이전 Text heading 예제는 2026-10-06 제목 의미 구조를 맞추면서 수정했다.
+- 구획 제목은 Heading으로 표시한다.
 - 현재 스토리는 이미지·장면 읽기와 PNG 내보내기 실패를 Notice로 표시하고 PNG 실패에는 같은 내보내기 함수를 다시 실행하는 행동을 둔다. PNG 버튼은 `loading`을 사용한다. 상태 문구는 Showcase 소유이며 제품은 위 보간 키 예제로 지역화한다. 타임라인의 영상·포스터 실패 표현은 SceneTimeline이 별도로 소유한다.
 
 
 ### 출력 작업과 편집 수명
 
-2026-10-13 실행 검수에서 같은 렌더의 연속 클릭이 출력을 중복 시작하고, 초기화·장면 교체 뒤 이전 출력이 새 상태에 결과를 쓰는 경합을 확인했다. PNG·포스터·영상은 각각 작업 식별자와 즉시 잠금을 사용한다. 초기화·파일 선택·언마운트 뒤 늦은 PNG 결과를 버리며, 타임라인의 장면·이미지 변경/언마운트는 진행 중 영상과 포스터 결과를 무효화한다. 사용자가 영상 취소 후 바로 다시 시작해도 이전 진행률·완료가 새 작업에 반영되지 않는다.
+PNG·포스터·영상은 각각 작업 식별자와 즉시 잠금을 사용한다. 초기화·파일 선택·언마운트 뒤 늦은 PNG 결과를 버리며, 타임라인의 장면·이미지 변경/언마운트는 진행 중 영상과 포스터 결과를 무효화한다. 사용자가 영상 취소 후 바로 다시 시작해도 이전 진행률·완료가 새 작업에 반영되지 않는다.
 
 주 PNG 내보내기는 시작 시 오프스크린 Canvas에 그린 복사본을 인코딩하므로 제목·비율 편집 중에도 그 출력의 픽셀은 바뀌지 않는다. 재시도 Notice가 사라진 뒤 초점은 완료 시 주 PNG 행동으로 돌아오되, 사용자가 다른 입력이나 빈 영역으로 옮긴 초점은 가져오지 않는다. 타임라인 재생은 부모 callback의 참조가 바뀌어도 기존 시계를 유지한다. 다운로드 안내는 브라우저에 파일 전송을 시작했다는 뜻이며 사용자의 디스크 저장 완료를 판정하지 않는다.
 
 최대 글자와 이를 모사하는 확대 조건은 공통 사용자 지침에 따라 설계·검증에서 제외한다. PNG 픽셀·제어 인코더 회귀를 실제 영상 코덱 품질이나 OS 다운로드 완료 근거로 확대하지 않는다.
+
+## 근거
+
+- 설정에 SegmentedControl·Switch: 2026-10-16 사용자 지적 — 이전 `selected` Button 줄은 선택 상태가 테두리 없는 글자로만 보이고 폭이 제각각이었다.
+- 구획 제목 Heading: 2026-10-06 제목 의미 구조를 맞추면서 이전 Text heading 예제를 수정했다.
+- 출력 작업 식별자·즉시 잠금·늦은 결과 폐기: 2026-10-13 실행 검수에서 같은 렌더의 연속 클릭이 출력을 중복 시작하고, 초기화·장면 교체 뒤 이전 출력이 새 상태에 결과를 쓰는 경합을 확인했다.

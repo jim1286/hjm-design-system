@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-15
+- 검토일: 2026-10-17
 - 근거: `showcase/web/src/patterns/Landing.stories.tsx`·`Landing.previews.tsx`(진입점)·`showcase/web/src/patterns/landing-preview.tsx`(기본 본체), `showcase/native/src/Landing.stories.tsx`·`introduction-preview.tsx`(진입점)·`showcase/native/src/landing-preview.tsx`(기본 본체), 변형 `showcase/*/reference-flow-previews.tsx`(`ServiceIntroduction`), `showcase/shared/landing-pattern.ts`, `showcase/native/src/pattern-status.tsx`, `packages/react/src/effect-surface.tsx`, `packages/react-native/src/effect-surface.tsx`. 2026-10-06 사용자 승인으로 실험 `서비스 소개/제품 체험 중심`(설명과 사례 중심 포함)을 배포하면서 같은 소개 목적의 배포 `화면/랜딩 화면`과 한 항목으로 합쳤다(Web id `patterns-landing` 보존, [승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정))
 - 스토리북: `배포/화면/소개/서비스 소개`
 
@@ -101,7 +101,7 @@ ScreenLayout(제목 = 소개 문장, 최대 720, 바깥 padding spacing.md 16) �
 | 파괴 행동 | — | — | 없음 |
 
 화면의 primary는 히어로 행동 하나다. 시트 `footer`의 제출은 시트 안에서 따로 센다.
-두 변형은 히어로 행동과 끝 행동 카드의 버튼이 같은 Sheet를 연다(같은 행동 반복). FAQ도 기본처럼 Collapsible로 답을 연다. 펼치고 접기를 `selected` 토글 Button으로 흉내 내지 않는다([선택 조립 규칙](../SELECTION.md#조립-규칙필수), 2026-10-16 사용자 지적).
+두 변형은 히어로 행동과 끝 행동 카드의 버튼이 같은 Sheet를 연다(같은 행동 반복). FAQ도 기본처럼 Collapsible로 답을 연다. 펼치고 접기를 `selected` 토글 Button으로 흉내 내지 않는다([선택 조립 규칙](../SELECTION.md#조립-규칙필수)).
 
 키보드: Native 시트는 `keyboardAvoidance`로 키보드 위에 붙고 `footer`가 키보드 위에 고정돼 제출 버튼이 가려지지 않는다.
 바깥 ScrollView에는 입력이 없다.
@@ -111,7 +111,6 @@ footer의 저장과 같은 동작을 실행한다. Web에서 IME 조합 확정 �
 빈 입력을 제출하면 시트를 유지하고 오류가 있는 입력칸에 초점을 돌린다. 닫기·Escape 또는 저장으로 시트가 끝나면
 `returnFocusRef`로 실제 누른 위·아래 CTA에 복귀한다(Native는 접근성 초점).
 
-2026-10-13 실제 예제 검수에서 닫은 뒤 초안 소실과 연속 제출 시 중복 행을 재현해 수정했다.
 기본 예제는 닫을 때 초안을 보존하고, 성공한 제출만 한 번 추가한 뒤 초안을 비운다. 다시 열면 새로운 기록을 시작한다.
 
 ## 상태
@@ -357,10 +356,16 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 
 ## 함정
 
-- 히어로는 Surface padding="xl"로 내부 여백을 갖고, 바깥 폭·gutter는 Container가 소유한다. 시트 저장은 footer에 둔다(2026-10-06 지침과 예제 정합성 수정).
+- 히어로는 Surface padding="xl"로 내부 여백을 갖고, 바깥 폭·gutter는 Container가 소유한다. 시트 저장은 footer에 둔다.
 - 기본 예제의 위·아래 CTA는 같은 시트를 연다. 히어로는 primary, FAQ 뒤의 반복 행동은 secondary다.
 - 미리보기 행은 번역 문구나 배열 위치 대신 생성 시 부여한 id로 유지한다.
 - 기본·변형 예제의 저장은 메모리에만 남는다. 기본 예제는 저장 없이 닫으면 초안을 보존하고 성공하면 비운다. 변형은 Sheet를 닫아도 입력 초안이 남는다. 운영 저장·실패 처리는 위 오류 행 규칙을 따른다.
-- 변형 스토리도 FAQ를 Collapsible로 그린다. 2026-10-16 이전에는 `selected` 토글 Button 하나였으나 펼침 의미가 눌림 토글로 읽혀 바꿨다.
+- 변형 스토리도 FAQ를 Collapsible로 그린다.
 
 제품 체험·편집형 ServiceIntroduction 변형도 Web에서 CTA 클릭의 `event.currentTarget`을 복귀 대상으로 기록한다. Safari의 포인터 클릭은 버튼에 초점을 주지 않을 수 있어, 열기 직전 `document.activeElement`만으로 복귀 대상을 추정하지 않는다. 이 변형은 저장한 한 장면을 다시 편집하는 예제이므로 닫기뿐 아니라 저장 뒤 재열기에도 입력값을 유지한다. 새 기록을 계속 추가하는 기본 랜딩의 성공 후 입력 초기화와 구분한다.
+
+## 근거
+
+- FAQ는 Collapsible(기본·변형): 2026-10-16 사용자 지적 — 변형 스토리가 `selected` 토글 Button 하나로 펼침을 흉내 내 눌림 토글로 읽혔다.
+- 닫을 때 초안 보존·성공 제출만 한 번 추가: 2026-10-13 실제 예제 검수에서 닫은 뒤 초안 소실과 연속 제출 시 중복 행을 재현했다.
+- 히어로 padding·시트 저장 footer: 2026-10-06 지침과 예제 정합성 수정.

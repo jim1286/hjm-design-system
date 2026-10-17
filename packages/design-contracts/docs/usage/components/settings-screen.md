@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.17.1
-- 검토일: 2026-10-08
+- 검토일: 2026-10-17
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screens.tsx`·`src/screen-flows.tsx`; 기존 개별 지침을 새 규격으로 통합. 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
 - 스토리북: `배포/화면/설정/앱 설정`
 
@@ -14,7 +14,7 @@
 [ScreenLayout](screen-layout.md) 안에 그룹으로 쌓는다(Web은 의미 있는 Section, Native는 Stack과 header 역할). 섹션 안의 행은
 기존 ListRow·Switch·Select·Field를 그대로 넣는다.
 
-2026-09-23 소비 감사에서 제품마다 같은 설정 화면을 직접 조립하고 있었다. 제목·섹션 틀·구분선·
+제목·섹션 틀·구분선·
 상태 교체를 제품이 다시 만들지 않는다.
 
 ## 쓰지 않을 때
@@ -52,9 +52,9 @@
 | --- | --- | --- | --- |
 | `sections` | `readonly { id: string; title: string; description?: string; children: ReactNode }[]` | 필수 | 각 항목을 설정 그룹 하나로 그린다. `id`는 안정적인 key |
 | `profile` | `ReactNode` | 없음 | 섹션 위 프로필 영역 |
-| 나머지 | `ScreenLayout`과 같음(`children`·`scroll` 제외) | — | `title` 필수, `state`·`stateAction`·`notice`·`footer`·`header`·`leading`·`actions`·`contentInset`. 화면 전체가 스크롤한다 |
+| 나머지 | `ScreenLayout`과 같음(`children`·`scroll` 제외) | — | `title` 필수, `state`·`stateAction`·`notice`·`footer`·`header`·`exit`(헤더 시작 쪽 화면 나가기 아이콘)·`actions`·`contentInset`. 화면 전체가 스크롤한다 |
 
-두 플랫폼 모두 그룹 위의 별도 구분선과 카드 배경을 두지 않는다. 행 구분은 List·Switch의 계약을 따른다(2026-10-08 실제 설정 화면 재검토).
+두 플랫폼 모두 그룹 위의 별도 구분선과 카드 배경을 두지 않는다. 행 구분은 List·Switch의 계약을 따른다.
 
 ## 배치
 
@@ -87,8 +87,12 @@
 | Switch 기본 `presentation` | `inline` | `row` |
 | 행 이동 이벤트 | ListRow `href`/`onClick` | ListRow `onPress` |
 
-2026-10-08 Spint 실화면 검토에서 일반 Section의 큰 제목과 상단 구분선이 설정 행보다 강하게
-보였다. SettingsScreen은 화면 제목 아래의 그룹 이름을 `Text label / strong / muted`로 표시하고,
+SettingsScreen은 화면 제목 아래의 그룹 이름을 `Text label / strong / muted`로 표시하고,
 그룹 간격은 `md`, 제목과 내용 간격은 `xs`로 둔다. 그룹마다 추가하던 진한 선은 제거하며,
 행 자체의 경계·터치 영역은 유지한다. 제품에서 내부 스타일을 덮거나 별도 설정 틀을 복제하지 않는다.
 Web의 의미 있는 section heading과 Native의 header 역할은 유지한다.
+
+## 근거
+
+- SettingsScreen 도입: 2026-09-23 소비 감사에서 제품마다 같은 설정 화면을 직접 조립하고 있었다.
+- 그룹 위 구분선·카드 배경 없음, 그룹 이름 `Text label / strong / muted`: 2026-10-08 실제 설정 화면 재검토(Spint 실화면) — 일반 Section의 큰 제목과 상단 구분선이 설정 행보다 강하게 보였다.

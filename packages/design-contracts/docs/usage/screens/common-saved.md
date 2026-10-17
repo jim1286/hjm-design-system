@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 구성 API 지침 참조
-- 검토일: 2026-10-15
+- 검토일: 2026-10-17
 - 근거: [반복 화면 조합](../../screen-patterns.md); 공통 API와 실제 Web·Native 예제의 슬롯·상태를 대조해 중복 조립 방지. 2026-10-06 사용자 승인으로 스토리북 배포(이전 `실험/화면/공통 화면/저장한 항목`, [승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정))
 - 스토리북: `배포/화면/콘텐츠/저장한 항목`
 
@@ -32,7 +32,7 @@ host: 남은 높이·safe area·키보드
 | 행동 | 컴포넌트·tone | 위치 | 개수·순서 |
 | --- | --- | --- | --- |
 | 새 컬렉션 | Button·ghost(내장, `labels.createCollection`) | 첫 화면 머리 오른쪽 actions 자리 | 하나. 누르면 `onCreateCollection` → 제품 Sheet(footer에 만들기 Button 하나) |
-| 뒤로 | Button·ghost(내장, `labels.back`) | 컬렉션·상세 머리 왼쪽 leading 자리 | 하나. 상세 → 격자 → 컬렉션 순으로 `onBack` |
+| 뒤로 | 헤더 ‹ 아이콘(내장 `exit`, 이름 `labels.back`) | 컬렉션·상세 헤더 시작 쪽 | 하나. 상세 → 격자 → 컬렉션 순으로 `onBack` |
 | 게시물 열기 | 격자 칸(내장 버튼) | 게시물 격자 | 칸마다 하나, `onOpenItem` |
 | 저장 해제 | IconButton·ghost(제품이 `renderDetail`에 둔다) | 상세 본문 머리 행 오른쪽(왼쪽은 작성자) | 하나. 해제 후 상세를 닫고 격자로 복귀 |
 | 실행 취소 | Button·secondary·small | `notice`(상태 문구 오른쪽) | 해제 직후 하나 |
@@ -49,8 +49,6 @@ host: 남은 높이·safe area·키보드
 
 
 ### 저장 해제와 목록 복귀
-
-2026-10-13 전수 점검에서 최초 조회와 변경 요청의 상태를 같은 골격으로 설명하던 부분을 구체화했다.
 
 | 상황 | 연결 | 유지·복구 |
 | --- | --- | --- |
@@ -138,6 +136,11 @@ import { SavedItemsScreen } from "@hjmds/react-native/saved-items";
 - 목록 비어 있음과 조회 실패를 구분하고 재시도 제공.
 - Storybook은 실제 서버·OS 권한·라우터 연동 증거가 아니다. 기본·다크·큰 글자와 실패/복구를 각각 확인한다.
 
-- 새 컬렉션은 Sheet footer에 만들기 하나, 본문은 스크롤한다. Native는 `scrollable keyboardAvoidance`를 사용하고 사진 선택 Button은 `growWithContent`로 이미지 높이를 보존한다. 고정 44 높이에 사진을 넣으면 행이 겹친다(2026-10-06 시뮬레이터 재현).
+- 새 컬렉션은 Sheet footer에 만들기 하나, 본문은 스크롤한다. Native는 `scrollable keyboardAvoidance`를 사용하고 사진 선택 Button은 `growWithContent`로 이미지 높이를 보존한다. 고정 44 높이에 사진을 넣으면 행이 겹친다.
 
 미게시(1.18.0 이후): 선택한 컬렉션 또는 전체 게시물이 0개면 SavedItemsScreen이 목록 pane의 empty 상태를 사용해 남은 본문 중앙에 안내한다. 제품의 loading/error/restricted 상태는 우선하며, 컬렉션 개요의 만들기 행동은 유지한다.
+
+## 근거
+
+- 저장 해제와 목록 복귀 상황 표: 2026-10-13 전수 점검 — 최초 조회와 변경 요청의 상태를 같은 골격으로 설명하던 부분을 구체화했다.
+- 사진 선택 Button `growWithContent`: 2026-10-06 시뮬레이터에서 고정 44 높이에 사진을 넣어 행이 겹치는 것을 재현했다.
