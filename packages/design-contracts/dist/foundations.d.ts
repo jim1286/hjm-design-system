@@ -95,17 +95,17 @@ export declare const typography: {
     readonly title: {
         readonly fontSize: 18;
         readonly lineHeight: 26;
-        readonly fontWeight: "700";
+        readonly fontWeight: "600";
     };
     readonly titleLarge: {
         readonly fontSize: 20;
         readonly lineHeight: 28;
-        readonly fontWeight: "700";
+        readonly fontWeight: "600";
     };
     readonly heading: {
         readonly fontSize: 24;
         readonly lineHeight: 32;
-        readonly fontWeight: "700";
+        readonly fontWeight: "600";
     };
 };
 export type TextVariant = keyof typeof typography;
@@ -130,17 +130,17 @@ export declare const heading: {
     readonly level3: {
         readonly fontSize: 24;
         readonly lineHeight: 32;
-        readonly fontWeight: "700";
+        readonly fontWeight: "600";
     };
     readonly level4: {
         readonly fontSize: 20;
         readonly lineHeight: 28;
-        readonly fontWeight: "700";
+        readonly fontWeight: "600";
     };
     readonly level5: {
         readonly fontSize: 18;
         readonly lineHeight: 26;
-        readonly fontWeight: "700";
+        readonly fontWeight: "600";
     };
 };
 export type HeadingLevel = keyof typeof heading;

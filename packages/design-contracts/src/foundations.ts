@@ -112,11 +112,11 @@ export const typography = {
   label: { fontSize: 12, lineHeight: 18, fontWeight: fontWeight.semibold },
   body: { fontSize: 14, lineHeight: 20, fontWeight: fontWeight.regular },
   bodyLarge: { fontSize: 16, lineHeight: 24, fontWeight: fontWeight.regular },
-  title: { fontSize: 18, lineHeight: 26, fontWeight: fontWeight.bold },
-  // Route titles and section headings are bold, not heavy (2026-10-17 user review: the 800 screen
-  // title read too heavy). Display levels 1–2 keep heavy.
-  titleLarge: { fontSize: 20, lineHeight: 28, fontWeight: fontWeight.bold },
-  heading: { fontSize: 24, lineHeight: 32, fontWeight: fontWeight.bold },
+  // Title steps are semibold (2026-10-17 user review: 800, then 700, still read too heavy on route
+  // titles). Display levels 1–2 keep heavy.
+  title: { fontSize: 18, lineHeight: 26, fontWeight: fontWeight.semibold },
+  titleLarge: { fontSize: 20, lineHeight: 28, fontWeight: fontWeight.semibold },
+  heading: { fontSize: 24, lineHeight: 32, fontWeight: fontWeight.semibold },
 } as const;
 
 export type TextVariant = keyof typeof typography;

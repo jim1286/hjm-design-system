@@ -14,7 +14,7 @@ function render(fonts: "system" | "pretendard") {
 it("selects the bundled Pretendard face per weight and keeps the OS font until fonts load", () => {
   const [body, heading] = render("pretendard");
   expect(body).toMatchObject({ fontFamily: "Pretendard" });
-  expect(heading).toMatchObject({ fontFamily: "Pretendard-Bold" });
+  expect(heading).toMatchObject({ fontFamily: "Pretendard-SemiBold" });
   expect(heading!.fontWeight).toBeUndefined();
   const [systemBody] = render("system");
   expect(systemBody!.fontFamily).toBeUndefined();

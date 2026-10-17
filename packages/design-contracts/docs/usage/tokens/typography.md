@@ -23,9 +23,9 @@
 | `typography.label` | 12 / 줄 18 / 600 | `--hjm-type-label-*` | `theme.tokens.typography.label` | 라벨·도움말·small 버튼 글자 |
 | `typography.body` | 14 / 줄 20 / 400 | `--hjm-type-body-*` | `theme.tokens.typography.body` | 기본 본문·medium 버튼·필드 글자 |
 | `typography.bodyLarge` | 16 / 줄 24 / 400 | `--hjm-type-body-large-*` | `theme.tokens.typography.bodyLarge` | 읽기용 긴 본문·large 버튼 글자 |
-| `typography.title` | 18 / 줄 26 / 700 | `--hjm-type-title-*` | `theme.tokens.typography.title` | 카드 제목(`heading.level5`) |
-| `typography.titleLarge` | 20 / 줄 28 / 700 | `--hjm-type-title-large-*` | `theme.tokens.typography.titleLarge` | 큰 구획 제목(`heading.level4`) |
-| `typography.heading` | 24 / 줄 32 / 700 | `--hjm-type-heading-*` | `theme.tokens.typography.heading` | 화면의 가장 큰 제목 |
+| `typography.title` | 18 / 줄 26 / 600 | `--hjm-type-title-*` | `theme.tokens.typography.title` | 카드 제목(`heading.level5`) |
+| `typography.titleLarge` | 20 / 줄 28 / 600 | `--hjm-type-title-large-*` | `theme.tokens.typography.titleLarge` | 큰 구획 제목(`heading.level4`) |
+| `typography.heading` | 24 / 줄 32 / 600 | `--hjm-type-heading-*` | `theme.tokens.typography.heading` | 화면의 가장 큰 제목 |
 
 굵기 열은 토큰 원본값이다. 프로필 없는 Text는 기본 `emphasis="regular"`(400)를 사용하므로
 variant만 지정해도 위 굵기가 자동 적용되는 것은 아니다. 프로필이 있으면 생략한 emphasis는
