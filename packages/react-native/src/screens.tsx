@@ -146,7 +146,9 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
     {scroll === "screen" || resolved.replacesContent ? <ScrollView {...scrollProps} ref={bodyScroll} style={{ flex: 1 }} keyboardShouldPersistTaps="handled" scrollEventThrottle={scrollProps?.scrollEventThrottle ?? 16} onScroll={event => { trackScroll(event); scrollProps?.onScroll?.(event); }}
       contentContainerStyle={{ flexGrow: 1, padding, paddingTop: bodyPaddingTop, paddingHorizontal: bodyInline }} accessibilityState={{ busy: resolved.busy }}>{body}</ScrollView>
       : <View style={{ flex: 1, minHeight: 0, padding, paddingTop: bodyPaddingTop, paddingHorizontal: bodyInline }}>{body}</View>}
-    {footer ? <View style={{ padding, borderTopWidth: contentInset === "none" ? 0 : 1, borderColor: colors.border }}><ScreenFooterContext.Provider value>{footer}</ScreenFooterContext.Provider></View> : null}
+    {/* The footer owns the bar (border, padding, surface) unless contentInset="none" hands every inset to the host;
+        only then may BottomCTA render bare, otherwise it keeps its own bar (utilverse tool footers lost theirs, 2026-10-17). */}
+    {footer ? <View style={{ padding, borderTopWidth: contentInset === "none" ? 0 : 1, borderColor: colors.border }}><ScreenFooterContext.Provider value={contentInset !== "none"}>{footer}</ScreenFooterContext.Provider></View> : null}
     </KeyboardAvoidanceContext.Provider>
   </View>;
 }

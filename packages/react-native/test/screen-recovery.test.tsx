@@ -19,6 +19,14 @@ it("draws BottomCTA bare inside ScreenLayout footer", () => {
   for (const key of ["borderTopWidth","backgroundColor","paddingHorizontal","shadowOpacity","minHeight"]) expect(style[key]).toBeUndefined();
   act(()=>tree.unmount());
 });
+// contentInset="none" hands every inset to the host, so the footer draws no bar and BottomCTA keeps its own.
+it("keeps BottomCTA's own bar when contentInset is none", () => {
+  const tree=render(<ScreenLayout title="도구" contentInset="none" footer={<BottomCTA testID="footer-cta" primaryAction={{label:"저장",onPress:vi.fn()}}/>}>본문</ScreenLayout>);
+  const style=Object.assign({},...[tree.root.findAllByType(View).find(node=>node.props.testID==="footer-cta")!.props.style].flat(3).filter(Boolean));
+  expect(style.borderTopWidth).toBeGreaterThan(0);
+  expect(style.backgroundColor).toBeDefined();
+  act(()=>tree.unmount());
+});
 it("allows a first message in empty state but hides input in unavailable states", () => {
   for (const kind of ["empty","ready","loading","error","restricted"] as const) {
     const tree=render(<ChatScreen title="Conversation" state={kind==="ready"?{kind}:{kind,title:kind}} composer={<TextInput accessibilityLabel="Message"/>}>Messages</ChatScreen>);

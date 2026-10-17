@@ -124,7 +124,8 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
         {stateAction}
       </div>}
     </div>
-    {footer ? <footer className="hjm-screen__footer"><ScreenFooterContext.Provider value>{footer}</ScreenFooterContext.Provider></footer> : null}
+    {/* Same rule as Native: with contentInset="none" the host owns the insets, so BottomCTA keeps its own bar. */}
+    {footer ? <footer className="hjm-screen__footer"><ScreenFooterContext.Provider value={contentInset !== "none"}>{footer}</ScreenFooterContext.Provider></footer> : null}
   </Element>;
 }
 

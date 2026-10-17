@@ -3029,6 +3029,8 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 /* contentInset="body-edge": header, notice and footer keep the gutter; full-width list rows own their inline inset
    (review S5#9: body 16 + row 16 put DM avatars ~32 from the edge). "none" keeps its host-owns-all meaning. */
 .hjm-screen[data-content-inset="body-edge"] > .hjm-screen__body { padding-inline: 0; }
+/* contentInset="none" hands every inset to the host: no footer rule, as on Native (BottomCTA then draws its own bar). */
+.hjm-screen[data-content-inset="none"] > .hjm-screen__footer { border-block-start: 0; }
 .hjm-screen__body[data-scroll="screen"] { overflow-y: auto; }
 .hjm-screen__body[data-scroll="content"] { display: flex; flex-direction: column; overflow: hidden; }
 .hjm-screen__body[data-content-alignment="center"] { display: flex; flex-direction: column; }

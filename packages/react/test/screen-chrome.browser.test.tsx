@@ -133,6 +133,16 @@ describe("screen chrome layout", () => {
     expect(save.getBoundingClientRect().width).toBe(before);
   });
 
+  it("keeps BottomCTA's own bar when contentInset is none and the host owns the insets", async () => {
+    await page.viewport(402, 844);
+    await act(async () => root.render(<HjmProvider><div style={{ height: 600 }}>
+      <ScreenLayout title="도구" contentInset="none" footer={<BottomCTA primaryAction={{ label: "저장", onClick: () => {} }} />}><p>본문</p></ScreenLayout>
+    </div></HjmProvider>));
+    expect(getComputedStyle(host.querySelector<HTMLElement>(".hjm-screen__footer")!).borderTopWidth).toBe("0px");
+    const cta = host.querySelector<HTMLElement>(".hjm-bottom-cta")!;
+    expect(cta.dataset.placement).not.toBe("screen-footer");
+    expect(getComputedStyle(cta).borderTopWidth).not.toBe("0px");
+  });
   it("draws BottomCTA bare inside ScreenLayout footer, which owns the bar border and padding", async () => {
     await page.viewport(402, 844);
     await act(async () => root.render(<HjmProvider><div style={{ height: 600 }}>
