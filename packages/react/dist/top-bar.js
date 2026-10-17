@@ -7,7 +7,7 @@ import { validateScreenExit } from "@hjmds/design-contracts/screen-patterns";
 import { classNames } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
 /** Screen chrome stays composable inside pages and dialogs, without adding a second banner landmark. */
-export const TopBar = forwardRef(function TopBar({ title, titleContent, subtitle, titleLeading, onTitleClick, titleAccessibilityLabel, headingLevel = 1, exit, leading: leadingSlot, trailing, actions, centered = topBarRecipe.defaults.centered, safeAreaTop = 0, className, style, layoutStyle, ...props }, ref) {
+export const TopBar = forwardRef(function TopBar({ title, titleContent, subtitle, titleLeading, onTitleClick, titleAccessibilityLabel, headingLevel = 1, exit, leading: leadingSlot, trailing, actions, safeAreaTop = 0, className, style, layoutStyle, ...props }, ref) {
     const theme = useOptionalHjmTheme();
     if (exit)
         validateScreenExit(exit, leadingSlot !== undefined);
@@ -29,7 +29,7 @@ export const TopBar = forwardRef(function TopBar({ title, titleContent, subtitle
         throw new TypeError("TopBar title affordances require a title");
     }
     const Heading = `h${headingLevel}`;
-    return _jsxs("div", { ...props, ref: ref, className: classNames("hjm-top-bar", className), "data-centered": centered, "data-large-text": (theme?.environment.textScale ?? 1) >= topBarRecipe.largeTextThreshold, style: {
+    return _jsxs("div", { ...props, ref: ref, className: classNames("hjm-top-bar", className), "data-large-text": (theme?.environment.textScale ?? 1) >= topBarRecipe.largeTextThreshold, style: {
             "--hjm-top-bar-min-height": `${topBarRecipe.minHeight}px`,
             "--hjm-top-bar-padding": `${topBarRecipe.paddingHorizontal}px`,
             "--hjm-top-bar-gap": `${topBarRecipe.gap}px`,

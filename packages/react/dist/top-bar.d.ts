@@ -16,7 +16,6 @@ export type TopBarProps = Omit<HTMLAttributes<HTMLDivElement>, "title" | "childr
     leading?: ReactNode;
     trailing?: ReactNode;
     actions?: ReactNode;
-    centered?: boolean;
     safeAreaTop?: number;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
@@ -37,7 +36,6 @@ export declare const TopBar: import("react").ForwardRefExoticComponent<Omit<HTML
     leading?: ReactNode;
     trailing?: ReactNode;
     actions?: ReactNode;
-    centered?: boolean;
     safeAreaTop?: number;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;

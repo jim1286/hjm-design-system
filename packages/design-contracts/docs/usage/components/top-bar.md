@@ -62,7 +62,6 @@ import { TopBar, TopBarAction } from "@hjmds/react-native/top-bar";
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `centered` | `boolean` | `true` | 남은 제목 영역 안에서의 정렬이며 좌우 열을 같은 폭으로 맞추지 않는다 |
 | `safeAreaTop` | 0 이상 유한수 | 0 | Web은 `env(safe-area-inset-top)`과 큰 값을 쓴다 |
 | `headingLevel` | 1~6 | 1 | Web만. 페이지 구조에 맞춘다 |
 | `onTitleClick`(Web) | `(event: MouseEvent<HTMLButtonElement>) => void` | — | 제목을 버튼으로 만든다 |
@@ -72,7 +71,7 @@ import { TopBar, TopBarAction } from "@hjmds/react-native/top-bar";
 | `exit` | `{ kind: "back" \| "close"; label; onClick(Web) \| onPress(Native); disabled? }` | — | 화면 나가기를 시작 쪽 아이콘 버튼으로 고정한다(글자 없음, `label`은 보조기술 이름). `leading`과 함께 주면 `TypeError`. [ScreenLayout `exit`](screen-layout.md)과 같은 버튼. 2026-10-17 추가, 미게시 |
 | `leading` / `actions`(별칭 `trailing`) | `ReactNode` | — | `actions`·`trailing`은 둘 중 한 이름만 쓴다. 뒤로·닫기는 `leading`으로 만들지 않고 `exit`을 쓴다 |
 | `layoutStyle` | `HjmCompositionStyleProp` | — | 루트 배치. Web·Native 모두 |
-| Native `style`·`leadingStyle`·`titleStyle`·`trailingStyle` | 지원하지 않음 | — | 제거된 속성 — `layoutStyle` 또는 `centered`. 현재 공개 props에서 제거되었다 |
+| Native `style`·`leadingStyle`·`titleStyle`·`trailingStyle` | 지원하지 않음 | — | 제거된 속성 — `layoutStyle`. 현재 공개 props에서 제거되었다. `centered`도 2026-10-17 제거(제목은 항상 가운데) |
 | `TopBarAction` `intent` | `button` · `link` | `button` | `button`은 `onPress: (event) => void`, `link`는 `destination` + `onNavigate?: (destination: LinkDestination) => void \| Promise<void>` 또는 `renderLink` |
 | `TopBarAction` `labelVisibility` | `visible` · `accessibility-only` | `visible` | — |
 | `TopBarAction` `layoutStyle` | `HjmCompositionStyleProp` | — | `style`·`labelStyle`은 제거된 속성 |
@@ -87,7 +86,7 @@ NavigationBar의 Native 프레임 모서리는 Provider의 `tokens.radius.xl`을
 | --- | --- | --- |
 | 크기 | 최소 높이 `control.buttonHeight.large` 52 + 위쪽 안전 영역. Web은 `max(env(safe-area-inset-top), safeAreaTop)`을 위 여백으로, Native는 `safeAreaTop`을 `paddingTop`과 `minHeight`(52 + `safeAreaTop`)에 더한다. 좌우 열 최소 폭 `control.minTouchTarget` 44, Native `TopBarAction` 최소 44×44 | `topBarRecipe.minHeight`·`sideMinWidth`·`action`, `.hjm-top-bar` |
 | 간격 | 좌우 여백 `spacing.md` 16, 슬롯 사이·슬롯 안 행동 사이 `spacing.xs` 8. `TopBarAction` 아이콘–라벨 `spacing.xxs` 4, 좌우 여백 4. 배경 `canvas` | `topBarRecipe.paddingHorizontal`·`gap`·`action` |
-| 순서·정렬 | 세 열: `leading`(뒤로·닫기) · 제목 · `actions`(끝 정렬). `centered`(기본)는 남은 제목 영역 안에서만 가운데 정렬. 행동은 1~2개만 끝 열에, 넘치면 하나만 남기고 [Menu](menu.md)로 묶는다. 주 행동(저장·완료)은 끝 열의 마지막 | `.hjm-top-bar` grid, Native `TopBar` |
+| 순서·정렬 | 세 열: `leading`(뒤로·닫기) · 제목 · `actions`(끝 정렬). 제목은 항상 가운데(왼쪽 정렬 옵션 없음). 행동은 1~2개만 끝 열에, 넘치면 하나만 남기고 [Menu](menu.md)로 묶는다. 주 행동(저장·완료)은 끝 열의 마지막 | `.hjm-top-bar` grid, Native `TopBar` |
 | 고정·스크롤 | 화면 맨 위, 스크롤 영역 **밖**에 둔다. TopBar 자체는 `position: sticky`/고정을 걸지 않으므로 화면 골격이 그 아래에 스크롤 영역을 둬야 고정된다. 바로 아래 본문 첫 블록은 [Top](top.md) | `.hjm-top-bar`(position 없음) |
 | 좁은 폭·큰 글자 | 글자 배율 ≥ `largeTextThreshold` 1.6: Web은 첫 행 leading·행동, 둘째 행 제목(시작 정렬, 위아래 `spacing.xs` 8). Native는 첫 행 leading+제목, 둘째 행 행동(끝 정렬, 줄바꿈 허용) | `.hjm-top-bar[data-large-text]`, `react-native/src/navigation.tsx` `TopBar` |
 

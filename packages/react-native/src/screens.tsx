@@ -31,7 +31,7 @@ export type ScreenLayoutProps = Readonly<{
   titleBadge?: ReactNode;
   /** Hide redundant route names while retaining descriptions and a named screen. */
   titleVisibility?: "visible" | "hidden";
-  headerAlignment?: "start" | "center";
+  /** Route titles are always centered (2026-10-17 user rule); extra actions sit at the trailing edge. */
   /** Host navigation can supply its existing header while the shared shell owns scrolling and state. */
   header?: ReactNode;
   /** Hosts that already inset routes avoid applying the shared gutter twice. */
@@ -68,7 +68,7 @@ export type ScreenLayoutProps = Readonly<{
   scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator" | "onScroll" | "onScrollBeginDrag" | "onScrollEndDrag" | "scrollEventThrottle" | "alwaysBounceVertical" | "automaticallyAdjustKeyboardInsets">;
 }>;
 
-export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance = true, hjmBodyInlinePadding, hjmTitleLeading }: ScreenLayoutProps & ScreenLayoutPrivateProps) {
+export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance = true, hjmBodyInlinePadding, hjmTitleLeading }: ScreenLayoutProps & ScreenLayoutPrivateProps) {
   if (exit) validateScreenExit(exit, false);
   const leading = exit ? <ScreenExitButton {...exit} /> : null;
   const insideAvoidance = useInsideKeyboardAvoidance();
@@ -87,14 +87,14 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
   const sideWidth = Math.max(leadingWidth, actionsWidth);
   const showHeader = titleVisibility === "visible" || !!description || !!leading || !!actions;
   const resolved = resolveScreenContentState(state);
-  const { colors, environment, designProfile } = useHjmNativeTheme();
+  const { colors, designProfile } = useHjmNativeTheme();
   const presentation = suppliedPresentation ?? designProfile?.screens.overview;
   const profileLayout = presentation === undefined ? undefined : resolveDesignProfileScreen(presentation);
   const recipe = screenPatternRecipe;
   const padding = contentInset === "none" ? 0 : recipe.padding;
   // Icon-only route headers need no title breathing room: otherwise the 60pt
   // heading plus full body inset leaves category tabs detached from navigation.
-  const compactHeader = header == null && showHeader && headerAlignment === "center" && titleVisibility === "hidden" && !description;
+  const compactHeader = header == null && showHeader && titleVisibility === "hidden" && !description;
   const headerVerticalPadding = compactHeader ? screenHeaderRecipe.compactPaddingVertical : screenHeaderRecipe.paddingVertical;
   // A notice can contain navigation tabs; keep its separation from body filters.
   const bodyPaddingTop = compactHeader && !notice ? Math.min(padding, screenHeaderRecipe.compactBodyTop) : padding;
@@ -112,7 +112,7 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
         large text), while TopBar is a fixed-height app bar with a single-line title and safe-area top.
         Importing it would also pull navigation.js (tabs/gooey indicator) into every screens graph.
         Hosts that want the app bar pass <TopBar> through `header`. */}
-    {header ?? (!showHeader ? null : headerAlignment === "center" ? <View style={{ minHeight: compactHeader ? screenHeaderRecipe.compactMinHeight : screenHeaderRecipe.minHeight, paddingHorizontal: padding + sideWidth + recipe.itemGap, paddingVertical: headerVerticalPadding, justifyContent: "center" }}>
+    {header ?? (!showHeader ? null : <View style={{ minHeight: compactHeader ? screenHeaderRecipe.compactMinHeight : screenHeaderRecipe.minHeight, paddingHorizontal: padding + sideWidth + recipe.itemGap, paddingVertical: headerVerticalPadding, justifyContent: "center" }}>
       {/* Measure unconstrained control rows before reserving equal space on both sides. */}
       <View onLayout={event => setLeadingWidth(event.nativeEvent.layout.width)} style={{ position: "absolute", left: padding, top: headerVerticalPadding, bottom: headerVerticalPadding, justifyContent: "center", flexDirection: "row", alignItems: "center" }}>{leading}</View>
       <View style={{ minWidth: 0, alignItems: "center", gap: 4 }}>
@@ -120,13 +120,6 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
         {description && <Text align="center" tone="muted">{description}</Text>}
       </View>
       <View onLayout={event => setActionsWidth(event.nativeEvent.layout.width)} style={{ position: "absolute", right: padding, top: headerVerticalPadding, bottom: headerVerticalPadding, justifyContent: "center", flexDirection: "row", alignItems: "center" }}>{actions}</View>
-    </View> : <View style={{ flexDirection: profileLayout?.headerAxis ?? "row", flexWrap: "wrap", alignItems: profileLayout ? (profileLayout.centered ? "center" : "flex-start") : "center", padding, gap: recipe.itemGap }}>
-      {/* Reserve a readable title column; wrapping moves actions below it at large text. */}
-      {leading}<View style={{ flexGrow: 1, flexShrink: 1, ...(profileLayout?.headerAxis === "column" ? { width: "100%" as const } : { flexBasis: recipe.headerMinWidth * environment.textScale }) }}>
-        {/* Same Heading level as Web (screenHeaderRecipe.titleLevel), with or without a design profile. */}
-        {titleVisibility === "visible" && <Stack axis="inline" gap="xs" align="center" justify={profileLayout?.centered ? "center" : "start"} wrap><Heading level={screenHeaderRecipe.titleLevel} semanticLevel={1} {...(profileLayout?.centered ? { align: "center" as const } : {})}>{title}</Heading>{titleBadge}</Stack>}
-        {description ? <Text tone="muted" {...(profileLayout?.centered ? { align: "center" as const } : {})}>{description}</Text> : null}
-      </View>{actions}
     </View>)}
     {notice ? <View style={{ paddingHorizontal: padding }}>{notice}</View> : null}
     {scroll === "screen" || resolved.replacesContent ? <ScrollView {...scrollProps} ref={bodyScroll} style={{ flex: 1 }} keyboardShouldPersistTaps="handled" scrollEventThrottle={scrollProps?.scrollEventThrottle ?? 16} onScroll={event => { trackScroll(event); scrollProps?.onScroll?.(event); }}
@@ -176,12 +169,12 @@ export type ChatScreenProps = Omit<ScreenLayoutProps, "footer"> & Readonly<{
   avatar?: ReactNode;
 }>;
 /** Wrap with existing KeyboardAvoiding (or the host's keyboard adapter), never both. */
-export function ChatScreen({ composer, jumpToLatest, avatar, scroll = "content", headerAlignment = "center", ...props }: ChatScreenProps) {
+export function ChatScreen({ composer, jumpToLatest, avatar, scroll = "content", ...props }: ChatScreenProps) {
   // An empty conversation must still allow its first message; unavailable states hide input.
   const showComposer = !props.state || props.state.kind === "ready" || props.state.kind === "empty";
   // Anchor the jump control to the composer edge so it floats over the timeline without measuring the footer.
   // Conversations center the peer between back and tools and use the measured 10pt timeline gutter (2026-10-16).
-  return <ScreenLayout {...props} scroll={scroll} headerAlignment={headerAlignment} hjmBodyInlinePadding={chatMessageRecipe.timelineInset} hjmTitleLeading={avatar} footer={showComposer ? <View style={{ position: "relative" }}>
+  return <ScreenLayout {...props} scroll={scroll} hjmBodyInlinePadding={chatMessageRecipe.timelineInset} hjmTitleLeading={avatar} footer={showComposer ? <View style={{ position: "relative" }}>
     {jumpToLatest ? <View style={{ position: "absolute", bottom: "100%", end: 0, marginBottom: chatMessageRecipe.jumpToLatestGap + screenPatternRecipe.padding }}><IconButton label={jumpToLatest.label} size="small" shape="circle" tone="secondary" onPress={jumpToLatest.onPress}>{jumpToLatest.icon}</IconButton></View> : null}
     {composer}</View> : null} />;
 }

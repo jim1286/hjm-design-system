@@ -22,7 +22,6 @@ export type TopBarProps = Omit<HTMLAttributes<HTMLDivElement>, "title" | "childr
   leading?: ReactNode;
   trailing?: ReactNode;
   actions?: ReactNode;
-  centered?: boolean;
   safeAreaTop?: number;
   /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
@@ -31,7 +30,7 @@ export type TopBarProps = Omit<HTMLAttributes<HTMLDivElement>, "title" | "childr
 /** Screen chrome stays composable inside pages and dialogs, without adding a second banner landmark. */
 export const TopBar = forwardRef<HTMLDivElement, TopBarProps>(function TopBar({
   title, titleContent, subtitle, titleLeading, onTitleClick, titleAccessibilityLabel, headingLevel = 1,
-  exit, leading: leadingSlot, trailing, actions, centered = topBarRecipe.defaults.centered, safeAreaTop = 0,
+  exit, leading: leadingSlot, trailing, actions, safeAreaTop = 0,
   className, style, layoutStyle, ...props
 }, ref) {
   const theme = useOptionalHjmTheme();
@@ -50,7 +49,7 @@ export const TopBar = forwardRef<HTMLDivElement, TopBarProps>(function TopBar({
   }
   const Heading = `h${headingLevel}` as "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   return <div {...props} ref={ref} className={classNames("hjm-top-bar", className)}
-    data-centered={centered} data-large-text={(theme?.environment.textScale ?? 1) >= topBarRecipe.largeTextThreshold}
+    data-large-text={(theme?.environment.textScale ?? 1) >= topBarRecipe.largeTextThreshold}
     style={{
       "--hjm-top-bar-min-height": `${topBarRecipe.minHeight}px`,
       "--hjm-top-bar-padding": `${topBarRecipe.paddingHorizontal}px`,

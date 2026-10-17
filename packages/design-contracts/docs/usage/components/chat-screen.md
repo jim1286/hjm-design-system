@@ -80,7 +80,7 @@ import { ChatScreen, MessageComposer } from "@hjmds/react-native/screens";
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `composer` | `ReactNode` | 필수 | footer에 고정되는 작성창. `ready`와 `empty`에서 보인다(빈 대화의 첫 메시지 입력) |
-| `headerAlignment` | `"center"` · `"start"` | `"center"`(미게시 변경, 이전 `"start"`) | 뒤로·도구 사이에 상대 이름을 가운데 둔다(카카오톡·인스타그램 실측) |
+| 헤더 정렬 | 항상 가운데 | — | 뒤로·도구 사이에 상대 이름을 가운데 둔다(카카오톡·인스타그램 실측). `headerAlignment` 옵션은 2026-10-17 제거됐다 |
 | `scroll` | `"content"` · `"screen"` | `"content"` | 가상화 목록이 스크롤을 소유하므로 작은 예제 외에는 바꾸지 않는다 |
 | `contentInset` | `"default"` · `"none"` | `"default"` | 이미 gutter를 주는 route 안에서는 `"none"`으로 이중 여백을 막는다 |
 | `state` | `ScreenContentState`(`{ kind: "ready" }` 또는 `{ kind, title, description? }`) | `{ kind: "ready" }` | ready 외에는 본문을 교체한다. composer는 loading·error·restricted에서 숨긴다 |

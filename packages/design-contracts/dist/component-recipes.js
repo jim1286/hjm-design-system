@@ -1614,6 +1614,7 @@ export const topBarRecipe = {
         "action",
         "actionLabel",
     ],
+    // Always centered; the left-aligned option was removed (2026-10-17 user rule).
     defaults: { centered: true },
     minHeight: control.buttonHeight.large,
     sideMinWidth: control.minTouchTarget,

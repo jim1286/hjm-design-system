@@ -24,7 +24,7 @@ export type ScreenLayoutProps = Readonly<{
   titleBadge?: ReactNode;
   /** Hide redundant route names while retaining descriptions and a named screen. */
   titleVisibility?: "visible" | "hidden";
-  headerAlignment?: "start" | "center";
+  /** Route titles are always centered (2026-10-17 user rule); extra actions sit at the trailing edge. */
   /** Preserve host navigation while the shared shell owns content and state. */
   header?: ReactNode;
   contentInset?: "default" | "none";
@@ -58,7 +58,7 @@ export type ScreenLayoutProps = Readonly<{
 }>;
 
 /** Shared screen shell. Routing, data, permission checks and mutation state remain product-owned. */
-export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "start", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", as: Element = "main", className, layoutStyle , hjmTitleLeading }: ScreenLayoutProps & Readonly<{ /** Internal: ChatScreen header photo. */ hjmTitleLeading?: ReactNode }>) {
+export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", as: Element = "main", className, layoutStyle , hjmTitleLeading }: ScreenLayoutProps & Readonly<{ /** Internal: ChatScreen header photo. */ hjmTitleLeading?: ReactNode }>) {
   const id = useId();
   if (exit) validateScreenExit(exit, false);
   const leading = exit ? <ScreenExitButton {...exit} /> : null;
@@ -86,15 +86,12 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
   const recipe = screenPatternRecipe;
   return <Element aria-labelledby={header || titleVisibility === "hidden" ? undefined : id} aria-label={header || titleVisibility === "hidden" ? title : undefined} data-content-inset={contentInset} data-presentation={presentation} className={classNames("hjm-screen", className)}
     style={{ backgroundColor: surface === "transparent" || designProfile?.material.canvas ? "transparent" : undefined, "--hjm-screen-width": `${profileLayout?.maxWidth ?? recipe.maxWidth}px`, "--hjm-screen-padding": `${contentInset === "none" ? 0 : recipe.padding}px`, "--hjm-screen-gap": `${profileLayout?.gap ?? recipe.sectionGap}px`, "--hjm-screen-item-gap": `${recipe.itemGap}px`, "--hjm-screen-state-gap": `${recipe.stateGap}px`, "--hjm-screen-header-min": `${recipe.headerMinWidth}px`, ...layoutStyle } as React.CSSProperties}>
-    {header ?? (showHeader ? headerAlignment === "center" ? <header className="hjm-screen__header" style={{ display: "grid", gridTemplateColumns: "1fr minmax(0, auto) 1fr", alignItems: "center" }}>
+    {header ?? (showHeader ? <header className="hjm-screen__header" style={{ display: "grid", gridTemplateColumns: "1fr minmax(0, auto) 1fr", alignItems: "center" }}>
       {/* Equal side columns sized by their controls and a title-size (18) heading, matching Native's measured
           centered header (2026-10-17: the fixed 1:2:1 split with a level3 heading wrapped short titles). */}
       <div>{leading}</div><div className="hjm-screen__heading" style={{ textAlign: "center", minWidth: 0 }}>
         {titleVisibility === "visible" && <Stack axis="inline" gap="xs" align="center" justify="center" wrap>{hjmTitleLeading}<Heading level={screenHeaderRecipe.centeredTitleLevel} semanticLevel={1} id={id}>{title}</Heading>{titleBadge}</Stack>}
         {description ? <Text as="p" tone="muted">{description}</Text> : null}</div><div style={{ justifySelf: "end" }}>{actions}</div>
-    </header> : <header className="hjm-screen__header" style={profileLayout ? { flexDirection: profileLayout.headerAxis, alignItems: profileLayout.centered ? "center" : undefined, textAlign: profileLayout.centered ? "center" : undefined } : undefined}>
-      {leading}<div className="hjm-screen__heading">{titleVisibility === "visible" && <Stack axis="inline" gap="xs" align="center" justify={profileLayout?.centered ? "center" : "start"} wrap><Heading level={screenHeaderRecipe.titleLevel} semanticLevel={1} id={id}>{title}</Heading>{titleBadge}</Stack>}
-        {description ? <Text as="p" tone="muted">{description}</Text> : null}</div>{actions}
     </header> : null)}
     {notice ? <div className="hjm-screen__notice">{notice}</div> : null}
     {/* Scrollable read-only screens still need a keyboard entry point. */}
@@ -158,12 +155,12 @@ export type ChatScreenProps = Omit<ScreenLayoutProps, "footer"> & Readonly<{
   avatar?: ReactNode;
 }>;
 /** Caller supplies a virtualized timeline and keyboard-aware composer; no implicit auto-scroll or send. */
-export function ChatScreen({ composer, jumpToLatest, avatar, scroll = "content", headerAlignment = "center", ...props }: ChatScreenProps) {
+export function ChatScreen({ composer, jumpToLatest, avatar, scroll = "content", ...props }: ChatScreenProps) {
   // An empty conversation must still allow its first message; unavailable states hide input.
   const showComposer = !props.state || props.state.kind === "ready" || props.state.kind === "empty";
   // Anchor the jump control to the composer edge so it floats over the timeline without measuring the footer.
   // Conversations center the peer between back and tools and use the measured 10px timeline gutter (2026-10-16).
-  return <ScreenLayout {...props} className={classNames("hjm-chat-screen", props.className) ?? "hjm-chat-screen"} hjmTitleLeading={avatar} scroll={scroll} headerAlignment={headerAlignment} footer={showComposer ? <div className="hjm-chat-screen__footer">
+  return <ScreenLayout {...props} className={classNames("hjm-chat-screen", props.className) ?? "hjm-chat-screen"} hjmTitleLeading={avatar} scroll={scroll} footer={showComposer ? <div className="hjm-chat-screen__footer">
     {jumpToLatest ? <div className="hjm-chat-screen__jump"><IconButton label={jumpToLatest.label} size="small" shape="circle" tone="secondary" onClick={jumpToLatest.onPress}>{jumpToLatest.icon}</IconButton></div> : null}
     {composer}</div> : null} />;
 }

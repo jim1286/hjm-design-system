@@ -41,6 +41,7 @@
 | 보조 행동 | 주 행동 아래 같은 폭 secondary, 또는 헤더 `actions` | 본문 중간에 흩어진 버튼, 나가기를 보조 행동으로 두기 |
 | 상태·결과 안내 | `Notice`, `Badge`, `ListRow` 설명 | 가운데 정렬 일반 글자 |
 | 예제 전용 도구(실패 예약 등) | "미리보기 도구" 캡션 아래 `Button size="small" tone="ghost"`로 분리 | 제품 행동과 같은 모양·폭 |
+| 헤더 제목·추가 기능 | 제목은 항상 가운데(`ScreenLayout`·`TopBar`), 추가 기능은 `actions`에 아이콘 버튼 1~2개로 오른쪽 위(`ScreenFlowAction.icon`, 넘치면 Menu) | 왼쪽 정렬 제목, 헤더의 글자 버튼(가운데 제목을 밀어냄), 본문에 흩어진 도구 버튼 |
 | 화면 나가기(뒤로·닫기·설정 나가기) | `ScreenLayout`(과 이를 쓰는 화면)의 `exit` — 헤더 시작 쪽 아이콘 버튼, 글자 없음 | 본문·하단의 "나가기" 글자 버튼, 화면마다 다른 화살표 |
 | 버튼 묶음 간격 | 세로로 쌓으면 `gap="xs"`(8), 가로로 나란하면 `gap="sm"`(12) — `actionGroupRecipe` | 세로 버튼 사이 12 이상 |
 | 간격 | `Stack`·`ScreenLayout`·recipe 간격 | 임의 `margin`·빈 `View` |

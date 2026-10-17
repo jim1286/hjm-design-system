@@ -55,7 +55,7 @@ it.each(["blur", "outside click"] as const)("does not reclaim focus after an int
 
 it("hides a redundant page title while keeping its screen name and centered date",async()=>{
  host.style.width='400px';
- await render(<ScreenLayout title="Schedule route" titleVisibility="hidden" headerAlignment="center" description="2026.10.14" exit={{kind:"back",label:"Back",onClick:()=>{}}} actions={<><button>Calendar</button><button>Search</button></>}><div>Games</div></ScreenLayout>);
+ await render(<ScreenLayout title="Schedule route" titleVisibility="hidden" description="2026.10.14" exit={{kind:"back",label:"Back",onClick:()=>{}}} actions={<><button>Calendar</button><button>Search</button></>}><div>Games</div></ScreenLayout>);
  expect(host.querySelector('h1')).toBeNull();expect(host.querySelector('main')!.getAttribute('aria-label')).toBe('Schedule route');
  const header=host.querySelector<HTMLElement>('.hjm-screen__header')!.getBoundingClientRect(),context=host.querySelector<HTMLElement>('.hjm-screen__heading')!.getBoundingClientRect();
  expect(Math.abs((header.left+header.right)/2-(context.left+context.right)/2)).toBeLessThan(1);

@@ -95,16 +95,17 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 | --- | --- | --- |
 | 크기 | 폭 100%, 최대 `screenPatternRecipe.maxWidth`(`layout.readingMaxWidth` 720), 가운데 정렬; 높이는 host가 준 남은 높이(Web `block-size: 100%`, Native `flex: 1`) | Web `.hjm-screen`, Native `ScreenLayout` |
 | 간격 | 바깥 padding `screenPatternRecipe.padding`(`spacing.md` 16)을 헤더 사방·notice 좌우·본문 사방·footer 사방에 준다(`contentInset="none"`이면 0); 헤더 안 `exit`·제목·`actions` 간격 `itemGap`(`spacing.sm`) 12(두 플랫폼, `contentInset="none"`이어도 유지); 상태 안내는 위아래 `sectionGap`(`spacing.xl`) 24, 안내–`stateAction` `stateGap`(`spacing.md`) 16 | Web `src/screens.tsx`(`--hjm-screen-item-gap`·`--hjm-screen-state-gap`)·`.hjm-screen__*`, Native `ScreenLayout` |
-| 제목 | 시작 정렬은 `Heading` `screenHeaderRecipe.titleLevel`(level3), 가운데 정렬은 `centeredTitleLevel`(level5). Web·Native 같은 단계 | `screenHeaderRecipe` |
+| 제목 | **항상 가운데**. `Heading` `screenHeaderRecipe.centeredTitleLevel`(level5), 추가 기능 버튼(`actions`)은 끝(오른쪽) 위, 나가기(`exit`)는 시작(왼쪽) 위. Web·Native 같은 단계 | `screenHeaderRecipe` |
 | 순서·정렬 | 헤더(`exit` → 제목·설명 → `actions`) → notice → 본문 → footer; 상태 안내는 본문 세로 가운데 | 렌더 순서 |
 | 고정·스크롤 | 헤더·notice·footer 고정, `scroll="screen"`은 본문이 스크롤, `"content"`는 자식이 스크롤; footer 위 테두리 1, Web은 하단 safe area만큼 padding을 늘린다 | Web `data-scroll`·`.hjm-screen__footer`, Native `ScrollView` |
 | 좁은 폭·큰 글자 | 제목 열 최소 폭 `headerMinWidth` 120 × 글자 배율, 모자라면 `actions`가 다음 줄로 내려간다; 제목은 줄바꿈(`overflow-wrap: anywhere`)되고 자르지 않는다; Native safe area·탭바 inset은 host | `screenPatternRecipe.headerMinWidth`, Web `.hjm-screen__heading` |
 
 ## 꼭 지킬 것
 
+- **헤더 제목은 항상 가운데, 추가 기능 버튼은 오른쪽 위(필수).** 시작 정렬 옵션(`headerAlignment`)은 없다. 2026-10-17 사용자 지시로 제거했다.
 - **나가기는 `exit` 하나로 헤더 시작 쪽에 둔다(필수).** 본문·하단의 "나가기"·"닫기"·"뒤로"·"취소하고 나가기" 글자 버튼, 화면마다 다른 화살표(`←` 글자, 제품 아이콘)로 만든 뒤로 버튼을 두지 않는다. 2026-10-17 사용자 지시: `변경 저장과 이탈 확인` 예제의 "설정 나가기"가 본문 버튼으로 떠 있었고, 제품마다 뒤로 버튼 모양이 달랐다(야잘알 자체 `BackButton`, 예제의 `←`·`ChevronLeft`). 변경이 있을 때의 확인 대화상자는 제품이 `exit` 콜백에서 띄운다. 기존 navigator 헤더를 쓰는 화면은 그 헤더의 뒤로 버튼이 같은 자리를 맡는다.
 
-- Native에서 `headerAlignment="center"` + `titleVisibility="hidden"`이고 설명·사용자 지정 헤더가 없으면 아이콘 헤더는 최소 48pt, 세로 여백 2pt다(값의 정본은 `screenHeaderRecipe`). 2026-10-14 야잘알의 상단 버튼–탭 사이 빈 공간 피드백으로 제목용 높이를 줄였다. 제목이 보이는 가운데 헤더는 최소 52pt, 세로 여백 4pt다(2026-10-17 사용자 지시 "상단 여백 줄여": 60pt가 iOS 내비게이션 바보다 높았다). `notice`가 없을 때만 본문 상단 여백을 최대 4pt로 줄이며, `notice`에 둔 탭과 본문 카테고리 사이 기본 16pt 간격은 유지한다. 좌우 여백·하단 여백·터치 영역은 그대로다.
+- Native에서 `titleVisibility="hidden"`이고 설명·사용자 지정 헤더가 없으면 아이콘 헤더는 최소 48pt, 세로 여백 2pt다(값의 정본은 `screenHeaderRecipe`). 2026-10-14 야잘알의 상단 버튼–탭 사이 빈 공간 피드백으로 제목용 높이를 줄였다. 제목이 보이는 가운데 헤더는 최소 52pt, 세로 여백 4pt다(2026-10-17 사용자 지시 "상단 여백 줄여": 60pt가 iOS 내비게이션 바보다 높았다). `notice`가 없을 때만 본문 상단 여백을 최대 4pt로 줄이며, `notice`에 둔 탭과 본문 카테고리 사이 기본 16pt 간격은 유지한다. 좌우 여백·하단 여백·터치 영역은 그대로다.
 
 - Web의 화면 스크롤 본문은 Tab으로 진입할 수 있다. `scroll="content"`의 정상 본문은 자식이 키보드 스크롤을 소유하지만, 오류·빈 상태 등 대체 안내는 화면 스크롤로 바뀌며 Tab 진입도 함께 복원된다.
 - Web에서 본문에 초점을 가진 입력·재시도 버튼이 상태 전환으로 제거되면 같은 본문으로 초점을 복구한다. `scroll="content"`의 본문은 이 복구만을 위한 `tabIndex=-1`을 가지며 일반 Tab 순서에는 추가되지 않는다. 사용자가 다른 컨트롤이나 바깥 영역으로 초점을 옮긴 경우에는 이동시키지 않는다. 2026-10-13 재시도·권한 제한 전환에서 초점이 body로 유실된 경로를 수정했다.

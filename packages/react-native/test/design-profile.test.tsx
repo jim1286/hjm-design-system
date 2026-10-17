@@ -66,9 +66,9 @@ it("centers landscape headings and removes platform elevation when a profile req
     act(() => { tree = create(<HjmNativeProvider reducedMotion designProfile={hjmDesignPresets.forest}>
       <OverviewScreen title="기록" toolbarLabel="도구" items={[{ id: "a", children: <Text>내용</Text> }]} />
     </HjmNativeProvider>); });
-    // Route titles are Heading at screenHeaderRecipe.titleLevel on both renderers (2026-10-17 parity).
+    // Route titles are always centered at screenHeaderRecipe.centeredTitleLevel (2026-10-17).
     const title = tree.root.findByType(Heading);
-    expect(title.props.level).toBe("level3");
+    expect(title.props.level).toBe("level5");
     expect(title.props.align).toBe("center");
     act(() => tree.update(<HjmNativeProvider reducedMotion designProfile={hjmDesignPresets.terminal}>
       <Surface tone="raised"><Text>내용</Text></Surface>

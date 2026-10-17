@@ -38,7 +38,7 @@ it("keeps host refresh and keyboard ownership when content scrolling is replaced
 
 it("hides the route name and centers context between unequal navigation controls", () => {
  const back=vi.fn();
- render(<ScreenLayout title="Route name" titleVisibility="hidden" headerAlignment="center" description="2026.10.14" exit={{kind:"back",label:"Back",onPress:back}} actions={<Text>Two actions</Text>}><Text>Body</Text></ScreenLayout>);
+ render(<ScreenLayout title="Route name" titleVisibility="hidden" description="2026.10.14" exit={{kind:"back",label:"Back",onPress:back}} actions={<Text>Two actions</Text>}><Text>Body</Text></ScreenLayout>);
  expect(JSON.stringify(tree!.toJSON())).not.toContain('Route name');
  const measures=tree!.root.findAllByType(View).filter(node=>node.props.onLayout);
  expect(measures).toHaveLength(2);

@@ -311,7 +311,8 @@ it("omits empty metadata above anonymous comment body",async()=>{
  const {CommentThreadScreen}=await import("../src/screen-flows.js");
  let tree:ReactTestRenderer;
  act(()=>{tree=create(<HjmNativeProvider><CommentThreadScreen title="Comments" items={[{id:"one",parentId:null,author:"",timeLabel:"",body:<Text>Comment body</Text>,avatar:<Text>Avatar</Text>,likeCountLabel:"",likeIcon:null,likeLabel:"Like",likeAction:null,canReply:false}]} expandedIds={[]} onExpandedChange={()=>{}} onLike={()=>{}} onReply={()=>{}} replyLabel="Reply" repliesLabel={()=>"Replies"}/></HjmNativeProvider>);});
- const column=tree!.root.findAllByType(View).find(node=>node.props.style?.flex===1&&node.props.style?.minWidth===0)!;
+ // The centered header also has a flex:1 title column; pick the comment row column by its body.
+ const column=tree!.root.findAllByType(View).find(node=>node.props.style?.flex===1&&node.props.style?.minWidth===0&&node.findAllByType(Text).some(text=>text.props.children==="Comment body"))!;
  // Identity (author/time) and body form one hold target fragment ahead of the action row.
  const identity=column.props.children[0];
  expect(identity.props.children[0]).toBeNull();

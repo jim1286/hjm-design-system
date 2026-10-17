@@ -19,7 +19,8 @@ if(previousJpg)nodeRequire.extensions['.jpg']=previousJpg;else delete nodeRequir
 (globalThis as {IS_REACT_ACT_ENVIRONMENT?:boolean}).IS_REACT_ACT_ENVIRONMENT=true;
 let tree:ReactTestRenderer;beforeEach(()=>vi.useFakeTimers());afterEach(()=>{if(tree)act(()=>tree.unmount());vi.useRealTimers();});
 const render=(ui:ReactNode)=>act(()=>{tree=create(<HjmNativeProvider reducedMotion>{ui}</HjmNativeProvider>,{createNodeMock:()=>({focus:vi.fn(),scrollTo:vi.fn()})});});
-const button=(label:string)=>tree.root.findAllByType(Button).find(n=>n.props.children===label)!;
+// Header actions are icon buttons named by label (2026-10-17); text buttons by children.
+const button=(label:string)=>tree.root.findAllByType(Button).find(n=>n.props.children===label)??tree.root.findAllByType(IconButton).find(n=>n.props.label===label)!;
 const press=(label:string)=>act(()=>button(label).props.onPress());
 const text=()=>tree.root.findAllByType(Text).map(n=>n.props.children).join(' ');
 const tick=()=>act(async()=>{await vi.advanceTimersByTimeAsync(450);});

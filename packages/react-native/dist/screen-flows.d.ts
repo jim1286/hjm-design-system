@@ -8,16 +8,18 @@ import { type ContainerGutter } from "@hjmds/design-contracts/components/contain
 import { type MessageMenuAction } from "./internal/message-reactions.js";
 import type { ReactionPickerProps } from "./reaction-picker.js";
 /** Copy, pending state and mutations are controlled by the consuming product. */
+/** `icon` renders an icon-only button named by `label`; header actions (top-right) use it so a centered title keeps its width (2026-10-17). */
 export type ScreenFlowAction = Readonly<{
     label: string;
     onAction(): void;
     disabled?: boolean;
     pending?: boolean;
+    icon?: ReactNode;
 }>;
 type Base = Omit<ScreenLayoutProps, "children" | "footer">;
 export type ListDetailScreenProps = Base & {
     list: ReactNode;
-    detail?: Pick<ScreenLayoutProps, "title" | "state" | "stateAction" | "notice" | "titleVisibility" | "headerAlignment"> & {
+    detail?: Pick<ScreenLayoutProps, "title" | "state" | "stateAction" | "notice" | "titleVisibility"> & {
         content: ReactNode;
     };
     back: ScreenFlowAction;

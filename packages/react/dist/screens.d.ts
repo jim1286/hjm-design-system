@@ -13,7 +13,7 @@ export type ScreenLayoutProps = Readonly<{
     titleBadge?: ReactNode;
     /** Hide redundant route names while retaining descriptions and a named screen. */
     titleVisibility?: "visible" | "hidden";
-    headerAlignment?: "start" | "center";
+    /** Route titles are always centered (2026-10-17 user rule); extra actions sit at the trailing edge. */
     /** Preserve host navigation while the shared shell owns content and state. */
     header?: ReactNode;
     contentInset?: "default" | "none";
@@ -46,7 +46,7 @@ export type ScreenLayoutProps = Readonly<{
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Shared screen shell. Routing, data, permission checks and mutation state remain product-owned. */
-export declare function ScreenLayout({ title, titleBadge, titleVisibility, headerAlignment, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, description, exit, actions, notice, footer, state, stateAction, children, scroll, as: Element, className, layoutStyle, hjmTitleLeading }: ScreenLayoutProps & Readonly<{
+export declare function ScreenLayout({ title, titleBadge, titleVisibility, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, description, exit, actions, notice, footer, state, stateAction, children, scroll, as: Element, className, layoutStyle, hjmTitleLeading }: ScreenLayoutProps & Readonly<{
     hjmTitleLeading?: ReactNode;
 }>): import("react").JSX.Element;
 export type SettingsScreenSection = Readonly<{
@@ -85,7 +85,7 @@ export type ChatScreenProps = Omit<ScreenLayoutProps, "footer"> & Readonly<{
     avatar?: ReactNode;
 }>;
 /** Caller supplies a virtualized timeline and keyboard-aware composer; no implicit auto-scroll or send. */
-export declare function ChatScreen({ composer, jumpToLatest, avatar, scroll, headerAlignment, ...props }: ChatScreenProps): import("react").JSX.Element;
+export declare function ChatScreen({ composer, jumpToLatest, avatar, scroll, ...props }: ChatScreenProps): import("react").JSX.Element;
 export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCount"> & Readonly<{
     maxLength?: number;
     /** Opt-in count/ring appears only near the actual maxLength; never trims drafts. */

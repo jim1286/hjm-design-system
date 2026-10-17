@@ -18,7 +18,7 @@ function render(child: ReactNode) {
 }
 describe("native screen composition", () => {
   it("compacts icon-only headers without collapsing notice tabs into body filters", () => {
-    const props = { title: "기록실", titleVisibility: "hidden" as const, headerAlignment: "center" as const, exit: { kind: "back" as const, label: "뒤로", onPress: () => {} } };
+    const props = { title: "기록실", titleVisibility: "hidden" as const, exit: { kind: "back" as const, label: "뒤로", onPress: () => {} } };
     const tree = render(<ScreenLayout {...props}><Text>카테고리</Text></ScreenLayout>);
     const header = tree.root.findAllByType(View).find(node => node.props.style?.minHeight === 48)!;
     expect(header).toBeDefined();

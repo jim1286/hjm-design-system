@@ -19,7 +19,7 @@ export type ScreenLayoutProps = Readonly<{
     titleBadge?: ReactNode;
     /** Hide redundant route names while retaining descriptions and a named screen. */
     titleVisibility?: "visible" | "hidden";
-    headerAlignment?: "start" | "center";
+    /** Route titles are always centered (2026-10-17 user rule); extra actions sit at the trailing edge. */
     /** Host navigation can supply its existing header while the shared shell owns scrolling and state. */
     header?: ReactNode;
     /** Hosts that already inset routes avoid applying the shared gutter twice. */
@@ -55,7 +55,7 @@ export type ScreenLayoutProps = Readonly<{
     keyboardAvoidance?: boolean;
     scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator" | "onScroll" | "onScrollBeginDrag" | "onScrollEndDrag" | "scrollEventThrottle" | "alwaysBounceVertical" | "automaticallyAdjustKeyboardInsets">;
 }>;
-export declare function ScreenLayout({ title, titleBadge, titleVisibility, headerAlignment, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, description, exit, actions, notice, footer, state, stateAction, children, scroll, layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance, hjmBodyInlinePadding, hjmTitleLeading }: ScreenLayoutProps & ScreenLayoutPrivateProps): import("react").JSX.Element;
+export declare function ScreenLayout({ title, titleBadge, titleVisibility, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, description, exit, actions, notice, footer, state, stateAction, children, scroll, layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance, hjmBodyInlinePadding, hjmTitleLeading }: ScreenLayoutProps & ScreenLayoutPrivateProps): import("react").JSX.Element;
 export type SettingsScreenSection = Readonly<{
     id: string;
     title: string;
@@ -91,7 +91,7 @@ export type ChatScreenProps = Omit<ScreenLayoutProps, "footer"> & Readonly<{
     avatar?: ReactNode;
 }>;
 /** Wrap with existing KeyboardAvoiding (or the host's keyboard adapter), never both. */
-export declare function ChatScreen({ composer, jumpToLatest, avatar, scroll, headerAlignment, ...props }: ChatScreenProps): import("react").JSX.Element;
+export declare function ChatScreen({ composer, jumpToLatest, avatar, scroll, ...props }: ChatScreenProps): import("react").JSX.Element;
 export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCount"> & Readonly<{
     maxLength?: number;
     /** Opt-in count/ring appears only near the actual maxLength; never trims drafts. */
