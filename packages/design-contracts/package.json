@@ -801,6 +801,7 @@
     },
     "./conversation-row": {
       "types": "./dist/conversation-row.d.ts",
+      "react-native": "./dist/conversation-row.js",
       "import": "./dist/conversation-row.js",
       "default": "./dist/conversation-row.js"
     }
