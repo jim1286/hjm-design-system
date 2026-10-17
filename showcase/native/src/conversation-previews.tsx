@@ -1,7 +1,7 @@
 // Item-level conversation compositions: composer, message bubble and notification row.
 // The full chat/inbox screens (common-screen-previews) own screen states; these previews
 // show the item interactions those screens repeat, so the two stories no longer duplicate.
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { ArrowUp, Plus } from "lucide-react-native";
 import { spacing, radius } from "@hjmds/design-contracts/foundations";
@@ -14,16 +14,12 @@ import { ChatMessage, MessageComposer, NotificationItem } from "@hjmds/react-nat
 import { resolveChatMessageGroups } from "@hjmds/design-contracts/screen-patterns";
 import { compositionBrandFixtures } from "../../shared/composition-brand-fixtures";
 import { useDemoAction } from "./action-recovery-previews";
-import { PatternStatus } from "./pattern-status";
+import { StatusText } from "@hjmds/react-native/status-text";
 import { PreviewPhoto } from "./reference-screen-parts";
 import { PreviewToolButton, PreviewTools } from "./preview-tools";
 
 // Failure arming is a demo-only tool: it sits in PreviewTools after each composition (SELECTION.md 조립 규칙).
 // The product screen owns the outer frame; the preview shows it so the example matches the usage guide.
-function Frame({ children }: { children: ReactNode }) {
-  return <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingVertical: spacing.md }}><Container gutter="compact"><Stack gap="lg">{children}</Stack></Container></ScrollView>;
-}
-
 // Purpose copy is a table like the product's purpose→i18n-key table; comment and message differ only here and in slots.
 const composerCopy = {
   comment: { title: "댓글 작성", label: "댓글을 남겨 주세요", send: "등록", reply: "답글 대상 선택", replyCancel: "답글 취소" },
@@ -53,12 +49,12 @@ function ComposerContents({ purpose = "comment", initialState = "idle", initialP
     // The draft, photos and reply target are cleared only after the server confirms.
     if (outcome.status === "success") { setSent(items => [...items, text || `사진 ${photos.length}장`]); setValue(""); setReply(false); setPhotos([]); }
   };
-  return <Frame>
+  return <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingVertical: spacing.md }}><Container gutter="compact"><Stack gap="lg">
     <Surface padding="lg"><Stack gap="md">
       <Heading level="level5">{copy.title}</Heading>
       <MessageComposer label={copy.label} sendLabel={copy.send} value={value} onValueChange={setValue} pending={pending} onSend={send}
         sendIcon={<ArrowUp size={20} color={colors.onPrimary} />} sendPresentation="circle"
-        context={error ? <PatternStatus announceOnMount tone="danger">전송하지 못했어요. 초안은 그대로예요. 다시 전송해 주세요.</PatternStatus> : null}
+        context={error ? <StatusText announceOnMount tone="danger">전송하지 못했어요. 초안은 그대로예요. 다시 전송해 주세요.</StatusText> : null}
         {...(reply ? { replyTo: { author: "서연", excerpt: "오늘 어떤 하루였나요?", cancelLabel: copy.replyCancel, onCancel: () => setReply(false) } } : {})}
         {...(purpose === "message" ? {
           attachmentAction: { label: "사진 추가", icon: <Plus size={20} color={colors.text} />, onPress: () => setPhotos(current => [...current, (current.at(-1) ?? -1) + 1]) },
@@ -66,7 +62,7 @@ function ComposerContents({ purpose = "comment", initialState = "idle", initialP
           onRemoveAttachment: (id: string) => setPhotos(current => current.filter(photo => String(photo) !== id)),
         } : {})} />
       {sent.map((text, index) => <Text key={index}>{text}</Text>)}
-      <PatternStatus>{sent.length ? `전송한 항목 ${sent.length}개` : ""}</PatternStatus>
+      <StatusText>{sent.length ? `전송한 항목 ${sent.length}개` : ""}</StatusText>
     </Stack></Surface>
     <Stack axis="inline" wrap gap="sm">
       <Button tone="secondary" disabled={pending} onPress={() => setReply(true)}>{copy.reply}</Button>
@@ -74,7 +70,7 @@ function ComposerContents({ purpose = "comment", initialState = "idle", initialP
     </Stack>
     <Text variant="caption" tone="muted">예제 전송은 서버에 저장하지 않습니다. 줄바꿈은 입력에 남고, 성공한 뒤에만 초안을 지웁니다.</Text>
     <PreviewTools><PreviewToolButton disabled={pending} selected={failureArmed} onPress={toggleFailure}>다음 전송 실패시키기</PreviewToolButton></PreviewTools>
-  </Frame>;
+  </Stack></Container></ScrollView>;
 }
 
 // The same composition receives a palette; no product-specific layout or behavioral fork.
@@ -116,7 +112,7 @@ export function ChatMessagePreview() {
   }, { retryable: true }); };
   useEffect(() => { if (!highlight) return; const timer = setTimeout(() => setHighlight(false), 1500); return () => clearTimeout(timer); }, [highlight]);
   const delivered = state.status === "success";
-  return <Frame>
+  return <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingVertical: spacing.md }}><Container gutter="compact"><Stack gap="lg">
     <Heading level="level3">대화 메시지</Heading>
     <Stack gap="lg">
       <View style={{ borderWidth: 2, borderColor: highlight ? colors.primary : "transparent", borderRadius: radius.md }}>
@@ -140,9 +136,9 @@ export function ChatMessagePreview() {
     <Heading level="level3">묶음 표시</Heading>
     {/* Timeline lists add no gap: each message's group position owns the spacing above it. */}
     <View>{groupedMessages.map(message => <ChatMessage key={message.id} direction={message.authorId === "me" ? "outgoing" : "incoming"} author={message.authorId === "me" ? "" : "서연"} timestamp={message.timestamp} groupPosition={groupPositions.get(message.id) ?? "single"} {...(message.authorId === "me" ? {} : { avatar: <Avatar name="서연" size={36} decorative source={{ uri: SEOYEON_PHOTO }} /> })}><Text>{message.text}</Text></ChatMessage>)}</View>
-    <PatternStatus>{state.status === "error" ? "다시 보내지 못했어요. 메시지는 그대로 남아 있어요." : status}</PatternStatus>
+    <StatusText>{state.status === "error" ? "다시 보내지 못했어요. 메시지는 그대로 남아 있어요." : status}</StatusText>
     <PreviewTools><PreviewToolButton selected={failureArmed} disabled={busy || delivered} onPress={toggleFailure}>다음 전송 실패시키기</PreviewToolButton></PreviewTools>
-  </Frame>;
+  </Stack></Container></ScrollView>;
 }
 
 const notifications = [
@@ -165,14 +161,14 @@ export function NotificationItemPreview() {
     const next = [...current.value, id];
     void session.run(() => request(next), { optimisticValue: next, retryable: true });
   };
-  return <Frame>
+  return <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingVertical: spacing.md }}><Container gutter="compact"><Stack gap="lg">
     <Heading level="level3">알림 항목</Heading>
     <Stack gap="sm">{notifications.map(entry => {
       const read = state.value.includes(entry.id);
       return <NotificationItem key={entry.id} title={entry.title} description={entry.description} leading={<Avatar name={entry.name} size={32} decorative />}
         read={read} statusLabel={read ? readCopy.read : readCopy.unread} timestamp={entry.time} disabled={busy} onPress={() => open(entry.id)} />;
     })}</Stack>
-    <PatternStatus>{readStatusCopy[state.status]}</PatternStatus>
+    <StatusText>{readStatusCopy[state.status]}</StatusText>
     <PreviewTools><PreviewToolButton selected={failureArmed} disabled={busy} onPress={toggleFailure}>다음 읽음 처리 실패시키기</PreviewToolButton></PreviewTools>
-  </Frame>;
+  </Stack></Container></ScrollView>;
 }

@@ -1,7 +1,7 @@
 import { Heading } from "@hjmds/react/heading";
 import { HjmProvider } from "@hjmds/react/provider";
 import { compositionBrandFixtures } from "../../../shared/composition-brand-fixtures";
-import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createActionSession } from "@hjmds/design-contracts/action-session";
 import { Button } from "@hjmds/react/actions";
 import { SearchField, TextField } from "@hjmds/react/forms";
@@ -17,8 +17,7 @@ type DisplayId = keyof typeof displayCopy;
 const displayOptions = Object.keys(displayCopy) as DisplayId[];
 // Single choice uses RadioGroup, not selected Buttons (SELECTION.md 조립 규칙).
 const displayItems = displayOptions.map(id => ({ value: id, label: displayCopy[id] }));
-// The product screen owns the outer frame; the preview shows it so the example matches the usage guide.
-function Frame({ children }: { children: ReactNode }) { return <Container gutter="compact"><Stack gap="md">{children}</Stack></Container>; }
+// The product screen owns the outer frame; each preview shows it so the example matches the usage guide.
 
 // Closing settles this opening synchronously. Old host callbacks must not apply,
 // save or edit a discarded draft, including after a later opening starts.
@@ -39,7 +38,7 @@ export function ApplyOrDiscardSelection() {
  const [draft, setDraft] = useState<DisplayId>(applied);
  const trigger = useRef<HTMLButtonElement>(null);
  const start = () => { setDraft(applied); openSheet(); };
- return <Frame><Heading level="level3">선택 후 적용하거나 취소</Heading>
+ return <Container gutter="compact"><Stack gap="md"><Heading level="level3">선택 후 적용하거나 취소</Heading>
   <Text role="status">현재 표시: {displayCopy[applied]}</Text>
   <Button ref={trigger} onClick={start}>표시 방식 선택</Button>
   <Sheet open={open} onOpenChange={onOpenChange} title="표시 방식 선택" closeLabel="닫기" returnFocusRef={trigger}
@@ -48,13 +47,13 @@ export function ApplyOrDiscardSelection() {
     <Text>적용을 눌러야 화면이 바뀌어요. 취소하거나 닫으면 기존 선택을 유지해요.</Text>
    </Stack>
   </Sheet>
- </Frame>;
+ </Stack></Container>;
 }
 
 export function ReopenDraft() {
  const { open, start, close, isCurrent, onOpenChange } = usePreviewSheet(); const [draft, setDraft] = useState(""); const [saved, setSaved] = useState("");
  const trigger = useRef<HTMLButtonElement>(null);
- return <Frame><Heading level="level3">작성 중 닫고 초안 이어쓰기</Heading>
+ return <Container gutter="compact"><Stack gap="md"><Heading level="level3">작성 중 닫고 초안 이어쓰기</Heading>
   <Button ref={trigger} onClick={start}>메모 작성</Button>
   <Text role="status">{draft ? "작성 중인 초안이 있어요." : "작성 중인 초안이 없어요."}</Text>
   <Text>저장된 메모: {saved || "아직 없어요"}</Text>
@@ -64,7 +63,7 @@ export function ReopenDraft() {
     <Text>닫았다 다시 열면 이어 쓸 수 있어요. 이 예제는 화면이 열린 동안 초안을 유지해요.</Text>
    </Stack>
   </Sheet>
- </Frame>;
+ </Stack></Container>;
 }
 
 // Status copy per session status (product: status → i18n key table; template-built keys escape key checks).
@@ -109,16 +108,16 @@ function LatestSearchContents({ initialState = "idle" }: Pick<LatestSearchProps,
  }, []);
  const pending = state.status === "pending";
  const message = state.status === "pending" || state.status === "error" ? latestSearchCopy[state.status] : state.value ? `검색 결과: ${state.value}` : latestSearchCopy.idle;
- return <Frame><Heading level="level3">최신 검색 결과 유지</Heading>
+ return <Container gutter="compact"><Stack gap="md"><Heading level="level3">최신 검색 결과 유지</Heading>
   <SearchField ref={searchRef} label="검색어" clearLabel="검색어 지우기" value={query} onValueChange={setQuery} loading={pending} />
-  <Button tone="secondary" disabled={!query.trim()} onClick={() => search(searchDelay.slow)}>느린 응답으로 검색</Button>
-  <Button tone="secondary" disabled={!query.trim()} onClick={() => search(searchDelay.fast)}>빠른 응답으로 검색</Button>
+  <Stack gap="xs"><Button tone="secondary" disabled={!query.trim()} onClick={() => search(searchDelay.slow)}>느린 응답으로 검색</Button>
+  <Button tone="secondary" disabled={!query.trim()} onClick={() => search(searchDelay.fast)}>빠른 응답으로 검색</Button></Stack>
   <Text role="status">{message}</Text>
   {state.status === "error" ? <Button tone="secondary" onClick={() => { searchRef.current?.focus(); void session.retry(); }}>다시 검색</Button> : null}
   <Text>느린 검색을 시작한 뒤 검색어를 바꿔 빠른 검색을 해보세요. 늦게 도착한 이전 결과가 최신 결과를 덮지 않아요. 실제 서버 요청은 없는 예제예요.</Text>
   {/* Failure arming is a demo-only tool, kept after the composition. */}
   <PreviewTools><PreviewToolButton selected={failureArmed} onClick={() => { failNext.current = !failNext.current; setFailureArmed(failNext.current); }}>다음 검색 실패시키기</PreviewToolButton></PreviewTools>
- </Frame>;
+ </Stack></Container>;
 }
 
 // The same composition receives a product palette; no product-specific layout or behavioral fork.

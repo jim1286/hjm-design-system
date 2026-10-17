@@ -1,7 +1,7 @@
 import { Heading } from "@hjmds/react-native/heading";
 import { HjmNativeProvider } from "@hjmds/react-native/provider";
 import { compositionBrandFixtures } from "../../shared/composition-brand-fixtures";
-import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createActionSession } from "@hjmds/design-contracts/action-session";
 import { Button } from "@hjmds/react-native/actions";
 import { RadioGroup, SearchField, TextField } from "@hjmds/react-native/inputs";
@@ -9,7 +9,7 @@ import { Sheet } from "@hjmds/react-native/overlays";
 import { Container, Stack, Text } from "@hjmds/react-native/primitives";
 import { ScrollView, View, type TextInput } from "react-native";
 import { spacing } from "@hjmds/design-contracts/foundations";
-import { PatternStatus } from "./pattern-status";
+import { StatusText } from "@hjmds/react-native/status-text";
 import { PreviewToolButton, PreviewTools } from "./preview-tools";
 
 // Selection state holds ids; visible copy comes from an id→copy table like the product's id→i18n-key table.
@@ -18,8 +18,7 @@ type DisplayId = keyof typeof displayCopy;
 const displayOptions = Object.keys(displayCopy) as DisplayId[];
 // Single choice uses RadioGroup, not selected Buttons (SELECTION.md 조립 규칙).
 const displayItems = displayOptions.map(id => ({ value: id, label: displayCopy[id] }));
-// The product screen owns the outer frame; the preview shows it so the example matches the usage guide.
-function Frame({ children }: { children: ReactNode }) { return <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingVertical: spacing.md }}><Container gutter="compact"><Stack gap="md">{children}</Stack></Container></ScrollView>; }
+// The product screen owns the outer frame; each preview shows it so the example matches the usage guide.
 
 // Closing settles this opening synchronously. Old host callbacks must not apply,
 // save or edit a discarded draft, including after a later opening starts.
@@ -40,8 +39,8 @@ export function ApplyOrDiscardSelection() {
  const [draft, setDraft] = useState<DisplayId>(applied);
  const trigger = useRef<View>(null);
  const start = () => { setDraft(applied); openSheet(); };
- return <Frame><Heading level="level3">선택 후 적용하거나 취소</Heading>
-  <PatternStatus>{`현재 표시: ${displayCopy[applied]}`}</PatternStatus>
+ return <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingVertical: spacing.md }}><Container gutter="compact"><Stack gap="md"><Heading level="level3">선택 후 적용하거나 취소</Heading>
+  <StatusText>{`현재 표시: ${displayCopy[applied]}`}</StatusText>
   <View ref={trigger} collapsable={false}><Button onPress={start}>표시 방식 선택</Button></View>
   <Sheet open={open} onOpenChange={onOpenChange} title="표시 방식 선택" closeLabel="닫기" returnFocusRef={trigger}
    footer={<Stack gap="xs"><Button onPress={() => { if (close()) setApplied(draft); }}>선택 적용</Button><Button tone="secondary" onPress={close}>선택 취소</Button></Stack>}>
@@ -49,15 +48,15 @@ export function ApplyOrDiscardSelection() {
     <Text>적용을 눌러야 화면이 바뀌어요. 취소하거나 닫으면 기존 선택을 유지해요.</Text>
    </Stack>
   </Sheet>
- </Frame>;
+ </Stack></Container></ScrollView>;
 }
 
 export function ReopenDraft() {
  const { open, start, close, isCurrent, onOpenChange } = usePreviewSheet(); const [draft, setDraft] = useState(""); const [saved, setSaved] = useState("");
  const trigger = useRef<View>(null);
- return <Frame><Heading level="level3">작성 중 닫고 초안 이어쓰기</Heading>
+ return <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingVertical: spacing.md }}><Container gutter="compact"><Stack gap="md"><Heading level="level3">작성 중 닫고 초안 이어쓰기</Heading>
   <View ref={trigger} collapsable={false}><Button onPress={start}>메모 작성</Button></View>
-  <PatternStatus>{draft ? "작성 중인 초안이 있어요." : "작성 중인 초안이 없어요."}</PatternStatus>
+  <StatusText>{draft ? "작성 중인 초안이 있어요." : "작성 중인 초안이 없어요."}</StatusText>
   <Text>저장된 메모: {saved || "아직 없어요"}</Text>
   <Sheet open={open} onOpenChange={onOpenChange} title="메모 작성" closeLabel="초안을 남기고 닫기" returnFocusRef={trigger} keyboardAvoidance scrollable
    footer={<Stack gap="xs"><Button disabled={!draft.trim()} onPress={() => { if (draft.trim() && close()) { setSaved(draft); setDraft(""); } }}>메모 저장</Button><Button tone="secondary" onPress={() => { if (close()) setDraft(""); }}>초안 버리기</Button></Stack>}>
@@ -65,7 +64,7 @@ export function ReopenDraft() {
     <Text>닫았다 다시 열면 이어 쓸 수 있어요. 이 예제는 화면이 열린 동안 초안을 유지해요.</Text>
    </Stack>
   </Sheet>
- </Frame>;
+ </Stack></Container></ScrollView>;
 }
 
 // Status copy per session status (product: status → i18n key table; template-built keys escape key checks).
@@ -110,16 +109,16 @@ function LatestSearchContents({ initialState = "idle" }: Pick<LatestSearchProps,
  }, []);
  const pending = state.status === "pending";
  const message = state.status === "pending" || state.status === "error" ? latestSearchCopy[state.status] : state.value ? `검색 결과: ${state.value}` : latestSearchCopy.idle;
- return <Frame><Heading level="level3">최신 검색 결과 유지</Heading>
+ return <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingVertical: spacing.md }}><Container gutter="compact"><Stack gap="md"><Heading level="level3">최신 검색 결과 유지</Heading>
   <SearchField ref={searchRef} label="검색어" clearLabel="검색어 지우기" value={query} onValueChange={setQuery} busy={pending} busyLabel="검색 중" />
-  <Button tone="secondary" disabled={!query.trim()} onPress={() => search(searchDelay.slow)}>느린 응답으로 검색</Button>
-  <Button tone="secondary" disabled={!query.trim()} onPress={() => search(searchDelay.fast)}>빠른 응답으로 검색</Button>
-  <PatternStatus>{message}</PatternStatus>
+  <Stack gap="xs"><Button tone="secondary" disabled={!query.trim()} onPress={() => search(searchDelay.slow)}>느린 응답으로 검색</Button>
+  <Button tone="secondary" disabled={!query.trim()} onPress={() => search(searchDelay.fast)}>빠른 응답으로 검색</Button></Stack>
+  <StatusText>{message}</StatusText>
   {state.status === "error" ? <Button tone="secondary" onPress={() => { searchRef.current?.focus(); void session.retry(); }}>다시 검색</Button> : null}
   <Text>느린 검색을 시작한 뒤 검색어를 바꿔 빠른 검색을 해보세요. 늦게 도착한 이전 결과가 최신 결과를 덮지 않아요. 실제 서버 요청은 없는 예제예요.</Text>
   {/* Failure arming is a demo-only tool, kept after the composition. */}
   <PreviewTools><PreviewToolButton selected={failureArmed} onPress={() => { failNext.current = !failNext.current; setFailureArmed(failNext.current); }}>다음 검색 실패시키기</PreviewToolButton></PreviewTools>
- </Frame>;
+ </Stack></Container></ScrollView>;
 }
 
 // The same composition receives a product palette; no product-specific layout or behavioral fork.

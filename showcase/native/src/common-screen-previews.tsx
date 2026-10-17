@@ -2,7 +2,7 @@ import { ProviderLogo } from "./provider-logo";
 import { SettingsPagePreview } from "./settings-page-preview";
 import { PreviewTools, PreviewToolButton } from "./preview-tools";
 import { Chip } from "@hjmds/react-native/inputs";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
 import { NotificationInboxScreen, NotificationItem, ChatScreen, ChatMessage, MessageComposer, ScreenLayout } from "@hjmds/react-native/screens";
 import { AuthScreenLayout } from "@hjmds/react-native/auth-screen";
 import { AuthProviderButton } from "@hjmds/react-native/provider-button";
@@ -30,7 +30,6 @@ export type ScreenPreviewOptions = { stateKind?: keyof typeof states; tools?: bo
 const glyphs = { bell: Bell, back: ChevronLeft, next: ChevronRight, language: Globe2, help: HelpCircle, shield: ShieldCheck, sound: Volume2, spark: Sparkles, more: MoreHorizontal, check: CheckCheck, chat: MessageCircle, heart: Heart, palette: Palette, settings: Settings2 };
 function Glyph({ name }: { name: keyof typeof glyphs }) { const GlyphIcon = glyphs[name]; const { colors } = useHjmNativeTheme(); return <GlyphIcon size={20} color={colors.textMuted} strokeWidth={1.8} />; }
 function Person({ name }: { name: string }) { return <Avatar name={name} size={32} decorative />; }
-function Frame({ children, login = false }: { children: ReactNode; login?: boolean }) { return <View style={{ height: login ? 740 : 720, width: "100%" }}>{children}</View>; }
 type ReplyTarget = {id:string; author:string; text:string};
 type DemoMessage = ReplyTarget & {direction:"incoming"|"outgoing"; timestamp:string; replyTo?:ReplyTarget; photos?:number};
 const initialMessages: DemoMessage[] = [
@@ -160,7 +159,7 @@ function ScreenPreview({ kind: initialKind, stateKind = "ready", tools = false }
   if (atHome) screen = <ScreenLayout title="나의 공간" description="오늘의 이야기와 소식을 만나 보세요."><Stack gap="sm">{([['settings', '설정'], ['notifications', '알림'], ['chat', '서연과의 대화']] as const).map(([target, label]) => <ListRow key={target} title={label} trailing={<Glyph name="next" />} onPress={() => { setKind(target); setAtHome(false); }} />)}</Stack></ScreenLayout>;
   else if (detail && kind !== "login") screen = <ScreenLayout title={kind === "notifications" ? "도착한 이야기" : kind === "chat" ? "대화 정보" : "상세 정보"} exit={{ kind: "back", label: "뒤로", onPress: () => setDetail(null) }}><Stack gap="lg"><Text>{detail}</Text>{kind === "notifications" && notificationDetailId === 1 ? <Button onPress={() => { setDetail(null); setKind("chat"); }}>대화 이어가기</Button> : null}</Stack></ScreenLayout>;
   const toggleCopy = kind === "chat" || kind === "notifications" ? failToggleCopy[kind] : null;
-  return <Stack gap="sm">{tools && toggleCopy ? <PreviewTools><PreviewToolButton selected={failNext === kind} onPress={() => setFailNext(v => v === kind ? null : kind === "chat" || kind === "notifications" ? kind : null)}>{toggleCopy[failNext === kind ? 1 : 0]}</PreviewToolButton></PreviewTools> : null}<Frame login={kind === "login"}>{screen}</Frame></Stack>;
+  return <Stack gap="sm">{tools && toggleCopy ? <PreviewTools><PreviewToolButton selected={failNext === kind} onPress={() => setFailNext(v => v === kind ? null : kind === "chat" || kind === "notifications" ? kind : null)}>{toggleCopy[failNext === kind ? 1 : 0]}</PreviewToolButton></PreviewTools> : null}{/* Host height stands in for the product route. */}<View style={{ height: kind === "login" ? 740 : 720, width: "100%" }}>{screen}</View></Stack>;
 }
 
 export function LoginScreenPreview(props: ScreenPreviewOptions) { return <ScreenPreview kind="login" {...props} />; }

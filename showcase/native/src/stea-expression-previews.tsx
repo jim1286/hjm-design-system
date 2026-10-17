@@ -1,7 +1,7 @@
 import { Container } from "@hjmds/react-native/primitives";
 // STEA Code 후보 중 표현 3종을 기존 HJM API로 다시 만든 실험이다. 새 공개 API는 만들지 않는다.
 // 데이터와 캐릭터 프레임은 shared/stea-expressions.ts가 소유한다.
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState } from "react";
 import { AccessibilityInfo, AppState, ScrollView, View } from "react-native";
 import { spacing } from "@hjmds/design-contracts/foundations";
 import { Button } from "@hjmds/react-native/actions";
@@ -16,10 +16,6 @@ import {
   flipCopy, pixelCopy, pixelFrameMs, pixelFrameRuns, pixelGridSize, pixelStillFrame, ticketCopy, type PixelInk,
 } from "../../shared/stea-expressions";
 
-function Frame({ children }: { children: ReactNode }) {
-  return <ScrollView contentContainerStyle={{ paddingVertical: spacing.lg }}><Container>{children}</Container></ScrollView>;
-}
-
 export function FlipInfoCard() {
   const [back, setBack] = useState(false);
   const toggle = () => {
@@ -28,7 +24,7 @@ export function FlipInfoCard() {
     // iOS는 accessibilityLiveRegion을 무시하므로 면이 바뀐 사실을 직접 알린다.
     AccessibilityInfo.announceForAccessibility(flipCopy.faceStatus(next));
   };
-  return <Frame><Card title={flipCopy.title}>
+  return <ScrollView contentContainerStyle={{ paddingVertical: spacing.lg }}><Container><Card title={flipCopy.title}>
     <Stack gap="md">
       <ContentTransition stateKey={back ? "back" : "front"} preset="scale">
         {back
@@ -41,7 +37,7 @@ export function FlipInfoCard() {
       </ContentTransition>
       <Button tone="secondary" onPress={toggle}>{back ? flipCopy.showFront : flipCopy.showBack}</Button>
     </Stack>
-  </Card></Frame>;
+  </Card></Container></ScrollView>;
 }
 
 /** 한 칸의 크기. spacing 토큰을 써서 픽셀 경계가 정수로 떨어지게 한다. 12칸 × 8 = 96으로 Web SVG와 같다. */
@@ -76,17 +72,17 @@ function PixelSprite({ paused }: { paused: boolean }) {
 export function PixelEmptyState() {
   const [paused, setPaused] = useState(false);
   const [started, setStarted] = useState(false);
-  return <Frame><Stack gap="md">
+  return <ScrollView contentContainerStyle={{ paddingVertical: spacing.lg }}><Container><Stack gap="md">
     <EmptyState illustration={<PixelSprite paused={paused} />} title={pixelCopy.title} description={pixelCopy.description}
       action={<Button onPress={() => setStarted(true)}>{pixelCopy.start}</Button>} />
     {/* 5초 넘게 반복되는 움직임은 멈출 수 있어야 한다(WCAG 2.2.2). */}
     <Button tone="ghost" onPress={() => setPaused(value => !value)}>{paused ? pixelCopy.resume : pixelCopy.pause}</Button>
     {started ? <Text accessibilityLiveRegion="polite" tone="muted">{pixelCopy.started}</Text> : null}
-  </Stack></Frame>;
+  </Stack></Container></ScrollView>;
 }
 
 export function EventTicket() {
-  return <Frame><Card title={ticketCopy.title} description={ticketCopy.subtitle}>
+  return <ScrollView contentContainerStyle={{ paddingVertical: spacing.lg }}><Container><Card title={ticketCopy.title} description={ticketCopy.subtitle}>
     <Stack gap="lg">
       <DescriptionList label={ticketCopy.detailsLabel} descriptor={{ items: ticketCopy.details }} />
       <Stack gap="sm">
@@ -95,5 +91,5 @@ export function EventTicket() {
         <Text selectable variant="title" emphasis="strong">{ticketCopy.booking}</Text>
       </Stack>
     </Stack>
-  </Card></Frame>;
+  </Card></Container></ScrollView>;
 }

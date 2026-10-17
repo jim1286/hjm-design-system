@@ -1,7 +1,7 @@
 // Item-level conversation compositions: composer, message bubble and notification row.
 // The full chat/inbox screens (common-screen-previews) own screen states; these previews
 // show the item interactions those screens repeat, so the two stories no longer duplicate.
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowUp, Plus } from "lucide-react";
 import { HjmProvider } from "@hjmds/react/provider";
 import { Button } from "@hjmds/react/actions";
@@ -17,8 +17,6 @@ import { PreviewToolButton, PreviewTools } from "./preview-tools";
 
 // Failure arming is a demo-only tool: it sits in PreviewTools after each composition (SELECTION.md 조립 규칙).
 // The product screen owns the outer frame; the preview shows it so the example matches the usage guide.
-function Frame({ children }: { children: ReactNode }) { return <Container gutter="compact"><Stack gap="lg">{children}</Stack></Container>; }
-
 // Purpose copy is a table like the product's purpose→i18n-key table; comment and message differ only here and in slots.
 const composerCopy = {
   comment: { title: "댓글 작성", label: "댓글을 남겨 주세요", send: "등록", reply: "답글 대상 선택", replyCancel: "답글 취소" },
@@ -50,7 +48,7 @@ function ComposerContents({ purpose = "comment", initialState = "idle", initialP
     // The draft, photos and reply target are cleared only after the server confirms.
     if (outcome.status === "success") { setSent(items => [...items, text || `사진 ${photos.length}장`]); setValue(""); setReply(false); setPhotos([]); }
   };
-  return <Frame>
+  return <Container gutter="compact"><Stack gap="lg">
     <Surface padding="lg"><Stack gap="md">
       <Heading level="level5" semanticLevel={2}>{copy.title}</Heading>
       <MessageComposer inputRef={input} label={copy.label} sendLabel={copy.send} value={value} onValueChange={setValue} pending={pending} onSend={send}
@@ -71,7 +69,7 @@ function ComposerContents({ purpose = "comment", initialState = "idle", initialP
     </Stack>
     <Text variant="caption" tone="muted">예제 전송은 서버에 저장하지 않습니다. Enter는 줄바꿈이고, 성공한 뒤에만 초안을 지웁니다.</Text>
     <PreviewTools><PreviewToolButton disabled={pending} selected={failureArmed} onClick={toggleFailure}>다음 전송 실패시키기</PreviewToolButton></PreviewTools>
-  </Frame>;
+  </Stack></Container>;
 }
 
 // The same composition receives a palette; no product-specific layout or behavioral fork.
@@ -115,7 +113,7 @@ export function ChatMessagePreview() {
   }, { retryable: true }); };
   useEffect(() => { if (!highlight) return; const timer = setTimeout(() => setHighlight(false), 1500); return () => clearTimeout(timer); }, [highlight]);
   const delivered = state.status === "success";
-  return <Frame>
+  return <Container gutter="compact"><Stack gap="lg">
     <Heading level="level3">대화 메시지</Heading>
     <Stack gap="lg">
       <div style={{ outline: highlight ? "2px solid var(--hjm-color-content-brand)" : undefined, borderRadius: "var(--hjm-radius-md)" }}>
@@ -141,7 +139,7 @@ export function ChatMessagePreview() {
     <div>{groupedMessages.map(message => <ChatMessage key={message.id} direction={message.authorId === "me" ? "outgoing" : "incoming"} author={message.authorId === "me" ? "" : "서연"} timestamp={message.timestamp} groupPosition={groupPositions.get(message.id) ?? "single"} {...(message.authorId === "me" ? {} : { avatar: <Avatar name="서연" size="small" src={SEOYEON_PHOTO} alt="" /> })}><Text>{message.text}</Text></ChatMessage>)}</div>
     <Text ref={receipt} tabIndex={-1} role="status">{state.status === "error" ? "다시 보내지 못했어요. 메시지는 그대로 남아 있어요." : status}</Text>
     <PreviewTools><PreviewToolButton selected={failureArmed} disabled={busy || delivered} onClick={toggleFailure}>다음 전송 실패시키기</PreviewToolButton></PreviewTools>
-  </Frame>;
+  </Stack></Container>;
 }
 
 const notifications = [
@@ -164,7 +162,7 @@ export function NotificationItemPreview() {
     const next = [...current.value, id];
     void session.run(() => request(next), { optimisticValue: next, retryable: true });
   };
-  return <Frame>
+  return <Container gutter="compact"><Stack gap="lg">
     <Heading level="level3">알림 항목</Heading>
     <Stack gap="sm">{notifications.map(entry => {
       const read = state.value.includes(entry.id);
@@ -173,5 +171,5 @@ export function NotificationItemPreview() {
     })}</Stack>
     <Text role="status">{readStatusCopy[state.status]}</Text>
     <PreviewTools><PreviewToolButton selected={failureArmed} disabled={busy} onClick={toggleFailure}>다음 읽음 처리 실패시키기</PreviewToolButton></PreviewTools>
-  </Frame>;
+  </Stack></Container>;
 }
