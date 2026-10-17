@@ -4897,6 +4897,1062 @@
         "generated": "docs/generated/component-maturity.md",
         "authored": "docs/visually-hidden.md"
       }
+    },
+    {
+      "id": "screen-layout",
+      "storyId": "layout/screen-layout",
+      "name": "ScreenLayout",
+      "category": "layout",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "composition-layout",
+      "storyId": "layout/composition-layout",
+      "name": "CompositionLayout",
+      "category": "layout",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "settings-screen",
+      "storyId": "layout/settings-screen",
+      "name": "SettingsScreen",
+      "category": "layout",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "search-screen",
+      "storyId": "layout/search-screen",
+      "name": "SearchScreen",
+      "category": "layout",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "editor-screen",
+      "storyId": "layout/editor-screen",
+      "name": "EditorScreen",
+      "category": "layout",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "permission-screen",
+      "storyId": "layout/permission-screen",
+      "name": "PermissionScreen",
+      "category": "layout",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "onboarding-screen",
+      "storyId": "layout/onboarding-screen",
+      "name": "OnboardingScreen",
+      "category": "layout",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "moderation-screen",
+      "storyId": "layout/moderation-screen",
+      "name": "ModerationScreen",
+      "category": "layout",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "chat-screen",
+      "storyId": "layout/chat-screen",
+      "name": "ChatScreen",
+      "category": "layout",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "notification-inbox-screen",
+      "storyId": "layout/notification-inbox-screen",
+      "name": "NotificationInboxScreen",
+      "category": "layout",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "comment-thread-screen",
+      "storyId": "layout/comment-thread-screen",
+      "name": "CommentThreadScreen",
+      "category": "layout",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "list-detail-screen",
+      "storyId": "layout/list-detail-screen",
+      "name": "ListDetailScreen",
+      "category": "layout",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "media-selection-screen",
+      "storyId": "layout/media-selection-screen",
+      "name": "MediaSelectionScreen",
+      "category": "layout",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "profile-screen",
+      "storyId": "layout/profile-screen",
+      "name": "ProfileScreen",
+      "category": "layout",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "chat-message",
+      "storyId": "data-display/chat-message",
+      "name": "ChatMessage",
+      "category": "data-display",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "notification-row",
+      "storyId": "data-display/notification-row",
+      "name": "NotificationRow",
+      "category": "data-display",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "notification-item",
+      "storyId": "data-display/notification-item",
+      "name": "NotificationItem",
+      "category": "data-display",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "comment-thread-row",
+      "storyId": "data-display/comment-thread-row",
+      "name": "CommentThreadRow",
+      "category": "data-display",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "profile-summary",
+      "storyId": "data-display/profile-summary",
+      "name": "ProfileSummary",
+      "category": "data-display",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "icon-tile",
+      "storyId": "data-display/icon-tile",
+      "name": "IconTile",
+      "category": "data-display",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "message-composer",
+      "storyId": "input/message-composer",
+      "name": "MessageComposer",
+      "category": "input",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "photo-source-sheet",
+      "storyId": "overlay/photo-source-sheet",
+      "name": "PhotoSourceSheet",
+      "category": "overlay",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
     }
   ]
 }

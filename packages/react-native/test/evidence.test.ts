@@ -28,6 +28,8 @@ vi.mock("@shopify/react-native-skia", () => ({}));
 vi.mock("react-native-svg", () => ({}));
 
 import * as actions from "../src/actions.js";
+import * as screens from "../src/screens.js";
+import * as screenFlows from "../src/screen-flows.js";
 import * as dataDisplay from "../src/data-display.js";
 import * as datePicker from "../src/date-picker.js";
 import {
@@ -58,6 +60,8 @@ const publicModules: Readonly<Record<string, Readonly<Record<string, unknown>>>>
   "./carousel": carousel,
   "./floating-action-button": floatingActionButton,
   "./actions": actions,
+  "./screens": screens,
+  "./screen-flows": screenFlows,
   "./data-display": dataDisplay,
   "./date-picker": datePicker,
   "./calendar": calendar,
@@ -106,7 +110,7 @@ describe("@hjmds/react-native renderer evidence", () => {
     const componentIds = reactNativeRendererEvidence.components.map(
       ({ componentId }) => componentId,
     );
-    expect(componentIds).toHaveLength(84);
+    expect(componentIds).toHaveLength(105);
     expect(componentIds).toContain("thinking-orb");
     expect(componentIds).toContain("combobox");
     expect(componentIds).toContain("load-more");

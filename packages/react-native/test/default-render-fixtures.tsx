@@ -1,3 +1,7 @@
+// 2026-10-17 screen compositions registered: screen compositions (catalog rows added the same day).
+import { Text as RNText } from "react-native";
+import { ChatMessage, ChatScreen, CompositionLayout, IconTile, MessageComposer, NotificationInboxScreen, NotificationItem, NotificationRow, ScreenLayout, SettingsScreen } from "../src/screens.js";
+import { CommentThreadRow, CommentThreadScreen, EditorScreen, ListDetailScreen, MediaSelectionScreen, ModerationScreen, PermissionScreen, PhotoSourceSheet, ProfileScreen, ProfileSummary, SearchScreen } from "../src/screen-flows.js";
 import { Masonry } from "../src/masonry.js";
 import { VirtualList } from "../src/virtual-list.js";
 import { QRCode } from "../src/qr-code.js";
@@ -134,6 +138,14 @@ const defaultCalendarGrid = {
 
 
 /** Literal case ids are consumed by the fail-closed evidence checker. */
+/** Shared stubs for the screen composition cases below. */
+const screenNoop = () => {};
+const screenAction = (label: string) => ({ label, onAction: screenNoop });
+const screenDiscard = { mode: "confirm" as const, title: "초안을 버릴까요?", description: "입력이 사라집니다", confirmLabel: "버리기", cancelLabel: "계속 작성", fallbackErrorMessage: "실패" };
+const screenUploadLabels = { pending: "대기 중", uploading: "업로드 중", success: "완료", cancel: "취소", retry: "다시 시도" };
+const screenPhotoLabels = { title: "사진 가져오기", library: "앨범에서 선택", camera: "카메라로 촬영", cancel: "취소" };
+const screenComments = [{ id: "c1", parentId: null, author: "서연", body: "첫 댓글이에요", timeLabel: "방금", likeCountLabel: "좋아요 3개", likeIcon: <RNText>♡</RNText>, likeLabel: "좋아요" }];
+
 export const defaultRenderCases = [
   {
     componentId: "design-system-provider",
@@ -721,5 +733,108 @@ export const defaultRenderCases = [
         }]}
       />
     ),
+  },
+  // 2026-10-17 screen compositions registered.
+  {
+    componentId: "screen-layout",
+    renderLongCopy: (copy) => <ScreenLayout title={copy}><RNText>본문</RNText></ScreenLayout>,
+    render: () => <ScreenLayout title="화면"><RNText>본문</RNText></ScreenLayout>,
+  },
+  {
+    componentId: "composition-layout",
+    renderLongCopy: (copy) => <CompositionLayout title={copy} description={copy}><RNText>본문</RNText></CompositionLayout>,
+    render: () => <CompositionLayout title="구성" description="설명"><RNText>본문</RNText></CompositionLayout>,
+  },
+  {
+    componentId: "settings-screen",
+    renderLongCopy: (copy) => <SettingsScreen title={copy} sections={[{ id: "account", title: copy, children: <RNText>이메일</RNText> }]} />,
+    render: () => <SettingsScreen title="설정" sections={[{ id: "account", title: "계정", children: <RNText>이메일</RNText> }]} />,
+  },
+  {
+    componentId: "search-screen",
+    renderLongCopy: (copy) => <SearchScreen title={copy} queryLabel="검색어" queryClearLabel="지우기" query="" onQueryChange={screenNoop} onSearch={screenNoop}><RNText>결과</RNText></SearchScreen>,
+    render: () => <SearchScreen title="검색" queryLabel="검색어" queryClearLabel="지우기" query="" onQueryChange={screenNoop} onSearch={screenNoop}><RNText>결과</RNText></SearchScreen>,
+  },
+  {
+    componentId: "editor-screen",
+    renderLongCopy: (copy) => <EditorScreen title={copy} dirty={false} submit={screenAction("저장")} cancel={screenAction("닫기")} discard={screenDiscard}><RNText>본문</RNText></EditorScreen>,
+    render: () => <EditorScreen title="작성" dirty={false} submit={screenAction("저장")} cancel={screenAction("닫기")} discard={screenDiscard}><RNText>본문</RNText></EditorScreen>,
+  },
+  {
+    componentId: "permission-screen",
+    renderLongCopy: (copy) => <PermissionScreen title={copy} status="prompt" explanation={<RNText>{copy}</RNText>} request={screenAction("허용")} settings={screenAction("설정")} continueAction={screenAction("계속")} />,
+    render: () => <PermissionScreen title="카메라" status="prompt" explanation={<RNText>사진을 올리려면 카메라가 필요해요</RNText>} request={screenAction("허용")} settings={screenAction("설정")} continueAction={screenAction("계속")} />,
+  },
+  {
+    componentId: "moderation-screen",
+    renderLongCopy: (copy) => <ModerationScreen title={copy} reasons={[{ value: "spam", label: "스팸" }]} reason={null} onReasonChange={screenNoop} reasonLabel="사유" submit={screenAction("보내기")} />,
+    render: () => <ModerationScreen title="신고" reasons={[{ value: "spam", label: "스팸" }]} reason={null} onReasonChange={screenNoop} reasonLabel="사유" submit={screenAction("보내기")} />,
+  },
+  {
+    componentId: "chat-screen",
+    renderLongCopy: (copy) => <ChatScreen title={copy} composer={<RNText>작성창</RNText>} />,
+    render: () => <ChatScreen title="대화" composer={<RNText>작성창</RNText>} />,
+  },
+  {
+    componentId: "notification-inbox-screen",
+    renderLongCopy: (copy) => <NotificationInboxScreen title={copy}><RNText>알림 목록</RNText></NotificationInboxScreen>,
+    render: () => <NotificationInboxScreen title="알림"><RNText>알림 목록</RNText></NotificationInboxScreen>,
+  },
+  {
+    componentId: "comment-thread-screen",
+    renderLongCopy: (copy) => <CommentThreadScreen title={copy} items={[{ ...screenComments[0]!, body: copy }]} expandedIds={[]} onExpandedChange={screenNoop} onLike={screenNoop} onReply={screenNoop} replyLabel="답글" repliesLabel={(count) => `답글 ${count}개`} />,
+    render: () => <CommentThreadScreen title="댓글" items={screenComments} expandedIds={[]} onExpandedChange={screenNoop} onLike={screenNoop} onReply={screenNoop} replyLabel="답글" repliesLabel={(count) => `답글 ${count}개`} />,
+  },
+  {
+    componentId: "list-detail-screen",
+    renderLongCopy: (copy) => <ListDetailScreen title={copy} list={<RNText>목록</RNText>} back={screenAction("뒤로")} />,
+    render: () => <ListDetailScreen title="목록" list={<RNText>목록</RNText>} back={screenAction("뒤로")} />,
+  },
+  {
+    componentId: "media-selection-screen",
+    renderLongCopy: (copy) => <MediaSelectionScreen title={copy} items={[]} done={screenAction("완료")} labels={screenUploadLabels} actionLabels={{ remove: "제거", moveUp: "위로", moveDown: "아래로" }} removeLabel={() => "제거"} moveUpLabel={() => "위로"} moveDownLabel={() => "아래로"} onRemove={screenNoop} onMove={screenNoop} onRetry={screenNoop} onCancel={screenNoop} />,
+    render: () => <MediaSelectionScreen title="사진 선택" items={[]} done={screenAction("완료")} labels={screenUploadLabels} actionLabels={{ remove: "제거", moveUp: "위로", moveDown: "아래로" }} removeLabel={() => "제거"} moveUpLabel={() => "위로"} moveDownLabel={() => "아래로"} onRemove={screenNoop} onMove={screenNoop} onRetry={screenNoop} onCancel={screenNoop} />,
+  },
+  {
+    componentId: "profile-screen",
+    renderLongCopy: (copy) => <ProfileScreen title={copy} summary={<RNText>요약</RNText>} edit={screenAction("편집")} />,
+    render: () => <ProfileScreen title="프로필" summary={<RNText>요약</RNText>} edit={screenAction("편집")} />,
+  },
+  {
+    componentId: "chat-message",
+    renderLongCopy: (copy) => <ChatMessage direction="incoming" author="서연" timestamp="지금"><RNText>{copy}</RNText></ChatMessage>,
+    render: () => <ChatMessage direction="incoming" author="서연" timestamp="지금"><RNText>안녕하세요</RNText></ChatMessage>,
+  },
+  {
+    componentId: "notification-row",
+    renderLongCopy: (copy) => <NotificationRow preview={<RNText>{copy}</RNText>} metadata="방금" avatar={<RNText>S</RNText>} />,
+    render: () => <NotificationRow preview={<RNText>새 답글이 달렸어요</RNText>} metadata="방금" avatar={<RNText>S</RNText>} />,
+  },
+  {
+    componentId: "notification-item",
+    renderLongCopy: (copy) => <NotificationItem title={copy} read={false} statusLabel="읽지 않음" timestamp="방금" />,
+    render: () => <NotificationItem title="답글" read={false} statusLabel="읽지 않음" timestamp="방금" />,
+  },
+  {
+    componentId: "comment-thread-row",
+    renderLongCopy: (copy) => <CommentThreadRow item={{ ...screenComments[0]!, body: copy }} onLike={screenNoop} onReply={screenNoop} replyLabel="답글" />,
+    render: () => <CommentThreadRow item={screenComments[0]!} onLike={screenNoop} onReply={screenNoop} replyLabel="답글" />,
+  },
+  {
+    componentId: "profile-summary",
+    renderLongCopy: (copy) => <ProfileSummary name={copy} avatar={<RNText>S</RNText>} />,
+    render: () => <ProfileSummary name="서연" avatar={<RNText>S</RNText>} />,
+  },
+  {
+    componentId: "icon-tile",
+    render: () => <IconTile icon={<RNText>★</RNText>} label="도구" />,
+  },
+  {
+    componentId: "message-composer",
+    render: () => <MessageComposer value="" label="메시지" sendLabel="전송" onValueChange={screenNoop} onSend={screenNoop} />,
+  },
+  {
+    componentId: "photo-source-sheet",
+    render: () => <PhotoSourceSheet open onOpenChange={screenNoop} onSelect={screenNoop} labels={screenPhotoLabels} />,
   },
 ] as const satisfies readonly DefaultRenderCase[];

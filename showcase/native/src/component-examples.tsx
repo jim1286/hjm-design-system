@@ -11,7 +11,10 @@ import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "@hjmds/react
 import { Carousel } from "@hjmds/react-native/carousel";
 import { Top } from "@hjmds/react-native/top";
 import { useRef, useState, type ReactNode } from "react";
-import { ScrollView, StyleSheet, TextInput, View } from "react-native";
+import { ScrollView, StyleSheet, TextInput, View, Text as RNText } from "react-native";
+// 2026-10-17 screen compositions registered.
+import { ChatMessage, ChatScreen, CompositionLayout, IconTile, MessageComposer, NotificationInboxScreen, NotificationItem, NotificationRow, ScreenLayout, SettingsScreen } from "@hjmds/react-native/screens";
+import { CommentThreadRow, CommentThreadScreen, EditorScreen, ListDetailScreen, MediaSelectionScreen, ModerationScreen, OnboardingScreen, PermissionScreen, PhotoSourceSheet, ProfileScreen, ProfileSummary, SearchScreen } from "@hjmds/react-native/screen-flows";
 import { Button, BottomCTA, IconButton, Link } from "@hjmds/react-native/actions";
 import {
   Accordion,
@@ -817,6 +820,80 @@ return (<StoryFrame><ImageChoiceGroup label={imageChoiceExample.label} showLabel
   <Text tone="muted" accessibilityLiveRegion="polite">{imageChoiceExample.result(chosen.label)}</Text></StoryFrame>);
 }
 
+
+// 2026-10-17 screen compositions registered. Minimal fixtures for the screen composition rows; richer flows stay in the 화면 stories.
+const screenNoop = () => {};
+const screenAction = (label: string) => ({ label, onAction: screenNoop });
+const screenDiscard = { mode: "confirm" as const, title: "초안을 버릴까요?", description: "입력이 사라집니다", confirmLabel: "버리기", cancelLabel: "계속 작성", fallbackErrorMessage: "실패" };
+const screenUploadLabels = { pending: "대기 중", uploading: "업로드 중", success: "완료", cancel: "취소", retry: "다시 시도" };
+const screenPhotoLabels = { title: "사진 가져오기", library: "앨범에서 선택", camera: "카메라로 촬영", cancel: "취소" };
+const screenComments = [{ id: "c1", parentId: null, author: "서연", body: "첫 댓글이에요", timeLabel: "방금", likeCountLabel: "좋아요 3개", likeIcon: <RNText>♡</RNText>, likeLabel: "좋아요" }];
+function ScreenLayoutExample({ variant: _variant }: { variant: PreviewVariant }) {
+  return (<StoryFrame><ScreenLayout title="화면"><RNText>본문</RNText></ScreenLayout></StoryFrame>);
+}
+function CompositionLayoutExample({ variant: _variant }: { variant: PreviewVariant }) {
+  return (<StoryFrame><CompositionLayout title="구성" description="설명"><RNText>본문</RNText></CompositionLayout></StoryFrame>);
+}
+function SettingsScreenExample({ variant: _variant }: { variant: PreviewVariant }) {
+  return (<StoryFrame><SettingsScreen title="설정" sections={[{ id: "account", title: "계정", children: <RNText>이메일</RNText> }]} /></StoryFrame>);
+}
+function SearchScreenExample({ variant: _variant }: { variant: PreviewVariant }) {
+  return (<StoryFrame><SearchScreen title="검색" queryLabel="검색어" queryClearLabel="지우기" query="" onQueryChange={screenNoop} onSearch={screenNoop}><RNText>결과</RNText></SearchScreen></StoryFrame>);
+}
+function EditorScreenExample({ variant: _variant }: { variant: PreviewVariant }) {
+  return (<StoryFrame><EditorScreen title="작성" dirty={false} submit={screenAction("저장")} cancel={screenAction("닫기")} discard={screenDiscard}><RNText>본문</RNText></EditorScreen></StoryFrame>);
+}
+function PermissionScreenExample({ variant: _variant }: { variant: PreviewVariant }) {
+  return (<StoryFrame><PermissionScreen title="카메라" status="prompt" explanation={<RNText>사진을 올리려면 카메라가 필요해요</RNText>} request={screenAction("허용")} settings={screenAction("설정")} continueAction={screenAction("계속")} /></StoryFrame>);
+}
+function ModerationScreenExample({ variant: _variant }: { variant: PreviewVariant }) {
+  return (<StoryFrame><ModerationScreen title="신고" reasons={[{ value: "spam", label: "스팸" }]} reason={null} onReasonChange={screenNoop} reasonLabel="사유" submit={screenAction("보내기")} /></StoryFrame>);
+}
+function ChatScreenExample({ variant: _variant }: { variant: PreviewVariant }) {
+  return (<StoryFrame><ChatScreen title="대화" composer={<RNText>작성창</RNText>} /></StoryFrame>);
+}
+function NotificationInboxScreenExample({ variant: _variant }: { variant: PreviewVariant }) {
+  return (<StoryFrame><NotificationInboxScreen title="알림"><RNText>알림 목록</RNText></NotificationInboxScreen></StoryFrame>);
+}
+function CommentThreadScreenExample({ variant: _variant }: { variant: PreviewVariant }) {
+  return (<StoryFrame><CommentThreadScreen title="댓글" items={screenComments} expandedIds={[]} onExpandedChange={screenNoop} onLike={screenNoop} onReply={screenNoop} replyLabel="답글" repliesLabel={(count) => `답글 ${count}개`} /></StoryFrame>);
+}
+function ListDetailScreenExample({ variant: _variant }: { variant: PreviewVariant }) {
+  return (<StoryFrame><ListDetailScreen title="목록" list={<RNText>목록</RNText>} back={screenAction("뒤로")} /></StoryFrame>);
+}
+function MediaSelectionScreenExample({ variant: _variant }: { variant: PreviewVariant }) {
+  return (<StoryFrame><MediaSelectionScreen title="사진 선택" items={[]} done={screenAction("완료")} labels={screenUploadLabels} actionLabels={{ remove: "제거", moveUp: "위로", moveDown: "아래로" }} removeLabel={() => "제거"} moveUpLabel={() => "위로"} moveDownLabel={() => "아래로"} onRemove={screenNoop} onMove={screenNoop} onRetry={screenNoop} onCancel={screenNoop} /></StoryFrame>);
+}
+function ProfileScreenExample({ variant: _variant }: { variant: PreviewVariant }) {
+  return (<StoryFrame><ProfileScreen title="프로필" summary={<RNText>요약</RNText>} edit={screenAction("편집")} /></StoryFrame>);
+}
+function ChatMessageExample({ variant: _variant }: { variant: PreviewVariant }) {
+  return (<StoryFrame><ChatMessage direction="incoming" author="서연" timestamp="지금"><RNText>안녕하세요</RNText></ChatMessage></StoryFrame>);
+}
+function NotificationRowExample({ variant: _variant }: { variant: PreviewVariant }) {
+  return (<StoryFrame><NotificationRow preview={<RNText>새 답글이 달렸어요</RNText>} metadata="방금" avatar={<RNText>S</RNText>} /></StoryFrame>);
+}
+function NotificationItemExample({ variant: _variant }: { variant: PreviewVariant }) {
+  return (<StoryFrame><NotificationItem title="답글" read={false} statusLabel="읽지 않음" timestamp="방금" /></StoryFrame>);
+}
+function CommentThreadRowExample({ variant: _variant }: { variant: PreviewVariant }) {
+  return (<StoryFrame><CommentThreadRow item={screenComments[0]!} onLike={screenNoop} onReply={screenNoop} replyLabel="답글" /></StoryFrame>);
+}
+function ProfileSummaryExample({ variant: _variant }: { variant: PreviewVariant }) {
+  return (<StoryFrame><ProfileSummary name="서연" avatar={<RNText>S</RNText>} /></StoryFrame>);
+}
+function IconTileExample({ variant: _variant }: { variant: PreviewVariant }) {
+  return (<StoryFrame><IconTile icon={<RNText>★</RNText>} label="도구" /></StoryFrame>);
+}
+function MessageComposerExample({ variant: _variant }: { variant: PreviewVariant }) {
+  const [value, setValue] = useState("");
+  return (<StoryFrame><MessageComposer value={value} label="메시지" sendLabel="전송" onValueChange={setValue} onSend={() => setValue("")} /></StoryFrame>);
+}
+function PhotoSourceSheetExample({ variant: _variant }: { variant: PreviewVariant }) {
+  const [open, setOpen] = useState(false);
+  return (<StoryFrame><Button onPress={() => setOpen(true)}>사진 가져오기</Button><PhotoSourceSheet open={open} onOpenChange={setOpen} onSelect={() => setOpen(false)} labels={screenPhotoLabels} /></StoryFrame>);
+}
+
 const examples = {
 "design-system-provider": DesignSystemProviderExample,
 "text": TextExample,
@@ -896,7 +973,28 @@ const examples = {
 "dialog": DialogExample,
 "alert-dialog": AlertDialogExample,
 "sheet": SheetExample,
-"floating-action-button": FloatingActionButtonExample
+"floating-action-button": FloatingActionButtonExample,
+"screen-layout": ScreenLayoutExample,
+"composition-layout": CompositionLayoutExample,
+"settings-screen": SettingsScreenExample,
+"search-screen": SearchScreenExample,
+"editor-screen": EditorScreenExample,
+"permission-screen": PermissionScreenExample,
+"moderation-screen": ModerationScreenExample,
+"chat-screen": ChatScreenExample,
+"notification-inbox-screen": NotificationInboxScreenExample,
+"comment-thread-screen": CommentThreadScreenExample,
+"list-detail-screen": ListDetailScreenExample,
+"media-selection-screen": MediaSelectionScreenExample,
+"profile-screen": ProfileScreenExample,
+"chat-message": ChatMessageExample,
+"notification-row": NotificationRowExample,
+"notification-item": NotificationItemExample,
+"comment-thread-row": CommentThreadRowExample,
+"profile-summary": ProfileSummaryExample,
+"icon-tile": IconTileExample,
+"message-composer": MessageComposerExample,
+"photo-source-sheet": PhotoSourceSheetExample
 };
 export function NativeComponentPreview({ componentId, variant = "default" }: { componentId: keyof typeof examples; variant?: PreviewVariant }) { const Example = examples[componentId]; return <Example variant={variant} />; }
 const styles = StyleSheet.create({

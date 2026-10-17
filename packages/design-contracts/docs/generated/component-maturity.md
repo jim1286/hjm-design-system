@@ -4,9 +4,9 @@
 
 This document is the human-readable projection of the same catalog and Showcase manifest consumed by product CI.
 
-- Contract: stable 103 · beta 2
-- Web renderer: stable 103 · beta 2
-- Native renderer: stable 83 · beta 4 · unsupported 18
+- Contract: stable 103 · beta 24
+- Web renderer: stable 103 · beta 24
+- Native renderer: stable 83 · beta 26 · unsupported 18
 
 | Component | Canonical story ID | Contract | Web | Native | Documentation | Required evidence |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -115,3 +115,25 @@ This document is the human-readable projection of the same catalog and Showcase 
 | DesignSystemProvider | `provider/design-system-provider` | stable | stable | stable | [authored](../design-system-provider.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | SkipNav | `utility/skip-nav` | stable | stable | unsupported | [authored](../skip-nav.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
 | VisuallyHidden | `utility/visually-hidden` | stable | stable | unsupported | [authored](../visually-hidden.md) | contract: contract; web: default, dark, large-text, rtl, reduced-motion, accessibility |
+| ScreenLayout | `layout/screen-layout` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| CompositionLayout | `layout/composition-layout` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| SettingsScreen | `layout/settings-screen` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| SearchScreen | `layout/search-screen` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| EditorScreen | `layout/editor-screen` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| PermissionScreen | `layout/permission-screen` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| OnboardingScreen | `layout/onboarding-screen` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| ModerationScreen | `layout/moderation-screen` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| ChatScreen | `layout/chat-screen` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| NotificationInboxScreen | `layout/notification-inbox-screen` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| CommentThreadScreen | `layout/comment-thread-screen` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| ListDetailScreen | `layout/list-detail-screen` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| MediaSelectionScreen | `layout/media-selection-screen` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| ProfileScreen | `layout/profile-screen` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| ChatMessage | `data-display/chat-message` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| NotificationRow | `data-display/notification-row` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| NotificationItem | `data-display/notification-item` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| CommentThreadRow | `data-display/comment-thread-row` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| ProfileSummary | `data-display/profile-summary` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| IconTile | `data-display/icon-tile` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| MessageComposer | `input/message-composer` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| PhotoSourceSheet | `overlay/photo-source-sheet` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |

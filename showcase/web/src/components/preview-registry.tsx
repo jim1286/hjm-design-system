@@ -1,4 +1,6 @@
 import { DialogPreview, AlertDialogPreview } from "./dialog-examples.js";
+// 2026-10-17 screen compositions registered.
+import { ScreenLayoutPreview, CompositionLayoutPreview, SettingsScreenPreview, SearchScreenPreview, EditorScreenPreview, PermissionScreenPreview, OnboardingScreenPreview, ModerationScreenPreview, ChatScreenPreview, NotificationInboxScreenPreview, CommentThreadScreenPreview, ListDetailScreenPreview, MediaSelectionScreenPreview, ProfileScreenPreview, ChatMessagePreview, NotificationRowPreview, NotificationItemPreview, CommentThreadRowPreview, ProfileSummaryPreview, IconTilePreview, MessageComposerPreview, PhotoSourceSheetPreview } from "../patterns/ScreenComponents.previews.js";
 import { WebAdditionsPreview } from "../patterns/WebAdditions.previews.js";
 import { calendarExampleGrid } from "../../../shared/calendar-example.js";
 import { DataLayoutPreview } from "../patterns/DataLayouts.previews.js";
@@ -352,6 +354,28 @@ export const webRendererComponentNames = [
   "Tooltip",
   "VisuallyHidden",
   "DesignSystemProvider",
+  "ScreenLayout",
+  "CompositionLayout",
+  "SettingsScreen",
+  "SearchScreen",
+  "EditorScreen",
+  "PermissionScreen",
+  "OnboardingScreen",
+  "ModerationScreen",
+  "ChatScreen",
+  "NotificationInboxScreen",
+  "CommentThreadScreen",
+  "ListDetailScreen",
+  "MediaSelectionScreen",
+  "ProfileScreen",
+  "ChatMessage",
+  "NotificationRow",
+  "NotificationItem",
+  "CommentThreadRow",
+  "ProfileSummary",
+  "IconTile",
+  "MessageComposer",
+  "PhotoSourceSheet",
 ] as const satisfies readonly ComponentName[];
 export type WebRendererComponentName = (typeof webRendererComponentNames)[number];
 type RecipeWebRendererComponentName = Exclude<
@@ -592,6 +616,28 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "Sheet": return <HjmSheet trigger={<HjmButton tone="secondary">{sheetExample.trigger}</HjmButton>} title={sheetExample.title} closeLabel={sheetExample.closeLabel} description={sheetExample.description} footer={<HjmButton>{sheetExample.apply}</HjmButton>}><HjmText as="p">{sheetExample.body}</HjmText></HjmSheet>;
     case "Tooltip": return <HjmStack gap="xs" align="start"><HjmTooltip trigger={<HjmIconButton label={tooltipExample.label} tone="ghost"><HjmIcon name="help" /></HjmIconButton>} content={tooltipExample.content} /><HjmText as="p" variant="label" tone="muted">{tooltipExample.hint}</HjmText></HjmStack>;
     case "VisuallyHidden": return <VisuallyHiddenPreview />;
+    case "ScreenLayout": return <ScreenLayoutPreview />;
+    case "CompositionLayout": return <CompositionLayoutPreview />;
+    case "SettingsScreen": return <SettingsScreenPreview />;
+    case "SearchScreen": return <SearchScreenPreview />;
+    case "EditorScreen": return <EditorScreenPreview />;
+    case "PermissionScreen": return <PermissionScreenPreview />;
+    case "OnboardingScreen": return <OnboardingScreenPreview />;
+    case "ModerationScreen": return <ModerationScreenPreview />;
+    case "ChatScreen": return <ChatScreenPreview />;
+    case "NotificationInboxScreen": return <NotificationInboxScreenPreview />;
+    case "CommentThreadScreen": return <CommentThreadScreenPreview />;
+    case "ListDetailScreen": return <ListDetailScreenPreview />;
+    case "MediaSelectionScreen": return <MediaSelectionScreenPreview />;
+    case "ProfileScreen": return <ProfileScreenPreview />;
+    case "ChatMessage": return <ChatMessagePreview />;
+    case "NotificationRow": return <NotificationRowPreview />;
+    case "NotificationItem": return <NotificationItemPreview />;
+    case "CommentThreadRow": return <CommentThreadRowPreview />;
+    case "ProfileSummary": return <ProfileSummaryPreview />;
+    case "IconTile": return <IconTilePreview />;
+    case "MessageComposer": return <MessageComposerPreview />;
+    case "PhotoSourceSheet": return <PhotoSourceSheetPreview />;
     default: return assertNever(name);
   }
 }
@@ -1007,6 +1053,28 @@ export const webRendererRegistry = {
   Tooltip: createWebRendererDefinition("Tooltip", "tooltipRecipe", "tooltip"),
   VisuallyHidden: createWebRendererDefinition("VisuallyHidden", "visuallyHiddenRecipe"),
   DesignSystemProvider: createProviderWebRendererDefinition(),
+  ScreenLayout: createWebRendererDefinition("ScreenLayout", "screenPatternRecipe"),
+  CompositionLayout: createWebRendererDefinition("CompositionLayout", "screenPatternRecipe"),
+  SettingsScreen: createWebRendererDefinition("SettingsScreen", "screenPatternRecipe"),
+  SearchScreen: createWebRendererDefinition("SearchScreen", "searchScreenRecipe"),
+  EditorScreen: createWebRendererDefinition("EditorScreen", "screenPatternRecipe"),
+  PermissionScreen: createWebRendererDefinition("PermissionScreen", "screenPatternRecipe"),
+  OnboardingScreen: createWebRendererDefinition("OnboardingScreen", "screenPatternRecipe"),
+  ModerationScreen: createWebRendererDefinition("ModerationScreen", "screenPatternRecipe"),
+  ChatScreen: createWebRendererDefinition("ChatScreen", "screenPatternRecipe"),
+  NotificationInboxScreen: createWebRendererDefinition("NotificationInboxScreen", "screenPatternRecipe"),
+  CommentThreadScreen: createWebRendererDefinition("CommentThreadScreen", "commentThreadRecipe"),
+  ListDetailScreen: createWebRendererDefinition("ListDetailScreen", "screenPatternRecipe"),
+  MediaSelectionScreen: createWebRendererDefinition("MediaSelectionScreen", "screenPatternRecipe"),
+  ProfileScreen: createWebRendererDefinition("ProfileScreen", "screenPatternRecipe"),
+  ChatMessage: createWebRendererDefinition("ChatMessage", "chatMessageRecipe"),
+  NotificationRow: createWebRendererDefinition("NotificationRow", "notificationRowRecipe"),
+  NotificationItem: createWebRendererDefinition("NotificationItem", "listRowRecipe"),
+  CommentThreadRow: createWebRendererDefinition("CommentThreadRow", "commentThreadRecipe"),
+  ProfileSummary: createWebRendererDefinition("ProfileSummary", "profileSummaryRecipe"),
+  IconTile: createWebRendererDefinition("IconTile", "iconTileRecipe"),
+  MessageComposer: createWebRendererDefinition("MessageComposer", "composerQuickInsertRecipe"),
+  PhotoSourceSheet: createWebRendererDefinition("PhotoSourceSheet", "sheetRecipe"),
 } satisfies Readonly<Record<WebRendererComponentName, WebRendererDefinition>>;
 
 export type WebShowcaseCoverageSummary = Readonly<{

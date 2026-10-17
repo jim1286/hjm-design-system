@@ -279,6 +279,38 @@ export const componentCatalog = [
   { name: "SkipNav", category: "utility", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), aliases: ["SkipLink"], recipe: "skipNavRecipe", behavior: "skipNav" },
   // Hidden copy is validated as an accessible node; visual long-copy overflow is inapplicable by design.
   { name: "VisuallyHidden", category: "utility", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), recipe: "visuallyHiddenRecipe", aliases: ["ScreenReaderOnly", "SrOnly"], ...evidenceNeeded("Chakra와 React Aria가 별도 접근성 primitive로 제공하는 문제를 Web에서 채택했습니다. Native는 중복 invisible node 대신 host accessibilityLabel/accessibilityHint를 사용하므로 의도적으로 지원하지 않습니다.") },
+  /*
+    2026-10-17 screen compositions registered. These screen compositions ship from the renderers' ./screens and ./screen-flows
+    subpaths and products use them as the common screen structure (2026-10-15 user rule), but they were
+    classified as supplemental to keep the catalog frozen. The consumer checker resolves imported symbols
+    only against canonical catalog ids, so 606 of 690 unresolved-symbol findings across six products (88%)
+    were these names (STANDARD_SCOPE_REVIEW_2026-10 §1.2). The freeze ended on 2026-10-17
+    (docs/stable-promotion.md), so they register as canonical rows. They start as beta on both surfaces:
+    the default proof and the claimed environment scenarios live in the renderer evidence manifests, and
+    any scenario still missing there is beta promotion debt, not a stable claim.
+  */
+  { name: "ScreenLayout", category: "layout", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "screenPatternRecipe" },
+  { name: "CompositionLayout", category: "layout", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "screenPatternRecipe" },
+  { name: "SettingsScreen", category: "layout", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "screenPatternRecipe" },
+  { name: "SearchScreen", category: "layout", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "searchScreenRecipe" },
+  { name: "EditorScreen", category: "layout", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "screenPatternRecipe" },
+  { name: "PermissionScreen", category: "layout", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "screenPatternRecipe" },
+  { name: "OnboardingScreen", category: "layout", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "screenPatternRecipe" },
+  { name: "ModerationScreen", category: "layout", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "screenPatternRecipe" },
+  { name: "ChatScreen", category: "layout", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "screenPatternRecipe" },
+  { name: "NotificationInboxScreen", category: "layout", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "screenPatternRecipe" },
+  { name: "CommentThreadScreen", category: "layout", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "commentThreadRecipe" },
+  { name: "ListDetailScreen", category: "layout", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "screenPatternRecipe" },
+  { name: "MediaSelectionScreen", category: "layout", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "screenPatternRecipe" },
+  { name: "ProfileScreen", category: "layout", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "screenPatternRecipe" },
+  { name: "ChatMessage", category: "data-display", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "chatMessageRecipe" },
+  { name: "NotificationRow", category: "data-display", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "notificationRowRecipe" },
+  { name: "NotificationItem", category: "data-display", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "listRowRecipe" },
+  { name: "CommentThreadRow", category: "data-display", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "commentThreadRecipe" },
+  { name: "ProfileSummary", category: "data-display", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "profileSummaryRecipe" },
+  { name: "IconTile", category: "data-display", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "iconTileRecipe" },
+  { name: "MessageComposer", category: "input", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "composerQuickInsertRecipe" },
+  { name: "PhotoSourceSheet", category: "overlay", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "sheetRecipe" },
 ] as const satisfies readonly ComponentCatalogEntry[];
 
 export type ComponentName = (typeof componentCatalog)[number]["name"];
@@ -392,6 +424,7 @@ import {
 } from "./recipes.js";
 import { floatingActionButtonRecipe } from "./floating-action-button.js";
 import { gridRecipe } from "./grid.js";
+import { screenPatternRecipe, searchScreenRecipe, chatMessageRecipe, commentThreadRecipe, notificationRowRecipe, profileSummaryRecipe, iconTileRecipe, composerQuickInsertRecipe } from "./screen-patterns.js";
 
 /** One typed registry prevents catalog recipe names from drifting into strings. */
 export const recipeRegistry = {
@@ -493,6 +526,15 @@ export const recipeRegistry = {
   treeRecipe,
   uploadItemRecipe,
   visuallyHiddenRecipe,
+  // Screen composition recipes (2026-10-17): registered so the screen catalog rows can bind their own values.
+  screenPatternRecipe,
+  searchScreenRecipe,
+  chatMessageRecipe,
+  commentThreadRecipe,
+  notificationRowRecipe,
+  profileSummaryRecipe,
+  iconTileRecipe,
+  composerQuickInsertRecipe,
 } as const;
 
 export type RecipeName = keyof typeof recipeRegistry;

@@ -4,7 +4,7 @@ import { componentStory } from "../story-factory";
 
 // Role overview page: canonical components of one role on one page (Web only). Moved under 개요 on 2026-10-06 with its
 // id kept so the old 배포/컴포넌트/<역할> URLs still open; each component also has its own item now (docs/STORYBOOK_NAVIGATION.md §1.2).
-const meta = { includeStories: ["UploadItem","Avatar","Badge","CounterBadge","Card","List","ListRow","VirtualList","Accordion","Collapsible","Asset","Statistic","Timeline","Chart","DataTable","Tree","Calendar","Carousel","DescriptionList","Image","QRCode","Tag"], id: "components-data-display", title: "배포/컴포넌트/개요/데이터 표시 모아 보기", component: ContractStory, parameters: { controls: { disable: true } } } satisfies Meta<typeof ContractStory>;
+const meta = { includeStories: ["UploadItem","Avatar","Badge","CounterBadge","Card","List","ListRow","VirtualList","Accordion","Collapsible","Asset","Statistic","Timeline","Chart","DataTable","Tree","Calendar","Carousel","DescriptionList","Image","QRCode","Tag","ChatMessage","NotificationRow","NotificationItem","CommentThreadRow","ProfileSummary","IconTile"], id: "components-data-display", title: "배포/컴포넌트/개요/데이터 표시 모아 보기", component: ContractStory, parameters: { controls: { disable: true } } } satisfies Meta<typeof ContractStory>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
@@ -33,3 +33,10 @@ export const DescriptionList: Story = { ...componentStory("DescriptionList"), na
 export const Image: Story = { ...componentStory("Image"), name: "이미지" };
 export const QRCode: Story = { ...componentStory("QRCode"), name: "큐알 코드" };
 export const Tag: Story = { ...componentStory("Tag"), name: "태그" };
+// 2026-10-17 screen compositions registered.
+export const ChatMessage: Story = { ...componentStory("ChatMessage"), name: "채팅 말풍선" };
+export const NotificationRow: Story = { ...componentStory("NotificationRow"), name: "알림 미리보기 행" };
+export const NotificationItem: Story = { ...componentStory("NotificationItem"), name: "알림 목록 항목" };
+export const CommentThreadRow: Story = { ...componentStory("CommentThreadRow"), name: "댓글 행" };
+export const ProfileSummary: Story = { ...componentStory("ProfileSummary"), name: "프로필 요약" };
+export const IconTile: Story = { ...componentStory("IconTile"), name: "아이콘 타일" };

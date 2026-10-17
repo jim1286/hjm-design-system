@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "designSystemVersion": "1.28.1",
+  "designSystemVersion": "1.28.0",
   "source": "packages/design-contracts/docs/generated/showcase-manifest.json",
   "surfaces": {
     "web": {
       "packageName": "@hjmds/react",
-      "packageVersion": "1.28.1",
-      "activeComponents": 105,
-      "claimedComponents": 103,
-      "completeScenarioComponents": 103,
+      "packageVersion": "1.28.0",
+      "activeComponents": 127,
+      "claimedComponents": 125,
+      "completeScenarioComponents": 119,
       "components": [
         {
           "componentId": "text",
@@ -5697,15 +5697,1115 @@
             "reduced-motion"
           ],
           "missingScenarios": []
+        },
+        {
+          "componentId": "screen-layout",
+          "name": "ScreenLayout",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screens",
+          "exportNames": [
+            "ScreenLayout"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "screen-layout"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.browser.test.tsx",
+              "caseId": "screen-layout"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "composition-layout",
+          "name": "CompositionLayout",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screens",
+          "exportNames": [
+            "CompositionLayout"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "composition-layout"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.browser.test.tsx",
+              "caseId": "composition-layout"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "settings-screen",
+          "name": "SettingsScreen",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screens",
+          "exportNames": [
+            "SettingsScreen"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "settings-screen"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.browser.test.tsx",
+              "caseId": "settings-screen"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "search-screen",
+          "name": "SearchScreen",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screen-flows",
+          "exportNames": [
+            "SearchScreen"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "search-screen"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.browser.test.tsx",
+              "caseId": "search-screen"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "editor-screen",
+          "name": "EditorScreen",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screen-flows",
+          "exportNames": [
+            "EditorScreen"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "editor-screen"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.browser.test.tsx",
+              "caseId": "editor-screen"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "permission-screen",
+          "name": "PermissionScreen",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screen-flows",
+          "exportNames": [
+            "PermissionScreen"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "permission-screen"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.browser.test.tsx",
+              "caseId": "permission-screen"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "onboarding-screen",
+          "name": "OnboardingScreen",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screen-flows",
+          "exportNames": [
+            "OnboardingScreen"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "onboarding-screen"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.browser.test.tsx",
+              "caseId": "onboarding-screen"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "moderation-screen",
+          "name": "ModerationScreen",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screen-flows",
+          "exportNames": [
+            "ModerationScreen"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "moderation-screen"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.browser.test.tsx",
+              "caseId": "moderation-screen"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "chat-screen",
+          "name": "ChatScreen",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screens",
+          "exportNames": [
+            "ChatScreen"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "chat-screen"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.browser.test.tsx",
+              "caseId": "chat-screen"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "notification-inbox-screen",
+          "name": "NotificationInboxScreen",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screens",
+          "exportNames": [
+            "NotificationInboxScreen"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "notification-inbox-screen"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.browser.test.tsx",
+              "caseId": "notification-inbox-screen"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "comment-thread-screen",
+          "name": "CommentThreadScreen",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screen-flows",
+          "exportNames": [
+            "CommentThreadScreen"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "comment-thread-screen"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.browser.test.tsx",
+              "caseId": "comment-thread-screen"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "list-detail-screen",
+          "name": "ListDetailScreen",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screen-flows",
+          "exportNames": [
+            "ListDetailScreen"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "list-detail-screen"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.browser.test.tsx",
+              "caseId": "list-detail-screen"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "media-selection-screen",
+          "name": "MediaSelectionScreen",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screen-flows",
+          "exportNames": [
+            "MediaSelectionScreen"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "media-selection-screen"
+            },
+            {
+              "scenarios": [
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.browser.test.tsx",
+              "caseId": "media-selection-screen"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": [
+            "accessibility"
+          ]
+        },
+        {
+          "componentId": "profile-screen",
+          "name": "ProfileScreen",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screen-flows",
+          "exportNames": [
+            "ProfileScreen"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "profile-screen"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.browser.test.tsx",
+              "caseId": "profile-screen"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "chat-message",
+          "name": "ChatMessage",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screens",
+          "exportNames": [
+            "ChatMessage"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "chat-message"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.browser.test.tsx",
+              "caseId": "chat-message"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "notification-row",
+          "name": "NotificationRow",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screens",
+          "exportNames": [
+            "NotificationRow"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "notification-row"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.browser.test.tsx",
+              "caseId": "notification-row"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "notification-item",
+          "name": "NotificationItem",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screens",
+          "exportNames": [
+            "NotificationItem"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "notification-item"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion"
+              ],
+              "file": "test/scenario-matrix.browser.test.tsx",
+              "caseId": "notification-item"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion"
+          ],
+          "missingScenarios": [
+            "long-copy"
+          ]
+        },
+        {
+          "componentId": "comment-thread-row",
+          "name": "CommentThreadRow",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screen-flows",
+          "exportNames": [
+            "CommentThreadRow"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "comment-thread-row"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion"
+              ],
+              "file": "test/scenario-matrix.browser.test.tsx",
+              "caseId": "comment-thread-row"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion"
+          ],
+          "missingScenarios": [
+            "long-copy"
+          ]
+        },
+        {
+          "componentId": "profile-summary",
+          "name": "ProfileSummary",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screen-flows",
+          "exportNames": [
+            "ProfileSummary"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "profile-summary"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.browser.test.tsx",
+              "caseId": "profile-summary"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "icon-tile",
+          "name": "IconTile",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screens",
+          "exportNames": [
+            "IconTile"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "icon-tile"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion"
+              ],
+              "file": "test/scenario-matrix.browser.test.tsx",
+              "caseId": "icon-tile"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion"
+          ],
+          "missingScenarios": [
+            "long-copy"
+          ]
+        },
+        {
+          "componentId": "message-composer",
+          "name": "MessageComposer",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screens",
+          "exportNames": [
+            "MessageComposer"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "message-composer"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion"
+              ],
+              "file": "test/scenario-matrix.browser.test.tsx",
+              "caseId": "message-composer"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion"
+          ],
+          "missingScenarios": [
+            "long-copy"
+          ]
+        },
+        {
+          "componentId": "photo-source-sheet",
+          "name": "PhotoSourceSheet",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screen-flows",
+          "exportNames": [
+            "PhotoSourceSheet"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "photo-source-sheet"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion"
+              ],
+              "file": "test/scenario-matrix.browser.test.tsx",
+              "caseId": "photo-source-sheet"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion"
+          ],
+          "missingScenarios": [
+            "long-copy"
+          ]
         }
       ]
     },
     "native": {
       "packageName": "@hjmds/react-native",
-      "packageVersion": "1.28.1",
-      "activeComponents": 87,
-      "claimedComponents": 84,
-      "completeScenarioComponents": 83,
+      "packageVersion": "1.28.0",
+      "activeComponents": 109,
+      "claimedComponents": 105,
+      "completeScenarioComponents": 100,
       "components": [
         {
           "componentId": "text",
@@ -10322,6 +11422,1084 @@
             "long-copy"
           ],
           "missingScenarios": []
+        },
+        {
+          "componentId": "screen-layout",
+          "name": "ScreenLayout",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screens",
+          "exportNames": [
+            "ScreenLayout"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "screen-layout"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.test.tsx",
+              "caseId": "screen-layout"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "composition-layout",
+          "name": "CompositionLayout",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screens",
+          "exportNames": [
+            "CompositionLayout"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "composition-layout"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.test.tsx",
+              "caseId": "composition-layout"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "settings-screen",
+          "name": "SettingsScreen",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screens",
+          "exportNames": [
+            "SettingsScreen"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "settings-screen"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.test.tsx",
+              "caseId": "settings-screen"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "search-screen",
+          "name": "SearchScreen",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screen-flows",
+          "exportNames": [
+            "SearchScreen"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "search-screen"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.test.tsx",
+              "caseId": "search-screen"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "editor-screen",
+          "name": "EditorScreen",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screen-flows",
+          "exportNames": [
+            "EditorScreen"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "editor-screen"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.test.tsx",
+              "caseId": "editor-screen"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "permission-screen",
+          "name": "PermissionScreen",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screen-flows",
+          "exportNames": [
+            "PermissionScreen"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "permission-screen"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.test.tsx",
+              "caseId": "permission-screen"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "onboarding-screen",
+          "name": "OnboardingScreen",
+          "status": "beta",
+          "claimed": false,
+          "subpath": null,
+          "exportNames": [],
+          "proofs": [],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [],
+          "missingScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "componentId": "moderation-screen",
+          "name": "ModerationScreen",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screen-flows",
+          "exportNames": [
+            "ModerationScreen"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "moderation-screen"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.test.tsx",
+              "caseId": "moderation-screen"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "chat-screen",
+          "name": "ChatScreen",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screens",
+          "exportNames": [
+            "ChatScreen"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "chat-screen"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.test.tsx",
+              "caseId": "chat-screen"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "notification-inbox-screen",
+          "name": "NotificationInboxScreen",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screens",
+          "exportNames": [
+            "NotificationInboxScreen"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "notification-inbox-screen"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.test.tsx",
+              "caseId": "notification-inbox-screen"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "comment-thread-screen",
+          "name": "CommentThreadScreen",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screen-flows",
+          "exportNames": [
+            "CommentThreadScreen"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "comment-thread-screen"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.test.tsx",
+              "caseId": "comment-thread-screen"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "list-detail-screen",
+          "name": "ListDetailScreen",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screen-flows",
+          "exportNames": [
+            "ListDetailScreen"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "list-detail-screen"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.test.tsx",
+              "caseId": "list-detail-screen"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "media-selection-screen",
+          "name": "MediaSelectionScreen",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screen-flows",
+          "exportNames": [
+            "MediaSelectionScreen"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "media-selection-screen"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.test.tsx",
+              "caseId": "media-selection-screen"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "profile-screen",
+          "name": "ProfileScreen",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screen-flows",
+          "exportNames": [
+            "ProfileScreen"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "profile-screen"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.test.tsx",
+              "caseId": "profile-screen"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "chat-message",
+          "name": "ChatMessage",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screens",
+          "exportNames": [
+            "ChatMessage"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "chat-message"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.test.tsx",
+              "caseId": "chat-message"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "notification-row",
+          "name": "NotificationRow",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screens",
+          "exportNames": [
+            "NotificationRow"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "notification-row"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.test.tsx",
+              "caseId": "notification-row"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "notification-item",
+          "name": "NotificationItem",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screens",
+          "exportNames": [
+            "NotificationItem"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "notification-item"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.test.tsx",
+              "caseId": "notification-item"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "comment-thread-row",
+          "name": "CommentThreadRow",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screen-flows",
+          "exportNames": [
+            "CommentThreadRow"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "comment-thread-row"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion"
+              ],
+              "file": "test/scenario-matrix.test.tsx",
+              "caseId": "comment-thread-row"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion"
+          ],
+          "missingScenarios": [
+            "long-copy"
+          ]
+        },
+        {
+          "componentId": "profile-summary",
+          "name": "ProfileSummary",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screen-flows",
+          "exportNames": [
+            "ProfileSummary"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "profile-summary"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.test.tsx",
+              "caseId": "profile-summary"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "icon-tile",
+          "name": "IconTile",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screens",
+          "exportNames": [
+            "IconTile"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "icon-tile"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion"
+              ],
+              "file": "test/scenario-matrix.test.tsx",
+              "caseId": "icon-tile"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion"
+          ],
+          "missingScenarios": [
+            "long-copy"
+          ]
+        },
+        {
+          "componentId": "message-composer",
+          "name": "MessageComposer",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screens",
+          "exportNames": [
+            "MessageComposer"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "message-composer"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion"
+              ],
+              "file": "test/scenario-matrix.test.tsx",
+              "caseId": "message-composer"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion"
+          ],
+          "missingScenarios": [
+            "long-copy"
+          ]
+        },
+        {
+          "componentId": "photo-source-sheet",
+          "name": "PhotoSourceSheet",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screen-flows",
+          "exportNames": [
+            "PhotoSourceSheet"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "photo-source-sheet"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion"
+              ],
+              "file": "test/scenario-matrix.test.tsx",
+              "caseId": "photo-source-sheet"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion"
+          ],
+          "missingScenarios": [
+            "long-copy"
+          ]
         }
       ]
     }

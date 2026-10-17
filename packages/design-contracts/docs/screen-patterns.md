@@ -5,7 +5,14 @@
 사용자가 로그인·설정·알림·채팅 화면을 미리 일반화해 개발 생산성을 높이도록 요청했다.
 기존 AuthScreenLayout, Section, ListRow, TopBar, Layout, EmptyState, action-session,
 NotificationBell과 두 renderer의 exports를 비교했다. 새 primitive catalog를 늘리는 대신
-`@hjmds/react/screens`, `@hjmds/react-native/screens`의 supplemental 화면 조합으로 제공한다.
+`@hjmds/react/screens`, `@hjmds/react-native/screens`의 화면 조합으로 제공한다.
+
+2026-10-17 카탈로그 등록: 처음에는 동결된 catalog를 늘리지 않으려고 supplemental로 분류했으나, 소비 앱 검사기가 canonical id로만
+심볼을 해석해 여섯 제품의 미해석 finding 690건 중 606건(88%)이 이 화면 조합이었다(app-portfolio
+`docs/design/STANDARD_SCOPE_REVIEW_2026-10.md` §1.2). 같은 날 동결이 종료돼([승격 기준](stable-promotion.md)) 22종을 canonical
+행으로 등록했다. 양 surface `beta`이며 renderer 증거의 누락 시나리오(`webScenarioGaps`·`nativeScenarioGaps`)와 Native
+`OnboardingScreen` claim 부재(마운트 시 `ScrollView.scrollTo` 호출이 테스트 host에 없음)는 승격 부채다. 소비 앱은 `optionalBetaAdoptions`로
+채택을 기록한다.
 
 ## 현재 제품에서 확인한 반복과 차이
 

@@ -130,8 +130,9 @@ describe("component reference coverage", () => {
     // 2026-09-29 promotion: every beta renderer now has complete required evidence; Form's focus path was implemented, and ThinkingOrb Native passed installed iOS/Android Skia smoke.
     // 2026-10-14: Chart (both renderers) and the new Native DataTable start as beta until device evidence.
     // 2026-10-17: ImageChoiceGroup registers as beta on both renderers until behavior matrices cover it.
-    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.web === "beta").map(entry => entry.name)).toEqual(["ImageChoiceGroup", "Chart"]);
-    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.native === "beta").map(entry => entry.name)).toEqual(["ImageChoiceGroup", "Pagination", "DataTable", "Chart"]);
+    // 2026-10-17 screen compositions registered: the 22 screen compositions start as beta on both renderers (catalog.ts comment).
+    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.web === "beta").map(entry => entry.name)).toEqual(["ImageChoiceGroup", "Chart", "ScreenLayout", "CompositionLayout", "SettingsScreen", "SearchScreen", "EditorScreen", "PermissionScreen", "OnboardingScreen", "ModerationScreen", "ChatScreen", "NotificationInboxScreen", "CommentThreadScreen", "ListDetailScreen", "MediaSelectionScreen", "ProfileScreen", "ChatMessage", "NotificationRow", "NotificationItem", "CommentThreadRow", "ProfileSummary", "IconTile", "MessageComposer", "PhotoSourceSheet"]);
+    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.native === "beta").map(entry => entry.name)).toEqual(["ImageChoiceGroup", "Pagination", "DataTable", "Chart", "ScreenLayout", "CompositionLayout", "SettingsScreen", "SearchScreen", "EditorScreen", "PermissionScreen", "OnboardingScreen", "ModerationScreen", "ChatScreen", "NotificationInboxScreen", "CommentThreadScreen", "ListDetailScreen", "MediaSelectionScreen", "ProfileScreen", "ChatMessage", "NotificationRow", "NotificationItem", "CommentThreadRow", "ProfileSummary", "IconTile", "MessageComposer", "PhotoSourceSheet"]);
     expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.web === "stable")).toHaveLength(103);
     expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.native === "stable")).toHaveLength(83);
   });

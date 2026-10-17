@@ -1,3 +1,6 @@
+// 2026-10-17 screen compositions registered: screen compositions (catalog rows added the same day).
+import { ChatMessage, ChatScreen, CompositionLayout, IconTile, MessageComposer, NotificationInboxScreen, NotificationItem, NotificationRow, ScreenLayout, SettingsScreen } from "../src/screens.js";
+import { CommentThreadRow, CommentThreadScreen, EditorScreen, ListDetailScreen, MediaSelectionScreen, ModerationScreen, OnboardingScreen, PermissionScreen, PhotoSourceSheet, ProfileScreen, ProfileSummary, SearchScreen } from "../src/screen-flows.js";
 import { ColorPicker } from "../src/color-picker.js";
 import { Watermark } from "../src/watermark.js";
 import { Affix } from "../src/affix.js";
@@ -154,6 +157,14 @@ const defaultCalendarGrid = {
  * by reactRendererEvidence, while markers prevent an import-only smoke test
  * from satisfying a renderer claim.
  */
+/** Shared stubs for the screen composition fixtures below. */
+const screenNoop = () => {};
+const screenAction = (label: string) => ({ label, onAction: screenNoop });
+const screenDiscard = { mode: "confirm" as const, title: "초안을 버릴까요?", description: "입력이 사라집니다", confirmLabel: "버리기", cancelLabel: "계속 작성", fallbackErrorMessage: "실패" };
+const screenUploadLabels = { pending: "대기 중", uploading: "업로드 중", success: "완료", cancel: "취소", retry: "다시 시도" };
+const screenPhotoLabels = { title: "사진 가져오기", library: "앨범에서 선택", camera: "카메라로 촬영", cancel: "취소" };
+const screenComments = [{ id: "c1", parentId: null, author: "서연", body: <span>첫 댓글이에요</span>, timeLabel: "방금", likeCountLabel: "좋아요 3개", likeIcon: <span aria-hidden="true">♡</span>, likeLabel: "좋아요" }];
+
 export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   { componentId: "top-bar", marker: "hjm-top-bar", renderLongCopy: (copy) => <TopBar title={copy} />, render: () => <TopBar title="오늘의 할 일" /> },
   { componentId: "bottom-cta", marker: "hjm-bottom-cta", renderLongCopy: (copy) => <BottomCTA primaryAction={{ label: copy, onClick: () => {} }} />, render: () => <BottomCTA primaryAction={{ label: "계속", onClick: () => {} }} /> },
@@ -1083,5 +1094,135 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
         items={[{ id: "one", label: "One" }]}
       />
     ),
+  },
+  // 2026-10-17 screen compositions registered.
+  {
+    componentId: "screen-layout",
+    marker: "hjm-screen",
+    renderLongCopy: (copy) => <ScreenLayout title={copy}><span>본문</span></ScreenLayout>,
+    render: () => <ScreenLayout title="화면"><span>본문</span></ScreenLayout>,
+  },
+  {
+    componentId: "composition-layout",
+    marker: "hjm-stack",
+    renderLongCopy: (copy) => <CompositionLayout title={copy} description={copy}><span>본문</span></CompositionLayout>,
+    render: () => <CompositionLayout title="구성" description="설명"><span>본문</span></CompositionLayout>,
+  },
+  {
+    componentId: "settings-screen",
+    marker: "hjm-screen",
+    renderLongCopy: (copy) => <SettingsScreen title={copy} sections={[{ id: "account", title: copy, children: <span>이메일</span> }]} />,
+    render: () => <SettingsScreen title="설정" sections={[{ id: "account", title: "계정", children: <span>이메일</span> }]} />,
+  },
+  {
+    componentId: "search-screen",
+    marker: "hjm-screen",
+    renderLongCopy: (copy) => <SearchScreen title={copy} queryLabel="검색어" queryClearLabel="지우기" query="" onQueryChange={screenNoop} onSearch={screenNoop}><span>결과</span></SearchScreen>,
+    render: () => <SearchScreen title="검색" queryLabel="검색어" queryClearLabel="지우기" query="" onQueryChange={screenNoop} onSearch={screenNoop}><span>결과</span></SearchScreen>,
+  },
+  {
+    componentId: "editor-screen",
+    marker: "hjm-screen",
+    renderLongCopy: (copy) => <EditorScreen title={copy} dirty={false} submit={screenAction("저장")} cancel={screenAction("닫기")} discard={screenDiscard}><span>본문</span></EditorScreen>,
+    render: () => <EditorScreen title="작성" dirty={false} submit={screenAction("저장")} cancel={screenAction("닫기")} discard={screenDiscard}><span>본문</span></EditorScreen>,
+  },
+  {
+    componentId: "permission-screen",
+    marker: "hjm-screen",
+    renderLongCopy: (copy) => <PermissionScreen title={copy} status="prompt" explanation={<span>{copy}</span>} request={screenAction("허용")} settings={screenAction("설정")} continueAction={screenAction("계속")} />,
+    render: () => <PermissionScreen title="카메라" status="prompt" explanation={<span>사진을 올리려면 카메라가 필요해요</span>} request={screenAction("허용")} settings={screenAction("설정")} continueAction={screenAction("계속")} />,
+  },
+  {
+    componentId: "onboarding-screen",
+    marker: "hjm-screen",
+    renderLongCopy: (copy) => <OnboardingScreen steps={[{ id: "one", title: copy, description: copy, content: <span>내용</span> }]} index={0} onIndexChange={screenNoop} nextLabel="다음" backLabel="이전" complete={screenAction("완료")} progressLabel={(index, total) => `${index}/${total}`} />,
+    render: () => <OnboardingScreen steps={[{ id: "one", title: "시작", description: "안내", content: <span>내용</span> }]} index={0} onIndexChange={screenNoop} nextLabel="다음" backLabel="이전" complete={screenAction("완료")} progressLabel={(index, total) => `${index}/${total}`} />,
+  },
+  {
+    componentId: "moderation-screen",
+    marker: "hjm-screen",
+    renderLongCopy: (copy) => <ModerationScreen title={copy} reasons={[{ value: "spam", label: "스팸" }]} reason={null} onReasonChange={screenNoop} reasonLabel="사유" submit={screenAction("보내기")} />,
+    render: () => <ModerationScreen title="신고" reasons={[{ value: "spam", label: "스팸" }]} reason={null} onReasonChange={screenNoop} reasonLabel="사유" submit={screenAction("보내기")} />,
+  },
+  {
+    componentId: "chat-screen",
+    marker: "hjm-chat-screen",
+    renderLongCopy: (copy) => <ChatScreen title={copy} composer={<span>작성창</span>} />,
+    render: () => <ChatScreen title="대화" composer={<span>작성창</span>} />,
+  },
+  {
+    componentId: "notification-inbox-screen",
+    marker: "hjm-screen",
+    renderLongCopy: (copy) => <NotificationInboxScreen title={copy}><span>알림 목록</span></NotificationInboxScreen>,
+    render: () => <NotificationInboxScreen title="알림"><span>알림 목록</span></NotificationInboxScreen>,
+  },
+  {
+    componentId: "comment-thread-screen",
+    marker: "hjm-screen",
+    renderLongCopy: (copy) => <CommentThreadScreen title={copy} items={[{ ...screenComments[0]!, body: <span>{copy}</span> }]} expandedIds={[]} onExpandedChange={screenNoop} onLike={screenNoop} onReply={screenNoop} replyLabel="답글" repliesLabel={(count) => `답글 ${count}개`} />,
+    render: () => <CommentThreadScreen title="댓글" items={screenComments} expandedIds={[]} onExpandedChange={screenNoop} onLike={screenNoop} onReply={screenNoop} replyLabel="답글" repliesLabel={(count) => `답글 ${count}개`} />,
+  },
+  {
+    componentId: "list-detail-screen",
+    marker: "hjm-screen",
+    renderLongCopy: (copy) => <ListDetailScreen title={copy} list={<span>목록</span>} back={screenAction("뒤로")} />,
+    render: () => <ListDetailScreen title="목록" list={<span>목록</span>} back={screenAction("뒤로")} />,
+  },
+  {
+    componentId: "media-selection-screen",
+    marker: "hjm-screen",
+    renderLongCopy: (copy) => <MediaSelectionScreen title={copy} items={[]} done={screenAction("완료")} labels={screenUploadLabels} actionLabels={{ remove: "제거", moveUp: "위로", moveDown: "아래로" }} removeLabel={() => "제거"} moveUpLabel={() => "위로"} moveDownLabel={() => "아래로"} onRemove={screenNoop} onMove={screenNoop} onRetry={screenNoop} onCancel={screenNoop} />,
+    render: () => <MediaSelectionScreen title="사진 선택" items={[]} done={screenAction("완료")} labels={screenUploadLabels} actionLabels={{ remove: "제거", moveUp: "위로", moveDown: "아래로" }} removeLabel={() => "제거"} moveUpLabel={() => "위로"} moveDownLabel={() => "아래로"} onRemove={screenNoop} onMove={screenNoop} onRetry={screenNoop} onCancel={screenNoop} />,
+  },
+  {
+    componentId: "profile-screen",
+    marker: "hjm-screen",
+    renderLongCopy: (copy) => <ProfileScreen title={copy} summary={<span>요약</span>} edit={screenAction("편집")} />,
+    render: () => <ProfileScreen title="프로필" summary={<span>요약</span>} edit={screenAction("편집")} />,
+  },
+  {
+    componentId: "chat-message",
+    marker: "hjm-chat-message",
+    renderLongCopy: (copy) => <ChatMessage direction="incoming" author="서연" timestamp="지금">{copy}</ChatMessage>,
+    render: () => <ChatMessage direction="incoming" author="서연" timestamp="지금">안녕하세요</ChatMessage>,
+  },
+  {
+    componentId: "notification-row",
+    marker: "data-hjm-notification-row",
+    renderLongCopy: (copy) => <NotificationRow preview={<span>{copy}</span>} metadata="방금" avatar={<span aria-hidden="true">S</span>} />,
+    render: () => <NotificationRow preview={<span>새 답글이 달렸어요</span>} metadata="방금" avatar={<span aria-hidden="true">S</span>} />,
+  },
+  {
+    componentId: "notification-item",
+    marker: "hjm-notification-item",
+    renderLongCopy: (copy) => <NotificationItem title={copy} read={false} statusLabel="읽지 않음" timestamp="방금" />,
+    render: () => <NotificationItem title="답글" read={false} statusLabel="읽지 않음" timestamp="방금" />,
+  },
+  {
+    componentId: "comment-thread-row",
+    marker: "hjm-comment-row__text",
+    renderLongCopy: (copy) => <CommentThreadRow item={{ ...screenComments[0]!, body: <span>{copy}</span> }} onLike={screenNoop} onReply={screenNoop} replyLabel="답글" />,
+    render: () => <CommentThreadRow item={screenComments[0]!} onLike={screenNoop} onReply={screenNoop} replyLabel="답글" />,
+  },
+  {
+    componentId: "profile-summary",
+    marker: "hjm-stack",
+    renderLongCopy: (copy) => <ProfileSummary name={copy} avatar={<span aria-hidden="true">S</span>} />,
+    render: () => <ProfileSummary name="서연" avatar={<span aria-hidden="true">S</span>} />,
+  },
+  {
+    componentId: "icon-tile",
+    marker: "data-hjm-icon-tile",
+    render: () => <IconTile icon={<span aria-hidden="true">★</span>} label="도구" />,
+  },
+  {
+    componentId: "message-composer",
+    marker: "hjm-message-composer",
+    render: () => <MessageComposer value="" label="메시지" sendLabel="전송" onValueChange={screenNoop} onSend={screenNoop} />,
+  },
+  {
+    componentId: "photo-source-sheet",
+    marker: "hjm-sheet",
+    render: () => <PhotoSourceSheet open onOpenChange={screenNoop} onSelect={screenNoop} labels={screenPhotoLabels} />,
   },
 ];

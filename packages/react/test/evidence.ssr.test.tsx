@@ -19,6 +19,8 @@ import { URL, fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 import * as actions from "../src/actions.js";
+import * as screens from "../src/screens.js";
+import * as screenFlows from "../src/screen-flows.js";
 import * as datePicker from "../src/date-picker.js";
 import * as display from "../src/display-public.js";
 import {
@@ -78,6 +80,8 @@ const publicModules: Readonly<Record<string, Readonly<Record<string, unknown>>>>
   "./carousel": carousel,
   "./floating-action-button": floatingActionButton,
   "./actions": actions,
+  "./screens": screens,
+  "./screen-flows": screenFlows,
   "./date-picker": datePicker,
   "./calendar": calendar,
   "./anchor": anchor,
@@ -139,7 +143,8 @@ describe("@hjmds/react renderer evidence", () => {
     });
 
     const componentIds = reactRendererEvidence.components.map(({ componentId }) => componentId);
-    expect(componentIds).toHaveLength(103);
+    // 2026-10-17: 103 + 22 screen composition rows (catalog.ts).
+    expect(componentIds).toHaveLength(125);
     expect(new Set(componentIds).size).toBe(componentIds.length);
   });
 

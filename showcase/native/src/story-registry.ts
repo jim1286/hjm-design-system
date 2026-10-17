@@ -20,6 +20,10 @@ export const nativeRendererStoryGroups = {
   dataLayouts: ["masonry", "virtual-list", "qr-code"],
   thinkingOrb: ["thinking-orb"],
   overlays: ["dialog", "alert-dialog", "sheet"],
+  // 2026-10-17 screen compositions registered (onboarding-screen waits for a Native default proof; see evidence.ts).
+  screens: [
+    "screen-layout", "composition-layout", "settings-screen", "search-screen", "editor-screen", "permission-screen", "moderation-screen", "chat-screen", "notification-inbox-screen", "comment-thread-screen", "list-detail-screen", "media-selection-screen", "profile-screen", "chat-message", "notification-row", "notification-item", "comment-thread-row", "profile-summary", "icon-tile", "message-composer", "photo-source-sheet",
+  ],
 } as const;
 
 export const nativeRendererStoryIds = Object.values(nativeRendererStoryGroups).flat();

@@ -10,7 +10,11 @@ const matrixProofFile = "test/scenario-matrix.test.tsx";
  */
 const matrixScenarios = ["accessibility", "dark", "large-text", "rtl", "reduced-motion"];
 /** Scenarios a component does not pass yet; reported as promotion debt. */
-const nativeScenarioGaps = {};
+const nativeScenarioGaps = {
+    // 2026-10-17 screen compositions registered: CommentThreadRow renders the body through a nested Text the
+    // long-copy check does not see as the holder; beta debt until the row exposes the copy slot directly.
+    "comment-thread-row": ["long-copy"],
+};
 /** Cases that render long copy inside the component (renderLongCopy). */
 const nativeLongCopyCases = new Set([
     "masonry", "virtual-list", "qr-code",
@@ -80,6 +84,26 @@ const nativeLongCopyCases = new Set([
     "carousel",
     "dialog",
     "alert-dialog",
+    // 2026-10-17 screen compositions registered.
+    "screen-layout",
+    "composition-layout",
+    "settings-screen",
+    "search-screen",
+    "editor-screen",
+    "permission-screen",
+    "onboarding-screen",
+    "moderation-screen",
+    "chat-screen",
+    "notification-inbox-screen",
+    "comment-thread-screen",
+    "list-detail-screen",
+    "media-selection-screen",
+    "profile-screen",
+    "chat-message",
+    "notification-row",
+    "notification-item",
+    "comment-thread-row",
+    "profile-summary",
 ]);
 function defaultClaim(componentId, exportNames, subpath) {
     const gaps = nativeScenarioGaps[componentId] ?? [];
@@ -225,6 +249,32 @@ export const reactNativeRendererEvidence = {
         // This claim covers standard chrome. Liquid's mock lifecycle tests and showcase do not
         // certify device motion, VoiceOver/TalkBack, or the optional runtime support matrix.
         nativeActionClaim("toast", ["ToastRegion", "useToastRegion"], "./feedback"),
+        // 2026-10-17 screen compositions registered. Beta on both surfaces; gaps in nativeScenarioGaps are promotion debt.
+        defaultClaim("screen-layout", ["ScreenLayout"], "./screens"),
+        defaultClaim("composition-layout", ["CompositionLayout"], "./screens"),
+        defaultClaim("settings-screen", ["SettingsScreen"], "./screens"),
+        defaultClaim("search-screen", ["SearchScreen"], "./screen-flows"),
+        defaultClaim("editor-screen", ["EditorScreen"], "./screen-flows"),
+        defaultClaim("permission-screen", ["PermissionScreen"], "./screen-flows"),
+        // OnboardingScreen: no Native claim yet. Its mount effect calls ScrollView.scrollTo on the host ref, and the
+        // shared test-renderer harness (createNodeMock: () => ({})) has no host scroll method, so the default proof
+        // throws. The fix is a host-method guard in screen-flows.tsx (file under another session's edit on
+        // 2026-10-17); until then the Native surface stays beta without renderer evidence.
+        defaultClaim("moderation-screen", ["ModerationScreen"], "./screen-flows"),
+        defaultClaim("chat-screen", ["ChatScreen"], "./screens"),
+        defaultClaim("notification-inbox-screen", ["NotificationInboxScreen"], "./screens"),
+        defaultClaim("comment-thread-screen", ["CommentThreadScreen"], "./screen-flows"),
+        defaultClaim("list-detail-screen", ["ListDetailScreen"], "./screen-flows"),
+        defaultClaim("media-selection-screen", ["MediaSelectionScreen"], "./screen-flows"),
+        defaultClaim("profile-screen", ["ProfileScreen"], "./screen-flows"),
+        defaultClaim("chat-message", ["ChatMessage"], "./screens"),
+        defaultClaim("notification-row", ["NotificationRow"], "./screens"),
+        defaultClaim("notification-item", ["NotificationItem"], "./screens"),
+        defaultClaim("comment-thread-row", ["CommentThreadRow"], "./screen-flows"),
+        defaultClaim("profile-summary", ["ProfileSummary"], "./screen-flows"),
+        defaultClaim("icon-tile", ["IconTile"], "./screens"),
+        defaultClaim("message-composer", ["MessageComposer"], "./screens"),
+        defaultClaim("photo-source-sheet", ["PhotoSourceSheet"], "./screen-flows"),
     ],
 };
 //# sourceMappingURL=evidence.js.map

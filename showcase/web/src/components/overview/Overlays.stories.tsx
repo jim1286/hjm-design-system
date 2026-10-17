@@ -4,7 +4,7 @@ import { componentStory } from "../story-factory";
 
 // Role overview page: canonical components of one role on one page (Web only). Moved under 개요 on 2026-10-06 with its
 // id kept so the old 배포/컴포넌트/<역할> URLs still open; each component also has its own item now (docs/STORYBOOK_NAVIGATION.md §1.2).
-const meta = { includeStories: ["Tour","Dialog","AlertDialog","Sheet","SidePanel","Popover","Tooltip","CommandPalette"], id: "components-overlays", title: "배포/컴포넌트/개요/오버레이 모아 보기", component: ContractStory, parameters: { controls: { disable: true } } } satisfies Meta<typeof ContractStory>;
+const meta = { includeStories: ["Tour","Dialog","AlertDialog","Sheet","SidePanel","Popover","Tooltip","CommandPalette","PhotoSourceSheet"], id: "components-overlays", title: "배포/컴포넌트/개요/오버레이 모아 보기", component: ContractStory, parameters: { controls: { disable: true } } } satisfies Meta<typeof ContractStory>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
@@ -17,3 +17,5 @@ export const Popover: Story = { ...componentStory("Popover"), name: "팝오버" 
 export const Tooltip: Story = { ...componentStory("Tooltip"), name: "툴팁" };
 // Catalog category overlay is the Storybook role too (2026-10-06 follow-up reverted the same-day move to 탐색).
 export const CommandPalette: Story = { ...componentStory("CommandPalette"), name: "명령 검색" };
+// 2026-10-17 screen compositions registered.
+export const PhotoSourceSheet: Story = { ...componentStory("PhotoSourceSheet"), name: "사진 출처 시트" };

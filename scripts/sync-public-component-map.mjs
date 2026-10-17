@@ -15,9 +15,11 @@ const companions = {
   // Finite all-interactive placement extends List; it is not a selected Carousel panel.
   CollectionRail: "List",
   NavigationBar: "TopBar",
+  // 2026-10-17: hero/footer are the two named regions of the AuthScreenLayout contract (docs/auth-screen.md), not rows of their own.
+  AuthScreenHero: "AuthScreenLayout", AuthScreenFooter: "AuthScreenLayout",
   TextField: "Field", NativeSelect: "Select", Table: "DataTable", TabPanel: "Tabs",
   AvatarGroup: "Avatar", StatisticGroup: "Statistic", ToastProvider: "Toast", ToastRegion: "Toast",
-  ClipboardButton: "Button", OverlayStackProvider: "Dialog", AssetGroup: "Asset", TopBarAction: "TopBar",
+  ClipboardButton: "Button", ClipboardIconButton: "IconButton", OverlayStackProvider: "Dialog", AssetGroup: "Asset", TopBarAction: "TopBar",
   // 2026-10-14: chart kinds share one Chart contract (ChartSeries model, dataviz colors, focus, text
   // alternative), so they are companions of one catalog row rather than seven new rows (docs/chart.md).
   LineChart: "Chart", BarChart: "Chart", PieChart: "Chart", RadarChart: "Chart", ScatterChart: "Chart",
@@ -52,9 +54,10 @@ const supplemental = new Set([
   "ImportFieldMapping", "ConversionFunnel", "CohortRetentionTable", "CorrelationMatrix", "TargetSummary", "HistogramExplorer",
   "InlineEdit", "RepeatableFieldGroup", "SelectionActionBar", "FilterRecovery", "TableColumnSettings",
   "CodeBlock", "ActivityHeatmap",
-  // Screen compositions reuse canonical primitives; they do not expand the frozen catalog.
-  "CompositionLayout", "CommentThreadRow", "ConversationRow", "SavedItemsScreen", "CommentThreadScreen", "ListDetailScreen", "EditorScreen", "ProfileScreen", "ProfileSummary", "ModerationScreen", "MediaSelectionScreen", "PhotoSourceSheet", "SearchScreen", "PermissionScreen", "OnboardingScreen",
-  "OverviewScreen", "ScreenLayout", "SettingsScreen", "NotificationInboxScreen", "NotificationItem", "NotificationRow", "IconTile", "ChatScreen", "MessageComposer", "ChatMessage",
+  // 2026-10-17 screen compositions registered: the 22 screen compositions (ScreenLayout, SettingsScreen, ChatScreen, …) are canonical
+  // rows now (catalog.ts). The remaining names here are screen helpers without a contract of their own.
+  "ConversationRow", "SavedItemsScreen", 
+  "OverviewScreen", 
   // 2026-10-16: the context lets ScreenLayout/Sheet skip duplicate keyboard padding inside KeyboardAvoiding.
   // KeyboardAvoidanceContext is a companion of KeyboardAvoiding with no UI semantics of its own (stays supplemental).
   "KeyboardAvoiding", "KeyboardAvoidanceContext", "KeyboardMotionProvider", "KeyboardDock", "KeyboardFormScrollView",

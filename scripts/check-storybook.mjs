@@ -115,6 +115,9 @@ export const PLATFORM_ONLY = {
     "컴포넌트/기반 기능/화면 읽기 도구용 글자": WEB_API,
     "컴포넌트/입력/색상 선택기": WEB_API,
     "컴포넌트/오버레이/명령 검색": WEB_API,
+    // 2026-10-17 screen compositions registered: Native OnboardingScreen has no renderer evidence yet (its mount
+    // effect needs ScrollView.scrollTo, absent from the shared test-renderer harness), so the Native item waits.
+    "컴포넌트/레이아웃/온보딩 화면": "Native 증거 claim 대기(screen-flows.tsx scrollTo 가드 필요)",
     "컴포넌트/탐색/문서 내 바로가기": WEB_API,
     "컴포넌트/탐색/사이드바": WEB_API,
     "컴포넌트/탐색/사이드바 전환": WEB_API,

@@ -111,6 +111,28 @@ export declare const componentIds: {
     readonly DesignSystemProvider: "design-system-provider";
     readonly SkipNav: "skip-nav";
     readonly VisuallyHidden: "visually-hidden";
+    readonly ScreenLayout: "screen-layout";
+    readonly CompositionLayout: "composition-layout";
+    readonly SettingsScreen: "settings-screen";
+    readonly SearchScreen: "search-screen";
+    readonly EditorScreen: "editor-screen";
+    readonly PermissionScreen: "permission-screen";
+    readonly OnboardingScreen: "onboarding-screen";
+    readonly ModerationScreen: "moderation-screen";
+    readonly ChatScreen: "chat-screen";
+    readonly NotificationInboxScreen: "notification-inbox-screen";
+    readonly CommentThreadScreen: "comment-thread-screen";
+    readonly ListDetailScreen: "list-detail-screen";
+    readonly MediaSelectionScreen: "media-selection-screen";
+    readonly ProfileScreen: "profile-screen";
+    readonly ChatMessage: "chat-message";
+    readonly NotificationRow: "notification-row";
+    readonly NotificationItem: "notification-item";
+    readonly CommentThreadRow: "comment-thread-row";
+    readonly ProfileSummary: "profile-summary";
+    readonly IconTile: "icon-tile";
+    readonly MessageComposer: "message-composer";
+    readonly PhotoSourceSheet: "photo-source-sheet";
 };
 export type ComponentId = (typeof componentIds)[ComponentName];
 export type ComponentDefinition = Readonly<{

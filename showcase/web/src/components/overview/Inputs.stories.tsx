@@ -4,7 +4,7 @@ import { componentStory } from "../story-factory";
 
 // Role overview page: canonical components of one role on one page (Web only). Moved under 개요 on 2026-10-06 with its
 // id kept so the old 배포/컴포넌트/<역할> URLs still open; each component also has its own item now (docs/STORYBOOK_NAVIGATION.md §1.2).
-const meta = { includeStories: ["Field","SearchField","TextArea","PasswordField","OtpField","ImageChoiceGroup","Checkbox","Radio","CheckboxGroup","RadioGroup","Switch","Chip","SegmentedControl","Slider","NumberField","Select","Combobox","DatePicker","ColorPicker","FilePicker","Form","Agreement","ToggleGroup","TagsInput","DateRangePicker","Mentions","TransferList"], id: "components-inputs", title: "배포/컴포넌트/개요/입력 모아 보기", component: ContractStory, parameters: { controls: { disable: true } } } satisfies Meta<typeof ContractStory>;
+const meta = { includeStories: ["Field","SearchField","TextArea","PasswordField","OtpField","ImageChoiceGroup","Checkbox","Radio","CheckboxGroup","RadioGroup","Switch","Chip","SegmentedControl","Slider","NumberField","Select","Combobox","DatePicker","ColorPicker","FilePicker","Form","Agreement","ToggleGroup","TagsInput","DateRangePicker","Mentions","TransferList","MessageComposer"], id: "components-inputs", title: "배포/컴포넌트/개요/입력 모아 보기", component: ContractStory, parameters: { controls: { disable: true } } } satisfies Meta<typeof ContractStory>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
@@ -35,3 +35,5 @@ export const TagsInput: Story = { ...componentStory("TagsInput"), name: "태그 
 export const DateRangePicker: Story = { ...componentStory("DateRangePicker"), name: "기간 선택" };
 export const Mentions: Story = { ...componentStory("Mentions"), name: "사용자 언급" };
 export const TransferList: Story = { ...componentStory("TransferList"), name: "목록 간 항목 이동" };
+// 2026-10-17 screen compositions registered.
+export const MessageComposer: Story = { ...componentStory("MessageComposer"), name: "메시지 작성창" };

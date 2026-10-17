@@ -1296,6 +1296,226 @@ export declare const componentCatalog: readonly [{
     readonly category: "utility";
     readonly platform: "web";
     readonly status: "stable";
+}, {
+    readonly recipe: "screenPatternRecipe";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "ScreenLayout";
+    readonly category: "layout";
+    readonly platform: "adaptive";
+    readonly status: "beta";
+}, {
+    readonly recipe: "screenPatternRecipe";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "CompositionLayout";
+    readonly category: "layout";
+    readonly platform: "adaptive";
+    readonly status: "beta";
+}, {
+    readonly recipe: "screenPatternRecipe";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "SettingsScreen";
+    readonly category: "layout";
+    readonly platform: "adaptive";
+    readonly status: "beta";
+}, {
+    readonly recipe: "searchScreenRecipe";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "SearchScreen";
+    readonly category: "layout";
+    readonly platform: "adaptive";
+    readonly status: "beta";
+}, {
+    readonly recipe: "screenPatternRecipe";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "EditorScreen";
+    readonly category: "layout";
+    readonly platform: "adaptive";
+    readonly status: "beta";
+}, {
+    readonly recipe: "screenPatternRecipe";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "PermissionScreen";
+    readonly category: "layout";
+    readonly platform: "adaptive";
+    readonly status: "beta";
+}, {
+    readonly recipe: "screenPatternRecipe";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "OnboardingScreen";
+    readonly category: "layout";
+    readonly platform: "adaptive";
+    readonly status: "beta";
+}, {
+    readonly recipe: "screenPatternRecipe";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "ModerationScreen";
+    readonly category: "layout";
+    readonly platform: "adaptive";
+    readonly status: "beta";
+}, {
+    readonly recipe: "screenPatternRecipe";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "ChatScreen";
+    readonly category: "layout";
+    readonly platform: "adaptive";
+    readonly status: "beta";
+}, {
+    readonly recipe: "screenPatternRecipe";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "NotificationInboxScreen";
+    readonly category: "layout";
+    readonly platform: "adaptive";
+    readonly status: "beta";
+}, {
+    readonly recipe: "commentThreadRecipe";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "CommentThreadScreen";
+    readonly category: "layout";
+    readonly platform: "adaptive";
+    readonly status: "beta";
+}, {
+    readonly recipe: "screenPatternRecipe";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "ListDetailScreen";
+    readonly category: "layout";
+    readonly platform: "adaptive";
+    readonly status: "beta";
+}, {
+    readonly recipe: "screenPatternRecipe";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "MediaSelectionScreen";
+    readonly category: "layout";
+    readonly platform: "adaptive";
+    readonly status: "beta";
+}, {
+    readonly recipe: "screenPatternRecipe";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "ProfileScreen";
+    readonly category: "layout";
+    readonly platform: "adaptive";
+    readonly status: "beta";
+}, {
+    readonly recipe: "chatMessageRecipe";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "ChatMessage";
+    readonly category: "data-display";
+    readonly platform: "adaptive";
+    readonly status: "beta";
+}, {
+    readonly recipe: "notificationRowRecipe";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "NotificationRow";
+    readonly category: "data-display";
+    readonly platform: "adaptive";
+    readonly status: "beta";
+}, {
+    readonly recipe: "listRowRecipe";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "NotificationItem";
+    readonly category: "data-display";
+    readonly platform: "adaptive";
+    readonly status: "beta";
+}, {
+    readonly recipe: "commentThreadRecipe";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "CommentThreadRow";
+    readonly category: "data-display";
+    readonly platform: "adaptive";
+    readonly status: "beta";
+}, {
+    readonly recipe: "profileSummaryRecipe";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "ProfileSummary";
+    readonly category: "data-display";
+    readonly platform: "adaptive";
+    readonly status: "beta";
+}, {
+    readonly recipe: "iconTileRecipe";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "IconTile";
+    readonly category: "data-display";
+    readonly platform: "adaptive";
+    readonly status: "beta";
+}, {
+    readonly recipe: "composerQuickInsertRecipe";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "MessageComposer";
+    readonly category: "input";
+    readonly platform: "adaptive";
+    readonly status: "beta";
+}, {
+    readonly recipe: "sheetRecipe";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "PhotoSourceSheet";
+    readonly category: "overlay";
+    readonly platform: "adaptive";
+    readonly status: "beta";
 }];
 export type ComponentName = (typeof componentCatalog)[number]["name"];
 export declare function summarizeComponentRoadmap(entries?: readonly ComponentCatalogEntry[]): Readonly<Record<ComponentRoadmapState, number>>;
@@ -8651,6 +8871,94 @@ export declare const recipeRegistry: {
         readonly overflow: "hidden";
         readonly position: "absolute";
         readonly whiteSpace: "nowrap";
+    };
+    readonly screenPatternRecipe: {
+        readonly maxWidth: 720;
+        readonly padding: 16;
+        readonly sectionGap: 24;
+        readonly itemGap: 12;
+        readonly stateGap: 16;
+        readonly headerMinWidth: number;
+        readonly messageMaxWidth: "84%";
+        readonly attachmentSize: 80;
+        readonly attachmentRemoveSize: 24;
+        readonly reactionHoldMs: 450;
+        readonly reactionMoveTolerance: 10;
+        readonly reactionMenuWidth: 320;
+        readonly replySwipeDistance: 60;
+        readonly composerMinLines: 1;
+        readonly composerMaxLines: 5;
+    };
+    readonly searchScreenRecipe: {
+        readonly debounceMs: 300;
+        readonly recentVisible: 5;
+        readonly suggestionVisible: 6;
+        readonly loadingRows: 4;
+        readonly sectionGap: 24;
+        readonly headerGap: 12;
+        readonly chipGap: 8;
+    };
+    readonly chatMessageRecipe: {
+        readonly avatarSize: 32;
+        readonly avatarGap: 8;
+        readonly authorGap: 4;
+        readonly metaGap: 4;
+        readonly bubbleRadius: 14;
+        readonly bubblePaddingInline: 10;
+        readonly bubblePaddingBlock: 6;
+        readonly runGap: 6;
+        readonly groupGap: 12;
+        readonly tailWidth: 7;
+        readonly tailHeight: 10;
+        readonly tailCornerRadius: 4;
+        readonly jumpToLatestGap: 8;
+        readonly timelineInset: 10;
+        readonly mediaWidth: 210;
+        readonly mediaGap: 2;
+    };
+    readonly commentThreadRecipe: {
+        readonly avatarSize: 32;
+        readonly replyAvatarSize: 24;
+        readonly avatarGap: 8;
+        readonly lineGap: 2;
+        readonly rowGap: 12;
+        readonly replyIndent: number;
+        readonly likeColumnWidth: 44;
+        readonly mediaMaxWidth: 160;
+        readonly mediaRadius: 12;
+        readonly menuGlyphSize: 20;
+        readonly actionAnchor: {
+            readonly authorTextVariant: "caption";
+            readonly inlineTextVariant: "body";
+        };
+    };
+    readonly notificationRowRecipe: {
+        readonly gap: 12;
+        readonly contentGap: 4;
+        readonly avatarSize: 44;
+        readonly avatarBadgeSize: 20;
+        readonly thumbnailSize: 44;
+        readonly unreadSize: 6;
+        readonly previewLines: 2;
+        readonly paddingBlock: 12;
+        readonly paddingInline: 16;
+    };
+    readonly profileSummaryRecipe: Readonly<{
+        avatarSize: 72;
+    }>;
+    readonly iconTileRecipe: Readonly<{
+        iconSize: 64;
+        labelMaxWidth: 72;
+        multilineLabelMaxWidth: 84;
+        multilineLabelMinHeight: 44;
+        ghostOpacity: 0.55;
+        gap: 6;
+        iconRadius: "22%";
+    }>;
+    readonly composerQuickInsertRecipe: {
+        readonly itemSize: 44;
+        readonly emojiSize: 26;
+        readonly gap: 8;
     };
 };
 export type RecipeName = keyof typeof recipeRegistry;
