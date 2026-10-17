@@ -67,8 +67,10 @@ const presetInputs = {
     },
     brutalist: {
         id: "brutalist",
-        // level1/2 pin heavy: the strong-emphasis preset used to inherit the foundation 800, which became bold
-        // on 2026-10-17 (docs/design-profile.md keeps brutalist display headings at 800).
+        // level1/2 stay heavy (800) on purpose: the foundation display headings became bold (700) on 2026-10-17,
+        // but the user kept brutalist at 800 after comparing it in Storybook, because thick borders and hard
+        // shadows need the heaviest headings to hold their weight. Do not align this with the 700 default.
+        // docs/design-profile.md documents the same exception.
         palette: { light: { primary: "#171717", contentBrand: "#171717", surfaceAccent: "#e8ed91", border: "#171717" }, dark: { primary: "#727272", contentBrand: "#f0f3a3", surfaceAccent: "#393a1c", border: "#cccccc" } },
         tokens: { radius: { sm: 0, md: 0, lg: 0, xl: 0 }, shadow: { raised: { radius: 0, offsetY: 4, opacity: 0.25 }, floating: { radius: 0, offsetY: 6, opacity: 0.3 } }, typography: { heading: { fontSize: 30, lineHeight: 38, fontWeight: fontWeight.heavy } }, heading: { level1: { fontSize: 48, lineHeight: 56, fontWeight: fontWeight.heavy }, level2: { fontSize: 38, lineHeight: 46, fontWeight: fontWeight.heavy } } },
         interactions: { contentTransition: "slide", selectionMotion: "none" },
