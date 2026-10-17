@@ -23,7 +23,7 @@ body/bodyLarge는 reading, caption/label은 ui다. `fontRole` 명시값은 크�
 Web은 nearest Provider가 CSS stack 변수를 내보내며 semantic h1~h6·Text가 소비한다.
 portal도 기존 Provider 복사 경로를 따라간다. Native는 View에 글꼴을 주어 전파할 수 없으므로
 기존 Text/TextInput host와 `resolveNativeFontStyle`을 사용한다. 제목·본문은 역할 stack의 첫 named font,
-code의 기본 monospace는 iOS Menlo/다른 host monospace로 번역한다. ui 기본 stack은 OS 기본을 유지한다.
+code의 기본 monospace는 iOS Menlo/다른 host monospace로 번역한다. 첫 이름이 generic serif(`ui-serif`/`serif`)이면 iOS Georgia/다른 host `serif`로 번역한다(2026-10-17 에디토리얼 프리셋의 시스템 serif; Android는 시스템 serif를 generic 이름으로만 제공한다). ui 기본 stack은 OS 기본을 유지한다.
 중첩 neutral Provider는 부모의 서체 역할도 중립으로 되돌린다.
 
 Web stack과 Native 단일 이름은 같은 설치 지원을 뜻하지 않는다. 폰트 파일·등록·다운로드·라이선스·

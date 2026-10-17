@@ -50,6 +50,7 @@ describe("@hjmds/react package boundary", () => {
       "./heading",
       "./text-formats",
       "./clipboard",
+      "./image-choice",
       "./toggle-group",
       "./tags-input",
       "./skip-nav",
@@ -122,6 +123,7 @@ describe("@hjmds/react package boundary", () => {
       ...executableExportPaths,
       "./styles.css",
       "./styles.layered.css",
+      "./fonts/pretendard.css",
       ...optionalExportPaths,
     ]);
     const familyTargets = [...executableExportPaths.slice(1), ...optionalExportPaths].map((exportPath) => {

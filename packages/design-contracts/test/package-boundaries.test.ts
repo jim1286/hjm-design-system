@@ -80,6 +80,7 @@ const publicComponentContractNames = [
   "text-formats",
   "timeline",
   "toast",
+  "image-choice",
   "toggle-group",
   "tooltip",
   "top",

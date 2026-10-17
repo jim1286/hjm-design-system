@@ -1,6 +1,6 @@
 # 디자인 프리셋 계약
 
-검토일: 2026-10-08 · 상태: 기본 10종 프로필 1.15.0 · 후속 글자/질감/토큰 소비 개선 1.16.0
+검토일: 2026-10-17 · 상태: 기본 10종 프로필 1.15.0 · 후속 글자/질감/토큰 소비 개선 1.16.0
 
 사용자가 레트로·종이·숲 등의 테마에 따라 같은 기능의 상호작용·구성·화면 배치도 자동으로 달라지고, 앱이 자기 테마를 한 번 주입하기를 요청했다. 색상 프리셋만으로는 그 요구를 충족하지 못하므로 네 축을 하나의 데이터 계약으로 둔다. 기존 상태 엔진을 테마마다 복제하는 방식은 채택하지 않는다.
 
@@ -47,6 +47,32 @@ export const productDesign = defineHjmDesignProfile({
 
 상속 후 데이터는 재귀적으로 동결한다. 호출자의 배열/descriptor를 동결하지 않고 복사해 앱 소유 상태에 영향을 주지 않는다. light/dark 팔레트와 nested 토큰은 역할별로 병합하며, preset 원본은 바뀌지 않는다. 고정된 원·pill 의미 때문에 radius.full=999는 유지한다. 글자 크기·줄 높이·그림자·질감 범위와 지원하는 변형 이름을 검사하고 지정 색상 쌍의 대비 미달을 거부한다. 이 검사는 완성 화면 접근성 인증이 아니다.
 
+## 미니멀·에디토리얼·터미널의 구분 — 2026-10-17
+
+| 프리셋 | 팔레트 | 서체·제목 | 깊이·모서리 | 구성 |
+| --- | --- | --- | --- | --- |
+| minimal | 흰 바탕·무채색 잉크, hairline `border` #e6e6e6, 짙은 회색 행동(#3d3d3d) | ui 유지, heading·level1/2 굵기 500, body 행간 26 | raised·floating 그림자 0(오버레이는 테두리와 scrim), 4/8/12/16 | cards(테두리·안쪽 24)/inline·dashboard |
+| editorial | 따뜻한 종이(#fdfbf7)·잉크(#1b1714), 와인 강조(#7a1f3d), 규칙선용 짙은 `border` #cfc5b8 | display·reading 시스템 serif stack, level1/2/3 56/42/30, body 행간 26 | raised 그림자 0, 0/2/2/4 | rows(규칙선)/collapsible·editorial |
+| terminal | 밝은 모드 녹회색(#c8d4c4)·짙은 녹색 잉크·호박갈색 강조, 어두운 모드 검정(#050a06)·녹색 형광 글자·호박색 강조 | ui=code이므로 display·reading도 monospace | 그림자 0, 모서리 0 | rows(규칙선)/collapsible·dashboard |
+
+serif stack은 `ui-serif, Iowan Old Style, Georgia, AppleMyungjo, Batang, Noto Serif KR, serif`이며 폰트를 내려받지 않는다.
+Safari는 `ui-serif`를 New York으로, Chrome은 다음 이름부터 쓴다. 한글은 macOS AppleMyungjo·Windows Batang 등
+설치된 serif를 쓰고 없으면 host 글꼴로 대체된다. Native는 첫 이름 `ui-serif`/`serif`를 iOS `Georgia`, 다른 host `serif`로
+번역한다(Android는 시스템 serif를 generic 이름으로만 제공). Native의 한글 serif와 실제 기기 표시는 확인하지 않았다.
+
+터미널의 밝은 모드는 검정 콘솔로 만들 수 없다. Notice·상태 문구의 `ACCENTS.light` 잉크는 프로필 팔레트가 바꾸지 않는
+고정 짙은 색이라, 밝은 모드 바탕을 어둡게 하면 팔레트 대비 검사는 통과해도 이 글자가 읽히지 않는다. 그래서 그 잉크가
+4.5:1을 유지하는 가장 어두운 녹회색(bg 약 4.6, surface 약 5.0)을 골랐다. 이 쌍은 계약 테스트가 확인한다. 강제 어두운 표현이
+필요하면 별도 계약(프로필의 색 모드 지정)이 필요하며 이번 변경에 포함하지 않았다.
+
+rows 구성은 테두리 없는 항목을 규칙선으로 나눈다. 이전의 작은 테두리 상자 목록은 cards와 구분되지 않았고 에디토리얼의
+규칙선을 표현할 수 없었다. 중립·종이도 rows이므로 같은 규칙선 목록으로 바뀐다. [목록 화면 배치](usage/components/overview-screen.md#배치)를 따른다.
+
+### 근거
+
+- 2026-10-17 사용자 검토: 밝은 모드에서 미니멀·에디토리얼·터미널이 모두 거의 흰 화면이었고 터미널은 글꼴만 달랐다.
+  색만 바꾸지 않고 기존 팔레트·서체 역할·그림자·모서리·구성 축을 함께 조정해 정체성을 구분했다. 대비 기준은 낮추지 않았다.
+
 ## 기존 API 비교와 연결 순서
 
 - 기존 Provider/brandPalette/environment는 유지한다. 프리셋은 별도 환경 축이 아니라 네 단계의 표현/배치 기본값이며 명시적인 props가 우선한다.
@@ -80,7 +106,7 @@ SegmentedControl·Tabs, ScreenLayout 및 optional OverviewScreen에 연결한다
 `tokens.heading`은 `level1`~`level5`의 fontSize/lineHeight/fontWeight를 부분 지정한다.
 현재 Heading은 두 renderer 모두 이 값으로 그리고 문서 `semanticLevel`과 textScale을
 따로 유지한다. 중립은 foundation의 40/32/24/20/18px를 그대로 쓰며, 에디토리얼의
-level1/2는 44/34px·행간 54/44px·굵기 500, 브루탈리즘은 48/38px·행간 56/46px·굵기
+level1/2/3은 56/42/30px·행간 66/52/40px·굵기 500(2026-10-17 44/34에서 상향), 브루탈리즘은 48/38px·행간 56/46px·굵기
 800이다. 이 두 큰 제목 선택은 원본 치수 복제가 아니라 편집형/강한 강조 프리셋의
 시각 계층을 구분한 HJM 실험값이며 좁은 폭·큰 글자 QA와 함께 판단한다.
 

@@ -12,10 +12,12 @@ it("keeps ui-only products compatible and isolates independent role arrays", () 
   const uiOnly = defineHjmDesignProfile({ tokens: { fontFamily: { ui: ["Legacy UI"] } } });
   expect(resolveFontFamilyStack(uiOnly.tokens.fontFamily, "reading")).toEqual(["Legacy UI"]);
   expect(resolveFontFamilyStack(uiOnly.tokens.fontFamily, "display")).toEqual(["Legacy UI"]);
-  for (const preset of Object.values(hjmDesignPresets)) {
+  // Editorial alone separates its display/reading roles (system serif); every other preset still follows ui.
+  for (const preset of Object.values(hjmDesignPresets).filter(preset => preset.id !== "editorial")) {
     expect(resolveFontFamilyStack(preset.tokens.fontFamily, "reading")).toEqual(preset.tokens.fontFamily.ui);
     expect(resolveFontFamilyStack(preset.tokens.fontFamily, "display")).toEqual(preset.tokens.fontFamily.ui);
   }
+  for (const role of ["display", "reading"] as const) expect(resolveFontFamilyStack(hjmDesignPresets.editorial.tokens.fontFamily, role).at(-1)).toBe("serif");
   expect(resolveFontFamilyStack(fontFamily, "code")).toEqual(fontFamily.code);
 });
 

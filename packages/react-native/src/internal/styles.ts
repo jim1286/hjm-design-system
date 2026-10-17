@@ -21,6 +21,11 @@ export function resolveNativeFontStyle(
   if (first === "ui-monospace" || first === "monospace") {
     return { fontFamily: Platform.OS === "ios" ? "Menlo" : "monospace" };
   }
+  // A CSS generic serif cannot be a Native family name. iOS ships Georgia under that name; Android exposes its system
+  // serif only through the generic "serif" family, so a named Latin face such as Georgia would fall back to sans.
+  if (first === "ui-serif" || first === "serif") {
+    return { fontFamily: Platform.OS === "ios" ? "Georgia" : "serif" };
+  }
   const neutralUI = role === "ui" && stack.length === fontFamily.ui.length &&
     stack.every((family, index) => family === fontFamily.ui[index]);
   return first === undefined || neutralUI

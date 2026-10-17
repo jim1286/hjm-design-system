@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.15.0
-- 검토일: 2026-10-08
+- 검토일: 2026-10-17
 - 근거: [디자인 프로필](../../design-profile.md), 양 renderer `src/design-profile.tsx`; 기존 ScreenLayout·Grid·Collapsible의 상태 엔진을 재사용한다.
 - 스토리북: `배포/컴포넌트/레이아웃/목록 화면 골격`
 
@@ -63,11 +63,11 @@ import { OverviewScreen } from "@hjmds/react-native/design-profile";
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | editorial은 `layout.readingMaxWidth` 720, dashboard·landscape는 `layout.contentMaxWidth` 1200, host가 높이를 제공한다 | `resolveDesignProfileScreen`, ScreenLayout |
-| 도구 폭 | 최대 `layout.readingMaxWidth`, header 제목·BottomCTA 내용과 같은 가운데 축(`overviewToolbarLayout`). 목록은 화면 폭 | `@hjmds/design-contracts/design-profile-layout` |
-| 간격 | 도구–목록 `spacing.xl` 24, rows `spacing.sm` 12, cards/grid `spacing.lg` 20, 카드 내부 rows `spacing.md` 16 / 나머지 `spacing.xl` 24 | OverviewScreen·공유 collection resolver |
+| 본문 폭 | 도구와 목록이 한 열: 최대 `layout.readingMaxWidth` 720, header 제목·BottomCTA 내용과 같은 가운데 축(`overviewContentLayout`). 카드 끝과 입력 끝이 같은 선에 놓인다 | `@hjmds/design-contracts/design-profile-layout` |
+| 간격·항목 | 도구–목록 `spacing.xl` 24. rows는 테두리 없는 항목을 규칙선(Divider, `border`)으로 나누고 선 위아래 `spacing.md` 16, 안쪽 여백 0. cards/grid는 테두리·raised 카드, 간격 `spacing.lg` 20, 안쪽 `spacing.xl` 24 | `resolveDesignProfileCollection`·`resolveDesignProfileCollectionItem` |
 | 순서·정렬 | 헤더 → notice → 도구 → 목록 → footer. leading은 뒤로, actions는 화면 도구, footer는 주 행동 | ScreenLayout 슬롯 |
 | 고정·스크롤 | 헤더·notice·footer 고정, 본문 스크롤. 가상 목록은 별도 ScreenLayout + `scroll="content"` | ScreenLayout 상태·스크롤 엔진 |
-| 좁은 폭·큰 글자 | rows 1/1/1, cards 1/2/2, grid 1/2/3(compact/medium/expanded). 최소 열 폭 240이며 실제 컨테이너·글자 배율로 열 수를 줄인다 | `resolveDesignProfileCollection`·Grid |
+| 좁은 폭·큰 글자 | rows 1/1/1, cards 1/2/2, grid 1/2/3(compact/medium/expanded). 최소 열 폭 226(720 열에 grid 3열과 간격 2개가 들어가는 값)이며 실제 컨테이너·글자 배율로 열 수를 줄인다 | `resolveDesignProfileCollection`·Grid |
 
 `collection`, `toolbarPresentation`, `presentation` 명시값이 프로필을 이긴다. 작은 화면의 열 수는 늘리지 않는다. virtual list는 이 정적 items 목록 대신 기존 ScreenLayout의 `scroll="content"`와 제품 list를 쓴다.
 
@@ -78,3 +78,4 @@ ScreenLayout의 ready/loading/empty/error와 stateAction을 그대로 사용한�
 ## 근거
 
 - 2026-10-17 구성 리뷰: dashboard 표현에서 도구만 왼쪽 반폭에 붙어 가운데 header·footer와 정렬 축이 섞였다.
+- 2026-10-17 사용자 검토: 도구만 읽기 폭이고 목록은 화면 폭이라 카드 행이 입력보다 넓어 좌우 끝이 어긋났다(1024px에서 카드 48–976, 입력 152–872). 도구와 목록을 한 열로 묶고, 그 열에서 grid 3열이 실제로 나오도록 최소 열 폭을 열 폭에서 유도했다. rows는 작은 테두리 상자를 쌓아 cards와 구분되지 않았고 에디토리얼의 규칙선을 표현할 수 없어 규칙선 목록으로 바꿨다. 항목 host(Surface)는 모든 구성에서 같아 테마를 바꿔도 항목 내용이 다시 마운트되지 않는다.

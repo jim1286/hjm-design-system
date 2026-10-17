@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.16.0
-- 검토일: 2026-10-15
+- 검토일: 2026-10-17
 - 근거: [프로필 계약](../../design-profile.md), [조사와 QA](../../../../../docs/qa/2026-10-07-design-profile-research.md), 두 Showcase `design-profile-preview.tsx`
 - 스토리북: `배포/구성/비교와 검증/테마 조합`
 
@@ -53,10 +53,18 @@
 | 바깥 틀 | Stack | 세로 | `spacing.xl` 24 |
 | 앱/참고 테마 | SegmentedControl | 선택 화면 위 | 앱 설정 3개 후 참고 테마 10개; `presentation="pills"`, 큰 선택 목록의 좁은 폭 배치는 공개 선택 계약을 따른다 |
 | 이름/기간 | TextField·SegmentedControl | 도구(최대 폭 `layout.readingMaxWidth`, 가운데) | `spacing.md` 16 |
-| 목록 | OverviewScreen | 본문 | [목록 배치](../components/overview-screen.md#배치) |
+| 목록 | OverviewScreen | 본문, 도구와 같은 열(같은 폭·시작 끝) | [목록 배치](../components/overview-screen.md#배치) |
 | 저장 | BottomCTA | footer | 주 행동만 |
 | 실패 재현 | PreviewTools 안 ghost 버튼 | OverviewScreen 밖 아래 | `spacing.md` 16 |
 | 자산 비교 | Asset·Stack | 탭 비교 아래 | `xlarge` 120px, `spacing.md` 16, 좁으면 줄바꿈. rounded는 프로필 radius.md, square 0, circle foundation full 유지 |
+
+### 비슷해 보이기 쉬운 세 테마
+
+| 테마 | 밝은 모드에서 보이는 차이 |
+| --- | --- |
+| 미니멀 | 흰 바탕·무채색 hairline, 그림자 없음, 굵기 500 제목과 넉넉한 행간, 넓은 안쪽 여백의 테두리 카드(cards) |
+| 에디토리얼 | 시스템 serif 제목·본문, 가장 큰 제목 단계(56/42/30px), 따뜻한 잉크색과 와인 강조, 각진 모서리, 규칙선으로 나눈 rows |
+| 터미널 | 모든 글자 monospace, 모서리 0, 그림자 없음, 녹회색 바탕·짙은 녹색 행동·호박색 강조, 규칙선 rows. 어두운 모드는 검정 콘솔 |
 
 ## 흐름과 상태
 
@@ -133,4 +141,5 @@ padding으로 예약한다. 프로필 전환은 같은 버튼과 실행 횟수�
 
 ## 근거
 
-- 2026-10-17 구성 리뷰: 예제 전용 실패 재현이 제품 화면 도구 안에 있었고, 두 pills 선택에 보이는 이름이 없었으며, 제목과 테마 이름이 regular Text였다. dashboard 도구만 왼쪽 반폭이라 가운데 정렬된 header·footer와 축이 섞였다. 그래서 실패 재현을 화면 밖 미리보기 도구로 옮기고, 보이는 이름과 Heading을 두고, `overviewToolbarLayout`으로 도구를 가운데 읽기 폭에 맞췄다.
+- 2026-10-17 구성 리뷰: 예제 전용 실패 재현이 제품 화면 도구 안에 있었고, 두 pills 선택에 보이는 이름이 없었으며, 제목과 테마 이름이 regular Text였다. dashboard 도구만 왼쪽 반폭이라 가운데 정렬된 header·footer와 축이 섞였다. 그래서 실패 재현을 화면 밖 미리보기 도구로 옮기고, 보이는 이름과 Heading을 두고, 도구를 가운데 읽기 폭에 맞췄다.
+- 2026-10-17 사용자 검토: 도구만 읽기 폭으로 제한해 카드 목록이 더 넓었고(1024px에서 카드 48–976, 입력 152–872) 좌우 끝이 맞지 않았다. 도구와 목록을 `overviewContentLayout` 한 열로 묶었다. 같은 검토에서 미니멀·에디토리얼·터미널이 밝은 모드에서 거의 같은 흰 화면으로 보여 세 테마의 팔레트·서체·깊이·구성을 함께 구분했다.

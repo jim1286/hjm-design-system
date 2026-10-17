@@ -19,6 +19,7 @@ const custom = defineHjmDesignProfile({ extends: "paper", tokens: {
   typography: { body: { fontSize: 19, lineHeight: 30 } },
 } });
 const mono = () => Platform.OS === "ios" ? "Menlo" : "monospace";
+const serif = () => Platform.OS === "ios" ? "Georgia" : "serif";
 
 it("keeps each editor and its draft while inherited UI fonts reach raw hosts across ten presets and reset", () => {
   let tree!: ReactTestRenderer;
@@ -56,8 +57,9 @@ it("keeps each editor and its draft while inherited UI fonts reach raw hosts acr
         fontSize: (profile?.tokens.typography.body.fontSize ?? 14) * 1.3,
         lineHeight: (profile?.tokens.typography.body.lineHeight ?? 20) * 1.3,
       });
+      // "본문" is reading text: editorial's serif reading role reaches it, controls above keep the ui family.
       const label = tree.root.findAllByType(NativeText).find(node => node.props.children === "본문")!;
-      expect(flatten(label.props.style).fontFamily).toBe(expectedUI);
+      expect(flatten(label.props.style).fontFamily).toBe(profile === hjmDesignPresets.editorial ? serif() : expectedUI);
       for (const node of tree.root.findByType(Slider).findAllByType(NativeText)) {
         expect(flatten(node.props.style).fontFamily).toBe(expectedUI);
       }

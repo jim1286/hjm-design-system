@@ -1,7 +1,7 @@
 import { expect, it } from "vitest";
 import { defineHjmDesignProfile, hjmDesignPresets, resolveDesignProfileSurfaceMaterial } from "../src/design-profile.js";
 import { checkPaletteContrast, contrastRatio, paletteContrastRules } from "../src/palette-contrast.js";
-import { THEMES } from "../src/colors.js";
+import { ACCENTS, THEMES } from "../src/colors.js";
 import { heading } from "../src/foundations.js";
 
 it("keeps the neutral palette compatible and gives each requested preset a distinct arrangement", () => {
@@ -11,6 +11,13 @@ it("keeps the neutral palette compatible and gives each requested preset a disti
   for (const preset of Object.values(hjmDesignPresets)) {
     expect(checkPaletteContrast(preset.palette.light)).toEqual([]);
     expect(checkPaletteContrast(preset.palette.dark)).toEqual([]);
+  }
+});
+
+it("keeps the fixed accent inks readable on terminal's tinted light canvas", () => {
+  // ACCENTS are not part of the profile palette, which is why terminal light is tinted rather than a dark console.
+  for (const background of ["bg", "surface"] as const) {
+    for (const ink of Object.values(ACCENTS.light)) expect(contrastRatio(ink, hjmDesignPresets.terminal.palette.light[background])).toBeGreaterThanOrEqual(4.5);
   }
 });
 
@@ -60,7 +67,7 @@ it("inherits display headings independently and lets explicit visual levels over
   expect(custom.tokens.typography.heading.fontSize).toBe(26);
   expect(defineHjmDesignProfile({ extends: "editorial" }).tokens.heading).toEqual(hjmDesignPresets.editorial.tokens.heading);
   expect(Object.isFrozen(custom.tokens.heading.level1)).toBe(true);
-  expect(hjmDesignPresets.editorial.tokens.heading.level1.fontSize).toBe(44);
+  expect(hjmDesignPresets.editorial.tokens.heading.level1.fontSize).toBe(56);
 });
 
 it("rejects invalid display-heading metrics and unknown persisted heading levels", () => {

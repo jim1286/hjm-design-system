@@ -1,5 +1,5 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
-import { Pressable, ScrollView, View } from "react-native";
+import { Platform, Pressable, ScrollView, View } from "react-native";
 import { expect, it, vi } from "vitest";
 import { defineHjmDesignProfile, hjmDesignPresets, type HjmDesignProfile } from "@hjmds/design-contracts/design-profile";
 import { HjmNativeProvider } from "../src/provider.js";
@@ -43,7 +43,8 @@ it("follows nearest corners across theme changes without resetting upload action
       expect(pickerStyle.borderRadius).toBe(expected); expect(pickerStyle.minHeight).toBeGreaterThanOrEqual(44);
       const upload = tree.root.findByType(UploadItem).findAllByType(View).find(node => flatten(node.props.style)?.minHeight === 68)!;
       expect(flatten(upload.props.style).borderRadius).toBe(expected);
-      for (const panel of tree.root.findAllByType(ScrollView)) expect(flatten(panel.props.style).borderRadius).toBe(expected);
+      // Since component review C the panel frame (header + list, clipped together) owns the corner, not the ScrollView.
+      for (const list of tree.root.findAllByType(ScrollView)) { let panel = list.parent; while (panel && flatten(panel.props.style)?.borderRadius === undefined) panel = panel.parent; expect(flatten(panel!.props.style).borderRadius).toBe(expected); }
     }
     act(() => action("Retry").props.onPress()); expect(retry).toHaveBeenCalledWith("archive");
     await act(async () => action("Locked").props.onPress()); expect(pick).not.toHaveBeenCalled();
@@ -73,7 +74,7 @@ it("resolves Top visual metrics and display family from the closest profile with
         const metrics = profile ? size === "large" ? profile.tokens.heading.level2 : profile.tokens.typography.titleLarge : topRecipe.sizes[size as "large" | "medium"].title;
         expect(flatten(titles[index]!.props.style)).toMatchObject(metrics);
       }
-      expect(tree.root.findAll(node => typeof node.type === "string" && node.props.accessibilityRole === "header").map(node => flatten(node.props.style).fontFamily)).toEqual(profile?.tokens.fontFamily.display ? ["Georgia", "Georgia"] : [undefined, undefined]);
+      expect(tree.root.findAll(node => typeof node.type === "string" && node.props.accessibilityRole === "header").map(node => flatten(node.props.style).fontFamily)).toEqual(profile === hjmDesignPresets.editorial ? Array(2).fill(Platform.OS === "ios" ? "Georgia" : "serif") : profile?.tokens.fontFamily.display ? ["Georgia", "Georgia"] : [undefined, undefined]);
     }
     const action = tree.root.findAllByType(Pressable).find(node => node.props.accessibilityLabel === "Title action")!;
     act(() => action.props.onPress()); expect(actionPress).toHaveBeenCalledOnce();

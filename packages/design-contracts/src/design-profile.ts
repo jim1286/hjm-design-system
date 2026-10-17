@@ -72,6 +72,11 @@ const neutral: HjmDesignProfile = {
   screens: { overview: "dashboard" },
 };
 
+/** System serif stack for editorial's display/reading roles; nothing is downloaded. `ui-serif` comes first because
+ * Safari maps it to New York and Native translates it to the host serif (Chrome skips it). AppleMyungjo/Batang/
+ * Noto Serif KR give Hangul a serif face where installed; otherwise Hangul falls back to the host font. */
+const serifStack = ["ui-serif", "Iowan Old Style", "Georgia", "AppleMyungjo", "Batang", "Noto Serif KR", "serif"] as const;
+
 /** Profiles deliberately differ in interaction and arrangement, not just hue.
  * No font asset is bundled or implied: custom font loading remains product-owned. */
 const presetInputs: Readonly<Record<Exclude<HjmDesignPreset, "neutral">, HjmDesignProfileInput>> = {
@@ -113,19 +118,33 @@ const presetInputs: Readonly<Record<Exclude<HjmDesignPreset, "neutral">, HjmDesi
     compositions: { collection: "cards", toolbar: "collapsible" },
     screens: { overview: "landscape" },
   },
+  // minimal, editorial and terminal looked alike in light mode (near-white, only terminal's font differed) at the
+  // 2026-10-17 user review. Each now carries its identity through palette, type, elevation and arrangement together.
+  // minimal: achromatic hairlines on white, no shadow anywhere (overlays rely on their border and scrim), quiet
+  // medium-weight headings, airy body leading and framed cards for the generous card padding.
   minimal: {
     id: "minimal",
-    palette: { light: { primary: "#404040", contentBrand: "#333333", surfaceAccent: "#eeeeee" }, dark: { primary: "#727272", contentBrand: "#dddddd", surfaceAccent: "#303030" } },
-    tokens: { radius: { sm: 4, md: 8, lg: 12, xl: 16 }, shadow: { raised: { opacity: 0 }, floating: { opacity: 0.08 } } },
-
+    palette: {
+      light: { bg: "#ffffff", surface: "#fafafa", surfaceAlt: "#f2f2f2", surfaceAccent: "#ededed", border: "#e6e6e6", borderControl: "#767676", primary: "#3d3d3d", contentBrand: "#2e2e2e", text: "#111111", textBody: "#2b2b2b", textMuted: "#4a4a4a", textSub: "#5e5e5e", textWeak: "#8a8a8a" },
+      dark: { bg: "#101010", surface: "#151515", surfaceAlt: "#1c1c1c", surfaceAccent: "#2a2a2a", border: "#333333", borderControl: "#8f8f8f", primary: "#6e6e6e", contentBrand: "#e2e2e2", text: "#f2f2f2", textBody: "#dedede", textMuted: "#c6c6c6", textSub: "#a3a3a3", textWeak: "#8a8a8a" },
+    },
+    tokens: { radius: { sm: 4, md: 8, lg: 12, xl: 16 }, shadow: { raised: { opacity: 0 }, floating: { opacity: 0 } },
+      typography: { heading: { fontWeight: fontWeight.medium }, body: { lineHeight: 26 } },
+      heading: { level1: { fontWeight: fontWeight.medium }, level2: { fontWeight: fontWeight.medium } } },
     interactions: { contentTransition: "fade", selectionMotion: "none" },
-    compositions: { collection: "rows", toolbar: "inline" }, screens: { overview: "dashboard" },
+    compositions: { collection: "cards", toolbar: "inline" }, screens: { overview: "dashboard" },
   },
+  // editorial: serif display and reading roles over a warm ink-on-paper palette with a deep wine accent, the largest
+  // display scale of the presets, flat print corners, and rows, which the shared layout divides with rule lines.
   editorial: {
     id: "editorial",
-    palette: { light: { primary: "#59435f", contentBrand: "#513a57", surfaceAccent: "#eee4f0" }, dark: { primary: "#846b8e", contentBrand: "#ead0f2", surfaceAccent: "#392a3e" } },
-    tokens: { radius: { sm: 0, md: 2, lg: 4, xl: 8 }, typography: { heading: { fontSize: 28, lineHeight: 38, fontWeight: fontWeight.medium }, body: { lineHeight: 24 } }, heading: { level1: { fontSize: 44, lineHeight: 54, fontWeight: fontWeight.medium }, level2: { fontSize: 34, lineHeight: 44, fontWeight: fontWeight.medium } } },
-
+    palette: {
+      light: { bg: "#fdfbf7", surface: "#f7f3ec", surfaceAlt: "#efe9df", surfaceAccent: "#f1e4ea", border: "#cfc5b8", borderControl: "#6f655a", primary: "#7a1f3d", contentBrand: "#6b1a35", text: "#1b1714", textBody: "#2e2823", textMuted: "#4a423b", textSub: "#5f564d", textWeak: "#8a7f73" },
+      dark: { bg: "#14110e", surface: "#1c1814", surfaceAlt: "#26211b", surfaceAccent: "#3f2430", border: "#5e554b", borderControl: "#a3988b", primary: "#ad4566", contentBrand: "#f2b8c9", text: "#f6f0e7", textBody: "#e6ddd1", textMuted: "#cfc4b6", textSub: "#b0a596", textWeak: "#958a7c" },
+    },
+    tokens: { radius: { sm: 0, md: 2, lg: 2, xl: 4 }, fontFamily: { display: serifStack, reading: serifStack }, shadow: { raised: { opacity: 0 } },
+      typography: { heading: { fontSize: 30, lineHeight: 40, fontWeight: fontWeight.medium }, body: { lineHeight: 26 } },
+      heading: { level1: { fontSize: 56, lineHeight: 66, fontWeight: fontWeight.medium }, level2: { fontSize: 42, lineHeight: 52, fontWeight: fontWeight.medium } } },
     interactions: { contentTransition: "rise", selectionMotion: "none" },
     compositions: { collection: "rows", toolbar: "collapsible" }, screens: { overview: "editorial" },
   },
@@ -159,11 +178,18 @@ const presetInputs: Readonly<Record<Exclude<HjmDesignPreset, "neutral">, HjmDesi
     interactions: { contentTransition: "scale", selectionMotion: "slide" },
     compositions: { collection: "grid", toolbar: "collapsible" }, screens: { overview: "landscape" },
   },
+  // terminal: monospace for every role (display/reading follow ui), square corners, no shadow, ruled rows, green
+  // phosphor primary with amber brand text. Dark is a black console. Light cannot be a black console: the accent
+  // foregrounds (ACCENTS.light, used by notices and status text) are fixed dark inks that the profile palette does not
+  // replace, so a dark light-mode canvas would pass the palette check yet leave them unreadable. Light therefore uses
+  // the darkest green-grey canvas on which those inks still reach 4.5:1 (about 4.6 on bg, 5.0 on surface).
   terminal: {
     id: "terminal",
-    palette: { light: { primary: "#235837", contentBrand: "#245435", surfaceAccent: "#deefdf" }, dark: { primary: "#467f54", contentBrand: "#95e2a6", surfaceAccent: "#203b28" } },
-    tokens: { radius: { sm: 2, md: 4, lg: 6, xl: 8 }, fontFamily: { ui: fontFamily.code }, shadow: { raised: { opacity: 0 }, floating: { radius: 0, offsetY: 0, opacity: 0 } } },
-
+    palette: {
+      light: { bg: "#c8d4c4", surface: "#d1dbcd", surfaceAlt: "#ccd7c8", surfaceAccent: "#cadbc5", border: "#6f8069", borderControl: "#33463a", primary: "#164f25", contentBrand: "#5c3200", text: "#04160a", textBody: "#0b2412", textMuted: "#15301c", textSub: "#1f3a26", textWeak: "#4a5d4d", danger: "#7f0e0e" },
+      dark: { bg: "#050a06", surface: "#0b130d", surfaceAlt: "#122016", surfaceAccent: "#173a20", border: "#2f6b3e", borderControl: "#4fae66", primary: "#1f7a3a", contentBrand: "#ffb84d", text: "#9cf5ae", textBody: "#86e39a", textMuted: "#74cf89", textSub: "#62b877", textWeak: "#4d9a61", danger: "#ff8a7a" },
+    },
+    tokens: { radius: { sm: 0, md: 0, lg: 0, xl: 0 }, fontFamily: { ui: fontFamily.code }, shadow: { raised: { opacity: 0 }, floating: { radius: 0, offsetY: 0, opacity: 0 } } },
     interactions: { contentTransition: "fade", selectionMotion: "none" },
     compositions: { collection: "rows", toolbar: "collapsible" }, screens: { overview: "dashboard" },
   },
