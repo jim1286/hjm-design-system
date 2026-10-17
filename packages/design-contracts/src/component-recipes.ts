@@ -548,16 +548,28 @@ export const dividerRecipe = {
   },
 } as const;
 
+/**
+ * How far a ListRow surface (pressed, hover, selected, focus ring) reaches past the row text on each inline side.
+ * 2026-10-17 user decision: the row text sits on its container's content edge (the 16 screen gutter on a default
+ * screen) and only the surface bleeds outward by this amount. Rows used to put it inside as padding, so row text
+ * started at 16 + 8 = 24 while section titles and result headers started at 16. Containers that clip (grouped List,
+ * VirtualList) keep exactly this much inline room so the bleed is never cut.
+ */
+const listRowSurfaceBleed = spacing.xs;
+
 export const listRecipe = {
   slots: ["root", "item", "separator"] as const,
   defaults: { separator: "indented" },
   separators: {
     none: null,
-    full: { insetStart: 0, insetEnd: 0 },
-    // Starts where the row text starts: row padding (xs, every ListRow density) + leading 40 + gap sm. Without the row
-    // padding the line began 8px before the text (2026-10-17 review E5).
-    indented: { insetStart: spacing.xs + 40 + spacing.sm, insetEnd: 0 },
+    // Separators are measured from the list's content edge, where the row text now sits. "full" spans the row
+    // surface (content edge ± bleed); "indented" starts at the text after leading 40 + gap sm and ends with the surface.
+    full: { insetStart: -listRowSurfaceBleed, insetEnd: -listRowSurfaceBleed },
+    indented: { insetStart: 40 + spacing.sm, insetEnd: -listRowSurfaceBleed },
   },
+  // A grouped list paints its own rounded surface and clips to it, so it leaves the row bleed as inline padding:
+  // rows keep their full surface inside the radius and the text stays 8 inside the group edge as before.
+  grouped: { paddingInline: listRowSurfaceBleed },
   background: null,
 } as const;
 
@@ -574,13 +586,13 @@ export const listRowRecipe = {
     compact: {
       oneLineMinHeight: control.minTouchTarget,
       twoLineMinHeight: 60,
-      paddingHorizontal: spacing.xs,
+      paddingHorizontal: listRowSurfaceBleed,
       paddingVertical: spacing.xxs,
     },
     comfortable: {
       oneLineMinHeight: layout.rowHeight.singleLine,
       twoLineMinHeight: layout.rowHeight.twoLine,
-      paddingHorizontal: spacing.xs,
+      paddingHorizontal: listRowSurfaceBleed,
       paddingVertical: spacing.xs,
     },
     /*
@@ -592,18 +604,24 @@ export const listRowRecipe = {
     relaxed: {
       oneLineMinHeight: layout.rowHeight.singleLine + spacing.xs,
       twoLineMinHeight: layout.rowHeight.twoLine + spacing.xs,
-      paddingHorizontal: spacing.xs,
+      paddingHorizontal: listRowSurfaceBleed,
       paddingVertical: spacing.sm,
     },
     spacious: {
       oneLineMinHeight: layout.rowHeight.singleLine + spacing.md,
       twoLineMinHeight: layout.rowHeight.twoLine + spacing.md,
-      paddingHorizontal: spacing.xs,
+      paddingHorizontal: listRowSurfaceBleed,
       paddingVertical: spacing.md,
     },
   },
   // Loading uses the same row/line boxes as content; only the copy width is illustrative.
   loading: { titleWidthPercent: 60, descriptionWidthPercent: 40, trailingWidth: spacing.xxl },
+  /**
+   * Inline placement (2026-10-17 user decision, see `listRowSurfaceBleed`): the content box sits on the container's
+   * content edge and the surface bleeds outward by `paddingHorizontal` — renderers draw the row with that padding and
+   * the same negative inline margin, so pressed/selected fills keep 8 of room beyond the text.
+   */
+  surfaceBleed: listRowSurfaceBleed,
   gap: spacing.sm,
   leadingSize: 40,
   /**
@@ -636,6 +654,7 @@ export const listRowRecipe = {
     paddingVertical: number;
   }>;
   loading: { titleWidthPercent: number; descriptionWidthPercent: number; trailingWidth: number };
+  surfaceBleed: number;
   gap: number;
   leadingSize: number;
   leadingShapes: Record<ListRowLeadingShape, keyof typeof radius | null>;

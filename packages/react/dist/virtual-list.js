@@ -1,6 +1,7 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import { useId, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { resolveVirtualWindow, validateListKeys } from "@hjmds/design-contracts/components/virtual-list";
+import { listRowRecipe } from "@hjmds/design-contracts/recipes";
 /** Fixed-height rows are an explicit host contract; use List for unconstrained flowing copy. */
 export function VirtualList({ items, keyExtractor, renderItem, rowHeight, height, label, empty, overscan = 3, layoutStyle }) {
     const keys = useMemo(() => items.map(keyExtractor), [items, keyExtractor]);
@@ -58,7 +59,10 @@ export function VirtualList({ items, keyExtractor, renderItem, rowHeight, height
     // Keep keyboard/descendant focus mounted when wheel scrolling moves it outside the window.
     const indices = [...new Set([...Array.from({ length: range.end - range.start }, (_, i) => i + range.start), ...(items.length ? [selected] : []), ...(focused >= 0 ? [focused] : [])])].sort((a, b) => a - b);
     // Pointer or programmatic focus must become the keyboard origin too.
-    return _jsx("div", { "data-hjm-virtual-list": true, className: "hjm-virtual-list", ref: host, role: "list", "aria-label": label, tabIndex: 0, style: { ...layoutStyle, overflowY: "auto", height, position: "relative" }, onScroll: event => setScrollTop(event.currentTarget.scrollTop), onKeyDown: event => {
+    return _jsx("div", { "data-hjm-virtual-list": true, className: "hjm-virtual-list", ref: host, role: "list", "aria-label": label, tabIndex: 0, 
+        // The viewport clips, so it leaves room for the ListRow surface bleed and bleeds itself by the same amount: row text
+        // stays on the host's content edge and the row fill is not cut or turned into horizontal scroll (2026-10-17).
+        style: { marginInline: -listRowRecipe.surfaceBleed, paddingInline: listRowRecipe.surfaceBleed, ...layoutStyle, overflowY: "auto", height, position: "relative" }, onScroll: event => setScrollTop(event.currentTarget.scrollTop), onKeyDown: event => {
             if (!items.length || !(event.target instanceof HTMLElement) || (event.target !== event.currentTarget && !event.target.hasAttribute("data-virtual-row")))
                 return;
             const next = event.key === "ArrowDown" ? Math.min(selected + 1, items.length - 1) : event.key === "ArrowUp" ? Math.max(0, selected - 1) : event.key === "Home" ? 0 : event.key === "End" ? items.length - 1 : null;

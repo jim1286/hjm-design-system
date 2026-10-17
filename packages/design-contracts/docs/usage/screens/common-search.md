@@ -79,7 +79,7 @@ Native · Web < 960: 아래 시트(size large)        Web ≥ 960(expanded): 옆
 | 결과 머리 | `resultSummary`: 개수 Text(muted) + 정렬 Menu(Button ghost small) | 본문 첫 줄 | `justify="between"` wrap, 큰 글자에서 두 줄 |
 | 적용 조건 | `appliedFilters`: Chip action(trailing ×) + Button ghost small `모두 해제` | 결과 머리 아래 | 머리와 `searchScreenRecipe.headerGap`(`spacing.sm` 12), 칩 사이 `spacing.xs` 8 |
 | 결과 | 제품 `children`: ListRow(두 줄 68) + LoadMore `manual` | 적용 조건 아래 | 위 `spacing.lg` 20(SearchScreen 본문 Stack) |
-| 최근 검색 | `recentQueries`: Heading level5 + Button ghost small `전체 삭제` + ListRow compact(Web: 옆 IconButton ×, Native: `trailingAction`) | 검색 전 본문 맨 위 | `searchScreenRecipe.recentVisible` 5행 표시(보관 개수는 제품), 섹션 사이 `searchScreenRecipe.sectionGap`(`spacing.xl` 24) |
+| 최근 검색 | `recentQueries`: Heading level5 + Button ghost small `전체 삭제` + ListRow compact + `trailingAction` IconButton × `edge="end"`(두 플랫폼, 행 글자·× glyph 칸이 여백 선 16) | 검색 전 본문 맨 위 | `searchScreenRecipe.recentVisible` 5행 표시(보관 개수는 제품), 섹션 사이 `searchScreenRecipe.sectionGap`(`spacing.xl` 24) |
 | 추천 검색어 | `suggestedQueries`: Heading level5 + Chip action wrap | 최근 검색 아래, 검색어 때문인 0건 아래 | 칩 사이 `spacing.xs` 8 |
 | 자동완성 | `suggestions`: ListRow compact ×(1 + `searchScreenRecipe.suggestionVisible` 6) | 입력 중 본문 | 행 최소 44 |
 | 필터 시트 | `filterSheet`: Sheet(`size` 기본 `large`, 섹션은 제품이 `auto`, Native `scrollable`, Web ≥ 960 `placement="end"`) | 오버레이 | 머리·footer 고정, 섹션은 제품 `renderContent`(섹션 사이 `spacing.xl` 24) |

@@ -4,7 +4,7 @@ import { resolveColorReference } from "@hjmds/design-contracts/color-references"
 import { focusIndicatorContract } from "@hjmds/design-contracts/contracts";
 import { visibleControlHeight, } from "@hjmds/design-contracts/components/design-system-provider";
 import { buttonRecipe, fieldRecipe, resolveButtonEdgeOverhang } from "@hjmds/design-contracts/recipes/base";
-import { bottomNavigationRecipe, iconButtonRecipe, resolveIconButtonEdgeOverhang, comboboxRecipe, dialogRecipe, listRowRecipe, menuRecipe, searchFieldRecipe, selectRecipe, sheetRecipe, skeletonRecipe, tooltipRecipe, switchRecipe, toastRecipe, } from "@hjmds/design-contracts/recipes";
+import { bottomNavigationRecipe, iconButtonRecipe, resolveIconButtonEdgeOverhang, comboboxRecipe, dialogRecipe, listRecipe, listRowRecipe, menuRecipe, searchFieldRecipe, selectRecipe, sheetRecipe, skeletonRecipe, tooltipRecipe, switchRecipe, toastRecipe, } from "@hjmds/design-contracts/recipes";
 function kebab(value) {
     return value.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
 }
@@ -76,6 +76,15 @@ export function createHjmThemeStyle(value) {
     // does not carry a second copy of the same numbers.
     style["--hjm-list-row-gap"] = rem(listRowRecipe.gap);
     style["--hjm-list-row-leading-size"] = rem(listRowRecipe.leadingSize);
+    // Row text sits on the container content edge; the surface bleeds by this much (2026-10-17 user decision).
+    style["--hjm-list-row-surface-bleed"] = rem(listRowRecipe.surfaceBleed);
+    style["--hjm-list-grouped-padding-inline"] = rem(listRecipe.grouped.paddingInline);
+    for (const [name, value] of Object.entries(listRecipe.separators)) {
+        if (value === null)
+            continue;
+        style[`--hjm-list-separator-${kebab(name)}-start`] = rem(value.insetStart);
+        style[`--hjm-list-separator-${kebab(name)}-end`] = rem(value.insetEnd);
+    }
     // Native already pins a described switch to the two-line list-row height; Web
     // let content decide (~48), so neighbouring settings rows differed by platform.
     style["--hjm-switch-row-min-height"] = rem(switchRecipe.rowMinHeight);

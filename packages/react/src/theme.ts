@@ -27,6 +27,7 @@ import {
   resolveIconButtonEdgeOverhang,
   comboboxRecipe,
   dialogRecipe,
+  listRecipe,
   listRowRecipe,
   menuRecipe,
   searchFieldRecipe,
@@ -125,6 +126,14 @@ export function createHjmThemeStyle(
   // does not carry a second copy of the same numbers.
   style["--hjm-list-row-gap"] = rem(listRowRecipe.gap);
   style["--hjm-list-row-leading-size"] = rem(listRowRecipe.leadingSize);
+  // Row text sits on the container content edge; the surface bleeds by this much (2026-10-17 user decision).
+  style["--hjm-list-row-surface-bleed"] = rem(listRowRecipe.surfaceBleed);
+  style["--hjm-list-grouped-padding-inline"] = rem(listRecipe.grouped.paddingInline);
+  for (const [name, value] of Object.entries(listRecipe.separators)) {
+    if (value === null) continue;
+    style[`--hjm-list-separator-${kebab(name)}-start`] = rem(value.insetStart);
+    style[`--hjm-list-separator-${kebab(name)}-end`] = rem(value.insetEnd);
+  }
   // Native already pins a described switch to the two-line list-row height; Web
   // let content decide (~48), so neighbouring settings rows differed by platform.
   style["--hjm-switch-row-min-height"] = rem(switchRecipe.rowMinHeight);

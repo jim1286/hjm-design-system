@@ -336,7 +336,8 @@ export const ListRow = forwardRef<HTMLElement, ListRowProps>(function ListRow(
       "data-lines": description ? "two" : "one",
       "data-state": disabled ? "disabled" : selected ? "selected" : "idle",
       // Placement wins over the legacy `style`, matching Surface's ordering.
-      style: { ...style, ...layoutStyle },
+      // With trailingAction the frame is the placed root, as Native's outer View.
+      style: trailingAction ? style : { ...style, ...layoutStyle },
     },
     leading
       ? <span className="hjm-list-row__leading" data-shape={leadingShape}>{leading}</span>
@@ -350,5 +351,13 @@ export const ListRow = forwardRef<HTMLElement, ListRowProps>(function ListRow(
     trailing ? <span className="hjm-list-row__trailing">{trailing}</span> : null,
   );
   const linked = href && renderLink ? renderLink(row.props as React.ComponentPropsWithRef<"a">) : row;
-  return trailingAction ? <div style={{display:"flex",alignItems:"center",gap:listRowRecipe.gap}}><div style={{flex:1,minWidth:0}}>{linked}</div><div style={{flexShrink:0}}>{trailingAction}</div></div> : linked;
+  // The frame owns the row surface and its bleed so the command and the separate action share one fill, as Native;
+  // the action stays outside the link/button (styles.css `.hjm-list-row-frame`).
+  return trailingAction ? (
+    <div className="hjm-list-row-frame" data-density={density}
+      data-state={disabled ? "disabled" : selected ? "selected" : "idle"} style={layoutStyle}>
+      {linked}
+      <div className="hjm-list-row__action">{trailingAction}</div>
+    </div>
+  ) : linked;
 });

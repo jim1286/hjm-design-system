@@ -736,13 +736,16 @@ export declare const listRecipe: {
     readonly separators: {
         readonly none: null;
         readonly full: {
-            readonly insetStart: 0;
-            readonly insetEnd: 0;
+            readonly insetStart: number;
+            readonly insetEnd: number;
         };
         readonly indented: {
             readonly insetStart: number;
-            readonly insetEnd: 0;
+            readonly insetEnd: number;
         };
+    };
+    readonly grouped: {
+        readonly paddingInline: 8;
     };
     readonly background: null;
 };
@@ -803,6 +806,12 @@ export declare const listRowRecipe: {
         readonly descriptionWidthPercent: 40;
         readonly trailingWidth: 32;
     };
+    /**
+     * Inline placement (2026-10-17 user decision, see `listRowSurfaceBleed`): the content box sits on the container's
+     * content edge and the surface bleeds outward by `paddingHorizontal` — renderers draw the row with that padding and
+     * the same negative inline margin, so pressed/selected fills keep 8 of room beyond the text.
+     */
+    readonly surfaceBleed: 8;
     readonly gap: 12;
     readonly leadingSize: 40;
     /**

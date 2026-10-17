@@ -1,6 +1,7 @@
 import { act, create } from "react-test-renderer";
 import { expect, it, vi } from "vitest";
-import { FlatList, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
+import { listRowRecipe } from "@hjmds/design-contracts/recipes";
 import { HjmNativeProvider } from "../src/provider.js";
 import { VirtualList } from "../src/virtual-list.js";
 import { Masonry } from "../src/masonry.js";
@@ -12,7 +13,9 @@ it("passes fixed-row geometry and keys to native virtualization", async () => {
   await act(async () => { tree=create(<VirtualList items={["a","b"]} keyExtractor={item=>item} rowHeight={60} height={240} label="Results" renderItem={item=><Text>{item}</Text>} />); });
   const list=tree.root.findByType(FlatList);
   expect(list.props.getItemLayout(null,1)).toEqual({length:60,offset:60,index:1});
-  expect(list.props.style).toEqual({ height: 240, flexGrow: 0, flexShrink: 0 });
+  // The viewport keeps the ListRow surface bleed as padding and bleeds itself by the same amount (2026-10-17).
+  expect(list.props.style).toEqual({ height: 240, flexGrow: 0, flexShrink: 0, marginHorizontal: -listRowRecipe.surfaceBleed });
+  expect(StyleSheet.flatten(list.props.contentContainerStyle)).toEqual({ paddingHorizontal: listRowRecipe.surfaceBleed });
   expect(list.props.accessibilityLabel).toBe("Results");
   act(()=>tree.unmount());
 });
@@ -28,9 +31,9 @@ it("gives empty guidance the entire native list viewport", async () => {
   let tree!: ReturnType<typeof create>;
   await act(async () => { tree = create(<VirtualList items={[]} keyExtractor={String} rowHeight={60} height={240} label="Results" renderItem={String} empty={<Text>No results</Text>} />); });
   const list = tree.root.findByType(FlatList);
-  expect(list.props.contentContainerStyle).toMatchObject({ flexGrow: 1, justifyContent: "center", alignItems: "center" });
+  expect(StyleSheet.flatten(list.props.contentContainerStyle)).toMatchObject({ flexGrow: 1, justifyContent: "center", alignItems: "center" });
   await act(async () => tree.update(<VirtualList items={["a"]} keyExtractor={String} rowHeight={60} height={240} label="Results" renderItem={item => <Text>{item}</Text>} />));
-  expect(tree.root.findByType(FlatList).props.contentContainerStyle).toBeUndefined();
+  expect(StyleSheet.flatten(tree.root.findByType(FlatList).props.contentContainerStyle)).toEqual({ paddingHorizontal: listRowRecipe.surfaceBleed });
   act(() => tree.unmount());
 });
 it("keeps the measured width and centers an empty native masonry region", async () => {

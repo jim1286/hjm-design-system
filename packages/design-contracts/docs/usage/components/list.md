@@ -92,8 +92,8 @@ Native `grouped` 프레임은 Provider의 `tokens.radius.lg`를 읽는다. plain
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 화면 본문 폭을 채우는 세로 묶음이다. `grouped`는 배경 `--hjm-color-bg`와 모서리 `radius.lg` 16으로 한 덩어리가 된다 | `design-contracts/src/foundations.ts`(`radius`), `react/src/styles.css`(`.hjm-list`) |
-| 간격 | 행 사이 간격은 없고 구분선 1px(`--hjm-color-border`)만 들어간다. `indented` 구분선의 시작 들여쓰기: 60(행 좌우 여백 `spacing.xs` 8 + leading 40 + `spacing.sm` 12, 글자 시작과 같은 위치, `listRecipe.separators.indented`, 두 플랫폼. 2026-10-17 전에는 행 여백을 빼서 52였다). 끝 쪽은 둘 다 0. 덩어리 바깥 여백·섹션 사이 간격은 감싸는 Stack이 준다(페이지 좌우 여백은 `layout.pagePadding`, 섹션 간격은 `layout.sectionGap` = `spacing.xl` 24) | `design-contracts/src/component-recipes.ts`(`listRecipe`), `design-contracts/src/foundations.ts`(`layout`), `react/src/styles.css`(`.hjm-list`), `react-native/src/data-display.tsx`(List) |
+| 크기 | 화면 본문 폭을 채우는 세로 묶음이다. `plain`은 자르지 않으므로 행 표면이 부모 여백 쪽으로 8씩 넓어진다(행 글자는 목록 콘텐츠 가장자리). `grouped`는 배경 `--hjm-color-bg`와 모서리 `radius.lg` 16으로 한 덩어리가 되고 그 모양으로 자르므로, 좌우 안쪽 여백 `listRecipe.grouped.paddingInline`(= `listRowRecipe.surfaceBleed` 8)을 두어 행 표면이 잘리지 않고 행 글자는 이전처럼 덩어리 끝에서 8 안쪽에 온다 | `design-contracts/src/component-recipes.ts`(`listRecipe`), `react/src/styles.css`(`.hjm-list`), `react-native/src/data-display.tsx`(List) |
+| 간격 | 행 사이 간격은 없고 구분선 1px(`--hjm-color-border`)만 들어간다. 구분선 위치는 목록 콘텐츠 가장자리(= 행 글자 시작) 기준이다: `indented`는 시작 52(leading 40 + `spacing.sm` 12, 글자 시작과 같은 위치), 끝 −8(행 표면 끝까지). `full`은 시작·끝 모두 −8로 행 표면 폭과 같다(`listRecipe.separators`, 두 플랫폼, Web `--hjm-list-separator-*`). 덩어리 바깥 여백·섹션 사이 간격은 감싸는 Stack이 준다(페이지 좌우 여백은 `layout.pagePadding`, 섹션 간격은 `layout.sectionGap` = `spacing.xl` 24) | `design-contracts/src/component-recipes.ts`(`listRecipe`), `design-contracts/src/foundations.ts`(`layout`), `react/src/styles.css`(`.hjm-list`), `react-native/src/data-display.tsx`(List) |
 | 순서·정렬 | 다음 페이지 요청은 목록 바로 아래에 [LoadMore](load-more.md)를 둔다 | — |
 | 고정·스크롤 | List 자체는 스크롤하지 않는다. 화면 스크롤 안에 둔다 | `react-native/src/data-display.tsx`(List) |
 | 좁은 폭·큰 글자 | — | — |
@@ -189,6 +189,7 @@ import { CollectionRail } from "@hjmds/react/collection-rail";
 
 - 자식 하나가 행 하나다. 자식마다 안정된 `key`를 준다(없으면 순서 index로 key를 만든다).
 - 구분선을 행에 직접 그리지 않는다. `separator`로 정한다.
+- `plain` 목록은 좌우 여백이 8 이상인 부모(화면 본문, Card·Sheet 본문 등) 안에 둔다. 여백 0인 상자에 두면 행 표면이 잘리거나 Web에 가로 스크롤이 생긴다.
 - TaskList는 체크해도 순서를 바꾸거나 지우지 않는다. 저장·실패·되돌리기는 제품이 `onCompletedChange`에서 처리한다.
 
 ## 플랫폼 차이
@@ -202,3 +203,6 @@ import { CollectionRail } from "@hjmds/react/collection-rail";
 2026-10-07 Utilverse 항목 삭제 채택을 위해 `renderItemAction`을 추가했다. 체크와 삭제의 초점·누름을 분리하고 큰 글자 라벨 폭을 보존하도록 행동을 다음 줄에 둔다. `renderCollection`의 `renderItem`에도 포함된다. 삭제 저장·실패·되돌리기는 제품이 처리한다.
 
 항목 삭제 뒤에는 제품이 다음 항목의 독립 행동(없으면 이전 항목, 목록이 비면 후속 행동)으로 초점을 복구한다. Web Showcase는 ref와 커밋 후 focus 예시를 제공한다. Native 접근성 초점 검증은 아직 남아 있다.
+
+## 근거
+- 구분선·grouped 여백: 2026-10-17 사용자 결정(행 글자는 여백 선 16, 표면만 바깥으로 8). 행 콘텐츠 상자가 목록 콘텐츠 가장자리로 옮겨져 `indented` 시작이 60 → 52가 되어도 화면에서 보이는 위치(글자 시작)는 같다. 기본 화면에서 행 글자가 24, 섹션 제목이 16이던 실측은 [ListRow 근거](list-row.md#근거)에 있다. 이전 plain 목록의 `overflow: hidden`은 grouped 모서리만을 위한 것이라 grouped로 옮겼다.

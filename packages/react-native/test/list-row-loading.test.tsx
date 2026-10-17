@@ -18,7 +18,13 @@ it.each(["compact", "comfortable", "relaxed", "spacious"] as const)("retains %s 
   const view = (loading: boolean) => <HjmNativeProvider reducedMotion><ListRow testID="row" density={density} title="Title" description="Description" loading={loading} loadingLabel="Loading" onPress={activate} trailingAction={<Button onPress={activate}>Remove</Button>} /></HjmNativeProvider>;
   act(() => { tree = create(view(true)); });
   const host = tree!.root.findAll(node => typeof node.type === "string" && node.props.testID === "row")[0]!;
-  expect(flatten(host.props.style)).toMatchObject({ minHeight: listRowRecipe.density[density].twoLineMinHeight, paddingVertical: listRowRecipe.density[density].paddingVertical });
+  // The 1pt transparent selection border is part of the recipe padding, and the surface bleeds by paddingHorizontal
+  // so the placeholder content sits on the container's content edge like the real row (2026-10-17).
+  const metrics = listRowRecipe.density[density];
+  const hostStyle = flatten(host.props.style) as Record<string, number>;
+  expect(hostStyle).toMatchObject({ minHeight: metrics.twoLineMinHeight, marginHorizontal: -metrics.paddingHorizontal });
+  expect(hostStyle.paddingVertical! + hostStyle.borderWidth!).toBe(metrics.paddingVertical);
+  expect(hostStyle.paddingHorizontal! + hostStyle.borderWidth!).toBe(metrics.paddingHorizontal);
   expect(host.props.accessibilityState).toEqual({ busy: true });
   expect(host.props.onPress).toBeUndefined();
   expect(tree!.root.findAllByType(Button)).toHaveLength(0);

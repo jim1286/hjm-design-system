@@ -8,6 +8,7 @@ import { TopBar } from "../src/top-bar.js";
 import { BottomCTA } from "../src/bottom-cta.js";
 import { ScreenLayout } from "../src/screens.js";
 import { bottomCtaRecipe } from "@hjmds/design-contracts/recipes";
+import { screenPatternRecipe } from "@hjmds/design-contracts/screen-patterns";
 import { List } from "../src/advanced-display.js";
 import { ListRow } from "../src/display.js";
 import { Switch } from "../src/selection.js";
@@ -51,15 +52,24 @@ describe("screen chrome layout", () => {
   it.each(["ltr", "rtl"] as const)("aligns indented-list titles and keeps compact switches named in %s", async (direction) => {
     await page.viewport(320, 844);
     const change = vi.fn();
+    // Rows bleed their surface into the host inset (listRowRecipe.surfaceBleed), so they are rendered in a real screen
+    // body: the titles sit on the 16 gutter and the switches end on it (2026-10-17 alignment decision).
     await act(async () => root.render(<HjmProvider direction={direction} textScale={1}>
-      <List label="받을 알림" separator="indented">
-        <ListRow title="내 활동" trailing={<Switch label="내 활동 알림" labelVisibility="hidden" onCheckedChange={change} />} />
-        <ListRow title="주간 모아보기" trailing={<Switch label="주간 모아보기 알림" labelVisibility="hidden" />} />
-      </List>
+      <ScreenLayout title="알림 설정">
+        <List label="받을 알림" separator="indented">
+          <ListRow title="내 활동" trailing={<Switch label="내 활동 알림" labelVisibility="hidden" onCheckedChange={change} />} />
+          <ListRow title="주간 모아보기" trailing={<Switch label="주간 모아보기 알림" labelVisibility="hidden" />} />
+        </List>
+      </ScreenLayout>
     </HjmProvider>));
     const titles = [...host.querySelectorAll(".hjm-list-row__title")].map((node) => node.getBoundingClientRect());
     expect(titles[0]!.left).toBe(titles[1]!.left);
     expect(titles[0]!.right).toBe(titles[1]!.right);
+    const width = document.documentElement.clientWidth;
+    const gutter = screenPatternRecipe.padding;
+    const track = host.querySelector(".hjm-switch__track")!.getBoundingClientRect();
+    if (direction === "ltr") { expect(titles[0]!.left).toBe(gutter); expect(width - track.right).toBe(gutter); }
+    else { expect(width - titles[0]!.right).toBe(gutter); expect(track.left).toBe(gutter); }
     const toggle = host.querySelector<HTMLButtonElement>('[role="switch"]')!;
     expect(toggle.textContent).toBe("내 활동 알림");
     expect(toggle.querySelector(".hjm-visually-hidden")).not.toBeNull();

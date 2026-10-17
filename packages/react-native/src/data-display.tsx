@@ -479,6 +479,11 @@ export function ListRow({
   // `leadingSize` was declared by the recipe but unbound, so consumers rebuilt
   // the avatar box themselves. The frame belongs here; `leadingStyle` keeps
   // only composition keys.
+  // Inline placement (listRowRecipe.surfaceBleed, 2026-10-17 user decision): the row content sits on the container's
+  // content edge and the pressable surface (pressed/selected fill, border, hit area) bleeds outward by
+  // `paddingHorizontal` through the same negative margin. The selection border is part of that padding, not added to
+  // it: the always-present 1pt border used to push content 1pt further than Web's inset ring (text at 25, not 24).
+  const rowBorder = 1;
   const leadingRadius = listRowRecipe.leadingShapes[leadingShape];
   const leadingFrameStyle = {
     alignItems: "center",
@@ -497,9 +502,9 @@ export function ListRow({
       accessibilityLabel={loadingLabel} accessibilityState={{ busy: true }}
       importantForAccessibility={loadingLabel ? "yes" : "no-hide-descendants"}
       style={[{ alignItems: "center", flexDirection: "row", direction: theme.environment.direction,
-        gap: listRowRecipe.gap, minHeight: visualState.minHeight,
-        paddingHorizontal: metrics.paddingHorizontal, paddingVertical: metrics.paddingVertical,
-        borderWidth: 1, borderColor: "transparent" }, layoutStyle]}>
+        gap: listRowRecipe.gap, minHeight: visualState.minHeight, marginHorizontal: -metrics.paddingHorizontal,
+        paddingHorizontal: metrics.paddingHorizontal - rowBorder, paddingVertical: metrics.paddingVertical - rowBorder,
+        borderWidth: rowBorder, borderColor: "transparent" }, layoutStyle]}>
       {leading ? <View style={[placeholder, leadingFrameStyle]} /> : null}
       <View style={{ flex: 1, minWidth: 0, gap: spacing.xxs }}>
         <View style={[placeholder, { width: `${listRowRecipe.loading.titleWidthPercent}%`, height: theme.tokens.typography[listRowRecipe.title.textVariant].lineHeight }]} />
@@ -593,17 +598,18 @@ export function ListRow({
           ? "transparent"
           : visualState.backgroundColor,
       borderColor: selected && !trailingAction ? theme.colors.contentBrand : "transparent",
-      borderWidth: trailingAction ? 0 : 1,
+      borderWidth: trailingAction ? 0 : rowBorder,
       direction: visualState.direction,
       flex: trailingAction ? 1 : undefined,
       flexDirection: "row",
       gap: listRowRecipe.gap,
       minHeight: visualState.minHeight,
       opacity: trailingAction ? 1 : visualState.opacity,
+      // With trailingAction the outer frame owns the bleed and border; the command keeps the start padding.
       ...(trailingAction
-        ? { paddingStart: metrics.paddingHorizontal }
-        : { paddingHorizontal: metrics.paddingHorizontal }),
-      paddingVertical: metrics.paddingVertical,
+        ? { paddingStart: metrics.paddingHorizontal - rowBorder, paddingVertical: metrics.paddingVertical - rowBorder }
+        : { marginHorizontal: -metrics.paddingHorizontal, paddingHorizontal: metrics.paddingHorizontal - rowBorder,
+            paddingVertical: metrics.paddingVertical - rowBorder }),
     },
     trailingAction ? undefined : layoutStyle,
   ];
@@ -645,9 +651,12 @@ export function ListRow({
           alignItems: "center",
           backgroundColor: visualState.backgroundColor,
           borderColor: selected ? theme.colors.contentBrand : "transparent",
-          borderWidth: 1,
+          borderWidth: rowBorder,
           direction: visualState.direction,
           flexDirection: "row",
+          // Command and action sit listRowRecipe.gap apart, as Web's frame.
+          gap: listRowRecipe.gap,
+          marginHorizontal: -metrics.paddingHorizontal,
           minHeight: visualState.minHeight,
           opacity: visualState.opacity,
         },
@@ -657,7 +666,8 @@ export function ListRow({
       {main}
       <View
         style={[
-          { flexShrink: 0, paddingEnd: metrics.paddingHorizontal },
+          // The action box ends on the content edge, so an `edge="end"` IconButton puts its glyph on that line.
+          { flexShrink: 0, paddingEnd: metrics.paddingHorizontal - rowBorder },
           trailingActionStyle,
         ]}
       >
@@ -1450,11 +1460,14 @@ export function List({
       style={[
         {
           direction: environment.direction,
+          // A grouped list clips to its rounded surface, so it keeps the row surface bleed as inline padding
+          // (listRecipe.grouped); a plain list lets rows bleed into the host's inset (2026-10-17).
           ...(appearance === "grouped"
             ? {
                 backgroundColor: colors.bg,
                 borderRadius: tokens.radius.lg,
                 overflow: "hidden" as const,
+                paddingHorizontal: listRecipe.grouped.paddingInline,
               }
             : {}),
         },

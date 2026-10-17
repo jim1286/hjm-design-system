@@ -71,11 +71,14 @@ export const ListRow = forwardRef(function ListRow({ title, description, leading
         "data-lines": description ? "two" : "one",
         "data-state": disabled ? "disabled" : selected ? "selected" : "idle",
         // Placement wins over the legacy `style`, matching Surface's ordering.
-        style: { ...style, ...layoutStyle },
+        // With trailingAction the frame is the placed root, as Native's outer View.
+        style: trailingAction ? style : { ...style, ...layoutStyle },
     }, leading
         ? _jsx("span", { className: "hjm-list-row__leading", "data-shape": leadingShape, children: leading })
         : null, _jsxs("span", { className: "hjm-list-row__content", children: [_jsx("span", { className: "hjm-list-row__title", children: title }), description ? (_jsx("span", { className: "hjm-list-row__description", children: description })) : null] }), trailing ? _jsx("span", { className: "hjm-list-row__trailing", children: trailing }) : null);
     const linked = href && renderLink ? renderLink(row.props) : row;
-    return trailingAction ? _jsxs("div", { style: { display: "flex", alignItems: "center", gap: listRowRecipe.gap }, children: [_jsx("div", { style: { flex: 1, minWidth: 0 }, children: linked }), _jsx("div", { style: { flexShrink: 0 }, children: trailingAction })] }) : linked;
+    // The frame owns the row surface and its bleed so the command and the separate action share one fill, as Native;
+    // the action stays outside the link/button (styles.css `.hjm-list-row-frame`).
+    return trailingAction ? (_jsxs("div", { className: "hjm-list-row-frame", "data-density": density, "data-state": disabled ? "disabled" : selected ? "selected" : "idle", style: layoutStyle, children: [linked, _jsx("div", { className: "hjm-list-row__action", children: trailingAction })] })) : linked;
 });
 //# sourceMappingURL=display.js.map

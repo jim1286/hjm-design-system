@@ -208,6 +208,7 @@ describe("Native product renderer gaps", () => {
       borderRadius: radius.lg,
       direction: "rtl",
       overflow: "hidden",
+      paddingHorizontal: listRecipe.grouped.paddingInline,
     });
     const divider = renderer.root.findAllByType(View).find(
       (node) => flattenStyle(node.props.style).height === 1,

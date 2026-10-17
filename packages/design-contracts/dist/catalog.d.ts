@@ -4722,13 +4722,16 @@ export declare const recipeRegistry: {
         readonly separators: {
             readonly none: null;
             readonly full: {
-                readonly insetStart: 0;
-                readonly insetEnd: 0;
+                readonly insetStart: number;
+                readonly insetEnd: number;
             };
             readonly indented: {
                 readonly insetStart: number;
-                readonly insetEnd: 0;
+                readonly insetEnd: number;
             };
+        };
+        readonly grouped: {
+            readonly paddingInline: 8;
         };
         readonly background: null;
     };
@@ -4786,6 +4789,7 @@ export declare const recipeRegistry: {
             readonly descriptionWidthPercent: 40;
             readonly trailingWidth: 32;
         };
+        readonly surfaceBleed: 8;
         readonly gap: 12;
         readonly leadingSize: 40;
         readonly leadingShapes: {

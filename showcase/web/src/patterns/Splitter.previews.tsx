@@ -33,7 +33,9 @@ export function SplitterPreview() {
           getValueText={(value) => `${value}%`}
           className="hjm-showcase-splitter-stage"
           primaryPane={
-            <List label="내 기록">
+            // Rows bleed their surface into the pane inset (listRowRecipe.surfaceBleed), so the list pane takes the same
+            // content inset as the detail pane and both texts start on one line.
+            <List label="내 기록" className="hjm-showcase-splitter-pane">
               {/* The row itself is the choice; a trailing "보기" button per row imitated selection with button tones. */}
               {records.map((entry) => (
                 <ListRow key={entry.id} title={entry.title} selected={entry.id === selected} onClick={() => setSelected(entry.id)} />

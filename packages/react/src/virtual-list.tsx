@@ -1,5 +1,6 @@
 import { useId, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { resolveVirtualWindow, validateListKeys } from "@hjmds/design-contracts/components/virtual-list";
+import { listRowRecipe } from "@hjmds/design-contracts/recipes";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type VirtualListProps<T> = { items: readonly T[]; keyExtractor: (item: T) => string; renderItem: (item: T, index: number) => ReactNode; rowHeight: number; height: number; label: string; empty?: ReactNode; overscan?: number;
   /** Canonical layout-only placement on the scroll viewport. `height` stays the prop's: the window math reads it. */
@@ -44,7 +45,9 @@ export function VirtualList<T>({ items, keyExtractor, renderItem, rowHeight, hei
   const indices = [...new Set([...Array.from({ length: range.end - range.start }, (_, i) => i + range.start), ...(items.length ? [selected] : []), ...(focused >= 0 ? [focused] : [])])].sort((a,b) => a-b);
   // Pointer or programmatic focus must become the keyboard origin too.
   return <div data-hjm-virtual-list className="hjm-virtual-list" ref={host} role="list" aria-label={label} tabIndex={0}
-    style={{ ...layoutStyle, overflowY: "auto", height, position: "relative" }} onScroll={event => setScrollTop(event.currentTarget.scrollTop)}
+    // The viewport clips, so it leaves room for the ListRow surface bleed and bleeds itself by the same amount: row text
+    // stays on the host's content edge and the row fill is not cut or turned into horizontal scroll (2026-10-17).
+    style={{ marginInline: -listRowRecipe.surfaceBleed, paddingInline: listRowRecipe.surfaceBleed, ...layoutStyle, overflowY: "auto", height, position: "relative" }} onScroll={event => setScrollTop(event.currentTarget.scrollTop)}
     onKeyDown={event => {
       if (!items.length || !(event.target instanceof HTMLElement) || (event.target !== event.currentTarget && !event.target.hasAttribute("data-virtual-row"))) return;
       const next = event.key === "ArrowDown" ? Math.min(selected + 1, items.length - 1) : event.key === "ArrowUp" ? Math.max(0, selected - 1) : event.key === "Home" ? 0 : event.key === "End" ? items.length - 1 : null;

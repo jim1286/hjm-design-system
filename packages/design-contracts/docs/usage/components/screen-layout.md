@@ -82,7 +82,7 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 | `scroll` | `"screen"` · `"content"` | `"screen"` | `content`는 본문 자식(가상화 목록)이 스크롤을 소유한다. 상태 교체 중에는 `screen`으로 돌아간다 |
 | `contentAlignment` | `"start"` · `"center"` | `"start"` | ready 본문을 사용 영역 중앙에 배치. 긴 본문은 위가 잘리지 않게 스크롤한다. 로그인/제품 안내를 가짜 query state로 바꾸지 않는다(1.24.0) |
 | `surface` | `"default"` · `"transparent"` | `"default"` | 투명은 제품 host의 배경·wallpaper를 보존. 배경색 style 우회 대신 사용(1.24.0) |
-| `contentInset` | `"default"` · `"none"` · `"body-edge"` | `"default"` | `none`은 헤더·notice·본문·footer padding을 0으로(Native는 footer 위 테두리도 뺀다). host가 모든 여백을 이미 줄 때 쓴다. `body-edge`는 헤더·notice·footer 여백(16)과 footer 테두리를 유지하고 **본문 좌우 padding만 0**으로 한다. 자기 좌우 여백을 가진 전체 폭 목록 행(ConversationRow·NotificationRow 등 행 padding 16)을 본문에 바로 둘 때 쓴다(미게시). 값 목록은 계약 `ScreenContentInset`·`screenContentInsets` |
+| `contentInset` | `"default"` · `"none"` · `"body-edge"` | `"default"` | `none`은 헤더·notice·본문·footer padding을 0으로(Native는 footer 위 테두리도 뺀다). host가 모든 여백을 이미 줄 때 쓴다. `body-edge`는 헤더·notice·footer 여백(16)과 footer 테두리를 유지하고 **본문 좌우 padding만 0**으로 한다. 자기 좌우 여백을 가진 전체 폭 목록 행(ConversationRow·NotificationRow 등 행 padding 16)을 본문에 바로 둘 때 쓴다(미게시). ListRow·NotificationItem은 `default`에 둔다. 값 목록은 계약 `ScreenContentInset`·`screenContentInsets` |
 | `presentation` | `"dashboard"` · `"editorial"` · `"landscape"` | 가장 가까운 profile.screens.overview / 없으면 기존 골격 | [디자인 프로필](../../design-profile.md)의 제공 범위를 따른다. 명시값이 프로필을 이긴다. 헤더 배치·읽기 폭만 바꾸고 상태·입력·행동 슬롯은 유지한다 |
 | `as` (Web) | `"main"` · `"section"` | `"main"` | 제품 셸에 이미 `<main>`이 있으면 `section` |
 | `layoutStyle` | `HjmCompositionStyleProp` | 없음 | 화면 루트 배치 전용(예: 분할 화면의 `flex`·`width`). ScreenLayout 위에 만든 화면은 모두 이 prop을 루트까지 넘긴다 |
@@ -130,7 +130,7 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 
 - 이미 `<main>`이 있는 제품 셸 안에서는 `as="section"`을 준다. 중첩 main이 생긴다.
 
-- 본문 좌우 여백을 직접 빼려고 목록에 음수 margin이나 제품 CSS를 쓰지 않는다. 행이 자기 여백을 가지면 `contentInset="body-edge"`, host가 모든 여백을 가지면 `"none"`이다. 본문 안에 행 여백이 없는 제목·문단을 함께 두는 화면(설정 묶음 제목, 알림 그룹 제목 + ListRow)은 `default`를 유지한다. ListRow 좌우 여백은 8이라 본문 여백을 빼면 제목이 화면 끝에 붙는다.
+- 본문 좌우 여백을 직접 빼려고 목록에 음수 margin이나 제품 CSS를 쓰지 않는다. 행이 자기 여백을 가지면 `contentInset="body-edge"`, host가 모든 여백을 가지면 `"none"`이다. ListRow·NotificationItem은 글자를 부모 콘텐츠 가장자리에 두고 표면만 8 바깥으로 넓히므로(2026-10-17) `default` 본문에서 글자가 여백 선 16에 오고 설정 묶음 제목·알림 그룹 제목과 같은 선에 선다. `body-edge` 본문에 두면 글자가 화면 끝에 붙으므로 두지 않는다.
 
 ### 디자인 프로필의 화면 표현
 

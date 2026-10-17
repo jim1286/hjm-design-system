@@ -328,10 +328,10 @@ function SearchIdleSections({ recent, suggested, legacy, onCommit, hostRef, onRe
         <Heading level="level5" semanticLevel={2}>{recent.title}</Heading>
         <Button tone="ghost" size="small" edge="end" onClick={onClearAll}>{recent.clearAllLabel}</Button>
       </Stack>
-      <Stack gap="xxs">{visible.map((item, index) => <Stack key={item} axis="inline" align="center" gap="xxs">
-        <ListRow density="compact" leading={recent.icon} title={item} onClick={() => onCommit(item)} layoutStyle={{ flex: 1, minWidth: 0 }} />
-        <IconButton data-search-recent-remove="" label={recent.removeLabel(item)} tone="ghost" onClick={() => onRemove(item, index)}>{recent.removeIcon ?? "×"}</IconButton>
-      </Stack>)}</Stack>
+      {/* The remove control is the row's trailingAction on both platforms: it sits outside the row command, the row text
+          stays on the gutter and the edge-aligned × glyph ends on the gutter line (2026-10-17 alignment decision). */}
+      <Stack gap="xxs">{visible.map((item, index) => <ListRow key={item} density="compact" leading={recent.icon} title={item} onClick={() => onCommit(item)}
+        trailingAction={<IconButton data-search-recent-remove="" label={recent.removeLabel(item)} tone="ghost" edge="end" onClick={() => onRemove(item, index)}>{recent.removeIcon ?? "×"}</IconButton>} />)}</Stack>
     </Stack> : null}
     {suggested?.items.length ? <SearchSuggestedChips suggested={suggested} onCommit={onCommit} /> : null}
   </Stack>;

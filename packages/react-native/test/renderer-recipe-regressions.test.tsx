@@ -747,8 +747,12 @@ describe("Native canonical recipe bindings", () => {
       ),
       gap: listRowRecipe.gap,
       minHeight: metrics.twoLineMinHeight,
-      paddingHorizontal: metrics.paddingHorizontal,
-      paddingVertical: metrics.paddingVertical,
+      // Content on the container edge, surface bleeding by paddingHorizontal; the 1pt selection border is part of
+      // the recipe padding (2026-10-17).
+      marginHorizontal: -metrics.paddingHorizontal,
+      borderWidth: 1,
+      paddingHorizontal: metrics.paddingHorizontal - 1,
+      paddingVertical: metrics.paddingVertical - 1,
     });
     expect(flattenStyle(row.props.style({ pressed: true }))).toMatchObject({
       backgroundColor: resolveColorReference(

@@ -202,7 +202,7 @@ function SearchIdleSections({ recent, suggested, legacy, onCommit }: {
         <Button tone="ghost" size="small" edge="end" onPress={recent.onClearAll}>{recent.clearAllLabel}</Button>
       </Stack>
       <Stack gap="xxs">{visible.map(item => <ListRow key={item} density="compact" leading={recent.icon} title={item} onPress={() => onCommit(item)}
-        trailingAction={<IconButton label={recent.removeLabel(item)} tone="ghost" onPress={() => recent.onRemove(item)}>{recent.removeIcon ?? <FixedGlyph tone="muted">×</FixedGlyph>}</IconButton>} />)}</Stack>
+        trailingAction={<IconButton label={recent.removeLabel(item)} tone="ghost" edge="end" onPress={() => recent.onRemove(item)}>{recent.removeIcon ?? <FixedGlyph tone="muted">×</FixedGlyph>}</IconButton>} />)}</Stack>
     </Stack> : null}
     {suggested?.items.length ? <SearchSuggestedChips suggested={suggested} onCommit={onCommit} /> : null}
   </Stack>;
