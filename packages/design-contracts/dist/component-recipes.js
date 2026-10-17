@@ -893,6 +893,7 @@ export const bottomNavigationRecipe = {
             radius: "full",
             shadow: floatingSurfaceContract.shadow,
             maxWidth: 480,
+            contentMaxWidth: null,
             outerPaddingHorizontal: spacing.md,
             outerPaddingTop: spacing.xs,
         },
@@ -904,6 +905,11 @@ export const bottomNavigationRecipe = {
             radius: null,
             shadow: null,
             maxWidth: null,
+            /**
+             * The bar surface and its top edge span the viewport, but the destinations stay in a centered 480 column
+             * (the capsule width): on a 1280 desktop two items otherwise sat at opposite screen edges (2026-10-17 review D8).
+             */
+            contentMaxWidth: 480,
             outerPaddingHorizontal: 0,
             outerPaddingTop: 0,
         },
@@ -915,6 +921,7 @@ export const bottomNavigationRecipe = {
             radius: "xl",
             shadow: floatingSurfaceContract.shadow,
             maxWidth: 384,
+            contentMaxWidth: null,
             outerPaddingHorizontal: spacing.md,
             outerPaddingTop: spacing.xs,
         },

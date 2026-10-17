@@ -82,6 +82,9 @@ function BottomNavigationInner({ descriptor, configuration = {}, getHref, render
             "--hjm-bottom-navigation-max-width": presentationRecipe.maxWidth
                 ? `${presentationRecipe.maxWidth}px`
                 : "none",
+            "--hjm-bottom-navigation-content-max-width": presentationRecipe.contentMaxWidth
+                ? `${presentationRecipe.contentMaxWidth}px`
+                : "none",
             "--hjm-bottom-navigation-outer-inline": `${presentationRecipe.outerPaddingHorizontal}px`,
             "--hjm-bottom-navigation-outer-top": `${presentationRecipe.outerPaddingTop}px`,
             ...style,

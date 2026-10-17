@@ -4,12 +4,17 @@ import { SkipNav } from "@hjmds/react/skip-nav";
 import { BottomInfo } from "@hjmds/react/bottom-info";
 import { Top } from "@hjmds/react/top";
 import { Button } from "@hjmds/react/actions";
+import { Icon } from "@hjmds/react/display";
 import { Stack, Section } from "@hjmds/react/layout";
 
 /*
   데스크톱 셸 한 장: SkipNav(첫 tab stop) → Sidebar(그룹 있는 세로 내비) → 본문.
   Layout이 자리를 정하고 이 컴포넌트들이 그 안을 채운다.
 */
+// Product icons per destination; first-syllable letters read as placeholder artwork (2026-10-17 review D6).
+const icons = { records: "calendar", archive: "download", trash: "delete", profile: "user", billing: "settings" } as const;
+const titles: Record<string, string> = { records: "내 기록", archive: "보관함", trash: "휴지통", profile: "프로필", billing: "결제" };
+
 export function SidebarPreview() {
   const [collapsed, setCollapsed] = useState(false);
   const [current, setCurrent] = useState("records");
@@ -21,7 +26,7 @@ export function SidebarPreview() {
         onCollapsedChange={setCollapsed}
         collapseLabels={{ collapse: "메뉴 접기", expand: "메뉴 펼치기" }}
         onNavigate={setCurrent}
-        renderIcon={(item) => <span>{item.label.slice(0, 1)}</span>}
+        renderIcon={(item) => <Icon name={icons[item.id as keyof typeof icons]} />}
         descriptor={{
           accessibilityLabel: "주요 메뉴",
           currentId: current,
@@ -39,8 +44,7 @@ export function SidebarPreview() {
         }}
       />
       <main id="showcase-main" className="hjm-showcase-shell-main">
-        <Top descriptor={{ title: "내 기록", description: "왼쪽 메뉴에서 다른 화면으로 갈 수 있어요.", size: "medium" }} />
-        <p>현재 화면: {current}</p>
+        <Top descriptor={{ title: titles[current] ?? titles.records!, description: "왼쪽 메뉴에서 다른 화면으로 갈 수 있어요.", size: "medium" }} />
       </main>
     </div>
   );

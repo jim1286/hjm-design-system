@@ -172,6 +172,14 @@ import {
   sliderExample,
   switchExample,
   textAreaExample,
+  bottomNavigationExample,
+  loadMoreExample,
+  menuExample,
+  sheetExample,
+  stepsExample,
+  tabsExample,
+  tooltipExample,
+  topBarExample,
 } from "../../../shared/component-examples.js";
 
 // The old empty-state button had no handler. Keep creation and search recovery observable
@@ -468,9 +476,9 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "Chip": return <ChipPreview />;
     case "Select": return <HjmSelect label={selectExample.label} name="language" placeholder={selectExample.placeholder} emptySelectionLabel={selectExample.emptySelectionLabel} defaultSelectedKey={selectExample.initial} items={selectExample.items} />;
     case "Combobox": return <HjmCombobox label={comboboxExample.label} placeholder={comboboxExample.placeholder} emptyMessage={comboboxExample.emptyMessage} loadingMessage={comboboxExample.loadingMessage} selectionRequiredMessage={comboboxExample.selectionRequiredMessage} items={comboboxExample.items.map(({ id, label }) => ({ value: id, label }))} />;
-    case "Tabs": return <HjmTabs label="선수 정보" items={[{ id: "first", label: "첫 번째", panel: "첫 번째 패널 내용" }, { id: "second", label: "두 번째", panel: "두 번째 패널 내용" }]} />;
-    case "BottomNavigation": return <HjmBottomNavigation descriptor={{ accessibilityLabel: "주요 탐색", selectedKey: "home", items: [{ id: "home", label: "홈", icon: { name: "home" } }, { id: "profile", label: "프로필", icon: { name: "user" } }] }} getHref={({ id }) => `#${id}`} renderIcon={({ name }) => <HjmIcon name={name} />} />;
-    case "LoadMore": return <ObservablePreview>{({ message, setMessage, selected, setSelected }) => <HjmLoadMore descriptor={{ state: { status: "ready", requestKey: "showcase-next" }, labels: { loadMore: "더 보기", loading: "불러오는 중", retry: "다시 시도", complete: "모두 불러왔습니다" } }} onLoadMore={async () => { setMessage("추가 항목을 불러왔어요"); }} />}</ObservablePreview>;
+    case "Tabs": return <HjmTabs label={tabsExample.label} items={tabsExample.items} />;
+    case "BottomNavigation": return <BottomNavigationPreview />;
+    case "LoadMore": return <LoadMorePreview />;
     case "Breadcrumb":
     case "Pagination": return <WebNavigationPreview />;
     case "Popover": return <PopoverPreview />;
@@ -503,12 +511,12 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "Calendar": return <CalendarPreview />;
     case "FloatingActionButton": return <FloatingActionPreview />;
     case "Carousel": return <HjmCarousel label="이번 주 소식" slides={[{ id: "one", label: "좋아하는 소식만 골라요" }, { id: "two", label: "언제든 설정을 바꿀 수 있어요" }]} labels={{ previous: "이전", next: "다음", pause: "멈추기", resume: "재생하기", navigation: "소식 이동" }} composeAccessibleName={({ position, total, label }) => `${position}/${total} ${label}`} renderSlide={({ label }) => <HjmText>{label}</HjmText>} />;
-    case "Steps": return <HjmSteps composeAccessibleName={({ position, total, label }) => `${total}단계 중 ${position}단계, ${label}`} descriptor={{ steps: [{ id: "account", label: "계정" }, { id: "profile", label: "프로필" }, { id: "confirm", label: "확인" }], currentStepId: "profile" }} statusLabels={{ pending: "예정", current: "현재", complete: "완료", error: "오류" }} />;
-    case "Menu": return <HjmMenu trigger={<button className="hjm-demo-button" type="button">작업 열기</button>} label="선수 작업" items={[{ id: "rename", label: "이름 바꾸기" }, { id: "share", label: "공유하기" }, { id: "delete", label: "삭제", tone: "danger" }]} />;
+    case "Steps": return <HjmSteps composeAccessibleName={stepsExample.accessibleName} descriptor={{ steps: stepsExample.steps, currentStepId: stepsExample.currentStepId }} statusLabels={stepsExample.statusLabels} />;
+    case "Menu": return <ObservablePreview>{({ setMessage }) => <HjmMenu trigger={<HjmIconButton label={menuExample.triggerLabel} tone="ghost"><HjmIcon name="more" /></HjmIconButton>} label={menuExample.label} items={menuExample.items} onAction={(id) => setMessage(menuExample.result(menuExample.items.find((item) => item.id === id)?.label ?? id))} />}</ObservablePreview>;
     case "Badge": return <HjmStack axis="inline" gap="sm"><HjmBadge>진행 중</HjmBadge><HjmBadge tone="success">완료</HjmBadge></HjmStack>;
     case "Avatar": return <HjmAvatar name="홍길동" />;
     case "CounterBadge": return <HjmStack axis="inline" align="center" gap="xs"><HjmIconButton label="알림 12개"><HjmIcon name="notifications" /></HjmIconButton><HjmCounterBadge count={12} /></HjmStack>;
-    case "TopBar": return <HjmTopBar title="알림 설정" leading={<HjmIconButton label="뒤로" tone="ghost"><HjmIcon name="chevronStart" /></HjmIconButton>} actions={<HjmButton tone="ghost">완료</HjmButton>} />;
+    case "TopBar": return <HjmTopBar title={topBarExample.title} leading={<HjmIconButton label={topBarExample.back} tone="ghost"><HjmIcon name="chevronStart" /></HjmIconButton>} actions={<HjmButton tone="ghost">{topBarExample.done}</HjmButton>} />;
     case "BottomCTA": return <ObservablePreview>{({ setMessage }) => <HjmBottomCTA description={bottomCtaExample.description} primaryAction={{ label: bottomCtaExample.primary.label, onClick: () => setMessage(bottomCtaExample.primary.result) }} secondaryAction={{ label: bottomCtaExample.secondary.label, onClick: () => setMessage(bottomCtaExample.secondary.result) }} />}</ObservablePreview>;
     case "List": return <HjmList label="선수 목록"><HjmListRow title="홍길동" description="내야수" /><HjmListRow title="김하늘" description="외야수" /></HjmList>;
     case "ListRow": return <ObservablePreview>{({ message, setMessage, selected, setSelected }) => <HjmListRow title="홍길동" description="선수 상세 보기" leading={<span className="hjm-showcase-avatar">홍</span>} trailing={<span aria-hidden>›</span>} onClick={() => setMessage("선수 상세를 열었어요")} />}</ObservablePreview>;
@@ -538,8 +546,8 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "Dialog": return <DialogPreview />;
     // Keep the information tone beside destructive confirmation for comparison.
     case "AlertDialog": return <AlertDialogPreview />;
-    case "Sheet": return <HjmSheet trigger={<button className="hjm-demo-button" type="button">Sheet 열기</button>} title="필터" closeLabel="필터 닫기" description="화면 크기와 방향에 맞춰 배치되는 보조 작업 영역입니다." footer={<HjmButton>적용</HjmButton>}><p>조건을 선택한 뒤 적용하세요.</p></HjmSheet>;
-    case "Tooltip": return <HjmTooltip trigger={<button className="hjm-demo-button" type="button">도움말에 포커스하거나 가리키기</button>} content="자세한 도움말" />;
+    case "Sheet": return <HjmSheet trigger={<HjmButton tone="secondary">{sheetExample.trigger}</HjmButton>} title={sheetExample.title} closeLabel={sheetExample.closeLabel} description={sheetExample.description} footer={<HjmButton>{sheetExample.apply}</HjmButton>}><HjmText as="p">{sheetExample.body}</HjmText></HjmSheet>;
+    case "Tooltip": return <HjmStack gap="xs" align="start"><HjmTooltip trigger={<HjmIconButton label={tooltipExample.label} tone="ghost"><HjmIcon name="help" /></HjmIconButton>} content={tooltipExample.content} /><HjmText as="p" variant="label" tone="muted">{tooltipExample.hint}</HjmText></HjmStack>;
     case "VisuallyHidden": return <HjmStack axis="inline" align="center"><button type="button" className="hjm-demo-button"><span aria-hidden>🔔</span><HjmVisuallyHidden>읽지 않은 알림 3개</HjmVisuallyHidden></button><HjmText tone="muted">추가 맥락은 화면에는 보이지 않고 접근성 트리에 남습니다.</HjmText></HjmStack>;
     default: return assertNever(name);
   }
@@ -1114,6 +1122,26 @@ function FloatingActionPreview() {
     <HjmFloatingActionButton descriptor={{ label: floatingActionExample.label, icon: { name: "add" } }} renderIcon={() => <HjmIcon name="add" />}
       onContentClearanceChange={setClearance} />
   </div>;
+}
+
+// BottomNavigation is position: fixed. A transformed, phone-width stage owns its containing block so the bar sits at the
+// bottom of the example instead of covering the evidence cards at the bottom of the Storybook viewport (2026-10-17 D8).
+function BottomNavigationPreview() {
+  const [selected, setSelected] = useState<string>(bottomNavigationExample.initial);
+  return <div style={{ position: "relative", transform: "translateZ(0)", blockSize: 240, inlineSize: "100%", maxInlineSize: 402, marginInline: "auto", overflow: "hidden", border: "1px solid var(--hjm-color-border)", borderRadius: "var(--hjm-radius-lg)" }}>
+    <HjmBottomNavigation descriptor={{ accessibilityLabel: bottomNavigationExample.label, selectedKey: selected, items: bottomNavigationExample.items }}
+      getHref={({ id }) => `#${id}`} onActivate={({ key }) => setSelected(key)} renderIcon={({ name }) => <HjmIcon name={name} />} />
+  </div>;
+}
+
+// Loaded rows are appended to a real list; LoadMore's own busy/complete footer reports progress (2026-10-17 D14).
+function LoadMorePreview() {
+  const [pages, setPages] = useState(1);
+  const complete = pages >= loadMoreExample.totalPages;
+  return <HjmStack gap="md">
+    <HjmList label={loadMoreExample.listLabel}>{Array.from({ length: pages * loadMoreExample.pageSize }, (_, index) => <HjmListRow key={index} title={loadMoreExample.item(index + 1)} />)}</HjmList>
+    <HjmLoadMore mode="manual" descriptor={{ state: complete ? { status: "complete" } : { status: "ready", requestKey: `page-${pages}` }, labels: loadMoreExample.labels }} onLoadMore={async () => { setPages((value) => value + 1); }} />
+  </HjmStack>;
 }
 
 // A rendered control is not action evidence when its callback is a no-op.

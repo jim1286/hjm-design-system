@@ -503,7 +503,8 @@
   display: grid;
   grid-template-columns: repeat(var(--hjm-bottom-navigation-columns), minmax(var(--hjm-bottom-navigation-item-min-width), 1fr));
   align-items: start;
-  margin: 0;
+  max-inline-size: var(--hjm-bottom-navigation-content-max-width, none);
+  margin: 0 auto;
   padding: 0;
   list-style: none;
 }

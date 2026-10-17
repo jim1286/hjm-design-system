@@ -17,17 +17,18 @@ export function PopoverPreview() {
   const [open, setOpen] = useState(false); const [draft, setDraft] = useState(""); const [favorite, setFavorite] = useState(false);
   const [applied, setApplied] = useState({ query: "", favorite: false });
   const visible = records.filter((record) => record.title.includes(applied.query) && (!applied.favorite || record.favorite));
+  const reset = () => setApplied({ query: "", favorite: false });
   return <Section title="다시 보고 싶은 순간" description="제목과 즐겨찾기로 기록을 찾아보세요."><Stack gap="md">
     <Popover open={open} onOpenChange={(next) => { if (next) { setDraft(applied.query); setFavorite(applied.favorite); } setOpen(next); }} title="기록을 골라봐요" closeLabel="닫기" closeIcon={<X size={20} />} trigger={<IconButton label="필터" tone="secondary"><SlidersHorizontal size={20} /></IconButton>}>
       {({ close }) => <form onSubmit={(event) => { event.preventDefault(); setApplied({ query: draft.trim(), favorite }); close(); }}><Stack gap="md">
         <TextField label="제목에 들어간 말" value={draft} onChange={(event) => setDraft(event.target.value)} />
         <Switch label="즐겨찾기만 보기" checked={favorite} onCheckedChange={setFavorite} />
-        <Button type="submit">적용하기</Button>
+        {/* Reset belongs with the filter it clears, not floating under the results (2026-10-17 review D12). */}
+        <Stack gap="xs"><Button type="submit">적용하기</Button><Button tone="secondary" onClick={() => { setDraft(""); setFavorite(false); reset(); close(); }}>초기화</Button></Stack>
       </Stack></form>}
     </Popover>
     <p role="status">기록 {visible.length}개</p>
-    {visible.length ? <List label="찾은 기록">{visible.map((record) => <ListRow key={record.id} title={record.title} description={record.favorite ? "즐겨찾기한 기록" : "일상의 기록"} />)}</List> : <Notice title="조건에 맞는 기록이 없어요" description="검색어를 줄이거나 즐겨찾기 조건을 바꿔보세요." />}
-    <Button tone="ghost" onClick={() => setApplied({ query: "", favorite: false })}>필터 초기화</Button>
+    {visible.length ? <List label="찾은 기록">{visible.map((record) => <ListRow key={record.id} title={record.title} description={record.favorite ? "즐겨찾기한 기록" : "일상의 기록"} />)}</List> : <Notice title="조건에 맞는 기록이 없어요" description="검색어를 줄이거나 즐겨찾기 조건을 바꿔보세요." action={<Button tone="secondary" onClick={reset}>필터 초기화</Button>} />}
   </Stack></Section>;
 }
 export function ConfirmPopoverPreview() {

@@ -81,6 +81,7 @@ import {
   Easing,
   Platform,
   Pressable,
+  ScrollView,
   Switch as NativeSwitch,
   Text as NativeText,
   TextInput,
@@ -1911,12 +1912,13 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
   const selectionMotion = textOnly ? "none" : suppliedSelectionMotion ?? theme.designProfile?.interactions.selectionMotion ?? "none";
   const movingHighlight = selectionMotion === "slide" && selectedRect !== undefined;
   const highlightRect = selectedRect && pills ? { ...selectedRect, y: selectedRect.y + segmentedControlRecipe.pills.inset, height: selectedRect.height - 2 * segmentedControlRecipe.pills.inset } : selectedRect;
-  return (
-    <View
-      accessibilityLabel={label}
-      accessibilityRole="radiogroup"
-      style={[
-        {
+  // Connected rows follow Web .hjm-segmented__items: items never shrink below their label (min-inline-size:
+  // max-content), spare width is shared, and an over-wide row scrolls instead of breaking labels mid-word
+  // (2026-10-17 review N6). Labels are not truncated; the horizontal scroll content leaves them unconstrained.
+  const scrollRow = !stacked && !pills && !textOnly;
+  const [trackWidth, setTrackWidth] = useState(0);
+  const borderWidth = pills || textOnly ? 0 : segmentedControlRecipe.container.borderWidth;
+  const containerStyle = {
           backgroundColor: pills || textOnly ? "transparent" : resolveColorReference(
             segmentedControlRecipe.container.background,
             theme.palette,
@@ -1926,16 +1928,16 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
             theme.palette,
           ),
           borderRadius: theme.tokens.radius[segmentedControlRecipe.container.radius],
-          borderWidth: pills || textOnly ? 0 : segmentedControlRecipe.container.borderWidth,
+          borderWidth,
           direction: environment.direction,
+  } as const;
+  const rowStyle = {
           flexDirection: stacked ? "column" : "row",
           flexWrap: pills ? "wrap" : "nowrap",
           gap: textOnly ? segmentedControlRecipe.text.gap : pills ? segmentedControlRecipe.pills.gap : segmentedControlRecipe.container.gap,
           padding: pills || textOnly ? 0 : segmentedControlRecipe.container.padding,
-        },
-        layoutStyle,
-      ]}
-    >
+  } as const;
+  const content = (<>
       {movingHighlight && highlightRect ? <NativeSelectionHighlight rect={highlightRect} selection={selected} reducedMotion={environment.reducedMotion} pills={pills} disabled={disabled} /> : null}
       {resolvedItems.map((item) => {
         const isSelected = item.value === selected;
@@ -1988,7 +1990,9 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
                 borderWidth: !textOnly && !pills && isSelected
                   ? segmentedControlRecipe.item.selectedBorderWidth
                   : 0,
-                flex: stacked || pills || textOnly ? undefined : 1,
+                flexBasis: scrollRow ? "auto" : undefined,
+                flexGrow: scrollRow ? 1 : undefined,
+                flexShrink: scrollRow ? 0 : undefined,
                 maxWidth: pills ? "100%" : undefined,
                 // Leading artwork and its label share a row; column layout squeezed theme options.
                 flexDirection: textOnly ? "column" : "row",
@@ -2034,6 +2038,22 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
           </Pressable>
         );
       })}
+  </>);
+  return scrollRow ? (
+    <ScrollView
+      accessibilityLabel={label}
+      accessibilityRole="radiogroup"
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      onLayout={event => setTrackWidth(event.nativeEvent.layout.width)}
+      style={[containerStyle, { flexGrow: 0 }, layoutStyle]}
+      contentContainerStyle={[rowStyle, { minWidth: Math.max(0, trackWidth - 2 * borderWidth) }]}
+    >
+      {content}
+    </ScrollView>
+  ) : (
+    <View accessibilityLabel={label} accessibilityRole="radiogroup" style={[containerStyle, rowStyle, layoutStyle]}>
+      {content}
     </View>
   );
 }

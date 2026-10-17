@@ -21,14 +21,15 @@ export function TourPreview() {
     <Section title="처음 오신 분께" description="어디에 무엇이 있는지 한 바퀴 돌아봐요.">
       <Stack gap="md">
         {ending ? <Notice title="둘러보기를 마쳤어요" description={ending} /> : null}
-        <Button id="tour-write" tone="primary">새 기록 쓰기</Button>
+        {/* Buttons keep their own width (align="start"); the list below still spans the section. */}
+        <Stack align="start"><Button id="tour-write" tone="primary">새 기록 쓰기</Button></Stack>
         <div id="tour-list">
           <List label="내 기록">
             <ListRow title="느리게 걸었던 오후" description="골목을 한 바퀴 돌았어요" />
             <ListRow title="함께 먹은 저녁" description="국이 좀 짰지만 좋았어요" />
           </List>
         </div>
-        <Button id="tour-settings" tone="secondary">알림 설정</Button>
+        <Stack align="start" gap="xs"><Button id="tour-settings" tone="secondary">알림 설정</Button>
         <Tour
           open={open}
           onOpenChange={(next, detail) => {
@@ -50,7 +51,7 @@ export function TourPreview() {
           resolveAnchor={(anchorId) => document.getElementById(anchorId)}
           composeAnnouncement={({ position, total, title, description }) => `${total}단계 중 ${position}단계, ${title}. ${description}`}
           onStepChange={(id) => setStepId(id as StepId)}
-        />
+        /></Stack>
       </Stack>
     </Section>
   );

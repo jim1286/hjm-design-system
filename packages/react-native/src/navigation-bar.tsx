@@ -20,6 +20,7 @@ export function NavigationBar({ label, brand, children, actions }: NavigationBar
     <View style={{ flexDirection: "row", flexWrap: "wrap", alignItems: "center", gap: spacing.md }}>
       {brand}<View style={{ flexDirection: "row", flexWrap: "wrap", alignItems: "center", gap: spacing.xs, flexGrow: 1, flexShrink: 1 }}>{children}</View>
     </View>
-    {actions && <View style={{ gap: spacing.xs }}>{actions}</View>}
+    {/* One wrapping row like Web .hjm-navigation-bar__actions; a column stretched every action to full width (2026-10-17 review N4). */}
+    {actions && <View style={{ flexDirection: "row", flexWrap: "wrap", alignItems: "center", gap: spacing.xs }}>{actions}</View>}
   </View>;
 }

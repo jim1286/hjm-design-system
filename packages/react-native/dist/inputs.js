@@ -1,5 +1,5 @@
 import { createElement as _createElement } from "react";
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { SelectionMark } from "./internal/selection-mark.js";
@@ -13,7 +13,7 @@ import { passwordFieldRecipe, resolvePasswordFieldDescriptor, } from "@hjmds/des
 import { getOtpFieldSlotValues, otpFieldRecipe, resolveOtpFieldValue, } from "@hjmds/design-contracts/components/otp-field";
 import { getCheckboxNextState, reconcileCheckboxSelection, resolveControlAccessibleName, resolveInitialRadioValue, resolveRadioTabStop, resolveInitialTabValue, reconcileRadioSelection, selectionGroupBehaviorDefaults, toggleCheckboxSelection, validateCheckboxSelection, validateRadioSelection, validateSelectionItems, } from "@hjmds/design-contracts/behaviors";
 import { forwardRef, useCallback, useEffect, useId, useImperativeHandle, useLayoutEffect, useRef, useState, } from "react";
-import { ActivityIndicator, Animated, AppState, Easing, Platform, Pressable, Switch as NativeSwitch, Text as NativeText, TextInput, View, } from "react-native";
+import { ActivityIndicator, Animated, AppState, Easing, Platform, Pressable, ScrollView, Switch as NativeSwitch, Text as NativeText, TextInput, View, } from "react-native";
 import { mixedCheckboxState, useControllableState } from "./internal/state.js";
 import { webChoiceProps, webOnly } from "./internal/web-a11y.js";
 import { logicalTextAlign, minimumTargetStyle, resolveNativeFontStyle, resolveNativeTextScaleProps, } from "./internal/styles.js";
@@ -709,20 +709,26 @@ export function SegmentedControl(props) {
     const selectionMotion = textOnly ? "none" : suppliedSelectionMotion ?? theme.designProfile?.interactions.selectionMotion ?? "none";
     const movingHighlight = selectionMotion === "slide" && selectedRect !== undefined;
     const highlightRect = selectedRect && pills ? { ...selectedRect, y: selectedRect.y + segmentedControlRecipe.pills.inset, height: selectedRect.height - 2 * segmentedControlRecipe.pills.inset } : selectedRect;
-    return (_jsxs(View, { accessibilityLabel: label, accessibilityRole: "radiogroup", style: [
-            {
-                backgroundColor: pills || textOnly ? "transparent" : resolveColorReference(segmentedControlRecipe.container.background, theme.palette),
-                borderColor: resolveColorReference(segmentedControlRecipe.container.border, theme.palette),
-                borderRadius: theme.tokens.radius[segmentedControlRecipe.container.radius],
-                borderWidth: pills || textOnly ? 0 : segmentedControlRecipe.container.borderWidth,
-                direction: environment.direction,
-                flexDirection: stacked ? "column" : "row",
-                flexWrap: pills ? "wrap" : "nowrap",
-                gap: textOnly ? segmentedControlRecipe.text.gap : pills ? segmentedControlRecipe.pills.gap : segmentedControlRecipe.container.gap,
-                padding: pills || textOnly ? 0 : segmentedControlRecipe.container.padding,
-            },
-            layoutStyle,
-        ], children: [movingHighlight && highlightRect ? _jsx(NativeSelectionHighlight, { rect: highlightRect, selection: selected, reducedMotion: environment.reducedMotion, pills: pills, disabled: disabled }) : null, resolvedItems.map((item) => {
+    // Connected rows follow Web .hjm-segmented__items: items never shrink below their label (min-inline-size:
+    // max-content), spare width is shared, and an over-wide row scrolls instead of breaking labels mid-word
+    // (2026-10-17 review N6). Labels are not truncated; the horizontal scroll content leaves them unconstrained.
+    const scrollRow = !stacked && !pills && !textOnly;
+    const [trackWidth, setTrackWidth] = useState(0);
+    const borderWidth = pills || textOnly ? 0 : segmentedControlRecipe.container.borderWidth;
+    const containerStyle = {
+        backgroundColor: pills || textOnly ? "transparent" : resolveColorReference(segmentedControlRecipe.container.background, theme.palette),
+        borderColor: resolveColorReference(segmentedControlRecipe.container.border, theme.palette),
+        borderRadius: theme.tokens.radius[segmentedControlRecipe.container.radius],
+        borderWidth,
+        direction: environment.direction,
+    };
+    const rowStyle = {
+        flexDirection: stacked ? "column" : "row",
+        flexWrap: pills ? "wrap" : "nowrap",
+        gap: textOnly ? segmentedControlRecipe.text.gap : pills ? segmentedControlRecipe.pills.gap : segmentedControlRecipe.container.gap,
+        padding: pills || textOnly ? 0 : segmentedControlRecipe.container.padding,
+    };
+    const content = (_jsxs(_Fragment, { children: [movingHighlight && highlightRect ? _jsx(NativeSelectionHighlight, { rect: highlightRect, selection: selected, reducedMotion: environment.reducedMotion, pills: pills, disabled: disabled }) : null, resolvedItems.map((item) => {
                 const isSelected = item.value === selected;
                 const optionDisabled = disabled || item.disabled === true;
                 const contentColor = resolveColorReference(isSelected
@@ -755,7 +761,9 @@ export function SegmentedControl(props) {
                             borderWidth: !textOnly && !pills && isSelected
                                 ? segmentedControlRecipe.item.selectedBorderWidth
                                 : 0,
-                            flex: stacked || pills || textOnly ? undefined : 1,
+                            flexBasis: scrollRow ? "auto" : undefined,
+                            flexGrow: scrollRow ? 1 : undefined,
+                            flexShrink: scrollRow ? 0 : undefined,
                             maxWidth: pills ? "100%" : undefined,
                             // Leading artwork and its label share a row; column layout squeezed theme options.
                             flexDirection: textOnly ? "column" : "row",
@@ -778,6 +786,7 @@ export function SegmentedControl(props) {
                                     : segmentedControlRecipe.item.fontWeight,
                             }, tone: isSelected ? "brand" : "muted", variant: textOnly ? "bodyLarge" : sizeContract.textVariant, children: item.label }), textOnly ? _jsx(View, { accessible: false, style: { width: segmentedControlRecipe.text.indicatorWidth, height: segmentedControlRecipe.text.indicatorHeight, borderRadius: segmentedControlRecipe.text.indicatorRadius, backgroundColor: isSelected ? theme.colors.contentBrand : "transparent" } }) : null] }, item.value));
             })] }));
+    return scrollRow ? (_jsx(ScrollView, { accessibilityLabel: label, accessibilityRole: "radiogroup", horizontal: true, showsHorizontalScrollIndicator: false, onLayout: event => setTrackWidth(event.nativeEvent.layout.width), style: [containerStyle, { flexGrow: 0 }, layoutStyle], contentContainerStyle: [rowStyle, { minWidth: Math.max(0, trackWidth - 2 * borderWidth) }], children: content })) : (_jsx(View, { accessibilityLabel: label, accessibilityRole: "radiogroup", style: [containerStyle, rowStyle, layoutStyle], children: content }));
 }
 /** Action/filter chip with role-specific, controlled selection semantics. */
 /** Forwards the host View ref so a chip can be a focus-return target (2026-10-16, DiscoveryGallery). */

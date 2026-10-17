@@ -2292,6 +2292,7 @@ export declare const bottomNavigationRecipe: {
                 readonly offsetY: 4;
             };
             readonly maxWidth: 480;
+            readonly contentMaxWidth: null;
             readonly outerPaddingHorizontal: 16;
             readonly outerPaddingTop: 8;
         };
@@ -2311,6 +2312,11 @@ export declare const bottomNavigationRecipe: {
             readonly radius: null;
             readonly shadow: null;
             readonly maxWidth: null;
+            /**
+             * The bar surface and its top edge span the viewport, but the destinations stay in a centered 480 column
+             * (the capsule width): on a 1280 desktop two items otherwise sat at opposite screen edges (2026-10-17 review D8).
+             */
+            readonly contentMaxWidth: 480;
             readonly outerPaddingHorizontal: 0;
             readonly outerPaddingTop: 0;
         };
@@ -2335,6 +2341,7 @@ export declare const bottomNavigationRecipe: {
                 readonly offsetY: 4;
             };
             readonly maxWidth: 384;
+            readonly contentMaxWidth: null;
             readonly outerPaddingHorizontal: 16;
             readonly outerPaddingTop: 8;
         };

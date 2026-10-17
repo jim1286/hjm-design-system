@@ -465,7 +465,8 @@ describe("Native input and navigation intent", () => {
       />,
     );
     const container = byLabel(renderer, "보기");
-    expect(flattenStyle(container.props.style)).toMatchObject({
+    // The connected row is a horizontal ScrollView: frame on style, row rhythm on contentContainerStyle.
+    expect(flattenStyle([container.props.style, container.props.contentContainerStyle])).toMatchObject({
       backgroundColor: resolveColorReference(
         segmentedControlRecipe.container.background,
         lightProviderValue.palette,

@@ -390,3 +390,76 @@ export const ratingExample = {
 } as const;
 
 export const previewResetLabel = "예시 다시 시작";
+
+// ---- 탐색·오버레이 (2026-10-17 review D): Native showed English placeholders ("Account", "Recent", "More actions",
+// "Load more", "Open sheet") with different items and debug lines, so neither renderer could be compared.
+
+export const tabsExample = {
+  label: "선수 정보",
+  items: [
+    { id: "first", label: "첫 번째", panel: "첫 번째 패널 내용" },
+    { id: "second", label: "두 번째", panel: "두 번째 패널 내용" },
+  ],
+} as const;
+
+export const stepsExample = {
+  steps: [{ id: "account", label: "계정" }, { id: "profile", label: "프로필" }, { id: "confirm", label: "확인" }],
+  currentStepId: "profile",
+  statusLabels: { pending: "예정", current: "현재", complete: "완료", error: "오류" },
+  accessibleName: ({ position, total, label }: { position: number; total: number; label: string }) => `${total}단계 중 ${position}단계, ${label}`,
+} as const;
+
+export const topBarExample = { title: "알림 설정", back: "뒤로", done: "완료" } as const;
+
+export const menuExample = {
+  triggerLabel: "작업 더보기",
+  label: "선수 작업",
+  dismissLabel: "닫기",
+  items: [{ id: "rename", label: "이름 바꾸기" }, { id: "share", label: "공유하기" }, { id: "delete", label: "삭제", tone: "danger" }],
+  result: (label: string) => `${label}을(를) 골랐어요`,
+} as const;
+
+export const bottomNavigationExample = {
+  label: "주요 탐색",
+  initial: "home",
+  items: [{ id: "home", label: "홈", icon: { name: "home" } }, { id: "profile", label: "프로필", icon: { name: "user" } }],
+} as const;
+
+/** LoadMore appends real rows; the footer's own status/complete state reports the result (no separate status line). */
+export const loadMoreExample = {
+  listLabel: "불러온 기록",
+  pageSize: 3,
+  totalPages: 3,
+  item: (index: number) => `${index}번째 산책 기록`,
+  labels: { loadMore: "더 보기", loading: "불러오는 중", retry: "다시 시도", complete: "모두 불러왔습니다" },
+} as const;
+
+export const paginationExample = {
+  label: "산책 기록 페이지",
+  listLabel: "산책 기록 목록",
+  total: 125,
+  pageSize: 5,
+  title: "걸었던 날을 모아봤어요",
+  description: "산책 기록 125개",
+  item: (index: number) => `${index}번째 산책 기록`,
+  itemDescription: "걷다가 만난 풍경을 담았어요.",
+  range: (start: number, end: number) => `${start}–${end}번째 기록`,
+  labels: { previous: "이전 페이지", next: "다음 페이지" },
+  accessibleName: ({ page, totalPages, current }: { page: number; totalPages: number; current: boolean }) =>
+    `${totalPages}페이지 중 ${page}페이지${current ? ", 현재 페이지" : "로 이동"}`,
+} as const;
+
+export const sheetExample = {
+  trigger: "필터 열기",
+  title: "필터",
+  closeLabel: "필터 닫기",
+  description: "화면 크기와 방향에 맞춰 배치되는 보조 작업 영역입니다.",
+  body: "조건을 선택한 뒤 적용하세요.",
+  apply: "적용",
+} as const;
+
+export const tooltipExample = {
+  label: "도움말",
+  content: "자세한 도움말",
+  hint: "도움말 버튼에 초점을 두거나 가리키면 설명이 보여요.",
+} as const;

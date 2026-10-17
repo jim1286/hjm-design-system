@@ -25,7 +25,8 @@ export function CommandPalettePreview() {
           The palette does not own its opening shortcut: which key combination
           opens it is a product decision, so the showcase opens it with a button.
         */}
-        <CommandPalette
+        {/* align="start" keeps the trigger at its own width; a stretched Stack drew it 1280px wide on desktop. */}
+        <Stack align="start"><CommandPalette
           open={open}
           onOpenChange={(next) => { setOpen(next); if (next) setQuery(""); }}
           trigger={<Button tone="secondary">명령 열기</Button>}
@@ -35,7 +36,7 @@ export function CommandPalettePreview() {
           onQueryChange={setQuery}
           onActivate={(id) => setDone(commands.find((command) => command.id === id)?.label ?? id)}
           {...(items.length === 0 ? { queryState: { asyncState: { status: "empty" as const, message: "찾는 명령이 없어요" } } } : {})}
-        />
+        /></Stack>
         {done ? <Notice tone="success" title={`${done}을(를) 실행했어요`} /> : null}
       </Stack>
     </Section>

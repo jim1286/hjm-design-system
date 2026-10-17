@@ -250,6 +250,9 @@ export function Tabs(props) {
                         direction,
                         flexGrow: fitted ? 1 : 0,
                         flexDirection: orientation === "vertical" ? "column" : "row",
+                        // The divider lives on the content container, so it must span the viewport like Web .hjm-tabs__list;
+                        // content-width containers cut it off after the last tab (2026-10-17 review N7).
+                        minWidth: orientation === "horizontal" ? tabViewport : undefined,
                     },
                 ], children: [movingIndicator && (indicatorRecipe || swipePosition) ? _jsx(Animated.View, { pointerEvents: "none", accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
                             position: "absolute", bottom: 0, height: appearance === "gooey" ? 6 : tabsRecipe.indicatorHeight, borderRadius: theme.tokens.radius.full,
@@ -472,6 +475,8 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
                             direction: presentation.direction,
                             flexDirection: "row",
                             width: capsule ? undefined : "100%",
+                            maxWidth: presentationRecipe.contentMaxWidth ?? undefined,
+                            alignSelf: capsule ? undefined : "center",
                             flex: capsule ? 1 : undefined,
                             minWidth: 0,
                             padding: tile ? tileRecipe.padding : capsule ? spacing.xxs : 0,

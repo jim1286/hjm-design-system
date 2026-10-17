@@ -472,6 +472,9 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
             direction,
             flexGrow: fitted ? 1 : 0,
             flexDirection: orientation === "vertical" ? "column" : "row",
+            // The divider lives on the content container, so it must span the viewport like Web .hjm-tabs__list;
+            // content-width containers cut it off after the last tab (2026-10-17 review N7).
+            minWidth: orientation === "horizontal" ? tabViewport : undefined,
           },
         ]}
       >
@@ -876,6 +879,8 @@ export function BottomNavigation<
               direction: presentation.direction,
               flexDirection: "row",
               width: capsule ? undefined : "100%",
+              maxWidth: presentationRecipe.contentMaxWidth ?? undefined,
+              alignSelf: capsule ? undefined : "center",
               flex: capsule ? 1 : undefined,
               minWidth: 0,
               padding: tile ? tileRecipe.padding : capsule ? spacing.xxs : 0,

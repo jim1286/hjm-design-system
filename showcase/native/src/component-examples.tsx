@@ -62,6 +62,7 @@ import {
 } from "@hjmds/react-native/inputs";
 import { Slider } from "@hjmds/react-native/slider";
 import { Steps } from "@hjmds/react-native/steps";
+import { Pagination } from "@hjmds/react-native/pagination";
 import { UploadItem } from "@hjmds/react-native/upload-item";
 import {
   BottomNavigation,
@@ -69,7 +70,6 @@ import {
   Menu,
   Tabs,
   TopBar,
-  TopBarAction,
 } from "@hjmds/react-native/navigation";
 import { Sheet } from "@hjmds/react-native/overlays";
 import {
@@ -136,6 +136,14 @@ import {
   toggleGroupExample,
   toggleGroupStatus,
   transferListExample,
+  bottomNavigationExample,
+  loadMoreExample,
+  menuExample,
+  paginationExample,
+  sheetExample,
+  stepsExample,
+  tabsExample,
+  topBarExample,
 } from "../../shared/component-examples";
 import { calendarExampleGrid } from "../../shared/calendar-example";
 import type { DateRangeValue } from "@hjmds/design-contracts/components/date-range";
@@ -546,78 +554,54 @@ return (<StoryFrame><Section title={copy.title} description={copy.description}><
 }
 
 function TabsExample({ variant }: { variant: PreviewVariant }) {
-const [tab, setTab] = useState("recent");
-return (<StoryFrame><Tabs
-        label="Feed view"
-        value={tab}
-        onValueChange={setTab}
-        items={[
-          { id: "recent", label: "Recent" },
-          { id: "popular", label: "Popular" },
-        ]}
-      /></StoryFrame>);
+return (<StoryFrame><Tabs label={tabsExample.label} items={tabsExample.items.map(item => ({ id: item.id, label: item.label, panel: <Text>{item.panel}</Text> }))} /></StoryFrame>);
 }
 
 function StepsExample({ variant }: { variant: PreviewVariant }) {
-return (<StoryFrame><Steps
-        composeAccessibleName={({ position, total, label }) => `Step ${position} of ${total}, ${label}`}
-        descriptor={{ steps: [{ id: "account", label: "Account" }, { id: "profile", label: "Profile" }, { id: "confirm", label: "Confirm" }], currentStepId: "profile" }}
-        statusLabels={{ pending: "Pending", current: "Current", complete: "Complete", error: "Error" }}
-      /></StoryFrame>);
+return (<StoryFrame><Steps composeAccessibleName={stepsExample.accessibleName} descriptor={{ steps: stepsExample.steps, currentStepId: stepsExample.currentStepId }} statusLabels={stepsExample.statusLabels} /></StoryFrame>);
 }
 
 function TopBarExample({ variant }: { variant: PreviewVariant }) {
-const [navigationAction, setNavigationAction] = useState("None");
-return (<StoryFrame><TopBar
-        title="HJM"
-        actions={<TopBarAction label="Refresh" onPress={() => setNavigationAction("Refreshed")}><Text>↻</Text></TopBarAction>}
-      /></StoryFrame>);
+return (<StoryFrame><TopBar title={topBarExample.title} leading={<IconButton label={topBarExample.back} tone="ghost"><Icon descriptor={{ name: "chevronStart" }} renderGlyph={semanticGlyph} /></IconButton>} actions={<Button tone="ghost">{topBarExample.done}</Button>} /></StoryFrame>);
 }
 
+// Same trigger as Web: a tool action is an IconButton named "작업 더보기", not a brand-colored text link.
 function MenuExample({ variant }: { variant: PreviewVariant }) {
-const [navigationAction, setNavigationAction] = useState("None");
-return (<StoryFrame><Menu
-        dismissLabel="Close"
-        triggerLabel="More actions"
-        items={[
-          { id: "edit", label: "Edit" },
-          { id: "delete", label: "Delete", tone: "danger" },
-        ]}
-        onAction={(value) => setNavigationAction(value)}
-      /><Text accessibilityLiveRegion="polite">Last action: {navigationAction}</Text></StoryFrame>);
+const [message, setMessage] = useState("");
+return (<StoryFrame><Stack gap="sm" layoutStyle={{ alignSelf: "stretch" }}><Menu triggerLabel={menuExample.triggerLabel} title={menuExample.label} dismissLabel={menuExample.dismissLabel} items={menuExample.items}
+  renderTrigger={props => <IconButton label={menuExample.triggerLabel} tone="ghost" {...props}><Icon descriptor={{ name: "more" }} renderGlyph={semanticGlyph} /></IconButton>}
+  onAction={value => setMessage(menuExample.result(menuExample.items.find(item => item.id === value)?.label ?? value))} layoutStyle={{ alignSelf: "flex-start" }} />
+  <PreviewResult message={message} /></Stack></StoryFrame>);
 }
 
+// The bar belongs at the bottom edge like a navigator tab bar (Web pins it to the bottom of its stage).
 function BottomNavigationExample({ variant }: { variant: PreviewVariant }) {
-const [destination, setDestination] = useState("home");
-return (<StoryFrame><BottomNavigation
-        descriptor={{
-          accessibilityLabel: "Primary destinations",
-          selectedKey: destination,
-          items: [
-            { id: "home", label: "Home", icon: { name: "home" } },
-            { id: "profile", label: "Profile", icon: { name: "user" } },
-          ],
-        }}
+const [destination, setDestination] = useState<string>(bottomNavigationExample.initial);
+return (<View style={{ flex: 1, justifyContent: "flex-end" }}><BottomNavigation
+        descriptor={{ accessibilityLabel: bottomNavigationExample.label, selectedKey: destination, items: bottomNavigationExample.items }}
         onActivate={({ key }) => setDestination(key)}
         renderIcon={semanticGlyph}
-      /></StoryFrame>);
+      /></View>);
 }
 
+// Loaded rows are appended to the list; LoadMore's own busy/complete footer reports progress, as on Web.
 function LoadMoreExample({ variant }: { variant: PreviewVariant }) {
-const [loads, setLoads] = useState(0);
-return (<StoryFrame><LoadMore
-        descriptor={{
-          labels: {
-            complete: "Everything loaded",
-            loading: "Loading more",
-            loadMore: "Load more",
-            retry: "Retry",
-          },
-          state: { status: "ready", requestKey: `page-${loads}` },
-        }}
-        mode="manual"
-        onLoadMore={async () => setLoads((value) => value + 1)}
-      /><Text accessibilityLiveRegion="polite">Loaded pages: {loads}</Text></StoryFrame>);
+const [pages, setPages] = useState(1);
+const complete = pages >= loadMoreExample.totalPages;
+return (<StoryFrame><List label={loadMoreExample.listLabel}>{Array.from({ length: pages * loadMoreExample.pageSize }, (_, index) => <ListRow key={index} title={loadMoreExample.item(index + 1)} />)}</List>
+  <LoadMore mode="manual" descriptor={{ labels: loadMoreExample.labels, state: complete ? { status: "complete" } : { status: "ready", requestKey: `page-${pages}` } }} onLoadMore={async () => setPages(value => value + 1)} /></StoryFrame>);
+}
+
+function PaginationExample({ variant }: { variant: PreviewVariant }) {
+const copy = paginationExample;
+const [page, setPage] = useState(1);
+const start = (page - 1) * copy.pageSize + 1;
+const end = Math.min(page * copy.pageSize, copy.total);
+return (<StoryFrame><Section title={copy.title} description={copy.description}><Stack gap="md">
+  <Text accessibilityLiveRegion="polite">{copy.range(start, end)}</Text>
+  <List label={copy.listLabel}>{Array.from({ length: end - start + 1 }, (_, index) => <ListRow key={start + index} title={copy.item(start + index)} description={copy.itemDescription} />)}</List>
+  <Pagination label={copy.label} descriptor={{ currentPage: page, totalCount: copy.total, pageSize: copy.pageSize }} labels={copy.labels} composeAccessibleName={copy.accessibleName} onPageChange={setPage} />
+</Stack></Section></StoryFrame>);
 }
 
 function BadgeExample({ variant }: { variant: PreviewVariant }) {
@@ -779,13 +763,14 @@ return (<StoryFrame><BottomInfo items={["Your draft stays private until publishe
 
 function SheetExample({ variant }: { variant: PreviewVariant }) {
 const [sheetOpen, setSheetOpen] = useState(false);
-return (<StoryFrame><><Button tone="secondary" onPress={() => setSheetOpen(true)}>Open sheet</Button><Sheet
+return (<StoryFrame><Button tone="secondary" onPress={() => setSheetOpen(true)} layoutStyle={{ alignSelf: "flex-start" }}>{sheetExample.trigger}</Button><Sheet
         open={sheetOpen}
         onOpenChange={setSheetOpen}
-        title="Share item"
-        description="Adaptive bottom sheet."
-        closeLabel="Close"
-      ><Text>Sheet content</Text></Sheet></></StoryFrame>);
+        title={sheetExample.title}
+        description={sheetExample.description}
+        closeLabel={sheetExample.closeLabel}
+        footer={<Button onPress={() => setSheetOpen(false)}>{sheetExample.apply}</Button>}
+      ><Text>{sheetExample.body}</Text></Sheet></StoryFrame>);
 }
 
 function FloatingActionButtonExample() {
@@ -854,6 +839,7 @@ const examples = {
 "menu": MenuExample,
 "bottom-navigation": BottomNavigationExample,
 "load-more": LoadMoreExample,
+"pagination": PaginationExample,
 "badge": BadgeExample,
 "avatar": AvatarExample,
 "card": CardExample,
