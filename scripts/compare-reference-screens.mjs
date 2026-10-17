@@ -77,7 +77,8 @@ function stageStories(stages) {
   return [...firstPerTitle.values()];
 }
 const selected = onlyIndex >= 0 ? args[onlyIndex + 1].split(',') : stageIndex >= 0 ? stageStories(args[stageIndex + 1].split(',')) : STORIES;
-const nativeSources = await Promise.all((await fs.readdir(path.join(root, 'showcase/native/src')))
+// Native stories live in src/ and src/components/; read every *.stories file recursively.
+const nativeSources = await Promise.all((await fs.readdir(path.join(root, 'showcase/native/src'), {recursive: true}))
   .filter(f => /\.stories\.tsx?$/.test(f))
   .map(f => fs.readFile(path.join(root, 'showcase/native/src', f), 'utf8')));
 
