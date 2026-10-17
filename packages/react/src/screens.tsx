@@ -112,8 +112,8 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
         {description ? <Text as="p" tone="muted">{description}</Text> : null}</div>{actions}
     </header> : null)}
     {notice ? <div className="hjm-screen__notice">{notice}</div> : null}
-    {/* Scrollable read-only screens still need a keyboard entry point. */}
-    <div ref={bodyRef} tabIndex={bodyScroll === "content" ? -1 : 0}
+    {/* Scrollable read-only screens need a named keyboard entry point, including hidden/custom headers. */}
+    <div ref={bodyRef} role="region" aria-label={title} tabIndex={bodyScroll === "content" ? -1 : 0}
       onFocusCapture={event => { lastBodyFocus.current = event.target as HTMLElement; }}
       onBlurCapture={event => {
         // A connected input blurred to the document intentionally relinquishes
