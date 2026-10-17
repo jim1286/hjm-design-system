@@ -190,10 +190,9 @@ export const uploadItemRecipe = {
     tone: progressRecipe.defaults.tone,
     errorTone: "danger",
   },
+  /** Cancel/retry render as ghost IconButtons named by their labels; the button recipe owns color (2026-10-17). */
   action: {
     minTarget: control.minTouchTarget,
-    color: semanticColors.content.brand,
-    dangerColor: semanticColors.content.danger,
   },
   states: {
     focus: focusIndicatorContract,
@@ -216,7 +215,7 @@ export const uploadItemRecipe = {
   meta: { color: ColorReference; textVariant: TextVariant };
   statusTones: Record<UploadItemStatus, ColorReference>;
   progress: { size: ProgressSize; tone: ProgressTone; errorTone: ProgressTone };
-  action: { minTarget: number; color: ColorReference; dangerColor: ColorReference };
+  action: { minTarget: number };
   states: { focus: typeof focusIndicatorContract; disabledOpacity: number };
 };
 

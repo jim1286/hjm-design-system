@@ -6,7 +6,9 @@ import {
 } from "@hjmds/design-contracts/components/upload-item";
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 
+import { IconButton } from "./actions.js";
 import { Progress } from "./feedback.js";
+import { Icon } from "./supplemental-display.js";
 import { classNames } from "./internal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
@@ -73,10 +75,12 @@ export const UploadItem = forwardRef<HTMLDivElement, UploadItemProps>(function U
           <span className="hjm-upload-item__status" aria-live="polite">{announcement.description}</span>
         )}
       </div>
+      {/* Row tool actions are icon buttons named by the localized label. Cancelling an upload is not destructive, so
+          it stays neutral instead of the danger text it used to be (2026-10-17 review). */}
       {action === "cancel" ? (
-        <button className="hjm-upload-item__action" data-action="cancel" onClick={() => onCancel?.(descriptor.id)} type="button">{labels.cancel}</button>
+        <IconButton className="hjm-upload-item__action" data-action="cancel" label={labels.cancel} onClick={() => onCancel?.(descriptor.id)} tone="ghost"><Icon name="close" /></IconButton>
       ) : action === "retry" ? (
-        <button className="hjm-upload-item__action" data-action="retry" onClick={() => onRetry?.(descriptor.id)} type="button">{labels.retry}</button>
+        <IconButton className="hjm-upload-item__action" data-action="retry" label={labels.retry} onClick={() => onRetry?.(descriptor.id)} tone="ghost"><Icon name="refresh" /></IconButton>
       ) : null}
     </div>
   );

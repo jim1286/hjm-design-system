@@ -77,12 +77,10 @@ function renderWithProvider(element: ReturnType<typeof createElement>): string {
 
 describe("web showcase coverage", () => {
   it("keeps demo fields in their own namespace and within the available inline size", () => {
-    const homeHtml = renderToStaticMarkup(createElement(Introduction));
     const fieldHtml = renderWithProvider(createElement(ContractStory, { name: "Field" }));
     const showcaseCss = readFileSync(new URL("./showcase.css", import.meta.url), "utf8");
     const demoFieldRule = showcaseCss.match(/\.hjm-demo-field\s*\{([^}]*)\}/)?.[1] ?? "";
 
-    expect(homeHtml).toContain('class="hjm-demo-field"');
     expect(fieldHtml).toContain('class="hjm-field hjm-demo-field"');
     expect(demoFieldRule).toMatch(/\binline-size:\s*100%\s*;/);
     expect(demoFieldRule).toMatch(/\bmax-width:\s*420px\s*;/);
@@ -147,9 +145,9 @@ describe("web showcase coverage", () => {
 
   it("renders the canonical 104/0/0 surface-evidence split in Home and Explorer", () => {
     const homeHtml = renderToStaticMarkup(createElement(Introduction));
-    expect(homeHtml).toContain("<strong>104</strong><span>Web references</span>");
-    expect(homeHtml).toContain("<strong>0</strong><span>contract-only stories</span>");
-    expect(homeHtml).toContain("<strong>0</strong><span>Native-only stories</span>");
+    expect(homeHtml).toContain("<strong>104</strong><span>웹 예제</span>");
+    expect(homeHtml).toContain("<strong>0</strong><span>계약만 등록</span>");
+    expect(homeHtml).toContain("<strong>0</strong><span>앱 전용</span>");
     expect(homeHtml).toContain(componentCategoryExplorerHref("input"));
     expect(homeHtml).not.toContain("args=initialCategory");
 

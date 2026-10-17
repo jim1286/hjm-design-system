@@ -1648,6 +1648,7 @@ export declare const recipeRegistry: {
             key: "border";
             alpha?: number;
         }>;
+        readonly initialsWeight: "strong";
     };
     readonly badgeRecipe: {
         readonly slots: readonly ["root", "icon", "label"];
@@ -2287,7 +2288,7 @@ export declare const recipeRegistry: {
                 readonly title: {
                     readonly fontSize: 20;
                     readonly lineHeight: 28;
-                    readonly fontWeight: "800";
+                    readonly fontWeight: "600";
                 };
                 readonly paddingTop: 16;
                 readonly paddingBottom: 12;
@@ -2360,7 +2361,7 @@ export declare const recipeRegistry: {
         readonly title: {
             readonly fontSize: 20;
             readonly lineHeight: 28;
-            readonly fontWeight: "800";
+            readonly fontWeight: "600";
         };
         readonly description: {
             readonly fontSize: 14;
@@ -2414,17 +2415,17 @@ export declare const recipeRegistry: {
             readonly level3: {
                 readonly fontSize: 24;
                 readonly lineHeight: 32;
-                readonly fontWeight: "800";
+                readonly fontWeight: "600";
             };
             readonly level4: {
                 readonly fontSize: 20;
                 readonly lineHeight: 28;
-                readonly fontWeight: "800";
+                readonly fontWeight: "600";
             };
             readonly level5: {
                 readonly fontSize: 18;
                 readonly lineHeight: 26;
-                readonly fontWeight: "700";
+                readonly fontWeight: "600";
             };
         };
         readonly color: Readonly<{
@@ -2712,7 +2713,7 @@ export declare const recipeRegistry: {
     readonly textFormatRecipe: {
         readonly slots: readonly ["root"];
         readonly kbd: {
-            readonly fontFamily: readonly ["ui-monospace", "SFMono-Regular", "Consolas", "Liberation Mono", "monospace"];
+            readonly fontFamily: readonly ["ui-monospace", "SFMono-Regular", "SF Mono", "Menlo", "Monaco", "Cascadia Mono", "Consolas", "Liberation Mono", "monospace"];
             readonly textVariant: "label";
             readonly paddingHorizontal: 4;
             readonly radius: 8;
@@ -2733,7 +2734,7 @@ export declare const recipeRegistry: {
             }>;
         };
         readonly code: {
-            readonly fontFamily: readonly ["ui-monospace", "SFMono-Regular", "Consolas", "Liberation Mono", "monospace"];
+            readonly fontFamily: readonly ["ui-monospace", "SFMono-Regular", "SF Mono", "Menlo", "Monaco", "Cascadia Mono", "Consolas", "Liberation Mono", "monospace"];
             readonly textVariant: "body";
             readonly paddingHorizontal: 4;
             readonly radius: 8;
@@ -7580,7 +7581,7 @@ export declare const recipeRegistry: {
             readonly size: "medium";
         };
         readonly presentationDefaults: {
-            readonly web: "inline";
+            readonly web: "row";
             readonly native: "row";
         };
         readonly stackedTextScale: 1.6;
@@ -8525,16 +8526,6 @@ export declare const recipeRegistry: {
         };
         readonly action: {
             readonly minTarget: 44;
-            readonly color: Readonly<{
-                source: "theme";
-                key: "contentBrand";
-                alpha?: number;
-            }>;
-            readonly dangerColor: Readonly<{
-                source: "theme";
-                key: "danger";
-                alpha?: number;
-            }>;
         };
         readonly states: {
             readonly focus: {

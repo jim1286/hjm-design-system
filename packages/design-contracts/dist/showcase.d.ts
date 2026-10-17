@@ -65,47 +65,47 @@ export type ShowcaseScenario = Readonly<{
 }>;
 export declare const showcaseScenarios: readonly [{
     readonly id: "contract";
-    readonly label: "Contract";
+    readonly label: "계약";
     readonly description: "Anatomy, defaults, supported axes, platform and maturity are visible.";
 }, {
     readonly id: "default";
-    readonly label: "Default";
+    readonly label: "기본";
     readonly description: "The normal state renders using recipe defaults without product overrides.";
 }, {
     readonly id: "dark";
-    readonly label: "Dark";
+    readonly label: "어두운 테마";
     readonly description: "Semantic colors remain legible on the dark theme.";
 }, {
     readonly id: "long-copy";
-    readonly label: "Long copy";
+    readonly label: "긴 문구";
     readonly description: "Long Korean and English copy wraps without clipping or hiding meaning.";
 }, {
     readonly id: "large-text";
-    readonly label: "200% text";
+    readonly label: "200% 글자";
     readonly description: "Text can grow to 200% without truncating required information.";
 }, {
     readonly id: "rtl";
-    readonly label: "RTL";
+    readonly label: "오른쪽→왼쪽";
     readonly description: "Logical start/end layout and directional icons mirror correctly.";
 }, {
     readonly id: "reduced-motion";
-    readonly label: "Reduced motion";
+    readonly label: "동작 줄이기";
     readonly description: "Motion follows the recipe reduced-motion fallback.";
 }, {
     readonly id: "accessibility";
-    readonly label: "Accessibility";
+    readonly label: "접근성";
     readonly description: "Names, states, relationships, contrast and touch targets are inspectable.";
 }, {
     readonly id: "keyboard";
-    readonly label: "Keyboard";
+    readonly label: "키보드";
     readonly description: "Focus order and documented keyboard behavior run as interaction tests.";
 }, {
     readonly id: "native-actions";
-    readonly label: "Native actions";
+    readonly label: "앱 동작";
     readonly description: "Accessible host actions and their state transitions run against the Native renderer.";
 }, {
     readonly id: "platform-parity";
-    readonly label: "Web / Native parity";
+    readonly label: "웹·앱 동등성";
     readonly description: "Adaptive renderers preserve intent while using platform-native behavior.";
 }];
 export type ShowcaseComponentEntry = Readonly<{

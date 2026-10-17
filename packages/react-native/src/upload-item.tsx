@@ -6,10 +6,12 @@ import {
   type UploadItemLabels,
 } from "@hjmds/design-contracts/components/upload-item";
 import type { ReactNode } from "react";
-import { Pressable, View } from "react-native";
+import { glyph } from "@hjmds/design-contracts/foundations";
+import { Text as NativeText, View } from "react-native";
+
+import { IconButton } from "./actions.js";
 
 import { Progress } from "./feedback.js";
-import { minimumTargetStyle } from "./internal/styles.js";
 import { Text } from "./primitives.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { useHjmNativeTheme } from "./provider.js";
@@ -57,15 +59,16 @@ export function UploadItem({ descriptor, labels, onCancel, onRetry, leading, lay
         {/* The live sentence already displays progress; keep the bar named without repeating that sentence twice visually. */}
         {descriptor.state.status === "uploading" ? <Progress accessibilityLabel={announcement.description} {...(descriptor.state.progress === null ? {} : { value: descriptor.state.progress * 100 })} valueText={announcement.description} /> : null}
       </View>
+      {/* Row tool actions are icon buttons named by the localized label, matching Web. Cancelling an upload is not
+          destructive, so the glyph stays muted instead of the danger text it used to be (2026-10-17 review). */}
       {action === null ? null : (
-        <Pressable
-          accessibilityLabel={action === "cancel" ? labels.cancel : labels.retry}
-          accessibilityRole="button"
+        <IconButton
+          label={action === "cancel" ? labels.cancel : labels.retry}
           onPress={() => action === "cancel" ? onCancel?.(descriptor.id) : onRetry?.(descriptor.id)}
-          style={({ pressed }) => [minimumTargetStyle, { alignItems: "center", justifyContent: "center", opacity: pressed ? 0.72 : 1 }]}
+          tone="ghost"
         >
-          <Text emphasis="strong" style={{ color: action === "cancel" ? colors.danger : colors.contentBrand }} variant="label">{action === "cancel" ? labels.cancel : labels.retry}</Text>
-        </Pressable>
+          <NativeText accessible={false} allowFontScaling={false} style={{ color: colors.textMuted, fontSize: glyph.md }}>{action === "cancel" ? "×" : "↻"}</NativeText>
+        </IconButton>
       )}
     </View>
   );

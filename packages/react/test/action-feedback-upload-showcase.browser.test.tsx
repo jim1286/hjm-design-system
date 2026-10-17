@@ -8,7 +8,8 @@ let host:HTMLDivElement,root:Root;
 beforeEach(()=>{(globalThis as {IS_REACT_ACT_ENVIRONMENT?:boolean}).IS_REACT_ACT_ENVIRONMENT=true;host=document.createElement('div');document.body.append(host);root=createRoot(host);});
 afterEach(async()=>{await act(async()=>root.unmount());host.remove();});
 const render=(ui:ReactNode)=>act(async()=>root.render(<HjmProvider reducedMotion>{ui}</HjmProvider>));
-const button=(label:string)=>[...host.querySelectorAll('button')].find(n=>n.textContent===label)!;
+// Icon-only row actions (UploadItem cancel/retry) carry their name in aria-label, not text.
+const button=(label:string)=>[...host.querySelectorAll('button')].find(n=>n.textContent===label||n.getAttribute('aria-label')===label)!;
 const click=(label:string)=>act(async()=>button(label).click());
 const fill=(value:string)=>act(async()=>{const input=host.querySelector<HTMLInputElement>('input')!;Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value')!.set!.call(input,value);input.dispatchEvent(new Event('input',{bubbles:true}));});
 const settle=()=>act(async()=>{await new Promise(r=>setTimeout(r,400));});

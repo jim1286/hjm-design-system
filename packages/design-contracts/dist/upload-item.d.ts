@@ -125,18 +125,9 @@ export declare const uploadItemRecipe: {
         readonly tone: "brand";
         readonly errorTone: "danger";
     };
+    /** Cancel/retry render as ghost IconButtons named by their labels; the button recipe owns color (2026-10-17). */
     readonly action: {
         readonly minTarget: 44;
-        readonly color: Readonly<{
-            source: "theme";
-            key: "contentBrand";
-            alpha?: number;
-        }>;
-        readonly dangerColor: Readonly<{
-            source: "theme";
-            key: "danger";
-            alpha?: number;
-        }>;
     };
     readonly states: {
         readonly focus: {

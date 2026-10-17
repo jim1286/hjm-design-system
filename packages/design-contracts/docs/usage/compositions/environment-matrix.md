@@ -46,9 +46,9 @@
 │ │ [default] [dark] [large-text] [rtl] [reduced-motion] │ │
 │ └──────────────────────────────────────────────────────┘ │
 │ ┌ Story requirements (카드 격자) ──────────────────────┐ │
-│ │ [Contract] [Default] [Dark] [Long copy] [200% text]  │ │
-│ │ [RTL] [Reduced motion] [Accessibility] [Keyboard]    │ │
-│ │ [Native actions] [Web / Native parity]               │ │
+│ │ [계약] [기본] [어두운 테마] [긴 문구] [200% 글자]    │ │
+│ │ [오른쪽→왼쪽] [동작 줄이기] [접근성] [키보드]        │ │
+│ │ [앱 동작] [웹·앱 동등성]                             │ │
 │ └──────────────────────────────────────────────────────┘ │
 └──────────────────────────────────────────────────────────┘
   상단 Storybook toolbar: light/dark · LTR/RTL · 100/150/200% · full/reduced

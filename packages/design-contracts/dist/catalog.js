@@ -130,7 +130,7 @@ export const componentCatalog = [
     { name: "TransferList", category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), aliases: ["Transfer"], recipe: "transferListRecipe", behavior: "transferList" },
     // Upload/network lifecycle belongs to consuming products; both renderers verify the caller-owned status/action contract.
     { name: "UploadItem", category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "uploadItemRecipe", behavior: "uploadItem" },
-    { name: "Tabs", category: "navigation", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "tabsRecipe", behavior: "tabs", ...evidenceNeeded("Web Arrow-key roving focus skips disabled tabs, keeps manual selection until activation, and scrolls a focused tab into view; reduced motion uses instant scrolling. Native exposes a contract-named activate action and labelled panel.") },
+    { name: "Tabs", category: "navigation", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "tabsRecipe", behavior: "tabs", ...evidenceNeeded("웹은 화살표 키 이동이 비활성 탭을 건너뛰고 활성화 전까지 수동 선택을 유지하며 초점 탭을 보이게 스크롤합니다(동작 줄이기는 즉시 스크롤). 앱은 계약 이름의 activate 동작과 이름 붙은 패널을 노출합니다.") },
     // Public API/Web are stable; Native long-copy evidence remains open (docs/stable-core.md).
     // Native title text now passes the long-copy scenario matrix, completing its renderer maturity.
     { name: "TopBar", category: "navigation", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "topBarRecipe" },

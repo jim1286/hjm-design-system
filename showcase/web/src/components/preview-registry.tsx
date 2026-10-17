@@ -26,6 +26,15 @@ import { FloatingActionButton as HjmFloatingActionButton } from "@hjmds/react/fl
 import { Carousel as HjmCarousel } from "@hjmds/react/carousel";
 import { useRef, useState, type CSSProperties, type ReactNode } from "react";
 import {
+  categoryLabels,
+  platformLabels,
+  roadmapStateLabels,
+  roadmapStateTones,
+  statusLabels,
+  statusTones,
+  surfaceLabels,
+} from "./showcase-labels.js";
+import {
   Button as HjmButton,
   IconButton as HjmIconButton,
   Link as HjmLink,
@@ -115,6 +124,7 @@ import {
   type ComponentCatalogEntry,
   type ComponentName,
   type ComponentPlatform,
+  type ComponentSurfaceStatus,
   type DesignSystemProviderValue,
   type RecipeName,
 } from "@hjmds/design-contracts";
@@ -389,14 +399,14 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
   switch (name) {
     case "Text": return <HjmStack gap="xs"><HjmText as="p" variant="title" emphasis="strong">명확한 제목</HjmText><HjmText as="p">조용한 본문 위계</HjmText><HjmText as="p" tone="muted" variant="label">보조 정보는 한 단계 낮게 표시합니다.</HjmText></HjmStack>;
     case "Icon": return <HjmStack axis="inline" gap="md" wrap role="group" aria-label="Semantic icons"><HjmIcon name="home" decorative={false} accessibilityLabel="홈" /><HjmIcon name="success" decorative={false} accessibilityLabel="성공" tone="success" /><HjmIcon name="warning" decorative={false} accessibilityLabel="경고" tone="warning" /><HjmIcon name="forward" decorative={false} accessibilityLabel="다음" /></HjmStack>;
-    case "Surface": return <HjmSurface as="article" bordered className="hjm-demo-surface"><HjmText as="strong">Surface 제목</HjmText><HjmText as="p" tone="muted">제품이 색·간격·모서리를 임의로 덮지 않는 의미 기반 컨테이너입니다.</HjmText></HjmSurface>;
+    case "Surface": return <HjmSurface as="article" bordered padding="lg"><HjmStack gap="xs"><HjmText as="strong">배경 영역 제목</HjmText><HjmText as="p" tone="muted">제품이 색·간격·모서리를 임의로 덮지 않는 의미 기반 컨테이너입니다.</HjmText></HjmStack></HjmSurface>;
     case "Card": return <HjmCard leading={<span aria-hidden="true">✨</span>} title="Card 제목" description="계약이 보장하는 여백과 정렬로 긴 설명도 안정적으로 표시합니다." actions={<HjmButton size="small">자세히</HjmButton>} />;
     case "Stack": return <HjmStack gap="sm"><HjmButton tone="secondary">첫 번째</HjmButton><HjmButton tone="secondary">두 번째</HjmButton><HjmButton tone="secondary">세 번째</HjmButton></HjmStack>;
     case "Container": return <HjmContainer size="reading"><HjmSurface bordered padding="md"><HjmText>읽기 폭과 논리 gutter를 Web·Native에서 같은 계약으로 유지합니다.</HjmText></HjmSurface></HjmContainer>;
     case "AspectRatio": return <HjmAspectRatio ratio="wide"><div style={{ alignItems: "center", background: "var(--hjm-color-bg)", display: "flex", justifyContent: "center" }}><HjmText tone="muted">16:9 media frame</HjmText></div></HjmAspectRatio>;
     case "Grid": return <HjmGrid columns={{ compact: 1, medium: 2, expanded: 3 }} gap={{ compact: "md" }}><HjmCard title="첫 번째">공통 window class</HjmCard><HjmCard title="두 번째">responsive columns</HjmCard><HjmCard title="세 번째">row-major order</HjmCard></HjmGrid>;
     case "Layout": return <HjmLayout header={<HjmText as="strong">제품 헤더</HjmText>} skipLinkLabel="본문으로 건너뛰기"><HjmSurface as="section" bordered>하나의 main landmark 안에 놓이는 제품 본문입니다.</HjmSurface></HjmLayout>;
-    case "Button": return <ObservablePreview>{({ message, setMessage, selected, setSelected }) => <HjmStack axis="inline" gap="sm" wrap><HjmButton onClick={() => setMessage("Primary 실행")}>Primary</HjmButton><HjmButton tone="secondary" onClick={() => setMessage("Secondary 실행")}>Secondary</HjmButton><HjmButton disabled>Disabled</HjmButton></HjmStack>}</ObservablePreview>;
+    case "Button": return <ObservablePreview>{({ message, setMessage, selected, setSelected }) => <HjmStack axis="inline" gap="sm" wrap><HjmButton onClick={() => setMessage("저장하기를 눌렀어요")}>저장하기</HjmButton><HjmButton tone="secondary" onClick={() => setMessage("취소를 눌렀어요")}>취소</HjmButton><HjmButton disabled>보내기</HjmButton></HjmStack>}</ObservablePreview>;
     case "IconButton": return <ObservablePreview>{({ message, setMessage, selected, setSelected }) => <HjmStack axis="inline" gap="sm"><HjmIconButton label="좋아요" onClick={() => setMessage("좋아요 실행")}>♡</HjmIconButton><HjmIconButton label="닫기" onClick={() => setMessage("닫기 실행")} tone="ghost">×</HjmIconButton></HjmStack>}</ObservablePreview>;
     case "Link": return <HjmLink href="#components">컴포넌트 문서로 이동</HjmLink>;
     case "Field": return <HjmField className="hjm-demo-field" controlId="showcase-player-name" label="이름" description="필수 정보는 입력 아래에서 설명합니다.">{(controlProps) => <input {...controlProps} defaultValue="홍길동" />}</HjmField>;
@@ -955,34 +965,57 @@ export function ComponentPreview({ name }: { name: WebRendererComponentName }) {
   );
 }
 
+function StatusBadge({ surface, status }: { surface: string; status: ComponentSurfaceStatus }) {
+  return <HjmBadge tone={statusTones[status]} variant={status === "unsupported" ? "outline" : "filled"}>{surface}: {statusLabels[status]}</HjmBadge>;
+}
+
 function StoryHeader({ entry }: { entry: ShowcaseComponentEntry }) {
   const { component } = entry;
+  const { roadmap } = component;
   return (
     <>
-      <p className="hjm-eyebrow">{component.category} · {component.platform}</p>
+      <p className="hjm-eyebrow">{categoryLabels[component.category]} · {platformLabels[component.platform]}</p>
       <h1 className="hjm-title">{component.name}</h1>
-      <div className="hjm-meta-row"><span className="hjm-pill" data-status={component.status}>contract: {component.status}</span><span className="hjm-pill" data-status={entry.surfaceMaturity.web}>web: {entry.surfaceMaturity.web}</span><span className="hjm-pill" data-status={entry.surfaceMaturity.native}>native: {entry.surfaceMaturity.native}</span>{component.behavior && <span className="hjm-pill">behavior: {component.behavior}</span>}{component.recipe && <span className="hjm-pill">recipe: {component.recipe}</span>}</div>
-      {component.roadmap && <section className="hjm-roadmap-callout" data-roadmap={component.roadmap.state}><span>{component.roadmap.state}</span><p>{component.roadmap.summary}</p>{component.roadmap.targets && <small>Composed with: {component.roadmap.targets.join(" + ")}</small>}</section>}
+      <HjmStack className="hjm-meta-row" axis="inline" gap="xs" wrap>
+        <StatusBadge surface={surfaceLabels.contract} status={component.status} />
+        <StatusBadge surface={surfaceLabels.web} status={entry.surfaceMaturity.web} />
+        <StatusBadge surface={surfaceLabels.native} status={entry.surfaceMaturity.native} />
+        {component.behavior && <HjmBadge variant="outline">동작 규칙 <code>{component.behavior}</code></HjmBadge>}
+        {component.recipe && <HjmBadge variant="outline">레시피 <code>{component.recipe}</code></HjmBadge>}
+      </HjmStack>
+      {roadmap && (
+        <HjmSurface as="section" className="hjm-roadmap-callout" bordered padding="md" data-roadmap={roadmap.state} aria-label="로드맵">
+          <HjmStack gap="xs" align="start">
+            <HjmBadge tone={roadmapStateTones[roadmap.state]}>{roadmapStateLabels[roadmap.state]}</HjmBadge>
+            <HjmText as="p">{roadmap.summary}</HjmText>
+            {roadmap.targets && <HjmText as="p" variant="label" tone="muted">함께 쓰는 컴포넌트: {roadmap.targets.join(" + ")}</HjmText>}
+          </HjmStack>
+        </HjmSurface>
+      )}
     </>
   );
 }
 
-function EvidenceSection({ entry, contract }: { entry: ShowcaseComponentEntry; contract: string }) {
+function EvidenceSection({ entry, contract }: { entry: ShowcaseComponentEntry; contract: ReactNode }) {
   return (
     <section className="hjm-showcase-section" aria-labelledby={`${entry.component.name}-evidence`}>
-      <h2 className="hjm-section-title" id={`${entry.component.name}-evidence`}>Required evidence</h2>
-      <div className="hjm-showcase-grid"><article className="hjm-showcase-card"><h3>Surfaces</h3><p>{entry.requiredSurfaces.join(" · ")}</p></article><article className="hjm-showcase-card"><h3>Required scenarios</h3><ul className="hjm-requirement-list">{entry.requiredScenarios.map((id) => <li key={id}>{scenarioLabels.get(id)}</li>)}</ul></article><article className="hjm-showcase-card"><h3>Contract</h3><p>{contract}</p></article></div>
+      <h2 className="hjm-section-title" id={`${entry.component.name}-evidence`}>확인해야 할 증거</h2>
+      <div className="hjm-showcase-grid"><article className="hjm-showcase-card"><h3>지원 표면</h3><p>{entry.requiredSurfaces.map((surface) => surfaceLabels[surface]).join(" · ")}</p></article><article className="hjm-showcase-card"><h3>필수 시나리오</h3><ul className="hjm-requirement-list">{entry.requiredScenarios.map((id) => <li key={id}>{scenarioLabels.get(id)}</li>)}</ul></article><article className="hjm-showcase-card"><h3>계약</h3><p>{contract}</p></article></div>
     </section>
   );
 }
 
+function RecipeContract({ name, recipe }: { name?: string; recipe: object }) {
+  return <>{name ? <>레시피 <code>{name}</code> · </> : null}분기 {Object.keys(recipe).map((key, index) => <span key={key}>{index > 0 ? " · " : null}<code>{key}</code></span>)}</>;
+}
+
 export function ContractOnlyStory({ entry }: { entry: ShowcaseComponentEntry }) {
   const recipe = entry.component.recipe ? recipeRegistry[entry.component.recipe] : null;
-  const contract = recipe ? `Recipe branches: ${Object.keys(recipe).join(" · ")}` : "Behavior/API or scope decision only";
+  const contract = recipe ? <RecipeContract recipe={recipe} /> : "동작·API 또는 범위 결정만 있습니다.";
   return (
     <main className="hjm-page" data-showcase-mode="contract-only">
       <StoryHeader entry={entry} />
-      <section className="hjm-showcase-section" aria-labelledby={`${entry.component.name}-contract`}><h2 className="hjm-section-title" id={`${entry.component.name}-contract`}>Contract only</h2><div className="hjm-stage"><div className="hjm-roadmap-preview"><span className="hjm-pill">No renderer evidence</span><strong>{entry.component.name}</strong><p>이 페이지는 범위와 승격 조건만 기록합니다. 구현된 Web UI를 의미하지 않습니다.</p></div></div></section>
+      <section className="hjm-showcase-section" aria-labelledby={`${entry.component.name}-contract`}><h2 className="hjm-section-title" id={`${entry.component.name}-contract`}>계약만 등록</h2><div className="hjm-stage"><div className="hjm-roadmap-preview"><HjmBadge variant="outline">렌더러 증거 없음</HjmBadge><strong>{entry.component.name}</strong><p>이 페이지는 범위와 승격 조건만 기록합니다. 구현된 웹 화면을 의미하지 않습니다.</p></div></div></section>
       <EvidenceSection entry={entry} contract={contract} />
     </main>
   );
@@ -992,8 +1025,8 @@ export function UnsupportedWebStory({ entry }: { entry: ShowcaseComponentEntry }
   return (
     <main className="hjm-page" data-showcase-mode="web-unsupported">
       <StoryHeader entry={entry} />
-      <section className="hjm-showcase-section" aria-labelledby={`${entry.component.name}-unsupported`}><h2 className="hjm-section-title" id={`${entry.component.name}-unsupported`}>Web renderer unsupported</h2><div className="hjm-stage"><div className="hjm-roadmap-preview"><span className="hjm-pill">Native surface</span><strong>{entry.component.name}</strong><p>이 계약은 Native renderer에서 검증합니다. Showcase가 유사한 Web UI를 만들어 지원 범위를 과장하지 않습니다.</p></div></div></section>
-      <EvidenceSection entry={entry} contract="Native renderer contract; no Web implementation is registered" />
+      <section className="hjm-showcase-section" aria-labelledby={`${entry.component.name}-unsupported`}><h2 className="hjm-section-title" id={`${entry.component.name}-unsupported`}>웹 렌더러 미지원</h2><div className="hjm-stage"><div className="hjm-roadmap-preview"><HjmBadge variant="outline">앱 화면</HjmBadge><strong>{entry.component.name}</strong><p>이 계약은 앱 렌더러에서 검증합니다. Showcase가 비슷한 웹 화면을 만들어 지원 범위를 과장하지 않습니다.</p></div></div></section>
+      <EvidenceSection entry={entry} contract="앱 렌더러 계약입니다. 웹 구현은 등록되지 않았습니다." />
     </main>
   );
 }
@@ -1001,12 +1034,12 @@ export function UnsupportedWebStory({ entry }: { entry: ShowcaseComponentEntry }
 function InteractiveWebStory({ entry, name }: { entry: ShowcaseComponentEntry; name: WebRendererComponentName }) {
   const definition = webRendererRegistry[name];
   const contract = definition.recipe
-    ? `Recipe: ${definition.recipe.name}; branches: ${Object.keys(definition.recipe.value).join(" · ")}`
-    : "Provider/API contract with a registered Web adapter";
+    ? <RecipeContract name={definition.recipe.name} recipe={definition.recipe.value} />
+    : "웹 어댑터가 등록된 제공자·API 계약입니다.";
   return (
     <main className="hjm-page" data-showcase-mode="web-renderer">
       <StoryHeader entry={entry} />
-      <section className="hjm-showcase-section" aria-labelledby={`${name}-preview`}><h2 className="hjm-section-title" id={`${name}-preview`}>Interactive Web reference</h2><div className="hjm-stage" data-inline-overlay={name === "DatePicker" ? "true" : undefined}><ComponentPreview name={name} /></div></section>
+      <section className="hjm-showcase-section" aria-labelledby={`${name}-preview`}><h2 className="hjm-section-title" id={`${name}-preview`}>웹 예제</h2><div className="hjm-stage" data-inline-overlay={name === "DatePicker" ? "true" : undefined}><ComponentPreview name={name} /></div></section>
       <EvidenceSection entry={entry} contract={contract} />
     </main>
   );

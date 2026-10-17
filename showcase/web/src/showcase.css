@@ -189,37 +189,18 @@ textarea {
   color: var(--hjm-color-text-muted);
 }
 
+/* Status chips on the overview pages are HJM Badges; the remaining pills are neutral labels and need their own fill,
+   because the page color made them read as loose bold text beside real chips (2026-10-17 review). */
 .hjm-pill {
   display: inline-flex;
   align-items: center;
   min-height: calc(var(--hjm-space-xl) + var(--hjm-space-xxs));
   padding-inline: calc(var(--hjm-space-xs) + var(--hjm-stroke-strong));
   border-radius: var(--hjm-radius-full);
-  background: var(--hjm-color-bg);
+  background: var(--hjm-color-surface-alt);
   color: var(--hjm-color-text-body);
   font-size: var(--hjm-type-label-size);
   font-weight: var(--hjm-font-weight-bold);
-}
-
-.hjm-pill[data-status="stable"] {
-  background: color-mix(in srgb, var(--hjm-accent-success) 14%, var(--hjm-color-bg));
-  color: color-mix(in srgb, var(--hjm-accent-success) 86%, var(--hjm-color-text));
-}
-
-.hjm-pill[data-status="beta"] {
-  background: color-mix(in srgb, var(--hjm-color-primary) 14%, var(--hjm-color-bg));
-  color: var(--hjm-color-content-brand);
-}
-
-.hjm-pill[data-status="planned"] {
-  background: var(--hjm-color-bg);
-  color: var(--hjm-color-text-muted);
-}
-
-.hjm-pill[data-status="deprecated"] {
-  background: color-mix(in srgb, var(--hjm-color-danger) 10%, var(--hjm-color-bg));
-  color: var(--hjm-color-danger);
-  text-decoration: line-through;
 }
 
 .hjm-table-wrap {
@@ -255,6 +236,14 @@ textarea {
   line-height: var(--hjm-type-body-line-height);
 }
 
+/* Nine columns crushed into 760px made each phone row ~470px tall with the scenario list wrapping per word (2026-10-17
+   review). Short status columns stay on one line and the two list columns get a readable floor; the wrap scrolls. */
+.hjm-catalog-table { min-width: 1100px; }
+.hjm-catalog-table th,
+.hjm-catalog-table td:not(:nth-child(7), :nth-child(9)) { white-space: nowrap; }
+.hjm-catalog-table td:nth-child(7) { min-inline-size: 200px; }
+.hjm-catalog-table td:nth-child(9) { min-inline-size: 260px; }
+
 .hjm-showcase-table tr:last-child td {
   border-block-end: 0;
 }
@@ -282,7 +271,6 @@ textarea {
   font-weight: var(--hjm-font-weight-heavy);
 }
 
-.hjm-meta-row,
 .hjm-preview-row,
 .hjm-actions,
 .hjm-avatar-row {
@@ -304,6 +292,10 @@ textarea {
   background: var(--hjm-color-bg);
 }
 
+/* Previews are phone-first compositions; letting them fill the 1280 stage stretched fields and primary buttons to ~900px
+   (2026-10-17 review). Cap the renderer at the medium window class and keep it start-aligned. */
+.hjm-stage > [data-hjm-renderer] { inline-size: 100%; max-inline-size: var(--hjm-breakpoint-medium); }
+
 /* DatePicker positions its calendar inside the reference; a scrolling stage clipped the open calendar and even scrolled its trigger away. */
 .hjm-stage[data-inline-overlay="true"] { overflow: visible; }
 
@@ -319,7 +311,7 @@ textarea {
 }
 
 .hjm-wide-button { width: 100%; }
-.hjm-demo-button:focus-visible, .hjm-showcase-icon-button:focus-visible, .hjm-showcase-chip:focus-visible,
+.hjm-demo-button:focus-visible, .hjm-showcase-chip:focus-visible,
 .hjm-showcase-list-row:focus-visible, .hjm-showcase-tabs button:focus-visible, .hjm-segments button:focus-visible {
   outline: calc(var(--hjm-stroke-default) + var(--hjm-stroke-strong)) solid var(--hjm-color-content-brand);
   outline-offset: calc(var(--hjm-stroke-default) + var(--hjm-stroke-strong));
@@ -353,7 +345,6 @@ textarea {
 .hjm-type-sample h2, .hjm-type-sample p { margin-block-start: 0; }
 .hjm-icon-grid { display: flex; flex-wrap: wrap; gap: var(--hjm-space-md); font-size: var(--hjm-glyph-xl); }
 .hjm-icon-grid span { width: var(--hjm-layout-row-single-line); height: var(--hjm-layout-row-single-line); display: grid; place-items: center; border-radius: calc(var(--hjm-space-sm) + var(--hjm-stroke-strong)); background: var(--hjm-color-bg); }
-.hjm-showcase-icon-button { position: relative; width: var(--hjm-control-min-touch-target); height: var(--hjm-control-min-touch-target); border: var(--hjm-stroke-default) solid var(--hjm-color-border); border-radius: 50%; background: var(--hjm-color-bg); color: var(--hjm-color-text); }
 
 .hjm-topbar { min-height: var(--hjm-layout-row-single-line); display: grid; grid-template-columns: var(--hjm-control-min-touch-target) 1fr var(--hjm-control-min-touch-target); align-items: center; gap: var(--hjm-space-xs); text-align: center; border-block-end: var(--hjm-stroke-default) solid var(--hjm-color-border); }
 .hjm-bottom-nav { display: grid; grid-template-columns: repeat(3, 1fr); border: var(--hjm-stroke-default) solid var(--hjm-color-border); border-radius: calc(var(--hjm-space-md) + var(--hjm-stroke-strong)); overflow: hidden; background: var(--hjm-color-bg); }
@@ -404,26 +395,9 @@ textarea {
 .hjm-showcase-sheet { align-self: end; width: min(100%, var(--hjm-layout-reading-max-width)); border-end-start-radius: 0; border-end-end-radius: 0; }
 
 /* Reference concepts and roadmap decisions */
-.hjm-roadmap-callout {
-  display: grid;
-  /* minmax(0, 1fr): a bare 1fr keeps the summary's min-content width, so a Latin·dot run with no break opportunity
-     pushed the callout past a 390 viewport at 2x text (2026-10-06 render sweep). */
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: calc(var(--hjm-space-xxs) + var(--hjm-stroke-strong)) calc(var(--hjm-space-sm) + var(--hjm-stroke-strong));
-  align-items: center;
-  margin-block-start: var(--hjm-space-xl);
-  padding: calc(var(--hjm-space-md) - var(--hjm-stroke-default)) calc(var(--hjm-space-md) + var(--hjm-stroke-default));
-  border: var(--hjm-stroke-default) solid var(--hjm-color-border);
-  border-inline-start: calc(var(--hjm-stroke-strong) * 2) solid var(--hjm-color-content-brand);
-  border-radius: calc(var(--hjm-space-sm) + var(--hjm-stroke-strong));
-  background: var(--hjm-color-bg);
-}
-.hjm-roadmap-callout > span { font-size: var(--hjm-type-label-size); font-weight: var(--hjm-font-weight-heavy); letter-spacing: var(--hjm-letter-spacing-wide); text-transform: uppercase; }
-.hjm-roadmap-callout p { margin: 0; color: var(--hjm-color-text-body); }
-.hjm-roadmap-callout small { grid-column: 2; color: var(--hjm-color-text-muted); }
-.hjm-roadmap-callout[data-roadmap="declined"] { border-inline-start-color: var(--hjm-color-danger); }
-.hjm-roadmap-callout[data-roadmap="evidence-needed"] { border-inline-start-color: var(--hjm-accent-warning); }
-.hjm-roadmap-callout[data-roadmap="prerequisite"] { border-inline-start-color: var(--hjm-accent-info); }
+/* The callout itself is an HJM Surface with a Badge above the summary; only its distance from the meta row is page chrome.
+   The previous label-beside-summary grid squeezed long summaries into ~60% of a phone width (2026-10-17 review). */
+.hjm-roadmap-callout { margin-block-start: var(--hjm-space-xl); }
 .hjm-roadmap-preview { max-width: var(--hjm-breakpoint-medium); display: grid; gap: var(--hjm-space-sm); justify-items: start; }
 .hjm-roadmap-preview strong { font-size: var(--hjm-type-heading-size); }
 .hjm-roadmap-preview p { margin: 0; color: var(--hjm-color-text-body); line-height: var(--hjm-type-body-line-height); }
@@ -502,7 +476,7 @@ textarea {
 .hjm-home-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: calc(var(--hjm-space-xs) + var(--hjm-stroke-strong));
+  gap: var(--hjm-space-sm);
   margin-block-start: calc(var(--hjm-space-xl) + var(--hjm-space-xxs));
 }
 
@@ -768,18 +742,14 @@ textarea {
 .hjm-explorer { padding-block: var(--hjm-space-xxl) calc(var(--hjm-space-xxl) * 2); }
 .hjm-explorer-summary { display: flex; flex-wrap: wrap; gap: calc(var(--hjm-space-xs) + var(--hjm-stroke-strong)); margin-block-start: var(--hjm-space-xl); }
 .hjm-explorer-summary span { display: inline-flex; gap: calc(var(--hjm-space-xxs) + var(--hjm-stroke-strong)); padding: calc(var(--hjm-space-xs) + var(--hjm-stroke-default)) var(--hjm-space-sm); border-radius: var(--hjm-radius-full); background: var(--hjm-color-bg); color: var(--hjm-color-text-body); }
-.hjm-explorer-tools { display: grid; grid-template-columns: minmax(260px, 1fr) repeat(3, minmax(140px, .35fr)); gap: var(--hjm-space-sm); margin-block-start: calc(var(--hjm-space-xl) + var(--hjm-space-xxs)); padding: var(--hjm-space-md); border: var(--hjm-stroke-default) solid var(--hjm-color-border); border-radius: calc(var(--hjm-space-md) + var(--hjm-stroke-strong)); background: var(--hjm-color-bg); }
-.hjm-explorer-tools label { min-width: 0; display: grid; gap: calc(var(--hjm-space-xs) - var(--hjm-stroke-default)); color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); font-weight: var(--hjm-font-weight-heavy); }
-.hjm-explorer-tools input, .hjm-explorer-tools select { width: 100%; min-height: var(--hjm-control-min-touch-target); padding: calc(var(--hjm-space-xs) + var(--hjm-stroke-strong)) var(--hjm-space-sm); border: var(--hjm-stroke-default) solid var(--hjm-color-border); border-radius: calc(var(--hjm-space-xs) + var(--hjm-stroke-strong)); background: var(--hjm-color-bg); color: var(--hjm-color-text); }
+.hjm-explorer-tools { margin-block-start: calc(var(--hjm-space-xl) + var(--hjm-space-xxs)); }
 .hjm-component-card-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: calc(var(--hjm-space-sm) + var(--hjm-stroke-strong)); }
 .hjm-component-card { min-width: 0; display: flex; flex-direction: column; min-height: 248px; padding: calc(var(--hjm-space-md) + var(--hjm-stroke-strong)); border: var(--hjm-stroke-default) solid var(--hjm-color-border); border-radius: calc(var(--hjm-space-md) + var(--hjm-stroke-strong)); background: var(--hjm-color-bg); }
 .hjm-component-card-topline { display: flex; align-items: center; justify-content: space-between; gap: var(--hjm-space-sm); }
-.hjm-component-glyph { width: calc(var(--hjm-control-min-touch-target) - var(--hjm-stroke-strong)); height: calc(var(--hjm-control-min-touch-target) - var(--hjm-stroke-strong)); display: grid; place-items: center; border-radius: var(--hjm-radius-md); background: var(--hjm-color-bg); color: var(--hjm-color-content-brand); font-weight: var(--hjm-font-weight-heavy); text-transform: uppercase; }
 .hjm-component-card h3 { margin: calc(var(--hjm-space-md) + var(--hjm-stroke-strong)) 0 calc(var(--hjm-space-xxs) + var(--hjm-stroke-strong)); font-size: var(--hjm-type-title-large-size); }
 .hjm-component-meta { margin: 0; color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); line-height: var(--hjm-type-label-line-height); }
-.hjm-component-roadmap { display: grid; gap: calc(var(--hjm-space-xxs) + var(--hjm-stroke-default)); margin: calc(var(--hjm-space-sm) + var(--hjm-stroke-strong)) 0 0; padding: calc(var(--hjm-space-xs) + var(--hjm-stroke-strong)); border-radius: calc(var(--hjm-space-sm) - var(--hjm-stroke-default)); background: var(--hjm-color-bg); color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); line-height: var(--hjm-type-label-line-height); }
-.hjm-component-roadmap strong { color: var(--hjm-color-text-body); font-size: var(--hjm-type-caption-size); letter-spacing: var(--hjm-letter-spacing-wide); text-transform: uppercase; }
-.hjm-component-roadmap[data-roadmap="declined"] strong { color: var(--hjm-color-danger); }
+.hjm-component-roadmap { display: grid; justify-items: start; gap: calc(var(--hjm-space-xxs) + var(--hjm-stroke-default)); margin: calc(var(--hjm-space-sm) + var(--hjm-stroke-strong)) 0 0; padding: calc(var(--hjm-space-xs) + var(--hjm-stroke-strong)); border-radius: calc(var(--hjm-space-sm) - var(--hjm-stroke-default)); background: var(--hjm-color-bg); color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); line-height: var(--hjm-type-label-line-height); }
+.hjm-component-roadmap p { margin: 0; }
 .hjm-reference-tags { display: flex; flex-wrap: wrap; gap: calc(var(--hjm-space-xxs) + var(--hjm-stroke-strong)); margin-block-start: calc(var(--hjm-space-sm) + var(--hjm-stroke-strong)); }
 .hjm-reference-tags span { display: inline-flex; gap: calc(var(--hjm-space-xxs) + var(--hjm-stroke-default)); align-items: center; padding: calc(var(--hjm-space-xxs) + var(--hjm-stroke-default)) var(--hjm-space-xs); border: var(--hjm-stroke-default) solid var(--hjm-color-border); border-radius: var(--hjm-radius-full); font-size: var(--hjm-type-label-size); }
 .hjm-reference-tags small { color: var(--hjm-color-text-muted); }
@@ -827,7 +797,6 @@ textarea {
   .hjm-category-count { grid-column: 2; text-align: start; }
   .hjm-section-heading { align-items: start; flex-direction: column; }
   .hjm-reference-section { padding: var(--hjm-space-xl) calc(var(--hjm-space-md) + var(--hjm-stroke-strong)); }
-  .hjm-explorer-tools { grid-template-columns: 1fr; }
 }
 
 @media (min-width: 641px) and (max-width: 980px) {
@@ -836,7 +805,6 @@ textarea {
   .hjm-feature-grid, .hjm-component-card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .hjm-roadmap-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .hjm-reference-section { grid-template-columns: 1fr; }
-  .hjm-explorer-tools { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 /* The seven-column demo uses the full phone width; only editorial copy owns gutters. */

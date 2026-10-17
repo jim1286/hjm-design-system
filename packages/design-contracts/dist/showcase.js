@@ -58,57 +58,57 @@ export function getShowcaseEnvironmentInput(environment) {
 export const showcaseScenarios = [
     {
         id: "contract",
-        label: "Contract",
+        label: "계약",
         description: "Anatomy, defaults, supported axes, platform and maturity are visible.",
     },
     {
         id: "default",
-        label: "Default",
+        label: "기본",
         description: "The normal state renders using recipe defaults without product overrides.",
     },
     {
         id: "dark",
-        label: "Dark",
+        label: "어두운 테마",
         description: "Semantic colors remain legible on the dark theme.",
     },
     {
         id: "long-copy",
-        label: "Long copy",
+        label: "긴 문구",
         description: "Long Korean and English copy wraps without clipping or hiding meaning.",
     },
     {
         id: "large-text",
-        label: "200% text",
+        label: "200% 글자",
         description: "Text can grow to 200% without truncating required information.",
     },
     {
         id: "rtl",
-        label: "RTL",
+        label: "오른쪽→왼쪽",
         description: "Logical start/end layout and directional icons mirror correctly.",
     },
     {
         id: "reduced-motion",
-        label: "Reduced motion",
+        label: "동작 줄이기",
         description: "Motion follows the recipe reduced-motion fallback.",
     },
     {
         id: "accessibility",
-        label: "Accessibility",
+        label: "접근성",
         description: "Names, states, relationships, contrast and touch targets are inspectable.",
     },
     {
         id: "keyboard",
-        label: "Keyboard",
+        label: "키보드",
         description: "Focus order and documented keyboard behavior run as interaction tests.",
     },
     {
         id: "native-actions",
-        label: "Native actions",
+        label: "앱 동작",
         description: "Accessible host actions and their state transitions run against the Native renderer.",
     },
     {
         id: "platform-parity",
-        label: "Web / Native parity",
+        label: "웹·앱 동등성",
         description: "Adaptive renderers preserve intent while using platform-native behavior.",
     },
 ];

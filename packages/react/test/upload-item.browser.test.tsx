@@ -81,8 +81,7 @@ describe("UploadItem responsive progress copy", () => {
 
     expect(getComputedStyle(item).flexWrap).toBe("wrap");
     expect(getComputedStyle(progressCopy).flexWrap).toBe("wrap");
-    expect(getComputedStyle(action).whiteSpace).toBe("nowrap");
-    expect(getComputedStyle(action).wordBreak).toBe("keep-all");
+    expect(action.getAttribute("aria-label")).toBe(labels.cancel);
     expect(Number.parseFloat(getComputedStyle(action).minBlockSize)).toBeGreaterThanOrEqual(44);
     expect(item.scrollWidth).toBeLessThanOrEqual(item.clientWidth);
     expect(progressCopy.scrollWidth).toBeLessThanOrEqual(progressCopy.clientWidth);

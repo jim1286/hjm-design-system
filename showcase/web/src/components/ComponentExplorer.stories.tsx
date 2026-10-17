@@ -11,10 +11,24 @@ import {
   type ComponentCategory,
   type ComponentPlatform,
   type ComponentStatus,
+  type SelectItemDescriptor,
 } from "@hjmds/design-contracts";
+import { Badge as HjmBadge } from "@hjmds/react/display";
+import { SearchField as HjmSearchField, Select as HjmSelect } from "@hjmds/react/forms";
+import { Grid as HjmGrid, Surface as HjmSurface } from "@hjmds/react/layout";
+
 import {
   summarizeWebShowcaseCoverage,
 } from "./preview-registry";
+import {
+  categoryLabels,
+  platformLabels,
+  relationshipLabels,
+  roadmapStateLabels,
+  roadmapStateTones,
+  statusLabels,
+  statusTones,
+} from "./showcase-labels.js";
 import {
   componentStoryHref,
   getComponentStoryClassification,
@@ -27,20 +41,17 @@ type ExplorerProps = { initialCategory?: CategoryFilter };
 
 const catalog: readonly ComponentCatalogEntry[] = componentCatalog;
 
-const categoryLabels: Readonly<Record<ComponentCategory, string>> = {
-  foundation: "글자와 아이콘",
-  layout: "레이아웃",
-  action: "동작",
-  input: "입력",
-  navigation: "탐색",
-  "data-display": "데이터 표시",
-  feedback: "상태와 알림",
-  overlay: "오버레이",
-  provider: "제공자 설정",
-  utility: "보조 기능",
-};
-
 const categories = Object.keys(categoryLabels) as ComponentCategory[];
+const platforms = Object.keys(platformLabels) as ComponentPlatform[];
+const statuses: readonly ComponentStatus[] = ["stable", "beta", "planned", "deprecated"];
+
+function filterOptions<Key extends string>(allLabel: string, keys: readonly Key[], labels: Readonly<Record<Key, string>>): SelectItemDescriptor<Key | "all">[] {
+  return [{ id: "all", label: allLabel, textValue: allLabel }, ...keys.map((id) => ({ id, label: labels[id], textValue: labels[id] }))];
+}
+
+const categoryOptions = filterOptions("전체 분류", categories, categoryLabels);
+const platformOptions = filterOptions("전체 환경", platforms, platformLabels);
+const statusOptions = filterOptions("전체 단계", statuses, statusLabels);
 
 export function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
   const [query, setQuery] = useState("");
@@ -85,7 +96,7 @@ export function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
         한글 이름과 개발용 API 이름으로 검색할 수 있습니다.
       </p>
 
-      <section className="hjm-explorer-summary" aria-label="Explorer summary">
+      <section className="hjm-explorer-summary" aria-label="탐색 요약">
         <span><strong>{showcaseCoverage.canonical}</strong> 컴포넌트</span>
         <span><strong>{showcaseCoverage.webReferences}</strong> 웹 예제</span>
         <span><strong>{showcaseCoverage.contractOnly}</strong> 계약만 등록</span>
@@ -94,44 +105,44 @@ export function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
         <span><strong>{filtered.length}</strong> 검색 결과</span>
       </section>
 
-      <section className="hjm-explorer-tools" aria-label="Filter components">
-        <label className="hjm-explorer-search">
-          <span>검색</span>
-          <input
-            onChange={(event) => setQuery(event.currentTarget.value)}
-            placeholder="버튼, 로그인 화면, Button…"
-            type="search"
+      <HjmSurface as="section" className="hjm-explorer-tools" bordered padding="md" aria-label="컴포넌트 필터">
+        <HjmGrid columns={{ compact: 2, expanded: 4 }} gap={{ compact: "sm" }}>
+          <HjmSearchField
+            label="검색"
+            clearLabel="검색어 지우기"
+            placeholder="이름 또는 API"
             value={query}
+            onValueChange={setQuery}
           />
-        </label>
-        <label>
-          <span>분류</span>
-          <select onChange={(event) => setCategory(event.currentTarget.value as CategoryFilter)} value={category}>
-            <option value="all">전체 분류</option>
-            {categories.map((item) => <option key={item} value={item}>{categoryLabels[item]}</option>)}
-          </select>
-        </label>
-        <label>
-          <span>지원 환경</span>
-          <select onChange={(event) => setPlatform(event.currentTarget.value as PlatformFilter)} value={platform}>
-            <option value="all">전체 환경</option>
-            <option value="shared">웹·앱 공통</option>
-            <option value="adaptive">환경별 대응</option>
-            <option value="web">웹</option>
-            <option value="native">앱</option>
-          </select>
-        </label>
-        <label>
-          <span>구현 단계</span>
-          <select onChange={(event) => setStatus(event.currentTarget.value as StatusFilter)} value={status}>
-            <option value="all">전체 단계</option>
-            <option value="stable">안정</option>
-            <option value="beta">시험 사용</option>
-            <option value="planned">구현 예정</option>
-            <option value="deprecated">사용 종료 예정</option>
-          </select>
-        </label>
-      </section>
+          <HjmSelect<CategoryFilter>
+            label="분류"
+            placeholder="전체 분류"
+            emptySelectionLabel="전체 분류"
+            disallowEmptySelection
+            items={categoryOptions}
+            selectedKey={category}
+            onSelectionChange={(key) => setCategory(key ?? "all")}
+          />
+          <HjmSelect<PlatformFilter>
+            label="지원 환경"
+            placeholder="전체 환경"
+            emptySelectionLabel="전체 환경"
+            disallowEmptySelection
+            items={platformOptions}
+            selectedKey={platform}
+            onSelectionChange={(key) => setPlatform(key ?? "all")}
+          />
+          <HjmSelect<StatusFilter>
+            label="구현 단계"
+            placeholder="전체 단계"
+            emptySelectionLabel="전체 단계"
+            disallowEmptySelection
+            items={statusOptions}
+            selectedKey={status}
+            onSelectionChange={(key) => setStatus(key ?? "all")}
+          />
+        </HjmGrid>
+      </HjmSurface>
 
       {visibleCategories.length === 0 ? (
         <section className="hjm-explorer-empty" role="status">
@@ -159,17 +170,16 @@ export function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
               return (
                 <article className="hjm-component-card" key={entry.name}>
                   <div className="hjm-component-card-topline">
-                    <span className="hjm-component-glyph" aria-hidden="true">{entry.name.slice(0, 2)}</span>
-                    <span className="hjm-pill" data-status={entry.status}>{entry.status}</span>
+                    <HjmBadge tone={statusTones[entry.status]}>{statusLabels[entry.status]}</HjmBadge>
                   </div>
                   <h3>{storyLabels[entry.name] ?? entry.name}</h3>
                   <code>{entry.name}</code>
-                  <p className="hjm-component-meta">{entry.platform} · {entry.recipe ? "visual recipe" : entry.nonVisualEvidence === "provider-adapter" ? "provider adapter" : "scope contract"}{entry.behavior ? ` · ${entry.behavior}` : ""}</p>
-                  {entry.roadmap && <p className="hjm-component-roadmap" data-roadmap={entry.roadmap.state}><strong>{entry.roadmap.state}</strong>{entry.roadmap.summary}</p>}
+                  <p className="hjm-component-meta">{platformLabels[entry.platform]} · {entry.recipe ? "시각 레시피" : entry.nonVisualEvidence === "provider-adapter" ? "제공자 어댑터" : "범위 계약"}{entry.behavior ? <> · 동작 규칙 <code>{entry.behavior}</code></> : null}</p>
+                  {entry.roadmap && <div className="hjm-component-roadmap" data-roadmap={entry.roadmap.state}><HjmBadge size="small" tone={roadmapStateTones[entry.roadmap.state]}>{roadmapStateLabels[entry.roadmap.state]}</HjmBadge><p>{entry.roadmap.summary}</p></div>}
                   {references.length > 0 && (
-                    <div className="hjm-reference-tags" aria-label="Reference system mappings">
+                    <div className="hjm-reference-tags" aria-label="참고 시스템 대응">
                       {references.map((reference) => (
-                        <span key={reference.name}>{reference.name}<small>{reference.relationship}</small></span>
+                        <span key={reference.name}>{reference.name}<small>{relationshipLabels[reference.relationship]}</small></span>
                       ))}
                     </div>
                   )}

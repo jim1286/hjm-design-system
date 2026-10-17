@@ -1051,12 +1051,24 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-result__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--hjm-space-sm); margin-block-start: var(--hjm-space-xs); }
 .hjm-progress { display: grid; gap: var(--hjm-space-xs); }
 .hjm-progress__copy { display: flex; justify-content: space-between; gap: var(--hjm-space-md); color: var(--hjm-color-text-body); }
-.hjm-progress__native { inline-size: 100%; block-size: 8px; border: 0; border-radius: var(--hjm-radius-full); overflow: hidden; accent-color: var(--hjm-color-content-brand); }
+/*
+  progressRecipe paints a tone fill on the sunken track. Authored box styles drop Chromium/WebKit out of native
+  appearance, which then ignores accent-color and paints its UA green bar on grey (2026-10-17 review), so the bar opts
+  out of native appearance explicitly and paints both parts. The track uses the same surface as the circular ring.
+*/
+.hjm-progress { --hjm-progress-fill: var(--hjm-color-content-brand); --hjm-progress-track: var(--hjm-color-surface-alt); }
+.hjm-progress[data-tone="success"] { --hjm-progress-fill: var(--hjm-accent-success); }
+.hjm-progress[data-tone="warning"] { --hjm-progress-fill: var(--hjm-accent-warning); }
+.hjm-progress[data-tone="danger"] { --hjm-progress-fill: var(--hjm-color-danger); }
+.hjm-progress__native { -webkit-appearance: none; appearance: none; inline-size: 100%; block-size: 8px; border: 0; border-radius: var(--hjm-radius-full); overflow: hidden; background: var(--hjm-progress-track); color: var(--hjm-progress-fill); }
+.hjm-progress__native::-webkit-progress-bar { border-radius: inherit; background: var(--hjm-progress-track); }
+.hjm-progress__native::-webkit-progress-value { border-radius: inherit; background: var(--hjm-progress-fill); }
+.hjm-progress__native::-moz-progress-bar { border-radius: inherit; background: var(--hjm-progress-fill); }
+/* Without a value there is no progress-value box; show the same fixed 30% start-edge segment as the Native renderer. */
+.hjm-progress[data-state="indeterminate"] .hjm-progress__native { background: linear-gradient(to right, var(--hjm-progress-fill) 0 30%, var(--hjm-progress-track) 30%); }
+.hjm-progress[data-state="indeterminate"] .hjm-progress__native:dir(rtl) { background: linear-gradient(to left, var(--hjm-progress-fill) 0 30%, var(--hjm-progress-track) 30%); }
 .hjm-progress[data-size="small"] .hjm-progress__native { block-size: 4px; }
 .hjm-progress[data-size="large"] .hjm-progress__native { block-size: 12px; }
-.hjm-progress[data-tone="success"] .hjm-progress__native { accent-color: var(--hjm-accent-success); }
-.hjm-progress[data-tone="warning"] .hjm-progress__native { accent-color: var(--hjm-accent-warning); }
-.hjm-progress[data-tone="danger"] .hjm-progress__native { accent-color: var(--hjm-color-danger); }
 /*
   The circular shape hides the native bar and draws the same value as a conic
   sweep. The element stays a <progress>, so the value, the indeterminate case
@@ -1073,13 +1085,10 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   inline-size: var(--hjm-progress-diameter);
   block-size: var(--hjm-progress-diameter);
   border-radius: var(--hjm-radius-full);
-  background: conic-gradient(var(--hjm-progress-ring-color, var(--hjm-color-content-brand)) var(--hjm-progress-sweep), var(--hjm-color-surface-alt) 0);
+  background: conic-gradient(var(--hjm-progress-fill) var(--hjm-progress-sweep), var(--hjm-progress-track) 0);
   -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - var(--hjm-progress-stroke)), #000 calc(100% - var(--hjm-progress-stroke)));
   mask: radial-gradient(farthest-side, transparent calc(100% - var(--hjm-progress-stroke)), #000 calc(100% - var(--hjm-progress-stroke)));
 }
-.hjm-progress[data-tone="success"] .hjm-progress__ring { --hjm-progress-ring-color: var(--hjm-accent-success); }
-.hjm-progress[data-tone="warning"] .hjm-progress__ring { --hjm-progress-ring-color: var(--hjm-accent-warning); }
-.hjm-progress[data-tone="danger"] .hjm-progress__ring { --hjm-progress-ring-color: var(--hjm-color-danger); }
 .hjm-progress[data-state="indeterminate"][data-shape="circular"] .hjm-progress__ring { animation: hjm-provider-spin 1200ms linear infinite; }
 @media (prefers-reduced-motion: reduce) {
   .hjm-progress[data-state="indeterminate"][data-shape="circular"] .hjm-progress__ring { animation: none; }
@@ -2657,8 +2666,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-upload-item .hjm-progress__copy > span:last-child:not(:first-child) { flex: 1 1 10rem; overflow-wrap: anywhere; text-align: end; }
 .hjm-upload-item[data-status="success"] .hjm-upload-item__status { color: var(--hjm-accent-success); }
 .hjm-upload-item[data-status="error"] .hjm-upload-item__status { color: var(--hjm-color-danger); }
-.hjm-upload-item__action { flex: 0 0 auto; min-inline-size: var(--hjm-control-min-touch-target); min-block-size: var(--hjm-control-min-touch-target); margin-inline-start: auto; padding-inline: var(--hjm-space-sm); border: 0; color: var(--hjm-color-content-brand); background: transparent; font: inherit; font-weight: var(--hjm-font-weight-bold); white-space: nowrap; word-break: keep-all; cursor: pointer; }
-.hjm-upload-item__action[data-action="cancel"] { color: var(--hjm-color-danger); }
+.hjm-upload-item__action { flex: 0 0 auto; margin-inline-start: auto; }
 
 .hjm-date-picker { display: grid; gap: var(--hjm-space-xs); }
 .hjm-date-picker__label { color: var(--hjm-color-text); font-weight: var(--hjm-font-weight-semibold); }
@@ -2728,7 +2736,6 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-toast__action:focus-visible,
 .hjm-toast__close:focus-visible,
 .hjm-file-picker__dropzone button:focus-visible,
-.hjm-upload-item__action:focus-visible,
 .hjm-date-picker__trigger:focus-visible,
 .hjm-date-picker__clear:focus-visible,
 .hjm-table-scroll:focus-visible {
