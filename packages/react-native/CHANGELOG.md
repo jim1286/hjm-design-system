@@ -1,5 +1,102 @@
 # @hjmds/react-native
 
+## 1.27.0
+
+### Minor Changes
+
+- de29daf: Route titles are always centered: remove `headerAlignment` from `ScreenLayout` (and screens built on it, `ListDetailScreen.detail`) and `centered` from `TopBar`; extra actions stay at the top-right. `screenHeaderRecipe.titleLevel` is removed (only `centeredTitleLevel`). `ScreenFlowAction.icon` renders header actions such as `ListDetailScreen` refresh as icon buttons so they do not squeeze the centered title.
+- 6dcb898: Add opt-in dotted vertical drops for missing LineChart periods on Web and Native. Each observed edge of a gap drops straight to the plot floor at its own category position; the two sides never connect across missing seasons. Preserve null values, unfilled missing regions, and observed-only focus navigation without assigning zero or changing the domain.
+- ab7bddb: Extend the measured chat and comment standard. The hold menu now shows the reaction strip (only when
+  options exist), the message preview and an action card: the exact time, reply, product `menuActions` and a
+  danger-tone `reportAction` last. `ChatMessage` gains `replyQuote` (an HJM-drawn "X에게 답장" quote whose tap
+  opens the original) and `media` photos (`resolveChatMediaColumns`; photo-only messages drop the bubble), hides
+  the author on own messages and draws a flat-topped tip. `ChatScreen` centers its header by default, takes an
+  `avatar` and uses a 10pt timeline gutter. `MessageComposer` wraps the reply target and input in one card.
+  Comments accept `reactions` (long press, action-only when no options), `reactionSummary` and optional
+  `media`; the like count is a bare number under the heart.
+- 3739d81: Component review E (data display): neutral and brand Badge/Tag plates draw `border.default` so they no longer vanish on the canvas; QRCode stacks and centers its fallback under the code (`qrCodeRecipe.fallbackGap`); Carousel and CollectionRail previous/next are icon buttons on both renderers, and Native Carousel shows Web's position dots as one adjustable page control instead of a caption and numbered buttons; LineScore and MatrixTable highlight with `dataTableFamilyRecipe.highlight` (surface tint) instead of the canvas-white selected row, Web LineScore pins the team and total columns, and Native LineScore opens at the live/latest period; Native MatrixTable heat fills the cell like Web; ImageComparison frames take the image radius; Asset accessory sits outside the end/bottom corner on both renderers (RTL-safe); FolderPreview centers artwork, label and open mark. New: `Collapsible` `marker="none"` with `CollapsibleMarker`, Web `ClipboardIconButton`. Korean text wraps between words (Web `word-break: keep-all`, Native `lineBreakStrategyIOS="hangul-word"`).
+- 3aecab0: `MessageComposer` gains `quickInserts`: an evenly spread emoji row above the input that appends the emoji to
+  the draft (Instagram comment sheet). The Web hold menu follows the measured look: 18px card radius with
+  actions, 28px emoji in 48px targets, 56px touch rows and an optional `submenu` chevron.
+- f24ca60: Keep `headerAlignment` (ScreenLayout and screens built on it, `ListDetailScreen.detail`) and TopBar `centered`, with centered as the default: `headerAlignment` now defaults to `"center"` (was `"start"`). Web ScreenLayout uses the same fixed header band as Native (`screenHeaderRecipe`), so the title sits at the same height with or without exit/action buttons.
+- 52f2c21: Add `ImageChoiceGroup` (image tile single/multiple selection) with `imageChoiceRecipe`; Native `Chip` forwards its ref; `ListDetailScreen` places screen actions beside refresh; register `KeyboardAvoidanceContext` in the public map.
+- 5ca0cee: Add an optional inline DescriptionList layout with aligned labels, wrapping values and row separators for long read-only records. Preserve the existing stacked layout by default.
+- 71f741d: Render `Text variant="label"` at medium (500) by default and draw `heading.level1`/`level2` bold (700) instead of heavy (800) on Web and Native (2026-10-17 user decision).
+
+  - `typography.label.fontWeight` is now `"500"` and `heading.level1`/`level2` are `"700"`; `Top size="large"` titles follow `heading.level2`.
+  - New `textRecipe.variantWeight` and `resolveTextDefaultWeight(variant, typography, designProfileActive)`: both renderers use it when `emphasis` is omitted, so label renders its token weight even without a design profile. Other variants keep `regular` outside a profile. Explicit `emphasis` still wins.
+  - Web Text now places the default variant weight before caller `style`/`layoutStyle`, matching Native's style order (previously a profile weight overrode an explicit style weight).
+  - The brutalist preset pins its level1/2 headings to 800 explicitly to keep its documented strong emphasis.
+  - Native `fonts="pretendard"` draws these weights with the bundled `Pretendard-Medium` and `Pretendard-Bold` faces.
+
+- 92723e8: Adopt the measured chat and comment standard. `ChatMessage` gains `groupPosition` (from the new
+  `resolveChatMessageGroups`) so a run shows its author, avatar and tip once and its time once beside the last
+  bubble; bubbles are filled, borderless and compact (`chatMessageRecipe`), and `bubbleTail` now defaults to
+  `true`. `ChatScreen` gains an optional `jumpToLatest` control. Comment rows follow `commentThreadRecipe`:
+  32/24 avatars, the like count under the heart, quiet text reply/expand actions and replies aligned with the
+  parent text column. Timeline hosts should drop their own message gaps.
+- c7999fb: Add the canonical Native `ContextMenu` (`@hjmds/react-native/context-menu`): long-press (and an accessibility
+  action) on a host pressable opens the hold-menu card with icon slots and danger-tone rows, then runs the item
+  after the modal is gone. Conversation rows use it for the measured DM row menu.
+- 35ef8ef: Keyboard handling moves into the components (2026-10-16 keyboard audit): `ScreenLayout` gains
+  `keyboardAvoidance` (default on) that pads only the real overlap and scrolls the focused input into view,
+  `Sheet` now defaults `keyboardAvoidance` to `true`, and `KeyboardAvoidanceContext` lets nested layouts inside
+  KeyboardAvoiding or a keyboard-aware Sheet/Dialog skip duplicate padding. New hooks: `useKeyboardOverlap`,
+  `useScrollFocusedInputIntoView`.
+- ddfda06: Bundle Pretendard (SIL OFL 1.1) as the default UI face. Web: `import "@hjmds/react/fonts/pretendard.css"` (variable dynamic subset). Native: register `hjmPretendardFonts` from `@hjmds/react-native/fonts` (e.g. expo-font) and pass `fonts="pretendard"` to `HjmNativeProvider`; Text picks the face for its final weight. `fontFamily.ui` now starts with Pretendard Variable/Pretendard (Inter removed). `typography.heading` and `titleLarge` drop from 800 to 700.
+- 71f741d: `ScreenLayout` gains `contentInset="body-edge"`: header, notice and footer keep the screen gutter while the body drops its
+  inline padding, so full-width list rows (ConversationRow, NotificationRow) supply their own 16pt inset instead of stacking
+  to ~32pt (review S5#9). `contentInset="none"` keeps its host-owns-all-insets meaning. Contracts export
+  `ScreenContentInset`/`screenContentInsets`.
+
+  `CommentThreadScreen` and `CommentThreadRow` gain `commentMenu` (`label(item)`, `items(item)`, `onAction(item, id)`; Native
+  also `dismissLabel`): HJM renders the trailing vertical-dots IconButton in every comment row and opens the shared Menu with
+  danger items last (`resolveCommentMenuItems`, `CommentMenuItemDescriptor`, `commentThreadRecipe.menuGlyphSize` in contracts).
+  The `actions` slot is unchanged.
+
+- b1d07e4: Add `exit` to `ScreenLayout` (and every screen built on it) and `TopBar`: leaving a screen is an icon-only back/close button fixed at the header's leading edge. `ListDetailScreen` detail back and `EditorScreen` cancel now render that icon instead of a text button; Native `ListDetailScreen` `detail.leading` is removed (use the built-in back). Add `actionGroupRecipe` (stacked buttons 8, inline 12) and use it for Sheet/Dialog footers. Web centered `ScreenLayout` header now sizes side columns by their controls with a title-size heading, matching Native.
+- dc2cde2: Remove the free `leading` slot from `ScreenLayout` and every screen built on it; the header's leading edge is only the icon `exit`. Every product use was a hand-made back button. `SavedItemsScreen` renders its collection back as the `exit` icon. Migrate `leading={<Back… />}` to `exit={{ kind: "back", label, onClick | onPress }}`. `TopBar` keeps `leading` for non-exit content such as a brand link.
+- ed78e1c: Web/Native parity from the reference screen comparison: route titles use `Heading` at `screenHeaderRecipe.titleLevel` (start, level3) and `centeredTitleLevel` (centered, level5) on both renderers — Native previously drew regular-weight Text. `Switch` defaults to `presentation="row"` on Web as on Native (label first, track trailing); pass `inline` for compact toolbars. Native `Heading` gains `align`.
+- b394f91: Bottom sheets close by dragging (2026-10-16 user decision). `swipeDismiss` now defaults to `true`; bottom
+  sheets default to no backdrop dismissal (`resolveSheetDismissPolicy`) and no visible × (`showClose`,
+  `resolveSheetCloseButton`). Web and Native draw the handle on every bottom sheet, follow the drag from the
+  handle/header and close past `sheetDragRecipe` thresholds with reason `swipe`; the handle is also the
+  accessible close control, and Escape/back stay. Flutter adds `showHjmBottomSheet` with the same defaults.
+  `KeyboardAvoiding` pads only the real keyboard overlap, and the icon-mode `MessageComposer` reserves the send
+  button so typing no longer resizes the field.
+- 7901e9f: Icon slots for tool actions: `SavedItemsScreen` now requires `createCollectionIcon` (Web and Native) and always renders the create-collection action as an `IconButton` named by `labels.createCollection`; the text-button fallback is removed because header tool actions are icons. Migrate by passing the product's add glyph. Web `Popover` `closeIcon` is optional and renders an `IconButton` named by the existing label; omitting it keeps the text button.
+
+### Patch Changes
+
+- 56ada36: Register `ImageChoiceGroup` in the component catalog (beta on both renderers) and add `screenHeaderRecipe`; Native `ScreenLayout` reads its header heights and padding from it instead of literals.
+- 6dcb898: Keep line-chart extreme labels on opposite sides of their points so fixed rank domains do not overlap the labels, including inverted axes.
+- 380d162: The Native hold menu anchors to the pressed content's measured top, so the preview stays in place (strip
+  above only when reactions exist); comments default to an action-only menu like the Instagram comment sheet.
+- 5e505a6: Component review B: ReactionPicker `wrap` draws chip frames on both renderers; `bottomCtaRecipe.contentMaxWidth` (720) caps BottomCTA content and the OverviewScreen toolbar; Native evidence registers ImageChoiceGroup.
+- 0ab0539: Component review C (inputs): Agreement and TransferList rows draw the Checkbox indicator (`selectionControlRecipe.indicatorBorderWidth`), Agreement items share the all-row inset (`agreementRecipe.itemLayout.paddingHorizontal`), TransferList move buttons stack with gap 8 and draw direction icons, Native TransferList matches the Web panel structure; DatePicker draws a calendar icon and icon clear/close buttons; Web PasswordField uses the `visibility`/`visibilityOff` icons; Sortable/TaskList rows fit on one line with icon move buttons; FieldGroup inline parts use `inline.minWidth` (128) on both renderers and split rows evenly on Native; NumberField value inset is `xxs`/`xs`; Calendar caps at `calendarRecipe.maxWidth` (360); Native Select/Combobox/NumberField use the control border, TagsInput tags get `tagsInputRecipe.tag.border`, Rating cells round and start-align the clear action, plain Statistic drops its inset.
+- 9e39cc7: Component review D: `bottomNavigationRecipe.presentations.*.contentMaxWidth` (480 for `bar`) centers the bar items on both renderers; Native Steps take all colors from `stepsRecipe`; Native NavigationBar actions wrap in one row; Native connected SegmentedControl keeps one-line labels and scrolls sideways like Web; Native tab divider spans the full width.
+- 148f258: Component review F: `resultRecipe.glyphs` gives Result the same default status mark on both renderers; Web `Progress` shows the percentage as default `valueText` (as documented and as Native already did); Native `GravityLetters` gains an optional `level`; ActivityChip fits its content on Web.
+- b997cc8: Composer fixes from the composition review: the reply card no longer remounts the input when a reply ends
+  (focus stays in the field), and the send slot reserves the button diameter instead of rendering a hidden
+  duplicate send button. Native `Combobox` results rise above the keyboard.
+- de37950: Design profiles: `OverviewScreen` lays its tools and collection out in one reading-width column (`overviewContentLayout`, replacing the unreleased `overviewToolbarLayout`), so card edges line up with the fields above them; the grid minimum column width is derived from that column so three columns still resolve. `resolveDesignProfileCollectionItem` gives both renderers the same item framing: rows are now unframed items divided by rule lines, cards/grid stay framed. The minimal, editorial and terminal presets are distinct: minimal uses achromatic hairlines with no shadows and framed cards, editorial uses a system serif display/reading stack with a larger heading scale and ruled rows, terminal uses monospace with square corners, a green-grey light canvas (the darkest on which the fixed accent inks stay readable) and a black console in dark mode. Native translates a generic serif stack to Georgia on iOS and `serif` elsewhere.
+- e1d81cb: Native hold menu follows `holdMenuRecipe` measured from the Instagram DM hold menu: full-width 60pt
+  reaction strip with 28pt emoji, the pressed bubble as its own preview on its side, and a 200pt action
+  card with 56pt rows and optional `submenu` chevrons.
+- ac2dcfd: Polish the hold menu from the simulator review: Native strip reactions are 44pt circles spread across the
+  row (six reactions fit without scrolling), the floating × is gone (backdrop, Escape and the screen-reader
+  close target remain), and comment menus accept `reactions.replyIcon` for the automatic reply row.
+- 9fccb92: Titled centered `ScreenLayout` headers are 52pt tall with 4pt vertical padding (was 60/8), matching the iOS navigation bar band.
+- a501bca: Fit Native DataTable column widths to measured header and plain cell text, including sort arrows and summary values, rather than truncating exact records to the supplied width. Keep pinned and scrolling header/body widths synchronized.
+- ef1b418: Web Progress paints the brand fill on the sunken track (native `<progress>` appearance no longer falls back to UA green); UploadItem cancel/retry are ghost IconButtons on both renderers (unused `uploadItemRecipe.action` colors removed); showcase scenario labels and the Tabs roadmap summary are Korean.
+- d5d298a: BottomCTA inside a ScreenLayout footer draws only its copy and actions; the footer owns the border, padding and surface. Web Section keeps its header on one row at any width and stacks only at large text, like Native.
+- 1b3686a: Place navigation beside the search field on search-first screens with hidden titles.
+- 1b3686a: Keep centered header controls stable by applying measured side spacing only to the title, outside the controls' Yoga width constraints.
+
+  Measure intrinsic control rows inside equal, non-shrinking side columns. Keep controls in normal flow so their height contributes to the header, preventing title/badge wrapping from feeding back into control measurement and moving the screen body.
+
+- 4004b6a: Web/Native parity from the reference screen comparison: Native Avatar uses `avatarRecipe` colors and size-stepped bold initials (`resolveAvatarInitialsTextVariant`); Native NotificationItem shows status·time as a muted caption; Native AuthScreenLayout hero centers its copy like Web; Native Top title no longer collapses inside a centered hero; Web ListRow title/description follow `listRowRecipe` (bodyLarge/body); Web ConversationRow keeps the space before its "·" separator.
+
 ## 1.26.1
 
 ### Patch Changes

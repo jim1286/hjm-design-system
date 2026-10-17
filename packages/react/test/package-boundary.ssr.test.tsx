@@ -117,6 +117,17 @@ describe("@hjmds/react package boundary", () => {
       "./activity-chip",
       // 2026-10-14 SVG chart family; opt-in so core graphs do not carry chart geometry.
       "./chart",
+      "./collection-editing",
+      "./data-workflows",
+      "./task-controls",
+      "./media-transport",
+      "./transfer-task",
+      "./authoring-tools",
+      "./social-compositions",
+      "./communication",
+      "./toggle-feedback",
+      "./streaming-answer",
+      "./conversation-row",
     ];
 
     expect(Object.keys(packageJson.exports)).toEqual([

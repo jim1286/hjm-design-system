@@ -67,6 +67,8 @@ describe("@hjmds/react-native package boundary", () => {
       "./agreement",
       "./top",
       "./heading",
+      "./image-choice",
+      "./fonts",
       "./toggle-group",
       "./bottom-info",
       "./collapsible",
@@ -92,6 +94,7 @@ describe("@hjmds/react-native package boundary", () => {
       "./image-viewer",
       "./keyboard-controller",
       "./sheet-gesture",
+      "./context-menu",
       "./context-menu-native",
       "./masonry",
       "./virtual-list",
@@ -136,6 +139,18 @@ describe("@hjmds/react-native package boundary", () => {
       "./collection-rail",
       // Panel-toast trigger; opt-in like CollectionRail so core graphs do not grow.
       "./activity-chip",
+      "./collection-editing",
+      "./data-workflows",
+      "./task-controls",
+      "./media-transport",
+      "./transfer-task",
+      "./authoring-tools",
+      "./social-compositions",
+      "./communication",
+      "./toggle-feedback",
+      "./streaming-answer",
+      "./conversation-row",
+      "./pagination",
     ];
     expect(Object.keys(packageJson.exports)).toEqual(expectedExportPaths);
     const familyTargets = expectedExportPaths.slice(1).filter((path) => path !== "./top-bar" && path !== "./bottom-cta").map((exportPath) => {

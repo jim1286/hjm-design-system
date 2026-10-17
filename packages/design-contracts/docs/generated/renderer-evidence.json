@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "designSystemVersion": "1.26.1",
+  "designSystemVersion": "1.27.0",
   "source": "packages/design-contracts/docs/generated/showcase-manifest.json",
   "surfaces": {
     "web": {
       "packageName": "@hjmds/react",
-      "packageVersion": "1.26.1",
+      "packageVersion": "1.27.0",
       "activeComponents": 105,
       "claimedComponents": 103,
       "completeScenarioComponents": 103,
@@ -5700,7 +5700,7 @@
     },
     "native": {
       "packageName": "@hjmds/react-native",
-      "packageVersion": "1.26.1",
+      "packageVersion": "1.27.0",
       "activeComponents": 87,
       "claimedComponents": 84,
       "completeScenarioComponents": 83,
