@@ -1,5 +1,17 @@
 # @hjmds/react-native
 
+## 1.29.0
+
+### Minor Changes
+
+- 9cbd80b: 22 screen compositions shipped from `./screens` and `./screen-flows` (`ScreenLayout`, `CompositionLayout`, `SettingsScreen`, `SearchScreen`, `EditorScreen`, `PermissionScreen`, `OnboardingScreen`, `ModerationScreen`, `ChatScreen`, `NotificationInboxScreen`, `CommentThreadScreen`, `ListDetailScreen`, `MediaSelectionScreen`, `ProfileScreen`, `ChatMessage`, `NotificationRow`, `NotificationItem`, `CommentThreadRow`, `ProfileSummary`, `IconTile`, `MessageComposer`, `PhotoSourceSheet`) are canonical catalog rows now (`beta` on both surfaces) with stable component ids, overview/individual Storybook items on both platforms, and first-party renderer evidence claims. Products that already use them stop failing the consumer source gate with "does not resolve to the pinned component catalog"; as beta rows they are declared through `optionalBetaAdoptions` until promoted. Their recipes (`screenPatternRecipe`, `searchScreenRecipe`, `chatMessageRecipe`, `commentThreadRecipe`, `notificationRowRecipe`, `profileSummaryRecipe`, `iconTileRecipe`, `composerQuickInsertRecipe`) join `recipeRegistry`. Known promotion debt is recorded in the evidence gap maps (Web: MediaSelectionScreen accessibility, NotificationItem and CommentThreadRow long-copy; Native: CommentThreadRow long-copy, and no Native OnboardingScreen claim until its mount scroll guards the host method). `AuthScreenHero`/`AuthScreenFooter` and `ClipboardIconButton` are classified as companions in the public component map.
+
+### Patch Changes
+
+- 9cbd80b: `AuthScreenLayout` gains `initialFocus` (`"first-input" | "none"`, Web and Native) with the ScreenLayout entry-focus rules. The default stays `none` (`initialFocusDefaults.auth`) because auth screens lead with provider buttons; a signup nickname step opts in with `first-input`.
+- 9cbd80b: Entry focus no longer reaches under an open overlay on Native either (Web already skipped open modals). HJM `Dialog`, `AlertDialog` and `Sheet` join an overlay stack while presented (until their exit and dismissal finish, where return focus runs); a screen or sheet scope below does not choose a field while an overlay above it is open, and taps inside that overlay do not count as interaction with the screen. When the overlay closes and the user has not touched the screen yet, the pending entry focus runs then (first-signup consent dialog over a nickname screen). Web now enters after the commit's effects so a modal opening in the same commit blocks entry instead of taking focus and handing it back, and it retries when an HJM modal closes. Native sees only HJM overlays, so full-screen app modals should be HJM overlays.
+- 9cbd80b: Entry focus covers fields that appear after entry (additive). New contracts rule `resolveEntryFocus` (`screen-patterns`, phases `entering` / `open` / `settled`) is shared by Web and Native. A scope that entered without focusing stays open until the user interacts with it (Native touch or scroll, Web pointer, key, wheel or touch while no modal is above): a field registering meanwhile (shown after data loads) gets the entry focus. After entry, a field marked `initialFocusTarget` that mounts is focused when it appears, in any `initialFocus` mode, unless another text field has focus or an overlay is above — a search field revealed by a tap, or each step's field in a multi-step `Sheet` / `EditorScreen`. Products drop `autoFocus` on revealed fields and manual step-change `ref.focus()`.
+
 ## 1.28.1
 
 ### Patch Changes

@@ -204,7 +204,7 @@ function nativeActionAndLongCopyClaim(
 export const reactNativeRendererEvidence = {
   schemaVersion: reactNativeRendererEvidenceSchemaVersion,
   packageName: "@hjmds/react-native",
-  packageVersion: "1.28.1",
+  packageVersion: "1.29.0",
   surface: "native",
   components: [
     defaultClaim("design-system-provider", ["HjmNativeProvider", "useHjmNativeTheme"], "./provider"),

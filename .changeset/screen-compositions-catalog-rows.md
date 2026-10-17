@@ -1,7 +1,0 @@
----
-"@hjmds/design-contracts": minor
-"@hjmds/react": minor
-"@hjmds/react-native": minor
----
-
-22 screen compositions shipped from `./screens` and `./screen-flows` (`ScreenLayout`, `CompositionLayout`, `SettingsScreen`, `SearchScreen`, `EditorScreen`, `PermissionScreen`, `OnboardingScreen`, `ModerationScreen`, `ChatScreen`, `NotificationInboxScreen`, `CommentThreadScreen`, `ListDetailScreen`, `MediaSelectionScreen`, `ProfileScreen`, `ChatMessage`, `NotificationRow`, `NotificationItem`, `CommentThreadRow`, `ProfileSummary`, `IconTile`, `MessageComposer`, `PhotoSourceSheet`) are canonical catalog rows now (`beta` on both surfaces) with stable component ids, overview/individual Storybook items on both platforms, and first-party renderer evidence claims. Products that already use them stop failing the consumer source gate with "does not resolve to the pinned component catalog"; as beta rows they are declared through `optionalBetaAdoptions` until promoted. Their recipes (`screenPatternRecipe`, `searchScreenRecipe`, `chatMessageRecipe`, `commentThreadRecipe`, `notificationRowRecipe`, `profileSummaryRecipe`, `iconTileRecipe`, `composerQuickInsertRecipe`) join `recipeRegistry`. Known promotion debt is recorded in the evidence gap maps (Web: MediaSelectionScreen accessibility, NotificationItem and CommentThreadRow long-copy; Native: CommentThreadRow long-copy, and no Native OnboardingScreen claim until its mount scroll guards the host method). `AuthScreenHero`/`AuthScreenFooter` and `ClipboardIconButton` are classified as companions in the public component map.
