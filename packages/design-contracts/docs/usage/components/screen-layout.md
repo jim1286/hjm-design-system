@@ -104,7 +104,7 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 
 ## 진입 포커스
 
-2026-10-18 사용자 요청("input이 있는 화면에 진입하면 포커스되도록, 웹앱 둘 다"). 앱마다 `autoFocus`·지연 `ref.focus()`를 붙이던 것을 화면 골격이 맡는다. 입력 칸(TextField·TextArea·SearchField·PasswordField, 작성창의 TextArea)은 가장 가까운 화면·시트 범위에 자신을 등록하고, 범위가 진입 뒤 한 칸을 고른다. 규칙의 정본은 contracts `resolveInitialFocusTarget`·`initialFocusDefaults`(`screen-patterns`)다.
+2026-10-18 사용자 요청("input이 있는 화면에 진입하면 포커스되도록, 웹앱 둘 다"). 앱마다 `autoFocus`·지연 `ref.focus()`를 붙이던 것을 화면 골격이 맡는다. 입력 칸(TextField·TextArea·SearchField·PasswordField, 작성창의 TextArea)은 가장 가까운 화면·시트 범위에 자신을 등록하고, 범위가 진입 뒤 한 칸을 고른다. 규칙의 정본은 contracts `resolveInitialFocusTarget`·`resolveEntryFocus`·`initialFocusDefaults`(`screen-patterns`)다.
 
 | 구성 | 기본값 | 이유 |
 | --- | --- | --- |
@@ -113,13 +113,17 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 | `EditorScreen` | `first-input` | 작성·편집이 화면의 목적 |
 | `ChatScreen`·`CommentThreadScreen` | `none` | 입력은 읽기의 보조. 키보드가 기록을 가린다. 같은 prop으로 켤 수 있다 |
 | `Sheet`·`Dialog`·`AlertDialog` | `single-input` | 텍스트 입력이 하나뿐일 때만(이름 바꾸기 등). 여럿이면 기존 포커스 규칙 |
+| `AuthScreenLayout` | `none` | 로그인 화면은 제공자 버튼이 주 행동. 가입 닉네임 단계만 `initialFocus="first-input"`(1.28.2) |
 
 - 고르는 순서: `initialFocusTarget` 칸 → 등록(트리) 순서 첫 칸. 비활성·읽기 전용 칸, `initialFocusTarget={false}` 칸은 고르지 않는다.
 - 시점: Native는 화면·시트 진입 전환이 끝난 뒤(`InteractionManager`, 시트는 표시 뒤) — 키보드 애니메이션이 전환과 겹치지 않는다. Web은 mount 직후, `preventScroll`.
-- 빼앗지 않는다: 사용자가 이미 입력 칸에 있으면 그대로 둔다(Native 포커스된 입력, Web 편집 가능한 요소). Web은 열린 모달(`aria-modal`) 밑의 화면 칸을 고르지 않는다.
+- 빼앗지 않는다: 사용자가 이미 입력 칸에 있으면 그대로 둔다(Native 포커스된 입력, Web 편집 가능한 요소).
+- 오버레이 아래(1.28.2, Web·Native): 위에 HJM `Dialog`·`AlertDialog`·`Sheet`가 열려 있으면 아래 화면·시트는 고르지 않는다. Web은 제품 자체 모달(`aria-modal`·`dialog[open]`)도 막는다. Native는 HJM 오버레이만 알 수 있으므로 화면을 덮는 모달은 HJM 오버레이로 만든다.
+- 진입 창(1.28.2): 진입 뒤 아직 포커스하지 못한 범위는 사용자가 그 범위를 직접 조작(Native 터치·스크롤, Web 포인터·키·휠·터치)하기 전까지 열려 있다. 그 동안 ① 칸이 새로 나타나면(데이터 로드 뒤 드러나는 확인 칸) ② 진입 때 위에 있던 오버레이가 닫히면(첫 가입 약관 동의) 다시 고른다. 오버레이 안의 조작(동의 탭)은 아래 화면의 조작으로 세지 않는다. 오버레이가 닫힌 시점은 그 오버레이의 반환 포커스와 같은 시점(Native: 퇴장·dismiss 뒤, Web: 반환 포커스 뒤)이다.
+- 나중에 드러나는 주 입력(1.28.2): 진입이 끝난 뒤 `initialFocusTarget`(`true`) 칸이 새로 mount되면 그 칸을 포커스한다. `initialFocus` 모드와 무관하다 — 검색 버튼으로 여는 검색 칸(`none` 화면), 단계형 시트·`EditorScreen`의 단계 칸(각 단계 칸에 `initialFocusTarget`)이 이 경우다. 다른 입력 칸에 초점이 있거나 위에 오버레이가 있으면 하지 않는다. 스스로 다시 mount되는 칸(가상화 목록 행)에는 주지 않는다.
 - 다시 진입: 화면은 mount당 한 번이다. 스택에서 돌아온 화면(이미 mount)은 다시 포커스하지 않는다 — 돌아온 맥락을 키보드가 가리고, HJM은 내비게이션 포커스 신호를 모른다. 시트·대화상자는 열 때마다 다시 고른다.
 - 모션 감소는 애니메이션에만 적용하고 포커스는 그대로 한다.
-- 제품은 `autoFocus`·`setTimeout(() => ref.focus())`를 쓰지 않고 `initialFocus`·`initialFocusTarget`으로 표현한다.
+- 제품은 `autoFocus`·`setTimeout(() => ref.focus())`·단계 전환 뒤 `ref.focus()`를 쓰지 않고 `initialFocus`·`initialFocusTarget`으로 표현한다. 검증 실패 칸으로 옮기는 포커스(제출 오류)는 제품의 동작이라 그대로 둔다.
 
 ## 꼭 지킬 것
 

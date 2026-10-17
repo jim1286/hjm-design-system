@@ -63,6 +63,8 @@ export type ScreenLayoutProps = Readonly<{
    * Focus a text field once when the screen mounts (`first-input`: the field marked `initialFocusTarget`, else the first
    * enabled one; never over a field the user is in or under an open modal). Off by default; SearchScreen and EditorScreen
    * default it on, Chat/CommentThread keep it off so the keyboard does not cover the history (2026-10-18, as Native).
+   * Until the user interacts, a field that appears later (after data loads) or a modal open on entry closing still
+   * gets this entry focus; a field marked `initialFocusTarget` that appears after entry is focused in any mode.
    */
   initialFocus?: ScreenInitialFocus;
 }>;

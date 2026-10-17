@@ -65,6 +65,12 @@ let bodyLockCount = 0;
 let previousBodyOverflow = "";
 const activeModalStack = [];
 let activeModalOrder = 0;
+const modalCloseListeners = new Set();
+/** Called after a modal released and its return focus ran: a screen that entered under it may focus now. */
+export function subscribeModalClose(listener) {
+    modalCloseListeners.add(listener);
+    return () => { modalCloseListeners.delete(listener); };
+}
 const isolatedModalBackground = new Map();
 let modalIsolationObserver = null;
 function getOwnedPopupHosts(modal) {
@@ -92,7 +98,7 @@ export function getModalLayer(priority) {
     // made product layer tokens disagree with actual overlay order.
     return layer.modal + priority;
 }
-function getTopModal() {
+export function getTopModal() {
     let top;
     for (const modal of activeModalStack) {
         if (!modal.element.isConnected)
@@ -187,7 +193,7 @@ function lockBodyScroll() {
             document.body.style.overflow = previousBodyOverflow;
     };
 }
-export function useModalFocus({ active, priority = 0, contentRef, initialFocusRef, resolveInitialFocus, returnFocusRef, fallbackReturnRef, onEscape, }) {
+export function useModalFocus({ active, priority = 0, contentRef, initialFocusRef, resolveInitialFocus, layerRef, returnFocusRef, fallbackReturnRef, onEscape, }) {
     const escapeRef = useRef(onEscape);
     escapeRef.current = onEscape;
     const resolveInitialFocusRef = useRef(resolveInitialFocus);
@@ -214,8 +220,12 @@ export function useModalFocus({ active, priority = 0, contentRef, initialFocusRe
                 priority,
             };
             activeModalStack.push(modal);
+            if (layerRef)
+                layerRef.current = modal;
             synchronizeModalBackgroundIsolation();
-            const initial = initialFocusRef?.current ?? resolveInitialFocusRef.current?.() ?? getFocusable(content)[0] ?? content;
+            const explicit = initialFocusRef?.current ?? null;
+            const resolved = resolveInitialFocusRef.current?.(explicit !== null) ?? null;
+            const initial = explicit ?? resolved ?? getFocusable(content)[0] ?? content;
             if (getTopModal() === modal)
                 initial.focus();
             const handleKeyDown = (event) => {
@@ -277,8 +287,13 @@ export function useModalFocus({ active, priority = 0, contentRef, initialFocusRe
                 const stackIndex = activeModalStack.lastIndexOf(modal);
                 if (stackIndex >= 0)
                     activeModalStack.splice(stackIndex, 1);
+                if (layerRef?.current === modal)
+                    layerRef.current = null;
                 synchronizeModalBackgroundIsolation();
                 releaseScroll();
+                // After the return-focus microtask below, so a pending entry focus sees where focus landed.
+                setTimeout(() => { for (const listener of [...modalCloseListeners])
+                    listener(); }, 0);
                 const returnTarget = returnFocusRef?.current ?? fallbackReturnRef?.current ?? previouslyFocused;
                 if (wasTop) {
                     queueMicrotask(() => {
@@ -304,7 +319,7 @@ export function useModalFocus({ active, priority = 0, contentRef, initialFocusRe
                 clearTimeout(retryTimer);
             release?.();
         };
-    }, [active, contentRef, fallbackReturnRef, initialFocusRef, priority, returnFocusRef]);
+    }, [active, contentRef, fallbackReturnRef, initialFocusRef, layerRef, priority, returnFocusRef]);
 }
 export function renderTrigger(trigger, triggerRef, open, contentId, popup, onOpen) {
     const props = trigger.props;

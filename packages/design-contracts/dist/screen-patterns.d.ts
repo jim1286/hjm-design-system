@@ -11,7 +11,7 @@ export declare function resolveScreenContentState(state?: ScreenContentState): {
     readonly kind: "error" | "empty" | "loading" | "ready" | "restricted";
     readonly replacesContent: boolean;
     readonly busy: boolean;
-    readonly announcement: "polite" | "assertive";
+    readonly announcement: "assertive" | "polite";
 };
 /**
  * Native header band heights. Titled centered headers match the iOS navigation bar (44 control + 4 + 4);
@@ -90,8 +90,65 @@ export declare const initialFocusDefaults: {
     readonly chat: "none";
     readonly commentThread: "none";
     readonly overlay: "single-input";
+    readonly auth: "none";
 };
 export declare function resolveInitialFocusTarget<T extends InitialFocusCandidate>(candidates: readonly T[], mode: InitialFocusMode): T | null;
+/**
+ * 진입 포커스 창(2026-10-18 1.28.1 앱 채택 점검). mount 시점 한 번만 고르면 세 경우가 앱 우회로 남았다: 진입 때 열린
+ * 모달 아래 칸(번뚝 첫 가입 약관), 진입 중 비동기로 나타나는 칸(번뚝 계정 삭제 확인), 사용자 행동으로 나중에 나타나는 칸
+ * (utilverse 검색 열기, 번뚝 아이디어 시트·spint 작성 단계). 그래서 범위는 아래 상태를 가진다.
+ *
+ * - `entering`: 진입 중(Native 전환·시트 등장 interaction 전). 칸 등록만 받는다.
+ * - `open`: 진입이 끝났지만 아직 포커스하지 못했다. 칸이 새로 등록되거나 위 오버레이가 닫히면 다시 고른다. 모달 아래에서
+ *   진입한 화면은 모달이 닫힐 때 사용자가 그 화면을 아직 만지지 않았으면 그때 포커스한다.
+ * - `settled`: 포커스했거나, 사용자가 범위를 직접 조작(터치·포인터·키·휠)했거나, 이미 다른 텍스트 칸에 초점이 있다.
+ *   이후에는 `initialFocusTarget`을 준 칸이 새로 나타날 때만 그 칸을 포커스한다 — 검색 열기·단계 이동처럼 사용자
+ *   행동으로 드러난 주 입력이다. 이 규칙은 `initialFocus` 모드와 무관하다(`none` 화면의 검색 칸도 드러날 때 포커스).
+ *
+ * 위에 다른 오버레이가 열려 있는 동안(`blocked`)은 고르지 않고, 그 동안의 조작은 아래 범위의 조작으로 세지 않는다
+ * (약관 동의 탭이 화면의 진입 포커스를 끝내면 안 된다). 텍스트 칸에 이미 초점이 있으면 빼앗지 않는다.
+ */
+export type EntryFocusPhase = "inactive" | "entering" | "open" | "settled";
+export type EntryFocusEvent<T extends InitialFocusCandidate> = 
+/** The scope mounted (screen) or opened (overlay). */
+Readonly<{
+    kind: "activate";
+}>
+/** The overlay closed or the scope unmounted. */
+ | Readonly<{
+    kind: "deactivate";
+}>
+/** The enter transition finished. */
+ | Readonly<{
+    kind: "enter";
+}>
+/** A field mounted into the scope (first registration of that field instance). */
+ | Readonly<{
+    kind: "register";
+    field: T;
+}>
+/** An overlay above the scope closed. */
+ | Readonly<{
+    kind: "unblock";
+}>
+/** User touch, pointer, key or wheel input reached the scope. */
+ | Readonly<{
+    kind: "interact";
+}>;
+export type EntryFocusFacts<T extends InitialFocusCandidate> = Readonly<{
+    mode: InitialFocusMode;
+    /** Every field registered in the scope now, including a newly registered one. */
+    candidates: readonly T[];
+    /** Another overlay is open above this scope. */
+    blocked: boolean;
+    /** A text field already has focus (the user's or the app's). */
+    textEntryFocused: boolean;
+}>;
+export type EntryFocusResolution<T> = Readonly<{
+    phase: EntryFocusPhase;
+    target: T | null;
+}>;
+export declare function resolveEntryFocus<T extends InitialFocusCandidate>(phase: EntryFocusPhase, event: EntryFocusEvent<T>, facts: EntryFocusFacts<T>): EntryFocusResolution<T>;
 export declare const screenPatternRecipe: {
     readonly maxWidth: 720;
     readonly padding: 16;

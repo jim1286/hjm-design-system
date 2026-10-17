@@ -124,6 +124,34 @@ describe("initial focus resolution", () => {
     expect(resolveInitialFocusTarget([field(0)], "single-input")?.order).toBe(0);
     expect(resolveInitialFocusTarget([field(0), field(1)], "single-input")).toBeNull();
     expect(resolveInitialFocusTarget([field(0, undefined, false)], "single-input")).toBeNull();
-    expect(initialFocusDefaults).toMatchObject({ screen: "none", search: "first-input", editor: "first-input", chat: "none", commentThread: "none", overlay: "single-input" });
+    expect(initialFocusDefaults).toMatchObject({ screen: "none", search: "first-input", editor: "first-input", chat: "none", commentThread: "none", overlay: "single-input", auth: "none" });
+  });
+  it("keeps the entry window open under an overlay and for late fields until the user interacts", async () => {
+    const { resolveEntryFocus } = await import("../src/screen-patterns.js");
+    const facts = (candidates: ReturnType<typeof field>[], blocked = false, textEntryFocused = false) => ({ mode: "first-input" as const, candidates, blocked, textEntryFocused });
+    // Entered under a modal: wait; a tap inside the modal does not end the window; closing it focuses the field.
+    expect(resolveEntryFocus("entering", { kind: "enter" }, facts([field(0)], true))).toEqual({ phase: "open", target: null });
+    expect(resolveEntryFocus("open", { kind: "interact" }, facts([field(0)], true)).phase).toBe("open");
+    expect(resolveEntryFocus("open", { kind: "unblock" }, facts([field(0)])).target?.order).toBe(0);
+    // A field appearing after async data still gets entry focus, unless the user has touched the screen first.
+    expect(resolveEntryFocus("entering", { kind: "enter" }, facts([]))).toEqual({ phase: "open", target: null });
+    expect(resolveEntryFocus("open", { kind: "register", field: field(0) }, facts([field(0)])).target?.order).toBe(0);
+    expect(resolveEntryFocus("open", { kind: "interact" }, facts([])).phase).toBe("settled");
+    expect(resolveEntryFocus("settled", { kind: "register", field: field(0) }, facts([field(0)])).target).toBeNull();
+    // Never over a focused text field; never while inactive or still entering.
+    expect(resolveEntryFocus("open", { kind: "register", field: field(0) }, facts([field(0)], false, true))).toEqual({ phase: "settled", target: null });
+    expect(resolveEntryFocus("entering", { kind: "register", field: field(0) }, facts([field(0)])).target).toBeNull();
+    expect(resolveEntryFocus("inactive", { kind: "unblock" }, facts([field(0)])).target).toBeNull();
+  });
+  it("focuses a marked field revealed after entry in any mode, but not under an overlay or over a focused field", async () => {
+    const { resolveEntryFocus } = await import("../src/screen-patterns.js");
+    const none = (blocked = false, textEntryFocused = false) => ({ mode: "none" as const, candidates: [field(0, true)], blocked, textEntryFocused });
+    expect(resolveEntryFocus("entering", { kind: "enter" }, none())).toEqual({ phase: "settled", target: null });
+    expect(resolveEntryFocus("settled", { kind: "register", field: field(0, true) }, none()).target?.order).toBe(0);
+    expect(resolveEntryFocus("settled", { kind: "register", field: field(0, true, false) }, none()).target).toBeNull();
+    expect(resolveEntryFocus("settled", { kind: "register", field: field(0, true) }, none(true)).target).toBeNull();
+    expect(resolveEntryFocus("settled", { kind: "register", field: field(0, true) }, none(false, true)).target).toBeNull();
+    expect(resolveEntryFocus("settled", { kind: "deactivate" }, none()).phase).toBe("inactive");
+    expect(resolveEntryFocus("inactive", { kind: "activate" }, none()).phase).toBe("entering");
   });
 });

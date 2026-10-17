@@ -172,13 +172,19 @@ export function getFocusable(container: HTMLElement): HTMLElement[] {
 
 let bodyLockCount = 0;
 let previousBodyOverflow = "";
-type ActiveModal = Readonly<{
+export type ActiveModal = Readonly<{
   element: HTMLElement;
   order: number;
   priority: number;
 }>;
 const activeModalStack: ActiveModal[] = [];
 let activeModalOrder = 0;
+const modalCloseListeners = new Set<() => void>();
+/** Called after a modal released and its return focus ran: a screen that entered under it may focus now. */
+export function subscribeModalClose(listener: () => void): () => void {
+  modalCloseListeners.add(listener);
+  return () => { modalCloseListeners.delete(listener); };
+}
 const isolatedModalBackground = new Map<
   HTMLElement,
   Readonly<{ ariaHidden: string | null; inert: boolean }>
@@ -213,7 +219,7 @@ export function getModalLayer(priority: number): number {
   return layer.modal + priority;
 }
 
-function getTopModal(): ActiveModal | undefined {
+export function getTopModal(): ActiveModal | undefined {
   let top: ActiveModal | undefined;
   for (const modal of activeModalStack) {
     if (!modal.element.isConnected) continue;
@@ -314,8 +320,13 @@ type ModalFocusOptions = Readonly<{
   priority?: number;
   contentRef: React.RefObject<HTMLElement | null>;
   initialFocusRef?: React.RefObject<HTMLElement | null>;
-  /** Default target when no `initialFocusRef` is given (entry-focus field), before the first focusable element. */
-  resolveInitialFocus?: () => HTMLElement | null;
+  /**
+   * Entry-focus field (screen-patterns `resolveEntryFocus`), before the first focusable element. Always called on
+   * activation; `explicit` is true when `initialFocusRef` already names the target, which then wins.
+   */
+  resolveInitialFocus?: (explicit: boolean) => HTMLElement | null;
+  /** Receives this modal's stack entry while active, so entry-focus scopes can tell what is above them. */
+  layerRef?: { current: ActiveModal | null };
   returnFocusRef?: React.RefObject<HTMLElement | null>;
   fallbackReturnRef?: React.RefObject<HTMLElement | null>;
   onEscape(): void;
@@ -327,6 +338,7 @@ export function useModalFocus({
   contentRef,
   initialFocusRef,
   resolveInitialFocus,
+  layerRef,
   returnFocusRef,
   fallbackReturnRef,
   onEscape,
@@ -358,8 +370,11 @@ export function useModalFocus({
         priority,
       };
       activeModalStack.push(modal);
+      if (layerRef) layerRef.current = modal;
       synchronizeModalBackgroundIsolation();
-      const initial = initialFocusRef?.current ?? resolveInitialFocusRef.current?.() ?? getFocusable(content)[0] ?? content;
+      const explicit = initialFocusRef?.current ?? null;
+      const resolved = resolveInitialFocusRef.current?.(explicit !== null) ?? null;
+      const initial = explicit ?? resolved ?? getFocusable(content)[0] ?? content;
       if (getTopModal() === modal) initial.focus();
 
       const handleKeyDown = (event: KeyboardEvent) => {
@@ -416,8 +431,11 @@ export function useModalFocus({
         document.removeEventListener("focusin", handleFocusIn, true);
         const stackIndex = activeModalStack.lastIndexOf(modal);
         if (stackIndex >= 0) activeModalStack.splice(stackIndex, 1);
+        if (layerRef?.current === modal) layerRef.current = null;
         synchronizeModalBackgroundIsolation();
         releaseScroll();
+        // After the return-focus microtask below, so a pending entry focus sees where focus landed.
+        setTimeout(() => { for (const listener of [...modalCloseListeners]) listener(); }, 0);
         const returnTarget =
           returnFocusRef?.current ?? fallbackReturnRef?.current ?? previouslyFocused;
         if (wasTop) {
@@ -440,7 +458,7 @@ export function useModalFocus({
       if (retryTimer !== undefined) clearTimeout(retryTimer);
       release?.();
     };
-  }, [active, contentRef, fallbackReturnRef, initialFocusRef, priority, returnFocusRef]);
+  }, [active, contentRef, fallbackReturnRef, initialFocusRef, layerRef, priority, returnFocusRef]);
 }
 
 export function renderTrigger(

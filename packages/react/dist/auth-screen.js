@@ -2,7 +2,9 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { authScreenRecipe, resolveAuthScreenDescriptor, validateAuthScreenHeroDescriptor, validateAuthScreenPolicyLinks, } from "@hjmds/design-contracts/components/auth-screen";
 import { typography } from "@hjmds/design-contracts/foundations";
 import { createContext, createElement, forwardRef, Fragment, useContext, useLayoutEffect, useRef, useId } from "react";
+import { initialFocusDefaults } from "@hjmds/design-contracts/screen-patterns";
 import { classNames, useDesignProfileDefaults } from "./internal.js";
+import { InitialFocusScope } from "./internal/initial-focus.js";
 // The hero follows the layout density without the product passing it twice.
 const AuthScreenDensityContext = createContext(undefined);
 /**
@@ -10,7 +12,7 @@ const AuthScreenDensityContext = createContext(undefined);
  * the bottom. The measurements come from the resolved descriptor as custom
  * properties so the stylesheet keeps one source of truth with the contract.
  */
-export const AuthScreenLayout = forwardRef(function AuthScreenLayout({ hero, main, footer, density, hasFooter, pendingLabel, mainCard = false, className, as: Element = "main", layoutStyle, ...props }, forwardedRef) {
+export const AuthScreenLayout = forwardRef(function AuthScreenLayout({ hero, main, footer, density, hasFooter, pendingLabel, mainCard = false, className, as: Element = "main", layoutStyle, initialFocus = initialFocusDefaults.auth, ...props }, forwardedRef) {
     const resolved = resolveAuthScreenDescriptor({
         ...(density === undefined ? {} : { density }),
         ...(hasFooter === undefined ? {} : { hasFooter }),
@@ -31,7 +33,7 @@ export const AuthScreenLayout = forwardRef(function AuthScreenLayout({ hero, mai
     }, [pending]);
     if (pending && !pendingLabel.trim())
         throw new TypeError("AuthScreen pendingLabel must not be empty");
-    return (_jsxs(Element, { ...props, ref: forwardedRef, className: classNames("hjm-auth-screen", className), "data-density": resolved.density, style: {
+    return (_jsx(Element, { ...props, ref: forwardedRef, className: classNames("hjm-auth-screen", className), "data-density": resolved.density, style: {
             ["--hjm-auth-screen-max-width"]: `${resolved.maxWidth}px`,
             ["--hjm-auth-screen-hero-gap"]: `${resolved.heroGap}px`,
             ["--hjm-auth-screen-main-gap"]: `${resolved.mainGap}px`,
@@ -40,8 +42,8 @@ export const AuthScreenLayout = forwardRef(function AuthScreenLayout({ hero, mai
             ["--hjm-auth-screen-padding-block"]: `${resolved.paddingBlock}px`,
             ...props.style,
             ...layoutStyle,
-        }, children: [_jsxs("div", { className: "hjm-auth-screen__block", children: [_jsx(AuthScreenDensityContext.Provider, { value: resolved.density, children: _jsx("div", { className: "hjm-auth-screen__hero", children: hero }) }), _jsxs("div", { className: "hjm-auth-screen__main", "data-card": mainCard || undefined, "aria-busy": pending || undefined, children: [_jsx("div", { ref: actionsRef, className: "hjm-auth-screen__actions", inert: pending, "aria-hidden": pending || undefined, onFocusCapture: event => { focusedAction.current = event.target; }, onBlurCapture: event => { if (!pending && !event.currentTarget.contains(event.relatedTarget))
-                                    focusedAction.current = null; }, style: pending ? { visibility: "hidden" } : undefined, children: main }), pending ? _jsx("div", { className: "hjm-auth-screen__pending", role: "status", "aria-label": pendingLabel, children: _jsx("span", { className: "hjm-auth-provider-button__spinner", "aria-hidden": "true" }) }) : null] })] }), showFooter ? _jsx("div", { className: "hjm-auth-screen__footer", children: footer }) : null] }));
+        }, children: _jsxs(InitialFocusScope, { mode: initialFocus, children: [_jsxs("div", { className: "hjm-auth-screen__block", children: [_jsx(AuthScreenDensityContext.Provider, { value: resolved.density, children: _jsx("div", { className: "hjm-auth-screen__hero", children: hero }) }), _jsxs("div", { className: "hjm-auth-screen__main", "data-card": mainCard || undefined, "aria-busy": pending || undefined, children: [_jsx("div", { ref: actionsRef, className: "hjm-auth-screen__actions", inert: pending, "aria-hidden": pending || undefined, onFocusCapture: event => { focusedAction.current = event.target; }, onBlurCapture: event => { if (!pending && !event.currentTarget.contains(event.relatedTarget))
+                                        focusedAction.current = null; }, style: pending ? { visibility: "hidden" } : undefined, children: main }), pending ? _jsx("div", { className: "hjm-auth-screen__pending", role: "status", "aria-label": pendingLabel, children: _jsx("span", { className: "hjm-auth-provider-button__spinner", "aria-hidden": "true" }) }) : null] })] }), showFooter ? _jsx("div", { className: "hjm-auth-screen__footer", children: footer }) : null] }) }));
 });
 /** Token weight per variant, following the nearest design profile like `Text` does. */
 function useTypeWeight() {

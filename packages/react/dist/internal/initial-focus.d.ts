@@ -1,5 +1,6 @@
 import { type InitialFocusMode } from "@hjmds/design-contracts/screen-patterns";
 import { type ReactNode, type RefObject } from "react";
+import { type ActiveModal } from "../modal.js";
 type Entry = {
     order: number;
     preference: boolean | undefined;
@@ -8,20 +9,35 @@ type Entry = {
 };
 type Registry = {
     nextOrder(): number;
-    register(entry: Entry): () => void;
-    resolve(mode: InitialFocusMode): HTMLElement | null;
+    register(entry: Entry, mounted: boolean): () => void;
 };
+/** The overlay's own entry on the shared modal stack while it is active (set by `useModalFocus`). */
+export type ModalLayerRef = {
+    current: ActiveModal | null;
+};
+export type InitialFocusScopeHandle = Readonly<{
+    registry: Registry;
+    layer: ModalLayerRef | null;
+    /**
+     * Overlays only: runs entry when the modal activates and returns the field for `useModalFocus` to focus. `explicit`
+     * means the overlay already has an `initialFocusRef`, so entry settles without choosing a field.
+     */
+    enter(explicit: boolean): HTMLElement | null;
+}>;
 /**
- * Nearest screen/overlay scope that chooses the field focused on entry (rules: screen-patterns
- * `resolveInitialFocusTarget`, shared with Native). Fields register by context, the same model as Native, instead of
- * the scope querying the DOM; a scope with mode "none" still owns its fields so they never reach an outer scope.
+ * Screen scopes enter on mount (Web has no enter transition to wait for); overlays pass `layer` and enter through
+ * `useModalFocus`. User pointer, key, wheel or touch input while no modal is above the scope ends the entry window.
  */
-export declare const InitialFocusContext: import("react").Context<Registry | null>;
-export declare function useInitialFocusRegistry(): Registry;
-/**
- * Screen scope: focuses the chosen field once per mount, right after mount (Web has no enter transition to wait for).
- * It never takes focus from a field the user is already in, and never reaches under an open modal dialog.
- */
+export declare function useInitialFocusScope({ mode, active, layer: ownLayer }: {
+    mode: InitialFocusMode;
+    active?: boolean;
+    layer?: ModalLayerRef;
+}): InitialFocusScopeHandle;
+export declare function InitialFocusProvider({ scope, children }: {
+    scope: InitialFocusScopeHandle;
+    children: ReactNode;
+}): import("react").JSX.Element;
+/** Screen scope: focuses the chosen field on mount, never over a field the user is in or under an open modal. */
 export declare function InitialFocusScope({ mode, children }: {
     mode: InitialFocusMode;
     children: ReactNode;

@@ -10,7 +10,9 @@ import {
 } from "@hjmds/design-contracts/components/auth-screen";
 import { typography, type TextVariant } from "@hjmds/design-contracts/foundations";
 import { createContext, createElement, forwardRef, Fragment, useContext, useLayoutEffect, useRef, type CSSProperties, type HTMLAttributeAnchorTarget, type HTMLAttributes, type ReactNode, useId } from "react";
+import { initialFocusDefaults, type ScreenInitialFocus } from "@hjmds/design-contracts/screen-patterns";
 import { classNames, useDesignProfileDefaults } from "./internal.js";
+import { InitialFocusScope } from "./internal/initial-focus.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 // The hero follows the layout density without the product passing it twice.
@@ -34,6 +36,11 @@ export type AuthScreenLayoutProps = Omit<HTMLAttributes<HTMLElement>, "children"
     className?: string;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * Entry focus, same rules as ScreenLayout `initialFocus`. Off by default because auth screens lead with provider
+     * buttons; a signup nickname step opts in with `first-input` (2026-10-18 adoption, same as Native).
+     */
+    initialFocus?: ScreenInitialFocus;
   }>;
 
 /**
@@ -43,7 +50,7 @@ export type AuthScreenLayoutProps = Omit<HTMLAttributes<HTMLElement>, "children"
  */
 export const AuthScreenLayout = forwardRef<HTMLElement, AuthScreenLayoutProps>(
   function AuthScreenLayout(
-    { hero, main, footer, density, hasFooter, pendingLabel, mainCard = false, className, as: Element = "main", layoutStyle, ...props },
+    { hero, main, footer, density, hasFooter, pendingLabel, mainCard = false, className, as: Element = "main", layoutStyle, initialFocus = initialFocusDefaults.auth, ...props },
     forwardedRef,
   ) {
     const resolved = resolveAuthScreenDescriptor({
@@ -82,6 +89,7 @@ export const AuthScreenLayout = forwardRef<HTMLElement, AuthScreenLayoutProps>(
           ...layoutStyle,
         }}
       >
+        <InitialFocusScope mode={initialFocus}>
         <div className="hjm-auth-screen__block">
           <AuthScreenDensityContext.Provider value={resolved.density}><div className="hjm-auth-screen__hero">{hero}</div></AuthScreenDensityContext.Provider>
           <div className="hjm-auth-screen__main" data-card={mainCard || undefined} aria-busy={pending || undefined}>
@@ -96,6 +104,7 @@ export const AuthScreenLayout = forwardRef<HTMLElement, AuthScreenLayoutProps>(
           </div>
         </div>
         {showFooter ? <div className="hjm-auth-screen__footer">{footer}</div> : null}
+        </InitialFocusScope>
       </Element>
     );
   },

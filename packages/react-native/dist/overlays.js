@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { ScreenBodyInsetContext } from "./internal/screen-body-inset.js";
-import { InitialFocusScope } from "./internal/initial-focus.js";
+import { InitialFocusProvider, useInitialFocusScope, useOverlayLayer } from "./internal/initial-focus.js";
 import { initialFocusDefaults } from "@hjmds/design-contracts/screen-patterns";
 import { resolveOriginTransition } from "@hjmds/design-contracts/content-transition";
 import { focusAccessibleHost } from "./internal/accessible-focus.js";
@@ -29,8 +29,8 @@ function CloseGlyph() {
 // Keep interaction visibility off native-driven animation hosts. In iOS 26.5,
 // Dialog/AlertDialog/Sheet lost their AX descendants on a second presentation
 // while still painting; a non-animated boundary preserves reopen accessibility.
-function ModalInteractionBoundary({ visible, children }) {
-    return _jsx(View, { accessibilityElementsHidden: !visible, importantForAccessibility: visible ? "auto" : "no-hide-descendants", pointerEvents: visible ? "auto" : "none", style: { flex: 1 }, children: children });
+function ModalInteractionBoundary({ visible, onTouchStart, children }) {
+    return _jsx(View, { onTouchStart: onTouchStart, accessibilityElementsHidden: !visible, importantForAccessibility: visible ? "auto" : "no-hide-descendants", pointerEvents: visible ? "auto" : "none", style: { flex: 1 }, children: children });
 }
 // BT-QA-027: maximum text made a centered BurnTok confirmation taller than the
 // window, putting its title/cancel off-screen. Keep full copy in a bounded scroll
@@ -182,8 +182,14 @@ export function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTi
     const [nativeVisible, setNativeVisible] = useState(visible);
     // Entry focus waits for the native presentation (onShow) so it runs after the enter animation's interaction.
     const [entered, setEntered] = useState(false);
+    // On the overlay stack from opening until the exit has fully torn down (where return focus runs), so screens below
+    // keep a pending entry focus until then.
+    const [layered, setLayered] = useState(visible);
     useEffect(() => { if (!visible)
-        setEntered(false); }, [visible]);
+        setEntered(false);
+    else
+        setLayered(true); }, [visible]);
+    const focusScope = useInitialFocusScope({ mode: initialFocus, active: visible && entered, layer: useOverlayLayer(layered) });
     const keyboardViewport = useModalKeyboardViewport(nativeVisible);
     const nativeVisibleRef = useRef(visible);
     nativeVisibleRef.current = nativeVisible;
@@ -258,8 +264,10 @@ export function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTi
                 startEnter();
             return;
         }
-        if (!visibleRef.current)
+        if (!visibleRef.current) {
+            setLayered(false);
             focusNativeTarget(returnFocusRef);
+        }
     }, [cancelExitFallback, motionProgress, returnFocusRef, startEnter]);
     const startExit = useCallback((token) => {
         measurementRun.current += 1;
@@ -369,7 +377,7 @@ export function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTi
     const contentBorder = resolveColorReference(dialogRecipe.content.border, palette);
     const stackActions = environment.textScale >= 1.6 || windowWidth < 480;
     // Overlay content is not in the screen body: a bleeding rail inside must not reach for the screen gutter.
-    return (_jsx(ScreenBodyInsetContext.Provider, { value: 0, children: _jsx(InitialFocusScope, { mode: initialFocus, active: visible && entered, children: _jsx(Modal, { ...modalProps, animationType: "none", onDismiss: () => {
+    return (_jsx(ScreenBodyInsetContext.Provider, { value: 0, children: _jsx(InitialFocusProvider, { scope: focusScope, children: _jsx(Modal, { ...modalProps, animationType: "none", onDismiss: () => {
                     nativeShownRef.current = false;
                     const pending = pendingExitRef.current;
                     if (pending)
@@ -379,7 +387,7 @@ export function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTi
                     startEnter();
                     setEntered(true);
                     onShow?.(event);
-                }, statusBarTranslucent: true, transparent: true, visible: nativeVisible, children: _jsx(ModalInteractionBoundary, { visible: visible, children: _jsxs(Animated.View, { onLayout: (event) => keyboardViewport.setModalHeight(event.nativeEvent.layout.height), style: {
+                }, statusBarTranslucent: true, transparent: true, visible: nativeVisible, children: _jsx(ModalInteractionBoundary, { visible: visible, onTouchStart: focusScope.onTouchStart, children: _jsxs(Animated.View, { onLayout: (event) => keyboardViewport.setModalHeight(event.nativeEvent.layout.height), style: {
                             flex: 1,
                             justifyContent: "center",
                             opacity: motionProgress,
@@ -454,8 +462,14 @@ export function AlertDialog({ open, defaultOpen, onOpenChange, request, size = a
     const [nativeVisible, setNativeVisible] = useState(visible);
     // Entry focus waits for the native presentation (onShow) so it runs after the enter animation's interaction.
     const [entered, setEntered] = useState(false);
+    // On the overlay stack from opening until the exit has fully torn down (where return focus runs), so screens below
+    // keep a pending entry focus until then.
+    const [layered, setLayered] = useState(visible);
     useEffect(() => { if (!visible)
-        setEntered(false); }, [visible]);
+        setEntered(false);
+    else
+        setLayered(true); }, [visible]);
+    const focusScope = useInitialFocusScope({ mode: initialFocus, active: visible && entered, layer: useOverlayLayer(layered) });
     const keyboardViewport = useModalKeyboardViewport(nativeVisible);
     const nativeVisibleRef = useRef(visible);
     nativeVisibleRef.current = nativeVisible;
@@ -514,8 +528,10 @@ export function AlertDialog({ open, defaultOpen, onOpenChange, request, size = a
                 startEnter();
             return;
         }
-        if (!visibleRef.current)
+        if (!visibleRef.current) {
+            setLayered(false);
             focusNativeTarget(returnFocusRef);
+        }
     }, [cancelExitFallback, motionProgress, returnFocusRef, startEnter]);
     const startExit = useCallback((target) => {
         motionProgress.stopAnimation();
@@ -662,12 +678,12 @@ export function AlertDialog({ open, defaultOpen, onOpenChange, request, size = a
             },
         ], children: _jsx(Text, { style: { color: confirmContent }, variant: "label", children: request.confirmLabel }) }));
     // Overlay content is not in the screen body: a bleeding rail inside must not reach for the screen gutter.
-    return (_jsx(ScreenBodyInsetContext.Provider, { value: 0, children: _jsx(InitialFocusScope, { mode: initialFocus, active: visible && entered, children: _jsx(Modal, { ...modalProps, animationType: "none", onDismiss: () => {
+    return (_jsx(ScreenBodyInsetContext.Provider, { value: 0, children: _jsx(InitialFocusProvider, { scope: focusScope, children: _jsx(Modal, { ...modalProps, animationType: "none", onDismiss: () => {
                     nativeShownRef.current = false;
                     const pending = pendingExitSessions.current[0];
                     if (pending)
                         completeExit(pending.session);
-                }, onRequestClose: () => cancel("back"), onShow: (event) => { focusLeastDestructive(event); setEntered(true); }, statusBarTranslucent: true, transparent: true, visible: nativeVisible, children: _jsx(ModalInteractionBoundary, { visible: visible, children: _jsxs(Animated.View, { onLayout: (event) => keyboardViewport.setModalHeight(event.nativeEvent.layout.height), style: {
+                }, onRequestClose: () => cancel("back"), onShow: (event) => { focusLeastDestructive(event); setEntered(true); }, statusBarTranslucent: true, transparent: true, visible: nativeVisible, children: _jsx(ModalInteractionBoundary, { visible: visible, onTouchStart: focusScope.onTouchStart, children: _jsxs(Animated.View, { onLayout: (event) => keyboardViewport.setModalHeight(event.nativeEvent.layout.height), style: {
                             flex: 1,
                             justifyContent: "center",
                             opacity: motionProgress,
@@ -757,8 +773,14 @@ keyboardAvoidance = true, scrollable = false, showClose, onShow, initialFocus = 
     const [nativeVisible, setNativeVisible] = useState(visible);
     // Entry focus waits for the native presentation (onShow) so it runs after the enter animation's interaction.
     const [entered, setEntered] = useState(false);
+    // On the overlay stack from opening until the exit has fully torn down (where return focus runs), so screens below
+    // keep a pending entry focus until then.
+    const [layered, setLayered] = useState(visible);
     useEffect(() => { if (!visible)
-        setEntered(false); }, [visible]);
+        setEntered(false);
+    else
+        setLayered(true); }, [visible]);
+    const focusScope = useInitialFocusScope({ mode: initialFocus, active: visible && entered, layer: useOverlayLayer(layered) });
     const { viewportHeight, keyboardInset, dockedKeyboard, setModalHeight } = useModalKeyboardViewport(nativeVisible, keyboardAvoidance);
     const nativeVisibleRef = useRef(visible);
     nativeVisibleRef.current = nativeVisible;
@@ -842,6 +864,7 @@ keyboardAvoidance = true, scrollable = false, showClose, onShow, initialFocus = 
         }
         if (!visibleRef.current) {
             onDismissComplete?.({ reason: pending.reason });
+            setLayered(false);
             focusNativeTarget(returnFocusRef);
         }
     }, [cancelDismissFallback, motionProgress, onDismissComplete, returnFocusRef]);
@@ -974,7 +997,7 @@ keyboardAvoidance = true, scrollable = false, showClose, onShow, initialFocus = 
     const contentBackground = resolveColorReference(sheetRecipe.content.background, palette);
     const contentBorder = resolveColorReference(sheetRecipe.content.border, palette);
     // Overlay content is not in the screen body: a bleeding rail inside must not reach for the screen gutter.
-    return (_jsx(ScreenBodyInsetContext.Provider, { value: 0, children: _jsx(InitialFocusScope, { mode: initialFocus, active: visible && entered, children: _jsx(Modal, { ...modalProps, animationType: "none", onDismiss: () => {
+    return (_jsx(ScreenBodyInsetContext.Provider, { value: 0, children: _jsx(InitialFocusProvider, { scope: focusScope, children: _jsx(Modal, { ...modalProps, animationType: "none", onDismiss: () => {
                     nativeShownRef.current = false;
                     const pending = pendingDismissals.current[0];
                     if (pending)
@@ -984,7 +1007,7 @@ keyboardAvoidance = true, scrollable = false, showClose, onShow, initialFocus = 
                     startEnter();
                     setEntered(true);
                     onShow?.(event);
-                }, statusBarTranslucent: true, transparent: true, visible: nativeVisible, children: _jsx(ModalInteractionBoundary, { visible: visible, children: _jsxs(Animated.View, { onLayout: (event) => setModalHeight(event.nativeEvent.layout.height), style: {
+                }, statusBarTranslucent: true, transparent: true, visible: nativeVisible, children: _jsx(ModalInteractionBoundary, { visible: visible, onTouchStart: focusScope.onTouchStart, children: _jsxs(Animated.View, { onLayout: (event) => setModalHeight(event.nativeEvent.layout.height), style: {
                             alignItems: physicalPlacement === "right" ? "flex-end" : "flex-start",
                             flex: 1,
                             justifyContent: physicalPlacement === "bottom" ? "flex-end" : "flex-start",

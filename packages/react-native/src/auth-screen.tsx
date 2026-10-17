@@ -8,7 +8,9 @@ import {
   type AuthScreenHeroDescriptor,
   type AuthScreenPolicyLinkDescriptor,
 } from "@hjmds/design-contracts/components/auth-screen";
+import { initialFocusDefaults, type ScreenInitialFocus } from "@hjmds/design-contracts/screen-patterns";
 import { createContext, Fragment, useContext, useMemo, useRef, type ReactNode } from "react";
+import { InitialFocusProvider, useInitialFocusScope } from "./internal/initial-focus.js";
 import { InheritedTextAlignContext } from "./internal/text-align.js";
 import { resolveScreenBottomPadding } from "./internal/screen-footer.js";
 import { useKeyboardOverlap } from "./keyboard.js";
@@ -45,6 +47,11 @@ export type AuthScreenLayoutProps = AuthScreenDescriptor &
      * Pass it instead of a bottom SafeAreaView edge, never both.
      */
     safeAreaBottom?: number;
+    /**
+     * Entry focus, same rules as ScreenLayout `initialFocus`. Off by default because auth screens lead with provider
+     * buttons; a signup nickname step opts in with `first-input` (2026-10-18 adoption: spint and utilverse signup).
+     */
+    initialFocus?: ScreenInitialFocus;
     testID?: string;
     layoutStyle?: HjmCompositionStyleProp;
   }>;
@@ -83,6 +90,7 @@ export function AuthScreenLayout({
   safeAreaBottom = 0,
   layoutStyle,
   testID,
+  initialFocus = initialFocusDefaults.auth,
 }: AuthScreenLayoutProps) {
   const MainContainer = mainCard ? AuthActionCard : View;
   const resolved = resolveAuthScreenDescriptor({
@@ -99,9 +107,12 @@ export function AuthScreenLayout({
   const keyboardHost = useMemo(() => ({ get current() { return scrollRef.current?.getNativeScrollRef?.() ?? null; } }), []);
   const keyboardOpen = useKeyboardOverlap(keyboardHost) > 0;
   const paddingBottom = resolveScreenBottomPadding(resolved.paddingBlock, safeAreaBottom, keyboardOpen);
+  const focusScope = useInitialFocusScope({ mode: initialFocus });
   return (
+    <InitialFocusProvider scope={focusScope}>
     <ScrollView
       ref={scrollRef}
+      onTouchStart={focusScope.onTouchStart}
       style={[{ flex: 1 }, layoutStyle]}
       testID={testID}
       keyboardShouldPersistTaps="handled"
@@ -154,6 +165,7 @@ export function AuthScreenLayout({
         </View>
       ) : null}
     </ScrollView>
+    </InitialFocusProvider>
   );
 }
 

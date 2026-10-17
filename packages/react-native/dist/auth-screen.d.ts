@@ -1,4 +1,5 @@
 import { authScreenRecipe, type AuthScreenDescriptor, type AuthScreenHeroDescriptor, type AuthScreenPolicyLinkDescriptor } from "@hjmds/design-contracts/components/auth-screen";
+import { type ScreenInitialFocus } from "@hjmds/design-contracts/screen-patterns";
 import { type ReactNode } from "react";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type AuthScreenLayoutProps = AuthScreenDescriptor & Readonly<{
@@ -20,6 +21,11 @@ export type AuthScreenLayoutProps = AuthScreenDescriptor & Readonly<{
      * Pass it instead of a bottom SafeAreaView edge, never both.
      */
     safeAreaBottom?: number;
+    /**
+     * Entry focus, same rules as ScreenLayout `initialFocus`. Off by default because auth screens lead with provider
+     * buttons; a signup nickname step opts in with `first-input` (2026-10-18 adoption: spint and utilverse signup).
+     */
+    initialFocus?: ScreenInitialFocus;
     testID?: string;
     layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -34,7 +40,7 @@ export type AuthScreenLayoutProps = AuthScreenDescriptor & Readonly<{
  * inset adjustment is off because it added the home-indicator inset on iOS only, on top of paddingBlock, which made
  * every product add its own Android inset (spint) or wrap the layout (diairy, utilverse) — 2026-10-17.
  */
-export declare function AuthScreenLayout({ hero, main, footer, density, hasFooter, pendingLabel, mainCard, safeAreaBottom, layoutStyle, testID, }: AuthScreenLayoutProps): import("react").JSX.Element;
+export declare function AuthScreenLayout({ hero, main, footer, density, hasFooter, pendingLabel, mainCard, safeAreaBottom, layoutStyle, testID, initialFocus, }: AuthScreenLayoutProps): import("react").JSX.Element;
 export type AuthScreenHeroProps = AuthScreenHeroDescriptor & Readonly<{
     /** Product mark asset. HJM never ships product marks. */
     mark?: ReactNode;

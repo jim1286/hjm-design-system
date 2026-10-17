@@ -58,7 +58,9 @@ type SharedInputProps = FieldCopyProps & Readonly<{
     layoutStyle?: HjmCompositionStyleProp;
     /**
      * Screen entry focus: true makes this the field the enclosing screen or sheet focuses on entry, false keeps it
-     * from ever being chosen; omitted fields are eligible in tree order (same as Native, 2026-10-18).
+     * from ever being chosen; omitted fields are eligible in tree order (same as Native, 2026-10-18). A true field that
+     * mounts after entry — revealed by a user action or a step change — is focused when it appears, whatever the
+     * mode, unless another text field has focus or a modal is above (screen-patterns `resolveEntryFocus`).
      */
     initialFocusTarget?: boolean;
 }>;
@@ -95,7 +97,9 @@ export declare const TextField: import("react").ForwardRefExoticComponent<Omit<I
     layoutStyle?: HjmCompositionStyleProp;
     /**
      * Screen entry focus: true makes this the field the enclosing screen or sheet focuses on entry, false keeps it
-     * from ever being chosen; omitted fields are eligible in tree order (same as Native, 2026-10-18).
+     * from ever being chosen; omitted fields are eligible in tree order (same as Native, 2026-10-18). A true field that
+     * mounts after entry — revealed by a user action or a step change — is focused when it appears, whatever the
+     * mode, unless another text field has focus or a modal is above (screen-patterns `resolveEntryFocus`).
      */
     initialFocusTarget?: boolean;
 }> & Readonly<{
@@ -182,7 +186,9 @@ export declare const SearchField: import("react").ForwardRefExoticComponent<Omit
     layoutStyle?: HjmCompositionStyleProp;
     /**
      * Screen entry focus: true makes this the field the enclosing screen or sheet focuses on entry, false keeps it
-     * from ever being chosen; omitted fields are eligible in tree order (same as Native, 2026-10-18).
+     * from ever being chosen; omitted fields are eligible in tree order (same as Native, 2026-10-18). A true field that
+     * mounts after entry — revealed by a user action or a step change — is focused when it appears, whatever the
+     * mode, unless another text field has focus or a modal is above (screen-patterns `resolveEntryFocus`).
      */
     initialFocusTarget?: boolean;
 }> & Readonly<{

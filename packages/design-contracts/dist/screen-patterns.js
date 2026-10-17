@@ -55,6 +55,8 @@ export const initialFocusDefaults = {
     chat: "none",
     commentThread: "none",
     overlay: "single-input",
+    // Auth screens lead with provider buttons; a signup nickname step opts in with `initialFocus="first-input"`.
+    auth: "none",
 };
 export function resolveInitialFocusTarget(candidates, mode) {
     if (mode === "none")
@@ -66,6 +68,35 @@ export function resolveInitialFocusTarget(candidates, mode) {
     }
     const eligible = ordered.filter(candidate => candidate.focusable && candidate.preference !== false);
     return eligible.find(candidate => candidate.preference === true) ?? eligible[0] ?? null;
+}
+export function resolveEntryFocus(phase, event, facts) {
+    const stay = { phase, target: null };
+    if (event.kind === "deactivate")
+        return { phase: "inactive", target: null };
+    if (event.kind === "activate")
+        return { phase: "entering", target: null };
+    if (phase === "inactive")
+        return stay;
+    if (event.kind === "interact")
+        return facts.blocked || phase === "settled" ? stay : { phase: "settled", target: null };
+    const attempt = () => {
+        if (facts.blocked)
+            return { phase: "open", target: null };
+        if (facts.textEntryFocused)
+            return { phase: "settled", target: null };
+        const target = resolveInitialFocusTarget(facts.candidates, facts.mode);
+        return target ? { phase: "settled", target } : { phase: "open", target: null };
+    };
+    if (event.kind === "enter")
+        return phase !== "entering" ? stay : facts.mode === "none" ? { phase: "settled", target: null } : attempt();
+    if (phase === "entering")
+        return stay;
+    if (phase === "open")
+        return attempt();
+    if (event.kind !== "register")
+        return stay;
+    const { field } = event;
+    return field.preference === true && field.focusable && !facts.blocked && !facts.textEntryFocused ? { phase, target: field } : stay;
 }
 // Reuse reading-width and spacing tokens; do not derive geometry from a product's device or artwork.
 export const screenPatternRecipe = {

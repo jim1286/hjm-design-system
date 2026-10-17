@@ -1,4 +1,4 @@
-import { InitialFocusContext, useInitialFocusRegistry } from "./internal/initial-focus.js";
+import { InitialFocusProvider, useInitialFocusScope, type ModalLayerRef } from "./internal/initial-focus.js";
 import { initialFocusDefaults, type InitialFocusMode } from "@hjmds/design-contracts/screen-patterns";
 import type { TransitionRect } from "@hjmds/design-contracts/content-transition";
 import { useOverlayOriginMotion } from "./internal/overlay-origin-motion.js";
@@ -194,13 +194,15 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
       });
     };
   }, []);
-  const focusRegistry = useInitialFocusRegistry();
+  const focusLayer = useRef<ModalLayerRef["current"]>(null);
+  const focusScope = useInitialFocusScope({ mode: initialFocus, active: visible, layer: focusLayer });
   useModalFocus({
     active: visible,
     priority: modalPriority,
     contentRef,
     ...(initialFocusRef === undefined ? {} : { initialFocusRef }),
-    resolveInitialFocus: () => focusRegistry.resolve(initialFocus),
+    resolveInitialFocus: focusScope.enter,
+    layerRef: focusLayer,
     ...(returnFocusRef === undefined ? {} : { returnFocusRef }),
     ...(trigger === undefined ? {} : { fallbackReturnRef: triggerRef }),
     onEscape: () => requestClose("escape"),
@@ -264,7 +266,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
                 ) : null}
               </header>
               {description ? <p id={descriptionId} className="hjm-dialog__description">{description}</p> : null}
-              {children ? <div className="hjm-dialog__body"><InitialFocusContext.Provider value={focusRegistry}>{children}</InitialFocusContext.Provider></div> : null}
+              {children ? <div className="hjm-dialog__body"><InitialFocusProvider scope={focusScope}>{children}</InitialFocusProvider></div> : null}
               {footer ? <footer className="hjm-dialog__footer">{footer}</footer> : null}
             </div>
           </div>
@@ -613,13 +615,15 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
       });
     };
   }, []);
-  const focusRegistry = useInitialFocusRegistry();
+  const focusLayer = useRef<ModalLayerRef["current"]>(null);
+  const focusScope = useInitialFocusScope({ mode: initialFocus, active: open, layer: focusLayer });
   useModalFocus({
     active: open,
     priority: modalPriority,
     contentRef,
     ...(initialFocusRef === undefined ? {} : { initialFocusRef }),
-    resolveInitialFocus: () => focusRegistry.resolve(initialFocus),
+    resolveInitialFocus: focusScope.enter,
+    layerRef: focusLayer,
     ...(returnFocusRef === undefined ? {} : { returnFocusRef }),
     ...(trigger === undefined ? {} : { fallbackReturnRef: triggerRef }),
     onEscape: () => requestClose("escape"),
@@ -748,7 +752,7 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
                 ) : null}
               </header> : null}
               </div>
-              {children ? <div className="hjm-sheet__body"><InitialFocusContext.Provider value={focusRegistry}>{children}</InitialFocusContext.Provider></div> : null}
+              {children ? <div className="hjm-sheet__body"><InitialFocusProvider scope={focusScope}>{children}</InitialFocusProvider></div> : null}
               {footer ? <footer className="hjm-sheet__footer">{footer}</footer> : null}
             </div>
           </div>

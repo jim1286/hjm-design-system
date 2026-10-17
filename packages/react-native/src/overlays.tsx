@@ -1,5 +1,5 @@
 import { ScreenBodyInsetContext } from "./internal/screen-body-inset.js";
-import { InitialFocusScope } from "./internal/initial-focus.js";
+import { InitialFocusProvider, useInitialFocusScope, useOverlayLayer } from "./internal/initial-focus.js";
 import { initialFocusDefaults, type InitialFocusMode } from "@hjmds/design-contracts/screen-patterns";
 import { resolveOriginTransition, type TransitionRect } from "@hjmds/design-contracts/content-transition";
 import { focusAccessibleHost } from "./internal/accessible-focus.js";
@@ -81,8 +81,9 @@ function CloseGlyph() {
 // Keep interaction visibility off native-driven animation hosts. In iOS 26.5,
 // Dialog/AlertDialog/Sheet lost their AX descendants on a second presentation
 // while still painting; a non-animated boundary preserves reopen accessibility.
-function ModalInteractionBoundary({ visible, children }: { visible: boolean; children: ReactNode }) {
+function ModalInteractionBoundary({ visible, onTouchStart, children }: { visible: boolean; onTouchStart(): void; children: ReactNode }) {
   return <View
+    onTouchStart={onTouchStart}
     accessibilityElementsHidden={!visible}
     importantForAccessibility={visible ? "auto" : "no-hide-descendants"}
     pointerEvents={visible ? "auto" : "none"}
@@ -392,7 +393,11 @@ export function Dialog({
   const [nativeVisible, setNativeVisible] = useState(visible);
   // Entry focus waits for the native presentation (onShow) so it runs after the enter animation's interaction.
   const [entered, setEntered] = useState(false);
-  useEffect(() => { if (!visible) setEntered(false); }, [visible]);
+  // On the overlay stack from opening until the exit has fully torn down (where return focus runs), so screens below
+  // keep a pending entry focus until then.
+  const [layered, setLayered] = useState(visible);
+  useEffect(() => { if (!visible) setEntered(false); else setLayered(true); }, [visible]);
+  const focusScope = useInitialFocusScope({ mode: initialFocus, active: visible && entered, layer: useOverlayLayer(layered) });
   const keyboardViewport = useModalKeyboardViewport(nativeVisible);
   const nativeVisibleRef = useRef(visible);
   nativeVisibleRef.current = nativeVisible;
@@ -460,7 +465,7 @@ export function Dialog({
         if (keptNativeHost) startEnter();
         return;
       }
-      if (!visibleRef.current) focusNativeTarget(returnFocusRef);
+      if (!visibleRef.current) { setLayered(false); focusNativeTarget(returnFocusRef); }
     },
     [cancelExitFallback, motionProgress, returnFocusRef, startEnter],
   );
@@ -563,7 +568,7 @@ export function Dialog({
 
   // Overlay content is not in the screen body: a bleeding rail inside must not reach for the screen gutter.
   return (
-    <ScreenBodyInsetContext.Provider value={0}><InitialFocusScope mode={initialFocus} active={visible && entered}>
+    <ScreenBodyInsetContext.Provider value={0}><InitialFocusProvider scope={focusScope}>
     <Modal
       {...modalProps}
       animationType="none"
@@ -583,7 +588,7 @@ export function Dialog({
       transparent
       visible={nativeVisible}
     >
-      <ModalInteractionBoundary visible={visible}>
+      <ModalInteractionBoundary visible={visible} onTouchStart={focusScope.onTouchStart}>
         <Animated.View
           onLayout={(event) => keyboardViewport.setModalHeight(event.nativeEvent.layout.height)}
           style={{
@@ -692,7 +697,7 @@ export function Dialog({
         </Animated.View>
       </ModalInteractionBoundary>
     </Modal>
-    </InitialFocusScope></ScreenBodyInsetContext.Provider>
+    </InitialFocusProvider></ScreenBodyInsetContext.Provider>
   );
 }
 
@@ -750,7 +755,11 @@ export function AlertDialog({
   const [nativeVisible, setNativeVisible] = useState(visible);
   // Entry focus waits for the native presentation (onShow) so it runs after the enter animation's interaction.
   const [entered, setEntered] = useState(false);
-  useEffect(() => { if (!visible) setEntered(false); }, [visible]);
+  // On the overlay stack from opening until the exit has fully torn down (where return focus runs), so screens below
+  // keep a pending entry focus until then.
+  const [layered, setLayered] = useState(visible);
+  useEffect(() => { if (!visible) setEntered(false); else setLayered(true); }, [visible]);
+  const focusScope = useInitialFocusScope({ mode: initialFocus, active: visible && entered, layer: useOverlayLayer(layered) });
   const keyboardViewport = useModalKeyboardViewport(nativeVisible);
   const nativeVisibleRef = useRef(visible);
   nativeVisibleRef.current = nativeVisible;
@@ -824,7 +833,7 @@ export function AlertDialog({
         if (keptNativeHost) startEnter();
         return;
       }
-      if (!visibleRef.current) focusNativeTarget(returnFocusRef);
+      if (!visibleRef.current) { setLayered(false); focusNativeTarget(returnFocusRef); }
     },
     [cancelExitFallback, motionProgress, returnFocusRef, startEnter],
   );
@@ -1016,7 +1025,7 @@ export function AlertDialog({
 
   // Overlay content is not in the screen body: a bleeding rail inside must not reach for the screen gutter.
   return (
-    <ScreenBodyInsetContext.Provider value={0}><InitialFocusScope mode={initialFocus} active={visible && entered}>
+    <ScreenBodyInsetContext.Provider value={0}><InitialFocusProvider scope={focusScope}>
     <Modal
       {...modalProps}
       animationType="none"
@@ -1031,7 +1040,7 @@ export function AlertDialog({
       transparent
       visible={nativeVisible}
     >
-      <ModalInteractionBoundary visible={visible}>
+      <ModalInteractionBoundary visible={visible} onTouchStart={focusScope.onTouchStart}>
         <Animated.View
           onLayout={(event) => keyboardViewport.setModalHeight(event.nativeEvent.layout.height)}
           style={{
@@ -1138,7 +1147,7 @@ export function AlertDialog({
         </Animated.View>
       </ModalInteractionBoundary>
     </Modal>
-    </InitialFocusScope></ScreenBodyInsetContext.Provider>
+    </InitialFocusProvider></ScreenBodyInsetContext.Provider>
   );
 }
 
@@ -1235,7 +1244,11 @@ export function Sheet({
   const [nativeVisible, setNativeVisible] = useState(visible);
   // Entry focus waits for the native presentation (onShow) so it runs after the enter animation's interaction.
   const [entered, setEntered] = useState(false);
-  useEffect(() => { if (!visible) setEntered(false); }, [visible]);
+  // On the overlay stack from opening until the exit has fully torn down (where return focus runs), so screens below
+  // keep a pending entry focus until then.
+  const [layered, setLayered] = useState(visible);
+  useEffect(() => { if (!visible) setEntered(false); else setLayered(true); }, [visible]);
+  const focusScope = useInitialFocusScope({ mode: initialFocus, active: visible && entered, layer: useOverlayLayer(layered) });
   const { viewportHeight, keyboardInset, dockedKeyboard, setModalHeight } = useModalKeyboardViewport(nativeVisible, keyboardAvoidance);
   const nativeVisibleRef = useRef(visible);
   nativeVisibleRef.current = nativeVisible;
@@ -1345,6 +1358,7 @@ export function Sheet({
       }
       if (!visibleRef.current) {
         onDismissComplete?.({ reason: pending.reason });
+        setLayered(false);
         focusNativeTarget(returnFocusRef);
       }
     },
@@ -1487,7 +1501,7 @@ export function Sheet({
 
   // Overlay content is not in the screen body: a bleeding rail inside must not reach for the screen gutter.
   return (
-    <ScreenBodyInsetContext.Provider value={0}><InitialFocusScope mode={initialFocus} active={visible && entered}>
+    <ScreenBodyInsetContext.Provider value={0}><InitialFocusProvider scope={focusScope}>
     <Modal
       {...modalProps}
       animationType="none"
@@ -1507,7 +1521,7 @@ export function Sheet({
       transparent
       visible={nativeVisible}
     >
-      <ModalInteractionBoundary visible={visible}>
+      <ModalInteractionBoundary visible={visible} onTouchStart={focusScope.onTouchStart}>
         <Animated.View
           onLayout={(event) => setModalHeight(event.nativeEvent.layout.height)}
           style={{
@@ -1658,6 +1672,6 @@ export function Sheet({
         </Animated.View>
       </ModalInteractionBoundary>
     </Modal>
-    </InitialFocusScope></ScreenBodyInsetContext.Provider>
+    </InitialFocusProvider></ScreenBodyInsetContext.Provider>
   );
 }

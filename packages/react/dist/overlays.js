@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import { InitialFocusContext, useInitialFocusRegistry } from "./internal/initial-focus.js";
+import { InitialFocusProvider, useInitialFocusScope } from "./internal/initial-focus.js";
 import { initialFocusDefaults } from "@hjmds/design-contracts/screen-patterns";
 import { useOverlayOriginMotion } from "./internal/overlay-origin-motion.js";
 import { layer } from "@hjmds/design-contracts/foundations";
@@ -77,13 +77,15 @@ export const Dialog = forwardRef(function Dialog({ trigger, title, description, 
             });
         };
     }, []);
-    const focusRegistry = useInitialFocusRegistry();
+    const focusLayer = useRef(null);
+    const focusScope = useInitialFocusScope({ mode: initialFocus, active: visible, layer: focusLayer });
     useModalFocus({
         active: visible,
         priority: modalPriority,
         contentRef,
         ...(initialFocusRef === undefined ? {} : { initialFocusRef }),
-        resolveInitialFocus: () => focusRegistry.resolve(initialFocus),
+        resolveInitialFocus: focusScope.enter,
+        layerRef: focusLayer,
         ...(returnFocusRef === undefined ? {} : { returnFocusRef }),
         ...(trigger === undefined ? {} : { fallbackReturnRef: triggerRef }),
         onEscape: () => requestClose("escape"),
@@ -95,7 +97,7 @@ export const Dialog = forwardRef(function Dialog({ trigger, title, description, 
                             event.preventDefault();
                             requestClose("outside");
                         }
-                    }, children: _jsxs("div", { ref: mergedContentRef, id: contentId, role: "dialog", "aria-modal": "true", "aria-labelledby": titleId, "aria-describedby": description ? descriptionId : undefined, "aria-busy": busy || undefined, inert: !open, "aria-hidden": !open || undefined, tabIndex: -1, className: classNames("hjm-dialog", className), "data-hjm-modal-content": "", "data-size": size, "data-state": busy ? "busy" : "idle", children: [_jsxs("header", { className: "hjm-dialog__header", children: [_jsx("h2", { id: titleId, className: "hjm-dialog__title", children: title }), dismissible ? (_jsx("button", { type: "button", className: "hjm-dialog__close", "aria-label": closeLabel, disabled: busy, onClick: () => requestClose("close-action"), children: "\u00D7" })) : null] }), description ? _jsx("p", { id: descriptionId, className: "hjm-dialog__description", children: description }) : null, children ? _jsx("div", { className: "hjm-dialog__body", children: _jsx(InitialFocusContext.Provider, { value: focusRegistry, children: children }) }) : null, footer ? _jsx("footer", { className: "hjm-dialog__footer", children: footer }) : null] }) }) })) : null] }));
+                    }, children: _jsxs("div", { ref: mergedContentRef, id: contentId, role: "dialog", "aria-modal": "true", "aria-labelledby": titleId, "aria-describedby": description ? descriptionId : undefined, "aria-busy": busy || undefined, inert: !open, "aria-hidden": !open || undefined, tabIndex: -1, className: classNames("hjm-dialog", className), "data-hjm-modal-content": "", "data-size": size, "data-state": busy ? "busy" : "idle", children: [_jsxs("header", { className: "hjm-dialog__header", children: [_jsx("h2", { id: titleId, className: "hjm-dialog__title", children: title }), dismissible ? (_jsx("button", { type: "button", className: "hjm-dialog__close", "aria-label": closeLabel, disabled: busy, onClick: () => requestClose("close-action"), children: "\u00D7" })) : null] }), description ? _jsx("p", { id: descriptionId, className: "hjm-dialog__description", children: description }) : null, children ? _jsx("div", { className: "hjm-dialog__body", children: _jsx(InitialFocusProvider, { scope: focusScope, children: children }) }) : null, footer ? _jsx("footer", { className: "hjm-dialog__footer", children: footer }) : null] }) }) })) : null] }));
 });
 export const AlertDialog = forwardRef(function AlertDialog({ trigger, request, icon, size = dialogRecipe.defaults.size, returnFocusRef, modalPriority = 0, portalContainer, open: openProp, defaultOpen, onOpenChange, className, }, forwardedRef) {
     const modalLayer = getModalLayer(modalPriority);
@@ -259,13 +261,15 @@ export const Sheet = forwardRef(function Sheet({ trigger, title, description, ch
             });
         };
     }, []);
-    const focusRegistry = useInitialFocusRegistry();
+    const focusLayer = useRef(null);
+    const focusScope = useInitialFocusScope({ mode: initialFocus, active: open, layer: focusLayer });
     useModalFocus({
         active: open,
         priority: modalPriority,
         contentRef,
         ...(initialFocusRef === undefined ? {} : { initialFocusRef }),
-        resolveInitialFocus: () => focusRegistry.resolve(initialFocus),
+        resolveInitialFocus: focusScope.enter,
+        layerRef: focusLayer,
         ...(returnFocusRef === undefined ? {} : { returnFocusRef }),
         ...(trigger === undefined ? {} : { fallbackReturnRef: triggerRef }),
         onEscape: () => requestClose("escape"),
@@ -313,7 +317,7 @@ export const Sheet = forwardRef(function Sheet({ trigger, title, description, ch
                                                     onDetentChange?.(next);
                                             }, children: _jsx("span", { "aria-hidden": "true", className: "hjm-sheet__handle-bar" }) }) })) : showHandle ? (
                                     // Without detents the handle is the visible close control for keyboard and switch users.
-                                    _jsx("div", { className: "hjm-sheet__handle-row", children: _jsx("button", { type: "button", className: "hjm-sheet__handle", "aria-label": closeLabel, disabled: closeBlocked, onClick: () => requestClose("close-action"), children: _jsx("span", { "aria-hidden": "true", className: "hjm-sheet__handle-bar" }) }) })) : null, description || (policy.dismissible && closeVisible) ? _jsxs("header", { className: "hjm-sheet__header", children: [description ? _jsx("div", { children: _jsx("p", { id: descriptionId, className: "hjm-sheet__description", children: description }) }) : null, policy.dismissible && closeVisible ? (_jsx("button", { type: "button", className: "hjm-dialog__close", "aria-label": closeLabel, disabled: busy && !policy.dismissWhileBusy, onClick: () => requestClose("close-action"), children: "\u00D7" })) : null] }) : null] }), children ? _jsx("div", { className: "hjm-sheet__body", children: _jsx(InitialFocusContext.Provider, { value: focusRegistry, children: children }) }) : null, footer ? _jsx("footer", { className: "hjm-sheet__footer", children: footer }) : null] }) }) })) : null] }));
+                                    _jsx("div", { className: "hjm-sheet__handle-row", children: _jsx("button", { type: "button", className: "hjm-sheet__handle", "aria-label": closeLabel, disabled: closeBlocked, onClick: () => requestClose("close-action"), children: _jsx("span", { "aria-hidden": "true", className: "hjm-sheet__handle-bar" }) }) })) : null, description || (policy.dismissible && closeVisible) ? _jsxs("header", { className: "hjm-sheet__header", children: [description ? _jsx("div", { children: _jsx("p", { id: descriptionId, className: "hjm-sheet__description", children: description }) }) : null, policy.dismissible && closeVisible ? (_jsx("button", { type: "button", className: "hjm-dialog__close", "aria-label": closeLabel, disabled: busy && !policy.dismissWhileBusy, onClick: () => requestClose("close-action"), children: "\u00D7" })) : null] }) : null] }), children ? _jsx("div", { className: "hjm-sheet__body", children: _jsx(InitialFocusProvider, { scope: focusScope, children: children }) }) : null, footer ? _jsx("footer", { className: "hjm-sheet__footer", children: footer }) : null] }) }) })) : null] }));
 });
 export const Tooltip = forwardRef(function Tooltip({ trigger, content, placement, align, pointerOpenDelayMs = tooltipBehaviorDefaults.pointerOpenDelayMs, focusOpenDelayMs = tooltipBehaviorDefaults.focusOpenDelayMs, portalContainer, open: openProp, defaultOpen, onOpenChange, className, layoutStyle, }, ref) {
     const descriptor = resolveTooltipDescriptor({

@@ -1,5 +1,6 @@
 import { type AuthScreenDensity, type AuthScreenDescriptor, type AuthScreenHeroDescriptor, type AuthScreenPolicyLinkDescriptor } from "@hjmds/design-contracts/components/auth-screen";
 import { type HTMLAttributeAnchorTarget, type HTMLAttributes, type ReactNode } from "react";
+import { type ScreenInitialFocus } from "@hjmds/design-contracts/screen-patterns";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type AuthScreenLayoutProps = Omit<HTMLAttributes<HTMLElement>, "children"> & AuthScreenDescriptor & Readonly<{
     /** Use section inside a product shell that already owns the main landmark. */
@@ -17,6 +18,11 @@ export type AuthScreenLayoutProps = Omit<HTMLAttributes<HTMLElement>, "children"
     className?: string;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * Entry focus, same rules as ScreenLayout `initialFocus`. Off by default because auth screens lead with provider
+     * buttons; a signup nickname step opts in with `first-input` (2026-10-18 adoption, same as Native).
+     */
+    initialFocus?: ScreenInitialFocus;
 }>;
 /**
  * Two regions: hero + main stay one vertically centred block, the footer sits at
@@ -42,6 +48,11 @@ export declare const AuthScreenLayout: import("react").ForwardRefExoticComponent
     className?: string;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * Entry focus, same rules as ScreenLayout `initialFocus`. Off by default because auth screens lead with provider
+     * buttons; a signup nickname step opts in with `first-input` (2026-10-18 adoption, same as Native).
+     */
+    initialFocus?: ScreenInitialFocus;
 }> & import("react").RefAttributes<HTMLElement>>;
 export type AuthScreenHeroProps = AuthScreenHeroDescriptor & Readonly<{
     /** Product mark asset. HJM never ships product marks. */

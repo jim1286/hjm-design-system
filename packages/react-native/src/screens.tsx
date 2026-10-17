@@ -15,7 +15,7 @@ import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { ScreenExitButton, type ScreenExit } from "./internal/screen-exit.js";
 import { ScreenFooterContext, resolveScreenBottomPadding } from "./internal/screen-footer.js";
 import { ScreenBodyInsetContext } from "./internal/screen-body-inset.js";
-import { InitialFocusScope } from "./internal/initial-focus.js";
+import { InitialFocusProvider, useInitialFocusScope } from "./internal/initial-focus.js";
 import { listRowScrollRoom } from "./internal/list-row-scroll-room.js";
 import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, screenHeaderRecipe, validateScreenExit, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState, type ScreenContentInset, initialFocusDefaults, type ScreenInitialFocus } from "@hjmds/design-contracts/screen-patterns";
 import { motion } from "@hjmds/design-contracts/foundations";
@@ -84,6 +84,9 @@ export type ScreenLayoutProps = Readonly<{
    * Focus a text field once when the screen is entered, after the enter transition (`first-input`: the field marked
    * `initialFocusTarget`, else the first enabled one). Off by default; SearchScreen and EditorScreen default it on,
    * Chat/CommentThread keep it off so the keyboard does not cover the history (2026-10-18, screen-patterns rules).
+   * Until the user touches the screen, a field that appears later (after data loads) or an HJM overlay that was open
+   * on entry closing still gets this entry focus; a field marked `initialFocusTarget` that appears after entry (search
+   * revealed, editor step changed) is focused in any mode (screen-patterns `resolveEntryFocus`).
    */
   initialFocus?: ScreenInitialFocus;
   scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator" | "onScroll" | "onScrollBeginDrag" | "onScrollEndDrag" | "scrollEventThrottle" | "alwaysBounceVertical" | "automaticallyAdjustKeyboardInsets">;
@@ -98,6 +101,7 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
   const rootRef = useRef<View>(null);
   const keyboardOverlap = useKeyboardOverlap(rootRef, avoidKeyboard);
   const bodyScroll = useRef<ScrollView | null>(null);
+  const focusScope = useInitialFocusScope({ mode: initialFocus });
   const trackScroll = useScrollFocusedInputIntoView(bodyScroll, avoidKeyboard);
   // ScrollView decorates object refs with scrollTo/scrollToEnd; mirror that instance into the host ref
   // after commit (child layout effects run before host effects) instead of passing a callback ref.
@@ -135,8 +139,8 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
       {state.description ? <Text tone="muted" align="center">{state.description}</Text> : null}
     </View>}{stateAction}
   </View>;
-  return <View ref={rootRef} testID={testID} style={[{ flex: 1, minHeight: 0, width: "100%", maxWidth: profileLayout?.maxWidth ?? recipe.maxWidth, alignSelf: "center", backgroundColor: surface === "transparent" || designProfile?.material.canvas ? "transparent" : colors.bg, ...(keyboardOverlap > 0 ? { paddingBottom: keyboardOverlap } : {}) }, layoutStyle]}>
-    <KeyboardAvoidanceContext.Provider value={insideAvoidance || avoidKeyboard}><InitialFocusScope mode={initialFocus}>
+  return <View ref={rootRef} testID={testID} onTouchStart={focusScope.onTouchStart} style={[{ flex: 1, minHeight: 0, width: "100%", maxWidth: profileLayout?.maxWidth ?? recipe.maxWidth, alignSelf: "center", backgroundColor: surface === "transparent" || designProfile?.material.canvas ? "transparent" : colors.bg, ...(keyboardOverlap > 0 ? { paddingBottom: keyboardOverlap } : {}) }, layoutStyle]}>
+    <KeyboardAvoidanceContext.Provider value={insideAvoidance || avoidKeyboard}><InitialFocusProvider scope={focusScope}>
     {/* Not TopBar: this is the page heading (titleLarge + description, actions wrap under the title at
         large text), while TopBar is a fixed-height app bar with a single-line title and safe-area top.
         Importing it would also pull navigation.js (tabs/gooey indicator) into every screens graph.
@@ -170,7 +174,7 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
     {/* The footer owns the bar (border, padding, surface) unless contentInset="none" hands every inset to the host;
         only then may BottomCTA render bare, otherwise it keeps its own bar (utilverse tool footers lost theirs, 2026-10-17). */}
     {footer ? <View style={{ padding, paddingBottom: bottomPadding, borderTopWidth: contentInset === "none" ? 0 : 1, borderColor: colors.border }}><ScreenFooterContext.Provider value={contentInset === "none" ? null : { bottomPadding }}>{footer}</ScreenFooterContext.Provider></View> : null}
-    </InitialFocusScope></KeyboardAvoidanceContext.Provider>
+    </InitialFocusProvider></KeyboardAvoidanceContext.Provider>
   </View>;
 }
 

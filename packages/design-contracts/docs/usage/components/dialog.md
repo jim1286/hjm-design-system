@@ -113,7 +113,7 @@ await handle.closed; // portal 제거·초점 복구 뒤. 다음 오버레이는
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `initialFocus` | `single-input` · `first-input` · `none` | `single-input` | 1.28.1. 열린 뒤(Native: 표시·진입 애니메이션 뒤, Web: 포커스 이동 시점) 포커스할 텍스트 입력. 기본은 텍스트 입력이 **하나뿐일 때만** 그 칸(이름 바꾸기·메모 한 줄), 여럿이면 기존 규칙(Web 첫 포커스 가능 요소, Native 접근성 포커스) 그대로. `first-input`은 `initialFocusTarget` 칸, 없으면 첫 칸. `initialFocusRef`(Web)가 있으면 그쪽이 이긴다. 열 때마다 다시 고른다 |
+| `initialFocus` | `single-input` · `first-input` · `none` | `single-input` | 1.28.1. 열린 뒤(Native: 표시·진입 애니메이션 뒤, Web: 포커스 이동 시점) 포커스할 텍스트 입력. 기본은 텍스트 입력이 **하나뿐일 때만** 그 칸(이름 바꾸기·메모 한 줄), 여럿이면 기존 규칙(Web 첫 포커스 가능 요소, Native 접근성 포커스) 그대로. `first-input`은 `initialFocusTarget` 칸, 없으면 첫 칸. `initialFocusRef`(Web)가 있으면 그쪽이 이긴다. 열 때마다 다시 고른다. 1.28.2: 열린 뒤 칸이 늦게 나타나도 조작 전이면 고르고, 단계형 내용은 각 단계 칸에 `initialFocusTarget`을 주면 단계가 바뀔 때 그 칸을 포커스한다(앱의 단계별 `ref.focus()` 대신). 위에 다른 오버레이가 열려 있는 동안은 고르지 않는다 |
 | `size` | `small` · `medium` · `large` | `medium` | Native recipe 최대 폭 320 · 420 · 640. Web 최대 폭 28rem · 36rem · 48rem(아래 배치 표) |
 | `dismissible` | `true` · `false` | `true` | `false`면 닫기 버튼과 바깥·Escape/back 닫기가 사라진다 |
 | `busy` | `true` · `false` | `false` | 비동기 작업 중에는 `open`을 유지하고 `busy`로 반복 행동과 닫기를 막는다 |

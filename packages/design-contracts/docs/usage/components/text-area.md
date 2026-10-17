@@ -62,7 +62,7 @@ import { TextArea } from "@hjmds/react-native/inputs";
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `initialFocusTarget` | `boolean` | — | 1.28.1. 둘러싼 화면·시트가 진입 포커스를 켰을 때 `true`면 이 칸을 고르고, `false`면 절대 고르지 않는다. 생략하면 트리 순서대로 후보다. 비활성·읽기 전용 칸은 고르지 않는다. 앱별 `autoFocus`·지연 `ref.focus()` 대신 쓴다([진입 포커스](screen-layout.md#진입-포커스)). TextField·TextArea·SearchField·PasswordField 공통 |
+| `initialFocusTarget` | `boolean` | — | 1.28.1. 둘러싼 화면·시트가 진입 포커스를 켰을 때 `true`면 이 칸을 고르고, `false`면 절대 고르지 않는다. 생략하면 트리 순서대로 후보다. 비활성·읽기 전용 칸은 고르지 않는다. 1.28.2부터 `true` 칸이 진입 뒤에 나타나면(검색 열기·단계 이동) 모드와 무관하게 그때 포커스한다. 앱별 `autoFocus`·지연 `ref.focus()` 대신 쓴다([진입 포커스](screen-layout.md#진입-포커스)). TextField·TextArea·SearchField·PasswordField 공통 |
 | `variant` | `surface` · `inset` | `surface` | — |
 | `shape` | `medium` · `large` · `full` | `medium` | — |
 | `align` | `start` · `center` | `start` | — |

@@ -1,6 +1,8 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { authScreenRecipe, resolveAuthScreenDescriptor, validateAuthScreenHeroDescriptor, validateAuthScreenPolicyLinks, } from "@hjmds/design-contracts/components/auth-screen";
+import { initialFocusDefaults } from "@hjmds/design-contracts/screen-patterns";
 import { createContext, Fragment, useContext, useMemo, useRef } from "react";
+import { InitialFocusProvider, useInitialFocusScope } from "./internal/initial-focus.js";
 import { InheritedTextAlignContext } from "./internal/text-align.js";
 import { resolveScreenBottomPadding } from "./internal/screen-footer.js";
 import { useKeyboardOverlap } from "./keyboard.js";
@@ -28,7 +30,7 @@ function AuthActionCard({ children, style }) {
  * inset adjustment is off because it added the home-indicator inset on iOS only, on top of paddingBlock, which made
  * every product add its own Android inset (spint) or wrap the layout (diairy, utilverse) — 2026-10-17.
  */
-export function AuthScreenLayout({ hero, main, footer, density, hasFooter, pendingLabel, mainCard = false, safeAreaBottom = 0, layoutStyle, testID, }) {
+export function AuthScreenLayout({ hero, main, footer, density, hasFooter, pendingLabel, mainCard = false, safeAreaBottom = 0, layoutStyle, testID, initialFocus = initialFocusDefaults.auth, }) {
     const MainContainer = mainCard ? AuthActionCard : View;
     const resolved = resolveAuthScreenDescriptor({
         ...(density === undefined ? {} : { density }),
@@ -46,27 +48,28 @@ export function AuthScreenLayout({ hero, main, footer, density, hasFooter, pendi
     const keyboardHost = useMemo(() => ({ get current() { return scrollRef.current?.getNativeScrollRef?.() ?? null; } }), []);
     const keyboardOpen = useKeyboardOverlap(keyboardHost) > 0;
     const paddingBottom = resolveScreenBottomPadding(resolved.paddingBlock, safeAreaBottom, keyboardOpen);
-    return (_jsxs(ScrollView, { ref: scrollRef, style: [{ flex: 1 }, layoutStyle], testID: testID, keyboardShouldPersistTaps: "handled", keyboardDismissMode: Platform.OS === "ios" ? "interactive" : "on-drag", automaticallyAdjustKeyboardInsets: true, contentContainerStyle: {
-            flexGrow: 1,
-            paddingHorizontal: resolved.paddingInline,
-            paddingTop: resolved.paddingBlock,
-            paddingBottom,
-        }, children: [_jsxs(View, { style: {
-                    flexGrow: 1,
-                    flexShrink: 0,
-                    width: "100%",
-                    maxWidth: resolved.maxWidth,
-                    alignSelf: "center",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: resolved.mainGap,
-                }, children: [_jsx(AuthScreenDensityContext.Provider, { value: resolved.density, children: _jsx(InheritedTextAlignContext.Provider, { value: "center", children: _jsx(View, { style: { width: "100%", alignItems: "center", gap: resolved.heroGap }, children: hero }) }) }), _jsxs(MainContainer, { style: { width: "100%" }, children: [_jsx(View, { pointerEvents: pending ? "none" : "auto", accessibilityElementsHidden: pending, importantForAccessibility: pending ? "no-hide-descendants" : "auto", style: pending ? { opacity: 0 } : undefined, children: main }), pending ? _jsx(View, { accessible: true, accessibilityLabel: pendingLabel, accessibilityRole: "progressbar", accessibilityLiveRegion: "polite", accessibilityState: { busy: true }, style: { position: "absolute", top: 0, right: 0, bottom: 0, left: 0, alignItems: "center", justifyContent: "center" }, children: _jsx(ActivityIndicator, { accessible: false }) }) : null] })] }), showFooter ? (_jsx(View, { style: {
-                    width: "100%",
-                    maxWidth: resolved.maxWidth,
-                    alignSelf: "center",
-                    alignItems: "center",
-                    marginTop: resolved.footerGap,
-                }, children: footer })) : null] }));
+    const focusScope = useInitialFocusScope({ mode: initialFocus });
+    return (_jsx(InitialFocusProvider, { scope: focusScope, children: _jsxs(ScrollView, { ref: scrollRef, onTouchStart: focusScope.onTouchStart, style: [{ flex: 1 }, layoutStyle], testID: testID, keyboardShouldPersistTaps: "handled", keyboardDismissMode: Platform.OS === "ios" ? "interactive" : "on-drag", automaticallyAdjustKeyboardInsets: true, contentContainerStyle: {
+                flexGrow: 1,
+                paddingHorizontal: resolved.paddingInline,
+                paddingTop: resolved.paddingBlock,
+                paddingBottom,
+            }, children: [_jsxs(View, { style: {
+                        flexGrow: 1,
+                        flexShrink: 0,
+                        width: "100%",
+                        maxWidth: resolved.maxWidth,
+                        alignSelf: "center",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: resolved.mainGap,
+                    }, children: [_jsx(AuthScreenDensityContext.Provider, { value: resolved.density, children: _jsx(InheritedTextAlignContext.Provider, { value: "center", children: _jsx(View, { style: { width: "100%", alignItems: "center", gap: resolved.heroGap }, children: hero }) }) }), _jsxs(MainContainer, { style: { width: "100%" }, children: [_jsx(View, { pointerEvents: pending ? "none" : "auto", accessibilityElementsHidden: pending, importantForAccessibility: pending ? "no-hide-descendants" : "auto", style: pending ? { opacity: 0 } : undefined, children: main }), pending ? _jsx(View, { accessible: true, accessibilityLabel: pendingLabel, accessibilityRole: "progressbar", accessibilityLiveRegion: "polite", accessibilityState: { busy: true }, style: { position: "absolute", top: 0, right: 0, bottom: 0, left: 0, alignItems: "center", justifyContent: "center" }, children: _jsx(ActivityIndicator, { accessible: false }) }) : null] })] }), showFooter ? (_jsx(View, { style: {
+                        width: "100%",
+                        maxWidth: resolved.maxWidth,
+                        alignSelf: "center",
+                        alignItems: "center",
+                        marginTop: resolved.footerGap,
+                    }, children: footer })) : null] }) }));
 }
 /**
  * The `hero` slot content: mark, eyebrow, tagline and one description line. Type
