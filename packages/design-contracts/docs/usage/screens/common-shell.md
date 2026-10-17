@@ -119,7 +119,7 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 
 ### 숨긴 페이지 이름과 가운데 문맥
 
-`ScreenLayout`의 `titleVisibility="hidden"`으로 페이지 이름을 숨기고 문맥을 가운데 둔다(헤더는 항상 가운데). 페이지 이름은 화면 식별값으로 유지하고 날짜·선수명 같은 실제 문맥만 표시할 수 있다. Native는 좌우 행동 영역의 큰 폭을 양쪽에 동일하게 확보해 중앙을 고정한다. `ListDetailScreen.detail`도 `titleVisibility`를 전달한다.
+`ScreenLayout`의 `titleVisibility="hidden"`으로 페이지 이름을 숨기고 문맥을 가운데 둔다(헤더 기본값이 가운데). 페이지 이름은 화면 식별값으로 유지하고 날짜·선수명 같은 실제 문맥만 표시할 수 있다. Native는 좌우 행동 영역의 큰 폭을 양쪽에 동일하게 확보해 중앙을 고정한다. `ListDetailScreen.detail`도 `titleVisibility`·`headerAlignment`를 전달한다.
 
 ## 근거
 

@@ -24,7 +24,8 @@ export type ScreenLayoutProps = Readonly<{
   titleBadge?: ReactNode;
   /** Hide redundant route names while retaining descriptions and a named screen. */
   titleVisibility?: "visible" | "hidden";
-  /** Route titles are always centered (2026-10-17 user rule); extra actions sit at the trailing edge. */
+  /** Centered by default (2026-10-17 user rule); `start` remains available. Extra actions sit at the trailing edge. */
+  headerAlignment?: "start" | "center";
   /** Preserve host navigation while the shared shell owns content and state. */
   header?: ReactNode;
   contentInset?: "default" | "none";
@@ -58,11 +59,14 @@ export type ScreenLayoutProps = Readonly<{
 }>;
 
 /** Shared screen shell. Routing, data, permission checks and mutation state remain product-owned. */
-export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", as: Element = "main", className, layoutStyle , hjmTitleLeading }: ScreenLayoutProps & Readonly<{ /** Internal: ChatScreen header photo. */ hjmTitleLeading?: ReactNode }>) {
+export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "center", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", as: Element = "main", className, layoutStyle , hjmTitleLeading }: ScreenLayoutProps & Readonly<{ /** Internal: ChatScreen header photo. */ hjmTitleLeading?: ReactNode }>) {
   const id = useId();
   if (exit) validateScreenExit(exit, false);
   const leading = exit ? <ScreenExitButton {...exit} /> : null;
   const showHeader = titleVisibility === "visible" || !!description || !!leading || !!actions;
+  // Same header band as Native (screenHeaderRecipe): a fixed 52 band (48 icon-only) so the title sits at the same
+  // height with or without exit/actions buttons (2026-10-17: Web grew 58→76 when a 44 button was present).
+  const compactHeader = header == null && headerAlignment === "center" && titleVisibility === "hidden" && !description;
   // Screens historically work with the stylesheet alone. Optional context keeps
   // that path while inheriting profiles from an enclosing Provider when present.
   const designProfile = useDesignProfileDefaults();
@@ -86,12 +90,15 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
   const recipe = screenPatternRecipe;
   return <Element aria-labelledby={header || titleVisibility === "hidden" ? undefined : id} aria-label={header || titleVisibility === "hidden" ? title : undefined} data-content-inset={contentInset} data-presentation={presentation} className={classNames("hjm-screen", className)}
     style={{ backgroundColor: surface === "transparent" || designProfile?.material.canvas ? "transparent" : undefined, "--hjm-screen-width": `${profileLayout?.maxWidth ?? recipe.maxWidth}px`, "--hjm-screen-padding": `${contentInset === "none" ? 0 : recipe.padding}px`, "--hjm-screen-gap": `${profileLayout?.gap ?? recipe.sectionGap}px`, "--hjm-screen-item-gap": `${recipe.itemGap}px`, "--hjm-screen-state-gap": `${recipe.stateGap}px`, "--hjm-screen-header-min": `${recipe.headerMinWidth}px`, ...layoutStyle } as React.CSSProperties}>
-    {header ?? (showHeader ? <header className="hjm-screen__header" style={{ display: "grid", gridTemplateColumns: "1fr minmax(0, auto) 1fr", alignItems: "center" }}>
+    {header ?? (showHeader ? headerAlignment === "center" ? <header className="hjm-screen__header" style={{ display: "grid", gridTemplateColumns: "1fr minmax(0, auto) 1fr", alignItems: "center", boxSizing: "border-box", minBlockSize: compactHeader ? screenHeaderRecipe.compactMinHeight : screenHeaderRecipe.minHeight, paddingBlock: compactHeader ? screenHeaderRecipe.compactPaddingVertical : screenHeaderRecipe.paddingVertical }}>
       {/* Equal side columns sized by their controls and a title-size (18) heading, matching Native's measured
           centered header (2026-10-17: the fixed 1:2:1 split with a level3 heading wrapped short titles). */}
       <div>{leading}</div><div className="hjm-screen__heading" style={{ textAlign: "center", minWidth: 0 }}>
         {titleVisibility === "visible" && <Stack axis="inline" gap="xs" align="center" justify="center" wrap>{hjmTitleLeading}<Heading level={screenHeaderRecipe.centeredTitleLevel} semanticLevel={1} id={id}>{title}</Heading>{titleBadge}</Stack>}
         {description ? <Text as="p" tone="muted">{description}</Text> : null}</div><div style={{ justifySelf: "end" }}>{actions}</div>
+    </header> : <header className="hjm-screen__header" style={profileLayout ? { flexDirection: profileLayout.headerAxis, alignItems: profileLayout.centered ? "center" : undefined, textAlign: profileLayout.centered ? "center" : undefined } : undefined}>
+      {leading}<div className="hjm-screen__heading">{titleVisibility === "visible" && <Stack axis="inline" gap="xs" align="center" justify={profileLayout?.centered ? "center" : "start"} wrap><Heading level={screenHeaderRecipe.titleLevel} semanticLevel={1} id={id}>{title}</Heading>{titleBadge}</Stack>}
+        {description ? <Text as="p" tone="muted">{description}</Text> : null}</div>{actions}
     </header> : null)}
     {notice ? <div className="hjm-screen__notice">{notice}</div> : null}
     {/* Scrollable read-only screens still need a keyboard entry point. */}

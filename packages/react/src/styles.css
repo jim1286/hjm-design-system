@@ -2784,6 +2784,8 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-top-bar__subtitle { display: block; color: var(--hjm-color-text-muted); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); }
 .hjm-top-bar__heading { margin: 0; font-size: var(--hjm-type-body-large-size); line-height: var(--hjm-type-body-large-line-height); font-weight: var(--hjm-font-weight-bold); }
 .hjm-top-bar__heading > span { display: inline-flex; align-items: center; gap: var(--hjm-top-bar-gap); }
+.hjm-top-bar[data-centered="false"] { grid-template-columns: auto minmax(0, 1fr) auto; }
+.hjm-top-bar[data-centered="false"] .hjm-top-bar__title { text-align: start; }
 .hjm-top-bar[data-large-text="true"] { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 .hjm-top-bar[data-large-text="true"] .hjm-top-bar__title { grid-column: 1 / -1; grid-row: 2; padding-block: var(--hjm-space-xs); text-align: start; }
 .hjm-top-bar[data-large-text="true"] .hjm-top-bar__trailing { grid-column: 2; grid-row: 1; }

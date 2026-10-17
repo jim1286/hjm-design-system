@@ -1291,6 +1291,7 @@ export type TopBarProps = Readonly<{
   trailing?: ReactNode;
   /** Semantic alias for trailing actions; do not combine with `trailing`. */
   actions?: ReactNode;
+  centered?: boolean;
   safeAreaTop?: number;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
@@ -1309,6 +1310,7 @@ export function TopBar({
   leading: leadingSlot,
   trailing,
   actions,
+  centered = topBarRecipe.defaults.centered,
   safeAreaTop = 0,
   layoutStyle,
   ...removedProps
@@ -1351,9 +1353,8 @@ export function TopBar({
   if (titleAccessibilityHint !== undefined && onTitlePress === undefined) {
     throw new TypeError("TopBar titleAccessibilityHint requires onTitlePress");
   }
-  // The title is always centered (2026-10-17 user rule), so both side slots render whenever there is a title.
-  const renderCompactLeadingSlot = hasLeading || hasTitle;
-  const renderCompactTrailingSlot = hasTrailingContent || hasTitle;
+  const renderCompactLeadingSlot = hasLeading || (hasTitle && centered);
+  const renderCompactTrailingSlot = hasTrailingContent || (hasTitle && centered);
   const theme = useHjmNativeTheme();
   const largeText = theme.environment.textScale >= topBarRecipe.largeTextThreshold;
   const resolvedTitleStyle: StyleProp<TextStyle> = [
@@ -1394,7 +1395,7 @@ export function TopBar({
         >
           {resolvedTitle}
         </Text>
-        {subtitle ? <Text variant="caption" tone="muted" align="center">{subtitle}</Text> : null}
+        {subtitle ? <Text variant="caption" tone="muted" align={centered ? "center" : "auto"}>{subtitle}</Text> : null}
         </View>
       </>
     );
@@ -1405,7 +1406,7 @@ export function TopBar({
         direction: theme.environment.direction,
         flexDirection: "row",
         gap: topBarRecipe.titleAction.gap,
-        justifyContent: "center",
+        justifyContent: centered ? "center" : "flex-start",
         minHeight: topBarRecipe.titleAction.minHeight,
         minWidth: topBarRecipe.titleAction.minWidth,
       },
@@ -1486,7 +1487,7 @@ export function TopBar({
               {hasTitle ? (
                 renderTitle({ flex: 1, flexShrink: 1, minWidth: 0 })
               ) : null}
-              {hasTitle && hasLeading ? (
+              {hasTitle && centered && hasLeading ? (
                 <View
                   accessibilityElementsHidden
                   accessible={false}

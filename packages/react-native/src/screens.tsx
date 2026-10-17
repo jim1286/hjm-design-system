@@ -31,7 +31,8 @@ export type ScreenLayoutProps = Readonly<{
   titleBadge?: ReactNode;
   /** Hide redundant route names while retaining descriptions and a named screen. */
   titleVisibility?: "visible" | "hidden";
-  /** Route titles are always centered (2026-10-17 user rule); extra actions sit at the trailing edge. */
+  /** Centered by default (2026-10-17 user rule); `start` remains available. Extra actions sit at the trailing edge. */
+  headerAlignment?: "start" | "center";
   /** Host navigation can supply its existing header while the shared shell owns scrolling and state. */
   header?: ReactNode;
   /** Hosts that already inset routes avoid applying the shared gutter twice. */
@@ -68,7 +69,7 @@ export type ScreenLayoutProps = Readonly<{
   scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator" | "onScroll" | "onScrollBeginDrag" | "onScrollEndDrag" | "scrollEventThrottle" | "alwaysBounceVertical" | "automaticallyAdjustKeyboardInsets">;
 }>;
 
-export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance = true, hjmBodyInlinePadding, hjmTitleLeading }: ScreenLayoutProps & ScreenLayoutPrivateProps) {
+export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "center", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance = true, hjmBodyInlinePadding, hjmTitleLeading }: ScreenLayoutProps & ScreenLayoutPrivateProps) {
   if (exit) validateScreenExit(exit, false);
   const leading = exit ? <ScreenExitButton {...exit} /> : null;
   const insideAvoidance = useInsideKeyboardAvoidance();
@@ -87,14 +88,14 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
   const sideWidth = Math.max(leadingWidth, actionsWidth);
   const showHeader = titleVisibility === "visible" || !!description || !!leading || !!actions;
   const resolved = resolveScreenContentState(state);
-  const { colors, designProfile } = useHjmNativeTheme();
+  const { colors, environment, designProfile } = useHjmNativeTheme();
   const presentation = suppliedPresentation ?? designProfile?.screens.overview;
   const profileLayout = presentation === undefined ? undefined : resolveDesignProfileScreen(presentation);
   const recipe = screenPatternRecipe;
   const padding = contentInset === "none" ? 0 : recipe.padding;
   // Icon-only route headers need no title breathing room: otherwise the 60pt
   // heading plus full body inset leaves category tabs detached from navigation.
-  const compactHeader = header == null && showHeader && titleVisibility === "hidden" && !description;
+  const compactHeader = header == null && showHeader && headerAlignment === "center" && titleVisibility === "hidden" && !description;
   const headerVerticalPadding = compactHeader ? screenHeaderRecipe.compactPaddingVertical : screenHeaderRecipe.paddingVertical;
   // A notice can contain navigation tabs; keep its separation from body filters.
   const bodyPaddingTop = compactHeader && !notice ? Math.min(padding, screenHeaderRecipe.compactBodyTop) : padding;
@@ -112,7 +113,7 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
         large text), while TopBar is a fixed-height app bar with a single-line title and safe-area top.
         Importing it would also pull navigation.js (tabs/gooey indicator) into every screens graph.
         Hosts that want the app bar pass <TopBar> through `header`. */}
-    {header ?? (!showHeader ? null : <View style={{ minHeight: compactHeader ? screenHeaderRecipe.compactMinHeight : screenHeaderRecipe.minHeight, paddingHorizontal: padding + sideWidth + recipe.itemGap, paddingVertical: headerVerticalPadding, justifyContent: "center" }}>
+    {header ?? (!showHeader ? null : headerAlignment === "center" ? <View style={{ minHeight: compactHeader ? screenHeaderRecipe.compactMinHeight : screenHeaderRecipe.minHeight, paddingHorizontal: padding + sideWidth + recipe.itemGap, paddingVertical: headerVerticalPadding, justifyContent: "center" }}>
       {/* Measure unconstrained control rows before reserving equal space on both sides. */}
       <View onLayout={event => setLeadingWidth(event.nativeEvent.layout.width)} style={{ position: "absolute", left: padding, top: headerVerticalPadding, bottom: headerVerticalPadding, justifyContent: "center", flexDirection: "row", alignItems: "center" }}>{leading}</View>
       <View style={{ minWidth: 0, alignItems: "center", gap: 4 }}>
@@ -120,6 +121,13 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
         {description && <Text align="center" tone="muted">{description}</Text>}
       </View>
       <View onLayout={event => setActionsWidth(event.nativeEvent.layout.width)} style={{ position: "absolute", right: padding, top: headerVerticalPadding, bottom: headerVerticalPadding, justifyContent: "center", flexDirection: "row", alignItems: "center" }}>{actions}</View>
+    </View> : <View style={{ flexDirection: profileLayout?.headerAxis ?? "row", flexWrap: "wrap", alignItems: profileLayout ? (profileLayout.centered ? "center" : "flex-start") : "center", padding, gap: recipe.itemGap }}>
+      {/* Reserve a readable title column; wrapping moves actions below it at large text. */}
+      {leading}<View style={{ flexGrow: 1, flexShrink: 1, ...(profileLayout?.headerAxis === "column" ? { width: "100%" as const } : { flexBasis: recipe.headerMinWidth * environment.textScale }) }}>
+        {/* Same Heading level as Web (screenHeaderRecipe.titleLevel), with or without a design profile. */}
+        {titleVisibility === "visible" && <Stack axis="inline" gap="xs" align="center" justify={profileLayout?.centered ? "center" : "start"} wrap><Heading level={screenHeaderRecipe.titleLevel} semanticLevel={1} {...(profileLayout?.centered ? { align: "center" as const } : {})}>{title}</Heading>{titleBadge}</Stack>}
+        {description ? <Text tone="muted" {...(profileLayout?.centered ? { align: "center" as const } : {})}>{description}</Text> : null}
+      </View>{actions}
     </View>)}
     {notice ? <View style={{ paddingHorizontal: padding }}>{notice}</View> : null}
     {scroll === "screen" || resolved.replacesContent ? <ScrollView {...scrollProps} ref={bodyScroll} style={{ flex: 1 }} keyboardShouldPersistTaps="handled" scrollEventThrottle={scrollProps?.scrollEventThrottle ?? 16} onScroll={event => { trackScroll(event); scrollProps?.onScroll?.(event); }}

@@ -699,7 +699,7 @@ export function TopBarAction(props) {
     return props.renderAction?.(controlProps) ?? _jsx(Pressable, { ...controlProps });
 }
 /** Native screen top bar with logical action slots and large-text reflow. */
-export function TopBar({ title, titleContent: customTitleContent, subtitle, titleLeading, onTitlePress, titleAccessibilityLabel, titleAccessibilityHint, exit, leading: leadingSlot, trailing, actions, safeAreaTop = 0, layoutStyle, ...removedProps }) {
+export function TopBar({ title, titleContent: customTitleContent, subtitle, titleLeading, onTitlePress, titleAccessibilityLabel, titleAccessibilityHint, exit, leading: leadingSlot, trailing, actions, centered = topBarRecipe.defaults.centered, safeAreaTop = 0, layoutStyle, ...removedProps }) {
     assertNoRemovedStyleProps("TopBar", removedProps, ["style", "leadingStyle", "titleStyle", "trailingStyle"]);
     if (exit)
         validateScreenExit(exit, leadingSlot !== undefined);
@@ -738,9 +738,8 @@ export function TopBar({ title, titleContent: customTitleContent, subtitle, titl
     if (titleAccessibilityHint !== undefined && onTitlePress === undefined) {
         throw new TypeError("TopBar titleAccessibilityHint requires onTitlePress");
     }
-    // The title is always centered (2026-10-17 user rule), so both side slots render whenever there is a title.
-    const renderCompactLeadingSlot = hasLeading || hasTitle;
-    const renderCompactTrailingSlot = hasTrailingContent || hasTitle;
+    const renderCompactLeadingSlot = hasLeading || (hasTitle && centered);
+    const renderCompactTrailingSlot = hasTrailingContent || (hasTitle && centered);
     const theme = useHjmNativeTheme();
     const largeText = theme.environment.textScale >= topBarRecipe.largeTextThreshold;
     const resolvedTitleStyle = [
@@ -756,7 +755,7 @@ export function TopBar({ title, titleContent: customTitleContent, subtitle, titl
                                 : {
                                     accessibilityLabel: titleAccessibilityLabel,
                                     accessibilityRole: "header",
-                                }), numberOfLines: numberOfLines, style: [{ flexShrink: 1, minWidth: 0 }, resolvedTitleStyle], variant: topBarRecipe.title.textVariant, children: resolvedTitle }), subtitle ? _jsx(Text, { variant: "caption", tone: "muted", align: "center", children: subtitle }) : null] })] }));
+                                }), numberOfLines: numberOfLines, style: [{ flexShrink: 1, minWidth: 0 }, resolvedTitleStyle], variant: topBarRecipe.title.textVariant, children: resolvedTitle }), subtitle ? _jsx(Text, { variant: "caption", tone: "muted", align: centered ? "center" : "auto", children: subtitle }) : null] })] }));
         const commonStyle = [
             containerStyle,
             {
@@ -764,7 +763,7 @@ export function TopBar({ title, titleContent: customTitleContent, subtitle, titl
                 direction: theme.environment.direction,
                 flexDirection: "row",
                 gap: topBarRecipe.titleAction.gap,
-                justifyContent: "center",
+                justifyContent: centered ? "center" : "flex-start",
                 minHeight: topBarRecipe.titleAction.minHeight,
                 minWidth: topBarRecipe.titleAction.minWidth,
             },
@@ -808,7 +807,7 @@ export function TopBar({ title, titleContent: customTitleContent, subtitle, titl
                                     flexDirection: "row",
                                     minWidth: topBarRecipe.sideMinWidth,
                                 },
-                            ], children: leading })) : null, hasTitle ? (renderTitle({ flex: 1, flexShrink: 1, minWidth: 0 })) : null, hasTitle && hasLeading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", pointerEvents: "none", style: { minWidth: topBarRecipe.sideMinWidth } })) : null] })) : null, hasTrailingContent ? (_jsx(View, { style: [
+                            ], children: leading })) : null, hasTitle ? (renderTitle({ flex: 1, flexShrink: 1, minWidth: 0 })) : null, hasTitle && centered && hasLeading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", pointerEvents: "none", style: { minWidth: topBarRecipe.sideMinWidth } })) : null] })) : null, hasTrailingContent ? (_jsx(View, { style: [
                         {
                             direction: theme.environment.direction,
                             flexDirection: "row",

@@ -13,7 +13,8 @@ export type ScreenLayoutProps = Readonly<{
     titleBadge?: ReactNode;
     /** Hide redundant route names while retaining descriptions and a named screen. */
     titleVisibility?: "visible" | "hidden";
-    /** Route titles are always centered (2026-10-17 user rule); extra actions sit at the trailing edge. */
+    /** Centered by default (2026-10-17 user rule); `start` remains available. Extra actions sit at the trailing edge. */
+    headerAlignment?: "start" | "center";
     /** Preserve host navigation while the shared shell owns content and state. */
     header?: ReactNode;
     contentInset?: "default" | "none";
@@ -46,7 +47,7 @@ export type ScreenLayoutProps = Readonly<{
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Shared screen shell. Routing, data, permission checks and mutation state remain product-owned. */
-export declare function ScreenLayout({ title, titleBadge, titleVisibility, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, description, exit, actions, notice, footer, state, stateAction, children, scroll, as: Element, className, layoutStyle, hjmTitleLeading }: ScreenLayoutProps & Readonly<{
+export declare function ScreenLayout({ title, titleBadge, titleVisibility, headerAlignment, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, description, exit, actions, notice, footer, state, stateAction, children, scroll, as: Element, className, layoutStyle, hjmTitleLeading }: ScreenLayoutProps & Readonly<{
     hjmTitleLeading?: ReactNode;
 }>): import("react").JSX.Element;
 export type SettingsScreenSection = Readonly<{
