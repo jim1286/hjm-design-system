@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web
 - 적용: 1.12.1
-- 검토일: 2026-10-07
+- 검토일: 2026-10-17
 - 근거: [Popover](../../popover.md), [ConfirmPopover 조합](../../confirm-popover.md), `src/popover.ts`(`popoverRecipe`)
 - 스토리북: `배포/컴포넌트/오버레이/팝오버`
 
@@ -33,13 +33,15 @@
 
 ```tsx
 // Web
-import { Button } from "@hjmds/react/actions";
+import { IconButton } from "@hjmds/react/actions";
+import { Icon } from "@hjmds/react/display";
 import { Popover } from "@hjmds/react/popover";
 
 <Popover
-  trigger={<Button tone="secondary">{t("filter.open")}</Button>}
+  trigger={<IconButton label={t("filter.open")} tone="secondary"><Icon name="filter" /></IconButton>}
   title={t("filter.title")}
   closeLabel={t("common.close")}
+  closeIcon={<Icon name="close" />}
   descriptor={{ placement: "bottom", align: "start" }}
 >
   {({ close }) => <FilterForm onApply={() => { apply(); close(); }} />}
@@ -54,6 +56,7 @@ Native 예는 없다(renderer 없음).
 | --- | --- | --- | --- |
 | `trigger` | 요소 하나 | 필수 | 여는 버튼. Popover가 ref·aria 속성을 붙인다 |
 | `title` · `closeLabel` | 문자열 | 필수 | 비면 던진다 |
+| `closeIcon` | `ReactNode` | — | 주면 머리 닫기를 ghost `IconButton`(이름 `closeLabel`)으로 그린다. 도구성 행동은 아이콘으로 둔다([IconButton](icon-button.md)). 없으면 기존 글자 버튼 |
 | `description` | 문자열 | — | 제목 아래 설명 |
 | `children` | 노드 또는 `(actions: { close(): void }) => ReactNode` | — | 콘텐츠 안에서 닫을 때 함수형을 쓴다 |
 | `openOn` | `press` · `hover` | `press` | `hover`는 지연된 포인터 진입(열기 300ms·닫기 150ms)을 **더할** 뿐이고 click/Enter/Space 경로는 그대로다 |

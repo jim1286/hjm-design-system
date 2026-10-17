@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { SidePanel } from "@hjmds/react/side-panel";
-import { Button } from "@hjmds/react/actions";
+import { Button, IconButton } from "@hjmds/react/actions";
+import { Pencil } from "lucide-react";
 import { TextField } from "@hjmds/react/forms";
 import { Switch } from "@hjmds/react/selection";
 import { List, ListRow } from "@hjmds/react/display";
@@ -27,7 +28,7 @@ export function SidePanelPreview() {
         <List label="내 기록">
           {records.map((record) => (
             <ListRow key={record.id} title={record.title} description={notes.get(record.id)}
-              trailing={<Button tone="secondary" onClick={() => { setDraft(notes.get(record.id) ?? ""); setEditing(record.id); }}>고치기</Button>} />
+              trailing={<IconButton label={`${record.title} 고치기`} tone="ghost" onClick={() => { setDraft(notes.get(record.id) ?? ""); setEditing(record.id); }}><Pencil size={20} /></IconButton>} />
           ))}
         </List>
         <SidePanel

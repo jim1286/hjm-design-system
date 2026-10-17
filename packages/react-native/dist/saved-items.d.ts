@@ -13,9 +13,11 @@ export type SavedItemsScreenProps<T extends SavedItem> = Omit<ListDetailScreenPr
     onOpenItem(id: string): void;
     onBack(): void;
     onCreateCollection(): void;
+    /** Same contract as Web: present renders an IconButton named by `labels.createCollection` (2026-10-17 icon-button usage rule). */
+    createCollectionIcon?: ReactNode;
     renderThumbnail(item: T): ReactNode;
     renderDetail(item: T): ReactNode;
 };
 /** Same controlled collection contract as Web, composed with the native screen and grid hosts. */
-export declare function SavedItemsScreen<T extends SavedItem>({ items, collections, collectionId, selectedItemId, labels, onOpenCollection, onOpenItem, onBack, onCreateCollection, renderThumbnail, renderDetail, ...screen }: SavedItemsScreenProps<T>): import("react").JSX.Element;
+export declare function SavedItemsScreen<T extends SavedItem>({ items, collections, collectionId, selectedItemId, labels, onOpenCollection, onOpenItem, onBack, onCreateCollection, createCollectionIcon, renderThumbnail, renderDetail, ...screen }: SavedItemsScreenProps<T>): import("react").JSX.Element;
 //# sourceMappingURL=saved-items.d.ts.map

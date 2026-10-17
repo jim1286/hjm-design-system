@@ -7,7 +7,8 @@ import { TextField, TextArea } from "@hjmds/react-native/inputs";
 import { ImageChoiceGroup } from "@hjmds/react-native/image-choice";
 import { Sheet } from "@hjmds/react-native/overlays";
 import { Notice } from "@hjmds/react-native/feedback";
-import { Bookmark } from "lucide-react-native";
+import { Bookmark, Plus } from "lucide-react-native";
+import { useHjmNativeTheme } from "@hjmds/react-native/provider";
 import { PreviewPhoto, ProfilePhoto } from "./reference-screen-parts";
 import { type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
 import { View } from "react-native";
@@ -15,6 +16,7 @@ import { View } from "react-native";
 import { savedPreviewItems, savedPreviewCollections } from "../../shared/saved-items-preview";
 type Options = {stateKind?: "ready" | "loading" | "empty" | "error" | "restricted"};
 export function SavedItemsPreview({stateKind="ready"}: Options){
+ const {colors}=useHjmNativeTheme();
  const [saved,setSaved]=useState(savedPreviewItems.map(item=>item.id));
  const [collections,setCollections]=useState(savedPreviewCollections);
  const [collectionId,setCollectionId]=useState<string|null|undefined>(undefined);
@@ -31,11 +33,11 @@ export function SavedItemsPreview({stateKind="ready"}: Options){
  {...(collectionId===undefined?{}:{collectionId})} selectedItemId={selectedItemId}
  labels={{allItems:"모든 게시물",privateNotice:"저장한 내용은 회원님만 볼 수 있습니다.",back:selectedItemId?"컬렉션으로":"저장됨으로",empty:"이 컬렉션에는 아직 게시물이 없어요.",createCollection:"새 컬렉션"}}
  onOpenCollection={setCollectionId} onOpenItem={setSelectedItemId} onBack={back}
- onCreateCollection={()=>{setName("");setChosen([]);setCreating(true);}}
+ onCreateCollection={()=>{setName("");setChosen([]);setCreating(true);}} createCollectionIcon={<Plus size={20} color={colors.text}/>}
  stateAction={kind==="error"||kind==="restricted"?<Button onPress={()=>setRecovered(true)}>{kind==="error"?"다시 불러오기":"예제 계정으로 이어가기"}</Button>:null}
  notice={removed!==null?<Notice announcement="polite" title="저장한 항목에서 삭제했습니다." action={<Button tone="secondary" size="small" onPress={restore}>실행 취소</Button>}/>:null}
  renderThumbnail={item=><PreviewPhoto index={item.photo} rounded={false} square label={item.title}/>}
- renderDetail={item=><Stack gap="md"><Stack axis="inline" align="center" justify="between"><Text emphasis="strong">{item.author}</Text><IconButton label={`${item.title} 저장 해제`} tone="ghost" onPress={()=>{setSaved(ids=>ids.filter(id=>id!==item.id));setRemoved(item.id);setSelectedItemId(null);}}><Bookmark size={20}/></IconButton></Stack><PreviewPhoto index={item.photo} square label={item.title}/><Text>{item.body}</Text></Stack>}/>
+ renderDetail={item=><Stack gap="md"><Stack axis="inline" align="center" justify="between"><Text emphasis="strong">{item.author}</Text><IconButton label={`${item.title} 저장 해제`} tone="ghost" onPress={()=>{setSaved(ids=>ids.filter(id=>id!==item.id));setRemoved(item.id);setSelectedItemId(null);}}><Bookmark size={20} color={colors.text}/></IconButton></Stack><PreviewPhoto index={item.photo} square label={item.title}/><Text>{item.body}</Text></Stack>}/>
  {/* Photo tiles wrap to content height; the sheet owns scroll and keyboard clearance once. */}
  <Sheet scrollable keyboardAvoidance open={creating} onOpenChange={setCreating} title="새 컬렉션" closeLabel="닫기" footer={<Button disabled={!name.trim()} onPress={create}>만들기</Button>}>
   <Stack gap="md"><TextField label="컬렉션 이름" placeholder="이름을 입력하세요" value={name} onValueChange={setName} maxLength={40}/><Text tone="muted">컬렉션에 담을 게시물을 선택하세요.</Text>

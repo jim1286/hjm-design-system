@@ -8,7 +8,7 @@ import { ListRow } from "@hjmds/react/display";
 import { ImageChoiceGroup } from "@hjmds/react/image-choice";
 import { Sheet } from "@hjmds/react/overlays";
 import { Notice } from "@hjmds/react/feedback";
-import { Bookmark, ArrowLeft, LockKeyhole } from "lucide-react";
+import { Bookmark, ArrowLeft, LockKeyhole, Plus } from "lucide-react";
 import { PreviewPhoto, ProfilePhoto } from "./reference-screen-parts";
 import { screenPatternRecipe, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
 
@@ -31,7 +31,7 @@ export function SavedItemsPreview({stateKind="ready"}: Options){
  {...(collectionId===undefined?{}:{collectionId})} selectedItemId={selectedItemId}
  labels={{allItems:"모든 게시물",privateNotice:"저장한 내용은 회원님만 볼 수 있습니다.",back:selectedItemId?"컬렉션으로":"저장됨으로",empty:"이 컬렉션에는 아직 게시물이 없어요.",createCollection:"새 컬렉션"}}
  onOpenCollection={setCollectionId} onOpenItem={setSelectedItemId} onBack={back}
- onCreateCollection={()=>{setName("");setChosen([]);setCreating(true);}}
+ onCreateCollection={()=>{setName("");setChosen([]);setCreating(true);}} createCollectionIcon={<Plus size={20}/>}
  stateAction={kind==="error"||kind==="restricted"?<Button onClick={()=>setRecovered(true)}>{kind==="error"?"다시 불러오기":"예제 계정으로 이어가기"}</Button>:null}
  notice={removed!==null?<Notice title="저장한 항목에서 삭제했습니다." action={<Button tone="secondary" size="small" onClick={restore}>실행 취소</Button>}/>:null}
  renderThumbnail={item=><PreviewPhoto index={item.photo} square label={item.title}/>}

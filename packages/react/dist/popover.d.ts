@@ -9,6 +9,12 @@ export type PopoverProps = PopoverOpenState & Readonly<{
     trigger: OverlayTrigger;
     title: string;
     closeLabel: string;
+    /**
+     * Product-supplied glyph for the header close. When present it renders an IconButton named by
+     * `closeLabel` (tool actions use icons, 2026-10-17 usage rule in docs/usage/components/icon-button.md);
+     * omitted keeps the text close for existing products.
+     */
+    closeIcon?: ReactNode;
     description?: string;
     descriptor?: PopoverDescriptor;
     children?: ReactNode | ((actions: PopoverContentActions) => ReactNode);

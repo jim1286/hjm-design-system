@@ -3,7 +3,7 @@ import { cloneElement, createContext, forwardRef, useCallback, useContext, useEf
 import { canDismissPopover, popoverBehaviorDefaults, popoverHoverDelay, popoverRecipe, resolvePopoverDescriptor, validatePopoverOpenState } from "@hjmds/design-contracts/components/popover";
 import { easing, layer } from "@hjmds/design-contracts/foundations";
 import { useOverlayOriginMotion } from "./internal/overlay-origin-motion.js";
-import { Button } from "./actions.js";
+import { Button, IconButton } from "./actions.js";
 import { classNames, composeRefs } from "./internal.js";
 import { AnchoredPortal, getPopoverOwner, useAnchoredPopup } from "./portal.js";
 import { useOptionalHjmTheme } from "./provider.js";
@@ -33,7 +33,7 @@ function contains(content, target) {
     }
     return false;
 }
-export const Popover = forwardRef(function Popover({ trigger, title, closeLabel, description, descriptor = {}, children, dismissPolicy, openOn = popoverBehaviorDefaults.openOn, initialFocusRef, portalContainer, className, motionOrigin, open: controlledOpen, defaultOpen, onOpenChange }, ref) {
+export const Popover = forwardRef(function Popover({ trigger, title, closeLabel, closeIcon, description, descriptor = {}, children, dismissPolicy, openOn = popoverBehaviorDefaults.openOn, initialFocusRef, portalContainer, className, motionOrigin, open: controlledOpen, defaultOpen, onOpenChange }, ref) {
     if (!title.trim() || !closeLabel.trim())
         throw new TypeError("Popover title and closeLabel must not be empty");
     const resolved = resolvePopoverDescriptor(descriptor);
@@ -228,6 +228,6 @@ export const Popover = forwardRef(function Popover({ trigger, title, closeLabel,
         boxShadow: theme?.designProfile ? "var(--hjm-shadow-floating)" : `0 ${popoverRecipe.surface.shadow.offsetY}px ${popoverRecipe.surface.shadow.radius}px ${popoverRecipe.surface.shadow.color}${Math.round(popoverRecipe.surface.shadow.opacity * 255).toString(16).padStart(2, "0")}`,
     };
     return _jsxs(_Fragment, { children: [renderedTrigger, open || present || motion.visible ? _jsx(AnchoredPortal, { anchorRef: triggerRef, ssrFallback: "inline", ...(portalContainer ? { container: portalContainer } : {}), children: _jsx(ParentPopoverOpen.Provider, { value: open, children: _jsxs("div", { ref: contentRef, id: id, role: "dialog", tabIndex: -1, "data-hjm-popover-content": "", "data-state": open ? "open" : "closed", "aria-hidden": !open || undefined, inert: !open || undefined, "aria-label": resolved.accessibilityLabel, "aria-labelledby": resolved.accessibilityLabel ? undefined : `${id}-title`, "aria-describedby": description ? `${id}-description` : undefined, className: classNames("hjm-popover", className), style: style, "data-placement": position.placement, "data-align": position.align, ...hoverHandlers, onAnimationEnd: (event) => { if (!open && event.target === event.currentTarget)
-                            setPresent(false); }, children: [_jsxs("div", { className: "hjm-popover__header", children: [_jsx("h2", { id: `${id}-title`, className: "hjm-popover__title", children: title }), _jsx(Button, { tone: "ghost", onClick: () => change(false, "close-action"), children: closeLabel })] }), description ? _jsx("p", { id: `${id}-description`, className: "hjm-popover__description", children: description }) : null, _jsx("div", { "data-hjm-popover-body": "", className: "hjm-popover__body", children: typeof children === "function" ? children({ close: () => change(false, "close-action") }) : children })] }) }) }) : null] });
+                            setPresent(false); }, children: [_jsxs("div", { className: "hjm-popover__header", children: [_jsx("h2", { id: `${id}-title`, className: "hjm-popover__title", children: title }), closeIcon === undefined ? _jsx(Button, { tone: "ghost", onClick: () => change(false, "close-action"), children: closeLabel }) : _jsx(IconButton, { label: closeLabel, tone: "ghost", onClick: () => change(false, "close-action"), children: closeIcon })] }), description ? _jsx("p", { id: `${id}-description`, className: "hjm-popover__description", children: description }) : null, _jsx("div", { "data-hjm-popover-body": "", className: "hjm-popover__body", children: typeof children === "function" ? children({ close: () => change(false, "close-action") }) : children })] }) }) }) : null] });
 });
 //# sourceMappingURL=popover.js.map

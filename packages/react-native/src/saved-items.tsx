@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { Pressable, View } from "react-native";
 import { ListDetailScreen, type ListDetailScreenProps } from "./screen-flows.js";
 import { Stack, Text, Grid } from "./primitives.js";
-import { Button } from "./actions.js";
+import { Button, IconButton } from "./actions.js";
 import { useHjmNativeTheme } from "./provider.js";
 import { spacing } from "@hjmds/design-contracts/foundations";
 
@@ -15,11 +15,13 @@ export type SavedItemsScreenProps<T extends SavedItem> = Omit<ListDetailScreenPr
   labels: SavedItemsLabels;
   onOpenCollection(id: string | null): void; onOpenItem(id: string): void;
   onBack(): void; onCreateCollection(): void;
+  /** Same contract as Web: present renders an IconButton named by `labels.createCollection` (2026-10-17 icon-button usage rule). */
+  createCollectionIcon?: ReactNode;
   renderThumbnail(item: T): ReactNode; renderDetail(item: T): ReactNode;
 };
 
 /** Same controlled collection contract as Web, composed with the native screen and grid hosts. */
-export function SavedItemsScreen<T extends SavedItem>({items,collections,collectionId,selectedItemId,labels,onOpenCollection,onOpenItem,onBack,onCreateCollection,renderThumbnail,renderDetail,...screen}:SavedItemsScreenProps<T>) {
+export function SavedItemsScreen<T extends SavedItem>({items,collections,collectionId,selectedItemId,labels,onOpenCollection,onOpenItem,onBack,onCreateCollection,createCollectionIcon,renderThumbnail,renderDetail,...screen}:SavedItemsScreenProps<T>) {
   const {colors,tokens}=useHjmNativeTheme();
   const {home,collection,visible,selected}=resolveSavedItems(items,collections,collectionId,selectedItemId);
   const groups=[{id:null,title:labels.allItems,itemIds:items.map(item=>item.id)},...collections];
@@ -30,7 +32,7 @@ export function SavedItemsScreen<T extends SavedItem>({items,collections,collect
   const covers=new Map(groups.map(group=>{const ids=new Set(group.itemIds);return [group.id,items.filter(item=>ids.has(item.id)).slice(0,4)] as const;}));
   return <ListDetailScreen {...screen} state={state} title={home?screen.title:collection?.title??labels.allItems}
     {...(home?(screen.exit?{exit:screen.exit}:{}):{exit:{kind:"back" as const,label:labels.back,onPress:onBack}})}
-    actions={home?<Button tone="ghost" onPress={onCreateCollection}>{labels.createCollection}</Button>:screen.actions}
+    actions={home?(createCollectionIcon===undefined?<Button tone="ghost" onPress={onCreateCollection}>{labels.createCollection}</Button>:<IconButton label={labels.createCollection} tone="ghost" onPress={onCreateCollection}>{createCollectionIcon}</IconButton>):screen.actions}
     back={{label:labels.back,onAction:onBack}}
     {...(selected?{detail:{title:selected.title,content:renderDetail(selected)}}:{})}
     list={<Stack gap="md">

@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-17
 - 근거: recipe `iconButtonRecipe`(`src/icon-button-recipe.ts`), NotificationBell 계약: [Compound controls](../../compound-controls.md#notificationbell)
 - 스토리북: `배포/컴포넌트/동작/아이콘 버튼` · `배포/컴포넌트/상태와 알림/알림 벨`
 
@@ -12,13 +12,22 @@
 
 보이는 글자 없이 아이콘만으로 표시하는 행동에 쓴다. 닫기, 뒤로, 더보기, 공유, 즐겨찾기 토글처럼
 모양이 널리 통하는 행동이다. 이름은 현지화한 `label`이 접근성 이름으로 읽힌다.
+
+**도구성 행동은 글자 버튼이 아니라 IconButton으로 표시한다.** 새로고침·추가(새 기록·새 컬렉션)·편집·삭제·공유·
+검색 열기·필터·정렬·더보기·설정·복사·내려받기, 도구 막대의 닫기가 여기에 해당한다. 화면 헤더 `actions`, 목록·카드 행 끝,
+도구 막대에 둔다. 예전에 보이던 글자는 `label`로 옮겨 보조기술 이름으로 읽힌다. 아이콘은 제품이 넘긴다(HJM `Icon`
+또는 제품 아이콘 라이브러리). HJM 화면·구성이 이런 행동을 직접 그리면 아이콘 슬롯을 쓴다 —
+`ScreenFlowAction.icon`(ListDetailScreen `refresh` 등), SavedItemsScreen `createCollectionIcon`, Popover `closeIcon`(Web).
+
+글자 버튼으로 남기는 것: 화면의 주 행동과 확인 행동(저장·완료·보내기·로그인), 상태 영역의 다시 시도,
+Dialog·Sheet footer 행동, 목록 끝 "더 보기", 온보딩 다음·이전, 선택 일괄 행동처럼 결과를 글자로 확인해야 하는 행동.
 미확인 알림 수가 붙은 알림 진입점은 `NotificationBell`을 쓴다.
 
 ## 쓰지 않을 때
 
 | 상황 | 대신 쓸 것 |
 | --- | --- |
-| 글자 라벨이 있는 행동 | [Button](button.md) |
+| 글자로 결과를 확인해야 하는 주 행동·확인 행동(저장·완료·보내기) | [Button](button.md) |
 | 다른 페이지·URL로 이동 | [Link](link.md) |
 | 화면 위에 떠 있는 주 행동 | [FloatingActionButton](floating-action-button.md) |
 | 여러 아이콘 중 하나를 고름 | [ToggleGroup](toggle-group.md), [SegmentedControl](segmented-control.md) |
@@ -102,6 +111,8 @@ TopBar
 ## 꼭 지킬 것
 
 - `label`은 모양이 아니라 행동을 말한다("돋보기"가 아니라 "검색"). Native는 빈 `label`·빈 children을 `TypeError`로 거부한다.
+- 도구성 행동(새로고침·추가·편집·삭제·공유·검색·필터·정렬·더보기·설정·복사)을 헤더·행·도구 막대에 글자 버튼으로 두지 않는다.
+  같은 행동이 여러 행에 있으면 `label`에 대상을 넣는다("할 일 A 삭제").
 - 안의 Icon은 장식으로 둔다. 이름은 버튼이 이미 읽는다.
 - 배치는 `layoutStyle`로만 한다. 지름·radius·배경을 `style`/`className`으로 덮지 않는다.
 - NotificationBell의 `label`에 미확인 수를 포함한 현지화 문구를 넣는다. 배지와 그림은 접근성에서 숨겨진다.
@@ -127,3 +138,8 @@ TopBar
 
 2026-10-10 사용자 요청: Button과 같은 선택 표현을 쓴다. 선택은 bg 바탕·contentBrand 아이콘으로
 표시하고 추가 선택 테두리는 없다. aria-pressed/Native selected와 키보드 focus outline은 유지한다.
+
+## 근거
+
+- 도구성 행동은 IconButton: 2026-10-17 사용자 지시 — '나의 기록' 헤더의 새로고침·새 기록 글자 버튼.
+- 선택 표현: 2026-10-10 사용자 요청 — Button과 같은 선택 표현을 쓴다.

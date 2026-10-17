@@ -19,7 +19,7 @@
 
 | 상황 | 대신 쓸 것 |
 | --- | --- |
-| 아이콘만 있는 행동 | [IconButton](icon-button.md) |
+| 아이콘만 있는 행동, 도구성 행동(새로고침·추가·편집·삭제·공유·검색·필터·더보기) | [IconButton](icon-button.md) — 글자는 `label`로 |
 | 화면 하단에 고정된 주 행동 | [BottomCTA](bottom-cta.md) |
 | 다른 페이지·URL로 이동 | [Link](link.md) (`tone="link"` 버튼은 같은 화면 안의 행동용) |
 | 여러 선택지 중 하나를 고름 | [SegmentedControl](segmented-control.md), [RadioGroup](radio-group.md), [ToggleGroup](toggle-group.md), `Chip`(`selectionMode="single"`) |

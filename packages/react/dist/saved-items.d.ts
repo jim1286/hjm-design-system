@@ -18,6 +18,12 @@ export type SavedItemsScreenProps<T extends SavedItem> = Omit<ListDetailScreenPr
      */
     onBack(): void;
     onCreateCollection(): void;
+    /**
+     * Product-supplied glyph for the create-collection header action. When present the action renders
+     * as an IconButton named by `labels.createCollection` (tool actions use icons, 2026-10-17 usage rule
+     * in docs/usage/components/icon-button.md); omitted keeps the text button for existing products.
+     */
+    createCollectionIcon?: ReactNode;
     renderThumbnail(item: T): ReactNode;
     renderDetail(item: T): ReactNode;
 };
@@ -29,5 +35,5 @@ export type SavedItemsScreenProps<T extends SavedItem> = Omit<ListDetailScreenPr
  * product's `actions`. A product `actions` passed for the home is therefore not rendered there —
  * Native ships the same rule, so changing it is a cross-platform API decision, not a Web fix.
  */
-export declare function SavedItemsScreen<T extends SavedItem>({ items, collections, collectionId, selectedItemId, labels, onOpenCollection, onOpenItem, onBack, onCreateCollection, renderThumbnail, renderDetail, ...screen }: SavedItemsScreenProps<T>): import("react").JSX.Element;
+export declare function SavedItemsScreen<T extends SavedItem>({ items, collections, collectionId, selectedItemId, labels, onOpenCollection, onOpenItem, onBack, onCreateCollection, createCollectionIcon, renderThumbnail, renderDetail, ...screen }: SavedItemsScreenProps<T>): import("react").JSX.Element;
 //# sourceMappingURL=saved-items.d.ts.map

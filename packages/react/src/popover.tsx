@@ -3,7 +3,7 @@ import { canDismissPopover, popoverBehaviorDefaults, popoverHoverDelay, popoverR
 import { easing, layer } from "@hjmds/design-contracts/foundations";
 import type { TransitionRect } from "@hjmds/design-contracts/content-transition";
 import { useOverlayOriginMotion } from "./internal/overlay-origin-motion.js";
-import { Button } from "./actions.js";
+import { Button, IconButton } from "./actions.js";
 import { classNames, composeRefs } from "./internal.js";
 import { AnchoredPortal, getPopoverOwner, useAnchoredPopup } from "./portal.js";
 import { useOptionalHjmTheme } from "./provider.js";
@@ -15,6 +15,12 @@ export type PopoverProps = PopoverOpenState & Readonly<{
   trigger: OverlayTrigger;
   title: string;
   closeLabel: string;
+  /**
+   * Product-supplied glyph for the header close. When present it renders an IconButton named by
+   * `closeLabel` (tool actions use icons, 2026-10-17 usage rule in docs/usage/components/icon-button.md);
+   * omitted keeps the text close for existing products.
+   */
+  closeIcon?: ReactNode;
   description?: string;
   descriptor?: PopoverDescriptor;
   children?: ReactNode | ((actions: PopoverContentActions) => ReactNode);
@@ -54,7 +60,7 @@ function contains(content: HTMLElement, target: Node): boolean {
   return false;
 }
 
-export const Popover = forwardRef<HTMLDivElement, PopoverProps>(function Popover({ trigger, title, closeLabel,
+export const Popover = forwardRef<HTMLDivElement, PopoverProps>(function Popover({ trigger, title, closeLabel, closeIcon,
   description, descriptor = {}, children, dismissPolicy, openOn = popoverBehaviorDefaults.openOn, initialFocusRef, portalContainer, className, motionOrigin,
   open: controlledOpen, defaultOpen, onOpenChange }, ref) {
   if (!title.trim() || !closeLabel.trim()) throw new TypeError("Popover title and closeLabel must not be empty");
@@ -213,7 +219,7 @@ export const Popover = forwardRef<HTMLDivElement, PopoverProps>(function Popover
       aria-hidden={!open || undefined} inert={!open || undefined} aria-label={resolved.accessibilityLabel} aria-labelledby={resolved.accessibilityLabel ? undefined : `${id}-title`} aria-describedby={description ? `${id}-description` : undefined}
       className={classNames("hjm-popover", className)} style={style} data-placement={position.placement} data-align={position.align} {...hoverHandlers}
       onAnimationEnd={(event) => { if (!open && event.target === event.currentTarget) setPresent(false); }}>
-      <div className="hjm-popover__header"><h2 id={`${id}-title`} className="hjm-popover__title">{title}</h2><Button tone="ghost" onClick={() => change(false, "close-action")}>{closeLabel}</Button></div>
+      <div className="hjm-popover__header"><h2 id={`${id}-title`} className="hjm-popover__title">{title}</h2>{closeIcon === undefined ? <Button tone="ghost" onClick={() => change(false, "close-action")}>{closeLabel}</Button> : <IconButton label={closeLabel} tone="ghost" onClick={() => change(false, "close-action")}>{closeIcon}</IconButton>}</div>
       {description ? <p id={`${id}-description`} className="hjm-popover__description">{description}</p> : null}
       <div data-hjm-popover-body="" className="hjm-popover__body">{typeof children === "function" ? children({ close: () => change(false, "close-action") }) : children}</div>
     </div></ParentPopoverOpen.Provider>
