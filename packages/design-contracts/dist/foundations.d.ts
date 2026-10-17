@@ -23,7 +23,7 @@ export declare const radius: {
  */
 export declare const fontFamily: {
     readonly ui: readonly ["Pretendard Variable", "Pretendard", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"];
-    readonly code: readonly ["ui-monospace", "SFMono-Regular", "Consolas", "Liberation Mono", "monospace"];
+    readonly code: readonly ["ui-monospace", "SFMono-Regular", "SF Mono", "Menlo", "Monaco", "Cascadia Mono", "Consolas", "Liberation Mono", "monospace"];
 };
 export type FontFamily = keyof typeof fontFamily;
 /**

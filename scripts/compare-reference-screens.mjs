@@ -82,7 +82,8 @@ const nativeSources = await Promise.all((await fs.readdir(path.join(root, 'showc
   .map(f => fs.readFile(path.join(root, 'showcase/native/src', f), 'utf8')));
 
 function nativeIdFor(entry) {
-  const source = nativeSources.find(s => s.includes(`title: "${entry.title}"`));
+  // Story files write the title with or without a space after the colon.
+  const source = nativeSources.find(s => s.includes(`title: "${entry.title}"`) || s.includes(`title:"${entry.title}"`));
   if (!source) return {error: `no native story file with title "${entry.title}"`};
   if (!new RegExp(`export const ${entry.exportName}\\b`).test(source)) return {error: `native file lacks export ${entry.exportName}`};
   return {id: toId(entry.title, storyNameFromExport(entry.exportName))};
@@ -151,7 +152,7 @@ for (const webId of selected) {
     await desktop.goto(`${webOrigin}/iframe.html?id=${encodeURIComponent(webId)}&viewMode=story`, {waitUntil: 'networkidle'});
     await desktop.locator('#storybook-root > *, body.sb-show-errordisplay').first().waitFor({state: 'attached'});
     await desktop.evaluate(() => document.fonts.ready);
-    await desktop.screenshot({path: desktopFile});
+    await desktop.screenshot({path: desktopFile, fullPage: true});
     result.webDesktop = 'captured';
   } catch (error) {
     result.webDesktop = 'failed';

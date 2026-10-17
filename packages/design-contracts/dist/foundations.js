@@ -33,9 +33,15 @@ export const fontFamily = {
         "Segoe UI",
         "sans-serif",
     ],
+    // Chrome ignores ui-monospace and cannot address SF Mono as "SFMono-Regular", so name the macOS/
+    // Windows monospace faces before the generic fallback (2026-10-17: Chrome rendered code in Courier).
     code: [
         "ui-monospace",
         "SFMono-Regular",
+        "SF Mono",
+        "Menlo",
+        "Monaco",
+        "Cascadia Mono",
         "Consolas",
         "Liberation Mono",
         "monospace",

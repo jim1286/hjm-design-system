@@ -46,7 +46,7 @@ variant만 지정해도 위 굵기가 자동 적용되는 것은 아니다. 프�
 | 토큰 | 값 | Web CSS 변수 | Native 경로 | 용도 |
 | --- | --- | --- | --- | --- |
 | `fontFamily.ui` | Pretendard Variable, Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif | `--hjm-font-family-ui` | `fontFamily.ui` | 화면 글자. Native는 `fonts="pretendard"`일 때 굵기별 Pretendard face, 그 전에는 OS 서체. 불러오기는 [글꼴 역할](font-roles.md#기본-서체-pretendard-불러오기필수) |
-| `fontFamily.code` | ui-monospace, SFMono-Regular, Consolas, Liberation Mono, monospace | — (`--hjm-font-family-code` fallback) | `fontFamily.code` | 코드 |
+| `fontFamily.code` | ui-monospace, SFMono-Regular, SF Mono, Menlo, Monaco, Cascadia Mono, Consolas, Liberation Mono, monospace | — (`--hjm-font-family-code` fallback) | `fontFamily.code` | 코드 |
 | `fontWeight.regular` · `medium` · `semibold` · `bold` · `heavy` | 400 · 500 · 600 · 700 · 800 | `--hjm-font-weight-<이름>` | `fontWeight.<이름>` | Text `emphasis`: `regular` 400 · `medium` 600 · `strong` 700 |
 | `letterSpacing.tight` · `normal` · `wide` | -0.2 · 0 · 0.2 | — | `letterSpacing.<이름>` | 자간 조정이 필요한 제품 고유 글자. HJM 컴포넌트는 자간을 지정하지 않는다 |
 | `numeric.tabular` · `proportional` | `tabular-nums` · `proportional-nums` | — | `numeric.<이름>` | 바뀌는 숫자(카운터·통계·날짜 칸)는 `tabular`로 폭을 고정 |

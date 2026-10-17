@@ -1,63 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-
-import { ACCENTS, THEMES, accentFill, brandGradient } from "@hjmds/design-contracts";
-
-function Swatch({ color, label, value }: { color: string; label: string; value: string }) {
-  return (
-    <article className="hjm-showcase-card">
-      <div
-        aria-hidden="true"
-        className="hjm-color-swatch"
-        style={{
-          background: color,
-        }}
-      />
-      <strong>{label}</strong>
-      <p className="hjm-muted">{value}</p>
-    </article>
-  );
-}
-
-function Colors() {
-  return (
-    <main className="hjm-page">
-      <p className="hjm-eyebrow">Foundations</p>
-      <h1 className="hjm-title">Semantic color</h1>
-      <p className="hjm-lead">
-        제품은 palette 이름 대신 의미를 선택합니다. 두 테마는 정확히 같은 키를 제공합니다.
-      </p>
-      {Object.entries(THEMES).map(([theme, colors]) => (
-        <section className="hjm-showcase-section" key={theme} aria-labelledby={`${theme}-title`}>
-          <h2 className="hjm-section-title" id={`${theme}-title`}>{theme}</h2>
-          <div className="hjm-showcase-grid">
-            {Object.entries(colors).map(([name, value]) => (
-              <Swatch color={value} key={name} label={name} value={value} />
-            ))}
-          </div>
-        </section>
-      ))}
-      <section className="hjm-showcase-section" aria-labelledby="accent-title">
-        <h2 className="hjm-section-title" id="accent-title">Status accents</h2>
-        <div className="hjm-showcase-grid">
-          {Object.entries(ACCENTS.light).map(([name, value]) => (
-            <Swatch color={value} key={name} label={name} value={`${value} · fill ${accentFill[name as keyof typeof accentFill]}`} />
-          ))}
-          <Swatch
-            color={`linear-gradient(135deg, ${brandGradient.from}, ${brandGradient.to})`}
-            label="HJM organization gradient"
-            value={`${brandGradient.from} → ${brandGradient.to} · not a product default`}
-          />
-        </div>
-      </section>
-    </main>
-  );
-}
+import { ColorTokens } from "./token-reference-previews";
 
 const meta = { includeStories: ["Default","Dark","LargeText"],
   id: "foundations-colors", title: "배포/토큰/색과 글자/색상",
-  component: Colors,
+  component: ColorTokens,
   parameters: { controls: { disable: true } },
-} satisfies Meta<typeof Colors>;
+} satisfies Meta<typeof ColorTokens>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
