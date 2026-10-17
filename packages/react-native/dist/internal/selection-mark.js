@@ -19,7 +19,8 @@ export function SelectionMark({ kind = "checkbox", checked, size = "medium", inv
     const artwork = children != null ? children : kind === "radio"
         ? checked === true ? _jsx(View, { style: { backgroundColor: ink, borderRadius: theme.tokens.radius.full, height: control * selectionControlRecipe.radioDotRatio, width: control * selectionControlRecipe.radioDotRatio } }) : null
         : checked === "mixed" ? _jsx(View, { style: { width: 10, height: 2, backgroundColor: ink } })
-            : checked ? _jsx(View, { style: { width: 8, height: 4, borderLeftWidth: 2, borderBottomWidth: 2, borderColor: ink, transform: [{ translateY: -1 }, { rotate: theme.environment.direction === "rtl" ? "45deg" : "-45deg" }] } })
+            // RTL mirrors the whole check (rotation and the drawn side together); flipping only the rotation drew a broken mark.
+            : checked ? _jsx(View, { style: { width: 8, height: 4, borderBottomWidth: 2, ...(theme.environment.direction === "rtl" ? { borderRightWidth: 2 } : { borderLeftWidth: 2 }), borderColor: ink, transform: [{ translateY: -1 }, { rotate: theme.environment.direction === "rtl" ? "45deg" : "-45deg" }] } })
                 : null;
     return _jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", style: {
             alignItems: "center",
