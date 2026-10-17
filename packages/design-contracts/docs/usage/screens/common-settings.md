@@ -67,13 +67,11 @@ host: 남은 높이·safe area·키보드
 아래 preview의 메모리 상태를 서버 저장으로 취급하지 않는다. 예제는 읽기용이며 제품에서 showcase를 import하지 않는다.
 
 <!-- usage-example: Web ../../../../../showcase/web/src/patterns/settings-page-preview.tsx -->
-- [Web 실행 예제](../../../../../showcase/web/src/patterns/settings-page-preview.tsx): 공개 SettingsScreen·행·Sheet 조합과 로컬 설정 상태.
+- [Web 실행 예제](https://github.com/jim1286/hjm-design-system/blob/9fccb921216a06bac2568ca8252bd0b4d7c48d95/showcase/web/src/patterns/settings-page-preview.tsx): 공개 SettingsScreen·행·Sheet 조합과 로컬 설정 상태.
 <!-- usage-example: Native ../../../../../showcase/native/src/settings-page-preview.tsx -->
-- [Native 실행 예제](../../../../../showcase/native/src/settings-page-preview.tsx): 같은 흐름의 Native 공개 API와 이벤트 연결.
+- [Native 실행 예제](https://github.com/jim1286/hjm-design-system/blob/9fccb921216a06bac2568ca8252bd0b4d7c48d95/showcase/native/src/settings-page-preview.tsx): 같은 흐름의 Native 공개 API와 이벤트 연결.
 
-설치 패키지에서 소스 링크를 열 수 없다면 [Web 원본](https://github.com/jim1286/hjm-design-system/blob/v1.17.1/showcase/web/src/patterns/settings-page-preview.tsx)과
-[Native 원본](https://github.com/jim1286/hjm-design-system/blob/v1.17.1/showcase/native/src/settings-page-preview.tsx)을 참고한다.
-고정 버전 예제와 현재 checkout의 후속 변경은 구분하며 설치된 타입을 기준으로 사용한다.
+고정 SHA의 예제는 설치 패키지에서도 열 수 있다. 해당 예제와 현재 checkout의 후속 변경을 구분하고 설치된 공개 타입을 기준으로 사용한다.
 
 ## 큰 글자·다크·좁은 폭
 

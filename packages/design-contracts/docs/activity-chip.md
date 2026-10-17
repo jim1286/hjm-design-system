@@ -1,13 +1,14 @@
 # Activity chip
 
-검토일: 2026-10-10 · 공개 진입점: 미게시(1.17.2 이후)
+검토일: 2026-10-17 · 제공 확인: 1.26.1(설치된 Web·Native 공개 타입 기준, 최초 출시 버전 아님)
 
 2026-10-10 사용자 요청("칩이랑 패널 디자인시스템에 넣고 구성에 칩 누르면 나오게 하자 … 칩은 있으면 다른 이름으로
 새로 만들고")으로 BurnTok 검수 상태 칩을 공통화했다. 기존 `Chip`은 행동/선택 칩이라 `radio`·`checkbox` 또는 단순
 button 의미를 가진다. 이 칩은 **상세 패널을 여닫는 공개(disclosure) 트리거**라 `aria-expanded`/`expanded` 상태가 필요하고,
 작은 장식 미디어와 한 줄 상태 문구를 가진다. Chip에 축을 더하면 선택 의미와 펼침 의미가 한 API에 섞이므로
-`ActivityChip`으로 분리했다. canonical catalog는 동결(`catalog-freeze.json`) 중이라 행을 추가하지 않고 공개 API 대응표에서
-supplemental로 분류한다.
+`ActivityChip`으로 분리했다. 공개 API 대응표에서는 supplemental로 분류하며, 이 분류는
+Chip의 안정성을 상속하거나 독립적인 stable 승격을 뜻하지 않는다. 현재 지원은 Web·Native이고
+기기 검증 제한은 아래 검증 범위를 따른다. 카탈로그 등록은 [공통 기준](stable-promotion.md#카탈로그-등록과-공개-api-분류)을 따른다.
 
 계약과 두 renderer의 granular subpath는 `/activity-chip`이다(contracts는 root에서도 재노출). 추가 peer는 없다.
 

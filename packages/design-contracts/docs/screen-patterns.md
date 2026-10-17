@@ -1,6 +1,6 @@
 # 반복 화면 조합
 
-검토일: 2026-10-15 · 상태: Storybook 배포(2026-10-06 사용자 승인) · 패키지 적용 범위는 개별 API 사용 지침 참조
+검토일: 2026-10-17 · 상태: Storybook 배포(2026-10-06 사용자 승인) · 패키지 적용 범위는 개별 API 사용 지침 참조
 
 사용자가 로그인·설정·알림·채팅 화면을 미리 일반화해 개발 생산성을 높이도록 요청했다.
 기존 AuthScreenLayout, Section, ListRow, TopBar, Layout, EmptyState, action-session,
@@ -400,7 +400,10 @@ CommentThreadScreen의 optional threadHeader는 첫 댓글 앞의 스크롤 콘�
 [댓글 화면](usage/components/comment-thread-screen.md#배치)을 따른다.
 
 
-### 화면별 독립 복구와 첫 행동 (미게시, 1.18.0 이후)
+### 화면별 독립 복구와 첫 행동
+
+API별 제공 기준과 개발 중 추가분은 [사용 지침](usage/README.md)과 설치된 공개 타입에서 확인한다.
+이 절의 설계 시점을 현재 미게시 상태로 해석하지 않는다.
 
 2026-10-13 계층 점검에서 빈 채팅의 첫 입력이 사라지고 상세 조회 실패를 제품이 다시 조립해야 하는
 누락을 확인했다. 기존 화면 API를 다음과 같이 보강한다.

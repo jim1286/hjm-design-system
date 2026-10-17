@@ -31,7 +31,7 @@ host: 남은 높이·safe area·키보드
 
 | 행동 | 컴포넌트·tone | 위치 | 개수·순서 |
 | --- | --- | --- | --- |
-| 작업 | ListDetailScreen 공개 행동 슬롯 | 새로고침은 actions, 상세 뒤로는 leading | 같은 표면에 경쟁하는 primary 하나만 |
+| 작업 | ListDetailScreen 공개 행동 슬롯 | 새로고침은 actions, 상세 뒤로는 `back` 콜백을 받아 헤더 `exit`로 표시 | 같은 표면에 경쟁하는 primary 하나만 |
 | 복구 | Button·secondary | 오류 근처 | 재시도할 대상과 범위를 표시 |
 
 ## 상태
@@ -45,7 +45,7 @@ host: 남은 높이·safe area·키보드
 
 ### 목록과 상세의 독립 상태
 
-`state`는 목록에, `detail.state`는 상세에만 적용한다. 새 상세 prop은 미게시(1.18.0 이후)이며
+`state`는 목록에, `detail.state`는 상세에만 적용한다. 상세 복구 prop은 Web·Native 1.26.1 설치 타입에서 확인했으며
 기존 `detail: { title, content }` 사용법은 그대로 유지한다. 목록 입력·스크롤을 보존한 채
 상세의 최초 조회·오류·재시도를 중앙 상태로 표현하려고 추가했다.
 
@@ -102,9 +102,9 @@ import { ListDetailScreen } from "@hjmds/react-native/screen-flows";
 `detailRetry`는 해당 id만 다시 조회하는 Button, `detailNotice`는 기존 상세를 유지하는 Notice다.
 
 <!-- usage-example: Web ../../../../../showcase/web/src/patterns/list-detail-recovery-preview.tsx -->
-- [Web 상세 복구 실행 예제](../../../../../showcase/web/src/patterns/list-detail-recovery-preview.tsx)
+- [Web 상세 복구 실행 예제](https://github.com/jim1286/hjm-design-system/blob/9fccb921216a06bac2568ca8252bd0b4d7c48d95/showcase/web/src/patterns/list-detail-recovery-preview.tsx)
 <!-- usage-example: Native ../../../../../showcase/native/src/list-detail-recovery-preview.tsx -->
-- [Native 상세 복구 실행 예제](../../../../../showcase/native/src/list-detail-recovery-preview.tsx)
+- [Native 상세 복구 실행 예제](https://github.com/jim1286/hjm-design-system/blob/9fccb921216a06bac2568ca8252bd0b4d7c48d95/showcase/native/src/list-detail-recovery-preview.tsx)
 
 스토리 `상세 조회 실패와 복구`: 목록 메모 입력 → 다음 상세 조회 실패시키기 → 항목 열기 →
 상세만 다시 불러오기 → 목록으로 복귀해 메모 유지 확인. 예제의 지연·서버 응답은 메모리 모의다.

@@ -2,8 +2,8 @@
 
 상태: **Normative**
 정책 버전: **2.0.0**
-검토일: 2026-10-13 · 현재 소비 계약과 변경 범위 검증
-적용 대상: 신규 HJM Web·React Native 앱과 기존 앱의 새 화면
+검토일: 2026-10-17 · 현재 소비 계약과 변경 범위 검증
+적용 대상: 신규 HJM Web·React Native 앱과 기존 앱의 새 화면. 기존 Flutter 제품의 별도 renderer 소비는 §1의 Flutter 경계를 따른다.
 
 이 원문은 `@hjmds/design-contracts/consumer-policy.md`에서 제공한다. 소비 앱은 설치한
 패키지 버전의 정책과 HJM-APP-STANDARD release snapshot을 함께 확인한다. 이 checkout의
@@ -20,16 +20,22 @@
 
 ## 1. 의존성과 버전
 
-- 앱은 `@hjmds/design-contracts`와 한 renderer(`@hjmds/react` 또는
+- Web·React Native 앱은 `@hjmds/design-contracts`와 한 renderer(`@hjmds/react` 또는
   `@hjmds/react-native`)를 npm registry에서 설치해야 합니다(MUST).
 - contracts와 renderer는 같은 정확한 SemVer여야 합니다(MUST). `^`, `~`, workspace·file,
-  Git ref와 tarball dependency는 허용하지 않습니다(MUST NOT).
+  Git ref와 tarball dependency는 이 npm 소비 경로에서 허용하지 않습니다(MUST NOT).
 - 앱 runtime은 granular subpath를 우선하고 catalog·showcase·evidence entry는 CI나
   tooling에서만 사용해야 합니다(SHOULD).
 
 저장소의 `module.contract.json` 소비 목록은 호환성 검토 대상을 기록하며 설치·배포 완료를
 뜻하지 않는다. 2026-10-13 실제 package 의존성을 대조해 누락된 Utilverse와 App Release Hub를
 추가했다. Hub는 정책 사이트 생성에 colors/foundations만 사용하므로 renderer 이관과 구분한다.
+
+기존 Flutter 제품은 별도 `hjm_flutter` beta renderer를 사용한다. npm fixed train에 포함되지
+않으며, 검토한 Git SHA와 `packages/flutter` 경로를 pubspec/lock에 고정한다. 공개 API와 지원
+범위는 [고정 source의 Flutter README](https://github.com/jim1286/hjm-design-system/blob/dfe74c171809dd43e43aa08f127de20932cb8257/packages/flutter/README.md), 버전·SDK는 해당 pubspec이 소유한다.
+2026-10-17 선택의창의 실제 Dart 소비를 대조해 module 계약에 Flutter 인터페이스와 소비자를
+추가했다. pub.dev 게시나 npm renderer의 전체 API parity, 기기 검증 완료를 뜻하지 않는다.
 
 ## 2. 성숙도별 채택
 
@@ -54,8 +60,9 @@
 [Stable Core 기록](stable-core.md)에 보존한다. 현재 규칙에 이전 버전의 개수나 임시 foundation
 bridge를 복제하지 않는다. 구버전 소비자는 설치된 정책·profile과 해당 이관표를 확인한다.
 
-화면은 [선택 기준](usage/SELECTION.md)에 따라 그대로 사용, 공개 슬롯 확장, 제품 전용 구성 중 고른다.
-이름이 같다는 이유로 저장·스크롤·권한 흐름이 다른 화면에 공통 API를 강제하지 않는다.
+화면은 [선택 기준](usage/SELECTION.md)에 따라 그대로 사용, 공개 슬롯 확장, 공통 API 보완, 제품 고유 기능 연결 중 고른다.
+제품의 저장·권한 흐름은 제품이 연결하되, 공통 배치·상태 엔진이 부족하면 HJM API를 보완한다.
+`children`·header·footer 슬롯이 있다는 이유로 공통 구조를 제품에서 다시 만들지 않는다.
 
 ## 3. 코드 경계
 

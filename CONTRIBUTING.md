@@ -1,6 +1,6 @@
 # Contributing to HJM Design System
 
-검토일: 2026-10-13
+검토일: 2026-10-17
 
 HJM은 계약, Web renderer, React Native renderer, Showcase evidence를 같은 변경에서
 함께 관리합니다. 새 API는 한 플랫폼의 편의보다 공통 사용자 문제와 검증 가능한 의미를
@@ -14,8 +14,8 @@ Node.js 20 이상과 저장소에 선언된 pnpm 버전을 사용합니다.
 pnpm install
 # 변경 파일의 타입·관련 동작 검사를 직접 선택한다.
 # 넓은 개발 진단이 필요할 때만 pnpm dev:check --base origin/main
-# npm 게시 전 실제 패키지 검사
-pnpm release:check
+# 게시 준비는 아래 변경 검증과 릴리스 계약의 범위를 따른다.
+# 전체 패키지 진단을 명시적으로 선택한 경우에만 pnpm release:check
 # 전체 문서·Showcase 회귀는 명시적으로 선택할 때만 pnpm ci:check
 ```
 
@@ -118,8 +118,10 @@ HJM이 제공한다. 제품은 데이터·문구·브랜드·권한·서버 요�
 ## 변경 검증
 
 개발 중에는 변경 파일·직접 소비 모듈의 타입과 관련 동작만 검사한다. `dev:check`와
-`ci:check`는 선택적 진단이며 커밋의 고정 선행 명령이 아니다. npm 게시 전에는
-`release:check`로 실제 패키지를 검사한다. 공개 계약 변경은 관련 생성물의 diff도 확인한다.
+`ci:check`는 선택적 진단이며 커밋의 고정 선행 명령이 아니다. 게시 전에도 변경 관련 검사와
+실제 게시물의 확인을 구분한다. 검사 대상과 성공 결과 재사용은
+[릴리스 계약](docs/RELEASE_GOVERNANCE.md#릴리스-차단-조건-최소화)을 따른다.
+`release:check`는 전체 패키지 진단을 명시적으로 선택할 때만 실행한다. 공개 계약 변경은 관련 생성물의 diff도 확인한다.
 
 사용 예제는 [사용 지침 규격](packages/design-contracts/docs/usage/STANDARD.md)의 원본 참조 방식을 따른다.
 문서 형식 검사와 TSX 예제 타입 검사는 별개의 결과다.
@@ -144,4 +146,5 @@ Foundation/Foundations와 단일 컴포넌트의 Patterns 등록이 혼재했다
 Web은 CSF `id`를 유지해 저장된 링크를 보존한다. Native 10.4.4는 명시적 meta ID를
 무시하는 runtime index 때문에 새 제목 기반 ID를 사용하며 변경 경로를 문서화한다.
 
-2026-10-12 릴리스 간소화: npm 게시에는 package build/typecheck/행동 테스트/bundle/artifact 검사를 적용한다. 문서·Storybook 규약과 Showcase 전수 검사는 게시 차단 조건에서 제외한다. 릴리스 커밋에 문서나 수정 파일을 함께 포함할 수 있으며 Changeset 소비 형태는 차단 조건이 아니다.
+2026-10-17 지침 감사: 10/14 최소화 지시 이후에도 10/12의 전체 `release:check` 의무가 남아 있었다.
+게시 준비 역시 변경 범위와 실제 artifact에 필요한 확인을 선택한다. 문서·Storybook 규약과 Showcase 전수 검사는 게시 차단 조건에서 제외한다. 릴리스 커밋에 문서나 수정 파일을 함께 포함할 수 있으며 Changeset 소비 형태는 차단 조건이 아니다.

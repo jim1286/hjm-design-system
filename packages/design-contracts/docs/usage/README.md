@@ -4,7 +4,7 @@
 
 단계는 Storybook과 같은 `토큰 → 컴포넌트 → 구성 → 화면`이다. 화면을 만들 때는 화면 지침의 영역 구조와
 버튼 위치에서 시작해 구성·컴포넌트 지침으로 내려가고, 값은 토큰 지침에서 고른다.
-[선택 기준](SELECTION.md)으로 그대로 사용·공개 슬롯 확장·제품 전용 구성을 고른다. 설치 버전의 지침을 본다: `node_modules/@hjmds/design-contracts/docs/usage/`.
+[선택 기준](SELECTION.md)으로 그대로 사용·공개 슬롯 확장·공통 API 보완·제품 고유 기능 연결을 고른다. 설치 버전의 지침을 본다: `node_modules/@hjmds/design-contracts/docs/usage/`.
 제공 기준은 확인한 기본 API 버전이며 최초 출시 버전이 아니다. 구성·화면은 각 API 지침의 제공 버전을 확인한다.
 API 안정성은 1.26.1의 생성 manifest에서 읽은 정규(canonical) API 기준이다. 동반·선택형 확장은 개별 계약을 확인한다.
 Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품 반영을 의미하지 않는다.
@@ -34,7 +34,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | --- | --- | --- | --- | --- | --- | --- |
 | [Accordion](components/accordion.md) | 데이터 표시 | 서로 관계가 있는 여러 접힘 항목을 한 그룹으로 보일 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [AccountSwitcher](components/account-switcher.md) | 구성/탐색과 이동 | 확인된 현재 계정을 보여 주고 메뉴에서 다른 계정을 골라 실제 세션 전환을 요청할 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
-| [ActivityChip](components/activity-chip.md) | 상태와 알림 | 백그라운드에서 돌고 있는 작업 하나(검수·업로드·동기화)의 상태를 헤더의 빈 자리에 짧게 보여 주고, 누르면 그 작업의 진행 패널(Toast 패널)을 여닫을 때 쓴다. | 미게시(1.17.2 이후) | Web · Native | 개별 API 계약 참조 | 배포 |
+| [ActivityChip](components/activity-chip.md) | 상태와 알림 | 백그라운드에서 돌고 있는 작업 하나(검수·업로드·동기화)의 상태를 헤더의 빈 자리에 짧게 보여 주고, 누르면 그 작업의 진행 패널(Toast 패널)을 여닫을 때 쓴다. | 1.26.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [ActivityHeatmap](components/activity-heatmap.md) | 데이터 표시 | 최대 1년(366일) 범위의 일별 활동량을 한눈에 보여 주는 읽기 전용 개요에 쓴다. | 1.12.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Affix](components/affix.md) | 기반 기능 | Web에서 스크롤하는 동안 요약·필터·저장 버튼 같은 작은 영역을 가장 가까운 스크롤 조상의 상단에 붙여 두고, 부모가 끝나면 함께 풀리게 할 때 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |
 | [Agreement](components/agreement.md) | 입력 | 가입·결제·서비스 시작 앞의 약관 동의 묶음에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |

@@ -10,7 +10,10 @@ const inside = (root, file) => file === root || file.startsWith(root + path.sep)
 function usesLocalSource(env) {
   // Development uses the shared checkout by default (2026-10-12 user decision).
   // Release/CI always resolve installed packages, even with an inherited opt-in.
-  if (env.NODE_ENV === 'production' || (env.CI && env.CI !== 'false') || env.EAS_BUILD === 'true') return false;
+  // The phone development launcher uses CI=0; treating that string as truthy
+  // silently selected published packages and left obsolete dist watchers running.
+  const isCI = Boolean(env.CI && env.CI !== 'false' && env.CI !== '0');
+  if (env.NODE_ENV === 'production' || isCI || env.EAS_BUILD === 'true') return false;
   if (env.HJM_DESIGN_SYSTEM_LOCAL === '1') throw new Error('Use HJM_LOCAL_SOURCE=1 instead of legacy package links');
   return env.HJM_LOCAL_SOURCE !== '0';
 }

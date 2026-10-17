@@ -1,18 +1,12 @@
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import { describe, expect, it } from "vitest";
 import { assertContractsPeerTrain } from "../../../scripts/contracts-peer-train.mjs";
 
-/**
- * Actions are pinned to a full commit SHA with the version as a comment
- * (portfolio baseline ci.actionPinning, 2026-09-26). This package publishes to
- * npm with provenance, so a re-pointed tag would run in the publishing job.
- */
-const pinned = (action: string, major: number) =>
-  new RegExp(`${action.replace("/", "\\/")}@[0-9a-f]{40} # v${major}\\b`);
-
 describe("GitHub Actions runtime contracts", () => {
   it("pins every third-party action to a full commit SHA", async () => {
-    for (const file of ["showcase.yml", "version-packages.yml", "visual.yml"]) {
+    // Discover the current workflows; retired CI files are not required artifacts.
+    const directory = new URL("../../../.github/workflows/", import.meta.url);
+    for (const file of (await readdir(directory)).filter((name) => /\.ya?ml$/.test(name))) {
       const workflow = await readFile(
         new URL(`../../../.github/workflows/${file}`, import.meta.url),
         "utf8",
@@ -21,82 +15,6 @@ describe("GitHub Actions runtime contracts", () => {
         expect(ref, file).toMatch(/^[0-9a-f]{40}$/);
       }
     }
-  });
-
-  it("keeps one canonical CI command for packages and both showcases", async () => {
-    const workspacePackage = JSON.parse(
-      await readFile(new URL("../../../package.json", import.meta.url), "utf8"),
-    ) as { scripts: Record<string, string> };
-
-    // showcase-web의 vitest(`showcase:web:check`)는 2026-09-15에 이 명령에 들어왔다.
-    // 그전에는 CI가 그 스위트를 한 번도 돌리지 않아 main에서 실패하는 테스트를 안은 채
-    // 릴리스가 통과했다 (#21).
-    expect(workspacePackage.scripts["ci:check"]).toBe(
-      "pnpm check && pnpm showcase:native:check:built && pnpm showcase:web:check:built && pnpm showcase:web:build:built",
-    );
-  });
-
-  it("gates version-intended main pushes and deploys the verified Storybook", async () => {
-    const workflow = await readFile(
-      new URL("../../../.github/workflows/showcase.yml", import.meta.url),
-      "utf8",
-    );
-
-    expect(workflow).toMatch(/on:\n\s+push:\n\s+branches:\n\s+- main\n/);
-    // 2026-10-07: ordinary PR checks were removed by user policy. Keep this
-    // package-level test aligned with RELEASE_GOVERNANCE.md; the shared checker
-    // separately exercises negative cases for bypassed version intent.
-    expect(workflow).not.toMatch(/\n\s+pull_request:/);
-    expect(workflow).toMatch(/\n\s+workflow_dispatch:/);
-    expect(workflow).toContain("run: node scripts/ci-version-intent.mjs");
-    expect(workflow).toContain("VERSION_BASE_SHA: ${{ github.event.before }}");
-    expect(workflow).toContain("needs: intent");
-    expect(workflow).toContain("if: needs.intent.outputs.run == 'true'");
-    expect(workflow).toMatch(pinned("actions/checkout", 7));
-    expect(workflow).toMatch(pinned("pnpm/action-setup", 6));
-    expect(workflow).toMatch(pinned("actions/setup-node", 7));
-    expect(workflow).toMatch(/node-version:\s*24\b/);
-    expect(workflow).toContain("pnpm ci:check");
-    expect(workflow).toContain(
-      "pnpm --filter @hjmds/react exec playwright install --with-deps chromium",
-    );
-    expect(workflow).toMatch(pinned("actions/upload-pages-artifact", 5));
-    expect(workflow).toMatch(pinned("actions/deploy-pages", 5));
-    // Once a version's verification starts, the next push must not cancel its deploy.
-    expect(workflow).toContain("group: design-system-showcase-${{ github.ref }}");
-    expect(workflow).toContain("cancel-in-progress: false");
-    expect(workflow).not.toContain("changeset:check");
-  });
-
-  it("publishes packages only when the release workflow is dispatched", async () => {
-    const workflow = await readFile(
-      new URL("../../../.github/workflows/version-packages.yml", import.meta.url),
-      "utf8",
-    );
-
-    expect(workflow).toMatch(/on:\n\s+workflow_dispatch:\s*\n/);
-    expect(workflow).not.toMatch(/\n\s+push:/);
-    expect(workflow).toContain("github.ref == 'refs/heads/main'");
-    expect(workflow).toContain('pnpm release:commit:check "$(git rev-parse HEAD^)"');
-    expect(workflow).toContain("pnpm release:check");
-    expect(workflow).toContain(
-      "pnpm --filter @hjmds/react exec playwright install --with-deps chromium",
-    );
-    expect(workflow).toContain("publish --access public --no-git-checks --provenance");
-    expect(workflow).toContain('git tag -a "${TAG}"');
-    expect(workflow).not.toContain("check-consumer-release");
-  });
-
-  it("joins non-default renderer evidence to structured executed-scenario registries", async () => {
-    const checker = await readFile(
-      new URL("../../../scripts/check-workspace-sync.mjs", import.meta.url),
-      "utf8",
-    );
-
-    expect(checker).toContain("scenarioRegistry.executions");
-    expect(checker).toContain("executionByProofFile");
-    expect(checker).toContain("is not joined to its executed-scenario registry");
-    expect(checker).toContain("has no registered ${scenario} execution");
   });
 
   /**

@@ -1,9 +1,9 @@
 # 디자인 시스템 검증과 릴리스 계약
 
-상태: 현재 내부 릴리스 계약 · 검토일: 2026-10-13
+상태: 현재 내부 릴리스 계약 · 검토일: 2026-10-17
 적용: 이 저장소의 contracts, React, React Native, 두 Showcase.
 Web Storybook 공개 실행 정본: [자체 도메인 게시](../deploy/storybook/README.md).
-기계 검사: [`scripts/check-release-governance.mjs`](../scripts/check-release-governance.mjs).
+실행 원본: [npm 게시](../.github/workflows/version-packages.yml), [Storybook artifact](../.github/workflows/showcase.yml).
 
 공통 기준은 [배포 정책](https://github.com/jim1286/app-portfolio/blob/main/docs/DEPLOYMENT_POLICY.md)과
 [모듈 개발 표준](https://github.com/jim1286/app-portfolio/blob/main/docs/MODULE_DEVELOPMENT_STANDARD.md)이다.
@@ -17,56 +17,37 @@ contracts를 같은 npm 버전으로 설치하고, 제품의 실제 화면·환�
 이 저장소의 CI 성공은 아래 내부 범위를 증명한다. 소비 제품의 CI 또는 실기기 QA 성공은
 별도 증거이며 내부 결과에서 파생하지 않는다.
 
-| 단계 | 실행 원본 | 검사 범위 |
+| 단계 | 실행 원본 | 확인 범위 |
 | --- | --- | --- |
-| 버전 상승/main 또는 기본 수동 검사 | `showcase.yml` → 버전 판정 → Web dependency build/typecheck | Web Storybook 정적 artifact·타입 |
-| 명시적 전체 회귀 | `showcase.yml`, `full_regression=true` → `pnpm ci:check` | package 계약·테스트·생성 drift·bundle·두 Showcase |
-| 수동 시각 검사 | `visual.yml` → 같은 버전 판정 → Linux baseline 비교 | Chromium/Linux의 대표 시각 회귀 |
-| package 검사 | `pnpm check` | 패키지 1회 build 후 typecheck/test·bundle, workspace/evidence/docs/governance/public API map 검사 |
-| release 후보 | `version-packages.yml` → `pnpm release:commit:check`와 `pnpm release:check` | 동일 패키지 버전, build/typecheck/행동 테스트/bundle, release artifacts |
-| publish/tag | 같은 workflow에서 검사 이후 실행 | 세 package publish 후 같은 commit에 canonical tag |
-| 제품 검증 | 각 제품 저장소의 CI/기기 QA | 설치된 npm train을 소비한 제품 흐름·환경·migration |
+| Storybook artifact | `showcase.yml` → `pnpm showcase:web:build` | contracts/Web build, Web Storybook build·정적 artifact 확인 |
+| Pages 이동 안내 | 같은 workflow의 build 이후 deploy | 자체 도메인으로 안내하는 정적 페이지 게시 |
+| 선택적 전수 진단 | 로컬 `pnpm ci:check` | package 계약·테스트·생성 drift·bundle·두 Showcase |
+| 게시 전 로컬 확인 | 변경 관련 검사와 실제 게시물 확인(아래 최소화 기준) | 영향 package 타입·행동·의존 경계 및 게시 artifact. 같은 소스의 성공 결과 재사용 |
+| npm publish/tag | 수동 `version-packages.yml` → 세 package build → publish → tag | npm 게시와 같은 commit의 canonical tag. 전체 검사 성공을 의미하지 않음 |
+| 제품 검증 | 각 제품의 영향 표면 검사·필요한 기기 QA | 설치한 train의 실제 제품 흐름·환경·migration |
 
-2026-10-02 사용자 요청으로 `release:commit:check`는 Changeset의 major/minor 등급에서
-버전 번호를 역산하는 검사를 제거했다. 버전 번호는 유지보수자가 결정한다.
-고정 패키지·manifest·evidence의 버전 일치, 안정적인 버전 형식, 실제 게시 여부는
-여전히 검사한다. 등급이 실제 호환성을 보증하지 않으므로 소비 앱 검증이 필요하다.
+2026-10-17 감사에서 최소 배포 workflow와 과거 품질 workflow 설명이 어긋난 것을 확인했다.
+폐기된 `visual.yml`, `full_regression`/`verify_only` 입력과 version-intent job은 현재 존재하지 않는다.
+삭제된 workflow와 테스트 파일을 요구하던 `governance:check` 및 미사용 version-intent 도구를
+제거했다. 명령 문자열·workflow step 이름을 복제하는 검사를 대체 게이트로 만들지 않는다.
+실제 renderer 행동·peer 호환성·금지 의존성·게시 실패는 그대로 확인한다.
 
-`pnpm governance:check`는 canonical 명령 연결, 필수 workflow step의 무조건 실행·실패 전파,
-publish/tag 이전 순서, renderer 테스트와 scenario registry 연결을 검사한다. 의도하지 않은
-검사 제거·조건부 건너뛰기·`continue-on-error`를 negative tests로 고정한다. 이 검사는
-현재 저장소의 제한된 workflow 형태에 대한 source 검사이며 원격 required-check 설치 여부는
-별도 운영 설정이다. workflow 형태를 바꿀 때 검사와 회귀 사례를 함께 바꾼다.
+### 배포 실행 시점
 
-### 자동 검사의 실행 시점
+현재 `showcase.yml`은 main push의 세 public package `package.json` 경로 변경 또는 수동
+실행으로 시작한다. manifest의 실제 버전 증가를 비교하지 않으므로 의존성 수정도 실행할 수 있다.
+일반 코드·문서만 바꾼 push와 PR 트리거는 없다. 수동 실행 역시 artifact 생성과 main의 Pages
+게시 경로이며 검사 전용 모드가 아니다. 전체 회귀가 필요하면 로컬 `ci:check`를 명시적으로 선택한다.
 
-2026-10-07 사용자가 버전 상승 때만 원격 검사를 실행하는 기존 결정을 재확인했다.
-HJM에는 일반 main push/PR 트리거가 남아 테마 개발 commit마다 전량 검사가 실행됐으므로,
-Showcase와 시각 검사도 버전 의도로 한정한다. 자동 실행 후보는 main push에서 세 public
-package의 `package.json` 중 하나가 바뀔 때이며, 의존성·설정 변경만으로는 전량 검사를 실행하지 않는다.
-[`ci-version-intent.mjs`](../scripts/ci-version-intent.mjs)가 `github.event.before`와 현재 SHA의
-세 fixed-train 버전을 비교해 모두 같은 안정 버전으로 실제 상승한 경우에만 실행한다.
-여러 commit을 함께 push할 수 있으므로 `HEAD^`로 대체하지 않는다. 이전 SHA 누락·버전 하락·
-혼합 train·잘못된 버전은 판정 실패로 남기고 임의로 검사 실행을 승인하지 않는다.
+빌드한 Storybook과 source SHA·run ID·hash를 delivery artifact에 담고, GitHub Pages에는
+자체 도메인 이동 안내만 게시한다. 실제 `storybook.jmstudioapps.com` 공개는
+[게시 실행서](../deploy/storybook/README.md)의 artifact 전달·공개 확인으로 구분한다.
+artifact 업로드·Pages 게시를 VPS 전달 완료로 보고하지 않는다.
 
-일반 코드·문서 push/PR은 이 두 원격 검사 workflow를 시작하지 않는다. `workflow_dispatch`는
-명시적인 진단·Linux baseline 재생성 경로로 유지한다. main에서 실행된 Showcase 검사가
-통과한 뒤에만 고정 Storybook delivery artifact와 Pages 이동 안내가 갱신되므로,
-일반 테마 개발의 확인은 로컬 Storybook으로 수행한다. 2026-10-10 도메인 이관 승인으로
-실제 Web Storybook은 자체 VPS에 검사한 artifact를 명시적으로 게시한다. artifact 생성/Pages 안내
-게시를 VPS 공개 완료로 보고하지 않고 [실행 정본](../deploy/storybook/README.md)의 공개 검증을 따른다.
-2026-10-14 CI 관측 검증에서 수동 main 검사가 Pages 게시까지 실행하는 결합을 확인했다.
-`showcase.yml`의 `verify_only=true`는 동일한 선택 범위의 검사와 실행 시간 요약을 수행하고,
-배포 artifact 생성·업로드와 Pages 게시만 생략한다. 기본값 false는 기존 게시 동작을 유지한다.
-원격 트리거 축소는 필요한 로컬 검증을 제거하는 변경이 아니다. npm 게시와 tag 생성은
-기존 수동 `version-packages.yml`의 release 검사를 유지하며 자동 게시로 바꾸지 않는다.
-GitHub 자체의 보안 분석·Dependabot 실행은 이 두 품질 workflow의 제어 범위와 별개다.
-
-2026-10-12 전수 CI 축소 요청으로 Web Storybook 배포는 Web 의존 패키지의 build/typecheck와
-정적 artifact 검증만 자동 실행한다. Web 게시에서 Native·브라우저 전체 회귀를 반복하던 비용을
-없애기 위한 변경이다. `full_regression=true`일 때만 Chromium 설치와 `ci:check`를 실행하고
-시각 baseline workflow도 수동으로 분리했다. npm package 게시의 `release:check`는 별도 계약이다.
-Web 최소 검사 성공을 Native·행동 회귀·npm 게시 성공으로 사용하지 않는다.
+npm 게시는 main의 수동 `version-packages.yml`에서 frozen 설치·세 npm package build·publish·tag
+순서로 실행한다. 별도의 타입·테스트·문서 게이트는 자동 실행하지 않는다. 로컬 검사 결과,
+npm에 존재하는 버전, tag, 소비 앱 채택은 각각 확인한 범위로 보고한다. 두 배포 workflow는
+같은 concurrency group에서 진행 중 작업을 취소하지 않고 대기한다.
 
 ## 시나리오 증거의 의미
 
@@ -78,21 +59,13 @@ registry는 독립적인 테스트 성공 영수증이 아니다. 해당 source 
 함께 읽는다. Node renderer/브라우저 proof는 실제 iOS·Android 기기 검증과 범위가 다르다.
 지원하지 않는 scenario는 beta debt로 남기며 실행하지 않은 device/parity 증거를 만들지 않는다.
 
-## 제품 검증과 향후 외부 gate
+## 제품 검증의 경계
 
-현재 release workflow에는 외부 소비 제품의 `repository_dispatch`, consumer SHA 수집,
-run/artifact correlation 검증 또는 두 제품 결과를 기다리는 gate가 **구현되어 있지 않다**.
-package publish와 canonical tag는 내부 검사를 기준으로 한다. 기존 문서의 외부 gate 완료
-표현은 이 계약으로 정정한다.
-
-향후 release-blocking consumer gate가 필요하면 제품을 하드코딩하기 전에 다음을 별도 설계한다.
-
-1. 소비 제품 등록부, 선택 기준·필수/선택 구분, 검증할 runtime과 source SHA.
-2. 최소 권한 인증, dispatch/run/artifact의 release SHA·consumer SHA·correlation 결합.
-3. timeout, 누락·실패·재실행 처리와 모든 필수 결과 확인 뒤 publish/tag하는 순서.
-4. 실제 성공·실패 integration evidence와 `governance:check`의 지원 범위 갱신.
-
-위 항목은 계획이며 token, SHA 또는 통과 evidence를 임의로 채우지 않는다.
+소비 제품의 `repository_dispatch`나 제품 결과를 기다리는 게시 게이트는 두지 않는다.
+공통 계약 변경은 실제 소비 제품의 영향 표면에서 확인하고, 설치 train·source와 실행 결과를
+구분해 기록한다. 내부 package 검사·npm 게시·tag만으로 제품 구현 적합성을 주장하지 않는다.
+2026-10-14 CI 최소화 지시를 따르며 과거의 외부 release-blocking gate 계획을 기본 후속 작업으로
+유지하지 않는다. 제품 검증을 생략하거나 실패를 무시한다는 뜻은 아니다.
 
 ## Contracts peer 범위
 
@@ -152,8 +125,8 @@ minor bump가 범위를 벗어나고, changesets는 범위를 벗어나는 peer 
 
 1. 계약·renderer·환경 증거를 같은 변경에서 설계한다.
 2. 게시 소스 변경은 작업 단위(PR 또는 PR 없는 `main` push 묶음)를 마칠 때 Changeset으로 정리하고, `release:version` 전에 마지막 tag 이후 변경이 모두 담겼는지 확인한다. 소비 API·동작이 바뀌면 migration을 작성하며 내부 리팩터링에 형식적인 migration 문서를 요구하지 않는다.
-3. 공개 계약이 바뀌면 해당 생성 명령으로 projection을 갱신한다. 개발 중에는 변경 범위 검사만 선택하고, 넓은 `dev:check`는 선택적 진단으로 사용한다. 게시 전에는 `pnpm release:check`를 실행한다.
-4. 실제 소비 제품은 설치 train과 지원 범위를 기록하고 별도 제품 CI/기기 QA를 검증한다.
+3. 공개 계약이 바뀌면 해당 생성 명령으로 projection을 갱신한다. 개발·게시 준비 모두 변경 관련 검사를 선택하고, 같은 소스의 성공 결과를 재사용한다. 넓은 `dev:check`·`release:check`는 명시적으로 선택하는 진단이다. 게시물 확인 범위는 아래 최소화 기준을 따른다.
+4. 실제 소비 제품은 설치 train과 지원 범위를 기록하고 제품의 영향 표면 검사와 필요한 기기 QA를 수행한다.
 5. package release가 승인된 작업일 때 release version/commit을 만들고 수동 workflow를 실행한다.
 
 로컬 검사, package publish, 소비 제품 구현 적합성, 원격 merge 권한을 별개 상태로 기록한다.
@@ -162,8 +135,8 @@ minor bump가 범위를 벗어나고, changesets는 범위를 벗어나는 peer 
 
 2026-10-01 중복 조사에서 canonical catalog 밖의 공개 컴포넌트 이름을 확인했다.
 root check의 `api-map:check`는 모든 공개 컴포넌트 export를 분류하고 정의 충돌과
-생성 projection drift를 쓰기 없이 검사한다. governance 음성 테스트는 이 gate를
-삭제하거나 write mode로 바꾸는 것을 거부한다.
+생성 projection drift를 쓰기 없이 검사한다. 이 선택적 감사와 npm 배포 workflow는 별개이며
+검사 시 생성물을 자동 수정해 차이를 숨기지 않는다.
 
 기능·행동 중복은 이 검사로 판정하지 않는다. API 추가와 공통 구현 변경은
 [기여 지침](../CONTRIBUTING.md)의 기존 API 비교·공통 계약 재사용·선택 기준 문서화를 따른다.
@@ -183,10 +156,18 @@ contracts-peer-train.mjs의 기존 계약을 따른다. 소비 제품은 같은 
 
 ## 릴리스 차단 조건 최소화
 
-2026-10-12 사용자 요청: 수정 후 반복 실패와 게시 지연을 줄이기 위해 npm 게시에서 문서 형식·Storybook 분류·생성 증거 감사·Showcase 전체 검사를 제거한다. `release:check`는 게시 패키지의 build/typecheck/행동 테스트/bundle과 실제 artifact만 검사한다. 기존 전수 검사는 명시적 `ci:check`에서 실행할 수 있다. 릴리스 커밋의 파일 whitelist와 Changeset 삭제/추가 형태 제한도 폐지한다. 버전 일치와 artifact 존재 검사는 유지한다.
+2026-10-17 감사에서 10/12의 `release:check` 의무가 10/14 변경 범위 검사 지시와 어긋난 것을 확인했다.
+이 명령의 `test:release`는 세 패키지의 행동 테스트 전체를 실행하므로 게시 준비의 자동 선행 조건으로 두지 않는다.
+
+- 마지막 게시 이후 바뀐 계약·renderer와 직접 소비하는 표면의 타입·핵심 동작 검사를 선택한다. 동일 소스·범위에서 통과한 결과를 재사용한다.
+- 게시할 패키지는 현재 source로 build하고 버전 일치·공개 entry·타입/CSS 등 실제 artifact를 확인한다. 기존 `check-release-artifacts.mjs`는 버전과 필수 파일 존재를 확인하며 동작이나 소비 호환성을 대신하지 않는다.
+- export·peer·의존 경계를 바꾸면 해당 renderer의 기존 bundle 검사를 선택한다. 금지 모듈·선택 peer 유입이나 실제 bundling 실패를 무시하지 않는다.
+- 전체 패키지 진단은 `release:check`, 문서·Showcase까지 포함한 전수 감사는 `ci:check`를 명시적으로 선택할 때 실행한다. 새 CI 게이트를 추가하지 않는다.
+
+10/12에 제거한 문서 형식·Storybook 분류·생성 증거 감사·Showcase 전수 검사, 릴리스 커밋 파일 whitelist와 Changeset 소비 형태 제한은 되살리지 않는다. 버전 일치와 artifact 존재 확인은 유지한다.
 
 2026-10-12 규약 축소: 모듈 수 상한도 바이트와 같이 관측값으로 전환한다. 실제 HJM 게시에서 gzip이 감소했는데 helper 파일 한 개 증가로 8개 진입점이 실패했다. 파일 수는 실행 오류 증거가 아니므로 차단하지 않으며 금지 import·선택 peer 유입·실제 bundling 실패는 계속 차단한다.
 
 Native 실제 Metro fixture의 남은 1,660,000/410,000 byte 상한도 제거했다. 모든 공개 경로에 수동 budget/면제 사유를 등록하던 의무도 폐지하고 manifest의 실제 export를 자동으로 순회한다. 새 경로도 파일 존재·금지 의존성 검사를 받는다.
 
-`test:release`는 package 동작 검사를 실행하되 `workflows.test.ts`(workflow 문자열 형식), `consumer-policy.test.ts`(규약 문구), `doc-links.test.ts`(문서 검사기)는 제외한다. 이 세 검사는 명시적인 `test`/`ci:check` 감사에 남긴다. 문서·workflow 형식 검사가 package 테스트 안에서 다시 릴리스를 막는 중복 경로를 없애기 위함이다.
+`test:release`는 package 동작 검사를 실행하되 `workflows.test.ts`(Actions pin·peer train의 선택적 진단), `consumer-policy.test.ts`(규약 문구), `doc-links.test.ts`(문서 검사기)는 제외한다. 이 세 검사는 명시적인 `test`/`ci:check` 감사에 남긴다. 문서·workflow 형식 검사가 package 테스트 안에서 다시 릴리스를 막는 중복 경로를 없애기 위함이다.

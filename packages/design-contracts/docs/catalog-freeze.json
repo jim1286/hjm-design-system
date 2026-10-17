@@ -1,5 +1,5 @@
 {
-  "$comment": "카탈로그 확장 동결. 이 목록에 없는 이름을 catalog.ts에 추가하면 test/catalog-freeze.test.ts가 실패한다. 2026-09-29 사용자 요청으로 도입 제외 후보 네 개 삭제; 기존 dataviz/provider API는 유지.",
+  "$comment": "종료된 카탈로그 동결의 역사 기록. 현재 등록 기준은 stable-promotion.md이며 이 목록으로 신규 등록을 차단하지 않는다.",
   "frozenAt": "2026-09-26",
   "reason": "2026-09-26 설계 점검: 111개 중 stable 4개였고, 세 제품 이상이 쓰는 약 30개가 beta에 묶여 있었다. 1.5.0에서 13개를 실제 증거로 승격했지만 입력·접근성 동작 증거가 필요한 핵심(Checkbox, Switch, Dialog, Sheet, SegmentedControl, RadioGroup, Link, PasswordField 등)은 아직 beta다. 폭을 넓히기 전에 이것들을 먼저 올린다.",
   "unfreezeWhen": "위 핵심 beta가 stable이 되면 동결을 푼다. 그 전에 추가가 필요하면 이 파일의 exceptions에 이름·날짜·근거(ADR 또는 이슈)를 적는다.",
@@ -13,11 +13,6 @@
       "name": "Chart",
       "date": "2026-10-14",
       "rationale": "사용자가 차트·표 라이브러리 흡수를 명시적으로 요청함. 2026-09-29 토큰만 남기고 지운 Chart를 되살려 Line·Bar·Pie·Radar·Scatter·Sparkline·ChartLegend를 한 계약의 동반 API로 둔다. Yajalal이 같은 스크럽 선 차트·막대를 직접 다시 만든 것이 근거. docs/chart.md"
-    },
-    {
-      "name": "ImageChoiceGroup",
-      "date": "2026-10-17",
-      "rationale": "사용자 요청으로 이미지 단일·다중 선택을 독립 계약으로 등록함. 예제가 selected 버튼으로 그림 선택을 흉내 내던 문제의 해결 컴포넌트이며 radio/checkbox 접근성 의미를 가진다. 동결 해제 조건(핵심 8개 stable)이 충족돼 해제 진행 중. docs/usage/components/image-choice-group.md"
     }
   ],
   "names": [
@@ -128,5 +123,8 @@
     "VirtualList",
     "VisuallyHidden",
     "Watermark"
-  ]
+  ],
+  "status": "retired",
+  "retiredAt": "2026-10-17",
+  "resolution": "해제 조건에 열거한 Checkbox, Switch, Dialog, Sheet, SegmentedControl, RadioGroup, Link, PasswordField 모두 1.26.1 생성 manifest에서 Web·Native stable임을 확인. 원래 names·exceptions는 당시 결정 근거로 보존한다."
 }

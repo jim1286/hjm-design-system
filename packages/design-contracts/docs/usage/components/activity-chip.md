@@ -3,8 +3,8 @@
 - 단계: 컴포넌트
 - 상태: 배포
 - 지원: Web · Native
-- 적용: 미게시(1.17.2 이후)
-- 검토일: 2026-10-10
+- 적용: 1.26.1
+- 검토일: 2026-10-17
 - 근거: [ActivityChip 계약](../../activity-chip.md), `src/activity-chip.ts`(`activityChipRecipe`)
 - 스토리북: `배포/컴포넌트/상태와 알림/작업 상태 칩`, `배포/구성/피드백과 복구/백그라운드 작업 상태`
 
@@ -105,5 +105,5 @@ import { ActivityChip } from "@hjmds/react-native/activity-chip";
 
 ## 함정
 
-- 새 컴포넌트라 canonical catalog 행이 없다(동결 중). 공개 API 대응표에서는 supplemental로 분류된다.
-- 실험 항목이다. 기기 시각·VoiceOver/TalkBack 확인은 아직 하지 않았다.
+- 공개 API 대응표에서는 supplemental로 분류된다. 기본 Chip의 stable 상태를 상속하지 않으며 지원 범위는 [개별 계약](../../activity-chip.md)을 확인한다.
+- Storybook 배포 분류와 기기 검증은 별개다. 기기 시각·VoiceOver/TalkBack 확인은 아직 하지 않았다.

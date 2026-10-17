@@ -6,7 +6,8 @@
   "owner": "repository-maintainers",
   "documentation": [
     "README.md",
-    "CONTRIBUTING.md"
+    "CONTRIBUTING.md",
+    "packages/flutter/README.md"
   ],
   "interfaces": [
     {
@@ -23,12 +24,18 @@
       "name": "react-native",
       "path": "packages/react-native/src/index.ts",
       "versionSource": "packages/react-native/package.json"
+    },
+    {
+      "name": "flutter",
+      "path": "packages/flutter/lib/hjm_flutter.dart",
+      "versionSource": "packages/flutter/pubspec.yaml"
     }
   ],
   "compatibility": {
     "document": "packages/design-contracts/docs/consumer-policy.md",
     "consumers": [
       "burntok",
+      "choose-window",
       "taground",
       "unairplane",
       "yajalal",
@@ -48,7 +55,6 @@
         "ci:check"
       ],
       "cwd": ".",
-      "workflow": ".github/workflows/showcase.yml",
       "timeoutSeconds": 1800
     }
   ]

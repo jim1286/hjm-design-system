@@ -14,6 +14,13 @@ config.resolver.nodeModulesPaths = [
   path.resolve(projectRoot, "node_modules"),
   path.resolve(workspaceRoot, "node_modules"),
 ];
+// QR is an optional pure-JS peer already installed in the renderer fixture.
+// Source previews include its story, so resolve that peer without installing
+// extra dependencies or falling back to the obsolete dist build watchers.
+config.resolver.extraNodeModules = {
+  ...config.resolver.extraNodeModules,
+  "qrcode-generator": path.join(workspaceRoot, "packages/react-native/node_modules/qrcode-generator"),
+};
 // The renderer's RN 0.81 fixture and Expo's RN 0.86 host create distinct pnpm
 // peer instances. Navigation contexts must come from the host, otherwise the
 // transition navigator cannot see NavigationContainer's LinkingContext.

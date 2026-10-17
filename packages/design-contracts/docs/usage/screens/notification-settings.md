@@ -36,10 +36,10 @@ ScreenLayout: 제목(고정) → 본문(스크롤) → footer(고정)
 | 행동 | 컴포넌트·tone | 위치 | 개수·순서 |
 | --- | --- | --- | --- |
 | 저장(주 행동) | Button(primary) | 화면 맨 아래 바 | 1. 저장 중 `loading`, 저장 뒤에는 라벨을 `t("settings.saved")`로 바꾸고 `disabled` |
-| 보조 행동 | Button(secondary) | 같은 바, 주 행동 앞(왼쪽) | 스토리에는 없음. 둘 다 있으면 [보조][주] 같은 폭으로 나뉜다 |
+| 보조 행동 | Button(secondary) | footer의 주 행동 아래 | [공통 행동 배치](../SELECTION.md#조립-규칙필수)를 따른다. 같은 폭, `actionGroupRecipe.stackedGap` |
 | 항목 켜기·끄기 | Switch `presentation="row"` 행 전체 | 본문 CompositionLayout 안 | 항목 수만큼, 위→아래 |
 | 다시 불러오기 | Notice `action` > Button `tone="secondary" size="small"` | 불러오기 실패 Notice 안 | 스토리에 없음. 1 |
-| 뒤로 | ScreenLayout `leading` | 상단 바 시작 끝 | 스토리에는 없음. 하위 설정 화면이면 1 |
+| 뒤로 | ScreenLayout `exit`(`kind="back"`) | 헤더 시작 쪽 | 하위 설정 화면이면 1. [ScreenLayout](../components/screen-layout.md)의 설치 버전 지원 범위를 확인 |
 | 파괴 행동 | — | — | 없음 |
 
 ## 상태
@@ -81,9 +81,9 @@ ScreenLayout: 제목(고정) → 본문(스크롤) → footer(고정)
 ## 코드 골격
 
 <!-- usage-example: Web ../../../../../showcase/web/src/patterns/NotificationSettings.stories.tsx -->
-- [Web 실행 예제](../../../../../showcase/web/src/patterns/NotificationSettings.stories.tsx)
+- [Web 실행 예제](https://github.com/jim1286/hjm-design-system/blob/9fccb921216a06bac2568ca8252bd0b4d7c48d95/showcase/web/src/patterns/NotificationSettings.stories.tsx)
 <!-- usage-example: Native ../../../../../showcase/native/src/NotificationSettings.stories.tsx -->
-- [Native 실행 예제](../../../../../showcase/native/src/NotificationSettings.stories.tsx)
+- [Native 실행 예제](https://github.com/jim1286/hjm-design-system/blob/9fccb921216a06bac2568ca8252bd0b4d7c48d95/showcase/native/src/NotificationSettings.stories.tsx)
 
 예제는 ScreenLayout·CompositionLayout에 설정 데이터와 저장 콜백을 연결한다. 메모리 저장 fixture를 운영 요청으로 취급하지 않는다.
 

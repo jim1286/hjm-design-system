@@ -84,7 +84,7 @@ import { ListDetailScreen } from "@hjmds/react-native/screen-flows";
 ## 꼭 지킬 것
 
 - 라벨은 모두 i18n 키로 넣는다.
-- `state`(로딩·빈·오류·제한)는 목록 pane에만 적용된다. 상세 최초 조회·오류는 `detail.state`, 재시도는 `detail.stateAction`, 기존 상세를 유지하는 갱신 실패는 `detail.notice`로 전달한다. 미게시(1.18.0 이후)에 추가된 선택 prop이며 이전 설치 버전에서는 상세 content 안에 상태를 구성한다.
+- `state`(로딩·빈·오류·제한)는 목록 pane에만 적용된다. 상세 최초 조회·오류는 `detail.state`, 재시도는 `detail.stateAction`, 기존 상세를 유지하는 갱신 실패는 `detail.notice`로 전달한다. Web·Native 1.26.1 설치 타입에서 제공을 확인한 선택 prop이다. 설치 버전에서 지원하지 않으면 지원 버전으로 갱신하고 공통 상태 틀을 제품에서 복제하지 않는다.
 - Web은 상세 진입 시 뒤로 버튼에 포커스를 옮기고 복귀 시 목록의 원래 요소로 돌린다. 요소가 삭제되었으면 목록 본문으로 이동한다.
   처음부터 `detail`이 있는 채로 mount되면(딥링크) 사용자 전환이 아니므로 포커스를 옮기지 않는다. 그때 포커스는 제품 router가 정한다.
 - 상세 열림 상태는 제품이 가진다. OS 뒤로가기·브라우저 뒤로가기와 `back`을 제품 router에서 함께 연결한다.
