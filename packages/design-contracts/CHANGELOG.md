@@ -1,5 +1,11 @@
 # @hjmds/design-contracts
 
+## 1.33.2
+
+### Patch Changes
+
+- 855f1b0: Keep EmptyState title and description at body size on both renderers, including when a web host inherits a larger font.
+
 ## 1.33.1
 
 ### Patch Changes

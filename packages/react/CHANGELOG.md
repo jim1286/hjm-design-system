@@ -1,5 +1,12 @@
 # @hjmds/react
 
+## 1.33.2
+
+### Patch Changes
+
+- 855f1b0: Keep EmptyState title and description at body size on both renderers, including when a web host inherits a larger font.
+- 0a46915: Cancel deferred page-entry focus as soon as the user clicks or opens a context menu. Activate the entry window before its deferred attempt, so it cannot reset a user's interaction and close an already opened message reaction menu. Preserve pending entry for a screen revealed by its enclosing modal.
+
 ## 1.33.1
 
 ### Patch Changes

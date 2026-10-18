@@ -100,7 +100,6 @@ export function useInitialFocusScope({ mode, active = true, layer: ownLayer, ena
         const settle = () => { s.phase = "settled"; };
         const enter = (explicit) => {
             s.fresh.clear();
-            dispatch({ kind: "activate" });
             const nested = overlay && layer ? [...(nestedScopes.get(layer) ?? [])] : [];
             if (explicit) {
                 settle();
@@ -108,7 +107,12 @@ export function useInitialFocusScope({ mode, active = true, layer: ownLayer, ena
                     scope.settle();
                 return null;
             }
-            const own = dispatch({ kind: "enter" });
+            // A user can open a menu before the deferred entry runs. Never reset their settled entry window.
+            if (s.phase === "settled")
+                return null;
+            if (s.phase === "inactive")
+                dispatch({ kind: "activate" });
+            const own = dispatch({ kind: s.phase === "open" ? "unblock" : "enter" });
             if (own)
                 return own;
             for (const scope of nested) {
@@ -125,6 +129,8 @@ export function useInitialFocusScope({ mode, active = true, layer: ownLayer, ena
             scope.dispatch({ kind: "deactivate" });
             return undefined;
         }
+        // Observe interaction immediately; deferring activation too would lose a click before the entry microtask.
+        scope.dispatch({ kind: "activate" });
         // After every effect of this commit, so a modal opening in the same commit (an app-root consent dialog) is
         // already on the stack and blocks entry instead of taking focus away and handing it back later.
         let cancelled = false;
@@ -140,7 +146,7 @@ export function useInitialFocusScope({ mode, active = true, layer: ownLayer, ena
             nested.add(nestedEntry);
         }
         const interact = () => { scope.dispatch({ kind: "interact" }); };
-        const events = ["pointerdown", "keydown", "wheel", "touchstart"];
+        const events = ["pointerdown", "click", "contextmenu", "keydown", "wheel", "touchstart"];
         for (const type of events)
             document.addEventListener(type, interact, true);
         // A modal above closed (after its return focus ran): retry a pending entry.
