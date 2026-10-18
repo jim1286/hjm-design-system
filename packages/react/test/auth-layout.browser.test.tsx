@@ -49,8 +49,12 @@ it("draws the hero tagline on a title step and keeps policy links one recipe gap
   const text = (element: HTMLElement) => { const range = document.createRange(); range.selectNodeContents(element); return range.getBoundingClientRect(); };
   // "간격 줄여": gap + dot + gap (about 19px), not button padding + Stack gap (42px).
   expect(text(links[1]!).left - text(links[0]!).right).toBeLessThan(24);
-  for (const link of links) {
-    expect(link.getBoundingClientRect().height).toBe(44);
-    expect(getComputedStyle(link).paddingInline).toBe("0px");
-  }
+  const separator = container.querySelector<HTMLElement>(".hjm-auth-screen__separator")!.getBoundingClientRect();
+  for (const link of links) expect(link.getBoundingClientRect().height).toBe(44);
+  // The horizontal target reaches the separator from both sides inside the link box (2026-10-18), so it adds
+  // no scrollable overflow; the former out-of-box pseudo element widened a full-width footer.
+  expect(links[0]!.getBoundingClientRect().right).toBeCloseTo(separator.left, 0);
+  expect(links[1]!.getBoundingClientRect().left).toBeCloseTo(separator.right, 0);
+  const footer = container.querySelector<HTMLElement>(".hjm-auth-screen__links")!;
+  expect(footer.scrollWidth).toBeLessThanOrEqual(footer.clientWidth);
 });

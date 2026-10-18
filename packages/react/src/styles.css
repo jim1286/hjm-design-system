@@ -1798,29 +1798,24 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  column-gap: var(--hjm-auth-screen-link-gap);
 }
-/* 2026-10-17 "간격 줄여": 보이는 간격은 gap + 구분점뿐이다. 44 터치 높이는 배경 없는 min-block-size,
-   가로 터치 폭은 보이지 않는 가상 요소가 구분점 앞까지 넓힌다 — 버튼 안쪽 여백으로 만들면 글자 사이가 다시 벌어진다. */
+/* 2026-10-17 "간격 줄여": 보이는 간격은 linkGap + 구분점뿐이다. 44 터치 높이는 배경 없는 min-block-size다.
+   2026-10-18 링크 사이 간격을 flex column-gap에서 링크의 inline 여백으로 옮겼다. 보이는 간격은 같고(column-gap 0),
+   가로 터치 폭이 그 여백만큼 링크 상자 안에 든다. 예전 가상 요소는 상자 밖으로 linkGap만큼 뻗어, 긴 링크가 푸터 폭을
+   다 쓰면 푸터의 스크롤 폭을 넓혔다(웹 scenario-matrix auth-screen long-copy 288 > 282). 여백을 gap과 함께 두면
+   글자 사이가 두 배로 벌어지므로 gap은 두지 않는다. */
 .hjm-auth-screen__link {
-  position: relative;
   display: inline-flex;
   align-items: center;
   min-block-size: var(--hjm-auth-screen-link-target);
   margin: 0;
-  padding: 0;
+  padding: 0 var(--hjm-auth-screen-link-gap);
   border: 0;
   background: none;
   font-family: var(--hjm-font-family-ui, inherit);
   text-decoration: underline;
   text-underline-offset: 0.18em;
   cursor: pointer;
-}
-.hjm-auth-screen__link::after {
-  content: "";
-  position: absolute;
-  inset-block: 0;
-  inset-inline: calc(var(--hjm-auth-screen-link-gap) * -1);
 }
 .hjm-auth-screen__link:focus-visible {
   outline: var(--hjm-focus-width) solid var(--hjm-color-focus);
