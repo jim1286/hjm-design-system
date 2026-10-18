@@ -2951,7 +2951,7 @@ export declare const emptyStateRecipe: {
         readonly fontWeight: "500";
     };
     readonly description: {
-        readonly textVariant: "label";
+        readonly textVariant: "body";
         readonly color: Readonly<{
             source: "theme";
             key: "textMuted";

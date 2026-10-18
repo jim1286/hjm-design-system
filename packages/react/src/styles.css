@@ -1125,7 +1125,8 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 
 /* emptyStateRecipe.density.regular paddingVertical xxxl 40 (2026-10-06; Web had xxl 32, Native read the recipe). */
 /* Like Native, a regular empty state fills the rest of a flex host and centers in it; compact (cards, sheets) stays content-high. */
-.hjm-empty-state { display: grid; flex-grow: 1; align-content: center; justify-items: center; gap: var(--hjm-space-xs); padding: var(--hjm-space-xxxl) var(--hjm-space-xl); color: var(--hjm-color-text-muted); text-align: center; }
+/* Empty copy uses body size even inside a title-sized host (2026-10-18 user rule). */
+.hjm-empty-state { font-size: var(--hjm-type-body-size); line-height: var(--hjm-type-body-line-height); display: grid; flex-grow: 1; align-content: center; justify-items: center; gap: var(--hjm-space-xs); padding: var(--hjm-space-xxxl) var(--hjm-space-xl); color: var(--hjm-color-text-muted); text-align: center; }
 .hjm-empty-state[data-density="compact"] { flex-grow: 0; padding-block: var(--hjm-space-xl); }
 .hjm-empty-state__title { color: var(--hjm-color-text); font-weight: var(--hjm-type-title-weight); }
 .hjm-result { display: grid; justify-items: center; gap: var(--hjm-space-sm); padding: var(--hjm-space-xxxl) var(--hjm-space-xl); text-align: center; }

@@ -1255,7 +1255,7 @@ export const emptyStateRecipe = {
     gap: spacing.xs,
     icon: { size: "lg", color: semanticColors.content.decorative },
     title: { textVariant: "body", color: semanticColors.content.primary, fontWeight: typography.title.fontWeight },
-    description: { textVariant: "label", color: semanticColors.content.secondary },
+    description: { textVariant: "body", color: semanticColors.content.secondary },
 };
 export const spinnerRecipe = {
     slots: ["root"],

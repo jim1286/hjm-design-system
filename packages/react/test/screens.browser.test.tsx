@@ -6,6 +6,7 @@ import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { HjmProvider } from "../src/provider.js";
 import { ChatScreen, MessageComposer, NotificationInboxScreen, NotificationItem, ScreenLayout, SettingsScreen } from "../src/screens.js";
 import { Button } from "../src/actions.js";
+import { EmptyState } from "../src/feedback.js";
 import "../src/styles.css";
 let host: HTMLDivElement;
 let root: Root;
@@ -285,4 +286,16 @@ it("renders the shared empty message at 14px without header supporting copy", as
   const body = host.querySelector<HTMLElement>(".hjm-screen__body")!.getBoundingClientRect();
   const group = host.querySelector<HTMLElement>(".hjm-screen__state")!.getBoundingClientRect();
   expect(Math.abs((group.top + group.bottom) / 2 - (body.top + body.bottom) / 2)).toBeLessThan(3);
+});
+
+
+it("keeps empty title and description at 14px inside a larger text host", async () => {
+  await act(async () => root.render(<HjmProvider textScale={1}><div style={{ fontSize: 18 }}>
+    <EmptyState title="주변에 새 꽃이 없어요" description="다른 들판도 둘러보세요" />
+  </div></HjmProvider>));
+  for (const slot of ["title", "description"]) {
+    const copy = host.querySelector<HTMLElement>(`.hjm-empty-state__${slot}`)!;
+    expect(getComputedStyle(copy).fontSize).toBe("14px");
+    expect(getComputedStyle(copy).lineHeight).toBe("20px");
+  }
 });
