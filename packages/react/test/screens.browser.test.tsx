@@ -271,3 +271,18 @@ it.each(["incoming", "outgoing"] as const)("reveals a timestamp while dragging a
   expect(time.style.opacity).toBe("0");
   expect(reply).not.toHaveBeenCalled();
 });
+
+
+it("renders the shared empty message at 14px without header supporting copy", async () => {
+  await page.viewport(390, 844);
+  await act(async () => root.render(<HjmProvider textScale={1}><div style={{ height: 650 }}>
+    <ScreenLayout title="들판" titleVisibility="visible" description="상단 보조 문구" state={{ kind: "empty", title: "주변에 새 꽃이 없어요" }} />
+  </div></HjmProvider>));
+  const message = host.querySelector<HTMLElement>(".hjm-screen__state .hjm-text")!;
+  expect(getComputedStyle(message).fontSize).toBe("14px");
+  expect(host.querySelector(".hjm-screen__header")?.textContent).toBe("들판");
+  expect(host.textContent).not.toContain("상단 보조 문구");
+  const body = host.querySelector<HTMLElement>(".hjm-screen__body")!.getBoundingClientRect();
+  const group = host.querySelector<HTMLElement>(".hjm-screen__state")!.getBoundingClientRect();
+  expect(Math.abs((group.top + group.bottom) / 2 - (body.top + body.bottom) / 2)).toBeLessThan(3);
+});
