@@ -79,6 +79,8 @@ import { BottomNavigation } from "@hjmds/react-native/navigation";
 | `configuration.selection` | `emphasis` · `tile` | `emphasis` | `tile`은 선택 목적지 전체를 카드로 채운다. floating·equal·visible labels 전용 |
 | `configuration.surface` | `flat` · `raised` | `flat` | `raised`는 `selection: "tile"` 전용 두께 있는 막대다. surfaceAlt 바탕·borderControl 옆면(4)·선택 카드 옆면(3) |
 | `configuration.iconSize` | `standard` · `large` · `xlarge` | `standard` | 1.31.0 추가. `standard`는 density 글리프(`regular` 24 · `compact` 20). `large` 44 · `xlarge` 52는 앱 아이콘 같은 그림을 `renderIcon`으로 넣는 자리다(`bottomNavigationRecipe.iconSizes`). `renderIcon`이 받은 `size`로 그린다 |
+| `configuration.shape` | `standard` · `rounded` · `pill` · `compact` · `square` | `standard` | 1.32.0 추가. floating 막대의 틀(모서리·안쪽 여백, `bottomNavigationRecipe.shapes`). `standard`는 floating 그대로(radius.xl, 여백 0). `rounded` radius.xl·8, `pill` radius.full·8, `compact` radius.lg·4, `square` radius.sm·4. `presentation: "floating"`·`selection: "emphasis"`에서만 허용(위반 시 오류) |
+| `configuration.iconEmphasis` | `scale` · `lift` | `scale` | 1.32.0 추가. `scale`은 선택 아이콘 1.06배. `lift`는 그 위에 선택 아이콘을 4 올리고 선택하지 않은 아이콘을 0.82로 흐리게 한다(`bottomNavigationRecipe.icon.liftEmphasis`). 색을 바꿀 수 없는 앱 아이콘 그림에 쓴다. 배지와 `prominent` 원은 흐려지지 않는다 |
 | 항목 `prominent` | `boolean` | `false` | 1.31.0 추가. 가운데 목적지를 막대 위로 솟은 브랜드 원(지름 56, 글리프 28)으로 그린다. 선택·재선택·router 소유는 다른 항목과 같다. 홀수 개 항목의 정가운데 하나만, `distribution: "equal"`·`bar`/`floating`·`selection: "emphasis"`에서만 허용(위반 시 오류) |
 | Native `placement` | `inline` · `overlay` | `inline` | 1.31.0 추가. `overlay`는 막대를 host 아래쪽에 겹쳐 고정하고(본문이 떠 있는 막대 뒤로 스크롤) 덮는 높이를 `BottomNavigationInsetProvider`에 알린다. `inline`은 자기 높이를 차지하므로 알리지 않는다 |
 | `primaryAction` | `ReactNode`(Button/IconButton) | — | `configuration` 밖의 별도 prop. 생성 같은 비목적지 행동이며 `center-gap` 또는 `capsule`과 짝짓는다 |
@@ -125,8 +127,11 @@ floating·capsule: 바깥 좌우 16 · 위 8 띄운 둥근 표면, 최대 폭 38
 화면들과 막대를 함께 감싸는 자리(탭 navigator·앱 셸)에 `BottomNavigationInsetProvider`를 둔다. 막대는 자기 높이(안전 영역
 padding과 `prominent` 원이 막대 위로 솟은 부분 포함)를 측정해 알리고, 키보드 때문에 숨으면 0을 알린다.
 `ScreenLayout`은 이 값을 스스로 읽어 마지막 영역(footer, 없으면 본문)의 아래 여백을 `max(기존 값, 화면 여백 16 + 덮인 높이)`로
-둔다. 그래서 탭 화면마다 손으로 둔 하단 빈칸이 필요 없다. `scroll="content"`로 직접 FlatList를 두는 화면은
-`useBottomNavigationInset()`을 읽어 `contentContainerStyle`의 아래 여백에 더한다. Sheet·Dialog 안에서는 0이다(오버레이가 막대를 덮는다).
+둔다. 그래서 탭 화면마다 손으로 둔 하단 빈칸이 필요 없다. **이 여백의 소유자는 ScreenLayout 하나다(1.32.0 patch).**
+`scroll="content"`로 FlatList를 두는 화면도 본문 영역이 이미 막대 위에서 끝나므로 목록의 `contentContainerStyle`에
+`useBottomNavigationInset()`을 더하지 않는다(더하면 두 번 쌓인다). ScreenLayout 위에 만든 화면 구성(NotificationInboxScreen 등)도
+같은 한 번이다. `contentInset="body-bleed"` 본문은 여백 16 없이 덮인 높이만 비운다. Sheet·Dialog 안에서는 0이다(오버레이가 막대를 덮는다).
+`useBottomNavigationInset()`은 ScreenLayout 밖에서 직접 만든 레이아웃(막대 위 떠 있는 제품 컨트롤 등)이 읽는다.
 
 ```tsx
 // Native (Expo Router 탭)
@@ -171,6 +176,32 @@ Web Provider는 같은 값을 `--hjm-bottom-navigation-inset` CSS 변수로도 �
 `renderIcon`은 원래 어떤 ReactNode든 그릴 수 있다(이미지 포함). `iconSize: "large" | "xlarge"`는 그 자리를 44 · 52로 키워
 런처의 앱 아이콘처럼 큰 그림을 넣게 한다. 그림은 받은 `size`로 그리고 크기를 따로 정하지 않는다.
 
+### 테마별 막대 모양 (`shape`·`iconEmphasis`, 1.32.0)
+
+제품 테마마다 막대 틀이 달라야 하면 막대를 직접 조립하지 않고 `configuration`으로 고른다. 틀 값은 recipe가 소유하고
+모서리는 theme radius token이라 design profile의 radius 척도를 그대로 따른다. 색은 팔레트 역할(`brandPalette`)로 바꾼다.
+높이는 `density`(`regular` 64 · `compact` 52)와 `iconSize`가 정한다.
+
+| 테마 예 | `shape` | `density` | `iconSize` | 틀 |
+| --- | --- | --- | --- | --- |
+| 둥근 독 | `rounded` | `regular` | `xlarge` | radius.xl · 안쪽 여백 8 |
+| 알약 막대 | `pill` | `regular` | `xlarge` | radius.full · 8 |
+| 작은 독 | `compact` | `compact` | `large` | radius.lg · 4 |
+| 각진 작업 표시줄 | `square` | `compact` | `large` | radius.sm · 4 |
+
+```tsx
+<BottomNavigation
+  placement="overlay"
+  configuration={{ presentation: "floating", shape: frames[theme].shape, density: frames[theme].density, iconSize: frames[theme].iconSize, iconEmphasis: "lift" }}
+  descriptor={descriptor}
+  onActivate={({ key }) => routes[key]()}
+  renderIcon={({ item, size }) => <Image source={art[theme][item.id]} style={{ width: size, height: size }} accessible={false} />}
+/>
+```
+
+`iconEmphasis: "lift"`는 선택 아이콘을 올리고 나머지를 흐리게 해 그림 아이콘에서도 색 없이 현재 목적지를 보인다.
+라벨의 굵기·색 선택 표시는 그대로다. 예제는 Storybook `테마별 막대 모양`(Web·Native)에 있다.
+
 ## 꼭 지킬 것
 
 - `selectedKey`는 router가 확정한 값으로 넘긴다. `onActivate`는 의도일 뿐이며 컴포넌트가 선택을 바꾸지 않는다.
@@ -197,6 +228,7 @@ Web Provider는 같은 값을 `--hjm-bottom-navigation-inset` CSS 변수로도 �
 
 - Web root가 `position: fixed`라 본문 마지막 내용이 막대 아래로 들어간다. `BottomNavigationInsetProvider`로 감싸면 ScreenLayout이 여백을 둔다. 직접 만든 레이아웃은 `--hjm-bottom-navigation-inset`을 쓴다.
 - Native 기본 `inline` 막대는 React Navigation `tabBar`처럼 자기 높이를 차지한다. 이때 탭 화면에 하단 빈칸을 또 두면 두 번 비게 된다. 막대 뒤로 본문을 보이게 하려면 `placement="overlay"`와 Provider를 함께 쓴다.
+- ScreenLayout 안의 목록(`scroll="content"` FlatList 포함)에 `useBottomNavigationInset()`이나 `--hjm-bottom-navigation-inset`을 더하지 않는다. ScreenLayout 마지막 영역이 이미 비웠다.
 - `renderLink` 없이 쓰면 일반 `<a>`로 그려 SPA 전환이 일어나지 않는다.
 - Web `onActivate`는 링크 기본 이동을 막지 않는다. `renderLink`의 라우터 Link가 이동하고 `onActivate`는 계측·맨 위로 스크롤 같은 부수 동작에만 쓴다. 수정키·가운데 클릭에는 불리지 않는다.
 - Native 내비게이션 연구 스토리(`showcase/native/src/reference-navigation-bars.tsx`)는 `configuration`과 [Heading](heading.md)을 사용한다. 과거의 `style`·`listStyle` override는 제거되었으며, 선택 타일과 모서리는 공개 configuration 축으로 정한다.
@@ -228,7 +260,9 @@ floating 그림자는 그리지 않는다. 옆면이 높이를 표현하므로 �
 ## 근거
 
 - 덮인 높이 Provider·`placement`: 2026-10-18 Spint가 떠 있는 막대 높이를 몰라 탭 화면마다 `TAB_BAR_SPACE`(112)를 손으로 두었다.
+- 덮인 높이의 단일 소유(ScreenLayout, 1.32.0 patch): 1.31.0 지침이 `scroll="content"` 화면에 목록 여백으로 다시 더하라고 안내했지만 두 renderer의 ScreenLayout은 그 화면에도 마지막 영역 여백을 이미 적용했다. 지침대로 하면 두 번 쌓인다. 코드는 그대로 두고 지침을 고쳤으며, 지침을 따른 소비 앱은 확인 시점(2026-10-18) 기준 없었다.
 - `prominent`: 2026-10-18 다에리 가운데 "메아리"(쓰기) 탭을 그리려고 HJM 막대 대신 Expo Router 기본 탭바와 제품 원 아이콘을 썼다.
 - `iconSize`: 2026-10-18 Utilverse 독이 38~54pt 앱 아이콘을 보이려고 Surface·Button으로 막대를 직접 조립했다.
+- `shape`·`iconEmphasis`: 1.31.0 채택 뒤에도 Utilverse 다섯 셸(iPhone 둥근 독·Android 알약·macOS 작은 독·Linux/Windows 각진 막대)의 틀과 선택 아이콘 올림(−3·1.06배, 나머지 0.82)을 표현할 공개 축이 없어 모든 셸을 floating 하나로 통일했다(2026-10-18, Utilverse ADR-0074). 모서리는 그 독의 radius token 그대로다. 안쪽 여백은 항목 density padding(8)이 이미 있어 원래 Surface 여백(폰 12·데스크톱 8)에서 한 단계(4)씩 줄였다. 올림은 4pt 격자에 맞춰 4로 했다.
 
 - capsule 선택 알약·tile 선택 카드: 2026-10-17 정렬 실측(Web 402·1280, 실험 내비게이션 바 비교). 첫·끝 아이콘의 막대 끝 거리 차이 17~23px은 선택 항목의 `flex: 2` 알약 때문이며 항목 상자 양끝 여백은 5/5로 같았다. 가운데 항목이 14.5px 솟아 보인 값은 tile 선택 카드 상자를 다른 항목의 라벨과 비교한 측정 오차였고 아이콘 244·라벨 268이 모든 항목에서 같았다. 두 renderer에 이미 같은 규칙이 있어 코드는 바꾸지 않고 배치 표에 의도를 적었다.

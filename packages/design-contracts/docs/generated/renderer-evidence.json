@@ -6504,7 +6504,8 @@
           "claimed": true,
           "subpath": "./screens",
           "exportNames": [
-            "ChatMessage"
+            "ChatMessage",
+            "MediaAlbumPageStatus"
           ],
           "proofs": [
             {
@@ -12444,7 +12445,8 @@
           "claimed": true,
           "subpath": "./screens",
           "exportNames": [
-            "ChatMessage"
+            "ChatMessage",
+            "MediaAlbumPageStatus"
           ],
           "proofs": [
             {

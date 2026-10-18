@@ -1,5 +1,5 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
-import { Text } from "react-native";
+import { FlatList, Text } from "react-native";
 import { expect, it, vi } from "vitest";
 import { HjmNativeProvider } from "../src/provider.js";
 import { ImageChoiceGroup } from "../src/image-choice.js";
@@ -50,5 +50,45 @@ it("shows item labels inside each tile only when asked", () => {
   const [first] = tiles(tree!);
   expect(first!.props.accessibilityLabel).toBe("웃는 얼굴");
   expect(first!.findAll(node => node.props.numberOfLines === 1 && node.props.children === "웃는 얼굴").length).toBeGreaterThan(0);
+  act(() => tree!.unmount());
+});
+
+// 2026-10-18 BurnTok share/creation starters: a status line read as the hint, and two-line labels.
+it("shows a description line as the tile hint and wraps labels to the requested lines", () => {
+  let tree: ReactTestRenderer;
+  const described = [{ id: "a", label: "서연", description: "보냄", image: <Text>A</Text> }, { id: "b", label: "민준", image: <Text>B</Text> }];
+  act(() => { tree = create(<HjmNativeProvider><ImageChoiceGroup label="보낼 사람" showItemLabels itemLabelLines={2} selectionMode="multiple" value={[]} onValueChange={() => {}} items={described} /></HjmNativeProvider>); });
+  const [first, second] = tiles(tree!);
+  expect(first!.props.accessibilityHint).toBe("보냄");
+  expect(second!.props.accessibilityHint).toBeUndefined();
+  expect(first!.findAll(node => node.props.numberOfLines === 2 && node.props.children === "서연").length).toBeGreaterThan(0);
+  expect(first!.findAll(node => node.props.numberOfLines === 1 && node.props.children === "보냄" && node.props.importantForAccessibility === "no").length).toBeGreaterThan(0);
+  act(() => tree!.unmount());
+  expect(() => act(() => { create(<HjmNativeProvider><ImageChoiceGroup label="x" itemLabelLines={3 as 2} selectionMode="single" value={null} onValueChange={() => {}} items={items} /></HjmNativeProvider>); })).toThrow(RangeError);
+});
+
+// 2026-10-18 BurnTok share sheet: long recipient lists recycle rows in a FlatList that stays the named group.
+it("virtualizes rows of tiles once the width is known and keeps selection working", () => {
+  const change = vi.fn();
+  const people = Array.from({ length: 200 }, (_, index) => ({ id: `p${index}`, label: `친구 ${index}`, image: <Text>{index}</Text> }));
+  let tree: ReactTestRenderer;
+  act(() => { tree = create(<HjmNativeProvider><ImageChoiceGroup label="보낼 사람" virtualized={{ height: 300 }} selectionMode="multiple" value={["p1"]} onValueChange={change} items={people} /></HjmNativeProvider>); });
+  expect(tree!.root.findAllByType(FlatList)).toHaveLength(0);
+  const slot = tree!.root.find(node => typeof node.props.onLayout === "function" && node.props.style?.height === 300);
+  // 400 wide: tiles of 80 with 8 gaps → 4 per row, 50 rows.
+  act(() => slot.props.onLayout({ nativeEvent: { layout: { width: 400, height: 300, x: 0, y: 0 } } }));
+  const list = tree!.root.findByType(FlatList);
+  expect(list.props.data).toHaveLength(50);
+  expect(list.props.accessibilityRole).toBe("list");
+  expect(list.props.accessibilityLabel).toBe("보낼 사람");
+  expect(list.props.getItemLayout(null, 2).offset).toBe(list.props.getItemLayout(null, 1).length * 2);
+  // The test renderer's FlatList mock draws every row; recycling is React Native's. The window is declared up front:
+  // 300 tall / 88 stride (80 tile + 8 gap, no captions) → 4 rows + 3 overscan.
+  expect(list.props.getItemLayout(null, 0).length).toBe(88);
+  expect(list.props.initialNumToRender).toBe(7);
+  const mounted = tiles(tree!);
+  expect(mounted[1]!.props.accessibilityState).toEqual({ checked: true, disabled: false });
+  act(() => mounted[0]!.props.onPress());
+  expect(change).toHaveBeenCalledExactlyOnceWith(["p1", "p0"]);
   act(() => tree!.unmount());
 });

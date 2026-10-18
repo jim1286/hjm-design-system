@@ -66,7 +66,7 @@ import { CommentThreadRow } from "@hjmds/react-native/screen-flows";
 | `bodyText` | 없음 | 주면 `author`와 본문을 한 문장으로, 시각은 아래 행동 줄로 옮긴다 |
 | `timePlacement` | `"auto"` | 미게시. `"auto"`는 `bodyText`가 없으면 시각을 작성자 옆에 둔다. `"actions"`는 글이 아닌 본문(꽃 도장·카드)에서도 시각을 본문 아래 반응 요약·답글과 같은 줄 맨 앞으로 옮긴다 |
 | `panel` | 없음 | 미게시. 댓글별 인라인 패널(수정·신고·차단 양식). 답글 줄 아래, 길게 누르기 대상 밖에 `panelGap` 8 간격으로 놓인다. 열림 상태·초점·제출·닫기는 제품이 소유한다 |
-| `mediaAlbum` | 없음 | 미게시. 한 장씩 넘기는 사진 묶음 `{ count, renderPage(index), pageLabel(index, count), previousLabel, nextLabel, aspectRatio?, onPress?(index), index?·onIndexChange?·defaultIndex? }`. `renderPage`는 화면에 보이는 장에만 호출되어 제품이 그 사진만 조회·디코딩한다. `media`와 함께 주면 `TypeError`. 본문 아래, 길게 누르기 대상 밖에 놓인다 |
+| `mediaAlbum` | 없음 | 미게시. 한 장씩 넘기는 사진 묶음 `{ count, renderPage(index), pageLabel(index, count), previousLabel, nextLabel, aspectRatio?, onPress?(index), index?·onIndexChange?·defaultIndex? }`. `renderPage`는 화면에 보이는 장에만 호출되어 제품이 그 사진만 조회·디코딩한다. 불러오는 중·실패 장은 `MediaAlbumPageStatus`(`@hjmds/react(-native)/screens`, [ChatMessage](chat-message.md#축과-기본값))로 그려 안쪽 내용이 낭독기에 닿게 한다. `media`와 함께 주면 `TypeError`. 본문 아래, 길게 누르기 대상 밖에 놓인다 |
 | `avatar` | 없음 | 제품 아바타. 최상위 32·답글 24 폭 칸에 둔다 |
 | `canReply` | `parentId === null` | 답글 행동 표시 여부 |
 | `replyDisabled` | false | 답글 행동 비활성 |

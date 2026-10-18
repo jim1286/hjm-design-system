@@ -8,6 +8,7 @@ export type PaginationByCount = Readonly<{
     totalCount: number;
     pageSize: number;
     totalPages?: never;
+    hasNext?: never;
     siblingCount?: number;
     boundaryCount?: number;
 }>;
@@ -16,8 +17,39 @@ export type PaginationByPageCount = Readonly<{
     totalPages: number;
     totalCount?: never;
     pageSize?: never;
+    hasNext?: never;
     siblingCount?: number;
     boundaryCount?: number;
+}>;
+/**
+ * Page-addressable results whose total is unknown: the source only reports whether a next page exists (Kakao
+ * Local's `meta.is_end`, cursor APIs). The control shows previous, a product-composed current page label and
+ * next — no numbered window, because pages beyond the next one cannot be addressed. Added 2026-10-18 for
+ * choose-window search, which assembled its own previous/next Button row. Infinite feeds remain LoadMore.
+ */
+export type PaginationOpenEndedDescriptor = Readonly<{
+    currentPage: number;
+    hasNext: boolean;
+    totalCount?: never;
+    pageSize?: never;
+    totalPages?: never;
+    siblingCount?: never;
+    boundaryCount?: never;
+}>;
+/** The current page label is the visible text and the accessible name, e.g. "3페이지" / "Page 3". */
+export type ComposePaginationCurrentPageLabel = (info: Readonly<{
+    page: number;
+}>) => string;
+export type ResolvedPaginationOpenEndedDescriptor = Readonly<{
+    currentPage: number;
+    hasPrevious: boolean;
+    hasNext: boolean;
+    labels: PaginationLabels;
+    currentPageLabel: string;
+}>;
+export type ResolvePaginationOpenEndedOptions = Readonly<{
+    labels: PaginationLabels;
+    composeCurrentPageLabel: ComposePaginationCurrentPageLabel;
 }>;
 /**
  * Required contract is exactly current page + (total count or total page
@@ -85,6 +117,14 @@ export type PaginationChangeReason = "previous" | "next" | "page";
 export type PaginationChangeHandler = (page: number, reason: PaginationChangeReason) => void;
 export declare function validatePaginationDescriptor(descriptor: PaginationDescriptor): void;
 export declare function validatePaginationLabels(labels: PaginationLabels): void;
+/** Distinguishes the open-ended form by its `hasNext` field, the one key the bounded forms forbid. */
+export declare function isPaginationOpenEndedDescriptor(descriptor: PaginationDescriptor | PaginationOpenEndedDescriptor): descriptor is PaginationOpenEndedDescriptor;
+export declare function validatePaginationOpenEndedDescriptor(descriptor: PaginationOpenEndedDescriptor): void;
+/**
+ * Open-ended counterpart of resolvePaginationDescriptor. A first page without a next page still resolves (both
+ * steps unavailable) so the renderer, not the product, decides how a single page is presented.
+ */
+export declare function resolvePaginationOpenEndedDescriptor(descriptor: PaginationOpenEndedDescriptor, options: ResolvePaginationOpenEndedOptions): ResolvedPaginationOpenEndedDescriptor;
 /**
  * Pure page-window function, independent of accessibility naming, so its
  * boundary inputs (total 1 page, total 2 pages, current at the first/last
@@ -153,6 +193,19 @@ export declare const paginationRecipe: {
     readonly navIcon: {
         readonly previous: "chevronStart";
         readonly next: "chevronEnd";
+    };
+    /**
+     * Open-ended current page label: plain text between the steps, not a button, because it is the only page the
+     * control can show. It keeps the item's touch-target height so the row does not jump between modes.
+     */
+    readonly pageLabel: {
+        readonly minHeight: 44;
+        readonly paddingHorizontal: 8;
+        readonly color: Readonly<{
+            source: "theme";
+            key: "textBody";
+            alpha?: number;
+        }>;
     };
     readonly focus: {
         readonly color: Readonly<{

@@ -6,6 +6,7 @@ Lucian 130·160–164를 검토하면서 기존 표·차트·통계의 실제 �
 별도의 표/차트 엔진을 만들지 않고 DataTable, BarChart, Statistic, Progress, Select를 합성한다.
 MatrixTable은 팀 간 비교에서 대각선을 숨기는 계약이므로 직사각형 코호트나 자기상관 보존에 쓰지 않는다.
 공개 진입점은 `@hjmds/{react,react-native}/data-workflows`, 계산은 `@hjmds/design-contracts/data-workflows`다.
+Native 진입점은 BarChart(`/chart`)를 합성하므로 `/chart`와 같은 optional peer `react-native-svg@15.15.5`가 필요하다(2026-10-18 Metro 번들 검사 복구 때 확인).
 
 | API | 계약과 선택 기준 |
 | --- | --- |

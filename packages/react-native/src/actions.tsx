@@ -23,7 +23,7 @@ import {
   type ButtonSize as ContractButtonSize,
   type ButtonTone as ContractButtonTone,
 } from "@hjmds/design-contracts/recipes/base";
-import { forwardRef, useContext, type ReactNode } from "react";
+import { forwardRef, useContext, type ReactNode, type Ref } from "react";
 import {
   ActivityIndicator,
   Pressable,
@@ -353,6 +353,12 @@ export type BottomCTAAction = Readonly<{
   loadingLabel?: ReactNode;
   size?: ButtonSize;
   tone?: ButtonTone;
+  /**
+   * Ref to this action's button. Native overlays return focus only to an explicit target
+   * (`ImmersiveOverlay`/`Dialog` `returnFocusRef`), so the action that opens one must expose its button
+   * (2026-10-18 Utilverse display board: focus did not come back after closing the board).
+   */
+  buttonRef?: Ref<NativeView>;
 }>;
 
 export type BottomCTAProps = Readonly<{
@@ -373,6 +379,7 @@ function BottomCTAButton({
 }: Readonly<{ action: BottomCTAAction; fallbackTone: ButtonTone }>) {
   return (
     <Button
+      ref={action.buttonRef}
       {...(action.accessibilityLabel === undefined ? {} : { accessibilityLabel: action.accessibilityLabel })}
       {...(action.accessibilityHint === undefined ? {} : { accessibilityHint: action.accessibilityHint })}
       {...(action.disabled === undefined ? {} : { disabled: action.disabled })}

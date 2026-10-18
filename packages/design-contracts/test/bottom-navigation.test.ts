@@ -463,6 +463,8 @@ describe("BottomNavigation visual and behavior contracts", () => {
       selection: "emphasis",
       surface: "flat",
       iconSize: "standard",
+      shape: "standard",
+      iconEmphasis: "scale",
     });
     expect(
       resolveBottomNavigationConfiguration(
@@ -486,6 +488,8 @@ describe("BottomNavigation visual and behavior contracts", () => {
       selection: "emphasis",
       surface: "flat",
       iconSize: "standard",
+      shape: "standard",
+      iconEmphasis: "scale",
     });
     expect(() =>
       validateBottomNavigationConfiguration({ distribution: "center-gap" }, 3),
@@ -551,6 +555,8 @@ describe("BottomNavigation visual and behavior contracts", () => {
       selection: "emphasis",
       surface: "flat",
       iconSize: "standard",
+      shape: "standard",
+      iconEmphasis: "scale",
       minItems: 2,
       maxItems: 6,
     });
@@ -627,5 +633,29 @@ describe("prominent destination and icon size", () => {
     expect(() => resolveBottomNavigationConfiguration({ iconSize: "huge" as never }, 3)).toThrow("Unsupported BottomNavigation iconSize");
     expect(bottomNavigationRecipe.iconSizes.large).toBeLessThan(bottomNavigationRecipe.iconSizes.xlarge);
     expect(bottomNavigationRecipe.prominentDestination.diameter).toBeGreaterThan(bottomNavigationRecipe.indicator.minWidth);
+  });
+
+  it("reframes only the floating emphasis surface with a recipe shape", () => {
+    expect(resolveBottomNavigationConfiguration({ presentation: "floating", shape: "pill" }, 4).shape).toBe("pill");
+    // `standard` is the floating recipe itself, so it stays valid on every presentation.
+    expect(resolveBottomNavigationConfiguration({ shape: "standard" }, 4).shape).toBe("standard");
+    expect(() => resolveBottomNavigationConfiguration({ shape: "blob" as never, presentation: "floating" }, 4)).toThrow("Unsupported BottomNavigation shape");
+    for (const configuration of [
+      { shape: "square" },
+      { shape: "square", presentation: "capsule" },
+      { shape: "square", presentation: "floating", selection: "tile" },
+    ] as const) {
+      expect(() => resolveBottomNavigationConfiguration(configuration, 4)).toThrow("floating presentation and emphasis selection");
+    }
+    expect(Object.keys(bottomNavigationRecipe.shapes)).toEqual(["rounded", "pill", "compact", "square"]);
+    expect(bottomNavigationRecipe.shapes.pill.radius).toBe("full");
+  });
+
+  it("resolves the lift icon emphasis from the recipe", () => {
+    expect(resolveBottomNavigationConfiguration({ iconEmphasis: "lift" }, 4).iconEmphasis).toBe("lift");
+    expect(() => resolveBottomNavigationConfiguration({ iconEmphasis: "bounce" as never }, 4)).toThrow("Unsupported BottomNavigation iconEmphasis");
+    expect(bottomNavigationRecipe.icon.liftEmphasis.translateY).toBeLessThan(0);
+    expect(bottomNavigationRecipe.icon.liftEmphasis.idleOpacity).toBeGreaterThan(0);
+    expect(bottomNavigationRecipe.icon.liftEmphasis.idleOpacity).toBeLessThan(1);
   });
 });

@@ -5,9 +5,11 @@ import { iconButtonRecipe, listRowRecipe } from "@hjmds/design-contracts/recipes
 import { resolveComposerLimit } from "@hjmds/design-contracts/communication";
 import { Progress } from "./feedback.js";
 import { resolveDesignProfileScreen } from "@hjmds/design-contracts/design-profile-layout";
-import { MessageReactions, ReactionSummaryButton, omitReactionSummary } from "./internal/message-reactions.js";
+import { MessageReactions, ReactionSummaryButton, ReactionSummaryText, omitReactionSummary } from "./internal/message-reactions.js";
 import { MediaAlbumView, useMediaAlbumIndex } from "./internal/media-album.js";
 import { validateMediaSetChoice } from "@hjmds/design-contracts/screen-patterns";
+// Loading/failed page rendered inside `mediaAlbum.renderPage` (2026-10-18); comment rows use the same component.
+export { MediaAlbumPageStatus } from "./internal/media-album.js";
 import { Button, IconButton } from "./actions.js";
 import { useOptionalHjmTheme } from "./provider.js";
 import { TextArea } from "./forms.js";
@@ -145,7 +147,7 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
     const summary = reactions?.summary;
     const reactionMenu = reactions ? omitReactionSummary(reactions) : undefined;
     const summaryItems = summary ? resolveChatReactionSummary(summary) : [];
-    const summaryButton = reactions && summary && summaryItems.length ? _jsx(ReactionSummaryButton, { label: summary.label, items: summaryItems, selected: reactions.value, disabled: reactions.disabled ?? false, onPress: () => menu.current?.open() }) : null;
+    const summaryButton = reactions && summary && summaryItems.length ? (summary.readOnly ? _jsx(ReactionSummaryText, { label: summary.label, items: summaryItems }) : _jsx(ReactionSummaryButton, { label: summary.label, items: summaryItems, selected: reactions.value, disabled: reactions.disabled ?? false, onPress: () => menu.current?.open() })) : null;
     return _jsxs("article", { tabIndex: replyAction && !replyAction.disabled ? 0 : undefined, "aria-keyshortcuts": replyAction ? "Alt+ArrowLeft Alt+ArrowRight" : undefined, "aria-description": replyAction?.label, onKeyDown: event => { if (event.target === event.currentTarget && event.altKey && (event.key === "ArrowLeft" || event.key === "ArrowRight") && replyAction && !replyAction.disabled) {
             event.preventDefault();
             replyAction.onPress();
@@ -180,7 +182,25 @@ export function IconTile({ icon, label, overlay, labelLines = 1, ghost = false, 
     const framed = frame === "surface";
     // Percent radius follows the rendered size, so a filling icon keeps its shape at every cell width.
     const dimensions = size === "fill" ? { width: "100%", minWidth: r.fillMinSize, maxWidth: r.fillMaxSize, aspectRatio: "1" } : { width: r.iconSize, height: r.iconSize };
-    return _jsxs("span", { "data-hjm-icon-tile": "true", "data-frame": frame, "data-shape": shape, "data-size": size, style: { display: "flex", flexDirection: "column", alignItems: "center", gap: r.gap, minWidth: 0, width: "100%", overflow: "visible" }, children: [_jsxs("span", { style: { position: "relative", display: "flex", alignItems: "center", justifyContent: "center", ...dimensions, boxSizing: "border-box", flexShrink: 0, borderRadius: `${Math.round(r.shapes[shape] * 100)}%`, background: framed ? "var(--hjm-color-surface-alt)" : undefined, color: "var(--hjm-color-text)", boxShadow: ghost || !framed ? undefined : "0 0 0 1px var(--hjm-color-border)", outline: ghost ? "1px dashed var(--hjm-color-text-muted)" : undefined, opacity: ghost ? r.ghostOpacity : 1, fontSize: 32 }, children: [icon, overlay] }), _jsx(Text, { variant: "caption", style: { display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: labelLines, width: "100%", maxWidth: labelLines === 2 ? r.multilineLabelMaxWidth : r.labelMaxWidth, minHeight: labelLines === 2 ? r.multilineLabelMinHeight : undefined, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "normal", overflowWrap: "anywhere", textAlign: "center", fontWeight: 500 }, children: label })] });
+    // A render-function icon needs the filling edge as a number. It is read before paint and on every resize; the
+    // computed width ignores transforms (a host's press scale) and keeps fractional cell widths.
+    const frameRef = useRef(null);
+    const measureEdge = size === "fill" && typeof icon === "function";
+    const [fillEdge, setFillEdge] = useState(r.fillMinSize);
+    useLayoutEffect(() => {
+        const element = frameRef.current;
+        if (!measureEdge || !element)
+            return;
+        setFillEdge(Number.parseFloat(getComputedStyle(element).width) || r.fillMinSize);
+        if (typeof ResizeObserver === "undefined")
+            return;
+        const observer = new ResizeObserver(([entry]) => { const width = entry?.borderBoxSize?.[0]?.inlineSize; if (width)
+            setFillEdge(width); });
+        observer.observe(element);
+        return () => observer.disconnect();
+    }, [measureEdge, r.fillMinSize]);
+    const edge = size === "fill" ? fillEdge : r.iconSize;
+    return _jsxs("span", { "data-hjm-icon-tile": "true", "data-frame": frame, "data-shape": shape, "data-size": size, style: { display: "flex", flexDirection: "column", alignItems: "center", gap: r.gap, minWidth: 0, width: "100%", overflow: "visible" }, children: [_jsxs("span", { ref: frameRef, style: { position: "relative", display: "flex", alignItems: "center", justifyContent: "center", ...dimensions, boxSizing: "border-box", flexShrink: 0, borderRadius: `${Math.round(r.shapes[shape] * 100)}%`, background: framed ? "var(--hjm-color-surface-alt)" : undefined, color: "var(--hjm-color-text)", boxShadow: ghost || !framed ? undefined : "0 0 0 1px var(--hjm-color-border)", outline: ghost ? "1px dashed var(--hjm-color-text-muted)" : undefined, opacity: ghost ? r.ghostOpacity : 1, fontSize: 32 }, children: [typeof icon === "function" ? icon({ edge }) : icon, overlay] }), _jsx(Text, { variant: "caption", style: { display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: labelLines, width: "100%", maxWidth: labelLines === 2 ? r.multilineLabelMaxWidth : r.labelMaxWidth, minHeight: labelLines === 2 ? r.multilineLabelMinHeight : undefined, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "normal", overflowWrap: "anywhere", textAlign: "center", fontWeight: 500 }, children: label })] });
 }
 /**
  * Incoming "is typing" row for a ChatScreen timeline (2026-10-18 BurnTok DM drew its own). The host shows it only while

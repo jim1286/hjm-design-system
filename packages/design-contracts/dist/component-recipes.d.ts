@@ -2352,6 +2352,30 @@ export declare const bottomNavigationRecipe: {
         readonly large: 44;
         readonly xlarge: 52;
     };
+    /**
+     * Floating frames for `configuration.shape` (Utilverse home shells, 2026-10-18). `surfacePadding` is the inner
+     * gap between the frame and the destination row; the two tighter frames pair with `density: "compact"` for the
+     * desktop-shell docks. Radii are theme radius tokens, so a design profile's radius scale still applies.
+     * `standard` is absent on purpose: it keeps `presentations.floating`.
+     */
+    readonly shapes: {
+        readonly rounded: {
+            readonly radius: "xl";
+            readonly surfacePadding: 8;
+        };
+        readonly pill: {
+            readonly radius: "full";
+            readonly surfacePadding: 8;
+        };
+        readonly compact: {
+            readonly radius: "lg";
+            readonly surfacePadding: 4;
+        };
+        readonly square: {
+            readonly radius: "sm";
+            readonly surfacePadding: 4;
+        };
+    };
     readonly adaptive: {
         readonly web: "fixed-compact-viewport";
         readonly native: "navigator-tab-bar";
@@ -2505,6 +2529,15 @@ export declare const bottomNavigationRecipe: {
                 readonly idle: 1;
                 readonly selected: 1.06;
             };
+        };
+        /**
+         * `configuration.iconEmphasis: "lift"` (Utilverse dock artwork, 2026-10-18): the selected icon rises one 4pt
+         * step on top of the selected scale, and idle icons dim. Full-color artwork cannot take the selected tint, so
+         * without the dim only the label would mark the current destination. 0.82 is the dock's measured idle opacity.
+         */
+        readonly liftEmphasis: {
+            readonly translateY: number;
+            readonly idleOpacity: 0.82;
         };
     };
     readonly label: {
@@ -3755,6 +3788,12 @@ export declare const toastRecipe: {
     readonly anchor: {
         readonly blockSize: 32;
     };
+    /**
+     * @deprecated Toast has no edge stripe: the tinted icon badge (or product media) carries tone. Retired in 1.10.0
+     * (width 0); since 1.32.0 neither renderer draws an element for it, so there is nothing for a product to hide
+     * (2026-10-18 BurnTok still hid a strip that no longer existed). Kept only so the published recipe shape stays
+     * compatible; remove in the next major.
+     */
     readonly toneMark: {
         readonly width: 0;
         readonly radius: "full";

@@ -6,7 +6,10 @@ export type BottomNavigationInsetProviderProps = Readonly<{
 }>;
 /** Wrap the app shell that holds both the screens and the BottomNavigation. */
 export declare function BottomNavigationInsetProvider({ children }: BottomNavigationInsetProviderProps): import("react").JSX.Element;
-/** Bottom height covered by the BottomNavigation inside the nearest provider; 0 outside one. */
+/**
+ * Bottom height covered by the BottomNavigation inside the nearest provider; 0 outside one. For layouts that are not
+ * a ScreenLayout: inside one the shell already pads by it, so adding it again doubles the space.
+ */
 export declare function useBottomNavigationInset(): number;
 export type BottomNavigationIconRenderProps<Key extends string = string, IconName extends string = string> = Readonly<{
     item: ResolvedBottomNavigationItemDescriptor<Key, IconName>;

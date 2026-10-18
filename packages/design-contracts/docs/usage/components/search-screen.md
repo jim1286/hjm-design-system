@@ -4,8 +4,8 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.17.1
-- 검토일: 2026-10-06
-- 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screens.tsx`·`src/screen-flows.tsx`; 기존 개별 지침을 새 규격으로 통합. `onSubmit`·`filtersOverflow`는 2026-10-06 사용자 요청("검색과 필터 있는 앱 서비스 따라해")의 검색 화면 개편에서 추가. 같은 날 사용자 위임 결정(권장안)으로 미리보기에만 있던 두 단계 검색 로직(`committedQuery`·`recentQueries`·`suggestedQueries`·`suggestions`·`resultSummary`·`appliedFilters`·`filterSheet`)과 `queryLabelVisibility`를, utilverse 적용 조사로 `searching`·`searchingLabel`을 추가([계약 결정 표](../../screen-patterns.md#searchscreen-두-단계-검색)). 1.13.0 utilverse 적용에서 드러난 결함으로 `hostGutter`와 확정 시 키보드 닫기(Web 결과 영역 포커스)를 추가(1.13.1 patch). 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
+- 검토일: 2026-10-18
+- 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screens.tsx`·`src/screen-flows.tsx`; 기존 개별 지침을 새 규격으로 통합. `onSubmit`·`filtersOverflow`는 2026-10-06 사용자 요청("검색과 필터 있는 앱 서비스 따라해")의 검색 화면 개편에서 추가. 같은 날 사용자 위임 결정(권장안)으로 미리보기에만 있던 두 단계 검색 로직(`committedQuery`·`recentQueries`·`suggestedQueries`·`suggestions`·`resultSummary`·`appliedFilters`·`filterSheet`)과 `queryLabelVisibility`를, utilverse 적용 조사로 `searching`·`searchingLabel`을 추가([계약 결정 표](../../screen-patterns.md#searchscreen-두-단계-검색)). 1.13.0 utilverse 적용에서 드러난 결함으로 `hostGutter`와 확정 시 키보드 닫기(Web 결과 영역 포커스)를 추가(1.13.1 patch). `filtersRole`은 2026-10-18 choose-window 적용 감사에서 추가(검색어 때문인 0건의 복구 수단인 범위 필터가 숨겨져 제품이 `resultSummary`를 쓰지 못했다). 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
 - 스토리북: `배포/화면/검색/검색 결과와 필터`
 
 ## 언제 쓰나
@@ -145,7 +145,8 @@ import { SearchScreen } from "@hjmds/react-native/screen-flows";
 | `queryClearLabel` | `string` | `queryField`가 없으면 필수 | 기본 입력의 지우기 버튼 이름. 비어 있으면 `TypeError` |
 | `queryField` | `ReactNode` | 없음 | 기본 `SearchField` 대신 그릴 입력. 지우기 동작을 직접 제공한다 |
 | `debounceMs` | `number` | `searchScreenRecipe.debounceMs` (`300`) | 유한값을 받으며 0 미만은 0. `NaN`·±`Infinity`는 `RangeError`. 두 renderer가 `resolveSearchDebounceMs`를 공유한다 |
-| `filters` | `ReactNode` | 없음 | 검색 입력 아래, 상단에 고정. 두 단계 검색에서는 결과 단계에만, 검색어 때문인 0건에는 숨긴다 |
+| `filters` | `ReactNode` | 없음 | 검색 입력 아래, 상단에 고정. 두 단계 검색에서는 결과 단계에만. 검색어 때문인 0건에는 `filtersRole="narrow"`(기본)면 숨기고 `scope`면 남긴다 |
+| `filtersRole` | `narrow` · `scope` | `narrow` | 1.32.0, 미게시. 필터 줄(`filters`·`filterSheet.trigger`)이 결과에 하는 일. `narrow`는 결과를 좁히기만 해서 적용한 필터 없이 0건이면 검색어 탓이고 어떤 필터도 결과를 되살리지 못하므로 줄을 숨긴다. `scope`는 무엇을 찾을지 고르는 필터(장소명/주소, 지역, 지도 영역)라 적용한 필터가 없어도 바꾸면 결과가 생길 수 있으므로 0건에도 줄을 남긴다. 판정은 두 renderer가 공유하는 `resolveSearchFilterRailVisible`(`@hjmds/design-contracts/screen-patterns`) |
 | `onSubmit` | `(query: string) => void` | 없음 | 확정 신호. 모든 확정에서 키보드를 닫는다(Native `Keyboard.dismiss()`, Web은 고른 항목이면 결과 영역으로 포커스, 1.13.1 변경) — 아래 플랫폼 차이. 기본 입력의 Web Enter(`enterKeyHint="search"`, IME 조합 중 Enter는 무시)·Native 키보드 검색 키(`returnKeyType="search"`, `onSubmitEditing`)와 SearchScreen이 그린 확정 행·제안·최근·추천 검색어가 모두 여기로 온다. 앞뒤 공백을 지운 값이고 공백만이면 부르지 않는다. 고른 값이 입력과 다르면 먼저 `onQueryChange`. 대기 중인 `onSearch` debounce는 그대로 둔다. `queryField`를 주면 그 입력의 키는 연결하지 않는다 |
 | `committedQuery` | `string` | 없음 | 결과를 보여 줄 확정 검색어. 주면 두 단계 검색(`onSubmit` 필수, 타입). 단계: 검색어 공백 = 검색 전, 확정값과 다름 = 입력 중, 같음 = 결과(앞뒤 공백 무시). `children`은 결과 단계에만 그린다 |
 | `queryLabelVisibility` | `visible` · `hidden` | `visible` | `hidden`이면 보이는 label 없이 `queryLabel`을 접근성 이름(Web `aria-label`, Native `accessibilityLabel`)과 placeholder로 쓴다 |
@@ -188,6 +189,7 @@ import { SearchScreen } from "@hjmds/react-native/screen-flows";
   `onSearch`는 보내지 않는다. `onSearch`에서 저장하면 "산", "산책"이 따로 쌓인다(2026-10-06 개편 전 공통 검색 예제의 결함).
 - 두 단계 검색에서 `children`에는 결과 목록만 넣는다. 제안·로딩 행·0건 EmptyState·개수·정렬을 다시 그리면 SearchScreen이 그린 것과 겹친다.
 - 적용 조건은 `appliedFilters`로 넘긴다. 0건 원인(필터면 칩 줄 유지 + `모두 해제`, 검색어면 칩 줄 숨김 + 추천 검색어)을 이 개수로 판정한다.
+- 검색 종류·지역·지도 영역처럼 무엇을 찾을지 고르는 필터는 `filtersRole="scope"`로 표시한다. 검색어 때문인 0건에도 필터 줄이 남아 바꿔 볼 수 있다. 이 때문에 `resultSummary`를 버리고 0건·로딩을 `children`에 다시 그리지 않는다(2026-10-18 choose-window 장소명/주소 전환).
 - 시트 `count`와 결과 개수는 같은 계산에서 나와야 한다. 다르면 "N개 결과 보기"와 적용 뒤 개수가 어긋난다.
 - `contentInset="none"`으로 host가 여백을 주는 화면은 `hostGutter`에 그 여백 이름을 넘긴다. 없으면 `scroll` 줄이 host 여백 안에서 잘린다.
 - 칩이 여러 개인 필터 줄은 `filtersOverflow="scroll"`로 한 줄에 둔다. 제품이 CSS·ScrollView로 가로 스크롤을 따로 만들지 않는다

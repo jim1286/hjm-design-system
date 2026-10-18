@@ -94,6 +94,20 @@ it("opens the hold menu from the reaction summary and gives destructive rows the
   expect(remove).toHaveBeenCalledTimes(1);
 });
 
+// 2026-10-18 Utilverse guests cannot react: the counts stay beside the time as text, not as a menu button.
+it("draws a read-only summary as named text in the same place", async () => {
+  await act(async () => root.render(<HjmProvider><ChatMessage direction="incoming" author="서연" timestamp="오후 3:04"
+    reactions={{ label: "메시지에 반응", closeLabel: "닫기", value: null, onValueChange: () => {}, options,
+      summary: { label: "반응 ❤️ 2개, 😂 1개", readOnly: true, items: [{ id: "heart", emoji: "❤️", count: 2 }, { id: "laugh", emoji: "😂", count: 1 }] } }}>
+    주말에 같이 가요
+  </ChatMessage></HjmProvider>));
+  const counts = host.querySelector<HTMLElement>(".hjm-chat-message__meta .hjm-chat-message__reaction-counts")!;
+  expect(counts.closest("button")).toBeNull();
+  expect(host.querySelector(".hjm-chat-message__reaction-summary")).toBeNull();
+  expect(counts.querySelector(".hjm-visually-hidden")?.textContent).toBe("반응 ❤️ 2개, 😂 1개");
+  expect([...counts.querySelectorAll('[aria-hidden="true"]')].map(node => node.textContent)).toEqual(["❤️2", "😂"]);
+});
+
 it("rejects a summary without a label or with invalid counts", async () => {
   const error = vi.spyOn(console, "error").mockImplementation(() => {});
   const render = (summary: { label: string; items: { id: string; emoji: string; count: number }[] }) => act(async () => root.render(<HjmProvider>

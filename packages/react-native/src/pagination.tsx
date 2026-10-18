@@ -1,26 +1,35 @@
-import { resolvePaginationDescriptor, paginationRecipe as recipe, type ComposePaginationAccessibleName, type PaginationChangeHandler, type PaginationDescriptor, type PaginationLabels } from '@hjmds/design-contracts/components/pagination';
+import { isPaginationOpenEndedDescriptor, resolvePaginationDescriptor, resolvePaginationOpenEndedDescriptor, paginationRecipe as recipe, type ComposePaginationAccessibleName, type ComposePaginationCurrentPageLabel, type PaginationChangeHandler, type PaginationDescriptor, type PaginationLabels, type PaginationOpenEndedDescriptor } from '@hjmds/design-contracts/components/pagination';
 import { resolveColorReference } from '@hjmds/design-contracts/color-references';
 import { Pressable, View } from 'react-native';
 import { Text } from './primitives.js';
 import { useHjmNativeTheme } from './provider.js';
 import type { HjmCompositionStyleProp } from './composition-style.js';
 
+/**
+ * Bounded results pass a total and `composeAccessibleName` for the numbered window; open-ended results pass
+ * `hasNext` and `composeCurrentPageLabel` for previous / current page label / next.
+ */
 export type PaginationProps = Readonly<{
   label: string;
-  descriptor: PaginationDescriptor;
   labels: PaginationLabels;
-  composeAccessibleName: ComposePaginationAccessibleName;
   onPageChange: PaginationChangeHandler;
   disabled?: boolean;
   testID?: string;
   layoutStyle?: HjmCompositionStyleProp;
-}>;
+}> & (
+  | Readonly<{ descriptor: PaginationDescriptor; composeAccessibleName: ComposePaginationAccessibleName; composeCurrentPageLabel?: never }>
+  | Readonly<{ descriptor: PaginationOpenEndedDescriptor; composeCurrentPageLabel: ComposePaginationCurrentPageLabel; composeAccessibleName?: never }>
+);
 
 /** Bounded Native archives need the same page window and validation as Web; feeds still use LoadMore. */
-export function Pagination({ label, descriptor, labels, composeAccessibleName, onPageChange, disabled = false, testID, layoutStyle }: PaginationProps) {
+export function Pagination({ label, descriptor, labels, composeAccessibleName, composeCurrentPageLabel, onPageChange, disabled = false, testID, layoutStyle }: PaginationProps) {
   const theme = useHjmNativeTheme();
   if (!label.trim()) throw new TypeError('Pagination label must not be empty');
-  const resolved = resolvePaginationDescriptor(descriptor, { labels, composeAccessibleName });
+  // The resolvers validate that the matching composer is a function, so a mismatched pair fails loudly.
+  const openEnded = isPaginationOpenEndedDescriptor(descriptor)
+    ? resolvePaginationOpenEndedDescriptor(descriptor, { labels, composeCurrentPageLabel: composeCurrentPageLabel as ComposePaginationCurrentPageLabel })
+    : null;
+  const resolved = openEnded ?? resolvePaginationDescriptor(descriptor as PaginationDescriptor, { labels, composeAccessibleName: composeAccessibleName as ComposePaginationAccessibleName });
   const rtl = theme.environment.direction === 'rtl';
   const button = (key: string | number, text: string, accessibleName: string, unavailable: boolean, current: boolean, onPress: () => void) => (
     <Pressable key={key} accessibilityRole="button" accessibilityLabel={accessibleName}
@@ -37,7 +46,15 @@ export function Pagination({ label, descriptor, labels, composeAccessibleName, o
   );
   return <View accessibilityLabel={label} testID={testID} style={[{ flexDirection: rtl ? 'row-reverse' : 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: recipe.gap }, layoutStyle]}>
     {button('previous', rtl ? '›' : '‹', resolved.labels.previous, !resolved.hasPrevious, false, () => onPageChange(resolved.currentPage - 1, 'previous'))}
-    {resolved.items.map((item, index) => item.type === 'ellipsis'
+    {openEnded ? (
+      // Plain text, not a button: it is the only page the control can address. `selected` mirrors the bounded
+      // current page so assistive tech reports it the same way.
+      <View accessible accessibilityRole="text" accessibilityLabel={openEnded.currentPageLabel} accessibilityState={{ selected: true }}
+        style={{ minHeight: recipe.pageLabel.minHeight, paddingHorizontal: recipe.pageLabel.paddingHorizontal, alignItems: 'center', justifyContent: 'center' }}>
+        <Text accessible={false} style={{ color: resolveColorReference(recipe.pageLabel.color, theme.palette) }}>{openEnded.currentPageLabel}</Text>
+      </View>
+    ) : null}
+    {'items' in resolved && resolved.items.map((item, index) => item.type === 'ellipsis'
       ? <Text key={`ellipsis-${index}`} accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" tone="muted">…</Text>
       : button(item.page, String(item.page), item.accessibleName, false, item.current, () => onPageChange(item.page, 'page')))}
     {button('next', rtl ? '‹' : '›', resolved.labels.next, !resolved.hasNext, false, () => onPageChange(resolved.currentPage + 1, 'next'))}

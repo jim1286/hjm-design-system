@@ -14,6 +14,8 @@ export const bottomNavigationBehaviorDefaults = {
     selection: "emphasis",
     surface: "flat",
     iconSize: "standard",
+    shape: "standard",
+    iconEmphasis: "scale",
     minItems: 2,
     maxItems: 6,
 };
@@ -38,6 +40,8 @@ const configurationKeys = new Set([
     "selection",
     "surface",
     "iconSize",
+    "shape",
+    "iconEmphasis",
 ]);
 const descriptorKeys = new Set(["accessibilityLabel", "items", "selectedKey"]);
 const itemKeys = new Set([
@@ -115,6 +119,8 @@ const keyboardBehaviors = new Set([
 ]);
 const labelModes = new Set(["visible", "hidden"]);
 const iconSizes = new Set(["standard", "large", "xlarge"]);
+const shapes = new Set(["standard", "rounded", "pill", "compact", "square"]);
+const iconEmphases = new Set(["scale", "lift"]);
 export function validateBottomNavigationConfiguration(configuration, itemCount) {
     if (!isObject(configuration)) {
         throw new TypeError("BottomNavigation configuration must be an object");
@@ -169,6 +175,19 @@ export function validateBottomNavigationConfiguration(configuration, itemCount) 
     if (configuration.iconSize !== undefined && !iconSizes.has(configuration.iconSize)) {
         throw new TypeError(`Unsupported BottomNavigation iconSize: ${String(configuration.iconSize)}`);
     }
+    if (configuration.shape !== undefined && !shapes.has(configuration.shape)) {
+        throw new TypeError(`Unsupported BottomNavigation shape: ${String(configuration.shape)}`);
+    }
+    // A shape reframes the floating surface only: bar spans the viewport, capsule is already a pill, and the tile
+    // row owns its own inner padding and card radius.
+    if (configuration.shape !== undefined &&
+        configuration.shape !== "standard" &&
+        (configuration.presentation !== "floating" || configuration.selection === "tile")) {
+        throw new TypeError("BottomNavigation shape requires floating presentation and emphasis selection");
+    }
+    if (configuration.iconEmphasis !== undefined && !iconEmphases.has(configuration.iconEmphasis)) {
+        throw new TypeError(`Unsupported BottomNavigation iconEmphasis: ${String(configuration.iconEmphasis)}`);
+    }
     if (configuration.distribution === "center-gap" && itemCount % 2 !== 0) {
         throw new RangeError("BottomNavigation center-gap distribution requires an even destination count");
     }
@@ -186,6 +205,8 @@ export function resolveBottomNavigationConfiguration(configuration, itemCount) {
         selection: configuration.selection ?? bottomNavigationBehaviorDefaults.selection,
         surface: configuration.surface ?? bottomNavigationBehaviorDefaults.surface,
         iconSize: configuration.iconSize ?? bottomNavigationBehaviorDefaults.iconSize,
+        shape: configuration.shape ?? bottomNavigationBehaviorDefaults.shape,
+        iconEmphasis: configuration.iconEmphasis ?? bottomNavigationBehaviorDefaults.iconEmphasis,
     };
 }
 export function validateBottomNavigationDescriptor(descriptor) {

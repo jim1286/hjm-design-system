@@ -1,13 +1,20 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { resolvePaginationDescriptor } from "@hjmds/design-contracts/components/pagination";
+import { isPaginationOpenEndedDescriptor, resolvePaginationDescriptor, resolvePaginationOpenEndedDescriptor, } from "@hjmds/design-contracts/components/pagination";
 import { forwardRef, useLayoutEffect, useRef } from "react";
 import { classNames } from "./internal.js";
-export const Pagination = forwardRef(function Pagination({ label, descriptor, labels, composeAccessibleName, onPageChange, className, layoutStyle, onFocusCapture, onBlurCapture, ...props }, ref) {
+export const Pagination = forwardRef(function Pagination({ label, descriptor, labels, composeAccessibleName, composeCurrentPageLabel, onPageChange, className, layoutStyle, onFocusCapture, onBlurCapture, ...props }, ref) {
     if (label.trim().length === 0)
         throw new TypeError("Pagination label must not be empty");
-    const resolved = resolvePaginationDescriptor(descriptor, {
+    // The resolvers validate that the matching composer is a function, so a mismatched pair fails loudly.
+    const openEnded = isPaginationOpenEndedDescriptor(descriptor)
+        ? resolvePaginationOpenEndedDescriptor(descriptor, {
+            labels,
+            composeCurrentPageLabel: composeCurrentPageLabel,
+        })
+        : null;
+    const resolved = openEnded ?? resolvePaginationDescriptor(descriptor, {
         labels,
-        composeAccessibleName,
+        composeAccessibleName: composeAccessibleName,
     });
     const focusedButton = useRef(null);
     const currentButton = useRef(null);
@@ -24,7 +31,7 @@ export const Pagination = forwardRef(function Pagination({ label, descriptor, la
                 focusedButton.current = null;
             onBlurCapture?.(event);
         }, children: _jsxs("ul", { className: "hjm-pagination__list", children: [_jsx("li", { children: _jsx("button", { type: "button", className: "hjm-pagination__item hjm-pagination__previous", "aria-label": resolved.labels.previous, "aria-disabled": !resolved.hasPrevious || undefined, onClick: () => { if (resolved.hasPrevious)
-                            onPageChange(resolved.currentPage - 1, "previous"); }, children: _jsx("span", { "aria-hidden": "true", children: "\u2039" }) }) }), resolved.items.map((item, index) => item.type === "ellipsis" ? (_jsx("li", { children: _jsx("span", { className: "hjm-pagination__ellipsis", "aria-hidden": "true", children: "\u2026" }) }, `ellipsis-${index}`)) : (_jsx("li", { children: _jsx("button", { type: "button", className: "hjm-pagination__item", ref: item.current ? currentButton : undefined, "data-state": item.current ? "current" : "idle", "aria-current": item.current ? "page" : undefined, "aria-label": item.accessibleName, onClick: () => {
+                            onPageChange(resolved.currentPage - 1, "previous"); }, children: _jsx("span", { "aria-hidden": "true", children: "\u2039" }) }) }), openEnded ? (_jsx("li", { children: _jsx("span", { className: "hjm-pagination__page-label", "aria-current": "page", children: openEnded.currentPageLabel }) })) : null, "items" in resolved && resolved.items.map((item, index) => item.type === "ellipsis" ? (_jsx("li", { children: _jsx("span", { className: "hjm-pagination__ellipsis", "aria-hidden": "true", children: "\u2026" }) }, `ellipsis-${index}`)) : (_jsx("li", { children: _jsx("button", { type: "button", className: "hjm-pagination__item", ref: item.current ? currentButton : undefined, "data-state": item.current ? "current" : "idle", "aria-current": item.current ? "page" : undefined, "aria-label": item.accessibleName, onClick: () => {
                             if (!item.current)
                                 onPageChange(item.page, "page");
                         }, children: item.page }) }, item.page))), _jsx("li", { children: _jsx("button", { type: "button", className: "hjm-pagination__item hjm-pagination__next", "aria-label": resolved.labels.next, "aria-disabled": !resolved.hasNext || undefined, onClick: () => { if (resolved.hasNext)

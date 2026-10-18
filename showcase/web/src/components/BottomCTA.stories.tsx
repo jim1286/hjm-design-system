@@ -1,3 +1,5 @@
+import { useRef, useState } from "react";
+import { BottomCTA, Dialog, Text } from "@hjmds/react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ContractStory } from "./preview-registry";
 
@@ -7,5 +9,19 @@ const meta = { id: "components-actions-bottom-cta", title: "배포/컴포넌트/
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };
+
+function FocusReturnPreview() {
+  const [open, setOpen] = useState(false);
+  // The action's buttonRef is the button itself; the component ref would be the bar.
+  const start = useRef<HTMLButtonElement>(null);
+  return <div style={{ display: "grid", gap: 12 }}>
+    <Text tone="muted">시작을 눌러 연 창을 닫으면 포커스가 시작 버튼으로 돌아와요.</Text>
+    <BottomCTA primaryAction={{ label: "전광판 시작", onClick: () => setOpen(true), buttonRef: start }} />
+    <Dialog open={open} onOpenChange={setOpen} title="전광판" closeLabel="전광판 닫기" returnFocusRef={start}>
+      <Text>오늘도 좋은 하루</Text>
+    </Dialog>
+  </div>;
+}
+export const FocusReturn: Story = { name: "닫은 뒤 포커스 복귀", render: () => <FocusReturnPreview /> };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

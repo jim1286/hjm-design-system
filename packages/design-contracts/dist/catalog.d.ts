@@ -1623,6 +1623,7 @@ export declare const componentCatalog: readonly [{
     };
     readonly name: "ChatMessage";
     readonly label: "채팅 말풍선";
+    readonly companions: readonly ["MediaAlbumPageStatus"];
     readonly category: "data-display";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -1745,6 +1746,11 @@ export declare const recipeRegistry: {
         readonly itemLabelGap: 4;
         readonly itemLabelVariant: "caption";
         readonly itemLabelLines: 1;
+        readonly itemLabelMaxLines: 2;
+        readonly itemDescriptionVariant: "caption";
+        readonly itemDescriptionTone: "muted";
+        readonly itemDescriptionLines: 1;
+        readonly virtualViewportInset: 4;
     };
     readonly affixRecipe: {
         readonly edge: "top";
@@ -2372,6 +2378,24 @@ export declare const recipeRegistry: {
             readonly large: 44;
             readonly xlarge: 52;
         };
+        readonly shapes: {
+            readonly rounded: {
+                readonly radius: "xl";
+                readonly surfacePadding: 8;
+            };
+            readonly pill: {
+                readonly radius: "full";
+                readonly surfacePadding: 8;
+            };
+            readonly compact: {
+                readonly radius: "lg";
+                readonly surfacePadding: 4;
+            };
+            readonly square: {
+                readonly radius: "sm";
+                readonly surfacePadding: 4;
+            };
+        };
         readonly adaptive: {
             readonly web: "fixed-compact-viewport";
             readonly native: "navigator-tab-bar";
@@ -2513,6 +2537,10 @@ export declare const recipeRegistry: {
                     readonly idle: 1;
                     readonly selected: 1.06;
                 };
+            };
+            readonly liftEmphasis: {
+                readonly translateY: number;
+                readonly idleOpacity: 0.82;
             };
         };
         readonly label: {
@@ -5811,6 +5839,15 @@ export declare const recipeRegistry: {
         readonly navIcon: {
             readonly previous: "chevronStart";
             readonly next: "chevronEnd";
+        };
+        readonly pageLabel: {
+            readonly minHeight: 44;
+            readonly paddingHorizontal: 8;
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textBody";
+                alpha?: number;
+            }>;
         };
         readonly focus: {
             readonly color: Readonly<{

@@ -1,9 +1,9 @@
-import { act } from "react";
+import { act, useEffect, useState } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { userEvent } from "vitest/browser";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { HjmProvider } from "../src/provider.js";
-import { ChatMessage } from "../src/screens.js";
+import { ChatMessage, MediaAlbumPageStatus } from "../src/screens.js";
 import { CommentThreadRow, type CommentThreadItem } from "../src/screen-flows.js";
 import "../src/styles.css";
 
@@ -48,4 +48,41 @@ it("CommentThreadRow places the album after the body, outside the hold target, a
   expect(albumNode.closest(".hjm-comment-row__reactions")).toBeNull();
   expect(new Set(renderPage.mock.calls.map(([index]) => index))).toEqual(new Set([0]));
   expect(() => CommentThreadRow({ item: { ...base, media: <img alt="" />, mediaAlbum: album(renderPage) }, onLike() {}, onReply() {}, replyLabel: "답글" })).toThrow(TypeError);
+});
+
+// 2026-10-18 Utilverse: the frame was one accessible image, so loading text and the retry button inside it were unreachable.
+it("a page status replaces the image and open semantics while keeping the product page mounted", async () => {
+  const onPress = vi.fn(), retry = vi.fn();
+  let mounts = 0, setPhase: (phase: "loading" | "error" | "ready") => void = () => {};
+  function Page() {
+    const [phase, set] = useState<"loading" | "error" | "ready">("loading");
+    setPhase = set;
+    useEffect(() => { mounts += 1; }, []);
+    if (phase === "ready") return <img alt="" data-page="0" />;
+    return phase === "loading" ? <MediaAlbumPageStatus kind="loading" label="사진 불러오는 중" />
+      : <MediaAlbumPageStatus kind="error" label="사진을 불러오지 못했어요" retry={{ label: "다시 시도", onPress: retry }} />;
+  }
+  await act(async () => root.render(<HjmProvider><ChatMessage direction="incoming" author="서연" timestamp="14:32" mediaAlbum={{ ...album(() => <Page />), onPress }}>{null}</ChatMessage></HjmProvider>));
+  const frame = host.querySelector(".hjm-media-album__page")!;
+  expect(button("사진 1/3")).toBeNull();
+  expect(frame.hasAttribute("role")).toBe(false);
+  expect(frame.querySelector(".hjm-media-album__content")!.hasAttribute("aria-hidden")).toBe(false);
+  expect(frame.querySelector('[aria-label="사진 불러오는 중"]')).not.toBeNull();
+  await act(async () => setPhase("error"));
+  expect(frame.querySelector('[role="alert"]')?.textContent).toBe("사진을 불러오지 못했어요");
+  await act(async () => { [...frame.querySelectorAll("button")].find(node => node.textContent === "다시 시도")!.click(); });
+  expect(retry).toHaveBeenCalledTimes(1);
+  expect(onPress).not.toHaveBeenCalled();
+  await act(async () => setPhase("ready"));
+  // Ready again: the overlay opens the page and hides the image beneath; the product page was never remounted.
+  expect(frame.querySelector(".hjm-media-album__content")!.getAttribute("aria-hidden")).toBe("true");
+  await act(async () => { button("사진 1/3").click(); });
+  expect(onPress).toHaveBeenCalledExactlyOnceWith(0);
+  expect(mounts).toBe(1);
+});
+
+it("a static page drops its image role while its status is shown", async () => {
+  await act(async () => root.render(<HjmProvider><ChatMessage direction="incoming" author="서연" timestamp="14:32" mediaAlbum={album(() => <MediaAlbumPageStatus kind="loading" label="사진 불러오는 중" />)}>{null}</ChatMessage></HjmProvider>));
+  expect(host.querySelector('[role="img"]')).toBeNull();
+  expect(() => MediaAlbumPageStatus({ kind: "loading", label: " " })).toThrow(TypeError);
 });

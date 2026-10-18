@@ -46,7 +46,10 @@ const executableFamilyExports = Object.entries(packageJson.exports)
       // SVG/Blobatar effects, QR and charts (2026-10-14) use the complete Expo showcase export; this baseline must resolve without their peers.
       // OverviewScreen composes EffectSurface, so its optional subpath belongs to the same SVG boundary.
       // ./icon-svg (1.31) draws the contract glyph paths with the optional react-native-svg peer, like ./chart.
-      exportPath !== "." && exportPath !== "./toast-liquid" && !(["./design-profile", "./avatar-blobatar", "./avatar-blobatar-motion", "./effect-surface", "./sortable", "./swipe-actions", "./carousel-motion", "./celebration", "./screen-transition", "./qr-code", "./chart", "./thinking-orb", "./image-viewer", "./keyboard-controller", "./sheet-gesture", "./context-menu-native", "./icon-svg"].includes(exportPath)) && typeof target === "string" && target.endsWith(".js"),
+      // ./media-transport, ./toggle-feedback and ./authoring-tools (BezierEditor curve) draw with the same optional
+      // react-native-svg peer; their contract docs state it, so they sit outside this peer-free baseline too.
+      // ./data-workflows composes BarChart from ./chart and therefore inherits the same peer.
+      exportPath !== "." && exportPath !== "./toast-liquid" && !(["./design-profile", "./avatar-blobatar", "./avatar-blobatar-motion", "./effect-surface", "./sortable", "./swipe-actions", "./carousel-motion", "./celebration", "./screen-transition", "./qr-code", "./chart", "./thinking-orb", "./image-viewer", "./keyboard-controller", "./sheet-gesture", "./context-menu-native", "./icon-svg", "./media-transport", "./toggle-feedback", "./authoring-tools", "./data-workflows"].includes(exportPath)) && typeof target === "string" && target.endsWith(".js"),
   );
 
 const requiredRendererSources = executableFamilyExports.map(([, target]) =>

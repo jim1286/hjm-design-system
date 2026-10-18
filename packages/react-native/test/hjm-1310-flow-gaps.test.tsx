@@ -152,3 +152,19 @@ it("renders the report form without screen chrome for a letter or sheet", () => 
   expect(cancel).toHaveBeenCalledOnce();
   act(() => tree.unmount());
 });
+
+// 1.32.0: review title, report time and refresh live in the form's own header (utilverse review queues, 2026-10-18).
+it("puts the description and header actions in the form header beside the title", async () => {
+  const { CompositionLayout } = await import("../src/screens.js");
+  const refresh = vi.fn();
+  const tree = render(<ModerationForm variant="review" title="댓글 신고" description="10월 18일 13:00 접수"
+    actions={<IconButton label="새로고침" onPress={refresh}><View /></IconButton>}
+    decisionReason={{ label: "처리 사유", value: "", onValueChange: () => {} }} decisions={[{ id: "dismiss", label: "기각", onAction: () => {} }]} />);
+  const layout = tree.root.findByType(CompositionLayout);
+  expect(layout.props.title).toBe("댓글 신고");
+  expect(layout.props.description).toBe("10월 18일 13:00 접수");
+  const action = tree.root.findAllByType(IconButton).find(button => button.props.label === "새로고침")!;
+  act(() => action.props.onPress());
+  expect(refresh).toHaveBeenCalledOnce();
+  act(() => tree.unmount());
+});

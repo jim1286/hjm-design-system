@@ -165,6 +165,16 @@ Toast의 `●` 글리프가 뜻 없는 회색 점으로 보였고, 글자 글리
 
 - tone은 32-unit 원형 tinted badge 안의 stroke SVG 아이콘이 전달합니다(neutral = 종). 2px 가장자리
   띠(`toneMark`)는 badge와 역할이 겹쳐 너비 0으로 은퇴했습니다 — slot은 가산 계약을 위해 남깁니다.
+
+### 띠 계약 — 2026-10-18 (1.32.0)
+
+Toast에는 가장자리 상태색 띠가 **없습니다**. tone은 badge(또는 제품 `media`)와 문구가 전달하며, 띠를 켜거나 끄는
+옵션을 두지 않습니다. 번뚝이 1.10.0 이후에도 띠를 숨기려고 Web `.hjm-toast__tone-mark`를 `display: none`으로 덮고
+Native 토스트 영역의 `statusAccents`·`danger`를 바탕색으로 바꿔 두었는데, 덮을 띠가 없었고 Native 덮어쓰기는 tone
+아이콘 색 입력만 지웠습니다. 원인은 은퇴한 slot이 Web DOM에 늘 숨겨진 빈 요소로, Native에 도달하지 않는 분기로 남아
+"띠가 있다"고 읽힌 것입니다. 1.32.0은 두 renderer에서 그 요소·분기를 지우고, `toastRecipe.toneMark`(너비 0)는 게시된
+recipe 모양 호환을 위해서만 `@deprecated`로 남깁니다(다음 major에서 제거). 띠를 다시 그리려면 badge와의 역할 중복을 새로
+검토하는 별도 계약 변경이 필요합니다.
 - action은 끝 정렬 tinted pill(`action.background` = `surface.brand`, 44-unit target)입니다. 라벨과
   fill 대비 4.5:1을 contract test가 지킵니다.
 - 카드 radius md → lg, description은 secondary 색으로 제목과 위계를 나눕니다. 테두리는

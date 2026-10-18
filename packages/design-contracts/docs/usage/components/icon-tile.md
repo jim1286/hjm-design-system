@@ -45,11 +45,16 @@ import { IconTile } from "@hjmds/react-native/screens";
 </Pressable>
 ```
 
+```tsx
+// Web·Native 같은 형태 — 격자 칸을 채우는 고정 크기 이미지 아트워크
+<IconTile frame="none" size="fill" label={title} icon={({ edge }) => <ToolArtwork id={tool.id} size={edge} />} />
+```
+
 ## 축과 기본값
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| icon | ReactNode | 필수 | 아이콘 원본 |
+| icon | `ReactNode` · `(artwork: IconTileArtwork) => ReactNode` | 필수 | 아이콘 원본. 함수면 그려질 아이콘 한 변 `artwork.edge`를 받는다(`fixed` 64, `fill`은 측정한 칸 크기 48~68). 고정 크기 이미지·생성 아트워크는 이 값으로 크기를 맞춘다(미게시, 1.31.0 이후) |
 | label | string | 필수 | 제목 |
 | overlay | ReactNode | 없음 | 제품 배지 |
 | labelLines | 1 또는 2 | 1 | 제목 줄 수 |
@@ -58,7 +63,7 @@ import { IconTile } from "@hjmds/react-native/screens";
 | shape | `"squircle"` · `"square"` · `"circle"` | `"squircle"` | 미게시. 틀(과 ghost 점선)의 모서리. 크기 대비 비율 `iconTileRecipe.shapes`(squircle 0.22 · square 0 · circle 0.5). 제품 아이콘 테마(아이폰 셸 squircle, Windows·Linux 셸 square)를 따른다 |
 | size | `"fixed"` · `"fill"` | `"fixed"` | 미게시. `fixed`는 64×64, `fill`은 격자 칸 폭을 채우되 `fillMinSize` 48 ~ `fillMaxSize` 68 사이로 제한한 정사각형. 열 수·칸 폭은 host Grid가 정하고 제품이 칸 크기를 계산해 넘기지 않는다 |
 
-`icon: ReactNode`, `label: string`, `overlay?: ReactNode`, `labelLines?: 1 | 2`(기본1), `ghost?: boolean`(기본false). 두 줄은 런처 제목 높이44를 예약하고 ghost는 이동 대상의 점선/반투명 표현이다. 아이콘 64, 제목 최대 폭72, 간격6을 공유 recipe가 정한다. overlay는 아이콘 기준 배지를 위한 슬롯이며 넘침을 자르지 않는다.
+`icon: ReactNode | ((artwork: IconTileArtwork) => ReactNode)`, `label: string`, `overlay?: ReactNode`, `labelLines?: 1 | 2`(기본1), `ghost?: boolean`(기본false). 두 줄은 런처 제목 높이44를 예약하고 ghost는 이동 대상의 점선/반투명 표현이다. 아이콘 64, 제목 최대 폭72, 간격6을 공유 recipe가 정한다. overlay는 아이콘 기준 배지를 위한 슬롯이며 넘침을 자르지 않는다.
 
 ## 배치
 
@@ -76,6 +81,7 @@ import { IconTile } from "@hjmds/react-native/screens";
 
 아이콘 원본과 제품 배지만 전달한다. 같은 배치를 별도 View/div로 다시 만들지 않는다.
 
+- `size="fill"`의 이미지 아트워크는 `icon={({ edge }) => <Artwork size={edge} />}`로 그린다. 제품이 격자 폭에서 48~68 제한을 다시 계산해 넘기지 않는다. 측정 전 쪽 수·높이 추정처럼 타일 밖에서 크기가 필요하면 contracts `resolveIconTileFillEdge(칸 폭)`을 쓴다. 측정 전 첫 렌더의 `edge`는 `fillMinSize` 48이다(Web은 그리기 전에 측정한다).
 - 완성된 아이콘 아트워크 위에 틀이 두 겹으로 그려지면 `frame="none"`, 아이콘 모양이 테마마다 다르면 `shape`, 칸 크기를 따라 커져야 하면 `size="fill"`을 쓴다. 이 이유로 런처 항목을 직접 만들지 않는다.
 
 ## 상태와 상호작용
@@ -97,3 +103,4 @@ host에 전체 행동의 현지화 이름을 제공한다. 아이콘 내부 장�
 ## 근거
 
 - `frame`·`shape`·`size`: 2026-10-18 HJM 1.30.0 감사. 유틸버스 런처는 도구 아트워크가 완성된 아이콘(셸에 따라 iPhone squircle, Windows·Linux square)이고 크기가 격자를 따라 48~68로 변해, 고정 64 틀을 그리는 IconTile 대신 자체 타일을 유지했다. 범위 48~68은 그 런처의 실제 칸 계산값이다.
+- `icon` 함수와 `resolveIconTileFillEdge`: 2026-10-18 HJM 1.32.0 감사. `size="fill"` 채택 뒤에도 유틸버스 런처는 도구 아트워크가 고정 크기 이미지라 격자 폭에서 48~68 제한을 다시 계산해(`ToolboxScreen` `size`) 아트워크에 넘겼다. 타일이 측정한 한 변을 아트워크에 넘겨 계산을 HJM 한 곳에 둔다.

@@ -196,7 +196,7 @@ it("places ListDetailScreen and SavedItemsScreen layoutStyle on the host that ow
 describe("SearchScreen two-step search", () => {
  type Filters={photo:boolean;saved?:boolean};
  type Spies={submit?:(query:string)=>void;apply?:(next:Filters)=>void;sortChange?:(id:string)=>void};
- function TwoStep({initialQuery="",initialCommitted="",initialApplied={photo:false},count=3,spies={}}:{initialQuery?:string;initialCommitted?:string;initialApplied?:Filters;count?:number|null;spies?:Spies}){
+ function TwoStep({initialQuery="",initialCommitted="",initialApplied={photo:false},count=3,spies={},filtersRole}:{initialQuery?:string;initialCommitted?:string;initialApplied?:Filters;count?:number|null;spies?:Spies;filtersRole?:"narrow"|"scope"}){
   const [query,setQuery]=useState(initialQuery),[committed,setCommitted]=useState(initialCommitted),[recents,setRecents]=useState(["카페","아침"]);
   const [applied,setApplied]=useState(initialApplied),[open,setOpen]=useState(false),[sort,setSort]=useState("relevance");
   return <SearchScreen title="검색" queryLabel="기록 검색" queryClearLabel="검색어 지우기" query={query} onQueryChange={setQuery} debounceMs={0} onSearch={()=>{}}
@@ -210,7 +210,7 @@ describe("SearchScreen two-step search", () => {
    filterSheet={{open,onOpenChange:setOpen,title:"필터",value:applied,onApply:next=>{spies.apply?.(next);setApplied(next);},count:draft=>draft.photo?0:5,reset:()=>({photo:false}),isDefault:draft=>!draft.photo,
     renderContent:(draft,setDraft)=><Button accessibilityState={{selected:draft.photo}} onPress={()=>setDraft({photo:!draft.photo})}>사진만</Button>,
     labels:{close:"닫기",reset:"초기화",apply:value=>value===0?"결과 없음":`${value}개 결과 보기`},trigger:{label:value=>value?`필터 ${value}`:"필터",accessibilityLabel:value=>value?`필터, ${value}개 적용됨`:"필터"}}}
-   filters={<Button onPress={()=>{}}>빠른 조건</Button>}>
+   filters={<Button onPress={()=>{}}>빠른 조건</Button>} {...(filtersRole?{filtersRole}:{})}>
    <Button onPress={()=>{}}>결과 목록</Button>
   </SearchScreen>;
  }
@@ -295,6 +295,9 @@ describe("SearchScreen two-step search", () => {
   act(()=>tree.update(wrap(<TwoStep key="query" initialQuery="없는말" initialCommitted="없는말" count={0}/>)));
   expect(buttons(tree)).not.toContain("빠른 조건");expect(labelled(tree,"필터")).toHaveLength(0);
   expect(tree.root.findAll(node=>(node.type as unknown)==="Text"&&node.props.children==="자주 찾는 주제").length).toBeGreaterThan(0);
+  // Scope filters (keyword/address, choose-window 2026-10-18) can turn this zero into results, so they stay.
+  act(()=>tree.update(wrap(<TwoStep key="scope" initialQuery="없는말" initialCommitted="없는말" count={0} filtersRole="scope"/>)));
+  expect(buttons(tree)).toContain("빠른 조건");expect(labelled(tree,"필터").length).toBeGreaterThan(0);
   act(()=>tree.unmount());
  });
  it("replaces results with skeleton rows while loading and scrolls to the top after a sort change", async () => {

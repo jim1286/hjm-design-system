@@ -426,15 +426,7 @@ function ToastSurface({ snapshot, managedMotion = false, announces = true, suspe
                     borderRadius: surfaceRadius,
                     borderWidth: pressFocused || pressed ? toastRecipe.states.focus.width : 0,
                     borderColor: resolveColorReference(toastRecipe.states.focus.color, theme.palette),
-                }) })) : null, toastRecipe.toneMark.width > 0 ? (_jsx(View, { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
-                    backgroundColor: accent,
-                    borderRadius: theme.tokens.radius[toastRecipe.toneMark.radius],
-                    bottom: 0,
-                    start: 0,
-                    position: "absolute",
-                    top: 0,
-                    width: toastRecipe.toneMark.width,
-                } })) : null, !announces || Platform.OS === "ios" ? null : (_jsx(Text, { accessibilityLabel: resolved.announcement, accessibilityLiveRegion: resolved.priority === "high" ? "assertive" : "polite", accessibilityRole: resolved.priority === "high" ? "alert" : undefined, accessible: true, style: { height: 1, opacity: 0, position: "absolute", width: 1 }, children: resolved.announcement })), _jsxs(View, { pointerEvents: resolved.press ? "box-none" : "auto", style: {
+                }) })) : null, !announces || Platform.OS === "ios" ? null : (_jsx(Text, { accessibilityLabel: resolved.announcement, accessibilityLiveRegion: resolved.priority === "high" ? "assertive" : "polite", accessibilityRole: resolved.priority === "high" ? "alert" : undefined, accessible: true, style: { height: 1, opacity: 0, position: "absolute", width: 1 }, children: resolved.announcement })), _jsxs(View, { pointerEvents: resolved.press ? "box-none" : "auto", style: {
                     // Start-aligned so a multi-line or large-text toast keeps its badge beside the title (Web does the same).
                     alignItems: "flex-start",
                     direction: theme.environment.direction,

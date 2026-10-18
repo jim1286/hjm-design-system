@@ -63,7 +63,10 @@ export function BottomNavigationInsetProvider({ children }: BottomNavigationInse
   );
 }
 
-/** Bottom height covered by the BottomNavigation inside the nearest provider; 0 outside one. */
+/**
+ * Bottom height covered by the BottomNavigation inside the nearest provider; 0 outside one. For layouts that are not
+ * a ScreenLayout: inside one the shell already pads by it, so adding it again doubles the space.
+ */
 export function useBottomNavigationInset(): number {
   return useContext(BottomNavigationInsetContext);
 }
@@ -219,6 +222,11 @@ function BottomNavigationInner<
   const iconSize = presentation.iconSize === "standard"
     ? iconRecipe.sizes[density.icon]
     : bottomNavigationRecipe.iconSizes[presentation.iconSize];
+  // `shape` reframes the floating surface (radius + inner padding); `standard` keeps the presentation recipe.
+  const shapeRecipe = presentation.shape === "standard"
+    ? null
+    : bottomNavigationRecipe.shapes[presentation.shape];
+  const liftRecipe = bottomNavigationRecipe.icon.liftEmphasis;
   const prominentRecipe = bottomNavigationRecipe.prominentDestination;
   // Lifting by (diameter - indicator height) keeps the prominent label on the other labels' line; an app-icon
   // slot taller than the indicator minimum raises that height.
@@ -265,6 +273,8 @@ function BottomNavigationInner<
       data-selection={presentation.selection}
       data-surface={presentation.surface}
       data-presentation={presentation.presentation}
+      data-shape={presentation.shape}
+      data-icon-emphasis={presentation.iconEmphasis}
       dir={presentation.direction}
       style={{
         "--hjm-bottom-navigation-center-gap": `${centerGap}px`,
@@ -284,6 +294,14 @@ function BottomNavigationInner<
         "--hjm-bottom-navigation-outer-top": `${presentationRecipe.outerPaddingTop}px`,
         "--hjm-bottom-navigation-prominent-diameter": `${prominentRecipe.diameter}px`,
         "--hjm-bottom-navigation-prominent-lift": `${prominentLift}px`,
+        ...(shapeRecipe ? {
+          "--hjm-bottom-navigation-shape-radius": `var(--hjm-radius-${shapeRecipe.radius})`,
+          "--hjm-bottom-navigation-shape-padding": `${shapeRecipe.surfacePadding}px`,
+        } : {}),
+        ...(presentation.iconEmphasis === "lift" ? {
+          "--hjm-bottom-navigation-lift-offset": `${liftRecipe.translateY}px`,
+          "--hjm-bottom-navigation-lift-idle-opacity": liftRecipe.idleOpacity,
+        } : {}),
         ...style,
         ...layoutStyle,
       } as CSSProperties}

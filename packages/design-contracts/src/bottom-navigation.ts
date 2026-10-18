@@ -44,10 +44,25 @@ export type BottomNavigationConfiguration = Readonly<{
    * Utilverse's dock, which drew its own Surface/Button row to show 38-54pt app icons.
    */
   iconSize?: BottomNavigationIconSize;
+  /**
+   * Frame of the floating surface (`bottomNavigationRecipe.shapes`): corner radius and the inner padding between
+   * the frame and the destinations. `standard` keeps the floating recipe. Floating + emphasis selection only.
+   * Added 2026-10-18 for Utilverse's home shells (iPhone rounded dock, Android pill, macOS compact dock,
+   * Linux/Windows square taskbar), which otherwise assembled their own Surface/Button bar per shell.
+   */
+  shape?: BottomNavigationShape;
+  /**
+   * Selected icon emphasis (`bottomNavigationRecipe.icon`). `scale` is the default glyph emphasis; `lift` also
+   * raises the selected icon and dims idle icons, the non-color cue for full-color artwork from `renderIcon` that
+   * cannot take the selected tint. Added 2026-10-18 with `shape` for the same Utilverse dock.
+   */
+  iconEmphasis?: BottomNavigationIconEmphasis;
 }>;
 
 export type BottomNavigationSurface = "flat" | "raised";
 export type BottomNavigationIconSize = "standard" | "large" | "xlarge";
+export type BottomNavigationShape = "standard" | "rounded" | "pill" | "compact" | "square";
+export type BottomNavigationIconEmphasis = "scale" | "lift";
 
 export type ResolvedBottomNavigationConfiguration = Readonly<{
   presentation: BottomNavigationPresentation;
@@ -59,6 +74,8 @@ export type ResolvedBottomNavigationConfiguration = Readonly<{
   selection: "emphasis" | "tile";
   surface: BottomNavigationSurface;
   iconSize: BottomNavigationIconSize;
+  shape: BottomNavigationShape;
+  iconEmphasis: BottomNavigationIconEmphasis;
 }>;
 
 /**
@@ -179,6 +196,8 @@ export const bottomNavigationBehaviorDefaults = {
   selection: "emphasis",
   surface: "flat",
   iconSize: "standard",
+  shape: "standard",
+  iconEmphasis: "scale",
   minItems: 2,
   maxItems: 6,
 } as const satisfies Readonly<{
@@ -188,6 +207,8 @@ export const bottomNavigationBehaviorDefaults = {
   selection: "emphasis" | "tile";
   surface: BottomNavigationSurface;
   iconSize: BottomNavigationIconSize;
+  shape: BottomNavigationShape;
+  iconEmphasis: BottomNavigationIconEmphasis;
   minItems: number;
   maxItems: number;
 }>;
@@ -215,6 +236,8 @@ const configurationKeys = new Set([
   "selection",
   "surface",
   "iconSize",
+  "shape",
+  "iconEmphasis",
 ]);
 const descriptorKeys = new Set(["accessibilityLabel", "items", "selectedKey"]);
 const itemKeys = new Set([
@@ -316,6 +339,8 @@ const keyboardBehaviors = new Set<BottomNavigationKeyboardBehavior>([
 ]);
 const labelModes = new Set<BottomNavigationLabels>(["visible", "hidden"]);
 const iconSizes = new Set<BottomNavigationIconSize>(["standard", "large", "xlarge"]);
+const shapes = new Set<BottomNavigationShape>(["standard", "rounded", "pill", "compact", "square"]);
+const iconEmphases = new Set<BottomNavigationIconEmphasis>(["scale", "lift"]);
 
 export function validateBottomNavigationConfiguration(
   configuration: BottomNavigationConfiguration,
@@ -400,6 +425,23 @@ export function validateBottomNavigationConfiguration(
       `Unsupported BottomNavigation iconSize: ${String(configuration.iconSize)}`,
     );
   }
+  if (configuration.shape !== undefined && !shapes.has(configuration.shape)) {
+    throw new TypeError(`Unsupported BottomNavigation shape: ${String(configuration.shape)}`);
+  }
+  // A shape reframes the floating surface only: bar spans the viewport, capsule is already a pill, and the tile
+  // row owns its own inner padding and card radius.
+  if (
+    configuration.shape !== undefined &&
+    configuration.shape !== "standard" &&
+    (configuration.presentation !== "floating" || configuration.selection === "tile")
+  ) {
+    throw new TypeError("BottomNavigation shape requires floating presentation and emphasis selection");
+  }
+  if (configuration.iconEmphasis !== undefined && !iconEmphases.has(configuration.iconEmphasis)) {
+    throw new TypeError(
+      `Unsupported BottomNavigation iconEmphasis: ${String(configuration.iconEmphasis)}`,
+    );
+  }
   if (configuration.distribution === "center-gap" && itemCount % 2 !== 0) {
     throw new RangeError(
       "BottomNavigation center-gap distribution requires an even destination count",
@@ -426,6 +468,8 @@ export function resolveBottomNavigationConfiguration(
     selection: configuration.selection ?? bottomNavigationBehaviorDefaults.selection,
     surface: configuration.surface ?? bottomNavigationBehaviorDefaults.surface,
     iconSize: configuration.iconSize ?? bottomNavigationBehaviorDefaults.iconSize,
+    shape: configuration.shape ?? bottomNavigationBehaviorDefaults.shape,
+    iconEmphasis: configuration.iconEmphasis ?? bottomNavigationBehaviorDefaults.iconEmphasis,
   };
 }
 

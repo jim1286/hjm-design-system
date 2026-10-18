@@ -6070,7 +6070,9 @@
       "storyId": "data-display/chat-message",
       "name": "ChatMessage",
       "label": "채팅 말풍선",
-      "companions": [],
+      "companions": [
+        "MediaAlbumPageStatus"
+      ],
       "extensions": [],
       "category": "data-display",
       "platform": "adaptive",

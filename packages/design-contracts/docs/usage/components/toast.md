@@ -159,6 +159,9 @@ Native의 선택형 `/toast-liquid`도 가장 가까운 프로필의 `radius.xl`
 - Provider/Region은 앱에 하나만 두고 화면마다 새로 만들지 않는다. 진행 상태를 바꿀 때는 같은 `id`로 다시 `publish`한다.
 - 문구는 모두 i18n 키로 만든 일반 문자열이다(ReactNode 아님). 아이콘만 있는 닫기 버튼 때문에 `closeLabel`이 필수다.
 - 색·모양은 tone이 정한다. 카드에 브랜드 색을 덮지 않는다. 문구·id·action은 제품 소유, 카드 모양·큐·타이머는 HJM 소유다.
+- 가장자리 상태색 띠는 없다. tone은 배지(또는 `media`)와 문구가 전달한다. 띠를 숨기는 옵션·CSS·팔레트 덮어쓰기를 두지 않는다 —
+  1.10.0에 띠를 없앴고, 미게시(1.32.0 예정)부터는 Web의 늘 숨겨져 있던 `.hjm-toast__tone-mark` 요소도 그리지 않는다.
+  Native에서 `statusAccents`·`danger`를 바탕색으로 바꾸면 띠가 아니라 tone 아이콘에 넘기는 색(`renderToneIcon`의 `color`)이 지워진다.
 - Native는 `safeAreaInsets`를 제품이 넘긴다(기본 `{}`). 하단 고정 바가 있으면 Web `bottomOffset`, Native `keyboardOffset`으로 띄운다.
 
 ## 플랫폼 차이
@@ -173,6 +176,8 @@ Native의 선택형 `/toast-liquid`도 가장 가까운 프로필의 `radius.xl`
 | `presentation: "liquid"` | 무시하고 기본 카드 | `presentationAdapter`가 있을 때만 리퀴드 |
 
 ## 함정
+
+- 2026-10-18 번뚝은 1.10.0에 이미 없어진 띠를 숨기려고 Web `.hjm-toast__tone-mark { display: none }`과 Native 토스트 영역의 팔레트 덮어쓰기를 유지하고 있었다. 띠 계약은 "없음"이며 `toastRecipe.toneMark`는 호환용으로만 남은 deprecated 값(너비 0)이다.
 
 - `/toast-liquid`는 앱에 없을 수 있는 optional native peer `@shopify/react-native-skia`·`react-native-reanimated`·
   `react-native-worklets`를 import한다(peerDependenciesMeta에서 모두 optional). 2026-10에 이런 subpath가

@@ -3,7 +3,7 @@ import { type ScreenLayoutProps } from "./screens.js";
 import { type SheetProps } from "./overlays.js";
 import { type UploadItemDescriptor, type UploadItemLabels } from "@hjmds/design-contracts/components/upload-item";
 import { type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
-import { type CommentMenuItemDescriptor, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
+import { type CommentMenuItemDescriptor, type SearchFiltersRole, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
 import { type MediaAlbum } from "./internal/media-album.js";
 export type { MediaAlbum } from "./internal/media-album.js";
 import { type ContainerGutter } from "@hjmds/design-contracts/components/container";
@@ -118,10 +118,14 @@ export declare function ModerationScreen(props: ModerationScreenProps): import("
 /** The moderation fields and actions without screen chrome, for a report opened inside a letter, card or Sheet
  * (2026-10-18: diairy turned ModerationScreen's header and padding off to place it in a letter). The host owns the
  * surrounding surface and placement; `title` is an optional section heading (omit it inside a titled Sheet) and
- * `cancel` adds a ghost "collapse" action after the others. */
+ * `cancel` adds a ghost "collapse" action after the others.
+ * `description` and `actions` fill the same CompositionLayout header (2026-10-18: utilverse review queues wrapped the
+ * form in a second CompositionLayout only to show the report time and a refresh button beside the title). */
 export type ModerationFormProps = ModerationFields & Readonly<{
     title?: string;
     headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
+    description?: string;
+    actions?: ReactNode;
     cancel?: ScreenFlowAction;
     layoutStyle?: ScreenLayoutProps["layoutStyle"];
 }>;
@@ -149,7 +153,12 @@ export type MediaSelectionRotate = Readonly<{
     itemLabel(item: MediaSelectionItem): string;
     onRotate(id: string): void;
 }>;
-/** Copy and callbacks of one item's actions, shared by the screen grid and MediaSelectionCell. */
+/**
+ * Copy and callbacks of one item's actions, shared by the screen grid and MediaSelectionCell.
+ * `disabled` locks move/rotate/remove while the host runs a job over the selection (2026-10-18: Utilverse photo-to-PDF
+ * and photo strip kept their own cells so a reorder could not diverge from a running build). Upload retry/cancel stay
+ * live: they act on one transfer, not on the order or content the job reads.
+ */
 export type MediaSelectionItemActions = {
     labels: UploadItemLabels;
     actionLabels: {
@@ -165,6 +174,7 @@ export type MediaSelectionItemActions = {
     onRetry(id: string): void;
     onCancel(id: string): void;
     rotate?: MediaSelectionRotate;
+    disabled?: boolean;
 };
 export type MediaSelectionScreenProps = Base & {
     library?: ReactNode;
@@ -183,9 +193,9 @@ export type MediaSelectionCellProps = MediaSelectionItemActions & Readonly<{
  * One picked item: preview, upload status, then move/rotate/remove. Exported (2026-10-18, Utilverse photo tools) so a
  * virtualized host (FlatList renderItem) renders the same cell as the screen grid instead of a copy.
  */
-export declare function MediaSelectionCell({ item, index, count, labels, actionLabels, removeLabel, moveUpLabel, moveDownLabel, onRemove, onMove, onRetry, onCancel, rotate }: MediaSelectionCellProps): import("react").JSX.Element;
+export declare function MediaSelectionCell({ item, index, count, labels, actionLabels, removeLabel, moveUpLabel, moveDownLabel, onRemove, onMove, onRetry, onCancel, rotate, disabled }: MediaSelectionCellProps): import("react").JSX.Element;
 /** A photo is the primary content; upload status stays below it instead of replacing the thumbnail. */
-export declare function MediaSelectionScreen({ library, selectionSummary, items, add, done, labels, actionLabels, removeLabel, moveUpLabel, moveDownLabel, onRemove, onMove, onRetry, onCancel, rotate, ...screen }: MediaSelectionScreenProps): import("react").JSX.Element;
+export declare function MediaSelectionScreen({ library, selectionSummary, items, add, done, labels, actionLabels, removeLabel, moveUpLabel, moveDownLabel, onRemove, onMove, onRetry, onCancel, rotate, disabled, ...screen }: MediaSelectionScreenProps): import("react").JSX.Element;
 export type SearchRecentQueries = Readonly<{
     items: readonly string[];
     title: string;
@@ -318,6 +328,8 @@ export type SearchScreenProps<F = unknown> = Base & SearchInputSlot & SearchComm
     footer?: ScreenLayoutProps["footer"];
     /** `scroll` keeps `filters` on one horizontally scrolling line that bleeds to the screen edges. */
     filtersOverflow?: "wrap" | "scroll";
+    /** `scope` marks filters that choose what is searched (kind, region, map area), so they stay on a query-caused zero as its recovery; `narrow` (default) hides them there. */
+    filtersRole?: SearchFiltersRole;
     /** Gutter the host (Container `gutter`, Sheet = `regular`) already applies around this screen; the scroll rail bleeds over it too. */
     hostGutter?: ContainerGutter;
     /** `hidden` drops the visible label (the field keeps `queryLabel` as its accessible name and placeholder). */
@@ -330,7 +342,7 @@ export type SearchScreenProps<F = unknown> = Base & SearchInputSlot & SearchComm
     filterSheet?: SearchFilterSheet<F>;
 };
 /** Abort is supplied to the host request; the host must ignore aborted responses before committing results. */
-export declare function SearchScreen<F = unknown>({ query, queryLabel, queryField, queryClearLabel, onQueryChange, onSearch, debounceMs, filters, recentSearches, children, onSubmit, committedQuery, filtersOverflow, hostGutter, queryLabelVisibility, searching, searchingLabel, recentQueries, suggestedQueries, suggestions, resultSummary, appliedFilters, filterSheet, initialFocus, ...screen }: SearchScreenProps<F>): import("react").JSX.Element;
+export declare function SearchScreen<F = unknown>({ query, queryLabel, queryField, queryClearLabel, onQueryChange, onSearch, debounceMs, filters, recentSearches, children, onSubmit, committedQuery, filtersOverflow, filtersRole, hostGutter, queryLabelVisibility, searching, searchingLabel, recentQueries, suggestedQueries, suggestions, resultSummary, appliedFilters, filterSheet, initialFocus, ...screen }: SearchScreenProps<F>): import("react").JSX.Element;
 export type PermissionScreenProps = Base & {
     status: PermissionScreenStatus;
     illustration?: ReactNode;

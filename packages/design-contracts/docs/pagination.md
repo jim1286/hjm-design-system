@@ -31,6 +31,22 @@ validator가 `TypeError`로 거부한다. `currentPage`가 유도된 `totalPages
 범위를 벗어나면 `RangeError`로 거부한다 — 조용히 clamp하지 않는다(브리프:
 "validator는 던진다").
 
+### 전체 수를 모르는 결과 (2026-10-18, 1.32.0)
+
+choose-window 장소 검색은 Kakao Local이 `meta.is_end`(다음 페이지가 있는지)만 주고 총량은 주지 않아 Pagination을
+쓰지 못하고 이전/다음 Button 줄을 직접 조립했다. LoadMore는 결과를 이어 붙이므로 "이전 결과"로 돌아가는 이 화면의
+페이지 교체 모델과 다르다. 그래서 같은 컴포넌트에 별도 descriptor 형태를 더했다.
+
+- `PaginationOpenEndedDescriptor = { currentPage, hasNext }`. 총량 필드·window 옵션은 함께 줄 수 없고
+  (`hasNext`는 총량 형태에서 금지 키다) `isPaginationOpenEndedDescriptor`가 `hasNext` 유무로 형태를 가른다.
+- `resolvePaginationOpenEndedDescriptor(descriptor, { labels, composeCurrentPageLabel })`가
+  `{ currentPage, hasPrevious, hasNext, labels, currentPageLabel }`을 만든다. 번호 목록은 없다. 다음 페이지 너머는 주소를
+  알 수 없기 때문이다. 현재 페이지 표시는 버튼이 아닌 글자이며 제품이 조립한 `currentPageLabel`이 보이는 글자이자
+  접근성 이름이다. 기존 `composeAccessibleName`의 `totalPages: number`를 nullable로 넓히면 기존 제품 composer의 타입이
+  깨지므로 별도 composer로 분리했다.
+- 기존 총량 형태와 `ResolvedPaginationDescriptor`는 바뀌지 않는다. renderer props는 descriptor 형태와 composer를
+  짝지은 union이며, 짝이 맞지 않으면 resolver가 composer 부재로 던진다.
+
 ### 배제한 것 — size changer와 jump-to-page
 
 **페이지 크기 변경(size changer)과 "몇 페이지로 이동" 입력은 넣지 않는다.**
@@ -110,6 +126,7 @@ Steps와 같은 이유다: 순서를 나타내는 문장의 어순과 조사는 
 | 축 | 상태 |
 | --- | --- |
 | `currentPage`, `totalPages`(또는 `totalCount`+`pageSize`) | 공개(필수) |
+| 총량 없는 `hasNext` + `composeCurrentPageLabel` | 공개(1.32.0, 별도 descriptor 형태) |
 | 페이지 window 크기(`siblingCount`/`boundaryCount`) | 공개(선택, 기본값 있음) |
 | 생략 표시 | 공개하되 장식으로 한정 — 낭독 제외 |
 | page size changer | **배제** — 측정된 수요 없음, 필요 시 제품이 같은 상태를 다시 넘기는 방식으로 조합 가능 |

@@ -1,6 +1,6 @@
 import { bottomCtaRecipe } from "@hjmds/design-contracts/recipes";
 import { isLargeTextScale } from "@hjmds/design-contracts/components/design-system-provider";
-import { forwardRef, useContext, type CSSProperties, type HTMLAttributes, type MouseEventHandler, type ReactNode } from "react";
+import { forwardRef, useContext, type CSSProperties, type HTMLAttributes, type MouseEventHandler, type ReactNode, type Ref } from "react";
 import { Button, type ButtonSize, type ButtonTone } from "./actions.js";
 import { classNames } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
@@ -16,6 +16,11 @@ export type BottomCTAAction = Readonly<{
   loadingLabel?: string;
   size?: ButtonSize;
   tone?: ButtonTone;
+  /**
+   * Ref to this action's button. The component `ref` names the bar; a dialog or overlay opened from the primary
+   * action needs the button itself to return focus to on close (2026-10-18 Utilverse display board).
+   */
+  buttonRef?: Ref<HTMLButtonElement>;
 }>;
 
 export type BottomCTAProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & Readonly<{
@@ -32,7 +37,7 @@ export type BottomCTAProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & 
 
 function Action({ action, tone }: { action: BottomCTAAction; tone: ButtonTone }) {
   if (!action.label.trim()) throw new TypeError("BottomCTA action label must not be empty");
-  return <Button onClick={action.onClick} tone={action.tone ?? tone} size={action.size ?? "medium"}
+  return <Button ref={action.buttonRef} onClick={action.onClick} tone={action.tone ?? tone} size={action.size ?? "medium"}
     disabled={action.disabled} loading={action.loading ?? false}
     aria-label={action.loading ? action.loadingLabel ?? action.accessibilityLabel ?? action.label : action.accessibilityLabel}>
     {action.label}

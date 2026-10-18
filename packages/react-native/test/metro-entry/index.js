@@ -4,6 +4,20 @@ import * as optionalFamily15 from "@hjmds/react-native/progressive-blur";
 import * as optionalFamily16 from "@hjmds/react-native/date-entry";
 import * as optionalFamily17 from "@hjmds/react-native/field-group";
 import * as optionalFamily18 from "@hjmds/react-native/document-resource";
+// Every peer-free public family is imported: the check stops at the first missing import, so after 1.31 Metro
+// never bundled at all (15 families were absent).
+import * as optionalFamily19 from "@hjmds/react-native/image-choice";
+import * as optionalFamily20 from "@hjmds/react-native/fonts";
+import * as optionalFamily21 from "@hjmds/react-native/context-menu";
+import * as optionalFamily22 from "@hjmds/react-native/data-table";
+import * as optionalFamily23 from "@hjmds/react-native/collection-editing";
+import * as optionalFamily25 from "@hjmds/react-native/task-controls";
+import * as optionalFamily26 from "@hjmds/react-native/transfer-task";
+import * as optionalFamily27 from "@hjmds/react-native/social-compositions";
+import * as optionalFamily28 from "@hjmds/react-native/communication";
+import * as optionalFamily29 from "@hjmds/react-native/streaming-answer";
+import * as optionalFamily30 from "@hjmds/react-native/conversation-row";
+import * as optionalFamily31 from "@hjmds/react-native/pagination";
 import { SavedItemsScreen } from "@hjmds/react-native/saved-items";
 import { ProfileScreen } from "@hjmds/react-native/screen-flows";
 import { ScreenLayout } from "@hjmds/react-native/screens";
@@ -79,7 +93,7 @@ import { StatusText } from "@hjmds/react-native/status-text";
 import { HjmNativeProvider } from "@hjmds/react-native/provider";
 
 // Keep peer-free optional exports reachable so Metro checks their actual dependency graph.
-const optionalFamilyNames = [optionalFamily0, optionalFamily1, optionalFamily2, optionalFamily3, optionalFamily4, optionalFamily5, optionalFamily6, optionalFamily7, optionalFamily8, optionalFamily9, optionalFamily10, optionalFamily11, optionalFamily12, optionalFamily13, optionalFamily14, optionalFamily15, optionalFamily16, optionalFamily17, optionalFamily18].flatMap(family => Object.keys(family));
+const optionalFamilyNames = [optionalFamily15, optionalFamily16, optionalFamily17, optionalFamily18, optionalFamily19, optionalFamily20, optionalFamily21, optionalFamily22, optionalFamily23, optionalFamily25, optionalFamily26, optionalFamily27, optionalFamily28, optionalFamily29, optionalFamily30, optionalFamily31, optionalFamily0, optionalFamily1, optionalFamily2, optionalFamily3, optionalFamily4, optionalFamily5, optionalFamily6, optionalFamily7, optionalFamily8, optionalFamily9, optionalFamily10, optionalFamily11, optionalFamily12, optionalFamily13, optionalFamily14].flatMap(family => Object.keys(family));
 
 const noop = () => undefined;
 const calendarGrid = {

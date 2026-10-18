@@ -53,9 +53,13 @@ export declare function validateScreenExit(exit: Readonly<{
  * `body-edge`: header, notice and footer keep the shell padding; only the body's inline padding is 0 so full-width
  * list rows (ConversationRow, ListRow-based items) supply their own inset — review S5#9 measured DM avatars ~32pt
  * from the edge because body padding and row padding stacked (2026-10-17 user decision).
+ * `body-bleed`: header, notice and footer keep the shell padding; the body has no gutter on any side, so a map or
+ * canvas meets the header (or notice), the screen edges and the footer. With no footer the body is still the last
+ * region and clears the bottom insets the screen owns (`safeAreaBottom`, an overlay BottomNavigation) without the
+ * gutter. choose-window's map screens used `body-edge` and kept a 16pt strip above and below the map (2026-10-18).
  */
-export type ScreenContentInset = "default" | "none" | "body-edge";
-export declare const screenContentInsets: readonly ["default", "none", "body-edge"];
+export type ScreenContentInset = "default" | "none" | "body-edge" | "body-bleed";
+export declare const screenContentInsets: readonly ["default", "none", "body-edge", "body-bleed"];
 /**
  * 화면 진입 시 첫 입력 포커스(2026-10-18 사용자 요청: "input이 있는 화면에 진입하면 포커스되도록, 웹앱 둘 다").
  * 앱마다 autoFocus를 따로 붙이던 일을 화면 골격이 맡는다. 입력 칸은 가장 가까운 화면·시트 범위에 자신을 등록하고,
@@ -232,6 +236,12 @@ export type ChatReactionSummaryItem = Readonly<{
 export type ChatReactionSummary = Readonly<{
     label: string;
     items: readonly ChatReactionSummaryItem[];
+    /**
+     * Counts only, for readers who cannot react (2026-10-18 Utilverse guests): drawn in the same place beside the time
+     * as non-interactive text named by `label`, without the pill surface, so it does not look or act like a control.
+     * Default `false` (the pill button that opens the hold menu).
+     */
+    readOnly?: boolean;
 }>;
 /**
  * Validates ChatMessage `reactions.summary` and marks which counts are drawn. The label (the button's accessible name)
@@ -280,7 +290,22 @@ export declare const mediaAlbumRecipe: {
     /** Previous/next are small ghost IconButtons so the counter row stays compact beside thumbnails. */
     readonly controlSize: "small";
     readonly controlGlyphSize: 20;
+    /**
+     * Loading / failed page drawn by `MediaAlbumPageStatus` (2026-10-18 Utilverse: the page frame was one accessible
+     * image, so the loading text and retry button inside it were unreachable by screen readers). The status block is
+     * centered in the frame (VQ-09); retry is a small secondary Button.
+     */
+    readonly pageStatus: {
+        readonly gap: 8;
+        readonly padding: 12;
+        readonly textVariant: "caption";
+        readonly retryTone: "secondary";
+        readonly retrySize: "small";
+    };
 };
+export type MediaAlbumPageStatusKind = "loading" | "error";
+/** A page status names what the reader is waiting for or what failed; the label is the only copy. */
+export declare function validateMediaAlbumPageStatus(kind: MediaAlbumPageStatusKind, label: string): void;
 /** A controlled index outside the set is a contract error, like Carousel's unknown `currentKey`. */
 export declare function validateMediaAlbum(count: number, index: number): void;
 /** One message or comment carries one photo set: either the eager `media` previews or the paged `mediaAlbum`. */
@@ -457,6 +482,21 @@ export declare function resolveSearchCommit(value: string): string | null;
 export type SearchEmptyCause = "none" | "filters" | "query";
 export declare function resolveSearchEmptyCause(count: number | null, appliedFilterCount: number): SearchEmptyCause;
 /**
+ * What the SearchScreen filter rail does to a result. `narrow` (default) only removes results, so with nothing applied
+ * a zero result is the query's and no filter can bring results back. `scope` chooses what is searched (keyword vs
+ * address, region, map area): changing it can turn a zero into results even with nothing applied (2026-10-18:
+ * choose-window's keyword/address switch is the recovery for a zero result, so it skipped resultSummary entirely).
+ */
+export type SearchFiltersRole = "narrow" | "scope";
+export declare const searchFiltersRoles: readonly ["narrow", "scope"];
+/**
+ * Whether SearchScreen shows its filter rail (`filters` and the filter sheet trigger). Two-step search shows it only
+ * beside results so typing keeps the pinned area short. A query-caused zero hides it only when the filters narrow,
+ * because then none of them can fix the zero; scope filters stay as the recovery path. A filter-caused zero always keeps
+ * it so the cause can be undone. Both renderers call this so the rule cannot drift between platforms.
+ */
+export declare function resolveSearchFilterRailVisible(phase: SearchScreenPhase, twoStep: boolean, cause: SearchEmptyCause, role?: SearchFiltersRole): boolean;
+/**
  * Index to focus after removing item `removedIndex` from a list that now has `remaining` items:
  * the item that slid into its place, else the new last item, else -1 (move to the fallback target).
  * Removing a focused chip or row would otherwise drop focus to <body>.
@@ -537,4 +577,14 @@ export declare const iconTileRecipe: Readonly<{
         size: IconTileSize;
     }>;
 }>;
+/**
+ * What an IconTile passes to an `icon` render function: the rendered icon edge (`iconSize` for `fixed`, the measured
+ * cell-clamped edge for `fill`). Fixed-size artwork (images, generated launcher art) sizes itself from it; Utilverse
+ * re-computed the 48–68 clamp from its grid width to size its artwork (2026-10-18).
+ */
+export type IconTileArtwork = Readonly<{
+    edge: number;
+}>;
+/** The edge a `size="fill"` icon takes in a cell of `cellWidth`, for layout estimates made before the tile measures. */
+export declare function resolveIconTileFillEdge(cellWidth: number): number;
 //# sourceMappingURL=screen-patterns.d.ts.map

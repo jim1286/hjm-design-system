@@ -4,6 +4,7 @@
 
 `@hjmds/design-contracts/authoring-tools`, `@hjmds/react/authoring-tools`,
 `@hjmds/react-native/authoring-tools` 선택 subpath로 제공한다.
+Native BezierEditor는 곡선을 optional peer `react-native-svg@15.15.5`로 그린다. 이 subpath를 쓰는 앱은 peer를 설치한다(2026-10-18 Metro 번들 검사 복구 때 확인).
 
 ## BezierEditor (Web·Native)
 

@@ -180,7 +180,6 @@ const ToastCard = forwardRef<HTMLDivElement, ToastCardProps>(function ToastCard(
           onClick={onPress}
         />
       ) : null}
-      <span className="hjm-toast__tone-mark" aria-hidden="true" />
       {descriptor.media === null ? (
         <span className="hjm-toast__icon" aria-hidden="true">
           <ToneGlyph tone={descriptor.tone} />

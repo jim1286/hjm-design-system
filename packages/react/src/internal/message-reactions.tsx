@@ -1,7 +1,7 @@
 import { useEffect, useImperativeHandle, useRef, useState, type ReactNode, type Ref } from "react";
 import { chatMessageRecipe, screenPatternRecipe, type ChatReactionSummaryItem } from "@hjmds/design-contracts/screen-patterns";
 import type { MenuItemTone } from "@hjmds/design-contracts/recipes";
-import { Text } from "../layout.js";
+import { Text, VisuallyHidden } from "../layout.js";
 import { Popover } from "../popover.js";
 import { ReactionPicker, type ReactionPickerProps } from "../reaction-picker.js";
 
@@ -78,4 +78,17 @@ export function ReactionSummaryButton({ label, items, selected, disabled, onPres
     style={{ minBlockSize: r.minHeight, paddingInline: r.paddingInline, gap: r.itemGap }}>
     {items.map(item => <span key={item.id} aria-hidden="true" style={{ display: "inline-flex", alignItems: "center", gap: r.emojiGap }}><span>{item.emoji}</span>{item.showCount ? <Text as="span" variant="caption">{item.count}</Text> : null}</span>)}
   </button>;
+}
+
+/**
+ * Read-only counts (`summary.readOnly`, 2026-10-18 Utilverse guests who cannot react): the same place and items as
+ * the pill, as plain caption text without the pill surface, so it is neither drawn nor announced as a control. The
+ * product label is the text screen readers read; the drawn emoji and numbers are hidden from them.
+ */
+export function ReactionSummaryText({ label, items }: Readonly<{ label: string; items: readonly (ChatReactionSummaryItem & Readonly<{ showCount: boolean }>)[] }>) {
+  const r = chatMessageRecipe.reactionSummary;
+  return <span className="hjm-chat-message__reaction-counts" style={{ minBlockSize: r.minHeight, gap: r.itemGap }}>
+    <VisuallyHidden>{label}</VisuallyHidden>
+    {items.map(item => <span key={item.id} aria-hidden="true" style={{ display: "inline-flex", alignItems: "center", gap: r.emojiGap }}><span>{item.emoji}</span>{item.showCount ? <Text as="span" variant="caption" tone="muted">{item.count}</Text> : null}</span>)}
+  </span>;
 }

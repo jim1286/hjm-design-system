@@ -156,7 +156,7 @@ UploadItem, RadioGroup, AlertDialog, TextField와 ScreenLayout의 계약을 그�
 | EditorScreen | 수정 중 닫기 확인, 저장 busy, 초안 안내 | 검증, 영속 초안, 저장, 라우터/OS 뒤로가기 guard |
 | ProfileScreen | 요약, 수정 진입, 계정 action 슬롯 | 계정 정보, 인증, 탈퇴/로그아웃 |
 | ModerationScreen | 사유 선택, 신고 활성 조건, 차단 확인 | 서버 신고/권한, 차단 mutation |
-| MediaSelectionScreen | 썸네일 격자, 업로드 상태, 순서/삭제/재시도 | 실제 picker, 권한, 이미지 URI 수명, 업로드 |
+| MediaSelectionScreen | 썸네일 격자, 업로드 상태, 순서/삭제/재시도, 제품 작업 중 순서·회전·삭제 잠금(`disabled`, 1.32.0) | 실제 picker, 권한, 이미지 URI 수명, 업로드, 잠글 작업의 시작·끝 |
 | SearchScreen | 300ms debounce, 이전 요청 AbortSignal, 검색/필터 슬롯, 기본 입력의 확정 신호(`onSubmit`)·검색 중 표시(`searching`)·label 숨김, 한 줄 가로 스크롤 필터 줄, 두 단계 검색 단계(검색 전·입력 중·결과)와 확정 경로, 최근·추천 검색어·제안 배치, 결과 개수·정렬, 적용 필터 칩, 초안/적용 필터 시트, 0건 원인별 복구, 개수 낭독 | API, 제안·결과·개수 조회, 오류 문구, 필터 정의와 계산, 정렬 값, 최근 검색 저장소, 늦은 응답 무시 |
 | PermissionScreen | prompt/denied/granted/unavailable에 맞는 action | OS 요청과 설정 이동, 앱 복귀 후 실제 권한 조회 |
 | OnboardingScreen | 단계 범위 검증, 이전/다음/건너뛰기 | 선택 데이터와 완료 여부 저장 |
@@ -316,6 +316,7 @@ SearchScreen accepts a queryField slot for an existing accessible SearchField wi
 | `committedQuery`를 주면 두 단계 검색. 단계는 `resolveSearchScreenPhase(query, committedQuery)`가 정한다(공백 = 검색 전, 확정값과 다름 = 입력 중, 같음 = 결과, 앞뒤 공백 무시) | 참고 서비스 공통의 "입력 중 제안 → 확정 → 결과" 구분. 기존 한 단계 검색(`committedQuery` 없음)은 그대로 둔다 | 입력 즉시 결과만 지원(제안 단계가 없어 최근 검색 저장 시점이 없음) |
 | 모든 확정(Enter·검색 키, "‘q’ 검색" 행, 제안, 최근 검색, 추천 검색어)은 `onSubmit` 하나로 간다. 값은 `resolveSearchCommit`으로 앞뒤 공백을 지우고 공백만이면 부르지 않는다. 고른 값이 입력과 다르면 먼저 `onQueryChange`를 부른다 | "확정한 검색만 최근 검색에 넣는다"를 API가 지킨다. debounce된 `onSearch`는 `onSubmit`에 닿지 않는다 | 행마다 다른 콜백(제품이 저장 규칙을 경로마다 다시 맞춤) |
 | 입력 중에는 `filters`·필터 시트 trigger를 숨기고, 검색어 때문에 0건이면(`resolveSearchEmptyCause` = `query`) 레일을 숨긴다. 필터 때문에 0건이면 레일을 남기고 "모두 해제"를 EmptyState 행동으로 둔다 | 입력 중 고정 영역을 줄인다. 필터가 원인인데 레일을 숨기면 원인을 지울 길이 사라진다 | 참고 서비스처럼 0건이면 항상 숨김 |
+| 1.32.0: `filtersRole`(`narrow` 기본 · `scope`). `scope`면 검색어 때문인 0건에도 레일을 남긴다. 판정은 `resolveSearchFilterRailVisible(phase, twoStep, cause, role)` 하나를 두 renderer가 부른다 | 2026-10-18 choose-window: 장소명/주소 전환 칩이 0건의 복구 수단인데 레일이 숨겨져 `resultSummary`를 버리고 로딩·0건을 직접 그렸다. "검색어 탓이면 어떤 필터도 못 고친다"는 좁히는 필터에만 맞는다. 필터 의미는 제품만 알므로 제품이 선언하고, 보이기 규칙은 계약이 소유해 플랫폼 간에 갈리지 않는다 | 0건이면 항상 레일 유지(좁히는 필터만 있는 화면에서 소용없는 칩이 고정 영역을 차지), `appliedFilters`에 기본 범위를 가짜 항목으로 넣기(× 칩·"모두 해제"가 범위를 지우는 동작이 되어 의미가 틀림) |
 | 필터 시트는 열 때 `value`를 초안으로 복사하고, 어떤 방식으로 닫혀도 초안을 버리며, 주 행동에서만 `onApply(draft)`. 주 행동 문구는 `count(draft)`로 실시간, 0이면 비활성. 초기화는 항상 같은 자리, 초안이 기본값이면 비활성 | 기존 `여러 조건 적용과 초기화` 규칙과 eBay·Baymard 권고("N개 결과 보기"). 위치 흔들림 방지 | 시트 안에서 즉시 적용(조합 필터는 결과가 계속 바뀜) |
 | 시트 열림은 제품이 제어(`open`/`onOpenChange`). 섹션만 여는 패싯 칩은 제품이 자기 범위를 정하고 `open`을 켠다 | 필터 정의·범위는 제품 소유. HJM에 범위 개념을 넣으면 제품 필터 모델을 강제한다 | `scope` 문자열을 HJM이 소유 |
 | 레일 첫 칩(`filterSheet.trigger`)은 HJM이 그리고 이름에 적용 개수를 넣는다(Web `aria-haspopup="dialog"`) | 적용 칩·모두 해제 뒤 포커스가 돌아갈 고정 대상이 필요하다 | 제품이 trigger를 그림(포커스 복귀 대상을 HJM이 모름) |
@@ -443,4 +444,39 @@ HJM 1.30.0 채택 감사에서 제품이 공통 구조를 다시 만든 지점(�
 - 새 조각 `TypingIndicator`(`typingIndicatorRecipe`)·`ChatDateSeparator`(`chatDateSeparatorRecipe`).
 
 검증: Web `screens-additions.browser.test.tsx`(Chromium), Native `screens-additions.test.tsx`(host 렌더),
+contracts `screen-patterns.test.ts`. 실기기·npm 게시·소비 앱 반영을 뜻하지 않는다.
+
+### 2026-10-18 읽기 전용 반응 집계·앨범 장 상태 (1.32.0)
+
+HJM 1.31.0 유틸버스 채택에서 남은 두 격차를 공개 API로 옮겼다. 둘 다 추가 API이며 기본값은 그대로다.
+
+- `ChatReactionSummary.readOnly`(기본 `false`): 반응할 수 없는 독자(게스트)에게 집계를 시각 옆 같은 자리에
+  누름 대상이 아닌 글자로 그린다. 알약 표면 없이 caption, 접근성 이름은 `label` 하나다. 유틸버스는 게스트 집계를
+  `actions`에 제품 caption으로 따로 그렸다.
+- `MediaAlbumPageStatus`(`mediaAlbumRecipe.pageStatus`, `validateMediaAlbumPageStatus`): `mediaAlbum.renderPage`가
+  사진 대신 그리는 불러오는 중·실패(+다시 시도) 장. 표시되는 동안 사진 칸은 하나의 접근성 이미지(Native는 자식을
+  합치는 단일 요소)·열기 버튼이 아니게 되어 스피너 이름·실패 문구·다시 시도 버튼이 화면 낭독기와 포인터에 닿는다.
+  사진 칸과 장 wrapper는 같은 요소로 유지되어 제품 장(조회 소유)이 다시 마운트되지 않는다. 칸 가운데 정렬(VQ-09).
+  유틸버스는 장 안에 CompositionLayout 상태를 그렸지만 칸의 `role="img"`(Native `accessible`)가 그 내용을 삼켰다.
+
+검증: Web `media-album.browser.test.tsx`·`screens-additions.browser.test.tsx`(Chromium), Native
+`media-album.test.tsx`·`screens-additions.test.tsx`(host 렌더), contracts `media-album.test.ts`. 실기기 낭독기 확인은 하지 않았다.
+
+## 2026-10-18 지도 본문·아이콘 크기 전달·하단 탐색 여백 소유 (1.32.0)
+
+HJM 1.31.0 채택 뒤에도 제품이 공통 계산을 다시 하던 세 지점을 정리했다. 기본값은 그대로다.
+
+- `ScreenContentInset`에 `body-bleed`를 더했다. 헤더·notice·footer는 여백 16을 유지하고 본문은 네 방향 padding이
+  0이다. footer가 없으면 본문이 마지막 영역이므로 여백 없이 `safeAreaBottom`과 겹친 하단 탐색 높이만 비운다.
+  선택의창 지도 화면(`body-edge`)은 지도 위아래에 16 띠가 남았다. `none`은 host가 모든 여백을 가진다는 기존 의미라
+  쓸 수 없었다. 함께 `body-edge`·`body-bleed`의 상태 안내 묶음(로딩·빈·오류)이 좌우 여백 16을 유지하도록 고쳤다.
+  본문 여백을 넘겨받는 것은 제품 내용(행·지도)이고 공통 상태 묶음은 자기 여백이 없어 글이 화면 끝에 붙었다.
+- `IconTile.icon`은 함수도 받는다. 함수는 `IconTileArtwork`(`{ edge }`: `fixed`는 64, `fill`은 측정한 칸 크기)를 받아
+  고정 크기 이미지가 스스로 크기를 맞춘다. 측정 전 추정이 필요한 host는 `resolveIconTileFillEdge(cellWidth)`로
+  같은 48~68 제한을 쓴다. 유틸버스 런처가 이 제한을 격자 폭에서 다시 계산해 아트워크 크기로 넘겼다.
+- `BottomNavigationInsetProvider`의 덮인 높이는 ScreenLayout만 적용한다(patch). 사용 지침이 `scroll="content"` 화면에
+  `useBottomNavigationInset()`을 다시 더하라고 안내해, 따르면 마지막 영역 여백과 목록 여백이 두 번 쌓였다. 코드는
+  이미 한 곳(마지막 영역)만 적용했으므로 지침을 고치고 두 renderer에 한 번만 적용되는지 검사를 더했다.
+
+검증: Web `hjm-1320-screen-insets.browser.test.tsx`(Chromium), Native `hjm-1320-screen-insets.test.tsx`(host 렌더),
 contracts `screen-patterns.test.ts`. 실기기·npm 게시·소비 앱 반영을 뜻하지 않는다.

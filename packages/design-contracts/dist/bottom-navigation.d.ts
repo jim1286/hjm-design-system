@@ -34,9 +34,24 @@ export type BottomNavigationConfiguration = Readonly<{
      * Utilverse's dock, which drew its own Surface/Button row to show 38-54pt app icons.
      */
     iconSize?: BottomNavigationIconSize;
+    /**
+     * Frame of the floating surface (`bottomNavigationRecipe.shapes`): corner radius and the inner padding between
+     * the frame and the destinations. `standard` keeps the floating recipe. Floating + emphasis selection only.
+     * Added 2026-10-18 for Utilverse's home shells (iPhone rounded dock, Android pill, macOS compact dock,
+     * Linux/Windows square taskbar), which otherwise assembled their own Surface/Button bar per shell.
+     */
+    shape?: BottomNavigationShape;
+    /**
+     * Selected icon emphasis (`bottomNavigationRecipe.icon`). `scale` is the default glyph emphasis; `lift` also
+     * raises the selected icon and dims idle icons, the non-color cue for full-color artwork from `renderIcon` that
+     * cannot take the selected tint. Added 2026-10-18 with `shape` for the same Utilverse dock.
+     */
+    iconEmphasis?: BottomNavigationIconEmphasis;
 }>;
 export type BottomNavigationSurface = "flat" | "raised";
 export type BottomNavigationIconSize = "standard" | "large" | "xlarge";
+export type BottomNavigationShape = "standard" | "rounded" | "pill" | "compact" | "square";
+export type BottomNavigationIconEmphasis = "scale" | "lift";
 export type ResolvedBottomNavigationConfiguration = Readonly<{
     presentation: BottomNavigationPresentation;
     distribution: BottomNavigationDistribution;
@@ -47,6 +62,8 @@ export type ResolvedBottomNavigationConfiguration = Readonly<{
     selection: "emphasis" | "tile";
     surface: BottomNavigationSurface;
     iconSize: BottomNavigationIconSize;
+    shape: BottomNavigationShape;
+    iconEmphasis: BottomNavigationIconEmphasis;
 }>;
 /**
  * Bottom navigation only accepts numeric counters. A silent status dot is too
@@ -141,6 +158,8 @@ export declare const bottomNavigationBehaviorDefaults: {
     readonly selection: "emphasis";
     readonly surface: "flat";
     readonly iconSize: "standard";
+    readonly shape: "standard";
+    readonly iconEmphasis: "scale";
     readonly minItems: 2;
     readonly maxItems: 6;
 };

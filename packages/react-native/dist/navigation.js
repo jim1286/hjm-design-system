@@ -432,6 +432,19 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
         ? theme.designProfile?.tokens.shadow.floating ?? presentationRecipe.shadow
         : null;
     const centerGap = bottomNavigationRecipe.distributions[presentation.distribution].centerGap;
+    // `shape` reframes the floating surface (radius + inner padding); `standard` keeps the presentation recipe.
+    const shapeRecipe = presentation.shape === "standard"
+        ? null
+        : bottomNavigationRecipe.shapes[presentation.shape];
+    const surfaceRadius = shapeRecipe
+        ? theme.tokens.radius[shapeRecipe.radius]
+        : presentationRecipe.radius ? theme.tokens.radius[presentationRecipe.radius] : 0;
+    const surfacePadding = shapeRecipe?.surfacePadding ?? 0;
+    // Edge items follow the frame's inner curve: the frame radius minus its border and inner padding.
+    const edgeItemRadius = Math.max(0, surfaceRadius - presentationRecipe.borderWidth - surfacePadding);
+    const lift = presentation.iconEmphasis === "lift"
+        ? bottomNavigationRecipe.icon.liftEmphasis
+        : null;
     const middleIndex = resolved.items.length / 2 - 1;
     const idleColor = resolveColorReference(bottomNavigationRecipe.colors.idle, theme.palette);
     const selectedIconColor = resolveColorReference(tile ? tileRecipe.selectedContent : bottomNavigationRecipe.colors.selectedIcon, theme.palette);
@@ -489,9 +502,7 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
                     gap: capsule ? spacing.xs : 0,
                     backgroundColor: capsule ? "transparent" : surfaceBackground,
                     borderColor: surfaceBorder,
-                    borderRadius: presentationRecipe.radius
-                        ? theme.tokens.radius[presentationRecipe.radius]
-                        : 0,
+                    borderRadius: surfaceRadius,
                     // RN's per-edge zero overrides borderWidth and erased floating's all-edge frame.
                     // Capsule's own list paints its border; bar/floating keep the recipe top edge here.
                     borderTopWidth: capsule ? 0 : presentationRecipe.borderWidth,
@@ -519,7 +530,7 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
                             alignSelf: capsule ? undefined : "center",
                             flex: capsule ? 1 : undefined,
                             minWidth: 0,
-                            padding: tile ? tileRecipe.padding : capsule ? spacing.xxs : 0,
+                            padding: tile ? tileRecipe.padding : capsule ? spacing.xxs : surfacePadding,
                             gap: tile ? tileRecipe.gap : 0,
                             backgroundColor: capsule ? surfaceBackground : undefined,
                             borderRadius: capsule ? radius.full : undefined,
@@ -566,12 +577,12 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
                                     // Match corners instead of clipping the whole surface (which clips shadows/focus).
                                     ...(presentation.presentation === "floating" && !tile ? {
                                         ...(index === 0 ? {
-                                            borderTopStartRadius: Math.max(0, theme.tokens.radius[presentationRecipe.radius] - presentationRecipe.borderWidth),
-                                            borderBottomStartRadius: Math.max(0, theme.tokens.radius[presentationRecipe.radius] - presentationRecipe.borderWidth),
+                                            borderTopStartRadius: edgeItemRadius,
+                                            borderBottomStartRadius: edgeItemRadius,
                                         } : {}),
                                         ...(index === resolved.items.length - 1 ? {
-                                            borderTopEndRadius: Math.max(0, theme.tokens.radius[presentationRecipe.radius] - presentationRecipe.borderWidth),
-                                            borderBottomEndRadius: Math.max(0, theme.tokens.radius[presentationRecipe.radius] - presentationRecipe.borderWidth),
+                                            borderTopEndRadius: edgeItemRadius,
+                                            borderBottomEndRadius: edgeItemRadius,
                                         } : {}),
                                     } : {}),
                                     flexDirection: capsule && !expandedLabels ? "row" : "column",
@@ -620,23 +631,34 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
                                         minHeight: bottomNavigationRecipe.indicator.minHeight,
                                         minWidth: bottomNavigationRecipe.indicator.minWidth,
                                         position: "relative",
-                                        transform: [{
+                                        transform: [
+                                            // `lift` raises the selected icon (and its badge) on top of the shared selected scale.
+                                            ...(lift && selected ? [{ translateY: lift.translateY }] : []),
+                                            {
                                                 scale: selected
                                                     ? bottomNavigationRecipe.icon.selectedEmphasis.scale.selected
                                                     : bottomNavigationRecipe.icon.selectedEmphasis.scale.idle,
-                                            }],
-                                    }, children: [renderIcon({
-                                            item,
-                                            name: item.icon.name,
-                                            selected,
-                                            color: item.prominent
-                                                ? resolveColorReference(prominentRecipe.content, theme.palette)
-                                                : selected ? selectedIconColor : idleColor,
-                                            size: item.prominent ? glyph[prominentRecipe.icon] : iconSize,
-                                            strokeWidth: selected
-                                                ? bottomNavigationRecipe.icon.selectedEmphasis.strokeWidth.selected
-                                                : bottomNavigationRecipe.icon.selectedEmphasis.strokeWidth.idle,
-                                        }), item.badge && sourceBadge ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", style: {
+                                            },
+                                        ],
+                                    }, children: [(() => {
+                                            const icon = renderIcon({
+                                                item,
+                                                name: item.icon.name,
+                                                selected,
+                                                color: item.prominent
+                                                    ? resolveColorReference(prominentRecipe.content, theme.palette)
+                                                    : selected ? selectedIconColor : idleColor,
+                                                size: item.prominent ? glyph[prominentRecipe.icon] : iconSize,
+                                                strokeWidth: selected
+                                                    ? bottomNavigationRecipe.icon.selectedEmphasis.strokeWidth.selected
+                                                    : bottomNavigationRecipe.icon.selectedEmphasis.strokeWidth.idle,
+                                            });
+                                            // Lift dims idle artwork only: the counter badge is a sibling and keeps full contrast, and the
+                                            // prominent circle keeps its full brand fill (prominentDestination).
+                                            return lift && !item.prominent && !selected
+                                                ? _jsx(View, { style: { opacity: lift.idleOpacity }, children: icon })
+                                                : icon;
+                                        })(), item.badge && sourceBadge ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", style: {
                                                 end: bottomNavigationRecipe.badge.anchor.inlineEnd,
                                                 position: "absolute",
                                                 top: bottomNavigationRecipe.badge.anchor.blockStart,

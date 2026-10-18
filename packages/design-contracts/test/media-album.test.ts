@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { mediaAlbumRecipe, resolveMediaAlbumIndex, validateMediaAlbum, validateMediaSetChoice } from "../src/screen-patterns.js";
+import { mediaAlbumRecipe, resolveMediaAlbumIndex, validateMediaAlbum, validateMediaAlbumPageStatus, validateMediaSetChoice } from "../src/screen-patterns.js";
 
 // 2026-10-18 Utilverse: the paged album mounts one page; index rules are shared by both renderers.
 describe("media album", () => {
@@ -17,5 +17,11 @@ describe("media album", () => {
   it("allows one photo set per message or comment", () => {
     expect(() => validateMediaSetChoice(true, true)).toThrow(TypeError);
     expect(() => validateMediaSetChoice(true, false)).not.toThrow();
+  });
+  it("requires a localized label and a known kind for a page status", () => {
+    expect(() => validateMediaAlbumPageStatus("loading", " ")).toThrow(TypeError);
+    expect(() => validateMediaAlbumPageStatus("ready" as "loading", "Loading")).toThrow(TypeError);
+    expect(() => validateMediaAlbumPageStatus("error", "Could not load the photo")).not.toThrow();
+    expect(mediaAlbumRecipe.pageStatus.retrySize).toBe("small");
   });
 });

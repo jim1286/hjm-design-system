@@ -332,6 +332,10 @@ it("keeps the rail and offers clear-all for a filter-caused zero, but hides it a
  await act(async()=>root.render(<HjmProvider><TwoStep key="query" initialQuery="없는말" initialCommitted="없는말" count={0}/></HjmProvider>));
  expect(texts()).toContain("결과 없음");expect(texts()).not.toContain("빠른 조건");expect(host.querySelector('[aria-label="필터"]')).toBeNull();
  expect(texts()).toContain("자주 찾는 주제");
+ // Scope filters (keyword/address, choose-window 2026-10-18) can turn this zero into results, so they stay.
+ await act(async()=>root.render(<HjmProvider><TwoStep key="scope" initialQuery="없는말" initialCommitted="없는말" count={0} extra={{filtersRole:"scope"}}/></HjmProvider>));
+ expect(texts()).toContain("결과 없음");expect(texts()).toContain("빠른 조건");expect(host.querySelector('[aria-label="필터"]')).not.toBeNull();
+ expect(texts()).toContain("자주 찾는 주제");
 });
 it("replaces results with loading rows while the count is unknown and scrolls to the top after a sort change", async () => {
  await act(async()=>root.render(<HjmProvider><div style={{blockSize:"400px"}}><TwoStep initialQuery="산책" initialCommitted="산책" count={null}/></div></HjmProvider>));

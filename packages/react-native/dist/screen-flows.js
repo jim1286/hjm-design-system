@@ -12,7 +12,7 @@ import { AlertDialog, Sheet } from "./overlays.js";
 import { UploadItem } from "./upload-item.js";
 import {} from "@hjmds/design-contracts/components/upload-item";
 import {} from "@hjmds/design-contracts/components/alert-dialog";
-import { initialFocusDefaults, validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchScreenPhase, screenPatternRecipe, commentThreadRecipe, profileSummaryRecipe, searchScreenRecipe, resolveCommentMenuItems } from "@hjmds/design-contracts/screen-patterns";
+import { initialFocusDefaults, validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchFilterRailVisible, resolveSearchScreenPhase, screenPatternRecipe, commentThreadRecipe, profileSummaryRecipe, searchScreenRecipe, resolveCommentMenuItems } from "@hjmds/design-contracts/screen-patterns";
 import { iconButtonRecipe, resolveIconButtonEdgeOverhang, resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
 import { visibleControlHeight } from "@hjmds/design-contracts/components/design-system-provider";
 import { DrawnMoreVertical } from "./internal/drawn-glyphs.js";
@@ -112,7 +112,7 @@ export function ModerationScreen(props) {
 }
 export function ModerationForm(props) {
     const { body, actions, dialogs } = useModeration(props, true, props.cancel);
-    return _jsxs(_Fragment, { children: [_jsx(CompositionLayout, { ...(props.title === undefined ? {} : { title: props.title }), ...(props.headingLevel === undefined ? {} : { headingLevel: props.headingLevel }), ...(props.layoutStyle === undefined ? {} : { layoutStyle: props.layoutStyle }), footer: actions, children: body }), dialogs] });
+    return _jsxs(_Fragment, { children: [_jsx(CompositionLayout, { ...(props.title === undefined ? {} : { title: props.title }), ...(props.headingLevel === undefined ? {} : { headingLevel: props.headingLevel }), ...(props.description === undefined ? {} : { description: props.description }), ...(props.actions === undefined ? {} : { actions: props.actions }), ...(props.layoutStyle === undefined ? {} : { layoutStyle: props.layoutStyle }), footer: actions, children: body }), dialogs] });
 }
 export function PhotoSourceSheet({ open, onOpenChange, onSelect, labels, disabled = false, cameraAvailable = true }) {
     const queued = useRef(null);
@@ -133,13 +133,13 @@ export function PhotoSourceSheet({ open, onOpenChange, onSelect, labels, disable
  * One picked item: preview, upload status, then move/rotate/remove. Exported (2026-10-18, Utilverse photo tools) so a
  * virtualized host (FlatList renderItem) renders the same cell as the screen grid instead of a copy.
  */
-export function MediaSelectionCell({ item, index, count, labels, actionLabels, removeLabel, moveUpLabel, moveDownLabel, onRemove, onMove, onRetry, onCancel, rotate }) {
+export function MediaSelectionCell({ item, index, count, labels, actionLabels, removeLabel, moveUpLabel, moveDownLabel, onRemove, onMove, onRetry, onCancel, rotate, disabled = false }) {
     const id = item.descriptor.id;
-    return _jsxs(Stack, { gap: "xs", children: [item.preview, _jsx(UploadItem, { descriptor: item.descriptor, labels: labels, onRetry: onRetry, onCancel: onCancel }), _jsxs(Stack, { axis: "inline", gap: "xxs", layoutStyle: { flexWrap: "wrap" }, children: [_jsx(Button, { accessibilityLabel: moveUpLabel(item), size: "small", tone: "ghost", disabled: index === 0, onPress: () => onMove(id, -1), children: actionLabels.moveUp }), _jsx(Button, { accessibilityLabel: moveDownLabel(item), size: "small", tone: "ghost", disabled: index === count - 1, onPress: () => onMove(id, 1), children: actionLabels.moveDown }), rotate ? _jsx(Button, { accessibilityLabel: rotate.itemLabel(item), size: "small", tone: "ghost", onPress: () => rotate.onRotate(id), children: rotate.label }) : null, _jsx(Button, { accessibilityLabel: removeLabel(item), size: "small", tone: "ghost", onPress: () => onRemove(id), children: actionLabels.remove })] })] });
+    return _jsxs(Stack, { gap: "xs", children: [item.preview, _jsx(UploadItem, { descriptor: item.descriptor, labels: labels, onRetry: onRetry, onCancel: onCancel }), _jsxs(Stack, { axis: "inline", gap: "xxs", layoutStyle: { flexWrap: "wrap" }, children: [_jsx(Button, { accessibilityLabel: moveUpLabel(item), size: "small", tone: "ghost", disabled: disabled || index === 0, onPress: () => onMove(id, -1), children: actionLabels.moveUp }), _jsx(Button, { accessibilityLabel: moveDownLabel(item), size: "small", tone: "ghost", disabled: disabled || index === count - 1, onPress: () => onMove(id, 1), children: actionLabels.moveDown }), rotate ? _jsx(Button, { accessibilityLabel: rotate.itemLabel(item), size: "small", tone: "ghost", disabled: disabled, onPress: () => rotate.onRotate(id), children: rotate.label }) : null, _jsx(Button, { accessibilityLabel: removeLabel(item), size: "small", tone: "ghost", disabled: disabled, onPress: () => onRemove(id), children: actionLabels.remove })] })] });
 }
 /** A photo is the primary content; upload status stays below it instead of replacing the thumbnail. */
-export function MediaSelectionScreen({ library, selectionSummary, items, add, done, labels, actionLabels, removeLabel, moveUpLabel, moveDownLabel, onRemove, onMove, onRetry, onCancel, rotate, ...screen }) {
-    const itemActions = { labels, actionLabels, removeLabel, moveUpLabel, moveDownLabel, onRemove, onMove, onRetry, onCancel, ...(rotate === undefined ? {} : { rotate }) };
+export function MediaSelectionScreen({ library, selectionSummary, items, add, done, labels, actionLabels, removeLabel, moveUpLabel, moveDownLabel, onRemove, onMove, onRetry, onCancel, rotate, disabled, ...screen }) {
+    const itemActions = { labels, actionLabels, removeLabel, moveUpLabel, moveDownLabel, onRemove, onMove, onRetry, onCancel, ...(rotate === undefined ? {} : { rotate }), ...(disabled === undefined ? {} : { disabled }) };
     return _jsx(ScreenLayout, { ...screen, ...(add || screen.actions ? { actions: _jsxs(Stack, { axis: "inline", gap: "xs", align: "center", children: [screen.actions, add ? _jsx(Action, { action: add, edge: "end" }) : null] }) } : {}), footer: _jsxs(Stack, { gap: "sm", children: [selectionSummary, _jsx(Action, { action: done })] }), children: library ?? _jsx(Grid, { columns: { compact: 2, expanded: 3 }, gap: { compact: "md" }, children: items.map((item, index) => _jsx(MediaSelectionCell, { item: item, index: index, count: items.length, ...itemActions }, item.descriptor.id)) }) });
 }
 /** Announce only when the text changes; iOS queues it behind the current utterance instead of cutting it off. */
@@ -205,7 +205,7 @@ function SearchFilterSheetView({ sheet }) {
     return _jsx(Sheet, { open: sheet.open, onOpenChange: open => sheet.onOpenChange(open), title: sheet.title, closeLabel: sheet.labels.close, size: sheet.size ?? "large", scrollable: true, footer: footer, children: sheet.renderContent(draft, setDraft) });
 }
 /** Abort is supplied to the host request; the host must ignore aborted responses before committing results. */
-export function SearchScreen({ query, queryLabel, queryField, queryClearLabel, onQueryChange, onSearch, debounceMs, filters, recentSearches, children, onSubmit, committedQuery, filtersOverflow = "wrap", hostGutter = "none", queryLabelVisibility = "visible", searching, searchingLabel, recentQueries, suggestedQueries, suggestions, resultSummary, appliedFilters, filterSheet, initialFocus = initialFocusDefaults.search, ...screen }) {
+export function SearchScreen({ query, queryLabel, queryField, queryClearLabel, onQueryChange, onSearch, debounceMs, filters, recentSearches, children, onSubmit, committedQuery, filtersOverflow = "wrap", filtersRole = "narrow", hostGutter = "none", queryLabelVisibility = "visible", searching, searchingLabel, recentQueries, suggestedQueries, suggestions, resultSummary, appliedFilters, filterSheet, initialFocus = initialFocusDefaults.search, ...screen }) {
     // The host owns localized copy. A custom queryField owns its own clear affordance.
     if (queryField == null && !queryClearLabel?.trim())
         throw new TypeError("SearchScreen requires a localized queryClearLabel for its default search field");
@@ -230,8 +230,9 @@ export function SearchScreen({ query, queryLabel, queryField, queryClearLabel, o
     const phase = resolveSearchScreenPhase(query, committedQuery);
     const appliedCount = appliedFilters?.items.length ?? 0;
     const cause = phase === "results" && resultSummary ? resolveSearchEmptyCause(resultSummary.count, appliedCount) : "none";
-    // Two-step search shows the rail only beside results, and a query-caused zero hides it (no filter can fix it).
-    const showRail = (committedQuery === undefined || phase === "results") && cause !== "query";
+    // Two-step search shows the rail only beside results; a query-caused zero hides narrowing filters (none can fix it)
+    // but keeps scope filters, which are that zero's recovery (resolveSearchFilterRailVisible, Web twin).
+    const showRail = resolveSearchFilterRailVisible(phase, committedQuery !== undefined, cause, filtersRole);
     const trigger = filterSheet?.trigger ? _jsx(SearchFilterTrigger, { sheet: filterSheet, appliedCount: appliedCount }) : null;
     const rail = !showRail ? null : trigger && filters != null ? _jsxs(Stack, { axis: "inline", gap: "xs", wrap: filtersOverflow === "wrap", children: [trigger, filters] }) : trigger ?? filters;
     // Wrapping chips grow the pinned area line by line at large text; the scroll rail caps it at one row.

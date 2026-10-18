@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-16
+- 검토일: 2026-10-18
 - 근거: [Pagination](../../pagination.md), `src/pagination.ts`(`paginationRecipe`)
 - 스토리북: `배포/컴포넌트/탐색/페이지 이동`
 
@@ -13,11 +13,14 @@
 총 개수(또는 총 페이지 수)가 정해진 결과 집합에서 사용자가 **임의의 페이지로 바로 이동**해야 할 때
 Web·Native에서 쓴다. 검색 결과, 관리자 테이블, 기록 목록이 여기에 속한다.
 
+총량은 모르지만 결과가 **페이지 단위로 오고 다음 페이지가 있는지만 아는** 원천(Kakao Local `meta.is_end`, cursor API의
+`hasMore`)도 Pagination을 쓴다. `descriptor={{ currentPage, hasNext }}`로 이전 · 현재 페이지 표시 · 다음만 그린다(1.32.0).
+
 ## 쓰지 않을 때
 
 | 상황 | 대신 쓸 것 |
 | --- | --- |
-| 총량을 모르거나 계속 이어지는 피드 | [LoadMore](load-more.md) |
+| 계속 이어 붙이는 피드(이전 페이지로 돌아가지 않음) | [LoadMore](load-more.md) |
 | 끝없이 이어지는 Native 피드 | [LoadMore](load-more.md), [VirtualList](virtual-list.md) |
 | 단계형 흐름의 이전/다음 | [Steps](steps.md) |
 | 이미지·카드 넘기기 | [Carousel](carousel.md) |
@@ -65,6 +68,25 @@ Native는 같은 props를 받는다. 조회 중에는 `disabled`로 이전·번�
 
 2026-10-15 다에리의 유한 편지 목록에서 페이지 번호가 이미 제품 기능이었으나 renderer 부재로 공통 배치를 복제한 원인을 수정했다. Native renderer는 1.26.0부터 게시본에 포함된다.
 
+### 전체 수를 모르는 결과 (1.32.0)
+
+```tsx
+// Native (Web도 같은 props)
+<Pagination
+  label={t("search.pagination")}
+  descriptor={{ currentPage: page, hasNext: results.data?.hasMore ?? false }}
+  labels={{ previous: t("previousPage"), next: t("nextPage") }}
+  composeCurrentPageLabel={({ page }) => t("search.page", { page })}
+  onPageChange={(next) => setPage(next)}
+  disabled={results.isFetching}
+/>
+```
+
+번호 목록은 그리지 않는다. 다음 페이지 너머는 주소를 알 수 없기 때문이다. 현재 페이지 표시는 버튼이 아닌 글자이고
+`composeCurrentPageLabel`이 만든 문자열이 보이는 글자이자 접근성 이름이다(Web `aria-current="page"`, Native 선택 상태).
+첫 페이지면 이전, `hasNext: false`면 다음이 비활성이다. 한 페이지뿐이어도 두 단계가 비활성인 채로 그려진다.
+`composeAccessibleName`과 함께 넘기거나 총량 필드와 섞으면 던진다.
+
 ## 축과 기본값
 
 타입은 `@hjmds/design-contracts/components/pagination`에서 가져온다.
@@ -72,10 +94,11 @@ Native는 같은 props를 받는다. 조회 중에는 `disabled`로 이전·번�
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `label` | 문자열 | 필수 | `<nav>` 이름. 비면 던진다 |
-| `descriptor` | `{ currentPage, totalCount, pageSize, siblingCount?, boundaryCount? }` 또는 `{ currentPage, totalPages, siblingCount?, boundaryCount? }` | 필수 | 정확히 하나의 형태. `currentPage`는 1부터 시작하는 정수 |
+| `descriptor` | `{ currentPage, totalCount, pageSize, siblingCount?, boundaryCount? }` 또는 `{ currentPage, totalPages, siblingCount?, boundaryCount? }` 또는 `{ currentPage, hasNext: boolean }` | 필수 | 정확히 하나의 형태. `currentPage`는 1부터 시작하는 정수. `hasNext` 형태(1.32.0)는 총량을 모를 때 쓴다 |
 | `siblingCount` · `boundaryCount`(descriptor 안) | 정수 | 1 | 생략된 구간은 말줄임으로 표시한다 |
 | `labels` | `{ previous: string; next: string }` | 필수 | 이전·다음 버튼 문구 |
-| `composeAccessibleName` | `(info: { page: number; totalPages: number; current: boolean }) => string` | 필수 | 페이지 버튼마다 부른다. 어순은 제품 i18n이 정한다 |
+| `composeAccessibleName` | `(info: { page: number; totalPages: number; current: boolean }) => string` | 총량 형태에서 필수 | 페이지 버튼마다 부른다. 어순은 제품 i18n이 정한다 |
+| `composeCurrentPageLabel` | `(info: { page: number }) => string` | `hasNext` 형태에서 필수 | 1.32.0 추가. 현재 페이지 표시의 글자이자 접근성 이름(예: "3페이지") |
 | `onPageChange` | `(page: number, reason: "previous" \| "next" \| "page") => void` | 필수 | 제품이 `currentPage`를 바꾼다 |
 | `className` · `layoutStyle` | 문자열 · 배치 전용 style 객체 | — | 루트 배치만 |
 
@@ -87,6 +110,7 @@ Native는 같은 props를 받는다. 조회 중에는 `disabled`로 이전·번�
 | 간격 | 칸 안쪽 `spacing.xs` 8, 칸 사이 `spacing.xxs` 4 | `paginationRecipe.gap`, `.hjm-pagination__list` |
 | 순서·정렬 | `[‹ 이전] [1] … [4] [5] [6] … [20] [다음 ›]`. 이전·다음은 아이콘 버튼(문구는 접근성 이름), RTL에서 화살표 반전. 정렬은 놓는 레이아웃이 정한다(관리자 테이블은 끝, 검색 결과는 가운데가 흔하다) | `src/pagination.tsx`, `.hjm-pagination__previous`·`__next` |
 | 고정·스크롤 | 목록·테이블 **바로 아래** 한 번. 페이지를 바꾸면 목록 시작으로 스크롤·포커스를 옮기는 것은 제품이 한다 | — |
+| 전체 수를 모를 때 | `[‹ 이전] 3페이지 [다음 ›]`. 현재 페이지 표시는 높이 44(`paginationRecipe.pageLabel.minHeight`), 좌우 여백 8, `content.body` | `paginationRecipe.pageLabel`, `.hjm-pagination__page-label` |
 | 좁은 폭·큰 글자 | 폭이 모자라면 줄바꿈된다(`flex-wrap`). 좁은 폭에서는 `siblingCount`·`boundaryCount`를 0~1로 줄여 한 줄을 유지한다 | `.hjm-pagination__list` |
 
 ## 꼭 지킬 것

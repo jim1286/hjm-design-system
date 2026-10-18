@@ -645,3 +645,9 @@ describe("Toast visual and behavior identity", () => {
     }
   });
 });
+
+// 2026-10-18 stripe contract (docs/toast.md "띠 계약"): there is no edge stripe; every tone keeps a badge fill instead.
+it("keeps the retired tone stripe at zero width while each tone carries a badge", () => {
+  expect(toastRecipe.toneMark.width).toBe(0);
+  for (const tone of Object.values(toastRecipe.tones)) expect(tone.badge).toBeTruthy();
+});

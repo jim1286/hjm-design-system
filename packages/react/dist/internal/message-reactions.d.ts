@@ -64,5 +64,16 @@ export declare function ReactionSummaryButton({ label, items, selected, disabled
     disabled: boolean;
     onPress(): void;
 }>): import("react").JSX.Element;
+/**
+ * Read-only counts (`summary.readOnly`, 2026-10-18 Utilverse guests who cannot react): the same place and items as
+ * the pill, as plain caption text without the pill surface, so it is neither drawn nor announced as a control. The
+ * product label is the text screen readers read; the drawn emoji and numbers are hidden from them.
+ */
+export declare function ReactionSummaryText({ label, items }: Readonly<{
+    label: string;
+    items: readonly (ChatReactionSummaryItem & Readonly<{
+        showCount: boolean;
+    }>)[];
+}>): import("react").JSX.Element;
 export {};
 //# sourceMappingURL=message-reactions.d.ts.map

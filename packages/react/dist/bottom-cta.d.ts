@@ -1,4 +1,4 @@
-import { type HTMLAttributes, type MouseEventHandler, type ReactNode } from "react";
+import { type HTMLAttributes, type MouseEventHandler, type ReactNode, type Ref } from "react";
 import { type ButtonSize, type ButtonTone } from "./actions.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type BottomCTAAction = Readonly<{
@@ -10,6 +10,11 @@ export type BottomCTAAction = Readonly<{
     loadingLabel?: string;
     size?: ButtonSize;
     tone?: ButtonTone;
+    /**
+     * Ref to this action's button. The component `ref` names the bar; a dialog or overlay opened from the primary
+     * action needs the button itself to return focus to on close (2026-10-18 Utilverse display board).
+     */
+    buttonRef?: Ref<HTMLButtonElement>;
 }>;
 export type BottomCTAProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & Readonly<{
     primaryAction: BottomCTAAction;

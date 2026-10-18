@@ -1,7 +1,13 @@
-import type { ReactNode } from "react";
-import { type ImageChoiceItemDescriptor } from "@hjmds/design-contracts/components/image-choice";
+import { type ReactNode } from "react";
+import { type ImageChoiceItemDescriptor, type ImageChoiceItemLabelLines } from "@hjmds/design-contracts/components/image-choice";
 export type ImageChoiceItem = ImageChoiceItemDescriptor & Readonly<{
     image: ReactNode;
+}>;
+export type ImageChoiceVirtualization = Readonly<{
+    /** Height of the scrolling viewport in dp. The group scrolls itself (a FlatList): do not nest it in a ScrollView. */
+    height: number;
+    /** Rows rendered beyond the visible window on first mount. */
+    overscan?: number;
 }>;
 type Base = Readonly<{
     /** Localized group name read before the choices. */
@@ -13,8 +19,15 @@ type Base = Readonly<{
      * The tile keeps the same accessible name, so turning this on does not change what screen readers announce.
      */
     showItemLabels?: boolean;
+    /** Lines the visible item label wraps to before the ellipsis (default 1). Every tile reserves the same height. */
+    itemLabelLines?: ImageChoiceItemLabelLines;
     items: readonly ImageChoiceItem[];
     disabled?: boolean;
+    /**
+     * Long lists (hundreds of people): rows are recycled by a FlatList. Tiles keep their size; the column count follows
+     * the measured width.
+     */
+    virtualized?: ImageChoiceVirtualization;
 }>;
 export type ImageChoiceGroupProps = Base & (Readonly<{
     selectionMode: "single";

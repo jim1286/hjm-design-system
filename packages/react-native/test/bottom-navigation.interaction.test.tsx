@@ -252,3 +252,69 @@ it("draws a prominent center destination as a selectable lifted circle and sizes
     );
   })).toThrow("prominent destination requires");
 });
+
+it("frames a floating bar with a recipe shape and lifts the selected artwork while dimming idle artwork", () => {
+  const items = [
+    { id: "home", label: "Home", icon: { name: "home" } },
+    { id: "search", label: "Search", icon: { name: "search" }, badge: { count: 2, accessibilityLabel: "2 new" } },
+  ];
+  let renderer!: ReturnType<typeof create>;
+  act(() => {
+    renderer = create(
+      <HjmNativeProvider reducedMotion theme="light">
+        <BottomNavigation
+          configuration={{ presentation: "floating", shape: "pill", iconEmphasis: "lift", iconSize: "xlarge" }}
+          descriptor={{ accessibilityLabel: "Dock", selectedKey: "home", items }}
+          getItemTestID={(item) => `dock-${item.id}`}
+          onActivate={() => {}}
+          renderIcon={({ item }) => <Text testID={`art-${item.id}`}>{item.id}</Text>}
+        />
+      </HjmNativeProvider>,
+    );
+  });
+  const shape = bottomNavigationRecipe.shapes.pill;
+  const lift = bottomNavigationRecipe.icon.liftEmphasis;
+  const flatStyle = (style: unknown) => Object.assign({}, ...[style].flat(3).filter(Boolean)) as Record<string, unknown>;
+  const tablist = renderer.root.findByProps({ accessibilityRole: "tablist" });
+  expect(flatStyle(tablist.props.style).padding).toBe(shape.surfacePadding);
+  // The frame View (tablist parent) takes the pill radius token instead of floating's xl.
+  expect(flatStyle(tablist.parent?.props.style).borderRadius).toBe(999);
+  const indicatorOf = (id: string) => renderer.root.findByProps({ testID: `dock-${id}` })
+    .findAll((node) => typeof node.type === "string" && node.props.importantForAccessibility === "no-hide-descendants")[0]!;
+  expect(flatStyle(indicatorOf("home").props.style).transform).toEqual([
+    { translateY: lift.translateY },
+    { scale: bottomNavigationRecipe.icon.selectedEmphasis.scale.selected },
+  ]);
+  expect(flatStyle(indicatorOf("search").props.style).transform).toEqual([
+    { scale: bottomNavigationRecipe.icon.selectedEmphasis.scale.idle },
+  ]);
+  // Only the idle artwork dims; the selected artwork and the badge keep full opacity.
+  const artParent = (id: string) => renderer.root.findByProps({ testID: `art-${id}` }).parent;
+  expect(flatStyle(artParent("search")?.props.style).opacity).toBe(lift.idleOpacity);
+  expect(flatStyle(artParent("home")?.props.style).opacity).toBeUndefined();
+  act(() => renderer.unmount());
+});
+
+it("keeps the floating recipe frame and scale emphasis by default", () => {
+  let renderer!: ReturnType<typeof create>;
+  act(() => {
+    renderer = create(
+      <HjmNativeProvider reducedMotion theme="light">
+        <BottomNavigation
+          configuration={{ presentation: "floating" }}
+          descriptor={{ accessibilityLabel: "Main", selectedKey: "home", items: [
+            { id: "home", label: "Home", icon: { name: "home" } },
+            { id: "search", label: "Search", icon: { name: "search" } },
+          ] }}
+          onActivate={() => {}}
+          renderIcon={({ item }) => <Text testID={`glyph-${item.id}`}>{item.id}</Text>}
+        />
+      </HjmNativeProvider>,
+    );
+  });
+  const tablist = renderer.root.findByProps({ accessibilityRole: "tablist" });
+  const style = Object.assign({}, ...[tablist.props.style].flat(3).filter(Boolean)) as Record<string, unknown>;
+  expect(style.padding).toBe(0);
+  expect(renderer.root.findAll((node) => node.props.style?.opacity === bottomNavigationRecipe.icon.liftEmphasis.idleOpacity)).toHaveLength(0);
+  act(() => renderer.unmount());
+});

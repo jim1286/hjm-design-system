@@ -13,7 +13,7 @@ import { Top } from "@hjmds/react-native/top";
 import { useRef, useState, type ReactNode } from "react";
 import { ScrollView, StyleSheet, TextInput, View, Text as RNText } from "react-native";
 // 2026-10-17 screen compositions registered.
-import { ChatDateSeparator, ChatMessage, ChatScreen, CompositionLayout, IconTile, MessageComposer, NotificationInboxScreen, NotificationItem, NotificationRow, ScreenLayout, SettingsScreen, TypingIndicator } from "@hjmds/react-native/screens";
+import { ChatDateSeparator, ChatMessage, ChatScreen, CompositionLayout, IconTile, MediaAlbumPageStatus, MessageComposer, NotificationInboxScreen, NotificationItem, NotificationRow, ScreenLayout, SettingsScreen, TypingIndicator } from "@hjmds/react-native/screens";
 import { CommentThreadRow, CommentThreadScreen, EditorScreen, ListDetailScreen, MediaSelectionCell, MediaSelectionScreen, type MediaSelectionItem, ModerationScreen, OnboardingScreen, PermissionScreen, PhotoSourceSheet, ProfileScreen, ProfileSummary, SearchScreen } from "@hjmds/react-native/screen-flows";
 import { Button, BottomCTA, IconButton, Link } from "@hjmds/react-native/actions";
 import {
@@ -838,6 +838,8 @@ function ScreenLayoutExample({ variant: _variant }: { variant: PreviewVariant })
   return (<StoryFrame>
     <View style={{ height: 200 }}><ScreenLayout title="화면" titleLeading={<View style={{ width: 28, height: 28, borderRadius: 8, backgroundColor: colors.contentBrand }} />}><RNText>본문</RNText></ScreenLayout></View>
     <View style={{ height: 200 }}><ScreenLayout title="브랜드 로딩" state={{ kind: "loading", title: "불러오는 중" }} loadingIndicator={<RNText style={{ fontSize: 32 }}>🌼</RNText>} /></View>
+    {/* 1.32.0 contentInset="body-bleed": a map stand-in meets the header and footer and both screen edges. */}
+    <View style={{ height: 260 }}><ScreenLayout title="지도" scroll="content" contentInset="body-bleed" footer={<Button onPress={screenNoop}>이 위치 사용</Button>}><View accessible={false} style={{ flex: 1, backgroundColor: colors.surfaceAlt }} /></ScreenLayout></View>
   </StoryFrame>);
 }
 function CompositionLayoutExample({ variant: _variant }: { variant: PreviewVariant }) {
@@ -894,7 +896,15 @@ const screenPhotoAlbum = { count: 3, renderPage: (index: number) => <PreviewPhot
 function ChatMessageExample({ variant: _variant }: { variant: PreviewVariant }) {
   return (<StoryFrame><ChatMessage direction="incoming" author="서연" timestamp="지금"><RNText>안녕하세요</RNText></ChatMessage>
     {/* 2026-10-18 mediaAlbum: renderPage runs only for the shown photo, so a product can fetch one image at a time. */}
-    <ChatMessage direction="incoming" author="서연" timestamp="지금" mediaAlbum={screenPhotoAlbum}>{null}</ChatMessage></StoryFrame>);
+    <ChatMessage direction="incoming" author="서연" timestamp="지금" mediaAlbum={screenPhotoAlbum}>{null}</ChatMessage>
+    {/* 2026-10-18 page status: a page that failed shows the failure and retry as reachable content, not inside one image. */}
+    <ChatMessage direction="incoming" author="서연" timestamp="지금" mediaAlbum={{ ...screenPhotoAlbum, renderPage: (index: number) => <ScreenRetryPage index={index} /> }}>{null}</ChatMessage>
+    {/* 2026-10-18 summary.readOnly: a guest who cannot react sees the counts as text in the same place. */}
+    <ChatMessage direction="incoming" author="서연" timestamp="지금" reactions={{ label: "메시지에 반응", closeLabel: "닫기", value: null, onValueChange: screenNoop, options: [{ id: "heart", emoji: "❤️", label: "좋아요", disabled: true }], summary: { label: "반응 ❤️ 2개", readOnly: true, items: [{ id: "heart", emoji: "❤️", count: 2 }] } }}><RNText>둘러보기만 하는 중이에요</RNText></ChatMessage></StoryFrame>);
+}
+function ScreenRetryPage({ index }: { index: number }) {
+  const [loaded, setLoaded] = useState(false);
+  return loaded ? <PreviewPhoto index={index} square rounded={false} label="" /> : <MediaAlbumPageStatus kind="error" label="사진을 불러오지 못했어요" retry={{ label: "다시 시도", onPress: () => setLoaded(true) }} />;
 }
 function NotificationRowExample({ variant: _variant }: { variant: PreviewVariant }) {
   return (<StoryFrame><NotificationRow preview={<RNText>새 답글이 달렸어요</RNText>} metadata="방금" avatar={<RNText>S</RNText>} /></StoryFrame>);
@@ -920,6 +930,8 @@ function IconTileExample({ variant: _variant }: { variant: PreviewVariant }) {
     <View style={{ width: 76 }}><IconTile frame="none" icon={<View style={{ width: 64, height: 64, borderRadius: 14, backgroundColor: colors.contentBrand, alignItems: "center", justifyContent: "center" }}><RNText style={{ color: colors.onPrimary }}>★</RNText></View>} label="틀 없음" /></View>
     <View style={{ width: 76 }}><IconTile shape="square" icon={<RNText>■</RNText>} label="사각형" /></View>
     <View style={{ width: 76 }}><IconTile shape="circle" size="fill" icon={<RNText>●</RNText>} label="칸 채움" /></View>
+    {/* 1.32.0: fixed-size artwork sizes itself from the edge the filling tile measured. */}
+    <View style={{ width: 60 }}><IconTile frame="none" shape="circle" size="fill" icon={({ edge }) => <View style={{ width: edge, height: edge, borderRadius: edge / 2, backgroundColor: colors.contentBrand, alignItems: "center", justifyContent: "center" }}><RNText style={{ color: colors.onPrimary }}>{Math.round(edge)}</RNText></View>} label="이미지 채움" /></View>
   </View></StoryFrame>);
 }
 function TypingIndicatorExample({ variant: _variant }: { variant: PreviewVariant }) {

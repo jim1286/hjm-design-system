@@ -15,7 +15,7 @@ import { AlertDialog, Menu, Sheet } from "./overlays.js";
 import { UploadItem } from "./upload-item.js";
 import {} from "@hjmds/design-contracts/components/upload-item";
 import {} from "@hjmds/design-contracts/components/alert-dialog";
-import { initialFocusDefaults, validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchScreenPhase, resolveFocusAfterRemoval, screenPatternRecipe, commentThreadRecipe, profileSummaryRecipe, searchScreenRecipe, resolveCommentMenuItems } from "@hjmds/design-contracts/screen-patterns";
+import { initialFocusDefaults, validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchFilterRailVisible, resolveSearchScreenPhase, resolveFocusAfterRemoval, screenPatternRecipe, commentThreadRecipe, profileSummaryRecipe, searchScreenRecipe, resolveCommentMenuItems } from "@hjmds/design-contracts/screen-patterns";
 import { resolveWindowClass } from "@hjmds/design-contracts/responsive";
 import { containerRecipe } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./display.js";
@@ -125,7 +125,7 @@ export function ModerationScreen(props) {
 }
 export function ModerationForm(props) {
     const { body, actions, dialogs } = useModeration(props, true, props.cancel);
-    return _jsxs(_Fragment, { children: [_jsx(CompositionLayout, { ...(props.title === undefined ? {} : { title: props.title }), ...(props.headingLevel === undefined ? {} : { headingLevel: props.headingLevel }), ...(props.layoutStyle === undefined ? {} : { layoutStyle: props.layoutStyle }), footer: actions, children: body }), dialogs] });
+    return _jsxs(_Fragment, { children: [_jsx(CompositionLayout, { ...(props.title === undefined ? {} : { title: props.title }), ...(props.headingLevel === undefined ? {} : { headingLevel: props.headingLevel }), ...(props.description === undefined ? {} : { description: props.description }), ...(props.actions === undefined ? {} : { actions: props.actions }), ...(props.layoutStyle === undefined ? {} : { layoutStyle: props.layoutStyle }), footer: actions, children: body }), dialogs] });
 }
 export function PhotoSourceSheet({ open, onOpenChange, onSelect, labels, disabled = false, cameraAvailable = true }) {
     // File-input click must stay in the user's activation stack. Deferring until the
@@ -139,13 +139,16 @@ export function PhotoSourceSheet({ open, onOpenChange, onSelect, labels, disable
  * virtualized host (VirtualList, FlatList renderItem) renders the same cell as the screen grid instead of a copy.
  * Web keyboard focus recovery after removal belongs to the screen grid; a virtualized host owns its own.
  */
-export function MediaSelectionCell({ item, index, count, labels, actionLabels, removeLabel, moveUpLabel, moveDownLabel, onRemove, onMove, onRetry, onCancel, rotate }) {
+export function MediaSelectionCell({ item, index, count, labels, actionLabels, removeLabel, moveUpLabel, moveDownLabel, onRemove, onMove, onRetry, onCancel, rotate, disabled = false }) {
     const id = item.descriptor.id;
-    return _jsxs(Stack, { "data-hjm-media-item": id, gap: "xs", children: [item.preview, _jsx(UploadItem, { descriptor: item.descriptor, labels: labels, onRetry: onRetry, onCancel: onCancel }), _jsxs(Stack, { axis: "inline", gap: "xxs", layoutStyle: { flexWrap: "wrap" }, children: [_jsx(Button, { "data-media-action": "up", "aria-label": moveUpLabel(item), size: "small", tone: "ghost", disabled: index === 0, onClick: () => onMove(id, -1), children: actionLabels.moveUp }), _jsx(Button, { "data-media-action": "down", "aria-label": moveDownLabel(item), size: "small", tone: "ghost", disabled: index === count - 1, onClick: () => onMove(id, 1), children: actionLabels.moveDown }), rotate ? _jsx(Button, { "data-media-action": "rotate", "aria-label": rotate.itemLabel(item), size: "small", tone: "ghost", onClick: () => rotate.onRotate(id), children: rotate.label }) : null, _jsx(Button, { "data-media-action": "remove", "aria-label": removeLabel(item), size: "small", tone: "ghost", onClick: () => onRemove(id), children: actionLabels.remove })] })] });
+    // The job lock is temporary, so it keeps the focused action focusable (aria-disabled; Button drops the click) instead
+    // of throwing keyboard focus to <body> for the length of the job. The list boundaries stay natively disabled.
+    const lock = disabled ? { "aria-disabled": true } : {};
+    return _jsxs(Stack, { "data-hjm-media-item": id, gap: "xs", children: [item.preview, _jsx(UploadItem, { descriptor: item.descriptor, labels: labels, onRetry: onRetry, onCancel: onCancel }), _jsxs(Stack, { axis: "inline", gap: "xxs", layoutStyle: { flexWrap: "wrap" }, children: [_jsx(Button, { "data-media-action": "up", "aria-label": moveUpLabel(item), size: "small", tone: "ghost", disabled: index === 0, ...lock, onClick: () => onMove(id, -1), children: actionLabels.moveUp }), _jsx(Button, { "data-media-action": "down", "aria-label": moveDownLabel(item), size: "small", tone: "ghost", disabled: index === count - 1, ...lock, onClick: () => onMove(id, 1), children: actionLabels.moveDown }), rotate ? _jsx(Button, { "data-media-action": "rotate", "aria-label": rotate.itemLabel(item), size: "small", tone: "ghost", ...lock, onClick: () => rotate.onRotate(id), children: rotate.label }) : null, _jsx(Button, { "data-media-action": "remove", "aria-label": removeLabel(item), size: "small", tone: "ghost", ...lock, onClick: () => onRemove(id), children: actionLabels.remove })] })] });
 }
 /** A photo is the primary content; upload status stays below it instead of replacing the thumbnail. */
-export function MediaSelectionScreen({ library, selectionSummary, items, add, done, labels, actionLabels, removeLabel, moveUpLabel, moveDownLabel, onRemove, onMove, onRetry, onCancel, rotate, ...screen }) {
-    const itemActions = { labels, actionLabels, removeLabel, moveUpLabel, moveDownLabel, onRemove, onMove, onRetry, onCancel, ...(rotate === undefined ? {} : { rotate }) };
+export function MediaSelectionScreen({ library, selectionSummary, items, add, done, labels, actionLabels, removeLabel, moveUpLabel, moveDownLabel, onRemove, onMove, onRetry, onCancel, rotate, disabled, ...screen }) {
+    const itemActions = { labels, actionLabels, removeLabel, moveUpLabel, moveDownLabel, onRemove, onMove, onRetry, onCancel, ...(rotate === undefined ? {} : { rotate }), ...(disabled === undefined ? {} : { disabled }) };
     const grid = useRef(null), addButton = useRef(null);
     const focusedItem = useRef(null);
     useLayoutEffect(() => {
@@ -302,7 +305,7 @@ function SearchFilterSheetView({ sheet }) {
     return _jsx(Sheet, { open: sheet.open, onOpenChange: open => sheet.onOpenChange(open), title: sheet.title, closeLabel: sheet.labels.close, placement: session?.side ? "end" : "bottom", size: sheet.size ?? "large", footer: footer, children: sheet.renderContent(draft, setDraft) });
 }
 /** Abort is supplied to the host request; the host must ignore aborted responses before committing results. */
-export function SearchScreen({ query, queryLabel, queryField, queryClearLabel, onQueryChange, onSearch, debounceMs, filters, recentSearches, children, onSubmit, committedQuery, filtersOverflow = "wrap", hostGutter = "none", queryLabelVisibility = "visible", searching, searchingLabel, recentQueries, suggestedQueries, suggestions, resultSummary, appliedFilters, filterSheet, initialFocus = initialFocusDefaults.search, ...screen }) {
+export function SearchScreen({ query, queryLabel, queryField, queryClearLabel, onQueryChange, onSearch, debounceMs, filters, recentSearches, children, onSubmit, committedQuery, filtersOverflow = "wrap", filtersRole = "narrow", hostGutter = "none", queryLabelVisibility = "visible", searching, searchingLabel, recentQueries, suggestedQueries, suggestions, resultSummary, appliedFilters, filterSheet, initialFocus = initialFocusDefaults.search, ...screen }) {
     // The host owns localized copy. A custom queryField owns its own clear affordance.
     if (queryField == null && !queryClearLabel?.trim())
         throw new TypeError("SearchScreen requires a localized queryClearLabel for its default search field");
@@ -337,9 +340,9 @@ export function SearchScreen({ query, queryLabel, queryField, queryClearLabel, o
     const phase = resolveSearchScreenPhase(query, committedQuery);
     const appliedCount = appliedFilters?.items.length ?? 0;
     const cause = phase === "results" && resultSummary ? resolveSearchEmptyCause(resultSummary.count, appliedCount) : "none";
-    // Two-step search shows the rail only beside results (typing keeps the pinned area short), and a
-    // query-caused zero hides it because no filter can fix that; a filter-caused zero keeps it to undo the filter.
-    const showRail = (committedQuery === undefined || phase === "results") && cause !== "query";
+    // Two-step search shows the rail only beside results; a query-caused zero hides narrowing filters (none can fix it)
+    // but keeps scope filters, which are that zero's recovery (resolveSearchFilterRailVisible, Native twin).
+    const showRail = resolveSearchFilterRailVisible(phase, committedQuery !== undefined, cause, filtersRole);
     const trigger = filterSheet?.trigger ? _jsx(SearchFilterTrigger, { sheet: filterSheet, appliedCount: appliedCount, triggerRef: focus.filterTrigger }) : null;
     const rail = !showRail ? null : trigger && filters != null ? _jsxs(Stack, { axis: "inline", gap: "xs", wrap: filtersOverflow === "wrap", children: [trigger, filters] }) : trigger ?? filters;
     // Wrapping chips grow the pinned area line by line at large text; the scroll rail caps it at one row.

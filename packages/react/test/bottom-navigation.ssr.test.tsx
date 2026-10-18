@@ -120,3 +120,25 @@ it("marks the raised tile plank for its surface styles", () => {
   </HjmProvider>);
   expect(markup).toContain('data-surface="raised"');
 });
+
+it("frames a floating bar with a recipe shape and lifts the selected icon", () => {
+  const markup = renderToStaticMarkup(<HjmProvider systemTheme="light">
+    <BottomNavigation descriptor={descriptor} configuration={{ presentation: "floating", shape: "pill", iconEmphasis: "lift" }} getHref={item => `/${item.id}`} renderIcon={() => <span />} />
+  </HjmProvider>);
+  expect(markup).toContain('data-shape="pill"');
+  expect(markup).toContain('data-icon-emphasis="lift"');
+  expect(markup).toContain("--hjm-bottom-navigation-shape-radius:var(--hjm-radius-full)");
+  expect(markup).toContain("--hjm-bottom-navigation-shape-padding:8px");
+  expect(markup).toContain("--hjm-bottom-navigation-lift-offset:-4px");
+  expect(markup).toContain("--hjm-bottom-navigation-lift-idle-opacity:0.82");
+});
+
+it("keeps the floating recipe frame by default", () => {
+  const markup = renderToStaticMarkup(<HjmProvider systemTheme="light">
+    <BottomNavigation descriptor={descriptor} configuration={{ presentation: "floating" }} getHref={item => `/${item.id}`} renderIcon={() => null} />
+  </HjmProvider>);
+  expect(markup).toContain('data-shape="standard"');
+  expect(markup).toContain('data-icon-emphasis="scale"');
+  expect(markup).not.toContain("--hjm-bottom-navigation-shape-radius");
+  expect(markup).not.toContain("--hjm-bottom-navigation-lift-offset");
+});

@@ -323,7 +323,8 @@ export const componentCatalog = [
   // MediaSelectionCell (2026-10-18): the screen's own item cell, exported so virtualized hosts render the same cell.
   { name: "MediaSelectionScreen", label: "미디어 선택 화면", companions: ["MediaSelectionCell"], category: "layout", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "screenPatternRecipe" },
   { name: "ProfileScreen", label: "프로필 화면", category: "layout", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "screenPatternRecipe" },
-  { name: "ChatMessage", label: "채팅 말풍선", category: "data-display", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "chatMessageRecipe" },
+  // MediaAlbumPageStatus (2026-10-18): loading/failed page of ChatMessage/CommentThreadRow `mediaAlbum`.
+  { name: "ChatMessage", label: "채팅 말풍선", companions: ["MediaAlbumPageStatus"], category: "data-display", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "chatMessageRecipe" },
   // 2026-10-18 timeline pieces that products drew themselves (BurnTok DM typing row, Utilverse chat time row).
   // New public API, so beta until both renderer proofs pass (docs/stable-promotion.md).
   { name: "TypingIndicator", label: "입력 중 표시", category: "feedback", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "typingIndicatorRecipe" },

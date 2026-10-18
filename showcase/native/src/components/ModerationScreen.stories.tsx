@@ -1,4 +1,4 @@
-import { ModerationFormPreview, ModerationReviewPreview } from "../flow-variants";
+import { ModerationFormPreview, ModerationReviewPreview, ModerationReviewSectionPreview } from "../flow-variants";
 import type { Meta, StoryObj } from "@storybook/react-native";
 import { NativeComponentPreview } from "../component-examples";
 const meta = { title: "배포/컴포넌트/레이아웃/신고 화면", component: NativeComponentPreview, args: { componentId: "moderation-screen", variant: "default" }, parameters: { hjm: { componentIds: ["moderation-screen"] }, controls: { exclude: ["componentId", "variant"] } } } satisfies Meta<typeof NativeComponentPreview>;
@@ -7,5 +7,6 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본",};
 export const Review: Story = { name: "운영자 검토", render: () => <ModerationReviewPreview /> };
 export const Inline: Story = { name: "편지 안 신고", render: () => <ModerationFormPreview /> };
+export const ReviewSection: Story = { name: "검토 절 머리", render: () => <ModerationReviewSectionPreview /> };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

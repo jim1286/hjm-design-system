@@ -6,7 +6,8 @@ import { AuthProviderButton } from "@hjmds/react/provider-button";
 import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "@hjmds/react/auth-screen";
 import { EditorScreen, ModerationForm, ModerationScreen, ProfileScreen, ProfileSummary } from "@hjmds/react/screen-flows";
 import { Steps } from "@hjmds/react/steps";
-import { Button } from "@hjmds/react/actions";
+import { Button, IconButton } from "@hjmds/react/actions";
+import { Icon } from "@hjmds/react/display";
 import { TextField } from "@hjmds/react/forms";
 import { Notice } from "@hjmds/react/feedback";
 import { Stack, Surface, Text } from "@hjmds/react/layout";
@@ -97,4 +98,16 @@ export function ModerationFormPreview() {
         submit={{ label: "신고하기", onAction: () => setSent(true) }} cancel={{ label: "취소", onAction: () => setOpen(false) }} />
     </Surface> : <Button tone="ghost" onClick={() => setOpen(true)}>신고</Button>}
   </Stack>;
+}
+
+/** HJM 1.32 ModerationForm `description`·`actions`: the review section's title, report time and refresh in the form's own header. */
+export function ModerationReviewSectionPreview() {
+  const [reason, setReason] = useState("");
+  const [checkedAt, setCheckedAt] = useState("13:00");
+  return <ModerationForm variant="review" title="댓글 신고" description={`10월 18일 ${checkedAt} 접수`}
+    actions={<IconButton label="새로고침" tone="ghost" edge="end" onClick={() => setCheckedAt("13:05")}><Icon name="refresh" /></IconButton>}
+    decisionReason={{ label: "처리 사유", value: reason, onValueChange: setReason, maxLength: 500 }}
+    decisions={[{ id: "dismiss", label: "기각", onAction: () => setReason("") }, { id: "hide", label: "숨기기", tone: "danger", onAction: () => setReason("") }]}>
+    <Stack gap="sm"><Text variant="caption" tone="muted">신고 사유: 스팸</Text><Text as="p">지금 가입하면 무료 쿠폰을 드려요!</Text></Stack>
+  </ModerationForm>;
 }

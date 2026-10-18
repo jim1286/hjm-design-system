@@ -8,7 +8,9 @@ import {
   paginationBehaviorScenarios,
   paginationDescriptorDefaults,
   paginationRecipe,
+  isPaginationOpenEndedDescriptor,
   resolvePaginationDescriptor,
+  resolvePaginationOpenEndedDescriptor,
   validatePaginationDescriptor,
   validatePaginationLabels,
   type PaginationDescriptor,
@@ -335,5 +337,37 @@ describe("Pagination catalog and crosswalk", () => {
       targets: ["pagination"],
       relationship: "direct",
     });
+  });
+});
+
+describe("Pagination without a known total", () => {
+  const composeCurrentPageLabel = ({ page }: { page: number }) => `${page}페이지`;
+
+  it("resolves previous / current page label / next from hasNext", () => {
+    expect(resolvePaginationOpenEndedDescriptor({ currentPage: 3, hasNext: true }, { labels, composeCurrentPageLabel })).toEqual({
+      currentPage: 3,
+      hasPrevious: true,
+      hasNext: true,
+      labels,
+      currentPageLabel: "3페이지",
+    });
+    expect(resolvePaginationOpenEndedDescriptor({ currentPage: 1, hasNext: false }, { labels, composeCurrentPageLabel })).toMatchObject({
+      hasPrevious: false,
+      hasNext: false,
+    });
+  });
+
+  it("is distinguished by hasNext and rejects totals or window options", () => {
+    expect(isPaginationOpenEndedDescriptor({ currentPage: 1, hasNext: false })).toBe(true);
+    expect(isPaginationOpenEndedDescriptor({ currentPage: 1, totalPages: 3 })).toBe(false);
+    expect(() => resolvePaginationOpenEndedDescriptor({ currentPage: 1, hasNext: true, totalPages: 3 } as never, { labels, composeCurrentPageLabel })).toThrow("Unsupported Pagination open-ended descriptor field: totalPages");
+    expect(() => resolvePaginationOpenEndedDescriptor({ currentPage: 0, hasNext: true }, { labels, composeCurrentPageLabel })).toThrow("currentPage must be a positive integer");
+    expect(() => resolvePaginationOpenEndedDescriptor({ currentPage: 1, hasNext: "yes" } as never, { labels, composeCurrentPageLabel })).toThrow("hasNext must be a boolean");
+    expect(() => validatePaginationDescriptor({ currentPage: 1, totalPages: 3, hasNext: true } as never)).toThrow("Unsupported Pagination descriptor field: hasNext");
+  });
+
+  it("requires a product-composed current page label", () => {
+    expect(() => resolvePaginationOpenEndedDescriptor({ currentPage: 2, hasNext: true }, { labels, composeCurrentPageLabel: undefined as never })).toThrow("composeCurrentPageLabel must be a function");
+    expect(() => resolvePaginationOpenEndedDescriptor({ currentPage: 2, hasNext: true }, { labels, composeCurrentPageLabel: () => " " })).toThrow("must return a non-empty string");
   });
 });

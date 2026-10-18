@@ -86,6 +86,45 @@ export function validatePaginationLabels(labels) {
         }
     }
 }
+const openEndedDescriptorKeys = new Set(["currentPage", "hasNext"]);
+/** Distinguishes the open-ended form by its `hasNext` field, the one key the bounded forms forbid. */
+export function isPaginationOpenEndedDescriptor(descriptor) {
+    return isObject(descriptor) && Object.prototype.hasOwnProperty.call(descriptor, "hasNext");
+}
+export function validatePaginationOpenEndedDescriptor(descriptor) {
+    if (!isObject(descriptor)) {
+        throw new TypeError("Pagination descriptor must be an object");
+    }
+    rejectUnknownKeys(descriptor, openEndedDescriptorKeys, "open-ended descriptor");
+    if (!isPositiveInteger(descriptor.currentPage)) {
+        throw new RangeError("Pagination currentPage must be a positive integer");
+    }
+    if (typeof descriptor.hasNext !== "boolean") {
+        throw new TypeError("Pagination hasNext must be a boolean");
+    }
+}
+/**
+ * Open-ended counterpart of resolvePaginationDescriptor. A first page without a next page still resolves (both
+ * steps unavailable) so the renderer, not the product, decides how a single page is presented.
+ */
+export function resolvePaginationOpenEndedDescriptor(descriptor, options) {
+    validatePaginationOpenEndedDescriptor(descriptor);
+    validatePaginationLabels(options.labels);
+    if (typeof options.composeCurrentPageLabel !== "function") {
+        throw new TypeError("Pagination composeCurrentPageLabel must be a function");
+    }
+    const currentPageLabel = options.composeCurrentPageLabel({ page: descriptor.currentPage });
+    if (typeof currentPageLabel !== "string" || currentPageLabel.trim().length === 0) {
+        throw new TypeError("Pagination composeCurrentPageLabel must return a non-empty string");
+    }
+    return {
+        currentPage: descriptor.currentPage,
+        hasPrevious: descriptor.currentPage > 1,
+        hasNext: descriptor.hasNext,
+        labels: options.labels,
+        currentPageLabel,
+    };
+}
 /**
  * Pure page-window function, independent of accessibility naming, so its
  * boundary inputs (total 1 page, total 2 pages, current at the first/last
@@ -208,6 +247,15 @@ export const paginationRecipe = {
         icon: "more",
     },
     navIcon: { previous: "chevronStart", next: "chevronEnd" },
+    /**
+     * Open-ended current page label: plain text between the steps, not a button, because it is the only page the
+     * control can show. It keeps the item's touch-target height so the row does not jump between modes.
+     */
+    pageLabel: {
+        minHeight: control.minTouchTarget,
+        paddingHorizontal: spacing.xs,
+        color: semanticColors.content.body,
+    },
     focus: focusIndicatorContract,
     states: { disabledOpacity: opacity.disabled },
 };

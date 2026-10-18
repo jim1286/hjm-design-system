@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { shouldSubmitMessageKey, canSubmitMessage, validateMessageAttachments, resolveScreenContentState, resolveSearchScreenPhase, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveFocusAfterRemoval, searchScreenRecipe, type ScreenContentState } from "../src/screen-patterns.js";
+import { shouldSubmitMessageKey, canSubmitMessage, validateMessageAttachments, resolveScreenContentState, resolveSearchScreenPhase, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchFilterRailVisible, resolveFocusAfterRemoval, searchScreenRecipe, type ScreenContentState } from "../src/screen-patterns.js";
 
 describe("screen content and composer ownership", () => {
   it("only replaces content for explicit initial states", () => {
@@ -59,6 +59,15 @@ describe("search screen phases", () => {
     expect(resolveSearchEmptyCause(0, 0)).toBe("query");
     expect(() => resolveSearchEmptyCause(-1, 0)).toThrow(RangeError);
     expect(() => resolveSearchEmptyCause(0, 1.5)).toThrow(RangeError);
+  });
+  it("keeps scope filters on a query-caused zero but hides narrowing ones, and hides every rail while typing", () => {
+    expect(resolveSearchFilterRailVisible("results", true, "query")).toBe(false);
+    expect(resolveSearchFilterRailVisible("results", true, "query", "scope")).toBe(true);
+    expect(resolveSearchFilterRailVisible("results", false, "query", "scope")).toBe(true);
+    expect(resolveSearchFilterRailVisible("results", true, "filters")).toBe(true);
+    expect(resolveSearchFilterRailVisible("typing", true, "none", "scope")).toBe(false);
+    expect(resolveSearchFilterRailVisible("idle", false, "none")).toBe(true);
+    expect(() => resolveSearchFilterRailVisible("results", true, "query", "wide" as never)).toThrow(RangeError);
   });
   it("moves focus to the item that replaced the removed one, then the last, then the fallback", () => {
     expect(resolveFocusAfterRemoval(0, 2)).toBe(0);
@@ -173,5 +182,13 @@ describe("chat reaction summary and icon tile frame (2026-10-18)", () => {
     expect(`${iconTileRecipe.shapes.squircle * 100}`.startsWith("22")).toBe(true);
     expect(iconTileRecipe.fillMinSize).toBeLessThan(iconTileRecipe.iconSize);
     expect(iconTileRecipe.fillMaxSize).toBeGreaterThan(iconTileRecipe.iconSize);
+  });
+  it("resolves a filling icon's edge from its cell with the recipe clamp", async () => {
+    const { iconTileRecipe, resolveIconTileFillEdge } = await import("../src/screen-patterns.js");
+    expect(resolveIconTileFillEdge(20)).toBe(iconTileRecipe.fillMinSize);
+    expect(resolveIconTileFillEdge(57.5)).toBe(57.5);
+    expect(resolveIconTileFillEdge(200)).toBe(iconTileRecipe.fillMaxSize);
+    expect(() => resolveIconTileFillEdge(Number.NaN)).toThrow(RangeError);
+    expect(() => resolveIconTileFillEdge(-1)).toThrow(RangeError);
   });
 });

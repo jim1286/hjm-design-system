@@ -2,8 +2,8 @@ import { type LinkDescriptor, type LinkDestination } from "@hjmds/design-contrac
 import type { SemanticIconName } from "@hjmds/design-contracts/components/icon";
 import { type IconButtonEdge, type IconButtonTone as ContractIconButtonTone, type IconButtonShape, type IconButtonSize } from "@hjmds/design-contracts/recipes";
 import { type ButtonAlign as ContractButtonAlign, type ButtonEdge as ContractButtonEdge, type ButtonShape as ContractButtonShape, type ButtonSize as ContractButtonSize, type ButtonTone as ContractButtonTone } from "@hjmds/design-contracts/recipes/base";
-import { type ReactNode } from "react";
-import { View, type PressableProps } from "react-native";
+import { type ReactNode, type Ref } from "react";
+import { View, type View as NativeView, type PressableProps } from "react-native";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { type NativeIconRenderProps } from "./primitives.js";
 export type ButtonTone = ContractButtonTone;
@@ -178,6 +178,12 @@ export type BottomCTAAction = Readonly<{
     loadingLabel?: ReactNode;
     size?: ButtonSize;
     tone?: ButtonTone;
+    /**
+     * Ref to this action's button. Native overlays return focus only to an explicit target
+     * (`ImmersiveOverlay`/`Dialog` `returnFocusRef`), so the action that opens one must expose its button
+     * (2026-10-18 Utilverse display board: focus did not come back after closing the board).
+     */
+    buttonRef?: Ref<NativeView>;
 }>;
 export type BottomCTAProps = Readonly<{
     primaryAction: BottomCTAAction;

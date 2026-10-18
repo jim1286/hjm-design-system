@@ -171,10 +171,28 @@ import { ModerationForm } from "@hjmds/react-native/screen-flows";
 | 신고·검토 필드 | ModerationScreen과 같음 | — | `variant`·`reasons`…·`block` 또는 `decisionReason`·`decisions`·`resolution` |
 | `title` | 문자열 | — | 구성 제목(`level3`, 문서 수준 `headingLevel` 기본 3). 제목 줄이 있는 Sheet·Dialog 안에서는 생략 |
 | `headingLevel` | 1~6 | 3 | 제목의 문서 수준 |
+| `description` | 문자열 | — | 1.32.0, 미게시. 제목 아래 muted 한 줄(접수·숨김 시각 등 제품이 형식을 정한 문자열) |
+| `actions` | `ReactNode` | — | 1.32.0, 미게시. 제목 줄 끝 행동(새로고침 IconButton `edge="end"` 등). 결정 버튼이 아니라 검토 대상을 다루는 보조 행동만 둔다 |
 | `cancel` | `ScreenFlowAction` | — | 행동 줄 맨 끝 ghost 버튼(펼친 신고 접기) |
 | `layoutStyle` | margin·width·flex·`alignSelf` | — | 바깥 배치 전용 |
 
 화면 상태(`state`)가 없으므로 신고·결정 버튼은 사유·`disabled`·`pending`으로만 잠긴다.
+
+운영자 검토 큐의 절 하나로 둘 때는 절 제목·접수 시각·새로고침을 폼의 머리에 넣는다(1.32.0). 같은 CompositionLayout 머리이므로 폼을 다른 CompositionLayout으로 감싸 제목을 두 번 쌓지 않는다.
+
+```tsx
+// Native(Web은 onPress 대신 onClick)
+<ModerationForm
+  variant="review"
+  title={t(labels[detail.report.kind])}
+  description={formatMessageTime(detail.report.reportedAt)}
+  actions={<IconButton label={t("refresh")} tone="ghost" edge="end" disabled={busy || fetching} onPress={refresh}><RefreshGlyph /></IconButton>}
+  decisionReason={decisionReason}
+  decisions={decisions}
+>
+  <ReportedContent detail={detail} />
+</ModerationForm>
+```
 
 ## 배치
 
@@ -182,7 +200,7 @@ import { ModerationForm } from "@hjmds/react-native/screen-flows";
 | --- | --- | --- |
 | 크기 | ScreenLayout 폭(최대 720); 사유는 세로 `RadioGroup`, 신고·차단은 `Button` 기본 크기 | `ModerationScreen`, `screen-flows.tsx` `Action` |
 | 간격 | 화면 padding `spacing.md` 16; 본문 사유 선택–`children` `spacing.lg` 20; footer 신고–차단 `spacing.xs` 8(세로로 쌓은 버튼, `actionGroupRecipe.stackedGap`) | Web·Native `ModerationScreen` `Stack gap="lg"`·`gap="xs"` |
-| 순서·정렬 | 헤더(제목) → 본문(사유 → 추가 설명 `children`) → footer(신고 primary → 차단 ghost). `review`: 본문(검토 대상 `children` → 처리 사유 TextArea 또는 `resolution`) → footer(결정 버튼, 주어진 순서). `ModerationForm`: (제목) → 본문 → 행동(… → `cancel` ghost) | 렌더 순서 |
+| 순서·정렬 | 헤더(제목) → 본문(사유 → 추가 설명 `children`) → footer(신고 primary → 차단 ghost). `review`: 본문(검토 대상 `children` → 처리 사유 TextArea 또는 `resolution`) → footer(결정 버튼, 주어진 순서). `ModerationForm`: 머리(제목 → `description`(사이 `spacing.xxs` 4), 같은 줄 끝 `actions`(제목 열과 `spacing.sm` 12)) → 본문 → 행동(… → `cancel` ghost) | 렌더 순서, `CompositionLayout` |
 | 고정·스크롤 | 헤더·footer 고정, 본문 화면 스크롤; 차단 확인은 AlertDialog 오버레이 | `ScreenLayout`, `AlertDialog` |
 | 좁은 폭·큰 글자 | 사유 문구는 줄바꿈되고 항목이 세로로 늘어난다; footer 버튼은 세로로 쌓여 좁은 폭에서도 나란히 줄지 않는다 | `RadioGroup orientation="vertical"`, `Stack` |
 
@@ -200,4 +218,5 @@ import { ModerationForm } from "@hjmds/react-native/screen-flows";
 ## 근거
 
 - `variant="review"`(1.31.0): 2026-10-18 앱 감사에서 utilverse 신고·이의 신청 처리 화면이 처리 사유 TextArea, 기각/숨기기 버튼 묶음, OS `Alert` 확인을 화면마다 직접 조립했다. 결정 문구는 큐마다 달라(기각·숨기기·유지·번복) props로 받고, 사유 필수·한 번에 한 결정·확인창 규칙은 HJM이 소유한다.
+- `ModerationForm` `description`·`actions`(1.32.0): 1.31.0 채택에서 utilverse 신고·이의 신청 검토가 절 제목·접수(숨김) 시각·새로고침을 둘 자리가 없어 폼을 CompositionLayout으로 한 번 더 감쌌다. 폼이 이미 그리는 CompositionLayout 머리의 같은 슬롯을 열었다.
 - `ModerationForm`(1.31.0): 같은 감사에서 diairy가 편지 안에 펼치는 신고에 ModerationScreen을 넣고 `contentInset="none"`·`scroll="content"`로 화면 틀을 끄면서도 머리 띠가 남았다(Dialog·Sheet는 자기 제목 줄을 가진다). 같은 필드·행동을 화면 틀 없이 그리는 companion으로 분리해 두 표현이 한 구현(`useModeration`)을 공유한다.

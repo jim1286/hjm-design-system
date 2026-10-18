@@ -54,3 +54,16 @@ it("renders the exported cell standalone with rotate before remove", async () =>
  act(() => button("b 회전").props.onPress());
  expect(onRotate).toHaveBeenCalledExactlyOnceWith("b");
 });
+// 2026-10-18 Utilverse photo-to-PDF/strip: a running job locks move/rotate/remove; the upload's own actions stay live.
+it("locks item edits on the screen and the standalone cell while the host job runs", async () => {
+ const { MediaSelectionCell } = await import("../src/screen-flows.js");
+ render([item("a"), item("b"), item("c")], { disabled: true, rotate: { label: "회전", itemLabel: entry => `${entry.descriptor.id} 회전`, onRotate: vi.fn() } });
+ for (const name of ["b 앞으로", "b 뒤로", "b 회전", "b 제거"]) expect(button(name).props.disabled).toBe(true);
+ act(() => tree!.unmount()); tree = undefined;
+ const onCancel = vi.fn();
+ const uploading: MediaSelectionItem = { descriptor: { id: "b", name: "b.jpg", state: { status: "uploading", progress: 0.5 } } };
+ act(() => { tree = create(<HjmNativeProvider reducedMotion><MediaSelectionCell {...props} onCancel={onCancel} item={uploading} index={1} count={3} disabled /></HjmNativeProvider>); });
+ for (const name of ["b 앞으로", "b 뒤로", "b 제거"]) expect(button(name).props.disabled).toBe(true);
+ const cancel = tree!.root.findAllByType(Button).find(node => node.props.children === "업로드 취소" || node.props.accessibilityLabel === "업로드 취소");
+ expect(cancel?.props.disabled).toBeFalsy();
+});

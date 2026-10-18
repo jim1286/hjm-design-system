@@ -90,6 +90,18 @@ describe("ChatMessage reaction summary and menu tone", () => {
     expect(deleteRow.findAllByType(Text).find(node => node.props.children === "삭제")!.props.tone).toBe("danger");
   });
 
+  // 2026-10-18 Utilverse guests cannot react: the counts stay beside the time as one text element, not a button.
+  it("draws a read-only summary as one named text element without a press target", () => {
+    const view = render(<ChatMessage direction="incoming" author="서연" timestamp="지금"
+      reactions={{ label: "메시지 반응", closeLabel: "닫기", value: null, onValueChange: () => {}, options, summary: { label: "반응 ❤️ 2개, 😂 1개", readOnly: true, items: [{ id: "heart", emoji: "❤️", count: 2 }, { id: "laugh", emoji: "😂", count: 1 }] } }}>
+      <Text>안녕</Text>
+    </ChatMessage>);
+    expect(view.root.findAllByType(Pressable).some(node => node.props.accessibilityLabel === "반응 ❤️ 2개, 😂 1개")).toBe(false);
+    const counts = view.root.findAll(node => typeof node.type === "string" && node.props.accessibilityRole === "text" && node.props.accessibilityLabel === "반응 ❤️ 2개, 😂 1개");
+    expect(counts).toHaveLength(1);
+    expect(counts[0]!.props.accessible).toBe(true);
+  });
+
   it("does not open from a disabled summary", () => {
     const view = render(<ChatMessage direction="incoming" author="서연" timestamp="지금"
       reactions={{ label: "메시지 반응", closeLabel: "닫기", value: null, onValueChange: () => {}, options, disabled: true, summary: { label: "반응 보기", items: [{ id: "heart", emoji: "❤️", count: 3 }] } }}>

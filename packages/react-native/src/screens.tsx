@@ -1,12 +1,14 @@
-import { iconTileRecipe, notificationRowRecipe as notificationRecipe, type IconTileFrame, type IconTileShape, type IconTileSize } from "@hjmds/design-contracts/screen-patterns";
+import { iconTileRecipe, notificationRowRecipe as notificationRecipe, type IconTileArtwork, type IconTileFrame, type IconTileShape, type IconTileSize } from "@hjmds/design-contracts/screen-patterns";
 import { iconButtonRecipe } from "@hjmds/design-contracts/recipes";
 import { resolveComposerLimit, type ComposerLengthFeedback } from "@hjmds/design-contracts/communication";
 import { Progress } from "./feedback.js";
 import { resolveDesignProfileScreen, type DesignProfileScreenPresentation } from "@hjmds/design-contracts/design-profile-layout";
-import { MessageReactions, ReactionSummaryButton, omitReactionSummary, type MessageMenuAction, type MessageReactionsHandle } from "./internal/message-reactions.js";
+import { MessageReactions, ReactionSummaryButton, ReactionSummaryText, omitReactionSummary, type MessageMenuAction, type MessageReactionsHandle } from "./internal/message-reactions.js";
 import { MediaAlbumView, useMediaAlbumIndex, type MediaAlbum } from "./internal/media-album.js";
 import { validateMediaSetChoice } from "@hjmds/design-contracts/screen-patterns";
-export type { MediaAlbum } from "./internal/media-album.js";
+export type { MediaAlbum, MediaAlbumPageStatusProps } from "./internal/media-album.js";
+// Loading/failed page rendered inside `mediaAlbum.renderPage` (2026-10-18); comment rows use the same component.
+export { MediaAlbumPageStatus } from "./internal/media-album.js";
 import type { ReactionPickerProps } from "./reaction-picker.js";
 import { Button, IconButton } from "./actions.js";
 import { TextArea } from "./inputs.js";
@@ -52,6 +54,7 @@ export type ScreenLayoutProps = Readonly<{
   /**
    * Hosts that already inset routes avoid applying the shared gutter twice (`none`). `body-edge` keeps the header,
    * notice and footer gutter and drops only the body's horizontal padding so full-width list rows own their inset.
+   * `body-bleed` keeps the same gutters and drops every body padding, so a map or canvas runs edge to edge.
    */
   contentInset?: ScreenContentInset;
   /** Center a product prompt in the available body without inventing a query state. */
@@ -138,17 +141,27 @@ export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility 
   // heading plus full body inset leaves category tabs detached from navigation.
   const compactHeader = header == null && showHeader && headerAlignment === "center" && titleVisibility === "hidden" && !hasMark && !description;
   const headerVerticalPadding = compactHeader ? screenHeaderRecipe.compactPaddingVertical : screenHeaderRecipe.paddingVertical;
+  // body-bleed: a map or canvas body has no gutter on any side; header, notice and footer keep theirs.
+  const bleed = contentInset === "body-bleed";
   // A notice can contain navigation tabs; keep its separation from body filters.
-  const bodyPaddingTop = compactHeader && !notice ? Math.min(padding, screenHeaderRecipe.compactBodyTop) : padding;
+  const bodyPaddingTop = bleed ? 0 : compactHeader && !notice ? Math.min(padding, screenHeaderRecipe.compactBodyTop) : padding;
   // The last region (footer, else body) owns the bottom inset once: max(gutter, safe area), never gutter + inset.
   // An overlay BottomNavigation covers `navigationInset` of the screen bottom (its safe area included), so the last
   // region keeps the gutter above the bar instead of each tab screen adding a spacer (BottomNavigationInsetProvider).
+  // This is the only place the inset is applied: `scroll="content"` lists inside must not add it again.
   const navigationInset = useContext(BottomNavigationInsetContext);
-  const edgePadding = resolveScreenBottomPadding(padding, safeAreaBottom, keyboardOverlap > 0);
-  const bottomPadding = navigationInset > 0 && keyboardOverlap === 0 ? Math.max(edgePadding, padding + navigationInset) : edgePadding;
-  const bodyPaddingBottom = footer ? padding : bottomPadding;
+  const lastRegionBottom = (gutter: number) => {
+    const edge = resolveScreenBottomPadding(gutter, safeAreaBottom, keyboardOverlap > 0);
+    return navigationInset > 0 && keyboardOverlap === 0 ? Math.max(edge, gutter + navigationInset) : edge;
+  };
+  const bottomPadding = lastRegionBottom(padding);
+  // A bleeding last body still clears the safe area and the bar, only without the gutter.
+  const bodyPaddingBottom = footer ? (bleed ? 0 : padding) : bleed ? lastRegionBottom(0) : bottomPadding;
   const ready = contentAlignment === "center" ? <View style={{ marginVertical: "auto", flexShrink: 0, width: "100%" }}>{children}</View> : children;
-  const body = state.kind === "ready" ? <ScreenBodyInsetContext.Provider value={bodyInline}>{ready}</ScreenBodyInsetContext.Provider> : <View style={{ marginVertical: "auto", flexShrink: 0, alignItems: "center", gap: recipe.stateGap, paddingVertical: profileLayout?.gap ?? recipe.sectionGap }}>
+  // body-edge/body-bleed hand the body gutter to product content (rows, a map); the shared state group has no inset
+  // of its own, so it keeps the screen gutter instead of putting copy against the screen edge.
+  const stateInline = contentInset === "body-edge" || bleed ? padding : 0;
+  const body = state.kind === "ready" ? <ScreenBodyInsetContext.Provider value={bodyInline}>{ready}</ScreenBodyInsetContext.Provider> : <View style={{ marginVertical: "auto", flexShrink: 0, alignItems: "center", gap: recipe.stateGap, paddingVertical: profileLayout?.gap ?? recipe.sectionGap, paddingHorizontal: stateInline }}>
     {/* Keep loading copy in Spinner's accessibility name rather than a visible
         second status, matching the shared spinner-only loading contract. */}
     {resolved.busy ? (loadingIndicator ? <View accessible accessibilityRole="progressbar" accessibilityLabel={[state.title, state.description].filter(Boolean).join(". ")} accessibilityState={{ busy: true }} accessibilityLiveRegion="polite" style={{ alignItems: "center" }}><View accessibilityElementsHidden importantForAccessibility="no-hide-descendants">{loadingIndicator}</View></View> : <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} />) : <View accessibilityLiveRegion={resolved.announcement} style={{ alignItems: "center", gap: recipe.itemGap }}>
@@ -376,7 +389,7 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
   const summary = reactions?.summary;
   const reactionMenu = reactions ? omitReactionSummary(reactions) : undefined;
   const summaryItems = summary ? resolveChatReactionSummary(summary) : [];
-  const summaryButton = reactions && summary && summaryItems.length ? <ReactionSummaryButton label={summary.label} items={summaryItems} selected={reactions.value} disabled={reactions.disabled ?? false} onPress={() => menu.current?.open()} /> : null;
+  const summaryButton = reactions && summary && summaryItems.length ? (summary.readOnly ? <ReactionSummaryText label={summary.label} items={summaryItems} /> : <ReactionSummaryButton label={summary.label} items={summaryItems} selected={reactions.value} disabled={reactions.disabled ?? false} onPress={() => menu.current?.open()} />) : null;
   // A run shows its time once, beside its last bubble; delivery state stays on every bubble.
   const visibleTime = revealTime || !display.showTimestamp ? "" : timestamp;
   const meta = [visibleTime, deliveryLabel].filter(Boolean).join(" · ");
@@ -500,7 +513,12 @@ export function NotificationRow({ preview, metadata, avatar, avatarBadge, thumbn
   </View>;
 }
 
-export type IconTileProps = Readonly<{ icon: ReactNode; label: string; overlay?: ReactNode; labelLines?: 1 | 2; ghost?: boolean;
+export type IconTileProps = Readonly<{
+  /**
+   * Icon artwork. A function receives the rendered edge (`IconTileArtwork`) so fixed-size artwork such as an image
+   * sizes itself to a `size="fill"` icon without the product re-computing the cell clamp.
+   */
+  icon: ReactNode | ((artwork: IconTileArtwork) => ReactNode); label: string; overlay?: ReactNode; labelLines?: 1 | 2; ghost?: boolean;
   /** `none`: the icon is complete product artwork, so no frame fill or hairline is drawn. */
   frame?: IconTileFrame;
   /** Frame (and ghost outline) corner shape from the product's icon theme. */
@@ -518,7 +536,7 @@ export function IconTile({icon, label, overlay, labelLines = 1, ghost = false, f
   const framed = frame === "surface";
   const dimensions = size === "fill" ? {width: "100%" as const, minWidth: r.fillMinSize, maxWidth: r.fillMaxSize, aspectRatio: 1} : {width: r.iconSize, height: r.iconSize};
   return <View style={{alignItems: "center", gap: r.gap, minWidth: 0, width: "100%", overflow: "visible"}}>
-    <View onLayout={size === "fill" ? event => setFillEdge(event.nativeEvent.layout.width) : undefined} style={{position: "relative", alignItems: "center", justifyContent: "center", ...dimensions, borderRadius: edge * r.shapes[shape], backgroundColor: framed ? colors.surfaceAlt : "transparent", borderWidth: framed || ghost ? 1 : 0, borderStyle: ghost ? "dashed" : "solid", opacity: ghost ? r.ghostOpacity : 1, borderColor: colors.border}}>{icon}{overlay}</View>
+    <View onLayout={size === "fill" ? event => setFillEdge(event.nativeEvent.layout.width) : undefined} style={{position: "relative", alignItems: "center", justifyContent: "center", ...dimensions, borderRadius: edge * r.shapes[shape], backgroundColor: framed ? colors.surfaceAlt : "transparent", borderWidth: framed || ghost ? 1 : 0, borderStyle: ghost ? "dashed" : "solid", opacity: ghost ? r.ghostOpacity : 1, borderColor: colors.border}}>{typeof icon === "function" ? icon({edge}) : icon}{overlay}</View>
     <Text variant="caption" numberOfLines={labelLines} style={{width: "100%", minHeight: labelLines === 2 ? r.multilineLabelMinHeight : undefined, maxWidth: labelLines === 2 ? r.multilineLabelMaxWidth : r.labelMaxWidth, textAlign: "center", fontWeight: "500"}}>{label}</Text>
   </View>;
 }

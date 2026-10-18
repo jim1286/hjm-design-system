@@ -107,6 +107,7 @@ export declare const publicExportEntries: {
     readonly LoadMore: readonly ["./navigation"];
     readonly Masonry: readonly ["./masonry"];
     readonly MatrixTable: readonly ["./data-table"];
+    readonly MediaAlbumPageStatus: readonly ["./screens"];
     readonly MediaSelectionCell: readonly ["./screen-flows"];
     readonly MediaSelectionScreen: readonly ["./screen-flows"];
     readonly MediaTransport: readonly ["./media-transport"];

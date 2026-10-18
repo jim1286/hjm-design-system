@@ -4,9 +4,11 @@ import { iconButtonRecipe } from "@hjmds/design-contracts/recipes";
 import { resolveComposerLimit } from "@hjmds/design-contracts/communication";
 import { Progress } from "./feedback.js";
 import { resolveDesignProfileScreen } from "@hjmds/design-contracts/design-profile-layout";
-import { MessageReactions, ReactionSummaryButton, omitReactionSummary } from "./internal/message-reactions.js";
+import { MessageReactions, ReactionSummaryButton, ReactionSummaryText, omitReactionSummary } from "./internal/message-reactions.js";
 import { MediaAlbumView, useMediaAlbumIndex } from "./internal/media-album.js";
 import { validateMediaSetChoice } from "@hjmds/design-contracts/screen-patterns";
+// Loading/failed page rendered inside `mediaAlbum.renderPage` (2026-10-18); comment rows use the same component.
+export { MediaAlbumPageStatus } from "./internal/media-album.js";
 import { Button, IconButton } from "./actions.js";
 import { TextArea } from "./inputs.js";
 import { useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
@@ -64,17 +66,27 @@ export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility 
     // heading plus full body inset leaves category tabs detached from navigation.
     const compactHeader = header == null && showHeader && headerAlignment === "center" && titleVisibility === "hidden" && !hasMark && !description;
     const headerVerticalPadding = compactHeader ? screenHeaderRecipe.compactPaddingVertical : screenHeaderRecipe.paddingVertical;
+    // body-bleed: a map or canvas body has no gutter on any side; header, notice and footer keep theirs.
+    const bleed = contentInset === "body-bleed";
     // A notice can contain navigation tabs; keep its separation from body filters.
-    const bodyPaddingTop = compactHeader && !notice ? Math.min(padding, screenHeaderRecipe.compactBodyTop) : padding;
+    const bodyPaddingTop = bleed ? 0 : compactHeader && !notice ? Math.min(padding, screenHeaderRecipe.compactBodyTop) : padding;
     // The last region (footer, else body) owns the bottom inset once: max(gutter, safe area), never gutter + inset.
     // An overlay BottomNavigation covers `navigationInset` of the screen bottom (its safe area included), so the last
     // region keeps the gutter above the bar instead of each tab screen adding a spacer (BottomNavigationInsetProvider).
+    // This is the only place the inset is applied: `scroll="content"` lists inside must not add it again.
     const navigationInset = useContext(BottomNavigationInsetContext);
-    const edgePadding = resolveScreenBottomPadding(padding, safeAreaBottom, keyboardOverlap > 0);
-    const bottomPadding = navigationInset > 0 && keyboardOverlap === 0 ? Math.max(edgePadding, padding + navigationInset) : edgePadding;
-    const bodyPaddingBottom = footer ? padding : bottomPadding;
+    const lastRegionBottom = (gutter) => {
+        const edge = resolveScreenBottomPadding(gutter, safeAreaBottom, keyboardOverlap > 0);
+        return navigationInset > 0 && keyboardOverlap === 0 ? Math.max(edge, gutter + navigationInset) : edge;
+    };
+    const bottomPadding = lastRegionBottom(padding);
+    // A bleeding last body still clears the safe area and the bar, only without the gutter.
+    const bodyPaddingBottom = footer ? (bleed ? 0 : padding) : bleed ? lastRegionBottom(0) : bottomPadding;
     const ready = contentAlignment === "center" ? _jsx(View, { style: { marginVertical: "auto", flexShrink: 0, width: "100%" }, children: children }) : children;
-    const body = state.kind === "ready" ? _jsx(ScreenBodyInsetContext.Provider, { value: bodyInline, children: ready }) : _jsxs(View, { style: { marginVertical: "auto", flexShrink: 0, alignItems: "center", gap: recipe.stateGap, paddingVertical: profileLayout?.gap ?? recipe.sectionGap }, children: [resolved.busy ? (loadingIndicator ? _jsx(View, { accessible: true, accessibilityRole: "progressbar", accessibilityLabel: [state.title, state.description].filter(Boolean).join(". "), accessibilityState: { busy: true }, accessibilityLiveRegion: "polite", style: { alignItems: "center" }, children: _jsx(View, { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", children: loadingIndicator }) }) : _jsx(Spinner, { label: [state.title, state.description].filter(Boolean).join(". ") })) : _jsxs(View, { accessibilityLiveRegion: resolved.announcement, style: { alignItems: "center", gap: recipe.itemGap }, children: [_jsx(Text, { variant: "title", align: "center", children: state.title }), state.description ? _jsx(Text, { tone: "muted", align: "center", children: state.description }) : null] }), stateAction] });
+    // body-edge/body-bleed hand the body gutter to product content (rows, a map); the shared state group has no inset
+    // of its own, so it keeps the screen gutter instead of putting copy against the screen edge.
+    const stateInline = contentInset === "body-edge" || bleed ? padding : 0;
+    const body = state.kind === "ready" ? _jsx(ScreenBodyInsetContext.Provider, { value: bodyInline, children: ready }) : _jsxs(View, { style: { marginVertical: "auto", flexShrink: 0, alignItems: "center", gap: recipe.stateGap, paddingVertical: profileLayout?.gap ?? recipe.sectionGap, paddingHorizontal: stateInline }, children: [resolved.busy ? (loadingIndicator ? _jsx(View, { accessible: true, accessibilityRole: "progressbar", accessibilityLabel: [state.title, state.description].filter(Boolean).join(". "), accessibilityState: { busy: true }, accessibilityLiveRegion: "polite", style: { alignItems: "center" }, children: _jsx(View, { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", children: loadingIndicator }) }) : _jsx(Spinner, { label: [state.title, state.description].filter(Boolean).join(". ") })) : _jsxs(View, { accessibilityLiveRegion: resolved.announcement, style: { alignItems: "center", gap: recipe.itemGap }, children: [_jsx(Text, { variant: "title", align: "center", children: state.title }), state.description ? _jsx(Text, { tone: "muted", align: "center", children: state.description }) : null] }), stateAction] });
     // The mark is decorative beside a visible title (hidden from assistive tech, as TopBar titleLeading); standing
     // alone it becomes the header, named by `title`.
     const mark = hasMark ? _jsx(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { flexShrink: 0, alignItems: "center", justifyContent: "center" }, children: titleLeading }) : null;
@@ -186,7 +198,7 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
     const summary = reactions?.summary;
     const reactionMenu = reactions ? omitReactionSummary(reactions) : undefined;
     const summaryItems = summary ? resolveChatReactionSummary(summary) : [];
-    const summaryButton = reactions && summary && summaryItems.length ? _jsx(ReactionSummaryButton, { label: summary.label, items: summaryItems, selected: reactions.value, disabled: reactions.disabled ?? false, onPress: () => menu.current?.open() }) : null;
+    const summaryButton = reactions && summary && summaryItems.length ? (summary.readOnly ? _jsx(ReactionSummaryText, { label: summary.label, items: summaryItems }) : _jsx(ReactionSummaryButton, { label: summary.label, items: summaryItems, selected: reactions.value, disabled: reactions.disabled ?? false, onPress: () => menu.current?.open() })) : null;
     // A run shows its time once, beside its last bubble; delivery state stays on every bubble.
     const visibleTime = revealTime || !display.showTimestamp ? "" : timestamp;
     const meta = [visibleTime, deliveryLabel].filter(Boolean).join(" · ");
@@ -239,7 +251,7 @@ export function IconTile({ icon, label, overlay, labelLines = 1, ghost = false, 
     const edge = size === "fill" ? fillEdge : r.iconSize;
     const framed = frame === "surface";
     const dimensions = size === "fill" ? { width: "100%", minWidth: r.fillMinSize, maxWidth: r.fillMaxSize, aspectRatio: 1 } : { width: r.iconSize, height: r.iconSize };
-    return _jsxs(View, { style: { alignItems: "center", gap: r.gap, minWidth: 0, width: "100%", overflow: "visible" }, children: [_jsxs(View, { onLayout: size === "fill" ? event => setFillEdge(event.nativeEvent.layout.width) : undefined, style: { position: "relative", alignItems: "center", justifyContent: "center", ...dimensions, borderRadius: edge * r.shapes[shape], backgroundColor: framed ? colors.surfaceAlt : "transparent", borderWidth: framed || ghost ? 1 : 0, borderStyle: ghost ? "dashed" : "solid", opacity: ghost ? r.ghostOpacity : 1, borderColor: colors.border }, children: [icon, overlay] }), _jsx(Text, { variant: "caption", numberOfLines: labelLines, style: { width: "100%", minHeight: labelLines === 2 ? r.multilineLabelMinHeight : undefined, maxWidth: labelLines === 2 ? r.multilineLabelMaxWidth : r.labelMaxWidth, textAlign: "center", fontWeight: "500" }, children: label })] });
+    return _jsxs(View, { style: { alignItems: "center", gap: r.gap, minWidth: 0, width: "100%", overflow: "visible" }, children: [_jsxs(View, { onLayout: size === "fill" ? event => setFillEdge(event.nativeEvent.layout.width) : undefined, style: { position: "relative", alignItems: "center", justifyContent: "center", ...dimensions, borderRadius: edge * r.shapes[shape], backgroundColor: framed ? colors.surfaceAlt : "transparent", borderWidth: framed || ghost ? 1 : 0, borderStyle: ghost ? "dashed" : "solid", opacity: ghost ? r.ghostOpacity : 1, borderColor: colors.border }, children: [typeof icon === "function" ? icon({ edge }) : icon, overlay] }), _jsx(Text, { variant: "caption", numberOfLines: labelLines, style: { width: "100%", minHeight: labelLines === 2 ? r.multilineLabelMinHeight : undefined, maxWidth: labelLines === 2 ? r.multilineLabelMaxWidth : r.labelMaxWidth, textAlign: "center", fontWeight: "500" }, children: label })] });
 }
 /**
  * Incoming "is typing" row for a ChatScreen timeline (2026-10-18 BurnTok DM drew its own). The host shows it only while

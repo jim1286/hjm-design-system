@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.17.1
-- 검토일: 2026-10-13
+- 검토일: 2026-10-18
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screens.tsx`·`src/screen-flows.tsx`; 기존 개별 지침을 새 규격으로 통합. 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
 - 스토리북: `배포/화면/콘텐츠/사진 선택과 업로드`
 
@@ -98,6 +98,7 @@ Web의 `<img alt="">`는 장식용 미리보기다. 사진 이름은 `removeLabe
 | `onMove` | `(id: string, direction: -1 \| 1) => void` | 필수 | 첫 항목의 위로·마지막 항목의 아래로는 비활성 |
 | `onRemove` · `onRetry` · `onCancel` | `(id: string) => void` | 필수 | 삭제, UploadItem 재시도·취소 |
 | `rotate` | `{ label, itemLabel(item), onRotate(id) }` | 없음 | 미게시. 주면 아래로와 삭제 사이에 회전 버튼(`label` 표시 문구, `itemLabel` 사진 이름을 포함한 접근성 이름). 회전 값 저장과 `preview`·결과물 반영은 제품이 한다 |
+| `disabled` | `boolean` | `false` | 1.32.0, 미게시. 제품이 선택한 사진으로 작업(PDF·사진 띠 만들기, 내보내기, 다른 사진 고르기)을 하는 동안 모든 항목의 위로·아래로·회전·삭제를 잠근다. 업로드 재시도·취소는 그 전송 하나의 행동이라 잠그지 않는다. Web은 잠근 버튼을 `aria-disabled`로 두어 누르던 버튼에 키보드 초점이 남고(목록 끝의 위로·아래로는 그대로 `disabled`), Native는 `disabled` |
 | 나머지 | `ScreenLayout`과 같음(`children`·`footer` 제외) | — | `actions`를 주면 `add` 앞에 같은 행으로 놓인다 |
 
 ## 배치
@@ -119,11 +120,11 @@ Web의 `<img alt="">`는 장식용 미리보기다. 사진 이름은 `removeLabe
 import { MediaSelectionCell } from "@hjmds/react-native/screen-flows";
 
 <FlatList data={photos} keyExtractor={photo => photo.id} renderItem={({ item, index }) =>
-  <MediaSelectionCell item={toMediaItem(item)} index={index} count={photos.length} {...itemActions}
+  <MediaSelectionCell item={toMediaItem(item)} index={index} count={photos.length} {...itemActions} disabled={building}
     rotate={{ label: t("photo.rotate"), itemLabel: entry => t("photo.rotateNamed", { name: entry.descriptor.name }), onRotate: rotatePhoto }} />} />
 ```
 
-`index`·`count`는 전체 목록 기준이다(첫 항목 위로·마지막 항목 아래로 비활성). `itemActions`는 화면과 같은 `labels`·`actionLabels`·`removeLabel`·`moveUpLabel`·`moveDownLabel`·`onRemove`·`onMove`·`onRetry`·`onCancel`이다. 칸 사이 간격·열 수는 host가 준다. 삭제 후 Web 키보드 초점 복구는 화면 격자의 동작이므로 가상화 host는 자기 초점을 소유한다.
+`index`·`count`는 전체 목록 기준이다(첫 항목 위로·마지막 항목 아래로 비활성). `itemActions`는 화면과 같은 `labels`·`actionLabels`·`removeLabel`·`moveUpLabel`·`moveDownLabel`·`onRemove`·`onMove`·`onRetry`·`onCancel`이고, 작업 중에는 `disabled`(1.32.0)를 함께 넘겨 칸마다 따로 잠그지 않는다. 칸 사이 간격·열 수는 host가 준다. 삭제 후 Web 키보드 초점 복구는 화면 격자의 동작이므로 가상화 host는 자기 초점을 소유한다.
 
 ## 꼭 지킬 것
 
@@ -131,6 +132,7 @@ import { MediaSelectionCell } from "@hjmds/react-native/screen-flows";
   둘 다 현지화한다.
 - preview는 작은 leading 아이콘으로 줄이지 않고 큰 썸네일로 둔다.
 - 업로드 진행·재시도·취소의 실제 동작과 개수·크기 제한, EXIF 처리는 제품이 한다.
+- 선택한 사진으로 결과물을 만드는 동안에는 `disabled`로 순서·회전·삭제를 잠근다. 잠그지 않으면 작업이 읽은 순서와 화면 순서가 달라진다. 이 때문에 제품 칸을 따로 만들지 않는다(2026-10-18 Utilverse 사진→PDF·사진 띠가 잠금 때문에 제품 칸을 유지했다).
 
 ## 함정
 

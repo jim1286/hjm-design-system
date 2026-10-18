@@ -30,6 +30,7 @@ DM·대화 타임라인의 메시지 한 개에 쓴다. 발신/수신 정렬, �
 | --- | --- | --- | --- |
 | `ChatMessage` | 메시지 한 개 | `/screens` | `/screens` |
 | `ReactionPicker` | `reactions` prop이 받는 타입(`ReactionPickerProps`)의 원본 | `/reaction-picker` | `/reaction-picker` |
+| `MediaAlbumPageStatus` | `mediaAlbum.renderPage`의 불러오는 중·실패 장(미게시, CommentThreadRow도 같다) | `/screens` | `/screens` |
 
 루트 barrel에는 없다. `/screens`는 optional native peer를 요구하지 않는다(Native 반응 메뉴는 core `Modal`).
 
@@ -85,11 +86,12 @@ import { Text } from "@hjmds/react-native/primitives";
 | `replyQuote` | `{ title, excerpt }` | 없음 | 미게시. 말풍선 맨 위에 HJM이 인용을 그린다: 제목(예: "서연에게 답장", 본문 글자) → 원문 한 줄(흐린 글자, 넘치면 말줄임) → 구분선 1 → 답장 본문. 자유 노드 `reply`보다 우선 사용한다 |
 | `replyLink` | `{ label, onPress() }` | 없음 | 인용과 같이 주면 말풍선 안 인용을 눌러 원문으로 이동한다(Native는 말풍선의 "원문으로 이동" 접근성 동작도 제공). 이전에는 버블 밖 ghost 버튼이었다 |
 | `media` | `{ id, label, preview, aspectRatio?, onPress? }[]` | 없음 | 미게시. 보낸 사진. 폭 `chatMessageRecipe.mediaWidth` 210, 한 장은 `aspectRatio`(기본 1), 여러 장은 정사각 칸(`resolveChatMediaColumns`: 2·4장 2열, 그 외 3열, 간격 2), 바깥 radius 14. 글 없이 사진만 보내면 말풍선 표면·꼬리를 그리지 않는다. `onPress`가 있으면 사진마다 버튼(크게 보기는 제품) |
-| `mediaAlbum` | `{ count, renderPage(index), pageLabel(index, count), previousLabel, nextLabel, aspectRatio?, onPress?(index), index?·onIndexChange?·defaultIndex? }` | 없음 | 미게시. 한 장씩 넘기는 사진 묶음. `renderPage`는 화면에 보이는 장에만 호출되어 제품이 그 사진만 조회·디코딩한다(이미지 원본·권한·캐시는 제품). 폭 `mediaWidth` 210, 사진 칸 `aspectRatio`(기본 1)·radius 14, 그 아래 이전 아이콘 · 위치(예: 2/5) · 다음 아이콘 줄(작은 ghost IconButton, `mediaAlbumRecipe`). 글 없이 앨범만 보내면 `media`처럼 말풍선 표면·꼬리를 그리지 않는다. 넘김 버튼이 있어 말풍선은 `interactiveContent`로 다뤄진다. 넘긴 장은 길게 누르기 미리보기에서도 같다. `media`와 함께 주면 `TypeError` |
+| `mediaAlbum` | `{ count, renderPage(index), pageLabel(index, count), previousLabel, nextLabel, aspectRatio?, onPress?(index), index?·onIndexChange?·defaultIndex? }` | 없음 | 미게시. 한 장씩 넘기는 사진 묶음. `renderPage`는 화면에 보이는 장에만 호출되어 제품이 그 사진만 조회·디코딩한다(이미지 원본·권한·캐시는 제품). 폭 `mediaWidth` 210, 사진 칸 `aspectRatio`(기본 1)·radius 14, 그 아래 이전 아이콘 · 위치(예: 2/5) · 다음 아이콘 줄(작은 ghost IconButton, `mediaAlbumRecipe`). 글 없이 앨범만 보내면 `media`처럼 말풍선 표면·꼬리를 그리지 않는다. 넘김 버튼이 있어 말풍선은 `interactiveContent`로 다뤄진다. 넘긴 장은 길게 누르기 미리보기에서도 같다. 사진을 아직 못 그리는 장은 `renderPage`(또는 그 안 컴포넌트)에서 `MediaAlbumPageStatus`를 돌려준다(아래). `media`와 함께 주면 `TypeError` |
+| `MediaAlbumPageStatus` | `{ kind: "loading", label }` 또는 `{ kind: "error", label, retry?: { label, onPress } }` | 없음 | 미게시, `@hjmds/react(-native)/screens`. 앨범 장의 불러오는 중(스피너, `label`은 접근성 이름)·실패(caption 문구는 alert로 알림 + 작은 secondary 다시 시도 Button) 표시. 칸 가운데에 한 묶음으로 놓인다(`mediaAlbumRecipe.pageStatus` 간격 4·안쪽 여백 8). 표시되는 동안 사진 칸은 접근성 이미지 이름과 `onPress` 열기를 내려놓아 안쪽 내용이 낭독기·포인터에 닿는다. 제품 장 컴포넌트는 상태가 바뀌어도 다시 마운트되지 않는다. 빈 `label`은 `TypeError` |
 | `replyAction` | `{ label, onPress(), disabled?, icon? }` | 없음 | `replySwipeDistance` 60px 이상이고 세로 이동의 2배를 넘는 가로 스와이프로 실행(`isReplySwipe`). `reactions`가 있으면 길게 누른 메뉴의 첫 항목으로도 보인다(미게시) |
 | `reactions` | `ReactionPickerProps & { closeLabel, menuActions?, reportAction?, menuAction? }` | 없음 | `reactionHoldMs` 450ms 길게 누르면 메뉴가 열린다: 반응 줄(이모지 `typography.title` 18/26, `more`면 +) → 메시지 미리보기 → 카드(맨 위 `timestamp` 정확한 시각 → `replyAction` → `menuActions` → `menuAction` → `reportAction` 빨간 글자). 항목은 높이 44, 아이콘 24 칸. 배치는 `holdMenuRecipe`(인스타그램 DM 실측): 화면 좌우 10 안쪽 전체 폭 반응 줄(높이 60, 48 원형 칸, 이모지 28, 넘칠 때만 가로 스크롤) → 12 → 누른 말풍선 그대로 미리보기(제 쪽 정렬) → 12 → 폭 200·radius 18 동작 카드(행 56, 아이콘 24, `submenu` 행은 ›)를 말풍선 쪽에 붙인다. 보이는 ×는 없고 배경 탭·Escape·VoiceOver 닫기로 닫는다(보조기술 첫 초점용 닫기 대상만 둔다). 같은 반응 재선택은 `null`. `label`은 Web에서 말풍선 이름·Popover 제목, Native에서 접근성 힌트·동작 이름. 시각·동작 카드와 `reportAction`·`menuActions`는 미게시(2026-10-16 인스타그램 DM 길게 누르기 실측 반영) |
 | `reactions.menuActions[].tone` | `"neutral"` · `"danger"` | `"neutral"` | 미게시(1.30.0 이후). 길게 누른 메뉴 행의 색. 삭제처럼 되돌릴 수 없는 행은 `danger`(빨간 글자). [Menu](menu.md) 항목 `tone`과 같은 어휘(`MenuItemTone`). `reportAction`은 항상 `danger`이고 맨 끝이다. 댓글(CommentThreadRow) 메뉴도 같다 |
-| `reactions.summary` | `{ label, items: { id, emoji, count }[] }` | 없음 | 미게시. 현재 반응 집계를 시각 옆 알약 버튼 하나로 그리고, 누르면 길게 누른 것과 같은 메뉴를 연다. `label`은 버튼의 지역화 접근성 이름(예: "반응 ❤️ 2개, 😂 1개. 반응 메뉴 열기"), `items`는 표시 순서. `count`가 `chatMessageRecipe.reactionSummary.minCount` 2 미만이면 이모지만 보인다. 내 반응(`value`)이 들어 있으면 brand 테두리. 높이 24(Native는 hitSlop으로 44 터치), 좌우 8, 항목 사이 4. 빈 `label`·중복 id·빈 이모지는 `TypeError`, 양의 정수가 아닌 count는 `RangeError`(`resolveChatReactionSummary`). `reactions.disabled`면 버튼도 비활성. 메뉴가 닫히면 Web 초점은 말풍선으로 돌아간다 |
+| `reactions.summary` | `{ label, items: { id, emoji, count }[] }` | 없음 | 미게시. 현재 반응 집계를 시각 옆 알약 버튼 하나로 그리고, 누르면 길게 누른 것과 같은 메뉴를 연다. `label`은 버튼의 지역화 접근성 이름(예: "반응 ❤️ 2개, 😂 1개. 반응 메뉴 열기"), `items`는 표시 순서. `count`가 `chatMessageRecipe.reactionSummary.minCount` 2 미만이면 이모지만 보인다. 내 반응(`value`)이 들어 있으면 brand 테두리. 높이 24(Native는 hitSlop으로 44 터치), 좌우 8, 항목 사이 4. 빈 `label`·중복 id·빈 이모지는 `TypeError`, 양의 정수가 아닌 count는 `RangeError`(`resolveChatReactionSummary`). `reactions.disabled`면 버튼도 비활성. 메뉴가 닫히면 Web 초점은 말풍선으로 돌아간다. `readOnly: true`(미게시)면 반응할 수 없는 독자(게스트)용으로 같은 자리에 알약 표면 없는 caption 글자로 그리고 누를 수 없다. 접근성 이름은 `label` 하나(Web 시각적으로 숨긴 글자, Native 단일 text 요소)이므로 "메뉴 열기" 같은 행동 문구를 넣지 않는다 |
 | `interactiveContent` | `boolean` | `false` | 사진 앨범·링크처럼 자식이 버튼을 가지면 `true`. 안쪽 버튼·링크의 누름과 Web Enter/Space는 그 컨트롤이 받는다 |
 | `actions` | `ReactNode` | 없음 | 시각 옆 슬롯. 반응 집계 배지·재시도는 제품이 넣는다 |
 | `children` | `ReactNode` | 필수 | 메시지 본문. Native는 말풍선이 이 텍스트로 읽힌다 |
@@ -154,6 +156,7 @@ import { Text } from "@hjmds/react-native/primitives";
 ## 근거
 
 - `reactions.summary`: 2026-10-18 번뚝 DM. 메뉴를 밖에서 열 수 없어 집계를 상태용 Tag로만 `actions`에 그렸다(제품 docs/DESIGN.md에 격차로 기록). 제어형 `open` 대신 HJM이 집계 버튼까지 그려 위치·접근성 이름·메뉴 연결을 공통으로 맡는다.
+- `reactions.summary.readOnly`·`MediaAlbumPageStatus`: 2026-10-18 HJM 1.31.0 유틸버스 채택. 게스트는 반응할 수 없는데 집계가 항상 메뉴 버튼이라 제품이 `actions`에 caption을 따로 그렸고, 앨범 장 안의 불러오는 중·다시 시도가 사진 칸의 단일 접근성 이미지에 삼켜져 낭독기로 닿지 않았다.
 - `menuActions[].tone`: 2026-10-18 유틸버스 채팅 길게 누르기 메뉴의 삭제 행. 빨간 글자가 `reportAction`에만 있어 삭제가 일반 행으로 보였다.
 
 - 아바타 32: 2026-10-17 정렬 실측. recipe·문서는 36이었지만 Web Avatar 단계(32/40/48/64)에 36이 없어 Web은 36 칸에 32 아바타를, Native는 36 아바타를 그렸다. 카카오톡 참고값 약 34에 가장 가까운 Avatar 단계 `small` 32를 recipe가 직접 읽게 해 두 플랫폼이 같은 값을 쓴다. 작성자 첫 줄과의 위쪽 맞춤(카카오톡 방식)은 유지한다.

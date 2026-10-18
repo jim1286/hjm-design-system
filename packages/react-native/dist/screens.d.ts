@@ -1,9 +1,10 @@
-import { type IconTileFrame, type IconTileShape, type IconTileSize } from "@hjmds/design-contracts/screen-patterns";
+import { type IconTileArtwork, type IconTileFrame, type IconTileShape, type IconTileSize } from "@hjmds/design-contracts/screen-patterns";
 import { type ComposerLengthFeedback } from "@hjmds/design-contracts/communication";
 import { type DesignProfileScreenPresentation } from "@hjmds/design-contracts/design-profile-layout";
 import { type MessageMenuAction } from "./internal/message-reactions.js";
 import { type MediaAlbum } from "./internal/media-album.js";
-export type { MediaAlbum } from "./internal/media-album.js";
+export type { MediaAlbum, MediaAlbumPageStatusProps } from "./internal/media-album.js";
+export { MediaAlbumPageStatus } from "./internal/media-album.js";
 import type { ReactionPickerProps } from "./reaction-picker.js";
 import { type Ref, type ReactNode } from "react";
 import { ScrollView, type TextInput, type ScrollViewProps } from "react-native";
@@ -34,6 +35,7 @@ export type ScreenLayoutProps = Readonly<{
     /**
      * Hosts that already inset routes avoid applying the shared gutter twice (`none`). `body-edge` keeps the header,
      * notice and footer gutter and drops only the body's horizontal padding so full-width list rows own their inset.
+     * `body-bleed` keeps the same gutters and drops every body padding, so a map or canvas runs edge to edge.
      */
     contentInset?: ScreenContentInset;
     /** Center a product prompt in the available body without inventing a query state. */
@@ -271,7 +273,11 @@ export type NotificationRowProps = Readonly<{
 /** The host supplies navigation/disabled state and the complete accessible name. */
 export declare function NotificationRow({ preview, metadata, avatar, avatarBadge, thumbnail, unread }: NotificationRowProps): import("react").JSX.Element;
 export type IconTileProps = Readonly<{
-    icon: ReactNode;
+    /**
+     * Icon artwork. A function receives the rendered edge (`IconTileArtwork`) so fixed-size artwork such as an image
+     * sizes itself to a `size="fill"` icon without the product re-computing the cell clamp.
+     */
+    icon: ReactNode | ((artwork: IconTileArtwork) => ReactNode);
     label: string;
     overlay?: ReactNode;
     labelLines?: 1 | 2;

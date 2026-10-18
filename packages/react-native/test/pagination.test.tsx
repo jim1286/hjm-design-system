@@ -25,3 +25,23 @@ it('keeps pages controlled, guards boundaries and pending requests, and reports 
   press('Previous'); expect(change).toHaveBeenLastCalledWith(19, 'previous');
   change.mockClear(); press('Next'); expect(change).not.toHaveBeenCalled();
 });
+
+it('shows previous, the composed current page label and next when the total is unknown', () => {
+  const change = vi.fn();
+  const render = (page: number, hasNext: boolean) => <HjmNativeProvider><Pagination label="Result pages"
+    descriptor={{ currentPage: page, hasNext }} labels={{ previous: 'Previous results', next: 'Next results' }}
+    composeCurrentPageLabel={({ page }) => `Page ${page}`} onPageChange={change} /></HjmNativeProvider>;
+  act(() => { renderer = create(render(1, true)); });
+  const buttons = () => renderer.root.findAllByType(Pressable);
+  const press = (label: string) => act(() => buttons().find(node => node.props.accessibilityLabel === label)!.props.onPress());
+  // Only the two steps are buttons; the current page is a selected text label.
+  expect(buttons().map(node => node.props.accessibilityLabel)).toEqual(['Previous results', 'Next results']);
+  const pageLabel = renderer.root.find(node => node.props.accessibilityLabel === 'Page 1' && node.props.accessibilityRole === 'text');
+  expect(pageLabel.props.accessibilityState).toEqual({ selected: true });
+  press('Previous results'); expect(change).not.toHaveBeenCalled();
+  press('Next results'); expect(change).toHaveBeenLastCalledWith(2, 'next');
+  act(() => renderer.update(render(4, false)));
+  change.mockClear(); press('Next results'); expect(change).not.toHaveBeenCalled();
+  press('Previous results'); expect(change).toHaveBeenLastCalledWith(3, 'previous');
+  expect(buttons().find(node => node.props.accessibilityLabel === 'Next results')!.props.accessibilityState.disabled).toBe(true);
+});

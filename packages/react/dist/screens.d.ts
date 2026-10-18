@@ -1,9 +1,10 @@
-import { type ScreenInitialFocus, type IconTileFrame, type IconTileShape, type IconTileSize } from "@hjmds/design-contracts/screen-patterns";
+import { type ScreenInitialFocus, type IconTileArtwork, type IconTileFrame, type IconTileShape, type IconTileSize } from "@hjmds/design-contracts/screen-patterns";
 import { type ComposerLengthFeedback } from "@hjmds/design-contracts/communication";
 import { type DesignProfileScreenPresentation } from "@hjmds/design-contracts/design-profile-layout";
 import { type MessageMenuAction } from "./internal/message-reactions.js";
 import { type MediaAlbum } from "./internal/media-album.js";
-export type { MediaAlbum } from "./internal/media-album.js";
+export type { MediaAlbum, MediaAlbumPageStatusProps } from "./internal/media-album.js";
+export { MediaAlbumPageStatus } from "./internal/media-album.js";
 import type { ReactionPickerProps } from "./reaction-picker.js";
 import { type Ref, type ReactNode } from "react";
 import { type MessageAttachmentDescriptor, type ChatReactionSummary, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState, type ScreenContentInset } from "@hjmds/design-contracts/screen-patterns";
@@ -26,7 +27,10 @@ export type ScreenLayoutProps = Readonly<{
     headerAlignment?: "start" | "center";
     /** Preserve host navigation while the shared shell owns content and state. */
     header?: ReactNode;
-    /** `none`: host owns every inset. `body-edge`: only the body drops its inline padding so list rows own their inset. */
+    /**
+     * `none`: host owns every inset. `body-edge`: only the body drops its inline padding so list rows own their inset.
+     * `body-bleed`: the body drops every padding (header, notice and footer keep theirs) for an edge-to-edge map or canvas.
+     */
     contentInset?: ScreenContentInset;
     /** Center a product prompt in the available body without inventing a query state. */
     contentAlignment?: "start" | "center";
@@ -252,7 +256,11 @@ export type NotificationRowProps = Readonly<{
 /** Router host owns the sole target and localized accessible name, as with ConversationRow. */
 export declare function NotificationRow({ preview, metadata, avatar, avatarBadge, thumbnail, unread }: NotificationRowProps): import("react").JSX.Element;
 export type IconTileProps = Readonly<{
-    icon: ReactNode;
+    /**
+     * Icon artwork. A function receives the rendered edge (`IconTileArtwork`) so fixed-size artwork such as an image
+     * sizes itself to a `size="fill"` icon without the product re-computing the cell clamp.
+     */
+    icon: ReactNode | ((artwork: IconTileArtwork) => ReactNode);
     label: string;
     overlay?: ReactNode;
     labelLines?: 1 | 2;

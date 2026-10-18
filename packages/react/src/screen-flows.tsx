@@ -16,7 +16,7 @@ import { AlertDialog, Menu, Sheet, type SheetProps } from "./overlays.js";
 import { UploadItem } from "./upload-item.js";
 import { type UploadItemDescriptor, type UploadItemLabels } from "@hjmds/design-contracts/components/upload-item";
 import { type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
-import { initialFocusDefaults, validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchScreenPhase, resolveFocusAfterRemoval, screenPatternRecipe, commentThreadRecipe, profileSummaryRecipe, searchScreenRecipe, resolveCommentMenuItems, type CommentMenuItemDescriptor, type SearchEmptyCause, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
+import { initialFocusDefaults, validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchFilterRailVisible, resolveSearchScreenPhase, resolveFocusAfterRemoval, screenPatternRecipe, commentThreadRecipe, profileSummaryRecipe, searchScreenRecipe, resolveCommentMenuItems, type CommentMenuItemDescriptor, type SearchEmptyCause, type SearchFiltersRole, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
 import { resolveWindowClass } from "@hjmds/design-contracts/responsive";
 import { containerRecipe, type ContainerGutter } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./display.js";
@@ -148,11 +148,13 @@ export function ModerationScreen(props:ModerationScreenProps){
 /** The moderation fields and actions without screen chrome, for a report opened inside a letter, card or Sheet
  * (2026-10-18: diairy turned ModerationScreen's header and padding off to place it in a letter). The host owns the
  * surrounding surface and placement; `title` is an optional section heading (omit it inside a titled Sheet) and
- * `cancel` adds a ghost "collapse" action after the others. */
-export type ModerationFormProps = ModerationFields & Readonly<{title?:string;headingLevel?:1|2|3|4|5|6;cancel?:ScreenFlowAction;layoutStyle?:ScreenLayoutProps["layoutStyle"]}>;
+ * `cancel` adds a ghost "collapse" action after the others.
+ * `description` and `actions` fill the same CompositionLayout header (2026-10-18: utilverse review queues wrapped the
+ * form in a second CompositionLayout only to show the report time and a refresh button beside the title). */
+export type ModerationFormProps = ModerationFields & Readonly<{title?:string;headingLevel?:1|2|3|4|5|6;description?:string;actions?:ReactNode;cancel?:ScreenFlowAction;layoutStyle?:ScreenLayoutProps["layoutStyle"]}>;
 export function ModerationForm(props:ModerationFormProps){
  const {body,actions,dialogs}=useModeration(props,true,props.cancel);
- return <><CompositionLayout {...(props.title===undefined?{}:{title:props.title})} {...(props.headingLevel===undefined?{}:{headingLevel:props.headingLevel})} {...(props.layoutStyle===undefined?{}:{layoutStyle:props.layoutStyle})} footer={actions}>{body}</CompositionLayout>{dialogs}</>;
+ return <><CompositionLayout {...(props.title===undefined?{}:{title:props.title})} {...(props.headingLevel===undefined?{}:{headingLevel:props.headingLevel})} {...(props.description===undefined?{}:{description:props.description})} {...(props.actions===undefined?{}:{actions:props.actions})} {...(props.layoutStyle===undefined?{}:{layoutStyle:props.layoutStyle})} footer={actions}>{body}</CompositionLayout>{dialogs}</>;
 }
 
 
@@ -177,8 +179,13 @@ export type MediaSelectionItem = {descriptor:UploadItemDescriptor;preview?:React
  * applies it to `preview` and its output; HJM only places the button with the other item actions.
  */
 export type MediaSelectionRotate = Readonly<{label:string;itemLabel(item:MediaSelectionItem):string;onRotate(id:string):void}>;
-/** Copy and callbacks of one item's actions, shared by the screen grid and MediaSelectionCell. */
-export type MediaSelectionItemActions = {labels:UploadItemLabels;actionLabels:{remove:string;moveUp:string;moveDown:string};removeLabel(item:MediaSelectionItem):string;moveUpLabel(item:MediaSelectionItem):string;moveDownLabel(item:MediaSelectionItem):string;onRemove(id:string):void;onMove(id:string,direction:-1|1):void;onRetry(id:string):void;onCancel(id:string):void;rotate?:MediaSelectionRotate};
+/**
+ * Copy and callbacks of one item's actions, shared by the screen grid and MediaSelectionCell.
+ * `disabled` locks move/rotate/remove while the host runs a job over the selection (2026-10-18: Utilverse photo-to-PDF
+ * and photo strip kept their own cells so a reorder could not diverge from a running build). Upload retry/cancel stay
+ * live: they act on one transfer, not on the order or content the job reads.
+ */
+export type MediaSelectionItemActions = {labels:UploadItemLabels;actionLabels:{remove:string;moveUp:string;moveDown:string};removeLabel(item:MediaSelectionItem):string;moveUpLabel(item:MediaSelectionItem):string;moveDownLabel(item:MediaSelectionItem):string;onRemove(id:string):void;onMove(id:string,direction:-1|1):void;onRetry(id:string):void;onCancel(id:string):void;rotate?:MediaSelectionRotate;disabled?:boolean};
 export type MediaSelectionScreenProps = Base & {library?:ReactNode;selectionSummary?:ReactNode;items:readonly MediaSelectionItem[];add?:ScreenFlowIconAction;done:ScreenFlowAction} & MediaSelectionItemActions;
 /** `index`/`count` place the item in the product's full list so the first/last move buttons disable correctly. */
 export type MediaSelectionCellProps = MediaSelectionItemActions & Readonly<{item:MediaSelectionItem;index:number;count:number}>;
@@ -187,22 +194,25 @@ export type MediaSelectionCellProps = MediaSelectionItemActions & Readonly<{item
  * virtualized host (VirtualList, FlatList renderItem) renders the same cell as the screen grid instead of a copy.
  * Web keyboard focus recovery after removal belongs to the screen grid; a virtualized host owns its own.
  */
-export function MediaSelectionCell({item,index,count,labels,actionLabels,removeLabel,moveUpLabel,moveDownLabel,onRemove,onMove,onRetry,onCancel,rotate}:MediaSelectionCellProps){
+export function MediaSelectionCell({item,index,count,labels,actionLabels,removeLabel,moveUpLabel,moveDownLabel,onRemove,onMove,onRetry,onCancel,rotate,disabled=false}:MediaSelectionCellProps){
  const id=item.descriptor.id;
+ // The job lock is temporary, so it keeps the focused action focusable (aria-disabled; Button drops the click) instead
+ // of throwing keyboard focus to <body> for the length of the job. The list boundaries stay natively disabled.
+ const lock=disabled?{"aria-disabled":true as const}:{};
  return <Stack data-hjm-media-item={id} gap="xs">
   {item.preview}<UploadItem descriptor={item.descriptor} labels={labels} onRetry={onRetry} onCancel={onCancel}/>
   <Stack axis="inline" gap="xxs" layoutStyle={{flexWrap:"wrap"}}>
-   <Button data-media-action="up" aria-label={moveUpLabel(item)} size="small" tone="ghost" disabled={index===0} onClick={()=>onMove(id,-1)}>{actionLabels.moveUp}</Button>
-   <Button data-media-action="down" aria-label={moveDownLabel(item)} size="small" tone="ghost" disabled={index===count-1} onClick={()=>onMove(id,1)}>{actionLabels.moveDown}</Button>
+   <Button data-media-action="up" aria-label={moveUpLabel(item)} size="small" tone="ghost" disabled={index===0} {...lock} onClick={()=>onMove(id,-1)}>{actionLabels.moveUp}</Button>
+   <Button data-media-action="down" aria-label={moveDownLabel(item)} size="small" tone="ghost" disabled={index===count-1} {...lock} onClick={()=>onMove(id,1)}>{actionLabels.moveDown}</Button>
    {/* Rotate edits the photo and stays before remove, so the destructive action keeps the trailing place. */}
-   {rotate?<Button data-media-action="rotate" aria-label={rotate.itemLabel(item)} size="small" tone="ghost" onClick={()=>rotate.onRotate(id)}>{rotate.label}</Button>:null}
-   <Button data-media-action="remove" aria-label={removeLabel(item)} size="small" tone="ghost" onClick={()=>onRemove(id)}>{actionLabels.remove}</Button>
+   {rotate?<Button data-media-action="rotate" aria-label={rotate.itemLabel(item)} size="small" tone="ghost" {...lock} onClick={()=>rotate.onRotate(id)}>{rotate.label}</Button>:null}
+   <Button data-media-action="remove" aria-label={removeLabel(item)} size="small" tone="ghost" {...lock} onClick={()=>onRemove(id)}>{actionLabels.remove}</Button>
   </Stack>
  </Stack>;
 }
 /** A photo is the primary content; upload status stays below it instead of replacing the thumbnail. */
-export function MediaSelectionScreen({library,selectionSummary,items,add,done,labels,actionLabels,removeLabel,moveUpLabel,moveDownLabel,onRemove,onMove,onRetry,onCancel,rotate,...screen}:MediaSelectionScreenProps){
- const itemActions={labels,actionLabels,removeLabel,moveUpLabel,moveDownLabel,onRemove,onMove,onRetry,onCancel,...(rotate===undefined?{}:{rotate})};
+export function MediaSelectionScreen({library,selectionSummary,items,add,done,labels,actionLabels,removeLabel,moveUpLabel,moveDownLabel,onRemove,onMove,onRetry,onCancel,rotate,disabled,...screen}:MediaSelectionScreenProps){
+ const itemActions={labels,actionLabels,removeLabel,moveUpLabel,moveDownLabel,onRemove,onMove,onRetry,onCancel,...(rotate===undefined?{}:{rotate}),...(disabled===undefined?{}:{disabled})};
  const grid = useRef<HTMLDivElement>(null), addButton = useRef<HTMLButtonElement>(null);
  const focusedItem = useRef<{node:HTMLElement;id:string;index:number;body:HTMLElement|null}|null>(null);
  useLayoutEffect(() => {
@@ -528,6 +538,8 @@ export type SearchScreenProps<F = unknown> = Base & SearchInputSlot & SearchComm
  footer?:ScreenLayoutProps["footer"];
  /** `scroll` keeps `filters` on one horizontally scrolling line that bleeds to the screen edges. */
  filtersOverflow?:"wrap"|"scroll";
+ /** `scope` marks filters that choose what is searched (kind, region, map area), so they stay on a query-caused zero as its recovery; `narrow` (default) hides them there. */
+ filtersRole?:SearchFiltersRole;
  /** Gutter the host (Container `gutter`, Sheet = `regular`) already applies around this screen; the scroll rail bleeds over it too. */
  hostGutter?:ContainerGutter;
  /** `hidden` drops the visible label (the field keeps `queryLabel` as its accessible name and placeholder). */
@@ -535,7 +547,7 @@ export type SearchScreenProps<F = unknown> = Base & SearchInputSlot & SearchComm
  recentQueries?:SearchRecentQueries;suggestedQueries?:SearchSuggestedQueries;suggestions?:SearchSuggestions;
  resultSummary?:SearchResultSummary;appliedFilters?:SearchAppliedFilters;filterSheet?:SearchFilterSheet<F>};
 /** Abort is supplied to the host request; the host must ignore aborted responses before committing results. */
-export function SearchScreen<F = unknown>({query,queryLabel,queryField,queryClearLabel,onQueryChange,onSearch,debounceMs,filters,recentSearches,children,onSubmit,committedQuery,filtersOverflow="wrap",hostGutter="none",queryLabelVisibility="visible",searching,searchingLabel,recentQueries,suggestedQueries,suggestions,resultSummary,appliedFilters,filterSheet,initialFocus=initialFocusDefaults.search,...screen}:SearchScreenProps<F>){
+export function SearchScreen<F = unknown>({query,queryLabel,queryField,queryClearLabel,onQueryChange,onSearch,debounceMs,filters,recentSearches,children,onSubmit,committedQuery,filtersOverflow="wrap",filtersRole="narrow",hostGutter="none",queryLabelVisibility="visible",searching,searchingLabel,recentQueries,suggestedQueries,suggestions,resultSummary,appliedFilters,filterSheet,initialFocus=initialFocusDefaults.search,...screen}:SearchScreenProps<F>){
  // The host owns localized copy. A custom queryField owns its own clear affordance.
  if (queryField == null && !queryClearLabel?.trim()) throw new TypeError("SearchScreen requires a localized queryClearLabel for its default search field");
  const searchDelay=resolveSearchDebounceMs(debounceMs);
@@ -564,9 +576,9 @@ export function SearchScreen<F = unknown>({query,queryLabel,queryField,queryClea
  const phase=resolveSearchScreenPhase(query,committedQuery);
  const appliedCount=appliedFilters?.items.length??0;
  const cause=phase==="results"&&resultSummary?resolveSearchEmptyCause(resultSummary.count,appliedCount):"none";
- // Two-step search shows the rail only beside results (typing keeps the pinned area short), and a
- // query-caused zero hides it because no filter can fix that; a filter-caused zero keeps it to undo the filter.
- const showRail=(committedQuery===undefined||phase==="results")&&cause!=="query";
+ // Two-step search shows the rail only beside results; a query-caused zero hides narrowing filters (none can fix it)
+ // but keeps scope filters, which are that zero's recovery (resolveSearchFilterRailVisible, Native twin).
+ const showRail=resolveSearchFilterRailVisible(phase,committedQuery!==undefined,cause,filtersRole);
  const trigger=filterSheet?.trigger?<SearchFilterTrigger sheet={filterSheet} appliedCount={appliedCount} triggerRef={focus.filterTrigger}/>:null;
  const rail=!showRail?null:trigger&&filters!=null?<Stack axis="inline" gap="xs" wrap={filtersOverflow==="wrap"}>{trigger}{filters}</Stack>:trigger??filters;
  // Wrapping chips grow the pinned area line by line at large text; the scroll rail caps it at one row.

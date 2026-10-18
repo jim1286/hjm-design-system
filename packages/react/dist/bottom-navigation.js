@@ -22,7 +22,10 @@ export function BottomNavigationInsetProvider({ children }) {
     }, []);
     return (_jsx(BottomNavigationInsetReporterContext.Provider, { value: report, children: _jsx(BottomNavigationInsetContext.Provider, { value: inset, children: _jsx("div", { style: { display: "contents", "--hjm-bottom-navigation-inset": `${inset}px` }, children: children }) }) }));
 }
-/** Bottom height covered by the BottomNavigation inside the nearest provider; 0 outside one. */
+/**
+ * Bottom height covered by the BottomNavigation inside the nearest provider; 0 outside one. For layouts that are not
+ * a ScreenLayout: inside one the shell already pads by it, so adding it again doubles the space.
+ */
 export function useBottomNavigationInset() {
     return useContext(BottomNavigationInsetContext);
 }
@@ -93,6 +96,11 @@ function BottomNavigationInner({ descriptor, configuration = {}, getHref, render
     const iconSize = presentation.iconSize === "standard"
         ? iconRecipe.sizes[density.icon]
         : bottomNavigationRecipe.iconSizes[presentation.iconSize];
+    // `shape` reframes the floating surface (radius + inner padding); `standard` keeps the presentation recipe.
+    const shapeRecipe = presentation.shape === "standard"
+        ? null
+        : bottomNavigationRecipe.shapes[presentation.shape];
+    const liftRecipe = bottomNavigationRecipe.icon.liftEmphasis;
     const prominentRecipe = bottomNavigationRecipe.prominentDestination;
     // Lifting by (diameter - indicator height) keeps the prominent label on the other labels' line; an app-icon
     // slot taller than the indicator minimum raises that height.
@@ -125,7 +133,7 @@ function BottomNavigationInner({ descriptor, configuration = {}, getHref, render
     return (_jsx("nav", { ...props, ref: (node) => {
             navRef.current = node;
             assignRef(ref, node);
-        }, "aria-label": resolved.accessibilityLabel, className: classNames("hjm-bottom-navigation", className), "data-expanded-labels": (theme?.environment.textScale ?? 1) >= 1.5 || resolved.items.length > 4 ? "true" : "false", "data-density": presentation.density, "data-distribution": presentation.distribution, "data-keyboard-behavior": presentation.keyboardBehavior, "data-labels": presentation.labels, "data-selection": presentation.selection, "data-surface": presentation.surface, "data-presentation": presentation.presentation, dir: presentation.direction, style: {
+        }, "aria-label": resolved.accessibilityLabel, className: classNames("hjm-bottom-navigation", className), "data-expanded-labels": (theme?.environment.textScale ?? 1) >= 1.5 || resolved.items.length > 4 ? "true" : "false", "data-density": presentation.density, "data-distribution": presentation.distribution, "data-keyboard-behavior": presentation.keyboardBehavior, "data-labels": presentation.labels, "data-selection": presentation.selection, "data-surface": presentation.surface, "data-presentation": presentation.presentation, "data-shape": presentation.shape, "data-icon-emphasis": presentation.iconEmphasis, dir: presentation.direction, style: {
             "--hjm-bottom-navigation-center-gap": `${centerGap}px`,
             "--hjm-bottom-navigation-columns": resolved.items.length,
             "--hjm-bottom-navigation-half-columns": resolved.items.length / 2,
@@ -143,6 +151,14 @@ function BottomNavigationInner({ descriptor, configuration = {}, getHref, render
             "--hjm-bottom-navigation-outer-top": `${presentationRecipe.outerPaddingTop}px`,
             "--hjm-bottom-navigation-prominent-diameter": `${prominentRecipe.diameter}px`,
             "--hjm-bottom-navigation-prominent-lift": `${prominentLift}px`,
+            ...(shapeRecipe ? {
+                "--hjm-bottom-navigation-shape-radius": `var(--hjm-radius-${shapeRecipe.radius})`,
+                "--hjm-bottom-navigation-shape-padding": `${shapeRecipe.surfacePadding}px`,
+            } : {}),
+            ...(presentation.iconEmphasis === "lift" ? {
+                "--hjm-bottom-navigation-lift-offset": `${liftRecipe.translateY}px`,
+                "--hjm-bottom-navigation-lift-idle-opacity": liftRecipe.idleOpacity,
+            } : {}),
             ...style,
             ...layoutStyle,
         }, children: _jsxs("div", { className: "hjm-bottom-navigation__surface", children: [_jsx("ul", { className: "hjm-bottom-navigation__list", children: resolved.items.map((item, index) => {

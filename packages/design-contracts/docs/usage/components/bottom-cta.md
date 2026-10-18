@@ -63,6 +63,7 @@ const insets = useSafeAreaInsets();
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `primaryAction` | Web `{ label, onClick, accessibilityLabel?, disabled?, loading?, loadingLabel?, size?, tone? }` · Native `{ label, onPress, accessibilityLabel?, accessibilityHint?, disabled?, loading?, loadingLabel?, size?, tone? }` | 필수, tone `primary`, size `medium` | Web `onClick: (event: MouseEvent<HTMLButtonElement>) => void`, Native `onPress: (event: GestureResponderEvent) => void` |
+| action `buttonRef` | Web `Ref<HTMLButtonElement>` · Native `Ref<View>` | — | 미게시. 그 행동의 버튼 자체를 가리킨다(컴포넌트 `ref`는 Web에서 바 `div`). 이 행동으로 연 Dialog·Sheet·`ImmersiveOverlay`가 닫힐 때 포커스를 돌려줄 곳으로 Native `returnFocusRef`에 넘긴다. Web Dialog는 연 요소로 스스로 돌아가므로 필요할 때만 쓴다 |
 | `secondaryAction` | 같은 action 객체 또는 제품이 만든 `ReactNode` | tone `secondary` | 객체면 HJM Button으로 그린다. Web은 `label`과 `onClick`이 있어야 객체로 본다 |
 | `description` | `string` | — | 행동 위 caption 한 줄 |
 | `accessibilityLabel` | `string` | — | 바 전체(Web `role="group"`, Native `toolbar`)의 이름 |
@@ -92,6 +93,15 @@ const insets = useSafeAreaInsets();
 │ ░░ 하단 안전 영역 ░░          │ ← max(spacing.sm, inset)
 └──────────────────────────────┘
 큰 글자: [    주 행동    ] / [     보조      ] (주 행동 위)
+```
+
+### 닫힌 뒤 여는 버튼으로 포커스 돌리기
+
+```tsx
+// Native — ScreenLayout footer의 BottomCTA로 연 전체 화면 오버레이
+const startRef = useRef<View>(null);
+<ScreenLayout footer={<BottomCTA primaryAction={{ label: t("display.start"), onPress: open, buttonRef: startRef }} />}>…</ScreenLayout>
+<ImmersiveOverlay open={presenting} onOpenChange={setPresenting} returnFocusRef={startRef} label={t("display.title")} exitLabel={t("common.close")}>…</ImmersiveOverlay>
 ```
 
 ## 꼭 지킬 것
@@ -129,4 +139,5 @@ const insets = useSafeAreaInsets();
 
 ## 근거
 
+- action `buttonRef`: 2026-10-18 유틸버스 전광판 — footer의 BottomCTA 주 행동으로 연 `ImmersiveOverlay`를 닫아도 Native는 명시한 `returnFocusRef`로만 포커스를 돌리는데, BottomCTA가 버튼 ref를 내주지 않아 포커스가 화면 처음으로 갔다.
 - footer 안 하단 inset은 합이 아니라 max: 2026-10-17 사용자 보고 "전체적으로 버튼 아래 여백이 많아". footer 16 위에 `safeAreaBottom`을 더해 홈 인디케이터 기기에서 버튼 아래가 50이 됐다. 마지막 컨트롤 아래 여백을 footer 위 여백 16과 같게 두고, 홈 인디케이터가 있으면 max(16, inset)만 둔다([ScreenLayout 근거](screen-layout.md#근거)).

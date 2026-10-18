@@ -1037,6 +1037,15 @@
         "role": "companion-or-alternative"
       },
       {
+        "name": "MediaAlbumPageStatus",
+        "source": "packages/react/src/internal/media-album.tsx",
+        "entries": [
+          "./screens"
+        ],
+        "canonicalComponent": "ChatMessage",
+        "role": "companion-or-alternative"
+      },
+      {
         "name": "MediaSelectionCell",
         "source": "packages/react/src/screen-flows.tsx",
         "entries": [
@@ -3131,6 +3140,15 @@
           "./data-table"
         ],
         "canonicalComponent": "DataTable",
+        "role": "companion-or-alternative"
+      },
+      {
+        "name": "MediaAlbumPageStatus",
+        "source": "packages/react-native/src/internal/media-album.tsx",
+        "entries": [
+          "./screens"
+        ],
+        "canonicalComponent": "ChatMessage",
         "role": "companion-or-alternative"
       },
       {

@@ -524,6 +524,13 @@
   border-radius: var(--hjm-radius-xl);
   box-shadow: var(--hjm-shadow-floating);
 }
+/* configuration.shape (bottomNavigationRecipe.shapes): the renderer sets the frame radius token and inner padding. */
+.hjm-bottom-navigation[data-presentation="floating"]:not([data-shape="standard"]) .hjm-bottom-navigation__surface {
+  border-radius: var(--hjm-bottom-navigation-shape-radius);
+}
+.hjm-bottom-navigation[data-presentation="floating"]:not([data-shape="standard"]) .hjm-bottom-navigation__list {
+  padding: var(--hjm-bottom-navigation-shape-padding);
+}
 .hjm-bottom-navigation__list {
   display: grid;
   grid-template-columns: repeat(var(--hjm-bottom-navigation-columns), minmax(var(--hjm-bottom-navigation-item-min-width), 1fr));
@@ -573,6 +580,14 @@
 }
 .hjm-bottom-navigation__indicator > :first-child { transition: transform 160ms ease; }
 .hjm-bottom-navigation__indicator[data-state="selected"] > :first-child { transform: scale(1.06); }
+/* iconEmphasis "lift" (bottomNavigationRecipe.icon.liftEmphasis): the selected icon rises one step above the shared
+   scale and idle icons dim, the non-color cue for full-color artwork. The badge is a later sibling and stays opaque. */
+.hjm-bottom-navigation[data-icon-emphasis="lift"] .hjm-bottom-navigation__indicator[data-state="selected"] > :first-child {
+  transform: translateY(var(--hjm-bottom-navigation-lift-offset)) scale(1.06);
+}
+.hjm-bottom-navigation[data-icon-emphasis="lift"] li:not([data-prominent="true"]) .hjm-bottom-navigation__indicator[data-state="idle"] > :first-child {
+  opacity: var(--hjm-bottom-navigation-lift-idle-opacity);
+}
 /* Icon-only items center the indicator in the density's minimum height instead of leaving an empty label row. */
 .hjm-bottom-navigation[data-labels="hidden"] .hjm-bottom-navigation__item { justify-content: center; }
 .hjm-bottom-navigation__label { font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); font-weight: var(--hjm-text-emphasis-medium); }
@@ -2789,6 +2804,8 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-pagination__item[data-state="current"] { border-color: var(--hjm-color-content-brand); color: var(--hjm-color-content-brand); font-weight: var(--hjm-text-emphasis-strong); }
 .hjm-pagination__item[aria-disabled="true"] { opacity: 0.5; cursor: not-allowed; }
 .hjm-pagination__ellipsis { color: var(--hjm-color-text-muted); }
+/* Open-ended current page label (paginationRecipe.pageLabel): text, not a button, on the steps' 44px row. */
+.hjm-pagination__page-label { min-block-size: var(--hjm-control-min-touch-target); display: grid; place-items: center; padding-inline: var(--hjm-space-xs); color: var(--hjm-color-text-body); overflow-wrap: anywhere; }
 .hjm-load-more { display: grid; justify-items: center; gap: var(--hjm-space-sm); padding-block: var(--hjm-space-lg); text-align: center; }
 .hjm-load-more[data-density="compact"] { gap: var(--hjm-space-xs); padding-block: var(--hjm-space-sm); }
 .hjm-load-more__sentinel { inline-size: 1px; block-size: 1px; }
@@ -2864,14 +2881,14 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 /* Cards stay narrow on desktop too; keep close/action rows explicit (docs/toast.md). The card owns its width cap so a
    controlled Toast outside the viewport keeps it too (it stretched to 1200px in the layout story, 2026-10-17 review).
    1.10.0 layout: [tone badge][title + description][close] / action pill on its own row, end-aligned.
-   The 2px tone strip is retired — the tinted badge carries tone (toastRecipe.toneMark width 0). */
+   There is no edge stripe: the tinted badge (or product media) carries tone. 1.10.0 retired the 2px strip and 1.32.0
+   removed its always-hidden element, so no product rule is needed to hide it (docs/toast.md). */
 .hjm-toast { position: relative; min-inline-size: 0; max-inline-size: min(26.25rem, 100%); min-block-size: 3.5rem; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; column-gap: var(--hjm-space-sm); row-gap: var(--hjm-space-xs); padding: var(--hjm-toast-padding-block) var(--hjm-toast-padding-inline); overflow: hidden; border: var(--hjm-toast-border-width) solid var(--hjm-toast-border); border-radius: var(--hjm-toast-radius); color: var(--hjm-color-text); background: var(--hjm-toast-background); box-shadow: var(--hjm-toast-shadow); pointer-events: auto; }
 /* Whole-card activation is a sibling surface; explicit controls stay above it. */
 .hjm-toast__press { position: absolute; inset: 0; z-index: 1; border: 0; border-radius: inherit; padding: 0; background: transparent; cursor: pointer; }
 .hjm-toast__press:focus-visible { outline: 2px solid var(--hjm-color-content-brand); outline-offset: -2px; }
 .hjm-toast:has(> .hjm-toast__press:active) { opacity: var(--hjm-toast-pressed-opacity); }
 .hjm-toast:has(> .hjm-toast__press) > :is(.hjm-toast__action, .hjm-toast__close) { position: relative; z-index: 2; }
-.hjm-toast__tone-mark { display: none; }
 .hjm-toast__icon { grid-column: 1; grid-row: 1; align-self: start; display: grid; place-items: center; inline-size: var(--hjm-toast-badge-size); block-size: var(--hjm-toast-badge-size); border-radius: 50%; color: var(--hjm-toast-accent-neutral); background: var(--hjm-toast-badge-neutral); }
 .hjm-toast[data-tone="info"] .hjm-toast__icon { color: var(--hjm-toast-accent-info); background: var(--hjm-toast-badge-info); }
 .hjm-toast[data-tone="success"] .hjm-toast__icon { color: var(--hjm-toast-accent-success); background: var(--hjm-toast-badge-success); }
@@ -3255,6 +3272,13 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 /* contentInset="body-edge": header, notice and footer keep the gutter; full-width list rows own their inline inset
    (review S5#9: body 16 + row 16 put DM avatars ~32 from the edge). "none" keeps its host-owns-all meaning. */
 .hjm-screen[data-content-inset="body-edge"] > .hjm-screen__body { --hjm-screen-body-inline: 0px; }
+/* contentInset="body-bleed": the same gutters stay on header, notice and footer; a map or canvas body has none on any
+   side. As the last region it still clears the fixed BottomNavigation, without the gutter (Native twin). */
+.hjm-screen[data-content-inset="body-bleed"] > .hjm-screen__body { --hjm-screen-body-inline: 0px; padding-block: 0; }
+.hjm-screen[data-content-inset="body-bleed"] > .hjm-screen__body:last-child { padding-block-end: var(--hjm-bottom-navigation-inset, 0px); }
+/* Both hand the body gutter to product content; the shared state group has no inset of its own, so it keeps the gutter. */
+.hjm-screen[data-content-inset="body-edge"] > .hjm-screen__body > .hjm-screen__state,
+.hjm-screen[data-content-inset="body-bleed"] > .hjm-screen__body > .hjm-screen__state { padding-inline: var(--hjm-screen-padding); }
 /* Overlay content is not in the screen body, even when rendered inside it: a bleeding rail there stays in its box. */
 .hjm-sheet, .hjm-dialog, .hjm-alert-dialog, .hjm-popover { --hjm-screen-body-inline: 0px; --hjm-bottom-navigation-inset: 0px; }
 /* contentInset="none" hands every inset to the host: no footer rule, as on Native (BottomCTA then draws its own bar). */
@@ -3267,7 +3291,8 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-screen__state { margin-block: auto; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: var(--hjm-screen-state-gap, var(--hjm-space-md)); padding-block: var(--hjm-screen-gap); text-align: center; }
 .hjm-screen__footer { flex: 0 0 auto; padding: var(--hjm-screen-padding); padding-block-end: max(var(--hjm-screen-padding), env(safe-area-inset-bottom), calc(var(--hjm-screen-padding) + var(--hjm-bottom-navigation-inset, 0px))); border-block-start: 1px solid var(--hjm-color-border); }
 /* --hjm-bottom-navigation-inset (BottomNavigationInsetProvider) is the viewport bottom the fixed bar covers. The last
-   region keeps its gutter above the bar; without a provider the value is 0 and the padding is unchanged. */
+   region keeps its gutter above the bar; without a provider the value is 0 and the padding is unchanged. This is the
+   only place the inset is applied: a scroll="content" list inside must not add it again. */
 .hjm-screen__body:last-child { padding-block-end: calc(var(--hjm-screen-padding) + var(--hjm-bottom-navigation-inset, 0px)); }
 /* SearchScreen filtersOverflow=scroll; why: screen-flows.tsx. Block padding keeps focus rings unclipped.
    --hjm-search-filters-bleed = screen padding + hostGutter (1.13.1), set inline by SearchScreen. */
@@ -3322,6 +3347,8 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-chat-message__reaction-summary:hover:not(:disabled) { background: var(--hjm-color-surface-alt); }
 .hjm-chat-message__reaction-summary:focus-visible { outline: 2px solid var(--hjm-color-focus, currentColor); outline-offset: 2px; }
 .hjm-chat-message__reaction-summary:disabled { opacity: 0.5; cursor: default; }
+/* Read-only counts (summary.readOnly): same slot, plain text, no pill surface or pointer affordance. */
+.hjm-chat-message__reaction-counts { display: inline-flex; align-items: center; line-height: 1; }
 /* Typing dots (typingIndicatorRecipe via custom properties): staggered pulse, static under reduced motion. */
 .hjm-typing-indicator__dot { inline-size: var(--hjm-typing-dot); block-size: var(--hjm-typing-dot); border-radius: 50%; background: var(--hjm-color-text-muted); animation: hjm-typing-pulse var(--hjm-typing-cycle) ease-in-out infinite both; }
 .hjm-typing-indicator[data-reduced-motion] .hjm-typing-indicator__dot { animation: none; }
@@ -3339,10 +3366,14 @@ button.hjm-chat-message__media-item { cursor: pointer; }
 button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm-color-focus, currentColor); outline-offset: -2px; }
 /* Paged media album (2026-10-18, mediaAlbumRecipe): one mounted page in the host's media width, counter row below. */
 .hjm-media-album { display: flex; flex-direction: column; max-inline-size: 100%; }
-.hjm-media-album__page { display: block; inline-size: 100%; overflow: hidden; padding: 0; border: 0; background: var(--hjm-color-surface-alt); }
-.hjm-media-album__page > img { display: block; inline-size: 100%; block-size: 100%; object-fit: cover; }
-button.hjm-media-album__page { cursor: pointer; }
-button.hjm-media-album__page:focus-visible { outline: 2px solid var(--hjm-color-focus, currentColor); outline-offset: -2px; }
+.hjm-media-album__page { position: relative; display: block; inline-size: 100%; overflow: hidden; padding: 0; border: 0; background: var(--hjm-color-surface-alt); }
+/* The page wrapper fills the frame in every state; the open action is a sibling overlay so a page status inside stays reachable. */
+.hjm-media-album__content { inline-size: 100%; block-size: 100%; }
+.hjm-media-album__content > img { display: block; inline-size: 100%; block-size: 100%; object-fit: cover; }
+.hjm-media-album__open { position: absolute; inset: 0; z-index: 1; padding: 0; border: 0; border-radius: inherit; background: transparent; cursor: pointer; }
+.hjm-media-album__open:focus-visible { outline: 2px solid var(--hjm-color-focus, currentColor); outline-offset: -2px; }
+/* Loading / failed page (MediaAlbumPageStatus): one block centered in the frame (VQ-09); gap and padding inline from mediaAlbumRecipe.pageStatus. */
+.hjm-media-album__status { box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; inline-size: 100%; block-size: 100%; text-align: center; }
 .hjm-media-album__controls { display: flex; align-items: center; justify-content: space-between; }
 .hjm-chat-message__bubble[data-photo-only] { background: none; padding: 0; }
 .hjm-chat-message__bubble[data-photo-only]::before { display: none; }
@@ -3362,6 +3393,15 @@ button.hjm-media-album__page:focus-visible { outline: 2px solid var(--hjm-color-
 .hjm-image-choice__ring { position: relative; display: block; inline-size: 100%; aspect-ratio: 1; padding: var(--hjm-image-choice-offset); border: var(--hjm-image-choice-ring) solid transparent; border-radius: inherit; }
 .hjm-image-choice__tile[data-selected] .hjm-image-choice__ring { border-color: var(--hjm-color-content-brand); }
 .hjm-image-choice__item-label { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center; }
+/* Caption block (label lines + optional description line) has the same height in every tile of a group
+   (resolveImageChoiceCaptionLines), so wrapped rows stay even and virtualized rows share one stride. */
+.hjm-image-choice__caption { display: flex; flex-direction: column; min-inline-size: 0; block-size: calc(var(--hjm-type-caption-line-height) * var(--hjm-image-choice-caption-lines)); }
+/* Two-line labels keep words whole (keep-all) and clamp; a single over-long word still breaks rather than overflowing. */
+.hjm-image-choice__item-label[data-lines="2"] { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; white-space: normal; word-break: keep-all; overflow-wrap: anywhere; }
+.hjm-image-choice__item-description { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center; }
+/* virtualized: the group is its own fixed-height scroller; the inset keeps the tile focus outline inside the clip. */
+.hjm-image-choice__viewport { position: relative; box-sizing: border-box; overflow-y: auto; padding: var(--hjm-image-choice-viewport-inset); }
+.hjm-image-choice__row { position: absolute; inset-inline: 0; display: flex; gap: var(--hjm-image-choice-gap); }
 .hjm-image-choice__tile:focus-visible { outline: 2px solid var(--hjm-color-focus, currentColor); outline-offset: 2px; }
 .hjm-image-choice__tile:disabled { opacity: 0.5; cursor: default; }
 .hjm-image-choice__image { display: block; inline-size: 100%; block-size: 100%; overflow: hidden; border-radius: var(--hjm-image-choice-radius); background: var(--hjm-color-surface); }

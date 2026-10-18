@@ -1,13 +1,15 @@
-import { iconTileRecipe, notificationRowRecipe as notificationRecipe, initialFocusDefaults, type ScreenInitialFocus, type IconTileFrame, type IconTileShape, type IconTileSize } from "@hjmds/design-contracts/screen-patterns";
+import { iconTileRecipe, notificationRowRecipe as notificationRecipe, initialFocusDefaults, type ScreenInitialFocus, type IconTileArtwork, type IconTileFrame, type IconTileShape, type IconTileSize } from "@hjmds/design-contracts/screen-patterns";
 import { InitialFocusScope } from "./internal/initial-focus.js";
 import { iconButtonRecipe, listRowRecipe } from "@hjmds/design-contracts/recipes";
 import { resolveComposerLimit, type ComposerLengthFeedback } from "@hjmds/design-contracts/communication";
 import { Progress } from "./feedback.js";
 import { resolveDesignProfileScreen, type DesignProfileScreenPresentation } from "@hjmds/design-contracts/design-profile-layout";
-import { MessageReactions, ReactionSummaryButton, omitReactionSummary, type MessageMenuAction, type MessageReactionsHandle } from "./internal/message-reactions.js";
+import { MessageReactions, ReactionSummaryButton, ReactionSummaryText, omitReactionSummary, type MessageMenuAction, type MessageReactionsHandle } from "./internal/message-reactions.js";
 import { MediaAlbumView, useMediaAlbumIndex, type MediaAlbum } from "./internal/media-album.js";
 import { validateMediaSetChoice } from "@hjmds/design-contracts/screen-patterns";
-export type { MediaAlbum } from "./internal/media-album.js";
+export type { MediaAlbum, MediaAlbumPageStatusProps } from "./internal/media-album.js";
+// Loading/failed page rendered inside `mediaAlbum.renderPage` (2026-10-18); comment rows use the same component.
+export { MediaAlbumPageStatus } from "./internal/media-album.js";
 import type { ReactionPickerProps } from "./reaction-picker.js";
 import { Button, IconButton } from "./actions.js";
 import { useOptionalHjmTheme } from "./provider.js";
@@ -39,7 +41,10 @@ export type ScreenLayoutProps = Readonly<{
   headerAlignment?: "start" | "center";
   /** Preserve host navigation while the shared shell owns content and state. */
   header?: ReactNode;
-  /** `none`: host owns every inset. `body-edge`: only the body drops its inline padding so list rows own their inset. */
+  /**
+   * `none`: host owns every inset. `body-edge`: only the body drops its inline padding so list rows own their inset.
+   * `body-bleed`: the body drops every padding (header, notice and footer keep theirs) for an edge-to-edge map or canvas.
+   */
   contentInset?: ScreenContentInset;
   /** Center a product prompt in the available body without inventing a query state. */
   contentAlignment?: "start" | "center";
@@ -308,7 +313,7 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
   const summary = reactions?.summary;
   const reactionMenu = reactions ? omitReactionSummary(reactions) : undefined;
   const summaryItems = summary ? resolveChatReactionSummary(summary) : [];
-  const summaryButton = reactions && summary && summaryItems.length ? <ReactionSummaryButton label={summary.label} items={summaryItems} selected={reactions.value} disabled={reactions.disabled ?? false} onPress={() => menu.current?.open()} /> : null;
+  const summaryButton = reactions && summary && summaryItems.length ? (summary.readOnly ? <ReactionSummaryText label={summary.label} items={summaryItems} /> : <ReactionSummaryButton label={summary.label} items={summaryItems} selected={reactions.value} disabled={reactions.disabled ?? false} onPress={() => menu.current?.open()} />) : null;
   return <article tabIndex={replyAction && !replyAction.disabled ? 0 : undefined}
     aria-keyshortcuts={replyAction ? "Alt+ArrowLeft Alt+ArrowRight" : undefined} aria-description={replyAction?.label}
     onKeyDown={event => { if (event.target === event.currentTarget && event.altKey && (event.key === "ArrowLeft" || event.key === "ArrowRight") && replyAction && !replyAction.disabled) { event.preventDefault(); replyAction.onPress(); } }}
@@ -395,7 +400,12 @@ export function NotificationRow({ preview, metadata, avatar, avatarBadge, thumbn
   </span>;
 }
 
-export type IconTileProps = Readonly<{ icon: ReactNode; label: string; overlay?: ReactNode; labelLines?: 1 | 2; ghost?: boolean;
+export type IconTileProps = Readonly<{
+  /**
+   * Icon artwork. A function receives the rendered edge (`IconTileArtwork`) so fixed-size artwork such as an image
+   * sizes itself to a `size="fill"` icon without the product re-computing the cell clamp.
+   */
+  icon: ReactNode | ((artwork: IconTileArtwork) => ReactNode); label: string; overlay?: ReactNode; labelLines?: 1 | 2; ghost?: boolean;
   /** `none`: the icon is complete product artwork, so no frame fill or hairline is drawn. */
   frame?: IconTileFrame;
   /** Frame (and ghost outline) corner shape from the product's icon theme. */
@@ -408,8 +418,23 @@ export function IconTile({icon, label, overlay, labelLines = 1, ghost = false, f
   const framed = frame === "surface";
   // Percent radius follows the rendered size, so a filling icon keeps its shape at every cell width.
   const dimensions = size === "fill" ? {width: "100%", minWidth: r.fillMinSize, maxWidth: r.fillMaxSize, aspectRatio: "1"} : {width: r.iconSize, height: r.iconSize};
+  // A render-function icon needs the filling edge as a number. It is read before paint and on every resize; the
+  // computed width ignores transforms (a host's press scale) and keeps fractional cell widths.
+  const frameRef = useRef<HTMLSpanElement>(null);
+  const measureEdge = size === "fill" && typeof icon === "function";
+  const [fillEdge, setFillEdge] = useState<number>(r.fillMinSize);
+  useLayoutEffect(() => {
+    const element = frameRef.current;
+    if (!measureEdge || !element) return;
+    setFillEdge(Number.parseFloat(getComputedStyle(element).width) || r.fillMinSize);
+    if (typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(([entry]) => { const width = entry?.borderBoxSize?.[0]?.inlineSize; if (width) setFillEdge(width); });
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [measureEdge, r.fillMinSize]);
+  const edge = size === "fill" ? fillEdge : r.iconSize;
   return <span data-hjm-icon-tile="true" data-frame={frame} data-shape={shape} data-size={size} style={{display: "flex", flexDirection: "column", alignItems: "center", gap: r.gap, minWidth: 0, width: "100%", overflow: "visible"}}>
-    <span style={{position: "relative", display: "flex", alignItems: "center", justifyContent: "center", ...dimensions, boxSizing: "border-box", flexShrink: 0, borderRadius: `${Math.round(r.shapes[shape] * 100)}%`, background: framed ? "var(--hjm-color-surface-alt)" : undefined, color: "var(--hjm-color-text)", boxShadow: ghost || !framed ? undefined : "0 0 0 1px var(--hjm-color-border)", outline: ghost ? "1px dashed var(--hjm-color-text-muted)" : undefined, opacity: ghost ? r.ghostOpacity : 1, fontSize: 32}}>{icon}{overlay}</span>
+    <span ref={frameRef} style={{position: "relative", display: "flex", alignItems: "center", justifyContent: "center", ...dimensions, boxSizing: "border-box", flexShrink: 0, borderRadius: `${Math.round(r.shapes[shape] * 100)}%`, background: framed ? "var(--hjm-color-surface-alt)" : undefined, color: "var(--hjm-color-text)", boxShadow: ghost || !framed ? undefined : "0 0 0 1px var(--hjm-color-border)", outline: ghost ? "1px dashed var(--hjm-color-text-muted)" : undefined, opacity: ghost ? r.ghostOpacity : 1, fontSize: 32}}>{typeof icon === "function" ? icon({edge}) : icon}{overlay}</span>
     <Text variant="caption" style={{display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: labelLines, width: "100%", maxWidth: labelLines === 2 ? r.multilineLabelMaxWidth : r.labelMaxWidth, minHeight: labelLines === 2 ? r.multilineLabelMinHeight : undefined, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "normal", overflowWrap: "anywhere", textAlign: "center", fontWeight: 500}}>{label}</Text>
   </span>;
 }

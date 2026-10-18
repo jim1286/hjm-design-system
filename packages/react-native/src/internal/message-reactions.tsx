@@ -138,3 +138,15 @@ export function ReactionSummaryButton({ label, items, selected, disabled, onPres
     {items.map(item => <View key={item.id} style={{ flexDirection: "row", alignItems: "center", gap: r.emojiGap }}><Text variant="caption">{item.emoji}</Text>{item.showCount ? <Text variant="caption">{String(item.count)}</Text> : null}</View>)}
   </Pressable>;
 }
+
+/**
+ * Read-only counts (`summary.readOnly`, 2026-10-18 Utilverse guests who cannot react): the same place and items as
+ * the pill, as plain caption text without the pill surface or press target. One text element carries the product
+ * label, so screen readers read the counts once and not as a button.
+ */
+export function ReactionSummaryText({ label, items }: Readonly<{ label: string; items: readonly (ChatReactionSummaryItem & Readonly<{ showCount: boolean }>)[] }>) {
+  const r = chatMessageRecipe.reactionSummary;
+  return <View accessible accessibilityRole="text" accessibilityLabel={label} style={{ flexDirection: "row", alignItems: "center", gap: r.itemGap, minHeight: r.minHeight }}>
+    {items.map(item => <View key={item.id} style={{ flexDirection: "row", alignItems: "center", gap: r.emojiGap }}><Text variant="caption">{item.emoji}</Text>{item.showCount ? <Text variant="caption" tone="muted">{String(item.count)}</Text> : null}</View>)}
+  </View>;
+}

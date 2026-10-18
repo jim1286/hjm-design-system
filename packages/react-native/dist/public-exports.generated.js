@@ -338,6 +338,9 @@ export const publicExportEntries = {
     MatrixTable: [
         "./data-table"
     ],
+    MediaAlbumPageStatus: [
+        "./screens"
+    ],
     MediaSelectionCell: [
         "./screen-flows"
     ],

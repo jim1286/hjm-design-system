@@ -46,7 +46,7 @@ export function validateScreenExit(exit, hasLeading) {
     if (hasLeading)
         throw new TypeError("Screen exit owns the leading slot; do not also pass leading");
 }
-export const screenContentInsets = ["default", "none", "body-edge"];
+export const screenContentInsets = ["default", "none", "body-edge", "body-bleed"];
 /** Defaults per composition; renderers read these instead of repeating literals. */
 export const initialFocusDefaults = {
     screen: "none",
@@ -225,7 +225,20 @@ export const mediaAlbumRecipe = {
     /** Previous/next are small ghost IconButtons so the counter row stays compact beside thumbnails. */
     controlSize: "small",
     controlGlyphSize: glyph.sm,
+    /**
+     * Loading / failed page drawn by `MediaAlbumPageStatus` (2026-10-18 Utilverse: the page frame was one accessible
+     * image, so the loading text and retry button inside it were unreachable by screen readers). The status block is
+     * centered in the frame (VQ-09); retry is a small secondary Button.
+     */
+    pageStatus: { gap: spacing.xs, padding: spacing.sm, textVariant: "caption", retryTone: "secondary", retrySize: "small" },
 };
+/** A page status names what the reader is waiting for or what failed; the label is the only copy. */
+export function validateMediaAlbumPageStatus(kind, label) {
+    if (kind !== "loading" && kind !== "error")
+        throw new TypeError("Media album page status must be loading or error");
+    if (!label.trim())
+        throw new TypeError("Media album page status requires a localized label");
+}
 /** A controlled index outside the set is a contract error, like Carousel's unknown `currentKey`. */
 export function validateMediaAlbum(count, index) {
     if (!Number.isSafeInteger(count) || count < 1)
@@ -410,6 +423,20 @@ export function resolveSearchEmptyCause(count, appliedFilterCount) {
         return "none";
     return appliedFilterCount > 0 ? "filters" : "query";
 }
+export const searchFiltersRoles = ["narrow", "scope"];
+/**
+ * Whether SearchScreen shows its filter rail (`filters` and the filter sheet trigger). Two-step search shows it only
+ * beside results so typing keeps the pinned area short. A query-caused zero hides it only when the filters narrow,
+ * because then none of them can fix the zero; scope filters stay as the recovery path. A filter-caused zero always keeps
+ * it so the cause can be undone. Both renderers call this so the rule cannot drift between platforms.
+ */
+export function resolveSearchFilterRailVisible(phase, twoStep, cause, role = "narrow") {
+    if (!searchFiltersRoles.includes(role))
+        throw new RangeError("SearchScreen filtersRole must be narrow or scope");
+    if (twoStep && phase !== "results")
+        return false;
+    return cause !== "query" || role === "scope";
+}
 /**
  * Index to focus after removing item `removedIndex` from a list that now has `remaining` items:
  * the item that slid into its place, else the new last item, else -1 (move to the fallback target).
@@ -470,4 +497,10 @@ export const iconTileRecipe = Object.freeze({ iconSize: 64, labelMaxWidth: 72, m
     shapes: Object.freeze({ squircle: 0.22, square: 0, circle: 0.5 }),
     fillMinSize: 48, fillMaxSize: 68,
     defaults: Object.freeze({ frame: "surface", shape: "squircle", size: "fixed" }) });
+/** The edge a `size="fill"` icon takes in a cell of `cellWidth`, for layout estimates made before the tile measures. */
+export function resolveIconTileFillEdge(cellWidth) {
+    if (!Number.isFinite(cellWidth) || cellWidth < 0)
+        throw new RangeError("IconTile cell width must be a non-negative finite number");
+    return Math.min(iconTileRecipe.fillMaxSize, Math.max(iconTileRecipe.fillMinSize, cellWidth));
+}
 //# sourceMappingURL=screen-patterns.js.map

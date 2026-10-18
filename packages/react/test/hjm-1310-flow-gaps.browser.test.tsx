@@ -155,3 +155,22 @@ it("renders the report form without screen chrome for a letter or sheet", async 
   await userEvent.click(buttons()[1]!);
   expect(cancel).toHaveBeenCalledOnce();
 });
+
+// 1.32.0: review title, report time and refresh live in the form's own header (utilverse review queues, 2026-10-18).
+it("puts the description and header actions in the form header beside the title", async () => {
+  const refresh = vi.fn();
+  await act(async () => root.render(<HjmProvider><ModerationForm variant="review" title="댓글 신고" description="10월 18일 13:00 접수"
+    actions={<button type="button" aria-label="새로고침" onClick={refresh}>↻</button>}
+    decisionReason={{ label: "처리 사유", value: "", onValueChange: () => {} }} decisions={[{ id: "dismiss", label: "기각", onAction: () => {} }]}>
+    <p>신고된 댓글</p>
+  </ModerationForm></HjmProvider>));
+  const heading = host.querySelector("h3")!;
+  expect(heading.textContent).toBe("댓글 신고");
+  expect(host.textContent).toContain("10월 18일 13:00 접수");
+  const action = host.querySelector<HTMLButtonElement>('button[aria-label="새로고침"]')!;
+  // Header row: title, then its action, both before the reported content in reading order.
+  expect(heading.compareDocumentPosition(action) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  expect(action.compareDocumentPosition(host.querySelector("p")!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  await userEvent.click(action);
+  expect(refresh).toHaveBeenCalledOnce();
+});

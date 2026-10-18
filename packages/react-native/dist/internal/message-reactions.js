@@ -84,4 +84,13 @@ export function ReactionSummaryButton({ label, items, selected, disabled, onPres
     const slop = Math.max(0, (control.minTouchTarget - r.minHeight) / 2);
     return _jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: label, accessibilityState: { disabled }, disabled: disabled, onPress: onPress, hitSlop: { top: slop, bottom: slop }, style: ({ pressed }) => ({ flexDirection: "row", alignItems: "center", gap: r.itemGap, minHeight: r.minHeight, paddingHorizontal: r.paddingInline, borderRadius: tokens.radius.full, borderWidth: 1, borderColor: mine ? colors.contentBrand : colors.border, backgroundColor: pressed ? colors.surfaceAlt : colors.surface, opacity: disabled ? 0.5 : 1 }), children: items.map(item => _jsxs(View, { style: { flexDirection: "row", alignItems: "center", gap: r.emojiGap }, children: [_jsx(Text, { variant: "caption", children: item.emoji }), item.showCount ? _jsx(Text, { variant: "caption", children: String(item.count) }) : null] }, item.id)) });
 }
+/**
+ * Read-only counts (`summary.readOnly`, 2026-10-18 Utilverse guests who cannot react): the same place and items as
+ * the pill, as plain caption text without the pill surface or press target. One text element carries the product
+ * label, so screen readers read the counts once and not as a button.
+ */
+export function ReactionSummaryText({ label, items }) {
+    const r = chatMessageRecipe.reactionSummary;
+    return _jsx(View, { accessible: true, accessibilityRole: "text", accessibilityLabel: label, style: { flexDirection: "row", alignItems: "center", gap: r.itemGap, minHeight: r.minHeight }, children: items.map(item => _jsxs(View, { style: { flexDirection: "row", alignItems: "center", gap: r.emojiGap }, children: [_jsx(Text, { variant: "caption", children: item.emoji }), item.showCount ? _jsx(Text, { variant: "caption", tone: "muted", children: String(item.count) }) : null] }, item.id)) });
+}
 //# sourceMappingURL=message-reactions.js.map

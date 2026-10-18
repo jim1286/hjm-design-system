@@ -65,9 +65,13 @@ export function validateScreenExit(exit: Readonly<{ kind: string; label: string 
  * `body-edge`: header, notice and footer keep the shell padding; only the body's inline padding is 0 so full-width
  * list rows (ConversationRow, ListRow-based items) supply their own inset — review S5#9 measured DM avatars ~32pt
  * from the edge because body padding and row padding stacked (2026-10-17 user decision).
+ * `body-bleed`: header, notice and footer keep the shell padding; the body has no gutter on any side, so a map or
+ * canvas meets the header (or notice), the screen edges and the footer. With no footer the body is still the last
+ * region and clears the bottom insets the screen owns (`safeAreaBottom`, an overlay BottomNavigation) without the
+ * gutter. choose-window's map screens used `body-edge` and kept a 16pt strip above and below the map (2026-10-18).
  */
-export type ScreenContentInset = "default" | "none" | "body-edge";
-export const screenContentInsets = ["default", "none", "body-edge"] as const satisfies readonly ScreenContentInset[];
+export type ScreenContentInset = "default" | "none" | "body-edge" | "body-bleed";
+export const screenContentInsets = ["default", "none", "body-edge", "body-bleed"] as const satisfies readonly ScreenContentInset[];
 
 /**
  * 화면 진입 시 첫 입력 포커스(2026-10-18 사용자 요청: "input이 있는 화면에 진입하면 포커스되도록, 웹앱 둘 다").
@@ -262,7 +266,16 @@ export const chatMessageRecipe = {
 } as const;
 
 export type ChatReactionSummaryItem = Readonly<{ id: string; emoji: string; count: number }>;
-export type ChatReactionSummary = Readonly<{ label: string; items: readonly ChatReactionSummaryItem[] }>;
+export type ChatReactionSummary = Readonly<{
+  label: string;
+  items: readonly ChatReactionSummaryItem[];
+  /**
+   * Counts only, for readers who cannot react (2026-10-18 Utilverse guests): drawn in the same place beside the time
+   * as non-interactive text named by `label`, without the pill surface, so it does not look or act like a control.
+   * Default `false` (the pill button that opens the hold menu).
+   */
+  readOnly?: boolean;
+}>;
 /**
  * Validates ChatMessage `reactions.summary` and marks which counts are drawn. The label (the button's accessible name)
  * is required; ids are unique and non-empty, emoji non-empty and counts positive integers; a count below
@@ -325,7 +338,20 @@ export const mediaAlbumRecipe = {
   /** Previous/next are small ghost IconButtons so the counter row stays compact beside thumbnails. */
   controlSize: "small",
   controlGlyphSize: glyph.sm,
+  /**
+   * Loading / failed page drawn by `MediaAlbumPageStatus` (2026-10-18 Utilverse: the page frame was one accessible
+   * image, so the loading text and retry button inside it were unreachable by screen readers). The status block is
+   * centered in the frame (VQ-09); retry is a small secondary Button.
+   */
+  pageStatus: { gap: spacing.xs, padding: spacing.sm, textVariant: "caption", retryTone: "secondary", retrySize: "small" },
 } as const;
+
+export type MediaAlbumPageStatusKind = "loading" | "error";
+/** A page status names what the reader is waiting for or what failed; the label is the only copy. */
+export function validateMediaAlbumPageStatus(kind: MediaAlbumPageStatusKind, label: string): void {
+  if (kind !== "loading" && kind !== "error") throw new TypeError("Media album page status must be loading or error");
+  if (!label.trim()) throw new TypeError("Media album page status requires a localized label");
+}
 
 /** A controlled index outside the set is a contract error, like Carousel's unknown `currentKey`. */
 export function validateMediaAlbum(count: number, index: number): void {
@@ -545,6 +571,26 @@ export function resolveSearchEmptyCause(count: number | null, appliedFilterCount
 }
 
 /**
+ * What the SearchScreen filter rail does to a result. `narrow` (default) only removes results, so with nothing applied
+ * a zero result is the query's and no filter can bring results back. `scope` chooses what is searched (keyword vs
+ * address, region, map area): changing it can turn a zero into results even with nothing applied (2026-10-18:
+ * choose-window's keyword/address switch is the recovery for a zero result, so it skipped resultSummary entirely).
+ */
+export type SearchFiltersRole = "narrow" | "scope";
+export const searchFiltersRoles = ["narrow", "scope"] as const satisfies readonly SearchFiltersRole[];
+/**
+ * Whether SearchScreen shows its filter rail (`filters` and the filter sheet trigger). Two-step search shows it only
+ * beside results so typing keeps the pinned area short. A query-caused zero hides it only when the filters narrow,
+ * because then none of them can fix the zero; scope filters stay as the recovery path. A filter-caused zero always keeps
+ * it so the cause can be undone. Both renderers call this so the rule cannot drift between platforms.
+ */
+export function resolveSearchFilterRailVisible(phase: SearchScreenPhase, twoStep: boolean, cause: SearchEmptyCause, role: SearchFiltersRole = "narrow"): boolean {
+  if (!searchFiltersRoles.includes(role)) throw new RangeError("SearchScreen filtersRole must be narrow or scope");
+  if (twoStep && phase !== "results") return false;
+  return cause !== "query" || role === "scope";
+}
+
+/**
  * Index to focus after removing item `removedIndex` from a list that now has `remaining` items:
  * the item that slid into its place, else the new last item, else -1 (move to the fallback target).
  * Removing a focused chip or row would otherwise drop focus to <body>.
@@ -619,3 +665,16 @@ export const iconTileRecipe = Object.freeze({ iconSize: 64, labelMaxWidth: 72, m
   shapes: Object.freeze({ squircle: 0.22, square: 0, circle: 0.5 }) as Readonly<Record<IconTileShape, number>>,
   fillMinSize: 48, fillMaxSize: 68,
   defaults: Object.freeze({ frame: "surface" as IconTileFrame, shape: "squircle" as IconTileShape, size: "fixed" as IconTileSize }) });
+
+/**
+ * What an IconTile passes to an `icon` render function: the rendered icon edge (`iconSize` for `fixed`, the measured
+ * cell-clamped edge for `fill`). Fixed-size artwork (images, generated launcher art) sizes itself from it; Utilverse
+ * re-computed the 48–68 clamp from its grid width to size its artwork (2026-10-18).
+ */
+export type IconTileArtwork = Readonly<{ edge: number }>;
+
+/** The edge a `size="fill"` icon takes in a cell of `cellWidth`, for layout estimates made before the tile measures. */
+export function resolveIconTileFillEdge(cellWidth: number): number {
+  if (!Number.isFinite(cellWidth) || cellWidth < 0) throw new RangeError("IconTile cell width must be a non-negative finite number");
+  return Math.min(iconTileRecipe.fillMaxSize, Math.max(iconTileRecipe.fillMinSize, cellWidth));
+}

@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useImperativeHandle, useRef, useState } from "react";
 import { chatMessageRecipe, screenPatternRecipe } from "@hjmds/design-contracts/screen-patterns";
-import { Text } from "../layout.js";
+import { Text, VisuallyHidden } from "../layout.js";
 import { Popover } from "../popover.js";
 import { ReactionPicker } from "../reaction-picker.js";
 /** Chat-specific trigger translation; Popover retains collision, focus, Escape and outside dismissal. */
@@ -61,5 +61,14 @@ export function ReactionSummaryButton({ label, items, selected, disabled, onPres
     const r = chatMessageRecipe.reactionSummary;
     const mine = items.some(item => item.id === selected);
     return _jsx("button", { type: "button", className: "hjm-chat-message__reaction-summary", "aria-label": label, disabled: disabled, "data-selected": mine || undefined, onClick: onPress, style: { minBlockSize: r.minHeight, paddingInline: r.paddingInline, gap: r.itemGap }, children: items.map(item => _jsxs("span", { "aria-hidden": "true", style: { display: "inline-flex", alignItems: "center", gap: r.emojiGap }, children: [_jsx("span", { children: item.emoji }), item.showCount ? _jsx(Text, { as: "span", variant: "caption", children: item.count }) : null] }, item.id)) });
+}
+/**
+ * Read-only counts (`summary.readOnly`, 2026-10-18 Utilverse guests who cannot react): the same place and items as
+ * the pill, as plain caption text without the pill surface, so it is neither drawn nor announced as a control. The
+ * product label is the text screen readers read; the drawn emoji and numbers are hidden from them.
+ */
+export function ReactionSummaryText({ label, items }) {
+    const r = chatMessageRecipe.reactionSummary;
+    return _jsxs("span", { className: "hjm-chat-message__reaction-counts", style: { minBlockSize: r.minHeight, gap: r.itemGap }, children: [_jsx(VisuallyHidden, { children: label }), items.map(item => _jsxs("span", { "aria-hidden": "true", style: { display: "inline-flex", alignItems: "center", gap: r.emojiGap }, children: [_jsx("span", { children: item.emoji }), item.showCount ? _jsx(Text, { as: "span", variant: "caption", tone: "muted", children: item.count }) : null] }, item.id))] });
 }
 //# sourceMappingURL=message-reactions.js.map

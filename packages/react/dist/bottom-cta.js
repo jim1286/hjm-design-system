@@ -9,7 +9,7 @@ import { ScreenFooterContext } from "./internal/screen-footer.js";
 function Action({ action, tone }) {
     if (!action.label.trim())
         throw new TypeError("BottomCTA action label must not be empty");
-    return _jsx(Button, { onClick: action.onClick, tone: action.tone ?? tone, size: action.size ?? "medium", disabled: action.disabled, loading: action.loading ?? false, "aria-label": action.loading ? action.loadingLabel ?? action.accessibilityLabel ?? action.label : action.accessibilityLabel, children: action.label });
+    return _jsx(Button, { ref: action.buttonRef, onClick: action.onClick, tone: action.tone ?? tone, size: action.size ?? "medium", disabled: action.disabled, loading: action.loading ?? false, "aria-label": action.loading ? action.loadingLabel ?? action.accessibilityLabel ?? action.label : action.accessibilityLabel, children: action.label });
 }
 function isAction(value) {
     return typeof value === "object" && value !== null && "label" in value && "onClick" in value;

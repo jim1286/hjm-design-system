@@ -15,7 +15,9 @@ export type BottomNavigationInsetProviderProps = Readonly<{ children: ReactNode 
 
 /**
  * Wrap the region that holds both the screens and an overlay BottomNavigation (for example the tab navigator).
- * Screens inside read the covered height with `useBottomNavigationInset()`; ScreenLayout applies it itself.
+ * ScreenLayout applies the covered height to its last region and is its only owner: content inside a ScreenLayout
+ * (a `scroll="content"` list included) must not add it again. Layouts that are not a ScreenLayout read it with
+ * `useBottomNavigationInset()`.
  */
 export function BottomNavigationInsetProvider({ children }: BottomNavigationInsetProviderProps) {
   const [inset, setInset] = useState(0);
@@ -30,7 +32,10 @@ export function BottomNavigationInsetProvider({ children }: BottomNavigationInse
   );
 }
 
-/** Bottom height covered by the nearest overlay BottomNavigation; 0 outside a provider. */
+/**
+ * Bottom height covered by the nearest overlay BottomNavigation; 0 outside a provider. For layouts that are not a
+ * ScreenLayout: inside one the shell already pads by it, so adding it again doubles the space.
+ */
 export function useBottomNavigationInset(): number {
   return useContext(BottomNavigationInsetContext);
 }

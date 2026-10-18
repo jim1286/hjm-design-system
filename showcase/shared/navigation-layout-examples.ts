@@ -22,6 +22,22 @@ export const appIconDockExample = {
   ],
 } as const;
 
+// HJM 1.32.0: one dock per frame shape with the lift emphasis, as a product switching its theme would render it.
+export const dockShapeExamples = [
+  { shape: "rounded", density: "regular", iconSize: "xlarge", caption: "둥근 독" },
+  { shape: "pill", density: "regular", iconSize: "xlarge", caption: "알약 막대" },
+  { shape: "compact", density: "compact", iconSize: "large", caption: "작은 독" },
+  { shape: "square", density: "compact", iconSize: "large", caption: "각진 작업 표시줄" },
+] as const;
+
+// HJM 1.32.0: results whose source only reports whether another page exists.
+export const openEndedPaginationExample = {
+  label: "검색 결과 페이지",
+  labels: { previous: "이전 결과", next: "다음 결과" },
+  currentPageLabel: ({ page }: { page: number }) => `${page}페이지`,
+  lastPage: 3,
+} as const;
+
 export const overlayInsetExample = {
   title: "오늘의 기록",
   count: 12,

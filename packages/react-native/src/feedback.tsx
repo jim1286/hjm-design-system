@@ -985,22 +985,6 @@ function ToastSurface({
           })}
         />
       ) : null}
-      {/* 1.10.0 retired the edge strip (toneMark width 0); the tinted icon badge carries tone. */}
-      {toastRecipe.toneMark.width > 0 ? (
-        <View
-          accessibilityElementsHidden
-          importantForAccessibility="no-hide-descendants"
-          style={{
-            backgroundColor: accent,
-            borderRadius: theme.tokens.radius[toastRecipe.toneMark.radius],
-            bottom: 0,
-            start: 0,
-            position: "absolute",
-            top: 0,
-            width: toastRecipe.toneMark.width,
-          }}
-        />
-      ) : null}
       {!announces || Platform.OS === "ios" ? null : (
         <Text
           accessibilityLabel={resolved.announcement}

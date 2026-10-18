@@ -1,6 +1,6 @@
 // 2026-10-17 screen compositions registered. Minimal previews for the screen composition catalog rows; the richer flows stay in the
 // 화면 stories. Products use the same public subpaths; nothing here is showcase-only API.
-import { ChatDateSeparator, ChatMessage, ChatScreen, CompositionLayout, IconTile, MessageComposer, NotificationInboxScreen, NotificationItem, NotificationRow, ScreenLayout, SettingsScreen, TypingIndicator } from "@hjmds/react/screens";
+import { ChatDateSeparator, ChatMessage, ChatScreen, CompositionLayout, IconTile, MediaAlbumPageStatus, MessageComposer, NotificationInboxScreen, NotificationItem, NotificationRow, ScreenLayout, SettingsScreen, TypingIndicator } from "@hjmds/react/screens";
 import { CommentThreadRow, CommentThreadScreen, EditorScreen, ListDetailScreen, MediaSelectionScreen, ModerationScreen, OnboardingScreen, PermissionScreen, PhotoSourceSheet, ProfileScreen, ProfileSummary, SearchScreen } from "@hjmds/react/screen-flows";
 import { Stack, Text } from "@hjmds/react/layout";
 import { Button } from "@hjmds/react/actions";
@@ -21,6 +21,8 @@ export function ScreenLayoutPreview() {
   return <Stack gap="lg">
     <div style={{ blockSize: 200 }}><ScreenLayout as="section" title="화면" titleLeading={previewMark}><Text as="p">본문</Text></ScreenLayout></div>
     <div style={{ blockSize: 200 }}><ScreenLayout as="section" title="브랜드 로딩" state={{ kind: "loading", title: "불러오는 중" }} loadingIndicator={<span style={{ fontSize: 32 }}>🌼</span>} /></div>
+    {/* 1.32.0 contentInset="body-bleed": a map stand-in meets the header and footer and both screen edges. */}
+    <div style={{ blockSize: 260 }}><ScreenLayout as="section" title="지도" scroll="content" contentInset="body-bleed" footer={<Button tone="primary">이 위치 사용</Button>}><div aria-hidden="true" style={{ flex: 1, background: "var(--hjm-color-surface-alt)" }} /></ScreenLayout></div>
   </Stack>;
 }
 
@@ -90,7 +92,15 @@ export function ChatMessagePreview() {
     <ChatMessage direction="incoming" author="서연" timestamp="지금">안녕하세요</ChatMessage>
     {/* 2026-10-18 mediaAlbum: renderPage runs only for the shown photo, so a product can fetch one image at a time. */}
     <ChatMessage direction="incoming" author="서연" timestamp="지금" mediaAlbum={photoAlbum}>{null}</ChatMessage>
+    {/* 2026-10-18 page status: a page that failed shows the failure and retry as reachable content, not inside one image. */}
+    <ChatMessage direction="incoming" author="서연" timestamp="지금" mediaAlbum={{ ...photoAlbum, renderPage: (index: number) => <RetryPreviewPage index={index} /> }}>{null}</ChatMessage>
+    {/* 2026-10-18 summary.readOnly: a guest who cannot react sees the counts as text in the same place. */}
+    <ChatMessage direction="incoming" author="서연" timestamp="지금" reactions={{ label: "메시지에 반응", closeLabel: "닫기", value: null, onValueChange: noop, options: [{ id: "heart", emoji: "❤️", label: "좋아요", disabled: true }], summary: { label: "반응 ❤️ 2개", readOnly: true, items: [{ id: "heart", emoji: "❤️", count: 2 }] } }}>둘러보기만 하는 중이에요</ChatMessage>
   </Stack>;
+}
+function RetryPreviewPage({ index }: { index: number }) {
+  const [loaded, setLoaded] = useState(false);
+  return loaded ? <PreviewPhoto index={index} square label="" /> : <MediaAlbumPageStatus kind="error" label="사진을 불러오지 못했어요" retry={{ label: "다시 시도", onPress: () => setLoaded(true) }} />;
 }
 
 export function NotificationRowPreview() {
@@ -123,6 +133,8 @@ export function IconTilePreview() {
     <IconTile frame="none" icon={<span aria-hidden="true" style={{ display: "grid", placeItems: "center", inlineSize: 64, blockSize: 64, borderRadius: 14, background: "var(--hjm-color-content-brand)", color: "var(--hjm-color-on-primary)" }}>★</span>} label="틀 없음" />
     <IconTile shape="square" icon={<span aria-hidden="true">■</span>} label="사각형" />
     <IconTile shape="circle" size="fill" icon={<span aria-hidden="true">●</span>} label="칸 채움" />
+    {/* 1.32.0: fixed-size artwork sizes itself from the edge the filling tile measured. */}
+    <IconTile frame="none" shape="circle" size="fill" icon={({ edge }) => <span aria-hidden="true" style={{ display: "grid", placeItems: "center", inlineSize: edge, blockSize: edge, borderRadius: "50%", background: "var(--hjm-color-content-brand)", color: "var(--hjm-color-on-primary)" }}>{Math.round(edge)}</span>} label="이미지 채움" />
   </div>;
 }
 

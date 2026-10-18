@@ -103,3 +103,23 @@ it("renders the exported cell standalone with rotate before remove", async () =>
  await act(async () => root.render(<HjmProvider><MediaSelectionScreen {...props} items={[item("a")]} /></HjmProvider>));
  expect(host.querySelector('button[data-media-action="rotate"]')).toBeNull();
 });
+// 2026-10-18 Utilverse photo-to-PDF/strip: a running job locks move/rotate/remove without dropping keyboard focus.
+it("locks item edits while the host job runs, keeps the focused action focusable and leaves upload actions live", async () => {
+ const onMove = vi.fn(), onRemove = vi.fn(), onRotate = vi.fn();
+ const rotate = { label: "회전", itemLabel: (entry: MediaSelectionItem) => `${entry.descriptor.id} 회전`, onRotate };
+ const uploading: MediaSelectionItem = { descriptor: { id: "b", name: "b.jpg", state: { status: "uploading", progress: 0.5 } } };
+ const cell = (disabled: boolean) => <HjmProvider><MediaSelectionCell {...props} onMove={onMove} onRemove={onRemove} item={uploading} index={1} count={3} rotate={rotate} disabled={disabled} /></HjmProvider>;
+ await act(async () => root.render(cell(false)));
+ button("b 제거").focus();
+ await act(async () => root.render(cell(true)));
+ expect(document.activeElement).toBe(button("b 제거"));
+ for (const name of ["b 앞으로", "b 뒤로", "b 회전", "b 제거"]) expect(button(name).getAttribute("aria-disabled")).toBe("true");
+ await act(async () => userEvent.keyboard("{Enter}"));
+ for (const name of ["b 앞으로", "b 뒤로", "b 회전"]) button(name).click();
+ expect(onMove).not.toHaveBeenCalled(); expect(onRemove).not.toHaveBeenCalled(); expect(onRotate).not.toHaveBeenCalled();
+ const cancel = host.querySelector<HTMLButtonElement>('button[aria-label="업로드 취소"]') ?? Array.from(host.querySelectorAll("button")).find(node => node.textContent === "업로드 취소");
+ expect(cancel).toBeDefined(); expect(cancel!.getAttribute("aria-disabled")).not.toBe("true");
+ await act(async () => root.render(cell(false)));
+ await act(async () => userEvent.keyboard("{Enter}"));
+ expect(onRemove).toHaveBeenCalledExactlyOnceWith("b");
+});

@@ -4,7 +4,7 @@
 
 ## @hjmds/react
 
-고유 공개 컴포넌트 및 provider 이름 218개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 219개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -116,6 +116,7 @@
 | LoadMore | LoadMore | canonical | root, ./navigation |
 | Masonry | Masonry | canonical | ./masonry |
 | MatrixTable | DataTable | companion-or-alternative | ./data-table |
+| MediaAlbumPageStatus | ChatMessage | companion-or-alternative | ./screens |
 | MediaSelectionCell | MediaSelectionScreen | companion-or-alternative | ./screen-flows |
 | MediaSelectionScreen | MediaSelectionScreen | canonical | ./screen-flows |
 | MediaTransport | 별도 보조 기능 | supplemental | ./media-transport |
@@ -229,7 +230,7 @@
 
 ## @hjmds/react-native
 
-고유 공개 컴포넌트 및 provider 이름 206개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 207개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -342,6 +343,7 @@
 | LoadMore | LoadMore | canonical | root, ./navigation, ./top-bar |
 | Masonry | Masonry | canonical | ./masonry |
 | MatrixTable | DataTable | companion-or-alternative | ./data-table |
+| MediaAlbumPageStatus | ChatMessage | companion-or-alternative | ./screens |
 | MediaSelectionCell | MediaSelectionScreen | companion-or-alternative | ./screen-flows |
 | MediaSelectionScreen | MediaSelectionScreen | canonical | ./screen-flows |
 | MediaTransport | 별도 보조 기능 | supplemental | ./media-transport |

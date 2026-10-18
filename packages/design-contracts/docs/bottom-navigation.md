@@ -186,7 +186,25 @@ floating 그림자는 그리지 않는다. 옆면이 높이를 표현하므로 �
 세 제품이 막대를 우회한 원인을 계약으로 옮겼다. Spint는 떠 있는 막대의 높이를 몰라 탭 화면마다 112 빈칸을 두었다.
 `BottomNavigationInsetProvider`·`useBottomNavigationInset`이 겹친 막대(Web 고정, Native `placement="overlay"`)의
 측정 높이를 화면에 전달하고 ScreenLayout이 마지막 영역 여백으로 쓴다. Native 기본 `inline`은 자기 높이를 차지하므로 0이다.
+이 여백은 ScreenLayout만 적용한다(1.32.0 patch): `scroll="content"` 목록과 ScreenLayout 위의 화면 구성은 다시 더하지 않는다.
+1.31.0 사용 지침이 `scroll="content"` 목록에 더하라고 잘못 안내해 따르면 두 번 쌓였다.
 다에리는 가운데 "쓰기" 목적지를 그리려고 기본 탭바로 돌아갔다. 항목 `prominent`는 홀수 개의 정가운데 하나만 허용하고,
 `primaryAction`(행동)과 달리 선택·재선택이 있는 목적지다. 원은 `prominentDestination` recipe(지름 56, `action.brand`)를 쓰고
 라벨이 다른 라벨과 한 줄이 되도록 `지름 − 표시 자리 높이`만큼 올라간다. Utilverse는 큰 앱 아이콘 때문에 막대를 직접
 조립했다. `configuration.iconSize`(`large` 44 · `xlarge` 52)가 `renderIcon`의 `size`를 키운다. 세 축 모두 기본값에서 기존 외형이 그대로다.
+
+### 테마별 틀과 선택 아이콘 올림 (2026-10-18, 1.32.0)
+
+Utilverse는 1.31.0 채택 뒤에도 셸마다 다른 막대 틀(둥근 독·알약·작은 독·각진 작업 표시줄)과 선택 아이콘 올림을
+표현할 공개 축이 없어 다섯 셸을 floating 하나로 통일했다. 제품이 막대를 다시 조립하지 않도록 두 축을 더했다.
+
+- `configuration.shape`(`standard` 기본 · `rounded` · `pill` · `compact` · `square`)는 floating 표면의 모서리 token과
+  안쪽 여백을 `bottomNavigationRecipe.shapes`에서 고른다. `standard`는 `presentations.floating` 그대로다.
+  bar는 화면 너비를 채우고 capsule은 이미 알약이며 tile 선택은 자기 안쪽 여백·카드 모서리를 가지므로
+  `presentation: "floating"`·`selection: "emphasis"`에서만 허용한다. Native floating 끝 항목의 눌림 모서리는
+  `틀 radius − 테두리 − 안쪽 여백`으로 틀의 안쪽 곡선을 따른다(2026-10-08 pressed-edge 규칙의 일반화).
+- `configuration.iconEmphasis`(`scale` 기본 · `lift`)는 선택 아이콘 강조다. `lift`는 공통 선택 배율 위에 선택 아이콘을
+  4 올리고(`icon.liftEmphasis.translateY`) 선택하지 않은 아이콘만 0.82로 흐린다. 색을 입힐 수 없는 앱 아이콘 그림에서
+  라벨 외의 비색상 선택 근거가 된다. 배지와 `prominent` 원은 흐리지 않는다.
+- 막대 바탕색은 기존 팔레트 역할(canvas)이고 테마별 색은 `brandPalette`로 바꾼다. 높이는 `density`와 `iconSize`가 정한다.
+  같은 의미의 값을 새 축으로 중복하지 않았다.
