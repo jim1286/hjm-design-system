@@ -1,5 +1,18 @@
 # @hjmds/react
 
+## 1.34.0
+
+### Minor Changes
+
+- 7ade479: Use the raised surface as the default Card treatment on Web and Native, matching Today Baseball schedule cards. Existing cards without a tone gain the shared floating shadow; set tone="default" to retain a flat card. Surface defaults remain unchanged.
+- 7ade479: Use compact rounded solid status badges with white bold copy, matching the Today Baseball reference. Support leading and trailing decorative icons on both renderers; retain the outline variant and semantic tone mapping.
+
+### Patch Changes
+
+- 7ade479: Keep the native screen name on the root when a duplicate route heading is hidden. Document the shared contextual-title rule and navigation/tools TopBar composition; titles identifying a subject or task remain visible when needed.
+
+  SearchScreen now uses a placeholder and persistent accessible name by default, so navigation icons align with the input instead of the input-plus-label block.
+
 ## 1.33.2
 
 ### Patch Changes

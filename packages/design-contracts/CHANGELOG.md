@@ -1,5 +1,12 @@
 # @hjmds/design-contracts
 
+## 1.34.0
+
+### Minor Changes
+
+- 7ade479: Use the raised surface as the default Card treatment on Web and Native, matching Today Baseball schedule cards. Existing cards without a tone gain the shared floating shadow; set tone="default" to retain a flat card. Surface defaults remain unchanged.
+- 7ade479: Use compact rounded solid status badges with white bold copy, matching the Today Baseball reference. Support leading and trailing decorative icons on both renderers; retain the outline variant and semantic tone mapping.
+
 ## 1.33.2
 
 ### Patch Changes
