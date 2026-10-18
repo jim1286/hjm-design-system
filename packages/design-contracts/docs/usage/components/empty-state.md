@@ -120,3 +120,5 @@ EmptyState 자체에는 콜백 prop이 없다. 2026-10-07 기존 예제의 생�
 | `description` | ReactNode | string |
 | 정렬·알림 | 없음 | `align`, `announcement`, `accessibilityLabel`, `titleRole` |
 | 배치 | `layoutStyle`(그 밖에 `className`과 div 속성) | `layoutStyle`(슬롯 style 다섯 개는 제거된 속성) |
+
+2026-10-18 사용자 결정: 제목과 보조 설명 모두 `body`(기본 14, 줄 높이 20)를 사용한다. 화면·부분 영역의 크기나 Web 부모의 큰 글자 스타일에 따라 빈 상태 문구를 키우지 않는다. 공통 화면·구성의 `empty` 상태도 같은 기준이다. Spint의 부분 빈 상태가 제목 크기로 커진 문제와 Web의 부모 글자 상속·Native 설명 12의 차이를 함께 정리했다.
