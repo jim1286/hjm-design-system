@@ -1,5 +1,30 @@
 # @hjmds/design-contracts
 
+## 1.31.0
+
+### Minor Changes
+
+- 1006160: BottomNavigation reports the height it covers through `BottomNavigationInsetProvider` / `useBottomNavigationInset` (Web's fixed bar always, Native with the new `placement="overlay"`), and ScreenLayout pads its last region by it; items accept `prominent` for a selectable raised center destination, and `configuration.iconSize` (`large` 44, `xlarge` 52) enlarges the icon slot for app-icon artwork.
+- 1006160: New `ChatDateSeparator` (`/screens`): a centered, product-formatted date or time row between ChatScreen timeline groups (`chatDateSeparatorRecipe`); Web renders `<time>` when `dateTime` is given.
+- 1006160: CommentThreadItem gains `timePlacement: "actions"` to put the time with Reply under a rich (non-text) body, and a `panel` slot for an inline edit/report/block form under the Reply line, outside the long-press target (`commentThreadRecipe.panelGap`).
+- 1006160: IconTile adds `frame` (`surface` | `none`), `shape` (`squircle` | `square` | `circle`) and `size` (`fixed` | `fill`, clamped to `iconTileRecipe.fillMinSize`–`fillMaxSize`), so complete product launcher artwork, theme icon shapes and grid-sized icons use the shared tile. Defaults keep the framed 64 squircle.
+- 1006160: ImageChoiceGroup accepts `showItemLabels` to show each item's name under its tile inside the same press target (one ellipsized caption line, `imageChoiceRecipe.itemLabel*`), without changing what assistive tech reads.
+- 1006160: Add `ImmersiveOverlay`, a Dialog companion for edge-to-edge presentations (no card, scrim or header; Native presents full screen with the status bar hidden and rotation allowed) that keeps the HJM modal stack, focus trap, focus return and reasoned dismissal, with values in `dialogRecipe.immersive`.
+- 1006160: ChatMessage and CommentThreadItem accept `mediaAlbum`, a paged photo set whose `renderPage(index)` runs only for the shown photo (counter row with previous/next icon buttons, `mediaAlbumRecipe`), so products that authorize each image fetch one page at a time instead of mounting every preview; `media` is unchanged and passing both throws.
+- 1006160: MediaSelectionScreen exports its item cell as `MediaSelectionCell` so virtualized hosts (VirtualList, FlatList renderItem) render the same preview, upload status and actions, and both accept an optional `rotate` action placed before remove.
+- 1006160: ModerationScreen adds `variant="review"` for operator decisions (required free-text reason, product-labelled decisions with optional confirmations, one decision at a time, `resolution` once decided), and the new companion `ModerationForm` renders the same report or review fields without screen chrome for letters, cards and sheets.
+- 1006160: New `PageIndicator` exposes Carousel's position dot row for product-owned pagers, backed by the `resolvePageIndicator` / `getPageIndicatorTarget` contracts and `carouselRecipe.dot`; Carousel now renders the same dot row.
+- 1006160: ProfileScreen accepts `editPlacement="summary"`, which draws the edit action first in the action row of the ProfileSummary inside `summary` as a small secondary button (`profileSummaryRecipe.editAction`) instead of the ghost button below the summary.
+- 1006160: ChatMessage `reactions.summary` draws the current reaction counts beside the time as one button that opens the same hold menu (`chatMessageRecipe.reactionSummary`, validated by `resolveChatReactionSummary`), so products no longer show counts as status tags that cannot open the menu.
+- 1006160: Semantic icons add `arrowUp`, `arrowDown`, `rotate` and `unblock`, and their 24-unit paths move into the contract as `semanticIconPaths` (with `isSemanticIconName`). Web draws them built in; Native draws the same paths through the new optional `@hjmds/react-native/icon-svg` entry (`renderSemanticGlyph`, react-native-svg peer).
+- 1006160: Steps accepts `onStepPress`: steps before the cursor (new resolved `revisitable` flag) become one named button over marker and label with a 44 minimum target (`stepsRecipe.press`), while the current and later steps stay static.
+- 1006160: Tabs accept `indicator="filled"`, which marks the selected tab with a brand-tinted pill (`tabsRecipe.indicators.filled`) instead of the underline and drops the list divider; the moving indicator becomes a sliding pill.
+- 1006160: New `TypingIndicator` (`/screens`): an incoming-bubble row of pulsing dots for a ChatScreen timeline with a localized `label` announced politely and an optional `avatar`; the dots stay still under reduced motion (`typingIndicatorRecipe`).
+
+### Patch Changes
+
+- 032a453: Classify TypingIndicator and PageIndicator as textless for the long-copy evidence scenario: their copy is an announced label or accessible names only, like Pagination.
+
 ## 1.30.0
 
 ### Minor Changes

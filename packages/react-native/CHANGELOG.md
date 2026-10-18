@@ -1,5 +1,40 @@
 # @hjmds/react-native
 
+## 1.31.0
+
+### Minor Changes
+
+- 1006160: AuthScreenLayout accepts `title` and `exit`: it draws the ScreenLayout centered header band (the same icon-only back/close exit, gutter and title step) above the centered sign-in block, so login and signup routes no longer stack a separate TopBar above the layout. On Web the hero tagline defaults to `h2` when a title is present.
+- 1006160: BottomNavigation reports the height it covers through `BottomNavigationInsetProvider` / `useBottomNavigationInset` (Web's fixed bar always, Native with the new `placement="overlay"`), and ScreenLayout pads its last region by it; items accept `prominent` for a selectable raised center destination, and `configuration.iconSize` (`large` 44, `xlarge` 52) enlarges the icon slot for app-icon artwork.
+- 1006160: Card now accepts `onActivate` together with `actions`: the whole card opens while each action stays an independent target (Web keeps an `<article>` with a covering activator button, Native makes media and body one Pressable beside the actions row), so products no longer rebuild an inner Pressable for open-plus-delete cards.
+- 1006160: New `ChatDateSeparator` (`/screens`): a centered, product-formatted date or time row between ChatScreen timeline groups (`chatDateSeparatorRecipe`); Web renders `<time>` when `dateTime` is given.
+- 1006160: CommentThreadItem gains `timePlacement: "actions"` to put the time with Reply under a rich (non-text) body, and a `panel` slot for an inline edit/report/block form under the Reply line, outside the long-press target (`commentThreadRecipe.panelGap`).
+- 1006160: Add `overlayLayer` to Dialog: a decorative, viewport/window-sized layer drawn above the card but outside its frame (for example a drag ghost in window coordinates), never a pointer target and hidden from assistive technology.
+- 8afe62b: Add `scrollEnabled` (default `true`) to Dialog. `false` locks user scrolling while a gesture inside the body owns the pointer, such as dragging an item in a folder popup: Web keeps the card's offset with `overflow: hidden`, Native disables the body ScrollView.
+- 1006160: EditorScreen accepts `stepBack`: while supplied, the header exit is a back chevron that returns to the previous step without opening the discard prompt, and it is locked during save; omitting it on the first step restores the cancel close exit.
+- 1006160: IconTile adds `frame` (`surface` | `none`), `shape` (`squircle` | `square` | `circle`) and `size` (`fixed` | `fill`, clamped to `iconTileRecipe.fillMinSize`–`fillMaxSize`), so complete product launcher artwork, theme icon shapes and grid-sized icons use the shared tile. Defaults keep the framed 64 squircle.
+- 1006160: ImageChoiceGroup accepts `showItemLabels` to show each item's name under its tile inside the same press target (one ellipsized caption line, `imageChoiceRecipe.itemLabel*`), without changing what assistive tech reads.
+- 1006160: Add `ImmersiveOverlay`, a Dialog companion for edge-to-edge presentations (no card, scrim or header; Native presents full screen with the status bar hidden and rotation allowed) that keeps the HJM modal stack, focus trap, focus return and reasoned dismissal, with values in `dialogRecipe.immersive`.
+- 1006160: ChatMessage and CommentThreadItem accept `mediaAlbum`, a paged photo set whose `renderPage(index)` runs only for the shown photo (counter row with previous/next icon buttons, `mediaAlbumRecipe`), so products that authorize each image fetch one page at a time instead of mounting every preview; `media` is unchanged and passing both throws.
+- 1006160: MediaSelectionScreen exports its item cell as `MediaSelectionCell` so virtualized hosts (VirtualList, FlatList renderItem) render the same preview, upload status and actions, and both accept an optional `rotate` action placed before remove.
+- 1006160: Hold-menu rows (`reactions.menuActions` on ChatMessage and comment rows) accept `tone`, the Menu item vocabulary, so destructive rows such as delete use the danger tone that only `reportAction` had before.
+- 1006160: ModerationScreen adds `variant="review"` for operator decisions (required free-text reason, product-labelled decisions with optional confirmations, one decision at a time, `resolution` once decided), and the new companion `ModerationForm` renders the same report or review fields without screen chrome for letters, cards and sheets.
+- 1006160: New `PageIndicator` exposes Carousel's position dot row for product-owned pagers, backed by the `resolvePageIndicator` / `getPageIndicatorTarget` contracts and `carouselRecipe.dot`; Carousel now renders the same dot row.
+- 1006160: ProfileScreen accepts `editPlacement="summary"`, which draws the edit action first in the action row of the ProfileSummary inside `summary` as a small secondary button (`profileSummaryRecipe.editAction`) instead of the ghost button below the summary.
+- 1006160: ChatMessage `reactions.summary` draws the current reaction counts beside the time as one button that opens the same hold menu (`chatMessageRecipe.reactionSummary`, validated by `resolveChatReactionSummary`), so products no longer show counts as status tags that cannot open the menu.
+- 1006160: ScreenLayout accepts `titleLeading`, a decorative identity mark (team logo, tool artwork) before the centered or start title; with `titleVisibility="hidden"` the mark stands alone as the heading named by `title`. It also accepts `loadingIndicator`, the same brand loading visual CompositionLayout takes, while the shared state keeps its accessible name and centering.
+- 1006160: Semantic icons add `arrowUp`, `arrowDown`, `rotate` and `unblock`, and their 24-unit paths move into the contract as `semanticIconPaths` (with `isSemanticIconName`). Web draws them built in; Native draws the same paths through the new optional `@hjmds/react-native/icon-svg` entry (`renderSemanticGlyph`, react-native-svg peer).
+- 1006160: Steps accepts `onStepPress`: steps before the cursor (new resolved `revisitable` flag) become one named button over marker and label with a 44 minimum target (`stepsRecipe.press`), while the current and later steps stay static.
+- 1006160: Tabs accept `indicator="filled"`, which marks the selected tab with a brand-tinted pill (`tabsRecipe.indicators.filled`) instead of the underline and drops the list divider; the moving indicator becomes a sliding pill.
+- 1006160: Text gains a product `color` role that replaces the tone color while keeping HJM metrics and font face, and a `numeric` axis (`tabular`/`proportional`) for stable digits on Web and Native. Native also exports `useHjmTextFace` so product text that cannot be a Text keeps the Provider's font face instead of falling back to the OS font.
+- 1006160: New `TypingIndicator` (`/screens`): an incoming-bubble row of pulsing dots for a ChatScreen timeline with a localized `label` announced politely and an optional `avatar`; the dots stay still under reduced motion (`typingIndicatorRecipe`).
+
+### Patch Changes
+
+- 1006160: MessageComposer now announces `error` assertively when it appears: Web through an always-mounted alert region and iOS through `announceForAccessibility` (Android already used the field message's assertive live region), matching FieldGroup errors.
+- d227f32: Announce Field errors the same way on every Field-based control. Web keeps one pre-mounted assertive region that carries the error id (linked by `aria-describedby`) and hides the visible copy from assistive technology, so the error is announced once and read once; MessageComposer drops its own hidden alert. Native announces each new error on iOS for TextField, TextArea, Select, Combobox, NumberField and choice groups, as Android's live region already did.
+- 1006160: Fix entry focus for a screen rendered inside a modal: a product modal that wraps the screen no longer blocks it on Web, and a ScreenLayout inside a Dialog or Sheet now enters with the overlay (after its activation or native presentation) instead of losing focus to the overlay's first control or focusing before the Modal is shown.
+
 ## 1.30.0
 
 ### Patch Changes
