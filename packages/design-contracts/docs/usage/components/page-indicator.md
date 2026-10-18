@@ -1,12 +1,12 @@
 # PageIndicator
 
 - 단계: 컴포넌트
-- 상태: 실험
+- 상태: 배포
 - 지원: Web · Native
-- 적용: 미게시(1.30.0 이후)
+- 적용: 1.31.0
 - 검토일: 2026-10-18
 - 근거: [Carousel](../../carousel.md), contract `src/carousel.ts`(`resolvePageIndicator`·`getPageIndicatorTarget`), recipe `carouselRecipe.dot`
-- 스토리북: `실험/컴포넌트/탐색/페이지 위치 표시`
+- 스토리북: `배포/컴포넌트/탐색/페이지 위치 표시`
 
 ## 언제 쓰나
 

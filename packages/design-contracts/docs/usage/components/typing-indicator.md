@@ -1,12 +1,12 @@
 # TypingIndicator
 
 - 단계: 컴포넌트
-- 상태: 실험
+- 상태: 배포
 - 지원: Web · Native
-- 적용: 미게시(1.30.0 이후)
+- 적용: 1.31.0
 - 검토일: 2026-10-18
 - 근거: [반복 화면 조합](../../screen-patterns.md), `src/screen-patterns.ts`의 `typingIndicatorRecipe`·`chatMessageRecipe`; Web·Native `src/screens.tsx`
-- 스토리북: `실험/컴포넌트/상태와 알림/입력 중 표시`
+- 스토리북: `배포/컴포넌트/상태와 알림/입력 중 표시`
 
 ## 언제 쓰나
 

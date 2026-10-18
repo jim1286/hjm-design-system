@@ -25,7 +25,7 @@ function PageIndicatorPreview() {
   </View>;
 }
 
-const meta = { title: "실험/컴포넌트/탐색/페이지 위치 표시", component: PageIndicatorPreview, parameters: { hjm: { componentIds: ["page-indicator"] } } } satisfies Meta<typeof PageIndicatorPreview>;
+const meta = { title: "배포/컴포넌트/탐색/페이지 위치 표시", component: PageIndicatorPreview, parameters: { hjm: { componentIds: ["page-indicator"] } } } satisfies Meta<typeof PageIndicatorPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

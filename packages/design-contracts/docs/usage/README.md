@@ -6,7 +6,7 @@
 버튼 위치에서 시작해 구성·컴포넌트 지침으로 내려가고, 값은 토큰 지침에서 고른다.
 [선택 기준](SELECTION.md)으로 그대로 사용·공개 슬롯 확장·공통 API 보완·제품 고유 기능 연결을 고른다. 설치 버전의 지침을 본다: `node_modules/@hjmds/design-contracts/docs/usage/`.
 제공 기준은 확인한 기본 API 버전이며 최초 출시 버전이 아니다. 구성·화면은 각 API 지침의 제공 버전을 확인한다.
-API 안정성은 1.31.0의 생성 manifest에서 읽은 정규(canonical) API 기준이다. 동반·선택형 확장은 개별 계약을 확인한다.
+API 안정성은 1.32.0의 생성 manifest에서 읽은 정규(canonical) API 기준이다. 동반·선택형 확장은 개별 계약을 확인한다.
 Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품 반영을 의미하지 않는다.
 `분류`는 Storybook 제목 `<배포|실험>/<단계>/<분류>/<항목>`의 셋째 마디이고, 토큰·구성·화면은 Storybook 메뉴와 같은 순서다.
 
@@ -57,7 +57,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [Carousel](components/carousel.md) | 데이터 표시 | 한 번에 카드 하나만 보이고 사용자가 순서대로 넘겨 보는 유한한 묶음에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Celebration](components/celebration.md) | 구성/직접 조작과 모션 | 목표 달성, 첫 완료처럼 드물게 일어나는 성공 순간에 한 번 터지는 색종이 효과에 쓴다. | 1.12.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Chart](components/chart.md) | 데이터 표시 | 수치의 흐름·비교·몫·모양·관계를 그림으로 읽게 할 때 쓴다. | 1.21.0 | Web · Native | Web beta / Native beta | 배포 |
-| [ChatDateSeparator](components/chat-date-separator.md) | 데이터 표시 | 대화 타임라인에서 날짜(또는 오래 쉰 뒤의 시각)가 바뀌는 자리에 가운데 정렬 구분 줄을 둘 때 쓴다. | 미게시(1.30.0 이후) | Web · Native | Web beta / Native beta | 실험 |
+| [ChatDateSeparator](components/chat-date-separator.md) | 데이터 표시 | 대화 타임라인에서 날짜(또는 오래 쉰 뒤의 시각)가 바뀌는 자리에 가운데 정렬 구분 줄을 둘 때 쓴다. | 1.31.0 | Web · Native | Web beta / Native beta | 배포 |
 | [ChatMessage](components/chat-message.md) | 구성/정보 표시 | DM·대화 타임라인의 메시지 한 개에 쓴다. | 1.17.1 | Web · Native | Web stable / Native stable | 배포 |
 | [ChatScreen](components/chat-screen.md) | 화면/소통 | DM·대화방처럼 헤더, 메시지 타임라인, 하단 작성창으로 이루어진 화면 한 장에 쓴다. | 1.17.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Checkbox](components/checkbox.md) | 입력 | 독립된 예/아니오 하나를 고르는 항목에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
@@ -75,7 +75,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [Container](components/container.md) | 레이아웃 | 화면 본문의 최대 폭과 좌우(논리 방향) 여백을 맞출 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [ContentTransition](components/content-transition.md) | 시각 효과 | 같은 자리의 내용이 상태에 따라 바뀔 때(필터 결과 패널, 단계별 본문) 새 내용이 짧게 나타나도록 감싼다. | 1.12.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [ContextMenu](components/context-menu.md) | 탐색 | Web에서 제품이 소유한 영역(카드·목록 행·캔버스)의 우클릭·길게 누르기·Shift+F10에 명령 목록을 띄울 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native unsupported | 배포 |
-| [ConversationRow](components/conversation-row.md) | 화면/소통 | 대화 목록에서 상대, 마지막 메시지, 상대 시각, 안 읽음 점을 표시한다. | 1.24.0 | Web · Native | 개별 API 계약 참조 | 실험 |
+| [ConversationRow](components/conversation-row.md) | 화면/소통 | 대화 목록에서 상대, 마지막 메시지, 상대 시각, 안 읽음 점을 표시한다. | 1.24.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [ConversionFunnel](components/conversion-funnel.md) | 구성/정보 표시 | 순차 단계(열기 → 작성 → 저장 등)의 인원을 가로 막대로 보여 주고, 단계를 골라 전체 대비·직전 대비 전환율과 이탈 수를 문구로 읽을 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [CorrelationMatrix](components/correlation-matrix.md) | 구성/정보 표시 | 여러 지표 사이의 상관계수(-1~1)를 정사각 대칭 표와 양·음 두 방향 heat 색으로 보여 줄 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [CounterBadge](components/counter-badge.md) | 데이터 표시 | 읽지 않은 알림·메시지·장바구니 수처럼 **셀 수 있는 개수**를 아이콘·행 옆에 작게 보일 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
@@ -135,7 +135,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [OnboardingScreen](components/onboarding-screen.md) | 화면/소개 | 첫 실행 소개·초기 설정처럼 **몇 단계를 차례로 넘기는 화면**에 쓴다. | 1.14.0 | Web · Native | Web stable / Native stable | 배포 |
 | [OtpField](components/otp-field.md) | 입력 | 문자·메일로 받은 **숫자 인증번호**를 칸 모양으로 입력받을 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [OverviewScreen](components/overview-screen.md) | 레이아웃 | 같은 데이터와 기능을 유지하면서 테마별 행·카드·격자와 도구 배치를 선택하는 목록 화면에 쓴다. | 1.15.0 | Web · Native | 개별 API 계약 참조 | 배포 |
-| [PageIndicator](components/page-indicator.md) | 탐색 | 제품이 직접 만든 가로 페이저(Native 페이징 `FlatList`, Web scroll-snap 줄) 아래에 지금 몇 번째 페이지인지 점으로 보여 주고, 점을 눌러 그 페이지로 옮길 때 쓴다. | 미게시(1.30.0 이후) | Web · Native | Web beta / Native beta | 실험 |
+| [PageIndicator](components/page-indicator.md) | 탐색 | 제품이 직접 만든 가로 페이저(Native 페이징 `FlatList`, Web scroll-snap 줄) 아래에 지금 몇 번째 페이지인지 점으로 보여 주고, 점을 눌러 그 페이지로 옮길 때 쓴다. | 1.31.0 | Web · Native | Web beta / Native beta | 배포 |
 | [Pagination](components/pagination.md) | 탐색 | 총 개수(또는 총 페이지 수)가 정해진 결과 집합에서 사용자가 **임의의 페이지로 바로 이동**해야 할 때 Web·Native에서 쓴다. | 1.12.1 | Web · Native | Web stable / Native beta | 배포 |
 | [PasswordField](components/password-field.md) | 입력 | 비밀번호를 입력받고, 필요할 때만 값을 눈으로 확인하게 할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [PasswordRulesField](components/password-rules-field.md) | 구성/입력과 작성 | 새 비밀번호 입력 아래에 제품이 정한 규칙의 충족 개수와 규칙별 상태를 함께 보여 줄 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
@@ -205,7 +205,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [TransferList](components/transfer-list.md) | 입력 | 한 항목 집합을 두 목록으로 나누고 사용자가 항목을 오가게 할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [TransferTask](components/transfer-task.md) | 구성/피드백과 복구 | 업로드·다운로드·동기화처럼 실제 전송 계층이 진행량을 알려 주는 작업에 시작·취소·진행률·결과를 한 묶음으로 붙인다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Tree](components/tree.md) | 데이터 표시 | 깊이가 정해지지 않은 계층 데이터를 펼치고 접으며 탐색하고, 그 안에서 하나 또는 여럿을 고를 때 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |
-| [TypingIndicator](components/typing-indicator.md) | 상태와 알림 | 대화 타임라인에서 상대가 지금 입력 중임을 보여 줄 때 쓴다. | 미게시(1.30.0 이후) | Web · Native | Web beta / Native beta | 실험 |
+| [TypingIndicator](components/typing-indicator.md) | 상태와 알림 | 대화 타임라인에서 상대가 지금 입력 중임을 보여 줄 때 쓴다. | 1.31.0 | Web · Native | Web beta / Native beta | 배포 |
 | [UploadItem](components/upload-item.md) | 데이터 표시 | 사용자가 고른 파일 **한 개**의 업로드 상태(대기·전송 중·완료·실패)를 한 행으로 보여 줄 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [VirtualList](components/virtual-list.md) | 데이터 표시 | 행 높이가 **모두 같은** 긴 목록(수백~수천 행)을 정해진 높이 안에서 스크롤할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [VisuallyHidden](components/visually-hidden.md) | 기반 기능 | Web에서 화면에는 보이지 않지만 스크린 리더는 읽어야 하는 **문맥 문구**를 덧붙일 때 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |
@@ -305,7 +305,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [사진 선택과 업로드](screens/flow-media.md) | 콘텐츠 | MediaSelectionScreen을 사용해 사진 선택과 업로드 흐름을 구성한다. | 구성 API 지침 참조 | Web · Native | 구성 API별 | 배포 |
 | [작성과 수정](screens/flow-editor.md) | 콘텐츠 | EditorScreen을 사용해 작성과 수정 흐름을 구성한다. | 구성 API 지침 참조 | Web · Native | 구성 API별 | 배포 |
 | [저장한 항목](screens/common-saved.md) | 콘텐츠 | SavedItemsScreen을 사용해 저장한 항목 흐름을 구성한다. | 구성 API 지침 참조 | Web · Native | 구성 API별 | 배포 |
-| [대화 목록](screens/common-conversation-list.md) | 소통 | DM·채팅방 목록에서 상대·마지막 메시지·시각·읽지 않음을 훑고, 행을 눌러 대화로 들어가며, 길게 눌러 행 단위 동작(읽지 않음 표시·알림 해제·차단·삭제)을 고른다. | 구성 API 지침 참조 | Web · Native | 구성 API별 | 실험 |
+| [대화 목록](screens/common-conversation-list.md) | 소통 | DM·채팅방 목록에서 상대·마지막 메시지·시각·읽지 않음을 훑고, 행을 눌러 대화로 들어가며, 길게 눌러 행 단위 동작(읽지 않음 표시·알림 해제·차단·삭제)을 고른다. | 구성 API 지침 참조 | Web · Native | 구성 API별 | 배포 |
 | [댓글](screens/common-comments.md) | 소통 | CommentThreadScreen을 사용해 댓글 흐름을 구성한다. | 구성 API 지침 참조 | Web · Native | 구성 API별 | 배포 |
 | [신고와 차단](screens/flow-moderation.md) | 소통 | ModerationScreen을 사용해 신고와 차단 흐름을 구성한다. | 구성 API 지침 참조 | Web · Native | 구성 API별 | 배포 |
 | [알림함](screens/common-inbox.md) | 소통 | NotificationInboxScreen을 사용해 알림함 흐름을 구성한다. | 구성 API 지침 참조 | Web · Native | 구성 API별 | 배포 |

@@ -1,12 +1,12 @@
 # ConversationRow
 
 - 단계: 컴포넌트
-- 상태: 실험
+- 상태: 배포
 - 지원: Web · Native
 - 적용: 1.24.0
 - 검토일: 2026-10-17
 - 근거: `src/conversation-row.ts`의 `conversationRowRecipe`
-- 스토리북: `실험/화면/소통/대화 목록`
+- 스토리북: `배포/화면/소통/대화 목록`
 
 ## 언제 쓰나
 
@@ -71,7 +71,7 @@ import { ConversationRow } from "@hjmds/react-native/conversation-row";
 
 메시지가 길어도 시각과 읽지 않음 점은 유지하고 미리보기만 말줄임한다. 앱은 별도 행 padding을 넣지 않는다.
 
-길게 눌러 여는 행 메뉴(읽지 않음 표시·알림 해제·차단·삭제 등)는 행 호스트를 [ContextMenu](context-menu.md)로 감싼다. 위험 항목은 `tone: "danger"`이며 목록 끝에 둔다. 예제: `실험/화면/소통/대화 목록`.
+길게 눌러 여는 행 메뉴(읽지 않음 표시·알림 해제·차단·삭제 등)는 행 호스트를 [ContextMenu](context-menu.md)로 감싼다. 위험 항목은 `tone: "danger"`이며 목록 끝에 둔다. 예제: `배포/화면/소통/대화 목록`.
 
 ## 꼭 지킬 것
 

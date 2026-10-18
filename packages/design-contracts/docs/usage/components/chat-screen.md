@@ -29,7 +29,7 @@ DM·대화방처럼 헤더, 메시지 타임라인, 하단 작성창으로 이�
 | --- | --- | --- | --- |
 | `ChatScreen` | 화면 조합 | `/screens` | `/screens` |
 | `ChatMessage`, `MessageComposer`, `ScreenLayout` | 함께 쓰는 조각 | `/screens` | `/screens` |
-| [`TypingIndicator`](typing-indicator.md), [`ChatDateSeparator`](chat-date-separator.md) | 타임라인 조각(입력 중 표시, 날짜 구분). 미게시(1.30.0 이후) | `/screens` | `/screens` |
+| [`TypingIndicator`](typing-indicator.md), [`ChatDateSeparator`](chat-date-separator.md) | 타임라인 조각(입력 중 표시, 날짜 구분). 1.31.0 | `/screens` | `/screens` |
 
 루트 barrel에는 없다. `/screens`는 optional native peer를 요구하지 않는다.
 
