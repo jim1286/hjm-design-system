@@ -128,3 +128,13 @@ it("blocks explicit input refs and nested footer focus in a bottom sheet, while 
   input.current!.focus();
   expect(active()).toBe("하단 입력");
 });
+
+it.each(["click", "contextmenu"])("cancels deferred page focus when a %s arrives before the entry microtask", async event => {
+  act(() => root.render(<HjmProvider><ScreenLayout title="대화"><TextField aria-label="메시지" />
+    <button type="button" aria-label="반응">반응</button></ScreenLayout></HjmProvider>));
+  const control = host.querySelector("button[aria-label='반응']")! as HTMLButtonElement;
+  control.focus();
+  control.dispatchEvent(new MouseEvent(event, { bubbles: true }));
+  await settle();
+  expect(active()).toBe("반응");
+});
