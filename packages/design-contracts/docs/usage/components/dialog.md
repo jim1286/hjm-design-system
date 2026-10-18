@@ -196,9 +196,9 @@ Native 입력 본문의 키보드 회피는 Dialog가 이미 맡는다(위 키�
 ```
 
 <!-- usage-example: Web ../../../../../showcase/web/src/components/dialog-overlay-examples.tsx -->
-- Web 실행 예제 `showcase/web/src/components/dialog-overlay-examples.tsx`의 `DialogOverlayLayerPreview`(`배포/컴포넌트/오버레이/대화상자` 카드 밖 레이어).
+- [Web 실행 예제](https://github.com/jim1286/hjm-design-system/blob/1006160fca6217b4993fd5d7458c0b24124042bf/showcase/web/src/components/dialog-overlay-examples.tsx): `DialogOverlayLayerPreview`·`ImmersiveOverlayPreview`(`배포/컴포넌트/오버레이/대화상자`의 카드 밖 레이어·전체 화면 표현).
 <!-- usage-example: Native ../../../../../showcase/native/src/dialog-overlay-preview.tsx -->
-- Native 실행 예제 `showcase/native/src/dialog-overlay-preview.tsx`의 같은 이름 preview.
+- [Native 실행 예제](https://github.com/jim1286/hjm-design-system/blob/1006160fca6217b4993fd5d7458c0b24124042bf/showcase/native/src/dialog-overlay-preview.tsx): 같은 이름의 Native preview.
 
 ### 전체 화면 표현 (`ImmersiveOverlay`)
 
