@@ -17,6 +17,8 @@ export function DialogOverlayLayerPreview() {
     <HjmText>폴더 안 항목을 끌면 카드 밖까지 따라오는 미리보기가 그려져요.</HjmText>
     <HjmButton ref={trigger} onClick={() => setOpen(true)}>폴더 열기</HjmButton>
     <HjmDialog open={open} onOpenChange={next => { setDrag(null); setOpen(next); }} returnFocusRef={trigger} title="즐겨 쓰는 앱" closeLabel="폴더 닫기"
+      // The card keeps its scroll offset while a tile is dragged (scrollEnabled, 1.31).
+      scrollEnabled={drag === null}
       // Viewport coordinates from the pointer event; the layer is decorative, so the tiles stay the drag targets.
       overlayLayer={drag ? <div style={{ position: "absolute", left: drag.x - 28, top: drag.y - 28, inlineSize: 56, blockSize: 56, display: "grid", placeItems: "center",
         borderRadius: "var(--hjm-radius-md)", background: "var(--hjm-color-surface-accent)", boxShadow: "var(--hjm-dialog-shadow)" }}>{drag.label}</div> : null}>

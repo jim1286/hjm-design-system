@@ -97,8 +97,9 @@ function ModalInteractionBoundary({ visible, onTouchStart, children }: { visible
 // BT-QA-027: maximum text made a centered BurnTok confirmation taller than the
 // window, putting its title/cancel off-screen. Keep full copy in a bounded scroll
 // and actions outside it; capping fonts or clipping copy would hide the decision.
-function DialogScrollBody({ children, gap }: { children: ReactNode; gap: number }) {
+function DialogScrollBody({ children, gap, scrollEnabled = true }: { children: ReactNode; gap: number; scrollEnabled?: boolean }) {
   return <ScrollView
+    scrollEnabled={scrollEnabled}
     style={{ flexGrow: 0, flexShrink: 1 }}
     contentContainerStyle={{ gap }}
     keyboardShouldPersistTaps="handled"
@@ -352,6 +353,12 @@ export type DialogProps = NativeModalProps &
      * `children`.
      */
     overlayLayer?: ReactNode;
+    /**
+     * Whether the user can scroll the dialog body (default true). `false` locks the bounded ScrollView while a
+     * gesture inside the body owns touch movement, e.g. dragging an item in a folder popup (BurnTok, 2026-10-18);
+     * turn it back on when the gesture ends.
+     */
+    scrollEnabled?: boolean;
   }>;
 
 /** Native modal boundary with one reasoned close intent for each user attempt. */
@@ -376,6 +383,7 @@ export function Dialog({
   onShow,
   initialFocus = initialFocusDefaults.overlay,
   overlayLayer,
+  scrollEnabled = true,
   ...modalProps
 }: DialogProps) {
   const [actionPending, setActionPending] = useState<OverlayAction | null>(null);
@@ -690,7 +698,7 @@ export function Dialog({
                 ) : null}
               </View>
               {description || children ? (
-                <DialogScrollBody gap={dialogRecipe.content.gap}>
+                <DialogScrollBody gap={dialogRecipe.content.gap} scrollEnabled={scrollEnabled}>
                   {description ? <Text tone="muted">{description}</Text> : null}
                   <KeyboardAvoidanceContext.Provider value>{children}</KeyboardAvoidanceContext.Provider>
                 </DialogScrollBody>

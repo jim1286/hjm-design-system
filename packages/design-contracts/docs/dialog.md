@@ -74,6 +74,9 @@ drew a card or a framed sheet. Both reused nothing of the modal stack, focus ret
 - `overlayLayer` is a viewport/window-sized sibling of the card inside the same modal. It is decorative by
   contract: no pointer input, hidden from assistive technology (Web `inert` + `aria-hidden`, Native
   `pointerEvents="none"` + `no-hide-descendants`). Interactive content stays in `children`, inside the focus trap.
+- `scrollEnabled` (default `true`) temporarily locks user scrolling of the dialog while a gesture in the body
+  owns pointer movement (the same folder drag): Web sets the card to `overflow: hidden` and keeps its offset, Native
+  disables the bounded body ScrollView. It is a temporary lock, not a way to clip content.
 - `ImmersiveOverlay` is a Dialog companion with no card, scrim, header or gutter: a product stage edge to edge
   and a control bar (status, tools, a localized exit action). It keeps the shared modal stack, focus trap,
   background isolation, focus return and the entry-focus wait of screens below. Web reports `escape` or

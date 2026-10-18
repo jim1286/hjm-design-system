@@ -19,6 +19,8 @@ export function DialogOverlayLayerPreview() {
     <Text>폴더 안 항목을 끌면 카드 밖까지 따라오는 미리보기가 그려져요.</Text>
     <Button onPress={() => setOpen(true)}>폴더 열기</Button>
     <Dialog open={open} onOpenChange={next => { setDrag(null); setOpen(next); }} title="즐겨 쓰는 앱" closeLabel="폴더 닫기"
+      // The body stops scrolling while a tile is dragged, so the responder keeps the touch (scrollEnabled, 1.31).
+      scrollEnabled={drag === null}
       // Window coordinates (pageX/pageY); the layer never takes touches, so the tiles keep the responder.
       overlayLayer={drag ? <View style={{ position: "absolute", left: drag.x - ghostSize / 2, top: drag.y - ghostSize / 2, width: ghostSize, height: ghostSize,
         alignItems: "center", justifyContent: "center", borderRadius: tokens.radius.md, backgroundColor: colors.surfaceAccent }}><Text>{drag.label}</Text></View> : null}>

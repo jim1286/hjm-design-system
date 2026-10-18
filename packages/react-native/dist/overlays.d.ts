@@ -81,9 +81,15 @@ export type DialogProps = NativeModalProps & ReasonedOpenProps<DialogOpenChangeR
      * `children`.
      */
     overlayLayer?: ReactNode;
+    /**
+     * Whether the user can scroll the dialog body (default true). `false` locks the bounded ScrollView while a
+     * gesture inside the body owns touch movement, e.g. dragging an item in a folder popup (BurnTok, 2026-10-18);
+     * turn it back on when the gesture ends.
+     */
+    scrollEnabled?: boolean;
 }>;
 /** Native modal boundary with one reasoned close intent for each user attempt. */
-export declare function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, primaryAction, secondaryAction, dismissible, busy: externalBusy, onActionError, size, motionOrigin, closeLabel, returnFocusRef, contentStyle, onShow, initialFocus, overlayLayer, ...modalProps }: DialogProps): import("react").JSX.Element;
+export declare function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, primaryAction, secondaryAction, dismissible, busy: externalBusy, onActionError, size, motionOrigin, closeLabel, returnFocusRef, contentStyle, onShow, initialFocus, overlayLayer, scrollEnabled, ...modalProps }: DialogProps): import("react").JSX.Element;
 export type AlertDialogProps = NativeModalProps & ReasonedOpenProps<AlertDialogOpenChangeReason> & Readonly<{
     request: AlertDialogRequest;
     size?: DialogSize;

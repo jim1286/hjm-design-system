@@ -8,7 +8,7 @@ import { HjmNativeProvider } from "../src/provider.js";
 import { TextField } from "../src/inputs.js";
 import { ScreenLayout } from "../src/screens.js";
 import { Dialog, ImmersiveOverlay } from "../src/overlays.js";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 const focused: string[] = [];
@@ -57,4 +57,15 @@ it("draws Dialog's overlay layer outside the card, untouchable and hidden from a
   expect(layer.props.style).toMatchObject({ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 });
   const card = tree!.root.find(node => node.props.role === "dialog");
   expect(card.findAll(node => node.props.testID === "ghost")).toHaveLength(0);
+});
+
+it("locks the Dialog body scroll while scrollEnabled is false", () => {
+  const body = (scrollEnabled?: boolean) => <Dialog open onOpenChange={() => {}} title="Folder" closeLabel="Close" {...(scrollEnabled === undefined ? {} : { scrollEnabled })}><View testID="grid" /></Dialog>;
+  const scrollOf = () => tree!.root.findAllByType(ScrollView).find(node => node.findAll(child => child.props.testID === "grid").length > 0)!;
+  render(body());
+  expect(scrollOf().props.scrollEnabled).toBe(true);
+  act(() => tree!.update(wrap(body(false))));
+  expect(scrollOf().props.scrollEnabled).toBe(false);
+  act(() => tree!.update(wrap(body(true))));
+  expect(scrollOf().props.scrollEnabled).toBe(true);
 });

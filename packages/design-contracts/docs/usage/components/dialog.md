@@ -129,6 +129,7 @@ await handle.closed; // portal 제거·초점 복구 뒤. 다음 오버레이는
 | `children`(Native) | `ReactNode` | — | 고정된 제목 줄 아래 스크롤 본문(`ScrollView`) 안에 들어간다. `FlatList`·`SectionList`를 넣지 않는다 |
 | `contentStyle`(Native) | 배치 key만(`HjmCompositionStyleProp`) | — | 대화상자 상자의 배치. 높이는 `size`로 |
 | `overlayLayer` | `ReactNode` | 없음 | 1.31.0. 카드 **밖** 화면 전체 층에 그리는 장식(끌기 미리보기·특정 위치 강조). 카드보다 위에 그려지고 Web viewport/Native window 좌표(`clientX`·`pageX`·`measureInWindow`)를 그대로 쓴다. 누름을 받지 않고 보조기술에서 숨긴다(Web `inert`·`aria-hidden`, Native `pointerEvents="none"`·`no-hide-descendants`). 조작할 내용은 `children`에 둔다 |
+| `scrollEnabled` | `boolean` | `true` | 1.31.0. `false`면 사용자가 대화상자를 스크롤하지 못한다(현재 위치 유지). Web은 카드 `overflow: hidden`, Native는 본문 ScrollView `scrollEnabled`. 본문 안 끌기 제스처가 진행되는 동안만 끄고 끝나면 되돌린다. 내용을 자르는 용도로 쓰지 않는다 |
 | `useDialog()`(Web) | `(request) => { closed: Promise<void>, close(): void }` | — | request는 `open`·`defaultOpen`·`onOpenChange`·`trigger`를 뺀 DialogProps. `OverlayStackProvider` 안에서만 |
 
 - Dialog는 `layoutStyle`을 받지 않는다(Web 제외 15개 중 하나 — 포털로 가운데 그려져 배치할 흐름 안 루트가 없다).
@@ -186,10 +187,12 @@ Native, 큰 글자 또는 폭 < 480:   [      취소      ]
 변형 때문에 좌표가 어긋나고 카드에 갇힌다. `overlayLayer`는 카드와 같은 모달 안이지만 카드의 형제 층이라 이 문제가 없다.
 끌기 제스처와 드롭 대상 측정은 카드 안 `children`이 소유하고, 층에는 현재 좌표의 그림만 넘긴다.
 Native 입력 본문의 키보드 회피는 Dialog가 이미 맡는다(위 키보드 설명). 제품이 `KeyboardAvoidingView`를 다시 감싸지 않는다.
+끌기 중에는 `scrollEnabled={!dragging}`으로 본문 스크롤을 잠근다. 잠그지 않으면 Native ScrollView가 세로 움직임을 가져가 끌기가 끊기고, Web은 카드가 함께 스크롤된다.
 
 ```tsx
 // Native
 <Dialog open={open} onOpenChange={setOpen} title={folder.name} closeLabel={t("common.close")}
+  scrollEnabled={drag === null}
   overlayLayer={drag ? <DragGhost x={drag.pageX} y={drag.pageY} item={drag.item} /> : null}>
   {grid /* 끌기 responder와 measureInWindow 등록은 여기 */}
 </Dialog>
@@ -319,4 +322,5 @@ function RecordDetail() {
 ## 근거
 
 - `overlayLayer`: 2026-10-18 번뚝 폴더 팝업. 끌기 유령 아이콘을 창 좌표로 카드 밖에 그려야 해서 Dialog 대신 raw RN `Modal`과 `KeyboardAvoidingView`를 썼다. 키보드 회피는 2026-10-13부터 Dialog가 이미 갖고 있었고, 카드 밖 층만 없었다.
+- `scrollEnabled`: 2026-10-18 번뚝 폴더 팝업. 아이콘을 끄는 동안 본문 스크롤을 꺼야 해서(`scrollEnabled={!touchingIcon && !draggingId}`) raw `Modal`의 ScrollView를 유지했다.
 - `ImmersiveOverlay`: 2026-10-18 utilverse 전광판. Dialog·Sheet는 항상 카드·scrim(`full` Sheet도 위 safe area·모서리·머리)을 그려 상태 표시줄을 숨긴 가로 전광판을 표현하지 못해 raw RN `Modal`을 썼다. 표현만 다르고 모달 스택·포커스·닫기 계약은 Dialog와 같아 Dialog의 확장으로 둔다.

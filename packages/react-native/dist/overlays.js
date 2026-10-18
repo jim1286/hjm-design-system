@@ -37,8 +37,8 @@ function ModalInteractionBoundary({ visible, onTouchStart, children }) {
 // BT-QA-027: maximum text made a centered BurnTok confirmation taller than the
 // window, putting its title/cancel off-screen. Keep full copy in a bounded scroll
 // and actions outside it; capping fonts or clipping copy would hide the decision.
-function DialogScrollBody({ children, gap }) {
-    return _jsx(ScrollView, { style: { flexGrow: 0, flexShrink: 1 }, contentContainerStyle: { gap }, keyboardShouldPersistTaps: "handled", 
+function DialogScrollBody({ children, gap, scrollEnabled = true }) {
+    return _jsx(ScrollView, { scrollEnabled: scrollEnabled, style: { flexGrow: 0, flexShrink: 1 }, contentContainerStyle: { gap }, keyboardShouldPersistTaps: "handled", 
         // Positioner owns safe-area clearance.
         automaticallyAdjustContentInsets: false, automaticallyAdjustKeyboardInsets: false, children: children });
 }
@@ -154,7 +154,7 @@ function resolveOverlayAccessibleTitle(title, accessibilityTitle) {
     throw new TypeError("An element `title` requires `accessibilityTitle` for the modal accessible name");
 }
 /** Native modal boundary with one reasoned close intent for each user attempt. */
-export function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, primaryAction, secondaryAction, dismissible = true, busy: externalBusy = false, onActionError, size = dialogRecipe.defaults.size, motionOrigin, closeLabel, returnFocusRef, contentStyle, onShow, initialFocus = initialFocusDefaults.overlay, overlayLayer, ...modalProps }) {
+export function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, primaryAction, secondaryAction, dismissible = true, busy: externalBusy = false, onActionError, size = dialogRecipe.defaults.size, motionOrigin, closeLabel, returnFocusRef, contentStyle, onShow, initialFocus = initialFocusDefaults.overlay, overlayLayer, scrollEnabled = true, ...modalProps }) {
     const [actionPending, setActionPending] = useState(null);
     const actionRun = useRef(null);
     const busy = externalBusy || actionPending !== null;
@@ -436,7 +436,7 @@ export function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTi
                                                             direction: environment.direction,
                                                             flexDirection: "row",
                                                             gap: spacing.sm,
-                                                        }, children: [_jsx(View, { style: { flex: 1 }, children: _jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: title }) }), dismissible ? (_jsx(IconButton, { disabled: busy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(CloseGlyph, {}) })) : null] }), description || children ? (_jsxs(DialogScrollBody, { gap: dialogRecipe.content.gap, children: [description ? _jsx(Text, { tone: "muted", children: description }) : null, _jsx(KeyboardAvoidanceContext.Provider, { value: true, children: children })] })) : null] }), _jsx(OverlayActions, { busy: busy, onAction: runAction, pendingAction: actionPending, stacked: stackActions, ...(primaryAction === undefined ? {} : { primaryAction }), ...(secondaryAction === undefined ? {} : { secondaryAction }) })] })] }), overlayLayer ? _jsx(Animated.View, { pointerEvents: "none", accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { bottom: 0, left: 0, opacity: motionProgress, position: "absolute", right: 0, top: 0 }, children: overlayLayer }) : null] }) }) }) }) }));
+                                                        }, children: [_jsx(View, { style: { flex: 1 }, children: _jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: title }) }), dismissible ? (_jsx(IconButton, { disabled: busy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(CloseGlyph, {}) })) : null] }), description || children ? (_jsxs(DialogScrollBody, { gap: dialogRecipe.content.gap, scrollEnabled: scrollEnabled, children: [description ? _jsx(Text, { tone: "muted", children: description }) : null, _jsx(KeyboardAvoidanceContext.Provider, { value: true, children: children })] })) : null] }), _jsx(OverlayActions, { busy: busy, onAction: runAction, pendingAction: actionPending, stacked: stackActions, ...(primaryAction === undefined ? {} : { primaryAction }), ...(secondaryAction === undefined ? {} : { secondaryAction }) })] })] }), overlayLayer ? _jsx(Animated.View, { pointerEvents: "none", accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { bottom: 0, left: 0, opacity: motionProgress, position: "absolute", right: 0, top: 0 }, children: overlayLayer }) : null] }) }) }) }) }));
 }
 /** Contract session owns duplicate confirms, busy dismissal, error and settlement. */
 export function AlertDialog({ open, defaultOpen, onOpenChange, request, size = alertDialogRecipe.defaults.size, returnFocusRef, onResult, contentStyle, onShow, ...modalProps }) {

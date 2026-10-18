@@ -92,6 +92,12 @@ export type DialogProps = ModalOpenState<Readonly<{ reason: DialogOpenChangeReas
      * input, and are hidden from assistive technology; interactive content belongs in `children`.
      */
     overlayLayer?: ReactNode;
+    /**
+     * Whether the user can scroll the dialog (default true). `false` locks the current scroll position while a
+     * gesture inside the body owns pointer movement, e.g. dragging an item in a folder popup (BurnTok, 2026-10-18);
+     * turn it back on when the gesture ends. Content stays reachable: it is a temporary lock, not a clip.
+     */
+    scrollEnabled?: boolean;
     /** Optional measured trigger bounds in viewport coordinates; keeps canonical modal behavior. */
     motionOrigin?: TransitionRect;
     size?: DialogSize;
@@ -128,6 +134,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
     children,
     footer,
     overlayLayer,
+    scrollEnabled = true,
     size = dialogRecipe.defaults.size,
     motionOrigin,
     dismissible = dialogRecipe.defaults.dismissible,
@@ -257,6 +264,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
               data-hjm-modal-content=""
               data-size={size}
               data-state={busy ? "busy" : "idle"}
+              data-scroll={scrollEnabled ? undefined : "locked"}
             >
               <header className="hjm-dialog__header">
                 <h2 id={titleId} className="hjm-dialog__title">{title}</h2>

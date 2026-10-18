@@ -23,6 +23,12 @@ export type DialogProps = ModalOpenState<Readonly<{
      * input, and are hidden from assistive technology; interactive content belongs in `children`.
      */
     overlayLayer?: ReactNode;
+    /**
+     * Whether the user can scroll the dialog (default true). `false` locks the current scroll position while a
+     * gesture inside the body owns pointer movement, e.g. dragging an item in a folder popup (BurnTok, 2026-10-18);
+     * turn it back on when the gesture ends. Content stays reachable: it is a temporary lock, not a clip.
+     */
+    scrollEnabled?: boolean;
     /** Optional measured trigger bounds in viewport coordinates; keeps canonical modal behavior. */
     motionOrigin?: TransitionRect;
     size?: DialogSize;

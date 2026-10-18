@@ -2270,6 +2270,8 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-dialog { inline-size: min(36rem, 100%); }
 .hjm-dialog[data-size="small"] { inline-size: min(28rem, 100%); }
 .hjm-dialog[data-size="large"] { inline-size: min(48rem, 100%); }
+/* Dialog scrollEnabled={false}: the card keeps its scroll offset while a gesture in the body owns the pointer. */
+.hjm-dialog[data-scroll="locked"] { overflow: hidden; overscroll-behavior: contain; touch-action: none; }
 .hjm-alert-dialog[data-size="small"] { inline-size: min(28rem, 100%); }
 .hjm-alert-dialog[data-size="large"] { inline-size: min(48rem, 100%); }
 .hjm-dialog__header,

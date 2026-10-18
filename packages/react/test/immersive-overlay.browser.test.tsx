@@ -61,3 +61,19 @@ it("draws Dialog's overlay layer over the viewport, outside the card, inert and 
   expect(rect.width).toBe(window.innerWidth); expect(rect.height).toBe(window.innerHeight);
   expect(ghost.getBoundingClientRect().left).toBe(10);
 });
+
+it("locks the dialog scroll while scrollEnabled is false and keeps the offset", async () => {
+  const tall = <div style={{ blockSize: 3000 }}>long body</div>;
+  await render(<Dialog open onOpenChange={() => {}} title="Folder" closeLabel="Close">{tall}</Dialog>);
+  await settle();
+  const card = document.querySelector<HTMLElement>(".hjm-dialog")!;
+  expect(getComputedStyle(card).overflowY).toBe("auto");
+  card.scrollTop = 200;
+  await render(<Dialog open onOpenChange={() => {}} title="Folder" closeLabel="Close" scrollEnabled={false}>{tall}</Dialog>);
+  expect(card.dataset.scroll).toBe("locked");
+  expect(getComputedStyle(card).overflowY).toBe("hidden");
+  expect(card.scrollTop).toBe(200);
+  await render(<Dialog open onOpenChange={() => {}} title="Folder" closeLabel="Close" scrollEnabled>{tall}</Dialog>);
+  expect(card.dataset.scroll).toBeUndefined();
+  expect(getComputedStyle(card).overflowY).toBe("auto");
+});
