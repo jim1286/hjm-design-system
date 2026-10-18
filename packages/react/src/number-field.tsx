@@ -23,6 +23,7 @@ import {
 
 import { classNames, composeRefs, useControllableState } from "./internal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { FieldError } from "./internal/field-error.js";
 
 type NativeNumberInputProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,
@@ -290,9 +291,7 @@ export const NumberField = forwardRef<HTMLInputElement, NumberFieldProps>(
         {description && !error ? (
           <div id={descriptionId} className="hjm-field__description">{description}</div>
         ) : null}
-        {error ? (
-          <div id={errorId} className="hjm-field__error">{error}</div>
-        ) : null}
+        <FieldError id={errorId} error={error} />
       </div>
     );
   },

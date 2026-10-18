@@ -30,6 +30,7 @@ import {
   resolveNativeTextScaleProps,
 } from "./internal/styles.js";
 import { useHjmNativeTheme } from "./provider.js";
+import { useFieldErrorAnnouncement } from "./internal/field-frame.js";
 
 type NativeNumberInputProps = Omit<
   TextInputProps,
@@ -166,6 +167,7 @@ export const NumberField = forwardRef<TextInput, NumberFieldProps>(
     const unavailable = disabled || readOnly;
     const visibleLabel = `${label}${required ? " *" : ""}`;
     const hint = accessibilityHint ?? error ?? description;
+    useFieldErrorAnnouncement(error);
     const parsedDraft = parseNumberFieldInput(draft);
     const announcedValue =
       typeof parsedDraft === "number" && parsedDraft >= min && parsedDraft <= max

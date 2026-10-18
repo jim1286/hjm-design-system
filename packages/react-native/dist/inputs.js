@@ -4,7 +4,7 @@ import { useInitialFocusTarget } from "./internal/initial-focus.js";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { SelectionMark } from "./internal/selection-mark.js";
-import { FieldMessage, NativeFieldFrame } from "./internal/field-frame.js";
+import { FieldMessage, NativeFieldFrame, useFieldErrorAnnouncement } from "./internal/field-frame.js";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { control, glyph, spacing, typography, motion as motionTiming, } from "@hjmds/design-contracts/foundations";
 import { fieldRecipe, } from "@hjmds/design-contracts/recipes/base";
@@ -513,6 +513,7 @@ function ChoiceGroupFrame({ label, accessibilityLabel, required, requiredLabel, 
         readOnly ? readOnlyLabel : undefined,
     ].filter(Boolean).join(", ");
     const gap = selectionGroupRecipe.orientations[orientation].gap[presentation];
+    useFieldErrorAnnouncement(error);
     return (_jsxs(View, { accessibilityHint: [error ?? description, readOnly ? readOnlyLabel : undefined]
             .filter(Boolean).join(". ") || undefined, accessibilityLabel: announcedName, accessibilityLabelledBy: label ? labelId : undefined, accessibilityRole: role, accessibilityState: { disabled: disabled || readOnly }, accessibilityValue: error ? { text: error } : undefined, style: [{ direction: theme.environment.direction, gap: selectionGroupRecipe.supportGap }, layoutStyle], children: [label ? (_jsxs(Text, { nativeID: labelId, tone: "primary", variant: selectionGroupRecipe.label.textVariant, children: [label, required ? requiredLabel ? ` (${requiredLabel})` : " *" : ""] })) : null, description && !error ? (_jsx(Text, { tone: "muted", variant: selectionGroupRecipe.description.textVariant, children: description })) : null, _jsx(View, { style: {
                     direction: theme.environment.direction,

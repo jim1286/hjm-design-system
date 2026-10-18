@@ -7,6 +7,7 @@ import { Pressable, Text as NativeText, TextInput, View, } from "react-native";
 import { useControllableState } from "./internal/state.js";
 import { logicalTextAlign, minimumTargetStyle, resolveNativeFontStyle, resolveNativeTextScaleProps, } from "./internal/styles.js";
 import { useHjmNativeTheme } from "./provider.js";
+import { useFieldErrorAnnouncement } from "./internal/field-frame.js";
 function valueToInput(value) {
     return value === null ? "" : String(value);
 }
@@ -64,6 +65,7 @@ export const NumberField = forwardRef(function NumberField({ label, min, max, st
     const unavailable = disabled || readOnly;
     const visibleLabel = `${label}${required ? " *" : ""}`;
     const hint = accessibilityHint ?? error ?? description;
+    useFieldErrorAnnouncement(error);
     const parsedDraft = parseNumberFieldInput(draft);
     const announcedValue = typeof parsedDraft === "number" && parsedDraft >= min && parsedDraft <= max
         ? parsedDraft

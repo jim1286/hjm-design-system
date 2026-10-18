@@ -4,6 +4,7 @@ import { chipRecipe, iconRecipe, segmentedControlRecipe, selectionControlRecipe,
 import { resolveControlAccessibleName, reconcileCheckboxSelection, reconcileRadioSelection, resolveInitialRadioValue, toggleCheckboxSelection, validateCheckboxSelection, validateRadioSelection, } from "@hjmds/design-contracts/behaviors";
 import { forwardRef, useEffect, useLayoutEffect, useId, useRef, } from "react";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
+import { FieldError } from "./internal/field-error.js";
 /** Action/filter chip with explicit selection semantics and no hidden state. */
 export const Chip = forwardRef(function Chip({ label, size = chipRecipe.defaults.size, leading, trailing, renderSelectionIndicator, selectionMode = "action", selected, onSelectedChange, onPress, disabled, className, layoutStyle, style, ...props }, ref) {
     const selectable = selectionMode !== "action";
@@ -99,7 +100,7 @@ function CheckboxGroupInner({ items, label, accessibilityLabel, description, err
                                     color: "currentColor",
                                     size: iconRecipe.sizes[selectionControlRecipe.leading.size],
                                 }) })) : null, _jsxs("span", { className: "hjm-choice__copy", children: [_jsx("span", { children: item.label }), item.description ? (_jsx("span", { className: "hjm-choice__description", children: item.description })) : null] })] }, item.id));
-                }) }), error ? _jsx("div", { id: errorId, className: "hjm-field__error", children: error }) : null] }));
+                }) }), _jsx(FieldError, { id: errorId, error: error })] }));
 }
 export const CheckboxGroup = forwardRef(CheckboxGroupInner);
 function validateItems(component, items) {
@@ -174,7 +175,7 @@ export const RadioGroup = forwardRef(function RadioGroup({ label, accessibilityL
                                     color: "currentColor",
                                     size: iconRecipe.sizes[selectionControlRecipe.leading.size],
                                 }) })) : null, _jsxs("span", { className: "hjm-choice__copy", children: [_jsx("span", { children: item.label }), item.description ? (_jsx("span", { className: "hjm-choice__description", children: item.description })) : null] })] }, item.value));
-                }) }), error ? _jsx("div", { id: errorId, className: "hjm-field__error", children: error }) : null] }));
+                }) }), _jsx(FieldError, { id: errorId, error: error })] }));
 });
 export const Switch = forwardRef(function Switch({ label, labelVisibility = "visible", description, presentation = switchRecipe.presentationDefaults.web, checked: checkedProp, defaultChecked = false, size = switchRecipe.defaults.size, onCheckedChange, disabled, type = "button", className, onClick, layoutStyle, style, ...props }, ref) {
     const labelId = useId();

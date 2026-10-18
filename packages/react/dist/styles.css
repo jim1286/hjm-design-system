@@ -372,7 +372,7 @@
    the support text fades, so a custom Field control dims without needing a class. A component
    recipe value (Select, NumberField, OtpField, SearchField, PasswordField) arrives as an
    inline --hjm-field-disabled-opacity on the root. */
-.hjm-field[data-state="disabled"] > :not(.hjm-field__description):not(.hjm-field__error) { opacity: var(--hjm-field-disabled-opacity); }
+.hjm-field[data-state="disabled"] > :not(.hjm-field__description):not(.hjm-field__error):not([data-hjm-field-error]) { opacity: var(--hjm-field-disabled-opacity); }
 .hjm-field__input {
   inline-size: 100%;
   min-inline-size: 0;

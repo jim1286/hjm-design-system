@@ -1,11 +1,27 @@
 import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
-import type { ReactNode } from "react";
-import { View, type StyleProp, type ViewStyle } from "react-native";
+import { useEffect, type ReactNode } from "react";
+import { AccessibilityInfo, Platform, View, type StyleProp, type ViewStyle } from "react-native";
 import { Text } from "../primitives.js";
 import { useHjmNativeTheme } from "../provider.js";
 
+/**
+ * The shared Field error announcement (Web: internal/field-error.tsx). Android announces the assertive
+ * live region; iOS ignores live regions, so each new or changed error is announced once. Before 1.31
+ * only MessageComposer and FieldGroup announced on iOS (2026-10-18), so other field errors were silent.
+ */
+export function useFieldErrorAnnouncement(error: string | undefined) {
+  useEffect(() => { if (error && Platform.OS === "ios") AccessibilityInfo.announceForAccessibility(error); }, [error]);
+}
+
+/** Error line for controls that draw their own caption (Select, Combobox) with the same announcement. */
+export function FieldErrorText({ error }: Readonly<{ error: string }>) {
+  useFieldErrorAnnouncement(error);
+  return <Text accessibilityLiveRegion="assertive" tone="danger" variant="caption">{error}</Text>;
+}
+
 export function FieldMessage({ error, supportText }: Readonly<{ error?: string; supportText?: string }>) {
   const { colors } = useHjmNativeTheme();
+  useFieldErrorAnnouncement(error);
   if (!error && !supportText) return null;
   return <Text accessibilityLiveRegion={error ? "assertive" : "none"}
     style={{ color: colors[error ? fieldRecipe.support.errorColor : fieldRecipe.support.hintColor] }}

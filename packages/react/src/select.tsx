@@ -46,6 +46,7 @@ import {
   useAnchoredPopup,
   type AnchoredPopupAlign,
 } from "./portal.js";
+import { FieldError } from "./internal/field-error.js";
 
 export type SelectItem<Key extends string = string> = SelectItemDescriptor<Key>;
 export type SelectSection<
@@ -731,7 +732,7 @@ function SelectInner<Key extends string, SectionKey extends string>(
       {description && !error ? (
         <div id={descriptionId} className="hjm-field__description">{description}</div>
       ) : null}
-      {error ? <div id={errorId} className="hjm-field__error">{error}</div> : null}
+      <FieldError id={errorId} error={error} />
       {name ? <input type="hidden" name={name} value={reconciledSelectedKey ?? ""} /> : null}
     </div>
   );

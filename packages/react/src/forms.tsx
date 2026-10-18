@@ -42,6 +42,7 @@ import { composeRefs, classNames, useControllableState } from "./internal.js";
 import { useInitialFocusTarget } from "./internal/initial-focus.js";
 import { Icon } from "./supplemental-display.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { FieldError } from "./internal/field-error.js";
 
 type FieldCopyProps = Readonly<{
   label?: ReactNode;
@@ -140,11 +141,7 @@ function FieldFrame({
           {description}
         </div>
       ) : null}
-      {error ? (
-        <div id={errorId} className="hjm-field__error">
-          {error}
-        </div>
-      ) : null}
+      <FieldError id={errorId} error={error} />
     </div>
   );
 }

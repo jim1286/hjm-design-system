@@ -76,7 +76,7 @@ import { Image } from "react-native";
 | `value` | `string` | 필수 | 완전 제어형. HJM은 초안을 지우지 않는다 |
 | `label` | `string` | 필수 | 접근성 이름; placeholder 생략 시 같은 문구 |
 | `placeholder` | `string` | `label` | 짧은 시각 안내와 전체 접근성 이름을 분리 |
-| `description` · `error` · `invalid` | `string` · `string` · `boolean` | 없음 | TextArea의 안내·오류 연결. Web describedby/invalid, Native hint/오류 표면. `error`는 나타나거나 바뀔 때 즉시(assertive) 알린다(1.30.0 이후 수정): Web은 항상 mount된 `role="alert"` 영역, Native는 입력 오류 문구의 assertive live region(Android)과 iOS `announceForAccessibility`. FieldGroup 오류와 같은 방식이다 |
+| `description` · `error` · `invalid` | `string` · `string` · `boolean` | 없음 | TextArea의 안내·오류 연결. Web describedby/invalid, Native hint/오류 표면. `error`는 나타나거나 바뀔 때 즉시(assertive) 알린다(1.30.0 이후 수정). 작성창 전용 알림은 없고 TextArea의 공용 Field 오류 계약([Field](field.md#오류-알림))을 그대로 쓴다 |
 | `onBlur` | `() => void` | 없음 | host의 입력 중 상태 해제 |
 | `submitMode` | `"newline"` · `"send"` | `"newline"` | Web Enter 전송은 Shift/IME/229 보호. Native send는 submit, newline은 기존 줄바꿈 |
 | `sendLabel` | `string` | 필수 | 전송 버튼 문구·접근성 이름 |
@@ -141,7 +141,7 @@ Native 내장 삭제·메뉴 기호는 고정 아이콘 틀의 크기를 유지�
 
 ## 근거
 
-- `error` 즉시 알림: 2026-10-18 번뚝 DM. 작성창 `error`가 입력 아래에 보이기만 하고 낭독되지 않아(Web 알림 없음, iOS live region 미지원) 전송 실패를 화면 notice의 Notice로 따로 알렸다.
+- `error` 즉시 알림: 2026-10-18 번뚝 DM. 작성창 `error`가 입력 아래에 보이기만 하고 낭독되지 않아(Web 알림 없음, iOS live region 미지원) 전송 실패를 화면 notice의 Notice로 따로 알렸다. 첫 수정은 작성창에만 숨긴 alert를 더해 Web 탐색 모드에서 같은 문구를 두 번 읽었으므로, 같은 날 모든 Field 컨트롤의 공용 오류 계약으로 옮겼다.
 
 - 답장 중 카드 배치: 2026-10-16 카카오톡 실측.
 - `submitMode` 등 입력 공개 축: 2026-10-07 번뚝 채택에서 기존 blur/IME/검증 연결이 누락됐다.

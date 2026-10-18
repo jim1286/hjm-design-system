@@ -127,10 +127,7 @@ export function MessageComposer({ leading, quickInserts, value, label, sendLabel
     // A bounded corner radius keeps multiline/large-text content inside the field instead of a tall pill.
     const hasContent = !!value.trim() || attachments.length > 0 || additionalContent;
     const { colors, tokens } = useHjmNativeTheme();
-    // The error is a send-time outcome, so it must be heard when it appears. TextArea's FieldMessage is an assertive live
-    // region (Android); iOS ignores live regions, so announce it once per new error, as FieldGroup does.
-    useEffect(() => { if (error && Platform.OS === "ios")
-        AccessibilityInfo.announceForAccessibility(error); }, [error]);
+    // The error is announced by TextArea's shared FieldMessage (internal/field-frame.tsx), on Android and iOS.
     const compactField = { hjmCompactMultiline: true };
     const attach = attachmentAction ? _jsx(IconButton, { label: attachmentAction.label, tone: "ghost", disabled: locked || (attachmentAction.disabled ?? false), onPress: attachmentAction.onPress, children: attachmentAction.icon }) : null;
     const send = sendIcon ? _jsx(IconButton, { label: sendLabel, size: sendPresentation === "circle" ? "small" : "medium", shape: "circle", tone: sendPresentation === "circle" ? "primary" : "ghost", disabled: !canSend, loading: pending, onPress: () => { if (canSend)

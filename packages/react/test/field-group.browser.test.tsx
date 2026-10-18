@@ -33,7 +33,8 @@ it("associates distinct group and field messages without repeated errors or dupl
     renderField={({ controlProps }) => <TextField {...controlProps} />} />
     <FieldGroup descriptor={{ label: "청구지", fields }} renderField={({ controlProps }) => <TextField {...controlProps} />} /></HjmProvider>));
   expect(host.querySelectorAll("fieldset > legend")).toHaveLength(2);
-  expect(host.querySelectorAll('[role="alert"]')).toHaveLength(1);
+  // Each field keeps its own empty error region mounted (1.31 shared Field error contract); only the group error speaks.
+  expect([...host.querySelectorAll('[role="alert"]')].filter(node => node.textContent)).toHaveLength(1);
   const inputs = [...host.querySelectorAll("input")];
   expect(new Set(inputs.map(input => input.id)).size).toBe(4);
   expect(inputs[0]!.getAttribute("aria-describedby")!.split(" ").map(id => document.getElementById(id)?.textContent)).toEqual(["받을 곳", "건물 번호", "주소 확인"]);

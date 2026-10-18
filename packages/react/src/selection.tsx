@@ -44,6 +44,7 @@ import {
 } from "react";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { FieldError } from "./internal/field-error.js";
 
 export type ChoiceLeadingRenderProps = Readonly<{
   selected: boolean;
@@ -496,7 +497,7 @@ function CheckboxGroupInner<Key extends string>(
           );
         })}
       </div>
-      {error ? <div id={errorId} className="hjm-field__error">{error}</div> : null}
+      <FieldError id={errorId} error={error} />
     </fieldset>
   );
 }
@@ -698,7 +699,7 @@ export const RadioGroup = forwardRef<HTMLFieldSetElement, RadioGroupProps>(
             );
           })}
         </div>
-        {error ? <div id={errorId} className="hjm-field__error">{error}</div> : null}
+        <FieldError id={errorId} error={error} />
       </fieldset>
     );
   },

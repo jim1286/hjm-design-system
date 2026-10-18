@@ -2,7 +2,7 @@ import { useInitialFocusTarget } from "./internal/initial-focus.js";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { SelectionMark } from "./internal/selection-mark.js";
-import { FieldMessage, NativeFieldFrame } from "./internal/field-frame.js";
+import { FieldMessage, NativeFieldFrame, useFieldErrorAnnouncement } from "./internal/field-frame.js";
 import type { FieldPrivateProps } from "./internal/field-private.js";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import {
@@ -1416,6 +1416,7 @@ function ChoiceGroupFrame({
     readOnly ? readOnlyLabel : undefined,
   ].filter(Boolean).join(", ");
   const gap = selectionGroupRecipe.orientations[orientation].gap[presentation];
+  useFieldErrorAnnouncement(error);
   return (
     <View
       accessibilityHint={[error ?? description, readOnly ? readOnlyLabel : undefined]

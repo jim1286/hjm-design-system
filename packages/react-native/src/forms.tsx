@@ -1,6 +1,6 @@
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { useKeyboardOverlap } from "./keyboard.js";
-import { NativeFieldFrame } from "./internal/field-frame.js";
+import { FieldErrorText, NativeFieldFrame } from "./internal/field-frame.js";
 import { focusAccessibleHost } from "./internal/accessible-focus.js";
 import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
 import {
@@ -670,7 +670,7 @@ export function Select<
         {busy ? <View pointerEvents="none" style={{ alignItems: "center", bottom: 0, justifyContent: "center", left: 0, position: "absolute", right: 0, top: 0 }}><ActivityIndicator size={glyph[selectRecipe.busyIndicator.glyph]} /></View> : null}
       </Pressable>
       {error ? (
-        <Text accessibilityLiveRegion="assertive" tone="danger" variant="caption">{error}</Text>
+        <FieldErrorText error={error} />
       ) : description ? (
         <Text tone="muted" variant="caption">{description}</Text>
       ) : null}
@@ -1254,7 +1254,7 @@ export function Combobox<
         ) : null}
       </View>
       {error ? (
-        <Text accessibilityLiveRegion="assertive" tone="danger" variant="caption">{error}</Text>
+        <FieldErrorText error={error} />
       ) : description ? (
         <Text tone="muted" variant="caption">{description}</Text>
       ) : null}

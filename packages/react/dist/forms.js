@@ -7,6 +7,7 @@ import { createContext, forwardRef, useContext, useEffect, useId, useLayoutEffec
 import { composeRefs, classNames, useControllableState } from "./internal.js";
 import { useInitialFocusTarget } from "./internal/initial-focus.js";
 import { Icon } from "./supplemental-display.js";
+import { FieldError } from "./internal/field-error.js";
 /*
   How far a disabled field fades its label and control (fieldRecipe.disabledScope). The
   frame defaults to fieldRecipe.disabledOpacity; SearchField and PasswordField render
@@ -30,7 +31,7 @@ function FieldFrame({ controlId, label, description, error, descriptionId, error
             ...(disabled && recipeOpacity !== undefined
                 ? { "--hjm-field-disabled-opacity": recipeOpacity }
                 : {}),
-        }, className: classNames("hjm-field", className), "data-state": state, "data-variant": variant, "data-shape": shape, "data-align": align, children: [label !== undefined && label !== null ? (_jsxs("label", { className: "hjm-field__label", htmlFor: controlId, children: [label, required ? _jsx("span", { "aria-hidden": "true", children: " *" }) : null] })) : null, children, description ? (_jsx("div", { id: descriptionId, className: "hjm-field__description", children: description })) : null, error ? (_jsx("div", { id: errorId, className: "hjm-field__error", children: error })) : null] }));
+        }, className: classNames("hjm-field", className), "data-state": state, "data-variant": variant, "data-shape": shape, "data-align": align, children: [label !== undefined && label !== null ? (_jsxs("label", { className: "hjm-field__label", htmlFor: controlId, children: [label, required ? _jsx("span", { "aria-hidden": "true", children: " *" }) : null] })) : null, children, description ? (_jsx("div", { id: descriptionId, className: "hjm-field__description", children: description })) : null, _jsx(FieldError, { id: errorId, error: error })] }));
 }
 /** Generic frame for custom native controls; `controlId` keeps the label explicit. */
 export function Field({ controlId, description, error, required = false, disabled = false, children, ...props }) {

@@ -112,6 +112,8 @@ describe("MessageComposer error announcement", () => {
     expect(announce).not.toHaveBeenCalled();
     act(() => view.update(<HjmNativeProvider>{composer("전송하지 못했어요")}</HjmNativeProvider>));
     expect(announce).toHaveBeenCalledWith("전송하지 못했어요");
+    // One announcement from the shared FieldMessage; the composer no longer adds its own (1.31).
+    expect(announce).toHaveBeenCalledTimes(1);
     expect(view.root.findAll(node => node.props.accessibilityLiveRegion === "assertive" && textOf(node).includes("전송하지 못했어요")).length).toBeGreaterThan(0);
     Platform.OS = previous;
   });

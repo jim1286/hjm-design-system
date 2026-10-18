@@ -6,6 +6,7 @@ import { iconRecipe, selectRecipe, } from "@hjmds/design-contracts/recipes";
 import { forwardRef, useCallback, useEffect, useId, useRef, useState, } from "react";
 import { classNames, useControllableState } from "./internal.js";
 import { AnchoredPortal, useAnchoredPopup, } from "./portal.js";
+import { FieldError } from "./internal/field-error.js";
 const emptySelectionKey = Symbol("hjm-select-empty-selection");
 function SelectInner(props, forwardedRef) {
     const { items, sections, label, accessibilityLabel, description, error, placeholder, emptySelectionLabel, asyncState = { status: "idle" }, selectedItem, disallowEmptySelection = selectBehaviorDefaults.disallowEmptySelection, loop = selectBehaviorDefaults.loop, busy = false, readOnly = false, size = selectRecipe.defaults.size, density = selectRecipe.defaults.density, align = "start", fieldClassName, layoutStyle, portalContainer, locale, renderLeading, renderOptionLeading, className, id: idProp, name, disabled = false, required = false, selectedKey: selectedKeyProp, defaultSelectedKey, onSelectionChange, open: openProp, defaultOpen = false, onOpenChange, onClick, onFocus, onBlur, onKeyDown, ...buttonProps } = props;
@@ -376,7 +377,7 @@ function SelectInner(props, forwardedRef) {
                                     }, id: `${controlId}-option-empty`, role: "option", className: "hjm-select__option hjm-select__option--empty", "aria-selected": reconciledSelectedKey === null, "data-state": reconciledSelectedKey === null ? "selected" : "idle", "data-active": activeKey === emptySelectionKey || undefined, onMouseDown: (event) => event.preventDefault(), onMouseMove: () => setHighlightedKey(emptySelectionKey), onClick: () => commit(emptySelectionKey), children: emptySelectionLabel })) : null, showOptions ? (source.sections ? source.sections.map((section) => {
                                     const sectionLabelId = `${controlId}-section-${section.id}`;
                                     return (_jsxs("div", { role: "group", "aria-labelledby": section.label ? sectionLabelId : undefined, "aria-label": section.label ? undefined : section.accessibilityLabel, className: "hjm-select__section", children: [section.label ? (_jsx("div", { id: sectionLabelId, className: "hjm-select__section-label", children: section.label })) : null, section.items.map(renderOption)] }, section.id));
-                                }) : source.items.map(renderOption)) : null] }) })) : null] }), description && !error ? (_jsx("div", { id: descriptionId, className: "hjm-field__description", children: description })) : null, error ? _jsx("div", { id: errorId, className: "hjm-field__error", children: error }) : null, name ? _jsx("input", { type: "hidden", name: name, value: reconciledSelectedKey ?? "" }) : null] }));
+                                }) : source.items.map(renderOption)) : null] }) })) : null] }), description && !error ? (_jsx("div", { id: descriptionId, className: "hjm-field__description", children: description })) : null, _jsx(FieldError, { id: errorId, error: error }), name ? _jsx("input", { type: "hidden", name: name, value: reconciledSelectedKey ?? "" }) : null] }));
 }
 export const Select = forwardRef(SelectInner);
 //# sourceMappingURL=select.js.map

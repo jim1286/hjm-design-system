@@ -110,11 +110,19 @@ it("announces a composer send error assertively while the field still shows it",
     return <><MessageComposer value="안녕" label="메시지" sendLabel="전송" onValueChange={() => {}} onSend={() => setError("전송하지 못했어요")} {...(error ? { error } : {})} /></>;
   }
   await act(async () => root.render(<HjmProvider><Composer /></HjmProvider>));
-  const alert = host.querySelector('.hjm-message-composer [role="alert"]')!;
+  // The shared Field error region (1.31): one alert node, mounted before the error, linked from the input.
+  const alerts = () => host.querySelectorAll('.hjm-message-composer [role="alert"]');
+  expect(alerts()).toHaveLength(1);
+  const alert = alerts()[0]!;
   expect(alert.textContent).toBe("");
   await page.getByRole("button", { name: "전송" }).click();
+  expect(alerts()).toHaveLength(1);
+  expect(alerts()[0]).toBe(alert);
   expect(alert.textContent).toBe("전송하지 못했어요");
-  expect(host.querySelector(".hjm-field__error")?.textContent).toBe("전송하지 못했어요");
+  expect(host.querySelector("textarea")!.getAttribute("aria-describedby")!.split(" ")).toContain(alert.id);
+  const visible = host.querySelector(".hjm-field__error")!;
+  expect(visible.textContent).toBe("전송하지 못했어요");
+  expect(visible.getAttribute("aria-hidden")).toBe("true");
 });
 
 it("shows typing dots as a polite named status that stops pulsing under reduced motion", async () => {

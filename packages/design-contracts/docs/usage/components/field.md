@@ -81,6 +81,19 @@ import { Field } from "@hjmds/react-native/forms";
 - 상태 테두리는 recipe가 정한다: 기본 `borderControl`, 포커스 `contentBrand`, 오류 `danger`.
 - 도움말은 오류가 생겨도 사라지지 않고 둘 다 보인다(Web은 `aria-describedby`로 둘 다 연결).
 - 비활성(`disabled`)은 라벨과 컨트롤만 흐리고 도움말·오류는 원래 대비 그대로 둔다(`fieldRecipe.disabledScope`).
+
+### 오류 알림
+
+`error`가 나타나거나 바뀌면 즉시(assertive) 한 번 알린다. Field·TextField·TextArea·Select·Combobox·NumberField·
+CheckboxGroup·RadioGroup과 그 위에 만든 컨트롤(MessageComposer 등)이 같은 계약을 쓴다(1.30.0 이후).
+
+- Web: 오류 전에 미리 mount된 `role="alert"` 영역 하나가 오류 id를 갖고, 컨트롤의 `aria-describedby`가 그 영역을 가리킨다.
+  보이는 오류 문구는 `aria-hidden`이라 탐색 모드에서도 한 번만 읽힌다. 영역은 시각적으로 숨겨져 칸 간격을 바꾸지 않는다.
+- Native: 오류 문구가 assertive live region(Android)이고, live region을 읽지 않는 iOS는 새 오류마다
+  `announceForAccessibility`로 한 번 알린다.
+- 제품은 같은 문구를 Notice나 별도 `role="alert"`로 다시 그리지 않는다.
+
+근거: 2026-10-18 번뚝 DM에서 Web 필드 오류가 describedby로만 연결돼 나타날 때 낭독되지 않았고, Native iOS도 작성창·FieldGroup 외 필드 오류를 알리지 않았다. 작성창에만 숨긴 alert를 더한 첫 수정은 같은 문구를 두 번 읽게 해 공용 계약(`react/src/internal/field-error.tsx`, `react-native/src/internal/field-frame.tsx`)으로 옮겼다.
   흐림 정도는 컴포넌트 recipe에 `states.disabledOpacity`가 있으면 그 값(SearchField·PasswordField·OtpField·NumberField·Select
   0.5), 없으면 `fieldRecipe.disabledOpacity` 0.6(TextField·TextArea·Mentions·Field·NativeSelect·Combobox·DatePicker·TagsInput)이다.
   2026-10-06 전에는 틀 전체가 흐려져 잠긴 이유를 적은 도움말까지 대비가 떨어졌다.
