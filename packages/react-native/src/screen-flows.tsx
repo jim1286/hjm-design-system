@@ -463,7 +463,7 @@ export function SearchScreen<F = unknown>({query,queryLabel,queryField,queryClea
    <SearchResultsBody summary={resultSummary} applied={appliedFilters} suggested={suggestedQueries} cause={cause} onCommit={commit}>{children}</SearchResultsBody></>;
  // Search-first routes have no visible heading: navigation and input share one row.
  // Keep explicit host headers and described/titled screens in their existing layout.
- const inlineNavigation=screen.titleVisibility==="hidden"&&screen.header==null&&!screen.description;
+ const inlineNavigation=screen.titleVisibility==="hidden"&&screen.header==null;
  const input=queryField??<SearchField {...labelProps} clearLabel={queryClearLabel!} value={query} onValueChange={onQueryChange} busy={searching??false} busyLabel={searchingLabel??queryLabel} {...submitProps}/>;
  const queryRow=inlineNavigation?<Stack axis="inline" align="center" gap="sm">{screen.exit?<ScreenExitButton {...screen.exit}/>:null}<View style={{flex:1,minWidth:0}}>{input}</View>{screen.actions}</Stack>:input;
  // The query field is the search screen's primary input (2026-10-18 entry focus).
