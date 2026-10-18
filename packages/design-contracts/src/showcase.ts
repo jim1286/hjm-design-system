@@ -255,6 +255,9 @@ const textlessComponentNames: ReadonlySet<string> = new Set([
   // description for assistive technology; ImageChoiceGroup tiles carry accessible names, not visible copy.
   // Neither has a long-form text slot, so the long-copy proof would measure a product caption, not the component.
   "Chart", "ImageChoiceGroup",
+  // 1.31: TypingIndicator's label is announced only (the bubble shows dots) and PageIndicator's names are the
+  // group and dot accessible names, like Pagination; neither draws product prose to wrap.
+  "TypingIndicator", "PageIndicator",
 ]);
 
 // These behaviors expose no interaction on either rendered surface.

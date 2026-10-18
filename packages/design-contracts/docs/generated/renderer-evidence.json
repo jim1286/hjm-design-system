@@ -3074,7 +3074,6 @@
             {
               "scenarios": [
                 "dark",
-                "long-copy",
                 "large-text",
                 "rtl",
                 "reduced-motion",
@@ -3087,7 +3086,6 @@
           "requiredScenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
@@ -3096,7 +3094,6 @@
           "claimedScenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
@@ -6570,7 +6567,6 @@
             {
               "scenarios": [
                 "dark",
-                "long-copy",
                 "large-text",
                 "rtl",
                 "reduced-motion",
@@ -6583,7 +6579,6 @@
           "requiredScenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
@@ -6592,7 +6587,6 @@
           "claimedScenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
@@ -9777,7 +9771,6 @@
             {
               "scenarios": [
                 "dark",
-                "long-copy",
                 "large-text",
                 "rtl",
                 "reduced-motion",
@@ -9790,7 +9783,6 @@
           "requiredScenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
@@ -9799,7 +9791,6 @@
           "claimedScenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
@@ -12516,7 +12507,6 @@
             {
               "scenarios": [
                 "dark",
-                "long-copy",
                 "large-text",
                 "rtl",
                 "reduced-motion",
@@ -12529,7 +12519,6 @@
           "requiredScenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
@@ -12538,7 +12527,6 @@
           "claimedScenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",

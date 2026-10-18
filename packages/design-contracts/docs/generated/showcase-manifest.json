@@ -2858,7 +2858,6 @@
           "scenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
@@ -2870,7 +2869,6 @@
           "scenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
@@ -6144,7 +6142,6 @@
           "scenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
@@ -6156,7 +6153,6 @@
           "scenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
