@@ -96,12 +96,9 @@ export type ScreenLayoutProps = Readonly<{
    */
   keyboardAvoidance?: boolean;
   /**
-   * Focus a text field once when the screen is entered, after the enter transition (`first-input`: the field marked
-   * `initialFocusTarget`, else the first enabled one). Off by default; SearchScreen and EditorScreen default it on,
-   * Chat/CommentThread keep it off so the keyboard does not cover the history (2026-10-18, screen-patterns rules).
-   * Until the user touches the screen, a field that appears later (after data loads) or an HJM overlay that was open
-   * on entry closing still gets this entry focus; a field marked `initialFocusTarget` that appears after entry (search
-   * revealed, editor step changed) is focused in any mode (screen-patterns `resolveEntryFocus`).
+   * Focus the marked, else first enabled input once on page entry (default `first-input`). Never steals an existing
+   * input's focus or focuses below an overlay. A pending entry can wait for data; after user interaction it ends.
+   * Bottom sheets disable automatic focus for this screen and all nested inputs, regardless of this prop.
    */
   initialFocus?: ScreenInitialFocus;
   scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator" | "onScroll" | "onScrollBeginDrag" | "onScrollEndDrag" | "scrollEventThrottle" | "alwaysBounceVertical" | "automaticallyAdjustKeyboardInsets">;

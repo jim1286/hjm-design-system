@@ -87,7 +87,7 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 | `contentInset` | `"default"` · `"none"` · `"body-edge"` | `"default"` | `none`은 헤더·notice·본문·footer padding을 0으로(Native는 footer 위 테두리도 뺀다). host가 모든 여백을 이미 줄 때 쓴다. `body-edge`는 헤더·notice·footer 여백(16)과 footer 테두리를 유지하고 **본문 좌우 padding만 0**으로 한다. 자기 좌우 여백을 가진 전체 폭 목록 행(ConversationRow·NotificationRow 등 행 padding 16)을 본문에 바로 둘 때 쓴다(미게시). ListRow·NotificationItem은 `default`에 둔다. `body-bleed`(미게시, 1.31.0 이후)는 같은 여백을 유지하고 **본문 네 방향 padding을 모두 0**으로 해 지도·캔버스가 헤더(또는 notice)·화면 좌우·footer에 바로 닿는다. footer가 없으면 본문이 마지막 영역이라 여백 16 없이 `safeAreaBottom`(Native)과 겹친 하단 탐색 높이만 비운다. 홈 인디케이터 아래까지 그리려면 `safeAreaBottom`을 넘기지 않는다. `body-edge`·`body-bleed`에서도 로딩·빈 상태·오류 안내 묶음은 자기 여백이 없으므로 좌우 16을 유지한다(1.32.0 수정). 값 목록은 계약 `ScreenContentInset`·`screenContentInsets` |
 | `presentation` | `"dashboard"` · `"editorial"` · `"landscape"` | 가장 가까운 profile.screens.overview / 없으면 기존 골격 | [디자인 프로필](../../design-profile.md)의 제공 범위를 따른다. 명시값이 프로필을 이긴다. 헤더 배치·읽기 폭만 바꾸고 상태·입력·행동 슬롯은 유지한다 |
 | `as` (Web) | `"main"` · `"section"` | `"main"` | 제품 셸에 이미 `<main>`이 있으면 `section` |
-| `initialFocus` | `first-input` · `none` | `none` | 1.28.1. 진입 시 텍스트 입력 하나에 한 번 포커스한다. 아래 [진입 포커스](#진입-포커스) |
+| `initialFocus` | `first-input` · `none` | `first-input` | 페이지 진입 시 입력 하나에 한 번 포커스한다. 기본값 변경은 1.33.0부터 제공. 하단 시트 안에서는 자동 포커스하지 않는다. 아래 [진입 포커스](#진입-포커스) |
 | `safeAreaBottom` (Native) | 0 이상의 유한수 | `0`(미게시) | 화면이 닿는 창 아래 가장자리의 safe area(`useSafeAreaInsets().bottom`, 탭바 위·이미 아래를 들인 host 안이면 0). 마지막 영역(footer, 없으면 본문)이 아래 여백을 `max(16, inset)`으로 한 번만 준다. 넘길 때는 host의 아래 SafeAreaView edge를 빼고, 둘을 같이 쓰지 않는다. 음수·무한대는 `RangeError` |
 | `layoutStyle` | `HjmCompositionStyleProp` | 없음 | 화면 루트 배치 전용(예: 분할 화면의 `flex`·`width`). ScreenLayout 위에 만든 화면은 모두 이 prop을 루트까지 넘긴다 |
 | `className` (Web) | `string` | 없음 | 식별·배치 보조. 색·여백을 덮지 않는다 |
@@ -106,25 +106,28 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 
 ## 진입 포커스
 
+2026-10-18 후속 사용자 지시: “페이지 진입에만 적용하고 하단 시트에는 폐지해 포커스”. 일반·대화·인증 페이지의 기존 `none`과 시트의 단일 입력 자동 포커스를 이 기준으로 교체한다. **1.33.0에서 제공한다.**
+
 2026-10-18 사용자 요청("input이 있는 화면에 진입하면 포커스되도록, 웹앱 둘 다"). 앱마다 `autoFocus`·지연 `ref.focus()`를 붙이던 것을 화면 골격이 맡는다. 입력 칸(TextField·TextArea·SearchField·PasswordField, 작성창의 TextArea)은 가장 가까운 화면·시트 범위에 자신을 등록하고, 범위가 진입 뒤 한 칸을 고른다. 규칙의 정본은 contracts `resolveInitialFocusTarget`·`resolveEntryFocus`·`initialFocusDefaults`(`screen-patterns`)다.
 
 | 구성 | 기본값 | 이유 |
 | --- | --- | --- |
-| `ScreenLayout`(일반 화면) | `none` | 입력이 화면의 주 행동인지 화면이 알 수 없다. 주 입력 화면은 `initialFocus="first-input"` |
+| `ScreenLayout`(일반 화면) | `first-input` | 페이지 진입 시 입력이 있으면 첫 유효 입력 선택 |
 | `SearchScreen` | `first-input`(검색어) | 검색이 화면의 목적 |
 | `EditorScreen` | `first-input` | 작성·편집이 화면의 목적 |
-| `ChatScreen`·`CommentThreadScreen` | `none` | 입력은 읽기의 보조. 키보드가 기록을 가린다. 같은 prop으로 켤 수 있다 |
-| `Sheet`·`Dialog`·`AlertDialog` | `single-input` | 텍스트 입력이 하나뿐일 때만(이름 바꾸기 등). 여럿이면 기존 포커스 규칙 |
-| `AuthScreenLayout` | `none` | 로그인 화면은 제공자 버튼이 주 행동. 가입 닉네임 단계만 `initialFocus="first-input"`(1.28.2) |
+| `ChatScreen`·`CommentThreadScreen` | `first-input` | 별도 페이지로 진입하면 작성창도 같은 규칙 적용 |
+| 하단 `Sheet` | 자동 입력 포커스 없음 | 입력 개수·`initialFocus`·중첩 화면·`initialFocusTarget`과 무관하게 자동 포커스하지 않음. Web은 모달 컨테이너에 초점 유지 |
+| `Dialog`·`AlertDialog`·측면 `Sheet` | 기존 모달 규칙 | `single-input` 등 기존 모달 포커스 계약 유지 |
+| `AuthScreenLayout` | `first-input` | 페이지 진입 시 텍스트 입력이 있으면 선택. 제공자 버튼만 있으면 입력 포커스 없음 |
 
 - 고르는 순서: `initialFocusTarget` 칸 → 등록(트리) 순서 첫 칸. 비활성·읽기 전용 칸, `initialFocusTarget={false}` 칸은 고르지 않는다.
-- 시점: Native는 화면·시트 진입 전환이 끝난 뒤(`InteractionManager`, 시트는 표시 뒤) — 키보드 애니메이션이 전환과 겹치지 않는다. Web은 mount 직후, `preventScroll`.
+- 시점: Native 페이지는 진입 전환이 끝난 뒤(`InteractionManager`) — 키보드 애니메이션이 전환과 겹치지 않는다. Web은 mount 직후, `preventScroll`.
 - 빼앗지 않는다: 사용자가 이미 입력 칸에 있으면 그대로 둔다(Native 포커스된 입력, Web 편집 가능한 요소).
 - 오버레이 아래(1.28.2, Web·Native): 위에 HJM `Dialog`·`AlertDialog`·`Sheet`가 열려 있으면 아래 화면·시트는 고르지 않는다. Web은 제품 자체 모달(`aria-modal`·`dialog[open]`)도 막는다. Native는 HJM 오버레이만 알 수 있으므로 화면을 덮는 모달은 HJM 오버레이로 만든다.
-- 오버레이 안의 화면(1.31.0, Web·Native): 화면을 **감싸는** 모달은 그 화면을 막지 않는다. `Dialog`·`Sheet` 본문에 둔 `ScreenLayout`(또는 화면 구성)은 오버레이가 열린 뒤(Web: 모달 활성화, Native: 표시·진입 애니메이션 뒤) 오버레이와 함께 진입해 자기 `initialFocus` 규칙으로 칸을 고른다. 오버레이 자신의 칸이 있으면 그 칸이 먼저이고, 오버레이에 `initialFocusRef`(Web)가 있으면 그쪽이 이긴다. Web 제품 모달(`aria-modal`)도 화면의 입력 칸을 품고 있으면 화면을 감싸는 것으로 보고 막지 않는다. 화면 밖에 열린 제품 모달은 그대로 막는다.
+- 오버레이 안의 화면(Web·Native, 하단 시트 제외): 화면을 **감싸는** 모달은 그 화면을 막지 않는다. `Dialog`·측면 `Sheet` 본문에 둔 `ScreenLayout`(또는 화면 구성)은 오버레이가 열린 뒤(Web: 모달 활성화, Native: 표시·진입 애니메이션 뒤) 오버레이와 함께 진입해 자기 `initialFocus` 규칙으로 칸을 고른다. 오버레이 자신의 칸이 있으면 그 칸이 먼저이고, 오버레이에 `initialFocusRef`(Web)가 있으면 그쪽이 이긴다. Web 제품 모달(`aria-modal`)도 화면의 입력 칸을 품고 있으면 화면을 감싸는 것으로 보고 막지 않는다. 화면 밖에 열린 제품 모달은 그대로 막는다.
 - 진입 창(1.28.2): 진입 뒤 아직 포커스하지 못한 범위는 사용자가 그 범위를 직접 조작(Native 터치·스크롤, Web 포인터·키·휠·터치)하기 전까지 열려 있다. 그 동안 ① 칸이 새로 나타나면(데이터 로드 뒤 드러나는 확인 칸) ② 진입 때 위에 있던 오버레이가 닫히면(첫 가입 약관 동의) 다시 고른다. 오버레이 안의 조작(동의 탭)은 아래 화면의 조작으로 세지 않는다. 오버레이가 닫힌 시점은 그 오버레이의 반환 포커스와 같은 시점(Native: 퇴장·dismiss 뒤, Web: 반환 포커스 뒤)이다.
-- 나중에 드러나는 주 입력(1.28.2): 진입이 끝난 뒤 `initialFocusTarget`(`true`) 칸이 새로 mount되면 그 칸을 포커스한다. `initialFocus` 모드와 무관하다 — 검색 버튼으로 여는 검색 칸(`none` 화면), 단계형 시트·`EditorScreen`의 단계 칸(각 단계 칸에 `initialFocusTarget`)이 이 경우다. 다른 입력 칸에 초점이 있거나 위에 오버레이가 있으면 하지 않는다. 스스로 다시 mount되는 칸(가상화 목록 행)에는 주지 않는다.
-- 다시 진입: 화면은 mount당 한 번이다. 스택에서 돌아온 화면(이미 mount)은 다시 포커스하지 않는다 — 돌아온 맥락을 키보드가 가리고, HJM은 내비게이션 포커스 신호를 모른다. 시트·대화상자는 열 때마다 다시 고른다.
+- 진입 종료 뒤 입력: 사용자 조작이나 첫 포커스 이후 새로 나타난 입력은 `initialFocusTarget`이 있어도 자동 포커스하지 않는다. 검색 열기·단계 이동은 새 페이지 진입이 아니다.
+- 다시 진입: 화면은 mount당 한 번이다. 스택에서 돌아온 화면(이미 mount)은 다시 포커스하지 않는다 — 돌아온 맥락을 키보드가 가리고, HJM은 내비게이션 포커스 신호를 모른다. 하단 시트는 자동 입력 포커스를 하지 않고, 대화상자·측면 시트는 기존 모달 규칙으로 다시 고른다.
 - 모션 감소는 애니메이션에만 적용하고 포커스는 그대로 한다.
 - 제품은 `autoFocus`·`setTimeout(() => ref.focus())`·단계 전환 뒤 `ref.focus()`를 쓰지 않고 `initialFocus`·`initialFocusTarget`으로 표현한다. 검증 실패 칸으로 옮기는 포커스(제출 오류)는 제품의 동작이라 그대로 둔다.
 

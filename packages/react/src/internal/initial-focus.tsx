@@ -13,6 +13,8 @@ export type ModalLayerRef = { current: ActiveModal | null };
  * scope with mode "none" still owns its fields so they never reach an outer scope.
  */
 const InitialFocusContext = createContext<Registry | null>(null);
+// A bottom sheet owns this boundary, including ScreenLayout/marked fields nested inside its body.
+const EntryFocusEnabledContext = createContext(true);
 /** Layer of the enclosing HJM overlay; null on the page itself. A ScreenLayout inside a sheet uses the sheet's. */
 const ModalLayerContext = createContext<ModalLayerRef | null>(null);
 
@@ -42,6 +44,7 @@ type Candidate = InitialFocusCandidate & { entry: Entry };
 export type InitialFocusScopeHandle = Readonly<{
   registry: Registry;
   layer: ModalLayerRef | null;
+  enabled: boolean;
   /**
    * Overlays only: runs entry when the modal activates and returns the field for `useModalFocus` to focus. `explicit`
    * means the overlay already has an `initialFocusRef`, so entry settles without choosing a field.
@@ -53,8 +56,12 @@ export type InitialFocusScopeHandle = Readonly<{
  * Screen scopes enter on mount (Web has no enter transition to wait for); overlays pass `layer` and enter through
  * `useModalFocus`. User pointer, key, wheel or touch input while no modal is above the scope ends the entry window.
  */
-export function useInitialFocusScope({ mode, active = true, layer: ownLayer }: { mode: InitialFocusMode; active?: boolean; layer?: ModalLayerRef }): InitialFocusScopeHandle {
+export function useInitialFocusScope({ mode, active = true, layer: ownLayer, enabled = true }: { mode: InitialFocusMode; active?: boolean; layer?: ModalLayerRef; enabled?: boolean }): InitialFocusScopeHandle {
   const inherited = useContext(ModalLayerContext);
+  const inheritedEnabled = useContext(EntryFocusEnabledContext);
+  // A separate overlay owns its policy; ordinary nested screens inherit their enclosing sheet's policy.
+  const entryFocusEnabled = enabled && (ownLayer !== undefined || inheritedEnabled);
+  const enabledRef = useRef(entryFocusEnabled); enabledRef.current = entryFocusEnabled;
   const layer = ownLayer ?? inherited;
   const overlay = ownLayer !== undefined;
   const modeRef = useRef(mode); modeRef.current = mode;
@@ -74,6 +81,7 @@ export function useInitialFocusScope({ mode, active = true, layer: ownLayer }: {
       return productModalAbove(fields);
     };
     const dispatch = (event: EntryFocusEvent<Candidate> | { kind: "register"; entry: Entry }): HTMLElement | null => {
+      if (!enabledRef.current) return null;
       const candidates: Candidate[] = [...s.entries].map(entry => ({ entry, order: entry.order, preference: entry.preference, focusable: entry.focusable() }));
       const resolved = event.kind === "register" && "entry" in event
         ? { kind: "register" as const, field: candidates.find(candidate => candidate.entry === event.entry)! }
@@ -139,13 +147,13 @@ export function useInitialFocusScope({ mode, active = true, layer: ownLayer }: {
       unsubscribe();
       scope.dispatch({ kind: "deactivate" });
     };
-  }, [active, overlay, scope]);
+  }, [active, overlay, scope, entryFocusEnabled]);
 
-  return useMemo(() => ({ registry: scope.registry, layer: scope.layer, enter: scope.enter }), [scope]);
+  return useMemo(() => ({ registry: scope.registry, layer: scope.layer, enter: scope.enter, enabled: entryFocusEnabled }), [scope, entryFocusEnabled]);
 }
 
 export function InitialFocusProvider({ scope, children }: { scope: InitialFocusScopeHandle; children: ReactNode }) {
-  return <ModalLayerContext.Provider value={scope.layer}><InitialFocusContext.Provider value={scope.registry}>{children}</InitialFocusContext.Provider></ModalLayerContext.Provider>;
+  return <EntryFocusEnabledContext.Provider value={scope.enabled}><ModalLayerContext.Provider value={scope.layer}><InitialFocusContext.Provider value={scope.registry}>{children}</InitialFocusContext.Provider></ModalLayerContext.Provider></EntryFocusEnabledContext.Provider>;
 }
 
 /** Screen scope: focuses the chosen field on mount, never over a field the user is in or under an open modal. */

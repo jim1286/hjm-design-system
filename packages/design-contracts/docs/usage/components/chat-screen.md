@@ -80,7 +80,7 @@ import { ChatScreen, MessageComposer } from "@hjmds/react-native/screens";
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `initialFocus` | `first-input` · `none` | `none` | 1.28.1. 대화는 기록을 읽는 것이 먼저라 기본으로 작성창에 포커스하지 않는다 — 키보드가 올라오면 읽던 메시지를 가린다. 새 대화 시작처럼 쓰기가 먼저인 화면만 `first-input` |
+| `initialFocus` | `first-input` · `none` | `first-input` | 페이지 진입 시 첫 유효 입력 또는 `initialFocusTarget` 칸에 한 번 포커스한다. 기본값·진입 한정 정책 변경은 1.33.0부터 제공. 진입 종료 뒤 단계 변경·입력 표시로 자동 포커스를 다시 시작하지 않으며 하단 시트 안에서는 자동 포커스하지 않는다. [진입 포커스](screen-layout.md#진입-포커스) |
 | `composer` | `ReactNode` | 필수 | footer에 고정되는 작성창. `ready`와 `empty`에서 보인다(빈 대화의 첫 메시지 입력) |
 | `headerAlignment` | `"center"` · `"start"` | `"center"` | 뒤로·도구 사이에 상대 이름을 가운데 둔다(카카오톡·인스타그램 실측) |
 | `scroll` | `"content"` · `"screen"` | `"content"` | 가상화 목록이 스크롤을 소유하므로 작은 예제 외에는 바꾸지 않는다 |

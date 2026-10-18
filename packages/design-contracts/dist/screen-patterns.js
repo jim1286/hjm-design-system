@@ -49,14 +49,14 @@ export function validateScreenExit(exit, hasLeading) {
 export const screenContentInsets = ["default", "none", "body-edge", "body-bleed"];
 /** Defaults per composition; renderers read these instead of repeating literals. */
 export const initialFocusDefaults = {
-    screen: "none",
+    // 2026-10-18: input focus belongs to page entry, including chat/auth pages; bottom sheets opt out at their boundary.
+    screen: "first-input",
     search: "first-input",
     editor: "first-input",
-    chat: "none",
-    commentThread: "none",
+    chat: "first-input",
+    commentThread: "first-input",
     overlay: "single-input",
-    // Auth screens lead with provider buttons; a signup nickname step opts in with `initialFocus="first-input"`.
-    auth: "none",
+    auth: "first-input",
 };
 export function resolveInitialFocusTarget(candidates, mode) {
     if (mode === "none")
@@ -93,10 +93,8 @@ export function resolveEntryFocus(phase, event, facts) {
         return stay;
     if (phase === "open")
         return attempt();
-    if (event.kind !== "register")
-        return stay;
-    const { field } = event;
-    return field.preference === true && field.focusable && !facts.blocked && !facts.textEntryFocused ? { phase, target: field } : stay;
+    // Page entry only: revealing a marked field after interaction/entry must not open the keyboard again.
+    return stay;
 }
 // Reuse reading-width and spacing tokens; do not derive geometry from a product's device or artwork.
 export const screenPatternRecipe = {

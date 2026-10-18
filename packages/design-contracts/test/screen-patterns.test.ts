@@ -133,7 +133,7 @@ describe("initial focus resolution", () => {
     expect(resolveInitialFocusTarget([field(0)], "single-input")?.order).toBe(0);
     expect(resolveInitialFocusTarget([field(0), field(1)], "single-input")).toBeNull();
     expect(resolveInitialFocusTarget([field(0, undefined, false)], "single-input")).toBeNull();
-    expect(initialFocusDefaults).toMatchObject({ screen: "none", search: "first-input", editor: "first-input", chat: "none", commentThread: "none", overlay: "single-input", auth: "none" });
+    expect(initialFocusDefaults).toMatchObject({ screen: "first-input", search: "first-input", editor: "first-input", chat: "first-input", commentThread: "first-input", overlay: "single-input", auth: "first-input" });
   });
   it("keeps the entry window open under an overlay and for late fields until the user interacts", async () => {
     const { resolveEntryFocus } = await import("../src/screen-patterns.js");
@@ -152,11 +152,11 @@ describe("initial focus resolution", () => {
     expect(resolveEntryFocus("entering", { kind: "register", field: field(0) }, facts([field(0)])).target).toBeNull();
     expect(resolveEntryFocus("inactive", { kind: "unblock" }, facts([field(0)])).target).toBeNull();
   });
-  it("focuses a marked field revealed after entry in any mode, but not under an overlay or over a focused field", async () => {
+  it("never restarts automatic focus after the page entry window has settled", async () => {
     const { resolveEntryFocus } = await import("../src/screen-patterns.js");
     const none = (blocked = false, textEntryFocused = false) => ({ mode: "none" as const, candidates: [field(0, true)], blocked, textEntryFocused });
     expect(resolveEntryFocus("entering", { kind: "enter" }, none())).toEqual({ phase: "settled", target: null });
-    expect(resolveEntryFocus("settled", { kind: "register", field: field(0, true) }, none()).target?.order).toBe(0);
+    expect(resolveEntryFocus("settled", { kind: "register", field: field(0, true) }, none()).target).toBeNull();
     expect(resolveEntryFocus("settled", { kind: "register", field: field(0, true, false) }, none()).target).toBeNull();
     expect(resolveEntryFocus("settled", { kind: "register", field: field(0, true) }, none(true)).target).toBeNull();
     expect(resolveEntryFocus("settled", { kind: "register", field: field(0, true) }, none(false, true)).target).toBeNull();

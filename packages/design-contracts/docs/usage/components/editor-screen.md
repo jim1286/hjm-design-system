@@ -91,7 +91,7 @@ import { TextField } from "@hjmds/react-native/inputs";
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `initialFocus` | `first-input` · `none` | `first-input` | 1.28.1. 작성·편집이 화면의 목적이라 진입 후 첫 입력(또는 `initialFocusTarget` 칸)에 한 번 포커스한다. 읽고 고칠 내용이 먼저인 편집은 `none`. 1.28.2: 단계형 작성(제목 → 본문)은 각 단계 칸에 `initialFocusTarget`을 주면 단계가 바뀔 때 그 칸을 포커스한다 |
+| `initialFocus` | `first-input` · `none` | `first-input` | 페이지 진입 시 첫 유효 입력 또는 `initialFocusTarget` 칸에 한 번 포커스한다. 기본값·진입 한정 정책 변경은 1.33.0부터 제공. 진입 종료 뒤 단계 변경·입력 표시로 자동 포커스를 다시 시작하지 않으며 하단 시트 안에서는 자동 포커스하지 않는다. [진입 포커스](screen-layout.md#진입-포커스) |
 | `dirty` | `boolean` | 필수 | `true`에서 닫기를 누르면 `discard` 확인창을 띄우고, 확인하면 `cancel.onAction`을 부른다. `false`면 바로 부른다 |
 | `submit` | `ScreenFlowAction`(`{ label, onAction(), disabled?, pending? }`) | 필수 | `pending`이면 loading·비활성. 그동안 닫기 버튼도 비활성. 본문 `state`가 `ready`가 아니면 저장 비활성 |
 | `cancel` | `ScreenFlowAction` | 필수 | 헤더 시작 쪽 × 아이콘 닫기 버튼(`ScreenLayout` `exit` `close`). `label`은 보조기술 이름이다. 2026-10-17부터 글자 버튼 대신 아이콘 |

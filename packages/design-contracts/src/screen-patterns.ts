@@ -74,20 +74,12 @@ export type ScreenContentInset = "default" | "none" | "body-edge" | "body-bleed"
 export const screenContentInsets = ["default", "none", "body-edge", "body-bleed"] as const satisfies readonly ScreenContentInset[];
 
 /**
- * 화면 진입 시 첫 입력 포커스(2026-10-18 사용자 요청: "input이 있는 화면에 진입하면 포커스되도록, 웹앱 둘 다").
- * 앱마다 autoFocus를 따로 붙이던 일을 화면 골격이 맡는다. 입력 칸은 가장 가까운 화면·시트 범위에 자신을 등록하고,
- * 범위가 진입이 끝난 뒤(Native: 전환·애니메이션 interaction 뒤, Web: mount 직후) 아래 규칙으로 한 번 고른다.
- *
- * - `first-input`: `initialFocusTarget`을 준 칸이 있으면 그 칸, 없으면 등록 순서상 첫 칸. 입력이 화면의 주 행동인 구성
- *   (검색, 작성·편집)의 기본값이다.
- * - `single-input`: 등록된 텍스트 입력이 정확히 하나일 때만 그 칸. 시트·대화상자의 기본값이다 — 칸이 여럿이면 어느
- *   것이 주인지 알 수 없어 기존 포커스 규칙(첫 포커스 가능 요소·덜 파괴적인 행동)을 그대로 둔다.
- * - `none`: 고르지 않는다. 일반 화면과, 입력이 읽기의 보조인 대화·댓글 화면의 기본값이다 — 키보드가 올라오면 읽던
- *   기록을 가린다. 같은 prop으로 켤 수 있다.
- *
- * 비활성·읽기 전용 칸은 고르지 않고 `initialFocusTarget={false}` 칸은 제외한다. 화면 범위는 mount당 한 번만 포커스한다:
- * 스택에서 돌아온 화면(이미 mount된 화면)을 다시 포커스하면 키보드가 돌아온 맥락을 가리고, HJM은 내비게이션 포커스
- * 신호를 알지 못한다. 시트·대화상자는 열릴 때마다 다시 고른다. 모션 감소는 애니메이션에만 적용하고 포커스는 그대로 한다.
+ * 2026-10-18 사용자 지시: 입력 자동 포커스는 페이지 진입에만 적용하고 하단 시트에서는 폐지한다.
+ * 페이지는 `first-input`으로 명시한 주 입력 또는 첫 유효 입력을 한 번 고른다. 하단 시트는 renderer의
+ * 상속 경계에서 중첩 화면까지 자동 포커스를 막는다. Dialog·측면 시트의 모달 포커스 계약은 유지한다.
+ * `single-input`은 Dialog·측면 시트의 단일 입력 선택, `none`은 입력 자동 선택을 끈다.
+ * 비활성·읽기 전용·initialFocusTarget={false} 칸은 제외한다. 이미 포커스된 입력을 빼앗지 않으며
+ * 화면은 mount당 한 번만 포커스한다. 모션 감소는 포커스 정책을 바꾸지 않는다.
  */
 export type InitialFocusMode = "first-input" | "single-input" | "none";
 export type ScreenInitialFocus = "first-input" | "none";
@@ -102,14 +94,14 @@ export type InitialFocusCandidate = Readonly<{
 
 /** Defaults per composition; renderers read these instead of repeating literals. */
 export const initialFocusDefaults = {
-  screen: "none",
+  // 2026-10-18: input focus belongs to page entry, including chat/auth pages; bottom sheets opt out at their boundary.
+  screen: "first-input",
   search: "first-input",
   editor: "first-input",
-  chat: "none",
-  commentThread: "none",
+  chat: "first-input",
+  commentThread: "first-input",
   overlay: "single-input",
-  // Auth screens lead with provider buttons; a signup nickname step opts in with `initialFocus="first-input"`.
-  auth: "none",
+  auth: "first-input",
 } as const satisfies Record<string, InitialFocusMode>;
 
 export function resolveInitialFocusTarget<T extends InitialFocusCandidate>(candidates: readonly T[], mode: InitialFocusMode): T | null {
@@ -132,8 +124,7 @@ export function resolveInitialFocusTarget<T extends InitialFocusCandidate>(candi
  * - `open`: 진입이 끝났지만 아직 포커스하지 못했다. 칸이 새로 등록되거나 위 오버레이가 닫히면 다시 고른다. 모달 아래에서
  *   진입한 화면은 모달이 닫힐 때 사용자가 그 화면을 아직 만지지 않았으면 그때 포커스한다.
  * - `settled`: 포커스했거나, 사용자가 범위를 직접 조작(터치·포인터·키·휠)했거나, 이미 다른 텍스트 칸에 초점이 있다.
- *   이후에는 `initialFocusTarget`을 준 칸이 새로 나타날 때만 그 칸을 포커스한다 — 검색 열기·단계 이동처럼 사용자
- *   행동으로 드러난 주 입력이다. 이 규칙은 `initialFocus` 모드와 무관하다(`none` 화면의 검색 칸도 드러날 때 포커스).
+ *   이후에 입력이 새로 나타나도 자동 포커스를 다시 시작하지 않는다(2026-10-18 페이지 진입에만 적용).
  *
  * 위에 다른 오버레이가 열려 있는 동안(`blocked`)은 고르지 않고, 그 동안의 조작은 아래 범위의 조작으로 세지 않는다
  * (약관 동의 탭이 화면의 진입 포커스를 끝내면 안 된다). 텍스트 칸에 이미 초점이 있으면 빼앗지 않는다.
@@ -178,9 +169,8 @@ export function resolveEntryFocus<T extends InitialFocusCandidate>(phase: EntryF
   if (event.kind === "enter") return phase !== "entering" ? stay : facts.mode === "none" ? { phase: "settled", target: null } : attempt();
   if (phase === "entering") return stay;
   if (phase === "open") return attempt();
-  if (event.kind !== "register") return stay;
-  const { field } = event;
-  return field.preference === true && field.focusable && !facts.blocked && !facts.textEntryFocused ? { phase, target: field } : stay;
+  // Page entry only: revealing a marked field after interaction/entry must not open the keyboard again.
+  return stay;
 }
 
 // Reuse reading-width and spacing tokens; do not derive geometry from a product's device or artwork.

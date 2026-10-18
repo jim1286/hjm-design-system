@@ -1210,7 +1210,7 @@ export type SheetProps = NativeModalProps &
     scrollable?: boolean;
     /** Visible × in the header. Off by default for bottom sheets, which close by dragging (2026-10-16). */
     showClose?: boolean;
-    /** Same as Dialog `initialFocus`: by default a lone text entry is focused once the sheet has entered. */
+    /** Side sheets only: same as Dialog. Bottom sheets disable automatic input focus, including nested screens. */
     initialFocus?: InitialFocusMode;
   }>;
 
@@ -1275,7 +1275,7 @@ export function Sheet({
   // keep a pending entry focus until then.
   const [layered, setLayered] = useState(visible);
   useEffect(() => { if (!visible) setEntered(false); else setLayered(true); }, [visible]);
-  const focusScope = useInitialFocusScope({ mode: initialFocus, active: visible && entered, layer: useOverlayLayer(layered) });
+  const focusScope = useInitialFocusScope({ mode: initialFocus, active: visible && entered, layer: useOverlayLayer(layered), enabled: placement !== "bottom" });
   const { viewportHeight, keyboardInset, dockedKeyboard, setModalHeight } = useModalKeyboardViewport(nativeVisible, keyboardAvoidance);
   const nativeVisibleRef = useRef(visible);
   nativeVisibleRef.current = nativeVisible;

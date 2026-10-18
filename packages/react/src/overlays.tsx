@@ -511,11 +511,11 @@ export type SheetProps = ModalOpenState<SheetOpenChangeDetails> &
     dismissPolicy?: Partial<SheetDismissPolicy>;
     /** Localized accessible name for the close action. */
     closeLabel: string;
+    /** Side sheets only. Bottom sheets focus their modal container, never an input on opening. */
     initialFocusRef?: React.RefObject<HTMLElement | null>;
     /**
-     * Text field focused when it opens and no `initialFocusRef` is given: by default only a lone text entry
-     * (`single-input`); `first-input` prefers the field marked `initialFocusTarget`; `none` keeps the first focusable
-     * element (2026-10-18, screen-patterns rules shared with Native).
+     * Side sheets only: same text-entry selection as Dialog. Bottom sheets disable automatic input focus,
+     * including nested screens and marked fields (2026-10-18 page-entry policy).
      */
     initialFocus?: InitialFocusMode;
     returnFocusRef?: React.RefObject<HTMLElement | null>;
@@ -634,12 +634,13 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
     };
   }, []);
   const focusLayer = useRef<ModalLayerRef["current"]>(null);
-  const focusScope = useInitialFocusScope({ mode: initialFocus, active: open, layer: focusLayer });
+  const focusScope = useInitialFocusScope({ mode: initialFocus, active: open, layer: focusLayer, enabled: placement !== "bottom" });
   useModalFocus({
     active: open,
     priority: modalPriority,
     contentRef,
-    ...(initialFocusRef === undefined ? {} : { initialFocusRef }),
+    // Bottom sheets focus their container for the modal trap, never a text field (2026-10-18 page-entry policy).
+    ...(placement === "bottom" ? { initialFocusRef: contentRef } : initialFocusRef === undefined ? {} : { initialFocusRef }),
     resolveInitialFocus: focusScope.enter,
     layerRef: focusLayer,
     ...(returnFocusRef === undefined ? {} : { returnFocusRef }),
@@ -771,7 +772,7 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
               </header> : null}
               </div>
               {children ? <div className="hjm-sheet__body"><InitialFocusProvider scope={focusScope}>{children}</InitialFocusProvider></div> : null}
-              {footer ? <footer className="hjm-sheet__footer">{footer}</footer> : null}
+              {footer ? <footer className="hjm-sheet__footer"><InitialFocusProvider scope={focusScope}>{footer}</InitialFocusProvider></footer> : null}
             </div>
           </div>
         </HjmPortal>

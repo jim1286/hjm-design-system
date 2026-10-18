@@ -84,7 +84,7 @@ import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "@hjmds/react
 | `pendingLabel` | 문자열 | — | 주면 진행 상태다. 공백만 있으면 `TypeError`. 제거하면 원래 상태로 돌아온다 |
 | Web `as` | `main` · `section` | `main` | 최대 폭은 416이다 |
 | `layoutStyle` | margin·width·flex·`alignSelf` | — | 바깥 배치 전용(Web·Native 모두) |
-| `initialFocus` | `first-input` · `none` | `none` | 1.28.2. [ScreenLayout 진입 포커스](screen-layout.md#진입-포커스)와 같은 규칙. 로그인은 제공자 버튼이 주 행동이라 기본 `none`, 가입 닉네임 단계처럼 입력이 주 행동인 `main`만 `first-input`. 닉네임 단계가 같은 화면에서 나중에 나타나면 그 칸에 `initialFocusTarget`을 준다 |
+| `initialFocus` | `first-input` · `none` | `first-input` | 페이지 진입 시 첫 유효 입력 또는 `initialFocusTarget` 칸에 한 번 포커스한다. 기본값·진입 한정 정책 변경은 1.33.0부터 제공. 진입 종료 뒤 단계 변경·입력 표시로 자동 포커스를 다시 시작하지 않으며 하단 시트 안에서는 자동 포커스하지 않는다. [진입 포커스](screen-layout.md#진입-포커스) |
 | Native `testID` | `string` | — | 본문 `ScrollView` 식별(머리 띠가 있어도 같은 `ScrollView`) |
 | Native `safeAreaBottom` | 0 이상의 유한수 | `0` | 화면이 닿는 창 아래 가장자리의 safe area(`useSafeAreaInsets().bottom`, 이미 아래를 들인 host 안이면 0). 아래 여백이 `max(paddingBlock, inset)` — `regular` max(40, inset), `compact` max(20, inset) — 으로 한 번만 들어간다(ScreenLayout과 같은 규칙, 합산 없음). 키보드가 열리면 paddingBlock만. 음수·무한대는 `RangeError` |
 | `AuthScreenHero` `title` · `eyebrow` · `description` · `mark` · `headingLevel` | 문자열 · `ReactNode` · `1`~`3` | `headingLevel` 1 | 제목은 필수이고 빈 문자열이면 `TypeError`. 밀도는 바깥 `AuthScreenLayout`을 따른다 |

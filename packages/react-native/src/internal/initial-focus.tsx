@@ -12,6 +12,8 @@ type LayerRef = { readonly current: number | null };
  * mode "none" still provides a registry so its fields never reach an outer scope.
  */
 const InitialFocusContext = createContext<Registry | null>(null);
+// A bottom sheet owns this boundary, including ScreenLayout/marked fields nested inside its body.
+const EntryFocusEnabledContext = createContext(true);
 
 /*
  * Open HJM overlays in presentation order. An RN Modal covers every screen, so a scope is blocked while an overlay
@@ -55,15 +57,18 @@ function textEntryFocused(): boolean {
 }
 
 type Candidate = InitialFocusCandidate & { entry: Entry };
-export type InitialFocusScopeHandle = Readonly<{ registry: Registry; layer: LayerRef; active: boolean; onTouchStart(): void }>;
+export type InitialFocusScopeHandle = Readonly<{ registry: Registry; layer: LayerRef; active: boolean; enabled: boolean; onTouchStart(): void }>;
 
 /**
  * Screen/overlay entry focus. The returned `onTouchStart` goes on the scope's root view: a touch there (bubbling from
  * any descendant, scrolls included) ends the entry window unless an overlay is above the scope.
  * `layer` is the overlay's own layer; screens inherit the enclosing one.
  */
-export function useInitialFocusScope({ mode, active: ownActive = true, layer: ownLayer }: { mode: InitialFocusMode; active?: boolean; layer?: LayerRef }): InitialFocusScopeHandle {
+export function useInitialFocusScope({ mode, active: ownActive = true, layer: ownLayer, enabled = true }: { mode: InitialFocusMode; active?: boolean; layer?: LayerRef; enabled?: boolean }): InitialFocusScopeHandle {
   const inherited = useContext(OverlayLayerContext);
+  const inheritedEnabled = useContext(EntryFocusEnabledContext);
+  const entryFocusEnabled = enabled && (ownLayer !== undefined || inheritedEnabled);
+  const enabledRef = useRef(entryFocusEnabled); enabledRef.current = entryFocusEnabled;
   const enclosingActive = useContext(ScopeActiveContext);
   const layer = ownLayer ?? inherited;
   // Overlays own their activation; screens follow the scope they are rendered in.
@@ -75,6 +80,7 @@ export function useInitialFocusScope({ mode, active: ownActive = true, layer: ow
     const s = state.current;
     const blocked = () => { const own = layer.current ?? 0; return [...openLayers].some(id => id > own); };
     const dispatch = (event: EntryFocusEvent<Candidate> | { kind: "register"; entry: Entry }) => {
+      if (!enabledRef.current) return;
       const candidates: Candidate[] = [...s.entries].map(entry => ({ entry, order: entry.order, preference: entry.preference, focusable: entry.focusable() }));
       const resolved = event.kind === "register" && "entry" in event
         ? { kind: "register" as const, field: candidates.find(candidate => candidate.entry === event.entry)! }
@@ -117,13 +123,13 @@ export function useInitialFocusScope({ mode, active: ownActive = true, layer: ow
       if (s.flush) { clearTimeout(s.flush); s.flush = null; }
       scope.dispatch({ kind: "deactivate" });
     };
-  }, [active, scope]);
+  }, [active, scope, entryFocusEnabled]);
 
-  return useMemo(() => ({ registry: scope.registry, layer: scope.layer, active, onTouchStart: scope.onTouchStart }), [scope, active]);
+  return useMemo(() => ({ registry: scope.registry, layer: scope.layer, active, enabled: entryFocusEnabled, onTouchStart: scope.onTouchStart }), [scope, active, entryFocusEnabled]);
 }
 
 export function InitialFocusProvider({ scope, children }: { scope: InitialFocusScopeHandle; children: ReactNode }) {
-  return <OverlayLayerContext.Provider value={scope.layer}><ScopeActiveContext.Provider value={scope.active}><InitialFocusContext.Provider value={scope.registry}>{children}</InitialFocusContext.Provider></ScopeActiveContext.Provider></OverlayLayerContext.Provider>;
+  return <EntryFocusEnabledContext.Provider value={scope.enabled}><OverlayLayerContext.Provider value={scope.layer}><ScopeActiveContext.Provider value={scope.active}><InitialFocusContext.Provider value={scope.registry}>{children}</InitialFocusContext.Provider></ScopeActiveContext.Provider></OverlayLayerContext.Provider></EntryFocusEnabledContext.Provider>;
 }
 
 /** Registers a text field with the nearest scope. `preference` is the field's public `initialFocusTarget`. */

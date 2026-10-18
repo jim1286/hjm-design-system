@@ -1,5 +1,5 @@
 // 2026-10-18 "input이 있는 화면에 진입하면 포커스되도록, 웹앱 둘 다": entry focus is owned by the screen/overlay scope.
-import { act, type ReactNode } from "react";
+import { act, createRef, type ReactNode } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, it } from "vitest";
 import { HjmProvider } from "../src/provider.js";
@@ -16,9 +16,9 @@ afterEach(async () => { await act(async () => root.unmount()); host.remove(); (d
 const render = (node: ReactNode) => act(async () => root.render(<HjmProvider>{node}</HjmProvider>));
 const active = () => (document.activeElement as HTMLElement | null)?.getAttribute("aria-label") ?? document.activeElement?.id ?? null;
 
-it("leaves a generic screen alone and focuses the marked, else first enabled field when asked", async () => {
+it("focuses a page input by default and prefers the marked, else first enabled field", async () => {
   await render(<ScreenLayout title="설정"><TextField aria-label="이름" /></ScreenLayout>);
-  expect(document.activeElement).toBe(document.body);
+  expect(active()).toBe("이름");
   await act(async () => root.unmount()); root = createRoot(host);
   await render(<ScreenLayout title="프로필" initialFocus="first-input"><TextField aria-label="이름" disabled /><TextField aria-label="소개" readOnly /><TextField aria-label="별명" /><TextField aria-label="메모" initialFocusTarget /></ScreenLayout>);
   expect(active()).toBe("메모");
@@ -35,7 +35,7 @@ it("does not steal focus from a field the user is in or from under an open modal
   await render(<ScreenLayout title="프로필" initialFocus="first-input"><TextField aria-label="별명" /></ScreenLayout>);
   expect(active()).not.toBe("별명"); modal.remove();
 });
-it("defaults on for search and editor screens and off for chat", async () => {
+it("defaults on for search, editor and chat pages", async () => {
   await render(<SearchScreen title="검색" query="" queryLabel="검색어" queryClearLabel="지우기" onQueryChange={() => {}} onSearch={() => {}}>{null}</SearchScreen>);
   expect(document.activeElement?.tagName).toBe("INPUT");
   await act(async () => root.unmount()); root = createRoot(host); (document.activeElement as HTMLElement).blur();
@@ -44,16 +44,16 @@ it("defaults on for search and editor screens and off for chat", async () => {
   expect(active()).toBe("본문");
   await act(async () => root.unmount()); root = createRoot(host); (document.activeElement as HTMLElement).blur();
   await render(<ChatScreen title="대화" composer={<TextArea aria-label="메시지" />}>{null}</ChatScreen>);
-  expect(active()).not.toBe("메시지");
+  expect(active()).toBe("메시지");
 });
-it("focuses a sheet's lone text entry, and keeps the first focusable element with several", async () => {
+it("never focuses a bottom sheet input on opening, with one field or several", async () => {
   await render(<Sheet open onOpenChange={() => {}} title="이름 바꾸기" closeLabel="닫기" showClose><TextField aria-label="새 이름" /></Sheet>);
   await act(async () => { await new Promise(resolve => setTimeout(resolve, 20)); });
-  expect(active()).toBe("새 이름");
+  expect(active()).not.toBe("새 이름");
   await act(async () => root.unmount()); root = createRoot(host);
   await render(<Sheet open onOpenChange={() => {}} title="이름 바꾸기" closeLabel="닫기" showClose><TextField aria-label="성" /><TextField aria-label="이름" /></Sheet>);
   await act(async () => { await new Promise(resolve => setTimeout(resolve, 20)); });
-  expect(active()).toBe("닫기");
+  expect(document.activeElement?.tagName).not.toBe("INPUT");
 });
 
 // 1.28.1 adoption gaps (2026-10-18): the entry window (modal on entry, late fields) and fields revealed after entry.
@@ -79,24 +79,24 @@ it("focuses a field that appears after entry data loads, unless the user interac
   await render(ui(false)); press(host); await render(ui(true)); await settle();
   expect(active()).not.toBe("확인 문구");
 });
-it("focuses a marked field revealed after entry in any mode, and each step's marked field in a sheet", async () => {
+it("does not focus newly revealed page fields after interaction or marked steps in a bottom sheet", async () => {
   const home = (searching: boolean, marked = true) => <ScreenLayout title="도구">{searching ? <TextField aria-label="검색" {...(marked ? { initialFocusTarget: true } : {})} /> : null}</ScreenLayout>;
   await render(home(false)); press(host);
   await render(home(true, false)); await settle();
   expect(active()).not.toBe("검색");
   await render(home(false)); await render(home(true)); await settle();
-  expect(active()).toBe("검색");
+  expect(active()).not.toBe("검색");
   await act(async () => root.unmount()); root = createRoot(host); (document.activeElement as HTMLElement).blur();
   const sheet = (step: 0 | 1) => <Sheet open onOpenChange={() => {}} title="새 아이디어" closeLabel="닫기" showClose>
     {step === 0 ? <TextField key="title" aria-label="제목" initialFocusTarget /> : <TextField key="seed" aria-label="씨앗" initialFocusTarget />}</Sheet>;
   await render(sheet(0)); await settle();
-  expect(active()).toBe("제목");
+  expect(active()).not.toBe("제목");
   await render(sheet(1)); await settle();
-  expect(active()).toBe("씨앗");
+  expect(active()).not.toBe("씨앗");
 });
-it("AuthScreenLayout focuses nothing by default and opts in for a nickname step", async () => {
+it("AuthScreenLayout focuses its input on page entry", async () => {
   await render(<AuthScreenLayout hero={null} hasFooter={false} main={<TextField aria-label="닉네임" />} />);
-  expect(active()).not.toBe("닉네임");
+  expect(active()).toBe("닉네임");
   await act(async () => root.unmount()); root = createRoot(host);
   await render(<AuthScreenLayout hero={null} hasFooter={false} initialFocus="first-input" main={<TextField aria-label="닉네임" />} />);
   expect(active()).toBe("닉네임");
@@ -109,12 +109,22 @@ it("focuses a screen rendered inside a product modal that wraps it", async () =>
   await settle();
   expect(active()).toBe("검색어");
 });
-it("focuses a screen rendered inside HJM Dialog and Sheet content", async () => {
+it("keeps Dialog focus but blocks a nested screen inside a bottom sheet", async () => {
   await render(<Dialog open onOpenChange={() => {}} title="검색" closeLabel="닫기"><ScreenLayout title="검색" initialFocus="first-input"><TextField aria-label="검색어" /></ScreenLayout></Dialog>);
   await settle();
   expect(active()).toBe("검색어");
   await act(async () => root.unmount()); root = createRoot(host); (document.activeElement as HTMLElement).blur();
-  await render(<Sheet open onOpenChange={() => {}} title="검색" closeLabel="닫기" showClose size="full"><ScreenLayout title="검색" initialFocus="first-input"><TextField aria-label="검색어" /></ScreenLayout></Sheet>);
+  await render(<Sheet open onOpenChange={() => {}} title="검색" closeLabel="닫기" showClose size="full" initialFocus="first-input"><ScreenLayout title="검색" initialFocus="first-input"><TextField aria-label="검색어" /></ScreenLayout></Sheet>);
   await settle();
-  expect(active()).toBe("검색어");
+  expect(active()).not.toBe("검색어");
+});
+
+it("blocks explicit input refs and nested footer focus in a bottom sheet, while manual focus still works", async () => {
+  const input = createRef<HTMLInputElement>();
+  await render(<Sheet open onOpenChange={() => {}} title="작성" closeLabel="닫기" initialFocus="first-input" initialFocusRef={input}
+    footer={<ScreenLayout title="작성창" initialFocus="first-input"><TextField ref={input} aria-label="하단 입력" initialFocusTarget /></ScreenLayout>} />);
+  await settle();
+  expect(active()).not.toBe("하단 입력");
+  input.current!.focus();
+  expect(active()).toBe("하단 입력");
 });

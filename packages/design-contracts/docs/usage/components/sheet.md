@@ -78,7 +78,7 @@ import { Sheet } from "@hjmds/react-native/overlays";
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `initialFocus` | `single-input` · `first-input` · `none` | `single-input` | 1.28.1. 열린 뒤(Native: 표시·진입 애니메이션 뒤, Web: 포커스 이동 시점) 포커스할 텍스트 입력. 기본은 텍스트 입력이 **하나뿐일 때만** 그 칸(이름 바꾸기·메모 한 줄), 여럿이면 기존 규칙(Web 첫 포커스 가능 요소, Native 접근성 포커스) 그대로. `first-input`은 `initialFocusTarget` 칸, 없으면 첫 칸. `initialFocusRef`(Web)가 있으면 그쪽이 이긴다. 열 때마다 다시 고른다. 1.28.2: 열린 뒤 칸이 늦게 나타나도 조작 전이면 고르고, 단계형 내용은 각 단계 칸에 `initialFocusTarget`을 주면 단계가 바뀔 때 그 칸을 포커스한다(앱의 단계별 `ref.focus()` 대신). 위에 다른 오버레이가 열려 있는 동안은 고르지 않는다 |
+| `initialFocus` | `single-input` · `first-input` · `none` | 하단: 자동 포커스 없음 / 측면: `single-input` | 1.33.0 정책 변경. 하단 시트는 이 prop·`initialFocusRef`·중첩 화면·`initialFocusTarget`으로 입력 자동 포커스를 켤 수 없다. Web은 모달 컨테이너로 초점을 옮겨 focus trap을 유지하고 Native는 키보드를 열지 않는다. 측면 시트는 기존 Dialog 계약을 따른다. 사용자가 직접 입력칸을 누르는 동작은 유지한다 |
 | `placement` | `bottom` · `start` · `end` | `bottom` | 나오는 가장자리 |
 | `size` | `auto` · `medium`(60%) · `large`(85%) · `full`(100%) | `auto` | `auto`는 내용 높이. 비율은 화면 높이 기준(Web `dvh`), 두 플랫폼 모두 위 safe area(Native는 키보드도)를 뺀 남은 높이를 넘지 않는다. `maxHeightRatio` 0.9 상한은 `auto`에만 걸린다 |
 | `open` · `defaultOpen` | `boolean` | 비제어 `false` | Web은 제어하면 `onOpenChange` 필수, 비제어면 `trigger` 필수 |
