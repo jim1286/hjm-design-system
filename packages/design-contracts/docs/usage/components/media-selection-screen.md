@@ -30,6 +30,7 @@
 | 이름 | 역할 | Web | Native |
 | --- | --- | --- | --- |
 | `MediaSelectionScreen` | 미디어 선택 검토 화면 | `/screen-flows` | `/screen-flows` |
+| `MediaSelectionCell` | 화면 격자가 그리는 항목 칸(미리보기 → UploadItem → 위로·아래로·회전·삭제). 가상화 목록에서 같은 칸을 그릴 때 쓴다. 미게시 | `/screen-flows` | `/screen-flows` |
 
 granular subpath로만 import 된다(루트 entry에 없음). 추가 peer는 없다.
 
@@ -96,6 +97,7 @@ Web의 `<img alt="">`는 장식용 미리보기다. 사진 이름은 `removeLabe
 | `removeLabel` · `moveUpLabel` · `moveDownLabel` | `(item: MediaSelectionItem) => string` | 필수 | 사진 이름을 포함한 접근성 이름 |
 | `onMove` | `(id: string, direction: -1 \| 1) => void` | 필수 | 첫 항목의 위로·마지막 항목의 아래로는 비활성 |
 | `onRemove` · `onRetry` · `onCancel` | `(id: string) => void` | 필수 | 삭제, UploadItem 재시도·취소 |
+| `rotate` | `{ label, itemLabel(item), onRotate(id) }` | 없음 | 미게시. 주면 아래로와 삭제 사이에 회전 버튼(`label` 표시 문구, `itemLabel` 사진 이름을 포함한 접근성 이름). 회전 값 저장과 `preview`·결과물 반영은 제품이 한다 |
 | 나머지 | `ScreenLayout`과 같음(`children`·`footer` 제외) | — | `actions`를 주면 `add` 앞에 같은 행으로 놓인다 |
 
 ## 배치
@@ -107,6 +109,21 @@ Web의 `<img alt="">`는 장식용 미리보기다. 사진 이름은 `removeLabe
 | 순서·정렬 | 헤더(제목 → 추가) → 격자(항목마다 미리보기 → UploadItem → 위로·아래로·삭제) → footer(`selectionSummary` → 완료) | 렌더 순서 |
 | 고정·스크롤 | 헤더·footer 고정, 격자는 본문 스크롤(`scroll` 기본 `"screen"`) | `ScreenLayout` |
 | 좁은 폭 | 좁은 폭에서도 2열 유지; 항목 버튼 줄은 줄바꿈(`flexWrap: "wrap"`)해 버튼을 자르지 않는다 | `screen-flows.tsx` |
+
+## 가상화 목록의 항목 칸
+
+사진이 많아 제품이 `VirtualList`·`FlatList`로 목록을 직접 그릴 때는 같은 칸 `MediaSelectionCell`을 `renderItem`에서 그린다. 미리보기와 행동 줄을 제품이 다시 조립하지 않는다(2026-10-18 Utilverse 사진→PDF·사진 띠 도구가 썸네일·순서·회전·삭제 칸을 직접 만들었다).
+
+```tsx
+// Native
+import { MediaSelectionCell } from "@hjmds/react-native/screen-flows";
+
+<FlatList data={photos} keyExtractor={photo => photo.id} renderItem={({ item, index }) =>
+  <MediaSelectionCell item={toMediaItem(item)} index={index} count={photos.length} {...itemActions}
+    rotate={{ label: t("photo.rotate"), itemLabel: entry => t("photo.rotateNamed", { name: entry.descriptor.name }), onRotate: rotatePhoto }} />} />
+```
+
+`index`·`count`는 전체 목록 기준이다(첫 항목 위로·마지막 항목 아래로 비활성). `itemActions`는 화면과 같은 `labels`·`actionLabels`·`removeLabel`·`moveUpLabel`·`moveDownLabel`·`onRemove`·`onMove`·`onRetry`·`onCancel`이다. 칸 사이 간격·열 수는 host가 준다. 삭제 후 Web 키보드 초점 복구는 화면 격자의 동작이므로 가상화 host는 자기 초점을 소유한다.
 
 ## 꼭 지킬 것
 

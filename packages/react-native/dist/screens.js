@@ -4,26 +4,29 @@ import { iconButtonRecipe } from "@hjmds/design-contracts/recipes";
 import { resolveComposerLimit } from "@hjmds/design-contracts/communication";
 import { Progress } from "./feedback.js";
 import { resolveDesignProfileScreen } from "@hjmds/design-contracts/design-profile-layout";
-import { MessageReactions } from "./internal/message-reactions.js";
+import { MessageReactions, ReactionSummaryButton, omitReactionSummary } from "./internal/message-reactions.js";
+import { MediaAlbumView, useMediaAlbumIndex } from "./internal/media-album.js";
+import { validateMediaSetChoice } from "@hjmds/design-contracts/screen-patterns";
 import { Button, IconButton } from "./actions.js";
 import { TextArea } from "./inputs.js";
 import { useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { Animated, PanResponder, Pressable, ScrollView, View } from "react-native";
+import { AccessibilityInfo, Animated, PanResponder, Platform, Pressable, ScrollView, View } from "react-native";
 import { Spinner } from "./internal/spinner.js";
 import { KeyboardAvoidanceContext, useInsideKeyboardAvoidance, useKeyboardOverlap, useScrollFocusedInputIntoView } from "./keyboard.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { ScreenExitButton } from "./internal/screen-exit.js";
 import { ScreenFooterContext, resolveScreenBottomPadding } from "./internal/screen-footer.js";
 import { ScreenBodyInsetContext } from "./internal/screen-body-inset.js";
+import { BottomNavigationInsetContext } from "./internal/bottom-navigation-inset.js";
 import { InitialFocusProvider, useInitialFocusScope } from "./internal/initial-focus.js";
 import { listRowScrollRoom } from "./internal/list-row-scroll-room.js";
-import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, screenHeaderRecipe, validateScreenExit, initialFocusDefaults } from "@hjmds/design-contracts/screen-patterns";
+import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, resolveChatReactionSummary, typingIndicatorRecipe, chatDateSeparatorRecipe, screenHeaderRecipe, validateScreenExit, initialFocusDefaults } from "@hjmds/design-contracts/screen-patterns";
 import { motion } from "@hjmds/design-contracts/foundations";
 import { Stack, Text } from "./primitives.js";
 import { Heading } from "./heading.js";
 import { ListRow } from "./data-display.js";
 import { useHjmNativeTheme } from "./provider.js";
-export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "center", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance = true, safeAreaBottom = 0, initialFocus = initialFocusDefaults.screen, hjmBodyInlinePadding, hjmTitleLeading }) {
+export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility = "visible", headerAlignment = "center", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, loadingIndicator, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance = true, safeAreaBottom = 0, initialFocus = initialFocusDefaults.screen, hjmBodyInlinePadding }) {
     if (exit)
         validateScreenExit(exit, false);
     if (!Number.isFinite(safeAreaBottom) || safeAreaBottom < 0)
@@ -46,7 +49,8 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
     });
     const [leadingWidth, setLeadingWidth] = useState(0), [actionsWidth, setActionsWidth] = useState(0);
     const sideWidth = Math.max(leadingWidth, actionsWidth);
-    const showHeader = titleVisibility === "visible" || !!description || !!leading || !!actions;
+    const hasMark = titleLeading !== undefined && titleLeading !== null && titleLeading !== false;
+    const showHeader = titleVisibility === "visible" || hasMark || !!description || !!leading || !!actions;
     const resolved = resolveScreenContentState(state);
     const { colors, environment, designProfile } = useHjmNativeTheme();
     const presentation = suppliedPresentation ?? designProfile?.screens.overview;
@@ -58,16 +62,24 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
     const bodyInline = contentInset === "default" ? hjmBodyInlinePadding ?? padding : 0;
     // Icon-only route headers need no title breathing room: otherwise the 60pt
     // heading plus full body inset leaves category tabs detached from navigation.
-    const compactHeader = header == null && showHeader && headerAlignment === "center" && titleVisibility === "hidden" && !description;
+    const compactHeader = header == null && showHeader && headerAlignment === "center" && titleVisibility === "hidden" && !hasMark && !description;
     const headerVerticalPadding = compactHeader ? screenHeaderRecipe.compactPaddingVertical : screenHeaderRecipe.paddingVertical;
     // A notice can contain navigation tabs; keep its separation from body filters.
     const bodyPaddingTop = compactHeader && !notice ? Math.min(padding, screenHeaderRecipe.compactBodyTop) : padding;
     // The last region (footer, else body) owns the bottom inset once: max(gutter, safe area), never gutter + inset.
-    const bottomPadding = resolveScreenBottomPadding(padding, safeAreaBottom, keyboardOverlap > 0);
+    // An overlay BottomNavigation covers `navigationInset` of the screen bottom (its safe area included), so the last
+    // region keeps the gutter above the bar instead of each tab screen adding a spacer (BottomNavigationInsetProvider).
+    const navigationInset = useContext(BottomNavigationInsetContext);
+    const edgePadding = resolveScreenBottomPadding(padding, safeAreaBottom, keyboardOverlap > 0);
+    const bottomPadding = navigationInset > 0 && keyboardOverlap === 0 ? Math.max(edgePadding, padding + navigationInset) : edgePadding;
     const bodyPaddingBottom = footer ? padding : bottomPadding;
     const ready = contentAlignment === "center" ? _jsx(View, { style: { marginVertical: "auto", flexShrink: 0, width: "100%" }, children: children }) : children;
-    const body = state.kind === "ready" ? _jsx(ScreenBodyInsetContext.Provider, { value: bodyInline, children: ready }) : _jsxs(View, { style: { marginVertical: "auto", flexShrink: 0, alignItems: "center", gap: recipe.stateGap, paddingVertical: profileLayout?.gap ?? recipe.sectionGap }, children: [resolved.busy ? _jsx(Spinner, { label: [state.title, state.description].filter(Boolean).join(". ") }) : _jsxs(View, { accessibilityLiveRegion: resolved.announcement, style: { alignItems: "center", gap: recipe.itemGap }, children: [_jsx(Text, { variant: "title", align: "center", children: state.title }), state.description ? _jsx(Text, { tone: "muted", align: "center", children: state.description }) : null] }), stateAction] });
-    return _jsx(View, { ref: rootRef, testID: testID, onTouchStart: focusScope.onTouchStart, style: [{ flex: 1, minHeight: 0, width: "100%", maxWidth: profileLayout?.maxWidth ?? recipe.maxWidth, alignSelf: "center", backgroundColor: surface === "transparent" || designProfile?.material.canvas ? "transparent" : colors.bg, ...(keyboardOverlap > 0 ? { paddingBottom: keyboardOverlap } : {}) }, layoutStyle], children: _jsx(KeyboardAvoidanceContext.Provider, { value: insideAvoidance || avoidKeyboard, children: _jsxs(InitialFocusProvider, { scope: focusScope, children: [header ?? (!showHeader ? null : headerAlignment === "center" ? _jsxs(View, { style: { minHeight: compactHeader ? screenHeaderRecipe.compactMinHeight : screenHeaderRecipe.minHeight, paddingHorizontal: padding, paddingVertical: headerVerticalPadding, flexDirection: "row", alignItems: "center", gap: recipe.itemGap }, children: [_jsx(View, { style: { width: sideWidth, flexShrink: 0, alignItems: "flex-start" }, children: _jsx(View, { onLayout: event => setLeadingWidth(event.nativeEvent.layout.width), style: { alignSelf: "flex-start", flexShrink: 0, flexDirection: "row", alignItems: "center" }, children: leading }) }), _jsxs(View, { style: { flex: 1, minWidth: 0, alignItems: "center", gap: 4 }, children: [titleVisibility === "visible" && _jsxs(Stack, { axis: "inline", gap: "xs", align: "center", justify: "center", layoutStyle: { flexWrap: "wrap" }, children: [hjmTitleLeading, _jsx(Heading, { level: screenHeaderRecipe.centeredTitleLevel, semanticLevel: 1, align: "center", children: title }), titleBadge] }), description && _jsx(Text, { align: "center", tone: "muted", children: description })] }), _jsx(View, { style: { width: sideWidth, flexShrink: 0, alignItems: "flex-end" }, children: _jsx(View, { onLayout: event => setActionsWidth(event.nativeEvent.layout.width), style: { alignSelf: "flex-end", flexShrink: 0, flexDirection: "row", alignItems: "center" }, children: actions }) })] }) : _jsxs(View, { style: { flexDirection: profileLayout?.headerAxis ?? "row", flexWrap: "wrap", alignItems: profileLayout ? (profileLayout.centered ? "center" : "flex-start") : "center", padding, gap: recipe.itemGap }, children: [leading, _jsxs(View, { style: { flexGrow: 1, flexShrink: 1, ...(profileLayout?.headerAxis === "column" ? { width: "100%" } : { flexBasis: recipe.headerMinWidth * environment.textScale }) }, children: [titleVisibility === "visible" && _jsxs(Stack, { axis: "inline", gap: "xs", align: "center", justify: profileLayout?.centered ? "center" : "start", wrap: true, children: [_jsx(Heading, { level: screenHeaderRecipe.titleLevel, semanticLevel: 1, ...(profileLayout?.centered ? { align: "center" } : {}), children: title }), titleBadge] }), description ? _jsx(Text, { tone: "muted", ...(profileLayout?.centered ? { align: "center" } : {}), children: description }) : null] }), actions] })), notice ? _jsx(View, { style: { paddingHorizontal: padding }, children: notice }) : null, scroll === "screen" || resolved.replacesContent ? _jsx(ScrollView, { ...scrollProps, ref: bodyScroll, style: { flex: 1 }, keyboardShouldPersistTaps: "handled", scrollEventThrottle: scrollProps?.scrollEventThrottle ?? 16, onScroll: event => { trackScroll(event); scrollProps?.onScroll?.(event); }, contentContainerStyle: { flexGrow: 1, padding, paddingTop: bodyPaddingTop, paddingBottom: bodyPaddingBottom, paddingHorizontal: bodyInline }, accessibilityState: { busy: resolved.busy }, children: body })
+    const body = state.kind === "ready" ? _jsx(ScreenBodyInsetContext.Provider, { value: bodyInline, children: ready }) : _jsxs(View, { style: { marginVertical: "auto", flexShrink: 0, alignItems: "center", gap: recipe.stateGap, paddingVertical: profileLayout?.gap ?? recipe.sectionGap }, children: [resolved.busy ? (loadingIndicator ? _jsx(View, { accessible: true, accessibilityRole: "progressbar", accessibilityLabel: [state.title, state.description].filter(Boolean).join(". "), accessibilityState: { busy: true }, accessibilityLiveRegion: "polite", style: { alignItems: "center" }, children: _jsx(View, { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", children: loadingIndicator }) }) : _jsx(Spinner, { label: [state.title, state.description].filter(Boolean).join(". ") })) : _jsxs(View, { accessibilityLiveRegion: resolved.announcement, style: { alignItems: "center", gap: recipe.itemGap }, children: [_jsx(Text, { variant: "title", align: "center", children: state.title }), state.description ? _jsx(Text, { tone: "muted", align: "center", children: state.description }) : null] }), stateAction] });
+    // The mark is decorative beside a visible title (hidden from assistive tech, as TopBar titleLeading); standing
+    // alone it becomes the header, named by `title`.
+    const mark = hasMark ? _jsx(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { flexShrink: 0, alignItems: "center", justifyContent: "center" }, children: titleLeading }) : null;
+    const standaloneMark = (centered) => mark ? _jsx(View, { accessible: true, accessibilityRole: "header", accessibilityLabel: title, style: { alignItems: centered ? "center" : "flex-start" }, children: mark }) : null;
+    return _jsx(View, { ref: rootRef, testID: testID, onTouchStart: focusScope.onTouchStart, style: [{ flex: 1, minHeight: 0, width: "100%", maxWidth: profileLayout?.maxWidth ?? recipe.maxWidth, alignSelf: "center", backgroundColor: surface === "transparent" || designProfile?.material.canvas ? "transparent" : colors.bg, ...(keyboardOverlap > 0 ? { paddingBottom: keyboardOverlap } : {}) }, layoutStyle], children: _jsx(KeyboardAvoidanceContext.Provider, { value: insideAvoidance || avoidKeyboard, children: _jsxs(InitialFocusProvider, { scope: focusScope, children: [header ?? (!showHeader ? null : headerAlignment === "center" ? _jsxs(View, { style: { minHeight: compactHeader ? screenHeaderRecipe.compactMinHeight : screenHeaderRecipe.minHeight, paddingHorizontal: padding, paddingVertical: headerVerticalPadding, flexDirection: "row", alignItems: "center", gap: recipe.itemGap }, children: [_jsx(View, { style: { width: sideWidth, flexShrink: 0, alignItems: "flex-start" }, children: _jsx(View, { onLayout: event => setLeadingWidth(event.nativeEvent.layout.width), style: { alignSelf: "flex-start", flexShrink: 0, flexDirection: "row", alignItems: "center" }, children: leading }) }), _jsxs(View, { style: { flex: 1, minWidth: 0, alignItems: "center", gap: 4 }, children: [titleVisibility === "visible" ? _jsxs(Stack, { axis: "inline", gap: "xs", align: "center", justify: "center", layoutStyle: { flexWrap: "wrap" }, children: [mark, _jsx(Heading, { level: screenHeaderRecipe.centeredTitleLevel, semanticLevel: 1, align: "center", children: title }), titleBadge] }) : standaloneMark(true), description && _jsx(Text, { align: "center", tone: "muted", children: description })] }), _jsx(View, { style: { width: sideWidth, flexShrink: 0, alignItems: "flex-end" }, children: _jsx(View, { onLayout: event => setActionsWidth(event.nativeEvent.layout.width), style: { alignSelf: "flex-end", flexShrink: 0, flexDirection: "row", alignItems: "center" }, children: actions }) })] }) : _jsxs(View, { style: { flexDirection: profileLayout?.headerAxis ?? "row", flexWrap: "wrap", alignItems: profileLayout ? (profileLayout.centered ? "center" : "flex-start") : "center", padding, gap: recipe.itemGap }, children: [leading, _jsxs(View, { style: { flexGrow: 1, flexShrink: 1, ...(profileLayout?.headerAxis === "column" ? { width: "100%" } : { flexBasis: recipe.headerMinWidth * environment.textScale }) }, children: [titleVisibility === "visible" ? _jsxs(Stack, { axis: "inline", gap: "xs", align: "center", justify: profileLayout?.centered ? "center" : "start", wrap: true, children: [mark, _jsx(Heading, { level: screenHeaderRecipe.titleLevel, semanticLevel: 1, ...(profileLayout?.centered ? { align: "center" } : {}), children: title }), titleBadge] }) : standaloneMark(!!profileLayout?.centered), description ? _jsx(Text, { tone: "muted", ...(profileLayout?.centered ? { align: "center" } : {}), children: description }) : null] }), actions] })), notice ? _jsx(View, { style: { paddingHorizontal: padding }, children: notice }) : null, scroll === "screen" || resolved.replacesContent ? _jsx(ScrollView, { ...scrollProps, ref: bodyScroll, style: { flex: 1 }, keyboardShouldPersistTaps: "handled", scrollEventThrottle: scrollProps?.scrollEventThrottle ?? 16, onScroll: event => { trackScroll(event); scrollProps?.onScroll?.(event); }, contentContainerStyle: { flexGrow: 1, padding, paddingTop: bodyPaddingTop, paddingBottom: bodyPaddingBottom, paddingHorizontal: bodyInline }, accessibilityState: { busy: resolved.busy }, children: body })
                         : _jsx(View, { style: { flex: 1, minHeight: 0, padding, paddingTop: bodyPaddingTop, paddingBottom: bodyPaddingBottom, paddingHorizontal: bodyInline }, children: body }), footer ? _jsx(View, { style: { padding, paddingBottom: bottomPadding, borderTopWidth: contentInset === "none" ? 0 : 1, borderColor: colors.border }, children: _jsx(ScreenFooterContext.Provider, { value: contentInset === "none" ? null : { bottomPadding }, children: footer }) }) : null] }) }) });
 }
 /**
@@ -100,7 +112,7 @@ export function ChatScreen({ composer, jumpToLatest, avatar, scroll = "content",
     const showComposer = !props.state || props.state.kind === "ready" || props.state.kind === "empty";
     // Anchor the jump control to the composer edge so it floats over the timeline without measuring the footer.
     // Conversations center the peer between back and tools and use the measured 10pt timeline gutter (2026-10-16).
-    return _jsx(ScreenLayout, { ...props, scroll: scroll, hjmBodyInlinePadding: chatMessageRecipe.timelineInset, hjmTitleLeading: avatar, footer: showComposer ? _jsxs(View, { style: { position: "relative" }, children: [jumpToLatest ? _jsx(View, { style: { position: "absolute", bottom: "100%", end: 0, marginBottom: chatMessageRecipe.jumpToLatestGap + screenPatternRecipe.padding }, children: _jsx(IconButton, { label: jumpToLatest.label, size: "small", shape: "circle", tone: "secondary", onPress: jumpToLatest.onPress, children: jumpToLatest.icon }) }) : null, composer] }) : null });
+    return _jsx(ScreenLayout, { ...props, scroll: scroll, hjmBodyInlinePadding: chatMessageRecipe.timelineInset, titleLeading: avatar, footer: showComposer ? _jsxs(View, { style: { position: "relative" }, children: [jumpToLatest ? _jsx(View, { style: { position: "absolute", bottom: "100%", end: 0, marginBottom: chatMessageRecipe.jumpToLatestGap + screenPatternRecipe.padding }, children: _jsx(IconButton, { label: jumpToLatest.label, size: "small", shape: "circle", tone: "secondary", onPress: jumpToLatest.onPress, children: jumpToLatest.icon }) }) : null, composer] }) : null });
 }
 export function MessageComposer({ leading, quickInserts, value, label, sendLabel, placeholder = label, description, error, invalid = false, submitMode = "newline", onBlur, disabled = false, pending = false, onValueChange, onSend, maxLength, lengthFeedback, sendDisabled = false, additionalContent = false, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation = "inline", attachmentAction, attachments = [], onRemoveAttachment }) {
     validateMessageAttachments(attachments);
@@ -115,6 +127,10 @@ export function MessageComposer({ leading, quickInserts, value, label, sendLabel
     // A bounded corner radius keeps multiline/large-text content inside the field instead of a tall pill.
     const hasContent = !!value.trim() || attachments.length > 0 || additionalContent;
     const { colors, tokens } = useHjmNativeTheme();
+    // The error is a send-time outcome, so it must be heard when it appears. TextArea's FieldMessage is an assertive live
+    // region (Android); iOS ignores live regions, so announce it once per new error, as FieldGroup does.
+    useEffect(() => { if (error && Platform.OS === "ios")
+        AccessibilityInfo.announceForAccessibility(error); }, [error]);
     const compactField = { hjmCompactMultiline: true };
     const attach = attachmentAction ? _jsx(IconButton, { label: attachmentAction.label, tone: "ghost", disabled: locked || (attachmentAction.disabled ?? false), onPress: attachmentAction.onPress, children: attachmentAction.icon }) : null;
     const send = sendIcon ? _jsx(IconButton, { label: sendLabel, size: sendPresentation === "circle" ? "small" : "medium", shape: "circle", tone: sendPresentation === "circle" ? "primary" : "ghost", disabled: !canSend, loading: pending, onPress: () => { if (canSend)
@@ -128,7 +144,7 @@ export function MessageComposer({ leading, quickInserts, value, label, sendLabel
             style: ({ pressed }) => ({ flexGrow: 1, flexShrink: 1, flexBasis: 0, maxWidth: composerQuickInsertRecipe.itemSize, height: composerQuickInsertRecipe.itemSize, borderRadius: composerQuickInsertRecipe.itemSize / 2, alignItems: "center", justifyContent: "center", opacity: locked ? 0.5 : 1, backgroundColor: pressed ? colors.surface : "transparent" }), children: _jsx(FixedGlyph, { fontSize: composerQuickInsertRecipe.emojiSize, lineHeight: composerQuickInsertRecipe.emojiSize + 6, children: item.emoji }) }, item.id)) }) : null;
     return _jsxs(Stack, { gap: "sm", children: [context, quickRow, _jsxs(View, { style: [{ gap: tokens.spacing.sm }, replyTo ? { backgroundColor: colors.surface, borderRadius: tokens.radius.xl, padding: tokens.spacing.sm } : null], children: [replyTo ? _jsxs(View, { style: { flexDirection: "row", alignItems: "flex-start", gap: tokens.spacing.sm }, children: [_jsxs(View, { style: { flex: 1, minWidth: 0, gap: 2 }, children: [_jsx(Text, { emphasis: "strong", children: replyTo.author }), _jsx(Text, { variant: "caption", tone: "muted", numberOfLines: 1, children: replyTo.excerpt })] }), _jsx(IconButton, { label: replyTo.cancelLabel, tone: "secondary", size: "small", shape: "circle", disabled: locked, onPress: replyTo.onCancel, children: _jsx(FixedGlyph, { children: "\u00D7" }) })] }) : null, composerBody] }), lengthFeedback && limit?.near ? _jsx(Progress, { shape: "circular", label: lengthFeedback.label, value: Math.min(limit.used, limit.max), max: limit.max, valueText: lengthFeedback.formatCount(limit.used, limit.max), children: _jsx(Text, { variant: "caption", children: lengthFeedback.formatCount(limit.used, limit.max) }) }) : null] });
 }
-export function ChatMessage({ direction, author, timestamp, timestampPresentation = "always", bubbleTail = true, groupPosition = "single", deliveryLabel, avatar, reply, replyQuote, media = [], actions, replyAction, replyLink, reactions, children, interactiveContent = false }) {
+export function ChatMessage({ direction, author, timestamp, timestampPresentation = "always", bubbleTail = true, groupPosition = "single", deliveryLabel, avatar, reply, replyQuote, media = [], mediaAlbum, actions, replyAction, replyLink, reactions, children, interactiveContent = false }) {
     const { colors, tokens, environment } = useHjmNativeTheme();
     const display = resolveChatMessageGroupDisplay(groupPosition);
     const revealTime = timestampPresentation === "swipe" && !!timestamp;
@@ -166,15 +182,20 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
         else if (event.nativeEvent.actionName === "openOriginal")
             quoteLink?.onPress(); },
     } : {};
-    // Pressable photos keep their own targets, like any interactive bubble content.
-    const interactive = interactiveContent || media.some(item => !!item.onPress);
+    // Pressable photos and album page buttons keep their own targets, like any interactive bubble content.
+    const interactive = interactiveContent || media.some(item => !!item.onPress) || mediaAlbum !== undefined;
     const captionCarriesReply = interactive && !reactions;
+    const menu = useRef(null);
+    const summary = reactions?.summary;
+    const reactionMenu = reactions ? omitReactionSummary(reactions) : undefined;
+    const summaryItems = summary ? resolveChatReactionSummary(summary) : [];
+    const summaryButton = reactions && summary && summaryItems.length ? _jsx(ReactionSummaryButton, { label: summary.label, items: summaryItems, selected: reactions.value, disabled: reactions.disabled ?? false, onPress: () => menu.current?.open() }) : null;
     // A run shows its time once, beside its last bubble; delivery state stays on every bubble.
     const visibleTime = revealTime || !display.showTimestamp ? "" : timestamp;
     const meta = [visibleTime, deliveryLabel].filter(Boolean).join(" · ");
     const surface = outgoing ? colors.surfaceAccent : colors.surface;
     // Filled, borderless bubbles separate authors by surface and side (2026-10-16 timeline standard).
-    const showTail = bubbleTail && display.showTail && !(media.length > 0 && !reply && !replyQuote && (children === null || children === undefined || children === false || children === ""));
+    const showTail = bubbleTail && display.showTail && !((media.length > 0 || mediaAlbum !== undefined) && !reply && !replyQuote && (children === null || children === undefined || children === false || children === ""));
     // The tipped corner tightens so the tip continues the bubble's top edge instead of a separate bump.
     const bubbleStyle = { backgroundColor: surface, borderRadius: chatMessageRecipe.bubbleRadius, ...(showTail ? (outgoing ? { borderTopEndRadius: chatMessageRecipe.tailCornerRadius } : { borderTopStartRadius: chatMessageRecipe.tailCornerRadius }) : {}), paddingHorizontal: chatMessageRecipe.bubblePaddingInline, paddingVertical: chatMessageRecipe.bubblePaddingBlock, gap: tokens.spacing.xs, flexShrink: 1 };
     // A flat-topped triangle in the bubble surface points outward from the run's first top corner.
@@ -184,9 +205,13 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
     // The quote stays inside the bubble; with replyLink a tap on it jumps to the original (2026-10-16 reference).
     const columns = media.length ? resolveChatMediaColumns(media.length) : 1;
     const tile = media.length > 1 ? (chatMessageRecipe.mediaWidth - chatMessageRecipe.mediaGap * (columns - 1)) / columns : chatMessageRecipe.mediaWidth;
-    const mediaBlock = media.length ? _jsx(View, { style: { width: chatMessageRecipe.mediaWidth, flexDirection: "row", flexWrap: "wrap", gap: chatMessageRecipe.mediaGap, borderRadius: chatMessageRecipe.bubbleRadius, overflow: "hidden" }, children: media.map(item => { const size = { width: tile, aspectRatio: media.length > 1 ? 1 : item.aspectRatio ?? 1 }; return item.onPress ? _jsx(Pressable, { accessibilityRole: "imagebutton", accessibilityLabel: item.label, onPress: item.onPress, style: size, children: item.preview }, item.id) : _jsx(View, { accessible: true, accessibilityRole: "image", accessibilityLabel: item.label, style: size, children: item.preview }, item.id); }) }) : null;
+    // The page index lives here so the hold-menu preview (a second render of the bubble) shows the same page.
+    validateMediaSetChoice(media.length > 0, mediaAlbum !== undefined);
+    const [albumIndex, setAlbumIndex] = useMediaAlbumIndex(mediaAlbum);
+    const mediaBlock = mediaAlbum ? _jsx(MediaAlbumView, { album: mediaAlbum, index: albumIndex, onIndexChange: setAlbumIndex, width: chatMessageRecipe.mediaWidth, radius: chatMessageRecipe.bubbleRadius })
+        : media.length ? _jsx(View, { style: { width: chatMessageRecipe.mediaWidth, flexDirection: "row", flexWrap: "wrap", gap: chatMessageRecipe.mediaGap, borderRadius: chatMessageRecipe.bubbleRadius, overflow: "hidden" }, children: media.map(item => { const size = { width: tile, aspectRatio: media.length > 1 ? 1 : item.aspectRatio ?? 1 }; return item.onPress ? _jsx(Pressable, { accessibilityRole: "imagebutton", accessibilityLabel: item.label, onPress: item.onPress, style: size, children: item.preview }, item.id) : _jsx(View, { accessible: true, accessibilityRole: "image", accessibilityLabel: item.label, style: size, children: item.preview }, item.id); }) }) : null;
     // A photo-only message drops the bubble surface so the photo itself is the message.
-    const photoOnly = media.length > 0 && !reply && !replyQuote && (children === null || children === undefined || children === false || children === "");
+    const photoOnly = (media.length > 0 || mediaAlbum !== undefined) && !reply && !replyQuote && (children === null || children === undefined || children === false || children === "");
     // Web bubbles accept plain text children; RN needs a Text host, so the public children contract matches.
     const body = typeof children === "string" || typeof children === "number" ? _jsx(Text, { children: children }) : children;
     const bubbleContent = _jsxs(_Fragment, { children: [tail, quote ? _jsx(View, { style: { borderBottomWidth: 1, borderColor: colors.border, paddingBottom: tokens.spacing.xs }, children: replyLink ? _jsx(Pressable, { accessibilityRole: "link", accessibilityLabel: replyLink.label, onPress: replyLink.onPress, children: quote }) : quote }) : null, mediaBlock, photoOnly ? null : body] });
@@ -195,7 +220,7 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
     return _jsxs(View, { ...gesture.panHandlers, style: { position: "relative", overflow: "hidden", marginTop: display.spacingBefore,
             // Reserve tip room only where it protrudes: the trailing edge of own messages, or the leading edge
             // when no avatar column hosts it. Symmetric 8pt padding narrowed every row (2026-10-16 review).
-            ...(bubbleTail ? (outgoing ? { paddingEnd: chatMessageRecipe.tailWidth } : avatar ? {} : { paddingStart: chatMessageRecipe.tailWidth }) : {}) }, children: [revealTime ? _jsx(Animated.View, { pointerEvents: "none", style: { position: "absolute", ...(outgoing ? { right: 0, alignItems: "flex-end" } : { left: 0 }), top: 0, bottom: 0, width: 80, justifyContent: "center", opacity: offset.interpolate({ inputRange: [-16, 0, 16], outputRange: [1, 0, 1], extrapolate: "clamp" }) }, children: _jsx(Text, { variant: "caption", tone: "muted", children: timestamp }) }) : null, _jsxs(Animated.View, { style: { transform: [{ translateX: offset }], flexDirection: "row", justifyContent: outgoing ? "flex-end" : "flex-start", alignItems: "flex-start", gap: chatMessageRecipe.avatarGap }, children: [!outgoing ? avatarSlot : null, _jsxs(View, { style: { maxWidth: screenPatternRecipe.messageMaxWidth, flexShrink: 1, gap: chatMessageRecipe.authorGap, alignItems: outgoing ? "flex-end" : "flex-start" }, children: [author && display.showAuthor && !outgoing ? _jsx(Text, { variant: "caption", tone: "muted", ...(captionCarriesReply && !meta ? replyAccessibility : {}), children: author }) : null, _jsxs(View, { style: { flexDirection: outgoing ? "row-reverse" : "row", alignItems: "flex-end", gap: chatMessageRecipe.metaGap, alignSelf: "stretch" }, children: [reactions ? _jsx(MessageReactions, { ...reactions, align: outgoing ? "end" : "start", interactiveContent: interactive, ...(timestamp ? { menuTitle: timestamp } : {}), ...(replyAction && !replyAction.disabled ? { replyAction } : {}), children: _jsx(View, { style: photoOnly ? { flexShrink: 1 } : bubbleStyle, children: bubbleContent }) }) : _jsx(View, { style: photoOnly ? { flexShrink: 1 } : bubbleStyle, accessible: !interactive, ...(interactive ? {} : replyAccessibility), children: bubbleContent }), meta || actions ? _jsxs(Stack, { axis: "inline", gap: "xs", align: "center", layoutStyle: { flexShrink: 0 }, children: [meta ? _jsx(Text, { variant: "caption", tone: "muted", ...(captionCarriesReply ? replyAccessibility : {}), children: meta }) : null, actions] }) : null] })] }), outgoing ? avatarSlot : null] })] });
+            ...(bubbleTail ? (outgoing ? { paddingEnd: chatMessageRecipe.tailWidth } : avatar ? {} : { paddingStart: chatMessageRecipe.tailWidth }) : {}) }, children: [revealTime ? _jsx(Animated.View, { pointerEvents: "none", style: { position: "absolute", ...(outgoing ? { right: 0, alignItems: "flex-end" } : { left: 0 }), top: 0, bottom: 0, width: 80, justifyContent: "center", opacity: offset.interpolate({ inputRange: [-16, 0, 16], outputRange: [1, 0, 1], extrapolate: "clamp" }) }, children: _jsx(Text, { variant: "caption", tone: "muted", children: timestamp }) }) : null, _jsxs(Animated.View, { style: { transform: [{ translateX: offset }], flexDirection: "row", justifyContent: outgoing ? "flex-end" : "flex-start", alignItems: "flex-start", gap: chatMessageRecipe.avatarGap }, children: [!outgoing ? avatarSlot : null, _jsxs(View, { style: { maxWidth: screenPatternRecipe.messageMaxWidth, flexShrink: 1, gap: chatMessageRecipe.authorGap, alignItems: outgoing ? "flex-end" : "flex-start" }, children: [author && display.showAuthor && !outgoing ? _jsx(Text, { variant: "caption", tone: "muted", ...(captionCarriesReply && !meta ? replyAccessibility : {}), children: author }) : null, _jsxs(View, { style: { flexDirection: outgoing ? "row-reverse" : "row", alignItems: "flex-end", gap: chatMessageRecipe.metaGap, alignSelf: "stretch" }, children: [reactionMenu ? _jsx(MessageReactions, { ...reactionMenu, menuRef: menu, align: outgoing ? "end" : "start", interactiveContent: interactive, ...(timestamp ? { menuTitle: timestamp } : {}), ...(replyAction && !replyAction.disabled ? { replyAction } : {}), children: _jsx(View, { style: photoOnly ? { flexShrink: 1 } : bubbleStyle, children: bubbleContent }) }) : _jsx(View, { style: photoOnly ? { flexShrink: 1 } : bubbleStyle, accessible: !interactive, ...(interactive ? {} : replyAccessibility), children: bubbleContent }), meta || actions || summaryButton ? _jsxs(Stack, { axis: "inline", gap: "xs", align: "center", layoutStyle: { flexShrink: 0 }, children: [summaryButton, meta ? _jsx(Text, { variant: "caption", tone: "muted", ...(captionCarriesReply ? replyAccessibility : {}), children: meta }) : null, actions] }) : null] })] }), outgoing ? avatarSlot : null] })] });
 }
 export function CompositionLayout({ title, headingLevel = 3, description, badge, leading, actions, notice, children, footer, state = { kind: "ready" }, stateAction, loadingIndicator, layoutStyle }) {
     const resolved = resolveScreenContentState(state);
@@ -208,9 +233,57 @@ export function NotificationRow({ preview, metadata, avatar, avatarBadge, thumbn
     return _jsxs(View, { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { flexDirection: "row", alignItems: "center", gap: r.gap, paddingVertical: r.paddingBlock, paddingHorizontal: r.paddingInline, width: "100%", minWidth: 0 }, children: [_jsxs(View, { style: { width: r.avatarSize, height: r.avatarSize, flexShrink: 0 }, children: [_jsx(View, { style: { width: "100%", height: "100%", overflow: "hidden", borderRadius: r.avatarSize / 2 }, children: avatar }), avatarBadge ? _jsx(View, { style: { position: "absolute", bottom: 0, right: 0, alignItems: "center", justifyContent: "center", width: r.avatarBadgeSize, height: r.avatarBadgeSize, borderRadius: r.avatarBadgeSize / 2, backgroundColor: colors.surface, borderWidth: 2, borderColor: colors.surface }, children: avatarBadge }) : null] }), _jsxs(View, { style: { flex: 1, minWidth: 0, gap: r.contentGap }, children: [_jsx(Text, { numberOfLines: r.previewLines, children: preview }), _jsxs(View, { style: { flexDirection: "row", alignItems: "center", gap: r.contentGap }, children: [_jsx(Text, { variant: "caption", tone: "muted", children: metadata }), unread ? _jsx(View, { testID: "hjm-unread-dot", style: { width: r.unreadSize, height: r.unreadSize, borderRadius: r.unreadSize / 2, flexShrink: 0, backgroundColor: colors.contentBrand } }) : null] })] }), thumbnail ? _jsx(View, { style: { width: r.thumbnailSize, height: r.thumbnailSize, flexShrink: 0, overflow: "hidden", borderRadius: tokens.radius.sm }, children: thumbnail }) : null] });
 }
 /** Presentation shared by launcher and profile grids; the host owns navigation or drag behavior. */
-export function IconTile({ icon, label, overlay, labelLines = 1, ghost = false }) {
+export function IconTile({ icon, label, overlay, labelLines = 1, ghost = false, frame = iconTileRecipe.defaults.frame, shape = iconTileRecipe.defaults.shape, size = iconTileRecipe.defaults.size }) {
     const r = iconTileRecipe;
     const { colors } = useHjmNativeTheme();
-    return _jsxs(View, { style: { alignItems: "center", gap: r.gap, minWidth: 0, width: "100%", overflow: "visible" }, children: [_jsxs(View, { style: { position: "relative", alignItems: "center", justifyContent: "center", width: r.iconSize, height: r.iconSize, borderRadius: r.iconSize * .22, backgroundColor: colors.surfaceAlt, borderWidth: 1, borderStyle: ghost ? "dashed" : "solid", opacity: ghost ? r.ghostOpacity : 1, borderColor: colors.border }, children: [icon, overlay] }), _jsx(Text, { variant: "caption", numberOfLines: labelLines, style: { width: "100%", minHeight: labelLines === 2 ? r.multilineLabelMinHeight : undefined, maxWidth: labelLines === 2 ? r.multilineLabelMaxWidth : r.labelMaxWidth, textAlign: "center", fontWeight: "500" }, children: label })] });
+    // A filling icon's edge is known only after layout; the radius follows the measured edge so the shape holds at every
+    // cell width (percentage border radii are not relied on across the supported RN versions).
+    const [fillEdge, setFillEdge] = useState(r.fillMinSize);
+    const edge = size === "fill" ? fillEdge : r.iconSize;
+    const framed = frame === "surface";
+    const dimensions = size === "fill" ? { width: "100%", minWidth: r.fillMinSize, maxWidth: r.fillMaxSize, aspectRatio: 1 } : { width: r.iconSize, height: r.iconSize };
+    return _jsxs(View, { style: { alignItems: "center", gap: r.gap, minWidth: 0, width: "100%", overflow: "visible" }, children: [_jsxs(View, { onLayout: size === "fill" ? event => setFillEdge(event.nativeEvent.layout.width) : undefined, style: { position: "relative", alignItems: "center", justifyContent: "center", ...dimensions, borderRadius: edge * r.shapes[shape], backgroundColor: framed ? colors.surfaceAlt : "transparent", borderWidth: framed || ghost ? 1 : 0, borderStyle: ghost ? "dashed" : "solid", opacity: ghost ? r.ghostOpacity : 1, borderColor: colors.border }, children: [icon, overlay] }), _jsx(Text, { variant: "caption", numberOfLines: labelLines, style: { width: "100%", minHeight: labelLines === 2 ? r.multilineLabelMinHeight : undefined, maxWidth: labelLines === 2 ? r.multilineLabelMaxWidth : r.labelMaxWidth, textAlign: "center", fontWeight: "500" }, children: label })] });
+}
+/**
+ * Incoming "is typing" row for a ChatScreen timeline (2026-10-18 BurnTok DM drew its own). The host shows it only while
+ * presence says someone is typing and places it after the last message; HJM owns the bubble, dots and announcement.
+ */
+export function TypingIndicator({ label, avatar, layoutStyle }) {
+    if (!label.trim())
+        throw new TypeError("TypingIndicator requires a localized label");
+    const { colors, tokens, environment } = useHjmNativeTheme();
+    const r = typingIndicatorRecipe, m = chatMessageRecipe;
+    const dots = useRef([0, 1, 2].map(() => new Animated.Value(1))).current;
+    useEffect(() => {
+        if (environment.reducedMotion) {
+            dots.forEach(dot => dot.setValue(1));
+            return;
+        }
+        const half = r.cycleMs / 2;
+        const pulses = dots.map((dot, index) => {
+            dot.setValue(r.restOpacity);
+            return Animated.sequence([Animated.delay(index * r.staggerMs), Animated.loop(Animated.sequence([
+                    Animated.timing(dot, { toValue: 1, duration: half, useNativeDriver: true }),
+                    Animated.timing(dot, { toValue: r.restOpacity, duration: half, useNativeDriver: true }),
+                ]))]);
+        });
+        pulses.forEach(pulse => pulse.start());
+        return () => pulses.forEach(pulse => pulse.stop());
+    }, [dots, environment.reducedMotion]);
+    // A polite status, as Web role="status": Android hears it through the live region; iOS ignores live regions, so it is
+    // queued once behind the current speech when the row appears.
+    useEffect(() => { if (Platform.OS === "ios")
+        AccessibilityInfo.announceForAccessibilityWithOptions(label, { queue: true }); }, [label]);
+    return _jsxs(View, { accessible: true, accessibilityLabel: label, accessibilityLiveRegion: "polite", style: [{ flexDirection: "row", alignItems: "flex-start", gap: m.avatarGap, marginTop: m.groupGap, paddingStart: avatar ? 0 : m.tailWidth }, layoutStyle], children: [avatar ? _jsx(View, { style: { width: m.avatarSize, alignItems: "center" }, children: avatar }) : null, _jsx(View, { style: { flexDirection: "row", alignItems: "center", gap: r.dotGap, minHeight: tokens.typography.body.lineHeight + m.bubblePaddingBlock * 2, paddingVertical: m.bubblePaddingBlock, paddingHorizontal: m.bubblePaddingInline, borderRadius: m.bubbleRadius, backgroundColor: colors.surface }, children: dots.map((opacity, index) => _jsx(Animated.View, { style: { width: r.dotSize, height: r.dotSize, borderRadius: r.dotSize / 2, backgroundColor: colors.textMuted, opacity } }, index)) })] });
+}
+/**
+ * Centered date (or time) row between ChatScreen timeline groups (2026-10-18 Utilverse chat drew a caption). Grouping
+ * rules stay with the product; the next message keeps its own group gap, so this row adds only the space before it.
+ */
+export function ChatDateSeparator({ label, layoutStyle }) {
+    if (!label.trim())
+        throw new TypeError("ChatDateSeparator requires a localized label");
+    const r = chatDateSeparatorRecipe;
+    return _jsx(View, { style: [{ alignItems: "center", paddingTop: r.paddingTop, paddingBottom: r.paddingBottom }, layoutStyle], children: _jsx(Text, { variant: r.textVariant, tone: r.tone, align: "center", children: label }) });
 }
 //# sourceMappingURL=screens.js.map

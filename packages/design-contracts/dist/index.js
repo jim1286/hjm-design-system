@@ -1,9 +1,9 @@
 export { aspectRatioDefaults, aspectRatioRecipe, resolveAspectRatioDescriptor, validateAspectRatioValue, } from "./aspect-ratio.js";
 export { containerDefaults, containerRecipe, resolveContainerDescriptor, validateContainerDescriptor, } from "./container.js";
 export { visuallyHiddenRecipe, } from "./visually-hidden.js";
-export { getIconDirectionality, getIconTransform, resolveIconDescriptor, semanticIconNames, validateIconDescriptor, } from "./icon.js";
+export { getIconDirectionality, getIconTransform, isSemanticIconName, resolveIconDescriptor, semanticIconNames, semanticIconPaths, validateIconDescriptor, } from "./icon.js";
 export { resolveLinkDescriptor, validateLinkDescriptor, validateLinkDestination, } from "./link.js";
-export { bottomNavigationBehaviorDefaults, resolveBottomNavigationActivation, resolveBottomNavigationConfiguration, resolveBottomNavigationDescriptor, resolveBottomNavigationItem, validateBottomNavigationConfiguration, validateBottomNavigationDescriptor, } from "./bottom-navigation.js";
+export { bottomNavigationBehaviorDefaults, resolveBottomNavigationActivation, resolveBottomNavigationConfiguration, resolveBottomNavigationDescriptor, resolveBottomNavigationItem, validateBottomNavigationConfiguration, validateBottomNavigationDescriptor, validateBottomNavigationProminence, } from "./bottom-navigation.js";
 export { resolveTooltipDescriptor, tooltipBehaviorDefaults, tooltipDescriptorDefaults, validateTooltipDescriptor, validateTooltipOpenState, } from "./tooltip.js";
 export { alertDialogBehaviorDefaults, canDismissAlertDialog, createAlertDialogSession, getAlertDialogInitialFocus, validateAlertDialogRequest, } from "./alert-dialog.js";
 export { canDismissSheet, createSheetLifecycle, sheetBehaviorDefaults, } from "./sheet.js";

@@ -19,6 +19,11 @@ const rootLayer = { current: 0 };
 /** Layer of the enclosing overlay, so a ScreenLayout rendered inside a sheet is blocked only by overlays above it. */
 const OverlayLayerContext = createContext(rootLayer);
 /**
+ * Whether the enclosing scope is active. A screen inside an overlay enters with the overlay (after its native
+ * presentation), not on mount: focusing a TextInput before the Modal is shown is dropped (BurnTok search, 2026-10-18).
+ */
+const ScopeActiveContext = createContext(true);
+/**
  * Keeps an overlay on the open stack while `presented` (from opening until its exit and native dismissal finish, the
  * point where return focus also runs). Closing notifies the scopes below so a pending entry focus can run.
  */
@@ -48,9 +53,12 @@ function textEntryFocused() {
  * any descendant, scrolls included) ends the entry window unless an overlay is above the scope.
  * `layer` is the overlay's own layer; screens inherit the enclosing one.
  */
-export function useInitialFocusScope({ mode, active = true, layer: ownLayer }) {
+export function useInitialFocusScope({ mode, active: ownActive = true, layer: ownLayer }) {
     const inherited = useContext(OverlayLayerContext);
+    const enclosingActive = useContext(ScopeActiveContext);
     const layer = ownLayer ?? inherited;
+    // Overlays own their activation; screens follow the scope they are rendered in.
+    const active = ownActive && (ownLayer !== undefined || enclosingActive);
     const modeRef = useRef(mode);
     modeRef.current = mode;
     const state = useRef({ phase: "inactive", entries: new Set(), fresh: new Set(), counter: 0, flush: null });
@@ -112,10 +120,10 @@ export function useInitialFocusScope({ mode, active = true, layer: ownLayer }) {
             scope.dispatch({ kind: "deactivate" });
         };
     }, [active, scope]);
-    return useMemo(() => ({ registry: scope.registry, layer: scope.layer, onTouchStart: scope.onTouchStart }), [scope]);
+    return useMemo(() => ({ registry: scope.registry, layer: scope.layer, active, onTouchStart: scope.onTouchStart }), [scope, active]);
 }
 export function InitialFocusProvider({ scope, children }) {
-    return _jsx(OverlayLayerContext.Provider, { value: scope.layer, children: _jsx(InitialFocusContext.Provider, { value: scope.registry, children: children }) });
+    return _jsx(OverlayLayerContext.Provider, { value: scope.layer, children: _jsx(ScopeActiveContext.Provider, { value: scope.active, children: _jsx(InitialFocusContext.Provider, { value: scope.registry, children: children }) }) });
 }
 /** Registers a text field with the nearest scope. `preference` is the field's public `initialFocusTarget`. */
 export function useInitialFocusTarget(input, preference, focusable) {

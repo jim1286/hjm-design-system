@@ -254,12 +254,94 @@ export const chatMessageRecipe = {
   // Photos render without the bubble surface (measured reference: ~210pt wide, bubble radius).
   mediaWidth: 210,
   mediaGap: 2,
+  /**
+   * Reaction summary pill beside the time (2026-10-18 BurnTok DM): one button that opens the same hold menu.
+   * Counts below `minCount` show the emoji alone, as the measured DM references do for a single reaction.
+   */
+  reactionSummary: { minHeight: 24, paddingInline: spacing.xs, itemGap: spacing.xxs, emojiGap: 2, minCount: 2 },
+} as const;
+
+export type ChatReactionSummaryItem = Readonly<{ id: string; emoji: string; count: number }>;
+export type ChatReactionSummary = Readonly<{ label: string; items: readonly ChatReactionSummaryItem[] }>;
+/**
+ * Validates ChatMessage `reactions.summary` and marks which counts are drawn. The label (the button's accessible name)
+ * is required; ids are unique and non-empty, emoji non-empty and counts positive integers; a count below
+ * `reactionSummary.minCount` shows the emoji alone.
+ */
+export function resolveChatReactionSummary({ label, items }: ChatReactionSummary): readonly (ChatReactionSummaryItem & Readonly<{ showCount: boolean }>)[] {
+  if (!label.trim()) throw new TypeError("Reaction summary requires a localized label");
+  const ids = new Set<string>();
+  return items.map(item => {
+    if (!item.id.trim() || ids.has(item.id)) throw new TypeError("Reaction summary ids must be unique and non-empty");
+    if (!item.emoji.trim()) throw new TypeError("Reaction summary items require an emoji");
+    if (!Number.isSafeInteger(item.count) || item.count < 1) throw new RangeError("Reaction summary counts must be positive integers");
+    ids.add(item.id);
+    return { ...item, showCount: item.count >= chatMessageRecipe.reactionSummary.minCount };
+  });
+}
+
+/**
+ * "Someone is typing" row in a chat timeline (2026-10-18 BurnTok DM). It reuses the incoming bubble geometry
+ * (chatMessageRecipe) so it reads as the next incoming message; only the dots are its own values. Under reduced
+ * motion the dots stay at full opacity instead of pulsing.
+ */
+export const typingIndicatorRecipe = {
+  dotSize: 6,
+  dotGap: spacing.xxs,
+  /** One pulse of the three dots; each dot starts `staggerMs` after the previous one. */
+  cycleMs: 1200,
+  staggerMs: 160,
+  restOpacity: 0.35,
+} as const;
+
+/**
+ * Centered date (or time) row between timeline groups (2026-10-18 Utilverse chat, which drew it as a product
+ * caption). The next message still owns its own group gap above it, so this row only adds the space before it.
+ */
+export const chatDateSeparatorRecipe = {
+  paddingTop: spacing.sm,
+  paddingBottom: spacing.xxs,
+  textVariant: "caption",
+  tone: "muted",
 } as const;
 
 /** Column count for a photo set: pairs read as 2-up, other counts as 3-up; one photo spans the width. */
 export function resolveChatMediaColumns(count: number): 1 | 2 | 3 {
   if (!Number.isSafeInteger(count) || count < 1) throw new RangeError("Chat media requires at least one item");
   return count === 1 ? 1 : count === 2 || count === 4 ? 2 : 3;
+}
+
+/**
+ * Paged photo album for ChatMessage `mediaAlbum` and CommentThreadItem `mediaAlbum` (2026-10-18, Utilverse social
+ * photos). Only the shown page is rendered, so a product that authorizes each image can fetch one photo at a time
+ * instead of every photo in a timeline row. The counter row matches CarouselMotion `navigation="counter"`:
+ * previous icon · position · next icon under the page; the frame keeps the host's media width and radius.
+ */
+export const mediaAlbumRecipe = {
+  /** Page frame width / height when the product gives no aspect ratio. */
+  defaultAspectRatio: 1,
+  /** Space between the page frame and the counter row. */
+  controlGap: spacing.xxs,
+  /** Previous/next are small ghost IconButtons so the counter row stays compact beside thumbnails. */
+  controlSize: "small",
+  controlGlyphSize: glyph.sm,
+} as const;
+
+/** A controlled index outside the set is a contract error, like Carousel's unknown `currentKey`. */
+export function validateMediaAlbum(count: number, index: number): void {
+  if (!Number.isSafeInteger(count) || count < 1) throw new RangeError("Media album requires at least one page");
+  if (!Number.isSafeInteger(index) || index < 0 || index >= count) throw new RangeError("Media album index must point at an existing page");
+}
+
+/** One message or comment carries one photo set: either the eager `media` previews or the paged `mediaAlbum`. */
+export function validateMediaSetChoice(hasMedia: boolean, hasAlbum: boolean): void {
+  if (hasMedia && hasAlbum) throw new TypeError("Pass either media or mediaAlbum, not both");
+}
+
+/** Uncontrolled albums keep the nearest page when the product's photo set shrinks (moderation, deletion). */
+export function resolveMediaAlbumIndex(count: number, index: number): number {
+  if (!Number.isSafeInteger(count) || count < 1) throw new RangeError("Media album requires at least one page");
+  return Math.min(Math.max(0, Math.trunc(index)), count - 1);
 }
 
 /**
@@ -351,6 +433,9 @@ export const commentThreadRecipe = {
   // Optional photo/sticker under the body; the measured reference keeps it thumbnail-sized.
   mediaMaxWidth: 160,
   mediaRadius: radius.md,
+  // Inline per-comment panel (edit/report/block form) under the action row (2026-10-18, Utilverse): a form reads as its
+  // own block, so it sits a full spacing step below the reply line instead of the 2pt line gap.
+  panelGap: spacing.xs,
   // The trailing vertical-dots menu glyph; the button keeps the shared 44pt IconButton target.
   menuGlyphSize: glyph.sm,
   /**
@@ -509,7 +594,28 @@ export const notificationRowRecipe = {
 } as const;
 
 /** Shared profile identity geometry; product owns the avatar content. */
-export const profileSummaryRecipe = Object.freeze({ avatarSize: 72 });
+export const profileSummaryRecipe = Object.freeze({
+  avatarSize: 72,
+  /**
+   * ProfileScreen `editPlacement="summary"` draws the edit action first in the summary's action row. A framed small
+   * button reads as the card's own action; the below-summary placement keeps its ghost button (2026-10-15 utilverse
+   * account decision: the edit action belongs inside the profile card).
+   */
+  editAction: Object.freeze({ tone: "secondary", size: "small" } as const),
+});
 
 /** Launcher artwork stays above its caption; product overlays may extend beyond the icon frame. */
-export const iconTileRecipe = Object.freeze({ iconSize: 64, labelMaxWidth: 72, multilineLabelMaxWidth: 84, multilineLabelMinHeight: 44, ghostOpacity: 0.55, gap: 6, iconRadius: "22%" });
+/**
+ * Frame of an IconTile icon (2026-10-18 Utilverse launcher). `surface` draws the shared filled, hairlined frame;
+ * `none` leaves product artwork that is already a complete launcher icon unframed. `shape` follows the product's
+ * icon theme (squircle on iPhone shells, square on Windows/Linux shells); `size: "fill"` lets the icon span its
+ * grid cell between `fillMinSize` and `fillMaxSize` instead of a product computing the cell size.
+ */
+export type IconTileFrame = "surface" | "none";
+export type IconTileShape = "squircle" | "square" | "circle";
+export type IconTileSize = "fixed" | "fill";
+export const iconTileRecipe = Object.freeze({ iconSize: 64, labelMaxWidth: 72, multilineLabelMaxWidth: 84, multilineLabelMinHeight: 44, ghostOpacity: 0.55, gap: 6, iconRadius: "22%",
+  /** Corner radius as a fraction of the icon size; `squircle` keeps the original 22%. */
+  shapes: Object.freeze({ squircle: 0.22, square: 0, circle: 0.5 }) as Readonly<Record<IconTileShape, number>>,
+  fillMinSize: 48, fillMaxSize: 68,
+  defaults: Object.freeze({ frame: "surface" as IconTileFrame, shape: "squircle" as IconTileShape, size: "fixed" as IconTileSize }) });

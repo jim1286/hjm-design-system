@@ -8,6 +8,11 @@ type Base = Readonly<{
     label: string;
     /** Visible caption above the tiles; omit when the screen heading already names the choice. */
     showLabel?: boolean;
+    /**
+     * Shows each item's `label` under its tile (one ellipsized line), e.g. a person's name in a recipient picker.
+     * The tile keeps the same accessible name, so turning this on does not change what assistive tech reads.
+     */
+    showItemLabels?: boolean;
     items: readonly ImageChoiceItem[];
     disabled?: boolean;
     className?: string;

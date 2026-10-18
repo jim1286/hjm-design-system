@@ -117,8 +117,9 @@ export function ChatMessagePreview() {
       <div style={{ outline: highlight ? "2px solid var(--hjm-color-content-brand)" : undefined, borderRadius: "var(--hjm-radius-md)" }}>
         <ChatMessage direction="incoming" author="서연" timestamp="오후 2:30" avatar={<Avatar name="서연" size="small" src={SEOYEON_PHOTO} alt="" />}
           replyAction={{ label: "답장", onPress: () => setStatus("서연님의 메시지에 답장을 준비했어요.") }}
-          reactions={{ label: "메시지에 반응", closeLabel: "반응 닫기", value: reaction, onValueChange: setReaction, options: reactionOptions, reportAction: { label: "신고", onPress: () => setStatus("서연님의 메시지 신고를 접수했어요.") } }}
-          actions={reaction ? <Text>{reactionOptions.find(option => option.id === reaction)?.emoji}</Text> : null}>
+          reactions={{ label: "메시지에 반응", closeLabel: "반응 닫기", value: reaction, onValueChange: setReaction, options: reactionOptions, reportAction: { label: "신고", onPress: () => setStatus("서연님의 메시지 신고를 접수했어요.") },
+            // The summary is HJM's pill beside the time; pressing it opens the same hold menu (2026-10-18).
+            ...(reaction ? { summary: { label: `반응 ${reactionOptions.find(option => option.id === reaction)?.emoji ?? ""} 1개. 반응 메뉴 열기`, items: [{ id: reaction, emoji: reactionOptions.find(option => option.id === reaction)?.emoji ?? "", count: 1 }] } } : {}) }}>
           <Text>지난번 이야기한 산책길, 가 보셨어요?</Text>
         </ChatMessage>
       </div>

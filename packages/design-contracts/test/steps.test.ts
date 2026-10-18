@@ -297,3 +297,16 @@ describe("Steps visual identity", () => {
     }
   });
 });
+
+describe("Steps revisitable steps", () => {
+  // 2026-10-18 spint compose: only steps before the cursor may be pressed to go back.
+  it("marks only steps strictly before the cursor, including when the cursor itself is complete", () => {
+    const options = { statusLabels, composeAccessibleName };
+    expect(resolveStepsDescriptor({ steps, currentStepId: "players" }, options).map((step) => step.revisitable))
+      .toEqual([true, true, false, false, false]);
+    expect(resolveStepsDescriptor({ steps, currentStepId: "players", currentStepStatus: "complete" }, options).map((step) => step.revisitable))
+      .toEqual([true, true, false, false, false]);
+    expect(resolveStepsDescriptor({ steps, currentStepId: "welcome" }, options).some((step) => step.revisitable)).toBe(false);
+    expect(stepsRecipe.press.minTouchTarget).toBe(44);
+  });
+});

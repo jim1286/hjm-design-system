@@ -4,7 +4,7 @@
 
 ## @hjmds/react
 
-고유 공개 컴포넌트 및 provider 이름 211개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 218개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -32,6 +32,7 @@
 | BottomCTA | BottomCTA | canonical | root, ./bottom-cta |
 | BottomInfo | BottomInfo | canonical | root, ./bottom-info |
 | BottomNavigation | BottomNavigation | canonical | root, ./navigation |
+| BottomNavigationInsetProvider | BottomNavigation | companion-or-alternative | root, ./navigation |
 | Breadcrumb | Breadcrumb | canonical | root, ./breadcrumb, ./navigation |
 | Button | Button | canonical | root, ./actions |
 | Calendar | Calendar | canonical | root, ./calendar |
@@ -40,6 +41,7 @@
 | CarouselMotion | Carousel | optional-extension | ./carousel-motion |
 | Celebration | 별도 보조 기능 | supplemental | ./celebration |
 | ChartLegend | Chart | companion-or-alternative | ./chart |
+| ChatDateSeparator | ChatDateSeparator | canonical | ./screens |
 | ChatMessage | ChatMessage | canonical | ./screens |
 | ChatScreen | ChatScreen | canonical | ./screens |
 | Checkbox | Checkbox | canonical | root, ./selection |
@@ -100,6 +102,7 @@
 | Image | Image | canonical | root, ./display |
 | ImageChoiceGroup | ImageChoiceGroup | canonical | ./image-choice |
 | ImageComparison | 별도 보조 기능 | supplemental | ./image-comparison |
+| ImmersiveOverlay | Dialog | companion-or-alternative | root, ./overlays |
 | ImportFieldMapping | 별도 보조 기능 | supplemental | ./data-workflows |
 | InlineConfirm | Button | optional-extension | ./inline-confirm |
 | InlineEdit | 별도 보조 기능 | supplemental | ./collection-editing |
@@ -113,12 +116,14 @@
 | LoadMore | LoadMore | canonical | root, ./navigation |
 | Masonry | Masonry | canonical | ./masonry |
 | MatrixTable | DataTable | companion-or-alternative | ./data-table |
+| MediaSelectionCell | MediaSelectionScreen | companion-or-alternative | ./screen-flows |
 | MediaSelectionScreen | MediaSelectionScreen | canonical | ./screen-flows |
 | MediaTransport | 별도 보조 기능 | supplemental | ./media-transport |
 | Mentions | Mentions | canonical | root, ./mentions |
 | Menu | Menu | canonical | root, ./overlays |
 | Menubar | Menubar | canonical | root, ./menubar |
 | MessageComposer | MessageComposer | canonical | ./screens |
+| ModerationForm | ModerationScreen | companion-or-alternative | ./screen-flows |
 | ModerationScreen | ModerationScreen | canonical | ./screen-flows |
 | MorphingMenu | Menu | optional-extension | ./menu-morph |
 | NativeSelect | Select | companion-or-alternative | root, ./forms |
@@ -133,6 +138,7 @@
 | OtpField | OtpField | canonical | root, ./forms, ./otp-field |
 | OverlayStackProvider | Dialog | companion-or-alternative | root, ./overlay-stack |
 | OverviewScreen | 별도 보조 기능 | supplemental | ./design-profile |
+| PageIndicator | PageIndicator | canonical | root, ./carousel |
 | Pagination | Pagination | canonical | root, ./navigation, ./pagination |
 | PasswordField | PasswordField | canonical | root, ./forms, ./password-field |
 | PasswordRulesField | 별도 보조 기능 | supplemental | ./task-controls |
@@ -214,6 +220,7 @@
 | TransferList | TransferList | canonical | root, ./transfer-list |
 | TransferTask | 별도 보조 기능 | supplemental | ./transfer-task |
 | Tree | Tree | canonical | root, ./tree |
+| TypingIndicator | TypingIndicator | canonical | ./screens |
 | UploadItem | UploadItem | canonical | root, ./display, ./upload-item |
 | VirtualList | VirtualList | canonical | ./virtual-list |
 | VisuallyHidden | VisuallyHidden | canonical | root, ./layout |
@@ -222,7 +229,7 @@
 
 ## @hjmds/react-native
 
-고유 공개 컴포넌트 및 provider 이름 199개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 206개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -247,6 +254,7 @@
 | BottomCTA | BottomCTA | canonical | root, ./actions, ./bottom-cta |
 | BottomInfo | BottomInfo | canonical | root, ./bottom-info |
 | BottomNavigation | BottomNavigation | canonical | root, ./navigation, ./top-bar |
+| BottomNavigationInsetProvider | BottomNavigation | companion-or-alternative | root, ./navigation, ./top-bar |
 | Button | Button | canonical | root, ./actions, ./bottom-cta |
 | Calendar | Calendar | canonical | root, ./calendar |
 | Card | Card | canonical | root, ./data-display |
@@ -254,6 +262,7 @@
 | CarouselMotion | Carousel | optional-extension | ./carousel-motion |
 | Celebration | 별도 보조 기능 | supplemental | ./celebration |
 | ChartLegend | Chart | companion-or-alternative | ./chart |
+| ChatDateSeparator | ChatDateSeparator | canonical | ./screens |
 | ChatMessage | ChatMessage | canonical | ./screens |
 | ChatScreen | ChatScreen | canonical | ./screens |
 | Checkbox | Checkbox | canonical | root, ./inputs |
@@ -314,6 +323,7 @@
 | ImageChoiceGroup | ImageChoiceGroup | canonical | ./image-choice |
 | ImageComparison | 별도 보조 기능 | supplemental | ./image-comparison |
 | ImageViewer | Image | optional-extension | ./image-viewer |
+| ImmersiveOverlay | Dialog | companion-or-alternative | root, ./overlays |
 | ImportFieldMapping | 별도 보조 기능 | supplemental | ./data-workflows |
 | InlineConfirm | Button | optional-extension | ./inline-confirm |
 | InlineEdit | 별도 보조 기능 | supplemental | ./collection-editing |
@@ -332,11 +342,13 @@
 | LoadMore | LoadMore | canonical | root, ./navigation, ./top-bar |
 | Masonry | Masonry | canonical | ./masonry |
 | MatrixTable | DataTable | companion-or-alternative | ./data-table |
+| MediaSelectionCell | MediaSelectionScreen | companion-or-alternative | ./screen-flows |
 | MediaSelectionScreen | MediaSelectionScreen | canonical | ./screen-flows |
 | MediaTransport | 별도 보조 기능 | supplemental | ./media-transport |
 | Mentions | Mentions | canonical | root, ./mentions |
 | Menu | Menu | canonical | root, ./navigation, ./top-bar |
 | MessageComposer | MessageComposer | canonical | ./screens |
+| ModerationForm | ModerationScreen | companion-or-alternative | ./screen-flows |
 | ModerationScreen | ModerationScreen | canonical | ./screen-flows |
 | NativeContextMenu | ContextMenu | optional-extension | ./context-menu-native |
 | NavigationBar | TopBar | companion-or-alternative | ./navigation-bar |
@@ -349,6 +361,7 @@
 | OnboardingScreen | OnboardingScreen | canonical | ./screen-flows |
 | OtpField | OtpField | canonical | root, ./inputs, ./otp-field |
 | OverviewScreen | 별도 보조 기능 | supplemental | ./design-profile |
+| PageIndicator | PageIndicator | canonical | root, ./carousel |
 | Pagination | Pagination | canonical | root, ./pagination |
 | PasswordField | PasswordField | canonical | root, ./inputs, ./password-field |
 | PasswordRulesField | 별도 보조 기능 | supplemental | ./task-controls |
@@ -422,6 +435,7 @@
 | TopBarAction | TopBar | companion-or-alternative | root, ./navigation, ./top-bar |
 | TransferList | TransferList | canonical | root, ./transfer-list |
 | TransferTask | 별도 보조 기능 | supplemental | ./transfer-task |
+| TypingIndicator | TypingIndicator | canonical | ./screens |
 | UploadItem | UploadItem | canonical | root, ./upload-item |
 | VirtualList | VirtualList | canonical | ./virtual-list |
 | VoiceNote | Asset | optional-extension | ./voice-note |

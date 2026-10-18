@@ -39,7 +39,11 @@ export type CardProps = Omit<SurfaceProps, "children" | "padding"> & Readonly<{
     media?: ReactNode;
     actions?: ReactNode;
     selected?: boolean;
-    /** Whole-card activation. Do not combine with interactive children or actions. */
+    /**
+     * Whole-card activation. With `actions`, media and body become one Pressable and the actions row stays a sibling,
+     * so each action is its own accessible target (an accessible Pressable would swallow nested buttons for screen
+     * readers). Keep other children passive.
+     */
     onActivate?: () => void;
     disabled?: boolean;
     padding?: SurfacePadding;

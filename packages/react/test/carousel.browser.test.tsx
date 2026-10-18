@@ -159,3 +159,22 @@ it("recovers an uncontrolled removed slide at its previous position and keeps co
 it.each(["default", "controlled"])("still rejects an initially invalid %s key", async kind => {
   await expect(render(kind === "default" ? { defaultCurrentKey: "missing" } : { currentKey: "missing", onCurrentKeyChange() {} })).rejects.toThrow(/currentKey/);
 });
+
+describe("Web PageIndicator", () => {
+  it("names the group, marks the current dot and requests pages by click and arrow key", async () => {
+    const { PageIndicator } = await import("../src/carousel.js");
+    const onChange = vi.fn();
+    await act(async () => root.render(<HjmProvider systemTheme="light"><PageIndicator label="Home pages" count={3} currentIndex={1}
+      onCurrentIndexChange={onChange} composeAccessibleName={({ position, total }) => `Page ${position} of ${total}`} /></HjmProvider>));
+    const group = host.querySelector<HTMLElement>('[role="group"][aria-label="Home pages"]')!;
+    const dots = [...group.querySelectorAll<HTMLButtonElement>(".hjm-page-indicator__dot")];
+    expect(dots.map((dot) => dot.getAttribute("aria-label"))).toEqual(["Page 1 of 3", "Page 2 of 3", "Page 3 of 3"]);
+    expect(dots[1]!.getAttribute("data-current")).toBe("true");
+    expect(dots[0]!.getBoundingClientRect().width).toBeGreaterThanOrEqual(44);
+    await act(async () => dots[2]!.click());
+    expect(onChange).toHaveBeenLastCalledWith(2);
+    dots[1]!.focus();
+    await act(async () => { dots[1]!.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true })); });
+    expect(onChange).toHaveBeenLastCalledWith(0);
+  });
+});

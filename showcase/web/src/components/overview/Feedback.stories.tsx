@@ -2,7 +2,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ContractStory } from "../preview-registry";
 import { componentStory } from "../story-factory";
-const meta = { includeStories: ["EmptyState","Notice","Progress","ThinkingOrb","Spinner","Skeleton","Result","BottomInfo","Toast","Watermark"], id: "components-feedback", title: "배포/컴포넌트/개요/상태와 알림 모아 보기", component: ContractStory, parameters: { controls: { disable: true } } } satisfies Meta<typeof ContractStory>;
+const meta = { includeStories: ["EmptyState","Notice","Progress","ThinkingOrb","Spinner","Skeleton","Result","BottomInfo","Toast","Watermark","TypingIndicator"], id: "components-feedback", title: "배포/컴포넌트/개요/상태와 알림 모아 보기", component: ContractStory, parameters: { controls: { disable: true } } } satisfies Meta<typeof ContractStory>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const EmptyState: Story = { ...componentStory("EmptyState"), name: "빈 상태" };
@@ -15,3 +15,4 @@ export const Result: Story = { ...componentStory("Result"), name: "결과 안내
 export const BottomInfo: Story = { ...componentStory("BottomInfo"), name: "하단 안내" };
 export const Toast: Story = { ...componentStory("Toast"), name: "토스트" };
 export const Watermark: Story = { ...componentStory("Watermark"), name: "워터마크" };
+export const TypingIndicator: Story = { ...componentStory("TypingIndicator"), name: "입력 중 표시" };

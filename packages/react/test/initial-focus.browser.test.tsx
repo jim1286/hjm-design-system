@@ -101,3 +101,20 @@ it("AuthScreenLayout focuses nothing by default and opts in for a nickname step"
   await render(<AuthScreenLayout hero={null} hasFooter={false} initialFocus="first-input" main={<TextField aria-label="닉네임" />} />);
   expect(active()).toBe("닉네임");
 });
+
+// 1.31 gap 10 (BurnTok search overlay, 2026-10-18): a modal that wraps the screen is the screen's own layer, not a
+// layer above it, so it must not block entry. A modal outside the screen still blocks (covered above).
+it("focuses a screen rendered inside a product modal that wraps it", async () => {
+  await render(<div role="dialog" aria-modal="true" aria-label="검색"><ScreenLayout title="검색" initialFocus="first-input"><TextField aria-label="검색어" /></ScreenLayout></div>);
+  await settle();
+  expect(active()).toBe("검색어");
+});
+it("focuses a screen rendered inside HJM Dialog and Sheet content", async () => {
+  await render(<Dialog open onOpenChange={() => {}} title="검색" closeLabel="닫기"><ScreenLayout title="검색" initialFocus="first-input"><TextField aria-label="검색어" /></ScreenLayout></Dialog>);
+  await settle();
+  expect(active()).toBe("검색어");
+  await act(async () => root.unmount()); root = createRoot(host); (document.activeElement as HTMLElement).blur();
+  await render(<Sheet open onOpenChange={() => {}} title="검색" closeLabel="닫기" showClose size="full"><ScreenLayout title="검색" initialFocus="first-input"><TextField aria-label="검색어" /></ScreenLayout></Sheet>);
+  await settle();
+  expect(active()).toBe("검색어");
+});

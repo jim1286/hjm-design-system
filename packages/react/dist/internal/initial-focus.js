@@ -10,6 +10,20 @@ import { getTopModal, subscribeModalClose } from "../modal.js";
 const InitialFocusContext = createContext(null);
 /** Layer of the enclosing HJM overlay; null on the page itself. A ScreenLayout inside a sheet uses the sheet's. */
 const ModalLayerContext = createContext(null);
+/**
+ * Screen scopes rendered inside an HJM overlay, keyed by that overlay's layer. Their fields register with the screen,
+ * not the overlay, so the overlay's activation asks them for the entry field instead of focusing its first control
+ * over them (BurnTok search: a ScreenLayout in a Sheet left focus on the close button, 2026-10-18).
+ */
+const nestedScopes = new WeakMap();
+/**
+ * Product modals (not on the HJM stack) layered above the scope. A product modal that contains the scope's own fields
+ * wraps the screen rather than covering it, so it does not block (BurnTok search overlay, 2026-10-18).
+ */
+function productModalAbove(fields) {
+    return [...document.querySelectorAll('[aria-modal="true"], dialog[open]')]
+        .some(modal => !fields.some(field => modal.contains(field)));
+}
 function isEditable(element) {
     return element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement || element instanceof HTMLSelectElement
         || (element instanceof HTMLElement && element.isContentEditable);
@@ -28,11 +42,18 @@ export function useInitialFocusScope({ mode, active = true, layer: ownLayer }) {
     const scope = useMemo(() => {
         const s = state.current;
         const blocked = () => {
+            const own = layer?.current ?? null;
+            // Inside an HJM overlay that is not on the stack yet: its activation runs this scope's entry (`nestedScopes`).
+            if (layer !== null && own === null)
+                return true;
             const top = getTopModal();
             if (top)
-                return top !== (layer?.current ?? null);
-            // A product's own modal (not on the HJM stack) still covers the page.
-            return layer === null && document.querySelector('[aria-modal="true"], dialog[open]') !== null;
+                return top !== own;
+            // A product's own modal above the page still covers it; overlay content is portaled outside product markup.
+            if (layer !== null)
+                return false;
+            const fields = [...s.entries].map(entry => entry.element()).filter((element) => element !== null);
+            return productModalAbove(fields);
         };
         const dispatch = (event) => {
             const candidates = [...s.entries].map(entry => ({ entry, order: entry.order, preference: entry.preference, focusable: entry.focusable() }));
@@ -67,17 +88,29 @@ export function useInitialFocusScope({ mode, active = true, layer: ownLayer }) {
                 return () => { s.entries.delete(entry); s.fresh.delete(entry); };
             },
         };
+        const settle = () => { s.phase = "settled"; };
         const enter = (explicit) => {
             s.fresh.clear();
             dispatch({ kind: "activate" });
+            const nested = overlay && layer ? [...(nestedScopes.get(layer) ?? [])] : [];
             if (explicit) {
-                s.phase = "settled";
+                settle();
+                for (const scope of nested)
+                    scope.settle();
                 return null;
             }
-            return dispatch({ kind: "enter" });
+            const own = dispatch({ kind: "enter" });
+            if (own)
+                return own;
+            for (const scope of nested) {
+                const target = scope.enter();
+                if (target)
+                    return target;
+            }
+            return null;
         };
-        return { registry, layer, dispatch, focus, enter };
-    }, [layer]);
+        return { registry, layer, dispatch, focus, enter, settle };
+    }, [layer, overlay]);
     useEffect(() => {
         if (!active) {
             scope.dispatch({ kind: "deactivate" });
@@ -89,6 +122,14 @@ export function useInitialFocusScope({ mode, active = true, layer: ownLayer }) {
         if (!overlay)
             queueMicrotask(() => { if (!cancelled)
                 scope.focus(scope.enter(false)); });
+        // A screen inside an overlay that activates later enters when the overlay does (see `enter`).
+        let nested;
+        const nestedEntry = { enter: () => scope.enter(false), settle: scope.settle };
+        if (!overlay && scope.layer) {
+            nested = nestedScopes.get(scope.layer) ?? new Set();
+            nestedScopes.set(scope.layer, nested);
+            nested.add(nestedEntry);
+        }
         const interact = () => { scope.dispatch({ kind: "interact" }); };
         const events = ["pointerdown", "keydown", "wheel", "touchstart"];
         for (const type of events)
@@ -97,6 +138,7 @@ export function useInitialFocusScope({ mode, active = true, layer: ownLayer }) {
         const unsubscribe = subscribeModalClose(() => scope.focus(scope.dispatch({ kind: "unblock" })));
         return () => {
             cancelled = true;
+            nested?.delete(nestedEntry);
             for (const type of events)
                 document.removeEventListener(type, interact, true);
             unsubscribe();

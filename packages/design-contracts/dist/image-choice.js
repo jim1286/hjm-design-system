@@ -6,6 +6,13 @@ export const imageChoiceRecipe = {
     ringWidth: 2,
     ringOffset: 2,
     checkSize: 20,
+    /**
+     * Visible per-tile caption (`showItemLabels`, 2026-10-18 BurnTok share recipients): people are recognised by name,
+     * not only by face. One line, ellipsized, as wide as the tile so the wrap grid stays even.
+     */
+    itemLabelGap: spacing.xxs,
+    itemLabelVariant: "caption",
+    itemLabelLines: 1,
 };
 export function validateImageChoiceItems(items) {
     if (!items.length)

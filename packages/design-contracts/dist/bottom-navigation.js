@@ -13,6 +13,7 @@ export const bottomNavigationBehaviorDefaults = {
     labels: "visible",
     selection: "emphasis",
     surface: "flat",
+    iconSize: "standard",
     minItems: 2,
     maxItems: 6,
 };
@@ -36,6 +37,7 @@ const configurationKeys = new Set([
     "labels",
     "selection",
     "surface",
+    "iconSize",
 ]);
 const descriptorKeys = new Set(["accessibilityLabel", "items", "selectedKey"]);
 const itemKeys = new Set([
@@ -45,6 +47,7 @@ const itemKeys = new Set([
     "icon",
     "badge",
     "disabled",
+    "prominent",
 ]);
 const iconKeys = new Set(["name", "decorative"]);
 const badgeKeys = new Set(["count", "max", "accessibilityLabel"]);
@@ -98,6 +101,9 @@ function validateItem(item) {
     }
     if (item.badge !== undefined)
         validateBadge(item.badge);
+    if (item.prominent !== undefined && typeof item.prominent !== "boolean") {
+        throw new TypeError("BottomNavigation item prominent must be a boolean");
+    }
 }
 const presentations = new Set(["bar", "floating", "capsule"]);
 const distributions = new Set(["equal", "center-gap"]);
@@ -108,6 +114,7 @@ const keyboardBehaviors = new Set([
     "remain",
 ]);
 const labelModes = new Set(["visible", "hidden"]);
+const iconSizes = new Set(["standard", "large", "xlarge"]);
 export function validateBottomNavigationConfiguration(configuration, itemCount) {
     if (!isObject(configuration)) {
         throw new TypeError("BottomNavigation configuration must be an object");
@@ -159,6 +166,9 @@ export function validateBottomNavigationConfiguration(configuration, itemCount) 
     if (configuration.presentation === "capsule" && configuration.distribution === "center-gap") {
         throw new TypeError("BottomNavigation capsule uses an adjacent action, not center-gap");
     }
+    if (configuration.iconSize !== undefined && !iconSizes.has(configuration.iconSize)) {
+        throw new TypeError(`Unsupported BottomNavigation iconSize: ${String(configuration.iconSize)}`);
+    }
     if (configuration.distribution === "center-gap" && itemCount % 2 !== 0) {
         throw new RangeError("BottomNavigation center-gap distribution requires an even destination count");
     }
@@ -175,6 +185,7 @@ export function resolveBottomNavigationConfiguration(configuration, itemCount) {
         labels: configuration.labels ?? bottomNavigationBehaviorDefaults.labels,
         selection: configuration.selection ?? bottomNavigationBehaviorDefaults.selection,
         surface: configuration.surface ?? bottomNavigationBehaviorDefaults.surface,
+        iconSize: configuration.iconSize ?? bottomNavigationBehaviorDefaults.iconSize,
     };
 }
 export function validateBottomNavigationDescriptor(descriptor) {
@@ -206,6 +217,28 @@ export function validateBottomNavigationDescriptor(descriptor) {
     if (selected.disabled) {
         throw new RangeError("BottomNavigation selected destination must be enabled");
     }
+    const prominentIndex = descriptor.items.findIndex((item) => item.prominent === true);
+    if (prominentIndex !== -1) {
+        // The lifted circle is centered over the bar; any other slot would sit off-center and overlap a neighbour.
+        if (descriptor.items.length % 2 === 0 ||
+            prominentIndex !== (descriptor.items.length - 1) / 2 ||
+            descriptor.items.filter((item) => item.prominent === true).length > 1) {
+            throw new RangeError("BottomNavigation prominent destination must be the single middle item of an odd item count");
+        }
+    }
+}
+/**
+ * A prominent destination needs the plain row: center-gap reserves the same slot for a primaryAction, capsule
+ * places actions beside the surface, and a tile card would paint behind the lifted circle.
+ */
+export function validateBottomNavigationProminence(items, configuration) {
+    if (!items.some((item) => item.prominent === true))
+        return;
+    if (configuration.distribution !== "equal" ||
+        configuration.presentation === "capsule" ||
+        configuration.selection === "tile") {
+        throw new TypeError("BottomNavigation prominent destination requires equal distribution, bar or floating presentation and emphasis selection");
+    }
 }
 export function resolveBottomNavigationItem(item) {
     validateItem(item);
@@ -224,6 +257,7 @@ export function resolveBottomNavigationItem(item) {
         label: item.label,
         icon: { name: item.icon.name, decorative: true },
         disabled: item.disabled ?? false,
+        prominent: item.prominent ?? false,
         badge,
         resolvedAccessibilityLabel: badge && item.badge
             ? `${baseAccessibilityLabel}, ${item.badge.accessibilityLabel}`

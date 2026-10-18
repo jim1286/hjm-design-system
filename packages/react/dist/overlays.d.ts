@@ -17,6 +17,12 @@ export type DialogProps = ModalOpenState<Readonly<{
     description?: ReactNode;
     children?: ReactNode;
     footer?: ReactNode;
+    /**
+     * Decorative layer over the whole viewport, outside the card frame (a drag ghost following the pointer, a
+     * highlight anchored to an element). Children are positioned in viewport coordinates, never receive pointer
+     * input, and are hidden from assistive technology; interactive content belongs in `children`.
+     */
+    overlayLayer?: ReactNode;
     /** Optional measured trigger bounds in viewport coordinates; keeps canonical modal behavior. */
     motionOrigin?: TransitionRect;
     size?: DialogSize;
@@ -201,4 +207,57 @@ export type MenuProps = OpenState<Readonly<{
     reason: MenuOpenChangeReason;
 }>> & MenuBaseProps & (MenuActionSelection | MenuSingleSelection | MenuMultipleSelection);
 export declare const Menu: import("react").ForwardRefExoticComponent<MenuProps & import("react").RefAttributes<HTMLDivElement>>;
+export type ImmersiveOverlayOpenChangeReason = "exit-action" | "escape";
+export type ImmersiveOverlayProps = Readonly<{
+    open: boolean;
+    onOpenChange: (open: boolean, detail: Readonly<{
+        reason: ImmersiveOverlayOpenChangeReason;
+    }>) => void;
+    /** Localized accessible name of the presentation. */
+    label: string;
+    /** Localized visible label of the exit action. */
+    exitLabel: string;
+    /** Product-drawn stage filling the viewport edge to edge above the control bar. */
+    children: ReactNode;
+    /** Tool actions placed before the exit action (pause, rotate). */
+    tools?: ReactNode;
+    /** Status copy above the action row (keep-awake state, a notice). */
+    status?: ReactNode;
+    /** Defaults to the exit action. */
+    initialFocusRef?: React.RefObject<HTMLElement | null>;
+    returnFocusRef?: React.RefObject<HTMLElement | null>;
+    /** Higher-priority modals remain interactive above later lower-priority modals. */
+    modalPriority?: number;
+    portalContainer?: HTMLElement;
+    className?: string;
+}>;
+/**
+ * Edge-to-edge presentation (Dialog companion): no card, scrim or header, on the shared modal stack with its focus
+ * trap, Escape dismissal, background isolation and focus return. The browser Fullscreen API is deliberately not
+ * requested: it needs a fresh user activation, its Escape exits fullscreen before the page sees the key (leaving the
+ * overlay open in a window), and iOS Safari does not grant it to elements.
+ */
+export declare const ImmersiveOverlay: import("react").ForwardRefExoticComponent<Readonly<{
+    open: boolean;
+    onOpenChange: (open: boolean, detail: Readonly<{
+        reason: ImmersiveOverlayOpenChangeReason;
+    }>) => void;
+    /** Localized accessible name of the presentation. */
+    label: string;
+    /** Localized visible label of the exit action. */
+    exitLabel: string;
+    /** Product-drawn stage filling the viewport edge to edge above the control bar. */
+    children: ReactNode;
+    /** Tool actions placed before the exit action (pause, rotate). */
+    tools?: ReactNode;
+    /** Status copy above the action row (keep-awake state, a notice). */
+    status?: ReactNode;
+    /** Defaults to the exit action. */
+    initialFocusRef?: React.RefObject<HTMLElement | null>;
+    returnFocusRef?: React.RefObject<HTMLElement | null>;
+    /** Higher-priority modals remain interactive above later lower-priority modals. */
+    modalPriority?: number;
+    portalContainer?: HTMLElement;
+    className?: string;
+}> & import("react").RefAttributes<HTMLDivElement>>;
 //# sourceMappingURL=overlays.d.ts.map

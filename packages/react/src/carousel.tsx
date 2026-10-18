@@ -1,8 +1,9 @@
 import { useEffect, useLayoutEffect, useRef, useState, forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import {
   resolveCarouselDescriptor, getCarouselNavigationTarget, isCarouselAutoplayActive,
+  resolvePageIndicator, getPageIndicatorTarget,
   type CarouselSlideDescriptor, type CarouselSelection, type CarouselAutoplayConfig,
-  type ComposeCarouselAccessibleName,
+  type ComposeCarouselAccessibleName, type ComposePageIndicatorAccessibleName, type ResolvedPageIndicatorDot,
 } from "@hjmds/design-contracts/components/carousel";
 import { Button, IconButton } from "./actions.js";
 import { Icon } from "./supplemental-display.js";
@@ -22,6 +23,57 @@ export type CarouselProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | "o
   /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
 }>;
+
+export type PageIndicatorProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | "onChange"> & Readonly<{
+  /** Name of the paged region (e.g. "Home pages"); the group's accessible name. */
+  label: string;
+  count: number;
+  /** Zero-based current page; the product pager owns it. */
+  currentIndex: number;
+  /** Requested page from a dot or an arrow key. It can repeat the current index. */
+  onCurrentIndexChange: (index: number) => void;
+  composeAccessibleName: ComposePageIndicatorAccessibleName;
+  /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
+}>;
+
+/** The dot buttons shared by Carousel and PageIndicator, so both rows keep one markup and one recipe. */
+function PageDots({ dots, onSelect, dotClassName, keys }: Readonly<{
+  dots: readonly ResolvedPageIndicatorDot[];
+  onSelect: (index: number) => void;
+  dotClassName: string;
+  /** Carousel keys dots by slide id so removing a slide removes its own (possibly focused) dot. */
+  keys?: readonly string[];
+}>) {
+  return <>{dots.map((dot) => <button key={keys?.[dot.index] ?? dot.index} type="button" aria-label={dot.accessibleName}
+    aria-disabled={dot.current} data-current={dot.current} className={dotClassName}
+    onClick={() => onSelect(dot.index)}><span aria-hidden="true" /></button>)}</>;
+}
+
+/**
+ * Carousel's position dots for a product-owned pager (scroll-snap row, virtualized pager). Arrow keys on a dot move
+ * one page in reading direction, as in Carousel's controls.
+ */
+export const PageIndicator = forwardRef<HTMLDivElement, PageIndicatorProps>(function PageIndicator({
+  label, count, currentIndex, onCurrentIndexChange, composeAccessibleName, className, onKeyDown, layoutStyle, ...props
+}, ref) {
+  const theme = useOptionalHjmTheme();
+  if (!label.trim()) throw new TypeError("PageIndicator label must not be empty");
+  const descriptor = { count, currentIndex };
+  const dots = resolvePageIndicator(descriptor, composeAccessibleName);
+  return <div {...props} ref={ref} style={{ ...props.style, ...layoutStyle }} role="group" aria-label={label}
+    className={classNames("hjm-page-indicator", className)}
+    onKeyDown={(event) => {
+      onKeyDown?.(event);
+      if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      event.preventDefault();
+      onCurrentIndexChange(getPageIndicatorTarget(descriptor,
+        (event.key === "ArrowRight") !== (theme?.environment.direction === "rtl") ? "next" : "previous"));
+    }}>
+    <PageDots dots={dots} onSelect={onCurrentIndexChange} dotClassName="hjm-page-indicator__dot" />
+  </div>;
+});
 
 /** Finite keyed cards. Hidden slides stay mounted but cannot receive focus. */
 export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carousel({
@@ -116,9 +168,9 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
       {/* Previous/next are tool actions: icon buttons named by the localized label (2026-10-17 review E9). */}
       <IconButton label={labels.previous} tone="ghost" aria-disabled={current === slides[0]!.id} onClick={() => move("previous")}><Icon name="chevronStart" /></IconButton>
       <div className="hjm-carousel__dots">
-        {resolved.map((slide) => <button key={slide.id} type="button" aria-label={slide.accessibleName}
-          aria-disabled={slide.current} data-current={slide.current} className="hjm-carousel__dot"
-          onClick={() => select(slide.id)}><span aria-hidden="true" /></button>)}
+        <PageDots dotClassName="hjm-carousel__dot" keys={slides.map((slide) => slide.id)} onSelect={(index) => select(slides[index]!.id)}
+          dots={resolvePageIndicator({ count: slides.length, currentIndex: resolved.findIndex((slide) => slide.current) },
+            ({ position }) => resolved[position - 1]!.accessibleName)} />
       </div>
       <IconButton label={labels.next} tone="ghost" aria-disabled={last} onClick={() => move("next")}><Icon name="chevronEnd" /></IconButton>
     </div>

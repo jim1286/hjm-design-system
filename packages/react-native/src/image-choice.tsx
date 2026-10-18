@@ -11,6 +11,11 @@ type Base = Readonly<{
   label: string;
   /** Visible caption above the tiles; omit when the screen heading already names the choice. */
   showLabel?: boolean;
+  /**
+   * Shows each item's `label` under its tile (one ellipsized line), e.g. a person's name in a recipient picker.
+   * The tile keeps the same accessible name, so turning this on does not change what screen readers announce.
+   */
+  showItemLabels?: boolean;
   items: readonly ImageChoiceItem[];
   disabled?: boolean;
 }>;
@@ -24,7 +29,7 @@ export type ImageChoiceGroupProps = Base & (
  * a brand ring plus a check when chosen; screen readers hear radios (single) or checkboxes (multiple).
  */
 export function ImageChoiceGroup(props: ImageChoiceGroupProps) {
-  const { label, showLabel = false, items, disabled = false } = props;
+  const { label, showLabel = false, showItemLabels = false, items, disabled = false } = props;
   validateImageChoiceItems(items);
   const { colors, tokens } = useHjmNativeTheme();
   const recipe = imageChoiceRecipe;
@@ -40,12 +45,18 @@ export function ImageChoiceGroup(props: ImageChoiceGroupProps) {
       {items.map(item => {
         const selected = isSelected(item.id);
         const off = disabled || (item.disabled ?? false);
+        const outer = recipe.tileSize + (recipe.ringWidth + recipe.ringOffset) * 2;
+        // The ring lives on an inner frame so an item label can sit below it inside the same Pressable: Android does
+        // not deliver touches to children drawn outside their parent's bounds, so the name must not overflow the tile.
         return <Pressable key={item.id} accessibilityRole={role} accessibilityLabel={item.label} accessibilityState={{ checked: selected, disabled: off }} disabled={off} onPress={() => choose(item.id)}
-          style={({ pressed }) => ({ width: recipe.tileSize + (recipe.ringWidth + recipe.ringOffset) * 2, height: recipe.tileSize + (recipe.ringWidth + recipe.ringOffset) * 2, padding: recipe.ringOffset, borderWidth: recipe.ringWidth, borderColor: selected ? colors.contentBrand : "transparent", borderRadius: recipe.radius + recipe.ringOffset + recipe.ringWidth, opacity: off ? 0.5 : pressed ? 0.8 : 1 })}>
-          <View style={{ flex: 1, borderRadius: recipe.radius, overflow: "hidden", backgroundColor: colors.surface }}>{item.image}</View>
-          {selected ? <View pointerEvents="none" style={{ position: "absolute", top: 0, end: 0, width: recipe.checkSize, height: recipe.checkSize, borderRadius: recipe.checkSize / 2, backgroundColor: colors.contentBrand, alignItems: "center", justifyContent: "center" }}>
-            <FixedGlyph color={colors.onPrimary} fontSize={12} lineHeight={14}>✓</FixedGlyph>
-          </View> : null}
+          style={({ pressed }) => ({ width: outer, gap: recipe.itemLabelGap, opacity: off ? 0.5 : pressed ? 0.8 : 1 })}>
+          <View style={{ width: outer, height: outer, padding: recipe.ringOffset, borderWidth: recipe.ringWidth, borderColor: selected ? colors.contentBrand : "transparent", borderRadius: recipe.radius + recipe.ringOffset + recipe.ringWidth }}>
+            <View style={{ flex: 1, borderRadius: recipe.radius, overflow: "hidden", backgroundColor: colors.surface }}>{item.image}</View>
+            {selected ? <View pointerEvents="none" style={{ position: "absolute", top: 0, end: 0, width: recipe.checkSize, height: recipe.checkSize, borderRadius: recipe.checkSize / 2, backgroundColor: colors.contentBrand, alignItems: "center", justifyContent: "center" }}>
+              <FixedGlyph color={colors.onPrimary} fontSize={12} lineHeight={14}>✓</FixedGlyph>
+            </View> : null}
+          </View>
+          {showItemLabels ? <Text variant={recipe.itemLabelVariant} align="center" numberOfLines={recipe.itemLabelLines} accessible={false} importantForAccessibility="no">{item.label}</Text> : null}
         </Pressable>;
       })}
     </View>

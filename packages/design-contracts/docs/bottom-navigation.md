@@ -180,3 +180,13 @@ floating 그림자는 그리지 않는다. 옆면이 높이를 표현하므로 �
 팔레트에 "눌린 브랜드" 역할이 없어서 새 역할을 추가하지 않고 기존 역할을 겹쳐 쓴다.
 선택하지 않은 카드도 같은 두께의 투명 테두리를 둔다. 그래서 선택이 바뀌어도 아이콘·라벨 줄이 움직이지 않는다.
 제품은 나무 같은 색을 surfaceAlt·borderControl 팔레트 역할로 공급한다. deprecated 시각 style로 덮지 않는다.
+
+### 덮인 높이·솟은 가운데 목적지·앱 아이콘 자리 (2026-10-18)
+
+세 제품이 막대를 우회한 원인을 계약으로 옮겼다. Spint는 떠 있는 막대의 높이를 몰라 탭 화면마다 112 빈칸을 두었다.
+`BottomNavigationInsetProvider`·`useBottomNavigationInset`이 겹친 막대(Web 고정, Native `placement="overlay"`)의
+측정 높이를 화면에 전달하고 ScreenLayout이 마지막 영역 여백으로 쓴다. Native 기본 `inline`은 자기 높이를 차지하므로 0이다.
+다에리는 가운데 "쓰기" 목적지를 그리려고 기본 탭바로 돌아갔다. 항목 `prominent`는 홀수 개의 정가운데 하나만 허용하고,
+`primaryAction`(행동)과 달리 선택·재선택이 있는 목적지다. 원은 `prominentDestination` recipe(지름 56, `action.brand`)를 쓰고
+라벨이 다른 라벨과 한 줄이 되도록 `지름 − 표시 자리 높이`만큼 올라간다. Utilverse는 큰 앱 아이콘 때문에 막대를 직접
+조립했다. `configuration.iconSize`(`large` 44 · `xlarge` 52)가 `renderIcon`의 `size`를 키운다. 세 축 모두 기본값에서 기존 외형이 그대로다.

@@ -178,10 +178,13 @@ export {
 
 export {
   BottomNavigation,
+  BottomNavigationInsetProvider,
+  useBottomNavigationInset,
   getBottomNavigationGridColumn,
   isUnmodifiedPrimaryBottomNavigationClick,
   shouldHideBottomNavigationForKeyboard,
   type BottomNavigationIconRenderProps,
+  type BottomNavigationInsetProviderProps,
   type BottomNavigationLinkRenderProps,
   type BottomNavigationProps,
 } from "./bottom-navigation.js";
@@ -273,12 +276,15 @@ export {
 export {
   AlertDialog,
   Dialog,
+  ImmersiveOverlay,
   Menu,
   Sheet,
   Tooltip,
   type AlertDialogProps,
   type DialogOpenChangeReason,
   type DialogProps,
+  type ImmersiveOverlayOpenChangeReason,
+  type ImmersiveOverlayProps,
   type MenuItem,
   type MenuAsyncState,
   type MenuOpenChangeReason,
@@ -291,7 +297,7 @@ export {
   type TooltipProps,
 } from "./overlays.js";
 
-export { Carousel, type CarouselProps, type CarouselLabels } from "./carousel.js";
+export { Carousel, PageIndicator, type CarouselProps, type CarouselLabels, type PageIndicatorProps } from "./carousel.js";
 
 export { FloatingActionButton, useFloatingActionButtonScroll, resolveFloatingActionButtonContentClearance, type FloatingActionButtonProps } from "./floating-action-button.js";
 

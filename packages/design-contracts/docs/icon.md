@@ -46,3 +46,12 @@ Lucide 1.49.0 is the verified development/showcase version and optional peer.
 The Native factory uses a scalar-only component interface instead of exporting
 one host version's RN StyleProp types, keeping consumers on supported newer RN
 versions structurally compatible. This does not replace provider/brand logos.
+
+## 공용 경로 — 2026-10-18 (1.31.0)
+
+semantic 이름별 24-unit stroke 경로는 `semanticIconPaths`(`components/icon`)가 소유한다. 이전에는 Web renderer
+내부 레지스트리라 Native 제품이 같은 그림을 adapter에 다시 그렸다(utilverse `arrowUp`·`arrowDown`·`rotate`).
+Web Icon은 이 데이터를 내장 그림으로 쓰고, Native는 optional peer `react-native-svg`를 쓰는 `/icon-svg`의
+`renderSemanticGlyph`로 같은 경로를 그린다. Native core는 계속 SVG 없이 동작하며 `renderGlyph` 계약은 바뀌지 않는다.
+이번에 순서 이동(`arrowUp`·`arrowDown`), 회전(`rotate`, 시계 방향), 차단 해제(`unblock`)를 추가했다. 세 방향 기호는
+물리 방향이라 RTL에서 반전하지 않는다. 눈/가린 눈은 기존 `visibility`·`visibilityOff`다.

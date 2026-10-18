@@ -7,9 +7,12 @@ import { PreviewPhoto } from "./reference-screen-parts";
 export function ImageChoicePreview() {
   const [value, setValue] = useState<string>(copy.initial);
   const chosen = copy.items.find(item => item.id === value)!;
+  const [recipients, setRecipients] = useState<string[]>([...copy.recipients.initial]);
   return <Stack gap="sm">
     <ImageChoiceGroup label={copy.label} showLabel selectionMode="single" value={value} onValueChange={setValue}
       items={copy.items.map(item => ({ id: item.id, label: item.label, image: <PreviewPhoto index={item.photo} square label="" /> }))} />
     <Text role="status" tone="muted">{copy.result(chosen.label)}</Text>
+    <ImageChoiceGroup label={copy.recipients.label} showLabel showItemLabels selectionMode="multiple" value={recipients} onValueChange={setRecipients}
+      items={copy.recipients.items.map(item => ({ id: item.id, label: item.label, image: <PreviewPhoto index={item.photo} square label="" /> }))} />
   </Stack>;
 }

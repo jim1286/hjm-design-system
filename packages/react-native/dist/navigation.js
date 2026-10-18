@@ -1,16 +1,18 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { getTabNavigationTarget, resolveInitialTabValue, tabsBehaviorDefaults, } from "@hjmds/design-contracts/behaviors";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { resolveBottomNavigationActivation, resolveBottomNavigationConfiguration, resolveBottomNavigationDescriptor, } from "@hjmds/design-contracts/components/bottom-navigation";
+import { resolveBottomNavigationActivation, resolveBottomNavigationConfiguration, resolveBottomNavigationDescriptor, validateBottomNavigationProminence, } from "@hjmds/design-contracts/components/bottom-navigation";
 import { flattenCollectionItems, validateCollection, } from "@hjmds/design-contracts/components/collection";
 import { createLoadMoreController, validateLoadMoreDescriptor, } from "@hjmds/design-contracts/components/load-more";
 import { backdrop, easing, glyph, radius, spacing, } from "@hjmds/design-contracts/foundations";
 import { resolveSwipeTabIndicator, resolveTabIndicator, resolveTabsAppearance, sampleTabIndicator, } from "@hjmds/design-contracts/gooey-navigation";
 import { bottomNavigationRecipe, counterBadgeRecipe, loadMoreRecipe, menuRecipe, spinnerRecipe, tabsRecipe, topBarRecipe, } from "@hjmds/design-contracts/recipes";
-import { Fragment, forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState, } from "react";
+import { Fragment, forwardRef, useCallback, useContext, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState, } from "react";
 import { AccessibilityInfo, ActivityIndicator, Animated, AppState, Easing, Keyboard, Modal, Platform, Pressable, ScrollView, View, findNodeHandle, } from "react-native";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { RecipeButton } from "./internal/recipe-button.js";
+import { BottomNavigationInsetReporterContext } from "./internal/bottom-navigation-inset.js";
+export { BottomNavigationInsetProvider, useBottomNavigationInset, } from "./internal/bottom-navigation-inset.js";
 import { isWebRenderer, webOnly, webTabProps } from "./internal/web-a11y.js";
 import { Button } from "./actions.js";
 import { ScreenExitButton } from "./internal/screen-exit.js";
@@ -58,7 +60,7 @@ export function TabPanel(props) {
 }
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export function Tabs(props) {
-    const { id, label, items, value: valueProp, defaultValue, onValueChange, activationMode = tabsBehaviorDefaults.activationMode, mountPolicy = tabsBehaviorDefaults.mountPolicy, panelMode = tabsBehaviorDefaults.panelMode, appearance: suppliedAppearance, swipePosition, orientation = tabsBehaviorDefaults.orientation, direction: directionProp, loop = tabsBehaviorDefaults.loop, size = tabsRecipe.defaults.size, layout = tabsRecipe.defaults.layout, overflow = tabsRecipe.defaults.overflow, renderPanels = true, children, layoutStyle, } = props;
+    const { id, label, items, value: valueProp, defaultValue, onValueChange, activationMode = tabsBehaviorDefaults.activationMode, mountPolicy = tabsBehaviorDefaults.mountPolicy, panelMode = tabsBehaviorDefaults.panelMode, appearance: suppliedAppearance, swipePosition, orientation = tabsBehaviorDefaults.orientation, direction: directionProp, loop = tabsBehaviorDefaults.loop, size = tabsRecipe.defaults.size, layout = tabsRecipe.defaults.layout, overflow = tabsRecipe.defaults.overflow, indicator = tabsRecipe.defaults.indicator, renderPanels = true, children, layoutStyle, } = props;
     assertNoRemovedStyleProps("Tabs", props, ["style", "tabListStyle"]);
     if (!label.trim())
         throw new TypeError("Tabs label must not be empty");
@@ -70,6 +72,10 @@ export function Tabs(props) {
     const tabItems = items;
     if (tabItems.length === 0)
         throw new TypeError("Tabs requires at least one option");
+    if (!(indicator in tabsRecipe.indicators))
+        throw new TypeError(`Unsupported Tabs indicator: ${String(indicator)}`);
+    const mark = tabsRecipe.indicators[indicator];
+    const filled = indicator === "filled";
     const theme = useHjmNativeTheme();
     const { colors, environment } = theme;
     const direction = directionProp ?? environment.direction;
@@ -235,18 +241,20 @@ export function Tabs(props) {
             layoutStyle,
         ], children: [_jsxs(ScrollView, { ref: tabScroll, onLayout: event => setTabViewport(event.nativeEvent.layout.width), onContentSizeChange: width => setTabContentWidth(width), nativeID: id, accessibilityLabel: label, accessibilityRole: "tablist", horizontal: orientation === "horizontal", scrollEnabled: scrollable && !fitted, showsHorizontalScrollIndicator: false, showsVerticalScrollIndicator: false, contentContainerStyle: [
                     {
-                        borderBottomColor: orientation === "horizontal"
+                        borderBottomColor: orientation === "horizontal" && mark.listDivider
                             ? resolveColorReference(tabsRecipe.colors.divider, theme.palette)
                             : undefined,
-                        borderBottomWidth: orientation === "horizontal"
+                        borderBottomWidth: orientation === "horizontal" && mark.listDivider
                             ? tabsRecipe.indicatorHeight / 2
                             : 0,
-                        borderEndColor: orientation === "vertical"
+                        borderEndColor: orientation === "vertical" && mark.listDivider
                             ? resolveColorReference(tabsRecipe.colors.divider, theme.palette)
                             : undefined,
-                        borderEndWidth: orientation === "vertical"
+                        borderEndWidth: orientation === "vertical" && mark.listDivider
                             ? tabsRecipe.indicatorHeight / 2
                             : 0,
+                        // The filled pill keeps tabsRecipe.gap between tabs so neighbouring pills never touch.
+                        gap: filled ? tabsRecipe.gap : undefined,
                         direction,
                         flexGrow: fitted ? 1 : 0,
                         flexDirection: orientation === "vertical" ? "column" : "row",
@@ -255,8 +263,10 @@ export function Tabs(props) {
                         minWidth: orientation === "horizontal" ? tabViewport : undefined,
                     },
                 ], children: [movingIndicator && (indicatorRecipe || swipePosition) ? _jsx(Animated.View, { pointerEvents: "none", accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
-                            position: "absolute", bottom: 0, height: appearance === "gooey" ? 6 : tabsRecipe.indicatorHeight, borderRadius: theme.tokens.radius.full,
-                            backgroundColor: resolveColorReference(tabsRecipe.colors.indicator, theme.palette),
+                            // The filled pill spans the tab height and moves behind the labels (rendered before the tabs).
+                            ...(filled && mark.background
+                                ? { position: "absolute", top: 0, bottom: 0, borderRadius: theme.tokens.radius[mark.radius], backgroundColor: resolveColorReference(mark.background, theme.palette) }
+                                : { position: "absolute", bottom: 0, height: appearance === "gooey" ? 6 : tabsRecipe.indicatorHeight, borderRadius: theme.tokens.radius.full, backgroundColor: resolveColorReference(tabsRecipe.colors.indicator, theme.palette) }),
                             left: swipePosition ? swipeX : progress.interpolate({ inputRange: [...indicatorRecipe.input], outputRange: [...indicatorRecipe.x] }),
                             width: swipePosition ? swipeWidth : progress.interpolate({ inputRange: [...indicatorRecipe.input], outputRange: [...indicatorRecipe.width] }),
                         } }) : null, tabItems.map((item) => {
@@ -318,7 +328,10 @@ export function Tabs(props) {
                                     alignItems: "center",
                                     backgroundColor: pressed
                                         ? resolveColorReference(tabsRecipe.states.pressedBackground, theme.palette)
-                                        : "transparent",
+                                        : filled && active && mark.background && !(movingIndicator && (indicatorRecipe || swipePosition))
+                                            ? resolveColorReference(mark.background, theme.palette)
+                                            : "transparent",
+                                    ...(filled && mark.radius ? { borderRadius: theme.tokens.radius[mark.radius] } : {}),
                                     direction,
                                     flex: fitted ? 1 : undefined,
                                     flexDirection: "row",
@@ -332,10 +345,10 @@ export function Tabs(props) {
                             ], children: [item.renderLeading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", children: item.renderLeading({
                                         selected: active,
                                         disabled: item.disabled === true,
-                                        color: resolveColorReference(active ? tabsRecipe.colors.selected : tabsRecipe.colors.idle, theme.palette),
+                                        color: resolveColorReference(active ? mark.selectedContent : tabsRecipe.colors.idle, theme.palette),
                                         size: glyph[tabsRecipe.icon.glyph],
                                     }) })) : null, _jsx(Text, { fontRole: "ui", align: "center", style: {
-                                        color: resolveColorReference(active ? tabsRecipe.colors.selected : tabsRecipe.colors.idle, theme.palette),
+                                        color: resolveColorReference(active ? mark.selectedContent : tabsRecipe.colors.idle, theme.palette),
                                         fontWeight: active
                                             ? tabsRecipe.label.selectedFontWeight
                                             : tabsRecipe.label.fontWeight,
@@ -343,7 +356,7 @@ export function Tabs(props) {
                                         backgroundColor: colors.bg,
                                         borderRadius: radius.full,
                                         paddingHorizontal: spacing.xs,
-                                    }, children: _jsx(Text, { align: "center", tone: "brand", variant: "caption", children: item.badge }) })) : null, active && (!movingIndicator || (!indicatorRecipe && !swipePosition)) ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", style: {
+                                    }, children: _jsx(Text, { align: "center", tone: "brand", variant: "caption", children: item.badge }) })) : null, active && !filled && (!movingIndicator || (!indicatorRecipe && !swipePosition)) ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", style: {
                                         backgroundColor: resolveColorReference(tabsRecipe.colors.indicator, theme.palette),
                                         ...(orientation === "horizontal"
                                             ? {
@@ -383,17 +396,21 @@ function useBottomNavigationKeyboardVisible() {
     return visible;
 }
 /** Router-owned persistent destinations; activation emits intent without mutating selection. */
-export function BottomNavigation({ descriptor, onActivate, onLongActivate, renderIcon, renderBadge, getItemTestID, primaryAction, configuration = {}, safeAreaBottom = 0, layoutStyle, ...removedProps }) {
+export function BottomNavigation({ descriptor, onActivate, onLongActivate, renderIcon, renderBadge, getItemTestID, primaryAction, configuration = {}, safeAreaBottom = 0, placement = "inline", layoutStyle, ...removedProps }) {
     assertNoRemovedStyleProps("BottomNavigation", removedProps, ["style", "surfaceStyle", "listStyle", "primaryActionStyle"]);
     const resolved = resolveBottomNavigationDescriptor(descriptor);
     if (!Number.isFinite(safeAreaBottom) || safeAreaBottom < 0) {
         throw new RangeError("BottomNavigation safeAreaBottom must be non-negative");
+    }
+    if (placement !== "inline" && placement !== "overlay") {
+        throw new TypeError(`Unsupported BottomNavigation placement: ${String(placement)}`);
     }
     const theme = useHjmNativeTheme();
     const presentation = resolveBottomNavigationConfiguration({
         ...configuration,
         direction: configuration.direction ?? theme.environment.direction,
     }, resolved.items.length);
+    validateBottomNavigationProminence(resolved.items, presentation);
     const capsule = presentation.presentation === "capsule";
     const tile = presentation.selection === "tile";
     const tileRecipe = bottomNavigationRecipe.selectionTile;
@@ -429,10 +446,33 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
     const badgeTone = counterBadgeRecipe.tones.danger;
     const badgeVariant = counterBadgeRecipe.variants[bottomNavigationRecipe.badge.variant];
     const [focusedKey, setFocusedKey] = useState(null);
-    if (presentation.keyboardBehavior === "hide" && keyboardVisible)
+    const iconSize = presentation.iconSize === "standard"
+        ? glyph[density.icon]
+        : bottomNavigationRecipe.iconSizes[presentation.iconSize];
+    const prominentRecipe = bottomNavigationRecipe.prominentDestination;
+    // Lifting by (diameter - indicator height) keeps the prominent label on the other labels' line; an app-icon
+    // slot taller than the indicator minimum raises that height.
+    const prominentLift = prominentRecipe.diameter - Math.max(bottomNavigationRecipe.indicator.minHeight, iconSize);
+    // The circle can rise above the bar's own box; an overlay reports that part too so content clears it.
+    const prominentOverflow = resolved.items.some((item) => item.prominent)
+        ? Math.max(0, prominentLift - density.padding - presentationRecipe.outerPaddingTop)
+        : 0;
+    const prominentShadow = theme.designProfile?.tokens.shadow.floating ?? prominentRecipe.shadow;
+    const hiddenForKeyboard = presentation.keyboardBehavior === "hide" && keyboardVisible;
+    const overlay = placement === "overlay";
+    const reportInset = useContext(BottomNavigationInsetReporterContext);
+    const [measuredHeight, setMeasuredHeight] = useState(0);
+    useEffect(() => {
+        if (!reportInset || !overlay)
+            return;
+        reportInset(hiddenForKeyboard || measuredHeight === 0 ? 0 : measuredHeight + prominentOverflow);
+        return () => reportInset(0);
+    }, [reportInset, overlay, hiddenForKeyboard, measuredHeight, prominentOverflow]);
+    if (hiddenForKeyboard)
         return null;
-    return (_jsx(View, { style: [
+    return (_jsx(View, { pointerEvents: overlay ? "box-none" : undefined, onLayout: overlay ? (event) => setMeasuredHeight(event.nativeEvent.layout.height) : undefined, style: [
             {
+                ...(overlay ? { bottom: 0, left: 0, position: "absolute", right: 0 } : {}),
                 backgroundColor: presentation.presentation === "bar" ? surfaceBackground : "transparent",
                 direction: presentation.direction,
                 paddingBottom: safeAreaBottom + bottomNavigationRecipe.safeArea.minimumBottomPadding,
@@ -558,7 +598,21 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
                                         : 0,
                                     padding: density.padding,
                                 },
-                            ], children: [_jsxs(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", style: {
+                            ], children: [_jsxs(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", style: item.prominent ? {
+                                        alignItems: "center",
+                                        backgroundColor: resolveColorReference(prominentRecipe.background, theme.palette),
+                                        borderRadius: prominentRecipe.diameter / 2,
+                                        height: prominentRecipe.diameter,
+                                        justifyContent: "center",
+                                        marginTop: -prominentLift,
+                                        position: "relative",
+                                        width: prominentRecipe.diameter,
+                                        ...resolveNativeShadowElevation(prominentShadow, theme.designProfile !== undefined, 8),
+                                        shadowColor: prominentShadow.color,
+                                        shadowOffset: { width: 0, height: prominentShadow.offsetY },
+                                        shadowOpacity: prominentShadow.opacity,
+                                        shadowRadius: prominentShadow.radius,
+                                    } : {
                                         alignItems: "center",
                                         borderRadius: theme.tokens.radius[bottomNavigationRecipe.indicator.radius],
                                         borderWidth: bottomNavigationRecipe.indicator.borderWidth,
@@ -575,8 +629,10 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
                                             item,
                                             name: item.icon.name,
                                             selected,
-                                            color: selected ? selectedIconColor : idleColor,
-                                            size: glyph[density.icon],
+                                            color: item.prominent
+                                                ? resolveColorReference(prominentRecipe.content, theme.palette)
+                                                : selected ? selectedIconColor : idleColor,
+                                            size: item.prominent ? glyph[prominentRecipe.icon] : iconSize,
                                             strokeWidth: selected
                                                 ? bottomNavigationRecipe.icon.selectedEmphasis.strokeWidth.selected
                                                 : bottomNavigationRecipe.icon.selectedEmphasis.strokeWidth.idle,

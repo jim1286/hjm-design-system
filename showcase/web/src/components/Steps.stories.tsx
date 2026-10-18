@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ContractStory } from "./preview-registry";
+import { StepsRevisitPreview } from "../patterns/flow-variants.previews.js";
 
 // Individual Steps item (2026-10-06, docs/STORYBOOK_NAVIGATION.md §1.7). The registry preview is the interactive default;
 // the role overview page components-navigation--steps keeps the same preview for old links.
@@ -7,5 +8,6 @@ const meta = { id: "components-navigation-steps", title: "배포/컴포넌트/�
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };
+export const Revisit: Story = { name: "지난 단계로 돌아가기", render: () => <StepsRevisitPreview /> };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

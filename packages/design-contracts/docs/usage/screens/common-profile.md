@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 구성 API 지침 참조
-- 검토일: 2026-10-17
+- 검토일: 2026-10-18
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screen-flows.tsx`(`ProfileScreen`·`EditorScreen`), 예제 `showcase/*/screen-flow-previews.tsx`(`AccountFlowPreview`)·`saved-profile-previews.tsx`(`ProfileEditFields`), 기본 얼굴 `showcase/web/src/patterns/ProfileStudio.previews.tsx`·`showcase/native/src/profile-face-preview.tsx`·`showcase/shared/profile-studio.ts`. 2026-10-06 사용자 승인으로 실험 `공통 화면/프로필`을 배포하면서 같은 프로필 수정을 직접 조립으로 보이던 배포 `화면/프로필 편집`과 합쳤다(API 기반 우선, Web id `patterns-profile-studio` 보존, [승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정))
 - 스토리북: `배포/화면/계정/프로필`
 
@@ -53,7 +53,7 @@
 | 바깥 틀 | ProfileScreen · EditorScreen(둘 다 ScreenLayout) | route 본문, host가 남은 높이·safe area·키보드를 준다 | 폭 최대 720, 바깥 padding `spacing.md` 16([ScreenLayout 배치](../components/screen-layout.md#배치)), 본문 스크롤 |
 | 머리 | `title` + `actions`(IconButton ghost 계정 메뉴) | 맨 위, 고정 | 제목 열 최소 120 × 글자 배율 |
 | 요약 | `summary`(제품) | 본문 맨 위 | 요약 안 배치는 제품 소유 |
-| 수정 진입 | `edit` → Button ghost | 요약 아래 | 요약과 `spacing.md` 16 |
+| 수정 진입 | `edit` → Button ghost | 요약 아래 | 요약과 `spacing.md` 16. 프로필 카드 안에 두는 제품은 `editPlacement="summary"`(ProfileSummary 행동 줄 맨 앞, `secondary` `small`, 1.31.0) |
 | 게시물 | `children` > Stack `gap="md"` > 탭 Button 줄 + Grid `columns={{ compact: 3 }}` | 수정 아래 | 요약 묶음과 `spacing.xl` 24, 격자 간격 `spacing.xxs` |
 | 계정 메뉴 | Sheet > ListRow, `footer` > Button ghost 로그아웃 → AlertDialog | 오버레이 | footer 고정 |
 | 수정 화면 | EditorScreen `submitPlacement="footer"` > 사진·이름·소개 필드 | 같은 route에서 보기 대신 | footer: 초안 상태 → 저장 primary, 사이 `spacing.sm` 12 |
@@ -77,7 +77,7 @@
 
 | 행동 | 컴포넌트·tone | 위치 | 개수·순서 |
 | --- | --- | --- | --- |
-| 프로필 수정 | `edit` → Button ghost | 요약 아래 | 1 |
+| 프로필 수정 | `edit` → Button ghost(`editPlacement="summary"`면 ProfileSummary 안 `secondary` `small`) | 요약 아래(또는 요약 카드 안 행동 줄 맨 앞) | 1 |
 | 계정 메뉴 | IconButton ghost(접근성 이름 "계정 메뉴") | 머리 끝(`actions`) | 1. 로그아웃·연결 계정은 메뉴 안 |
 | 게시물·저장됨 전환 | [SegmentedControl](../components/segmented-control.md)(label "프로필 보기") | 게시물 영역 맨 위 | 2개 항목, 단일 선택. 선택 상태를 ghost Button으로 흉내 내지 않는다 |
 | 게시물 열기 | 사진 칸 전체 | 격자 | 칸마다 1. 상세는 ScreenLayout + `exit` 뒤로 아이콘 |

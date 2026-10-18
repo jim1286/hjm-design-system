@@ -16,6 +16,7 @@ import {
   iconRecipe,
   tabsRecipe,
   type TabSize,
+  type TabsIndicator,
   type TabsLayout,
   type TabsOverflow,
 } from "@hjmds/design-contracts/recipes";
@@ -79,6 +80,8 @@ export type TabsProps = Omit<HTMLAttributes<HTMLDivElement>, "dir" | "onChange">
     size?: TabSize;
     layout?: TabsLayout;
     overflow?: TabsOverflow;
+    /** Selection mark: the 2pt underline (default) or a brand-tinted pill behind the selected tab. */
+    indicator?: TabsIndicator;
     /** Set false when panels are rendered separately with `TabPanel`. */
     renderPanels?: boolean;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
@@ -268,6 +271,7 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
     size = tabsRecipe.defaults.size,
     layout = tabsRecipe.defaults.layout,
     overflow = tabsRecipe.defaults.overflow,
+    indicator = tabsRecipe.defaults.indicator,
     renderPanels = true,
     className,
     id,
@@ -279,6 +283,7 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
   } = props;
   validateItems(items);
   if (label.trim().length === 0) throw new TypeError("Tabs label must not be empty");
+  if (!(indicator in tabsRecipe.indicators)) throw new TypeError(`Unsupported Tabs indicator: ${String(indicator)}`);
   if (panelMode === "dynamic" && mountPolicy !== "active") {
     throw new TypeError("Tabs dynamic panelMode requires active mountPolicy");
   }
@@ -470,6 +475,8 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
       data-layout={layout}
       data-overflow={overflow}
       data-appearance={appearance}
+      data-indicator={indicator}
+      data-indicator-motion={movingIndicator ? "moving" : "static"}
       data-orientation={orientation}
       data-mount-policy={mountPolicy}
       data-panel-mode={panelMode}

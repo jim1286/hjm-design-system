@@ -23,6 +23,7 @@
 | 여러 카드의 독립 입력·행동을 함께 유지하는 유한 가로 탐색 | [CollectionRail](list.md#collectionrail-가로-배치) |
 | 항목 수가 많거나 끝이 없음 | [VirtualList](virtual-list.md), [LoadMore](load-more.md) |
 | 같은 자리의 보기 전환 | [Tabs](tabs.md), [SegmentedControl](segmented-control.md) |
+| 페이저와 페이지 내용을 제품이 직접 소유하고 위치 점만 필요 | [PageIndicator](page-indicator.md)(이 컴포넌트의 점 줄과 같은 부품) |
 
 ## 공개 이름과 import
 

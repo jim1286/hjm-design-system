@@ -25,6 +25,7 @@ export {
   Stack,
   Surface,
   Text,
+  useHjmTextFace,
   type AspectRatioProps,
   type AspectRatioValue,
   type ContainerGutter,
@@ -45,6 +46,7 @@ export {
   type SurfaceProps,
   type SurfaceRadius,
   type SurfaceTone,
+  type HjmTextFaceOptions,
   type TextEmphasis,
   type TextProps,
   type TextTone,
@@ -141,6 +143,8 @@ export {
 
 export {
   BottomNavigation,
+  BottomNavigationInsetProvider,
+  useBottomNavigationInset,
   getDynamicTabPanelId,
   getTabId,
   getTabPanelId,
@@ -152,6 +156,7 @@ export {
   TopBarAction,
   type BottomNavigationBadgeRenderProps,
   type BottomNavigationIconRenderProps,
+  type BottomNavigationInsetProviderProps,
   type BottomNavigationProps,
   type LoadMoreHandle,
   type LoadMoreProps,
@@ -256,10 +261,13 @@ export {
 export {
   AlertDialog,
   Dialog,
+  ImmersiveOverlay,
   Sheet,
   type AlertDialogProps,
   type DialogOpenChangeReason,
   type DialogProps,
+  type ImmersiveOverlayOpenChangeReason,
+  type ImmersiveOverlayProps,
   type OverlayAction,
   type OverlayTitleProps,
   type SheetPlacement,
@@ -267,7 +275,7 @@ export {
   type SheetProps,
 } from "./overlays.js";
 
-export { Carousel, type CarouselProps, type CarouselLabels } from "./carousel.js";
+export { Carousel, PageIndicator, type CarouselProps, type CarouselLabels, type PageIndicatorProps, type PageIndicatorLabels } from "./carousel.js";
 
 export { FloatingActionButton, useFloatingActionButtonScroll, resolveFloatingActionButtonContentClearance, type FloatingActionButtonProps } from "./floating-action-button.js";
 

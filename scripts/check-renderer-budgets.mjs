@@ -785,7 +785,7 @@ async function checkRenderer(renderer) {
     const regressions = [];
     // Opt-in peers must never become a hidden installation requirement of base entries.
     // Derive the peer list from the manifest so new optional runtimes cannot escape this gate.
-    const optionalEntries = new Set(["./design-profile", "./avatar-blobatar-motion", "./progressive-blur", "./effect-surface", "./icon-lucide", "./avatar-blobatar", "./sortable", "./swipe-actions", "./content-transition", "./carousel-motion", "./celebration", "./screen-transition", "./qr-code", "./thinking-orb", "./toast-liquid", "./statistic-motion", "./menu-morph", "./image-viewer", "./keyboard-controller", "./sheet-gesture", "./context-menu-native"]);
+    const optionalEntries = new Set(["./design-profile", "./avatar-blobatar-motion", "./progressive-blur", "./effect-surface", "./icon-lucide", "./icon-svg", "./avatar-blobatar", "./sortable", "./swipe-actions", "./content-transition", "./carousel-motion", "./celebration", "./screen-transition", "./qr-code", "./thinking-orb", "./toast-liquid", "./statistic-motion", "./menu-morph", "./image-viewer", "./keyboard-controller", "./sheet-gesture", "./context-menu-native"]);
     if (!optionalEntries.has(exportPath)) {
       for (const [peer, metadata] of Object.entries(packageJson.peerDependenciesMeta ?? {})) {
         if (metadata.optional && measured.externals.some(specifier => specifier === peer || specifier.startsWith(`${peer}/`))) {

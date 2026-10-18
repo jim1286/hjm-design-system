@@ -4,8 +4,8 @@
 
 This projection joins the canonical surface maturity manifest with first-party renderer claims. Missing scenarios are explicit beta promotion debt; stable surfaces are blocked by CI until none remain.
 
-- web: 127/127 active implementations; 126/127 required scenario sets
-- native: 109/109 active implementations; 106/109 required scenario sets
+- web: 130/130 active implementations; 129/130 required scenario sets
+- native: 112/112 active implementations; 109/112 required scenario sets
 
 | Component | Surface | Maturity | Renderer package | Export | Claimed scenarios | Missing required scenarios | Executable proofs |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -64,6 +64,7 @@ This projection joins the canonical surface maturity manifest with first-party r
 | Sidebar | web | stable | @hjmds/react | ./sidebar | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard | none | test/default-render.ssr.test.tsx#sidebar, test/scenario-matrix.browser.test.tsx#sidebar, test/sidebar.browser.test.tsx#sidebar |
 | BottomNavigation | web | stable | @hjmds/react | ./navigation | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard | none | test/default-render.ssr.test.tsx#bottom-navigation, test/scenario-matrix.browser.test.tsx#bottom-navigation, test/bottom-navigation.keyboard.browser.test.tsx#bottom-navigation |
 | Breadcrumb | web | stable | @hjmds/react | ./breadcrumb | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard | none | test/default-render.ssr.test.tsx#breadcrumb, test/scenario-matrix.browser.test.tsx#breadcrumb, test/page-navigation.browser.test.tsx#breadcrumb |
+| PageIndicator | web | beta | @hjmds/react | ./carousel | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.ssr.test.tsx#page-indicator, test/scenario-matrix.browser.test.tsx#page-indicator |
 | Pagination | web | stable | @hjmds/react | ./pagination | default, dark, large-text, rtl, reduced-motion, accessibility, keyboard | none | test/default-render.ssr.test.tsx#pagination, test/scenario-matrix.browser.test.tsx#pagination, test/pagination.keyboard.browser.test.tsx#pagination |
 | LoadMore | web | stable | @hjmds/react | ./navigation | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard | none | test/default-render.ssr.test.tsx#load-more, test/scenario-matrix.browser.test.tsx#load-more, test/load-more.interactions.browser.test.tsx#load-more |
 | Steps | web | stable | @hjmds/react | ./steps | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.ssr.test.tsx#steps, test/scenario-matrix.browser.test.tsx#steps |
@@ -129,6 +130,8 @@ This projection joins the canonical surface maturity manifest with first-party r
 | MediaSelectionScreen | web | stable | @hjmds/react | ./screen-flows | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.ssr.test.tsx#media-selection-screen, test/scenario-matrix.browser.test.tsx#media-selection-screen |
 | ProfileScreen | web | stable | @hjmds/react | ./screen-flows | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.ssr.test.tsx#profile-screen, test/scenario-matrix.browser.test.tsx#profile-screen |
 | ChatMessage | web | stable | @hjmds/react | ./screens | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.ssr.test.tsx#chat-message, test/scenario-matrix.browser.test.tsx#chat-message |
+| TypingIndicator | web | beta | @hjmds/react | ./screens | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.ssr.test.tsx#typing-indicator, test/scenario-matrix.browser.test.tsx#typing-indicator |
+| ChatDateSeparator | web | beta | @hjmds/react | ./screens | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.ssr.test.tsx#chat-date-separator, test/scenario-matrix.browser.test.tsx#chat-date-separator |
 | NotificationRow | web | stable | @hjmds/react | ./screens | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.ssr.test.tsx#notification-row, test/scenario-matrix.browser.test.tsx#notification-row |
 | NotificationItem | web | stable | @hjmds/react | ./screens | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.ssr.test.tsx#notification-item, test/scenario-matrix.browser.test.tsx#notification-item |
 | CommentThreadRow | web | stable | @hjmds/react | ./screen-flows | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.ssr.test.tsx#comment-thread-row, test/scenario-matrix.browser.test.tsx#comment-thread-row |
@@ -186,6 +189,7 @@ This projection joins the canonical surface maturity manifest with first-party r
 | Tabs | native | stable | @hjmds/react-native | ./top-bar | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions | none | test/default-render.test.tsx#tabs, test/scenario-matrix.test.tsx#tabs, test/tabs-actions.test.tsx#tabs |
 | TopBar | native | stable | @hjmds/react-native | ./top-bar | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.test.tsx#top-bar, test/scenario-matrix.test.tsx#top-bar |
 | BottomNavigation | native | stable | @hjmds/react-native | ./top-bar | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions | none | test/default-render.test.tsx#bottom-navigation, test/scenario-matrix.test.tsx#bottom-navigation, test/bottom-navigation.interaction.test.tsx#bottom-navigation |
+| PageIndicator | native | beta | @hjmds/react-native | ./carousel | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.test.tsx#page-indicator, test/scenario-matrix.test.tsx#page-indicator |
 | Pagination | native | beta | @hjmds/react-native | ./pagination | default, dark, large-text, rtl, reduced-motion, accessibility | native-actions | test/default-render.test.tsx#pagination, test/scenario-matrix.test.tsx#pagination |
 | LoadMore | native | stable | @hjmds/react-native | ./top-bar | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions | none | test/default-render.test.tsx#load-more, test/scenario-matrix.test.tsx#load-more, test/load-more.interactions.test.tsx#load-more |
 | Steps | native | stable | @hjmds/react-native | ./steps | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.test.tsx#steps, test/scenario-matrix.test.tsx#steps |
@@ -238,6 +242,8 @@ This projection joins the canonical surface maturity manifest with first-party r
 | MediaSelectionScreen | native | stable | @hjmds/react-native | ./screen-flows | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.test.tsx#media-selection-screen, test/scenario-matrix.test.tsx#media-selection-screen |
 | ProfileScreen | native | stable | @hjmds/react-native | ./screen-flows | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.test.tsx#profile-screen, test/scenario-matrix.test.tsx#profile-screen |
 | ChatMessage | native | stable | @hjmds/react-native | ./screens | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.test.tsx#chat-message, test/scenario-matrix.test.tsx#chat-message |
+| TypingIndicator | native | beta | @hjmds/react-native | ./screens | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.test.tsx#typing-indicator, test/scenario-matrix.test.tsx#typing-indicator |
+| ChatDateSeparator | native | beta | @hjmds/react-native | ./screens | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.test.tsx#chat-date-separator, test/scenario-matrix.test.tsx#chat-date-separator |
 | NotificationRow | native | stable | @hjmds/react-native | ./screens | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.test.tsx#notification-row, test/scenario-matrix.test.tsx#notification-row |
 | NotificationItem | native | stable | @hjmds/react-native | ./screens | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.test.tsx#notification-item, test/scenario-matrix.test.tsx#notification-item |
 | CommentThreadRow | native | stable | @hjmds/react-native | ./screen-flows | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.test.tsx#comment-thread-row, test/scenario-matrix.test.tsx#comment-thread-row |

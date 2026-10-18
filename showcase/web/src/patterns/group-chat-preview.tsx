@@ -3,11 +3,13 @@ import { useState } from "react";
 import { ArrowUp } from "lucide-react";
 import { Text } from "@hjmds/react/layout";
 import { Avatar } from "@hjmds/react/display";
-import { ChatMessage, ChatScreen, MessageComposer } from "@hjmds/react/screens";
+import { ChatDateSeparator, ChatMessage, ChatScreen, MessageComposer, TypingIndicator } from "@hjmds/react/screens";
 import { resolveChatMessageGroups } from "@hjmds/design-contracts/screen-patterns";
 
 // 2026-10-16 group-room example: several members, one avatar/name per run, quote, photo and hold menu.
 // Neutral landscape crops stand in for member photos so no real person is depicted.
+// 2026-10-18: the day row, the typing row, the reaction summary (opens the hold menu) and a danger-toned delete on
+// own messages are HJM pieces, so this room shows them instead of product captions and status tags.
 const photo = (id: string) => `https://images.unsplash.com/${id}?w=96&h=96&fit=crop`;
 const members: Record<string, { name: string; photo: string }> = {
   seoyeon: { name: "서연", photo: photo("photo-1472396961693-142e6e269027") },
@@ -32,19 +34,21 @@ export function GroupChatPreview() {
   const [replyTarget, setReplyTarget] = useState<GroupMessage | null>(null);
   const [reactions, setReactions] = useState<Record<string, string | null>>({});
   const [status, setStatus] = useState("");
+  const [typing, setTyping] = useState(true);
   const positions = resolveChatMessageGroups(messages);
   const nameOf = (message: GroupMessage) => message.authorId === "me" ? "나" : members[message.authorId]!.name;
   const send = (value: string) => {
     setMessages(current => [...current, { id: `sent-${current.length}`, authorId: "me", timestamp: "지금", text: value, ...(replyTarget ? { replyTo: { author: nameOf(replyTarget), text: replyTarget.text || "사진" } } : {}) }]);
-    setDraft(""); setReplyTarget(null);
+    setDraft(""); setReplyTarget(null); setTyping(false);
   };
+  const summaryOf = (id: string) => { const value = reactions[id]; return value ? { summary: { label: `반응 ${emoji[value]} 1개. 반응 메뉴 열기`, items: [{ id: value, emoji: emoji[value]!, count: 1 }] } } : {}; };
   return <div style={{ height: 720 }}>
     <ChatScreen title="산책 모임" as="section" titleBadge={<Text tone="muted">4</Text>} exit={{ kind: "back", label: "뒤로", onClick: () => setStatus("목록으로 돌아가요.") }}
       avatar={<Avatar name="산책 모임" size="small" src={members.seoyeon!.photo} alt="" />}
       notice={status ? <Text tone="muted">{status}</Text> : null}
       composer={<MessageComposer value={draft} onValueChange={setDraft} label="메시지 보내기" sendLabel="전송" onSend={send} sendPresentation="circle" sendIcon={<ArrowUp size={20} strokeWidth={2} color="var(--hjm-color-on-primary)" />}
         {...(replyTarget ? { replyTo: { author: `${nameOf(replyTarget)}에게 답장`, excerpt: replyTarget.text || "사진", cancelLabel: "답장 취소", onCancel: () => setReplyTarget(null) } } : {})} />}>
-      <div>{messages.map(message => {
+      <div><ChatDateSeparator label="10월 18일 토요일" dateTime="2026-10-18" />{messages.map(message => {
         const member = members[message.authorId];
         return <ChatMessage key={message.id} direction={member ? "incoming" : "outgoing"} author={member?.name ?? "나"} timestamp={message.timestamp} groupPosition={positions.get(message.id) ?? "single"}
           {...(member ? { avatar: <Avatar name={member.name} size="small" src={member.photo} alt="" /> } : {})}
@@ -53,11 +57,12 @@ export function GroupChatPreview() {
           {...(message.photos ? { media: Array.from({ length: message.photos }, (_, index) => ({ id: `${message.id}-${index}`, label: "산책길 사진", aspectRatio: 4 / 3, preview: <img src={riverPhoto} alt="" /> })) } : {})}
           reactions={{ label: "메시지에 반응", closeLabel: "닫기", value: reactions[message.id] ?? null, onValueChange: value => setReactions(current => ({ ...current, [message.id]: value })),
             options: Object.entries(emoji).map(([id, value]) => ({ id, emoji: value, label: id })),
-            ...(member ? { reportAction: { label: "신고", onPress: () => setStatus(`${member.name}님의 메시지 신고를 접수했어요.`) } } : {}) }}
-          actions={reactions[message.id] ? <Text>{emoji[reactions[message.id]!]}</Text> : null}>
+            ...summaryOf(message.id),
+            ...(member ? { reportAction: { label: "신고", onPress: () => setStatus(`${member.name}님의 메시지 신고를 접수했어요.`) } }
+              : { menuActions: [{ id: "delete", label: "삭제", tone: "danger" as const, onPress: () => { setMessages(current => current.filter(item => item.id !== message.id)); setStatus("메시지를 삭제했어요."); } }] }) }}>
           {message.text ? <Text>{message.text}</Text> : null}
         </ChatMessage>;
-      })}</div>
+      })}{typing ? <TypingIndicator label="민준님이 입력 중" avatar={<Avatar name="민준" size="small" src={members.minjun!.photo} alt="" />} /> : null}</div>
     </ChatScreen>
   </div>;
 }

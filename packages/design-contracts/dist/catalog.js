@@ -136,10 +136,12 @@ export const componentCatalog = [
     { name: "TopBar", label: "상단 탐색 막대", companions: ["NavigationBar", "TopBarAction"], category: "navigation", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "topBarRecipe" },
     // Web keyboard and long-copy renderer proofs now pass; Native remains unsupported because its navigation pattern is product-owned.
     { name: "Sidebar", label: "사이드바", category: "navigation", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), aliases: ["NavigationRail", "SideNav"], recipe: "sidebarRecipe", behavior: "sidebar" },
-    { name: "BottomNavigation", label: "하단 탐색", category: "navigation", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "bottomNavigationRecipe", behavior: "bottomNavigation", ...evidenceNeeded("Web Tab·Enter link와 Native route/reselect host action이 navigator 소유 선택 상태를 보존하고, 긴 목적지 label을 보이는 문구와 접근성 이름에 유지합니다.") },
+    { name: "BottomNavigation", label: "하단 탐색", companions: ["BottomNavigationInsetProvider"], category: "navigation", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "bottomNavigationRecipe", behavior: "bottomNavigation", ...evidenceNeeded("Web Tab·Enter link와 Native route/reselect host action이 navigator 소유 선택 상태를 보존하고, 긴 목적지 label을 보이는 문구와 접근성 이름에 유지합니다.") },
     // Product routes and device QA remain consumer-owned; the Web renderer and route-link proofs now pass.
     { name: "Breadcrumb", label: "이동 경로", category: "navigation", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), recipe: "breadcrumbRecipe", behavior: "breadcrumb" },
     // Numeric-only rendering has no visible prose slot; four-digit page layout remains in the 320px/2x/RTL proof.
+    // Carousel's dot row on its own for a product-owned pager (Utilverse launcher, 2026-10-18); same recipe, no new visuals.
+    { name: "PageIndicator", label: "페이지 위치 표시", category: "navigation", platform: "shared", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "carouselRecipe" },
     { name: "Pagination", label: "페이지 이동", category: "navigation", platform: "shared", status: "stable", ...surfaceMaturity("stable", "beta"), recipe: "paginationRecipe", behavior: "pagination" },
     { name: "LoadMore", label: "더 보기", category: "navigation", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "loadMoreRecipe", behavior: "loadMore", ...evidenceNeeded("Web keyboard fallback·viewport observer와 Native onEndReached·retry action에서 requestKey 중복 방지, busy/error/complete 상태와 긴 현지화 문구를 검증했습니다. Native FlatList/device 통합은 소비 앱 QA입니다.") },
     // This non-interactive progress summary now has long-label matrix coverage on both renderers.
@@ -192,7 +194,7 @@ export const componentCatalog = [
     // Liquid is an opt-in presentation; Web close/Escape and Native close actions are covered separately.
     { name: "Toast", label: "토스트", companions: ["ToastProvider", "ToastRegion"], category: "feedback", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "toastRecipe", behavior: "toast", aliases: ["Notification"] },
     { name: "Watermark", label: "워터마크", category: "feedback", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), recipe: "watermarkRecipe" },
-    { name: "Dialog", label: "대화상자", companions: ["OverlayStackProvider"], category: "overlay", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "dialogRecipe", behavior: "dialog" },
+    { name: "Dialog", label: "대화상자", companions: ["OverlayStackProvider", "ImmersiveOverlay"], category: "overlay", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "dialogRecipe", behavior: "dialog" },
     { name: "AlertDialog", label: "확인 대화상자", category: "overlay", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "alertDialogRecipe", behavior: "alertDialog" },
     { name: "Sheet", label: "시트", extensions: ["GestureSheet", "GestureSheetProvider"], category: "overlay", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "sheetRecipe", behavior: "sheet" },
     { name: "SidePanel", label: "측면 패널", category: "overlay", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), recipe: "sidePanelRecipe", behavior: "sidePanel" },
@@ -221,14 +223,19 @@ export const componentCatalog = [
     { name: "EditorScreen", label: "편집 화면", category: "layout", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "screenPatternRecipe" },
     { name: "PermissionScreen", label: "권한 화면", category: "layout", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "screenPatternRecipe" },
     { name: "OnboardingScreen", label: "온보딩 화면", category: "layout", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "screenPatternRecipe" },
-    { name: "ModerationScreen", label: "신고 화면", category: "layout", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "screenPatternRecipe" },
+    { name: "ModerationScreen", label: "신고 화면", companions: ["ModerationForm"], category: "layout", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "screenPatternRecipe" },
     { name: "ChatScreen", label: "채팅 화면", category: "layout", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "screenPatternRecipe" },
     { name: "NotificationInboxScreen", label: "알림함 화면", category: "layout", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "screenPatternRecipe" },
     { name: "CommentThreadScreen", label: "댓글 화면", category: "layout", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "commentThreadRecipe" },
     { name: "ListDetailScreen", label: "목록 상세 화면", category: "layout", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "screenPatternRecipe" },
-    { name: "MediaSelectionScreen", label: "미디어 선택 화면", category: "layout", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "screenPatternRecipe" },
+    // MediaSelectionCell (2026-10-18): the screen's own item cell, exported so virtualized hosts render the same cell.
+    { name: "MediaSelectionScreen", label: "미디어 선택 화면", companions: ["MediaSelectionCell"], category: "layout", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "screenPatternRecipe" },
     { name: "ProfileScreen", label: "프로필 화면", category: "layout", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "screenPatternRecipe" },
     { name: "ChatMessage", label: "채팅 말풍선", category: "data-display", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "chatMessageRecipe" },
+    // 2026-10-18 timeline pieces that products drew themselves (BurnTok DM typing row, Utilverse chat time row).
+    // New public API, so beta until both renderer proofs pass (docs/stable-promotion.md).
+    { name: "TypingIndicator", label: "입력 중 표시", category: "feedback", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "typingIndicatorRecipe" },
+    { name: "ChatDateSeparator", label: "대화 날짜 구분", category: "data-display", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "chatDateSeparatorRecipe" },
     { name: "NotificationRow", label: "알림 미리보기 행", category: "data-display", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "notificationRowRecipe" },
     { name: "NotificationItem", label: "알림 목록 항목", category: "data-display", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "listRowRecipe" },
     { name: "CommentThreadRow", label: "댓글 행", category: "data-display", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "commentThreadRecipe" },
@@ -260,7 +267,7 @@ export function summarizeComponentRoadmap(entries = componentCatalog) {
 import { accordionRecipe, alertDialogRecipe, avatarRecipe, badgeRecipe, bottomNavigationRecipe, bottomCtaRecipe, anchorRecipe, agreementRecipe, topRecipe, authProviderButtonRecipe, authScreenRecipe, headingRecipe, toggleGroupRecipe, tagsInputRecipe, skipNavRecipe, bottomInfoRecipe, sidebarRecipe, textFormatRecipe, collapsibleRecipe, menubarRecipe, assetRecipe, breadcrumbRecipe, aspectRatioRecipe, containerRecipe, calendarRecipe, cardRecipe, buttonRecipe, carouselRecipe, chipRecipe, comboboxRecipe, descriptionListRecipe, counterBadgeRecipe, dialogRecipe, dataTableRecipe, chartRecipe, datePickerRecipe, dividerRecipe, formRecipe, emptyStateRecipe, fieldRecipe, filePickerRecipe, iconButtonRecipe, iconRecipe, imageRecipe, linkRecipe, listRecipe, listRowRecipe, loadMoreRecipe, menuRecipe, noticeRecipe, paginationRecipe, popoverRecipe, numberFieldRecipe, progressRecipe, resultRecipe, searchFieldRecipe, selectRecipe, selectionGroupRecipe, sectionRecipe, segmentedControlRecipe, selectionControlRecipe, sheetRecipe, sidePanelRecipe, commandPaletteRecipe, layoutRecipe, otpFieldRecipe, passwordFieldRecipe, splitterRecipe, tourRecipe, transferListRecipe, skeletonRecipe, sliderRecipe, spinnerRecipe, stackRecipe, statisticRecipe, stepsRecipe, surfaceRecipe, switchRecipe, tabsRecipe, tagRecipe, textRecipe, timelineRecipe, toastRecipe, tooltipRecipe, topBarRecipe, treeRecipe, uploadItemRecipe, visuallyHiddenRecipe, } from "./recipes.js";
 import { floatingActionButtonRecipe } from "./floating-action-button.js";
 import { gridRecipe } from "./grid.js";
-import { screenPatternRecipe, searchScreenRecipe, chatMessageRecipe, commentThreadRecipe, notificationRowRecipe, profileSummaryRecipe, iconTileRecipe, composerQuickInsertRecipe } from "./screen-patterns.js";
+import { screenPatternRecipe, searchScreenRecipe, chatMessageRecipe, commentThreadRecipe, notificationRowRecipe, profileSummaryRecipe, iconTileRecipe, composerQuickInsertRecipe, typingIndicatorRecipe, chatDateSeparatorRecipe } from "./screen-patterns.js";
 /** One typed registry prevents catalog recipe names from drifting into strings. */
 export const recipeRegistry = {
     imageChoiceRecipe,
@@ -370,5 +377,7 @@ export const recipeRegistry = {
     profileSummaryRecipe,
     iconTileRecipe,
     composerQuickInsertRecipe,
+    typingIndicatorRecipe,
+    chatDateSeparatorRecipe,
 };
 //# sourceMappingURL=catalog.js.map

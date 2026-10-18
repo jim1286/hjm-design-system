@@ -2742,7 +2742,9 @@
       "storyId": "navigation/bottom-navigation",
       "name": "BottomNavigation",
       "label": "하단 탐색",
-      "companions": [],
+      "companions": [
+        "BottomNavigationInsetProvider"
+      ],
       "extensions": [],
       "category": "navigation",
       "platform": "adaptive",
@@ -2828,6 +2830,57 @@
       "documentation": {
         "generated": "docs/generated/component-maturity.md",
         "authored": "docs/breadcrumb.md"
+      }
+    },
+    {
+      "id": "page-indicator",
+      "storyId": "navigation/page-indicator",
+      "name": "PageIndicator",
+      "label": "페이지 위치 표시",
+      "companions": [],
+      "extensions": [],
+      "category": "navigation",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
       }
     },
     {
@@ -4809,7 +4862,8 @@
       "name": "Dialog",
       "label": "대화상자",
       "companions": [
-        "OverlayStackProvider"
+        "OverlayStackProvider",
+        "ImmersiveOverlay"
       ],
       "extensions": [],
       "category": "overlay",
@@ -5657,7 +5711,9 @@
       "storyId": "layout/moderation-screen",
       "name": "ModerationScreen",
       "label": "신고 화면",
-      "companions": [],
+      "companions": [
+        "ModerationForm"
+      ],
       "extensions": [],
       "category": "layout",
       "platform": "adaptive",
@@ -5912,7 +5968,9 @@
       "storyId": "layout/media-selection-screen",
       "name": "MediaSelectionScreen",
       "label": "미디어 선택 화면",
-      "companions": [],
+      "companions": [
+        "MediaSelectionCell"
+      ],
       "extensions": [],
       "category": "layout",
       "platform": "adaptive",
@@ -6022,6 +6080,108 @@
       "surfaces": {
         "web": "stable",
         "native": "stable"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "typing-indicator",
+      "storyId": "feedback/typing-indicator",
+      "name": "TypingIndicator",
+      "label": "입력 중 표시",
+      "companions": [],
+      "extensions": [],
+      "category": "feedback",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "chat-date-separator",
+      "storyId": "data-display/chat-date-separator",
+      "name": "ChatDateSeparator",
+      "label": "대화 날짜 구분",
+      "companions": [],
+      "extensions": [],
+      "category": "data-display",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
       },
       "requirements": [
         {

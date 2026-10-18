@@ -2,6 +2,7 @@ import { useId, useMemo, useRef, useState } from "react";
 import { useHjmTheme } from "@hjmds/react/provider";
 import { Tabs, getTabId, getTabPanelId } from "@hjmds/react/navigation";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { filledTabsExample } from "../../../shared/navigation-layout-examples";
 import { ContractStory } from "./preview-registry";
 
 // Individual Tabs item (2026-10-06, docs/STORYBOOK_NAVIGATION.md §1.7). The registry preview is the interactive default;
@@ -11,6 +12,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };
 export const SwipePager: Story = { name: "스와이프와 이어지는 밑줄", render: () => <SwipePagerPreview /> };
+export const FilledIndicator: Story = { name: "채운 선택 표시", render: () => <FilledIndicatorPreview /> };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
 
@@ -27,4 +29,10 @@ function SwipePagerPreview() {
     <div ref={pager} style={{ display: "flex", overflowX: "auto", scrollSnapType: "x mandatory", touchAction: "pan-x pan-y" }} onScroll={event => { const node = event.currentTarget; position.publish(node.scrollLeft / Math.max(1, node.clientWidth)); }} onScrollEnd={event => { const node = event.currentTarget; setSelected(items[Math.round(node.scrollLeft / Math.max(1, node.clientWidth))]?.id ?? "one"); }}>
       {items.map(item => <div key={item.id} role="tabpanel" id={getTabPanelId(id, item.id)} aria-labelledby={getTabId(id, item.id)} aria-hidden={selected !== item.id} style={{ flex: "0 0 100%", scrollSnapAlign: "start", minHeight: 180, padding: 24, boxSizing: "border-box" }}><p>{item.label}</p><p>가로로 넘기면 밑줄이 실제 스크롤 위치를 따라갑니다.</p></div>)}
     </div></div>;
+}
+
+function FilledIndicatorPreview() {
+  const [selected, setSelected] = useState<string>(filledTabsExample.initial);
+  return <Tabs label={filledTabsExample.label} indicator="filled" layout="fitted" value={selected} onValueChange={setSelected}
+    items={filledTabsExample.items.map(item => ({ id: item.id, label: item.label, panel: <p>{filledTabsExample.panel(item.label)}</p> }))} />;
 }

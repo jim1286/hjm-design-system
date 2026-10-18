@@ -1,6 +1,13 @@
 import { type BottomNavigationActivation, type BottomNavigationConfiguration, type BottomNavigationDescriptor, type ResolvedBottomNavigationItemDescriptor } from "@hjmds/design-contracts/components/bottom-navigation";
 import { type AnchorHTMLAttributes, type HTMLAttributes, type MouseEvent, type ReactElement, type ReactNode, type RefAttributes } from "react";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+export type BottomNavigationInsetProviderProps = Readonly<{
+    children: ReactNode;
+}>;
+/** Wrap the app shell that holds both the screens and the BottomNavigation. */
+export declare function BottomNavigationInsetProvider({ children }: BottomNavigationInsetProviderProps): import("react").JSX.Element;
+/** Bottom height covered by the BottomNavigation inside the nearest provider; 0 outside one. */
+export declare function useBottomNavigationInset(): number;
 export type BottomNavigationIconRenderProps<Key extends string = string, IconName extends string = string> = Readonly<{
     item: ResolvedBottomNavigationItemDescriptor<Key, IconName>;
     name: IconName;

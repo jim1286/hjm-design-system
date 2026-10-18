@@ -32,6 +32,7 @@ export function FlatList({ data = [], renderItem, ListEmptyComponent, ...props }
   return createElement("FlatList", props, data.length ? data.map((item, index) => createElement("Cell", { key: index }, renderItem?.({ item, index }))) : ListEmptyComponent);
 }
 export const Image = host("Image");
+export const StatusBar = host("StatusBar");
 /** Every Animated.timing that started, for the reduced-motion scenario proof. */
 export const startedAnimatedTimings: { duration: number }[] = [];
 
@@ -84,6 +85,10 @@ export const Animated = {
     stop: () => {
       for (const animation of animations) animation.stop();
     },
+  }),
+  delay: (_duration: number): MockAnimation => ({
+    start: (callback) => { callback?.({ finished: true }); },
+    stop: () => undefined,
   }),
   loop: (animation: MockAnimation): MockAnimation => ({
     // Every timing in this mock settles synchronously, so replaying the inner

@@ -74,9 +74,16 @@ export type DialogProps = NativeModalProps & ReasonedOpenProps<DialogOpenChangeR
      * prefers the field marked `initialFocusTarget`; `none` leaves focus alone (2026-10-18, screen-patterns rules).
      */
     initialFocus?: InitialFocusMode;
+    /**
+     * Decorative layer over the whole modal window, outside the card frame (a drag ghost following the finger, a
+     * highlight anchored to a measured view). Children are positioned in window coordinates (`pageX`/`pageY`,
+     * `measureInWindow`), never receive touches and are hidden from accessibility; interactive content belongs in
+     * `children`.
+     */
+    overlayLayer?: ReactNode;
 }>;
 /** Native modal boundary with one reasoned close intent for each user attempt. */
-export declare function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, primaryAction, secondaryAction, dismissible, busy: externalBusy, onActionError, size, motionOrigin, closeLabel, returnFocusRef, contentStyle, onShow, initialFocus, ...modalProps }: DialogProps): import("react").JSX.Element;
+export declare function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, primaryAction, secondaryAction, dismissible, busy: externalBusy, onActionError, size, motionOrigin, closeLabel, returnFocusRef, contentStyle, onShow, initialFocus, overlayLayer, ...modalProps }: DialogProps): import("react").JSX.Element;
 export type AlertDialogProps = NativeModalProps & ReasonedOpenProps<AlertDialogOpenChangeReason> & Readonly<{
     request: AlertDialogRequest;
     size?: DialogSize;
@@ -122,5 +129,30 @@ export type SheetProps = NativeModalProps & ReasonedOpenProps<SheetOpenChangeDet
 }>;
 /** Native Sheet applies policy before emitting a concrete dismissal reason. */
 export declare function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, footer, placement, size, busy, dismissPolicy, closeLabel, returnFocusRef, safeAreaInsets: suppliedSafeAreaInsets, onDismissComplete, contentStyle, keyboardAvoidance, scrollable, showClose, onShow, initialFocus, ...modalProps }: SheetProps): import("react").JSX.Element;
+export type ImmersiveOverlayOpenChangeReason = "exit-action" | "back";
+export type ImmersiveOverlayProps = Readonly<{
+    open: boolean;
+    onOpenChange: (open: boolean, detail: Readonly<{
+        reason: ImmersiveOverlayOpenChangeReason;
+    }>) => void;
+    /** Localized accessible name of the presentation. */
+    label: string;
+    /** Localized visible label of the exit action. */
+    exitLabel: string;
+    /** Product-drawn stage filling the window edge to edge above the control bar. */
+    children: ReactNode;
+    /** Tool actions placed before the exit action (pause, rotate). */
+    tools?: ReactNode;
+    /** Status copy above the action row (keep-awake state, a notice). */
+    status?: ReactNode;
+    returnFocusRef?: RefObject<View | null>;
+    onShow?: ModalProps["onShow"];
+}>;
+/**
+ * Edge-to-edge presentation (Dialog companion): a full-screen Modal with the status bar hidden and rotation allowed,
+ * no card, scrim or header. It joins the overlay stack (screens below keep a pending entry focus until it has torn
+ * down), dismisses on back with a reason, and returns accessibility focus after the native dismissal.
+ */
+export declare function ImmersiveOverlay({ open, onOpenChange, label, exitLabel, children, tools, status, returnFocusRef, onShow }: ImmersiveOverlayProps): import("react").JSX.Element;
 export {};
 //# sourceMappingURL=overlays.d.ts.map

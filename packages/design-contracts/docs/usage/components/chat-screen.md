@@ -29,6 +29,7 @@ DM·대화방처럼 헤더, 메시지 타임라인, 하단 작성창으로 이�
 | --- | --- | --- | --- |
 | `ChatScreen` | 화면 조합 | `/screens` | `/screens` |
 | `ChatMessage`, `MessageComposer`, `ScreenLayout` | 함께 쓰는 조각 | `/screens` | `/screens` |
+| [`TypingIndicator`](typing-indicator.md), [`ChatDateSeparator`](chat-date-separator.md) | 타임라인 조각(입력 중 표시, 날짜 구분). 미게시(1.30.0 이후) | `/screens` | `/screens` |
 
 루트 barrel에는 없다. `/screens`는 optional native peer를 요구하지 않는다.
 
@@ -68,11 +69,11 @@ import { ChatScreen, MessageComposer } from "@hjmds/react-native/screens";
 | --- | --- | --- |
 | `title`(필수) | 지역화한 대화 제목 | `header`를 주면 Web은 `aria-label`로만 쓴다 |
 | `header` / `exit` / `actions` / `description` | 기존 navigation 헤더, 또는 헤더 시작 쪽 화면 나가기 아이콘(`exit`: 뒤로·닫기)·도구 슬롯 | `header`를 주면 기본 헤더를 그리지 않는다 |
-| `children` | 타임라인(가상화 목록 + `ChatMessage`) | 자동 스크롤·새 메시지 배지·이전 메시지 위치는 제품 |
+| `children` | 타임라인(가상화 목록 + `ChatMessage`) | 자동 스크롤·새 메시지 배지·이전 메시지 위치는 제품. 날짜·시각이 바뀌는 자리에는 `ChatDateSeparator`, 상대가 입력 중이면 마지막 메시지 뒤에 `TypingIndicator`를 둔다. 둘을 제품 caption·점 표시로 만들지 않는다 |
 | `composer`(필수) | `MessageComposer` 등 작성창 | `ready`와 `empty`에서 보인다(빈 대화의 첫 메시지 입력) |
 | `state` / `stateAction` | `loading`·`empty`·`error`·`restricted` + 지역화 `title` | ready 외에는 본문을 교체한다 |
 | `notice` | 새로고침 실패 같은 비차단 안내 | 초안 유지가 필요하면 `state` 대신 이것 |
-| `avatar` | 상대·방 사진 노드 | 미게시. 가운데 정렬 제목 앞에 놓는다. 단톡방은 인원 수를 `titleBadge`(흐린 글자)로 넘긴다 |
+| `avatar` | 상대·방 사진 노드 | 미게시. 가운데 정렬 제목 앞에 놓는다. 단톡방은 인원 수를 `titleBadge`(흐린 글자)로 넘긴다. ScreenLayout `titleLeading`과 같은 자리라 ChatScreen은 `titleLeading`을 따로 받지 않는다. 장식이라 보조기술에서 숨는다(제목이 이름) |
 | `jumpToLatest` | `{ label, icon, onPress() }` | 미게시. 독자가 최신 메시지에서 벗어났을 때만 넘긴다. 작성창 위 끝 쪽에 원형 `IconButton size="small"`(secondary)로 떠 있고, 스크롤 위치 판단은 제품이 한다 |
 
 ## 축과 기본값

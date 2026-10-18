@@ -52,6 +52,7 @@ import { ImageChoiceGroup } from "@hjmds/react-native/image-choice";
 | --- | --- | --- | --- |
 | `label` | `string` | 필수 | 묶음의 접근성 이름 |
 | `showLabel` | `boolean` | `false` | 타일 위에 `label`을 보이는 글자로 둔다 |
+| `showItemLabels` | `boolean` | `false` | 미게시. 타일마다 항목 `label`을 그림 아래 한 줄(caption, 넘치면 말줄임)로 보인다. 같은 누름 영역 안에 있고 보조기술은 기존처럼 타일 이름 하나만 읽는다. 사람을 이름으로 알아봐야 하는 받는 사람 선택에 쓴다 |
 | `items` | `{ id, label, image, disabled? }[]` | 필수 | id 중복·빈 이름이면 `TypeError`. `image`는 칸을 채우는 그림 노드 |
 | `selectionMode` | `"single"` · `"multiple"` | 필수 | 단일은 radio, 다중은 checkbox로 읽힌다 |
 | `value`·`onValueChange` | 단일 `string \| null` / 다중 `string[]` | 필수 | 제어형. 다중은 누른 순서대로 추가·제거 |
@@ -62,7 +63,7 @@ import { ImageChoiceGroup } from "@hjmds/react-native/image-choice";
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 그림 72 정사각, 바깥 고리 2 + 간격 2(터치 영역 80), radius `radius.md` 12, 체크 원 20 | `imageChoiceRecipe` |
-| 간격 | 타일 사이 `spacing.xs` 8, 라벨–타일 8 | `imageChoiceRecipe.gap` |
+| 간격 | 타일 사이 `spacing.xs` 8, 라벨–타일 8, 그림–항목 라벨 `spacing.xxs` 4 | `imageChoiceRecipe.gap`, `itemLabelGap` |
 | 순서·정렬 | `items` 순서대로 시작 쪽부터 줄바꿈 배치, 체크는 타일 끝 쪽 위 모서리 | 두 렌더러 |
 | 고정·스크롤 | 자체 스크롤 없음. 바깥 목록·화면이 스크롤 | 두 렌더러 |
 | 좁은 폭·큰 글자 | 남은 폭에서 줄바꿈, 타일 크기는 유지 | flex wrap |
@@ -78,4 +79,5 @@ import { ImageChoiceGroup } from "@hjmds/react-native/image-choice";
 
 ## 근거
 
+- `showItemLabels`: 2026-10-18 번뚝 공유 받는 사람 선택이 이름을 보이려고 링크 버튼에 아바타·체크·이름을 직접 조립했다.
 - 도입 계기: 2026-10-16 구성 예제 점검 — 제품들이 `selected`를 준 ghost 버튼으로 그림 선택을 흉내 내 선택 상태가 일관되지 않았다.

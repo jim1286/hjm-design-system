@@ -17,6 +17,7 @@ import {
   resolveBottomNavigationActivation,
   resolveBottomNavigationConfiguration,
   resolveBottomNavigationDescriptor,
+  validateBottomNavigationProminence,
   type BottomNavigationActivation,
   type BottomNavigationConfiguration,
   type BottomNavigationDescriptor,
@@ -64,6 +65,7 @@ import {
   type LoadMoreDensity,
   type MenuDensity,
   type TabSize,
+  type TabsIndicator,
   type TabsLayout,
   type TabsOverflow,
 } from "@hjmds/design-contracts/recipes";
@@ -71,6 +73,7 @@ import {
   Fragment,
   forwardRef,
   useCallback,
+  useContext,
   useEffect,
   useImperativeHandle,
   useLayoutEffect,
@@ -101,6 +104,12 @@ import {
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { RecipeButton } from "./internal/recipe-button.js";
+import { BottomNavigationInsetReporterContext } from "./internal/bottom-navigation-inset.js";
+export {
+  BottomNavigationInsetProvider,
+  useBottomNavigationInset,
+  type BottomNavigationInsetProviderProps,
+} from "./internal/bottom-navigation-inset.js";
 import { isWebRenderer, webOnly, webTabProps } from "./internal/web-a11y.js";
 
 export type { TabsAppearance };
@@ -167,6 +176,8 @@ type TabsBaseProps<Value extends string> = Readonly<{
   size?: TabSize;
   layout?: TabsLayout;
   overflow?: TabsOverflow;
+  /** Selection mark: the 2pt underline (default) or a brand-tinted pill behind the selected tab. */
+  indicator?: TabsIndicator;
   /** Set false when panels are rendered separately with `TabPanel`. */
   renderPanels?: boolean;
   children?: (selectedValue: Value) => ReactNode;
@@ -278,6 +289,7 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
     size = tabsRecipe.defaults.size,
     layout = tabsRecipe.defaults.layout,
     overflow = tabsRecipe.defaults.overflow,
+    indicator = tabsRecipe.defaults.indicator,
     renderPanels = true,
     children,
     layoutStyle,
@@ -290,6 +302,9 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
   if ("options" in props || !Array.isArray(items)) throw new TypeError("Tabs requires items; options was removed");
   const tabItems = items;
   if (tabItems.length === 0) throw new TypeError("Tabs requires at least one option");
+  if (!(indicator in tabsRecipe.indicators)) throw new TypeError(`Unsupported Tabs indicator: ${String(indicator)}`);
+  const mark = tabsRecipe.indicators[indicator];
+  const filled = indicator === "filled";
   const theme = useHjmNativeTheme();
   const { colors, environment } = theme;
   const direction = directionProp ?? environment.direction;
@@ -457,18 +472,20 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[
           {
-            borderBottomColor: orientation === "horizontal"
+            borderBottomColor: orientation === "horizontal" && mark.listDivider
               ? resolveColorReference(tabsRecipe.colors.divider, theme.palette)
               : undefined,
-            borderBottomWidth: orientation === "horizontal"
+            borderBottomWidth: orientation === "horizontal" && mark.listDivider
               ? tabsRecipe.indicatorHeight / 2
               : 0,
-            borderEndColor: orientation === "vertical"
+            borderEndColor: orientation === "vertical" && mark.listDivider
               ? resolveColorReference(tabsRecipe.colors.divider, theme.palette)
               : undefined,
-            borderEndWidth: orientation === "vertical"
+            borderEndWidth: orientation === "vertical" && mark.listDivider
               ? tabsRecipe.indicatorHeight / 2
               : 0,
+            // The filled pill keeps tabsRecipe.gap between tabs so neighbouring pills never touch.
+            gap: filled ? tabsRecipe.gap : undefined,
             direction,
             flexGrow: fitted ? 1 : 0,
             flexDirection: orientation === "vertical" ? "column" : "row",
@@ -479,8 +496,10 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
         ]}
       >
         {movingIndicator && (indicatorRecipe || swipePosition) ? <Animated.View pointerEvents="none" accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{
-          position: "absolute", bottom: 0, height: appearance === "gooey" ? 6 : tabsRecipe.indicatorHeight, borderRadius: theme.tokens.radius.full,
-          backgroundColor: resolveColorReference(tabsRecipe.colors.indicator, theme.palette),
+          // The filled pill spans the tab height and moves behind the labels (rendered before the tabs).
+          ...(filled && mark.background
+            ? { position: "absolute", top: 0, bottom: 0, borderRadius: theme.tokens.radius[mark.radius], backgroundColor: resolveColorReference(mark.background, theme.palette) }
+            : { position: "absolute", bottom: 0, height: appearance === "gooey" ? 6 : tabsRecipe.indicatorHeight, borderRadius: theme.tokens.radius.full, backgroundColor: resolveColorReference(tabsRecipe.colors.indicator, theme.palette) }),
           left: swipePosition ? swipeX : progress.interpolate({ inputRange: [...indicatorRecipe!.input], outputRange: [...indicatorRecipe!.x] }),
           width: swipePosition ? swipeWidth : progress.interpolate({ inputRange: [...indicatorRecipe!.input], outputRange: [...indicatorRecipe!.width] }),
         }} /> : null}
@@ -551,7 +570,10 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
                   alignItems: "center",
                   backgroundColor: pressed
                     ? resolveColorReference(tabsRecipe.states.pressedBackground, theme.palette)
-                    : "transparent",
+                    : filled && active && mark.background && !(movingIndicator && (indicatorRecipe || swipePosition))
+                      ? resolveColorReference(mark.background, theme.palette)
+                      : "transparent",
+                  ...(filled && mark.radius ? { borderRadius: theme.tokens.radius[mark.radius] } : {}),
                   direction,
                   flex: fitted ? 1 : undefined,
                   flexDirection: "row",
@@ -574,7 +596,7 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
                     selected: active,
                     disabled: item.disabled === true,
                     color: resolveColorReference(
-                      active ? tabsRecipe.colors.selected : tabsRecipe.colors.idle,
+                      active ? mark.selectedContent : tabsRecipe.colors.idle,
                       theme.palette,
                     ),
                     size: glyph[tabsRecipe.icon.glyph],
@@ -586,7 +608,7 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
                 align="center"
                 style={{
                   color: resolveColorReference(
-                    active ? tabsRecipe.colors.selected : tabsRecipe.colors.idle,
+                    active ? mark.selectedContent : tabsRecipe.colors.idle,
                     theme.palette,
                   ),
                   fontWeight: active
@@ -609,7 +631,7 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
                   <Text align="center" tone="brand" variant="caption">{item.badge}</Text>
                 </View>
               ) : null}
-              {active && (!movingIndicator || (!indicatorRecipe && !swipePosition)) ? (
+              {active && !filled && (!movingIndicator || (!indicatorRecipe && !swipePosition)) ? (
                 <View
                   accessibilityElementsHidden
                   accessible={false}
@@ -716,6 +738,13 @@ export type BottomNavigationProps<
   primaryAction?: ReactNode;
   configuration?: BottomNavigationConfiguration;
   safeAreaBottom?: number;
+  /**
+   * `inline` (default) takes its own height in the host layout, as a navigator tab bar does. `overlay` pins the
+   * bar to the bottom of its host over the screens, so content scrolls behind a floating bar, and publishes the
+   * covered height to the nearest BottomNavigationInsetProvider (ScreenLayout pads by it). Native only: the Web
+   * bar is always `position: fixed`, i.e. always an overlay.
+   */
+  placement?: "inline" | "overlay";
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
         }>;
@@ -747,6 +776,7 @@ export function BottomNavigation<
   primaryAction,
   configuration = {},
   safeAreaBottom = 0,
+  placement = "inline",
   layoutStyle,
   ...removedProps
 }: BottomNavigationProps<Key, IconName>) {
@@ -754,6 +784,9 @@ export function BottomNavigation<
   const resolved = resolveBottomNavigationDescriptor(descriptor);
   if (!Number.isFinite(safeAreaBottom) || safeAreaBottom < 0) {
     throw new RangeError("BottomNavigation safeAreaBottom must be non-negative");
+  }
+  if (placement !== "inline" && placement !== "overlay") {
+    throw new TypeError(`Unsupported BottomNavigation placement: ${String(placement)}`);
   }
   const theme = useHjmNativeTheme();
   const presentation = resolveBottomNavigationConfiguration(
@@ -763,6 +796,7 @@ export function BottomNavigation<
     },
     resolved.items.length,
   );
+  validateBottomNavigationProminence(resolved.items, presentation);
   const capsule = presentation.presentation === "capsule";
   const tile = presentation.selection === "tile";
   const tileRecipe = bottomNavigationRecipe.selectionTile;
@@ -818,13 +852,37 @@ export function BottomNavigation<
   const badgeTone = counterBadgeRecipe.tones.danger;
   const badgeVariant = counterBadgeRecipe.variants[bottomNavigationRecipe.badge.variant];
   const [focusedKey, setFocusedKey] = useState<Key | null>(null);
+  const iconSize = presentation.iconSize === "standard"
+    ? glyph[density.icon]
+    : bottomNavigationRecipe.iconSizes[presentation.iconSize];
+  const prominentRecipe = bottomNavigationRecipe.prominentDestination;
+  // Lifting by (diameter - indicator height) keeps the prominent label on the other labels' line; an app-icon
+  // slot taller than the indicator minimum raises that height.
+  const prominentLift = prominentRecipe.diameter - Math.max(bottomNavigationRecipe.indicator.minHeight, iconSize);
+  // The circle can rise above the bar's own box; an overlay reports that part too so content clears it.
+  const prominentOverflow = resolved.items.some((item) => item.prominent)
+    ? Math.max(0, prominentLift - density.padding - presentationRecipe.outerPaddingTop)
+    : 0;
+  const prominentShadow = theme.designProfile?.tokens.shadow.floating ?? prominentRecipe.shadow;
+  const hiddenForKeyboard = presentation.keyboardBehavior === "hide" && keyboardVisible;
+  const overlay = placement === "overlay";
+  const reportInset = useContext(BottomNavigationInsetReporterContext);
+  const [measuredHeight, setMeasuredHeight] = useState(0);
+  useEffect(() => {
+    if (!reportInset || !overlay) return;
+    reportInset(hiddenForKeyboard || measuredHeight === 0 ? 0 : measuredHeight + prominentOverflow);
+    return () => reportInset(0);
+  }, [reportInset, overlay, hiddenForKeyboard, measuredHeight, prominentOverflow]);
 
-  if (presentation.keyboardBehavior === "hide" && keyboardVisible) return null;
+  if (hiddenForKeyboard) return null;
 
   return (
     <View
+      pointerEvents={overlay ? "box-none" : undefined}
+      onLayout={overlay ? (event) => setMeasuredHeight(event.nativeEvent.layout.height) : undefined}
       style={[
         {
+          ...(overlay ? { bottom: 0, left: 0, position: "absolute" as const, right: 0 } : {}),
           backgroundColor:
             presentation.presentation === "bar" ? surfaceBackground : "transparent",
           direction: presentation.direction,
@@ -986,7 +1044,21 @@ export function BottomNavigation<
                   accessibilityElementsHidden
                   accessible={false}
                   importantForAccessibility="no-hide-descendants"
-                  style={{
+                  style={item.prominent ? {
+                    alignItems: "center",
+                    backgroundColor: resolveColorReference(prominentRecipe.background, theme.palette),
+                    borderRadius: prominentRecipe.diameter / 2,
+                    height: prominentRecipe.diameter,
+                    justifyContent: "center",
+                    marginTop: -prominentLift,
+                    position: "relative",
+                    width: prominentRecipe.diameter,
+                    ...resolveNativeShadowElevation(prominentShadow, theme.designProfile !== undefined, 8),
+                    shadowColor: prominentShadow.color,
+                    shadowOffset: { width: 0, height: prominentShadow.offsetY },
+                    shadowOpacity: prominentShadow.opacity,
+                    shadowRadius: prominentShadow.radius,
+                  } : {
                     alignItems: "center",
                     borderRadius: theme.tokens.radius[bottomNavigationRecipe.indicator.radius],
                     borderWidth: bottomNavigationRecipe.indicator.borderWidth,
@@ -1005,8 +1077,10 @@ export function BottomNavigation<
                     item,
                     name: item.icon.name,
                     selected,
-                    color: selected ? selectedIconColor : idleColor,
-                    size: glyph[density.icon],
+                    color: item.prominent
+                      ? resolveColorReference(prominentRecipe.content, theme.palette)
+                      : selected ? selectedIconColor : idleColor,
+                    size: item.prominent ? glyph[prominentRecipe.icon] : iconSize,
                     strokeWidth: selected
                       ? bottomNavigationRecipe.icon.selectedEmphasis.strokeWidth.selected
                       : bottomNavigationRecipe.icon.selectedEmphasis.strokeWidth.idle,

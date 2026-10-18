@@ -126,3 +126,32 @@ it("keeps controlled selection until accepted while RTL arrows and endpoints mov
   await act(async () => key("Home"));
   expect(document.activeElement?.textContent).toBe("a");
 });
+
+it("paints the filled indicator as a pill behind the selected tab without the list divider", async () => {
+  await act(async () => root.render(
+    <HjmProvider systemTheme="light">
+      <Tabs label="Sent" indicator="filled" appearance="standard" layout="fitted" defaultValue="people"
+        items={[{ id: "travelling", label: "Travelling" }, { id: "people", label: "People" }]} />
+    </HjmProvider>,
+  ));
+  const tabs = [...host.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+  expect(host.querySelector(".hjm-tabs")!.getAttribute("data-indicator")).toBe("filled");
+  expect(getComputedStyle(tabs[1]!).backgroundColor).not.toBe("rgba(0, 0, 0, 0)");
+  expect(getComputedStyle(tabs[0]!).backgroundColor).toBe("rgba(0, 0, 0, 0)");
+  expect(getComputedStyle(tabs[1]!, "::after").display).toBe("none");
+  expect(getComputedStyle(host.querySelector(".hjm-tabs__list")!).borderBottomWidth).toBe("0px");
+  await act(async () => tabs[0]!.click());
+  expect(getComputedStyle(tabs[0]!).backgroundColor).not.toBe("rgba(0, 0, 0, 0)");
+});
+
+it("moves the filled pill behind the labels when the indicator slides", async () => {
+  await act(async () => root.render(
+    <HjmProvider systemTheme="light">
+      <Tabs label="Sent" indicator="filled" appearance="slide" items={[{ id: "a", label: "A" }, { id: "b", label: "B" }]} />
+    </HjmProvider>,
+  ));
+  const indicator = host.querySelector<HTMLElement>(".hjm-tabs__indicator")!;
+  const tab = host.querySelector<HTMLElement>('[role="tab"]')!;
+  expect(indicator.getBoundingClientRect().height).toBeCloseTo(tab.getBoundingClientRect().height, 0);
+  expect(getComputedStyle(tab).backgroundColor).toBe("rgba(0, 0, 0, 0)");
+});

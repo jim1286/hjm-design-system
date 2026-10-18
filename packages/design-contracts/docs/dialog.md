@@ -64,3 +64,23 @@ enter duration, falling back to ordinary presentation if the host fails to reply
 spatial interpolation. Device geometry, resizing/keyboard behavior, themes and performance remain
 experimental until the QA report verifies them. See the usage guide and
 [origin transition QA](../../../docs/qa/2026-10-07-overlay-origin-transition.md).
+
+## Decorative layer and immersive presentation (1.31.0)
+
+2026-10-18 product gaps: BurnTok kept a raw RN Modal for a folder popup because its drag ghost had to be drawn
+in window coordinates outside the card, and utilverse kept one for a display board because every HJM overlay
+drew a card or a framed sheet. Both reused nothing of the modal stack, focus return or dismissal contract.
+
+- `overlayLayer` is a viewport/window-sized sibling of the card inside the same modal. It is decorative by
+  contract: no pointer input, hidden from assistive technology (Web `inert` + `aria-hidden`, Native
+  `pointerEvents="none"` + `no-hide-descendants`). Interactive content stays in `children`, inside the focus trap.
+- `ImmersiveOverlay` is a Dialog companion with no card, scrim, header or gutter: a product stage edge to edge
+  and a control bar (status, tools, a localized exit action). It keeps the shared modal stack, focus trap,
+  background isolation, focus return and the entry-focus wait of screens below. Web reports `escape` or
+  `exit-action`; Native reports `back` or `exit-action`. Native presents full screen with the status bar hidden
+  and rotation allowed (`dialogRecipe.immersive`). Web does not request the Fullscreen API (user activation,
+  Escape consumed by the browser, no element fullscreen on iOS Safari).
+
+Renderer proof: `immersive-overlay.browser.test.tsx` (geometry, exit focus, Escape, focus return, inert layer)
+and `immersive-overlay.test.tsx` (Modal presentation, status bar, orientations, reasons, overlay-stack wait,
+layer placement). Device rotation and status bar behavior are unverified on hardware.

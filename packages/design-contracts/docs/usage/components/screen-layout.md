@@ -71,6 +71,7 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 | `keyboardAvoidance` (Native) | `boolean` | `true`(미게시) | 키보드와 실제로 겹치는 만큼 footer·본문을 올리고 포커스된 입력칸을 스크롤해 보인다. `KeyboardAvoiding`·키보드 처리 Sheet/Dialog 안에서는 건너뛴다 |
 | `title` | `string` | 필수 | 화면 제목. `header`를 주면 접근성 이름으로만 쓴다 |
 | `titleBadge` | `ReactNode` | 없음 | 기본 제목 바로 옆 배지. 값·의미는 제품, 간격·정렬은 HJM. `header` 교체 또는 제목 숨김이면 그리지 않는다. 1.23.0 추가 API |
+| `titleLeading` | `ReactNode` | 없음 | 미게시(1.30.0 이후). 제목 앞 식별 표시(팀 로고·도구 아트워크). 장식이라 보조기술에서 숨기고 제목이 heading·접근성 이름으로 남는다. `titleVisibility="hidden"`이면 표시가 제목 자리에 혼자 서고 `title`을 이름으로 하는 heading(level 1)이 된다. 이때도 아이콘 전용 48 띠가 아니라 제목 띠 52를 쓴다. 노드 크기는 제품이 주되 헤더 띠 안에 들어가야 한다. `header` 교체 시 그리지 않는다. `ChatScreen`은 같은 자리를 `avatar`로 받는다 |
 | `header` | `ReactNode` | 없음 | 기존 navigator 헤더 유지용. 주면 기본 헤더(`exit`·제목·`description`·`actions`)를 그리지 않는다 |
 | `description` | `string` | 없음 | 제목 아래 muted 설명 |
 | `exit` | `{ kind: "back" \| "close"; label; onClick(Web) \| onPress(Native); disabled? }` | 없음 | 화면 나가기(뒤로·닫기·"설정 나가기")를 헤더 시작 쪽 아이콘 버튼으로 고정한다. 글자는 보이지 않고 `label`은 보조기술 이름이다. `back`은 ‹(RTL 반전), `close`는 ×. 헤더 시작 쪽에는 이 버튼 외의 자유 슬롯이 없다. 미게시(1.26.1 이후) |
@@ -79,6 +80,7 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 | `footer` | `ReactNode` | 없음 | 하단 고정 행동. footer가 위 경계·여백·safe area를 맡고, 안에 둔 [BottomCTA](bottom-cta.md)는 자기 바를 그리지 않고 설명·행동 줄만 그린다(2026-10-17, 경계 두 겹·버튼 이중 들여쓰기 수정) |
 | `state` | `{ kind: "ready" }` · `{ kind: "loading" \| "empty" \| "error" \| "restricted"; title; description? }` | `{ kind: "ready" }` | ready가 아니면 children을 그리지 않고 상태와 `stateAction`을 가운데에 놓는다. 로딩은 Spinner 하나만 보이고 `title`·`description`은 Spinner의 접근성 이름이 된다 |
 | `stateAction` | `ReactNode` | 없음 | 상태 안내 아래 행동(재시도 등) |
+| `loadingIndicator` | `ReactNode` | 없음 | 미게시(1.30.0 이후). `state.kind === "loading"`일 때 Spinner 대신 그리는 브랜드 표시. 표시 자체는 보조기술에서 숨기고, `title`·`description`을 이름으로 하는 busy 상태(Web `role="status"`, Native `progressbar`)·가운데 배치·알림은 HJM이 맡는다. [CompositionLayout](composition-layout.md)의 같은 prop과 같은 계약 |
 | `scroll` | `"screen"` · `"content"` | `"screen"` | `content`는 본문 자식(가상화 목록)이 스크롤을 소유한다. 상태 교체 중에는 `screen`으로 돌아간다 |
 | `contentAlignment` | `"start"` · `"center"` | `"start"` | ready 본문을 사용 영역 중앙에 배치. 긴 본문은 위가 잘리지 않게 스크롤한다. 로그인/제품 안내를 가짜 query state로 바꾸지 않는다(1.24.0) |
 | `surface` | `"default"` · `"transparent"` | `"default"` | 투명은 제품 host의 배경·wallpaper를 보존. 배경색 style 우회 대신 사용(1.24.0) |
@@ -119,6 +121,7 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 - 시점: Native는 화면·시트 진입 전환이 끝난 뒤(`InteractionManager`, 시트는 표시 뒤) — 키보드 애니메이션이 전환과 겹치지 않는다. Web은 mount 직후, `preventScroll`.
 - 빼앗지 않는다: 사용자가 이미 입력 칸에 있으면 그대로 둔다(Native 포커스된 입력, Web 편집 가능한 요소).
 - 오버레이 아래(1.28.2, Web·Native): 위에 HJM `Dialog`·`AlertDialog`·`Sheet`가 열려 있으면 아래 화면·시트는 고르지 않는다. Web은 제품 자체 모달(`aria-modal`·`dialog[open]`)도 막는다. Native는 HJM 오버레이만 알 수 있으므로 화면을 덮는 모달은 HJM 오버레이로 만든다.
+- 오버레이 안의 화면(1.31.0, Web·Native): 화면을 **감싸는** 모달은 그 화면을 막지 않는다. `Dialog`·`Sheet` 본문에 둔 `ScreenLayout`(또는 화면 구성)은 오버레이가 열린 뒤(Web: 모달 활성화, Native: 표시·진입 애니메이션 뒤) 오버레이와 함께 진입해 자기 `initialFocus` 규칙으로 칸을 고른다. 오버레이 자신의 칸이 있으면 그 칸이 먼저이고, 오버레이에 `initialFocusRef`(Web)가 있으면 그쪽이 이긴다. Web 제품 모달(`aria-modal`)도 화면의 입력 칸을 품고 있으면 화면을 감싸는 것으로 보고 막지 않는다. 화면 밖에 열린 제품 모달은 그대로 막는다.
 - 진입 창(1.28.2): 진입 뒤 아직 포커스하지 못한 범위는 사용자가 그 범위를 직접 조작(Native 터치·스크롤, Web 포인터·키·휠·터치)하기 전까지 열려 있다. 그 동안 ① 칸이 새로 나타나면(데이터 로드 뒤 드러나는 확인 칸) ② 진입 때 위에 있던 오버레이가 닫히면(첫 가입 약관 동의) 다시 고른다. 오버레이 안의 조작(동의 탭)은 아래 화면의 조작으로 세지 않는다. 오버레이가 닫힌 시점은 그 오버레이의 반환 포커스와 같은 시점(Native: 퇴장·dismiss 뒤, Web: 반환 포커스 뒤)이다.
 - 나중에 드러나는 주 입력(1.28.2): 진입이 끝난 뒤 `initialFocusTarget`(`true`) 칸이 새로 mount되면 그 칸을 포커스한다. `initialFocus` 모드와 무관하다 — 검색 버튼으로 여는 검색 칸(`none` 화면), 단계형 시트·`EditorScreen`의 단계 칸(각 단계 칸에 `initialFocusTarget`)이 이 경우다. 다른 입력 칸에 초점이 있거나 위에 오버레이가 있으면 하지 않는다. 스스로 다시 mount되는 칸(가상화 목록 행)에는 주지 않는다.
 - 다시 진입: 화면은 mount당 한 번이다. 스택에서 돌아온 화면(이미 mount)은 다시 포커스하지 않는다 — 돌아온 맥락을 키보드가 가리고, HJM은 내비게이션 포커스 신호를 모른다. 시트·대화상자는 열 때마다 다시 고른다.
@@ -143,6 +146,8 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 - Web host는 실제 남은 높이(`height:100%` 등)를, Native host는 위·옆 safe area와 탭바 inset을 먼저 처리한다. 아래 홈 인디케이터는 host가 SafeAreaView로 들이지 말고 `safeAreaBottom`으로 넘긴다(들인 뒤 footer 16을 더하면 버튼 아래가 50이 된다).
   HJM은 기종별 높이를 추측하지 않는다.
 - 배치는 Web·Native 모두 `layoutStyle`로 한다(Web은 `className`도 있다). 색·여백을 덮지 않는다.
+- 제목 옆 로고·아트워크 때문에 `header`에 TopBar나 직접 만든 헤더를 넣지 않는다. `titleLeading`을 쓰면 가운데 제목·양쪽 같은 폭 열·`exit`·`actions` 배치가 그대로 유지된다.
+- 첫 로딩에 브랜드 로더를 보이려고 `ready` 본문 안에 로딩 화면을 직접 두지 않는다. `state={{ kind: "loading", title }}` + `loadingIndicator`로 넘긴다.
 
 ## 플랫폼 차이
 
@@ -168,6 +173,10 @@ dashboard는 가로 헤더/1200 목록 폭, editorial은 세로 헤더/720 읽�
 
 ## 근거
 
+- `titleLeading`: 2026-10-18 HJM 1.30.0 채택 감사. 야잘알 팀 상세는 팀 로고를 제목 자리에 두려고 헤더 전체를 직접 만들었고(측정한 양쪽 폭 맞춤까지 복제), 유틸버스 도구 화면은 도구 아트워크 때문에 `header`에 TopBar를 넣었다. ChatScreen 상대 사진은 이미 같은 자리를 비공개로 쓰고 있었으므로 공개 prop으로 열었다.
+- `loadingIndicator`: 2026-10-18 spint 홈. ScreenLayout 로딩 상태가 브랜드 표시를 받지 않아 첫 로딩을 `ready` 본문 안의 제품 상태 화면으로 그렸다. CompositionLayout에는 같은 prop이 있었다.
+
 - 하단 여백 `max(16, inset)`(Native `safeAreaBottom`): 2026-10-17 사용자 보고 "전체적으로 버튼 아래 여백이 많아". Native Storybook의 사진 선택과 업로드 화면에서 버튼 아래가 약 33pt였다. 원인은 둘이었다. 화면 스토리의 route host가 고정 높이 720이라 iPhone 17 Pro 스토리 영역 737보다 17 짧았고(footer 16 + 빈 칸 17), 컴포넌트는 Native footer가 safe area를 다루지 않아 host의 아래 inset 위에 16을, footer 안 BottomCTA의 `safeAreaBottom`도 16 위에 더했다(16 + 34 = 50). Web footer는 이미 `max(16, env())`였지만 footer 안 BottomCTA의 `safeAreaBottom`은 그 위에 더했다. 표준을 "마지막 컨트롤 아래 = footer 위 여백 16, 홈 인디케이터 기기에서는 max(16, inset)"으로 정하고 footer가 한 번만 소유하게 했다.
 - 화면 여백은 ScreenLayout 소유, 바깥 여백 + `none` 미지원: 2026-10-17 바깥 여백 호스트 예제 사용자 검토. utilverse식(`Container gutter="regular"` 20 + `contentInset="none"`)을 HJM에서 지원하려고 본문 확장·footer 바 소유를 붙인 예제가 어색하다는 판단으로 지원을 접었다(2026-10-15 공통 구조는 HJM 소유 원칙). 측정상 그 구성에서는 Web 402·1280에서 행 표면이 양쪽 8 잘리고 본문이 옆으로 8 스크롤되며, Native 3x에서 선택 테두리 옆 선이 그려지지 않았다. 제품은 바깥 여백을 걷고 기본 inset을 쓴다.
 - `contentInset="body-edge"`: 2026-10-17 사용자 결정. 화면 검토 S5#9에서 대화 목록 아바타가 화면 끝에서 약 32pt 안쪽에서 시작했다. 본문 padding 16과 ConversationRow 자체 padding 16이 겹쳤다(인스타그램 DM은 약 16). 앱 약 45곳이 "host가 모든 여백을 소유한다"는 뜻으로 `none`을 쓰고 있어 `none`의 의미를 바꿀 수 없었으므로 값을 새로 추가했다. ChatScreen의 10 타임라인 여백은 `default`일 때만 공통 여백을 대신한다.
+- 오버레이 안의 화면 진입 포커스: 2026-10-18 번뚝 검색 오버레이. Web은 화면을 감싼 제품 `aria-modal`을 화면 위의 모달로 보고 진입 포커스를 막았고, HJM Sheet 안에 둔 ScreenLayout은 Sheet의 첫 컨트롤(닫기)에 포커스를 빼앗겼다. Native는 오버레이 표시 전에 칸을 포커스해 무시될 수 있었다. 감싸는 모달은 막지 않고 오버레이 안의 화면은 오버레이와 함께 진입하도록 고쳤다(1.31.0 patch).

@@ -401,6 +401,7 @@ export declare const behaviorRegistry: {
             readonly labels: "visible";
             readonly selection: "emphasis";
             readonly surface: "flat";
+            readonly iconSize: "standard";
             readonly minItems: 2;
             readonly maxItems: 6;
         };

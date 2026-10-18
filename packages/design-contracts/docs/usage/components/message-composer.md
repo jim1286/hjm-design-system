@@ -76,7 +76,7 @@ import { Image } from "react-native";
 | `value` | `string` | 필수 | 완전 제어형. HJM은 초안을 지우지 않는다 |
 | `label` | `string` | 필수 | 접근성 이름; placeholder 생략 시 같은 문구 |
 | `placeholder` | `string` | `label` | 짧은 시각 안내와 전체 접근성 이름을 분리 |
-| `description` · `error` · `invalid` | `string` · `string` · `boolean` | 없음 | TextArea의 안내·오류 연결. Web describedby/invalid, Native hint/오류 표면 |
+| `description` · `error` · `invalid` | `string` · `string` · `boolean` | 없음 | TextArea의 안내·오류 연결. Web describedby/invalid, Native hint/오류 표면. `error`는 나타나거나 바뀔 때 즉시(assertive) 알린다(1.30.0 이후 수정): Web은 항상 mount된 `role="alert"` 영역, Native는 입력 오류 문구의 assertive live region(Android)과 iOS `announceForAccessibility`. FieldGroup 오류와 같은 방식이다 |
 | `onBlur` | `() => void` | 없음 | host의 입력 중 상태 해제 |
 | `submitMode` | `"newline"` · `"send"` | `"newline"` | Web Enter 전송은 Shift/IME/229 보호. Native send는 submit, newline은 기존 줄바꿈 |
 | `sendLabel` | `string` | 필수 | 전송 버튼 문구·접근성 이름 |
@@ -123,6 +123,7 @@ import { Image } from "react-native";
 - 입력 연결(blur/IME/검증)이 더 필요하면 제품이 내부 TextArea를 따로 조립하지 않고 기존 MessageComposer 엔진의 공개 축을 확장한다.
 - 로컬 준비 사진은 `attachments`로 표시하며 UploadItem의 서버 업로드 완료로 가장하지 않는다. 준비 중 해당 항목의 `disabled`와 attachmentAction.disabled를 연결해 편집 가능한 본문과 사진 제거를 분리한다. 서버 성공 전 초안을 지우지 않는다.
 - Web 배치는 `layoutStyle`로 한다. Native는 스타일 통로가 없어 감싸는 레이아웃에서 배치한다.
+- 전송 실패는 `error`로 넘긴다. 알림을 위해 같은 문구를 화면 `notice`의 Notice나 `context`의 `role="alert"` 문구로 한 번 더 그리지 않는다.
 
 ## 플랫폼 차이
 
@@ -139,6 +140,8 @@ import { Image } from "react-native";
 Native 내장 삭제·메뉴 기호는 고정 아이콘 틀의 크기를 유지한다. 주변 제목·라벨은 계속 확대한다. Chip의 체크와 Toast 닫기는 기존 비확대 경로를 유지하며 회귀 검사에 포함한다. 제품이 전달한 아이콘 슬롯은 제품이 같은 조건을 검증한다.
 
 ## 근거
+
+- `error` 즉시 알림: 2026-10-18 번뚝 DM. 작성창 `error`가 입력 아래에 보이기만 하고 낭독되지 않아(Web 알림 없음, iOS live region 미지원) 전송 실패를 화면 notice의 Notice로 따로 알렸다.
 
 - 답장 중 카드 배치: 2026-10-16 카카오톡 실측.
 - `submitMode` 등 입력 공개 축: 2026-10-07 번뚝 채택에서 기존 blur/IME/검증 연결이 누락됐다.

@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1 (`safeAreaBottom`·링크 `target`/`rel`/`accessibilityHint` 1.28.1)
-- 검토일: 2026-10-17
+- 검토일: 2026-10-18
 - 근거: [로그인 화면 골격](../../auth-screen.md), [1.4 제품 채택 가이드](../../product-adoption-1.4.md), recipe `authScreenRecipe`(`src/auth-screen.ts`), 포트폴리오 상위 기준 루트 `docs/LOGIN_SCREEN_STANDARD.md`(LS)
 - 스토리북: `배포/컴포넌트/레이아웃/로그인 화면`
 
@@ -21,6 +21,7 @@
 | --- | --- |
 | 제공자 버튼 하나하나 | [AuthProviderButton](auth-provider-button.md) (`main` 슬롯에 넣는다) |
 | 동의 체크 항목 | [Agreement](agreement.md) (`footer`나 가입 단계에 넣는다) |
+| 로그인 위에 "로그인" 제목·뒤로/닫기만 두려고 바깥에 얹는 [TopBar](top-bar.md) | 이 레이아웃의 `title`·`exit`(1.31.0) |
 
 ## 공개 이름과 import
 
@@ -54,6 +55,8 @@ import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "@hjmds/react
 import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "@hjmds/react-native/auth-screen";
 
 <AuthScreenLayout
+  title={t("auth.title")}                                                       // 머리 띠의 route 이름(선택)
+  exit={{ kind: "close", label: t("common.close"), disabled: pending, onPress: close }}  // 헤더 시작 쪽 닫기(선택)
   mainCard
   {...(pending ? { pendingLabel: t("auth.pending") } : {})}
   hero={<AuthScreenHero mark={<ProductMark />} title={t("auth.tagline")} description={t("auth.description")} />}
@@ -71,6 +74,8 @@ import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "@hjmds/react
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
+| `title` | 문자열 | — | 1.31.0. route 이름("로그인")을 [ScreenLayout](screen-layout.md) 가운데 정렬 머리와 같은 띠(최소 높이 52, `Heading` `level5`, 문서 수준 1)에 그린다. 공백만 있으면 `TypeError`. Web은 이때 `AuthScreenHero`의 기본 `headingLevel`이 2가 된다(route 이름이 h1) |
+| `exit` | `ScreenExit`(`{ kind: "back" \| "close", label, onClick/onPress, disabled? }`) | — | 1.31.0. ScreenLayout·TopBar `exit`와 같은 아이콘 뒤로/닫기, 머리 띠 시작 끝. `label`은 보조기술 이름. `title` 없이 `exit`만 줘도 띠를 그린다 |
 | `hero` · `main` | `ReactNode` | 필수 | 제품 마크·제목·설명 / 제공자 버튼 목록(진행 중에도 같은 목록) |
 | `footer` | `ReactNode` | — | 동의 고지·정책 링크 |
 | `density` | `regular` · `compact` | `regular` | 제품이 화면 높이를 보고 고른다. 간격·padding만 바뀐다 |
@@ -80,7 +85,7 @@ import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "@hjmds/react
 | Web `as` | `main` · `section` | `main` | 최대 폭은 416이다 |
 | `layoutStyle` | margin·width·flex·`alignSelf` | — | 바깥 배치 전용(Web·Native 모두) |
 | `initialFocus` | `first-input` · `none` | `none` | 1.28.2. [ScreenLayout 진입 포커스](screen-layout.md#진입-포커스)와 같은 규칙. 로그인은 제공자 버튼이 주 행동이라 기본 `none`, 가입 닉네임 단계처럼 입력이 주 행동인 `main`만 `first-input`. 닉네임 단계가 같은 화면에서 나중에 나타나면 그 칸에 `initialFocusTarget`을 준다 |
-| Native `testID` | `string` | — | 뿌리 `ScrollView` 식별 |
+| Native `testID` | `string` | — | 본문 `ScrollView` 식별(머리 띠가 있어도 같은 `ScrollView`) |
 | Native `safeAreaBottom` | 0 이상의 유한수 | `0` | 화면이 닿는 창 아래 가장자리의 safe area(`useSafeAreaInsets().bottom`, 이미 아래를 들인 host 안이면 0). 아래 여백이 `max(paddingBlock, inset)` — `regular` max(40, inset), `compact` max(20, inset) — 으로 한 번만 들어간다(ScreenLayout과 같은 규칙, 합산 없음). 키보드가 열리면 paddingBlock만. 음수·무한대는 `RangeError` |
 | `AuthScreenHero` `title` · `eyebrow` · `description` · `mark` · `headingLevel` | 문자열 · `ReactNode` · `1`~`3` | `headingLevel` 1 | 제목은 필수이고 빈 문자열이면 `TypeError`. 밀도는 바깥 `AuthScreenLayout`을 따른다 |
 | `AuthScreenFooter` `links` · `notice` · `children` | 링크 배열(1개 이상) · `ReactNode` | — | 빈 링크 목록·빈 라벨은 `TypeError`(LS-04: 약관 링크는 로그인 전 같은 화면에 있어야 한다). `children`은 링크 아래 제품 내용 |
@@ -95,8 +100,9 @@ import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "@hjmds/react
 | 간격 | `regular` / `compact`: 바깥 좌우 `layout.pagePadding.regular` 20 / `.compact` 16, 바깥 위아래 `spacing.xxxl` 40 / `spacing.lg` 20, hero 안 `spacing.md` 16 / `spacing.xs` 8, hero↔main `spacing.xl` 24 / `spacing.md` 16, 위 블록↔footer 최소 `spacing.xl` 24 / `spacing.md` 16. mainCard 안쪽 `spacing.md` 16 | `authScreenRecipe.densities`·`mainCard` |
 | 히어로 문구 | 마크 ↔ 문구 묶음은 hero 간격. eyebrow `label` 12/18·500·브랜드색, 아래 `spacing.xxs` 4 → 태그라인 `regular` `typography.heading` 24/32 · `compact` `titleLarge` 20/28, 굵기는 제목 단계 500, 기본 글자색, 실제 heading 요소(Native `header`) → 설명 `body` 14/20·400·보조색(`muted`), 위 `spacing.xs` 8 | `authScreenRecipe.hero`, `densities.*.titleVariant` |
 | 동의 고지·정책 링크 | 고지 `caption` 11/16 흐린 색, 링크 줄과 `spacing.xxs` 4. 링크 `caption`·브랜드색·밑줄, 링크 사이 `linkGap` 8 + `·` + 8(보이는 글자 간격 약 19). 각 링크 높이 44(배경 없음), 가로 터치 폭은 구분점 앞까지 보이지 않게 넓힘(Web 가상 요소, Native `hitSlop`) | `authScreenRecipe.footer`, `.hjm-auth-screen__link` |
-| 순서·정렬 | 위→아래 hero(가운데 정렬 문구) → main(폭 꽉 채움) → footer(동의 고지·정책 링크). 위 블록은 남는 세로 공간에서 가운데, footer는 바닥에 붙는다. 진행 중 로딩은 main 카드 가운데에 겹친다 | `.hjm-auth-screen__block`(`justify-content: center`), `.hjm-auth-screen__pending` |
-| 고정·스크롤 | 고정 영역이 없다. 넘치면 화면 전체가 스크롤한다. 위 safe area는 host(TopBar·SafeAreaView top)가, 아래는 레이아웃이 `max(paddingBlock, 하단 inset)`으로 맡는다 — Web `env(safe-area-inset-bottom)`, Native `safeAreaBottom`. Native 키보드 inset은 자동 조정이 처리한다 | `react-native/src/auth-screen.tsx`, `.hjm-auth-screen` |
+| 머리 띠(`title`·`exit`) | ScreenLayout 가운데 머리와 같다: 최소 높이 52(`screenHeaderRecipe.minHeight`), 위아래 `spacing.xxs` 4, 좌우 화면 gutter `spacing.md` 16(`screenPatternRecipe.padding`), 시작 끝 `exit`, 가운데 제목 `level5`(양옆 같은 폭 칸). 화면 가장자리까지 닿고(바깥 좌우 여백 밖), 원래 바깥 위 여백(`regular` 40 / `compact` 20)은 띠 아래로 옮겨진다. 스크롤하지 않는다(Native는 `ScrollView` 밖) | `screenHeaderRecipe`, `.hjm-auth-screen__header`, Native `AuthScreenHeader` |
+| 순서·정렬 | 위→아래 (머리 띠) → hero(가운데 정렬 문구) → main(폭 꽉 채움) → footer(동의 고지·정책 링크). 위 블록은 남는 세로 공간에서 가운데, footer는 바닥에 붙는다. 진행 중 로딩은 main 카드 가운데에 겹친다 | `.hjm-auth-screen__block`(`justify-content: center`), `.hjm-auth-screen__pending` |
+| 고정·스크롤 | 머리 띠만 고정이고 나머지는 넘치면 함께 스크롤한다. 위 safe area는 host(SafeAreaView top 등, ScreenLayout과 같다)가, 아래는 레이아웃이 `max(paddingBlock, 하단 inset)`으로 맡는다 — Web `env(safe-area-inset-bottom)`, Native `safeAreaBottom`. Native 키보드 inset은 자동 조정이 처리한다 | `react-native/src/auth-screen.tsx`, `.hjm-auth-screen` |
 | 좁은 폭·큰 글자 | 키 작은 화면·큰 글자에서는 `compact`를 고른다. 그래도 넘치면 스크롤되며 footer는 맨 아래로 밀린다 | `authScreenRecipe.densities` |
 
 ```text
@@ -136,7 +142,8 @@ import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "@hjmds/react
 
 | 항목 | Web | Native |
 | --- | --- | --- |
-| 뿌리 요소 | `<main>` 또는 `as="section"`, ref 전달 | `ScrollView` |
+| 뿌리 요소 | `<main>` 또는 `as="section"`, ref 전달. 머리 띠는 그 안의 `<header>` | `ScrollView`. `title`·`exit`가 있으면 `View`(머리 띠 + `ScrollView`)가 뿌리이고 `layoutStyle`은 그 `View`에 간다 |
+| 머리 띠 위 safe area | 다루지 않는다(브라우저·host) | host가 SafeAreaView top으로 준다. TopBar `safeAreaTop`에 해당하는 prop은 없다(ScreenLayout과 같다) |
 | 배치·식별 | `layoutStyle`, `className`, HTML 속성 | `layoutStyle`, `testID` |
 | 진행 중 숨김 | `inert` + `aria-hidden` + `visibility: hidden`, 로딩은 `role="status"` | 터치·접근성 제외 + 불투명도 0, 로딩은 `progressbar` + live region |
 | 키보드 | 브라우저 기본 | 키보드 inset 자동 조정, 탭 유지(`handled`), iOS `interactive`·Android `on-drag` 내리기 |
@@ -144,6 +151,8 @@ import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "@hjmds/react
 | 정책 링크 보조 안내 | `aria-describedby` 숨긴 텍스트, `target`·`rel` | `accessibilityHint` |
 
 ## 함정
+
+- `title`·`exit`를 쓰면 바깥에 얹던 TopBar·제품 헤더를 지운다. 둘 다 두면 머리가 두 줄이 된다. Native에서 host TopBar가 맡던 위 safe area(`safeAreaTop`)는 host의 SafeAreaView top으로 옮긴다.
 
 - Native에서 아래 홈 인디케이터를 `SafeAreaView edges={['bottom']}`·`paddingBottom: insets.bottom` 래퍼로 들이지 말고 `safeAreaBottom`으로 넘긴다. 둘을 같이 주면 inset + paddingBlock이 다시 더해진다.
 - 1.28.0까지 Native는 iOS `contentInsetAdjustmentBehavior="automatic"`으로 위·아래 safe area를 iOS에서만 더했다. 1.28.1부터 위는 host, 아래는 `safeAreaBottom`이다. 위 safe area를 아무도 들이지 않던 화면은 host에서 TopBar `safeAreaTop`이나 SafeAreaView top으로 들인다.
@@ -159,6 +168,7 @@ import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "@hjmds/react
 
 ## 근거
 
+- `title`·`exit`(1.31.0): 2026-10-18 앱 감사에서 utilverse·burntok 로그인이 "로그인" 제목과 뒤로/닫기만을 위해 레이아웃 위에 TopBar(burntok은 제품 `AppScreenHeader` 래퍼)를 따로 얹어, 로그인만 다른 머리 높이·제목 단계를 가졌다. 앱마다 띠를 조립하지 않도록 ScreenLayout의 `exit` 버튼과 가운데 머리 recipe를 그대로 쓰는 띠를 이 레이아웃이 소유한다. Native에서 TopBar를 가져오면 `navigation` 그래프 전체가 로그인 subpath에 들어오므로(ScreenLayout이 TopBar를 쓰지 않는 같은 이유) 띠는 `screenHeaderRecipe`로 그린다.
 - `safeAreaBottom`·링크 `target`/`rel`/`accessibilityHint`(1.28.1): 2026-10-17 1.28 채택에서 다에리·utilverse·spint가 레이아웃을 각자 아래 inset 래퍼로 감쌌고(iOS는 자동 content inset이 이미 더해 합산, Android는 아무도 안 들여 spint가 Android만 덧붙임), 다에리 웹은 정책 문서 새 탭 열기(`target="_blank"`)를, spint는 "브라우저에서 열림" 접근성 안내를 링크 슬롯이 없어 잃었다. ScreenLayout의 max 규칙을 그대로 쓰고 링크에 같은 의미의 보조 안내·anchor 속성을 연다.
 - `AuthScreenHero`·`AuthScreenFooter`와 히어로·링크 수치: 2026-10-17 사용자 피드백("굵기랑 크기 줄여", "간격 줄여").
   예제가 히어로에 `Top large`(display 32/40·600)를 넣어 402 폭에서 태그라인이 두 줄이 됐고, 정책 링크는 ghost Button

@@ -38,9 +38,16 @@ export type BottomNavigationConfiguration = Readonly<{
    * product supplies colors through palette roles instead of deprecated styles.
    */
   surface?: BottomNavigationSurface;
+  /**
+   * Icon slot size. `standard` keeps the density glyph; `large`/`xlarge` reserve an app-icon sized slot
+   * (`bottomNavigationRecipe.iconSizes`) for artwork rendered through `renderIcon`. Added 2026-10-18 for
+   * Utilverse's dock, which drew its own Surface/Button row to show 38-54pt app icons.
+   */
+  iconSize?: BottomNavigationIconSize;
 }>;
 
 export type BottomNavigationSurface = "flat" | "raised";
+export type BottomNavigationIconSize = "standard" | "large" | "xlarge";
 
 export type ResolvedBottomNavigationConfiguration = Readonly<{
   presentation: BottomNavigationPresentation;
@@ -51,6 +58,7 @@ export type ResolvedBottomNavigationConfiguration = Readonly<{
   labels: BottomNavigationLabels;
   selection: "emphasis" | "tile";
   surface: BottomNavigationSurface;
+  iconSize: BottomNavigationIconSize;
 }>;
 
 /**
@@ -102,6 +110,13 @@ export type BottomNavigationItemDescriptor<
   icon: BottomNavigationIconDescriptor<IconName>;
   badge?: BottomNavigationCounterBadge;
   disabled?: boolean;
+  /**
+   * Raised center destination: a selectable route drawn as a lifted brand circle above the bar, with its label
+   * below. Only the middle item of an odd item count may be prominent. Unlike `primaryAction` it is a real
+   * destination (selected state, reselect, router-owned). Added 2026-10-18 for Diairy's "write" tab, which
+   * replaced the shared bar with Expo Router's default tab bar to draw it.
+   */
+  prominent?: boolean;
 }>;
 
 /** The router owns selectedKey; the design-system never keeps a second copy. */
@@ -134,6 +149,7 @@ export type ResolvedBottomNavigationItemDescriptor<
   disabled: boolean;
   badge: ResolvedBottomNavigationCounterBadge | null;
   resolvedAccessibilityLabel: string;
+  prominent: boolean;
 }>;
 
 export type ResolvedBottomNavigationDescriptor<
@@ -162,6 +178,7 @@ export const bottomNavigationBehaviorDefaults = {
   labels: "visible",
   selection: "emphasis",
   surface: "flat",
+  iconSize: "standard",
   minItems: 2,
   maxItems: 6,
 } as const satisfies Readonly<{
@@ -170,6 +187,7 @@ export const bottomNavigationBehaviorDefaults = {
   labels: BottomNavigationLabels;
   selection: "emphasis" | "tile";
   surface: BottomNavigationSurface;
+  iconSize: BottomNavigationIconSize;
   minItems: number;
   maxItems: number;
 }>;
@@ -196,6 +214,7 @@ const configurationKeys = new Set([
   "labels",
   "selection",
   "surface",
+  "iconSize",
 ]);
 const descriptorKeys = new Set(["accessibilityLabel", "items", "selectedKey"]);
 const itemKeys = new Set([
@@ -205,6 +224,7 @@ const itemKeys = new Set([
   "icon",
   "badge",
   "disabled",
+  "prominent",
 ]);
 const iconKeys = new Set(["name", "decorative"]);
 const badgeKeys = new Set(["count", "max", "accessibilityLabel"]);
@@ -281,6 +301,9 @@ function validateItem<Key extends string, IconName extends string>(
     throw new TypeError("BottomNavigation item disabled must be a boolean");
   }
   if (item.badge !== undefined) validateBadge(item.badge);
+  if (item.prominent !== undefined && typeof item.prominent !== "boolean") {
+    throw new TypeError("BottomNavigation item prominent must be a boolean");
+  }
 }
 
 const presentations = new Set<BottomNavigationPresentation>(["bar", "floating", "capsule"]);
@@ -292,6 +315,7 @@ const keyboardBehaviors = new Set<BottomNavigationKeyboardBehavior>([
   "remain",
 ]);
 const labelModes = new Set<BottomNavigationLabels>(["visible", "hidden"]);
+const iconSizes = new Set<BottomNavigationIconSize>(["standard", "large", "xlarge"]);
 
 export function validateBottomNavigationConfiguration(
   configuration: BottomNavigationConfiguration,
@@ -371,6 +395,11 @@ export function validateBottomNavigationConfiguration(
   if (configuration.presentation === "capsule" && configuration.distribution === "center-gap") {
     throw new TypeError("BottomNavigation capsule uses an adjacent action, not center-gap");
   }
+  if (configuration.iconSize !== undefined && !iconSizes.has(configuration.iconSize)) {
+    throw new TypeError(
+      `Unsupported BottomNavigation iconSize: ${String(configuration.iconSize)}`,
+    );
+  }
   if (configuration.distribution === "center-gap" && itemCount % 2 !== 0) {
     throw new RangeError(
       "BottomNavigation center-gap distribution requires an even destination count",
@@ -396,6 +425,7 @@ export function resolveBottomNavigationConfiguration(
     labels: configuration.labels ?? bottomNavigationBehaviorDefaults.labels,
     selection: configuration.selection ?? bottomNavigationBehaviorDefaults.selection,
     surface: configuration.surface ?? bottomNavigationBehaviorDefaults.surface,
+    iconSize: configuration.iconSize ?? bottomNavigationBehaviorDefaults.iconSize,
   };
 }
 
@@ -447,6 +477,39 @@ export function validateBottomNavigationDescriptor<
   if (selected.disabled) {
     throw new RangeError("BottomNavigation selected destination must be enabled");
   }
+  const prominentIndex = descriptor.items.findIndex((item) => item.prominent === true);
+  if (prominentIndex !== -1) {
+    // The lifted circle is centered over the bar; any other slot would sit off-center and overlap a neighbour.
+    if (
+      descriptor.items.length % 2 === 0 ||
+      prominentIndex !== (descriptor.items.length - 1) / 2 ||
+      descriptor.items.filter((item) => item.prominent === true).length > 1
+    ) {
+      throw new RangeError(
+        "BottomNavigation prominent destination must be the single middle item of an odd item count",
+      );
+    }
+  }
+}
+
+/**
+ * A prominent destination needs the plain row: center-gap reserves the same slot for a primaryAction, capsule
+ * places actions beside the surface, and a tile card would paint behind the lifted circle.
+ */
+export function validateBottomNavigationProminence(
+  items: readonly Readonly<{ prominent?: boolean }>[],
+  configuration: ResolvedBottomNavigationConfiguration,
+): void {
+  if (!items.some((item) => item.prominent === true)) return;
+  if (
+    configuration.distribution !== "equal" ||
+    configuration.presentation === "capsule" ||
+    configuration.selection === "tile"
+  ) {
+    throw new TypeError(
+      "BottomNavigation prominent destination requires equal distribution, bar or floating presentation and emphasis selection",
+    );
+  }
 }
 
 export function resolveBottomNavigationItem<
@@ -472,6 +535,7 @@ export function resolveBottomNavigationItem<
     label: item.label,
     icon: { name: item.icon.name, decorative: true },
     disabled: item.disabled ?? false,
+    prominent: item.prominent ?? false,
     badge,
     resolvedAccessibilityLabel:
       badge && item.badge

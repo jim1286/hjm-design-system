@@ -1,4 +1,6 @@
 import { ScreenBodyInsetContext } from "./internal/screen-body-inset.js";
+// Overlays cover the bottom bar, so screens inside them must not pad for it.
+import { BottomNavigationInsetContext } from "./internal/bottom-navigation-inset.js";
 import { InitialFocusProvider, useInitialFocusScope, useOverlayLayer } from "./internal/initial-focus.js";
 import { initialFocusDefaults, type InitialFocusMode } from "@hjmds/design-contracts/screen-patterns";
 import { resolveOriginTransition, type TransitionRect } from "@hjmds/design-contracts/content-transition";
@@ -52,6 +54,7 @@ import {
   Platform,
   ScrollView,
   Pressable,
+  StatusBar,
   View,
   useWindowDimensions,
   type Insets,
@@ -342,6 +345,13 @@ export type DialogProps = NativeModalProps &
      * prefers the field marked `initialFocusTarget`; `none` leaves focus alone (2026-10-18, screen-patterns rules).
      */
     initialFocus?: InitialFocusMode;
+    /**
+     * Decorative layer over the whole modal window, outside the card frame (a drag ghost following the finger, a
+     * highlight anchored to a measured view). Children are positioned in window coordinates (`pageX`/`pageY`,
+     * `measureInWindow`), never receive touches and are hidden from accessibility; interactive content belongs in
+     * `children`.
+     */
+    overlayLayer?: ReactNode;
   }>;
 
 /** Native modal boundary with one reasoned close intent for each user attempt. */
@@ -365,6 +375,7 @@ export function Dialog({
   contentStyle,
   onShow,
   initialFocus = initialFocusDefaults.overlay,
+  overlayLayer,
   ...modalProps
 }: DialogProps) {
   const [actionPending, setActionPending] = useState<OverlayAction | null>(null);
@@ -568,7 +579,7 @@ export function Dialog({
 
   // Overlay content is not in the screen body: a bleeding rail inside must not reach for the screen gutter.
   return (
-    <ScreenBodyInsetContext.Provider value={0}><InitialFocusProvider scope={focusScope}>
+    <ScreenBodyInsetContext.Provider value={0}><BottomNavigationInsetContext.Provider value={0}><InitialFocusProvider scope={focusScope}>
     <Modal
       {...modalProps}
       animationType="none"
@@ -695,9 +706,17 @@ export function Dialog({
             />
           </Animated.View>
         </Animated.View>
+        {/* Outside the positioner: its safe-area and keyboard padding would offset window coordinates, and the card
+            would clip the layer (BurnTok folder drag ghost, 2026-10-18). Later sibling, so it paints above the card. */}
+        {overlayLayer ? <Animated.View
+          pointerEvents="none"
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          style={{ bottom: 0, left: 0, opacity: motionProgress, position: "absolute", right: 0, top: 0 }}
+        >{overlayLayer}</Animated.View> : null}
       </ModalInteractionBoundary>
     </Modal>
-    </InitialFocusProvider></ScreenBodyInsetContext.Provider>
+    </InitialFocusProvider></BottomNavigationInsetContext.Provider></ScreenBodyInsetContext.Provider>
   );
 }
 
@@ -1025,7 +1044,7 @@ export function AlertDialog({
 
   // Overlay content is not in the screen body: a bleeding rail inside must not reach for the screen gutter.
   return (
-    <ScreenBodyInsetContext.Provider value={0}><InitialFocusProvider scope={focusScope}>
+    <ScreenBodyInsetContext.Provider value={0}><BottomNavigationInsetContext.Provider value={0}><InitialFocusProvider scope={focusScope}>
     <Modal
       {...modalProps}
       animationType="none"
@@ -1147,7 +1166,7 @@ export function AlertDialog({
         </Animated.View>
       </ModalInteractionBoundary>
     </Modal>
-    </InitialFocusProvider></ScreenBodyInsetContext.Provider>
+    </InitialFocusProvider></BottomNavigationInsetContext.Provider></ScreenBodyInsetContext.Provider>
   );
 }
 
@@ -1501,7 +1520,7 @@ export function Sheet({
 
   // Overlay content is not in the screen body: a bleeding rail inside must not reach for the screen gutter.
   return (
-    <ScreenBodyInsetContext.Provider value={0}><InitialFocusProvider scope={focusScope}>
+    <ScreenBodyInsetContext.Provider value={0}><BottomNavigationInsetContext.Provider value={0}><InitialFocusProvider scope={focusScope}>
     <Modal
       {...modalProps}
       animationType="none"
@@ -1671,6 +1690,96 @@ export function Sheet({
           </Animated.View>
         </Animated.View>
       </ModalInteractionBoundary>
+    </Modal>
+    </InitialFocusProvider></BottomNavigationInsetContext.Provider></ScreenBodyInsetContext.Provider>
+  );
+}
+
+export type ImmersiveOverlayOpenChangeReason = "exit-action" | "back";
+
+export type ImmersiveOverlayProps = Readonly<{
+  open: boolean;
+  onOpenChange: (open: boolean, detail: Readonly<{ reason: ImmersiveOverlayOpenChangeReason }>) => void;
+  /** Localized accessible name of the presentation. */
+  label: string;
+  /** Localized visible label of the exit action. */
+  exitLabel: string;
+  /** Product-drawn stage filling the window edge to edge above the control bar. */
+  children: ReactNode;
+  /** Tool actions placed before the exit action (pause, rotate). */
+  tools?: ReactNode;
+  /** Status copy above the action row (keep-awake state, a notice). */
+  status?: ReactNode;
+  returnFocusRef?: RefObject<View | null>;
+  onShow?: ModalProps["onShow"];
+}>;
+
+/**
+ * Edge-to-edge presentation (Dialog companion): a full-screen Modal with the status bar hidden and rotation allowed,
+ * no card, scrim or header. It joins the overlay stack (screens below keep a pending entry focus until it has torn
+ * down), dismisses on back with a reason, and returns accessibility focus after the native dismissal.
+ */
+export function ImmersiveOverlay({ open, onOpenChange, label, exitLabel, children, tools, status, returnFocusRef, onShow }: ImmersiveOverlayProps) {
+  const { palette, environment } = useHjmNativeTheme();
+  const insets = useHjmNativeSafeAreaInsets();
+  const recipe = dialogRecipe.immersive;
+  const [layered, setLayered] = useState(open);
+  const [entered, setEntered] = useState(false);
+  const wasOpen = useRef(open);
+  const shown = useRef(false);
+  const pendingDismiss = useRef<(() => void) | null>(null);
+  const focusScope = useInitialFocusScope({ mode: "none", active: open && entered, layer: useOverlayLayer(layered) });
+  useEffect(() => {
+    if (open) { wasOpen.current = true; pendingDismiss.current = null; setLayered(true); return undefined; }
+    setEntered(false);
+    if (!wasOpen.current) return undefined;
+    wasOpen.current = false;
+    // Leave the stack and return focus once the native window is gone, the point Dialog and Sheet use.
+    const finish = () => { pendingDismiss.current = null; setLayered(false); focusNativeTarget(returnFocusRef); };
+    if (shouldAwaitNativeModalDismiss(shown.current)) { pendingDismiss.current = finish; return undefined; }
+    const task = scheduleAfterNativeModalTeardown(finish);
+    return () => task.cancel();
+  }, [open, returnFocusRef]);
+  const background = resolveColorReference(recipe.background, palette);
+  // The stage is not in a screen body: a bleeding rail inside must not reach for the screen gutter.
+  return (
+    <ScreenBodyInsetContext.Provider value={0}><InitialFocusProvider scope={focusScope}>
+    <Modal
+      visible={open}
+      // Animation "none": teardown completion is scheduled after removal, which assumes no built-in exit animation.
+      animationType="none"
+      presentationStyle="fullScreen"
+      supportedOrientations={[...recipe.orientations]}
+      statusBarTranslucent
+      onRequestClose={() => onOpenChange(false, { reason: "back" })}
+      onShow={(event) => { shown.current = true; setEntered(true); onShow?.(event); }}
+      onDismiss={() => { shown.current = false; pendingDismiss.current?.(); }}
+    >
+      <StatusBar hidden={recipe.statusBarHidden} />
+      <View
+        onTouchStart={focusScope.onTouchStart}
+        accessibilityViewIsModal
+        accessibilityLabel={label}
+        role="dialog"
+        style={{ backgroundColor: background, direction: environment.direction, flex: 1 }}
+      >
+        {/* Edge to edge: the stage is the presentation. Products keep readable content centered or read
+            useHjmNativeSafeAreaInsets for cutouts; the control bar below owns its safe-area clearance. */}
+        <View style={{ flex: 1, overflow: "hidden" }}>{children}</View>
+        <View style={{
+          gap: recipe.controls.gap,
+          paddingTop: recipe.controls.padding,
+          paddingBottom: Math.max(recipe.controls.padding, insets.bottom ?? 0),
+          paddingLeft: Math.max(recipe.controls.padding, insets.left ?? 0),
+          paddingRight: Math.max(recipe.controls.padding, insets.right ?? 0),
+        }}>
+          {status}
+          <View style={{ alignItems: "center", flexDirection: "row", gap: recipe.controls.actionGap }}>
+            {tools}
+            <Button size="large" growWithContent layoutStyle={{ flex: 1 }} onPress={() => onOpenChange(false, { reason: "exit-action" })}>{exitLabel}</Button>
+          </View>
+        </View>
+      </View>
     </Modal>
     </InitialFocusProvider></ScreenBodyInsetContext.Provider>
   );

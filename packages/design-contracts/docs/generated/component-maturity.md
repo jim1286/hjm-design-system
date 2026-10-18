@@ -4,9 +4,9 @@
 
 This document is the human-readable projection of the same catalog and Showcase manifest consumed by product CI.
 
-- Contract: stable 125 · beta 2
-- Web renderer: stable 125 · beta 2
-- Native renderer: stable 105 · beta 4 · unsupported 18
+- Contract: stable 125 · beta 5
+- Web renderer: stable 125 · beta 5
+- Native renderer: stable 105 · beta 7 · unsupported 18
 
 | Component | Canonical story ID | Contract | Web | Native | Documentation | Required evidence |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -65,6 +65,7 @@ This document is the human-readable projection of the same catalog and Showcase 
 | Sidebar | `navigation/sidebar` | stable | stable | unsupported | [authored](../sidebar.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
 | BottomNavigation | `navigation/bottom-navigation` | stable | stable | stable | [authored](../bottom-navigation.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |
 | Breadcrumb | `navigation/breadcrumb` | stable | stable | unsupported | [authored](../breadcrumb.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
+| PageIndicator | `navigation/page-indicator` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | Pagination | `navigation/pagination` | stable | stable | beta | [authored](../pagination.md) | contract: contract; web: default, dark, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, large-text, rtl, reduced-motion, accessibility, native-actions |
 | LoadMore | `navigation/load-more` | stable | stable | stable | [authored](../load-more.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |
 | Steps | `navigation/steps` | stable | stable | stable | [authored](../steps.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
@@ -130,6 +131,8 @@ This document is the human-readable projection of the same catalog and Showcase 
 | MediaSelectionScreen | `layout/media-selection-screen` | stable | stable | stable | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | ProfileScreen | `layout/profile-screen` | stable | stable | stable | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | ChatMessage | `data-display/chat-message` | stable | stable | stable | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| TypingIndicator | `feedback/typing-indicator` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| ChatDateSeparator | `data-display/chat-date-separator` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | NotificationRow | `data-display/notification-row` | stable | stable | stable | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | NotificationItem | `data-display/notification-item` | stable | stable | stable | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | CommentThreadRow | `data-display/comment-thread-row` | stable | stable | stable | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |

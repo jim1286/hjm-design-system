@@ -18,12 +18,13 @@ AuthScreenLayout을 사용해 로그인 흐름을 구성한다. 제품이 데이
 
 ```text
 host: 남은 높이·safe area·키보드
-└─ 히어로 → 제공자 카드 → 하단 동의
+└─ (머리 띠: [뒤로/닫기] 로그인) → 히어로 → 제공자 카드 → 하단 동의
 ```
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
 | 바깥 틀 | AuthScreenLayout | route 본문 | [API 배치 규칙](../components/auth-screen-layout.md#배치), host 남은 높이 |
+| 머리(선택) | AuthScreenLayout `title`·`exit`(1.31.0) | 맨 위 고정, 화면 가장자리까지 | ScreenLayout 가운데 머리 띠(최소 52). 바깥에 TopBar를 따로 얹지 않는다 |
 | 내용 | 공개 슬롯 | 히어로 → 제공자 카드 → 하단 동의 | 화면 recipe의 sectionGap·itemGap; 슬롯 안은 각 지침 토큰 |
 | 상태 | pendingLabel 또는 main 안 Notice | 제공자 카드 내부 | 카드 크기를 유지하고 동의 고지를 남긴다 |
 
@@ -33,6 +34,7 @@ host: 남은 높이·safe area·키보드
 | --- | --- | --- | --- |
 | 작업 | AuthScreenLayout 공개 행동 슬롯 | 제공자 버튼에는 이름만; 로그인 중 카드 중앙 스피너 하나 | 같은 표면에 경쟁하는 primary 하나만 |
 | 복구 | Button·secondary | 오류 근처 | 재시도할 대상과 범위를 표시 |
+| 나가기 | AuthScreenLayout `exit`(아이콘 뒤로/닫기) | 머리 띠 시작 끝 | 0~1. 로그인 진행 중에는 제품이 `disabled` |
 
 ## 상태
 

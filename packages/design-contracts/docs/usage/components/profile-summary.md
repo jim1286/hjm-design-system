@@ -4,7 +4,7 @@
 - 상태: 실험
 - 지원: Web · Native
 - 적용: 1.26.0
-- 검토일: 2026-10-16
+- 검토일: 2026-10-18
 - 근거: [프로필 화면](../screens/common-profile.md), `src/screen-patterns.ts`의 `profileSummaryRecipe`, 양 renderer `src/screen-flows.tsx`
 - 스토리북: 별도 예제 미등록
 
@@ -50,7 +50,7 @@ import { ProfileSummary } from '@hjmds/react-native/screen-flows';
 | badge | ReactNode | 없음 | 이름 옆 배지 |
 | nameActions | ReactNode | 없음 | 이름 행의 행동 |
 | stats | `{id,value,label,onPress?,disabled?}[]` | `[]` | 통계 수치. `onPress`가 있으면 버튼 |
-| actions | ReactNode | 없음 | 수치 아래 행동 줄 |
+| actions | ReactNode | 없음 | 수치 아래 행동 줄. [ProfileScreen](profile-screen.md) `editPlacement="summary"` 안에서는 그 화면의 `edit`이 이 줄 맨 앞에 `secondary` `small` 버튼(`profileSummaryRecipe.editAction`)으로 먼저 들어간다(1.31.0) |
 | children | ReactNode | 없음 | 하단 footer |
 
 `stats`는 각 수치의 독립 행동을 보존하며 조회·팔로우·인증·라우팅은 앱에서 연결한다. 팔로우 상태 기계까지 필요한 경우 기존 FollowProfileCard 사용 여부를 먼저 검토한다.
@@ -59,7 +59,7 @@ import { ProfileSummary } from '@hjmds/react-native/screen-flows';
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 원형 아바타 프레임 72 | `profileSummaryRecipe.avatarSize` |
+| 크기 | 원형 아바타 프레임 72. ProfileScreen 수정 행동은 `Button` `secondary` `small` | `profileSummaryRecipe.avatarSize`·`editAction` |
 | 간격 | 수치 칸 사이 `spacing.md` 16, 값·라벨 사이 `spacing.xxs` 4, 행동 사이 `spacing.sm` 12. 영역 간격은 [CompositionLayout](composition-layout.md) | 양 renderer |
 | 순서·정렬 | 머리(아바타 → 이름·배지 → nameActions) → 수치 줄 → actions → children, 수치 칸은 균등 폭·가운데 | `CompositionLayout` + `flex: 1` 칸 |
 | 고정·스크롤 | 없음. ProfileScreen 본문 스크롤 안에 놓인다 | — |

@@ -1,9 +1,9 @@
 /**
- * Ant Design Steps' full surface (navigation/clickable jump, dot type, custom
- * per-item icon, vertical orientation) is intentionally not reproduced. Both
- * known consumers (Yajalal onboarding, BurnTok sign-up) are single-cursor,
- * horizontal, back-button-driven wizards; see docs/steps.md for the per-axis
- * rationale.
+ * Ant Design Steps' full surface (navigation jump, dot type, custom per-item
+ * icon, vertical orientation) is intentionally not reproduced. Steps stay a
+ * single-cursor, horizontal wizard; the only press is returning to a step
+ * before the cursor (2026-10-18, spint compose rebuilt its own rail for it).
+ * See docs/steps.md for the per-axis rationale.
  */
 export type StepStatus = "pending" | "current" | "complete" | "error";
 /** Only the cursor step can be "current" or "error"; every other step is derived. */
@@ -16,8 +16,8 @@ export type StepItemDescriptor<Id extends string = string> = Readonly<{
 /**
  * A single stable cursor (`currentStepId`) is the source of truth instead of a
  * per-item status array, so "two current steps" or "a completed step past an
- * unresolved error" cannot be represented. Clickable jump is out of scope, so
- * the flow is always linear relative to the cursor.
+ * unresolved error" cannot be represented. Pressing only returns to a step
+ * before the cursor, so the flow stays linear relative to the cursor.
  */
 export type StepsDescriptor<Id extends string = string> = Readonly<{
     steps: readonly StepItemDescriptor<Id>[];
@@ -53,6 +53,11 @@ export type ResolvedStepDescriptor<Id extends string = string> = StepItemDescrip
     accessibleName: string;
     /** Supplementary status announcement (Web aria-describedby text / RN accessibilityHint). */
     statusLabel: string;
+    /**
+     * Strictly before the cursor. Only these steps become buttons when the product supplies a step press handler:
+     * jumping forward would skip validation, and the cursor step is where the user already is (2026-10-18).
+     */
+    revisitable: boolean;
 }>;
 export type ResolveStepsOptions = Readonly<{
     statusLabels: StepsStatusLabels;
@@ -191,6 +196,10 @@ export declare const stepsRecipe: {
             key: "textMuted";
             alpha?: number;
         }>;
+    };
+    /** A revisitable step is one button over its marker and label; the shared touch minimum applies to the whole cell. */
+    readonly press: {
+        readonly minTouchTarget: 44;
     };
 };
 //# sourceMappingURL=steps.d.ts.map

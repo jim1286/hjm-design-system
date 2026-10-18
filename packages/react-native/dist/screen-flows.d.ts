@@ -4,6 +4,8 @@ import { type SheetProps } from "./overlays.js";
 import { type UploadItemDescriptor, type UploadItemLabels } from "@hjmds/design-contracts/components/upload-item";
 import { type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
 import { type CommentMenuItemDescriptor, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
+import { type MediaAlbum } from "./internal/media-album.js";
+export type { MediaAlbum } from "./internal/media-album.js";
 import { type ContainerGutter } from "@hjmds/design-contracts/components/container";
 import { type MessageMenuAction } from "./internal/message-reactions.js";
 import type { ReactionPickerProps } from "./reaction-picker.js";
@@ -46,16 +48,44 @@ export type EditorScreenProps = Omit<Base, "leading" | "exit"> & {
         fallbackErrorMessage: string;
     };
     draftStatus?: ReactNode;
+    /** Multi-step editor: while supplied, the header exit is a back chevron that returns to the previous step instead of
+     * the cancel ×, and never opens the discard prompt (stepping back keeps the draft). Omit it on the first step so the
+     * exit leaves through `cancel` again (2026-10-18: spint compose replaced the header with its own TopBar for this). */
+    stepBack?: ScreenFlowAction;
 };
-export declare function EditorScreen({ children, dirty, submitPlacement, submit, cancel, discard, draftStatus, initialFocus, ...screen }: EditorScreenProps): import("react").JSX.Element;
+export declare function EditorScreen({ children, dirty, submitPlacement, submit, cancel, discard, draftStatus, stepBack, initialFocus, ...screen }: EditorScreenProps): import("react").JSX.Element;
 export type ProfileScreenProps = Base & {
     summary: ReactNode;
     edit: ScreenFlowAction;
     children?: ReactNode;
     accountActions?: ReactNode;
+    /** `below-summary` (default): ghost button under the summary. `summary`: the edit action goes first in the action row
+     * of the ProfileSummary inside `summary` (2026-10-15 utilverse account decision: the edit action belongs inside the
+     * profile card). With `summary`, the slot must contain a ProfileSummary, or the edit action is not drawn. */
+    editPlacement?: "below-summary" | "summary";
 };
-export declare function ProfileScreen({ summary, edit, children, accountActions, ...screen }: ProfileScreenProps): import("react").JSX.Element;
-export type ModerationScreenProps = Base & {
+export declare function ProfileScreen({ summary, edit, children, accountActions, editPlacement, ...screen }: ProfileScreenProps): import("react").JSX.Element;
+/** Operator decision on a report (dismiss, hide, uphold, overturn…). Labels are product copy; ids are product keys.
+ * With `confirmation`, pressing opens that AlertDialog and only its `onConfirm` acts (same rule as `block`). */
+export type ModerationDecision = ScreenFlowAction & Readonly<{
+    id: string;
+    tone?: "primary" | "secondary" | "danger";
+    confirmation?: Extract<AlertDialogRequest, {
+        mode: "confirm";
+    }>;
+}>;
+/** Free-text decision reason. `required` (default true) keeps every decision locked until it has non-blank text. */
+export type ModerationDecisionReason = Readonly<{
+    label: string;
+    value: string;
+    onValueChange(value: string): void;
+    description?: string;
+    maxLength?: number;
+    required?: boolean;
+    disabled?: boolean;
+}>;
+type ModerationReportFields = {
+    variant?: "report";
     reasonPicker?: ReactNode;
     reasons: readonly {
         value: string;
@@ -73,7 +103,29 @@ export type ModerationScreenProps = Base & {
         }>;
     };
 };
-export declare function ModerationScreen({ reasonPicker, reasons, reason, onReasonChange, reasonLabel, children, submit, block, ...screen }: ModerationScreenProps): import("react").JSX.Element;
+/** Operator review (2026-10-18: utilverse review and appeal queues hand-built this with TextArea, buttons and Alert):
+ * `children` shows the reported content, then the reason field and the decisions; `resolution` replaces both once decided. */
+type ModerationReviewFields = {
+    variant: "review";
+    children?: ReactNode;
+    decisionReason: ModerationDecisionReason;
+    decisions: readonly ModerationDecision[];
+    resolution?: ReactNode;
+};
+export type ModerationFields = ModerationReportFields | ModerationReviewFields;
+export type ModerationScreenProps = Base & ModerationFields;
+export declare function ModerationScreen(props: ModerationScreenProps): import("react").JSX.Element;
+/** The moderation fields and actions without screen chrome, for a report opened inside a letter, card or Sheet
+ * (2026-10-18: diairy turned ModerationScreen's header and padding off to place it in a letter). The host owns the
+ * surrounding surface and placement; `title` is an optional section heading (omit it inside a titled Sheet) and
+ * `cancel` adds a ghost "collapse" action after the others. */
+export type ModerationFormProps = ModerationFields & Readonly<{
+    title?: string;
+    headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
+    cancel?: ScreenFlowAction;
+    layoutStyle?: ScreenLayoutProps["layoutStyle"];
+}>;
+export declare function ModerationForm(props: ModerationFormProps): import("react").JSX.Element;
 /** Source choice only: permission, capture, decoding and draft persistence belong to the host. */
 export type PhotoSourceSheetProps = Readonly<{
     open: boolean;
@@ -88,12 +140,17 @@ export type MediaSelectionItem = {
     descriptor: UploadItemDescriptor;
     preview?: ReactNode;
 };
-export type MediaSelectionScreenProps = Base & {
-    library?: ReactNode;
-    selectionSummary?: ReactNode;
-    items: readonly MediaSelectionItem[];
-    add?: ScreenFlowIconAction;
-    done: ScreenFlowAction;
+/**
+ * Quarter-turn action for a picked photo (2026-10-18, Utilverse photo-to-PDF). The product stores the rotation and
+ * applies it to `preview` and its output; HJM only places the button with the other item actions.
+ */
+export type MediaSelectionRotate = Readonly<{
+    label: string;
+    itemLabel(item: MediaSelectionItem): string;
+    onRotate(id: string): void;
+}>;
+/** Copy and callbacks of one item's actions, shared by the screen grid and MediaSelectionCell. */
+export type MediaSelectionItemActions = {
     labels: UploadItemLabels;
     actionLabels: {
         remove: string;
@@ -107,9 +164,28 @@ export type MediaSelectionScreenProps = Base & {
     onMove(id: string, direction: -1 | 1): void;
     onRetry(id: string): void;
     onCancel(id: string): void;
+    rotate?: MediaSelectionRotate;
 };
+export type MediaSelectionScreenProps = Base & {
+    library?: ReactNode;
+    selectionSummary?: ReactNode;
+    items: readonly MediaSelectionItem[];
+    add?: ScreenFlowIconAction;
+    done: ScreenFlowAction;
+} & MediaSelectionItemActions;
+/** `index`/`count` place the item in the product's full list so the first/last move buttons disable correctly. */
+export type MediaSelectionCellProps = MediaSelectionItemActions & Readonly<{
+    item: MediaSelectionItem;
+    index: number;
+    count: number;
+}>;
+/**
+ * One picked item: preview, upload status, then move/rotate/remove. Exported (2026-10-18, Utilverse photo tools) so a
+ * virtualized host (FlatList renderItem) renders the same cell as the screen grid instead of a copy.
+ */
+export declare function MediaSelectionCell({ item, index, count, labels, actionLabels, removeLabel, moveUpLabel, moveDownLabel, onRemove, onMove, onRetry, onCancel, rotate }: MediaSelectionCellProps): import("react").JSX.Element;
 /** A photo is the primary content; upload status stays below it instead of replacing the thumbnail. */
-export declare function MediaSelectionScreen({ library, selectionSummary, items, add, done, labels, actionLabels, removeLabel, moveUpLabel, moveDownLabel, onRemove, onMove, onRetry, onCancel, ...screen }: MediaSelectionScreenProps): import("react").JSX.Element;
+export declare function MediaSelectionScreen({ library, selectionSummary, items, add, done, labels, actionLabels, removeLabel, moveUpLabel, moveDownLabel, onRemove, onMove, onRetry, onCancel, rotate, ...screen }: MediaSelectionScreenProps): import("react").JSX.Element;
 export type SearchRecentQueries = Readonly<{
     items: readonly string[];
     title: string;
@@ -306,6 +382,23 @@ export type CommentThreadItem = Readonly<{
     reactionSummary?: ReactNode;
     /** Optional photo or sticker under the body; HJM bounds its width and corners, the product sizes the image. */
     media?: ReactNode;
+    /**
+     * Where the time label sits. "auto" keeps it beside the author unless `bodyText` inlines the author; "actions" moves it
+     * into the line under the body with reactions and Reply, for rich (non-text) bodies such as Spint's flower stamp
+     * (2026-10-18). Default "auto".
+     */
+    timePlacement?: "auto" | "actions";
+    /**
+     * Inline per-comment panel (edit, report or block form) under the Reply line, outside the long-press target
+     * (2026-10-18, Utilverse). The product owns its open state, focus, submit and close; HJM owns its place in the row.
+     */
+    panel?: ReactNode;
+    /**
+     * Paged photo set under the body (2026-10-18, Utilverse): HJM mounts only the shown page so the product can fetch one
+     * authorized image at a time. Exclusive with `media` (validated at render); it sits outside the long-press target because it has its own buttons, and the
+     * hold menu's preview (a second render) would otherwise mount a second page.
+     */
+    mediaAlbum?: MediaAlbum;
 }>;
 export type CommentReactions = ReactionPickerProps & Readonly<{
     closeLabel: string;
@@ -382,5 +475,4 @@ export type ProfileSummaryProps = Readonly<{
 }>;
 /** Profile identity and counts are common; routing and mutations stay controlled by the product. */
 export declare function ProfileSummary({ name, headingLevel, avatar, badge, nameActions, stats, actions, children }: ProfileSummaryProps): import("react").JSX.Element;
-export {};
 //# sourceMappingURL=screen-flows.d.ts.map

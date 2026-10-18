@@ -1,5 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useEffect, useRef, useState } from "react";
+import { createContext, useContext } from "react";
+import { TextArea } from "./inputs.js";
 import { CompositionLayout, ScreenLayout } from "./screens.js";
 import { ScreenExitButton } from "./internal/screen-exit.js";
 import { Button, IconButton } from "./actions.js";
@@ -14,6 +16,8 @@ import { initialFocusDefaults, validateCommentThread, resolvePermissionAction, r
 import { iconButtonRecipe, resolveIconButtonEdgeOverhang, resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
 import { visibleControlHeight } from "@hjmds/design-contracts/components/design-system-provider";
 import { DrawnMoreVertical } from "./internal/drawn-glyphs.js";
+import { MediaAlbumView, useMediaAlbumIndex } from "./internal/media-album.js";
+import { validateMediaSetChoice } from "@hjmds/design-contracts/screen-patterns";
 import { useHjmNativeTheme } from "./provider.js";
 import { AccessibilityInfo, Keyboard, Pressable, ScrollView, View } from "react-native";
 import { containerRecipe } from "@hjmds/design-contracts/components/container";
@@ -33,34 +37,82 @@ function Action({ action, secondary = false, edge }) { if (action.icon)
 // placement while list and detail swap. Passing it to the list ScreenLayout dropped it on detail.
 // "Load more" ends the list inside the scroll body, centered like LoadMore; the fixed footer is the bottom CTA slot (2026-10-17 review).
 export function ListDetailScreen({ list, detail, back, refresh, loadMore, layoutStyle, ...screen }) { return _jsxs(View, { style: [{ flex: 1 }, layoutStyle], children: [_jsx(Pane, { hidden: !!detail, children: _jsx(ScreenLayout, { ...screen, ...(refresh || screen.actions ? { actions: _jsxs(Stack, { axis: "inline", gap: "xs", align: "center", children: [screen.actions, refresh ? _jsx(Action, { action: refresh, secondary: true, edge: "end" }) : null] }) } : {}), children: loadMore ? _jsxs(View, { style: { flexGrow: 1, flexShrink: 1, minHeight: 0, gap: screenPatternRecipe.itemGap }, children: [list, _jsx(View, { style: { alignItems: "center" }, children: _jsx(Action, { action: loadMore, secondary: true }) })] }) : list }) }), detail ? _jsx(Pane, { children: _jsx(ScreenLayout, { title: detail.title, ...(detail.titleVisibility === undefined ? {} : { titleVisibility: detail.titleVisibility }), ...(detail.headerAlignment === undefined ? {} : { headerAlignment: detail.headerAlignment }), ...(detail.state === undefined ? {} : { state: detail.state }), stateAction: detail.stateAction, notice: detail.notice, ...(screen.safeAreaBottom === undefined ? {} : { safeAreaBottom: screen.safeAreaBottom }), exit: { kind: "back", label: back.label, onPress: back.onAction, disabled: !!(back.disabled || back.pending) }, children: detail.content }) }) : null] }); }
-export function EditorScreen({ children, dirty, submitPlacement = "footer", submit, cancel, discard, draftStatus, initialFocus = initialFocusDefaults.editor, ...screen }) {
+export function EditorScreen({ children, dirty, submitPlacement = "footer", submit, cancel, discard, draftStatus, stepBack, initialFocus = initialFocusDefaults.editor, ...screen }) {
     const [confirm, setConfirm] = useState(false);
     const cancelLocked = !!(cancel.disabled || cancel.pending || submit.pending);
     const submitAction = { ...submit, disabled: !!(submit.disabled || screen.state && screen.state.kind !== "ready") };
     // A prompt opened before an external save must not bypass the current leave lock
     // or reappear once the save finishes. Keep the draft mounted throughout.
-    useEffect(() => { if (cancelLocked)
-        setConfirm(false); }, [cancelLocked]);
+    const stepping = !!stepBack, stepLocked = !!(stepBack?.disabled || stepBack?.pending || submit.pending);
+    // A step-back exit replaces the cancel exit, so a discard prompt opened from the cancel exit cannot outlive it.
+    useEffect(() => { if (cancelLocked || stepping)
+        setConfirm(false); }, [cancelLocked, stepping]);
     // Preserve an async host result so AlertDialog can retain failure and retry.
     const leave = () => { if (!cancelLocked)
         return cancel.onAction(); };
     // Writing is the screen's purpose: focus the first field on entry unless the host opts out (2026-10-18).
-    return _jsxs(_Fragment, { children: [_jsx(ScreenLayout, { ...screen, initialFocus: initialFocus, exit: { kind: "close", label: cancel.label, disabled: cancelLocked, onPress: () => { if (cancelLocked)
-                        return; if (dirty)
-                        setConfirm(true);
-                    else
-                        leave(); } }, actions: submitPlacement === "header" ? _jsx(Action, { action: submitAction }) : screen.actions, footer: submitPlacement === "header" ? draftStatus : _jsxs(Stack, { gap: "sm", children: [draftStatus, _jsx(Action, { action: submitAction })] }), children: children }), _jsx(AlertDialog, { open: confirm && !cancelLocked, onOpenChange: setConfirm, request: { ...discard, mode: "confirm", onConfirm: leave } })] });
+    return _jsxs(_Fragment, { children: [_jsx(ScreenLayout, { ...screen, initialFocus: initialFocus, exit: stepBack ? { kind: "back", label: stepBack.label, disabled: stepLocked, onPress: () => { if (!stepLocked)
+                        stepBack.onAction(); } }
+                    : { kind: "close", label: cancel.label, disabled: cancelLocked, onPress: () => { if (cancelLocked)
+                            return; if (dirty)
+                            setConfirm(true);
+                        else
+                            leave(); } }, actions: submitPlacement === "header" ? _jsx(Action, { action: submitAction }) : screen.actions, footer: submitPlacement === "header" ? draftStatus : _jsxs(Stack, { gap: "sm", children: [draftStatus, _jsx(Action, { action: submitAction })] }), children: children }), _jsx(AlertDialog, { open: confirm && !cancelLocked && !stepping, onOpenChange: setConfirm, request: { ...discard, mode: "confirm", onConfirm: leave } })] });
 }
-export function ProfileScreen({ summary, edit, children, accountActions, ...screen }) { return _jsx(ScreenLayout, { ...screen, children: _jsxs(Stack, { gap: "xl", children: [_jsx(CompositionLayout, { footer: _jsx(Action, { action: edit, secondary: true }), children: summary }), children, accountActions] }) }); }
-export function ModerationScreen({ reasonPicker, reasons, reason, onReasonChange, reasonLabel, children, submit, block, ...screen }) {
+// Hands ProfileScreen's edit action to the ProfileSummary inside its summary slot, wherever the product nests it.
+const ProfileEditContext = createContext(undefined);
+export function ProfileScreen({ summary, edit, children, accountActions, editPlacement = "below-summary", ...screen }) { return _jsx(ScreenLayout, { ...screen, children: _jsxs(Stack, { gap: "xl", children: [editPlacement === "summary" ? _jsx(ProfileEditContext.Provider, { value: edit, children: summary }) : _jsx(CompositionLayout, { footer: _jsx(Action, { action: edit, secondary: true }), children: summary }), children, accountActions] }) }); }
+/** Body, stacked actions and confirmations shared by ModerationScreen (screen chrome) and ModerationForm (none). */
+function useModeration(fields, ready, cancel) {
     const [confirm, setConfirm] = useState(false);
-    const hasBlock = !!block;
+    const [confirmId, setConfirmId] = useState(null);
+    const review = fields.variant === "review" ? fields : null, report = fields.variant === "review" ? null : fields;
+    const hasBlock = !!report?.block;
     // Withdrawing the action ends that confirmation session; a later action needs
     // a new explicit press even if the screen itself stays mounted.
     useEffect(() => { if (!hasBlock)
         setConfirm(false); }, [hasBlock]);
-    return _jsxs(_Fragment, { children: [_jsx(ScreenLayout, { ...screen, footer: _jsxs(Stack, { gap: "xs", children: [_jsx(Action, { action: { ...submit, disabled: submit.disabled || !!screen.state && screen.state.kind !== "ready" || !reasons.some(item => item.value === reason) } }), block ? _jsx(Action, { action: { ...block.action, onAction: () => setConfirm(true) }, secondary: true }) : null] }), children: _jsxs(Stack, { gap: "lg", children: [reasonPicker ?? (reasons.length ? _jsx(RadioGroup, { accessibilityLabel: reasonLabel, orientation: "vertical", items: reasons, value: reason, onValueChange: value => { if (value)
-                                onReasonChange(value); } }) : null), children] }) }), block ? _jsx(AlertDialog, { open: confirm, onOpenChange: setConfirm, request: block.confirmation }) : null] });
+    const confirming = review && !review.resolution ? review.decisions.find(decision => decision.id === confirmId && decision.confirmation) : undefined;
+    // Same rule for a decision: its confirmation closes when the decision or its confirmation is withdrawn or resolved.
+    useEffect(() => { if (confirmId !== null && !confirming)
+        setConfirmId(null); }, [confirmId, confirming]);
+    const cancelAction = cancel ? _jsx(Action, { action: cancel, secondary: true }) : null;
+    if (review) {
+        const busy = review.decisions.some(decision => decision.pending);
+        const reasonMissing = (review.decisionReason.required ?? true) && !review.decisionReason.value.trim();
+        const field = review.resolution ?? _jsx(TextArea, { label: review.decisionReason.label, value: review.decisionReason.value, onValueChange: review.decisionReason.onValueChange, ...(review.decisionReason.description === undefined ? {} : { description: review.decisionReason.description }), ...(review.decisionReason.maxLength === undefined ? {} : { maxLength: review.decisionReason.maxLength }), required: review.decisionReason.required ?? true, disabled: !!review.decisionReason.disabled || busy });
+        // One decision at a time: a pending decision locks the others and the reason it was taken with.
+        const decisions = review.resolution ? [] : review.decisions.map(decision => {
+            const locked = !!decision.disabled || busy || !ready || reasonMissing;
+            return _jsx(Button, { tone: decision.tone ?? "secondary", disabled: locked, loading: decision.pending ?? false, onPress: () => { if (locked)
+                    return; if (decision.confirmation)
+                    setConfirmId(decision.id);
+                else
+                    decision.onAction(); }, children: decision.label }, decision.id);
+        });
+        return { body: _jsxs(Stack, { gap: "lg", children: [review.children, field] }),
+            actions: decisions.length || cancelAction ? _jsxs(Stack, { gap: "xs", children: [decisions, cancelAction] }) : null,
+            dialogs: confirming?.confirmation ? _jsx(AlertDialog, { open: true, onOpenChange: open => { if (!open)
+                    setConfirmId(null); }, request: confirming.confirmation }) : null };
+    }
+    const r = report;
+    return { body: _jsxs(Stack, { gap: "lg", children: [r.reasonPicker ?? (r.reasons.length ? _jsx(RadioGroup, { accessibilityLabel: r.reasonLabel, orientation: "vertical", items: r.reasons, value: r.reason, onValueChange: value => { if (value)
+                        r.onReasonChange(value); } }) : null), r.children] }),
+        actions: _jsxs(Stack, { gap: "xs", children: [_jsx(Action, { action: { ...r.submit, disabled: r.submit.disabled || !ready || !r.reasons.some(item => item.value === r.reason) } }), r.block ? _jsx(Action, { action: { ...r.block.action, onAction: () => setConfirm(true) }, secondary: true }) : null, cancelAction] }),
+        dialogs: r.block ? _jsx(AlertDialog, { open: confirm, onOpenChange: setConfirm, request: r.block.confirmation }) : null };
+}
+// Every key of either variant, so the rest of the props reach ScreenLayout unchanged whichever variant is used.
+const moderationFieldKeys = ["variant", "reasonPicker", "reasons", "reason", "onReasonChange", "reasonLabel", "children", "submit", "block", "decisionReason", "decisions", "resolution"];
+export function ModerationScreen(props) {
+    const screen = { ...props };
+    for (const key of moderationFieldKeys)
+        delete screen[key];
+    const { body, actions, dialogs } = useModeration(props, !props.state || props.state.kind === "ready");
+    return _jsxs(_Fragment, { children: [_jsx(ScreenLayout, { ...screen, footer: actions, children: body }), dialogs] });
+}
+export function ModerationForm(props) {
+    const { body, actions, dialogs } = useModeration(props, true, props.cancel);
+    return _jsxs(_Fragment, { children: [_jsx(CompositionLayout, { ...(props.title === undefined ? {} : { title: props.title }), ...(props.headingLevel === undefined ? {} : { headingLevel: props.headingLevel }), ...(props.layoutStyle === undefined ? {} : { layoutStyle: props.layoutStyle }), footer: actions, children: body }), dialogs] });
 }
 export function PhotoSourceSheet({ open, onOpenChange, onSelect, labels, disabled = false, cameraAvailable = true }) {
     const queued = useRef(null);
@@ -77,8 +129,19 @@ export function PhotoSourceSheet({ open, onOpenChange, onSelect, labels, disable
         queued.current = null; onOpenChange(next); };
     return _jsx(Sheet, { open: open, onOpenChange: dismiss, title: labels.title, closeLabel: labels.cancel, onDismissComplete: complete, children: _jsxs(Stack, { gap: "xs", children: [_jsx(Button, { tone: "secondary", disabled: disabled, onPress: () => select("library"), children: labels.library }), cameraAvailable ? _jsx(Button, { tone: "secondary", disabled: disabled, onPress: () => select("camera"), children: labels.camera }) : null] }) });
 }
+/**
+ * One picked item: preview, upload status, then move/rotate/remove. Exported (2026-10-18, Utilverse photo tools) so a
+ * virtualized host (FlatList renderItem) renders the same cell as the screen grid instead of a copy.
+ */
+export function MediaSelectionCell({ item, index, count, labels, actionLabels, removeLabel, moveUpLabel, moveDownLabel, onRemove, onMove, onRetry, onCancel, rotate }) {
+    const id = item.descriptor.id;
+    return _jsxs(Stack, { gap: "xs", children: [item.preview, _jsx(UploadItem, { descriptor: item.descriptor, labels: labels, onRetry: onRetry, onCancel: onCancel }), _jsxs(Stack, { axis: "inline", gap: "xxs", layoutStyle: { flexWrap: "wrap" }, children: [_jsx(Button, { accessibilityLabel: moveUpLabel(item), size: "small", tone: "ghost", disabled: index === 0, onPress: () => onMove(id, -1), children: actionLabels.moveUp }), _jsx(Button, { accessibilityLabel: moveDownLabel(item), size: "small", tone: "ghost", disabled: index === count - 1, onPress: () => onMove(id, 1), children: actionLabels.moveDown }), rotate ? _jsx(Button, { accessibilityLabel: rotate.itemLabel(item), size: "small", tone: "ghost", onPress: () => rotate.onRotate(id), children: rotate.label }) : null, _jsx(Button, { accessibilityLabel: removeLabel(item), size: "small", tone: "ghost", onPress: () => onRemove(id), children: actionLabels.remove })] })] });
+}
 /** A photo is the primary content; upload status stays below it instead of replacing the thumbnail. */
-export function MediaSelectionScreen({ library, selectionSummary, items, add, done, labels, actionLabels, removeLabel, moveUpLabel, moveDownLabel, onRemove, onMove, onRetry, onCancel, ...screen }) { return _jsx(ScreenLayout, { ...screen, ...(add || screen.actions ? { actions: _jsxs(Stack, { axis: "inline", gap: "xs", align: "center", children: [screen.actions, add ? _jsx(Action, { action: add, edge: "end" }) : null] }) } : {}), footer: _jsxs(Stack, { gap: "sm", children: [selectionSummary, _jsx(Action, { action: done })] }), children: library ?? _jsx(Grid, { columns: { compact: 2, expanded: 3 }, gap: { compact: "md" }, children: items.map((item, index) => _jsxs(Stack, { gap: "xs", children: [item.preview, _jsx(UploadItem, { descriptor: item.descriptor, labels: labels, onRetry: onRetry, onCancel: onCancel }), _jsxs(Stack, { axis: "inline", gap: "xxs", layoutStyle: { flexWrap: "wrap" }, children: [_jsx(Button, { accessibilityLabel: moveUpLabel(item), size: "small", tone: "ghost", disabled: index === 0, onPress: () => onMove(item.descriptor.id, -1), children: actionLabels.moveUp }), _jsx(Button, { accessibilityLabel: moveDownLabel(item), size: "small", tone: "ghost", disabled: index === items.length - 1, onPress: () => onMove(item.descriptor.id, 1), children: actionLabels.moveDown }), _jsx(Button, { accessibilityLabel: removeLabel(item), size: "small", tone: "ghost", onPress: () => onRemove(item.descriptor.id), children: actionLabels.remove })] })] }, item.descriptor.id)) }) }); }
+export function MediaSelectionScreen({ library, selectionSummary, items, add, done, labels, actionLabels, removeLabel, moveUpLabel, moveDownLabel, onRemove, onMove, onRetry, onCancel, rotate, ...screen }) {
+    const itemActions = { labels, actionLabels, removeLabel, moveUpLabel, moveDownLabel, onRemove, onMove, onRetry, onCancel, ...(rotate === undefined ? {} : { rotate }) };
+    return _jsx(ScreenLayout, { ...screen, ...(add || screen.actions ? { actions: _jsxs(Stack, { axis: "inline", gap: "xs", align: "center", children: [screen.actions, add ? _jsx(Action, { action: add, edge: "end" }) : null] }) } : {}), footer: _jsxs(Stack, { gap: "sm", children: [selectionSummary, _jsx(Action, { action: done })] }), children: library ?? _jsx(Grid, { columns: { compact: 2, expanded: 3 }, gap: { compact: "md" }, children: items.map((item, index) => _jsx(MediaSelectionCell, { item: item, index: index, count: items.length, ...itemActions }, item.descriptor.id)) }) });
+}
 /** Announce only when the text changes; iOS queues it behind the current utterance instead of cutting it off. */
 function useSearchAnnouncement(text) {
     useEffect(() => {
@@ -226,6 +289,10 @@ function CommentMenuButton({ item, menu, items }) {
 }
 /** Virtualized hosts reuse the same row as CommentThreadScreen; product slots add content, not a second layout. */
 export function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyle, commentMenu }) {
+    validateMediaSetChoice(item.media != null, item.mediaAlbum !== undefined);
+    const [albumIndex, setAlbumIndex] = useMediaAlbumIndex(item.mediaAlbum);
+    // bodyText inlines the author, so its time always moves under the body; rich bodies opt in with timePlacement.
+    const timeInActions = item.bodyText !== undefined || item.timePlacement === "actions";
     const avatarSize = item.parentId === null ? commentThreadRecipe.avatarSize : commentThreadRecipe.replyAvatarSize;
     const theme = useHjmNativeTheme();
     const menuItems = commentMenu ? resolveCommentMenuItems(commentMenu.items(item)) : [];
@@ -239,9 +306,9 @@ export function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyl
     const edgeOverhang = menuItems.length || item.actions == null && item.likeAction === undefined ? resolveIconButtonEdgeOverhang("ghost", "medium", visibleTarget) : 0;
     // The like count sits under the heart so the text column carries only identity, body and reply.
     return _jsxs(Stack, { axis: "inline", align: "start", gap: "xs", ...(layoutStyle === undefined ? {} : { layoutStyle }), children: [item.avatar ? _jsx(View, { style: { width: avatarSize, alignItems: "center" }, children: item.avatar }) : null, _jsxs(View, { style: { flex: 1, minWidth: 0, gap: commentThreadRecipe.lineGap }, children: [(() => {
-                        const identity = _jsxs(_Fragment, { children: [item.bodyText !== undefined ? _jsxs(Text, { children: [_jsx(Text, { emphasis: "strong", children: item.author }), " ", item.bodyText] }) : (item.author || item.timeLabel) ? _jsxs(Stack, { axis: "inline", gap: "xxs", align: "center", layoutStyle: { flexWrap: "wrap" }, children: [item.author ? _jsx(Text, { variant: "caption", emphasis: "strong", children: item.author }) : null, item.timeLabel ? _jsx(Text, { variant: "caption", tone: "muted", children: item.timeLabel }) : null] }) : null, item.body, item.media ? _jsx(View, { style: { maxWidth: commentThreadRecipe.mediaMaxWidth, borderRadius: commentThreadRecipe.mediaRadius, overflow: "hidden", marginTop: commentThreadRecipe.avatarGap / 2, alignSelf: "flex-start" }, children: item.media }) : null] });
+                        const identity = _jsxs(_Fragment, { children: [item.bodyText !== undefined ? _jsxs(Text, { children: [_jsx(Text, { emphasis: "strong", children: item.author }), " ", item.bodyText] }) : (item.author || (item.timeLabel && !timeInActions)) ? _jsxs(Stack, { axis: "inline", gap: "xxs", align: "center", layoutStyle: { flexWrap: "wrap" }, children: [item.author ? _jsx(Text, { variant: "caption", emphasis: "strong", children: item.author }) : null, item.timeLabel && !timeInActions ? _jsx(Text, { variant: "caption", tone: "muted", children: item.timeLabel }) : null] }) : null, item.body, item.media ? _jsx(View, { style: { maxWidth: commentThreadRecipe.mediaMaxWidth, borderRadius: commentThreadRecipe.mediaRadius, overflow: "hidden", marginTop: commentThreadRecipe.avatarGap / 2, alignSelf: "flex-start" }, children: item.media }) : null] });
                         return item.reactions ? _jsx(MessageReactions, { previewSurface: true, ...item.reactions, ...((item.canReply ?? item.parentId === null) && !item.replyDisabled ? { replyAction: { label: replyLabel, onPress: () => onReply(item.id), ...(item.reactions.replyIcon === undefined ? {} : { icon: item.reactions.replyIcon }) } } : {}), children: _jsx(View, { style: { gap: commentThreadRecipe.lineGap }, children: identity }) }) : identity;
-                    })(), (item.bodyText !== undefined && item.timeLabel) || (item.canReply ?? item.parentId === null) || item.reactionSummary ? _jsxs(Stack, { axis: "inline", gap: "sm", align: "center", layoutStyle: { flexWrap: "wrap" }, children: [item.bodyText !== undefined && item.timeLabel ? _jsx(Text, { variant: "caption", tone: "muted", children: item.timeLabel }) : null, item.reactionSummary, (item.canReply ?? item.parentId === null) ? _jsx(CommentTextAction, { label: replyLabel, disabled: item.replyDisabled ?? false, onPress: () => onReply(item.id) }) : null] }) : null] }), _jsxs(View, { style: { flexShrink: 0, marginTop: anchorOffset, ...(edgeOverhang ? { marginEnd: -edgeOverhang } : {}) }, children: [_jsxs(Stack, { axis: "inline", gap: "xxs", align: "center", layoutStyle: { flexShrink: 0 }, children: [item.likeAction !== undefined ? item.likeAction : _jsx(IconButton, { label: item.likeLabel, tone: "ghost", onPress: () => onLike(item.id), children: item.likeIcon }), item.actions, commentMenu && menuItems.length ? _jsx(CommentMenuButton, { item: item, menu: commentMenu, items: menuItems }) : null] }), item.likeCountLabel ? _jsx(View, { style: { width: commentThreadRecipe.likeColumnWidth }, children: _jsx(Text, { variant: "caption", tone: "muted", align: "center", children: item.likeCountLabel }) }) : null] })] }, item.id);
+                    })(), item.mediaAlbum ? _jsx(View, { style: { marginTop: commentThreadRecipe.avatarGap / 2, alignSelf: "flex-start" }, children: _jsx(MediaAlbumView, { album: item.mediaAlbum, index: albumIndex, onIndexChange: setAlbumIndex, width: commentThreadRecipe.mediaMaxWidth, radius: commentThreadRecipe.mediaRadius }) }) : null, (timeInActions && item.timeLabel) || (item.canReply ?? item.parentId === null) || item.reactionSummary ? _jsxs(Stack, { axis: "inline", gap: "sm", align: "center", layoutStyle: { flexWrap: "wrap" }, children: [timeInActions && item.timeLabel ? _jsx(Text, { variant: "caption", tone: "muted", children: item.timeLabel }) : null, item.reactionSummary, (item.canReply ?? item.parentId === null) ? _jsx(CommentTextAction, { label: replyLabel, disabled: item.replyDisabled ?? false, onPress: () => onReply(item.id) }) : null] }) : null, item.panel != null ? _jsx(View, { style: { marginTop: commentThreadRecipe.panelGap - commentThreadRecipe.lineGap }, children: item.panel }) : null] }), _jsxs(View, { style: { flexShrink: 0, marginTop: anchorOffset, ...(edgeOverhang ? { marginEnd: -edgeOverhang } : {}) }, children: [_jsxs(Stack, { axis: "inline", gap: "xxs", align: "center", layoutStyle: { flexShrink: 0 }, children: [item.likeAction !== undefined ? item.likeAction : _jsx(IconButton, { label: item.likeLabel, tone: "ghost", onPress: () => onLike(item.id), children: item.likeIcon }), item.actions, commentMenu && menuItems.length ? _jsx(CommentMenuButton, { item: item, menu: commentMenu, items: menuItems }) : null] }), item.likeCountLabel ? _jsx(View, { style: { width: commentThreadRecipe.likeColumnWidth }, children: _jsx(Text, { variant: "caption", tone: "muted", align: "center", children: item.likeCountLabel }) }) : null] })] }, item.id);
 }
 /** Controlled thread: server ordering, permission checks and receipt-based draft clearing belong to the product. */
 export function CommentThreadScreen({ items, expandedIds, onExpandedChange, onLike, onReply, replyLabel, repliesLabel, composer, threadHeader, threadFooter, commentMenu, ...screen }) {
@@ -267,7 +334,10 @@ export function CommentThreadScreen({ items, expandedIds, onExpandedChange, onLi
 }
 /** Profile identity and counts are common; routing and mutations stay controlled by the product. */
 export function ProfileSummary({ name, headingLevel = 2, avatar, badge, nameActions, stats = [], actions, children }) {
+    const edit = useContext(ProfileEditContext);
+    const { tone: editTone, size: editSize } = profileSummaryRecipe.editAction;
+    const editButton = edit ? _jsx(Button, { tone: editTone, size: editSize, disabled: !!(edit.disabled || edit.pending), loading: edit.pending ?? false, onPress: edit.onAction, children: edit.label }) : null;
     return _jsxs(CompositionLayout, { title: name, headingLevel: headingLevel, leading: _jsx(View, { style: { width: profileSummaryRecipe.avatarSize, height: profileSummaryRecipe.avatarSize, flexShrink: 0, borderRadius: profileSummaryRecipe.avatarSize / 2, overflow: "hidden" }, children: avatar }), badge: badge, actions: nameActions, footer: children, children: [stats.length ? _jsx(Stack, { axis: "inline", gap: "md", align: "stretch", layoutStyle: { width: "100%" }, children: stats.map(stat => _jsx(Stack, { gap: "xxs", align: "center", justify: "center", layoutStyle: { flex: 1, minWidth: 0 }, children: stat.onPress ? _jsx(Button, { tone: "ghost", accessibilityLabel: `${stat.value} ${stat.label}`, disabled: stat.disabled ?? false, onPress: stat.onPress, layoutStyle: { width: "100%" }, children: _jsxs(Stack, { gap: "xxs", align: "center", children: [_jsx(Text, { emphasis: "strong", children: stat.value }), _jsx(Text, { variant: "caption", tone: "muted", children: stat.label })] }) })
-                        : _jsxs(_Fragment, { children: [_jsx(Text, { emphasis: "strong", children: stat.value }), _jsx(Text, { variant: "caption", tone: "muted", children: stat.label })] }) }, stat.id)) }) : null, actions ? _jsx(Stack, { axis: "inline", gap: "sm", wrap: true, children: actions }) : null] });
+                        : _jsxs(_Fragment, { children: [_jsx(Text, { emphasis: "strong", children: stat.value }), _jsx(Text, { variant: "caption", tone: "muted", children: stat.label })] }) }, stat.id)) }) : null, editButton || actions ? _jsxs(Stack, { axis: "inline", gap: "sm", wrap: true, children: [editButton, actions] }) : null] });
 }
 //# sourceMappingURL=screen-flows.js.map

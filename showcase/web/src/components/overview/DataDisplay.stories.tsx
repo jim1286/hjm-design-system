@@ -2,7 +2,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ContractStory } from "../preview-registry";
 import { componentStory } from "../story-factory";
-const meta = { includeStories: ["UploadItem","Avatar","Asset","Badge","CounterBadge","Card","List","ListRow","VirtualList","Collapsible","Accordion","Statistic","Timeline","DataTable","Chart","Tree","Calendar","Carousel","DescriptionList","Image","QRCode","Tag","ChatMessage","NotificationRow","NotificationItem","CommentThreadRow","ProfileSummary","IconTile"], id: "components-data-display", title: "배포/컴포넌트/개요/데이터 표시 모아 보기", component: ContractStory, parameters: { controls: { disable: true } } } satisfies Meta<typeof ContractStory>;
+const meta = { includeStories: ["UploadItem","Avatar","Asset","Badge","CounterBadge","Card","List","ListRow","VirtualList","Collapsible","Accordion","Statistic","Timeline","DataTable","Chart","Tree","Calendar","Carousel","DescriptionList","Image","QRCode","Tag","ChatMessage","ChatDateSeparator","NotificationRow","NotificationItem","CommentThreadRow","ProfileSummary","IconTile"], id: "components-data-display", title: "배포/컴포넌트/개요/데이터 표시 모아 보기", component: ContractStory, parameters: { controls: { disable: true } } } satisfies Meta<typeof ContractStory>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const UploadItem: Story = { ...componentStory("UploadItem"), name: "업로드 항목" };
@@ -28,6 +28,7 @@ export const Image: Story = { ...componentStory("Image"), name: "이미지" };
 export const QRCode: Story = { ...componentStory("QRCode"), name: "큐알 코드" };
 export const Tag: Story = { ...componentStory("Tag"), name: "태그" };
 export const ChatMessage: Story = { ...componentStory("ChatMessage"), name: "채팅 말풍선" };
+export const ChatDateSeparator: Story = { ...componentStory("ChatDateSeparator"), name: "대화 날짜 구분" };
 export const NotificationRow: Story = { ...componentStory("NotificationRow"), name: "알림 미리보기 행" };
 export const NotificationItem: Story = { ...componentStory("NotificationItem"), name: "알림 목록 항목" };
 export const CommentThreadRow: Story = { ...componentStory("CommentThreadRow"), name: "댓글 행" };

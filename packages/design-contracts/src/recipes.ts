@@ -105,6 +105,7 @@ export {
   type TabSize,
   type TabsLayout,
   type TabsOverflow,
+  type TabsIndicator,
   type TextEmphasis,
   type TextTone,
   type ToastPlacement,

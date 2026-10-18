@@ -43,7 +43,7 @@
 | 예제 전용 도구(실패 예약 등) | "미리보기 도구" 캡션 아래 `Button size="small" tone="ghost"`로 분리 | 제품 행동과 같은 모양·폭 |
 | 헤더 제목·추가 기능 | 제목은 기본 가운데(`ScreenLayout`·`TopBar`, 왼쪽 정렬은 선택), 추가 기능은 `actions`에 아이콘 버튼 1~2개로 오른쪽 위(`ScreenFlowAction.icon`, 넘치면 Menu) | 왼쪽 정렬 제목, 헤더의 글자 버튼(가운데 제목을 밀어냄), 본문에 흩어진 도구 버튼 |
 | 도구성 행동(새로고침·추가·편집·삭제·공유·검색·필터·더보기) | `IconButton` + 아이콘, 글자는 `label`(보조기술 이름). HJM 화면은 아이콘 슬롯(`ScreenFlowAction.icon` 등) | 헤더·행·도구 막대의 글자 버튼 |
-| 화면 나가기(뒤로·닫기·설정 나가기) | `ScreenLayout`(과 이를 쓰는 화면)의 `exit` — 헤더 시작 쪽 아이콘 버튼, 글자 없음 | 본문·하단의 "나가기" 글자 버튼, 화면마다 다른 화살표 |
+| 화면 나가기(뒤로·닫기·설정 나가기) | `ScreenLayout`(과 이를 쓰는 화면)·`AuthScreenLayout`의 `exit` — 헤더 시작 쪽 아이콘 버튼, 글자 없음. 단계형 작성의 앞 단계는 `EditorScreen` `stepBack`(1.31.0) | 본문·하단의 "나가기" 글자 버튼, 화면마다 다른 화살표, 로그인·작성 화면 위에 따로 얹은 `TopBar` |
 | 버튼 묶음 간격 | 세로로 쌓으면 `gap="xs"`(8), 가로로 나란하면 `gap="sm"`(12) — `actionGroupRecipe` | 세로 버튼 사이 12 이상 |
 | 간격 | `Stack`·`ScreenLayout`·recipe 간격 | 임의 `margin`·빈 `View` |
 | 화면 진입 시 입력 포커스 | `ScreenLayout`(과 이를 쓰는 화면)·`AuthScreenLayout`·`Sheet`·`Dialog`의 `initialFocus`, 주 입력 지정은 칸의 `initialFocusTarget`([진입 포커스](components/screen-layout.md#진입-포커스)) | 앱별 `autoFocus`·지연 `ref.focus()`·단계 전환·검색 열기 뒤 `ref.focus()`, 대화·댓글 화면의 작성창 자동 포커스 |

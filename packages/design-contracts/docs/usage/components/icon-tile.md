@@ -54,6 +54,9 @@ import { IconTile } from "@hjmds/react-native/screens";
 | overlay | ReactNode | 없음 | 제품 배지 |
 | labelLines | 1 또는 2 | 1 | 제목 줄 수 |
 | ghost | boolean | false | 이동 대상 표시 |
+| frame | `"surface"` · `"none"` | `"surface"` | 미게시(1.30.0 이후). `surface`는 공통 틀(`surfaceAlt` 채움 + 테두리 1), `none`은 틀을 그리지 않는다. 아이콘 원본이 이미 완성된 런처 아이콘(모양·배경 포함)일 때 `none` |
+| shape | `"squircle"` · `"square"` · `"circle"` | `"squircle"` | 미게시. 틀(과 ghost 점선)의 모서리. 크기 대비 비율 `iconTileRecipe.shapes`(squircle 0.22 · square 0 · circle 0.5). 제품 아이콘 테마(아이폰 셸 squircle, Windows·Linux 셸 square)를 따른다 |
+| size | `"fixed"` · `"fill"` | `"fixed"` | 미게시. `fixed`는 64×64, `fill`은 격자 칸 폭을 채우되 `fillMinSize` 48 ~ `fillMaxSize` 68 사이로 제한한 정사각형. 열 수·칸 폭은 host Grid가 정하고 제품이 칸 크기를 계산해 넘기지 않는다 |
 
 `icon: ReactNode`, `label: string`, `overlay?: ReactNode`, `labelLines?: 1 | 2`(기본1), `ghost?: boolean`(기본false). 두 줄은 런처 제목 높이44를 예약하고 ghost는 이동 대상의 점선/반투명 표현이다. 아이콘 64, 제목 최대 폭72, 간격6을 공유 recipe가 정한다. overlay는 아이콘 기준 배지를 위한 슬롯이며 넘침을 자르지 않는다.
 
@@ -61,7 +64,7 @@ import { IconTile } from "@hjmds/react-native/screens";
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 아이콘 64×64(radius 22%), 제목 최대 폭 72 · 두 줄이면 84와 최소 높이 44 | `iconTileRecipe` |
+| 크기 | 아이콘 64×64(radius 22%, `shape`에 따라 0%·50%), `size="fill"`이면 칸 폭 48~68 정사각형; 제목 최대 폭 72 · 두 줄이면 84와 최소 높이 44 | `iconTileRecipe` |
 | 간격 | 아이콘과 제목 사이 6 | `iconTileRecipe.gap` |
 | 순서·정렬 | 아이콘(overlay 포함) 위 → 제목 아래, 가로 가운데, 제목 가운데 정렬 | 양 renderer |
 | 고정·스크롤 | Grid나 가상 목록의 host가 열 수·외부 여백·스크롤을 정한다 | 별도 scroller 없음 |
@@ -72,6 +75,8 @@ import { IconTile } from "@hjmds/react-native/screens";
 ## 꼭 지킬 것
 
 아이콘 원본과 제품 배지만 전달한다. 같은 배치를 별도 View/div로 다시 만들지 않는다.
+
+- 완성된 아이콘 아트워크 위에 틀이 두 겹으로 그려지면 `frame="none"`, 아이콘 모양이 테마마다 다르면 `shape`, 칸 크기를 따라 커져야 하면 `size="fill"`을 쓴다. 이 이유로 런처 항목을 직접 만들지 않는다.
 
 ## 상태와 상호작용
 
@@ -88,3 +93,7 @@ host에 전체 행동의 현지화 이름을 제공한다. 아이콘 내부 장�
 ## 관련 지침
 
 [선택 기준](../SELECTION.md), [Grid](grid.md), [Card](card.md).
+
+## 근거
+
+- `frame`·`shape`·`size`: 2026-10-18 HJM 1.30.0 감사. 유틸버스 런처는 도구 아트워크가 완성된 아이콘(셸에 따라 iPhone squircle, Windows·Linux square)이고 크기가 격자를 따라 48~68로 변해, 고정 64 틀을 그리는 IconTile 대신 자체 타일을 유지했다. 범위 48~68은 그 런처의 실제 칸 계산값이다.

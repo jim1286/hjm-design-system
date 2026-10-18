@@ -2317,6 +2317,41 @@ export declare const bottomNavigationRecipe: {
             alpha?: number;
         }>;
     };
+    /**
+     * Raised center destination (`prominent` item, Diairy write tab, 2026-10-18). The circle is the large control
+     * height plus one 4pt step so it outranks the 40pt indicators beside it. Renderers lift it by
+     * `diameter - indicator.minHeight` so its label stays on the same line as the other labels. It keeps brand
+     * fill in both states because a dimmed circle would read as a large idle icon, not the product's main entry;
+     * selection evidence stays on the label (weight and color), as for other items.
+     */
+    readonly prominentDestination: {
+        readonly diameter: number;
+        readonly icon: "lg";
+        readonly background: Readonly<{
+            source: "theme";
+            key: "primary";
+            alpha?: number;
+        }>;
+        readonly content: Readonly<{
+            source: "theme";
+            key: "onPrimary";
+            alpha?: number;
+        }>;
+        readonly shadow: {
+            readonly color: "#000000";
+            readonly opacity: 0.12;
+            readonly radius: 12;
+            readonly offsetY: 4;
+        };
+    };
+    /**
+     * App-icon slots for `configuration.iconSize` (Utilverse dock artwork, 2026-10-18). `standard` keeps the
+     * density glyph; 44 is the minimum touch target and 52 the large control height, the sizes the dock used.
+     */
+    readonly iconSizes: {
+        readonly large: 44;
+        readonly xlarge: 52;
+    };
     readonly adaptive: {
         readonly web: "fixed-compact-viewport";
         readonly native: "navigator-tab-bar";
@@ -2550,6 +2585,38 @@ export declare const tabsRecipe: {
         readonly size: "medium";
         readonly layout: "content";
         readonly overflow: "scroll";
+        readonly indicator: "underline";
+    };
+    /**
+     * Selection mark. `filled` paints the selected tab as a brand-tinted pill instead of the 2pt underline and
+     * drops the list divider, which only anchors underlines (Diairy nest tabs, 2026-10-18: the app's tab bar
+     * already marks the current place with this pill, so in-screen tabs looked like a second product).
+     */
+    readonly indicators: {
+        readonly underline: {
+            readonly listDivider: true;
+            readonly background: null;
+            readonly selectedContent: Readonly<{
+                source: "theme";
+                key: "text";
+                alpha?: number;
+            }>;
+            readonly radius: null;
+        };
+        readonly filled: {
+            readonly listDivider: false;
+            readonly background: Readonly<{
+                source: "theme";
+                key: "surfaceAccent";
+                alpha?: number;
+            }>;
+            readonly selectedContent: Readonly<{
+                source: "theme";
+                key: "contentBrand";
+                alpha?: number;
+            }>;
+            readonly radius: "full";
+        };
     };
     readonly sizes: {
         readonly small: {
@@ -3296,6 +3363,25 @@ export declare const dialogRecipe: {
             readonly reducedMotion: "instant";
         };
     };
+    /**
+     * ImmersiveOverlay (Dialog companion, 1.31.0): an edge-to-edge stage with a control bar and no card, scrim or
+     * header, for presentations such as a display board (utilverse used a raw RN Modal because Dialog/Sheet always
+     * framed their content). The stage is product-drawn; the bar reuses screen spacing so it matches a screen footer.
+     */
+    readonly immersive: {
+        readonly background: Readonly<{
+            source: "theme";
+            key: "bg";
+            alpha?: number;
+        }>;
+        readonly controls: {
+            readonly padding: 16;
+            readonly gap: 8;
+            readonly actionGap: 12;
+        };
+        readonly orientations: readonly ["portrait", "landscape-left", "landscape-right"];
+        readonly statusBarHidden: true;
+    };
 };
 /**
  * Tone is the dialog's reason for interrupting, not its decoration.
@@ -3969,6 +4055,7 @@ export type SelectionControlPresentation = keyof typeof selectionControlRecipe.p
 export type TabSize = keyof typeof tabsRecipe.sizes;
 export type TabsLayout = keyof typeof tabsRecipe.layouts;
 export type TabsOverflow = keyof typeof tabsRecipe.overflow;
+export type TabsIndicator = keyof typeof tabsRecipe.indicators;
 export type SpinnerSize = keyof typeof spinnerRecipe.sizes;
 export type SpinnerTone = keyof typeof spinnerRecipe.tones;
 export type AvatarSize = keyof typeof avatarRecipe.sizes;

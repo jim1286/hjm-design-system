@@ -2,6 +2,7 @@ import {
   resolveBottomNavigationActivation,
   resolveBottomNavigationConfiguration,
   resolveBottomNavigationDescriptor,
+  validateBottomNavigationProminence,
   type BottomNavigationActivation,
   type BottomNavigationConfiguration,
   type BottomNavigationDescriptor,
@@ -12,8 +13,12 @@ import {
   iconRecipe,
 } from "@hjmds/design-contracts/recipes";
 import {
+  createContext,
   forwardRef,
+  useContext,
   useEffect,
+  useMemo,
+  useRef,
   useState,
   type AnchorHTMLAttributes,
   type CSSProperties,
@@ -24,11 +29,44 @@ import {
   type ReactNode,
   type RefAttributes,
 } from "react";
-import { classNames } from "./internal.js";
+import { assignRef, classNames } from "./internal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { useOptionalHjmTheme } from "./provider.js";
 
 const virtualKeyboardMinimumOcclusion = 120;
+
+/**
+ * Height of the viewport bottom covered by the fixed bar (safe area and a raised center circle included); 0 when
+ * there is no bar or it is hidden for the keyboard. The provider also exposes it as `--hjm-bottom-navigation-inset`,
+ * which ScreenLayout's last region adds to its bottom padding, so products stop hand-keeping a bottom spacer
+ * (2026-10-18; Native shares the same API for its `placement="overlay"` bar).
+ */
+const BottomNavigationInsetContext = createContext(0);
+const BottomNavigationInsetReporterContext = createContext<((height: number) => void) | null>(null);
+
+export type BottomNavigationInsetProviderProps = Readonly<{ children: ReactNode }>;
+
+/** Wrap the app shell that holds both the screens and the BottomNavigation. */
+export function BottomNavigationInsetProvider({ children }: BottomNavigationInsetProviderProps) {
+  const [inset, setInset] = useState(0);
+  const report = useMemo(() => (height: number) => {
+    const next = Number.isFinite(height) && height > 0 ? height : 0;
+    setInset(current => current === next ? current : next);
+  }, []);
+  return (
+    <BottomNavigationInsetReporterContext.Provider value={report}>
+      <BottomNavigationInsetContext.Provider value={inset}>
+        {/* `display: contents` adds no box; the custom property still inherits to every screen below. */}
+        <div style={{ display: "contents", "--hjm-bottom-navigation-inset": `${inset}px` } as CSSProperties}>{children}</div>
+      </BottomNavigationInsetContext.Provider>
+    </BottomNavigationInsetReporterContext.Provider>
+  );
+}
+
+/** Bottom height covered by the BottomNavigation inside the nearest provider; 0 outside one. */
+export function useBottomNavigationInset(): number {
+  return useContext(BottomNavigationInsetContext);
+}
 
 export type BottomNavigationIconRenderProps<
   Key extends string = string,
@@ -171,20 +209,52 @@ function BottomNavigationInner<
     },
     resolved.items.length,
   );
+  validateBottomNavigationProminence(resolved.items, presentation);
   const hidden = useKeyboardHidden(presentation.keyboardBehavior);
   const density = bottomNavigationRecipe.density[presentation.density];
   const presentationRecipe =
     bottomNavigationRecipe.presentations[presentation.presentation];
   const centerGap =
     bottomNavigationRecipe.distributions[presentation.distribution].centerGap;
-  const iconSize = iconRecipe.sizes[density.icon];
+  const iconSize = presentation.iconSize === "standard"
+    ? iconRecipe.sizes[density.icon]
+    : bottomNavigationRecipe.iconSizes[presentation.iconSize];
+  const prominentRecipe = bottomNavigationRecipe.prominentDestination;
+  // Lifting by (diameter - indicator height) keeps the prominent label on the other labels' line; an app-icon
+  // slot taller than the indicator minimum raises that height.
+  const prominentLift = prominentRecipe.diameter - Math.max(bottomNavigationRecipe.indicator.minHeight, iconSize);
+  // The part of the circle above the nav box still covers content, so the reported inset includes it.
+  const prominentOverflow = resolved.items.some((item) => item.prominent)
+    ? Math.max(0, prominentLift - density.padding - presentationRecipe.outerPaddingTop)
+    : 0;
+  const navRef = useRef<HTMLElement | null>(null);
+  const reportInset = useContext(BottomNavigationInsetReporterContext);
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!reportInset) return;
+    if (hidden || !nav) {
+      reportInset(0);
+      return;
+    }
+    const update = () => reportInset(nav.getBoundingClientRect().height + prominentOverflow);
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(nav);
+    return () => {
+      observer.disconnect();
+      reportInset(0);
+    };
+  }, [reportInset, hidden, prominentOverflow]);
 
   if (hidden) return null;
 
   return (
     <nav
       {...props}
-      ref={ref}
+      ref={(node) => {
+        navRef.current = node;
+        assignRef(ref, node);
+      }}
       aria-label={resolved.accessibilityLabel}
       className={classNames("hjm-bottom-navigation", className)}
       data-expanded-labels={(theme?.environment.textScale ?? 1) >= 1.5 || resolved.items.length > 4 ? "true" : "false"}
@@ -212,6 +282,8 @@ function BottomNavigationInner<
           : "none",
         "--hjm-bottom-navigation-outer-inline": `${presentationRecipe.outerPaddingHorizontal}px`,
         "--hjm-bottom-navigation-outer-top": `${presentationRecipe.outerPaddingTop}px`,
+        "--hjm-bottom-navigation-prominent-diameter": `${prominentRecipe.diameter}px`,
+        "--hjm-bottom-navigation-prominent-lift": `${prominentLift}px`,
         ...style,
         ...layoutStyle,
       } as CSSProperties}
@@ -232,7 +304,7 @@ function BottomNavigationInner<
                     name: item.icon.name,
                     selected,
                     color: "currentColor",
-                    size: iconSize,
+                    size: item.prominent ? iconRecipe.sizes[prominentRecipe.icon] : iconSize,
                     strokeWidth: selected
                       ? bottomNavigationRecipe.icon.selectedEmphasis.strokeWidth.selected
                       : bottomNavigationRecipe.icon.selectedEmphasis.strokeWidth.idle,
@@ -262,7 +334,7 @@ function BottomNavigationInner<
             };
             if (item.disabled) {
               return (
-                <li key={item.id} style={itemStyle} data-selected="false">
+                <li key={item.id} style={itemStyle} data-selected="false" data-prominent={item.prominent || undefined}>
                   <span
                     aria-disabled="true"
                     aria-label={item.resolvedAccessibilityLabel}
@@ -293,7 +365,7 @@ function BottomNavigationInner<
               children: content,
             };
             return (
-              <li key={item.id} style={itemStyle} data-selected={selected}>
+              <li key={item.id} style={itemStyle} data-selected={selected} data-prominent={item.prominent || undefined}>
                 {renderLink ? renderLink(linkProps) : <a {...linkProps} />}
               </li>
             );

@@ -8,7 +8,7 @@ import {
 } from "@hjmds/design-contracts/components/steps";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import type { ReactNode } from "react";
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 
 import { Text } from "./primitives.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
@@ -19,16 +19,22 @@ export type StepsProps<Id extends string = string> = Readonly<{
   statusLabels: StepsStatusLabels;
   composeAccessibleName: ComposeStepsAccessibleName;
   renderMark?: (status: StepStatus, position: number) => ReactNode;
+  /**
+   * Return to a step before the cursor (2026-10-18, spint compose). Only those steps become buttons; the cursor and
+   * later steps stay static so the flow never skips forward past validation. Omit it while the flow is locked.
+   */
+  onStepPress?: (id: Id) => void;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
 }>;
 
-/** Non-interactive linear steps preserving one cursor and reading order. */
+/** Linear steps preserving one cursor and reading order; steps before the cursor can be pressed to go back. */
 export function Steps<Id extends string>({
   descriptor,
   statusLabels,
   composeAccessibleName,
   renderMark,
+  onStepPress,
   layoutStyle,
 }: StepsProps<Id>) {
   const { colors, environment, palette } = useHjmNativeTheme();
@@ -39,8 +45,9 @@ export function Steps<Id extends string>({
   const color = (reference: Parameters<typeof resolveColorReference>[0]) => resolveColorReference(reference, palette);
   return (
     <View accessibilityRole="summary" style={[{ direction: environment.direction, flexDirection: "row", gap: stepsRecipe.gap }, layoutStyle]}>
-      {steps.map((step, index) => (
-        <View accessibilityHint={step.statusLabel} accessibilityLabel={step.accessibleName} accessible key={step.id} style={{ flex: 1, gap: stepsRecipe.gap, minWidth: 0 }}>
+      {steps.map((step, index) => {
+        const cell = { flex: 1, gap: stepsRecipe.gap, minWidth: 0 } as const;
+        const content = <>
           <View accessible={false} style={{ alignItems: "center", flexDirection: "row" }}>
             <View style={{ alignItems: "center", backgroundColor: indicator.background[step.status] === null ? colors.bg : color(indicator.background[step.status]!), borderColor: color(indicator.border[step.status]), borderRadius: indicator.size / 2, borderWidth: step.status === "current" || step.status === "error" ? indicator.activeBorderWidth : indicator.borderWidth, height: indicator.size, justifyContent: "center", width: indicator.size }}>
               {renderMark?.(step.status, step.position) ?? <Text align="center" emphasis="strong" style={{ color: color(indicator.content[step.status]) }} variant="label">{step.status === "complete" ? "✓" : step.status === "error" ? "!" : step.position}</Text>}
@@ -49,8 +56,13 @@ export function Steps<Id extends string>({
           </View>
           <Text emphasis="medium" style={{ color: color(label.color[step.status]) }} variant={label.textVariant}>{step.label}</Text>
           {step.description === undefined ? null : <Text tone="muted" variant="caption">{step.description}</Text>}
-        </View>
-      ))}
+        </>;
+        // A pressable step is one named button over marker and label; the status stays the hint, as on static steps.
+        return step.revisitable && onStepPress
+          ? <Pressable accessibilityRole="button" accessibilityHint={step.statusLabel} accessibilityLabel={step.accessibleName} key={step.id}
+              onPress={() => onStepPress(step.id)} style={{ ...cell, minHeight: stepsRecipe.press.minTouchTarget }}>{content}</Pressable>
+          : <View accessibilityHint={step.statusLabel} accessibilityLabel={step.accessibleName} accessible key={step.id} style={cell}>{content}</View>;
+      })}
     </View>
   );
 }

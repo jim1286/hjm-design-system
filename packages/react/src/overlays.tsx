@@ -86,6 +86,12 @@ export type DialogProps = ModalOpenState<Readonly<{ reason: DialogOpenChangeReas
     description?: ReactNode;
     children?: ReactNode;
     footer?: ReactNode;
+    /**
+     * Decorative layer over the whole viewport, outside the card frame (a drag ghost following the pointer, a
+     * highlight anchored to an element). Children are positioned in viewport coordinates, never receive pointer
+     * input, and are hidden from assistive technology; interactive content belongs in `children`.
+     */
+    overlayLayer?: ReactNode;
     /** Optional measured trigger bounds in viewport coordinates; keeps canonical modal behavior. */
     motionOrigin?: TransitionRect;
     size?: DialogSize;
@@ -121,6 +127,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
     description,
     children,
     footer,
+    overlayLayer,
     size = dialogRecipe.defaults.size,
     motionOrigin,
     dismissible = dialogRecipe.defaults.dismissible,
@@ -269,6 +276,9 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
               {children ? <div className="hjm-dialog__body"><InitialFocusProvider scope={focusScope}>{children}</InitialFocusProvider></div> : null}
               {footer ? <footer className="hjm-dialog__footer">{footer}</footer> : null}
             </div>
+            {/* A sibling of the card, not a child: the card scrolls, clips and runs the origin transform, any of
+                which would trap or offset viewport-positioned content (BurnTok folder drag ghost, 2026-10-18). */}
+            {overlayLayer ? <div className="hjm-dialog__overlay-layer" aria-hidden="true" inert>{overlayLayer}</div> : null}
           </div>
         </HjmPortal>
       ) : null}
@@ -1528,4 +1538,89 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(props, r
       </button>
     );
   }
+});
+
+export type ImmersiveOverlayOpenChangeReason = "exit-action" | "escape";
+
+// No `layoutStyle`: a viewport-filling modal layer; there is no in-flow root to place.
+export type ImmersiveOverlayProps = Readonly<{
+  open: boolean;
+  onOpenChange: (open: boolean, detail: Readonly<{ reason: ImmersiveOverlayOpenChangeReason }>) => void;
+  /** Localized accessible name of the presentation. */
+  label: string;
+  /** Localized visible label of the exit action. */
+  exitLabel: string;
+  /** Product-drawn stage filling the viewport edge to edge above the control bar. */
+  children: ReactNode;
+  /** Tool actions placed before the exit action (pause, rotate). */
+  tools?: ReactNode;
+  /** Status copy above the action row (keep-awake state, a notice). */
+  status?: ReactNode;
+  /** Defaults to the exit action. */
+  initialFocusRef?: React.RefObject<HTMLElement | null>;
+  returnFocusRef?: React.RefObject<HTMLElement | null>;
+  /** Higher-priority modals remain interactive above later lower-priority modals. */
+  modalPriority?: number;
+  portalContainer?: HTMLElement;
+  className?: string;
+}>;
+
+/**
+ * Edge-to-edge presentation (Dialog companion): no card, scrim or header, on the shared modal stack with its focus
+ * trap, Escape dismissal, background isolation and focus return. The browser Fullscreen API is deliberately not
+ * requested: it needs a fresh user activation, its Escape exits fullscreen before the page sees the key (leaving the
+ * overlay open in a window), and iOS Safari does not grant it to elements.
+ */
+export const ImmersiveOverlay = forwardRef<HTMLDivElement, ImmersiveOverlayProps>(function ImmersiveOverlay(
+  { open, onOpenChange, label, exitLabel, children, tools, status, initialFocusRef, returnFocusRef, modalPriority = 0, portalContainer, className },
+  forwardedRef,
+) {
+  const contentRef = useRef<HTMLDivElement>(null);
+  const exitRef = useRef<HTMLButtonElement>(null);
+  const focusLayer = useRef<ModalLayerRef["current"]>(null);
+  // The stage is a presentation, not a form: fields inside stay with this overlay instead of an outer screen scope.
+  const focusScope = useInitialFocusScope({ mode: "none", active: open, layer: focusLayer });
+  const onOpenChangeRef = useRef(onOpenChange);
+  onOpenChangeRef.current = onOpenChange;
+  useModalFocus({
+    active: open,
+    priority: modalPriority,
+    contentRef,
+    initialFocusRef: initialFocusRef ?? exitRef,
+    resolveInitialFocus: focusScope.enter,
+    layerRef: focusLayer,
+    ...(returnFocusRef === undefined ? {} : { returnFocusRef }),
+    onEscape: () => onOpenChangeRef.current(false, { reason: "escape" }),
+  });
+  const { controls } = dialogRecipe.immersive;
+  if (!open) return null;
+  return (
+    <HjmPortal {...(portalContainer === undefined ? {} : { container: portalContainer })}>
+      <div className="hjm-overlay hjm-immersive-positioner" data-kind="immersive" data-modal-priority={modalPriority} data-state="open" style={{ zIndex: getModalLayer(modalPriority) }}>
+        <div
+          ref={composeRefs(contentRef, forwardedRef)}
+          role="dialog"
+          aria-modal="true"
+          aria-label={label}
+          tabIndex={-1}
+          className={classNames("hjm-immersive", className)}
+          data-hjm-modal-content=""
+          style={{
+            "--hjm-immersive-padding": `${controls.padding}px`,
+            "--hjm-immersive-gap": `${controls.gap}px`,
+            "--hjm-immersive-action-gap": `${controls.actionGap}px`,
+          } as React.CSSProperties}
+        >
+          <div className="hjm-immersive__stage"><InitialFocusProvider scope={focusScope}>{children}</InitialFocusProvider></div>
+          <div className="hjm-immersive__controls">
+            {status ? <div className="hjm-immersive__status">{status}</div> : null}
+            <div className="hjm-immersive__actions">
+              {tools}
+              <Button ref={exitRef} size="large" layoutStyle={{ flex: 1 }} onClick={() => onOpenChange(false, { reason: "exit-action" })}>{exitLabel}</Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </HjmPortal>
+  );
 });

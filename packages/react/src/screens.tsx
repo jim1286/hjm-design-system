@@ -1,21 +1,24 @@
-import { iconTileRecipe, notificationRowRecipe as notificationRecipe, initialFocusDefaults, type ScreenInitialFocus } from "@hjmds/design-contracts/screen-patterns";
+import { iconTileRecipe, notificationRowRecipe as notificationRecipe, initialFocusDefaults, type ScreenInitialFocus, type IconTileFrame, type IconTileShape, type IconTileSize } from "@hjmds/design-contracts/screen-patterns";
 import { InitialFocusScope } from "./internal/initial-focus.js";
 import { iconButtonRecipe, listRowRecipe } from "@hjmds/design-contracts/recipes";
 import { resolveComposerLimit, type ComposerLengthFeedback } from "@hjmds/design-contracts/communication";
 import { Progress } from "./feedback.js";
 import { resolveDesignProfileScreen, type DesignProfileScreenPresentation } from "@hjmds/design-contracts/design-profile-layout";
-import { MessageReactions, type MessageMenuAction } from "./internal/message-reactions.js";
+import { MessageReactions, ReactionSummaryButton, omitReactionSummary, type MessageMenuAction, type MessageReactionsHandle } from "./internal/message-reactions.js";
+import { MediaAlbumView, useMediaAlbumIndex, type MediaAlbum } from "./internal/media-album.js";
+import { validateMediaSetChoice } from "@hjmds/design-contracts/screen-patterns";
+export type { MediaAlbum } from "./internal/media-album.js";
 import type { ReactionPickerProps } from "./reaction-picker.js";
 import { Button, IconButton } from "./actions.js";
 import { useOptionalHjmTheme } from "./provider.js";
 import { TextArea } from "./forms.js";
 import { useId, useLayoutEffect, useRef, useState, type Ref, type ReactNode } from "react";
-import { isReplySwipe, timestampRevealOffset, shouldSubmitMessageKey, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, screenHeaderRecipe, validateScreenExit, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState, type ScreenContentInset } from "@hjmds/design-contracts/screen-patterns";
+import { isReplySwipe, timestampRevealOffset, shouldSubmitMessageKey, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, resolveChatReactionSummary, type ChatReactionSummary, typingIndicatorRecipe, chatDateSeparatorRecipe, screenHeaderRecipe, validateScreenExit, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState, type ScreenContentInset } from "@hjmds/design-contracts/screen-patterns";
 import { Heading } from "./heading.js";
 import { Spinner } from "./internal/spinner.js";
 import { ScreenExitButton, type ScreenExit } from "./internal/screen-exit.js";
 import { ScreenFooterContext } from "./internal/screen-footer.js";
-import { Section, Stack, Text } from "./layout.js";
+import { Section, Stack, Text, VisuallyHidden } from "./layout.js";
 import { ListRow, type ListRowProps } from "./display.js";
 import { classNames, useDesignProfileDefaults } from "./internal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
@@ -24,6 +27,12 @@ export type ScreenLayoutProps = Readonly<{
   title: string;
   /** The shared header owns badge placement; the product supplies its meaning and label. */
   titleBadge?: ReactNode;
+  /**
+   * Identity mark or artwork before the title (team logo, tool artwork). Decorative: the title stays the heading and
+   * the accessible name. With `titleVisibility="hidden"` the mark stands alone in the title slot as the heading,
+   * named by `title` (2026-10-18: yajalal team detail and Utilverse tool headers rebuilt the header to get this).
+   */
+  titleLeading?: ReactNode;
   /** Hide redundant route names while retaining descriptions and a named screen. */
   titleVisibility?: "visible" | "hidden";
   /** Centered by default (2026-10-17 user rule); `start` remains available. Extra actions sit at the trailing edge. */
@@ -49,6 +58,8 @@ export type ScreenLayoutProps = Readonly<{
   footer?: ReactNode;
   state?: ScreenContentState;
   stateAction?: ReactNode;
+  /** Brand visual for `state.kind === "loading"`; the shared state group keeps copy, centering and announcement (as CompositionLayout). */
+  loadingIndicator?: ReactNode;
   children?: ReactNode;
   /** A virtualized list must own scrolling; never nest it inside a second scroll container. */
   scroll?: "screen" | "content";
@@ -70,14 +81,15 @@ export type ScreenLayoutProps = Readonly<{
 }>;
 
 /** Shared screen shell. Routing, data, permission checks and mutation state remain product-owned. */
-export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "center", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", as: Element = "main", className, layoutStyle, initialFocus = initialFocusDefaults.screen, hjmTitleLeading }: ScreenLayoutProps & Readonly<{ /** Internal: ChatScreen header photo. */ hjmTitleLeading?: ReactNode }>) {
+export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility = "visible", headerAlignment = "center", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, loadingIndicator, children, scroll = "screen", as: Element = "main", className, layoutStyle, initialFocus = initialFocusDefaults.screen }: ScreenLayoutProps) {
   const id = useId();
   if (exit) validateScreenExit(exit, false);
   const leading = exit ? <ScreenExitButton {...exit} /> : null;
-  const showHeader = titleVisibility === "visible" || !!description || !!leading || !!actions;
+  const hasMark = titleLeading !== undefined && titleLeading !== null && titleLeading !== false;
+  const showHeader = titleVisibility === "visible" || hasMark || !!description || !!leading || !!actions;
   // Same header band as Native (screenHeaderRecipe): a fixed 52 band (48 icon-only) so the title sits at the same
   // height with or without exit/actions buttons (2026-10-17: Web grew 58→76 when a 44 button was present).
-  const compactHeader = header == null && headerAlignment === "center" && titleVisibility === "hidden" && !description;
+  const compactHeader = header == null && headerAlignment === "center" && titleVisibility === "hidden" && !hasMark && !description;
   // Screens historically work with the stylesheet alone. Optional context keeps
   // that path while inheriting profiles from an enclosing Provider when present.
   const designProfile = useDesignProfileDefaults();
@@ -99,16 +111,21 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
     if (previous && !previous.isConnected) lastBodyFocus.current = null;
   });
   const recipe = screenPatternRecipe;
+  // The mark is decorative beside a visible title; standing alone it becomes the heading, named by `title`.
+  const mark = hasMark ? <span className="hjm-screen__title-leading" aria-hidden="true">{titleLeading}</span> : null;
+  const titleRow = (level: typeof screenHeaderRecipe.titleLevel | typeof screenHeaderRecipe.centeredTitleLevel, justify: "center" | "start") => titleVisibility === "visible"
+    ? <Stack axis="inline" gap="xs" align="center" justify={justify} wrap>{mark}<Heading level={level} semanticLevel={1} id={id}>{title}</Heading>{titleBadge}</Stack>
+    : mark ? <div role="heading" aria-level={1} aria-label={title} style={{ display: "flex", justifyContent: justify === "center" ? "center" : "flex-start" }}>{mark}</div> : null;
   return <Element aria-labelledby={header || titleVisibility === "hidden" ? undefined : id} aria-label={header || titleVisibility === "hidden" ? title : undefined} data-content-inset={contentInset} data-presentation={presentation} className={classNames("hjm-screen", className)}
     style={{ backgroundColor: surface === "transparent" || designProfile?.material.canvas ? "transparent" : undefined, "--hjm-screen-width": `${profileLayout?.maxWidth ?? recipe.maxWidth}px`, "--hjm-screen-padding": `${contentInset === "none" ? 0 : recipe.padding}px`, "--hjm-screen-gap": `${profileLayout?.gap ?? recipe.sectionGap}px`, "--hjm-screen-item-gap": `${recipe.itemGap}px`, "--hjm-screen-state-gap": `${recipe.stateGap}px`, "--hjm-screen-header-min": `${recipe.headerMinWidth}px`, ...layoutStyle } as React.CSSProperties}><InitialFocusScope mode={initialFocus}>
     {header ?? (showHeader ? headerAlignment === "center" ? <header className="hjm-screen__header" style={{ display: "grid", gridTemplateColumns: "1fr minmax(0, auto) 1fr", alignItems: "center", boxSizing: "border-box", minBlockSize: compactHeader ? screenHeaderRecipe.compactMinHeight : screenHeaderRecipe.minHeight, paddingBlock: compactHeader ? screenHeaderRecipe.compactPaddingVertical : screenHeaderRecipe.paddingVertical }}>
       {/* Equal side columns sized by their controls and a title-size (18) heading, matching Native's measured
           centered header (2026-10-17: the fixed 1:2:1 split with a level3 heading wrapped short titles). */}
       <div>{leading}</div><div className="hjm-screen__heading" style={{ textAlign: "center", minWidth: 0 }}>
-        {titleVisibility === "visible" && <Stack axis="inline" gap="xs" align="center" justify="center" wrap>{hjmTitleLeading}<Heading level={screenHeaderRecipe.centeredTitleLevel} semanticLevel={1} id={id}>{title}</Heading>{titleBadge}</Stack>}
+        {titleRow(screenHeaderRecipe.centeredTitleLevel, "center")}
         {description ? <Text as="p" tone="muted">{description}</Text> : null}</div><div style={{ justifySelf: "end" }}>{actions}</div>
     </header> : <header className="hjm-screen__header" style={profileLayout ? { flexDirection: profileLayout.headerAxis, alignItems: profileLayout.centered ? "center" : undefined, textAlign: profileLayout.centered ? "center" : undefined } : undefined}>
-      {leading}<div className="hjm-screen__heading">{titleVisibility === "visible" && <Stack axis="inline" gap="xs" align="center" justify={profileLayout?.centered ? "center" : "start"} wrap><Heading level={screenHeaderRecipe.titleLevel} semanticLevel={1} id={id}>{title}</Heading>{titleBadge}</Stack>}
+      {leading}<div className="hjm-screen__heading">{titleRow(screenHeaderRecipe.titleLevel, profileLayout?.centered ? "center" : "start")}
         {description ? <Text as="p" tone="muted">{description}</Text> : null}</div>{actions}
     </header> : null)}
     {notice ? <div className="hjm-screen__notice">{notice}</div> : null}
@@ -127,7 +144,7 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
         {/* Loading copy is an accessible name; visible copy beside the spinner
             contradicts the shared spinner-only loading contract. */}
         {/* The live role wraps only the copy: an alert around the retry action announced the button too (2026-10-17). */}
-        {resolved.busy ? <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} /> : <div role={state.kind === "error" ? "alert" : "status"}>
+        {resolved.busy ? (loadingIndicator ? <div role="status" aria-busy="true" aria-label={[state.title, state.description].filter(Boolean).join(". ")}><div aria-hidden="true">{loadingIndicator}</div></div> : <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} />) : <div role={state.kind === "error" ? "alert" : "status"}>
           <Stack gap="sm" align="center"><Text variant="title">{state.title}</Text>
             {state.description ? <Text tone="muted">{state.description}</Text> : null}</Stack>
         </div>}
@@ -178,7 +195,7 @@ export function NotificationItem({ read, statusLabel, timestamp, description, ti
     description={<Stack gap="xxs">{description}<Text variant="caption" tone="muted">{statusLabel} · {timestamp}</Text></Stack>} />;
 }
 
-export type ChatScreenProps = Omit<ScreenLayoutProps, "footer"> & Readonly<{
+export type ChatScreenProps = Omit<ScreenLayoutProps, "footer" | "titleLeading"> & Readonly<{
   composer: ReactNode;
   /** Shown while the reader is away from the latest message; the host owns scroll position and visibility. */
   jumpToLatest?: Readonly<{ label: string; icon: ReactNode; onPress(): void }>;
@@ -191,7 +208,7 @@ export function ChatScreen({ composer, jumpToLatest, avatar, scroll = "content",
   const showComposer = !props.state || props.state.kind === "ready" || props.state.kind === "empty";
   // Anchor the jump control to the composer edge so it floats over the timeline without measuring the footer.
   // Conversations center the peer between back and tools and use the measured 10px timeline gutter (2026-10-16).
-  return <ScreenLayout {...props} className={classNames("hjm-chat-screen", props.className) ?? "hjm-chat-screen"} hjmTitleLeading={avatar} scroll={scroll} footer={showComposer ? <div className="hjm-chat-screen__footer">
+  return <ScreenLayout {...props} className={classNames("hjm-chat-screen", props.className) ?? "hjm-chat-screen"} titleLeading={avatar} scroll={scroll} footer={showComposer ? <div className="hjm-chat-screen__footer">
     {jumpToLatest ? <div className="hjm-chat-screen__jump"><IconButton label={jumpToLatest.label} size="small" shape="circle" tone="secondary" onClick={jumpToLatest.onPress}>{jumpToLatest.icon}</IconButton></div> : null}
     {composer}</div> : null} />;
 }
@@ -248,30 +265,53 @@ export function MessageComposer({ leading, quickInserts, value, label, sendLabel
   const quickRow = quickInserts?.items.length ? <div className="hjm-message-composer__quick" role="group" aria-label={quickInserts.label} style={{ "--hjm-quick-size": `${composerQuickInsertRecipe.itemSize}px`, "--hjm-quick-emoji": `${composerQuickInsertRecipe.emojiSize}px` } as React.CSSProperties}>
     {quickInserts.items.map(item => <button key={item.id} type="button" className="hjm-message-composer__quick-item" aria-label={item.label} disabled={locked} onClick={() => onValueChange(value + item.emoji)}>{item.emoji}</button>)}
   </div> : null;
-  return <div className="hjm-message-composer" data-send-presentation={sendPresentation} style={{"--hjm-message-composer-gap": `${screenPatternRecipe.itemGap}px`, "--hjm-attachment-size": `${screenPatternRecipe.attachmentSize}px`, "--hjm-attachment-remove-size": `${screenPatternRecipe.attachmentRemoveSize}px`, ...layoutStyle} as React.CSSProperties}>{context}{quickRow}{/* Replying wraps target, attachments and input in one card (2026-10-16 reference). */}{/* One stable wrapper whether or not replying, so the textarea is never remounted (focus stays). */}<div className="hjm-message-composer__reply-card" data-replying={replyTo ? true : undefined}>{replyTo ? <div className="hjm-message-composer__reply"><div className="hjm-message-composer__reply-text"><Text emphasis="strong">{replyTo.author}</Text><Text variant="caption" tone="muted" className="hjm-message-composer__reply-excerpt">{replyTo.excerpt}</Text></div><IconButton label={replyTo.cancelLabel} tone="secondary" size="small" shape="circle" disabled={locked} onClick={replyTo.onCancel}><Text>×</Text></IconButton></div> : null}{composerBody}</div>{lengthFeedback && limit?.near ? <Progress shape="circular" label={lengthFeedback.label} value={Math.min(limit.used, limit.max)} max={limit.max} valueText={lengthFeedback.formatCount(limit.used, limit.max)}><Text variant="caption">{lengthFeedback.formatCount(limit.used, limit.max)}</Text></Progress> : null}</div>;
+  // The error is a send-time outcome, so it must be heard when it appears. The field shows it and references it from
+  // the input (aria-describedby), but that is not announced; this always-mounted alert region announces each new error,
+  // matching Native's assertive field message.
+  const errorAnnouncement = <VisuallyHidden role="alert">{error ?? ""}</VisuallyHidden>;
+  return <div className="hjm-message-composer" data-send-presentation={sendPresentation} style={{"--hjm-message-composer-gap": `${screenPatternRecipe.itemGap}px`, "--hjm-attachment-size": `${screenPatternRecipe.attachmentSize}px`, "--hjm-attachment-remove-size": `${screenPatternRecipe.attachmentRemoveSize}px`, ...layoutStyle} as React.CSSProperties}>{context}{quickRow}{/* Replying wraps target, attachments and input in one card (2026-10-16 reference). */}{/* One stable wrapper whether or not replying, so the textarea is never remounted (focus stays). */}<div className="hjm-message-composer__reply-card" data-replying={replyTo ? true : undefined}>{replyTo ? <div className="hjm-message-composer__reply"><div className="hjm-message-composer__reply-text"><Text emphasis="strong">{replyTo.author}</Text><Text variant="caption" tone="muted" className="hjm-message-composer__reply-excerpt">{replyTo.excerpt}</Text></div><IconButton label={replyTo.cancelLabel} tone="secondary" size="small" shape="circle" disabled={locked} onClick={replyTo.onCancel}><Text>×</Text></IconButton></div> : null}{composerBody}</div>{lengthFeedback && limit?.near ? <Progress shape="circular" label={lengthFeedback.label} value={Math.min(limit.used, limit.max)} max={limit.max} valueText={lengthFeedback.formatCount(limit.used, limit.max)}><Text variant="caption">{lengthFeedback.formatCount(limit.used, limit.max)}</Text></Progress> : null}{errorAnnouncement}</div>;
 }
 
-export type ChatMessageProps = ChatMessageDescriptor & Readonly<{ children: ReactNode; interactiveContent?: boolean; avatar?: ReactNode; reply?: ReactNode; actions?: ReactNode; replyAction?: Readonly<{label:string; onPress():void; disabled?:boolean; icon?:ReactNode}>; replyLink?: Readonly<{label:string; onPress():void}>; /** HJM-drawn quote ("Replying to X" + one-line excerpt) heading the bubble; preferred over a custom `reply` node. */ replyQuote?: Readonly<{ title: string; excerpt: string }>; /** Photos sent in the message. Products own the image source, viewer and upload; HJM owns the layout. */ media?: readonly Readonly<{ id: string; label: string; preview: ReactNode; aspectRatio?: number; onPress?(): void }>[]; reactions?: ReactionPickerProps & Readonly<{ closeLabel: string; menuAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean }>; menuActions?: readonly MessageMenuAction[]; reportAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean; icon?: ReactNode }> }>;
+export type ChatMessageProps = ChatMessageDescriptor & Readonly<{ children: ReactNode; interactiveContent?: boolean; avatar?: ReactNode; reply?: ReactNode; actions?: ReactNode; replyAction?: Readonly<{label:string; onPress():void; disabled?:boolean; icon?:ReactNode}>; replyLink?: Readonly<{label:string; onPress():void}>; /** HJM-drawn quote ("Replying to X" + one-line excerpt) heading the bubble; preferred over a custom `reply` node. */ replyQuote?: Readonly<{ title: string; excerpt: string }>; /** Photos sent in the message. Products own the image source, viewer and upload; HJM owns the layout. */ media?: readonly Readonly<{ id: string; label: string; preview: ReactNode; aspectRatio?: number; onPress?(): void }>[]; reactions?: ReactionPickerProps & Readonly<{ closeLabel: string; menuAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean }>; menuActions?: readonly MessageMenuAction[]; reportAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean; icon?: ReactNode }>; summary?: ChatMessageReactionSummary }>;
   /** Canonical layout-only placement on the message row. The swipe offset still owns `transform`. */
-  layoutStyle?: HjmCompositionStyleProp }>;
-export function ChatMessage({ direction, author, timestamp, timestampPresentation = "always", bubbleTail = true, groupPosition = "single", deliveryLabel, avatar, reply, replyQuote, media = [], actions, replyAction, replyLink, reactions, children, interactiveContent=false, layoutStyle }: ChatMessageProps) {
+  layoutStyle?: HjmCompositionStyleProp }> & Readonly<{
+  /**
+   * Paged alternative to `media` (2026-10-18, Utilverse): HJM mounts only the shown photo, so a product that authorizes
+   * each image fetches one page at a time. Exclusive with `media` (validated at render): one message has one photo set.
+   */
+  mediaAlbum?: MediaAlbum }>;
+/**
+ * Current reactions drawn beside the time as one button that opens the same hold menu (2026-10-18 BurnTok DM, which
+ * showed counts as status tags because the menu could not be opened from outside). Counts and the localized
+ * accessible name ("Reactions: heart 2. Open menu") come from the product; `items` in display order.
+ */
+export type ChatMessageReactionSummary = ChatReactionSummary;
+export function ChatMessage({ direction, author, timestamp, timestampPresentation = "always", bubbleTail = true, groupPosition = "single", deliveryLabel, avatar, reply, replyQuote, media = [], mediaAlbum, actions, replyAction, replyLink, reactions, children, interactiveContent=false, layoutStyle }: ChatMessageProps) {
   const theme = useOptionalHjmTheme();
   const display = resolveChatMessageGroupDisplay(groupPosition);
   // A run shows its time once, beside its last bubble; delivery state stays on every bubble.
   const visibleTime = display.showTimestamp ? timestamp : "";
   const quote = replyQuote ? <><Text emphasis="strong">{replyQuote.title}</Text><Text tone="muted" className="hjm-chat-message__quote-excerpt">{replyQuote.excerpt}</Text></> : reply;
   // The quote stays inside the bubble; with replyLink a click on it jumps to the original (2026-10-16 reference).
-  const mediaBlock = media.length ? <div className="hjm-chat-message__media" style={{ inlineSize: chatMessageRecipe.mediaWidth, gap: chatMessageRecipe.mediaGap, gridTemplateColumns: `repeat(${resolveChatMediaColumns(media.length)}, minmax(0, 1fr))` } as React.CSSProperties}>
+  validateMediaSetChoice(media.length > 0, mediaAlbum !== undefined);
+  const [albumIndex, setAlbumIndex] = useMediaAlbumIndex(mediaAlbum);
+  const mediaBlock = mediaAlbum ? <MediaAlbumView album={mediaAlbum} index={albumIndex} onIndexChange={setAlbumIndex} width={chatMessageRecipe.mediaWidth} radius={chatMessageRecipe.bubbleRadius} />
+    : media.length ? <div className="hjm-chat-message__media" style={{ inlineSize: chatMessageRecipe.mediaWidth, gap: chatMessageRecipe.mediaGap, gridTemplateColumns: `repeat(${resolveChatMediaColumns(media.length)}, minmax(0, 1fr))` } as React.CSSProperties}>
     {media.map(item => { const style = { aspectRatio: media.length > 1 ? 1 : item.aspectRatio ?? 1 }; return item.onPress ? <button key={item.id} type="button" className="hjm-chat-message__media-item" aria-label={item.label} style={style} onClick={item.onPress}>{item.preview}</button> : <div key={item.id} role="img" aria-label={item.label} className="hjm-chat-message__media-item" style={style}>{item.preview}</div>; })}
   </div> : null;
   // A photo-only message drops the bubble surface so the photo itself is the message.
-  const photoOnly = media.length > 0 && !reply && !replyQuote && (children === null || children === undefined || children === false || children === "");
+  const photoOnly = (media.length > 0 || mediaAlbum !== undefined) && !reply && !replyQuote && (children === null || children === undefined || children === false || children === "");
   const quoteBlock = quote ? (replyLink ? <button type="button" className="hjm-chat-message__reply hjm-chat-message__quote" aria-label={replyLink.label} onClick={replyLink.onPress}>{quote}</button> : <div className="hjm-chat-message__reply">{quote}</div>) : null;
   const revealTime = timestampPresentation === "swipe" && !!timestamp;
   // Only the pointer that began a drag can finish it; another touch must not reply or cancel it.
   const start = useRef<{x:number;y:number;pointerId:number} | null>(null);
   const [offset, setOffset] = useState(0);
   const finish = () => { start.current = null; setOffset(0); };
+  const menu = useRef<MessageReactionsHandle>(null);
+  const summary = reactions?.summary;
+  const reactionMenu = reactions ? omitReactionSummary(reactions) : undefined;
+  const summaryItems = summary ? resolveChatReactionSummary(summary) : [];
+  const summaryButton = reactions && summary && summaryItems.length ? <ReactionSummaryButton label={summary.label} items={summaryItems} selected={reactions.value} disabled={reactions.disabled ?? false} onPress={() => menu.current?.open()} /> : null;
   return <article tabIndex={replyAction && !replyAction.disabled ? 0 : undefined}
     aria-keyshortcuts={replyAction ? "Alt+ArrowLeft Alt+ArrowRight" : undefined} aria-description={replyAction?.label}
     onKeyDown={event => { if (event.target === event.currentTarget && event.altKey && (event.key === "ArrowLeft" || event.key === "ArrowRight") && replyAction && !replyAction.disabled) { event.preventDefault(); replyAction.onPress(); } }}
@@ -288,8 +328,8 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
     <div className="hjm-chat-message__content">{author && display.showAuthor && direction !== "outgoing"?<Text variant="caption" tone="muted">{author}</Text>:null}
       {/* Time and delivery sit beside the bubble's bottom edge, on the side facing the open space. */}
       <div className="hjm-chat-message__body">
-      {reactions ? <MessageReactions {...reactions} interactiveContent={interactiveContent} {...(timestamp ? { menuTitle: timestamp } : {})} {...(replyAction && !replyAction.disabled ? {replyAction} : {})}>{quoteBlock}{mediaBlock}{photoOnly ? null : children}</MessageReactions> : <div className="hjm-chat-message__bubble" data-photo-only={photoOnly || undefined}>{quoteBlock}{mediaBlock}{photoOnly ? null : children}</div>}
-      {(!revealTime && visibleTime)||deliveryLabel||actions?<div className="hjm-chat-message__meta">{(!revealTime && visibleTime)||deliveryLabel?<Text variant="caption" tone="muted">{[revealTime ? "" : visibleTime, deliveryLabel].filter(Boolean).join(" · ")}</Text>:null}{actions}</div>:null}
+      {reactionMenu ? <MessageReactions {...reactionMenu} menuRef={menu} interactiveContent={interactiveContent || mediaAlbum !== undefined} {...(timestamp ? { menuTitle: timestamp } : {})} {...(replyAction && !replyAction.disabled ? {replyAction} : {})}>{quoteBlock}{mediaBlock}{photoOnly ? null : children}</MessageReactions> : <div className="hjm-chat-message__bubble" data-photo-only={photoOnly || undefined}>{quoteBlock}{mediaBlock}{photoOnly ? null : children}</div>}
+      {(!revealTime && visibleTime)||deliveryLabel||actions||summaryButton?<div className="hjm-chat-message__meta">{summaryButton}{(!revealTime && visibleTime)||deliveryLabel?<Text variant="caption" tone="muted">{[revealTime ? "" : visibleTime, deliveryLabel].filter(Boolean).join(" · ")}</Text>:null}{actions}</div>:null}
       </div>
     </div>
     </div>
@@ -358,12 +398,66 @@ export function NotificationRow({ preview, metadata, avatar, avatarBadge, thumbn
   </span>;
 }
 
-export type IconTileProps = Readonly<{ icon: ReactNode; label: string; overlay?: ReactNode; labelLines?: 1 | 2; ghost?: boolean }>;
+export type IconTileProps = Readonly<{ icon: ReactNode; label: string; overlay?: ReactNode; labelLines?: 1 | 2; ghost?: boolean;
+  /** `none`: the icon is complete product artwork, so no frame fill or hairline is drawn. */
+  frame?: IconTileFrame;
+  /** Frame (and ghost outline) corner shape from the product's icon theme. */
+  shape?: IconTileShape;
+  /** `fill`: the icon spans the grid cell between iconTileRecipe.fillMinSize and fillMaxSize. */
+  size?: IconTileSize }>;
 /** Presentation shared by launcher and profile grids; the host owns navigation or drag behavior. */
-export function IconTile({icon, label, overlay, labelLines = 1, ghost = false}: IconTileProps) {
+export function IconTile({icon, label, overlay, labelLines = 1, ghost = false, frame = iconTileRecipe.defaults.frame, shape = iconTileRecipe.defaults.shape, size = iconTileRecipe.defaults.size}: IconTileProps) {
   const r = iconTileRecipe;
-  return <span data-hjm-icon-tile="true" style={{display: "flex", flexDirection: "column", alignItems: "center", gap: r.gap, minWidth: 0, width: "100%", overflow: "visible"}}>
-    <span style={{position: "relative", display: "flex", alignItems: "center", justifyContent: "center", width: r.iconSize, height: r.iconSize, flexShrink: 0, borderRadius: r.iconRadius, background: "var(--hjm-color-surface-alt)", color: "var(--hjm-color-text)", boxShadow: ghost ? undefined : "0 0 0 1px var(--hjm-color-border)", outline: ghost ? "1px dashed var(--hjm-color-text-muted)" : undefined, opacity: ghost ? r.ghostOpacity : 1, fontSize: 32}}>{icon}{overlay}</span>
+  const framed = frame === "surface";
+  // Percent radius follows the rendered size, so a filling icon keeps its shape at every cell width.
+  const dimensions = size === "fill" ? {width: "100%", minWidth: r.fillMinSize, maxWidth: r.fillMaxSize, aspectRatio: "1"} : {width: r.iconSize, height: r.iconSize};
+  return <span data-hjm-icon-tile="true" data-frame={frame} data-shape={shape} data-size={size} style={{display: "flex", flexDirection: "column", alignItems: "center", gap: r.gap, minWidth: 0, width: "100%", overflow: "visible"}}>
+    <span style={{position: "relative", display: "flex", alignItems: "center", justifyContent: "center", ...dimensions, boxSizing: "border-box", flexShrink: 0, borderRadius: `${Math.round(r.shapes[shape] * 100)}%`, background: framed ? "var(--hjm-color-surface-alt)" : undefined, color: "var(--hjm-color-text)", boxShadow: ghost || !framed ? undefined : "0 0 0 1px var(--hjm-color-border)", outline: ghost ? "1px dashed var(--hjm-color-text-muted)" : undefined, opacity: ghost ? r.ghostOpacity : 1, fontSize: 32}}>{icon}{overlay}</span>
     <Text variant="caption" style={{display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: labelLines, width: "100%", maxWidth: labelLines === 2 ? r.multilineLabelMaxWidth : r.labelMaxWidth, minHeight: labelLines === 2 ? r.multilineLabelMinHeight : undefined, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "normal", overflowWrap: "anywhere", textAlign: "center", fontWeight: 500}}>{label}</Text>
   </span>;
+}
+
+export type TypingIndicatorProps = Readonly<{
+  /** Localized status read by assistive tech ("Seoyeon is typing"); the visible row shows only the dots. */
+  label: string;
+  /** Typer's photo in a group room, sized like ChatMessage avatars (`chatMessageRecipe.avatarSize`). */
+  avatar?: ReactNode;
+  layoutStyle?: HjmCompositionStyleProp;
+}>;
+/**
+ * Incoming "is typing" row for a ChatScreen timeline (2026-10-18 BurnTok DM drew its own). The host shows it only while
+ * presence says someone is typing and places it after the last message; HJM owns the bubble, dots and announcement.
+ */
+export function TypingIndicator({ label, avatar, layoutStyle }: TypingIndicatorProps) {
+  if (!label.trim()) throw new TypeError("TypingIndicator requires a localized label");
+  const theme = useOptionalHjmTheme();
+  const r = typingIndicatorRecipe, m = chatMessageRecipe;
+  // A polite status: appearing is announced once without interrupting, and the dots stay hidden from assistive tech.
+  return <div role="status" className="hjm-typing-indicator" data-reduced-motion={theme?.environment.reducedMotion || undefined}
+    style={{ display: "flex", alignItems: "flex-start", gap: m.avatarGap, marginBlockStart: m.groupGap, paddingInlineStart: avatar ? 0 : m.tailWidth, ...layoutStyle, "--hjm-typing-dot": `${r.dotSize}px`, "--hjm-typing-cycle": `${r.cycleMs}ms`, "--hjm-typing-rest": r.restOpacity } as React.CSSProperties}>
+    {avatar ? <span aria-hidden="true" style={{ display: "flex", justifyContent: "center", flex: `0 0 ${m.avatarSize}px`, inlineSize: m.avatarSize }}>{avatar}</span> : null}
+    <span aria-hidden="true" className="hjm-typing-indicator__bubble" style={{ display: "inline-flex", alignItems: "center", gap: r.dotGap, boxSizing: "border-box", minBlockSize: `calc(var(--hjm-type-body-line-height) + ${m.bubblePaddingBlock * 2}px)`, paddingBlock: m.bubblePaddingBlock, paddingInline: m.bubblePaddingInline, borderRadius: m.bubbleRadius, background: "var(--hjm-color-surface)" }}>
+      {[0, 1, 2].map(index => <span key={index} className="hjm-typing-indicator__dot" style={{ animationDelay: `${index * r.staggerMs}ms` }} />)}
+    </span>
+    <VisuallyHidden>{label}</VisuallyHidden>
+  </div>;
+}
+
+export type ChatDateSeparatorProps = Readonly<{
+  /** Product-formatted date or time ("Today", "Oct 18", "3:04 PM"). */
+  label: string;
+  /** Machine-readable value for the Web `<time>` element; Native ignores it. */
+  dateTime?: string;
+  layoutStyle?: HjmCompositionStyleProp;
+}>;
+/**
+ * Centered date (or time) row between ChatScreen timeline groups (2026-10-18 Utilverse chat drew a caption). Grouping
+ * rules stay with the product; the next message keeps its own group gap, so this row adds only the space before it.
+ */
+export function ChatDateSeparator({ label, dateTime, layoutStyle }: ChatDateSeparatorProps) {
+  if (!label.trim()) throw new TypeError("ChatDateSeparator requires a localized label");
+  const r = chatDateSeparatorRecipe;
+  return <div className="hjm-chat-date-separator" style={{ display: "flex", justifyContent: "center", textAlign: "center", paddingBlockStart: r.paddingTop, paddingBlockEnd: r.paddingBottom, ...layoutStyle }}>
+    <Text variant={r.textVariant} tone={r.tone}>{dateTime ? <time dateTime={dateTime}>{label}</time> : label}</Text>
+  </div>;
 }

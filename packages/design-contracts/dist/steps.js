@@ -1,4 +1,4 @@
-import { fontWeight, glyph, spacing, stroke } from "./foundations.js";
+import { control, fontWeight, glyph, spacing, stroke } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
 export const stepsDefaults = {
     currentStepStatus: "current",
@@ -92,6 +92,7 @@ export function resolveStepsDescriptor(descriptor, options) {
             total,
             accessibleName,
             statusLabel: options.statusLabels[status],
+            revisitable: index < cursorIndex,
         };
     });
 }
@@ -156,6 +157,10 @@ export const stepsRecipe = {
     description: {
         textVariant: "caption",
         color: semanticColors.content.secondary,
+    },
+    /** A revisitable step is one button over its marker and label; the shared touch minimum applies to the whole cell. */
+    press: {
+        minTouchTarget: control.minTouchTarget,
     },
 };
 //# sourceMappingURL=steps.js.map

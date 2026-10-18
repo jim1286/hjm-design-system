@@ -9,7 +9,7 @@ import { resolveContainerDescriptor, } from "@hjmds/design-contracts/components/
 import { layoutRecipe, validateLayoutWebDescriptor, } from "@hjmds/design-contracts/components/layout";
 import { surfaceDefaults, surfaceGeometry, surfaceRecipe, } from "@hjmds/design-contracts/recipes/base";
 import { resolveTextDefaultWeight, stackRecipe, textRecipe, } from "@hjmds/design-contracts/recipes";
-import { resolveTextFontRole, typography } from "@hjmds/design-contracts/foundations";
+import { numeric as numericVariants, resolveTextFontRole, typography } from "@hjmds/design-contracts/foundations";
 import { createElement, forwardRef, useId, useRef, } from "react";
 import { classNames, composeRefs, useElementWidth, useWindowWidth, } from "./internal.js";
 function hasRegionContent(content) {
@@ -94,7 +94,7 @@ export const Layout = forwardRef(function Layout({ children, header, footer, sid
                     ...mainStyle,
                 }, children: children }), hasFooter ? (_jsx("footer", { ...restFooterProps, className: classNames("hjm-layout__footer", footerClassName), children: footer })) : null] }));
 });
-export const Text = forwardRef(function Text({ as = "span", variant = textRecipe.defaults.variant, fontRole, tone = textRecipe.defaults.tone, emphasis: suppliedEmphasis, className, layoutStyle, style, ...props }, ref) {
+export const Text = forwardRef(function Text({ as = "span", variant = textRecipe.defaults.variant, fontRole, tone = textRecipe.defaults.tone, color, numeric, emphasis: suppliedEmphasis, className, layoutStyle, style, ...props }, ref) {
     const profile = useDesignProfileDefaults();
     const emphasis = suppliedEmphasis ?? textRecipe.defaults.emphasis;
     const defaultWeight = suppliedEmphasis === undefined
@@ -110,7 +110,14 @@ export const Text = forwardRef(function Text({ as = "span", variant = textRecipe
         "data-emphasis": emphasis,
         // The variant default weight goes first so caller `style`/placement win, matching Native's style order
         // (it used to be spread last and overrode an explicit style weight under a profile).
-        style: { ...(defaultWeight === undefined ? {} : { fontWeight: defaultWeight }), ...style, ...layoutStyle },
+        "data-numeric": numeric,
+        style: {
+            ...(defaultWeight === undefined ? {} : { fontWeight: defaultWeight }),
+            ...(color === undefined ? {} : { color }),
+            ...(numeric === undefined ? {} : { fontVariantNumeric: numericVariants[numeric] }),
+            ...style,
+            ...layoutStyle,
+        },
     });
 });
 export const Surface = forwardRef(function Surface({ as = "div", tone = surfaceDefaults.tone, bordered, padding = surfaceDefaults.padding, radius = surfaceDefaults.radius, className, layoutStyle, style, ...props }, ref) {

@@ -2,8 +2,9 @@ import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "re
 import { AccessibilityInfo, AppState, PanResponder, Pressable, View } from "react-native";
 import {
   carouselRecipe, resolveCarouselDescriptor, getCarouselNavigationTarget, isCarouselAutoplayActive,
+  resolvePageIndicator, getPageIndicatorTarget,
   type CarouselSlideDescriptor, type CarouselSelection, type CarouselAutoplayConfig,
-  type ComposeCarouselAccessibleName,
+  type ComposeCarouselAccessibleName, type ComposePageIndicatorAccessibleName,
 } from "@hjmds/design-contracts/components/carousel";
 import { Button, IconButton } from "./actions.js";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
@@ -25,6 +26,47 @@ export type CarouselProps = CarouselSelection & Readonly<{
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
 }>;
+
+export type PageIndicatorLabels = Readonly<{ previous: string; next: string }>;
+export type PageIndicatorProps = Readonly<{
+  /** Name of the paged region, read before the current page name (e.g. "Home pages"). */
+  label: string;
+  count: number;
+  /** Zero-based current page; the product pager owns it. */
+  currentIndex: number;
+  /** Requested page from a dot press or an adjustable action. It can repeat the current index. */
+  onCurrentIndexChange: (index: number) => void;
+  composeAccessibleName: ComposePageIndicatorAccessibleName;
+  /** Localized names of the adjustable increment/decrement actions. */
+  labels: PageIndicatorLabels;
+  /** Canonical layout-only placement. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
+  testID?: string;
+}>;
+
+/**
+ * Carousel's position dots for a product-owned pager. The row is one adjustable element, like a platform page
+ * control, so a screen reader hears "label: page name" and swipes up/down to move; each dot is a 44pt target.
+ */
+export function PageIndicator({ label, count, currentIndex, onCurrentIndexChange, composeAccessibleName, labels,
+  layoutStyle, testID }: PageIndicatorProps) {
+  const { palette } = useHjmNativeTheme();
+  if (!label.trim() || !labels.previous.trim() || !labels.next.trim()) throw new TypeError("PageIndicator labels must not be empty");
+  const descriptor = { count, currentIndex };
+  const dots = resolvePageIndicator(descriptor, composeAccessibleName);
+  const current = dots[currentIndex]!;
+  const move = (intent: "next" | "previous") => onCurrentIndexChange(getPageIndicatorTarget(descriptor, intent));
+  return <View testID={testID} accessible accessibilityRole="adjustable" accessibilityLabel={`${label}: ${current.accessibleName}`}
+    accessibilityValue={{ min: 1, max: count, now: current.position, text: current.accessibleName }}
+    accessibilityActions={[{ name: "increment", label: labels.next }, { name: "decrement", label: labels.previous }]}
+    onAccessibilityAction={({ nativeEvent }) => { if (nativeEvent.actionName === "increment") move("next"); if (nativeEvent.actionName === "decrement") move("previous"); }}
+    style={[{ flexDirection: "row", flexShrink: 1, flexWrap: "wrap", justifyContent: "center" }, layoutStyle]}>
+    {dots.map((dot) => <Pressable key={dot.index} accessible={false} accessibilityLabel={dot.accessibleName} onPress={() => onCurrentIndexChange(dot.index)}
+      style={{ alignItems: "center", height: carouselRecipe.dot.hitTarget, justifyContent: "center", width: carouselRecipe.dot.hitTarget }}>
+      <View style={{ backgroundColor: resolveColorReference(dot.current ? carouselRecipe.dot.color.current : carouselRecipe.dot.color.inactive, palette), borderRadius: carouselRecipe.dot.diameter / 2, height: carouselRecipe.dot.diameter, width: carouselRecipe.dot.diameter }} />
+    </Pressable>)}
+  </View>;
+}
 
 export function Carousel({ label, slides, renderSlide, composeAccessibleName, labels, autoplay,
   currentKey, defaultCurrentKey, onCurrentKeyChange, layoutStyle }: CarouselProps) {
@@ -103,16 +145,10 @@ export function Carousel({ label, slides, renderSlide, composeAccessibleName, la
       <IconButton label={labels.previous} tone="ghost" disabled={current === slides[0]!.id} onPress={() => move("previous")}>
         <DrawnChevron direction="start" size={glyph[carouselRecipe.sizes.medium.controlIcon]} color={chevronColor} />
       </IconButton>
-      <View accessible accessibilityRole="adjustable" accessibilityLabel={`${label}: ${selected.accessibleName}`}
-        accessibilityValue={{ min: 1, max: slides.length, now: selected.position, text: selected.accessibleName }}
-        accessibilityActions={[{ name: "increment", label: labels.next }, { name: "decrement", label: labels.previous }]}
-        onAccessibilityAction={({ nativeEvent }) => { if (nativeEvent.actionName === "increment") move("next"); if (nativeEvent.actionName === "decrement") move("previous"); }}
-        style={{ flexDirection: "row", flexShrink: 1, flexWrap: "wrap", justifyContent: "center" }}>
-        {resolved.map((slide) => <Pressable key={slide.id} accessible={false} accessibilityLabel={slide.accessibleName} onPress={() => select(slide.id)}
-          style={{ alignItems: "center", height: carouselRecipe.dot.hitTarget, justifyContent: "center", width: carouselRecipe.dot.hitTarget }}>
-          <View style={{ backgroundColor: resolveColorReference(slide.current ? carouselRecipe.dot.color.current : carouselRecipe.dot.color.inactive, palette), borderRadius: carouselRecipe.dot.diameter / 2, height: carouselRecipe.dot.diameter, width: carouselRecipe.dot.diameter }} />
-        </Pressable>)}
-      </View>
+      <PageIndicator label={label} count={slides.length} currentIndex={selected.position - 1}
+        composeAccessibleName={({ position }) => resolved[position - 1]!.accessibleName}
+        labels={{ previous: labels.previous, next: labels.next }}
+        onCurrentIndexChange={(index) => select(slides[index]!.id)} />
       <IconButton label={labels.next} tone="ghost" disabled={last} onPress={() => move("next")}>
         <DrawnChevron direction="end" size={glyph[carouselRecipe.sizes.medium.controlIcon]} color={chevronColor} />
       </IconButton>

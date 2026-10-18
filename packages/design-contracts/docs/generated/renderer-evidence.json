@@ -6,9 +6,9 @@
     "web": {
       "packageName": "@hjmds/react",
       "packageVersion": "1.30.0",
-      "activeComponents": 127,
-      "claimedComponents": 127,
-      "completeScenarioComponents": 126,
+      "activeComponents": 130,
+      "claimedComponents": 130,
+      "completeScenarioComponents": 129,
       "components": [
         {
           "componentId": "text",
@@ -2942,7 +2942,8 @@
           "claimed": true,
           "subpath": "./navigation",
           "exportNames": [
-            "BottomNavigation"
+            "BottomNavigation",
+            "BottomNavigationInsetProvider"
           ],
           "proofs": [
             {
@@ -3050,6 +3051,56 @@
             "reduced-motion",
             "accessibility",
             "keyboard"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "page-indicator",
+          "name": "PageIndicator",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./carousel",
+          "exportNames": [
+            "PageIndicator"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "page-indicator"
+            },
+            {
+              "scenarios": [
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/scenario-matrix.browser.test.tsx",
+              "caseId": "page-indicator"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
           ],
           "missingScenarios": []
         },
@@ -5133,7 +5184,8 @@
           "claimed": true,
           "subpath": "./overlays",
           "exportNames": [
-            "Dialog"
+            "Dialog",
+            "ImmersiveOverlay"
           ],
           "proofs": [
             {
@@ -6103,7 +6155,8 @@
           "claimed": true,
           "subpath": "./screen-flows",
           "exportNames": [
-            "ModerationScreen"
+            "ModerationScreen",
+            "ModerationForm"
           ],
           "proofs": [
             {
@@ -6353,7 +6406,8 @@
           "claimed": true,
           "subpath": "./screen-flows",
           "exportNames": [
-            "MediaSelectionScreen"
+            "MediaSelectionScreen",
+            "MediaSelectionCell"
           ],
           "proofs": [
             {
@@ -6474,6 +6528,106 @@
               ],
               "file": "test/scenario-matrix.browser.test.tsx",
               "caseId": "chat-message"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "typing-indicator",
+          "name": "TypingIndicator",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screens",
+          "exportNames": [
+            "TypingIndicator"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "typing-indicator"
+            },
+            {
+              "scenarios": [
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/scenario-matrix.browser.test.tsx",
+              "caseId": "typing-indicator"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "chat-date-separator",
+          "name": "ChatDateSeparator",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screens",
+          "exportNames": [
+            "ChatDateSeparator"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "chat-date-separator"
+            },
+            {
+              "scenarios": [
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/scenario-matrix.browser.test.tsx",
+              "caseId": "chat-date-separator"
             }
           ],
           "requiredScenarios": [
@@ -6851,9 +7005,9 @@
     "native": {
       "packageName": "@hjmds/react-native",
       "packageVersion": "1.30.0",
-      "activeComponents": 109,
-      "claimedComponents": 109,
-      "completeScenarioComponents": 106,
+      "activeComponents": 112,
+      "claimedComponents": 112,
+      "completeScenarioComponents": 109,
       "components": [
         {
           "componentId": "text",
@@ -9550,7 +9704,8 @@
           "claimed": true,
           "subpath": "./top-bar",
           "exportNames": [
-            "BottomNavigation"
+            "BottomNavigation",
+            "BottomNavigationInsetProvider"
           ],
           "proofs": [
             {
@@ -9599,6 +9754,56 @@
             "reduced-motion",
             "accessibility",
             "native-actions"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "page-indicator",
+          "name": "PageIndicator",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./carousel",
+          "exportNames": [
+            "PageIndicator"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "page-indicator"
+            },
+            {
+              "scenarios": [
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/scenario-matrix.test.tsx",
+              "caseId": "page-indicator"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
           ],
           "missingScenarios": []
         },
@@ -11317,7 +11522,8 @@
           "claimed": true,
           "subpath": "./overlays",
           "exportNames": [
-            "Dialog"
+            "Dialog",
+            "ImmersiveOverlay"
           ],
           "proofs": [
             {
@@ -11895,7 +12101,8 @@
           "claimed": true,
           "subpath": "./screen-flows",
           "exportNames": [
-            "ModerationScreen"
+            "ModerationScreen",
+            "ModerationForm"
           ],
           "proofs": [
             {
@@ -12145,7 +12352,8 @@
           "claimed": true,
           "subpath": "./screen-flows",
           "exportNames": [
-            "MediaSelectionScreen"
+            "MediaSelectionScreen",
+            "MediaSelectionCell"
           ],
           "proofs": [
             {
@@ -12266,6 +12474,106 @@
               ],
               "file": "test/scenario-matrix.test.tsx",
               "caseId": "chat-message"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "typing-indicator",
+          "name": "TypingIndicator",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screens",
+          "exportNames": [
+            "TypingIndicator"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "typing-indicator"
+            },
+            {
+              "scenarios": [
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/scenario-matrix.test.tsx",
+              "caseId": "typing-indicator"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "chat-date-separator",
+          "name": "ChatDateSeparator",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./screens",
+          "exportNames": [
+            "ChatDateSeparator"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "chat-date-separator"
+            },
+            {
+              "scenarios": [
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/scenario-matrix.test.tsx",
+              "caseId": "chat-date-separator"
             }
           ],
           "requiredScenarios": [

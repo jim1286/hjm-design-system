@@ -1,23 +1,27 @@
-import { iconTileRecipe, notificationRowRecipe as notificationRecipe } from "@hjmds/design-contracts/screen-patterns";
+import { iconTileRecipe, notificationRowRecipe as notificationRecipe, type IconTileFrame, type IconTileShape, type IconTileSize } from "@hjmds/design-contracts/screen-patterns";
 import { iconButtonRecipe } from "@hjmds/design-contracts/recipes";
 import { resolveComposerLimit, type ComposerLengthFeedback } from "@hjmds/design-contracts/communication";
 import { Progress } from "./feedback.js";
 import { resolveDesignProfileScreen, type DesignProfileScreenPresentation } from "@hjmds/design-contracts/design-profile-layout";
-import { MessageReactions, type MessageMenuAction } from "./internal/message-reactions.js";
+import { MessageReactions, ReactionSummaryButton, omitReactionSummary, type MessageMenuAction, type MessageReactionsHandle } from "./internal/message-reactions.js";
+import { MediaAlbumView, useMediaAlbumIndex, type MediaAlbum } from "./internal/media-album.js";
+import { validateMediaSetChoice } from "@hjmds/design-contracts/screen-patterns";
+export type { MediaAlbum } from "./internal/media-album.js";
 import type { ReactionPickerProps } from "./reaction-picker.js";
 import { Button, IconButton } from "./actions.js";
 import { TextArea } from "./inputs.js";
 import { useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type Ref, type ReactNode } from "react";
-import { Animated, PanResponder, Pressable, ScrollView, View, type AccessibilityActionEvent, type TextInput, type ScrollViewProps } from "react-native";
+import { AccessibilityInfo, Animated, PanResponder, Platform, Pressable, ScrollView, View, type AccessibilityActionEvent, type TextInput, type ScrollViewProps } from "react-native";
 import { Spinner } from "./internal/spinner.js";
 import { KeyboardAvoidanceContext, useInsideKeyboardAvoidance, useKeyboardOverlap, useScrollFocusedInputIntoView } from "./keyboard.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { ScreenExitButton, type ScreenExit } from "./internal/screen-exit.js";
 import { ScreenFooterContext, resolveScreenBottomPadding } from "./internal/screen-footer.js";
 import { ScreenBodyInsetContext } from "./internal/screen-body-inset.js";
+import { BottomNavigationInsetContext } from "./internal/bottom-navigation-inset.js";
 import { InitialFocusProvider, useInitialFocusScope } from "./internal/initial-focus.js";
 import { listRowScrollRoom } from "./internal/list-row-scroll-room.js";
-import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, screenHeaderRecipe, validateScreenExit, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState, type ScreenContentInset, initialFocusDefaults, type ScreenInitialFocus } from "@hjmds/design-contracts/screen-patterns";
+import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, resolveChatReactionSummary, type ChatReactionSummary, typingIndicatorRecipe, chatDateSeparatorRecipe, screenHeaderRecipe, validateScreenExit, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState, type ScreenContentInset, initialFocusDefaults, type ScreenInitialFocus } from "@hjmds/design-contracts/screen-patterns";
 import { motion } from "@hjmds/design-contracts/foundations";
 import { Stack, Text } from "./primitives.js";
 import { Heading } from "./heading.js";
@@ -28,11 +32,17 @@ import { useHjmNativeTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 /** Internal: lets ChatScreen narrow only the timeline gutter without a public spacing escape hatch. */
-type ScreenLayoutPrivateProps = Readonly<{ hjmBodyInlinePadding?: number; hjmTitleLeading?: ReactNode }>;
+type ScreenLayoutPrivateProps = Readonly<{ hjmBodyInlinePadding?: number }>;
 export type ScreenLayoutProps = Readonly<{
   title: string;
   /** The shared header owns badge placement; the product supplies its meaning and label. */
   titleBadge?: ReactNode;
+  /**
+   * Identity mark or artwork before the title (team logo, tool artwork). Decorative: the title stays the header and
+   * the accessible name. With `titleVisibility="hidden"` the mark stands alone in the title slot as the header,
+   * named by `title` (2026-10-18: yajalal team detail and Utilverse tool headers rebuilt the header to get this).
+   */
+  titleLeading?: ReactNode;
   /** Hide redundant route names while retaining descriptions and a named screen. */
   titleVisibility?: "visible" | "hidden";
   /** Centered by default (2026-10-17 user rule); `start` remains available. Extra actions sit at the trailing edge. */
@@ -61,6 +71,8 @@ export type ScreenLayoutProps = Readonly<{
   footer?: ReactNode;
   state?: ScreenContentState;
   stateAction?: ReactNode;
+  /** Brand visual for `state.kind === "loading"`; the shared state group keeps copy, centering and announcement (as CompositionLayout). */
+  loadingIndicator?: ReactNode;
   children?: ReactNode;
   /** Use content when the child is a FlatList/virtualized timeline. */
   scroll?: "screen" | "content";
@@ -92,7 +104,7 @@ export type ScreenLayoutProps = Readonly<{
   scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator" | "onScroll" | "onScrollBeginDrag" | "onScrollEndDrag" | "scrollEventThrottle" | "alwaysBounceVertical" | "automaticallyAdjustKeyboardInsets">;
 }>;
 
-export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", headerAlignment = "center", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance = true, safeAreaBottom = 0, initialFocus = initialFocusDefaults.screen, hjmBodyInlinePadding, hjmTitleLeading }: ScreenLayoutProps & ScreenLayoutPrivateProps) {
+export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility = "visible", headerAlignment = "center", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, loadingIndicator, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance = true, safeAreaBottom = 0, initialFocus = initialFocusDefaults.screen, hjmBodyInlinePadding }: ScreenLayoutProps & ScreenLayoutPrivateProps) {
   if (exit) validateScreenExit(exit, false);
   if (!Number.isFinite(safeAreaBottom) || safeAreaBottom < 0) throw new RangeError("ScreenLayout safeAreaBottom must be non-negative");
   const leading = exit ? <ScreenExitButton {...exit} /> : null;
@@ -111,7 +123,8 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
   });
   const [leadingWidth, setLeadingWidth] = useState(0), [actionsWidth, setActionsWidth] = useState(0);
   const sideWidth = Math.max(leadingWidth, actionsWidth);
-  const showHeader = titleVisibility === "visible" || !!description || !!leading || !!actions;
+  const hasMark = titleLeading !== undefined && titleLeading !== null && titleLeading !== false;
+  const showHeader = titleVisibility === "visible" || hasMark || !!description || !!leading || !!actions;
   const resolved = resolveScreenContentState(state);
   const { colors, environment, designProfile } = useHjmNativeTheme();
   const presentation = suppliedPresentation ?? designProfile?.screens.overview;
@@ -123,22 +136,30 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
   const bodyInline = contentInset === "default" ? hjmBodyInlinePadding ?? padding : 0;
   // Icon-only route headers need no title breathing room: otherwise the 60pt
   // heading plus full body inset leaves category tabs detached from navigation.
-  const compactHeader = header == null && showHeader && headerAlignment === "center" && titleVisibility === "hidden" && !description;
+  const compactHeader = header == null && showHeader && headerAlignment === "center" && titleVisibility === "hidden" && !hasMark && !description;
   const headerVerticalPadding = compactHeader ? screenHeaderRecipe.compactPaddingVertical : screenHeaderRecipe.paddingVertical;
   // A notice can contain navigation tabs; keep its separation from body filters.
   const bodyPaddingTop = compactHeader && !notice ? Math.min(padding, screenHeaderRecipe.compactBodyTop) : padding;
   // The last region (footer, else body) owns the bottom inset once: max(gutter, safe area), never gutter + inset.
-  const bottomPadding = resolveScreenBottomPadding(padding, safeAreaBottom, keyboardOverlap > 0);
+  // An overlay BottomNavigation covers `navigationInset` of the screen bottom (its safe area included), so the last
+  // region keeps the gutter above the bar instead of each tab screen adding a spacer (BottomNavigationInsetProvider).
+  const navigationInset = useContext(BottomNavigationInsetContext);
+  const edgePadding = resolveScreenBottomPadding(padding, safeAreaBottom, keyboardOverlap > 0);
+  const bottomPadding = navigationInset > 0 && keyboardOverlap === 0 ? Math.max(edgePadding, padding + navigationInset) : edgePadding;
   const bodyPaddingBottom = footer ? padding : bottomPadding;
   const ready = contentAlignment === "center" ? <View style={{ marginVertical: "auto", flexShrink: 0, width: "100%" }}>{children}</View> : children;
   const body = state.kind === "ready" ? <ScreenBodyInsetContext.Provider value={bodyInline}>{ready}</ScreenBodyInsetContext.Provider> : <View style={{ marginVertical: "auto", flexShrink: 0, alignItems: "center", gap: recipe.stateGap, paddingVertical: profileLayout?.gap ?? recipe.sectionGap }}>
     {/* Keep loading copy in Spinner's accessibility name rather than a visible
         second status, matching the shared spinner-only loading contract. */}
-    {resolved.busy ? <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} /> : <View accessibilityLiveRegion={resolved.announcement} style={{ alignItems: "center", gap: recipe.itemGap }}>
+    {resolved.busy ? (loadingIndicator ? <View accessible accessibilityRole="progressbar" accessibilityLabel={[state.title, state.description].filter(Boolean).join(". ")} accessibilityState={{ busy: true }} accessibilityLiveRegion="polite" style={{ alignItems: "center" }}><View accessibilityElementsHidden importantForAccessibility="no-hide-descendants">{loadingIndicator}</View></View> : <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} />) : <View accessibilityLiveRegion={resolved.announcement} style={{ alignItems: "center", gap: recipe.itemGap }}>
       <Text variant="title" align="center">{state.title}</Text>
       {state.description ? <Text tone="muted" align="center">{state.description}</Text> : null}
     </View>}{stateAction}
   </View>;
+  // The mark is decorative beside a visible title (hidden from assistive tech, as TopBar titleLeading); standing
+  // alone it becomes the header, named by `title`.
+  const mark = hasMark ? <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ flexShrink: 0, alignItems: "center", justifyContent: "center" }}>{titleLeading}</View> : null;
+  const standaloneMark = (centered: boolean) => mark ? <View accessible accessibilityRole="header" accessibilityLabel={title} style={{ alignItems: centered ? "center" : "flex-start" }}>{mark}</View> : null;
   return <View ref={rootRef} testID={testID} onTouchStart={focusScope.onTouchStart} style={[{ flex: 1, minHeight: 0, width: "100%", maxWidth: profileLayout?.maxWidth ?? recipe.maxWidth, alignSelf: "center", backgroundColor: surface === "transparent" || designProfile?.material.canvas ? "transparent" : colors.bg, ...(keyboardOverlap > 0 ? { paddingBottom: keyboardOverlap } : {}) }, layoutStyle]}>
     <KeyboardAvoidanceContext.Provider value={insideAvoidance || avoidKeyboard}><InitialFocusProvider scope={focusScope}>
     {/* Not TopBar: this is the page heading (titleLarge + description, actions wrap under the title at
@@ -153,7 +174,7 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
         <View onLayout={event => setLeadingWidth(event.nativeEvent.layout.width)} style={{ alignSelf: "flex-start", flexShrink: 0, flexDirection: "row", alignItems: "center" }}>{leading}</View>
       </View>
       <View style={{ flex: 1, minWidth: 0, alignItems: "center", gap: 4 }}>
-        {titleVisibility === "visible" && <Stack axis="inline" gap="xs" align="center" justify="center" layoutStyle={{flexWrap: "wrap"}}>{hjmTitleLeading}<Heading level={screenHeaderRecipe.centeredTitleLevel} semanticLevel={1} align="center">{title}</Heading>{titleBadge}</Stack>}
+        {titleVisibility === "visible" ? <Stack axis="inline" gap="xs" align="center" justify="center" layoutStyle={{flexWrap: "wrap"}}>{mark}<Heading level={screenHeaderRecipe.centeredTitleLevel} semanticLevel={1} align="center">{title}</Heading>{titleBadge}</Stack> : standaloneMark(true)}
         {description && <Text align="center" tone="muted">{description}</Text>}
       </View>
       <View style={{ width: sideWidth, flexShrink: 0, alignItems: "flex-end" }}>
@@ -163,7 +184,7 @@ export function ScreenLayout({ title, titleBadge, titleVisibility = "visible", h
       {/* Reserve a readable title column; wrapping moves actions below it at large text. */}
       {leading}<View style={{ flexGrow: 1, flexShrink: 1, ...(profileLayout?.headerAxis === "column" ? { width: "100%" as const } : { flexBasis: recipe.headerMinWidth * environment.textScale }) }}>
         {/* Same Heading level as Web (screenHeaderRecipe.titleLevel), with or without a design profile. */}
-        {titleVisibility === "visible" && <Stack axis="inline" gap="xs" align="center" justify={profileLayout?.centered ? "center" : "start"} wrap><Heading level={screenHeaderRecipe.titleLevel} semanticLevel={1} {...(profileLayout?.centered ? { align: "center" as const } : {})}>{title}</Heading>{titleBadge}</Stack>}
+        {titleVisibility === "visible" ? <Stack axis="inline" gap="xs" align="center" justify={profileLayout?.centered ? "center" : "start"} wrap>{mark}<Heading level={screenHeaderRecipe.titleLevel} semanticLevel={1} {...(profileLayout?.centered ? { align: "center" as const } : {})}>{title}</Heading>{titleBadge}</Stack> : standaloneMark(!!profileLayout?.centered)}
         {description ? <Text tone="muted" {...(profileLayout?.centered ? { align: "center" as const } : {})}>{description}</Text> : null}
       </View>{actions}
     </View>)}
@@ -221,7 +242,7 @@ export function NotificationItem({ read, statusLabel, timestamp, description, ..
     {...(description === undefined ? {} : { description })} />;
 }
 
-export type ChatScreenProps = Omit<ScreenLayoutProps, "footer"> & Readonly<{
+export type ChatScreenProps = Omit<ScreenLayoutProps, "footer" | "titleLeading"> & Readonly<{
   composer: ReactNode;
   /** Shown while the reader is away from the latest message; the host owns scroll position and visibility. */
   jumpToLatest?: Readonly<{ label: string; icon: ReactNode; onPress(): void }>;
@@ -234,7 +255,7 @@ export function ChatScreen({ composer, jumpToLatest, avatar, scroll = "content",
   const showComposer = !props.state || props.state.kind === "ready" || props.state.kind === "empty";
   // Anchor the jump control to the composer edge so it floats over the timeline without measuring the footer.
   // Conversations center the peer between back and tools and use the measured 10pt timeline gutter (2026-10-16).
-  return <ScreenLayout {...props} scroll={scroll} hjmBodyInlinePadding={chatMessageRecipe.timelineInset} hjmTitleLeading={avatar} footer={showComposer ? <View style={{ position: "relative" }}>
+  return <ScreenLayout {...props} scroll={scroll} hjmBodyInlinePadding={chatMessageRecipe.timelineInset} titleLeading={avatar} footer={showComposer ? <View style={{ position: "relative" }}>
     {jumpToLatest ? <View style={{ position: "absolute", bottom: "100%", end: 0, marginBottom: chatMessageRecipe.jumpToLatestGap + screenPatternRecipe.padding }}><IconButton label={jumpToLatest.label} size="small" shape="circle" tone="secondary" onPress={jumpToLatest.onPress}>{jumpToLatest.icon}</IconButton></View> : null}
     {composer}</View> : null} />;
 }
@@ -276,6 +297,9 @@ export function MessageComposer({ leading, quickInserts, value, label, sendLabel
   // A bounded corner radius keeps multiline/large-text content inside the field instead of a tall pill.
   const hasContent = !!value.trim() || attachments.length > 0 || additionalContent;
   const { colors, tokens } = useHjmNativeTheme();
+  // The error is a send-time outcome, so it must be heard when it appears. TextArea's FieldMessage is an assertive live
+  // region (Android); iOS ignores live regions, so announce it once per new error, as FieldGroup does.
+  useEffect(() => { if (error && Platform.OS === "ios") AccessibilityInfo.announceForAccessibility(error); }, [error]);
   const compactField: FieldPrivateProps = { hjmCompactMultiline: true };
   const attach = attachmentAction ? <IconButton label={attachmentAction.label} tone="ghost" disabled={locked || (attachmentAction.disabled ?? false)} onPress={attachmentAction.onPress}>{attachmentAction.icon}</IconButton> : null;
   const send = sendIcon ? <IconButton label={sendLabel} size={sendPresentation === "circle" ? "small" : "medium"} shape="circle" tone={sendPresentation === "circle" ? "primary" : "ghost"} disabled={!canSend} loading={pending} onPress={() => { if (canSend) onSend(value); }}>{sendIcon}</IconButton> : <Button disabled={!canSend} loading={pending} onPress={() => { if (canSend) onSend(value); }}>{sendLabel}</Button>;
@@ -303,8 +327,19 @@ export function MessageComposer({ leading, quickInserts, value, label, sendLabel
   return <Stack gap="sm">{context}{quickRow}{/* Replying wraps target, attachments and input in one card (2026-10-16 reference). */}{/* One stable wrapper whether or not replying, so the input is never remounted (focus stays). */}<View style={[{ gap: tokens.spacing.sm }, replyTo ? { backgroundColor: colors.surface, borderRadius: tokens.radius.xl, padding: tokens.spacing.sm } : null]}>{replyTo ? <View style={{ flexDirection: "row", alignItems: "flex-start", gap: tokens.spacing.sm }}><View style={{ flex: 1, minWidth: 0, gap: 2 }}><Text emphasis="strong">{replyTo.author}</Text><Text variant="caption" tone="muted" numberOfLines={1}>{replyTo.excerpt}</Text></View><IconButton label={replyTo.cancelLabel} tone="secondary" size="small" shape="circle" disabled={locked} onPress={replyTo.onCancel}><FixedGlyph>×</FixedGlyph></IconButton></View> : null}{composerBody}</View>{lengthFeedback && limit?.near ? <Progress shape="circular" label={lengthFeedback.label} value={Math.min(limit.used, limit.max)} max={limit.max} valueText={lengthFeedback.formatCount(limit.used, limit.max)}><Text variant="caption">{lengthFeedback.formatCount(limit.used, limit.max)}</Text></Progress> : null}</Stack>;
 }
 
-export type ChatMessageProps = ChatMessageDescriptor & Readonly<{ children: ReactNode; interactiveContent?: boolean; avatar?: ReactNode; reply?: ReactNode; actions?: ReactNode; replyAction?: Readonly<{label:string; onPress():void; disabled?:boolean; icon?:ReactNode}>; replyLink?: Readonly<{label:string; onPress():void}>; /** HJM-drawn quote ("Replying to X" + one-line excerpt) heading the bubble; preferred over a custom `reply` node. */ replyQuote?: Readonly<{ title: string; excerpt: string }>; /** Photos sent in the message. Products own the image source, viewer and upload; HJM owns the layout. */ media?: readonly Readonly<{ id: string; label: string; preview: ReactNode; aspectRatio?: number; onPress?(): void }>[]; reactions?: ReactionPickerProps & Readonly<{ closeLabel: string; menuAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean }>; menuActions?: readonly MessageMenuAction[]; reportAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean; icon?: ReactNode }> }> }>;
-export function ChatMessage({ direction, author, timestamp, timestampPresentation = "always", bubbleTail = true, groupPosition = "single", deliveryLabel, avatar, reply, replyQuote, media = [], actions, replyAction, replyLink, reactions, children, interactiveContent=false }: ChatMessageProps) {
+export type ChatMessageProps = ChatMessageDescriptor & Readonly<{ children: ReactNode; interactiveContent?: boolean; avatar?: ReactNode; reply?: ReactNode; actions?: ReactNode; replyAction?: Readonly<{label:string; onPress():void; disabled?:boolean; icon?:ReactNode}>; replyLink?: Readonly<{label:string; onPress():void}>; /** HJM-drawn quote ("Replying to X" + one-line excerpt) heading the bubble; preferred over a custom `reply` node. */ replyQuote?: Readonly<{ title: string; excerpt: string }>; /** Photos sent in the message. Products own the image source, viewer and upload; HJM owns the layout. */ media?: readonly Readonly<{ id: string; label: string; preview: ReactNode; aspectRatio?: number; onPress?(): void }>[]; reactions?: ReactionPickerProps & Readonly<{ closeLabel: string; menuAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean }>; menuActions?: readonly MessageMenuAction[]; reportAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean; icon?: ReactNode }>; summary?: ChatMessageReactionSummary }> }> & Readonly<{
+  /**
+   * Paged alternative to `media` (2026-10-18, Utilverse): HJM mounts only the shown photo, so a product that authorizes
+   * each image fetches one page at a time. Exclusive with `media` (validated at render): one message has one photo set.
+   */
+  mediaAlbum?: MediaAlbum }>;
+/**
+ * Current reactions drawn beside the time as one button that opens the same hold menu (2026-10-18 BurnTok DM, which
+ * showed counts as status tags because the menu could not be opened from outside). Counts and the localized
+ * accessible name ("Reactions: heart 2. Open menu") come from the product; `items` in display order.
+ */
+export type ChatMessageReactionSummary = ChatReactionSummary;
+export function ChatMessage({ direction, author, timestamp, timestampPresentation = "always", bubbleTail = true, groupPosition = "single", deliveryLabel, avatar, reply, replyQuote, media = [], mediaAlbum, actions, replyAction, replyLink, reactions, children, interactiveContent=false }: ChatMessageProps) {
   const { colors, tokens, environment } = useHjmNativeTheme();
   const display = resolveChatMessageGroupDisplay(groupPosition);
   const revealTime = timestampPresentation === "swipe" && !!timestamp;
@@ -336,15 +371,20 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
     accessibilityActions: [...(canReply ? [{ name: "reply", label: replyAction!.label }] : []), ...(quoteLink ? [{ name: "openOriginal", label: quoteLink.label }] : [])],
     onAccessibilityAction: (event: AccessibilityActionEvent) => { if (event.nativeEvent.actionName === "reply" && canReply) replyAction!.onPress(); else if (event.nativeEvent.actionName === "openOriginal") quoteLink?.onPress(); },
   } : {};
-  // Pressable photos keep their own targets, like any interactive bubble content.
-  const interactive = interactiveContent || media.some(item => !!item.onPress);
+  // Pressable photos and album page buttons keep their own targets, like any interactive bubble content.
+  const interactive = interactiveContent || media.some(item => !!item.onPress) || mediaAlbum !== undefined;
   const captionCarriesReply = interactive && !reactions;
+  const menu = useRef<MessageReactionsHandle>(null);
+  const summary = reactions?.summary;
+  const reactionMenu = reactions ? omitReactionSummary(reactions) : undefined;
+  const summaryItems = summary ? resolveChatReactionSummary(summary) : [];
+  const summaryButton = reactions && summary && summaryItems.length ? <ReactionSummaryButton label={summary.label} items={summaryItems} selected={reactions.value} disabled={reactions.disabled ?? false} onPress={() => menu.current?.open()} /> : null;
   // A run shows its time once, beside its last bubble; delivery state stays on every bubble.
   const visibleTime = revealTime || !display.showTimestamp ? "" : timestamp;
   const meta = [visibleTime, deliveryLabel].filter(Boolean).join(" · ");
   const surface = outgoing ? colors.surfaceAccent : colors.surface;
   // Filled, borderless bubbles separate authors by surface and side (2026-10-16 timeline standard).
-  const showTail = bubbleTail && display.showTail && !(media.length > 0 && !reply && !replyQuote && (children === null || children === undefined || children === false || children === ""));
+  const showTail = bubbleTail && display.showTail && !((media.length > 0 || mediaAlbum !== undefined) && !reply && !replyQuote && (children === null || children === undefined || children === false || children === ""));
   // The tipped corner tightens so the tip continues the bubble's top edge instead of a separate bump.
   const bubbleStyle = { backgroundColor: surface, borderRadius: chatMessageRecipe.bubbleRadius, ...(showTail ? (outgoing ? { borderTopEndRadius: chatMessageRecipe.tailCornerRadius } : { borderTopStartRadius: chatMessageRecipe.tailCornerRadius }) : {}), paddingHorizontal: chatMessageRecipe.bubblePaddingInline, paddingVertical: chatMessageRecipe.bubblePaddingBlock, gap: tokens.spacing.xs, flexShrink: 1 };
   // A flat-topped triangle in the bubble surface points outward from the run's first top corner.
@@ -354,11 +394,15 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
   // The quote stays inside the bubble; with replyLink a tap on it jumps to the original (2026-10-16 reference).
   const columns = media.length ? resolveChatMediaColumns(media.length) : 1;
   const tile = media.length > 1 ? (chatMessageRecipe.mediaWidth - chatMessageRecipe.mediaGap * (columns - 1)) / columns : chatMessageRecipe.mediaWidth;
-  const mediaBlock = media.length ? <View style={{ width: chatMessageRecipe.mediaWidth, flexDirection: "row", flexWrap: "wrap", gap: chatMessageRecipe.mediaGap, borderRadius: chatMessageRecipe.bubbleRadius, overflow: "hidden" }}>
+  // The page index lives here so the hold-menu preview (a second render of the bubble) shows the same page.
+  validateMediaSetChoice(media.length > 0, mediaAlbum !== undefined);
+  const [albumIndex, setAlbumIndex] = useMediaAlbumIndex(mediaAlbum);
+  const mediaBlock = mediaAlbum ? <MediaAlbumView album={mediaAlbum} index={albumIndex} onIndexChange={setAlbumIndex} width={chatMessageRecipe.mediaWidth} radius={chatMessageRecipe.bubbleRadius} />
+    : media.length ? <View style={{ width: chatMessageRecipe.mediaWidth, flexDirection: "row", flexWrap: "wrap", gap: chatMessageRecipe.mediaGap, borderRadius: chatMessageRecipe.bubbleRadius, overflow: "hidden" }}>
     {media.map(item => { const size = { width: tile, aspectRatio: media.length > 1 ? 1 : item.aspectRatio ?? 1 }; return item.onPress ? <Pressable key={item.id} accessibilityRole="imagebutton" accessibilityLabel={item.label} onPress={item.onPress} style={size}>{item.preview}</Pressable> : <View key={item.id} accessible accessibilityRole="image" accessibilityLabel={item.label} style={size}>{item.preview}</View>; })}
   </View> : null;
   // A photo-only message drops the bubble surface so the photo itself is the message.
-  const photoOnly = media.length > 0 && !reply && !replyQuote && (children === null || children === undefined || children === false || children === "");
+  const photoOnly = (media.length > 0 || mediaAlbum !== undefined) && !reply && !replyQuote && (children === null || children === undefined || children === false || children === "");
   // Web bubbles accept plain text children; RN needs a Text host, so the public children contract matches.
   const body = typeof children === "string" || typeof children === "number" ? <Text>{children}</Text> : children;
   const bubbleContent = <>{tail}{quote ? <View style={{ borderBottomWidth: 1, borderColor: colors.border, paddingBottom: tokens.spacing.xs }}>{replyLink ? <Pressable accessibilityRole="link" accessibilityLabel={replyLink.label} onPress={replyLink.onPress}>{quote}</Pressable> : quote}</View> : null}{mediaBlock}{photoOnly ? null : body}</>;
@@ -384,10 +428,10 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
       {/* Stretch to the column's resolved width: a percentage max width here is unresolved while Yoga
           measures an auto-width column, so long bubbles pushed the time off screen. */}
       <View style={{ flexDirection: outgoing ? "row-reverse" : "row", alignItems: "flex-end", gap: chatMessageRecipe.metaGap, alignSelf: "stretch" }}>
-      {reactions ? <MessageReactions {...reactions} align={outgoing ? "end" : "start"} interactiveContent={interactive} {...(timestamp ? { menuTitle: timestamp } : {})} {...(replyAction && !replyAction.disabled ? {replyAction} : {})}>
+      {reactionMenu ? <MessageReactions {...reactionMenu} menuRef={menu} align={outgoing ? "end" : "start"} interactiveContent={interactive} {...(timestamp ? { menuTitle: timestamp } : {})} {...(replyAction && !replyAction.disabled ? {replyAction} : {})}>
         <View style={photoOnly ? { flexShrink: 1 } : bubbleStyle}>{bubbleContent}</View>
       </MessageReactions> : <View style={photoOnly ? { flexShrink: 1 } : bubbleStyle} accessible={!interactive} {...(interactive ? {} : replyAccessibility)}>{bubbleContent}</View>}
-      {meta||actions?<Stack axis="inline" gap="xs" align="center" layoutStyle={{ flexShrink: 0 }}>{meta?<Text variant="caption" tone="muted" {...(captionCarriesReply ? replyAccessibility : {})}>{meta}</Text>:null}{actions}</Stack>:null}
+      {meta||actions||summaryButton?<Stack axis="inline" gap="xs" align="center" layoutStyle={{ flexShrink: 0 }}>{summaryButton}{meta?<Text variant="caption" tone="muted" {...(captionCarriesReply ? replyAccessibility : {})}>{meta}</Text>:null}{actions}</Stack>:null}
       </View>
     </View>
     {outgoing ? avatarSlot : null}
@@ -458,13 +502,81 @@ export function NotificationRow({ preview, metadata, avatar, avatarBadge, thumbn
   </View>;
 }
 
-export type IconTileProps = Readonly<{ icon: ReactNode; label: string; overlay?: ReactNode; labelLines?: 1 | 2; ghost?: boolean }>;
+export type IconTileProps = Readonly<{ icon: ReactNode; label: string; overlay?: ReactNode; labelLines?: 1 | 2; ghost?: boolean;
+  /** `none`: the icon is complete product artwork, so no frame fill or hairline is drawn. */
+  frame?: IconTileFrame;
+  /** Frame (and ghost outline) corner shape from the product's icon theme. */
+  shape?: IconTileShape;
+  /** `fill`: the icon spans the grid cell between iconTileRecipe.fillMinSize and fillMaxSize. */
+  size?: IconTileSize }>;
 /** Presentation shared by launcher and profile grids; the host owns navigation or drag behavior. */
-export function IconTile({icon, label, overlay, labelLines = 1, ghost = false}: IconTileProps) {
+export function IconTile({icon, label, overlay, labelLines = 1, ghost = false, frame = iconTileRecipe.defaults.frame, shape = iconTileRecipe.defaults.shape, size = iconTileRecipe.defaults.size}: IconTileProps) {
   const r = iconTileRecipe;
   const {colors} = useHjmNativeTheme();
+  // A filling icon's edge is known only after layout; the radius follows the measured edge so the shape holds at every
+  // cell width (percentage border radii are not relied on across the supported RN versions).
+  const [fillEdge, setFillEdge] = useState<number>(r.fillMinSize);
+  const edge = size === "fill" ? fillEdge : r.iconSize;
+  const framed = frame === "surface";
+  const dimensions = size === "fill" ? {width: "100%" as const, minWidth: r.fillMinSize, maxWidth: r.fillMaxSize, aspectRatio: 1} : {width: r.iconSize, height: r.iconSize};
   return <View style={{alignItems: "center", gap: r.gap, minWidth: 0, width: "100%", overflow: "visible"}}>
-    <View style={{position: "relative", alignItems: "center", justifyContent: "center", width: r.iconSize, height: r.iconSize, borderRadius: r.iconSize * .22, backgroundColor: colors.surfaceAlt, borderWidth: 1, borderStyle: ghost ? "dashed" : "solid", opacity: ghost ? r.ghostOpacity : 1, borderColor: colors.border}}>{icon}{overlay}</View>
+    <View onLayout={size === "fill" ? event => setFillEdge(event.nativeEvent.layout.width) : undefined} style={{position: "relative", alignItems: "center", justifyContent: "center", ...dimensions, borderRadius: edge * r.shapes[shape], backgroundColor: framed ? colors.surfaceAlt : "transparent", borderWidth: framed || ghost ? 1 : 0, borderStyle: ghost ? "dashed" : "solid", opacity: ghost ? r.ghostOpacity : 1, borderColor: colors.border}}>{icon}{overlay}</View>
     <Text variant="caption" numberOfLines={labelLines} style={{width: "100%", minHeight: labelLines === 2 ? r.multilineLabelMinHeight : undefined, maxWidth: labelLines === 2 ? r.multilineLabelMaxWidth : r.labelMaxWidth, textAlign: "center", fontWeight: "500"}}>{label}</Text>
+  </View>;
+}
+
+export type TypingIndicatorProps = Readonly<{
+  /** Localized status read by assistive tech ("Seoyeon is typing"); the visible row shows only the dots. */
+  label: string;
+  /** Typer's photo in a group room, sized like ChatMessage avatars (`chatMessageRecipe.avatarSize`). */
+  avatar?: ReactNode;
+  layoutStyle?: HjmCompositionStyleProp;
+}>;
+/**
+ * Incoming "is typing" row for a ChatScreen timeline (2026-10-18 BurnTok DM drew its own). The host shows it only while
+ * presence says someone is typing and places it after the last message; HJM owns the bubble, dots and announcement.
+ */
+export function TypingIndicator({ label, avatar, layoutStyle }: TypingIndicatorProps) {
+  if (!label.trim()) throw new TypeError("TypingIndicator requires a localized label");
+  const { colors, tokens, environment } = useHjmNativeTheme();
+  const r = typingIndicatorRecipe, m = chatMessageRecipe;
+  const dots = useRef([0, 1, 2].map(() => new Animated.Value(1))).current;
+  useEffect(() => {
+    if (environment.reducedMotion) { dots.forEach(dot => dot.setValue(1)); return; }
+    const half = r.cycleMs / 2;
+    const pulses = dots.map((dot, index) => { dot.setValue(r.restOpacity); return Animated.sequence([Animated.delay(index * r.staggerMs), Animated.loop(Animated.sequence([
+      Animated.timing(dot, { toValue: 1, duration: half, useNativeDriver: true }),
+      Animated.timing(dot, { toValue: r.restOpacity, duration: half, useNativeDriver: true }),
+    ]))]); });
+    pulses.forEach(pulse => pulse.start());
+    return () => pulses.forEach(pulse => pulse.stop());
+  }, [dots, environment.reducedMotion]);
+  // A polite status, as Web role="status": Android hears it through the live region; iOS ignores live regions, so it is
+  // queued once behind the current speech when the row appears.
+  useEffect(() => { if (Platform.OS === "ios") AccessibilityInfo.announceForAccessibilityWithOptions(label, { queue: true }); }, [label]);
+  return <View accessible accessibilityLabel={label} accessibilityLiveRegion="polite" style={[{ flexDirection: "row", alignItems: "flex-start", gap: m.avatarGap, marginTop: m.groupGap, paddingStart: avatar ? 0 : m.tailWidth }, layoutStyle]}>
+    {avatar ? <View style={{ width: m.avatarSize, alignItems: "center" }}>{avatar}</View> : null}
+    <View style={{ flexDirection: "row", alignItems: "center", gap: r.dotGap, minHeight: tokens.typography.body.lineHeight + m.bubblePaddingBlock * 2, paddingVertical: m.bubblePaddingBlock, paddingHorizontal: m.bubblePaddingInline, borderRadius: m.bubbleRadius, backgroundColor: colors.surface }}>
+      {dots.map((opacity, index) => <Animated.View key={index} style={{ width: r.dotSize, height: r.dotSize, borderRadius: r.dotSize / 2, backgroundColor: colors.textMuted, opacity }} />)}
+    </View>
+  </View>;
+}
+
+export type ChatDateSeparatorProps = Readonly<{
+  /** Product-formatted date or time ("Today", "Oct 18", "3:04 PM"). */
+  label: string;
+  /** Machine-readable value for the Web `<time>` element; Native ignores it. */
+  dateTime?: string;
+  layoutStyle?: HjmCompositionStyleProp;
+}>;
+/**
+ * Centered date (or time) row between ChatScreen timeline groups (2026-10-18 Utilverse chat drew a caption). Grouping
+ * rules stay with the product; the next message keeps its own group gap, so this row adds only the space before it.
+ */
+export function ChatDateSeparator({ label, layoutStyle }: ChatDateSeparatorProps) {
+  if (!label.trim()) throw new TypeError("ChatDateSeparator requires a localized label");
+  const r = chatDateSeparatorRecipe;
+  return <View style={[{ alignItems: "center", paddingTop: r.paddingTop, paddingBottom: r.paddingBottom }, layoutStyle]}>
+    <Text variant={r.textVariant} tone={r.tone} align="center">{label}</Text>
   </View>;
 }

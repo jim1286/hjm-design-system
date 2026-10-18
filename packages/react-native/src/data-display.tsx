@@ -269,7 +269,11 @@ export type CardProps = Omit<SurfaceProps, "children" | "padding"> &
     media?: ReactNode;
     actions?: ReactNode;
     selected?: boolean;
-    /** Whole-card activation. Do not combine with interactive children or actions. */
+    /**
+     * Whole-card activation. With `actions`, media and body become one Pressable and the actions row stays a sibling,
+     * so each action is its own accessible target (an accessible Pressable would swallow nested buttons for screen
+     * readers). Keep other children passive.
+     */
     onActivate?: () => void;
     disabled?: boolean;
     padding?: SurfacePadding;
@@ -297,12 +301,23 @@ export function Card({
   ...props
 }: CardProps) {
   const { environment, tokens } = useHjmNativeTheme();
-  if (onActivate && (!accessibilityLabel?.trim() || actions !== undefined)) {
-    throw new TypeError("Interactive Card requires accessibilityLabel and no actions");
+  if (onActivate && !accessibilityLabel?.trim()) {
+    throw new TypeError("Interactive Card requires accessibilityLabel");
   }
   const bodyPadding = surfaceGeometry.paddings[padding];
   const hasHeader =
     leading !== undefined || title !== undefined || description !== undefined;
+  // Whole-card open plus separate commands (2026-10-18 unairplane journey card: open + delete); see `onActivate`.
+  const split = onActivate !== undefined && actions !== undefined && actions !== null && actions !== false;
+  const activate = () => { if (!disabled) onActivate?.(); };
+  const activationA11y = {
+    accessibilityRole: "button" as const,
+    accessibilityLabel,
+    accessibilityHint,
+    accessibilityState: { selected, disabled },
+  };
+  const feedbackOpacity = (pressed: boolean) =>
+    disabled ? cardRecipe.interaction.disabledOpacity : pressed ? cardRecipe.interaction.pressedOpacity : 1;
   const frame = (
     <Surface
       {...props}
@@ -310,7 +325,7 @@ export function Card({
       padding="none"
       radius={cornerRadius}
       {...(onActivate ? {} : { accessibilityLabel, accessibilityHint })}
-      {...(layoutStyle === undefined || onActivate ? {} : { layoutStyle })}
+      {...(layoutStyle === undefined || (onActivate && !split) ? {} : { layoutStyle })}
       tone={selected ? cardRecipe.selectedTone : tone}
     >
       {/* The inner clip must use the same theme radius as Surface; foundation-only
@@ -321,6 +336,7 @@ export function Card({
           borderRadius: tokens.radius[cornerRadius],
         }}
       >
+        <CardActivationRegion split={split} activation={activationA11y} disabled={disabled} onPress={activate} feedbackOpacity={feedbackOpacity}>
         {media === undefined ? null : <View>{media}</View>}
         <View style={{ gap: cardRecipe.body.gap, padding: bodyPadding }}>
           {hasHeader ? (
@@ -356,6 +372,7 @@ export function Card({
           ) : null}
           {children === undefined ? null : <View>{children}</View>}
         </View>
+        </CardActivationRegion>
         {actions === undefined ? null : (
           <View
             style={{
@@ -373,15 +390,26 @@ export function Card({
       </View>
     </Surface>
   );
-  if (!onActivate) return frame;
+  if (!onActivate || split) return frame;
   // Keep Surface's material/clip inside one native action host. App-owned wrappers
   // previously had to reinvent disabled/selected naming and press feedback.
-  return <Pressable accessibilityRole="button" accessibilityLabel={accessibilityLabel}
-    accessibilityHint={accessibilityHint} accessibilityState={{ selected, disabled }}
-    disabled={disabled} onPress={() => { if (!disabled) onActivate(); }}
-    style={({ pressed }) => [minimumTargetStyle, {
-      opacity: disabled ? cardRecipe.interaction.disabledOpacity : pressed ? cardRecipe.interaction.pressedOpacity : 1,
-    }, layoutStyle]}>{frame}</Pressable>;
+  return <Pressable {...activationA11y}
+    disabled={disabled} onPress={activate}
+    style={({ pressed }) => [minimumTargetStyle, { opacity: feedbackOpacity(pressed) }, layoutStyle]}>{frame}</Pressable>;
+}
+
+/** Media and body as the card's own target when actions sit beside it; otherwise a transparent passthrough. */
+function CardActivationRegion({ split, activation, disabled, onPress, feedbackOpacity, children }: Readonly<{
+  split: boolean;
+  activation: Pick<PressableProps, "accessibilityRole" | "accessibilityLabel" | "accessibilityHint" | "accessibilityState">;
+  disabled: boolean;
+  onPress: () => void;
+  feedbackOpacity: (pressed: boolean) => number;
+  children: ReactNode;
+}>) {
+  if (!split) return <>{children}</>;
+  return <Pressable {...activation} disabled={disabled} onPress={onPress}
+    style={({ pressed }) => [minimumTargetStyle, { opacity: feedbackOpacity(pressed) }]}>{children}</Pressable>;
 }
 
 /**

@@ -33,7 +33,7 @@ index > cursor  → pending
 두 단계 이상 "current"이거나, cursor보다 앞선 단계가 아직 "pending"으로 남거나, cursor
 너머의 단계가 "complete"인 상태는 애초에 표현할 수 없다 — 이 저장소의 다른 계약들
 (`SheetOpenState`, `ComboboxCollectionState`, `LoadMoreState`)과 같은 이유다: 유효하지 않은
-조합을 타입과 유도 규칙으로 만들 수 없게 한다. clickable을 공개하지 않기로 했으므로(아래
+조합을 타입과 유도 규칙으로 만들 수 없게 한다. 누르기는 커서 앞 단계로 돌아가는 것만 열었으므로(아래
 참고) 흐름은 항상 cursor 기준 선형이라 이 유도가 항상 맞다.
 
 `"complete"`는 2026-10-02에 추가했다. 그 전에는 마지막 단계에 커서가 있으면 항상 "진행 중"으로
@@ -100,11 +100,12 @@ index > cursor  → pending
 | --- | --- |
 | `pending / current / complete / error`(유도) | 공개 |
 | 순서(`position`/`total`) | 공개 |
-| clickable(스텝 탭으로 이동) | **배제** — 브리프 지침이자 실제 사용처 둘 다 뒤로 가기는 별도 버튼(Yajalal `OnboardingScreen`의 "이전" `AppButton`)이다. 필요해지면 그때 추가한다. |
+| 지난 단계 누르기(`revisitable` + renderer `onStepPress`) | **공개(1.31.0)** — 2026-10-18 spint 작성 화면이 지난 단계를 눌러 돌아가려고 단계 레일을 직접 그렸다. resolver가 커서보다 앞선 단계에 `revisitable: true`를 붙이고, renderer는 제품이 `onStepPress`를 줄 때 그 단계만 버튼으로 만든다(칸 전체, 최소 44 `stepsRecipe.press.minTouchTarget`). 이전 판단("뒤로 가기는 별도 버튼")은 바로 앞 단계 행동에는 그대로 유효하다. |
+| 앞으로 건너뛰기(현재·다음 단계 누르기) | **배제** — 검증 전 단계를 지나치고 단일 커서 유도를 흐린다. 커서 단계는 이미 있는 자리라 누를 이유가 없다. |
 | vertical 방향 | **배제** — 두 사용처 모두 가로 진행바 하나만 필요해 antd 표면을 미리 복제하지 않는다. |
 | dot type(압축 점 표현) | **배제** — 측정된 요구가 없다. numbered + check/error 마크 하나만 공개한다. |
 | custom icon(스텝별 임의 아이콘 교체) | **배제** — 4개 상태 마크로 충분하고, 임의 아이콘 허용은 브랜드 표현의 일관성을 깨뜨린다. |
-| navigation type(`navigation`/`inline` 등 antd variant) | **배제** — 위 clickable/vertical 배제와 같은 이유로 단일 표현만 남긴다. |
+| navigation type(`navigation`/`inline` 등 antd variant) | **배제** — 위 앞으로 건너뛰기·vertical 배제와 같은 이유로 단일 표현만 남긴다. |
 
 ## 검증 화면
 

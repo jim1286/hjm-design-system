@@ -1,5 +1,5 @@
 // 2026-10-17 screen compositions registered: screen compositions (catalog rows added the same day).
-import { ChatMessage, ChatScreen, CompositionLayout, IconTile, MessageComposer, NotificationInboxScreen, NotificationItem, NotificationRow, ScreenLayout, SettingsScreen } from "../src/screens.js";
+import { ChatDateSeparator, ChatMessage, ChatScreen, CompositionLayout, IconTile, TypingIndicator, MessageComposer, NotificationInboxScreen, NotificationItem, NotificationRow, ScreenLayout, SettingsScreen } from "../src/screens.js";
 import { CommentThreadRow, CommentThreadScreen, EditorScreen, ListDetailScreen, MediaSelectionScreen, ModerationScreen, OnboardingScreen, PermissionScreen, PhotoSourceSheet, ProfileScreen, ProfileSummary, SearchScreen } from "../src/screen-flows.js";
 import { ColorPicker } from "../src/color-picker.js";
 import { LineChart } from "../src/chart.js";
@@ -45,7 +45,7 @@ import { Breadcrumb } from "../src/breadcrumb.js";
 import { Pagination } from "../src/pagination.js";
 import { Anchor } from "../src/anchor.js";
 import { FloatingActionButton } from "../src/floating-action-button.js";
-import { Carousel } from "../src/carousel.js";
+import { Carousel, PageIndicator } from "../src/carousel.js";
 import type { ReactNode } from "react";
 
 import {
@@ -1227,6 +1227,24 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
     marker: "data-hjm-icon-tile",
     renderLongCopy: (copy) => <IconTile icon={<span aria-hidden="true">★</span>} label={copy} labelLines={2} />,
     render: () => <IconTile icon={<span aria-hidden="true">★</span>} label="도구" />,
+  },
+  {
+    componentId: "typing-indicator",
+    marker: "hjm-typing-indicator",
+    renderLongCopy: (copy) => <TypingIndicator label={copy} />,
+    render: () => <TypingIndicator label="서연 님이 입력 중" />,
+  },
+  {
+    componentId: "chat-date-separator",
+    marker: "hjm-chat-date-separator",
+    renderLongCopy: (copy) => <ChatDateSeparator label={copy} />,
+    render: () => <ChatDateSeparator label="10월 18일 토요일" dateTime="2026-10-18" />,
+  },
+  {
+    componentId: "page-indicator",
+    marker: "hjm-page-indicator",
+    renderLongCopy: (copy) => <PageIndicator label={copy} count={3} currentIndex={0} onCurrentIndexChange={screenNoop} composeAccessibleName={({ position, total }) => `${position}/${total}`} />,
+    render: () => <PageIndicator label="홈 화면" count={3} currentIndex={0} onCurrentIndexChange={screenNoop} composeAccessibleName={({ position, total }) => `${position}/${total}`} />,
   },
   {
     componentId: "message-composer",

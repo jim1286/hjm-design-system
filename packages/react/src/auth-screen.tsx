@@ -10,19 +10,30 @@ import {
 } from "@hjmds/design-contracts/components/auth-screen";
 import { typography, type TextVariant } from "@hjmds/design-contracts/foundations";
 import { createContext, createElement, forwardRef, Fragment, useContext, useLayoutEffect, useRef, type CSSProperties, type HTMLAttributeAnchorTarget, type HTMLAttributes, type ReactNode, useId } from "react";
-import { initialFocusDefaults, type ScreenInitialFocus } from "@hjmds/design-contracts/screen-patterns";
+import { initialFocusDefaults, screenHeaderRecipe, screenPatternRecipe, validateScreenExit, type ScreenInitialFocus } from "@hjmds/design-contracts/screen-patterns";
 import { classNames, useDesignProfileDefaults } from "./internal.js";
 import { InitialFocusScope } from "./internal/initial-focus.js";
+import { ScreenExitButton, type ScreenExit } from "./internal/screen-exit.js";
+import { Heading } from "./heading.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 // The hero follows the layout density without the product passing it twice.
 const AuthScreenDensityContext = createContext<AuthScreenDensity | undefined>(undefined);
+// With a header title the route name is the page heading (h1), so the hero tagline steps down to h2 by default.
+const AuthScreenTitledContext = createContext(false);
 
-export type AuthScreenLayoutProps = Omit<HTMLAttributes<HTMLElement>, "children"> &
+export type AuthScreenLayoutProps = Omit<HTMLAttributes<HTMLElement>, "children" | "title"> &
   AuthScreenDescriptor &
   Readonly<{
     /** Use section inside a product shell that already owns the main landmark. */
     as?: "main" | "section";
+    /**
+     * Route name in the shared screen header band (screenHeaderRecipe, centered like ScreenLayout). Login and signup
+     * routes kept a TopBar above this layout only for the route name + back/close (2026-10-18: utilverse, burntok).
+     */
+    title?: string;
+    /** Leaving the route: the same icon-only back/close as ScreenLayout `exit`, at the header's leading edge. */
+    exit?: ScreenExit;
     /** Product mark, title and description. The product owns every string here. */
     hero: ReactNode;
     /** The primary action block — provider buttons, or a product's own sign-in bundle. */
@@ -50,9 +61,12 @@ export type AuthScreenLayoutProps = Omit<HTMLAttributes<HTMLElement>, "children"
  */
 export const AuthScreenLayout = forwardRef<HTMLElement, AuthScreenLayoutProps>(
   function AuthScreenLayout(
-    { hero, main, footer, density, hasFooter, pendingLabel, mainCard = false, className, as: Element = "main", layoutStyle, initialFocus = initialFocusDefaults.auth, ...props },
+    { title, exit, hero, main, footer, density, hasFooter, pendingLabel, mainCard = false, className, as: Element = "main", layoutStyle, initialFocus = initialFocusDefaults.auth, ...props },
     forwardedRef,
   ) {
+    if (title !== undefined && !title.trim()) throw new TypeError("AuthScreenLayout title must not be empty");
+    if (exit) validateScreenExit(exit, false);
+    const hasHeader = title !== undefined || exit !== undefined;
     const resolved = resolveAuthScreenDescriptor({
       ...(density === undefined ? {} : { density }),
       ...(hasFooter === undefined ? {} : { hasFooter }),
@@ -78,6 +92,7 @@ export const AuthScreenLayout = forwardRef<HTMLElement, AuthScreenLayoutProps>(
         ref={forwardedRef}
         className={classNames("hjm-auth-screen", className)}
         data-density={resolved.density}
+        data-header={hasHeader || undefined}
         style={{
           ["--hjm-auth-screen-max-width" as string]: `${resolved.maxWidth}px`,
           ["--hjm-auth-screen-hero-gap" as string]: `${resolved.heroGap}px`,
@@ -85,13 +100,24 @@ export const AuthScreenLayout = forwardRef<HTMLElement, AuthScreenLayoutProps>(
           ["--hjm-auth-screen-footer-gap" as string]: `${resolved.footerGap}px`,
           ["--hjm-auth-screen-padding-inline" as string]: `${resolved.paddingInline}px`,
           ["--hjm-auth-screen-padding-block" as string]: `${resolved.paddingBlock}px`,
+          ...(hasHeader ? {
+            ["--hjm-auth-screen-header-padding-inline" as string]: `${screenPatternRecipe.padding}px`,
+            ["--hjm-auth-screen-header-padding-block" as string]: `${screenHeaderRecipe.paddingVertical}px`,
+            ["--hjm-auth-screen-header-min-height" as string]: `${screenHeaderRecipe.minHeight}px`,
+          } : {}),
           ...props.style,
           ...layoutStyle,
         }}
       >
+        {/* The ScreenLayout centered band (same exit, gutter and title step), full-bleed above the padded block. */}
+        {hasHeader ? <header className="hjm-auth-screen__header">
+          <div>{exit ? <ScreenExitButton {...exit} /> : null}</div>
+          <div className="hjm-auth-screen__header-title">{title === undefined ? null : <Heading level={screenHeaderRecipe.centeredTitleLevel} semanticLevel={1}>{title}</Heading>}</div>
+          <div />
+        </header> : null}
         <InitialFocusScope mode={initialFocus}>
         <div className="hjm-auth-screen__block">
-          <AuthScreenDensityContext.Provider value={resolved.density}><div className="hjm-auth-screen__hero">{hero}</div></AuthScreenDensityContext.Provider>
+          <AuthScreenDensityContext.Provider value={resolved.density}><AuthScreenTitledContext.Provider value={title !== undefined}><div className="hjm-auth-screen__hero">{hero}</div></AuthScreenTitledContext.Provider></AuthScreenDensityContext.Provider>
           <div className="hjm-auth-screen__main" data-card={mainCard || undefined} aria-busy={pending || undefined}>
             {/* Keep the action block in flow so the card never collapses; inert also removes keyboard access. */}
             <div ref={actionsRef} className="hjm-auth-screen__actions" inert={pending} aria-hidden={pending || undefined}
@@ -128,7 +154,9 @@ export type AuthScreenHeroProps = AuthScreenHeroDescriptor &
  * product supplies the strings and mark; the type steps, tones and gaps come from
  * `authScreenRecipe.hero` so a login slogan never borrows the page-heading size.
  */
-export function AuthScreenHero({ mark, title, eyebrow, description, headingLevel = 1 }: AuthScreenHeroProps) {
+export function AuthScreenHero({ mark, title, eyebrow, description, headingLevel: suppliedHeadingLevel }: AuthScreenHeroProps) {
+  const titled = useContext(AuthScreenTitledContext);
+  const headingLevel = suppliedHeadingLevel ?? (titled ? 2 : 1);
   validateAuthScreenHeroDescriptor({ title, ...(eyebrow === undefined ? {} : { eyebrow }), ...(description === undefined ? {} : { description }), headingLevel });
   const density = useContext(AuthScreenDensityContext);
   const variant = resolveAuthScreenDescriptor(density === undefined ? {} : { density }).titleVariant;

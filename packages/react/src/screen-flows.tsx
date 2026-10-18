@@ -1,8 +1,13 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode, type Ref, type RefObject } from "react";
+import { createContext, useContext } from "react";
+import { TextArea } from "./forms.js";
 import { CompositionLayout, ScreenLayout, type ScreenLayoutProps } from "./screens.js";
 import { ScreenExitButton } from "./internal/screen-exit.js";
 import { Button, IconButton } from "./actions.js";
 import { MessageReactions, type MessageMenuAction } from "./internal/message-reactions.js";
+import { MediaAlbumView, useMediaAlbumIndex, type MediaAlbum } from "./internal/media-album.js";
+import { validateMediaSetChoice } from "@hjmds/design-contracts/screen-patterns";
+export type { MediaAlbum } from "./internal/media-album.js";
 import type { ReactionPickerProps } from "./reaction-picker.js";
 import { Stack, Text, Grid, VisuallyHidden } from "./layout.js";
 import { SearchField } from "./forms.js";
@@ -57,35 +62,98 @@ export function ListDetailScreen({list,detail,back,refresh,loadMore,layoutStyle,
  </div>;
 }
 
-export type EditorScreenProps = Omit<Base,"leading"|"exit"> & {children:ReactNode;submitPlacement?:"header"|"footer";dirty:boolean;submit:ScreenFlowAction;cancel:ScreenFlowAction;discard:Omit<Extract<AlertDialogRequest,{mode:"confirm"}>,"onConfirm"|"fallbackErrorMessage"> & {fallbackErrorMessage:string};draftStatus?:ReactNode};
-export function EditorScreen({children,dirty,submitPlacement="footer",submit,cancel,discard,draftStatus,initialFocus=initialFocusDefaults.editor,...screen}:EditorScreenProps){
+export type EditorScreenProps = Omit<Base,"leading"|"exit"> & {children:ReactNode;submitPlacement?:"header"|"footer";dirty:boolean;submit:ScreenFlowAction;cancel:ScreenFlowAction;discard:Omit<Extract<AlertDialogRequest,{mode:"confirm"}>,"onConfirm"|"fallbackErrorMessage"> & {fallbackErrorMessage:string};draftStatus?:ReactNode;
+ /** Multi-step editor: while supplied, the header exit is a back chevron that returns to the previous step instead of
+  * the cancel ×, and never opens the discard prompt (stepping back keeps the draft). Omit it on the first step so the
+  * exit leaves through `cancel` again (2026-10-18: spint compose replaced the header with its own TopBar for this). */
+ stepBack?:ScreenFlowAction};
+export function EditorScreen({children,dirty,submitPlacement="footer",submit,cancel,discard,draftStatus,stepBack,initialFocus=initialFocusDefaults.editor,...screen}:EditorScreenProps){
  const [confirm,setConfirm]=useState(false);
  const cancelLocked=!!(cancel.disabled||cancel.pending||submit.pending);
  const submitAction={...submit,disabled:!!(submit.disabled||screen.state&&screen.state.kind!=="ready")};
  // A prompt opened before an external save must not bypass the current leave lock
  // or reappear once the save finishes. Keep the draft mounted throughout.
- useEffect(()=>{if(cancelLocked)setConfirm(false);},[cancelLocked]);
+ const stepping=!!stepBack,stepLocked=!!(stepBack?.disabled||stepBack?.pending||submit.pending);
+ // A step-back exit replaces the cancel exit, so a discard prompt opened from the cancel exit cannot outlive it.
+ useEffect(()=>{if(cancelLocked||stepping)setConfirm(false);},[cancelLocked,stepping]);
  // Preserve an async host result so AlertDialog can retain failure and retry.
  const leave=()=>{if(!cancelLocked)return cancel.onAction();};
  // Writing is the screen's purpose: focus the first field on entry unless the host opts out (2026-10-18).
  return <><ScreenLayout {...screen} initialFocus={initialFocus}
-  exit={{kind:"close",label:cancel.label,disabled:cancelLocked,onClick:()=>{if(cancelLocked)return;if(dirty)setConfirm(true);else leave();}}}
+  exit={stepBack?{kind:"back",label:stepBack.label,disabled:stepLocked,onClick:()=>{if(!stepLocked)stepBack.onAction();}}
+   :{kind:"close",label:cancel.label,disabled:cancelLocked,onClick:()=>{if(cancelLocked)return;if(dirty)setConfirm(true);else leave();}}}
   actions={submitPlacement==="header"?<Action action={submitAction}/>:screen.actions}
   footer={submitPlacement==="header"?draftStatus:<Stack gap="sm">{draftStatus}<Action action={submitAction}/></Stack>}
- >{children}</ScreenLayout><AlertDialog open={confirm&&!cancelLocked} onOpenChange={setConfirm} request={{...discard,mode:"confirm",onConfirm:leave}}/></>;
+ >{children}</ScreenLayout><AlertDialog open={confirm&&!cancelLocked&&!stepping} onOpenChange={setConfirm} request={{...discard,mode:"confirm",onConfirm:leave}}/></>;
 }
 
-export type ProfileScreenProps = Base & {summary:ReactNode;edit:ScreenFlowAction;children?:ReactNode;accountActions?:ReactNode};
-export function ProfileScreen({summary,edit,children,accountActions,...screen}:ProfileScreenProps){return <ScreenLayout {...screen}><Stack gap="xl"><CompositionLayout footer={<Action action={edit} secondary/>}>{summary}</CompositionLayout>{children}{accountActions}</Stack></ScreenLayout>;}
+export type ProfileScreenProps = Base & {summary:ReactNode;edit:ScreenFlowAction;children?:ReactNode;accountActions?:ReactNode;
+ /** `below-summary` (default): ghost button under the summary. `summary`: the edit action goes first in the action row
+  * of the ProfileSummary inside `summary` (2026-10-15 utilverse account decision: the edit action belongs inside the
+  * profile card). With `summary`, the slot must contain a ProfileSummary, or the edit action is not drawn. */
+ editPlacement?:"below-summary"|"summary"};
+// Hands ProfileScreen's edit action to the ProfileSummary inside its summary slot, wherever the product nests it.
+const ProfileEditContext=createContext<ScreenFlowAction|undefined>(undefined);
+export function ProfileScreen({summary,edit,children,accountActions,editPlacement="below-summary",...screen}:ProfileScreenProps){return <ScreenLayout {...screen}><Stack gap="xl">{editPlacement==="summary"?<ProfileEditContext.Provider value={edit}>{summary}</ProfileEditContext.Provider>:<CompositionLayout footer={<Action action={edit} secondary/>}>{summary}</CompositionLayout>}{children}{accountActions}</Stack></ScreenLayout>;}
 
-export type ModerationScreenProps = Base & {reasonPicker?:ReactNode;reasons:readonly {value:string;label:string}[];reason:string|null;onReasonChange(value:string):void;reasonLabel:string;children?:ReactNode;submit:ScreenFlowAction;block?:{action:ScreenFlowAction;confirmation:Extract<AlertDialogRequest,{mode:"confirm"}>}};
-export function ModerationScreen({reasonPicker,reasons,reason,onReasonChange,reasonLabel,children,submit,block,...screen}:ModerationScreenProps){
+/** Operator decision on a report (dismiss, hide, uphold, overturn…). Labels are product copy; ids are product keys.
+ * With `confirmation`, pressing opens that AlertDialog and only its `onConfirm` acts (same rule as `block`). */
+export type ModerationDecision = ScreenFlowAction & Readonly<{id:string;tone?:"primary"|"secondary"|"danger";confirmation?:Extract<AlertDialogRequest,{mode:"confirm"}>}>;
+/** Free-text decision reason. `required` (default true) keeps every decision locked until it has non-blank text. */
+export type ModerationDecisionReason = Readonly<{label:string;value:string;onValueChange(value:string):void;description?:string;maxLength?:number;required?:boolean;disabled?:boolean}>;
+type ModerationReportFields = {variant?:"report";reasonPicker?:ReactNode;reasons:readonly {value:string;label:string}[];reason:string|null;onReasonChange(value:string):void;reasonLabel:string;children?:ReactNode;submit:ScreenFlowAction;block?:{action:ScreenFlowAction;confirmation:Extract<AlertDialogRequest,{mode:"confirm"}>}};
+/** Operator review (2026-10-18: utilverse review and appeal queues hand-built this with TextArea, buttons and Alert):
+ * `children` shows the reported content, then the reason field and the decisions; `resolution` replaces both once decided. */
+type ModerationReviewFields = {variant:"review";children?:ReactNode;decisionReason:ModerationDecisionReason;decisions:readonly ModerationDecision[];resolution?:ReactNode};
+export type ModerationFields = ModerationReportFields|ModerationReviewFields;
+export type ModerationScreenProps = Base & ModerationFields;
+/** Body, stacked actions and confirmations shared by ModerationScreen (screen chrome) and ModerationForm (none). */
+function useModeration(fields:ModerationFields,ready:boolean,cancel?:ScreenFlowAction):{body:ReactNode;actions:ReactNode;dialogs:ReactNode}{
  const [confirm,setConfirm]=useState(false);
- const hasBlock=!!block;
+ const [confirmId,setConfirmId]=useState<string|null>(null);
+ const review=fields.variant==="review"?fields:null,report=fields.variant==="review"?null:fields;
+ const hasBlock=!!report?.block;
  // Withdrawing the action ends that confirmation session; a later action needs
  // a new explicit press even if the screen itself stays mounted.
  useEffect(()=>{if(!hasBlock)setConfirm(false);},[hasBlock]);
- return <><ScreenLayout {...screen} footer={<Stack gap="xs"><Action action={{...submit,disabled:submit.disabled||!!screen.state&&screen.state.kind!=="ready"||!reasons.some(item=>item.value===reason)}}/>{block?<Action action={{...block.action,onAction:()=>setConfirm(true)}} secondary/>:null}</Stack>}><Stack gap="lg">{reasonPicker??(reasons.length?<RadioGroup accessibilityLabel={reasonLabel} orientation="vertical" items={reasons} value={reason} onValueChange={value=>{if(value)onReasonChange(value);}}/>:null)}{children}</Stack></ScreenLayout>{block?<AlertDialog open={confirm} onOpenChange={setConfirm} request={block.confirmation}/>:null}</>;}
+ const confirming=review&&!review.resolution?review.decisions.find(decision=>decision.id===confirmId&&decision.confirmation):undefined;
+ // Same rule for a decision: its confirmation closes when the decision or its confirmation is withdrawn or resolved.
+ useEffect(()=>{if(confirmId!==null&&!confirming)setConfirmId(null);},[confirmId,confirming]);
+ const cancelAction=cancel?<Action action={cancel} secondary/>:null;
+ if(review){
+  const busy=review.decisions.some(decision=>decision.pending);
+  const reasonMissing=(review.decisionReason.required??true)&&!review.decisionReason.value.trim();
+  const field=review.resolution??<TextArea label={review.decisionReason.label} value={review.decisionReason.value} onChange={event=>review.decisionReason.onValueChange(event.currentTarget.value)}
+   {...(review.decisionReason.description===undefined?{}:{description:review.decisionReason.description})} {...(review.decisionReason.maxLength===undefined?{}:{maxLength:review.decisionReason.maxLength})}
+   required={review.decisionReason.required??true} disabled={!!review.decisionReason.disabled||busy}/>;
+  // One decision at a time: a pending decision locks the others and the reason it was taken with.
+  const decisions=review.resolution?[]:review.decisions.map(decision=>{const locked=!!decision.disabled||busy||!ready||reasonMissing;
+   return <Button key={decision.id} tone={decision.tone??"secondary"} disabled={locked} loading={decision.pending??false} onClick={()=>{if(locked)return;if(decision.confirmation)setConfirmId(decision.id);else decision.onAction();}}>{decision.label}</Button>;});
+  return {body:<Stack gap="lg">{review.children}{field}</Stack>,
+   actions:decisions.length||cancelAction?<Stack gap="xs">{decisions}{cancelAction}</Stack>:null,
+   dialogs:confirming?.confirmation?<AlertDialog open onOpenChange={open=>{if(!open)setConfirmId(null);}} request={confirming.confirmation}/>:null};
+ }
+ const r=report!;
+ return {body:<Stack gap="lg">{r.reasonPicker??(r.reasons.length?<RadioGroup accessibilityLabel={r.reasonLabel} orientation="vertical" items={r.reasons} value={r.reason} onValueChange={value=>{if(value)r.onReasonChange(value);}}/>:null)}{r.children}</Stack>,
+  actions:<Stack gap="xs"><Action action={{...r.submit,disabled:r.submit.disabled||!ready||!r.reasons.some(item=>item.value===r.reason)}}/>{r.block?<Action action={{...r.block.action,onAction:()=>setConfirm(true)}} secondary/>:null}{cancelAction}</Stack>,
+  dialogs:r.block?<AlertDialog open={confirm} onOpenChange={setConfirm} request={r.block.confirmation}/>:null};
+}
+// Every key of either variant, so the rest of the props reach ScreenLayout unchanged whichever variant is used.
+const moderationFieldKeys=["variant","reasonPicker","reasons","reason","onReasonChange","reasonLabel","children","submit","block","decisionReason","decisions","resolution"] as const;
+export function ModerationScreen(props:ModerationScreenProps){
+ const screen:Record<string,unknown>={...props};for(const key of moderationFieldKeys)delete screen[key];
+ const {body,actions,dialogs}=useModeration(props,!props.state||props.state.kind==="ready");
+ return <><ScreenLayout {...screen as Base} footer={actions}>{body}</ScreenLayout>{dialogs}</>;
+}
+/** The moderation fields and actions without screen chrome, for a report opened inside a letter, card or Sheet
+ * (2026-10-18: diairy turned ModerationScreen's header and padding off to place it in a letter). The host owns the
+ * surrounding surface and placement; `title` is an optional section heading (omit it inside a titled Sheet) and
+ * `cancel` adds a ghost "collapse" action after the others. */
+export type ModerationFormProps = ModerationFields & Readonly<{title?:string;headingLevel?:1|2|3|4|5|6;cancel?:ScreenFlowAction;layoutStyle?:ScreenLayoutProps["layoutStyle"]}>;
+export function ModerationForm(props:ModerationFormProps){
+ const {body,actions,dialogs}=useModeration(props,true,props.cancel);
+ return <><CompositionLayout {...(props.title===undefined?{}:{title:props.title})} {...(props.headingLevel===undefined?{}:{headingLevel:props.headingLevel})} {...(props.layoutStyle===undefined?{}:{layoutStyle:props.layoutStyle})} footer={actions}>{body}</CompositionLayout>{dialogs}</>;
+}
 
 
 /** Source choice only: permission, capture, decoding and draft persistence belong to the host. */
@@ -104,9 +172,37 @@ export function PhotoSourceSheet({open,onOpenChange,onSelect,labels,disabled=fal
 }
 
 export type MediaSelectionItem = {descriptor:UploadItemDescriptor;preview?:ReactNode};
-export type MediaSelectionScreenProps = Base & {library?:ReactNode;selectionSummary?:ReactNode;items:readonly MediaSelectionItem[];add?:ScreenFlowIconAction;done:ScreenFlowAction;labels:UploadItemLabels;actionLabels:{remove:string;moveUp:string;moveDown:string};removeLabel(item:MediaSelectionItem):string;moveUpLabel(item:MediaSelectionItem):string;moveDownLabel(item:MediaSelectionItem):string;onRemove(id:string):void;onMove(id:string,direction:-1|1):void;onRetry(id:string):void;onCancel(id:string):void};
+/**
+ * Quarter-turn action for a picked photo (2026-10-18, Utilverse photo-to-PDF). The product stores the rotation and
+ * applies it to `preview` and its output; HJM only places the button with the other item actions.
+ */
+export type MediaSelectionRotate = Readonly<{label:string;itemLabel(item:MediaSelectionItem):string;onRotate(id:string):void}>;
+/** Copy and callbacks of one item's actions, shared by the screen grid and MediaSelectionCell. */
+export type MediaSelectionItemActions = {labels:UploadItemLabels;actionLabels:{remove:string;moveUp:string;moveDown:string};removeLabel(item:MediaSelectionItem):string;moveUpLabel(item:MediaSelectionItem):string;moveDownLabel(item:MediaSelectionItem):string;onRemove(id:string):void;onMove(id:string,direction:-1|1):void;onRetry(id:string):void;onCancel(id:string):void;rotate?:MediaSelectionRotate};
+export type MediaSelectionScreenProps = Base & {library?:ReactNode;selectionSummary?:ReactNode;items:readonly MediaSelectionItem[];add?:ScreenFlowIconAction;done:ScreenFlowAction} & MediaSelectionItemActions;
+/** `index`/`count` place the item in the product's full list so the first/last move buttons disable correctly. */
+export type MediaSelectionCellProps = MediaSelectionItemActions & Readonly<{item:MediaSelectionItem;index:number;count:number}>;
+/**
+ * One picked item: preview, upload status, then move/rotate/remove. Exported (2026-10-18, Utilverse photo tools) so a
+ * virtualized host (VirtualList, FlatList renderItem) renders the same cell as the screen grid instead of a copy.
+ * Web keyboard focus recovery after removal belongs to the screen grid; a virtualized host owns its own.
+ */
+export function MediaSelectionCell({item,index,count,labels,actionLabels,removeLabel,moveUpLabel,moveDownLabel,onRemove,onMove,onRetry,onCancel,rotate}:MediaSelectionCellProps){
+ const id=item.descriptor.id;
+ return <Stack data-hjm-media-item={id} gap="xs">
+  {item.preview}<UploadItem descriptor={item.descriptor} labels={labels} onRetry={onRetry} onCancel={onCancel}/>
+  <Stack axis="inline" gap="xxs" layoutStyle={{flexWrap:"wrap"}}>
+   <Button data-media-action="up" aria-label={moveUpLabel(item)} size="small" tone="ghost" disabled={index===0} onClick={()=>onMove(id,-1)}>{actionLabels.moveUp}</Button>
+   <Button data-media-action="down" aria-label={moveDownLabel(item)} size="small" tone="ghost" disabled={index===count-1} onClick={()=>onMove(id,1)}>{actionLabels.moveDown}</Button>
+   {/* Rotate edits the photo and stays before remove, so the destructive action keeps the trailing place. */}
+   {rotate?<Button data-media-action="rotate" aria-label={rotate.itemLabel(item)} size="small" tone="ghost" onClick={()=>rotate.onRotate(id)}>{rotate.label}</Button>:null}
+   <Button data-media-action="remove" aria-label={removeLabel(item)} size="small" tone="ghost" onClick={()=>onRemove(id)}>{actionLabels.remove}</Button>
+  </Stack>
+ </Stack>;
+}
 /** A photo is the primary content; upload status stays below it instead of replacing the thumbnail. */
-export function MediaSelectionScreen({library,selectionSummary,items,add,done,labels,actionLabels,removeLabel,moveUpLabel,moveDownLabel,onRemove,onMove,onRetry,onCancel,...screen}:MediaSelectionScreenProps){
+export function MediaSelectionScreen({library,selectionSummary,items,add,done,labels,actionLabels,removeLabel,moveUpLabel,moveDownLabel,onRemove,onMove,onRetry,onCancel,rotate,...screen}:MediaSelectionScreenProps){
+ const itemActions={labels,actionLabels,removeLabel,moveUpLabel,moveDownLabel,onRemove,onMove,onRetry,onCancel,...(rotate===undefined?{}:{rotate})};
  const grid = useRef<HTMLDivElement>(null), addButton = useRef<HTMLButtonElement>(null);
  const focusedItem = useRef<{node:HTMLElement;id:string;index:number;body:HTMLElement|null}|null>(null);
  useLayoutEffect(() => {
@@ -159,14 +255,7 @@ export function MediaSelectionScreen({library,selectionSummary,items,add,done,la
     // disabled move button retain it until the layout effect chooses a successor.
     if (event.relatedTarget ? !event.currentTarget.contains(event.relatedTarget as Node) : node.isConnected && !node.matches(":disabled")) focusedItem.current = null;
    }}>
-   {items.map((item,index)=><Stack key={item.descriptor.id} data-hjm-media-item={item.descriptor.id} gap="xs">
-    {item.preview}<UploadItem descriptor={item.descriptor} labels={labels} onRetry={onRetry} onCancel={onCancel}/>
-    <Stack axis="inline" gap="xxs" layoutStyle={{flexWrap:"wrap"}}>
-     <Button data-media-action="up" aria-label={moveUpLabel(item)} size="small" tone="ghost" disabled={index===0} onClick={()=>onMove(item.descriptor.id,-1)}>{actionLabels.moveUp}</Button>
-     <Button data-media-action="down" aria-label={moveDownLabel(item)} size="small" tone="ghost" disabled={index===items.length-1} onClick={()=>onMove(item.descriptor.id,1)}>{actionLabels.moveDown}</Button>
-     <Button data-media-action="remove" aria-label={removeLabel(item)} size="small" tone="ghost" onClick={()=>onRemove(item.descriptor.id)}>{actionLabels.remove}</Button>
-    </Stack>
-   </Stack>)}
+   {items.map((item,index)=><MediaSelectionCell key={item.descriptor.id} item={item} index={index} count={items.length} {...itemActions}/>)}
   </Grid>}
  </ScreenLayout>;
 }
@@ -528,7 +617,23 @@ export type CommentThreadItem = Readonly<{id:string;parentId:string|null;author:
  /** Long-press the comment (author and body) to react; the product owns the stored value and summary. */
  reactions?:CommentReactions;reactionSummary?:ReactNode;
  /** Optional photo or sticker under the body; HJM bounds its width and corners, the product sizes the image. */
- media?:ReactNode}>;
+ media?:ReactNode;
+ /**
+  * Where the time label sits. "auto" keeps it beside the author unless `bodyText` inlines the author; "actions" moves it
+  * into the line under the body with reactions and Reply, for rich (non-text) bodies such as Spint's flower stamp
+  * (2026-10-18). Default "auto".
+  */
+ timePlacement?:"auto"|"actions";
+ /**
+  * Inline per-comment panel (edit, report or block form) under the Reply line, outside the long-press target
+  * (2026-10-18, Utilverse). The product owns its open state, focus, submit and close; HJM owns its place in the row.
+  */
+ panel?:ReactNode;
+ /**
+  * Paged photo set under the body (2026-10-18, Utilverse): HJM mounts only the shown page so the product can fetch one
+  * authorized image at a time. Exclusive with `media` (validated at render); it sits outside the long-press target because it has its own buttons.
+  */
+ mediaAlbum?:MediaAlbum}>;
 export type CommentReactions = ReactionPickerProps & Readonly<{closeLabel:string;menuAction?:Readonly<{label:string;onPress():void;disabled?:boolean}>;menuActions?:readonly MessageMenuAction[];reportAction?:Readonly<{label:string;onPress():void;disabled?:boolean;icon?:ReactNode}>;interactiveContent?:boolean;/** Icon for the automatic "reply" row of the hold menu. */replyIcon?:ReactNode}>;
 /**
  * HJM-owned "more" menu per comment (2026-10-17: common comment structure belongs to HJM, review S4#7). HJM draws the
@@ -559,6 +664,10 @@ function CommentMenuButton({item,menu,items}:Readonly<{item:CommentThreadItem;me
 
 /** Virtualized hosts reuse the same row as CommentThreadScreen; product slots add content, not a second layout. */
 export function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyle, commentMenu }: CommentThreadRowProps) {
+ validateMediaSetChoice(item.media!=null,item.mediaAlbum!==undefined);
+ const [albumIndex,setAlbumIndex]=useMediaAlbumIndex(item.mediaAlbum);
+ // bodyText inlines the author, so its time always moves under the body; rich bodies opt in with timePlacement.
+ const timeInActions=item.bodyText!==undefined||item.timePlacement==="actions";
  const avatarSize=item.parentId===null?commentThreadRecipe.avatarSize:commentThreadRecipe.replyAvatarSize;
  const canReply=item.canReply??item.parentId===null;
  const menuItems=commentMenu?resolveCommentMenuItems(commentMenu.items(item)):[];
@@ -566,9 +675,12 @@ export function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyl
  // The like count sits under the heart so the text column carries only identity, body and reply.
  return <Stack key={item.id} axis="inline" align="start" gap="xs" {...(layoutStyle === undefined ? {} : {layoutStyle})}>{item.avatar?<div className="hjm-comment-row__avatar" style={{inlineSize:avatarSize}}>{item.avatar}</div>:null}<div className="hjm-comment-row__text" style={{gap:commentThreadRecipe.lineGap}}>
  {/* Only identity and body are the hold target, so the reply action keeps its own button semantics. */}
- {(()=>{const identity=<>{item.bodyText!==undefined?<Text><Text emphasis="strong">{item.author}</Text>{" "}{item.bodyText}</Text>:(item.author||item.timeLabel)?<Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexWrap:"wrap"}}>{item.author?<Text variant="caption" emphasis="strong">{item.author}</Text>:null}{time}</Stack>:null}
+ {(()=>{const identity=<>{item.bodyText!==undefined?<Text><Text emphasis="strong">{item.author}</Text>{" "}{item.bodyText}</Text>:(item.author||(item.timeLabel&&!timeInActions))?<Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexWrap:"wrap"}}>{item.author?<Text variant="caption" emphasis="strong">{item.author}</Text>:null}{timeInActions?null:time}</Stack>:null}
  {item.body}{item.media?<div className="hjm-comment-row__media" style={{maxInlineSize:commentThreadRecipe.mediaMaxWidth,borderRadius:commentThreadRecipe.mediaRadius}}>{item.media}</div>:null}</>;return item.reactions?<MessageReactions {...item.reactions} {...((item.canReply??item.parentId===null)&&!item.replyDisabled ? {replyAction:{label:replyLabel,onPress:()=>onReply(item.id),...(item.reactions.replyIcon===undefined?{}:{icon:item.reactions.replyIcon})}} : {})} triggerClassName="hjm-comment-row__reactions">{identity}</MessageReactions>:identity;})()}
- {(item.bodyText!==undefined&&time)||canReply||item.reactionSummary?<Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap:"wrap"}}>{item.bodyText!==undefined?time:null}{item.reactionSummary}{canReply?<CommentTextAction label={replyLabel} disabled={item.replyDisabled??false} onPress={()=>onReply(item.id)}/>:null}</Stack>:null}</div>
+ {item.mediaAlbum?<MediaAlbumView className="hjm-comment-row__album" album={item.mediaAlbum} index={albumIndex} onIndexChange={setAlbumIndex} width={commentThreadRecipe.mediaMaxWidth} radius={commentThreadRecipe.mediaRadius}/>:null}
+ {(timeInActions&&time)||canReply||item.reactionSummary?<Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap:"wrap"}}>{timeInActions?time:null}{item.reactionSummary}{canReply?<CommentTextAction label={replyLabel} disabled={item.replyDisabled??false} onPress={()=>onReply(item.id)}/>:null}</Stack>:null}
+ {/* The text column already spaces lines by lineGap; the panel adds the rest of panelGap. */}
+ {item.panel!=null?<div className="hjm-comment-row__panel" style={{marginBlockStart:commentThreadRecipe.panelGap-commentThreadRecipe.lineGap}}>{item.panel}</div>:null}</div>
  <div className="hjm-comment-row__like" {...(menuItems.length||item.actions==null&&item.likeAction===undefined?{"data-edge":"end"}:{})} style={{"--hjm-comment-anchor-line":`var(--hjm-type-${item.bodyText!==undefined?commentThreadRecipe.actionAnchor.inlineTextVariant:commentThreadRecipe.actionAnchor.authorTextVariant}-line-height)`} as CSSProperties}><Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexShrink:0}}>{item.likeAction!==undefined?item.likeAction:<IconButton label={item.likeLabel} tone="ghost" onClick={()=>onLike(item.id)}>{item.likeIcon}</IconButton>}{item.actions}{commentMenu&&menuItems.length?<CommentMenuButton item={item} menu={commentMenu} items={menuItems}/>:null}</Stack>{item.likeCountLabel?<div className="hjm-comment-row__like-count" style={{inlineSize:commentThreadRecipe.likeColumnWidth}}><Text variant="caption" tone="muted">{item.likeCountLabel}</Text></div>:null}</div></Stack>;
 }
 
@@ -601,6 +713,9 @@ export type ProfileSummaryProps = Readonly<{
 
 /** Profile identity and counts are common; routing and mutations stay controlled by the product. */
 export function ProfileSummary({ name, headingLevel = 2, avatar, badge, nameActions, stats = [], actions, children }: ProfileSummaryProps) {
+  const edit = useContext(ProfileEditContext);
+  const { tone: editTone, size: editSize } = profileSummaryRecipe.editAction;
+  const editButton = edit ? <Button tone={editTone} size={editSize} disabled={!!(edit.disabled || edit.pending)} loading={edit.pending ?? false} onClick={edit.onAction}>{edit.label}</Button> : null;
   return <CompositionLayout title={name} headingLevel={headingLevel} leading={<span style={{ display: "flex", width: profileSummaryRecipe.avatarSize, height: profileSummaryRecipe.avatarSize, flexShrink: 0, borderRadius: "50%", overflow: "hidden" }}>{avatar}</span>} badge={badge} actions={nameActions} footer={children}>
     {/* Static and actionable counts occupy identical cells; button hit areas must not shift their baselines. */}
     {stats.length ? <Stack axis="inline" gap="md" align="stretch" layoutStyle={{ width: "100%" }}>{stats.map(stat =>
@@ -608,6 +723,6 @@ export function ProfileSummary({ name, headingLevel = 2, avatar, badge, nameActi
         {stat.onPress ? <Button tone="ghost" aria-label={`${stat.value} ${stat.label}`} disabled={stat.disabled ?? false} onClick={stat.onPress} layoutStyle={{ width: "100%" }}><Stack gap="xxs" align="center"><Text emphasis="strong">{stat.value}</Text><Text variant="caption" tone="muted">{stat.label}</Text></Stack></Button>
           : <><Text emphasis="strong">{stat.value}</Text><Text variant="caption" tone="muted">{stat.label}</Text></>}
       </Stack>)}</Stack> : null}
-    {actions ? <Stack axis="inline" gap="sm" wrap>{actions}</Stack> : null}
+    {editButton || actions ? <Stack axis="inline" gap="sm" wrap>{editButton}{actions}</Stack> : null}
   </CompositionLayout>;
 }

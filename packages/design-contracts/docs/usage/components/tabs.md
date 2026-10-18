@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-07
+- 검토일: 2026-10-18
 - 근거: [Gooey navigation](../../gooey-navigation.md), `src/component-recipes.ts`(`tabsRecipe`), `src/behaviors.ts`(`tabsBehaviorDefaults`)
 - 스토리북: `배포/컴포넌트/탐색/탭`, `배포/컴포넌트/탐색/선택 표시가 이어지는 탭`
 
@@ -77,6 +77,7 @@ import { Tabs } from "@hjmds/react-native/navigation";
 | `overflow` | `scroll` · `clip` | `scroll` | — |
 | `orientation` | `horizontal` · `vertical` | `horizontal` | — |
 | `loop` | `boolean` | `true` | — |
+| `indicator` | `underline` · `filled` | `underline` | 1.31.0 추가. `filled`는 선택 탭 뒤에 브랜드 연한 면(`surface.brand`) 알약을 깔고 글자를 `content.brand`로 바꾸며 목록 구분선을 없앤다. `slide`·`gooey`·`swipePosition`과 함께 쓰면 알약이 움직인다 |
 | `appearance` | `standard` · `slide` · `gooey` | 미지정 시 프로필의 selectionMotion; 없으면 `standard` | 1.15.0 변경: `slide`는 2점 표시선 이동, `gooey`는 6점 표시선 늘어남. 명시 값 우선, 세로는 standard 유지 |
 | `renderPanels` | `boolean` | `true` | `false`면 패널을 그리지 않는다. 패널을 라우터·스크롤 상태와 함께 따로 둘 때 `TabPanel`에 `tabsId`(Tabs의 `id`와 같게)·`activeValue`·`value`를 넘긴다 |
 | `children`(Native) | `(selectedValue: Value) => ReactNode` | — | 항목 `panel` 대신 선택 값으로 패널을 그린다 |
@@ -105,6 +106,19 @@ import { Tabs } from "@hjmds/react-native/navigation";
 └────────────────────────────────────┘
 ```
 
+### 채운 선택 표시 (`indicator="filled"`)
+
+선택 표시를 2점 밑줄 대신 선택 탭 전체를 채우는 알약으로 그린다. 값은 `tabsRecipe.indicators.filled`다.
+알약 면 `surface.brand`(surfaceAccent), 선택 글자 `content.brand`, 모서리 `radius.full`, 목록 구분선 없음.
+Native는 `filled`일 때 탭 사이에 `tabsRecipe.gap` 8을 두어 이웃 알약이 붙지 않게 한다(Web 목록은 원래 8 간격).
+움직이는 표시(`appearance="slide"`·`"gooey"`, `swipePosition`)와 함께 쓰면 알약이 탭 높이 그대로 라벨 뒤에서 이동한다.
+앱 하단 탭이 현재 위치를 연한 알약으로 표시하는 제품에서 화면 안 탭도 같은 표시를 쓰려고 고른다.
+
+```tsx
+// Native
+<Tabs label={t("sent.group")} layout="fitted" indicator="filled" value={tab} onValueChange={setTab} items={items} />
+```
+
 ## 꼭 지킬 것
 
 - `label`(탭 목록 이름)은 필수이고 비어 있으면 `TypeError`다. 항목 라벨과 함께 i18n 키로 넣는다.
@@ -128,6 +142,8 @@ import { Tabs } from "@hjmds/react-native/navigation";
 | import 경로 | `/navigation` | `/navigation`, `/top-bar` |
 
 ## 함정
+
+- `indicator="filled"`는 선택 표시만 바꾼다. 같은 목록의 필터처럼 패널이 하나뿐이면 Tabs가 아니라 [SegmentedControl](segmented-control.md)(`pills`)이다.
 
 - 2026-10-07 [Animated Tabs 대조](../../../../../docs/plans/aceternity-interaction-adoption-2026-10-07.md)에서
   선택 표시의 이동과 겹친 패널의 이동을 구분했다. 현재 `appearance="gooey"`는 표시선만 늘어나며,
@@ -166,3 +182,7 @@ import { Tabs } from "@hjmds/react-native/navigation";
 
 source 객체는 렌더마다 바꾸지 않도록 `useMemo` 또는 제품 어댑터의 안정 인스턴스를
 사용한다. source는 시각적 위치만 전달하므로 접근성·키보드 선택을 대신하지 않는다.
+
+## 근거
+
+- 채운 선택 표시: 2026-10-18 다에리 둥지 화면의 보낸 편지·모음 탭. 앱 하단 탭은 현재 위치를 연한 알약으로 보이는데 화면 안 탭만 밑줄이라 다른 제품처럼 보였다.

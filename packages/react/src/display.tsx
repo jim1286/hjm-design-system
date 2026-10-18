@@ -120,7 +120,10 @@ export type CardProps = Omit<HTMLAttributes<HTMLElement>, "title"> &
     actions?: ReactNode;
     headingLevel?: CardHeadingLevel;
     selected?: boolean;
-    /** Whole-card activation. Do not combine with interactive children or actions. */
+    /**
+     * Whole-card activation. With `actions`, the card stays an article and a separate full-card button sits under the
+     * action region, so actions remain independent buttons (never a button inside a button). Keep other children passive.
+     */
     onActivate?: () => void;
     disabled?: boolean;
     tone?: SurfaceTone;
@@ -152,21 +155,27 @@ export const Card = forwardRef<HTMLElement, CardProps>(function Card(
   },
   ref,
 ) {
-  if (onActivate && (!props["aria-label"]?.trim() || actions !== undefined)) {
-    throw new TypeError("Interactive Card requires aria-label and no actions");
+  if (onActivate && !props["aria-label"]?.trim()) {
+    throw new TypeError("Interactive Card requires aria-label");
   }
   const hasHeader =
     leading !== undefined || title !== undefined || description !== undefined;
+  // Whole-card open plus separate commands (2026-10-18 unairplane journey card: open + delete). A root button cannot
+  // contain the action buttons, so the root stays an article and an overlay button carries the card's name and state.
+  const overlay = onActivate !== undefined && Boolean(actions);
+  const { "aria-label": activationLabel, ...rootProps } = props;
+  const activate = () => { if (!disabled) onActivate?.(); };
 
   return (
     <Surface
-      {...props}
+      {...(overlay ? rootProps : props)}
       ref={ref}
-      as={onActivate ? "button" : "article"}
-      {...(onActivate ? {
+      as={onActivate && !overlay ? "button" : "article"}
+      {...(onActivate && !overlay ? {
         type: "button" as const, disabled, "aria-pressed": selected,
-        "data-interactive": true, onClick: () => { if (!disabled) onActivate(); },
+        "data-interactive": true, onClick: activate,
       } : {})}
+      {...(overlay ? { "data-activation": "overlay" } : {})}
       tone={selected ? cardRecipe.selectedTone : tone}
       bordered={bordered}
       {...(radius === undefined ? {} : { radius })}
@@ -213,6 +222,17 @@ export const Card = forwardRef<HTMLElement, CardProps>(function Card(
           <div className="hjm-card__content" data-slot="content">{children}</div>
         )}
       </div>
+      {overlay ? (
+        <button
+          type="button"
+          className="hjm-card__activator"
+          data-slot="activator"
+          aria-label={activationLabel}
+          aria-pressed={selected}
+          disabled={disabled}
+          onClick={activate}
+        />
+      ) : null}
       {actions ? <div className="hjm-card__actions" data-slot="actions">{actions}</div> : null}
     </Surface>
   );

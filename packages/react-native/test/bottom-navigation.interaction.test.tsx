@@ -160,3 +160,95 @@ it("raised tile plank reserves every lower edge and darkens only the selected on
   expect(search.borderBottomColor).toBe("transparent");
   act(() => tree.unmount());
 });
+
+it("publishes an overlay bar's covered height so ScreenLayout pads its last region by it", async () => {
+  const { BottomNavigationInsetProvider, useBottomNavigationInset } = await import("../src/index.js");
+  const { ScreenLayout } = await import("../src/screens.js");
+  const { ScrollView, View } = await import("react-native");
+  const seen: number[] = [];
+  function Probe() { seen.push(useBottomNavigationInset()); return null; }
+  const bar = (placement: "inline" | "overlay") => (
+    <BottomNavigation
+      placement={placement}
+      configuration={{ presentation: "floating" }}
+      descriptor={{ accessibilityLabel: "Main", selectedKey: "home", items: [
+        { id: "home", label: "Home", icon: { name: "home" } },
+        { id: "search", label: "Search", icon: { name: "search" } },
+      ] }}
+      onActivate={() => {}}
+      renderIcon={({ name }) => <Text>{name}</Text>}
+    />
+  );
+  let renderer!: ReturnType<typeof create>;
+  act(() => {
+    renderer = create(
+      <HjmNativeProvider reducedMotion theme="light">
+        <BottomNavigationInsetProvider>
+          <ScreenLayout title="Feed"><Probe /></ScreenLayout>
+          {bar("overlay")}
+        </BottomNavigationInsetProvider>
+      </HjmNativeProvider>,
+    );
+  });
+  const root = renderer.root.findAll((node) => node.type === View && node.props.pointerEvents === "box-none" && typeof node.props.onLayout === "function")[0]!;
+  expect(root.props.style[0]).toMatchObject({ position: "absolute", bottom: 0 });
+  act(() => root.props.onLayout({ nativeEvent: { layout: { x: 0, y: 0, width: 390, height: 96 } } }));
+  expect(seen.at(-1)).toBe(96);
+  const body = renderer.root.findByType(ScrollView);
+  expect(body.props.contentContainerStyle.paddingBottom).toBe(16 + 96);
+
+  // An inline bar takes its own layout height, so it reports nothing.
+  act(() => {
+    renderer.update(
+      <HjmNativeProvider reducedMotion theme="light">
+        <BottomNavigationInsetProvider>
+          <ScreenLayout title="Feed"><Probe /></ScreenLayout>
+          {bar("inline")}
+        </BottomNavigationInsetProvider>
+      </HjmNativeProvider>,
+    );
+  });
+  expect(seen.at(-1)).toBe(0);
+  expect(renderer.root.findByType(ScrollView).props.contentContainerStyle.paddingBottom).toBe(16);
+});
+
+it("draws a prominent center destination as a selectable lifted circle and sizes app-icon slots", () => {
+  const icons: Array<{ id: string; size: number; color: string }> = [];
+  const items = [
+    { id: "trail", label: "Trail", icon: { name: "home" } },
+    { id: "write", label: "Write", icon: { name: "add" }, prominent: true },
+    { id: "nest", label: "Nest", icon: { name: "person" } },
+  ];
+  const onActivate = vi.fn();
+  let renderer!: ReturnType<typeof create>;
+  act(() => {
+    renderer = create(
+      <HjmNativeProvider reducedMotion theme="light">
+        <BottomNavigation
+          configuration={{ iconSize: "xlarge" }}
+          descriptor={{ accessibilityLabel: "Main", selectedKey: "trail", items }}
+          getItemTestID={(item) => `tab-${item.id}`}
+          onActivate={onActivate}
+          renderIcon={({ item, size, color }) => { icons.push({ id: item.id, size, color }); return <Text>{item.id}</Text>; }}
+        />
+      </HjmNativeProvider>,
+    );
+  });
+  expect(icons.find((icon) => icon.id === "trail")?.size).toBe(bottomNavigationRecipe.iconSizes.xlarge);
+  expect(icons.find((icon) => icon.id === "write")?.size).toBe(28);
+  act(() => renderer.root.findByProps({ testID: "tab-write" }).props.onPress());
+  expect(onActivate).toHaveBeenLastCalledWith({ key: "write", reason: "navigate" });
+  expect(renderer.root.findByProps({ testID: "tab-write" }).props.accessibilityRole).toBe("tab");
+  expect(() => act(() => {
+    renderer.update(
+      <HjmNativeProvider reducedMotion theme="light">
+        <BottomNavigation
+          configuration={{ presentation: "floating", selection: "tile" }}
+          descriptor={{ accessibilityLabel: "Main", selectedKey: "trail", items }}
+          onActivate={onActivate}
+          renderIcon={() => null}
+        />
+      </HjmNativeProvider>,
+    );
+  })).toThrow("prominent destination requires");
+});

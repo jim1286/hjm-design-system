@@ -67,6 +67,10 @@ export const publicExportEntries = {
     "./top-bar",
     "./navigation"
   ],
+  BottomNavigationInsetProvider: [
+    "./top-bar",
+    "./navigation"
+  ],
   Button: [
     "./bottom-cta",
     "./actions"
@@ -88,6 +92,9 @@ export const publicExportEntries = {
   ],
   ChartLegend: [
     "./chart"
+  ],
+  ChatDateSeparator: [
+    "./screens"
   ],
   ChatMessage: [
     "./screens"
@@ -272,6 +279,9 @@ export const publicExportEntries = {
   ImageViewer: [
     "./image-viewer"
   ],
+  ImmersiveOverlay: [
+    "./overlays"
+  ],
   ImportFieldMapping: [
     "./data-workflows"
   ],
@@ -328,6 +338,9 @@ export const publicExportEntries = {
   MatrixTable: [
     "./data-table"
   ],
+  MediaSelectionCell: [
+    "./screen-flows"
+  ],
   MediaSelectionScreen: [
     "./screen-flows"
   ],
@@ -343,6 +356,9 @@ export const publicExportEntries = {
   ],
   MessageComposer: [
     "./screens"
+  ],
+  ModerationForm: [
+    "./screen-flows"
   ],
   ModerationScreen: [
     "./screen-flows"
@@ -381,6 +397,9 @@ export const publicExportEntries = {
   ],
   OverviewScreen: [
     "./design-profile"
+  ],
+  PageIndicator: [
+    "./carousel"
   ],
   Pagination: [
     "./pagination"
@@ -606,6 +625,9 @@ export const publicExportEntries = {
   ],
   TransferTask: [
     "./transfer-task"
+  ],
+  TypingIndicator: [
+    "./screens"
   ],
   UploadItem: [
     "./upload-item"

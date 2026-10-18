@@ -1,7 +1,7 @@
 import { type TabSwipePosition, type TabsAppearance } from "@hjmds/design-contracts/gooey-navigation";
 export type { TabsAppearance };
 import { type TabsActivationMode, type TabsDirection, type TabsMountPolicy, type TabsOrientation, type TabsPanelMode } from "@hjmds/design-contracts/behaviors";
-import { type TabSize, type TabsLayout, type TabsOverflow } from "@hjmds/design-contracts/recipes";
+import { type TabSize, type TabsIndicator, type TabsLayout, type TabsOverflow } from "@hjmds/design-contracts/recipes";
 import { type HTMLAttributes, type ReactNode } from "react";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type TabLeadingRenderProps = Readonly<{
@@ -42,6 +42,8 @@ export type TabsProps = Omit<HTMLAttributes<HTMLDivElement>, "dir" | "onChange">
     size?: TabSize;
     layout?: TabsLayout;
     overflow?: TabsOverflow;
+    /** Selection mark: the 2pt underline (default) or a brand-tinted pill behind the selected tab. */
+    indicator?: TabsIndicator;
     /** Set false when panels are rendered separately with `TabPanel`. */
     renderPanels?: boolean;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */

@@ -4,6 +4,8 @@ import {
   carouselBehavior,
   carouselRecipe,
   getCarouselNavigationTarget,
+  getPageIndicatorTarget,
+  resolvePageIndicator,
   isCarouselAutoplayActive,
   resolveCarouselDescriptor,
   validateCarouselAutoplayConfig,
@@ -197,5 +199,23 @@ describe("Carousel visual identity", () => {
   it("keeps the previous/next glyphs as logical-direction chevrons, not left/right", () => {
     expect(carouselRecipe.control.icons.previous).toBe("chevronStart");
     expect(carouselRecipe.control.icons.next).toBe("chevronEnd");
+  });
+});
+
+describe("PageIndicator", () => {
+  const name = ({ position, total }: { position: number; total: number }) => `Page ${position} of ${total}`;
+  it("resolves one named dot per page with the current one marked", () => {
+    expect(resolvePageIndicator({ count: 3, currentIndex: 1 }, name).map((dot) => [dot.accessibleName, dot.current]))
+      .toEqual([["Page 1 of 3", false], ["Page 2 of 3", true], ["Page 3 of 3", false]]);
+  });
+  it("rejects empty counts, out-of-range indices and empty names", () => {
+    expect(() => resolvePageIndicator({ count: 0, currentIndex: 0 }, name)).toThrow(RangeError);
+    expect(() => resolvePageIndicator({ count: 2, currentIndex: 2 }, name)).toThrow(RangeError);
+    expect(() => resolvePageIndicator({ count: 2, currentIndex: 0 }, () => " ")).toThrow(TypeError);
+  });
+  it("clamps navigation like Carousel", () => {
+    expect(getPageIndicatorTarget({ count: 3, currentIndex: 2 }, "next")).toBe(2);
+    expect(getPageIndicatorTarget({ count: 3, currentIndex: 0 }, "previous")).toBe(0);
+    expect(getPageIndicatorTarget({ count: 3, currentIndex: 0 }, "next")).toBe(1);
   });
 });

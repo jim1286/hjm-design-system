@@ -6,7 +6,7 @@
 버튼 위치에서 시작해 구성·컴포넌트 지침으로 내려가고, 값은 토큰 지침에서 고른다.
 [선택 기준](SELECTION.md)으로 그대로 사용·공개 슬롯 확장·공통 API 보완·제품 고유 기능 연결을 고른다. 설치 버전의 지침을 본다: `node_modules/@hjmds/design-contracts/docs/usage/`.
 제공 기준은 확인한 기본 API 버전이며 최초 출시 버전이 아니다. 구성·화면은 각 API 지침의 제공 버전을 확인한다.
-API 안정성은 1.29.0의 생성 manifest에서 읽은 정규(canonical) API 기준이다. 동반·선택형 확장은 개별 계약을 확인한다.
+API 안정성은 1.30.0의 생성 manifest에서 읽은 정규(canonical) API 기준이다. 동반·선택형 확장은 개별 계약을 확인한다.
 Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품 반영을 의미하지 않는다.
 `분류`는 Storybook 제목 `<배포|실험>/<단계>/<분류>/<항목>`의 셋째 마디이고, 토큰·구성·화면은 Storybook 메뉴와 같은 순서다.
 
@@ -57,6 +57,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [Carousel](components/carousel.md) | 데이터 표시 | 한 번에 카드 하나만 보이고 사용자가 순서대로 넘겨 보는 유한한 묶음에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Celebration](components/celebration.md) | 구성/직접 조작과 모션 | 목표 달성, 첫 완료처럼 드물게 일어나는 성공 순간에 한 번 터지는 색종이 효과에 쓴다. | 1.12.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Chart](components/chart.md) | 데이터 표시 | 수치의 흐름·비교·몫·모양·관계를 그림으로 읽게 할 때 쓴다. | 1.21.0 | Web · Native | Web beta / Native beta | 배포 |
+| [ChatDateSeparator](components/chat-date-separator.md) | 데이터 표시 | 대화 타임라인에서 날짜(또는 오래 쉰 뒤의 시각)가 바뀌는 자리에 가운데 정렬 구분 줄을 둘 때 쓴다. | 미게시(1.30.0 이후) | Web · Native | Web beta / Native beta | 실험 |
 | [ChatMessage](components/chat-message.md) | 구성/정보 표시 | DM·대화 타임라인의 메시지 한 개에 쓴다. | 1.17.1 | Web · Native | Web stable / Native stable | 배포 |
 | [ChatScreen](components/chat-screen.md) | 화면/소통 | DM·대화방처럼 헤더, 메시지 타임라인, 하단 작성창으로 이루어진 화면 한 장에 쓴다. | 1.17.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Checkbox](components/checkbox.md) | 입력 | 독립된 예/아니오 하나를 고르는 항목에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
@@ -99,7 +100,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [Grid](components/grid.md) | 레이아웃 | 카드·타일처럼 같은 모양의 자식을 창 크기에 따라 열 수를 바꿔 배치할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Heading](components/heading.md) | 글자와 아이콘 | 자리를 모르는 제목 글자 하나가 필요할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [HistogramExplorer](components/histogram-explorer.md) | 구성/정보 표시 | 실제 관측값 배열의 분포를 동폭 구간 막대로 보여 주고, 사용자가 구간 수를 바꿔 볼 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
-| [Icon](components/icon.md) | 글자와 아이콘 | HJM semantic 이름(`search`, `back`, `chevronEnd`, `notifications` 등 43개)으로 고르는 그림 기호에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [Icon](components/icon.md) | 글자와 아이콘 | HJM semantic 이름(`search`, `back`, `chevronEnd`, `notifications` 등 47개)으로 고르는 그림 기호에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [IconButton](components/icon-button.md) | 동작 | 보이는 글자 없이 아이콘만으로 표시하는 행동에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [IconTile](components/icon-tile.md) | — | 프로필·런처 격자의 아이콘 위/제목 아래 항목에 쓴다. | 1.26.0 | Web · Native | Web stable / Native stable | 실험 |
 | [Image](components/image.md) | 데이터 표시 | 원본 크기를 아는 사진·차트 이미지를 로드 전에 자리를 잡아 두고, 실패해도 의미를 잃지 않게 보여 줄 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
@@ -134,6 +135,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [OnboardingScreen](components/onboarding-screen.md) | 화면/소개 | 첫 실행 소개·초기 설정처럼 **몇 단계를 차례로 넘기는 화면**에 쓴다. | 1.14.0 | Web · Native | Web stable / Native stable | 배포 |
 | [OtpField](components/otp-field.md) | 입력 | 문자·메일로 받은 **숫자 인증번호**를 칸 모양으로 입력받을 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [OverviewScreen](components/overview-screen.md) | 레이아웃 | 같은 데이터와 기능을 유지하면서 테마별 행·카드·격자와 도구 배치를 선택하는 목록 화면에 쓴다. | 1.15.0 | Web · Native | 개별 API 계약 참조 | 배포 |
+| [PageIndicator](components/page-indicator.md) | 탐색 | 제품이 직접 만든 가로 페이저(Native 페이징 `FlatList`, Web scroll-snap 줄) 아래에 지금 몇 번째 페이지인지 점으로 보여 주고, 점을 눌러 그 페이지로 옮길 때 쓴다. | 미게시(1.30.0 이후) | Web · Native | Web beta / Native beta | 실험 |
 | [Pagination](components/pagination.md) | 탐색 | 총 개수(또는 총 페이지 수)가 정해진 결과 집합에서 사용자가 **임의의 페이지로 바로 이동**해야 할 때 Web·Native에서 쓴다. | 1.12.1 | Web · Native | Web stable / Native beta | 배포 |
 | [PasswordField](components/password-field.md) | 입력 | 비밀번호를 입력받고, 필요할 때만 값을 눈으로 확인하게 할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [PasswordRulesField](components/password-rules-field.md) | 구성/입력과 작성 | 새 비밀번호 입력 아래에 제품이 정한 규칙의 충족 개수와 규칙별 상태를 함께 보여 줄 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
@@ -203,6 +205,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [TransferList](components/transfer-list.md) | 입력 | 한 항목 집합을 두 목록으로 나누고 사용자가 항목을 오가게 할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [TransferTask](components/transfer-task.md) | 구성/피드백과 복구 | 업로드·다운로드·동기화처럼 실제 전송 계층이 진행량을 알려 주는 작업에 시작·취소·진행률·결과를 한 묶음으로 붙인다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Tree](components/tree.md) | 데이터 표시 | 깊이가 정해지지 않은 계층 데이터를 펼치고 접으며 탐색하고, 그 안에서 하나 또는 여럿을 고를 때 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |
+| [TypingIndicator](components/typing-indicator.md) | 상태와 알림 | 대화 타임라인에서 상대가 지금 입력 중임을 보여 줄 때 쓴다. | 미게시(1.30.0 이후) | Web · Native | Web beta / Native beta | 실험 |
 | [UploadItem](components/upload-item.md) | 데이터 표시 | 사용자가 고른 파일 **한 개**의 업로드 상태(대기·전송 중·완료·실패)를 한 행으로 보여 줄 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [VirtualList](components/virtual-list.md) | 데이터 표시 | 행 높이가 **모두 같은** 긴 목록(수백~수천 행)을 정해진 높이 안에서 스크롤할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [VisuallyHidden](components/visually-hidden.md) | 기반 기능 | Web에서 화면에는 보이지 않지만 스크린 리더는 읽어야 하는 **문맥 문구**를 덧붙일 때 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |

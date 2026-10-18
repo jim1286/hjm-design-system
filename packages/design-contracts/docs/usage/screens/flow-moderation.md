@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 구성 API 지침 참조
-- 검토일: 2026-10-17
+- 검토일: 2026-10-18
 - 근거: [반복 화면 조합](../../screen-patterns.md); 공통 API와 실제 Web·Native 예제의 슬롯·상태를 대조해 중복 조립 방지. 2026-10-06 사용자 승인으로 스토리북 배포(이전 `실험/화면/기본 흐름/신고와 차단`, [승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정))
 - 스토리북: `배포/화면/소통/신고와 차단`
 
@@ -32,7 +32,7 @@ host: 남은 높이·safe area·키보드
 | 행동 | 컴포넌트·tone | 위치 | 개수·순서 |
 | --- | --- | --- | --- |
 | 닫기 | ScreenLayout `exit` `kind="close"` | 헤더 시작 끝 아이콘 버튼 | 1. 신고하지 않고 화면을 닫는다 |
-| 작업 | ModerationScreen 공개 행동 슬롯 | 신고는 footer; 차단은 별도 확인 후 실행 | 같은 표면에 경쟁하는 primary 하나만 |
+| 작업 | ModerationScreen 공개 행동 슬롯 | 신고는 footer; 차단은 별도 확인 후 실행. 운영자 검토(`variant="review"`)는 결정 버튼을 footer에 세로로 쌓는다 | 같은 표면에 경쟁하는 primary 하나만 |
 | 복구 | Button·secondary | 오류 근처 | 재시도할 대상과 범위를 표시 |
 
 ## 상태
@@ -55,11 +55,39 @@ host: 남은 높이·safe area·키보드
 | 차단 실패 | AlertDialog 유지 | Promise 실패를 전달한다. 확인창을 먼저 닫고 성공 처리하지 않는다 |
 | 대상 변경 | 대상 id와 초안·요청 묶음 갱신 | 이전 대상의 늦은 응답이 새 대상 상태를 덮지 않게 한다 |
 
+### 편지·카드·Sheet 안에서 신고(1.31.0)
+
+신고가 별도 route가 아니라 편지 아래에 펼쳐지거나 Sheet 안에 열리면 [ModerationForm](../components/moderation-screen.md#moderationform-화면-틀-없는-신고-폼)을 쓴다.
+ModerationScreen과 같은 사유 선택·추가 설명·신고/차단 버튼과 규칙을 화면 머리·바깥 여백 없이 그린다.
+
+```text
+편지(제품 Surface)
+└─ [신고] 제목(선택) → 사유 선택 → 추가 설명 → [신고하기] → [차단] → [취소]
+```
+
+| 행동 | 연결 | 규칙 |
+| --- | --- | --- |
+| 펼친 신고 접기 | `cancel` → 마지막 ghost 버튼 | Sheet 안에서는 Sheet 닫기가 있으므로 생략 가능 |
+| 제목 | `title`(구성 제목 `level3`) | 제목 줄이 있는 Sheet·Dialog 안에서는 생략한다 |
+| 화면 틀 | ModerationScreen에 `contentInset="none"`·`scroll="content"`를 주어 끄지 않는다 | 머리 띠와 footer 표면이 남는다 |
+
+### 운영자 검토(1.31.0)
+
+신고·이의 신청 처리 화면은 ModerationScreen `variant="review"`다. 신고된 내용(`children`) → 처리 사유 자유 입력 → 결정 버튼(기각·숨기기·유지·번복 등, 문구는 제품) 순이다.
+
+| 상황 | 연결 | 유지·복구 |
+| --- | --- | --- |
+| 사유 미입력 | 모든 결정 비활성(`decisionReason.required` 기본 `true`) | 공백만 있는 사유는 입력하지 않은 것으로 본다 |
+| 되돌리기 어려운 결정 | 결정의 `confirmation`(AlertDialog `confirm`, 보통 `tone: "danger"`) | 버튼은 확인창만 열고 `onConfirm`이 실행한다. 실패는 Promise로 넘겨 확인창을 유지한다 |
+| 결정 진행 중 | 그 결정 `pending` | 다른 결정과 사유 입력을 HJM이 잠근다 |
+| 이미 처리됨 | `resolution`(예: Notice `success` + 처리 사유) | 사유 입력과 결정 버튼 자리를 대체한다 |
+| 처리 결과·충돌 | `notice` 또는 `children` 안 Notice | 서버 확정 후에만 성공을 표시한다 |
+
 ## 사용하는 지침
 
 | 지침 | 쓰는 곳 |
 | --- | --- |
-| [ModerationScreen](../components/moderation-screen.md) | 필수 props·슬롯·플랫폼 차이 |
+| [ModerationScreen](../components/moderation-screen.md) | 필수 props·슬롯·플랫폼 차이, 운영자 검토 `variant="review"`, 화면 틀 없는 `ModerationForm` |
 | [Button](../components/button.md) | 동작·로딩·보조 행동 |
 | [ScreenLayout](../components/screen-layout.md) | 화면 높이·본문 교체·스크롤 소유 |
 

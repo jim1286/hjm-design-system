@@ -42,7 +42,7 @@ import {
   type TextEmphasis,
   type TextTone,
 } from "@hjmds/design-contracts/recipes";
-import { resolveTextFontRole, typography, type FontRole, type TextVariant } from "@hjmds/design-contracts/foundations";
+import { numeric as numericVariants, resolveTextFontRole, typography, type FontRole, type NumericVariant, type TextVariant } from "@hjmds/design-contracts/foundations";
 import {
   createElement,
   forwardRef,
@@ -311,7 +311,7 @@ export const Layout = forwardRef<HTMLDivElement, LayoutProps>(function Layout(
   );
 });
 
-export type TextProps = Omit<HTMLAttributes<HTMLElement>, "children"> &
+export type TextProps = Omit<HTMLAttributes<HTMLElement>, "children" | "color"> &
   Readonly<{
     children: ReactNode;
     as?: "span" | "p" | "div" | "strong" | "small";
@@ -319,6 +319,14 @@ export type TextProps = Omit<HTMLAttributes<HTMLElement>, "children"> &
     /** Overrides the variant family role; never changes its semantic element or metrics. */
     fontRole?: FontRole;
     tone?: TextTone;
+    /**
+     * Product-owned color role (team, sentiment, chart series) replacing the `tone` color while the HJM variant
+     * metrics and font face stay. Mirrors Native, where dropping to a raw text host lost the face (2026-10-18).
+     * Replaces the legacy HTML `color` attribute type, which no browser applies to text. Contrast is the product's.
+     */
+    color?: string;
+    /** Digit spacing; `tabular` keeps changing numbers (scores, timers, counts) from shifting the layout. */
+    numeric?: NumericVariant;
     emphasis?: TextEmphasis;
       /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
@@ -330,6 +338,8 @@ export const Text = forwardRef<HTMLElement, TextProps>(function Text(
     variant = textRecipe.defaults.variant,
     fontRole,
     tone = textRecipe.defaults.tone,
+    color,
+    numeric,
     emphasis: suppliedEmphasis,
     className,
     layoutStyle,
@@ -353,7 +363,14 @@ export const Text = forwardRef<HTMLElement, TextProps>(function Text(
     "data-emphasis": emphasis,
     // The variant default weight goes first so caller `style`/placement win, matching Native's style order
     // (it used to be spread last and overrode an explicit style weight under a profile).
-    style: { ...(defaultWeight === undefined ? {} : { fontWeight: defaultWeight }), ...style, ...layoutStyle },
+    "data-numeric": numeric,
+    style: {
+      ...(defaultWeight === undefined ? {} : { fontWeight: defaultWeight }),
+      ...(color === undefined ? {} : { color }),
+      ...(numeric === undefined ? {} : { fontVariantNumeric: numericVariants[numeric] }),
+      ...style,
+      ...layoutStyle,
+    },
   });
 });
 

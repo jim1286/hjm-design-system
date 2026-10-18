@@ -23,6 +23,7 @@ export declare const publicExportEntries: {
     readonly BottomCTA: readonly ["./bottom-cta"];
     readonly BottomInfo: readonly ["./bottom-info"];
     readonly BottomNavigation: readonly ["./navigation"];
+    readonly BottomNavigationInsetProvider: readonly ["./navigation"];
     readonly Breadcrumb: readonly ["./breadcrumb", "./navigation"];
     readonly Button: readonly ["./actions"];
     readonly Calendar: readonly ["./calendar"];
@@ -31,6 +32,7 @@ export declare const publicExportEntries: {
     readonly CarouselMotion: readonly ["./carousel-motion"];
     readonly Celebration: readonly ["./celebration"];
     readonly ChartLegend: readonly ["./chart"];
+    readonly ChatDateSeparator: readonly ["./screens"];
     readonly ChatMessage: readonly ["./screens"];
     readonly ChatScreen: readonly ["./screens"];
     readonly Checkbox: readonly ["./selection"];
@@ -91,6 +93,7 @@ export declare const publicExportEntries: {
     readonly Image: readonly ["./display"];
     readonly ImageChoiceGroup: readonly ["./image-choice"];
     readonly ImageComparison: readonly ["./image-comparison"];
+    readonly ImmersiveOverlay: readonly ["./overlays"];
     readonly ImportFieldMapping: readonly ["./data-workflows"];
     readonly InlineConfirm: readonly ["./inline-confirm"];
     readonly InlineEdit: readonly ["./collection-editing"];
@@ -104,12 +107,14 @@ export declare const publicExportEntries: {
     readonly LoadMore: readonly ["./navigation"];
     readonly Masonry: readonly ["./masonry"];
     readonly MatrixTable: readonly ["./data-table"];
+    readonly MediaSelectionCell: readonly ["./screen-flows"];
     readonly MediaSelectionScreen: readonly ["./screen-flows"];
     readonly MediaTransport: readonly ["./media-transport"];
     readonly Mentions: readonly ["./mentions"];
     readonly Menu: readonly ["./overlays"];
     readonly Menubar: readonly ["./menubar"];
     readonly MessageComposer: readonly ["./screens"];
+    readonly ModerationForm: readonly ["./screen-flows"];
     readonly ModerationScreen: readonly ["./screen-flows"];
     readonly MorphingMenu: readonly ["./menu-morph"];
     readonly NativeSelect: readonly ["./forms"];
@@ -124,6 +129,7 @@ export declare const publicExportEntries: {
     readonly OtpField: readonly ["./otp-field", "./forms"];
     readonly OverlayStackProvider: readonly ["./overlay-stack"];
     readonly OverviewScreen: readonly ["./design-profile"];
+    readonly PageIndicator: readonly ["./carousel"];
     readonly Pagination: readonly ["./pagination", "./navigation"];
     readonly PasswordField: readonly ["./password-field", "./forms"];
     readonly PasswordRulesField: readonly ["./task-controls"];
@@ -205,6 +211,7 @@ export declare const publicExportEntries: {
     readonly TransferList: readonly ["./transfer-list"];
     readonly TransferTask: readonly ["./transfer-task"];
     readonly Tree: readonly ["./tree"];
+    readonly TypingIndicator: readonly ["./screens"];
     readonly UploadItem: readonly ["./upload-item", "./display"];
     readonly VirtualList: readonly ["./virtual-list"];
     readonly VisuallyHidden: readonly ["./layout"];

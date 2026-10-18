@@ -394,6 +394,12 @@
       "import": "./dist/icon-lucide.js",
       "default": "./dist/icon-lucide.js"
     },
+    "./icon-svg": {
+      "types": "./dist/icon-svg.d.ts",
+      "react-native": "./dist/icon-svg.js",
+      "import": "./dist/icon-svg.js",
+      "default": "./dist/icon-svg.js"
+    },
     "./duration-field": {
       "types": "./dist/duration-field.d.ts",
       "react-native": "./dist/duration-field.js",

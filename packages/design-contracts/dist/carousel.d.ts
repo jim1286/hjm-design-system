@@ -121,6 +121,36 @@ export declare const carouselBehavior: {
     };
     readonly scenarios: readonly ["current-position-is-announced-with-a-readable-name-not-dots-alone", "inactive-slide-content-is-excluded-from-focus-and-the-accessibility-tree", "previous-next-and-dot-controls-stay-in-tab-order-regardless-of-current-slide", "arrow-keys-move-one-slide-on-web-swipe-moves-one-slide-on-native", "boundary-slides-clamp-instead-of-wrapping-because-loop-is-out-of-scope", "autoplay-is-opt-in-and-off-by-default", "autoplay-never-runs-when-reduced-motion-is-active", "autoplay-pauses-on-hover-focus-or-drag-and-does-not-announce-automatic-transitions"];
 };
+/**
+ * PageIndicator is Carousel's position dot row on its own, for a product-owned pager (a paging FlatList or
+ * scroll-snap row) that Carousel cannot host because Carousel owns its slides. It reuses `carouselRecipe.dot`
+ * and the same clamped navigation, so both rows look and behave the same. Added 2026-10-18 for the Utilverse
+ * launcher, which drew its own dots under a native pager.
+ */
+export type PageIndicatorDescriptor = Readonly<{
+    /** Number of pages, at least 1. */
+    count: number;
+    /** Zero-based current page. */
+    currentIndex: number;
+}>;
+export type PageIndicatorAccessibleNameInfo = Readonly<{
+    position: number;
+    total: number;
+}>;
+/** Product-owned copy for one page, e.g. "Home page 2 of 5" — counter grammar is not the renderer's. */
+export type ComposePageIndicatorAccessibleName = (info: PageIndicatorAccessibleNameInfo) => string;
+export type ResolvedPageIndicatorDot = Readonly<{
+    index: number;
+    /** 1-indexed reading position. */
+    position: number;
+    total: number;
+    current: boolean;
+    accessibleName: string;
+}>;
+export declare function validatePageIndicatorDescriptor(descriptor: PageIndicatorDescriptor): void;
+export declare function resolvePageIndicator(descriptor: PageIndicatorDescriptor, composeAccessibleName: ComposePageIndicatorAccessibleName): readonly ResolvedPageIndicatorDot[];
+/** Clamps like getCarouselNavigationTarget: a pager indicator has an end, it never wraps. */
+export declare function getPageIndicatorTarget(descriptor: PageIndicatorDescriptor, intent: CarouselNavigationIntent): number;
 export type CarouselSize = "medium";
 export declare const carouselRecipe: {
     readonly slots: readonly ["root", "track", "slide", "dots", "dot", "previousControl", "nextControl"];

@@ -64,6 +64,9 @@ import { CommentThreadRow } from "@hjmds/react-native/screen-flows";
 | --- | --- | --- |
 | `id`·`parentId`·`author`·`body`·`timeLabel`·`likeCountLabel`·`likeIcon`·`likeLabel` | 필수 | `parentId`가 `null`이면 최상위 댓글 |
 | `bodyText` | 없음 | 주면 `author`와 본문을 한 문장으로, 시각은 아래 행동 줄로 옮긴다 |
+| `timePlacement` | `"auto"` | 미게시. `"auto"`는 `bodyText`가 없으면 시각을 작성자 옆에 둔다. `"actions"`는 글이 아닌 본문(꽃 도장·카드)에서도 시각을 본문 아래 반응 요약·답글과 같은 줄 맨 앞으로 옮긴다 |
+| `panel` | 없음 | 미게시. 댓글별 인라인 패널(수정·신고·차단 양식). 답글 줄 아래, 길게 누르기 대상 밖에 `panelGap` 8 간격으로 놓인다. 열림 상태·초점·제출·닫기는 제품이 소유한다 |
+| `mediaAlbum` | 없음 | 미게시. 한 장씩 넘기는 사진 묶음 `{ count, renderPage(index), pageLabel(index, count), previousLabel, nextLabel, aspectRatio?, onPress?(index), index?·onIndexChange?·defaultIndex? }`. `renderPage`는 화면에 보이는 장에만 호출되어 제품이 그 사진만 조회·디코딩한다. `media`와 함께 주면 `TypeError`. 본문 아래, 길게 누르기 대상 밖에 놓인다 |
 | `avatar` | 없음 | 제품 아바타. 최상위 32·답글 24 폭 칸에 둔다 |
 | `canReply` | `parentId === null` | 답글 행동 표시 여부 |
 | `replyDisabled` | false | 답글 행동 비활성 |
@@ -75,9 +78,9 @@ import { CommentThreadRow } from "@hjmds/react-native/screen-flows";
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 아바타 칸 최상위 32·답글 24, 좋아요 수 칸 폭 44, `media` 최대 폭 160·radius `radius.md` | `commentThreadRecipe` |
+| 크기 | 아바타 칸 최상위 32·답글 24, 좋아요 수 칸 폭 44, `media`·`mediaAlbum` 최대 폭 160·radius `radius.md`(앨범은 사진 칸에만 radius, 그 아래 이전 아이콘 · 위치(예: 2/5) · 다음 아이콘 줄, 작은 ghost IconButton) | `commentThreadRecipe`, `mediaAlbumRecipe` |
 | 간격 | 아바타·본문·좋아요 열 사이 `spacing.xs` 8, 본문 줄 사이 2, 행동 줄 항목 사이 `spacing.sm` 12, 작성자–시각 `spacing.xxs` 4, `media` 위 4 | `commentThreadRecipe.lineGap`, `Stack gap` |
-| 순서·정렬 | 아바타 → (작성자·시각 → 본문 → media → 시각/반응 요약/답글 행동) → 좋아요 버튼·`actions` 아래 좋아요 수. 위 정렬 단, 오른쪽 좋아요·`actions`·더보기 열은 44 터치 영역을 첫 줄(작성자 caption, `bodyText`면 본문 줄)의 가운데에 맞춘다: 열을 (첫 줄 높이 − 44) / 2만큼 올린다(`commentThreadRecipe.actionAnchor`). HJM의 좋아요·더보기가 마지막이면 열 전체가 IconButton 가장자리 오버행(10)만큼 끝으로 나가 아이콘 칸이 행 끝 여백 선(아바타 시작과 같은 선)에 온다. 제품 `actions`가 마지막이면 그 버튼에 `edge="end"`를 준다. 측정 전후(Web 402): 아바타 168 / 작성자 줄 162 / 아이콘 174 → 아이콘 160 = 작성자 줄, 더보기 칸 끝 28 → 16(2026-10-17 실측 감사, [IconButton `edge`](icon-button.md#배치)) | 양 renderer |
+| 순서·정렬 | 아바타 → (작성자·시각 → 본문 → media 또는 mediaAlbum → 시각/반응 요약/답글 행동 → panel) → 좋아요 버튼·`actions` 아래 좋아요 수. 위 정렬 단, 오른쪽 좋아요·`actions`·더보기 열은 44 터치 영역을 첫 줄(작성자 caption, `bodyText`면 본문 줄)의 가운데에 맞춘다: 열을 (첫 줄 높이 − 44) / 2만큼 올린다(`commentThreadRecipe.actionAnchor`). HJM의 좋아요·더보기가 마지막이면 열 전체가 IconButton 가장자리 오버행(10)만큼 끝으로 나가 아이콘 칸이 행 끝 여백 선(아바타 시작과 같은 선)에 온다. 제품 `actions`가 마지막이면 그 버튼에 `edge="end"`를 준다. 측정 전후(Web 402): 아바타 168 / 작성자 줄 162 / 아이콘 174 → 아이콘 160 = 작성자 줄, 더보기 칸 끝 28 → 16(2026-10-17 실측 감사, [IconButton `edge`](icon-button.md#배치)) | 양 renderer |
 | 고정·스크롤 | 행은 스크롤하지 않는다. 목록 스크롤·행 간격(`rowGap` 12)·답글 들여쓰기(`replyIndent` 40)는 host가 준다 | `CommentThreadScreen` |
 | 좁은 폭·큰 글자 | 본문 열이 `min-width: 0`으로 줄며 줄바꿈되고 작성자·행동 줄은 `flexWrap`. 좋아요 열은 줄지 않는다 | `.hjm-comment-row__text`, `flexShrink: 0` |
 
@@ -85,13 +88,18 @@ import { CommentThreadRow } from "@hjmds/react-native/screen-flows";
 
 - 가상화 host에서 행 사이 간격(`commentThreadRecipe.rowGap`)과 답글 들여쓰기(`replyIndent`)를 직접 줄 때도 recipe 값을 쓴다. 제품 숫자로 다시 정하지 않는다.
 - 답글 펼치기·정렬·권한·좋아요 저장은 제품이 소유한다. 행은 콜백만 호출한다.
-- 행 안에 두 번째 레이아웃을 만들지 말고 `actions`·`likeAction`·`media` 슬롯으로 추가한다.
+- 행 안에 두 번째 레이아웃을 만들지 말고 `actions`·`likeAction`·`media`·`mediaAlbum`·`panel` 슬롯으로 추가한다. 시각·답글 줄을 본문 노드 안에 다시 그리지 말고 `timePlacement: "actions"`와 `canReply`를 쓴다.
+- `mediaAlbum`의 사진 조회·권한 확인·캐시 수명은 제품이 `renderPage` 안에서 소유한다. HJM은 보이는 장만 마운트하고 넘김 상태를 행 안에 둔다(제어형은 `index`+`onIndexChange`).
 
 ## 상태와 상호작용
 
 답글 행동은 채운 버튼이 아니라 muted caption 문구 버튼이며 `replyDisabled`면 불투명도 0.5로 비활성이다.
 `reactions`를 주면 작성자·본문만 길게 누르기 대상이 되고, 답글 가능하면 메뉴에 답글 항목이 자동으로 붙는다.
 답글 행동 버튼은 길게 누르기 대상 밖에 남아 자기 버튼 의미를 유지한다.
+
+## 근거
+
+- `timePlacement`·`panel`·`mediaAlbum`: 2026-10-18 HJM 1.30.0 채택 감사. Spint는 꽃 도장 본문에서 시각을 답글 줄에 두려고 시각·답글 행을 본문 안에 다시 그렸고, Utilverse는 수정·신고·차단 양식을 본문 노드 안(길게 누르기 대상 안)에 넣었으며, 사진 묶음은 선택한 장만 조회하는 제품 앨범을 따로 만들었다.
 
 ## 플랫폼 차이
 

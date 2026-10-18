@@ -120,6 +120,12 @@ export const imageChoiceExample = {
   items: [0, 1, 2].map(index => ({ id: String(index), photo: index, label: `예제 사진 ${index + 1}` })),
   initial: "0",
   result: (label: string) => `${label}을 골랐어요`,
+  // 2026-10-18 showItemLabels: a recipient picker shows names under the faces (BurnTok share sheet).
+  recipients: {
+    label: "보낼 사람",
+    items: [{ id: "seoyeon", photo: 0, label: "서연" }, { id: "minjun", photo: 1, label: "민준" }, { id: "jiwoo", photo: 2, label: "지우와 친구들" }],
+    initial: ["seoyeon"],
+  },
 } as const;
 
 // ---- 입력 (2026-10-17 review C): Web examples are the canonical copy; Native read English fixtures with different

@@ -4,7 +4,7 @@ import { type ContainerGutter, type ContainerSize } from "@hjmds/design-contract
 import { type LayoutSidebarRole } from "@hjmds/design-contracts/components/layout";
 import { type SurfacePadding, type SurfaceRadius, type SurfaceTone } from "@hjmds/design-contracts/recipes/base";
 import { type StackAlign, type StackAxis, type StackGap, type StackJustify, type TextEmphasis, type TextTone } from "@hjmds/design-contracts/recipes";
-import { type FontRole, type TextVariant } from "@hjmds/design-contracts/foundations";
+import { type FontRole, type NumericVariant, type TextVariant } from "@hjmds/design-contracts/foundations";
 import { type AnchorHTMLAttributes, type HTMLAttributes, type ReactElement, type ReactNode, type Ref } from "react";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type { SurfacePadding, SurfaceRadius, SurfaceTone, } from "@hjmds/design-contracts/recipes/base";
@@ -62,24 +62,40 @@ export declare const Layout: import("react").ForwardRefExoticComponent<Omit<HTML
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLDivElement>>;
-export type TextProps = Omit<HTMLAttributes<HTMLElement>, "children"> & Readonly<{
+export type TextProps = Omit<HTMLAttributes<HTMLElement>, "children" | "color"> & Readonly<{
     children: ReactNode;
     as?: "span" | "p" | "div" | "strong" | "small";
     variant?: TextVariant;
     /** Overrides the variant family role; never changes its semantic element or metrics. */
     fontRole?: FontRole;
     tone?: TextTone;
+    /**
+     * Product-owned color role (team, sentiment, chart series) replacing the `tone` color while the HJM variant
+     * metrics and font face stay. Mirrors Native, where dropping to a raw text host lost the face (2026-10-18).
+     * Replaces the legacy HTML `color` attribute type, which no browser applies to text. Contrast is the product's.
+     */
+    color?: string;
+    /** Digit spacing; `tabular` keeps changing numbers (scores, timers, counts) from shifting the layout. */
+    numeric?: NumericVariant;
     emphasis?: TextEmphasis;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare const Text: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLElement>, "children"> & Readonly<{
+export declare const Text: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLElement>, "color" | "children"> & Readonly<{
     children: ReactNode;
     as?: "span" | "p" | "div" | "strong" | "small";
     variant?: TextVariant;
     /** Overrides the variant family role; never changes its semantic element or metrics. */
     fontRole?: FontRole;
     tone?: TextTone;
+    /**
+     * Product-owned color role (team, sentiment, chart series) replacing the `tone` color while the HJM variant
+     * metrics and font face stay. Mirrors Native, where dropping to a raw text host lost the face (2026-10-18).
+     * Replaces the legacy HTML `color` attribute type, which no browser applies to text. Contrast is the product's.
+     */
+    color?: string;
+    /** Digit spacing; `tabular` keeps changing numbers (scores, timers, counts) from shifting the layout. */
+    numeric?: NumericVariant;
     emphasis?: TextEmphasis;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;

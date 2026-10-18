@@ -1,11 +1,35 @@
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useLayoutEffect, useRef, useState, forwardRef } from "react";
-import { resolveCarouselDescriptor, getCarouselNavigationTarget, isCarouselAutoplayActive, } from "@hjmds/design-contracts/components/carousel";
+import { resolveCarouselDescriptor, getCarouselNavigationTarget, isCarouselAutoplayActive, resolvePageIndicator, getPageIndicatorTarget, } from "@hjmds/design-contracts/components/carousel";
 import { Button, IconButton } from "./actions.js";
 import { Icon } from "./supplemental-display.js";
 import { isLargeTextScale } from "@hjmds/design-contracts/components/design-system-provider";
 import { assignRef, classNames, useControllableState } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
+/** The dot buttons shared by Carousel and PageIndicator, so both rows keep one markup and one recipe. */
+function PageDots({ dots, onSelect, dotClassName, keys }) {
+    return _jsx(_Fragment, { children: dots.map((dot) => _jsx("button", { type: "button", "aria-label": dot.accessibleName, "aria-disabled": dot.current, "data-current": dot.current, className: dotClassName, onClick: () => onSelect(dot.index), children: _jsx("span", { "aria-hidden": "true" }) }, keys?.[dot.index] ?? dot.index)) });
+}
+/**
+ * Carousel's position dots for a product-owned pager (scroll-snap row, virtualized pager). Arrow keys on a dot move
+ * one page in reading direction, as in Carousel's controls.
+ */
+export const PageIndicator = forwardRef(function PageIndicator({ label, count, currentIndex, onCurrentIndexChange, composeAccessibleName, className, onKeyDown, layoutStyle, ...props }, ref) {
+    const theme = useOptionalHjmTheme();
+    if (!label.trim())
+        throw new TypeError("PageIndicator label must not be empty");
+    const descriptor = { count, currentIndex };
+    const dots = resolvePageIndicator(descriptor, composeAccessibleName);
+    return _jsx("div", { ...props, ref: ref, style: { ...props.style, ...layoutStyle }, role: "group", "aria-label": label, className: classNames("hjm-page-indicator", className), onKeyDown: (event) => {
+            onKeyDown?.(event);
+            if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey)
+                return;
+            if (event.key !== "ArrowLeft" && event.key !== "ArrowRight")
+                return;
+            event.preventDefault();
+            onCurrentIndexChange(getPageIndicatorTarget(descriptor, (event.key === "ArrowRight") !== (theme?.environment.direction === "rtl") ? "next" : "previous"));
+        }, children: _jsx(PageDots, { dots: dots, onSelect: onCurrentIndexChange, dotClassName: "hjm-page-indicator__dot" }) });
+});
 /** Finite keyed cards. Hidden slides stay mounted but cannot receive focus. */
 export const Carousel = forwardRef(function Carousel({ label, slides, renderSlide, composeAccessibleName, labels, autoplay, currentKey, defaultCurrentKey, onCurrentKeyChange, className, onFocusCapture, onMouseEnter, onMouseLeave, onKeyDown, layoutStyle, ...props }, ref) {
     const theme = useOptionalHjmTheme();
@@ -84,6 +108,6 @@ export const Carousel = forwardRef(function Carousel({ label, slides, renderSlid
                     if (next && last)
                         setCurrent(slides[0].id);
                     setRotating(next);
-                }, children: rotationRequested ? labels.pause : labels.resume }) : null, _jsx("div", { className: "hjm-carousel__track", "aria-live": playing ? "off" : "polite", "aria-atomic": false, children: resolved.map((slide) => _jsx("div", { className: "hjm-carousel__slide", role: "group", "aria-roledescription": "slide", "aria-label": slide.accessibleName, hidden: slide.inert, inert: slide.inert, children: renderSlide(slide) }, slide.id)) }), _jsxs("div", { className: "hjm-carousel__controls", "data-carousel-controls": true, role: "group", "aria-label": labels.navigation, children: [_jsx(IconButton, { label: labels.previous, tone: "ghost", "aria-disabled": current === slides[0].id, onClick: () => move("previous"), children: _jsx(Icon, { name: "chevronStart" }) }), _jsx("div", { className: "hjm-carousel__dots", children: resolved.map((slide) => _jsx("button", { type: "button", "aria-label": slide.accessibleName, "aria-disabled": slide.current, "data-current": slide.current, className: "hjm-carousel__dot", onClick: () => select(slide.id), children: _jsx("span", { "aria-hidden": "true" }) }, slide.id)) }), _jsx(IconButton, { label: labels.next, tone: "ghost", "aria-disabled": last, onClick: () => move("next"), children: _jsx(Icon, { name: "chevronEnd" }) })] })] });
+                }, children: rotationRequested ? labels.pause : labels.resume }) : null, _jsx("div", { className: "hjm-carousel__track", "aria-live": playing ? "off" : "polite", "aria-atomic": false, children: resolved.map((slide) => _jsx("div", { className: "hjm-carousel__slide", role: "group", "aria-roledescription": "slide", "aria-label": slide.accessibleName, hidden: slide.inert, inert: slide.inert, children: renderSlide(slide) }, slide.id)) }), _jsxs("div", { className: "hjm-carousel__controls", "data-carousel-controls": true, role: "group", "aria-label": labels.navigation, children: [_jsx(IconButton, { label: labels.previous, tone: "ghost", "aria-disabled": current === slides[0].id, onClick: () => move("previous"), children: _jsx(Icon, { name: "chevronStart" }) }), _jsx("div", { className: "hjm-carousel__dots", children: _jsx(PageDots, { dotClassName: "hjm-carousel__dot", keys: slides.map((slide) => slide.id), onSelect: (index) => select(slides[index].id), dots: resolvePageIndicator({ count: slides.length, currentIndex: resolved.findIndex((slide) => slide.current) }, ({ position }) => resolved[position - 1].accessibleName) }) }), _jsx(IconButton, { label: labels.next, tone: "ghost", "aria-disabled": last, onClick: () => move("next"), children: _jsx(Icon, { name: "chevronEnd" }) })] })] });
 });
 //# sourceMappingURL=carousel.js.map

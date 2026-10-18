@@ -81,10 +81,12 @@ export function TabPanel(props) {
     return (_jsx(TabPanelHost, { ...hostProps, id: getTabPanelId(tabsId, value, dynamic ? "dynamic" : "keyed"), labelledBy: getTabId(tabsId, dynamic ? activeValue : value), selected: selected, dynamic: dynamic, children: children }));
 }
 export const Tabs = forwardRef(function Tabs(props, ref) {
-    const { label, items, activationMode = tabsBehaviorDefaults.activationMode, mountPolicy = tabsBehaviorDefaults.mountPolicy, panelMode = tabsBehaviorDefaults.panelMode, appearance: suppliedAppearance, swipePosition, orientation = tabsBehaviorDefaults.orientation, direction: directionProp, loop = tabsBehaviorDefaults.loop, size = tabsRecipe.defaults.size, layout = tabsRecipe.defaults.layout, overflow = tabsRecipe.defaults.overflow, renderPanels = true, className, id, value: valueProp, defaultValue, onValueChange, layoutStyle, ...rest } = props;
+    const { label, items, activationMode = tabsBehaviorDefaults.activationMode, mountPolicy = tabsBehaviorDefaults.mountPolicy, panelMode = tabsBehaviorDefaults.panelMode, appearance: suppliedAppearance, swipePosition, orientation = tabsBehaviorDefaults.orientation, direction: directionProp, loop = tabsBehaviorDefaults.loop, size = tabsRecipe.defaults.size, layout = tabsRecipe.defaults.layout, overflow = tabsRecipe.defaults.overflow, indicator = tabsRecipe.defaults.indicator, renderPanels = true, className, id, value: valueProp, defaultValue, onValueChange, layoutStyle, ...rest } = props;
     validateItems(items);
     if (label.trim().length === 0)
         throw new TypeError("Tabs label must not be empty");
+    if (!(indicator in tabsRecipe.indicators))
+        throw new TypeError(`Unsupported Tabs indicator: ${String(indicator)}`);
     if (panelMode === "dynamic" && mountPolicy !== "active") {
         throw new TypeError("Tabs dynamic panelMode requires active mountPolicy");
     }
@@ -271,7 +273,7 @@ export const Tabs = forwardRef(function Tabs(props, ref) {
         }
     };
     const panelId = (value) => getTabPanelId(baseId, value, panelMode);
-    return (_jsxs("div", { ...rest, style: { ...rest.style, ...layoutStyle }, ref: ref, id: baseId, className: classNames("hjm-tabs", className), "data-size": size, "data-layout": layout, "data-overflow": overflow, "data-appearance": appearance, "data-orientation": orientation, "data-mount-policy": mountPolicy, "data-panel-mode": panelMode, "data-state": "ready", dir: direction, children: [_jsxs("div", { className: "hjm-tabs__list", role: "tablist", "aria-label": label, "aria-orientation": orientation, children: [movingIndicator ? _jsx("span", { ref: indicatorRef, "aria-hidden": "true", className: classNames("hjm-tabs__indicator", appearance === "gooey" && "hjm-tabs__gooey") }) : null, items.map((item) => {
+    return (_jsxs("div", { ...rest, style: { ...rest.style, ...layoutStyle }, ref: ref, id: baseId, className: classNames("hjm-tabs", className), "data-size": size, "data-layout": layout, "data-overflow": overflow, "data-appearance": appearance, "data-indicator": indicator, "data-indicator-motion": movingIndicator ? "moving" : "static", "data-orientation": orientation, "data-mount-policy": mountPolicy, "data-panel-mode": panelMode, "data-state": "ready", dir: direction, children: [_jsxs("div", { className: "hjm-tabs__list", role: "tablist", "aria-label": label, "aria-orientation": orientation, children: [movingIndicator ? _jsx("span", { ref: indicatorRef, "aria-hidden": "true", className: classNames("hjm-tabs__indicator", appearance === "gooey" && "hjm-tabs__gooey") }) : null, items.map((item) => {
                         const selected = item.id === value;
                         const tabId = getTabId(baseId, item.id);
                         const leadingSize = iconRecipe.sizes[tabsRecipe.icon.glyph];

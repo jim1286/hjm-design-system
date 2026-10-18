@@ -26,9 +26,12 @@ import { resolveColorReference } from "@hjmds/design-contracts/color-references"
 import { withAlpha, type ThemeColors } from "@hjmds/design-contracts/colors";
 import {
   glyph,
+  numeric as numericVariants,
   resolveTextFontRole,
   resolveFontFamilyStack,
+  type FontFamilyRoles,
   type FontRole,
+  type NumericVariant,
   type TextVariant,
 } from "@hjmds/design-contracts/foundations";
 import {
@@ -183,6 +186,14 @@ export type TextProps = Omit<NativeTextProps, "children"> &
     /** Overrides family role while retaining the variant metrics and text semantics. */
     fontRole?: FontRole;
     tone?: TextTone;
+    /**
+     * Product-owned color role (team, sentiment, chart series) that replaces the `tone` color while keeping the HJM
+     * variant metrics and font face. Products dropped to RN Text for these and lost the bundled face (2026-10-18
+     * yajalal stats). Contrast against the surface stays the product's responsibility.
+     */
+    color?: string;
+    /** Digit spacing; `tabular` keeps changing numbers (scores, timers, counts) from shifting the layout. */
+    numeric?: NumericVariant;
     emphasis?: TextEmphasis;
     align?: TextStyle["textAlign"];
       /** Canonical layout-only placement. Controlled visual keys are excluded. */
@@ -195,6 +206,8 @@ export const Text = forwardRef<NativeText, TextProps>(function Text(
     variant = textRecipe.defaults.variant,
     fontRole,
     tone = textRecipe.defaults.tone,
+    color,
+    numeric,
     emphasis: suppliedEmphasis,
     align,
     allowFontScaling,
@@ -223,7 +236,8 @@ export const Text = forwardRef<NativeText, TextProps>(function Text(
     [
       tokens.typography[variant],
       {
-        color: toneColors[tone],
+        color: color ?? toneColors[tone],
+        ...(numeric === undefined ? {} : { fontVariant: [numericVariants[numeric]] }),
         fontWeight: (suppliedEmphasis === undefined ? resolveTextDefaultWeight(variant, tokens.typography, Boolean(designProfile)) : undefined) ?? textRecipe.emphasis[emphasis],
         ...resolveNativeFontStyle(resolveFontFamilyStack(tokens.fontFamily, familyRole), familyRole === "code" ? "code" : "ui"),
         textAlign: align ?? inheritedAlign ?? logicalTextAlign(environment.direction),
@@ -246,6 +260,28 @@ export const Text = forwardRef<NativeText, TextProps>(function Text(
     </NativeText>
   );
 });
+
+export type HjmTextFaceOptions = Readonly<{
+  /** Final weight of the product-drawn text ("400"–"800", "normal", "bold"). */
+  weight?: TextStyle["fontWeight"];
+  fontRole?: FontRole;
+}>;
+
+/**
+ * Font family and weight that Text would use for this weight and role under the current Provider, for product text
+ * that cannot be a Text (a figure above the HJM type scale, an SVG label host). RN does not inherit fontFamily, so a raw
+ * RN Text silently fell back to the OS font even with `fonts="pretendard"` (2026-10-18 yajalal Figure). Spread the
+ * result into that text's style; size, line height and color stay product decisions.
+ */
+export function useHjmTextFace({ weight = textRecipe.emphasis.regular, fontRole = "ui" }: HjmTextFaceOptions = {}): Pick<TextStyle, "fontFamily" | "fontWeight"> {
+  const { tokens } = useHjmNativeTheme();
+  return resolveTextFace(tokens.fontFamily, fontRole, weight);
+}
+
+function resolveTextFace(families: FontFamilyRoles, role: FontRole, weight: TextStyle["fontWeight"]): Pick<TextStyle, "fontFamily" | "fontWeight"> {
+  const face = resolveBundledFace({ fontWeight: weight, ...resolveNativeFontStyle(resolveFontFamilyStack(families, role), role === "code" ? "code" : "ui") });
+  return StyleSheet.flatten(face) as Pick<TextStyle, "fontFamily" | "fontWeight">;
+}
 
 /**
  * Bundled Pretendard registers one face per weight; RN cannot pick a weight inside a custom family on every

@@ -1,6 +1,6 @@
 import { DialogPreview, AlertDialogPreview } from "./dialog-examples.js";
 // 2026-10-17 screen compositions registered.
-import { ScreenLayoutPreview, CompositionLayoutPreview, SettingsScreenPreview, SearchScreenPreview, EditorScreenPreview, PermissionScreenPreview, OnboardingScreenPreview, ModerationScreenPreview, ChatScreenPreview, NotificationInboxScreenPreview, CommentThreadScreenPreview, ListDetailScreenPreview, MediaSelectionScreenPreview, ProfileScreenPreview, ChatMessagePreview, NotificationRowPreview, NotificationItemPreview, CommentThreadRowPreview, ProfileSummaryPreview, IconTilePreview, MessageComposerPreview, PhotoSourceSheetPreview } from "../patterns/ScreenComponents.previews.js";
+import { ScreenLayoutPreview, CompositionLayoutPreview, SettingsScreenPreview, SearchScreenPreview, EditorScreenPreview, PermissionScreenPreview, OnboardingScreenPreview, ModerationScreenPreview, ChatScreenPreview, NotificationInboxScreenPreview, CommentThreadScreenPreview, ListDetailScreenPreview, MediaSelectionScreenPreview, ProfileScreenPreview, ChatMessagePreview, NotificationRowPreview, NotificationItemPreview, CommentThreadRowPreview, ProfileSummaryPreview, IconTilePreview, MessageComposerPreview, PhotoSourceSheetPreview, TypingIndicatorPreview, ChatDateSeparatorPreview } from "../patterns/ScreenComponents.previews.js";
 import { WebAdditionsPreview } from "../patterns/WebAdditions.previews.js";
 import { calendarExampleGrid } from "../../../shared/calendar-example.js";
 import { DataLayoutPreview } from "../patterns/DataLayouts.previews.js";
@@ -25,7 +25,8 @@ import { WebNavigationPreview } from "../patterns/WebNavigation.previews.js";
 import { AnchorPreview } from "../patterns/Anchor.previews.js";
 import { CalendarPreview } from "../patterns/Calendar.previews.js";
 import { FloatingActionButton as HjmFloatingActionButton } from "@hjmds/react/floating-action-button";
-import { Carousel as HjmCarousel } from "@hjmds/react/carousel";
+import { Carousel as HjmCarousel, PageIndicator as HjmPageIndicator } from "@hjmds/react/carousel";
+import { pageIndicatorExample } from "../../../shared/navigation-layout-examples";
 import { useRef, useState, type CSSProperties, type ReactNode } from "react";
 import {
   categoryLabels,
@@ -455,6 +456,7 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "Anchor": return <AnchorPreview />;
     case "Calendar": return <CalendarPreview />;
     case "FloatingActionButton": return <FloatingActionPreview />;
+    case "PageIndicator": return <PageIndicatorRegistryPreview />;
     case "Carousel": return <HjmCarousel label="이번 주 소식" slides={[{ id: "one", label: "좋아하는 소식만 골라요" }, { id: "two", label: "언제든 설정을 바꿀 수 있어요" }]} labels={{ previous: "이전", next: "다음", pause: "멈추기", resume: "재생하기", navigation: "소식 이동" }} composeAccessibleName={({ position, total, label }) => `${position}/${total} ${label}`} renderSlide={({ label }) => <HjmText>{label}</HjmText>} />;
     case "Steps": return <HjmSteps composeAccessibleName={stepsExample.accessibleName} descriptor={{ steps: stepsExample.steps, currentStepId: stepsExample.currentStepId }} statusLabels={stepsExample.statusLabels} />;
     case "Menu": return <ObservablePreview>{({ setMessage }) => <HjmMenu trigger={<HjmIconButton label={menuExample.triggerLabel} tone="ghost"><HjmIcon name="more" /></HjmIconButton>} label={menuExample.label} items={menuExample.items} onAction={(id) => setMessage(menuExample.result(menuExample.items.find((item) => item.id === id)?.label ?? id))} />}</ObservablePreview>;
@@ -509,6 +511,8 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "MediaSelectionScreen": return <MediaSelectionScreenPreview />;
     case "ProfileScreen": return <ProfileScreenPreview />;
     case "ChatMessage": return <ChatMessagePreview />;
+    case "TypingIndicator": return <TypingIndicatorPreview />;
+    case "ChatDateSeparator": return <ChatDateSeparatorPreview />;
     case "NotificationRow": return <NotificationRowPreview />;
     case "NotificationItem": return <NotificationItemPreview />;
     case "CommentThreadRow": return <CommentThreadRowPreview />;
@@ -1079,4 +1083,10 @@ function SkipNavPreview() {
     <HjmText tone="muted" variant="caption">{skipNavExample.hint}</HjmText>
     <PreviewTools><PreviewToolButton onClick={() => link.current?.focus()}>{skipNavExample.focusTool}</PreviewToolButton></PreviewTools>
   </HjmStack>;
+}
+
+// The registry renders every catalog row; the pager owns the index, so the dots need a small stateful host.
+function PageIndicatorRegistryPreview() {
+  const [page, setPage] = useState(0);
+  return <HjmPageIndicator label={pageIndicatorExample.label} count={pageIndicatorExample.count} currentIndex={page} onCurrentIndexChange={setPage} composeAccessibleName={pageIndicatorExample.pageName} />;
 }

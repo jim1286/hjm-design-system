@@ -1,10 +1,18 @@
 import { type AuthScreenDensity, type AuthScreenDescriptor, type AuthScreenHeroDescriptor, type AuthScreenPolicyLinkDescriptor } from "@hjmds/design-contracts/components/auth-screen";
 import { type HTMLAttributeAnchorTarget, type HTMLAttributes, type ReactNode } from "react";
 import { type ScreenInitialFocus } from "@hjmds/design-contracts/screen-patterns";
+import { type ScreenExit } from "./internal/screen-exit.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
-export type AuthScreenLayoutProps = Omit<HTMLAttributes<HTMLElement>, "children"> & AuthScreenDescriptor & Readonly<{
+export type AuthScreenLayoutProps = Omit<HTMLAttributes<HTMLElement>, "children" | "title"> & AuthScreenDescriptor & Readonly<{
     /** Use section inside a product shell that already owns the main landmark. */
     as?: "main" | "section";
+    /**
+     * Route name in the shared screen header band (screenHeaderRecipe, centered like ScreenLayout). Login and signup
+     * routes kept a TopBar above this layout only for the route name + back/close (2026-10-18: utilverse, burntok).
+     */
+    title?: string;
+    /** Leaving the route: the same icon-only back/close as ScreenLayout `exit`, at the header's leading edge. */
+    exit?: ScreenExit;
     /** Product mark, title and description. The product owns every string here. */
     hero: ReactNode;
     /** The primary action block — provider buttons, or a product's own sign-in bundle. */
@@ -29,12 +37,19 @@ export type AuthScreenLayoutProps = Omit<HTMLAttributes<HTMLElement>, "children"
  * the bottom. The measurements come from the resolved descriptor as custom
  * properties so the stylesheet keeps one source of truth with the contract.
  */
-export declare const AuthScreenLayout: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLElement>, "children"> & Readonly<{
+export declare const AuthScreenLayout: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLElement>, "title" | "children"> & Readonly<{
     density?: AuthScreenDensity;
     hasFooter?: boolean;
 }> & Readonly<{
     /** Use section inside a product shell that already owns the main landmark. */
     as?: "main" | "section";
+    /**
+     * Route name in the shared screen header band (screenHeaderRecipe, centered like ScreenLayout). Login and signup
+     * routes kept a TopBar above this layout only for the route name + back/close (2026-10-18: utilverse, burntok).
+     */
+    title?: string;
+    /** Leaving the route: the same icon-only back/close as ScreenLayout `exit`, at the header's leading edge. */
+    exit?: ScreenExit;
     /** Product mark, title and description. The product owns every string here. */
     hero: ReactNode;
     /** The primary action block — provider buttons, or a product's own sign-in bundle. */
@@ -63,7 +78,7 @@ export type AuthScreenHeroProps = AuthScreenHeroDescriptor & Readonly<{
  * product supplies the strings and mark; the type steps, tones and gaps come from
  * `authScreenRecipe.hero` so a login slogan never borrows the page-heading size.
  */
-export declare function AuthScreenHero({ mark, title, eyebrow, description, headingLevel }: AuthScreenHeroProps): import("react").JSX.Element;
+export declare function AuthScreenHero({ mark, title, eyebrow, description, headingLevel: suppliedHeadingLevel }: AuthScreenHeroProps): import("react").JSX.Element;
 export type AuthScreenPolicyLink = AuthScreenPolicyLinkDescriptor & Readonly<{
     /** Document URL; renders an anchor. */
     href?: string;

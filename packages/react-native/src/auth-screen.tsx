@@ -8,8 +8,10 @@ import {
   type AuthScreenHeroDescriptor,
   type AuthScreenPolicyLinkDescriptor,
 } from "@hjmds/design-contracts/components/auth-screen";
-import { initialFocusDefaults, type ScreenInitialFocus } from "@hjmds/design-contracts/screen-patterns";
-import { createContext, Fragment, useContext, useMemo, useRef, type ReactNode } from "react";
+import { initialFocusDefaults, screenHeaderRecipe, screenPatternRecipe, validateScreenExit, type ScreenInitialFocus } from "@hjmds/design-contracts/screen-patterns";
+import { createContext, Fragment, useContext, useMemo, useRef, useState, type ReactNode } from "react";
+import { ScreenExitButton, type ScreenExit } from "./internal/screen-exit.js";
+import { Heading } from "./heading.js";
 import { InitialFocusProvider, useInitialFocusScope } from "./internal/initial-focus.js";
 import { InheritedTextAlignContext } from "./internal/text-align.js";
 import { resolveScreenBottomPadding } from "./internal/screen-footer.js";
@@ -29,6 +31,14 @@ import { useHjmNativeTheme } from "./provider.js";
 
 export type AuthScreenLayoutProps = AuthScreenDescriptor &
   Readonly<{
+    /**
+     * Route name in the shared screen header band (screenHeaderRecipe, centered like ScreenLayout). Login and signup
+     * routes kept a TopBar above this layout only for the route name + back/close (2026-10-18: utilverse, burntok).
+     * The band does not scroll; the host still owns the top safe area, as for ScreenLayout.
+     */
+    title?: string;
+    /** Leaving the route: the same icon-only back/close as ScreenLayout `exit`, at the header's leading edge. */
+    exit?: ScreenExit;
     /** Product mark, title and description. The product owns every string here. */
     hero: ReactNode;
     /** The primary action block — provider buttons, or a product's own sign-in bundle. */
@@ -68,6 +78,21 @@ function AuthActionCard({ children, style }: { children?: ReactNode; style?: Sty
     padding: authScreenRecipe.mainCard.padding }, style]}>{children}</View>;
 }
 
+/** The ScreenLayout centered header band: equal side columns keep the title centered beside the exit. */
+function AuthScreenHeader({ title, exit }: { title: string | undefined; exit: ScreenExit | undefined }) {
+  const [sideWidth, setSideWidth] = useState(0);
+  return <View style={{ minHeight: screenHeaderRecipe.minHeight, paddingHorizontal: screenPatternRecipe.padding, paddingVertical: screenHeaderRecipe.paddingVertical, flexDirection: "row", alignItems: "center", gap: screenPatternRecipe.itemGap }}>
+    <View style={{ width: sideWidth, flexShrink: 0, alignItems: "flex-start" }}>
+      {/* Measure the intrinsic control, never a box constrained by its own last measurement (ScreenLayout rule). */}
+      <View onLayout={event => setSideWidth(event.nativeEvent.layout.width)} style={{ alignSelf: "flex-start", flexShrink: 0, flexDirection: "row", alignItems: "center" }}>{exit ? <ScreenExitButton {...exit} /> : null}</View>
+    </View>
+    <View style={{ flex: 1, minWidth: 0, alignItems: "center" }}>
+      {title === undefined ? null : <Heading level={screenHeaderRecipe.centeredTitleLevel} semanticLevel={1} align="center">{title}</Heading>}
+    </View>
+    <View style={{ width: sideWidth, flexShrink: 0 }} />
+  </View>;
+}
+
 /**
  * Two regions: hero + main stay one vertically centred block, the footer sits at
  * the bottom. Content taller than the viewport scrolls instead of pushing the
@@ -80,6 +105,8 @@ function AuthActionCard({ children, style }: { children?: ReactNode; style?: Sty
  * every product add its own Android inset (spint) or wrap the layout (diairy, utilverse) — 2026-10-17.
  */
 export function AuthScreenLayout({
+  title,
+  exit,
   hero,
   main,
   footer,
@@ -92,6 +119,9 @@ export function AuthScreenLayout({
   testID,
   initialFocus = initialFocusDefaults.auth,
 }: AuthScreenLayoutProps) {
+  if (title !== undefined && !title.trim()) throw new TypeError("AuthScreenLayout title must not be empty");
+  if (exit) validateScreenExit(exit, false);
+  const hasHeader = title !== undefined || exit !== undefined;
   const MainContainer = mainCard ? AuthActionCard : View;
   const resolved = resolveAuthScreenDescriptor({
     ...(density === undefined ? {} : { density }),
@@ -108,12 +138,12 @@ export function AuthScreenLayout({
   const keyboardOpen = useKeyboardOverlap(keyboardHost) > 0;
   const paddingBottom = resolveScreenBottomPadding(resolved.paddingBlock, safeAreaBottom, keyboardOpen);
   const focusScope = useInitialFocusScope({ mode: initialFocus });
-  return (
-    <InitialFocusProvider scope={focusScope}>
+  const scroll = (
     <ScrollView
       ref={scrollRef}
       onTouchStart={focusScope.onTouchStart}
-      style={[{ flex: 1 }, layoutStyle]}
+      // With a header the outer View takes the placement; the ScrollView only fills the rest.
+      style={hasHeader ? { flex: 1 } : [{ flex: 1 }, layoutStyle]}
       testID={testID}
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode={Platform.OS === "ios" ? "interactive" : "on-drag"}
@@ -165,6 +195,10 @@ export function AuthScreenLayout({
         </View>
       ) : null}
     </ScrollView>
+  );
+  return (
+    <InitialFocusProvider scope={focusScope}>
+      {hasHeader ? <View style={[{ flex: 1 }, layoutStyle]}><AuthScreenHeader title={title} exit={exit} />{scroll}</View> : scroll}
     </InitialFocusProvider>
   );
 }

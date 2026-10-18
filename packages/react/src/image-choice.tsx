@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
+import { Text } from "./layout.js";
 import { imageChoiceRecipe, resolveImageChoiceToggle, validateImageChoiceItems, type ImageChoiceItemDescriptor } from "@hjmds/design-contracts/components/image-choice";
 
 export type ImageChoiceItem = ImageChoiceItemDescriptor & Readonly<{ image: ReactNode }>;
@@ -7,6 +8,11 @@ type Base = Readonly<{
   label: string;
   /** Visible caption above the tiles; omit when the screen heading already names the choice. */
   showLabel?: boolean;
+  /**
+   * Shows each item's `label` under its tile (one ellipsized line), e.g. a person's name in a recipient picker.
+   * The tile keeps the same accessible name, so turning this on does not change what assistive tech reads.
+   */
+  showItemLabels?: boolean;
   items: readonly ImageChoiceItem[];
   disabled?: boolean;
   className?: string;
@@ -21,7 +27,7 @@ export type ImageChoiceGroupProps = Base & (
  * a brand ring plus a check when chosen; assistive tech hears radios (single) or checkboxes (multiple).
  */
 export function ImageChoiceGroup(props: ImageChoiceGroupProps) {
-  const { label, showLabel = false, items, disabled = false, className } = props;
+  const { label, showLabel = false, showItemLabels = false, items, disabled = false, className } = props;
   validateImageChoiceItems(items);
   const isSelected = (id: string) => props.selectionMode === "single" ? props.value === id : props.value.includes(id);
   const choose = (id: string) => {
@@ -29,7 +35,7 @@ export function ImageChoiceGroup(props: ImageChoiceGroupProps) {
     else props.onValueChange(resolveImageChoiceToggle("multiple", props.value, id));
   };
   const role = props.selectionMode === "single" ? "radio" : "checkbox";
-  const style = { "--hjm-image-choice-size": `${imageChoiceRecipe.tileSize}px`, "--hjm-image-choice-gap": `${imageChoiceRecipe.gap}px`, "--hjm-image-choice-radius": `${imageChoiceRecipe.radius}px`, "--hjm-image-choice-ring": `${imageChoiceRecipe.ringWidth}px`, "--hjm-image-choice-offset": `${imageChoiceRecipe.ringOffset}px`, "--hjm-image-choice-check": `${imageChoiceRecipe.checkSize}px` } as CSSProperties;
+  const style = { "--hjm-image-choice-size": `${imageChoiceRecipe.tileSize}px`, "--hjm-image-choice-gap": `${imageChoiceRecipe.gap}px`, "--hjm-image-choice-radius": `${imageChoiceRecipe.radius}px`, "--hjm-image-choice-ring": `${imageChoiceRecipe.ringWidth}px`, "--hjm-image-choice-offset": `${imageChoiceRecipe.ringOffset}px`, "--hjm-image-choice-check": `${imageChoiceRecipe.checkSize}px`, "--hjm-image-choice-item-label-gap": `${imageChoiceRecipe.itemLabelGap}px` } as CSSProperties;
   return <div className={["hjm-image-choice", className].filter(Boolean).join(" ")} style={style}>
     {showLabel ? <span className="hjm-image-choice__label">{label}</span> : null}
     <div className="hjm-image-choice__tiles" role={props.selectionMode === "single" ? "radiogroup" : "group"} aria-label={label}>
@@ -37,8 +43,13 @@ export function ImageChoiceGroup(props: ImageChoiceGroupProps) {
         const selected = isSelected(item.id);
         return <button key={item.id} type="button" role={role} aria-checked={selected} aria-label={item.label} className="hjm-image-choice__tile" data-selected={selected || undefined}
           disabled={disabled || item.disabled} onClick={() => choose(item.id)}>
-          <span className="hjm-image-choice__image">{item.image}</span>
-          {selected ? <span className="hjm-image-choice__check" aria-hidden="true">✓</span> : null}
+          {/* The ring lives on an inner frame so an item label can sit below it inside the same button (one tap target). */}
+          <span className="hjm-image-choice__ring">
+            <span className="hjm-image-choice__image">{item.image}</span>
+            {selected ? <span className="hjm-image-choice__check" aria-hidden="true">✓</span> : null}
+          </span>
+          {/* aria-label already names the tile; the visible copy must not be read twice. */}
+          {showItemLabels ? <Text variant={imageChoiceRecipe.itemLabelVariant} className="hjm-image-choice__item-label" aria-hidden="true">{item.label}</Text> : null}
         </button>;
       })}
     </div>

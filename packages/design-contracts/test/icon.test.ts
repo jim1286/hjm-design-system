@@ -4,8 +4,10 @@ import {
   getIconDirectionality,
   getIconTransform,
   iconRecipe,
+  isSemanticIconName,
   resolveIconDescriptor,
   semanticIconNames,
+  semanticIconPaths,
   statisticRecipe,
   toastRecipe,
   menuRecipe,
@@ -75,6 +77,17 @@ describe("Icon semantic contract", () => {
       status: "stable",
       recipe: "iconRecipe",
     });
+  });
+
+  it("ships one shared 24-unit path per semantic name, including reorder, rotate and unblock", () => {
+    expect(Object.keys(semanticIconPaths).sort()).toEqual([...semanticIconNames].sort());
+    for (const name of ["arrowUp", "arrowDown", "rotate", "unblock", "visibility", "visibilityOff"]) {
+      expect(isSemanticIconName(name)).toBe(true);
+      expect(semanticIconPaths[name as keyof typeof semanticIconPaths]).toMatch(/^[Mm]/u);
+    }
+    // Up/down and rotation are physical directions, not reading order.
+    for (const name of ["arrowUp", "arrowDown", "rotate"]) expect(getIconDirectionality(name)).toBe("fixed");
+    expect(isSemanticIconName("productOnly")).toBe(false);
   });
 
   it("keeps every shared recipe mark inside the semantic registry", () => {

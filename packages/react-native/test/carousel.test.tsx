@@ -116,3 +116,24 @@ it("recovers an uncontrolled removed slide at its previous position and keeps co
 it.each(["default", "controlled"])("still rejects an initially invalid %s key", async kind => {
   await expect(render(kind === "default" ? { defaultCurrentKey: "missing" } : { currentKey: "missing", onCurrentKeyChange() {} })).rejects.toThrow(/currentKey/);
 });
+
+describe("Native PageIndicator", () => {
+  it("names the current page in one adjustable row and requests pages from dots and actions", async () => {
+    const { PageIndicator } = await import("../src/carousel.js");
+    const { Pressable } = await import("react-native");
+    const onChange = vi.fn();
+    await act(async () => {
+      renderer = create(<HjmNativeProvider><PageIndicator label="Home pages" count={3} currentIndex={1} onCurrentIndexChange={onChange}
+        labels={{ previous: "Previous page", next: "Next page" }} composeAccessibleName={({ position, total }) => `Page ${position} of ${total}`} /></HjmNativeProvider>);
+    });
+    const row = position();
+    expect(row.props.accessibilityLabel).toBe("Home pages: Page 2 of 3");
+    expect(row.props.accessibilityValue).toMatchObject({ min: 1, max: 3, now: 2 });
+    expect(row.props.accessibilityActions.map((action: { label: string }) => action.label)).toEqual(["Next page", "Previous page"]);
+    act(() => row.props.onAccessibilityAction({ nativeEvent: { actionName: "increment" } }));
+    expect(onChange).toHaveBeenLastCalledWith(2);
+    act(() => renderer.root.findAllByType(Pressable)[0]!.props.onPress());
+    expect(onChange).toHaveBeenLastCalledWith(0);
+    expect(renderer.root.findAllByType(Pressable)).toHaveLength(3);
+  });
+});

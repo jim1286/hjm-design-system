@@ -4,10 +4,11 @@ import { type CollectionSource } from "@hjmds/design-contracts/components/collec
 import type { LinkDestination } from "@hjmds/design-contracts/components/link";
 import { type LoadMoreDescriptor, type LoadMoreMode, type LoadMoreRequestHandler, type LoadMoreRequestOutcome, type LoadMoreRequestReason } from "@hjmds/design-contracts/components/load-more";
 import { type TabSwipePosition, type TabsAppearance } from "@hjmds/design-contracts/gooey-navigation";
-import { type LoadMoreDensity, type MenuDensity, type TabSize, type TabsLayout, type TabsOverflow } from "@hjmds/design-contracts/recipes";
+import { type LoadMoreDensity, type MenuDensity, type TabSize, type TabsIndicator, type TabsLayout, type TabsOverflow } from "@hjmds/design-contracts/recipes";
 import { type ReactElement, type ReactNode } from "react";
 import { type ModalProps, type PressableProps } from "react-native";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+export { BottomNavigationInsetProvider, useBottomNavigationInset, type BottomNavigationInsetProviderProps, } from "./internal/bottom-navigation-inset.js";
 export type { TabsAppearance };
 import { type ScreenExit } from "./internal/screen-exit.js";
 export type TabItem<Value extends string = string> = Readonly<{
@@ -53,6 +54,8 @@ type TabsBaseProps<Value extends string> = Readonly<{
     size?: TabSize;
     layout?: TabsLayout;
     overflow?: TabsOverflow;
+    /** Selection mark: the 2pt underline (default) or a brand-tinted pill behind the selected tab. */
+    indicator?: TabsIndicator;
     /** Set false when panels are rendered separately with `TabPanel`. */
     renderPanels?: boolean;
     children?: (selectedValue: Value) => ReactNode;
@@ -114,11 +117,18 @@ export type BottomNavigationProps<Key extends string = string, IconName extends 
     primaryAction?: ReactNode;
     configuration?: BottomNavigationConfiguration;
     safeAreaBottom?: number;
+    /**
+     * `inline` (default) takes its own height in the host layout, as a navigator tab bar does. `overlay` pins the
+     * bar to the bottom of its host over the screens, so content scrolls behind a floating bar, and publishes the
+     * covered height to the nearest BottomNavigationInsetProvider (ScreenLayout pads by it). Native only: the Web
+     * bar is always `position: fixed`, i.e. always an overlay.
+     */
+    placement?: "inline" | "overlay";
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Router-owned persistent destinations; activation emits intent without mutating selection. */
-export declare function BottomNavigation<Key extends string = string, IconName extends string = string>({ descriptor, onActivate, onLongActivate, renderIcon, renderBadge, getItemTestID, primaryAction, configuration, safeAreaBottom, layoutStyle, ...removedProps }: BottomNavigationProps<Key, IconName>): import("react").JSX.Element | null;
+export declare function BottomNavigation<Key extends string = string, IconName extends string = string>({ descriptor, onActivate, onLongActivate, renderIcon, renderBadge, getItemTestID, primaryAction, configuration, safeAreaBottom, placement, layoutStyle, ...removedProps }: BottomNavigationProps<Key, IconName>): import("react").JSX.Element | null;
 type TopBarActionHostProps = Omit<PressableProps, "accessible" | "accessibilityLabel" | "accessibilityRole" | "accessibilityState" | "children" | "disabled" | "onPress" | "role" | "style">;
 export type TopBarActionControlProps = TopBarActionHostProps & Readonly<{
     accessible: true;

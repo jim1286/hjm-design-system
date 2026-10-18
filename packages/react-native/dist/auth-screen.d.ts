@@ -1,8 +1,17 @@
 import { authScreenRecipe, type AuthScreenDescriptor, type AuthScreenHeroDescriptor, type AuthScreenPolicyLinkDescriptor } from "@hjmds/design-contracts/components/auth-screen";
 import { type ScreenInitialFocus } from "@hjmds/design-contracts/screen-patterns";
 import { type ReactNode } from "react";
+import { type ScreenExit } from "./internal/screen-exit.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type AuthScreenLayoutProps = AuthScreenDescriptor & Readonly<{
+    /**
+     * Route name in the shared screen header band (screenHeaderRecipe, centered like ScreenLayout). Login and signup
+     * routes kept a TopBar above this layout only for the route name + back/close (2026-10-18: utilverse, burntok).
+     * The band does not scroll; the host still owns the top safe area, as for ScreenLayout.
+     */
+    title?: string;
+    /** Leaving the route: the same icon-only back/close as ScreenLayout `exit`, at the header's leading edge. */
+    exit?: ScreenExit;
     /** Product mark, title and description. The product owns every string here. */
     hero: ReactNode;
     /** The primary action block — provider buttons, or a product's own sign-in bundle. */
@@ -40,7 +49,7 @@ export type AuthScreenLayoutProps = AuthScreenDescriptor & Readonly<{
  * inset adjustment is off because it added the home-indicator inset on iOS only, on top of paddingBlock, which made
  * every product add its own Android inset (spint) or wrap the layout (diairy, utilverse) — 2026-10-17.
  */
-export declare function AuthScreenLayout({ hero, main, footer, density, hasFooter, pendingLabel, mainCard, safeAreaBottom, layoutStyle, testID, initialFocus, }: AuthScreenLayoutProps): import("react").JSX.Element;
+export declare function AuthScreenLayout({ title, exit, hero, main, footer, density, hasFooter, pendingLabel, mainCard, safeAreaBottom, layoutStyle, testID, initialFocus, }: AuthScreenLayoutProps): import("react").JSX.Element;
 export type AuthScreenHeroProps = AuthScreenHeroDescriptor & Readonly<{
     /** Product mark asset. HJM never ships product marks. */
     mark?: ReactNode;

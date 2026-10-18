@@ -114,3 +114,16 @@ it("AuthScreenLayout focuses nothing by default and opts in for a nickname step"
   render(auth("first-input"));
   expect(focused).toEqual(["닉네임"]);
 });
+
+// 1.31 gap 10 (2026-10-18): a screen rendered inside an overlay enters with that overlay — after its native
+// presentation — instead of on mount, the same rule Web applies when the overlay activates.
+it("focuses a screen rendered inside a sheet or dialog once the overlay has entered", () => {
+  for (const Overlay of [Sheet, Dialog]) {
+    render(<Overlay open onOpenChange={() => {}} title="검색" closeLabel="닫기"><ScreenLayout title="검색" initialFocus="first-input"><TextField label="검색어" /></ScreenLayout></Overlay>);
+    expect(focused).toEqual([]);
+    const modal = tree!.root.find(node => String(node.type) === "Modal");
+    act(() => modal.props.onShow?.({})); act(() => { vi.runAllTimers(); });
+    expect(focused).toEqual(["검색어"]);
+    act(() => tree!.unmount()); tree = undefined; focused.length = 0;
+  }
+});

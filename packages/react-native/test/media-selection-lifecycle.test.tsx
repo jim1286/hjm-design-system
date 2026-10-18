@@ -44,3 +44,13 @@ it("keeps native library and completion policy under product control", () => {
  expect(tree!.root.findByType(TextInput).props.accessibilityLabel).toBe("제품 라이브러리");
  act(() => action().props.onPress()); expect(done).toHaveBeenCalledOnce();
 });
+// 2026-10-18 Utilverse photo tools: the screen's own cell renders standalone (FlatList renderItem) and can rotate.
+it("renders the exported cell standalone with rotate before remove", async () => {
+ const { MediaSelectionCell } = await import("../src/screen-flows.js");
+ const onRotate = vi.fn();
+ act(() => { tree = create(<HjmNativeProvider reducedMotion><MediaSelectionCell {...props} item={item("b")} index={4} count={5} rotate={{ label: "회전", itemLabel: entry => `${entry.descriptor.id} 회전`, onRotate }} /></HjmNativeProvider>); });
+ expect(tree!.root.findAllByType(Button).map(node => node.props.accessibilityLabel)).toEqual(["b 앞으로", "b 뒤로", "b 회전", "b 제거"]);
+ expect(button("b 뒤로").props.disabled).toBe(true);
+ act(() => button("b 회전").props.onPress());
+ expect(onRotate).toHaveBeenCalledExactlyOnceWith("b");
+});

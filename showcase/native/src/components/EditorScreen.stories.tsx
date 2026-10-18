@@ -1,8 +1,10 @@
+import { EditorStepBackPreview } from "../flow-variants";
 import type { Meta, StoryObj } from "@storybook/react-native";
 import { NativeComponentPreview } from "../component-examples";
 const meta = { title: "배포/컴포넌트/레이아웃/편집 화면", component: NativeComponentPreview, args: { componentId: "editor-screen", variant: "default" }, parameters: { hjm: { componentIds: ["editor-screen"] }, controls: { exclude: ["componentId", "variant"] } } } satisfies Meta<typeof NativeComponentPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본",};
+export const StepBack: Story = { name: "단계 뒤로 가기", render: () => <EditorStepBackPreview /> };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

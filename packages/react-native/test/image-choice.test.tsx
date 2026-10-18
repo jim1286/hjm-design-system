@@ -39,3 +39,16 @@ it("multiple mode toggles membership and rejects unnamed items", () => {
   act(() => tree!.unmount());
   expect(() => act(() => { create(<HjmNativeProvider><ImageChoiceGroup label="사진" selectionMode="multiple" value={[]} onValueChange={change} items={[{ id: "x", label: " ", image: null }]} /></HjmNativeProvider>); })).toThrow(TypeError);
 });
+
+// 2026-10-18 BurnTok share recipients: names under the faces, inside the same press target, not read twice.
+it("shows item labels inside each tile only when asked", () => {
+  let tree: ReactTestRenderer;
+  const visible = (root: ReactTestRenderer) => root.root.findAll(node => node.props.numberOfLines === 1 && node.props.importantForAccessibility === "no" && typeof node.type !== "string");
+  act(() => { tree = create(<HjmNativeProvider><ImageChoiceGroup label="보낼 사람" selectionMode="multiple" value={[]} onValueChange={() => {}} items={items} /></HjmNativeProvider>); });
+  expect(visible(tree!)).toHaveLength(0);
+  act(() => tree!.update(<HjmNativeProvider><ImageChoiceGroup label="보낼 사람" showItemLabels selectionMode="multiple" value={[]} onValueChange={() => {}} items={items} /></HjmNativeProvider>));
+  const [first] = tiles(tree!);
+  expect(first!.props.accessibilityLabel).toBe("웃는 얼굴");
+  expect(first!.findAll(node => node.props.numberOfLines === 1 && node.props.children === "웃는 얼굴").length).toBeGreaterThan(0);
+  act(() => tree!.unmount());
+});

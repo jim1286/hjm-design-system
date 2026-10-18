@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.17.1
-- 검토일: 2026-10-17
+- 검토일: 2026-10-18
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screens.tsx`·`src/screen-flows.tsx`; 기존 개별 지침을 새 규격으로 통합. 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
 - 스토리북: `배포/화면/콘텐츠/작성과 수정`, `배포/화면/계정/프로필`
 
@@ -95,6 +95,7 @@ import { TextField } from "@hjmds/react-native/inputs";
 | `dirty` | `boolean` | 필수 | `true`에서 닫기를 누르면 `discard` 확인창을 띄우고, 확인하면 `cancel.onAction`을 부른다. `false`면 바로 부른다 |
 | `submit` | `ScreenFlowAction`(`{ label, onAction(), disabled?, pending? }`) | 필수 | `pending`이면 loading·비활성. 그동안 닫기 버튼도 비활성. 본문 `state`가 `ready`가 아니면 저장 비활성 |
 | `cancel` | `ScreenFlowAction` | 필수 | 헤더 시작 쪽 × 아이콘 닫기 버튼(`ScreenLayout` `exit` `close`). `label`은 보조기술 이름이다. 2026-10-17부터 글자 버튼 대신 아이콘 |
+| `stepBack` | `ScreenFlowAction` | 없음 | 1.31.0. 단계형 작성에서 주는 동안 헤더 시작 쪽이 뒤로 화살표(`exit` `back`)가 되고 누르면 `stepBack.onAction`(앞 단계로)을 부른다. 단계를 되돌리는 일이라 `dirty`여도 `discard` 확인을 띄우지 않고, 이미 열린 버리기 확인도 닫는다. `disabled`·`pending` 또는 `submit.pending`이면 잠긴다. 첫 단계에서는 빼서 × 닫기로 돌아간다 |
 | `discard` | AlertDialog confirm 요청에서 `onConfirm`을 뺀 것 + `fallbackErrorMessage: string` | 필수 | `onConfirm`은 EditorScreen이 채운다 |
 | `submitPlacement` | `"footer"` · `"header"` | `"footer"` | `header`면 저장이 상단 `actions` 자리로 가고 footer에는 `draftStatus`만 남는다 |
 | `draftStatus` | `ReactNode` | 없음 | 초안 저장 상태 안내. footer에 놓인다 |
@@ -107,7 +108,7 @@ import { TextField } from "@hjmds/react-native/inputs";
 | --- | --- | --- |
 | 크기 | ScreenLayout 폭(최대 720) 안에 입력 본문; 저장은 `Button` 기본 크기, 닫기는 `IconButton` | `ScreenLayout`, `screen-flows.tsx` `Action` |
 | 간격 | 화면 padding `spacing.md` 16; footer 안 `draftStatus`–저장 `spacing.sm` 12(`Stack gap="sm"`); 본문 안 입력 간격은 제품(Form 등) 소유 | Web·Native `EditorScreen` |
-| 순서·정렬 | 헤더(닫기 → 제목 → [저장: header 배치]) → 본문 → footer(`draftStatus` → 저장) | `EditorScreen` 렌더 순서 |
+| 순서·정렬 | 헤더(닫기 또는 `stepBack` 뒤로 → 제목 → [저장: header 배치]) → 본문 → footer(`draftStatus` → 저장) | `EditorScreen` 렌더 순서 |
 | 고정·스크롤 | 헤더·footer 고정, 본문 스크롤(`scroll` 기본 `"screen"`); 이탈 확인은 AlertDialog 오버레이 | `ScreenLayout`, `AlertDialog` |
 | 좁은 폭·큰 글자 | 제목 열 최소 폭 120 × 글자 배율, 모자라면 header 저장 버튼이 다음 줄로 내려간다; 키보드·safe area는 host | `screenPatternRecipe.headerMinWidth` |
 
@@ -119,6 +120,8 @@ import { TextField } from "@hjmds/react-native/inputs";
 - 저장 시작 또는 `cancel.disabled`/`cancel.pending` 전환은 이미 열린 초안 버리기 확인도 종료한다. 잠금이 풀렸다고 확인창이 다시 열리지는 않는다.
 - 최초 조회·오류·권한 제한 등 본문 대체 상태에서는 저장을 잠근다. 새 문서의 빈 초안은 `state="empty"`가 아니라 `ready`와 빈 입력으로 표현하고 제품 validation은 `submit.disabled`에 연결한다.
 - 라우터 뒤로가기·Android back·브라우저 이탈은 이 컴포넌트가 막지 않는다. 제품이 `dirty`로 guard를 건다.
+- 단계형 작성의 헤더 뒤로는 `header`에 TopBar를 넣어 만들지 않고 `stepBack`을 쓴다. 지난 단계를 눌러 돌아가는 표시는 [Steps](steps.md) `onStepPress`다([단계형 작성](../screens/flow-editor.md#단계형-작성1310)).
+- 첫 단계에서 이탈하는 길은 `cancel`이다. `stepBack`으로 화면을 떠나게 만들면 `discard` 확인을 건너뛴다.
 - 저장 성공 판정·오류 표시는 제품 상태(`notice`, Toast 등)로 한다.
 
 ## 플랫폼 차이
@@ -130,4 +133,5 @@ import { TextField } from "@hjmds/react-native/inputs";
 
 ## 근거
 
+- `stepBack`(1.31.0): 2026-10-18 spint 작성(색 → 이모지 → 글)은 헤더 시작 쪽이 앞 단계로 가야 했는데 EditorScreen은 × 닫기만 있고 `exit`를 받지 않아, 제품이 `header`에 TopBar를 넣어 머리를 통째로 대체했다.
 - 저장 시작 시 열린 버리기 확인 종료: 2026-10-13 이전 확인창으로 저장 중 이탈 잠금을 우회할 수 있던 경로를 수정했다.

@@ -948,6 +948,28 @@ export const bottomNavigationRecipe = {
         selectedDepth: 3,
         selectedDepthColor: semanticColors.interaction.depth,
     },
+    /**
+     * Raised center destination (`prominent` item, Diairy write tab, 2026-10-18). The circle is the large control
+     * height plus one 4pt step so it outranks the 40pt indicators beside it. Renderers lift it by
+     * `diameter - indicator.minHeight` so its label stays on the same line as the other labels. It keeps brand
+     * fill in both states because a dimmed circle would read as a large idle icon, not the product's main entry;
+     * selection evidence stays on the label (weight and color), as for other items.
+     */
+    prominentDestination: {
+        diameter: control.buttonHeight.large + spacing.xxs,
+        icon: "lg",
+        background: semanticColors.action.brand.background,
+        content: semanticColors.action.brand.content,
+        shadow: floatingSurfaceContract.shadow,
+    },
+    /**
+     * App-icon slots for `configuration.iconSize` (Utilverse dock artwork, 2026-10-18). `standard` keeps the
+     * density glyph; 44 is the minimum touch target and 52 the large control height, the sizes the dock used.
+     */
+    iconSizes: {
+        large: control.minTouchTarget,
+        xlarge: control.buttonHeight.large,
+    },
     adaptive: {
         web: "fixed-compact-viewport",
         native: "navigator-tab-bar",
@@ -1100,7 +1122,16 @@ export const bottomNavigationRecipe = {
 };
 export const tabsRecipe = {
     slots: ["root", "list", "tab", "label", "indicator", "panel"],
-    defaults: { size: "medium", layout: "content", overflow: "scroll" },
+    defaults: { size: "medium", layout: "content", overflow: "scroll", indicator: "underline" },
+    /**
+     * Selection mark. `filled` paints the selected tab as a brand-tinted pill instead of the 2pt underline and
+     * drops the list divider, which only anchors underlines (Diairy nest tabs, 2026-10-18: the app's tab bar
+     * already marks the current place with this pill, so in-screen tabs looked like a second product).
+     */
+    indicators: {
+        underline: { listDivider: true, background: null, selectedContent: semanticColors.content.primary, radius: null },
+        filled: { listDivider: false, background: semanticColors.surface.brand, selectedContent: semanticColors.content.brand, radius: "full" },
+    },
     sizes: {
         small: {
             minHeight: control.minTouchTarget,
@@ -1454,6 +1485,18 @@ export const dialogRecipe = {
         shadow: floatingSurfaceContract.shadow,
     },
     transition: { enter: motionPreset.enter, exit: motionPreset.exit },
+    /**
+     * ImmersiveOverlay (Dialog companion, 1.31.0): an edge-to-edge stage with a control bar and no card, scrim or
+     * header, for presentations such as a display board (utilverse used a raw RN Modal because Dialog/Sheet always
+     * framed their content). The stage is product-drawn; the bar reuses screen spacing so it matches a screen footer.
+     */
+    immersive: {
+        background: semanticColors.canvas,
+        controls: { padding: spacing.md, gap: spacing.xs, actionGap: spacing.sm },
+        // A presentation is read from across a room: rotation follows the device even when the app is portrait-only.
+        orientations: ["portrait", "landscape-left", "landscape-right"],
+        statusBarHidden: true,
+    },
 };
 export const alertDialogRecipe = {
     slots: [

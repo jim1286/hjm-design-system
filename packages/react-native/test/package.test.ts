@@ -108,6 +108,8 @@ describe("@hjmds/react-native package boundary", () => {
       "./avatar-blobatar",
       "./effect-surface",
       "./icon-lucide",
+      // Optional react-native-svg adapter for the shared semantic glyph paths.
+      "./icon-svg",
       "./duration-field",
       "./inline-confirm",
       "./reaction-picker",

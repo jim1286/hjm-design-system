@@ -155,3 +155,23 @@ describe("initial focus resolution", () => {
     expect(resolveEntryFocus("inactive", { kind: "activate" }, none()).phase).toBe("entering");
   });
 });
+
+describe("chat reaction summary and icon tile frame (2026-10-18)", () => {
+  it("validates summary copy, ids and counts and shows counts from minCount", async () => {
+    const { resolveChatReactionSummary, chatMessageRecipe } = await import("../src/screen-patterns.js");
+    const items = resolveChatReactionSummary({ label: "Reactions", items: [{ id: "heart", emoji: "❤️", count: 2 }, { id: "laugh", emoji: "😂", count: 1 }] });
+    expect(items.map(item => item.showCount)).toEqual([true, false]);
+    expect(chatMessageRecipe.reactionSummary.minCount).toBe(2);
+    expect(() => resolveChatReactionSummary({ label: " ", items: [] })).toThrow(TypeError);
+    expect(() => resolveChatReactionSummary({ label: "R", items: [{ id: "a", emoji: "❤️", count: 1 }, { id: "a", emoji: "😂", count: 1 }] })).toThrow(TypeError);
+    expect(() => resolveChatReactionSummary({ label: "R", items: [{ id: "a", emoji: "", count: 1 }] })).toThrow(TypeError);
+    expect(() => resolveChatReactionSummary({ label: "R", items: [{ id: "a", emoji: "❤️", count: 1.5 }] })).toThrow(RangeError);
+  });
+  it("keeps the original squircle as the default frame and bounds a filling icon", async () => {
+    const { iconTileRecipe } = await import("../src/screen-patterns.js");
+    expect(iconTileRecipe.defaults).toEqual({ frame: "surface", shape: "squircle", size: "fixed" });
+    expect(`${iconTileRecipe.shapes.squircle * 100}`.startsWith("22")).toBe(true);
+    expect(iconTileRecipe.fillMinSize).toBeLessThan(iconTileRecipe.iconSize);
+    expect(iconTileRecipe.fillMaxSize).toBeGreaterThan(iconTileRecipe.iconSize);
+  });
+});

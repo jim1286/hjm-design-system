@@ -6,7 +6,7 @@ import { getIconTransform, resolveIconDescriptor, } from "@hjmds/design-contract
 import { validateLayoutRegions, } from "@hjmds/design-contracts/components/layout";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { withAlpha } from "@hjmds/design-contracts/colors";
-import { glyph, resolveTextFontRole, resolveFontFamilyStack, } from "@hjmds/design-contracts/foundations";
+import { glyph, numeric as numericVariants, resolveTextFontRole, resolveFontFamilyStack, } from "@hjmds/design-contracts/foundations";
 import { surfaceDefaults, surfaceGeometry, surfaceRecipe, } from "@hjmds/design-contracts/recipes/base";
 import { resolveTextDefaultWeight, sectionRecipe, stackRecipe, textRecipe, } from "@hjmds/design-contracts/recipes";
 import { Children, Component, Fragment, forwardRef, isValidElement, useEffect, useMemo, useState, } from "react";
@@ -38,7 +38,7 @@ export const Layout = forwardRef(function Layout({ children, header, footer, sid
         : (_jsx(View, { ...sidebar.containerProps, accessibilityLabel: sidebar.label, children: sidebar.children }));
     return (_jsxs(View, { ...props, ref: ref, style: [{ flex: 1 }, style], children: [hasHeader ? _jsx(View, { ...headerProps, children: header }) : null, sidebar?.mode === "overlay" ? sidebar.renderOverlay(sidebarNode) : sidebarNode, _jsx(View, { ...mainProps, ref: mainRef, style: [{ flex: 1 }, mainProps?.style], children: children }), hasFooter ? _jsx(View, { ...footerProps, children: footer }) : null] }));
 });
-export const Text = forwardRef(function Text({ children, variant = textRecipe.defaults.variant, fontRole, tone = textRecipe.defaults.tone, emphasis: suppliedEmphasis, align, allowFontScaling, layoutStyle, style, ...props }, ref) {
+export const Text = forwardRef(function Text({ children, variant = textRecipe.defaults.variant, fontRole, tone = textRecipe.defaults.tone, color, numeric, emphasis: suppliedEmphasis, align, allowFontScaling, layoutStyle, style, ...props }, ref) {
     const { colors, environment, textScaling, tokens, designProfile } = useHjmNativeTheme();
     const inheritedAlign = useInheritedTextAlign();
     const emphasis = suppliedEmphasis ?? textRecipe.defaults.emphasis;
@@ -56,7 +56,8 @@ export const Text = forwardRef(function Text({ children, variant = textRecipe.de
     const resolvedText = resolveNativeTextScaleProps(textScaling, [
         tokens.typography[variant],
         {
-            color: toneColors[tone],
+            color: color ?? toneColors[tone],
+            ...(numeric === undefined ? {} : { fontVariant: [numericVariants[numeric]] }),
             fontWeight: (suppliedEmphasis === undefined ? resolveTextDefaultWeight(variant, tokens.typography, Boolean(designProfile)) : undefined) ?? textRecipe.emphasis[emphasis],
             ...resolveNativeFontStyle(resolveFontFamilyStack(tokens.fontFamily, familyRole), familyRole === "code" ? "code" : "ui"),
             textAlign: align ?? inheritedAlign ?? logicalTextAlign(environment.direction),
@@ -70,6 +71,20 @@ export const Text = forwardRef(function Text({ children, variant = textRecipe.de
         // iOS otherwise breaks Korean inside words (a word split across lines), unlike Web's word-break: keep-all (2026-10-17 review N10).
         lineBreakStrategyIOS: "hangul-word", ...props, allowFontScaling: resolvedText.allowFontScaling, ref: ref, style: resolveBundledFace(resolvedText.style), children: children }));
 });
+/**
+ * Font family and weight that Text would use for this weight and role under the current Provider, for product text
+ * that cannot be a Text (a figure above the HJM type scale, an SVG label host). RN does not inherit fontFamily, so a raw
+ * RN Text silently fell back to the OS font even with `fonts="pretendard"` (2026-10-18 yajalal Figure). Spread the
+ * result into that text's style; size, line height and color stay product decisions.
+ */
+export function useHjmTextFace({ weight = textRecipe.emphasis.regular, fontRole = "ui" } = {}) {
+    const { tokens } = useHjmNativeTheme();
+    return resolveTextFace(tokens.fontFamily, fontRole, weight);
+}
+function resolveTextFace(families, role, weight) {
+    const face = resolveBundledFace({ fontWeight: weight, ...resolveNativeFontStyle(resolveFontFamilyStack(families, role), role === "code" ? "code" : "ui") });
+    return StyleSheet.flatten(face);
+}
 /**
  * Bundled Pretendard registers one face per weight; RN cannot pick a weight inside a custom family on every
  * platform (Android fakes bold). Swap the family for the face of the final weight and drop fontWeight.

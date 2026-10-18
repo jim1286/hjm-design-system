@@ -23,6 +23,11 @@ const layerListeners = new Set<() => void>();
 const rootLayer: LayerRef = { current: 0 };
 /** Layer of the enclosing overlay, so a ScreenLayout rendered inside a sheet is blocked only by overlays above it. */
 const OverlayLayerContext = createContext<LayerRef>(rootLayer);
+/**
+ * Whether the enclosing scope is active. A screen inside an overlay enters with the overlay (after its native
+ * presentation), not on mount: focusing a TextInput before the Modal is shown is dropped (BurnTok search, 2026-10-18).
+ */
+const ScopeActiveContext = createContext(true);
 
 /**
  * Keeps an overlay on the open stack while `presented` (from opening until its exit and native dismissal finish, the
@@ -50,16 +55,19 @@ function textEntryFocused(): boolean {
 }
 
 type Candidate = InitialFocusCandidate & { entry: Entry };
-export type InitialFocusScopeHandle = Readonly<{ registry: Registry; layer: LayerRef; onTouchStart(): void }>;
+export type InitialFocusScopeHandle = Readonly<{ registry: Registry; layer: LayerRef; active: boolean; onTouchStart(): void }>;
 
 /**
  * Screen/overlay entry focus. The returned `onTouchStart` goes on the scope's root view: a touch there (bubbling from
  * any descendant, scrolls included) ends the entry window unless an overlay is above the scope.
  * `layer` is the overlay's own layer; screens inherit the enclosing one.
  */
-export function useInitialFocusScope({ mode, active = true, layer: ownLayer }: { mode: InitialFocusMode; active?: boolean; layer?: LayerRef }): InitialFocusScopeHandle {
+export function useInitialFocusScope({ mode, active: ownActive = true, layer: ownLayer }: { mode: InitialFocusMode; active?: boolean; layer?: LayerRef }): InitialFocusScopeHandle {
   const inherited = useContext(OverlayLayerContext);
+  const enclosingActive = useContext(ScopeActiveContext);
   const layer = ownLayer ?? inherited;
+  // Overlays own their activation; screens follow the scope they are rendered in.
+  const active = ownActive && (ownLayer !== undefined || enclosingActive);
   const modeRef = useRef(mode); modeRef.current = mode;
   const state = useRef({ phase: "inactive" as EntryFocusPhase, entries: new Set<Entry>(), fresh: new Set<Entry>(), counter: 0, flush: null as ReturnType<typeof setTimeout> | null });
 
@@ -111,11 +119,11 @@ export function useInitialFocusScope({ mode, active = true, layer: ownLayer }: {
     };
   }, [active, scope]);
 
-  return useMemo(() => ({ registry: scope.registry, layer: scope.layer, onTouchStart: scope.onTouchStart }), [scope]);
+  return useMemo(() => ({ registry: scope.registry, layer: scope.layer, active, onTouchStart: scope.onTouchStart }), [scope, active]);
 }
 
 export function InitialFocusProvider({ scope, children }: { scope: InitialFocusScopeHandle; children: ReactNode }) {
-  return <OverlayLayerContext.Provider value={scope.layer}><InitialFocusContext.Provider value={scope.registry}>{children}</InitialFocusContext.Provider></OverlayLayerContext.Provider>;
+  return <OverlayLayerContext.Provider value={scope.layer}><ScopeActiveContext.Provider value={scope.active}><InitialFocusContext.Provider value={scope.registry}>{children}</InitialFocusContext.Provider></ScopeActiveContext.Provider></OverlayLayerContext.Provider>;
 }
 
 /** Registers a text field with the nearest scope. `preference` is the field's public `initialFocusTarget`. */

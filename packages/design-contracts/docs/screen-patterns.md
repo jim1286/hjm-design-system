@@ -426,3 +426,21 @@ API별 제공 기준과 개발 중 추가분은 [사용 지침](usage/README.md)
 
 검증: 각 renderer의 `screen-recovery` 테스트. Web은 Chromium 동작 검사, Native는 host 렌더 검사이며
 실기기 성능·운영 서버·npm 게시·소비 앱 반영을 뜻하지 않는다.
+
+## 2026-10-18 헤더 식별 표시·채팅 타임라인 조각
+
+HJM 1.30.0 채택 감사에서 제품이 공통 구조를 다시 만든 지점(야잘알 팀 상세 헤더, 유틸버스 도구 헤더·런처·채팅,
+번뚝 DM, spint 홈 로딩)을 공개 API로 옮겼다. 모두 추가 API이며 기존 기본값은 그대로다.
+
+- `ScreenLayout.titleLeading`: 제목 앞 장식 표시. `titleVisibility="hidden"`이면 표시가 `title`을 이름으로 하는
+  heading이 된다. ChatScreen의 비공개 상대 사진 자리를 공개했다(`avatar`는 유지). Native 가운데 헤더의 양쪽 열
+  측정 방식은 바꾸지 않았다.
+- `ScreenLayout.loadingIndicator`: CompositionLayout과 같은 브랜드 로딩 계약.
+- `IconTile` `frame`·`shape`·`size`(`iconTileRecipe.shapes`·`fillMinSize`·`fillMaxSize`·`defaults`).
+- `ChatMessage.reactions.summary`(`chatMessageRecipe.reactionSummary`, `resolveChatReactionSummary`)와
+  메뉴 행 `tone`(Menu의 `MenuItemTone`).
+- `MessageComposer.error`는 나타날 때 assertive로 알린다(버그 수정).
+- 새 조각 `TypingIndicator`(`typingIndicatorRecipe`)·`ChatDateSeparator`(`chatDateSeparatorRecipe`).
+
+검증: Web `screens-additions.browser.test.tsx`(Chromium), Native `screens-additions.test.tsx`(host 렌더),
+contracts `screen-patterns.test.ts`. 실기기·npm 게시·소비 앱 반영을 뜻하지 않는다.

@@ -1,22 +1,30 @@
+import { type IconTileFrame, type IconTileShape, type IconTileSize } from "@hjmds/design-contracts/screen-patterns";
 import { type ComposerLengthFeedback } from "@hjmds/design-contracts/communication";
 import { type DesignProfileScreenPresentation } from "@hjmds/design-contracts/design-profile-layout";
 import { type MessageMenuAction } from "./internal/message-reactions.js";
+import { type MediaAlbum } from "./internal/media-album.js";
+export type { MediaAlbum } from "./internal/media-album.js";
 import type { ReactionPickerProps } from "./reaction-picker.js";
 import { type Ref, type ReactNode } from "react";
 import { ScrollView, type TextInput, type ScrollViewProps } from "react-native";
 import { type ScreenExit } from "./internal/screen-exit.js";
-import { type MessageAttachmentDescriptor, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState, type ScreenContentInset, type ScreenInitialFocus } from "@hjmds/design-contracts/screen-patterns";
+import { type MessageAttachmentDescriptor, type ChatReactionSummary, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState, type ScreenContentInset, type ScreenInitialFocus } from "@hjmds/design-contracts/screen-patterns";
 import { type ListRowProps } from "./data-display.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 /** Internal: lets ChatScreen narrow only the timeline gutter without a public spacing escape hatch. */
 type ScreenLayoutPrivateProps = Readonly<{
     hjmBodyInlinePadding?: number;
-    hjmTitleLeading?: ReactNode;
 }>;
 export type ScreenLayoutProps = Readonly<{
     title: string;
     /** The shared header owns badge placement; the product supplies its meaning and label. */
     titleBadge?: ReactNode;
+    /**
+     * Identity mark or artwork before the title (team logo, tool artwork). Decorative: the title stays the header and
+     * the accessible name. With `titleVisibility="hidden"` the mark stands alone in the title slot as the header,
+     * named by `title` (2026-10-18: yajalal team detail and Utilverse tool headers rebuilt the header to get this).
+     */
+    titleLeading?: ReactNode;
     /** Hide redundant route names while retaining descriptions and a named screen. */
     titleVisibility?: "visible" | "hidden";
     /** Centered by default (2026-10-17 user rule); `start` remains available. Extra actions sit at the trailing edge. */
@@ -45,6 +53,8 @@ export type ScreenLayoutProps = Readonly<{
     footer?: ReactNode;
     state?: ScreenContentState;
     stateAction?: ReactNode;
+    /** Brand visual for `state.kind === "loading"`; the shared state group keeps copy, centering and announcement (as CompositionLayout). */
+    loadingIndicator?: ReactNode;
     children?: ReactNode;
     /** Use content when the child is a FlatList/virtualized timeline. */
     scroll?: "screen" | "content";
@@ -75,7 +85,7 @@ export type ScreenLayoutProps = Readonly<{
     initialFocus?: ScreenInitialFocus;
     scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator" | "onScroll" | "onScrollBeginDrag" | "onScrollEndDrag" | "scrollEventThrottle" | "alwaysBounceVertical" | "automaticallyAdjustKeyboardInsets">;
 }>;
-export declare function ScreenLayout({ title, titleBadge, titleVisibility, headerAlignment, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, description, exit, actions, notice, footer, state, stateAction, children, scroll, layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance, safeAreaBottom, initialFocus, hjmBodyInlinePadding, hjmTitleLeading }: ScreenLayoutProps & ScreenLayoutPrivateProps): import("react").JSX.Element;
+export declare function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility, headerAlignment, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, description, exit, actions, notice, footer, state, stateAction, loadingIndicator, children, scroll, layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance, safeAreaBottom, initialFocus, hjmBodyInlinePadding }: ScreenLayoutProps & ScreenLayoutPrivateProps): import("react").JSX.Element;
 /**
  * Styles for a product scroller that owns the body with `scroll="content"` (FlatList, SectionList): `style` reaches
  * across the ScreenLayout body gutter and `contentContainerStyle` pads it back, so items stay on the gutter while the
@@ -114,7 +124,7 @@ export type NotificationItemProps = Omit<ListRowProps, "description" | "selected
     description?: string;
 }>;
 export declare function NotificationItem({ read, statusLabel, timestamp, description, ...props }: NotificationItemProps): import("react").JSX.Element;
-export type ChatScreenProps = Omit<ScreenLayoutProps, "footer"> & Readonly<{
+export type ChatScreenProps = Omit<ScreenLayoutProps, "footer" | "titleLeading"> & Readonly<{
     composer: ReactNode;
     /** Shown while the reader is away from the latest message; the host owns scroll position and visibility. */
     jumpToLatest?: Readonly<{
@@ -214,9 +224,22 @@ export type ChatMessageProps = ChatMessageDescriptor & Readonly<{
             disabled?: boolean;
             icon?: ReactNode;
         }>;
+        summary?: ChatMessageReactionSummary;
     }>;
+}> & Readonly<{
+    /**
+     * Paged alternative to `media` (2026-10-18, Utilverse): HJM mounts only the shown photo, so a product that authorizes
+     * each image fetches one page at a time. Exclusive with `media` (validated at render): one message has one photo set.
+     */
+    mediaAlbum?: MediaAlbum;
 }>;
-export declare function ChatMessage({ direction, author, timestamp, timestampPresentation, bubbleTail, groupPosition, deliveryLabel, avatar, reply, replyQuote, media, actions, replyAction, replyLink, reactions, children, interactiveContent }: ChatMessageProps): import("react").JSX.Element;
+/**
+ * Current reactions drawn beside the time as one button that opens the same hold menu (2026-10-18 BurnTok DM, which
+ * showed counts as status tags because the menu could not be opened from outside). Counts and the localized
+ * accessible name ("Reactions: heart 2. Open menu") come from the product; `items` in display order.
+ */
+export type ChatMessageReactionSummary = ChatReactionSummary;
+export declare function ChatMessage({ direction, author, timestamp, timestampPresentation, bubbleTail, groupPosition, deliveryLabel, avatar, reply, replyQuote, media, mediaAlbum, actions, replyAction, replyLink, reactions, children, interactiveContent }: ChatMessageProps): import("react").JSX.Element;
 /** Shared structure for embedded compositions. The parent supplies size; this never creates a second scroller. */
 export type CompositionLayoutProps = Readonly<{
     title?: string;
@@ -253,8 +276,37 @@ export type IconTileProps = Readonly<{
     overlay?: ReactNode;
     labelLines?: 1 | 2;
     ghost?: boolean;
+    /** `none`: the icon is complete product artwork, so no frame fill or hairline is drawn. */
+    frame?: IconTileFrame;
+    /** Frame (and ghost outline) corner shape from the product's icon theme. */
+    shape?: IconTileShape;
+    /** `fill`: the icon spans the grid cell between iconTileRecipe.fillMinSize and fillMaxSize. */
+    size?: IconTileSize;
 }>;
 /** Presentation shared by launcher and profile grids; the host owns navigation or drag behavior. */
-export declare function IconTile({ icon, label, overlay, labelLines, ghost }: IconTileProps): import("react").JSX.Element;
-export {};
+export declare function IconTile({ icon, label, overlay, labelLines, ghost, frame, shape, size }: IconTileProps): import("react").JSX.Element;
+export type TypingIndicatorProps = Readonly<{
+    /** Localized status read by assistive tech ("Seoyeon is typing"); the visible row shows only the dots. */
+    label: string;
+    /** Typer's photo in a group room, sized like ChatMessage avatars (`chatMessageRecipe.avatarSize`). */
+    avatar?: ReactNode;
+    layoutStyle?: HjmCompositionStyleProp;
+}>;
+/**
+ * Incoming "is typing" row for a ChatScreen timeline (2026-10-18 BurnTok DM drew its own). The host shows it only while
+ * presence says someone is typing and places it after the last message; HJM owns the bubble, dots and announcement.
+ */
+export declare function TypingIndicator({ label, avatar, layoutStyle }: TypingIndicatorProps): import("react").JSX.Element;
+export type ChatDateSeparatorProps = Readonly<{
+    /** Product-formatted date or time ("Today", "Oct 18", "3:04 PM"). */
+    label: string;
+    /** Machine-readable value for the Web `<time>` element; Native ignores it. */
+    dateTime?: string;
+    layoutStyle?: HjmCompositionStyleProp;
+}>;
+/**
+ * Centered date (or time) row between ChatScreen timeline groups (2026-10-18 Utilverse chat drew a caption). Grouping
+ * rules stay with the product; the next message keeps its own group gap, so this row adds only the space before it.
+ */
+export declare function ChatDateSeparator({ label, layoutStyle }: ChatDateSeparatorProps): import("react").JSX.Element;
 //# sourceMappingURL=screens.d.ts.map

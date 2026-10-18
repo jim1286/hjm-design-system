@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Stack } from "@hjmds/react";
+import { Button, Stack, Text } from "@hjmds/react";
 import { StatusText } from "@hjmds/react/status-text";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ContractStory } from "./preview-registry";
@@ -25,5 +25,18 @@ function StatusPreview() {
   </Stack>;
 }
 export const Status: Story = { name: "상태 알림", render: () => <StatusPreview /> };
+
+function ScorePreview() {
+  const [score, setScore] = useState(7);
+  // A product color role (team color) and tabular digits: the score keeps its width while it changes.
+  return <Stack gap="sm">
+    <Stack axis="inline" gap="md" align="center">
+      <Text variant="heading" emphasis="strong" color="#c8102e" numeric="tabular">{score}</Text>
+      <Text variant="heading" emphasis="strong" tone="muted" numeric="tabular">11</Text>
+    </Stack>
+    <Button tone="secondary" onClick={() => setScore(value => (value + 1) % 20)}>점수 올리기</Button>
+  </Stack>;
+}
+export const ProductColor: Story = { name: "제품 색과 고정 폭 숫자", render: () => <ScorePreview /> };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

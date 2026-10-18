@@ -209,6 +209,7 @@ export function createHjmThemeStyle(
     // dialogs, sheets and toasts cannot retain neutral shadows after a theme switch.
     style[`--hjm-${name}-shadow`] = shadowCss(profileTokens?.shadow.floating ?? chrome.shadow);
   }
+  style["--hjm-immersive-background"] = resolveColorReference(dialogRecipe.immersive.background, palette);
   style["--hjm-sheet-max-height"] = `${sheetRecipe.content.maxHeightRatio * 100}dvh`;
   style["--hjm-sheet-max-width"] = `${sheetRecipe.web.maxWidth}px`;
   style["--hjm-sheet-handle-width"] = `${sheetRecipe.handle.width}px`;

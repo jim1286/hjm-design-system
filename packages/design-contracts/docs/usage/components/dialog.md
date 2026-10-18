@@ -38,6 +38,7 @@
 | --- | --- | --- | --- |
 | `Dialog` | 기본 | `@hjmds/react`, `/overlays` | `@hjmds/react-native`, `/overlays` |
 | `OverlayStackProvider` | 확장 — 명령형 열기(`useDialog`·`useSheet`·`useOverlayStack`) | `@hjmds/react`, `/overlay-stack` | 없음 |
+| `ImmersiveOverlay` | 확장 — 카드·scrim·머리 없이 화면 전체를 채우는 표현(1.31.0). 아래 [전체 화면 표현](#전체-화면-표현-immersiveoverlay) | `@hjmds/react`, `/overlays` | `@hjmds/react-native`, `/overlays` |
 
 ## 최소 사용 예
 
@@ -127,6 +128,7 @@ await handle.closed; // portal 제거·초점 복구 뒤. 다음 오버레이는
 | `onActionError`(Native) | `(error: unknown) => void` | — | action 실패를 본문 오류·재시도로 연결한다. 오류를 처리하는 동안 초안을 보존한다. 없으면 개발 빌드에서 실패마다 `console.error`를 남긴다(중복 제거 없음). 1.13.0 변경 |
 | `children`(Native) | `ReactNode` | — | 고정된 제목 줄 아래 스크롤 본문(`ScrollView`) 안에 들어간다. `FlatList`·`SectionList`를 넣지 않는다 |
 | `contentStyle`(Native) | 배치 key만(`HjmCompositionStyleProp`) | — | 대화상자 상자의 배치. 높이는 `size`로 |
+| `overlayLayer` | `ReactNode` | 없음 | 1.31.0. 카드 **밖** 화면 전체 층에 그리는 장식(끌기 미리보기·특정 위치 강조). 카드보다 위에 그려지고 Web viewport/Native window 좌표(`clientX`·`pageX`·`measureInWindow`)를 그대로 쓴다. 누름을 받지 않고 보조기술에서 숨긴다(Web `inert`·`aria-hidden`, Native `pointerEvents="none"`·`no-hide-descendants`). 조작할 내용은 `children`에 둔다 |
 | `useDialog()`(Web) | `(request) => { closed: Promise<void>, close(): void }` | — | request는 `open`·`defaultOpen`·`onOpenChange`·`trigger`를 뺀 DialogProps. `OverlayStackProvider` 안에서만 |
 
 - Dialog는 `layoutStyle`을 받지 않는다(Web 제외 15개 중 하나 — 포털로 가운데 그려져 배치할 흐름 안 루트가 없다).
@@ -177,6 +179,64 @@ Native, 큰 글자 또는 폭 < 480:   [      취소      ]
   긴 목록은 [Sheet](sheet.md)나 `map`으로 그린 짧은 목록을 쓴다.
 - Native에서 저장처럼 실패할 수 있는 action은 `onActionError`를 넘긴다. 단발성 작업에 Promise를 반환하면 완료까지 닫히지 않으므로, 즉시 닫으려면 아무것도 반환하지 않는다.
 - 배치 변경은 Native `contentStyle`(layout 전용)만 쓴다. 높이는 `size`로 정한다. Web은 `className`만 받으며 시각 override에 쓰지 않는다.
+
+### 카드 밖 레이어 (`overlayLayer`)
+
+폴더 안 아이콘을 끌 때처럼 손가락·포인터를 따라가는 미리보기는 카드 안에 그리면 카드의 안쪽 여백·스크롤·잘림·열림
+변형 때문에 좌표가 어긋나고 카드에 갇힌다. `overlayLayer`는 카드와 같은 모달 안이지만 카드의 형제 층이라 이 문제가 없다.
+끌기 제스처와 드롭 대상 측정은 카드 안 `children`이 소유하고, 층에는 현재 좌표의 그림만 넘긴다.
+Native 입력 본문의 키보드 회피는 Dialog가 이미 맡는다(위 키보드 설명). 제품이 `KeyboardAvoidingView`를 다시 감싸지 않는다.
+
+```tsx
+// Native
+<Dialog open={open} onOpenChange={setOpen} title={folder.name} closeLabel={t("common.close")}
+  overlayLayer={drag ? <DragGhost x={drag.pageX} y={drag.pageY} item={drag.item} /> : null}>
+  {grid /* 끌기 responder와 measureInWindow 등록은 여기 */}
+</Dialog>
+```
+
+<!-- usage-example: Web ../../../../../showcase/web/src/components/dialog-overlay-examples.tsx -->
+- Web 실행 예제 `showcase/web/src/components/dialog-overlay-examples.tsx`의 `DialogOverlayLayerPreview`(`배포/컴포넌트/오버레이/대화상자` 카드 밖 레이어).
+<!-- usage-example: Native ../../../../../showcase/native/src/dialog-overlay-preview.tsx -->
+- Native 실행 예제 `showcase/native/src/dialog-overlay-preview.tsx`의 같은 이름 preview.
+
+### 전체 화면 표현 (`ImmersiveOverlay`)
+
+전광판·발표 화면처럼 **화면 자체가 내용**인 표현에 쓴다. 카드·scrim·머리·안쪽 여백이 없고, 제품이 그린 무대가 화면 끝까지
+채운다. 아래에는 HJM 행동 줄(상태 문구 → 도구 행동 → 나가기 행동)이 safe area 안에 붙는다. 모달 스택·포커스 가두기·
+배경 격리·닫힌 뒤 포커스 복귀·아래 화면의 진입 포커스 대기는 Dialog와 같다.
+
+| prop | 값 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `open`·`onOpenChange` | `boolean`, `(open, { reason }) => void` | — | 제어형만. Web `reason`: `"exit-action"`·`"escape"`. Native: `"exit-action"`·`"back"` |
+| `label` | 현지화 문자열 | — | 표현 전체의 접근성 이름 |
+| `exitLabel` | 현지화 문자열 | — | 나가기 버튼에 보이는 문구(제품 문구) |
+| `children` | `ReactNode` | — | 무대. 남은 높이 전체를 채우고 넘치는 부분은 잘린다 |
+| `tools` | `ReactNode` | 없음 | 나가기 앞에 놓는 도구 행동(멈춤 등 `IconButton`) |
+| `status` | `ReactNode` | 없음 | 행동 줄 위 상태 문구·`Notice` |
+| `returnFocusRef` | ref | 없음 | 닫힌 뒤 돌아갈 대상 |
+| `initialFocusRef`(Web) | ref | 나가기 버튼 | 열릴 때 포커스 |
+| `modalPriority`·`portalContainer`·`className`(Web) | — | — | Dialog와 같다 |
+| `onShow`(Native) | RN `Modal` `onShow` | — | 표시 완료 |
+
+- Native는 `presentationStyle="fullScreen"` Modal에서 상태 표시줄을 숨기고 세로·가로 회전을 허용한다(`dialogRecipe.immersive.orientations`, 앱이 세로 고정이어도 이 표현은 회전한다). 무대는 화면 끝까지 그려지므로 읽어야 할 내용은 가운데 두거나 `useHjmNativeSafeAreaInsets`로 가장자리 절개를 피한다.
+- Web은 viewport 전체를 덮는 고정 층이다. 브라우저 Fullscreen API는 요청하지 않는다. 새 사용자 활성화가 필요하고, 그 Escape는 페이지가 받기 전에 전체 화면만 끝내 오버레이가 창 안에 남으며, iOS Safari는 요소 전체 화면을 지원하지 않는다.
+- 행동 줄 간격: 안쪽 `spacing.md` 16(아래·좌우는 safe area와 큰 값), 상태–행동 `spacing.xs` 8, 행동 사이 `spacing.sm` 12. 나가기 버튼은 `size="large"`로 남은 폭을 채운다.
+- 화면 꺼짐 방지·움직임 같은 무대 동작은 제품 소유다.
+
+```tsx
+// Native
+import { ImmersiveOverlay } from "@hjmds/react-native/overlays";
+
+<ImmersiveOverlay open={presenting} onOpenChange={(next) => { if (!next) setPresenting(false); }}
+  label={t("display.title")} exitLabel={t("displayClose")}
+  status={<Text variant="caption" tone="muted">{t("displayWakeActive")}</Text>}
+  tools={<IconButton tone="secondary" size="large" label={t("displayPause")} onPress={togglePause}><PauseGlyph /></IconButton>}>
+  {sign /* 제품이 그린 전광판 */}
+</ImmersiveOverlay>
+```
+
+실행 예제: 위 같은 파일의 `ImmersiveOverlayPreview`(`배포/컴포넌트/오버레이/대화상자` 전체 화면 표현).
 
 ## 플랫폼 차이
 
@@ -255,3 +315,8 @@ function RecordDetail() {
 실제 View의 `measureInWindow`로 활성화 시점의 영역을 얻고, 좌표를 얻지 못해도 일반 Dialog를 연다.
 측정 callback만 무기한 기다리면서 열기 행동을 막지 않는다. 버튼의 접근성 이름과 초점 복귀 대상을
 유지하고, 카드 전체를 누름 가능한 비의미적 View/div로 바꾸지 않는다.
+
+## 근거
+
+- `overlayLayer`: 2026-10-18 번뚝 폴더 팝업. 끌기 유령 아이콘을 창 좌표로 카드 밖에 그려야 해서 Dialog 대신 raw RN `Modal`과 `KeyboardAvoidingView`를 썼다. 키보드 회피는 2026-10-13부터 Dialog가 이미 갖고 있었고, 카드 밖 층만 없었다.
+- `ImmersiveOverlay`: 2026-10-18 utilverse 전광판. Dialog·Sheet는 항상 카드·scrim(`full` Sheet도 위 safe area·모서리·머리)을 그려 상태 표시줄을 숨긴 가로 전광판을 표현하지 못해 raw RN `Modal`을 썼다. 표현만 다르고 모달 스택·포커스·닫기 계약은 Dialog와 같아 Dialog의 확장으로 둔다.

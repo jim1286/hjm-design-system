@@ -35,6 +35,7 @@ Text와 Heading의 경계: Text의 `variant="heading"`(24px)은 **모양만** �
 | --- | --- | --- | --- |
 | `Text` | 기본 | `@hjmds/react`, `/layout` | `@hjmds/react-native`, `/primitives` |
 | `StatusText` | 짧은 상태·결과 알림 companion | `@hjmds/react`, `/status-text` | `@hjmds/react-native`, `/status-text` |
+| `useHjmTextFace` | 보조 — Text 밖 제품 글자의 글꼴 해석 hook(컴포넌트 아님, 1.31.0) | — (CSS 상속) | `@hjmds/react-native`, `/primitives` |
 | `GravityLetters` | 확장(홍보용 글자 낙하 장식, optional-extension) | `/gravity-letters` | `/gravity-letters` |
 
 `GravityLetters`는 granular subpath로만 import 된다. 추가 peer 의존성은 없다(Web은 WAAPI, Native는 RN `Animated`).
@@ -63,6 +64,8 @@ import { Text } from "@hjmds/react-native/primitives";
 | `fontRole` | `ui` · `display` · `reading` · `code` | 제목 variant는 display, 본문은 reading, caption/label은 ui | 명시값이 기본을 덮는다. [역할 지침](../tokens/font-roles.md), 1.16.0 변경 |
 | `emphasis` | `regular` 400 · `medium` 500 · `strong` 500(제목 굵기) | 프로필이 있으면 variant 굵기, 없으면 `regular`. `label`은 프로필과 무관하게 variant 굵기 500 | 명시값이 프로필과 variant보다 우선 |
 | `tone` | `primary` · `body` · `muted` · `subtle` · `weak` · `brand` · `danger` · `inverse` | `primary` | — |
+| `color` | `string` | — | 제품이 소유한 도메인 색 역할(팀 색·등락·차트 계열)로 `tone` 색만 바꾼다. variant 크기·굵기·글꼴은 그대로. 1.31.0 추가 |
+| `numeric` | `proportional` · `tabular` | —(글꼴 기본) | `tabular`는 바뀌는 숫자(점수·타이머·개수)의 폭을 고정한다. Web `font-variant-numeric`, Native `fontVariant`. 1.31.0 추가 |
 | `as` | `span` · `p` · `div` · `strong` · `small` | `span` | Web만. 문단은 `as="p"` |
 | `align` | `TextStyle["textAlign"]` | 쓰기 방향의 시작 쪽 | Native만 |
 | `layoutStyle` | `HjmCompositionStyleProp` | — | 배치. Web·Native 모두 |
@@ -86,15 +89,41 @@ Native는 Text의 역할을 해당 stack에, 입력/조작 host는 제품 프로
 - 글자는 i18n 키로 넣는다. 제품 이름·도메인 문구는 제품 소유, 크기·색 체계는 HJM 소유다.
 - 배치(여백·폭·flex)는 `layoutStyle`로만 한다. 색·크기·굵기는 `style`/`className`으로 덮지 않는다.
   (Native Text의 `style`은 layout primitive라 deprecated 경고 대상에서 빠져 있을 뿐 권장 경로가 아니다.)
-- 색으로 의미를 바꿀 때는 `tone`만 쓴다(오류 문구 `danger`, 어두운 배경 위 `inverse`).
+- 색으로 의미를 바꿀 때는 `tone`을 쓴다(오류 문구 `danger`, 어두운 배경 위 `inverse`). HJM tone에 없는 제품 도메인 색
+  (팀 색, 등락 빨강/파랑)만 `color`로 넘긴다. 이때 배경 대비 확인은 제품 몫이다. `style.color`로 덮지 않는다.
 - `GravityLetters`는 장식이며 접근성 트리에서 숨는다. 읽을 수 있는 같은 문구를 함께 두되 화면에 두 번 보이지 않게 한다: Web은 같은 Heading 안의 `VisuallyHidden`, Native는 `accessibilityRole="header"`·`accessibilityLabel`을 가진 감싸는 View.
   `glyphs`는 32개 이하, 빈 문자열·줄바꿈 없이 넘긴다(어기면 `RangeError`). `active` 기본은 `false`다.
+
+### 제품 색과 고정 폭 숫자(1.31.0 추가)
+
+2026-10-18 야잘알의 제품 색 기록·연속 기록 문구는 HJM Text에 제품 색을 넣을 공개 경로가 없어 RN `Text`로 내려갔고,
+RN은 글꼴을 상속하지 않아 `fonts="pretendard"`에서도 OS 글꼴로 그려졌다. 같은 이유로 숫자 폭 고정도 직접 `fontVariant`를 썼다.
+
+```tsx
+// Native(Web도 같은 prop)
+<Text variant="bodyLarge" emphasis="medium" color={streakColor}>{streakLabel}</Text>
+<Text variant="caption" emphasis="strong" numeric="tabular" color={onAccentFill} align="center">{pitch.pitchSequence}</Text>
+```
+
+HJM type 단계(최대 24)보다 큰 제품 숫자처럼 Text로 그릴 수 없는 글자는 Native `useHjmTextFace`로 같은 글꼴을 받는다.
+Provider의 글꼴 설정(`fonts="pretendard"`, designProfile `fontFamily`)과 굵기에 맞는 `fontFamily`/`fontWeight`를 돌려준다.
+크기·줄 높이·색은 제품이 정한다.
+
+```tsx
+import { useHjmTextFace } from "@hjmds/react-native/primitives";
+
+const face = useHjmTextFace({ weight: "800" }); // fontRole 기본 ui
+<RNText style={{ ...face, fontSize: 40, lineHeight: 46, fontVariant: ["tabular-nums"], color }}>{value}</RNText>
+```
+
+Web은 Provider가 CSS 상속으로 글꼴을 내려 주므로 같은 hook이 없다. 제품 요소는 Provider 안에서 HJM 글꼴을 이어받는다.
 
 ## 플랫폼 차이
 
 | 항목 | Web | Native |
 | --- | --- | --- |
 | 요소 선택 | `as` | 없음(항상 RN `Text`) |
+| Text 밖 제품 글자의 글꼴 | CSS 상속 | `useHjmTextFace` |
 | 정렬 | 없음(배치는 부모) | `align`(생략 시 방향에 맞춘 논리 정렬) |
 | 글자 크기 조정 | 브라우저 | provider `textScaling`이 `allowFontScaling`을 정함 |
 | 긴 단어 줄바꿈 | `overflow-wrap: anywhere` | RN 기본 |

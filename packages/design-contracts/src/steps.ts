@@ -1,15 +1,15 @@
 import type { ColorReference } from "./color-references.js";
 import type { FontWeightValue, TextVariant } from "./foundations.js";
 import type { SemanticIconName } from "./icon.js";
-import { fontWeight, glyph, spacing, stroke } from "./foundations.js";
+import { control, fontWeight, glyph, spacing, stroke } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
 
 /**
- * Ant Design Steps' full surface (navigation/clickable jump, dot type, custom
- * per-item icon, vertical orientation) is intentionally not reproduced. Both
- * known consumers (Yajalal onboarding, BurnTok sign-up) are single-cursor,
- * horizontal, back-button-driven wizards; see docs/steps.md for the per-axis
- * rationale.
+ * Ant Design Steps' full surface (navigation jump, dot type, custom per-item
+ * icon, vertical orientation) is intentionally not reproduced. Steps stay a
+ * single-cursor, horizontal wizard; the only press is returning to a step
+ * before the cursor (2026-10-18, spint compose rebuilt its own rail for it).
+ * See docs/steps.md for the per-axis rationale.
  */
 export type StepStatus = "pending" | "current" | "complete" | "error";
 
@@ -26,8 +26,8 @@ export type StepItemDescriptor<Id extends string = string> = Readonly<{
 /**
  * A single stable cursor (`currentStepId`) is the source of truth instead of a
  * per-item status array, so "two current steps" or "a completed step past an
- * unresolved error" cannot be represented. Clickable jump is out of scope, so
- * the flow is always linear relative to the cursor.
+ * unresolved error" cannot be represented. Pressing only returns to a step
+ * before the cursor, so the flow stays linear relative to the cursor.
  */
 export type StepsDescriptor<Id extends string = string> = Readonly<{
   steps: readonly StepItemDescriptor<Id>[];
@@ -72,6 +72,11 @@ export type ResolvedStepDescriptor<Id extends string = string> =
       accessibleName: string;
       /** Supplementary status announcement (Web aria-describedby text / RN accessibilityHint). */
       statusLabel: string;
+      /**
+       * Strictly before the cursor. Only these steps become buttons when the product supplies a step press handler:
+       * jumping forward would skip validation, and the cursor step is where the user already is (2026-10-18).
+       */
+      revisitable: boolean;
     }>;
 
 export type ResolveStepsOptions = Readonly<{
@@ -194,6 +199,7 @@ export function resolveStepsDescriptor<Id extends string>(
       total,
       accessibleName,
       statusLabel: options.statusLabels[status],
+      revisitable: index < cursorIndex,
     };
   });
 }
@@ -260,6 +266,10 @@ export const stepsRecipe = {
     textVariant: "caption",
     color: semanticColors.content.secondary,
   },
+  /** A revisitable step is one button over its marker and label; the shared touch minimum applies to the whole cell. */
+  press: {
+    minTouchTarget: control.minTouchTarget,
+  },
 } as const satisfies {
   slots: readonly string[];
   gap: number;
@@ -284,5 +294,8 @@ export const stepsRecipe = {
   description: {
     textVariant: TextVariant;
     color: ColorReference;
+  };
+  press: {
+    minTouchTarget: number;
   };
 };

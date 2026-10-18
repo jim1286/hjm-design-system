@@ -88,20 +88,31 @@ export function Tag({ children, tone, accessibilityLabel, layoutStyle, ...props 
 }
 export function Card({ children, title, description, leading, media, actions, selected = cardRecipe.defaults.selected, onActivate, disabled = false, accessibilityLabel, accessibilityHint, tone = cardRecipe.defaults.tone, bordered = cardRecipe.defaults.bordered, padding = cardRecipe.defaults.padding, layoutStyle, radius: cornerRadius = surfaceDefaults.radius, ...props }) {
     const { environment, tokens } = useHjmNativeTheme();
-    if (onActivate && (!accessibilityLabel?.trim() || actions !== undefined)) {
-        throw new TypeError("Interactive Card requires accessibilityLabel and no actions");
+    if (onActivate && !accessibilityLabel?.trim()) {
+        throw new TypeError("Interactive Card requires accessibilityLabel");
     }
     const bodyPadding = surfaceGeometry.paddings[padding];
     const hasHeader = leading !== undefined || title !== undefined || description !== undefined;
-    const frame = (_jsx(Surface, { ...props, bordered: bordered, padding: "none", radius: cornerRadius, ...(onActivate ? {} : { accessibilityLabel, accessibilityHint }), ...(layoutStyle === undefined || onActivate ? {} : { layoutStyle }), tone: selected ? cardRecipe.selectedTone : tone, children: _jsxs(View, { style: {
+    // Whole-card open plus separate commands (2026-10-18 unairplane journey card: open + delete); see `onActivate`.
+    const split = onActivate !== undefined && actions !== undefined && actions !== null && actions !== false;
+    const activate = () => { if (!disabled)
+        onActivate?.(); };
+    const activationA11y = {
+        accessibilityRole: "button",
+        accessibilityLabel,
+        accessibilityHint,
+        accessibilityState: { selected, disabled },
+    };
+    const feedbackOpacity = (pressed) => disabled ? cardRecipe.interaction.disabledOpacity : pressed ? cardRecipe.interaction.pressedOpacity : 1;
+    const frame = (_jsx(Surface, { ...props, bordered: bordered, padding: "none", radius: cornerRadius, ...(onActivate ? {} : { accessibilityLabel, accessibilityHint }), ...(layoutStyle === undefined || (onActivate && !split) ? {} : { layoutStyle }), tone: selected ? cardRecipe.selectedTone : tone, children: _jsxs(View, { style: {
                 overflow: "hidden",
                 borderRadius: tokens.radius[cornerRadius],
-            }, children: [media === undefined ? null : _jsx(View, { children: media }), _jsxs(View, { style: { gap: cardRecipe.body.gap, padding: bodyPadding }, children: [hasHeader ? (_jsxs(View, { style: {
-                                alignItems: "flex-start",
-                                direction: environment.direction,
-                                flexDirection: "row",
-                                gap: cardRecipe.header.gap,
-                            }, children: [leading === undefined ? null : (_jsx(View, { style: { flexShrink: 0 }, children: leading })), _jsxs(View, { style: { flex: 1, gap: cardRecipe.body.gap, minWidth: 0 }, children: [title === undefined ? null : (_jsx(Text, { accessibilityRole: "header", emphasis: "strong", tone: "primary", variant: "title", children: title })), description === undefined ? null : (_jsx(Text, { emphasis: "regular", tone: "muted", variant: "body", children: description }))] })] })) : null, children === undefined ? null : _jsx(View, { children: children })] }), actions === undefined ? null : (_jsx(View, { style: {
+            }, children: [_jsxs(CardActivationRegion, { split: split, activation: activationA11y, disabled: disabled, onPress: activate, feedbackOpacity: feedbackOpacity, children: [media === undefined ? null : _jsx(View, { children: media }), _jsxs(View, { style: { gap: cardRecipe.body.gap, padding: bodyPadding }, children: [hasHeader ? (_jsxs(View, { style: {
+                                        alignItems: "flex-start",
+                                        direction: environment.direction,
+                                        flexDirection: "row",
+                                        gap: cardRecipe.header.gap,
+                                    }, children: [leading === undefined ? null : (_jsx(View, { style: { flexShrink: 0 }, children: leading })), _jsxs(View, { style: { flex: 1, gap: cardRecipe.body.gap, minWidth: 0 }, children: [title === undefined ? null : (_jsx(Text, { accessibilityRole: "header", emphasis: "strong", tone: "primary", variant: "title", children: title })), description === undefined ? null : (_jsx(Text, { emphasis: "regular", tone: "muted", variant: "body", children: description }))] })] })) : null, children === undefined ? null : _jsx(View, { children: children })] })] }), actions === undefined ? null : (_jsx(View, { style: {
                         direction: environment.direction,
                         flexDirection: "row",
                         flexWrap: "wrap",
@@ -109,14 +120,17 @@ export function Card({ children, title, description, leading, media, actions, se
                         paddingBottom: cardRecipe.actions.paddingBottom,
                         paddingHorizontal: cardRecipe.actions.paddingHorizontal,
                     }, children: actions }))] }) }));
-    if (!onActivate)
+    if (!onActivate || split)
         return frame;
     // Keep Surface's material/clip inside one native action host. App-owned wrappers
     // previously had to reinvent disabled/selected naming and press feedback.
-    return _jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: accessibilityLabel, accessibilityHint: accessibilityHint, accessibilityState: { selected, disabled }, disabled: disabled, onPress: () => { if (!disabled)
-            onActivate(); }, style: ({ pressed }) => [minimumTargetStyle, {
-                opacity: disabled ? cardRecipe.interaction.disabledOpacity : pressed ? cardRecipe.interaction.pressedOpacity : 1,
-            }, layoutStyle], children: frame });
+    return _jsx(Pressable, { ...activationA11y, disabled: disabled, onPress: activate, style: ({ pressed }) => [minimumTargetStyle, { opacity: feedbackOpacity(pressed) }, layoutStyle], children: frame });
+}
+/** Media and body as the card's own target when actions sit beside it; otherwise a transparent passthrough. */
+function CardActivationRegion({ split, activation, disabled, onPress, feedbackOpacity, children }) {
+    if (!split)
+        return _jsx(_Fragment, { children: children });
+    return _jsx(Pressable, { ...activation, disabled: disabled, onPress: onPress, style: ({ pressed }) => [minimumTargetStyle, { opacity: feedbackOpacity(pressed) }], children: children });
 }
 /**
  * A List item hands its rows this reporter so the indented separator drawn after the item follows the row's text

@@ -3,7 +3,7 @@ import { createRoot, type Root } from "react-dom/client";
 import { page, userEvent } from "vitest/browser";
 import { beforeEach, afterEach, expect, it, vi } from "vitest";
 import { HjmProvider } from "../src/provider.js";
-import { MediaSelectionScreen, type MediaSelectionItem } from "../src/screen-flows.js";
+import { MediaSelectionCell, MediaSelectionScreen, type MediaSelectionItem } from "../src/screen-flows.js";
 import "../src/styles.css";
 let host: HTMLDivElement, root: Root;
 beforeEach(() => { (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true; host = document.createElement("div"); document.body.append(host); root = createRoot(host); });
@@ -89,4 +89,17 @@ it("keeps a moved action visible within the scrollable body", async () => {
  expect(document.activeElement).toBe(button("b 뒤로"));
  const bounds=button("b 뒤로").getBoundingClientRect(),clip=host.querySelector(".hjm-screen__body")!.getBoundingClientRect();
  expect(bounds.top).toBeGreaterThanOrEqual(clip.top); expect(bounds.bottom).toBeLessThanOrEqual(clip.bottom);
+});
+// 2026-10-18 Utilverse photo tools: the screen's own cell renders standalone in a virtualized host and can rotate.
+it("renders the exported cell standalone with rotate before remove", async () => {
+ const onRotate = vi.fn();
+ const rotate = { label: "회전", itemLabel: (entry: MediaSelectionItem) => `${entry.descriptor.id} 회전`, onRotate };
+ await act(async () => root.render(<HjmProvider><MediaSelectionCell {...props} item={item("b")} index={4} count={5} rotate={rotate} /></HjmProvider>));
+ const actions = Array.from(host.querySelectorAll<HTMLButtonElement>("button[data-media-action]")).map(node => node.dataset.mediaAction);
+ expect(actions).toEqual(["up", "down", "rotate", "remove"]);
+ expect(button("b 뒤로").disabled).toBe(true); expect(button("b 앞으로").disabled).toBe(false);
+ button("b 회전").focus(); await act(async () => userEvent.keyboard("{Enter}"));
+ expect(onRotate).toHaveBeenCalledExactlyOnceWith("b");
+ await act(async () => root.render(<HjmProvider><MediaSelectionScreen {...props} items={[item("a")]} /></HjmProvider>));
+ expect(host.querySelector('button[data-media-action="rotate"]')).toBeNull();
 });

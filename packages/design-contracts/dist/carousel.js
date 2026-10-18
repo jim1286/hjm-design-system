@@ -125,6 +125,38 @@ export const carouselBehavior = {
         "autoplay-pauses-on-hover-focus-or-drag-and-does-not-announce-automatic-transitions",
     ],
 };
+export function validatePageIndicatorDescriptor(descriptor) {
+    if (!Number.isSafeInteger(descriptor.count) || descriptor.count < 1) {
+        throw new RangeError("PageIndicator count must be a positive integer");
+    }
+    if (!Number.isSafeInteger(descriptor.currentIndex) ||
+        descriptor.currentIndex < 0 ||
+        descriptor.currentIndex >= descriptor.count) {
+        throw new RangeError(`PageIndicator currentIndex is out of range: ${String(descriptor.currentIndex)}`);
+    }
+}
+export function resolvePageIndicator(descriptor, composeAccessibleName) {
+    validatePageIndicatorDescriptor(descriptor);
+    if (typeof composeAccessibleName !== "function") {
+        throw new TypeError("PageIndicator composeAccessibleName must be a function");
+    }
+    return Array.from({ length: descriptor.count }, (_, index) => {
+        const accessibleName = composeAccessibleName({ position: index + 1, total: descriptor.count });
+        if (typeof accessibleName !== "string" || accessibleName.trim().length === 0) {
+            throw new TypeError("PageIndicator composeAccessibleName must return a non-empty string");
+        }
+        return { index, position: index + 1, total: descriptor.count, current: index === descriptor.currentIndex, accessibleName };
+    });
+}
+/** Clamps like getCarouselNavigationTarget: a pager indicator has an end, it never wraps. */
+export function getPageIndicatorTarget(descriptor, intent) {
+    validatePageIndicatorDescriptor(descriptor);
+    if (intent === "first")
+        return 0;
+    if (intent === "last")
+        return descriptor.count - 1;
+    return Math.min(Math.max(descriptor.currentIndex + (intent === "next" ? 1 : -1), 0), descriptor.count - 1);
+}
 export const carouselRecipe = {
     slots: [
         "root",

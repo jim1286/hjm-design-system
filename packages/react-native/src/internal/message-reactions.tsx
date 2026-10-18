@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useImperativeHandle, useRef, useState, type ReactNode, type Ref } from "react";
 import { AccessibilityInfo, Modal, Platform, Pressable, ScrollView, View, findNodeHandle, useWindowDimensions } from "react-native";
-import { scrim } from "@hjmds/design-contracts/foundations";
-import { holdMenuRecipe, screenPatternRecipe } from "@hjmds/design-contracts/screen-patterns";
+import { control, scrim } from "@hjmds/design-contracts/foundations";
+import { chatMessageRecipe, holdMenuRecipe, screenPatternRecipe, type ChatReactionSummaryItem } from "@hjmds/design-contracts/screen-patterns";
+import type { MenuItemTone } from "@hjmds/design-contracts/recipes";
 import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "../provider.js";
 import { IconButton } from "../actions.js";
 import { FixedGlyph } from "./fixed-glyph.js";
@@ -9,7 +10,10 @@ import { Text } from "../primitives.js";
 import { ReactionPicker, type ReactionPickerProps } from "../reaction-picker.js";
 
 /** One row of the hold menu. Products supply copy and icons; HJM owns order, size and tone. */
-export type MessageMenuAction = Readonly<{ id: string; label: string; icon?: ReactNode; onPress(): void; disabled?: boolean; /** Shows › for rows that open a further list (e.g. "Load more"). */ submenu?: boolean }>;
+export type MessageMenuAction = Readonly<{ id: string; label: string; icon?: ReactNode; onPress(): void; disabled?: boolean; /** Shows › for rows that open a further list (e.g. "Load more"). */ submenu?: boolean;
+  /** Same vocabulary as Menu items: `danger` for destructive rows such as delete (default `neutral`). */ tone?: MenuItemTone }>;
+/** Lets the owning message open the same hold menu from its reaction summary. */
+export type MessageReactionsHandle = Readonly<{ open(): void }>;
 type Props = ReactionPickerProps & Readonly<{ closeLabel: string; menuAction?: Readonly<{label:string;onPress():void;disabled?:boolean}>; children: ReactNode; interactiveContent?:boolean; replyAction?: Readonly<{label:string;onPress():void;disabled?:boolean;icon?:ReactNode}>;
   /** Shown above the actions, e.g. the exact send time that a run only shows once. */
   menuTitle?: string;
@@ -19,15 +23,16 @@ type Props = ReactionPickerProps & Readonly<{ closeLabel: string; menuAction?: R
   /** Side of the pressed content: own messages align the preview and action card to the end. */
   align?: "start" | "end";
   /** Comments are plain text, so their preview gets a surface; chat bubbles already have one. */
-  previewSurface?: boolean }>;
+  previewSurface?: boolean;
+  menuRef?: Ref<MessageReactionsHandle> }>;
 /** Core RN composition: no optional context-menu/Expo dependency enters the screens subpath. */
-export function MessageReactions({ children, closeLabel, replyAction, menuAction, menuTitle, menuActions = [], reportAction, interactiveContent=false, align = "start", previewSurface = false, ...picker }: Props) {
+export function MessageReactions({ children, closeLabel, replyAction, menuAction, menuTitle, menuActions = [], reportAction, interactiveContent=false, align = "start", previewSurface = false, menuRef, ...picker }: Props) {
   // Reply leads and report trails; legacy single menuAction keeps its place before report.
-  const rows: (MessageMenuAction & { danger?: boolean })[] = [
+  const rows: MessageMenuAction[] = [
     ...(replyAction ? [{ id: "reply", ...replyAction }] : []),
     ...menuActions,
     ...(menuAction ? [{ id: "menu", ...menuAction }] : []),
-    ...(reportAction ? [{ id: "report", ...reportAction, danger: true }] : []),
+    ...(reportAction ? [{ id: "report", ...reportAction, tone: "danger" as const }] : []),
   ];
   const { colors, tokens, environment } = useHjmNativeTheme();
   const insets = useHjmNativeSafeAreaInsets();
@@ -60,6 +65,8 @@ export function MessageReactions({ children, closeLabel, replyAction, menuAction
     if (node && typeof node.measureInWindow === "function") node.measureInWindow((_x, y) => setAnchor(y));
     else setAnchor(fallbackY);
   };
+  // Opened from the summary, the menu still anchors on the pressed bubble so the preview stays in place.
+  useImperativeHandle(menuRef, () => ({ open: () => { if (!picker.disabled) openAt(height / 2); } }), [picker.disabled, height]);
   return <>
     {/* No accessibilityLabel: the platform names the target from the bubble text, so the message is
         read. picker.label was the name before and hid the body (2026-10-06 review); it is now the hint. */}
@@ -93,7 +100,7 @@ export function MessageReactions({ children, closeLabel, replyAction, menuAction
               onPress={() => { queuedAction.current = row.onPress; close(); }}
               style={({ pressed }) => ({ minHeight: holdMenuRecipe.actionRowHeight, flexDirection: "row", alignItems: "center", gap: tokens.spacing.sm, paddingHorizontal: tokens.spacing.md, opacity: row.disabled ? 0.5 : 1, backgroundColor: pressed ? colors.surface : "transparent" })}>
               {row.icon ? <View style={{ width: holdMenuRecipe.iconSize, alignItems: "center" }}>{row.icon}</View> : null}
-              <View style={{ flex: 1, minWidth: 0 }}><Text tone={row.danger ? "danger" : "body"}>{row.label}</Text></View>
+              <View style={{ flex: 1, minWidth: 0 }}><Text tone={row.tone === "danger" ? "danger" : "body"}>{row.label}</Text></View>
               {row.submenu ? <FixedGlyph>›</FixedGlyph> : null}
             </Pressable>)}
           </View> : null}
@@ -109,4 +116,25 @@ export function MessageReactions({ children, closeLabel, replyAction, menuAction
       </View>
     </Modal>
   </>;
+}
+
+/** ChatMessage strips its summary before spreading the rest into the hold menu. */
+export function omitReactionSummary<T extends Readonly<{ summary?: unknown }>>({ summary: _summary, ...rest }: T): Omit<T, "summary"> {
+  return rest;
+}
+
+/**
+ * Current reactions as one button beside the time; pressing it opens the hold menu. The pill is the single target and
+ * carries the product's label, so per-emoji parts are not separate elements. hitSlop extends the 24pt pill to the 44pt
+ * touch target without changing the timeline row height.
+ */
+export function ReactionSummaryButton({ label, items, selected, disabled, onPress }: Readonly<{ label: string; items: readonly (ChatReactionSummaryItem & Readonly<{ showCount: boolean }>)[]; selected: string | null; disabled: boolean; onPress(): void }>) {
+  const { colors, tokens } = useHjmNativeTheme();
+  const r = chatMessageRecipe.reactionSummary;
+  const mine = items.some(item => item.id === selected);
+  const slop = Math.max(0, (control.minTouchTarget - r.minHeight) / 2);
+  return <Pressable accessibilityRole="button" accessibilityLabel={label} accessibilityState={{ disabled }} disabled={disabled} onPress={onPress} hitSlop={{ top: slop, bottom: slop }}
+    style={({ pressed }) => ({ flexDirection: "row", alignItems: "center", gap: r.itemGap, minHeight: r.minHeight, paddingHorizontal: r.paddingInline, borderRadius: tokens.radius.full, borderWidth: 1, borderColor: mine ? colors.contentBrand : colors.border, backgroundColor: pressed ? colors.surfaceAlt : colors.surface, opacity: disabled ? 0.5 : 1 })}>
+    {items.map(item => <View key={item.id} style={{ flexDirection: "row", alignItems: "center", gap: r.emojiGap }}><Text variant="caption">{item.emoji}</Text>{item.showCount ? <Text variant="caption">{String(item.count)}</Text> : null}</View>)}
+  </Pressable>;
 }

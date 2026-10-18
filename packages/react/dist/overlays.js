@@ -14,7 +14,7 @@ import { classNames, composeRefs, useControllableState } from "./internal.js";
 import { AnchoredPortal, useAnchoredPopup } from "./portal.js";
 import { useHjmDensityDefault, useTooltipCoordinator, useOptionalHjmTheme } from "./provider.js";
 import { containsEventTarget, getModalLayer, HjmPortal, renderTrigger, useModalFocus, useOpenState, } from "./modal.js";
-export const Dialog = forwardRef(function Dialog({ trigger, title, description, children, footer, size = dialogRecipe.defaults.size, motionOrigin, dismissible = dialogRecipe.defaults.dismissible, busy = false, closeLabel, initialFocusRef, initialFocus = initialFocusDefaults.overlay, returnFocusRef, onDismissComplete, modalPriority = 0, portalContainer, open: openProp, defaultOpen, onOpenChange, className, }, forwardedRef) {
+export const Dialog = forwardRef(function Dialog({ trigger, title, description, children, footer, overlayLayer, size = dialogRecipe.defaults.size, motionOrigin, dismissible = dialogRecipe.defaults.dismissible, busy = false, closeLabel, initialFocusRef, initialFocus = initialFocusDefaults.overlay, returnFocusRef, onDismissComplete, modalPriority = 0, portalContainer, open: openProp, defaultOpen, onOpenChange, className, }, forwardedRef) {
     const modalLayer = getModalLayer(modalPriority);
     const [open, changeOpen] = useOpenState({
         ...(openProp === undefined ? {} : { open: openProp }),
@@ -90,14 +90,14 @@ export const Dialog = forwardRef(function Dialog({ trigger, title, description, 
         ...(trigger === undefined ? {} : { fallbackReturnRef: triggerRef }),
         onEscape: () => requestClose("escape"),
     });
-    return (_jsxs(_Fragment, { children: [trigger === undefined ? null : renderTrigger(trigger, triggerRef, open, contentId, "dialog", () => changeOpen(true, { reason: "trigger" })), visible ? (_jsx(HjmPortal, { ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("div", { className: "hjm-overlay", "data-kind": "dialog", "data-modal-priority": modalPriority, "data-state": "open", style: { zIndex: modalLayer }, onMouseDown: (event) => {
+    return (_jsxs(_Fragment, { children: [trigger === undefined ? null : renderTrigger(trigger, triggerRef, open, contentId, "dialog", () => changeOpen(true, { reason: "trigger" })), visible ? (_jsx(HjmPortal, { ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsxs("div", { className: "hjm-overlay", "data-kind": "dialog", "data-modal-priority": modalPriority, "data-state": "open", style: { zIndex: modalLayer }, onMouseDown: (event) => {
                         if (event.target === event.currentTarget) {
                             // Diairy QA W16: Chrome's default backdrop blur can run after focus
                             // cleanup and undo its return target. Cancel that default, not the modal's dismissal.
                             event.preventDefault();
                             requestClose("outside");
                         }
-                    }, children: _jsxs("div", { ref: mergedContentRef, id: contentId, role: "dialog", "aria-modal": "true", "aria-labelledby": titleId, "aria-describedby": description ? descriptionId : undefined, "aria-busy": busy || undefined, inert: !open, "aria-hidden": !open || undefined, tabIndex: -1, className: classNames("hjm-dialog", className), "data-hjm-modal-content": "", "data-size": size, "data-state": busy ? "busy" : "idle", children: [_jsxs("header", { className: "hjm-dialog__header", children: [_jsx("h2", { id: titleId, className: "hjm-dialog__title", children: title }), dismissible ? (_jsx("button", { type: "button", className: "hjm-dialog__close", "aria-label": closeLabel, disabled: busy, onClick: () => requestClose("close-action"), children: "\u00D7" })) : null] }), description ? _jsx("p", { id: descriptionId, className: "hjm-dialog__description", children: description }) : null, children ? _jsx("div", { className: "hjm-dialog__body", children: _jsx(InitialFocusProvider, { scope: focusScope, children: children }) }) : null, footer ? _jsx("footer", { className: "hjm-dialog__footer", children: footer }) : null] }) }) })) : null] }));
+                    }, children: [_jsxs("div", { ref: mergedContentRef, id: contentId, role: "dialog", "aria-modal": "true", "aria-labelledby": titleId, "aria-describedby": description ? descriptionId : undefined, "aria-busy": busy || undefined, inert: !open, "aria-hidden": !open || undefined, tabIndex: -1, className: classNames("hjm-dialog", className), "data-hjm-modal-content": "", "data-size": size, "data-state": busy ? "busy" : "idle", children: [_jsxs("header", { className: "hjm-dialog__header", children: [_jsx("h2", { id: titleId, className: "hjm-dialog__title", children: title }), dismissible ? (_jsx("button", { type: "button", className: "hjm-dialog__close", "aria-label": closeLabel, disabled: busy, onClick: () => requestClose("close-action"), children: "\u00D7" })) : null] }), description ? _jsx("p", { id: descriptionId, className: "hjm-dialog__description", children: description }) : null, children ? _jsx("div", { className: "hjm-dialog__body", children: _jsx(InitialFocusProvider, { scope: focusScope, children: children }) }) : null, footer ? _jsx("footer", { className: "hjm-dialog__footer", children: footer }) : null] }), overlayLayer ? _jsx("div", { className: "hjm-dialog__overlay-layer", "aria-hidden": "true", inert: true, children: overlayLayer }) : null] }) })) : null] }));
 });
 export const AlertDialog = forwardRef(function AlertDialog({ trigger, request, icon, size = dialogRecipe.defaults.size, returnFocusRef, modalPriority = 0, portalContainer, open: openProp, defaultOpen, onOpenChange, className, }, forwardedRef) {
     const modalLayer = getModalLayer(modalPriority);
@@ -830,5 +830,38 @@ export const Menu = forwardRef(function Menu(props, ref) {
                     itemRefs.current.delete(index);
             }, type: "button", role: role, "aria-checked": selectionMode === "action" ? undefined : selected, className: "hjm-menu__item", "data-tone": item.tone ?? menuRecipe.defaults.itemTone, "data-state": itemDisabled ? "disabled" : selected ? "selected" : "idle", "data-focus": index === focusIndex || undefined, disabled: itemDisabled, tabIndex: !itemDisabled && index === focusIndex ? 0 : -1, onClick: () => activateItem(item, index), children: [item.tone === "danger" ? (_jsx("span", { className: "hjm-menu__danger-indicator", "aria-hidden": "true", children: "!" })) : null, item.leading ? _jsx("span", { className: "hjm-menu__leading", "aria-hidden": "true", children: item.leading }) : null, _jsxs("span", { className: "hjm-menu__copy", children: [_jsx("span", { children: item.label }), item.description ? _jsx("span", { className: "hjm-menu__description", children: item.description }) : null] }), item.trailing ? _jsx("span", { className: "hjm-menu__trailing", children: item.trailing }) : null] }, item.id));
     }
+});
+/**
+ * Edge-to-edge presentation (Dialog companion): no card, scrim or header, on the shared modal stack with its focus
+ * trap, Escape dismissal, background isolation and focus return. The browser Fullscreen API is deliberately not
+ * requested: it needs a fresh user activation, its Escape exits fullscreen before the page sees the key (leaving the
+ * overlay open in a window), and iOS Safari does not grant it to elements.
+ */
+export const ImmersiveOverlay = forwardRef(function ImmersiveOverlay({ open, onOpenChange, label, exitLabel, children, tools, status, initialFocusRef, returnFocusRef, modalPriority = 0, portalContainer, className }, forwardedRef) {
+    const contentRef = useRef(null);
+    const exitRef = useRef(null);
+    const focusLayer = useRef(null);
+    // The stage is a presentation, not a form: fields inside stay with this overlay instead of an outer screen scope.
+    const focusScope = useInitialFocusScope({ mode: "none", active: open, layer: focusLayer });
+    const onOpenChangeRef = useRef(onOpenChange);
+    onOpenChangeRef.current = onOpenChange;
+    useModalFocus({
+        active: open,
+        priority: modalPriority,
+        contentRef,
+        initialFocusRef: initialFocusRef ?? exitRef,
+        resolveInitialFocus: focusScope.enter,
+        layerRef: focusLayer,
+        ...(returnFocusRef === undefined ? {} : { returnFocusRef }),
+        onEscape: () => onOpenChangeRef.current(false, { reason: "escape" }),
+    });
+    const { controls } = dialogRecipe.immersive;
+    if (!open)
+        return null;
+    return (_jsx(HjmPortal, { ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("div", { className: "hjm-overlay hjm-immersive-positioner", "data-kind": "immersive", "data-modal-priority": modalPriority, "data-state": "open", style: { zIndex: getModalLayer(modalPriority) }, children: _jsxs("div", { ref: composeRefs(contentRef, forwardedRef), role: "dialog", "aria-modal": "true", "aria-label": label, tabIndex: -1, className: classNames("hjm-immersive", className), "data-hjm-modal-content": "", style: {
+                    "--hjm-immersive-padding": `${controls.padding}px`,
+                    "--hjm-immersive-gap": `${controls.gap}px`,
+                    "--hjm-immersive-action-gap": `${controls.actionGap}px`,
+                }, children: [_jsx("div", { className: "hjm-immersive__stage", children: _jsx(InitialFocusProvider, { scope: focusScope, children: children }) }), _jsxs("div", { className: "hjm-immersive__controls", children: [status ? _jsx("div", { className: "hjm-immersive__status", children: status }) : null, _jsxs("div", { className: "hjm-immersive__actions", children: [tools, _jsx(Button, { ref: exitRef, size: "large", layoutStyle: { flex: 1 }, onClick: () => onOpenChange(false, { reason: "exit-action" }), children: exitLabel })] })] })] }) }) }));
 });
 //# sourceMappingURL=overlays.js.map

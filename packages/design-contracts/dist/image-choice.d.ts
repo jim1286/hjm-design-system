@@ -15,6 +15,13 @@ export declare const imageChoiceRecipe: {
     readonly ringWidth: 2;
     readonly ringOffset: 2;
     readonly checkSize: 20;
+    /**
+     * Visible per-tile caption (`showItemLabels`, 2026-10-18 BurnTok share recipients): people are recognised by name,
+     * not only by face. One line, ellipsized, as wide as the tile so the wrap grid stays even.
+     */
+    readonly itemLabelGap: 4;
+    readonly itemLabelVariant: "caption";
+    readonly itemLabelLines: 1;
 };
 export declare function validateImageChoiceItems(items: readonly ImageChoiceItemDescriptor[]): void;
 /** Single mode keeps exactly the pressed id (radio semantics); multiple toggles membership in order. */

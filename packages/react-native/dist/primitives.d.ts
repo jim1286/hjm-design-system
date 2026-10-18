@@ -3,7 +3,7 @@ import { type AspectRatioValue } from "@hjmds/design-contracts/components/aspect
 import { type ContainerGutter, type ContainerSize } from "@hjmds/design-contracts/components/container";
 import { type IconDescriptor } from "@hjmds/design-contracts/components/icon";
 import { type LayoutSidebarRole } from "@hjmds/design-contracts/components/layout";
-import { type FontRole, type TextVariant } from "@hjmds/design-contracts/foundations";
+import { type FontRole, type NumericVariant, type TextVariant } from "@hjmds/design-contracts/foundations";
 import { type SurfacePadding as ContractSurfacePadding, type SurfaceRadius as ContractSurfaceRadius, type SurfaceTone as ContractSurfaceTone } from "@hjmds/design-contracts/recipes/base";
 import { type StackAlign, type StackAxis, type StackGap, type StackJustify, type TextEmphasis, type TextTone as ContractTextTone } from "@hjmds/design-contracts/recipes";
 import { type Ref, type ReactNode } from "react";
@@ -52,6 +52,14 @@ export type TextProps = Omit<NativeTextProps, "children"> & Readonly<{
     /** Overrides family role while retaining the variant metrics and text semantics. */
     fontRole?: FontRole;
     tone?: TextTone;
+    /**
+     * Product-owned color role (team, sentiment, chart series) that replaces the `tone` color while keeping the HJM
+     * variant metrics and font face. Products dropped to RN Text for these and lost the bundled face (2026-10-18
+     * yajalal stats). Contrast against the surface stays the product's responsibility.
+     */
+    color?: string;
+    /** Digit spacing; `tabular` keeps changing numbers (scores, timers, counts) from shifting the layout. */
+    numeric?: NumericVariant;
     emphasis?: TextEmphasis;
     align?: TextStyle["textAlign"];
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
@@ -63,11 +71,31 @@ export declare const Text: import("react").ForwardRefExoticComponent<Omit<Native
     /** Overrides family role while retaining the variant metrics and text semantics. */
     fontRole?: FontRole;
     tone?: TextTone;
+    /**
+     * Product-owned color role (team, sentiment, chart series) that replaces the `tone` color while keeping the HJM
+     * variant metrics and font face. Products dropped to RN Text for these and lost the bundled face (2026-10-18
+     * yajalal stats). Contrast against the surface stays the product's responsibility.
+     */
+    color?: string;
+    /** Digit spacing; `tabular` keeps changing numbers (scores, timers, counts) from shifting the layout. */
+    numeric?: NumericVariant;
     emphasis?: TextEmphasis;
     align?: TextStyle["textAlign"];
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<NativeText>>;
+export type HjmTextFaceOptions = Readonly<{
+    /** Final weight of the product-drawn text ("400"–"800", "normal", "bold"). */
+    weight?: TextStyle["fontWeight"];
+    fontRole?: FontRole;
+}>;
+/**
+ * Font family and weight that Text would use for this weight and role under the current Provider, for product text
+ * that cannot be a Text (a figure above the HJM type scale, an SVG label host). RN does not inherit fontFamily, so a raw
+ * RN Text silently fell back to the OS font even with `fonts="pretendard"` (2026-10-18 yajalal Figure). Spread the
+ * result into that text's style; size, line height and color stay product decisions.
+ */
+export declare function useHjmTextFace({ weight, fontRole }?: HjmTextFaceOptions): Pick<TextStyle, "fontFamily" | "fontWeight">;
 export type SurfaceTone = ContractSurfaceTone;
 export type SurfacePadding = ContractSurfacePadding;
 export type SurfaceRadius = ContractSurfaceRadius;

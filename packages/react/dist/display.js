@@ -18,18 +18,23 @@ export const Tag = forwardRef(function Tag({ children, tone, className, layoutSt
     return (_jsx("span", { ...props, style: { ...style, ...layoutStyle }, ref: ref, className: classNames("hjm-tag", className), "data-tone": descriptor.tone, children: _jsx("span", { className: "hjm-tag__label", children: descriptor.label }) }));
 });
 export const Card = forwardRef(function Card({ title, description, leading, media, actions, headingLevel = cardRecipe.defaults.headingLevel, selected = cardRecipe.defaults.selected, onActivate, disabled = false, tone = cardRecipe.defaults.tone, bordered = cardRecipe.defaults.bordered, padding = cardRecipe.defaults.padding, radius, className, children, ...props }, ref) {
-    if (onActivate && (!props["aria-label"]?.trim() || actions !== undefined)) {
-        throw new TypeError("Interactive Card requires aria-label and no actions");
+    if (onActivate && !props["aria-label"]?.trim()) {
+        throw new TypeError("Interactive Card requires aria-label");
     }
     const hasHeader = leading !== undefined || title !== undefined || description !== undefined;
-    return (_jsxs(Surface, { ...props, ref: ref, as: onActivate ? "button" : "article", ...(onActivate ? {
+    // Whole-card open plus separate commands (2026-10-18 unairplane journey card: open + delete). A root button cannot
+    // contain the action buttons, so the root stays an article and an overlay button carries the card's name and state.
+    const overlay = onActivate !== undefined && Boolean(actions);
+    const { "aria-label": activationLabel, ...rootProps } = props;
+    const activate = () => { if (!disabled)
+        onActivate?.(); };
+    return (_jsxs(Surface, { ...(overlay ? rootProps : props), ref: ref, as: onActivate && !overlay ? "button" : "article", ...(onActivate && !overlay ? {
             type: "button", disabled, "aria-pressed": selected,
-            "data-interactive": true, onClick: () => { if (!disabled)
-                onActivate(); },
-        } : {}), tone: selected ? cardRecipe.selectedTone : tone, bordered: bordered, ...(radius === undefined ? {} : { radius }), className: classNames("hjm-card", className), "data-state": onActivate && disabled ? "disabled" : selected ? "selected" : "idle", style: { "--hjm-card-disabled-opacity": cardRecipe.interaction.disabledOpacity,
+            "data-interactive": true, onClick: activate,
+        } : {}), ...(overlay ? { "data-activation": "overlay" } : {}), tone: selected ? cardRecipe.selectedTone : tone, bordered: bordered, ...(radius === undefined ? {} : { radius }), className: classNames("hjm-card", className), "data-state": onActivate && disabled ? "disabled" : selected ? "selected" : "idle", style: { "--hjm-card-disabled-opacity": cardRecipe.interaction.disabledOpacity,
             "--hjm-card-pressed-opacity": cardRecipe.interaction.pressedOpacity, ...props.style }, children: [media ? _jsx("div", { className: "hjm-card__media", "data-slot": "media", children: media }) : null, _jsxs("div", { className: "hjm-card__body", "data-slot": "body", style: { padding: surfaceGeometry.paddings[padding] }, children: [hasHeader ? (_jsxs("div", { className: "hjm-card__header", "data-slot": "header", children: [leading === undefined ? null : (_jsx("span", { className: "hjm-card__leading", "data-slot": "leading", children: leading })), _jsxs("div", { className: "hjm-card__copy", children: [title === undefined
                                         ? null
-                                        : createElement(`h${headingLevel}`, { className: "hjm-card__title", "data-slot": "title" }, title), description === undefined ? null : (_jsx(Text, { as: "p", tone: "muted", className: "hjm-card__description", "data-slot": "description", children: description }))] })] })) : null, children === undefined ? null : (_jsx("div", { className: "hjm-card__content", "data-slot": "content", children: children }))] }), actions ? _jsx("div", { className: "hjm-card__actions", "data-slot": "actions", children: actions }) : null] }));
+                                        : createElement(`h${headingLevel}`, { className: "hjm-card__title", "data-slot": "title" }, title), description === undefined ? null : (_jsx(Text, { as: "p", tone: "muted", className: "hjm-card__description", "data-slot": "description", children: description }))] })] })) : null, children === undefined ? null : (_jsx("div", { className: "hjm-card__content", "data-slot": "content", children: children }))] }), overlay ? (_jsx("button", { type: "button", className: "hjm-card__activator", "data-slot": "activator", "aria-label": activationLabel, "aria-pressed": selected, disabled: disabled, onClick: activate })) : null, actions ? _jsx("div", { className: "hjm-card__actions", "data-slot": "actions", children: actions }) : null] }));
 });
 export const ListRow = forwardRef(function ListRow({ title, description, leading, trailing, trailingAction, renderLink, density: densityProp, tone = listRowRecipe.defaults.tone, leadingShape = "square", selected = listRowRecipe.defaults.selected, disabled = false, loading = false, loadingLabel, href, onClick, className, layoutStyle, style, ...props }, ref) {
     // The hook runs unconditionally — `??` would short-circuit it and break the

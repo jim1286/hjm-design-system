@@ -794,6 +794,7 @@ export declare const componentCatalog: readonly [{
     };
     readonly name: "BottomNavigation";
     readonly label: "하단 탐색";
+    readonly companions: readonly ["BottomNavigationInsetProvider"];
     readonly category: "navigation";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -809,6 +810,17 @@ export declare const componentCatalog: readonly [{
     readonly category: "navigation";
     readonly platform: "web";
     readonly status: "stable";
+}, {
+    readonly recipe: "carouselRecipe";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "PageIndicator";
+    readonly label: "페이지 위치 표시";
+    readonly category: "navigation";
+    readonly platform: "shared";
+    readonly status: "beta";
 }, {
     readonly recipe: "paginationRecipe";
     readonly behavior: "pagination";
@@ -1318,7 +1330,7 @@ export declare const componentCatalog: readonly [{
     };
     readonly name: "Dialog";
     readonly label: "대화상자";
-    readonly companions: readonly ["OverlayStackProvider"];
+    readonly companions: readonly ["OverlayStackProvider", "ImmersiveOverlay"];
     readonly category: "overlay";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -1532,6 +1544,7 @@ export declare const componentCatalog: readonly [{
     };
     readonly name: "ModerationScreen";
     readonly label: "신고 화면";
+    readonly companions: readonly ["ModerationForm"];
     readonly category: "layout";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -1587,6 +1600,7 @@ export declare const componentCatalog: readonly [{
     };
     readonly name: "MediaSelectionScreen";
     readonly label: "미디어 선택 화면";
+    readonly companions: readonly ["MediaSelectionCell"];
     readonly category: "layout";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -1612,6 +1626,28 @@ export declare const componentCatalog: readonly [{
     readonly category: "data-display";
     readonly platform: "adaptive";
     readonly status: "stable";
+}, {
+    readonly recipe: "typingIndicatorRecipe";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "TypingIndicator";
+    readonly label: "입력 중 표시";
+    readonly category: "feedback";
+    readonly platform: "adaptive";
+    readonly status: "beta";
+}, {
+    readonly recipe: "chatDateSeparatorRecipe";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "ChatDateSeparator";
+    readonly label: "대화 날짜 구분";
+    readonly category: "data-display";
+    readonly platform: "adaptive";
+    readonly status: "beta";
 }, {
     readonly recipe: "notificationRowRecipe";
     readonly surfaceStatus: {
@@ -1706,6 +1742,9 @@ export declare const recipeRegistry: {
         readonly ringWidth: 2;
         readonly ringOffset: 2;
         readonly checkSize: 20;
+        readonly itemLabelGap: 4;
+        readonly itemLabelVariant: "caption";
+        readonly itemLabelLines: 1;
     };
     readonly affixRecipe: {
         readonly edge: "top";
@@ -2308,6 +2347,30 @@ export declare const recipeRegistry: {
                 key: "text";
                 alpha?: number;
             }>;
+        };
+        readonly prominentDestination: {
+            readonly diameter: number;
+            readonly icon: "lg";
+            readonly background: Readonly<{
+                source: "theme";
+                key: "primary";
+                alpha?: number;
+            }>;
+            readonly content: Readonly<{
+                source: "theme";
+                key: "onPrimary";
+                alpha?: number;
+            }>;
+            readonly shadow: {
+                readonly color: "#000000";
+                readonly opacity: 0.12;
+                readonly radius: 12;
+                readonly offsetY: 4;
+            };
+        };
+        readonly iconSizes: {
+            readonly large: 44;
+            readonly xlarge: 52;
         };
         readonly adaptive: {
             readonly web: "fixed-compact-viewport";
@@ -4294,6 +4357,20 @@ export declare const recipeRegistry: {
                 readonly easing: "exit";
                 readonly reducedMotion: "instant";
             };
+        };
+        readonly immersive: {
+            readonly background: Readonly<{
+                source: "theme";
+                key: "bg";
+                alpha?: number;
+            }>;
+            readonly controls: {
+                readonly padding: 16;
+                readonly gap: 8;
+                readonly actionGap: 12;
+            };
+            readonly orientations: readonly ["portrait", "landscape-left", "landscape-right"];
+            readonly statusBarHidden: true;
         };
     };
     readonly dataTableRecipe: {
@@ -8009,6 +8086,9 @@ export declare const recipeRegistry: {
                 alpha?: number;
             }>;
         };
+        readonly press: {
+            readonly minTouchTarget: 44;
+        };
     };
     readonly surfaceRecipe: {
         readonly default: {
@@ -8158,6 +8238,33 @@ export declare const recipeRegistry: {
             readonly size: "medium";
             readonly layout: "content";
             readonly overflow: "scroll";
+            readonly indicator: "underline";
+        };
+        readonly indicators: {
+            readonly underline: {
+                readonly listDivider: true;
+                readonly background: null;
+                readonly selectedContent: Readonly<{
+                    source: "theme";
+                    key: "text";
+                    alpha?: number;
+                }>;
+                readonly radius: null;
+            };
+            readonly filled: {
+                readonly listDivider: false;
+                readonly background: Readonly<{
+                    source: "theme";
+                    key: "surfaceAccent";
+                    alpha?: number;
+                }>;
+                readonly selectedContent: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+                readonly radius: "full";
+            };
         };
         readonly sizes: {
             readonly small: {
@@ -9093,6 +9200,13 @@ export declare const recipeRegistry: {
         readonly timelineInset: 10;
         readonly mediaWidth: 210;
         readonly mediaGap: 2;
+        readonly reactionSummary: {
+            readonly minHeight: 24;
+            readonly paddingInline: 8;
+            readonly itemGap: 4;
+            readonly emojiGap: 2;
+            readonly minCount: 2;
+        };
     };
     readonly commentThreadRecipe: {
         readonly avatarSize: 32;
@@ -9104,6 +9218,7 @@ export declare const recipeRegistry: {
         readonly likeColumnWidth: 44;
         readonly mediaMaxWidth: 160;
         readonly mediaRadius: 12;
+        readonly panelGap: 8;
         readonly menuGlyphSize: 20;
         readonly actionAnchor: {
             readonly authorTextVariant: "caption";
@@ -9123,6 +9238,10 @@ export declare const recipeRegistry: {
     };
     readonly profileSummaryRecipe: Readonly<{
         avatarSize: 72;
+        editAction: Readonly<{
+            readonly tone: "secondary";
+            readonly size: "small";
+        }>;
     }>;
     readonly iconTileRecipe: Readonly<{
         iconSize: 64;
@@ -9132,11 +9251,32 @@ export declare const recipeRegistry: {
         ghostOpacity: 0.55;
         gap: 6;
         iconRadius: "22%";
+        shapes: Readonly<Record<import("./screen-patterns.js").IconTileShape, number>>;
+        fillMinSize: 48;
+        fillMaxSize: 68;
+        defaults: Readonly<{
+            frame: import("./screen-patterns.js").IconTileFrame;
+            shape: import("./screen-patterns.js").IconTileShape;
+            size: import("./screen-patterns.js").IconTileSize;
+        }>;
     }>;
     readonly composerQuickInsertRecipe: {
         readonly itemSize: 44;
         readonly emojiSize: 26;
         readonly gap: 8;
+    };
+    readonly typingIndicatorRecipe: {
+        readonly dotSize: 6;
+        readonly dotGap: 4;
+        readonly cycleMs: 1200;
+        readonly staggerMs: 160;
+        readonly restOpacity: 0.35;
+    };
+    readonly chatDateSeparatorRecipe: {
+        readonly paddingTop: 12;
+        readonly paddingBottom: 4;
+        readonly textVariant: "caption";
+        readonly tone: "muted";
     };
 };
 export type RecipeName = keyof typeof recipeRegistry;

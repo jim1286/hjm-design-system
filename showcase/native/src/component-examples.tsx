@@ -13,8 +13,8 @@ import { Top } from "@hjmds/react-native/top";
 import { useRef, useState, type ReactNode } from "react";
 import { ScrollView, StyleSheet, TextInput, View, Text as RNText } from "react-native";
 // 2026-10-17 screen compositions registered.
-import { ChatMessage, ChatScreen, CompositionLayout, IconTile, MessageComposer, NotificationInboxScreen, NotificationItem, NotificationRow, ScreenLayout, SettingsScreen } from "@hjmds/react-native/screens";
-import { CommentThreadRow, CommentThreadScreen, EditorScreen, ListDetailScreen, MediaSelectionScreen, ModerationScreen, OnboardingScreen, PermissionScreen, PhotoSourceSheet, ProfileScreen, ProfileSummary, SearchScreen } from "@hjmds/react-native/screen-flows";
+import { ChatDateSeparator, ChatMessage, ChatScreen, CompositionLayout, IconTile, MessageComposer, NotificationInboxScreen, NotificationItem, NotificationRow, ScreenLayout, SettingsScreen, TypingIndicator } from "@hjmds/react-native/screens";
+import { CommentThreadRow, CommentThreadScreen, EditorScreen, ListDetailScreen, MediaSelectionCell, MediaSelectionScreen, type MediaSelectionItem, ModerationScreen, OnboardingScreen, PermissionScreen, PhotoSourceSheet, ProfileScreen, ProfileSummary, SearchScreen } from "@hjmds/react-native/screen-flows";
 import { Button, BottomCTA, IconButton, Link } from "@hjmds/react-native/actions";
 import {
   Accordion,
@@ -815,9 +815,13 @@ return <View style={{ flex: 1 }}><Stack gap="sm"><Text>{floatingActionExample.bo
 function ImageChoiceGroupExample({ variant }: { variant: PreviewVariant }) {
 const [value, setValue] = useState<string>(imageChoiceExample.initial);
 const chosen = imageChoiceExample.items.find(item => item.id === value)!;
+const [recipients, setRecipients] = useState<string[]>([...imageChoiceExample.recipients.initial]);
 return (<StoryFrame><ImageChoiceGroup label={imageChoiceExample.label} showLabel selectionMode="single" value={value} onValueChange={setValue} disabled={variant === "disabled"}
   items={imageChoiceExample.items.map(item => ({ id: item.id, label: item.label, image: <PreviewPhoto index={item.photo} square rounded={false} label="" /> }))} />
-  <Text tone="muted" accessibilityLiveRegion="polite">{imageChoiceExample.result(chosen.label)}</Text></StoryFrame>);
+  <Text tone="muted" accessibilityLiveRegion="polite">{imageChoiceExample.result(chosen.label)}</Text>
+  {/* 2026-10-18 showItemLabels: names under the faces, inside the same press target. */}
+  <ImageChoiceGroup label={imageChoiceExample.recipients.label} showLabel showItemLabels selectionMode="multiple" value={recipients} onValueChange={setRecipients} disabled={variant === "disabled"}
+    items={imageChoiceExample.recipients.items.map(item => ({ id: item.id, label: item.label, image: <PreviewPhoto index={item.photo} square rounded={false} label="" /> }))} /></StoryFrame>);
 }
 
 
@@ -828,8 +832,13 @@ const screenDiscard = { mode: "confirm" as const, title: "초안을 버릴까요
 const screenUploadLabels = { pending: "대기 중", uploading: "업로드 중", success: "완료", cancel: "취소", retry: "다시 시도" };
 const screenPhotoLabels = { title: "사진 가져오기", library: "앨범에서 선택", camera: "카메라로 촬영", cancel: "취소" };
 const screenComments = [{ id: "c1", parentId: null, author: "서연", body: "첫 댓글이에요", timeLabel: "방금", likeCountLabel: "좋아요 3개", likeIcon: <RNText>♡</RNText>, likeLabel: "좋아요" }];
+// Stand-in product artwork for the header mark and the brand loader (2026-10-18 titleLeading / loadingIndicator).
 function ScreenLayoutExample({ variant: _variant }: { variant: PreviewVariant }) {
-  return (<StoryFrame><ScreenLayout title="화면"><RNText>본문</RNText></ScreenLayout></StoryFrame>);
+  const { colors } = useHjmNativeTheme();
+  return (<StoryFrame>
+    <View style={{ height: 200 }}><ScreenLayout title="화면" titleLeading={<View style={{ width: 28, height: 28, borderRadius: 8, backgroundColor: colors.contentBrand }} />}><RNText>본문</RNText></ScreenLayout></View>
+    <View style={{ height: 200 }}><ScreenLayout title="브랜드 로딩" state={{ kind: "loading", title: "불러오는 중" }} loadingIndicator={<RNText style={{ fontSize: 32 }}>🌼</RNText>} /></View>
+  </StoryFrame>);
 }
 function CompositionLayoutExample({ variant: _variant }: { variant: PreviewVariant }) {
   return (<StoryFrame><CompositionLayout title="구성" description="설명"><RNText>본문</RNText></CompositionLayout></StoryFrame>);
@@ -867,14 +876,25 @@ function CommentThreadScreenExample({ variant: _variant }: { variant: PreviewVar
 function ListDetailScreenExample({ variant: _variant }: { variant: PreviewVariant }) {
   return (<StoryFrame><ListDetailScreen title="목록" list={<RNText>목록</RNText>} back={screenAction("뒤로")} /></StoryFrame>);
 }
+const screenMediaActions = { labels: screenUploadLabels, actionLabels: { remove: "제거", moveUp: "위로", moveDown: "아래로" }, removeLabel: (item: MediaSelectionItem) => `${item.descriptor.name} 제거`, moveUpLabel: (item: MediaSelectionItem) => `${item.descriptor.name} 위로`, moveDownLabel: (item: MediaSelectionItem) => `${item.descriptor.name} 아래로`, onRemove: screenNoop, onMove: screenNoop, onRetry: screenNoop, onCancel: screenNoop };
+// 2026-10-18: rotate is an optional item action; the product stores the turn and applies it to its own preview.
+// MediaSelectionCell is the same cell a FlatList renderItem renders.
 function MediaSelectionScreenExample({ variant: _variant }: { variant: PreviewVariant }) {
-  return (<StoryFrame><MediaSelectionScreen title="사진 선택" items={[]} done={screenAction("완료")} labels={screenUploadLabels} actionLabels={{ remove: "제거", moveUp: "위로", moveDown: "아래로" }} removeLabel={() => "제거"} moveUpLabel={() => "위로"} moveDownLabel={() => "아래로"} onRemove={screenNoop} onMove={screenNoop} onRetry={screenNoop} onCancel={screenNoop} /></StoryFrame>);
+  const [turns, setTurns] = useState<Readonly<Record<string, number>>>({});
+  const items: MediaSelectionItem[] = [0, 1].map(index => ({ descriptor: { id: String(index), name: `사진 ${index + 1}`, state: { status: "success" } }, preview: <View style={{ transform: [{ rotate: `${(turns[String(index)] ?? 0) * 90}deg` }] }}><PreviewPhoto index={index} square label="" /></View> }));
+  const rotate = { label: "회전", itemLabel: (item: MediaSelectionItem) => `${item.descriptor.name} 회전`, onRotate: (id: string) => setTurns(current => ({ ...current, [id]: ((current[id] ?? 0) + 1) % 4 })) };
+  return (<StoryFrame><MediaSelectionScreen title="사진 선택" items={items} done={screenAction("완료")} {...screenMediaActions} rotate={rotate} />
+    <Text variant="caption" tone="muted">가상화 목록의 항목 칸</Text>
+    <MediaSelectionCell item={items[1]!} index={1} count={items.length} {...screenMediaActions} rotate={rotate} /></StoryFrame>);
 }
 function ProfileScreenExample({ variant: _variant }: { variant: PreviewVariant }) {
   return (<StoryFrame><ProfileScreen title="프로필" summary={<RNText>요약</RNText>} edit={screenAction("편집")} /></StoryFrame>);
 }
+const screenPhotoAlbum = { count: 3, renderPage: (index: number) => <PreviewPhoto index={index} square rounded={false} label="" />, pageLabel: (index: number, count: number) => `사진 ${index + 1}/${count}`, previousLabel: "이전 사진", nextLabel: "다음 사진" };
 function ChatMessageExample({ variant: _variant }: { variant: PreviewVariant }) {
-  return (<StoryFrame><ChatMessage direction="incoming" author="서연" timestamp="지금"><RNText>안녕하세요</RNText></ChatMessage></StoryFrame>);
+  return (<StoryFrame><ChatMessage direction="incoming" author="서연" timestamp="지금"><RNText>안녕하세요</RNText></ChatMessage>
+    {/* 2026-10-18 mediaAlbum: renderPage runs only for the shown photo, so a product can fetch one image at a time. */}
+    <ChatMessage direction="incoming" author="서연" timestamp="지금" mediaAlbum={screenPhotoAlbum}>{null}</ChatMessage></StoryFrame>);
 }
 function NotificationRowExample({ variant: _variant }: { variant: PreviewVariant }) {
   return (<StoryFrame><NotificationRow preview={<RNText>새 답글이 달렸어요</RNText>} metadata="방금" avatar={<RNText>S</RNText>} /></StoryFrame>);
@@ -882,14 +902,31 @@ function NotificationRowExample({ variant: _variant }: { variant: PreviewVariant
 function NotificationItemExample({ variant: _variant }: { variant: PreviewVariant }) {
   return (<StoryFrame><NotificationItem title="답글" read={false} statusLabel="읽지 않음" timestamp="방금" /></StoryFrame>);
 }
+// 2026-10-18: a rich (non-text) body can move the time under it, a paged album loads one photo, and an inline
+// panel (edit/report/block form) sits under the Reply line outside the long-press target.
 function CommentThreadRowExample({ variant: _variant }: { variant: PreviewVariant }) {
-  return (<StoryFrame><CommentThreadRow item={screenComments[0]!} onLike={screenNoop} onReply={screenNoop} replyLabel="답글" /></StoryFrame>);
+  const [reporting, setReporting] = useState(false);
+  return (<StoryFrame><CommentThreadRow item={screenComments[0]!} onLike={screenNoop} onReply={screenNoop} replyLabel="답글" />
+    <CommentThreadRow item={{ ...screenComments[0]!, id: "c2", body: <RNText accessibilityLabel="분홍 꽃 도장" style={{ fontSize: 28 }}>🌸</RNText>, timeLabel: "3분 전", timePlacement: "actions", mediaAlbum: screenPhotoAlbum, actions: <Button size="small" tone="ghost" onPress={() => setReporting(open => !open)}>신고</Button>, ...(reporting ? { panel: <Stack gap="xs"><Text>신고 사유를 골라 주세요</Text><Button size="small" tone="secondary" onPress={() => setReporting(false)}>닫기</Button></Stack> } : {}) }} onLike={screenNoop} onReply={screenNoop} replyLabel="답글" /></StoryFrame>);
 }
 function ProfileSummaryExample({ variant: _variant }: { variant: PreviewVariant }) {
   return (<StoryFrame><ProfileSummary name="서연" avatar={<RNText>S</RNText>} /></StoryFrame>);
 }
 function IconTileExample({ variant: _variant }: { variant: PreviewVariant }) {
-  return (<StoryFrame><IconTile icon={<RNText>★</RNText>} label="도구" /></StoryFrame>);
+  const { colors } = useHjmNativeTheme();
+  // Default frame, then the 2026-10-18 frame options: complete artwork without a frame, a theme shape, a filling icon.
+  return (<StoryFrame><View style={{ flexDirection: "row", gap: 12 }}>
+    <View style={{ width: 76 }}><IconTile icon={<RNText>★</RNText>} label="도구" /></View>
+    <View style={{ width: 76 }}><IconTile frame="none" icon={<View style={{ width: 64, height: 64, borderRadius: 14, backgroundColor: colors.contentBrand, alignItems: "center", justifyContent: "center" }}><RNText style={{ color: colors.onPrimary }}>★</RNText></View>} label="틀 없음" /></View>
+    <View style={{ width: 76 }}><IconTile shape="square" icon={<RNText>■</RNText>} label="사각형" /></View>
+    <View style={{ width: 76 }}><IconTile shape="circle" size="fill" icon={<RNText>●</RNText>} label="칸 채움" /></View>
+  </View></StoryFrame>);
+}
+function TypingIndicatorExample({ variant: _variant }: { variant: PreviewVariant }) {
+  return (<StoryFrame><ChatMessage direction="incoming" author="서연" timestamp="오후 3:01"><RNText>곧 도착해요</RNText></ChatMessage><TypingIndicator label="서연님이 입력 중" /></StoryFrame>);
+}
+function ChatDateSeparatorExample({ variant: _variant }: { variant: PreviewVariant }) {
+  return (<StoryFrame><View><ChatDateSeparator label="10월 18일 토요일" /><ChatMessage direction="incoming" author="서연" timestamp="오전 9:12"><RNText>좋은 아침이에요</RNText></ChatMessage></View></StoryFrame>);
 }
 function MessageComposerExample({ variant: _variant }: { variant: PreviewVariant }) {
   const [value, setValue] = useState("");
@@ -1000,6 +1037,8 @@ const examples = {
 "comment-thread-row": CommentThreadRowExample,
 "profile-summary": ProfileSummaryExample,
 "icon-tile": IconTileExample,
+"typing-indicator": TypingIndicatorExample,
+"chat-date-separator": ChatDateSeparatorExample,
 "message-composer": MessageComposerExample,
 "photo-source-sheet": PhotoSourceSheetExample
 };

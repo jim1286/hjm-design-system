@@ -93,3 +93,27 @@ it("routes accessibility increment around disabled tabs without changing manual 
   act(() => tabs()[2]!.props.onAccessibilityAction({ nativeEvent: { actionName: "activate" } }));
   expect(change).toHaveBeenCalledWith("c");
 });
+
+it("paints the filled indicator as a brand-tinted pill without the underline or list divider", async () => {
+  const { ScrollView, View } = await import("react-native");
+  const items = [{ id: "travelling", label: "Travelling" }, { id: "people", label: "People" }];
+  act(() => {
+    renderer = create(
+      <HjmNativeProvider reducedMotion theme="light">
+        <Tabs label="Sent" indicator="filled" layout="fitted" appearance="standard" items={items} defaultValue="people" />
+      </HjmNativeProvider>,
+    );
+  });
+  const tabs = renderer.root.findAllByType(Pressable);
+  const style = (node: (typeof tabs)[number]) => node.props.style({ pressed: false }).flat().reduce((all: object, part: object) => ({ ...all, ...part }), {});
+  expect(style(tabs[1]!).backgroundColor).toEqual(expect.any(String));
+  expect(style(tabs[1]!).backgroundColor).not.toBe("transparent");
+  expect(style(tabs[1]!).borderRadius).toBeGreaterThan(100);
+  expect(style(tabs[0]!).backgroundColor).toBe("transparent");
+  expect(renderer.root.findByType(ScrollView).props.contentContainerStyle[0].borderBottomWidth).toBe(0);
+  // No absolutely placed underline bar under the selected tab.
+  expect(tabs[1]!.findAll((node) => node.type === View && node.props.style?.position === "absolute")).toHaveLength(0);
+  expect(() => act(() => {
+    renderer.update(<HjmNativeProvider reducedMotion theme="light"><Tabs label="Sent" indicator={"boxed" as never} items={items} /></HjmNativeProvider>);
+  })).toThrow("Unsupported Tabs indicator");
+});

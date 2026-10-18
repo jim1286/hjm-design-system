@@ -252,6 +252,74 @@ export const carouselBehavior = {
   ],
 } as const satisfies BehaviorContract;
 
+/**
+ * PageIndicator is Carousel's position dot row on its own, for a product-owned pager (a paging FlatList or
+ * scroll-snap row) that Carousel cannot host because Carousel owns its slides. It reuses `carouselRecipe.dot`
+ * and the same clamped navigation, so both rows look and behave the same. Added 2026-10-18 for the Utilverse
+ * launcher, which drew its own dots under a native pager.
+ */
+export type PageIndicatorDescriptor = Readonly<{
+  /** Number of pages, at least 1. */
+  count: number;
+  /** Zero-based current page. */
+  currentIndex: number;
+}>;
+
+export type PageIndicatorAccessibleNameInfo = Readonly<{ position: number; total: number }>;
+
+/** Product-owned copy for one page, e.g. "Home page 2 of 5" — counter grammar is not the renderer's. */
+export type ComposePageIndicatorAccessibleName = (info: PageIndicatorAccessibleNameInfo) => string;
+
+export type ResolvedPageIndicatorDot = Readonly<{
+  index: number;
+  /** 1-indexed reading position. */
+  position: number;
+  total: number;
+  current: boolean;
+  accessibleName: string;
+}>;
+
+export function validatePageIndicatorDescriptor(descriptor: PageIndicatorDescriptor): void {
+  if (!Number.isSafeInteger(descriptor.count) || descriptor.count < 1) {
+    throw new RangeError("PageIndicator count must be a positive integer");
+  }
+  if (
+    !Number.isSafeInteger(descriptor.currentIndex) ||
+    descriptor.currentIndex < 0 ||
+    descriptor.currentIndex >= descriptor.count
+  ) {
+    throw new RangeError(`PageIndicator currentIndex is out of range: ${String(descriptor.currentIndex)}`);
+  }
+}
+
+export function resolvePageIndicator(
+  descriptor: PageIndicatorDescriptor,
+  composeAccessibleName: ComposePageIndicatorAccessibleName,
+): readonly ResolvedPageIndicatorDot[] {
+  validatePageIndicatorDescriptor(descriptor);
+  if (typeof composeAccessibleName !== "function") {
+    throw new TypeError("PageIndicator composeAccessibleName must be a function");
+  }
+  return Array.from({ length: descriptor.count }, (_, index) => {
+    const accessibleName = composeAccessibleName({ position: index + 1, total: descriptor.count });
+    if (typeof accessibleName !== "string" || accessibleName.trim().length === 0) {
+      throw new TypeError("PageIndicator composeAccessibleName must return a non-empty string");
+    }
+    return { index, position: index + 1, total: descriptor.count, current: index === descriptor.currentIndex, accessibleName };
+  });
+}
+
+/** Clamps like getCarouselNavigationTarget: a pager indicator has an end, it never wraps. */
+export function getPageIndicatorTarget(
+  descriptor: PageIndicatorDescriptor,
+  intent: CarouselNavigationIntent,
+): number {
+  validatePageIndicatorDescriptor(descriptor);
+  if (intent === "first") return 0;
+  if (intent === "last") return descriptor.count - 1;
+  return Math.min(Math.max(descriptor.currentIndex + (intent === "next" ? 1 : -1), 0), descriptor.count - 1);
+}
+
 export type CarouselSize = "medium";
 
 export const carouselRecipe = {

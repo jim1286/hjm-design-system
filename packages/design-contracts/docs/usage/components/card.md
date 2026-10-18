@@ -78,7 +78,7 @@ import { Button } from "@hjmds/react-native/actions";
 | `selected` | `boolean` | `false` | `true`면 tone이 `accent`로 바뀐다(`cardRecipe.selectedTone`) |
 | `headingLevel`(Web만) | `2` · `3` · `4` | `3` | 제목이 `h3`로 렌더되므로 문서 위계에 맞춰 고른다 |
 | `title` · `description` · `leading` · `media` · `actions` · `children` | `ReactNode` | — | 슬롯. 순서는 HJM이 고정한다 |
-| `onActivate` | `() => void` | — | 카드 전체가 하나의 행동일 때 사용(미게시). Web `aria-label`, Native `accessibilityLabel` 필수 |
+| `onActivate` | `() => void` | — | 카드 전체가 하나의 행동일 때 사용(미게시). Web `aria-label`, Native `accessibilityLabel` 필수. `actions`와 함께 쓰면 행동은 별도 대상으로 남는다(1.31.0 추가) |
 | `disabled` | `boolean` | `false` | 전체 카드 행동 차단·비활성 피드백(미게시) |
 | `layoutStyle` | margin·width·flex·`alignSelf` | — | 배치 전용. 두 플랫폼 모두 root Surface에 적용된다 |
 
@@ -99,8 +99,39 @@ import { Button } from "@hjmds/react-native/actions";
 // Native는 aria-label 대신 accessibilityLabel을 전달한다.
 ```
 
-`onActivate`와 `actions`를 함께 쓰지 않는다. children·media·leading에도 입력/링크/버튼을
-넣지 않는다. 내부 행동이 여러 개인 카드에는 기존 `actions` 슬롯을 사용한다.
+children·media·leading에는 입력/링크/버튼을 넣지 않는다. 카드를 여는 행동과 별도 명령(삭제·더보기)이
+함께 필요하면 명령을 `actions`에 둔다.
+
+### 카드 열기와 별도 행동(1.31.0 추가)
+
+2026-10-18 unairplane 홈 여정 카드는 카드 전체로 상세를 열고 삭제는 따로 해야 했다. 이전에는 `onActivate`와
+`actions`가 상호 배제라 제품이 카드 안에 Pressable을 다시 조립하고 삭제를 별도 footer로 붙였다.
+이제 둘을 함께 주면 HJM이 버튼 안 버튼 없이 두 대상을 나눈다.
+
+```tsx
+// Native
+<Card accessibilityLabel={flightLabel} accessibilityHint={t("journey.openHint")} title={route} description={flightNumber}
+  onActivate={openJourney}
+  actions={<IconButton label={t("journey.delete", { flight: flightNumber })} tone="ghost" size="small" edge="start" onPress={confirmDelete}>
+    <Icon descriptor={{ name: "delete", tone: "danger" }} renderGlyph={renderSemanticGlyph} />
+  </IconButton>}>
+  {schedule}
+</Card>
+// Web은 accessibilityLabel 대신 aria-label, onPress 대신 onClick을 쓴다.
+```
+
+| 항목 | Web | Native |
+| --- | --- | --- |
+| 구조 | root는 `<article>`로 남고, 카드 전체를 덮는 투명 `<button>`(`data-slot="activator"`)이 이름·`aria-pressed`·`disabled`를 가진다. 행동 영역만 그 위에 놓인다 | media+본문이 하나의 `Pressable`(버튼 role·이름·선택/비활성 상태), 행동 줄은 그 형제다 |
+| 누르는 영역 | 행동 버튼을 뺀 카드 전체(행동 줄의 빈 자리 포함) | media+본문. 행동 줄의 빈 자리는 누름 대상이 아니다 |
+| 초점·낭독 순서 | 카드 → 행동 | 카드 → 행동(각각 별도 접근성 요소) |
+| 눌림·비활성 피드백 | media·본문만 흐려진다. 행동은 자기 상태를 쓴다 | 같음 |
+
+- `disabled`는 카드 열기만 막는다. 행동을 막으려면 그 버튼의 `disabled`를 따로 준다.
+- 행동은 `actions`에 직접 넣는다. Web은 행동 영역의 직계 자식만 누름을 받으므로, 행동을 넓은 묶음으로 감싸면
+  그 묶음의 빈 자리도 카드 열기가 아니라 묶음이 받는다. 행동을 끝 쪽에 두려면 묶음으로 감싸지 말고 첫 행동의
+  `layoutStyle`에 Web `{ marginInlineStart: "auto" }`, Native `{ marginStart: "auto" }`를 준다(행동 줄은 시작 쪽부터 놓인다).
+- `actions` 없이 `onActivate`만 주면 기존처럼 root 자체가 버튼(Web `<button>`, Native `Pressable`)이다.
 기존 passive Card는 콜백 없이 동일하게 유지된다. 이 API는 로컬 source/candidate 단계이며
 npm 게시 및 소비 제품의 게시 버전 채택 완료를 뜻하지 않는다.
 
@@ -134,13 +165,13 @@ subtree라 질감을 바꾸거나 host가 실패해도 본문/초안은 유지�
 - 색·radius·padding은 `tone`·`radius`·`padding` 축으로만 바꾼다. 카드마다 브랜드 색을 칠하지 않는다.
 - 배치는 두 플랫폼 모두 `layoutStyle`로 한다. Native `CardProps`에는 `style`이 없다. Web의 `className`·`style`로 recipe 값을 덮지 않는다.
   카드 목록 사이 간격은 바깥 [Stack](stack.md)·[Grid](grid.md)이 정한다.
-- 카드 전체 행동은 `onActivate`만 사용한다. 카드 안 행동이 있으면 전체 행동을 빼고 `actions`의 Button으로 둔다.
+- 카드 전체 행동은 `onActivate`만 사용한다. 카드 안 별도 명령은 `actions`에 두고 children에 버튼을 넣지 않는다.
 
 ## 플랫폼 차이
 
 | 항목 | Web | Native |
 | --- | --- | --- |
-| root | 기본 `<article>`, 전체 행동은 `<button type="button">` | 기본 `View`(Surface), 전체 행동은 `Pressable` |
+| root | 기본 `<article>`, 전체 행동은 `<button type="button">`, 전체 행동+`actions`는 `<article>` + 덮개 `<button>` | 기본 `View`(Surface), 전체 행동은 `Pressable`, 전체 행동+`actions`는 media·본문 `Pressable` + 형제 행동 줄 |
 | 제목 | `h{headingLevel}` | `Text` + `accessibilityRole="header"`, 수준 지정 없음 |
 | 배치 | `layoutStyle` | `layoutStyle` |
 | 내용 clip | tone의 `clipsContent`(`raised`는 그림자 때문에 clip 안 함) | 내부 `View`가 항상 clip, 그림자는 바깥에 남는다. frame과 clip이 같은 Provider radius token을 사용 |

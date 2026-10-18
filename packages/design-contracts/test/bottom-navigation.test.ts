@@ -16,6 +16,7 @@ import {
   resolveColorReference,
   validateBottomNavigationConfiguration,
   validateBottomNavigationDescriptor,
+  validateBottomNavigationProminence,
   type BottomNavigationDescriptor,
   type BottomNavigationIconDescriptor,
   type BottomNavigationItemDescriptor,
@@ -461,6 +462,7 @@ describe("BottomNavigation visual and behavior contracts", () => {
       labels: "visible",
       selection: "emphasis",
       surface: "flat",
+      iconSize: "standard",
     });
     expect(
       resolveBottomNavigationConfiguration(
@@ -483,6 +485,7 @@ describe("BottomNavigation visual and behavior contracts", () => {
       labels: "hidden",
       selection: "emphasis",
       surface: "flat",
+      iconSize: "standard",
     });
     expect(() =>
       validateBottomNavigationConfiguration({ distribution: "center-gap" }, 3),
@@ -547,6 +550,7 @@ describe("BottomNavigation visual and behavior contracts", () => {
       labels: "visible",
       selection: "emphasis",
       surface: "flat",
+      iconSize: "standard",
       minItems: 2,
       maxItems: 6,
     });
@@ -593,5 +597,35 @@ describe("tile selection", () => {
     expect(resolveBottomNavigationConfiguration({ presentation: "floating", selection: "tile", surface: "raised" }, 3).surface).toBe("raised");
     expect(() => resolveBottomNavigationConfiguration({ presentation: "floating", surface: "raised" }, 3)).toThrow("requires tile selection");
     expect(() => resolveBottomNavigationConfiguration({ presentation: "floating", selection: "tile", surface: "wood" as never }, 3)).toThrow("Unsupported BottomNavigation surface");
+  });
+});
+
+describe("prominent destination and icon size", () => {
+  const icon = { name: "home" } as const;
+  const three = (prominent: number) => ({
+    accessibilityLabel: "Main",
+    selectedKey: "a",
+    items: ["a", "b", "c"].map((id, index) => ({ id, label: id.toUpperCase(), icon, ...(index === prominent ? { prominent: true } : {}) })),
+  });
+
+  it("resolves only the middle item of an odd count as prominent", () => {
+    expect(resolveBottomNavigationDescriptor(three(1)).items.map((item) => item.prominent)).toEqual([false, true, false]);
+    expect(() => resolveBottomNavigationDescriptor(three(0))).toThrow("single middle item");
+    expect(() => resolveBottomNavigationDescriptor({ ...three(-1), items: [...three(-1).items, { id: "d", label: "D", icon, prominent: true }] })).toThrow("single middle item");
+  });
+
+  it("requires the plain equal row", () => {
+    const items = resolveBottomNavigationDescriptor(three(1)).items;
+    expect(() => validateBottomNavigationProminence(items, resolveBottomNavigationConfiguration({ presentation: "floating" }, 3))).not.toThrow();
+    expect(() => validateBottomNavigationProminence(items, resolveBottomNavigationConfiguration({ presentation: "floating", selection: "tile" }, 3))).toThrow("emphasis selection");
+    expect(() => validateBottomNavigationProminence(items, resolveBottomNavigationConfiguration({ presentation: "capsule" }, 3))).toThrow("bar or floating");
+  });
+
+  it("defaults iconSize to the density glyph and validates app-icon slots", () => {
+    expect(resolveBottomNavigationConfiguration({}, 3).iconSize).toBe("standard");
+    expect(resolveBottomNavigationConfiguration({ iconSize: "xlarge" }, 3).iconSize).toBe("xlarge");
+    expect(() => resolveBottomNavigationConfiguration({ iconSize: "huge" as never }, 3)).toThrow("Unsupported BottomNavigation iconSize");
+    expect(bottomNavigationRecipe.iconSizes.large).toBeLessThan(bottomNavigationRecipe.iconSizes.xlarge);
+    expect(bottomNavigationRecipe.prominentDestination.diameter).toBeGreaterThan(bottomNavigationRecipe.indicator.minWidth);
   });
 });

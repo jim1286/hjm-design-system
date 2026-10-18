@@ -153,3 +153,11 @@ Native 위치 제어는 숫자 버튼으로 표현해 현재 위치를 눈으로
 자동재생은 선택 기능이며 기본 화면 예제는 수동이다. Web browser 및 Native renderer
 테스트는 숨김·key 유지·경계·controlled 요청·RTL·자동재생 중지와 swipe/접근성 action을
 검증한다. Native 기기 제스처·스크린 리더 실측은 별도이며 이 증거로 stable 승격하지 않는다.
+
+## PageIndicator (2026-10-18)
+
+Carousel의 위치 점 줄을 `PageIndicator`로 공개했다. 제품이 페이저와 페이지 내용을 직접 소유하는 자리(Utilverse 홈 런처의
+Native 페이징 목록)에서 같은 점·같은 끝 멈춤 이동을 쓰게 하려는 것이다. 계약은 `resolvePageIndicator`(점 이름은
+`composeAccessibleName`으로 제품이 짓는다)와 `getPageIndicatorTarget`(순환 없이 끝에서 멈춤)이고 recipe는 `carouselRecipe.dot`
+그대로다. Carousel도 같은 점 줄을 렌더한다(Web 내부 공유 컴포넌트, Native `PageIndicator`). Native는 줄 하나가 adjustable
+요소이고 Web은 group 안의 점 버튼이며 ←/→로 한 페이지씩 요청한다.

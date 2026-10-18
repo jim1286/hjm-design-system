@@ -212,9 +212,81 @@ export declare const chatMessageRecipe: {
     readonly timelineInset: 10;
     readonly mediaWidth: 210;
     readonly mediaGap: 2;
+    /**
+     * Reaction summary pill beside the time (2026-10-18 BurnTok DM): one button that opens the same hold menu.
+     * Counts below `minCount` show the emoji alone, as the measured DM references do for a single reaction.
+     */
+    readonly reactionSummary: {
+        readonly minHeight: 24;
+        readonly paddingInline: 8;
+        readonly itemGap: 4;
+        readonly emojiGap: 2;
+        readonly minCount: 2;
+    };
+};
+export type ChatReactionSummaryItem = Readonly<{
+    id: string;
+    emoji: string;
+    count: number;
+}>;
+export type ChatReactionSummary = Readonly<{
+    label: string;
+    items: readonly ChatReactionSummaryItem[];
+}>;
+/**
+ * Validates ChatMessage `reactions.summary` and marks which counts are drawn. The label (the button's accessible name)
+ * is required; ids are unique and non-empty, emoji non-empty and counts positive integers; a count below
+ * `reactionSummary.minCount` shows the emoji alone.
+ */
+export declare function resolveChatReactionSummary({ label, items }: ChatReactionSummary): readonly (ChatReactionSummaryItem & Readonly<{
+    showCount: boolean;
+}>)[];
+/**
+ * "Someone is typing" row in a chat timeline (2026-10-18 BurnTok DM). It reuses the incoming bubble geometry
+ * (chatMessageRecipe) so it reads as the next incoming message; only the dots are its own values. Under reduced
+ * motion the dots stay at full opacity instead of pulsing.
+ */
+export declare const typingIndicatorRecipe: {
+    readonly dotSize: 6;
+    readonly dotGap: 4;
+    /** One pulse of the three dots; each dot starts `staggerMs` after the previous one. */
+    readonly cycleMs: 1200;
+    readonly staggerMs: 160;
+    readonly restOpacity: 0.35;
+};
+/**
+ * Centered date (or time) row between timeline groups (2026-10-18 Utilverse chat, which drew it as a product
+ * caption). The next message still owns its own group gap above it, so this row only adds the space before it.
+ */
+export declare const chatDateSeparatorRecipe: {
+    readonly paddingTop: 12;
+    readonly paddingBottom: 4;
+    readonly textVariant: "caption";
+    readonly tone: "muted";
 };
 /** Column count for a photo set: pairs read as 2-up, other counts as 3-up; one photo spans the width. */
 export declare function resolveChatMediaColumns(count: number): 1 | 2 | 3;
+/**
+ * Paged photo album for ChatMessage `mediaAlbum` and CommentThreadItem `mediaAlbum` (2026-10-18, Utilverse social
+ * photos). Only the shown page is rendered, so a product that authorizes each image can fetch one photo at a time
+ * instead of every photo in a timeline row. The counter row matches CarouselMotion `navigation="counter"`:
+ * previous icon · position · next icon under the page; the frame keeps the host's media width and radius.
+ */
+export declare const mediaAlbumRecipe: {
+    /** Page frame width / height when the product gives no aspect ratio. */
+    readonly defaultAspectRatio: 1;
+    /** Space between the page frame and the counter row. */
+    readonly controlGap: 4;
+    /** Previous/next are small ghost IconButtons so the counter row stays compact beside thumbnails. */
+    readonly controlSize: "small";
+    readonly controlGlyphSize: 20;
+};
+/** A controlled index outside the set is a contract error, like Carousel's unknown `currentKey`. */
+export declare function validateMediaAlbum(count: number, index: number): void;
+/** One message or comment carries one photo set: either the eager `media` previews or the paged `mediaAlbum`. */
+export declare function validateMediaSetChoice(hasMedia: boolean, hasAlbum: boolean): void;
+/** Uncontrolled albums keep the nearest page when the product's photo set shrinks (moderation, deletion). */
+export declare function resolveMediaAlbumIndex(count: number, index: number): number;
 /**
  * Long-press menu geometry measured from the Instagram iOS DM hold menu (2026-10-16 @3x capture):
  * full-width reaction strip ~60pt with ~30pt emoji, the pressed bubble itself as preview, and a ~200pt
@@ -292,6 +364,7 @@ export declare const commentThreadRecipe: {
     readonly likeColumnWidth: 44;
     readonly mediaMaxWidth: 160;
     readonly mediaRadius: 12;
+    readonly panelGap: 8;
     readonly menuGlyphSize: 20;
     /**
      * Trailing actions (like, product actions, more) centre their 44 targets on the identity's first line instead of
@@ -426,8 +499,26 @@ export declare const notificationRowRecipe: {
 /** Shared profile identity geometry; product owns the avatar content. */
 export declare const profileSummaryRecipe: Readonly<{
     avatarSize: 72;
+    /**
+     * ProfileScreen `editPlacement="summary"` draws the edit action first in the summary's action row. A framed small
+     * button reads as the card's own action; the below-summary placement keeps its ghost button (2026-10-15 utilverse
+     * account decision: the edit action belongs inside the profile card).
+     */
+    editAction: Readonly<{
+        readonly tone: "secondary";
+        readonly size: "small";
+    }>;
 }>;
 /** Launcher artwork stays above its caption; product overlays may extend beyond the icon frame. */
+/**
+ * Frame of an IconTile icon (2026-10-18 Utilverse launcher). `surface` draws the shared filled, hairlined frame;
+ * `none` leaves product artwork that is already a complete launcher icon unframed. `shape` follows the product's
+ * icon theme (squircle on iPhone shells, square on Windows/Linux shells); `size: "fill"` lets the icon span its
+ * grid cell between `fillMinSize` and `fillMaxSize` instead of a product computing the cell size.
+ */
+export type IconTileFrame = "surface" | "none";
+export type IconTileShape = "squircle" | "square" | "circle";
+export type IconTileSize = "fixed" | "fill";
 export declare const iconTileRecipe: Readonly<{
     iconSize: 64;
     labelMaxWidth: 72;
@@ -436,5 +527,14 @@ export declare const iconTileRecipe: Readonly<{
     ghostOpacity: 0.55;
     gap: 6;
     iconRadius: "22%";
+    /** Corner radius as a fraction of the icon size; `squircle` keeps the original 22%. */
+    shapes: Readonly<Record<IconTileShape, number>>;
+    fillMinSize: 48;
+    fillMaxSize: 68;
+    defaults: Readonly<{
+        frame: IconTileFrame;
+        shape: IconTileShape;
+        size: IconTileSize;
+    }>;
 }>;
 //# sourceMappingURL=screen-patterns.d.ts.map

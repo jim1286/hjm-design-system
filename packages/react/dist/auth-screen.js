@@ -2,17 +2,26 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { authScreenRecipe, resolveAuthScreenDescriptor, validateAuthScreenHeroDescriptor, validateAuthScreenPolicyLinks, } from "@hjmds/design-contracts/components/auth-screen";
 import { typography } from "@hjmds/design-contracts/foundations";
 import { createContext, createElement, forwardRef, Fragment, useContext, useLayoutEffect, useRef, useId } from "react";
-import { initialFocusDefaults } from "@hjmds/design-contracts/screen-patterns";
+import { initialFocusDefaults, screenHeaderRecipe, screenPatternRecipe, validateScreenExit } from "@hjmds/design-contracts/screen-patterns";
 import { classNames, useDesignProfileDefaults } from "./internal.js";
 import { InitialFocusScope } from "./internal/initial-focus.js";
+import { ScreenExitButton } from "./internal/screen-exit.js";
+import { Heading } from "./heading.js";
 // The hero follows the layout density without the product passing it twice.
 const AuthScreenDensityContext = createContext(undefined);
+// With a header title the route name is the page heading (h1), so the hero tagline steps down to h2 by default.
+const AuthScreenTitledContext = createContext(false);
 /**
  * Two regions: hero + main stay one vertically centred block, the footer sits at
  * the bottom. The measurements come from the resolved descriptor as custom
  * properties so the stylesheet keeps one source of truth with the contract.
  */
-export const AuthScreenLayout = forwardRef(function AuthScreenLayout({ hero, main, footer, density, hasFooter, pendingLabel, mainCard = false, className, as: Element = "main", layoutStyle, initialFocus = initialFocusDefaults.auth, ...props }, forwardedRef) {
+export const AuthScreenLayout = forwardRef(function AuthScreenLayout({ title, exit, hero, main, footer, density, hasFooter, pendingLabel, mainCard = false, className, as: Element = "main", layoutStyle, initialFocus = initialFocusDefaults.auth, ...props }, forwardedRef) {
+    if (title !== undefined && !title.trim())
+        throw new TypeError("AuthScreenLayout title must not be empty");
+    if (exit)
+        validateScreenExit(exit, false);
+    const hasHeader = title !== undefined || exit !== undefined;
     const resolved = resolveAuthScreenDescriptor({
         ...(density === undefined ? {} : { density }),
         ...(hasFooter === undefined ? {} : { hasFooter }),
@@ -33,17 +42,22 @@ export const AuthScreenLayout = forwardRef(function AuthScreenLayout({ hero, mai
     }, [pending]);
     if (pending && !pendingLabel.trim())
         throw new TypeError("AuthScreen pendingLabel must not be empty");
-    return (_jsx(Element, { ...props, ref: forwardedRef, className: classNames("hjm-auth-screen", className), "data-density": resolved.density, style: {
+    return (_jsxs(Element, { ...props, ref: forwardedRef, className: classNames("hjm-auth-screen", className), "data-density": resolved.density, "data-header": hasHeader || undefined, style: {
             ["--hjm-auth-screen-max-width"]: `${resolved.maxWidth}px`,
             ["--hjm-auth-screen-hero-gap"]: `${resolved.heroGap}px`,
             ["--hjm-auth-screen-main-gap"]: `${resolved.mainGap}px`,
             ["--hjm-auth-screen-footer-gap"]: `${resolved.footerGap}px`,
             ["--hjm-auth-screen-padding-inline"]: `${resolved.paddingInline}px`,
             ["--hjm-auth-screen-padding-block"]: `${resolved.paddingBlock}px`,
+            ...(hasHeader ? {
+                ["--hjm-auth-screen-header-padding-inline"]: `${screenPatternRecipe.padding}px`,
+                ["--hjm-auth-screen-header-padding-block"]: `${screenHeaderRecipe.paddingVertical}px`,
+                ["--hjm-auth-screen-header-min-height"]: `${screenHeaderRecipe.minHeight}px`,
+            } : {}),
             ...props.style,
             ...layoutStyle,
-        }, children: _jsxs(InitialFocusScope, { mode: initialFocus, children: [_jsxs("div", { className: "hjm-auth-screen__block", children: [_jsx(AuthScreenDensityContext.Provider, { value: resolved.density, children: _jsx("div", { className: "hjm-auth-screen__hero", children: hero }) }), _jsxs("div", { className: "hjm-auth-screen__main", "data-card": mainCard || undefined, "aria-busy": pending || undefined, children: [_jsx("div", { ref: actionsRef, className: "hjm-auth-screen__actions", inert: pending, "aria-hidden": pending || undefined, onFocusCapture: event => { focusedAction.current = event.target; }, onBlurCapture: event => { if (!pending && !event.currentTarget.contains(event.relatedTarget))
-                                        focusedAction.current = null; }, style: pending ? { visibility: "hidden" } : undefined, children: main }), pending ? _jsx("div", { className: "hjm-auth-screen__pending", role: "status", "aria-label": pendingLabel, children: _jsx("span", { className: "hjm-auth-provider-button__spinner", "aria-hidden": "true" }) }) : null] })] }), showFooter ? _jsx("div", { className: "hjm-auth-screen__footer", children: footer }) : null] }) }));
+        }, children: [hasHeader ? _jsxs("header", { className: "hjm-auth-screen__header", children: [_jsx("div", { children: exit ? _jsx(ScreenExitButton, { ...exit }) : null }), _jsx("div", { className: "hjm-auth-screen__header-title", children: title === undefined ? null : _jsx(Heading, { level: screenHeaderRecipe.centeredTitleLevel, semanticLevel: 1, children: title }) }), _jsx("div", {})] }) : null, _jsxs(InitialFocusScope, { mode: initialFocus, children: [_jsxs("div", { className: "hjm-auth-screen__block", children: [_jsx(AuthScreenDensityContext.Provider, { value: resolved.density, children: _jsx(AuthScreenTitledContext.Provider, { value: title !== undefined, children: _jsx("div", { className: "hjm-auth-screen__hero", children: hero }) }) }), _jsxs("div", { className: "hjm-auth-screen__main", "data-card": mainCard || undefined, "aria-busy": pending || undefined, children: [_jsx("div", { ref: actionsRef, className: "hjm-auth-screen__actions", inert: pending, "aria-hidden": pending || undefined, onFocusCapture: event => { focusedAction.current = event.target; }, onBlurCapture: event => { if (!pending && !event.currentTarget.contains(event.relatedTarget))
+                                            focusedAction.current = null; }, style: pending ? { visibility: "hidden" } : undefined, children: main }), pending ? _jsx("div", { className: "hjm-auth-screen__pending", role: "status", "aria-label": pendingLabel, children: _jsx("span", { className: "hjm-auth-provider-button__spinner", "aria-hidden": "true" }) }) : null] })] }), showFooter ? _jsx("div", { className: "hjm-auth-screen__footer", children: footer }) : null] })] }));
 });
 /** Token weight per variant, following the nearest design profile like `Text` does. */
 function useTypeWeight() {
@@ -56,7 +70,9 @@ function useTypeWeight() {
  * product supplies the strings and mark; the type steps, tones and gaps come from
  * `authScreenRecipe.hero` so a login slogan never borrows the page-heading size.
  */
-export function AuthScreenHero({ mark, title, eyebrow, description, headingLevel = 1 }) {
+export function AuthScreenHero({ mark, title, eyebrow, description, headingLevel: suppliedHeadingLevel }) {
+    const titled = useContext(AuthScreenTitledContext);
+    const headingLevel = suppliedHeadingLevel ?? (titled ? 2 : 1);
     validateAuthScreenHeroDescriptor({ title, ...(eyebrow === undefined ? {} : { eyebrow }), ...(description === undefined ? {} : { description }), headingLevel });
     const density = useContext(AuthScreenDensityContext);
     const variant = resolveAuthScreenDescriptor(density === undefined ? {} : { density }).titleVariant;

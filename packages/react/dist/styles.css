@@ -600,6 +600,18 @@
   inset-block-start: 50%;
   translate: -50% -50%;
 }
+/* Prominent center destination: bottomNavigationRecipe.prominentDestination, lifted so its label stays on the
+   other labels' line. The circle keeps brand fill in both states; the label carries selection. */
+.hjm-bottom-navigation li[data-prominent="true"] .hjm-bottom-navigation__indicator {
+  inline-size: var(--hjm-bottom-navigation-prominent-diameter);
+  block-size: var(--hjm-bottom-navigation-prominent-diameter);
+  margin-block-start: calc(-1 * var(--hjm-bottom-navigation-prominent-lift));
+  border-radius: var(--hjm-radius-full);
+  color: var(--hjm-color-on-primary);
+  background: var(--hjm-color-primary);
+  box-shadow: var(--hjm-shadow-floating);
+}
+.hjm-bottom-navigation li[data-prominent="true"] .hjm-bottom-navigation__indicator > :first-child { transform: none; }
 
 .hjm-number-field__control {
   padding-inline: 0;
@@ -1719,6 +1731,22 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
      AuthScreenLayout safeAreaBottom (2026-10-17 1.28 adoption: products wrapped the layout in their own inset). */
   padding-block-end: max(var(--hjm-auth-screen-padding-block), env(safe-area-inset-bottom, 0px));
 }
+/* With title/exit the layout owns the ScreenLayout centered header band: full-bleed over the inline padding, at the
+   shared screen gutter, with the former top padding moved below it (2026-10-18: products kept a TopBar above). */
+.hjm-auth-screen[data-header] { padding-block-start: 0; }
+.hjm-auth-screen__header {
+  display: grid;
+  grid-template-columns: 1fr minmax(0, auto) 1fr;
+  align-items: center;
+  box-sizing: border-box;
+  min-block-size: var(--hjm-auth-screen-header-min-height);
+  margin-inline: calc(var(--hjm-auth-screen-padding-inline) * -1);
+  margin-block-end: var(--hjm-auth-screen-padding-block);
+  padding-inline: var(--hjm-auth-screen-header-padding-inline);
+  padding-block: var(--hjm-auth-screen-header-padding-block);
+}
+.hjm-auth-screen__header-title { min-inline-size: 0; text-align: center; overflow-wrap: anywhere; }
+.hjm-auth-screen__header-title > * { margin: 0; }
 .hjm-auth-screen__block {
   display: flex;
   flex: 1;
@@ -2190,6 +2218,46 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   padding: var(--hjm-space-md);
   background: var(--hjm-backdrop-modal);
   overscroll-behavior: contain;
+}
+/* Dialog overlayLayer: viewport-sized, decorative, above the card (later sibling) and never a pointer target. */
+.hjm-dialog__overlay-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+/* ImmersiveOverlay: an edge-to-edge stage and control bar with no scrim, card or gutter. */
+.hjm-overlay.hjm-immersive-positioner {
+  align-items: stretch;
+  padding: 0;
+  background: var(--hjm-immersive-background);
+}
+.hjm-immersive {
+  display: flex;
+  flex-direction: column;
+  inline-size: 100%;
+  block-size: 100%;
+  color: var(--hjm-color-text);
+  background: var(--hjm-immersive-background);
+  outline: none;
+}
+.hjm-immersive__stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-block-size: 0;
+  overflow: hidden;
+}
+.hjm-immersive__controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hjm-immersive-gap);
+  padding: var(--hjm-immersive-padding);
+  padding-inline: max(var(--hjm-immersive-padding), env(safe-area-inset-left)) max(var(--hjm-immersive-padding), env(safe-area-inset-right));
+  padding-block-end: max(var(--hjm-immersive-padding), env(safe-area-inset-bottom));
+}
+.hjm-immersive__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--hjm-immersive-action-gap);
 }
 .hjm-dialog,
 .hjm-alert-dialog,
@@ -2748,6 +2816,9 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-steps__step[data-status="pending"] .hjm-steps__label { color: var(--hjm-color-text-muted); }
 .hjm-steps__step[data-status="error"] .hjm-steps__label { color: var(--hjm-color-danger); }
 .hjm-steps__description { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-caption-size); overflow-wrap: anywhere; }
+/* A step before the cursor is one button over marker and label (Steps onStepPress); the cell keeps its static layout. */
+.hjm-steps__press { display: grid; align-content: start; gap: var(--hjm-space-xs); min-inline-size: 0; min-block-size: var(--hjm-steps-press-target); margin: 0; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: start; cursor: pointer; }
+.hjm-steps__press:focus-visible { outline: var(--hjm-focus-width) solid var(--hjm-color-focus); outline-offset: var(--hjm-focus-offset); }
 
 .hjm-file-picker { display: grid; gap: var(--hjm-space-xs); }
 .hjm-file-picker__label { color: var(--hjm-color-text); font-weight: var(--hjm-text-emphasis-medium); }
@@ -2934,10 +3005,12 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-carousel__rotation { justify-self: start; }
 .hjm-carousel__controls, .hjm-carousel__dots { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: var(--hjm-space-xs); }
 .hjm-carousel__controls { flex-wrap: nowrap; } .hjm-carousel__dots { flex-shrink: 1; min-inline-size: 0; }
-.hjm-carousel__dot { display: grid; place-items: center; min-inline-size: var(--hjm-control-min-touch-target); min-block-size: var(--hjm-control-min-touch-target); border: 0; border-radius: var(--hjm-radius-full); background: transparent; cursor: pointer; }
-.hjm-carousel__dot > span { inline-size: var(--hjm-space-xs); block-size: var(--hjm-space-xs); border-radius: var(--hjm-radius-full); background: var(--hjm-color-text-weak); } /* carouselRecipe.dot.color.inactive (border.strong), as Native */
-.hjm-carousel__dot[data-current="true"] > span { background: var(--hjm-color-content-brand); }
-.hjm-carousel__dot:focus-visible { outline: 2px solid var(--hjm-color-content-brand); outline-offset: 2px; }
+/* PageIndicator is the same dot row for a product-owned pager (carouselRecipe.dot). */
+.hjm-page-indicator { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: var(--hjm-space-xs); min-inline-size: 0; }
+.hjm-carousel__dot, .hjm-page-indicator__dot { display: grid; place-items: center; min-inline-size: var(--hjm-control-min-touch-target); min-block-size: var(--hjm-control-min-touch-target); border: 0; border-radius: var(--hjm-radius-full); background: transparent; cursor: pointer; }
+.hjm-carousel__dot > span, .hjm-page-indicator__dot > span { inline-size: var(--hjm-space-xs); block-size: var(--hjm-space-xs); border-radius: var(--hjm-radius-full); background: var(--hjm-color-text-weak); } /* carouselRecipe.dot.color.inactive (border.strong), as Native */
+.hjm-carousel__dot[data-current="true"] > span, .hjm-page-indicator__dot[data-current="true"] > span { background: var(--hjm-color-content-brand); }
+.hjm-carousel__dot:focus-visible, .hjm-page-indicator__dot:focus-visible { outline: 2px solid var(--hjm-color-content-brand); outline-offset: 2px; }
 
 /* The viewport action follows the content in DOM order. Its measured clearance
    belongs on the scroll content, not on the fixed button (docs/floating-action-button.md). */
@@ -3113,6 +3186,16 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-tabs:is([data-appearance="gooey"], [data-appearance="slide"]) .hjm-tabs__list { position: relative; }
 .hjm-tabs:is([data-appearance="gooey"], [data-appearance="slide"]) .hjm-tabs__tab[data-state="selected"]::after { display: none; }
 .hjm-tabs__indicator { position: absolute; bottom: 0; height: 2px; border-radius: var(--hjm-radius-full); background: var(--hjm-color-content-brand); pointer-events: none; }
+/* indicator="filled" (tabsRecipe.indicators.filled): a surface-accent pill behind the selected tab, no list divider.
+   The moving pill spans the tab height and sits under the labels. */
+.hjm-tabs[data-indicator="filled"] .hjm-tabs__list { border: 0; }
+.hjm-tabs[data-indicator="filled"] .hjm-tabs__tab { border-radius: var(--hjm-radius-full); }
+.hjm-tabs[data-indicator="filled"] .hjm-tabs__tab[data-state="selected"] { color: var(--hjm-color-content-brand); }
+.hjm-tabs[data-indicator="filled"] .hjm-tabs__tab[data-state="selected"]::after { display: none; }
+.hjm-tabs[data-indicator="filled"]:not([data-indicator-motion="moving"]) .hjm-tabs__tab[data-state="selected"] { background: var(--hjm-color-surface-accent); }
+.hjm-tabs[data-indicator="filled"] .hjm-tabs__indicator { top: 0; bottom: 0; height: auto; border-radius: var(--hjm-radius-full); background: var(--hjm-color-surface-accent); z-index: 0; }
+.hjm-tabs[data-indicator="filled"] .hjm-tabs__list { position: relative; }
+.hjm-tabs[data-indicator="filled"] .hjm-tabs__tab { z-index: 1; }
 .hjm-tabs__gooey { height: 6px; }
 
 /* Capsule destinations retain route/link semantics. At larger text sizes we show
@@ -3167,6 +3250,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-screen__header { display: flex; flex-wrap: wrap; align-items: center; gap: var(--hjm-screen-item-gap, var(--hjm-space-sm)); padding: var(--hjm-screen-padding); flex: 0 0 auto; }
 .hjm-screen__heading { flex: 1 1 calc(var(--hjm-screen-header-min) * var(--hjm-text-scale, 1)); min-inline-size: 0; overflow-wrap: anywhere; }
 .hjm-screen__heading > * { margin: 0; }
+.hjm-screen__title-leading { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; }
 .hjm-screen__notice { padding-inline: var(--hjm-screen-padding); flex: 0 0 auto; }
 /* --hjm-screen-body-inline is the body's inline padding and the distance a bleeding CollectionRail crosses (Native
    ScreenBodyInsetContext); inset variants change this one value instead of the padding itself. */
@@ -3175,7 +3259,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
    (review S5#9: body 16 + row 16 put DM avatars ~32 from the edge). "none" keeps its host-owns-all meaning. */
 .hjm-screen[data-content-inset="body-edge"] > .hjm-screen__body { --hjm-screen-body-inline: 0px; }
 /* Overlay content is not in the screen body, even when rendered inside it: a bleeding rail there stays in its box. */
-.hjm-sheet, .hjm-dialog, .hjm-alert-dialog, .hjm-popover { --hjm-screen-body-inline: 0px; }
+.hjm-sheet, .hjm-dialog, .hjm-alert-dialog, .hjm-popover { --hjm-screen-body-inline: 0px; --hjm-bottom-navigation-inset: 0px; }
 /* contentInset="none" hands every inset to the host: no footer rule, as on Native (BottomCTA then draws its own bar). */
 .hjm-screen[data-content-inset="none"] > .hjm-screen__footer { border-block-start: 0; }
 .hjm-screen__body[data-scroll="screen"] { overflow-y: auto; }
@@ -3184,7 +3268,10 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-screen__centered-content { margin-block: auto; flex-shrink: 0; inline-size: 100%; }
 .hjm-screen__body[data-replacement="true"] { display: flex; flex-direction: column; }
 .hjm-screen__state { margin-block: auto; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: var(--hjm-screen-state-gap, var(--hjm-space-md)); padding-block: var(--hjm-screen-gap); text-align: center; }
-.hjm-screen__footer { flex: 0 0 auto; padding: var(--hjm-screen-padding); padding-block-end: max(var(--hjm-screen-padding), env(safe-area-inset-bottom)); border-block-start: 1px solid var(--hjm-color-border); }
+.hjm-screen__footer { flex: 0 0 auto; padding: var(--hjm-screen-padding); padding-block-end: max(var(--hjm-screen-padding), env(safe-area-inset-bottom), calc(var(--hjm-screen-padding) + var(--hjm-bottom-navigation-inset, 0px))); border-block-start: 1px solid var(--hjm-color-border); }
+/* --hjm-bottom-navigation-inset (BottomNavigationInsetProvider) is the viewport bottom the fixed bar covers. The last
+   region keeps its gutter above the bar; without a provider the value is 0 and the padding is unchanged. */
+.hjm-screen__body:last-child { padding-block-end: calc(var(--hjm-screen-padding) + var(--hjm-bottom-navigation-inset, 0px)); }
 /* SearchScreen filtersOverflow=scroll; why: screen-flows.tsx. Block padding keeps focus rings unclipped.
    --hjm-search-filters-bleed = screen padding + hostGutter (1.13.1), set inline by SearchScreen. */
 .hjm-search-screen__filters { --f: calc(var(--hjm-focus-width) + var(--hjm-focus-offset)); --b: var(--hjm-search-filters-bleed, var(--hjm-screen-padding)); overflow-x: auto; margin: calc(-1 * var(--f)) calc(-1 * var(--b)); padding: var(--f) var(--b); scroll-padding-inline: var(--b); scrollbar-width: none; }
@@ -3232,6 +3319,17 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 [dir="rtl"] .hjm-chat-message[data-tail] .hjm-chat-message__bubble::before { transform: scaleX(-1); }
 
 .hjm-chat-message__meta { display: flex; flex-shrink: 0; align-items: center; gap: var(--hjm-space-xs); }
+/* Reaction summary pill (sizes inline from chatMessageRecipe.reactionSummary); own reaction shows the brand border. */
+.hjm-chat-message__reaction-summary { display: inline-flex; align-items: center; box-sizing: border-box; border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-full); background: var(--hjm-color-surface); color: var(--hjm-color-text); font: inherit; line-height: 1; cursor: pointer; }
+.hjm-chat-message__reaction-summary[data-selected] { border-color: var(--hjm-color-content-brand); }
+.hjm-chat-message__reaction-summary:hover:not(:disabled) { background: var(--hjm-color-surface-alt); }
+.hjm-chat-message__reaction-summary:focus-visible { outline: 2px solid var(--hjm-color-focus, currentColor); outline-offset: 2px; }
+.hjm-chat-message__reaction-summary:disabled { opacity: 0.5; cursor: default; }
+/* Typing dots (typingIndicatorRecipe via custom properties): staggered pulse, static under reduced motion. */
+.hjm-typing-indicator__dot { inline-size: var(--hjm-typing-dot); block-size: var(--hjm-typing-dot); border-radius: 50%; background: var(--hjm-color-text-muted); animation: hjm-typing-pulse var(--hjm-typing-cycle) ease-in-out infinite both; }
+.hjm-typing-indicator[data-reduced-motion] .hjm-typing-indicator__dot { animation: none; }
+@media (prefers-reduced-motion: reduce) { .hjm-typing-indicator__dot { animation: none; } }
+@keyframes hjm-typing-pulse { 0%, 100% { opacity: var(--hjm-typing-rest); } 50% { opacity: 1; } }
 /* A quoted reply heads the bubble and is divided from the answer. */
 .hjm-chat-message__reply { border-block-end: 1px solid var(--hjm-color-border); padding-block-end: var(--hjm-space-xs); margin-block-end: var(--hjm-space-xs); display: flex; flex-direction: column; gap: 2px; min-inline-size: 0; }
 .hjm-chat-message__quote { inline-size: 100%; border-inline: 0; border-block-start: 0; background: none; padding-inline: 0; padding-block-start: 0; color: inherit; font: inherit; text-align: start; cursor: pointer; }
@@ -3242,6 +3340,13 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-chat-message__media-item > img { display: block; inline-size: 100%; block-size: 100%; object-fit: cover; }
 button.hjm-chat-message__media-item { cursor: pointer; }
 button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm-color-focus, currentColor); outline-offset: -2px; }
+/* Paged media album (2026-10-18, mediaAlbumRecipe): one mounted page in the host's media width, counter row below. */
+.hjm-media-album { display: flex; flex-direction: column; max-inline-size: 100%; }
+.hjm-media-album__page { display: block; inline-size: 100%; overflow: hidden; padding: 0; border: 0; background: var(--hjm-color-surface-alt); }
+.hjm-media-album__page > img { display: block; inline-size: 100%; block-size: 100%; object-fit: cover; }
+button.hjm-media-album__page { cursor: pointer; }
+button.hjm-media-album__page:focus-visible { outline: 2px solid var(--hjm-color-focus, currentColor); outline-offset: -2px; }
+.hjm-media-album__controls { display: flex; align-items: center; justify-content: space-between; }
 .hjm-chat-message__bubble[data-photo-only] { background: none; padding: 0; }
 .hjm-chat-message__bubble[data-photo-only]::before { display: none; }
 /* Only the shared default gutter narrows to the timeline gutter; "none" and "body-edge" keep their own meaning. */
@@ -3254,8 +3359,12 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-image-choice { display: flex; flex-direction: column; gap: var(--hjm-space-xs); }
 .hjm-image-choice__label { font-weight: var(--hjm-text-emphasis-medium); }
 .hjm-image-choice__tiles { display: flex; flex-wrap: wrap; gap: var(--hjm-image-choice-gap); }
-.hjm-image-choice__tile { position: relative; inline-size: calc(var(--hjm-image-choice-size) + (var(--hjm-image-choice-ring) + var(--hjm-image-choice-offset)) * 2); aspect-ratio: 1; padding: var(--hjm-image-choice-offset); border: var(--hjm-image-choice-ring) solid transparent; border-radius: calc(var(--hjm-image-choice-radius) + var(--hjm-image-choice-ring) + var(--hjm-image-choice-offset)); background: none; cursor: pointer; }
-.hjm-image-choice__tile[data-selected] { border-color: var(--hjm-color-content-brand); }
+/* The button is a column (ring frame, optional item label) so the label shares the tap target; the ring is drawn on
+   the inner frame (2026-10-18 showItemLabels). */
+.hjm-image-choice__tile { display: flex; flex-direction: column; gap: var(--hjm-image-choice-item-label-gap); inline-size: calc(var(--hjm-image-choice-size) + (var(--hjm-image-choice-ring) + var(--hjm-image-choice-offset)) * 2); padding: 0; border: 0; border-radius: calc(var(--hjm-image-choice-radius) + var(--hjm-image-choice-ring) + var(--hjm-image-choice-offset)); background: none; color: inherit; cursor: pointer; }
+.hjm-image-choice__ring { position: relative; display: block; inline-size: 100%; aspect-ratio: 1; padding: var(--hjm-image-choice-offset); border: var(--hjm-image-choice-ring) solid transparent; border-radius: inherit; }
+.hjm-image-choice__tile[data-selected] .hjm-image-choice__ring { border-color: var(--hjm-color-content-brand); }
+.hjm-image-choice__item-label { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center; }
 .hjm-image-choice__tile:focus-visible { outline: 2px solid var(--hjm-color-focus, currentColor); outline-offset: 2px; }
 .hjm-image-choice__tile:disabled { opacity: 0.5; cursor: default; }
 .hjm-image-choice__image { display: block; inline-size: 100%; block-size: 100%; overflow: hidden; border-radius: var(--hjm-image-choice-radius); background: var(--hjm-color-surface); }
@@ -3303,6 +3412,8 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-comment-row__reactions:focus-visible { outline: 2px solid var(--hjm-color-focus, currentColor); outline-offset: 2px; }
 .hjm-comment-row__media { align-self: flex-start; overflow: hidden; margin-block-start: 4px; }
 .hjm-comment-row__media > img { display: block; inline-size: 100%; block-size: auto; }
+.hjm-comment-row__album { align-self: flex-start; margin-block-start: 4px; }
+.hjm-comment-row__panel { min-inline-size: 0; }
 /* commentThreadRecipe.actionAnchor (2026-10-17 measured audit): the 44 targets centre on the identity's first line
    (--hjm-comment-anchor-line, set per row), so like/more glyphs share the author line's centre instead of sitting
    12px below it. When HJM's own like/more is the last control (data-edge), the whole column takes the IconButton edge
@@ -3416,6 +3527,17 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-card[data-interactive="true"] { font: inherit; color: inherit; text-align: inherit; cursor: pointer; min-inline-size: var(--hjm-control-min-touch-target); min-block-size: var(--hjm-control-min-touch-target); }
 .hjm-card[data-interactive="true"]:active:not(:disabled) { opacity: var(--hjm-card-pressed-opacity); }
 .hjm-card[data-interactive="true"]:disabled { opacity: var(--hjm-card-disabled-opacity); cursor: default; }
+/* Whole-card activation beside actions: the article keeps its semantics, a transparent button covers it, and only the
+   action controls rise above that button, so the gaps around them still open the card. */
+.hjm-card[data-activation="overlay"] { position: relative; }
+.hjm-card__activator { position: absolute; inset: 0; z-index: 0; margin: 0; padding: 0; border: 0; border-radius: inherit; background: transparent; cursor: pointer; }
+.hjm-card__activator:disabled { cursor: default; }
+.hjm-card[data-activation="overlay"] > .hjm-card__actions { position: relative; z-index: 1; pointer-events: none; }
+.hjm-card[data-activation="overlay"] > .hjm-card__actions > * { pointer-events: auto; }
+/* Press/disabled feedback belongs to the card target (media and body); action controls keep their own states. */
+.hjm-card[data-activation="overlay"]:has(> .hjm-card__activator:active:not(:disabled)) > :is(.hjm-card__media, .hjm-card__body) { opacity: var(--hjm-card-pressed-opacity); }
+.hjm-card[data-activation="overlay"]:has(> .hjm-card__activator:disabled) > :is(.hjm-card__media, .hjm-card__body) { opacity: var(--hjm-card-disabled-opacity); }
+.hjm-card[data-activation="overlay"]:has(> .hjm-card__activator:focus-visible) { outline: var(--hjm-focus-width) solid var(--hjm-color-focus); outline-offset: var(--hjm-focus-offset); }
 
 /* Full destination cards keep all names and widths stable; colors remain product semantic roles. */
 .hjm-bottom-navigation[data-selection="tile"] .hjm-bottom-navigation__surface { background: var(--hjm-color-surface-accent); }

@@ -28,8 +28,15 @@ export type BottomNavigationConfiguration = Readonly<{
      * product supplies colors through palette roles instead of deprecated styles.
      */
     surface?: BottomNavigationSurface;
+    /**
+     * Icon slot size. `standard` keeps the density glyph; `large`/`xlarge` reserve an app-icon sized slot
+     * (`bottomNavigationRecipe.iconSizes`) for artwork rendered through `renderIcon`. Added 2026-10-18 for
+     * Utilverse's dock, which drew its own Surface/Button row to show 38-54pt app icons.
+     */
+    iconSize?: BottomNavigationIconSize;
 }>;
 export type BottomNavigationSurface = "flat" | "raised";
+export type BottomNavigationIconSize = "standard" | "large" | "xlarge";
 export type ResolvedBottomNavigationConfiguration = Readonly<{
     presentation: BottomNavigationPresentation;
     distribution: BottomNavigationDistribution;
@@ -39,6 +46,7 @@ export type ResolvedBottomNavigationConfiguration = Readonly<{
     labels: BottomNavigationLabels;
     selection: "emphasis" | "tile";
     surface: BottomNavigationSurface;
+    iconSize: BottomNavigationIconSize;
 }>;
 /**
  * Bottom navigation only accepts numeric counters. A silent status dot is too
@@ -79,6 +87,13 @@ export type BottomNavigationItemDescriptor<Key extends string = string, IconName
     icon: BottomNavigationIconDescriptor<IconName>;
     badge?: BottomNavigationCounterBadge;
     disabled?: boolean;
+    /**
+     * Raised center destination: a selectable route drawn as a lifted brand circle above the bar, with its label
+     * below. Only the middle item of an odd item count may be prominent. Unlike `primaryAction` it is a real
+     * destination (selected state, reselect, router-owned). Added 2026-10-18 for Diairy's "write" tab, which
+     * replaced the shared bar with Expo Router's default tab bar to draw it.
+     */
+    prominent?: boolean;
 }>;
 /** The router owns selectedKey; the design-system never keeps a second copy. */
 export type BottomNavigationDescriptor<Key extends string = string, IconName extends string = SemanticIconName> = Readonly<{
@@ -102,6 +117,7 @@ export type ResolvedBottomNavigationItemDescriptor<Key extends string = string, 
     disabled: boolean;
     badge: ResolvedBottomNavigationCounterBadge | null;
     resolvedAccessibilityLabel: string;
+    prominent: boolean;
 }>;
 export type ResolvedBottomNavigationDescriptor<Key extends string = string, IconName extends string = SemanticIconName> = Readonly<{
     accessibilityLabel: string;
@@ -124,12 +140,20 @@ export declare const bottomNavigationBehaviorDefaults: {
     readonly labels: "visible";
     readonly selection: "emphasis";
     readonly surface: "flat";
+    readonly iconSize: "standard";
     readonly minItems: 2;
     readonly maxItems: 6;
 };
 export declare function validateBottomNavigationConfiguration(configuration: BottomNavigationConfiguration, itemCount: number): void;
 export declare function resolveBottomNavigationConfiguration(configuration: BottomNavigationConfiguration, itemCount: number): ResolvedBottomNavigationConfiguration;
 export declare function validateBottomNavigationDescriptor<Key extends string, IconName extends string>(descriptor: BottomNavigationDescriptor<Key, IconName>): void;
+/**
+ * A prominent destination needs the plain row: center-gap reserves the same slot for a primaryAction, capsule
+ * places actions beside the surface, and a tile card would paint behind the lifted circle.
+ */
+export declare function validateBottomNavigationProminence(items: readonly Readonly<{
+    prominent?: boolean;
+}>[], configuration: ResolvedBottomNavigationConfiguration): void;
 export declare function resolveBottomNavigationItem<Key extends string, IconName extends string>(item: BottomNavigationItemDescriptor<Key, IconName>): ResolvedBottomNavigationItemDescriptor<Key, IconName>;
 export declare function resolveBottomNavigationDescriptor<Key extends string, IconName extends string>(descriptor: BottomNavigationDescriptor<Key, IconName>): ResolvedBottomNavigationDescriptor<Key, IconName>;
 /**
