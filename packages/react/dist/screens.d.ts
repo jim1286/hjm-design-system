@@ -62,11 +62,9 @@ export type ScreenLayoutProps = Readonly<{
      */
     layoutStyle?: HjmCompositionStyleProp;
     /**
-     * Focus a text field once when the screen mounts (`first-input`: the field marked `initialFocusTarget`, else the first
-     * enabled one; never over a field the user is in or under an open modal). Off by default; SearchScreen and EditorScreen
-     * default it on, Chat/CommentThread keep it off so the keyboard does not cover the history (2026-10-18, as Native).
-     * Until the user interacts, a field that appears later (after data loads) or a modal open on entry closing still
-     * gets this entry focus; a field marked `initialFocusTarget` that appears after entry is focused in any mode.
+     * Focus the marked, else first enabled input once on page entry (default `first-input`). Never steals an existing
+     * input's focus or focuses below an overlay. A pending entry can wait for data; after user interaction it ends.
+     * Bottom sheets disable automatic focus for this screen and all nested inputs, regardless of this prop.
      */
     initialFocus?: ScreenInitialFocus;
 }>;

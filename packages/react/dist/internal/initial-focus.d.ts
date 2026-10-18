@@ -18,6 +18,7 @@ export type ModalLayerRef = {
 export type InitialFocusScopeHandle = Readonly<{
     registry: Registry;
     layer: ModalLayerRef | null;
+    enabled: boolean;
     /**
      * Overlays only: runs entry when the modal activates and returns the field for `useModalFocus` to focus. `explicit`
      * means the overlay already has an `initialFocusRef`, so entry settles without choosing a field.
@@ -28,10 +29,11 @@ export type InitialFocusScopeHandle = Readonly<{
  * Screen scopes enter on mount (Web has no enter transition to wait for); overlays pass `layer` and enter through
  * `useModalFocus`. User pointer, key, wheel or touch input while no modal is above the scope ends the entry window.
  */
-export declare function useInitialFocusScope({ mode, active, layer: ownLayer }: {
+export declare function useInitialFocusScope({ mode, active, layer: ownLayer, enabled }: {
     mode: InitialFocusMode;
     active?: boolean;
     layer?: ModalLayerRef;
+    enabled?: boolean;
 }): InitialFocusScopeHandle;
 export declare function InitialFocusProvider({ scope, children }: {
     scope: InitialFocusScopeHandle;

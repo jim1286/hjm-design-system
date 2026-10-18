@@ -46,12 +46,8 @@ type BaseFieldProps = Omit<TextInputProps, "accessibilityLabel" | "defaultValue"
     /** Canonical layout-only placement for the complete field. Controlled keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
     /**
-     * Screen entry focus: true makes this the field the enclosing screen or sheet focuses on entry, false keeps it
-     * from ever being chosen; omitted fields are eligible in tree order. The screen's `initialFocus` decides whether
-     * anything is focused on entry (screen-patterns `resolveInitialFocusTarget`, 2026-10-18). A true field that mounts
-     * after entry — revealed by a user action or a step change — is focused when it appears, whatever the mode, unless
-     * another text field has focus or an overlay is above (`resolveEntryFocus`). Do not mark fields that remount on
-     * their own (virtualized rows).
+     * Page-entry target: true prefers this field, false excludes it, omission uses tree order. Only chooses during
+     * entry; revealing a field after interaction does not focus it. Bottom sheets disable automatic input focus.
      */
     initialFocusTarget?: boolean;
 }>;

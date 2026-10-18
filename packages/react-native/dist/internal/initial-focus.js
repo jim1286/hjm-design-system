@@ -8,6 +8,8 @@ import { InteractionManager, TextInput } from "react-native";
  * mode "none" still provides a registry so its fields never reach an outer scope.
  */
 const InitialFocusContext = createContext(null);
+// A bottom sheet owns this boundary, including ScreenLayout/marked fields nested inside its body.
+const EntryFocusEnabledContext = createContext(true);
 /*
  * Open HJM overlays in presentation order. An RN Modal covers every screen, so a scope is blocked while an overlay
  * presented after its own layer is open (the root screen layer is 0). Web reads its modal stack the same way.
@@ -53,8 +55,12 @@ function textEntryFocused() {
  * any descendant, scrolls included) ends the entry window unless an overlay is above the scope.
  * `layer` is the overlay's own layer; screens inherit the enclosing one.
  */
-export function useInitialFocusScope({ mode, active: ownActive = true, layer: ownLayer }) {
+export function useInitialFocusScope({ mode, active: ownActive = true, layer: ownLayer, enabled = true }) {
     const inherited = useContext(OverlayLayerContext);
+    const inheritedEnabled = useContext(EntryFocusEnabledContext);
+    const entryFocusEnabled = enabled && (ownLayer !== undefined || inheritedEnabled);
+    const enabledRef = useRef(entryFocusEnabled);
+    enabledRef.current = entryFocusEnabled;
     const enclosingActive = useContext(ScopeActiveContext);
     const layer = ownLayer ?? inherited;
     // Overlays own their activation; screens follow the scope they are rendered in.
@@ -66,6 +72,8 @@ export function useInitialFocusScope({ mode, active: ownActive = true, layer: ow
         const s = state.current;
         const blocked = () => { const own = layer.current ?? 0; return [...openLayers].some(id => id > own); };
         const dispatch = (event) => {
+            if (!enabledRef.current)
+                return;
             const candidates = [...s.entries].map(entry => ({ entry, order: entry.order, preference: entry.preference, focusable: entry.focusable() }));
             const resolved = event.kind === "register" && "entry" in event
                 ? { kind: "register", field: candidates.find(candidate => candidate.entry === event.entry) }
@@ -119,11 +127,11 @@ export function useInitialFocusScope({ mode, active: ownActive = true, layer: ow
             }
             scope.dispatch({ kind: "deactivate" });
         };
-    }, [active, scope]);
-    return useMemo(() => ({ registry: scope.registry, layer: scope.layer, active, onTouchStart: scope.onTouchStart }), [scope, active]);
+    }, [active, scope, entryFocusEnabled]);
+    return useMemo(() => ({ registry: scope.registry, layer: scope.layer, active, enabled: entryFocusEnabled, onTouchStart: scope.onTouchStart }), [scope, active, entryFocusEnabled]);
 }
 export function InitialFocusProvider({ scope, children }) {
-    return _jsx(OverlayLayerContext.Provider, { value: scope.layer, children: _jsx(ScopeActiveContext.Provider, { value: scope.active, children: _jsx(InitialFocusContext.Provider, { value: scope.registry, children: children }) }) });
+    return _jsx(EntryFocusEnabledContext.Provider, { value: scope.enabled, children: _jsx(OverlayLayerContext.Provider, { value: scope.layer, children: _jsx(ScopeActiveContext.Provider, { value: scope.active, children: _jsx(InitialFocusContext.Provider, { value: scope.registry, children: children }) }) }) });
 }
 /** Registers a text field with the nearest scope. `preference` is the field's public `initialFocusTarget`. */
 export function useInitialFocusTarget(input, preference, focusable) {

@@ -262,12 +262,13 @@ export const Sheet = forwardRef(function Sheet({ trigger, title, description, ch
         };
     }, []);
     const focusLayer = useRef(null);
-    const focusScope = useInitialFocusScope({ mode: initialFocus, active: open, layer: focusLayer });
+    const focusScope = useInitialFocusScope({ mode: initialFocus, active: open, layer: focusLayer, enabled: placement !== "bottom" });
     useModalFocus({
         active: open,
         priority: modalPriority,
         contentRef,
-        ...(initialFocusRef === undefined ? {} : { initialFocusRef }),
+        // Bottom sheets focus their container for the modal trap, never a text field (2026-10-18 page-entry policy).
+        ...(placement === "bottom" ? { initialFocusRef: contentRef } : initialFocusRef === undefined ? {} : { initialFocusRef }),
         resolveInitialFocus: focusScope.enter,
         layerRef: focusLayer,
         ...(returnFocusRef === undefined ? {} : { returnFocusRef }),
@@ -317,7 +318,7 @@ export const Sheet = forwardRef(function Sheet({ trigger, title, description, ch
                                                     onDetentChange?.(next);
                                             }, children: _jsx("span", { "aria-hidden": "true", className: "hjm-sheet__handle-bar" }) }) })) : showHandle ? (
                                     // Without detents the handle is the visible close control for keyboard and switch users.
-                                    _jsx("div", { className: "hjm-sheet__handle-row", children: _jsx("button", { type: "button", className: "hjm-sheet__handle", "aria-label": closeLabel, disabled: closeBlocked, onClick: () => requestClose("close-action"), children: _jsx("span", { "aria-hidden": "true", className: "hjm-sheet__handle-bar" }) }) })) : null, description || (policy.dismissible && closeVisible) ? _jsxs("header", { className: "hjm-sheet__header", children: [description ? _jsx("div", { children: _jsx("p", { id: descriptionId, className: "hjm-sheet__description", children: description }) }) : null, policy.dismissible && closeVisible ? (_jsx("button", { type: "button", className: "hjm-dialog__close", "aria-label": closeLabel, disabled: busy && !policy.dismissWhileBusy, onClick: () => requestClose("close-action"), children: "\u00D7" })) : null] }) : null] }), children ? _jsx("div", { className: "hjm-sheet__body", children: _jsx(InitialFocusProvider, { scope: focusScope, children: children }) }) : null, footer ? _jsx("footer", { className: "hjm-sheet__footer", children: footer }) : null] }) }) })) : null] }));
+                                    _jsx("div", { className: "hjm-sheet__handle-row", children: _jsx("button", { type: "button", className: "hjm-sheet__handle", "aria-label": closeLabel, disabled: closeBlocked, onClick: () => requestClose("close-action"), children: _jsx("span", { "aria-hidden": "true", className: "hjm-sheet__handle-bar" }) }) })) : null, description || (policy.dismissible && closeVisible) ? _jsxs("header", { className: "hjm-sheet__header", children: [description ? _jsx("div", { children: _jsx("p", { id: descriptionId, className: "hjm-sheet__description", children: description }) }) : null, policy.dismissible && closeVisible ? (_jsx("button", { type: "button", className: "hjm-dialog__close", "aria-label": closeLabel, disabled: busy && !policy.dismissWhileBusy, onClick: () => requestClose("close-action"), children: "\u00D7" })) : null] }) : null] }), children ? _jsx("div", { className: "hjm-sheet__body", children: _jsx(InitialFocusProvider, { scope: focusScope, children: children }) }) : null, footer ? _jsx("footer", { className: "hjm-sheet__footer", children: _jsx(InitialFocusProvider, { scope: focusScope, children: footer }) }) : null] }) }) })) : null] }));
 });
 export const Tooltip = forwardRef(function Tooltip({ trigger, content, placement, align, pointerOpenDelayMs = tooltipBehaviorDefaults.pointerOpenDelayMs, focusOpenDelayMs = tooltipBehaviorDefaults.focusOpenDelayMs, portalContainer, open: openProp, defaultOpen, onOpenChange, className, layoutStyle, }, ref) {
     const descriptor = resolveTooltipDescriptor({

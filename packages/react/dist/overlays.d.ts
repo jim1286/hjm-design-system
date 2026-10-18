@@ -104,11 +104,11 @@ export type SheetProps = ModalOpenState<SheetOpenChangeDetails> & Readonly<{
     dismissPolicy?: Partial<SheetDismissPolicy>;
     /** Localized accessible name for the close action. */
     closeLabel: string;
+    /** Side sheets only. Bottom sheets focus their modal container, never an input on opening. */
     initialFocusRef?: React.RefObject<HTMLElement | null>;
     /**
-     * Text field focused when it opens and no `initialFocusRef` is given: by default only a lone text entry
-     * (`single-input`); `first-input` prefers the field marked `initialFocusTarget`; `none` keeps the first focusable
-     * element (2026-10-18, screen-patterns rules shared with Native).
+     * Side sheets only: same text-entry selection as Dialog. Bottom sheets disable automatic input focus,
+     * including nested screens and marked fields (2026-10-18 page-entry policy).
      */
     initialFocus?: InitialFocusMode;
     returnFocusRef?: React.RefObject<HTMLElement | null>;

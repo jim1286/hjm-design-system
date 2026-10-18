@@ -782,7 +782,7 @@ keyboardAvoidance = true, scrollable = false, showClose, onShow, initialFocus = 
         setEntered(false);
     else
         setLayered(true); }, [visible]);
-    const focusScope = useInitialFocusScope({ mode: initialFocus, active: visible && entered, layer: useOverlayLayer(layered) });
+    const focusScope = useInitialFocusScope({ mode: initialFocus, active: visible && entered, layer: useOverlayLayer(layered), enabled: placement !== "bottom" });
     const { viewportHeight, keyboardInset, dockedKeyboard, setModalHeight } = useModalKeyboardViewport(nativeVisible, keyboardAvoidance);
     const nativeVisibleRef = useRef(visible);
     nativeVisibleRef.current = nativeVisible;

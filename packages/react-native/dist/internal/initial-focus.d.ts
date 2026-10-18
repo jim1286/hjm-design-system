@@ -23,6 +23,7 @@ export type InitialFocusScopeHandle = Readonly<{
     registry: Registry;
     layer: LayerRef;
     active: boolean;
+    enabled: boolean;
     onTouchStart(): void;
 }>;
 /**
@@ -30,10 +31,11 @@ export type InitialFocusScopeHandle = Readonly<{
  * any descendant, scrolls included) ends the entry window unless an overlay is above the scope.
  * `layer` is the overlay's own layer; screens inherit the enclosing one.
  */
-export declare function useInitialFocusScope({ mode, active: ownActive, layer: ownLayer }: {
+export declare function useInitialFocusScope({ mode, active: ownActive, layer: ownLayer, enabled }: {
     mode: InitialFocusMode;
     active?: boolean;
     layer?: LayerRef;
+    enabled?: boolean;
 }): InitialFocusScopeHandle;
 export declare function InitialFocusProvider({ scope, children }: {
     scope: InitialFocusScopeHandle;

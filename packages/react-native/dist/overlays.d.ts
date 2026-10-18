@@ -130,7 +130,7 @@ export type SheetProps = NativeModalProps & ReasonedOpenProps<SheetOpenChangeDet
     scrollable?: boolean;
     /** Visible × in the header. Off by default for bottom sheets, which close by dragging (2026-10-16). */
     showClose?: boolean;
-    /** Same as Dialog `initialFocus`: by default a lone text entry is focused once the sheet has entered. */
+    /** Side sheets only: same as Dialog. Bottom sheets disable automatic input focus, including nested screens. */
     initialFocus?: InitialFocusMode;
 }>;
 /** Native Sheet applies policy before emitting a concrete dismissal reason. */

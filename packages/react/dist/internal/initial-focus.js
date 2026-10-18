@@ -8,6 +8,8 @@ import { getTopModal, subscribeModalClose } from "../modal.js";
  * scope with mode "none" still owns its fields so they never reach an outer scope.
  */
 const InitialFocusContext = createContext(null);
+// A bottom sheet owns this boundary, including ScreenLayout/marked fields nested inside its body.
+const EntryFocusEnabledContext = createContext(true);
 /** Layer of the enclosing HJM overlay; null on the page itself. A ScreenLayout inside a sheet uses the sheet's. */
 const ModalLayerContext = createContext(null);
 /**
@@ -32,8 +34,13 @@ function isEditable(element) {
  * Screen scopes enter on mount (Web has no enter transition to wait for); overlays pass `layer` and enter through
  * `useModalFocus`. User pointer, key, wheel or touch input while no modal is above the scope ends the entry window.
  */
-export function useInitialFocusScope({ mode, active = true, layer: ownLayer }) {
+export function useInitialFocusScope({ mode, active = true, layer: ownLayer, enabled = true }) {
     const inherited = useContext(ModalLayerContext);
+    const inheritedEnabled = useContext(EntryFocusEnabledContext);
+    // A separate overlay owns its policy; ordinary nested screens inherit their enclosing sheet's policy.
+    const entryFocusEnabled = enabled && (ownLayer !== undefined || inheritedEnabled);
+    const enabledRef = useRef(entryFocusEnabled);
+    enabledRef.current = entryFocusEnabled;
     const layer = ownLayer ?? inherited;
     const overlay = ownLayer !== undefined;
     const modeRef = useRef(mode);
@@ -56,6 +63,8 @@ export function useInitialFocusScope({ mode, active = true, layer: ownLayer }) {
             return productModalAbove(fields);
         };
         const dispatch = (event) => {
+            if (!enabledRef.current)
+                return null;
             const candidates = [...s.entries].map(entry => ({ entry, order: entry.order, preference: entry.preference, focusable: entry.focusable() }));
             const resolved = event.kind === "register" && "entry" in event
                 ? { kind: "register", field: candidates.find(candidate => candidate.entry === event.entry) }
@@ -144,11 +153,11 @@ export function useInitialFocusScope({ mode, active = true, layer: ownLayer }) {
             unsubscribe();
             scope.dispatch({ kind: "deactivate" });
         };
-    }, [active, overlay, scope]);
-    return useMemo(() => ({ registry: scope.registry, layer: scope.layer, enter: scope.enter }), [scope]);
+    }, [active, overlay, scope, entryFocusEnabled]);
+    return useMemo(() => ({ registry: scope.registry, layer: scope.layer, enter: scope.enter, enabled: entryFocusEnabled }), [scope, entryFocusEnabled]);
 }
 export function InitialFocusProvider({ scope, children }) {
-    return _jsx(ModalLayerContext.Provider, { value: scope.layer, children: _jsx(InitialFocusContext.Provider, { value: scope.registry, children: children }) });
+    return _jsx(EntryFocusEnabledContext.Provider, { value: scope.enabled, children: _jsx(ModalLayerContext.Provider, { value: scope.layer, children: _jsx(InitialFocusContext.Provider, { value: scope.registry, children: children }) }) });
 }
 /** Screen scope: focuses the chosen field on mount, never over a field the user is in or under an open modal. */
 export function InitialFocusScope({ mode, children }) {
