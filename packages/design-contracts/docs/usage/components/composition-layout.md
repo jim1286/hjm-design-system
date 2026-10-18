@@ -57,7 +57,7 @@ import { CompositionLayout } from "@hjmds/react-native/screens";
 | loadingIndicator | ReactNode | 기본 Spinner | loading 상태의 제품 브랜드 그림. HJM이 제목·설명을 접근성 이름으로 전달하고 중앙 배치를 소유하며 ready/error에는 표시하지 않는다(1.24.0) |
 | children | ReactNode | 없음 | 제품 도메인 콘텐츠 또는 HJM 전용 구성 |
 | footer | ReactNode | 없음 | 본문 다음 보조/주 행동; 고정은 바깥 ScreenLayout 소유 |
-| state | ScreenContentState | ready | 본문 교체; loading은 Spinner만 표시 |
+| state | ScreenContentState | ready | 본문 교체; loading은 Spinner만 표시. empty 제목은 body(14), 오류·접근 제한 제목은 title |
 | stateAction | ReactNode | 없음 | 본문 상태와 중앙 정렬되는 복구 행동 |
 | layoutStyle | HjmCompositionStyleProp | 없음 | 부모가 제공하는 영역 크기·배치 |
 

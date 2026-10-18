@@ -66,7 +66,7 @@ import { TopBar, TopBarAction } from "@hjmds/react-native/top-bar";
 | `headingLevel` | 1~6 | 1 | Web만. 페이지 구조에 맞춘다 |
 | `onTitleClick`(Web) | `(event: MouseEvent<HTMLButtonElement>) => void` | — | 제목을 버튼으로 만든다 |
 | `onTitlePress`(Native) | `(event: GestureResponderEvent) => void` | — | 제목을 버튼으로 만든다 |
-| `subtitle` | `string` | — | 제목 아래 보조 문맥. 제목이 필요하며 배치·색·글자 규격은 HJM이 소유(1.24.0) |
+| `subtitle` | `string` | — | 2026-10-18 사용자 결정으로 표시하지 않는다. 기존 호출의 타입 호환용으로만 유지하며 다음 major 정리에서 제거한다. 필요한 문맥은 본문에 둔다 |
 | `titleLeading` | `ReactNode` | — | 제목 앞 작은 시각 요소 |
 | `centered` | `boolean` | `true` | 제목 가운데 정렬(기본). `false`면 왼쪽 정렬 |
 | `exit` | `{ kind: "back" \| "close"; label; onClick(Web) \| onPress(Native); disabled? }` | — | 화면 나가기를 시작 쪽 아이콘 버튼으로 고정한다(글자 없음, `label`은 보조기술 이름). `leading`과 함께 주면 `TypeError`. [ScreenLayout `exit`](screen-layout.md)과 같은 버튼. 2026-10-17 추가, 미게시 |

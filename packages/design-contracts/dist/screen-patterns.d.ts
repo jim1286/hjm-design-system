@@ -11,6 +11,7 @@ export declare function resolveScreenContentState(state?: ScreenContentState): {
     readonly kind: "error" | "empty" | "loading" | "ready" | "restricted";
     readonly replacesContent: boolean;
     readonly busy: boolean;
+    readonly titleVariant: "body" | "title";
     readonly announcement: "assertive" | "polite";
 };
 /**

@@ -35,7 +35,7 @@ export type ScreenLayoutProps = Readonly<{
    * named by `title` (2026-10-18: yajalal team detail and Utilverse tool headers rebuilt the header to get this).
    */
   titleLeading?: ReactNode;
-  /** Hide redundant route names while retaining descriptions and a named screen. */
+  /** Hide redundant route names while retaining a named screen. */
   titleVisibility?: "visible" | "hidden";
   /** Centered by default (2026-10-17 user rule); `start` remains available. Extra actions sit at the trailing edge. */
   headerAlignment?: "start" | "center";
@@ -52,6 +52,7 @@ export type ScreenLayoutProps = Readonly<{
   surface?: "default" | "transparent";
   /** Explicit layout wins over the nearest design profile. */
   presentation?: DesignProfileScreenPresentation;
+  /** @deprecated Screen headers no longer show supporting copy (2026-10-18). Move required guidance into body content. Retained until the next major API cleanup. */
   description?: string;
   /**
    * Leaving this screen (back, close, settings exit): icon-only button fixed at the header's leading edge.
@@ -84,15 +85,15 @@ export type ScreenLayoutProps = Readonly<{
 }>;
 
 /** Shared screen shell. Routing, data, permission checks and mutation state remain product-owned. */
-export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility = "visible", headerAlignment = "center", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, description, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, loadingIndicator, children, scroll = "screen", as: Element = "main", className, layoutStyle, initialFocus = initialFocusDefaults.screen }: ScreenLayoutProps) {
+export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility = "visible", headerAlignment = "center", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, loadingIndicator, children, scroll = "screen", as: Element = "main", className, layoutStyle, initialFocus = initialFocusDefaults.screen }: ScreenLayoutProps) {
   const id = useId();
   if (exit) validateScreenExit(exit, false);
   const leading = exit ? <ScreenExitButton {...exit} /> : null;
   const hasMark = titleLeading !== undefined && titleLeading !== null && titleLeading !== false;
-  const showHeader = titleVisibility === "visible" || hasMark || !!description || !!leading || !!actions;
+  const showHeader = titleVisibility === "visible" || hasMark || !!leading || !!actions;
   // Same header band as Native (screenHeaderRecipe): a fixed 52 band (48 icon-only) so the title sits at the same
   // height with or without exit/actions buttons (2026-10-17: Web grew 58→76 when a 44 button was present).
-  const compactHeader = header == null && headerAlignment === "center" && titleVisibility === "hidden" && !hasMark && !description;
+  const compactHeader = header == null && headerAlignment === "center" && titleVisibility === "hidden" && !hasMark;
   // Screens historically work with the stylesheet alone. Optional context keeps
   // that path while inheriting profiles from an enclosing Provider when present.
   const designProfile = useDesignProfileDefaults();
@@ -126,10 +127,10 @@ export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility 
           centered header (2026-10-17: the fixed 1:2:1 split with a level3 heading wrapped short titles). */}
       <div>{leading}</div><div className="hjm-screen__heading" style={{ textAlign: "center", minWidth: 0 }}>
         {titleRow(screenHeaderRecipe.centeredTitleLevel, "center")}
-        {description ? <Text as="p" tone="muted">{description}</Text> : null}</div><div style={{ justifySelf: "end" }}>{actions}</div>
+        </div><div style={{ justifySelf: "end" }}>{actions}</div>
     </header> : <header className="hjm-screen__header" style={profileLayout ? { flexDirection: profileLayout.headerAxis, alignItems: profileLayout.centered ? "center" : undefined, textAlign: profileLayout.centered ? "center" : undefined } : undefined}>
       {leading}<div className="hjm-screen__heading">{titleRow(screenHeaderRecipe.titleLevel, profileLayout?.centered ? "center" : "start")}
-        {description ? <Text as="p" tone="muted">{description}</Text> : null}</div>{actions}
+        </div>{actions}
     </header> : null)}
     {notice ? <div className="hjm-screen__notice">{notice}</div> : null}
     {/* Scrollable read-only screens need a named keyboard entry point, including hidden/custom headers. */}
@@ -148,7 +149,7 @@ export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility 
             contradicts the shared spinner-only loading contract. */}
         {/* The live role wraps only the copy: an alert around the retry action announced the button too (2026-10-17). */}
         {resolved.busy ? (loadingIndicator ? <div role="status" aria-busy="true" aria-label={[state.title, state.description].filter(Boolean).join(". ")}><div aria-hidden="true">{loadingIndicator}</div></div> : <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} />) : <div role={state.kind === "error" ? "alert" : "status"}>
-          <Stack gap="sm" align="center"><Text variant="title">{state.title}</Text>
+          <Stack gap="sm" align="center"><Text variant={resolved.titleVariant}>{state.title}</Text>
             {state.description ? <Text tone="muted">{state.description}</Text> : null}</Stack>
         </div>}
         {stateAction}
@@ -365,7 +366,7 @@ export function CompositionLayout({title, headingLevel = 3, description, badge, 
     </Stack> : null}
     {notice}
     {state.kind === "ready" ? children : <Stack gap="sm" align="center" justify="center" layoutStyle={{flex: 1}}>
-      {resolved.busy ? (loadingIndicator ? <div role="status" aria-busy="true" aria-label={[state.title, state.description].filter(Boolean).join(". ")}><div aria-hidden="true">{loadingIndicator}</div></div> : <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} />) : <div role={state.kind === "error" ? "alert" : "status"} style={{ textAlign: "center" }}>{/* Block, centered lines as Native; the live role covers the copy only, not stateAction. */}<Text as="p" variant="title">{state.title}</Text>{state.description ? <Text as="p" tone="muted">{state.description}</Text> : null}</div>}
+      {resolved.busy ? (loadingIndicator ? <div role="status" aria-busy="true" aria-label={[state.title, state.description].filter(Boolean).join(". ")}><div aria-hidden="true">{loadingIndicator}</div></div> : <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} />) : <div role={state.kind === "error" ? "alert" : "status"} style={{ textAlign: "center" }}>{/* Block, centered lines as Native; the live role covers the copy only, not stateAction. */}<Text as="p" variant={resolved.titleVariant}>{state.title}</Text>{state.description ? <Text as="p" tone="muted">{state.description}</Text> : null}</div>}
       {stateAction}
     </Stack>}
     {footer}

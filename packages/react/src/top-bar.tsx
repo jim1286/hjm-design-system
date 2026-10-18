@@ -11,7 +11,7 @@ export type TopBarProps = Omit<HTMLAttributes<HTMLDivElement>, "title" | "childr
   title?: string;
   /** Product control in the shared title slot; exclusive with text title affordances. */
   titleContent?: ReactNode;
-  /** Secondary product context; the shared title slot owns its placement. */
+  /** @deprecated Header supporting copy is no longer displayed; retained until the next major API cleanup. */
   subtitle?: string;
   titleLeading?: ReactNode;
   onTitleClick?: MouseEventHandler<HTMLButtonElement>;
@@ -63,7 +63,6 @@ export const TopBar = forwardRef<HTMLDivElement, TopBarProps>(function TopBar({
         {onTitleClick ? <Button tone="ghost" onClick={onTitleClick} aria-label={titleAccessibilityLabel} leading={titleLeading}>{title}</Button>
           : <span aria-label={titleAccessibilityLabel}>{titleLeading}{title}</span>}
       </Heading>)}
-      {subtitle ? <span className="hjm-top-bar__subtitle">{subtitle}</span> : null}
     </div>
     <div className="hjm-top-bar__trailing">{actions ?? trailing}</div>
   </div>;

@@ -1,5 +1,5 @@
 import { glyph, layout, radius, spacing } from "./foundations.js";
-import { avatarRecipe } from "./component-recipes.js";
+import { avatarRecipe, emptyStateRecipe } from "./component-recipes.js";
 import type { MenuItemDescriptor } from "./behaviors.js";
 
 /** Initial load replaces the body; refresh/save errors belong beside retained content. */
@@ -18,6 +18,8 @@ export function resolveScreenContentState(state: ScreenContentState = { kind: "r
     kind: state.kind,
     replacesContent: state.kind !== "ready",
     busy: state.kind === "loading",
+    // 2026-10-18: empty copy stays at the 14pt body size, including full-screen compositions.
+    titleVariant: state.kind === "empty" ? emptyStateRecipe.title.textVariant : "title",
     announcement: state.kind === "error" ? "assertive" : "polite",
   } as const;
 }

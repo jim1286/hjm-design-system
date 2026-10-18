@@ -3,10 +3,11 @@ import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { describe, expect, it, vi } from "vitest";
 import { ScrollView } from "react-native";
 import { HjmNativeProvider } from "../src/provider.js";
-import { ChatScreen, MessageComposer, NotificationInboxScreen, NotificationItem, ScreenLayout, SettingsScreen } from "../src/screens.js";
+import { CompositionLayout, ChatScreen, MessageComposer, NotificationInboxScreen, NotificationItem, ScreenLayout, SettingsScreen } from "../src/screens.js";
 import { TextArea } from "../src/inputs.js";
 import { Button } from "../src/actions.js";
 import { Text } from "../src/primitives.js";
+import { TopBar } from "../src/navigation.js";
 import { Spinner } from "../src/feedback.js";
 import { ListRow } from "../src/data-display.js";
 import type { ReactNode } from "react";
@@ -349,4 +350,26 @@ describe("ScreenLayout exit", () => {
     expect(back).toHaveBeenCalledOnce();
     act(() => tree.unmount());
   });
+});
+
+
+it("keeps native empty states at body size without header supporting copy", () => {
+  for (const Component of [ScreenLayout, CompositionLayout]) {
+    const tree = render(<Component title="주변" state={{ kind: "empty", title: "새 꽃이 없어요" }} />);
+    expect(tree.root.findAllByType(Text).find(node => node.props.children === "새 꽃이 없어요")?.props.variant).toBe("body");
+    act(() => tree.unmount());
+  }
+  for (const headerAlignment of ["start", "center"] as const) {
+    const tree = render(<ScreenLayout title="들판" description="상단 보조 문구" headerAlignment={headerAlignment}><Text>본문 안내</Text></ScreenLayout>);
+    expect(JSON.stringify(tree.toJSON())).not.toContain("상단 보조 문구");
+    expect(JSON.stringify(tree.toJSON())).toContain("본문 안내");
+    act(() => tree.unmount());
+  }
+});
+
+it("omits supporting copy from the native top bar", () => {
+  const tree = render(<TopBar title="들판" subtitle="상단 보조 문구" />);
+  expect(JSON.stringify(tree.toJSON())).toContain("들판");
+  expect(JSON.stringify(tree.toJSON())).not.toContain("상단 보조 문구");
+  act(() => tree.unmount());
 });

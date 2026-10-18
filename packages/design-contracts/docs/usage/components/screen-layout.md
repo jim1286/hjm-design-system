@@ -72,8 +72,8 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 | `title` | `string` | 필수 | 화면 제목. `header`를 주면 접근성 이름으로만 쓴다 |
 | `titleBadge` | `ReactNode` | 없음 | 기본 제목 바로 옆 배지. 값·의미는 제품, 간격·정렬은 HJM. `header` 교체 또는 제목 숨김이면 그리지 않는다. 1.23.0 추가 API |
 | `titleLeading` | `ReactNode` | 없음 | 미게시(1.30.0 이후). 제목 앞 식별 표시(팀 로고·도구 아트워크). 장식이라 보조기술에서 숨기고 제목이 heading·접근성 이름으로 남는다. `titleVisibility="hidden"`이면 표시가 제목 자리에 혼자 서고 `title`을 이름으로 하는 heading(level 1)이 된다. 이때도 아이콘 전용 48 띠가 아니라 제목 띠 52를 쓴다. 노드 크기는 제품이 주되 헤더 띠 안에 들어가야 한다. `header` 교체 시 그리지 않는다. `ChatScreen`은 같은 자리를 `avatar`로 받는다 |
-| `header` | `ReactNode` | 없음 | 기존 navigator 헤더 유지용. 주면 기본 헤더(`exit`·제목·`description`·`actions`)를 그리지 않는다 |
-| `description` | `string` | 없음 | 제목 아래 muted 설명 |
+| `header` | `ReactNode` | 없음 | 기존 navigator 헤더 유지용. 주면 기본 헤더(`exit`·제목·`actions`)를 그리지 않는다 |
+| `description` | `string` | 없음 | 2026-10-18 사용자 결정으로 상단 보조 문구는 표시하지 않는다. 기존 호출의 타입 호환을 위해 prop만 유지하며 다음 major 정리에서 제거한다. 필요한 설명은 본문 콘텐츠에 둔다 |
 | `exit` | `{ kind: "back" \| "close"; label; onClick(Web) \| onPress(Native); disabled? }` | 없음 | 화면 나가기(뒤로·닫기·"설정 나가기")를 헤더 시작 쪽 아이콘 버튼으로 고정한다. 글자는 보이지 않고 `label`은 보조기술 이름이다. `back`은 ‹(RTL 반전), `close`는 ×. 헤더 시작 쪽에는 이 버튼 외의 자유 슬롯이 없다. 미게시(1.26.1 이후) |
 | `actions` | `ReactNode` | 없음 | 제목 뒤(도구) 슬롯. 시작 쪽 `leading` 슬롯은 2026-10-17 제거됐다 — 제품 사용처가 모두 직접 만든 뒤로 버튼이었다 |
 | `notice` | `ReactNode` | 없음 | 헤더 아래 비차단 안내. 상태 교체 중에도 남는다 |
@@ -186,3 +186,5 @@ dashboard는 가로 헤더/1200 목록 폭, editorial은 세로 헤더/720 읽�
 - `contentInset="body-bleed"`: 2026-10-18 HJM 1.32.0 감사. 선택의창 지도 화면 세 곳(홈·경로 지도·지도에서 고르기)이 `body-edge`로 지도를 좌우 끝까지 그렸지만 본문 위아래 padding 16이 남아 헤더·footer와 지도 사이에 띠가 생겼다. `body-edge`의 뜻(전체 폭 목록 행의 좌우 여백)과 `none`의 뜻(host가 모든 여백)을 바꿀 수 없어 값을 추가했다.
 - 하단 탐색 여백의 단일 소유: 2026-10-18 HJM 1.32.0. BottomNavigation 사용 지침이 `scroll="content"` 화면에 목록 여백으로 다시 더하라고 안내했으나 ScreenLayout은 그 화면에도 이미 적용했다(두 번 쌓임). 지침을 ScreenLayout 단일 소유로 고쳤다.
 - 오버레이 안의 화면 진입 포커스: 2026-10-18 번뚝 검색 오버레이. Web은 화면을 감싼 제품 `aria-modal`을 화면 위의 모달로 보고 진입 포커스를 막았고, HJM Sheet 안에 둔 ScreenLayout은 Sheet의 첫 컨트롤(닫기)에 포커스를 빼앗겼다. Native는 오버레이 표시 전에 칸을 포커스해 무시될 수 있었다. 감싸는 모달은 막지 않고 오버레이 안의 화면은 오버레이와 함께 진입하도록 고쳤다(1.31.0 patch).
+
+2026-10-18 사용자 결정: 빈 상태 문구는 화면·부분 영역 모두 `body`(14)로 표시한다. 오류·접근 제한의 제목은 기존 위계를 유지한다. 상단 보조 문구는 Spint 헤더 교체 중 커지고 강조된 문제를 계기로 표시를 제거했다. `state.description`과 본문의 안내는 유지한다.

@@ -1,5 +1,5 @@
 import { glyph, layout, radius, spacing } from "./foundations.js";
-import { avatarRecipe } from "./component-recipes.js";
+import { avatarRecipe, emptyStateRecipe } from "./component-recipes.js";
 export function resolveScreenContentState(state = { kind: "ready" }) {
     if (!["ready", "loading", "empty", "error", "restricted"].includes(state.kind)) {
         throw new TypeError("Unknown screen content state");
@@ -11,6 +11,8 @@ export function resolveScreenContentState(state = { kind: "ready" }) {
         kind: state.kind,
         replacesContent: state.kind !== "ready",
         busy: state.kind === "loading",
+        // 2026-10-18: empty copy stays at the 14pt body size, including full-screen compositions.
+        titleVariant: state.kind === "empty" ? emptyStateRecipe.title.textVariant : "title",
         announcement: state.kind === "error" ? "assertive" : "polite",
     };
 }
