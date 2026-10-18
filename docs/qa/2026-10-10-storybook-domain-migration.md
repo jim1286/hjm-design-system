@@ -105,3 +105,29 @@ exact head `f73174d666227b75c037d41ac73099241191d475`로 intent/verify/deploy �
   BurnTok readiness database/redis up 및 기존 revision 유지.
 - GitHub 저장소/artifact 읽기와 서버 SSH 관리 권한이 있는 다른 계정·컴퓨터도 같은 게시 명령을 사용할 수 있다.
   다른 계정에 새 권한을 부여하거나 credential을 발급한 작업은 아니다. npm/모바일 앱 버전은 변경하지 않았다.
+
+## 2026-10-18 HJM 1.34.0 게시와 소비 적용
+
+사용자 요청에 따라 오늘야구 경기 상태 참조의 단색·흰 굵은 글자·둥근 사각형 배지와 양쪽 아이콘 슬롯을 게시했다. 대기 중이던 Card 기본 raised 처리, Native 메뉴 크기·닫힘, 문맥 제목·검색 placeholder 변경을 함께 포함했다.
+
+- npm fixed train: `@hjmds/design-contracts`, `@hjmds/react`, `@hjmds/react-native` 모두 `1.34.0`. 세 tarball integrity와 canonical `v1.34.0` tag를 공개 registry/Git에서 확인했다. contracts는 CI 게시 성공 후 공개 조회까지 지연됐으며, 실제 조회 가능해진 뒤 소비 설치를 시작했다. 중복 게시하지 않았다.
+- 게시 source: `4c0022973ffaa6471e8afd13c35ef17853d559ef`. 버전 준비는 mac-ci에서 수행했다. npm workflow [39111234276](https://github.com/jim1286/hjm-design-system/actions/runs/39111234276) 성공.
+- Storybook CI [39111228513](https://github.com/jim1286/hjm-design-system/actions/runs/39111228513), artifact `hjm-storybook-4c0022973ffaa6471e8afd13c35ef17853d559ef`. 고정 artifact 638개 파일을 게시하고 loopback 및 공개 HTTPS의 hash/cache와 4개 negative route를 확인했다.
+- 공개 current: `/srv/hjm-storybook/releases/4c0022973ffaa6471e8afd13c35ef17853d559ef-fb176759b71e`, 전송 archive SHA-256 `39bdbad6b243e263d19f12d499fce52eb7a63c40d6c7efcdd75352d45ec50e8e`. 실행은 관리 SSH로 수행했으며 기존 previous release를 보존했다.
+- 소비 설치: 앱 8개와 Release Hub, manifest 12개·직접 의존 선언/설치본 22곳을 exact `1.34.0`으로 확인했다. 루트 release record와 제품별 catalog/contract/lockfile을 갱신했다. 번뚝 CSS 역할 대응표와 비행중의 HJM 기본 테마 상속을 추가해 새 neutralFill/strongFill 역할을 연결했다.
+- 검사: 세 package build/게시 artifact, Web·Native 및 Showcase typecheck, Web 아이콘 SSR/라이트·다크 browser proof, 관련 Native recipe/menu/search 검사 통과. 소비 앱·웹·Hub 타입 검사와 번뚝 ThemeProvider/채택 14개·비행중 brand palette 1개 검사 통과. 초기 소비 타입 실패 두 곳은 위 호환성 수정 후 통과했다.
+- 기존 선택적 Showcase 검사 실패는 별도 미해결이다: Web의 105↔130 카탈로그 수치 및 ChatDateSeparator evidence, Native CommonChat story 순서. 해당 문서·분류 감사를 npm 게시 차단 조건으로 확대하지 않았다.
+- 소비 적용의 확인 범위는 source/main push, 실제 게시 package 설치와 타입·관련 동작 검사다. 제품 스토어 제출·제품 운영 웹 배포·실기기 QA는 이번에 실행하지 않았다. 다른 세션의 미커밋 작업은 보존했다.
+
+소비 적용 커밋(각 origin/main 확인):
+
+- `burntok`: `4b40d4a9e43a47c354a07de41f9f86559551720f`
+- `choose-window`: `92752ef6bfd4e36895d1e52868497f1bb923e1cd`
+- `portfolio-site`: `2a33971d8e5dfa74d744ad9c5764687a9094615d`
+- `unairplane`: `b6d48f71ac59f220b29303b03cc6cdab2a5ca03c`
+- `yajalal`: `a82a61cd9aa78f8691ee55d7cad33c7bcdb33ecf`
+- `spint`: `4f2db1a8025bae9aee57ac8e6a77ecf12b4cabfe`
+- `diairy`: `1c17eac97a6d71a914058b884172351f0d6461c0`
+- `utilverse`: `c5a42b9b209a0bcaaac65e089723b0d650dfaf1b`
+- `app-portfolio`: `e7a0f7693146e384a8aeb7a1b3403caa08375008`
+- `app-release-hub`: `5be34807402e3dff3e28b6bdb66863bfe27aec7f`
