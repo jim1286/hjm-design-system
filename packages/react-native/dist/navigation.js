@@ -833,12 +833,12 @@ export function TopBar({ title, titleContent: customTitleContent, subtitle, titl
     ];
     const renderTitle = (containerStyle, numberOfLines) => {
         // Match Web: a clickable title is a UI button; a static heading keeps display.
-        const titleContent = (_jsxs(_Fragment, { children: [titleLeading !== undefined && titleLeading !== null && titleLeading !== false ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", pointerEvents: "none", children: titleLeading })) : null, _jsxs(View, { style: { flexShrink: 1, minWidth: 0 }, children: [_jsx(Text, { fontRole: onTitlePress ? "ui" : "display", ...(onTitlePress
-                                ? { accessible: false }
-                                : {
-                                    accessibilityLabel: titleAccessibilityLabel,
-                                    accessibilityRole: "header",
-                                }), numberOfLines: numberOfLines, style: [{ flexShrink: 1, minWidth: 0 }, resolvedTitleStyle], variant: topBarRecipe.title.textVariant, children: resolvedTitle }), subtitle ? _jsx(Text, { variant: "caption", tone: "muted", align: centered ? "center" : "auto", children: subtitle }) : null] })] }));
+        const titleContent = (_jsxs(_Fragment, { children: [titleLeading !== undefined && titleLeading !== null && titleLeading !== false ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", pointerEvents: "none", children: titleLeading })) : null, _jsx(View, { style: { flexShrink: 1, minWidth: 0 }, children: _jsx(Text, { fontRole: onTitlePress ? "ui" : "display", ...(onTitlePress
+                            ? { accessible: false }
+                            : {
+                                accessibilityLabel: titleAccessibilityLabel,
+                                accessibilityRole: "header",
+                            }), numberOfLines: numberOfLines, style: [{ flexShrink: 1, minWidth: 0 }, resolvedTitleStyle], variant: topBarRecipe.title.textVariant, children: resolvedTitle }) })] }));
         const commonStyle = [
             containerStyle,
             {
@@ -854,7 +854,7 @@ export function TopBar({ title, titleContent: customTitleContent, subtitle, titl
         if (customTitleContent !== undefined)
             return _jsx(View, { accessible: false, style: commonStyle, children: customTitleContent });
         if (onTitlePress) {
-            return (_jsx(Pressable, { accessible: true, accessibilityHint: titleAccessibilityHint, accessibilityLabel: titleAccessibilityLabel ?? [resolvedTitle, subtitle].filter(Boolean).join(". "), accessibilityRole: "button", onPress: onTitlePress, style: ({ pressed }) => [
+            return (_jsx(Pressable, { accessible: true, accessibilityHint: titleAccessibilityHint, accessibilityLabel: titleAccessibilityLabel ?? resolvedTitle, accessibilityRole: "button", onPress: onTitlePress, style: ({ pressed }) => [
                     commonStyle,
                     { opacity: pressed ? topBarRecipe.titleAction.pressedOpacity : 1 },
                 ], children: titleContent }));

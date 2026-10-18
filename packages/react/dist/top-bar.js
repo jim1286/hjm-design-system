@@ -34,7 +34,7 @@ export const TopBar = forwardRef(function TopBar({ title, titleContent, subtitle
             "--hjm-top-bar-padding": `${topBarRecipe.paddingHorizontal}px`,
             "--hjm-top-bar-gap": `${topBarRecipe.gap}px`,
             "--hjm-top-bar-safe-area": `${safeAreaTop}px`, ...style, ...layoutStyle,
-        }, children: [_jsx("div", { className: "hjm-top-bar__leading", children: leading }), _jsxs("div", { className: "hjm-top-bar__title", children: [titleContent ?? (title === undefined ? null : _jsx(Heading, { className: "hjm-top-bar__heading", children: onTitleClick ? _jsx(Button, { tone: "ghost", onClick: onTitleClick, "aria-label": titleAccessibilityLabel, leading: titleLeading, children: title })
-                            : _jsxs("span", { "aria-label": titleAccessibilityLabel, children: [titleLeading, title] }) })), subtitle ? _jsx("span", { className: "hjm-top-bar__subtitle", children: subtitle }) : null] }), _jsx("div", { className: "hjm-top-bar__trailing", children: actions ?? trailing })] });
+        }, children: [_jsx("div", { className: "hjm-top-bar__leading", children: leading }), _jsx("div", { className: "hjm-top-bar__title", children: titleContent ?? (title === undefined ? null : _jsx(Heading, { className: "hjm-top-bar__heading", children: onTitleClick ? _jsx(Button, { tone: "ghost", onClick: onTitleClick, "aria-label": titleAccessibilityLabel, leading: titleLeading, children: title })
+                        : _jsxs("span", { "aria-label": titleAccessibilityLabel, children: [titleLeading, title] }) })) }), _jsx("div", { className: "hjm-top-bar__trailing", children: actions ?? trailing })] });
 });
 //# sourceMappingURL=top-bar.js.map

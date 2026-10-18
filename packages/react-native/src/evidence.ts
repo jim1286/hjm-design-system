@@ -164,7 +164,7 @@ const activeNativeEntries: readonly ComponentCatalogEntry[] = componentCatalog.f
 export const reactNativeRendererEvidence = {
   schemaVersion: reactNativeRendererEvidenceSchemaVersion,
   packageName: "@hjmds/react-native",
-  packageVersion: "1.33.0",
+  packageVersion: "1.33.1",
   surface: "native",
   components: activeNativeEntries.map(derivedClaim),
 } as const satisfies ReactNativeRendererEvidenceManifest;

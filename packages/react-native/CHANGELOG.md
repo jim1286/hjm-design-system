@@ -1,5 +1,11 @@
 # @hjmds/react-native
 
+## 1.33.1
+
+### Patch Changes
+
+- 474106b: Keep empty-state copy at the shared 14pt body size in screen and embedded compositions. Remove supporting copy from ScreenLayout and TopBar headers; retain the deprecated input props for source compatibility until the next major cleanup. Required guidance belongs in body content.
+
 ## 1.33.0
 
 ### Minor Changes

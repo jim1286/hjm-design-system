@@ -26,7 +26,7 @@ export type ScreenLayoutProps = Readonly<{
      * named by `title` (2026-10-18: yajalal team detail and Utilverse tool headers rebuilt the header to get this).
      */
     titleLeading?: ReactNode;
-    /** Hide redundant route names while retaining descriptions and a named screen. */
+    /** Hide redundant route names while retaining a named screen. */
     titleVisibility?: "visible" | "hidden";
     /** Centered by default (2026-10-17 user rule); `start` remains available. Extra actions sit at the trailing edge. */
     headerAlignment?: "start" | "center";
@@ -44,6 +44,7 @@ export type ScreenLayoutProps = Readonly<{
     surface?: "default" | "transparent";
     /** Explicit layout wins over the nearest design profile. */
     presentation?: DesignProfileScreenPresentation;
+    /** @deprecated Screen headers no longer show supporting copy (2026-10-18). Move required guidance into body content. Retained until the next major API cleanup. */
     description?: string;
     /**
      * Leaving this screen (back, close, settings exit): icon-only button fixed at the header's leading edge.
@@ -84,7 +85,7 @@ export type ScreenLayoutProps = Readonly<{
     initialFocus?: ScreenInitialFocus;
     scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator" | "onScroll" | "onScrollBeginDrag" | "onScrollEndDrag" | "scrollEventThrottle" | "alwaysBounceVertical" | "automaticallyAdjustKeyboardInsets">;
 }>;
-export declare function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility, headerAlignment, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, description, exit, actions, notice, footer, state, stateAction, loadingIndicator, children, scroll, layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance, safeAreaBottom, initialFocus, hjmBodyInlinePadding }: ScreenLayoutProps & ScreenLayoutPrivateProps): import("react").JSX.Element;
+export declare function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility, headerAlignment, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, exit, actions, notice, footer, state, stateAction, loadingIndicator, children, scroll, layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance, safeAreaBottom, initialFocus, hjmBodyInlinePadding }: ScreenLayoutProps & ScreenLayoutPrivateProps): import("react").JSX.Element;
 /**
  * Styles for a product scroller that owns the body with `scroll="content"` (FlatList, SectionList): `style` reaches
  * across the ScreenLayout body gutter and `contentContainerStyle` pads it back, so items stay on the gutter while the

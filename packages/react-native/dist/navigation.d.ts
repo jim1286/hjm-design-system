@@ -180,7 +180,7 @@ export type TopBarProps = Readonly<{
     title?: string;
     /** Product control in the shared title slot; exclusive with text title affordances. */
     titleContent?: ReactNode;
-    /** Secondary product context below the title. */
+    /** @deprecated Header supporting copy is no longer displayed; retained until the next major API cleanup. */
     subtitle?: string;
     /** Optional visual before the title, such as a small product avatar. */
     titleLeading?: ReactNode;

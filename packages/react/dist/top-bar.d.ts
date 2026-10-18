@@ -5,7 +5,7 @@ export type TopBarProps = Omit<HTMLAttributes<HTMLDivElement>, "title" | "childr
     title?: string;
     /** Product control in the shared title slot; exclusive with text title affordances. */
     titleContent?: ReactNode;
-    /** Secondary product context; the shared title slot owns its placement. */
+    /** @deprecated Header supporting copy is no longer displayed; retained until the next major API cleanup. */
     subtitle?: string;
     titleLeading?: ReactNode;
     onTitleClick?: MouseEventHandler<HTMLButtonElement>;
@@ -26,7 +26,7 @@ export declare const TopBar: import("react").ForwardRefExoticComponent<Omit<HTML
     title?: string;
     /** Product control in the shared title slot; exclusive with text title affordances. */
     titleContent?: ReactNode;
-    /** Secondary product context; the shared title slot owns its placement. */
+    /** @deprecated Header supporting copy is no longer displayed; retained until the next major API cleanup. */
     subtitle?: string;
     titleLeading?: ReactNode;
     onTitleClick?: MouseEventHandler<HTMLButtonElement>;

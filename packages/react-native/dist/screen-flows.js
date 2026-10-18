@@ -260,7 +260,7 @@ export function SearchScreen({ query, queryLabel, queryField, queryClearLabel, o
             : _jsxs(_Fragment, { children: [_jsx(SearchResultsHeader, { summary: resultSummary, applied: appliedFilters, cause: cause, onSortChange: changeSort }), _jsx(SearchResultsBody, { summary: resultSummary, applied: appliedFilters, suggested: suggestedQueries, cause: cause, onCommit: commit, children: children })] });
     // Search-first routes have no visible heading: navigation and input share one row.
     // Keep explicit host headers and described/titled screens in their existing layout.
-    const inlineNavigation = screen.titleVisibility === "hidden" && screen.header == null && !screen.description;
+    const inlineNavigation = screen.titleVisibility === "hidden" && screen.header == null;
     const input = queryField ?? _jsx(SearchField, { ...labelProps, clearLabel: queryClearLabel, value: query, onValueChange: onQueryChange, busy: searching ?? false, busyLabel: searchingLabel ?? queryLabel, ...submitProps });
     const queryRow = inlineNavigation ? _jsxs(Stack, { axis: "inline", align: "center", gap: "sm", children: [screen.exit ? _jsx(ScreenExitButton, { ...screen.exit }) : null, _jsx(View, { style: { flex: 1, minWidth: 0 }, children: input }), screen.actions] }) : input;
     // The query field is the search screen's primary input (2026-10-18 entry focus).
