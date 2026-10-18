@@ -44,6 +44,7 @@ export type BadgeProps = HTMLAttributes<HTMLSpanElement> &
     size?: BadgeSize;
     variant?: BadgeVariant;
     leading?: ReactNode;
+    trailing?: ReactNode;
       /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -54,6 +55,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
     size = badgeRecipe.defaults.size,
     variant = badgeRecipe.defaults.variant,
     leading,
+    trailing,
     className,
     children,
     layoutStyle,
@@ -78,6 +80,9 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
         </span>
       )}
       <span className="hjm-badge__label">{children}</span>
+      {trailing === undefined ? null : (
+        <span aria-hidden="true" className="hjm-badge__icon">{trailing}</span>
+      )}
     </span>
   );
 });

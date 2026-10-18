@@ -114,6 +114,7 @@ export type BadgeProps = Omit<
   size?: BadgeSize;
   variant?: BadgeVariant;
   leading?: ReactNode;
+  trailing?: ReactNode;
   accessibilityLabel?: string;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
@@ -125,6 +126,7 @@ export function Badge({
   size = badgeRecipe.defaults.size,
   variant = badgeRecipe.defaults.variant,
   leading,
+  trailing,
   accessibilityLabel,
   layoutStyle,
   ...props
@@ -135,11 +137,8 @@ export function Badge({
   const metrics = badgeRecipe.sizes[size];
   const variantPresentation = badgeRecipe.variants[variant];
   const outlined = !variantPresentation.usesToneBackground;
-  const borderColor = presentation.border
-    ? resolveColorReference(presentation.border, theme.palette)
-    : variantPresentation.borderFallback === null
-      ? "transparent"
-      : resolveColorReference(variantPresentation.borderFallback, theme.palette);
+  const borderReference = outlined ? presentation.border ?? variantPresentation.borderFallback : null;
+  const borderColor = borderReference === null ? "transparent" : resolveColorReference(borderReference, theme.palette);
   return (
     <View
       {...props}
@@ -154,9 +153,7 @@ export function Badge({
             : resolveColorReference(presentation.background, theme.palette),
           borderColor,
           borderRadius: theme.tokens.radius[badgeRecipe.radius],
-          borderWidth: presentation.border || variantPresentation.borderFallback
-            ? badgeRecipe.borderWidth
-            : 0,
+          borderWidth: borderReference === null ? 0 : badgeRecipe.borderWidth,
           direction: theme.environment.direction,
           flexDirection: "row",
           gap: metrics.gap,
@@ -182,6 +179,7 @@ export function Badge({
         emphasis="strong"
         style={[
           {
+            fontWeight: badgeRecipe.fontWeight,
             color: resolveColorReference(
               outlined ? presentation.outlineContent : presentation.content,
               theme.palette,
@@ -192,6 +190,11 @@ export function Badge({
       >
         {label}
       </Text>
+      {trailing === undefined ? null : (
+        <View accessibilityElementsHidden accessible={false} importantForAccessibility="no-hide-descendants">
+          {trailing}
+        </View>
+      )}
     </View>
   );
 }

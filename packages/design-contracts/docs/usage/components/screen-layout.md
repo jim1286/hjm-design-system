@@ -70,9 +70,10 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 | --- | --- | --- | --- |
 | `keyboardAvoidance` (Native) | `boolean` | `true`(미게시) | 키보드와 실제로 겹치는 만큼 footer·본문을 올리고 포커스된 입력칸을 스크롤해 보인다. `KeyboardAvoiding`·키보드 처리 Sheet/Dialog 안에서는 건너뛴다 |
 | `title` | `string` | 필수 | 화면 제목. `header`를 주면 접근성 이름으로만 쓴다 |
+| `titleVisibility` | `"visible"` · `"hidden"` | `"visible"` | 하단 탭·상단 탐색으로 이미 식별되는 최상위 화면명은 `hidden`. 대상·하위 작업 이름은 식별에 필요하고 본문과 중복되지 않을 때 유지. 기본값이나 뒤로가기 유무로 목적지를 추정하지 않으며 제품이 맥락에 맞게 선택한다. `title` 값은 유지한다 |
 | `titleBadge` | `ReactNode` | 없음 | 기본 제목 바로 옆 배지. 값·의미는 제품, 간격·정렬은 HJM. `header` 교체 또는 제목 숨김이면 그리지 않는다. 1.23.0 추가 API |
 | `titleLeading` | `ReactNode` | 없음 | 미게시(1.30.0 이후). 제목 앞 식별 표시(팀 로고·도구 아트워크). 장식이라 보조기술에서 숨기고 제목이 heading·접근성 이름으로 남는다. `titleVisibility="hidden"`이면 표시가 제목 자리에 혼자 서고 `title`을 이름으로 하는 heading(level 1)이 된다. 이때도 아이콘 전용 48 띠가 아니라 제목 띠 52를 쓴다. 노드 크기는 제품이 주되 헤더 띠 안에 들어가야 한다. `header` 교체 시 그리지 않는다. `ChatScreen`은 같은 자리를 `avatar`로 받는다 |
-| `header` | `ReactNode` | 없음 | 기존 navigator 헤더 유지용. 주면 기본 헤더(`exit`·제목·`actions`)를 그리지 않는다 |
+| `header` | `ReactNode` | 없음 | 기존 navigator 헤더 또는 HJM `TopBar` 합성. 상단 탐색은 `TopBar.leading`에 HJM 탐색 컨트롤, 도구는 `TopBar.actions`에 주어 한 행을 만든다. 주면 기본 헤더(`exit`·제목·`actions`)를 그리지 않으므로 뒤로가기·도구도 해당 TopBar에 연결한다. 앱 자체 헤더 복제용 슬롯이 아니다 |
 | `description` | `string` | 없음 | 2026-10-18 사용자 결정으로 상단 보조 문구는 표시하지 않는다. 기존 호출의 타입 호환을 위해 prop만 유지하며 다음 major 정리에서 제거한다. 필요한 설명은 본문 콘텐츠에 둔다 |
 | `exit` | `{ kind: "back" \| "close"; label; onClick(Web) \| onPress(Native); disabled? }` | 없음 | 화면 나가기(뒤로·닫기·"설정 나가기")를 헤더 시작 쪽 아이콘 버튼으로 고정한다. 글자는 보이지 않고 `label`은 보조기술 이름이다. `back`은 ‹(RTL 반전), `close`는 ×. 헤더 시작 쪽에는 이 버튼 외의 자유 슬롯이 없다. 미게시(1.26.1 이후) |
 | `actions` | `ReactNode` | 없음 | 제목 뒤(도구) 슬롯. 시작 쪽 `leading` 슬롯은 2026-10-17 제거됐다 — 제품 사용처가 모두 직접 만든 뒤로 버튼이었다 |
@@ -133,7 +134,8 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 
 ## 꼭 지킬 것
 
-- **헤더 제목은 기본 가운데, 추가 기능 버튼은 오른쪽 위.** `headerAlignment` 기본값은 `"center"`이고 `"start"`는 큰 제목이 필요한 화면에서만 고른다(2026-10-17 사용자 지시: 가운데가 기본, 강제는 아님).
+- **중복된 화면명은 숨기고, 대상·작업 식별에 필요한 제목은 유지한다.** 하단 탭·상단 탐색이 화면을 이미 설명하면 `titleVisibility="hidden"`으로 둔다. 제목·식별 자산·뒤로가기·도구가 모두 없으면 기본 헤더는 그리지 않는다. 내용 첫머리에서 이미 대상·작업을 식별할 수 있으면 같은 제목을 반복하지 않는다. 2026-10-18 사용자 결정이며 모든 제목을 숨기는 기본값 변경이 아니다.
+- **보이는 헤더 제목은 기본 가운데, 추가 기능 버튼은 오른쪽 위.** `headerAlignment` 기본값은 `"center"`이고 `"start"`도 선택할 수 있다(2026-10-17 사용자 지시: 가운데가 기본, 강제는 아님). 상단 탐색이 있으면 HJM TopBar를 `header`에 합성해 왼쪽 탐색·오른쪽 도구 한 행으로 두고 별도 제목 줄을 만들지 않는다.
 - **나가기는 `exit` 하나로 헤더 시작 쪽에 둔다(필수).** 본문·하단의 "나가기"·"닫기"·"뒤로"·"취소하고 나가기" 글자 버튼, 화면마다 다른 화살표(`←` 글자, 제품 아이콘)로 만든 뒤로 버튼을 두지 않는다. 2026-10-17 사용자 지시: `변경 저장과 이탈 확인` 예제의 "설정 나가기"가 본문 버튼으로 떠 있었고, 제품마다 뒤로 버튼 모양이 달랐다(야잘알 자체 `BackButton`, 예제의 `←`·`ChevronLeft`). 변경이 있을 때의 확인 대화상자는 제품이 `exit` 콜백에서 띄운다. 기존 navigator 헤더를 쓰는 화면은 그 헤더의 뒤로 버튼이 같은 자리를 맡는다.
 
 - `headerAlignment="center"` + `titleVisibility="hidden"`이고 설명·사용자 지정 헤더가 없으면 아이콘 헤더는 최소 48pt, 세로 여백 2pt다(값의 정본은 `screenHeaderRecipe`). 2026-10-14 야잘알의 상단 버튼–탭 사이 빈 공간 피드백으로 제목용 높이를 줄였다. 제목이 보이는 가운데 헤더는 최소 52pt, 세로 여백 4pt다(2026-10-17 사용자 지시 "상단 여백 줄여": 60pt가 iOS 내비게이션 바보다 높았다). `notice`가 없을 때만 본문 상단 여백을 최대 4pt로 줄이며, `notice`에 둔 탭과 본문 카테고리 사이 기본 16pt 간격은 유지한다. 좌우 여백·하단 여백·터치 영역은 그대로다.

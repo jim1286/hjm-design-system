@@ -88,11 +88,11 @@ Native popover와 항목 모서리는 Provider token에서 recipe 역할을 해�
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 항목 높이 `comfortable` 56(`layout.rowHeight.singleLine`) · `compact` 44(`control.minTouchTarget`). Web 표면 폭 `13.75rem`~`min(24rem, 90vw)`, 높이 최대 `100dvh − 2 × spacing.md`. Native 표면 폭 100%·최대 520, 높이 최대 75% | `menuRecipe.density`, `.hjm-menu__content`, `react-native/src/navigation.tsx` |
+| 크기 | 항목 높이 `comfortable` 56(`layout.rowHeight.singleLine`) · `compact` 44(`control.minTouchTarget`). Web 표면 폭 `13.75rem`~`min(24rem, 90vw)`, 높이 최대 `100dvh − 2 × spacing.md`. Native 표면 폭 100%·최대 320(`menuRecipe.maxWidth`), 높이 최대 75% | `menuRecipe.density`, `.hjm-menu__content`, `react-native/src/navigation.tsx` |
 | 간격 | 항목 좌우 `spacing.sm` 12, leading·문구·단축키 사이 12. 섹션 제목 좌우 12 · 위아래 `spacing.xs` 8. Web: 트리거와 8(`menuRecipe.sideOffset`), 화면 가장자리 8(`collisionPadding`), 안쪽 `spacing.xs` 8(`menuRecipe.surface.padding`; 2026-10-06까지 4, 1.13.0 변경), 표면·항목 radius `radius.md` 12, 구분선 위아래 4 · 좌우 8. Native: 바깥 여백·안쪽 `spacing.md` 16, 제목·목록·닫기 사이 12, radius `radius.lg` 16 | `collectionItemContract`, `menuRecipe.sectionLabel`·`surface`, `.hjm-menu__*`, `useAnchoredPopup` |
-| 순서·정렬 | 일반 행동을 위에, `danger` 행동은 맨 아래. Web `align="start"`(기본)는 트리거 시작 끝, `end`는 끝 끝에 맞춘다(행 끝 ⋯은 `end`). Native는 위→아래 제목 → 항목 → 닫기 버튼(`secondary`) | `menuRecipe`, `src/overlays.tsx` |
+| 순서·정렬 | 일반 행동을 위에, `danger` 행동은 맨 아래. Web `align="start"`(기본)는 트리거 시작 끝, `end`는 끝 끝에 맞춘다(행 끝 ⋯은 `end`). Native는 위→아래 가운데 정렬한 보조 제목(`label`, muted) → 항목 → 닫기 버튼(`ghost`) | `menuRecipe`, `src/overlays.tsx` |
 | 고정·스크롤 | Web: 트리거에 붙는 portal(z-index `layer.dropdown` 400), 아래가 모자라면 위로 뒤집고 가로는 화면 안으로 민다. 넘치면 표면 안 스크롤. Native: `Modal`로 화면 **가운데**, scrim을 누르면 닫히고 항목 목록만 스크롤 | `useAnchoredPopup`, `react-native/src/navigation.tsx`(`Menu`) |
-| 좁은 폭·큰 글자 | Web 폭 상한 `90vw`, 항목 문구는 줄바꿈된다. Native 높이 상한 75%를 넘으면 목록이 스크롤된다 | `.hjm-menu__content`, `maxHeight: "75%"` |
+| 좁은 폭·큰 글자 | Web 폭 상한 `90vw`, 항목 문구는 줄바꿈된다. Native 높이 상한 75%를 넘으면 목록이 스크롤된다. 짧은 목록은 내용 높이만 사용한다(`flexGrow: 0`) | `.hjm-menu__content`, `maxHeight: "75%"` |
 
 ```text
 Web (트리거 아래, 앵커)                 Native (Modal, 화면 가운데)
@@ -103,9 +103,9 @@ Web (트리거 아래, 앵커)                 Native (Modal, 화면 가운데)
          │ 편집            │ ← 56       │░ │ 편집                    │ ░│ ← 항목 56
          │ 공유            │            │░ │ 공유                    │ ░│   (스크롤)
          │─────────────────│            │░ │ 삭제 (danger)           │ ░│
-         │ 삭제 (danger)   │            │░ │ [        닫기         ] │ ░│ ← secondary
+         │ 삭제 (danger)   │            │░ │ [        닫기         ] │ ░│ ← ghost
          └─────────────────┘            │░ └─────────────────────────┘ ░│
-          13.75rem ~ 24rem              │░  폭 ≤520 · 높이 ≤75% · 여백 16│
+          13.75rem ~ 24rem              │░  폭 ≤320 · 높이 ≤75% · 여백 16│
                                         └───────────────────────────────┘
 ```
 
@@ -130,3 +130,5 @@ Web (트리거 아래, 앵커)                 Native (Modal, 화면 가운데)
 | 표면 | 트리거에 붙는 portal(`portalContainer`) | `Modal` |
 | 항목 label | `ReactNode`(+`textValue`) | `string` |
 | 배치 | `className`, `layoutStyle` | `layoutStyle`(`style`은 제거된 속성) |
+
+2026-10-18 스핀트 댓글 메뉴 사진에서 단일 행동에도 넓은 폭과 빈 공간이 생겼다. Native 메뉴 폭을 기존 recipe 상한에 맞추고 목록의 기본 확장을 없앴으며, 닫기는 조용한 행동으로 분리했다. 사용자 후속 요청으로 닫기 위 구분선은 제거했다.

@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-10
+- 검토일: 2026-10-18
 - 근거: recipe `cardRecipe`(`src/card.ts`), 바탕 `surfaceRecipe`(`src/base-recipes.ts`). 별도 계약 문서는 없다
 - 스토리북: `배포/컴포넌트/데이터 표시/카드`
 
@@ -69,9 +69,14 @@ import { Button } from "@hjmds/react-native/actions";
 
 ## 축과 기본값
 
+2026-10-18 사용자 요청으로 오늘야구 경기일정의 입체 카드 표현을 공통 기본값으로 채택했다.
+Web·Native 모두 기존 `raised` Surface의 테두리·그림자를 재사용하며, 그림자는 바깥 프레임에,
+콘텐츠의 둥근 모서리 클리핑은 안쪽에 유지한다. 배경 영역인 `Surface`의 기본값은 바꾸지 않는다.
+기존 평면 표현이 필요한 소비자는 `tone="default"`를 명시한다. 이 변경의 npm 게시와 앱 버전 갱신은 별도다.
+
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `tone` | `default` · `raised` · `accent` · `sunken` · `subtle`(Surface tone) | `default` | — |
+| `tone` | `default` · `raised` · `accent` · `sunken` · `subtle`(Surface tone) | `raised` | 테두리와 공통 floating shadow로 입체감 표시. 평면 카드는 `tone="default"` 지정 |
 | `bordered` | `boolean` | `true` | Surface 기본 `false`와 다르다 |
 | `padding` | spacing 이름 | `md`(16) | — |
 | `radius` | radius 이름 | `lg`(foundation 16) | 선택한 designProfile의 같은 radius 역할로 frame과 media clip을 함께 변경 |

@@ -1,3 +1,4 @@
+import { solidAccentColor, themeColor } from "./color-references.js";
 import { collectionItemContract, fieldFrameContract, floatingSurfaceContract, focusIndicatorContract, formSupportContract, } from "./component-contracts.js";
 import { backdrop, breakpoint, control, glyph, layer, largeTextThreshold, layout, fontWeight, motion, motionPreset, opacity, radius, spacing, stroke, typography, } from "./foundations.js";
 import { buttonRecipe } from "./base-recipes.js";
@@ -137,7 +138,7 @@ export const selectionGroupRecipe = {
     states: { disabledOpacity: opacity.disabled },
 };
 export const badgeRecipe = {
-    slots: ["root", "icon", "label"],
+    slots: ["root", "icon", "label", "trailing"],
     defaults: { tone: "neutral", size: "medium", variant: "filled" },
     variants: {
         filled: {
@@ -149,68 +150,22 @@ export const badgeRecipe = {
             borderFallback: semanticColors.border.default,
         },
     },
+    // 2026-10-18: match the Today Baseball status plate reference: solid fill,
+    // white copy and compact rounded corners. Outline retains its tone-colored copy.
     tones: {
-        // A canvas-colored plate is invisible on the canvas, so neutral and brand badges read as plain text beside a
-        // tinted success badge (2026-10-17 review E3). The plate stays white (canvas) and the neutral border draws it.
-        neutral: {
-            content: semanticColors.content.secondary,
-            outlineContent: semanticColors.content.secondary,
-            background: semanticColors.canvas,
-            border: semanticColors.border.default,
-        },
-        strong: {
-            content: semanticColors.content.inverse,
-            outlineContent: semanticColors.content.primary,
-            background: semanticColors.content.primary,
-            border: null,
-        },
-        brand: {
-            content: semanticColors.content.brand,
-            outlineContent: semanticColors.content.brand,
-            // The brand tint now means "selected" everywhere (see
-            // `selectionControlRecipe`/`segmentedControlRecipe`), so a badge that
-            // only labels something — a season, a grade, a question number —
-            // cannot wear it: rows of static badges started reading as a filter
-            // with one option switched on. The plate goes neutral and the brand
-            // stays in the copy.
-            background: semanticColors.canvas,
-            border: semanticColors.border.default,
-        },
-        info: {
-            content: semanticColors.feedback.info.foreground,
-            outlineContent: semanticColors.feedback.info.foreground,
-            background: semanticColors.canvas,
-            border: semanticColors.feedback.info.border,
-        },
-        success: {
-            content: semanticColors.feedback.success.foreground,
-            outlineContent: semanticColors.feedback.success.foreground,
-            background: semanticColors.feedback.success.badgeBackground,
-            border: semanticColors.feedback.success.border,
-        },
-        warning: {
-            content: semanticColors.feedback.warning.foreground,
-            outlineContent: semanticColors.feedback.warning.foreground,
-            background: semanticColors.feedback.warning.badgeBackground,
-            border: semanticColors.feedback.warning.border,
-        },
-        attention: {
-            content: semanticColors.feedback.attention.foreground,
-            outlineContent: semanticColors.feedback.attention.foreground,
-            background: semanticColors.feedback.attention.badgeBackground,
-            border: semanticColors.feedback.attention.border,
-        },
-        danger: {
-            content: semanticColors.feedback.danger.foreground,
-            outlineContent: semanticColors.feedback.danger.foreground,
-            background: semanticColors.feedback.danger.badgeBackground,
-            border: semanticColors.feedback.danger.border,
-        },
+        neutral: { content: semanticColors.content.inverse, outlineContent: semanticColors.content.secondary, background: themeColor("neutralFill"), border: null },
+        strong: { content: semanticColors.content.inverse, outlineContent: semanticColors.content.primary, background: themeColor("strongFill"), border: null },
+        brand: { content: semanticColors.content.inverse, outlineContent: semanticColors.content.brand, background: semanticColors.action.brand.background, border: null },
+        info: { content: semanticColors.content.inverse, outlineContent: semanticColors.feedback.info.foreground, background: solidAccentColor("info"), border: semanticColors.feedback.info.border },
+        success: { content: semanticColors.content.inverse, outlineContent: semanticColors.feedback.success.foreground, background: solidAccentColor("success"), border: semanticColors.feedback.success.border },
+        warning: { content: semanticColors.content.inverse, outlineContent: semanticColors.feedback.warning.foreground, background: solidAccentColor("warning"), border: semanticColors.feedback.warning.border },
+        attention: { content: semanticColors.content.inverse, outlineContent: semanticColors.feedback.attention.foreground, background: solidAccentColor("attention"), border: semanticColors.feedback.attention.border },
+        danger: { content: semanticColors.action.danger.content, outlineContent: semanticColors.content.danger, background: semanticColors.action.danger.background, border: semanticColors.feedback.danger.border },
     },
     sizes: {
         small: {
             minHeight: 20,
-            paddingHorizontal: spacing.xxs,
+            paddingHorizontal: spacing.xs,
             gap: spacing.xxs,
             textVariant: "caption",
         },
@@ -221,9 +176,9 @@ export const badgeRecipe = {
             textVariant: "caption",
         },
     },
-    radius: "full",
+    radius: "sm",
     borderWidth: stroke.default,
-    fontWeight: fontWeight.medium,
+    fontWeight: fontWeight.bold,
 };
 /** Search is a field specialization with stable affordance and clear targets. */
 export const searchFieldRecipe = {

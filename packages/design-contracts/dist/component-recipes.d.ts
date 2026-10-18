@@ -312,7 +312,7 @@ export type BadgeTone = "neutral"
 export type BadgeSize = "small" | "medium";
 export type BadgeVariant = "filled" | "outline";
 export declare const badgeRecipe: {
-    readonly slots: readonly ["root", "icon", "label"];
+    readonly slots: readonly ["root", "icon", "label", "trailing"];
     readonly defaults: {
         readonly tone: "neutral";
         readonly size: "medium";
@@ -336,7 +336,7 @@ export declare const badgeRecipe: {
         readonly neutral: {
             readonly content: Readonly<{
                 source: "theme";
-                key: "textMuted";
+                key: "onPrimary";
                 alpha?: number;
             }>;
             readonly outlineContent: Readonly<{
@@ -346,14 +346,10 @@ export declare const badgeRecipe: {
             }>;
             readonly background: Readonly<{
                 source: "theme";
-                key: "bg";
+                key: "neutralFill";
                 alpha?: number;
             }>;
-            readonly border: Readonly<{
-                source: "theme";
-                key: "border";
-                alpha?: number;
-            }>;
+            readonly border: null;
         };
         readonly strong: {
             readonly content: Readonly<{
@@ -368,7 +364,7 @@ export declare const badgeRecipe: {
             }>;
             readonly background: Readonly<{
                 source: "theme";
-                key: "text";
+                key: "strongFill";
                 alpha?: number;
             }>;
             readonly border: null;
@@ -376,7 +372,7 @@ export declare const badgeRecipe: {
         readonly brand: {
             readonly content: Readonly<{
                 source: "theme";
-                key: "contentBrand";
+                key: "onPrimary";
                 alpha?: number;
             }>;
             readonly outlineContent: Readonly<{
@@ -386,19 +382,15 @@ export declare const badgeRecipe: {
             }>;
             readonly background: Readonly<{
                 source: "theme";
-                key: "bg";
+                key: "primary";
                 alpha?: number;
             }>;
-            readonly border: Readonly<{
-                source: "theme";
-                key: "border";
-                alpha?: number;
-            }>;
+            readonly border: null;
         };
         readonly info: {
             readonly content: Readonly<{
-                source: "accent";
-                key: "info";
+                source: "theme";
+                key: "onPrimary";
                 alpha?: number;
             }>;
             readonly outlineContent: Readonly<{
@@ -407,8 +399,8 @@ export declare const badgeRecipe: {
                 alpha?: number;
             }>;
             readonly background: Readonly<{
-                source: "theme";
-                key: "bg";
+                source: "accentFill";
+                key: "info";
                 alpha?: number;
             }>;
             readonly border: Readonly<{
@@ -419,8 +411,8 @@ export declare const badgeRecipe: {
         };
         readonly success: {
             readonly content: Readonly<{
-                source: "accent";
-                key: "success";
+                source: "theme";
+                key: "onPrimary";
                 alpha?: number;
             }>;
             readonly outlineContent: Readonly<{
@@ -429,7 +421,7 @@ export declare const badgeRecipe: {
                 alpha?: number;
             }>;
             readonly background: Readonly<{
-                source: "accent";
+                source: "accentFill";
                 key: "success";
                 alpha?: number;
             }>;
@@ -441,8 +433,8 @@ export declare const badgeRecipe: {
         };
         readonly warning: {
             readonly content: Readonly<{
-                source: "accent";
-                key: "warning";
+                source: "theme";
+                key: "onPrimary";
                 alpha?: number;
             }>;
             readonly outlineContent: Readonly<{
@@ -451,7 +443,7 @@ export declare const badgeRecipe: {
                 alpha?: number;
             }>;
             readonly background: Readonly<{
-                source: "accent";
+                source: "accentFill";
                 key: "warning";
                 alpha?: number;
             }>;
@@ -463,8 +455,8 @@ export declare const badgeRecipe: {
         };
         readonly attention: {
             readonly content: Readonly<{
-                source: "accent";
-                key: "attention";
+                source: "theme";
+                key: "onPrimary";
                 alpha?: number;
             }>;
             readonly outlineContent: Readonly<{
@@ -473,7 +465,7 @@ export declare const badgeRecipe: {
                 alpha?: number;
             }>;
             readonly background: Readonly<{
-                source: "accent";
+                source: "accentFill";
                 key: "attention";
                 alpha?: number;
             }>;
@@ -486,7 +478,7 @@ export declare const badgeRecipe: {
         readonly danger: {
             readonly content: Readonly<{
                 source: "theme";
-                key: "danger";
+                key: "onDanger";
                 alpha?: number;
             }>;
             readonly outlineContent: Readonly<{
@@ -496,7 +488,7 @@ export declare const badgeRecipe: {
             }>;
             readonly background: Readonly<{
                 source: "theme";
-                key: "danger";
+                key: "dangerFill";
                 alpha?: number;
             }>;
             readonly border: Readonly<{
@@ -509,7 +501,7 @@ export declare const badgeRecipe: {
     readonly sizes: {
         readonly small: {
             readonly minHeight: 20;
-            readonly paddingHorizontal: 4;
+            readonly paddingHorizontal: 8;
             readonly gap: 4;
             readonly textVariant: "caption";
         };
@@ -520,9 +512,9 @@ export declare const badgeRecipe: {
             readonly textVariant: "caption";
         };
     };
-    readonly radius: "full";
+    readonly radius: "sm";
     readonly borderWidth: 1;
-    readonly fontWeight: "500";
+    readonly fontWeight: "700";
 };
 export type SearchFieldSize = "medium" | "large";
 /** Search is a field specialization with stable affordance and clear targets. */

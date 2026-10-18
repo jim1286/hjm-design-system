@@ -1,5 +1,5 @@
 import { spacing } from "./foundations.js";
-import { buttonRecipe, surfaceDefaults, } from "./base-recipes.js";
+import { buttonRecipe, } from "./base-recipes.js";
 /**
  * Shared Card anatomy. Renderers own their host nodes (`article` on Web,
  * `View` on Native), while these slots and defaults stay identical.
@@ -17,7 +17,9 @@ export const cardRecipe = {
         "actions",
     ],
     defaults: {
-        tone: surfaceDefaults.tone,
+        // Today Baseball's schedule cards establish the shared raised card treatment.
+        // Keep plain Surface defaults independent so layout containers stay flat.
+        tone: "raised",
         selected: false,
         bordered: true,
         headingLevel: 3,

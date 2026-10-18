@@ -924,22 +924,28 @@
 .hjm-tabs[data-orientation="vertical"] .hjm-tabs__tab[data-state="selected"]::after { inset-block: 0; inset-inline-start: auto; inset-inline-end: 0; inline-size: 2px; block-size: auto; }
 
 .hjm-badge, .hjm-tag { display: inline-flex; align-items: center; gap: var(--hjm-space-xxs); max-inline-size: 100%; overflow-wrap: anywhere; }
-.hjm-badge { min-block-size: 24px; padding: 2px var(--hjm-space-xs); border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-full); color: var(--hjm-color-text-muted); background: var(--hjm-color-bg); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); font-weight: var(--hjm-text-emphasis-medium); }
-.hjm-badge[data-size="small"] { min-block-size: 20px; padding-inline: var(--hjm-space-xxs); font-size: var(--hjm-type-caption-size); } /* badgeRecipe.sizes.small.paddingHorizontal xxs 4 (2026-10-06; Web had kept medium's 8) */
-.hjm-badge[data-tone="strong"] { color: var(--hjm-color-bg); background: var(--hjm-color-text); border-color: transparent; } /* neutral/brand plates are canvas-white and need badgeRecipe's border to stay visible (2026-10-17) */
-.hjm-badge[data-tone="brand"] { color: var(--hjm-color-content-brand); }
-.hjm-badge[data-tone="info"], .hjm-tag[data-tone="info"] { color: var(--hjm-accent-info); background: var(--hjm-color-bg); border-color: color-mix(in srgb, var(--hjm-accent-info) 30%, transparent); }
-.hjm-badge[data-tone="success"], .hjm-tag[data-tone="success"] { color: var(--hjm-accent-success); background: color-mix(in srgb, var(--hjm-accent-success) 14%, transparent); border-color: color-mix(in srgb, var(--hjm-accent-success) 30%, transparent); }
-.hjm-badge[data-tone="warning"] { color: var(--hjm-accent-warning); background: color-mix(in srgb, var(--hjm-accent-warning) 14%, transparent); border-color: color-mix(in srgb, var(--hjm-accent-warning) 30%, transparent); }
-.hjm-badge[data-tone="attention"], .hjm-tag[data-tone="attention"] { color: var(--hjm-accent-attention); background: color-mix(in srgb, var(--hjm-accent-attention) 14%, transparent); border-color: color-mix(in srgb, var(--hjm-accent-attention) 30%, transparent); }
-.hjm-badge[data-tone="danger"] { color: var(--hjm-color-danger); background: color-mix(in srgb, var(--hjm-color-danger) 14%, transparent); border-color: color-mix(in srgb, var(--hjm-color-danger) 30%, transparent); }
-.hjm-badge[data-variant="outline"] { background: transparent; border-color: var(--hjm-color-border); }
+/* Solid status plates mirror badgeRecipe; Tag keeps its independent tint treatment. */
+.hjm-badge { min-block-size: 24px; padding: 2px var(--hjm-space-xs); border: 0; border-radius: var(--hjm-radius-sm); color: var(--hjm-color-on-primary); background: var(--hjm-color-neutral-fill); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); font-weight: var(--hjm-font-weight-bold); }
+.hjm-badge[data-size="small"] { min-block-size: 20px; }
+.hjm-badge[data-tone="strong"] { background: var(--hjm-color-strong-fill); }
+.hjm-badge[data-tone="brand"] { background: var(--hjm-color-primary); }
+.hjm-badge[data-tone="danger"] { color: var(--hjm-color-on-danger); background: var(--hjm-color-danger-fill); }
+.hjm-badge__icon { display: inline-flex; align-items: center; flex: 0 0 auto; }
+.hjm-badge[data-variant="outline"] { background: transparent; border: 1px solid var(--hjm-color-border); color: var(--hjm-color-text-muted); }
 .hjm-badge[data-variant="outline"][data-tone="strong"] { color: var(--hjm-color-text); }
-.hjm-badge[data-variant="outline"][data-tone="info"] { border-color: color-mix(in srgb, var(--hjm-accent-info) 30%, transparent); }
-.hjm-badge[data-variant="outline"][data-tone="success"] { border-color: color-mix(in srgb, var(--hjm-accent-success) 30%, transparent); }
-.hjm-badge[data-variant="outline"][data-tone="warning"] { border-color: color-mix(in srgb, var(--hjm-accent-warning) 30%, transparent); }
-.hjm-badge[data-variant="outline"][data-tone="attention"] { border-color: color-mix(in srgb, var(--hjm-accent-attention) 30%, transparent); }
-.hjm-badge[data-variant="outline"][data-tone="danger"] { border-color: color-mix(in srgb, var(--hjm-color-danger) 30%, transparent); }
+.hjm-badge[data-variant="outline"][data-tone="brand"] { color: var(--hjm-color-content-brand); }
+.hjm-badge[data-variant="outline"][data-tone="danger"] { color: var(--hjm-color-danger); }
+.hjm-badge[data-tone="info"] { background: var(--hjm-accent-fill-info); }
+.hjm-badge[data-variant="outline"][data-tone="info"] { background: transparent; color: var(--hjm-accent-info); border-color: color-mix(in srgb, var(--hjm-accent-info) 30%, transparent); }
+.hjm-badge[data-tone="success"] { background: var(--hjm-accent-fill-success); }
+.hjm-badge[data-variant="outline"][data-tone="success"] { background: transparent; color: var(--hjm-accent-success); border-color: color-mix(in srgb, var(--hjm-accent-success) 30%, transparent); }
+.hjm-badge[data-tone="warning"] { background: var(--hjm-accent-fill-warning); }
+.hjm-badge[data-variant="outline"][data-tone="warning"] { background: transparent; color: var(--hjm-accent-warning); border-color: color-mix(in srgb, var(--hjm-accent-warning) 30%, transparent); }
+.hjm-badge[data-tone="attention"] { background: var(--hjm-accent-fill-attention); }
+.hjm-badge[data-variant="outline"][data-tone="attention"] { background: transparent; color: var(--hjm-accent-attention); border-color: color-mix(in srgb, var(--hjm-accent-attention) 30%, transparent); }
+.hjm-tag[data-tone="info"] { color: var(--hjm-accent-info); background: color-mix(in srgb, var(--hjm-accent-info) 14%, transparent); border-color: color-mix(in srgb, var(--hjm-accent-info) 30%, transparent); }
+.hjm-tag[data-tone="success"] { color: var(--hjm-accent-success); background: color-mix(in srgb, var(--hjm-accent-success) 14%, transparent); border-color: color-mix(in srgb, var(--hjm-accent-success) 30%, transparent); }
+.hjm-tag[data-tone="attention"] { color: var(--hjm-accent-attention); background: color-mix(in srgb, var(--hjm-accent-attention) 14%, transparent); border-color: color-mix(in srgb, var(--hjm-accent-attention) 30%, transparent); }
 .hjm-tag { min-block-size: 20px; padding-inline: var(--hjm-space-xxs); border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-sm); color: var(--hjm-color-text-muted); background: var(--hjm-color-bg); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); font-weight: var(--hjm-text-emphasis-medium); }
 .hjm-tag[data-tone="brand"] { color: var(--hjm-color-content-brand); background: var(--hjm-color-bg); }
 .hjm-tag[data-tone="info"] { background: var(--hjm-color-bg); }

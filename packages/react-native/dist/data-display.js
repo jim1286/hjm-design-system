@@ -19,18 +19,15 @@ import { minimumTargetStyle } from "./internal/styles.js";
 import { webDisclosureProps, webOnly } from "./internal/web-a11y.js";
 import { Surface, Text, } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
-export function Badge({ label, tone = badgeRecipe.defaults.tone, size = badgeRecipe.defaults.size, variant = badgeRecipe.defaults.variant, leading, accessibilityLabel, layoutStyle, ...props }) {
+export function Badge({ label, tone = badgeRecipe.defaults.tone, size = badgeRecipe.defaults.size, variant = badgeRecipe.defaults.variant, leading, trailing, accessibilityLabel, layoutStyle, ...props }) {
     assertNoRemovedStyleProps("Badge", props, ["style", "labelStyle"]);
     const theme = useHjmNativeTheme();
     const presentation = badgeRecipe.tones[tone];
     const metrics = badgeRecipe.sizes[size];
     const variantPresentation = badgeRecipe.variants[variant];
     const outlined = !variantPresentation.usesToneBackground;
-    const borderColor = presentation.border
-        ? resolveColorReference(presentation.border, theme.palette)
-        : variantPresentation.borderFallback === null
-            ? "transparent"
-            : resolveColorReference(variantPresentation.borderFallback, theme.palette);
+    const borderReference = outlined ? presentation.border ?? variantPresentation.borderFallback : null;
+    const borderColor = borderReference === null ? "transparent" : resolveColorReference(borderReference, theme.palette);
     return (_jsxs(View, { ...props, accessibilityLabel: accessibilityLabel ?? String(label), accessible: true, style: [
             {
                 alignSelf: "flex-start",
@@ -40,9 +37,7 @@ export function Badge({ label, tone = badgeRecipe.defaults.tone, size = badgeRec
                     : resolveColorReference(presentation.background, theme.palette),
                 borderColor,
                 borderRadius: theme.tokens.radius[badgeRecipe.radius],
-                borderWidth: presentation.border || variantPresentation.borderFallback
-                    ? badgeRecipe.borderWidth
-                    : 0,
+                borderWidth: borderReference === null ? 0 : badgeRecipe.borderWidth,
                 direction: theme.environment.direction,
                 flexDirection: "row",
                 gap: metrics.gap,
@@ -53,9 +48,10 @@ export function Badge({ label, tone = badgeRecipe.defaults.tone, size = badgeRec
             layoutStyle,
         ], children: [leading === undefined ? null : (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", children: leading })), _jsx(Text, { accessible: false, align: "center", emphasis: "strong", style: [
                     {
+                        fontWeight: badgeRecipe.fontWeight,
                         color: resolveColorReference(outlined ? presentation.outlineContent : presentation.content, theme.palette),
                     },
-                ], variant: metrics.textVariant, children: label })] }));
+                ], variant: metrics.textVariant, children: label }), trailing === undefined ? null : (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", children: trailing }))] }));
 }
 export function Tag({ children, tone, accessibilityLabel, layoutStyle, ...props }) {
     assertNoRemovedStyleProps("Tag", props, ["style", "labelStyle"]);

@@ -332,7 +332,7 @@ export type SearchScreenProps<F = unknown> = Base & SearchInputSlot & SearchComm
     filtersRole?: SearchFiltersRole;
     /** Gutter the host (Container `gutter`, Sheet = `regular`) already applies around this screen; the scroll rail bleeds over it too. */
     hostGutter?: ContainerGutter;
-    /** `hidden` drops the visible label (the field keeps `queryLabel` as its accessible name and placeholder). */
+    /** Placeholder by default (2026-10-18 header-input rule); the accessible name remains queryLabel after typing. */
     queryLabelVisibility?: "visible" | "hidden";
     recentQueries?: SearchRecentQueries;
     suggestedQueries?: SearchSuggestedQueries;

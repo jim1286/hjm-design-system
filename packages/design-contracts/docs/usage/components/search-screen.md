@@ -67,7 +67,7 @@ import { SearchField } from "@hjmds/react-native/inputs";
   query={query}
   onQueryChange={setQuery}
   onSearch={runSearch}
-  queryField={<SearchField label={t("search.query")} clearLabel={t("common.clearSearch")}
+  queryField={<SearchField accessibilityLabel={t("search.query")} placeholder={t("search.query")} clearLabel={t("common.clearSearch")}
     busyLabel={t("common.searching")} value={query} onValueChange={setQuery} busy={isFetching} />}
 >
   <ProductResults items={results} />
@@ -139,7 +139,7 @@ import { SearchScreen } from "@hjmds/react-native/screen-flows";
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `query` | `string` | 필수 | 제어형 검색어 |
-| `queryLabel` | `string` | 필수 | 기본 입력의 label |
+| `queryLabel` | `string` | 필수 | 기본 검색 입력의 placeholder·접근성 이름. 입력값이 있어도 접근성 이름은 유지한다 |
 | `onQueryChange` | `(value: string) => void` | 필수 | 입력·지우기(`""`) |
 | `onSearch` | `(query: string, context: { signal: AbortSignal }) => void` | 필수 | `debounceMs` 뒤 호출. 값이 바뀌면 이전 타이머를 지우고 이전 신호를 abort한다 |
 | `queryClearLabel` | `string` | `queryField`가 없으면 필수 | 기본 입력의 지우기 버튼 이름. 비어 있으면 `TypeError` |
@@ -149,7 +149,7 @@ import { SearchScreen } from "@hjmds/react-native/screen-flows";
 | `filtersRole` | `narrow` · `scope` | `narrow` | 1.32.0, 미게시. 필터 줄(`filters`·`filterSheet.trigger`)이 결과에 하는 일. `narrow`는 결과를 좁히기만 해서 적용한 필터 없이 0건이면 검색어 탓이고 어떤 필터도 결과를 되살리지 못하므로 줄을 숨긴다. `scope`는 무엇을 찾을지 고르는 필터(장소명/주소, 지역, 지도 영역)라 적용한 필터가 없어도 바꾸면 결과가 생길 수 있으므로 0건에도 줄을 남긴다. 판정은 두 renderer가 공유하는 `resolveSearchFilterRailVisible`(`@hjmds/design-contracts/screen-patterns`) |
 | `onSubmit` | `(query: string) => void` | 없음 | 확정 신호. 모든 확정에서 키보드를 닫는다(Native `Keyboard.dismiss()`, Web은 고른 항목이면 결과 영역으로 포커스, 1.13.1 변경) — 아래 플랫폼 차이. 기본 입력의 Web Enter(`enterKeyHint="search"`, IME 조합 중 Enter는 무시)·Native 키보드 검색 키(`returnKeyType="search"`, `onSubmitEditing`)와 SearchScreen이 그린 확정 행·제안·최근·추천 검색어가 모두 여기로 온다. 앞뒤 공백을 지운 값이고 공백만이면 부르지 않는다. 고른 값이 입력과 다르면 먼저 `onQueryChange`. 대기 중인 `onSearch` debounce는 그대로 둔다. `queryField`를 주면 그 입력의 키는 연결하지 않는다 |
 | `committedQuery` | `string` | 없음 | 결과를 보여 줄 확정 검색어. 주면 두 단계 검색(`onSubmit` 필수, 타입). 단계: 검색어 공백 = 검색 전, 확정값과 다름 = 입력 중, 같음 = 결과(앞뒤 공백 무시). `children`은 결과 단계에만 그린다 |
-| `queryLabelVisibility` | `visible` · `hidden` | `visible` | `hidden`이면 보이는 label 없이 `queryLabel`을 접근성 이름(Web `aria-label`, Native `accessibilityLabel`)과 placeholder로 쓴다 |
+| `queryLabelVisibility` | `visible` · `hidden` | `hidden` | `hidden`이면 보이는 label 없이 `queryLabel`을 접근성 이름(Web `aria-label`, Native `accessibilityLabel`)과 placeholder로 쓴다 |
 | `searching` · `searchingLabel` | `boolean` · `string` | 없음 | 기본 입력의 진행 표시(Web `loading`, Native `busy`+`busyLabel`). 함께 주거나 함께 생략(타입). 켜져 있으면 `searchingLabel`을 낭독한다 |
 | `recentQueries` | `{ items, title, clearAllLabel, onClearAll(), removeLabel(query), onRemove(query), icon?, removeIcon?, maxVisible? }` | 없음 | 검색 전 본문 맨 위. 행 = 확정, 행 끝 × = `onRemove`, 제목 끝 = `onClearAll`. 기본 5행(`searchScreenRecipe.recentVisible`) |
 | `suggestedQueries` | `{ title, items: string[] }` | 없음 | 검색 전(최근 검색 아래)과 검색어 때문인 0건 아래 Chip 줄. 누르면 확정 |
@@ -216,7 +216,7 @@ import { SearchScreen } from "@hjmds/react-native/screen-flows";
 
 ## 함정
 
-- 기본값(`queryLabelVisibility="visible"`)은 label을 보이게 그려 고정 영역을 1배 약 22, 2배 약 40 더 쓴다(2026-10-06 실측). 검색만 하는 화면은 `hidden`을 쓴다.
+- 2026-10-18 사용자 결정: 기본값은 `queryLabelVisibility="hidden"`이다. 상단 검색·장소 입력의 안내는 placeholder로 두고 `queryLabel`은 접근성 이름으로 계속 유지한다. 선택의창에서 보이는 label 때문에 오른쪽 지도 아이콘이 입력칸보다 위로 보였던 것이 계기다. `titleVisibility="hidden"`이고 별도 `header`가 없으면 뒤로가기·입력·오른쪽 도구를 같은 행의 세로 중앙에 둔다. 보이는 제목이나 기존 navigator 헤더를 유지하는 경우에도 검색 입력의 기본 안내는 placeholder다. 일반 폼 필드의 label 정책은 바꾸지 않는다.
 - 1.12.1 이하 Native에서는 `searching`인 동안 SearchField `busy`가 입력을 무시해 그동안 친 글자가 사라졌다. 다음 릴리스부터 두 플랫폼 모두 입력을 받으므로 입력 중 제안 조회에도 켤 수 있다. 1.12.1 이하에 머무는 Native 제품은 확정 결과 요청에만 켠다.
 - Native 필터 시트는 닫힘 애니메이션이 끝난 뒤에 다시 열린다(Sheet 계약). 닫자마자 `open`을 켜도 바로 보이지 않을 수 있다.
 - Web `filters` 안에 `Stack wrap`을 넣어도 `scroll`에서는 한 줄이다(자식 폭을 `max-content`로 잡는다).

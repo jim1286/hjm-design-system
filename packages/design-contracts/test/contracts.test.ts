@@ -1658,7 +1658,7 @@ describe("expanded cross-platform component contracts", () => {
       "danger",
     ]);
     expect(JSON.stringify({ badgeRecipe, noticeRecipe })).not.toMatch(
-      /burntok|yajalal|baseball|kbo|ai|rare|popular/i,
+      /burntok|yajalal|baseball|kbo|\bai\b|rare|popular/i,
     );
   });
 

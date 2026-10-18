@@ -630,6 +630,7 @@ describe("Native canonical recipe bindings", () => {
       <Badge
         label="위험"
         leading={<View testID="badge-leading" />}
+        trailing={<View testID="badge-trailing" />}
         size="small"
         tone="danger"
       />,
@@ -640,9 +641,9 @@ describe("Native canonical recipe bindings", () => {
     const metrics = badgeRecipe.sizes.small;
     expect(flattenStyle(badge.props.style)).toMatchObject({
       backgroundColor: resolveColorReference(tone.background, lightValue.palette),
-      borderColor: resolveColorReference(tone.border!, lightValue.palette),
+      borderColor: "transparent",
       borderRadius: radius[badgeRecipe.radius],
-      borderWidth: badgeRecipe.borderWidth,
+      borderWidth: 0,
       gap: metrics.gap,
       minHeight: metrics.minHeight,
       paddingHorizontal: metrics.paddingHorizontal,
@@ -652,6 +653,8 @@ describe("Native canonical recipe bindings", () => {
       accessible: false,
       importantForAccessibility: "no-hide-descendants",
     });
+    const trailing = renderer.root.findByProps({ testID: "badge-trailing" }).parent;
+    expect(trailing?.props.accessible).toBe(false);
     const label = copy(renderer, "위험");
     expect(label.props).toMatchObject({
       accessible: false,

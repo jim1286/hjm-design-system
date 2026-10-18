@@ -4,10 +4,26 @@ import { searchScreenRecipe } from "@hjmds/design-contracts/screen-patterns";
 import { HjmNativeProvider } from "../src/provider.js";
 import { SearchScreen } from "../src/screen-flows.js";
 import { Text } from "../src/primitives.js";
+import { TextInput } from "react-native";
 
 let tree: ReactTestRenderer | undefined;
 beforeEach(() => { vi.useFakeTimers(); });
 afterEach(() => { act(() => tree?.unmount()); tree = undefined; vi.useRealTimers(); });
+
+it("keeps the search name accessible after the placeholder is replaced by a value", () => {
+  const onChange = vi.fn();
+  const view = (query: string) => <HjmNativeProvider reducedMotion><SearchScreen title="장소 검색" titleVisibility="hidden" queryLabel="장소명 또는 주소" queryClearLabel="지우기" query={query} onQueryChange={onChange} onSearch={() => {}}>{null}</SearchScreen></HjmNativeProvider>;
+  act(() => { tree = create(view("")); });
+  const field = tree!.root.findByType(TextInput);
+  expect(field.props.placeholder).toBe("장소명 또는 주소");
+  expect(field.props.accessibilityLabel).toBe("장소명 또는 주소");
+  act(() => field.props.onChangeText("서울역"));
+  expect(onChange).toHaveBeenCalledWith("서울역");
+  act(() => { tree!.update(view("서울역")); });
+  expect(tree!.root.findByType(TextInput).props.value).toBe("서울역");
+  expect(tree!.root.findByType(TextInput).props.accessibilityLabel).toBe("장소명 또는 주소");
+  expect(tree!.root.findAllByType(Text).some(node => node.props.children === "장소명 또는 주소")).toBe(false);
+});
 
 function screen(query: string, onSearch: (query: string, context: { signal: AbortSignal }) => void, debounceMs?: number) {
   return <HjmNativeProvider reducedMotion><SearchScreen title="검색" queryLabel="검색어" queryField={<Text>검색 입력 슬롯</Text>} query={query} onQueryChange={() => {}} onSearch={onSearch} {...(debounceMs === undefined ? {} : { debounceMs })}>{null}</SearchScreen></HjmNativeProvider>;

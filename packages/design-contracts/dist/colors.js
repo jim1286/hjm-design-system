@@ -18,6 +18,8 @@ const light = {
     contentBrand: "#075985",
     danger: "#b71919",
     onPrimary: "#ffffff",
+    neutralFill: "#4e5968",
+    strongFill: "#333d4b",
     dangerFill: "#b91c1c",
     onDanger: "#ffffff",
 };
@@ -38,6 +40,8 @@ const dark = {
     contentBrand: "#51bff6",
     danger: "#f87171",
     onPrimary: "#ffffff",
+    neutralFill: "#4e5968",
+    strongFill: "#333d4b",
     dangerFill: "#b91c1c",
     onDanger: "#ffffff",
 };

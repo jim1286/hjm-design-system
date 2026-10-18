@@ -6,7 +6,7 @@ export type CardHeadingLevel = 2 | 3 | 4;
 export declare const cardRecipe: {
     readonly slots: readonly ["root", "media", "body", "header", "leading", "title", "description", "content", "actions"];
     readonly defaults: {
-        readonly tone: "default";
+        readonly tone: "raised";
         readonly selected: false;
         readonly bordered: true;
         readonly headingLevel: 3;

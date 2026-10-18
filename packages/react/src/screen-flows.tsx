@@ -542,12 +542,12 @@ export type SearchScreenProps<F = unknown> = Base & SearchInputSlot & SearchComm
  filtersRole?:SearchFiltersRole;
  /** Gutter the host (Container `gutter`, Sheet = `regular`) already applies around this screen; the scroll rail bleeds over it too. */
  hostGutter?:ContainerGutter;
- /** `hidden` drops the visible label (the field keeps `queryLabel` as its accessible name and placeholder). */
+ /** Placeholder by default (2026-10-18 header-input rule); the accessible name remains queryLabel after typing. */
  queryLabelVisibility?:"visible"|"hidden";
  recentQueries?:SearchRecentQueries;suggestedQueries?:SearchSuggestedQueries;suggestions?:SearchSuggestions;
  resultSummary?:SearchResultSummary;appliedFilters?:SearchAppliedFilters;filterSheet?:SearchFilterSheet<F>};
 /** Abort is supplied to the host request; the host must ignore aborted responses before committing results. */
-export function SearchScreen<F = unknown>({query,queryLabel,queryField,queryClearLabel,onQueryChange,onSearch,debounceMs,filters,recentSearches,children,onSubmit,committedQuery,filtersOverflow="wrap",filtersRole="narrow",hostGutter="none",queryLabelVisibility="visible",searching,searchingLabel,recentQueries,suggestedQueries,suggestions,resultSummary,appliedFilters,filterSheet,initialFocus=initialFocusDefaults.search,...screen}:SearchScreenProps<F>){
+export function SearchScreen<F = unknown>({query,queryLabel,queryField,queryClearLabel,onQueryChange,onSearch,debounceMs,filters,recentSearches,children,onSubmit,committedQuery,filtersOverflow="wrap",filtersRole="narrow",hostGutter="none",queryLabelVisibility="hidden",searching,searchingLabel,recentQueries,suggestedQueries,suggestions,resultSummary,appliedFilters,filterSheet,initialFocus=initialFocusDefaults.search,...screen}:SearchScreenProps<F>){
  // The host owns localized copy. A custom queryField owns its own clear affordance.
  if (queryField == null && !queryClearLabel?.trim()) throw new TypeError("SearchScreen requires a localized queryClearLabel for its default search field");
  const searchDelay=resolveSearchDebounceMs(debounceMs);
@@ -693,7 +693,7 @@ export function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyl
  {(timeInActions&&time)||canReply||item.reactionSummary?<Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap:"wrap"}}>{timeInActions?time:null}{item.reactionSummary}{canReply?<CommentTextAction label={replyLabel} disabled={item.replyDisabled??false} onPress={()=>onReply(item.id)}/>:null}</Stack>:null}
  {/* The text column already spaces lines by lineGap; the panel adds the rest of panelGap. */}
  {item.panel!=null?<div className="hjm-comment-row__panel" style={{marginBlockStart:commentThreadRecipe.panelGap-commentThreadRecipe.lineGap}}>{item.panel}</div>:null}</div>
- <div className="hjm-comment-row__like" {...(menuItems.length||item.actions==null&&item.likeAction===undefined?{"data-edge":"end"}:{})} style={{"--hjm-comment-anchor-line":`var(--hjm-type-${item.bodyText!==undefined?commentThreadRecipe.actionAnchor.inlineTextVariant:commentThreadRecipe.actionAnchor.authorTextVariant}-line-height)`} as CSSProperties}><Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexShrink:0}}>{item.likeAction!==undefined?item.likeAction:<IconButton label={item.likeLabel} tone="ghost" onClick={()=>onLike(item.id)}>{item.likeIcon}</IconButton>}{item.actions}{commentMenu&&menuItems.length?<CommentMenuButton item={item} menu={commentMenu} items={menuItems}/>:null}</Stack>{item.likeCountLabel?<div className="hjm-comment-row__like-count" style={{inlineSize:commentThreadRecipe.likeColumnWidth}}><Text variant="caption" tone="muted">{item.likeCountLabel}</Text></div>:null}</div></Stack>;
+ <div className="hjm-comment-row__like" {...(menuItems.length||item.actions==null&&item.likeAction===undefined?{"data-edge":"end"}:{})} style={{"--hjm-comment-anchor-line":`var(--hjm-type-${item.bodyText!==undefined?commentThreadRecipe.actionAnchor.inlineTextVariant:commentThreadRecipe.actionAnchor.authorTextVariant}-line-height)`} as CSSProperties}><Stack axis="inline" style={{gap:0}} align="center" layoutStyle={{flexShrink:0}}>{item.likeAction!==undefined?item.likeAction:<IconButton label={item.likeLabel} tone="ghost" onClick={()=>onLike(item.id)}>{item.likeIcon}</IconButton>}{item.actions}{commentMenu&&menuItems.length?<CommentMenuButton item={item} menu={commentMenu} items={menuItems}/>:null}</Stack>{item.likeCountLabel?<div className="hjm-comment-row__like-count" style={{inlineSize:commentThreadRecipe.likeColumnWidth}}><Text variant="caption" tone="muted">{item.likeCountLabel}</Text></div>:null}</div></Stack>;
 }
 
 /** Controlled thread: server ordering, permission checks and receipt-based draft clearing belong to the product. */

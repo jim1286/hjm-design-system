@@ -1,7 +1,6 @@
 import { spacing } from "./foundations.js";
 import {
   buttonRecipe,
-  surfaceDefaults,
   type SurfacePadding,
   type SurfaceTone,
 } from "./base-recipes.js";
@@ -25,7 +24,9 @@ export const cardRecipe = {
     "actions",
   ] as const,
   defaults: {
-    tone: surfaceDefaults.tone,
+    // Today Baseball's schedule cards establish the shared raised card treatment.
+    // Keep plain Surface defaults independent so layout containers stay flat.
+    tone: "raised",
     selected: false,
     bordered: true,
     headingLevel: 3,

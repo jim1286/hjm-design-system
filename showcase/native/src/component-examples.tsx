@@ -641,7 +641,7 @@ return (<StoryFrame><Section title={copy.title} description={copy.description}><
 // Data-display examples read the same shared spec as Web (2026-10-17 review N1): English placeholders, other counts and
 // debug lines ("Selected row: None", "Cancelled: No") made the two renderers incomparable.
 function BadgeExample({ variant }: { variant: PreviewVariant }) {
-return (<StoryFrame><Stack axis="inline" gap="sm">{badgeExample.map(item => <Badge key={item.label} label={item.label} {...("tone" in item ? { tone: item.tone } : {})} />)}</Stack></StoryFrame>);
+return (<StoryFrame><Stack axis="inline" gap="sm" wrap>{badgeExample.map(item => <Badge key={item.label} label={item.label} {...("tone" in item ? { tone: item.tone } : {})} />)}<Badge tone="success" label="왼쪽 아이콘" leading={<Icon descriptor={{ name: "check", tone: "inverse", size: "xs" }} renderGlyph={semanticGlyph} />} /><Badge label="오른쪽 아이콘" trailing={<Icon descriptor={{ name: "check", tone: "inverse", size: "xs" }} renderGlyph={semanticGlyph} />} /><Badge tone="brand" label="양쪽 아이콘" leading={<Icon descriptor={{ name: "check", tone: "inverse", size: "xs" }} renderGlyph={semanticGlyph} />} trailing={<Icon descriptor={{ name: "check", tone: "inverse", size: "xs" }} renderGlyph={semanticGlyph} />} /></Stack></StoryFrame>);
 }
 
 function AvatarExample({ variant }: { variant: PreviewVariant }) {

@@ -2088,14 +2088,15 @@ export function Menu<
               borderRadius: theme.tokens.radius.lg,
               gap: spacing.sm,
               maxHeight: "75%",
-              maxWidth: 520,
+              maxWidth: menuRecipe.maxWidth,
               padding: spacing.md,
               width: "100%",
             }}
           >
             {/* Empty titles intentionally hide the heading; rendering an empty Text still reserves a line box. */}
-            {title.trim() ? <Text tone="primary" variant="title">{title}</Text> : null}
-            <ScrollView>
+            {title.trim() ? <Text tone="muted" variant="label" align="center">{title}</Text> : null}
+            {/* A short action list must size to its content; ScrollView's default growth left empty modal space. */}
+            <ScrollView style={{ flexGrow: 0 }}>
               {asyncState.status === "loading" || asyncState.status === "error" || asyncState.status === "empty" ? (
                 <View style={{ gap: spacing.sm, minHeight: densityContract.minHeight }}>
                   {asyncState.status === "loading" ? <Spinner label={asyncState.message} /> : (
@@ -2114,7 +2115,9 @@ export function Menu<
               ) : collection}
               {asyncState.status === "loadingMore" ? <Spinner label={asyncState.message} /> : null}
             </ScrollView>
-            <Button onPress={() => close("programmatic")} tone="secondary">{dismissLabel}</Button>
+            <View style={{ paddingTop: spacing.xs }}>
+              <Button onPress={() => close("programmatic")} tone="ghost">{dismissLabel}</Button>
+            </View>
           </View>
         </View>
       </Modal>

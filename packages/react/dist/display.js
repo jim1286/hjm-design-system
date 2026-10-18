@@ -7,8 +7,8 @@ import { createElement, forwardRef, } from "react";
 import { classNames } from "./internal.js";
 import { useHjmDensityDefault } from "./provider.js";
 import { Surface, Text } from "./layout.js";
-export const Badge = forwardRef(function Badge({ tone = badgeRecipe.defaults.tone, size = badgeRecipe.defaults.size, variant = badgeRecipe.defaults.variant, leading, className, children, layoutStyle, style, ...props }, ref) {
-    return (_jsxs("span", { ...props, style: { ...style, ...layoutStyle }, ref: ref, className: classNames("hjm-badge", className), "data-tone": tone, "data-size": size, "data-variant": variant, children: [leading === undefined ? null : (_jsx("span", { "aria-hidden": "true", className: "hjm-badge__icon", children: leading })), _jsx("span", { className: "hjm-badge__label", children: children })] }));
+export const Badge = forwardRef(function Badge({ tone = badgeRecipe.defaults.tone, size = badgeRecipe.defaults.size, variant = badgeRecipe.defaults.variant, leading, trailing, className, children, layoutStyle, style, ...props }, ref) {
+    return (_jsxs("span", { ...props, style: { ...style, ...layoutStyle }, ref: ref, className: classNames("hjm-badge", className), "data-tone": tone, "data-size": size, "data-variant": variant, children: [leading === undefined ? null : (_jsx("span", { "aria-hidden": "true", className: "hjm-badge__icon", children: leading })), _jsx("span", { className: "hjm-badge__label", children: children }), trailing === undefined ? null : (_jsx("span", { "aria-hidden": "true", className: "hjm-badge__icon", children: trailing }))] }));
 });
 export const Tag = forwardRef(function Tag({ children, tone, className, layoutStyle, style, ...props }, ref) {
     const descriptor = resolveTagDescriptor({

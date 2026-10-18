@@ -89,3 +89,7 @@ Ant의 원시 색상이나 낮은 테두리 대비까지 복제하지 않고, HJ
 버튼의 배경색은 소비 화면에서 직접 지정하지 않고 `ButtonTone`의 `primary | secondary | ghost | danger | link`로 선택한다.
 웹과 네이티브는 같은 `buttonRecipe`의 배경·글자·테두리 역할을 해석한다. Create draft는 `primary`를 유지하므로
 일반 표면의 canvas 전환과 독립적으로 기존 브랜드 채움색을 보존한다.
+
+## 단색 배지 판 (2026-10-18)
+
+사용자가 제시한 오늘야구 경기 상태 배지의 단색 판과 흰 글자를 양 테마에서 유지하도록 `neutralFill`(#4e5968)·`strongFill`(#333d4b)을 추가했다. 기존 textMuted/text는 다크 모드에서 밝아지므로 판에 재사용하지 않는다. 상태색은 기존 `accentFill`과 `dangerFill`, 브랜드는 primary를 사용한다. 일반 본문과 Tag의 색 계약은 유지한다.

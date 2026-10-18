@@ -3,6 +3,19 @@ import { expect, it } from "vitest";
 import { HjmProvider } from "../src/provider.js";
 import { SearchScreen } from "../src/screen-flows.js";
 
+it("keeps the search name accessible after the placeholder is replaced by a value", () => {
+  const render = (query: string) => renderToStaticMarkup(<HjmProvider><SearchScreen title="장소 검색" titleVisibility="hidden" queryLabel="장소명 또는 주소" queryClearLabel="지우기" query={query} onQueryChange={() => {}} onSearch={() => {}} exit={{ kind: "back", label: "뒤로", onClick: () => {} }} actions={<button aria-label="지도 보기" />}>{null}</SearchScreen></HjmProvider>);
+  for (const query of ["", "서울역"]) {
+    const html = render(query);
+    expect(html).toContain('placeholder="장소명 또는 주소"');
+    expect(html).toContain('aria-label="장소명 또는 주소"');
+    expect(html).toContain(`value="${query}"`);
+    expect(html).not.toMatch(/<label[^>]*>장소명 또는 주소/);
+    expect(html).toContain('aria-label="뒤로"');
+    expect(html).toContain('aria-label="지도 보기"');
+  }
+});
+
 it("hides only the visual count and retains announcements and body states", () => {
   const render = (count: number | null, hidden = true) => renderToStaticMarkup(<HjmProvider><SearchScreen title="검색" queryLabel="검색어" queryClearLabel="지우기" query="구" committedQuery="구" onSubmit={() => {}} onQueryChange={() => {}} onSearch={() => {}} resultSummary={{ count, countVisibility: hidden ? "hidden" : "visible", countLabel: n => `total:${n}`, loadingLabel: "검색 로딩", empty: { title: "결과 없음" } }}><span>선수 결과</span></SearchScreen></HjmProvider>);
   // The hidden status announces the total; only the visible text disappears.

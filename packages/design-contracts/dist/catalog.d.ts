@@ -2096,7 +2096,7 @@ export declare const recipeRegistry: {
         readonly initialsWeight: "strong";
     };
     readonly badgeRecipe: {
-        readonly slots: readonly ["root", "icon", "label"];
+        readonly slots: readonly ["root", "icon", "label", "trailing"];
         readonly defaults: {
             readonly tone: "neutral";
             readonly size: "medium";
@@ -2120,7 +2120,7 @@ export declare const recipeRegistry: {
             readonly neutral: {
                 readonly content: Readonly<{
                     source: "theme";
-                    key: "textMuted";
+                    key: "onPrimary";
                     alpha?: number;
                 }>;
                 readonly outlineContent: Readonly<{
@@ -2130,14 +2130,10 @@ export declare const recipeRegistry: {
                 }>;
                 readonly background: Readonly<{
                     source: "theme";
-                    key: "bg";
+                    key: "neutralFill";
                     alpha?: number;
                 }>;
-                readonly border: Readonly<{
-                    source: "theme";
-                    key: "border";
-                    alpha?: number;
-                }>;
+                readonly border: null;
             };
             readonly strong: {
                 readonly content: Readonly<{
@@ -2152,7 +2148,7 @@ export declare const recipeRegistry: {
                 }>;
                 readonly background: Readonly<{
                     source: "theme";
-                    key: "text";
+                    key: "strongFill";
                     alpha?: number;
                 }>;
                 readonly border: null;
@@ -2160,7 +2156,7 @@ export declare const recipeRegistry: {
             readonly brand: {
                 readonly content: Readonly<{
                     source: "theme";
-                    key: "contentBrand";
+                    key: "onPrimary";
                     alpha?: number;
                 }>;
                 readonly outlineContent: Readonly<{
@@ -2170,19 +2166,15 @@ export declare const recipeRegistry: {
                 }>;
                 readonly background: Readonly<{
                     source: "theme";
-                    key: "bg";
+                    key: "primary";
                     alpha?: number;
                 }>;
-                readonly border: Readonly<{
-                    source: "theme";
-                    key: "border";
-                    alpha?: number;
-                }>;
+                readonly border: null;
             };
             readonly info: {
                 readonly content: Readonly<{
-                    source: "accent";
-                    key: "info";
+                    source: "theme";
+                    key: "onPrimary";
                     alpha?: number;
                 }>;
                 readonly outlineContent: Readonly<{
@@ -2191,8 +2183,8 @@ export declare const recipeRegistry: {
                     alpha?: number;
                 }>;
                 readonly background: Readonly<{
-                    source: "theme";
-                    key: "bg";
+                    source: "accentFill";
+                    key: "info";
                     alpha?: number;
                 }>;
                 readonly border: Readonly<{
@@ -2203,8 +2195,8 @@ export declare const recipeRegistry: {
             };
             readonly success: {
                 readonly content: Readonly<{
-                    source: "accent";
-                    key: "success";
+                    source: "theme";
+                    key: "onPrimary";
                     alpha?: number;
                 }>;
                 readonly outlineContent: Readonly<{
@@ -2213,7 +2205,7 @@ export declare const recipeRegistry: {
                     alpha?: number;
                 }>;
                 readonly background: Readonly<{
-                    source: "accent";
+                    source: "accentFill";
                     key: "success";
                     alpha?: number;
                 }>;
@@ -2225,8 +2217,8 @@ export declare const recipeRegistry: {
             };
             readonly warning: {
                 readonly content: Readonly<{
-                    source: "accent";
-                    key: "warning";
+                    source: "theme";
+                    key: "onPrimary";
                     alpha?: number;
                 }>;
                 readonly outlineContent: Readonly<{
@@ -2235,7 +2227,7 @@ export declare const recipeRegistry: {
                     alpha?: number;
                 }>;
                 readonly background: Readonly<{
-                    source: "accent";
+                    source: "accentFill";
                     key: "warning";
                     alpha?: number;
                 }>;
@@ -2247,8 +2239,8 @@ export declare const recipeRegistry: {
             };
             readonly attention: {
                 readonly content: Readonly<{
-                    source: "accent";
-                    key: "attention";
+                    source: "theme";
+                    key: "onPrimary";
                     alpha?: number;
                 }>;
                 readonly outlineContent: Readonly<{
@@ -2257,7 +2249,7 @@ export declare const recipeRegistry: {
                     alpha?: number;
                 }>;
                 readonly background: Readonly<{
-                    source: "accent";
+                    source: "accentFill";
                     key: "attention";
                     alpha?: number;
                 }>;
@@ -2270,7 +2262,7 @@ export declare const recipeRegistry: {
             readonly danger: {
                 readonly content: Readonly<{
                     source: "theme";
-                    key: "danger";
+                    key: "onDanger";
                     alpha?: number;
                 }>;
                 readonly outlineContent: Readonly<{
@@ -2280,7 +2272,7 @@ export declare const recipeRegistry: {
                 }>;
                 readonly background: Readonly<{
                     source: "theme";
-                    key: "danger";
+                    key: "dangerFill";
                     alpha?: number;
                 }>;
                 readonly border: Readonly<{
@@ -2293,7 +2285,7 @@ export declare const recipeRegistry: {
         readonly sizes: {
             readonly small: {
                 readonly minHeight: 20;
-                readonly paddingHorizontal: 4;
+                readonly paddingHorizontal: 8;
                 readonly gap: 4;
                 readonly textVariant: "caption";
             };
@@ -2304,9 +2296,9 @@ export declare const recipeRegistry: {
                 readonly textVariant: "caption";
             };
         };
-        readonly radius: "full";
+        readonly radius: "sm";
         readonly borderWidth: 1;
-        readonly fontWeight: "500";
+        readonly fontWeight: "700";
     };
     readonly bottomNavigationRecipe: {
         readonly slots: readonly ["root", "surface", "list", "item", "indicator", "icon", "label", "badge"];
@@ -3617,7 +3609,7 @@ export declare const recipeRegistry: {
     readonly cardRecipe: {
         readonly slots: readonly ["root", "media", "body", "header", "leading", "title", "description", "content", "actions"];
         readonly defaults: {
-            readonly tone: "default";
+            readonly tone: "raised";
             readonly selected: false;
             readonly bordered: true;
             readonly headingLevel: 3;

@@ -26,7 +26,7 @@ export type ScreenLayoutProps = Readonly<{
      * named by `title` (2026-10-18: yajalal team detail and Utilverse tool headers rebuilt the header to get this).
      */
     titleLeading?: ReactNode;
-    /** Hide redundant route names while retaining a named screen. */
+    /** Hide duplicate route names; retain titles that identify a subject or a task. */
     titleVisibility?: "visible" | "hidden";
     /** Centered by default (2026-10-17 user rule); `start` remains available. Extra actions sit at the trailing edge. */
     headerAlignment?: "start" | "center";

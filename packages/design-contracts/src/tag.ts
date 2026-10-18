@@ -61,7 +61,7 @@ export function resolveTagDescriptor(
 }
 
 /**
- * Rectangular, not the pill `radius.full` that `chipRecipe` and `badgeRecipe`
+ * Rectangular, not the pill `radius.full` that `chipRecipe`
  * use, so a static Tag never reads as a pressable Chip or a status Badge at a
  * glance. No `states` and no `focus` contract: nothing here is ever pressed
  * or focused.

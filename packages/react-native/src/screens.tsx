@@ -45,7 +45,7 @@ export type ScreenLayoutProps = Readonly<{
    * named by `title` (2026-10-18: yajalal team detail and Utilverse tool headers rebuilt the header to get this).
    */
   titleLeading?: ReactNode;
-  /** Hide redundant route names while retaining a named screen. */
+  /** Hide duplicate route names; retain titles that identify a subject or a task. */
   titleVisibility?: "visible" | "hidden";
   /** Centered by default (2026-10-17 user rule); `start` remains available. Extra actions sit at the trailing edge. */
   headerAlignment?: "start" | "center";
@@ -171,7 +171,7 @@ export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility 
   // alone it becomes the header, named by `title`.
   const mark = hasMark ? <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ flexShrink: 0, alignItems: "center", justifyContent: "center" }}>{titleLeading}</View> : null;
   const standaloneMark = (centered: boolean) => mark ? <View accessible accessibilityRole="header" accessibilityLabel={title} style={{ alignItems: centered ? "center" : "flex-start" }}>{mark}</View> : null;
-  return <View ref={rootRef} testID={testID} onTouchStart={focusScope.onTouchStart} style={[{ flex: 1, minHeight: 0, width: "100%", maxWidth: profileLayout?.maxWidth ?? recipe.maxWidth, alignSelf: "center", backgroundColor: surface === "transparent" || designProfile?.material.canvas ? "transparent" : colors.bg, ...(keyboardOverlap > 0 ? { paddingBottom: keyboardOverlap } : {}) }, layoutStyle]}>
+  return <View ref={rootRef} testID={testID} accessibilityLabel={titleVisibility === "hidden" || header ? title : undefined} onTouchStart={focusScope.onTouchStart} style={[{ flex: 1, minHeight: 0, width: "100%", maxWidth: profileLayout?.maxWidth ?? recipe.maxWidth, alignSelf: "center", backgroundColor: surface === "transparent" || designProfile?.material.canvas ? "transparent" : colors.bg, ...(keyboardOverlap > 0 ? { paddingBottom: keyboardOverlap } : {}) }, layoutStyle]}>
     <KeyboardAvoidanceContext.Provider value={insideAvoidance || avoidKeyboard}><InitialFocusProvider scope={focusScope}>
     {/* Not TopBar: this is the page heading (titleLarge, actions wrap under the title at
         large text), while TopBar is a fixed-height app bar with a single-line title and safe-area top.

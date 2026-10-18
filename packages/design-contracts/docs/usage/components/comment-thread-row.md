@@ -84,6 +84,9 @@ import { CommentThreadRow } from "@hjmds/react-native/screen-flows";
 | 고정·스크롤 | 행은 스크롤하지 않는다. 목록 스크롤·행 간격(`rowGap` 12)·답글 들여쓰기(`replyIndent` 40)는 host가 준다 | `CommentThreadScreen` |
 | 좁은 폭·큰 글자 | 본문 열이 `min-width: 0`으로 줄며 줄바꿈되고 작성자·행동 줄은 `flexWrap`. 좋아요 열은 줄지 않는다 | `.hjm-comment-row__text`, `flexShrink: 0` |
 
+좋아요·더보기 버튼 사이의 추가 간격은 0이다. 각 IconButton의 터치 영역은 유지한다.
+2026-10-18 Spint 화면에서 두 아이콘이 멀리 떨어져 보인다는 사용자 피드백으로, 버튼 내부 여백에 더해지던 `xxs` 간격을 제거했다. 미게시 변경이다.
+
 ## 꼭 지킬 것
 
 - 가상화 host에서 행 사이 간격(`commentThreadRecipe.rowGap`)과 답글 들여쓰기(`replyIndent`)를 직접 줄 때도 recipe 값을 쓴다. 제품 숫자로 다시 정하지 않는다.

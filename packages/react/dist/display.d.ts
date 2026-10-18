@@ -12,6 +12,7 @@ export type BadgeProps = HTMLAttributes<HTMLSpanElement> & Readonly<{
     size?: BadgeSize;
     variant?: BadgeVariant;
     leading?: ReactNode;
+    trailing?: ReactNode;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -20,6 +21,7 @@ export declare const Badge: import("react").ForwardRefExoticComponent<HTMLAttrib
     size?: BadgeSize;
     variant?: BadgeVariant;
     leading?: ReactNode;
+    trailing?: ReactNode;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLSpanElement>>;

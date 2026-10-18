@@ -17,11 +17,12 @@ export type BadgeProps = Omit<ViewProps, "accessibilityLabel" | "accessible" | "
     size?: BadgeSize;
     variant?: BadgeVariant;
     leading?: ReactNode;
+    trailing?: ReactNode;
     accessibilityLabel?: string;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function Badge({ label, tone, size, variant, leading, accessibilityLabel, layoutStyle, ...props }: BadgeProps): import("react").JSX.Element;
+export declare function Badge({ label, tone, size, variant, leading, trailing, accessibilityLabel, layoutStyle, ...props }: BadgeProps): import("react").JSX.Element;
 export type TagTone = ContractTagTone;
 export type TagProps = Omit<ViewProps, "accessibilityLabel" | "accessible" | "children" | "style"> & Readonly<{
     children: string;
