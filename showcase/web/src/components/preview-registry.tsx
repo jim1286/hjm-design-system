@@ -325,6 +325,8 @@ type RendererMetricProperty =
   | "minHeight"
   | "minWidth"
   | "maxWidth"
+  | "paddingBlockStart"
+  | "paddingBlockEnd"
   | "paddingBlock"
   | "paddingInline"
   | "paddingInlineEnd"
@@ -587,6 +589,9 @@ function resolveMetricProperty(path: string): RendererMetricProperty {
   if (/insetStart$/i.test(path)) return "paddingInlineStart";
   if (/insetEnd$/i.test(path)) return "paddingInlineEnd";
   if (/paddingHorizontal$/i.test(path)) return "paddingInline";
+  // Date separators own independent top/bottom padding, which must be recorded without shifting the preview wrapper.
+  if (/paddingTop$/i.test(path)) return "paddingBlockStart";
+  if (/paddingBottom$/i.test(path)) return "paddingBlockEnd";
   if (/paddingVertical$/i.test(path)) return "paddingBlock";
   if (/(?:gap|gaps\.[^.]+)$/i.test(path)) return "gap";
   if (/(?:radius|radii\.[^.]+)$/i.test(path)) return "borderRadius";
@@ -638,7 +643,7 @@ function resolveRecipePresentation(
       // 비율은 1 미만일 수 있다(portrait = 0.75). 길이 하한만 그대로 둔다.
       (/ratios\.[^.]+$/i.test(leaf.path) ? leaf.value > 0 : leaf.value >= 1) &&
       leaf.value <= (/(?:min|max)?width/i.test(leaf.path) ? 1280 : 160) &&
-      /(?:minHeight|height|diameter|paddingHorizontal|paddingVertical|gap|size|thickness|width|insetStart|insetEnd|(?:gaps|sizes|radii|maxWidths|gutters|ratios)\.[^.]+)$/i.test(leaf.path),
+      /(?:minHeight|height|diameter|paddingHorizontal|paddingVertical|paddingTop|paddingBottom|gap|size|thickness|width|insetStart|insetEnd|(?:gaps|sizes|radii|maxWidths|gutters|ratios)\.[^.]+)$/i.test(leaf.path),
   );
   const metric = metricCandidates.find(({ path }) =>
     path.split(".").some((segment) => defaultSelections.has(segment)),
@@ -675,7 +680,7 @@ function resolveRecipePresentation(
     // Inset/padding metrics stay evidence-only (--hjm-evidence-metric): applied to the wrapper they shifted the real
     // renderer, e.g. List's indented-separator inset (52) pushed every row 52px inward (2026-10-17 review E5).
     if (metricProperty === "aspectRatio") style.aspectRatio = appliedMetric;
-    else if (metricProperty === "paddingInlineStart" || metricProperty === "paddingInlineEnd" || metricProperty === "paddingInline" || metricProperty === "paddingBlock") { /* evidence-only */ }
+    else if (metricProperty === "paddingInlineStart" || metricProperty === "paddingInlineEnd" || metricProperty === "paddingInline" || metricProperty === "paddingBlock" || metricProperty === "paddingBlockStart" || metricProperty === "paddingBlockEnd") { /* evidence-only */ }
     else if (metricProperty === "gap") style.gap = appliedMetric;
     else if (metricProperty === "borderWidth") style.borderWidth = appliedMetric;
     else if (metricProperty === "borderRadius") style.borderRadius = appliedMetric;
