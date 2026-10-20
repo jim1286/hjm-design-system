@@ -1,6 +1,6 @@
 # 브랜드 경계 — 제품이 바꿀 수 있는 것과 그 경로
 
-상태: 규범 · 검토일: 2026-10-13 · 이 문서가 브랜드·테마 주입 규칙의 단일 원본이다.
+상태: 규범 · 검토일: 2026-10-20 · 이 문서가 브랜드·테마 주입 규칙의 단일 원본이다.
 [theming.md](./theming.md)는 사용법 예시, [consumer-policy.md](./consumer-policy.md)는 채택 정책,
 [design-system-provider.md](./design-system-provider.md)는 환경 축 설계를 다루며 브랜드 규칙은 여기로 링크한다.
 
@@ -12,7 +12,7 @@ CSS 변수 재정의, 제품 자체 토큰 생성기)였고, 문서 세 개가 �
 ## 1. 지원하는 제품 설정 경로
 
 - 색만 바꾸는 제품 브랜드는 Provider의 `brandPalette` prop으로 넣는다(`<HjmProvider brandPalette={…}>`,
-  `<HjmNativeProvider brandPalette={…}>`, 1.5.0). theme별로 17개 `ThemeColors` key 중 필요한 것만 넘기고,
+  `<HjmNativeProvider brandPalette={…}>`, 1.5.0). theme별로 20개 `ThemeColors` key 중 필요한 것만 넘기고,
   나머지는 선택된 프로필 또는 HJM 기본값을 쓴다(부분 병합). Provider는 계속 OS theme·글자 크기·모션 설정을 따르고,
   중첩 Provider는 가장 가까운 상위의 `brandPalette`를 물려받는다.
 - 상태 강조색(`statusAccents`·`statusAccentFills`)은 덮을 수 없다. "오류·성공"과 "브랜드"가 같은 색이 되는
@@ -22,13 +22,15 @@ CSS 변수 재정의, 제품 자체 토큰 생성기)였고, 문서 세 개가 �
   motion을 직접 구독해야 했다. 이 우회를 쓰는 제품은 prop으로 옮긴다.
 - **전체 `value`를 손으로 조립하는 것**(resolver 결과의 `palette.theme`을 통째로 바꾸는 것 포함)은 테스트·임베딩용이지
   브랜드 경로가 아니다. 부분 병합으로 표현할 수 없는 요구는 계약 공백이므로 이슈로 올린다.
-  17개 key를 모두 채운 `brandPalette`는 허용되지만 아래 대비 검사를 반드시 통과해야 한다.
+  20개 key를 모두 채운 `brandPalette`는 허용되지만 아래 대비 검사를 반드시 통과해야 한다.
 
 2026-10-07 사용자 요청으로 색뿐 아니라 질감·컴포넌트 기본 전환·구성·화면 배치를 한 번 선택하는
 [디자인 프로필](./design-profile.md)을 제공한다. 제공 버전과 지원 축은 해당 계약을 따른다. `defineHjmDesignProfile`로 정규화한
 앱 소유 데이터를 Provider의 `designProfile`로 주입한다. CSS/전체 value 우회나 테마별 상태 엔진 복제는
 허용하지 않는다. `brandPalette`는 프로필의 해당 light/dark 팔레트 위에 병합된다. 글꼴 자산·로고·문구·데이터는
 제품 소유이며 현재 연결 범위와 미지원 표현은 프로필 계약에 명시한다.
+
+안전 영역 등 환경을 연결하는 `value={resolvedValue}` 중첩 Provider도 현재 모드의 해석된 브랜드 팔레트를 하위 Provider에 전달한다. 명시적으로 새 `brandPalette`를 지정하면 기존처럼 그 범위를 대체한다. 이 구분은 환경 bridge 뒤의 일반 Provider가 브랜드색을 기본값으로 되돌리던 문제를 막는다.
 
 ## 2. 모든 브랜드 팔레트는 대비 검사를 통과해야 한다
 
@@ -44,6 +46,7 @@ theme별 병합 결과를 검사하고, theme별 기준 미달 쌍을 돌려준�
 | `text`·`textBody`·`textMuted`·`textSub` on `bg`·`surface` | 4.5 | WCAG 1.4.3 본문. `textSub`는 `Text tone="subtle"`의 실제 글자색이다 |
 | `contentBrand`·`danger` on `bg`·`surface` | 4.5 | 링크·현재 위치·오류 문구는 글자로 읽힌다 |
 | `onPrimary` on `primary`, `onDanger` on `dangerFill` | 4.5 | 채운 버튼의 라벨 |
+| `onStatusFill` on `neutralFill`·`strongFill`·고정 `accentFill.<tone>` | 4.5 | 채운 Badge의 실제 라벨·바탕 쌍 |
 | `primary`·`borderControl` vs `bg`·`surface` | 3 | WCAG 1.4.11. 채운 컨트롤과 쉬고 있는 컨트롤 윤곽선은 형태로 식별돼야 한다 |
 | `textWeak` vs `bg` | 3 | 아래 참조 |
 

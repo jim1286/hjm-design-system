@@ -1,4 +1,5 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
+import { contrastRatio } from "@hjmds/design-contracts/palette-contrast";
 import { expect, it, vi } from "vitest";
 vi.mock("react-native-svg", async () => {
   const { View } = await import("react-native");
@@ -97,5 +98,17 @@ it.each(["none", "dotted"] as const)("marks missing periods with disconnected do
     // Missing seasons remain absent from focus navigation even when dotted drops are visible.
     act(() => adjustable(tree).props.onAccessibilityAction({ nativeEvent: { actionName: "decrement" } }));
     expect(adjustable(tree).props.accessibilityValue.text).toBe("2022 2");
+  } finally { act(() => tree.unmount()); }
+});
+
+it.each(["light", "dark"] as const)("keeps pie labels legible over custom series and inherits the product font (%s)", theme => {
+  let tree!: ReactTestRenderer;
+  act(() => { tree = create(<HjmNativeProvider theme={theme} fonts="pretendard"><PieChart donut={false} showLegend={false}
+    data={[{ id: "a", label: "A", value: 1, color: "#ffffff" }]} accessibilityLabel="비율" formatValue={String} /></HjmNativeProvider>); });
+  try {
+    const label = tree.root.find(n => typeof n.type === "string" && n.props.children === "100%");
+    expect(label.props.fontFamily).toContain("Pretendard");
+    const plate = tree.root.find(n => typeof n.type === "string" && n.props.rx !== undefined && n.props.fill && n.props.width);
+    expect(contrastRatio(label.props.fill, plate.props.fill)).toBeGreaterThanOrEqual(4.5);
   } finally { act(() => tree.unmount()); }
 });

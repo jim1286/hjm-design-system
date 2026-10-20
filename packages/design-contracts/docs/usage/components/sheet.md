@@ -81,7 +81,7 @@ import { Sheet } from "@hjmds/react-native/overlays";
 | --- | --- | --- | --- |
 | `initialFocus` | `single-input` · `first-input` · `none` | 하단: 자동 포커스 없음 / 측면: `single-input` | 1.33.0 정책 변경. 하단 시트는 이 prop·`initialFocusRef`·중첩 화면·`initialFocusTarget`으로 입력 자동 포커스를 켤 수 없다. Web은 모달 컨테이너로 초점을 옮겨 focus trap을 유지하고 Native는 키보드를 열지 않는다. 측면 시트는 기존 Dialog 계약을 따른다. 사용자가 직접 입력칸을 누르는 동작은 유지한다 |
 | `placement` | `bottom` · `start` · `end` | `bottom` | 나오는 가장자리 |
-| `size` | `auto` · `medium`(60%) · `large`(85%) · `full`(100%) | `auto` | `auto`는 내용 높이. 비율은 화면 높이 기준(Web `dvh`), 두 플랫폼 모두 위 safe area(Native는 키보드도)를 뺀 남은 높이를 넘지 않는다. `maxHeightRatio` 0.9 상한은 `auto`에만 걸린다 |
+| `size` | `auto` · `small`(40%, 1.37.0) · `medium`(60%) · `large`(85%) · `full`(100%) | `auto` | `auto`는 내용 높이. 비율은 화면 높이 기준(Web `dvh`), 두 플랫폼 모두 위 safe area(Native는 키보드도)를 뺀 남은 높이를 넘지 않는다. `maxHeightRatio` 0.9 상한은 `auto`에만 걸린다 |
 | `open` · `defaultOpen` | `boolean` | 비제어 `false` | Web은 제어하면 `onOpenChange` 필수, 비제어면 `trigger` 필수 |
 | `onOpenChange` | `(open: boolean, detail: { reason }) => void` | — | reason: `trigger` · `close-action` · `escape` · `back` · `outside` · `swipe` · `programmatic`. Android 하드웨어 back은 Native에서만 `back` |
 | `onDismissComplete` | `(detail: { reason }) => void` | — | 표면이 실제로 사라진 뒤 한 번. 다음 modal·화면 이동은 여기서 |
@@ -106,6 +106,10 @@ import { Sheet } from "@hjmds/react-native/overlays";
 
 
 ## 배치
+
+2026-10-20 선택의창 위치 안내 사용자 지적: 버튼은 홈 인디케이터·하단 제스처 안전 영역 **위쪽**에 둔다. Native 앱은 `SafeAreaProvider` 아래에서 읽은 `useSafeAreaInsets()`를 `HjmNativeProvider safeAreaInsets`에 전달해야 한다. Provider 기본값은 실제 기기 inset의 자동 조회가 아니므로 누락 시 0이 된다. 시트는 이 값을 사용해 하단 여백을 확보하고 footer의 BottomCTA와 중복 적용하지 않는다. 시트 높이 축소로 안전 여백을 없애지 않는다.
+
+개발 소스·미게시: `size="small"`은 가용 높이의 40%로, `medium`(60%) 높이의 2/3이다. 짧은 안내에 내용 높이만 쓰면 지나치게 작고 medium은 빈 공간이 큰 경우 선택한다. Web·Native 공통 recipe가 크기를 소유한다.
 
 Native 스크롤 본문은 viewport 높이만큼 content를 채운다(미게시). 고정 크기 시트의 빈/오류/로딩 상태는 `CompositionLayout layoutStyle={{ flex: 1 }}`로 연결해 손잡이·머리·footer를 제외한 본문 중앙에 둔다. 목록이 길면 같은 본문에서 스크롤한다.
 

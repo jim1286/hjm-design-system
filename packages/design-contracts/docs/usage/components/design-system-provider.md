@@ -85,7 +85,7 @@ expect(checkBrandPaletteContrast(PRODUCT_BRAND_PALETTE)).toEqual({ light: [], da
 | `textScale` | 연속값 | `1` | — |
 | `reducedMotion` | `true` · `false` | `false` | — |
 | `minimumVisualTarget` | `true` · `false` | `false` | — |
-| `brandPalette` | `{ light?, dark? }` | — | 각각 `ThemeColors` 17개 key 중 필요한 것만 넘긴다(부분 병합). 상태 강조색은 덮을 수 없다. 중첩 Provider는 가장 가까운 상위의 값을 물려받는다 |
+| `brandPalette` | `{ light?, dark? }` | — | 각각 `ThemeColors` 20개 key 중 필요한 것만 넘긴다(부분 병합). 상태 강조색은 덮을 수 없다. 중첩 Provider는 가장 가까운 상위의 값을 물려받는다 |
 | `designProfile` | `HjmDesignProfile` | 가장 가까운 상위 프로필 또는 없음 | 기본 프로필·표면 질감은 1.15.0 추가. `hjmDesignPresets` 또는 `defineHjmDesignProfile` 결과만 넣는다. 글자 역할·관련 구성 개선은 1.16.0 변경. [프로필 계약](../../design-profile.md)의 토큰·질감·전환·구성·화면 기본값을 상속한다 |
 | `value` | `DesignSystemProviderValue`(`resolveDesignSystemProviderValue` 결과) | — | 테스트·스토리·임베딩용. 환경 prop·`brandPalette`·`designProfile`과 함께 쓸 수 없고(타입이 막는다), 주면 OS theme·모션 관찰과 상위 `brandPalette` 상속이 멈춘다 |
 | `surfaceEffects`(Native) | `{ renderBackdrop?, insetShadows? }` | 상위 host 또는 없음 | 1.15.0 실험 API. 실제 blur host·inset capability를 한 번 등록하며 `{}`로 하위 영역을 해제. [Surface 질감 계약](../../design-profile.md#surfacecard의-유리클레이-질감) |
@@ -120,7 +120,7 @@ expect(checkBrandPaletteContrast(PRODUCT_BRAND_PALETTE)).toEqual({ light: [], da
 
 | 항목 | Web | Native |
 | --- | --- | --- |
-| `density`(`comfortable` 기본 · `compact`) | 있음 | 없음 |
+| `density`(`comfortable` 기본 · `compact`) | 있음 | 있음. ListRow·Menu·DataTable의 생략된 density에 적용 |
 | `host`(`surface` 기본 · `contents`) | 있음. 문서 루트가 이미 표면을 칠하면 `contents` | 없음 |
 | `systemTheme` 고정(SSR·테스트) | 있음 | 없음(`useColorScheme`) |
 | `safeAreaInsets` | 없음 | 있음. Sheet·DatePicker·Select·Combobox가 기본 여백으로 쓴다 |

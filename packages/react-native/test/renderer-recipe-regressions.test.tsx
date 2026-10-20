@@ -586,7 +586,7 @@ describe("Recipe axes that replace product style overrides", () => {
     expect(flattenStyle(flat.root.findByProps({ testID: "child" }).parent!.parent!.props.style).overflow)
       .toBe("hidden");
     const raised = render(<Surface tone="raised"><View testID="raised-child" /></Surface>);
-    expect(flattenStyle(raised.root.findByProps({ testID: "raised-child" }).parent!.parent!.props.style)).toMatchObject({ shadowColor: shadow.floating.color, shadowOpacity: shadow.floating.opacity, shadowRadius: shadow.floating.radius, shadowOffset: { width: 0, height: shadow.floating.offsetY } });
+    expect(flattenStyle(raised.root.findByProps({ testID: "raised-child" }).parent!.parent!.props.style)).toMatchObject({ shadowColor: shadow.raised.color, shadowOpacity: shadow.raised.opacity, shadowRadius: shadow.raised.radius, shadowOffset: { width: 0, height: shadow.raised.offsetY } });
     expect(
       flattenStyle(raised.root.findByProps({ testID: "raised-child" }).parent!.parent!.props.style).overflow,
     ).toBe("visible");
@@ -1049,6 +1049,8 @@ describe("Native canonical recipe bindings", () => {
       color: resolveColorReference(emptyStateRecipe.description.color, lightValue.palette),
     });
     expect(renderer.root.findByProps({ testID: "empty-action" }).parent?.type).toBe("View");
+    expect(flattenStyle(renderer.root.findByProps({ testID: "empty-action" }).parent?.props.style))
+      .toMatchObject({ alignSelf: "stretch", alignItems: "center" });
   });
 
   it("binds Progress visible copy, semantic value, track/indicator recipe, and slots", () => {

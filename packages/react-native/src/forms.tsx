@@ -1,6 +1,5 @@
 import type { ComponentRef } from "react";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
-import { useKeyboardOverlap } from "./keyboard.js";
 import { FieldErrorText, NativeFieldFrame } from "./internal/field-frame.js";
 import { focusAccessibleHost } from "./internal/accessible-focus.js";
 import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
@@ -29,7 +28,6 @@ import {
 } from "@hjmds/design-contracts/components/collection";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import {
-  backdrop,
   glyph,
   spacing,
 } from "@hjmds/design-contracts/foundations";
@@ -53,7 +51,6 @@ import {
 } from "react";
 import {
   ActivityIndicator,
-  Modal,
   Pressable,
   ScrollView,
   TextInput,
@@ -63,11 +60,7 @@ import {
 
 import { Button } from "./actions.js";
 import { useControllableState } from "./internal/state.js";
-import {
-  scheduleAfterNativeModalTeardown,
-  shouldAwaitNativeModalDismiss,
-  type NativeModalTeardownTask,
-} from "./internal/modal-lifecycle.js";
+import { Sheet, type SheetProps } from "./overlays.js";
 import {
   logicalTextAlign,
   minimumTargetStyle,
@@ -75,7 +68,7 @@ import {
   resolveNativeTextScaleProps,
 } from "./internal/styles.js";
 import { Text } from "./primitives.js";
-import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "./provider.js";
+import { useHjmNativeTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 type NativeCollectionLeadingRenderProps = Readonly<{
@@ -88,41 +81,22 @@ type NativeCollectionLeadingRenderProps = Readonly<{
 
 type PendingDismissAction = null | (() => void | Promise<void>);
 
-function useAfterModalDismiss(visible: boolean) {
-  const shownRef = useRef(false);
-  const previousVisibleRef = useRef(visible);
+// Sheet owns native teardown. Commit locale/navigation changes only after its exit completes.
+function useAfterSheetDismiss() {
   const pendingRef = useRef<PendingDismissAction>(null);
-  const teardownTaskRef = useRef<NativeModalTeardownTask | null>(null);
-  const complete = useCallback(() => {
-    teardownTaskRef.current?.cancel();
-    teardownTaskRef.current = null;
-    shownRef.current = false;
-    const pending = pendingRef.current;
-    pendingRef.current = null;
-    if (pending) void pending();
-  }, []);
-  useLayoutEffect(() => {
-    const wasVisible = previousVisibleRef.current;
-    previousVisibleRef.current = visible;
-    if (
-      !wasVisible ||
-      visible ||
-      shouldAwaitNativeModalDismiss(shownRef.current)
-    )
-      return;
-    teardownTaskRef.current?.cancel();
-    teardownTaskRef.current = scheduleAfterNativeModalTeardown(complete);
-  }, [complete, visible]);
-  useEffect(() => () => teardownTaskRef.current?.cancel(), []);
   return {
-    queue(action: PendingDismissAction) {
-      pendingRef.current = action;
-    },
-    onDismiss: complete,
-    onShow() {
-      shownRef.current = true;
+    queue(action: PendingDismissAction) { pendingRef.current = action; },
+    onDismiss() {
+      const pending = pendingRef.current;
+      pendingRef.current = null;
+      if (pending) void pending();
     },
   } as const;
+}
+
+// Preserve the collection API's reasons while the shared Sheet owns dismissal gestures.
+function collectionDismissReason(reason: Parameters<NonNullable<SheetProps["onOpenChange"]>>[1]["reason"]): SelectOpenChangeReason {
+  return reason === "outside" ? "outside" : reason === "back" || reason === "escape" ? "escape" : "programmatic";
 }
 
 export type FieldControlProps = Readonly<{
@@ -357,28 +331,13 @@ export type SelectProps<
     ) => ReactNode;
     onSelectionAfterDismiss?: (value: Value) => void | Promise<void>;
     onDismiss?: (reason: SelectOpenChangeReason) => void;
-    /** Localized accessible name and visible label for dismissing the option list. */
+    /** Localized accessible name for dismissing the option list. */
     dismissLabel: string;
     /** Optional localized name for the option-list region; defaults neutrally to label. */
     optionsAccessibilityLabel?: string;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
   }>;
-
-/** Shared collection sheets keep dismissal in the header so it does not compete with choices. */
-function CollectionSheetHeader({ title, dismissLabel, onDismiss }: { title: string; dismissLabel: string; onDismiss: () => void }) {
-  const { colors, environment, tokens } = useHjmNativeTheme();
-  // 2026-10-17 user decision: sheets show no visible title. The title stays a screen-reader header in an
-  // off-layout 1pt view (as the canonical Sheet), and the × keeps its inline-end place.
-  return <View style={{ flexDirection: "row", direction: environment.direction, alignItems: "center", justifyContent: "flex-end", gap: spacing.sm }}>
-    <View accessible accessibilityRole="header" accessibilityLabel={title}
-      style={{ position: "absolute", top: 0, start: 0, width: 1, height: 1, overflow: "hidden" }} />
-    <Pressable accessibilityRole="button" accessibilityLabel={dismissLabel} onPress={onDismiss}
-      style={({ pressed }) => [minimumTargetStyle, { alignItems: "center", justifyContent: "center", borderRadius: tokens.radius.full, backgroundColor: pressed ? colors.bg : "transparent" }]}>
-      <Text accessible={false} tone="muted" variant="title">×</Text>
-    </Pressable>
-  </View>;
-}
 
 /** Native adaptive Select with shared sections, async states, and teardown-safe commits. */
 
@@ -445,7 +404,6 @@ export function Select<
   const accessibleName = resolveControlAccessibleName(label, accessibilityLabel, "Select");
   const theme = useHjmNativeTheme();
   const { colors, environment, tokens } = theme;
-  const safeArea = useHjmNativeSafeAreaInsets();
   const requestedControlled = selectedKey;
   const requestedDefault = defaultSelectedKey ?? null;
   const requestedValue = requestedControlled === undefined ? requestedDefault : requestedControlled;
@@ -503,7 +461,7 @@ export function Select<
     viewport.positioned = false;
     viewport.measuring = false;
   }, [visible]);
-  const modalDismiss = useAfterModalDismiss(visible);
+  const modalDismiss = useAfterSheetDismiss();
   const sizeContract = selectRecipe.sizes[size];
   const densityContract = selectRecipe.density[density];
   const close = useCallback((reason: SelectOpenChangeReason, after?: PendingDismissAction) => {
@@ -705,50 +663,20 @@ export function Select<
         <Text tone="muted" variant="caption">{description}</Text>
       ) : null}
 
-      <Modal
+      <Sheet
         {...modalProps}
-        animationType="none"
-        onDismiss={modalDismiss.onDismiss}
-        onRequestClose={() => close("escape")}
+        open={visible}
+        title={label ?? accessibleName}
+        closeLabel={dismissLabel}
+        onOpenChange={(next, detail) => { if (!next) close(collectionDismissReason(detail.reason)); }}
+        onDismissComplete={modalDismiss.onDismiss}
         onShow={() => {
-          modalDismiss.onShow();
           optionViewport.current.presented = true;
           revealInitialOption();
           focusInitialOption();
         }}
-        transparent
-        visible={visible}
       >
-        <View style={{ flex: 1, justifyContent: "flex-end" }}>
-          <Pressable
-            accessibilityLabel={dismissLabel}
-            accessibilityRole="button"
-            onPress={() => close("outside")}
-            style={{
-              backgroundColor: backdrop.modal.color, opacity: backdrop.modal.opacity,
-              bottom: 0,
-              left: 0,
-              position: "absolute",
-              right: 0,
-              top: 0,
-            }}
-          />
-          <View
-            accessibilityLabel={optionsAccessibilityLabel ?? accessibleName}
-            accessibilityRole="radiogroup"
-            accessibilityViewIsModal
-            style={{
-              backgroundColor: colors.bg,
-              borderTopLeftRadius: tokens.radius.lg,
-              borderTopRightRadius: tokens.radius.lg,
-              gap: spacing.sm,
-              maxHeight: "75%",
-              padding: spacing.md,
-              // Clear the home indicator / navigation bar (2026-09-30 audit).
-              paddingBottom: spacing.md + (safeArea.bottom ?? 0),
-            }}
-          >
-            <CollectionSheetHeader title={label ?? accessibleName} dismissLabel={dismissLabel} onDismiss={() => close("programmatic")} />
+          <View accessibilityLabel={optionsAccessibilityLabel ?? accessibleName} accessibilityRole="radiogroup" style={{ flexShrink: 1 }}>
             <ScrollView ref={optionsScroll}
               onLayout={event => { optionViewport.current.height = event.nativeEvent.layout.height; revealInitialOption(); }}
               onContentSizeChange={(_width, height) => { optionViewport.current.contentHeight = height; revealInitialOption(); }}>
@@ -776,8 +704,7 @@ export function Select<
               </View>
             </ScrollView>
           </View>
-        </View>
-      </Modal>
+      </Sheet>
     </View>
   );
 }
@@ -959,7 +886,6 @@ export function Combobox<
   const accessibleName = resolveControlAccessibleName(label, accessibilityLabel, "Combobox");
   const theme = useHjmNativeTheme();
   const { colors, environment, tokens } = theme;
-  const safeArea = useHjmNativeSafeAreaInsets();
   const [committedKey, setCommittedKey] = useControllableState<Key | null>({
     ...(selectedKey === undefined ? {} : { value: selectedKey }),
     defaultValue: defaultSelectedKey,
@@ -986,7 +912,7 @@ export function Combobox<
     if (refocusGuardTimer.current !== null) clearTimeout(refocusGuardTimer.current);
   }, []);
   const optionRefs = useRef(new Map<Key, ComponentRef<typeof View>>());
-  const modalDismiss = useAfterModalDismiss(visible);
+  const modalDismiss = useAfterSheetDismiss();
   const normalizedQuery = query.trim().toLocaleLowerCase();
   const resultsAreCurrent = filtering !== "external" ||
     isComboboxResultCurrent(queryValue ?? query, resultQuery ?? query);
@@ -1201,8 +1127,6 @@ export function Combobox<
     );
   }) : filteredItems.map(renderOption);
 
-  const modalRoot = useRef<ComponentRef<typeof View>>(null);
-  const modalKeyboardOverlap = useKeyboardOverlap(modalRoot, visible);
   return (
     <View style={[{ gap: spacing.xs }, layoutStyle]}>
       {/* fieldRecipe.disabledScope: label and input frame fade, the support text does not. comboboxRecipe has no
@@ -1295,42 +1219,16 @@ export function Combobox<
         <Text tone="muted" variant="caption">{description}</Text>
       ) : null}
 
-      <Modal
+      <Sheet
         {...modalProps}
-        animationType="none"
-        onDismiss={modalDismiss.onDismiss}
-        onRequestClose={() => dismiss("escape")}
-        onShow={() => {
-          modalDismiss.onShow();
-          focusInitialOption();
-        }}
-        transparent
-        visible={visible}
+        open={visible}
+        title={sheetTitle ?? label ?? accessibleName}
+        closeLabel={dismissLabel}
+        onOpenChange={(next, detail) => { if (!next) dismiss(collectionDismissReason(detail.reason)); }}
+        onDismissComplete={modalDismiss.onDismiss}
+        onShow={focusInitialOption}
       >
-        {/* The bottom results panel rises above the keyboard; it covered the typed query (2026-10-16 keyboard audit). */}
-        <View ref={modalRoot} style={{ flex: 1, justifyContent: "flex-end", paddingBottom: modalKeyboardOverlap }}>
-          <Pressable
-            accessibilityLabel={dismissLabel}
-            accessibilityRole="button"
-            onPress={() => dismiss("outside")}
-            style={{ backgroundColor: backdrop.modal.color, opacity: backdrop.modal.opacity, bottom: 0, left: 0, position: "absolute", right: 0, top: 0 }}
-          />
-          <View
-            accessibilityLabel={resultsAccessibilityLabel ?? accessibleName}
-            accessibilityRole="radiogroup"
-            accessibilityViewIsModal
-            style={{
-              backgroundColor: colors.bg,
-              borderTopLeftRadius: tokens.radius.lg,
-              borderTopRightRadius: tokens.radius.lg,
-              gap: spacing.sm,
-              maxHeight: "75%",
-              padding: spacing.md,
-              // Clear the home indicator / navigation bar (2026-09-30 audit).
-              paddingBottom: spacing.md + (safeArea.bottom ?? 0),
-            }}
-          >
-            <CollectionSheetHeader title={sheetTitle ?? label ?? accessibleName} dismissLabel={dismissLabel} onDismiss={() => dismiss("programmatic")} />
+          <View accessibilityLabel={resultsAccessibilityLabel ?? accessibleName} accessibilityRole="radiogroup" style={{ flexShrink: 1 }}>
             {viewStatus === "loading" || viewStatus === "prompt" || viewStatus === "error" || viewStatus === "empty" ? (
               <View accessibilityLabel={viewStatus === "loading" ? stateMessage : undefined} accessibilityRole={viewStatus === "loading" ? "progressbar" : undefined} style={{ alignItems: "center", gap: spacing.sm, justifyContent: "center", minHeight: comboboxRecipe.stateMessage.minHeight }}>
                 {viewStatus === "loading" ? <ActivityIndicator /> : null}
@@ -1356,8 +1254,7 @@ export function Combobox<
               </ScrollView>
             )}
           </View>
-        </View>
-      </Modal>
+      </Sheet>
     </View>
   );
 }

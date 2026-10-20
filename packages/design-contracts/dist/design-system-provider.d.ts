@@ -113,6 +113,9 @@ export type DesignSystemProviderValue = Readonly<{
     /** Optional to preserve existing pre-resolved provider values. */
     designProfile?: HjmDesignProfile;
 }>;
+/** A resolved-value bridge still owns its current color scope. Preserve it for nested
+ * providers. An explicit brandPalette still replaces the inherited overrides (scope reset contract). */
+export declare function resolveProviderBrandPalette(inherited: ResolveDesignSystemEnvironmentOptions["brandPalette"], supplied: ResolveDesignSystemEnvironmentOptions["brandPalette"], value?: DesignSystemProviderValue): ResolveDesignSystemEnvironmentOptions["brandPalette"];
 /**
  * Runtime boundary for the resolved palette a renderer receives, including one
  * merged from a partial `brandPalette`: after merging, every semantic role a

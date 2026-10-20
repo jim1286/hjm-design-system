@@ -2107,7 +2107,7 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
                   : pressed
                     ? segmentedControlRecipe.item.pressedOpacity
                     : 1,
-                paddingHorizontal: textOnly ? 0 : pills ? chipRecipe.sizes[size].paddingHorizontal : sizeContract.paddingHorizontal,
+                paddingHorizontal: textOnly ? 0 : pills ? segmentedControlRecipe.pills.paddingHorizontal[size] : sizeContract.paddingHorizontal,
                 paddingVertical: pills ? segmentedControlRecipe.pills.inset : undefined,
                 width: stacked ? "100%" : undefined,
               },
@@ -2133,7 +2133,7 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
                   : segmentedControlRecipe.item.fontWeight,
               }}
               tone={isSelected ? "brand" : "muted"}
-              variant={textOnly ? "bodyLarge" : pills ? chipRecipe.sizes[size].textVariant : sizeContract.textVariant}
+              variant={textOnly ? "bodyLarge" : pills ? segmentedControlRecipe.pills.textVariant : sizeContract.textVariant}
             >
               {item.label}
             </Text>

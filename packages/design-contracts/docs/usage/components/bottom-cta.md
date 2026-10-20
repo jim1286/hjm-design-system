@@ -75,6 +75,8 @@ const insets = useSafeAreaInsets();
 
 ## 배치
 
+2026-10-20 선택의창 사용자 지적: 버튼의 보이는 면과 터치 영역은 홈 인디케이터·하단 제스처 안전 영역 위에 배치한다. 바탕만 화면 끝까지 이어진다. Native Sheet footer는 앱이 `HjmNativeProvider safeAreaInsets`로 공급한 실제 창 inset을 사용한다. 시트 크기를 줄여도 이 여백은 보존하며, inset 미전달을 제품별 고정 padding으로 덮지 않는다.
+
 2026-10-20 번뚝 작성 화면은 BottomCTA에 HTML 제출 연결이 없어 버튼 묶음을 직접 유지했다.
 Web은 기존 form의 onSubmit/IME·검증을 유지하고 아래처럼 footer의 버튼을 form ID로 연결한다.
 onClick에서 requestSubmit을 흉내 내거나 빈 콜백을 넣을 필요가 없다. 여러 편집기가 함께 있으면 React useId로 ID를 만든다.

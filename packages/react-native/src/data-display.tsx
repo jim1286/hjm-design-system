@@ -1,3 +1,4 @@
+import { resolveDensityDefault } from "@hjmds/design-contracts/components/design-system-provider";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { resolveAvatarInitials, type AvatarFallbackContext } from "@hjmds/design-contracts/avatar-fallback";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
@@ -551,7 +552,7 @@ export function ListRow({
   accessibilityLabel,
   accessibilityHint,
   disabled = false,
-  density = listRowRecipe.defaults.density,
+  density: suppliedDensity,
   loading = false,
   loadingLabel,
   selected: selectedProp,
@@ -570,6 +571,7 @@ export function ListRow({
   assertNoRemovedStyleProps("ListRow", forwarded, ["titleStyle","descriptionStyle"]);
   const { hjmTitleEmphasis, hjmMeta, ...props } = forwarded as typeof forwarded & ListRowPrivateProps;
   const theme = useHjmNativeTheme();
+  const density = suppliedDensity ?? resolveDensityDefault(theme.environment.density, { comfortable: listRowRecipe.defaults.density, compact: "compact" } as const);
   // Tell the enclosing List item whether this row has a leading frame, so the indented separator after it starts at
   // this row's text column (listRecipe.separators). Runs before the loading early return to keep hook order.
   const reportLeading = useContext(ListItemLeadingContext);

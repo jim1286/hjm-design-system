@@ -1,8 +1,8 @@
-import { type ResolvedTheme, type ThemeColors } from "./colors.js";
+import { type AccentTone, type ResolvedTheme, type ThemeColors } from "./colors.js";
 /** Pair thresholds and their rationale: docs/brand-boundary.md. */
 export type PaletteContrastRule = Readonly<{
     foreground: keyof ThemeColors;
-    background: keyof ThemeColors;
+    background: keyof ThemeColors | `accentFill.${AccentTone}`;
     minimum: number;
     kind: "text" | "non-text";
 }>;
@@ -12,6 +12,8 @@ export type PaletteContrastFinding = PaletteContrastRule & Readonly<{
 export declare const paletteContrastRules: readonly PaletteContrastRule[];
 /** WCAG 2.x contrast ratio between two six-digit hex colors. */
 export declare function contrastRatio(foreground: string, background: string): number;
+/** Fixed status fills remain outside the product palette, but participate in the same report. */
+export declare function resolveContrastBackground(palette: Readonly<ThemeColors>, key: PaletteContrastRule["background"]): string;
 /** Pairs of a resolved theme palette that fall below their threshold; empty means it passes. */
 export declare function checkPaletteContrast(palette: Readonly<ThemeColors>): readonly PaletteContrastFinding[];
 /** Checks a `brandPalette` the way the Provider applies it: each theme merged over the HJM defaults. */

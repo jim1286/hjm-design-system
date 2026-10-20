@@ -1,3 +1,5 @@
+import { stateLayer } from "./foundations.js";
+import { accentTint } from "./colors.js";
 import { accentColor, themeColor } from "./color-references.js";
 
 /**
@@ -59,40 +61,40 @@ export const semanticColors = {
   feedback: {
     info: {
       foreground: accentColor("info"),
-      background: accentColor("info", 0.1),
-      badgeBackground: accentColor("info", 0.1),
-      border: accentColor("info", 0.3),
+      background: accentColor("info", accentTint.weak),
+      badgeBackground: accentColor("info", accentTint.weak),
+      border: accentColor("info", accentTint.border),
     },
     success: {
       foreground: accentColor("success"),
-      background: accentColor("success", 0.1),
-      badgeBackground: accentColor("success", 0.1),
-      border: accentColor("success", 0.3),
+      background: accentColor("success", accentTint.weak),
+      badgeBackground: accentColor("success", accentTint.weak),
+      border: accentColor("success", accentTint.border),
     },
     warning: {
       foreground: accentColor("warning"),
-      background: accentColor("warning", 0.1),
-      badgeBackground: accentColor("warning", 0.1),
-      border: accentColor("warning", 0.3),
+      background: accentColor("warning", accentTint.weak),
+      badgeBackground: accentColor("warning", accentTint.weak),
+      border: accentColor("warning", accentTint.border),
     },
     attention: {
       foreground: accentColor("attention"),
-      background: accentColor("attention", 0.1),
-      badgeBackground: accentColor("attention", 0.1),
-      border: accentColor("attention", 0.3),
+      background: accentColor("attention", accentTint.weak),
+      badgeBackground: accentColor("attention", accentTint.weak),
+      border: accentColor("attention", accentTint.border),
     },
     danger: {
       foreground: themeColor("danger"),
-      background: themeColor("danger", 0.1),
-      badgeBackground: themeColor("danger", 0.1),
-      border: themeColor("danger", 0.3),
+      background: themeColor("danger", accentTint.weak),
+      badgeBackground: themeColor("danger", accentTint.weak),
+      border: themeColor("danger", accentTint.border),
     },
   },
   interaction: {
-    hover: themeColor("text", 0.06),
-    focus: themeColor("contentBrand", 0.08),
-    pressed: themeColor("text", 0.1),
-    selected: themeColor("primary", 0.1),
+    hover: themeColor("text", stateLayer.hover),
+    focus: themeColor("contentBrand", stateLayer.focus),
+    pressed: themeColor("text", stateLayer.pressed),
+    selected: themeColor("primary", stateLayer.selected),
     /**
      * Lower edge of a raised object, composited over its own fill so one shade
      * darkens any brand color (BottomNavigation raised tile, Spint 2026-10-13).

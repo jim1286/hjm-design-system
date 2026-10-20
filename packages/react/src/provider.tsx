@@ -9,6 +9,7 @@ import {
   isLargeTextScale,
   resolveDensityDefault,
   resolveDesignSystemProviderValue,
+  resolveProviderBrandPalette,
   validateDesignSystemProviderValue,
   type DesignSystemDensity,
   type DesignSystemDirection,
@@ -149,7 +150,7 @@ export const HjmProvider = forwardRef<HTMLDivElement, HjmProviderProps>(
     const parent = useContext(HjmThemeContext);
     const designProfile = suppliedDesignProfile ?? parent?.designProfile;
     const inheritedBrandPalette = useContext(HjmBrandPaletteContext);
-    const brandPalette = suppliedBrandPalette ?? inheritedBrandPalette;
+    const brandPalette = resolveProviderBrandPalette(inheritedBrandPalette, suppliedBrandPalette, suppliedValue);
     const observesSystem = suppliedValue === undefined;
     const prefersDark = useMediaQuery("(prefers-color-scheme: dark)", observesSystem);
     const prefersReducedMotion = useMediaQuery(
@@ -220,7 +221,7 @@ export const HjmProvider = forwardRef<HTMLDivElement, HjmProviderProps>(
     return (
       <HjmThemeContext.Provider value={value}>
         <DesignProfileContext.Provider value={value.designProfile}>
-          <HjmBrandPaletteContext.Provider value={suppliedValue === undefined ? brandPalette : undefined}>
+          <HjmBrandPaletteContext.Provider value={brandPalette}>
             <TooltipCoordinatorContext.Provider value={tooltipCoordinator}>
               <div
                 {...rest}

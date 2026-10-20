@@ -1,3 +1,4 @@
+import { resolveDensityDefault } from "@hjmds/design-contracts/components/design-system-provider";
 import type { ComponentRef } from "react";
 import { useMemo, useRef, useState, type ReactNode } from "react";
 import { Pressable, ScrollView, Text as NativeText, View, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
@@ -70,13 +71,14 @@ const alignOf = (align: DataTableColumnDescriptor["align"], direction: "ltr" | "
 
 export function DataTable<ColumnKey extends string = string, RowKey extends string = string>({
   columns, rows, labels, renderCell, getCellText, sortState = null, sortCycle = dataTableDefaults.sortCycle, onSortChange, onRowPress, selectedRowId = null,
-  summaryRow, asyncState = { status: "idle" }, emptyLabel, density = dataTableRecipe.defaults.density, footer, layoutStyle,
+  summaryRow, asyncState = { status: "idle" }, emptyLabel, density: suppliedDensity, footer, layoutStyle,
   columnGroups = [], rowGroups = [], cellStyle, heatColors, maxBodyHeight,
 }: DataTableProps<ColumnKey, RowKey>) {
   validateDataTableColumns(columns);
   validateDataTableRows(rows);
   validateDataTableSortState(sortState, columns);
   const theme = useHjmNativeTheme(), { colors } = theme;
+  const density = suppliedDensity ?? resolveDensityDefault(theme.environment.density, { comfortable: dataTableRecipe.defaults.density, compact: "compact" } as const);
   const direction = theme.environment.direction;
   const color = (reference: Parameters<typeof resolveColorReference>[0]) => resolveColorReference(reference, theme.palette);
   const [width, setWidth] = useState(0), [atEnd, setAtEnd] = useState(false), [pressed, setPressed] = useState<RowKey | null>(null);

@@ -1907,6 +1907,11 @@ export declare const segmentedControlRecipe: {
         readonly size: "medium";
     };
     readonly pills: {
+        readonly textVariant: "label";
+        readonly paddingHorizontal: {
+            readonly small: 12;
+            readonly medium: 16;
+        };
         readonly gap: 8;
         readonly radius: 999;
         readonly inset: 4;
@@ -2788,6 +2793,17 @@ export declare const noticeRecipe: {
     readonly slots: readonly ["root", "icon", "content", "title", "description", "action"];
     readonly defaults: {
         readonly tone: "info";
+        readonly appearance: "panel";
+    };
+    readonly appearances: {
+        readonly panel: {
+            readonly padding: 16;
+            readonly borderWidth: 1;
+        };
+        readonly status: {
+            readonly padding: 0;
+            readonly borderWidth: 0;
+        };
     };
     readonly tones: {
         readonly info: {
@@ -3307,6 +3323,7 @@ export declare const sheetRecipe: {
      */
     readonly sizes: {
         readonly auto: null;
+        readonly small: 0.4;
         readonly medium: 0.6;
         readonly large: 0.85;
         readonly full: 1;

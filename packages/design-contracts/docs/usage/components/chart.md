@@ -276,3 +276,7 @@ Native centerContent에는 Text 등 Native 노드를 쓴다. 모두 제외하거
   accessibilityLabel={t("comparison")} formatValue={formatValue} missingLabel={t("missing")}
   animateChanges showAxis />
 ```
+
+### 테마와 글자
+
+원형 차트의 비율 라벨은 `chartRecipe.chrome.labelSurface`(`bg`) 판 위에 `labelContent`(`text`)로 표시한다. 제품이 계열색을 바꾸거나 선택하지 않은 조각을 흐리게 해도 라벨 대비가 유지된다. Native SVG 라벨은 프로필의 `caption` 크기와 `ui` 글꼴, Provider의 글자 배율을 따르며 범례 값과 커서 안내도 공통 Text를 사용한다.

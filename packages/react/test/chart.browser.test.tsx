@@ -1,3 +1,4 @@
+import { contrastRatio } from "@hjmds/design-contracts/palette-contrast";
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
@@ -149,4 +150,16 @@ it("renders a standalone legend with labels next to every swatch", async () => {
 it("uses the dark dataviz palette under a dark provider", async () => {
   await act(async () => root.render(<HjmProvider theme="dark"><Sparkline values={[1, 2]} /></HjmProvider>));
   expect(host.querySelector(".hjm-chart__line")!.getAttribute("stroke")).toBe("#60a5fa");
+});
+
+it.each(["light", "dark"] as const)("keeps percentage labels on a readable plate over custom pie colors (%s)", async theme => {
+  await act(async () => root.render(<HjmProvider theme={theme} reducedMotion><PieChart donut={false} showLegend={false}
+    data={[{ id: "bright", label: "밝음", value: 1, color: "#ffffff" }]} accessibilityLabel="비율" formatValue={String} /></HjmProvider>));
+  const label = host.querySelector<SVGTextElement>(".hjm-chart__slice-label")!;
+  const plate = label.previousElementSibling as SVGRectElement;
+  const toHex = (color: string) => "#" + color.match(/\d+/g)!.slice(0, 3).map(n => Number(n).toString(16).padStart(2, "0")).join("");
+  expect(contrastRatio(toHex(getComputedStyle(label).fill), toHex(getComputedStyle(plate).fill))).toBeGreaterThanOrEqual(4.5);
+  const ink = label.getBBox(), background = plate.getBBox();
+  expect(ink.width).toBeLessThanOrEqual(background.width);
+  expect(ink.height).toBeLessThanOrEqual(background.height);
 });

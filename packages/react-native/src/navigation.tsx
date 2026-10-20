@@ -1,3 +1,4 @@
+import { resolveDensityDefault } from "@hjmds/design-contracts/components/design-system-provider";
 import type { ComponentRef } from "react";
 import {
   getTabNavigationTarget,
@@ -1853,7 +1854,7 @@ export function Menu<
   asyncState = { status: "idle" },
   onRetry,
   retryLabel,
-  density = menuRecipe.defaults.density,
+  density: suppliedDensity,
   renderLeading,
   renderTrailing,
   dismissLabel,
@@ -1890,6 +1891,7 @@ export function Menu<
     throw new Error("Menu requires an item or a non-idle asyncState");
   }
   const theme = useHjmNativeTheme();
+  const density = suppliedDensity ?? resolveDensityDefault(theme.environment.density, { comfortable: menuRecipe.defaults.density, compact: "compact" } as const);
   const { colors, environment } = theme;
   const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
   const visible = open ?? uncontrolledOpen;

@@ -1004,7 +1004,8 @@ export const segmentedControlRecipe = {
   // See usage/components/segmented-control.md; no separate filter-selection state is introduced.
   // Match Chip's visible size step in mixed filter rails; the inset keeps a separate 44pt touch box.
   // The old 8pt inset drew 28pt pills next to a 36pt small action chip (Utilverse, 2026-10-20).
-  pills: { gap: spacing.xs, radius: radius.full, inset: spacing.xxs, minHeight: control.minTouchTarget,
+  // Spint review (2026-10-20): restore the original inset and use a smaller category label instead.
+  pills: { textVariant: "label", paddingHorizontal: { small: spacing.sm, medium: spacing.md }, gap: spacing.xs, radius: radius.full, inset: spacing.xxs, minHeight: control.minTouchTarget,
     // Utilverse's pastel scene swallowed the sunken fill without an outline (2026-10-20).
     // Use the resting control border on the inset surface so touch geometry stays unchanged.
     background: semanticColors.surface.raised, border: semanticColors.border.control, borderWidth: stroke.subtle,
@@ -1545,7 +1546,10 @@ export type NoticeTone = "info" | "success" | "warning" | "attention" | "danger"
 
 export const noticeRecipe = {
   slots: ["root", "icon", "content", "title", "description", "action"] as const,
-  defaults: { tone: "info" },
+  defaults: { tone: "info", appearance: "panel" },
+  // Saved results belong beside their owner without a second banner-sized surface.
+  // Both renderers reuse Badge for the short status; panels remain the default for guidance/errors.
+  appearances: { panel: { padding: spacing.md, borderWidth: stroke.default }, status: { padding: 0, borderWidth: 0 } },
   tones: {
     ...semanticColors.feedback,
     info: {
@@ -1874,6 +1878,9 @@ export const sheetRecipe = {
    */
   sizes: {
     auto: null,
+    // Short explanatory sheets need breathing room without the medium step's
+    // empty space (Choose Window primer review, 2026-10-20: two-thirds of medium).
+    small: 0.4,
     medium: 0.6,
     large: 0.85,
     full: 1,

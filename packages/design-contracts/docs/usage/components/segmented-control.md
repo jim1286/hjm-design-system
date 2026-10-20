@@ -184,3 +184,5 @@ Spint 스팟 필터가 제품 ScrollView와 고정 추가 행을 재조립하던
 
 <!-- usage-example: Web ../../../../../showcase/web/src/components/SegmentedControl.stories.tsx -->
 <!-- usage-example: Native ../../../../../showcase/native/src/components/SegmentedControl.stories.tsx -->
+
+2026-10-20 개발 소스·미게시: Spint 카테고리 재검토에서 사용자가 여백은 이전처럼 유지하고 글씨를 줄이도록 요청했다. pills 좌우 여백은 small 12, medium 16으로 복원하고 글씨는 label(12/18)로 통일한다. 높이와 터치 영역은 유지한다.

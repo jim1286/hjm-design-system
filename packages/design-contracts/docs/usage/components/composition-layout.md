@@ -51,6 +51,7 @@ import { CompositionLayout } from "@hjmds/react-native/screens";
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
+| titleSize | default · compact | default | 1.37.0. compact는 body(14)·500으로 표시하고 제목 의미를 유지한다. 2026-10-20 Spint 시트의 TOP 제목 축소 요청 |
 | title / description | string | 없음 | 제품 지역화 문구 |
 | leading / badge / actions | ReactNode | 없음 | 앞 콘텐츠·제목 옆 배지·끝 행동. 자리와 간격은 HJM |
 | notice | ReactNode | 없음 | 초안을 유지하는 비차단 안내 |
@@ -93,7 +94,7 @@ footer
 | 의미 | Heading·alert/status | header·accessibilityLiveRegion |
 | 환경 | 부모 화면의 높이 | 부모 화면의 safe area·키보드 |
 
-제목과 설명 묶음은 자연 너비를 기준으로 늘어나며 부모 너비를 넘지 않는다. 제목과 actions가 한 줄에 들어가지 않으면 actions가 다음 줄로 이동한다. Spint 셀에서 제목이 정렬 버튼 옆의 남은 폭으로 압축되던 문제를 양 renderer에서 수정했다(미게시).
+제목과 설명 묶음은 자연 너비를 기준으로 늘어나며 부모 너비를 넘지 않는다. 제목과 actions가 한 줄에 들어가지 않으면 actions가 다음 줄로 이동한다. Spint 셀에서 제목이 정렬 버튼 옆의 남은 폭으로 압축되던 문제를 양 renderer에서 수정했다(1.37.0).
 
 2026-10-19 사용자 지시: 앱·모바일 웹뷰의 큰 글씨를 지양하므로 구획 제목은 두 renderer 모두 18(level5)을 기본으로 쓴다.
 headingLevel은 문서 구조만 결정한다. 기존 24는 상한이며 일반 카드·선택 영역 제목의 기본값이 아니다.

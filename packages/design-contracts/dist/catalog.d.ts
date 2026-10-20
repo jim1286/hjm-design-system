@@ -4659,6 +4659,16 @@ export declare const recipeRegistry: {
                 key: "textBody";
                 alpha?: number;
             }>;
+            readonly labelSurface: Readonly<{
+                source: "theme";
+                key: "bg";
+                alpha?: number;
+            }>;
+            readonly labelContent: Readonly<{
+                source: "theme";
+                key: "text";
+                alpha?: number;
+            }>;
             readonly lineWidth: 1;
             readonly gridWidth: 1;
             readonly labelVariant: "caption";
@@ -5740,6 +5750,17 @@ export declare const recipeRegistry: {
         readonly slots: readonly ["root", "icon", "content", "title", "description", "action"];
         readonly defaults: {
             readonly tone: "info";
+            readonly appearance: "panel";
+        };
+        readonly appearances: {
+            readonly panel: {
+                readonly padding: 16;
+                readonly borderWidth: 1;
+            };
+            readonly status: {
+                readonly padding: 0;
+                readonly borderWidth: 0;
+            };
         };
         readonly tones: {
             readonly info: {
@@ -6746,6 +6767,11 @@ export declare const recipeRegistry: {
             readonly size: "medium";
         };
         readonly pills: {
+            readonly textVariant: "label";
+            readonly paddingHorizontal: {
+                readonly small: 12;
+                readonly medium: 16;
+            };
             readonly gap: 8;
             readonly radius: 999;
             readonly inset: 4;
@@ -7040,6 +7066,7 @@ export declare const recipeRegistry: {
         };
         readonly sizes: {
             readonly auto: null;
+            readonly small: 0.4;
             readonly medium: 0.6;
             readonly large: 0.85;
             readonly full: 1;

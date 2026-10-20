@@ -6,7 +6,7 @@
 버튼 위치에서 시작해 구성·컴포넌트 지침으로 내려가고, 값은 토큰 지침에서 고른다.
 [선택 기준](SELECTION.md)으로 그대로 사용·공개 슬롯 확장·공통 API 보완·제품 고유 기능 연결을 고른다. 설치 버전의 지침을 본다: `node_modules/@hjmds/design-contracts/docs/usage/`.
 제공 기준은 확인한 기본 API 버전이며 최초 출시 버전이 아니다. 구성·화면은 각 API 지침의 제공 버전을 확인한다.
-API 안정성은 1.35.1의 생성 manifest에서 읽은 정규(canonical) API 기준이다. 동반·선택형 확장은 개별 계약을 확인한다.
+API 안정성은 1.36.1의 생성 manifest에서 읽은 정규(canonical) API 기준이다. 동반·선택형 확장은 개별 계약을 확인한다.
 Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품 반영을 의미하지 않는다.
 `분류`는 Storybook 제목 `<배포|실험>/<단계>/<분류>/<항목>`의 셋째 마디이고, 토큰·구성·화면은 Storybook 메뉴와 같은 순서다.
 
@@ -127,7 +127,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [Menubar](components/menubar.md) | 탐색 | 데스크톱 Web 앱 상단에 항상 같은 자리에 있는 가로 메뉴 막대(파일·편집·보기)에 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |
 | [MessageComposer](components/message-composer.md) | 구성/입력과 작성 | 채팅·DM·댓글 입력창에 쓴다. | 1.17.1 | Web · Native | Web stable / Native stable | 배포 |
 | [ModerationScreen](components/moderation-screen.md) | 화면/소통 | 게시물·댓글·사용자 **신고** 화면에 쓴다. | 1.17.1 | Web · Native | Web stable / Native stable | 배포 |
-| [Notice](components/notice.md) | 상태와 알림 | 화면 흐름 안 **제자리에 남아 있는** 상태 알림에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [Notice](components/notice.md) | 상태와 알림 | 저장된 항목·폼 안의 작은 성공 상태는 `appearance="status"`(1.37.0)를 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [NotificationInboxScreen](components/notification-inbox-screen.md) | 화면/소통 | 알림함 화면 전체 틀에 쓴다. | 1.17.1 | Web · Native | Web stable / Native stable | 배포 |
 | [NotificationItem](components/notification-item.md) | 구성/정보 표시 | 알림함의 알림 한 행에 쓴다. | 1.17.1 | Web · Native | Web stable / Native stable | 배포 |
 | [NotificationRow](components/notification-row.md) | 데이터 표시 | 알림 목록에서 아바타, 유형 배지, 미리보기, 시간, 읽지 않음 표시, 선택적 썸네일을 나란히 배치한다. | 1.26.0 | Web · Native | Web stable / Native stable | 배포 |
@@ -196,7 +196,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [ThinkingOrb](components/thinking-orb.md) | 상태와 알림 | AI 에이전트가 실제로 검색·생성·듣기 같은 작업을 하는 동안 그 단계를 보여 줄 때만 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Timeline](components/timeline.md) | 데이터 표시 | 이미 일어난 일을 시간 순서대로 보여 줄 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [TimePicker](components/time-picker.md) | 입력 | 하루 중 시각 하나를 시·분 두 열에서 고를 때 쓴다. | 미게시(1.34.0 이후) | Web · Native | Web stable / Native stable | 배포 |
-| [Toast](components/toast.md) | 상태와 알림 | 방금 한 행동의 결과처럼 **무시해도 안전한 짧은 알림**에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [Toast](components/toast.md) | 상태와 알림 | 저장 완료의 한 줄형·대상 요약형과 화면 안 상태 표시의 선택은 저장 결과 구성을 따른다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [ToggleFeedbackButton](components/toggle-feedback-button.md) | 구성/직접 조작과 모션 | 좋아요·저장·알림 받기처럼 켜고 끄는 선택에 반응 모션과 개수를 붙인다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [ToggleGroup](components/toggle-group.md) | 입력 | 여러 개를 동시에 켜고 끄는 짧은 버튼 묶음에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Tooltip](components/tooltip.md) | 오버레이 | Web에서 이미 이름과 focus를 가진 컨트롤(대개 IconButton)에 **짧은 보충 설명 한 문장**을 붙일 때 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |
@@ -242,6 +242,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [펼치는 검색과 실제 메시지 답장](compositions/communication.md) | 선택과 필터 | 검색 아이콘 버튼에서 검색 영역을 펼치거나 채팅의 실제 메시지를 선택해 답장을 전송할 때 쓴다. | 1.21.0 | Web · Native | 구성 API별 | 배포 |
 | [보관함과 페이지 이동](compositions/web-navigation.md) | 탐색과 이동 | Web에서 상위 보관함 → 하위 모음으로 들어가고, 그 모음의 긴 목록을 페이지 단위로 넘겨 보는 탐색에 쓴다. | 1.12.1 | Web | 구성 API별 | 배포 |
 | [펼침과 메뉴](compositions/disclosure.md) | 탐색과 이동 | 내용을 숨겼다 펼치거나(Collapsible), Web에서 대상에 붙은 작업 메뉴를 우클릭·키보드로 열거나(ContextMenu), 데스크톱 앱처럼 상단 메뉴 막대를 두는(Menubar) 세 방식을 각각 보여 주는 모음이다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
+| [ShortcutRail](compositions/shortcut-rail.md) | 탐색과 이동 | 최근 장소·최근 도구처럼 누르면 바로 열리는 유한 목록이다. | 1.36.1 | Web · Native | 구성 API별 | 배포 |
 | [대화 메시지](compositions/common-message.md) | 정보 표시 | 말풍선 하나하나에 반응·답장·원문 이동·전송 실패 후 다시 보내기를 붙일 때 쓴다. | 구성 API 지침 참조 | Web · Native | 구성 API별 | 배포 |
 | [명령 기록 표시](compositions/command-records.md) | 정보 표시 | 명령 원문과 출력 기록을 선택·읽기·복사할 때 쓴다. | 1.16.0 | Web · Native | 구성 API별 | 배포 |
 | [문서와 파일](compositions/document-resource.md) | 정보 표시 | 이름·형식·크기와 미리보기·내보내기·별도 메뉴를 함께 제공하는 문서에 쓴다. | 1.14.0 | Web · Native | 구성 API별 | 배포 |
@@ -261,6 +262,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [보관과 실행 취소](compositions/action-recovery-undo.md) | 피드백과 복구 | 보관·숨기기·목록에서 빼기처럼 제품이 역연산을 제공하는 작업 뒤에, 같은 자리에서 실행 취소를 주고 그 복구 요청이 성공해야 화면을 되돌릴 때 쓴다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
 | [선택과 오류 복구](compositions/upload-recovery.md) | 피드백과 복구 | 파일 선택과 전송 상태의 취소·재시도를 연결할 때 쓴다. | 1.14.0 | Web · Native | 구성 API별 | 배포 |
 | [스트림 응답과 중지](compositions/streaming-answer.md) | 피드백과 복구 | 실제 provider가 보내는 응답 delta를 표시하고 중지·재생성·오류를 같은 영역에서 제공할 때 쓴다. | 1.21.0 | Web · Native | 구성 API별 | 배포 |
+| [저장 결과](compositions/save-feedback.md) | 피드백과 복구 | 사용자 저장 요청의 성공이 확인된 뒤, 대상과 현재 화면에 맞는 피드백을 선택할 때 쓴다. | 1.37.0 | Web · Native | 구성 API별 | 실험 |
 | [저장과 재시도](compositions/action-recovery-save.md) | 피드백과 복구 | 입력한 내용을 서버에 저장하는 폼 한 덩어리에서 저장 중 중복 실행을 막고, 실패하면 입력을 지우지 않은 채 제출했던 값 그대로 다시 보낼 때 쓴다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
 | [전송 진행과 취소](compositions/transfer-task.md) | 피드백과 복구 | 실제 다운로드·업로드·작업의 시작/대기/진행·취소·실패 복구를 한 구성으로 제공할 때 쓴다. | 1.21.0 | Web · Native | 구성 API별 | 배포 |
 | [중단해도 남는 현재 상태](compositions/expo-interactions.md) | 피드백과 복구 | 버튼으로 상태를 빠르게 바꾸거나 전환 도중 내용을 닫아도 현재 상태가 바로 보이고 남아야 하는 영역에 쓴다. | 1.12.1 | Native | 구성 API별 | 배포 |
@@ -286,7 +288,6 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [테마 조합](compositions/design-profile-comparison.md) | 비교와 검증 | 같은 기능에 10가지 표현을 적용하고, 앱 소유 테마 설정을 넣었을 때 네 단계의 전파와 상태 유지를 검토할 때 쓴다. | 1.16.0 | Web · Native | 구성 API별 | 배포 |
 | [토스트 배치 비교](compositions/toast-layout.md) | 비교와 검증 | Toast 카드 한 장의 내부 배치(톤 배지·제목·설명·닫기·실행 버튼)와 화면 위 위치를 좁은 폭·큰 글자·긴 문구·톤별로 확인하는 비교 스토리다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
 | [환경 조합 검증](compositions/environment-matrix.md) | 비교와 검증 | 제품 화면이 테마·쓰기 방향·글자 크기·모션 설정이 달라져도 같은 의미를 유지하는지 확인할 때, 어떤 환경 조합과 검증 항목을 골라 볼지 정하는 기준표로 쓴다. | 1.12.1 | Web | 구성 API별 | 배포 |
-| [ShortcutRail](compositions/shortcut-rail.md) | 콘텐츠 | 최근 장소·최근 도구처럼 누르면 바로 열리는 유한 목록이다. | 미게시(1.34.0 이후) | Web · Native | 구성 API별 | 실험 |
 
 ## 화면
 

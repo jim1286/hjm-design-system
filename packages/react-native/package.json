@@ -677,7 +677,7 @@
   },
   "peerDependencies": {
     "@gorhom/bottom-sheet": "5.2.14",
-    "@hjmds/design-contracts": ">=1.36.0 <1.37.0",
+    "@hjmds/design-contracts": ">=1.37.0 <1.38.0",
     "@react-native-menu/menu": "1.2.2",
     "@shopify/react-native-skia": "^2.6.2",
     "react": ">=19",

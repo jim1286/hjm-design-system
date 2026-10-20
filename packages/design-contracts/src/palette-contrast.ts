@@ -1,9 +1,9 @@
-import { THEMES, type ResolvedTheme, type ThemeColors } from "./colors.js";
+import { THEMES, accentFill, type AccentTone, type ResolvedTheme, type ThemeColors } from "./colors.js";
 
 /** Pair thresholds and their rationale: docs/brand-boundary.md. */
 export type PaletteContrastRule = Readonly<{
   foreground: keyof ThemeColors;
-  background: keyof ThemeColors;
+  background: keyof ThemeColors | `accentFill.${AccentTone}`;
   minimum: number;
   kind: "text" | "non-text";
 }>;
@@ -19,6 +19,9 @@ export const paletteContrastRules: readonly PaletteContrastRule[] = [
   ),
   { foreground: "onPrimary", background: "primary", minimum: 4.5, kind: "text" },
   { foreground: "onDanger", background: "dangerFill", minimum: 4.5, kind: "text" },
+  // Filled badges use a separate ink/fill pair, independent of primary buttons.
+  ...(["neutralFill", "strongFill"] as const).map(background => ({ foreground: "onStatusFill" as const, background, minimum: 4.5, kind: "text" as const })),
+  ...(Object.keys(accentFill) as AccentTone[]).map(tone => ({ foreground: "onStatusFill" as const, background: `accentFill.${tone}` as const, minimum: 4.5, kind: "text" as const })),
   ...(["primary", "borderControl"] as const).flatMap((foreground) =>
     surfaces.map((background) => ({ foreground, background, minimum: 3, kind: "non-text" as const })),
   ),
@@ -45,13 +48,18 @@ export function contrastRatio(foreground: string, background: string): number {
   return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
 }
 
+/** Fixed status fills remain outside the product palette, but participate in the same report. */
+export function resolveContrastBackground(palette: Readonly<ThemeColors>, key: PaletteContrastRule["background"]): string {
+  return key.startsWith("accentFill.") ? accentFill[key.slice("accentFill.".length) as AccentTone] : palette[key as keyof ThemeColors];
+}
+
 /** Pairs of a resolved theme palette that fall below their threshold; empty means it passes. */
 export function checkPaletteContrast(
   palette: Readonly<ThemeColors>,
 ): readonly PaletteContrastFinding[] {
   const findings: PaletteContrastFinding[] = [];
   for (const rule of paletteContrastRules) {
-    const ratio = contrastRatio(palette[rule.foreground], palette[rule.background]);
+    const ratio = contrastRatio(palette[rule.foreground], resolveContrastBackground(palette, rule.background));
     if (ratio < rule.minimum) findings.push({ ...rule, ratio: Math.round(ratio * 100) / 100 });
   }
   return findings;

@@ -144,6 +144,16 @@ export declare const chartRecipe: {
             key: "textBody";
             alpha?: number;
         }>;
+        readonly labelSurface: Readonly<{
+            source: "theme";
+            key: "bg";
+            alpha?: number;
+        }>;
+        readonly labelContent: Readonly<{
+            source: "theme";
+            key: "text";
+            alpha?: number;
+        }>;
         readonly lineWidth: 1;
         readonly gridWidth: 1;
         readonly labelVariant: "caption";

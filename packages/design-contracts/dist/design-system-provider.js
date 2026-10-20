@@ -37,6 +37,13 @@ export const designSystemEnvironmentDefaults = {
     minimumVisualTarget: false,
     density: "comfortable",
 };
+/** A resolved-value bridge still owns its current color scope. Preserve it for nested
+ * providers. An explicit brandPalette still replaces the inherited overrides (scope reset contract). */
+export function resolveProviderBrandPalette(inherited, supplied, value) {
+    if (value !== undefined)
+        return { ...inherited, [value.environment.theme]: value.palette.theme };
+    return supplied ?? inherited;
+}
 const themeColorKeys = Object.keys(THEMES.light);
 const accentColorKeys = Object.keys(ACCENTS.light);
 const sixDigitHexColor = /^#[0-9a-f]{6}$/i;

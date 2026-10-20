@@ -6,7 +6,7 @@ export declare function studioReport(palette: StudioPalette, theme: ResolvedThem
     ratio: number;
     pass: boolean;
     foreground: keyof ThemeColors;
-    background: keyof ThemeColors;
+    background: keyof ThemeColors | `accentFill.${import("./colors.js").AccentTone}`;
     minimum: number;
     kind: "text" | "non-text";
 }[];

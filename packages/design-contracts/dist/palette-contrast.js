@@ -1,10 +1,13 @@
-import { THEMES } from "./colors.js";
+import { THEMES, accentFill } from "./colors.js";
 const readable = ["text", "textBody", "textMuted", "textSub", "contentBrand", "danger"];
 const surfaces = ["bg", "surface"];
 export const paletteContrastRules = [
     ...readable.flatMap((foreground) => surfaces.map((background) => ({ foreground, background, minimum: 4.5, kind: "text" }))),
     { foreground: "onPrimary", background: "primary", minimum: 4.5, kind: "text" },
     { foreground: "onDanger", background: "dangerFill", minimum: 4.5, kind: "text" },
+    // Filled badges use a separate ink/fill pair, independent of primary buttons.
+    ...["neutralFill", "strongFill"].map(background => ({ foreground: "onStatusFill", background, minimum: 4.5, kind: "text" })),
+    ...Object.keys(accentFill).map(tone => ({ foreground: "onStatusFill", background: `accentFill.${tone}`, minimum: 4.5, kind: "text" })),
     ...["primary", "borderControl"].flatMap((foreground) => surfaces.map((background) => ({ foreground, background, minimum: 3, kind: "non-text" }))),
     // textWeak is the disabled/decorative/placeholder tier, exempt from text AA;
     // it also paints border.strong on canvas, which must stay a visible boundary.
@@ -26,11 +29,15 @@ export function contrastRatio(foreground, background) {
     const b = luminance(background);
     return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
 }
+/** Fixed status fills remain outside the product palette, but participate in the same report. */
+export function resolveContrastBackground(palette, key) {
+    return key.startsWith("accentFill.") ? accentFill[key.slice("accentFill.".length)] : palette[key];
+}
 /** Pairs of a resolved theme palette that fall below their threshold; empty means it passes. */
 export function checkPaletteContrast(palette) {
     const findings = [];
     for (const rule of paletteContrastRules) {
-        const ratio = contrastRatio(palette[rule.foreground], palette[rule.background]);
+        const ratio = contrastRatio(palette[rule.foreground], resolveContrastBackground(palette, rule.background));
         if (ratio < rule.minimum)
             findings.push({ ...rule, ratio: Math.round(ratio * 100) / 100 });
     }

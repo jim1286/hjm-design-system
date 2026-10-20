@@ -79,6 +79,7 @@ export type { ToastPresentationAdapter } from "./internal/toast-presentation.js"
 import { Button, IconButton } from "./actions.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { Text } from "./primitives.js";
+import { Badge } from "./data-display.js";
 import { useHjmNativeTheme } from "./provider.js";
 
 export type AnnouncementMode = "none" | "polite" | "assertive";
@@ -94,6 +95,8 @@ export type NoticeProps = Omit<ViewProps, "children" | "style"> & Readonly<{
   title: string;
   description?: string;
   tone?: NoticeTone;
+  /** Unframed status beside its saved item; retains the same announcement lifecycle. */
+  appearance?: keyof typeof noticeRecipe.appearances;
   announcement?: AnnouncementMode;
   icon?: ReactNode;
   renderIcon?: (props: NoticeIconRenderProps) => ReactNode;
@@ -106,6 +109,7 @@ export function Notice({
   title,
   description,
   tone = noticeRecipe.defaults.tone,
+  appearance = noticeRecipe.defaults.appearance,
   announcement = "none",
   icon,
   renderIcon,
@@ -141,12 +145,12 @@ export function Notice({
       accessibilityRole={announcement === "assertive" ? "alert" : undefined}
       style={[
         {
-          backgroundColor: resolveColorReference(toneContract.background, theme.palette),
+          backgroundColor: appearance === "status" ? "transparent" : resolveColorReference(toneContract.background, theme.palette),
           borderColor: resolveColorReference(toneContract.border, theme.palette),
           borderRadius: theme.tokens.radius[noticeRecipe.radius],
-          borderWidth: noticeRecipe.borderWidth,
+          borderWidth: noticeRecipe.appearances[appearance].borderWidth,
           gap: noticeRecipe.gap,
-          padding: noticeRecipe.padding,
+          padding: noticeRecipe.appearances[appearance].padding,
         },
         layoutStyle,
       ]}
@@ -174,12 +178,12 @@ export function Notice({
           </View>
         )}
         <View style={{ flex: 1, gap: noticeRecipe.contentGap, minWidth: 0 }}>
-          <Text
+          {appearance === "status" ? <Badge label={title} tone={tone} size="small" /> : <Text
             style={{ color: foreground, fontWeight: noticeRecipe.title.fontWeight }}
             variant={noticeRecipe.title.textVariant}
           >
             {title}
-          </Text>
+          </Text>}
           {description ? (
             <Text
               style={{ color: resolveColorReference(noticeRecipe.description.color, theme.palette) }}
@@ -314,7 +318,9 @@ export function EmptyState({
           {description}
         </Text>
       ) : null}
-      {action ? <View>{action}</View> : null}
+      {/* Percentage-width actions need a definite parent width; intrinsic sizing here
+          makes Yoga resolve the stack and its full-width buttons against each other. */}
+      {action ? <View style={{ alignSelf: "stretch", alignItems: "center" }}>{action}</View> : null}
       {usesUpperSpacers ? <View accessible={false} style={{ flexGrow: 3 }} /> : null}
     </View>
   );

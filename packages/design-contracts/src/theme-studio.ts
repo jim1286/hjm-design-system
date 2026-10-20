@@ -1,5 +1,5 @@
 import { THEMES, type ResolvedTheme, type ThemeColors } from "./colors.js";
-import { contrastRatio, paletteContrastRules } from "./palette-contrast.js";
+import { contrastRatio, paletteContrastRules, resolveContrastBackground } from "./palette-contrast.js";
 export type StudioPalette = Partial<Record<ResolvedTheme, Partial<ThemeColors>>>;
 export type StudioColorRole = "primary" | "onPrimary" | "contentBrand";
 export function applyStudioColor(palette:StudioPalette, theme:ResolvedTheme, role:StudioColorRole, color:string):StudioPalette {
@@ -8,7 +8,7 @@ export function applyStudioColor(palette:StudioPalette, theme:ResolvedTheme, rol
 }
 export function studioReport(palette:StudioPalette,theme:ResolvedTheme){
  const resolved={...THEMES[theme],...palette[theme]};
- return paletteContrastRules.map(rule=>({...rule,ratio:contrastRatio(resolved[rule.foreground],resolved[rule.background]),pass:contrastRatio(resolved[rule.foreground],resolved[rule.background])>=rule.minimum}));
+ return paletteContrastRules.map(rule=>({...rule,ratio:contrastRatio(resolved[rule.foreground],resolveContrastBackground(resolved, rule.background)),pass:contrastRatio(resolved[rule.foreground],resolveContrastBackground(resolved, rule.background))>=rule.minimum}));
 }
 export function exportStudioPalette(palette:StudioPalette){
  // Export the actual provider overrides, not invented derived hues or product defaults.

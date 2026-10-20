@@ -26,6 +26,7 @@ import { buttonRecipe, type ButtonShape } from "@hjmds/design-contracts/recipes/
 import { classNames } from "./internal.js";
 import { Button } from "./actions.js";
 import { Text } from "./layout.js";
+import { Badge } from "./display.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 // The HTML `title` attribute (tooltip string) shares its name with the heading slot.
@@ -39,6 +40,8 @@ export type NoticeProps = Omit<HTMLAttributes<HTMLElement>, "title"> &
     action?: ReactNode;
     icon?: ReactNode;
     tone?: NoticeTone;
+    /** Unframed status beside the result; shares Notice live-region semantics. */
+    appearance?: keyof typeof noticeRecipe.appearances;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
   }>;
@@ -50,6 +53,7 @@ export const Notice = forwardRef<HTMLElement, NoticeProps>(function Notice(
     action,
     icon,
     tone = noticeRecipe.defaults.tone,
+    appearance = noticeRecipe.defaults.appearance,
     className,
     layoutStyle,
     ...props
@@ -64,6 +68,7 @@ export const Notice = forwardRef<HTMLElement, NoticeProps>(function Notice(
       ref={ref}
       className={classNames("hjm-notice", className)}
       data-tone={tone}
+      data-appearance={appearance}
       role={urgent ? "alert" : "status"}
       // A background refresh can retain content while reporting danger. Honor the
       // public HTML live-region override instead of forcing every danger to interrupt.
@@ -71,7 +76,7 @@ export const Notice = forwardRef<HTMLElement, NoticeProps>(function Notice(
     >
       {icon ? <div className="hjm-notice__icon" aria-hidden="true">{icon}</div> : null}
       <div className="hjm-notice__content">
-        <strong className="hjm-notice__title">{title}</strong>
+        {appearance === "status" ? <Badge tone={tone} size="small">{title}</Badge> : <strong className="hjm-notice__title">{title}</strong>}
         {description ? <div className="hjm-notice__description">{description}</div> : null}
       </div>
       {action ? <div className="hjm-notice__action">{action}</div> : null}

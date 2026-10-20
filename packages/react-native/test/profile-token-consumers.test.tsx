@@ -22,7 +22,7 @@ import { SavedItemsScreen } from "../src/saved-items.js";
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 const custom = defineHjmDesignProfile({ extends: "paper", tokens: {
   radius: { sm: 3, md: 27, lg: 39, xl: 51 },
-  typography: { body: { fontSize: 19, lineHeight: 30 }, bodyLarge: { fontSize: 27, lineHeight: 40 }, label: { fontSize: 17, lineHeight: 28 } },
+  typography: { body: { fontSize: 19, lineHeight: 30 }, bodyLarge: { fontSize: 23, lineHeight: 40 }, label: { fontSize: 17, lineHeight: 28 } },
   fontFamily: { code: ["ProductMono", "monospace"] },
 } });
 const flatten = (style: unknown): Record<string, unknown> => typeof style === "function" ? flatten(style({ pressed: false }))
@@ -65,7 +65,7 @@ it("updates actual display, collection and navigation hosts using a product prof
   // Deliberately unusual product radii reveal a renderer frozen on stock values.
   // Expectations keep each existing semantic role rather than flattening all corners.
   const cases: { name: string; node: ReactNode; role: "sm" | "md" | "lg" | "xl" | "full"; select?: (tree: ReactTestRenderer) => Record<string, unknown> }[] = [
-    { name: "Badge", node: <Badge label="새 소식" />, role: "full" },
+    { name: "Badge", node: <Badge label="새 소식" />, role: "sm" },
     { name: "Tag", node: <Tag>종이</Tag>, role: "sm" },
     { name: "ListRow", node: <ListRow title="기록" leading={<View />} leadingShape="circle" />, role: "full", select: tree => flatten(tree.root.findAllByType(View).find(node => flatten(node.props.style).overflow === "hidden")!.props.style) },
     { name: "Image", node: <Image src="https://example.com/image.png" decorative={false} accessibilityLabel="기록 이미지" width={80} height={80} renderImage={() => <View />} />, role: "md" },
@@ -117,7 +117,7 @@ it("uses product text metrics for large password frames, calendar content and se
       <ActivityHeatmap label="활동" descriptor={{ startDate: "2026-10-07", endDate: "2026-10-07", days: [{ date: "2026-10-07", value: 1 }] }} formatDay={date => date} />
     </HjmNativeProvider>); });
     const input = tree.root.findByType(PasswordField).findByType(TextInput);
-    expect(flatten(input.props.style).fontSize).toBe(27 * 1.3);
+    expect(flatten(input.props.style).fontSize).toBe(23 * 1.3);
     expect(flatten(input.props.style).lineHeight).toBe(40 * 1.3);
     expect(flatten(input.props.style).minHeight).toBeGreaterThanOrEqual(40 * 1.3);
     expect(input.props.allowFontScaling).toBe(false);

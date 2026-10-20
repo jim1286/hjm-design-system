@@ -41,7 +41,7 @@ import {
   type ChartSeries,
   type ScatterDatum,
 } from "@hjmds/design-contracts/components/chart";
-import { spacing } from "@hjmds/design-contracts/foundations";
+import { spacing, typography } from "@hjmds/design-contracts/foundations";
 import { useOptionalHjmTheme } from "./provider.js";
 import { classNames } from "./internal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
@@ -87,6 +87,8 @@ const chromeStyle = {
   "--hjm-chart-tooltip-surface": cssColor(chrome.tooltipSurface),
   "--hjm-chart-tooltip-border": cssColor(chrome.tooltipBorder),
   "--hjm-chart-tooltip-content": cssColor(chrome.tooltipContent),
+  "--hjm-chart-label-surface": cssColor(chrome.labelSurface),
+  "--hjm-chart-label-content": cssColor(chrome.labelContent),
 } as CSSProperties;
 
 function useSeriesColor(): (series: Readonly<{ color?: string | undefined }>, index: number) => string {
@@ -614,6 +616,9 @@ export function PieChart({
   data, accessibilityLabel, formatValue, donut = true, size = 180, centerContent, selectedId, defaultSelectedId = null, onSelect,
   showLegend = true, exclusion, className, layoutStyle,
 }: PieChartProps) {
+  const labelTheme = useOptionalHjmTheme();
+  const labelMetrics = labelTheme?.designProfile?.tokens.typography[chrome.labelVariant] ?? typography[chrome.labelVariant];
+  const labelScale = labelTheme?.environment.textScale ?? 1;
   const colorOf = useSeriesColor(), id = useSvgId(), descriptionId = `${id}-description`;
   const [own, setOwn] = useState<string | null>(defaultSelectedId);
   const candidate = selectedId !== undefined ? selectedId : own;
@@ -669,9 +674,15 @@ export function PieChart({
               />
             );
           })}
-          {!donut ? slices.filter((slice) => slice.percent >= chartRecipe.pie.minLabelPercent * 2).map((slice) => (
-            <text key={`t${slice.index}`} className="hjm-chart__slice-label" x={slice.centroid.x} y={slice.centroid.y} dominantBaseline="middle" textAnchor="middle">{percentText(slice.index)}</text>
-          )) : null}
+          {!donut ? slices.filter((slice) => slice.percent >= chartRecipe.pie.minLabelPercent * 2).map((slice) => {
+            const label = percentText(slice.index);
+            const labelWidth = label.length * labelMetrics.fontSize * labelScale + spacing.xxs * 2;
+            const labelHeight = labelMetrics.lineHeight * labelScale + spacing.xxs;
+            return <g key={`t${slice.index}`} pointerEvents="none">
+              <rect x={slice.centroid.x - labelWidth / 2} y={slice.centroid.y - labelHeight / 2} width={labelWidth} height={labelHeight} style={{ rx: "var(--hjm-radius-sm)", fill: "var(--hjm-chart-label-surface)" }} />
+              <text className="hjm-chart__slice-label" x={slice.centroid.x} y={slice.centroid.y} dominantBaseline="middle" textAnchor="middle">{label}</text>
+            </g>;
+          }) : null}
         </svg>
         {donut && center != null ? <div className="hjm-chart__pie-center">{center}</div> : null}
       </div>

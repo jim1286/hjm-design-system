@@ -92,13 +92,15 @@ import { Combobox } from "@hjmds/react-native/forms";
 
 ## 배치
 
+2026-10-20 언어 선택 화면에서 자체 모달에 옛 ×·여백이 남은 문제를 해결하기 위해 Native는 공통 Sheet를 직접 사용한다. 닫기 제스처·안전 영역·높이·키보드 대응·teardown은 Sheet가 소유하고, 선택 목록과 확정 콜백은 입력 컴포넌트가 소유한다.
+
 Native는 제품 프로필의 `tokens.fontFamily.ui`를 실제 텍스트/입력 host에 연결한다. 기본 UI stack은 OS 서체를 유지하고, 제품이 지정한 첫 named font의 등록·글리프 확인은 제품이 맡는다.
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 입력 높이 `medium` 44(`fieldFrameContract`) · `large` 52(`control.buttonHeight.large`), 폭은 폼 열을 채운다. Web 목록 최대 높이 22.5rem(360, recipe `popover.maxHeight`), 선택지 최소 높이 `compact` 44 · `comfortable` 56(3.5rem). Native 시트 최대 높이 화면의 75% | `selectRecipe.sizes`·`popover`, `.hjm-combobox__listbox`·`__option`, `react-native/src/forms.tsx` |
-| 간격 | 라벨·설명·오류는 [Field](field.md) 규칙(`formSupportContract.gap` `spacing.xs` 8). Web 목록 안쪽 `spacing.xs` 8(`comboboxRecipe.popover.padding` = Select와 같은 표면. 2026-10-06까지 4, 1.13.0 변경), 선택지 안쪽 위아래 `spacing.xs` 8 · 좌우 `spacing.sm` 12. Native 시트 안쪽 `spacing.md` 16, 아래는 `spacing.md` + 하단 안전 영역, 요소 사이 `spacing.sm` 12 | `.hjm-combobox__option`, `react-native/src/forms.tsx` |
-| 순서·정렬 | 폼 안에서 다른 입력과 같은 열에 둔다. Web은 입력 바로 아래(공간이 없으면 위, `data-placement`)에 목록이 붙는다. Native는 화면 아래에서 시트가 올라오고 [제목·닫기] → [상태 문구 또는 선택지 목록] 순서다 | `react/src/advanced-forms.tsx`(`AnchoredPortal`), `CollectionSheetHeader` |
+| 크기 | 입력 높이 `medium` 44(`fieldFrameContract`) · `large` 52(`control.buttonHeight.large`), 폭은 폼 열을 채운다. Web 목록 최대 높이 22.5rem(360, recipe `popover.maxHeight`), 선택지 최소 높이 `compact` 44 · `comfortable` 56(3.5rem). Native는 공통 Sheet의 `auto` 높이·가용 영역 상한을 따른다 | `selectRecipe.sizes`·`popover`, `.hjm-combobox__listbox`·`__option`, `react-native/src/forms.tsx` |
+| 간격 | 라벨·설명·오류는 [Field](field.md) 규칙(`formSupportContract.gap` `spacing.xs` 8). Web 목록 안쪽 `spacing.xs` 8(`comboboxRecipe.popover.padding` = Select와 같은 표면. 2026-10-06까지 4, 1.13.0 변경), 선택지 안쪽 위아래 `spacing.xs` 8 · 좌우 `spacing.sm` 12. Native 시트 여백·안전 영역·손잡이와 본문 간격은 [Sheet](sheet.md)의 공통 recipe를 따른다 | `.hjm-combobox__option`, `react-native/src/forms.tsx` |
+| 순서·정렬 | 폼 안에서 다른 입력과 같은 열에 둔다. Web은 입력 바로 아래(공간이 없으면 위, `data-placement`)에 목록이 붙는다. Native는 공통 Sheet의 손잡이 → 상태 문구 또는 선택지 목록 순서다. 제목은 접근성 이름으로만 남기고 ×는 기본으로 숨긴다 | `react/src/advanced-forms.tsx`(`AnchoredPortal`), Native `Sheet` |
 | 고정·스크롤 | 목록은 그 안에서 스크롤한다. Web 목록은 `position: fixed`(z-index `layer.dropdown` 400)로 떠서 화면 스크롤과 무관하다. Native 시트는 배경막(`backdrop.modal`)과 함께 모달로 뜬다 | `.hjm-combobox__listbox`, `react-native/src/forms.tsx` |
 | 좁은 폭·큰 글자 | 선택지 문구는 줄바꿈되고(`overflow-wrap: anywhere`) 높이가 늘어난다. 좁은 폭에서도 Web 목록은 입력에 붙는다 | `.hjm-combobox__option` |
 
@@ -109,8 +111,8 @@ Web                                   Native
 │ [ 입력어 _____________ ▾ ]│          │ [ 입력어 _____________ ▾ ]│
 │ ┌──────────────────────┐ │          │ ▒▒▒▒ 배경막 ▒▒▒▒▒▒▒▒▒▒▒▒ │
 │ │ 선택지 1 (44/56)     │ │ ← fixed  │ ┌──────────────────────┐ │
-│ │ 선택지 2             │ │   스크롤 │ │ 제목            [닫기]│ │
-│ └──────────────────────┘ │          │ │ 선택지 목록(스크롤)  │ │ ← 최대 75%
+│ │ 선택지 2             │ │   스크롤 │ │         ━━━          │ │
+│ └──────────────────────┘ │          │ │ 선택지 목록(스크롤)  │ │ ← Sheet 가용 높이
 │ 설명·오류                 │          │ │ ░ 하단 안전 영역 ░   │ │
 └──────────────────────────┘          └─┴──────────────────────┴─┘
 ```

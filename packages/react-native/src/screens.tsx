@@ -471,6 +471,8 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
 /** Shared structure for embedded compositions. The parent supplies size; this never creates a second scroller. */
 export type CompositionLayoutProps = Readonly<{
   title?: string;
+  /** Compact labels inside sheets retain heading semantics without a large section title. */
+  titleSize?: "default" | "compact";
   /** Document heading level; visual treatment remains the shared composition title. */
   headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
   description?: string;
@@ -486,14 +488,14 @@ export type CompositionLayoutProps = Readonly<{
   loadingIndicator?: ReactNode;
   layoutStyle?: HjmCompositionStyleProp;
 }>;
-export function CompositionLayout({title, headingLevel = 3, description, badge, leading, actions, notice, children, footer, state = {kind: "ready"}, stateAction, loadingIndicator, layoutStyle}: CompositionLayoutProps) {
+export function CompositionLayout({title, titleSize = "default", headingLevel = 3, description, badge, leading, actions, notice, children, footer, state = {kind: "ready"}, stateAction, loadingIndicator, layoutStyle}: CompositionLayoutProps) {
   const resolved = resolveScreenContentState(state);
   // Compact section titles follow the 2026-10-19 mobile typography direction; headingLevel still owns document semantics.
   return <Stack gap="md" {...(layoutStyle === undefined ? {} : {layoutStyle})}>
     {title || description || badge || leading || actions ? <Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap: "wrap"}}>
       {/* Keep the copy’s natural width as its flex basis so actions wrap before squeezing a short title (Spint cell header). */}
       {leading}<Stack gap="xxs" layoutStyle={{flexGrow: 1, flexShrink: 0, flexBasis: "auto", maxWidth: "100%"}}>
-        <Stack axis="inline" gap="xs" align="center" layoutStyle={{flexWrap: "wrap"}}>{title ? <Heading level="level5" semanticLevel={headingLevel}>{title}</Heading> : null}{badge}</Stack>
+        <Stack axis="inline" gap="xs" align="center" layoutStyle={{flexWrap: "wrap"}}>{title ? (titleSize === "compact" ? <Text variant="body" fontRole="ui" accessibilityRole="header" aria-level={headingLevel} style={{fontWeight: "500"}}>{title}</Text> : <Heading level="level5" semanticLevel={headingLevel}>{title}</Heading>) : null}{badge}</Stack>
         {description ? <Text tone="muted">{description}</Text> : null}
       </Stack>{actions}
     </Stack> : null}

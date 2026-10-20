@@ -41,6 +41,9 @@ export const datavizChromeTokens = {
     tooltipSurface: themeColor("surface"),
     tooltipBorder: themeColor("border"),
     tooltipContent: themeColor("textBody"),
+    // An opaque label plate owns contrast even for arbitrary product series colors and faded slices.
+    labelSurface: themeColor("bg"),
+    labelContent: themeColor("text"),
     lineWidth: stroke.default,
     gridWidth: stroke.subtle,
     labelVariant: "caption",

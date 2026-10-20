@@ -19,7 +19,7 @@
 1. 컴포넌트에 `tone`이 있으면 그것으로 고른다([Text](../components/text.md), [Icon](../components/icon.md),
    [Badge](../components/badge.md), [Notice](../components/notice.md), [Button](../components/button.md)).
 2. 없으면 아래 표에서 **칠할 대상**(용도 열)으로 역할을 찾는다. 같은 대상에 후보가 둘이면 위쪽(더 강한) 것을 먼저 본다.
-3. 채운 바탕 위의 글자는 반드시 짝(`onPrimary`·`onDanger`·`onAccentFill`)을 쓴다.
+3. 채운 바탕 위의 글자는 반드시 짝(`onPrimary`·`onDanger`·`onStatusFill`)을 쓴다.
 
 ## 값
 
@@ -65,8 +65,14 @@
 | `feedback.warning.foreground` | `#92400e` / `#fbbf24` | `--hjm-accent-warning` | `theme.palette.statusAccents.warning` | 주의가 필요한 상태 |
 | `feedback.attention.foreground` | `#9a3412` / `#fb923c` | `--hjm-accent-attention` | `theme.palette.statusAccents.attention` | 눈길을 끌 새 소식 |
 | `feedback.<tone>.background` · `.border` | 위 색 alpha 0.1 · 0.3 | — (`color-mix`) | `resolveColorReference(…, theme.palette)` | 피드백 영역의 옅은 바탕·테두리(Notice·Badge가 그린다) |
-| `accentFill.<tone>` | info `#6d28d9` · success `#065f46` · warning `#92400e` · attention `#9a3412`(두 테마 공통) | `--hjm-accent-fill-<tone>` | `theme.palette.statusAccentFills.<tone>` | 꽉 찬 상태 표지 바탕. 글자는 `onAccentFill` `#ffffff` |
-| `accentTint` | `weak` 0.1 · `base` 0.15 · `strong` 0.2 · `border` 0.3 | — | `accentTint` | 피드백 색을 옅게 깔 때 쓰는 alpha |
+| `accentFill.<tone>` | info `#6d28d9` · success `#065f46` · warning `#92400e` · attention `#9a3412`(두 테마 공통) | `--hjm-accent-fill-<tone>` | `theme.palette.statusAccentFills.<tone>` | 꽉 찬 상태 표지 바탕. 글자는 팔레트의 `onStatusFill`(기본 `#ffffff`) |
+| `onStatusFill` | `#ffffff`(두 테마 공통) | `--hjm-color-on-status-fill` | `theme.colors.onStatusFill` | 채운 상태 표지의 글자. 모든 상태 fill과 4.5:1 이상 |
+| `neutralFill` | `#4e5968`(두 테마 공통) | `--hjm-color-neutral-fill` | `theme.colors.neutralFill` | 중립 상태 표지 바탕 |
+| `strongFill` | `#333d4b`(두 테마 공통) | `--hjm-color-strong-fill` | `theme.colors.strongFill` | 강한 상태 표지 바탕 |
+| `accentTint` | `weak` 0.1 · `base` 0.15 · `strong` 0.2 · `border` 0.3 | — | `onStatusFill` | `#ffffff`(두 테마 공통) | `--hjm-color-on-status-fill` | `theme.colors.onStatusFill` | 채운 상태 표지의 글자. 모든 상태 fill과 4.5:1 이상 |
+| `neutralFill` | `#4e5968`(두 테마 공통) | `--hjm-color-neutral-fill` | `theme.colors.neutralFill` | 중립 상태 표지 바탕 |
+| `strongFill` | `#333d4b`(두 테마 공통) | `--hjm-color-strong-fill` | `theme.colors.strongFill` | 강한 상태 표지 바탕 |
+| `accentTint` | 피드백 색을 옅게 깔 때 쓰는 alpha |
 
 도메인 상태(예: "배송 지연")는 제품 어댑터에서 `info`·`success`·`warning`·`attention`·`danger` 중 하나로 매핑한다.
 `info`·`success`·`warning`·`attention`의 accent 색은 `brandPalette` 변경 대상이 아니다.
@@ -114,7 +120,7 @@ const theme = useHjmNativeTheme();
 const tint = resolveColorReference(semanticColors.feedback.warning.background, theme.palette);
 ```
 
-제품 브랜드는 Provider의 `brandPalette`로 17개 key 중 필요한 것만 바꾼다. 값은 [테마 편집](theme-studio.md)으로 고르고 대비를 확인한다.
+제품 브랜드는 Provider의 `brandPalette`로 20개 key 중 필요한 것만 바꾼다. 값은 [테마 편집](theme-studio.md)으로 고르고 대비를 확인한다.
 
 ```tsx
 // Web
@@ -131,7 +137,7 @@ import { HjmProvider } from "@hjmds/react/provider";
 - 제품 브랜드를 `--hjm-color-*` 재정의나 `.hjm-*` 덮어쓰기로 넣지 않는다. 색만 바꾸면 `brandPalette`, 여러 표현 축을 함께 선택하면 검증한 `designProfile`을 쓴다([브랜드 경계](../../brand-boundary.md)).
 - 성공·오류 색을 브랜드 색으로, 브랜드 색을 상태 색으로 쓰지 않는다.
 - `textWeak`로 읽혀야 하는 문구를 쓰지 않는다. 보조 문구는 `textMuted`·`textSub`다.
-- 채운 `primary`·`dangerFill`·`accentFill` 위에 `text`를 올리지 않는다. 짝(`onPrimary`·`onDanger`·`onAccentFill`)을 쓴다.
+- 채운 `primary`·`dangerFill`·`accentFill` 위에 `text`를 올리지 않는다. 짝(`onPrimary`·`onDanger`·`onStatusFill`)을 쓴다.
 - Showcase의 예시 색을 제품 기본값으로 복사하지 않는다.
 
 ## 플랫폼 차이

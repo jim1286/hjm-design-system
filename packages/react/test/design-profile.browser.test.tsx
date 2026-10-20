@@ -161,7 +161,7 @@ it("uses real glass filtering and clay inset shadows without replacing focused c
     const style = getComputedStyle(surface);
     expect(style.backdropFilter).toBe("none");
     expect(style.boxShadow.match(/inset/g)).toHaveLength(2);
-    expect(style.boxShadow).toContain(`${hjmDesignPresets.clay.tokens.shadow.floating.radius}px`);
+    expect(style.boxShadow).toContain(`${hjmDesignPresets.clay.tokens.shadow.raised.radius}px`);
     expect(host.querySelector('[aria-label="질감 초안"]')).toBe(draft);
     expect(draft.value).toBe("retained"); expect(document.activeElement).toBe(draft);
     await render(hjmDesignPresets.neutral);

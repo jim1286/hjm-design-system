@@ -150,6 +150,17 @@ export type DesignSystemProviderValue = Readonly<{
   designProfile?: HjmDesignProfile;
 }>;
 
+/** A resolved-value bridge still owns its current color scope. Preserve it for nested
+ * providers. An explicit brandPalette still replaces the inherited overrides (scope reset contract). */
+export function resolveProviderBrandPalette(
+  inherited: ResolveDesignSystemEnvironmentOptions["brandPalette"],
+  supplied: ResolveDesignSystemEnvironmentOptions["brandPalette"],
+  value?: DesignSystemProviderValue,
+): ResolveDesignSystemEnvironmentOptions["brandPalette"] {
+  if (value !== undefined) return { ...inherited, [value.environment.theme]: value.palette.theme };
+  return supplied ?? inherited;
+}
+
 const themeColorKeys = Object.keys(THEMES.light) as readonly (keyof typeof THEMES.light)[];
 const accentColorKeys = Object.keys(ACCENTS.light) as readonly (keyof typeof ACCENTS.light)[];
 const sixDigitHexColor = /^#[0-9a-f]{6}$/i;

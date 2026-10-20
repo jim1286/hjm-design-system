@@ -73,7 +73,7 @@ import { TimePicker } from '@hjmds/react/time-picker';
 | 간격 | 열 사이 spacing.sm(12), 영역 사이 spacing.md(16) | timePickerRecipe |
 | 고정·스크롤 | 제목·확인은 공통 overlay 영역, 시·분 목록만 세로 스크롤 | Popover / Sheet / TimePicker |
 | 좁은 폭·큰 글자 | 좁은 폭은 두 열을 같은 폭으로 유지. 최대 글자 조건은 사용자 지침으로 범위 제외 | 포트폴리오 AGENTS.md |
-| 선택 표시 | radius.md, surfaceAccent 배경·contentBrand 글자 | 공통 recipe·semantic palette |
+| 선택 표시 | radius.md, surfaceAccent 배경·text 글자·500 굵기 | 시간 값은 주요 글자로 강조하고, 제품 선택 배경과 확정 버튼 대표색을 구분(2026-10-20 토스 공개 팔레트 참고 요청) |
 | 설명·오류 | 입력 아래 description/error. 오류는 보조기술에도 알림 | 양 renderer |
 
 

@@ -38,7 +38,7 @@ export const productDesign = defineHjmDesignProfile({
 
 | 축 | 중립 기본값 | 참고 프리셋의 차이 |
 | --- | --- | --- |
-| palette | 현재 HJM light/dark 17 semantic roles | 레트로의 잉크/황갈색, 종이의 따뜻한 중립색, 숲의 녹색 |
+| palette | 현재 HJM light/dark 20 semantic roles | 레트로의 잉크/황갈색, 종이의 따뜻한 중립색, 숲의 녹색 |
 | tokens | 기존 radius/fontFamily/typography/heading/shadow | 모서리·글자 크기/행간/강조·그림자와 일반 monospace fallback; 폰트 자산은 번들하지 않음 |
 | material | canvas/card/surface 모두 null | 레트로 noise, 종이 grain+ruled, 숲 mesh+glow; 오로라만 active=true, 나머지는 정적 |
 | interactions | contentTransition=fade, selectionMotion=none | 레트로 slide, 종이 fade, 숲 rise와 slide 선택 배경 |

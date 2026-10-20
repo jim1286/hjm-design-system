@@ -288,12 +288,13 @@ describe("Sheet title and backdrop", () => {
 });
 
 describe("Native Select sheet title", () => {
-  it("names the selection sheet without a visible title and keeps the × (2026-10-17)", () => {
+  it("names the shared selection sheet without a visible title and keeps an accessible dismissal target", () => {
     render(<HjmNativeProvider reducedMotion>
       <Select label="기간" placeholder="선택" open dismissLabel="닫기" optionsAccessibilityLabel="기간 선택"
         items={[{ id: "a", label: "오늘", textValue: "오늘" }]} />
     </HjmNativeProvider>);
-    const sheet = renderer!.root.findAll((node) => node.props.accessibilityViewIsModal === true && node.props.accessibilityRole === "radiogroup")[0]!;
+    // Select now uses Sheet's dialog boundary; its radiogroup remains inside it.
+    const sheet = dialog();
     expect(sheet.findAll((node) => node.props.accessibilityRole === "header" && node.props.accessibilityLabel === "기간").length).toBeGreaterThan(0);
     expect(sheet.findAllByType(NativeText).some((node) => node.props.children === "기간")).toBe(false);
     expect(sheet.findAll((node) => node.props.accessibilityRole === "button" && node.props.accessibilityLabel === "닫기").length).toBeGreaterThan(0);

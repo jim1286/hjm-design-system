@@ -2,8 +2,10 @@ import type { HjmDesignProfile } from "@hjmds/design-contracts/design-profile";
 import { resolveSurfaceFillOpacity } from "@hjmds/design-contracts/palette-contrast";
 import {
   resolveDesignSystemProviderValue,
+  resolveProviderBrandPalette,
   validateDesignSystemProviderValue,
   type DesignSystemDirection,
+  type DesignSystemDensity,
   type DesignSystemEnvironmentInput,
   type DesignSystemProviderValue,
   type DesignSystemTextScale,
@@ -70,6 +72,7 @@ type HjmNativeProviderEnvironmentProps = Readonly<{
   textScale?: DesignSystemTextScale;
   reducedMotion?: boolean;
   minimumVisualTarget?: boolean;
+  density?: DesignSystemDensity;
   /**
    * The supported brand route. Before 1.5.0 branding required a hand-built
    * `value`, which also stopped following the OS theme, text scale and
@@ -88,6 +91,7 @@ type HjmNativeProviderValueProps = Readonly<{
   textScale?: never;
   reducedMotion?: never;
   minimumVisualTarget?: never;
+  density?: never;
   brandPalette?: never;
   designProfile?: never;
 }>;
@@ -193,6 +197,7 @@ function toEnvironmentInput(
   props: HjmNativeProviderEnvironmentProps,
 ): DesignSystemEnvironmentInput {
   return {
+    ...(props.density === undefined ? {} : { density: props.density }),
     ...(props.theme === undefined ? {} : { theme: props.theme }),
     ...(props.direction === undefined ? {} : { direction: props.direction }),
     ...(props.textScale === undefined ? {} : { textScale: props.textScale }),
@@ -210,6 +215,7 @@ export function HjmNativeProvider({
   textScale,
   reducedMotion,
   minimumVisualTarget,
+  density,
   brandPalette: suppliedBrandPalette,
   designProfile: suppliedDesignProfile,
   value: suppliedValue,
@@ -227,7 +233,7 @@ export function HjmNativeProvider({
   const inheritedInsets = useContext(HjmNativeSafeAreaContext);
   const safeAreaInsets = suppliedInsets ?? inheritedInsets;
   const inheritedBrandPalette = useContext(HjmNativeBrandPaletteContext);
-  const brandPalette = suppliedValue === undefined ? suppliedBrandPalette ?? inheritedBrandPalette : undefined;
+  const brandPalette = useMemo(() => resolveProviderBrandPalette(inheritedBrandPalette, suppliedBrandPalette, suppliedValue), [inheritedBrandPalette, suppliedBrandPalette, suppliedValue]);
   const colorScheme = useColorScheme();
   // Match Expo web's light server snapshot to avoid stale styles after hydration;
   // native stays immediate. See README: static-web theme precedence.
@@ -242,13 +248,14 @@ export function HjmNativeProvider({
   const environment = useMemo(
     () =>
       toEnvironmentInput({
+        ...(density === undefined ? {} : { density }),
         ...(theme === undefined ? {} : { theme }),
         ...(direction === undefined ? {} : { direction }),
         ...(textScale === undefined ? {} : { textScale }),
         ...(reducedMotion === undefined ? {} : { reducedMotion }),
         ...(minimumVisualTarget === undefined ? {} : { minimumVisualTarget }),
       }),
-    [direction, minimumVisualTarget, reducedMotion, textScale, theme],
+    [density, direction, minimumVisualTarget, reducedMotion, textScale, theme],
   );
 
   const contextValue = useMemo<HjmNativeTheme>(() => {

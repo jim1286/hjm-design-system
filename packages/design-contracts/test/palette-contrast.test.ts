@@ -19,6 +19,13 @@ describe("palette contrast checker", () => {
     expect(checkPaletteContrast(THEMES.dark)).toEqual([]);
   });
 
+  it("rejects unreadable status ink on product and fixed badge fills", () => {
+    const findings = checkPaletteContrast({ ...THEMES.light, onStatusFill: "#000000" });
+    expect(findings.some(f => f.background === "neutralFill")).toBe(true);
+    expect(findings.some(f => f.background === "strongFill")).toBe(true);
+    expect(findings.some(f => f.background === "accentFill.info")).toBe(true);
+  });
+
   it("covers the text, action label and control boundary pairs", () => {
     const keys = paletteContrastRules.map(({ foreground, background }) => `${foreground}/${background}`);
     for (const pair of [

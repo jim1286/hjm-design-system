@@ -5,6 +5,7 @@ import { userEvent } from "vitest/browser";
 import { compositionBrandFixtures } from "../../../showcase/shared/composition-brand-fixtures.js";
 import { TimePicker, type TimePickerProps } from "../src/time-picker.js";
 import { HjmProvider } from "../src/provider.js";
+import { THEMES } from "@hjmds/design-contracts/colors";
 import "../src/styles.css";
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 const labels = { label: "Time", hour: "Hour", minute: "Minute", placeholder: "Choose time", confirm: "Confirm", cancel: "Cancel" };
@@ -68,7 +69,9 @@ it("time-picker inherits two product palettes in both themes", async () => {
  for (const brandPalette of Object.values(compositionBrandFixtures)) for (const theme of ["light", "dark"] as const) {
   await act(async () => root.render(<HjmProvider brandPalette={brandPalette} theme={theme}><TimePicker presentation="inline" value="14:30" labels={labels} onValueChange={() => {}} /></HjmProvider>));
   const color = getComputedStyle(option("14 Hour")).color;
-  const expected = document.createElement('span'); expected.style.color = brandPalette[theme].contentBrand; host.append(expected);
-  expect(color).toBe(getComputedStyle(expected).color); expected.remove();
+  // These brand fixtures override primary roles only; selected values retain the base text role.
+  const expected = document.createElement('span'); expected.style.color = THEMES[theme].text; host.append(expected);
+  expect(color).toBe(getComputedStyle(expected).color);
+  expect(getComputedStyle(option("14 Hour")).fontWeight).toBe("500"); expected.remove();
  }
 });

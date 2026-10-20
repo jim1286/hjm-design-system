@@ -4,6 +4,7 @@ import * as ReactNative from "react-native";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { HjmNativeProvider, useHjmNativeTheme, type HjmNativeTheme } from "../src/provider.js";
+import { ListRow } from "../src/data-display.js";
 
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean })
   .IS_REACT_ACT_ENVIRONMENT = true;
@@ -72,6 +73,28 @@ describe("native provider theme precedence", () => {
 });
 
 describe("brandPalette prop", () => {
+  it("retains the product palette through a resolved-value safe-area bridge", () => {
+    const seen: HjmNativeTheme[] = [];
+    function Bridge() {
+      const value = useHjmNativeTheme();
+      return <HjmNativeProvider value={value} safeAreaInsets={{ bottom: 20 }}>
+        <HjmNativeProvider><Probe onRender={value => seen.push(value)} /></HjmNativeProvider>
+      </HjmNativeProvider>;
+    }
+    act(() => { renderer = create(<HjmNativeProvider theme="light" reducedMotion brandPalette={{ light: { primary: "#123456" } }}><Bridge /></HjmNativeProvider>); });
+    expect(seen[0]!.colors.primary).toBe("#123456");
+  });
+
+  it("applies inherited density while preserving explicit row density", () => {
+    act(() => { renderer = create(<HjmNativeProvider reducedMotion density="compact">
+      <HjmNativeProvider><ListRow title="Inherited" /><ListRow title="Explicit" density="comfortable" /></HjmNativeProvider>
+    </HjmNativeProvider>); });
+    const rows = renderer!.root.findAllByType(ListRow);
+    const heights = rows.map(row => row.findAllByType(ReactNative.View)
+      .map(node => ReactNative.StyleSheet.flatten(node.props.style)?.minHeight).filter(value => value !== undefined));
+    expect(heights[0]).toContain(44);
+    expect(heights[1]).toContain(56);
+  });
   it("merges the brand over the defaults, follows the theme and reaches nested providers", async () => {
     const { resolveDesignSystemProviderValue } = await import("@hjmds/design-contracts/components/design-system-provider");
     const { HjmNativeProvider: Provider, useHjmNativeTheme: useTheme } = await import("../src/index.js");

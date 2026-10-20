@@ -104,12 +104,14 @@ import { NativeSelect } from "@hjmds/react/forms";
 
 ## 배치
 
+2026-10-20 언어 선택 화면에서 자체 모달에 옛 ×·여백이 남은 문제를 해결하기 위해 Native는 공통 Sheet를 직접 사용한다. 닫기 제스처·안전 영역·높이·키보드 대응·teardown은 Sheet가 소유하고, 선택 목록과 확정 콜백은 입력 컴포넌트가 소유한다.
+
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 트리거 최소 높이 `medium` 44 · `large` 52, 폼 열 폭을 채운다(Web `inline-size: 100%`). 선택지 행 `comfortable` 56 · `compact` 44. Web 목록 최대 폭 420(`min(26.25rem, 100vw − 2×spacing.md)`)·최대 높이 360. Native sheet 최대 높이 75% | `fieldFrameContract.minHeight`, `control.buttonHeight.large`, `selectRecipe.density`·`popover`, `.hjm-select__listbox`, Native `forms.tsx` |
-| 간격 | 트리거 좌우 `medium` `spacing.md` 16 · `large` `spacing.lg` 20(recipe), 안쪽 요소 사이 `spacing.sm` 12. 라벨·설명·오류와 `spacing.xs` 8. Web 목록은 트리거에서 8 떨어지고 안쪽 여백 `spacing.xs` 8(`selectRecipe.popover.padding`; 2026-10-06까지 4, 1.13.0 변경), 화면 가장자리에서 8(`selectRecipe.popover.collisionPadding`). Native sheet 안쪽 `spacing.md` 16, 머리와 목록 사이 `spacing.sm` 12 | `selectRecipe.sizes`·`value.gap`, `formSupportContract.gap`, `selectRecipe.popover`(sideOffset 8, collisionPadding 8, padding 8), Native `forms.tsx` |
-| 순서·정렬 | 트리거: 앞 아이콘 → 값(넘치면 말줄임) → 펼침 표시. Web 목록은 트리거 아래·트리거와 같은 폭, 공간이 없으면 위로 뒤집힌다. Native sheet 머리는 제목 + 끝쪽 닫기 ×(44). 확인 버튼은 없고 항목을 누르면 선택하고 닫힌다 | `.hjm-select__trigger`, `select.tsx`(`matchAnchorWidth`), `CollectionSheetHeader` |
-| 고정·스크롤 | Web 목록은 `position: fixed` popover(z-index `layer.dropdown` 400), 넘치면 목록 안에서 스크롤. Native는 화면 아래에서 올라오는 modal sheet로 목록만 스크롤되고, 아래 여백에 안전 영역(`safeArea.bottom`)을 더한다. 배경(scrim)을 누르면 닫힌다 | `.hjm-select__listbox`, Native `Select`(Modal·ScrollView) |
+| 크기 | 트리거 최소 높이 `medium` 44 · `large` 52, 폼 열 폭을 채운다(Web `inline-size: 100%`). 선택지 행 `comfortable` 56 · `compact` 44. Web 목록 최대 폭 420(`min(26.25rem, 100vw − 2×spacing.md)`)·최대 높이 360. Native는 공통 Sheet의 `auto` 높이·가용 영역 상한을 따른다 | `fieldFrameContract.minHeight`, `control.buttonHeight.large`, `selectRecipe.density`·`popover`, `.hjm-select__listbox`, Native `forms.tsx` |
+| 간격 | 트리거 좌우 `medium` `spacing.md` 16 · `large` `spacing.lg` 20(recipe), 안쪽 요소 사이 `spacing.sm` 12. 라벨·설명·오류와 `spacing.xs` 8. Web 목록은 트리거에서 8 떨어지고 안쪽 여백 `spacing.xs` 8(`selectRecipe.popover.padding`; 2026-10-06까지 4, 1.13.0 변경), 화면 가장자리에서 8(`selectRecipe.popover.collisionPadding`). Native 시트 여백·안전 영역·손잡이와 본문 간격은 [Sheet](sheet.md)의 공통 recipe를 따른다 | `selectRecipe.sizes`·`value.gap`, `formSupportContract.gap`, `selectRecipe.popover`(sideOffset 8, collisionPadding 8, padding 8), Native `forms.tsx` |
+| 순서·정렬 | 트리거: 앞 아이콘 → 값(넘치면 말줄임) → 펼침 표시. Web 목록은 트리거 아래·트리거와 같은 폭, 공간이 없으면 위로 뒤집힌다. Native는 공통 Sheet의 상단 손잡이를 쓰며 제목은 접근성 이름으로만 남기고 ×는 기본으로 숨긴다. 확인 버튼은 없고 항목을 누르면 선택하고 닫힌다 | `.hjm-select__trigger`, `select.tsx`(`matchAnchorWidth`), Native `Sheet` |
+| 고정·스크롤 | Web 목록은 `position: fixed` popover(z-index `layer.dropdown` 400), 넘치면 목록 안에서 스크롤. Native는 화면 아래에서 올라오는 modal sheet로 목록만 스크롤되고, 아래 여백에 안전 영역(`safeArea.bottom`)을 더한다. 배경(scrim)을 누르면 닫힌다 | `.hjm-select__listbox`, Native `Select`(Sheet·ScrollView) |
 | 좁은 폭·큰 글자 | 트리거 높이는 최소값이라 큰 글자에서 늘어나고 값은 한 줄 말줄임이다. Web 목록 폭은 화면 폭 − 32를 넘지 않는다 | `.hjm-select__value`, `.hjm-select__listbox` |
 
 ```text
@@ -117,13 +119,13 @@ Web popover                         Native sheet
 라벨                                 ┌──────── scrim (누르면 닫힘) ────────┐
 ┌──────────────────────┐            │                                     │
 │ 선택된 값          ⌄ │ 44         ├─────────────────────────────────────┤ radius.lg 16
-└──────────────────────┘            │ 정렬 기준                       (×) │ ← 머리, × 44
-  ↓ 8                               │   gap spacing.sm 12                 │
+└──────────────────────┘            │                ━━━                  │ ← 손잡이
+  ↓ 8                               │   gap sheetRecipe.body.gap           │
 ┌──────────────────────┐            │ ┌─────────────────────────────────┐ │
 │ 최신순             ✓ │ 56         │ │ 최신순                        ✓ │ │ 56 ↕ 스크롤
 │ 인기순               │            │ │ 인기순                          │ │
 └──────────────────────┘ max 360    │ └─────────────────────────────────┘ │
- 트리거 폭, max 420                  │ padding 16 + 안전 영역              │ max 75%
+ 트리거 폭, max 420                  │ Sheet 공통 여백 + 안전 영역          │ auto
                                     └─────────────────────────────────────┘
 ```
 

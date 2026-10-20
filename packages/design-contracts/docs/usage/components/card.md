@@ -79,7 +79,7 @@ Web·Native 모두 기존 `raised` Surface의 테두리·그림자를 재사용�
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `tone` | `default` · `raised` · `accent` · `sunken` · `subtle`(Surface tone) | `raised` | 테두리와 공통 floating shadow로 입체감 표시. 평면 카드는 `tone="default"` 지정 |
+| `tone` | `default` · `raised` · `accent` · `sunken` · `subtle`(Surface tone) | `raised` | 테두리와 공통 raised shadow로 입체감 표시. 평면 카드는 `tone="default"` 지정 |
 | `bordered` | `boolean` | `true` | Surface 기본 `false`와 다르다 |
 | `padding` | spacing 이름 | `md`(16) | — |
 | `radius` | radius 이름 | `lg`(foundation 16) | 선택한 designProfile의 같은 radius 역할로 frame과 media clip을 함께 변경 |

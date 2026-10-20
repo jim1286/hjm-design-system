@@ -1,5 +1,5 @@
 import { useCallback, useId, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { AppState, Platform, PanResponder, Pressable, Text as NativeText, View, type GestureResponderEvent, type LayoutChangeEvent } from "react-native";
+import { AppState, Platform, PanResponder, Pressable, View, type GestureResponderEvent, type LayoutChangeEvent } from "react-native";
 import Svg, { Circle, ClipPath, Defs, G, Line, LinearGradient, Path, Rect, Stop, Text as SvgText } from "react-native-svg";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { resolveDatavizSeriesColor } from "@hjmds/design-contracts/dataviz";
@@ -13,7 +13,7 @@ import {
 import { spacing } from "@hjmds/design-contracts/foundations";
 // Chart labels and values use the text emphasis scale, the same weight the Web `.hjm-chart__*` rules read.
 import { textRecipe } from "@hjmds/design-contracts/recipes";
-import { Text } from "./primitives.js";
+import { Text, useHjmTextFace } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 
 // react-native-svg forwards native-only props to SVG DOM on Expo Web. Keep the
@@ -101,16 +101,24 @@ function useScrub(pick: (x: number, y: number) => number | null, onScrub: (index
 }
 
 function CursorBubble({ x, width, text, surface, color }: { x: number; width: number; text: string; surface: string; color: string }) {
+  const { tokens } = useHjmNativeTheme();
   const box = 88, left = Math.min(width - box, Math.max(0, x - box / 2));
   return <View pointerEvents="none" importantForAccessibility="no-hide-descendants" accessibilityElementsHidden style={{ position: "absolute", top: 0, left, width: box, alignItems: "center" }}>
-    <View style={{ paddingHorizontal: spacing.xs, paddingVertical: 2, borderRadius: 8, backgroundColor: surface }}>
-      <NativeText numberOfLines={1} style={{ color, fontSize: 11, fontWeight: textRecipe.emphasis.medium }}>{text}</NativeText>
+    <View style={{ paddingHorizontal: spacing.xs, paddingVertical: spacing.xxs, borderRadius: tokens.radius.sm, backgroundColor: surface }}>
+      <Text variant="caption" fontRole="ui" emphasis="medium" numberOfLines={1} style={{ color }}>{text}</Text>
     </View>
   </View>;
 }
 
+function ChartLabel({ fontWeight, ...props }: Omit<React.ComponentProps<typeof SvgText>, "fontWeight"> & { fontWeight?: "400" | "500" | "600" | "700" | "800" }) {
+  const theme = useHjmNativeTheme();
+  const metrics = theme.tokens.typography[chartRecipe.chrome.labelVariant];
+  const face = useHjmTextFace({ fontRole: "ui", weight: fontWeight ?? metrics.fontWeight });
+  return <SvgText {...props} {...(face.fontFamily ? { fontFamily: face.fontFamily } : {})} fontWeight={face.fontWeight ?? metrics.fontWeight} fontSize={metrics.fontSize * theme.textScaling.scale} />;
+}
+
 function AxisLabels({ ticks, y, x, color, format }: { ticks: readonly number[]; y: (value: number) => number; x: number; color: string; format: (value: number) => string }) {
-  return <>{ticks.map(tick => <SvgText key={tick} x={x} y={y(tick) + 4} fontSize={10} fill={color} textAnchor="end">{format(tick)}</SvgText>)}</>;
+  return <>{ticks.map(tick => <ChartLabel key={tick} x={x} y={y(tick) + 4} fill={color} textAnchor="end">{format(tick)}</ChartLabel>)}</>;
 }
 
 // Paths/rectangles update their host attributes directly; values, axes and accessibility
@@ -242,11 +250,11 @@ export function LineChart({ categories, series, accessibilityLabel, formatValue,
         // Opposite sides of the extrema keep labels apart even when a fixed rank domain packs
         // both points into the top of the plot. Inversion swaps which numeric extreme is higher.
         const above = index === (invert ? marks.min : marks.max);
-        return p ? <SvgText key={label} x={Math.min(g.plot.right - 4, Math.max(g.plot.left + 4, p.x))} y={Math.max(10, Math.min(height - 2, p.y + (above ? -10 : 16)))} fontSize={11} fontWeight={textRecipe.emphasis.medium} fill={palette.label} textAnchor={p.x < width * 0.2 ? "start" : p.x > width * 0.8 ? "end" : "middle"}>{`${label} ${formatValue(p.value)}`}</SvgText> : null;
+        return p ? <ChartLabel key={label} x={Math.min(g.plot.right - 4, Math.max(g.plot.left + 4, p.x))} y={Math.max(10, Math.min(height - 2, p.y + (above ? -10 : 16)))} fontWeight={textRecipe.emphasis.medium} fill={palette.label} textAnchor={p.x < width * 0.2 ? "start" : p.x > width * 0.8 ? "end" : "middle"}>{`${label} ${formatValue(p.value)}`}</ChartLabel> : null;
       })}
       {showAxis && categories.length > 0 && <>
-        <SvgText x={g.xs[0]!} y={height - 4} fontSize={10} fill={palette.label} textAnchor="start">{categories[0]}</SvgText>
-        <SvgText x={g.xs.at(-1)!} y={height - 4} fontSize={10} fill={palette.label} textAnchor="end">{categories.at(-1)}</SvgText>
+        <ChartLabel x={g.xs[0]!} y={height - 4} fill={palette.label} textAnchor="start">{categories[0]}</ChartLabel>
+        <ChartLabel x={g.xs.at(-1)!} y={height - 4} fill={palette.label} textAnchor="end">{categories.at(-1)}</ChartLabel>
       </>}
     </Svg>}
     {g && scrubbing && focus !== null && <CursorBubble x={g.xs[focus]!} width={width} text={cursorLabel?.(focus) ?? categories[focus]!} surface={palette.surface} color={palette.legend} />}
@@ -299,10 +307,10 @@ export function BarChart({ categories, series, accessibilityLabel, formatValue, 
         : <Line key={tick} y1={g.plot.top} y2={g.plot.bottom} x1={g.value(tick)} x2={g.value(tick)} stroke={palette.grid} strokeWidth={chartRecipe.chrome.gridWidth} />)}
       {showAxis && vertical && <AxisLabels ticks={g.ticks} y={g.value} x={g.plot.left - 6} color={palette.label} format={formatValue} />}
       {g.bars.map(bar => <MotionBar key={`${series[bar.seriesIndex]!.id}-${categoryKeys[bar.index]}`} bar={bar} animate={animateChanges && g.bars.length <= 200} rx={chartRecipe.bar.radius} fill={palette.seriesColor(series[bar.seriesIndex]!, bar.seriesIndex)} opacity={focus === null || focus === bar.index ? 1 : chartRecipe.bar.restOpacity} />)}
-      {showValues && layout === "grouped" && g.bars.map(bar => <SvgText key={`v${bar.seriesIndex}-${bar.index}`} x={vertical ? bar.x + bar.width / 2 : bar.x + bar.width + 4} y={vertical ? bar.y - 4 : bar.y + bar.height / 2 + 4} fontSize={10} fontWeight={textRecipe.emphasis.medium} fill={palette.legend} textAnchor={vertical ? "middle" : "start"}>{formatValue(bar.value)}</SvgText>)}
+      {showValues && layout === "grouped" && g.bars.map(bar => <ChartLabel key={`v${bar.seriesIndex}-${bar.index}`} x={vertical ? bar.x + bar.width / 2 : bar.x + bar.width + 4} y={vertical ? bar.y - 4 : bar.y + bar.height / 2 + 4} fontWeight={textRecipe.emphasis.medium} fill={palette.legend} textAnchor={vertical ? "middle" : "start"}>{formatValue(bar.value)}</ChartLabel>)}
       {categories.map((category, i) => vertical
-        ? (categories.length <= 12 || i % Math.ceil(categories.length / 12) === 0) && <SvgText key={category + i} x={g.centers[i]!} y={resolvedHeight - 4} fontSize={10} fill={focus === i ? palette.legend : palette.label} textAnchor="middle">{category}</SvgText>
-        : <SvgText key={category + i} x={g.plot.left - 8} y={g.centers[i]! + 4} fontSize={11} fill={focus === i ? palette.legend : palette.label} textAnchor="end">{category}</SvgText>)}
+        ? (categories.length <= 12 || i % Math.ceil(categories.length / 12) === 0) && <ChartLabel key={category + i} x={g.centers[i]!} y={resolvedHeight - 4} fill={focus === i ? palette.legend : palette.label} textAnchor="middle">{category}</ChartLabel>
+        : <ChartLabel key={category + i} x={g.plot.left - 8} y={g.centers[i]! + 4} fill={focus === i ? palette.legend : palette.label} textAnchor="end">{category}</ChartLabel>)}
     </Svg>}
     {g && scrubbing && focus !== null && vertical && <CursorBubble x={g.centers[focus]!} width={width} text={`${categories[focus]} ${series.map(item => { const v = item.values[focus]; return isChartNumber(v) ? formatValue(v) : missingLabel; }).join(" · ")}`} surface={palette.surface} color={palette.legend} />}
   </View>;
@@ -319,7 +327,7 @@ export function ChartLegend({ items, selectedId, onSelect, exclusion }: Readonly
     const content = <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs, minHeight: 32, opacity: selectedId && selectedId !== item.id ? 0.5 : 1 }}>
       <View style={{ width: 10, height: 10, borderRadius: 3, backgroundColor: item.color }} />
       <Text variant="body" layoutStyle={{ flex: 1 }} numberOfLines={1}>{item.label}</Text>
-      {item.value !== undefined && <NativeText style={{ color: palette.legend, fontSize: 13, fontWeight: textRecipe.emphasis.medium, fontVariant: ["tabular-nums"] }}>{item.value}</NativeText>}
+      {item.value !== undefined && <Text variant="label" fontRole="ui" emphasis="medium" style={{ color: palette.legend, fontVariant: ["tabular-nums"] }}>{item.value}</Text>}
     </View>;
     const selection = onSelect ? <Pressable key={item.id} accessibilityRole="button" accessibilityState={{ selected: selectedId === item.id }} accessibilityLabel={`${item.label}${item.value ? ` ${item.value}` : ""}`} onPress={() => onSelect(selectedId === item.id ? null : item.id)}>{content}</Pressable>
       : <View key={item.id} accessible accessibilityLabel={`${item.label}${item.value ? ` ${item.value}` : ""}`}>{content}</View>;
@@ -361,7 +369,17 @@ export function PieChart({ data, accessibilityLabel, formatValue, donut = true, 
     <View accessible accessibilityRole="image" accessibilityLabel={`${accessibilityLabel}. ${summary}`} style={{ width: size, height: size, alignSelf: "center" }}>
       <Svg width={size} height={size} {...decorativeSvgAccessibility}>
         {slices.map(slice => <Path key={slice.index} d={slice.path} fill={colorOf(slice.index)} opacity={selected && data[slice.index]!.id !== selected ? 0.35 : 1} {...(onSelect || selectedId !== undefined ? { onPress: () => select(data[slice.index]!.id === selected ? null : data[slice.index]!.id) } : {})} />)}
-        {slices.filter(slice => !donut && slice.percent >= chartRecipe.pie.minLabelPercent * 2).map(slice => <SvgText key={`t${slice.index}`} x={slice.centroid.x} y={slice.centroid.y + 4} fontSize={11} fontWeight={textRecipe.emphasis.medium} fill="#FFFFFF" textAnchor="middle">{`${Math.round(slice.percent)}%`}</SvgText>)}
+        {slices.filter(slice => !donut && slice.percent >= chartRecipe.pie.minLabelPercent * 2).map(slice => {
+          const label = `${Math.round(slice.percent)}%`;
+          const metrics = palette.theme.tokens.typography[chartRecipe.chrome.labelVariant];
+          const fontSize = metrics.fontSize * palette.theme.textScaling.scale;
+          const labelWidth = label.length * fontSize + spacing.xxs * 2;
+          const labelHeight = metrics.lineHeight * palette.theme.textScaling.scale + spacing.xxs;
+          return <G key={`t${slice.index}`} pointerEvents="none">
+            <Rect x={slice.centroid.x - labelWidth / 2} y={slice.centroid.y - labelHeight / 2} width={labelWidth} height={labelHeight} rx={palette.theme.tokens.radius.sm} fill={resolveColorReference(chartRecipe.chrome.labelSurface, palette.theme.palette)} />
+            <ChartLabel x={slice.centroid.x} y={slice.centroid.y + fontSize * 0.35} fontWeight={textRecipe.emphasis.medium} fill={resolveColorReference(chartRecipe.chrome.labelContent, palette.theme.palette)} textAnchor="middle">{label}</ChartLabel>
+          </G>;
+        })}
       </Svg>
       {donut && center != null && <View pointerEvents="none" style={{ position: "absolute", inset: 0, alignItems: "center", justifyContent: "center" }}>{center}</View>}
     </View>
@@ -396,8 +414,8 @@ export function RadarChart({ categories, series, accessibilityLabel, formatValue
           {polygon.points.map(p => p.value !== null && <Circle key={p.index} cx={p.x} cy={p.y} r={3} fill={color} />)}
         </G>; })}
         {g.axes.map(axis => { const first = series[0]?.values[axis.index]; return <G key={`l${axis.index}`}>
-          <SvgText x={axis.labelAt.x} y={axis.labelAt.y} fontSize={11} fontWeight={textRecipe.emphasis.medium} fill={palette.legend} textAnchor={axis.anchor}>{axis.label}</SvgText>
-          {series.length === 1 && <SvgText x={axis.labelAt.x} y={axis.labelAt.y + 14} fontSize={11} fill={palette.label} textAnchor={axis.anchor}>{isChartNumber(first) ? formatValue(first) : missingLabel}</SvgText>}
+          <ChartLabel x={axis.labelAt.x} y={axis.labelAt.y} fontWeight={textRecipe.emphasis.medium} fill={palette.legend} textAnchor={axis.anchor}>{axis.label}</ChartLabel>
+          {series.length === 1 && <ChartLabel x={axis.labelAt.x} y={axis.labelAt.y + 14} fill={palette.label} textAnchor={axis.anchor}>{isChartNumber(first) ? formatValue(first) : missingLabel}</ChartLabel>}
         </G>; })}
       </Svg>
     </View>
@@ -435,8 +453,8 @@ export function ScatterChart({ points, accessibilityLabel, xLabel, yLabel, forma
         if (next) choose(next.id);
       }} onLayout={onLayout} style={{ height }} {...handlers}>
       {g && <Svg width={width} height={height} {...decorativeSvgAccessibility}>
-        {g.yTicks.map(tick => { const y = g.plot.bottom - (tick - g.yDomain[0]) / ((g.yDomain[1] - g.yDomain[0]) || 1) * (g.plot.bottom - g.plot.top); return <G key={`y${tick}`}><Line x1={g.plot.left} x2={g.plot.right} y1={y} y2={y} stroke={palette.grid} strokeWidth={chartRecipe.chrome.gridWidth} /><SvgText x={g.plot.left - 6} y={y + 4} fontSize={10} fill={palette.label} textAnchor="end">{formatY(tick)}</SvgText></G>; })}
-        {g.xTicks.map(tick => { const x = g.plot.left + (tick - g.xDomain[0]) / ((g.xDomain[1] - g.xDomain[0]) || 1) * (g.plot.right - g.plot.left); return <SvgText key={`x${tick}`} x={x} y={height - 4} fontSize={10} fill={palette.label} textAnchor="middle">{formatX(tick)}</SvgText>; })}
+        {g.yTicks.map(tick => { const y = g.plot.bottom - (tick - g.yDomain[0]) / ((g.yDomain[1] - g.yDomain[0]) || 1) * (g.plot.bottom - g.plot.top); return <G key={`y${tick}`}><Line x1={g.plot.left} x2={g.plot.right} y1={y} y2={y} stroke={palette.grid} strokeWidth={chartRecipe.chrome.gridWidth} /><ChartLabel x={g.plot.left - 6} y={y + 4} fill={palette.label} textAnchor="end">{formatY(tick)}</ChartLabel></G>; })}
+        {g.xTicks.map(tick => { const x = g.plot.left + (tick - g.xDomain[0]) / ((g.xDomain[1] - g.xDomain[0]) || 1) * (g.plot.right - g.plot.left); return <ChartLabel key={`x${tick}`} x={x} y={height - 4} fill={palette.label} textAnchor="middle">{formatX(tick)}</ChartLabel>; })}
         {g.points.map(p => <Circle key={p.id} cx={p.px} cy={p.py} r={p.id === focused ? chartRecipe.scatter.focusRadius : chartRecipe.scatter.radius} fill={palette.seriesColor({}, p.seriesIndex ?? 0)} opacity={focused && p.id !== focused ? 0.45 : 0.9} stroke={p.id === focused ? palette.background : "none"} strokeWidth={2} />)}
       </Svg>}
       {g && focusPoint && <CursorBubble x={focusPoint.px} width={width} text={`${focusPoint.label} · ${formatX(focusPoint.x)} / ${formatY(focusPoint.y)}`} surface={palette.surface} color={palette.legend} />}
