@@ -27,3 +27,13 @@ it("announces each saved result once and keeps it in a reusable badge without pa
     expect(announce).toHaveBeenLastCalledWith("저장됨. KE456", { queue: true });
   } finally { Platform.OS = originalOS; }
 });
+
+it.each(["info", "success", "warning", "attention", "danger"] as const)("keeps %s panels opaque over content, including title-only notices", tone => {
+  act(() => { tree = create(<HjmNativeProvider><Notice testID="panel" tone={tone} title="현재 위치를 확인하지 못했어요." /></HjmNativeProvider>); });
+  const host = tree!.root.findAllByType(View).find(node => node.props.testID === "panel")!;
+  expect(StyleSheet.flatten(host.props.style).backgroundColor).toMatch(/^#[0-9a-f]{6}$/i);
+  const tint = host.findAllByType(View).find(node => node.props.pointerEvents === "none")!;
+  expect(tint).toBeDefined();
+  expect(StyleSheet.flatten(tint.props.style)).toMatchObject({ position: "absolute", top: 0, bottom: 0 });
+  expect(JSON.stringify(tree!.toJSON())).toContain("현재 위치를 확인하지 못했어요.");
+});

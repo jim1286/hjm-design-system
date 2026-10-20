@@ -145,7 +145,9 @@ export function Notice({
       accessibilityRole={announcement === "assertive" ? "alert" : undefined}
       style={[
         {
-          backgroundColor: appearance === "status" ? "transparent" : resolveColorReference(toneContract.background, theme.palette),
+          // Feedback tints carry alpha. Give them an opaque canvas, as Web's
+          // color-mix does, so map/photo content cannot show through the message.
+          backgroundColor: appearance === "status" ? "transparent" : theme.palette.theme.bg,
           borderColor: resolveColorReference(toneContract.border, theme.palette),
           borderRadius: theme.tokens.radius[noticeRecipe.radius],
           borderWidth: noticeRecipe.appearances[appearance].borderWidth,
@@ -155,6 +157,10 @@ export function Notice({
         layoutStyle,
       ]}
     >
+      {appearance === "panel" ? <View pointerEvents="none" accessibilityElementsHidden importantForAccessibility="no-hide-descendants"
+        style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0,
+          borderRadius: theme.tokens.radius[noticeRecipe.radius],
+          backgroundColor: resolveColorReference(toneContract.background, theme.palette) }} /> : null}
       <View
         style={{
           alignItems: "flex-start",

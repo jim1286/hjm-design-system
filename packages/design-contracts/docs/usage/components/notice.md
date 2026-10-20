@@ -88,6 +88,11 @@ import { Notice } from "@hjmds/react-native/feedback";
 
 ## 배치
 
+2026-10-20 선택의창 지도 위에서 Native 안내 배경의 alpha가 지도 지명·도로를 그대로 비춰 문구와 겹쳤다.
+`panel`은 불투명한 테마 바탕 위에 tone tint를 합성한다(Web의 기존 color-mix와 같은 방식).
+지도·사진 위에서도 아래 콘텐츠가 비치지 않는다. `status`는 기존처럼 배경 없이 유지한다.
+설명을 생략하면 제목만 표시하며 설명 자리와 제목·설명 사이 간격을 남기지 않는다.
+
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 본문 폭을 꽉 채운다. 아이콘 20(`glyph.sm`), 테두리 1(`stroke.default`), radius `radius.md` 12 | `noticeRecipe` |
