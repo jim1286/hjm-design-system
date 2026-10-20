@@ -1,13 +1,12 @@
 # Deployment only: queue concurrent requests; no separate CI gates.
 name: Design System Showcase
 on:
+  # The public Showcase follows the annotated tag created after the explicit package release.
+  # Ordinary main/dependency pushes must not publish, and this public repository cannot consume
+  # the private release-hub composite action (2026-10-20 verified action resolution failure).
   push:
-    branches:
-      - main
-    paths:
-      - packages/design-contracts/package.json
-      - packages/react/package.json
-      - packages/react-native/package.json
+    tags:
+      - 'v*'
   workflow_dispatch: {}
 permissions:
   contents: read
@@ -17,20 +16,14 @@ concurrency:
   cancel-in-progress: false
   queue: max
 jobs:
-  # These three packages are one fixed Changesets group. Dependency/export edits are development pushes;
-  # only a group version change (or explicit dispatch) selects public Showcase delivery (2026-10-20).
-  version-change:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    outputs:
-      deploy: ${{ steps.decide.outputs.deploy }}
+  deploy: ${{ steps.decide.outputs.deploy }}
     steps:
       - id: decide
         uses: jim1286/app-release-hub/.github/actions/version-change-decision@v1.4.2
         with:
           manifest: packages/design-contracts/package.json
   deploy:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -45,8 +38,6 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346
   build:
-    needs: version-change
-    if: needs.version-change.outputs.deploy == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
