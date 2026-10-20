@@ -34,7 +34,7 @@ contracts를 같은 npm 버전으로 설치하고, 제품의 실제 화면·환�
 
 ### 배포 실행 시점
 
-현재 `showcase.yml`은 명시적 npm 릴리스가 만든 `v*` 태그 또는 수동 실행으로 시작한다.
+현재 `showcase.yml`은 `v*` 태그 push 또는 수동 실행으로 시작한다. npm 릴리스는 GITHUB_TOKEN으로 만든 태그가 다른 workflow를 자동 실행하지 않으므로 같은 고정 태그를 명시적으로 dispatch한다.
 일반 main push·의존성 수정·version 준비만으로는 게시하지 않는다. 2026-10-20 개발 변경 push가
 의도하지 않은 게시로 이어지는 경로를 정리했다. 공개 HJM에서 비공개 release-hub action을 읽을 수
 없는 경계도 확인했으므로, 기존 package 릴리스의 태그를 직접 사용한다. 수동 실행 역시 artifact 생성과
@@ -49,6 +49,8 @@ npm 게시는 main의 수동 `version-packages.yml`에서 frozen 설치·세 npm
 순서로 실행한다. 별도의 타입·테스트·문서 게이트는 자동 실행하지 않는다. 로컬 검사 결과,
 npm에 존재하는 버전, tag, 소비 앱 채택은 각각 확인한 범위로 보고한다. 두 배포 workflow는
 같은 concurrency group에서 진행 중 작업을 취소하지 않고 대기한다.
+2026-10-20 1.36.0 게시에서 github-pages 환경이 main만 허용해 태그 deploy job을 거부했다.
+환경의 배포 정책은 main branch와 v* tag를 허용하며, npm 게시와 Storybook source는 같은 태그 SHA로 고정한다.
 
 ## 시나리오 증거의 의미
 

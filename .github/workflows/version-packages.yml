@@ -3,6 +3,7 @@ name: Release Packages
 on:
   workflow_dispatch: null
 permissions:
+  actions: write
   contents: write
   id-token: write
 concurrency:
@@ -60,3 +61,10 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git tag -a "${TAG}" -m "HJM design system ${VERSION}"
           git push origin "${TAG}"
+      # GITHUB_TOKEN-created tags do not trigger another workflow; dispatch the same immutable tag explicitly.
+      - name: Publish release Showcase
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION="$(node -p "require('./packages/design-contracts/package.json').version")"
+          gh workflow run showcase.yml --ref "v${VERSION}"
