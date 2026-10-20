@@ -1,12 +1,12 @@
 # ShortcutRail
 
 - 단계: 구성
-- 상태: 실험
+- 상태: 배포
 - 지원: Web · Native
-- 적용: 미게시(1.34.0 이후)
+- 적용: 1.36.1
 - 검토일: 2026-10-19
 - 근거: `src/shortcut-rail.ts`, `chipRecipe`. Spint 최근 도시에서 열기 버튼 안에 삭제 버튼을 넣어 두 행동과 접근성 경계가 겹친 2026-10-18 전수 이관.
-- 스토리북: `배포/구성/콘텐츠/바로가기 목록`
+- 스토리북: `배포/구성/탐색과 이동/바로가기 목록`
 
 ## 언제 쓰나
 
@@ -68,8 +68,8 @@ Native는 물리 LTR scroll 좌표와 RTL 행 배치를 분리한다.
 | onRemove(item) · removeLabel(item) | 없음 | 함께 제공한다. 제품이 항목을 제거하거나 같은 ID의 조건을 기본값으로 되돌려 새 items를 전달한다 |
 | isRemovable(item) | 모두 | onRemove와 함께 쓰는 순수 판정. false인 항목에는 해제 버튼을 만들지 않는다. disabled는 별도로 본문/해제를 함께 잠근다 |
 | leading | 없음 | 첫 항목 앞의 행동/범위 선택 슬롯. 같은 스크롤/줄바꿈 흐름에 놓이며 items가 비어도 남는다 |
-| layout | scroll | 미게시. `scroll`은 기존 한 줄, `wrap`은 본문 폭에서 줄바꿈하며 별도 스크롤 host를 만들지 않는다. 긴 라벨도 부모 폭 안에서 감싼다 |
-| items[].description | 없음 | 미게시. Native accessibilityHint / Web aria-description. 짧은 행동 설명 |
+| layout | scroll | 1.36.1 게시. `scroll`은 기존 한 줄, `wrap`은 본문 폭에서 줄바꿈하며 별도 스크롤 host를 만들지 않는다. 긴 라벨도 부모 폭 안에서 감싼다 |
+| items[].description | 없음 | 1.36.1 게시. Native accessibilityHint / Web aria-description. 짧은 행동 설명 |
 | size | small | small/medium. 선택 칩의 selected·selectionMode는 없다 |
 | renderLeading · removeIcon | 없음/× | 장식 슬롯. 읽을 의미는 label/removeLabel에 쓴다 |
 | layoutStyle | 없음 | 구성 바깥 배치 전용 |

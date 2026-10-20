@@ -1,5 +1,11 @@
 # @hjmds/react
 
+## 1.36.1
+
+### Patch Changes
+
+- Align ShortcutRail usage status and examples with its released Storybook classification, remove stale unpublished labels, and group the promoted rail under navigation while preserving existing story URLs.
+
 ## 1.36.0
 
 ### Minor Changes

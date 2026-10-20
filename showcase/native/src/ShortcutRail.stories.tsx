@@ -13,7 +13,7 @@ function Preview() {
     <Button tone="ghost" size="small" onPress={() => setItems(initial)}>예제 기록 복원</Button>
   </Stack>;
 }
-const meta = { title: "배포/구성/콘텐츠/바로가기 목록", component: Preview } satisfies Meta<typeof Preview>;
+const meta = { title: "배포/구성/탐색과 이동/바로가기 목록", component: Preview } satisfies Meta<typeof Preview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "열기와 기록 삭제" };
@@ -24,7 +24,7 @@ function WrappedPreview() {
    items={[{id:"profile",label:"내 프로필"},{id:"sound",label:"소리"},{id:"language",label:"언어와 지역별 표시 설정"}]}
    onAction={item=>setOpened(item.label)}/><Text>{opened ? `${opened}으로 이동` : "바로가기를 골라보세요"}</Text></Stack>;
 }
-export const Wrapped: Story = { name: "줄바꿈 바로가기 · 미게시", render: () => <WrappedPreview/> };
+export const Wrapped: Story = { name: "줄바꿈 바로가기", render: () => <WrappedPreview/> };
 
 function FilterSummaryPreview() {
  const [year,setYear]=useState("2025"),[opened,setOpened]=useState(false);
@@ -37,4 +37,4 @@ function FilterSummaryPreview() {
    <Button tone="ghost" size="small" onPress={()=>{setYear("2025");setOpened(false);}}>예제 조건 복원</Button>
  </Stack>;
 }
-export const FilterSummary: Story = { name: "조건 열기와 선택적 해제 · 미게시", render:()=> <FilterSummaryPreview/> };
+export const FilterSummary: Story = { name: "조건 열기와 선택적 해제", render:()=> <FilterSummaryPreview/> };
