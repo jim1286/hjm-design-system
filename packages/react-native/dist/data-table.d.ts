@@ -45,6 +45,6 @@ export type DataTableProps<ColumnKey extends string = string, RowKey extends str
     maxBodyHeight?: number;
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function DataTable<ColumnKey extends string = string, RowKey extends string = string>({ columns, rows, labels, renderCell, getCellText, sortState, sortCycle, onSortChange, onRowPress, selectedRowId, summaryRow, asyncState, emptyLabel, density, footer, layoutStyle, columnGroups, rowGroups, cellStyle, heatColors, maxBodyHeight, }: DataTableProps<ColumnKey, RowKey>): import("react").JSX.Element;
+export declare function DataTable<ColumnKey extends string = string, RowKey extends string = string>({ columns, rows, labels, renderCell, getCellText, sortState, sortCycle, onSortChange, onRowPress, selectedRowId, summaryRow, asyncState, emptyLabel, density: suppliedDensity, footer, layoutStyle, columnGroups, rowGroups, cellStyle, heatColors, maxBodyHeight, }: DataTableProps<ColumnKey, RowKey>): import("react").JSX.Element;
 export { LineScore, MatrixTable, ComparisonTable, type LineScoreProps, type MatrixTableProps, type ComparisonTableProps } from "./table-family.js";
 //# sourceMappingURL=data-table.d.ts.map

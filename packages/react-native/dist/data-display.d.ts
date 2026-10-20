@@ -117,7 +117,7 @@ export type ListRowProps = Omit<PressableProps, "accessibilityLabel" | "accessib
     trailingActionStyle?: HjmCompositionStyleProp;
     containerProps?: Omit<ViewProps, "children" | "style">;
 }>;
-export declare function ListRow({ title, tone, description, leading, trailing, titleMetadata, trailingAction, trailingText, metadataLabel, trailingLabel, onPress, accessibilityLabel, accessibilityHint, disabled, density, loading, loadingLabel, selected: selectedProp, leadingShape, layoutStyle, leadingStyle, contentStyle, titleRowStyle, trailingStyle, trailingActionStyle, containerProps, accessibilityState, ...forwarded }: ListRowProps): import("react").JSX.Element;
+export declare function ListRow({ title, tone, description, leading, trailing, titleMetadata, trailingAction, trailingText, metadataLabel, trailingLabel, onPress, accessibilityLabel, accessibilityHint, disabled, density: suppliedDensity, loading, loadingLabel, selected: selectedProp, leadingShape, layoutStyle, leadingStyle, contentStyle, titleRowStyle, trailingStyle, trailingActionStyle, containerProps, accessibilityState, ...forwarded }: ListRowProps): import("react").JSX.Element;
 type AccessibleMedia = Readonly<{
     decorative: true;
     accessibilityLabel?: never;

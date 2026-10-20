@@ -136,7 +136,8 @@ export function createHjmThemeStyle(value) {
         ? surfaceMaterial.insetShadows.map(token => `inset ${shadowCss(token, token.offsetX)}`).join(", ")
         : "";
     style["--hjm-surface-inset-shadow"] = insetShadow || "none";
-    style["--hjm-surface-raised-shadow"] = shadowCss(profileTokens?.shadow.floating ?? shadow.floating) + (insetShadow ? `, ${insetShadow}` : "");
+    // Raised cards share the low elevation token with Native; overlays retain floating.
+    style["--hjm-surface-raised-shadow"] = shadowCss(profileTokens?.shadow.raised ?? shadow.raised) + (insetShadow ? `, ${insetShadow}` : "");
     // BottomCTA overlaps content above it (bottomCtaRecipe rationale). Profile
     // strength is shared, but its shadow must cast upward rather than behind the
     // footer; preserve the stylesheet-only legacy path when no profile is supplied.

@@ -87,7 +87,7 @@
 /* A child image would otherwise spill past the rounded corner. An elevated tone
    opts out because clipping cuts off its own shadow. */
 .hjm-surface[data-clips="true"] { overflow: hidden; }
-.hjm-surface[data-tone="raised"] { background: var(--hjm-color-bg); box-shadow: var(--hjm-surface-raised-shadow, var(--hjm-shadow-floating)); }
+.hjm-surface[data-tone="raised"] { background: var(--hjm-color-bg); box-shadow: var(--hjm-surface-raised-shadow, var(--hjm-shadow-raised)); }
 .hjm-surface[data-tone="accent"] { background: var(--hjm-color-bg); }
 .hjm-surface[data-tone="sunken"] { background: var(--hjm-color-bg); }
 .hjm-surface[data-tone="subtle"] { background: var(--hjm-color-bg); }
@@ -1160,6 +1160,9 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-notice[data-tone="warning"] { border-color: var(--hjm-accent-warning); background: color-mix(in srgb, var(--hjm-accent-warning) 10%, var(--hjm-color-bg)); }
 .hjm-notice[data-tone="attention"] { border-color: var(--hjm-accent-attention); background: color-mix(in srgb, var(--hjm-accent-attention) 10%, var(--hjm-color-bg)); }
 .hjm-notice[data-tone="danger"] { border-color: var(--hjm-color-danger); background: color-mix(in srgb, var(--hjm-color-danger) 10%, var(--hjm-color-bg)); }
+/* Status is placed inside the saved card/form; Badge carries tone without a second surface. */
+.hjm-notice[data-appearance="status"] { padding: 0; border: 0; background: transparent; }
+.hjm-notice[data-appearance="status"] .hjm-notice__content { justify-items: start; }
 /* Reserve readable copy; wrap the action instead of crushing its label. */
 .hjm-notice__content { flex: 1 1 60%; min-inline-size: 0; display: grid; gap: var(--hjm-space-xxs); }
 /* Center the complete copy and action within the row; a first-line offset drifts
@@ -1492,7 +1495,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-chart__pie-center { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; pointer-events: none; }
 .hjm-chart__slice[role="button"], .hjm-chart--pie .hjm-chart__slice[data-id] { cursor: pointer; }
 .hjm-chart__slice:focus-visible { outline: none; stroke: var(--hjm-color-focus); stroke-width: var(--hjm-focus-width); }
-.hjm-chart__slice-label { fill: #ffffff; font-family: inherit; font-size: var(--hjm-type-caption-size); font-weight: var(--hjm-text-emphasis-medium); }
+.hjm-chart__slice-label { fill: var(--hjm-chart-label-content); font-family: inherit; font-size: var(--hjm-type-caption-size); font-weight: var(--hjm-text-emphasis-medium); }
 .hjm-chart__axis-titles { display: flex; justify-content: space-between; color: var(--hjm-chart-axis-label); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); }
 .hjm-chart-legend {
   display: flex;
@@ -2508,6 +2511,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 }
 .hjm-sheet__handle:focus-visible { outline: 2px solid var(--hjm-color-focus); outline-offset: -2px; border-radius: var(--hjm-radius-full); }
 .hjm-sheet__handle-bar { inline-size: var(--hjm-sheet-handle-width); block-size: var(--hjm-sheet-handle-height); border-radius: var(--hjm-radius-full); background: var(--hjm-sheet-handle-color); }
+.hjm-sheet[data-detent="small"] { block-size: var(--hjm-sheet-size-small); }
 .hjm-sheet[data-detent="medium"] { block-size: var(--hjm-sheet-size-medium); }
 .hjm-sheet[data-detent="large"] { block-size: var(--hjm-sheet-size-large); }
 .hjm-sheet[data-detent="full"] { block-size: var(--hjm-sheet-size-full); }
@@ -3616,7 +3620,7 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-segmented[data-presentation="pills"] { background:transparent; border:0; padding:0; }
 /* Keep the inset pill behind the whole line at large text (40px text / 28px fill was observed). Native already includes this inset as vertical padding. */
 .hjm-segmented[data-presentation="pills"] .hjm-segmented__items { flex-wrap:wrap; gap:var(--hjm-space-xs); overflow:visible; padding:0; border:0; border-radius:0; background:transparent; }
-.hjm-segmented[data-presentation="pills"] .hjm-segmented__item { padding-block:var(--hjm-space-xxs); position:relative; flex:0 1 auto; min-inline-size:0; min-block-size:max(var(--hjm-control-min-touch-target), calc(var(--hjm-segmented-height) + 2 * var(--hjm-space-xxs))); border:0; border-radius:var(--hjm-radius-full); background:transparent; box-shadow:none; padding-inline:var(--hjm-space-md); color:var(--hjm-color-text-muted); }
+.hjm-segmented[data-presentation="pills"] .hjm-segmented__item { padding-block:var(--hjm-space-xxs); position:relative; flex:0 1 auto; min-inline-size:0; min-block-size:max(var(--hjm-control-min-touch-target), calc(var(--hjm-segmented-height) + 2 * var(--hjm-space-xxs))); border:0; border-radius:var(--hjm-radius-full); background:transparent; box-shadow:none; padding-inline:var(--hjm-space-md); font-size:var(--hjm-type-label-size); line-height:var(--hjm-type-label-line-height); color:var(--hjm-color-text-muted); }
 /* Outline the inset surface, preserving the pill's layout and touch target on colored scenes. */
 .hjm-segmented[data-presentation="pills"] .hjm-segmented__item::before { content:""; position:absolute; inset:var(--hjm-space-xxs) 0; border-radius:var(--hjm-radius-full); background:var(--hjm-color-bg); border:1px solid var(--hjm-color-border-control); }
 .hjm-segmented[data-presentation="pills"][data-size="small"] .hjm-segmented__item { padding-inline:var(--hjm-space-sm); }
@@ -3788,7 +3792,7 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-time-picker__caption { text-align:center; color:var(--hjm-color-text-muted); margin-block-end:var(--hjm-space-xs); }
 .hjm-time-picker__list { position:relative; block-size:var(--hjm-time-height); overflow-y:auto; overscroll-behavior:contain; scrollbar-width:thin; }
 .hjm-time-picker__list button { display:block; inline-size:100%; min-block-size:var(--hjm-time-row); border:0; border-radius:var(--hjm-radius-md); background:transparent; color:var(--hjm-color-text); font:inherit; font-variant-numeric:tabular-nums; cursor:pointer; }
-.hjm-time-picker__list button[aria-selected=true] { background:var(--hjm-color-surface-accent); color:var(--hjm-color-content-brand); font-weight:500; }
+.hjm-time-picker__list button[aria-selected=true] { background:var(--hjm-color-surface-accent); color:var(--hjm-color-text); font-weight:500; }
 .hjm-time-picker__list button:disabled { opacity:.4; cursor:default; }
 .hjm-time-picker__list button:focus-visible,.hjm-time-picker__trigger:focus-visible { outline:2px solid var(--hjm-color-content-brand); outline-offset:-2px; }
 .hjm-time-picker__description { color:var(--hjm-color-text-muted); }

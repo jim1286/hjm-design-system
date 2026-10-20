@@ -834,7 +834,7 @@ export function SegmentedControl(props) {
                                 : pressed
                                     ? segmentedControlRecipe.item.pressedOpacity
                                     : 1,
-                            paddingHorizontal: textOnly ? 0 : pills ? chipRecipe.sizes[size].paddingHorizontal : sizeContract.paddingHorizontal,
+                            paddingHorizontal: textOnly ? 0 : pills ? segmentedControlRecipe.pills.paddingHorizontal[size] : sizeContract.paddingHorizontal,
                             paddingVertical: pills ? segmentedControlRecipe.pills.inset : undefined,
                             width: stacked ? "100%" : undefined,
                         },
@@ -843,7 +843,7 @@ export function SegmentedControl(props) {
                                 fontWeight: textOnly ? segmentedControlRecipe.text[textEmphasis][isSelected ? "selected" : "idle"] : isSelected
                                     ? segmentedControlRecipe.item.selectedFontWeight
                                     : segmentedControlRecipe.item.fontWeight,
-                            }, tone: isSelected ? "brand" : "muted", variant: textOnly ? "bodyLarge" : pills ? chipRecipe.sizes[size].textVariant : sizeContract.textVariant, children: item.label }), textOnly ? _jsx(View, { accessible: false, style: { width: segmentedControlRecipe.text.indicatorWidth, height: segmentedControlRecipe.text.indicatorHeight, borderRadius: segmentedControlRecipe.text.indicatorRadius, backgroundColor: isSelected ? theme.colors.contentBrand : "transparent" } }) : null] }, item.value));
+                            }, tone: isSelected ? "brand" : "muted", variant: textOnly ? "bodyLarge" : pills ? segmentedControlRecipe.pills.textVariant : sizeContract.textVariant, children: item.label }), textOnly ? _jsx(View, { accessible: false, style: { width: segmentedControlRecipe.text.indicatorWidth, height: segmentedControlRecipe.text.indicatorHeight, borderRadius: segmentedControlRecipe.text.indicatorRadius, backgroundColor: isSelected ? theme.colors.contentBrand : "transparent" } }) : null] }, item.value));
             })] }));
     // The scroller clips its content, so it reaches `outerSlop` past the 36 track on each block side (negative
     // margin, no layout growth) and the options' vertical slop can complete the 44 target like Chip's hitSlop.

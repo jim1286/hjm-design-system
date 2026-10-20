@@ -2,7 +2,7 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import { useCallback, useId, useLayoutEffect, useMemo, useRef, useState, } from "react";
 import { resolveDatavizSeriesColor } from "@hjmds/design-contracts/dataviz";
 import { prepareChartLineMorph, areaPath, chartRecipe, describeChart, isChartNumber, linePath, nearestChartIndex, nearestScatterPoint, observedIndices, resolveBarGeometry, resolveLineGeometry, resolvePieGeometry, resolvePieVisibility, resolveRadarGeometry, resolveScatterGeometry, scaleLinear, seriesExtremes, splitSegments, stackValues, stepChartIndex, validateChartSeries, } from "@hjmds/design-contracts/components/chart";
-import { spacing } from "@hjmds/design-contracts/foundations";
+import { spacing, typography } from "@hjmds/design-contracts/foundations";
 import { useOptionalHjmTheme } from "./provider.js";
 import { classNames } from "./internal.js";
 /*
@@ -42,6 +42,8 @@ const chromeStyle = {
     "--hjm-chart-tooltip-surface": cssColor(chrome.tooltipSurface),
     "--hjm-chart-tooltip-border": cssColor(chrome.tooltipBorder),
     "--hjm-chart-tooltip-content": cssColor(chrome.tooltipContent),
+    "--hjm-chart-label-surface": cssColor(chrome.labelSurface),
+    "--hjm-chart-label-content": cssColor(chrome.labelContent),
 };
 function useSeriesColor() {
     const theme = useOptionalHjmTheme()?.environment.theme ?? "light";
@@ -360,6 +362,9 @@ export function ChartLegend({ items, selectedId, onSelect, exclusion, className,
         }) }));
 }
 export function PieChart({ data, accessibilityLabel, formatValue, donut = true, size = 180, centerContent, selectedId, defaultSelectedId = null, onSelect, showLegend = true, exclusion, className, layoutStyle, }) {
+    const labelTheme = useOptionalHjmTheme();
+    const labelMetrics = labelTheme?.designProfile?.tokens.typography[chrome.labelVariant] ?? typography[chrome.labelVariant];
+    const labelScale = labelTheme?.environment.textScale ?? 1;
     const colorOf = useSeriesColor(), id = useSvgId(), descriptionId = `${id}-description`;
     const [own, setOwn] = useState(defaultSelectedId);
     const candidate = selectedId !== undefined ? selectedId : own;
@@ -399,7 +404,12 @@ export function PieChart({ data, accessibilityLabel, formatValue, donut = true, 
                                             toggle(datum.id);
                                         },
                                     } : {}) }, datum.id));
-                            }), !donut ? slices.filter((slice) => slice.percent >= chartRecipe.pie.minLabelPercent * 2).map((slice) => (_jsx("text", { className: "hjm-chart__slice-label", x: slice.centroid.x, y: slice.centroid.y, dominantBaseline: "middle", textAnchor: "middle", children: percentText(slice.index) }, `t${slice.index}`))) : null] }), donut && center != null ? _jsx("div", { className: "hjm-chart__pie-center", children: center }) : null] }), showLegend ? (_jsx(ChartLegend, { items: data.map((d, i) => ({ id: d.id, label: d.label, color: colorAt(i), value: rowValue(d, i) })), selectedId: selected, ...(legendExclusion ? { exclusion: legendExclusion } : {}), ...(interactive ? { onSelect: select } : {}) })) : null, _jsx("p", { id: descriptionId, className: "hjm-visually-hidden", children: summary })] }));
+                            }), !donut ? slices.filter((slice) => slice.percent >= chartRecipe.pie.minLabelPercent * 2).map((slice) => {
+                                const label = percentText(slice.index);
+                                const labelWidth = label.length * labelMetrics.fontSize * labelScale + spacing.xxs * 2;
+                                const labelHeight = labelMetrics.lineHeight * labelScale + spacing.xxs;
+                                return _jsxs("g", { pointerEvents: "none", children: [_jsx("rect", { x: slice.centroid.x - labelWidth / 2, y: slice.centroid.y - labelHeight / 2, width: labelWidth, height: labelHeight, style: { rx: "var(--hjm-radius-sm)", fill: "var(--hjm-chart-label-surface)" } }), _jsx("text", { className: "hjm-chart__slice-label", x: slice.centroid.x, y: slice.centroid.y, dominantBaseline: "middle", textAnchor: "middle", children: label })] }, `t${slice.index}`);
+                            }) : null] }), donut && center != null ? _jsx("div", { className: "hjm-chart__pie-center", children: center }) : null] }), showLegend ? (_jsx(ChartLegend, { items: data.map((d, i) => ({ id: d.id, label: d.label, color: colorAt(i), value: rowValue(d, i) })), selectedId: selected, ...(legendExclusion ? { exclusion: legendExclusion } : {}), ...(interactive ? { onSelect: select } : {}) })) : null, _jsx("p", { id: descriptionId, className: "hjm-visually-hidden", children: summary })] }));
 }
 export function RadarChart({ categories, series, accessibilityLabel, formatValue, missingLabel, domain, levels = chartRecipe.radar.levels, size = 240, showLegend, className, layoutStyle, }) {
     validateChartSeries(categories, series);

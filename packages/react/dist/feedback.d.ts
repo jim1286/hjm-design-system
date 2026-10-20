@@ -1,4 +1,4 @@
-import { emptyStateRecipe, skeletonRecipe, type NoticeTone, type ProgressShape, type ProgressSize, type ProgressTone } from "@hjmds/design-contracts/recipes";
+import { emptyStateRecipe, noticeRecipe, skeletonRecipe, type NoticeTone, type ProgressShape, type ProgressSize, type ProgressTone } from "@hjmds/design-contracts/recipes";
 import { type ResultDescriptor } from "@hjmds/design-contracts/components/result";
 import { type HTMLAttributes, type ProgressHTMLAttributes, type ReactNode } from "react";
 import { type ButtonShape } from "@hjmds/design-contracts/recipes/base";
@@ -9,6 +9,8 @@ export type NoticeProps = Omit<HTMLAttributes<HTMLElement>, "title"> & Readonly<
     action?: ReactNode;
     icon?: ReactNode;
     tone?: NoticeTone;
+    /** Unframed status beside the result; shares Notice live-region semantics. */
+    appearance?: keyof typeof noticeRecipe.appearances;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -18,6 +20,8 @@ export declare const Notice: import("react").ForwardRefExoticComponent<Omit<HTML
     action?: ReactNode;
     icon?: ReactNode;
     tone?: NoticeTone;
+    /** Unframed status beside the result; shares Notice live-region semantics. */
+    appearance?: keyof typeof noticeRecipe.appearances;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLElement>>;

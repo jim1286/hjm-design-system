@@ -11,8 +11,9 @@ import { Text as NativeText, AccessibilityInfo, Animated, AppState, Easing, Keyb
 import { buttonRecipe } from "@hjmds/design-contracts/recipes/base";
 import { Button, IconButton } from "./actions.js";
 import { Text } from "./primitives.js";
+import { Badge } from "./data-display.js";
 import { useHjmNativeTheme } from "./provider.js";
-export function Notice({ title, description, tone = noticeRecipe.defaults.tone, announcement = "none", icon, renderIcon, action, layoutStyle, ...props }) {
+export function Notice({ title, description, tone = noticeRecipe.defaults.tone, appearance = noticeRecipe.defaults.appearance, announcement = "none", icon, renderIcon, action, layoutStyle, ...props }) {
     assertNoRemovedStyleProps("Notice", props, ["style"]);
     const theme = useHjmNativeTheme();
     const toneContract = noticeRecipe.tones[tone];
@@ -35,12 +36,12 @@ export function Notice({ title, description, tone = noticeRecipe.defaults.tone, 
     const titleLineHeight = theme.tokens.typography[noticeRecipe.title.textVariant].lineHeight * theme.textScaling.scale;
     return (_jsxs(View, { ...props, accessibilityLiveRegion: announcement, accessibilityRole: announcement === "assertive" ? "alert" : undefined, style: [
             {
-                backgroundColor: resolveColorReference(toneContract.background, theme.palette),
+                backgroundColor: appearance === "status" ? "transparent" : resolveColorReference(toneContract.background, theme.palette),
                 borderColor: resolveColorReference(toneContract.border, theme.palette),
                 borderRadius: theme.tokens.radius[noticeRecipe.radius],
-                borderWidth: noticeRecipe.borderWidth,
+                borderWidth: noticeRecipe.appearances[appearance].borderWidth,
                 gap: noticeRecipe.gap,
-                padding: noticeRecipe.padding,
+                padding: noticeRecipe.appearances[appearance].padding,
             },
             layoutStyle,
         ], children: [_jsxs(View, { style: {
@@ -53,7 +54,7 @@ export function Notice({ title, description, tone = noticeRecipe.defaults.tone, 
                             height: Math.max(glyph[noticeRecipe.iconSize], titleLineHeight),
                             justifyContent: "center",
                             width: glyph[noticeRecipe.iconSize],
-                        }, children: resolvedIcon })), _jsxs(View, { style: { flex: 1, gap: noticeRecipe.contentGap, minWidth: 0 }, children: [_jsx(Text, { style: { color: foreground, fontWeight: noticeRecipe.title.fontWeight }, variant: noticeRecipe.title.textVariant, children: title }), description ? (_jsx(Text, { style: { color: resolveColorReference(noticeRecipe.description.color, theme.palette) }, variant: noticeRecipe.description.textVariant, children: description })) : null] })] }), action] }));
+                        }, children: resolvedIcon })), _jsxs(View, { style: { flex: 1, gap: noticeRecipe.contentGap, minWidth: 0 }, children: [appearance === "status" ? _jsx(Badge, { label: title, tone: tone, size: "small" }) : _jsx(Text, { style: { color: foreground, fontWeight: noticeRecipe.title.fontWeight }, variant: noticeRecipe.title.textVariant, children: title }), description ? (_jsx(Text, { style: { color: resolveColorReference(noticeRecipe.description.color, theme.palette) }, variant: noticeRecipe.description.textVariant, children: description })) : null] })] }), action] }));
 }
 export function EmptyState({ title, description, illustration, action, density = emptyStateRecipe.defaults.density, align = "center", announcement = "none", accessibilityLabel, titleRole = "header", layoutStyle, ...props }) {
     assertNoRemovedStyleProps("EmptyState", props, ["style", "illustrationStyle", "titleStyle", "descriptionStyle", "actionStyle"]);
@@ -98,7 +99,7 @@ export function EmptyState({ title, description, illustration, action, density =
                     {
                         color: resolveColorReference(emptyStateRecipe.description.color, theme.palette),
                     },
-                ], variant: emptyStateRecipe.description.textVariant, children: description })) : null, action ? _jsx(View, { children: action }) : null, usesUpperSpacers ? _jsx(View, { accessible: false, style: { flexGrow: 3 } }) : null] }));
+                ], variant: emptyStateRecipe.description.textVariant, children: description })) : null, action ? _jsx(View, { style: { alignSelf: "stretch", alignItems: "center" }, children: action }) : null, usesUpperSpacers ? _jsx(View, { accessible: false, style: { flexGrow: 3 } }) : null] }));
 }
 /** Terminal flow outcome with platform announcement and canonical actions. */
 export function Result({ status, title, description, actions, renderIcon, layoutStyle, ...props }) {

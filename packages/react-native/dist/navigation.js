@@ -1,4 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
+import { resolveDensityDefault } from "@hjmds/design-contracts/components/design-system-provider";
 import { getTabNavigationTarget, resolveInitialTabValue, tabsBehaviorDefaults, } from "@hjmds/design-contracts/behaviors";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { resolveBottomNavigationActivation, resolveBottomNavigationConfiguration, resolveBottomNavigationDescriptor, validateBottomNavigationProminence, } from "@hjmds/design-contracts/components/bottom-navigation";
@@ -1007,7 +1008,7 @@ function useMenuAfterDismiss(visible) {
     };
 }
 /** Sectioned Native action/selection menu with teardown-safe action callbacks. */
-export function Menu({ triggerLabel, title = "", presentation = "grouped", items, sections, source: sourceProp, selection = { mode: "none" }, onAction, onActionAfterDismiss, onSelectionAfterDismiss, open, defaultOpen = false, onOpenChange, onDismiss, disabled = false, readOnly = false, busy = false, readOnlyLabel, asyncState = { status: "idle" }, onRetry, retryLabel, density = menuRecipe.defaults.density, renderLeading, renderTrailing, dismissLabel, trigger, renderTrigger, layoutStyle, ...modalProps }) {
+export function Menu({ triggerLabel, title = "", presentation = "grouped", items, sections, source: sourceProp, selection = { mode: "none" }, onAction, onActionAfterDismiss, onSelectionAfterDismiss, open, defaultOpen = false, onOpenChange, onDismiss, disabled = false, readOnly = false, busy = false, readOnlyLabel, asyncState = { status: "idle" }, onRetry, retryLabel, density: suppliedDensity, renderLeading, renderTrailing, dismissLabel, trigger, renderTrigger, layoutStyle, ...modalProps }) {
     assertNoRemovedStyleProps("Menu", modalProps, ["style"]);
     const providedSources = [sourceProp, items, sections].filter((candidate) => candidate !== undefined).length;
     if (providedSources !== 1) {
@@ -1034,6 +1035,7 @@ export function Menu({ triggerLabel, title = "", presentation = "grouped", items
         throw new Error("Menu requires an item or a non-idle asyncState");
     }
     const theme = useHjmNativeTheme();
+    const density = suppliedDensity ?? resolveDensityDefault(theme.environment.density, { comfortable: menuRecipe.defaults.density, compact: "compact" });
     const { colors, environment } = theme;
     const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
     const visible = open ?? uncontrolledOpen;

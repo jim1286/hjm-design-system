@@ -1,5 +1,5 @@
 import type { HjmDesignProfile } from "@hjmds/design-contracts/design-profile";
-import { type DesignSystemDirection, type DesignSystemProviderValue, type DesignSystemTextScale, type ResolveDesignSystemEnvironmentOptions } from "@hjmds/design-contracts/components/design-system-provider";
+import { type DesignSystemDirection, type DesignSystemDensity, type DesignSystemProviderValue, type DesignSystemTextScale, type ResolveDesignSystemEnvironmentOptions } from "@hjmds/design-contracts/components/design-system-provider";
 import type { ThemePreference } from "@hjmds/design-contracts/colors";
 import { spacing } from "@hjmds/design-contracts/foundations";
 import { type ReactNode } from "react";
@@ -43,6 +43,7 @@ type HjmNativeProviderEnvironmentProps = Readonly<{
     textScale?: DesignSystemTextScale;
     reducedMotion?: boolean;
     minimumVisualTarget?: boolean;
+    density?: DesignSystemDensity;
     /**
      * The supported brand route. Before 1.5.0 branding required a hand-built
      * `value`, which also stopped following the OS theme, text scale and
@@ -60,6 +61,7 @@ type HjmNativeProviderValueProps = Readonly<{
     textScale?: never;
     reducedMotion?: never;
     minimumVisualTarget?: never;
+    density?: never;
     brandPalette?: never;
     designProfile?: never;
 }>;
@@ -91,7 +93,7 @@ export type HjmNativeProviderProps = Readonly<{
      * No Expo/Skia peer enters the core graph. `{}` opts this subtree out. */
     surfaceEffects?: NativeSurfaceEffects;
 }> & (HjmNativeProviderEnvironmentProps | HjmNativeProviderValueProps);
-export declare function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, brandPalette: suppliedBrandPalette, designProfile: suppliedDesignProfile, value: suppliedValue, safeAreaInsets: suppliedInsets, surfaceEffects: suppliedSurfaceEffects, fonts: suppliedFonts, }: HjmNativeProviderProps): import("react").JSX.Element;
+export declare function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, density, brandPalette: suppliedBrandPalette, designProfile: suppliedDesignProfile, value: suppliedValue, safeAreaInsets: suppliedInsets, surfaceEffects: suppliedSurfaceEffects, fonts: suppliedFonts, }: HjmNativeProviderProps): import("react").JSX.Element;
 export declare function useHjmNativeTheme(): HjmNativeTheme;
 /** Insets supplied to the nearest HjmNativeProvider; `{}` when the host supplied none. */
 export declare function useHjmNativeSafeAreaInsets(): HjmNativeSafeAreaInsets;

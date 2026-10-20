@@ -113,12 +113,12 @@ export function Surface({ tone = surfaceDefaults.tone, padding = surfaceDefaults
     const borderColor = resolveThemeColor(colors, contract.border);
     const elevatedStyle = contract.elevated
         ? {
-            ...resolveNativeShadowElevation(tokens.shadow.floating, designProfile !== undefined, 4),
-            // Use the same floating surface token as Web instead of a separate blur.
-            shadowColor: tokens.shadow.floating.color,
-            shadowOffset: { width: 0, height: tokens.shadow.floating.offsetY },
-            shadowOpacity: tokens.shadow.floating.opacity,
-            shadowRadius: tokens.shadow.floating.radius,
+            ...resolveNativeShadowElevation(tokens.shadow.raised, designProfile !== undefined, 4),
+            // Raised cards use the low elevation token; floating is reserved for floating controls and overlays.
+            shadowColor: tokens.shadow.raised.color,
+            shadowOffset: { width: 0, height: tokens.shadow.raised.offsetY },
+            shadowOpacity: tokens.shadow.raised.opacity,
+            shadowRadius: tokens.shadow.raised.radius,
         }
         : undefined;
     return (_jsxs(View, { ...props, style: [

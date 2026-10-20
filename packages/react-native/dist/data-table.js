@@ -1,4 +1,5 @@
 import { jsxs as _jsxs, jsx as _jsx, Fragment as _Fragment } from "react/jsx-runtime";
+import { resolveDensityDefault } from "@hjmds/design-contracts/components/design-system-provider";
 import { useMemo, useRef, useState } from "react";
 import { Pressable, ScrollView, Text as NativeText, View } from "react-native";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
@@ -11,11 +12,12 @@ const DEFAULT_WIDTH = 72, PINNED_WIDTH = 96;
 // React Native textAlign has no logical start/end; mirror through the provider direction so RTL tables read
 // from the right like the Web renderer's logical alignment (2026-10-18 scenario-matrix rtl proof).
 const alignOf = (align, direction) => align === "center" ? "center" : (align === "end") !== (direction === "rtl") ? "right" : "left";
-export function DataTable({ columns, rows, labels, renderCell, getCellText, sortState = null, sortCycle = dataTableDefaults.sortCycle, onSortChange, onRowPress, selectedRowId = null, summaryRow, asyncState = { status: "idle" }, emptyLabel, density = dataTableRecipe.defaults.density, footer, layoutStyle, columnGroups = [], rowGroups = [], cellStyle, heatColors, maxBodyHeight, }) {
+export function DataTable({ columns, rows, labels, renderCell, getCellText, sortState = null, sortCycle = dataTableDefaults.sortCycle, onSortChange, onRowPress, selectedRowId = null, summaryRow, asyncState = { status: "idle" }, emptyLabel, density: suppliedDensity, footer, layoutStyle, columnGroups = [], rowGroups = [], cellStyle, heatColors, maxBodyHeight, }) {
     validateDataTableColumns(columns);
     validateDataTableRows(rows);
     validateDataTableSortState(sortState, columns);
     const theme = useHjmNativeTheme(), { colors } = theme;
+    const density = suppliedDensity ?? resolveDensityDefault(theme.environment.density, { comfortable: dataTableRecipe.defaults.density, compact: "compact" });
     const direction = theme.environment.direction;
     const color = (reference) => resolveColorReference(reference, theme.palette);
     const [width, setWidth] = useState(0), [atEnd, setAtEnd] = useState(false), [pressed, setPressed] = useState(null);

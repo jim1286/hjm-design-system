@@ -3,7 +3,7 @@ import { jsx as _jsx } from "react/jsx-runtime";
 // The provider creates React context and observes browser preferences; server pages can pass a serializable product profile without wrapping the whole page.
 // Root-barrel marking would also move unrelated exports; see docs/qa/2026-10-07-rsc-profile-boundary.md.
 import { DesignProfileContext } from "./internal.js";
-import { designSystemEnvironmentDefaults, isLargeTextScale, resolveDensityDefault, resolveDesignSystemProviderValue, validateDesignSystemProviderValue, } from "@hjmds/design-contracts/components/design-system-provider";
+import { designSystemEnvironmentDefaults, isLargeTextScale, resolveDensityDefault, resolveDesignSystemProviderValue, resolveProviderBrandPalette, validateDesignSystemProviderValue, } from "@hjmds/design-contracts/components/design-system-provider";
 import { tooltipBehaviorDefaults } from "@hjmds/design-contracts/components/tooltip";
 import { createContext, forwardRef, useCallback, useContext, useRef, useState, useSyncExternalStore, } from "react";
 import { classNames } from "./internal.js";
@@ -29,7 +29,7 @@ export const HjmProvider = forwardRef(function HjmProvider({ children, theme, di
     const parent = useContext(HjmThemeContext);
     const designProfile = suppliedDesignProfile ?? parent?.designProfile;
     const inheritedBrandPalette = useContext(HjmBrandPaletteContext);
-    const brandPalette = suppliedBrandPalette ?? inheritedBrandPalette;
+    const brandPalette = resolveProviderBrandPalette(inheritedBrandPalette, suppliedBrandPalette, suppliedValue);
     const observesSystem = suppliedValue === undefined;
     const prefersDark = useMediaQuery("(prefers-color-scheme: dark)", observesSystem);
     const prefersReducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)", observesSystem);
@@ -91,7 +91,7 @@ export const HjmProvider = forwardRef(function HjmProvider({ children, theme, di
     // module into granular entries like ./selection and blow their gzip budgets.
     // See issue #20.
     const largeText = isLargeTextScale(environment.textScale) ? "true" : undefined;
-    return (_jsx(HjmThemeContext.Provider, { value: value, children: _jsx(DesignProfileContext.Provider, { value: value.designProfile, children: _jsx(HjmBrandPaletteContext.Provider, { value: suppliedValue === undefined ? brandPalette : undefined, children: _jsx(TooltipCoordinatorContext.Provider, { value: tooltipCoordinator, children: _jsx("div", { ...rest, ref: ref, className: classNames("hjm-root", className), "data-hjm-provider": "", "data-host": host, "data-motion": environment.reducedMotion ? "reduced" : "full", "data-theme": environment.theme, "data-design-profile": value.designProfile?.id, "data-text-scale": environment.textScale, "data-large-text": largeText, dir: environment.direction, style: { ...createHjmThemeStyle(value), ...style }, children: children }) }) }) }) }));
+    return (_jsx(HjmThemeContext.Provider, { value: value, children: _jsx(DesignProfileContext.Provider, { value: value.designProfile, children: _jsx(HjmBrandPaletteContext.Provider, { value: brandPalette, children: _jsx(TooltipCoordinatorContext.Provider, { value: tooltipCoordinator, children: _jsx("div", { ...rest, ref: ref, className: classNames("hjm-root", className), "data-hjm-provider": "", "data-host": host, "data-motion": environment.reducedMotion ? "reduced" : "full", "data-theme": environment.theme, "data-design-profile": value.designProfile?.id, "data-text-scale": environment.textScale, "data-large-text": largeText, dir: environment.direction, style: { ...createHjmThemeStyle(value), ...style }, children: children }) }) }) }) }));
 });
 export function useHjmTheme() {
     const value = useContext(HjmThemeContext);

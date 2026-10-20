@@ -227,6 +227,8 @@ export declare function ChatMessage({ direction, author, timestamp, timestampPre
 /** Shared structure for embedded compositions. The parent supplies size; this never creates a second scroller. */
 export type CompositionLayoutProps = Readonly<{
     title?: string;
+    /** Compact labels inside sheets retain heading semantics without a large section title. */
+    titleSize?: "default" | "compact";
     /** Document heading level; visual treatment remains the shared composition title. */
     headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
     description?: string;
@@ -242,7 +244,7 @@ export type CompositionLayoutProps = Readonly<{
     loadingIndicator?: ReactNode;
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function CompositionLayout({ title, headingLevel, description, badge, leading, actions, notice, children, footer, state, stateAction, loadingIndicator, layoutStyle }: CompositionLayoutProps): import("react").JSX.Element;
+export declare function CompositionLayout({ title, titleSize, headingLevel, description, badge, leading, actions, notice, children, footer, state, stateAction, loadingIndicator, layoutStyle }: CompositionLayoutProps): import("react").JSX.Element;
 export type NotificationRowProps = Readonly<{
     /** Text and inline emphasis only; interactive content belongs outside the row. */
     preview: ReactNode;

@@ -1,6 +1,6 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import { resolveSurfaceFillOpacity } from "@hjmds/design-contracts/palette-contrast";
-import { resolveDesignSystemProviderValue, validateDesignSystemProviderValue, } from "@hjmds/design-contracts/components/design-system-provider";
+import { resolveDesignSystemProviderValue, resolveProviderBrandPalette, validateDesignSystemProviderValue, } from "@hjmds/design-contracts/components/design-system-provider";
 import { spacing, radius, typography, shadow, fontFamily, pretendardNativeFaces } from "@hjmds/design-contracts/foundations";
 import { createContext, useContext, useEffect, useMemo, useState, useSyncExternalStore, } from "react";
 import { AccessibilityInfo, I18nManager, Platform, useColorScheme, useWindowDimensions, } from "react-native";
@@ -69,6 +69,7 @@ function useSystemReducedTransparency(observe) {
 }
 function toEnvironmentInput(props) {
     return {
+        ...(props.density === undefined ? {} : { density: props.density }),
         ...(props.theme === undefined ? {} : { theme: props.theme }),
         ...(props.direction === undefined ? {} : { direction: props.direction }),
         ...(props.textScale === undefined ? {} : { textScale: props.textScale }),
@@ -78,7 +79,7 @@ function toEnvironmentInput(props) {
             : { minimumVisualTarget: props.minimumVisualTarget }),
     };
 }
-export function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, brandPalette: suppliedBrandPalette, designProfile: suppliedDesignProfile, value: suppliedValue, safeAreaInsets: suppliedInsets, surfaceEffects: suppliedSurfaceEffects, fonts: suppliedFonts, }) {
+export function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, density, brandPalette: suppliedBrandPalette, designProfile: suppliedDesignProfile, value: suppliedValue, safeAreaInsets: suppliedInsets, surfaceEffects: suppliedSurfaceEffects, fonts: suppliedFonts, }) {
     const parent = useContext(HjmNativeThemeContext);
     const fonts = suppliedFonts ?? parent?.fonts ?? "system";
     const designProfile = suppliedDesignProfile ?? parent?.designProfile;
@@ -89,7 +90,7 @@ export function HjmNativeProvider({ children, theme, direction, textScale, reduc
     const inheritedInsets = useContext(HjmNativeSafeAreaContext);
     const safeAreaInsets = suppliedInsets ?? inheritedInsets;
     const inheritedBrandPalette = useContext(HjmNativeBrandPaletteContext);
-    const brandPalette = suppliedValue === undefined ? suppliedBrandPalette ?? inheritedBrandPalette : undefined;
+    const brandPalette = useMemo(() => resolveProviderBrandPalette(inheritedBrandPalette, suppliedBrandPalette, suppliedValue), [inheritedBrandPalette, suppliedBrandPalette, suppliedValue]);
     const colorScheme = useColorScheme();
     // Match Expo web's light server snapshot to avoid stale styles after hydration;
     // native stays immediate. See README: static-web theme precedence.
@@ -100,12 +101,13 @@ export function HjmNativeProvider({ children, theme, direction, textScale, reduc
     const systemReducedMotion = useSystemReducedMotion(suppliedValue === undefined && reducedMotion === undefined && parent === null);
     const { fontScale: systemTextScale } = useWindowDimensions();
     const environment = useMemo(() => toEnvironmentInput({
+        ...(density === undefined ? {} : { density }),
         ...(theme === undefined ? {} : { theme }),
         ...(direction === undefined ? {} : { direction }),
         ...(textScale === undefined ? {} : { textScale }),
         ...(reducedMotion === undefined ? {} : { reducedMotion }),
         ...(minimumVisualTarget === undefined ? {} : { minimumVisualTarget }),
-    }), [direction, minimumVisualTarget, reducedMotion, textScale, theme]);
+    }), [density, direction, minimumVisualTarget, reducedMotion, textScale, theme]);
     const contextValue = useMemo(() => {
         const resolved = suppliedValue ?? resolveDesignSystemProviderValue(environment, {
             systemTheme,

@@ -1,4 +1,4 @@
-import { emptyStateRecipe, skeletonRecipe, type NoticeTone as ContractNoticeTone, type ProgressShape, type ProgressSize, type ProgressTone, type ToastPlacement, type ToastTone, type ToastToneMark } from "@hjmds/design-contracts/recipes";
+import { emptyStateRecipe, noticeRecipe, skeletonRecipe, type NoticeTone as ContractNoticeTone, type ProgressShape, type ProgressSize, type ProgressTone, type ToastPlacement, type ToastTone, type ToastToneMark } from "@hjmds/design-contracts/recipes";
 import { type ResultDescriptor, type ResultStatus } from "@hjmds/design-contracts/components/result";
 import { type ToastDescriptor, type ToastDismissReason, type ToastDuplicatePolicy, type ToastOverflowPolicy, type ToastPauseReason, type ToastPublishResult, type ToastTimerUpdatePolicy } from "@hjmds/design-contracts/components/toast";
 import { type ReactNode } from "react";
@@ -18,6 +18,8 @@ export type NoticeProps = Omit<ViewProps, "children" | "style"> & Readonly<{
     title: string;
     description?: string;
     tone?: NoticeTone;
+    /** Unframed status beside its saved item; retains the same announcement lifecycle. */
+    appearance?: keyof typeof noticeRecipe.appearances;
     announcement?: AnnouncementMode;
     icon?: ReactNode;
     renderIcon?: (props: NoticeIconRenderProps) => ReactNode;
@@ -25,7 +27,7 @@ export type NoticeProps = Omit<ViewProps, "children" | "style"> & Readonly<{
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function Notice({ title, description, tone, announcement, icon, renderIcon, action, layoutStyle, ...props }: NoticeProps): import("react").JSX.Element;
+export declare function Notice({ title, description, tone, appearance, announcement, icon, renderIcon, action, layoutStyle, ...props }: NoticeProps): import("react").JSX.Element;
 export type EmptyStateAlign = "center" | "upper";
 export type EmptyStateProps = Omit<ViewProps, "children" | "style"> & Readonly<{
     title?: string;

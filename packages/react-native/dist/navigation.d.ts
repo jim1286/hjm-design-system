@@ -257,7 +257,7 @@ export type MenuProps<Value extends string = string, SectionKey extends string =
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Sectioned Native action/selection menu with teardown-safe action callbacks. */
-export declare function Menu<Value extends string = string, SectionKey extends string = string>({ triggerLabel, title, presentation, items, sections, source: sourceProp, selection, onAction, onActionAfterDismiss, onSelectionAfterDismiss, open, defaultOpen, onOpenChange, onDismiss, disabled, readOnly, busy, readOnlyLabel, asyncState, onRetry, retryLabel, density, renderLeading, renderTrailing, dismissLabel, trigger, renderTrigger, layoutStyle, ...modalProps }: MenuProps<Value, SectionKey>): import("react").JSX.Element;
+export declare function Menu<Value extends string = string, SectionKey extends string = string>({ triggerLabel, title, presentation, items, sections, source: sourceProp, selection, onAction, onActionAfterDismiss, onSelectionAfterDismiss, open, defaultOpen, onOpenChange, onDismiss, disabled, readOnly, busy, readOnlyLabel, asyncState, onRetry, retryLabel, density: suppliedDensity, renderLeading, renderTrailing, dismissLabel, trigger, renderTrigger, layoutStyle, ...modalProps }: MenuProps<Value, SectionKey>): import("react").JSX.Element;
 export type LoadMoreProps = Readonly<{
     descriptor: LoadMoreDescriptor;
     /** Temporarily block pagination during a product mutation/refetch without claiming a page is loading. */

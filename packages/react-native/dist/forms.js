@@ -1,6 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
-import { useKeyboardOverlap } from "./keyboard.js";
 import { FieldErrorText, NativeFieldFrame } from "./internal/field-frame.js";
 import { focusAccessibleHost } from "./internal/accessible-focus.js";
 import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
@@ -8,50 +7,32 @@ import { formRecipe, } from "@hjmds/design-contracts/components/form";
 import { comboboxBehaviorDefaults, resolveControlAccessibleName, } from "@hjmds/design-contracts/behaviors";
 import { flattenCollectionItems, isComboboxResultCurrent, reconcileSelectSelection, resolveComboboxSelectedItem, resolveSelectSelectedItem, validateCollection, } from "@hjmds/design-contracts/components/collection";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { backdrop, glyph, spacing, } from "@hjmds/design-contracts/foundations";
+import { glyph, spacing, } from "@hjmds/design-contracts/foundations";
 import { comboboxRecipe, selectRecipe, } from "@hjmds/design-contracts/recipes";
 import { useImperativeHandle, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, } from "react";
-import { ActivityIndicator, Modal, Pressable, ScrollView, TextInput, View, } from "react-native";
+import { ActivityIndicator, Pressable, ScrollView, TextInput, View, } from "react-native";
 import { Button } from "./actions.js";
 import { useControllableState } from "./internal/state.js";
-import { scheduleAfterNativeModalTeardown, shouldAwaitNativeModalDismiss, } from "./internal/modal-lifecycle.js";
+import { Sheet } from "./overlays.js";
 import { logicalTextAlign, minimumTargetStyle, resolveNativeFontStyle, resolveNativeTextScaleProps, } from "./internal/styles.js";
 import { Text } from "./primitives.js";
-import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "./provider.js";
-function useAfterModalDismiss(visible) {
-    const shownRef = useRef(false);
-    const previousVisibleRef = useRef(visible);
+import { useHjmNativeTheme } from "./provider.js";
+// Sheet owns native teardown. Commit locale/navigation changes only after its exit completes.
+function useAfterSheetDismiss() {
     const pendingRef = useRef(null);
-    const teardownTaskRef = useRef(null);
-    const complete = useCallback(() => {
-        teardownTaskRef.current?.cancel();
-        teardownTaskRef.current = null;
-        shownRef.current = false;
-        const pending = pendingRef.current;
-        pendingRef.current = null;
-        if (pending)
-            void pending();
-    }, []);
-    useLayoutEffect(() => {
-        const wasVisible = previousVisibleRef.current;
-        previousVisibleRef.current = visible;
-        if (!wasVisible ||
-            visible ||
-            shouldAwaitNativeModalDismiss(shownRef.current))
-            return;
-        teardownTaskRef.current?.cancel();
-        teardownTaskRef.current = scheduleAfterNativeModalTeardown(complete);
-    }, [complete, visible]);
-    useEffect(() => () => teardownTaskRef.current?.cancel(), []);
     return {
-        queue(action) {
-            pendingRef.current = action;
-        },
-        onDismiss: complete,
-        onShow() {
-            shownRef.current = true;
+        queue(action) { pendingRef.current = action; },
+        onDismiss() {
+            const pending = pendingRef.current;
+            pendingRef.current = null;
+            if (pending)
+                void pending();
         },
     };
+}
+// Preserve the collection API's reasons while the shared Sheet owns dismissal gestures.
+function collectionDismissReason(reason) {
+    return reason === "outside" ? "outside" : reason === "back" || reason === "escape" ? "escape" : "programmatic";
 }
 /** A renderer-neutral field frame for custom Native controls. */
 export function Field({ label, children, description, error, required = false, disabled = false, layoutStyle, }) {
@@ -123,13 +104,6 @@ export function Form({ label, values, onSubmit, children, submitLabel, actions, 
     useImperativeHandle(ref, () => ({ submit }));
     return (_jsxs(View, { accessibilityLabel: label, accessibilityState: { busy, disabled }, style: [{ gap: formRecipe.density[density].fieldGap }, layoutStyle], children: [children, error ?? internalError ? (_jsx(View, { accessibilityLiveRegion: "assertive", accessibilityRole: "alert", children: _jsx(Text, { tone: "danger", children: error ?? internalError }) })) : null, actions !== undefined ? actions : _jsx(Button, { disabled: disabled, loading: busy, onPress: () => void submit(), children: submitLabel })] }));
 }
-/** Shared collection sheets keep dismissal in the header so it does not compete with choices. */
-function CollectionSheetHeader({ title, dismissLabel, onDismiss }) {
-    const { colors, environment, tokens } = useHjmNativeTheme();
-    // 2026-10-17 user decision: sheets show no visible title. The title stays a screen-reader header in an
-    // off-layout 1pt view (as the canonical Sheet), and the × keeps its inline-end place.
-    return _jsxs(View, { style: { flexDirection: "row", direction: environment.direction, alignItems: "center", justifyContent: "flex-end", gap: spacing.sm }, children: [_jsx(View, { accessible: true, accessibilityRole: "header", accessibilityLabel: title, style: { position: "absolute", top: 0, start: 0, width: 1, height: 1, overflow: "hidden" } }), _jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: dismissLabel, onPress: onDismiss, style: ({ pressed }) => [minimumTargetStyle, { alignItems: "center", justifyContent: "center", borderRadius: tokens.radius.full, backgroundColor: pressed ? colors.bg : "transparent" }], children: _jsx(Text, { accessible: false, tone: "muted", variant: "title", children: "\u00D7" }) })] });
-}
 /** Native adaptive Select with shared sections, async states, and teardown-safe commits. */
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export function Select({ label, accessibilityLabel, source: sourceProp, items, sections, selectedKey, defaultSelectedKey, onSelectionChange, selectedItem, disallowEmptySelection = false, open, defaultOpen = false, onOpenChange, placeholder, description, error, required = false, disabled = false, readOnly = false, busy = false, size = selectRecipe.defaults.size, density = selectRecipe.defaults.density, asyncState = { status: "idle" }, onRetry, retryLabel, readOnlyLabel, openHint, renderLeading, renderOptionLeading, onSelectionAfterDismiss, onDismiss, dismissLabel, optionsAccessibilityLabel, layoutStyle, ...modalProps }) {
@@ -155,7 +129,6 @@ export function Select({ label, accessibilityLabel, source: sourceProp, items, s
     const accessibleName = resolveControlAccessibleName(label, accessibilityLabel, "Select");
     const theme = useHjmNativeTheme();
     const { colors, environment, tokens } = theme;
-    const safeArea = useHjmNativeSafeAreaInsets();
     const requestedControlled = selectedKey;
     const requestedDefault = defaultSelectedKey ?? null;
     const requestedValue = requestedControlled === undefined ? requestedDefault : requestedControlled;
@@ -209,7 +182,7 @@ export function Select({ label, accessibilityLabel, source: sourceProp, items, s
         viewport.positioned = false;
         viewport.measuring = false;
     }, [visible]);
-    const modalDismiss = useAfterModalDismiss(visible);
+    const modalDismiss = useAfterSheetDismiss();
     const sizeContract = selectRecipe.sizes[size];
     const densityContract = selectRecipe.density[density];
     const close = useCallback((reason, after) => {
@@ -334,28 +307,12 @@ export function Select({ label, accessibilityLabel, source: sourceProp, items, s
                         paddingHorizontal: sizeContract.paddingHorizontal,
                         position: "relative",
                     },
-                ], children: [triggerLeading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", style: { opacity: busy ? 0 : 1 }, children: triggerLeading })) : null, _jsx(Text, { fontRole: "ui", style: { flex: 1, opacity: busy ? 0 : 1 }, tone: resolvedSelectedItem ? "body" : "muted", variant: sizeContract.textVariant, children: resolvedSelectedItem?.label ?? placeholder }), _jsx(Text, { accessible: false, style: { opacity: busy ? 0 : 1 }, tone: "muted", children: "\u2304" }), busy ? _jsx(View, { pointerEvents: "none", style: { alignItems: "center", bottom: 0, justifyContent: "center", left: 0, position: "absolute", right: 0, top: 0 }, children: _jsx(ActivityIndicator, { size: glyph[selectRecipe.busyIndicator.glyph] }) }) : null] }), error ? (_jsx(FieldErrorText, { error: error })) : description ? (_jsx(Text, { tone: "muted", variant: "caption", children: description })) : null, _jsx(Modal, { ...modalProps, animationType: "none", onDismiss: modalDismiss.onDismiss, onRequestClose: () => close("escape"), onShow: () => {
-                    modalDismiss.onShow();
+                ], children: [triggerLeading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", style: { opacity: busy ? 0 : 1 }, children: triggerLeading })) : null, _jsx(Text, { fontRole: "ui", style: { flex: 1, opacity: busy ? 0 : 1 }, tone: resolvedSelectedItem ? "body" : "muted", variant: sizeContract.textVariant, children: resolvedSelectedItem?.label ?? placeholder }), _jsx(Text, { accessible: false, style: { opacity: busy ? 0 : 1 }, tone: "muted", children: "\u2304" }), busy ? _jsx(View, { pointerEvents: "none", style: { alignItems: "center", bottom: 0, justifyContent: "center", left: 0, position: "absolute", right: 0, top: 0 }, children: _jsx(ActivityIndicator, { size: glyph[selectRecipe.busyIndicator.glyph] }) }) : null] }), error ? (_jsx(FieldErrorText, { error: error })) : description ? (_jsx(Text, { tone: "muted", variant: "caption", children: description })) : null, _jsx(Sheet, { ...modalProps, open: visible, title: label ?? accessibleName, closeLabel: dismissLabel, onOpenChange: (next, detail) => { if (!next)
+                    close(collectionDismissReason(detail.reason)); }, onDismissComplete: modalDismiss.onDismiss, onShow: () => {
                     optionViewport.current.presented = true;
                     revealInitialOption();
                     focusInitialOption();
-                }, transparent: true, visible: visible, children: _jsxs(View, { style: { flex: 1, justifyContent: "flex-end" }, children: [_jsx(Pressable, { accessibilityLabel: dismissLabel, accessibilityRole: "button", onPress: () => close("outside"), style: {
-                                backgroundColor: backdrop.modal.color, opacity: backdrop.modal.opacity,
-                                bottom: 0,
-                                left: 0,
-                                position: "absolute",
-                                right: 0,
-                                top: 0,
-                            } }), _jsxs(View, { accessibilityLabel: optionsAccessibilityLabel ?? accessibleName, accessibilityRole: "radiogroup", accessibilityViewIsModal: true, style: {
-                                backgroundColor: colors.bg,
-                                borderTopLeftRadius: tokens.radius.lg,
-                                borderTopRightRadius: tokens.radius.lg,
-                                gap: spacing.sm,
-                                maxHeight: "75%",
-                                padding: spacing.md,
-                                // Clear the home indicator / navigation bar (2026-09-30 audit).
-                                paddingBottom: spacing.md + (safeArea.bottom ?? 0),
-                            }, children: [_jsx(CollectionSheetHeader, { title: label ?? accessibleName, dismissLabel: dismissLabel, onDismiss: () => close("programmatic") }), _jsx(ScrollView, { ref: optionsScroll, onLayout: event => { optionViewport.current.height = event.nativeEvent.layout.height; revealInitialOption(); }, onContentSizeChange: (_width, height) => { optionViewport.current.contentHeight = height; revealInitialOption(); }, children: _jsxs(View, { ref: optionsContent, collapsable: false, children: [blockingState ? (_jsxs(View, { accessibilityLabel: asyncState.status === "loading" ? asyncState.message : undefined, accessibilityRole: asyncState.status === "loading" ? "progressbar" : undefined, style: { alignItems: "center", gap: spacing.sm, justifyContent: "center", minHeight: selectRecipe.stateMessage.minHeight }, children: [asyncState.status === "loading" ? _jsx(ActivityIndicator, {}) : null, asyncState.status !== "loading" ? _jsx(Text, { accessibilityLiveRegion: "polite", accessibilityRole: asyncState.status === "error" ? "alert" : undefined, tone: asyncState.status === "error" ? "danger" : "muted", children: asyncState.message }) : null, asyncState.status === "error" && onRetry ? (_jsx(Button, { onPress: onRetry, tone: "secondary", children: retryLabel ?? dismissLabel })) : null] })) : collection, asyncState.status === "loadingMore" ? (_jsx(View, { accessibilityLabel: asyncState.message, accessibilityRole: "progressbar", accessibilityState: { busy: true }, style: { alignItems: "center", justifyContent: "center" }, children: _jsx(ActivityIndicator, {}) })) : null] }) })] })] }) })] }));
+                }, children: _jsx(View, { accessibilityLabel: optionsAccessibilityLabel ?? accessibleName, accessibilityRole: "radiogroup", style: { flexShrink: 1 }, children: _jsx(ScrollView, { ref: optionsScroll, onLayout: event => { optionViewport.current.height = event.nativeEvent.layout.height; revealInitialOption(); }, onContentSizeChange: (_width, height) => { optionViewport.current.contentHeight = height; revealInitialOption(); }, children: _jsxs(View, { ref: optionsContent, collapsable: false, children: [blockingState ? (_jsxs(View, { accessibilityLabel: asyncState.status === "loading" ? asyncState.message : undefined, accessibilityRole: asyncState.status === "loading" ? "progressbar" : undefined, style: { alignItems: "center", gap: spacing.sm, justifyContent: "center", minHeight: selectRecipe.stateMessage.minHeight }, children: [asyncState.status === "loading" ? _jsx(ActivityIndicator, {}) : null, asyncState.status !== "loading" ? _jsx(Text, { accessibilityLiveRegion: "polite", accessibilityRole: asyncState.status === "error" ? "alert" : undefined, tone: asyncState.status === "error" ? "danger" : "muted", children: asyncState.message }) : null, asyncState.status === "error" && onRetry ? (_jsx(Button, { onPress: onRetry, tone: "secondary", children: retryLabel ?? dismissLabel })) : null] })) : collection, asyncState.status === "loadingMore" ? (_jsx(View, { accessibilityLabel: asyncState.message, accessibilityRole: "progressbar", accessibilityState: { busy: true }, style: { alignItems: "center", justifyContent: "center" }, children: _jsx(ActivityIndicator, {}) })) : null] }) }) }) })] }));
 }
 /**
  * How long focus events are ignored after a result is chosen. It covers the
@@ -398,7 +355,6 @@ export function Combobox({ label, accessibilityLabel, items, sections, source: s
     const accessibleName = resolveControlAccessibleName(label, accessibilityLabel, "Combobox");
     const theme = useHjmNativeTheme();
     const { colors, environment, tokens } = theme;
-    const safeArea = useHjmNativeSafeAreaInsets();
     const [committedKey, setCommittedKey] = useControllableState({
         ...(selectedKey === undefined ? {} : { value: selectedKey }),
         defaultValue: defaultSelectedKey,
@@ -428,7 +384,7 @@ export function Combobox({ label, accessibilityLabel, items, sections, source: s
             clearTimeout(refocusGuardTimer.current);
     }, []);
     const optionRefs = useRef(new Map());
-    const modalDismiss = useAfterModalDismiss(visible);
+    const modalDismiss = useAfterSheetDismiss();
     const normalizedQuery = query.trim().toLocaleLowerCase();
     const resultsAreCurrent = filtering !== "external" ||
         isComboboxResultCurrent(queryValue ?? query, resultQuery ?? query);
@@ -606,8 +562,6 @@ export function Combobox({ label, accessibilityLabel, items, sections, source: s
                     return renderOption(item, optionIndex);
                 })] }, section.id));
     }) : filteredItems.map(renderOption);
-    const modalRoot = useRef(null);
-    const modalKeyboardOverlap = useKeyboardOverlap(modalRoot, visible);
     return (_jsxs(View, { style: [{ gap: spacing.xs }, layoutStyle], children: [label ? _jsxs(Text, { tone: "primary", variant: "label", style: disabled ? { opacity: fieldRecipe.disabledOpacity } : undefined, children: [label, required ? " *" : ""] }) : null, _jsxs(View, { style: {
                     alignItems: "center",
                     backgroundColor: colors.bg,
@@ -665,18 +619,7 @@ export function Combobox({ label, accessibilityLabel, items, sections, source: s
                                 if (active)
                                     commit(active);
                             }
-                        }, placeholder: placeholder, placeholderTextColor: colors.textWeak, value: query }), query.length > 0 && !readOnly ? (_jsx(Pressable, { accessibilityLabel: clearLabel, accessibilityRole: "button", disabled: disabled || busy || viewStatus === "loading", onPress: clear, style: minimumTargetStyle, children: _jsx(Text, { align: "center", tone: "muted", variant: "title", children: "\u00D7" }) })) : null] }), error ? (_jsx(FieldErrorText, { error: error })) : description ? (_jsx(Text, { tone: "muted", variant: "caption", children: description })) : null, _jsx(Modal, { ...modalProps, animationType: "none", onDismiss: modalDismiss.onDismiss, onRequestClose: () => dismiss("escape"), onShow: () => {
-                    modalDismiss.onShow();
-                    focusInitialOption();
-                }, transparent: true, visible: visible, children: _jsxs(View, { ref: modalRoot, style: { flex: 1, justifyContent: "flex-end", paddingBottom: modalKeyboardOverlap }, children: [_jsx(Pressable, { accessibilityLabel: dismissLabel, accessibilityRole: "button", onPress: () => dismiss("outside"), style: { backgroundColor: backdrop.modal.color, opacity: backdrop.modal.opacity, bottom: 0, left: 0, position: "absolute", right: 0, top: 0 } }), _jsxs(View, { accessibilityLabel: resultsAccessibilityLabel ?? accessibleName, accessibilityRole: "radiogroup", accessibilityViewIsModal: true, style: {
-                                backgroundColor: colors.bg,
-                                borderTopLeftRadius: tokens.radius.lg,
-                                borderTopRightRadius: tokens.radius.lg,
-                                gap: spacing.sm,
-                                maxHeight: "75%",
-                                padding: spacing.md,
-                                // Clear the home indicator / navigation bar (2026-09-30 audit).
-                                paddingBottom: spacing.md + (safeArea.bottom ?? 0),
-                            }, children: [_jsx(CollectionSheetHeader, { title: sheetTitle ?? label ?? accessibleName, dismissLabel: dismissLabel, onDismiss: () => dismiss("programmatic") }), viewStatus === "loading" || viewStatus === "prompt" || viewStatus === "error" || viewStatus === "empty" ? (_jsxs(View, { accessibilityLabel: viewStatus === "loading" ? stateMessage : undefined, accessibilityRole: viewStatus === "loading" ? "progressbar" : undefined, style: { alignItems: "center", gap: spacing.sm, justifyContent: "center", minHeight: comboboxRecipe.stateMessage.minHeight }, children: [viewStatus === "loading" ? _jsx(ActivityIndicator, {}) : null, viewStatus !== "loading" ? _jsx(Text, { accessibilityLiveRegion: viewStatus === "error" ? "assertive" : "polite", accessibilityRole: viewStatus === "error" ? "alert" : undefined, tone: viewStatus === "error" ? "danger" : "muted", children: stateMessage }) : null, viewStatus === "error" && onRetry ? (_jsx(Button, { onPress: onRetry, tone: "secondary", children: retryLabel ?? dismissLabel })) : null] })) : (_jsxs(ScrollView, { keyboardShouldPersistTaps: "handled", children: [collection, viewStatus === "loadingMore" ? (_jsx(View, { accessibilityLabel: stateMessage || loadingMoreMessage || loadingMessage, accessibilityRole: "progressbar", accessibilityState: { busy: true }, style: { alignItems: "center", justifyContent: "center" }, children: _jsx(ActivityIndicator, {}) })) : null] }))] })] }) })] }));
+                        }, placeholder: placeholder, placeholderTextColor: colors.textWeak, value: query }), query.length > 0 && !readOnly ? (_jsx(Pressable, { accessibilityLabel: clearLabel, accessibilityRole: "button", disabled: disabled || busy || viewStatus === "loading", onPress: clear, style: minimumTargetStyle, children: _jsx(Text, { align: "center", tone: "muted", variant: "title", children: "\u00D7" }) })) : null] }), error ? (_jsx(FieldErrorText, { error: error })) : description ? (_jsx(Text, { tone: "muted", variant: "caption", children: description })) : null, _jsx(Sheet, { ...modalProps, open: visible, title: sheetTitle ?? label ?? accessibleName, closeLabel: dismissLabel, onOpenChange: (next, detail) => { if (!next)
+                    dismiss(collectionDismissReason(detail.reason)); }, onDismissComplete: modalDismiss.onDismiss, onShow: focusInitialOption, children: _jsx(View, { accessibilityLabel: resultsAccessibilityLabel ?? accessibleName, accessibilityRole: "radiogroup", style: { flexShrink: 1 }, children: viewStatus === "loading" || viewStatus === "prompt" || viewStatus === "error" || viewStatus === "empty" ? (_jsxs(View, { accessibilityLabel: viewStatus === "loading" ? stateMessage : undefined, accessibilityRole: viewStatus === "loading" ? "progressbar" : undefined, style: { alignItems: "center", gap: spacing.sm, justifyContent: "center", minHeight: comboboxRecipe.stateMessage.minHeight }, children: [viewStatus === "loading" ? _jsx(ActivityIndicator, {}) : null, viewStatus !== "loading" ? _jsx(Text, { accessibilityLiveRegion: viewStatus === "error" ? "assertive" : "polite", accessibilityRole: viewStatus === "error" ? "alert" : undefined, tone: viewStatus === "error" ? "danger" : "muted", children: stateMessage }) : null, viewStatus === "error" && onRetry ? (_jsx(Button, { onPress: onRetry, tone: "secondary", children: retryLabel ?? dismissLabel })) : null] })) : (_jsxs(ScrollView, { keyboardShouldPersistTaps: "handled", children: [collection, viewStatus === "loadingMore" ? (_jsx(View, { accessibilityLabel: stateMessage || loadingMoreMessage || loadingMessage, accessibilityRole: "progressbar", accessibilityState: { busy: true }, style: { alignItems: "center", justifyContent: "center" }, children: _jsx(ActivityIndicator, {}) })) : null] })) }) })] }));
 }
 //# sourceMappingURL=forms.js.map

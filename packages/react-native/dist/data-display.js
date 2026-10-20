@@ -1,4 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
+import { resolveDensityDefault } from "@hjmds/design-contracts/components/design-system-provider";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { resolveAvatarInitials } from "@hjmds/design-contracts/avatar-fallback";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
@@ -157,10 +158,11 @@ export function QuoteCard({ children, attribution, renderMark, ...props }) {
  * root's `data-leading` attribute in CSS.
  */
 const ListItemLeadingContext = createContext(null);
-export function ListRow({ title, tone = listRowRecipe.defaults.tone, description, leading, trailing, titleMetadata, trailingAction, trailingText, metadataLabel, trailingLabel, onPress, accessibilityLabel, accessibilityHint, disabled = false, density = listRowRecipe.defaults.density, loading = false, loadingLabel, selected: selectedProp, leadingShape = "square", layoutStyle, leadingStyle, contentStyle, titleRowStyle, trailingStyle, trailingActionStyle, containerProps, accessibilityState, ...forwarded }) {
+export function ListRow({ title, tone = listRowRecipe.defaults.tone, description, leading, trailing, titleMetadata, trailingAction, trailingText, metadataLabel, trailingLabel, onPress, accessibilityLabel, accessibilityHint, disabled = false, density: suppliedDensity, loading = false, loadingLabel, selected: selectedProp, leadingShape = "square", layoutStyle, leadingStyle, contentStyle, titleRowStyle, trailingStyle, trailingActionStyle, containerProps, accessibilityState, ...forwarded }) {
     assertNoRemovedStyleProps("ListRow", forwarded, ["titleStyle", "descriptionStyle"]);
     const { hjmTitleEmphasis, hjmMeta, ...props } = forwarded;
     const theme = useHjmNativeTheme();
+    const density = suppliedDensity ?? resolveDensityDefault(theme.environment.density, { comfortable: listRowRecipe.defaults.density, compact: "compact" });
     // Tell the enclosing List item whether this row has a leading frame, so the indented separator after it starts at
     // this row's text column (listRecipe.separators). Runs before the loading early return to keep hook order.
     const reportLeading = useContext(ListItemLeadingContext);

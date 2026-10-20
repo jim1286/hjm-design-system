@@ -100,7 +100,7 @@ export type SelectProps<Value extends string = string, SectionKey extends string
     renderOptionLeading?: (item: SelectItemDescriptor<Value>, props: SelectLeadingRenderProps) => ReactNode;
     onSelectionAfterDismiss?: (value: Value) => void | Promise<void>;
     onDismiss?: (reason: SelectOpenChangeReason) => void;
-    /** Localized accessible name and visible label for dismissing the option list. */
+    /** Localized accessible name for dismissing the option list. */
     dismissLabel: string;
     /** Optional localized name for the option-list region; defaults neutrally to label. */
     optionsAccessibilityLabel?: string;
