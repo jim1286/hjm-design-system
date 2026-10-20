@@ -2,7 +2,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ContractStory } from "../preview-registry";
 import { componentStory } from "../story-factory";
-const meta = { includeStories: ["Field","SearchField","TextArea","PasswordField","OtpField","Checkbox","Radio","CheckboxGroup","RadioGroup","Switch","Chip","ImageChoiceGroup","SegmentedControl","ToggleGroup","TagsInput","Slider","NumberField","Select","Combobox","DatePicker","DateRangePicker","ColorPicker","FilePicker","Form","Agreement","Mentions","TransferList","MessageComposer"], id: "components-inputs", title: "배포/컴포넌트/개요/입력 모아 보기", component: ContractStory, parameters: { controls: { disable: true } } } satisfies Meta<typeof ContractStory>;
+const meta = { includeStories: ["Field","SearchField","TextArea","PasswordField","OtpField","Checkbox","Radio","CheckboxGroup","RadioGroup","Switch","Chip","ImageChoiceGroup","SegmentedControl","ToggleGroup","TagsInput","Slider","NumberField","Select","Combobox","TimePicker","DatePicker","DateRangePicker","ColorPicker","FilePicker","Form","Agreement","Mentions","TransferList","MessageComposer"], id: "components-inputs", title: "배포/컴포넌트/개요/입력 모아 보기", component: ContractStory, parameters: { controls: { disable: true } } } satisfies Meta<typeof ContractStory>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Field: Story = { ...componentStory("Field"), name: "입력 필드" };
@@ -24,6 +24,7 @@ export const Slider: Story = { ...componentStory("Slider"), name: "슬라이더"
 export const NumberField: Story = { ...componentStory("NumberField"), name: "숫자 입력" };
 export const Select: Story = { ...componentStory("Select"), name: "목록에서 선택" };
 export const Combobox: Story = { ...componentStory("Combobox"), name: "검색형 선택" };
+export const TimePicker: Story = { ...componentStory("TimePicker"), name: "시각 선택" };
 export const DatePicker: Story = { ...componentStory("DatePicker"), name: "날짜 선택" };
 export const DateRangePicker: Story = { ...componentStory("DateRangePicker"), name: "기간 선택" };
 export const ColorPicker: Story = { ...componentStory("ColorPicker"), name: "색상 선택기" };

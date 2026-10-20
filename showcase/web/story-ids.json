@@ -394,6 +394,7 @@
     "components-inputs--switch",
     "components-inputs--tags-input",
     "components-inputs--text-area",
+    "components-inputs--time-picker",
     "components-inputs--toggle-group",
     "components-inputs--transfer-list",
     "components-inputs-checkbox--dark",
