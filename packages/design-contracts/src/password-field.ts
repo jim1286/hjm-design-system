@@ -16,7 +16,8 @@ import { semanticColors } from "./semantic-colors.js";
  * nothing new to contract there (unlike NumberField, whose value is a parsed
  * number). See docs/password-field.md.
  */
-export type PasswordFieldAutofillHint = "current" | "new";
+// Wi-Fi and other non-account secrets must not request an account credential or a generated password.
+export type PasswordFieldAutofillHint = "current" | "new" | "none";
 
 export type PasswordFieldDescriptor = Readonly<{
   revealed: boolean;
@@ -42,7 +43,7 @@ export function validatePasswordFieldDescriptor(
   descriptor: PasswordFieldDescriptor,
 ): void {
   assertBoolean(descriptor.revealed, "revealed");
-  if (descriptor.autofillHint !== "current" && descriptor.autofillHint !== "new") {
+  if (descriptor.autofillHint !== "current" && descriptor.autofillHint !== "new" && descriptor.autofillHint !== "none") {
     throw new TypeError(
       `Unsupported PasswordField autofillHint: ${String(descriptor.autofillHint)}`,
     );

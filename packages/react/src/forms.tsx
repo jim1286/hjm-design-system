@@ -686,7 +686,7 @@ export const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(
       <TextField
         {...props}
         ref={composeRefs(inputRef, forwardedRef)}
-        autoComplete={autofillHint === "current" ? "current-password" : "new-password"}
+        autoComplete={autofillHint === "none" ? "off" : autofillHint === "current" ? "current-password" : "new-password"}
         className={classNames("hjm-password-field__input", className)}
         disabled={disabled}
         fieldClassName={classNames(

@@ -1,5 +1,19 @@
 # @hjmds/react
 
+## 1.36.0
+
+### Minor Changes
+
+- Promote QuoteCard and ShortcutRail stories to the released section on Web and Native. Align the bundle checker with the documented opt-in animated counter peers of social and toggle compositions.
+
+- Give unselected category pills a raised surface and control outline so their boundaries remain visible over colored backgrounds. Preserve selected colors and touch targets in both renderers.
+
+  Add grouped, anchored and bottom Menu presentations with shared item/selection and after-dismiss actions. Grouped and bottom lists separate rows and keep dismiss actions distinct; Native anchored menus measure their trigger and available safe-area space. Comment menus default to anchored and accept an explicit presentation. Native Menu no longer repeats the trigger name as a visible heading unless title is supplied. Document selection rules and add Web/Native examples.
+
+  Present photo sources as matching icon list rows with shared light/dark neutral plates independent of product brand palettes instead of outlined buttons. Preserve localized labels, disabled/camera availability behavior, synchronous Web selection and Native selection after sheet dismissal.
+
+  Add PasswordField autofillHint="none" for non-account secrets and a LoadMore disabled lock for mutation/refetch work in both renderers. Tighten inline action spacing to 8, join curved chat bubble tails, and keep the share icon inside its viewport.
+
 ## 1.35.1
 
 ### Patch Changes

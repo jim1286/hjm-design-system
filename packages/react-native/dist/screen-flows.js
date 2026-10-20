@@ -22,6 +22,7 @@ import { useHjmNativeTheme } from "./provider.js";
 import { AccessibilityInfo, Keyboard, Pressable, ScrollView, View } from "react-native";
 import { containerRecipe } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./data-display.js";
+import { PhotoSourceIcon } from "./internal/photo-source-icon.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { MessageReactions } from "./internal/message-reactions.js";
 import { Heading } from "./heading.js";
@@ -127,7 +128,8 @@ export function PhotoSourceSheet({ open, onOpenChange, onSelect, labels, disable
     // deferred closing after source selection. Do not launch that abandoned picker.
     const dismiss = (next) => { if (!next)
         queued.current = null; onOpenChange(next); };
-    return _jsx(Sheet, { open: open, onOpenChange: dismiss, title: labels.title, closeLabel: labels.cancel, onDismissComplete: complete, children: _jsxs(Stack, { gap: "xs", children: [_jsx(Button, { tone: "secondary", disabled: disabled, onPress: () => select("library"), children: labels.library }), cameraAvailable ? _jsx(Button, { tone: "secondary", disabled: disabled, onPress: () => select("camera"), children: labels.camera }) : null] }) });
+    // Source choices are peer list actions; the shared row owns touch geometry and label alignment.
+    return _jsx(Sheet, { open: open, onOpenChange: dismiss, title: labels.title, closeLabel: labels.cancel, onDismissComplete: complete, children: _jsxs(Stack, { gap: "xxs", children: [_jsx(ListRow, { title: labels.library, leading: _jsx(PhotoSourceIcon, { source: "library" }), disabled: disabled, onPress: () => select("library") }), cameraAvailable ? _jsx(ListRow, { title: labels.camera, leading: _jsx(PhotoSourceIcon, { source: "camera" }), disabled: disabled, onPress: () => select("camera") }) : null] }) });
 }
 /**
  * One picked item: preview, upload status, then move/rotate/remove. Exported (2026-10-18, Utilverse photo tools) so a
@@ -175,7 +177,7 @@ function SearchResultsHeader({ summary, applied, cause, onSortChange }) {
     const showSort = summary && cause === "none" && sort;
     if (!summary?.notice && !showCount && !showSort && !applied?.items.length)
         return null;
-    return _jsxs(Stack, { gap: "sm", children: [summary?.notice, showCount || showSort ? _jsxs(Stack, { axis: "inline", justify: showCount ? "between" : "end", align: "center", gap: "sm", wrap: true, children: [showCount ? (summary.count === null ? _jsx(Skeleton, { shape: "text", width: "30%" }) : _jsx(Text, { tone: "muted", children: summary.countLabel(summary.count) })) : null, sort ? _jsx(Menu, { triggerLabel: sort.triggerLabel, title: sort.label, dismissLabel: sort.dismissLabel, items: sort.options.map(option => ({ id: option.id, label: option.label })), selection: { mode: "single", selectedKey: sort.value, onSelectionChange: next => { if (next)
+    return _jsxs(Stack, { gap: "sm", children: [summary?.notice, showCount || showSort ? _jsxs(Stack, { axis: "inline", justify: showCount ? "between" : "end", align: "center", gap: "sm", wrap: true, children: [showCount ? (summary.count === null ? _jsx(Skeleton, { shape: "text", width: "30%" }) : _jsx(Text, { tone: "muted", children: summary.countLabel(summary.count) })) : null, sort ? _jsx(Menu, { presentation: "anchored", triggerLabel: sort.triggerLabel, title: sort.label, dismissLabel: sort.dismissLabel, items: sort.options.map(option => ({ id: option.id, label: option.label })), selection: { mode: "single", selectedKey: sort.value, onSelectionChange: next => { if (next)
                                 onSortChange(next); } }, renderTrigger: trigger => _jsx(Button, { size: "small", tone: "ghost", edge: "end", accessibilityState: trigger.accessibilityState, onPress: trigger.onPress, ...(sort.icon === undefined ? {} : { trailing: sort.icon }), children: sort.triggerLabel }) }) : null] }) : null, applied?.items.length ? _jsxs(Stack, { axis: "inline", wrap: true, gap: "xs", align: "center", children: [applied.items.map(item => _jsx(Chip, { label: item.label, accessibilityLabel: applied.removeLabel(item.label), trailing: applied.removeIcon ?? _jsx(FixedGlyph, { tone: "muted", children: "\u00D7" }), onPress: () => applied.onRemove(item.key) }, item.key)), _jsx(Button, { tone: "ghost", size: "small", onPress: applied.onClearAll, children: applied.clearAllLabel })] }) : null] });
 }
 function SearchResultsBody({ summary, applied, suggested, cause, onCommit, children }) {
@@ -295,7 +297,7 @@ function CommentTextAction({ label, onPress, disabled = false, expanded }) {
 function CommentMenuButton({ item, menu, items }) {
     const { palette } = useHjmNativeTheme();
     const label = menu.label(item);
-    return _jsx(Menu, { triggerLabel: label, title: label, dismissLabel: menu.dismissLabel, items: items.map(entry => ({ id: entry.id, label: entry.label, ...(entry.tone === undefined ? {} : { tone: entry.tone }), ...(entry.disabled === undefined ? {} : { disabled: entry.disabled }) })), onActionAfterDismiss: id => menu.onAction(item, id), renderTrigger: trigger => _jsx(IconButton, { label: label, tone: "ghost", onPress: trigger.onPress, children: _jsx(DrawnMoreVertical, { size: commentThreadRecipe.menuGlyphSize, color: resolveIconButtonPresentation("ghost", palette).content }) }) });
+    return _jsx(Menu, { presentation: menu.presentation ?? "anchored", triggerLabel: label, dismissLabel: menu.dismissLabel, items: items.map(entry => ({ id: entry.id, label: entry.label, ...(entry.tone === undefined ? {} : { tone: entry.tone }), ...(entry.disabled === undefined ? {} : { disabled: entry.disabled }) })), onActionAfterDismiss: id => menu.onAction(item, id), renderTrigger: trigger => _jsx(IconButton, { label: label, tone: "ghost", onPress: trigger.onPress, children: _jsx(DrawnMoreVertical, { size: commentThreadRecipe.menuGlyphSize, color: resolveIconButtonPresentation("ghost", palette).content }) }) });
 }
 /** Virtualized hosts reuse the same row as CommentThreadScreen; product slots add content, not a second layout. */
 export function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyle, commentMenu }) {

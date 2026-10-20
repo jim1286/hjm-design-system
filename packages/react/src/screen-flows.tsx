@@ -20,6 +20,7 @@ import { initialFocusDefaults, validateCommentThread, resolvePermissionAction, r
 import { resolveWindowClass } from "@hjmds/design-contracts/responsive";
 import { containerRecipe, type ContainerGutter } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./display.js";
+import { PhotoSourceIcon } from "./internal/photo-source-icon.js";
 import { Heading } from "./heading.js";
 import { EmptyState, Skeleton } from "./feedback.js";
 
@@ -167,9 +168,10 @@ export function PhotoSourceSheet({open,onOpenChange,onSelect,labels,disabled=fal
  // File-input click must stay in the user's activation stack. Deferring until the
  // sheet animation ends can cause browsers to reject camera/album selection.
  const select=(source:PhotoSource)=>{if(disabled)return;onOpenChange(false);onSelect(source);};
- return <Sheet open={open} onOpenChange={onOpenChange} title={labels.title} closeLabel={labels.cancel}><Stack gap="xs">
- <Button tone="secondary" disabled={disabled} onClick={()=>select("library")}>{labels.library}</Button>
- {cameraAvailable?<Button tone="secondary" disabled={disabled} onClick={()=>select("camera")}>{labels.camera}</Button>:null}
+ // Same peer list actions as Native, without changing the browser activation stack.
+ return <Sheet open={open} onOpenChange={onOpenChange} title={labels.title} closeLabel={labels.cancel}><Stack gap="xxs">
+ <ListRow title={labels.library} leading={<PhotoSourceIcon source="library"/>} disabled={disabled} onClick={()=>select("library")}/>
+ {cameraAvailable?<ListRow title={labels.camera} leading={<PhotoSourceIcon source="camera"/>} disabled={disabled} onClick={()=>select("camera")}/>:null}
  </Stack></Sheet>;
 }
 
@@ -468,7 +470,7 @@ function SearchResultsHeader({ summary, applied, cause, appliedHost, onRemove, o
     {summary?.notice}
     {showCount || showSort ? <Stack axis="inline" justify={showCount ? "between" : "end"} align="center" gap="sm" wrap>
       {showCount ? (summary!.count === null ? <Skeleton shape="text" width="30%" /> : <Text tone="muted">{summary!.countLabel(summary!.count)}</Text>) : null}
-      {sort ? <Menu label={sort.label} align="end" selectionMode="single" value={sort.value} onValueChange={onSortChange}
+      {sort ? <Menu presentation="anchored" label={sort.label} align="end" selectionMode="single" value={sort.value} onValueChange={onSortChange}
         items={sort.options.map(option => ({ id: option.id, label: option.label }))}
         trigger={<Button size="small" tone="ghost" edge="end" {...(sort.icon === undefined ? {} : { trailing: sort.icon })}>{sort.triggerLabel}</Button>} /> : null}
     </Stack> : null}
@@ -668,6 +670,10 @@ export type CommentReactions = ReactionPickerProps & Readonly<{closeLabel:string
  * only the localized button name, the items allowed for that comment and the action callback.
  */
 export type CommentMenu = Readonly<{
+  /** Context belongs to the row: anchored by default; override only for a product interaction reason. */
+  presentation?: "grouped" | "anchored" | "bottom";
+  /** Required when presentation is grouped or bottom. */
+  dismissLabel?: string;
   /** Localized accessible name of the button, e.g. "More options for seoyeon's comment". */
   label(item: CommentThreadItem): string;
   /** Items allowed for this comment (permission is product-owned). An empty list omits the button for that row. */
@@ -686,7 +692,7 @@ function CommentTextAction({label,onPress,disabled=false,expanded}:Readonly<{lab
 function CommentMenuGlyph(){const size=commentThreadRecipe.menuGlyphSize;return <svg aria-hidden="true" focusable="false" width={size} height={size} viewBox="0 0 24 24" fill="currentColor">{[5,12,19].map(y=><circle key={y} cx="12" cy={y} r="1.75"/>)}</svg>;}
 function CommentMenuButton({item,menu,items}:Readonly<{item:CommentThreadItem;menu:CommentMenu;items:readonly CommentMenuItemDescriptor[]}>){
  const label=menu.label(item);
- return <Menu label={label} align="end" trigger={<IconButton label={label} tone="ghost"><CommentMenuGlyph/></IconButton>} items={items.map(entry=>({id:entry.id,label:entry.label,textValue:entry.label,...(entry.tone===undefined?{}:{tone:entry.tone}),...(entry.disabled===undefined?{}:{disabled:entry.disabled})}))} onActionAfterDismiss={id=>menu.onAction(item,id)}/>;
+ return <Menu presentation={menu.presentation ?? "anchored"} {...(menu.dismissLabel === undefined ? {} : {dismissLabel: menu.dismissLabel})} label={label} align="end" trigger={<IconButton label={label} tone="ghost"><CommentMenuGlyph/></IconButton>} items={items.map(entry=>({id:entry.id,label:entry.label,textValue:entry.label,...(entry.tone===undefined?{}:{tone:entry.tone}),...(entry.disabled===undefined?{}:{disabled:entry.disabled})}))} onActionAfterDismiss={id=>menu.onAction(item,id)}/>;
 }
 
 /** Virtualized hosts reuse the same row as CommentThreadScreen; product slots add content, not a second layout. */

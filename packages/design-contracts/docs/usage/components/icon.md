@@ -142,3 +142,7 @@ const renderGlyph = (props: NativeIconRenderProps<AppGlyphName>) =>
 - 아이콘은 자기 `tone` 색을 직접 칠한다. Web CSS가 `data-tone`으로 색을 지정하므로 부모 색을 상속하지 않는다.
   primary·danger IconButton 안에서 기본 tone(`secondary`)을 쓰면 채워진 면 위에 회색이 된다. 이때는 `tone="inverse"`.
 - `createLucideGlyph` 맵에 없는 이름을 그리면 실행 중 `TypeError`가 난다. `renderSemanticGlyph`도 HJM 이름이 아니면 `TypeError`를 낸다.
+
+2026-10-20 공유 아이콘 잘림 수정(개발 소스): 아래 원의 외곽이 24-unit viewBox 끝에 닿아 선 굵기만큼
+잘리던 공통 share 경로를 수정했다. 아래 원의 중심과 가운데–아래 연결선을 함께 맞췄으며 regular/strong
+선 전체가 viewBox 안에 들어간다. 소비 앱에서 이미지 크기·padding·overflow로 보정하지 않는다. 미게시 변경이다.

@@ -111,3 +111,9 @@ import { CommentThreadRow } from "@hjmds/react-native/screen-flows";
 | 답글 행동 | `<button class="hjm-comment-row__action">` | `Pressable`, `hitSlop` 8 |
 | 시각 | `<time dateTime>` 안 caption | caption `Text` |
 | 길게 누르기 반응 | `MessageReactions` 트리거 class `hjm-comment-row__reactions` | `MessageReactions previewSurface` |
+
+### 댓글 더보기 표현 — 개발 소스, 미게시
+
+2026-10-20 메뉴의 대상 연결을 분명히 하자는 결정으로 `commentMenu.presentation`은 Web·Native 모두
+`anchored`가 기본이다. `grouped`/`bottom`으로 바꿀 때는 제품 상호작용 이유와 지역화한 `dismissLabel`을 함께 제공한다.
+행마다 제품 Menu를 새로 조립하지 않는다. [Menu의 세 표현](menu.md#세-가지-표시-방식--개발-소스-미게시)을 따른다.

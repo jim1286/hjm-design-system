@@ -176,7 +176,8 @@ it("retains host header, zero gutters and pull-to-refresh ownership", () => {
   expect(scroll.props.refreshControl).toBe(refresh);
   expect(scroll.props.keyboardDismissMode).toBe("interactive");
   expect(scroll.props.contentContainerStyle.padding).toBe(0);
-  expect(JSON.stringify(tree.toJSON())).not.toContain("Shared header");
+  // The screen keeps its accessible name; only the visible shared heading is replaced by the host.
+  expect(tree.root.findAllByType(Text).some(node => node.props.children === "Shared header")).toBe(false);
   expect(JSON.stringify(tree.toJSON())).toContain("Host header");
   act(()=>tree.unmount());
 });

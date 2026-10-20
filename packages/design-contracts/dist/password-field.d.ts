@@ -5,7 +5,7 @@
  * nothing new to contract there (unlike NumberField, whose value is a parsed
  * number). See docs/password-field.md.
  */
-export type PasswordFieldAutofillHint = "current" | "new";
+export type PasswordFieldAutofillHint = "current" | "new" | "none";
 export type PasswordFieldDescriptor = Readonly<{
     revealed: boolean;
     /**

@@ -40,6 +40,7 @@ import {
   type AlertDialogTone,
   type DialogSize,
   type MenuDensity,
+  type MenuPresentation,
   type MenuItemTone,
 } from "@hjmds/design-contracts/recipes";
 import type { MenuSectionDescriptor } from "@hjmds/design-contracts/behaviors";
@@ -1094,7 +1095,8 @@ export type MenuOpenChangeReason =
   | "selection"
   | "escape"
   | "outside"
-  | "tab";
+  | "tab"
+  | "programmatic";
 
 export type MenuAsyncState =
   | Readonly<{ status: "idle" }>
@@ -1152,6 +1154,9 @@ type MenuBaseProps = Readonly<{
   trigger: OverlayTrigger;
   label: string;
   density?: MenuDensity;
+  presentation?: MenuPresentation;
+  /** Required for grouped/bottom; accessible and visible dismiss label. */
+  dismissLabel?: string;
   /** Logical alignment against the trigger; automatically mirrors in RTL. */
   align?: "start" | "end";
   disabled?: boolean;
@@ -1223,6 +1228,8 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(props, r
     trigger,
     label,
     density: densityProp,
+    presentation = "anchored",
+    dismissLabel,
     align = "start",
     disabled = false,
     asyncState = { status: "idle" },
@@ -1236,6 +1243,7 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(props, r
     layoutStyle,
   } = props;
   const density = densityProp ?? densityDefault;
+  if (presentation !== "anchored" && !dismissLabel?.trim()) throw new TypeError("Modal Menu requires dismissLabel");
   const sections = props.sections;
   const items = sections === undefined ? props.items : sections.flatMap((section) => section.items);
   if (label.trim().length === 0) throw new TypeError("Menu label must not be empty");
@@ -1296,7 +1304,7 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(props, r
   const typeaheadRef = useRef({ value: "", time: 0 });
   const id = `${useId().replaceAll(":", "")}-menu`;
   // menuRecipe offset/edge padding (2026-10-06 follow-up; helper default edge padding was 16).
-  const popupPosition = useAnchoredPopup(triggerRef, contentNode, {
+  const popupPosition = useAnchoredPopup(triggerRef, presentation === "anchored" ? contentNode : null, {
     align, gap: menuRecipe.sideOffset, viewportPadding: menuRecipe.collisionPadding, zIndex: layer.dropdown,
   });
   const setMenuContentRef = useCallback((node: HTMLDivElement | null) => {
@@ -1447,7 +1455,7 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(props, r
     } else if (event.key === "Escape") {
       event.preventDefault();
       close("escape", true);
-    } else if (event.key === "Tab") {
+    } else if (event.key === "Tab" && presentation === "anchored") {
       close("tab", false);
     } else if (
       event.key.length === 1 &&
@@ -1461,23 +1469,18 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(props, r
     }
   };
 
+  useModalFocus({ active: open && presentation !== "anchored", contentRef,
+    fallbackReturnRef: triggerRef, onEscape: () => close("escape", true) });
   const showItems = asyncState.status !== "empty" && asyncState.status !== "error";
 
-  return (
-    <span ref={wrapperRef} className="hjm-menu" style={layoutStyle} data-state={open ? "open" : "closed"}>
-      {renderedTrigger}
-      {open ? (
-        <AnchoredPortal
-          anchorRef={triggerRef}
-          ssrFallback="inline"
-          {...(portalContainer === undefined ? {} : { container: portalContainer })}
-        >
+  const content = (
           <div
             ref={setMenuContentRef}
             id={id}
             role="menu"
             aria-label={label}
             className={classNames("hjm-menu__content", className)}
+            data-presentation={presentation}
             data-density={density}
             data-async-state={asyncState.status}
             data-placement={popupPosition.placement}
@@ -1485,7 +1488,7 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(props, r
             aria-busy={
               asyncState.status === "loading" || asyncState.status === "loadingMore" || undefined
             }
-            style={popupPosition.style}
+            style={presentation === "anchored" ? popupPosition.style : undefined}
             tabIndex={-1}
             onKeyDown={handleMenuKeyDown}
           >
@@ -1497,6 +1500,7 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(props, r
                 {asyncState.message}
               </div>
             ) : null}
+            <div className="hjm-menu__viewport">
             {showItems ? (sections === undefined ? items.map((item, index) => {
               const selected = itemSelected(item.id);
               const itemDisabled = itemIsDisabled(item);
@@ -1540,8 +1544,25 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(props, r
                 </div>
               );
             })) : null}
+            </div>
+            {presentation !== "anchored" ? <Button tone="secondary" role="menuitem" onClick={() => close("programmatic", true)}>{dismissLabel}</Button> : null}
           </div>
+  );
+  return (
+    <span ref={wrapperRef} className="hjm-menu" style={layoutStyle} data-state={open ? "open" : "closed"}>
+      {renderedTrigger}
+      {open ? presentation === "anchored" ? (
+        <AnchoredPortal anchorRef={triggerRef} ssrFallback="inline"
+          {...(portalContainer === undefined ? {} : { container: portalContainer })}>
+          {content}
         </AnchoredPortal>
+      ) : (
+        <HjmPortal {...(portalContainer === undefined ? {} : { container: portalContainer })}>
+          <div className="hjm-overlay hjm-menu-positioner" data-presentation={presentation} style={{ zIndex: getModalLayer(0) }}
+            onPointerDown={event => { if (event.target === event.currentTarget) close("outside", true); }}>
+            {content}
+          </div>
+        </HjmPortal>
       ) : null}
     </span>
   );

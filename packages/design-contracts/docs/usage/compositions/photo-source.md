@@ -19,7 +19,7 @@
 | 컴포넌트 | 역할 | 지침 |
 | --- | --- | --- |
 | PhotoSourceSheet | 명시적으로 선택 후 플랫폼 picker 실행 | [공개 계약](../components/photo-source-sheet.md) |
-| Button | 명시 행동·재시도 | [Button](../components/button.md) |
+| ListRow | 공통 중성색 아이콘과 출처 선택 행동 | [ListRow](../components/list-row.md) |
 
 ## 배치
 
@@ -32,7 +32,7 @@
 | --- | --- | --- | --- |
 | 바깥 틀 | PhotoSourceSheet 또는 포함 Surface | 부모 화면의 해당 슬롯 | [배치](../components/photo-source-sheet.md#배치)에 따른다 |
 | 내용 | PhotoSourceSheet 내부 슬롯 | 앨범 → 촬영(보이는 제목 없음(2026-10-17 사용자 결정: 시트는 보이는 제목 없이 `title`을 접근성 이름으로만 쓴다)) | spacing 토큰과 포함 컴포넌트 recipe |
-| 행동 | Button 또는 공개 콜백 | 내용과 가까운 명시 진입점 | 주 행동 하나, 보조 행동과 구분 |
+| 행동 | 아이콘 ListRow의 공개 콜백 | 앨범·촬영 행 전체 | 동등한 두 출처, 같은 중성색 표현 |
 
 ## 흐름과 상태
 

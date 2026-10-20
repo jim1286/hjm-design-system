@@ -33,6 +33,40 @@ async function render(ui: React.ReactNode) {
 async function flush() {
   await act(async () => { await new Promise((resolve) => setTimeout(resolve, 20)); });
 }
+
+it.each(["grouped", "bottom"] as const)("%s keeps modal focus, separates rows, and runs an action after the surface closes", async presentation => {
+  const action = vi.fn(() => expect(document.querySelector('[role="menu"]')).toBeNull());
+  const changes = vi.fn();
+  await render(<HjmProvider><Menu onOpenChange={changes} presentation={presentation} label="더보기" dismissLabel="닫기"
+    trigger={<button type="button">더보기</button>} items={[{ id: "recent", label: "최근 사용" }, { id: "settings", label: "설정" }]}
+    onActionAfterDismiss={action} /></HjmProvider>);
+  const trigger = host.querySelector<HTMLButtonElement>("button")!;
+  await act(async () => trigger.click());
+  await flush();
+  const menu = document.querySelector<HTMLElement>('[role="menu"]')!;
+  expect(menu.dataset.presentation).toBe(presentation);
+  expect(menu.contains(document.activeElement)).toBe(true);
+  expect(document.body.style.overflow).toBe("hidden");
+  const items = menu.querySelectorAll<HTMLButtonElement>('.hjm-menu__item');
+  expect(getComputedStyle(items[1]!).borderTopWidth).toBe("1px");
+  const rect = menu.getBoundingClientRect();
+  expect(rect.left).toBeGreaterThanOrEqual(0);
+  expect(rect.right).toBeLessThanOrEqual(window.innerWidth);
+  expect(rect.bottom).toBeLessThanOrEqual(window.innerHeight);
+  if (presentation === "bottom") expect(rect.top).toBeGreaterThan(window.innerHeight / 2);
+  await act(async () => items[1]!.click());
+  await flush();
+  expect(action).toHaveBeenCalledWith("settings");
+  expect(document.activeElement).toBe(trigger);
+  expect(document.body.style.overflow).not.toBe("hidden");
+  await act(async () => trigger.click());
+  await flush();
+  const dismiss = document.querySelector<HTMLButtonElement>('[role="menu"] > button')!;
+  await act(async () => dismiss.click());
+  await flush();
+  expect(changes).toHaveBeenLastCalledWith(false, { reason: "programmatic" });
+  expect(document.activeElement).toBe(trigger);
+});
 function key(target: Element, value: string) {
   target.dispatchEvent(new KeyboardEvent("keydown", { key: value, bubbles: true, cancelable: true }));
 }

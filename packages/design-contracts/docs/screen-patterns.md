@@ -354,9 +354,9 @@ Photo albums and tool links set `ChatMessage.interactiveContent` so native acces
 
 ## 사진 촬영과 앨범 선택 (2026-10-05)
 
-`PhotoSourceSheet`는 `Sheet`와 `Button`의 보조 조합이며 `MediaSelectionScreen`이나
+`PhotoSourceSheet`는 `Sheet`와 아이콘이 있는 `ListRow`의 보조 조합이며 `MediaSelectionScreen`이나
 업로드 컴포넌트를 대체하지 않는다. 사용자 요청으로 사진 버튼 하나에서 앨범·촬영을 선택한다.
-`labels`는 제품 지역화 문구이며 색은 현재 HJM provider/theme을 따른다.
+`labels`는 제품 지역화 문구다. 2026-10-20 사용자 결정으로 출처 아이콘은 앱 브랜드와 관계없이 밝은 모드 배경 `#E2E8F0`·선 `#334155`, 어두운 모드 배경 `#334155`·선 `#F1F5F9`로 통일한다. 모드 선택과 나머지 시트 색은 HJM provider/theme을 따른다.
 `cameraAvailable=false`는 촬영 경로를 숨긴다. HJM은 Expo/브라우저 카메라 SDK를 의존하지 않는다.
 
 Native는 시트가 실제 닫힌 뒤 `onSelect`를 호출한다. Web은 브라우저 사용자 활성화를 보존하기

@@ -19,6 +19,7 @@ import { initialFocusDefaults, validateCommentThread, resolvePermissionAction, r
 import { resolveWindowClass } from "@hjmds/design-contracts/responsive";
 import { containerRecipe } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./display.js";
+import { PhotoSourceIcon } from "./internal/photo-source-icon.js";
 import { Heading } from "./heading.js";
 import { EmptyState, Skeleton } from "./feedback.js";
 // `edge`: the action ends a header/row edge (IconButton/Button edge rule, 2026-10-17 audit); framed tones ignore it.
@@ -132,7 +133,8 @@ export function PhotoSourceSheet({ open, onOpenChange, onSelect, labels, disable
     // sheet animation ends can cause browsers to reject camera/album selection.
     const select = (source) => { if (disabled)
         return; onOpenChange(false); onSelect(source); };
-    return _jsx(Sheet, { open: open, onOpenChange: onOpenChange, title: labels.title, closeLabel: labels.cancel, children: _jsxs(Stack, { gap: "xs", children: [_jsx(Button, { tone: "secondary", disabled: disabled, onClick: () => select("library"), children: labels.library }), cameraAvailable ? _jsx(Button, { tone: "secondary", disabled: disabled, onClick: () => select("camera"), children: labels.camera }) : null] }) });
+    // Same peer list actions as Native, without changing the browser activation stack.
+    return _jsx(Sheet, { open: open, onOpenChange: onOpenChange, title: labels.title, closeLabel: labels.cancel, children: _jsxs(Stack, { gap: "xxs", children: [_jsx(ListRow, { title: labels.library, leading: _jsx(PhotoSourceIcon, { source: "library" }), disabled: disabled, onClick: () => select("library") }), cameraAvailable ? _jsx(ListRow, { title: labels.camera, leading: _jsx(PhotoSourceIcon, { source: "camera" }), disabled: disabled, onClick: () => select("camera") }) : null] }) });
 }
 /**
  * One picked item: preview, upload status, then move/rotate/remove. Exported (2026-10-18, Utilverse photo tools) so a
@@ -270,7 +272,7 @@ function SearchResultsHeader({ summary, applied, cause, appliedHost, onRemove, o
         return null;
     // The sort trigger ends the count row: edge="end" puts its chevron on the gutter like the count text starts on it
     // (2026-10-17 measured audit: chevron 29 from the edge against 16).
-    return _jsxs(Stack, { gap: "sm", children: [summary?.notice, showCount || showSort ? _jsxs(Stack, { axis: "inline", justify: showCount ? "between" : "end", align: "center", gap: "sm", wrap: true, children: [showCount ? (summary.count === null ? _jsx(Skeleton, { shape: "text", width: "30%" }) : _jsx(Text, { tone: "muted", children: summary.countLabel(summary.count) })) : null, sort ? _jsx(Menu, { label: sort.label, align: "end", selectionMode: "single", value: sort.value, onValueChange: onSortChange, items: sort.options.map(option => ({ id: option.id, label: option.label })), trigger: _jsx(Button, { size: "small", tone: "ghost", edge: "end", ...(sort.icon === undefined ? {} : { trailing: sort.icon }), children: sort.triggerLabel }) }) : null] }) : null, applied?.items.length ? _jsxs(Stack, { ref: appliedHost, axis: "inline", wrap: true, gap: "xs", align: "center", children: [applied.items.map((item, index) => _jsx(Chip, { "data-search-applied-filter": "", label: item.label, "aria-label": applied.removeLabel(item.label), trailing: applied.removeIcon ?? _jsx("span", { "aria-hidden": "true", children: "\u00D7" }), onPress: () => onRemove(item.key, index) }, item.key)), _jsx(Button, { tone: "ghost", size: "small", onClick: onClearAll, children: applied.clearAllLabel })] }) : null] });
+    return _jsxs(Stack, { gap: "sm", children: [summary?.notice, showCount || showSort ? _jsxs(Stack, { axis: "inline", justify: showCount ? "between" : "end", align: "center", gap: "sm", wrap: true, children: [showCount ? (summary.count === null ? _jsx(Skeleton, { shape: "text", width: "30%" }) : _jsx(Text, { tone: "muted", children: summary.countLabel(summary.count) })) : null, sort ? _jsx(Menu, { presentation: "anchored", label: sort.label, align: "end", selectionMode: "single", value: sort.value, onValueChange: onSortChange, items: sort.options.map(option => ({ id: option.id, label: option.label })), trigger: _jsx(Button, { size: "small", tone: "ghost", edge: "end", ...(sort.icon === undefined ? {} : { trailing: sort.icon }), children: sort.triggerLabel }) }) : null] }) : null, applied?.items.length ? _jsxs(Stack, { ref: appliedHost, axis: "inline", wrap: true, gap: "xs", align: "center", children: [applied.items.map((item, index) => _jsx(Chip, { "data-search-applied-filter": "", label: item.label, "aria-label": applied.removeLabel(item.label), trailing: applied.removeIcon ?? _jsx("span", { "aria-hidden": "true", children: "\u00D7" }), onPress: () => onRemove(item.key, index) }, item.key)), _jsx(Button, { tone: "ghost", size: "small", onClick: onClearAll, children: applied.clearAllLabel })] }) : null] });
 }
 function SearchResultsBody({ summary, applied, suggested, cause, onCommit, onClearAll, children }) {
     // Loading keeps each row's own height (ListRow `loading`), so the list does not jump when results land.
@@ -402,7 +404,7 @@ function CommentTextAction({ label, onPress, disabled = false, expanded }) {
 function CommentMenuGlyph() { const size = commentThreadRecipe.menuGlyphSize; return _jsx("svg", { "aria-hidden": "true", focusable: "false", width: size, height: size, viewBox: "0 0 24 24", fill: "currentColor", children: [5, 12, 19].map(y => _jsx("circle", { cx: "12", cy: y, r: "1.75" }, y)) }); }
 function CommentMenuButton({ item, menu, items }) {
     const label = menu.label(item);
-    return _jsx(Menu, { label: label, align: "end", trigger: _jsx(IconButton, { label: label, tone: "ghost", children: _jsx(CommentMenuGlyph, {}) }), items: items.map(entry => ({ id: entry.id, label: entry.label, textValue: entry.label, ...(entry.tone === undefined ? {} : { tone: entry.tone }), ...(entry.disabled === undefined ? {} : { disabled: entry.disabled }) })), onActionAfterDismiss: id => menu.onAction(item, id) });
+    return _jsx(Menu, { presentation: menu.presentation ?? "anchored", ...(menu.dismissLabel === undefined ? {} : { dismissLabel: menu.dismissLabel }), label: label, align: "end", trigger: _jsx(IconButton, { label: label, tone: "ghost", children: _jsx(CommentMenuGlyph, {}) }), items: items.map(entry => ({ id: entry.id, label: entry.label, textValue: entry.label, ...(entry.tone === undefined ? {} : { tone: entry.tone }), ...(entry.disabled === undefined ? {} : { disabled: entry.disabled }) })), onActionAfterDismiss: id => menu.onAction(item, id) });
 }
 /** Virtualized hosts reuse the same row as CommentThreadScreen; product slots add content, not a second layout. */
 export function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyle, commentMenu }) {

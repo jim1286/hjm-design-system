@@ -300,12 +300,12 @@ export const PasswordField = forwardRef(function PasswordField({ revealed: revea
         }, 0);
         return () => clearTimeout(timeout);
     }, [revealed]);
-    return (_jsx(FieldRenderer, { ...props, ref: inputRef, autoComplete: autofillHint === "current" ? "current-password" : "new-password", disabled: disabled, 
+    return (_jsx(FieldRenderer, { ...props, ref: inputRef, autoComplete: autofillHint === "none" ? "off" : autofillHint === "current" ? "current-password" : "new-password", disabled: disabled, 
         // passwordFieldRecipe.states owns the amount; both renderers used the field default 0.6 until 2026-10-06.
         disabledOpacity: passwordFieldRecipe.states.disabledOpacity, recipeTextVariant: size === "large" ? "bodyLarge" : fieldRecipe.textVariant, recipeMinHeight: metrics.minHeight, multiline: false, onSelectionChange: (event) => {
             selectionRef.current = event.nativeEvent.selection;
             onSelectionChange?.(event);
-        }, search: false, secureTextEntry: resolved.nativeSecureTextEntry, textContentType: autofillHint === "current" ? "password" : "newPassword", trailing: (_jsx(Pressable, { accessibilityLabel: resolved.toggleAccessibleName, accessibilityRole: "button", 
+        }, search: false, secureTextEntry: resolved.nativeSecureTextEntry, importantForAutofill: autofillHint === "none" ? "no" : props.importantForAutofill, textContentType: autofillHint === "none" ? "none" : autofillHint === "current" ? "password" : "newPassword", trailing: (_jsx(Pressable, { accessibilityLabel: resolved.toggleAccessibleName, accessibilityRole: "button", 
             // No `selected`: the label already names the next action, and VoiceOver
             // would read "Selected, Hide password" — the Native twin of the
             // `aria-pressed` the contract rules out (password-field.md, rationale 1).
@@ -838,7 +838,7 @@ export function SegmentedControl(props) {
                             paddingVertical: pills ? segmentedControlRecipe.pills.inset : undefined,
                             width: stacked ? "100%" : undefined,
                         },
-                    ], children: [pills ? _jsx(View, { pointerEvents: "none", accessible: false, style: { position: "absolute", left: 0, right: 0, top: segmentedControlRecipe.pills.inset, bottom: segmentedControlRecipe.pills.inset, borderRadius: segmentedControlRecipe.pills.radius, backgroundColor: isSelected ? (movingHighlight ? "transparent" : resolveColorReference(segmentedControlRecipe.pills.selectedBackground, theme.palette)) : theme.colors.surfaceAlt } }) : null, leading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", children: leading })) : null, _jsx(Text, { fontRole: "ui", align: "center", style: {
+                    ], children: [pills ? _jsx(View, { pointerEvents: "none", accessible: false, style: { position: "absolute", left: 0, right: 0, top: segmentedControlRecipe.pills.inset, bottom: segmentedControlRecipe.pills.inset, borderRadius: segmentedControlRecipe.pills.radius, backgroundColor: isSelected ? (movingHighlight ? "transparent" : resolveColorReference(segmentedControlRecipe.pills.selectedBackground, theme.palette)) : resolveColorReference(segmentedControlRecipe.pills.background, theme.palette), borderWidth: segmentedControlRecipe.pills.borderWidth, borderColor: resolveColorReference(isSelected ? segmentedControlRecipe.pills.selectedBackground : segmentedControlRecipe.pills.border, theme.palette) } }) : null, leading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", children: leading })) : null, _jsx(Text, { fontRole: "ui", align: "center", style: {
                                 color: textOnly ? (isSelected ? theme.colors.text : theme.colors.textMuted) : contentColor,
                                 fontWeight: textOnly ? segmentedControlRecipe.text[textEmphasis][isSelected ? "selected" : "idle"] : isSelected
                                     ? segmentedControlRecipe.item.selectedFontWeight

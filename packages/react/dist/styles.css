@@ -1061,6 +1061,9 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
    the avatar box in product styles. */
 .hjm-list-row__leading { display: flex; align-items: center; justify-content: center; inline-size: var(--hjm-list-row-leading-size); block-size: var(--hjm-list-row-leading-size); overflow: hidden; }
 .hjm-list-row__leading[data-shape="circle"] { border-radius: var(--hjm-radius-full); }
+/* Photo source peers share ListRow geometry; only their decorative brand plate is specialized. */
+.hjm-photo-source__icon { display: grid; place-items: center; inline-size: 100%; block-size: 100%; border-radius: var(--hjm-radius-md); }
+.hjm-photo-source__icon svg { inline-size: 24px; block-size: 24px; }
 .hjm-list-row__content { flex: 1 1 auto; min-inline-size: 0; display: grid; gap: var(--hjm-space-xxs); }
 /* listRowRecipe title bodyLarge / description body (2026-10-17: Web inherited 14 for both while Native used the recipe). */
 .hjm-list-row__title { color: var(--hjm-color-text-body); font-size: var(--hjm-type-body-large-size); line-height: var(--hjm-type-body-large-line-height); font-weight: var(--hjm-type-title-weight); overflow-wrap: anywhere; }
@@ -2383,7 +2386,8 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: var(--hjm-space-sm);
+  /* Match actionGroupRecipe: 8px in either direction (2026-10-20 user request). */
+  gap: var(--hjm-space-xs);
   padding: 0 var(--hjm-space-lg) var(--hjm-space-lg);
 }
 .hjm-dialog__close {
@@ -2674,6 +2678,27 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-menu__description { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); }
 .hjm-menu__leading,
 .hjm-menu__trailing { flex: 0 0 auto; color: var(--hjm-color-text-muted); }
+
+/* Three Menu presentations share items and focus semantics; modal chrome never belongs to a consumer. */
+.hjm-menu-positioner[data-presentation="bottom"] { align-items: end; padding-block-end: max(var(--hjm-space-md), env(safe-area-inset-bottom)); }
+.hjm-menu__content[data-presentation="grouped"],
+.hjm-menu__content[data-presentation="bottom"] {
+  position: relative; inset: auto; display: flex; flex-direction: column; gap: var(--hjm-space-xs);
+  inline-size: min(18rem, 100%); min-inline-size: 0; max-inline-size: 100%;
+  max-block-size: calc(100dvh - 2 * var(--hjm-space-md)); padding: var(--hjm-space-sm);
+  border-radius: var(--hjm-radius-lg);
+}
+.hjm-menu__content[data-presentation="bottom"] { inline-size: min(26.25rem, 100%); padding: 0; border: 0; background: transparent; box-shadow: none; }
+.hjm-menu__content[data-presentation="bottom"] .hjm-menu__viewport { background: var(--hjm-color-bg); }
+.hjm-menu__content[data-presentation="grouped"] .hjm-menu__viewport,
+.hjm-menu__content[data-presentation="bottom"] .hjm-menu__viewport { min-block-size: 0; overflow: auto; border-radius: var(--hjm-radius-md); }
+.hjm-menu__content[data-presentation="grouped"] .hjm-menu__viewport { background: var(--hjm-color-surface); }
+.hjm-menu__content[data-presentation="anchored"] .hjm-menu__item + .hjm-menu__item,
+.hjm-menu__content[data-presentation="grouped"] .hjm-menu__item + .hjm-menu__item,
+.hjm-menu__content[data-presentation="bottom"] .hjm-menu__item + .hjm-menu__item { border-block-start: 1px solid var(--hjm-color-border); border-radius: 0; }
+.hjm-menu__content[data-presentation="grouped"][data-density="comfortable"] .hjm-menu__item { min-block-size: 3.25rem; }
+.hjm-menu__content[data-presentation="grouped"] > .hjm-button,
+.hjm-menu__content[data-presentation="bottom"] > .hjm-button { flex-shrink: 0; inline-size: 100%; }
 
 /* Advanced forms --------------------------------------------------------- */
 .hjm-select__native { appearance: none; padding-inline-end: calc(var(--hjm-space-lg) + var(--hjm-space-sm)); cursor: pointer; }
@@ -3397,13 +3422,13 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-chat-message[data-direction="outgoing"] .hjm-chat-message__body { flex-direction: row-reverse; }
 .hjm-chat-message__bubble { border-radius: 14px; background: var(--hjm-color-surface); padding: 6px 10px; min-inline-size: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
 .hjm-chat-message[data-direction="outgoing"] .hjm-chat-message__bubble { background: var(--hjm-color-surface-accent); }
-/* A flat-topped tip in the bubble surface continues the run's first top edge; that corner tightens to meet it. */
+/* Tighten the first corner to join the overlapping rounded tip. */
 .hjm-chat-message[data-tail] .hjm-chat-message__bubble { position: relative; border-start-start-radius: 4px; }
-.hjm-chat-message[data-tail] .hjm-chat-message__bubble::before { content: ""; position: absolute; top: 0; inset-inline-start: -6px; width: 7px; height: 10px; background: var(--hjm-color-surface); clip-path: polygon(0 0, 100% 0, 100% 100%); pointer-events: none; }
+/* The reference tip follows the top edge; its curved underside joins the bubble (2026-10-20). */
+.hjm-chat-message[data-tail] .hjm-chat-message__bubble::before { content: ""; position: absolute; top: 0; inset-inline-start: -6px; width: 11px; height: 10px; border-start-start-radius: 1px; border-end-start-radius: 10px; background: var(--hjm-color-surface); pointer-events: none; }
 .hjm-chat-message[data-tail][data-direction="outgoing"] .hjm-chat-message__bubble { border-start-start-radius: 14px; border-start-end-radius: 4px; }
-.hjm-chat-message[data-tail][data-direction="outgoing"] .hjm-chat-message__bubble::before { inset-inline-start: auto; inset-inline-end: -6px; background: var(--hjm-color-surface-accent); clip-path: polygon(0 0, 100% 0, 0 100%); }
-/* clip-path is physical; mirror the tip for right-to-left layouts. */
-[dir="rtl"] .hjm-chat-message[data-tail] .hjm-chat-message__bubble::before { transform: scaleX(-1); }
+.hjm-chat-message[data-tail][data-direction="outgoing"] .hjm-chat-message__bubble::before { inset-inline-start: auto; inset-inline-end: -6px; border-start-start-radius: 0; border-end-start-radius: 0; border-start-end-radius: 1px; border-end-end-radius: 10px; background: var(--hjm-color-surface-accent); }
+/* Logical corner radii and insets mirror the curved tail in RTL. */
 
 .hjm-chat-message__meta { display: flex; flex-shrink: 0; align-items: center; gap: var(--hjm-space-xs); }
 /* Reaction summary pill (sizes inline from chatMessageRecipe.reactionSummary); own reaction shows the brand border. */
@@ -3592,11 +3617,12 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 /* Keep the inset pill behind the whole line at large text (40px text / 28px fill was observed). Native already includes this inset as vertical padding. */
 .hjm-segmented[data-presentation="pills"] .hjm-segmented__items { flex-wrap:wrap; gap:var(--hjm-space-xs); overflow:visible; padding:0; border:0; border-radius:0; background:transparent; }
 .hjm-segmented[data-presentation="pills"] .hjm-segmented__item { padding-block:var(--hjm-space-xxs); position:relative; flex:0 1 auto; min-inline-size:0; min-block-size:max(var(--hjm-control-min-touch-target), calc(var(--hjm-segmented-height) + 2 * var(--hjm-space-xxs))); border:0; border-radius:var(--hjm-radius-full); background:transparent; box-shadow:none; padding-inline:var(--hjm-space-md); color:var(--hjm-color-text-muted); }
-.hjm-segmented[data-presentation="pills"] .hjm-segmented__item::before { content:""; position:absolute; inset:var(--hjm-space-xxs) 0; border-radius:var(--hjm-radius-full); background:var(--hjm-color-surface-alt); }
+/* Outline the inset surface, preserving the pill's layout and touch target on colored scenes. */
+.hjm-segmented[data-presentation="pills"] .hjm-segmented__item::before { content:""; position:absolute; inset:var(--hjm-space-xxs) 0; border-radius:var(--hjm-radius-full); background:var(--hjm-color-bg); border:1px solid var(--hjm-color-border-control); }
 .hjm-segmented[data-presentation="pills"][data-size="small"] .hjm-segmented__item { padding-inline:var(--hjm-space-sm); }
 .hjm-segmented[data-presentation="pills"] .hjm-segmented__item > span { position:relative; overflow-wrap:anywhere; }
 .hjm-segmented[data-presentation="pills"] .hjm-segmented__item[data-state="checked"] { color:var(--hjm-color-bg); font-weight:var(--hjm-font-weight-semibold); }
-.hjm-segmented[data-presentation="pills"] .hjm-segmented__item[data-state="checked"]::before { background:var(--hjm-color-text-body); }
+.hjm-segmented[data-presentation="pills"] .hjm-segmented__item[data-state="checked"]::before { background:var(--hjm-color-text-body); border-color:var(--hjm-color-text-body); }
 .hjm-segmented[data-presentation="pills"] .hjm-segmented__item:focus-within { outline:2px solid var(--hjm-color-focus); outline-offset:2px; }
 
 /* Reference rating: real radios preserve browser keyboard and form behavior. */

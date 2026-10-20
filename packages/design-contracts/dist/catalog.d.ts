@@ -2071,7 +2071,7 @@ export declare const recipeRegistry: {
             readonly textVariant: "label";
         };
         readonly actions: {
-            readonly gap: 12;
+            readonly gap: 8;
             readonly stackedGap: 8;
             readonly stackedOrder: "confirm-first";
             readonly stackBelow: 600;
@@ -5510,6 +5510,26 @@ export declare const recipeRegistry: {
             readonly density: "comfortable";
             readonly itemTone: "neutral";
         };
+        readonly presentations: {
+            readonly grouped: {
+                readonly maxWidth: 288;
+                readonly padding: 12;
+                readonly gap: 8;
+                readonly rowHeight: 52;
+            };
+            readonly anchored: {
+                readonly maxWidth: 280;
+                readonly padding: 8;
+                readonly gap: 8;
+                readonly rowHeight: 48;
+            };
+            readonly bottom: {
+                readonly maxWidth: 420;
+                readonly padding: 0;
+                readonly gap: 8;
+                readonly rowHeight: 56;
+            };
+        };
         readonly surface: {
             readonly background: Readonly<{
                 source: "theme";
@@ -6730,6 +6750,17 @@ export declare const recipeRegistry: {
             readonly radius: 999;
             readonly inset: 4;
             readonly minHeight: 44;
+            readonly background: Readonly<{
+                source: "theme";
+                key: "bg";
+                alpha?: number;
+            }>;
+            readonly border: Readonly<{
+                source: "theme";
+                key: "borderControl";
+                alpha?: number;
+            }>;
+            readonly borderWidth: 1;
             readonly selectedBackground: Readonly<{
                 source: "theme";
                 key: "textBody";

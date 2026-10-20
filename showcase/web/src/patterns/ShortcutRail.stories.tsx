@@ -13,7 +13,8 @@ function Preview() {
     <Button tone="ghost" size="small" onClick={() => setItems(initial)}>예제 기록 복원</Button>
   </Stack>;
 }
-const meta = { title: "실험/구성/콘텐츠/바로가기 목록", component: Preview } satisfies Meta<typeof Preview>;
+// Keep existing story URLs when promoting the navigation section.
+const meta = { id: "실험-구성-콘텐츠-바로가기-목록", title: "배포/구성/콘텐츠/바로가기 목록", component: Preview } satisfies Meta<typeof Preview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "열기와 기록 삭제" };

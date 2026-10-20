@@ -414,10 +414,10 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
   const surface = outgoing ? colors.surfaceAccent : colors.surface;
   // Filled, borderless bubbles separate authors by surface and side (2026-10-16 timeline standard).
   const showTail = bubbleTail && display.showTail && !((media.length > 0 || mediaAlbum !== undefined) && !reply && !replyQuote && (children === null || children === undefined || children === false || children === ""));
-  // The tipped corner tightens so the tip continues the bubble's top edge instead of a separate bump.
+  // Tighten the first corner to join the overlapping rounded tip.
   const bubbleStyle = { backgroundColor: surface, borderRadius: chatMessageRecipe.bubbleRadius, ...(showTail ? (outgoing ? { borderTopEndRadius: chatMessageRecipe.tailCornerRadius } : { borderTopStartRadius: chatMessageRecipe.tailCornerRadius }) : {}), paddingHorizontal: chatMessageRecipe.bubblePaddingInline, paddingVertical: chatMessageRecipe.bubblePaddingBlock, gap: tokens.spacing.xs, flexShrink: 1 };
-  // A flat-topped triangle in the bubble surface points outward from the run's first top corner.
-  const tail = showTail ? <View pointerEvents="none" accessible={false} style={{ position: "absolute", top: 0, ...(outgoing ? { end: -chatMessageRecipe.tailWidth + 1, borderEndWidth: chatMessageRecipe.tailWidth, borderEndColor: "transparent" } : { start: -chatMessageRecipe.tailWidth + 1, borderStartWidth: chatMessageRecipe.tailWidth, borderStartColor: "transparent" }), width: 0, height: 0, borderTopWidth: chatMessageRecipe.tailHeight, borderTopColor: surface }} /> : null;
+  // The reference keeps the tip on the top edge and curves its underside into the bubble; overlap joins the rounded corner.
+  const tail = showTail ? <View pointerEvents="none" accessible={false} style={{ position: "absolute", top: 0, ...(outgoing ? { end: -chatMessageRecipe.tailWidth + 1, borderTopEndRadius: 1, borderBottomEndRadius: chatMessageRecipe.tailHeight } : { start: -chatMessageRecipe.tailWidth + 1, borderTopStartRadius: 1, borderBottomStartRadius: chatMessageRecipe.tailHeight }), width: chatMessageRecipe.tailWidth + chatMessageRecipe.tailCornerRadius, height: chatMessageRecipe.tailHeight, backgroundColor: surface }} /> : null;
   // A quoted reply heads the bubble and is divided from the answer, as in the measured reference.
   const quote = replyQuote ? <View style={{ gap: 2 }}><Text emphasis="strong">{replyQuote.title}</Text><Text tone="muted" numberOfLines={1}>{replyQuote.excerpt}</Text></View> : reply;
   // The quote stays inside the bubble; with replyLink a tap on it jumps to the original (2026-10-16 reference).

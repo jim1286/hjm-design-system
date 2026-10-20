@@ -395,6 +395,7 @@ export {
   type LoadMoreDensity,
   type ListRowDensity,
   type MenuDensity,
+  type MenuPresentation,
   type MenuItemTone,
   type NoticeTone,
   type ProgressSize,

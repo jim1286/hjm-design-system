@@ -23,7 +23,7 @@ function ChoiceMenu(props: ChoiceMenuProps) {
   if (props.trigger === "icon" && !available) return <IconButton label={props.label} tone="secondary" disabled>{chevron(true)}</IconButton>;
   // The menu trigger is content-width like the Web Menu trigger; a column Stack would otherwise stretch it full width.
   if (!available) return <Button disabled layoutStyle={{ alignSelf: "flex-start" }}>{props.label}</Button>;
-  return <Menu triggerLabel={props.label} dismissLabel={props.dismissLabel} disabled={props.disabled} busy={props.pending === true}
+  return <Menu presentation="anchored" triggerLabel={props.label} dismissLabel={props.dismissLabel} disabled={props.disabled} busy={props.pending === true}
     renderTrigger={trigger => props.trigger === "icon" ? <IconButton label={props.label} tone="secondary" onPress={trigger.onPress} disabled={props.disabled}>{chevron(props.disabled)}</IconButton>
       : <Button tone="secondary" onPress={trigger.onPress} disabled={props.disabled} loading={props.pending === true} layoutStyle={{ alignSelf: "flex-start" }}>{props.label}</Button>}
     items={props.choices} selection={{ mode: "single", selectedKey: props.selectedId, onSelectionChange: () => undefined }} onSelectionAfterDismiss={id => props.onChoose(id)} />;

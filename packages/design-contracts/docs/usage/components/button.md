@@ -88,7 +88,7 @@ import { Button } from "@hjmds/react-native/actions";
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 높이 `small` 36 · `medium` 44 · `large` 52. `small`만 hitSlop 4로 터치 영역 44 | `control.buttonHeight`, `control.buttonHitSlop` |
-| 간격 | 한 묶음의 버튼 사이: **세로로 쌓으면 `spacing.xs` 8, 가로로 나란하면 `spacing.sm` 12**. 예제·제품의 `Stack`도 같은 값을 쓴다. Dialog·Sheet 행동 영역 좌우·아래 여백 `spacing.lg` 20 | `actionGroupRecipe`, `.hjm-dialog__footer`, Native Sheet footer |
+| 간격 | 한 묶음의 버튼 사이: **가로·세로 모두 `spacing.xs` 8**(2026-10-20 사용자 요청으로 가로 기본값도 통일). 예제·제품의 `Stack`도 같은 값을 쓴다. Dialog·Sheet 행동 영역 좌우·아래 여백 `spacing.lg` 20 | `actionGroupRecipe`, `.hjm-dialog__footer`, Native Sheet footer |
 | 순서·정렬 | 가로 행동 줄은 **보조 → 주**, 끝 정렬. 세로 순서는 배치 소유자의 계약을 따른다: Dialog는 보조 → 주, Native Sheet는 주 → 보조, 좁은 AlertDialog는 주 → 보조. 본문의 짧은 선택·확정 구성은 해당 구성의 순서다. 목록 행 끝은 `small` + `ghost`/`secondary`, `primary` 금지 | `renderAction` 순서(Native overlays), `.hjm-dialog__footer` |
 | 가장자리 정렬 | 행·섹션 머리 끝의 ghost 글자 버튼(정렬 트리거, 전체 삭제)은 `edge="end"`로 라벨·화살표를 옆 글자와 같은 여백 선(16)에 맞춘다. 2026-10-17 실측: SearchScreen 정렬 화살표 29 → 16 | `base-recipes.ts` `resolveButtonEdgeOverhang`, `styles.css` `[data-edge]` |
 | 고정·스크롤 | 화면 맨 아래 고정 주 행동은 Button 대신 [BottomCTA](bottom-cta.md)(안전 영역·키보드 처리) | — |

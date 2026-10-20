@@ -57,15 +57,17 @@
 
 ## 자동완성 힌트: 계약은 만들지만 값은 제품이 정한다
 
-`autofillHint: "current" | "new"`는 필수 필드다. HJM이 로그인 화면인지 가입/비밀번호
+`autofillHint: "current" | "new" | "none"`는 필수 필드다. HJM이 로그인 화면인지 가입/비밀번호
 변경 화면인지 판단할 방법이 없고, 잘못 추측하면(로그인 화면에 "새 비밀번호" 힌트를
 주는 식) 브라우저/OS의 자동완성 제안을 실제로 망가뜨린다 — 그래서 제품이 명시적으로
 결정해서 넘긴다. 반면 각 플랫폼의 **정확한 속성 이름**(Web `autocomplete` 토큰, iOS
 `textContentType`, Android autofill 힌트)은 여기서 문자열로 고정하지 않는다 — 이 값들은
 RN 버전에 따라 이름이 바뀐 적이 있고, 이 패키지는 런타임 의존성이 없어 그 사실을
 검증할 방법이 없다(`docs/architecture.md`의 "런타임 의존성 금지" 원칙). 렌더러가 자기
-플랫폼의 현재 API로 `current`/`new` 두 값 중 하나를 골라 번역한다 — Icon의 semantic
+플랫폼의 현재 API로 `current`/`new`/`none` 중 하나를 골라 번역한다 — Icon의 semantic
 name → 실제 글리프 번역과 같은 경계다.
+
+Wi-Fi QR처럼 계정 자격증명이 아닌 비밀값은 `none`을 명시해 계정 암호 자동완성·생성을 요청하지 않는다(2026-10-20 Utilverse 채택). 표시·숨김 계약은 계정 암호와 동일하다.
 
 ## 강도 표시(strength meter)는 넣지 않는다
 

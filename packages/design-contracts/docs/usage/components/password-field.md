@@ -89,7 +89,7 @@ const passwordRef = useRef<TextInput>(null);
 | --- | --- | --- | --- |
 | `value` · `defaultValue` | 문자열 | 비제어 `""` | |
 | `onValueChange` | `(value: string) => void` | — | Web은 DOM `onChange`도 함께 받는다 |
-| `autofillHint` | `current`(로그인) · `new`(가입·변경) | 필수 | Web은 `current-password`/`new-password`, Native는 iOS `textContentType` `password`/`newPassword`로 번역된다 |
+| `autofillHint` | `current`(로그인) · `new`(가입·변경) · `none`(비계정 비밀값) | 필수 | Web은 `current-password`/`new-password`, Native는 iOS `textContentType` `password`/`newPassword`로 번역된다 |
 | `revealLabel` · `concealLabel` | 문자열 | 필수 | 토글의 접근성 이름. 각각 "누르면 보임"·"누르면 숨김" 행동 문구 |
 | `revealed` · `defaultRevealed` | `boolean` | `false` | 가림 상태(제어·비제어). 값과 독립된 축이다 |
 | `onRevealedChange` | `(revealed: boolean) => void` | — | 토글을 누를 때 |
@@ -139,3 +139,5 @@ Native `large`는 프로필의 `typography.bodyLarge`를 읽고 그 줄 높이�
 
 - Native `error`·`description`은 `string`이라 `exactOptionalPropertyTypes`에서 `undefined`를 받지 않는다(Web은 `ReactNode`라 통과).
   값이 없을 수 있으면 위 예처럼 조건부 spread로 넘긴다.
+
+2026-10-20 Utilverse Wi-Fi QR 채택: `autofillHint="none"`은 Web autocomplete=off, Native autoComplete=off/textContentType=none/importantForAutofill=no로 계정 자격증명 제안을 요청하지 않는다(1.36.0 추가 API). 숨김/표시 상태는 기존 계약을 유지한다.

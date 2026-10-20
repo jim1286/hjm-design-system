@@ -964,6 +964,26 @@ export declare const menuRecipe: {
         readonly density: "comfortable";
         readonly itemTone: "neutral";
     };
+    readonly presentations: {
+        readonly grouped: {
+            readonly maxWidth: 288;
+            readonly padding: 12;
+            readonly gap: 8;
+            readonly rowHeight: 52;
+        };
+        readonly anchored: {
+            readonly maxWidth: 280;
+            readonly padding: 8;
+            readonly gap: 8;
+            readonly rowHeight: 48;
+        };
+        readonly bottom: {
+            readonly maxWidth: 420;
+            readonly padding: 0;
+            readonly gap: 8;
+            readonly rowHeight: 56;
+        };
+    };
     readonly surface: {
         readonly background: Readonly<{
             source: "theme";
@@ -1171,6 +1191,7 @@ export declare const menuRecipe: {
     };
 };
 export type MenuDensity = keyof typeof menuRecipe.density;
+export type MenuPresentation = keyof typeof menuRecipe.presentations;
 export type SelectSize = "medium" | "large";
 export type SelectDensity = "compact" | "comfortable";
 /**
@@ -1890,6 +1911,17 @@ export declare const segmentedControlRecipe: {
         readonly radius: 999;
         readonly inset: 4;
         readonly minHeight: 44;
+        readonly background: Readonly<{
+            source: "theme";
+            key: "bg";
+            alpha?: number;
+        }>;
+        readonly border: Readonly<{
+            source: "theme";
+            key: "borderControl";
+            alpha?: number;
+        }>;
+        readonly borderWidth: 1;
         readonly selectedBackground: Readonly<{
             source: "theme";
             key: "textBody";
@@ -3254,12 +3286,11 @@ export declare const statisticRecipe: {
     };
 };
 /**
- * Gap between adjacent buttons in one action group (2026-10-17 user rule: stacked bottom buttons looked
- * loose at 12). Stacked (column) groups use 8, inline (row) groups keep 12 so tap targets stay apart.
- * AlertDialog already used these values; Sheet/Dialog footers and composed screens now share them.
+ * Adjacent action buttons use 8 in both directions. The 2026-10-20 user request tightened
+ * horizontal groups to the same spacing as stacked groups; control touch targets remain unchanged.
  */
 export declare const actionGroupRecipe: {
-    readonly inlineGap: 12;
+    readonly inlineGap: 8;
     readonly stackedGap: 8;
 };
 export declare const sheetRecipe: {
@@ -3620,7 +3651,7 @@ export declare const alertDialogRecipe: {
         readonly textVariant: "label";
     };
     readonly actions: {
-        readonly gap: 12;
+        readonly gap: 8;
         readonly stackedGap: 8;
         readonly stackedOrder: "confirm-first";
         readonly stackBelow: 600;

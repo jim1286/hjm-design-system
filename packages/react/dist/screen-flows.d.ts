@@ -462,6 +462,10 @@ export type CommentReactions = ReactionPickerProps & Readonly<{
  * only the localized button name, the items allowed for that comment and the action callback.
  */
 export type CommentMenu = Readonly<{
+    /** Context belongs to the row: anchored by default; override only for a product interaction reason. */
+    presentation?: "grouped" | "anchored" | "bottom";
+    /** Required when presentation is grouped or bottom. */
+    dismissLabel?: string;
     /** Localized accessible name of the button, e.g. "More options for seoyeon's comment". */
     label(item: CommentThreadItem): string;
     /** Items allowed for this comment (permission is product-owned). An empty list omits the button for that row. */

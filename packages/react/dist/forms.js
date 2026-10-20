@@ -176,7 +176,7 @@ export const PasswordField = forwardRef(function PasswordField({ value: valuePro
         revealed,
         disabled: disabled ?? false,
     };
-    return (_jsx(FieldDisabledOpacityContext.Provider, { value: passwordFieldRecipe.states.disabledOpacity, children: _jsx(TextField, { ...props, ref: composeRefs(inputRef, forwardedRef), autoComplete: autofillHint === "current" ? "current-password" : "new-password", className: classNames("hjm-password-field__input", className), disabled: disabled, fieldClassName: classNames("hjm-password-field", `hjm-password-field--${size}`, fieldClassName), onChange: (event) => {
+    return (_jsx(FieldDisabledOpacityContext.Provider, { value: passwordFieldRecipe.states.disabledOpacity, children: _jsx(TextField, { ...props, ref: composeRefs(inputRef, forwardedRef), autoComplete: autofillHint === "none" ? "off" : autofillHint === "current" ? "current-password" : "new-password", className: classNames("hjm-password-field__input", className), disabled: disabled, fieldClassName: classNames("hjm-password-field", `hjm-password-field--${size}`, fieldClassName), onChange: (event) => {
                 setValue(event.currentTarget.value);
                 onChange?.(event);
             }, readOnly: readOnly, trailing: (_jsx("button", { "aria-label": resolved.toggleAccessibleName, className: "hjm-password-field__toggle", "data-revealed": revealed || undefined, disabled: disabled, onClick: () => {

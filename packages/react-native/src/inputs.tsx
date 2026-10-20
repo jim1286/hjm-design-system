@@ -761,7 +761,7 @@ export const PasswordField: ReturnType<typeof forwardRef<ComponentRef<typeof Tex
     <FieldRenderer
       {...props}
       ref={inputRef}
-      autoComplete={autofillHint === "current" ? "current-password" : "new-password"}
+      autoComplete={autofillHint === "none" ? "off" : autofillHint === "current" ? "current-password" : "new-password"}
       disabled={disabled}
       // passwordFieldRecipe.states owns the amount; both renderers used the field default 0.6 until 2026-10-06.
       disabledOpacity={passwordFieldRecipe.states.disabledOpacity}
@@ -774,7 +774,8 @@ export const PasswordField: ReturnType<typeof forwardRef<ComponentRef<typeof Tex
       }}
       search={false}
       secureTextEntry={resolved.nativeSecureTextEntry}
-      textContentType={autofillHint === "current" ? "password" : "newPassword"}
+      importantForAutofill={autofillHint === "none" ? "no" : props.importantForAutofill}
+      textContentType={autofillHint === "none" ? "none" : autofillHint === "current" ? "password" : "newPassword"}
       trailing={(
         <Pressable
           accessibilityLabel={resolved.toggleAccessibleName}
@@ -2112,7 +2113,7 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
               },
             ]}
           >
-            {pills ? <View pointerEvents="none" accessible={false} style={{position:"absolute",left:0,right:0,top:segmentedControlRecipe.pills.inset,bottom:segmentedControlRecipe.pills.inset,borderRadius:segmentedControlRecipe.pills.radius,backgroundColor:isSelected?(movingHighlight?"transparent":resolveColorReference(segmentedControlRecipe.pills.selectedBackground,theme.palette)):theme.colors.surfaceAlt}}/> : null}
+            {pills ? <View pointerEvents="none" accessible={false} style={{position:"absolute",left:0,right:0,top:segmentedControlRecipe.pills.inset,bottom:segmentedControlRecipe.pills.inset,borderRadius:segmentedControlRecipe.pills.radius,backgroundColor:isSelected?(movingHighlight?"transparent":resolveColorReference(segmentedControlRecipe.pills.selectedBackground,theme.palette)):resolveColorReference(segmentedControlRecipe.pills.background,theme.palette),borderWidth:segmentedControlRecipe.pills.borderWidth,borderColor:resolveColorReference(isSelected?segmentedControlRecipe.pills.selectedBackground:segmentedControlRecipe.pills.border,theme.palette)}}/> : null}
             {leading ? (
               <View
                 accessibilityElementsHidden

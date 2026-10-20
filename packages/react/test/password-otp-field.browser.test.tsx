@@ -127,3 +127,10 @@ describe("OtpField", () => {
       .toEqual(["1", "2", "3", "4", "5", "6"]);
   });
 });
+
+it('does not request account-password autofill for non-account secrets', async () => {
+  await render(<HjmProvider><PasswordField label="Wi-Fi 비밀번호" value="sample-wifi-secret" autofillHint="none" revealLabel="표시" concealLabel="숨기기" /></HjmProvider>);
+  const input = container.querySelector('input')!;
+  expect(input.autocomplete).toBe('off');
+  expect(input.type).toBe('password');
+});

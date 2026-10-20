@@ -18,7 +18,7 @@ function ChoiceMenu(props: ChoiceMenuProps) {
   if (props.trigger === "icon" && !available) return <IconButton label={props.label} tone="secondary" disabled><Icon name="chevronDown" /></IconButton>;
   if (!available) return <Button disabled>{props.label}</Button>;
   const trigger = props.trigger === "icon" ? <IconButton label={props.label} tone="secondary"><Icon name="chevronDown" /></IconButton> : <Button tone="secondary" loading={props.pending === true}>{props.label}</Button>;
-  return <Menu label={props.label} trigger={trigger} disabled={props.disabled}
+  return <Menu presentation="anchored" label={props.label} trigger={trigger} disabled={props.disabled}
     items={props.choices} selectionMode="single" value={props.selectedId} onValueChange={() => undefined} onActionAfterDismiss={props.onChoose} />;
 }
 function Failure({ failed, label }: Readonly<{ failed: boolean; label: string }>) {

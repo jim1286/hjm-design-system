@@ -583,8 +583,10 @@ export const Menu = forwardRef(function Menu(props, ref) {
         comfortable: menuRecipe.defaults.density,
         compact: "compact",
     });
-    const { trigger, label, density: densityProp, align = "start", disabled = false, asyncState = { status: "idle" }, onAction, onActionAfterDismiss, portalContainer, open: openProp, defaultOpen, onOpenChange, className, layoutStyle, } = props;
+    const { trigger, label, density: densityProp, presentation = "anchored", dismissLabel, align = "start", disabled = false, asyncState = { status: "idle" }, onAction, onActionAfterDismiss, portalContainer, open: openProp, defaultOpen, onOpenChange, className, layoutStyle, } = props;
     const density = densityProp ?? densityDefault;
+    if (presentation !== "anchored" && !dismissLabel?.trim())
+        throw new TypeError("Modal Menu requires dismissLabel");
     const sections = props.sections;
     const items = sections === undefined ? props.items : sections.flatMap((section) => section.items);
     if (label.trim().length === 0)
@@ -646,7 +648,7 @@ export const Menu = forwardRef(function Menu(props, ref) {
     const typeaheadRef = useRef({ value: "", time: 0 });
     const id = `${useId().replaceAll(":", "")}-menu`;
     // menuRecipe offset/edge padding (2026-10-06 follow-up; helper default edge padding was 16).
-    const popupPosition = useAnchoredPopup(triggerRef, contentNode, {
+    const popupPosition = useAnchoredPopup(triggerRef, presentation === "anchored" ? contentNode : null, {
         align, gap: menuRecipe.sideOffset, viewportPadding: menuRecipe.collisionPadding, zIndex: layer.dropdown,
     });
     const setMenuContentRef = useCallback((node) => {
@@ -805,7 +807,7 @@ export const Menu = forwardRef(function Menu(props, ref) {
             event.preventDefault();
             close("escape", true);
         }
-        else if (event.key === "Tab") {
+        else if (event.key === "Tab" && presentation === "anchored") {
             close("tab", false);
         }
         else if (event.key.length === 1 &&
@@ -817,33 +819,37 @@ export const Menu = forwardRef(function Menu(props, ref) {
             runTypeahead(event.key);
         }
     };
+    useModalFocus({ active: open && presentation !== "anchored", contentRef,
+        fallbackReturnRef: triggerRef, onEscape: () => close("escape", true) });
     const showItems = asyncState.status !== "empty" && asyncState.status !== "error";
-    return (_jsxs("span", { ref: wrapperRef, className: "hjm-menu", style: layoutStyle, "data-state": open ? "open" : "closed", children: [renderedTrigger, open ? (_jsx(AnchoredPortal, { anchorRef: triggerRef, ssrFallback: "inline", ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsxs("div", { ref: setMenuContentRef, id: id, role: "menu", "aria-label": label, className: classNames("hjm-menu__content", className), "data-density": density, "data-async-state": asyncState.status, "data-placement": popupPosition.placement, "data-align": popupPosition.align, "aria-busy": asyncState.status === "loading" || asyncState.status === "loadingMore" || undefined, style: popupPosition.style, tabIndex: -1, onKeyDown: handleMenuKeyDown, children: [asyncState.status !== "idle" ? (_jsx("div", { className: "hjm-menu__state-message", role: asyncState.status === "error" ? "alert" : "status", children: asyncState.message })) : null, showItems ? (sections === undefined ? items.map((item, index) => {
-                            const selected = itemSelected(item.id);
-                            const itemDisabled = itemIsDisabled(item);
-                            const role = selectionMode === "single"
-                                ? "menuitemradio"
-                                : selectionMode === "multiple"
-                                    ? "menuitemcheckbox"
-                                    : "menuitem";
-                            return renderMenuItem(item, index, role, selected, itemDisabled);
-                        }) : sections.map((section, sectionIndex) => {
-                            const sectionLabelId = `${id}-section-${sectionIndex}`;
-                            const firstIndex = sections
-                                .slice(0, sectionIndex)
-                                .reduce((total, current) => total + current.items.length, 0);
-                            return (_jsxs("div", { className: "hjm-menu__section-boundary", children: [sectionIndex > 0 ? _jsx("div", { role: "separator", className: "hjm-menu__separator" }) : null, _jsxs("div", { role: "group", "aria-labelledby": section.label ? sectionLabelId : undefined, "aria-label": section.label ? undefined : section.accessibilityLabel, className: "hjm-menu__section", children: [section.label ? (_jsx("div", { id: sectionLabelId, className: "hjm-menu__section-label", children: section.label })) : null, section.items.map((item, itemIndex) => {
-                                                const index = firstIndex + itemIndex;
-                                                const selected = itemSelected(item.id);
-                                                const itemDisabled = itemIsDisabled(item);
-                                                const role = selectionMode === "single"
-                                                    ? "menuitemradio"
-                                                    : selectionMode === "multiple"
-                                                        ? "menuitemcheckbox"
-                                                        : "menuitem";
-                                                return renderMenuItem(item, index, role, selected, itemDisabled);
-                                            })] })] }, section.id));
-                        })) : null] }) })) : null] }));
+    const content = (_jsxs("div", { ref: setMenuContentRef, id: id, role: "menu", "aria-label": label, className: classNames("hjm-menu__content", className), "data-presentation": presentation, "data-density": density, "data-async-state": asyncState.status, "data-placement": popupPosition.placement, "data-align": popupPosition.align, "aria-busy": asyncState.status === "loading" || asyncState.status === "loadingMore" || undefined, style: presentation === "anchored" ? popupPosition.style : undefined, tabIndex: -1, onKeyDown: handleMenuKeyDown, children: [asyncState.status !== "idle" ? (_jsx("div", { className: "hjm-menu__state-message", role: asyncState.status === "error" ? "alert" : "status", children: asyncState.message })) : null, _jsx("div", { className: "hjm-menu__viewport", children: showItems ? (sections === undefined ? items.map((item, index) => {
+                    const selected = itemSelected(item.id);
+                    const itemDisabled = itemIsDisabled(item);
+                    const role = selectionMode === "single"
+                        ? "menuitemradio"
+                        : selectionMode === "multiple"
+                            ? "menuitemcheckbox"
+                            : "menuitem";
+                    return renderMenuItem(item, index, role, selected, itemDisabled);
+                }) : sections.map((section, sectionIndex) => {
+                    const sectionLabelId = `${id}-section-${sectionIndex}`;
+                    const firstIndex = sections
+                        .slice(0, sectionIndex)
+                        .reduce((total, current) => total + current.items.length, 0);
+                    return (_jsxs("div", { className: "hjm-menu__section-boundary", children: [sectionIndex > 0 ? _jsx("div", { role: "separator", className: "hjm-menu__separator" }) : null, _jsxs("div", { role: "group", "aria-labelledby": section.label ? sectionLabelId : undefined, "aria-label": section.label ? undefined : section.accessibilityLabel, className: "hjm-menu__section", children: [section.label ? (_jsx("div", { id: sectionLabelId, className: "hjm-menu__section-label", children: section.label })) : null, section.items.map((item, itemIndex) => {
+                                        const index = firstIndex + itemIndex;
+                                        const selected = itemSelected(item.id);
+                                        const itemDisabled = itemIsDisabled(item);
+                                        const role = selectionMode === "single"
+                                            ? "menuitemradio"
+                                            : selectionMode === "multiple"
+                                                ? "menuitemcheckbox"
+                                                : "menuitem";
+                                        return renderMenuItem(item, index, role, selected, itemDisabled);
+                                    })] })] }, section.id));
+                })) : null }), presentation !== "anchored" ? _jsx(Button, { tone: "secondary", role: "menuitem", onClick: () => close("programmatic", true), children: dismissLabel }) : null] }));
+    return (_jsxs("span", { ref: wrapperRef, className: "hjm-menu", style: layoutStyle, "data-state": open ? "open" : "closed", children: [renderedTrigger, open ? presentation === "anchored" ? (_jsx(AnchoredPortal, { anchorRef: triggerRef, ssrFallback: "inline", ...(portalContainer === undefined ? {} : { container: portalContainer }), children: content })) : (_jsx(HjmPortal, { ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("div", { className: "hjm-overlay hjm-menu-positioner", "data-presentation": presentation, style: { zIndex: getModalLayer(0) }, onPointerDown: event => { if (event.target === event.currentTarget)
+                        close("outside", true); }, children: content }) })) : null] }));
     function renderMenuItem(item, index, role, selected, itemDisabled) {
         return (_jsxs("button", { ref: (node) => {
                 if (node) {

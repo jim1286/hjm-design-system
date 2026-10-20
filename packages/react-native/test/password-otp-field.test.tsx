@@ -92,3 +92,13 @@ describe("Native OtpField", () => {
       .toBeGreaterThanOrEqual(6);
   });
 });
+
+it('keeps a non-account secret masked without requesting OS credential autofill', () => {
+  const renderer = render(<PasswordField label="Wi-Fi 비밀번호" value="sample-wifi-secret" autofillHint="none" revealLabel="표시" concealLabel="숨기기" />);
+  const input = renderer.root.findByType(TextInput);
+  expect(input.props.autoComplete).toBe('off');
+  expect(input.props.textContentType).toBe('none');
+  expect(input.props.importantForAutofill).toBe('no');
+  expect(input.props.secureTextEntry).toBe(true);
+  act(() => renderer.unmount());
+});

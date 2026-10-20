@@ -785,10 +785,19 @@ async function checkRenderer(renderer) {
     const regressions = [];
     // Opt-in peers must never become a hidden installation requirement of base entries.
     // Derive the peer list from the manifest so new optional runtimes cannot escape this gate.
+    // Social and toggle compositions explicitly opt into AnimatedStatistic (usage/compositions/{social-compositions,toggle-feedback}.md).
+    // Native gesture panels and SVG compositions likewise opt into their host peers through dedicated subpaths.
+    // Keep these boundaries aligned with their existing public implementations; the root remains peer-free.
     const optionalEntries = new Set(["./design-profile", "./avatar-blobatar-motion", "./progressive-blur", "./effect-surface", "./icon-lucide", "./icon-svg", "./avatar-blobatar", "./sortable", "./swipe-actions", "./content-transition", "./carousel-motion", "./celebration", "./screen-transition", "./qr-code", "./thinking-orb", "./toast-liquid", "./statistic-motion", "./menu-morph", "./image-viewer", "./keyboard-controller", "./sheet-gesture", "./context-menu-native"]);
+    const compositionPeers = renderer.packageName === "@hjmds/react"
+      ? { "./social-compositions": ["@number-flow/react"], "./toggle-feedback": ["@number-flow/react"] }
+      : { "./sheet-panel": ["react-native-reanimated", "react-native-worklets", "react-native-gesture-handler"],
+          "./chart": ["react-native-svg"], "./data-workflows": ["react-native-svg"],
+          "./media-transport": ["react-native-svg"], "./authoring-tools": ["react-native-svg"],
+          "./toggle-feedback": ["react-native-svg"] };
     if (!optionalEntries.has(exportPath)) {
       for (const [peer, metadata] of Object.entries(packageJson.peerDependenciesMeta ?? {})) {
-        if (metadata.optional && measured.externals.some(specifier => specifier === peer || specifier.startsWith(`${peer}/`))) {
+        if (metadata.optional && !(compositionPeers[exportPath] ?? []).includes(peer) && measured.externals.some(specifier => specifier === peer || specifier.startsWith(`${peer}/`))) {
           regressions.push(`base entry imports optional peer ${peer}`);
         }
       }

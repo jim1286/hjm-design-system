@@ -79,7 +79,7 @@ import { Text } from "@hjmds/react-native/primitives";
 | `groupPosition` | `"single"` · `"first"` · `"middle"` · `"last"` | `"single"` | 미게시. `resolveChatMessageGroups(items)`가 같은 작성자·같은 표시 시각의 연속 메시지를 묶어 돌려준다. 첫 말풍선에만 작성자·아바타·꼬리, 끝 말풍선에만 시각을 그리고 뒤 말풍선은 아바타 폭을 비워 둔다 |
 | `timestamp` | `string` | 필수 | 제품이 포맷한 시각. 묶음 판정에도 같은 문자열을 쓴다. 말풍선 아래 끝 옆(수신 오른쪽·발신 왼쪽)에 그린다 |
 | `timestampPresentation` | `"always"` · `"swipe"` | `"always"` | `swipe`는 수신은 오른쪽·발신은 왼쪽으로 끄는 동안 반대편 여백에 시각을 보여 주고 놓으면 숨긴다. 이 모드에서는 같은 제스처로 답장을 실행하지 않는다. 시각은 보조기술에서도 읽을 수 있다. |
-| `bubbleTail` | `boolean` | `true`(미게시 변경, 이전 `false`) | 묶음 첫 말풍선의 위쪽 모서리(수신 시작 쪽·발신 끝 쪽)에 윗변이 이어지는 삼각 꼬리(`tailWidth` 7 × `tailHeight` 10)를 같은 표면으로 그리고, 그 모서리 radius를 `tailCornerRadius` 4로 줄인다. 행 양쪽 `spacing.xs` 8 여백으로 잘림을 막는다 |
+| `bubbleTail` | `boolean` | `true`(미게시 변경, 이전 `false`) | 묶음 첫 말풍선의 위쪽 모서리(수신 시작 쪽·발신 끝 쪽)에 윗변에서 옆으로 뻗고 아랫면은 곡선으로 본체에 이어지는 꼬리(`tailWidth` 7 × `tailHeight` 10, 끝 radius 1, 아래로 꺾이지 않음)를 같은 표면으로 겹쳐 그리고, 그 모서리 radius를 `tailCornerRadius` 4로 줄인다. 행 양쪽 `spacing.xs` 8 여백으로 잘림을 막는다 |
 | `deliveryLabel` | `string` | 없음 | 시각 뒤에 ` · `로 붙는 전송 상태 |
 | `avatar` | `ReactNode` | 없음 | 버블 옆 아바타. `chatMessageRecipe.avatarSize` 32(`avatarRecipe.sizes.small`) 크기로 넘긴다(Web `size="small"`, Native `size={chatMessageRecipe.avatarSize}`). 묶음 뒤 말풍선에서는 같은 폭을 비워 정렬을 유지한다 |
 | `reply` | `ReactNode` | 없음 | 인용 노드. `replyLink`가 없으면 버블 맨 위에 그리고 아래 구분선(1)으로 답장 본문과 나눈다 |

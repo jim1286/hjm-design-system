@@ -48,7 +48,7 @@ Magic UI Animated List의 소개 페이지 순차 노출에서 새 항목의 등
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
 | 바깥 틀 | Web: `Container size="reading"` → Stack, Native: KeyboardAvoiding → ScrollView → Stack | 위에서 아래. Native canvas는 자체 스크롤이 없으므로 명시적 host 사용 | gap lg=20px, Native keyboardShouldPersistTaps="handled"·하단 spacing.md |
-| 변경 행동 | inline Stack 하나 · Button | 목록 위, 좁으면 감김 | `gap="sm"` 12. 주 행동은 "기록 추가" primary 하나, 나머지는 secondary |
+| 변경 행동 | inline Stack 하나 · Button | 목록 위, 좁으면 감김 | `gap="xs"` 8. 주 행동은 "기록 추가" primary 하나, 나머지는 secondary |
 | 예제 도구 | 미리보기 도구 캡션 + Button `size="small"` `tone="ghost"` | 변경 행동 아래 | 캡션과 버튼 사이 `spacing.xs` 8. 제품에는 복사하지 않는다 |
 | 데이터 | List | 변경 결과 아래 | separator full, 공통 ListRow/TextField 크기. 메모 TextField는 `layoutStyle` 좌우 margin `listRowRecipe.density.comfortable.paddingHorizontal`(8)로 행 글자 시작선에 맞춘다 |
 | 빈 상태 | EmptyState | 목록 자리 가운데 | EmptyState 기본 |

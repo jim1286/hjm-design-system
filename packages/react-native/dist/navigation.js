@@ -4,11 +4,11 @@ import { resolveColorReference } from "@hjmds/design-contracts/color-references"
 import { resolveBottomNavigationActivation, resolveBottomNavigationConfiguration, resolveBottomNavigationDescriptor, validateBottomNavigationProminence, } from "@hjmds/design-contracts/components/bottom-navigation";
 import { flattenCollectionItems, validateCollection, } from "@hjmds/design-contracts/components/collection";
 import { createLoadMoreController, validateLoadMoreDescriptor, } from "@hjmds/design-contracts/components/load-more";
-import { backdrop, easing, glyph, radius, spacing, } from "@hjmds/design-contracts/foundations";
+import { backdrop, shadow, easing, glyph, radius, spacing, } from "@hjmds/design-contracts/foundations";
 import { resolveSwipeTabIndicator, resolveTabIndicator, resolveTabsAppearance, sampleTabIndicator, } from "@hjmds/design-contracts/gooey-navigation";
 import { bottomNavigationRecipe, counterBadgeRecipe, loadMoreRecipe, menuRecipe, spinnerRecipe, tabsRecipe, topBarRecipe, } from "@hjmds/design-contracts/recipes";
 import { Fragment, forwardRef, useCallback, useContext, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState, } from "react";
-import { AccessibilityInfo, ActivityIndicator, Animated, AppState, Easing, Keyboard, Modal, Platform, Pressable, ScrollView, View, findNodeHandle, } from "react-native";
+import { AccessibilityInfo, ActivityIndicator, Animated, AppState, Easing, Keyboard, Modal, Platform, Pressable, ScrollView, View, findNodeHandle, useWindowDimensions, } from "react-native";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { RecipeButton } from "./internal/recipe-button.js";
 import { BottomNavigationInsetReporterContext } from "./internal/bottom-navigation-inset.js";
@@ -22,7 +22,8 @@ import { scheduleAfterNativeModalTeardown, shouldAwaitNativeModalDismiss, } from
 import { useControllableState } from "./internal/state.js";
 import { minimumTargetStyle, resolveNativeShadowElevation } from "./internal/styles.js";
 import { Text } from "./primitives.js";
-import { HjmNativeProvider, useHjmNativeTheme } from "./provider.js";
+import { resolveNativeMenuPosition } from "./internal/menu-position.js";
+import { HjmNativeProvider, useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "./provider.js";
 function encodedTabId(value) {
     return encodeURIComponent(value);
 }
@@ -1006,7 +1007,7 @@ function useMenuAfterDismiss(visible) {
     };
 }
 /** Sectioned Native action/selection menu with teardown-safe action callbacks. */
-export function Menu({ triggerLabel, title = triggerLabel, items, sections, source: sourceProp, selection = { mode: "none" }, onAction, onActionAfterDismiss, onSelectionAfterDismiss, open, defaultOpen = false, onOpenChange, onDismiss, disabled = false, readOnly = false, busy = false, readOnlyLabel, asyncState = { status: "idle" }, onRetry, retryLabel, density = menuRecipe.defaults.density, renderLeading, renderTrailing, dismissLabel, trigger, renderTrigger, layoutStyle, ...modalProps }) {
+export function Menu({ triggerLabel, title = "", presentation = "grouped", items, sections, source: sourceProp, selection = { mode: "none" }, onAction, onActionAfterDismiss, onSelectionAfterDismiss, open, defaultOpen = false, onOpenChange, onDismiss, disabled = false, readOnly = false, busy = false, readOnlyLabel, asyncState = { status: "idle" }, onRetry, retryLabel, density = menuRecipe.defaults.density, renderLeading, renderTrailing, dismissLabel, trigger, renderTrigger, layoutStyle, ...modalProps }) {
     assertNoRemovedStyleProps("Menu", modalProps, ["style"]);
     const providedSources = [sourceProp, items, sections].filter((candidate) => candidate !== undefined).length;
     if (providedSources !== 1) {
@@ -1057,6 +1058,37 @@ export function Menu({ triggerLabel, title = triggerLabel, items, sections, sour
     const itemRefs = useRef(new Map());
     const modalDismiss = useMenuAfterDismiss(visible);
     const densityContract = menuRecipe.density[density];
+    const presentationRecipe = menuRecipe.presentations[presentation];
+    const insets = useHjmNativeSafeAreaInsets();
+    const window = useWindowDimensions();
+    const rootRef = useRef(null);
+    const [rootBounds, setRootBounds] = useState({ x: 0, y: 0, width: window.width, height: window.height });
+    const [anchor, setAnchor] = useState(null);
+    const [menuHeight, setMenuHeight] = useState(0);
+    const [headingHeight, setHeadingHeight] = useState(0);
+    const measureAnchor = useCallback(() => {
+        if (!visible || presentation !== "anchored")
+            return;
+        rootRef.current?.measureInWindow((rootX, rootY, width, height) => {
+            triggerRef.current?.measureInWindow((x, y, triggerWidth, triggerHeight) => {
+                setRootBounds({ x: rootX, y: rootY, width, height });
+                setAnchor({ x: x - rootX, y: y - rootY, width: triggerWidth, height: triggerHeight });
+            });
+        });
+    }, [visible, presentation]);
+    useEffect(() => {
+        if (!visible) {
+            setAnchor(null);
+            setMenuHeight(0);
+            return;
+        }
+        measureAnchor();
+    }, [measureAnchor, visible, window.width, window.height]);
+    const anchorPosition = anchor ? resolveNativeMenuPosition(anchor, {
+        width: rootBounds.width, height: rootBounds.height,
+        top: Math.max(0, (insets.top ?? 0) - rootBounds.y), bottom: (insets.bottom ?? 0),
+        left: (insets.left ?? 0), right: (insets.right ?? 0),
+    }, menuHeight, environment.direction, presentationRecipe.maxWidth) : null;
     const requestOpen = useCallback((next, reason) => {
         if (next === visible)
             return;
@@ -1115,7 +1147,7 @@ export function Menu({ triggerLabel, title = triggerLabel, items, sections, sour
         void onAction?.(item.id);
         close("selection", onActionAfterDismiss ? () => onActionAfterDismiss(item.id) : null);
     };
-    const renderItem = (item) => {
+    const renderItem = (item, index) => {
         const selected = selection.mode === "single"
             ? selectedSingle === item.id
             : selection.mode === "multiple"
@@ -1152,7 +1184,9 @@ export function Menu({ triggerLabel, title = triggerLabel, items, sections, sour
                     direction: environment.direction,
                     flexDirection: "row",
                     gap: densityContract.gap,
-                    minHeight: densityContract.minHeight,
+                    minHeight: density === "compact" ? densityContract.minHeight : presentationRecipe.rowHeight,
+                    borderTopWidth: index > 0 ? 1 : 0,
+                    borderTopColor: resolveColorReference(menuRecipe.separator, theme.palette),
                     opacity: itemDisabled ? menuRecipe.states.disabledOpacity : 1,
                     paddingHorizontal: densityContract.paddingHorizontal,
                 },
@@ -1170,7 +1204,7 @@ export function Menu({ triggerLabel, title = triggerLabel, items, sections, sour
                 requestOpen(!visible, "trigger");
         },
     };
-    return (_jsxs(View, { style: [layoutStyle], children: [_jsx(View, { ref: triggerRef, children: renderTrigger ? renderTrigger(triggerProps) : (_jsx(Pressable, { accessibilityHint: readOnly ? readOnlyLabel : undefined, accessibilityLabel: triggerLabel, accessibilityRole: "button", accessibilityState: triggerProps.accessibilityState, disabled: disabled || readOnly || busy, onPress: triggerProps.onPress, style: ({ pressed }) => [
+    return (_jsxs(View, { style: [layoutStyle], children: [_jsx(View, { ref: triggerRef, collapsable: false, onLayout: measureAnchor, children: renderTrigger ? renderTrigger(triggerProps) : (_jsx(Pressable, { accessibilityHint: readOnly ? readOnlyLabel : undefined, accessibilityLabel: triggerLabel, accessibilityRole: "button", accessibilityState: triggerProps.accessibilityState, disabled: disabled || readOnly || busy, onPress: triggerProps.onPress, style: ({ pressed }) => [
                         minimumTargetStyle,
                         {
                             alignItems: "center",
@@ -1179,24 +1213,34 @@ export function Menu({ triggerLabel, title = triggerLabel, items, sections, sour
                         },
                     ], children: trigger ?? _jsx(Text, { tone: "brand", variant: "label", children: triggerLabel }) })) }), _jsx(Modal, { ...modalProps, animationType: "none", onDismiss: modalDismiss.onDismiss, onRequestClose: () => close("escape"), onShow: () => {
                     modalDismiss.onShow();
+                    measureAnchor();
                     focusFirstItem();
-                }, transparent: true, visible: visible, children: _jsxs(View, { style: { flex: 1, justifyContent: "center", padding: spacing.md }, children: [_jsx(Pressable, { accessibilityLabel: dismissLabel, accessibilityRole: "button", onPress: () => close("outside"), style: {
-                                backgroundColor: backdrop.modal.color, opacity: backdrop.modal.opacity,
+                }, transparent: true, visible: visible, children: _jsxs(View, { ref: rootRef, collapsable: false, onLayout: measureAnchor, style: { flex: 1, justifyContent: presentation === "bottom" ? "flex-end" : "center",
+                        paddingTop: (insets.top ?? 0) + spacing.md, paddingBottom: (insets.bottom ?? 0) + spacing.md,
+                        paddingLeft: (insets.left ?? 0) + spacing.md, paddingRight: (insets.right ?? 0) + spacing.md }, children: [_jsx(Pressable, { accessibilityLabel: dismissLabel, accessibilityRole: "button", onPress: () => close("outside"), style: {
+                                backgroundColor: backdrop.modal.color, opacity: presentation === "anchored" ? backdrop.modal.opacity / 2 : backdrop.modal.opacity,
                                 bottom: 0,
                                 left: 0,
                                 position: "absolute",
                                 right: 0,
                                 top: 0,
-                            } }), _jsxs(View, { accessibilityLabel: title.trim() || triggerLabel, accessibilityRole: "menu", accessibilityViewIsModal: true, style: {
+                            } }), _jsxs(View, { accessibilityLabel: title.trim() || triggerLabel, accessibilityRole: "menu", accessibilityViewIsModal: true, onAccessibilityEscape: () => close("escape"), style: {
                                 alignSelf: "center",
-                                backgroundColor: colors.bg,
+                                backgroundColor: presentation === "bottom" ? "transparent" : colors.bg,
                                 borderRadius: theme.tokens.radius.lg,
-                                gap: spacing.sm,
+                                gap: presentationRecipe.gap,
                                 maxHeight: "75%",
-                                maxWidth: menuRecipe.maxWidth,
-                                padding: spacing.md,
+                                maxWidth: presentationRecipe.maxWidth,
+                                padding: presentationRecipe.padding,
                                 width: "100%",
-                            }, children: [title.trim() ? _jsx(Text, { tone: "muted", variant: "label", align: "center", children: title }) : null, _jsxs(ScrollView, { style: { flexGrow: 0 }, children: [asyncState.status === "loading" || asyncState.status === "error" || asyncState.status === "empty" ? (_jsxs(View, { style: { gap: spacing.sm, minHeight: densityContract.minHeight }, children: [asyncState.status === "loading" ? _jsx(Spinner, { label: asyncState.message }) : (_jsx(Text, { accessibilityLiveRegion: asyncState.status === "error" ? "assertive" : "polite", accessibilityRole: asyncState.status === "error" ? "alert" : undefined, tone: asyncState.status === "error" ? "danger" : "muted", children: asyncState.message })), asyncState.status === "error" && onRetry ? (_jsx(Button, { onPress: onRetry, tone: "secondary", children: retryLabel ?? dismissLabel })) : null] })) : collection, asyncState.status === "loadingMore" ? _jsx(Spinner, { label: asyncState.message }) : null] }), _jsx(View, { style: { paddingTop: spacing.xs }, children: _jsx(Button, { onPress: () => close("programmatic"), tone: "ghost", children: dismissLabel }) })] })] }) })] }));
+                                ...(presentation === "bottom" ? {} : resolveNativeShadowElevation(theme.designProfile?.tokens.shadow.floating ?? shadow.floating, theme.designProfile !== undefined, 8)),
+                                ...(presentation === "anchored" ? {
+                                    position: "absolute", opacity: anchorPosition ? 1 : 0,
+                                    ...(anchorPosition ? { left: anchorPosition.left, top: anchorPosition.top, width: anchorPosition.width,
+                                        maxHeight: anchorPosition.maxHeight } : {}),
+                                } : {}),
+                            }, children: [title.trim() ? _jsx(View, { onLayout: event => setHeadingHeight(event.nativeEvent.layout.height), children: _jsx(Text, { tone: "muted", variant: "label", align: "center", children: title }) }) : null, _jsxs(ScrollView, { onContentSizeChange: (_width, height) => setMenuHeight(height + presentationRecipe.padding * 2 + (title.trim() ? headingHeight + presentationRecipe.gap : 0)), style: { flexGrow: 0, flexShrink: 1, borderRadius: theme.tokens.radius.md,
+                                        backgroundColor: presentation === "grouped" ? colors.surface : presentation === "bottom" ? colors.bg : "transparent" }, children: [asyncState.status === "loading" || asyncState.status === "error" || asyncState.status === "empty" ? (_jsxs(View, { style: { gap: spacing.sm, minHeight: densityContract.minHeight }, children: [asyncState.status === "loading" ? _jsx(Spinner, { label: asyncState.message }) : (_jsx(Text, { accessibilityLiveRegion: asyncState.status === "error" ? "assertive" : "polite", accessibilityRole: asyncState.status === "error" ? "alert" : undefined, tone: asyncState.status === "error" ? "danger" : "muted", children: asyncState.message })), asyncState.status === "error" && onRetry ? (_jsx(Button, { onPress: onRetry, tone: "secondary", children: retryLabel ?? dismissLabel })) : null] })) : collection, asyncState.status === "loadingMore" ? _jsx(Spinner, { label: asyncState.message }) : null] }), presentation !== "anchored" ? _jsx(Button, { onPress: () => close("programmatic"), tone: "secondary", children: dismissLabel }) : null] })] }) })] }));
 }
 function createNativeLoadMoreControllerFacade() {
     let active = null;
@@ -1216,8 +1260,10 @@ function createNativeLoadMoreControllerFacade() {
     };
 }
 /** Collection footer that de-duplicates automatic and manual page requests. */
-export const LoadMore = forwardRef(function LoadMore({ descriptor, onLoadMore, mode = loadMoreRecipe.defaults.mode, density = loadMoreRecipe.defaults.density, onRequestOutcome, onRequestError, layoutStyle, }, ref) {
+export const LoadMore = forwardRef(function LoadMore({ descriptor, disabled = false, onLoadMore, mode = loadMoreRecipe.defaults.mode, density = loadMoreRecipe.defaults.density, onRequestOutcome, onRequestError, layoutStyle, }, ref) {
     validateLoadMoreDescriptor(descriptor);
+    const disabledRef = useRef(disabled);
+    disabledRef.current = disabled;
     const stateRef = useRef(descriptor.state);
     const handlerRef = useRef(onLoadMore);
     stateRef.current = descriptor.state;
@@ -1244,7 +1290,7 @@ export const LoadMore = forwardRef(function LoadMore({ descriptor, onLoadMore, m
     }, [controllerFacade, mode]);
     const request = useCallback(async (reason) => {
         // FlatList may have queued onEndReached before the footer was removed.
-        if (!requestActive.current)
+        if (!requestActive.current || disabledRef.current)
             return "blocked-by-state";
         const generation = requestGeneration.current;
         const state = stateRef.current;
@@ -1291,7 +1337,7 @@ export const LoadMore = forwardRef(function LoadMore({ descriptor, onLoadMore, m
                 paddingVertical: densityContract.paddingVertical,
             },
             layoutStyle,
-        ], children: state.status === "ready" ? (_jsx(RecipeButton, { onPress: () => {
+        ], children: state.status === "ready" ? (_jsx(RecipeButton, { disabled: disabled, onPress: () => {
                 void request("manual").catch(() => undefined);
             }, labelStyle: {
                 color: resolveColorReference(loadMoreRecipe.trigger.color, theme.palette),
@@ -1305,7 +1351,7 @@ export const LoadMore = forwardRef(function LoadMore({ descriptor, onLoadMore, m
                 flexDirection: "row",
                 gap: densityContract.gap,
                 justifyContent: "center",
-            }, children: _jsx(ActivityIndicator, { color: resolveColorReference(spinnerRecipe.tones[loadMoreRecipe.spinner.tone], theme.palette), size: loadMoreRecipe.spinner.size }) })) : state.status === "error" ? (_jsxs(_Fragment, { children: [_jsx(Text, { accessibilityLiveRegion: "assertive", style: { color: resolveColorReference(loadMoreRecipe.error.color, theme.palette) }, variant: loadMoreRecipe.error.textVariant, children: state.message }), _jsx(RecipeButton, { onPress: () => {
+            }, children: _jsx(ActivityIndicator, { color: resolveColorReference(spinnerRecipe.tones[loadMoreRecipe.spinner.tone], theme.palette), size: loadMoreRecipe.spinner.size }) })) : state.status === "error" ? (_jsxs(_Fragment, { children: [_jsx(Text, { accessibilityLiveRegion: "assertive", style: { color: resolveColorReference(loadMoreRecipe.error.color, theme.palette) }, variant: loadMoreRecipe.error.textVariant, children: state.message }), _jsx(RecipeButton, { disabled: disabled, onPress: () => {
                         void request("retry").catch(() => undefined);
                     }, labelStyle: {
                         color: resolveColorReference(loadMoreRecipe.trigger.color, theme.palette),

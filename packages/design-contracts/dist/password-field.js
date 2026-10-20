@@ -8,7 +8,7 @@ function assertBoolean(value, field) {
 }
 export function validatePasswordFieldDescriptor(descriptor) {
     assertBoolean(descriptor.revealed, "revealed");
-    if (descriptor.autofillHint !== "current" && descriptor.autofillHint !== "new") {
+    if (descriptor.autofillHint !== "current" && descriptor.autofillHint !== "new" && descriptor.autofillHint !== "none") {
         throw new TypeError(`Unsupported PasswordField autofillHint: ${String(descriptor.autofillHint)}`);
     }
 }

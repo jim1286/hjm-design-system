@@ -50,7 +50,7 @@ export declare const semanticIconPaths: {
     readonly rotate: "M20 12a8 8 0 1 1-2.3-5.6L20 9m0-5v5h-5";
     readonly search: "m21 21-4.4-4.4M19 11a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z";
     readonly settings: "M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm7.4-3.5 2-1.5-2-3.5-2.4 1a8 8 0 0 0-2-1.2L14.7 4h-4l-.4 2.8A8 8 0 0 0 8 8L5.6 7l-2 3.5 2 1.5a8 8 0 0 0 0 2l-2 1.5 2 3.5L8 18a8 8 0 0 0 2.3 1.2l.4 2.8h4l.3-2.8A8 8 0 0 0 17 18l2.4 1 2-3.5-2-1.5a8 8 0 0 0 0-2Z";
-    readonly share: "M18 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM6 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm12 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM8.6 16.5l6.8 4M15.4 6.5l-6.8 4";
+    readonly share: "M18 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM6 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm12 7a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM8.6 13.5l6.8 4M15.4 6.5l-6.8 4";
     readonly success: "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Zm-5-10 3 3 7-7";
     readonly trendDown: "M3 7l7 7 4-4 7 7m0 0v-6m0 6h-6";
     readonly trendFlat: "M4 12h16m0 0-4-4m4 4-4 4";

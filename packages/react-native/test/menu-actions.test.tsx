@@ -1,4 +1,4 @@
-import { Pressable } from "react-native";
+import { Pressable, ScrollView, StyleSheet, type StyleProp, type ViewStyle } from "react-native";
 // This proof file is listed by test/executed-scenarios.json; the workspace checker validates its cases against that registry.
 import { act, create } from "react-test-renderer";
 import { beforeEach, expect, it, vi } from "vitest";
@@ -11,6 +11,47 @@ export const menuNativeLongCopyCases = [{ componentId: "menu" }] as const;
 
 beforeEach(() => {
   (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+});
+
+it.each(["grouped", "anchored", "bottom"] as const)("%s uses the same permission and action contract", async presentation => {
+  const action = vi.fn();
+  let renderer: ReturnType<typeof create>;
+  await act(async () => {
+    renderer = create(<HjmNativeProvider><Menu presentation={presentation} defaultOpen triggerLabel="더보기" dismissLabel="닫기"
+      items={[{ id: "edit", label: "편집" }, { id: "locked", label: "잠김", disabled: true }]} onAction={action} /></HjmNativeProvider>);
+  });
+  const pressables = renderer!.root.findAllByType(Pressable);
+  const locked = pressables.find(node => node.props.accessibilityLabel === "잠김")!;
+  expect(locked.props.disabled).toBe(true);
+  const edit = pressables.find(node => node.props.accessibilityLabel === "편집")!;
+  await act(async () => edit.props.onPress());
+  expect(action).toHaveBeenCalledExactlyOnceWith("edit");
+  act(() => renderer!.unmount());
+});
+
+it("measures the Modal origin separately and positions the popup above a row near the bottom", async () => {
+  let renderer: ReturnType<typeof create>;
+  await act(async () => {
+    renderer = create(<HjmNativeProvider><Menu presentation="anchored" defaultOpen triggerLabel="댓글 메뉴" dismissLabel="닫기"
+      items={[{ id: "report", label: "신고" }, { id: "block", label: "차단" }]} /></HjmNativeProvider>, {
+      createNodeMock: element => ({
+        measureInWindow: (complete: (x: number, y: number, width: number, height: number) => void) => {
+          // A non-zero Modal origin catches status-bar/root coordinate mixing.
+          const style = StyleSheet.flatten((element.props as { style?: StyleProp<ViewStyle> }).style);
+          if (style?.flex === 1) complete(0, 24, 320, 576);
+          else complete(280, 530, 24, 32);
+        },
+      }),
+    });
+  });
+  await act(async () => renderer!.root.findByType(ScrollView).props.onContentSizeChange(264, 120));
+  const menu = renderer!.root.findAll(node => typeof node.type === "string" && node.props.accessibilityRole === "menu")[0]!;
+  const style = StyleSheet.flatten(menu.props.style);
+  expect(style.opacity).toBe(1);
+  expect(style.top + 136).toBeLessThan(506);
+  expect(style.left + style.width).toBeLessThanOrEqual(312);
+  expect(renderer!.root.findAllByType(Pressable).filter(node => node.props.accessibilityLabel === "닫기")).toHaveLength(1); // backdrop only
+  act(() => renderer!.unmount());
 });
 
 it("exposes menu items as named host actions and activates an enabled item", async () => {

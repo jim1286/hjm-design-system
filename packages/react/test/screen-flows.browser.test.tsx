@@ -242,7 +242,7 @@ it("hides the visible query label but keeps the field named and described by its
  const input=host.querySelector<HTMLInputElement>('input[type="search"]')!;
  expect(input.getAttribute("placeholder")).toBe("기록 검색");
  await expect.element(page.getByRole("searchbox",{name:"기록 검색"})).toBeInTheDocument();
- await act(async()=>root.render(<HjmProvider><SearchScreen title="검색" queryLabel="기록 검색" queryClearLabel="지우기" query="" onQueryChange={()=>{}} onSearch={()=>{}}>{null}</SearchScreen></HjmProvider>));
+ await act(async()=>root.render(<HjmProvider><SearchScreen title="검색" queryLabel="기록 검색" queryClearLabel="지우기" query="" onQueryChange={()=>{}} onSearch={()=>{}} queryLabelVisibility="visible">{null}</SearchScreen></HjmProvider>));
  expect(host.querySelector("label")?.textContent).toBe("기록 검색");
  expect(host.querySelector('input[type="search"]')!.hasAttribute("placeholder")).toBe(false);
 });

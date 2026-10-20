@@ -253,7 +253,8 @@ export const chatMessageRecipe = {
   // Bubbles of one run read as a stack; a new author or minute starts a visibly separate group.
   runGap: 6,
   groupGap: spacing.sm,
-  // Flat-topped tip continuing the bubble's top edge; the tipped corner tightens to meet it.
+  // The supplied reference keeps the tip on the top edge and curves its underside into the bubble (2026-10-20).
+  // Add tailCornerRadius to the drawn width so the tail overlaps the rounded bubble corner without a gap.
   tailWidth: 7,
   tailHeight: 10,
   tailCornerRadius: 4,

@@ -23,6 +23,7 @@ import { useHjmNativeTheme } from "./provider.js";
 import { AccessibilityInfo, Keyboard, Pressable, ScrollView, View, type TextInputProps } from "react-native";
 import { containerRecipe, type ContainerGutter } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./data-display.js";
+import { PhotoSourceIcon } from "./internal/photo-source-icon.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { MessageReactions, type MessageMenuAction } from "./internal/message-reactions.js";
 import type { ReactionPickerProps } from "./reaction-picker.js";
@@ -161,9 +162,10 @@ export function PhotoSourceSheet({open,onOpenChange,onSelect,labels,disabled=fal
  // A later close action is cancellation, even if the controlled owner previously
  // deferred closing after source selection. Do not launch that abandoned picker.
  const dismiss=(next:boolean)=>{if(!next)queued.current=null;onOpenChange(next);};
- return <Sheet open={open} onOpenChange={dismiss} title={labels.title} closeLabel={labels.cancel} onDismissComplete={complete}><Stack gap="xs">
- <Button tone="secondary" disabled={disabled} onPress={()=>select("library")}>{labels.library}</Button>
- {cameraAvailable?<Button tone="secondary" disabled={disabled} onPress={()=>select("camera")}>{labels.camera}</Button>:null}
+ // Source choices are peer list actions; the shared row owns touch geometry and label alignment.
+ return <Sheet open={open} onOpenChange={dismiss} title={labels.title} closeLabel={labels.cancel} onDismissComplete={complete}><Stack gap="xxs">
+ <ListRow title={labels.library} leading={<PhotoSourceIcon source="library"/>} disabled={disabled} onPress={()=>select("library")}/>
+ {cameraAvailable?<ListRow title={labels.camera} leading={<PhotoSourceIcon source="camera"/>} disabled={disabled} onPress={()=>select("camera")}/>:null}
  </Stack></Sheet>;
 }
 
@@ -341,7 +343,7 @@ function SearchResultsHeader({ summary, applied, cause, onSortChange }: {
     {/* Sort trigger edge="end": its chevron ends on the gutter like the count starts on it (2026-10-17 audit). */}
     {showCount || showSort ? <Stack axis="inline" justify={showCount ? "between" : "end"} align="center" gap="sm" wrap>
       {showCount ? (summary!.count === null ? <Skeleton shape="text" width="30%" /> : <Text tone="muted">{summary!.countLabel(summary!.count)}</Text>) : null}
-      {sort ? <Menu triggerLabel={sort.triggerLabel} title={sort.label} dismissLabel={sort.dismissLabel}
+      {sort ? <Menu presentation="anchored" triggerLabel={sort.triggerLabel} title={sort.label} dismissLabel={sort.dismissLabel}
         items={sort.options.map(option => ({ id: option.id, label: option.label }))}
         selection={{ mode: "single", selectedKey: sort.value, onSelectionChange: next => { if (next) onSortChange(next); } }}
         renderTrigger={trigger => <Button size="small" tone="ghost" edge="end" accessibilityState={trigger.accessibilityState} onPress={trigger.onPress}
@@ -531,6 +533,8 @@ export type CommentReactions = ReactionPickerProps & Readonly<{closeLabel:string
  * supplies only the localized names, the items allowed for that comment and the action callback.
  */
 export type CommentMenu = Readonly<{
+  /** Context belongs to the row: anchored by default; override only for a product interaction reason. */
+  presentation?: "grouped" | "anchored" | "bottom";
   /** Localized accessible name of the button and menu title, e.g. "More options for seoyeon's comment". */
   label(item: CommentThreadItem): string;
   /** Localized name of the Menu sheet's dismiss action (Native Menu requires one). */
@@ -550,7 +554,7 @@ function CommentTextAction({label,onPress,disabled=false,expanded}:Readonly<{lab
 function CommentMenuButton({item,menu,items}:Readonly<{item:CommentThreadItem;menu:CommentMenu;items:readonly CommentMenuItemDescriptor[]}>){
  const {palette}=useHjmNativeTheme();
  const label=menu.label(item);
- return <Menu triggerLabel={label} title={label} dismissLabel={menu.dismissLabel} items={items.map(entry=>({id:entry.id,label:entry.label,...(entry.tone===undefined?{}:{tone:entry.tone}),...(entry.disabled===undefined?{}:{disabled:entry.disabled})}))}
+ return <Menu presentation={menu.presentation ?? "anchored"} triggerLabel={label} dismissLabel={menu.dismissLabel} items={items.map(entry=>({id:entry.id,label:entry.label,...(entry.tone===undefined?{}:{tone:entry.tone}),...(entry.disabled===undefined?{}:{disabled:entry.disabled})}))}
   onActionAfterDismiss={id=>menu.onAction(item,id)} renderTrigger={trigger=><IconButton label={label} tone="ghost" onPress={trigger.onPress}><DrawnMoreVertical size={commentThreadRecipe.menuGlyphSize} color={resolveIconButtonPresentation("ghost",palette).content}/></IconButton>}/>;
 }
 

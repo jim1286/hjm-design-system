@@ -4,7 +4,7 @@ import { type CollectionSource } from "@hjmds/design-contracts/components/collec
 import type { LinkDestination } from "@hjmds/design-contracts/components/link";
 import { type LoadMoreDescriptor, type LoadMoreMode, type LoadMoreRequestHandler, type LoadMoreRequestOutcome, type LoadMoreRequestReason } from "@hjmds/design-contracts/components/load-more";
 import { type TabSwipePosition, type TabsAppearance } from "@hjmds/design-contracts/gooey-navigation";
-import { type LoadMoreDensity, type MenuDensity, type TabSize, type TabsIndicator, type TabsLayout, type TabsOverflow } from "@hjmds/design-contracts/recipes";
+import { type LoadMoreDensity, type MenuDensity, type MenuPresentation, type TabSize, type TabsIndicator, type TabsLayout, type TabsOverflow } from "@hjmds/design-contracts/recipes";
 import { type ReactElement, type ReactNode } from "react";
 import { type ModalProps, type PressableProps } from "react-native";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
@@ -226,6 +226,8 @@ export type MenuTriggerRenderProps = Readonly<{
 export type MenuProps<Value extends string = string, SectionKey extends string = string> = Omit<ModalProps, "animationType" | "children" | "onDismiss" | "onRequestClose" | "onShow" | "style" | "transparent" | "visible"> & Readonly<{
     triggerLabel: string;
     title?: string;
+    /** Native defaults to grouped; anchored follows the trigger, bottom presents an action list. */
+    presentation?: MenuPresentation;
     items?: readonly MenuItem<Value>[];
     sections?: readonly MenuSection<Value, SectionKey>[];
     source?: CollectionSource<Value, SectionKey>;
@@ -255,9 +257,11 @@ export type MenuProps<Value extends string = string, SectionKey extends string =
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Sectioned Native action/selection menu with teardown-safe action callbacks. */
-export declare function Menu<Value extends string = string, SectionKey extends string = string>({ triggerLabel, title, items, sections, source: sourceProp, selection, onAction, onActionAfterDismiss, onSelectionAfterDismiss, open, defaultOpen, onOpenChange, onDismiss, disabled, readOnly, busy, readOnlyLabel, asyncState, onRetry, retryLabel, density, renderLeading, renderTrailing, dismissLabel, trigger, renderTrigger, layoutStyle, ...modalProps }: MenuProps<Value, SectionKey>): import("react").JSX.Element;
+export declare function Menu<Value extends string = string, SectionKey extends string = string>({ triggerLabel, title, presentation, items, sections, source: sourceProp, selection, onAction, onActionAfterDismiss, onSelectionAfterDismiss, open, defaultOpen, onOpenChange, onDismiss, disabled, readOnly, busy, readOnlyLabel, asyncState, onRetry, retryLabel, density, renderLeading, renderTrailing, dismissLabel, trigger, renderTrigger, layoutStyle, ...modalProps }: MenuProps<Value, SectionKey>): import("react").JSX.Element;
 export type LoadMoreProps = Readonly<{
     descriptor: LoadMoreDescriptor;
+    /** Temporarily block pagination during a product mutation/refetch without claiming a page is loading. */
+    disabled?: boolean;
     onLoadMore: LoadMoreRequestHandler;
     mode?: LoadMoreMode;
     density?: LoadMoreDensity;
@@ -273,6 +277,8 @@ export type LoadMoreHandle = Readonly<{
 /** Collection footer that de-duplicates automatic and manual page requests. */
 export declare const LoadMore: import("react").ForwardRefExoticComponent<Readonly<{
     descriptor: LoadMoreDescriptor;
+    /** Temporarily block pagination during a product mutation/refetch without claiming a page is loading. */
+    disabled?: boolean;
     onLoadMore: LoadMoreRequestHandler;
     mode?: LoadMoreMode;
     density?: LoadMoreDensity;

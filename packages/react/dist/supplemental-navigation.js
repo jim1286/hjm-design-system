@@ -33,8 +33,10 @@ function createLoadMoreControllerFacade() {
  * A collection footer that keeps product data controlled while the shared
  * controller prevents overlapping cursor requests.
  */
-export const LoadMore = forwardRef(function LoadMore({ descriptor, mode = loadMoreRecipe.defaults.mode, density = loadMoreRecipe.defaults.density, onLoadMore, onRequestOutcome, onRequestError, intersectionRoot = null, rootMargin = "200px 0px", className, layoutStyle, style, ...props }, ref) {
+export const LoadMore = forwardRef(function LoadMore({ descriptor, disabled = false, mode = loadMoreRecipe.defaults.mode, density = loadMoreRecipe.defaults.density, onLoadMore, onRequestOutcome, onRequestError, intersectionRoot = null, rootMargin = "200px 0px", className, layoutStyle, style, ...props }, ref) {
     validateLoadMoreDescriptor(descriptor);
+    const disabledRef = useRef(disabled);
+    disabledRef.current = disabled;
     const onLoadMoreRef = useRef(onLoadMore);
     onLoadMoreRef.current = onLoadMore;
     const [controllerFacade] = useState(createLoadMoreControllerFacade);
@@ -51,7 +53,7 @@ export const LoadMore = forwardRef(function LoadMore({ descriptor, mode = loadMo
         return () => { currentRequestIdentityRef.current = null; };
     }, [currentRequestIdentity]);
     const request = useCallback(async (state, reason) => {
-        if (state.status === "loading" || state.status === "complete")
+        if (disabledRef.current || state.status === "loading" || state.status === "complete")
             return;
         const requestIdentity = `${state.status}:${state.requestKey}`;
         // IntersectionObserver may deliver an already queued callback after
@@ -93,7 +95,7 @@ export const LoadMore = forwardRef(function LoadMore({ descriptor, mode = loadMo
         };
     }, [controllerFacade, mode]);
     useEffect(() => {
-        if (mode !== "automatic" ||
+        if (disabled || mode !== "automatic" ||
             descriptor.state.status !== "ready" ||
             typeof IntersectionObserver === "undefined") {
             return;
@@ -108,8 +110,8 @@ export const LoadMore = forwardRef(function LoadMore({ descriptor, mode = loadMo
         }, { root: intersectionRoot, rootMargin });
         observer.observe(sentinel);
         return () => observer.disconnect();
-    }, [descriptor.state, intersectionRoot, mode, request, rootMargin]);
+    }, [descriptor.state, disabled, intersectionRoot, mode, request, rootMargin]);
     const { state, labels } = descriptor;
-    return (_jsxs("div", { ...props, style: { ...style, ...layoutStyle }, ref: ref, className: classNames("hjm-load-more", className), "data-mode": mode, "data-density": density, "data-state": state.status, "aria-busy": state.status === "loading" || undefined, children: [_jsx("span", { ref: sentinelRef, className: "hjm-load-more__sentinel", "aria-hidden": "true" }), state.status === "ready" ? (_jsx("button", { type: "button", className: "hjm-load-more__trigger", onClick: () => void request(state, "manual"), children: labels.loadMore })) : state.status === "loading" ? (_jsxs("div", { className: "hjm-load-more__status", role: "status", children: [_jsx("span", { className: "hjm-load-more__spinner", "aria-hidden": "true" }), _jsx("span", { className: "hjm-visually-hidden", children: labels.loading })] })) : state.status === "error" ? (_jsxs("div", { className: "hjm-load-more__error", children: [_jsx("span", { role: "alert", children: state.message }), _jsx("button", { type: "button", className: "hjm-load-more__trigger", onClick: () => void request(state, "retry"), children: labels.retry })] })) : (_jsx("div", { className: "hjm-load-more__end", children: labels.complete }))] }));
+    return (_jsxs("div", { ...props, style: { ...style, ...layoutStyle }, ref: ref, className: classNames("hjm-load-more", className), "data-mode": mode, "data-density": density, "data-state": state.status, "aria-disabled": disabled || undefined, "aria-busy": state.status === "loading" || undefined, children: [_jsx("span", { ref: sentinelRef, className: "hjm-load-more__sentinel", "aria-hidden": "true" }), state.status === "ready" ? (_jsx("button", { type: "button", className: "hjm-load-more__trigger", disabled: disabled, onClick: () => void request(state, "manual"), children: labels.loadMore })) : state.status === "loading" ? (_jsxs("div", { className: "hjm-load-more__status", role: "status", children: [_jsx("span", { className: "hjm-load-more__spinner", "aria-hidden": "true" }), _jsx("span", { className: "hjm-visually-hidden", children: labels.loading })] })) : state.status === "error" ? (_jsxs("div", { className: "hjm-load-more__error", children: [_jsx("span", { role: "alert", children: state.message }), _jsx("button", { type: "button", className: "hjm-load-more__trigger", disabled: disabled, onClick: () => void request(state, "retry"), children: labels.retry })] })) : (_jsx("div", { className: "hjm-load-more__end", children: labels.complete }))] }));
 });
 //# sourceMappingURL=supplemental-navigation.js.map

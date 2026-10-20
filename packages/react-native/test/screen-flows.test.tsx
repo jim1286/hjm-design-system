@@ -1,6 +1,7 @@
 import {act,create,type ReactTestRenderer} from "react-test-renderer";
 import {describe,expect,it,vi} from "vitest";
 import {HjmNativeProvider} from "../src/provider.js";
+import {ListRow} from "../src/data-display.js";
 import {Button,IconButton} from "../src/actions.js";
 import {RadioGroup} from "../src/inputs.js";
 import {AlertDialog} from "../src/overlays.js";
@@ -14,7 +15,7 @@ it("groups comment heart and overflow in one inline action row without merging t
 
  const like=vi.fn(),more=vi.fn();
  const tree=render(<CommentThreadScreen title="댓글" items={[{id:"one",parentId:null,author:"작성자",body:"본문",timeLabel:"방금",likeCountLabel:"좋아요 3개",likeIcon:<Text>♡</Text>,likeLabel:"댓글 좋아요",actions:<IconButton label="댓글 더보기" onPress={more}>⋮</IconButton>}]} expandedIds={[]} onExpandedChange={()=>{}} onLike={like} onReply={()=>{}} replyLabel="답글" repliesLabel={()=>"답글 더 보기"}/>);
- const row=tree.root.findAllByType(Stack).find(node=>node.props.axis==="inline"&&node.props.gap==="xxs"&&node.props.layoutStyle?.flexShrink===0)!;
+ const row=tree.root.findAllByType(Stack).find(node=>node.props.axis==="inline"&&node.props.layoutStyle?.flexShrink===0)!;
  expect(row.props.layoutStyle.flexShrink).toBe(0);
  const actions=row.findAllByType(IconButton);expect(actions.map(action=>action.props.label)).toEqual(["댓글 좋아요","댓글 더보기"]);
  act(()=>actions[0]!.props.onPress());expect(like).toHaveBeenCalledExactlyOnceWith("one");expect(more).not.toHaveBeenCalled();
@@ -95,7 +96,7 @@ it("starts native capture only after sheet dismissal and never selects on cancel
  const select=vi.fn(),close=vi.fn();
  const tree=render(<PhotoSourceSheet open onOpenChange={close} onSelect={select} labels={{title:"사진 추가",library:"앨범",camera:"촬영",cancel:"취소"}}/>);
  expect(select).not.toHaveBeenCalled();
- act(()=>tree.root.findAllByType(Button).find(node=>node.props.children==="촬영")!.props.onPress());
+ act(()=>tree.root.findAllByType(ListRow).find(node=>node.props.title==="촬영")!.props.onPress());
  expect(close).toHaveBeenCalledWith(false);expect(select).not.toHaveBeenCalled();
  act(()=>tree.root.findByType(Sheet).props.onDismissComplete({reason:"programmatic"}));
  expect(select).toHaveBeenCalledExactlyOnceWith("camera");
@@ -105,8 +106,8 @@ it("starts native capture only after sheet dismissal and never selects on cancel
 it("hides unavailable camera and suppresses disabled selection",async()=>{
  const {PhotoSourceSheet}=await import("../src/screen-flows.js");const select=vi.fn();
  const tree=render(<PhotoSourceSheet open disabled cameraAvailable={false} onOpenChange={()=>{}} onSelect={select} labels={{title:"사진",library:"앨범",camera:"촬영",cancel:"취소"}}/>);
- expect(tree.root.findAllByType(Button).map(node=>node.props.children)).not.toContain("촬영");
- act(()=>tree.root.findAllByType(Button).find(node=>node.props.children==="앨범")!.props.onPress());expect(select).not.toHaveBeenCalled();act(()=>tree.unmount());
+ expect(tree.root.findAllByType(ListRow).map(node=>node.props.title)).not.toContain("촬영");
+ act(()=>tree.root.findAllByType(ListRow).find(node=>node.props.title==="앨범")!.props.onPress());expect(select).not.toHaveBeenCalled();act(()=>tree.unmount());
 });
 
 it("shows a clear action only for nonempty search and clears the whole query", () => {
@@ -238,7 +239,7 @@ describe("SearchScreen two-step search", () => {
   // Visible copy is any host Text child; placeholder and accessibilityLabel are props, not text.
   const visible=(t:ReactTestRenderer)=>t.root.findAll(node=>(node.type as unknown)==="Text"&&[node.props.children].flat().includes("기록 검색"));
   expect(visible(tree)).toHaveLength(0);
-  act(()=>tree.update(wrap(<SearchScreen title="검색" queryLabel="기록 검색" queryClearLabel="지우기" query="" onQueryChange={()=>{}} onSearch={()=>{}}>{null}</SearchScreen>)));
+  act(()=>tree.update(wrap(<SearchScreen title="검색" queryLabel="기록 검색" queryClearLabel="지우기" query="" onQueryChange={()=>{}} onSearch={()=>{}} queryLabelVisibility="visible">{null}</SearchScreen>)));
   expect(tree.root.findByType(TextInput).props.placeholder).toBeUndefined();
   expect(visible(tree).length).toBeGreaterThan(0);
   act(()=>tree.unmount());

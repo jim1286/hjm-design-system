@@ -116,3 +116,7 @@ describe("PasswordField visual and behavior identity", () => {
     expect(passwordFieldBehavior.scenarios.join(" ")).toMatch(/strength-meter-is-out-of-scope/);
   });
 });
+
+it('accepts non-account secrets without requesting account-password autofill', () => {
+  expect(() => validatePasswordFieldDescriptor({ revealed: false, autofillHint: 'none' })).not.toThrow();
+});

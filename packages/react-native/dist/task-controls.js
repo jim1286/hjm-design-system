@@ -22,7 +22,7 @@ function ChoiceMenu(props) {
     // The menu trigger is content-width like the Web Menu trigger; a column Stack would otherwise stretch it full width.
     if (!available)
         return _jsx(Button, { disabled: true, layoutStyle: { alignSelf: "flex-start" }, children: props.label });
-    return _jsx(Menu, { triggerLabel: props.label, dismissLabel: props.dismissLabel, disabled: props.disabled, busy: props.pending === true, renderTrigger: trigger => props.trigger === "icon" ? _jsx(IconButton, { label: props.label, tone: "secondary", onPress: trigger.onPress, disabled: props.disabled, children: chevron(props.disabled) })
+    return _jsx(Menu, { presentation: "anchored", triggerLabel: props.label, dismissLabel: props.dismissLabel, disabled: props.disabled, busy: props.pending === true, renderTrigger: trigger => props.trigger === "icon" ? _jsx(IconButton, { label: props.label, tone: "secondary", onPress: trigger.onPress, disabled: props.disabled, children: chevron(props.disabled) })
             : _jsx(Button, { tone: "secondary", onPress: trigger.onPress, disabled: props.disabled, loading: props.pending === true, layoutStyle: { alignSelf: "flex-start" }, children: props.label }), items: props.choices, selection: { mode: "single", selectedKey: props.selectedId, onSelectionChange: () => undefined }, onSelectionAfterDismiss: id => props.onChoose(id) });
 }
 function Failure({ failed, label }) {

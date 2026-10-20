@@ -115,3 +115,5 @@ Native trigger 모서리는 Provider token에서 `loadMoreRecipe.trigger.radius`
 
 - [VirtualList](virtual-list.md)는 끝 도달 callback을 노출하지 않는다. Native에서 VirtualList 아래 자동 요청은 연결할 수 없으니
   `mode="manual"`로 두거나 제품 FlatList를 쓴다.
+
+2026-10-20 Utilverse 목록 채택: `disabled`(기본 false)는 읽음 처리나 재조회 중 다음 페이지·재시도·자동 끝 도달 요청을 막는다. 페이지 로딩 상태를 대신하지 않으며, 보관된 이전 콜백도 현재 잠금을 따른다(1.36.0 추가 API).

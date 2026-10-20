@@ -3,7 +3,7 @@ import type { TransitionRect } from "@hjmds/design-contracts/content-transition"
 import { type AlertDialogOpenChangeReason, type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
 import { type SheetDetent, type SheetDismissPolicy, type SheetDismissReason, type SheetOpenChangeDetails } from "@hjmds/design-contracts/components/sheet";
 import { type TooltipAlign, type TooltipOpenChangeDetails, type TooltipPlacement } from "@hjmds/design-contracts/components/tooltip";
-import { sheetRecipe, type DialogSize, type MenuDensity, type MenuItemTone } from "@hjmds/design-contracts/recipes";
+import { sheetRecipe, type DialogSize, type MenuDensity, type MenuPresentation, type MenuItemTone } from "@hjmds/design-contracts/recipes";
 import type { MenuSectionDescriptor } from "@hjmds/design-contracts/behaviors";
 import { type ReactNode } from "react";
 import { type ModalOpenState, type OpenState, type OverlayTrigger } from "./modal.js";
@@ -155,7 +155,7 @@ export type MenuItem = Readonly<{
 export type MenuSection = Omit<MenuSectionDescriptor<string, string>, "items"> & Readonly<{
     items: readonly MenuItem[];
 }>;
-export type MenuOpenChangeReason = "trigger" | "selection" | "escape" | "outside" | "tab";
+export type MenuOpenChangeReason = "trigger" | "selection" | "escape" | "outside" | "tab" | "programmatic";
 export type MenuAsyncState = Readonly<{
     status: "idle";
 }> | Readonly<{
@@ -201,6 +201,9 @@ type MenuBaseProps = Readonly<{
     trigger: OverlayTrigger;
     label: string;
     density?: MenuDensity;
+    presentation?: MenuPresentation;
+    /** Required for grouped/bottom; accessible and visible dismiss label. */
+    dismissLabel?: string;
     /** Logical alignment against the trigger; automatically mirrors in RTL. */
     align?: "start" | "end";
     disabled?: boolean;

@@ -442,6 +442,8 @@ export type CommentReactions = ReactionPickerProps & Readonly<{
  * supplies only the localized names, the items allowed for that comment and the action callback.
  */
 export type CommentMenu = Readonly<{
+    /** Context belongs to the row: anchored by default; override only for a product interaction reason. */
+    presentation?: "grouped" | "anchored" | "bottom";
     /** Localized accessible name of the button and menu title, e.g. "More options for seoyeon's comment". */
     label(item: CommentThreadItem): string;
     /** Localized name of the Menu sheet's dismiss action (Native Menu requires one). */

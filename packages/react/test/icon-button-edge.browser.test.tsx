@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { HjmProvider } from "../src/provider.js";
 import { Button, IconButton } from "../src/actions.js";
 import { CommentThreadRow } from "../src/screen-flows.js";
+import { Icon } from "../src/supplemental-display.js";
 import "../src/styles.css";
 
 // 2026-10-17 measured audit: 44 targets at row/header edges left their glyph 10–15px inside the 16px inset and, in
@@ -27,6 +28,21 @@ const glyph24 = <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="tru
 const chevron16 = <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" /></svg>;
 
 describe("edge-aligned controls", () => {
+  it("keeps the shared share glyph's strokes inside its viewport at both weights", async () => {
+    await act(async () => root.render(<HjmProvider>{(["regular", "strong"] as const).map(weight =>
+      <Icon key={weight} name="share" decorative weight={weight} />
+    )}</HjmProvider>));
+    const icons = container.querySelectorAll<SVGSVGElement>('svg[data-name="share"]');
+    expect(icons).toHaveLength(2);
+    for (const svg of icons) {
+      const bounds = svg.querySelector<SVGPathElement>('path')!.getBBox();
+      const halfStroke = Number(svg.getAttribute('stroke-width')) / 2;
+      expect(bounds.x - halfStroke).toBeGreaterThanOrEqual(0);
+      expect(bounds.y - halfStroke).toBeGreaterThanOrEqual(0);
+      expect(bounds.x + bounds.width + halfStroke).toBeLessThanOrEqual(24);
+      expect(bounds.y + bounds.height + halfStroke).toBeLessThanOrEqual(24);
+    }
+  });
   for (const direction of ["ltr", "rtl"] as const) {
     it(`puts the glyph slot / label on the 16px inset and keeps the 44 target (${direction})`, async () => {
       await page.viewport(402, 844);

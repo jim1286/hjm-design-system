@@ -132,7 +132,7 @@ import { SegmentedControl } from "@hjmds/react-native/inputs";
 
 - `presentation="pills"`: 카테고리·작성자·기간처럼 같은 목록의 범위를 좁힐 때 쓴다.
 - 표면 높이·좌우 여백·글자는 같은 size의 Chip과 맞춘다. 터치 영역은 최소 `control.minTouchTarget` 44이며 안쪽 표면은 위아래 `spacing.xxs` 4만큼 들어간다. 2026-10-20 Utilverse 혼합 필터 행에서 작은 Chip36과 pill28의 불일치가 확인돼 공통 크기로 정렬했다(미게시). 누름 영역은 줄이지 않는다.
-- 좌우 여백은 Chip과 같이 small12/medium16, 항목 사이 `spacing.xs` 8, 모서리 `radius.full`. 비선택은 `surfaceAlt`, 선택은 `content.body`/`canvas` 반전이다. 색은 제품 provider에서 따라온다.
+- 좌우 여백은 Chip과 같이 small12/medium16, 항목 사이 `spacing.xs` 8, 모서리 `radius.full`. 비선택은 `surface.raised`(`canvas`) 바탕과 `border.control` 1pt 테두리, 선택은 `content.body`/`canvas` 반전과 같은 짙은 테두리다. 2026-10-20 Utilverse의 파스텔 배경에서 비선택 버튼 경계가 묻힌 사용자 지적에 따라 inset 표면을 공통으로 보완했다(미게시). 색은 제품 provider에서 따라온다.
 - 항목은 내용 폭이며 좁아지면 줄바꿈한다. 큰 글자에서도 세로로 쌓지 않는다(`pills.largeTextLayout` `wrap`): 블록 안에서는 줄바꿈하고, 가로 스크롤 줄 안에서는 한 줄로 남아 스크롤된다. 라벨 높이만큼 항목도 늘어난다. 선택 상태(radio)와 포커스 이동(Web 화살표, Native 접근성 순서)은 배치와 관계없이 같다.
 - 그룹 이름은 `label`, 하나의 선택은 `value`/`onValueChange`. 복수 조건은 ToggleGroup, 화면 이동은 Tabs/Navigation을 쓴다.
 - 예제의 전체 선택값도 실제 항목으로 넣는다. 선택된 항목을 다시 눌러도 선택을 해제하지 않는다.

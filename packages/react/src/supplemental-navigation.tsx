@@ -56,6 +56,8 @@ function createLoadMoreControllerFacade(): Readonly<{
 export type LoadMoreProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> &
   Readonly<{
     descriptor: LoadMoreDescriptor;
+    /** Product mutation/refetch lock, separate from the next-page loading state. */
+    disabled?: boolean;
     mode?: LoadMoreMode;
     density?: LoadMoreDensity;
     onLoadMore: LoadMoreRequestHandler;
@@ -78,6 +80,7 @@ export const LoadMore = forwardRef<HTMLDivElement, LoadMoreProps>(
   function LoadMore(
     {
       descriptor,
+      disabled = false,
       mode = loadMoreRecipe.defaults.mode,
       density = loadMoreRecipe.defaults.density,
       onLoadMore,
@@ -93,6 +96,8 @@ export const LoadMore = forwardRef<HTMLDivElement, LoadMoreProps>(
     ref,
   ) {
     validateLoadMoreDescriptor(descriptor);
+    const disabledRef = useRef(disabled);
+    disabledRef.current = disabled;
     const onLoadMoreRef = useRef(onLoadMore);
     onLoadMoreRef.current = onLoadMore;
     const [controllerFacade] = useState(createLoadMoreControllerFacade);
@@ -116,7 +121,7 @@ export const LoadMore = forwardRef<HTMLDivElement, LoadMoreProps>(
         state: LoadMoreDescriptor["state"],
         reason: LoadMoreRequestReason,
       ) => {
-        if (state.status === "loading" || state.status === "complete") return;
+        if (disabledRef.current || state.status === "loading" || state.status === "complete") return;
         const requestIdentity = `${state.status}:${state.requestKey}`;
         // IntersectionObserver may deliver an already queued callback after
         // disconnect. Only events for the currently committed descriptor may
@@ -157,7 +162,7 @@ export const LoadMore = forwardRef<HTMLDivElement, LoadMoreProps>(
 
     useEffect(() => {
       if (
-        mode !== "automatic" ||
+        disabled || mode !== "automatic" ||
         descriptor.state.status !== "ready" ||
         typeof IntersectionObserver === "undefined"
       ) {
@@ -175,7 +180,7 @@ export const LoadMore = forwardRef<HTMLDivElement, LoadMoreProps>(
       );
       observer.observe(sentinel);
       return () => observer.disconnect();
-    }, [descriptor.state, intersectionRoot, mode, request, rootMargin]);
+    }, [descriptor.state, disabled, intersectionRoot, mode, request, rootMargin]);
 
     const { state, labels } = descriptor;
     return (
@@ -187,6 +192,7 @@ export const LoadMore = forwardRef<HTMLDivElement, LoadMoreProps>(
         data-mode={mode}
         data-density={density}
         data-state={state.status}
+        aria-disabled={disabled || undefined}
         aria-busy={state.status === "loading" || undefined}
       >
         <span ref={sentinelRef} className="hjm-load-more__sentinel" aria-hidden="true" />
@@ -194,6 +200,7 @@ export const LoadMore = forwardRef<HTMLDivElement, LoadMoreProps>(
           <button
             type="button"
             className="hjm-load-more__trigger"
+            disabled={disabled}
             onClick={() => void request(state, "manual")}
           >
             {labels.loadMore}
@@ -209,6 +216,7 @@ export const LoadMore = forwardRef<HTMLDivElement, LoadMoreProps>(
             <button
               type="button"
               className="hjm-load-more__trigger"
+              disabled={disabled}
               onClick={() => void request(state, "retry")}
             >
               {labels.retry}

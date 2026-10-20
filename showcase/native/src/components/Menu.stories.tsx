@@ -1,8 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react-native";
 import { NativeComponentPreview } from "../component-examples";
+import { Menu } from "@hjmds/react-native/navigation";
 const meta = { title: "배포/컴포넌트/탐색/메뉴", component: NativeComponentPreview, args: { componentId: "menu", variant: "default" }, parameters: { hjm: { componentIds: ["menu"] }, controls: { exclude: ["componentId", "variant"] } } } satisfies Meta<typeof NativeComponentPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본",};
+const menuItems = [{ id: "recent", label: "최근 사용" }, { id: "settings", label: "설정" }];
+export const Grouped: Story = { name: "그룹형", render: () => <Menu presentation="grouped" triggerLabel="더보기" dismissLabel="닫기" items={menuItems} /> };
+export const Anchored: Story = { name: "앵커형", render: () => <Menu presentation="anchored" triggerLabel="댓글 더보기" dismissLabel="닫기" items={[{ id: "report", label: "신고" }, { id: "block", label: "차단", tone: "danger" }]} /> };
+export const Bottom: Story = { name: "하단형", render: () => <Menu presentation="bottom" triggerLabel="사진 작업" dismissLabel="닫기" items={[{ id: "save", label: "저장" }, { id: "share", label: "공유" }]} /> };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

@@ -4,6 +4,8 @@ import { type HTMLAttributes } from "react";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type LoadMoreProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & Readonly<{
     descriptor: LoadMoreDescriptor;
+    /** Product mutation/refetch lock, separate from the next-page loading state. */
+    disabled?: boolean;
     mode?: LoadMoreMode;
     density?: LoadMoreDensity;
     onLoadMore: LoadMoreRequestHandler;
@@ -20,6 +22,8 @@ export type LoadMoreProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & R
  */
 export declare const LoadMore: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLDivElement>, "children"> & Readonly<{
     descriptor: LoadMoreDescriptor;
+    /** Product mutation/refetch lock, separate from the next-page loading state. */
+    disabled?: boolean;
     mode?: LoadMoreMode;
     density?: LoadMoreDensity;
     onLoadMore: LoadMoreRequestHandler;

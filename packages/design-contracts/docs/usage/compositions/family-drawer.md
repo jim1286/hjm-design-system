@@ -60,7 +60,7 @@
 | 시트 머리 | Sheet 손잡이, `title`은 보이지 않는 접근성 이름 | 시트 맨 위 고정 | 보이는 제목 줄 없음(2026-10-17 사용자 결정: 시트는 보이는 제목 없이 `title`을 접근성 이름으로만 쓴다) |
 | 단계 표시 | `Steps` | 본문 맨 위 | 항상 가로 한 줄, 아래 `spacing.xl` 24 |
 | 단계 본문 | `ContentTransition` > `Stack gap="md"` | Steps 아래, 본문 스크롤 | 제목·설명 사이 `spacing.md` 16, `slide` 가로 16 이동 |
-| 행동 | Sheet `footer` + Button ×2 | 시트 아래 고정(스크롤 밖) | Web 오른쪽 정렬 가로 [이전 ghost][계속 primary], 사이 `spacing.sm` 12. Native 세로 열 꽉 찬 폭 [계속]→[이전], 사이 `spacing.sm` 12, 위 `spacing.sm` 12. 높이 44 |
+| 행동 | Sheet `footer` + Button ×2 | 시트 아래 고정(스크롤 밖) | Web 오른쪽 정렬 가로 [이전 ghost][계속 primary], 사이 `spacing.xs` 8. Native 세로 열 꽉 찬 폭 [계속]→[이전], 사이 `spacing.xs` 8, 위 `spacing.sm` 12. 높이 44 |
 | 하단 안전 영역 | `Sheet` | 시트 아래 | Native `spacing.sm` 12 + inset, Web footer 아래 `spacing.lg` 20 + `env(safe-area-inset-bottom)` |
 
 - 마지막 단계의 "설정 마치기"가 저장이므로 행동은 Sheet `footer`에 둔다([Sheet](../components/sheet.md) 꼭 지킬 것). 본문만 스크롤되고 행동은 큰 글자에서도 보인다.

@@ -446,6 +446,12 @@ export const menuRecipe = {
         "separator",
     ],
     defaults: { density: "comfortable", itemTone: "neutral" },
+    // 2026-10-20: one menu contract, three intentional placements. Item count never changes the presentation.
+    presentations: {
+        grouped: { maxWidth: 288, padding: spacing.sm, gap: spacing.xs, rowHeight: 52 },
+        anchored: { maxWidth: 280, padding: spacing.xs, gap: spacing.xs, rowHeight: 48 },
+        bottom: { maxWidth: 420, padding: 0, gap: spacing.xs, rowHeight: 56 },
+    },
     surface: floatingSurfaceContract,
     density: {
         compact: { ...collectionItemContract, minHeight: control.minTouchTarget },
@@ -635,6 +641,9 @@ export const segmentedControlRecipe = {
     // Match Chip's visible size step in mixed filter rails; the inset keeps a separate 44pt touch box.
     // The old 8pt inset drew 28pt pills next to a 36pt small action chip (Utilverse, 2026-10-20).
     pills: { gap: spacing.xs, radius: radius.full, inset: spacing.xxs, minHeight: control.minTouchTarget,
+        // Utilverse's pastel scene swallowed the sunken fill without an outline (2026-10-20).
+        // Use the resting control border on the inset surface so touch geometry stays unchanged.
+        background: semanticColors.surface.raised, border: semanticColors.border.control, borderWidth: stroke.subtle,
         selectedBackground: semanticColors.content.body, selectedContent: semanticColors.canvas,
         /**
          * Pills are content-width, so large text keeps the row: it wraps inside a block and stays one line
@@ -1396,11 +1405,10 @@ export const statisticRecipe = {
     },
 };
 /**
- * Gap between adjacent buttons in one action group (2026-10-17 user rule: stacked bottom buttons looked
- * loose at 12). Stacked (column) groups use 8, inline (row) groups keep 12 so tap targets stay apart.
- * AlertDialog already used these values; Sheet/Dialog footers and composed screens now share them.
+ * Adjacent action buttons use 8 in both directions. The 2026-10-20 user request tightened
+ * horizontal groups to the same spacing as stacked groups; control touch targets remain unchanged.
  */
-export const actionGroupRecipe = { inlineGap: spacing.sm, stackedGap: spacing.xs };
+export const actionGroupRecipe = { inlineGap: spacing.xs, stackedGap: spacing.xs };
 export const sheetRecipe = {
     slots: ["backdrop", "positioner", "content", "handle", "header", "title", "body", "footer", "close"],
     defaults: { placement: "bottom", size: "auto" },

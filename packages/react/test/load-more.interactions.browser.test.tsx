@@ -127,3 +127,23 @@ it("renders long localized text in the retry, error, and complete states", async
   ));
   expect(host.querySelector(".hjm-load-more__end")?.textContent).toBe(longLabels.complete);
 });
+
+it('blocks a queued observer event during a product lock and allows the same cursor after unlock', async () => {
+  const onLoadMore = vi.fn(async () => undefined);
+  let deliver: IntersectionObserverCallback | undefined;
+  vi.stubGlobal('IntersectionObserver', class {
+    constructor(callback: IntersectionObserverCallback) { deliver = callback; }
+    observe() {} disconnect() {}
+  });
+  const render = (disabled: boolean) => <HjmProvider><LoadMore disabled={disabled}
+    descriptor={{ state: { status: 'ready', requestKey: 'cursor-a' }, labels }} onLoadMore={onLoadMore} /></HjmProvider>;
+  await act(async () => root.render(render(false)));
+  const queued = deliver!;
+  await act(async () => root.render(render(true)));
+  expect((host.querySelector('button') as HTMLButtonElement).disabled).toBe(true);
+  await act(async () => queued([{ isIntersecting: true } as IntersectionObserverEntry], {} as IntersectionObserver));
+  expect(onLoadMore).not.toHaveBeenCalled();
+  await act(async () => root.render(render(false)));
+  await act(async () => (host.querySelector('button') as HTMLButtonElement).click());
+  expect(onLoadMore).toHaveBeenCalledOnce();
+});

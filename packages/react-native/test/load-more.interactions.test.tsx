@@ -91,3 +91,20 @@ it("keeps long localized labels visible throughout the Native footer states", ()
   expect(renderer!.root.findAll((node) => node.children.includes(longLabels.complete))).not.toHaveLength(0);
   act(() => renderer!.unmount());
 });
+
+it('blocks both a retained manual action and viewport requests during a product lock', async () => {
+  const onLoadMore = vi.fn(async () => undefined);
+  const ref = { current: null as LoadMoreHandle | null };
+  let renderer!: ReturnType<typeof create>;
+  const render = (disabled: boolean) => <HjmNativeProvider><LoadMore ref={ref} disabled={disabled} mode="manual"
+    descriptor={{ state: { status: 'ready', requestKey: 'cursor-a' }, labels }} onLoadMore={onLoadMore} /></HjmNativeProvider>;
+  act(() => { renderer = create(render(false)); });
+  const retained = renderer.root.findAll(node => node.props.onPress && node.props.children === labels.loadMore)[0]!.props.onPress;
+  act(() => renderer.update(render(true)));
+  await act(async () => { retained(); await ref.current!.onEndReached(); });
+  expect(onLoadMore).not.toHaveBeenCalled();
+  act(() => renderer.update(render(false)));
+  await act(async () => { retained(); });
+  expect(onLoadMore).toHaveBeenCalledOnce();
+  act(() => renderer.unmount());
+});

@@ -17,7 +17,7 @@ function ChoiceMenu(props) {
     if (!available)
         return _jsx(Button, { disabled: true, children: props.label });
     const trigger = props.trigger === "icon" ? _jsx(IconButton, { label: props.label, tone: "secondary", children: _jsx(Icon, { name: "chevronDown" }) }) : _jsx(Button, { tone: "secondary", loading: props.pending === true, children: props.label });
-    return _jsx(Menu, { label: props.label, trigger: trigger, disabled: props.disabled, items: props.choices, selectionMode: "single", value: props.selectedId, onValueChange: () => undefined, onActionAfterDismiss: props.onChoose });
+    return _jsx(Menu, { presentation: "anchored", label: props.label, trigger: trigger, disabled: props.disabled, items: props.choices, selectionMode: "single", value: props.selectedId, onValueChange: () => undefined, onActionAfterDismiss: props.onChoose });
 }
 function Failure({ failed, label }) {
     return failed ? _jsx(Text, { role: "alert", tone: "danger", style: { textAlign: "center" }, children: label }) : null;

@@ -42,6 +42,7 @@ import {
 } from "@hjmds/design-contracts/components/load-more";
 import {
   backdrop,
+  shadow,
   easing,
   glyph,
   radius,
@@ -65,6 +66,7 @@ import {
   topBarRecipe,
   type LoadMoreDensity,
   type MenuDensity,
+  type MenuPresentation,
   type TabSize,
   type TabsIndicator,
   type TabsLayout,
@@ -96,6 +98,7 @@ import {
   ScrollView,
   View,
   findNodeHandle,
+  useWindowDimensions,
   type ModalProps,
   type PressableProps,
   type StyleProp,
@@ -127,7 +130,8 @@ type NativeModalTeardownTask,
 import { useControllableState } from "./internal/state.js";
 import { minimumTargetStyle, resolveNativeShadowElevation } from "./internal/styles.js";
 import { Text } from "./primitives.js";
-import { HjmNativeProvider, useHjmNativeTheme } from "./provider.js";
+import { resolveNativeMenuPosition } from "./internal/menu-position.js";
+import { HjmNativeProvider, useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "./provider.js";
 
 export type TabItem<Value extends string = string> = Readonly<{
   id: Value;
@@ -1789,6 +1793,8 @@ export type MenuProps<
   Readonly<{
     triggerLabel: string;
     title?: string;
+    /** Native defaults to grouped; anchored follows the trigger, bottom presents an action list. */
+    presentation?: MenuPresentation;
     items?: readonly MenuItem<Value>[];
     sections?: readonly MenuSection<Value, SectionKey>[];
     source?: CollectionSource<Value, SectionKey>;
@@ -1827,7 +1833,8 @@ export function Menu<
   SectionKey extends string = string,
 >({
   triggerLabel,
-  title = triggerLabel,
+  title = "",
+  presentation = "grouped",
   items,
   sections,
   source: sourceProp,
@@ -1911,6 +1918,32 @@ export function Menu<
   const itemRefs = useRef(new Map<Value, ComponentRef<typeof View>>());
   const modalDismiss = useMenuAfterDismiss(visible);
   const densityContract = menuRecipe.density[density];
+  const presentationRecipe = menuRecipe.presentations[presentation];
+  const insets = useHjmNativeSafeAreaInsets();
+  const window = useWindowDimensions();
+  const rootRef = useRef<ComponentRef<typeof View>>(null);
+  const [rootBounds, setRootBounds] = useState({ x: 0, y: 0, width: window.width, height: window.height });
+  const [anchor, setAnchor] = useState<{ x: number; y: number; width: number; height: number } | null>(null);
+  const [menuHeight, setMenuHeight] = useState(0);
+  const [headingHeight, setHeadingHeight] = useState(0);
+  const measureAnchor = useCallback(() => {
+    if (!visible || presentation !== "anchored") return;
+    rootRef.current?.measureInWindow((rootX, rootY, width, height) => {
+      triggerRef.current?.measureInWindow((x, y, triggerWidth, triggerHeight) => {
+        setRootBounds({ x: rootX, y: rootY, width, height });
+        setAnchor({ x: x - rootX, y: y - rootY, width: triggerWidth, height: triggerHeight });
+      });
+    });
+  }, [visible, presentation]);
+  useEffect(() => {
+    if (!visible) { setAnchor(null); setMenuHeight(0); return; }
+    measureAnchor();
+  }, [measureAnchor, visible, window.width, window.height]);
+  const anchorPosition = anchor ? resolveNativeMenuPosition(anchor, {
+    width: rootBounds.width, height: rootBounds.height,
+    top: Math.max(0, (insets.top ?? 0) - rootBounds.y), bottom: (insets.bottom ?? 0),
+    left: (insets.left ?? 0), right: (insets.right ?? 0),
+  }, menuHeight, environment.direction, presentationRecipe.maxWidth) : null;
   const requestOpen = useCallback((next: boolean, reason: MenuOpenChangeReason) => {
     if (next === visible) return;
     if (open === undefined) setUncontrolledOpen(next);
@@ -1958,7 +1991,7 @@ export function Menu<
     void onAction?.(item.id);
     close("selection", onActionAfterDismiss ? () => onActionAfterDismiss(item.id) : null);
   };
-  const renderItem = (item: CollectionItemDescriptor<Value>) => {
+  const renderItem = (item: CollectionItemDescriptor<Value>, index: number) => {
     const selected = selection.mode === "single"
       ? selectedSingle === item.id
       : selection.mode === "multiple"
@@ -2006,7 +2039,9 @@ export function Menu<
             direction: environment.direction,
             flexDirection: "row",
             gap: densityContract.gap,
-            minHeight: densityContract.minHeight,
+            minHeight: density === "compact" ? densityContract.minHeight : presentationRecipe.rowHeight,
+            borderTopWidth: index > 0 ? 1 : 0,
+            borderTopColor: resolveColorReference(menuRecipe.separator, theme.palette),
             opacity: itemDisabled ? menuRecipe.states.disabledOpacity : 1,
             paddingHorizontal: densityContract.paddingHorizontal,
           },
@@ -2054,7 +2089,7 @@ export function Menu<
 
   return (
     <View style={[layoutStyle]}>
-      <View ref={triggerRef}>
+      <View ref={triggerRef} collapsable={false} onLayout={measureAnchor}>
         {renderTrigger ? renderTrigger(triggerProps) : (
           <Pressable
             accessibilityHint={readOnly ? readOnlyLabel : undefined}
@@ -2083,18 +2118,22 @@ export function Menu<
         onRequestClose={() => close("escape")}
         onShow={() => {
           modalDismiss.onShow();
+          measureAnchor();
           focusFirstItem();
         }}
         transparent
         visible={visible}
       >
-        <View style={{ flex: 1, justifyContent: "center", padding: spacing.md }}>
+        <View ref={rootRef} collapsable={false} onLayout={measureAnchor}
+          style={{ flex: 1, justifyContent: presentation === "bottom" ? "flex-end" : "center",
+            paddingTop: (insets.top ?? 0) + spacing.md, paddingBottom: (insets.bottom ?? 0) + spacing.md,
+            paddingLeft: (insets.left ?? 0) + spacing.md, paddingRight: (insets.right ?? 0) + spacing.md }}>
           <Pressable
             accessibilityLabel={dismissLabel}
             accessibilityRole="button"
             onPress={() => close("outside")}
             style={{
-              backgroundColor: backdrop.modal.color, opacity: backdrop.modal.opacity,
+              backgroundColor: backdrop.modal.color, opacity: presentation === "anchored" ? backdrop.modal.opacity / 2 : backdrop.modal.opacity,
               bottom: 0,
               left: 0,
               position: "absolute",
@@ -2106,21 +2145,30 @@ export function Menu<
             accessibilityLabel={title.trim() || triggerLabel}
             accessibilityRole="menu"
             accessibilityViewIsModal
+            onAccessibilityEscape={() => close("escape")}
             style={{
               alignSelf: "center",
-              backgroundColor: colors.bg,
+              backgroundColor: presentation === "bottom" ? "transparent" : colors.bg,
               borderRadius: theme.tokens.radius.lg,
-              gap: spacing.sm,
+              gap: presentationRecipe.gap,
               maxHeight: "75%",
-              maxWidth: menuRecipe.maxWidth,
-              padding: spacing.md,
+              maxWidth: presentationRecipe.maxWidth,
+              padding: presentationRecipe.padding,
               width: "100%",
+              ...(presentation === "bottom" ? {} : resolveNativeShadowElevation(theme.designProfile?.tokens.shadow.floating ?? shadow.floating, theme.designProfile !== undefined, 8)),
+              ...(presentation === "anchored" ? {
+                position: "absolute", opacity: anchorPosition ? 1 : 0,
+                ...(anchorPosition ? { left: anchorPosition.left, top: anchorPosition.top, width: anchorPosition.width,
+                  maxHeight: anchorPosition.maxHeight } : {}),
+              } : {}),
             }}
           >
             {/* Empty titles intentionally hide the heading; rendering an empty Text still reserves a line box. */}
-            {title.trim() ? <Text tone="muted" variant="label" align="center">{title}</Text> : null}
+            {title.trim() ? <View onLayout={event => setHeadingHeight(event.nativeEvent.layout.height)}><Text tone="muted" variant="label" align="center">{title}</Text></View> : null}
             {/* A short action list must size to its content; ScrollView's default growth left empty modal space. */}
-            <ScrollView style={{ flexGrow: 0 }}>
+            <ScrollView onContentSizeChange={(_width, height) => setMenuHeight(height + presentationRecipe.padding * 2 + (title.trim() ? headingHeight + presentationRecipe.gap : 0))}
+              style={{ flexGrow: 0, flexShrink: 1, borderRadius: theme.tokens.radius.md,
+              backgroundColor: presentation === "grouped" ? colors.surface : presentation === "bottom" ? colors.bg : "transparent" }}>
               {asyncState.status === "loading" || asyncState.status === "error" || asyncState.status === "empty" ? (
                 <View style={{ gap: spacing.sm, minHeight: densityContract.minHeight }}>
                   {asyncState.status === "loading" ? <Spinner label={asyncState.message} /> : (
@@ -2139,9 +2187,7 @@ export function Menu<
               ) : collection}
               {asyncState.status === "loadingMore" ? <Spinner label={asyncState.message} /> : null}
             </ScrollView>
-            <View style={{ paddingTop: spacing.xs }}>
-              <Button onPress={() => close("programmatic")} tone="ghost">{dismissLabel}</Button>
-            </View>
+            {presentation !== "anchored" ? <Button onPress={() => close("programmatic")} tone="secondary">{dismissLabel}</Button> : null}
           </View>
         </View>
       </Modal>
@@ -2151,6 +2197,8 @@ export function Menu<
 
 export type LoadMoreProps = Readonly<{
   descriptor: LoadMoreDescriptor;
+  /** Temporarily block pagination during a product mutation/refetch without claiming a page is loading. */
+  disabled?: boolean;
   onLoadMore: LoadMoreRequestHandler;
   mode?: LoadMoreMode;
   density?: LoadMoreDensity;
@@ -2192,6 +2240,7 @@ function createNativeLoadMoreControllerFacade() {
 export const LoadMore = forwardRef<LoadMoreHandle, LoadMoreProps>(function LoadMore(
   {
     descriptor,
+    disabled = false,
     onLoadMore,
     mode = loadMoreRecipe.defaults.mode,
     density = loadMoreRecipe.defaults.density,
@@ -2203,6 +2252,8 @@ export const LoadMore = forwardRef<LoadMoreHandle, LoadMoreProps>(function LoadM
   ref,
 ) {
   validateLoadMoreDescriptor(descriptor);
+  const disabledRef = useRef(disabled);
+  disabledRef.current = disabled;
   const stateRef = useRef(descriptor.state);
   const handlerRef = useRef(onLoadMore);
   stateRef.current = descriptor.state;
@@ -2235,7 +2286,7 @@ export const LoadMore = forwardRef<LoadMoreHandle, LoadMoreProps>(function LoadM
   const request = useCallback(
     async (reason: LoadMoreRequestReason) => {
       // FlatList may have queued onEndReached before the footer was removed.
-      if (!requestActive.current) return "blocked-by-state";
+      if (!requestActive.current || disabledRef.current) return "blocked-by-state";
       const generation = requestGeneration.current;
       const state = stateRef.current;
       if (reason === "viewport" && mode === "automatic" && state.status === "ready") {
@@ -2290,6 +2341,7 @@ export const LoadMore = forwardRef<LoadMoreHandle, LoadMoreProps>(function LoadM
     >
       {state.status === "ready" ? (
         <RecipeButton
+          disabled={disabled}
           onPress={() => {
             void request("manual").catch(() => undefined);
           }}
@@ -2338,6 +2390,7 @@ export const LoadMore = forwardRef<LoadMoreHandle, LoadMoreProps>(function LoadM
             {state.message}
           </Text>
           <RecipeButton
+            disabled={disabled}
             onPress={() => {
               void request("retry").catch(() => undefined);
             }}

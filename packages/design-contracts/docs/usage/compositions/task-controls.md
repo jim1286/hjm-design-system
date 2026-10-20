@@ -38,7 +38,7 @@
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
 | 바깥 틀 | Stack/Card | 기존 본문·패널 안 | sm 또는 md |
-| 분할 행동 | Button + Menu(IconButton chevronDown 트리거, label=`menuLabel`) | 같은 inline 행, 메뉴는 실행 버튼 끝 | 인라인 간격 `spacing.sm` 12(button.md) |
+| 분할 행동 | Button + Menu(IconButton chevronDown 트리거, label=`menuLabel`) | 같은 inline 행, 메뉴는 실행 버튼 끝 | 인라인 간격 `spacing.xs` 8(button.md) |
 | 메뉴 트리거 | 분할 행: IconButton(secondary). 계정 전환: Button(secondary) | 분할 행 끝·계정 이름 아래 | 내용 폭. Web·Native 모두 전체 폭으로 늘이지 않음 |
 | 비밀번호 | PasswordField/Progress/Text | 위→아래 | sm |
 | 요금 선택 | RadioGroup | 카드 상단 | card presentation |
@@ -98,3 +98,5 @@ import { AccountSwitcher } from "@hjmds/react-native/task-controls";
 ## 근거
 
 - 2026-10-17 구성 리뷰: 분할 실행의 방식 메뉴가 두 번째 텍스트 버튼("실행 방식 선택")으로 보여 별개 행동처럼 읽혔고 인라인 간격이 8이었다. 그래서 메뉴를 chevron IconButton 도구로 바꾸고 간격을 12로 맞췄다.
+
+- 2026-10-20 사용자 요청: 버튼 묶음의 가로 기본 간격도 8로 통일했다. 위 2026-10-17의 12 간격 결정은 이 기준으로 대체한다.
