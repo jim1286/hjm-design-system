@@ -34,10 +34,11 @@ contracts를 같은 npm 버전으로 설치하고, 제품의 실제 화면·환�
 
 ### 배포 실행 시점
 
-현재 `showcase.yml`은 main push의 세 public package `package.json` 경로 변경 또는 수동
-실행으로 시작한다. manifest의 실제 버전 증가를 비교하지 않으므로 의존성 수정도 실행할 수 있다.
-일반 코드·문서만 바꾼 push와 PR 트리거는 없다. 수동 실행 역시 artifact 생성과 main의 Pages
-게시 경로이며 검사 전용 모드가 아니다. 전체 회귀가 필요하면 로컬 `ci:check`를 명시적으로 선택한다.
+현재 `showcase.yml`은 명시적 npm 릴리스가 만든 `v*` 태그 또는 수동 실행으로 시작한다.
+일반 main push·의존성 수정·version 준비만으로는 게시하지 않는다. 2026-10-20 개발 변경 push가
+의도하지 않은 게시로 이어지는 경로를 정리했다. 공개 HJM에서 비공개 release-hub action을 읽을 수
+없는 경계도 확인했으므로, 기존 package 릴리스의 태그를 직접 사용한다. 수동 실행 역시 artifact 생성과
+Pages 게시 경로이며 검사 전용 모드가 아니다. 전체 회귀가 필요하면 로컬 `ci:check`를 명시적으로 선택한다.
 
 빌드한 Storybook과 source SHA·run ID·hash를 delivery artifact에 담고, GitHub Pages에는
 자체 도메인 이동 안내만 게시한다. 실제 `storybook.jmstudioapps.com` 공개는

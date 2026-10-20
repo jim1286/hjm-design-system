@@ -7,9 +7,10 @@
 
 ## 빌드와 artifact
 
-`showcase.yml`의 main fixed-train 버전 상승/명시적 수동 실행은 Web build·typecheck만 수행한다.
-2026-10-12 배포 최소화 요청으로 전체 Native·브라우저 회귀는 `full_regression=true`인 수동 실행의
-`pnpm ci:check`로 분리했다. 기본 실행은 Chromium을 설치하지 않는다.
+`showcase.yml`은 명시적 package 릴리스가 만든 `v*` 태그 또는 수동 실행에서 Web artifact를 빌드한다.
+일반 main/dependency push는 실행하지 않는다(2026-10-20 개발 push와 게시 분리).
+전체 Native·브라우저 회귀는 로컬 `pnpm ci:check`로 명시적으로 선택하며 배포 workflow에 붙이지 않는다.
+기본 실행은 Chromium을 설치하지 않는다.
 검사한 `showcase/web/storybook-static`을 `artifact.py prepare`로 파일 closure/hash·source SHA·CI run ID와 묶는다.
 `hjm-storybook-<source SHA>` Actions artifact는 manual delivery 시간을 확보하면서 누적을 제한하도록 30일 보존한다.
 일반 개발 push에서 전체 검사를 실행하거나 게시하지 않는다. 고정 artifact는 그 이후 source commit과 별개다.

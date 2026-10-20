@@ -92,9 +92,9 @@ pnpm install
 `ci:check`는 명시적으로 선택하는 로컬 전수 진단입니다. package 계약·테스트·bundle/evidence,
 Native Showcase와 Web Storybook을 확인하며 배포 workflow에서 자동으로 실행하지 않습니다.
 
-- `main` 단일 branch로 운영합니다. 현재 `showcase.yml`은 세 public package manifest 경로가 바뀐 main push 또는 수동 실행에서 Web artifact를 만들고 GitHub Pages 이동 안내를 게시합니다. 실제 버전 상승을 비교하는 단계는 없으므로 의존성 등 manifest의 다른 변경도 실행을 유발합니다. 자체 도메인 Storybook은 [게시 실행서](deploy/storybook/README.md)로 별도 전달합니다.
+- `main` 단일 branch로 운영합니다. 현재 `showcase.yml`은 명시적 npm 릴리스가 만든 `v*` 태그 또는 수동 실행에서 Web artifact를 만들고 GitHub Pages 이동 안내를 게시합니다. 일반 main push·의존성 수정은 배포하지 않습니다. 자체 도메인 Storybook은 [게시 실행서](deploy/storybook/README.md)로 별도 전달합니다.
 - 세 public package는 하나의 fixed version train으로 함께 versioning합니다.
-- 게시 소스 변경은 작업 단위(PR 또는 PR 없이 `main`에 push하는 묶음)를 마칠 때 `pnpm changeset` 하나로 정리합니다. 개발 반복 commit마다 추가하지 않고, `release:version` 전에 마지막 tag 이후 게시 소스 변경이 changeset에 모두 담겼는지 확인합니다. 버전 상승 시의 자동 배포는 Storybook만 갱신하고 package를 릴리스하지 않습니다.
+- 게시 소스 변경은 작업 단위(PR 또는 PR 없이 `main`에 push하는 묶음)를 마칠 때 `pnpm changeset` 하나로 정리합니다. 개발 반복 commit마다 추가하지 않고, `release:version` 전에 마지막 tag 이후 게시 소스 변경이 changeset에 모두 담겼는지 확인합니다. 명시적 package 릴리스가 태그를 만든 뒤 Storybook artifact 흐름이 시작되며, 일반 version 준비 push는 게시하지 않습니다.
 - 릴리스 commit: 로컬에서 `pnpm release:version`을 실행하고 생성 결과를 하나의 commit으로
   `main`에 push합니다. package publish가 필요할 때 GitHub Actions에서 `Release Packages`를 직접
   실행합니다. workflow는 세 package를 build하고 npm에 publish한 뒤
