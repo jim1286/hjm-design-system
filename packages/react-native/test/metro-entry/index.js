@@ -1,3 +1,6 @@
+// Keep the new peer-free controls in the production dependency graph.
+import * as shortcutRailFamily from "@hjmds/react-native/shortcut-rail";
+import * as timePickerFamily from "@hjmds/react-native/time-picker";
 import * as optionalFamily15 from "@hjmds/react-native/progressive-blur";
 // New peer-free families must enter the real Metro graph; source/type tests alone
 // cannot prove their granular imports stay independent of optional native engines.
@@ -93,7 +96,7 @@ import { StatusText } from "@hjmds/react-native/status-text";
 import { HjmNativeProvider } from "@hjmds/react-native/provider";
 
 // Keep peer-free optional exports reachable so Metro checks their actual dependency graph.
-const optionalFamilyNames = [optionalFamily15, optionalFamily16, optionalFamily17, optionalFamily18, optionalFamily19, optionalFamily20, optionalFamily21, optionalFamily22, optionalFamily23, optionalFamily25, optionalFamily26, optionalFamily27, optionalFamily28, optionalFamily29, optionalFamily30, optionalFamily31, optionalFamily0, optionalFamily1, optionalFamily2, optionalFamily3, optionalFamily4, optionalFamily5, optionalFamily6, optionalFamily7, optionalFamily8, optionalFamily9, optionalFamily10, optionalFamily11, optionalFamily12, optionalFamily13, optionalFamily14].flatMap(family => Object.keys(family));
+const optionalFamilyNames = [shortcutRailFamily, timePickerFamily, optionalFamily15, optionalFamily16, optionalFamily17, optionalFamily18, optionalFamily19, optionalFamily20, optionalFamily21, optionalFamily22, optionalFamily23, optionalFamily25, optionalFamily26, optionalFamily27, optionalFamily28, optionalFamily29, optionalFamily30, optionalFamily31, optionalFamily0, optionalFamily1, optionalFamily2, optionalFamily3, optionalFamily4, optionalFamily5, optionalFamily6, optionalFamily7, optionalFamily8, optionalFamily9, optionalFamily10, optionalFamily11, optionalFamily12, optionalFamily13, optionalFamily14].flatMap(family => Object.keys(family));
 
 const noop = () => undefined;
 const calendarGrid = {

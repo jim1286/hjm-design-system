@@ -49,7 +49,8 @@ const executableFamilyExports = Object.entries(packageJson.exports)
       // ./media-transport, ./toggle-feedback and ./authoring-tools (BezierEditor curve) draw with the same optional
       // react-native-svg peer; their contract docs state it, so they sit outside this peer-free baseline too.
       // ./data-workflows composes BarChart from ./chart and therefore inherits the same peer.
-      exportPath !== "." && exportPath !== "./toast-liquid" && !(["./design-profile", "./avatar-blobatar", "./avatar-blobatar-motion", "./effect-surface", "./sortable", "./swipe-actions", "./carousel-motion", "./celebration", "./screen-transition", "./qr-code", "./chart", "./thinking-orb", "./image-viewer", "./keyboard-controller", "./sheet-gesture", "./context-menu-native", "./icon-svg", "./media-transport", "./toggle-feedback", "./authoring-tools", "./data-workflows"].includes(exportPath)) && typeof target === "string" && target.endsWith(".js"),
+      // ./sheet-panel requires Gesture Handler, Reanimated and Worklets, like ./sheet-gesture.
+      exportPath !== "." && exportPath !== "./toast-liquid" && !(["./design-profile", "./avatar-blobatar", "./avatar-blobatar-motion", "./effect-surface", "./sortable", "./swipe-actions", "./carousel-motion", "./celebration", "./screen-transition", "./qr-code", "./chart", "./thinking-orb", "./image-viewer", "./keyboard-controller", "./sheet-gesture", "./sheet-panel", "./context-menu-native", "./icon-svg", "./media-transport", "./toggle-feedback", "./authoring-tools", "./data-workflows"].includes(exportPath)) && typeof target === "string" && target.endsWith(".js"),
   );
 
 const requiredRendererSources = executableFamilyExports.map(([, target]) =>
@@ -122,8 +123,13 @@ try {
     stat(bundleFile),
   ]);
   const sourceMap = JSON.parse(mapText);
-  if (!Array.isArray(sourceMap.sources)) fail("source map does not expose its module graph");
-  const sources = sourceMap.sources.map(normalizeSource);
+  // Metro 0.87 emits an indexed map; inspect every section as well as flat maps.
+  function collectSources(map) {
+    if (Array.isArray(map.sources)) return map.sources;
+    if (Array.isArray(map.sections)) return map.sections.flatMap(section => collectSources(section.map));
+    fail("source map does not expose its module graph");
+  }
+  const sources = collectSources(sourceMap).map(normalizeSource);
 
   for (const requiredSource of requiredRendererSources) {
     if (!sources.some((source) => source.endsWith(requiredSource))) {
