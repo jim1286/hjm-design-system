@@ -106,3 +106,5 @@ import { ListDetailScreen } from "@hjmds/react-native/screen-flows";
 - `refresh`를 주면 ScreenLayout `actions`는 무시된다. 둘 다 필요하면 `refresh` 대신 `actions`에 직접 조합한다.
 - 상세 pane은 `title`·`state`·`stateAction`·`notice`와 `back`(헤더 `exit`)을 받는다. 상세 쪽 `description`·`actions`·footer 자리는 없다.
 - `loadMore`는 상태 없는 버튼이다. 끝·오류·중복 요청 방지가 필요하면 LoadMore를 쓴다.
+
+2026-10-20 Utilverse 체크리스트 채택: 목록의 생성 행동을 고정 footer에 유지할 수 있도록 `footer`를 공개한다(checkout 개발 API·미게시). 상세 footer는 기존 `detail.footer`가 소유한다.

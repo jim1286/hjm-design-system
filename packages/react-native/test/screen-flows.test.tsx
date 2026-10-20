@@ -364,3 +364,27 @@ it("resets the native onboarding body on a controlled step change",()=>{
  expect(scrollTo).toHaveBeenCalledWith({y:0,animated:false});
  act(()=>tree.unmount());
 });
+
+it("keeps the list draft and its primary footer mounted across detail navigation", async () => {
+ const {ListDetailScreen}=await import("../src/screen-flows.js");
+ const {TextField}=await import("../src/inputs.js");
+ const {ScreenLayout}=await import("../src/screens.js");
+ const open=vi.fn();
+ const list=<TextField label="목록 초안" value="보존할 이름" onValueChange={()=>{}}/>;
+ const renderPage=(detail?:{title:string;content:ReactNode})=><HjmNativeProvider><ListDetailScreen
+   title="목록" list={list} {...(detail ? { detail } : {})} back={{label:"목록으로",onAction:()=>{}}}
+   footer={<Button onPress={open}>목록 만들기</Button>}/></HjmNativeProvider>;
+ let tree!: ReactTestRenderer;
+ act(()=>{tree=create(renderPage());});
+ const field=tree.root.findByType(TextInput);
+ act(()=>tree.root.findAllByType(Button).find(button=>button.props.children==="목록 만들기")!.props.onPress());
+ expect(open).toHaveBeenCalledOnce();
+ act(()=>tree.update(renderPage({title:"상세",content:"항목"})));
+ expect(tree.root.findByType(TextInput) === field).toBe(true);
+ const screens=tree.root.findAllByType(ScreenLayout);
+ expect(screens[0]!.props.footer).toBeDefined();
+ expect(screens[1]!.props.footer).toBeUndefined();
+ act(()=>tree.update(renderPage()));
+ expect(tree.root.findByType(TextInput).props.value).toBe("보존할 이름");
+ act(()=>tree.unmount());
+});

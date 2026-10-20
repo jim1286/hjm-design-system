@@ -76,3 +76,25 @@ it("blocks retained native actions after a product lock and unmount", () => {
   act(() => tree!.unmount()); tree = undefined;
   act(() => retained()); expect(mutate).not.toHaveBeenCalled();
 });
+
+it("keeps referenced rows editable and rejects a removal action after the reference locks it", () => {
+  const remove = vi.fn(), edit = vi.fn();
+  const render = (locked: boolean) => <HjmNativeProvider><RepeatableFieldGroup
+    descriptor={{ label: "참여자", fields: [{ id: "a", label: "이름" }, { id: "b", label: "다른 이름" }] }}
+    addLabel="추가" removeLabel={id => `${id} 삭제`} isRemoveDisabled={id => locked && id === "a"}
+    onAdd={() => undefined} onRemove={remove}
+    renderField={({ controlProps, guardChange, focusRef }) => <TextField {...controlProps} ref={focusRef} onValueChange={guardChange(edit)} />}
+  /></HjmNativeProvider>;
+  act(() => { tree = create(render(false)); });
+  const retainedRemove = button("a 삭제").props.onPress;
+  act(() => tree!.update(render(true)));
+  expect(button("a 삭제").props.disabled).toBe(true);
+  const name = tree!.root.findAllByType(TextField)[0]!;
+  expect(name.props.disabled).toBe(false);
+  act(() => { name.props.onValueChange("새 이름"); retainedRemove(); });
+  expect(edit).toHaveBeenCalledWith("새 이름");
+  expect(remove).not.toHaveBeenCalled();
+  act(() => tree!.update(render(false)));
+  act(() => button("a 삭제").props.onPress());
+  expect(remove).toHaveBeenCalledWith("a");
+});

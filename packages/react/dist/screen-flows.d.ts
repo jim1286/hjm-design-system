@@ -25,6 +25,7 @@ export type ScreenFlowIconAction = ScreenFlowAction & Readonly<{
 }>;
 type Base = Omit<ScreenLayoutProps, "children" | "footer">;
 export type ListDetailScreenProps = Base & {
+    footer?: ScreenLayoutProps["footer"];
     list: ReactNode;
     detail?: Pick<ScreenLayoutProps, "title" | "state" | "stateAction" | "notice" | "titleVisibility" | "headerAlignment" | "actions" | "footer"> & {
         content: ReactNode;

@@ -1,5 +1,11 @@
 # @hjmds/react-native
 
+## 1.35.1
+
+### Patch Changes
+
+- Allow referenced repeatable rows to remain editable while removal is disabled, and expose the list footer on ListDetailScreen so creation actions remain pinned during list/detail adoption.
+
 ## 1.35.0
 
 ### Minor Changes

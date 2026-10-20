@@ -47,7 +47,7 @@ function InlineEditBody(props) {
     return _jsx(View, { accessible: false, children: !editing ? _jsxs(Stack, { axis: "inline", gap: "sm", align: "center", children: [_jsxs(Stack, { gap: "xxs", layoutStyle: { flex: 1, minWidth: 0 }, children: [_jsx(Text, { variant: "caption", tone: "muted", children: props.label }), _jsx(Text, { emphasis: "strong", children: props.value })] }), _jsx(IconButton, { ref: trigger, label: props.editLabel, tone: "ghost", edge: "end", disabled: props.disabled ?? false, onPress: () => { setDraft(props.value); action.session.reset(null); setEditing(true); }, children: _jsx(DrawnPencil, { size: glyph.sm, color: toolColor(props.disabled === true) }) })] })
             : _jsxs(Stack, { gap: collectionEditingRecipe.actionGap, children: [_jsx(TextField, { ref: input, label: props.label, value: draft, disabled: props.disabled === true || action.pending, ...(error ? { error, invalid: true } : {}), onValueChange: setDraft, onSubmitEditing: () => void save() }), _jsxs(Stack, { axis: "inline", gap: "sm", wrap: true, children: [_jsx(Button, { tone: "ghost", disabled: action.pending, onPress: () => close(), children: props.cancelLabel }), _jsx(Button, { loading: action.pending, disabled: props.disabled === true || !!error, onPress: () => void save(), children: props.saveLabel })] }), action.failed ? _jsx(ErrorMessage, { children: props.errorLabel }) : null] }) });
 }
-export function RepeatableFieldGroup({ renderField, addLabel, removeLabel, minFields = 0, maxFields = Infinity, onAdd, onRemove, ...props }) {
+export function RepeatableFieldGroup({ renderField, addLabel, removeLabel, minFields = 0, maxFields = Infinity, isRemoveDisabled, onAdd, onRemove, ...props }) {
     const targets = useRef(new Map()), add = useRef(null);
     const { palette } = useHjmNativeTheme();
     const focus = useRef(undefined);
@@ -64,19 +64,19 @@ export function RepeatableFieldGroup({ renderField, addLabel, removeLabel, minFi
         }
     });
     const fields = props.descriptor.fields;
-    const live = useRef(true), policy = useRef({ fields, minFields, maxFields, onAdd, onRemove, disabled: props.descriptor.disabled });
-    policy.current = { fields, minFields, maxFields, onAdd, onRemove, disabled: props.descriptor.disabled };
+    const live = useRef(true), policy = useRef({ fields, minFields, maxFields, isRemoveDisabled, onAdd, onRemove, disabled: props.descriptor.disabled });
+    policy.current = { fields, minFields, maxFields, isRemoveDisabled, onAdd, onRemove, disabled: props.descriptor.disabled };
     useEffect(() => { live.current = true; return () => { live.current = false; }; }, []);
     return _jsxs(Stack, { gap: collectionEditingRecipe.gap, children: [_jsx(FieldGroup, { ...props, renderField: binding => _jsxs(Stack, { axis: "inline", gap: "xs", align: "end", children: [_jsx(View, { style: { flex: 1, minWidth: 0 }, children: renderField({ ...binding, focusRef: target => { if (target)
                                     targets.current.set(binding.id, target);
                                 else
-                                    targets.current.delete(binding.id); } }) }), _jsx(IconButton, { label: removeLabel(binding.id), tone: "ghost", edge: "end", disabled: binding.controlProps.disabled || fields.length <= minFields, onPress: binding.guardChange(() => {
+                                    targets.current.delete(binding.id); } }) }), _jsx(IconButton, { label: removeLabel(binding.id), tone: "ghost", edge: "end", disabled: binding.controlProps.disabled || fields.length <= minFields || isRemoveDisabled?.(binding.id) === true, onPress: binding.guardChange(() => {
                                 const current = policy.current;
-                                if (!live.current || current.disabled || current.fields.length <= current.minFields)
+                                if (!live.current || current.disabled || current.fields.length <= current.minFields || current.isRemoveDisabled?.(binding.id))
                                     return;
                                 focus.current = focusAfterRemoval(current.fields.map(field => field.id), binding.id, current.fields.filter(field => field.disabled).map(field => field.id)) ?? null;
                                 current.onRemove(binding.id);
-                            }), children: _jsx(DrawnTrash, { size: glyph.sm, color: resolveIconButtonPresentation("ghost", palette, binding.controlProps.disabled || fields.length <= minFields).content }) })] }) }), _jsx(Button, { ref: add, tone: "secondary", disabled: props.descriptor.disabled === true || fields.length >= maxFields, onPress: () => {
+                            }), children: _jsx(DrawnTrash, { size: glyph.sm, color: resolveIconButtonPresentation("ghost", palette, binding.controlProps.disabled || fields.length <= minFields || isRemoveDisabled?.(binding.id) === true).content }) })] }) }), _jsx(Button, { ref: add, tone: "secondary", disabled: props.descriptor.disabled === true || fields.length >= maxFields, onPress: () => {
                     const current = policy.current;
                     if (!live.current || current.disabled || current.fields.length >= current.maxFields)
                         return;

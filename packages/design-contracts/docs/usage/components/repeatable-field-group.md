@@ -67,6 +67,7 @@ import { TextField } from "@hjmds/react-native/inputs";
 | `removeLabel` | `(id) => string` | 필수 | 행마다 다른 삭제 이름(대상 이름 포함) |
 | `minFields` / `maxFields` | `number` | `0` / `Infinity` | 이하면 삭제, 이상이면 추가 비활성 |
 | `onAdd` | `() => string \| undefined` | 필수 | 새 행 id를 돌려주면 그 행이 descriptor에 나타난 뒤 포커스 |
+| `isRemoveDisabled` | `(id) => boolean` | `false` | 참조 중인 정산 참여자처럼 입력은 허용하고 삭제만 막을 때 사용. checkout 개발 API·미게시(2026-10-20 Utilverse 채택) |
 | `onRemove` | `(id) => void` | 필수 | 제품 상태에서 행 제거 |
 | `layout` · Web `className`·`layoutStyle` | FieldGroup 값 | FieldGroup 기본 | FieldGroup으로 전달 |
 

@@ -67,10 +67,12 @@ function InlineEditBody(props: InlineEditProps) {
 export type RepeatableFieldGroupProps = Omit<FieldGroupProps, "renderField"> & Readonly<{
   renderField: (binding: FieldGroupBinding & { focusRef: (target: FocusTarget | null) => void }) => ReactNode;
   addLabel: string; removeLabel: (id: string) => string; minFields?: number; maxFields?: number;
+  /** A referenced row may stay editable while removal is unavailable (Utilverse expense participants). */
+  isRemoveDisabled?: (id: string) => boolean;
   /** Return the new stable id to focus after the controlled descriptor includes it. */
   onAdd: () => string | undefined; onRemove: (id: string) => void;
 }>;
-export function RepeatableFieldGroup({ renderField, addLabel, removeLabel, minFields = 0, maxFields = Infinity, onAdd, onRemove, ...props }: RepeatableFieldGroupProps) {
+export function RepeatableFieldGroup({ renderField, addLabel, removeLabel, minFields = 0, maxFields = Infinity, isRemoveDisabled, onAdd, onRemove, ...props }: RepeatableFieldGroupProps) {
   const targets = useRef(new Map<string, FocusTarget>()), add = useRef<HTMLButtonElement>(null);
   const focus = useRef<string | null | undefined>(undefined);
   useLayoutEffect(() => {
@@ -79,17 +81,17 @@ export function RepeatableFieldGroup({ renderField, addLabel, removeLabel, minFi
     else if (targets.current.has(focus.current)) { targets.current.get(focus.current)?.focus(); focus.current = undefined; }
   });
   const fields = props.descriptor.fields;
-  const live = useRef(true), policy = useRef({ fields, minFields, maxFields, onAdd, onRemove, disabled: props.descriptor.disabled });
-  policy.current = { fields, minFields, maxFields, onAdd, onRemove, disabled: props.descriptor.disabled };
+  const live = useRef(true), policy = useRef({ fields, minFields, maxFields, isRemoveDisabled, onAdd, onRemove, disabled: props.descriptor.disabled });
+  policy.current = { fields, minFields, maxFields, isRemoveDisabled, onAdd, onRemove, disabled: props.descriptor.disabled };
   useEffect(() => { live.current = true; return () => { live.current = false; }; }, []);
   return <Stack gap={collectionEditingRecipe.gap}>
     {/* Remove is a row tool: a trash IconButton at the field's end whose label names the row (icon-button.md), not a
         full-width ghost text button under the field (2026-10-17 review). End-aligned so it sits beside the input. */}
     <FieldGroup {...props} renderField={binding => <Stack axis="inline" gap="xs" align="end">
       <div style={{ flex: 1, minInlineSize: 0 }}>{renderField({ ...binding, focusRef: target => { if (target) targets.current.set(binding.id, target); else targets.current.delete(binding.id); } })}</div>
-      <IconButton label={removeLabel(binding.id)} tone="ghost" edge="end" disabled={binding.controlProps.disabled || fields.length <= minFields} onClick={binding.guardChange(() => {
+      <IconButton label={removeLabel(binding.id)} tone="ghost" edge="end" disabled={binding.controlProps.disabled || fields.length <= minFields || isRemoveDisabled?.(binding.id) === true} onClick={binding.guardChange(() => {
         const current = policy.current;
-        if (!live.current || current.disabled || current.fields.length <= current.minFields) return;
+        if (!live.current || current.disabled || current.fields.length <= current.minFields || current.isRemoveDisabled?.(binding.id)) return;
         focus.current = focusAfterRemoval(current.fields.map(field => field.id), binding.id, current.fields.filter(field => field.disabled).map(field => field.id)) ?? null;
         current.onRemove(binding.id);
       })}><Icon name="delete" /></IconButton>

@@ -42,7 +42,7 @@ function Action({action,secondary=false,edge}:{action:ScreenFlowAction;secondary
 type Base = Omit<ScreenLayoutProps,"children"|"footer">;
 // Stacked footer/sheet buttons use Stack gap "xs" (actionGroupRecipe.stackedGap 8); 12 read as split groups (button.md, 2026-10-17).
 
-export type ListDetailScreenProps = Base & { list:ReactNode; detail?:Pick<ScreenLayoutProps,"title"|"state"|"stateAction"|"notice"|"titleVisibility"|"headerAlignment"|"actions"|"footer"> & {content:ReactNode}; back:ScreenFlowAction; refresh?:ScreenFlowIconAction; loadMore?:ScreenFlowAction };
+export type ListDetailScreenProps = Base & { footer?:ScreenLayoutProps["footer"]; list:ReactNode; detail?:Pick<ScreenLayoutProps,"title"|"state"|"stateAction"|"notice"|"titleVisibility"|"headerAlignment"|"actions"|"footer"> & {content:ReactNode}; back:ScreenFlowAction; refresh?:ScreenFlowIconAction; loadMore?:ScreenFlowAction };
 /** Keep the list mounted so input and scroll survive a detail visit. Routers may instead restore host scroll state.
  * Both panes reach the same window bottom, so `safeAreaBottom` goes to each (yajalal detail content sat under the home indicator, 2026-10-17). */
 // layoutStyle places the outer host that owns both panes, as on Web, so the screen keeps the same

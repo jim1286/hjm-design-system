@@ -23,11 +23,13 @@ export type RepeatableFieldGroupProps = Omit<FieldGroupProps, "renderField"> & R
     removeLabel: (id: string) => string;
     minFields?: number;
     maxFields?: number;
+    /** A referenced row may stay editable while removal is unavailable (Utilverse expense participants). */
+    isRemoveDisabled?: (id: string) => boolean;
     /** Return the new stable id to focus after the controlled descriptor includes it. */
     onAdd: () => string | undefined;
     onRemove: (id: string) => void;
 }>;
-export declare function RepeatableFieldGroup({ renderField, addLabel, removeLabel, minFields, maxFields, onAdd, onRemove, ...props }: RepeatableFieldGroupProps): import("react").JSX.Element;
+export declare function RepeatableFieldGroup({ renderField, addLabel, removeLabel, minFields, maxFields, isRemoveDisabled, onAdd, onRemove, ...props }: RepeatableFieldGroupProps): import("react").JSX.Element;
 export type SelectionActionBarProps = Readonly<{
     selectedIds: readonly string[];
     selectionLabel: (count: number) => string;

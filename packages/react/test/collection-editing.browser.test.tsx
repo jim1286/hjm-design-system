@@ -125,3 +125,22 @@ it("keeps all five compositions within a narrow host and inherits two brands in 
     expect(host.scrollWidth).toBeLessThanOrEqual(host.clientWidth);
   }
 });
+
+it("keeps a referenced row editable while its removal is disabled", async () => {
+  const remove = vi.fn(), edit = vi.fn();
+  const render = (locked: boolean) => <HjmProvider><RepeatableFieldGroup
+    descriptor={{ label: "참여자", fields: [{ id: "a", label: "이름" }, { id: "b", label: "다른 이름" }] }}
+    addLabel="추가" removeLabel={id => `${id} 삭제`} isRemoveDisabled={id => locked && id === "a"}
+    onAdd={() => undefined} onRemove={remove}
+    renderField={({ controlProps, guardChange, focusRef }) => <TextField {...controlProps} ref={focusRef} onValueChange={guardChange(edit)} />}
+  /></HjmProvider>;
+  await act(async () => root.render(render(true)));
+  expect((host.querySelector('[aria-label="a 삭제"]') as HTMLButtonElement).disabled).toBe(true);
+  const input = host.querySelector('input')!;
+  expect(input.disabled).toBe(false);
+  await page.getByRole('textbox', { name: '이름', exact: true }).fill('새 이름');
+  expect(edit).toHaveBeenCalledWith('새 이름');
+  await act(async () => root.render(render(false)));
+  await page.getByRole('button', { name: 'a 삭제', exact: true }).click();
+  expect(remove).toHaveBeenCalledWith('a');
+});
